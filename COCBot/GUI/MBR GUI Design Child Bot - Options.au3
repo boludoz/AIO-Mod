@@ -27,6 +27,9 @@ Global $g_hChkSinglePBTForced = 0, $g_hTxtSinglePBTimeForced = 0, $g_hTxtPBTimeF
 Global $g_hChkSqlite = 0
 Global $g_hBtnExportData = 0
 
+; Auto Dock, Hide Emulator & Bot - Team AiO MOD++
+Global $g_hChkEnableAuto = 0, $g_hChkAutoDock = 0, $g_hChkAutoHideEmulator = 0, $g_hChkAutoMinimizeBot = 0
+
 Func CreateBotOptions()
 
 	Local $sTxtTip = ""

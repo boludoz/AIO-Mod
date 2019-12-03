@@ -627,7 +627,7 @@ Func UpdateStats($bForceUpdate = False)
 		EndIf
 	Next
 
-	If Not _DateIsValid($g_sLabUpgradeTime) Then GUICtrlSetData($g_hLbLLabTime, "")
+	If Not _DateIsValid($g_sLabUpgradeTime) Then GUICtrlSetData($g_hLbLLabTime, "00:00:00")
 
 	If ProfileSwitchAccountEnabled() Then
 		;village report
@@ -635,7 +635,7 @@ Func UpdateStats($bForceUpdate = False)
 		GUICtrlSetData($g_ahLblResultElixirNowAcc[$g_iCurAccount], _NumberFormat($g_aiCurrentLoot[$eLootElixir], True))
 		GUICtrlSetData($g_ahLblResultDENowAcc[$g_iCurAccount], _NumberFormat($g_aiCurrentLoot[$eLootDarkElixir], False))
 		GUICtrlSetData($g_ahLblResultTrophyNowAcc[$g_iCurAccount], _NumberFormat($g_aiCurrentLoot[$eLootTrophy], True))
-		GUICtrlSetData($g_ahLblResultBuilderNowAcc[$g_iCurAccount], $g_iFreeBuilderCount & "/" & $g_iTotalBuilderCount)
+		If Not _DateIsValid($g_sNextBuilderReadyTime) Then GUICtrlSetData($g_ahLblResultBuilderNowAcc[$g_iCurAccount], $g_iFreeBuilderCount & "/" & $g_iTotalBuilderCount)
 		Local $TempGemDisplay = $g_iGemAmount < 10000 ? $g_iGemAmount : Round($g_iGemAmount/1000,1)
 		GUICtrlSetData($g_ahLblResultGemNowAcc[$g_iCurAccount], _NumberFormat($TempGemDisplay, True))
 
@@ -734,12 +734,33 @@ Func ResetStats()
 	$g_iTotalDonateStatsSiegeMachinesXP = 0
 	If ProfileSwitchAccountEnabled() Then
 		SwitchAccountVariablesReload("Reset")
-		For $i = 0 To 7
+		For $i = 0 To $g_iTotalAcc
 			GUICtrlSetData($g_ahLblResultRuntimeNowAcc[$i], "00:00:00")
 			$g_aiRunTime[$i] = 0
-			GUICtrlSetData($g_hLbLLabTime, "")
+			GUICtrlSetState($g_hPicLabGreen, $GUI_HIDE)
+			GUICtrlSetState($g_hPicLabRed, $GUI_HIDE)
+			GUICtrlSetState($g_hPicLabGray, $GUI_SHOW)
+			GUICtrlSetData($g_hLbLLabTime, "00:00:00")
+			GUICtrlSetColor($g_hLbLLabTime, $COLOR_BLACK)
+			For $j = 0 To 2
+				GUICtrlSetState($g_hPicHeroGreen[$j], $GUI_HIDE)
+				GUICtrlSetState($g_hPicHeroRed[$j], $GUI_HIDE)
+				GUICtrlSetState($g_hPicHeroBlue[$j], $GUI_HIDE)
+				GUICtrlSetState($g_hPicHeroGray[$j], $GUI_SHOW)
+
+				GUICtrlSetState($g_hPicHeroGreenStatus[$j][$i], $GUI_HIDE)
+				GUICtrlSetState($g_hPicHeroRedStatus[$j][$i], $GUI_HIDE)
+				GUICtrlSetState($g_hPicHeroBlueStatus[$j][$i], $GUI_HIDE)
+				GUICtrlSetState($g_hPicHeroGrayStatus[$j][$i], $GUI_SHOW)
+			Next
+			GUICtrlSetState($g_hPicLabGreenStatus[$i], $GUI_HIDE)
+			GUICtrlSetState($g_hPicLabRedStatus[$i], $GUI_HIDE)
+			GUICtrlSetState($g_hPicLabGrayStatus[$i], $GUI_SHOW)
+			GUICtrlSetData($g_hLblLabTimeStatus[$i], "00:00:00")
+			GUICtrlSetColor($g_hLblLabTimeStatus[$i], $COLOR_BLACK)
 		Next
 	EndIf
+	ResetStatsSX()
 	UpdateStats()
 EndFunc   ;==>ResetStats
 

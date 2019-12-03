@@ -16,7 +16,26 @@
 #include-once
 #include <WinAPISys.au3>
 
+#Region AIO Mod ++
+Func SpecialAway()
+	_Sleep(Random(0,2000,1))
+	Local $aSpecialAway[2] = [Random(1,4,1), Random(1,50,1)]
+	If $g_bDebugClick Or TestCapture() Then SetLog("Click SpecialAway " & $aSpecialAway[0] & ", " & $aSpecialAway[1], $COLOR_ACTION, "Verdana", "7.5", 0)
+	ClickP($aSpecialAway)
+EndFunc
+#EndRegion
+
 Func Click($x, $y, $times = 1, $speed = 0, $debugtxt = "")
+
+#Region AIO Mod ++
+		#comments-start AIO Mod
+		Global $aAway[2] = [175, 10] ; Away click, moved from 1,1 to prevent scroll window from top, moved from 0,10 to 175,32 to prevent structure click or 175,10 to just fix MEmu 2.x opening and closing toolbar
+		Global $aAway2[2] = [235, 10] ; Second Away Position for Windows like Donate Window where at $aAway is a button
+		#comments-end
+
+	If ($x = 175 Or $x = 235) And $y = 10 Then Return SpecialAway()
+#EndRegion
+
 	Local $txt = "", $aPrevCoor[2] = [$x, $y]
     If $g_bUseRandomClick Then
 		$x = Random($x - 5, $x + 5, 1)
@@ -100,7 +119,7 @@ EndFunc   ;==>isProblemAffectBeforeClick
 
 ; ClickP : takes an array[2] (or array[4]) as a parameter [x,y]
 Func ClickP($point, $howMuch = 1, $speed = 0, $debugtxt = "")
-	Click($point[0], $point[1], $howMuch, $speed, $debugtxt)
+	If IsArray($point) And UBound($point) > 1 Then Click($point[0], $point[1], $howMuch, $speed, $debugtxt) ; AIO Mod
 EndFunc   ;==>ClickP
 
 Func BuildingClick($x, $y, $debugtxt = "")

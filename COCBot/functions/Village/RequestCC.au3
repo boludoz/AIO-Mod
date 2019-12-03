@@ -15,6 +15,8 @@
 
 Func RequestCC($bClickPAtEnd = True, $sText = "")
 
+	If $g_bChkClanHop Then Return
+
 	If Not $g_bRequestTroopsEnable Or Not $g_bDonationEnabled Then
 		Return
 	EndIf

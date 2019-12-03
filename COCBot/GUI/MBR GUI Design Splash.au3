@@ -43,10 +43,10 @@ Func CreateSplashScreen($iSteps = Default)
 		EndIf
 	EndIf
 
-	Local $sSplashImg = $g_sLogoPath
+	Local $sSplashImg = $g_sLogoLoading
 	Local $hImage, $iX, $iY
-	Local $iT = 20 ; Top of logo (additional space)
-	Local $iB = 10 ; Bottom of logo (additional space)
+	Local $iT = 4 ; Top of logo (additional space)
+	Local $iB = 0 ; Bottom of logo (additional space)
 
 	If Not $bCustomWindow Then
 		Switch $g_iGuiMode ; in Mini GIU or GUI less mode we have less steps

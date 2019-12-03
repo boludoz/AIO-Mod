@@ -75,7 +75,7 @@ Global $hTimeoutAutoClose = 0 ; Timer Handle for $iTimeoutAutoClose
 Global $g_iMainLoopSleep = 50 ;
 ;Global $g_bBotLaunchOption_NoBotSlot = True
 
-Global $g_sBotTitle = "My Bot Mini " & $g_sBotVersion & " " ;~ Don't use any non file name supported characters like \ / : * ? " < > |
+Global $g_sBotTitle = "My Bot Mini " & $g_sBotVersion & " - " & "AiO++ MOD " & $g_sModVersion & " -" ;~ Don't use any non file name supported characters like \ / : * ? " < > |
 Global $g_hFrmBot = 0
 Global $g_hFrmBotBackend = 0
 Global $g_bBotLaunched = False
@@ -103,6 +103,8 @@ Global $g_hFrmBotEmbeddedMouse = 0
 
 #include "COCBot\MBR GUI Design Mini.au3"
 #include "COCBot\functions\Config\readConfig.au3"
+; Team AiO MOD++ (2019)
+#include "COCBot\Team__AiO__MOD++\functions\Config\readConfig.au3"
 #include "COCBot\functions\Other\UpdateStats.Mini.au3"
 #include "COCBot\functions\Other\_NumberFormat.au3"
 
@@ -143,7 +145,7 @@ Func UpdateBotTitle($sTitle = "My Bot " & $g_sBotVersion)
 	DllCall("kernel32.dll", "bool", "SetConsoleTitle", "str", "Console " & $g_sBotTitle)
 	; Update try icon title
 	TraySetToolTip($g_sBotTitle)
-	GUISetIcon($g_sLibIconPath, $eIcnGUI)
+	GUISetIcon($g_sLibModIconPath, $eIcnAIOMod)
 
 	SetDebugLog("Bot title updated to: " & $g_sBotTitle)
 EndFunc   ;==>UpdateBotTitle
@@ -155,7 +157,6 @@ EndFunc   ;==>_SleepMilli
 ; added to avoid SciTE warning
 Func ResumeAndroid()
 EndFunc   ;==>ResumeAndroid
-
 
 Func ProcessCommandLine()
 
@@ -891,6 +892,14 @@ Func btnResume()
 	TogglePause()
 EndFunc   ;==>btnResume
 
+; Enable/Disable GUI while botting - Team AiO MOD++
+Func btnEnableGUI()
+EndFunc   ;==>btnEnableGUI
+
+Func btnDisableGUI()
+EndFunc   ;==>btnDisableGUI
+; Enable/Disable GUI while botting - Team AiO MOD++
+
 Func btnVillageStat($source = "")
 
 	If $g_iFirstRun = 0 And $g_bRunState And Not $g_bBotPaused Then SetTime(True)
@@ -958,6 +967,10 @@ EndFunc   ;==>btnEmbed
 
 Func chkBackground()
 EndFunc   ;==>chkBackground
+
+; Only farm - Team AiO MOD++
+Func chkOnlyFarm()
+EndFunc   ;==>chkOnlyFarm
 
 Func ButtonBoost()
 EndFunc   ;==>ButtonBoost
@@ -1049,6 +1062,7 @@ Func BotStopped()
 	;GUICtrlSetState($g_hBtnAttackNowTS, $GUI_HIDE)
 	;GUICtrlSetState($g_hPicTwoArrowShield, $GUI_SHOW)
 	;GUICtrlSetState($g_hLblVersion, $GUI_SHOW)
+	;GUICtrlSetState($g_hLblMod, $GUI_SHOW)
 
 	; update try items
 	TrayItemSetText($g_hTiStartStop, GetTranslatedFileIni("MBR GUI Design - Loading", "StatusBar_Item_Start", "Start bot"))

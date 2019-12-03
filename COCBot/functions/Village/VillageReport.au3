@@ -30,6 +30,9 @@ Func VillageReport($bBypass = False, $bSuppressLog = False)
 	getBuilderCount($bSuppressLog) ; update builder data
 	If _Sleep($DELAYRESPOND) Then Return
 
+	; Builder Status - Team AiO MOD++
+	If Not $bBypass Then getBuilderTime()
+
 	$g_aiCurrentLoot[$eLootTrophy] = getTrophyMainScreen($aTrophies[0], $aTrophies[1])
 	If Not $bSuppressLog Then SetLog(" [T]: " & _NumberFormat($g_aiCurrentLoot[$eLootTrophy]), $COLOR_SUCCESS)
 
@@ -58,3 +61,53 @@ Func VillageReport($bBypass = False, $bSuppressLog = False)
 	WEnd
 
 EndFunc   ;==>VillageReport
+
+; Builder Status - Team AiO MOD++
+Func getBuilderTime()
+	Local $iBuilderTime = -1
+	Static $sBuilderTimeLastCheck = ""
+	Static $asBuilderTimeLastCheck[8] = ["", "", "", "", "", "", "", ""]
+
+	If ProfileSwitchAccountEnabled() Then $sBuilderTimeLastCheck = $asBuilderTimeLastCheck[$g_iCurAccount]
+
+	If _DateIsValid($sBuilderTimeLastCheck) And _DateIsValid($g_sNextBuilderReadyTime) And Not $g_bFirstStart Then
+		Local $iTimeFromLastCheck = Int(_DateDiff('n', $sBuilderTimeLastCheck, _NowCalc())) ; elapse time in minutes
+		Local $iTimeTillNextBuilderReady = Int(_DateDiff('n', _NowCalc(), $g_sNextBuilderReadyTime)) ; builder time in minutes
+
+		SetDebugLog("Next Builder will be ready in " & $iTimeTillNextBuilderReady & "m, (" & $g_sNextBuilderReadyTime & ")")
+		SetDebugLog("It has been " & $iTimeFromLastCheck & "m since last check (" & $sBuilderTimeLastCheck & ")")
+
+		If $iTimeFromLastCheck <= 6 * 60 And $iTimeTillNextBuilderReady > 0 Then
+			SetDebugLog("Next time to check: " & _Min(360 - Number($iTimeFromLastCheck), Number($iTimeTillNextBuilderReady)) & "m")
+			Return
+		EndIf
+	EndIf
+
+	If $g_iFreeBuilderCount >= $g_iTotalBuilderCount Then Return
+
+	SetLog("Getting Builder Time", $COLOR_INFO)
+
+	If IsMainPage() Then Click(293, 32) ; click builder's nose for poping out information
+	If _Sleep(1000) Then Return
+
+	Local $sBuilderTime = QuickMIS("OCR", $g_sImgBuilderTime, 360, 109, 456, 125, True, $g_bDebugImageSave)
+	If $sBuilderTime <> "none" Then
+		$iBuilderTime = ConvertOCRTime("Builder Time", $sBuilderTime, False)
+		If $g_bDebugSetlog Then SetDebugLog("$sResult QuickMIS OCR: " & $sBuilderTime & " (" & Round($iBuilderTime,2) & " minutes)")
+	EndIf
+
+	If $iBuilderTime > 0 Then
+		$g_sNextBuilderReadyTime = _DateAdd("n", $iBuilderTime, _NowCalc())
+		$sBuilderTimeLastCheck = _NowCalc()
+	Else
+		$g_sNextBuilderReadyTime = ""
+		$sBuilderTimeLastCheck = ""
+	EndIf
+
+	If ProfileSwitchAccountEnabled() Then
+		$asBuilderTimeLastCheck[$g_iCurAccount] = $sBuilderTimeLastCheck
+		SwitchAccountVariablesReload("Save")
+	EndIf
+
+	ClickP($aAway, 2, 0, "#0000") ;Click Away
+EndFunc   ;==>getBuilderTime

@@ -58,6 +58,7 @@
 #include <Timers.au3>
 
 Global Const $g_sLogoPath = @ScriptDir & "\Images\Logo.png"
+Global Const $g_sLogoLoading = @ScriptDir & "\Images\LogoLoading.png"
 Global Const $g_sLogoUrlPath = @ScriptDir & "\Images\LogoURL.png"
 Global Const $g_sLogoUrlSmallPath = @ScriptDir & "\Images\LogoURLsmall.png"
 Global Const $g_iGAME_WIDTH = 860
@@ -298,7 +299,7 @@ Global $g_bFoundRunningAndroid = False
 Global $g_bFoundInstalledAndroid = False
 
 ; Android Options and settings
-Global Const $g_iOpenAndroidActiveMaxTry = 3 ; Try recursively 3 times to open Android
+Global Const $g_iOpenAndroidActiveMaxTry = 5 ; Try recursively 5 times to open Android
 Global Const $g_iAndroidBackgroundModeDirectX = 1
 Global Const $g_iAndroidBackgroundModeOpenGL = 2
 Global $g_iAndroidBackgroundMode = 0 ; 0 = Default (using $g_iAndroidBackgroundModeDefault), 1 = WinAPI mode (faster, but requires Android DirectX), 2 = ADB screencap mode (slower, but alwasy works even if Monitor is off -> "True Brackground Mode")
@@ -525,6 +526,7 @@ Global Const $g_sIcnMBisland = @ScriptDir & "\Images\bbico.png"
 Global Const $g_sIcnBldGold = @ScriptDir & "\Images\gold.png"
 Global Const $g_sIcnBldElixir = @ScriptDir & "\Images\elixir.png"
 Global Const $g_sIcnBldTrophy = @ScriptDir & "\Images\trophy.png"
+Global Const $g_sIcnSuperXP = @ScriptDir & "\Images\Stats\SuperXP.png"
 
 ; Improve GUI interactions by disabling bot window redraw
 Global $g_iRedrawBotWindowMode = 2 ; 0 = disabled, 1 = Redraw always entire bot window, 2 = Redraw only required bot window area (or entire bot if control not specified)
@@ -720,7 +722,7 @@ Global $g_aiHeroBoost[$eHeroCount] = ["1970/01/01 00:00:00", "1970/01/01 00:00:0
 Global $g_bLeagueAttack = False
 Global Enum $eLeagueUnranked, $eLeagueBronze, $eLeagueSilver, $eLeagueGold, $eLeagueCrystal, $eLeagueMaster, $eLeagueChampion, $eLeagueTitan, $eLeagueLegend, $eLeagueCount
 Global Const $g_asLeagueDetails[22][5] = [ _
-		["0", "Bronze III", "0", "B3", "400"], ["1000", "Bronze II", "0", "B2", "500"], ["1300", "Bronze I", "0", "B1", "600"], _
+		["700", "Bronze III", "0", "B3", "400"], ["1000", "Bronze II", "0", "B2", "500"], ["1300", "Bronze I", "0", "B1", "600"], _
 		["2600", "Silver III", "0", "S3", "800"], ["3700", "Silver II", "0", "S2", "1000"], ["4800", "Silver I", "0", "S1", "1200"], _
 		["10000", "Gold III", "0", "G3", "1400"], ["13500", "Gold II", "0", "G2", "1600"], ["17000", "Gold I", "0", "G1", "1800"], _
 		["40000", "Crystal III", "120", "c3", "2000"], ["55000", "Crystal II", "220", "c2", "2200"], ["70000", "Crystal I", "320", "c1", "2400"], _
@@ -907,7 +909,7 @@ Global $g_sTxtGeneralBlacklist = ""
 Global $g_bDonateHoursEnable = False
 Global $g_abDonateHours[24] = [False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False]
 Global $g_iCmbDonateFilter = 0 ; 0 no filter, 1 capture only images, 2 white list, 3 black list
-Global $g_bDonateSkipNearFullEnable = 1
+Global $g_bDonateSkipNearFullEnable = False
 Global $g_iDonateSkipNearFullPercent = 90
 
 ; <><><><> Village / Upgrade <><><><>
@@ -962,7 +964,7 @@ Global $g_sUpgradeDuration
 ; Builder Base
 Global $g_iChkBBSuggestedUpgrades = 0, $g_iChkBBSuggestedUpgradesIgnoreGold = 0, $g_iChkBBSuggestedUpgradesIgnoreElixir = 0, $g_iChkBBSuggestedUpgradesIgnoreHall = 0
 Global $g_iChkPlacingNewBuildings = 0
-Global $g_bStayOnBuilderBase = False ; set to True in MyBot.run.au3 _RunFunction when on builder base
+Global $g_bStayOnBuilderBase = False ; set to True in MyBot.run.au3 __RunFunction when on builder base
 
 Global $g_iQuickMISX = 0, $g_iQuickMISY = 0
 
@@ -1033,7 +1035,8 @@ Global $g_bDoubleTrain, $g_bPreciseArmy
 Global $g_bAllBarracksUpgd = False
 
 ; <><><><> Attack Plan / Train Army / Boost <><><><>
-Global $g_iCmbBoostBarracks = 0, $g_iCmbBoostSpellFactory = 0, $g_iCmbBoostWorkshop = 0, $g_iCmbBoostBarbarianKing = 0, $g_iCmbBoostArcherQueen = 0, $g_iCmbBoostWarden = 0, $g_iCmbBoostEverything = 0
+Global $g_iCmbBoostBarracks = 0, $g_iCmbBoostSpellFactory = 0, $g_iCmbBoostWorkshop = 0, $g_iCmbBoostBarbarianKing = 0, $g_iCmbBoostArcherQueen = 0, $g_iCmbBoostWarden = 0
+Global $g_iCmbBoostTrainingPotion = 0, $g_iCmbBoostResourcePotion = 0
 Global $g_abBoostBarracksHours[24] = [True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True]
 
 ; <><><><> Attack Plan / Train Army / Train Order <><><><>
@@ -1083,8 +1086,8 @@ Global $g_aiDropOrder[$eDropOrderCount] = [ _
 		$eHeroeS, $eCCS]
 
 ; <><><><> Attack Plan / Train Army / Options <><><><>
-Global $g_bCloseWhileTrainingEnable = True, $g_bCloseWithoutShield = False, $g_bCloseEmulator = False, $g_bSuspendComputer = False, $g_bCloseRandom = False, _
-		$g_bCloseExactTime = False, $g_bCloseRandomTime = True, $g_iCloseRandomTimePercent = 10, $g_iCloseMinimumTime = 2
+Global $g_bCloseWhileTrainingEnable = False, $g_bCloseWithoutShield = True, $g_bCloseEmulator = False, $g_bSuspendComputer = False, $g_bCloseRandom = False, _
+		$g_bCloseExactTime = True, $g_bCloseRandomTime = False, $g_iCloseRandomTimePercent = 10, $g_iCloseMinimumTime = 2
 Global $g_iTrainClickDelay = 40
 Global $g_bTrainAddRandomDelayEnable = False, $g_iTrainAddRandomDelayMin = 5, $g_iTrainAddRandomDelayMax = 60
 
@@ -1231,9 +1234,9 @@ Global $g_bAutoAlignEnable = False, $g_iAutoAlignPosition = "EMBED", $g_iAutoAli
 Global $g_bUpdatingWhenMinimized = True ; Alternative Minimize Window routine for bot that enables window updates when minimized
 Global $g_bHideWhenMinimized = False ; Hide bot window in taskbar when minimized
 Global $g_bUseRandomClick = False
-Global $g_bScreenshotPNGFormat = False, $g_bScreenshotHideName = True
+Global $g_bScreenshotPNGFormat = True, $g_bScreenshotHideName = True
 Global $g_iAnotherDeviceWaitTime = 120
-Global $g_bForceSinglePBLogoff = 0, $g_iSinglePBForcedLogoffTime = 18, $g_iSinglePBForcedEarlyExitTime = 15
+Global $g_bForceSinglePBLogoff = True, $g_iSinglePBForcedLogoffTime = 17, $g_iSinglePBForcedEarlyExitTime = 15
 Global $g_bAutoResumeEnable = 0, $g_iAutoResumeTime = 5
 Global $g_bDisableNotifications = False
 Global $g_bForceClanCastleDetection = 0
@@ -1253,6 +1256,7 @@ Global $g_abAccountNo[8], $g_asProfileName[8], $g_abDonateOnly[8]
 Global $g_aiAttackedCountSwitch[8], $g_iActiveSwitchCounter = 0, $g_iDonateSwitchCounter = 0
 Global $g_asTrainTimeFinish[8], $g_abPBActive[8]
 Global $g_aiRunTime[8], $g_ahTimerSinceSwitched[8]
+
 ; <><><><> Bot / Stats <><><><>
 ; <<< nothing here >>>
 
@@ -1321,6 +1325,7 @@ Global $g_aiQueenAltarPos[2] = [-1, -1] ; position Queens Altar
 Global $g_aiWardenAltarPos[2] = [-1, -1] ; position Grand Warden Altar
 Global $g_aiLaboratoryPos[2] = [-1, -1] ; Position of laboratory
 Global $g_aiClanCastlePos[2] = [-1, -1] ; Position of clan castle
+;Global $g_aiResourcesPos[2] = [-1, -1] ; Position of Resources - BLD MOD NO MORE
 Global $g_iDetectedImageType = 0 ; Image theme; 0 = normal, 1 = snow
 Global $g_abNotNeedAllTime[2] = [True, True] ; Collect LootCart, CheckTombs
 
@@ -1790,3 +1795,6 @@ Global $g_sStarsEarned = Null
 Func _ArrayIndexValid(Const ByRef $a, Const $idx)
 	Return $idx >= 0 And $idx < UBound($a)
 EndFunc   ;==>_ArrayIndexValid
+
+; Team AiO MOD++ (2018)
+#include "Team__AiO__MOD++\Globals_Team__AiO__MOD++.au3"

@@ -504,7 +504,7 @@ Func cmbScriptDroplineAB()
 	$g_aiAttackScrDroplineEdge[$LB] = _GUICtrlComboBox_GetCurSel($g_hCmbScriptDroplineAB)
 EndFunc   ;==>cmbScriptDroplineAB
 
-Func AttackNow()
+Func AttackNowAB()
 	Local $tempbRunState = $g_bRunState
 	Local $tempSieges = $g_aiCurrentSiegeMachines
 	$g_aiCurrentSiegeMachines[$eSiegeWallWrecker] = 1
@@ -518,4 +518,20 @@ Func AttackNow()
 		Attack()			; Fire xD
 	$g_aiCurrentSiegeMachines = $tempSieges
 	$g_bRunState = $tempbRunState
-EndFunc   ;==>AttackNow
+EndFunc   ;==>AttackNowAB
+
+Func AttackNowDB()
+	Local $tempbRunState = $g_bRunState
+	Local $tempSieges = $g_aiCurrentSiegeMachines
+	$g_aiCurrentSiegeMachines[$eSiegeWallWrecker] = 1
+	$g_aiCurrentSiegeMachines[$eSiegeBattleBlimp] = 1
+	$g_aiCurrentSiegeMachines[$eSiegeStoneSlammer] = 1
+	$g_aiAttackAlgorithm[$DB] = 1										; Select Scripted Attack
+	$g_sAttackScrScriptName[$DB] = GuiCtrlRead($g_hCmbScriptNameDB)		; Select Scripted Attack File From The Combo Box, Cos it wasn't refreshing until pressing Start button
+	$g_iMatchMode = $DB													; Select Live Base As Attack Type
+	$g_bRunState = True
+	PrepareAttack($g_iMatchMode)										;
+		Attack()			; Fire xD
+	$g_aiCurrentSiegeMachines = $tempSieges
+	$g_bRunState = $tempbRunState
+EndFunc   ;==>AttackNowDB

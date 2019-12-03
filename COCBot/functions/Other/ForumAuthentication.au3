@@ -18,8 +18,12 @@ Global $g_iForumRetryOnErrorCount = 20 ; retry on unknown error 5 times
 Global $g_iForumRetryOnErrorDelay = 3000 ; retry delay in Milliseconds
 
 Func ForumAuthentication()
+	Local $iAuthenticated = 0
+	$iAuthenticated = CheckForumAuthentication()
+	If $iAuthenticated = 1 Then Return True
+	If $iAuthenticated = -1 Then Return False
 
-	Local $bWasRunState = $g_bRunState
+#cs	Local $bWasRunState = $g_bRunState
 
 	; load text so translation is upadted
 	Local $sLogLogPleaseEnter = GetTranslatedFileIni("MBR Authentication", "LogPleaseEnter", "Please enter your Mybot.run Forum username and password")
@@ -173,7 +177,7 @@ Func ForumAuthentication()
 		EndIf
 	EndIf
 
-	Return $bOk
+#ce	Return $bOk
 EndFunc   ;==>ForumAuthentication
 
 Func ForumAuthenticationLogin()

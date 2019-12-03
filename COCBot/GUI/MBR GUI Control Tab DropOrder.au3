@@ -18,6 +18,7 @@ Func CustomDropOrder()
 	; prevent user to open a second window impossible to close...
 	GUICtrlSetState($g_hBtnCustomDropOrderDB, $GUI_DISABLE)
 	GUICtrlSetState($g_hBtnCustomDropOrderAB, $GUI_DISABLE)
+	GUICtrlSetState($g_hBtnCustomDropOrderDB1, $GUI_DISABLE)
 	GUISetState(@SW_SHOW, $g_hGUI_DropOrder)
 EndFunc   ;==>CustomDropOrder
 
@@ -26,6 +27,7 @@ Func CloseCustomDropOrder()
 	GUISetState(@SW_HIDE, $g_hGUI_DropOrder)
 	GUICtrlSetState($g_hBtnCustomDropOrderDB, $GUI_ENABLE)
 	GUICtrlSetState($g_hBtnCustomDropOrderAB, $GUI_ENABLE)
+	GUICtrlSetState($g_hBtnCustomDropOrderDB1, $GUI_ENABLE)
 EndFunc   ;==>CloseCustomDropOrder
 
 Func chkDropOrder()
@@ -33,6 +35,7 @@ Func chkDropOrder()
 		$g_bCustomDropOrderEnable = True
 		GUICtrlSetBkColor($g_hBtnCustomDropOrderDB, $COLOR_GREEN)
 		GUICtrlSetBkColor($g_hBtnCustomDropOrderAB, $COLOR_GREEN)
+		GUICtrlSetBkColor($g_hBtnCustomDropOrderDB1, $COLOR_GREEN)
 		GUICtrlSetState($g_hBtnDropOrderSet, $GUI_ENABLE)
 		GUICtrlSetState($g_hBtnRemoveDropOrder, $GUI_ENABLE)
 		For $i = 0 To UBound($g_ahCmbDropOrder) - 1
@@ -43,6 +46,7 @@ Func chkDropOrder()
 		$g_bCustomDropOrderEnable = False
 		GUICtrlSetBkColor($g_hBtnCustomDropOrderDB, $COLOR_RED)
 		GUICtrlSetBkColor($g_hBtnCustomDropOrderAB, $COLOR_RED)
+		GUICtrlSetBkColor($g_hBtnCustomDropOrderDB1, $COLOR_RED)
 		GUICtrlSetState($g_hBtnDropOrderSet, $GUI_DISABLE) ; disable button
 		GUICtrlSetState($g_hBtnRemoveDropOrder, $GUI_DISABLE)
 		For $i = 0 To UBound($g_ahCmbDropOrder) - 1

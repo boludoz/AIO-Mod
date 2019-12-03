@@ -22,7 +22,7 @@ Func CreateAttackSearchTHSnipeEndBattle()
 	Local $x = 10, $y = 45
 	$g_hGrpTSEndBattle = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - EndBattle", "Group_01", -1), $x - 5, $y - 20, $g_iSizeWGrpTab4, $g_iSizeHGrpTab4)
 	;Apply to switch Attack Standard after THSnipe End ==>
-		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - EndBattle", "LblSwitch_DB_Attack_at_END", "Switch DB Attack at END") & ":", $x, $y, 143, 18, $SS_LEFT)
+		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - EndBattle", "LblSwitch_DB_Attack_at_END", "Switch DB Attack at END") & ":", $x, $y, -1, 18, $SS_LEFT)
 	$y += 15
 		;chk camps
 		$g_hChkTSActivateCamps2 = GUICtrlCreateCheckbox("", $x + 2, $y + 3, 16, 16)
@@ -35,6 +35,7 @@ Func CreateAttackSearchTHSnipeEndBattle()
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - EndBattle", "TxtArmyCamps2_Info_01", "Set the % Army camps before activate this option"))
 			GUICtrlSetLimit(-1, 6)
+			GUICtrlSetBkColor(-1, 0xD1DFE7)
 
 		;camps %
 		GUICtrlCreateLabel("%", $x + 115, $y + 4, -1, -1)

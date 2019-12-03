@@ -32,7 +32,7 @@ Func CreateBotAndroid()
 	$x = 280
 	$y = 45
 	$w = 185
-	GUICtrlCreateGroup(GetTranslatedFileIni("Android", "Android_Click_Delay", "Additional Click Delay"), $x - 20, $y - 20, $w, $h)
+	GUICtrlCreateGroup(GetTranslatedFileIni("Android", "Android_Options_01", "Additional Click Delay"), $x - 20, $y - 20, $w, $h)
 	$sTxtTip = GetTranslatedFileIni("Android", "LblAdditionalClickDelay_Info", "Increase the delay if your PC is slow or to create human like click speed")
 	$g_hLblAdditionalClickDelay = GUICtrlCreateLabel($g_iAndroidControlClickAdditionalDelay & " ms", $x + $w - 65, $y + 5, 37, 30, $SS_RIGHT)
 	_GUICtrlSetTip(-1, $sTxtTip)
@@ -50,7 +50,7 @@ Func CreateBotAndroid()
 	$y2 = $y
 	$w = $g_iSizeWGrpTab2 - 2
 	$h = 9 * 25
-	GUICtrlCreateGroup(GetTranslatedFileIni("Android", "Android_Options", "Android Options"), $x - 20, $y - 20, $w, $h)
+	GUICtrlCreateGroup(GetTranslatedFileIni("Android", "Android_Options_02", "Android Options"), $x - 20, $y - 20, $w, $h)
 		GUICtrlCreateLabel(GetTranslatedFileIni("Android", "LblBackgroundMode", "Screencapture Background Mode"), $x - 8, $y + 5, 180, 22, $SS_RIGHT)
 		$g_hCmbAndroidBackgroundMode = GUICtrlCreateCombo("", $x - 8 + 180 + 5, $y, 200, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 			GUICtrlSetData(-1, GetTranslatedFileIni("Android", "CmbBackgroundMode", "Default|Use WinAPI (need Android DirectX)|Use ADB screencap"))
@@ -105,6 +105,7 @@ Func CreateBotAndroid()
 		$g_hTxtAndroidRebootHours = GUICtrlCreateInput($g_iAndroidRebootHours, $x + 327, $y + 1, 30, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 4)
+			GUICtrlSetBkColor(-1, 0xD1DFE7)
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "hrs", -1), $x + 362, $y + 2, -1, -1)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 

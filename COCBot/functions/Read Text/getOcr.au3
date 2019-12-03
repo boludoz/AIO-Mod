@@ -10,6 +10,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
+
 Func getNameBuilding($x_start, $y_start) ; getNameBuilding(242,520) -> Gets complete name and level of the buildings, bottom of screen
 	Return getOcrAndCapture("coc-build", $x_start, $y_start, 377, 27)
 EndFunc   ;==>getNameBuilding
@@ -133,6 +134,10 @@ EndFunc   ;==>getArmyCampCap
 Func getCastleDonateCap($x_start, $y_start) ;  -> Gets clan castle capacity,  --> donatecc.au3
 	Return getOcrAndCapture("coc-army", $x_start, $y_start, 30, 14, True)
 EndFunc   ;==>getCastleDonateCap
+
+Func getBarracksTroopQuantity($x_start, $y_start) ;  -> Gets quantity of troops in training --> train.au3
+	Return getOcrAndCapture("coc-train", $x_start, $y_start, 52, 16, True)
+EndFunc   ;==>getBarracksTroopQuantity
 
 Func getAttackDisable($x_start, $y_start) ;  -> 346, 182 - Gets red text disabled for early warning of Personal Break
 	Return getOcrAndCapture("coc-dis", $x_start, $y_start, 118, 24, True)
@@ -312,7 +317,7 @@ Func OcrForceCaptureRegion($bForce = Default)
 	$g_bOcrForceCaptureRegion = $bForce
 	Return $wasForce
 EndFunc   ;==>OcrForceCaptureRegion
-
+#cs - Team AiO++ MOD (ModFuncs.au3)
 Func getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpace = Default, $bImgLoc = Default, $bForceCaptureRegion = Default)
 	If $removeSpace = Default Then $removeSpace = False
 	If $bImgLoc = Default Then $bImgLoc = False
@@ -348,7 +353,7 @@ Func getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpa
 	EndIf
 	Return $result
 EndFunc   ;==>getOcrAndCapture
-
+#ce
 Func getOcr(ByRef Const $_hHBitmap, $language)
 	Local $result = DllCallMyBot("ocr", "ptr", $_hHBitmap, "str", $language, "int", $g_bDebugOcr ? 1 : 0)
 	If IsArray($result) Then

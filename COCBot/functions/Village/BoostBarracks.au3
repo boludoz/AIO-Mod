@@ -1,7 +1,7 @@
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: BoostBarracks.au3
 ; Description ...:
-; Syntax ........: BoostBarracks(), BoostSpellFactory(), BoostWorkshop()
+; Syntax ........: BoostBarracks(), BoostSpellFactory(), BoostWorkshop(), BoostTrainingPotion(), BoostResourcePotion()
 ; Parameters ....:
 ; Return values .: None
 ; Author ........: MR.ViPER (9/9/2016)
@@ -40,12 +40,12 @@ Func BoostTrainBuilding($sName, $iCmbBoost, $iCmbBoostCtrl)
 
 	If OpenArmyOverview(True, "BoostTrainBuilding()") Then
 		If $sName = "Barracks" Then
-			OpenTroopsTab(True, "BoostTrainBuilding()")
+			If Not OpenTroopsTab(True, "BoostTrainBuilding()") Then Return
 		ElseIf $sName = "Spell Factory" Then
-			OpenSpellsTab(True, "BoostTrainBuilding()")
+			If Not OpenSpellsTab(True, "BoostTrainBuilding()") Then Return
 			$sIsAre = "is"
 		ElseIf $sName = "Workshop" Then
-			OpenSiegeMachinesTab(True, "BoostTrainBuilding()")
+			If Not OpenSiegeMachinesTab(True, "BoostTrainBuilding()") Then Return
 			$sIsAre = "is"
 		Else
 			SetDebugLog("BoostTrainBuilding(): $sName called with a wrong Value.", $COLOR_ERROR)
@@ -91,26 +91,124 @@ Func BoostTrainBuilding($sName, $iCmbBoost, $iCmbBoostCtrl)
 
 	ClickP($aAway, 1, 0, "#0161")
 	_Sleep($DELAYBOOSTBARRACKS2)
-
 	Return $bBoosted
 EndFunc   ;==>BoostTrainBuilding
 
-Func BoostEverything()
+Func BoostTrainingPotion()
 	; Verifying existent Variables to run this routine
-	If Not AllowBoosting("Everything", $g_iCmbBoostEverything) Then Return
+	If Not AllowBoosting("Training Potion", $g_iCmbBoostTrainingPotion) Then Return
 
-	SetLog("Boosting Everything", $COLOR_INFO)
+	SetLog("Boosting Training Potion", $COLOR_INFO)
 	If $g_aiTownHallPos[0] = "" Or $g_aiTownHallPos[0] = -1 Then
 		LocateTownHall()
 		SaveConfig()
 		If _Sleep($DELAYBOOSTBARRACKS2) Then Return
 	EndIf
 
-	Return BoostPotion("Everything", "Town Hall", $g_aiTownHallPos, $g_iCmbBoostEverything, $g_hCmbBoostEverything) = _NowCalc()
-	$g_aiTimeTrain[0] = 0 ; reset Troop remaining time
-	$g_aiTimeTrain[1] = 0 ; reset Spells remaining time
-	$g_aiTimeTrain[2] = 0 ; reset Heroes remaining time
+	Local Static $iLastTimeChecked[8] = [0, 0, 0, 0, 0, 0, 0, 0], $iDateCalc
+	$iDateCalc = _DateDiff('n', $iLastTimeChecked[$g_iCurAccount], _NowCalc())
+
+	If $iLastTimeChecked[$g_iCurAccount] = 0 Or $iDateCalc > 50 Then
+		; Chek if the Boost is running
+		If OpenArmyOverview(True, "BoostTrainingPotion()") Then
+			If Not OpenTroopsTab(True, "BoostTrainingPotion()") Then Return
+			Local $aBoostBtn = findButton("BoostBarrack")
+			If IsArray($aBoostBtn) Then
+				ClickP($aAway, 2, 0, "#0161")
+				If _Sleep(1000) Then Return
+
+				Local $bChecked = BoostPotion("Training Potion", "Town Hall", $g_aiTownHallPos, $g_iCmbBoostTrainingPotion, $g_hCmbBoostTrainingPotion) = _NowCalc()
+				If Not $bChecked Then Return False
+				$g_aiTimeTrain[0] = 0 ; reset Troop remaining time
+				$g_aiTimeTrain[1] = 0 ; reset Spells remaining time
+				$g_aiTimeTrain[2] = 0 ; reset Heroes remaining time
+				$iLastTimeChecked[$g_iCurAccount] = _NowCalc() ; Reset the Check Timer
+				Return True
+			Else
+				SetLog("Training Potion is already Boosted", $COLOR_INFO)
+			EndIf
+			ClickP($aAway, 2, 0, "#0161")
+		EndIf
+	EndIf
 
 	If _Sleep($DELAYBOOSTBARRACKS3) Then Return
 	checkMainScreen(False) ; Check for errors during function
-EndFunc   ;==>BoostEverything
+	Return False
+EndFunc   ;==>BoostTrainingPotion
+
+; #FUNCTION# ====================================================================================================================
+; Name ..........: -
+; Description ...:
+; Syntax ........: BoostResourcePotion()
+; Parameters ....:
+; Return values .: None
+; Author ........: (Boldina) boludoz - 2018 - (FOR RK MOD)
+; Modified ......: 
+; Related .......:
+; Link ..........: https://github.com/MyBotRun/MyBot/wiki
+; Example .......: No
+; ===============================================================================================================================
+
+Func BoostResourcePotion($aiTmp0 = 0, $aiTmp1 = 0)
+	Local $aiResourcesPos[2] = [$aiTmp0, $aiTmp1]
+	; Verifying existent Variables to run this routine
+	If Not AllowBoosting("Resource Potion", $g_iCmbBoostResourcePotion) Then Return
+
+	SetLog("Boosting Resource Potion", $COLOR_INFO)
+	If $g_aiTownHallPos[0] = "" Or $g_aiTownHallPos[0] = -1 Then
+		LocateTownHall()
+		SaveConfig()
+		If _Sleep($DELAYBOOSTBARRACKS2) Then Return
+	EndIf
+
+	Local Static $iLastTimeChecked[8] = [0, 0, 0, 0, 0, 0, 0, 0], $iDateCalc
+	$iDateCalc = _DateDiff('n', $iLastTimeChecked[$g_iCurAccount], _NowCalc())
+	Local $ok = False
+	If $iLastTimeChecked[$g_iCurAccount] = 0 Or $iDateCalc > 50 Then
+		; Chek if the Boost is running
+		If UBound($aiResourcesPos) > 1 And $aiResourcesPos[0] > 0 And $aiResourcesPos[1] > 0 Then
+			ClickP($aiResourcesPos, 1, 0, "#Resources")
+			If _Sleep($DELAYBOOSTHEROES2) Then Return
+			ForceCaptureRegion()
+			Local $aResult = BuildingInfo(242, 490 + $g_iBottomOffsetY)
+			If $aResult[0] > 1 Then
+				Local $sN = $aResult[1] ; Store bldg name
+				Local $sL = $aResult[2] ; Sotre bdlg level
+				If StringInStr($sN, "Mine", $STR_NOCASESENSEBASIC) > 0 Then
+					; Structure located
+					SetLog("Find " & $sN & " (Level " & $sL & ") located at " & $aiResourcesPos[0] & ", " & $aiResourcesPos[1], $COLOR_SUCCESS)
+					$ok = True
+				ElseIf StringInStr($sN, "Collector", $STR_NOCASESENSEBASIC) > 0 Then
+					; Structure located
+					SetLog("Find " & $sN & " (Level " & $sL & ") located at " & $aiResourcesPos[0] & ", " & $aiResourcesPos[1], $COLOR_SUCCESS)
+					$ok = True
+				ElseIf StringInStr($sN, "Drill", $STR_NOCASESENSEBASIC) > 0 Then
+					; Structure located
+					SetLog("Find " & $sN & " (Level " & $sL & ") located at " & $aiResourcesPos[0] & ", " & $aiResourcesPos[1], $COLOR_SUCCESS)
+					$ok = True
+				Else
+					SetLog("Cannot find " & $sN & " (Level " & $sL & ") located at " & $aiResourcesPos[0] & ", " & $aiResourcesPos[1], $COLOR_ERROR)
+				EndIf
+			EndIf
+		EndIf
+		If $ok = True Then
+			Local $aCheckBoosted = findButton("Boostleft")
+			If Not IsArray($aCheckBoosted) Then
+				ClickP($aAway, 2, 0, "#0161")
+				If _Sleep($DELAYBOOSTBARRACKS1) Then Return
+
+				Local $bChecked = BoostPotion("Resource Potion", "Town Hall", $g_aiTownHallPos, $g_iCmbBoostResourcePotion, $g_hCmbBoostResourcePotion) = _NowCalc()
+				If Not $bChecked Then Return False
+				$iLastTimeChecked[$g_iCurAccount] = _NowCalc() ; Reset the Check Timer
+				Return True
+			Else
+				SetLog("Resource Potion is already Boosted", $COLOR_INFO)
+			EndIf
+			ClickP($aAway, 2, 0, "#0161")
+		EndIf
+	EndIf
+
+	If _Sleep($DELAYBOOSTBARRACKS3) Then Return
+	checkMainScreen(False) ; Check for errors during function
+	Return False
+EndFunc   ;==>BoostTrainingPotion

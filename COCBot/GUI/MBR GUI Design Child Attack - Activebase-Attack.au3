@@ -79,7 +79,7 @@ Func CreateAttackSearchActiveBaseAttack()
 				GUICtrlSetOnEvent(-1, "chkABWardenAttack")
 
 		$x += 46
-			$g_hCmbABWardenMode = GUICtrlCreateCombo("", $x, $y, 90, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+			$g_hCmbABWardenMode = GUICtrlCreateCombo("", $x, $y, 89, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 				GUICtrlSetData(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Cmb-WardenMode_Item_01", -1) & "|" & _
 									   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Cmb-WardenMode_Item_02", -1) & "|" & _
 									   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Cmb-WardenMode_Item_03", -1), GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Cmb-WardenMode_Item_03", -1))

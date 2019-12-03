@@ -143,11 +143,11 @@ EndFunc   ;==>chkStarLab
 
 Func LabStatusGUIUpdate()
 	If _DateIsValid($g_sLabUpgradeTime) Then
-		_GUICtrlSetTip($g_hBtnResetLabUpgradeTime, GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_01", "Visible Red button means that laboratory upgrade in process") & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_02", "This will automatically disappear when near time for upgrade to be completed.") & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_03", "If upgrade has been manually finished with gems before normal end time,") & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_04", "Click red button to reset internal upgrade timer BEFORE STARTING NEW UPGRADE") & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_05", "Caution - Unnecessary timer reset will force constant checks for lab status") & @CRLF & @CRLF & _
+		_GUICtrlSetTip($g_hBtnResetLabUpgradeTime, GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_01", -1) & @CRLF & _
+				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_02", -1) & @CRLF & _
+				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_03", -1) & @CRLF & _
+				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_04", -1) & @CRLF & _
+				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_05", -1) & @CRLF & @CRLF & _
 				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_06", "Troop Upgrade started") & ", " & _
 				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_07", "Will begin to check completion at:") & " " & $g_sLabUpgradeTime & @CRLF & " ")
 		GUICtrlSetState($g_hBtnResetLabUpgradeTime, $GUI_SHOW)
@@ -160,13 +160,13 @@ EndFunc   ;==>LabStatusGUIUpdate
 
 Func StarLabStatusGUIUpdate()
 	If _DateIsValid($g_sStarLabUpgradeTime) Then
-		_GUICtrlSetTip($g_hBtnResetStarLabUpgradeTime, GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_01", "Visible Red button means that laboratory upgrade in process") & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_02", "This will automatically disappear when near time for upgrade to be completed.") & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_03", "If upgrade has been manually finished with gems before normal end time,") & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_04", "Click red button to reset internal upgrade timer BEFORE STARTING NEW UPGRADE") & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_05", "Caution - Unnecessary timer reset will force constant checks for lab status") & @CRLF & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_06", "Troop Upgrade started") & ", " & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_07", "Will begin to check completion at:") & " " & $g_sStarLabUpgradeTime & @CRLF & " ")
+		_GUICtrlSetTip($g_hBtnResetStarLabUpgradeTime, GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_01", -1) & @CRLF & _
+				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_02", -1) & @CRLF & _
+				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_03", -1) & @CRLF & _
+				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_04", -1) & @CRLF & _
+				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_05", -1) & @CRLF & @CRLF & _
+				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_06", -1) & ", " & _
+				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_07", -1) & " " & $g_sStarLabUpgradeTime & @CRLF & " ")
 		GUICtrlSetState($g_hBtnResetStarLabUpgradeTime, $GUI_SHOW)
 		GUICtrlSetState($g_hBtnResetStarLabUpgradeTime, $GUI_ENABLE)
 	Else
@@ -188,10 +188,10 @@ EndFunc   ;==>cmbStarLab
 Func ResetLabUpgradeTime()
 	; Display are you sure message
 	_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 600)
-	Local $stext = @CRLF & GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_07", "Are you 100% sure you want to reset lab upgrade timer?") & @CRLF & _
-			GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_08", "Click OK to reset") & @CRLF & GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_09", "Or Click Cancel to exit") & @CRLF
-	Local $MsgBox = _ExtMsgBox(0, GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_10", "Reset timer") & "|" & GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_11", "Cancel and Return"), _
-							   GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_12", "Reset laboratory upgrade timer?"), $stext, 120, $g_hFrmBot)
+	Local $stext = @CRLF & GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_01", "Are you 100% sure you want to reset lab upgrade timer?") & @CRLF & _
+			GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_02", "Click OK to reset") & @CRLF & GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_03", "Or Click Cancel to exit") & @CRLF
+	Local $MsgBox = _ExtMsgBox(0, GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_04", "Reset timer") & "|" & GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_05", "Cancel and Return"), _
+							   GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_06", "Reset laboratory upgrade timer?"), $stext, 120, $g_hFrmBot)
 	If $g_bDebugSetlog Then SetDebugLog("$MsgBox= " & $MsgBox, $COLOR_DEBUG)
 	If $MsgBox = 1 Then
 		$g_sLabUpgradeTime = ""
@@ -213,18 +213,18 @@ EndFunc   ;==>ResetLabUpgradeTime
 Func ResetStarLabUpgradeTime()
 	; Display are you sure message
 	_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 600)
-	Local $stext = @CRLF & GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_07", "Are you 100% sure you want to reset lab upgrade timer?") & @CRLF & _
-			GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_08", "Click OK to reset") & @CRLF & GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_09", "Or Click Cancel to exit") & @CRLF
-	Local $MsgBox = _ExtMsgBox(0, GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_10", "Reset timer") & "|" & GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_11", "Cancel and Return"), _
-							   GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_12", "Reset laboratory upgrade timer?"), $stext, 120, $g_hFrmBot)
+	Local $stext = @CRLF & GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_01", -1) & @CRLF & _
+			GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_02", -1) & @CRLF & GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_03", -1) & @CRLF
+	Local $MsgBox = _ExtMsgBox(0, GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_04", -1) & "|" & GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_05", -1), _
+							   GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_06", -1), $stext, 120, $g_hFrmBot)
 	If $g_bDebugSetlog Then SetDebugLog("$MsgBox= " & $MsgBox, $COLOR_DEBUG)
 	If $MsgBox = 1 Then
 		$g_sStarLabUpgradeTime = ""
-		_GUICtrlSetTip($g_hBtnResetStarLabUpgradeTime, GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_01", "Visible Red button means that laboratory upgrade in process") & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_02", "This will automatically disappear when near time for upgrade to be completed.") & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_03", "If upgrade has been manually finished with gems before normal end time,") & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_04", "Click red button to reset internal upgrade timer BEFORE STARTING NEW UPGRADE") & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_05", "Caution - Unnecessary timer reset will force constant checks for lab status"))
+		_GUICtrlSetTip($g_hBtnResetStarLabUpgradeTime, GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_01", -1) & @CRLF & _
+				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_02", -1) & @CRLF & _
+				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_03", -1) & @CRLF & _
+				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_04", -1) & @CRLF & _
+				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_05", -1))
 	EndIf
 	If _DateIsValid($g_sStarLabUpgradeTime) Then
 		GUICtrlSetState($g_hBtnResetStarLabUpgradeTime, $GUI_SHOW)
@@ -236,7 +236,7 @@ Func ResetStarLabUpgradeTime()
 EndFunc   ;==>ResetLabUpgradeTime
 
 Func chkUpgradeKing()
-	If $g_iTownHallLevel > 6 Then ; Must be TH7 or above to have King
+	If $g_iTownHallLevel > 6 Or $g_iTownHallLevel = 0 Then ; Must be TH7 or above to have King
 		If GUICtrlRead($g_hCmbBoostBarbarianKing) > 0 Then
 			GUICtrlSetState($g_hChkUpgradeKing, $GUI_DISABLE)
 			GUICtrlSetState($g_hChkUpgradeKing, $GUI_UNCHECKED)
@@ -269,7 +269,7 @@ Func chkUpgradeKing()
 EndFunc   ;==>chkUpgradeKing
 
 Func chkUpgradeQueen()
-	If $g_iTownHallLevel > 8 Then ; Must be TH9 or above to have Queen
+	If $g_iTownHallLevel > 8 Or $g_iTownHallLevel = 0 Then ; Must be TH9 or above to have Queen
 		If GUICtrlRead($g_hCmbBoostArcherQueen) > 0 Then
 			GUICtrlSetState($g_hChkUpgradeQueen, $GUI_DISABLE)
 			GUICtrlSetState($g_hChkUpgradeQueen, $GUI_UNCHECKED)
@@ -301,7 +301,7 @@ Func chkUpgradeQueen()
 EndFunc   ;==>chkUpgradeQueen
 
 Func chkUpgradeWarden()
-	If $g_iTownHallLevel > 10 Then ; Must be TH11 to have warden
+	If $g_iTownHallLevel > 10 Or $g_iTownHallLevel = 0 Then ; Must be TH11 to have warden
 		If GUICtrlRead($g_hCmbBoostWarden) > 0 Then
 			GUICtrlSetState($g_hChkUpgradeWarden, $GUI_DISABLE)
 			GUICtrlSetState($g_hChkUpgradeWarden, $GUI_UNCHECKED)

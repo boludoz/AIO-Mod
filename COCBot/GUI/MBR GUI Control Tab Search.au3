@@ -398,7 +398,7 @@ Func chkSpellWaitError()
 							$sFunnyText = $sText & GetTranslatedFileIni("MBR GUI Control Tab Search", "Func_chkSpellWaitError_FunnyText_01", "Sorry not that button!") & @CRLF
 						Case 2
 							_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0xDC00FF, 0x011E00, 12, "Comic Sans MS", 480)
-							$sFunnyText = $sText & GetTranslatedFileIni("MBR GUI Control Tab Search", "Func_chkSpellWaitError_FunnyText_02", "Donate ??5000 to MyBot.run while you wait 15 minutes for this to time out?") & @CRLF
+							$sFunnyText = $sText & GetTranslatedFileIni("MBR GUI Control Tab Search", "Func_chkSpellWaitError_FunnyText_02", "Donate £5000 to MyBot.run while you wait 15 minutes for this to time out?") & @CRLF
 						Case 3
 							_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x000000, 0xFFFFFF, 12, "Tahoma", 480)
 							$sFunnyText = $sText & GetTranslatedFileIni("MBR GUI Control Tab Search", "Func_chkSpellWaitError_FunnyText_03", "Having trouble finding the exit button?") & @CRLF

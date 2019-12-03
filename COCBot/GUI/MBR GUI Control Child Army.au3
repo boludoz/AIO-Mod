@@ -217,11 +217,15 @@ Func lblTotalCountSpell2()
 		$iTotalTotalTimeSpell += $g_aiArmyCustomSpells[$i] * $g_aiSpellTrainTime[$i]
 	Next
 
-	For $i = 0 To $eSpellCount - 1
-		GUICtrlSetBkColor($g_ahTxtTrainArmySpellCount[$i], $g_iTotalTrainSpaceSpell <= GUICtrlRead($g_hTxtTotalCountSpell) ? $COLOR_WHITE : $COLOR_RED)
-	Next
-
 	GUICtrlSetData($g_hLblTotalTimeSpell, CalculTimeTo($iTotalTotalTimeSpell))
+	GUICtrlSetData($g_hLblCountTotalSpell, $g_iTotalTrainSpaceSpell)
+	If $g_iTotalTrainSpaceSpell < GUICtrlRead($g_hTxtTotalCountSpell) Then
+		GUICtrlSetBkColor($g_hLblCountTotalSpell, $COLOR_ORANGE)
+	ElseIf $g_iTotalTrainSpaceSpell > GUICtrlRead($g_hTxtTotalCountSpell) Then
+		GUICtrlSetBkColor($g_hLblCountTotalSpell, $COLOR_RED)
+	ElseIf $g_iTotalTrainSpaceSpell = GUICtrlRead($g_hTxtTotalCountSpell) Then
+		GUICtrlSetBkColor($g_hLblCountTotalSpell, $COLOR_MONEYGREEN)
+	EndIf
 
 	CalCostSpell()
 EndFunc   ;==>lblTotalCountSpell2
@@ -358,11 +362,15 @@ Func chkCloseWaitEnable()
 	If GUICtrlRead($g_hChkCloseWhileTraining) = $GUI_CHECKED Then
 		$g_bCloseWhileTrainingEnable = True
 		_GUI_Value_STATE("ENABLE", $groupCloseWhileTraining)
-		_GUI_Value_STATE("ENABLE", $g_hLblCloseWaitingTroops & "#" & $g_hCmbMinimumTimeClose & "#" & $g_hLblSymbolWaiting & "#" & $g_hLblWaitingInMinutes)
+		; Max logout time - Team AiO MOD++
+		_GUI_Value_STATE("ENABLE", $g_hLblCloseWaitingTroops & "#" & $g_hCmbMinimumTimeClose & "#" & $g_hLblSymbolWaiting & "#" & $g_hLblWaitingInMinutes & "#" & $g_hChkTrainLogoutMaxTime)
+		chkTrainLogoutMaxTime()
 	Else
 		$g_bCloseWhileTrainingEnable = False
 		_GUI_Value_STATE("DISABLE", $groupCloseWhileTraining)
-		_GUI_Value_STATE("DISABLE", $g_hLblCloseWaitingTroops & "#" & $g_hCmbMinimumTimeClose & "#" & $g_hLblSymbolWaiting & "#" & $g_hLblWaitingInMinutes)
+		; Max logout time - Team AiO MOD++
+		_GUI_Value_STATE("DISABLE", $g_hLblCloseWaitingTroops & "#" & $g_hCmbMinimumTimeClose & "#" & $g_hLblSymbolWaiting & "#" & $g_hLblWaitingInMinutes & "#" & $g_hChkTrainLogoutMaxTime & "#" & $g_hTxtTrainLogoutMaxTime & "#" & $g_hLblTrainLogoutMaxTime)
+		_GUI_Value_STATE("UNCHECKED", $g_hChkTrainLogoutMaxTime)
 	EndIf
 	If GUICtrlRead($g_hChkRandomClose) = $GUI_CHECKED Then
 		GUICtrlSetState($g_hChkCloseEmulator, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
@@ -551,9 +559,9 @@ EndFunc   ;==>GUITrainOrder
 Func BtnRemoveTroops()
 	Local $bWasRedraw = SetRedrawBotWindow(False, Default, Default, Default, "BtnRemoveTroops")
 	Local $sComboData = ""
-	For $j = 0 To UBound($g_asTroopOrderList) - 1
-		$sComboData &= $g_asTroopOrderList[$j] & "|"
-	Next
+		For $j = 0 To UBound($g_asTroopOrderList) - 1
+			$sComboData &= $g_asTroopOrderList[$j] & "|"
+		Next
 	For $i = $eTroopBarbarian To $eTroopCount - 1
 		$g_aiCmbCustomTrainOrder[$i] = -1
 		_GUICtrlComboBox_ResetContent($g_ahCmbTroopOrder[$i])

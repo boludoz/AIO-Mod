@@ -169,89 +169,59 @@ Func ArmyHeroStatus($i)
 			Local $aResult = StringSplit($aKeys[0], "_", $STR_NOCOUNT)
 			$sResult = $aResult[0]
 
-			Select
-				Case $i = "King" Or $i = 0 Or $i = $eKing
-					Switch $sResult
-						Case "heal" ; Blue
-							GUICtrlSetState($g_hPicKingGray, $GUI_HIDE)
-							GUICtrlSetState($g_hPicKingGreen, $GUI_HIDE)
-							GUICtrlSetState($g_hPicKingRed, $GUI_HIDE)
-							GUICtrlSetState($g_hPicKingBlue, $GUI_SHOW)
-						Case "upgrade" ; Red
-							GUICtrlSetState($g_hPicKingGray, $GUI_HIDE)
-							GUICtrlSetState($g_hPicKingGreen, $GUI_HIDE)
-							GUICtrlSetState($g_hPicKingBlue, $GUI_HIDE)
-							GUICtrlSetState($g_hPicKingRed, $GUI_SHOW)
-						Case "king" ; Green
-							GUICtrlSetState($g_hPicKingGray, $GUI_HIDE)
-							GUICtrlSetState($g_hPicKingRed, $GUI_HIDE)
-							GUICtrlSetState($g_hPicKingBlue, $GUI_HIDE)
-							GUICtrlSetState($g_hPicKingGreen, $GUI_SHOW)
-					EndSwitch
+			Switch $sResult
+				Case "heal" ; Blue
+					GUICtrlSetState($g_hPicHeroGray[$i], $GUI_HIDE)
+					GUICtrlSetState($g_hPicHeroGreen[$i], $GUI_HIDE)
+					GUICtrlSetState($g_hPicHeroRed[$i], $GUI_HIDE)
+					GUICtrlSetState($g_hPicHeroBlue[$i], $GUI_SHOW)
+					If ProfileSwitchAccountEnabled() Then
+						GUICtrlSetState($g_hPicHeroGrayStatus[$i][$g_iCurAccount], $GUI_HIDE)
+						GUICtrlSetState($g_hPicHeroGreenStatus[$i][$g_iCurAccount], $GUI_HIDE)
+						GUICtrlSetState($g_hPicHeroRedStatus[$i][$g_iCurAccount], $GUI_HIDE)
+						GUICtrlSetState($g_hPicHeroBlueStatus[$i][$g_iCurAccount], $GUI_SHOW)
+					EndIf
+				Case "upgrade" ; Red
+					GUICtrlSetState($g_hPicHeroGray[$i], $GUI_HIDE)
+					GUICtrlSetState($g_hPicHeroGreen[$i], $GUI_HIDE)
+					GUICtrlSetState($g_hPicHeroBlue[$i], $GUI_HIDE)
+					GUICtrlSetState($g_hPicHeroRed[$i], $GUI_SHOW)
+					If ProfileSwitchAccountEnabled() Then
+						GUICtrlSetState($g_hPicHeroGrayStatus[$i][$g_iCurAccount], $GUI_HIDE)
+						GUICtrlSetState($g_hPicHeroGreenStatus[$i][$g_iCurAccount], $GUI_HIDE)
+						GUICtrlSetState($g_hPicHeroBlueStatus[$i][$g_iCurAccount], $GUI_HIDE)
+						GUICtrlSetState($g_hPicHeroRedStatus[$i][$g_iCurAccount], $GUI_SHOW)
+					EndIf
+				Case "king", "queen", "warden" ; Green
+					GUICtrlSetState($g_hPicHeroGray[$i], $GUI_HIDE)
+					GUICtrlSetState($g_hPicHeroRed[$i], $GUI_HIDE)
+					GUICtrlSetState($g_hPicHeroBlue[$i], $GUI_HIDE)
+					GUICtrlSetState($g_hPicHeroGreen[$i], $GUI_SHOW)
+					If ProfileSwitchAccountEnabled() Then
+						GUICtrlSetState($g_hPicHeroGrayStatus[$i][$g_iCurAccount], $GUI_HIDE)
+						GUICtrlSetState($g_hPicHeroRedStatus[$i][$g_iCurAccount], $GUI_HIDE)
+						GUICtrlSetState($g_hPicHeroBlueStatus[$i][$g_iCurAccount], $GUI_HIDE)
+						GUICtrlSetState($g_hPicHeroGreenStatus[$i][$g_iCurAccount], $GUI_SHOW)
+					EndIf
+			EndSwitch
 
-				Case $i = "Queen" Or $i = 1 Or $i = $eQueen
-					Switch $sResult
-						Case "heal" ; Blue
-							GUICtrlSetState($g_hPicQueenGray, $GUI_HIDE)
-							GUICtrlSetState($g_hPicQueenGreen, $GUI_HIDE)
-							GUICtrlSetState($g_hPicQueenRed, $GUI_HIDE)
-							GUICtrlSetState($g_hPicQueenBlue, $GUI_SHOW)
-						Case "upgrade" ; Red
-							GUICtrlSetState($g_hPicQueenGray, $GUI_HIDE)
-							GUICtrlSetState($g_hPicQueenGreen, $GUI_HIDE)
-							GUICtrlSetState($g_hPicQueenBlue, $GUI_HIDE)
-							GUICtrlSetState($g_hPicQueenRed, $GUI_SHOW)
-						Case "queen" ; Green
-							GUICtrlSetState($g_hPicQueenGray, $GUI_HIDE)
-							GUICtrlSetState($g_hPicQueenRed, $GUI_HIDE)
-							GUICtrlSetState($g_hPicQueenBlue, $GUI_HIDE)
-							GUICtrlSetState($g_hPicQueenGreen, $GUI_SHOW)
-					EndSwitch
-
-				Case $i = "Warden" Or $i = 2 Or $i = $eWarden
-					Switch $sResult
-						Case "heal" ; Blue
-							GUICtrlSetState($g_hPicWardenGray, $GUI_HIDE)
-							GUICtrlSetState($g_hPicWardenGreen, $GUI_HIDE)
-							GUICtrlSetState($g_hPicWardenRed, $GUI_HIDE)
-							GUICtrlSetState($g_hPicWardenBlue, $GUI_SHOW)
-						Case "upgrade" ; Red
-							GUICtrlSetState($g_hPicWardenGray, $GUI_HIDE)
-							GUICtrlSetState($g_hPicWardenGreen, $GUI_HIDE)
-							GUICtrlSetState($g_hPicWardenBlue, $GUI_HIDE)
-							GUICtrlSetState($g_hPicWardenRed, $GUI_SHOW)
-						Case "warden" ; Green
-							GUICtrlSetState($g_hPicWardenGray, $GUI_HIDE)
-							GUICtrlSetState($g_hPicWardenRed, $GUI_HIDE)
-							GUICtrlSetState($g_hPicWardenBlue, $GUI_HIDE)
-							GUICtrlSetState($g_hPicWardenGreen, $GUI_SHOW)
-					EndSwitch
-			EndSelect
 			Return $sResult
 		EndIf
-	EndIf
 
-	;return 'none' if there was a problem with the search ; or no Hero slot
-	Switch $i
-		Case 0
-			GUICtrlSetState($g_hPicKingGreen, $GUI_HIDE)
-			GUICtrlSetState($g_hPicKingRed, $GUI_HIDE)
-			GUICtrlSetState($g_hPicKingBlue, $GUI_HIDE)
-			GUICtrlSetState($g_hPicKingGray, $GUI_SHOW)
-			Return "none"
-		Case 1
-			GUICtrlSetState($g_hPicQueenGreen, $GUI_HIDE)
-			GUICtrlSetState($g_hPicQueenRed, $GUI_HIDE)
-			GUICtrlSetState($g_hPicQueenBlue, $GUI_HIDE)
-			GUICtrlSetState($g_hPicQueenGray, $GUI_SHOW)
-			Return "none"
-		Case 2
-			GUICtrlSetState($g_hPicWardenGreen, $GUI_HIDE)
-			GUICtrlSetState($g_hPicWardenRed, $GUI_HIDE)
-			GUICtrlSetState($g_hPicWardenBlue, $GUI_HIDE)
-			GUICtrlSetState($g_hPicWardenGray, $GUI_SHOW)
-			Return "none"
-	EndSwitch
+	Else
+		;return 'none' if there was a problem with the search ; or no Hero slot
+		GUICtrlSetState($g_hPicHeroGreen[$i], $GUI_HIDE)
+		GUICtrlSetState($g_hPicHeroRed[$i], $GUI_HIDE)
+		GUICtrlSetState($g_hPicHeroBlue[$i], $GUI_HIDE)
+		GUICtrlSetState($g_hPicHeroGray[$i], $GUI_SHOW)
+		If ProfileSwitchAccountEnabled() Then
+			GUICtrlSetState($g_hPicHeroGreenStatus[$i][$g_iCurAccount], $GUI_HIDE)
+			GUICtrlSetState($g_hPicHeroRedStatus[$i][$g_iCurAccount], $GUI_HIDE)
+			GUICtrlSetState($g_hPicHeroBlueStatus[$i][$g_iCurAccount], $GUI_HIDE)
+			GUICtrlSetState($g_hPicHeroGrayStatus[$i][$g_iCurAccount], $GUI_SHOW)
+		EndIf
+		Return "none"
+	EndIf
 
 EndFunc   ;==>ArmyHeroStatus
 
@@ -280,15 +250,21 @@ Func LabGuiDisplay() ; called from main loop to get an early status for indictor
 		GUICtrlSetState($g_hPicLabGreen, $GUI_HIDE)
 		GUICtrlSetState($g_hPicLabRed, $GUI_HIDE)
 		GUICtrlSetState($g_hPicLabGray, $GUI_SHOW)
-		GUICtrlSetData($g_hLbLLabTime, "")
+		GUICtrlSetData($g_hLblLabTime, "00:00:00")
+		GUICtrlSetColor($g_hLbLLabTime, $COLOR_BLACK)
+		If ProfileSwitchAccountEnabled() Then
+			GUICtrlSetState($g_hPicLabGreenStatus[$g_iCurAccount], $GUI_HIDE)
+			GUICtrlSetState($g_hPicLabRedStatus[$g_iCurAccount], $GUI_HIDE)
+			GUICtrlSetState($g_hPicLabGrayStatus[$g_iCurAccount], $GUI_SHOW)
+			GUICtrlSetData($g_hLblLabTimeStatus[$g_iCurAccount], "00:00:00")
+			GUICtrlSetColor($g_hLblLabTimeStatus[$g_iCurAccount], $COLOR_BLACK)
+		EndIf
 		;============================================
 		Return
 	EndIf
 
 	Setlog("Checking Lab Status", $COLOR_INFO)
-
 	;=================Section 2 Lab Gui
-
 	; If $g_bAutoLabUpgradeEnable = True Then  ====>>>> TODO : or use this or make a checkbox on GUI
 	; make sure lab is located, if not locate lab
 	If $g_aiLaboratoryPos[0] <= 0 Or $g_aiLaboratoryPos[1] <= 0 Then
@@ -297,7 +273,15 @@ Func LabGuiDisplay() ; called from main loop to get an early status for indictor
 		GUICtrlSetState($g_hPicLabGreen, $GUI_HIDE)
 		GUICtrlSetState($g_hPicLabRed, $GUI_HIDE)
 		GUICtrlSetState($g_hPicLabGray, $GUI_SHOW)
-		GUICtrlSetData($g_hLbLLabTime, "")
+		GUICtrlSetData($g_hLblLabTime, "00:00:00")
+		GUICtrlSetColor($g_hLbLLabTime, $COLOR_BLACK)
+		If ProfileSwitchAccountEnabled() Then
+			GUICtrlSetState($g_hPicLabGreenStatus[$g_iCurAccount], $GUI_HIDE)
+			GUICtrlSetState($g_hPicLabRedStatus[$g_iCurAccount], $GUI_HIDE)
+			GUICtrlSetState($g_hPicLabGrayStatus[$g_iCurAccount], $GUI_SHOW)
+			GUICtrlSetData($g_hLblLabTimeStatus[$g_iCurAccount], "00:00:00")
+			GUICtrlSetColor($g_hLblLabTimeStatus[$g_iCurAccount], $COLOR_BLACK)
+		EndIf
 		;============================================
 		Return
 	EndIf
@@ -319,7 +303,15 @@ Func LabGuiDisplay() ; called from main loop to get an early status for indictor
 		GUICtrlSetState($g_hPicLabGreen, $GUI_HIDE)
 		GUICtrlSetState($g_hPicLabRed, $GUI_HIDE)
 		GUICtrlSetState($g_hPicLabGray, $GUI_SHOW)
-		GUICtrlSetData($g_hLbLLabTime, "")
+		GUICtrlSetData($g_hLblLabTime, "00:00:00")
+		GUICtrlSetColor($g_hLbLLabTime, $COLOR_BLACK)
+		If ProfileSwitchAccountEnabled() Then
+			GUICtrlSetState($g_hPicLabGreenStatus[$g_iCurAccount], $GUI_HIDE)
+			GUICtrlSetState($g_hPicLabRedStatus[$g_iCurAccount], $GUI_HIDE)
+			GUICtrlSetState($g_hPicLabGrayStatus[$g_iCurAccount], $GUI_SHOW)
+			GUICtrlSetData($g_hLblLabTimeStatus[$g_iCurAccount], "00:00:00")
+			GUICtrlSetColor($g_hLblLabTimeStatus[$g_iCurAccount], $COLOR_BLACK)
+		EndIf
 		;===========================================
 		Return
 	EndIf
@@ -331,6 +323,11 @@ Func LabGuiDisplay() ; called from main loop to get an early status for indictor
 		GUICtrlSetState($g_hPicLabGray, $GUI_HIDE)
 		GUICtrlSetState($g_hPicLabRed, $GUI_HIDE)
 		GUICtrlSetState($g_hPicLabGreen, $GUI_SHOW)
+		If ProfileSwitchAccountEnabled() Then
+			GUICtrlSetState($g_hPicLabGrayStatus[$g_iCurAccount], $GUI_HIDE)
+			GUICtrlSetState($g_hPicLabRedStatus[$g_iCurAccount], $GUI_HIDE)
+			GUICtrlSetState($g_hPicLabGreenStatus[$g_iCurAccount], $GUI_SHOW)
+		EndIf
 		;===========================================
 		If _Sleep($DELAYLABORATORY2) Then Return
 		Local $sLabTimeOCR = getRemainTLaboratory(270, 257)
@@ -351,7 +348,15 @@ Func LabGuiDisplay() ; called from main loop to get an early status for indictor
 		GUICtrlSetState($g_hPicLabGray, $GUI_HIDE)
 		GUICtrlSetState($g_hPicLabGreen, $GUI_HIDE)
 		GUICtrlSetState($g_hPicLabRed, $GUI_SHOW)
-		GUICtrlSetData($g_hLbLLabTime, "")
+		GUICtrlSetData($g_hLblLabTime, "00:00:00")
+		GUICtrlSetColor($g_hLbLLabTime, $COLOR_RED)
+		If ProfileSwitchAccountEnabled() Then
+			GUICtrlSetState($g_hPicLabGrayStatus[$g_iCurAccount], $GUI_HIDE)
+			GUICtrlSetState($g_hPicLabGreenStatus[$g_iCurAccount], $GUI_HIDE)
+			GUICtrlSetState($g_hPicLabRedStatus[$g_iCurAccount], $GUI_SHOW)
+			GUICtrlSetData($g_hLblLabTimeStatus[$g_iCurAccount], "00:00:00")
+			GUICtrlSetColor($g_hLblLabTimeStatus[$g_iCurAccount], $COLOR_RED)
+		EndIf
 		;============================================
 		ClickP($aAway, 2, $DELAYLABORATORY4, "#0359")
 		$g_sLabUpgradeTime = ""
@@ -364,30 +369,17 @@ Func LabGuiDisplay() ; called from main loop to get an early status for indictor
 		GUICtrlSetState($g_hPicLabGreen, $GUI_HIDE)
 		GUICtrlSetState($g_hPicLabRed, $GUI_HIDE)
 		GUICtrlSetState($g_hPicLabGray, $GUI_SHOW)
-		GUICtrlSetData($g_hLbLLabTime, "")
+		GUICtrlSetData($g_hLblLabTime, "00:00:00")
+		GUICtrlSetColor($g_hLbLLabTime, $COLOR_BLACK)
+		If ProfileSwitchAccountEnabled() Then
+			GUICtrlSetState($g_hPicLabGreenStatus[$g_iCurAccount], $GUI_HIDE)
+			GUICtrlSetState($g_hPicLabRedStatus[$g_iCurAccount], $GUI_HIDE)
+			GUICtrlSetState($g_hPicLabGrayStatus[$g_iCurAccount], $GUI_SHOW)
+			GUICtrlSetData($g_hLblLabTimeStatus[$g_iCurAccount], "00:00:00")
+			GUICtrlSetColor($g_hLblLabTimeStatus[$g_iCurAccount], $COLOR_BLACK)
+		EndIf
 		;=============================================
 		Return
 	EndIf
 
 EndFunc   ;==>LabGuiDisplay
-
-Func HideShields($bHide = False)
-	Local Static $ShieldState[20]
-	Local $counter
-	If $bHide = True Then
-		$counter = 0
-		For $i = $g_hlblKing to $g_hLbLLabTime
-			$ShieldState[$counter] = GUICtrlGetState($i)
-			GUICtrlSetState($i, $GUI_HIDE)
-			$counter += 1
-		Next
-	Else
-		$counter = 0
-		For $i = $g_hlblKing to $g_hLbLLabTime
-			If $ShieldState[$counter] = 80 Then
-				GUICtrlSetState($i, $GUI_SHOW )
-			EndIf
-			$counter += 1
-		Next
-	EndIf
-EndFunc

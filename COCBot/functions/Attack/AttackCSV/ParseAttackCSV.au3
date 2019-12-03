@@ -179,24 +179,75 @@ Func ParseAttackCSV($debug = False)
 								EndIf
 							EndIf
 						EndIf
-						;qty...
-						Local $qty1, $qty2, $qtyvect
-						$qtyvect = StringSplit($value3, "-", 2)
-						If UBound($qtyvect) > 1 Then
-							If Int($qtyvect[0]) > 0 And Int($qtyvect[1]) > 0 Then
-								$qty1 = Int($qtyvect[0])
-								$qty2 = Int($qtyvect[1])
+						;quantities : With %
+						Local $qty1, $qty2, $qtyvect, $bUpdateQuantity = False
+						If StringInStr($value3, "%") > 0 Then
+							$qtyvect = StringSplit($value3, "%", 2)
+							If UBound($qtyvect) > 0 Then
+								Local $iPercentage = $qtyvect[0]
+								If UBound($qtyvect) > 1 Then $bUpdateQuantity = (($qtyvect[1] = "U") ? True : False)
+								Local $theTroopPosition = -2
+
+								;get the integer index of the troop name specified
+								Local $troopName = $value4
+								Local $iTroopIndex = TroopIndexLookup($troopName)
+								If $iTroopIndex = -1 Then
+									SetLog("CSV CMD '%' troop name '" & $troopName & "' is unrecognized.")
+									Return
+								EndIf
+
+								For $i = 0 To UBound($g_avAttackTroops) - 1
+									If $g_avAttackTroops[$i][0] = $iTroopIndex Then
+										$theTroopPosition = $i
+										ExitLoop
+									EndIf
+								Next
+								If $bUpdateQuantity = True Then
+									If $theTroopPosition >= 0 Then
+										SetLog("Updating Available " & GetTroopName($iTroopIndex) & " Quantities", $COLOR_INFO)
+										$theTroopPosition = UpdateTroopQuantity($troopName)
+									EndIf
+								EndIf
+								If $theTroopPosition >= 0 And UBound($g_avAttackTroops) > $theTroopPosition Then
+									If Int($qtyvect[0]) > 0 Then
+										$qty1 = Round((Number($qtyvect[0]) / 100) * Number($g_avAttackTroops[Number($theTroopPosition)][1]))
+										$qty2 = $qty1
+										SetLog($qtyvect[0] & "% Of x" & Number($g_avAttackTroops[$theTroopPosition][1]) & " " & GetTroopName($g_avAttackTroops[$theTroopPosition][0]) & " = " & $qty1, $COLOR_INFO)
+									Else
+										$index1 = 1
+										$qty2 = 1
+									EndIf
+								Else
+									$qty1 = 0
+									$qty2 = 0
+								EndIf
 							Else
-								$index1 = 1
-								$qty2 = 1
+								If Int($value3) > 0 Then
+									$qty1 = Int($value3)
+									$qty2 = Int($value3)
+								Else
+									$qty1 = 1
+									$qty2 = 1
+								EndIf
 							EndIf
 						Else
-							If Int($value3) > 0 Then
-								$qty1 = Int($value3)
-								$qty2 = Int($value3)
+							$qtyvect = StringSplit($value3, "-", 2)
+							If UBound($qtyvect) > 1 Then
+								If Int($qtyvect[0]) > 0 And Int($qtyvect[1]) > 0 Then
+									$qty1 = Int($qtyvect[0])
+									$qty2 = Int($qtyvect[1])
+								Else
+									$index1 = 1
+									$qty2 = 1
+								EndIf
 							Else
-								$qty1 = 1
-								$qty2 = 1
+								If Int($value3) > 0 Then
+									$qty1 = Int($value3)
+									$qty2 = Int($value3)
+								Else
+									$qty1 = 1
+									$qty2 = 1
+								EndIf
 							EndIf
 						EndIf
 						;delay between points
@@ -259,6 +310,26 @@ Func ParseAttackCSV($debug = False)
 								$sleepdrop2 = 1
 							EndIf
 						EndIf
+						;sleep time before drop
+						Local $sleepbeforedrop1 = 0, $sleepbeforedrop2 = 0, $sleepbeforedroppvect
+						$sleepbeforedroppvect = StringSplit($value8, "-", 2)
+						If UBound($sleepbeforedroppvect) > 1 Then
+							If Int($sleepbeforedroppvect[0]) > 0 And Int($sleepbeforedroppvect[1]) > 0 Then
+								$sleepbeforedrop1 = Int($sleepbeforedroppvect[0])
+								$sleepbeforedrop2 = Int($sleepbeforedroppvect[1])
+							Else
+								$sleepbeforedrop1 = 0
+								$sleepbeforedrop2 = 0
+							EndIf
+						Else
+							If Int($value3) > 0 Then
+								$sleepbeforedrop1 = Int($value8)
+								$sleepbeforedrop2 = Int($value8)
+							Else
+								$sleepbeforedrop1 = 0
+								$sleepbeforedrop2 = 0
+							EndIf
+						EndIf
 						; check for targeted vectors and validate index numbers, need too many values for check logic to use CheckCSVValues()
 						Local $tmpVectorList = StringSplit($value1, "-", $STR_NOCOUNT) ; get array with all vector(s) used
 						For $v = 0 To UBound($tmpVectorList) - 1 ; loop thru each vector in target list
@@ -293,7 +364,7 @@ Func ParseAttackCSV($debug = False)
 							; REMAIN CMD from @chalicucu
 							If $value4 = "REMAIN" Then
 								ReleaseClicks()
-								SetLog("Drop|Remain:  Dropping left over troops", $COLOR_BLUE)
+								SetLog("Drop|Remain:  Dropping left over troops", $COLOR_INFO)
 								; Let's get the troops again and quantities
 								If PrepareAttack($g_iMatchMode, True) > 0 Then
 									; a Loop from all troops
@@ -303,9 +374,9 @@ Func ParseAttackCSV($debug = False)
 											; If the Name exist and haves more than zero is deploy it
 											If $g_avAttackTroops[$x][0] = $ii And $g_avAttackTroops[$x][1] > 0 Then
 												Local $name = GetTroopName($g_avAttackTroops[$x][0], $g_avAttackTroops[$x][1])
-												Setlog("Name: " & $name, $COLOR_DEBUG)
-												Setlog("Qty: " & $g_avAttackTroops[$x][1], $COLOR_DEBUG)
-												DropTroopFromINI($value1, $index1, $index2, $indexArray, $g_avAttackTroops[$x][1], $g_avAttackTroops[$x][1], $g_asTroopShortNames[$ii], $delaypoints1, $delaypoints2, $delaydrop1, $delaydrop2, $sleepdrop1, $sleepdrop2, $debug)
+												SetLog("Name: " & $name, $COLOR_DEBUG)
+												SetLog("Qty: " & $g_avAttackTroops[$x][1], $COLOR_DEBUG)
+												DropTroopFromINI($value1, $index1, $index2, $indexArray, $g_avAttackTroops[$x][1], $g_avAttackTroops[$x][1], $g_asTroopShortNames[$ii], $delaypoints1, $delaypoints2, $delaydrop1, $delaydrop2, $sleepdrop1, $sleepdrop2, $sleepbeforedrop1, $sleepbeforedrop2, $debug)
 												CheckHeroesHealth()
 												If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
 											EndIf
@@ -313,7 +384,7 @@ Func ParseAttackCSV($debug = False)
 									Next
 								EndIf
 							Else
-								DropTroopFromINI($value1, $index1, $index2, $indexArray, $qty1, $qty2, $value4, $delaypoints1, $delaypoints2, $delaydrop1, $delaydrop2, $sleepdrop1, $sleepdrop2, $debug)
+								DropTroopFromINI($value1, $index1, $index2, $indexArray, $qty1, $qty2, $value4, $delaypoints1, $delaypoints2, $delaydrop1, $delaydrop2, $sleepdrop1, $sleepdrop2, $sleepbeforedrop1, $sleepbeforedrop2, $debug)
 							EndIf
 						EndIf
 						ReleaseClicks($g_iAndroidAdbClicksTroopDeploySize)
@@ -418,7 +489,7 @@ Func ParseAttackCSV($debug = False)
 							Next
 							SetDebugLog("$bBreakImmediately = " & $bBreakImmediately & ", $bBreakOnTH = " & $bBreakOnTH & ", $bBreakOnSiege = " & $bBreakOnSiege & ", $bBreakOnTHAndSiege = " & $bBreakOnTHAndSiege, $COLOR_INFO)
 							SetDebugLog("$bBreakOn50Percent = " & $bBreakOn50Percent & ", $bBreakOnAQAct = " & $bBreakOnAQAct & ", $bBreakOnBKAct = " & $bBreakOnBKAct & ", $bBreakOnGWAct = " & $bBreakOnGWAct, $COLOR_INFO)
-							If $bBreakOnSiege Or $bBreakOnTHAndSiege Then 
+							If $bBreakOnSiege Or $bBreakOnTHAndSiege Then
 								debugAttackCSV("WAIT Condition Break on Siege Troop Drop set")
 								;Check if Siege is Available In Attackbar
 								For $i = 0 To UBound($g_avAttackTroops) - 1
@@ -494,7 +565,7 @@ Func ParseAttackCSV($debug = False)
 							If $bBreakOnTH And CheckIfTownHallGotDestroyed($hSleepTimer) Then ContinueLoop 2
 							; When Break on TH Kill And Siege is active, if both TH is destroyed and Siege troops are dropped, return ASAP
 							If $bBreakOnTHAndSiege And CheckIfSiegeDroppedTheTroops($hSleepTimer, $aSiegeSlotPos) And CheckIfTownHallGotDestroyed($hSleepTimer) Then ContinueLoop 2
-							
+
 							If $g_bDebugSetlog Then SetDebugLog("detected [G]: " & $Gold & " [E]: " & $Elixir & " [DE]: " & $DarkElixir, $COLOR_INFO)
 							;EXIT IF RESOURCES = 0
 							If $g_abStopAtkNoResources[$g_iMatchMode] And Number($Gold) = 0 And Number($Elixir) = 0 And Number($DarkElixir) = 0 Then
@@ -586,7 +657,7 @@ Func CheckIfTownHallGotDestroyed($hSleepTimer)
 							   _ColorCheck(_GetPixelColor(Int($g_iGAME_WIDTH / 2) + 2, Int($g_iGAME_HEIGHT / 2) - 2, True), Hex(0xC0C4C0, 6), 20)
 	;Get Current Damge %
 	Local $iDamage = Number(getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY))
-	
+
 	; Optimistic Trigger on Star Popup
 	If $bCentralStarPopup Then
 	; When damage < 50% TH is destroyed
@@ -600,7 +671,7 @@ Func CheckIfTownHallGotDestroyed($hSleepTimer)
 		ElseIf $hPopupTimer = 0 Or __TimerDiff($hPopupTimer) > 1500 Then
 			$hPopupTimer = __TimerInit()
 	; trigger, when 500ms after a star popup there is still a popped up star (the star usually stays less than half a sec)
-		ElseIf __TimerDiff($hPopupTimer) > 500 Then 
+		ElseIf __TimerDiff($hPopupTimer) > 500 Then
 			$bIsTHDestroyed = True
 		EndIf
 	; Failsafe Trigger: If Got 1 Star and Damage % < 50% then TH was taken before 50%
@@ -614,7 +685,6 @@ Func CheckIfTownHallGotDestroyed($hSleepTimer)
 	If $bIsTHDestroyed Then SetDebugLog("WAIT--> Town Hall Got Destroyed After " & Round(__TimerDiff($hSleepTimer)) & "ms.", $COLOR_SUCCESS)
 	Return $bIsTHDestroyed
 EndFunc   ;==>CheckIfTownHallGotDestroyed
-
 
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: ParseAttackCSV_MainSide
@@ -1023,4 +1093,3 @@ Func ParseAttackCSV_MainSide($debug = False)
 		SetLog("Cannot find attack file " & $g_sCSVAttacksPath & "\" & $filename & ".csv", $COLOR_ERROR)
 	EndIf
 EndFunc   ;==>ParseAttackCSV_MainSide
-

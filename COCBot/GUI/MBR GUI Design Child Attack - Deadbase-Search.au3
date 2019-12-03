@@ -36,6 +36,9 @@ Global $g_hChkDBMeetTH = 0, $g_hCmbDBTH = 0, $g_hChkDBMeetTHO = 0
 Global $g_hGrpDBFilter = 0, $g_hPicDBMinGold = 0, $g_hPicDBMinElixir = 0, $g_hPicDBMinGPEGold = 0, $g_hPicDBMinDarkElixir = 0, $g_hPicDBMinTrophies = 0
 Global $g_ahPicDBMaxTH[13]
 
+; Check No League for Dead Base - Team AiO MOD++
+Global $g_hChkDBNoLeague = 0
+
 Func CreateAttackSearchDeadBaseSearch()
 	Local $sTxtLightningSpells = GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortLightningSpells", -1)
 	Local $sTxtHealSpells = GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortHealSpells", -1)
@@ -46,6 +49,7 @@ Func CreateAttackSearchDeadBaseSearch()
 	Local $sTxtEarthquakeSpells = GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortEarthquakeSpells", -1)
 	Local $sTxtHasteSpells = GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortHasteSpells", -1)
 	Local $sTxtSkeletonSpells = GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortSkeletonSpells", -1)
+	Local $sTxtBatSpells = GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortBatSpells", -1)
 
 	Local $sTxtTip = ""
 	Local $x = 25, $y = 45
@@ -61,12 +65,14 @@ Func CreateAttackSearchDeadBaseSearch()
 							   GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkActivateSearches_Info_01", -1) & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkActivateSearches_Info_02", -1))
 			GUICtrlSetLimit(-1, 6)
+			GUICtrlSetBkColor(-1, 0xD1DFE7)
 		$g_hLblDBSearches = GUICtrlCreateLabel("-", $x + 113, $y + 2, -1, -1)
 		$g_hTxtDBSearchesMax = GUICtrlCreateInput("9999", $x + 120, $y, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER)) ;ChrW(8734)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "LblActivateMaxSearches_Info_01", "Set the Max number of searches to activate this attack option") & @CRLF & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkActivateSearches_Info_01", -1) & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkActivateSearches_Info_02", -1))
 			GUICtrlSetLimit(-1, 6)
+			GUICtrlSetBkColor(-1, 0xD1DFE7)
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnMagnifier, $x + 163, $y + 1, 16, 16)
 
 	$y += 21
@@ -79,6 +85,7 @@ Func CreateAttackSearchDeadBaseSearch()
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "LblActivateMinTropies_Info_01", "Set the Min. number of trophies where this attack will be used") & @CRLF & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkActivateTropies_Info_02", -1))
 			GUICtrlSetLimit(-1, 6)
+			GUICtrlSetBkColor(-1, 0xD1DFE7)
 		$g_hLblDBTropies = GUICtrlCreateLabel("-", $x + 113, $y + 2, -1, -1)
 			GUICtrlSetState(-1, $GUI_DISABLE)
 		$g_hTxtDBTropiesMax = GUICtrlCreateInput("6000", $x + 120, $y, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
@@ -86,6 +93,7 @@ Func CreateAttackSearchDeadBaseSearch()
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "LblActivateMaxTropies_Info_01", "Set the Max number of trophies where this attack will be used") & @CRLF & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkActivateTropies_Info_02", -1))
 			GUICtrlSetLimit(-1, 6)
+			GUICtrlSetBkColor(-1, 0xD1DFE7)
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnTrophy, $x + 163, $y + 1, 16, 16)
 
 	$y += 21
@@ -100,6 +108,7 @@ Func CreateAttackSearchDeadBaseSearch()
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			GUICtrlSetLimit(-1, 6)
+			GUICtrlSetBkColor(-1, 0xD1DFE7)
 		GUICtrlCreateLabel("%", $x + 163 + 3, $y + 4, -1, -1)
 			GUICtrlSetState(-1, $GUI_DISABLE)
 
@@ -142,6 +151,7 @@ Func CreateAttackSearchDeadBaseSearch()
 	$x = 10
 		$g_hChkDBNotWaitHeroes = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkNotWaitHeroes", "Not wait for Heroes when upgrade"), $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkNotWaitHeroes_Info_01", "Continue to attack, when Upgrade heroes and enable Wait for heroes."))
+			GUICtrlSetState(-1, $GUI_CHECKED)
 			GUICtrlSetOnEvent(-1, "chkNotWaitHeroes")
 
 	$y += 22
@@ -178,10 +188,20 @@ Func CreateAttackSearchDeadBaseSearch()
 							   GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "CmbMeetGE_Info_03", "OR: One condition must meet, Gold or Elixir.") & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "CmbMeetGE_Info_04", "+ (PLUS): Total amount of Gold + Elixir must meet."))
 			GUICtrlSetOnEvent(-1, "cmbDBGoldElixir")
+		
+Local $sMinUmbralTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "Txt_MinUmbralTip", "Recover what I spent in the army in minimum percentage, 0 = Disabled.")
+
 		$g_hTxtDBMinGold = GUICtrlCreateInput("80000", $x + 85, $y, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "TxtMinGold_Info_01", "Set the Min. amount of Gold to search for on a village to attack.")
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 6)
+			GUICtrlSetBkColor(-1, 0xD1DFE7)
+;---------------- Gold DB - AIO Team
+		$g_hMinArmyUmbralGoldDB = GUICtrlCreateInput("0", $x + 85 + 75, $y, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
+			_GUICtrlSetTip(-1, $sMinUmbralTip)
+			GUICtrlCreateLabel("%", $x + 85 + 85 + 20, $y, 12, 17)
+;----------------
+
 		$g_hPicDBMinGold = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 140, $y, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
 
@@ -190,6 +210,12 @@ Func CreateAttackSearchDeadBaseSearch()
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "TxtMinElixir_Info_01", "Set the Min. amount of Elixir to search for on a village to attack.")
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 6)
+			GUICtrlSetBkColor(-1, 0xD1DFE7)
+;---------------- Elixir DB - AIO Team
+		$g_hMinArmyUmbralElixirDB = GUICtrlCreateInput("0", $x + 85 + 75, $y, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
+			_GUICtrlSetTip(-1, $sMinUmbralTip)
+			GUICtrlCreateLabel("%", $x + 85 + 85 + 20, $y, 12, 17)
+;----------------
 		$g_hPicDBMinElixir = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnElixir, $x + 140, $y, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
 
@@ -198,7 +224,13 @@ Func CreateAttackSearchDeadBaseSearch()
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "TxtMinGoldPlusElixir_Info_01", "Set the Min. amount of Gold + Elixir to search for on a village to attack.")
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 6)
+			GUICtrlSetBkColor(-1, 0xD1DFE7)
 			GUICtrlSetState (-1, $GUI_HIDE)
+;---------------- Plus DB - AIO Team
+		$g_hMinArmyUmbralPlusDB = GUICtrlCreateInput("0", $x + 85 + 75, $y, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
+			_GUICtrlSetTip(-1, $sMinUmbralTip)
+			GUICtrlCreateLabel("%", $x + 85 + 85 + 20, $y, 12, 17)
+;----------------
 		$g_hPicDBMinGPEGold = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnGoldElixir, $x + 140, $y + 1, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetState (-1, $GUI_HIDE)
@@ -211,7 +243,13 @@ Func CreateAttackSearchDeadBaseSearch()
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "TxtMinDarkElixir_Info_01", "Set the Min. amount of Dark Elixir to search for on a village to attack.")
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 5)
+			GUICtrlSetBkColor(-1, 0xD1DFE7)
 			_GUICtrlEdit_SetReadOnly(-1, True)
+;---------------- Dark Elixir DB - AIO Team
+		$g_hMinArmyUmbralDarkDB = GUICtrlCreateInput("0", $x + 85 + 75, $y, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
+			_GUICtrlSetTip(-1, $sMinUmbralTip)
+			GUICtrlCreateLabel("%", $x + 85 + 85 + 20, $y, 12, 17)
+;----------------
 		$g_hPicDBMinDarkElixir = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 140, $y, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
 
@@ -224,12 +262,14 @@ Func CreateAttackSearchDeadBaseSearch()
 			_GUICtrlSetTip(-1, $sTxtTip)
 			_GUICtrlEdit_SetReadOnly(-1, True)
 			GUICtrlSetLimit(-1, 2)
+			GUICtrlSetBkColor(-1, 0xD1DFE7)
 			GUICtrlCreateLabel("-", $x + 109, $y + 2, -1, -1)
 		$g_hTxtDBMaxTrophy = GUICtrlCreateInput("0", $x + 115, $y, 20, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkMeetTrophy_Info_03", "Set the Max. amount of Trophies to search for on a village to attack.")
 			_GUICtrlSetTip(-1, $sTxtTip)
 			_GUICtrlEdit_SetReadOnly(-1, True)
 			GUICtrlSetLimit(-1, 2)
+			GUICtrlSetBkColor(-1, 0xD1DFE7)
 		$g_hPicDBMinTrophies = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnTrophy, $x + 140, $y, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
 
@@ -345,7 +385,11 @@ Func CreateAttackSearchDeadBaseSearch()
 			_GUICtrlSetTip(-1, $sTxtTip)
 
 	$y += 44
-	$x = $xStartColumn
+	$x = $xStartColumn - 5
+		$g_hChkDBNoLeague = GUICtrlCreateCheckbox("No League", $x, $y, -1, -1)
+			_GUICtrlSetTip(-1, "Search for a Dead bases that has no league.")
+			GUICtrlSetOnEvent(-1, "chkDBNoLeague")
+	$y += 25
 		$g_ahChkMeetOne[$DB] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkMeetOne", "Meet One Then Attack"), $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkMeetOne_Info_01", "Just meet only ONE of the above conditions, then Attack."))
 	GUICtrlCreateGroup("", -99, -99, 1, 1)

@@ -19,6 +19,7 @@ Func chkShieldStatus($bChkShield = True, $bForceChkPBT = False)
 	; skip shield data collection if force single PB, wait for shield, or close while training not enabled, or window is not on main base
 	Local $bHaltModeWithShield = $g_bChkBotStop And $g_iCmbBotCond >= 19 And $g_iCmbBotCond <= 21
 	If (Not $g_bForceSinglePBLogoff And Not $bHaltModeWithShield) And Not $g_bCloseWhileTrainingEnable Or Not (IsMainPage()) Then Return
+	If Number($g_aiCurrentLoot[$eLootTrophy] + 150) >= Number($g_asLeagueDetails[21][4]) Then Return
 
 	Local $Result, $iTimeTillPBTstartSec, $ichkTime = 0, $ichkSTime = 0, $ichkPBTime = 0
 

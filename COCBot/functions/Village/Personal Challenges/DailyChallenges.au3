@@ -64,8 +64,9 @@ EndFunc   ;==>OpenPersonalChallenges
 
 Func CollectDailyRewards($bGoldPass = False)
 
-	If Not $g_bChkCollectRewards Or Not _CheckPixel($aPersonalChallengeRewardsAvail, $g_bCapturePixel) Then Return ; no red badge on rewards tab
-
+	;If Not $g_bChkCollectRewards Or Not _CheckPixel($aPersonalChallengeRewardsAvail, $g_bCapturePixel) Then Return ; no red badge on rewards tab
+	If MultiPSimple(530, 45, 563, 75, Hex(0xD80818, 6), 40) = 0 Then Return ; AIO Mod
+	
 	SetLog("Collecting Daily Rewards...")
 
 	ClickP($aPersonalChallengeRewardsTab, 1, 0, "Rewards tab") ; Click Rewards tab

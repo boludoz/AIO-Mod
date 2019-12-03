@@ -60,12 +60,12 @@ EndFunc   ;==>CreateAttackTab
 
 Func CreateDropOrderGUI()
 
-	$g_hGUI_DropOrder = _GUICreate(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "GUI_DropOrder", "Attack Custom Dropping Order"), 322, 438, -1, -1, $WS_BORDER, $WS_EX_CONTROLPARENT)
+	$g_hGUI_DropOrder = _GUICreate(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "GUI_DropOrder", "Attack Custom Dropping Order"), 322, 448, -1, -1, $WS_BORDER, $WS_EX_CONTROLPARENT)
 	SetDefaultDropOrderGroup(False)
 	LoadTranslatedDropOrderList()
 
 	Local $x = 25, $y = 25
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Group_03", "Custom Dropping Order"), $x - 20, $y - 20, 308, 375)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Group_03", "Custom Dropping Order"), $x - 20, $y - 20, 308, 345)
 	$x += 10
 	$y += 20
 
@@ -112,7 +112,7 @@ Func CreateDropOrderGUI()
 		Next
 
 	$x = 25
-	$y = 350
+	$y = 355
 		; Create push button to set training order once completed
 		$g_hBtnDropOrderSet = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "BtnDropOrderSet", "Apply New Order"), $x, $y, 100, 25)
 			GUICtrlSetState(-1, BitOR($GUI_UNCHECKED, $GUI_ENABLE))
@@ -129,7 +129,7 @@ Func CreateDropOrderGUI()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	; Create a button control.
-	Local $g_hBtnClose = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "BtnClose", "Close"), 229, 383, 85, 25)
+	Local $g_hBtnClose = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "BtnClose", "Close"), 229, 388, 85, 25)
 		GUICtrlSetOnEvent(-1, "CloseCustomDropOrder")
 
 EndFunc   ;==>CreateDropOrderGUI

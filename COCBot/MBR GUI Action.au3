@@ -132,6 +132,7 @@ Func BotStart($bAutostartDelay = 0)
 		EndIf
 		If Not $g_bRunState Then Return FuncReturn()
 		If $hWndActive = $g_hAndroidWindow And ($g_bAndroidBackgroundLaunched = True Or AndroidControlAvailable())  Then ; Really?
+			autoHideAndDockAndMinimize() ; Auto Dock, Hide Emulator & Bot - Team AiO MOD++
 			Initiate() ; Initiate and run bot
 		Else
 			SetLog("Cannot use " & $g_sAndroidEmulator & ", please check log", $COLOR_ERROR)
@@ -192,12 +193,17 @@ Func BotStop()
 	_ITaskBar_UpdateTBButton($g_hTblPause, $THBF_DISABLED)
 	_ITaskBar_UpdateTBButton($g_hTblResume, $THBF_DISABLED)
 
+	; Enable/Disable GUI while botting - Team AiO MOD++
+	GUICtrlSetState($g_hBtnEnableGUI, $GUI_HIDE)
+	GUICtrlSetState($g_hBtnDisableGUI, $GUI_HIDE)
+
 	; hide attack buttons if show
 	GUICtrlSetState($g_hBtnAttackNowDB, $GUI_HIDE)
 	GUICtrlSetState($g_hBtnAttackNowLB, $GUI_HIDE)
 	GUICtrlSetState($g_hBtnAttackNowTS, $GUI_HIDE)
-	HideShields(False)
-	;GUICtrlSetState($g_hLblVersion, $GUI_SHOW)
+	GUICtrlSetState($g_hPicTwoArrowShield, $GUI_SHOW)
+	GUICtrlSetState($g_hLblVersion, $GUI_SHOW)
+	GUICtrlSetState($g_hLblMod, $GUI_SHOW)
 	$g_bBtnAttackNowPressed = False
 
 	; update try items

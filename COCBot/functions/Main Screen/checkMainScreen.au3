@@ -89,7 +89,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default) ;Checks if in
 			If _Sleep($DELAYCHECKMAINSCREEN1) Then Return
 		EndIf
 	WEnd
-	If $bLocated Then
+	If $bLocated Then 
 		; check that shared_prefs are pulled
 		If $g_bUpdateSharedPrefs And Not HaveSharedPrefs() Then PullSharedPrefs()
 		ZoomOut()

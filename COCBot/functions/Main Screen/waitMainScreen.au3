@@ -1,3 +1,4 @@
+
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: waitMainScreen
 ; Description ...: Waits 5 minutes for the pixel of mainscreen to be located, checks for obstacles every 2 seconds.  After five minutes, will try to restart bluestacks.
@@ -92,6 +93,7 @@ Func waitMainScreenMini()
 	SetDebugLog("waitMainScreenMini")
 	If TestCapture() = False Then getBSPos() ; Update Android Window Positions
 	SetLog("Waiting for Main Screen after " & $g_sAndroidEmulator & " restart", $COLOR_INFO)
+	autoHideAndDockAndMinimize(False) ; Auto Dock, Hide Emulator & Bot - Team AiO MOD++
 	Local $aPixelToCheck = $g_bStayOnBuilderBase ? $aIsOnBuilderBase : $aIsMain
 	For $i = 0 To 60 ;30*2000 = 1 Minutes
 		If Not $g_bRunState Then Return

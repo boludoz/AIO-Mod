@@ -121,7 +121,7 @@ Func applyConfig($bRedrawAtExit = True, $TypeReadSave = "Read") ;Applies the dat
 	ApplyConfig_600_33($TypeReadSave)
 	; <><><><> Bot / Options <><><><>
 	ApplyConfig_600_35_1($TypeReadSave)
-	; <><><><> Bot / Profile / Switch Account <><><><>
+	; <><><><> Bot / Profile / Switch Accounts <><><><>
 	ApplyConfig_600_35_2($TypeReadSave)
 	; <><><> Attack Plan / Train Army / Troops/Spells <><><>
 	; Quick train
@@ -132,6 +132,26 @@ Func applyConfig($bRedrawAtExit = True, $TypeReadSave = "Read") ;Applies the dat
 	ApplyConfig_600_56($TypeReadSave)
 	; <><><> Attack Plan / Train Army / Options <><><>
 	ApplyConfig_641_1($TypeReadSave)
+
+	; <><><> Team AiO MOD++ (2019) <><><>
+	; <><><> SuperXP / GoblinXP <><><>
+	ApplyConfig_MOD_SuperXP($TypeReadSave)
+	; <><><> ChatActions <><><>
+	ApplyConfig_MOD_ChatActions($TypeReadSave)
+	; <><><> Daily Discounts + Builder Base Attack + Builder Base Drop Order <><><>
+	ApplyConfig_MOD_600_6($TypeReadSave)
+	; <><><> ClanHop <><><>
+	ApplyConfig_MOD_600_12($TypeReadSave)
+	; <><><> Max logout time <><><>
+	ApplyConfig_MOD_600_28($TypeReadSave)
+	; <><><> Classic Four Finger + CSV Deploy Speed <><><>
+	ApplyConfig_MOD_600_29($TypeReadSave)
+	; <><><> Check Collectors Outside <><><>
+	ApplyConfig_MOD_600_31($TypeReadSave)
+	; <><><> Auto Dock, Hide Emulator & Bot <><><>
+	ApplyConfig_MOD_600_35_1($TypeReadSave)
+	; <><><><> Switch Profiles <><><><>
+	ApplyConfig_MOD_600_35_2($TypeReadSave)
 
 	; <><><><> Attack Plan / Strategies <><><><>
 	; <<< nothing here >>>
@@ -956,7 +976,8 @@ Func ApplyConfig_600_22($TypeReadSave)
 			_GUICtrlComboBox_SetCurSel($g_hCmbBoostBarbarianKing, $g_iCmbBoostBarbarianKing)
 			_GUICtrlComboBox_SetCurSel($g_hCmbBoostArcherQueen, $g_iCmbBoostArcherQueen)
 			_GUICtrlComboBox_SetCurSel($g_hCmbBoostWarden, $g_iCmbBoostWarden)
-			_GUICtrlComboBox_SetCurSel($g_hCmbBoostEverything, $g_iCmbBoostEverything)
+			_GUICtrlComboBox_SetCurSel($g_hCmbBoostTrainingPotion, $g_iCmbBoostTrainingPotion)
+			_GUICtrlComboBox_SetCurSel($g_hCmbBoostResourcePotion, $g_iCmbBoostResourcePotion)
 			For $i = 0 To 23
 				GUICtrlSetState($g_hChkBoostBarracksHours[$i], $g_abBoostBarracksHours[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
 			Next
@@ -967,7 +988,8 @@ Func ApplyConfig_600_22($TypeReadSave)
 			$g_iCmbBoostBarbarianKing = _GUICtrlComboBox_GetCurSel($g_hCmbBoostBarbarianKing)
 			$g_iCmbBoostArcherQueen = _GUICtrlComboBox_GetCurSel($g_hCmbBoostArcherQueen)
 			$g_iCmbBoostWarden = _GUICtrlComboBox_GetCurSel($g_hCmbBoostWarden)
-			$g_iCmbBoostEverything = _GUICtrlComboBox_GetCurSel($g_hCmbBoostEverything)
+			$g_iCmbBoostTrainingPotion = _GUICtrlComboBox_GetCurSel($g_hCmbBoostTrainingPotion)
+			$g_iCmbBoostResourcePotion = _GUICtrlComboBox_GetCurSel($g_hCmbBoostResourcePotion)
 			For $i = 0 To 23
 				$g_abBoostBarracksHours[$i] = (GUICtrlRead($g_hChkBoostBarracksHours[$i]) = $GUI_CHECKED)
 			Next
@@ -1820,6 +1842,7 @@ Func ApplyConfig_600_35_1($TypeReadSave)
 
 			GUICtrlSetState($g_hChkOnlySCIDAccounts, $g_bOnlySCIDAccounts ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbWhatSCIDAccount2Use, $g_iWhatSCIDAccount2Use)
+			OnlySCIDAccounts()
 
 		Case "Save"
 			$g_bDisableSplash = (GUICtrlRead($g_hChkDisableSplash) = $GUI_CHECKED)
@@ -1861,14 +1884,28 @@ Func ApplyConfig_600_35_1($TypeReadSave)
 EndFunc   ;==>ApplyConfig_600_35_1
 
 Func ApplyConfig_600_35_2($TypeReadSave)
-	; <><><><> Bot / Profile / Switch Account <><><><>
+	; <><><><> Bot / Profile / Switch Accounts <><><><>
 	Switch $TypeReadSave
 		Case "Read"
+			;Switch Accounts
 			_GUICtrlComboBox_SetCurSel($g_hCmbSwitchAcc, $g_iCmbSwitchAcc)
 			GUICtrlSetState($g_hChkSwitchAcc, $g_bChkSwitchAcc ? $GUI_CHECKED : $GUI_UNCHECKED)
-			If $g_bChkGooglePlay Then GUICtrlSetState($g_hRadSwitchGooglePlay, $GUI_CHECKED)
-			If $g_bChkSuperCellID Then GUICtrlSetState($g_hRadSwitchSuperCellID, $GUI_CHECKED)
-			If $g_bChkSharedPrefs Then GUICtrlSetState($g_hRadSwitchSharedPrefs, $GUI_CHECKED)
+			chkSwitchAcc()
+			If $g_bChkGooglePlay Then
+				GUICtrlSetState($g_hRadSwitchGooglePlay, $GUI_CHECKED)
+				GUICtrlSetState($g_hRadSwitchSuperCellID, $GUI_UNCHECKED)
+				GUICtrlSetState($g_hRadSwitchSharedPrefs, $GUI_UNCHECKED)
+			EndIf
+			If $g_bChkSuperCellID Then
+				GUICtrlSetState($g_hRadSwitchGooglePlay, $GUI_UNCHECKED)
+				GUICtrlSetState($g_hRadSwitchSuperCellID, $GUI_CHECKED)
+				GUICtrlSetState($g_hRadSwitchSharedPrefs, $GUI_UNCHECKED)
+			EndIf
+			If $g_bChkSharedPrefs Then
+				GUICtrlSetState($g_hRadSwitchGooglePlay, $GUI_UNCHECKED)
+				GUICtrlSetState($g_hRadSwitchSuperCellID, $GUI_UNCHECKED)
+				GUICtrlSetState($g_hRadSwitchSharedPrefs, $GUI_CHECKED)
+			EndIf
 			GUICtrlSetState($g_hChkSmartSwitch, $g_bChkSmartSwitch ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkDonateLikeCrazy, $g_bDonateLikeCrazy ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbTotalAccount, $g_iTotalAcc - 1)
@@ -1876,11 +1913,24 @@ Func ApplyConfig_600_35_2($TypeReadSave)
 				GUICtrlSetState($g_ahChkAccount[$i], $g_abAccountNo[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
 				_GUICtrlComboBox_SetCurSel($g_ahCmbProfile[$i], _GUICtrlComboBox_FindStringExact($g_ahCmbProfile[$i], $g_asProfileName[$i]))
 				GUICtrlSetState($g_ahChkDonate[$i], $g_abDonateOnly[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
+
+				;Farm Schedule
+				GUICtrlSetState($g_ahChkSetFarm[$i], $g_abChkSetFarm[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
+
+				_GUICtrlComboBox_SetCurSel($g_ahCmbAction1[$i], $g_aiCmbAction1[$i])
+				_GUICtrlComboBox_SetCurSel($g_ahCmbCriteria1[$i], $g_aiCmbCriteria1[$i])
+				GUICtrlSetData($g_ahTxtResource1[$i], $g_aiTxtResource1[$i])
+				_GUICtrlComboBox_SetCurSel($g_ahCmbTime1[$i], $g_aiCmbTime1[$i])
+
+				_GUICtrlComboBox_SetCurSel($g_ahCmbAction2[$i], $g_aiCmbAction2[$i])
+				_GUICtrlComboBox_SetCurSel($g_ahCmbCriteria2[$i], $g_aiCmbCriteria2[$i])
+				GUICtrlSetData($g_ahTxtResource2[$i], $g_aiTxtResource2[$i])
+				_GUICtrlComboBox_SetCurSel($g_ahCmbTime2[$i], $g_aiCmbTime2[$i])
 			Next
 			_GUICtrlComboBox_SetCurSel($g_hCmbTrainTimeToSkip, $g_iTrainTimeToSkip)
 			_cmbSwitchAcc(False)
-
 		Case "Save"
+			;Switch Accounts
 			$g_iCmbSwitchAcc = _GUICtrlComboBox_GetCurSel($g_hCmbSwitchAcc)
 			$g_bChkSwitchAcc = (GUICtrlRead($g_hChkSwitchAcc) = $GUI_CHECKED)
 			$g_bChkGooglePlay = (GUICtrlRead($g_hRadSwitchGooglePlay) = $GUI_CHECKED)
@@ -1893,6 +1943,19 @@ Func ApplyConfig_600_35_2($TypeReadSave)
 				$g_abAccountNo[$i] = (GUICtrlRead($g_ahChkAccount[$i]) = $GUI_CHECKED)
 				$g_asProfileName[$i] = GUICtrlRead($g_ahCmbProfile[$i])
 				$g_abDonateOnly[$i] = (GUICtrlRead($g_ahChkDonate[$i]) = $GUI_CHECKED)
+
+				;Farm Schedule
+				$g_abChkSetFarm[$i] = (GUICtrlRead($g_ahChkSetFarm[$i]) = $GUI_CHECKED)
+
+				$g_aiCmbAction1[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbAction1[$i])
+				$g_aiCmbCriteria1[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbCriteria1[$i])
+				$g_aiTxtResource1[$i] = GUICtrlRead($g_ahTxtResource1[$i])
+				$g_aiCmbTime1[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbTime1[$i])
+
+				$g_aiCmbAction2[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbAction2[$i])
+				$g_aiCmbCriteria2[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbCriteria2[$i])
+				$g_aiTxtResource2[$i] = GUICtrlRead($g_ahTxtResource2[$i])
+				$g_aiCmbTime2[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbTime2[$i])
 			Next
 			$g_iTrainTimeToSkip = _GUICtrlComboBox_GetCurSel($g_hCmbTrainTimeToSkip)
 	EndSwitch
@@ -2083,6 +2146,9 @@ Func ApplyConfig_641_1($TypeReadSave)
 				GUICtrlSetState($g_hCmbMinimumTimeClose, $GUI_ENABLE)
 				GUICtrlSetState($g_hLblSymbolWaiting, $GUI_ENABLE)
 				GUICtrlSetState($g_hLblWaitingInMinutes, $GUI_ENABLE)
+				; Max logout time - Team AiO MOD++
+				GUICtrlSetState($g_hChkTrainLogoutMaxTime, $GUI_ENABLE)
+				chkTrainLogoutMaxTime()
 			Else
 				GUICtrlSetState($g_hChkCloseWhileTraining, $GUI_UNCHECKED)
 				_GUI_Value_STATE("DISABLE", $groupCloseWhileTraining)
@@ -2090,6 +2156,8 @@ Func ApplyConfig_641_1($TypeReadSave)
 				GUICtrlSetState($g_hCmbMinimumTimeClose, $GUI_DISABLE)
 				GUICtrlSetState($g_hLblSymbolWaiting, $GUI_DISABLE)
 				GUICtrlSetState($g_hLblWaitingInMinutes, $GUI_DISABLE)
+				; Max logout time - Team AiO MOD++
+				GUICtrlSetState($g_hChkTrainLogoutMaxTime, $GUI_DISABLE)
 			EndIf
 			GUICtrlSetState($g_hChkCloseWithoutShield, $g_bCloseWithoutShield ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkCloseEmulator, $g_bCloseEmulator ? $GUI_CHECKED : $GUI_UNCHECKED)

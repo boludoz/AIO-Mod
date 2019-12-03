@@ -222,7 +222,7 @@ Func SaveRegularConfig()
 	SaveConfig_600_33()
 	; <><><><> Bot / Options <><><><>
 	SaveConfig_600_35_1()
-	; <><><><> Bot / Profile / Switch Account <><><><>
+	; <><><><> Bot / Profile / Switch Accounts <><><><>
 	SaveConfig_600_35_2()
 	; <><><> Attack Plan / Train Army / Troops/Spells <><><>
 	; Quick train
@@ -237,6 +237,28 @@ Func SaveRegularConfig()
 	SaveConfig_641_1()
 	; <><><><> Bot / Debug <><><><>
 	SaveConfig_Debug()
+
+	; <><><> Team AiO MOD++ (2019) <><><>
+	; <><><> SuperXP / GoblinXP <><><>
+	SaveConfig_MOD_SuperXP()
+	; <><><> ChatActions <><><>
+	SaveConfig_MOD_ChatActions()
+	; <><><> Daily Discounts + Builder Base Attack + Builder Base Drop Order <><><>
+	SaveConfig_MOD_600_6()
+	; <><><> ClanHop <><><>
+	SaveConfig_MOD_600_12()
+	; <><><> Max logout time <><><>
+	SaveConfig_MOD_600_28()
+	; <><><> Classic Four Finger + CSV Deploy Speed <><><>
+	SaveConfig_MOD_600_29()
+	; <><><> Check Collectors Outside <><><>
+	SaveConfig_MOD_600_31()
+	; <><><> Auto Dock, Hide Emulator & Bot <><><>
+	SaveConfig_MOD_600_35_1()
+	; <><><><> Switch Profiles <><><><>
+	SaveConfig_MOD_600_35_2()
+
+
 	; <><><><> Attack Plan / Strategies <><><><>
 	; <<< nothing here >>>
 
@@ -483,7 +505,7 @@ Func SaveConfig_600_12()
 		_Ini_Add("donate", "chkDonateAll" & $sIniName, $g_abChkDonateAllTroop[$index + $i] ? 1 : 0)
 		_Ini_Add("donate", "txtDonate" & $sIniName, StringReplace($g_asTxtDonateTroop[$index + $i], @CRLF, "|"))
 		_Ini_Add("donate", "txtBlacklist" & $sIniName, StringReplace($g_asTxtBlacklistTroop[$index + $i], @CRLF, "|"))
-	NExt
+	Next
 
 	For $i = 0 To 2
 		_Ini_Add("donate", "cmbDonateCustomA" & $i + 1, $g_aiDonateCustomTrpNumA[$i][0])
@@ -1021,7 +1043,7 @@ Func SaveConfig_600_35_1()
 EndFunc   ;==>SaveConfig_600_35_1
 
 Func SaveConfig_600_35_2()
-	; <><><><> Bot / Profile / Switch Account <><><><>
+	; <><><><> Bot / Profile / Switch Accounts <><><><>
 	ApplyConfig_600_35_2(GetApplyConfigSaveAction())
 
 	Local $sSwitchAccFile
@@ -1063,7 +1085,21 @@ Func SaveConfig_600_35_2()
 			IniWrite($sSwitchAccFile, "SwitchAccount", "AccountNo." & $i, $g_abAccountNo[$i - 1] ? 1 : 0)
 			IniWrite($sSwitchAccFile, "SwitchAccount", "ProfileName." & $i, $g_asProfileName[$i - 1])
 			IniWrite($sSwitchAccFile, "SwitchAccount", "DonateOnly." & $i, $g_abDonateOnly[$i - 1] ? 1 : 0)
+
+			;Farm Schedule
+			IniWrite($sSwitchAccFile, "FarmStrategy", "ChkSetFarm" & $i, $g_abChkSetFarm[$i - 1] ? 1 : 0)
+
+			IniWrite($sSwitchAccFile, "FarmStrategy", "CmbAction1" & $i, $g_aiCmbAction1[$i - 1])
+			IniWrite($sSwitchAccFile, "FarmStrategy", "CmbCriteria1" & $i, $g_aiCmbCriteria1[$i - 1])
+			IniWrite($sSwitchAccFile, "FarmStrategy", "TxtResource1" & $i, $g_aiTxtResource1[$i - 1])
+			IniWrite($sSwitchAccFile, "FarmStrategy", "CmbTime1" & $i, $g_aiCmbTime1[$i - 1])
+
+			IniWrite($sSwitchAccFile, "FarmStrategy", "CmbAction2" & $i, $g_aiCmbAction2[$i - 1])
+			IniWrite($sSwitchAccFile, "FarmStrategy", "CmbCriteria2" & $i, $g_aiCmbCriteria2[$i - 1])
+			IniWrite($sSwitchAccFile, "FarmStrategy", "TxtResource2" & $i, $g_aiTxtResource2[$i - 1])
+			IniWrite($sSwitchAccFile, "FarmStrategy", "CmbTime2" & $i, $g_aiCmbTime2[$i - 1])
 		Next
+
 	EndIf
 
 EndFunc   ;==>SaveConfig_600_35_2

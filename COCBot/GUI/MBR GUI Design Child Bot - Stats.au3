@@ -45,16 +45,17 @@ Global $g_hLblTotalTroopsQ = 0, $g_hLblTotalTroopsXP = 0, $g_hLblTotalSpellsQ = 
 
 ; Multi Stats
 Global $g_ahGrpVillageAcc[8], $g_ahGrpDefaultAcc[8], $g_ahGrpReportAcc[8], $g_ahGrpStatsAcc[8]
-Global $g_ahLblResultGoldNowAcc[8], $g_ahPicResultGoldNowAcc[8], $g_ahLblResultTrophyNowAcc[8], $g_ahPicResultTrophyNowAcc[8]
-Global $g_ahLblResultElixirNowAcc[8], $g_ahPicResultElixirNowAcc[8], $g_ahLblResultBuilderNowAcc[8], $g_ahPicResultBuilderNowAcc[8]
-Global $g_ahLblResultDENowAcc[8], $g_ahPicResultDENowAcc[8], $g_ahLblResultGemNowAcc[8], $g_ahPicResultGemNowAcc[8]
-Global $g_ahLblHourlyStatsGoldAcc[8], $g_ahLblResultRuntimeNowAcc[8], $g_ahPicResultRuntimeNowAcc[8]
-Global $g_ahLblHourlyStatsElixirAcc[8], $g_ahLblResultAttacked[8], $g_ahPicResultAttacked[8]
-Global $g_ahLblHourlyStatsDarkAcc[8], $g_ahLblResultSkipped[8], $g_ahPicResultSkipped[8]
-Global $g_ahPicArrowLeft[8], $g_ahPicArrowRight[8]
-Global $g_ahPicResultGoldTemp[8], $g_ahPicResultElixirTemp[8], $g_ahPicResultDETemp[8], $g_ahLblVillageReportTemp[8], $g_ahGrpTempAcc[8]
-Global $g_ahLblTroopTime[8], $g_ahPicTroopTime[8]
-Global $g_ahLblLabTime[8], $g_ahPicLabTime[8]
+Global $g_ahLblResultGoldNowAcc[8], $g_ahPicResultGoldNowAcc[8], $g_ahLblResultTrophyNowAcc[8], $g_ahPicResultTrophyNowAcc[8], _
+	$g_ahLblResultElixirNowAcc[8], $g_ahPicResultElixirNowAcc[8], $g_ahLblResultBuilderNowAcc[8], $g_ahPicResultBuilderNowAcc[8], _
+	$g_ahLblResultDENowAcc[8], $g_ahPicResultDENowAcc[8], $g_ahLblResultGemNowAcc[8], $g_ahPicResultGemNowAcc[8]
+Global $g_ahLblHourlyStatsGoldAcc[8], $g_ahLblResultRuntimeNowAcc[8], $g_ahPicResultRuntimeNowAcc[8], _
+	$g_ahLblHourlyStatsElixirAcc[8], $g_ahLblResultAttacked[8], $g_ahPicResultAttacked[8], _
+	$g_ahLblHourlyStatsDarkAcc[8], $g_ahLblResultSkipped[8], $g_ahPicResultSkipped[8]
+Global $g_ahPicArrowLeft[8], $g_ahPicArrowRight[8], _
+	$g_ahPicResultGoldTemp[8], $g_ahPicResultElixirTemp[8], $g_ahPicResultDETemp[8], $g_ahLblVillageReportTemp[8], $g_ahGrpTempAcc[8], _
+	$g_ahLblTroopTime[8], $g_ahPicTroopTime[8]
+Global $g_hPicHeroGrayStatus[3][8], $g_hPicHeroBlueStatus[3][8], $g_hPicHeroGreenStatus[3][8], $g_hPicHeroRedStatus[3][8], _
+	$g_hPicLabGrayStatus[8], $g_hPicLabGreenStatus[8], $g_hPicLabRedStatus[8], $g_hLblLabTimeStatus[8]
 
 Func CreateBotStats()
 
@@ -1075,7 +1076,6 @@ Func CreateDonationsSubTab()
 			GUICtrlSetColor(-1, $COLOR_BLACK)
 			_GUICtrlSetTip(-1, $sTxtTip)
 
-
 	; SIEGE
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnBattleB, $x + 145, $y, 24, 24)
 			$sTxtTip = ""
@@ -1373,7 +1373,7 @@ EndFunc   ;==>CreateDonationsSubTab
 
 #Region MultiStats SubTab
 Func CreateMultiStatsSubTab()
-
+	Local $sTxtTip = ""
 	For $i = 0 To 7
 		Local $x = 25
 		Local $y = 27
@@ -1385,22 +1385,19 @@ Func CreateMultiStatsSubTab()
 
 			; Village report (resource & info)
 			$g_ahLblResultGoldNowAcc[$i] = GUICtrlCreateLabel("", $x + $i_X * $delX2, $y + $delY + $i_Y * $delY2, 70, 17, $SS_RIGHT)
-			$g_ahPicResultGoldNowAcc[$i] = GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 75 + $i_X * $delX2, $y + $delY + $i_Y * $delY2, 16, 16)
+			$g_ahPicResultGoldNowAcc[$i] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 75 + $i_X * $delX2, $y + $delY + $i_Y * $delY2, 16, 16)
 			$g_ahLblResultTrophyNowAcc[$i] = GUICtrlCreateLabel("", $x + $delX + $i_X * $delX2, $y + $delY + $i_Y * $delY2, 55, 17, $SS_RIGHT)
-			$g_ahPicResultTrophyNowAcc[$i] = GUICtrlCreateIcon($g_sLibIconPath, $eIcnTrophy, $x + 60 + $delX + $i_X * $delX2, $y + $delY + $i_Y * $delY2, 16, 16)
+			$g_ahPicResultTrophyNowAcc[$i] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnTrophy, $x + 60 + $delX + $i_X * $delX2, $y + $delY + $i_Y * $delY2, 16, 14)
 
 			$g_ahLblResultElixirNowAcc[$i] = GUICtrlCreateLabel("", $x + $i_X * $delX2, $y + $delY * 2 + $i_Y * $delY2, 70, 17, $SS_RIGHT)
-			$g_ahPicResultElixirNowAcc[$i] = GUICtrlCreateIcon($g_sLibIconPath, $eIcnElixir, $x + 75 + $i_X * $delX2, $y + $delY * 2 + $i_Y * $delY2, 16, 16)
+			$g_ahPicResultElixirNowAcc[$i] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnElixir, $x + 75 + $i_X * $delX2, $y + $delY * 2 + $i_Y * $delY2, 16, 16)
 			$g_ahLblResultBuilderNowAcc[$i] = GUICtrlCreateLabel("", $x + $delX + $i_X * $delX2, $y + $delY * 2 + $i_Y * $delY2, 55, 17, $SS_RIGHT)
-			$g_ahPicResultBuilderNowAcc[$i] = GUICtrlCreateIcon($g_sLibIconPath, $eIcnBuilder, $x + 60 + $delX + $i_X * $delX2, $y + $delY * 2 + $i_Y * $delY2, 16, 14)
+			$g_ahPicResultBuilderNowAcc[$i] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnBuilder, $x + 60 + $delX + $i_X * $delX2, $y + $delY * 2 + $i_Y * $delY2, 16, 15)
 
 			$g_ahLblResultDENowAcc[$i] = GUICtrlCreateLabel("", $x + $i_X * $delX2, $y + $delY * 3 + $i_Y * $delY2, 70, 17, $SS_RIGHT)
-			$g_ahPicResultDENowAcc[$i] = GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 75 + $i_X * $delX2, $y + $delY * 3 + $i_Y * $delY2, 16, 16)
+			$g_ahPicResultDENowAcc[$i] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 75 + $i_X * $delX2, $y + $delY * 3 + $i_Y * $delY2, 16, 16)
 			$g_ahLblResultGemNowAcc[$i] = GUICtrlCreateLabel("", $x + $delX + $i_X * $delX2, $y + $delY * 3 + $i_Y * $delY2, 55, 17, $SS_RIGHT)
-			$g_ahPicResultGemNowAcc[$i] = GUICtrlCreateIcon($g_sLibIconPath, $eIcnGem, $x + 60 + $delX + $i_X * $delX2, $y + $delY * 3 + $i_Y * $delY2, 16, 14)
-
-			$g_ahLblLabTime[$i] = GUICtrlCreateLabel("", $x + $i_X * $delX2, $y + $delY * 4 + $i_Y * $delY2, 70, 17, $SS_RIGHT)
-			$g_ahPicLabTime[$i] = GUICtrlCreateIcon($g_sLibIconPath, $eIcnLaboratory, $x + 75 + $i_X * $delX2, $y + $delY * 4 + $i_Y * $delY2, 15, 14)
+			$g_ahPicResultGemNowAcc[$i] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnGem, $x + 60 + $delX + $i_X * $delX2, $y + $delY * 3 + $i_Y * $delY2, 16, 16)
 
 			$g_ahPicArrowLeft[$i] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnArrowLeft, $x - 20 + $i_X * $delX2, $y + $delY * 2 + $i_Y * $delY2, 16, 16)
 				Local $sTxtTip = GetTranslatedFileIni("MBR GUI Design Bottom", "GrpVillage_Info_01", "Switch between village info and stats")
@@ -1414,33 +1411,86 @@ Func CreateMultiStatsSubTab()
 			; Statistics & Runtime
 			$g_ahLblHourlyStatsGoldAcc[$i] = GUICtrlCreateLabel("", $x + $i_X * $delX2, $y + $delY + $i_Y * $delY2, 70, 17, $SS_RIGHT)
 			$g_ahLblResultRuntimeNowAcc[$i] = GUICtrlCreateLabel("00:00:00", $x + $delX + $i_X * $delX2, $y + $delY + $i_Y * $delY2, 55, 17, $SS_RIGHT)
-			$g_ahPicResultRuntimeNowAcc[$i] = GUICtrlCreateIcon($g_sLibIconPath, $eIcnHourGlass, $x + 60 + $delX + $i_X * $delX2, $y + $delY + $i_Y * $delY2, 16, 16)
+			$g_ahPicResultRuntimeNowAcc[$i] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnHourGlass, $x + 60 + $delX + $i_X * $delX2, $y + $delY + $i_Y * $delY2, 16, 16)
 
 			$g_ahLblHourlyStatsElixirAcc[$i] = GUICtrlCreateLabel("", $x + $i_X * $delX2, $y + $delY * 2 + $i_Y * $delY2, 70, 17, $SS_RIGHT)
 			$g_ahLblResultAttacked[$i] = GUICtrlCreateLabel("", $x + $delX + $i_X * $delX2, $y + $delY * 2 + $i_Y * $delY2, 55, 17, $SS_RIGHT)
-			$g_ahPicResultAttacked[$i] = GUICtrlCreateIcon($g_sLibIconPath, $eIcnBldgTarget, $x + 60 + $delX + $i_X * $delX2, $y + $delY * 2 + $i_Y * $delY2, 16, 14)
+			$g_ahPicResultAttacked[$i] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnBldgTarget, $x + 60 + $delX + $i_X * $delX2, $y + $delY * 2 + $i_Y * $delY2, 16, 16)
 
 			$g_ahLblHourlyStatsDarkAcc[$i] = GUICtrlCreateLabel("", $x + $i_X * $delX2, $y + $delY * 3 + $i_Y * $delY2, 70, 17, $SS_RIGHT)
 			$g_ahLblResultSkipped[$i] = GUICtrlCreateLabel("", $x + $delX + $i_X * $delX2, $y + $delY * 3 + $i_Y * $delY2, 55, 17, $SS_RIGHT)
-			$g_ahPicResultSkipped[$i] = GUICtrlCreateIcon ($g_sLibIconPath, $eIcnBldgX, $x + 60 + $delX + $i_X * $delX2, $y + $delY * 3 + $i_Y * $delY2, 16, 14)
+			$g_ahPicResultSkipped[$i] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnBldgX, $x + 60 + $delX + $i_X * $delX2, $y + $delY * 3 + $i_Y * $delY2, 16, 16)
 
-			$g_ahLblTroopTime[$i] = GUICtrlCreateLabel("", $x + $delX + $i_X * $delX2, $y + $delY * 4 + $i_Y * $delY2, 55, 17, $SS_RIGHT)
-			$g_ahPicTroopTime[$i] = GUICtrlCreateIcon($g_sLibIconPath, $eIcnTrain, $x + 60 + $delX + $i_X * $delX2, $y + $delY * 4 + $i_Y * $delY2, 15, 14)
+			$g_ahLblTroopTime[$i] = GUICtrlCreateLabel("", $x + $delX + $i_X * $delX2, $y + 4 + $delY * 4 + $i_Y * $delY2, 55, 17, $SS_RIGHT)
+			$g_ahPicTroopTime[$i] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnTrain, $x + 60 + $delX + $i_X * $delX2, $y + 2 + $delY * 4 + $i_Y * $delY2, 16, 16)
+
+			; Heroes and Laboratory status
+			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Bottom", "GrpStatus_Info_01", -1)
+			;King
+			$g_hPicHeroGrayStatus[0][$i] = _GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModKingGray, $x + 2 + $i_X * $delX2, $y + 3 + $delY * 4 + $i_Y * $delY2, 15, 15)
+				_GUICtrlSetTip(-1, $sTxtTip)
+			$g_hPicHeroBlueStatus[0][$i] = _GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModKingBlue, $x + 2 + $i_X * $delX2, $y + 3 + $delY * 4 + $i_Y * $delY2, 15, 15)
+				_GUICtrlSetTip(-1, $sTxtTip)
+				GUICtrlSetState(-1, $GUI_HIDE)
+			$g_hPicHeroGreenStatus[0][$i] = _GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModKingGreen, $x + 2 + $i_X * $delX2, $y + 3 + $delY * 4 + $i_Y * $delY2, 15, 15)
+				_GUICtrlSetTip(-1, $sTxtTip)
+				GUICtrlSetState(-1, $GUI_HIDE)
+			$g_hPicHeroRedStatus[0][$i] = _GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModKingRed, $x + 2 + $i_X * $delX2, $y + 3 + $delY * 4 + $i_Y * $delY2, 15, 15)
+				_GUICtrlSetTip(-1, $sTxtTip)
+				GUICtrlSetState(-1, $GUI_HIDE)
+
+			;Queen
+			$g_hPicHeroGrayStatus[1][$i] = _GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModQueenGray, $x + 26 + $i_X * $delX2, $y + 3 + $delY * 4 + $i_Y * $delY2, 15, 15)
+				_GUICtrlSetTip(-1, $sTxtTip)
+			$g_hPicHeroBlueStatus[1][$i] = _GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModQueenBlue, $x + 26 + $i_X * $delX2, $y + 3 + $delY * 4 + $i_Y * $delY2, 15, 15)
+				_GUICtrlSetTip(-1, $sTxtTip)
+				GUICtrlSetState(-1, $GUI_HIDE)
+			$g_hPicHeroGreenStatus[1][$i] = _GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModQueenGreen, $x + 26 + $i_X * $delX2, $y + 3 + $delY * 4 + $i_Y * $delY2, 15, 15)
+				_GUICtrlSetTip(-1, $sTxtTip)
+				GUICtrlSetState(-1, $GUI_HIDE)
+			$g_hPicHeroRedStatus[1][$i] = _GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModQueenRed, $x + 26 + $i_X * $delX2, $y + 3 + $delY * 4 + $i_Y * $delY2, 15, 15)
+				_GUICtrlSetTip(-1, $sTxtTip)
+				GUICtrlSetState(-1, $GUI_HIDE)
+
+			;Warden
+			$g_hPicHeroGrayStatus[2][$i] = _GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModWardenGray, $x + 51 + $i_X * $delX2, $y + 3 + $delY * 4 + $i_Y * $delY2, 15, 15)
+				_GUICtrlSetTip(-1, $sTxtTip)
+			$g_hPicHeroBlueStatus[2][$i] = _GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModWardenBlue, $x + 51 + $i_X * $delX2, $y + 3 + $delY * 4 + $i_Y * $delY2, 15, 15)
+				_GUICtrlSetTip(-1, $sTxtTip)
+				GUICtrlSetState(-1, $GUI_HIDE)
+			$g_hPicHeroGreenStatus[2][$i] = _GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModWardenGreen, $x + 51 + $i_X * $delX2, $y + 3 + $delY * 4 + $i_Y * $delY2, 15, 15)
+				_GUICtrlSetTip(-1, $sTxtTip)
+				GUICtrlSetState(-1, $GUI_HIDE)
+			$g_hPicHeroRedStatus[2][$i] = _GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModWardenRed, $x + 51 + $i_X * $delX2, $y + 3 + $delY * 4 + $i_Y * $delY2, 15, 15)
+				_GUICtrlSetTip(-1, $sTxtTip)
+				GUICtrlSetState(-1, $GUI_HIDE)
+
+			;Lab
+			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Bottom", "GrpStatus_Info_02", -1)
+			$g_hPicLabGrayStatus[$i] = _GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModLabGray, $x + 75 + $i_X * $delX2, $y + 3 + $delY * 4 + $i_Y * $delY2, 15, 15)
+				_GUICtrlSetTip(-1, $sTxtTip)
+			$g_hPicLabGreenStatus[$i] = _GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModLabGreen, $x + 75 + $i_X * $delX2, $y + 3 + $delY * 4 + $i_Y * $delY2, 15, 15)
+				_GUICtrlSetTip(-1, $sTxtTip)
+				GUICtrlSetState(-1, $GUI_HIDE)
+			$g_hPicLabRedStatus[$i] = _GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModLabRed, $x + 75 + $i_X * $delX2, $y + 3 + $delY * 4 + $i_Y * $delY2, 15, 15)
+				_GUICtrlSetTip(-1, $sTxtTip)
+				GUICtrlSetState(-1, $GUI_HIDE)
+			$g_hLblLabTimeStatus[$i] = GUICtrlCreateLabel("00:00:00", $x + 95 + $i_X * $delX2, $y + 4 + $delY * 4 + $i_Y * $delY2, 90, 17, $SS_LEFT)
 
 			$g_ahGrpDefaultAcc[$i] = $g_ahGrpVillageAcc[$i] & "#" & $g_ahPicArrowLeft[$i] & "#" & $g_ahPicArrowRight[$i] & "#" & _
-									$g_ahPicResultGoldNowAcc[$i] & "#" & $g_ahPicResultElixirNowAcc[$i] & "#" & $g_ahPicResultDENowAcc[$i] & "#" & _
-									$g_ahLblTroopTime[$i] & "#" & $g_ahPicTroopTime[$i] & "#" & $g_ahLblLabTime[$i] & "#" & $g_ahPicLabTime[$i]
+									$g_ahPicResultGoldNowAcc[$i] & "#" & $g_ahPicResultElixirNowAcc[$i] & "#" & $g_ahPicResultDENowAcc[$i]
 			$g_ahGrpReportAcc[$i] = $g_ahLblResultGoldNowAcc[$i] & "#" & $g_ahLblResultTrophyNowAcc[$i] & "#" & $g_ahPicResultTrophyNowAcc[$i] & "#" & _
 									$g_ahLblResultElixirNowAcc[$i] & "#" & $g_ahLblResultBuilderNowAcc[$i] & "#" & $g_ahPicResultBuilderNowAcc[$i] & "#" & _
-									$g_ahLblResultDENowAcc[$i] & "#" & $g_ahLblResultGemNowAcc[$i] & "#" & $g_ahPicResultGemNowAcc[$i]
+									$g_ahLblResultDENowAcc[$i] & "#" & $g_ahLblResultGemNowAcc[$i] & "#" & $g_ahPicResultGemNowAcc[$i] & "#" & _
+									$g_ahLblTroopTime[$i] & "#" & $g_ahPicTroopTime[$i]
 			$g_ahGrpStatsAcc[$i] = 	$g_ahLblHourlyStatsGoldAcc[$i] & "#" & $g_ahLblResultRuntimeNowAcc[$i] & "#" & $g_ahPicResultRuntimeNowAcc[$i] & "#" & _
 									$g_ahLblHourlyStatsElixirAcc[$i] & "#" & $g_ahLblResultAttacked[$i] & "#" & $g_ahPicResultAttacked[$i] & "#" & _
-									$g_ahLblHourlyStatsDarkAcc[$i] & "#" & $g_ahLblResultSkipped[$i] & "#" & $g_ahPicResultSkipped[$i]
+									$g_ahLblHourlyStatsDarkAcc[$i] & "#" & $g_ahLblResultSkipped[$i] & "#" & $g_ahPicResultSkipped[$i] & "#" & $g_hLblLabTimeStatus[$i]
 
 		GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 		_GUI_Value_STATE("HIDE", $g_ahGrpDefaultAcc[$i] & "#" & $g_ahGrpReportAcc[$i] & "#" & $g_ahGrpStatsAcc[$i])
-
+		_GUI_Value_STATE("HIDE", $g_hPicHeroGrayStatus[0][$i] & "#" & $g_hPicHeroGrayStatus[1][$i] & "#" & $g_hPicHeroGrayStatus[2][$i] & "#" & $g_hPicLabGrayStatus[$i])
 	Next
 EndFunc   ;==>CreateMultiStatsSubTab
 #EndRegion

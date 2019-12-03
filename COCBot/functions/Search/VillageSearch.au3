@@ -24,8 +24,9 @@ Func VillageSearch()
 		GUICtrlSetState($g_hBtnAttackNowDB, $GUI_HIDE)
 		GUICtrlSetState($g_hBtnAttackNowLB, $GUI_HIDE)
 		GUICtrlSetState($g_hBtnAttackNowTS, $GUI_HIDE)
-		HideShields(False)
-		;GUICtrlSetState($g_hLblVersion, $GUI_SHOW)
+		GUICtrlSetState($g_hPicTwoArrowShield, $GUI_SHOW)
+		GUICtrlSetState($g_hLblVersion, $GUI_SHOW)
+		GUICtrlSetState($g_hLblMod, $GUI_SHOW)
 		$g_bBtnAttackNowPressed = False
 	EndIf
 
@@ -83,11 +84,12 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 	EndIf
 
 	If $g_bSearchAttackNowEnable Then
-		HideShields(True)
 		GUICtrlSetState($g_hBtnAttackNowDB, $GUI_SHOW)
 		GUICtrlSetState($g_hBtnAttackNowLB, $GUI_SHOW)
 		GUICtrlSetState($g_hBtnAttackNowTS, $GUI_SHOW)
-		;GUICtrlSetState($g_hLblVersion, $GUI_HIDE)
+		GUICtrlSetState($g_hPicTwoArrowShield, $GUI_HIDE)
+		GUICtrlSetState($g_hLblVersion, $GUI_HIDE)
+		GUICtrlSetState($g_hLblMod, $GUI_HIDE)
 	EndIf
 
 	If $g_bIsClientSyncError = False And $g_bIsSearchLimit = False Then
@@ -262,7 +264,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 
 				If $bIsWeak And $try = 1 Then
 					ResumeAndroid()
-					If _Sleep(3000) Then Return ; wait 5 Seconds to give heroes time to "walk away"
+					If _Sleep(Random(2845,5484,1)) Then Return ; AIO Team- Random time to give heroes time to "walk away"
 					ForceCaptureRegion()
 					_CaptureRegion2()
 					SuspendAndroid()
@@ -287,8 +289,99 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 			SetLog($GetResourcesTXT, $COLOR_SUCCESS, "Lucida Console", 7.5)
 			SetLog("      " & "Dead Base Found!", $COLOR_SUCCESS, "Lucida Console", 7.5)
 			$logwrited = True
-			$g_iMatchMode = $DB
-			ExitLoop
+
+			; Check Collector Outside & Check No League for Dead Base - Team AiO MOD++
+			Local $g_bFlagSearchAnotherBase = False
+			If $g_bChkNoLeague[$DB] Then
+				If SearchNoLeague() Then
+					SetLog("      " & "Dead Base is in No League, match found !", $COLOR_SUCCESS, "Lucida Console", 7.5)
+					$g_bFlagSearchAnotherBase = False
+				Else
+					SetLog("      " & "Dead Base is in a League, skipping search !", $COLOR_ERROR, "Lucida Console", 7.5)
+					$match[$DB] = False ; got league skip attack, search another base
+					$g_bFlagSearchAnotherBase = True
+				EndIf
+			Else
+				$g_bFlagSearchAnotherBase = False
+			EndIf
+
+			If Not $g_bFlagSearchAnotherBase Then
+				If $g_bDBMeetCollectorOutside Then ; check is that collector  near outside
+					$g_bScanMineAndElixir = False
+
+					If AreCollectorsOutside($g_iDBMinCollectorOutsidePercent) Then
+						SetLog("Collectors are outside, match found !", $COLOR_SUCCESS, "Lucida Console", 7.5)
+						$g_bFlagSearchAnotherBase = False
+					Else
+						$g_bFlagSearchAnotherBase = True
+						If $g_bSkipCollectorCheck Then
+							If Number($g_iTxtSkipCollectorGold) <> 0 And Number($g_iTxtSkipCollectorElixir) <> 0 And Number($g_iTxtSkipCollectorDark) <> 0 Then
+								If Number($g_iSearchGold) >= Number($g_iTxtSkipCollectorGold) And Number($g_iSearchElixir) >= Number($g_iTxtSkipCollectorElixir) And Number($g_iSearchDark) >= Number($g_iTxtSkipCollectorDark) Then
+									SetLog("Target Resource(G,E,D) over for skip collectors check, Prepare for attack...", $COLOR_SUCCESS, "Lucida Console", 7.5)
+									$g_bFlagSearchAnotherBase = False
+								EndIf
+							ElseIf Number($g_iTxtSkipCollectorGold) <> 0 And Number($g_iTxtSkipCollectorElixir) <> 0 Then
+								If Number($g_iSearchGold) >= Number($g_iTxtSkipCollectorGold) And Number($g_iSearchElixir) >= Number($g_iTxtSkipCollectorElixir) Then
+									SetLog("Target Resource(G,E) over for skip collectors check, Prepare for attack...", $COLOR_SUCCESS, "Lucida Console", 7.5)
+									$g_bFlagSearchAnotherBase = False
+								EndIf
+							ElseIf Number($g_iTxtSkipCollectorGold) <> 0 And Number($g_iTxtSkipCollectorDark) <> 0 Then
+								If Number($g_iSearchGold) >= Number($g_iTxtSkipCollectorGold) And Number($g_iSearchDark) >= Number($g_iTxtSkipCollectorDark) Then
+									SetLog("Target Resource(G,D) over for skip collectors check, Prepare for attack...", $COLOR_SUCCESS, "Lucida Console", 7.5)
+									$g_bFlagSearchAnotherBase = False
+								EndIf
+							ElseIf Number($g_iTxtSkipCollectorElixir) <> 0 And Number($g_iTxtSkipCollectorDark) <> 0 Then
+								If Number($g_iSearchElixir) >= Number($g_iTxtSkipCollectorElixir) And Number($g_iSearchDark) >= Number($g_iTxtSkipCollectorDark) Then
+									SetLog("Target Resource(E,D) over for skip collectors check, Prepare for attack...", $COLOR_SUCCESS, "Lucida Console", 7.5)
+									$g_bFlagSearchAnotherBase = False
+								EndIf
+							ElseIf Number($g_iTxtSkipCollectorGold) <> 0 Then
+								If Number($g_iSearchGold) >= Number($g_iTxtSkipCollectorGold) Then
+									SetLog("Target Resource(G) over for skip collectors check, Prepare for attack...", $COLOR_SUCCESS, "Lucida Console", 7.5)
+									$g_bFlagSearchAnotherBase = False
+								EndIf
+							ElseIf Number($g_iTxtSkipCollectorElixir) <> 0 Then
+								If Number($g_iSearchElixir) >= Number($g_iTxtSkipCollectorElixir) Then
+									SetLog("Target Resource(E) over for skip collectors check, Prepare for attack...", $COLOR_SUCCESS, "Lucida Console", 7.5)
+									$g_bFlagSearchAnotherBase = False
+								EndIf
+							ElseIf Number($g_iTxtSkipCollectorDark) <> 0 Then
+								If Number($g_iSearchDark) >= Number($g_iTxtSkipCollectorDark) Then
+									SetLog("Target Resource(D) over for skip collectors check, Prepare for attack...", $COLOR_SUCCESS, "Lucida Console", 7.5)
+									$g_bFlagSearchAnotherBase = False
+								EndIf
+							EndIf
+							If $g_bFlagSearchAnotherBase Then
+								SetLog("Collectors are not outside AND Target Resource not match for attack, skipping search !", $COLOR_ERROR, "Lucida Console", 7.5)
+							EndIf
+						Else
+							SetLog("Collectors are not outside, skipping search !", $COLOR_ERROR, "Lucida Console", 7.5)
+						EndIf
+						If $g_bSkipCollectorCheckTH Then
+							If $g_bFlagSearchAnotherBase Then
+								If $g_iSearchTH <> "-" Then
+									If Number($g_iSearchTH) <= $g_iCmbSkipCollectorCheckTH Then
+										SetLog("Target TownHall Level is " & $g_iSearchTH & ", lower than or equal my setting " & $g_iCmbSkipCollectorCheckTH & ", Prepare for attack...", $COLOR_SUCCESS, "Lucida Console", 7.5)
+										$g_bFlagSearchAnotherBase = False
+									Else
+										SetLog("Collectors are not outside, and TownHall Level is " & $g_iSearchTH & " Over " & $g_iCmbSkipCollectorCheckTH & ", skipping search !", $COLOR_ERROR, "Lucida Console", 7.5)
+									EndIf
+								Else
+									SetLog("Collectors are not outside, and failded to get townhall level, skipping search !", $COLOR_ERROR, "Lucida Console", 7.5)
+								EndIf
+							EndIf
+						EndIf
+					EndIf
+					$g_iSearchTH = ""
+				Else
+					$g_bFlagSearchAnotherBase = False
+				EndIf
+				If Not $g_bFlagSearchAnotherBase Then
+					$g_iMatchMode = $DB
+					ExitLoop
+				EndIf
+			EndIf
+
 		ElseIf $match[$LB] And Not $dbBase Then
 			SetLog($GetResourcesTXT, $COLOR_SUCCESS, "Lucida Console", 7.5)
 			SetLog("      " & "Live Base Found!", $COLOR_SUCCESS, "Lucida Console", 7.5)

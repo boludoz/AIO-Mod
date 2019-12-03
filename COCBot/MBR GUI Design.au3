@@ -51,12 +51,13 @@ Global $g_bBotDockedShrinked = False ; Bot is shrinked or not when docked
 Global $g_hFrmBotButtons, $g_hFrmBotLogoUrlSmall, $g_hFrmBotEx = 0, $g_hLblBotTitle, $g_hLblBotShrink = 0, $g_hLblBotExpand = 0, $g_hLblBotMiniGUI = 0, $g_hLblBotNormalGUI = 0 _
 		, $g_hLblBotMinimize = 0, $g_hLblBotClose = 0, $g_hFrmBotBottom = 0, $g_hFrmBotEmbeddedShield = 0, $g_hFrmBotEmbeddedShieldInput = 0, $g_hFrmBotEmbeddedGraphics = 0
 Global $g_hFrmBot_MAIN_PIC = 0, $g_hFrmBot_URL_PIC = 0, $g_hFrmBot_URL_PIC2 = 0
-Global $g_hTabMain = 0, $g_hTabLog = 0, $g_hTabVillage = 0, $g_hTabAttack = 0, $g_hTabBot = 0, $g_hTabAbout = 0
+Global $g_hTabMain = 0, $g_hTabLog = 0, $g_hTabVillage = 0, $g_hTabAttack = 0, $g_hTabMOD = 0, $g_hTabBot = 0, $g_hTabAbout = 0
 Global $g_hStatusBar = 0
 Global $g_hTiShow = 0, $g_hTiHide = 0, $g_hTiDonate = 0, $g_hTiAbout = 0, $g_hTiStartStop = 0, $g_hTiPause = 0, $g_hTiExit = 0
 Global $g_aFrmBotPosInit[8] = [0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_hFirstControlToHide = 0, $g_hLastControlToHide = 0, $g_aiControlPrevState[1]
 Global $g_bFrmBotMinimized = False ; prevents bot flickering
+Global $g_hLblAndroidInfo = 0
 Global $g_hTblStart = 0, $g_hTblStop = 0, $g_hTblPause = 0, $g_hTblResume = 0, $g_hTblMakeScreenshot = 0 ; TaskBarList buttons
 
 Global $g_oCtrlIconData = ObjCreate("Scripting.Dictionary")
@@ -68,6 +69,8 @@ Global $g_oGuiNotInMini = ObjCreate("Scripting.Dictionary")
 #include "GUI\MBR GUI Design Attack.au3"
 #include "GUI\MBR GUI Design Bot.au3"
 #include "GUI\MBR GUI Design About.au3"
+; Team AiO MOD++ (2019)
+#include "Team__AiO__MOD++\GUI\MOD GUI Design.au3"
 
 Func CreateMainGUI()
 
@@ -115,14 +118,14 @@ Func CreateMainGUI()
 	EndIf
 
 	; Set Main Window icon
-	GUISetIcon($g_sLibIconPath, $eIcnGUI)
+	GUISetIcon($g_sLibModIconPath, $eIcnAIOMod)
 	If $g_iGuiMode = 0 Then
 		UpdateBotTitle()
 		Return
 	EndIf
 
 	; Create tray icon
-	TraySetIcon($g_sLibIconPath, $eIcnGUI)
+	TraySetIcon($g_sLibModIconPath, $eIcnAIOMod)
 	Opt("TrayMenuMode", 3)
 	Opt("TrayOnEventMode", 1)
 	Opt("TrayIconHide", 0)
@@ -261,6 +264,11 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 		$g_hFrmBot_MAIN_PIC = _GUICtrlCreatePic($g_sLogoPath, 0, $_GUI_MAIN_TOP, $_GUI_MAIN_WIDTH, 67)
 		GUICtrlSetOnEvent(-1, "BotMoveRequest")
 
+		$g_hLblAndroidInfo = GUICtrlCreateLabel($g_sAndroidEmulator & " v" & $g_sAndroidVersion, $_GUI_MAIN_WIDTH - 390, $_GUI_MAIN_TOP + 54, -1, 12, $SS_LEFT)
+		GUICtrlSetFont(-1, 8.5, $FW_BOLD)
+		GUICtrlSetColor(-1, 0x804001)
+		GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
+
 		$g_hFrmBot_URL_PIC = _GUICtrlCreatePic($g_sLogoUrlPath, 0, $_GUI_MAIN_TOP + 67, $_GUI_MAIN_WIDTH, 13)
 		GUICtrlSetCursor(-1, 0)
 
@@ -323,6 +331,9 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 	SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_05", "Loading Attack tab..."))
 	CreateAttackTab()
 
+	SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_10", "Loading Mods tab..."))
+	CreateMODTab()
+
 	SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_06", "Loading Bot tab..."))
 	CreateBotTab() ; also creates  $g_hLastControlToHide
 	If Not $bGuiModeUpdate Then DistributorsUpdateGUI() ; Now loading Distributors (during GUI switch it must be called outside CreateMainGUIControls()!)
@@ -347,6 +358,7 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 	$g_hTabLog = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_01", "Log"))
 	$g_hTabVillage = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_02", "Village"))
 	$g_hTabAttack = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_03", "Attack Plan"))
+	$g_hTabMOD = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_06", "Mods"))
 	$g_hTabBot = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_04", "Bot"))
 	$g_hTabAbout = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_05", "About Us"))
 	GUICtrlCreateTabItem("")
@@ -369,9 +381,12 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 	Static $g_hGUI_SEARCH_TAB_ImageList = 0
 	Static $g_hGUI_DEADBASE_TAB_ImageList = 0
 	Static $g_hGUI_ACTIVEBASE_TAB_ImageList = 0
+	Static $g_hGUI_THSNIPE_TAB_ImageList = 0
 	Static $g_hGUI_ATTACKOPTION_TAB_ImageList = 0
 	Static $g_hGUI_STRATEGIES_TAB_ImageList = 0
+	Static $g_hGUI_MOD_TAB_ImageList = 0
 	Static $g_hGUI_BOT_TAB_ImageList = 0
+	Static $g_hGUI_SWITCH_OPTIONS_TAB_ImageList = 0
 	Static $g_hGUI_STATS_TAB_ImageList = 0
 
 	Bind_ImageList($g_hTabMain, $g_hTabMain_ImageList)
@@ -390,8 +405,9 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 	Bind_ImageList($g_hGUI_ATTACKOPTION_TAB, $g_hGUI_ATTACKOPTION_TAB_ImageList)
 	Bind_ImageList($g_hGUI_STRATEGIES_TAB, $g_hGUI_STRATEGIES_TAB_ImageList)
 
+	Bind_ImageList($g_hGUI_MOD_TAB, $g_hGUI_MOD_TAB_ImageList)
 	Bind_ImageList($g_hGUI_BOT_TAB, $g_hGUI_BOT_TAB_ImageList)
-
+	Bind_ImageList($g_hGUI_SWITCH_OPTIONS_TAB, $g_hGUI_SWITCH_OPTIONS_TAB_ImageList)
 	Bind_ImageList($g_hGUI_STATS_TAB, $g_hGUI_STATS_TAB_ImageList)
 
 	; Show Tab LOG

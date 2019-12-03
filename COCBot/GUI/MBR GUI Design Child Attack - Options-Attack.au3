@@ -59,6 +59,7 @@ Func CreateAttackSearchOptionsAttack()
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Options-Attack", "TxtManAbilities_Info_01", "Set the time in seconds for Timed Activation of Hero Abilities.")
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 3)
+			GUICtrlSetBkColor(-1, 0xD1DFE7)
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "sec.", -1), $x + 115, $y + 4, -1, -1)
 	$x += 145
 		$g_hRadBothQueenAbility = GUICtrlCreateRadio(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-Attack", "RadBothAbilities_Info_01", "Check Both"), $x, $y, -1, -1)
@@ -86,6 +87,7 @@ Func CreateAttackSearchOptionsAttack()
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Options-Attack", "TxtManAbilities_Info_01", "Set the time in seconds for Timed Activation of Hero Abilities.")
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 3)
+			GUICtrlSetBkColor(-1, 0xD1DFE7)
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "sec.", -1), $x + 115, $y + 4, -1, -1)
 
 	$x += 145
@@ -114,6 +116,7 @@ Func CreateAttackSearchOptionsAttack()
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Options-Attack", "TxtManAbilities_Info_01", "Set the time in seconds for Timed Activation of Hero Abilities.")
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 3)
+			GUICtrlSetBkColor(-1, 0xD1DFE7)
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "sec.", -1), $x + 115, $y + 4, -1, -1)
 
 	$x += 145

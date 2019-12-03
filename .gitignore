@@ -14,7 +14,6 @@
 # don't exclude exe in lib folder
 !lib/*.exe
 !lib/*/*.exe
-
 # Global Folders
 [Pp]rofiles/
 [Tt]emplates/
@@ -27,6 +26,9 @@
 
 # Exclusion Curl (used for PushBullet)
 ![Cc]url.exe
+
+# Exclusion phantomjs (used for Chatbot)
+![Pp]hantomjs.exe
 
 # Exclusion build
 ![Bb]uild/**
@@ -83,6 +85,7 @@
 ![Ss]trategies/*.ini
 
 #imgloc transition
+![Ii]mgxml/AttackBar/*.png
 ![Ii]mgxml/boostbarracks/*.png
 ![Ii]mgxml/donateccwbl/*.png
 ![Ii]mgxml/imglocbuttons/*.png
@@ -95,6 +98,7 @@
 ![Ii]mgxml/Storages/*.png
 ![Ii]mgxml/Walls/*.png
 ![Ii]mgxml/Buildings/*.png
+![Ii]mgxml/WarPage/*.png
 ![Ii]mgxml/imglocbuttons/attackwindow/*.png
 ![Ii]mgxml/imglocbuttons/chatopen/*.png
 ![Ii]mgxml/imglocbuttons/exit/*.png
@@ -122,7 +126,30 @@
 ![Ii]mgxml/deadbase/elix/*.png
 ![Ii]mgxml/deadbase/elix/50/*.png
 ![Ii]mgxml/deadbase/elix/100/*.png
-
+![Ii]mgxml/BuilderTime/*.png
+![Ii]mgxml/SuperCellID/*.png
+![Ii]mgxml/SuperCellID/ListAccounts/*.png
+# AIO Mod 
+![Ii]mgxml/Attack/BuilderBase/ArmyStatus/Full/*.png
+![Ii]mgxml/Attack/BuilderBase/ArmyStatus/Hero/Battle Machine/*.png
+![Ii]mgxml/Attack/BuilderBase/ArmyStatus/Hero/Recovering/*.png
+![Ii]mgxml/Attack/BuilderBase/ArmyStatus/Hero/Upgrading/*.png
+![Cc]OCBot/Team__AiO__MOD++/Images/BuilderBase/BattleMachine/*.bmp
+![Cc]OCBot/Team__AiO__MOD++/Images/BuilderBase/BattleStarted/*.bmp
+![Cc]OCBot/Team__AiO__MOD++/Images/BuilderBase/BBTroops/*.bmp
+![Cc]OCBot/Team__AiO__MOD++/Images/BuilderBase/OkayButton/*.bmp
+![Cc]OCBot/Team__AiO__MOD++/Images/BuilderBase/TroopStatus/*.bmp
+![Cc]OCBot/Team__AiO__MOD++/Images/BuilderTime/*.png
+![Cc]OCBot/Team__AiO__MOD++/Images/SwitchAccounts/*.png
+![Cc]OCBot/Team__AiO__MOD++/Images/SwitchAccounts/ListAccounts/*.png
+![Cc]OCBot/Team__AiO__MOD++/Images/SuperXP/Find
+![Cc]OCBot/Team__AiO__MOD++/Images/SuperXP/Locked
+![Cc]OCBot/Team__AiO__MOD++/Images/SuperXP/Verify
+![Cc]OCBot/Team__AiO__MOD++/Images/DailyDiscounts/*.png
+![Cc]OCBot/Team__AiO__MOD++/Images/DailyDiscounts/WallRingAmount/*.png
+![Cc]OCBot/Team__AiO__MOD++/Images/ChatActions/*.png
+![Cc]OCBot/Team__AiO__MOD++/Images/ChatActions/Chat/*.png
+![Cc]OCBot/Team__AiO__MOD++/Images/ChatActions/FriendlyChallenge/*.png
 
 # ignore test strategies
 [Ss]trategies/[Tt]est*.ini
@@ -151,6 +178,7 @@ LastVersion*.txt
 TestVersion*.txt
 *_stripped.au3
 lib/*.html
+archive/
 SQLite_exportedData.csv
 build/au3Stripper/Au3Stripper.Log
 *.lnk

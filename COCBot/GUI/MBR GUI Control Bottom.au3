@@ -29,7 +29,7 @@ Func Initiate()
 			SetLogCentered(" Search Mode Start ", Default, $COLOR_SUCCESS)
 		EndIf
 		SetLogCentered("  Current Profile: " & $g_sProfileCurrentName & " ", "-", $COLOR_INFO)
-		If $g_bDebugSetlog Or $g_bDebugOcr Or $g_bDebugRedArea Or $g_bDevMode Or $g_bDebugImageSave Or $g_bDebugBuildingPos Or $g_bDebugOCRdonate Or $g_bDebugAttackCSV Or $g_bDebugAndroid Then
+		If $g_bDebugSetlog Or $g_bDebugOcr Or $g_bDebugRedArea Or $g_bDebugImageSave Or $g_bDebugBuildingPos Or $g_bDebugOCRdonate Or $g_bDebugAttackCSV Or $g_bDebugAndroid Then
 			SetLogCentered(" Warning Debug Mode Enabled! ", "-", $COLOR_ERROR)
 			SetLog("      SetLog : " & $g_bDebugSetlog, $COLOR_ERROR, "Lucida Console", 8)
 			SetLog("     Android : " & $g_bDebugAndroid, $COLOR_ERROR, "Lucida Console", 8)
@@ -153,6 +153,12 @@ Func UpdateChkBackground()
 	EndIf
 EndFunc   ;==>UpdateChkBackground
 
+Func IsStopped()
+	If $g_bRunState Then Return False
+	If $g_bRestart Then Return True
+	Return False
+EndFunc   ;==>IsStopped
+
 Func btnStart()
 	; decide when to run
 	EnableControls($g_hFrmBotBottom, False, $g_aFrmBotBottomCtrlState)
@@ -187,11 +193,53 @@ EndFunc   ;==>btnSearchMode
 
 Func btnPause($bRunNow = True)
 	TogglePause()
+	; Enable/Disable GUI while botting - Team AiO MOD++
+	GUICtrlSetState($g_hBtnDisableGUI, $GUI_HIDE)
+	GUICtrlSetState($g_hBtnEnableGUI, $GUI_SHOW)
+
+	GUICtrlSetState($g_hLblVersion, $GUI_HIDE)
+	GUICtrlSetState($g_hLblMod, $GUI_HIDE)
+
 EndFunc   ;==>btnPause
 
 Func btnResume()
 	TogglePause()
+	; Enable/Disable GUI while botting - Team AiO MOD++
+	GUICtrlSetState($g_hBtnDisableGUI, $GUI_HIDE)
+	GUICtrlSetState($g_hBtnEnableGUI, $GUI_HIDE)
+
+	If $g_bVillageSearchActive And $g_bSearchAttackNowEnable Then
+		GUICtrlSetState($g_hLblVersion, $GUI_HIDE)
+		GUICtrlSetState($g_hLblMod, $GUI_HIDE)
+	Else
+		GUICtrlSetState($g_hLblVersion, $GUI_SHOW)
+		GUICtrlSetState($g_hLblMod, $GUI_SHOW)
+	EndIf
+
 EndFunc   ;==>btnResume
+
+; Enable/Disable GUI while botting - Team AiO MOD++
+Func btnEnableGUI()
+	GUICtrlSetState($g_hBtnEnableGUI, $GUI_HIDE)
+	GUICtrlSetState($g_hBtnDisableGUI, $GUI_SHOW)
+	GUICtrlSetState($g_hBtnResume, $GUI_DISABLE)
+	AndroidShieldForceDown(True)
+	EnableGuiControls() ; enable emulator menu controls
+	SetLog("Enabled bot controls as you wished", $COLOR_SUCCESS)
+EndFunc   ;==>btnEnableGUI
+
+Func btnDisableGUI()
+	GUICtrlSetState($g_hBtnDisableGUI, $GUI_HIDE)
+	GUICtrlSetState($g_hBtnEnableGUI, $GUI_SHOW)
+	GUICtrlSetState($g_hBtnResume, $GUI_ENABLE)
+	SetLog("Save config and disable bot controls manually", $COLOR_SUCCESS)
+	AndroidShieldForceDown(False)
+	SaveConfig()
+	readConfig()
+	applyConfig()
+	DisableGuiControls()
+EndFunc   ;==>btnDisableGUI
+; Enable/Disable GUI while botting - Team AiO MOD++
 
 Func btnAttackNowDB()
 	If $g_bRunState Then

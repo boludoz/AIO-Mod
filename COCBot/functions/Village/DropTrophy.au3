@@ -121,9 +121,25 @@ Func DropTrophy()
 						If $g_bDebugDeadBaseImage Then setZombie()
 						ForceCaptureRegion()
 						_CaptureRegion2() ; take new capture for deadbase
+						Local $bDeadBaseOK = False
 						If checkDeadBase() Then
-
 							SetLog("      " & "Dead Base Found while dropping Trophies!", $COLOR_SUCCESS, "Lucida Console", 7.5)
+
+							If $g_bChkNoLeague[$DB] Then
+								If SearchNoLeague() Then
+									SetLog("      " & "Dead Base is in No League, match found !", $COLOR_SUCCESS, "Lucida Console", 7.5)
+									$bDeadBaseOK = True
+								Else
+									SetLog("      " & "Dead Base is in a League, resuming Trophy Dropping !", $COLOR_ERROR, "Lucida Console", 7.5)
+									$bDeadBaseOK = False
+								EndIf
+							Else
+								$bDeadBaseOK = True
+							EndIf
+						Else
+							SetLog("      " & "Not a Dead Base, resuming Trophy Dropping.", $COLOR_BLACK, "Lucida Console", 7.5)
+						EndIf
+						If $bDeadBaseOK Then
 							SetLog("Identification of your troops:", $COLOR_INFO)
 							PrepareAttack($DB) ; ==== Troops :checks for type, slot, and quantity ===
 							If $g_bRestart Then Return
@@ -134,8 +150,6 @@ Func DropTrophy()
 							$g_bRestart = True ; Set restart flag after dead base attack to ensure troops are trained
 							If $g_bDebugSetlog Then SetDebugLog("Drop Trophy END: Dead Base was attacked, reset army and return to Village.", $COLOR_DEBUG)
 							ExitLoop ; or Return, Will end function, no troops left to drop Trophies, will need to Train new Troops first
-						Else
-							SetLog("      " & "Not a Dead Base, resuming Trophy Dropping.", $COLOR_BLACK, "Lucida Console", 7.5)
 						EndIf
 					EndIf
 				EndIf

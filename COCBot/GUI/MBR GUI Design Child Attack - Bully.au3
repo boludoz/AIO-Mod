@@ -38,6 +38,7 @@ Func CreateAttackSearchBully()
 			GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Bully", "LblSearch", "Enable Bully after"), $x, $y + 3)
 			$g_hTxtATBullyMode = GUICtrlCreateInput("150", $x + 95, $y, 35, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 				GUICtrlSetLimit(-1, 3)
+				GUICtrlSetBkColor(-1, 0xD1DFE7)
 				_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Bully", "LblSearch_Info_01", "TH Bully: No. of searches to wait before activating."))
 			GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "search(es).", "search(es)."), $x + 135, $y + 5, -1, -1)
 

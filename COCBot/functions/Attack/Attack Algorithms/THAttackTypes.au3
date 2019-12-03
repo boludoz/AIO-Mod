@@ -30,11 +30,7 @@ Func AttackTHParseCSV($test = False)
 		Case $LB
 			$attackCSVtoUse = $g_iTHSnipeBeforeScript[$LB]
 		Case $DB
-			If $g_bDuringMilkingAttack = True Then
-				$attackCSVtoUse = $g_sMilkFarmAlgorithmTh
-			Else
-				$attackCSVtoUse = $g_iTHSnipeBeforeScript[$DB]
-			EndIf
+			$attackCSVtoUse = $g_iTHSnipeBeforeScript[$DB]
 	EndSwitch
 
 
@@ -50,7 +46,7 @@ Func AttackTHParseCSV($test = False)
 			$acommand = StringSplit($line, "|")
 			If $acommand[0] >= 8 Then
 				$command = StringStripWS(StringUpper($acommand[1]), 2)
-				;   $eLSpell, $eHSpell, $eRSpell, $eJSpell, $eFSpell, $eCSpell, $ePSpell, $eESpell, $eHaSpell, $eSkSpell
+				;   $eLSpell, $eHSpell, $eRSpell, $eJSpell, $eFSpell, $eCSpell, $ePSpell, $eESpell, $eHaSpell, $eSkSpell, $eBtSpell
 				Select
 					Case $command = "TROOP" Or $command = ""
 						;SetLog("<<<<discard line>>>>")

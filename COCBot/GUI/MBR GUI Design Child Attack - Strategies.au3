@@ -63,6 +63,7 @@ Func CreateAttackStrategies()
 
 	$x += 205
 		$g_hTxtPresetSaveFilename = GUICtrlCreateInput("strategy " &  @YEAR & "-" & @MON & "-" & @MDAY & " " & @HOUR & "." & @MIN & "." & @SEC, $x, $y, 200, 25)
+		GUICtrlSetBkColor(-1, 0xD1DFE7)
 
 	$x = $xStart
 	$y += 30

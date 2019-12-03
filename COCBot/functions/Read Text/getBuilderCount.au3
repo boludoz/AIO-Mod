@@ -1,3 +1,4 @@
+
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: getBuilderCount
 ; Description ...: updates global builder count variables
@@ -15,6 +16,7 @@
 ; ===============================================================================================================================
 
 Func getBuilderCount($bSuppressLog = False, $bBuilderBase = False)
+	If $g_bChkOnlyFarm Then Return ; AIO Team - Only farm
 
 	Local $sBuilderInfo, $aGetBuilders, $bIsMainPage = False
 

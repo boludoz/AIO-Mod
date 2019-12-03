@@ -19,6 +19,7 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 	Local $aiZero[8] = [0, 0, 0, 0, 0, 0, 0, 0], $aiTrue[8] = [1, 1, 1, 1, 1, 1, 1, 1], $aiMinus[8] = [-1, -1, -1, -1, -1, -1, -1, -1]
 	Local $aiZero83[8][3] = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
 	Local $aiZero84[8][4] = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+	Local $aiZero86[8][6] = [[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0]]
 	Local $asEmpty[8] = ["", "", "", "", "", "", "", ""]
 	Local $aiZeroTroop[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 	Local $aiZeroSpell[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -44,10 +45,14 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 	Static $aiNbrOfWallsUpped = $aiZero
 
 	; Attack Stats
-	Static $aiAttackedVillageCount = $aiZero83 ; number of attack villages for DB, LB, TB
-	Static $aiTotalGoldGain = $aiZero83, $aiTotalElixirGain = $aiZero83, $aiTotalDarkGain = $aiZero83, $aiTotalTrophyGain = $aiZero83 ; total resource gains for DB, LB, TB
-	Static $aiNbrOfDetectedMines = $aiZero83, $aiNbrOfDetectedCollectors = $aiZero83, $aiNbrOfDetectedDrills = $aiZero83 ; number of mines, collectors, drills detected for DB, LB, TB
+	Static $aiAttackedVillageCount = $aiZero86 ; number of attack villages for DB, LB, TB, TS
+	Static $aiTotalGoldGain = $aiZero86, $aiTotalElixirGain = $aiZero86, $aiTotalDarkGain = $aiZero86, $aiTotalTrophyGain = $aiZero86 ; total resource gains for DB, LB, TB, TS
+	Static $aiNbrOfDetectedMines = $aiZero86, $aiNbrOfDetectedCollectors = $aiZero86, $aiNbrOfDetectedDrills = $aiZero86 ; number of mines, collectors, drills detected for DB, LB, TB
 	Static $aiSmartZapGain = $aiZero, $aiNumEQSpellsUsed = $aiZero, $aiNumLSpellsUsed = $aiZero ; smart zap
+
+	; Builder time and count
+	Static $asNextBuilderReadyTime = $asEmpty
+	Static $aiFreeBuilderCount = $aiZero, $aiTotalBuilderCount = $aiZero
 
 	; Lab time
 	Static $asLabUpgradeTime = $asEmpty, $aiLabStatus = $aiZero, $aiLabElixirCost = $aiZero, $aiLabDElixirCost = $aiZero
@@ -72,9 +77,6 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 	Static $abFullStorage = $aiZero84
 	Static $aiBuilderBoostDiscount = $aiZero
 
-	Static $abNotNeedAllTime0 = $aiTrue
-	Static $abNotNeedAllTime1 = $aiTrue
-
 	; First time switch account
 	Switch $sType
 		Case "Reset"
@@ -82,7 +84,7 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			$aiFirstRun = $aiTrue
 
 			$g_asTrainTimeFinish = $asEmpty
-			For $i = 0 To 7
+			For $i = 0 To $g_iTotalAcc
 				GUICtrlSetData($g_ahLblTroopTime[$i], "")
 			Next
 			$g_ahTimerSinceSwitched = $aiZero
@@ -122,18 +124,22 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			$aiNbrOfWallsUpped = $aiZero
 
 			; Attack Stats
-			$aiAttackedVillageCount = $aiZero83
-			$aiTotalGoldGain = $aiZero83
-			$aiTotalElixirGain = $aiZero83
-			$aiTotalDarkGain = $aiZero83
-			$aiTotalTrophyGain = $aiZero83
-			$aiNbrOfDetectedMines = $aiZero83
-			$aiNbrOfDetectedCollectors = $aiZero83
-			$aiNbrOfDetectedDrills = $aiZero83
+			$aiAttackedVillageCount = $aiZero86
+			$aiTotalGoldGain = $aiZero86
+			$aiTotalElixirGain = $aiZero86
+			$aiTotalDarkGain = $aiZero86
+			$aiTotalTrophyGain = $aiZero86
+			$aiNbrOfDetectedMines = $aiZero86
+			$aiNbrOfDetectedCollectors = $aiZero86
+			$aiNbrOfDetectedDrills = $aiZero86
 			$aiSmartZapGain = $aiZero
 			$aiNumEQSpellsUsed = $aiZero
 			$aiNumLSpellsUsed = $aiZero
 
+			; Builder time and count
+			$asNextBuilderReadyTime = $asEmpty
+			$aiFreeBuilderCount = $aiZero
+			$aiTotalBuilderCount = $aiZero
 			; Lab time
 			$asLabUpgradeTime = $asEmpty
 			$aiLabElixirCost = $aiZero
@@ -160,8 +166,6 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			$aiAllBarracksUpgd = $aiZero
 			$abFullStorage = $aiZero84
 			$aiBuilderBoostDiscount = $aiZero
-			$abNotNeedAllTime0 = $aiTrue
-			$abNotNeedAllTime1 = $aiTrue
 
 		Case "Save"
 			$abFirstStart[$iAccount] = $g_bFirstStart
@@ -203,7 +207,7 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			$aiNbrOfWallsUpped[$iAccount] = $g_iNbrOfWallsUpped
 
 			; Attack Stats
-			For $i = 0 To $g_iModeCount - 1
+			For $i = 0 To 5
 				$aiAttackedVillageCount[$iAccount][$i] = $g_aiAttackedVillageCount[$i]
 				$aiTotalGoldGain[$iAccount][$i] = $g_aiTotalGoldGain[$i]
 				$aiTotalElixirGain[$iAccount][$i] = $g_aiTotalElixirGain[$i]
@@ -217,6 +221,10 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			$aiNumEQSpellsUsed[$iAccount] = $g_iNumEQSpellsUsed
 			$aiNumLSpellsUsed[$iAccount] = $g_iNumLSpellsUsed
 
+			; Builder time and count
+			$asNextBuilderReadyTime[$iAccount] = $g_sNextBuilderReadyTime
+			$aiFreeBuilderCount[$iAccount] = $g_iFreeBuilderCount
+			$aiTotalBuilderCount[$iAccount] = $g_iTotalBuilderCount
 			; Lab time
 			$asLabUpgradeTime[$iAccount] = $g_sLabUpgradeTime
 			$aiLabElixirCost[$iAccount] = $g_iLaboratoryElixirCost
@@ -252,8 +260,6 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 				$abFullStorage[$iAccount][$i] = $g_abFullStorage[$i]
 			Next
 			$aiBuilderBoostDiscount[$iAccount] = $g_iBuilderBoostDiscount
-			$abNotNeedAllTime0[$iAccount] = $g_abNotNeedAllTime[0]
-			$abNotNeedAllTime1[$iAccount] = $g_abNotNeedAllTime[1]
 
 		Case "Load"
 			$g_bFirstStart = $abFirstStart[$iAccount]
@@ -295,7 +301,7 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			$g_iNbrOfWallsUpped = $aiNbrOfWallsUpped[$iAccount]
 
 			; Attack Stats
-			For $i = 0 To $g_iModeCount - 1
+			For $i = 0 To 5
 				$g_aiAttackedVillageCount[$i] = $aiAttackedVillageCount[$iAccount][$i]
 				$g_aiTotalGoldGain[$i] = $aiTotalGoldGain[$iAccount][$i]
 				$g_aiTotalElixirGain[$i] = $aiTotalElixirGain[$iAccount][$i]
@@ -309,9 +315,14 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			$g_iNumEQSpellsUsed = $aiNumEQSpellsUsed[$iAccount]
 			$g_iNumLSpellsUsed = $aiNumLSpellsUsed[$iAccount]
 
+			; Builder time and count
+			$g_sNextBuilderReadyTime = $asNextBuilderReadyTime[$iAccount]
+			$g_iFreeBuilderCount = $aiFreeBuilderCount[$iAccount]
+			$g_iTotalBuilderCount = $aiTotalBuilderCount[$iAccount]
 			; Lab time
 			$g_sLabUpgradeTime = $asLabUpgradeTime[$iAccount]
-			GUICtrlSetData($g_hLbLLabTime, "")
+			GUICtrlSetData($g_hLbLLabTime, "00:00:00")
+			GUICtrlSetColor($g_hLbLLabTime, $COLOR_BLACK)
 			$g_iLaboratoryElixirCost = $aiLabElixirCost[$iAccount]
 			$g_iLaboratoryDElixirCost = $aiLabDElixirCost[$iAccount]
 			Local $Counter = 0
@@ -343,8 +354,6 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 				$g_abFullStorage[$i] = $abFullStorage[$iAccount][$i]
 			Next
 			$g_iBuilderBoostDiscount = $aiBuilderBoostDiscount[$iAccount]
-			$g_abNotNeedAllTime[0] = $abNotNeedAllTime0[$iAccount]
-			$g_abNotNeedAllTime[1] = $abNotNeedAllTime1[$iAccount]
 
 			ResetVariables("donated") ; reset for new account
 			$g_aiAttackedCountSwitch[$iAccount] = $aiAttackedCount[$iAccount]
@@ -357,32 +366,73 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 				GUICtrlSetData($g_ahLblStatsStartedWith[$i], _NumberFormat($g_iStatsStartedWith[$i], True))
 				$aiStatsTotalGain[$iAccount][$i] = $g_iStatsTotalGain[$i]
 			Next
-			For $i = 0 To 7
+			For $i = 0 To $g_iTotalAcc
 				GUICtrlSetData($g_ahLblHourlyStatsGoldAcc[$i], _NumberFormat(Round($aiStatsTotalGain[$i][$eLootGold] / (Int(__TimerDiff($g_hTimerSinceStarted) + $g_iTimePassed)) * 3600)) & "k / h")
 				GUICtrlSetData($g_ahLblHourlyStatsElixirAcc[$i], _NumberFormat(Round($aiStatsTotalGain[$i][$eLootElixir] / (Int(__TimerDiff($g_hTimerSinceStarted) + $g_iTimePassed)) * 3600)) & "k / h")
 				GUICtrlSetData($g_ahLblHourlyStatsDarkAcc[$i], _NumberFormat(Round($aiStatsTotalGain[$i][$eLootDarkElixir] / (Int(__TimerDiff($g_hTimerSinceStarted) + $g_iTimePassed)) * 3600 * 1000)) & " / h")
 			Next
 
 		Case "SetTime"
-			Local $day, $hour, $min, $sec
+			Static $DisplayLoop = 1
+			Local $day = 0, $hour = 0, $min = 0, $sec = 0
+
+			; Clock of current account
+			_TicksToTime(Int(__TimerDiff($g_ahTimerSinceSwitched[$iAccount]) + $g_aiRunTime[$iAccount]), $hour, $min, $sec)
+			GUICtrlSetData($g_ahLblResultRuntimeNowAcc[$iAccount], StringFormat("%02i:%02i:%02i", $hour, $min, $sec))
+
+			; Army time, Builder time, Lab time
 			For $i = 0 To $g_iTotalAcc
+				; Army time of all accounts
+				If _DateIsValid($g_asTrainTimeFinish[$i]) Then
+					Local $iTime = _DateDiff("s", _NowCalc(), $g_asTrainTimeFinish[$i]) * 1000
+					_TicksToTime(Abs($iTime), $hour, $min, $sec)
+					GUICtrlSetData($g_ahLblTroopTime[$i], ($iTime < 0 ? "-" : "") & StringFormat("%02i:%02i", $min, $sec))
+					Local $SetColor = $COLOR_BLACK
+					If $i = $iAccount Then
+						$SetColor = $COLOR_GREEN
+					ElseIf $iTime < 0 Then
+						$SetColor = $COLOR_RED
+					EndIf
+					GUICtrlSetColor($g_ahLblTroopTime[$i], $SetColor)
+				EndIf
+
+				; Builder time of all account
+				If IsInt($DisplayLoop / 5) Then
+					If _DateIsValid($asNextBuilderReadyTime[$i]) Then
+						_TicksToDay(Int(_DateDiff("s", _NowCalc(), $asNextBuilderReadyTime[$i]) * 1000), $day, $hour, $min, $sec)
+						Local $sBuilderTime = $day > 0 ? StringFormat("%2ud %02i:%02i", $day, $hour, $min, $sec) : ($hour > 0 ? StringFormat("%02i:%02i:%02i", $hour, $min, $sec) : StringFormat("%02i:%02i", $min, $sec))
+
+						If Not IsInt($DisplayLoop / 10) Then
+							GUICtrlSetData($g_ahLblResultBuilderNowAcc[$i], $aiFreeBuilderCount[$i] & "/" & $aiTotalBuilderCount[$i])
+							GUICtrlSetColor($g_ahLblResultBuilderNowAcc[$i], $COLOR_BLACK)
+						Else
+							GUICtrlSetData($g_ahLblResultBuilderNowAcc[$i], $sBuilderTime)
+							GUICtrlSetColor($g_ahLblResultBuilderNowAcc[$i], $aiFreeBuilderCount[$i] > 0 ? $COLOR_GREEN : $COLOR_BLACK)
+						EndIf
+					EndIf
+				EndIf
+
+				; Lab time of all account
 				If _DateIsValid($asLabUpgradeTime[$i]) Then
 					Local $iLabTime = _DateDiff("s", _NowCalc(), $asLabUpgradeTime[$i]) * 1000
 					If $iLabTime > 0 Then
 						_TicksToDay($iLabTime, $day, $hour, $min, $sec)
-						GUICtrlSetData($g_ahLblLabTime[$i], $day > 0 ? StringFormat("%2ud %02i:%02i'", $day, $hour, $min) : StringFormat("%02i:%02i:%02i", $hour, $min, $sec))
-						GUICtrlSetColor($g_ahLblLabTime[$i], $day > 0 ? $COLOR_GREEN : $COLOR_ORANGE)
+						GUICtrlSetData($g_hLblLabTimeStatus[$i], $day > 0 ? StringFormat("%2ud %02i:%02i:%02i", $day, $hour, $min, $sec) : ($hour > 0 ? StringFormat("%02i:%02i:%02i", $hour, $min, $sec) : StringFormat("%02i:%02i", $min, $sec)))
+						Local $SetColor = $COLOR_BLACK
+						If $i = $g_iCurAccount Then $SetColor = $COLOR_GREEN
+						GUICtrlSetColor($g_hLblLabTimeStatus[$i], $day > 0 ? $SetColor : $COLOR_ORANGE)
 					Else
-						GUICtrlSetData($g_ahLblLabTime[$i], "")
+						GUICtrlSetData($g_hLblLabTimeStatus[$i], "00:00:00")
+						GUICtrlSetColor($g_hLblLabTimeStatus[$i], $COLOR_BLACK)
 						$asLabUpgradeTime[$i] = ""
 					EndIf
-				Else
-					GUICtrlSetData($g_ahLblLabTime[$i], "")
 				EndIf
 			Next
+			$DisplayLoop += 1
+			If $DisplayLoop > 10 Then $DisplayLoop = 1
 
 		Case "$g_iCommandStop"
-			return $aiCommandStop[$iAccount]
+			Return $aiCommandStop[$iAccount]
 
 	EndSwitch
 

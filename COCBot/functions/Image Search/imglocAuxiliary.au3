@@ -259,7 +259,7 @@ Func GetButtonDiamond($sButtonName)
 			$btnDiamond = "357,545|502,545|502,607|357,607"
 		Case "Next" ; attackpage attackwindow
 			$btnDiamond = "697,542|850,542|850,610|697,610"
-		Case "ObjectButtons", "BoostOne", "BoostCT", "Upgrade", "Research", "Treasury", "RemoveObstacle", "CollectLootCart" ; Full size of object buttons at the bottom
+		Case "ObjectButtons", "BoostOne", "BoostCT", "Upgrade", "Research", "MagicItems", "Boostleft", "Treasury" ; Full size of object buttons at the bottom
 			$btnDiamond = GetDiamondFromRect("140,591,720,671")
 		Case "GEM", "BOOSTBtn" ; Boost window button (full button size)
 			$btnDiamond = GetDiamondFromRect("359,412(148,66)")
@@ -287,6 +287,8 @@ Func GetButtonDiamond($sButtonName)
 			$btnDiamond = GetDiamondFromRect("630,280,850,360")
 		Case "ArmyTab", "TrainTroopsTab", "BrewSpellsTab", "BuildSiegeMachinesTab", "QuickTrainTab"
 			$btnDiamond = GetDiamondFromRect("18,100,800,150")
+		Case "BoostTrainingPotionBtn", "BoostResourcePotionBtn"
+			$btnDiamond = GetDiamondFromRect("420,395(85,60)")
 		Case "MessagesButton"
 			$btnDiamond = GetDiamondFromRect("0,0,250,250")
 		Case "AttackLogTab", "ShareReplayButton"

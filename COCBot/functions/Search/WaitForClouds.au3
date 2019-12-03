@@ -17,7 +17,7 @@ Func WaitForClouds()
 
 	If $g_bDebugSetlog Then SetDebugLog("Begin WaitForClouds:", $COLOR_DEBUG1)
 	$g_bCloudsActive = True
-	
+
 	Local $iCount = 0
 	Local $bigCount = 0, $iLastTime = 0
 	Local $hMinuteTimer, $iSearchTime

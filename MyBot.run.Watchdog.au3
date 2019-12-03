@@ -115,7 +115,7 @@ Func UpdateManagedMyBot($aBotDetails)
 	Return True
 EndFunc   ;==>UpdateManagedMyBot
 
-Global $g_sBotTitle = "My Bot Watchdog " & $g_sBotVersion ;~ Don't use any non file name supported characters like \ / : * ? " < > |
+Global $g_sBotTitle = "My Bot Watchdog " & $g_sBotVersion & " - " & "AiO++ MOD " & $g_sModVersion & " -" ;~ Don't use any non file name supported characters like \ / : * ? " < > |
 
 Opt("WinTitleMatchMode", 3) ; Window Title exact match mode
 

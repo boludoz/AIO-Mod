@@ -1373,6 +1373,7 @@ Func IIf($Condition, $IfTrue, $IfFalse)
 	EndIf
 EndFunc   ;==>IIf
 
+#cs - SuperXP / GoblinXP - Team AiO MOD++
 Func _ArryRemoveBlanks(ByRef $aArray)
 	Local $iCounter = 0
 	For $i = 0 To UBound($aArray) - 1
@@ -1383,6 +1384,7 @@ Func _ArryRemoveBlanks(ByRef $aArray)
 	Next
 	ReDim $aArray[$iCounter]
 EndFunc   ;==>_ArryRemoveBlanks
+#ce - SuperXP / GoblinXP - Team AiO MOD++
 
 Func ValidateSearchArmyResult($aSearchResult, $iIndex = 0)
 	If IsArray($aSearchResult) Then

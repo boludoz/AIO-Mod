@@ -89,11 +89,13 @@ EndFunc   ;==>chkDisableNotifications
 Func chkUseRandomClick()
 	$g_bUseRandomClick = (GUICtrlRead($g_hChkUseRandomClick) = $GUI_CHECKED)
 EndFunc   ;==>chkUseRandomClick
+
 #cs
 	Func chkUpdatingWhenMinimized()
 	$g_bUpdatingWhenMinimized = (GUICtrlRead($g_hChkUpdatingWhenMinimized) = $GUI_CHECKED)
 	EndFunc   ;==>chkUpdatingWhenMinimized
 #ce
+
 Func chkHideWhenMinimized()
 	$g_bHideWhenMinimized = (GUICtrlRead($g_hChkHideWhenMinimized) = $GUI_CHECKED)
 	TrayItemSetState($g_hTiHide, ($g_bHideWhenMinimized = 1 ? $TRAY_CHECKED : $TRAY_UNCHECKED))
@@ -153,7 +155,7 @@ Func txtSinglePBTimeForced()
 		Case 16
 			GUICtrlSetBkColor($g_hTxtSinglePBTimeForced, $COLOR_YELLOW)
 		Case 17 To 999
-			GUICtrlSetBkColor($g_hTxtSinglePBTimeForced, $COLOR_MONEYGREEN)
+			GUICtrlSetBkColor($g_hTxtSinglePBTimeForced, 0xD1DFE7)
 	EndSwitch
 	Switch Int(GUICtrlRead($g_hTxtPBTimeForcedExit))
 		Case 0 To 11
@@ -161,7 +163,7 @@ Func txtSinglePBTimeForced()
 		Case 12 To 14
 			GUICtrlSetBkColor($g_hTxtPBTimeForcedExit, $COLOR_YELLOW)
 		Case 15 To 999
-			GUICtrlSetBkColor($g_hTxtPBTimeForcedExit, $COLOR_MONEYGREEN)
+			GUICtrlSetBkColor($g_hTxtPBTimeForcedExit, 0xD1DFE7)
 	EndSwitch
 EndFunc   ;==>txtSinglePBTimeForced
 
@@ -209,17 +211,25 @@ Func chkSwitchAcc()
 		For $i = $g_hCmbTotalAccount To $g_ahChkDonate[7]
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
-		GUICtrlSetState($g_hChkOnlySCIDAccounts, $GUI_UNCHECKED)
-		GUICtrlSetState($g_hChkOnlySCIDAccounts, $GUI_DISABLE)
-		OnlySCIDAccounts()
+		GUICtrlSetState($g_hChkOnlySCIDAccounts, $GUI_DISABLE + $GUI_UNCHECKED)
+		For $i = 0 To 7
+			GUICtrlSetState($g_ahChkSetFarm[$i], $GUI_ENABLE)
+			_chkSetFarmSchedule($i)
+		Next
 	Else
 		releaseSwitchAccountMutex()
 		For $i = $g_hCmbTotalAccount To $g_ahChkDonate[7]
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
 		GUICtrlSetState($g_hChkOnlySCIDAccounts, $GUI_ENABLE)
-		OnlySCIDAccounts()
+		For $i = 0 To 7
+			For $j = $g_ahChkSetFarm[$i] To $g_ahCmbTime2[$i]
+				GUICtrlSetState($j, $GUI_DISABLE)
+			Next
+		Next
 	EndIf
+	chkSwitchProfile()
+	OnlySCIDAccounts()
 EndFunc   ;==>chkSwitchAcc
 
 Func cmbSwitchAcc()
@@ -285,6 +295,18 @@ Func _cmbSwitchAcc($bReadSaveConfig = True)
 		GUICtrlSetState($i, (($bEnable) ? $GUI_ENABLE : $GUI_DISABLE))
 	Next
 	cmbTotalAcc()
+
+	For $i = 0 To 7
+		If $bEnable Then
+			GUICtrlSetState($g_ahChkSetFarm[$i], $GUI_ENABLE)
+			_chkSetFarmSchedule($i)
+		Else
+			For $j = $g_ahChkSetFarm[$i] To $g_ahCmbTime2[$i]
+				GUICtrlSetState($j, $GUI_DISABLE)
+			Next
+		EndIf
+	Next
+
 	$s_bActive = False
 EndFunc   ;==>_cmbSwitchAcc
 
@@ -293,9 +315,16 @@ Func cmbTotalAcc()
 	For $i = 0 To 7
 		If $iCmbTotalAcc >= 0 And $i <= $iCmbTotalAcc Then
 			_GUI_Value_STATE("SHOW", $g_ahChkAccount[$i] & "#" & $g_ahCmbProfile[$i] & "#" & $g_ahChkDonate[$i])
+			For $j = $g_ahChkSetFarm[$i] To $g_ahCmbTime2[$i]
+				GUICtrlSetState($j, $GUI_SHOW)
+			Next
+			_chkSetFarmSchedule($i)
 		ElseIf $i > $iCmbTotalAcc Then
 			GUICtrlSetState($g_ahChkAccount[$i], $GUI_UNCHECKED)
 			_GUI_Value_STATE("HIDE", $g_ahChkAccount[$i] & "#" & $g_ahCmbProfile[$i] & "#" & $g_ahChkDonate[$i])
+			For $j = $g_ahChkSetFarm[$i] To $g_ahCmbTime2[$i]
+				GUICtrlSetState($j, $GUI_HIDE)
+			Next
 		EndIf
 		chkAccount($i)
 	Next
@@ -305,8 +334,7 @@ Func chkSmartSwitch()
 	If GUICtrlRead($g_hChkSmartSwitch) = $GUI_CHECKED Then
 		GUICtrlSetState($g_hChkDonateLikeCrazy, $GUI_ENABLE)
 	Else
-		GUICtrlSetState($g_hChkDonateLikeCrazy, $GUI_UNCHECKED)
-		GUICtrlSetState($g_hChkDonateLikeCrazy, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkDonateLikeCrazy, $GUI_DISABLE + $GUI_UNCHECKED)
 	EndIf
 EndFunc   ;==>chkSmartSwitch
 
@@ -365,6 +393,26 @@ Func cmbSwitchAccProfileX()
 	Next
 EndFunc   ;==>cmbSwitchAccProfileX
 
+Func chkAccSwitchMode()
+	If GUICtrlRead($g_hRadSwitchGooglePlay) = $GUI_CHECKED Then
+		$g_bChkGooglePlay = True
+		$g_bChkSuperCellID = False
+		$g_bChkSharedPrefs = False
+	ElseIf GUICtrlRead($g_hRadSwitchSuperCellID) = $GUI_CHECKED Then
+		$g_bChkGooglePlay = False
+		$g_bChkSuperCellID = True
+		$g_bChkSharedPrefs = False
+	ElseIf GUICtrlRead($g_hRadSwitchSharedPrefs) = $GUI_CHECKED Then
+		$g_bChkGooglePlay = False
+		$g_bChkSuperCellID = False
+		$g_bChkSharedPrefs = True
+	Else
+		$g_bChkGooglePlay = False
+		$g_bChkSuperCellID = False
+		$g_bChkSharedPrefs = False
+	EndIf
+EndFunc   ;==>chkAccSwitchMode
+
 ; #DEBUG FUNCTION# ==============================================================================================================
 
 Func chkDebugSetLog()
@@ -409,7 +457,7 @@ Func chkDebugOcr()
 	SetDebugLog("DebugOcr " & ($g_bDebugOcr ? "enabled" : "disabled"))
 EndFunc   ;==>chkDebugOcr
 
-Func chkDebugImageSave()
+Func chkSaveDebugImage()
 	$g_bDebugImageSave = (GUICtrlRead($g_hChkDebugImageSave) = $GUI_CHECKED)
 	SetDebugLog("DebugImageSave " & ($g_bDebugImageSave ? "enabled" : "disabled"))
 EndFunc   ;==>chkDebugImageSave
@@ -585,6 +633,16 @@ Func btnTestImage()
 		SetLog("$aNoCloudsAttack pixel check: " & _CheckPixel($aNoCloudsAttack, $g_bCapturePixel))
 		SetLog("Testing WaitForClouds DONE", $COLOR_SUCCESS)
 
+		#cs
+			SetLog("Testing checkAttackDisable...", $COLOR_SUCCESS)
+			SetLog("Testing checkAttackDisable($g_iTaBChkAttack)...", $COLOR_SUCCESS)
+			SetLog("checkAttackDisable($g_iTaBChkAttack) = " & checkAttackDisable($g_iTaBChkAttack))
+			SetLog("Testing checkAttackDisable($g_iTaBChkIdle)...", $COLOR_SUCCESS)
+			SetLog("checkAttackDisable($g_iTaBChkIdle) = " & checkAttackDisable($g_iTaBChkIdle))
+			SetLog("Testing checkAttackDisable($g_iTaBChkTime)...", $COLOR_SUCCESS)
+			SetLog("checkAttackDisable($g_iTaBChkTime) = " & checkAttackDisable($g_iTaBChkTime))
+			SetLog("Testing checkAttackDisable DONE", $COLOR_SUCCESS)
+		#ce
 	Next
 
 	SetLog("Testing finished", $COLOR_INFO)

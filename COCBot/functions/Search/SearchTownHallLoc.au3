@@ -27,11 +27,7 @@ Func SearchTownHallLoc()
 		Case $LB
 			$addtiles = $g_iTHSnipeBeforeTiles[$LB]
 		Case $DB
-			If $g_bDuringMilkingAttack = True Then
-				$addtiles = $g_iMilkFarmTHMaxTilesFromBorder
-			Else
-				$addtiles = $g_iTHSnipeBeforeTiles[$DB]
-			EndIf
+			$addtiles = $g_iTHSnipeBeforeTiles[$DB]
 	EndSwitch
 
 

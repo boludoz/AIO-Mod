@@ -239,7 +239,7 @@ Func ReadRegularConfig()
 	ReadConfig_600_33()
 	; <><><><> Bot / Options <><><><>
 	ReadConfig_600_35_1()
-	; <><><><> Bot / Profile / Switch Account <><><><>
+	; <><><><> Bot / Profile / Switch Accounts <><><><>
 	ReadConfig_600_35_2()
 	; <><><> Attack Plan / Train Army / Troops/Spells <><><>
 	; Quick train
@@ -252,6 +252,26 @@ Func ReadRegularConfig()
 	ReadConfig_600_56()
 	; <><><> Attack Plan / Train Army / Options <><><>
 	ReadConfig_641_1()
+
+	; <><><> Team AiO MOD++ (2019) <><><>
+	; <><><> SuperXP / GoblinXP <><><>
+	ReadConfig_MOD_SuperXP()
+	; <><><> ChatActions <><><>
+	ReadConfig_MOD_ChatActions()
+	; <><><> Daily Discounts + Builder Base Attack + Builder Base Drop Order <><><>
+	ReadConfig_MOD_600_6()
+	; <><><> ClanHop <><><>
+	ReadConfig_MOD_600_12()
+	; <><><> Max logout time <><><>
+	ReadConfig_MOD_600_28()
+	; <><><> Classic Four Finger + CSV Deploy Speed <><><>
+	ReadConfig_MOD_600_29()
+	; <><><> Check Collectors Outside <><><>
+	ReadConfig_MOD_600_31()
+	; <><><> Auto Dock, Hide Emulator & Bot <><><>
+	ReadConfig_MOD_600_35_1()
+	; <><><><> Switch Profiles <><><><>
+	ReadConfig_MOD_600_35_2()
 
 	; <><><><> Attack Plan / Strategies <><><><>
 	; <<< nothing here >>>
@@ -810,7 +830,7 @@ Func ReadConfig_600_22()
 		$g_abBoostBarracksHours[$i] = ($g_abBoostBarracksHours[$i] = "1")
 	Next
 	; Note: These global variables are not stored to the ini file, to prevent automatic boosting (and spending of gems) when the bot is started:
-	; $g_iCmbBoostBarracks, $g_iCmbBoostSpellFactory, $g_iCmbBoostWorkshop, $g_iCmbBoostBarbarianKing, $g_iCmbBoostArcherQueen, $g_iCmbBoostWarden
+	; $g_iCmbBoostBarracks, $g_iCmbBoostSpellFactory, $g_iCmbBoostWorkshop, $g_iCmbBoostBarbarianKing, $g_iCmbBoostArcherQueen, $g_iCmbBoostWarden, $g_iCmbBoostTrainingPotion, $g_iCmbBoostResourcePotion
 EndFunc   ;==>ReadConfig_600_22
 
 Func ReadConfig_600_26()
@@ -1186,7 +1206,7 @@ Func ReadConfig_600_35_1()
 EndFunc   ;==>ReadConfig_600_35_1
 
 Func ReadConfig_600_35_2()
-	; <><><><> Bot / Profile / Switch Account <><><><>
+	; <><><><> Bot / Profile / Switch Accounts <><><><>
 	Local $sSwitchAccFile
 	$g_iCmbSwitchAcc = 0
 	$g_bChkSwitchAcc = False
@@ -1232,7 +1252,21 @@ Func ReadConfig_SwitchAccounts()
 		For $i = 1 To 8
 			$g_abAccountNo[$i - 1] = IniRead($sSwitchAccFile, "SwitchAccount", "AccountNo." & $i, "") = "1"
 			$g_asProfileName[$i - 1] = IniRead($sSwitchAccFile, "SwitchAccount", "ProfileName." & $i, "")
-			$g_abDonateOnly[$i - 1] = IniRead($sSwitchAccFile, "SwitchAccount", "DonateOnly." & $i, "0") = "1"
+			$g_abDonateOnly[$i - 1] = $g_abAccountNo[$i - 1] And IniRead($sSwitchAccFile, "SwitchAccount", "DonateOnly." & $i, "0") = "1"
+
+			;Farm Schedule
+			$g_abChkSetFarm[$i - 1] = IniRead($sSwitchAccFile, "FarmStrategy", "ChkSetFarm" & $i, "0") = "1"
+
+			$g_aiCmbAction1[$i - 1] = Int(IniRead($sSwitchAccFile, "FarmStrategy", "CmbAction1" & $i, 0))
+			$g_aiCmbCriteria1[$i - 1] = Int(IniRead($sSwitchAccFile, "FarmStrategy", "CmbCriteria1" & $i, 0))
+			$g_aiTxtResource1[$i - 1] = Int(IniRead($sSwitchAccFile, "FarmStrategy", "TxtResource1" & $i, 0))
+			$g_aiCmbTime1[$i - 1] = Int(IniRead($sSwitchAccFile, "FarmStrategy", "CmbTime1" & $i, -1))
+
+			$g_aiCmbAction2[$i - 1] = Int(IniRead($sSwitchAccFile, "FarmStrategy", "CmbAction2" & $i, 0))
+			$g_aiCmbCriteria2[$i - 1] = Int(IniRead($sSwitchAccFile, "FarmStrategy", "CmbCriteria2" & $i, 0))
+			$g_aiTxtResource2[$i - 1] = Int(IniRead($sSwitchAccFile, "FarmStrategy", "TxtResource2" & $i, 0))
+			$g_aiCmbTime2[$i - 1] = Int(IniRead($sSwitchAccFile, "FarmStrategy", "CmbTime2" & $i, -1))
+
 		Next
 	EndIf
 EndFunc   ;==>ReadConfig_SwitchAccounts
