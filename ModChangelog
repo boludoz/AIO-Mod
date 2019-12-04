@@ -4,10 +4,20 @@
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
                     Based on MyBot.run v7.8
+	**V3.0.1**
+	» Fixed:
+		• SwitchAccountVariablesReload : Error 66372 fixed
+	
+	» Improved:
+		• Chat AI: Scroll
+
 	**V3.0.0**
 	» Added:
-		• Smart farm: collector outside support
-	
+        • Daily Discounts custom  (thx Chilly-Chill - NGuyen <3 )
+        • Smart farm: collector outside support
+        • Random click away ( detect $aAway and $aAway2)
+        • Only farm mode (fast farming)
+
 	» Improved:
 		• Chat AI: Scroll
 		• Collector outside: TH12

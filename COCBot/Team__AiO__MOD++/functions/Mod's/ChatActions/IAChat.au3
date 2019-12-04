@@ -13,21 +13,79 @@
 ; Example .......: ReadChat()
 ; ===============================================================================================================================
 Func ChatScroll()
+	Setlog("ChatActions: Scroll", $COLOR_INFO)
+
+	Local $iIntPreventTime = 0
+	Local $iLastIntPrevent = 0
+
 	For $i = 0 To 50 
 		Local $hTimer = __TimerInit()
 		While Random(15000, 25555, 1) > __TimerDiff($hTimer)
 			Local $aCapture = MultiPSimple(303, 637, 311, 679, Hex(0x91D125, 6), 15)
 			If IsArray($aCapture) And UBound($aCapture) > 1 Then 
-				$aCapture[0] -= Random(5, 10, 1) 
+				$aCapture[0] -= Random(5, 10, -1) 
 				$aCapture[1] += Random(7, 10, 1)
 				ClickP($aCapture)
 			Else
+				ExitLoop
+			EndIf
+		WEnd
+		
+		CheckScrollG($iIntPreventTime, $iLastIntPrevent)
+		
+		While Random(15000, 25555, 1) > __TimerDiff($hTimer)
+			If CheckScrollW() and CheckScrollB() Then
+				ClickDrag(185, 570 + $g_iMidOffsetY, 185 + $g_iMidOffsetY, 220)
+				$iIntPreventTime = 0
+				ElseIf not CheckScrollW() and not CheckScrollB() Then
+				ClickDrag(185, 570 + $g_iMidOffsetY, 185 + $g_iMidOffsetY, 220)
+				$iIntPreventTime += 1
+				If CheckScrollG($iIntPreventTime, $iLastIntPrevent) Then ExitLoop 2
+				ElseIf not CheckScrollB() and CheckScrollW() Then
+				$iIntPreventTime = 0
 				ExitLoop 2
 			EndIf
 		WEnd
 	Next
 EndFunc
+
+Func CheckScrollG(ByRef $iIntPreventTime, ByRef $iLastIntPrevent)
+	Local $aCapture = MultiPSimple(36, 554, 70, 672, Hex(0x979797, 6), 10)
+	Local $iSuperAI = Abs(Int($iLastIntPrevent) - Int($aCapture[1]))
+	
+	If _Sleep(1500) Then Return
+	
+	;Setlog($iIntPreventTime & " /1/ " & $iLastIntPrevent)
+	
+	If IsArray($aCapture) and UBound($aCapture) > 1 Then 
+	
 		
+		If $iIntPreventTime < 2 and $iSuperAI = 0 Then Return True
+		
+		$iLastIntPrevent = $aCapture[1]
+	
+	EndIf
+	;Setlog($iIntPreventTime & " /2/ " & $iLastIntPrevent)
+
+Return False
+EndFunc
+
+Func CheckScrollB()
+	If MultiPSimple(230, 663, 310, 677, Hex(0x2B2B29, 6), 10) = 0 then 
+		Return False
+	Else
+		Return True
+	EndIf
+EndFunc
+
+Func CheckScrollW()
+	If MultiPSimple(234, 662, 307, 677, Hex(0x8F8F87, 6), 25) = 0 then
+		Return False
+	Else
+		Return True
+	EndIf
+EndFunc
+
 Func ReadChatIA(ByRef $sOCRString, $sCondition = -1, $bFast = True)
 	Local $bResult = True
 	Local $asFCKeyword = ""
