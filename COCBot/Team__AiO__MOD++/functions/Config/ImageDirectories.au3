@@ -30,3 +30,8 @@ Global $g_sImgDDWallRingx10 = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Dail
 #Region ChatActions
 Global $g_sImgChatObstacles = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ChatActions\FriendlyChallenge"
 #EndRegion
+
+#Region GTFO
+Global $g_sImgKickOut = @ScriptDir & "\COCBot\Fenix MOD\imgxml\GTFO\KickOut"
+Global $g_sImgClanProfilePage = @ScriptDir & "\COCBot\Fenix MOD\imgxml\Pages\Profile"
+#EndRegion GTFO

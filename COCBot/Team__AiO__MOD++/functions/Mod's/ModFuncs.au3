@@ -283,3 +283,21 @@ Func SearchNoLeague($bCheckOneTime = False)
 	Return True
 EndFunc   ;==>SearchNoLeague
 
+#Region AIO Mod ++
+Func SpecialAway()
+	_Sleep(Random(0,2000,1))
+	Local $aSpecialAway[2] = [Random(1,4,1), Random(1,50,1)]
+	If $g_bDebugClick Or TestCapture() Then SetLog("Click SpecialAway " & $aSpecialAway[0] & ", " & $aSpecialAway[1], $COLOR_ACTION, "Verdana", "7.5", 0)
+	ClickP($aSpecialAway)
+EndFunc
+#EndRegion
+
+Func UnderstandChatRules() 
+	;LEFT - 68, 447, 92, 479
+	;RIGHT - 223, 448, 249, 479
+	;DDF685
+	If IsArray(MultiPSimple(68, 447, 92, 479, Hex(0xDDF685, 6), 15)) And IsArray(MultiPSimple(223, 448, 249, 479, Hex(0xDDF685, 6), 15)) Then 
+		Click(Random(90, 248, 1), Random(448, 479, 1))
+		If _Sleep(500) Then Return
+	EndIf
+EndFunc

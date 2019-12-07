@@ -721,6 +721,12 @@ Func runBot() ;Bot that runs everything in order
 		chkShieldStatus()
 		If Not $g_bRunState Then Return
 		If $g_bRestart Then ContinueLoop
+		
+		; AIO - Start
+		MainGTFO()
+		MainKickout()
+		; AIO - End
+		
 		checkObstacles() ; trap common error messages also check for reconnecting animation
 		If $g_bRestart Then ContinueLoop
 
@@ -812,8 +818,7 @@ Func runBot() ;Bot that runs everything in order
 			If $g_bFirstStart Then SetDebugLog("First loop completed!")
 			$g_bFirstStart = False ; already finished first loop since bot started.
 
-			ClanHop() ; ClanHop - Team AiO MOD++
-			ChatActions() ; ChatActions - Team AiO MOD++
+			If not $g_bChkOnlyFarm Then ChatActions() ; ChatActions - Team AiO MOD++
 
 			If ProfileSwitchAccountEnabled() And ($g_iCommandStop = 0 Or $g_iCommandStop = 3 Or $g_abDonateOnly[$g_iCurAccount]) Then checkSwitchAcc()
 			If IsSearchAttackEnabled() Then ; If attack scheduled has attack disabled now, stop wall upgrades, and attack.
@@ -874,8 +879,6 @@ Func _Idle() ;Sequence that runs until Full Army
 
 	Local $TimeIdle = 0 ;In Seconds
 	If $g_bDebugSetlog Then SetDebugLog("Func Idle ", $COLOR_DEBUG)
-
-	If $g_bChkClanHop Then Return ; ClanHop - Team AiO MOD++
 
 	While $g_bIsFullArmywithHeroesAndSpells = False
 
@@ -1047,16 +1050,12 @@ Func AttackMain() ;Main control for attack functions
 			If _Sleep($DELAYATTACKMAIN2) Then Return
 			Return True
 		Else
-			If Not $g_bChkClanHop Then ; ClanHop - Team AiO MOD++
-				SetLog("None of search condition match:", $COLOR_WARNING)
-				SetLog("Search, Trophy or Army Camp % are out of range in search setting", $COLOR_WARNING)
-				$g_bIsSearchLimit = False
-				$g_bIsClientSyncError = False
-				If ProfileSwitchAccountEnabled() Then checkSwitchAcc()
-				SmartWait4Train()
-			Else                                                                     ;  ClanHop - Team AiO MOD++
-				SetLog("Skipping Attack because Clan Hop is enabled!", $COLOR_INFO)  ;  ClanHop - Team AiO MOD++
-			EndIf                                                                    ;  ClanHop - Team AiO MOD++
+			SetLog("None of search condition match:", $COLOR_WARNING)
+			SetLog("Search, Trophy or Army Camp % are out of range in search setting", $COLOR_WARNING)
+			$g_bIsSearchLimit = False
+			$g_bIsClientSyncError = False
+			If ProfileSwitchAccountEnabled() Then checkSwitchAcc()
+			SmartWait4Train()
 		EndIf
 	Else
 		SetLog("Attacking Not Planned, Skipped..", $COLOR_WARNING)
@@ -1108,22 +1107,20 @@ Func __RunFunction($action)
 			CleanYard()
 		Case "ReplayShare"
 			If BitAnd(Not BitOr($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
-			If $g_bChkClanHop Then Return ; ClanHop - Team AiO MOD++
 			ReplayShare($g_bShareAttackEnableNow)
 			_Sleep($DELAYRUNBOT3)
 		Case "NotifyReport"
-			If $g_bChkClanHop Then Return ; ClanHop - Team AiO MOD++
 			NotifyReport()
 			_Sleep($DELAYRUNBOT3)
 		Case "DonateCC"
-			If $g_bChkClanHop Or not $g_bChkOnlyFarm Then Return ; Team AiO MOD++
+			If $g_bChkOnlyFarm Then Return ; Team AiO MOD++
 			If $g_iActiveDonate And $g_bChkDonate Then
 				; if in "Halt/Donate" don't skip near full army
 				If (Not SkipDonateNearFullTroops(True) Or $g_iCommandStop = 3 Or $g_iCommandStop = 0) And BalanceDonRec(True) Then DonateCC()
 				If _Sleep($DELAYRUNBOT1) = False Then checkMainScreen(False)
 			EndIf
 		Case "DonateCC,Train"
-			If $g_bChkOnlyFarm And (Not $g_abDonateOnly[$g_iCurAccount]) Then Return ; AIO Mod
+			If Not $g_abDonateOnly[$g_iCurAccount] Then Return ; AIO Mod
 			If $g_iActiveDonate And $g_bChkDonate Then
 				If $g_bFirstStart Then
 					getArmyTroopCapacity(True, False)
@@ -1164,15 +1161,12 @@ Func __RunFunction($action)
 			BoostWorkshop()
 			_Sleep($DELAYRESPOND)
 		Case "BoostKing"
-			If $g_bChkClanHop Then Return ; ClanHop - Team AiO MOD++
 			BoostKing()
 			_Sleep($DELAYRESPOND)
 		Case "BoostQueen"
-			If $g_bChkClanHop Then Return ; ClanHop - Team AiO MOD++
 			BoostQueen()
 			_Sleep($DELAYRESPOND)
 		Case "BoostWarden"
-			If $g_bChkClanHop Then Return ; ClanHop - Team AiO MOD++
 			BoostWarden()
 			_Sleep($DELAYRESPOND)
 		Case "BoostTrainingPotion"
@@ -1193,30 +1187,25 @@ Func __RunFunction($action)
             If Not _Sleep($DELAYRUNBOT1) Then checkMainScreen(False)
 		Case "Laboratory"
 			If BitAnd(Not BitOr($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
-			If $g_bChkClanHop Then Return ; ClanHop - Team AiO MOD++
 			Laboratory()
             If Not _Sleep($DELAYRUNBOT3) Then checkMainScreen(False)
 		Case "UpgradeHeroes"
 			If BitAnd(Not BitOr($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
-			If $g_bChkClanHop Then Return ; ClanHop - Team AiO MOD++
 			UpgradeHeroes()
 			_Sleep($DELAYRUNBOT3)
 		Case "UpgradeBuilding"
 			If BitAnd(Not BitOr($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
-			If $g_bChkClanHop Then Return ; ClanHop - Team AiO MOD++
 			UpgradeBuilding()
 			If _Sleep($DELAYRUNBOT3) Then Return
 			AutoUpgrade()
 			_Sleep($DELAYRUNBOT3)
 		Case "UpgradeWall"
 			If BitAnd(Not BitOr($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
-			If $g_bChkClanHop Then Return ; ClanHop - Team AiO MOD++
 			$g_iNbrOfWallsUpped = 0
 			UpgradeWall()
 			_Sleep($DELAYRUNBOT3)
 		Case "BuilderBase"
 			If BitAnd(Not BitOr($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
-			If $g_bChkClanHop Then Return ; ClanHop - Team AiO MOD++
 			If isOnBuilderBase() Or (($g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_iChkBBSuggestedUpgrades Or $g_bChkEnableBBAttack) And SwitchBetweenBases()) Then
 				$g_bStayOnBuilderBase = True
 				If _Sleep($DELAYRUNBOT3) Then Return
@@ -1267,7 +1256,6 @@ Func FirstCheck()
 
 	SetDebugLog("-- FirstCheck Loop --")
 	If Not $g_bRunState Then Return
-	If $g_bChkClanHop Then Return ; ClanHop - Team AiO MOD++
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
 
 	If not $g_bChkOnlyFarm Then
@@ -1275,10 +1263,15 @@ Func FirstCheck()
 	$g_bFullArmy = False
 	$g_iCommandStop = -1
 	EndIf
-
+	
+	;Aio
 	VillageReport()
-	ProfileSwitch()  ; AIO Mod
-	CheckFarmSchedule()  ; AIO Mod
+	ProfileSwitch()
+	CheckFarmSchedule()
+	MainGTFO()
+	MainKickout()
+	;Aio
+	
 	If Not $g_bRunState Then Return
 
 	If $g_bOutOfGold And (Number($g_aiCurrentLoot[$eLootGold]) >= Number($g_iTxtRestartGold)) Then ; check if enough gold to begin searching again

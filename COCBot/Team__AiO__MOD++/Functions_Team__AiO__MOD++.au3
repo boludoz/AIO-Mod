@@ -27,8 +27,6 @@
 #include "functions\Mod's\ChatActions\IAChat.au3"
 #include "functions\Mod's\ChatActions\ChatActions.au3"
 
-; ClanHop - Team AiO MOD++
-#include "functions\Mod's\ClanHop.au3"
 
 ; Auto Dock, Hide Emulator & Bot - Team AiO MOD++
 #include "functions\Mod's\AutoHideDockMinimize.au3"
@@ -40,10 +38,16 @@
 
 ; Switch Profiles - Team AiO MOD++
 #include "functions\Mod's\ProfilesOptions\SwitchProfiles.au3"
+
 ; Farm Schedule - Team AiO MOD++
 #include "functions\Mod's\ProfilesOptions\FarmSchedule.au3"
+
+; GTFO
+#include "functions\Mod's\GTFO\GTFO.au3"
+#include "functions\Mod's\GTFO\KickOut.au3"
 
 ; moved to the end to avoid any global declare issues
 #include "functions\Config\saveConfig.au3"
 #include "functions\Config\readConfig.au3"
 #include "functions\Config\applyConfig.au3"
+

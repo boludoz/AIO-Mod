@@ -20,6 +20,7 @@ Global $g_hGUI_MOD_TAB = 0, $g_hGUI_MOD_TAB_ITEM1 = 0, $g_hGUI_MOD_TAB_ITEM2 = 0
 #include "MOD GUI Design - SuperXP.au3"
 #include "MOD GUI Design - ChatActions.au3"
 #include "MOD GUI Design - AiO-Debug.au3"
+#include "MOD GUI Design - GTFO.au3"
 
 Func CreateMODTab()
 
@@ -34,7 +35,9 @@ Func CreateMODTab()
 			TabSuperXPGUI()
 		$g_hGUI_MOD_TAB_ITEM2 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_06_STab_04", "ChatActions"))
 			TabChatActionsGUI()
-			
+		$g_hGUI_MOD_TAB_ITEM4 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_10_STab_02", "GTFO"))
+			TabGTFOGUI()
+
 		If $g_bDevMode Then
 			$g_hGUI_MOD_TAB_ITEM3 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_06_STab_05", "Debug"))
 				TabDebugGUI()

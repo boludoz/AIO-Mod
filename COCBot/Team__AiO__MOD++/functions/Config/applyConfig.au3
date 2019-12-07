@@ -51,6 +51,7 @@ Func ApplyConfig_MOD_SuperXP($TypeReadSave)
 			$g_bAQueenSX = (GUICtrlRead($g_hChkAQueenSX) = $GUI_CHECKED) ? $eHeroQueen : $eHeroNone
 			$g_bGWardenSX = (GUICtrlRead($g_hChkGWardenSX) = $GUI_CHECKED) ? $eHeroWarden : $eHeroNone
 	EndSwitch
+
 EndFunc   ;==>ApplyConfig_MOD_SuperXP
 
 Func ApplyConfig_MOD_ChatActions($TypeReadSave)
@@ -128,12 +129,39 @@ Func ApplyConfig_MOD_600_6($TypeReadSave)
 EndFunc   ;==>ApplyConfig_MOD_600_6
 
 Func ApplyConfig_MOD_600_12($TypeReadSave)
-	; <><><> ClanHop <><><>
+	; <><><> GTFO <><><>
 	Switch $TypeReadSave
 		Case "Read"
-			GUICtrlSetState($g_hChkClanHop, $g_bChkClanHop = True ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkGTFOClanHop, $g_bChkGTFOClanHop = True ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkGTFOReturnClan, $g_bChkGTFOReturnClan = True ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetData($g_hTxtCyclesGTFO, $g_iTxtCyclesGTFO)
+			GUICtrlSetState($g_hChkUseGTFO, $g_bChkUseGTFO = True ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetData($g_hTxtMinSaveGTFO_Elixir, $g_iTxtMinSaveGTFO_Elixir)
+			GUICtrlSetData($g_hTxtMinSaveGTFO_DE, $g_iTxtMinSaveGTFO_DE)
+			GUICtrlSetData($g_hTxtClanID, $g_sTxtClanID)
+			ApplyGTFO()
+
+			GUICtrlSetState($g_hChkUseKickOut, $g_bChkUseKickOut = True ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetData($g_hTxtDonatedCap, $g_iTxtDonatedCap)
+			GUICtrlSetData($g_hTxtReceivedCap, $g_iTxtReceivedCap)
+			GUICtrlSetState($g_hChkKickOutSpammers, $g_bChkKickOutSpammers = True ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetData($g_hTxtKickLimit, $g_iTxtKickLimit)
+			ApplyKickOut()
+
 		Case "Save"
-			$g_bChkClanHop = (GUICtrlRead($g_hChkClanHop) = $GUI_CHECKED)
+			$g_bChkGTFOClanHop = (GUICtrlRead($g_hChkGTFOClanHop) = $GUI_CHECKED)
+			$g_bChkGTFOReturnClan = (GUICtrlRead($g_hChkGTFOReturnClan) = $GUI_CHECKED)
+			$g_iTxtCyclesGTFO = Number(GUICtrlRead($g_hTxtCyclesGTFO))
+			$g_sTxtClanID = GUICtrlRead($g_hTxtClanID)
+
+			$g_bChkUseGTFO = (GUICtrlRead($g_hChkUseGTFO) = $GUI_CHECKED)
+			$g_iTxtMinSaveGTFO_Elixir = Number(GUICtrlRead($g_hTxtMinSaveGTFO_Elixir))
+			$g_iTxtMinSaveGTFO_DE = Number(GUICtrlRead($g_hTxtMinSaveGTFO_DE))
+			$g_bChkUseKickOut = (GUICtrlRead($g_hChkUseKickOut) = $GUI_CHECKED)
+			$g_iTxtDonatedCap = Number(GUICtrlRead($g_hTxtDonatedCap))
+			$g_iTxtReceivedCap = Number(GUICtrlRead($g_hTxtReceivedCap))
+			$g_bChkKickOutSpammers = (GUICtrlRead($g_hChkKickOutSpammers) = $GUI_CHECKED)
+			$g_iTxtKickLimit = Number(GUICtrlRead($g_hTxtKickLimit))
 	EndSwitch
 EndFunc   ;==>ApplyConfig_MOD_600_12
 

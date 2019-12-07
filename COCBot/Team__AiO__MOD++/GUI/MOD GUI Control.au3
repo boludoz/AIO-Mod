@@ -14,14 +14,12 @@
 ; ===============================================================================================================================
 #include-once
 
-; ClanHop - Team AiO MOD++
-Func btnDonateOptions()
-	If GUICtrlGetState($g_hGrpDonateOptions) = BitOR($GUI_HIDE, $GUI_ENABLE) Then
-		_DonateBtn($g_hGrpDonateOptions, $g_hChkClanHop)
-	EndIf
-	GUICtrlSetState($g_hChkDonateQueueTroopOnly, $GUI_HIDE)
-	GUICtrlSetState($g_hChkDonateQueueSpellOnly, $GUI_HIDE)
-EndFunc   ;==>btnDonateOptions
+#include "MOD GUI Control - Daily-Discounts.au3"
+#include "MOD GUI Control - Switch-Options.au3"
+#include "MOD GUI Control - SuperXP.au3"
+#include "MOD GUI Control - ChatActions.au3"
+#include "MOD GUI Control - AiO-Debug.au3"
+#include "MOD GUI Control - GTFO.au3"
 
 ; Classic Four Finger - Team AiO MOD++
 Func cmbStandardDropSidesAB() ; avoid conflict between FourFinger and SmartAttack

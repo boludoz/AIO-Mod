@@ -158,20 +158,21 @@ Func btnTestAttackBB()
 	$g_bDebugSetlog = $currentSetlog
 EndFunc   ;==>btnTestAttackBB
 
-Func btnTestClanHop()
-	Local $currentRunState = $g_bRunState
-	Local $currentSetlog = $g_bDebugSetlog
-	Local $currentEnableClanHop = $g_bChkClanHop
+Func btnTestGTFO()
+	SetLog("Test GTFO Started", $COLOR_DEBUG)
 
-	_GUICtrlTab_ClickTab($g_hTabMain, 0)
+	Local $wasRunState = $g_bRunState
+	Local $wasUseGTFO = $g_bChkUseGTFO
+	;For Debug Purpose set run state to true temporarily
 	$g_bRunState = True
-	$g_bChkClanHop = True
+	$g_bChkUseGTFO = True
+	_GUICtrlTab_ClickTab($g_hTabMain, 0)
+	MainGTFO()
 
-	SetLog(_PadStringCenter(" Test ClanHop begin (" & $g_sBotVersion & ")", 54, "="), $COLOR_INFO)
-	ClanHop()
-	SetLog(_PadStringCenter(" Test ClanHop end ", 54, "="), $COLOR_INFO)
+	;Reset to orignal state
+	$g_bChkUseGTFO = $wasUseGTFO
+	$g_bRunState = $wasRunState
 
-	$g_bChkClanHop = $currentEnableClanHop
-	$g_bRunState = $currentRunState
-	$g_bDebugSetlog = $currentSetlog
-EndFunc   ;==>btnTestClanHop
+	SetLog("Test GTFO Ended", $COLOR_DEBUG)
+
+EndFunc   ;==>btnTestGTFO

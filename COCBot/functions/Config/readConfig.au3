@@ -260,7 +260,7 @@ Func ReadRegularConfig()
 	ReadConfig_MOD_ChatActions()
 	; <><><> Daily Discounts + Builder Base Attack + Builder Base Drop Order <><><>
 	ReadConfig_MOD_600_6()
-	; <><><> ClanHop <><><>
+	; <><><> GTFO <><><>
 	ReadConfig_MOD_600_12()
 	; <><><> Max logout time <><><>
 	ReadConfig_MOD_600_28()

@@ -52,12 +52,53 @@ Func CreateVillageMisc()
 		CreateMiscBuilderBaseSubTab()
 	$g_hGUI_MISC_TAB_ITEM3 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "MISC_TAB_ITEM3", "Clan Games"))
 		CreateMiscClanGamesV3SubTab()
+	$g_hGUI_MISC_TAB_ITEM4 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "MISC_TAB_ITEM4", "Magic Items"))
+		CreateMiscMagicSubTab()
 
 	CreateDailyDiscountGUI() ; Daily Discounts - Team AiO MOD++
 	CreateBBDropOrderGUI() ; Builder Base Attack - Team AiO MOD++
 	GUICtrlCreateTabItem("")
 
 EndFunc   ;==>CreateVillageMisc
+
+Func CreateMiscMagicSubTab()
+
+	; GUI SubTab
+	Local $x = 15, $y = 45
+	
+	GUICtrlCreateGroup("CollectGroup", 16, 24, 449, 65)
+	Global $g_hChkCollectMagicItems = GUICtrlCreateCheckbox("Collect magic items", 56, 48, 113, 17)
+	Global $g_hChkCollectFree = GUICtrlCreateCheckbox("Collect FREE items", 320, 48, 113, 17)
+	Global $g_hBtnMagicItemsConfig = GUICtrlCreateButton("Settings", 176, 48, 97, 25)
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+	GUICtrlCreateGroup("Magic Items", 16, 104, 449, 257)
+	Global $g_hChkBuilder = GUICtrlCreateCheckbox("Use builder potion when busy builders is > ", 56, 128, 225, 17)
+	Global $g_hChkClockTower = GUICtrlCreateCheckbox("Use clock tower potion when :", 56, 160, 217, 17)
+	Global $g_hChkHeroPotion = GUICtrlCreateCheckbox("Use hero potion whem are avariable : ", 56, 192, 217, 17)
+	Global $g_hChkLabPotion = GUICtrlCreateCheckbox("Use research potion when laboratory time is > ", 56, 224, 233, 17)
+	Global $g_hChkPowerPotion = GUICtrlCreateCheckbox("Use power potion during : ", 56, 256, 225, 17)
+	Global $g_hChkResourcePotion = GUICtrlCreateCheckbox("Use resource potion only if storage are :", 56, 288, 225, 17)
+	Global $g_hInputGoldItems = GUICtrlCreateInput("1000000", 88, 320, 73, 21)
+	Global $g_hInputElixirItem = GUICtrlCreateInput("1000000", 192, 320, 73, 21)
+	Global $g_hInputDarkElixirItem = GUICtrlCreateInput("1000", 296, 320, 49, 21)
+	Global $g_hComboBuilderPotion = GUICtrlCreateCombo("Number", 296, 128, 41, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
+	Global $g_hComboClockTowerPotion = GUICtrlCreateCombo("Select", 296, 160, 89, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
+	Global $g_hComboHeroPotion = GUICtrlCreateCombo("Select", 296, 192, 89, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
+	Global $g_hComboLabPotion = GUICtrlCreateInput("Hours", 296, 224, 41, 21)
+	Global $g_hComboPowerPotion = GUICtrlCreateCombo("Select", 296, 256, 89, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
+	GUICtrlCreateLabel("Lower : ", 40, 320, 42, 17)
+	Global $Pic0 = _GUICtrlCreatePic(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Icons\Shop.png", 24, 48, 25, 25)
+	Global $Pic1 = _GUICtrlCreatePic(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Icons\Builder.png", 24, 128, 25, 25)
+	Global $Pic3 = _GUICtrlCreatePic(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Icons\ClockTower.png", 24, 160, 25, 25)
+	Global $Pic4 = _GUICtrlCreatePic(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Icons\Hero.png", 24, 192, 25, 25)
+	Global $Pic5 = _GUICtrlCreatePic(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Icons\Lab.png", 24, 224, 25, 25)
+	Global $Pic6 = _GUICtrlCreatePic(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Icons\Power.png", 24, 256, 25, 25)
+	Global $Pic7 = _GUICtrlCreatePic(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Icons\Resource.png", 24, 288, 25, 25)
+	Global $Pic8 = _GUICtrlCreatePic(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Icons\IcnGold.png", 168, 320, 17, 17)
+	Global $Pic9 = _GUICtrlCreatePic(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Icons\IcnElixir.png", 272, 320, 17, 17)
+	Global $Pic10 = _GUICtrlCreatePic(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Icons\IcnDarkElixir.png", 352, 320, 17, 17)
+
+EndFunc   ;==>CreateMiscMagicSubTab
 
 Func CreateMiscNormalVillageSubTab()
 	Local $sTxtTip = ""

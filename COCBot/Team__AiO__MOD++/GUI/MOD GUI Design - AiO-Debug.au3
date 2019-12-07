@@ -15,7 +15,7 @@
 #include-once
 
 Global $g_hBtnTestSuperXP = 0, $g_hBtnTestClanChat = 0, $g_hBtnTestFriendChallenge = 0, $g_hBtnTestReadChat = 0, _
-	$g_hBtnTestDailyDiscounts = 0, $g_hBtnTestAttackBB = 0, $g_hBtnTestRequestDefense = 0, $g_hBtnTestClanHop = 0, $g_hBtnTestCollectorsOutside = 0, _
+	$g_hBtnTestDailyDiscounts = 0, $g_hBtnTestAttackBB = 0, $g_hBtnTestRequestDefense = 0, $g_hBtnTestGTFO = 0, $g_hBtnTestCollectorsOutside = 0, _
 	$g_hTxtTestExecuteButton = 0, $g_hBtnTestExecuteButton = 0
 
 Func TabDebugGUI()
@@ -35,7 +35,7 @@ Func TabDebugGUI()
 	$y += 30
 		$g_hBtnTestAttackBB = GUICtrlCreateButton("Test AttackBB", $x, $y, 140, 25)
 	$y += 30
-		$g_hBtnTestClanHop = GUICtrlCreateButton("Test ClanHop", $x, $y, 140, 25)
+		$g_hBtnTestGTFO = GUICtrlCreateButton("Test GTFO", $x, $y, 140, 25)
 	$y += 30
 		$g_hTxtTestExecuteButton = GUICtrlCreateInput("Execute()", $x - 90, $y + 3, 85, 20)
 			GUICtrlSetBkColor(-1, 0xD1DFE7)

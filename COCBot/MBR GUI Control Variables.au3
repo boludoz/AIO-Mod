@@ -284,7 +284,7 @@ Func InitializeControlVariables()
 	$oAlwaysEnabledControls($g_hBtnTestReadChat) = 1
 	$oAlwaysEnabledControls($g_hBtnTestDailyDiscounts) = 1
 	$oAlwaysEnabledControls($g_hBtnTestAttackBB) = 1
-	$oAlwaysEnabledControls($g_hBtnTestClanHop) = 1
+	$oAlwaysEnabledControls($g_hBtnTestGTFO) = 1
 #EndRegion
 
 	For $i in $aTabControlsVillage

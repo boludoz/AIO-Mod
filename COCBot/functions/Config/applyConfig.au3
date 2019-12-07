@@ -140,7 +140,7 @@ Func applyConfig($bRedrawAtExit = True, $TypeReadSave = "Read") ;Applies the dat
 	ApplyConfig_MOD_ChatActions($TypeReadSave)
 	; <><><> Daily Discounts + Builder Base Attack + Builder Base Drop Order <><><>
 	ApplyConfig_MOD_600_6($TypeReadSave)
-	; <><><> ClanHop <><><>
+	; <><><> GTFO <><><>
 	ApplyConfig_MOD_600_12($TypeReadSave)
 	; <><><> Max logout time <><><>
 	ApplyConfig_MOD_600_28($TypeReadSave)

@@ -32,13 +32,6 @@ EndFunc   ;==>SaveConfig_MOD_SuperXP
 Func SaveConfig_MOD_ChatActions()
 	; <><><> ChatActions <><><>
 	ApplyConfig_MOD_ChatActions(GetApplyConfigSaveAction())
-	_Ini_Add("ChatActions", "EnableChatGlobal", $g_bChatGlobal ? 1 : 0)
-	_Ini_Add("ChatActions", "DelayTimeGlobal", $g_sDelayTimeGlobal)
-	_Ini_Add("ChatActions", "ScrambleGlobal", $g_bScrambleGlobal ? 1 : 0)
-	_Ini_Add("ChatActions", "SwitchLang", $g_bSwitchLang ? 1 : 0)
-	_Ini_Add("ChatActions", "CmbLang", $g_iCmbLang)
-	_Ini_Add("ChatActions", "RusLang", $g_bRusLang ? 1 : 0)
-
 	_Ini_Add("ChatActions", "EnableChatClan", $g_bChatClan ? 1 : 0)
 	_Ini_Add("ChatActions", "DelayTimeClan", $g_sDelayTimeClan)
 	_Ini_Add("ChatActions", "UseResponsesClan", $g_bClanUseResponses ? 1 : 0)
@@ -63,6 +56,12 @@ Func SaveConfig_MOD_ChatActions()
 
 	$g_sIAVar = _ArrayToString($g_aIAVar)
 	_Ini_Add("ChatActions", "String", $g_sIAVar)
+	
+	_Ini_Add("ChatActions", "ResponseMsgClan", $g_sClanResponses)
+	_Ini_Add("ChatActions", "GenericMsgClan", $g_sClanGeneric)
+	_Ini_Add("ChatActions", "FriendlyChallengeText", $g_sChallengeText)
+	_Ini_Add("ChatActions", "FriendlyChallengeKeyword", $g_sKeywordFcRequest)
+
 EndFunc   ;==>SaveConfig_MOD_ChatActions
 
 Func SaveConfig_MOD_600_6()
@@ -78,9 +77,22 @@ Func SaveConfig_MOD_600_6()
 EndFunc   ;==>SaveConfig_MOD_600_6
 
 Func SaveConfig_MOD_600_12()
-	; <><><> ClanHop <><><>
+	; <><><> GTFO <><><>
 	ApplyConfig_MOD_600_12(GetApplyConfigSaveAction())
-	_Ini_Add("donate", "chkClanHop", $g_bChkClanHop ? 1 : 0)
+	_Ini_Add("GTFO", "chkGTFOClanHop", $g_bChkGTFOClanHop)
+	_Ini_Add("GTFO", "chkGTFOReturnClan", $g_bChkGTFOReturnClan)
+	_Ini_Add("GTFO", "chkUseGTFO", $g_bChkUseGTFO)
+
+	_Ini_Add("GTFO", "txtClanID", $g_sTxtClanID)
+	_Ini_Add("GTFO", "txtMinSaveGTFO_Elixir", $g_iTxtMinSaveGTFO_Elixir)
+	_Ini_Add("GTFO", "txtCyclesGTFO", $g_iTxtCyclesGTFO)
+	_Ini_Add("GTFO", "TxtMinSaveGTFO_DE", $g_iTxtMinSaveGTFO_DE)
+	_Ini_Add("GTFO", "chkUseKickOut", $g_bChkUseKickOut)
+	_Ini_Add("GTFO", "txtDonatedCap", $g_iTxtDonatedCap)
+	_Ini_Add("GTFO", "txtReceivedCap", $g_iTxtReceivedCap)
+	_Ini_Add("GTFO", "chkKickOutSpammers", $g_bChkKickOutSpammers)
+	_Ini_Add("GTFO", "txtKickLimit", $g_iTxtKickLimit)
+
 EndFunc   ;==>SaveConfig_MOD_600_12
 
 Func SaveConfig_MOD_600_28()

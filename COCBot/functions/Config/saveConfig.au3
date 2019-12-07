@@ -245,7 +245,7 @@ Func SaveRegularConfig()
 	SaveConfig_MOD_ChatActions()
 	; <><><> Daily Discounts + Builder Base Attack + Builder Base Drop Order <><><>
 	SaveConfig_MOD_600_6()
-	; <><><> ClanHop <><><>
+	; <><><> GTFO <><><>
 	SaveConfig_MOD_600_12()
 	; <><><> Max logout time <><><>
 	SaveConfig_MOD_600_28()

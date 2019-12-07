@@ -12,6 +12,7 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: ReadChat()
 ; ===============================================================================================================================
+#cs
 Func ChatScroll()
 	Setlog("ChatActions: Scroll", $COLOR_INFO)
 
@@ -22,8 +23,10 @@ Func ChatScroll()
 		Local $hTimer = __TimerInit()
 		While Random(15000, 25555, 1) > __TimerDiff($hTimer)
 			Local $aCapture = MultiPSimple(303, 637, 311, 679, Hex(0x91D125, 6), 15)
+			Local $aCapture = IsArray($aCapture) ? ($aCapture) : (MultiPSimple(295, 625, 310, 658, Hex(0xFFBC35, 6), 15))
+
 			If IsArray($aCapture) And UBound($aCapture) > 1 Then 
-				$aCapture[0] -= Random(5, 10, -1) 
+				$aCapture[0] -= Random(5, 10, 1) 
 				$aCapture[1] += Random(7, 10, 1)
 				ClickP($aCapture)
 			Else
@@ -35,10 +38,10 @@ Func ChatScroll()
 		
 		While Random(15000, 25555, 1) > __TimerDiff($hTimer)
 			If CheckScrollW() and CheckScrollB() Then
-				ClickDrag(185, 570 + $g_iMidOffsetY, 185 + $g_iMidOffsetY, 220)
+				ClickDrag(185 + Random(1, 10, 1), 570 + Random(1, 10, 1) + $g_iMidOffsetY, 185 + Random(1, 10, 1) + $g_iMidOffsetY, 220 + Random(1, 10, 1))
 				$iIntPreventTime = 0
 				ElseIf not CheckScrollW() and not CheckScrollB() Then
-				ClickDrag(185, 570 + $g_iMidOffsetY, 185 + $g_iMidOffsetY, 220)
+				ClickDrag(185 + Random(1, 10, 1), 570 + Random(1, 10, 1) + $g_iMidOffsetY, 185 + Random(1, 10, 1) + $g_iMidOffsetY, 220 + Random(1, 10, 1))
 				$iIntPreventTime += 1
 				If CheckScrollG($iIntPreventTime, $iLastIntPrevent) Then ExitLoop 2
 				ElseIf not CheckScrollB() and CheckScrollW() Then
@@ -52,21 +55,11 @@ EndFunc
 Func CheckScrollG(ByRef $iIntPreventTime, ByRef $iLastIntPrevent)
 	Local $aCapture = MultiPSimple(36, 554, 70, 672, Hex(0x979797, 6), 10)
 	Local $iSuperAI = Abs(Int($iLastIntPrevent) - Int($aCapture[1]))
-	
 	If _Sleep(1500) Then Return
-	
-	;Setlog($iIntPreventTime & " /1/ " & $iLastIntPrevent)
-	
 	If IsArray($aCapture) and UBound($aCapture) > 1 Then 
-	
-		
 		If $iIntPreventTime < 2 and $iSuperAI = 0 Then Return True
-		
 		$iLastIntPrevent = $aCapture[1]
-	
 	EndIf
-	;Setlog($iIntPreventTime & " /2/ " & $iLastIntPrevent)
-
 Return False
 EndFunc
 
@@ -84,6 +77,27 @@ Func CheckScrollW()
 	Else
 		Return True
 	EndIf
+EndFunc
+#ce
+
+Func ChatScroll()
+	Local $aCapture = MultiPSimple(19, 673, 30, 678, Hex(0x70AC2A, 6), 15) ; Incomplete 
+	If IsArray($aCapture) And UBound($aCapture) > 1 Then 
+		$aCapture[0] = Random(15, 40, 1)
+		$aCapture[1] = Int($aCapture[1])
+		PureClickP($aCapture)
+		Return
+	EndIf
+	
+	Local $aCapture = MultiPSimple(17, 633, 35, 653, Hex(0xDCF984, 6), 15) ; Full
+	If IsArray($aCapture) And UBound($aCapture) > 1 Then 
+		$aCapture[0] = Random(15, 40, 1)
+		$aCapture[1] += Random(1, 10, 1)
+		PureClickP($aCapture)
+		Return
+	EndIf
+	
+	Return False
 EndFunc
 
 Func ReadChatIA(ByRef $sOCRString, $sCondition = -1, $bFast = True)

@@ -49,11 +49,6 @@ Global $g_hFrmBot_WNDPROC_ptr = 0
 #include "MBR GUI Action.au3"
 ; Team AiO MOD++ (2019)
 #include "Team__AiO__MOD++\GUI\MOD GUI Control.au3"
-#include "Team__AiO__MOD++\GUI\MOD GUI Control - Daily-Discounts.au3"
-#include "Team__AiO__MOD++\GUI\MOD GUI Control - Switch-Options.au3"
-#include "Team__AiO__MOD++\GUI\MOD GUI Control - SuperXP.au3"
-#include "Team__AiO__MOD++\GUI\MOD GUI Control - ChatActions.au3"
-#include "Team__AiO__MOD++\GUI\MOD GUI Control - AiO-Debug.au3"
 
 Func InitializeMainGUI($bGuiModeUpdate = False)
 	InitializeControlVariables()
@@ -639,8 +634,8 @@ Func GUIControl_WM_COMMAND($hWind, $iMsg, $wParam, $lParam)
 			btnTestDailyDiscounts()
 		Case $g_hBtnTestAttackBB
 			btnTestAttackBB()
-		Case $g_hBtnTestClanHop
-			btnTestClanHop()
+		Case $g_hBtnTestGTFO
+			btnTestGTFO()
 	EndSwitch
 
 	If $lParam = $g_hCmbGUILanguage Then
@@ -2106,7 +2101,7 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 			Local $aIconIndex = [$eIcnTrain, $eIcnGem, $eIcnReOrder, $eIcnOptions]
 
 		Case $g_hGUI_MISC_TAB
-			Local $aIconIndex = [$eIcnTH1, $eIcnBuilderHall, $eIcnStrongMan]
+			Local $aIconIndex = [$eIcnTH1, $eIcnBuilderHall, $eIcnStrongMan, $eIcnPowerPotion]
 
 		Case $g_hGUI_DONATE_TAB
 			; the icons for donate tab

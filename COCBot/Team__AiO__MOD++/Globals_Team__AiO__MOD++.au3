@@ -18,9 +18,8 @@ Global Const $g_sLibModIconPath = $g_sLibPath & "\AIOMod.dll" ; Mod icon library
 Global Enum $eIcnModKingGray = 1, $eIcnModKingBlue, $eIcnModKingGreen, $eIcnModKingRed, $eIcnModQueenGray, $eIcnModQueenBlue, $eIcnModQueenGreen, $eIcnModQueenRed, _
 		$eIcnModWardenGray, $eIcnModWardenBlue, $eIcnModWardenGreen, $eIcnModWardenRed, $eIcnModLabGray, $eIcnModLabGreen, $eIcnModLabRed, _
 		$eIcnModArrowLeft, $eIcnModArrowRight, $eIcnModTrainingP, $eIcnModResourceP, $eIcnModHeroP, $eIcnModClockTowerP, $eIcnModBuilderP, $eIcnModPowerP, _
-		$eIcnModChat, $eIcnModRepeat, $eIcnModClan, $eIcnModTarget, $eIcnModSettings, $eIcnModBKingSX, $eIcnModAQueenSX, $eIcnModGWardenSX, $eIcnModDebug, $eIcnModClanHop, $eIcnModPrecise, _
+		$eIcnModChat, $eIcnModRepeat, $eIcnModClan, $eIcnModTarget, $eIcnModSettings, $eIcnModBKingSX, $eIcnModAQueenSX, $eIcnModGWardenSX, $eIcnModDebug, $eIcnModGTFO, $eIcnModPrecise, _
 		$eIcnModAccountsS, $eIcnModProfilesS, $eIcnModFarmingS, $eIcnMiscMod, $eIcnSuperXP, $eIcnChatActions, $eIcnHumanization, $eIcnAIOMod, $eIcnDebugMod
-
 ; SuperXP / GoblinXP - Team AiO MOD++
 Global $g_bEnableSuperXP = False, $g_bSkipZoomOutSX = False, $g_bFastSuperXP = False, $g_bSkipDragToEndSX = False, _
 	$g_iActivateOptionSX = 1, $g_iGoblinMapOptSX = 2, $g_sGoblinMapOptSX = "The Arena", $g_iMaxXPtoGain = 500, _
@@ -38,7 +37,6 @@ Global Const $g_iMinStarsToEnd = 1
 Global $bCanGainXP = False
 
 ; ChatActions - Team AiO MOD++
-Global $g_bChatGlobal = False, $g_sDelayTimeGlobal = 10, $g_bScrambleGlobal = False, $g_bSwitchLang = False, $g_iCmbLang = 0, $g_bRusLang = False
 Global $g_bChatClan = False, $g_sDelayTimeClan = 2, $g_bClanUseResponses = False, $g_bClanUseGeneric = False, $g_bCleverbot = False
 Global $g_bUseNotify = False, $g_bPbSendNew = False
 Global $g_bEnableFriendlyChallenge = False, $g_sDelayTimeFC = 5, $g_bOnlyOnRequest = False
@@ -48,7 +46,6 @@ Global $ChatbotStartTime, $ChatbotQueuedChats[0], $ChatbotReadQueued = False, $C
 	$g_sMessage = "", $g_sGlobalChatLastMsgSentTime = "", $g_sClanChatLastMsgSentTime = "", $g_sFCLastMsgSentTime = ""
 Global $g_aIAVar[5] = [0, 0, 0, 0, 0], $g_sIAVar = '0|0|0|0|0'
 Global $g_sGetOcrMod = "", $g_aImageSearchXML = -1
-Global $g_aGlobalMessages1, $g_aGlobalMessages2, $g_sGlobalMessages1, $g_sGlobalMessages2
 Global $g_aClanResponses, $g_sClanResponses
 Global $g_aClanGeneric, $g_sClanGeneric
 Global $g_aChallengeText, $g_aKeywordFcRequest, $g_sChallengeText, $g_sKeywordFcRequest
@@ -65,31 +62,10 @@ Global $g_eDDPotionTrain = 0, $g_eDDPotionClock = 1, $g_eDDPotionResearch = 2, $
 Global $g_bDD_DealsSet = False
 #EndRegion
 
-#cs
-; Builder Base Attack - Team AiO MOD++
-Global $g_bChkEnableBBAttack = False, $g_bChkBBTrophyRange = False, $g_bChkBBAttIfLootAvail = False, $g_bChkBBWaitForMachine = False
-Global $g_iTxtBBTrophyLowerLimit = 0, $g_iTxtBBTrophyUpperLimit = 5000
-Global $g_bBBMachineReady = False
-Global $g_aBBMachine = [0,0] ; x,y coordinates of where to click for Battle machine on attack bar
-Global $g_iBBMachAbilityTime = 14000 ; in milliseconds, so 14 seconds between abilities
-Global Const $g_iBBNextTroopDelayDefault = 2000, $g_iBBSameTroopDelayDefault = 300 ; default delay times
-Global $g_iBBNextTroopDelay = $g_iBBNextTroopDelayDefault, $g_iBBSameTroopDelay = $g_iBBSameTroopDelayDefault; delay time between different and same troops
-Global $g_iBBNextTroopDelayIncrement = 400, $g_iBBSameTroopDelayIncrement = 60 ; used for math to calculate delays based on selection
-Global $g_apTL[10][2] = [ [22, 374], [59, 348], [102, 319], [137, 288], [176, 259], [209, 232], [239, 212], [270, 188], [307, 164], [347, 139] ]
-Global $g_apTR[10][2] = [ [831, 368], [791, 334], [747, 306], [714, 277], [684, 252], [647, 227], [615, 203], [577, 177], [539, 149], [506, 123] ]
-
-; BB Drop Order
-Global $g_bBBDropOrderSet = False
-Global Const $g_iBBTroopCount = 10
-Global Const $g_sBBDropOrderDefault = "BoxerGiant|SuperPekka|DropShip|Witch|BabyDrag|WallBreaker|Barbarian|CannonCart|Archer|Minion"
-Global $g_sBBDropOrder = $g_sBBDropOrderDefault
-#ce
-
 ; BB Suggested Upgrades
 Global $g_bChkBBIgnoreWalls = False
 
-; ClanHop - Team AiO MOD++
-Global $g_bChkClanHop = False
+; GTFO - Team AiO MOD++
 
 ; CSV Deploy Speed - Team AiO MOD++
 Global $cmbCSVSpeed[2] = [$LB, $DB]
@@ -98,6 +74,7 @@ Global $g_CSVSpeedDivider[2] = [1, 1] ; default CSVSpeed for DB & LB
 
 ; Check Collector Outside - Team AiO MOD++
 Global $g_bScanMineAndElixir = False
+
 #Region Check Collectors Outside
 ; Collectors Outside Filter
 Global $g_bDBMeetCollectorOutside = False, $g_iDBMinCollectorOutsidePercent = 80
@@ -151,3 +128,12 @@ $g_hMinArmyUmbralGoldAB, $g_hMinArmyUmbralElixirAB, $g_hMinArmyUmbralPlusAB, $g_
 
 Global $g_iMinArmyUmbralGoldDB = 0, $g_iMinArmyUmbralElixirDB = 0, $g_iMinArmyUmbralPlusDB = 0, $g_iMinArmyUmbralDarkDB = 0, _
 $g_iMinArmyUmbralGoldAB = 0, $g_iMinArmyUmbralElixirAB = 0, $g_iMinArmyUmbralPlusAB = 0, $g_iMinArmyUmbralDarkAB = 0
+
+; GTFO
+Global $g_bChkUseGTFO = False, $g_bChkUseKickOut = False, $g_bChkKickOutSpammers = False
+Global $g_iTxtMinSaveGTFO_Elixir = 200000, $g_iTxtMinSaveGTFO_DE = 2000, _
+		$g_iTxtDonatedCap = 8, $g_iTxtReceivedCap = 35, _
+		$g_iTxtKickLimit = 6
+Global $g_hTxtClanID, $g_sTxtClanID, $g_iTxtCyclesGTFO
+Global $g_bChkGTFOClanHop = False, $g_bChkGTFOReturnClan = False
+Global $g_iCycle = 0
