@@ -138,6 +138,8 @@ Func applyConfig($bRedrawAtExit = True, $TypeReadSave = "Read") ;Applies the dat
 	ApplyConfig_MOD_SuperXP($TypeReadSave)
 	; <><><> ChatActions <><><>
 	ApplyConfig_MOD_ChatActions($TypeReadSave)
+	; <><><> MagicItems <><><>
+	ApplyConfig_MOD_MagicItems($TypeReadSave)
 	; <><><> Daily Discounts + Builder Base Attack + Builder Base Drop Order <><><>
 	ApplyConfig_MOD_600_6($TypeReadSave)
 	; <><><> GTFO <><><>

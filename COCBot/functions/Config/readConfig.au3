@@ -258,6 +258,8 @@ Func ReadRegularConfig()
 	ReadConfig_MOD_SuperXP()
 	; <><><> ChatActions <><><>
 	ReadConfig_MOD_ChatActions()
+	; <><><> MagicItems <><><>
+	ReadConfig_MOD_MagicItems()
 	; <><><> Daily Discounts + Builder Base Attack + Builder Base Drop Order <><><>
 	ReadConfig_MOD_600_6()
 	; <><><> GTFO <><><>

@@ -54,6 +54,26 @@ Func ApplyConfig_MOD_SuperXP($TypeReadSave)
 
 EndFunc   ;==>ApplyConfig_MOD_SuperXP
 
+Func ApplyConfig_MOD_MagicItems($TypeReadSave)
+	; <><><> MagicItems <><><>
+	#cs
+
+	Switch $TypeReadSave
+		Case "Read"
+			Global $g_hChkCollectMagicItems, $g_hChkCollectFree, _
+			$g_hChkBuilderPotion, $g_hChkClockTowerPotion, $g_hChkHeroPotion, $g_hChkLabPotion, $g_hChkPowerPotion, $g_hChkResourcePotion, _
+			$g_hComboBuilderPotion, $g_hComboClockTowerPotion, $g_hComboHeroPotion, $g_hComboLabPotion, $g_hComboPowerPotion, _
+			$g_hInputGoldItems, $g_hInputElixirItem, $g_hInputDarkElixirItem
+
+		Case "Save"
+			Global $g_hChkCollectMagicItems, $g_hChkCollectFree, _
+			$g_hChkBuilderPotion, $g_hChkClockTowerPotion, $g_hChkHeroPotion, $g_hChkLabPotion, $g_hChkPowerPotion, $g_hChkResourcePotion, _
+			$g_hComboBuilderPotion, $g_hComboClockTowerPotion, $g_hComboHeroPotion, $g_hComboLabPotion, $g_hComboPowerPotion, _
+			$g_hInputGoldItems, $g_hInputElixirItem, $g_hInputDarkElixirItem
+	EndSwitch
+#ce
+EndFunc   ;==>ApplyConfig_MOD_MagicItems
+
 Func ApplyConfig_MOD_ChatActions($TypeReadSave)
 	; <><><> ChatActions <><><>
 	Switch $TypeReadSave

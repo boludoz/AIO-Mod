@@ -29,6 +29,27 @@ Func SaveConfig_MOD_SuperXP()
 	_Ini_Add("SuperXP", "GWardenSX", $g_bGWardenSX)
 EndFunc   ;==>SaveConfig_MOD_SuperXP
 
+Func SaveConfig_MOD_MagicItems()
+	; <><><> MagicItems <><><>
+	ApplyConfig_MOD_MagicItems(GetApplyConfigSaveAction())
+#cs
+	Global $g_hChkCollectMagicItems, $g_hChkCollectFree, _
+	$g_hChkBuilderPotion, $g_hChkClockTowerPotion, $g_hChkHeroPotion, $g_hChkLabPotion, $g_hChkPowerPotion, $g_hChkResourcePotion, _
+	$g_hComboBuilderPotion, $g_hComboClockTowerPotion, $g_hComboHeroPotion, $g_hComboLabPotion, $g_hComboPowerPotion, _
+	$g_hInputGoldItems, $g_hInputElixirItem, $g_hInputDarkElixirItem
+                $res = GUICtrlRead($Combo1)
+	_Ini_Add("MagicItems", "DelayTimeClan", $g_sDelayTimeClan)
+            Case $Save
+                $res = GUICtrlRead($Combo1)
+                IniWrite($IniFile, "Display Properties", "Resolution", $res)
+            Case $Load
+                ; last parameter '1024x768' is default value if nothing found in ini file
+                $IniRead = IniRead($IniFile, "Display Properties", "Resolution", "1024x768")
+                GUICtrlSetData($Combo1,$IniRead)
+        EndSwitch
+		#ce
+EndFunc   ;==>SaveConfig_MOD_MagicItems
+
 Func SaveConfig_MOD_ChatActions()
 	; <><><> ChatActions <><><>
 	ApplyConfig_MOD_ChatActions(GetApplyConfigSaveAction())

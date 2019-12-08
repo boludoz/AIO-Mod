@@ -28,6 +28,18 @@ Func ReadConfig_MOD_SuperXP()
 	IniReadS($g_bGWardenSX, $g_sProfileConfigPath, "SuperXP", "GWardenSX", $eHeroNone)
 EndFunc   ;==>ReadConfig_MOD_SuperXP
 
+Func ReadConfig_MOD_MagicItems()
+	; <><><> MagicItems <><><>
+	#cs
+
+	Global $g_hChkCollectMagicItems, $g_hChkCollectFree, _
+	$g_hChkBuilderPotion, $g_hChkClockTowerPotion, $g_hChkHeroPotion, $g_hChkLabPotion, $g_hChkPowerPotion, $g_hChkResourcePotion, _
+	$g_hComboBuilderPotion, $g_hComboClockTowerPotion, $g_hComboHeroPotion, $g_hComboLabPotion, $g_hComboPowerPotion, _
+	$g_hInputGoldItems, $g_hInputElixirItem, $g_hInputDarkElixirItem
+#ce
+
+EndFunc   ;==>ReadConfig_MOD_MagicItems
+
 Func ReadConfig_MOD_ChatActions()
 	; <><><> ChatActions <><><>
 	IniReadS($g_bChatClan, $g_sProfileConfigPath, "ChatActions", "EnableChatClan", $g_bChatClan, "Bool")

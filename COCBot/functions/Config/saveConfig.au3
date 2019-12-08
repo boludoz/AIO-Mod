@@ -243,6 +243,8 @@ Func SaveRegularConfig()
 	SaveConfig_MOD_SuperXP()
 	; <><><> ChatActions <><><>
 	SaveConfig_MOD_ChatActions()
+	; <><><> MagicItems <><><>
+	SaveConfig_MOD_MagicItems()
 	; <><><> Daily Discounts + Builder Base Attack + Builder Base Drop Order <><><>
 	SaveConfig_MOD_600_6()
 	; <><><> GTFO <><><>
