@@ -23,7 +23,7 @@ Global $g_iLoop2 = 0
 Global $g_bClanJoin = True
 Global $g_bFirstHop = True
 Global $g_bLeader = False
-
+Global $g_aiDonatePixel
 ; Make a Main Loop , replacing the Original Main Loop / Necessary Functions : Train - Donate - CheckResourcesValues
 Func MainGTFO()
 
@@ -144,7 +144,7 @@ Func TrainGTFO()
 
 
 	If $g_bDoubleTrain Then
-		DoubleTrain($g_bQuickTrainEnable)
+		DoubleTrain()
 		Return
 	EndIf
 
@@ -375,11 +375,11 @@ Func ClanHop($sClanJoin = False)
 					; Clicks chat Button
 					Click($aCloseChat[0], $aCloseChat[1], 1, 0, "#0173") ;Clicks chat close button
 					ExitLoop
-				ElseIf QuickMIS("BC1", $g_sImgDonateCloseWindow, 790, 0, 825, 220, True, False) Then ; RC Done
-					SetLog("Closing the Donate troops window!...", $COLOR_SUCCESS)
-					Click($g_iQuickMISWOffSetX, $g_iQuickMISWOffSetY)
-					;Add delay so donate window will get close
-					If _Sleep($DELAYDONATEWINDOW1) Then ExitLoop
+;~ 				ElseIf QuickMIS("BC1", $g_sImgDonateCloseWindow, 790, 0, 825, 220, True, False) Then ; RC Done
+;~ 					SetLog("Closing the Donate troops window!...", $COLOR_SUCCESS)
+;~ 					Click($g_iQuickMISWOffSetX, $g_iQuickMISWOffSetY)
+;~ 					;Add delay so donate window will get close
+;~ 					If _Sleep($DELAYDONATEWINDOW1) Then ExitLoop
 				Else
 					If _Sleep(100) Then Return
 					$y += 1
@@ -598,11 +598,11 @@ Func CloseClanChat()
 			; Clicks chat thing
 			Click($aCloseChat[0], $aCloseChat[1], 1, 0, "#0173") ;Clicks chat thing
 			ExitLoop
-		ElseIf QuickMIS("BC1", $g_sImgDonateCloseWindow, 790, 0, 825, 220, True, False) Then ; RC Done
-			SetLog("Closing the Donate troops window!...", $COLOR_SUCCESS)
-			Click($g_iQuickMISWOffSetX, $g_iQuickMISWOffSetY)
-			;Add delay so donate window will get close
-			If _Sleep($DELAYDONATEWINDOW1) Then ExitLoop
+;~ 		ElseIf QuickMIS("BC1", $g_sImgDonateCloseWindow, 790, 0, 825, 220, True, False) Then ; RC Done
+;~ 			SetLog("Closing the Donate troops window!...", $COLOR_SUCCESS)
+;~ 			Click($g_iQuickMISWOffSetX, $g_iQuickMISWOffSetY)
+;~ 			;Add delay so donate window will get close
+;~ 			If _Sleep($DELAYDONATEWINDOW1) Then ExitLoop
 		Else
 			If _Sleep(100) Then Return
 			$i += 1

@@ -1,5 +1,5 @@
 ; #FUNCTION# ====================================================================================================================
-; Name ..........: MBR GUI Control MOD Tab GTFO
+; Name ..........: MOD GUI Design - GTFO
 ; Description ...: This file is used for Fenix MOD GUI functions of GTFO Tab will be here.
 ; Author ........: Boldina/Boludoz (2018 FOR SIMBIOS)
 ; Modified ......:

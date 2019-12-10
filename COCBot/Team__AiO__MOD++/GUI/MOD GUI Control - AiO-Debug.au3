@@ -61,6 +61,23 @@ Func btnTestSuperXP()
 	$g_bRunState = $currentRunState
 EndFunc   ;==>btnTestSuperXP
 
+Func btnTestBotHumanization()
+	SetLog(_PadStringCenter(" Test Humanization begin (" & $g_sBotVersion & ")", 54, "="), $COLOR_INFO)
+
+	Local $wasRunState = $g_bRunState
+	Local $wasUseBotHumanization = $g_bUseBotHumanization
+
+	$g_bRunState = True
+	$g_bUseBotHumanization = True
+	_GUICtrlTab_ClickTab($g_hTabMain, 0)
+	BotHumanization()
+
+	$g_bRunState = $wasRunState
+	$g_bUseBotHumanization = $wasUseBotHumanization
+
+	SetLog(_PadStringCenter(" Test Humanization end ", 54, "="), $COLOR_INFO)
+EndFunc   ;==>btnTestBotHumanization
+
 Func btnTestClanChat()
 	Local $currentRunState = $g_bRunState
 	Local $currentSetlog = $g_bDebugSetlog

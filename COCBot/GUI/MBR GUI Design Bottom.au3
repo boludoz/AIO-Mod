@@ -78,8 +78,8 @@ Func CreateBottomPanel()
 			If $g_bBtnColor Then GUICtrlSetBkColor(-1, 0x22C4F5)
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			GUICtrlSetOnEvent(-1, "btnEmbed")
-		$g_hChkBackgroundMode = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Bottom", "ChkBackgroundMode", "Background Mode"), $x + 1, $y + 72, -1, 24)
-			GUICtrlSetFont(-1, 7)
+		$g_hChkBackgroundMode = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Bottom", "ChkBackgroundMode", "Background"), $x + 1, $y + 72, -1, 24)
+			;GUICtrlSetFont(-1, 7)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "ChkBackgroundMode_Info_01", "Check this to ENABLE the Background Mode of the Bot.") & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Bottom", "ChkBackgroundMode_Info_02", "With this you can also hide the Android Emulator window out of sight."))
 			If $g_bGuiRemote Then GUICtrlSetState(-1, $GUI_DISABLE)
@@ -88,7 +88,7 @@ Func CreateBottomPanel()
 
 		; Only farm - Team AiO MOD++
 		$g_hChkOnlyFarm = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Bottom", "ChkOnlyFarm", "Only Farm"), $x + 110, $y + 72, -1, 24)
-			GUICtrlSetFont(-1, 7)
+			;GUICtrlSetFont(-1, 7)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "ChkOnlyFarm_01", "Only attack."))
 			GUICtrlSetOnEvent(-1, "chkOnlyFarm")
 

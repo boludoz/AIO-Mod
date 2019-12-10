@@ -71,7 +71,7 @@ EndFunc   ;==>DelayTime
 
 Func ChatActions() ; run the chatbot
 
-	If BitOr($g_bChatClan, BitAND($g_bEnableFriendlyChallenge, Not $g_bStayOnBuilderBase), $g_bChatGlobal) Then
+	If BitOr($g_bChatClan, BitAND($g_bEnableFriendlyChallenge, Not $g_bStayOnBuilderBase)) Then
 		If Not ChatbotChatOpen() Then
 			Setlog("ChatActions : ChatbotChatOpen Error.", $COLOR_ERROR)
 			AndroidPageError("ChatActions")
@@ -224,7 +224,7 @@ EndFunc   ;==>ChatClan
 
 Func ChatbotChatOpen() ; open the chat area
 	SetDebugLog("ChatBot|Begin ChatbotChatOpen", $COLOR_DEBUG)
-	
+
 	ClickP($aAway2, 1, 0, "#0176") ;Click Away
 	ForceCaptureRegion()
 	If _Sleep($DELAYCHATACTIONS2) Then Return
@@ -307,21 +307,21 @@ Func ChatbotChatInput($g_sMessage)
 	SetLog("Chatbot: Type msg : " & $g_sMessage, $COLOR_SUCCESS)
 	Click($aOpenedChatSelectTextBox[0], $aOpenedChatSelectTextBox[1], 1, 0, "ChatInput")
 	If _Sleep($DELAYCHATACTIONS5) Then Return
-	If $g_bRusLang Then
-		SetLog("Chat Send In Russia", $COLOR_INFO)
-		AutoItWinSetTitle('MyAutoItTitle')
-		_WinAPI_SetKeyboardLayout(WinGetHandle(AutoItWinGetTitle()), 0x0419)
-		_Sleep($DELAYCHATACTIONS3)
-		ControlFocus($g_hAndroidWindow, "", "")
-		SendKeepActive($g_hAndroidWindow)
-		_Sleep($DELAYCHATACTIONS3)
-		AutoItSetOption("SendKeyDelay", 50)
-		_SendExEx($g_sMessage)
-		SendKeepActive("")
-	Else
+;~ 	If $g_bRusLang Then
+;~ 		SetLog("Chat Send In Russia", $COLOR_INFO)
+;~ 		AutoItWinSetTitle('MyAutoItTitle')
+;~ 		_WinAPI_SetKeyboardLayout(WinGetHandle(AutoItWinGetTitle()), 0x0419)
+;~ 		_Sleep($DELAYCHATACTIONS3)
+;~ 		ControlFocus($g_hAndroidWindow, "", "")
+;~ 		SendKeepActive($g_hAndroidWindow)
+;~ 		_Sleep($DELAYCHATACTIONS3)
+;~ 		AutoItSetOption("SendKeyDelay", 50)
+;~ 		_SendExEx($g_sMessage)
+;~ 		SendKeepActive("")
+;~ 	Else
 		_Sleep($DELAYCHATACTIONS3)
 		SendText($g_sMessage)
-	EndIf
+;~ 	EndIf
 	Return True
 	SetDebugLog("ChatBot|ChatbotChatInput Finished", $COLOR_DEBUG)
 EndFunc   ;==>ChatbotChatInput

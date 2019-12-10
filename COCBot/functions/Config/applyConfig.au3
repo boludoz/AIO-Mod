@@ -154,6 +154,8 @@ Func applyConfig($bRedrawAtExit = True, $TypeReadSave = "Read") ;Applies the dat
 	ApplyConfig_MOD_600_35_1($TypeReadSave)
 	; <><><><> Switch Profiles <><><><>
 	ApplyConfig_MOD_600_35_2($TypeReadSave)
+	; <><><> Humanization <><><>
+	ApplyConfig_MOD_Humanization($TypeReadSave)
 
 	; <><><><> Attack Plan / Strategies <><><><>
 	; <<< nothing here >>>
@@ -331,8 +333,8 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetState($g_hChkCleanYard, $g_bChkCleanYard ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkGemsBox, $g_bChkGemsBox ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkTreasuryCollect, $g_bChkTreasuryCollect ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkFreeMagicItems, $g_bChkCollectFreeMagicItems ? $GUI_CHECKED : $GUI_UNCHECKED)
-			ChkFreeMagicItems()
+		;	GUICtrlSetState($g_hChkFreeMagicItems, $g_bChkCollectFreeMagicItems ? $GUI_CHECKED : $GUI_UNCHECKED) ; AIO MOD++
+		;	ChkFreeMagicItems() ; AIO MOD++
 			ChkTreasuryCollect()
 			GUICtrlSetData($g_hTxtTreasuryGold, $g_iTxtTreasuryGold)
 			GUICtrlSetData($g_hTxtTreasuryElixir, $g_iTxtTreasuryElixir)
@@ -421,7 +423,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_iTxtCollectDark = GUICtrlRead($g_hTxtCollectDark)
 			$g_bChkTombstones = (GUICtrlRead($g_hChkTombstones) = $GUI_CHECKED)
 			$g_bChkCleanYard = (GUICtrlRead($g_hChkCleanYard) = $GUI_CHECKED)
-			$g_bChkCollectFreeMagicItems = (GUICtrlRead($g_hChkFreeMagicItems) = $GUI_CHECKED)
+		;	$g_bChkCollectFreeMagicItems = (GUICtrlRead($g_hChkFreeMagicItems) = $GUI_CHECKED) ; AIO MOD++
 			$g_bChkGemsBox = (GUICtrlRead($g_hChkGemsBox) = $GUI_CHECKED)
 			$g_bChkTreasuryCollect = (GUICtrlRead($g_hChkTreasuryCollect) = $GUI_CHECKED)
 			$g_iTxtTreasuryGold = GUICtrlRead($g_hTxtTreasuryGold)
@@ -979,7 +981,6 @@ Func ApplyConfig_600_22($TypeReadSave)
 			_GUICtrlComboBox_SetCurSel($g_hCmbBoostArcherQueen, $g_iCmbBoostArcherQueen)
 			_GUICtrlComboBox_SetCurSel($g_hCmbBoostWarden, $g_iCmbBoostWarden)
 			_GUICtrlComboBox_SetCurSel($g_hCmbBoostTrainingPotion, $g_iCmbBoostTrainingPotion)
-			_GUICtrlComboBox_SetCurSel($g_hCmbBoostResourcePotion, $g_iCmbBoostResourcePotion)
 			For $i = 0 To 23
 				GUICtrlSetState($g_hChkBoostBarracksHours[$i], $g_abBoostBarracksHours[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
 			Next
@@ -991,7 +992,6 @@ Func ApplyConfig_600_22($TypeReadSave)
 			$g_iCmbBoostArcherQueen = _GUICtrlComboBox_GetCurSel($g_hCmbBoostArcherQueen)
 			$g_iCmbBoostWarden = _GUICtrlComboBox_GetCurSel($g_hCmbBoostWarden)
 			$g_iCmbBoostTrainingPotion = _GUICtrlComboBox_GetCurSel($g_hCmbBoostTrainingPotion)
-			$g_iCmbBoostResourcePotion = _GUICtrlComboBox_GetCurSel($g_hCmbBoostResourcePotion)
 			For $i = 0 To 23
 				$g_abBoostBarracksHours[$i] = (GUICtrlRead($g_hChkBoostBarracksHours[$i]) = $GUI_CHECKED)
 			Next
@@ -1889,7 +1889,7 @@ Func ApplyConfig_600_35_2($TypeReadSave)
 	; <><><><> Bot / Profile / Switch Accounts <><><><>
 	Switch $TypeReadSave
 		Case "Read"
-			;Switch Accounts
+			; Switch Accounts - Team AiO MOD++
 			_GUICtrlComboBox_SetCurSel($g_hCmbSwitchAcc, $g_iCmbSwitchAcc)
 			GUICtrlSetState($g_hChkSwitchAcc, $g_bChkSwitchAcc ? $GUI_CHECKED : $GUI_UNCHECKED)
 			chkSwitchAcc()
@@ -1916,7 +1916,7 @@ Func ApplyConfig_600_35_2($TypeReadSave)
 				_GUICtrlComboBox_SetCurSel($g_ahCmbProfile[$i], _GUICtrlComboBox_FindStringExact($g_ahCmbProfile[$i], $g_asProfileName[$i]))
 				GUICtrlSetState($g_ahChkDonate[$i], $g_abDonateOnly[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
 
-				;Farm Schedule
+				; Farm Schedule - Team AiO MOD++
 				GUICtrlSetState($g_ahChkSetFarm[$i], $g_abChkSetFarm[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
 
 				_GUICtrlComboBox_SetCurSel($g_ahCmbAction1[$i], $g_aiCmbAction1[$i])
@@ -1946,7 +1946,7 @@ Func ApplyConfig_600_35_2($TypeReadSave)
 				$g_asProfileName[$i] = GUICtrlRead($g_ahCmbProfile[$i])
 				$g_abDonateOnly[$i] = (GUICtrlRead($g_ahChkDonate[$i]) = $GUI_CHECKED)
 
-				;Farm Schedule
+				; Farm Schedule - Team AiO MOD++
 				$g_abChkSetFarm[$i] = (GUICtrlRead($g_ahChkSetFarm[$i]) = $GUI_CHECKED)
 
 				$g_aiCmbAction1[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbAction1[$i])
@@ -2148,7 +2148,7 @@ Func ApplyConfig_641_1($TypeReadSave)
 				GUICtrlSetState($g_hCmbMinimumTimeClose, $GUI_ENABLE)
 				GUICtrlSetState($g_hLblSymbolWaiting, $GUI_ENABLE)
 				GUICtrlSetState($g_hLblWaitingInMinutes, $GUI_ENABLE)
-				; Max logout time - Team AiO MOD++
+				; Max Logout Time - Team AiO MOD++
 				GUICtrlSetState($g_hChkTrainLogoutMaxTime, $GUI_ENABLE)
 				chkTrainLogoutMaxTime()
 			Else
@@ -2158,7 +2158,7 @@ Func ApplyConfig_641_1($TypeReadSave)
 				GUICtrlSetState($g_hCmbMinimumTimeClose, $GUI_DISABLE)
 				GUICtrlSetState($g_hLblSymbolWaiting, $GUI_DISABLE)
 				GUICtrlSetState($g_hLblWaitingInMinutes, $GUI_DISABLE)
-				; Max logout time - Team AiO MOD++
+				; Max Logout Time - Team AiO MOD++
 				GUICtrlSetState($g_hChkTrainLogoutMaxTime, $GUI_DISABLE)
 			EndIf
 			GUICtrlSetState($g_hChkCloseWithoutShield, $g_bCloseWithoutShield ? $GUI_CHECKED : $GUI_UNCHECKED)

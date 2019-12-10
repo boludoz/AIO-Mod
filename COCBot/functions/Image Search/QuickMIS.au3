@@ -68,6 +68,8 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 					If UBound($aCord) < 2 Then Return False ; should never happen, but anyway...
 					$g_iQuickMISX = $aCord[0]
 					$g_iQuickMISY = $aCord[1]
+					$g_iQuickMISWOffSetX = $aCord[0] + $Left ;Update X with offset of Left
+					$g_iQuickMISWOffSetY = $aCord[1] + $Top ;Update Y with offset of Top
 
 					$Name = RetrieveImglocProperty($KeyValue[0], "objectname")
 

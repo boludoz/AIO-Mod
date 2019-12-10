@@ -16,9 +16,20 @@ Global $g_sImgBuilderTime = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Builde
 #EndRegion
 
 #Region SuperXP
-Global $g_sImgFindSX = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\SuperXP\Find"
-Global $g_sImgVerifySX = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\SuperXP\Verify"
-Global $g_sImgLockedSX = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\SuperXP\Locked"
+Global $g_sImgFindSX = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\SuperXP\Find\"
+Global $g_sImgVerifySX = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\SuperXP\Verify\"
+#EndRegion
+
+#Region Humanization
+Global $g_sImgHumanizationWarLog = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Humanization\WarLog"
+Global $g_sImgHumanizationDuration = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Humanization\Duration"
+Global $g_sImgHumanizationFriend = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Humanization\Friend"
+Global $g_sImgHumanizationClaimReward = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Humanization\ClaimReward"
+Global $g_sImgHumanizationCurrentWar = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Humanization\CurrentWar"
+Global $g_sImgHumanizationWarDetails = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Humanization\WarDetails"
+Global $g_sImgHumanizationReplay = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Humanization\Replay"
+Global $g_sImgHumanizationVisit = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Humanization\Visit"
+Global $g_sImgChatIUnterstandMultiLang = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Humanization\Chat"
 #EndRegion
 
 #Region DailyDiscounts
@@ -32,6 +43,6 @@ Global $g_sImgChatObstacles = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Chat
 #EndRegion
 
 #Region GTFO
-Global $g_sImgKickOut = @ScriptDir & "\COCBot\Fenix MOD\imgxml\GTFO\KickOut"
-Global $g_sImgClanProfilePage = @ScriptDir & "\COCBot\Fenix MOD\imgxml\Pages\Profile"
+Global $g_sImgKickOut = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\GTFO\KickOut"
+Global $g_sImgClanProfilePage = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Pages\Profile"
 #EndRegion GTFO

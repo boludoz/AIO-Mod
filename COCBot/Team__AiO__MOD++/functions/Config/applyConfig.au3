@@ -56,22 +56,54 @@ EndFunc   ;==>ApplyConfig_MOD_SuperXP
 
 Func ApplyConfig_MOD_MagicItems($TypeReadSave)
 	; <><><> MagicItems <><><>
-	#cs
 
 	Switch $TypeReadSave
 		Case "Read"
-			Global $g_hChkCollectMagicItems, $g_hChkCollectFree, _
-			$g_hChkBuilderPotion, $g_hChkClockTowerPotion, $g_hChkHeroPotion, $g_hChkLabPotion, $g_hChkPowerPotion, $g_hChkResourcePotion, _
-			$g_hComboBuilderPotion, $g_hComboClockTowerPotion, $g_hComboHeroPotion, $g_hComboLabPotion, $g_hComboPowerPotion, _
-			$g_hInputGoldItems, $g_hInputElixirItem, $g_hInputDarkElixirItem
+			GUICtrlSetData($g_hInputGoldItems, $g_iInputGoldItems)
+			GUICtrlSetData($g_hInputElixirItems, $g_iInputElixirItems)
+			GUICtrlSetData($g_hInputDarkElixirItems, $g_iInputDarkElixirItems)
+
+			GUICtrlSetData($g_hInputBuilderPotion, $g_iInputBuilderPotion)
+			GUICtrlSetData($g_hInputLabPotion, $g_iInputLabPotion)
+
+			_GUICtrlComboBox_SetCurSel($g_hComboClockTowerPotion, $g_iComboClockTowerPotion)
+			_GUICtrlComboBox_SetCurSel($g_hComboHeroPotion, $g_iComboHeroPotion)
+			_GUICtrlComboBox_SetCurSel($g_hComboPowerPotion, $g_iComboPowerPotion)
+			
+			GUICtrlSetState($g_hChkCollectMagicItems, $g_bChkCollectMagicItems = True ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkCollectFree, $g_bChkCollectFree = True ? $GUI_CHECKED : $GUI_UNCHECKED)
+			ChkMagicItems()
+
+			GUICtrlSetState($g_hChkBuilderPotion, $g_bChkBuilderPotion = True ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkClockTowerPotion, $g_bChkClockTowerPotion = True ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkHeroPotion, $g_bChkHeroPotion = True ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkLabPotion, $g_bChkLabPotion = True ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkPowerPotion, $g_bChkPowerPotion = True ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkResourcePotion, $g_bChkResourcePotion = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 
 		Case "Save"
-			Global $g_hChkCollectMagicItems, $g_hChkCollectFree, _
-			$g_hChkBuilderPotion, $g_hChkClockTowerPotion, $g_hChkHeroPotion, $g_hChkLabPotion, $g_hChkPowerPotion, $g_hChkResourcePotion, _
-			$g_hComboBuilderPotion, $g_hComboClockTowerPotion, $g_hComboHeroPotion, $g_hComboLabPotion, $g_hComboPowerPotion, _
-			$g_hInputGoldItems, $g_hInputElixirItem, $g_hInputDarkElixirItem
+			$g_iInputGoldItems = GUICtrlRead($g_hInputGoldItems)
+			$g_iInputElixirItems = GUICtrlRead($g_hInputElixirItems)
+			$g_iInputDarkElixirItems = GUICtrlRead($g_hInputDarkElixirItems)
+
+			$g_iInputBuilderPotion = GUICtrlRead($g_hInputBuilderPotion)
+			$g_iInputLabPotion = GUICtrlRead($g_hInputLabPotion)
+			
+			$g_iComboPowerPotion = _GUICtrlComboBox_GetCurSel($g_hComboPowerPotion)
+			$g_iComboHeroPotion = _GUICtrlComboBox_GetCurSel($g_hComboHeroPotion)
+			$g_iComboClockTowerPotion = _GUICtrlComboBox_GetCurSel($g_hComboClockTowerPotion)
+			
+			$g_bChkCollectMagicItems = (GUICtrlRead($g_hChkCollectMagicItems) = $GUI_CHECKED)
+			$g_bChkCollectFree = (GUICtrlRead($g_hChkCollectFree) = $GUI_CHECKED)
+		
+			$g_bChkBuilderPotion = (GUICtrlRead($g_hChkBuilderPotion) = $GUI_CHECKED)
+			$g_bChkClockTowerPotion = (GUICtrlRead($g_hChkClockTowerPotion) = $GUI_CHECKED)
+			$g_bChkHeroPotion = (GUICtrlRead($g_hChkHeroPotion) = $GUI_CHECKED)
+			$g_bChkLabPotion = (GUICtrlRead($g_hChkLabPotion) = $GUI_CHECKED)
+			$g_bChkPowerPotion = (GUICtrlRead($g_hChkPowerPotion) = $GUI_CHECKED)
+			$g_bChkResourcePotion = (GUICtrlRead($g_hChkResourcePotion) = $GUI_CHECKED)
 	EndSwitch
-#ce
+
 EndFunc   ;==>ApplyConfig_MOD_MagicItems
 
 Func ApplyConfig_MOD_ChatActions($TypeReadSave)
@@ -126,7 +158,7 @@ Func ApplyConfig_MOD_600_6($TypeReadSave)
 			For $i = 0 To $g_iDDCount - 1
 				GUICtrlSetState($g_ahChkDD_Deals[$i], $g_abChkDD_Deals[$i] = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			Next
-			GUICtrlSetBkColor($g_hBtnDailyDiscounts, $g_bDD_DealsSet = True ? $COLOR_GREEN : $COLOR_RED)
+			GUICtrlSetBkColor($g_hBtnMagicItemsConfig, $g_bDD_DealsSet = True ? $COLOR_GREEN : $COLOR_RED)
 			btnDDApply()
 
 			; BB Suggested Upgrades
@@ -317,3 +349,50 @@ Func ApplyConfig_MOD_600_35_2($TypeReadSave)
 			Next
 	EndSwitch
 EndFunc   ;==>ApplyConfig_MOD_600_35_2
+
+Func ApplyConfig_MOD_Humanization($TypeReadSave)
+	; <><><><> Humanization <><><><>
+	Switch $TypeReadSave
+		Case "Read"
+			GUICtrlSetState($g_hChkUseBotHumanization, $g_bUseBotHumanization ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkUseAltRClick, $g_bUseAltRClick ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkCollectAchievements, $g_bCollectAchievements ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkLookAtRedNotifications, $g_bLookAtRedNotifications ? $GUI_CHECKED : $GUI_UNCHECKED)
+			chkUseBotHumanization()
+			For $i = 0 To 12
+				_GUICtrlComboBox_SetCurSel($g_acmbPriority[$i], $g_iacmbPriority[$i])
+			Next
+			For $i = 0 To 1
+				_GUICtrlComboBox_SetCurSel($g_acmbMaxSpeed[$i], $g_iacmbMaxSpeed[$i])
+			Next
+			For $i = 0 To 1
+				_GUICtrlComboBox_SetCurSel($g_acmbPause[$i], $g_iacmbPause[$i])
+			Next
+			For $i = 0 To 1
+				GUICtrlSetData($g_ahumanMessage[$i], $g_iahumanMessage[$i])
+			Next
+			_GUICtrlComboBox_SetCurSel($g_hCmbMaxActionsNumber, $g_iCmbMaxActionsNumber)
+			GUICtrlSetData($g_hChallengeMessage, $g_iTxtChallengeMessage)
+			cmbStandardReplay()
+			cmbWarReplay()
+		Case "Save"
+			$g_bUseBotHumanization = (GUICtrlRead($g_hChkUseBotHumanization) = $GUI_CHECKED)
+			$g_bUseAltRClick = (GUICtrlRead($g_hChkUseAltRClick) = $GUI_CHECKED)
+			$g_bCollectAchievements = (GUICtrlRead($g_hChkCollectAchievements) = $GUI_CHECKED)
+			$g_bLookAtRedNotifications = (GUICtrlRead($g_hChkLookAtRedNotifications) = $GUI_CHECKED)
+			For $i = 0 To 12
+				$g_iacmbPriority[$i] = _GUICtrlComboBox_GetCurSel($g_acmbPriority[$i])
+			Next
+			For $i = 0 To 1
+				$g_iacmbMaxSpeed[$i] = _GUICtrlComboBox_GetCurSel($g_acmbMaxSpeed[$i])
+			Next
+			For $i = 0 To 1
+				$g_iacmbPause[$i] = _GUICtrlComboBox_GetCurSel($g_acmbPause[$i])
+			Next
+			For $i = 0 To 1
+				$g_iahumanMessage[$i] = GUICtrlRead($g_ahumanMessage[$i])
+			Next
+			$g_iCmbMaxActionsNumber = _GUICtrlComboBox_GetCurSel($g_iCmbMaxActionsNumber)
+			$g_iTxtChallengeMessage = GUICtrlRead($g_hChallengeMessage)
+	EndSwitch
+EndFunc   ;==>ApplyConfig_MOD_Humanization

@@ -53,7 +53,7 @@ Func MatchTroopDropName($Num)
 		Case 19
 			Return $eBowl
 		Case 20
-			Return $eIceG	
+			Return $eIceG
 		Case 21
 			Return "CC"
 		Case 22
@@ -137,7 +137,7 @@ Func MatchSlotsPerEdge($Num)
 		Case 19 ;$eBowl
 			Return 0
 		Case 20 ;$eIceG
-			Return 2	
+			Return 2
 		Case 21 ;CC
 			Return 1
 		Case 22 ;HEROES

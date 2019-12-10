@@ -17,16 +17,26 @@
 #include "functions\Mod's\ModFuncs.au3"
 #include "functions\Pixels\_Wait4Pixel.au3"
 
+; MagicItems
+#include "functions\Mod's\MagicItems.au3"
+
 ; SuperXP / GoblinXP - Team AiO MOD++
 #include "functions\Mod's\SuperXP\ArrayFunctions.au3"
 #include "functions\Mod's\SuperXP\multiSearch.au3"
 #include "functions\Mod's\SuperXP\SuperXP.au3"
 
+; Humanization - Team AiO MOD++
+#include "functions\Mod's\Humanization\BotHumanization.au3"
+#include "functions\Mod's\Humanization\AttackNDefenseActions.au3"
+#include "functions\Mod's\Humanization\BestClansNPlayersActions.au3"
+#include "functions\Mod's\Humanization\ChatActions.au3"
+#include "functions\Mod's\Humanization\ClanActions.au3"
+#include "functions\Mod's\Humanization\ClanWarActions.au3"
+
 ; ChatActions - Team AiO MOD++
 #include "functions\Mod's\ChatActions\MultyLang.au3"
 #include "functions\Mod's\ChatActions\IAChat.au3"
 #include "functions\Mod's\ChatActions\ChatActions.au3"
-
 
 ; Auto Dock, Hide Emulator & Bot - Team AiO MOD++
 #include "functions\Mod's\AutoHideDockMinimize.au3"
@@ -46,8 +56,7 @@
 #include "functions\Mod's\GTFO\GTFO.au3"
 #include "functions\Mod's\GTFO\KickOut.au3"
 
-; moved to the end to avoid any global declare issues
+; Moved to the end to avoid any global declare issues - Team AiO MOD++
 #include "functions\Config\saveConfig.au3"
 #include "functions\Config\readConfig.au3"
 #include "functions\Config\applyConfig.au3"
-

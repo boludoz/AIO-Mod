@@ -31,7 +31,7 @@ Func TabChatActionsGUI()
 	ChatbotReadSettings()
 
 	Local $x = 25, $y = 45
-	GUICtrlCreateGroup(GetTranslatedFileIni("MOD GUI Design - ChatActions", "Group_02", "Clan Chat"), $x - 20, $y - 20, $g_iSizeWGrpTab2, 114)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MOD GUI Design - ChatActions", "Group_02", "Clan Chat"), $x - 20, $y - 20, $g_iSizeWGrpTab2 - 1, 118)
 	$x -= 10
 	$y -= 5
 		$g_hChkClanChat = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design - ChatActions", "ChkClanChat", "Enable Clan Chat"), $x, $y, -1, -1)
@@ -74,8 +74,8 @@ Func TabChatActionsGUI()
 			GUICtrlSetOnEvent(-1, "ChatGuiEditUpdate")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
-	Local $x = 25, $y = 161
-	GUICtrlCreateGroup(GetTranslatedFileIni("MOD GUI Design - ChatActions", "Group_03", "Friend Challenge"), $x - 20, $y - 20, $g_iSizeWGrpTab2, 113)
+	Local $x = 25, $y = 165
+	GUICtrlCreateGroup(GetTranslatedFileIni("MOD GUI Design - ChatActions", "Group_03", "Friend Challenge"), $x - 20, $y - 20, $g_iSizeWGrpTab2 - 1, 117)
 	$x -= 10
 	$y -= 5
 		$g_hChkEnableFriendlyChallenge = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design - ChatActions", "ChkEnableFriendlyChallenge", "Enable Friend Challenge"), $x, $y, -1, -1)
@@ -123,8 +123,8 @@ Func TabChatActionsGUI()
 			GUICtrlSetOnEvent(-1, "ChatGuiEditUpdate")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
-	Local $x = 25, $y = 392
-	GUICtrlCreateGroup(GetTranslatedFileIni("MOD GUI Design - ChatActions", "Group_04", "Only in hours"), $x - 20, $y - 20, $g_iSizeWGrpTab2 - 150, 63)
+	Local $x = 25, $y = 284
+	GUICtrlCreateGroup(GetTranslatedFileIni("MOD GUI Design - ChatActions", "Group_04", "Only in hours"), $x - 20, $y - 20, $g_iSizeWGrpTab2 - 151, 67)
 	$x -= 10
 	$y -= 6
 		$g_hLblChatActionsOnlyDuringHours = GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "Hour", -1) & ":", $x, $y, -1, 15)
@@ -208,8 +208,8 @@ Func TabChatActionsGUI()
 		$g_hLblFriendlyChallengeHoursPM = GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "PM", -1), $x + 5, $y)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
-	Local $x = 325, $y = 392
-	GUICtrlCreateGroup(GetTranslatedFileIni("MOD GUI Design - ChatActions", "Group_05", "Remote chat"), $x - 20, $y - 20, $g_iSizeWGrpTab2 - 300, 63)
+	Local $x = 324, $y = 284
+	GUICtrlCreateGroup(GetTranslatedFileIni("MOD GUI Design - ChatActions", "Group_05", "Remote chat"), $x - 20, $y - 20, $g_iSizeWGrpTab2 - 300, 67)
 	$x -= 10
 		$g_hChkChatNotify = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design - ChatActions", "ChkChatNotify", "Remote chatting"), $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design - ChatActions", "ChkChatNotify_Info_01", "Send and recieve chats via pushbullet or telegram.") & @CRLF & _
@@ -221,5 +221,8 @@ Func TabChatActionsGUI()
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design - ChatActions", "ChkPbSendNewChats_Info_01", "Will send an image of your clan chat via pushbullet & telegram when a new chat is detected.") & @CRLF & _
 					GetTranslatedFileIni("MOD GUI Design - ChatActions", "ChkPbSendNewChats_Info_02", "Not guaranteed to be 100% accurate."))
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
+	$x -= 300 + 8
+	$y += 40 + 8
+	_GUICtrlCreatePic($g_sIcnChatAction, $x, $y, 438, 100)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 EndFunc   ;==>TabChatActionsGUI

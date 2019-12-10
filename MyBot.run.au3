@@ -593,6 +593,13 @@ Func FinalInitialization(Const $sAI)
 		EndIf
 	EndIf
 
+	SetLog(" ")
+	SetLog(" •  " & "AIO++ MOD " & $g_sModVersion, $COLOR_SUCCESS, "Candara", 9)
+	SetLog(" •  " & "Based On MBR " & $g_sBotVersion, $COLOR_SUCCESS, "Candara", 9)
+	SetLog(" •  " & "Create a New Profile", $COLOR_SUCCESS, "Candara", 9)
+	SetLog(" •  " & "Participants and thanks: Nguyen, Chill-chill, Eloy, Boldina, Demen, and bolsonaro fan.", $COLOR_SUCCESS, "Candara", 9)
+	SetLog(" ")
+
 	; destroy splash screen here (so we witness the 100% ;)
 	DestroySplashScreen(False)
 	If $bCheckPrerequisitesOK Then
@@ -636,8 +643,8 @@ EndFunc   ;==>FinalInitialization
 Func MainLoop($bCheckPrerequisitesOK = True)
 	Local $iStartDelay = 0
 
-    If $bCheckPrerequisitesOK And ($g_bAutoStart Or $g_bRestarted) Then
-	Local $iDelay = $g_iAutoStartDelay
+	If $bCheckPrerequisitesOK And ($g_bAutoStart Or $g_bRestarted) Then
+		Local $iDelay = $g_iAutoStartDelay
 		If $g_bRestarted Then $iDelay = 0
 		$iStartDelay = $iDelay * 1000
 		$g_iBotAction = $eBotStart
@@ -706,8 +713,8 @@ Func runBot() ;Bot that runs everything in order
 	While 1
 		;Restart bot after these seconds
 		If $b_iAutoRestartDelay > 0 And __TimerDiff($g_hBotLaunchTime) > $b_iAutoRestartDelay * 1000 Then
-            If RestartBot(False) Then Return
-        EndIf
+			If RestartBot(False) Then Return
+		EndIf
 
 		PrepareDonateCC()
 		If Not $g_bRunState Then Return
@@ -721,12 +728,12 @@ Func runBot() ;Bot that runs everything in order
 		chkShieldStatus()
 		If Not $g_bRunState Then Return
 		If $g_bRestart Then ContinueLoop
-		
+
 		; AIO - Start
 		MainGTFO()
 		MainKickout()
 		; AIO - End
-		
+
 		checkObstacles() ; trap common error messages also check for reconnecting animation
 		If $g_bRestart Then ContinueLoop
 
@@ -765,8 +772,8 @@ Func runBot() ;Bot that runs everything in order
 			Next
 
 			If Not $g_bChkOnlyFarm Then AddIdleTime() ; AIO Mod
-            If Not $g_bRunState Then Return
-            If $g_bRestart Then ContinueLoop
+			If Not $g_bRunState Then Return
+			If $g_bRestart Then ContinueLoop
 			If IsSearchAttackEnabled() Then ; if attack is disabled skip reporting, requesting, donating, training, and boosting
 				Local $aRndFuncList = ['ReplayShare', 'NotifyReport', 'DonateCC,Train', 'RequestCC']
 				_ArrayShuffle($aRndFuncList)
@@ -889,9 +896,11 @@ Func _Idle() ;Sequence that runs until Full Army
 		If _Sleep($DELAYIDLE1) Then Return
 		If $g_iCommandStop = -1 Then SetLog("====== Waiting for full army ======", $COLOR_SUCCESS)
 
-		ChatActions() ; ChatActions - Team AiO MOD++
+		If not $g_bChkOnlyFarm Then ChatActions() ; ChatActions - Team AiO MOD++
 
 		Local $hTimer = __TimerInit()
+		If not $g_bChkOnlyFarm Then BotHumanization() ; Humanization - Team AiO MOD++
+
 		If _Sleep($DELAYIDLE1) Then ExitLoop
 		checkObstacles() ; trap common error messages also check for reconnecting animation
 		checkMainScreen(False) ; required here due to many possible exits
@@ -1026,7 +1035,7 @@ Func AttackMain() ;Main control for attack functions
 				;SetLog("BullyMode: " & $g_abAttackTypeEnable[$TB] & ", Bully Hero: " & BitAND($g_aiAttackUseHeroes[$g_iAtkTBMode], $g_aiSearchHeroWaitEnable[$g_iAtkTBMode], $g_iHeroAvailable) & "|" & $g_aiSearchHeroWaitEnable[$g_iAtkTBMode] & "|" & $g_iHeroAvailable, $COLOR_DEBUG)
 			EndIf
 
-			ChatActions() ; ChatActions - Team AiO MOD++
+			If not $g_bChkOnlyFarm Then ChatActions() ; ChatActions - Team AiO MOD++
 
 			_ClanGames()
 			ClickP($aAway, 1, 0, "#0000") ;Click Away to prevent any pages on top
@@ -1172,9 +1181,6 @@ Func __RunFunction($action)
 		Case "BoostTrainingPotion"
 			BoostTrainingPotion()
 			_Sleep($DELAYRESPOND)
-		Case "BoostResourcePotion"
-			BoostResourcePotion()
-			_Sleep($DELAYRESPOND)
 		Case "DailyChallenge"
 			DailyChallenges()
 			_Sleep($DELAYRUNBOT3)
@@ -1258,21 +1264,23 @@ Func FirstCheck()
 	If Not $g_bRunState Then Return
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
 
+	#Region AIO MOD++
 	If not $g_bChkOnlyFarm Then
-	$g_bRestart = False
-	$g_bFullArmy = False
-	$g_iCommandStop = -1
+		$g_bRestart = False
+		$g_bFullArmy = False
+		$g_iCommandStop = -1
+
+		VillageReport()
+		ProfileSwitch()
+		CheckFarmSchedule()
+		MainGTFO()
+		MainKickout()
 	EndIf
-	
-	;Aio
-	VillageReport()
-	ProfileSwitch()
-	CheckFarmSchedule()
-	MainGTFO()
-	MainKickout()
-	;Aio
-	
+	#Region End
+
 	If Not $g_bRunState Then Return
+
+	If not $g_bChkOnlyFarm Then BotHumanization() ; Humanization - Team AiO MOD++
 
 	If $g_bOutOfGold And (Number($g_aiCurrentLoot[$eLootGold]) >= Number($g_iTxtRestartGold)) Then ; check if enough gold to begin searching again
 		$g_bOutOfGold = False ; reset out of gold flag
@@ -1307,8 +1315,8 @@ Func FirstCheck()
 				If Not $g_bRunState Then Return
 				AttackMain()
 				$g_bSkipFirstZoomout = False
-                If $g_bOutOfGold Then
-                    SetLog("Switching to Halt Attack, Stay Online/Collect mode", $COLOR_ERROR)
+				If $g_bOutOfGold Then
+					SetLog("Switching to Halt Attack, Stay Online/Collect mode", $COLOR_ERROR)
 					$g_bFirstStart = True ; reset First time flag to ensure army balancing when returns to training
 					Return
 				EndIf

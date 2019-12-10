@@ -259,7 +259,8 @@ Func SaveRegularConfig()
 	SaveConfig_MOD_600_35_1()
 	; <><><><> Switch Profiles <><><><>
 	SaveConfig_MOD_600_35_2()
-
+	; <><><> Humanization <><><>
+	SaveConfig_MOD_Humanization()
 
 	; <><><><> Attack Plan / Strategies <><><><>
 	; <<< nothing here >>>
@@ -370,7 +371,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "minCollectdark", $g_iTxtCollectDark)
 	_Ini_Add("other", "chkTombstones", $g_bChkTombstones ? 1 : 0)
 	_Ini_Add("other", "chkCleanYard", $g_bChkCleanYard ? 1 : 0)
-	_Ini_Add("other", "ChkCollectFreeMagicItems", $g_bChkCollectFreeMagicItems ? 1 : 0)
+;	_Ini_Add("other", "ChkCollectFreeMagicItems", $g_bChkCollectFreeMagicItems ? 1 : 0) ; AIO MOD++
 	_Ini_Add("other", "ChkCollectRewards", $g_bChkCollectRewards ? 1 : 0)
 	_Ini_Add("other", "chkGemsBox", $g_bChkGemsBox ? 1 : 0)
 	_Ini_Add("other", "ChkTreasuryCollect", $g_bChkTreasuryCollect ? 1 : 0)
@@ -1088,7 +1089,7 @@ Func SaveConfig_600_35_2()
 			IniWrite($sSwitchAccFile, "SwitchAccount", "ProfileName." & $i, $g_asProfileName[$i - 1])
 			IniWrite($sSwitchAccFile, "SwitchAccount", "DonateOnly." & $i, $g_abDonateOnly[$i - 1] ? 1 : 0)
 
-			;Farm Schedule
+			; Farm Schedule - Team AiO MOD++
 			IniWrite($sSwitchAccFile, "FarmStrategy", "ChkSetFarm" & $i, $g_abChkSetFarm[$i - 1] ? 1 : 0)
 
 			IniWrite($sSwitchAccFile, "FarmStrategy", "CmbAction1" & $i, $g_aiCmbAction1[$i - 1])

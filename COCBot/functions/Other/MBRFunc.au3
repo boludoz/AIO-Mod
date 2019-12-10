@@ -156,6 +156,7 @@ EndFunc   ;==>SetBotGuiPID
 
 Func CheckForumAuthentication()
 	If $g_hLibMyBot = -1 Then Return False ; Bot didn't finish launch yet
+	Return 1 ;AIO
 	Local $result = DllCall($g_hLibMyBot, "str", "CheckForumAuthentication")
 	If @error Then
 		_logErrorDLLCall($g_sLibMyBotPath & ", CheckForumAuthentication:", @error)

@@ -8,13 +8,21 @@
 	» Added:
         • GTFO Preview.
 		• Magic items Preview.
+		• Humanization (THX Eloy, Chilly-Chill).
 
 	» Fixed:
+		• Only farm.
+		• LOT of fixes in GUI (THX Eloy).
         • ChatActions Config.
-	
+        • Super XP bug 783.
+        • Super XP GUI vars.
+
 	» Improved:
-        • Super XP images fix.
+        • Super XP separed images.
 		• Chat AI: Scroll.
+		
+	» Disabled:
+        • Resource bost (For fix).
 
 	**V3.0.1**
 	» Fixed:
@@ -25,10 +33,10 @@
 
 	**V3.0.0**
 	» Added:
-        • Daily Discounts custom  (thx Chilly-Chill - NGuyen <3 )
-        • Smart farm: collector outside support
-        • Random click away ( detect $aAway and $aAway2)
-        • Only farm mode (fast farming)
+		• Daily Discounts custom  (thx Chilly-Chill - NGuyen <3 )
+		• Smart farm: collector outside support
+		• Random click away ( detect $aAway and $aAway2)
+		• Only farm mode (fast farming)
 
 	» Improved:
 		• Chat AI: Scroll
@@ -38,12 +46,11 @@
 		• Clan chat
 		• SuperXP
 		• BB attack now if you don't have a siege machine 
-	
+
 	» Deleted:
 		• Global chat
 
 	**V2.0.4**
-
 
 	**V2.0.3**
 	» Improved:

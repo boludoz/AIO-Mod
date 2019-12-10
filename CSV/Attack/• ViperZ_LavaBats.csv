@@ -1,0 +1,51 @@
+NOTE  |Authors: ViperZ
+NOTE  |             ★★★TH 12★★★
+NOTE  |Attack: LavaBats
+NOTE  | TH12: 5 Lava, 26 loons
+NOTE  | Spells: 11 Bat Spells
+NOTE  | Army Cost: 143000 Elixir & 4800 Dark Elixir (Max TH12)
+NOTE  | CC: Balloon & Rage & wrecker
+NOTE  | Warden timed after 15 seconds
+
+      |_TROOPNAME_|__FLEXIBLE_|____TH06___|____TH07___|____TH08___|____TH09___|____TH10___|____TH11___|____TH12___|
+TRAIN |Lava       |0          |0          |0          |0          |0          |0          |0          |5          |
+TRAIN |Ball       |0          |0          |0          |0          |0          |0          |0          |26         |
+
+TRAIN |BtSpell    |0          |0          |0          |0          |0          |0          |0          |11         |
+
+      |_TROOPNAME_|___________|____TH06___|____TH07___|____TH08___|____TH09___|____TH10___|____TH11___|____TH12___|Hero Abilities: 1.Auto 2.Timed 3.Both
+TRAIN |King       |0          |0          |0          |0          |0          |0          |0          |1          |auto
+TRAIN |Queen      |0          |0          |0          |0          |0          |0          |0          |1          |timed after 9 sec.
+TRAIN |Warden     |0          |0          |0          |0          |0          |0          |0          |315        |both: auto or timed after 12 sec.
+
+      |___________|___________|____TH06___|____TH07___|____TH08___|____TH09___|____TH10___|____TH11___|____TH12___|
+REDLN |0          |0          |0          |0          |0          |0          |0          |0          |4          |1.RAW 2.POINTS 3.ORIGINAL 4.EDGES
+
+      |EXTR. GOLD |EXTR.ELIXIR|EXTR. DARK |DEPO. GOLD |DEPO.ELIXIR|DEPO. DARK |TOWNHALL   |FORCED SIDE|
+SIDE  |           |           |           |           |           |0          |10         |           |
+      |EAGLE      |INFERNO    |XBOW       |WIZTOWER   |MORTAR     |AIRDEFENSE |GEMBOX     |GEMBOX     |
+SIDEB |0          |0          |0          |0          |0          |0          |           |           |
+
+      |VECTOR_____|SIDE_______|DROP_POINTS|ADDTILES___|VERSUS_____|RANDOMX_PX_|RANDOMY_PX_|BUILDING___|___________|
+MAKE  |A          |FRONT-LEFT |10         |0          |EXT-INT    |0          |5          |           |           |
+MAKE  |B          |FRONT-RIGHT|10         |0          |INT-EXT    |0          |5          |           |           |
+MAKE  |Z          |FRONT-RIGHT|10         |0          |EXT-INT    |0          |5          |           |           |
+MAKE  |C          |FRONT-LEFT |10         |-6         |INT-EXT    |0          |5          |           |           |
+MAKE  |D          |FRONT-RIGHT|10         |-6         |INT-EXT    |0          |5          |           |           |
+MAKE  |E          |FRONT-LEFT |10         |-15        |INT-EXT    |0          |5          |           |           |
+
+      |VECTOR_____|INDEX______|QTY_X_VECT_|TROOPNAME__|DELAY_DROP_|DELAYCHANGE|SLEEPAFTER_|___________|___________|
+DROP  |A-Z        |4,7,9      |3          |Lava       |50-70      |27-50      |10-20      |           |           |
+DROP  |A          |3-9        |9          |Ball       |50-70      |27-50      |15-20      |           |           |
+DROP  |B          |1-7        |8          |Ball       |50-70      |27-50      |15-20      |           |           |
+DROP  |Z          |2-8        |9          |Ball       |55-70      |27-50      |15-20      |           |           |
+DROP  |A          |10         |1          |StoneS     |0          |0          |150-170    |           |           |
+DROP  |A          |10         |1          |BattleB    |0          |0          |150-170    |           |           |
+DROP  |A          |10         |1          |WallW      |70-100     |           |200-250    |           |           |
+DROP  |A          |10         |1          |Warden     |70-100     |           |200-250    |           |           |
+DROP  |A          |10         |1          |King       |0          |0          |15-20      |           |           |
+DROP  |A          |10         |1          |Queen      |0          |0          |15-20      |           |           |
+DROP  |C-D        |2          |6          |BtSpell    |50-100     |0          |190-200    |           |           |
+DROP  |E          |1          |1          |RSpell     |50-100     |0          |190-200    |           |           |
+WAIT  |1000-2000  |           |           |           |           |           |           |           |           |
+DROP  |A-B        |1-8        |1          |REMAIN     |50-70      |100        |50-100     |           |           |

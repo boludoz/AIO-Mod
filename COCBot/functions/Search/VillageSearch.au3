@@ -264,7 +264,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 
 				If $bIsWeak And $try = 1 Then
 					ResumeAndroid()
-					If _Sleep(Random(2845,5484,1)) Then Return ; AIO Team- Random time to give heroes time to "walk away"
+					If _Sleep(Random(2845,5484,1)) Then Return ; AIO Team - Random time to give heroes time to "walk away"
 					ForceCaptureRegion()
 					_CaptureRegion2()
 					SuspendAndroid()
@@ -534,8 +534,8 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 	;--- write in log match found ----
 	If $g_bSearchAlertMe Then
 		TrayTip($g_sProfileCurrentName & ": " & $g_asModeText[$g_iMatchMode] & " Match Found!", "Gold: " & $g_iSearchGold & "; Elixir: " & $g_iSearchElixir & "; Dark: " & $g_iSearchDark & "; Trophy: " & $g_iSearchTrophy, "", 0)
-		If FileExists(@WindowsDir & "\media\Festival\Windows Exclamation.wav") Then
-			SoundPlay(@WindowsDir & "\media\Festival\Windows Exclamation.wav", 1)
+		If FileExists(@WindowsDir & "\media\Festival\Windows Logoff Sound.wav") Then
+			SoundPlay(@WindowsDir & "\media\Festival\Windows Logoff Sound.wav", 1)
 		ElseIf FileExists(@WindowsDir & "\media\Windows Exclamation.wav") Then
 			SoundPlay(@WindowsDir & "\media\Windows Exclamation.wav", 1)
 		EndIf

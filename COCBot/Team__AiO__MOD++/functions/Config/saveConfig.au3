@@ -32,22 +32,26 @@ EndFunc   ;==>SaveConfig_MOD_SuperXP
 Func SaveConfig_MOD_MagicItems()
 	; <><><> MagicItems <><><>
 	ApplyConfig_MOD_MagicItems(GetApplyConfigSaveAction())
-#cs
-	Global $g_hChkCollectMagicItems, $g_hChkCollectFree, _
-	$g_hChkBuilderPotion, $g_hChkClockTowerPotion, $g_hChkHeroPotion, $g_hChkLabPotion, $g_hChkPowerPotion, $g_hChkResourcePotion, _
-	$g_hComboBuilderPotion, $g_hComboClockTowerPotion, $g_hComboHeroPotion, $g_hComboLabPotion, $g_hComboPowerPotion, _
-	$g_hInputGoldItems, $g_hInputElixirItem, $g_hInputDarkElixirItem
-                $res = GUICtrlRead($Combo1)
-	_Ini_Add("MagicItems", "DelayTimeClan", $g_sDelayTimeClan)
-            Case $Save
-                $res = GUICtrlRead($Combo1)
-                IniWrite($IniFile, "Display Properties", "Resolution", $res)
-            Case $Load
-                ; last parameter '1024x768' is default value if nothing found in ini file
-                $IniRead = IniRead($IniFile, "Display Properties", "Resolution", "1024x768")
-                GUICtrlSetData($Combo1,$IniRead)
-        EndSwitch
-		#ce
+	_Ini_Add("MagicItems", "InputGoldItems", $g_iInputGoldItems)
+	_Ini_Add("MagicItems", "InputElixirItems", $g_iInputElixirItems)
+	_Ini_Add("MagicItems", "InputDarkElixirItems", $g_iInputDarkElixirItems)
+
+	_Ini_Add("MagicItems", "InputBuilderPotion", $g_iInputBuilderPotion)
+	_Ini_Add("MagicItems", "InputLabPotion", $g_iInputLabPotion)
+	
+	_Ini_Add("MagicItems", "ComboClockTowerPotion", $g_iComboClockTowerPotion)
+	_Ini_Add("MagicItems", "ComboHeroPotion", $g_iComboHeroPotion)
+	_Ini_Add("MagicItems", "ComboPowerPotion", $g_iComboPowerPotion)
+
+	_Ini_Add("MagicItems", "CollectMagicItems", $g_bChkCollectMagicItems ? 1 : 0)
+	_Ini_Add("MagicItems", "ChkCollectFree", $g_bChkCollectFree ? 1 : 0)
+
+	_Ini_Add("MagicItems", "ChkBuilderPotion", $g_bChkBuilderPotion ? 1 : 0)
+	_Ini_Add("MagicItems", "ChkClockTowerPotion", $g_bChkClockTowerPotion ? 1 : 0)
+	_Ini_Add("MagicItems", "ChkHeroPotion", $g_bChkHeroPotion ? 1 : 0)
+	_Ini_Add("MagicItems", "ChkLabPotion", $g_bChkLabPotion ? 1 : 0)
+	_Ini_Add("MagicItems", "ChkPowerPotion", $g_bChkPowerPotion ? 1 : 0)
+	_Ini_Add("MagicItems", "ChkResourcePotion", $g_bChkResourcePotion ? 1 : 0)
 EndFunc   ;==>SaveConfig_MOD_MagicItems
 
 Func SaveConfig_MOD_ChatActions()
@@ -183,3 +187,25 @@ Func SaveConfig_MOD_600_35_2()
 		_Ini_Add("SwitchProfile", "ConditionMin" & $i, $g_aiConditionMin[$i])
 	Next
 EndFunc   ;==>SaveConfig_MOD_600_35_2
+
+Func SaveConfig_MOD_Humanization()
+	; <><><> Humanization <><><>
+	_Ini_Add("Bot Humanization", "chkUseBotHumanization", $g_bUseBotHumanization ? True : False)
+	_Ini_Add("Bot Humanization", "chkUseAltRClick", $g_bUseAltRClick ? True : False)
+	_Ini_Add("Bot Humanization", "chkCollectAchievements", $g_bCollectAchievements ? True : False)
+	_Ini_Add("Bot Humanization", "chkLookAtRedNotifications", $g_bLookAtRedNotifications ? True : False)
+	For $i = 0 To 12
+		_Ini_Add("Bot Humanization", "cmbPriority[" & $i & "]", _GUICtrlComboBox_GetCurSel($g_acmbPriority[$i]))
+	Next
+	For $i = 0 To 1
+		_Ini_Add("Bot Humanization", "cmbMaxSpeed[" & $i & "]", _GUICtrlComboBox_GetCurSel($g_acmbMaxSpeed[$i]))
+	Next
+	For $i = 0 To 1
+		_Ini_Add("Bot Humanization", "cmbPause[" & $i & "]", _GUICtrlComboBox_GetCurSel($g_acmbPause[$i]))
+	Next
+	For $i = 0 To 1
+		_Ini_Add("Bot Humanization", "humanMessage[" & $i & "]", GUICtrlRead($g_ahumanMessage[$i]))
+	Next
+	_Ini_Add("Bot Humanization", "cmbMaxActionsNumber", _GUICtrlComboBox_GetCurSel($g_hCmbMaxActionsNumber))
+	_Ini_Add("Bot Humanization", "challengeMessage", GUICtrlRead($g_hChallengeMessage))
+EndFunc   ;==>SaveConfig_MOD_Humanization

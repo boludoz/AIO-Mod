@@ -1,0 +1,49 @@
+NOTE  |JUVELoon v.3  by Juven-Tino EXTERNAL EDGES Warden 13 Sec                 
+NOTE  |TH-12 T: 2 Lava, 28 Balls, 8 BabyD – 3 Rage, 2 Haste, 1 Clone in CC 8 Balls, 1 Rage
+
+      |EXTR. GOLD |EXTR.ELIXIR|EXTR. DARK |DEPO. GOLD |DEPO.ELIXIR|DEPO. DARK |TOWNHALL   |FORCED SIDE|
+SIDE  |0          |0          |0          |0          |0          |0          |10         |0          |
+      |EAGLE      |INFERNO    |XBOW       |WIZTOWER   |MORTAR     |AIRDEFENSE |AIRSWEEPER |GEMBOX     |
+SIDEB |0          |0          |0          |0          |0          |0          |0          |0          |
+
+      |VECTOR_____|SIDE_______|DROP_POINTS|ADDTILES___|VERSUS_____|RANDOMX_PX_|RANDOMY_PX_|___________|
+MAKE  |A          |FRONT-LEFT |10         |0          |EXT-INT    |0          |5          |           |
+MAKE  |B          |FRONT-RIGHT|10         |0          |INT-EXT    |0          |5          |           |
+MAKE  |Z          |FRONT-RIGHT|10         |0          |EXT-INT    |0          |5          |           |
+MAKE  |K          |FRONT-LEFT |10         |0          |INT-EXT    |0          |5          |           |
+MAKE  |C          |FRONT-LEFT |10         |-7         |INT-EXT    |0          |5          |           |
+MAKE  |D          |FRONT-RIGHT|10         |-7         |INT-EXT    |0          |5          |           |
+MAKE  |E          |FRONT-LEFT |10         |-17        |INT-EXT    |0          |5          |           |
+MAKE  |G          |FRONT-RIGHT|10         |-17        |INT-EXT    |0          |5          |           |
+MAKE  |F          |FRONT-RIGHT|10         |-16        |INT-EXT    |0          |5          |           |
+MAKE  |R          |BACK-RIGHT |10         |0          |INT-EXT    |0          |5          |           |
+MAKE  |J          |BACK-LEFT  |10         |0          |INT-EXT    |0          |5          |           |
+
+      |VECTOR_____|INDEX______|QTY_X_VECT_|TROOPNAME__|DELAY_DROP_|DELAYCHANGE|SLEEPAFTER_|___________|
+DROP  |C          |5          |1          |HaSpell    |           |           |150-200    |           |
+DROP  |D          |5          |1          |HaSpell    |           |           |150-200    |           |
+DROP  |Z          |5          |1          |Lava       |           |           |150-200    |           |
+DROP  |A          |5          |1          |Lava       |           |           |150-200    |           |
+DROP  |A          |10         |1          |Castle     |           |           |150-200    |           |
+DROP  |A          |10         |1          |BattleB    |           |           |150-200    |           |
+DROP  |A          |10         |1          |WallW      |           |           |150-200    |           |
+DROP  |A          |10         |1          |StoneS     |           |           |150-200    |           |
+DROP  |D          |1          |1          |RSpell     |           |           |150-200    |           |
+DROP  |A          |4-10       |7          |Ball       |75-100     |           |           |           |
+DROP  |B          |1-7        |7          |Ball       |75-100     |           |           |           |
+DROP  |Z          |4-10       |7          |Ball       |75-100     |           |           |           |
+DROP  |K          |1-7        |7          |Ball       |75-100     |           |150-200    |           |
+DROP  |A          |10         |1          |Warden     |           |           |           |           |
+WAIT  |7500-8000  |           |           |           |           |           |           |           |
+DROP  |F          |1          |1          |Cspell     |           |           |150-200    |           |
+DROP  |E          |5          |1          |RSpell     |           |           |150-200    |           |
+DROP  |E          |1          |1          |RSpell     |           |           |150-200    |           |
+DROP  |G          |4          |1          |RSpell     |           |           |150-200    |           |
+DROP  |A          |1,5,10     |3          |BabyD      |100-150    |           |           |           |
+DROP  |B          |5,10       |2          |BabyD      |100-150    |           |           |           |
+DROP  |R          |1          |1          |BabyD      |           |           |150-200    |           |
+DROP  |R          |6          |1          |BabyD      |           |           |150-200    |           |
+DROP  |J          |6          |1          |BabyD      |           |           |           |           |
+WAIT  |10000-11000|           |           |           |           |           |           |           |
+DROP  |A          |10         |1          |King       |           |           |1000-1200  |           |
+DROP  |A          |10         |1          |Queen      |           |           |           |           |

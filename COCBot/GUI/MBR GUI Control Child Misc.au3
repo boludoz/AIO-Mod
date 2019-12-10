@@ -256,24 +256,6 @@ Func chkBotStop()
 	EndIf
 EndFunc   ;==>chkBotStop
 
-;~ Func btnLocateBarracks()
-;~ 	Local $wasRunState = $g_bRunState
-;~ 	$g_bRunState = True
-;~ 	ZoomOut()
-;~ 	;LocateOneBarrack()
-;~ 	$g_bRunState = $wasRunState
-;~ 	AndroidShield("btnLocateBarracks") ; Update shield status due to manual $g_bRunState
-;~ EndFunc   ;==>btnLocateBarracks
-
-;~ Func btnLocateArmyCamp()
-;~ 	Local $wasRunState = $g_bRunState
-;~ 	$g_bRunState = True
-;~ 	ZoomOut()
-;~ 	;LocateBarrack(True)
-;~ 	$g_bRunState = $wasRunState
-;~ 	AndroidShield("btnLocateArmyCamp") ; Update shield status due to manual $g_bRunState
-;~ EndFunc   ;==>btnLocateArmyCamp
-
 Func btnLocateClanCastle()
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
@@ -283,28 +265,9 @@ Func btnLocateClanCastle()
 	AndroidShield("btnLocateClanCastle") ; Update shield status due to manual $g_bRunState
 EndFunc   ;==>btnLocateClanCastle
 
-;~ Func btnLocateSpellfactory()
-;~ 	Local $wasRunState = $g_bRunState
-;~ 	$g_bRunState = True
-;~ 	ZoomOut()
-;~ 	LocateSpellFactory()
-;~ 	$g_bRunState = $wasRunState
-;~ 	AndroidShield("btnLocateSpellfactory") ; Update shield status due to manual $g_bRunState
-;~ EndFunc   ;==>btnLocateSpellfactory
-
-;~ Func btnLocateDarkSpellfactory()
-;~ 	Local $wasRunState = $g_bRunState
-;~ 	$g_bRunState = True
-;~ 	ZoomOut()
-;~ 	LocateDarkSpellFactory()
-;~ 	$g_bRunState = $wasRunState
-;~ 	AndroidShield("btnLocateDarkSpellfactory") ; Update shield status due to manual $g_bRunState
-;~ EndFunc   ;==>btnLocateDarkSpellfactory
-
 Func btnLocateKingAltar()
 	LocateKingAltar()
 EndFunc   ;==>btnLocateKingAltar
-
 
 Func btnLocateQueenAltar()
 	LocateQueenAltar()
@@ -341,8 +304,6 @@ Func btnLocateTownHall()
 	$g_bRunState = $wasRunState
 	AndroidShield("btnLocateTownHall") ; Update shield status due to manual $g_bRunState
 EndFunc   ;==>btnLocateTownHall
-
-
 
 Func btnResetBuilding()
 	Local $wasRunState = $g_bRunState
@@ -617,7 +578,7 @@ Func ChkTreasuryCollect()
 		GUICtrlSetState($g_hTxtTreasuryDark, $GUI_DISABLE)
 	EndIf
 EndFunc   ;==>ChkTreasuryCollect
-
+#CS - AIO MOD++
 Func ChkFreeMagicItems()
 	If $g_iTownHallLevel >= 8 Or $g_iTownHallLevel = 0 Then ; Must be Th8 or more to use the Trader
 		GUICtrlSetState($g_hChkFreeMagicItems, $GUI_ENABLE)
@@ -625,7 +586,7 @@ Func ChkFreeMagicItems()
 		GUICtrlSetState($g_hChkFreeMagicItems, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
 	EndIf
 EndFunc   ;==>ChkFreeMagicItems
-
+#CE
 Func chkStartClockTowerBoost()
 	If GUICtrlRead($g_hChkStartClockTowerBoost) = $GUI_CHECKED Then
 		GUICtrlSetState($g_hChkCTBoostBlderBz, $GUI_ENABLE)
@@ -633,8 +594,6 @@ Func chkStartClockTowerBoost()
 		GUICtrlSetState($g_hChkCTBoostBlderBz, $GUI_DISABLE)
 	EndIf
 EndFunc   ;==>chkStartClockTowerBoost
-
-
 
 Func chkActivateClangames()
 	If GUICtrlRead($g_hChkClanGamesEnabled) = $GUI_CHECKED Then
@@ -683,7 +642,7 @@ Func chkPurgeLimits()
 	Else
 		GUICtrlSetState($g_hcmbPurgeLimit, $GUI_DISABLE)
 	EndIf
-EndFunc
+EndFunc   ;==>chkPurgeLimits
 
 
 Func chkEnableBBAttack()
@@ -705,19 +664,19 @@ Func chkEnableBBAttack()
 		GUICtrlSetState($g_hCmbBBSameTroopDelay, $GUI_DISABLE)
 		GUICtrlSetState($g_hCmbBBNextTroopDelay, $GUI_DISABLE)
 	EndIf
-EndFunc
+EndFunc   ;==>chkEnableBBAttack
 
 Func cmbBBNextTroopDelay()
 	$g_iBBNextTroopDelay  = $g_iBBNextTroopDelayDefault + ((_GUICtrlComboBox_GetCurSel($g_hCmbBBNextTroopDelay) + 1) - 5)*$g_iBBNextTroopDelayIncrement ; +- n*increment
 	SetDebugLog("Next Troop Delay: " & $g_iBBNextTroopDelay)
 	SetDebugLog((_GUICtrlComboBox_GetCurSel($g_hCmbBBNextTroopDelay) + 1) - 5)
-EndFunc
+EndFunc   ;==>cmbBBNextTroopDelay
 
 Func cmbBBSameTroopDelay()
 	$g_iBBSameTroopDelay  = $g_iBBSameTroopDelayDefault + ((_GUICtrlComboBox_GetCurSel($g_hCmbBBSameTroopDelay) + 1) - 5)*$g_iBBSameTroopDelayIncrement ; +- n*increment
 	SetDebugLog("Same Troop Delay: " & $g_iBBSameTroopDelay)
 	SetDebugLog((_GUICtrlComboBox_GetCurSel($g_hCmbBBSameTroopDelay) + 1) - 5)
-EndFunc
+EndFunc   ;==>cmbBBSameTroopDelay
 
 Func chkBBTrophyRange()
 	If GUICtrlRead($g_hChkBBTrophyRange) = $GUI_CHECKED Then
@@ -727,13 +686,13 @@ Func chkBBTrophyRange()
 		GUICtrlSetState($g_hTxtBBTrophyLowerLimit, $GUI_DISABLE)
 		GUICtrlSetState($g_hTxtBBTrophyUpperLimit, $GUI_DISABLE)
 	EndIf
-EndFunc
+EndFunc   ;==>chkBBTrophyRange
 
 Func btnBBDropOrder()
 	GUICtrlSetState( $g_hBtnBBDropOrder, $GUI_DISABLE )
 	GUICtrlSetState( $g_hChkEnableBBAttack, $GUI_DISABLE )
 	GUISetState(@SW_SHOW, $g_hGUI_BBDropOrder)
-EndFunc
+EndFunc   ;==>btnBBDropOrder
 
 Func chkBBDropOrder()
 	If GUICtrlRead($g_hChkBBCustomDropOrderEnable) = $GUI_CHECKED Then
@@ -751,7 +710,7 @@ Func chkBBDropOrder()
 		GUICtrlSetBkColor($g_hBtnBBDropOrder, $COLOR_RED)
 		$g_bBBDropOrderSet = False
 	EndIf
-EndFunc
+EndFunc   ;==>chkBBDropOrder
 
 Func GUIBBDropOrder()
 	Local $iGUI_CtrlId = @GUI_CtrlId
@@ -764,7 +723,7 @@ Func GUIBBDropOrder()
 			GUISetState()
 		EndIf
 	Next
-EndFunc
+EndFunc   ;==>GUIBBDropOrder
 
 Func BtnBBDropOrderSet()
 	$g_sBBDropOrder = ""
@@ -799,7 +758,7 @@ Func BtnBBDropOrderSet()
 	$g_sBBDropOrder = StringTrimRight($g_sBBDropOrder, 1) ; Remove last '|'
 	GUICtrlSetBkColor($g_hBtnBBDropOrder, $COLOR_GREEN)
 	$g_bBBDropOrderSet = True
-EndFunc
+EndFunc   ;==>BtnBBDropOrderSet
 
 Func BtnBBRemoveDropOrder()
 	For $i=0 To $g_iBBTroopCount-1
@@ -808,10 +767,10 @@ Func BtnBBRemoveDropOrder()
 	Next
 	GUICtrlSetBkColor($g_hBtnBBDropOrder, $COLOR_RED)
 	$g_bBBDropOrderSet = False
-EndFunc
+EndFunc   ;==>BtnBBRemoveDropOrder
 
 Func CloseCustomBBDropOrder()
 	GUISetState(@SW_HIDE, $g_hGUI_BBDropOrder)
 	GUICtrlSetState($g_hBtnBBDropOrder, $GUI_ENABLE)
 	GUICtrlSetState( $g_hChkEnableBBAttack, $GUI_ENABLE )
-EndFunc
+EndFunc   ;==>CloseCustomBBDropOrder

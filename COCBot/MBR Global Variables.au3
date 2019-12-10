@@ -527,6 +527,7 @@ Global Const $g_sIcnBldGold = @ScriptDir & "\Images\gold.png"
 Global Const $g_sIcnBldElixir = @ScriptDir & "\Images\elixir.png"
 Global Const $g_sIcnBldTrophy = @ScriptDir & "\Images\trophy.png"
 Global Const $g_sIcnSuperXP = @ScriptDir & "\Images\Stats\SuperXP.png"
+Global Const $g_sIcnChatAction = @ScriptDir & "\Images\Stats\ChatAction.png"
 
 ; Improve GUI interactions by disabling bot window redraw
 Global $g_iRedrawBotWindowMode = 2 ; 0 = disabled, 1 = Redraw always entire bot window, 2 = Redraw only required bot window area (or entire bot if control not specified)
@@ -861,7 +862,7 @@ Global $g_hChkBBCustomDropOrderEnable = 0
 Global $g_hBtnBBDropOrderSet = 0, $g_hBtnBBRemoveDropOrder = 0, $g_hBtnBBClose = 0
 Global $g_bBBDropOrderSet = False
 Global Const $g_iBBTroopCount = 11
-Global Const $g_sBBDropOrderDefault = "BoxerGiant|HogGlider|SuperPekka|DropShip|Witch|BabyDrag|WallBreaker|Barbarian|CannonCart|Archer|Minion"
+Global Const $g_sBBDropOrderDefault = "Minion|DropShip|BabyDrag|BoxerGiant|SuperPekka|WallBreaker|Barbarian|Archer|CannonCart|Witch|HogGlider"
 Global $g_sBBDropOrder = $g_sBBDropOrderDefault
 Global $g_ahCmbBBDropOrder[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
@@ -964,9 +965,9 @@ Global $g_sUpgradeDuration
 ; Builder Base
 Global $g_iChkBBSuggestedUpgrades = 0, $g_iChkBBSuggestedUpgradesIgnoreGold = 0, $g_iChkBBSuggestedUpgradesIgnoreElixir = 0, $g_iChkBBSuggestedUpgradesIgnoreHall = 0
 Global $g_iChkPlacingNewBuildings = 0
-Global $g_bStayOnBuilderBase = False ; set to True in MyBot.run.au3 __RunFunction when on builder base
+Global $g_bStayOnBuilderBase = False ; set to True in MyBot.run.au3 _RunFunction when on builder base
 
-Global $g_iQuickMISX = 0, $g_iQuickMISY = 0
+Global $g_iQuickMISX = 0, $g_iQuickMISY = 0, $g_iQuickMISWOffSetX = 0, $g_iQuickMISWOffSety = 0
 
 ; <><><><> Village / Achievements <><><><>
 Global $g_iUnbrkMode = 0, $g_iUnbrkWait = 5
@@ -1036,7 +1037,7 @@ Global $g_bAllBarracksUpgd = False
 
 ; <><><><> Attack Plan / Train Army / Boost <><><><>
 Global $g_iCmbBoostBarracks = 0, $g_iCmbBoostSpellFactory = 0, $g_iCmbBoostWorkshop = 0, $g_iCmbBoostBarbarianKing = 0, $g_iCmbBoostArcherQueen = 0, $g_iCmbBoostWarden = 0
-Global $g_iCmbBoostTrainingPotion = 0, $g_iCmbBoostResourcePotion = 0
+Global $g_iCmbBoostTrainingPotion = 0
 Global $g_abBoostBarracksHours[24] = [True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True]
 
 ; <><><><> Attack Plan / Train Army / Train Order <><><><>
@@ -1325,7 +1326,6 @@ Global $g_aiQueenAltarPos[2] = [-1, -1] ; position Queens Altar
 Global $g_aiWardenAltarPos[2] = [-1, -1] ; position Grand Warden Altar
 Global $g_aiLaboratoryPos[2] = [-1, -1] ; Position of laboratory
 Global $g_aiClanCastlePos[2] = [-1, -1] ; Position of clan castle
-;Global $g_aiResourcesPos[2] = [-1, -1] ; Position of Resources - BLD MOD NO MORE
 Global $g_iDetectedImageType = 0 ; Image theme; 0 = normal, 1 = snow
 Global $g_abNotNeedAllTime[2] = [True, True] ; Collect LootCart, CheckTombs
 
@@ -1755,7 +1755,7 @@ Global $g_iPurgeMax = 5 ; [0] is unlimited , 1-10
 Global $g_sClanGamesScore = "N/A", $g_sClanGamesTimeRemaining = "N/A"
 
 ; Collect Free Magic Items
-Global $g_bChkCollectFreeMagicItems = True
+; Global $g_bChkCollectFreeMagicItems = True ; AIO MOD++
 
 ; Daily challenge
 Global $g_bChkCollectRewards = True

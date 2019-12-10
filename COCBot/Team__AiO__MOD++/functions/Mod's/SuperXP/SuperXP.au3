@@ -765,38 +765,39 @@ Func OpenGoblinMapSX()
 	EndIf
 
 	Local $rDragToGoblinMapSX = DragToGoblinMapSX()
-	If $rDragToGoblinMapSX = False Then
+	If not BitAND(IsArray($rDragToGoblinMapSX), UBound($rDragToGoblinMapSX) = 2) Or $rDragToGoblinMapSX = False Then
 		SetLog("Failed to find " & $g_sGoblinMapOptSX, $COLOR_ERROR)
 		SaveDebugImage("SuperXP_", True, True, String(Random(5, 100, 1)) & ", " & String(Random(5, 100, 1)) & ", " & String(Random(5, 100, 1)))
 		SafeReturnSX()
 		Return False
 	EndIf
-
+	
 	If $g_bDebugSX Then SetDebugLog("SX|OpenGoblinMapSX|Clicking On GP Text: " & $rDragToGoblinMapSX[0] & ", " & $rDragToGoblinMapSX[1])
 	Click($rDragToGoblinMapSX[0], $rDragToGoblinMapSX[1]) ; Click On Goblin Picnic Text To Show Attack Button
 	SetLog("Waiting for Attack Button color", $COLOR_INFO)
 	If _Sleep(50) Then Return False
 
 	Local $Counter = 0
-	While Not _ColorCheck(_GetPixelColor($rDragToGoblinMapSX[0], $rDragToGoblinMapSX[1] + 132, True, "OpenGoblinMapSX-AttackButton"), Hex(0xEC5012, 6), 30)
+	While not BitAND(IsArray($rDragToGoblinMapSX), UBound($rDragToGoblinMapSX) = 2) and Not _ColorCheck(_GetPixelColor($rDragToGoblinMapSX[0], $rDragToGoblinMapSX[1] + 132, True, "OpenGoblinMapSX-AttackButton"), Hex(0xEC5012, 6), 30)
 		$rDragToGoblinMapSX = DragToGoblinMapSX()
 		Click($rDragToGoblinMapSX[0], $rDragToGoblinMapSX[1]) ; Click On Goblin Picnic Text To Show Attack Button
-		If _Sleep(50) Then ExitLoop
+		If _Sleep(50) Or $Counter > 15 Then ExitLoop
 		$Counter += 1
-
-		If $Counter > 15 Then
-			If IsGoblinMapSXLocked($rDragToGoblinMapSX) = True Then
-				SetLog("Are you kidding me? " & $g_sGoblinMapOptSX & " is Locked", $COLOR_ERROR)
-				DisableSX()
-				SafeReturnSX()
-				Return False
-			EndIf
-			SetLog("Attack Button Cannot be Verified", $COLOR_ERROR)
-			SaveDebugImage("SuperXP_", True, True, String(Number($rDragToGoblinMapSX[0], 2) & ", " & Number($rDragToGoblinMapSX[1], 2) & @CRLF & Number($rDragToGoblinMapSX[0], 2) & ", " & Number($rDragToGoblinMapSX[1] + 132, 2)))
+	WEnd
+	
+	; "Fuse" anti prohibition/bug
+	If $Counter > 15 Then
+		If IsGoblinMapSXLocked($rDragToGoblinMapSX) = True Then
+			SetLog("Are you kidding me? " & $g_sGoblinMapOptSX & " is Locked", $COLOR_ERROR)
+			DisableSX()
 			SafeReturnSX()
 			Return False
 		EndIf
-	WEnd
+		SetLog("Attack Button Cannot be Verified", $COLOR_ERROR)
+		SaveDebugImage("SuperXP_", True, True, String(Number($rDragToGoblinMapSX[0], 2) & ", " & Number($rDragToGoblinMapSX[1], 2) & @CRLF & Number($rDragToGoblinMapSX[0], 2) & ", " & Number($rDragToGoblinMapSX[1] + 132, 2)))
+		SafeReturnSX()
+		Return False
+	EndIf
 
 	If $g_bDebugSX Then SetDebugLog("SX|OpenGoblinMapSX|Clicking On Attack Btn: " & $rDragToGoblinMapSX[0] & ", " & $rDragToGoblinMapSX[1] + 118)
 	Click($rDragToGoblinMapSX[0], $rDragToGoblinMapSX[1] + 118) ; Click On Attack Button
@@ -829,12 +830,27 @@ Func OpenGoblinMapSX()
 	Return True
 EndFunc   ;==>OpenGoblinMapSX
 
+Func IsGoblinMapSXLocked($FoundCoord)
+	If not BitAND(IsArray($FoundCoord), UBound($FoundCoord) = 2) Or $FoundCoord = False Then Return True
+
+	Local $x = Num($FoundCoord[0]) - 100, _
+	$y = Num($FoundCoord[1]) - 100, _
+	$x1 = Num($FoundCoord[0]) + 100, _
+	$y1 = Num($FoundCoord[1]) + 100
+	
+	Local $bResult = (MultiPSimple($x, $y, $x1, $y1, Hex(0xEC5012, 6), 25) = 0)
+	
+	If $g_bDebugSX Then SetDebugLog("SX|IsGoblinMapSXLocked Return " & $bResult, $COLOR_DEBUG)
+	
+	Return $bResult
+EndFunc   ;==>IsGoblinMapSXLocked
+
 Func IsInGoblinMapSX($Retry = True, $maxRetry = 30, $timeBetweenEachRet = 300)
 	If $g_bDebugSX Then SetDebugLog("SX|Begin IsInGoblinMapSX", $COLOR_DEBUG)
 
 	Local $Found = False
 	Local $Counter = 0
-	Local $directory = $g_sImgVerifySX
+	Local $directory = ($g_iGoblinMapOptSX = 1) ? ($g_sImgVerifySX & "Picnic") : ($g_sImgVerifySX & "Arena" )
 	Local $result = ""
 	While Not $Found
 		If _Sleep($timeBetweenEachRet) Then Return False
@@ -860,28 +876,6 @@ Func IsInGoblinMapSX($Retry = True, $maxRetry = 30, $timeBetweenEachRet = 300)
 	If $g_bDebugSX Then SetDebugLog("SX|IsInGoblinMapSX = " & $Found, $COLOR_DEBUG)
 	Return $Found
 EndFunc   ;==>IsInGoblinMapSX
-
-Func IsGoblinMapSXLocked($FoundCoord)
-	If $g_bDebugSX Then SetDebugLog("SX|Begin IsGoblinMapSXLocked", $COLOR_DEBUG)
-	Local $directory = $g_sImgLockedSX
-	Local $x = 0, $y = 0, $x1 = 0, $y1 = 0
-	If $g_iGoblinMapOptSX = 1 Then
-		$x = $FoundCoord[0] - 6
-		$y = $FoundCoord[1] + 18
-		$x1 = $x + 40
-		$y1 = $y + 38
-	ElseIf $g_iGoblinMapOptSX = 2 Then
-		$x = $FoundCoord[0] - 25
-		$y = $FoundCoord[1] + 18
-		$x1 = $x + 40
-		$y1 = $y + 38
-	EndIf
-	Local $result = multiMatchesPixelOnly($directory, 0, "FV", "FV", "", 0, 1000, $x, $y, $x1, $y1)
-	If $g_bDebugSX Then SetDebugLog("SX|IsGoblinMapSXLocked|$result = " & $result)
-	Local $Found = (StringLen($result) > 2 And StringInStr($result, ","))
-	If $g_bDebugSX Then SetDebugLog("SX|IsGoblinMapSXLocked Return " & $Found)
-	Return $Found
-EndFunc   ;==>IsGoblinMapSXLocked
 
 Func DragToGoblinMapSX()
 	If $g_bDebugSX Then SetDebugLog("SX|Begin DragToGoblinMapSX", $COLOR_DEBUG)
@@ -941,19 +935,25 @@ EndFunc   ;==>DragToGoblinMapSX
 
 Func IsGoblinMapSXFound()
 	If $g_bDebugSX Then SetDebugLog("SX|Begin IsGoblinMapSXFound", $COLOR_DEBUG)
-	Local $directory = $g_sImgFindSX
+	;Local $directory = ($g_iGoblinMapOptSX = 1) ? ($g_sImgFindSX & "Picnic") : ($g_sImgFindSX & "Arena" )
 	Local $result = ""
 	Local $x1 = 0, $x2 = 0
 
 	If _Sleep(50) Then Return False
-	If $g_iGoblinMapOptSX = 1 Then
-		$x1 = 418
-		$x2 = 453
-		$result = multiMatchesPixelOnly($directory, 0, "FV", "FV", "", 0, 1000, $x1, 132, $x2, 668)
-	ElseIf $g_iGoblinMapOptSX = 2 Then
+	
+	$x1 = 418
+	$x2 = 453
+	$result = multiMatchesPixelOnly(($g_sImgFindSX & "Picnic"), 0, "FV", "FV", "", 0, 1000, $x1, 132, $x2, 668)
+
+	If StringInStr($result, "|") > 0 and $g_iGoblinMapOptSX = 2 Then
+		$g_iGoblinMapOptSX = 1
+		Setlog("The arena locked.", $COLOR_ERROR)
+	EndIf
+
+	If $g_iGoblinMapOptSX = 2 Then
 		$x1 = 599
 		$x2 = 644
-		$result = multiMatchesPixelOnly($directory, 0, "FV", "FV", "", 0, 1000, $x1, 132, $x2, 668)
+		$result = multiMatchesPixelOnly(($g_sImgFindSX & "Arena" ), 0, "FV", "FV", "", 0, 1000, $x1, 132, $x2, 668)
 	EndIf
 
 	If $g_bDebugSX Then SetDebugLog("SX|IGMSX|$result = " & $result)

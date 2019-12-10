@@ -14,7 +14,7 @@
 ; ===============================================================================================================================
 #include-once
 
-Global $g_hBtnTestSuperXP = 0, $g_hBtnTestClanChat = 0, $g_hBtnTestFriendChallenge = 0, $g_hBtnTestReadChat = 0, _
+Global $g_hBtnTestSuperXP = 0, $g_hBtnTestBotHumanization = 0, $g_hBtnTestClanChat = 0, $g_hBtnTestFriendChallenge = 0, $g_hBtnTestReadChat = 0, _
 	$g_hBtnTestDailyDiscounts = 0, $g_hBtnTestAttackBB = 0, $g_hBtnTestRequestDefense = 0, $g_hBtnTestGTFO = 0, $g_hBtnTestCollectorsOutside = 0, _
 	$g_hTxtTestExecuteButton = 0, $g_hBtnTestExecuteButton = 0
 
@@ -24,6 +24,8 @@ Func TabDebugGUI()
 	$x = 300
 	$y = 40
 		$g_hBtnTestSuperXP = GUICtrlCreateButton("Test SuperXP", $x, $y, 140, 25)
+	$y += 30
+		$g_hBtnTestBotHumanization = GUICtrlCreateButton("Test Humanization", $x, $y, 140, 25)
 	$y += 30
 		$g_hBtnTestClanChat = GUICtrlCreateButton("Test ClanChat", $x, $y, 140, 25)
 	$y += 30

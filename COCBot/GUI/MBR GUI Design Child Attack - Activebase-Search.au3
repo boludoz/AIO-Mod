@@ -192,11 +192,12 @@ Local $sMinUmbralTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Searc
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 6)
 			GUICtrlSetBkColor(-1, 0xD1DFE7)
-;---------------- Gold AB - AIO Team
+		; Gold AB - Team AiO MOD++
 		$g_hMinArmyUmbralGoldAB = GUICtrlCreateInput("0", $x + 85 + 75, $y, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
 			_GUICtrlSetTip(-1, $sMinUmbralTip)
+			GUICtrlSetBkColor(-1, 0xD1DFE7)
 			GUICtrlCreateLabel("%", $x + 85 + 85 + 20, $y, 12, 17)
-;----------------
+
 		$g_hPicABMinGold = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 137, $y, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
 
@@ -206,11 +207,11 @@ Local $sMinUmbralTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Searc
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 6)
 			GUICtrlSetBkColor(-1, 0xD1DFE7)
-;---------------- Elixir AB - AIO Team
-		$g_hMinArmyUmbralElixirAB = GUICtrlCreateInput("0", $x + 85 + 75, $y, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
+		; Elixir AB - Team AiO MOD++
+		$g_hMinArmyUmbralElixirAB = GUICtrlCreateInput("0", $x + 85 + 75, $y + 1, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
 			_GUICtrlSetTip(-1, $sMinUmbralTip)
-			GUICtrlCreateLabel("%", $x + 85 + 85 + 20, $y, 12, 17)
-;----------------
+			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			GUICtrlCreateLabel("%", $x + 85 + 85 + 20, $y + 1, 12, 17)
 
 		$g_hPicABMinElixir = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnElixir, $x + 137, $y, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
@@ -222,11 +223,12 @@ Local $sMinUmbralTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Searc
 			GUICtrlSetLimit(-1, 6)
 			GUICtrlSetBkColor(-1, 0xD1DFE7)
 			GUICtrlSetState (-1, $GUI_HIDE)
-;---------------- Plus AB - AIO Team
-		$g_hMinArmyUmbralPlusAB = GUICtrlCreateInput("0", $x + 85 + 75, $y, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
+		; Plus AB - Team AiO MOD++
+		$g_hMinArmyUmbralPlusAB = GUICtrlCreateInput("0", $x + 85 + 75, $y + 35, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
 			_GUICtrlSetTip(-1, $sMinUmbralTip)
-			GUICtrlCreateLabel("%", $x + 85 + 85 + 20, $y, 12, 17)
-;----------------
+			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			GUICtrlCreateLabel("%", $x + 85 + 85 + 20, $y + 35, 12, 17)
+
 		$g_hPicABMinGPEGold = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnGoldElixir, $x + 137, $y + 1, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetState (-1, $GUI_HIDE)
@@ -241,11 +243,12 @@ Local $sMinUmbralTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Searc
 			GUICtrlSetLimit(-1, 5)
 			GUICtrlSetBkColor(-1, 0xD1DFE7)
 			_GUICtrlEdit_SetReadOnly(-1, True)
-;---------------- Dark Elixir AB - AIO Team
-		$g_hMinArmyUmbralDarkAB = GUICtrlCreateInput("0", $x + 85 + 75, $y, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
+		; Dark Elixir AB - Team AiO MOD++
+		$g_hMinArmyUmbralDarkAB = GUICtrlCreateInput("0", $x + 85 + 75, $y + 24, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
 			_GUICtrlSetTip(-1, $sMinUmbralTip)
-			GUICtrlCreateLabel("%", $x + 85 + 85 + 20, $y, 12, 17)
-;----------------
+			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			GUICtrlCreateLabel("%", $x + 85 + 85 + 20, $y + 24, 12, 17)
+
 		$g_hPicABMinDarkElixir = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 137, $y, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
 

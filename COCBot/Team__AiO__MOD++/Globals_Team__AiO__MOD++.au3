@@ -18,8 +18,9 @@ Global Const $g_sLibModIconPath = $g_sLibPath & "\AIOMod.dll" ; Mod icon library
 Global Enum $eIcnModKingGray = 1, $eIcnModKingBlue, $eIcnModKingGreen, $eIcnModKingRed, $eIcnModQueenGray, $eIcnModQueenBlue, $eIcnModQueenGreen, $eIcnModQueenRed, _
 		$eIcnModWardenGray, $eIcnModWardenBlue, $eIcnModWardenGreen, $eIcnModWardenRed, $eIcnModLabGray, $eIcnModLabGreen, $eIcnModLabRed, _
 		$eIcnModArrowLeft, $eIcnModArrowRight, $eIcnModTrainingP, $eIcnModResourceP, $eIcnModHeroP, $eIcnModClockTowerP, $eIcnModBuilderP, $eIcnModPowerP, _
-		$eIcnModChat, $eIcnModRepeat, $eIcnModClan, $eIcnModTarget, $eIcnModSettings, $eIcnModBKingSX, $eIcnModAQueenSX, $eIcnModGWardenSX, $eIcnModDebug, $eIcnModGTFO, $eIcnModPrecise, _
+		$eIcnModChat, $eIcnModRepeat, $eIcnModClan, $eIcnModTarget, $eIcnModSettings, $eIcnModBKingSX, $eIcnModAQueenSX, $eIcnModGWardenSX, $eIcnModDebug, $eIcnModClanHop, $eIcnModPrecise, _
 		$eIcnModAccountsS, $eIcnModProfilesS, $eIcnModFarmingS, $eIcnMiscMod, $eIcnSuperXP, $eIcnChatActions, $eIcnHumanization, $eIcnAIOMod, $eIcnDebugMod
+
 ; SuperXP / GoblinXP - Team AiO MOD++
 Global $g_bEnableSuperXP = False, $g_bSkipZoomOutSX = False, $g_bFastSuperXP = False, $g_bSkipDragToEndSX = False, _
 	$g_iActivateOptionSX = 1, $g_iGoblinMapOptSX = 2, $g_sGoblinMapOptSX = "The Arena", $g_iMaxXPtoGain = 500, _
@@ -35,6 +36,25 @@ Global $g_aiBdTheArena[2] = [0, "5000-7000"] ; [0] = Queen, [1] = Warden, Can't 
 Global $g_bActivatedHeroes[3] = [False, False, False] ; [0] = Archer Queen, [1] = Grand Warden, [2] = Barbarian King , Prevent to click on them to Activate Again And Again
 Global Const $g_iMinStarsToEnd = 1
 Global $bCanGainXP = False
+
+; Humanization - Team AiO MOD++
+Global $g_iacmbPriority[13] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_iacmbMaxSpeed[2] = [1, 1]
+Global $g_iacmbPause[2] = [0, 0]
+Global $g_iahumanMessage[2] = ["Hello !", "Hello !"]
+Global $g_iTxtChallengeMessage = "Ready to Challenge?"
+
+Global $g_iMinimumPriority, $g_iMaxActionsNumber, $g_iActionToDo
+Global $g_aSetActionPriority[13] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+Global $g_sFrequenceChain = "Never|Sometimes|Frequently|Often|Very Often"
+Global $g_sReplayChain = "1|2|4"
+Global $g_bUseBotHumanization = False, $g_bUseAltRClick = False, $g_iCmbMaxActionsNumber = 1, $g_bCollectAchievements = False, $g_bLookAtRedNotifications = False
+
+Global $g_aReplayDuration[2] = [0, 0] ; An array, [0] = Minute | [1] = Seconds
+Global $g_bOnReplayWindow, $g_iReplayToPause
+
+Global $g_iLastLayout = 0
 
 ; ChatActions - Team AiO MOD++
 Global $g_bChatClan = False, $g_sDelayTimeClan = 2, $g_bClanUseResponses = False, $g_bClanUseGeneric = False, $g_bCleverbot = False
@@ -65,7 +85,6 @@ Global $g_bDD_DealsSet = False
 ; BB Suggested Upgrades
 Global $g_bChkBBIgnoreWalls = False
 
-; GTFO - Team AiO MOD++
 
 ; CSV Deploy Speed - Team AiO MOD++
 Global $cmbCSVSpeed[2] = [$LB, $DB]
@@ -74,7 +93,6 @@ Global $g_CSVSpeedDivider[2] = [1, 1] ; default CSVSpeed for DB & LB
 
 ; Check Collector Outside - Team AiO MOD++
 Global $g_bScanMineAndElixir = False
-
 #Region Check Collectors Outside
 ; Collectors Outside Filter
 Global $g_bDBMeetCollectorOutside = False, $g_iDBMinCollectorOutsidePercent = 80
@@ -122,7 +140,7 @@ Global Const $g_iMilkFarmOffsetY = 41
 Global Const $g_iMilkFarmOffsetXStep = 35
 Global Const $g_iMilkFarmOffsetYStep = 26
 
-; Ai Army search
+; Ai Army search - Team AiO MOD++
 Global $g_hMinArmyUmbralGoldDB, $g_hMinArmyUmbralElixirDB, $g_hMinArmyUmbralPlusDB, $g_hMinArmyUmbralDarkDB, _
 $g_hMinArmyUmbralGoldAB, $g_hMinArmyUmbralElixirAB, $g_hMinArmyUmbralPlusAB, $g_hMinArmyUmbralDarkAB
 
@@ -137,3 +155,10 @@ Global $g_iTxtMinSaveGTFO_Elixir = 200000, $g_iTxtMinSaveGTFO_DE = 2000, _
 Global $g_hTxtClanID, $g_sTxtClanID, $g_iTxtCyclesGTFO
 Global $g_bChkGTFOClanHop = False, $g_bChkGTFOReturnClan = False
 Global $g_iCycle = 0
+
+; Magic Items
+
+Global $g_bChkCollectMagicItems, $g_bChkCollectFree, _
+$g_bChkBuilderPotion, $g_bChkClockTowerPotion, $g_bChkHeroPotion, $g_bChkLabPotion, $g_bChkPowerPotion, $g_bChkResourcePotion, _
+$g_iComboClockTowerPotion, $g_iComboHeroPotion, $g_iComboPowerPotion, _
+$g_iInputBuilderPotion, $g_iInputLabPotion, $g_iInputGoldItems = 250000, $g_iInputElixirItems = 300000, $g_iInputDarkElixirItems = 1000

@@ -13,13 +13,14 @@
 ; Example .......: No
 ; ===============================================================================================================================
 #include-once
-
-#include "MOD GUI Control - Daily-Discounts.au3"
 #include "MOD GUI Control - Switch-Options.au3"
+#include "MOD GUI Control - Daily-Discounts.au3"
 #include "MOD GUI Control - SuperXP.au3"
+#include "MOD GUI Control - Humanization.au3"
 #include "MOD GUI Control - ChatActions.au3"
-#include "MOD GUI Control - AiO-Debug.au3"
 #include "MOD GUI Control - GTFO.au3"
+#include "MOD GUI Control - AiO-Debug.au3"
+#include "MOD GUI Control - MagicItems.au3"
 
 ; Classic Four Finger - Team AiO MOD++
 Func cmbStandardDropSidesAB() ; avoid conflict between FourFinger and SmartAttack

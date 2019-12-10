@@ -139,9 +139,9 @@ Func lblTotalCountTroop1()
 	GUICtrlSetData($g_hLblCountTotal, String($TotalTroopsToTrain))
 
 	If GUICtrlRead($g_hChkTotalCampForced) = $GUI_CHECKED And GUICtrlRead($g_hLblCountTotal) = GUICtrlRead($g_hTxtTotalCampForced) Then
-		GUICtrlSetBkColor($g_hLblCountTotal, $COLOR_MONEYGREEN)
+		GUICtrlSetBkColor($g_hLblCountTotal, 0xD1DFE7)
 	ElseIf GUICtrlRead($g_hLblCountTotal) = $ArmyCampTemp Then
-		GUICtrlSetBkColor($g_hLblCountTotal, $COLOR_MONEYGREEN)
+		GUICtrlSetBkColor($g_hLblCountTotal, 0xD1DFE7)
 	ElseIf GUICtrlRead($g_hLblCountTotal) > $ArmyCampTemp / 2 And GUICtrlRead($g_hLblCountTotal) < $ArmyCampTemp Then
 		GUICtrlSetBkColor($g_hLblCountTotal, $COLOR_ORANGE)
 	Else
@@ -224,7 +224,7 @@ Func lblTotalCountSpell2()
 	ElseIf $g_iTotalTrainSpaceSpell > GUICtrlRead($g_hTxtTotalCountSpell) Then
 		GUICtrlSetBkColor($g_hLblCountTotalSpell, $COLOR_RED)
 	ElseIf $g_iTotalTrainSpaceSpell = GUICtrlRead($g_hTxtTotalCountSpell) Then
-		GUICtrlSetBkColor($g_hLblCountTotalSpell, $COLOR_MONEYGREEN)
+		GUICtrlSetBkColor($g_hLblCountTotalSpell, 0xD1DFE7)
 	EndIf
 
 	CalCostSpell()
@@ -243,7 +243,7 @@ Func lblTotalCountSiege()
 
 	GUICtrlSetData($g_hLblTotalTimeSiege, CalculTimeTo($iTotalTotalTimeSiege))
 	GUICtrlSetData($g_hLblCountTotalSiege, $g_iTotalTrainSpaceSiege)
-	GUICtrlSetBkColor($g_hLblCountTotalSiege, $g_iTotalTrainSpaceSiege <= 3 ? $COLOR_MONEYGREEN : $COLOR_RED)
+	GUICtrlSetBkColor($g_hLblCountTotalSiege, $g_iTotalTrainSpaceSiege <= 3 ? 0xD1DFE7 : $COLOR_RED)
 
 	CalCostSiege()
 	; prepared for some new TH level !!

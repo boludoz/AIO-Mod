@@ -158,6 +158,7 @@ Func CreateBotDebug()
 	$x -= 145
 
 		$g_hTxtTestFindButton = GUICtrlCreateInput("BoostOne", $x - 90, $y + 3, 85, 20)
+		GUICtrlSetBkColor(-1, 0xD1DFE7)
 		$g_hBtnTestFindButton = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Bot - Debug", "TestFindButton", "Test Find Button"), $x, $y, 140, 25)
 	$y -= $yNext
 

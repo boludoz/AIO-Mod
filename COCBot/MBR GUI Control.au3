@@ -624,6 +624,8 @@ Func GUIControl_WM_COMMAND($hWind, $iMsg, $wParam, $lParam)
 			btnTestSuperXP()
 		Case $g_hBtnTestExecuteButton
 			btnTestExecuteButton()
+		Case $g_hBtnTestBotHumanization
+			btnTestBotHumanization()
 		Case $g_hBtnTestClanChat
 			btnTestClanChat()
 		Case $g_hBtnTestFriendChallenge
@@ -1992,6 +1994,8 @@ Func tabMod()
 
 		Case $tabidx = 3
 
+		Case $tabidx = 4
+
 	EndSelect
 EndFunc   ;==>tabMod
 
@@ -2139,7 +2143,7 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 		Case $g_hGUI_MOD_TAB
 			; the icons for Mods tab
 			; $eIcnMiscMod, $eIcnWarPreparation
-			Local $aIconIndex = [$eIcnSuperXP, $eIcnChatActions, $eIcnDebugMod]
+			Local $aIconIndex = [$eIcnSuperXP, $eIcnHumanization, $eIcnChatActions, $eIcnDebugMod]
 
 		Case $g_hGUI_BOT_TAB
 			; the icons for Bot tab

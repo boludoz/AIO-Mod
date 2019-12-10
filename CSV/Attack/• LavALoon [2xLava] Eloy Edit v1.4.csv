@@ -1,0 +1,77 @@
+﻿NOTE  |
+NOTE  |                   Lavaloon  v1.4
+NOTE  |                   Author:   E l o y
+NOTE  |Troops :
+NOTE  |       •  2 Lava,  34 Loon,  25 Minion
+NOTE  |       •  3 Rage +  2 Haste + 1 Clone
+NOTE  |
+NOTE  |Clan Castle :
+NOTE  |       •  Balloons  +  Rage
+NOTE  |
+NOTE  |Setting :
+NOTE  |       •  Warden Ability 17 Sec
+NOTE  |       •  Use External Edges
+
+      |_TROOPNAME_|__FLEXIBLE_|____TH06___|____TH07___|____TH08___|____TH09___|____TH10___|____TH11___|____TH12___|
+TRAIN |Ball       |0          |0          |0          |0          |0          |0          |30         |34         |
+TRAIN |Mini       |0          |0          |0          |0          |0          |0          |25         |25         |
+TRAIN |Lava       |0          |0          |0          |0          |0          |0          |2          |2          |
+      |           |           |           |           |           |           |           |           |           |
+TRAIN |RSpell     |0          |0          |0          |0          |0          |0          |3          |3          |
+TRAIN |CSpell     |0          |0          |0          |0          |0          |0          |1          |1          |
+TRAIN |HaSpell    |0          |0          |0          |0          |0          |0          |2          |2          |
+      |           |           |           |           |           |           |           |           |           |
+      |_TROOPNAME_|___________|____TH06___|____TH07___|____TH08___|____TH09___|____TH10___|____TH11___|____TH12___|Hero Abilities: 1.Auto 2.Timed 3.Both
+TRAIN |King       |0          |0          |0          |0          |0          |0          |1          |1          |Auto
+TRAIN |Queen      |0          |0          |0          |0          |0          |0          |1          |1          |Auto
+TRAIN |Warden     |0          |0          |0          |0          |0          |0          |317        |317        |Both: Auto or Timed After 15 sec.
+      |           |           |           |           |           |           |           |           |           |
+      |___________|___________|____TH06___|____TH07___|____TH08___|____TH09___|____TH10___|____TH11___|____TH12___|
+REDLN |0          |0          |0          |0          |0          |0          |0          |4          |4          |1.RAW 2.POINTS 3.ORIGINAL 4.EDGES
+DRPLN |0          |0          |0          |0          |0          |0          |0          |0          |0          |1.CORNER 2.POINT 3.FULLCORNER 4.FULLPOINT 5.NONE
+      |           |           |           |           |           |           |           |           |           |
+      |___________|___________|____TH06___|____TH07___|____TH08___|____TH09___|____TH10___|____TH11___|____TH12___|
+CCREQ |           |           |           |           |           |           |           |Loon   Rage|Loon   Rage|Request Donation.
+
+      |EXTR. GOLD |EXTR.ELIXIR|EXTR. DARK |DEPO. GOLD |DEPO.ELIXIR|DEPO. DARK |TOWNHALL   |FORCED SIDE|___________|
+SIDE  |0          |0          |0          |5          |5          |10         |0          |           |           |
+      |EAGLE      |INFERNO    |XBOW       |WIZTOWER   |MORTAR     |AIRDEFENSE |AIRSWEEPER |GEMBOX     |           |
+SIDEB |10         |0          |0          |0          |0          |0          |0          |0          |           |
+
+      |VECTOR_____|SIDE_______|DROP_POINTS|ADDTILES___|VERSUS_____|RANDOMX_PX_|RANDOMY_PX_|___________|___________|
+MAKE  |A          |FRONT-LEFT |10         |0          |EXT-INT    |0          |5          |           |           |
+MAKE  |B          |FRONT-RIGHT|10         |0          |INT-EXT    |0          |5          |           |           |
+MAKE  |C          |FRONT-RIGHT|10         |0          |EXT-INT    |0          |5          |           |           |
+MAKE  |D          |FRONT-LEFT |10         |0          |INT-EXT    |0          |5          |           |           |
+MAKE  |E          |RIGHT-FRONT|10         |0          |EXT-INT    |1          |5          |           |           |
+MAKE  |F          |LEFT-FRONT |10         |0          |EXT-INT    |1          |5          |           |           |
+MAKE  |G          |FRONT-LEFT |10         |-6         |INT-EXT    |0          |5          |           |           |
+MAKE  |H          |FRONT-RIGHT|10         |-7         |INT-EXT    |0          |5          |           |           |
+MAKE  |I          |FRONT-RIGHT|10         |-14        |INT-EXT    |0          |5          |           |           |
+MAKE  |J          |FRONT-LEFT |10         |-15        |INT-EXT    |0          |5          |           |           |
+
+      |VECTOR_____|INDEX_____________________|QTY_X_VECT_|TROOPNAME__|DELAY_DROP_|DELAYCHANGE|SLEEPAFTER_|________|
+DROP  |A-C        |6                         |1          |Lava       |125-150    |50-100     |250-300    |        |
+DROP  |A          |10                        |1          |Castle     |0          |0          |200-250    |        |
+DROP  |A          |10                        |1          |WallW      |0          |0          |50         |        |
+DROP  |A          |10                        |1          |BattleB    |0          |0          |50         |        |
+DROP  |A          |10                        |1          |StoneS     |0          |0          |50         |        |
+DROP  |A          |3,4,5,6,6,7,8,9,10        |9          |Ball       |70-90      |40-50      |           |        |
+DROP  |B          |1,2,3,3,4,5,6,6           |8          |Ball       |70-90      |40-50      |           |        |
+DROP  |C          |3,4,5,6,7,9,10,10         |8          |Ball       |65-85      |40-50      |20-30      |        |
+DROP  |D          |1,2,2,3,4,5,5,6,7         |9          |Ball       |65-85      |40-50      |200-250    |        |
+DROP  |B          |1                         |1          |Warden     |0          |0          |200-250    |        |
+DROP  |G          |4                         |1          |HaSpell    |50-100     |0          |100-150    |        |
+DROP  |H          |5                         |1          |HaSpell    |50-100     |0          |200-250    |        |
+DROP  |H          |1                         |1          |RSpell     |50-100     |0          |250-300    |        |
+DROP  |H          |1                         |1          |CSpell     |50-100     |0          |           |        |
+WAIT  |5000       |                          |           |           |           |           |           |        |
+DROP  |J          |5                         |1          |RSpell     |50-100     |0          |250-300    |        |
+DROP  |J          |1                         |1          |RSpell     |50-100     |0          |250-300    |        |
+DROP  |I          |5                         |1          |RSpell     |50-100     |0          |250-300    |        |
+DROP  |A          |1,2,2,3,4,5,6,6,7,8,9,9,10|13         |Mini       |70-90      |40-50      |           |        |
+DROP  |B          |1,2,3,3,4,5,6,7,8,9,9,10  |12         |Mini       |70-90      |40-50      |           |        |
+WAIT  |1500       |                          |           |           |           |           |           |        |
+DROP  |F          |5                         |1          |King       |0          |0          |300-500    |        |
+DROP  |E          |5                         |1          |Queen      |0          |0          |100-150    |        |
+DROP  |A-B        |1-8                       |1          |REMAIN     |80-100     |40-50      |           |        |

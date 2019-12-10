@@ -1,5 +1,5 @@
 ; #FUNCTION# ====================================================================================================================
-; Name ..........: Boost any sstructure (King, Queen, Warden)
+; Name ..........: Boost any structure (King, Queen, Warden)
 ; Description ...:
 ; Syntax ........: BoostStructure($sName, $sOcrName, $aPos, ByRef $icmbBoostValue, $cmbBoostCtrl)
 ; Parameters ....:
@@ -109,26 +109,13 @@ Func BoostPotion($sName, $sOcrName, $aPos, ByRef $icmbBoostValue, $cmbBoostCtrl)
 		EndIf
 	EndIf
 	If $ok = True Then
-		Local $sRegionToSearch = "172,238,684,469"
+		Local $sTile = "BoostPotion_0_90.xml", $sRegionToSearch = "172,238,684,469"
 		Local $Boost = findButton("MagicItems")
-		Local $sTile1 = "", $sTile2 = ""
-		If $sName = "Training Potion" Then
-			$sTile1 = "BoostTrainingPotion*"
-			$sTile2 = "BoostTrainingPotionBtn"
-		ElseIf $sName = "Resource Potion" Then
-			$sTile1 = "BoostResourcePotion*"
-			$sTile2 = "BoostResourcePotionBtn"
-		Else
-			SetDebugLog("BoostPotion(): $sName called with a wrong Value.", $COLOR_ERROR)
-			ClickP($aAway, 1, 0, "#0161")
-			_Sleep($DELAYBOOSTBARRACKS2)
-			Return $boosted
-		EndIf
 		If UBound($Boost) > 1 Then
 			If $g_bDebugSetlog Then SetDebugLog("Magic Items Button X|Y = " & $Boost[0] & "|" & $Boost[1], $COLOR_DEBUG)
 			Click($Boost[0], $Boost[1], 1, 0, "#0463")
 			If _Sleep($DELAYBOOSTHEROES1) Then Return
-			$Boost = decodeSingleCoord(FindImageInPlace($sTile1, @ScriptDir & "\imgxml\imglocbuttons\" & $sTile1, $sRegionToSearch))
+			$Boost = decodeSingleCoord(FindImageInPlace($sTile, @ScriptDir & "\imgxml\imglocbuttons\" & $sTile, $sRegionToSearch))
 			If UBound($Boost) > 1 Then
 				If $g_bDebugSetlog Then SetDebugLog("Boost Potion Button X|Y = " & $Boost[0] & "|" & $Boost[1], $COLOR_DEBUG)
 				ClickP($Boost)
@@ -140,7 +127,7 @@ Func BoostPotion($sName, $sOcrName, $aPos, ByRef $icmbBoostValue, $cmbBoostCtrl)
 				EndIf
 				Click(305, 556) ; Click on 'Use'
 				If _Sleep($DELAYBOOSTHEROES2) Then Return
-				$Boost = findButton($sTile2)
+				$Boost = findButton("BoostPotionGreen")
 				If IsArray($Boost) Then
 					Click($Boost[0], $Boost[1], 1, 0, "#0465")
 					If _Sleep($DELAYBOOSTHEROES4) Then Return
@@ -154,7 +141,7 @@ Func BoostPotion($sName, $sOcrName, $aPos, ByRef $icmbBoostValue, $cmbBoostCtrl)
 					SetLog($sName & " is already Boosted", $COLOR_SUCCESS)
 				EndIf
 			Else
-				SetLog($sName & " Boost Button not found!", $COLOR_ERROR)
+				SetLog($sName & " Boost Potion Button not found!", $COLOR_ERROR)
 				If _Sleep($DELAYBOOSTHEROES4) Then Return
 			EndIf
 			If _Sleep($DELAYBOOSTHEROES3) Then Return

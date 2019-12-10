@@ -61,7 +61,7 @@ Global $g_ahPicSpell_QTEdit[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 ; Boost sub-tab
 Global $g_hCmbBoostBarracks = 0, $g_hCmbBoostSpellFactory = 0, $g_hCmbBoostWorkshop = 0, $g_hCmbBoostBarbarianKing = 0, $g_hCmbBoostArcherQueen = 0, $g_hCmbBoostWarden = 0
-Global $g_hCmbBoostTrainingPotion = 0, $g_hCmbBoostResourcePotion = 0
+Global $g_hCmbBoostTrainingPotion = 0
 Global $g_hLblBoosthour = 0, $g_ahLblBoosthoursE = 0
 Global $g_hLblBoosthours[12] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_hChkBoostBarracksHours[24] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], $g_hChkBoostBarracksHoursE1 = 0, $g_hChkBoostBarracksHoursE2 = 0
@@ -1024,13 +1024,6 @@ Func CreateTrainBoost()
 	$g_hCmbBoostTrainingPotion = GUICtrlCreateCombo("", $x + 185, $y - 2, 65, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 	GUICtrlSetData(-1, "0|1|2|3|4|5|No limit", "0")
 	_GUICtrlSetTip(-1, $sTxtTip)
-
-	$y += 25
-	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModResourceP, $x - 10, $y - 4, 24, 24)
-	GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design Names Troops", "Potion_02", "Resource Potion") & " " & $sTextBoostLeft, $x + 20, $y + 2, -1, -1)
-	$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "LblBoostPotion_Info_02", "Use this to boost everything with Resource POTIONS! Use with caution!")
-	_GUICtrlSetTip(-1, $sTxtTip)
-	$g_hCmbBoostResourcePotion = GUICtrlCreateCombo("", $x + 185, $y - 2, 65, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 	GUICtrlSetData(-1, "0|1|2|3|4|5|No limit", "0")
 	_GUICtrlSetTip(-1, $sTxtTip)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)

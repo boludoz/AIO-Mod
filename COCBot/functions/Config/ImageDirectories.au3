@@ -57,12 +57,12 @@ Global $g_sImgIsOnBB = @ScriptDir & "\imgxml\village\Page\BuilderBase\"
 Global $g_sImgStarLaboratory = @ScriptDir & "\imgxml\Resources\BuildersBase\StarLaboratory"
 Global $g_sImgStarLabElex = @ScriptDir & "\imgxml\Resources\BuildersBase\StarLabElex\StarLabElex*"
 
-#Region Aio ++ fix machine
+#Region AIO MOD
 Global Const $g_sImgFullArmyBB = @ScriptDir & "\imgxml\Attack\BuilderBase\ArmyStatus\Full\"
 Global Const $g_sImgHeroStatusRec = @ScriptDir & "\imgxml\Attack\BuilderBase\ArmyStatus\Hero\Recovering\"
 Global Const $g_sImgHeroStatusUpg = @ScriptDir & "\imgxml\Attack\BuilderBase\ArmyStatus\Hero\Upgrading\"
 Global Const $g_sImgHeroStatusMachine = @ScriptDir & "\imgxml\Attack\BuilderBase\ArmyStatus\Hero\Battle Machine\"
-#EndRegion Aio ++
+#EndRegion AIO MOD
 
 ;Global $g_sImgBBMachReady = @ScriptDir & "\imgxml\Attack\BuilderBase\BattleMachine\BBMachReady_0_90.xml"
 Global $g_sImgBBNeedTrainTroops = @ScriptDir & "\imgxml\Attack\BuilderBase\TroopStatus\BBNeedTrainTroops_0_90.xml"

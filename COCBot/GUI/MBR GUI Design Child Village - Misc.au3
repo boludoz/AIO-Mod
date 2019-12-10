@@ -25,7 +25,7 @@ Global $g_hChkTrap = 1, $g_hChkCollect = 1, $g_hChkTombstones = 1, $g_hChkCleanY
 Global $g_hChkCollectCartFirst = 0, $g_hTxtCollectGold = 0, $g_hTxtCollectElixir = 0, $g_hTxtCollectDark = 0
 Global $g_hBtnLocateSpellfactory = 0, $g_hBtnLocateDarkSpellFactory = 0
 Global $g_hBtnLocateKingAltar = 0, $g_hBtnLocateQueenAltar = 0, $g_hBtnLocateWardenAltar = 0, $g_hBtnLocateLaboratory = 0, $g_hBtnResetBuilding = 0
-Global $g_hChkTreasuryCollect = 0, $g_hTxtTreasuryGold = 0, $g_hTxtTreasuryElixir = 0, $g_hTxtTreasuryDark = 0, $g_hChkFreeMagicItems = 0, $g_hBtnDailyDiscounts = 0, $g_hChkCollectRewards = 0
+Global $g_hChkTreasuryCollect = 0, $g_hTxtTreasuryGold = 0, $g_hTxtTreasuryElixir = 0, $g_hTxtTreasuryDark = 0, $g_hChkFreeMagicItems = 0, $g_hChkCollectRewards = 0
 
 Global $g_alblBldBaseStats[4] = ["", "", ""]
 Global $g_hChkCollectBuilderBase = 0, $g_hChkStartClockTowerBoost = 0, $g_hChkCTBoostBlderBz = 0, $g_hChkCleanBBYard = 0
@@ -40,6 +40,13 @@ Global $g_hChkClanGamesPurge = 0 , $g_hcmbPurgeLimit = 0 , $g_hChkClanGamesStopB
 Global $g_hTxtClanGamesLog = 0
 Global $g_hChkClanGamesDebug = 0
 Global $g_hLblRemainTime = 0 , $g_hLblYourScore = 0
+
+Global $g_hChkCollectMagicItems, $g_hChkCollectFree, _
+$g_hBtnMagicItemsConfig, _
+$g_hChkBuilderPotion, $g_hChkClockTowerPotion, $g_hChkHeroPotion, $g_hChkLabPotion, $g_hChkPowerPotion, $g_hChkResourcePotion, _
+$g_hComboClockTowerPotion, $g_hComboHeroPotion, $g_hComboPowerPotion, _
+$g_hInputBuilderPotion, $g_hInputLabPotion, $g_hInputGoldItems, $g_hInputElixirItems, $g_hInputDarkElixirItems
+
 
 Func CreateVillageMisc()
 	$g_hGUI_MISC = _GUICreate("", $g_iSizeWGrpTab2, $g_iSizeHGrpTab2, 5, 25, BitOR($WS_CHILD, $WS_TABSTOP), -1, $g_hGUI_VILLAGE)
@@ -62,27 +69,16 @@ Func CreateVillageMisc()
 EndFunc   ;==>CreateVillageMisc
 
 Func CreateMiscMagicSubTab()
-	Global $g_hChkCollectMagicItems, $g_hChkCollectFree, _
-	$g_hBtnMagicItemsConfig, _
-	$g_hChkBuilderPotion, $g_hChkClockTowerPotion, $g_hChkHeroPotion, $g_hChkLabPotion, $g_hChkPowerPotion, $g_hChkResourcePotion, _
-	$g_hComboBuilderPotion, $g_hComboClockTowerPotion, $g_hComboHeroPotion, $g_hComboLabPotion, $g_hComboPowerPotion, _
-	$g_hInputGoldItems, $g_hInputElixirItem, $g_hInputDarkElixirItem
-	
-	Global $g_bChkCollectMagicItems, $g_bChkCollectFree, _
-	$g_bBtnMagicItemsConfig, _
-	$g_bChkBuilderPotion, $g_bChkClockTowerPotion, $g_bChkHeroPotion, $g_bChkLabPotion, $g_bChkPowerPotion, $g_bChkResourcePotion, _
-	$g_bComboBuilderPotion, $g_bComboClockTowerPotion, $g_bComboHeroPotion, $g_bComboLabPotion, $g_bComboPowerPotion, _
-	$g_bInputGoldItems, $g_bInputElixirItem, $g_bInputDarkElixirItem
-	
-	; $sComboRead = GUICtrlRead($idComboBox)
-	
+
 	; GUI SubTab
 	Local $x = 15, $y = 45
 	
 	GUICtrlCreateGroup("CollectGroup", 16, 24, 449, 65)
 	$g_hChkCollectMagicItems = GUICtrlCreateCheckbox("Collect magic items", 56, 48, 113, 17)
 	$g_hChkCollectFree = GUICtrlCreateCheckbox("Collect FREE items", 320, 48, 113, 17)
+    GUICtrlSetOnEvent(-1, "ChkMagicItems")
 	$g_hBtnMagicItemsConfig = GUICtrlCreateButton("Settings", 176, 48, 97, 25)
+    GUICtrlSetOnEvent(-1, "btnDailyDiscounts")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	GUICtrlCreateGroup("Magic Items", 16, 104, 449, 257)
 	$g_hChkBuilderPotion = GUICtrlCreateCheckbox("Use builder potion when busy builders is > ", 56, 128, 225, 17)
@@ -91,14 +87,14 @@ Func CreateMiscMagicSubTab()
 	$g_hChkLabPotion = GUICtrlCreateCheckbox("Use research potion when laboratory time is > ", 56, 224, 233, 17)
 	$g_hChkPowerPotion = GUICtrlCreateCheckbox("Use power potion during : ", 56, 256, 225, 17)
 	$g_hChkResourcePotion = GUICtrlCreateCheckbox("Use resource potion only if storage are :", 56, 288, 225, 17)
-	$g_hComboBuilderPotion = GUICtrlCreateCombo("Number", 296, 128, 41, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
+	$g_hInputBuilderPotion = GUICtrlCreateCombo("Number", 296, 128, 41, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
 	$g_hComboClockTowerPotion = GUICtrlCreateCombo("Select", 296, 160, 89, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
 	$g_hComboHeroPotion = GUICtrlCreateCombo("Select", 296, 192, 89, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
-	$g_hComboLabPotion = GUICtrlCreateInput("Hours", 296, 224, 41, 21)
+	$g_hInputLabPotion = GUICtrlCreateInput("Hours", 296, 224, 41, 21)
 	$g_hComboPowerPotion = GUICtrlCreateCombo("Select", 296, 256, 89, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
 	$g_hInputGoldItems = GUICtrlCreateInput("1000000", 88, 320, 73, 21)
-	$g_hInputElixirItem = GUICtrlCreateInput("1000000", 192, 320, 73, 21)
-	$g_hInputDarkElixirItem = GUICtrlCreateInput("1000", 296, 320, 49, 21)
+	$g_hInputElixirItems = GUICtrlCreateInput("1000000", 192, 320, 73, 21)
+	$g_hInputDarkElixirItems = GUICtrlCreateInput("1000", 296, 320, 49, 21)
 	GUICtrlCreateLabel("Lower : ", 40, 320, 42, 17)
 	_GUICtrlCreatePic(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Icons\Shop.png", 24, 48, 25, 25)
 	_GUICtrlCreatePic(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Icons\Builder.png", 24, 128, 25, 25)
@@ -218,6 +214,7 @@ Func CreateMiscNormalVillageSubTab()
 		$g_ahTxtResumeAttackLoot[$eLootDarkElixir] = GUICtrlCreateInput("", $x + 15, $y, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkResumeAttackTip_02", -1))
 		GUICtrlSetLimit(-1, 6)
+		GUICtrlSetBkColor(-1, 0xD1DFE7)
 
 	$x = 15
 	$y += 45
@@ -288,6 +285,7 @@ Func CreateMiscNormalVillageSubTab()
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtCollectElixir_Info_03", "happens during troop training.") & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtCollectGold_Info_04", -1))
 			GUICtrlSetLimit(-1, 7)
+			GUICtrlSetBkColor(-1, 0xD1DFE7)
 
 	$x += 80
 		GUICtrlCreateLabel("<", $x, $y + 2, -1, -1)
@@ -299,7 +297,7 @@ Func CreateMiscNormalVillageSubTab()
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtCollectElixir_Info_03", -1) & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtCollectGold_Info_04", -1))
 			GUICtrlSetLimit(-1, 6)
-
+			GUICtrlSetBkColor(-1, 0xD1DFE7)
 	$x = 15
 	$y += 22
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnTreasury, $x + 22, $y - 14, 48, 48)
@@ -321,6 +319,7 @@ Func CreateMiscNormalVillageSubTab()
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtTreasuryGold_Info_03", "happens while searching for attack") & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTreasuryCollect_Info_01", -1))
 			GUICtrlSetLimit(-1, 7)
+			GUICtrlSetBkColor(-1, 0xD1DFE7)
 
 	$x += 80
 		GUICtrlCreateLabel("<", $x, $y + 2, -1, -1)
@@ -332,6 +331,7 @@ Func CreateMiscNormalVillageSubTab()
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtTreasuryElixir_Info_03", "happens during troop training") & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTreasuryCollect_Info_01", -1))
 			GUICtrlSetLimit(-1, 7)
+			GUICtrlSetBkColor(-1, 0xD1DFE7)
 
 	$x += 80
 		GUICtrlCreateLabel("<", $x, $y + 2, -1, -1)
@@ -367,15 +367,16 @@ Func CreateMiscNormalVillageSubTab()
 
 	$x = 220
 	$y -= 50
+	#CS - Daily Discounts - Team AiO MOD++
 		_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModPowerP, $x + 32, $y, 24, 24)
 		$g_hChkFreeMagicItems = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkFreeMagicItems", "Collect Free Magic Items"), $x + 60, $y + 4, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkFreeMagicItems_Info", "Check this to automatically collect free magic items.\r\nMust be at least Th8."))
 			GUICtrlSetOnEvent(-1, "ChkFreeMagicItems")
-	; Daily Discounts - Team AiO MOD++
 	$y += 25
-		$g_hBtnDailyDiscounts = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SetDailyDiscounts", "Daily Discounts"), $x + 90, $y, -1, 22)
+		$g_hBtnMagicItemsConfig = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SetDailyDiscounts", "Daily Discounts"), $x + 90, $y, -1, 22)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SetDailyDiscounts", "Custom select magic items you would like from trader."))
 			GUICtrlSetOnEvent(-1, "btnDailyDiscounts")
+	#CE
 
 	$y += 25
 		$g_hChkCollectRewards = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCollectRewards", "Collect Challenge Rewards"), $x + 60, $y + 4, -1, -1)
@@ -480,9 +481,11 @@ Func CreateMiscBuilderBaseSubTab()
 			GUICtrlSetOnEvent(-1, "chkBBTrophyRange")
 			GUICtrlSetState(-1, $GUI_DISABLE)
 		$g_hTxtBBTrophyLowerLimit = GUICtrlCreateInput($g_iTxtBBTrophyLowerLimit, $x + 310, $y + 30, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+			GUICtrlSetBkColor(-1, 0xD1DFE7)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtBBTrophyLimit_Info_01", "If your trophies go below this number then attacking is stopped."))
 			GUICtrlSetState(-1, $GUI_DISABLE)
 		$g_hTxtBBTrophyUpperLimit = GUICtrlCreateInput($g_iTxtBBTrophyUpperLimit, $x + 360, $y + 30, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+			GUICtrlSetBkColor(-1, 0xD1DFE7)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtBBTrophyLimit_Info_02", "If your trophies go above this number then the bot drops trophies"))
 			GUICtrlSetState(-1, $GUI_DISABLE)
 		$g_hChkBBAttIfLootAvail = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBAttIfLootAvail", "Only if loot is available"), $x + 240, $y + 55)
@@ -561,7 +564,7 @@ Func CreateMiscClanGamesV3SubTab()
 		$g_hChkClanGamesEnabled = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGamesEnabled", "Clan Games"), $x, $y, -1, -1)
 			GUICtrlSetOnEvent(-1, "chkActivateClangames")
 		$g_hChkClanGames60 = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGames60", "No 60min Events"), $x + 100 , $y, -1, -1)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGames60_Info_01", "will not choose 60 minute events"))
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGames60_Info_01", "Will not choose 60 minutes events"))
 		$g_hChkClanGamesDebug = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGamesDebug", "Debug"), $x + 205, $y, -1, -1)
 	$x += 25
 	$y += 25

@@ -44,9 +44,9 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 	Static $aiNbrOfWallsUpped = $aiZero
 
 	; Attack Stats
-    Static $aiAttackedVillageCount = $aiZero83 ; number of attack villages for DB, LB, TB
-    Static $aiTotalGoldGain = $aiZero83, $aiTotalElixirGain = $aiZero83, $aiTotalDarkGain = $aiZero83, $aiTotalTrophyGain = $aiZero83 ; total resource gains for DB, LB, TB
-    Static $aiNbrOfDetectedMines = $aiZero83, $aiNbrOfDetectedCollectors = $aiZero83, $aiNbrOfDetectedDrills = $aiZero83 ; number of mines, collectors, drills detected for DB, LB, TB
+	Static $aiAttackedVillageCount = $aiZero83 ; number of attack villages for DB, LB, TB
+	Static $aiTotalGoldGain = $aiZero83, $aiTotalElixirGain = $aiZero83, $aiTotalDarkGain = $aiZero83, $aiTotalTrophyGain = $aiZero83 ; total resource gains for DB, LB, TB
+	Static $aiNbrOfDetectedMines = $aiZero83, $aiNbrOfDetectedCollectors = $aiZero83, $aiNbrOfDetectedDrills = $aiZero83 ; number of mines, collectors, drills detected for DB, LB, TB
 	Static $aiSmartZapGain = $aiZero, $aiNumEQSpellsUsed = $aiZero, $aiNumLSpellsUsed = $aiZero ; smart zap
 
 	; Builder time and count
@@ -128,14 +128,14 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			$aiNbrOfWallsUpped = $aiZero
 
 			; Attack Stats
-            $aiAttackedVillageCount = $aiZero83
-            $aiTotalGoldGain = $aiZero83
-            $aiTotalElixirGain = $aiZero83
-            $aiTotalDarkGain = $aiZero83
-            $aiTotalTrophyGain = $aiZero83
-            $aiNbrOfDetectedMines = $aiZero83
-            $aiNbrOfDetectedCollectors = $aiZero83
-            $aiNbrOfDetectedDrills = $aiZero83
+			$aiAttackedVillageCount = $aiZero83
+			$aiTotalGoldGain = $aiZero83
+			$aiTotalElixirGain = $aiZero83
+			$aiTotalDarkGain = $aiZero83
+			$aiTotalTrophyGain = $aiZero83
+			$aiNbrOfDetectedMines = $aiZero83
+			$aiNbrOfDetectedCollectors = $aiZero83
+			$aiNbrOfDetectedDrills = $aiZero83
 			$aiSmartZapGain = $aiZero
 			$aiNumEQSpellsUsed = $aiZero
 			$aiNumLSpellsUsed = $aiZero
@@ -168,13 +168,13 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			; Other global status
 			$aiCommandStop = $aiMinus
 			$aiAllBarracksUpgd = $aiZero
-            $abFullStorage = $aiZero84
-            $aiBuilderBoostDiscount = $aiZero
-            $abNotNeedAllTime0 = $aiTrue
-            $abNotNeedAllTime1 = $aiTrue
+			$abFullStorage = $aiZero84
+			$aiBuilderBoostDiscount = $aiZero
+			$abNotNeedAllTime0 = $aiTrue
+			$abNotNeedAllTime1 = $aiTrue
 
-        Case "Save"
-            $abFirstStart[$iAccount] = $g_bFirstStart
+		Case "Save"
+			$abFirstStart[$iAccount] = $g_bFirstStart
 			$aiFirstRun[$iAccount] = $g_iFirstRun
 
 			; Multi-Stats
@@ -213,7 +213,7 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			$aiNbrOfWallsUpped[$iAccount] = $g_iNbrOfWallsUpped
 
 			; Attack Stats
-            For $i = 0 To $g_iModeCount - 1
+			For $i = 0 To $g_iModeCount - 1
 				$aiAttackedVillageCount[$iAccount][$i] = $g_aiAttackedVillageCount[$i]
 				$aiTotalGoldGain[$iAccount][$i] = $g_aiTotalGoldGain[$i]
 				$aiTotalElixirGain[$iAccount][$i] = $g_aiTotalElixirGain[$i]
@@ -263,13 +263,13 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			$aiAllBarracksUpgd[$iAccount] = $g_bAllBarracksUpgd
 
 			For $i = 0 To 3
-                $abFullStorage[$iAccount][$i] = $g_abFullStorage[$i]
-            Next
-            $aiBuilderBoostDiscount[$iAccount] = $g_iBuilderBoostDiscount
-            $abNotNeedAllTime0[$iAccount] = $g_abNotNeedAllTime[0]
-            $abNotNeedAllTime1[$iAccount] = $g_abNotNeedAllTime[1]
+				$abFullStorage[$iAccount][$i] = $g_abFullStorage[$i]
+			Next
+			$aiBuilderBoostDiscount[$iAccount] = $g_iBuilderBoostDiscount
+			$abNotNeedAllTime0[$iAccount] = $g_abNotNeedAllTime[0]
+			$abNotNeedAllTime1[$iAccount] = $g_abNotNeedAllTime[1]
 
-        Case "Load"
+		Case "Load"
 			$g_bFirstStart = $abFirstStart[$iAccount]
 			$g_iFirstRun = $aiFirstRun[$iAccount]
 
@@ -309,7 +309,7 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			$g_iNbrOfWallsUpped = $aiNbrOfWallsUpped[$iAccount]
 
 			; Attack Stats
-            For $i = 0 To $g_iModeCount - 1
+			For $i = 0 To $g_iModeCount - 1
 				$g_aiAttackedVillageCount[$i] = $aiAttackedVillageCount[$iAccount][$i]
 				$g_aiTotalGoldGain[$i] = $aiTotalGoldGain[$iAccount][$i]
 				$g_aiTotalElixirGain[$i] = $aiTotalElixirGain[$iAccount][$i]
@@ -359,11 +359,11 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			$g_iCommandStop = $aiCommandStop[$iAccount]
 			$g_bAllBarracksUpgd = $aiAllBarracksUpgd[$iAccount]
 			For $i = 0 To 3
-                $g_abFullStorage[$i] = $abFullStorage[$iAccount][$i]
-            Next
-            $g_iBuilderBoostDiscount = $aiBuilderBoostDiscount[$iAccount]
-            $g_abNotNeedAllTime[0] = $abNotNeedAllTime0[$iAccount]
-            $g_abNotNeedAllTime[1] = $abNotNeedAllTime1[$iAccount]
+				$g_abFullStorage[$i] = $abFullStorage[$iAccount][$i]
+			Next
+			$g_iBuilderBoostDiscount = $aiBuilderBoostDiscount[$iAccount]
+			$g_abNotNeedAllTime[0] = $abNotNeedAllTime0[$iAccount]
+			$g_abNotNeedAllTime[1] = $abNotNeedAllTime1[$iAccount]
 			
 			ResetVariables("donated") ; reset for new account
 			$g_aiAttackedCountSwitch[$iAccount] = $aiAttackedCount[$iAccount]
