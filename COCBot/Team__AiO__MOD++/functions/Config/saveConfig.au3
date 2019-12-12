@@ -95,7 +95,6 @@ Func SaveConfig_MOD_600_6()
 	For $i = 0 To $g_iDDCount - 1
 		_Ini_Add("DailyDiscounts", "ChkDD_Deals" & String($i), $g_abChkDD_Deals[$i] ? 1 : 0)
 	Next
-	_Ini_Add("DailyDiscounts", "DD_DealsSet", $g_bDD_DealsSet ? 1 : 0)
 
 	; BB Suggested Upgrades
 	_Ini_Add("other", "ChkBBIgnoreWalls", $g_bChkBBIgnoreWalls ? 1 : 0)

@@ -15,28 +15,33 @@
 #include-once
 
 Func btnDailyDiscounts()
-	GUICtrlSetState($g_hBtnMagicItemsConfig, $GUI_DISABLE)
-	GUISetState(@SW_SHOW, $g_hGUI_DailyDiscounts)
+		GUICtrlSetState($g_hBtnMagicItemsConfig, $GUI_DISABLE)
+		GUISetState(@SW_SHOW, $g_hGUI_DailyDiscounts)
 EndFunc   ;==>btnDailyDiscounts
 
 Func btnDDApply()
 	GUISetState(@SW_HIDE, $g_hGUI_DailyDiscounts)
+	
 	Local $iDealsChecked = 0
-
+	
+	$g_bChkCollectMagicItems = (GUICtrlRead($g_hChkCollectMagicItems) = $GUI_CHECKED) ? (True) : (False)
+	GUICtrlSetState($g_hBtnMagicItemsConfig, ($g_bChkCollectMagicItems) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+	
 	For $i = 0 To $g_iDDCount - 1
-		If GUICtrlRead($g_ahChkDD_Deals[$i]) = $GUI_CHECKED Then
+		If $g_bChkCollectMagicItems = False Then
+			$g_abChkDD_Deals[$i] = False
+		ElseIf $g_bChkCollectMagicItems = True and GUICtrlRead($g_ahChkDD_Deals[$i]) = $GUI_CHECKED Then
 			$g_abChkDD_Deals[$i] = True
-			$g_bDD_DealsSet = True
 			$iDealsChecked += 1
 		Else
 			$g_abChkDD_Deals[$i] = False
 		EndIf
 	Next
 
-	If $g_bDD_DealsSet And $iDealsChecked <> 0 Then
+	If $g_bChkCollectMagicItems And $iDealsChecked <> 0 Then
 		GUICtrlSetBkColor($g_hBtnMagicItemsConfig, $COLOR_GREEN)
 	Else
-		$g_bDD_DealsSet = False
+		$g_bChkCollectMagicItems = False
 		GUICtrlSetBkColor($g_hBtnMagicItemsConfig, $COLOR_RED)
 	EndIf
 

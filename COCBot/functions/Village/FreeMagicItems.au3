@@ -14,7 +14,7 @@
 ; ===============================================================================================================================
 
 Func CollectFreeMagicItems($bTest = False)
-	If Not BitOR($g_bChkCollectFreeMagicItems, $g_bDD_DealsSet) Then Return
+	If Not BitOR($g_bChkCollectFree, $g_bChkCollectMagicItems) Then Return
 	If Not $g_bRunState Then Return
 
 	Local Static $iLastTimeChecked[8] = [0, 0, 0, 0, 0, 0, 0, 0]
@@ -23,7 +23,7 @@ Func CollectFreeMagicItems($bTest = False)
 	ClickP($aAway, 1, 0, "#0332") ;Click Away
 	If Not IsMainPage() Then Return
 
-	Local $sSetLog = $g_bDD_DealsSet ? "Collecting Magic Items" : "Collecting Free Magic Items"
+	Local $sSetLog = $g_bChkCollectMagicItems ? "Collecting Magic Items" : "Collecting Free Magic Items"
 	SetLog($sSetLog, $COLOR_INFO)
 	If _Sleep($DELAYCOLLECT2) Then Return
 
@@ -67,7 +67,7 @@ Func CollectFreeMagicItems($bTest = False)
 
 		; 5D79C5 ; >Blue Background price
 		If $aResults[$i] <> "" Then
-			If (BitAND($g_bDD_DealsSet, $g_aImageSearchXML <> -1, 1 > StringInStr($aResultsProx[$i], "#" & $i+1), $aResultsProx[$i] <> "")) Or (BitAND($aResults[$i] = "FREE", $g_bChkCollectFreeMagicItems)) Then
+			If (BitAND($g_bChkCollectMagicItems, $g_aImageSearchXML <> -1, 1 > StringInStr($aResultsProx[$i], "#" & $i+1), $aResultsProx[$i] <> "")) Or (BitAND($aResults[$i] = "FREE", $g_bChkCollectFree)) Then
 				SetLog("Magic Item detected : " & $aResultsProx[$i], $COLOR_INFO)
 				If Not $bTest Then
 					Click($aOcrPositions[$i][0], $aOcrPositions[$i][1], 1, 0)
@@ -75,7 +75,7 @@ Func CollectFreeMagicItems($bTest = False)
 					SetLog("Daily Discounts: " & "X: " & $aOcrPositions[$i][0] & " | " & "Y: " & $aOcrPositions[$i][1], $COLOR_DEBUG)
 				EndIf
 				If _Sleep(200) Then Return
-				If Not $bTest And $g_bDD_DealsSet Then ConfirmPurchase()
+				If Not $bTest And $g_bChkCollectMagicItems Then ConfirmPurchase()
 				If _Sleep(500) Then Return
 			Else
 				If _ColorCheck(_GetPixelColor($aOcrPositions[$i][0], $aOcrPositions[$i][1] + 5, True), Hex(0x5D79C5, 6), 5) Then

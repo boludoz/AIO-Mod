@@ -72,7 +72,7 @@ Func ApplyConfig_MOD_MagicItems($TypeReadSave)
 			
 			GUICtrlSetState($g_hChkCollectMagicItems, $g_bChkCollectMagicItems = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkCollectFree, $g_bChkCollectFree = True ? $GUI_CHECKED : $GUI_UNCHECKED)
-			ChkMagicItems()
+			ChkFreeMagicItems()
 
 			GUICtrlSetState($g_hChkBuilderPotion, $g_bChkBuilderPotion = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkClockTowerPotion, $g_bChkClockTowerPotion = True ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -158,7 +158,7 @@ Func ApplyConfig_MOD_600_6($TypeReadSave)
 			For $i = 0 To $g_iDDCount - 1
 				GUICtrlSetState($g_ahChkDD_Deals[$i], $g_abChkDD_Deals[$i] = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			Next
-			GUICtrlSetBkColor($g_hBtnMagicItemsConfig, $g_bDD_DealsSet = True ? $COLOR_GREEN : $COLOR_RED)
+			;GUICtrlSetBkColor($g_hBtnMagicItemsConfig, $g_bChkCollectMagicItems = True ? $COLOR_GREEN : $COLOR_RED)
 			btnDDApply()
 
 			; BB Suggested Upgrades

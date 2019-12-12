@@ -33,7 +33,7 @@
 
 Global $g_hBtnMagicItemsConfig = 0
  
-Func ChkMagicItems()
+Func ChkFreeMagicItems()
 	If $g_iTownHallLevel >= 8 Or $g_iTownHallLevel = 0 Then ; Must be Th8 or more to use the Trader
 		GUICtrlSetState($g_hChkCollectFree, $GUI_ENABLE)
 	Else

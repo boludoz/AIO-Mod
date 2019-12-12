@@ -833,10 +833,10 @@ EndFunc   ;==>OpenGoblinMapSX
 Func IsGoblinMapSXLocked($FoundCoord)
 	If not BitAND(IsArray($FoundCoord), UBound($FoundCoord) = 2) Or $FoundCoord = False Then Return True
 
-	Local $x = Num($FoundCoord[0]) - 100, _
-	$y = Num($FoundCoord[1]) - 100, _
-	$x1 = Num($FoundCoord[0]) + 100, _
-	$y1 = Num($FoundCoord[1]) + 100
+	Local $x = Int($FoundCoord[0]) - 100, _
+	$y = Int($FoundCoord[1]) - 100, _
+	$x1 = Int($FoundCoord[0]) + 100, _
+	$y1 = Int($FoundCoord[1]) + 100
 	
 	Local $bResult = (MultiPSimple($x, $y, $x1, $y1, Hex(0xEC5012, 6), 25) = 0)
 	

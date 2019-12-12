@@ -274,7 +274,7 @@ Func DonateGTFO()
 			$firstrun = False
 
 			; Check Donate Pixel
-			$g_aiDonatePixel = _MultiPixelSearch(200, $y, 230, 660 + $g_iBottomOffsetY, -2, 1, Hex(0x6da725, 6), $aChatDonateBtnColors, 20)
+			$g_aiDonatePixel = _MultiPixelSearch(200, 90, 300, 700, -2, 1, Hex(0x6da725, 6), $aChatDonateBtnColors, 20)
 			If IsArray($g_aiDonatePixel) Then
 				$y = $g_aiDonatePixel[1] + 30
 
@@ -347,20 +347,15 @@ Func ClanHop($sClanJoin = False)
 	Local $sTimeStartedHopping = _NowCalc()
 	Local $iPosJoinedClans = 0, $iScrolls = 0, $iHopLoops = 0, $iErrors = 0
 
-	Local $aJoinClanBtn[4] = [157, 510, 0x6CBB1F, 20] ; Green Join Button on Chat Tab when you are not in a Clan
-	Local $aClanPage[4] = [768, 398, 0xFD5D64, 20] ; Red Leave Clan Button on Clan Page
-	Local $aClanPageJoin[4] = [768, 398, 0xDCF583, 20] ; Green Join Clan Button on Clan Page
+	Local $aJoinClanBtn[4] = [163, 515, 0x6DBB1F, 20] ; OK - Green Join Button on Chat Tab when you are not in a Clan
+	Local $aClanPage[4] = [764, 397, 0xF70D16, 20] ; OK - Red Leave Clan Button on Clan Page
+	Local $aClanPageJoin[4] = [764, 397, 0xDDF685, 20] ; OK - Green Join Clan Button on Clan Page
+	Local $aClanChat[4] = [86, 12, 0xC1BB91, 20] ; OK - Verify is in clan.
 	Local $aJoinClanPage[4] = [720, 310, 0xEBCC80, 20] ; Trophy Amount of Clan Background of first Clan
-	Local $aClanChat[4] = [105, 650, 0x87C907, 40] ; *Your Name* joined the Clan Message Check to verify loaded Clan Chat
-	Local $aChatTab[4] = [189, 24, 0x706C50, 20] ; Clan Chat Tab on Top, check if right one is selected
-	Local $aGlobalTab[4] = [189, 24, 0x383828, 20] ; Global Chat Tab on Top, check if right one is selected
-	Local $aClanBadgeNoClan[4] = [151, 307, 0xF05538, 20] ; Orange Tile of Clan Logo on Chat Tab if you are not in a Clan
-	Local $aShare[4] = [438, 190, 0xFFFFFF, 20]
-	Local $aCopy[4] = [598, 176, 0xD9F481, 20]
-	Local $aClick[2] = [176, 216]
-	Local $aSearchClan[4] = [569, 202, 0xDCF684, 20]
-	Local $aClanNameBtn[2] = [89, 63] ; Button to open Clan Page from Chat Tab
-	;Local $aClanMod[4] = [215, 297, 0xCECDC6, 20] ; Not in use
+	Local $aClanBadgeNoClan[4] = [151, 307, 0xF05538, 20] ; OK - Orange Tile of Clan Logo on Chat Tab if you are not in a Clan
+	Local $aShare[4] = [438, 190, 0xFFFFFF, 20] ; OK - Share clan
+	Local $aClanNameBtn[2] = [173, 19] ; OK - Button to open Clan Page from Chat Tab
+	Local $aCopy[4] = [512, 182, 0xDDF685, 20] ; OK - Copy button
 	Local $aSendRequest[4] = [528, 213, 0xE2F98A, 20]
 
 	$g_iCommandStop = 0 ; Halt Attacking
@@ -426,9 +421,7 @@ Func ClanHop($sClanJoin = False)
 				EndIf
 			EndIf
 
-			If _Sleep(400) Then Return
-			ClickP($aClick)
-			If _Sleep(400) Then Return
+			ClickAwayChat(400)
 
 			Local $g_sTxtClanID = GUICtrlRead($g_hTxtClanID)
 
@@ -528,7 +521,7 @@ Func ClanHop($sClanJoin = False)
 		ClickP($aClanPageJoin) ; Join Clan
 		If _Sleep(1000) Then Return
 		UnderstandChatRules() ; December Update(2018)
-		If Not _WaitForCheckPixel($aClanChat, $g_bCapturePixel, Default, "Wait For Clan Chat:") Then ; Check for your "joined the Clan" Message to verify that Chat loaded successfully
+		If Not _WaitForCheckPixel($aClanChat, $g_bCapturePixel, Default, "Wait For Clan Chat:") Then ; Verify is in clan
 			SetLog("Could not verify loaded Clan Chat. Starting over again", $COLOR_ERROR)
 			$iErrors += 1
 			ContinueLoop
@@ -540,81 +533,8 @@ EndFunc   ;==>ClanHop
 
 Func ClickAwayChat($iSleep = 10)
 	_Sleep($iSleep)
-Return SpecialAway()
-#CS deprecated
-	Local $ix = Random(90, 129, 1)
-	Local $iy = Random(687, 724, 1)
-
-	Click($ix, $iy, 1, 0)
-#CE
+	Return SpecialAway()
 EndFunc   ;==>ClickAwayChat
-
-Func OpenClanChat()
-
-	; OPEN CLAN CHAT and verbose in log
-	ClickP($aAway, 1, 0, "#0167") ;Click Away
-	If _Sleep($DELAYDONATECC4) Then Return
-	SetLog("Checking for Donate Requests in Clan Chat", $COLOR_INFO)
-	ClickP($aOpenChat, 1, 0, "#0168") ; Clicks chat tab
-	If _Sleep($DELAYDONATECC4) Then Return
-	Local $iLoopCount = 0
-	While 1
-		;If Clan tab is selected.
-		If _ColorCheck(_GetPixelColor(189, 24, True), Hex(0x706C50, 6), 20) Then ; color med gray
-			If _Sleep(200) Then Return ;small delay to allow tab to completely open
-			;Clan tab already Selected no click needed
-			ClickP($aClanTab, 1, 0, "#0169") ; clicking clan tab
-			ExitLoop
-		EndIf
-		;If Global tab is selected.
-		If _ColorCheck(_GetPixelColor(189, 24, True), Hex(0x383828, 6), 20) Then ; Darker gray
-			If _Sleep($DELAYDONATECC1) Then Return ;small delay to allow tab to completely open
-			ClickP($aClanTab, 1, 0, "#0169") ; clicking clan tab
-			ExitLoop
-		EndIf
-		;counter for time approx 3 sec max allowed for tab to open
-		$iLoopCount += 1
-		If $iLoopCount >= 15 Then ; allows for up to a sleep of 3000
-			SetLog("Clan Chat Did Not Open - Abandon Donate")
-			AndroidPageError("DonateCC")
-			CloseCoc(True) ; Restarting to get some new Clans
-			WaitMainScreenMini()
-			_Sleep(100)
-			ClickP($aClanTab, 1, 0, "#0169") ; clicking clan tab
-			_Sleep(100)
-			$iLoopCount = 0
-			ExitLoop
-		EndIf
-		If _Sleep($DELAYDONATECC1) Then Return ; delay Allow 15x
-	WEnd
-	UnderstandChatRules() ; December Update(2018)
-EndFunc   ;==>OpenClanChat
-
-Func CloseClanChat()
-	Local $i = 0
-	While 1
-		If _Sleep(100) Then Return
-		If _ColorCheck(_GetPixelColor($aCloseChat[0], $aCloseChat[1], True), Hex($aCloseChat[2], 6), $aCloseChat[3]) Then
-			; Clicks chat thing
-			Click($aCloseChat[0], $aCloseChat[1], 1, 0, "#0173") ;Clicks chat thing
-			ExitLoop
-;~ 		ElseIf QuickMIS("BC1", $g_sImgDonateCloseWindow, 790, 0, 825, 220, True, False) Then ; RC Done
-;~ 			SetLog("Closing the Donate troops window!...", $COLOR_SUCCESS)
-;~ 			Click($g_iQuickMISWOffSetX, $g_iQuickMISWOffSetY)
-;~ 			;Add delay so donate window will get close
-;~ 			If _Sleep($DELAYDONATEWINDOW1) Then ExitLoop
-		Else
-			If _Sleep(100) Then Return
-			$i += 1
-			If $i > 30 Then
-				SetLog("Error finding Clan Tab to close...", $COLOR_ERROR)
-				AndroidPageError("DonateCC")
-				ExitLoop
-			EndIf
-		EndIf
-	WEnd
-
-EndFunc   ;==>CloseClanChat
 
 Func ScrollUp()
 	Local $Scroll, $i_attempts = 0

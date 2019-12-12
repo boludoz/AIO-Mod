@@ -136,11 +136,11 @@ EndFunc   ;==>btnTestReadChat
 Func btnTestDailyDiscounts()
 	Local $currentRunState = $g_bRunState
 	Local $currentSetlog = $g_bDebugSetlog
-	Local $currentDD_DealsSet = $g_bDD_DealsSet
+	Local $currentDD_DealsSet = $g_bChkCollectMagicItems
 
 	_GUICtrlTab_ClickTab($g_hTabMain, 0)
 	$g_bRunState = True
-	$g_bDD_DealsSet = True
+	$g_bChkCollectMagicItems = True
 	$g_abChkDD_Deals[0] = True
 
 	AndroidOnlyZoomOut()
@@ -148,7 +148,7 @@ Func btnTestDailyDiscounts()
 	CollectFreeMagicItems()
 	SetLog(_PadStringCenter(" Test DailyDiscounts end ", 54, "="), $COLOR_INFO)
 
-	$g_bDD_DealsSet = $currentDD_DealsSet
+	$g_bChkCollectMagicItems = $currentDD_DealsSet
 	$g_bRunState = $currentRunState
 	$g_bDebugSetlog = $currentSetlog
 EndFunc   ;==>btnTestDailyDiscounts
