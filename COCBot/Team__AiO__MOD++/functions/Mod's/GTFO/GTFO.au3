@@ -56,13 +56,12 @@ Func MainGTFO()
 
 	; GTFO Main Loop
 	While 1
-		SetLogCentered(" GTFO v1.4 ", Default, Default, True)
+		SetLogCentered(" GTFO v1.5 ", Default, Default, True)
 		; Just a user log
 		$_diffTimer = (TimerDiff($_timer) / 1000) / 60
 		If Not $_bFirstLoop Then
 			SetLog(" - Running GTFO for " & StringFormat("%.2f", $_diffTimer) & " min", $COLOR_DEBUG)
 		EndIf
-		$_bFirstLoop = False
 
 		; Function to take nmore responsive the GUI /STOP and PASUE
 		If Not $g_bRunState Then Return
@@ -78,29 +77,22 @@ Func MainGTFO()
 		checkAttackDisable($g_iTaBChkIdle)
 
 		; Custom Train to be accurate
-		TrainGTFO()
+		If not $_bFirstLoop Then TrainGTFO()
+		$_bFirstLoop = False
 
 		MainKickout()
 		; **TODO** - verify is the train is Boosted , if is true the $g_aiTimeTrain[0] / 4 (x4 faster)
 
-		If $g_aiTimeTrain[0] > 10 Then
-			SetLog("Let's wait for a few minutes!", $COLOR_INFO)
-			Local $aRndFuncList = ['Collect', 'CheckTombs', 'ReArm', 'CleanYard', 'BuilderBase', 'Boost']
-			While 1
+		SetLog("Let's wait for a few minutes!", $COLOR_INFO)
+		Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectFreeMagicItems', "BuilderBase"]
+		While $g_aiTimeTrain[0] > 10
+			_ArrayShuffle($aRndFuncList)
+			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
+				_RunFunction($Index)
 				If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
-				If UBound($aRndFuncList) > 1 Then
-					Local $Index = Random(0, UBound($aRndFuncList), 1)
-					If $Index > UBound($aRndFuncList) - 1 Then $Index = UBound($aRndFuncList) - 1
-					_RunFunction($aRndFuncList[$Index])
-					_ArrayDelete($aRndFuncList, $Index)
-				Else
-					_RunFunction($aRndFuncList[0])
-					ExitLoop
-				EndIf
-				If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
-			WEnd
-		EndIf
+			Next
+		WEnd
 
 		VillageReport()
 
@@ -319,7 +311,7 @@ Func DonateGTFO()
 		; A click just to mantain the 'Game active'
 		If $g_iLoop >= 5 Then
 			If $g_bChkGTFOClanHop = True Then
-				ClanHop() ; Hop!!!
+				ClanHop($g_bChkGTFOClanHop) ; Hop!!!
 				$firstrun = True
 				$g_iLoop = 0
 			EndIf
@@ -338,198 +330,122 @@ Func DonateGTFO()
 	If $g_iLoop2 > $g_iTxtCyclesGTFO Then Return False
 EndFunc   ;==>DonateGTFO
 
+Func ClanSaveAndJoiner(ByRef $sClanJoin, ByRef $g_bFirstHop)
+	Local $aClanBadgeNoClan[4] = [151, 307, 0xF05538, 20] ; OK - Orange Tile of Clan Logo on Chat Tab if you are not in a Clan
+	Local $aCopy[4] = [512, 182, 0xDDF685, 20] ; OK - Copy button
+	Local $aShare[4] = [438, 190, 0xFFFFFF, 20] ; OK - Share clan
+	Local $aClanPage[4] = [764, 397, 0xF70D16, 20] ; OK - Red Leave Clan Button on Clan Page
+	Local $aClanLabel[4] = [522, 70, 0xEDEDE8, 20] ; OK - Select white label
+	Local $aJoinClanBtn[4] = [163, 515, 0x6DBB1F, 20] ; OK - Green Join Button on Chat Tab when you are not in a Clan
+	Local $aIsClanChat[4] = [86, 12, 0xC1BB91, 20] ; OK - Verify is in clan.
+
+	If UnderstandChatRules() And _WaitForCheckPixel($aClanChat, $g_bCapturePixel, Default, "Wait For Clan Chat.") Then ; If Still in Clan
+			SetLog("Still in a Clan! Leaving the Clan now")
+			ClickP($aClanChat)
+				#Region Start (only if had g_bChkGTFOReturnClan)
+				If $g_bFirstHop = True and $g_bChkGTFOReturnClan = True Then
+					If _WaitForCheckPixel($aShare, $g_bCapturePixel, Default, "Wait for Share") Then
+						ClickP($aShare)
+						If _WaitForCheckPixel($aCopy, $g_bCapturePixel, Default, "Wait for Copy") Then
+							Local $sData = ""
+							ClickP($aCopy)
+							Local $sData = ClipGet()
+							If _Sleep(250) Then Return
+							GUICtrlSetData($g_hTxtClanID, $sData)
+							$g_sTxtClanID = $sData
+							$g_bFirstHop = False
+						Else
+							SetLog("No Copy Button", $COLOR_ERROR)
+							Return False
+						EndIf
+					Else
+						SetLog("No Share Button", $COLOR_ERROR)
+						Return False
+					EndIf
+				EndIf
+				#Region End
+				If _WaitForCheckPixel($aClanPage, $g_bCapturePixel, Default, "GTFO: Checking if you not are leader.") Then
+					; Click clans label, It is way 1
+					ClickP($aClanLabel)
+				Else
+					Setlog("GTFO|Error or you are a clan leader.", $COLOR_ERROR)
+					$g_bLeader = True
+					$sClanJoin = False
+					Return False
+				EndIf
+		ElseIf Not _WaitForCheckPixel($aIsClanChat, $g_bCapturePixel, Default, "") and _WaitForCheckPixel($aClanBadgeNoClan, $g_bCapturePixel, Default, "") Then ; If not Still in Clan
+			;CLick on green button if you dont is on clan, It is way 2
+			ClickP($aClanBadgeNoClan)
+			If _Sleep(100) Then Return
+		EndIf
+
+	; Open clans page
+	Local $aIsOnClanLabel = [640, 205, 0xDDF685, 20]
+	If _WaitForCheckPixel($aClanLabel, $g_bCapturePixel, Default, "GTFO: ClansLabel.") Then
+		; Announcement blue on clans page click
+		Local $aBlueAnnouncementClick = [658, 283, 0xB9E484, 20]
+		If _WaitForCheckPixel($aIsOnClanLabel, $g_bCapturePixel, Default, "GTFO: ClansLabel.") Then
+			ClickP($aBlueAnnouncementClick)
+			If _Sleep(100) Then Return
+
+			; Click on random clan
+			Click(295, 320 + (68 * Random(0, 6, 1)))
+			If ClickOkay("ClanHop") Then SetLog("GTFO|Leaving the clan for another.", $COLOR_INFO)
+
+			If _WaitForCheckPixel($aJoinClanBtn, $g_bCapturePixel, Default, "GTFO: Clan joined.") Then
+				ClickP($aJoinClanBtn)
+				Return True
+			EndIf
+		EndIf
+	EndIf
+	Setlog("ClanSaveAndJoiner|End ERROR", $COLOR_ERROR)
+	Return False
+EndFunc ;==> ClanSaveAndJoiner
+
 Func ClanHop($sClanJoin = False)
 
-	If Not $g_bChkGTFOClanHop Then Return
+	If BitOr($g_bLeader, $sClanJoin) Or (Not $g_bChkGTFOClanHop) Then Return
 
-	If $g_bLeader = True Then Return
 	SetLog("Start Clan Hopping", $COLOR_INFO)
 	Local $sTimeStartedHopping = _NowCalc()
 	Local $iPosJoinedClans = 0, $iScrolls = 0, $iHopLoops = 0, $iErrors = 0
-
-	Local $aJoinClanBtn[4] = [163, 515, 0x6DBB1F, 20] ; OK - Green Join Button on Chat Tab when you are not in a Clan
-	Local $aClanPage[4] = [764, 397, 0xF70D16, 20] ; OK - Red Leave Clan Button on Clan Page
-	Local $aClanPageJoin[4] = [764, 397, 0xDDF685, 20] ; OK - Green Join Clan Button on Clan Page
-	Local $aClanChat[4] = [86, 12, 0xC1BB91, 20] ; OK - Verify is in clan.
-	Local $aJoinClanPage[4] = [720, 310, 0xEBCC80, 20] ; Trophy Amount of Clan Background of first Clan
-	Local $aClanBadgeNoClan[4] = [151, 307, 0xF05538, 20] ; OK - Orange Tile of Clan Logo on Chat Tab if you are not in a Clan
-	Local $aShare[4] = [438, 190, 0xFFFFFF, 20] ; OK - Share clan
-	Local $aClanNameBtn[2] = [173, 19] ; OK - Button to open Clan Page from Chat Tab
-	Local $aCopy[4] = [512, 182, 0xDDF685, 20] ; OK - Copy button
-	Local $aSendRequest[4] = [528, 213, 0xE2F98A, 20]
 
 	$g_iCommandStop = 0 ; Halt Attacking
 
 	While 1
 		If $iErrors >= 10 Then
-			Local $y = 0
 			SetLog("Too Many Errors occured in current ClanHop Loop. Leaving ClanHopping!", $COLOR_ERROR)
-			While 1
-				If _Sleep(50) Then Return
-				If _ColorCheck(_GetPixelColor($aCloseChat[0], $aCloseChat[1], True), Hex($aCloseChat[2], 6), $aCloseChat[3]) Then
-					; Clicks chat Button
-					Click($aCloseChat[0], $aCloseChat[1], 1, 0, "#0173") ;Clicks chat close button
-					ExitLoop
-;~ 				ElseIf QuickMIS("BC1", $g_sImgDonateCloseWindow, 790, 0, 825, 220, True, False) Then ; RC Done
-;~ 					SetLog("Closing the Donate troops window!...", $COLOR_SUCCESS)
-;~ 					Click($g_iQuickMISWOffSetX, $g_iQuickMISWOffSetY)
-;~ 					;Add delay so donate window will get close
-;~ 					If _Sleep($DELAYDONATEWINDOW1) Then ExitLoop
-				Else
-					If _Sleep(100) Then Return
-					$y += 1
-					If $y > 30 Then
-						SetLog("Error finding Clan Tab to close.", $COLOR_ERROR)
-						AndroidPageError("ClanHop")
-						ExitLoop
-					EndIf
-				EndIf
-			WEnd
-			Return
-		EndIf
-
-		If $iScrolls >= 8 Then
-			CloseCoc(True) ; Restarting to get some new Clans
-			$iScrolls = 0
-			$iPosJoinedClans = 0
-		EndIf
-
-		ForceCaptureRegion()
-
-		OpenClanChat()
-
-		If $g_bClanJoin = True And $g_bChkGTFOClanHop = True Then
-			If Not _CheckPixel($aClanBadgeNoClan, $g_bCapturePixel) Then ; If Still in Clan
-				SetLog("Still in a Clan! Leaving the Clan now")
-				ClickP($aClanNameBtn)
-				If _WaitForCheckPixel($aClanPage, $g_bCapturePixel, Default, "Wait for Clan Page:") Then
-					ClickP($aClanPage)
-					If Not ClickOkay("ClanHop") Then
-						$g_bLeader = True
-						SetLog("Okay Button not found! Starting over again", $COLOR_ERROR)
-						$iErrors += 1
-						ContinueLoop
-					Else
-						SetLog("Successfully left Clan", $COLOR_SUCCESS)
-						If _Sleep(400) Then Return
-						Return
-					EndIf
-				Else
-					SetLog("Clan Page did not open! Starting over again", $COLOR_ERROR)
-					$iErrors += 1
-					ContinueLoop
-				EndIf
-			EndIf
-
-			ClickAwayChat(400)
-
-			Local $g_sTxtClanID = GUICtrlRead($g_hTxtClanID)
-
-			Local $sClaID = StringReplace($g_sTxtClanID, "#", "")
-			Setlog("Send : " & $sClaID, $COLOR_INFO)
-			AndroidAdbSendShellCommand("am start -n com.supercell.clashofclans/com.supercell.clashofclans.GameApp -a android.intent.action.VIEW -d 'https://link.clashofclans.com/?action=OpenClanProfile&tag=" & $sClaID & "'", Default)
-			Setlog("Wait")
-			If _Sleep(5500) Then Return
-			$sClanJoin = False
-
-			If _Sleep(100) Then Return
-			ClickP($aClanPageJoin)
-			If _Sleep(100) Then Return
-			ClickP($aSendRequest)
-			If _Sleep(100) Then Return
-
-			CloseClanChat()
-			Return
-
-		EndIf
-
-		If Not _CheckPixel($aClanBadgeNoClan, $g_bCapturePixel) Then ; If Still in Clan
-			SetLog("Still in a Clan! Leaving the Clan now")
-			ClickP($aClanNameBtn)
-			If $g_bFirstHop = True Then
-				If _WaitForCheckPixel($aShare, $g_bCapturePixel, Default, "Wait for Share") Then
-					ClickP($aShare)
-					If _WaitForCheckPixel($aCopy, $g_bCapturePixel, Default, "Wait for Copy") Then
-						Local $sData = 0
-						ClickP($aCopy)
-						Local $sData = ClipGet()
-						If _Sleep(250) Then Return
-						GUICtrlSetData($g_hTxtClanID, $sData)
-						$g_sTxtClanID = $sData
-						$g_bFirstHop = False
-					Else
-						SetLog("No Copy Button", $COLOR_ERROR)
-						$iErrors += 1
-						ContinueLoop
-					EndIf
-				Else
-					SetLog("No Share Button", $COLOR_ERROR)
-					$iErrors += 1
-					ContinueLoop
-				EndIf
-			EndIf
-
-			If _WaitForCheckPixel($aClanPage, $g_bCapturePixel, Default, "Wait for Clan Page:") Then
-				ClickP($aClanPage)
-				If Not ClickOkay("ClanHop") Then
-					$g_bLeader = True
-					SetLog("Okay Button not found! Starting over again", $COLOR_ERROR)
-					$iErrors += 1
-					ContinueLoop
-				Else
-					SetLog("Successfully left Clan", $COLOR_SUCCESS)
-					If _Sleep(400) Then Return
-				EndIf
-			Else
-				SetLog("Clan Page did not open! Starting over again", $COLOR_ERROR)
-				$iErrors += 1
-				ContinueLoop
-			EndIf
-		EndIf
-
-		If _CheckPixel($aJoinClanBtn, $g_bCapturePixel) Then ; Click on Green Join Button on Donate Window
-			SetLog("Opening Join Clan Page", $COLOR_INFO)
-			ClickP($aJoinClanBtn)
+			ExitLoop
 		Else
-			SetLog("Join Clan Button not visible! Starting over again", $COLOR_ERROR)
-			$iErrors += 1
-			ContinueLoop
+					If _Sleep(50) Then Return
+					If OpenClanChat() = False Then $iErrors += 1
+					If ClanSaveAndJoiner($sClanJoin, $g_bFirstHop) = False Then $iErrors += 1
+					ClickAwayChat(400)
 		EndIf
-
-		If Not _WaitForCheckPixel($aJoinClanPage, $g_bCapturePixel, Default, "Wait For Join Clan Page:") Then ; Wait For The golden Trophy Background of the First Clan in list
-			SetLog("Joinable Clans did not show.. Starting over again", $COLOR_ERROR)
-			$iErrors += 1
-			ContinueLoop
-		EndIf
-
-		;Go through all Clans of the list 1 by 1
-		If $iPosJoinedClans >= 7 Then
-			ClickDrag(333, 668, 333, 286, 300)
-			$iScrolls += 1
-			$iPosJoinedClans = 0
-		EndIf
-
-		Click(161, 286 + ($iPosJoinedClans * 55)) ; Open specific Clans Page
-		$iPosJoinedClans += 1
-		If _Sleep(300) Then Return
-		If Not _WaitForCheckPixel($aClanPageJoin, $g_bCapturePixel, Default, "Wait For Clan Page:") Then ; Check if Clan Page itself opened up
-			SetLog("Clan Page did not open. Starting over again", $COLOR_ERROR)
-			$iErrors += 1
-			ContinueLoop
-		EndIf
-
-		ClickP($aClanPageJoin) ; Join Clan
-		If _Sleep(1000) Then Return
-		UnderstandChatRules() ; December Update(2018)
-		If Not _WaitForCheckPixel($aClanChat, $g_bCapturePixel, Default, "Wait For Clan Chat:") Then ; Verify is in clan
-			SetLog("Could not verify loaded Clan Chat. Starting over again", $COLOR_ERROR)
-			$iErrors += 1
-			ContinueLoop
-		EndIf
-		Return
 	WEnd
+	LeaveClanHop()
 EndFunc   ;==>ClanHop
 
+Func LeaveClanHop()
+	If not $g_bChkGTFOReturnClan Then Return
+	Local $aJoinClanBtn[4] = [163, 515, 0x6DBB1F, 20] ; OK - Green Join Button on Chat Tab when you are not in a Clan
+    Local $aSendRequest[4] = [528, 213, 0xE2F98A, 20]
+
+	Setlog("GTFO|Joining to native clan.", $COLOR_INFO)
+	Local $g_sTxtClanID = GUICtrlRead($g_hTxtClanID)
+	Local $sClaID = StringReplace($g_sTxtClanID, "#", "")
+	Setlog("Send : " & $sClaID, $COLOR_INFO)
+	AndroidAdbSendShellCommand("am start -n com.supercell.clashofclans/com.supercell.clashofclans.GameApp -a android.intent.action.VIEW -d 'https://link.clashofclans.com/?action=OpenClanProfile&tag=" & $sClaID & "'", Default)
+	Setlog("Wait")
+	If _Sleep(5500) Then Return
+	$g_bLeader = True
+	ClickP($aJoinClanBtn)
+	If _Sleep(100) Then Return
+	ClickP($aSendRequest)
+	If _Sleep(100) Then Return
+	CloseClanChat()
+	Return
+EndFunc ;==> LeaveClanHop
 
 Func ClickAwayChat($iSleep = 10)
 	_Sleep($iSleep)
