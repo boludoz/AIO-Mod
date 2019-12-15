@@ -90,9 +90,9 @@ Global $cmbCSVSpeed[2] = [$LB, $DB]
 Global $icmbCSVSpeed[2] = [2, 2]
 Global $g_CSVSpeedDivider[2] = [1, 1] ; default CSVSpeed for DB & LB
 
+#Region Check Collectors Outside
 ; Check Collector Outside - Team AiO MOD++
 Global $g_bScanMineAndElixir = False
-#Region Check Collectors Outside
 ; Collectors Outside Filter
 Global $g_bDBMeetCollectorOutside = False, $g_iDBMinCollectorOutsidePercent = 80
 Global $g_bDBCollectorNearRedline = False, $g_iCmbRedlineTiles = 1

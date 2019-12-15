@@ -77,7 +77,7 @@ Func MainGTFO()
 		checkAttackDisable($g_iTaBChkIdle)
 
 		; Custom Train to be accurate
-		If not $_bFirstLoop Then TrainGTFO()
+		TrainGTFO()
 		$_bFirstLoop = False
 
 		MainKickout()
@@ -89,7 +89,7 @@ Func MainGTFO()
 			_ArrayShuffle($aRndFuncList)
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
-				_RunFunction($Index)
+				__RunFunction($Index)
 				If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 			Next
 		WEnd
@@ -330,18 +330,28 @@ Func DonateGTFO()
 	If $g_iLoop2 > $g_iTxtCyclesGTFO Then Return False
 EndFunc   ;==>DonateGTFO
 
+Func TestClanSaveAndJoiner()
+
+Local $sClanJoin = True, $g_bFirstHop = True
+ClanSaveAndJoiner($sClanJoin, $g_bFirstHop)
+	
+EndFunc
+
 Func ClanSaveAndJoiner(ByRef $sClanJoin, ByRef $g_bFirstHop)
 	Local $aClanBadgeNoClan[4] = [151, 307, 0xF05538, 20] ; OK - Orange Tile of Clan Logo on Chat Tab if you are not in a Clan
 	Local $aCopy[4] = [512, 182, 0xDDF685, 20] ; OK - Copy button
 	Local $aShare[4] = [438, 190, 0xFFFFFF, 20] ; OK - Share clan
-	Local $aClanPage[4] = [764, 397, 0xF70D16, 20] ; OK - Red Leave Clan Button on Clan Page
+	Local $aClanPage[4] = [821, 400, 0xFB5D63, 20] ; OK - Red Leave Clan Button on Clan Page
 	Local $aClanLabel[4] = [522, 70, 0xEDEDE8, 20] ; OK - Select white label
-	Local $aJoinClanBtn[4] = [163, 515, 0x6DBB1F, 20] ; OK - Green Join Button on Chat Tab when you are not in a Clan
+	Local $aJoinClanBtn[4] = [821, 400, 0xDBF583, 25] ; OK - Join Button on Tab 
 	Local $aIsClanChat[4] = [86, 12, 0xC1BB91, 20] ; OK - Verify is in clan.
-
-	If UnderstandChatRules() And _WaitForCheckPixel($aClanChat, $g_bCapturePixel, Default, "Wait For Clan Chat.") Then ; If Still in Clan
+	Local $aNoClanBtn[4] = [163, 515, 0x6DBB1F, 20] ; OK - Green Join Button on Chat Tab when you are not in a Clan
+	
+	UnderstandChatRules() 
+	
+	If _WaitForCheckPixel($aIsClanChat, $g_bCapturePixel, Default, "Wait For Clan Chat.") Then ; If Still in Clan
 			SetLog("Still in a Clan! Leaving the Clan now")
-			ClickP($aClanChat)
+			ClickP($aIsClanChat)
 				#Region Start (only if had g_bChkGTFOReturnClan)
 				If $g_bFirstHop = True and $g_bChkGTFOReturnClan = True Then
 					If _WaitForCheckPixel($aShare, $g_bCapturePixel, Default, "Wait for Share") Then
@@ -373,7 +383,7 @@ Func ClanSaveAndJoiner(ByRef $sClanJoin, ByRef $g_bFirstHop)
 					$sClanJoin = False
 					Return False
 				EndIf
-		ElseIf Not _WaitForCheckPixel($aIsClanChat, $g_bCapturePixel, Default, "") and _WaitForCheckPixel($aClanBadgeNoClan, $g_bCapturePixel, Default, "") Then ; If not Still in Clan
+		ElseIf Not _WaitForCheckPixel($aIsClanChat, $g_bCapturePixel, Default, "") Or _WaitForCheckPixel($aClanBadgeNoClan, $g_bCapturePixel, Default, "") Then ; If not Still in Clan
 			;CLick on green button if you dont is on clan, It is way 2
 			ClickP($aClanBadgeNoClan)
 			If _Sleep(100) Then Return
@@ -381,6 +391,7 @@ Func ClanSaveAndJoiner(ByRef $sClanJoin, ByRef $g_bFirstHop)
 
 	; Open clans page
 	Local $aIsOnClanLabel = [640, 205, 0xDDF685, 20]
+	Local $aClansBtns = [359, 302, 0xBABB9C, 20]
 	If _WaitForCheckPixel($aClanLabel, $g_bCapturePixel, Default, "GTFO: ClansLabel.") Then
 		; Announcement blue on clans page click
 		Local $aBlueAnnouncementClick = [658, 283, 0xB9E484, 20]
@@ -389,22 +400,43 @@ Func ClanSaveAndJoiner(ByRef $sClanJoin, ByRef $g_bFirstHop)
 			If _Sleep(100) Then Return
 
 			; Click on random clan
-			Click(295, 320 + (68 * Random(0, 6, 1)))
-			If ClickOkay("ClanHop") Then SetLog("GTFO|Leaving the clan for another.", $COLOR_INFO)
-
-			If _WaitForCheckPixel($aJoinClanBtn, $g_bCapturePixel, Default, "GTFO: Clan joined.") Then
-				ClickP($aJoinClanBtn)
-				Return True
+			If _WaitForCheckPixel($aClansBtns, $g_bCapturePixel, Default, "GTFO: Clans btn.") Then
+				Click(295, 320 + (68 * Random(0, 6, 1))) 
+				Else
+				Return False
 			EndIf
+			
+			If _Sleep(100) Then Return
+
+			If _WaitForCheckPixel($aJoinClanBtn, $g_bCapturePixel, Default, "GTFO: Clan joiner.") Then
+				ClickP($aJoinClanBtn) 
+				Else
+				Return False
+			EndIf
+			
+			If _Sleep(100) Then Return
+			
+			Local $i = 10
+			
+			While $i > 0
+				If ClickOkay("ClanHop") Then ExitLoop
+				If _Sleep(1000) Then Return False
+				$i -= 1
+			WEnd
+			
+			If $i > 0 Then SetLog("GTFO|Leaving the clan for another.", $COLOR_INFO)
+			Return UnderstandChatRules()
+		
 		EndIf
 	EndIf
+	
 	Setlog("ClanSaveAndJoiner|End ERROR", $COLOR_ERROR)
 	Return False
 EndFunc ;==> ClanSaveAndJoiner
 
 Func ClanHop($sClanJoin = False)
 
-	If BitOr($g_bLeader, $sClanJoin) Or (Not $g_bChkGTFOClanHop) Then Return
+	;If BitOr($g_bLeader, $sClanJoin) Or (Not $g_bChkGTFOClanHop) Then Return
 
 	SetLog("Start Clan Hopping", $COLOR_INFO)
 	Local $sTimeStartedHopping = _NowCalc()
@@ -419,7 +451,13 @@ Func ClanHop($sClanJoin = False)
 		Else
 					If _Sleep(50) Then Return
 					If OpenClanChat() = False Then $iErrors += 1
-					If ClanSaveAndJoiner($sClanJoin, $g_bFirstHop) = False Then $iErrors += 1
+					
+					If ClanSaveAndJoiner($sClanJoin, $g_bFirstHop) = False Then 
+						$iErrors += 1
+						Else
+						SetLog("GTFO|Hop ok.", $COLOR_SUCCESS)
+					EndIf
+					
 					ClickAwayChat(400)
 		EndIf
 	WEnd
@@ -428,8 +466,8 @@ EndFunc   ;==>ClanHop
 
 Func LeaveClanHop()
 	If not $g_bChkGTFOReturnClan Then Return
-	Local $aJoinClanBtn[4] = [163, 515, 0x6DBB1F, 20] ; OK - Green Join Button on Chat Tab when you are not in a Clan
     Local $aSendRequest[4] = [528, 213, 0xE2F98A, 20]
+	Local $aNoClanBtn[4] = [163, 515, 0x6DBB1F, 20] ; OK - Green Join Button on Chat Tab when you are not in a Clan
 
 	Setlog("GTFO|Joining to native clan.", $COLOR_INFO)
 	Local $g_sTxtClanID = GUICtrlRead($g_hTxtClanID)
@@ -439,7 +477,7 @@ Func LeaveClanHop()
 	Setlog("Wait")
 	If _Sleep(5500) Then Return
 	$g_bLeader = True
-	ClickP($aJoinClanBtn)
+	ClickP($aNoClanBtn)
 	If _Sleep(100) Then Return
 	ClickP($aSendRequest)
 	If _Sleep(100) Then Return
