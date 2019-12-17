@@ -94,57 +94,22 @@ Func BoostTrainBuilding($sName, $iCmbBoost, $iCmbBoostCtrl)
 	Return $bBoosted
 EndFunc   ;==>BoostTrainBuilding
 
-; #FUNCTION# ====================================================================================================================
-; Name ..........: -
-; Description ...:
-; Syntax ........: BoostTrainingPotion()
-; Parameters ....:
-; Return values .: None
-; Author ........: Demen - 2018 - (FOR RK MOD)
-; Modified ......: 
-; Related .......:
-; Link ..........: https://github.com/MyBotRun/MyBot/wiki
-; Example .......: No
-; ===============================================================================================================================
-
-Func BoostTrainingPotion()
+Func BoostEverything()
 	; Verifying existent Variables to run this routine
-	If Not AllowBoosting("Training Potion", $g_iCmbBoostTrainingPotion) Then Return
+	If Not AllowBoosting("Everything", $g_iCmbBoostEverything) Then Return
 
-	SetLog("Boosting Training Potion", $COLOR_INFO)
+	SetLog("Boosting Everything", $COLOR_INFO)
 	If $g_aiTownHallPos[0] = "" Or $g_aiTownHallPos[0] = -1 Then
 		LocateTownHall()
 		SaveConfig()
 		If _Sleep($DELAYBOOSTBARRACKS2) Then Return
 	EndIf
 
-	Local Static $iLastTimeChecked[8] = [0, 0, 0, 0, 0, 0, 0, 0], $iDateCalc
-	$iDateCalc = _DateDiff('n', $iLastTimeChecked[$g_iCurAccount], _NowCalc())
-
-	If $iLastTimeChecked[$g_iCurAccount] = 0 Or $iDateCalc > 50 Then
-		; Chek if the Boost is running
-		If OpenArmyOverview(True, "BoostTrainingPotion()") Then
-			If Not OpenTroopsTab(True, "BoostTrainingPotion()") Then Return
-			Local $aBoostBtn = findButton("BoostBarrack")
-			If IsArray($aBoostBtn) Then
-				ClickP($aAway, 2, 0, "#0161")
-				If _Sleep(1000) Then Return
-
-				Local $bChecked = BoostPotion("Training Potion", "Town Hall", $g_aiTownHallPos, $g_iCmbBoostTrainingPotion, $g_hCmbBoostTrainingPotion) = _NowCalc()
-				If Not $bChecked Then Return False
-				$g_aiTimeTrain[0] = 0 ; reset Troop remaining time
-				$g_aiTimeTrain[1] = 0 ; reset Spells remaining time
-				$g_aiTimeTrain[2] = 0 ; reset Heroes remaining time
-				$iLastTimeChecked[$g_iCurAccount] = _NowCalc() ; Reset the Check Timer
-				Return True
-			Else
-				SetLog("Training Potion is already Boosted", $COLOR_INFO)
-			EndIf
-			ClickP($aAway, 2, 0, "#0161")
-		EndIf
-	EndIf
+	Return BoostPotion("Everything", "Town Hall", $g_aiTownHallPos, $g_iCmbBoostEverything, $g_hCmbBoostEverything) = _NowCalc()
+	$g_aiTimeTrain[0] = 0 ; reset Troop remaining time
+	$g_aiTimeTrain[1] = 0 ; reset Spells remaining time
+	$g_aiTimeTrain[2] = 0 ; reset Heroes remaining time
 
 	If _Sleep($DELAYBOOSTBARRACKS3) Then Return
 	checkMainScreen(False) ; Check for errors during function
-	Return False
-EndFunc   ;==>BoostTrainingPotion
+EndFunc   ;==>BoostEverything

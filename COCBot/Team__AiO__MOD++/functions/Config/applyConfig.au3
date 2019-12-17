@@ -160,9 +160,6 @@ Func ApplyConfig_MOD_600_6($TypeReadSave)
 			Next
 			;GUICtrlSetBkColor($g_hBtnMagicItemsConfig, $g_bChkCollectMagicItems = True ? $COLOR_GREEN : $COLOR_RED)
 			btnDDApply()
-
-			; BB Suggested Upgrades
-			GUICtrlSetState($g_hChkBBIgnoreWalls, $g_bChkBBIgnoreWalls = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 		Case "Save"
 			For $i = 0 To $g_iDDCount - 1
 				$g_abChkDD_Deals[$i] = (GUICtrlRead($g_ahChkDD_Deals[$i]) = $GUI_CHECKED)
@@ -174,9 +171,6 @@ Func ApplyConfig_MOD_600_6($TypeReadSave)
 			$g_iTxtBBTrophyUpperLimit = GUICtrlRead($g_hTxtBBTrophyUpperLimit)
 			$g_bChkBBAttIfLootAvail = (GUICtrlRead($g_hChkBBAttIfLootAvail) = $GUI_CHECKED)
 			$g_bChkBBWaitForMachine = (GUICtrlRead($g_hChkBBWaitForMachine) = $GUI_CHECKED)
-
-			; BB Suggested Upgrades
-			$g_bChkBBIgnoreWalls = (GUICtrlRead($g_hChkBBIgnoreWalls) = $GUI_CHECKED)
 	EndSwitch
 EndFunc   ;==>ApplyConfig_MOD_600_6
 

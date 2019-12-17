@@ -383,7 +383,7 @@ Func ClanSaveAndJoiner(ByRef $sClanJoin, ByRef $g_bFirstHop)
 					$sClanJoin = False
 					Return False
 				EndIf
-		ElseIf Not _WaitForCheckPixel($aIsClanChat, $g_bCapturePixel, Default, "") Or _WaitForCheckPixel($aClanBadgeNoClan, $g_bCapturePixel, Default, "") Then ; If not Still in Clan
+		ElseIf Not _WaitForCheckPixel($aIsClanChat, $g_bCapturePixel, Default, "") And _WaitForCheckPixel($aClanBadgeNoClan, $g_bCapturePixel, Default, "") And not UnderstandChatRules() Then ; If not Still in Clan
 			;CLick on green button if you dont is on clan, It is way 2
 			ClickP($aClanBadgeNoClan)
 			If _Sleep(100) Then Return

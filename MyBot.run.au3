@@ -762,8 +762,7 @@ Func runBot() ;Bot that runs everything in order
 			If _Sleep($DELAYRUNBOT5) Then Return
 			checkMainScreen(False)
 			If $g_bRestart Then ContinueLoop
-            ;Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectFreeMagicItems', 'DailyChallenge'] ; AIO Mod
-            Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectFreeMagicItems'] ; AIO Mod
+            Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectFreeMagicItems', 'DailyChallenge'] ; AIO Mod
 			_ArrayShuffle($aRndFuncList)
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
@@ -784,7 +783,7 @@ Func runBot() ;Bot that runs everything in order
 					If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 				Next
 				If $g_bRestart Then ContinueLoop
-				Local $aRndFuncList = ['BoostBarracks', 'BoostSpellFactory', 'BoostWorkshop', 'BoostKing', 'BoostQueen', 'BoostWarden']
+                Local $aRndFuncList = ['BoostBarracks', 'BoostSpellFactory', 'BoostWorkshop', 'BoostKing', 'BoostQueen', 'BoostWarden', 'BoostChampion']
 				_ArrayShuffle($aRndFuncList)
 				For $Index In $aRndFuncList
 					If Not $g_bRunState Then Return
@@ -1178,8 +1177,11 @@ Func __RunFunction($action)
 		Case "BoostWarden"
 			BoostWarden()
 			_Sleep($DELAYRESPOND)
-		Case "BoostTrainingPotion"
-			BoostTrainingPotion()
+        Case "BoostChampion"
+            BoostChampion()
+            _Sleep($DELAYRESPOND)
+		Case "BoostEverything"
+			BoostEverything()
 			_Sleep($DELAYRESPOND)
 		Case "DailyChallenge"
 			DailyChallenges()

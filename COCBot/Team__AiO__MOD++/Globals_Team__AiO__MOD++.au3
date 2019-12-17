@@ -81,10 +81,6 @@ Global $g_eDDPotionTrain = 0, $g_eDDPotionClock = 1, $g_eDDPotionResearch = 2, $
 		$g_eDDRuneBBGold = 17, $g_eDDRuneBBElixir = 18
 #EndRegion
 
-; BB Suggested Upgrades
-Global $g_bChkBBIgnoreWalls = False
-
-
 ; CSV Deploy Speed - Team AiO MOD++
 Global $cmbCSVSpeed[2] = [$LB, $DB]
 Global $icmbCSVSpeed[2] = [2, 2]
