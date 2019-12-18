@@ -50,6 +50,22 @@ Func _Sleep($iDelay, $iSleep = True, $CheckRunState = True, $SleepWhenPaused = T
 
 	debugGdiHandle("_Sleep")
 	CheckBotRequests() ; check if bot window should be moved, minized etc.
+	
+	#Region - AIO ++ - More delay / start
+	Local $iOri = $iDelay
+	If $g_bUseSleep and not BitAND($g_bNoAttackSleep, $g_bAttackActive) Then 
+        $iDelay = Int($iDelay + ($iDelay * $g_iIntSleep) / 100)
+		If $g_bUseRandomSleep Then 
+			If $g_iIntSleep < 0 Then 
+				$iDelay = Abs(Random($iDelay, $iOri, 1))
+			ElseIf $g_iIntSleep > 0 Then 
+				$iDelay = Abs(Random($iOri, $iDelay, 1))
+			EndIf
+		EndIf
+	EndIf
+			
+	; Setlog("Delay/Sleep : " & $iDelay & " - " & $g_bUseRandomSleep & " - " & $g_iIntSleep, $COLOR_YELLOW)
+    #Region - AIO ++ - More delay / end
 
 	If SetCriticalMessageProcessing() = False Then
 

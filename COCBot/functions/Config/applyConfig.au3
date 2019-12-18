@@ -134,6 +134,8 @@ Func applyConfig($bRedrawAtExit = True, $TypeReadSave = "Read") ;Applies the dat
 	ApplyConfig_641_1($TypeReadSave)
 
 	; <><><> Team AiO MOD++ (2019) <><><>
+	; <><><> MiscTab <><><>
+	ApplyConfig_MOD_MiscTab($TypeReadSave)
 	; <><><> SuperXP / GoblinXP <><><>
 	ApplyConfig_MOD_SuperXP($TypeReadSave)
 	; <><><> ChatActions <><><>

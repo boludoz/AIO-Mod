@@ -13,6 +13,17 @@
 ; Example .......: No
 ; ===============================================================================================================================
 ;<><><> Team AiO MOD++ (2019) <><><>
+Func SaveConfig_MOD_MiscTab()
+	; <><><> MiscTab <><><>
+	_Ini_Add("CustomDelay", "UseSleep", $g_bUseSleep)
+	_Ini_Add("CustomDelay", "IntSleep", $g_iIntSleep)
+	_Ini_Add("CustomDelay", "UseRandomSleep", $g_bUseRandomSleep)
+	_Ini_Add("CustomDelay", "NoAttackSleep", $g_bNoAttackSleep)
+	_Ini_Add("CustomDelay", "DeployCastleFirst", $g_bDeployCastleFirst)
+	_Ini_Add("CustomDelay", "DisableColorLog", $g_bDisableColorLog)
+	_Ini_Add("CustomDelay", "AvoidLocation", $g_bAvoidLocation)
+EndFunc   ;==>SaveConfig_MOD_MiscTab
+
 Func SaveConfig_MOD_SuperXP()
 	; <><><> SuperXP / GoblinXP <><><>
 	ApplyConfig_MOD_SuperXP(GetApplyConfigSaveAction())

@@ -13,6 +13,18 @@
 ; Example .......: No
 ; ===============================================================================================================================
 ;<><><> Team AiO MOD++ (2019) <><><>
+Func ReadConfig_MOD_MiscTab()
+	; <><><> MiscTab <><><>
+	IniReadS($g_bUseSleep, $g_sProfileConfigPath, "CustomDelay", "UseSleep", True, "Bool")
+	IniReadS($g_iIntSleep, $g_sProfileConfigPath, "CustomDelay", "IntSleep", 20, "Int")
+	IniReadS($g_bUseRandomSleep, $g_sProfileConfigPath, "CustomDelay", "UseRandomSleep", False, "Bool")
+	IniReadS($g_bNoAttackSleep, $g_sProfileConfigPath, "CustomDelay", "NoAttackSleep", False, "Bool")
+	IniReadS($g_bDeployCastleFirst, $g_sProfileConfigPath, "CustomDelay", "DeployCastleFirst", False, "Bool")
+	IniReadS($g_bDisableColorLog, $g_sProfileConfigPath, "CustomDelay", "DisableColorLog", False, "Bool")
+	IniReadS($g_bAvoidLocation, $g_sProfileConfigPath, "CustomDelay", "AvoidLocation", False, "Bool")
+
+EndFunc   ;==>ReadConfig_MOD_MiscTab
+
 Func ReadConfig_MOD_SuperXP()
 	; <><><> SuperXP / GoblinXP <><><>
 	IniReadS($g_bEnableSuperXP, $g_sProfileConfigPath, "SuperXP", "EnableSuperXP", $g_bEnableSuperXP, "Bool")

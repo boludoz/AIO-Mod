@@ -257,6 +257,24 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 	$g_bIsHeroesDropped = False
 	$g_aiDeployHeroesPosition[0] = -1
 	$g_aiDeployHeroesPosition[1] = -1
+	
+    # AIO ++ Mod (Samkie inspired|By Boludoz)
+    If $g_bDeployCastleFirst Then
+		Local $aFilled[1][5] = [[0, 0, 0, 0, 0]]
+        Local $iPos = -1
+		
+        For $i = 0 To UBound($listInfoDeploy) - 1
+            If IsString($listInfoDeploy[$i][0]) And $listInfoDeploy[$i][0] = "CC" Then
+					For $iF = 0 to UBound($aFilled, 2) -1
+						$aFilled[0][$iF] = $listInfoDeploy[$i][$iF]
+					Next
+					_ArrayInsert($listInfoDeploy, 0, $aFilled)
+					_ArrayDelete($listInfoDeploy, $i+1)
+                ExitLoop
+            EndIf
+        Next
+	Endif
+    # AIO ++ Mod (Samkie inspired|ByBoludoz)
 
 	LaunchTroop2($listInfoDeploy, $g_iClanCastleSlot, $g_iKingSlot, $g_iQueenSlot, $g_iWardenSlot, $g_iChampionSlot)
 

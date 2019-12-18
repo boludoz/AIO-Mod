@@ -4,6 +4,13 @@
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
                     Based on MyBot.run v7.8.1
+	**V3.1.4b**
+	» Added:
+        • Misc tab: 
+			- Sleep as human (human time for all bot / attack / clicks / random option) (lower / higher CPU consumption).
+			- Deploy the castle first for all modes. (Include CSV - SamM0d inspired - THX Samkie)
+			- Avoid the location of buildings for the first time.
+
 	**V3.1.3**
 	» Added:
         • Eloy GUI !!!.

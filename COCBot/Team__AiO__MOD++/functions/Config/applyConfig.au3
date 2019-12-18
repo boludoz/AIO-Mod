@@ -13,6 +13,30 @@
 ; Example .......: No
 ; ===============================================================================================================================
 ;<><><> Team AiO MOD++ (2019) <><><>
+Func ApplyConfig_MOD_MiscTab($TypeReadSave)
+	; <><><> MiscTab <><><>
+	Switch $TypeReadSave
+		Case "Read"
+			GUICtrlSetState($g_hUseSleep, $g_bUseSleep = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetData($g_hIntSleep, $g_iIntSleep)
+			GUICtrlSetState($g_hUseRandomSleep, $g_bUseRandomSleep = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hNoAttackSleep, $g_bNoAttackSleep = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hDeployCastleFirst, $g_bDeployCastleFirst = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hDisableColorLog, $g_bDisableColorLog = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hAvoidLocation, $g_bAvoidLocation = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			chkDelayMod()
+		Case "Save"
+			$g_bUseSleep = (GUICtrlRead($g_hUseSleep) = $GUI_CHECKED) ? 1 : 0
+			$g_iIntSleep = Int(GUICtrlRead($g_hIntSleep))
+			$g_bUseRandomSleep = (GUICtrlRead($g_hUseRandomSleep) = $GUI_CHECKED) ? 1 : 0
+			$g_bNoAttackSleep = (GUICtrlRead($g_hNoAttackSleep) = $GUI_CHECKED) ? 1 : 0
+			$g_bDeployCastleFirst = (GUICtrlRead($g_hDeployCastleFirst) = $GUI_CHECKED) ? 1 : 0
+			$g_bDisableColorLog = (GUICtrlRead($g_hDisableColorLog) = $GUI_CHECKED) ? 1 : 0
+			$g_bAvoidLocation = (GUICtrlRead($g_hAvoidLocation) = $GUI_CHECKED) ? 1 : 0
+	EndSwitch
+
+EndFunc   ;==>ApplyConfig_MOD_MiscTab
+
 Func ApplyConfig_MOD_SuperXP($TypeReadSave)
 	; <><><> SuperXP / GoblinXP <><><>
 	Switch $TypeReadSave

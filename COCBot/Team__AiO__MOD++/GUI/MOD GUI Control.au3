@@ -22,6 +22,28 @@
 #include "MOD GUI Control - AiO-Debug.au3"
 #include "MOD GUI Control - MagicItems.au3"
 
+; Misc tab - Team AiO MOD++
+Func chkDelayMod()
+	GUICtrlSetState($g_hDisableColorLog, $GUI_DISABLE)
+	$g_bUseSleep = (GUICtrlRead($g_hUseSleep) = $GUI_CHECKED)
+	$g_iIntSleep = Int(GUICtrlRead($g_hIntSleep))
+	$g_bUseRandomSleep = (GUICtrlRead($g_hUseRandomSleep) = $GUI_CHECKED)
+	$g_bNoAttackSleep = (GUICtrlRead($g_hNoAttackSleep) = $GUI_CHECKED)
+	$g_bDeployCastleFirst = (GUICtrlRead($g_hDeployCastleFirst) = $GUI_CHECKED)
+	$g_bDisableColorLog = (GUICtrlRead($g_hDisableColorLog) = $GUI_CHECKED)
+	$g_bAvoidLocation = (GUICtrlRead($g_hAvoidLocation) = $GUI_CHECKED)
+	GUICtrlSetData($g_hDelayLabel, $g_iIntSleep)
+	If $g_bUseSleep Then
+		GUICtrlSetState($g_hIntSleep, $GUI_ENABLE)
+		GUICtrlSetState($g_hUseRandomSleep, $GUI_ENABLE)
+		GUICtrlSetState($g_hNoAttackSleep, $GUI_ENABLE)
+	Else
+		GUICtrlSetState($g_hIntSleep, $GUI_DISABLE)
+		GUICtrlSetState($g_hUseRandomSleep, $GUI_DISABLE)
+		GUICtrlSetState($g_hNoAttackSleep, $GUI_DISABLE)
+	EndIf
+EndFunc
+
 ; Classic Four Finger - Team AiO MOD++
 Func cmbStandardDropSidesAB() ; avoid conflict between FourFinger and SmartAttack
 	If _GUICtrlComboBox_GetCurSel($g_hCmbStandardDropSidesAB) = 4 Then

@@ -259,6 +259,8 @@ Func ReadRegularConfig()
 	ReadConfig_641_1()
 
 	; <><><> Team AiO MOD++ (2019) <><><>
+	; <><><> MiscTab <><><>
+	ReadConfig_MOD_MiscTab()
 	; <><><> SuperXP / GoblinXP <><><>
 	ReadConfig_MOD_SuperXP()
 	; <><><> ChatActions <><><>
