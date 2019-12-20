@@ -16,7 +16,10 @@
 Func SelectDropTroop($iSlotIndex, $iClicks = 1, $iDelay = Default, $bCheckAttackPage = Default)
 	If $iDelay = Default Then $iDelay = 0
 	If $bCheckAttackPage = Default Then $bCheckAttackPage = True
-	If Not $bCheckAttackPage Or IsAttackPage() Then ClickP(GetSlotPosition($iSlotIndex), $iClicks, $iDelay, "#0111")
+	#Region - Prevent dead slots click - Team AIO Mod++
+	Local $aSlotPos = GetSlotPosition($iSlotIndex)
+	If Not $bCheckAttackPage Or BitAND(IsAttackPage(), not IsSlotDead($aSlotPos, True)) Then ClickPDrop($aSlotPos, $iClicks, $iDelay, "#0111")
+	#EndRegion
 EndFunc   ;==>SelectDropTroop
 
 Func GetSlotPosition($iSlotIndex, $bOCRPosition = False)

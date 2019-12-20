@@ -65,7 +65,7 @@ Func Collect($bCheckTreasury = True)
 				$bArrayExist = False
 			EndIf
 		Next
-		If $bArrayExist then BoostResourcePotion($aCollectXY[$t][0], $aCollectXY[$t][1] + 40) ; MOD - AIO Team
+		If $bArrayExist then ResourceBoost($aCollectXY[$t][0], $aCollectXY[$t][1] + 40) ; MOD - AIO Team
 	EndIf
 
 	If _Sleep($DELAYCOLLECT3) Then Return

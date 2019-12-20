@@ -7,10 +7,11 @@
 	**V3.1.4b**
 	» Added:
         • Magic items:
-			- Enabled resource potion. - No *
+			- Enabled resource potion.
+			- Enabled builder potion.
 
         • Builder base: 
-			- Auto camps. - No *
+			- Camps fill. *No
 			
         • Misc tab: 
 			- Sleep as human (human time for all bot / attack / clicks / random option) (lower / higher CPU consumption).
@@ -27,6 +28,8 @@
 			- Umbral disabled.
 			- No League / Meet one then attack fix.
 			- Restored and updated custom AIO MBRBot.dll. 
+	» Improved:
+			- Prevent dead slots click.
 
 	**V3.1.3**
 	» Added:

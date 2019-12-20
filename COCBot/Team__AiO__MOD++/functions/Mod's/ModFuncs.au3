@@ -303,3 +303,40 @@ Func UnderstandChatRules()
 		If _Sleep(500) Then Return
 	EndIf
 EndFunc
+
+; #FUNCTION# ====================================================================================================================
+; Name ..........: IsSlotDead
+; Description ...: If Is Slot Dead Return True
+; Syntax ........: IsSlotDead($iSlotNumber)
+; Parameters ....: $iSlotNumber               - an unknown value.
+; Return values .: None
+; Author ........: Boludoz (8/3/2019)
+; Modified ......:
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
+;                  MyBot is distributed under the terms of the GNU GPL
+; Related .......:
+; Link ..........: https://github.com/MyBotRun/MyBot/wiki
+; Example .......: IsSlotDead(1)
+; ===============================================================================================================================
+Func IsSlotDead($iSlotNumber, $bIndex = False)
+	Local $aSlotPosition = ($bIndex) ? (GetSlotPosition($iSlotNumber)) : ($iSlotNumber)
+	Local $aSearchOpp[3][3] = [[0x656565, 1, 1], [0x656565, 2, 1], [0x656565, 3, 1]]
+	Local $aSearchOpp_2[3][3] = [[0x000000, 1, 0], [0x505050, 0, 1], [0x515151, 1, 1]]
+	Local $aSearchOpp_3[3][3] = [[0x5B5B5B, 1, 1], [0x5B5B5B, 2, 1], [0x5B5B5B, 3, 1]]
+	
+	For $i = 0 To 3 
+		If _MultiPixelSearch($aSlotPosition[0] - 25, $aSlotPosition[1] -20 , $aSlotPosition[0], $aSlotPosition[1], -2, 1, Hex(0x000000, 6), $aSearchOpp, 25) <> 0 Then Return True ; Normal Slot
+		If _MultiPixelSearch($aSlotPosition[0] - 25, $aSlotPosition[1] -20 , $aSlotPosition[0], $aSlotPosition[1], -2, 1, Hex(0x000000, 6), $aSearchOpp_2, 25) <> 0 Then Return True ; King/Big Slot		
+		If _MultiPixelSearch($aSlotPosition[0] - 25, $aSlotPosition[1] -20 , $aSlotPosition[0], $aSlotPosition[1], -2, 1, Hex(0x000000, 6), $aSearchOpp_3, 25) <> 0 Then Return True ; Spell		
+		Sleep(10)
+	Next
+	
+	Return False
+EndFunc   ;==>IsSlotDead
+
+; ClickPDrop : takes an array[2] (or array[4]) as a parameter [x,y], prevent Click in switch 
+Func ClickPDrop($point, $howMuch = 1, $speed = 0, $debugtxt = "")
+		Local $iX = Abs(Number($point[0]) - Random(-4, 4, 1)), $iY = Abs(Number($g_iGAME_HEIGHT) - Random(52, 86, 1))
+        If $g_bDebugClick Then SetLog("ClickPDrop " & $point[0] & "," & $iY & "," & $howMuch & "," & $speed & " " & $debugtxt, $COLOR_YELLOW, "Verdana", "7.5", 0)
+		Click($iX, $iY, $howMuch, $speed, $debugtxt)
+EndFunc   ;==>ClickPDrop
