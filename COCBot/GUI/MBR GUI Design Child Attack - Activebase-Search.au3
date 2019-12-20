@@ -193,7 +193,7 @@ Func CreateAttackSearchActiveBaseSearch()
 							   GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "CmbMeetGE_Info_03", -1) & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "CmbMeetGE_Info_04", -1))
 			GUICtrlSetOnEvent(-1, "cmbABGoldElixir")
-			
+
 Local $sMinUmbralTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "Txt_MinUmbralTip", "Recover what I spent in the army in minimum percentage, 0 = Disabled.")
 
 		$g_hTxtABMinGold = GUICtrlCreateInput("80000", $x + 85, $y, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
@@ -202,10 +202,10 @@ Local $sMinUmbralTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Searc
 			GUICtrlSetLimit(-1, 6)
 			GUICtrlSetBkColor(-1, 0xD1DFE7)
 		; Gold AB - Team AiO MOD++
-		$g_hMinArmyUmbralGoldAB = GUICtrlCreateInput("0", $x + 85 + 75, $y, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
-			_GUICtrlSetTip(-1, $sMinUmbralTip)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
-			GUICtrlCreateLabel("%", $x + 85 + 85 + 20, $y, 12, 17)
+;~ 		$g_hMinArmyUmbralGoldAB = GUICtrlCreateInput("0", $x + 85 + 75, $y, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
+;~ 			_GUICtrlSetTip(-1, $sMinUmbralTip)
+;~ 			GUICtrlSetBkColor(-1, 0xD1DFE7)
+;~ 			GUICtrlCreateLabel("%", $x + 85 + 85 + 20, $y, 12, 17)
 
 		$g_hPicABMinGold = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 137, $y, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
@@ -217,10 +217,10 @@ Local $sMinUmbralTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Searc
 			GUICtrlSetLimit(-1, 6)
 			GUICtrlSetBkColor(-1, 0xD1DFE7)
 		; Elixir AB - Team AiO MOD++
-		$g_hMinArmyUmbralElixirAB = GUICtrlCreateInput("0", $x + 85 + 75, $y + 1, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
-			_GUICtrlSetTip(-1, $sMinUmbralTip)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
-			GUICtrlCreateLabel("%", $x + 85 + 85 + 20, $y + 1, 12, 17)
+;~ 		$g_hMinArmyUmbralElixirAB = GUICtrlCreateInput("0", $x + 85 + 75, $y + 1, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
+;~ 			_GUICtrlSetTip(-1, $sMinUmbralTip)
+;~ 			GUICtrlSetBkColor(-1, 0xD1DFE7)
+;~ 			GUICtrlCreateLabel("%", $x + 85 + 85 + 20, $y + 1, 12, 17)
 
 		$g_hPicABMinElixir = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnElixir, $x + 137, $y, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
@@ -233,10 +233,10 @@ Local $sMinUmbralTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Searc
 			GUICtrlSetBkColor(-1, 0xD1DFE7)
 			GUICtrlSetState (-1, $GUI_HIDE)
 		; Plus AB - Team AiO MOD++
-		$g_hMinArmyUmbralPlusAB = GUICtrlCreateInput("0", $x + 85 + 75, $y + 35, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
-			_GUICtrlSetTip(-1, $sMinUmbralTip)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
-			GUICtrlCreateLabel("%", $x + 85 + 85 + 20, $y + 35, 12, 17)
+;~ 		$g_hMinArmyUmbralPlusAB = GUICtrlCreateInput("0", $x + 85 + 75, $y + 35, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
+;~ 			_GUICtrlSetTip(-1, $sMinUmbralTip)
+;~ 			GUICtrlSetBkColor(-1, 0xD1DFE7)
+;~ 			GUICtrlCreateLabel("%", $x + 85 + 85 + 20, $y + 35, 12, 17)
 
 		$g_hPicABMinGPEGold = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnGoldElixir, $x + 137, $y + 1, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)

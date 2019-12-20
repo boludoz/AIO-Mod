@@ -156,16 +156,16 @@ Func ParseAttackCSV($debug = False)
 							EndSwitch
 							If CheckCsvValues("MAKE", 1, $value1) And CheckCsvValues("MAKE", 5, $value5) Then
 								$sTargetVectors = StringReplace($sTargetVectors, $value3, "", Default, $STR_NOCASESENSEBASIC) ; if re-making a vector, must remove from target vector string
-								If CheckCsvValues("MAKE", 8, $value8) Then ; Vector is targeted towards building v7.2
+								If CheckCsvValues("MAKE", 8, $value8) Then ; Vector is targeted towards building 
 									; new field definitions:
 									; $side = target side string
-									; value3 = Drop point count can be 1 or 5 value only
-									; value4 = addtiles Ignore if value3 = 5, only used when dropping in sigle point
+									; value3 = Drop points can be 1,3,5,7... ODD number Only e.g if 5=[2, 1, 0, -1, -2] will Add tiles to left and right to make drop point 3 would be exact positon of building
+									; value4 = addtiles
 									; value5 = versus ignore direction
 									; value6 = RandomX ignored as image find location will be "random" without need to add more variability
 									; value7 = randomY ignored as image find location will be "random" without need to add more variability
 									; value8 = Building target for drop points
-									If $value3 = 1 Or $value3 = 5 Then ; check for valid number of drop points
+									If $value3 > 0 Then ; check for valid number of drop points
 										Local $tmpArray = MakeTargetDropPoints(Eval($sidex), $value3, $value4, $value8)
 										If @error Then
 											$sErrorText = "MakeTargetDropPoints: " & @error ; set flag
@@ -426,6 +426,22 @@ Func ParseAttackCSV($debug = False)
 												If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
 											EndIf
 										Next
+									Next
+									; Loop on all detected troops And Check If Heroes Or Siege Was Not Dropped
+									For $i = 0 To UBound($g_avAttackTroops) - 1
+										Local $bFoundSpecialTroop = False
+										Local $iTroopKind = $g_avAttackTroops[$i][0]
+										If $iTroopKind = $eCastle Or $iTroopKind = $eWallW Or $iTroopKind = $eBattleB Or $iTroopKind = $eStoneS Or $iTroopKind = $eSiegeB Then
+											$bFoundSpecialTroop = True
+										ElseIf ($iTroopKind = $eKing And Not $g_bDropKing) Or ($iTroopKind = $eQueen And Not $g_bDropQueen) Or ($iTroopKind = $eWarden And Not $g_bDropWarden) Or ($iTroopKind = $eChampion And Not $g_bDropChampion) Then
+											$bFoundSpecialTroop = True
+										EndIf
+										If $bFoundSpecialTroop Then
+											Setlog("Name: " & GetTroopName($iTroopKind, 0), $COLOR_DEBUG)
+											DropTroopFromINI($value1, $index1, $index2, $indexArray, $g_avAttackTroops[$x][1], $g_avAttackTroops[$x][1], $g_asTroopShortNames[$iTroopKind], $delaypoints1, $delaypoints2, $delaydrop1, $delaydrop2, $sleepdrop1, $sleepdrop2, $sleepbeforedrop1, $sleepbeforedrop2, $debug)
+											CheckHeroesHealth()
+											If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
+										EndIf
 									Next
 								EndIf
 							Else

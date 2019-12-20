@@ -77,68 +77,64 @@ Func BoostResourcePotion($aiTmp0 = 0, $aiTmp1 = 0)
 	Return False
 EndFunc   ;==>BoostTrainingPotion
 
-Func BoostPotionMod($sName, $sOcrName, $aPos, ByRef $icmbBoostValue, $cmbBoostCtrl)
-	Local $boosted = False
-	Local $ok = False
+Func BoostPotionMod($sName, $bDebug = False)
+	Local $aClick1[2] = [0, 0]
+	
+	_ImageSearchXML($g_sImgPotionsBtn, 0, "134, 580, 730, 675", True, False, True, 25)
+	If not IsArray($g_aImageSearchXML) Then Return False
+	If $bDebug Then _ArrayDisplay($g_aImageSearchXML)
+	
+	For $iResult = 0 To UBound($g_aImageSearchXML) - 1
+		If _Sleep(100) Then Return False ; CPU Control
+		;$g_bChkBuilderPotion, $g_bChkClockTowerPotion, $g_bChkHeroPotion, $g_bChkLabPotion, $g_bChkPowerPotion, $g_bChkResourcePotion
+		
+		If Not ($g_aImageSearchXML[$iResult][0]) = $sName Then ContinueLoop
+		
+		Switch $sName
+			Case "BuilderPotion"
+				If $g_bChkBuilderPotion Then ExitLoop
+			Case "ClockTowerPotion"
+				If $g_bChkClockTowerPotion Then ExitLoop 
+			Case "HeroPotion"
+				If $g_bChkHeroPotion Then ExitLoop 
+			Case "LabPotion"
+				If $g_bChkLabPotion Then ExitLoop 
+			Case "ResourcePotion"
+				If $g_bChkResourcePotion Then ExitLoop 
+			;Case "PowerPotion" dont exist
+			;	If $g_bChkBuilderPotion Then ExitLoop 
+			;Case "BarracksPotion" Unused
+			;	If $g_bChkBuilderPotion Then ExitLoop 
+			Case Else
+				Setlog("Magic Items : Invalid item " & $sName, $COLOR_ERROR)
+				Return False
+		EndSwitch
+		$aClick1[0] = $g_aImageSearchXML[$iResult][1]
+		$aClick1[1] = $g_aImageSearchXML[$iResult][2]
+	Next
+	
+	Setlog("Magic Items : Builder Potion boost " & $sName, $COLOR_SUCCESS)
+	ClickP($aClick1)
+	
+	;7C8AFF
+	;360, 395
+	;494, 451
+	Local $bFuse = False
+	
+	For $i = 0 To 5
+		If _Sleep(500) Then Return False ; CPU Control
+		If IsArray(MultiPSimple(362, 396, 493, 450, Hex(0x8490FF, 6), 15, 5000)) Then 
+				If $bDebug Then 
+					Setlog(Random(360, 494, 1) & " / " & Random(395, 451, 1), $COLOR_ERROR)
+					Else
+					Click(Random(360, 494, 1), Random(395, 451, 1))
+				EndIf
+			$bFuse = True 
+			Else
+			If BitAND($i > 0, $bFuse) Then ExitLoop
+		EndIf
+	 Next
+		 
+	Return $bFuse
+EndFunc   ;==>BoostPotionMod
 
-	If UBound($aPos) > 1 And $aPos[0] > 0 And $aPos[1] > 0 Then
-		BuildingClickP($aPos, "#0462")
-		If _Sleep($DELAYBOOSTHEROES2) Then Return
-		ForceCaptureRegion()
-		Local $aResult = BuildingInfo(242, 490 + $g_iBottomOffsetY)
-		If $aResult[0] > 1 Then
-			Local $sN = $aResult[1] ; Store bldg name
-			Local $sL = $aResult[2] ; Sotre bdlg level
-			If $sOcrName = "" Or StringInStr($sN, $sOcrName, $STR_NOCASESENSEBASIC) > 0 Then
-				; Structure located
-				SetLog("Boosting everything using potion")
-				$ok = True
-			Else
-				SetLog("Cannot boost using potion some error occured", $COLOR_ERROR)
-			EndIf
-		EndIf
-	EndIf
-	If $ok = True Then
-		Local $sTile = "BoostPotion_0_90.xml", $sRegionToSearch = "172,238,684,469"
-		Local $Boost = findButton("MagicItems")
-		If UBound($Boost) > 1 Then
-			If $g_bDebugSetlog Then SetDebugLog("Magic Items Button X|Y = " & $Boost[0] & "|" & $Boost[1], $COLOR_DEBUG)
-			Click($Boost[0], $Boost[1], 1, 0, "#0463")
-			If _Sleep($DELAYBOOSTHEROES1) Then Return
-			$Boost = decodeSingleCoord(FindImageInPlace($sTile, @ScriptDir & "\imgxml\imglocbuttons\" & $sTile, $sRegionToSearch))
-			If UBound($Boost) > 1 Then
-				If $g_bDebugSetlog Then SetDebugLog("Boost Potion Button X|Y = " & $Boost[0] & "|" & $Boost[1], $COLOR_DEBUG)
-				ClickP($Boost)
-				If _Sleep($DELAYBOOSTHEROES1) Then Return
-				If Not _ColorCheck(_GetPixelColor(255, 550, True), Hex(0xFFFFFF, 6), 25) Then
-					SetLog("Cannot find/verify 'Use' Button", $COLOR_WARNING)
-					ClickP($aAway, 2, 0, "#000000") ; Click Away, Necessary! due to possible errors/changes
-					Return False ; Exit Function
-				EndIf
-				Click(305, 556) ; Click on 'Use'
-				If _Sleep($DELAYBOOSTHEROES2) Then Return
-				$Boost = findButton("BoostPotionGreen")
-				If IsArray($Boost) Then
-					Click($Boost[0], $Boost[1], 1, 0, "#0465")
-					If _Sleep($DELAYBOOSTHEROES4) Then Return
-					If $icmbBoostValue <= 5 Then
-						$icmbBoostValue -= 1
-						SetLog($sName & ' Boost completed. Remaining iterations: ' & $icmbBoostValue, $COLOR_SUCCESS)
-						_GUICtrlComboBox_SetCurSel($cmbBoostCtrl, $icmbBoostValue)
-					EndIf
-					$boosted = True
-				Else
-					SetLog($sName & " is already Boosted", $COLOR_SUCCESS)
-				EndIf
-			Else
-				SetLog($sName & " Potion Button not found!", $COLOR_ERROR)
-				If _Sleep($DELAYBOOSTHEROES4) Then Return
-			EndIf
-			If _Sleep($DELAYBOOSTHEROES3) Then Return
-			ClickP($aAway, 1, 0, "#0465")
-		Else
-			SetLog("Abort boosting " & $sName & ", bad location", $COLOR_ERROR)
-		EndIf
-	EndIf
-	Return $boosted
-EndFunc   ;==>BoostPotion

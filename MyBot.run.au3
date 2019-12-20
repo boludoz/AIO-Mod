@@ -1278,7 +1278,7 @@ Func FirstCheck()
 		MainGTFO()
 		MainKickout()
 	EndIf
-	#Region End
+	#EndRegion
 
 	If Not $g_bRunState Then Return
 

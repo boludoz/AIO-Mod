@@ -67,7 +67,7 @@ Func BotDetectFirstTime()
 		GUICtrlSetData($g_hLblTHLevels, $g_iTownHallLevel)
 		Return
 	EndIf
-	#Region End AvoidLocation - Team AIO MOD++
+	#EndRegion AvoidLocation - Team AIO MOD++
 
 	If $g_bScreenshotHideName Then
 		If _Sleep($DELAYBOTDETECT3) Then Return

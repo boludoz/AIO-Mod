@@ -33,6 +33,15 @@ Func chkDelayMod()
 	$g_bDisableColorLog = (GUICtrlRead($g_hDisableColorLog) = $GUI_CHECKED)
 	$g_bAvoidLocation = (GUICtrlRead($g_hAvoidLocation) = $GUI_CHECKED)
 	GUICtrlSetData($g_hDelayLabel, $g_iIntSleep)
+
+	If $g_iIntSleep < -25 Then 
+		GUICtrlSetColor($g_hDelayLabel, $COLOR_RED)
+	ElseIf $g_iIntSleep > 0 Then 
+		GUICtrlSetColor($g_hDelayLabel, $COLOR_GREEN)
+	Else
+		GUICtrlSetColor($g_hDelayLabel, -1)
+	EndIf
+
 	If $g_bUseSleep Then
 		GUICtrlSetState($g_hIntSleep, $GUI_ENABLE)
 		GUICtrlSetState($g_hUseRandomSleep, $GUI_ENABLE)

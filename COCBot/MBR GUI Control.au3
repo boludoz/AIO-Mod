@@ -2143,7 +2143,7 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 		Case $g_hGUI_MOD_TAB
 			; the icons for Mods tab
 			; $eIcnMiscMod, $eIcnWarPreparation
-			Local $aIconIndex = [$eIcnSuperXP, $eIcnHumanization, $eIcnChatActions, $eIcnGFTO, $eIcnDebugMod]
+			Local $aIconIndex = [$eIcnSuperXP, $eIcnHumanization, $eIcnChatActions, $eIcnGFTO, $eIcnMisc, $eIcnDebugMod]
 
 		Case $g_hGUI_BOT_TAB
 			; the icons for Bot tab

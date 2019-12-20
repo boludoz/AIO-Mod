@@ -198,7 +198,7 @@ Func CreateAttackSearchDeadBaseSearch()
 							   GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "CmbMeetGE_Info_03", "OR: One condition must meet, Gold or Elixir.") & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "CmbMeetGE_Info_04", "+ (PLUS): Total amount of Gold + Elixir must meet."))
 			GUICtrlSetOnEvent(-1, "cmbDBGoldElixir")
-		
+
 Local $sMinUmbralTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "Txt_MinUmbralTip", "Recover what I spent in the army in minimum percentage, 0 = Disabled.")
 
 		$g_hTxtDBMinGold = GUICtrlCreateInput("80000", $x + 85, $y, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
@@ -206,11 +206,11 @@ Local $sMinUmbralTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Searc
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 6)
 			GUICtrlSetBkColor(-1, 0xD1DFE7)
-		; Gold DB - Team AiO MOD++
-		$g_hMinArmyUmbralGoldDB = GUICtrlCreateInput("0", $x + 85 + 75, $y, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
-			_GUICtrlSetTip(-1, $sMinUmbralTip)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
-			GUICtrlCreateLabel("%", $x + 85 + 85 + 20, $y, 12, 17)
+;~ 		; Gold DB - Team AiO MOD++
+;~ 		$g_hMinArmyUmbralGoldDB = GUICtrlCreateInput("0", $x + 85 + 75, $y, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
+;~ 			_GUICtrlSetTip(-1, $sMinUmbralTip)
+;~ 			GUICtrlSetBkColor(-1, 0xD1DFE7)
+;~ 			GUICtrlCreateLabel("%", $x + 85 + 85 + 20, $y, 12, 17)
 
 		$g_hPicDBMinGold = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 140, $y, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
@@ -222,10 +222,10 @@ Local $sMinUmbralTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Searc
 			GUICtrlSetLimit(-1, 6)
 			GUICtrlSetBkColor(-1, 0xD1DFE7)
 		; Elixir DB - Team AiO MOD++
-		$g_hMinArmyUmbralElixirDB = GUICtrlCreateInput("0", $x + 85 + 75, $y + 1, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
-			_GUICtrlSetTip(-1, $sMinUmbralTip)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
-			GUICtrlCreateLabel("%", $x + 85 + 85 + 20, $y + 1, 12, 17)
+;~ 		$g_hMinArmyUmbralElixirDB = GUICtrlCreateInput("0", $x + 85 + 75, $y + 1, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
+;~ 			_GUICtrlSetTip(-1, $sMinUmbralTip)
+;~ 			GUICtrlSetBkColor(-1, 0xD1DFE7)
+;~ 			GUICtrlCreateLabel("%", $x + 85 + 85 + 20, $y + 1, 12, 17)
 
 		$g_hPicDBMinElixir = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnElixir, $x + 140, $y, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
@@ -238,10 +238,10 @@ Local $sMinUmbralTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Searc
 			GUICtrlSetBkColor(-1, 0xD1DFE7)
 			GUICtrlSetState (-1, $GUI_HIDE)
 		; Plus DB - Team AiO MOD++
-		$g_hMinArmyUmbralPlusDB = GUICtrlCreateInput("0", $x + 85 + 75, $y + 35, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
-			_GUICtrlSetTip(-1, $sMinUmbralTip)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
-			GUICtrlCreateLabel("%", $x + 85 + 85 + 20, $y + 35, 12, 17)
+;~ 		$g_hMinArmyUmbralPlusDB = GUICtrlCreateInput("0", $x + 85 + 75, $y + 35, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
+;~ 			_GUICtrlSetTip(-1, $sMinUmbralTip)
+;~ 			GUICtrlSetBkColor(-1, 0xD1DFE7)
+;~ 			GUICtrlCreateLabel("%", $x + 85 + 85 + 20, $y + 35, 12, 17)
 
 		$g_hPicDBMinGPEGold = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnGoldElixir, $x + 140, $y + 1, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
@@ -258,10 +258,10 @@ Local $sMinUmbralTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Searc
 			GUICtrlSetBkColor(-1, 0xD1DFE7)
 			_GUICtrlEdit_SetReadOnly(-1, True)
 		; Dark Elixir DB - Team AiO MOD++
-		$g_hMinArmyUmbralDarkDB = GUICtrlCreateInput("0", $x + 85 + 75, $y + 24, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
-			_GUICtrlSetTip(-1, $sMinUmbralTip)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
-			GUICtrlCreateLabel("%", $x + 85 + 85 + 20, $y + 24, 12, 17)
+;~ 		$g_hMinArmyUmbralDarkDB = GUICtrlCreateInput("0", $x + 85 + 75, $y + 24, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
+;~ 			_GUICtrlSetTip(-1, $sMinUmbralTip)
+;~ 			GUICtrlSetBkColor(-1, 0xD1DFE7)
+;~ 			GUICtrlCreateLabel("%", $x + 85 + 85 + 20, $y + 24, 12, 17)
 
 		$g_hPicDBMinDarkElixir = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 140, $y, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
@@ -413,14 +413,16 @@ Local $sMinUmbralTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Searc
 		$g_ahPicWeakEagle[$DB] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnEagleArt, $x + 75, $y - 2, 24, 24)
 			_GUICtrlSetTip(-1, $sTxtTip)
 
-	$y += 24
-	$x = $xStartColumn - 5
+	$y += 55
+	$x = $xStartColumn
+		$g_ahChkMeetOne[$LB] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkMeetOne", -1), $x, $y, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkMeetOne_Info_01", -1))
+	#Region - Check Collector Outside & Check No League for Dead Base - Team AiO MOD++
+	$y += 25
 		$g_hChkDBNoLeague = GUICtrlCreateCheckbox("No League", $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, "Search for a Dead bases that has no league.")
 			GUICtrlSetOnEvent(-1, "chkDBNoLeague")
-	$y += 25
-		$g_ahChkMeetOne[$DB] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkMeetOne", "Meet One Then Attack"), $x, $y, -1, -1)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkMeetOne_Info_01", "Just meet only ONE of the above conditions, then Attack."))
+	#EndRegion
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 EndFunc   ;==>CreateAttackSearchDeadBaseSearch

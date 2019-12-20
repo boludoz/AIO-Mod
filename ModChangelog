@@ -6,10 +6,27 @@
                     Based on MyBot.run v7.8.1
 	**V3.1.4b**
 	» Added:
+        • Magic items:
+			- Enabled resource potion. - No *
+
+        • Builder base: 
+			- Auto camps. - No *
+			
         • Misc tab: 
 			- Sleep as human (human time for all bot / attack / clicks / random option) (lower / higher CPU consumption).
 			- Deploy the castle first for all modes. (Include CSV - SamM0d inspired - THX Samkie)
 			- Avoid the location of buildings for the first time.
+			
+		• CSV: 
+			- Remain hero / sieges.
+			- Add hero if it doesn't exist in CSV. - No *
+
+	» Fixed:
+		• GUI:
+			- Only Farm.
+			- Umbral disabled.
+			- No League / Meet one then attack fix.
+			- Restored and updated custom AIO MBRBot.dll. 
 
 	**V3.1.3**
 	» Added:
@@ -20,7 +37,6 @@
         • GTFO Preview.
 		• Magic items Preview.
 		• Humanization (THX Eloy, Chilly-Chill).
-		• Remain hero.
 
 	» Fixed:
 		• Only farm.

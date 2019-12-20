@@ -66,7 +66,7 @@ EndFunc   ;==>_GetPixelColor2
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func MultiPSimple($iLeft, $iTop, $iRight, $iBottom, $Hex, $iTolerance = 10, $iWait = 1000, $iDelay = 100)
+Func MultiPSimple($iLeft, $iTop, $iRight, $iBottom, $Hex, $iTolerance = 15, $iWait = 5000, $iDelay = 50)
 	Local $aReturn[2] = [0, 0]
 
 	Local $hTimer = __TimerInit()

@@ -373,7 +373,7 @@ Func ClanSaveAndJoiner(ByRef $sClanJoin, ByRef $g_bFirstHop)
 						Return False
 					EndIf
 				EndIf
-				#Region End
+				#EndRegion
 				If _WaitForCheckPixel($aClanPage, $g_bCapturePixel, Default, "GTFO: Checking if you not are leader.") Then
 					; Click clans label, It is way 1
 					ClickP($aClanLabel)

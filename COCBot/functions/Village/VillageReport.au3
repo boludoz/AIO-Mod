@@ -83,7 +83,7 @@ Func getBuilderTime()
 		EndIf
 	EndIf
 
-	If $g_iFreeBuilderCount >= $g_iTotalBuilderCount Then Return
+	;If $g_iFreeBuilderCount >= $g_iTotalBuilderCount Then Return
 
 	SetLog("Getting Builder Time", $COLOR_INFO)
 
@@ -92,6 +92,21 @@ Func getBuilderTime()
 
 	Local $sBuilderTime = QuickMIS("OCR", $g_sImgBuilderTime, 360, 109, 456, 125, True, $g_bDebugImageSave)
 	If $sBuilderTime <> "none" Then
+		#Region - Magic items - Team AIO Mod ++
+		Local Static $sBoost = False
+		Local $sBuilder
+		If _Sleep(500) Then return False
+	
+		If not $sBoost and $g_bChkBuilderPotion Then
+			$sBoost = True
+			If Abs($g_iFreeBuilderCount - $g_iTotalBuilderCount) <= $g_iInputBuilderPotion Then
+				Click(Random(211, 109, 1), Random(457, 137, 1))
+				If _Sleep(500) Then return False
+				BoostPotionMod("BuilderPotion", False)
+			EndIf
+		EndIf
+		If $g_iFreeBuilderCount >= $g_iTotalBuilderCount Then Return
+		#EndRegion
 		$iBuilderTime = ConvertOCRTime("Builder Time", $sBuilderTime, False)
 		If $g_bDebugSetlog Then SetDebugLog("$sResult QuickMIS OCR: " & $sBuilderTime & " (" & Round($iBuilderTime,2) & " minutes)")
 	EndIf
