@@ -25,11 +25,15 @@
 				- Drop Remain hero / sieges !!!.
 
 		» Fixed:
+			• V7.8.1:
+				- Added remaining files (Champion/Yeti fix.). thx @eightn .
+
 			• GUI:
 				- Only Farm.
 				- Umbral disabled.
 				- No League / Meet one then attack fix.
 				- Restored and updated custom AIO MBRBot.dll. 
+				- Chilly-Chill name
 				
 		» Improved:
 				- Prevent dead slots re-click (Optimized real time).

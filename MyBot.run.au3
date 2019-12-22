@@ -597,7 +597,7 @@ Func FinalInitialization(Const $sAI)
 	SetLog(" •  " & "AIO++ MOD " & $g_sModVersion, $COLOR_SUCCESS, "Candara", 9)
 	SetLog(" •  " & "Based On MBR " & $g_sBotVersion, $COLOR_SUCCESS, "Candara", 9)
 	SetLog(" •  " & "Create a New Profile", $COLOR_SUCCESS, "Candara", 9)
-	SetLog(" •  " & "Participants and thanks: Nguyen, Chill-chill, Eloy, Boldina, Demen, and bolsonaro fan.", $COLOR_SUCCESS, "Candara", 9)
+	SetLog(" •  " & "Participants and thanks: Nguyen, Chilly-Chill, Eloy, Boldina, Demen, and bolsonaro fan.", $COLOR_SUCCESS, "Candara", 9)
 	SetLog(" ")
 
 	; destroy splash screen here (so we witness the 100% ;)
