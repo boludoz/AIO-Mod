@@ -1,0 +1,66 @@
+NOTE  |           ★★★BNT★★★
+NOTE  |                      TH10-11
+NOTE  | Train: 12,ballon 9,dragon 2,babydragon.. spell,3,rage 1,clone 1,haste 
+NOTE  |cc: ballon and lava.. spell,rage th10,haste
+NOTE  |           don't forget Th10 don't train babydragon
+
+      |EXTR. GOLD |EXTR.ELIXIR|EXTR. DARK |DEPO. GOLD |DEPO.ELIXIR|DEPO. DARK |TOWNHALL   |FORCED SIDE|
+SIDE  |0          |0          |0          |0          |0          |0          |10         |           |
+
+
+      |VECTOR_____|SIDE_______|DROP_POINTS|ADDTILES___|VERSUS_____|RANDOMX_PX_|RANDOMY_PX_|___________|
+MAKE  |A          |FRONT-LEFT |10         |1          |INT-EXT    |0          |0          |           |
+MAKE  |B          |FRONT-RIGHT|10         |1          |INT-EXT    |0          |0          |           |
+MAKE  |K          |FRONT-LEFT |10         |1          |INT-EXT    |0          |0          |           |
+MAKE  |Z          |FRONT-RIGHT|10         |1          |INT-EXT    |0          |0          |           |
+MAKE  |C          |FRONT-LEFT |10         |-7         |INT-EXT    |0          |0          |           |
+MAKE  |D          |FRONT-RIGHT|10         |-8         |INT-EXT    |0          |0          |           | 
+MAKE  |E          |FRONT-LEFT |10         |-13        |INT-EXT    |0          |0          |           | 
+MAKE  |F          |FRONT-RIGHT|10         |-18        |INT-EXT    |0          |0          |           | 
+MAKE  |L          |FRONT-LEFT |10         |-17        |INT-EXT    |0          |0          |           | 
+MAKE  |M          |LEFT-FRONT |10         |0          |INT-EXT    |0          |0          |           |
+MAKE  |N          |RIGHT-FRONT|10         |0          |INT-EXT    |0          |0          |           |
+MAKE  |G          |FRONT-LEFT |10         |-17        |INT-EXT    |0          |0          |           | 
+
+
+
+
+      |VECTOR_____|INDEX______|QTY_X_VECT_|TROOPNAME__|DELAY_DROP_|DELAYCHANGE|SLEEPAFTER_|SLEEPBEFORE|
+DROP  |A-B        |10,10      |2          |BabyD      |50-70      | 30-50     |6000- 7000 |           |
+DROP  |K          |6          |1          |drag       |50-70      | 30-50     |250-500    |           |
+DROP  |Z          |6          |1          |drag       |50-70      | 30-50     |250-500    |           |
+WAIT  |2000-3000  |           |           |           |           |           |           |           |
+DROP  |A          |1,3,4,5    |4          |drag       |50-70      |27-50      |0          |           | 
+DROP  |B          |1,2,3,5    |4          |drag       |50-70      |27-50      |0          |           |
+DROP  |D          |4          |1          |RSpell     |50-100     |           |50-70      |           |
+DROP  |C          |4          |1          |RSpell     |50-100     |           |50-70      |           |
+DROP  |D          |1          |1          |HaSpell    |50-100     |           |500-700    |           |
+DROP  |A          |1          |1          |WallW      |0          |50-70      |50-70      |           |          
+DROP  |A          |1          |1          |BattleB    |0          |50-70      |50-70      |           |          
+DROP  |A          |1          |1          |StoneS     |0          |50-70      |50-70      |           |
+DROP  |A          |1          |1          |SiegeB     |0          |50-70      |50-70      |           | 
+DROP  |k          |2,3,4,5,6,5|6          |Ball       |50-70      |27-50      |0          |           |
+DROP  |Z          |1,2,3,5,4,5|6          |Ball       |50-70      |27-50      |0          |           |
+DROP  |A          |1          |1          |Castle     |30-50      |37-70      |50-70      |           |
+DROP  |B          |1          |1          |Warden     |50-70      |           |50-70      |           |
+WAIT  |4000-5000  |           |           |           |           |           |           |           |
+DROP  |E          |1          |1          |CSpell     |50-70      |           |1000-2000  |           |
+WAIT  |2000-3000  |           |           |           |           |           |           |           |
+
+RECALC|           |           |           |           |           |           |           |           |
+
+DROP  |F          |2          |1          |RSpell     |50-100     |           |50-100     |           |
+DROP  |L          |3          |1          |RSpell     |50-100     |           |450-600    |           |
+DROP  |G          |3          |1          |HaSpell    |50-100     |           |450-600    |           |
+
+      |VECTOR_____|INDEX______|QTY_X_VECT_|TROOPNAME__|DELAY_DROP_|DELAYCHANGE|SLEEPAFTER_|SLEEPBEFORE|
+DROP  |A          |1          |1          |Warden     |70-100     |           |500-700    |           |
+
+WAIT  |1000-2500  |           |           |           |           |           |           |           |
+
+DROP  |A          |5          |1          |King       |27-50      |0          |400-500    |           |
+DROP  |B          |5          |1          |Queen      |27-50      |0          |500-700    |           |
+WAIT  |22000-27000|           |           |           |           |           |           |           |
+DROP  |A          |1          |1          |king       |27-50      |0          |200-300    |           |  
+DROP  |B          |1          |1          |queen      |27-50      |0          |500-800    |           |
+DROP  |A          |1          |20         |Remain     |0          |0          |100-500    |           |

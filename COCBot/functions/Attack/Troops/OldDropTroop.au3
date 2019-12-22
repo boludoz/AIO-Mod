@@ -15,7 +15,9 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func OldDropTroop($troop, $position, $nbperspot)
-	SelectDropTroop($troop) ;Select Troop
+	#Region - No reddrop - Team AiO MOD++
+	If SelectDropTroop($troop) = False Then Return ;Select Troop
+	#EndRegion - No reddrop - Team AiO MOD++
 	If _Sleep($DELAYOLDDROPTROOP1) Then Return
 	For $i = 0 To 4
 		Click($position[$i][0], $position[$i][1], $nbperspot, 1, "#0110")

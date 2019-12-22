@@ -38,42 +38,42 @@ Func ParseAttackCSV($debug = False)
 	If FileExists($g_sCSVAttacksPath & "\" & $filename & ".csv") Then
 		Local $aLines = FileReadToArray($g_sCSVAttacksPath & "\" & $filename & ".csv")
 
-	# AIO ++ Mod (By Boludoz)
-    If $g_bDeployCastleFirst Then
+		#Region - Drop CC first - Team AIO Mod++  (By Boludoz)
+		If $g_bDeployCastleFirst Then
 			Local $iFirstDrop = -1, $iCastlePosOld = -1, $iDbgSector = 0, $ichkDropCCFirst = 1, $aTmpCommand
 			Local $aShortAndCC = $g_asSiegeMachineShortNames
 			_ArrayAdd($aShortAndCC, "Castle")
-	
+		
 			If $iDbgSector = 1 Then _ArrayDisplay($aShortAndCC)
 			If $iDbgSector = 1 Then _ArrayDisplay($aLines)
-	
+		
 				For $ii = 0 To UBound($aShortAndCC) -1 ; CC, Sieges ($eWallW, $eBattleB, $eStoneS, $eCastle)
 					$iFirstDrop = -1
 					$iCastlePosOld = -1
 					$iDbgSector = 0
 					$ichkDropCCFirst = 1
 					$aTmpCommand = -1
-	
+		
 					For $i = 0 To UBound($aLines) - 1
 						$aTmpCommand = StringSplit($aLines[$i], "|", 2)
-	
+		
 						; Search first 'DROP'
 						If UBound($aTmpCommand) > 4 And StringInStr($aTmpCommand[0], "DROP") > 0 Then ; Pos. 1 for prevent commints and Notes.
 							$iFirstDrop = $i
 							ExitLoop
 						EndIf
 						Next
-	
+		
 					For $i = 0 To UBound($aLines) - 1
 						$aTmpCommand = StringSplit($aLines[$i], "|", 2)
-	
+		
 						; Search first 'Castle', if is in first position does not apply.
 						If UBound($aTmpCommand) > 4 And $iFirstDrop < $i And StringInStr($aTmpCommand[4], $aShortAndCC[$ii]) > 0 Then
 							$iCastlePosOld = $i
 							ExitLoop
 						EndIf
 						Next
-	
+		
 					If $iCastlePosOld > -1 Then
 						_ArrayInsert($aLines, $iFirstDrop, $aLines[$iCastlePosOld], -1, -1, $ARRAYFILL_FORCE_STRING)
 						_ArrayDelete($aLines, $iCastlePosOld  + 1)
@@ -81,8 +81,8 @@ Func ParseAttackCSV($debug = False)
 					EndIf
 				Next
 		EndIf
-		# AIO ++ Mod (By Boludoz)
-
+		#Region - Drop CC first - Team AIO Mod++  (By Boludoz)
+				
 		; Read in lines of text until the EOF is reached
 		For $iLine = 0 To UBound($aLines) - 1
 			$line = $aLines[$iLine]
@@ -438,7 +438,7 @@ Func ParseAttackCSV($debug = False)
 										EndIf
 										If $bFoundSpecialTroop Then
 											Setlog("Name: " & GetTroopName($iTroopKind, 0), $COLOR_DEBUG)
-											DropTroopFromINI($value1, $index1, $index2, $indexArray, $g_avAttackTroops[$x][1], $g_avAttackTroops[$x][1], $g_asTroopShortNames[$iTroopKind], $delaypoints1, $delaypoints2, $delaydrop1, $delaydrop2, $sleepdrop1, $sleepdrop2, $sleepbeforedrop1, $sleepbeforedrop2, $debug)
+											DropTroopFromINI($value1, $index1, $index2, $indexArray, $g_avAttackTroops[$i][1], $g_avAttackTroops[$i][1], GetTroopName($iTroopKind, 1, True), $delaypoints1, $delaypoints2, $delaydrop1, $delaydrop2, $sleepdrop1, $sleepdrop2, $sleepbeforedrop1, $sleepbeforedrop2, $debug)
 											CheckHeroesHealth()
 											If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
 										EndIf

@@ -13,16 +13,16 @@
 Func _MultiPixelSearchMod($iLeft, $iTop, $iRight, $iBottom, $xSkip, $ySkip, $firstColor, $offColor, $iColorVariation)
 
 	Local $aTmp = _MultiPixelSearch($iLeft, $iTop, $iRight, $iBottom, $xSkip, $ySkip, $firstColor, $offColor, $iColorVariation)
-	
+
 	If $aTmp <> 0 Then
 		$g_iMultiPixelOffSet[0] = $aTmp[0]
 		$g_iMultiPixelOffSet[1] = $aTmp[1]
-	   
+
 		Return $g_iMultiPixelOffSet
 	Else
 		$g_iMultiPixelOffSet[0] = Null
 		$g_iMultiPixelOffSet[1] = Null
-		
+
 		Return 0
 	EndIf
 
@@ -283,22 +283,20 @@ Func SearchNoLeague($bCheckOneTime = False)
 	Return True
 EndFunc   ;==>SearchNoLeague
 
-#Region AIO Mod ++
 Func SpecialAway()
 	_Sleep(Random(0,2000,1))
 	Local $aSpecialAway[2] = [Random(1,4,1), Random(1,50,1)]
 	If $g_bDebugClick Or TestCapture() Then SetLog("Click SpecialAway " & $aSpecialAway[0] & ", " & $aSpecialAway[1], $COLOR_ACTION, "Verdana", "7.5", 0)
 	ClickP($aSpecialAway)
 EndFunc
-#EndRegion
 
-Func UnderstandChatRules() 
+Func UnderstandChatRules()
 	;LEFT - 68, 447, 92, 479
 	;RIGHT - 223, 448, 249, 479
 	;DDF685
 	Local $aClanBadgeNoClan[4] = [151, 307, 0xF05538, 20] ; OK - Orange Tile of Clan Logo on Chat Tab if you are not in a Clan
 
-	If IsArray(MultiPSimple(68, 447, 92, 479, Hex(0xDDF685, 6), 15, 5000)) AND NOT _WaitForCheckPixel($aClanBadgeNoClan, $g_bCapturePixel, Default, "") Then 
+	If IsArray(MultiPSimple(68, 447, 92, 479, Hex(0xDDF685, 6), 15, 5000)) AND NOT _WaitForCheckPixel($aClanBadgeNoClan, $g_bCapturePixel, Default, "") Then
 		Click(Random(90, 248, 1), Random(448, 479, 1))
 		If _Sleep(500) Then Return
 	EndIf
@@ -310,7 +308,7 @@ EndFunc
 ; Syntax ........: IsSlotDead($iSlotNumber)
 ; Parameters ....: $iSlotNumber               - an unknown value.
 ; Return values .: None
-; Author ........: Boludoz (8/3/2019)
+; Author ........: Boludoz/Boldina (8/3/2019)
 ; Modified ......:
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
@@ -318,25 +316,35 @@ EndFunc
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: IsSlotDead(1)
 ; ===============================================================================================================================
-Func IsSlotDead($iSlotNumber, $bIndex = False)
-	Local $aSlotPosition = ($bIndex) ? (GetSlotPosition($iSlotNumber)) : ($iSlotNumber)
-	Local $aSearchOpp[3][3] = [[0x656565, 1, 1], [0x656565, 2, 1], [0x656565, 3, 1]]
-	Local $aSearchOpp_2[3][3] = [[0x000000, 1, 0], [0x505050, 0, 1], [0x515151, 1, 1]]
-	Local $aSearchOpp_3[3][3] = [[0x5B5B5B, 1, 1], [0x5B5B5B, 2, 1], [0x5B5B5B, 3, 1]]
+Func IsSlotDead()
+	; Fuse
+	If $g_aIsDead[$g_iSlotNow] = 1 Then Return True
 	
-	For $i = 0 To 3 
-		If _MultiPixelSearch($aSlotPosition[0] - 25, $aSlotPosition[1] -20 , $aSlotPosition[0], $aSlotPosition[1], -2, 1, Hex(0x000000, 6), $aSearchOpp, 25) <> 0 Then Return True ; Normal Slot
-		If _MultiPixelSearch($aSlotPosition[0] - 25, $aSlotPosition[1] -20 , $aSlotPosition[0], $aSlotPosition[1], -2, 1, Hex(0x000000, 6), $aSearchOpp_2, 25) <> 0 Then Return True ; King/Big Slot		
-		If _MultiPixelSearch($aSlotPosition[0] - 25, $aSlotPosition[1] -20 , $aSlotPosition[0], $aSlotPosition[1], -2, 1, Hex(0x000000, 6), $aSearchOpp_3, 25) <> 0 Then Return True ; Spell		
-		Sleep(10)
-	Next
-	
-	Return False
+	Local $iX = Int($g_avAttackTroops[$g_iSlotNow][4])
+	Local $iY = 721
+	If _ColorCheck(_GetPixelColor($iX, 723), Hex(0xFFFFFF, 6), 15) = True Then
+		;SetLog("Slot NOT Dead X: " & $iX & " Y: " & $iY & " Slot: " & $g_iSlotNow, $COLOR_ORANGE)
+		ElseIf MultiPSimple($iX, $iY, $iX + 5, $iY + 2, Hex(0xFFFFFF, 6), 15, 200, 5) = 0 Then 
+		SetLog("Slot Dead X: " & $iX & " Y: " & $iY & " Slot: " & $g_iSlotNow, $COLOR_ORANGE)
+			$g_aIsDead[$g_iSlotNow] = 1
+		;Return True
+	EndIf
 EndFunc   ;==>IsSlotDead
 
-; ClickPDrop : takes an array[2] (or array[4]) as a parameter [x,y], prevent Click in switch 
-Func ClickPDrop($point, $howMuch = 1, $speed = 0, $debugtxt = "")
-		Local $iX = Abs(Number($point[0]) - Random(-4, 4, 1)), $iY = Abs(Number($g_iGAME_HEIGHT) - Random(52, 86, 1))
-        If $g_bDebugClick Then SetLog("ClickPDrop " & $point[0] & "," & $iY & "," & $howMuch & "," & $speed & " " & $debugtxt, $COLOR_YELLOW, "Verdana", "7.5", 0)
-		Click($iX, $iY, $howMuch, $speed, $debugtxt)
-EndFunc   ;==>ClickPDrop
+Func AttackClick($x, $y, $times = 1, $speed = 0, $afterDelay = 0, $debugtxt = "")
+	Local $timer = __TimerInit(), $bReturn = True
+	; Protect the Attack Bar
+	If $y > 555 + $g_iBottomOffsetY Then $y = 555 + $g_iBottomOffsetY
+	AttackRemainingTime(False) ; flag attack started
+	If $times = 1 Then
+		$bReturn = PureClick($x, $y, 1, $speed, $debugtxt)
+	Else 
+		For $i = 1 To $times
+			IsSlotDead()
+			$bReturn = ($g_aIsDead[$g_iSlotNow] = 1) ? (True) : (PureClick($x, $y, 1, $speed, $debugtxt))
+		Next
+	EndIf
+	Local $delay = $times * $speed + $afterDelay - __TimerDiff($timer)
+	If IsKeepClicksActive() = False And $delay > 0 Then _Sleep($delay, False)
+	Return $bReturn
+EndFunc   ;==>AttackClick

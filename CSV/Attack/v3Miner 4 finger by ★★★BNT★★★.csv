@@ -1,0 +1,44 @@
+NOTE  |Authors: ★★★BNT★★★
+NOTE  |            TH10-11-12-13
+NOTE  |Troops makeing: fil miner fil archer
+	  
+	  |EXTR. GOLD |EXTR.ELIXIR|EXTR. DARK |DEPO. GOLD |DEPO.ELIXIR|DEPO. DARK |TOWNHALL   |FORCED SIDE|
+SIDE  |0          |0          |0          |0          |0          |0          |9          |           |
+      |EAGLE      |INFERNO    |XBOW       |WIZTOWER   |MORTAR     |AIRDEFENSE |GEMBOX     |GEMBOX     |
+SIDEB |10         |5          |0          |0          |0          |4          |0          |0          |
+
+      |VECTOR_____|SIDE_______|DROP_POINTS|ADDTILES___|VERSUS_____|RANDOMX_PX_|RANDOMY_PX_|BUILDING___|
+MAKE  |A          |FRONT-LEFT |10         |2          |EXT-INT    |0          |0          |           |
+MAKE  |B          |FRONT-RIGHT|10         |2          |INT-EXT    |0          |0          |           |
+MAKE  |C          |RIGHT-BACK |10         |2          |INT-EXT    |0          |0          |           |
+MAKE  |D          |RIGHT-FRONT|10         |2          |EXT-INT    |0          |0          |           |
+MAKE  |E          |BACK-RIGHT |10         |2          |INT-EXT    |0          |0          |           |
+MAKE  |F          |BACK-LEFT  |10         |2          |EXT-INT    |0          |0          |           |
+MAKE  |G          |LEFT-BACK  |10         |0          |EXT-INT    |0          |5          |           |
+MAKE  |H          |LEFT-FRONT |10         |0          |INT-EXT    |0          |5          |           |
+
+
+      |VECTOR_____|INDEX______|QTY_X_VECT_|TROOPNAME__|DELAY_DROP_|DELAYCHANGE|SLEEPAFTER_|           |
+DROP  |A          |4,5,6,8,9,10|6         |Mine       |50-70      |0          |0          |           |
+DROP  |B          |1,3,4,5,6,7|6          |Mine       |50-70      |0          |1000-1200  |           |
+DROP  |C          |9,8,7,5,4,3|6          |Mine       |55-70      |0          |0          |           |
+DROP  |D          |10,8,7,5,3,2|6         |Mine       |55-70      |0          |1000-1200  |           |
+DROP  |E          |9,8,6,4,3,1|6          |Mine       |50-70      |0          |0          |           |
+DROP  |F          |9,7,5,3,2,1|6          |Mine       |50-70      |0          |1000-1200  |           |
+DROP  |G          |9,8,7,5,4,3|6          |Mine       |55-70      |0          |0          |           |
+DROP  |H          |10,8,7,5,3,2|6         |Mine       |55-70      |0          |1000-1200  |           |
+DROP  |G-H        |2-10       |10         |Mine       |10-30      |100        |100-200    |           |
+DROP  |G-H        |2-10       |10         |Arch       |10-30      |100        |100-200    |           |
+DROP  |H          |1          |2          |CASTLE     |30-50      |0          |50-100     |           |
+DROP  |G          |10         |1          |king       |0          |0          |30-50      |           |
+DROP  |G          |10         |1          |queen      |0          |0          |50-50      |           | 
+DROP  |G          |10         |1          |warden     |0          |0          |50-50      |           |
+DROP  |G          |10         |1          |Champion   |0          |0          |50-50      |           |
+WAIT  |17000-20000|           |           |           |           |           |           |           |
+RECALC|           |           |           |           |           |           |           |           |
+DROP  |G          |1          |1          |king       |0          |0          |30-50      |           |
+DROP  |G          |1          |1          |queen      |0          |0          |50-50      |           | 
+DROP  |G          |1          |1          |warden     |0          |0          |50-50      |           |
+DROP  |G          |1          |1          |Champion   |0          |0          |50-50      |           |
+DROP  |H          |1          |20         |Remain     |0          |0          |100-500    |           |
+

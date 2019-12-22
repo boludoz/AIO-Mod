@@ -4,157 +4,160 @@
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
                     Based on MyBot.run v7.8.1
-	**V3.1.4b**
-	» Added:
-        • Magic items:
-			- Enabled resource potion.
-			- Enabled builder potion.
-
+>> Next
         • Builder base: 
-			- Camps fill. *No
-			
-        • Misc tab: 
-			- Sleep as human (human time for all bot / attack / clicks / random option) (lower / higher CPU consumption).
-			- Deploy the castle first for all modes. (Include CSV - SamM0d inspired - THX Samkie)
-			- Avoid the location of buildings for the first time.
-			
+			- Troops train.
 		• CSV: 
-			- Remain hero / sieges.
-			- Add hero if it doesn't exist in CSV. - No *
+			- Add hero if it doesn't exist in CSV.
 
-	» Fixed:
-		• GUI:
-			- Only Farm.
-			- Umbral disabled.
-			- No League / Meet one then attack fix.
-			- Restored and updated custom AIO MBRBot.dll. 
-	» Improved:
-			- Prevent dead slots click.
+	**V3.1.5**
+		» Added:
+			• Magic items:
+				- Enabled resource potion.
+				- Enabled builder potion.
+
+			• Misc tab: 
+				- Sleep as human (human time for all bot / attack / clicks / random option) (lower / higher CPU consumption).
+				- Deploy the castle first for all modes. (Include CSV - SamM0d inspired - THX Samkie)
+				- Avoid the location of buildings for the first time.
+				
+			• CSV: 
+				- Drop Remain hero / sieges !!!.
+
+		» Fixed:
+			• GUI:
+				- Only Farm.
+				- Umbral disabled.
+				- No League / Meet one then attack fix.
+				- Restored and updated custom AIO MBRBot.dll. 
+				
+		» Improved:
+				- Prevent dead slots re-click (Optimized real time).
 
 	**V3.1.3**
-	» Added:
-        • Eloy GUI !!!.
+		» Added:
+			• Eloy GUI !!!.
 
 	**V3.1.2**
-	» Added:
-        • GTFO Preview.
-		• Magic items Preview.
-		• Humanization (THX Eloy, Chilly-Chill).
+		» Added:
+			• GTFO Preview.
+			• Magic items Preview.
+			• Humanization (THX Eloy, Chilly-Chill).
 
-	» Fixed:
-		• Only farm.
-		• LOT of fixes in GUI (THX Eloy).
-        • ChatActions Config.
-        • Super XP bug 783.
-        • Super XP GUI vars.
+		» Fixed:
+			• Only farm.
+			• LOT of fixes in GUI (THX Eloy).
+			• ChatActions Config.
+			• Super XP bug 783.
+			• Super XP GUI vars.
 
-	» Improved:
-        • Super XP separed images.
-		• Chat AI: Scroll.
-		
-	» Disabled:
-        • Resource bost (For fix).
+		» Improved:
+			• Super XP separed images.
+			• Chat AI: Scroll.
+			
+		» Disabled:
+			• Resource bost (For fix).
 
 	**V3.0.1**
-	» Fixed:
-		• SwitchAccountVariablesReload : Error 66372 fixed
-	
-	» Improved:
-		• Chat AI: Scroll
+		» Fixed:
+			• SwitchAccountVariablesReload : Error 66372 fixed
+		
+		» Improved:
+			• Chat AI: Scroll
 
 	**V3.0.0**
-	» Added:
-		• Daily Discounts custom  (thx Chilly-Chill - NGuyen <3 )
-		• Smart farm: collector outside support
-		• Random click away ( detect $aAway and $aAway2)
-		• Only farm mode (fast farming)
+		» Added:
+			• Daily Discounts custom  (thx Chilly-Chill - NGuyen <3 )
+			• Smart farm: collector outside support
+			• Random click away ( detect $aAway and $aAway2)
+			• Only farm mode (fast farming)
 
-	» Improved:
-		• Chat AI: Scroll
-		• Collector outside: TH12
+		» Improved:
+			• Chat AI: Scroll
+			• Collector outside: TH12
 
-	» Fixed:
-		• Clan chat
-		• SuperXP
-		• BB attack now if you don't have a siege machine 
+		» Fixed:
+			• Clan chat
+			• SuperXP
+			• BB attack now if you don't have a siege machine 
 
-	» Deleted:
-		• Global chat
+		» Deleted:
+			• Global chat
 
 	**V2.0.4**
 
 	**V2.0.3**
-	» Improved:
-		• Disable check Authentication from MyBot.run forum
-		• Improve check loot available for BB Attack
-		• Improve read chats for ChatActions
+		» Improved:
+			• Disable check Authentication from MyBot.run forum
+			• Improve check loot available for BB Attack
+			• Improve read chats for ChatActions
 
 	**V2.0.2**
-	» Added:
-		• Add empty siege support﻿
-		• Add BB Attack Sliders
-		• Add option to ignore walls on BB
+		» Added:
+			• Add empty siege support﻿
+			• Add BB Attack Sliders
+			• Add option to ignore walls on BB
 
-	» Fixed:
-		• Fix Train Logout Maxtime not save config
-		• Fix get AttackBar when 11+ slots for SuperXP (no need to drag AttackBar)
+		» Fixed:
+			• Fix Train Logout Maxtime not save config
+			• Fix get AttackBar when 11+ slots for SuperXP (no need to drag AttackBar)
 
-	» Improved:
-		• Improve pixel color on the attack button for Super XP
-		• Improve allows SuperXP to run when Halt Attack enabled
-		• Improve language switch for Chat Actions
-		• Improve pixel color on the buttons for Chat Actions
+		» Improved:
+			• Improve pixel color on the attack button for Super XP
+			• Improve allows SuperXP to run when Halt Attack enabled
+			• Improve language switch for Chat Actions
+			• Improve pixel color on the buttons for Chat Actions
 
 	**V2.0.1**
-	» Updated:
-		• Update Official v7.7.6
-		• Vietnamese language
+		» Updated:
+			• Update Official v7.7.6
+			• Vietnamese language
 
-	» Added:
-		• Add Colllector Outside check feature
-		• Add Super XP feature
-		• Add Daily Discounts feature
-		• Add Builder Base Attack feature
-		• Add Chat Actions feature
+		» Added:
+			• Add Colllector Outside check feature
+			• Add Super XP feature
+			• Add Daily Discounts feature
+			• Add Builder Base Attack feature
+			• Add Chat Actions feature
 
-	» Improved:
-		• Improve Auto Hide & Dock & Minimize the Emultor/Bot
-		• Improve Clan Hop
+		» Improved:
+			• Improve Auto Hide & Dock & Minimize the Emultor/Bot
+			• Improve Clan Hop
 
 	**V2.0**
-	» Updated:
-		• Update Official v7.7.3
+		» Updated:
+			• Update Official v7.7.3
 
-	» Added:
-		• Add Precise Army feature
-		• Add Multi-Click Army 3 feature
-		• Add Request Defense troops feature
-		• Add Switch Profiles feature
-		• Add Farm Schedule feature
-		• Add Boost for Workshop, Resource Magic
-		• Add Clan Hop feature
-		• Add Four Finger Classic option for Standard Attack
-		• Add CSV Deployment Speed
-		• Add CSV '%', 'Sleep Before' cmd for CSV Attack
-		• Add Max logout time option
-		• Add Restart Search Legend league
-		• Add Builder time, Hero & Lab Stats
-		• Add Enable/Disable GUI while botting
-		• Add Auto Hide/Dock for Emulator
+		» Added:
+			• Add Precise Army feature
+			• Add Multi-Click Army 3 feature
+			• Add Request Defense troops feature
+			• Add Switch Profiles feature
+			• Add Farm Schedule feature
+			• Add Boost for Workshop, Resource Magic
+			• Add Clan Hop feature
+			• Add Four Finger Classic option for Standard Attack
+			• Add CSV Deployment Speed
+			• Add CSV '%', 'Sleep Before' cmd for CSV Attack
+			• Add Max logout time option
+			• Add Restart Search Legend league
+			• Add Builder time, Hero & Lab Stats
+			• Add Enable/Disable GUI while botting
+			• Add Auto Hide/Dock for Emulator
 
-	» Fixed:
-		• April Update Fixed Buildings info positions
-		• April Update Fixed Buildings icon positions
-		• April Update Fixed Auto upgrade button position
-		• April Update Fixed Okay button
-		• April Update Fixed Star Bonus button
-		• April Update Fixed Wall upgrade button
-		• April Update Fixed Loot Cart button
-		• April Update Fixed Treasury button
-		• April Update Fixed Boost for Magic in Town Hall
-		• April Update Fixed Builder time
-		• April Update Added Auto upgrade wall exclude
+		» Fixed:
+			• April Update Fixed Buildings info positions
+			• April Update Fixed Buildings icon positions
+			• April Update Fixed Auto upgrade button position
+			• April Update Fixed Okay button
+			• April Update Fixed Star Bonus button
+			• April Update Fixed Wall upgrade button
+			• April Update Fixed Loot Cart button
+			• April Update Fixed Treasury button
+			• April Update Fixed Boost for Magic in Town Hall
+			• April Update Fixed Builder time
+			• April Update Added Auto upgrade wall exclude
 
-	» Improved:
-		• Improve Switch Accounts for Supercell ID option
-		• And improve many other features....
+		» Improved:
+			• Improve Switch Accounts for Supercell ID option
+			• And improve many other features....

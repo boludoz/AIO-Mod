@@ -1,0 +1,68 @@
+NOTE  |          ★★★BNT★★★
+NOTE  |      ★★★TH-9-10-11-12-13★★★
+NOTE  |Troops: 20Giant minimum,20wiz minimum,20valk minimum,4healer minimum
+NOTE  |spell : 3Rage,2jump,cc valk and rage
+NOTE  |            15/12/2019
+
+
+
+
+      |EXTR. GOLD |EXTR.ELIXIR|EXTR. DARK |DEPO. GOLD |DEPO.ELIXIR|DEPO. DARK |TOWNHALL   |FORCED SIDE|
+SIDE  |0          |0          |0          |0          |0          |0          |10         |           |
+
+
+      |VECTOR_____|SIDE_______|DROP_POINTS|ADDTILES___|VERSUS_____|RANDOMX_PX_|RANDOMY_PX_|___________|MAKE VECTOR FOR FRONT SIDE ATTACK: GIANTS, WIZ, pekka,valk
+MAKE  |A          |FRONT-LEFT |10         |1          |INT-EXT    |0          |2          |           |vector for giant front left 
+MAKE  |B          |FRONT-RIGHT|10         |1          |INT-EXT    |0          |2          |           |vector for giant front right
+MAKE  |C          |FRONT-LEFT |10         |3          |INT-EXT    |0          |3          |           |vector for wiz and archers front left
+MAKE  |D          |FRONT-RIGHT|10         |3          |INT-EXT    |0          |3          |           |vector for wiz and archers front right
+MAKE  |E          |FRONT-LEFT |10         |3          |INT-EXT    |0          |3          |           |vector for valk front left
+MAKE  |F          |FRONT-LEFT |10         |1          |INT-EXT    |0          |1          |           |vector for 0
+MAKE  |G          |FRONT-RIGHT|10         |1          |INT-EXT    |0          |1          |           |vector for 0
+MAKE  |H          |FRONT-LEFT |10         |-7         |INT-EXT    |0          |1          |           |vector for jump,rage spell
+MAKE  |I          |FRONT-LEFT |10         |-14        |INT-EXT    |0          |1          |           |vector for jump spell
+MAKE  |J          |FRONT-LEFT |10         |-15        |EXT-INT    |0          |0          |           |vector for rage spell
+MAKE  |K          |FRONT-RIGHT|10         |-15        |EXT-INT    |0          |0          |           |vector for rage spell
+MAKE  |L          |FRONT-RIGHT|10         |-23        |EXT-INT    |0          |0          |           |vector for rage spell
+MAKE  |M          |FRONT-LEFT |10         |-17        |INT-EXT    |0          |5          |           |vector for haste spell
+
+      |VECTOR_____|INDEX______|QTY_X_VECT_|TROOPNAME__|DELAY_DROP_|DELAYCHANGE|SLEEPAFTER_|SLEEPBEFORE|
+DROP  |A          |10         |1          |King       |0          |0          |150-200    |           |
+DROP  |B          |10         |1          |Queen      |0          |0          |200-250    |           |
+WAIT  |8500-10000 |           |           |           |           |           |           |           |
+DROP  |A          |10         |1          |King       |0          |0          |100-150    |           |
+DROP  |B          |10         |1          |Queen      |0          |0          |200-250    |           |
+WAIT  |2500-3000  |           |           |           |           |           |           |           |
+DROP  |H          |1          |1          |Jspell     |50         |0          |500-600    |           |drop Jspell
+DROP  |I          |1          |1          |Jspell     |50         |0          |500-600    |           |drop Jspell
+DROP  |A          |2,3,4,5,6  |5          |giant      |50-70      |27-50      |0          |           |launch 5 giant
+DROP  |B          |1,2,3,5,4  |5          |giant      |50-70      |27-50      |0          |           |launch 5 giant
+DROP  |C          |1,3,2,4,5  |5          |giant      |50-70      |27-50      |0          |           |launch 5 giant
+DROP  |D          |1,2,3,4,5  |5          |giant      |50-70      |27-50      |0          |           |launch 5 giant
+DROP  |A          |1          |1          |WallW      |0          |50-70      |150-170    |           |Wall Wrecker
+WAIT  |1500-2000  |           |           |           |           |           |           |           | 
+DROP  |A          |2,3,4,5,6  |5          |wiza       |50-70      |27-50      |0          |           |launch 5 wiza
+DROP  |B          |1,2,3,5,4  |5          |wiza       |50-70      |27-50      |0          |           |launch 5 wiza
+DROP  |C          |1,3,2,4,5  |5          |wiza       |50-70      |27-50      |0          |           |launch 5 wiza
+DROP  |D          |1,2,3,4,5  |5          |wiza       |50-70      |27-50      |350-400    |           |launch 5 wiza
+DROP  |A          |1          |4          |heal       |50-70      |27-50      |0          |           |launch for healer 
+DROP  |A          |1          |1          |Champion   |0          |0          |50-70      |           |Launch RChampion
+DROP  |A          |1          |1          |warden     |0          |0          |50-70      |           |launch warden
+DROP  |H          |1          |1          |RSpell     |0          |0          |100-200    |           |drop rage spell
+WAIT  |5000-6000  |           |           |           |           |           |           |           |
+DROP  |A          |1          |1          |castle     |0          |0          |0          |           |launch castle  
+DROP  |E          |1-2        |20         |valk       |200        |0          |100-300    |           |launch all valks
+DROP  |J          |9          |1          |Rspell     |1          |0          |100-200    |           |drop rage
+DROP  |K          |9          |1          |Rspell     |10-50      |0          |100-200    |           |drop rage
+WAIT  |3000-5000  |           |           |           |           |           |           |           |
+DROP  |A          |1          |1          |warden     |30-50      |100        |50-100     |           |launch warden
+
+WAIT  |2500-3000  |           |           |           |           |           |           |           |
+DROP  |A          |1          |1          |Champion   |0          |0          |200-250    |           |Launch RChampion
+
+RECALC|           |           |           |           |           |           |           |           |
+
+DROP  |M          |3          |1          |HaSpell    |0          |0          |50-100     |           |drop healet
+DROP  |L          |10         |1          |Rspell     |1          |0          |5000-8000  |           |drop rage
+DROP  |C-D        |2-10       |10         |Arch       |10-30      |100        |100-200    |           |launch arch
+DROP  |A          |1          |20         |Remain     |0          |0          |100-500    |           |

@@ -795,19 +795,41 @@ EndFunc   ;==>TroopIndexLookup
 ; This function takes a troop,spell,hero, or castle index, based on the "Global Enum $eBarb, $eArch ... $eHaSpell, $eSkSpell" declaration,
 ; and returns the full name.
 ;--------------------------------------------------------------------------
-Func GetTroopName(Const $iIndex, $iQuantity = 1)
+#Region - Return short names - Team AiO MOD++
+Func GetTroopName(Const $iIndex, $iQuantity = 1, $bShortName = False)
 	If $iIndex >= $eBarb And $iIndex <= $eIceG Then
-		Return $iQuantity > 1 ? $g_asTroopNamesPlural[$iIndex] : $g_asTroopNames[$iIndex]
+		If Not $bShortName Then
+			Return $iQuantity > 1 ? $g_asTroopNamesPlural[$iIndex] : $g_asTroopNames[$iIndex]
+		Else
+			Return $g_asTroopShortNames[$iIndex]
+		EndIf
 	ElseIf $iIndex >= $eLSpell And $iIndex <= $eBtSpell Then
-		Return $iQuantity > 1 ? $g_asSpellNames[$iIndex - $eLSpell] & " Spells" : $g_asSpellNames[$iIndex - $eLSpell] & " Spell"
+		If Not $bShortName Then
+			Return $iQuantity > 1 ? $g_asSpellNames[$iIndex - $eLSpell] & " Spells" : $g_asSpellNames[$iIndex - $eLSpell] & " Spell"
+		Else
+			Return $g_asSpellShortNames[$iIndex - $eLSpell]
+		EndIf
 	ElseIf $iIndex >= $eKing And $iIndex <= $eChampion Then
-		Return $g_asHeroNames[$iIndex - $eKing]
+		If Not $bShortName Then
+			Return $g_asHeroNames[$iIndex - $eKing]
+		Else
+			Return $g_asHeroShortNames[$iIndex - $eKing]
+		EndIf
 	ElseIf $iIndex >= $eWallW And $iIndex <= $eSiegeB Then
-		Return $g_asSiegeMachineNames[$iIndex - $eWallW]
+		If Not $bShortName Then
+			Return $g_asSiegeMachineNames[$iIndex - $eWallW]
+		Else
+			Return $g_asSiegeMachineShortNames[$iIndex - $eWallW]
+		EndIf
 	ElseIf $iIndex = $eCastle Then
-		Return "Clan Castle"
+		If Not $bShortName Then
+			Return "Clan Castle"
+		Else
+			Return "Castle"
+		EndIf
 	EndIf
 EndFunc   ;==>GetTroopName
+#EndRegion - Return short names - Team AiO MOD++
 ;--------------------------------------------------------------------------
 ; END: GetTroopName()
 ;--------------------------------------------------------------------------

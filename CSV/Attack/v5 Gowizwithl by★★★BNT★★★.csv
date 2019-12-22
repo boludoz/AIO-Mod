@@ -1,0 +1,65 @@
+NOTE  |Authors: ★★★BNT★★★
+NOTE  |PUSH TH11/TH12
+NOTE  |Troops: 2Golem,18r17WIZ,4Healer,6r8Witch [SPELL] 4Rage,1Jump,1Haste
+NOTE  |Troops: CC Golem ARE Giant,Spell,Rage ARE Haste
+NOTE  |only Support [WallW]
+
+      |EXTR. GOLD |EXTR.ELIXIR|EXTR. DARK |DEPO. GOLD |DEPO.ELIXIR|DEPO. DARK |TOWNHALL   |FORCED SIDE|
+SIDE  |           |           |           |           |           |           |10         |           |
+      |EAGLE      |INFERNO    |XBOW       |WIZTOWER   |MORTAR     |AIRDEFENSE |GEMBOX     |GEMBOX     |
+SIDEB |5          |0          |0          |0          |0          |8          |           |           |
+
+      |VECTOR_____|SIDE_______|DROP_POINTS|ADDTILES___|VERSUS_____|RANDOMX_PX_|RANDOMY_PX_|___________|
+MAKE  |A          |FRONT-LEFT |10         |1          |INT-EXT    |0          |1          |           |
+MAKE  |B          |FRONT-RIGHT|10         |1          |INT-EXT    |0          |1          |           |
+MAKE  |C          |FRONT-RIGHT|10         |1          |EXT-INT    |0          |1          |           |  
+MAKE  |D          |FRONT-LEFT |10         |1          |EXT-INT    |0          |1          |           |
+MAKE  |E          |FRONT-LEFT |10         |-15        |EXT-INT    |0          |0          |           |
+MAKE  |F          |FRONT-LEFT |10         |-15        |EXT-INT    |0          |0          |           |
+MAKE  |G          |FRONT-LEFT |10         |-8         |EXT-INT    |0          |0          |           |
+MAKE  |H          |FRONT-RIGHT|10         |-23        |EXT-INT    |0          |0          |           | 
+MAKE  |I          |RIGHT-FRONT|10         |3          |EXT-INT    |0          |5          |           |  
+MAKE  |L          |LEFT-FRONT |10         |3          |EXT-INT    |0          |5          |           |
+MAKE  |M          |FRONT-RIGHT|10         |-15        |EXT-INT    |0          |0          |           |
+MAKE  |O          |FRONT-LEFT |10         |-17        |INT-EXT    |0          |5          |           |
+MAKE  |R          |FRONT-LEFT |10         |-23        |EXT-INT    |0          |0          |           |
+MAKE  |S          |FRONT-LEFT |10         |-12        |EXT-INT    |0          |5          |           | 
+
+
+      |VECTOR_____|INDEX______|QTY_X_VECT_|TROOPNAME__|DELAY_DROP_|DELAYCHANGE|SLEEPAFTER_|___________|
+DROP  |A-B        |6-7        |1          |gole       |0          |0          |600-800    |           |        
+DROP  |A          |1          |2          |CASTLE     |30-50      |0          |50-100     |           |
+DROP  |A          |1          |1          |WallW      |0          |0          |800-900    |           |
+  
+WAIT  |2500-3000  |           |           |           |           |           |           |           | 
+
+DROP  |C          |1,3,5,7,8  |5          |wiza       |50-70      |27-50      |0          |           |
+DROP  |D          |2,3,5,7,9  |5          |wiza       |50-70      |27-50      |0          |           |
+DROP  |E          |10         |1          |Jspell     |1          |0          |500-600    |           |
+DROP  |C-D        |10,9,8,9,10,8|7        |wiza       |30-50      |27-50      |50-100     |           |
+WAIT  |2500-3000  |           |           |           |           |           |           |           | 
+DROP  |A-B        |4,3,2,1,10,9,8,7|8     |Witc       |30-50      |27-50      |50-100     |           |
+DROP  |A          |1          |1          |king       |0          |0          |30-50      |           |
+DROP  |A          |1          |1          |queen      |0          |0          |50-50      |           | 
+DROP  |A          |1          |1          |warden     |0          |0          |50-50      |           | 
+DROP  |A-B        |1          |4          |heal       |30-50      |27-50      |50-100     |           |
+DROP  |G          |10         |1          |Rspell     |1          |0          |100-200    |           |
+WAIT  |5000-6000  |           |           |           |           |           |           |           |
+DROP  |F          |9          |1          |Rspell     |1          |0          |100-200    |           |
+DROP  |M          |9          |1          |Rspell     |10-50      |0          |100-200    |           |
+WAIT  |3000-5000  |           |           |           |           |           |           |           |
+DROP  |A          |1          |1          |warden     |30-50      |100        |50-100     |           |
+
+WAIT  |1000-2000   |           |           |           |           |           |           |           |
+
+RECALC|           |           |           |           |           |           |           |           |
+
+DROP  |O          |3          |1          |HaSpell    |0          |0          |50-100     |           |
+DROP  |R          |8          |1          |Rspell     |1          |0          |500-600    |           |
+DROP  |H          |9          |1          |Rspell     |1          |0          |5000-8000  |           |
+
+WAIT  |20000-22000|           |           |           |           |           |           |           |
+DROP  |A          |1          |1          |king       |0          |0          |200-300    |           |  
+DROP  |A          |1          |1          |queen      |0          |0          |500-800    |           |
+DROP  |C-D        |2-10       |10         |Arch       |10-30      |100        |100-200    |           |
+DROP  |A          |1          |20         |Remain     |0          |0          |100-500    |           |

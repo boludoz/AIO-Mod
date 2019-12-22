@@ -13,6 +13,10 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
+; No reddrop - Team AiO MOD++
+Global $g_aIsDead[UBound($g_avAttackTroops, 1)]
+Global $g_iSlotNow = -1
+
 Global Const $g_sLibModIconPath = $g_sLibPath & "\AIOMod.dll" ; Mod icon library - Team AiO MOD++
 ; enumerated Icons 1-based index to IconLibMod
 Global Enum $eIcnModKingGray = 1, $eIcnModKingBlue, $eIcnModKingGreen, $eIcnModKingRed, $eIcnModQueenGray, $eIcnModQueenBlue, $eIcnModQueenGreen, $eIcnModQueenRed, _

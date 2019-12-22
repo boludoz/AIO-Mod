@@ -14,16 +14,22 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func SelectDropTroop($iSlotIndex, $iClicks = 1, $iDelay = Default, $bCheckAttackPage = Default)
+	#Region - No reddrop - Team AiO MOD++
+	$g_iSlotNow = $iSlotIndex
+	
+	Local $aTropPosition = GetSlotPosition($iSlotIndex)
+	If IsArray($aTropPosition) And BitAnd($aTropPosition[0] = 0, $aTropPosition[1] = 0) Then Return False
 	If $iDelay = Default Then $iDelay = 0
 	If $bCheckAttackPage = Default Then $bCheckAttackPage = True
-	#Region - Prevent dead slots click - Team AIO Mod++
-	Local $aSlotPos = GetSlotPosition($iSlotIndex)
-	If Not $bCheckAttackPage Or BitAND(IsAttackPage(), not IsSlotDead($aSlotPos, True)) Then ClickPDrop($aSlotPos, $iClicks, $iDelay, "#0111")
-	#EndRegion
+	If Not $bCheckAttackPage Or IsAttackPage() Then ClickP($aTropPosition, $iClicks, $iDelay, "#0111")
+	Return True
+	#EndRegion - No reddrop - Team AiO MOD++
 EndFunc   ;==>SelectDropTroop
 
 Func GetSlotPosition($iSlotIndex, $bOCRPosition = False)
 	Local $aiReturnPosition[2] = [0, 0]
+	
+	If $g_aIsDead[$iSlotIndex] = 1 Then Return $aiReturnPosition ; No reddrop - Team AiO MOD++
 
 	If $iSlotIndex < 0 Or $iSlotIndex > UBound($g_avAttackTroops, 1) - 1 Then 
 		SetDebugLog("GetSlotPosition(" & $iSlotIndex & ", " & $bOCRPosition & "): Invalid slot index: " & $iSlotIndex)

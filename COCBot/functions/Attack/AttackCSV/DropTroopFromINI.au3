@@ -147,7 +147,9 @@ Func DropTroopFromINI($vectors, $indexStart, $indexEnd, $indexArray, $qtaMin, $q
 		If $g_iCSVLastTroopPositionDropTroopFromINI <> $troopSlotConst Then
 			ReleaseClicks()
 			If $bSelectTroop Then
-				SelectDropTroop($troopPosition) ; select the troop...
+				#Region - No reddrop - Team AiO MOD++
+				If SelectDropTroop($troopPosition) = False Then Return ; select the troop...
+				#EndRegion
 				ReleaseClicks()
 				KeepClicks()
 			EndIf
