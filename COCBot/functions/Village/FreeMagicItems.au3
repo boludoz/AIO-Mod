@@ -32,13 +32,16 @@ Func CollectFreeMagicItems($bTest = False)
 		SetLog("Trader available, Entering Daily Discounts", $COLOR_SUCCESS)
 		Click($g_iQuickMISX + 120, $g_iQuickMISY + 160)
 		If _Sleep(1500) Then Return
+	ElseIf QuickMIS("BC1", $g_sImgTrader, 90, 80, 350, 254, True, False) Then
+		Click($g_iQuickMISX - 15 + 90, $g_iQuickMISY + 58 + 80)
+		If _Sleep(1500) Then Return
 	Else
 		SetLog("Trader unavailable", $COLOR_INFO)
 		Return
 	EndIf
 
 	; Check Daily Discounts Window
-	If Not QuickMIS("BC1", $g_sImgDailyDiscountWindow, 310, 175, 385, 210, True, False) Then
+	If _Wait4PixelGone(492, 545, 0xE3F488, 15, 1500, 100, "Not Daily Discounts Window") Then
 		ClickP($aAway, 1, 0, "#0332") ;Click Away
 		Return
 	EndIf
@@ -78,7 +81,7 @@ Func CollectFreeMagicItems($bTest = False)
 				If Not $bTest And $g_bChkCollectMagicItems Then ConfirmPurchase()
 				If _Sleep(500) Then Return
 			Else
-				If _ColorCheck(_GetPixelColor($aOcrPositions[$i][0], $aOcrPositions[$i][1] + 5, True), Hex(0x5D79C5, 6), 5) Then
+				If _ColorCheck(_GetPixelColor(200, 439 + 5, True), Hex(0x5D79C5, 6), 5) Or _ColorCheck(_GetPixelColor(200, 439 + 5, True), Hex(0x0D9A7C, 6), 5) Then
 					$aResults[$i] = "(" & $aResults[$i] & " Gems)"
 				Else
 					$aResults[$i] = Int($aResults[$i]) > 0 ? "(No Space In Castle)" : "(Collected)"
