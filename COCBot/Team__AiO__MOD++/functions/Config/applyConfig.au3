@@ -24,6 +24,8 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			GUICtrlSetState($g_hDeployCastleFirst, $g_bDeployCastleFirst = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hDisableColorLog, $g_bDisableColorLog = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hAvoidLocation, $g_bAvoidLocation = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkNoDropIfShield, $g_bChkNoDropIfShield = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			chkNoDropIfShield()
 			chkDelayMod()
 		Case "Save"
 			$g_bUseSleep = (GUICtrlRead($g_hUseSleep) = $GUI_CHECKED) ? 1 : 0
@@ -33,6 +35,7 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			$g_bDeployCastleFirst = (GUICtrlRead($g_hDeployCastleFirst) = $GUI_CHECKED) ? 1 : 0
 			$g_bDisableColorLog = (GUICtrlRead($g_hDisableColorLog) = $GUI_CHECKED) ? 1 : 0
 			$g_bAvoidLocation = (GUICtrlRead($g_hAvoidLocation) = $GUI_CHECKED) ? 1 : 0
+			$g_bChkNoDropIfShield = (GUICtrlRead($g_hChkNoDropIfShield) = $GUI_CHECKED) ? 1 : 0
 	EndSwitch
 
 EndFunc   ;==>ApplyConfig_MOD_MiscTab

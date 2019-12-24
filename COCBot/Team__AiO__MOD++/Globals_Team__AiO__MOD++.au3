@@ -13,10 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-; No reddrop - Team AiO MOD++
-Global $g_aIsDead[UBound($g_avAttackTroops, 1)]
-Global $g_iSlotNow = -1
-
+; AIO Icons - Team AiO MOD++
 Global Const $g_sLibModIconPath = $g_sLibPath & "\AIOMod.dll" ; Mod icon library - Team AiO MOD++
 ; enumerated Icons 1-based index to IconLibMod
 Global Enum $eIcnModKingGray = 1, $eIcnModKingBlue, $eIcnModKingGreen, $eIcnModKingRed, $eIcnModQueenGray, $eIcnModQueenBlue, $eIcnModQueenGreen, $eIcnModQueenRed, _
@@ -25,7 +22,20 @@ Global Enum $eIcnModKingGray = 1, $eIcnModKingBlue, $eIcnModKingGreen, $eIcnModK
 		$eIcnModChat, $eIcnModRepeat, $eIcnModClan, $eIcnModTarget, $eIcnModSettings, $eIcnModBKingSX, $eIcnModAQueenSX, $eIcnModGWardenSX, $eIcnModDebug, $eIcnModClanHop, $eIcnModPrecise, _
 		$eIcnModAccountsS, $eIcnModProfilesS, $eIcnModFarmingS, $eIcnMiscMod, $eIcnSuperXP, $eIcnChatActions, $eIcnHumanization, $eIcnAIOMod, $eIcnMisc, _
 		$eIcnLabP, $eIcnShop, $eIcnGoldP, $eIcnElixirP, $eIcnDarkP, $eIcnGFTO, $eIcnDebugMod
-		
+
+; No reddrop - Team AiO MOD++
+Global $g_aIsDead[UBound($g_avAttackTroops, 1)]
+Global $g_iSlotNow = -1
+
+; Drop trophy - Team AiO MOD++
+Global $g_bChkNoDropIfShield = True
+; GUI
+Global $g_hChkNoDropIfShield
+
+; No reddrop - Team AiO MOD++
+Global $g_aIsDead[UBound($g_avAttackTroops, 1)]
+Global $g_iSlotNow = -1
+
 ; Misc tab - Team AiO MOD++
 Global $g_bUseSleep = False, $g_iIntSleep = 20, $g_bUseRandomSleep = False, $g_bNoAttackSleep = False, $g_bDeployCastleFirst = False, $g_bDisableColorLog = False, $g_bDelayLabel = False, $g_bAvoidLocation = False
 ; GUI

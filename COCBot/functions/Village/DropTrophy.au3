@@ -17,7 +17,16 @@ Func DropTrophy()
 
 	If $g_bDropTrophyEnable Then
 		SetDebugLog("Drop Trophy()", $COLOR_DEBUG)
-
+		
+		If $g_bChkNoDropIfShield Then
+			Local $aResult = getShieldInfo() ; get expire time of shield
+			
+			If Not $aResult[0] = "none" Then 
+				Setlog("Active shield, jumping Drop Trophy.", $COLOR_INFO)
+				Return
+			EndIf
+		EndIf
+		
 		If $g_bDebugDeadBaseImage Then
 			DirCreate($g_sProfileTempDebugPath & "\SkippedZombies\")
 			DirCreate($g_sProfileTempDebugPath & "\Zombies\")

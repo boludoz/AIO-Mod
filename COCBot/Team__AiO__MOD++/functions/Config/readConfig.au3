@@ -15,14 +15,14 @@
 ;<><><> Team AiO MOD++ (2019) <><><>
 Func ReadConfig_MOD_MiscTab()
 	; <><><> MiscTab <><><>
-	IniReadS($g_bUseSleep, $g_sProfileConfigPath, "CustomDelay", "UseSleep", True, "Bool")
-	IniReadS($g_iIntSleep, $g_sProfileConfigPath, "CustomDelay", "IntSleep", 20, "Int")
-	IniReadS($g_bUseRandomSleep, $g_sProfileConfigPath, "CustomDelay", "UseRandomSleep", False, "Bool")
-	IniReadS($g_bNoAttackSleep, $g_sProfileConfigPath, "CustomDelay", "NoAttackSleep", False, "Bool")
-	IniReadS($g_bDeployCastleFirst, $g_sProfileConfigPath, "CustomDelay", "DeployCastleFirst", False, "Bool")
-	IniReadS($g_bDisableColorLog, $g_sProfileConfigPath, "CustomDelay", "DisableColorLog", False, "Bool")
-	IniReadS($g_bAvoidLocation, $g_sProfileConfigPath, "CustomDelay", "AvoidLocation", False, "Bool")
-
+	IniReadS($g_bUseSleep, $g_sProfileConfigPath, "MiscTab", "UseSleep", $g_bUseSleep, "Bool")
+	IniReadS($g_iIntSleep, $g_sProfileConfigPath, "MiscTab", "IntSleep", $g_iIntSleep, "Int")
+	IniReadS($g_bUseRandomSleep, $g_sProfileConfigPath, "MiscTab", "UseRandomSleep", $g_bUseRandomSleep, "Bool")
+	IniReadS($g_bNoAttackSleep, $g_sProfileConfigPath, "MiscTab", "NoAttackSleep", $g_bNoAttackSleep, "Bool")
+	IniReadS($g_bDeployCastleFirst, $g_sProfileConfigPath, "MiscTab", "DeployCastleFirst", $g_bDeployCastleFirst, "Bool")
+	IniReadS($g_bDisableColorLog, $g_sProfileConfigPath, "MiscTab", "DisableColorLog", $g_bDisableColorLog, "Bool")
+	IniReadS($g_bAvoidLocation, $g_sProfileConfigPath, "MiscTab", "AvoidLocation", $g_bAvoidLocation, "Bool")
+	IniReadS($g_bChkNoDropIfShield, $g_sProfileConfigPath, "MiscTab", "ChkNoDropIfShield", $g_bChkNoDropIfShield, "Bool")
 EndFunc   ;==>ReadConfig_MOD_MiscTab
 
 Func ReadConfig_MOD_SuperXP()

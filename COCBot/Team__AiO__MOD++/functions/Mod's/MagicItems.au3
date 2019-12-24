@@ -67,8 +67,24 @@ Func BoostResourcePotion($aiTmp0 = 0, $aiTmp1 = 0)
 	Return False
 EndFunc   ;==>BoostTrainingPotion
 
-Func BuilderPotionBoost()
-	If $g_bChkBuilderPotion Then Return
+Func DbgBuilderPotionBoost($iDbgTotalBuilderCount = 5, $iDbgFreeBuilderCount = 5)
+	
+	Local $iTmpDbgTotalBuilderCount = $g_iTotalBuilderCount
+	Local $iTmpDbgFreeBuilderCount = $g_iFreeBuilderCount
+
+	$g_iTotalBuilderCount = $iDbgTotalBuilderCount
+	$g_iFreeBuilderCount = $iDbgFreeBuilderCount
+	
+	Local $bResult = BuilderPotionBoost(True)
+
+	$g_iTotalBuilderCount = $iTmpDbgTotalBuilderCount
+	$g_iFreeBuilderCount = $iTmpDbgFreeBuilderCount
+	
+	Return $bResult
+EndFunc 
+
+Func BuilderPotionBoost($bDebug = False)
+	If not $g_bChkBuilderPotion Then Return
 	
 	Local Static $iLastTimeChecked[8] = [0, 0, 0, 0, 0, 0, 0, 0]
 	
@@ -78,49 +94,51 @@ Func BuilderPotionBoost()
 
 		If Abs($g_iTotalBuilderCount - $g_iFreeBuilderCount) >= $g_iInputBuilderPotion Then
  			If _Sleep($DELAYBOOSTHEROES2) Then Return
- 			ForceCaptureRegion()
- 			Local $aResult = getNameBuilding(242, 490 + $g_iBottomOffsetY)
+			Click(Random(212, 453, 1), Random(114, 129, 1))
  			If _Sleep($DELAYBOOSTHEROES2) Then Return
- 			If $aResult <> "" Then
-				Click(Random(211, 109, 1), Random(457, 137, 1))
-				If _Sleep($DELAYBOOSTHEROES2) Then Return
-				If BoostPotionMod("BuilderPotion", False) Then 
-					$iLastTimeChecked[$g_iCurAccount] = 1
-					Return True
-					Else
+			ForceCaptureRegion()
+ 			Local $aResult = getNameBuilding(242, 490 + $g_iBottomOffsetY)
+				If $aResult <> "" Then
+					If _Sleep($DELAYBOOSTHEROES2) Then Return
+					If BoostPotionMod("BuilderPotion", $bDebug) Then 
+						$iLastTimeChecked[$g_iCurAccount] = 1
+						Return True
+						Else
+						Setlog("Magic Items| Fail builder potion.", $COLOR_ERROR)
 					Return false
+					EndIf
+				Else
+					Setlog("Magic Items| OCR Fail.", $COLOR_ERROR)
+					Return False
 				EndIf
 			Else
-				Setlog("Magic Items| Fail builder potion.", $COLOR_ERROR)
-				Return False
-			EndIf
+			Setlog("Magic Items| Condition not met.", $COLOR_ERROR)
+			Return False
 		EndIf
 	EndIf
 	Return True
 EndFunc
 
 Func ResourceBoost($aPos1 = 0, $aPos2 = 0)
- 		If $g_bChkResourcePotion Then Return
+ 		If not $g_bChkResourcePotion Then Return
 		
-		Local $iGold = $g_aiTempGainCost[0], $iElixir = $g_aiTempGainCost[1], $iDarkElixir = $g_aiTempGainCost[2]
-		
-		If BitAND($iElixir < $g_iInputElixirItems, $iDarkElixir < $g_iInputDarkElixirItems, $iGold < $g_iInputGoldItems) Then Return 
+		If Not BitAND($g_iInputGoldItems >= $g_aiTempGainCost[0], $g_iInputElixirItems >= $g_aiTempGainCost[1], $g_iInputDarkElixirItems >= $g_aiTempGainCost[2]) Then Return 
 		
 		Local Static $iLastTimeChecked[8] = [0, 0, 0, 0, 0, 0, 0, 0]
-		Local $aiResourcesPos[2] = [$aPos1, $aPos2]
 		
-		If $iLastTimeChecked[$g_iCurAccount] = 0 And not Abs($aiResourcesPos[0] + $aiResourcesPos[1]) = 0 Then
+		If $iLastTimeChecked[$g_iCurAccount] = 0 And not Int($aPos1 + $aPos2 <= 0) Then
+ 			If _Sleep($DELAYBOOSTHEROES2) Then Return
 
- 			ClickP($aiResourcesPos, 1, 0, "#Resources")
+ 			Click($aPos1, $aPos2 + 25, 1, 0, "#Resources")
  			If _Sleep($DELAYBOOSTHEROES2) Then Return
  			ForceCaptureRegion()
  			Local $aResult = BuildingInfo(242, 490 + $g_iBottomOffsetY)
  			If $aResult[0] > 1 Then
  				Local $sN = $aResult[1] ; Store bldg name
  				Local $sL = $aResult[2] ; Sotre bdlg level
- 				If StringInStr($sN, "Collector", $STR_NOCASESENSEBASIC) > 0 Then
+ 				If Number($sL) > 0 Then ; Multi Language
  					; Structure located
- 					SetLog("Find " & $sN & " (Level " & $sL & ") located at " & $aiResourcesPos[0] & ", " & $aiResourcesPos[1], $COLOR_SUCCESS)
+ 					SetLog("Find " & $sN & " (Level " & $sL & ") located at " & $aPos1 & ", " & $aPos2, $COLOR_SUCCESS)
  					If BoostPotionMod("ResourcePotion") Then 
 						$iLastTimeChecked[$g_iCurAccount] = 1
 						Return True
@@ -130,15 +148,33 @@ Func ResourceBoost($aPos1 = 0, $aPos2 = 0)
  				EndIf
 			EndIf
 			Else
-			Setlog("Magic Items| Fail resource potion.", $COLOR_ERROR)
+			;Setlog("Magic Items| Fail resource potion.", $COLOR_ERROR)
 			Return False
 		EndIf
 	Return False
 EndFunc
 
 Func BoostPotionMod($sName, $bDebug = False)
+
 	Local $aClick1[2] = [0, 0]
-	
+
+	; Security check
+	Switch $sName
+		Case "BuilderPotion"
+			If not $g_bChkBuilderPotion Then Return False
+		Case "ClockTowerPotion"
+			If not $g_bChkClockTowerPotion Then Return False
+		Case "HeroPotion"
+			If not $g_bChkHeroPotion Then Return False
+		Case "LabPotion"
+			If not $g_bChkLabPotion Then Return False
+		Case "ResourcePotion"
+			If not $g_bChkResourcePotion Then Return False
+		Case Else
+			Setlog("Magic Items : Invalid item " & $sName, $COLOR_ERROR)
+			Return False
+	EndSwitch
+
 	If _Sleep(500) Then Return False
 	
 	_ImageSearchXML($g_sImgPotionsBtn, 0, "134, 580, 730, 675", True, False, True, 25)
@@ -151,28 +187,10 @@ Func BoostPotionMod($sName, $bDebug = False)
 		
 		If Not ($g_aImageSearchXML[$iResult][0]) = $sName Then ContinueLoop
 		
-		Switch $sName
-			Case "BuilderPotion"
-				If $g_bChkBuilderPotion Then ExitLoop
-			Case "ClockTowerPotion"
-				If $g_bChkClockTowerPotion Then ExitLoop 
-			Case "HeroPotion"
-				If $g_bChkHeroPotion Then ExitLoop 
-			Case "LabPotion"
-				If $g_bChkLabPotion Then ExitLoop 
-			Case "ResourcePotion"
-				If $g_bChkResourcePotion Then ExitLoop 
-			;Case "PowerPotion" dont exist
-			;	If $g_bChkBuilderPotion Then ExitLoop 
-			;Case "BarracksPotion" Unused
-			;	If $g_bChkBuilderPotion Then ExitLoop 
-			Case Else
-				Setlog("Magic Items : Invalid item " & $sName, $COLOR_ERROR)
-				Return False
-		EndSwitch
 		$aClick1[0] = $g_aImageSearchXML[$iResult][1]
 		$aClick1[1] = $g_aImageSearchXML[$iResult][2]
 	Next
+	
 	
 	Setlog("Magic Items : Builder Potion boost " & $sName, $COLOR_SUCCESS)
 	ClickP($aClick1)

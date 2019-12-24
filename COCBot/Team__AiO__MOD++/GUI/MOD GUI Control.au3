@@ -22,6 +22,11 @@
 #include "MOD GUI Control - AiO-Debug.au3"
 #include "MOD GUI Control - MagicItems.au3"
 
+; Drop trophy - Team AiO MOD++
+Func chkNoDropIfShield()
+		$g_bChkNoDropIfShield = (GUICtrlRead($g_hChkNoDropIfShield) = $GUI_CHECKED)
+EndFunc   ;==>chkNoDropIfShield
+
 ; Misc tab - Team AiO MOD++
 Func chkDelayMod()
 	GUICtrlSetState($g_hDisableColorLog, $GUI_DISABLE)
@@ -51,7 +56,7 @@ Func chkDelayMod()
 		GUICtrlSetState($g_hUseRandomSleep, $GUI_DISABLE)
 		GUICtrlSetState($g_hNoAttackSleep, $GUI_DISABLE)
 	EndIf
-EndFunc
+EndFunc   ;==>chkDelayMod
 
 ; Classic Four Finger - Team AiO MOD++
 Func cmbStandardDropSidesAB() ; avoid conflict between FourFinger and SmartAttack

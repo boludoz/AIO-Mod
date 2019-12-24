@@ -320,15 +320,15 @@ Func IsSlotDead()
 	; Fuse
 	If $g_aIsDead[$g_iSlotNow] = 1 Then Return True
 	
-	Local $iX = Int($g_avAttackTroops[$g_iSlotNow][4])
-	Local $iY = 721
-	If _ColorCheck(_GetPixelColor($iX, 723), Hex(0xFFFFFF, 6), 15) = True Then
-		;SetLog("Slot NOT Dead X: " & $iX & " Y: " & $iY & " Slot: " & $g_iSlotNow, $COLOR_ORANGE)
-		ElseIf MultiPSimple($iX, $iY, $iX + 5, $iY + 2, Hex(0xFFFFFF, 6), 15, 200, 5) = 0 Then 
+	Local $iX = Int($g_avAttackTroops[$g_iSlotNow][3])
+	Local $iY = Int($g_avAttackTroops[$g_iSlotNow][4])
+	
+	If  _ColorCheck(_GetPixelColor($iX + 20, $iY + 20, True, "WAIT--> IsSlotDead"), Hex(0x474747, 6), 10) Then
 		SetLog("Slot Dead X: " & $iX & " Y: " & $iY & " Slot: " & $g_iSlotNow, $COLOR_ORANGE)
 			$g_aIsDead[$g_iSlotNow] = 1
-		;Return True
+		Return True
 	EndIf
+	Return False
 EndFunc   ;==>IsSlotDead
 
 Func AttackClick($x, $y, $times = 1, $speed = 0, $afterDelay = 0, $debugtxt = "")

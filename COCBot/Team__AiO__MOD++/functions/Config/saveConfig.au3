@@ -15,13 +15,14 @@
 ;<><><> Team AiO MOD++ (2019) <><><>
 Func SaveConfig_MOD_MiscTab()
 	; <><><> MiscTab <><><>
-	_Ini_Add("CustomDelay", "UseSleep", $g_bUseSleep)
-	_Ini_Add("CustomDelay", "IntSleep", $g_iIntSleep)
-	_Ini_Add("CustomDelay", "UseRandomSleep", $g_bUseRandomSleep)
-	_Ini_Add("CustomDelay", "NoAttackSleep", $g_bNoAttackSleep)
-	_Ini_Add("CustomDelay", "DeployCastleFirst", $g_bDeployCastleFirst)
-	_Ini_Add("CustomDelay", "DisableColorLog", $g_bDisableColorLog)
-	_Ini_Add("CustomDelay", "AvoidLocation", $g_bAvoidLocation)
+	_Ini_Add("MiscTab", "UseSleep", $g_bUseSleep)
+	_Ini_Add("MiscTab", "IntSleep", $g_iIntSleep)
+	_Ini_Add("MiscTab", "UseRandomSleep", $g_bUseRandomSleep)
+	_Ini_Add("MiscTab", "NoAttackSleep", $g_bNoAttackSleep)
+	_Ini_Add("MiscTab", "DeployCastleFirst", $g_bDeployCastleFirst)
+	_Ini_Add("MiscTab", "DisableColorLog", $g_bDisableColorLog)
+	_Ini_Add("MiscTab", "AvoidLocation", $g_bAvoidLocation)
+	_Ini_Add("MiscTab", "ChkNoDropIfShield", $g_bChkNoDropIfShield)
 EndFunc   ;==>SaveConfig_MOD_MiscTab
 
 Func SaveConfig_MOD_SuperXP()

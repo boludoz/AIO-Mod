@@ -32,6 +32,7 @@ Func Collect($bCheckTreasury = True)
 	Local $aCollectXY, $t
 
 	Local $aResult = returnMultipleMatchesOwnVillage($g_sImgCollectRessources)
+	Local $aiLootPoint[2] = [0, 0] ; Magic items - AIO Team Mod++
 
 	If UBound($aResult) > 1 Then ; we have an array with data of images found
 		For $i = 1 To UBound($aResult) - 1 ; loop through array rows
@@ -56,16 +57,18 @@ Func Collect($bCheckTreasury = True)
 			EndSwitch
 			Local $bArrayExist = False
 			If IsArray($aCollectXY) Then ; found array of locations
-					$bArrayExist = True
 					$t = Random(0, UBound($aCollectXY) - 1, 1) ; SC May 2017 update only need to pick one of each to collect all
 					If $g_bDebugSetlog Then SetDebugLog($sFileName & " found, random pick(" & $aCollectXY[$t][0] & "," & $aCollectXY[$t][1] & ")", $COLOR_GREEN)
 					If IsMainPage() Then Click($aCollectXY[$t][0], $aCollectXY[$t][1], 1, 0, "#0430")
+					
+					$aiLootPoint[0] = Number($aCollectXY[$t][0]) ; Magic items - AIO Team Mod++
+					$aiLootPoint[1] = Number($aCollectXY[$t][1]) ; Magic items - AIO Team Mod++
+					
 					If _Sleep($DELAYCOLLECT3) Then Return
-				Else
-				$bArrayExist = False
 			EndIf
 		Next
-		If $bArrayExist then ResourceBoost($aCollectXY[$t][0], $aCollectXY[$t][1] + 40) ; MOD - AIO Team
+		
+		If IsArray($aiLootPoint) Then ResourceBoost($aiLootPoint[0], $aiLootPoint[1]) ; Magic items - AIO Team Mod++
 	EndIf
 
 	If _Sleep($DELAYCOLLECT3) Then Return
