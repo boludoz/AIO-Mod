@@ -10,6 +10,10 @@
 		• CSV: 
 			- Add hero if it doesn't exist in CSV.
 			
+	**V3.1.7**
+		» Fixed:
+			• Daily discounts.
+			
 	**V3.1.6**
 		» Added:
 			• Option: Drop trophies only if the shield is not available. @darksider007 idea.
