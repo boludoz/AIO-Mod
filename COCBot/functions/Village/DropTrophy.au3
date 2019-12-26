@@ -50,28 +50,41 @@ Func DropTrophy($bDebug = False) ; Drop Throphy - Team AIO Mod++
 		If Number($g_aiCurrentLoot[$eLootTrophy]) <= Number($g_iDropTrophyMax) Then Return ; exit on trophy count to avoid other checks
 
 		; Check if proper troop types avail during last checkarmycamp(), no need to call separately since droptrophy checked often
-		Local $bHaveTroops = False
 
-		If BitOR($g_hChkTrophyTroops, $g_bChkTrophyHeroesAndTroops) and not $g_bDropTrophyUseHeroes Then
-			For $i = 0 To UBound($g_avDTtroopsToBeUsed, 1) - 1
-				If $g_avDTtroopsToBeUsed[$i][1] > 0 Then
-					$bHaveTroops = True
-					If $g_bDebugSetlog Then
-						SetDebugLog("Drop Trophy Found " & StringFormat("%3s", $g_avDTtroopsToBeUsed[$i][1]) & " " & $g_avDTtroopsToBeUsed[$i][0], $COLOR_DEBUG)
-						ContinueLoop ; display all troop counts if debug flag set
-					Else
-						ExitLoop ; Finding 1 troop type is enough to use trophy drop, stop checking rest when no debug flag
-					EndIf
+		; $g_bChkTrophyTroops, $g_bChkTrophyHeroesAndTroops, $g_bDropTrophyUseHeroes
+		Local $bHaveTroops = False
+		
+		For $i = 0 To UBound($g_avDTtroopsToBeUsed, 1) - 1
+			If $g_avDTtroopsToBeUsed[$i][1] > 0 Then
+				$bHaveTroops = True
+				If $g_bDebugSetlog Then
+					SetDebugLog("Drop Trophy Found " & StringFormat("%3s", $g_avDTtroopsToBeUsed[$i][1]) & " " & $g_avDTtroopsToBeUsed[$i][0], $COLOR_DEBUG)
+					ContinueLoop ; display all troop counts if debug flag set
+				Else
+					ExitLoop ; Finding 1 troop type is enough to use trophy drop, stop checking rest when no debug flag
 				EndIf
-			Next
-		EndIf
+			EndIf
+		Next
+			
+		Local $bHaveHero = False	
+
 		; if heroes enabled, check them and reset drop trophy disable
-		If BitOR($g_bDropTrophyUseHeroes, $g_bChkTrophyHeroesAndTroops) And $g_iHeroAvailable > 0 And not $g_hChkTrophyTroops Then
+		If $g_iHeroAvailable > 0 Then
 			If $g_bDebugSetlog Then SetDebugLog("Drop Trophy Found Hero BK|AQ|GW|RC: " & BitOR($g_iHeroAvailable, $eHeroKing) & "|" & BitOR($g_iHeroAvailable, $eHeroQueen) & "|" & BitOR($g_iHeroAvailable, $eHeroWarden) & "|" & BitOR($g_iHeroAvailable, $eHeroChampion), $COLOR_DEBUG)
-			$bHaveTroops = True
+			$bHaveHero = True
 		EndIf
 		
-		If Not $bHaveTroops And Not $bDebug Then ; troops available?  ; Drop Throphy - Team AIO Mod++
+		Local $bReadyToDrop = False
+		
+		If $g_bChkTrophyTroops Then
+			$bReadyToDrop = $bHaveTroops
+		ElseIf $g_bDropTrophyUseHeroes Then
+			$bReadyToDrop = $bHaveHero
+		ElseIf $g_bChkTrophyHeroesAndTroops Then
+			$bReadyToDrop = BitOR($bHaveHero, $bHaveTroops)
+		EndIf
+
+		If Not $bReadyToDrop And Not $bDebug Then ; troops available?  ; Drop Throphy - Team AIO Mod++
 			SetLog("Drop Trophy temporarily disabled, missing proper troop type", $COLOR_ERROR)
 			SetDebugLog("Drop Trophy(): No troops in $g_avDTtroopsToBeUsed array", $COLOR_DEBUG)
 			Return
@@ -89,24 +102,43 @@ Func DropTrophy($bDebug = False) ; Drop Throphy - Team AIO Mod++
 			$g_aiCurrentLoot[$eLootTrophy] = getTrophyMainScreen($aTrophies[0], $aTrophies[1])
 			SetLog("Trophy Count : " & $g_aiCurrentLoot[$eLootTrophy], $COLOR_SUCCESS)
 			If Number($g_aiCurrentLoot[$eLootTrophy]) > Number($g_iDropTrophyMaxNeedCheck) Then
+				
+				If not $bDebug Then ; Drop Throphy - Team AIO Mod++
+					; Check for enough troops before starting base search to save search costs
+					If $g_bDropTrophyAtkDead and not $g_bDropTrophyUseHeroes Then
+						; If attack dead bases during trophy drop is enabled then make sure we have enough army troops
+						If ($g_CurrentCampUtilization <= ($g_iTotalCampSpace * $DTArmyPercent)) Then ; check if current troops above setting
+							SetLog("Drop Trophy is waiting for " & $g_iDropTrophyArmyMinPct & "% full army to also attack Deadbases.", $COLOR_ACTION)
+							SetDebugLog("Drop Trophy(): Drop Trophy + Dead Base skipped, army < " & $g_iDropTrophyArmyMinPct & "%.", $COLOR_DEBUG)
+							ExitLoop ; no troops then cycle again
+						EndIf
 
-				; Check for enough troops before starting base search to save search costs
-				If $g_bDropTrophyAtkDead And not $bDebug Then ; Drop Throphy - Team AIO Mod++
-					; If attack dead bases during trophy drop is enabled then make sure we have enough army troops
-					If ($g_CurrentCampUtilization <= ($g_iTotalCampSpace * $DTArmyPercent)) Then ; check if current troops above setting
-						SetLog("Drop Trophy is waiting for " & $g_iDropTrophyArmyMinPct & "% full army to also attack Deadbases.", $COLOR_ACTION)
-						SetDebugLog("Drop Trophy(): Drop Trophy + Dead Base skipped, army < " & $g_iDropTrophyArmyMinPct & "%.", $COLOR_DEBUG)
-						ExitLoop ; no troops then cycle again
+						; no deadbase attacks enabled, then only 1 giant or hero needed to enable drop trophy to work
+					Else
+						#Region - Drop Throphy - Team AIO Mod++
+						Switch True
+							Case $g_bChkTrophyHeroesAndTroops
+								If ($g_CurrentCampUtilization < 5) And ($g_iHeroAvailable = $eHeroNone) Then 
+									SetLog("DropTrophy, no hero or troops ready.", $COLOR_INFO)
+									ExitLoop ; no troops then cycle again
+								EndIf
+							Case $g_hChkTrophyTroops
+								If ($g_CurrentCampUtilization < 5) Then 
+									SetLog("DropTrophy, no troops ready.", $COLOR_INFO)
+									ExitLoop ; no troops then cycle again
+								EndIf
+							Case $g_bDropTrophyUseHeroes
+								If ($g_iHeroAvailable = $eHeroNone) Then 
+									SetLog("DropTrophy, no hero ready.", $COLOR_INFO)
+									ExitLoop ; no troops then cycle again
+								EndIf
+							Case Else
+								SetLog("DropTrophy error, no radio selected.", $COLOR_ERROR)
+							ExitLoop ; no troops then cycle again
+						EndSwitch
 					EndIf
-
-					; no deadbase attacks enabled, then only 1 giant or hero needed to enable drop trophy to work
-				ElseIf not $bDebug Then ; Drop Throphy - Team AIO Mod++
-					If ($g_CurrentCampUtilization < 5) And ($g_bDropTrophyUseHeroes And $g_iHeroAvailable = $eHeroNone) Then
-						SetLog("No troops available to use on Drop Trophy", $COLOR_ERROR)
-						SetDebugLog("Drop Trophy(): Drop Trophy skipped, no army.", $COLOR_DEBUG)
-						ExitLoop ; no troops then cycle again
-					EndIf
-				EndIf
+					#EndRegion - Drop Throphy - Team AIO Mod++
+				EndIf ; Drop Throphy - Team AIO Mod++
 
 				$g_iDropTrophyMaxNeedCheck = $g_iDropTrophyMin ; already checked above max trophy, so set target to min trophy value
 				SetLog("Dropping Trophies to " & $g_iDropTrophyMin, $COLOR_INFO)
