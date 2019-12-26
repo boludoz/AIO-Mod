@@ -28,9 +28,9 @@ Global $g_aIsDead[UBound($g_avAttackTroops, 1)]
 Global $g_iSlotNow = -1
 
 ; Drop trophy - Team AiO MOD++
-Global $g_bChkNoDropIfShield = True
+Global $g_bChkNoDropIfShield = True, $g_bChkTrophyTroops = False, $g_bChkTrophyHeroesAndTroops = True
 ; GUI
-Global $g_hChkNoDropIfShield
+Global $g_hChkNoDropIfShield, $g_hChkTrophyTroops, $g_hChkTrophyHeroesAndTroops
 
 ; No reddrop - Team AiO MOD++
 Global $g_aIsDead[UBound($g_avAttackTroops, 1)]

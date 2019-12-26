@@ -22,7 +22,6 @@ Func ReadConfig_MOD_MiscTab()
 	IniReadS($g_bDeployCastleFirst, $g_sProfileConfigPath, "MiscTab", "DeployCastleFirst", $g_bDeployCastleFirst, "Bool")
 	IniReadS($g_bDisableColorLog, $g_sProfileConfigPath, "MiscTab", "DisableColorLog", $g_bDisableColorLog, "Bool")
 	IniReadS($g_bAvoidLocation, $g_sProfileConfigPath, "MiscTab", "AvoidLocation", $g_bAvoidLocation, "Bool")
-	IniReadS($g_bChkNoDropIfShield, $g_sProfileConfigPath, "MiscTab", "ChkNoDropIfShield", $g_bChkNoDropIfShield, "Bool")
 EndFunc   ;==>ReadConfig_MOD_MiscTab
 
 Func ReadConfig_MOD_SuperXP()
@@ -48,7 +47,7 @@ Func ReadConfig_MOD_MagicItems()
 
 	IniReadS($g_iInputBuilderPotion, $g_sProfileConfigPath, "MagicItems", "InputBuilderPotion", $g_iInputBuilderPotion, "int")
 	IniReadS($g_iInputLabPotion, $g_sProfileConfigPath, "MagicItems", "InputLabPotion", $g_iInputLabPotion, "int")
-	
+
 	IniReadS($g_iComboClockTowerPotion, $g_sProfileConfigPath, "MagicItems", "ComboClockTowerPotion", $g_iComboClockTowerPotion, "int")
 	IniReadS($g_iComboHeroPotion, $g_sProfileConfigPath, "MagicItems", "ComboHeroPotion", $g_iComboHeroPotion, "int")
 	IniReadS($g_iComboPowerPotion, $g_sProfileConfigPath, "MagicItems", "ComboPowerPotion", $g_iComboPowerPotion, "int")

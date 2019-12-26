@@ -13,20 +13,26 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func DropTrophy()
+Func DropTrophy($bDebug = False) ; Drop Throphy - Team AIO Mod++
 
 	If $g_bDropTrophyEnable Then
 		SetDebugLog("Drop Trophy()", $COLOR_DEBUG)
 		
+		#Region - Drop Throphy - Team AIO Mod++
 		If $g_bChkNoDropIfShield Then
 			Local $aResult = getShieldInfo() ; get expire time of shield
-			
-			If Not $aResult[0] = "none" Then 
-				Setlog("Active shield, jumping Drop Trophy.", $COLOR_INFO)
-				Return
+			If IsArray($aResult) Then
+				SetDebuglog("Drop trophy : " & $aResult[0], $COLOR_ERROR)
+				If BitOr($aResult[0] <> "none", $aResult[0] = "shield", $aResult[0] = "guard") Then 
+					Setlog("Active " & $aResult[0] & " , jumping Drop Trophy.", $COLOR_INFO)
+					Return
+				EndIf
+				Else
+				Setlog("Error In jumping Drop Trophy.", $COLOR_ERROR)
 			EndIf
 		EndIf
-		
+		#EndRegion - Drop Throphy - Team AIO Mod++
+
 		If $g_bDebugDeadBaseImage Then
 			DirCreate($g_sProfileTempDebugPath & "\SkippedZombies\")
 			DirCreate($g_sProfileTempDebugPath & "\Zombies\")
@@ -45,24 +51,27 @@ Func DropTrophy()
 
 		; Check if proper troop types avail during last checkarmycamp(), no need to call separately since droptrophy checked often
 		Local $bHaveTroops = False
-		For $i = 0 To UBound($g_avDTtroopsToBeUsed, 1) - 1
-			If $g_avDTtroopsToBeUsed[$i][1] > 0 Then
-				$bHaveTroops = True
-				If $g_bDebugSetlog Then
-					SetDebugLog("Drop Trophy Found " & StringFormat("%3s", $g_avDTtroopsToBeUsed[$i][1]) & " " & $g_avDTtroopsToBeUsed[$i][0], $COLOR_DEBUG)
-					ContinueLoop ; display all troop counts if debug flag set
-				Else
-					ExitLoop ; Finding 1 troop type is enough to use trophy drop, stop checking rest when no debug flag
+
+		If BitOR($g_hChkTrophyTroops, $g_bChkTrophyHeroesAndTroops) and not $g_bDropTrophyUseHeroes Then
+			For $i = 0 To UBound($g_avDTtroopsToBeUsed, 1) - 1
+				If $g_avDTtroopsToBeUsed[$i][1] > 0 Then
+					$bHaveTroops = True
+					If $g_bDebugSetlog Then
+						SetDebugLog("Drop Trophy Found " & StringFormat("%3s", $g_avDTtroopsToBeUsed[$i][1]) & " " & $g_avDTtroopsToBeUsed[$i][0], $COLOR_DEBUG)
+						ContinueLoop ; display all troop counts if debug flag set
+					Else
+						ExitLoop ; Finding 1 troop type is enough to use trophy drop, stop checking rest when no debug flag
+					EndIf
 				EndIf
-			EndIf
-		Next
+			Next
+		EndIf
 		; if heroes enabled, check them and reset drop trophy disable
-		If $g_bDropTrophyUseHeroes And $g_iHeroAvailable > 0 Then
+		If BitOR($g_bDropTrophyUseHeroes, $g_bChkTrophyHeroesAndTroops) And $g_iHeroAvailable > 0 And not $g_hChkTrophyTroops Then
 			If $g_bDebugSetlog Then SetDebugLog("Drop Trophy Found Hero BK|AQ|GW|RC: " & BitOR($g_iHeroAvailable, $eHeroKing) & "|" & BitOR($g_iHeroAvailable, $eHeroQueen) & "|" & BitOR($g_iHeroAvailable, $eHeroWarden) & "|" & BitOR($g_iHeroAvailable, $eHeroChampion), $COLOR_DEBUG)
 			$bHaveTroops = True
 		EndIf
-
-		If Not $bHaveTroops Then ; troops available?
+		
+		If Not $bHaveTroops And Not $bDebug Then ; troops available?  ; Drop Throphy - Team AIO Mod++
 			SetLog("Drop Trophy temporarily disabled, missing proper troop type", $COLOR_ERROR)
 			SetDebugLog("Drop Trophy(): No troops in $g_avDTtroopsToBeUsed array", $COLOR_DEBUG)
 			Return
@@ -82,7 +91,7 @@ Func DropTrophy()
 			If Number($g_aiCurrentLoot[$eLootTrophy]) > Number($g_iDropTrophyMaxNeedCheck) Then
 
 				; Check for enough troops before starting base search to save search costs
-				If $g_bDropTrophyAtkDead Then
+				If $g_bDropTrophyAtkDead And not $bDebug Then ; Drop Throphy - Team AIO Mod++
 					; If attack dead bases during trophy drop is enabled then make sure we have enough army troops
 					If ($g_CurrentCampUtilization <= ($g_iTotalCampSpace * $DTArmyPercent)) Then ; check if current troops above setting
 						SetLog("Drop Trophy is waiting for " & $g_iDropTrophyArmyMinPct & "% full army to also attack Deadbases.", $COLOR_ACTION)
@@ -91,7 +100,7 @@ Func DropTrophy()
 					EndIf
 
 					; no deadbase attacks enabled, then only 1 giant or hero needed to enable drop trophy to work
-				Else
+				ElseIf not $bDebug Then ; Drop Throphy - Team AIO Mod++
 					If ($g_CurrentCampUtilization < 5) And ($g_bDropTrophyUseHeroes And $g_iHeroAvailable = $eHeroNone) Then
 						SetLog("No troops available to use on Drop Trophy", $COLOR_ERROR)
 						SetDebugLog("Drop Trophy(): Drop Trophy skipped, no army.", $COLOR_DEBUG)
@@ -171,7 +180,7 @@ Func DropTrophy()
 				If _Sleep($DELAYDROPTROPHY4) Then ExitLoop
 
 				; Drop a Hero or Troop
-				If $g_bDropTrophyUseHeroes Then
+				If BitOR($g_bDropTrophyUseHeroes, $g_bChkTrophyHeroesAndTroops) Then
 					;a) identify heroes avaiables...
 					SetSlotSpecialTroops()
 
@@ -263,7 +272,7 @@ Func DropTrophy()
 						Next
 					EndIf
 				EndIf
-				If ($g_iQueenSlot = -1 And $g_iKingSlot = -1 And $g_iWardenSlot = -1 And $g_iChampionSlot = -1) Or Not $g_bDropTrophyUseHeroes Then
+				If ($g_iQueenSlot = -1 And $g_iKingSlot = -1 And $g_iWardenSlot = -1 And $g_iChampionSlot = -1) Or Not BitOR($g_bDropTrophyUseHeroes, $g_bChkTrophyHeroesAndTroops) Then
 					$aRandomEdge = $g_aaiEdgeDropPoints[Round(Random(0, 3))]
 					$iRandomXY = Round(Random(0, 4))
 					If $g_bDebugSetlog Then SetDebugLog("Troop Loc = " & $iRandomXY & ", X:Y= " & $aRandomEdge[$iRandomXY][0] & "|" & $aRandomEdge[$iRandomXY][1], $COLOR_DEBUG)

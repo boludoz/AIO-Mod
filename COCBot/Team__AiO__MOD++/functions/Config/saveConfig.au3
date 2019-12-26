@@ -15,6 +15,7 @@
 ;<><><> Team AiO MOD++ (2019) <><><>
 Func SaveConfig_MOD_MiscTab()
 	; <><><> MiscTab <><><>
+	ApplyConfig_MOD_MiscTab(GetApplyConfigSaveAction())
 	_Ini_Add("MiscTab", "UseSleep", $g_bUseSleep)
 	_Ini_Add("MiscTab", "IntSleep", $g_iIntSleep)
 	_Ini_Add("MiscTab", "UseRandomSleep", $g_bUseRandomSleep)
@@ -22,7 +23,6 @@ Func SaveConfig_MOD_MiscTab()
 	_Ini_Add("MiscTab", "DeployCastleFirst", $g_bDeployCastleFirst)
 	_Ini_Add("MiscTab", "DisableColorLog", $g_bDisableColorLog)
 	_Ini_Add("MiscTab", "AvoidLocation", $g_bAvoidLocation)
-	_Ini_Add("MiscTab", "ChkNoDropIfShield", $g_bChkNoDropIfShield)
 EndFunc   ;==>SaveConfig_MOD_MiscTab
 
 Func SaveConfig_MOD_SuperXP()
@@ -50,7 +50,7 @@ Func SaveConfig_MOD_MagicItems()
 
 	_Ini_Add("MagicItems", "InputBuilderPotion", $g_iInputBuilderPotion)
 	_Ini_Add("MagicItems", "InputLabPotion", $g_iInputLabPotion)
-	
+
 	_Ini_Add("MagicItems", "ComboClockTowerPotion", $g_iComboClockTowerPotion)
 	_Ini_Add("MagicItems", "ComboHeroPotion", $g_iComboHeroPotion)
 	_Ini_Add("MagicItems", "ComboPowerPotion", $g_iComboPowerPotion)
@@ -93,7 +93,7 @@ Func SaveConfig_MOD_ChatActions()
 
 	$g_sIAVar = _ArrayToString($g_aIAVar)
 	_Ini_Add("ChatActions", "String", $g_sIAVar)
-	
+
 	_Ini_Add("ChatActions", "ResponseMsgClan", $g_sClanResponses)
 	_Ini_Add("ChatActions", "GenericMsgClan", $g_sClanGeneric)
 	_Ini_Add("ChatActions", "FriendlyChallengeText", $g_sChallengeText)

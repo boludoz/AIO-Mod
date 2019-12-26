@@ -1186,6 +1186,10 @@ Func ReadConfig_600_32()
 	IniReadS($g_iDropTrophyHeroesPriority, $g_sProfileConfigPath, "search", "cmbTrophyHeroesPriority", 0, "int")
 	IniReadS($g_bDropTrophyAtkDead, $g_sProfileConfigPath, "search", "chkTrophyAtkDead", False, "Bool")
 	IniReadS($g_iDropTrophyArmyMinPct, $g_sProfileConfigPath, "search", "DTArmyMin", 70, "int")
+	; Drop Throphy - Team AIO Mod++
+	IniReadS($g_bChkNoDropIfShield, $g_sProfileConfigPath, "search", "ChkNoDropIfShield", $g_bChkNoDropIfShield, "Bool")
+	IniReadS($g_bChkTrophyTroops, $g_sProfileConfigPath, "search", "ChkTrophyTroops", $g_bChkTrophyTroops, "Bool")
+	IniReadS($g_bChkTrophyHeroesAndTroops, $g_sProfileConfigPath, "search", "ChkTrophyHeroesAndTroops", $g_bChkTrophyHeroesAndTroops, "Bool")
 EndFunc   ;==>ReadConfig_600_32
 
 Func ReadConfig_600_33()

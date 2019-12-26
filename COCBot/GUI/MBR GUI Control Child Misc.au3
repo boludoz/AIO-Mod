@@ -372,6 +372,11 @@ Func chkTrophyRange()
 		GUICtrlSetState($g_hTxtMaxTrophy, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkTrophyHeroes, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkTrophyAtkDead, $GUI_ENABLE)
+        #Region - Drop Throphy - Team AIO Mod++
+		GUICtrlSetState($g_hChkTrophyTroops, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkTrophyHeroesAndTroops, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkNoDropIfShield, $GUI_ENABLE)
+        #EndRegion - Drop Throphy - Team AIO Mod++
 		chkTrophyAtkDead()
 		chkTrophyHeroes()
 	Else
@@ -384,6 +389,11 @@ Func chkTrophyRange()
 		GUICtrlSetState($g_hLblDropTrophyArmyPercent, $GUI_DISABLE)
 		GUICtrlSetState($g_hLblTrophyHeroesPriority, $GUI_DISABLE)
 		GUICtrlSetState($g_hCmbTrophyHeroesPriority, $GUI_DISABLE)
+        #Region - Drop Throphy - Team AIO Mod++
+		GUICtrlSetState($g_hChkTrophyTroops, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkTrophyHeroesAndTroops, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkNoDropIfShield, $GUI_DISABLE)
+        #EndRegion - Drop Throphy - Team AIO Mod++
 	EndIf
 EndFunc   ;==>chkTrophyRange
 
@@ -543,7 +553,7 @@ Func TxtMaxTrophy()
 EndFunc   ;==>TxtMaxTrophy
 
 Func chkTrophyHeroes()
-	If GUICtrlRead($g_hChkTrophyHeroes) = $GUI_CHECKED Then
+	If GUICtrlRead($g_hChkTrophyHeroes) = $GUI_CHECKED Or GUICtrlRead($g_hChkTrophyHeroesAndTroops) = $GUI_CHECKED Then ; Drop Throphy - Team AIO Mod++
 		GUICtrlSetState($g_hLblTrophyHeroesPriority, $GUI_ENABLE)
 		GUICtrlSetState($g_hCmbTrophyHeroesPriority, $GUI_ENABLE)
 	Else

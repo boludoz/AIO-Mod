@@ -1789,10 +1789,15 @@ Func ApplyConfig_600_32($TypeReadSave)
 			GUICtrlSetData($g_hTxtMaxTrophy, $g_iDropTrophyMax)
 			GUICtrlSetData($g_hTxtDropTrophy, $g_iDropTrophyMin)
 			GUICtrlSetState($g_hChkTrophyHeroes, $g_bDropTrophyUseHeroes ? $GUI_CHECKED : $GUI_UNCHECKED)
-			chkTrophyHeroes()
 			_GUICtrlComboBox_SetCurSel($g_hCmbTrophyHeroesPriority, $g_iDropTrophyHeroesPriority)
 			GUICtrlSetState($g_hChkTrophyAtkDead, $g_bDropTrophyAtkDead ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hTxtDropTrophyArmyMin, $g_iDropTrophyArmyMinPct)
+			; Drop Throphy - Team AIO Mod++ 
+			GUICtrlSetState($g_hChkNoDropIfShield, $g_bChkNoDropIfShield ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkTrophyTroops, $g_bChkTrophyTroops ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkTrophyHeroesAndTroops, $g_bChkTrophyHeroesAndTroops ? $GUI_CHECKED : $GUI_UNCHECKED)
+			chkNoDropIfShield()
+			chkTrophyHeroes()
 			chkTrophyRange()
 			TxtDropTrophy()
 			TxtMaxTrophy()
@@ -1804,6 +1809,10 @@ Func ApplyConfig_600_32($TypeReadSave)
 			$g_iDropTrophyHeroesPriority = _GUICtrlComboBox_GetCurSel($g_hCmbTrophyHeroesPriority)
 			$g_bDropTrophyAtkDead = (GUICtrlRead($g_hChkTrophyAtkDead) = $GUI_CHECKED)
 			$g_iDropTrophyArmyMinPct = GUICtrlRead($g_hTxtDropTrophyArmyMin)
+			; Drop Throphy - Team AIO Mod++ 
+			$g_bChkNoDropIfShield = (GUICtrlRead($g_hChkNoDropIfShield) = $GUI_CHECKED) ? 1 : 0
+			$g_bChkTrophyTroops = (GUICtrlRead($g_hChkTrophyTroops) = $GUI_CHECKED) ? 1 : 0
+			$g_bChkTrophyHeroesAndTroops = (GUICtrlRead($g_hChkTrophyHeroesAndTroops) = $GUI_CHECKED) ? 1 : 0
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_32
 

@@ -1012,6 +1012,10 @@ Func SaveConfig_600_32()
 	_Ini_Add("search", "cmbTrophyHeroesPriority", $g_iDropTrophyHeroesPriority)
 	_Ini_Add("search", "chkTrophyAtkDead", $g_bDropTrophyAtkDead ? 1 : 0)
 	_Ini_Add("search", "DTArmyMin", $g_iDropTrophyArmyMinPct)
+	; Drop Throphy - Team AIO Mod++
+	_Ini_Add("search", "ChkNoDropIfShield", $g_bChkNoDropIfShield)
+	_Ini_Add("search", "ChkTrophyTroops", $g_bChkTrophyTroops)
+	_Ini_Add("search", "ChkTrophyHeroesAndTroops", $g_bChkTrophyHeroesAndTroops)
 EndFunc   ;==>SaveConfig_600_32
 
 Func SaveConfig_600_33()

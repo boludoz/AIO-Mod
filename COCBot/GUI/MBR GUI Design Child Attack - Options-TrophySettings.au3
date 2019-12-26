@@ -94,11 +94,20 @@ Func CreateAttackSearchOptionsTrophySettings()
 
 	$y += 24
 	$x += 20
-		$g_hChkTrophyHeroes = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-TrophySettings", "ChkTrophyHeroes", "Use Heroes To Drop Trophies"), $x, $y, -1, -1)
+        #Region - Drop Throphy - Team AIO Mod++
+		$g_hChkTrophyHeroes = GUICtrlCreateRadio(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-TrophySettings", "ChkTrophyHeroes_0", "Use heroes."), $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-TrophySettings", "ChkTrophyHeroes_Info_01", "Use Heroes to drop Trophies if Heroes are available."))
-			GUICtrlSetState(-1,$GUI_DISABLE)
+			;GUICtrlSetState(-1,$GUI_DISABLE)
 			GUICtrlSetOnEvent(-1, "chkTrophyHeroes")
-
+		$g_hChkTrophyTroops = GUICtrlCreateRadio(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-TrophySettings", "ChkTrophyHeroes_1", "Use troops."), $x + 75, $y, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-TrophySettings", "ChkTrophyHeroes_Info_02", "Use Troops to drop Trophies if troops are available."))
+			;GUICtrlSetState(-1,$GUI_DISABLE)
+			GUICtrlSetOnEvent(-1, "chkTrophyHeroes")
+		$g_hChkTrophyHeroesAndTroops = GUICtrlCreateRadio(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-TrophySettings", "ChkTrophyHeroes_2", "Use heroes and troops."), $x + 75 + 75, $y, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-TrophySettings", "ChkTrophyHeroes_Info_03", "Use Heroes and troops to drop Trophies if are available."))
+			;GUICtrlSetState(-1,$GUI_DISABLE)
+			GUICtrlSetOnEvent(-1, "chkTrophyHeroes")
+        #EndRegion - Drop Throphy - Team AIO Mod++
 	$y += 25
 		$g_hLblTrophyHeroesPriority = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-TrophySettings", "LblTrophyHeroesPriority", "Priority Hero to Use") & ":", $x + 16, $y, 110, -1)
 		$g_hCmbTrophyHeroesPriority = GUICtrlCreateCombo("", $x + 125, $y - 4 , 170, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
@@ -106,7 +115,7 @@ Func CreateAttackSearchOptionsTrophySettings()
 			Local $txtPriorityConnector = ">"
 			Local $txtPriorityDefault = GetTranslatedFileIni("MBR Global GUI Design Names Troops", "Queen", -1) & $txtPriorityConnector & _
 										GetTranslatedFileIni("MBR Global GUI Design Names Troops", "King", -1) & $txtPriorityConnector & _
-										GetTranslatedFileIni("MBR Global GUI Design Names Troops", "Warden", -1)
+										GetTranslatedFileIni("MBR Global GUI Design Names Troops", "Warden", -1) & $txtPriorityConnector & _
 										GetTranslatedFileIni("MBR Global GUI Design Names Troops", "Champion", -1) ; default value Queen, King, G.Warden, Royal Champion
 			Local $txtPriorityList = "" & _
 			GetTranslatedFileIni("MBR Global GUI Design Names Troops", "Queen", -1) & $txtPriorityConnector & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "King", -1) & $txtPriorityConnector & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "Warden", -1) & $txtPriorityConnector & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "Champion", -1) & "|" & _
