@@ -892,6 +892,11 @@ Global Const $g_sBBDropOrderDefault = "BoxerGiant|HogGlider|SuperPekka|DropShip|
 Global $g_sBBDropOrder = $g_sBBDropOrderDefault
 Global $g_ahCmbBBDropOrder[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
+#Region - Custom BBase army - Team AIO Mod++
+Global $g_hBtnBBArmy = 0
+Global $g_hGUI_BBArmy = 0
+#EndRegion - Custom BBase army - Team AIO Mod++
+
 ; <><><><> Village / Donate - Request <><><><>
 Global $g_bRequestTroopsEnable = False
 Global $g_sRequestTroopsText = ""
