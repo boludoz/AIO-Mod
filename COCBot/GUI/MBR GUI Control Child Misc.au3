@@ -667,9 +667,6 @@ Func chkEnableBBAttack()
 		GUICtrlSetState($g_hBtnBBDropOrder, $GUI_ENABLE)
 		GUICtrlSetState($g_hCmbBBSameTroopDelay, $GUI_ENABLE)
 		GUICtrlSetState($g_hCmbBBNextTroopDelay, $GUI_ENABLE)
-		#Region - Custom BBase army - Team AIO Mod++
-		GUICtrlSetState($g_hGUI_BBArmy, $GUI_ENABLE)
-		#EndRegion - Custom BBase army - Team AIO Mod++
 		chkBBTrophyRange()
 	Else
 		GUICtrlSetState($g_hChkBBTrophyRange, $GUI_DISABLE)
@@ -680,10 +677,6 @@ Func chkEnableBBAttack()
 		GUICtrlSetState($g_hBtnBBDropOrder, $GUI_DISABLE)
 		GUICtrlSetState($g_hCmbBBSameTroopDelay, $GUI_DISABLE)
 		GUICtrlSetState($g_hCmbBBNextTroopDelay, $GUI_DISABLE)
-		#Region - Custom BBase army - Team AIO Mod++
-		GUICtrlSetState($g_hGUI_BBArmy, $GUI_DISABLE)
-		#EndRegion - Custom BBase army - Team AIO Mod++
-
 	EndIf
 EndFunc   ;==>chkEnableBBAttack
 
@@ -713,17 +706,7 @@ Func btnBBDropOrder()
 	GUICtrlSetState( $g_hBtnBBDropOrder, $GUI_DISABLE )
 	GUICtrlSetState( $g_hChkEnableBBAttack, $GUI_DISABLE )
 	GUISetState(@SW_SHOW, $g_hGUI_BBDropOrder)
-	GUISetState(@SW_HIDE, $g_hGUI_BBArmy)
 EndFunc   ;==>btnBBDropOrder
-
-#Region - Custom BBase army - Team AIO Mod++
-Func btnBBArmy()
-	GUICtrlSetState( $g_hBtnBBArmy, $GUI_DISABLE )
-	GUICtrlSetState( $g_hChkEnableBBAttack, $GUI_DISABLE )
-	GUISetState(@SW_HIDE, $g_hGUI_BBDropOrder)
-	GUISetState(@SW_SHOW, $g_hGUI_BBArmy)
-EndFunc   ;==>btnBBArmy
-#EndRegion - Custom BBase army - Team AIO Mod++
 
 Func chkBBDropOrder()
 	If GUICtrlRead($g_hChkBBCustomDropOrderEnable) = $GUI_CHECKED Then

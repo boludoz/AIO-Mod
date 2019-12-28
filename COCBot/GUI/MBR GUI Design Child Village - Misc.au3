@@ -58,7 +58,6 @@ Func CreateVillageMisc()
 
 	CreateDailyDiscountGUI() ; Daily Discounts - Team AiO MOD++
 	CreateBBDropOrderGUI() ; Builder Base Attack - Team AiO MOD++
-	CreateBBArmyGUI() ; Builder Base Attack - Team AiO MOD++
 	#EndRegion - Team AiO MOD++
 
 	GUICtrlCreateTabItem("")
@@ -416,7 +415,7 @@ Func CreateMiscBuilderBaseSubTab()
 	Local $iBBAttackGroupSize = 110
 
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_13", "Builders Base Attacking"), $x - 10,  $y, $g_iSizeWGrpTab3, $iBBAttackGroupSize)
-		$g_hChkEnableBBAttack = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkEnableBBAttack", "Attack"), $x + 10, $y + 15, -1, -1)
+		$g_hChkEnableBBAttack = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkEnableBBAttack", "Attack"), $x + 20, $y + 30, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkEnableBBAttack_Info_01", "Uses the currently queued army to attack."))
 			GUICtrlSetOnEvent(-1, "chkEnableBBAttack")
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "LblBBNextTroopDelay", "Next Troop Delay"), $x + 113, $y + 17)
@@ -433,14 +432,7 @@ Func CreateMiscBuilderBaseSubTab()
 			GUICtrlSetData(-1, "1|2|3|4|5|6|7|8|9")
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			_GUICtrlComboBox_SetCurSel($g_hCmbBBSameTroopDelay, 4) ; start in middle
-		#Region - Custom BBase army - Team AIO Mod++
-		$g_hBtnBBArmy = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropArrmy", "Select army"), $x + 10, $y + 40, -1, -1)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBArmy_Set", "Set a custom army for your troops."))
-			GUICtrlSetBkColor(-1, $COLOR_RED)
-			GUICtrlSetOnEvent(-1, "btnBBArmy")
-			GUICtrlSetState(-1, $GUI_DISABLE)
-		#EndRegion - Custom BBase army - Team AIO Mod++
-		$g_hBtnBBDropOrder = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrder", "Drop Order"), $x + 10, $y + 75, -1, -1)
+		$g_hBtnBBDropOrder = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrder", "Drop Order"), $x + 10, $y + 62, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrder_Info", "Set a custom dropping order for your troops."))
 			GUICtrlSetBkColor(-1, $COLOR_RED)
 			GUICtrlSetOnEvent(-1, "btnBBDropOrder")
@@ -619,12 +611,3 @@ Func CreateBBDropOrderGUI()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 EndFunc ;==>CreateBBDropOrderGUI
-
-Func CreateBBArmyGUI()
-	$g_hGUI_BBArmy = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_BBArmy", "BB Custom Army"), 322, 313, -1, -1, $WS_BORDER, $WS_EX_CONTROLPARENT)
-
-
-	Local $x = 25, $y = 25
-	GUICtrlCreateGroup("", -99, -99, 1, 1)
-
-EndFunc ;==>CreateBBArmyGUI
