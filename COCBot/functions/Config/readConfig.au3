@@ -479,7 +479,12 @@ Func ReadConfig_600_6()
 
 	; Builder Base Drop Order
 	IniReadS($g_bBBDropOrderSet, $g_sProfileConfigPath, "other", "bBBDropOrderSet", False, "Bool")
-	$g_sBBDropOrder = IniRead($g_sProfileConfigPath, "other", "sBBDropOrder", $g_sBBDropOrderDefault)
+	#Region - Custom BB Army - Team AIO Mod++
+	For $i = 0 To $g_iBBTroopCount - 1
+		IniReadS($g_aiCmbBBDropOrder[$i], $g_sProfileConfigPath, "other", "sBBDropOrderSet" & $i, $g_aiCmbBBDropOrder[$i], "int")
+	Next
+	#EndRegion - Custom BB Army - Team AIO Mod++
+
 EndFunc   ;==>ReadConfig_600_6
 
 Func ReadConfig_600_9()

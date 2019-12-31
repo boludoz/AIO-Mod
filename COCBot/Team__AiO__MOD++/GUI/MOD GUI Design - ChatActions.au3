@@ -212,13 +212,13 @@ Func TabChatActionsGUI()
 	GUICtrlCreateGroup(GetTranslatedFileIni("MOD GUI Design - ChatActions", "Group_05", "Remote chat"), $x - 20, $y - 20, $g_iSizeWGrpTab2 - 300, 67)
 	$x -= 10
 		$g_hChkChatNotify = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design - ChatActions", "ChkChatNotify", "Remote chatting"), $x, $y, -1, -1)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design - ChatActions", "ChkChatNotify_Info_01", "Send and recieve chats via pushbullet or telegram.") & @CRLF & _
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design - ChatActions", "ChkChatNotify_Info_01", "Send and recieve chats via telegram.") & @CRLF & _
 					GetTranslatedFileIni("MOD GUI Design - ChatActions", "ChkChatNotify_Info_02", "Use BOT <myvillage> GETCHATS <interval|NOW|STOP> to get the latest clan") & @CRLF & _
 					GetTranslatedFileIni("MOD GUI Design - ChatActions", "ChkChatNotify_Info_03", "chat as an image, and BOT <myvillage> SENDCHAT <chat message> to send a chat to your clan"))
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
 
 		$g_hChkPbSendNewChats = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design - ChatActions", "ChkPbSendNewChats", "Notify me chat"), $x, $y + 20, -1, -1)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design - ChatActions", "ChkPbSendNewChats_Info_01", "Will send an image of your clan chat via pushbullet & telegram when a new chat is detected.") & @CRLF & _
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design - ChatActions", "ChkPbSendNewChats_Info_01", "Will send an image of your clan chat via telegram when a new chat is detected.") & @CRLF & _
 					GetTranslatedFileIni("MOD GUI Design - ChatActions", "ChkPbSendNewChats_Info_02", "Not guaranteed to be 100% accurate."))
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
 	$x -= 300 + 8

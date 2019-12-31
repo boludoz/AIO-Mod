@@ -188,5 +188,7 @@ build_compile_only.bat
 build_delete_compile.bat
 build_retry.bat
 build_zip_only.bat
-*.kxf
-Nueva carpeta/
+#*.kxf
+MyBot.run/
+Features/
+lib/MBRBot_original.dll

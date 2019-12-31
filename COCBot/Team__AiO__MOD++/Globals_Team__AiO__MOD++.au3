@@ -21,11 +21,30 @@ Global Enum $eIcnModKingGray = 1, $eIcnModKingBlue, $eIcnModKingGreen, $eIcnModK
 		$eIcnModArrowLeft, $eIcnModArrowRight, $eIcnModTrainingP, $eIcnModResourceP, $eIcnModHeroP, $eIcnModClockTowerP, $eIcnModBuilderP, $eIcnModPowerP, _
 		$eIcnModChat, $eIcnModRepeat, $eIcnModClan, $eIcnModTarget, $eIcnModSettings, $eIcnModBKingSX, $eIcnModAQueenSX, $eIcnModGWardenSX, $eIcnModDebug, $eIcnModClanHop, $eIcnModPrecise, _
 		$eIcnModAccountsS, $eIcnModProfilesS, $eIcnModFarmingS, $eIcnMiscMod, $eIcnSuperXP, $eIcnChatActions, $eIcnHumanization, $eIcnAIOMod, $eIcnMisc, _
-		$eIcnLabP, $eIcnShop, $eIcnGoldP, $eIcnElixirP, $eIcnDarkP, $eIcnGFTO, $eIcnDebugMod
-
-; No reddrop - Team AiO MOD++
-Global $g_aIsDead[UBound($g_avAttackTroops, 1)]
-Global $g_iSlotNow = -1
+		$eIcnLabP, $eIcnShop, $eIcnGoldP, $eIcnElixirP, $eIcnDarkP, $eIcnDebugMod, $eIcnGFTO
+; Custom BB Army
+;GUI
+; BB Drop Order
+Global $g_hBtnBBDropOrder = 0
+Global $g_hGUI_BBDropOrder = 0
+Global $g_hChkBBCustomDropOrderEnable = 0
+Global $g_hBtnBBDropOrderSet = 0, $g_hBtnBBRemoveDropOrder = 0, $g_hBtnBBClose = 0
+Global $g_bBBDropOrderSet = False
+Global Const $g_iBBTroopCount = 11
+;Global Const $g_sBBDropOrderDefault = "BoxerGiant|HogGlider|SuperPekka|DropShip|Witch|BabyDrag|WallBreaker|Barbarian|CannonCart|Archer|Minion" - Team AIO Mod++
+;Global $g_sBBDropOrder = $g_sBBDropOrderDefault - Team AIO Mod++
+Global $g_ahCmbBBDropOrder[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_sIcnTroopBB[6]
+Global $g_sComboTroopBB[6]
+Global $g_sIcnBBOrder[11]
+Global $g_sBBDropOrderDefault
+Global $g_asAttackBarBB[12] = ["", "Barbarian", "Archer", "BoxerGiant", "Minion", "WallBreaker", "BabyDrag", "CannonCart", "Witch", "DropShip", "SuperPekka", "HogGlider"]
+Global $g_aiCmbBBDropOrder[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_sBBDropOrder
+For $i = 1 To UBound($g_asAttackBarBB) -1
+	Local $iS = $g_asAttackBarBB[$i]
+	$g_sBBDropOrder &= (UBound($g_asAttackBarBB) -1 = $i) ? ($iS) : ($iS & "|") 
+Next
 
 ; Drop trophy - Team AiO MOD++
 Global $g_bChkNoDropIfShield = True, $g_bChkTrophyTroops = False, $g_bChkTrophyHeroesAndTroops = True
@@ -33,7 +52,7 @@ Global $g_bChkNoDropIfShield = True, $g_bChkTrophyTroops = False, $g_bChkTrophyH
 Global $g_hChkNoDropIfShield, $g_hChkTrophyTroops, $g_hChkTrophyHeroesAndTroops
 
 ; No reddrop - Team AiO MOD++
-Global $g_aIsDead[UBound($g_avAttackTroops, 1)]
+Global $g_aIsDead[UBound($g_avAttackTroops, 1) -1]
 Global $g_iSlotNow = -1
 
 ; Misc tab - Team AiO MOD++

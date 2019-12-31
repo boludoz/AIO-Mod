@@ -39,19 +39,18 @@ Func CreateMODTab()
 			TabHumanizationGUI()
 		$g_hGUI_MOD_TAB_ITEM3 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_06_STab_03", "Chat"))
 			TabChatActionsGUI()
-        $g_hGUI_MOD_TAB_ITEM4 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_06_STab_04", "GTFO"))
-            TabGTFOGUI()
-        $g_hGUI_MOD_TAB_ITEM5 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_06_STab_05", "Misc"))
-            TabMiscGUI()
+		$g_hGUI_MOD_TAB_ITEM4 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_06_STab_04", "GTFO"))
+			TabGTFOGUI()
+		$g_hGUI_MOD_TAB_ITEM5 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_06_STab_05", "Misc"))
+			TabMiscGUI()
 
-
-		If $g_bDevMode Then
-			$g_hGUI_MOD_TAB_ITEM6 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_06_STab_06", "Debug"))
-				TabDebugGUI()
+	If $g_bDevMode Then
+		$g_hGUI_MOD_TAB_ITEM6 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_06_STab_06", "Debug"))
+			TabDebugGUI()
 		EndIf
 
 	GUICtrlCreateTabItem("")
- EndFunc   ;==>CreateMODTab
+EndFunc   ;==>CreateMODTab
 
 ; Tab Misc GUI - Team AiO MOD++
  Func TabMiscGUI()
@@ -59,7 +58,7 @@ Func CreateMODTab()
 
 	;Local $x = 10, $y = 45
 
-	GUICtrlCreateLabel(GetTranslatedFileIni("MiscMODs", "DelayLabel",  "Delay"), 30, 45, 436, 22, BitOR($SS_CENTER,$SS_CENTERIMAGE))
+	GUICtrlCreateLabel(GetTranslatedFileIni("MiscMODs", "DelayLabel",  "Delay"), 7, 45, 436, 22, BitOR($SS_CENTER,$SS_CENTERIMAGE))
 	GUICtrlSetTip(-1, GetTranslatedFileIni("MiscMODs", "DelayTip",  "Delay before performing each action. You can add time before each action to improve performance and lower CPU usage."))
 	GUICtrlSetBkColor(-1, 0x333300)
 	GUICtrlSetFont(-1, 12, 500, 0, "Candara", $CLEARTYPE_QUALITY)
@@ -69,7 +68,7 @@ Func CreateMODTab()
 	GUICtrlSetOnEvent(-1, "chkDelayMod")
 
 	$g_hIntSleep = GUICtrlCreateSlider(32, 104, 250, 25, BitOR($TBS_TOOLTIPS, $TBS_AUTOTICKS))
-	_GUICtrlSetTip(-1, GetTranslatedFileIni("MiscMODs", "UseSleep", "LblDelay_Info_01", -1))
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MiscMODs", "UseSleep", "Increase for all delay setting, more stabilize for slow PC/Multi Emulators."))
 	_GUICtrlSlider_SetTipSide(-1, $TBTS_BOTTOM)
 	_GUICtrlSlider_SetTicFreq(-100, 100)
 	GUICtrlSetLimit(-1, 200, -99)
@@ -84,7 +83,7 @@ Func CreateMODTab()
 	$g_hNoAttackSleep = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "NoAttackSleep",  "Do not use this during the attack."), 32, 160, 177, 17)
 	GUICtrlSetOnEvent(-1, "chkDelayMod")
 
-	GUICtrlCreateLabel(GetTranslatedFileIni("MiscMODs", "AttackLabel",  "Attack"), 30, 192, 436, 22, BitOR($SS_CENTER,$SS_CENTERIMAGE))
+	GUICtrlCreateLabel(GetTranslatedFileIni("MiscMODs", "AttackLabel",  "Attack"), 7, 192, 436, 22, BitOR($SS_CENTER,$SS_CENTERIMAGE))
 	GUICtrlSetTip(-1, GetTranslatedFileIni("MiscMODs", "AttackTip",  "Attacks extra functions."))
 	GUICtrlSetBkColor(-1, 0x333300)
 	GUICtrlSetFont(-1, 12, 500, 0, "Candara", $CLEARTYPE_QUALITY)
@@ -96,7 +95,7 @@ Func CreateMODTab()
 
 	$g_hDisableColorLog = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "DisableColorLog",  "No color attack log"), 32, 248, 113, 17)
 
-	GUICtrlCreateLabel(GetTranslatedFileIni("MiscMODs", "OtherSettingsLabel", "Other"), 30, 280, 436, 22, BitOR($SS_CENTER,$SS_CENTERIMAGE))
+	GUICtrlCreateLabel(GetTranslatedFileIni("MiscMODs", "OtherSettingsLabel", "Other"), 7, 280, 436, 22, BitOR($SS_CENTER,$SS_CENTERIMAGE))
 	GUICtrlSetTip(-1, GetTranslatedFileIni("MiscMODs", "OtherSettingsTip", "Other settings"))
 	GUICtrlSetBkColor(-1, 0x333300)
 	GUICtrlSetFont(-1, 12, 500, 0, "Candara", $CLEARTYPE_QUALITY)

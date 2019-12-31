@@ -727,16 +727,20 @@ Func chkBBDropOrder()
 EndFunc   ;==>chkBBDropOrder
 
 Func GUIBBDropOrder()
+#Region - Custom BB Army - Team AIO Mod++
 	Local $iGUI_CtrlId = @GUI_CtrlId
 	Local $iDropIndex = _GUICtrlComboBox_GetCurSel($iGUI_CtrlId)
-
+	
 	For $i=0 To $g_iBBTroopCount - 1
-		If $iGUI_CtrlId = $g_ahCmbBBDropOrder[$i] Then ContinueLoop
-		If $iDropIndex = _GUICtrlComboBox_GetCurSel($g_ahCmbBBDropOrder[$i]) Then
+		If $iGUI_CtrlId = $g_ahCmbBBDropOrder[$i] Then 
+			_GUICtrlSetImage($g_sIcnBBOrder[$i], $g_sLibIconPath, $g_avStarLabTroops[$iDropIndex+1][4])
+		ElseIf $iDropIndex = _GUICtrlComboBox_GetCurSel($g_ahCmbBBDropOrder[$i]) Then
 			_GUICtrlComboBox_SetCurSel($g_ahCmbBBDropOrder[$i], -1)
+			_GUICtrlSetImage($g_sIcnBBOrder[$i], $g_sLibIconPath, $g_avStarLabTroops[0][4])
 			GUISetState()
 		EndIf
 	Next
+#EndRegion - Custom BB Army - Team AIO Mod++
 EndFunc   ;==>GUIBBDropOrder
 
 Func BtnBBDropOrderSet()
@@ -768,6 +772,7 @@ Func BtnBBDropOrderSet()
 		EndIf
 		$g_sBBDropOrder &= (GUICtrlRead($g_ahCmbBBDropOrder[$i]) & "|")
 		SetDebugLog("DropOrder: " & $g_sBBDropOrder)
+		_GUICtrlSetImage($g_sIcnBBOrder[$i], $g_sLibIconPath, $g_avStarLabTroops[_GUICtrlComboBox_GetCurSel($g_ahCmbBBDropOrder[$i])+1][4])
 	Next
 	$g_sBBDropOrder = StringTrimRight($g_sBBDropOrder, 1) ; Remove last '|'
 	GUICtrlSetBkColor($g_hBtnBBDropOrder, $COLOR_GREEN)
@@ -776,6 +781,7 @@ EndFunc   ;==>BtnBBDropOrderSet
 
 Func BtnBBRemoveDropOrder()
 	For $i=0 To $g_iBBTroopCount-1
+			_GUICtrlSetImage($g_sIcnBBOrder[$i], $g_sLibIconPath, $g_avStarLabTroops[0][4]) ; Custom BB Army - Team AIO Mod++
 			_GUICtrlComboBox_SetCurSel($g_ahCmbBBDropOrder[$i], -1)
 			GUICtrlSetState($g_ahCmbBBDropOrder[$i], $GUI_ENABLE)
 	Next

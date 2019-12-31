@@ -317,18 +317,16 @@ EndFunc
 ; Example .......: IsSlotDead(1)
 ; ===============================================================================================================================
 Func IsSlotDead()
-	; Fuse
-	If $g_aIsDead[$g_iSlotNow] = 1 Then Return True
-	
-	Local $iX = Int($g_avAttackTroops[$g_iSlotNow][3])
-	Local $iY = Int($g_avAttackTroops[$g_iSlotNow][4])
-	
-	If  _ColorCheck(_GetPixelColor($iX + 20, $iY + 20, True, "WAIT--> IsSlotDead"), Hex(0x474747, 6), 10) Then
-		SetLog("Slot Dead X: " & $iX & " Y: " & $iY & " Slot: " & $g_iSlotNow, $COLOR_ORANGE)
-			$g_aIsDead[$g_iSlotNow] = 1
-		Return True
+	Local $Hex = _GetPixelColor(Int($g_avAttackTroops[$g_iSlotNow][4], 638, True, "WAIT--> IsSlotDead")
+	Setlog($Hex, $COLOR_ORANGE) 
+
+	If _Wait4Pixel(Int($g_avAttackTroops[$g_iSlotNow][4]), 633, 0xFFFFFF, 15, 1000, 10) Then 
+		Return
+	ElseIf _Wait4Pixel(Int($g_avAttackTroops[$g_iSlotNow][4]), 638, 0x656565, 10, 1000, 250) Then
+		SetLog("Troop Dead X: " & $g_iSlotNow, $COLOR_ORANGE)
+		$g_aIsDead[$g_iSlotNow] = 1
+		Else
 	EndIf
-	Return False
 EndFunc   ;==>IsSlotDead
 
 Func AttackClick($x, $y, $times = 1, $speed = 0, $afterDelay = 0, $debugtxt = "")
@@ -340,8 +338,12 @@ Func AttackClick($x, $y, $times = 1, $speed = 0, $afterDelay = 0, $debugtxt = ""
 		$bReturn = PureClick($x, $y, 1, $speed, $debugtxt)
 	Else 
 		For $i = 1 To $times
-			IsSlotDead()
-			$bReturn = ($g_aIsDead[$g_iSlotNow] = 1) ? (True) : (PureClick($x, $y, 1, $speed, $debugtxt))
+			If $g_aIsDead[$g_iSlotNow] = 0 Then 
+				IsSlotDead()
+			Else
+				Return false
+			EndIf
+			$bReturn = ($g_aIsDead[$g_iSlotNow] = 1) ? (False) : (PureClick($x, $y, 1, $speed, $debugtxt))
 		Next
 	EndIf
 	Local $delay = $times * $speed + $afterDelay - __TimerDiff($timer)

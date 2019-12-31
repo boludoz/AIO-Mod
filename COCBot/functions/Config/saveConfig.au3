@@ -426,7 +426,11 @@ Func SaveConfig_600_6()
 
 	; Builder Base Drop Order
 	_Ini_Add("other", "bBBDropOrderSet", $g_bBBDropOrderSet)
-	_Ini_Add("other", "sBBDropOrder", $g_sBBDropOrder)
+	#Region - Custom BB Army - Team AIO Mod++
+	For $i = 0 To $g_iBBTroopCount - 1
+		_Ini_Add("other", "sBBDropOrderSet" & $i, $g_aiCmbBBDropOrder[$i]) 
+	Next
+	#EndRegion - Custom BB Army - Team AIO Mod++
 
 EndFunc   ;==>SaveConfig_600_6
 

@@ -119,7 +119,7 @@ Func ApplyConfig_MOD_MagicItems($TypeReadSave)
 			
 			$g_bChkCollectMagicItems = (GUICtrlRead($g_hChkCollectMagicItems) = $GUI_CHECKED)
 			$g_bChkCollectFree = (GUICtrlRead($g_hChkCollectFree) = $GUI_CHECKED)
-		
+
 			$g_bChkBuilderPotion = (GUICtrlRead($g_hChkBuilderPotion) = $GUI_CHECKED)
 			$g_bChkClockTowerPotion = (GUICtrlRead($g_hChkClockTowerPotion) = $GUI_CHECKED)
 			$g_bChkHeroPotion = (GUICtrlRead($g_hChkHeroPotion) = $GUI_CHECKED)

@@ -397,16 +397,20 @@ Func ApplyConfig_600_6($TypeReadSave)
 				GUICtrlSetState($g_hChkBBCustomDropOrderEnable, $GUI_CHECKED)
 				GUICtrlSetState($g_hBtnBBDropOrderSet, $GUI_ENABLE)
 				GUICtrlSetState($g_hBtnBBRemoveDropOrder, $GUI_ENABLE)
-				Local $asBBDropOrder = StringSplit($g_sBBDropOrder, "|")
+				#Region - Custom BB Army - Team AIO Mod++
+				;Local $asBBDropOrder = StringSplit($g_sBBDropOrder, "|")
 				For $i=0 To $g_iBBTroopCount - 1
-					_GUICtrlComboBox_SetCurSel($g_ahCmbBBDropOrder[$i], _GUICtrlComboBox_SelectString($g_ahCmbBBDropOrder[$i], $asBBDropOrder[$i+1]))
+					_GUICtrlComboBox_SetCurSel($g_ahCmbBBDropOrder[$i], $g_aiCmbBBDropOrder[$i])
+					_GUICtrlSetImage($g_sIcnBBOrder[$i], $g_sLibIconPath, $g_avStarLabTroops[$g_aiCmbBBDropOrder[$i]+1][4])
 				Next
+				#EndRegion - Custom BB Army - Team AIO Mod++
 				GUICtrlSetBkColor($g_hBtnBBDropOrder, $COLOR_GREEN)
 			EndIf
 
 		Case "Save"
 			$g_bChkBotStop = (GUICtrlRead($g_hChkBotStop) = $GUI_CHECKED)
 			$g_iCmbBotCommand = _GUICtrlComboBox_GetCurSel($g_hCmbBotCommand)
+			
 			$g_iCmbBotCond = _GUICtrlComboBox_GetCurSel($g_hCmbBotCond)
 			$g_iCmbHoursStop = _GUICtrlComboBox_GetCurSel($g_hCmbHoursStop)
 			For $i = 0 To $eLootCount - 1
@@ -469,6 +473,13 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_iTxtBBTrophyUpperLimit = GUICtrlRead($g_hTxtBBTrophyUpperLimit)
 			$g_bChkBBAttIfLootAvail = (GUICtrlRead($g_hChkBBAttIfLootAvail) = $GUI_CHECKED)
 			$g_bChkBBWaitForMachine = (GUICtrlRead($g_hChkBBWaitForMachine) = $GUI_CHECKED)
+			
+			#Region - Custom BB Army - Team AIO Mod++
+			For $i=0 To $g_iBBTroopCount - 1
+				$g_aiCmbBBDropOrder[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbBBDropOrder[$i])
+			Next
+			#EndRegion - Custom BB Army - Team AIO Mod++
+
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_6
 

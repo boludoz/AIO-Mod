@@ -161,7 +161,7 @@ Func CreateAttackSearchDeadBaseCollectors()
 		$g_hLblSkipCollectorCheckTH = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "LblSkipCollectorCheckTH", "Target Townhall Level"), $x + 10, $y, -1, -1)
 		GUICtrlCreateLabel(ChrW(8804), $x + 120, $y, -1, -1)
 		$g_hCmbSkipCollectorCheckTH = GUICtrlCreateCombo("", $x + 130, $y - 2, 36, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
-			GUICtrlSetData(-1, "7|8|9|10|11|12", "8")
+			GUICtrlSetData(-1, "7|8|9|10|11|12|13", "8")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 EndFunc   ;==>CreateAttackSearchDeadBaseCollectors

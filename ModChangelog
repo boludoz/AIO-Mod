@@ -3,13 +3,34 @@
             | | | _| / ▓ \| |\/| |    / ▓ \| | (_) |  |_   _||_   _|
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
-                    Based on MyBot.run v7.8.1
+                    Based on MyBot.run v7.8.2 
 >> Next
-        • Builder base: 
-			- Troops train.
 		• CSV: 
 			- Add hero if it doesn't exist in CSV.
 			
+	**V3.2.0** (Pre update / dont use this)
+		» Added:
+			• CSV: 
+				- By @Eloy
+				
+			• Check collectors outside: 
+				- TH13 support.
+				
+			• BB Army and Order troops translation support. 
+
+			• Builder base: 
+				- Troops train.
+			
+			• Drop trophies: 
+				- Drop hero/troops only option.
+		
+		» Improved:
+			• @Eloy GUI !!!. 
+
+		» Fixed:
+			• Drop trophies.
+			• @Eloy GUI !!!. 
+
 	**V3.1.7**
 		» Fixed:
 			• Daily discounts.

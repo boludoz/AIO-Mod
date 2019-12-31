@@ -366,10 +366,10 @@ Local $sMinUmbralTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Searc
 
 	$y += 24
 		$g_ahChkMaxScatter[$DB] = GUICtrlCreateCheckbox("", $x, $y, 17, 17)
-		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkMaxScatter", -1))
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkMaxScatter", "Search for a base that has Scattershot below this level"))
 			GUICtrlSetOnEvent(-1, "chkDBWeakBase")
 		$g_ahCmbWeakScatter[$DB] = GUICtrlCreateCombo("", $x + 19, $y, 53, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
-			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "CmbMaxScatter_Info_01", -1)
+			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "CmbMaxScatter_Info_01", "Set the Max. level of the Scattershot to search for on a village to attack.")
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetData(-1, "-|Lvl 1|Lvl 2", "Lvl 1")
 			GUICtrlSetState(-1, $GUI_DISABLE)
@@ -408,7 +408,7 @@ Local $sMinUmbralTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Searc
 		$g_ahCmbWeakEagle[$DB] = GUICtrlCreateCombo("", $x + 19, $y, 50, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "CmbMaxEagle_Info_01", "Set the Max. level of the Eagle Artillery to search for on a village to attack.")
 			_GUICtrlSetTip(-1, $sTxtTip)
-            GUICtrlSetData(-1, "-|Lvl 1|Lvl 2|Lvl 3|Lvl 4", "Lvl 1")
+			GUICtrlSetData(-1, "-|Lvl 1|Lvl 2|Lvl 3|Lvl 4", "Lvl 1")
 			GUICtrlSetState(-1, $GUI_DISABLE)
 		$g_ahPicWeakEagle[$DB] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnEagleArt, $x + 75, $y - 2, 24, 24)
 			_GUICtrlSetTip(-1, $sTxtTip)

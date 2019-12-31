@@ -70,11 +70,13 @@ Func AttackBB()
 	While Not $bTroopsDropped
 		local $iNumSlots = UBound($aBBAttackBar, 1)
 		If $g_bBBDropOrderSet = True Then
-			local $asBBDropOrder = StringSplit($g_sBBDropOrder, "|")
+	;		Local $asBBDropOrder = StringSplit($g_sBBDropOrder, "|") ; Custom BB Army - Team AIO Mod++
 			For $i=0 To $g_iBBTroopCount - 1 ; loop through each name in the drop order
 				local $j=0, $bDone = 0
 				While $j < $iNumSlots And Not $bDone
-					If $aBBAttackBar[$j][0] = $asBBDropOrder[$i+1] Then
+					;If $aBBAttackBar[$j][0] = $asBBDropOrder[$i+1] Then; Custom BB Army - Team AIO Mod++
+					Local $iId = _GUICtrlComboBox_GetCurSel($g_ahCmbBBDropOrder[$i]) ; Custom BB Army - Team AIO Mod++
+					If $aBBAttackBar[$j][0] = $g_asAttackBarBB[$iId] Then ; Custom BB Army - Team AIO Mod++
 						DeployBBTroop($aBBAttackBar[$j][0], $aBBAttackBar[$j][1], $aBBAttackBar[$j][2], $aBBAttackBar[$j][4], $iSide)
 						If $j = $iNumSlots-1 Or $aBBAttackBar[$j][0] <> $aBBAttackBar[$j+1][0] Then
 							$bDone = True
