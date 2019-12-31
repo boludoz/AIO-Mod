@@ -566,7 +566,7 @@ Func CreateBBDropOrderGUI()
 	Next
 	
 	$g_hGUI_BBDropOrder = GUICreate("Army", 428, 451, 240, 124)
-	GUICtrlCreateGroup("Group1", 16, 8, 393, 105)
+	GUICtrlCreateGroup("Army", 16, 8, 393, 105)
 	
 	$g_sIcnTroopBB[0] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnBlank, 32, 32, 41, 41)
 	$g_sIcnTroopBB[1] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnBlank, 96, 32, 41, 41)
@@ -576,11 +576,17 @@ Func CreateBBDropOrderGUI()
 	$g_sIcnTroopBB[5] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnBlank, 352, 32, 41, 41)
 	
 	$g_sComboTroopBB[0] = GUICtrlCreateCombo("", 24, 80, 57, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
+		GUICtrlSetState(-1, $GUI_DISABLE)
 	$g_sComboTroopBB[1] = GUICtrlCreateCombo("", 88, 80, 57, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
+		GUICtrlSetState(-1, $GUI_DISABLE)
 	$g_sComboTroopBB[2] = GUICtrlCreateCombo("", 152, 80, 57, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
+		GUICtrlSetState(-1, $GUI_DISABLE)
 	$g_sComboTroopBB[3] = GUICtrlCreateCombo("", 216, 80, 57, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
+		GUICtrlSetState(-1, $GUI_DISABLE)
 	$g_sComboTroopBB[4] = GUICtrlCreateCombo("", 280, 80, 57, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
+		GUICtrlSetState(-1, $GUI_DISABLE)
 	$g_sComboTroopBB[5] = GUICtrlCreateCombo("", 344, 80, 57, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
+		GUICtrlSetState(-1, $GUI_DISABLE)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	GUICtrlCreateGroup("BB Custom dropping order.", 8, 120, 409, 281)
 	

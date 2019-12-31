@@ -317,12 +317,9 @@ EndFunc
 ; Example .......: IsSlotDead(1)
 ; ===============================================================================================================================
 Func IsSlotDead()
-	Local $Hex = _GetPixelColor(Int($g_avAttackTroops[$g_iSlotNow][4], 638, True, "WAIT--> IsSlotDead")
-	Setlog($Hex, $COLOR_ORANGE) 
-
-	If _Wait4Pixel(Int($g_avAttackTroops[$g_iSlotNow][4]), 633, 0xFFFFFF, 15, 1000, 10) Then 
+	If _Wait4Pixel($g_avAttackTroops[$g_iSlotNow][4], 633, 0xFFFFFF, 15, 250, 10) Then 
 		Return
-	ElseIf _Wait4Pixel(Int($g_avAttackTroops[$g_iSlotNow][4]), 638, 0x656565, 10, 1000, 250) Then
+	ElseIf _Wait4Pixel($g_avAttackTroops[$g_iSlotNow][4], 638, 0x656565, 10, 250, 10) Then
 		SetLog("Troop Dead X: " & $g_iSlotNow, $COLOR_ORANGE)
 		$g_aIsDead[$g_iSlotNow] = 1
 		Else
