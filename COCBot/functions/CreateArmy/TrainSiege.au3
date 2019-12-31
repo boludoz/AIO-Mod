@@ -77,8 +77,8 @@ Func TrainSiege()
 	Next
 
 	; build 2nd army
-	If $g_bDoubleTrain And $g_iTotalTrainSpaceSiege <= 3 Then
-		For $iSiegeIndex = $eSiegeWallWrecker To $eSiegeMachineCount - 1
+    If BitOr($g_bQuickTrainEnable, $g_bDoubleTrain) And $g_iTotalTrainSpaceSiege <= 3 Then ; Double train siege - Team AIO Mod++
+	For $iSiegeIndex = $eSiegeWallWrecker To $eSiegeMachineCount - 1
 			Local $HowMany = $g_aiArmyCompSiegeMachine[$iSiegeIndex] * 2 - $aiTotalSiegeMachine[$iSiegeIndex]
 			Local $checkPixel
 			If $iSiegeIndex = $eSiegeWallWrecker Then $checkPixel = $aCheckIsAvailableSiege
