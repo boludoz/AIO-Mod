@@ -13,6 +13,28 @@
 ; Example .......: No
 ; ===============================================================================================================================
 ;<><><> Team AiO MOD++ (2019) <><><>
+Func ApplyConfig_MOD_CustomArmyBB($TypeReadSave)
+	; <><><> CustomArmyBB <><><>
+	Switch $TypeReadSave
+		Case "Read"
+			GUICtrlSetState($g_hChkBBCustomArmyEnable, $g_bChkBBCustomArmyEnable = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			
+			For $i = 0 To UBound($g_hComboTroopBB) - 1
+				_GUICtrlComboBox_SetCurSel($g_hComboTroopBB[$i], $g_iCmbCampsBB[$i])
+				_GUICtrlSetImage($g_hIcnTroopBB[$i], $g_sLibIconPath, $g_avStarLabTroops[$g_iCmbCampsBB[$i]+1][4])
+			Next
+
+			chkBBCustomArmy()
+		Case "Save"
+			$g_bChkBBCustomArmyEnable = (GUICtrlRead($g_hChkBBCustomArmyEnable) = $GUI_CHECKED) ? 1 : 0
+			
+			For $i = 0 To UBound($g_hComboTroopBB) - 1
+				$g_iCmbCampsBB[$i] = _GUICtrlComboBox_GetCurSel($g_hComboTroopBB[$i])
+			Next
+
+	EndSwitch
+EndFunc   ;==>ApplyConfig_MOD_CustomArmyBB
+
 Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 	; <><><> MiscTab <><><>
 	Switch $TypeReadSave

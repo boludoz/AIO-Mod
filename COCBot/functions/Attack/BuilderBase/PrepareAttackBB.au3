@@ -96,7 +96,7 @@ Func CheckMachReady()
 	Return $bRet
 EndFunc
 #ce 
-
+#Region - Custom army BB - Team Aio Mod++
 Func CheckMachReady()
 	Local $bIsReaddy
 	If Not $g_bRunState Then Return
@@ -112,6 +112,7 @@ Func CheckMachReady()
 	EndIf
 	Return $bIsReaddy
 EndFunc   ;==>ArmyStatus
+#EndRegion
 
 Func CheckArmyReady()
 	local $i = 0
@@ -137,7 +138,17 @@ Func CheckArmyReady()
 	If Not $bReady Then
 		SetLog("Army is not ready.")
 		If $bTraining Then SetLog("Troops are training.")
-		If $bNeedTrain Then SetLog("Troops need to be trained in the training tab.")
+		
+		#Region - Custom army BB - Team AIO Mod++
+			If $bNeedTrain Then 
+				;ClickP($aAway, 1, 0, "#0000") ; ensure field is clean
+				;If _Sleep(1500) Then Return
+				SetLog("Troops need to be trained in the training tab.")
+				;CheckArmyBuilderBase()
+				;Return False
+			EndIf
+		#EndRegion
+		
 		If $g_bDebugImageSave Then SaveDebugImage("FindIfArmyReadyBB")
 	Else
 		SetLog("Army is ready.")

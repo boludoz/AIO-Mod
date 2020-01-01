@@ -22,6 +22,19 @@
 #include "MOD GUI Control - AiO-Debug.au3"
 #include "MOD GUI Control - MagicItems.au3"
 
+; Custom army - Team AiO MOD++
+Func chkBBCustomArmy()
+		$g_bChkBBCustomArmyEnable = (GUICtrlRead($g_hChkBBCustomArmyEnable) = $GUI_CHECKED)
+		
+		For $i = 0 To UBound($g_hComboTroopBB) - 1
+			If $g_bChkBBCustomArmyEnable Then
+				GUICtrlSetState($g_hComboTroopBB[$i], $GUI_ENABLE) 
+			Else
+				GUICtrlSetState($g_hComboTroopBB[$i], $GUI_DISABLE) 
+			EndIf
+		Next
+EndFunc   ;==>chkBBCustomArmy
+
 ; Drop trophy - Team AiO MOD++
 Func chkNoDropIfShield()
 		$g_bChkNoDropIfShield = (GUICtrlRead($g_hChkNoDropIfShield) = $GUI_CHECKED)

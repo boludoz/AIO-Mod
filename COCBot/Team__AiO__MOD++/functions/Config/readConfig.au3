@@ -13,6 +13,16 @@
 ; Example .......: No
 ; ===============================================================================================================================
 ;<><><> Team AiO MOD++ (2019) <><><>
+Func ReadConfig_MOD_CustomArmyBB()
+	; <><><> CustomArmyBB <><><>
+	IniReadS($g_bChkBBCustomArmyEnable, $g_sProfileConfigPath, "BBCustomArmy", "ChkBBCustomArmyEnable", $g_bChkBBCustomArmyEnable, "Bool")
+	
+	For $i = 0 To UBound($g_hComboTroopBB) - 1
+		IniReadS($g_iCmbCampsBB[$i], $g_sProfileConfigPath, "BBCustomArmy", "ComboTroopBB" & $i, $g_iCmbCampsBB[$i], "Int")
+	Next
+
+EndFunc   ;==>SaveConfig_MOD_CustomArmyBB
+
 Func ReadConfig_MOD_MiscTab()
 	; <><><> MiscTab <><><>
 	IniReadS($g_bUseSleep, $g_sProfileConfigPath, "MiscTab", "UseSleep", $g_bUseSleep, "Bool")

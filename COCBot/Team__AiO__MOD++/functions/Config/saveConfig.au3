@@ -13,6 +13,17 @@
 ; Example .......: No
 ; ===============================================================================================================================
 ;<><><> Team AiO MOD++ (2019) <><><>
+Func SaveConfig_MOD_CustomArmyBB()
+	; <><><> CustomArmyBB <><><>
+	ApplyConfig_MOD_CustomArmyBB(GetApplyConfigSaveAction())
+	_Ini_Add("BBCustomArmy", "ChkBBCustomArmyEnable", $g_bChkBBCustomArmyEnable)
+	
+	For $i = 0 To UBound($g_hComboTroopBB) - 1
+		_Ini_Add("BBCustomArmy", "ComboTroopBB" & $i, $g_iCmbCampsBB[$i])
+	Next
+
+EndFunc   ;==>SaveConfig_MOD_CustomArmyBB
+
 Func SaveConfig_MOD_MiscTab()
 	; <><><> MiscTab <><><>
 	ApplyConfig_MOD_MiscTab(GetApplyConfigSaveAction())

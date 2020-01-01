@@ -244,6 +244,7 @@ Func SaveRegularConfig()
 	; <><><> Team AiO MOD++ (2019) <><><>
 	; <><><> MiscTab <><><>
 	SaveConfig_MOD_MiscTab()
+	SaveConfig_MOD_CustomArmyBB()
 	; <><><> SuperXP / GoblinXP <><><>
 	SaveConfig_MOD_SuperXP()
 	; <><><> ChatActions <><><>

@@ -23,6 +23,7 @@ Global Enum $eIcnModKingGray = 1, $eIcnModKingBlue, $eIcnModKingGreen, $eIcnModK
 		$eIcnModAccountsS, $eIcnModProfilesS, $eIcnModFarmingS, $eIcnMiscMod, $eIcnSuperXP, $eIcnChatActions, $eIcnHumanization, $eIcnAIOMod, $eIcnMisc, _
 		$eIcnLabP, $eIcnShop, $eIcnGoldP, $eIcnElixirP, $eIcnDarkP, $eIcnGFTO, $eIcnDebugMod
 ; Custom BB Army
+Global $g_bDebugBBattack = False
 ;GUI
 ; BB Drop Order
 Global $g_hBtnBBDropOrder = 0
@@ -34,8 +35,12 @@ Global Const $g_iBBTroopCount = 11
 ;Global Const $g_sBBDropOrderDefault = "BoxerGiant|HogGlider|SuperPekka|DropShip|Witch|BabyDrag|WallBreaker|Barbarian|CannonCart|Archer|Minion" - Team AIO Mod++
 ;Global $g_sBBDropOrder = $g_sBBDropOrderDefault - Team AIO Mod++
 Global $g_ahCmbBBDropOrder[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_sIcnTroopBB[6]
-Global $g_sComboTroopBB[6]
+;CustomArmy
+Global $g_iCmbCampsBB[6] = [0, 0, 0, 0, 0, 0]
+Global $g_hIcnTroopBB[6]
+Global $g_hComboTroopBB[6]
+Global $g_hChkBBCustomArmyEnable, $g_bChkBBCustomArmyEnable
+
 Global $g_sIcnBBOrder[11]
 Global $g_sBBDropOrderDefault
 Global $g_asAttackBarBB[12] = ["", "Barbarian", "Archer", "BoxerGiant", "Minion", "WallBreaker", "BabyDrag", "CannonCart", "Witch", "DropShip", "SuperPekka", "HogGlider"]

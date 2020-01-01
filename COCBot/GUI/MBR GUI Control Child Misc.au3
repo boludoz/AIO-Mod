@@ -726,8 +726,8 @@ Func chkBBDropOrder()
 	EndIf
 EndFunc   ;==>chkBBDropOrder
 
-Func GUIBBDropOrder()
 #Region - Custom BB Army - Team AIO Mod++
+Func GUIBBDropOrder()
 	Local $iGUI_CtrlId = @GUI_CtrlId
 	Local $iDropIndex = _GUICtrlComboBox_GetCurSel($iGUI_CtrlId)
 	
@@ -740,8 +740,21 @@ Func GUIBBDropOrder()
 			GUISetState()
 		EndIf
 	Next
-#EndRegion - Custom BB Army - Team AIO Mod++
 EndFunc   ;==>GUIBBDropOrder
+
+Func GUIBBCustomArmy()
+	Local $iGUI_CtrlId = @GUI_CtrlId
+	Local $iDropIndex = _GUICtrlComboBox_GetCurSel($iGUI_CtrlId)
+	
+	For $i=0 To UBound($g_hComboTroopBB)-1
+		If $iGUI_CtrlId = $g_hComboTroopBB[$i] Then 
+			_GUICtrlSetImage($g_hIcnTroopBB[$i], $g_sLibIconPath, $g_avStarLabTroops[$iDropIndex+1][4])
+			$g_iCmbCampsBB[$i] = $iDropIndex
+		EndIf
+	Next
+EndFunc   ;==>GUIBBDropOrder
+
+#EndRegion - Custom BB Army - Team AIO Mod++
 
 Func BtnBBDropOrderSet()
 	$g_sBBDropOrder = ""

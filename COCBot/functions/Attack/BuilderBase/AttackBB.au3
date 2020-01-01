@@ -15,7 +15,7 @@
 
 Func AttackBB()
 	If Not $g_bChkEnableBBAttack Then Return
-
+	
 	local $iSide = Random(0, 1, 1) ; randomly choose top left or top right
 	local $aBMPos = 0
 	ClickP($aAway)
@@ -71,6 +71,11 @@ Func AttackBB()
 		If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Enabled")
 		Return
 	EndIf
+	
+	#Region - Custom BB Army - Team AIO Mod++
+	; Correct troops
+	If $g_bChkBBCustomArmyEnable Then BuilderBaseSelectCorrectScript($aBBAttackBar)
+	#EndRegion - Custom BB Army - Team AIO Mod++
 
 	; Deploy all troops
 	local $bTroopsDropped = False, $bBMDeployed = False

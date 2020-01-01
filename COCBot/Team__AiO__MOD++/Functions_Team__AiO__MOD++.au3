@@ -17,7 +17,11 @@
 #include "functions\Mod's\ModFuncs.au3"
 #include "functions\Pixels\_Wait4Pixel.au3"
 
-; MagicItems
+; Custom army - Team AiO MOD++
+#include "functions\Mod's\BuilderBase\Camps\BuilderBaseCorrectAttackBar.au3"
+#include "functions\Mod's\BuilderBase\Camps\BuilderBaseCheckArmy.au3"
+
+; MagicItems - Team AiO MOD++
 #include "functions\Mod's\MagicItems.au3"
 
 ; SuperXP / GoblinXP - Team AiO MOD++
