@@ -475,8 +475,8 @@ Global $g_iLogCheckFreeSpaceMB = 100 ; If > 0, check every 10 Minutes when loggi
 ; Used in _Sleep.au3 to control various administrative tasks when idle
 Global $g_hStruct_SleepMicro = DllStructCreate("int64 time;") ; holds the _SleepMilli sleep time in 100-nanoseconds
 Global $g_pStruct_SleepMicro = DllStructGetPtr($g_hStruct_SleepMicro)
-Global Const $g_iEmptyWorkingSetAndroid = 0 ; Empty Android Workingset specified Seconds, 0 for disable
-Global Const $g_iEmptyWorkingSetBot = 300 ; Empty Bot Workingset specified Seconds, 0 for disable
+Global Const $g_iEmptyWorkingSetAndroid = 3000 ; Empty Android Workingset specified Seconds, 0 for disable
+Global Const $g_iEmptyWorkingSetBot = 1500 ; Empty Bot Workingset specified Seconds, 0 for disable
 Global Const $g_bMoveMouseOutBS = False ; If enabled moves mouse out of Android window when bot is running
 Global $g_bDevMode = False ; set to true in mybot.run.au3 if EnableMBRDebug.txt is present in MBR root directory
 

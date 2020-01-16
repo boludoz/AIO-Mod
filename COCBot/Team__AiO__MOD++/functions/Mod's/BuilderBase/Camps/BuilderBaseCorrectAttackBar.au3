@@ -156,7 +156,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $AvailableTroops)
 			Local $aAttackBar = _ImageSearchXML($g_sImgDirBBTroops, 20, "0,523,861,615", True, False)
 			If $aAttackBar = -1 Then
 ;~ 				_DebugFailedImageDetection("Attackbar")
-				ExitLoop
+				Return False
 			EndIf
 			For $j = 0 To UBound($aAttackBar) - 1
 				If Not $g_bRunState Then ExitLoop

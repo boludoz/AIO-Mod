@@ -477,7 +477,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			
 			#Region - Custom BB Army - Team AIO Mod++
 			For $i=0 To $g_iBBTroopCount - 1
-				$g_aiCmbBBDropOrder[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbBBDropOrder[$i])
+				$g_aiCmbBBDropOrder[$i] = Number(_GUICtrlComboBox_GetCurSel($g_ahCmbBBDropOrder[$i]))
 			Next
 			#EndRegion - Custom BB Army - Team AIO Mod++
 

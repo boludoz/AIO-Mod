@@ -88,8 +88,7 @@ Func AttackBB()
 				local $j=0, $bDone = 0
 				While $j < $iNumSlots And Not $bDone
 					;If $aBBAttackBar[$j][0] = $asBBDropOrder[$i+1] Then; Custom BB Army - Team AIO Mod++
-					Local $iId = _GUICtrlComboBox_GetCurSel($g_ahCmbBBDropOrder[$i]) ; Custom BB Army - Team AIO Mod++
-					If $aBBAttackBar[$j][0] = $g_asAttackBarBB[$iId] Then ; Custom BB Army - Team AIO Mod++
+					If $aBBAttackBar[$j][0] = $g_asAttackBarBB[$g_aiCmbBBDropOrder[$i]+1] Then ; Custom BB Army - Team AIO Mod++
 						DeployBBTroop($aBBAttackBar[$j][0], $aBBAttackBar[$j][1], $aBBAttackBar[$j][2], $aBBAttackBar[$j][4], $iSide)
 						If $j = $iNumSlots-1 Or $aBBAttackBar[$j][0] <> $aBBAttackBar[$j+1][0] Then
 							$bDone = True

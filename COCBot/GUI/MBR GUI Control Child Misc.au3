@@ -754,10 +754,8 @@ Func GUIBBCustomArmy()
 	Next
 EndFunc   ;==>GUIBBDropOrder
 
-#EndRegion - Custom BB Army - Team AIO Mod++
-
 Func BtnBBDropOrderSet()
-	$g_sBBDropOrder = ""
+	;$g_sBBDropOrder = ""
 	; loop through reading and disabling all combo boxes
 	For $i=0 To $g_iBBTroopCount - 1
 		GUICtrlSetState($g_ahCmbBBDropOrder[$i], $GUI_DISABLE)
@@ -783,14 +781,16 @@ Func BtnBBDropOrderSet()
 				EndIf
 			WEnd
 		EndIf
-		$g_sBBDropOrder &= (GUICtrlRead($g_ahCmbBBDropOrder[$i]) & "|")
-		SetDebugLog("DropOrder: " & $g_sBBDropOrder)
-		_GUICtrlSetImage($g_sIcnBBOrder[$i], $g_sLibIconPath, $g_avStarLabTroops[_GUICtrlComboBox_GetCurSel($g_ahCmbBBDropOrder[$i])+1][4])
+		$g_aiCmbBBDropOrder[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbBBDropOrder[$i])
+		;Local $iS = $g_avStarLabTroops[$i][3]
+		;$g_sBBDropOrder &= (UBound($g_iBBTroopCount) -1 = $i) ? ($iS) : ($iS & "|") 
+		;SetDebugLog("DropOrder: " & $g_sBBDropOrder)
+		_GUICtrlSetImage($g_sIcnBBOrder[$i], $g_sLibIconPath, $g_avStarLabTroops[$g_aiCmbBBDropOrder[$i]+1][4])
 	Next
-	$g_sBBDropOrder = StringTrimRight($g_sBBDropOrder, 1) ; Remove last '|'
 	GUICtrlSetBkColor($g_hBtnBBDropOrder, $COLOR_GREEN)
 	$g_bBBDropOrderSet = True
 EndFunc   ;==>BtnBBDropOrderSet
+#EndRegion - Custom BB Army - Team AIO Mod++
 
 Func BtnBBRemoveDropOrder()
 	For $i=0 To $g_iBBTroopCount-1
