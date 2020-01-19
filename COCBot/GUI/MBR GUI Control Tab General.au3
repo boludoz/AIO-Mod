@@ -137,5 +137,5 @@ Func MoveDivider()
 	_GUICtrlRichEdit_SetSel($g_hTxtAtkLog, - 1, -1) ; select end
 
 	SetDebugLog("MoveDivider exit", Default, True)
-
+	$g_bMoveDivider = False ; Team AIO Mod++
 EndFunc   ;==>MoveDivider

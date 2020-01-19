@@ -443,7 +443,7 @@ Func NotifyRemoteControlProc()
 						$g_bChkBotStop = True ; set halt attack variable
 						$g_iCmbBotCond = 18 ; set stay online
 						btnStart()
-					Case GetTranslatedFileIni("MBR Func_Notify", "HALTATTACKOFF", "HALTATTACKOFF"), '\U2705 ' & StringUpper(GetTranslatedFileIni("MBR Func_Notify", "ATTACK ON_Info_01", "ATTACK ON"))
+					Case GetTranslatedFileIni("MBR Func_Notify", "HALTATTACKOFF", "HALTATTACKOFF"), '\U2705 ' & StringUpper(GetTranslatedFileIni("MBR Func_Notify", "ATTACK ON_Info_03", "ATTACK ON"))
 						GUICtrlSetState($g_hChkBotStop, $GUI_UNCHECKED)
 						NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "ATTACK OFF_Info_02", "Set Halt Attack OFF."))
 						btnStop()
@@ -483,33 +483,33 @@ Func NotifyRemoteControlProc()
 						$bHibernate = False
 						$bStandby = False
 					Case Else
-                        ; ChatActions - Team AiO MOD++ START
-                        Local $bFoundChatMessage = False
-                        If StringInStr($TGActionMSG, "SENDCHAT") Then
-                            $bFoundChatMessage = True
-                            Local $sChatMessage = StringRight($TGActionMSG, StringLen($TGActionMSG) - StringLen("SENDCHAT"))
-                            $sChatMessage = StringLower($sChatMessage)
-                            ChatbotNotifyQueueChat($sChatMessage)
-                            NotifyPushToTelegram($g_sNotifyOrigin & " | " & "Chat queued, will send on next idle")
-                        ElseIf StringInStr($TGActionMSG, "GETCHATS") Then
-                            $bFoundChatMessage = True
-                            Local $Interval = 1
-                            $Interval = StringRight($TGActionMSG, StringLen($TGActionMSG) - StringLen("GETCHATS"))
-                            If $Interval = "STOP" Then
-                                ChatbotNotifyStopChatRead()
-                                NotifyPushToTelegram($g_sNotifyOrigin & " | " & "Stopping interval sending")
-                            Else
-                                If $Interval = "NOW" Then
-                                    ChatbotNotifySendChat()
-                                    NotifyPushToTelegram($g_sNotifyOrigin & " | " & "Command queued, will send clan chat image on next idle")
-                                EndIf
-                            EndIf
-                        EndIf
-                        If Not $bFoundChatMessage Then
-                            NotifyPushToTelegram(GetTranslatedFileIni("MBR Func_Notify", "ELSE_Info_01", "Sorry Chief!,") & " " & $TGActionMSG & " " & _
-                                GetTranslatedFileIni("MBR Func_Notify", "ELSE_Info_02", "is not a valid command."))
-                        EndIf
-			            ; ChatActions - Team AiO MOD++ END
+				; ChatActions - Team AiO MOD++ START
+				Local $bFoundChatMessage = False
+				If StringInStr($TGActionMSG, "SENDCHAT") Then
+					$bFoundChatMessage = True
+					Local $sChatMessage = StringRight($TGActionMSG, StringLen($TGActionMSG) - StringLen("SENDCHAT"))
+					$sChatMessage = StringLower($sChatMessage)
+					ChatbotNotifyQueueChat($sChatMessage)
+					NotifyPushToTelegram($g_sNotifyOrigin & " | " & "Chat queued, will send on next idle")
+				ElseIf StringInStr($TGActionMSG, "GETCHATS") Then
+					$bFoundChatMessage = True
+					Local $Interval = 1
+					$Interval = StringRight($TGActionMSG, StringLen($TGActionMSG) - StringLen("GETCHATS"))
+					If $Interval = "STOP" Then
+						ChatbotNotifyStopChatRead()
+						NotifyPushToTelegram($g_sNotifyOrigin & " | " & "Stopping interval sending")
+					Else
+						If $Interval = "NOW" Then
+							ChatbotNotifySendChat()
+							NotifyPushToTelegram($g_sNotifyOrigin & " | " & "Command queued, will send clan chat image on next idle")
+						EndIf
+					EndIf
+				EndIf
+				If Not $bFoundChatMessage Then
+					NotifyPushToTelegram(GetTranslatedFileIni("MBR Func_Notify", "ELSE_Info_01", "Sorry Chief!,") & " " & $TGActionMSG & " " & _
+						GetTranslatedFileIni("MBR Func_Notify", "ELSE_Info_02", "is not a valid command."))
+					EndIf
+				; ChatActions - Team AiO MOD++ END
 				EndSwitch
 			EndIf
 		EndIf

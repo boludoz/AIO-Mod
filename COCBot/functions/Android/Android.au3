@@ -4399,6 +4399,9 @@ Func UpdateAndroidBackgroundMode()
 	; update Android Brackground Mode support
 	Local $iMode = (($g_iAndroidBackgroundMode = 0) ? ($g_iAndroidBackgroundModeDefault) : ($g_iAndroidBackgroundMode))
 	Local $iBackgroundMode = Execute("Get" & $g_sAndroidEmulator & "BackgroundMode()")
+	
+	If _Sleep(150) Then Return ; Team AIO Mod++
+
 	If $iBackgroundMode = "" And @error <> 0 Then
 		; Not implemented
 		Local $sMode = "Unknown"
@@ -4436,6 +4439,8 @@ Func UpdateAndroidBackgroundMode()
 		EndSwitch
 	EndIf
 
+	If _Sleep(150) Then Return ; Team AIO Mod++
+	
 	Switch $iMode
 		Case 1 ; WinAPI mode (faster, but requires Android DirectX)
 			If BitAND($g_iAndroidSupportFeature, 1) = 0 Then

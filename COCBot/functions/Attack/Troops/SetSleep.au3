@@ -5,31 +5,39 @@
 ; Parameters ....: $type                - Flag for type return desired.
 ; Return values .: None
 ; Author ........:
-; Modified ......: KnowJack (06/2015)
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
+; Modified ......: KnowJack (06-2015)
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2018
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func SetSleep($iType)
-	If IsKeepClicksActive() Then Return 0 ; fast bulk deploy
-	Local $iFactorZero = 10
-	Local $iFactorOne = 100
-
-	If $g_bAndroidAdbClick Then
+#Region - Custom sleep Drop - Team AIO Mod++ 
+Func SetSleep($type)
+	If IsKeepClicksActive() = True Then Return 0 ; fast bulk deploy
+	Local $factor0 = 10
+	Local $factor1 = 100
+	If $g_bAndroidAdbClick = True Then
 		; adjust for slow ADB clicks the delay factor
-		$iFactorZero = 10
-		$iFactorOne = 100
+		$factor0 = 10
+		$factor1 = 100
 	EndIf
-
-	Switch $iType
+	Switch $type
 		Case 0
-			Return Round(Random(1, 10)) * $iFactorZero
+			If $g_abAttackStdRandomizeDelay[$g_iMatchMode] Then
+				Return Round(Random(1, 10) * $factor0)
+			Else
+				Return Random(($g_aiAttackStdUnitDelay[$g_iMatchMode] + 1) - 1, ($g_aiAttackStdUnitDelay[$g_iMatchMode] + 1) + 1, 1)
+			EndIf
 		Case 1
-			Return Round(Random(1, 10)) * $iFactorOne
+			If $g_abAttackStdRandomizeDelay[$g_iMatchMode] Then
+				Return Round(Random(1, 10) * $factor1)
+			Else
+				Return Random(($g_aiAttackStdWaveDelay[$g_iMatchMode] + 1) - 1, ($g_aiAttackStdWaveDelay[$g_iMatchMode] + 1) + 1, 1) * $factor1
+			EndIf
 	EndSwitch
 EndFunc   ;==>SetSleep
+#RegionEnd
 
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: _SleepAttack

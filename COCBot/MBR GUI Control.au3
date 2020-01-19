@@ -1317,10 +1317,12 @@ Func BotCloseRequest()
 	$g_iBotAction = $eBotClose
 EndFunc   ;==>BotCloseRequest
 
+#CS Unutil code - Team AIO Mod++ 
 Func BotCloseRequestProcessed()
-	Return False ; no stable yet, so disabled for now
-	;Return $g_iBotAction = $eBotClose And $g_bAndroidEmbedded = False
+	;Return False ; no stable yet, so disabled for now
+	Return $g_iBotAction = $eBotClose And $g_bAndroidEmbedded = False
 EndFunc   ;==>BotCloseRequestProcessed
+#CE
 
 Func BotClose($SaveConfig = Default, $bExit = True)
 	If $SaveConfig = Default Then $SaveConfig = IsBotLaunched()

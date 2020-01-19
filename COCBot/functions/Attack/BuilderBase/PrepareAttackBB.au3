@@ -81,7 +81,7 @@ Func CheckLootAvail()
 	Return $bRet
 EndFunc
 
-#cs - Custom army BB - Team Aio Mod++
+#cs
 Func CheckMachReady()
 	local $aCoords = decodeSingleCoord(findImage("BBMachReady_bmp", $g_sImgBBMachReady, GetDiamondFromRect("113,388,170,448"), 1, True))
 	local $bRet = False
@@ -95,7 +95,7 @@ Func CheckMachReady()
 
 	Return $bRet
 EndFunc
-#ce
+#ce 
 #Region - Custom army BB - Team Aio Mod++
 Func CheckMachReady()
 	Local $bIsReaddy
@@ -140,12 +140,12 @@ Func CheckArmyReady()
 		If $bTraining Then SetLog("Troops are training.")
 
 		#Region - Custom army BB - Team AIO Mod++
-			If $bNeedTrain Then
-				If _Sleep(1500) Then Return
+			If $bNeedTrain Then 
+				;ClickP($aAway, 1, 0, "#0000") ; ensure field is clean
+				;If _Sleep(1500) Then Return
 				SetLog("Troops need to be trained in the training tab.")
-				CheckArmyBuilderBase()
-				ClickP($aAway, 1, 0, "#0000") ; ensure field is clean
-				$bReady = False
+				;CheckArmyBuilderBase()
+				;Return False
 			EndIf
 		#EndRegion
 

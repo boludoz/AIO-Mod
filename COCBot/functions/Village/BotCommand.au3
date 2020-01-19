@@ -104,8 +104,8 @@ Func BotCommand()
 		If $g_bMeetCondStop Then
 			Switch $iCmbBotCommand
 				Case 0
-                    ChatActions() ; ChatActions - Team AiO MOD++
-                    MainSXHandler() ; SuperXP / GoblinXP - Team AiO MOD++
+					ChatActions() ; ChatActions - Team AiO MOD++
+					MainSXHandler() ; SuperXP / GoblinXP - Team AiO MOD++
 					If $iCmbBotCond <= 14 And $g_bCollectStarBonus And WaitforPixel(84, 630, 97, 635, "AF5725", 20, 0.2) Then
 						SetLog("Star bonus available. Continue attacking to collect them.")
 						Return False

@@ -273,8 +273,7 @@ EndFunc   ;==>ConvertFromVillagePos
 
 Func ReduceBotMemory($bDisposeCaptures = True)
 	If $bDisposeCaptures = True Then _CaptureDispose()
-	If $g_iEmptyWorkingSetBot > 0 Then _WinAPI_EmptyWorkingSet() ; Reduce Working Set of Bot
-	If $g_iEmptyWorkingSetAndroid > 0 Then _WinAPI_EmptyWorkingSet(GetAndroidPid()) ; Reduce Working Set of Emulator
+	If $g_iEmptyWorkingSetBot > 0 Then _WinAPI_EmptyWorkingSet(@AutoItPID) ; Reduce Working Set of Bot
 	;DllCall($g_hLibMyBot, "none", "gc") ; run .net garbage collection
 EndFunc   ;==>ReduceBotMemory
 
