@@ -6,7 +6,34 @@
                     Based on MyBot.run v7.8.2 
 >> Next
 		• CSV: 
+			- Stop for war.
+			
+		• CSV: 
 			- Add hero if it doesn't exist in CSV.
+			
+	**V3.2.2**
+		» Added:
+			• GTFO.
+
+		» Improved:
+			• GUI: 
+				- GUI embellishments and language fixes By @Eloy.
+
+			• BB Army : 
+				- Fill camps beta.
+				
+			• Sleep : 
+				- Now it does not change the time, only the number of times it verifies the variables.
+				- The bot does not lock now if it is in sleep.
+				- Random sleep.
+				
+		» Fixed:
+			• BB Army : 
+				- Drop order.
+				
+			• DonateCC : 
+				Force PrepareDonateCC().
+				
 	**V3.2.1**
 		» Added:
 			• Double train siege. @Chakal-gyn inspired.
