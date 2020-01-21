@@ -12,7 +12,7 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-#Region - Custom sleep Drop - Team AIO Mod++ 
+#Region - Custom sleep Drop - Team AIO Mod++
 Func SetSleep($type)
 	If IsKeepClicksActive() = True Then Return 0 ; fast bulk deploy
 	Local $factor0 = 10
@@ -24,17 +24,17 @@ Func SetSleep($type)
 	EndIf
 	Switch $type
 		Case 0
-			If $g_abAttackStdRandomizeDelay[$g_iMatchMode] Then
+;~ 			If $g_abAttackStdRandomizeDelay[$g_iMatchMode] Then
 				Return Round(Random(1, 10) * $factor0)
-			Else
-				Return Random(($g_aiAttackStdUnitDelay[$g_iMatchMode] + 1) - 1, ($g_aiAttackStdUnitDelay[$g_iMatchMode] + 1) + 1, 1)
-			EndIf
+;~ 			Else
+;~ 				Return Random(($g_aiAttackStdUnitDelay[$g_iMatchMode] + 1) - 1, ($g_aiAttackStdUnitDelay[$g_iMatchMode] + 1) + 1, 1)
+;~ 			EndIf
 		Case 1
-			If $g_abAttackStdRandomizeDelay[$g_iMatchMode] Then
+;~ 			If $g_abAttackStdRandomizeDelay[$g_iMatchMode] Then
 				Return Round(Random(1, 10) * $factor1)
-			Else
-				Return Random(($g_aiAttackStdWaveDelay[$g_iMatchMode] + 1) - 1, ($g_aiAttackStdWaveDelay[$g_iMatchMode] + 1) + 1, 1) * $factor1
-			EndIf
+;~ 			Else
+;~ 				Return Random(($g_aiAttackStdWaveDelay[$g_iMatchMode] + 1) - 1, ($g_aiAttackStdWaveDelay[$g_iMatchMode] + 1) + 1, 1) * $factor1
+;~ 			EndIf
 	EndSwitch
 EndFunc   ;==>SetSleep
 #RegionEnd

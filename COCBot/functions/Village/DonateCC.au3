@@ -186,12 +186,14 @@ Func DonateCC($bCheckForNewMsg = False)
 	ClickP($aAway2, 1, 0, "#0167") ;Click Away
 
 	If _Sleep($DELAYDONATECC2) Then Return
-
-	If Not ClickB("ClanChat") Then
-		SetLog("Error finding the Clan Tab Button", $COLOR_ERROR)
+	
+	;If Not ClickB("ClanChat") Then
+	If Not OpenClanChat() Then ; GTFO - Team AIO Mod++
+	SetLog("Error finding the Clan Tab Button", $COLOR_ERROR)
 		Return
 	EndIf
-
+	
+	
 	If _Sleep($DELAYDONATECC4) Then Return
 
 	; check for "I Understand" button

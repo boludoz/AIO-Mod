@@ -91,6 +91,44 @@ Func MultiPSimple($iLeft, $iTop, $iRight, $iBottom, $Hex, $iTolerance = 15, $iWa
 	Return 0
 EndFunc   ;==>MultiPSimple
 
+Func _Wait4PixelArray($aSettings) ; Return true if pixel is true
+	Local $x = $aSettings[0] 
+	Local $y = $aSettings[1]
+	Local $sColor = $aSettings[2]
+	Local $iColorVariation = (UBound($aSettings) > 3) ? ($aSettings[3]) : (15)
+	Local $iWait = (UBound($aSettings) > 4) ? ($aSettings[4]) : (1000)
+	Local $iDelay = (UBound($aSettings) > 5) ? ($aSettings[5]) : (100)
+	Local $sMsglog = (UBound($aSettings) > 6) ? ($aSettings[6]) : (Default)
+	
+	Local $hTimer = __TimerInit()
+	While BitOr($iWait > __TimerDiff($hTimer), $iWait <= 0) ; '-1' support
+		ForceCaptureRegion()
+		If _CheckColorPixel($x, $y, $sColor, $iColorVariation, True, $sMsglog) Then Return True
+		If _Sleep($iDelay) Then Return False
+		If ($iWait <= 0) Then ExitLoop ; Loop prevention.
+	WEnd
+	Return False
+EndFunc   ;==>_Wait4PixelArray
+
+Func _Wait4PixelGoneArray($aSettings) ; Return true if pixel is false
+	Local $x = $aSettings[0] 
+	Local $y = $aSettings[1]
+	Local $sColor = $aSettings[2]
+	Local $iColorVariation = (UBound($aSettings) > 3) ? ($aSettings[3]) : (15)
+	Local $iWait = (UBound($aSettings) > 4) ? ($aSettings[4]) : (1000)
+	Local $iDelay = (UBound($aSettings) > 5) ? ($aSettings[5]) : (100)
+	Local $sMsglog = (UBound($aSettings) > 6) ? ($aSettings[6]) : (Default)
+
+	Local $hTimer = __TimerInit()
+	While BitOr($iWait > __TimerDiff($hTimer), ($iWait <= 0)) ; '-1' support
+		ForceCaptureRegion()
+		If Not _CheckColorPixel($x, $y, $sColor, $iColorVariation, True, $sMsglog) Then Return True ; diff
+		If _Sleep($iDelay) Then Return False
+		If ($iWait <= 0) Then ExitLoop ; Loop prevention.
+	WEnd
+	Return False
+EndFunc   ;==>_Wait4PixelGoneArray
+
 Func _WaitForCheckXML($pathImage, $SearchZone, $ForceArea = True, $iWait = 10000, $iDelay = 250)
     Local $hTimer = __TimerInit()
     While BitOr($iWait > __TimerDiff($hTimer), $iWait <= 0) ; '-1' support

@@ -296,10 +296,13 @@ Func UnderstandChatRules()
 	;DDF685
 	Local $aClanBadgeNoClan[4] = [151, 307, 0xF05538, 20] ; OK - Orange Tile of Clan Logo on Chat Tab if you are not in a Clan
 
-	If IsArray(MultiPSimple(68, 447, 92, 479, Hex(0xDDF685, 6), 15, 5000)) AND NOT _WaitForCheckPixel($aClanBadgeNoClan, $g_bCapturePixel, Default, "") Then
+	If IsArray(MultiPSimple(68, 447, 92, 479, Hex(0xDDF685, 6), 15, 5000)) and _Wait4PixelGoneArray($aClanBadgeNoClan) Then
 		Click(Random(90, 248, 1), Random(448, 479, 1))
 		If _Sleep(500) Then Return
+		Return True
 	EndIf
+	Return False
+
 EndFunc
 
 ; #FUNCTION# ====================================================================================================================
