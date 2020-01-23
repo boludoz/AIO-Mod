@@ -18,7 +18,7 @@ Func ApplyConfig_MOD_CustomArmyBB($TypeReadSave)
 	Switch $TypeReadSave
 		Case "Read"
 			GUICtrlSetState($g_hChkBBCustomArmyEnable, $g_bChkBBCustomArmyEnable = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
-			
+
 			For $i = 0 To UBound($g_hComboTroopBB) - 1
 				_GUICtrlComboBox_SetCurSel($g_hComboTroopBB[$i], $g_iCmbCampsBB[$i])
 				_GUICtrlSetImage($g_hIcnTroopBB[$i], $g_sLibIconPath, $g_avStarLabTroops[$g_iCmbCampsBB[$i]+1][4])
@@ -27,7 +27,7 @@ Func ApplyConfig_MOD_CustomArmyBB($TypeReadSave)
 			chkBBCustomArmy()
 		Case "Save"
 			$g_bChkBBCustomArmyEnable = (GUICtrlRead($g_hChkBBCustomArmyEnable) = $GUI_CHECKED) ? 1 : 0
-			
+
 			For $i = 0 To UBound($g_hComboTroopBB) - 1
 				$g_iCmbCampsBB[$i] = _GUICtrlComboBox_GetCurSel($g_hComboTroopBB[$i])
 			Next
@@ -43,18 +43,54 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			GUICtrlSetData($g_hIntSleep, $g_iIntSleep)
 			GUICtrlSetState($g_hUseRandomSleep, $g_bUseRandomSleep = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hNoAttackSleep, $g_bNoAttackSleep = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hDeployCastleFirst, $g_bDeployCastleFirst = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hDisableColorLog, $g_bDisableColorLog = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hAvoidLocation, $g_bAvoidLocation = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			
+			GUICtrlSetState($g_hDeployCastleFirstDB, $g_bDeployCastleFirst[$DB] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hDeployCastleFirstAB, $g_bDeployCastleFirst[$LB] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			
+			; DeployDelay
+			GUICtrlSetData($g_hDeployDelay[0], $g_iDeployDelay[0])
+			GUICtrlSetData($g_hDeployDelay[1], $g_iDeployDelay[1])
+			;GUICtrlSetData($g_hDeployDelay[2], $g_iDeployDelay[2])
+
+			; DeployWave
+			GUICtrlSetData($g_hDeployWave[0], $g_iDeployWave[0])
+			GUICtrlSetData($g_hDeployWave[1], $g_iDeployWave[1])
+			;GUICtrlSetData($g_hDeployWave[2], $g_iDeployWave[2])
+
+			; ChkEnableRandom
+			GUICtrlSetState($g_hChkEnableRandom[0], $g_bChkEnableRandom[0] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkEnableRandom[1], $g_bChkEnableRandom[1] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			;GUICtrlSetState($g_hChkEnableRandom[2], $g_bChkEnableRandom[2] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+
 			chkDelayMod()
 		Case "Save"
 			$g_bUseSleep = (GUICtrlRead($g_hUseSleep) = $GUI_CHECKED) ? 1 : 0
 			$g_iIntSleep = Int(GUICtrlRead($g_hIntSleep))
 			$g_bUseRandomSleep = (GUICtrlRead($g_hUseRandomSleep) = $GUI_CHECKED) ? 1 : 0
 			$g_bNoAttackSleep = (GUICtrlRead($g_hNoAttackSleep) = $GUI_CHECKED) ? 1 : 0
-			$g_bDeployCastleFirst = (GUICtrlRead($g_hDeployCastleFirst) = $GUI_CHECKED) ? 1 : 0
 			$g_bDisableColorLog = (GUICtrlRead($g_hDisableColorLog) = $GUI_CHECKED) ? 1 : 0
 			$g_bAvoidLocation = (GUICtrlRead($g_hAvoidLocation) = $GUI_CHECKED) ? 1 : 0
+			
+			$g_bDeployCastleFirst[$DB] = (GUICtrlRead($g_hDeployCastleFirstDB) = $GUI_CHECKED) ? 1 : 0
+			$g_bDeployCastleFirst[$LB] = (GUICtrlRead($g_hDeployCastleFirstAB) = $GUI_CHECKED) ? 1 : 0
+			
+			; DeployDelay
+			$g_iDeployDelay[0] = Int(GUICtrlRead($g_hDeployDelay[0]))
+			$g_iDeployDelay[1] = Int(GUICtrlRead($g_hDeployDelay[1]))
+			$g_iDeployDelay[2] = Int(GUICtrlRead($g_hDeployDelay[2]))
+			
+			; DeployWave
+			$g_iDeployWave[0] = Int(GUICtrlRead($g_hDeployWave[0]))
+			$g_iDeployWave[1] = Int(GUICtrlRead($g_hDeployWave[1]))
+			$g_iDeployWave[2] = Int(GUICtrlRead($g_hDeployWave[2]))
+
+			; ChkEnableRandom
+			$g_bChkEnableRandom[0] = (GUICtrlRead($g_hChkEnableRandom[0]) = $GUI_CHECKED) ? 1 : 0
+			$g_bChkEnableRandom[1] = (GUICtrlRead($g_hChkEnableRandom[1]) = $GUI_CHECKED) ? 1 : 0
+			$g_bChkEnableRandom[2] = (GUICtrlRead($g_hChkEnableRandom[2]) = $GUI_CHECKED) ? 1 : 0
+
 	EndSwitch
 
 EndFunc   ;==>ApplyConfig_MOD_MiscTab
@@ -115,7 +151,7 @@ Func ApplyConfig_MOD_MagicItems($TypeReadSave)
 			_GUICtrlComboBox_SetCurSel($g_hComboClockTowerPotion, $g_iComboClockTowerPotion)
 			_GUICtrlComboBox_SetCurSel($g_hComboHeroPotion, $g_iComboHeroPotion)
 			_GUICtrlComboBox_SetCurSel($g_hComboPowerPotion, $g_iComboPowerPotion)
-			
+
 			GUICtrlSetState($g_hChkCollectMagicItems, $g_bChkCollectMagicItems = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkCollectFree, $g_bChkCollectFree = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			ChkFreeMagicItems()
@@ -134,11 +170,11 @@ Func ApplyConfig_MOD_MagicItems($TypeReadSave)
 
 			$g_iInputBuilderPotion = GUICtrlRead($g_hInputBuilderPotion)
 			$g_iInputLabPotion = GUICtrlRead($g_hInputLabPotion)
-			
+
 			$g_iComboPowerPotion = _GUICtrlComboBox_GetCurSel($g_hComboPowerPotion)
 			$g_iComboHeroPotion = _GUICtrlComboBox_GetCurSel($g_hComboHeroPotion)
 			$g_iComboClockTowerPotion = _GUICtrlComboBox_GetCurSel($g_hComboClockTowerPotion)
-			
+
 			$g_bChkCollectMagicItems = (GUICtrlRead($g_hChkCollectMagicItems) = $GUI_CHECKED)
 			$g_bChkCollectFree = (GUICtrlRead($g_hChkCollectFree) = $GUI_CHECKED)
 

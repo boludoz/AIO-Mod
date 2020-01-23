@@ -29,9 +29,27 @@ Func ReadConfig_MOD_MiscTab()
 	IniReadS($g_iIntSleep, $g_sProfileConfigPath, "MiscTab", "IntSleep", $g_iIntSleep, "Int")
 	IniReadS($g_bUseRandomSleep, $g_sProfileConfigPath, "MiscTab", "UseRandomSleep", $g_bUseRandomSleep, "Bool")
 	IniReadS($g_bNoAttackSleep, $g_sProfileConfigPath, "MiscTab", "NoAttackSleep", $g_bNoAttackSleep, "Bool")
-	IniReadS($g_bDeployCastleFirst, $g_sProfileConfigPath, "MiscTab", "DeployCastleFirst", $g_bDeployCastleFirst, "Bool")
 	IniReadS($g_bDisableColorLog, $g_sProfileConfigPath, "MiscTab", "DisableColorLog", $g_bDisableColorLog, "Bool")
 	IniReadS($g_bAvoidLocation, $g_sProfileConfigPath, "MiscTab", "AvoidLocation", $g_bAvoidLocation, "Bool")
+	
+	IniReadS($g_bDeployCastleFirst[$DB], $g_sProfileConfigPath, "MiscTab", "DeployCastleFirst" & $DB, $g_bDeployCastleFirst[$DB], "Bool")
+	IniReadS($g_bDeployCastleFirst[$LB], $g_sProfileConfigPath, "MiscTab", "DeployCastleFirst" & $LB, $g_bDeployCastleFirst[$LB], "Bool")
+	
+	; DeployDelay
+	IniReadS($g_iDeployDelay[0], $g_sProfileConfigPath, "MiscTab", "DeployDelay0", $g_iDeployDelay[0], "Int")
+	IniReadS($g_iDeployDelay[1], $g_sProfileConfigPath, "MiscTab", "DeployDelay1", $g_iDeployDelay[1], "Int")
+	;IniReadS($g_iDeployDelay[2], $g_sProfileConfigPath, "MiscTab", "DeployDelay2", $g_iDeployDelay[2], "Int")
+
+	; DeployWave
+	IniReadS($g_iDeployWave[0], $g_sProfileConfigPath, "MiscTab", "DeployWave0", $g_iDeployWave[0], "Int")
+	IniReadS($g_iDeployWave[1], $g_sProfileConfigPath, "MiscTab", "DeployWave1", $g_iDeployWave[1], "Int")
+	;IniReadS($g_iDeployWave[2], $g_sProfileConfigPath, "MiscTab", "DeployWave2", $g_iDeployWave[2], "Int")
+	
+	; ChkEnableRandom
+	IniReadS($g_bChkEnableRandom[0], $g_sProfileConfigPath, "MiscTab", "ChkEnableRandom0", $g_bChkEnableRandom[0], "Bool")
+	IniReadS($g_bChkEnableRandom[1], $g_sProfileConfigPath, "MiscTab", "ChkEnableRandom1", $g_bChkEnableRandom[1], "Bool")
+	;IniReadS($g_bChkEnableRandom[2], $g_sProfileConfigPath, "MiscTab", "ChkEnableRandom2", $g_bChkEnableRandom[2], "Bool")
+
 EndFunc   ;==>ReadConfig_MOD_MiscTab
 
 Func ReadConfig_MOD_SuperXP()

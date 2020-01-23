@@ -120,8 +120,16 @@ Func CreateAttackSearchDeadBaseAttack()
 												"Choose 'Default' to bypass Castle/Siege check")
 				_GUICtrlSetTip(-1, $sTxtTip)
 
-        $y += 27
-        $x -= 46
+		$y += 27
+		$x -= 46
+		#Region - Deploy CC First - Team AIO Mod++
+				$g_hDeployCastleFirstDB = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Chk-First", "SG/Castle first."), $x + 27, $y, 100, 17)
+				$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "DeployCastleSiegeFirstTip", "Deploy CC / Sieges troops first, support for all modes.")
+				_GUICtrlSetTip(-1, $sTxtTip)
+                GUICtrlSetOnEvent(-1, "chkDelayMod")
+
+		$y += 27
+		#EndRegion
 			$g_hPicDBLightSpell = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnLightSpell, $x, $y, 24, 24)
 				$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Chk-Use-Light_Info_01", "Use your Light Spells when Attacking")
 				_GUICtrlSetTip(-1, $sTxtTip)

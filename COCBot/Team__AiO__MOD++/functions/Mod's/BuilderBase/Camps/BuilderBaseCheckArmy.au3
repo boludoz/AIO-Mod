@@ -105,8 +105,8 @@ Func DetectCamps()
 				Else
 					For $i2 = UBound($aTroops) - 1 To 0 Step -1
 						If BitAnd($X < $aTroops[$i2][1], Int($X + $iDiffSlot) > $aTroops[$i2][1] ) Then 
-							$iArmyCampsInBBLimited[$i] = _ArraySearch($asAttackBarBB, $aTroops[$i2][0])
-							If @error Then $iArmyCampsInBBLimited[$i] = -2
+							$iArmyCampsInBBLimited[$i] = _ArraySearch($asAttackBarBB, $aTroops[$i2][0], 0, 0, 0, 0, 0, 0)
+							If $iArmyCampsInBBLimited[$i] = -1 Then $iArmyCampsInBBLimited[$i] = -2
 							_ArrayDelete($aTroops, $i2)
 						EndIf
 						_SleepMicro(500)
@@ -118,6 +118,7 @@ Func DetectCamps()
 					DeleteTroop($X, $Y) 
 					Setlog("Builder base army: Troop not recognized, eliminated.", $COLOR_WARNING)
 					$iArmyCampsInBBLimited[$i] = -1
+					ContinueLoop
 				EndIf
 				
 				Local $iIsInCamp = $iArmyCampsInBBLimited[$i]
@@ -174,7 +175,6 @@ EndFunc   ;==>DeleteTroop
 
 ; Samkie inspired code
 Func LocateTroopButton($iTroopButton, $sImgTrain = $g_sImgPathTroopsTrain, $sRegionForScan = "37, 479, 891, 579")
-		$iTroopButton += 1
 		Global $g_aTroopButton[2] = [0, 0]
 		Local $asAttackBarBB = _ArrayExtract($g_asAttackBarBB, 1, UBound($g_asAttackBarBB)-1)
 
@@ -187,18 +187,18 @@ Func LocateTroopButton($iTroopButton, $sImgTrain = $g_sImgPathTroopsTrain, $sReg
 			Local $aTroopPosition = _ImageSearchXML($g_sImgPathTroopsTrain, 0, $sRegionForScan, True, False, True, 25)
 			If $aTroopPosition = 0 Or UBound($aTroopPosition) < 1 Then Return 0
 
-			$iButtonIsIn = _ArraySearch($aTroopPosition, $g_asAttackBarBB[$iTroopButton+1])
+			$iButtonIsIn = _ArraySearch($aTroopPosition, $asAttackBarBB[$iTroopButton], 0, 0, 0, 0, 0, 0)
 			SetDebugLog("LocateTroopButton: " & "_ArraySearch($aTroopPosition, $asAttackBarBB[$iTroopButton]) " & $iButtonIsIn)
 			
-			If $iButtonIsIn > 0 Then
-				$g_aTroopButton[0] = $aTroopPosition[$iButtonIsIn-1][1]
-				$g_aTroopButton[1] = $aTroopPosition[$iButtonIsIn-1][2]
+			If $iButtonIsIn > -1 Then
+				$g_aTroopButton[0] = $aTroopPosition[$iButtonIsIn][1]
+				$g_aTroopButton[1] = $aTroopPosition[$iButtonIsIn][2]
 				Return $g_aTroopButton
-			ElseIf _ArraySearch($g_asAttackBarBB, $aTroopPosition[0][0]) < $iTroopButton Then
+			ElseIf _ArraySearch($g_asAttackBarBB , $aTroopPosition[0][0], 0, 0, 0, 0, 0, 0) < $iTroopButton Then
 				SetDebugLog("LocateTroopButton: " & "ClickDrag(575, 522, 280, 522, 50)")
 				ClickDrag(575, 522, 280, 522, 50)
 				If _Sleep(Random((400*90)/100, (400*110)/100, 1)) Then Return
-			ElseIf _ArraySearch($g_asAttackBarBB, $aTroopPosition[UBound($aTroopPosition)-1][0]) > $iTroopButton Then
+			ElseIf _ArraySearch($asAttackBarBB, $aTroopPosition[UBound($aTroopPosition)-1][0], 0, 0, 0, 0, 0, 0) > $iTroopButton Then
 				SetDebugLog("LocateTroopButton: " & "ClickDrag(280, 522, 575, 522, 50)")
 				ClickDrag(280, 522, 575, 522, 50)
 				If _Sleep(Random((400*90)/100, (400*110)/100, 1)) Then Return
@@ -208,7 +208,7 @@ Func LocateTroopButton($iTroopButton, $sImgTrain = $g_sImgPathTroopsTrain, $sReg
 			If _Sleep(500) Then Return
 		Next
 
-		SetLog("Cannot find " & $asAttackBarBB[$iTroopButton-1] & " for scan", $COLOR_ERROR)
+		SetLog("Cannot find " & $asAttackBarBB[$iTroopButton] & " for scan", $COLOR_ERROR)
 
 		Global $g_aTroopButton = 0
 		Return 0

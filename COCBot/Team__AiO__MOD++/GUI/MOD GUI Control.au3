@@ -25,12 +25,12 @@
 ; Custom army - Team AiO MOD++
 Func chkBBCustomArmy()
 		$g_bChkBBCustomArmyEnable = (GUICtrlRead($g_hChkBBCustomArmyEnable) = $GUI_CHECKED)
-		
+
 		For $i = 0 To UBound($g_hComboTroopBB) - 1
 			If $g_bChkBBCustomArmyEnable Then
-				GUICtrlSetState($g_hComboTroopBB[$i], $GUI_ENABLE) 
+				GUICtrlSetState($g_hComboTroopBB[$i], $GUI_ENABLE)
 			Else
-				GUICtrlSetState($g_hComboTroopBB[$i], $GUI_DISABLE) 
+				GUICtrlSetState($g_hComboTroopBB[$i], $GUI_DISABLE)
 			EndIf
 		Next
 EndFunc   ;==>chkBBCustomArmy
@@ -44,17 +44,34 @@ EndFunc   ;==>chkNoDropIfShield
 Func chkDelayMod()
 	GUICtrlSetState($g_hDisableColorLog, $GUI_DISABLE)
 	$g_bUseSleep = (GUICtrlRead($g_hUseSleep) = $GUI_CHECKED)
-	$g_iIntSleep = Int(GUICtrlRead($g_hIntSleep))
 	$g_bUseRandomSleep = (GUICtrlRead($g_hUseRandomSleep) = $GUI_CHECKED)
 	$g_bNoAttackSleep = (GUICtrlRead($g_hNoAttackSleep) = $GUI_CHECKED)
-	$g_bDeployCastleFirst = (GUICtrlRead($g_hDeployCastleFirst) = $GUI_CHECKED)
 	$g_bDisableColorLog = (GUICtrlRead($g_hDisableColorLog) = $GUI_CHECKED)
 	$g_bAvoidLocation = (GUICtrlRead($g_hAvoidLocation) = $GUI_CHECKED)
+	
+	$g_bDeployCastleFirst[$DB] = (GUICtrlRead($g_hDeployCastleFirstDB) = $GUI_CHECKED)
+	$g_bDeployCastleFirst[$LB] = (GUICtrlRead($g_hDeployCastleFirstAB) = $GUI_CHECKED)
+	
+	$g_iDeployWave[0] = Int(GUICtrlRead($g_hDeployWave[0]))
+	$g_iDeployWave[1] = Int(GUICtrlRead($g_hDeployWave[1]))
+	$g_iDeployWave[2] = Int(GUICtrlRead($g_hDeployWave[2]))
+	GUICtrlSetData($g_hDeployWave[0], $g_iDeployWave[0])
+	GUICtrlSetData($g_hDeployWave[1], $g_iDeployWave[1])
+	GUICtrlSetData($g_hDeployWave[2], $g_iDeployWave[2])
+	
+	$g_iDeployDelay[0] = Int(GUICtrlRead($g_hDeployDelay[0]))
+	$g_iDeployDelay[1] = Int(GUICtrlRead($g_hDeployDelay[1]))
+	$g_iDeployDelay[2] = Int(GUICtrlRead($g_hDeployDelay[2]))
+	GUICtrlSetData($g_hDeployDelay[0], $g_iDeployDelay[0])
+	GUICtrlSetData($g_hDeployDelay[1], $g_iDeployDelay[1])
+	GUICtrlSetData($g_hDeployDelay[2], $g_iDeployDelay[2])
+
+	$g_iIntSleep = Int(GUICtrlRead($g_hIntSleep))
 	GUICtrlSetData($g_hDelayLabel, $g_iIntSleep)
 
-	If $g_iIntSleep < -25 Then 
+	If $g_iIntSleep < -25 Then
 		GUICtrlSetColor($g_hDelayLabel, $COLOR_RED)
-	ElseIf $g_iIntSleep > 0 Then 
+	ElseIf $g_iIntSleep > 0 Then
 		GUICtrlSetColor($g_hDelayLabel, $COLOR_GREEN)
 	Else
 		GUICtrlSetColor($g_hDelayLabel, -1)

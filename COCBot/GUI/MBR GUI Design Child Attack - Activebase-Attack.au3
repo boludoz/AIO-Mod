@@ -117,6 +117,14 @@ Func CreateAttackSearchActiveBaseAttack()
 
 		$y += 27
 		$x -= 46
+		#Region - Deploy CC First - Team AIO Mod++
+				$g_hDeployCastleFirstAB = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Chk-First", "SG/Castle first."), $x + 27, $y, 100, 17)
+				$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "DeployCastleSiegeFirstTip", "Deploy CC / Sieges troops first, support for all modes.")
+				_GUICtrlSetTip(-1, $sTxtTip)
+                GUICtrlSetOnEvent(-1, "chkDelayMod")
+
+		$y += 27
+		#EndRegion
 			$g_hPicABLightSpell = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnLightSpell, $x, $y, 24, 24)
 				$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Chk-Use-Light_Info_01", -1)
 				_GUICtrlSetTip(-1, $sTxtTip)

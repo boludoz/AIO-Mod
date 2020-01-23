@@ -89,9 +89,9 @@ EndFunc   ;==>CreateMODTab
 	GUICtrlSetFont(-1, 12, 500, 0, "Candara", $CLEARTYPE_QUALITY)
 	GUICtrlSetColor(-1, 0xFFCC00)
 
-	$g_hDeployCastleFirst = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "DeployCastleSiegeFirst",  "Deploy castle first (All modes)"), 32, 224, 161, 17)
-	GUICtrlSetOnEvent(-1, "chkDelayMod")
-	_GUICtrlSetTip(-1, GetTranslatedFileIni("MiscMODs", "DeployCastleSiegeFirstTip", "Deploy CC / Sieges troops first, support for all modes."))
+;~ 	$g_hDeployCastleFirst = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "DeployCastleSiegeFirst",  "Deploy castle first (All modes)"), 32, 224, 161, 17)
+;~ 	GUICtrlSetOnEvent(-1, "chkDelayMod")
+;~ 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MiscMODs", "DeployCastleSiegeFirstTip", "Deploy CC / Sieges troops first, support for all modes."))
 
 	$g_hDisableColorLog = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "DisableColorLog",  "No color attack log"), 32, 248, 113, 17)
 
@@ -117,7 +117,7 @@ Func CreateMiscMagicSubTab()
 
 	; GUI SubTab
 	Local $x = 15, $y = 45
-	
+
 	GUICtrlCreateGroup("Collect Items", 16, 24, 449, 65)
 	$g_hChkCollectMagicItems = GUICtrlCreateCheckbox("Collect magic items", 56, 48, 113, 17)
 	GUICtrlSetOnEvent(-1, "btnDDApply")

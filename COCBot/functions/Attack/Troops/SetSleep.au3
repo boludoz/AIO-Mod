@@ -22,22 +22,30 @@ Func SetSleep($type)
 		$factor0 = 10
 		$factor1 = 100
 	EndIf
-	Switch $type
-		Case 0
-;~ 			If $g_abAttackStdRandomizeDelay[$g_iMatchMode] Then
-				Return Round(Random(1, 10) * $factor0)
-;~ 			Else
-;~ 				Return Random(($g_aiAttackStdUnitDelay[$g_iMatchMode] + 1) - 1, ($g_aiAttackStdUnitDelay[$g_iMatchMode] + 1) + 1, 1)
-;~ 			EndIf
-		Case 1
-;~ 			If $g_abAttackStdRandomizeDelay[$g_iMatchMode] Then
-				Return Round(Random(1, 10) * $factor1)
-;~ 			Else
-;~ 				Return Random(($g_aiAttackStdWaveDelay[$g_iMatchMode] + 1) - 1, ($g_aiAttackStdWaveDelay[$g_iMatchMode] + 1) + 1, 1) * $factor1
-;~ 			EndIf
-	EndSwitch
+
+	Local $iReturn = Random(1, 10) * Int(($type = 0) ? ($factor0) : ($factor1))
+	SetDebugLog("SetSleep Base : " & $iReturn)
+	Local $iCmbValue = $g_aiAttackAlgorithm[$DB]
+
+	If $g_iMatchMode = $DB Then
+		If BitAND($g_bChkEnableRandom[0], $iCmbValue = 0) Then ; DB + Standard
+			;	0	-	UnitDelay - $g_iDeployDelay[0]
+			;	1	-	WaveDelay - $g_iDeployWave[0]
+			$iReturn = ($type = 0) ? ($factor0 * Int($g_iDeployDelay[0])) : ($factor1 * Int($g_iDeployWave[0]))
+			SetDebugLog("SetSleep Mod + DB + Standard : " & $iReturn)
+			
+		ElseIf BitAND($g_bChkEnableRandom[1], $iCmbValue = 2) Then ; DB + Smart farm
+			;	0	-	UnitDelay - $g_iDeployDelay[1]
+			;	1	-	WaveDelay - $g_iDeployWave[1]
+			$iReturn = ($type = 0) ? ($factor0 * Int($g_iDeployDelay[1])) : ($factor1 * Int($g_iDeployWave[1]))
+			SetDebugLog("SetSleep Mod + DB + Smart farm : " & $iReturn)
+
+		EndIf
+	EndIf
+
+	Return Round(Random(($iReturn*80)/100, ($iReturn*120)/100, 1))
 EndFunc   ;==>SetSleep
-#RegionEnd
+#EndRegion
 
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: _SleepAttack
@@ -59,5 +67,5 @@ Func _SleepAttack($iDelay, $iSleep = True)
 		Return True
 	EndIf
 	If IsKeepClicksActive() Then Return False
-	Return _Sleep($iDelay, $iSleep)
+	Return _Sleep(Random(($iDelay*80)/100, ($iDelay*120)/100, 1), $iSleep) ; Team AIO Mod++
 EndFunc   ;==>_SleepAttack

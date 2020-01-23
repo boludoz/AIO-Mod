@@ -5,11 +5,22 @@
 
                     Based on MyBot.run v7.8.2 
 >> Next
-		• CSV: 
-			- Stop for war.
+		• Stop for war.
 			
 		• CSV: 
 			- Add hero if it doesn't exist in CSV.
+			
+	**V3.2.3**
+		» Improved:
+			• Deploy Castle/SG first option for all.
+
+			• Smart farm:
+				- Wave delay and wave work now.
+
+		» Fixed:
+			• Builder Base Check Army:
+				- Totally improved (_ArraySearch now return -1).
+				- The witch was corrected.
 			
 	**V3.2.2**
 		» Added:

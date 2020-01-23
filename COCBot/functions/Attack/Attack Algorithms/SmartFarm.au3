@@ -12,8 +12,8 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-
-Func TestSmartFarm()
+ 
+Func TestSmartFarm($bFast = True)
 
 	$g_iDetectedImageType = 0
 
@@ -22,22 +22,22 @@ Func TestSmartFarm()
 	$g_bRunState = True
 
 	Setlog("Starting the SmartFarm Attack Test()", $COLOR_INFO)
-
-	checkMainScreen(False)
-	CheckIfArmyIsReady()
-	ClickP($aAway, 2, 0, "") ;Click Away
-	If _Sleep(100) Then Return FuncReturn()
-	If (IsSearchModeActive($DB) And checkCollectors(True, False)) Or IsSearchModeActive($LB) Then
+	If $bFast = False Then 
+		checkMainScreen(False)
+		CheckIfArmyIsReady()
+		ClickP($aAway, 2, 0, "") ;Click Away
 		If _Sleep(100) Then Return FuncReturn()
-		PrepareSearch()
-		If _Sleep(1000) Then Return FuncReturn()
-		VillageSearch()
-		If $g_bOutOfGold Then Return ; Check flag for enough gold to search
-		If _Sleep(100) Then Return FuncReturn()
-	Else
-		SetLog("Your Army is not prepared, check the Attack/train options")
+		If (IsSearchModeActive($DB) And checkCollectors(True, False)) Or IsSearchModeActive($LB) Then
+			If _Sleep(100) Then Return FuncReturn()
+			PrepareSearch()
+			If _Sleep(1000) Then Return FuncReturn()
+			VillageSearch()
+			If $g_bOutOfGold Then Return ; Check flag for enough gold to search
+			If _Sleep(100) Then Return FuncReturn()
+		Else
+			SetLog("Your Army is not prepared, check the Attack/train options")
+		EndIf
 	EndIf
-
 	PrepareAttack($g_iMatchMode)
 
 	$g_bAttackActive = True
@@ -191,7 +191,7 @@ Func ChkSmartFarm($TypeResources = "All")
 
 	; DEBUG , image with all information
 	Local $redline[UBound($BestSideToAttack)]
-	If $g_bDebugSmartFarm Then
+	If $g_bDebugSmartFarm Then 
 		For $i = 0 To UBound($BestSideToAttack) - 1
 			$redline[$i] = GetOffsetRedline($BestSideToAttack[$i], 5)
 		Next
@@ -602,23 +602,17 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 	$g_aiDeployHeroesPosition[0] = -1
 	$g_aiDeployHeroesPosition[1] = -1
 	
-    # AIO ++ Mod (Samkie inspired|By Boludoz)
-    If $g_bDeployCastleFirst Then
-		Local $aFilled[1][5] = [[0, 0, 0, 0, 0]]
-        Local $iPos = -1
-		
-        For $i = 0 To UBound($listInfoDeploy) - 1
-            If IsString($listInfoDeploy[$i][0]) And $listInfoDeploy[$i][0] = "CC" Then
-					For $iF = 0 to UBound($aFilled, 2) -1
-						$aFilled[0][$iF] = $listInfoDeploy[$i][$iF]
-					Next
-					_ArrayInsert($listInfoDeploy, 0, $aFilled)
-					_ArrayDelete($listInfoDeploy, $i+1)
-                ExitLoop
-            EndIf
-        Next
-	Endif
-    # AIO ++ Mod (Samkie inspired|ByBoludoz)
+	#Region - Team AIO Mod++ (Samkie inspired|By Boludoz)
+	Switch $g_iMatchMode
+		Case $LB, $DB
+			If $g_bDeployCastleFirst[$g_iMatchMode] Then
+				Local $aCC = _ArraySearch($listInfoDeploy, "CC", 0, 0, 0, 0, 0, 0)
+				Local $aRem = _ArrayExtract($listInfoDeploy, $aCC, $aCC)
+				_ArrayDelete($listInfoDeploy, $aCC)
+				_ArrayInsert($listInfoDeploy, 0, $aRem)
+			EndIf
+	EndSwitch
+    #EndRegion
 
 	LaunchTroopSmartFarm($listInfoDeploy, $g_iClanCastleSlot, $g_iKingSlot, $g_iQueenSlot, $g_iWardenSlot, $g_iChampionSlot, $SIDESNAMES)
 
