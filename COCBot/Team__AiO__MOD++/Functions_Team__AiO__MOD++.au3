@@ -17,6 +17,9 @@
 #include "functions\Mod's\ModFuncs.au3"
 #include "functions\Pixels\_Wait4Pixel.au3"
 
+; Check Stop For War - Team AiO MOD++
+#include "functions\Mod's\CheckStopForWar.au3"
+
 ; Custom army - Team AiO MOD++
 #include "functions\Mod's\BuilderBase\Camps\BuilderBaseCorrectAttackBar.au3"
 #include "functions\Mod's\BuilderBase\Camps\BuilderBaseCheckArmy.au3"

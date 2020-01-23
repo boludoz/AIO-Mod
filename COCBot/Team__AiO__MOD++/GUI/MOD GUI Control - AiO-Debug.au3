@@ -14,6 +14,28 @@
 ; ===============================================================================================================================
 #include-once
 
+Func btnTestStopForWar()
+	SetLog("Test Stop For War Started", $COLOR_DEBUG)
+
+	Local $wasRunState = $g_bRunState
+	Local $wasFirstStart = $g_bFirstStart
+	Local $wasStopForWar = $g_bStopForWar
+	;For Debug Purpose set run state to true temporarily
+	$g_bRunState = True
+	$g_bStopForWar = True
+	$g_bFirstStart = True
+	_GUICtrlTab_ClickTab($g_hTabMain, 0)
+	CheckStopForWar()
+
+	;Reset to orignal state
+	$g_bStopForWar = $wasStopForWar
+	$g_bFirstStart = $wasFirstStart
+	$g_bRunState = $wasRunState
+
+	SetLog("Test Stop For War Ended", $COLOR_DEBUG)
+
+EndFunc   ;==>btnTestStopForWar
+
 Func btnTestExecuteButton()
 	Local $currentRunState = $g_bRunState
 	$g_bRunState = True

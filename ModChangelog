@@ -5,12 +5,14 @@
 
                     Based on MyBot.run v7.8.2 
 >> Next
-		• Stop for war.
 			
 		• CSV: 
 			- Add hero if it doesn't exist in CSV.
 			
 	**V3.2.3**
+		» Added:
+			• Stop for war @demen @Chilly-Chill. 
+			
 		» Improved:
 			• Deploy Castle/SG first option for all.
 

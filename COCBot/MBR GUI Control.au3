@@ -638,6 +638,8 @@ Func GUIControl_WM_COMMAND($hWind, $iMsg, $wParam, $lParam)
 			btnTestAttackBB()
 		Case $g_hBtnTestGTFO
 			btnTestGTFO()
+		Case $g_hBtnTestStopForWar
+			btnTestStopForWar()
 	EndSwitch
 
 	If $lParam = $g_hCmbGUILanguage Then
@@ -2145,7 +2147,7 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 		Case $g_hGUI_MOD_TAB
 			; the icons for Mods tab
 			; $eIcnMiscMod, $eIcnWarPreparation
-			Local $aIconIndex = [$eIcnSuperXP, $eIcnHumanization, $eIcnChatActions, $eIcnGFTO, $eIcnMisc, $eIcnDebugMod]
+			Local $aIconIndex = [$eIcnSuperXP, $eIcnHumanization, $eIcnChatActions, $eIcnGFTO, $eIcnPrewar, $eIcnMisc, $eIcnDebugMod]
 
 		Case $g_hGUI_BOT_TAB
 			; the icons for Bot tab

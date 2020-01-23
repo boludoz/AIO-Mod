@@ -526,10 +526,10 @@ Func IsClanOverview()
 	Return $Result
 EndFunc   ;==>IsClanOverview
 
-Func IsWarMenu()
-	Local $Result = _ColorCheck(_GetPixelColor(826, 34, True), "FFFFFF", 20)
-	Return $Result
-EndFunc   ;==>IsWarMenu
+;Func IsWarMenu()
+;	Local $Result = _ColorCheck(_GetPixelColor(826, 34, True), "FFFFFF", 20)
+;	Return $Result
+;EndFunc   ;==>IsWarMenu
 
 Func randomSleep($SleepTime, $Range = 0)
 	If $g_bRunState = False Then Return

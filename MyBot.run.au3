@@ -744,8 +744,9 @@ Func runBot() ;Bot that runs everything in order
 			If $g_bRestart Then ContinueLoop
 			If _Sleep($DELAYRUNBOT3) Then Return
 			VillageReport()
-			ProfileSwitch()  ; AIO Mod
-			CheckFarmSchedule()  ; AIO Mod
+			CheckStopForWar() ; War Preparation - Team AIO Mod++
+			ProfileSwitch()  ;  Team AIO Mod++
+			CheckFarmSchedule()  ;  Team AIO Mod++
 			If _Sleep($DELAYRUNBOT2) Then Return
 			If BotCommand() Then btnStop()
 			If Not $g_bRunState Then Return

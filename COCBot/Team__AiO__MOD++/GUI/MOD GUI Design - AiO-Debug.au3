@@ -15,7 +15,7 @@
 #include-once
 
 Global $g_hBtnTestSuperXP = 0, $g_hBtnTestBotHumanization = 0, $g_hBtnTestClanChat = 0, $g_hBtnTestFriendChallenge = 0, $g_hBtnTestReadChat = 0, _
-	$g_hBtnTestDailyDiscounts = 0, $g_hBtnTestAttackBB = 0, $g_hBtnTestRequestDefense = 0, $g_hBtnTestGTFO = 0, $g_hBtnTestCollectorsOutside = 0, _
+	$g_hBtnTestDailyDiscounts = 0, $g_hBtnTestAttackBB = 0, $g_hBtnTestRequestDefense = 0, $g_hBtnTestGTFO = 0, $g_hBtnTestCollectorsOutside = 0, $g_hBtnTestStopForWar = 0, _
 	$g_hTxtTestExecuteButton = 0, $g_hBtnTestExecuteButton = 0
 
 Func TabDebugGUI()
@@ -23,24 +23,26 @@ Func TabDebugGUI()
 	GUICtrlCreateGroup("Debug", $x - 20, $y - 20, $g_iSizeWGrpTab2, $g_iSizeHGrpTab2)
 	$x = 300
 	$y = 40
-		$g_hBtnTestSuperXP = GUICtrlCreateButton("Test SuperXP", $x, $y, 140, 25)
+		$g_hBtnTestSuperXP = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Bot - Debug", "BtnTestSuperXP", "Test SuperXP"), $x, $y, 140, 25)
 	$y += 30
-		$g_hBtnTestBotHumanization = GUICtrlCreateButton("Test Humanization", $x, $y, 140, 25)
+		$g_hBtnTestBotHumanization = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Bot - Debug", "BtnTestBotHumanization", "Test Humanization"), $x, $y, 140, 25)
 	$y += 30
-		$g_hBtnTestClanChat = GUICtrlCreateButton("Test ClanChat", $x, $y, 140, 25)
+		$g_hBtnTestClanChat = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Bot - Debug", "BtnTestClanChat", "Test ClanChat"), $x, $y, 140, 25)
 	$y += 30
-		$g_hBtnTestFriendChallenge = GUICtrlCreateButton("Test FriendChallenge", $x, $y, 140, 25)
+		$g_hBtnTestFriendChallenge = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Bot - Debug", "BtnTestFriendChallenge", "Test FriendChallenge"), $x, $y, 140, 25)
 	$y += 30
-		$g_hBtnTestReadChat = GUICtrlCreateButton("Test ReadChat", $x, $y, 140, 25)
+		$g_hBtnTestReadChat = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Bot - Debug", "BtnTestReadChat", "Test ReadChat"), $x, $y, 140, 25)
 	$y += 30
-		$g_hBtnTestDailyDiscounts = GUICtrlCreateButton("Test DailyDiscounts", $x, $y, 140, 25)
+		$g_hBtnTestDailyDiscounts = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Bot - Debug", "BtnTestDailyDiscounts", "Test DailyDiscounts"), $x, $y, 140, 25)
 	$y += 30
-		$g_hBtnTestAttackBB = GUICtrlCreateButton("Test AttackBB", $x, $y, 140, 25)
+		$g_hBtnTestAttackBB = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Bot - Debug", "BtnTestAttackBB", "Test AttackBB"), $x, $y, 140, 25)
 	$y += 30
-		$g_hBtnTestGTFO = GUICtrlCreateButton("Test GTFO", $x, $y, 140, 25)
+		$g_hBtnTestStopForWar = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Bot - Debug", "BtnTestStopForWar", "Test Stop For War"), $x, $y, 140, 25)
 	$y += 30
-		$g_hTxtTestExecuteButton = GUICtrlCreateInput("Execute()", $x - 90, $y + 3, 85, 20)
+		$g_hBtnTestGTFO = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Bot - Debug", "BtnTestGTFO", "Test GTFO"), $x, $y, 140, 25)
+	$y += 30
+		$g_hTxtTestExecuteButton = GUICtrlCreateInput(GetTranslatedFileIni("MBR GUI Design Child Bot - Debug", "TxtTestExecuteButton", "Execute()"), $x - 90, $y + 3, 85, 20)
 			GUICtrlSetBkColor(-1, 0xD1DFE7)
-		$g_hBtnTestExecuteButton = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Bot - Debug", "Execute", "Execute func/math"), $x, $y, 140, 25)
+		$g_hBtnTestExecuteButton = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Bot - Debug", "BtnTestExecuteButton", "Execute func/math"), $x, $y, 140, 25)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 EndFunc   ;==>TabDebugGUI

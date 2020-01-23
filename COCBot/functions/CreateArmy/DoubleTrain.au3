@@ -15,7 +15,7 @@
 ; ===============================================================================================================================
 #include-once
 
-Func DoubleTrain()
+Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 
 	If Not $g_bDoubleTrain Then Return
 	Local $bDebug = $g_bDebugSetlogTrain Or $g_bDebugSetlog
@@ -36,8 +36,8 @@ Func DoubleTrain()
 		If $TroopCamp[1] <> $g_iTotalCampSpace Then _
 			SetLog("Incorrect Troop combo: " & $g_iTotalCampSpace & " vs Total camp: " & $TroopCamp[1] & @CRLF & @TAB & "Double train may not work well", $COLOR_DEBUG)
 
-		If $TroopCamp[0] < $TroopCamp[1] Then ; <280/280
-			If $g_bDonationEnabled And $g_bChkDonate And MakingDonatedTroops("Troops") Then
+		If $bWarTroop Or $TroopCamp[0] < $TroopCamp[1] Then ; <280/280 ; Check Stop For War - Team AiO MOD++
+			If Not $bWarTroop And $g_bDonationEnabled And $g_bChkDonate And MakingDonatedTroops("Troops") Then ; Check Stop For War - Team AiO MOD++
 				If $bDebug Then SetLog($Step & ". MakingDonatedTroops('Troops')", $COLOR_DEBUG)
 				$Step += 1
 				If $Step = 6 Then ExitLoop
@@ -85,8 +85,8 @@ Func DoubleTrain()
 				$SpellCamp[1] = $TotalSpell
 			EndIf
 
-			If $SpellCamp[0] < $SpellCamp[1] Then ; 0-10/11
-				If $g_bDonationEnabled And $g_bChkDonate And MakingDonatedTroops("Spells") Then
+			If $bWarTroop Or $SpellCamp[0] < $SpellCamp[1] Then ; 0-10/11 ; Check Stop For War - Team AiO MOD++
+				If Not $bWarTroop And $g_bDonationEnabled And $g_bChkDonate And MakingDonatedTroops("Spells") Then ; Check Stop For War - Team AiO MOD++
 					If $bDebug Then SetLog($Step & ". MakingDonatedTroops('Spells')", $COLOR_DEBUG)
 					$Step += 1
 					If $Step = 6 Then ExitLoop
