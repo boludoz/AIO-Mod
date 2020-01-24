@@ -729,10 +729,12 @@ Func runBot() ;Bot that runs everything in order
 		If Not $g_bRunState Then Return
 		If $g_bRestart Then ContinueLoop
 
-		; AIO - Start
-		MainGTFO()
-		MainKickout()
-		; AIO - End
+		#Region - GTFO - Team AIO Mod++
+		If $g_bChkOnlyFarm = False Then 
+			MainGTFO()
+			MainKickout()
+		EndIf
+		#EndRegion
 
 		checkObstacles() ; trap common error messages also check for reconnecting animation
 		If $g_bRestart Then ContinueLoop
@@ -803,6 +805,7 @@ Func runBot() ;Bot that runs everything in order
 			; Train Donate only - force a donate cc everytime
 			If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) Then _RunFunction('DonateCC,Train')
 			If $g_bRestart Then ContinueLoop
+			If $g_bChkOnlyFarm = False Then MainSXHandler() ; Super XP - Team AIO Mod++
 			Local $aRndFuncList = ['Laboratory', 'UpgradeHeroes', 'UpgradeBuilding']
 			_ArrayShuffle($aRndFuncList)
 			For $Index In $aRndFuncList
@@ -931,7 +934,7 @@ Func _Idle() ;Sequence that runs until Full Army
 			If $g_bRestart Then ExitLoop
 			If _Sleep($DELAYIDLE1) Or Not $g_bRunState Then ExitLoop
 		EndIf
-		AddIdleTime()
+		If Not $g_bChkOnlyFarm Then AddIdleTime()
 		checkMainScreen(False) ; required here due to many possible exits
 		If $g_iCommandStop = -1 Then
 			If $g_iActualTrainSkip < $g_iMaxTrainSkip Then
@@ -948,7 +951,7 @@ Func _Idle() ;Sequence that runs until Full Army
 				EndIf
 				CheckArmyCamp(True, True)
 			EndIf
-			MainSXHandler() ; SuperXP / GoblinXP - Team AiO MOD++
+			If $g_bChkOnlyFarm = False Then MainSXHandler() ; Super XP - Team AIO Mod++
 		EndIf
 		If _Sleep($DELAYIDLE1) Then Return
 		If $g_iCommandStop = 0 And $g_bTrainEnabled Then
@@ -1005,11 +1008,12 @@ EndFunc   ;==>_Idle
 
 Func AttackMain() ;Main control for attack functions
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
-	; SuperXP / GoblinXP - Team AiO MOD++
-	If $g_bEnableSuperXP And $g_iActivateOptionSX = 2 Then
+	#Region - SuperXP / GoblinXP - Team AiO MOD++
+	If $g_bChkOnlyFarm = False And $g_bEnableSuperXP = True And $g_iActivateOptionSX = 2 Then
 		MainSXHandler()
 		Return
 	EndIf
+	#EndRegion
 	; getArmyTroopCapacity(True, True)
 	ClickP($aAway, 1, 0, "#0000") ;Click Away to prevent any pages on top
 	If IsSearchAttackEnabled() Then
@@ -1267,7 +1271,7 @@ Func FirstCheck()
 	If Not $g_bRunState Then Return
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
 
-	#Region AIO MOD++
+	#Region - Team AIO MOD++
 	If not $g_bChkOnlyFarm Then
 		$g_bRestart = False
 		$g_bFullArmy = False
@@ -1278,12 +1282,16 @@ Func FirstCheck()
 		CheckFarmSchedule()
 		MainGTFO()
 		MainKickout()
+		BotHumanization()	
 	EndIf
 	#EndRegion
+	
+	If $g_bChkOnlyFarm = False And $g_bEnableSuperXP = True And $g_iActivateOptionSX = 2 Then ;When Super Xp Only Farm Option is on skip all and just do the Goblin Xp Farming
+		MainSXHandler()
+		Return
+	EndIf
 
 	If Not $g_bRunState Then Return
-
-	If not $g_bChkOnlyFarm Then BotHumanization() ; Humanization - Team AiO MOD++
 
 	If $g_bOutOfGold And (Number($g_aiCurrentLoot[$eLootGold]) >= Number($g_iTxtRestartGold)) Then ; check if enough gold to begin searching again
 		$g_bOutOfGold = False ; reset out of gold flag
