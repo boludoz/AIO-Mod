@@ -18,15 +18,19 @@
 
 		» Improved:
 			• Deploy Castle/SG first option for all.
+			
 			• Super XP.
-			• Smart farm:
-				- Wave delay and wave work now.
+			
+			• Smart farm / Standard attack DB humanized:
+				- The dropping time is really random.
+				- Random delay / wave work and randomly.
 
 		» Fixed:
 			• Builder Base Check Army:
 				- Totally improved (_ArraySearch now return -1).
 				- The witch was corrected.
-			
+				- TH13 Filter
+				
 	**V3.2.2**
 		» Added:
 			• GTFO.
