@@ -13,11 +13,9 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func RequestCC($bClickPAtEnd = True, $sText = "")
+Func RequestCC($bClickPAtEnd = True, $sText = "", $bRequestFast = False)
 
-	If Not $g_bRequestTroopsEnable Or Not $g_bDonationEnabled Then
-		Return
-	EndIf
+	If Not $g_bRequestTroopsEnable Or Not $g_bDonationEnabled Then Return
 
 	If Not $g_bRunState Then Return
 
@@ -35,10 +33,33 @@ Func RequestCC($bClickPAtEnd = True, $sText = "")
 	If _Sleep($DELAYREQUESTCC1) Then Return
 	SetLog("Requesting Clan Castle reinforcements", $COLOR_INFO)
 	checkAttackDisable($g_iTaBChkIdle) ; Early Take-A-Break detection
+	
+	#Region - Team AIO Mod++ - Always request
+	If $bRequestFast Then
+		If not OpenClanChat() Then
+				SetDebugLog("RequestCC | Chat open failed.")
+			Else
+				If _Sleep(Random(500, 700, 1)) Then Return
+
+				Local $aDonationChat_button = MultiPSimple(7, 688, 65, 723, 0xD7F37F)
+				If IsArray($aDonationChat_button) And not IsArray(MultiPSimple(69, 695, 73, 717, 0x7A775C)) Then
+				
+				If _Sleep(Random(500, 700, 1)) Then Return
+				
+				_makerequest($aDonationChat_button)
+				CloseClanChat()
+			EndIf
+			If $bClickPAtEnd Then ClickP($aAway, 2, 0, "#0335")
+
+			Return
+		EndIf
+	EndIf
+	#EndRegion - Team AIO Mod++ - Always request
+
 	If $bClickPAtEnd Then CheckCCArmy()
 
 	If Not $g_bRunState Then Return
-
+	
 	Local $sSearchDiamond = GetDiamondFromRect("718,580,780,614")
 	Local Static $aRequestButtonPos[2] = [-1, -1]
 
