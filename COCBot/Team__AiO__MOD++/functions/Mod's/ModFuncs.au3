@@ -66,67 +66,63 @@ Func getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpa
 	Return $result
 EndFunc   ;==>getOcrAndCapture
 
-Func _ImageSearchXML($sDirectory, $Quantity2Match = 0, $saiArea2SearchOri = "0,0,860,732", $bForceCapture = True, $DebugLog = False, $checkDuplicatedpoints = False, $Distance2check = 25, $iLevel = 0)
+Func _ImageSearchXML($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "0,0,860,732", $bForceCapture = True, $bDebugLog = False, $bCheckDuplicatedpoints = False, $iDistance2check = 25, $iLevel = 0)
 	$g_aImageSearchXML = -1
 
-	Local $iMax = 0
-
 	Local $sSearchDiamond = GetDiamondFromRect($saiArea2SearchOri)
-	Local $aResult = findMultiple($sDirectory , $sSearchDiamond, $sSearchDiamond, $iLevel, 1000, $Quantity2Match, "objectname,objectlevel,objectpoints", $bForceCapture)
+	Local $aResult = findMultiple($sDirectory , $sSearchDiamond, $sSearchDiamond, $iLevel, 1000, $iQuantity2Match, "objectname,objectlevel,objectpoints", $bForceCapture)
 	If Not IsArray($aResult) Then Return -1
 
 	Local $iCount = 0
 
-	$iMax = UBound($aResult) -1
-
 	; Compatible with BuilderBaseBuildingsDetection()[old function] same return array
 	; Result [X][0] = NAME , [x][1] = Xaxis , [x][2] = Yaxis , [x][3] = Level
-	Local $AllResults[0][4]
+	Local $aAllResults[0][4]
 
 	Local $aArrays = "", $aCoords, $aCommaCoord
 
-	For $i = 0 To $iMax
+	For $i = 0 To UBound($aResult) -1
 		$aArrays = $aResult[$i] ; should be return objectname,objectpoints,objectlevel
 		$aCoords = StringSplit($aArrays[2], "|", 2)
 		For $iCoords = 0 To UBound($aCoords) -1
 			$aCommaCoord = StringSplit($aCoords[$iCoords], ",", 2)
 			; Inspired in Chilly-chill
 			Local $aTmpResults[1][4] = [[$aArrays[0], Int($aCommaCoord[0]), Int($aCommaCoord[1]), Int($aArrays[1])]]
-			_ArrayAdd($AllResults, $aTmpResults)
+			_ArrayAdd($aAllResults, $aTmpResults)
 		Next
 		$iCount += 1
 	Next
 	If $iCount < 1 Then Return -1
 
-	If $checkDuplicatedpoints And UBound($AllResults) > 0 Then
+	If $bCheckDuplicatedpoints And UBound($aAllResults) > 0 Then
 		; Sort by X axis
-		_ArraySort($AllResults, 0, 0, 0, 1)
+		_ArraySort($aAllResults, 0, 0, 0, 1)
 
 		; Distance in pixels to check if is a duplicated detection , for deploy point will be 5
-		Local $D2Check = $Distance2check
+		Local $iD2Check = $iDistance2check
 
 		; check if is a double Detection, near in 10px
-		Local $Dime = 0
-		For $i = 0 To UBound($AllResults) - 1
-			If $i > UBound($AllResults) - 1 Then ExitLoop
-			Local $LastCoordinate[4] = [$AllResults[$i][0], $AllResults[$i][1], $AllResults[$i][2], $AllResults[$i][3]]
+		Local $iDime = 0
+		For $i = 0 To UBound($aAllResults) - 1
+			If $i > UBound($aAllResults) - 1 Then ExitLoop
+			Local $LastCoordinate[4] = [$aAllResults[$i][0], $aAllResults[$i][1], $aAllResults[$i][2], $aAllResults[$i][3]]
 			SetDebugLog("Coordinate to Check: " & _ArrayToString($LastCoordinate))
-			If UBound($AllResults) > 1 Then
-				For $j = 0 To UBound($AllResults) - 1
-					If $j > UBound($AllResults) - 1 Then ExitLoop
+			If UBound($aAllResults) > 1 Then
+				For $j = 0 To UBound($aAllResults) - 1
+					If $j > UBound($aAllResults) - 1 Then ExitLoop
 					; SetDebugLog("$j: " & $j)
 					; SetDebugLog("UBound($aAllResults) -1: " & UBound($aAllResults) - 1)
-					Local $SingleCoordinate[4] = [$AllResults[$j][0], $AllResults[$j][1], $AllResults[$j][2], $AllResults[$j][3]]
+					Local $SingleCoordinate[4] = [$aAllResults[$j][0], $aAllResults[$j][1], $aAllResults[$j][2], $aAllResults[$j][3]]
 					; SetDebugLog(" - Comparing with: " & _ArrayToString($SingleCoordinate))
 					If $LastCoordinate[1] <> $SingleCoordinate[1] Or $LastCoordinate[2] <> $SingleCoordinate[2] Then
-						If $SingleCoordinate[1] < $LastCoordinate[1] + $D2Check And $SingleCoordinate[1] > $LastCoordinate[1] - $D2Check Then
+						If $SingleCoordinate[1] < $LastCoordinate[1] + $iD2Check And $SingleCoordinate[1] > $LastCoordinate[1] - $iD2Check Then
 							; SetDebugLog(" - removed : " & _ArrayToString($SingleCoordinate))
-							_ArrayDelete($AllResults, $j)
+							_ArrayDelete($aAllResults, $j)
 						EndIf
 					Else
 						If $LastCoordinate[1] = $SingleCoordinate[1] And $LastCoordinate[2] = $SingleCoordinate[2] And $LastCoordinate[3] <> $SingleCoordinate[3] Then
 							; SetDebugLog(" - removed equal level : " & _ArrayToString($SingleCoordinate))
-							_ArrayDelete($AllResults, $j)
+							_ArrayDelete($aAllResults, $j)
 						EndIf
 					EndIf
 				Next
@@ -134,12 +130,44 @@ Func _ImageSearchXML($sDirectory, $Quantity2Match = 0, $saiArea2SearchOri = "0,0
 		Next
 	EndIf
 
-	If (UBound($AllResults) > 0) Then
-	;_ArrayDisplay($AllResults)
-		$g_aImageSearchXML = $AllResults
-		Return $AllResults
+	If (UBound($aAllResults) > 0) Then
+	;_ArrayDisplay($aAllResults)
+		$g_aImageSearchXML = $aAllResults
+		Return $aAllResults
 	Else
 		$g_aImageSearchXML = -1
+		Return -1
+	EndIf
+EndFunc
+
+Func findMultipleQuick($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "0,0,860,732", $bForceCapture = True, $bDebugLog = False, $iDistance2check = 25, $iLevel = 0)
+	Local $sSearchDiamond = GetDiamondFromRect($saiArea2SearchOri)
+	Local $aResult = findMultiple($sDirectory , $sSearchDiamond, $sSearchDiamond, $iLevel, 1000, $iQuantity2Match, "objectname,objectlevel,objectpoints", $bForceCapture)
+	If Not IsArray($aResult) Then Return -1
+
+	Local $iCount = 0
+
+	; Result [X][0] = NAME , [x][1] = Xaxis , [x][2] = Yaxis , [x][3] = Level
+	Local $aAllResults[0][4]
+
+	Local $aArrays = "", $aCoords, $aCommaCoord
+
+	For $i = 0 To UBound($aResult) -1
+		$aArrays = $aResult[$i] ; should be return objectname,objectpoints,objectlevel
+		$aCoords = StringSplit($aArrays[2], "|", 2)
+		For $iCoords = 0 To UBound($aCoords) -1
+			$aCommaCoord = StringSplit($aCoords[$iCoords], ",", 2)
+			; Inspired in Chilly-chill
+			Local $aTmpResults[1][4] = [[$aArrays[0], Int($aCommaCoord[0]), Int($aCommaCoord[1]), Int($aArrays[1])]]
+			_ArrayAdd($aAllResults, $aTmpResults)
+		Next
+		$iCount += 1
+	Next
+	If $iCount < 1 Then Return -1
+
+	If (UBound($aAllResults) > 0) Then
+		Return $aAllResults
+	Else
 		Return -1
 	EndIf
 EndFunc
