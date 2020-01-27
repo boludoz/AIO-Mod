@@ -84,9 +84,18 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			Next
 			GUICtrlSetState($g_hChkRequestCCForWar, $g_bRequestCCForWar ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hTxtRequestCCForWar, $g_sTxtRequestCCForWar)
-			ReadConfig_600_52_2()
-			ChkStopForWar()
 
+			; Request form chat / on a loop.
+			GUICtrlSetState($g_hChkReqCCAlways, $g_bChkReqCCAlways ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkReqCCFromChat, $g_bChkReqCCFromChat ? $GUI_CHECKED : $GUI_UNCHECKED)
+			
+			ChkReqCCAlways()
+			ChkReqCCFromChat()
+
+			ReadConfig_600_52_2()
+			
+			ChkStopForWar()
+			
 			chkDelayMod()
 		Case "Save"
 			$g_bUseSleep = (GUICtrlRead($g_hUseSleep) = $GUI_CHECKED) ? 1 : 0
@@ -136,6 +145,9 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			$g_bRequestCCForWar = GUICtrlRead($g_hChkRequestCCForWar) = $GUI_CHECKED
 			$g_sTxtRequestCCForWar = GUICtrlRead($g_hTxtRequestCCForWar)
 
+			; Request form chat / on a loop.
+			$g_bChkReqCCAlways = GUICtrlRead($g_hChkReqCCAlways) = $GUI_CHECKED
+			$g_bChkReqCCFromChat = GUICtrlRead($g_hChkReqCCFromChat) = $GUI_CHECKED
 
 	EndSwitch
 

@@ -70,6 +70,9 @@ Func ReadConfig_MOD_MiscTab()
 	IniReadS($g_bRequestCCForWar, $g_sProfileConfigPath, "war preparation", "RequestCC War", False, "Bool")
 	$g_sTxtRequestCCForWar = IniRead($g_sProfileConfigPath, "war preparation", "RequestCC War Text", "War troop please")
 
+	; Request form chat / on a loop.
+	IniReadS($g_bChkReqCCAlways, $g_sProfileConfigPath, "ReqCCOptions", "ReqCCAlways", $g_bChkReqCCAlways, "Bool")
+	IniReadS($g_bChkReqCCFromChat, $g_sProfileConfigPath, "ReqCCOptions", "ReqCCFromChat", $g_bChkReqCCFromChat, "Bool")
 
 EndFunc   ;==>ReadConfig_MOD_MiscTab
 

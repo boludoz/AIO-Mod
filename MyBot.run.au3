@@ -765,6 +765,13 @@ Func runBot() ;Bot that runs everything in order
 			If _Sleep($DELAYRUNBOT5) Then Return
 			checkMainScreen(False)
 			If $g_bRestart Then ContinueLoop
+			#Region - Request form chat / on a loop - Team AIO Mod++
+            If $g_bChkReqCCAlways Then
+				$g_bCanRequestCC = True
+				RequestCC()
+                If _Sleep($DELAYRUNBOT1) = False Then checkMainScreen(False)
+            EndIf
+			#EndRegion - Request form chat / on a loop - Team AIO Mod++
             Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectFreeMagicItems', 'DailyChallenge'] ; AIO Mod
 			_ArrayShuffle($aRndFuncList)
 			For $Index In $aRndFuncList
@@ -1196,7 +1203,7 @@ Func __RunFunction($action)
 			LabGuiDisplay()
 			_Sleep($DELAYRUNBOT3)
 		Case "RequestCC"
-			RequestCC()
+			If not $g_bChkReqCCAlways Then RequestCC() ; Request form chat / on a loop - Team AIO Mod++
             If Not _Sleep($DELAYRUNBOT1) Then checkMainScreen(False)
 		Case "Laboratory"
 			If BitAnd(Not BitOr($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return

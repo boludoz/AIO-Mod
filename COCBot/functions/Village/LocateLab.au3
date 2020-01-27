@@ -65,7 +65,7 @@ Func LocateLab($bCollect = True)
 			Return
 		EndIf
 		Local $sLabInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY); 860x780
-		If $sLabInfo[0] > 1 Or $sLabInfo[0] = "" Then
+		If $sLabInfo[0] > 1 Or $sLabInfo[1] = "" Then ; Team AIO Mod++
 			If StringInStr($sLabInfo[1], "Lab") = 0 Then
 				Local $sLocMsg = ($sLabInfo[0] = "" ? "Nothing" : $sLabInfo[1])
 

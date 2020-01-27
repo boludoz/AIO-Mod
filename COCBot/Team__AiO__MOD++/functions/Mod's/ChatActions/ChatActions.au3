@@ -225,7 +225,7 @@ EndFunc   ;==>ChatClan
 Func OpenClanChat() ; open the chat area
 	SetDebugLog("ChatBot|Begin OpenClanChat", $COLOR_DEBUG)
 
-	ClickP($aAway2, 1, 0, "#0176") ;Click Away
+	;ClickP($aAway2, 1, 0, "#0176") ;Click Away
 	ForceCaptureRegion()
 	If _Sleep($DELAYCHATACTIONS2) Then Return
 	If Not _CheckPixel($aChatTab, $g_bCapturePixel) Or Not _CheckPixel($aChatTab2, $g_bCapturePixel) Or Not _CheckPixel($aChatTab3, $g_bCapturePixel) Then

@@ -72,6 +72,10 @@ Func SaveConfig_MOD_MiscTab()
 	_Ini_Add("war preparation", "RequestCC War", $g_bRequestCCForWar ? 1 : 0)
 	_Ini_Add("war preparation", "RequestCC War Text", $g_sTxtRequestCCForWar)
 
+	; Request form chat / on a loop.
+	_Ini_Add("ReqCCOptions", "ReqCCAlways", $g_bChkReqCCAlways)
+	_Ini_Add("ReqCCOptions", "ReqCCFromChat", $g_bChkReqCCFromChat)
+
 EndFunc   ;==>SaveConfig_MOD_MiscTab
 
 Func SaveConfig_MOD_SuperXP()

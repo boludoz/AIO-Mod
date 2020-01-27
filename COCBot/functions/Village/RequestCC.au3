@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func RequestCC($bClickPAtEnd = True, $sText = "", $bRequestFast = False)
+Func RequestCC($bClickPAtEnd = True, $sText = "", $bRequestFast = $g_bChkReqCCFromChat) ; Request form chat / on a loop - Team AIO Mod++
 
 	If Not $g_bRequestTroopsEnable Or Not $g_bDonationEnabled Then Return
 
@@ -27,22 +27,20 @@ Func RequestCC($bClickPAtEnd = True, $sText = "", $bRequestFast = False)
 		EndIf
 	EndIf
 
-	;open army overview
-	If $sText <> "IsFullClanCastle" And Not OpenArmyOverview(True, "RequestCC()") Then Return
-
-	If _Sleep($DELAYREQUESTCC1) Then Return
-	SetLog("Requesting Clan Castle reinforcements", $COLOR_INFO)
-	checkAttackDisable($g_iTaBChkIdle) ; Early Take-A-Break detection
-	
-	#Region - Team AIO Mod++ - Always request
+	#Region - Request form chat / on a loop - Team AIO Mod++
 	If $bRequestFast Then
+	
+		If _Sleep($DELAYREQUESTCC1) Then Return
+		SetLog("Requesting Clan Castle reinforcements from chat", $COLOR_INFO)
+		checkAttackDisable($g_iTaBChkIdle) ; Early Take-A-Break detection
+
 		If not OpenClanChat() Then
 				SetDebugLog("RequestCC | Chat open failed.")
 			Else
 				If _Sleep(Random(500, 700, 1)) Then Return
 
 				Local $aDonationChat_button = MultiPSimple(7, 688, 65, 723, 0xD7F37F)
-				If IsArray($aDonationChat_button) And not IsArray(MultiPSimple(69, 695, 73, 717, 0x7A775C)) Then
+				If IsArray($aDonationChat_button) And IsArray(MultiPSimple(69, 695, 73, 717, 0x7A775C)) Then
 				
 				If _Sleep(Random(500, 700, 1)) Then Return
 				
@@ -54,7 +52,15 @@ Func RequestCC($bClickPAtEnd = True, $sText = "", $bRequestFast = False)
 			Return
 		EndIf
 	EndIf
-	#EndRegion - Team AIO Mod++ - Always request
+	#EndRegion - Request form chat / on a loop - Team AIO Mod++
+	
+	;open army overview
+	If $sText <> "IsFullClanCastle" And Not OpenArmyOverview(True, "RequestCC()") Then Return
+
+	If _Sleep($DELAYREQUESTCC1) Then Return
+	SetLog("Requesting Clan Castle reinforcements", $COLOR_INFO)
+	checkAttackDisable($g_iTaBChkIdle) ; Early Take-A-Break detection
+	
 
 	If $bClickPAtEnd Then CheckCCArmy()
 

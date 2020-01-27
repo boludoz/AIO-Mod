@@ -5,10 +5,20 @@
 
                     Based on MyBot.run v7.8.2 
 >> Next
-			
+		• Builder:
+			- Drop thropy.
+
 		• CSV: 
 			- Add hero if it doesn't exist in CSV.
-			
+	**V3.2.4**
+		» Added:
+			• Request fast and from chat beta.
+		» Improved:
+			• Remove obstacles from BB.
+		
+		» Fixed:
+			• OpenClanChat() extra click fixed (Clan hop, troop request, etc)
+
 	**V3.2.3**
 		» Added:
 			• Stop for war @demen @Chilly-Chill. 

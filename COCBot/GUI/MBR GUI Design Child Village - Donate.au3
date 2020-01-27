@@ -578,6 +578,19 @@ Func CreateRequestSubTab()
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "TxtRequestCC_Info_01", "This text is used on your request for troops in the Clan chat."))
 
+     #Region - Request form chat / on a loop - Team AIO Mod++
+	 $y += 23
+         $g_hChkReqCCAlways = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "ChkReqCCAlways", "Request always"), $x + 295, $y - 27)
+            _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "ChkReqCCAlways_Info", "Request troops on loop."))
+             GUICtrlSetState(-1, $GUI_UNCHECKED)
+            GUICtrlSetOnEvent(-1, "ChkReqCCAlways")
+     $y += 23
+         $g_hChkReqCCFromChat = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "ChkReqCCFromChat", "Request from chat."), $x + 295, $y - 27)
+            _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "ChkReqCCFromChat_Info", "Request troops from chat."))
+             GUICtrlSetState(-1, $GUI_UNCHECKED)
+            GUICtrlSetOnEvent(-1, "ChkReqCCFromChat")
+	#EndRegion - Request form chat / on a loop - Team AIO Mod++
+	
 	; Request Type (Demen)
 	$y += 25
 		$g_hLblRequestType = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "LblRequestType", "When lacking "), $x + 70, $y + 23)
