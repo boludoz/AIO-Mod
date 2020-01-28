@@ -22,6 +22,13 @@
 #include "MOD GUI Control - AiO-Debug.au3"
 #include "MOD GUI Control - MagicItems.au3"
 
+; Donation records.
+Func InputRecords()
+		$g_iDayLimitTroops = (GUICtrlRead($g_hDayLimitTroops))
+		$g_iDayLimitSpells = (GUICtrlRead($g_hDayLimitSpells))
+		$g_iDayLimitSieges = (GUICtrlRead($g_hDayLimitSieges))
+EndFunc   ;==>ChkReqCCAlways
+
 ; Request form chat / on a loop - Team AiO MOD++
 Func ChkReqCCAlways()
 		$g_bChkReqCCAlways = (GUICtrlRead($g_hChkReqCCAlways) = $GUI_CHECKED)

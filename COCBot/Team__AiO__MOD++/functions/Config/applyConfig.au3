@@ -89,13 +89,15 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			GUICtrlSetState($g_hChkReqCCAlways, $g_bChkReqCCAlways ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkReqCCFromChat, $g_bChkReqCCFromChat ? $GUI_CHECKED : $GUI_UNCHECKED)
 			
+			; Donation records.
+			GUICtrlSetData($g_hDayLimitTroops, $g_iDayLimitTroops)
+			GUICtrlSetData($g_hDayLimitSpells, $g_iDayLimitSpells)
+			GUICtrlSetData($g_hDayLimitSieges, $g_iDayLimitSieges)
+
 			ChkReqCCAlways()
 			ChkReqCCFromChat()
-
 			ReadConfig_600_52_2()
-			
 			ChkStopForWar()
-			
 			chkDelayMod()
 		Case "Save"
 			$g_bUseSleep = (GUICtrlRead($g_hUseSleep) = $GUI_CHECKED) ? 1 : 0
@@ -148,6 +150,11 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			; Request form chat / on a loop.
 			$g_bChkReqCCAlways = GUICtrlRead($g_hChkReqCCAlways) = $GUI_CHECKED
 			$g_bChkReqCCFromChat = GUICtrlRead($g_hChkReqCCFromChat) = $GUI_CHECKED
+			
+			; Donation records.
+			$g_iDayLimitTroops = GUICtrlRead($g_hDayLimitTroops)
+			$g_iDayLimitSpells = GUICtrlRead($g_hDayLimitSpells) 
+			$g_iDayLimitSieges = GUICtrlRead($g_hDayLimitSieges)
 
 	EndSwitch
 

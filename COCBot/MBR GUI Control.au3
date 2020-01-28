@@ -1984,11 +1984,19 @@ Func tabDONATE()
 				GUICtrlSetState($g_hLblScheduleDisabled, $GUI_SHOW)
 			EndIf
 			GUICtrlSetPos($g_hChkDonate, $tabdonx[2] - 15, $tabdonx[3] - 15)
-		Case $tabidx = 3 ; Schedule
-			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_DonateLimiter)
+		Case $tabidx = 3 ; Team AIO Mod++
 			GUISetState(@SW_HIDE, $g_hGUI_RequestCC)
 			GUISetState(@SW_HIDE, $g_hGUI_DONATECC)
 			GUISetState(@SW_HIDE, $g_hGUI_ScheduleCC)
+			
+			If GUICtrlRead($g_hChkDonate) = $GUI_CHECKED Then
+				GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_DonateLimiter)
+				GUICtrlSetState($g_hLblScheduleDisabled, $GUI_HIDE)
+			Else
+				GUISetState(@SW_HIDE, $g_hGUI_DonateLimiter)
+				GUICtrlSetState($g_hLblScheduleDisabled, $GUI_SHOW)
+			EndIf
+
 			GUICtrlSetPos($g_hChkDonate, $tabdonx[2] - 15, $tabdonx[3] - 15)
 
 	EndSelect

@@ -130,6 +130,13 @@ EndFunc   ;==>IsDonateQueueOnly
 
 Func DonateCC($bCheckForNewMsg = False)
 
+	#Region - Donation records - Team AIO Mod++
+	If BitAND($g_iTotalDonateStatsTroops >= $g_iDayLimitTroops and $g_iDayLimitTroops > 0, $g_iTotalDonateStatsSpells >= $g_iDayLimitSpells and $g_iDayLimitSpells > 0, $g_iTotalDonateStatsSiegeMachines >= $g_iDayLimitSieges and $g_iDayLimitSieges > 0) Then
+		SetLog("Donate skip :  day limit reached.", $COLOR_INFO)
+		Return
+	EndIf
+	#EndRegion
+
 	Local $bDonateTroop = ($g_aiPrepDon[0] = 1)
 	Local $bDonateAllTroop = ($g_aiPrepDon[1] = 1)
 
@@ -712,6 +719,13 @@ Func DonateTroopType(Const $iTroopIndex, $Quant = 0, Const $bDonateQueueOnly = F
 	Local $donateposinrow = -1
 	Local $sTextToAll = ""
 
+	#Region - Donation records - Team AIO Mod++
+	If $g_iTotalDonateStatsTroops >= $g_iDayLimitTroops and $g_iDayLimitTroops > 0 Then
+		SetLog("Donate Troops skip :  day limit reached.", $COLOR_INFO)
+		Return
+	EndIf
+	#EndRegion
+
 	If $g_iTotalDonateTroopCapacity = 0 Then Return
 	If $g_bDebugSetlog Then SetDebugLog("$DonateTroopType Start: " & $g_asTroopNames[$iTroopIndex], $COLOR_DEBUG)
 
@@ -774,39 +788,31 @@ Func DonateTroopType(Const $iTroopIndex, $Quant = 0, Const $bDonateQueueOnly = F
 			SetLog("coordinate: " & 365 + ($Slot * 68) & "," & $g_iDonationWindowY + 100 + $YComp, $COLOR_ERROR)
 			SaveDebugImage("LiveDonateCC-r" & $donaterow & "-c" & $donateposinrow & "-" & $g_asTroopNames[$iTroopIndex] & "_")
 		EndIf
-		; Use slow click when the Train system is Quicktrain
-		If $g_bQuickTrainEnable Then
-			Local $icount = 0
-			For $x = 0 To $Quant
-				If _ColorCheck(_GetPixelColor(350 + ($Slot * 68), $g_iDonationWindowY + 105 + $YComp, True), Hex(0x306ca8, 6), 20) Or _
-						_ColorCheck(_GetPixelColor(355 + ($Slot * 68), $g_iDonationWindowY + 106 + $YComp, True), Hex(0x306ca8, 6), 20) Or _
-						_ColorCheck(_GetPixelColor(360 + ($Slot * 68), $g_iDonationWindowY + 107 + $YComp, True), Hex(0x306ca8, 6), 20) Then ; check for 'blue'
-
-					Click(365 + ($Slot * 68), $g_iDonationWindowY + 100 + $YComp, 1, $DELAYDONATECC3, "#0175")
-					If $g_iCommandStop = 3 Then
-						$g_iCommandStop = 0
-						$g_bFullArmy = False
-					EndIf
-					If _Sleep(1000) Then Return
-					$icount += 1
-				EndIf
-			Next
-			$Quant = $icount ; Count Troops Donated Clicks
-			$g_aiDonateStatsTroops[$iTroopIndex][0] += $Quant
-		Else
+		
+		#Region - Donation records - Team AIO Mod++
+		Local $iCount = 0
+		For $x = 0 To $Quant
 			If _ColorCheck(_GetPixelColor(350 + ($Slot * 68), $g_iDonationWindowY + 105 + $YComp, True), Hex(0x306ca8, 6), 20) Or _
 					_ColorCheck(_GetPixelColor(355 + ($Slot * 68), $g_iDonationWindowY + 106 + $YComp, True), Hex(0x306ca8, 6), 20) Or _
 					_ColorCheck(_GetPixelColor(360 + ($Slot * 68), $g_iDonationWindowY + 107 + $YComp, True), Hex(0x306ca8, 6), 20) Then ; check for 'blue'
-
-				Click(365 + ($Slot * 68), $g_iDonationWindowY + 100 + $YComp, $Quant, $DELAYDONATECC3, "#0175")
-				$g_aiDonateStatsTroops[$iTroopIndex][0] += $Quant
+		
+				Click(365 + ($Slot * 68), $g_iDonationWindowY + 100 + $YComp, 1, $DELAYDONATECC3, "#0175")
 				If $g_iCommandStop = 3 Then
 					$g_iCommandStop = 0
 					$g_bFullArmy = False
 				EndIf
+				If _Sleep(500) Then Return
+				$iCount += 1	
+				If Int($g_iTotalDonateStatsTroops + $iCount) >= $g_iDayLimitTroops and $g_iDayLimitTroops > 0 Then
+					SetLog("Donate Troops skip :  day limit reached.", $COLOR_INFO)
+					ExitLoop
+				EndIf
 			EndIf
-		EndIf
-
+		Next
+		$Quant = $iCount ; Count Troops Donated Clicks
+		$g_aiDonateStatsTroops[$iTroopIndex][0] += $Quant
+		#EndRegion
+		
 		; Adjust Values for donated troops to prevent a Double ghost donate to stats and train
 		If $iTroopIndex >= $eTroopBarbarian And $iTroopIndex <= $eTroopIceGolem Then
 			;Reduce iTotalDonateCapacity by troops donated
@@ -837,6 +843,13 @@ Func DonateSpellType(Const $iSpellIndex, Const $bDonateQueueOnly = False, Const 
 	Local $YComp = 0, $donaterow = -1
 	Local $donateposinrow = -1
 	;Local $sTextToAll = ""
+
+	#Region - Donation records - Team AIO Mod++
+	If $g_iTotalDonateStatsSpells >= $g_iDayLimitSpells and $g_iDayLimitSpells > 0 Then
+		SetLog("Donate Spell skip :  day limit reached.", $COLOR_INFO)
+		Return
+	EndIf
+	#EndRegion
 
 	If $g_iTotalDonateSpellCapacity = 0 Then Return
 	If $g_bDebugSetlog Then SetDebugLog("DonateSpellType Start: " & $g_asSpellNames[$iSpellIndex], $COLOR_DEBUG)
@@ -895,7 +908,19 @@ Func DonateSpellType(Const $iSpellIndex, Const $bDonateQueueOnly = False, Const 
 			SaveDebugImage("LiveDonateCC-r" & $donaterow & "-c" & $donateposinrow & "-" & $g_asSpellNames[$iSpellIndex] & "_")
 		EndIf
 		If Not $g_bDebugOCRdonate Then
+		
+			#Region - Donation records - Team AIO Mod++
+			If $g_iDayLimitSpells > 0 Then
+				Local $iTempSpell = Int($g_iDayLimitSpells - Int($g_iDonSpellsQuantity + $g_iTotalDonateStatsSpells))
+				
+				If $iTempSpell < 0 Then
+						$g_iDonSpellsQuantity -= Abs($iTempSpell)
+						If $g_iDonSpellsQuantity = 0 Then Return ; Theory
+				EndIf
+				
+			EndIf
 			Click(365 + ($Slot * 68), $g_iDonationWindowY + 100 + $YComp, $g_iDonSpellsQuantity, $DELAYDONATECC3, "#0600")
+			#EndRegion
 
 			$g_bFullArmySpells = False
 			$g_bFullArmy = False
@@ -930,7 +955,14 @@ Func DonateSiegeType(Const $iSiegeIndex, $bDonateAll = False)
 	Local $YComp = 0, $donaterow = -1
 	Local $donateposinrow = -1
 	Local $sTextToAll = ""
-
+	
+	#Region - Donation records - Team AIO Mod++
+	If $g_iTotalDonateStatsSiegeMachines >= $g_iDayLimitSieges and $g_iDayLimitSieges > 0 Then
+		SetLog("Donate Siege skip :  day limit reached.", $COLOR_INFO)
+		Return
+	EndIf
+	#EndRegion
+	
 	If $g_iTotalDonateSiegeMachineCapacity < 1 Then Return
 	If $g_bDebugSetlog Then SetDebugLog("DonateSiegeType Start: " & $g_asSiegeMachineNames[$iSiegeIndex], $COLOR_DEBUG)
 
@@ -969,6 +1001,7 @@ Func DonateSiegeType(Const $iSiegeIndex, $bDonateAll = False)
 			_ColorCheck(_GetPixelColor(360 + ($Slot * 68), $g_iDonationWindowY + 107 + $YComp, True), Hex(0x306ca8, 6), 20) Then ; check for 'blue'
 
 		Click(365 + ($Slot * 68), $g_iDonationWindowY + 100 + $YComp, 1, $DELAYDONATECC3, "#0175")
+
 		If $g_iCommandStop = 3 Then
 			$g_iCommandStop = 0
 			$g_bFullArmy = False

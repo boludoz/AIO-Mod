@@ -71,10 +71,8 @@ Func CreateBotStats()
 		CreateMiscSubTab()
 	$g_hGUI_STATS_TAB_ITEM3 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_04_STab_05_STab_03", "Attacks"))
 		CreateAttacksSubTab()
-	#CS - Donation records - Team AIO Mod++
 	$g_hGUI_STATS_TAB_ITEM4 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_04_STab_05_STab_04", "Donations"))
 		CreateDonationsSubTab()
-	#CE
 	$g_hGUI_STATS_TAB_ITEM5 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_04_STab_05_STab_05", "Multi Stats"))
 		CreateMultiStatsSubTab()
 	GUICtrlCreateTabItem("")
@@ -941,7 +939,7 @@ Func CreateAttacksSubTab()
 EndFunc   ;==>CreateAttacksSubTab
 #EndRegion
 
-#cs - Region Donations SubTab
+#Region Donations SubTab
 Func CreateDonationsSubTab()
 	Local $sTxtTip = ""
 	Local $xStart = 25, $yStart = 45
@@ -1393,7 +1391,7 @@ Func CreateDonationsSubTab()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 EndFunc   ;==>CreateDonationsSubTab
-#ce - EndRegion
+#EndRegion
 
 #Region MultiStats SubTab
 Func CreateMultiStatsSubTab()

@@ -76,6 +76,11 @@ Func SaveConfig_MOD_MiscTab()
 	_Ini_Add("ReqCCOptions", "ReqCCAlways", $g_bChkReqCCAlways)
 	_Ini_Add("ReqCCOptions", "ReqCCFromChat", $g_bChkReqCCFromChat)
 
+	; Donation records.
+	_Ini_Add("DonRecords", "DayLimitTroops", $g_iDayLimitTroops)
+	_Ini_Add("DonRecords", "DayLimitSpells", $g_iDayLimitSpells)
+	_Ini_Add("DonRecords", "DayLimitSieges", $g_iDayLimitSieges)
+
 EndFunc   ;==>SaveConfig_MOD_MiscTab
 
 Func SaveConfig_MOD_SuperXP()

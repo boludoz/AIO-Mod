@@ -173,3 +173,90 @@ Func CreateMiscMagicSubTab()
 	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnDarkP, 345, 318, 25, 25)
 
 EndFunc   ;==>CreateMiscMagicSubTab
+
+#Region Donations Control SubTab - Donation records - Team AIO Mod++
+Global $g_hLblDayTroop[$eTroopCount], $g_hLblDaySpell[$eSpellCount], $g_hLblDaySiege[$eSiegeMachineCount]
+Global $g_hDayTotalTroops = 0, $g_hDayTotalSpells = 0, $g_hDayTotalSieges = 0
+Global $g_hDayLimitTroops = 0, $g_hDayLimitSpells = 0, $g_hDayLimitSieges = 0
+
+Func CreateDonationsControlSubTab()
+	Local $aTroopsIcons[$eTroopCount] = [$eIcnBarbarian, $eIcnArcher, $eIcnGiant, $eIcnGoblin, $eIcnWallBreaker, $eIcnBalloon, _
+			$eIcnWizard, $eIcnHealer, $eIcnDragon, $eIcnPekka, $eIcnBabyDragon, $eIcnMiner, $eIcnElectroDragon, $eIcnYeti, $eIcnMinion, _
+			$eIcnHogRider, $eIcnValkyrie, $eIcnGolem, $eIcnWitch, $eIcnLavaHound, $eIcnBowler, $eIcnIceGolem]
+	Local $aSpellsIcons[$eSpellCount] = [$eIcnLightSpell, $eIcnHealSpell, $eIcnRageSpell, $eIcnJumpSpell, $eIcnFreezeSpell, _
+			$eIcnCloneSpell, $eIcnPoisonSpell, $eIcnEarthQuakeSpell, $eIcnHasteSpell, $eIcnSkeletonSpell, $eIcnBatSpell]
+	Local $eSiegeMachineIcons[$eSiegeMachineCount] = [$eIcnWallW, $eIcnBattleB, $eIcnStoneS, $eIcnSiegeB]
+	Local $g_ahTxtTrainWarTroopCount[$eTroopCount], $g_ahTxtTrainWarSpellCount[$eSpellCount], $g_ahTxtSiegeMachineCount[$eSiegeMachineCount]
+	Local $aTroopList[$eTroopCount] = [$eTroopBarbarian, $eTroopArcher, $eTroopGiant, $eTroopGoblin, $eTroopWallBreaker, $eTroopBalloon, _
+			$eTroopWizard, $eTroopHealer, $eTroopDragon, $eTroopPekka, $eTroopBabyDragon, $eTroopMiner, $eTroopElectroDragon, $eTroopYeti, $eTroopMinion, _
+			$eTroopHogRider, $eTroopValkyrie, $eTroopGolem, $eTroopWitch, $eTroopLavaHound, $eTroopBowler, $eTroopIceGolem]
+	Local $aSpellList[$eSpellCount] = [$eSpellLightning, $eSpellHeal, $eSpellRage, $eSpellJump, $eSpellFreeze, _
+			$eSpellClone, $eSpellPoison, $eSpellEarthQuake, $eSpellHaste, $eSpellSkeleton, $eSpellBat]
+	Local $aSiegeList[$eSiegeMachineCount] = [$eSiegeBarracks, $eSiegeWallWrecker, $eSiegeBattleBlimp, $eSiegeStoneSlammer]
+
+	Local $sTxtTip = ""
+	Local $xStart = 25, $yStart = 45
+	$g_hGUI_DonateLimiter = _GUICreate("", $g_iSizeWGrpTab3, $g_iSizeHGrpTab3, $xStart - 20, $yStart - 20, BitOR($WS_CHILD, $WS_TABSTOP), -1, $g_hGUI_DONATE)
+	Local $xStart = 20, $yStart = 20
+	Local $x = $xStart, $y = $yStart
+
+	
+	GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "GroupDonationslimiter", "Donations stats + limiter"), $x, $y, 436, 22, BitOR($SS_CENTER, $SS_CENTERIMAGE))
+	GUICtrlSetBkColor(-1, 0x333300) ; Blue
+	GUICtrlSetFont(-1, 12, 500, 0, "Candara", $CLEARTYPE_QUALITY)
+	GUICtrlSetColor(-1, 0xFFCC00)
+
+
+	$y += 35
+
+		For $i = 0 To $eTroopCount - 1 ; Troops
+			If $i >= 12 Then $x = 25
+			_GUICtrlCreateIcon($g_sLibIconPath, $aTroopsIcons[$i], $x + Int($i / 2) * 38, $y + Mod($i, 2) * 60, 32, 32)
+			$g_hLblDayTroop[$aTroopList[$i]] = GUICtrlCreateLabel("0", $x + Int($i / 2) * 38 + 1, $y + Mod($i, 2) * 60 + 34, 30, 20, BitOR($ES_CENTER, $ES_NUMBER))
+				GUICtrlSetLimit(-1, 3)
+		Next
+		$y += 115
+		
+		GUICtrlCreateLabel("Limit ", $x, $y)
+		$g_hDayLimitTroops = GUICtrlCreateInput("0", $x + 25, -1 , 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		GUICtrlSetOnEvent(-1, "InputRecords")
+		GUICtrlSetBkColor(-1, 0xD1DFE7)
+		GUICtrlCreateLabel("per day.   Total : ", $x + 60, -1)
+		$g_hDayTotalTroops = GUICtrlCreateLabel("0", $x + 150, -1)
+		$y += 35
+
+
+		For $i = 0 To $eSpellCount - 1 ; Spells
+			If $i >= 6 Then $x = 25
+			_GUICtrlCreateIcon($g_sLibIconPath, $aSpellsIcons[$i], $x + $i * 38, $y, 32, 32)
+			$g_hLblDaySpell[$aSpellList[$i]] = GUICtrlCreateLabel("0", $x +  $i * 38, $y + 34, 30, 20, BitOR($ES_CENTER, $ES_NUMBER))
+				GUICtrlSetLimit(-1, 3)
+		Next
+		$y += 50
+		
+		GUICtrlCreateLabel("Limit ", $x, $y)
+		$g_hDayLimitSpells = GUICtrlCreateInput("0", $x + 25, -1 , 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		GUICtrlSetOnEvent(-1, "InputRecords")
+		GUICtrlSetBkColor(-1, 0xD1DFE7)
+		GUICtrlCreateLabel("per day.   Total : ", $x + 60, -1)
+		$g_hDayTotalSpells = GUICtrlCreateLabel("0", $x + 150, -1)
+		$y += 35
+
+		For $i = 0 To $eSiegeMachineCount - 1 ; Siege Machine
+			_GUICtrlCreateIcon($g_sLibIconPath, $eSiegeMachineIcons[$i], $x + $i * 38, $y, 32, 32)
+			$g_hLblDaySiege[$aSiegeList[$i]] = GUICtrlCreateLabel("0", $x +  $i * 38, $y + 34, 30, 20, BitOR($ES_CENTER, $ES_NUMBER))
+				GUICtrlSetLimit(-1, 3)
+		Next
+		$y += 50
+		
+		GUICtrlCreateLabel("Limit ", $x, $y)
+		$g_hDayLimitSieges = GUICtrlCreateInput("0", $x + 25, -1 , 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		GUICtrlSetOnEvent(-1, "InputRecords")
+		GUICtrlSetBkColor(-1, 0xD1DFE7)
+		GUICtrlCreateLabel("per day.   Total : ", $x + 60, -1)
+		$g_hDayTotalSieges = GUICtrlCreateLabel("0", $x + 150, -1)
+		
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+
+EndFunc   ;==>CreateDonationsSubTab
+#EndRegion
