@@ -133,7 +133,6 @@ Func CreateDonationsControlSubTab()
 		For $i = 0 To $eTroopCount - 1 ; Troops
 			If $i >= 12 Then $x = 25
 			_GUICtrlCreateIcon($g_sLibIconPath, $aTroopsIcons[$i], $x + Int($i / 2) * 38, $y + Mod($i, 2) * 60, 32, 32)
-
 			$g_hLblDonTroop[$aTroopList[$i]] = GUICtrlCreateLabel("0", $x + Int($i / 2) * 38 + 1, $y + Mod($i, 2) * 60 + 34, 30, 20, BitOR($ES_CENTER, $ES_NUMBER))
 				GUICtrlSetLimit(-1, 3)
 		Next
@@ -141,6 +140,7 @@ Func CreateDonationsControlSubTab()
 		
 		GUICtrlCreateLabel("Limit             per day : ", $x, $y)
 		GUICtrlCreateInput("0", $x + 25, $y , 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+				GUICtrlSetBkColor(-1, 0xD1DFE7)
 		$y += 35
 
 
@@ -154,6 +154,7 @@ Func CreateDonationsControlSubTab()
 		
 		GUICtrlCreateLabel("Limit             per day : ", $x, $y)
 		GUICtrlCreateInput("0", $x + 25, $y , 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+				GUICtrlSetBkColor(-1, 0xD1DFE7)
 		$y += 35
 
 		For $i = 0 To $eSiegeMachineCount - 1 ; Siege Machine
@@ -165,6 +166,7 @@ Func CreateDonationsControlSubTab()
 		
 		GUICtrlCreateLabel("Limit             per day : ", $x + 40 * $eSiegeMachineCount, $y)
 		GUICtrlCreateInput("0", $x + 25 + 40 * $eSiegeMachineCount, $y , 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+				GUICtrlSetBkColor(-1, 0xD1DFE7)
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 

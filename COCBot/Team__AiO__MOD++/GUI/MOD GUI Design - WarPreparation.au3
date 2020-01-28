@@ -36,20 +36,23 @@ Func TabWarPreparationGUI()
 			_GUICtrlSetTip(-1, "Pause or set current account 'idle' to prepare for war")
 			GUICtrlSetOnEvent(-1, "ChkStopForWar")
 
-		$g_hCmbStopTime = GUICtrlCreateCombo("", $x + 140, $y, 60, -1)
-			GUICtrlSetData(-1, 	"0 hr|1 hr|2 hrs|3 hrs|4 hrs|5 hrs|6 hrs|7 hrs|8 hrs|9 hrs|10 hrs|11 hrs|12 hrs |13 hrs|14 hrs|15 hrs|16 hrs|17 hrs|18 hrs|19 hrs|20 hrs|21 hrs|22 hrs|23 hrs", "0 hr")
+		$g_hCmbStopTime = GUICtrlCreateCombo("", $x + 140, $y, 41, 25, BitOR($GUI_SS_DEFAULT_COMBO,$CBS_SIMPLE))
+			GUICtrlSetData(-1, 	"0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23", "0")
 			GUICtrlSetOnEvent(-1,"CmbStopTime")
-		$g_hCmbStopBeforeBattle = GUICtrlCreateCombo("", $x + 220, $y, 120, -1)
+			GUICtrlCreateLabel("Hrs", $x + 190, -1)
+			
+		$g_hCmbStopBeforeBattle = GUICtrlCreateCombo("", $x + 245, $y, 120, 25, BitOR($GUI_SS_DEFAULT_COMBO,$CBS_SIMPLE))
 			GUICtrlSetData(-1, 	"before battle start|after battle start", "before battle start")
 			GUICtrlSetOnEvent(-1,"CmbStopTime")
-
+			
 	$y += 25
 		GUICtrlCreateLabel("Return to farm", $x + 15, $y + 1, -1, -1)
-		$g_hCmbReturnTime = GUICtrlCreateCombo("", $x + 140, $y, 60, -1)
-			GUICtrlSetData(-1, 	"0 hr|1 hr|2 hrs|3 hrs|4 hrs|5 hrs|6 hrs|7 hrs|8 hrs|9 hrs|10 hrs|11 hrs|12 hrs |13 hrs|14 hrs|15 hrs|16 hrs|17 hrs|18 hrs|19 hrs|20 hrs|21 hrs|22 hrs|23 hrs", "0 hr")
-			GUICtrlSetOnEvent(-1,"CmbReturnTime")
-		GUICtrlCreateLabel("before battle finish", $x + 220, $y + 1, -1, -1)
-
+		$g_hCmbReturnTime = GUICtrlCreateCombo("", $x + 140, $y, 41, 25, BitOR($GUI_SS_DEFAULT_COMBO,$CBS_SIMPLE))
+		GUICtrlSetData(-1, 	"0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23", "0")
+		GUICtrlCreateLabel("Hrs", $x + 190, -1)
+		GUICtrlSetOnEvent(-1,"CmbReturnTime")
+		GUICtrlCreateLabel("before battle finish", $x + 245, $y + 1, -1, -1)
+			
 	$y += 25
 		$g_hChkTrainWarTroop = GUICtrlCreateCheckbox("Delete all farming troops and train war troops before pausing", $x, $y, -1, -1)
 			GUICtrlSetOnEvent(-1, "ChkTrainWarTroop")
@@ -75,6 +78,7 @@ Func TabWarPreparationGUI()
 			_GUICtrlCreateIcon($g_sLibIconPath, $aTroopsIcons[$i], $x + Int($i / 2) * 38, $y + Mod($i, 2) * 60, 32, 32)
 
 			$g_ahTxtTrainWarTroopCount[$i] = GUICtrlCreateInput("0", $x + Int($i / 2) * 38 + 1, $y + Mod($i, 2) * 60 + 34, 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+				GUICtrlSetBkColor(-1, 0xD1DFE7)
 				GUICtrlSetLimit(-1, 3)
 				GUICtrlSetOnEvent(-1, "TrainWarTroopCountEdit")
 		Next
@@ -96,6 +100,7 @@ Func TabWarPreparationGUI()
 			_GUICtrlCreateIcon($g_sLibIconPath, $aSpellsIcons[$i], $x + $i * 38, $y, 32, 32)
 			$g_ahTxtTrainWarSpellCount[$i] = GUICtrlCreateInput("0", $x +  $i * 38, $y + 34, 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 				GUICtrlSetLimit(-1, 3)
+				GUICtrlSetBkColor(-1, 0xD1DFE7)
 				GUICtrlSetOnEvent(-1, "TrainWarSpellCountEdit")
 		Next
 
