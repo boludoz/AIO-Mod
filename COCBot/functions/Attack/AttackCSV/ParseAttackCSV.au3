@@ -36,9 +36,9 @@ Func ParseAttackCSV($debug = False)
 	Local $f, $line, $acommand, $command
 	Local $value1 = "", $value2 = "", $value3 = "", $value4 = "", $value5 = "", $value6 = "", $value7 = "", $value8 = "", $value9 = ""
 	If FileExists($g_sCSVAttacksPath & "\" & $filename & ".csv") Then
-		Local $aLines = FileReadToArray($g_sCSVAttacksPath & "\" & $filename & ".csv")
+	Local $aLines = FileReadToArray($g_sCSVAttacksPath & "\" & $filename & ".csv")
 
-		#Region - Drop CC first - Team AIO Mod++  (By Boludoz)
+	#Region - Drop CC first - Team AIO Mod++  (By Boludoz)
 	Switch $g_iMatchMode
 		Case $LB, $DB
 			If $g_bDeployCastleFirst[$g_iMatchMode] Then
@@ -84,7 +84,7 @@ Func ParseAttackCSV($debug = False)
 						Next
 				EndIf
 	EndSwitch
-		#Region - Drop CC first - Team AIO Mod++  (By Boludoz)
+	#EndRegion - Drop CC first - Team AIO Mod++  (By Boludoz)
 				
 		; Read in lines of text until the EOF is reached
 		For $iLine = 0 To UBound($aLines) - 1
