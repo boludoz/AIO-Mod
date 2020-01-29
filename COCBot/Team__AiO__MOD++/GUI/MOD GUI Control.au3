@@ -60,6 +60,22 @@ EndFunc   ;==>chkNoDropIfShield
 
 ; Misc tab - Team AiO MOD++
 Func chkDelayMod()
+
+	For $i = 0 To UBound($g_hDeployWave) -1
+		$g_bChkEnableRandom[$i] = (GUICtrlRead($g_hChkEnableRandom[$i]) = $GUI_CHECKED)
+		
+		GUICtrlSetState($g_hDeployWave[$i], ($g_bChkEnableRandom[$i]) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+		GUICtrlSetState($g_hDeployDelay[$i], ($g_bChkEnableRandom[$i]) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+
+		; Deploy wave
+		$g_iDeployWave[$i] = Int(GUICtrlRead($g_hDeployWave[$i]))
+		GUICtrlSetData($g_hDeployWave[$i], $g_iDeployWave[$i])
+		
+		; Deploy delay
+		$g_iDeployDelay[$i] = Int(GUICtrlRead($g_hDeployDelay[$i]))
+		GUICtrlSetData($g_hDeployDelay[$i], $g_iDeployDelay[$i])
+	Next
+
 	GUICtrlSetState($g_hDisableColorLog, $GUI_DISABLE)
 	$g_bUseSleep = (GUICtrlRead($g_hUseSleep) = $GUI_CHECKED)
 	$g_bUseRandomSleep = (GUICtrlRead($g_hUseRandomSleep) = $GUI_CHECKED)
@@ -70,20 +86,8 @@ Func chkDelayMod()
 	$g_bDeployCastleFirst[$DB] = (GUICtrlRead($g_hDeployCastleFirstDB) = $GUI_CHECKED)
 	$g_bDeployCastleFirst[$LB] = (GUICtrlRead($g_hDeployCastleFirstAB) = $GUI_CHECKED)
 	
-	$g_iDeployWave[0] = Int(GUICtrlRead($g_hDeployWave[0]))
-	$g_iDeployWave[1] = Int(GUICtrlRead($g_hDeployWave[1]))
-	$g_iDeployWave[2] = Int(GUICtrlRead($g_hDeployWave[2]))
-	GUICtrlSetData($g_hDeployWave[0], $g_iDeployWave[0])
-	GUICtrlSetData($g_hDeployWave[1], $g_iDeployWave[1])
-	GUICtrlSetData($g_hDeployWave[2], $g_iDeployWave[2])
-	
-	$g_iDeployDelay[0] = Int(GUICtrlRead($g_hDeployDelay[0]))
-	$g_iDeployDelay[1] = Int(GUICtrlRead($g_hDeployDelay[1]))
-	$g_iDeployDelay[2] = Int(GUICtrlRead($g_hDeployDelay[2]))
-	GUICtrlSetData($g_hDeployDelay[0], $g_iDeployDelay[0])
-	GUICtrlSetData($g_hDeployDelay[1], $g_iDeployDelay[1])
-	GUICtrlSetData($g_hDeployDelay[2], $g_iDeployDelay[2])
 
+	
 	$g_iIntSleep = Int(GUICtrlRead($g_hIntSleep))
 	GUICtrlSetData($g_hDelayLabel, $g_iIntSleep)
 
