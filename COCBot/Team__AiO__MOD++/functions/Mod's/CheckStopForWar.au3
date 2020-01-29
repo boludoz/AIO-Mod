@@ -88,8 +88,10 @@ Func CheckStopForWar()
 
 	Local $bCurrentWar = False, $sBattleEndTime = "", $bInWar, $iSleepTime = -1
 	$bCurrentWar = CheckWarTime($sBattleEndTime, $bInWar)
-	If @error Or Not _DateIsValid($sBattleEndTime) Then Return
-
+	If @error Or Not _DateIsValid($sBattleEndTime) Then ; Incase error was returned go to home
+		Click(70, 680, 1, 500, "#0000") ; return home
+		Return
+	EndIf
 	If Not $bCurrentWar Then
 		$sTimeToRecheck = _DateAdd("h", 6, _NowCalc())
 		SetLog("Will come back to check in 6 hours", $COLOR_INFO)
@@ -146,10 +148,12 @@ Func CheckWarTime(ByRef $sResult, ByRef $bResult) ; return [Success + $sResult =
 	$sResult = ""
 	Local $directoryDay = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\WarPage\Day"
 	Local $directoryTime = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\WarPage\Time"
-	Local $bBattleDay_InWar = False, $sWarDay, $sTime
+	Local $bBattleDay_InWar = False, $bClanWarLeague = False, $sWarDay, $sTime
 
 	If IsMainPage() Then
 		$bBattleDay_InWar = _ColorCheck(_GetPixelColor(45, 500, True), "ED151D", 20) ; Red color in war button
+		$bClanWarLeague = _ColorCheck(_GetPixelColor(10, 510, True), "FFED71", 20) ; Golden color at left side of clan war button
+		If $bClanWarLeague Then SetLog("Your Clan Is Doing Clan War League.", $COLOR_INFO)
 		If $g_bDebugSetlog Then SetDebugLog("Checking battle notification, $bBattleDay_InWar = " & $bBattleDay_InWar)
 		Click(40, 530) ; open war menu
 		If _Sleep(2000) Then Return
@@ -160,6 +164,25 @@ Func CheckWarTime(ByRef $sResult, ByRef $bResult) ; return [Success + $sResult =
 			$sWarDay = "Battle"
 			$bResult = True
 		Else
+			If $bClanWarLeague Then
+				If QuickMIS("BC1", $directoryDay & "\CWL_Preparation", 175, 645, 175 + 515, 645 + 30, True) Then ; By Default Battle Days Opens So Find Prepration Button
+					If $g_bDebugSetlog Then SetDebugLog("CWL Enter In Preparation page")
+					Click($g_iQuickMISX + 175, $g_iQuickMISY + 645, 1)
+					If _Sleep(500) Then Return
+					If Not IsWarMenu() Then
+						SetLog("Error when trying to open CWL Preparation page.", $COLOR_ERROR)
+						Return SetError(1, 0, "Error Open CWL Preparation page")
+					EndIf
+				ElseIf QuickMIS("BC1", $directoryDay & "\CWL_Battle", 175, 645, 175 + 515, 645 + 30, True) Then ; When Battle Day Is Unselected
+					If $g_bDebugSetlog Then SetDebugLog("CWL Enter In Battle page")
+					Click($g_iQuickMISX + 175, $g_iQuickMISY + 645, 1)
+					If _Sleep(500) Then Return
+					If Not IsWarMenu() Then
+						SetLog("Error when trying to open CWL Battle page.", $COLOR_ERROR)
+						Return SetError(1, 0, "Error Open CWL Battle page")
+					EndIf
+				EndIf
+			EndIf
 			$sWarDay = QuickMIS("N1", $directoryDay, 360, 85, 360 + 145, 85 + 28, True) ; Prepare or Battle
 			$bResult = Not(QuickMIS("BC1", $directoryDay, 359, 127, 510, 154, True)); $bInWar.... Fixed (08/2019)
 			If $g_bDebugSetlog Then SetDebugLog("$sResult QuickMIS N1/BC1: " & $sWarDay & "/ " & $bResult)

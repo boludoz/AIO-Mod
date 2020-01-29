@@ -196,7 +196,6 @@ Func DonateCC($bCheckForNewMsg = False)
 
 	If _Sleep($DELAYDONATECC2) Then Return
 	
-	;If Not ClickB("ClanChat") Then
 	If Not OpenClanChat() Then ; GTFO - Team AIO Mod++
 	SetLog("Error finding the Clan Tab Button", $COLOR_ERROR)
 		Return
@@ -637,7 +636,7 @@ Func DonateCC($bCheckForNewMsg = False)
 	ClickP($aAway2, 1, 0, "#0176") ; click away any possible open window
 	If _Sleep($DELAYDONATECC2) Then Return
 
-	If Not ClickB("ClanChat") Then
+	If Not CloseClanChat() Then ; GTFO - Team AIO Mod++
 		SetLog("Error finding the Clan Tab Button", $COLOR_ERROR)
 		AndroidPageError("DonateCC")
 	EndIf
@@ -791,22 +790,31 @@ Func DonateTroopType(Const $iTroopIndex, $Quant = 0, Const $bDonateQueueOnly = F
 		
 		#Region - Donation records - Team AIO Mod++
 		Local $iCount = 0
+		Local $bCanClick = True
 		For $x = 0 To $Quant
 			If _ColorCheck(_GetPixelColor(350 + ($Slot * 68), $g_iDonationWindowY + 105 + $YComp, True), Hex(0x306ca8, 6), 20) Or _
-					_ColorCheck(_GetPixelColor(355 + ($Slot * 68), $g_iDonationWindowY + 106 + $YComp, True), Hex(0x306ca8, 6), 20) Or _
-					_ColorCheck(_GetPixelColor(360 + ($Slot * 68), $g_iDonationWindowY + 107 + $YComp, True), Hex(0x306ca8, 6), 20) Then ; check for 'blue'
-		
-				Click(365 + ($Slot * 68), $g_iDonationWindowY + 100 + $YComp, 1, $DELAYDONATECC3, "#0175")
+				_ColorCheck(_GetPixelColor(355 + ($Slot * 68), $g_iDonationWindowY + 106 + $YComp, True), Hex(0x306ca8, 6), 20) Or _
+				_ColorCheck(_GetPixelColor(360 + ($Slot * 68), $g_iDonationWindowY + 107 + $YComp, True), Hex(0x306ca8, 6), 20) Then ; check for 'blue'
+					
+				If $g_iDayLimitTroops > 0 Then
+					If Int($g_iTotalDonateStatsTroops + $iCount) >= $g_iDayLimitTroops Then 
+						SetLog("Donate Troops skip :  day limit reached.", $COLOR_INFO)
+						$bCanClick = False
+					EndIf
+				EndIf
+					
+				If $bCanClick Then 
+					Click(365 + ($Slot * 68), $g_iDonationWindowY + 100 + $YComp, 1, $DELAYDONATECC3, "#0175")
+					Else 
+					ExitLoop
+				EndIf
+				
 				If $g_iCommandStop = 3 Then
 					$g_iCommandStop = 0
 					$g_bFullArmy = False
 				EndIf
 				If _Sleep(500) Then Return
 				$iCount += 1	
-				If Int($g_iTotalDonateStatsTroops + $iCount) >= $g_iDayLimitTroops and $g_iDayLimitTroops > 0 Then
-					SetLog("Donate Troops skip :  day limit reached.", $COLOR_INFO)
-					ExitLoop
-				EndIf
 			EndIf
 		Next
 		$Quant = $iCount ; Count Troops Donated Clicks
@@ -909,7 +917,7 @@ Func DonateSpellType(Const $iSpellIndex, Const $bDonateQueueOnly = False, Const 
 		EndIf
 		If Not $g_bDebugOCRdonate Then
 		
-			#Region - Donation records - Team AIO Mod++
+			#CS Region - Donation records - Team AIO Mod++
 			If $g_iDayLimitSpells > 0 Then
 				Local $iTempSpell = Int($g_iDayLimitSpells - Int($g_iDonSpellsQuantity + $g_iTotalDonateStatsSpells))
 				
@@ -919,8 +927,9 @@ Func DonateSpellType(Const $iSpellIndex, Const $bDonateQueueOnly = False, Const 
 				EndIf
 				
 			EndIf
+			#CE EndRegion
+			
 			Click(365 + ($Slot * 68), $g_iDonationWindowY + 100 + $YComp, $g_iDonSpellsQuantity, $DELAYDONATECC3, "#0600")
-			#EndRegion
 
 			$g_bFullArmySpells = False
 			$g_bFullArmy = False

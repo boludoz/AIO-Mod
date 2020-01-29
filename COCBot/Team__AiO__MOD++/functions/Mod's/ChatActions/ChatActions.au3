@@ -222,55 +222,39 @@ Func ChatClan() ; Handle Clan Chat Logic
 	Return True
 EndFunc   ;==>ChatClan
 
-Func OpenClanChat() ; open the chat area
+Func OpenClanChat($iDelay = 200, $bIUnders = True)
 	SetDebugLog("ChatBot|Begin OpenClanChat", $COLOR_DEBUG)
-
-	;ClickP($aAway2, 1, 0, "#0176") ;Click Away
-	ForceCaptureRegion()
-	If _Sleep($DELAYCHATACTIONS2) Then Return
-	If Not _CheckPixel($aChatTab, $g_bCapturePixel) Or Not _CheckPixel($aChatTab2, $g_bCapturePixel) Or Not _CheckPixel($aChatTab3, $g_bCapturePixel) Then
-		ClickP($aOpenChat, 1, 0, "#OpenChatBtn") ; Clicks chat tab
-		If _Sleep($DELAYCHATACTIONS2) Then Return
-		If _WaitForCheckPixel($aChatTab, $g_bCapturePixel, Default, "Wait for Open ClanChat #1:") Or _WaitForCheckPixel($aChatTab2, $g_bCapturePixel, Default, "Wait for Open ClanChat #2:") Or _WaitForCheckPixel($aChatTab3, $g_bCapturePixel, Default, "Wait for Open ClanChat #3:") Then
-			SetDebugLog("Chatbot: Chat Window Opened.", $COLOR_SUCCESS)
+	Local $aiButton = 0
+	For $i = 0 To 2
+		Local $aiButton = findButton("ClanChat", Default, 1, True)
+		If IsArray($aiButton) And UBound($aiButton) >= 2 Then
+			If $aiButton[0] < 150 Then ClickP($aiButton, 1)
+			If $bIUnders and UnderstandChatRules() = True Then SetDebugLog("ChatBot|UnderstandChatRules", $COLOR_DEBUG) ; December Update(2018)
+			Return True
 		Else
-			SetDebugLog("Chatbot: Not find $aChatTab|Pixel was:" & _GetPixelColor($aChatTab[0], $aChatTab[1], True), $COLOR_ERROR)
-			Return False
+			ClickP($aAway2, 1, 0, "#0176")
 		EndIf
-	EndIf
-	If UnderstandChatRules() = True Then SetDebugLog("ChatBot|UnderstandChatRules", $COLOR_DEBUG) ; December Update(2018)
-	SetDebugLog("ChatBot|OpenClanChat Finished", $COLOR_DEBUG)
-	Return True
+		
+		If _Sleep(Round( Int($iDelay * Random(90, 120)) / 100)) Then Return
+	Next
+	Return False
 EndFunc   ;==>OpenClanChat
 
-Func CloseClanChat() ; close chat area
+Func CloseClanChat($iDelay = 200) ; close chat area
 	SetDebugLog("ChatBot|Begin CloseClanChat", $COLOR_DEBUG)
-    Local $i = 0
-    While 1
-        If _Sleep($DELAYCHATACTIONS1) Then Return
-        ForceCaptureRegion()
-        _CaptureRegion()
-        Select
-            Case _CheckPixel($aCloseChat, $g_bCapturePixel, Default, "BtnCloseChat:")
-                Click($aCloseChat[0], $aCloseChat[1], 1, 0, "#0173") ;Clicks chat thing
-            Case _CheckPixel($aOpenChatTab, $g_bCapturePixel, Default, "BtnOpenChatTab:")
-                ExitLoop
-            Case _CheckPixel($aButtonFCClose, $g_bCapturePixel, Default, "BtnFCClose:")
-                Click($aButtonFCClose[0], $aButtonFCClose[1], 1, 0, "#BtnFCClose") ;Clicks chat thing
-            Case _CheckPixel($aButtonFCBack, $g_bCapturePixel, Default, "BtnFCBack:")
-                AndroidBackButton()
-            Case Else
-                If $i = 0 Then ClickP($aAway2, 1, 0, "#0176") ;Click Away
-                $i += 1
-                If $i > 30 Then
-                    SetLog("Error finding Clan Tab to close...", $COLOR_ERROR)
-                    AndroidPageError("ChatActions")
-                    Return False
-                EndIf
-        EndSelect
-    WEnd
-	Return True
-    If _Sleep($DELAYCHATACTIONS1) Then Return
+	Local $aiButton = 0
+	For $i = 0 To 2
+		Local $aiButton = findButton("ClanChat", Default, 1, True)
+		If IsArray($aiButton) And UBound($aiButton) >= 2 Then
+			If $aiButton[0] > 150 Then ClickP($aiButton, 1)
+			Return True
+		Else
+			ClickP($aAway2, 1, 0, "#0176")
+		EndIf
+		
+		If _Sleep(Round( Int($iDelay * Random(90, 120)) / 100)) Then Return
+	Next
+	Return False
 EndFunc   ;==>CloseClanChat
 
 Func ChatbotCheckIfUserIsInClan() ; check if user is in a clan before doing chat

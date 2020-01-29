@@ -312,10 +312,9 @@ Func SearchNoLeague($bCheckOneTime = False)
 EndFunc   ;==>SearchNoLeague
 
 Func SpecialAway()
-	_Sleep(Random(0,2000,1))
-	Local $aSpecialAway[2] = [Random(1,4,1), Random(1,50,1)]
+	Local $aSpecialAway = [Random(224, 256, 1), Random(9, 15 , 1)]
 	If $g_bDebugClick Or TestCapture() Then SetLog("Click SpecialAway " & $aSpecialAway[0] & ", " & $aSpecialAway[1], $COLOR_ACTION, "Verdana", "7.5", 0)
-	ClickP($aSpecialAway)
+	Click($aSpecialAway[0], $aSpecialAway[1])
 EndFunc
 
 Func UnderstandChatRules()
