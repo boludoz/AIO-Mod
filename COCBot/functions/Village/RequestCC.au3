@@ -38,9 +38,10 @@ Func RequestCC($bClickPAtEnd = True, $sText = "", $bRequestFast = $g_bChkReqCCFr
 				SetDebugLog("RequestCC | Chat open failed.")
 			Else
 				If _Sleep(Random(500, 700, 1)) Then Return
-
-				Local $aDonationChat_button = MultiPSimple(7, 688, 65, 723, 0xD7F37F)
-				If IsArray($aDonationChat_button) And IsArray(MultiPSimple(69, 695, 73, 717, 0x7A775C)) Then
+				
+				Local $vGreen = 0xD7F37F
+				Local $aDonationChat_button = MultiPSimple(7, 688, 65, 723, $vGreen)
+				If IsArray($aDonationChat_button) And not IsArray(MultiPSimple(69, 695, 73, 717, $vGreen)) Then
 				
 				If _Sleep(Random(500, 700, 1)) Then Return
 				
