@@ -14,11 +14,16 @@
 ; ===============================================================================================================================
 
 Func PrepareAttackBB()
+	Local $bIsToDropTrophies = False
+
 	If $g_bChkBBTrophyRange Then
-		If ($g_aiCurrentLootBB[$eLootTrophyBB] > $g_iTxtBBTrophyUpperLimit or $g_aiCurrentLootBB[$eLootTrophyBB] < $g_iTxtBBTrophyLowerLimit) Then
+		If ($g_aiCurrentLootBB[$eLootTrophyBB] > $g_iTxtBBTrophyUpperLimit) Then
+			SetLog("Trophies out of range.")
+			$bIsToDropTrophies = True
+		ElseIf  ($g_aiCurrentLootBB[$eLootTrophyBB] < $g_iTxtBBTrophyLowerLimit) Then
 			SetLog("Trophies out of range.")
 			SetDebugLog("Current Trophies: " & $g_aiCurrentLootBB[$eLootTrophyBB] & " Lower Limit: " & $g_iTxtBBTrophyLowerLimit & " Upper Limit: " & $g_iTxtBBTrophyUpperLimit)
-			_Sleep(1500)
+			If _Sleep(1500) Then Return ; Team AIO Mod++
 			Return False
 		EndIf
 	EndIf
@@ -26,23 +31,32 @@ Func PrepareAttackBB()
 	If Not ClickAttack() Then Return False
 
 	If Not CheckArmyReady() Then
-		_Sleep(1500)
+		If _Sleep(1500) Then Return ; Team AIO Mod++
 		ClickP($aAway)
 		Return False
 	EndIf
 
 	If $g_bChkBBAttIfLootAvail Then
 		If Not CheckLootAvail() Then
-			_Sleep(1500)
+			If _Sleep(1500) Then Return ; Team AIO Mod++
 			ClickP($aAway)
 			Return False
 		EndIf
 	EndIf
+	
+	#Region - Custom army BB - Team AIO Mod++
+	If $bIsToDropTrophies Then
+		SetLog("Trophies drop.")
+		If _Sleep(1500) Then Return ; Team AIO Mod++
+		BuilderBaseDropTrophy()
+		Return
+	EndIf
+	#EndRegion - Custom army BB - Team AIO Mod++
 
 	$g_bBBMachineReady = CheckMachReady()
 	If $g_bChkBBWaitForMachine And Not $g_bBBMachineReady Then
 		SetLog("Battle Machine is not ready.")
-		_Sleep(1500)
+		If _Sleep(1500) Then Return ; Team AIO Mod++
 		ClickP($aAway)
 		Return False
 	EndIf
@@ -81,7 +95,7 @@ Func CheckLootAvail()
 	Return $bRet
 EndFunc
 
-#cs
+#cs - Custom army BB - Team AIO Mod++
 Func CheckMachReady()
 	local $aCoords = decodeSingleCoord(findImage("BBMachReady_bmp", $g_sImgBBMachReady, GetDiamondFromRect("113,388,170,448"), 1, True))
 	local $bRet = False
@@ -95,8 +109,9 @@ Func CheckMachReady()
 
 	Return $bRet
 EndFunc
-#ce 
-#Region - Custom army BB - Team Aio Mod++
+#ce
+
+#Region - Custom army BB - Team AIO Mod++
 Func CheckMachReady()
 	Local $bIsReaddy
 	If Not $g_bRunState Then Return
@@ -142,7 +157,7 @@ Func CheckArmyReady()
 		#Region - Custom army BB - Team AIO Mod++
 			If $bNeedTrain Then 
 				ClickP($aAway, 1, 0, "#0000") ; ensure field is clean
-				If _Sleep(1500) Then Return
+				If _Sleep(1500) Then Return ; Team AIO Mod++ Then Return
 				SetLog("Troops need to be trained in the training tab.")
 				CheckArmyBuilderBase()
 				Return False

@@ -20,9 +20,10 @@
 ; Check Stop For War - Team AiO MOD++
 #include "functions\Mod's\CheckStopForWar.au3"
 
-; Custom army - Team AiO MOD++
+; Builder base - Team AiO MOD++
 #include "functions\Mod's\BuilderBase\Camps\BuilderBaseCorrectAttackBar.au3"
 #include "functions\Mod's\BuilderBase\Camps\BuilderBaseCheckArmy.au3"
+#include "functions\Mod's\BuilderBase\Attack\BuilderBaseDropTrophy.au3"
 
 ; MagicItems - Team AiO MOD++
 #include "functions\Mod's\MagicItems.au3"
