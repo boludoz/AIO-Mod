@@ -133,7 +133,7 @@ Func _DelPosWithDiff1(ByRef $Arr, $xDiff, $yDiff, $ReturnAsString = True, $And =
 			$tmpArr[$i][0] = $Arr[$i][0]
 			$tmpArr[$i][1] = $Arr[$i][1]
 		Next
-		_ArryRemoveBlanks($tmpArr)
+		_ArryRemoveBlanksMod($tmpArr)
 		$Arr = $tmpArr
 	EndIf
 
@@ -207,7 +207,7 @@ Func _DelPosWithDiff2(ByRef $sResult, $xDiff, $yDiff, $ReturnAsString = True, $A
 			$tmpArr[$i][0] = $Arr[$i][0]
 			$tmpArr[$i][1] = $Arr[$i][1]
 		Next
-		_ArryRemoveBlanks($tmpArr)
+		_ArryRemoveBlanksMod($tmpArr)
 		$Arr = $tmpArr
 	EndIf
 

@@ -40,12 +40,12 @@ Func ArrayRemoveDuplicates(ByRef $Arr) ; Only 1D Array
 		$tmpArr[$i] = $Arr[$i]
 	Next
 
-	_ArryRemoveBlanks($tmpArr)
+	_ArryRemoveBlanksMod($tmpArr)
 
 	$Arr = $tmpArr
 EndFunc   ;==>ArrayRemoveDuplicates
 
-Func _ArryRemoveBlanks(ByRef $Array)
+Func _ArryRemoveBlanksMod(ByRef $Array)
 	Switch (UBound($Array, 2) > 0) ; If Array Is 2D Array
 		Case True
 			Local $canKeep = True

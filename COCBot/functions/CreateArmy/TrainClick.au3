@@ -32,7 +32,13 @@ Func TrainClick($iX, $iY, $iTimes, $iSpeed, $aWatchSpot, $sdebugtxt, $TypeTroops
 			If $g_bDebugClick Or $g_bDebugSetlogTrain Then SetLog("KeepClicks: " & KeepClicks(), $COLOR_DEBUG)
 			If IsKeepClicksActive() Then
 				For $i = 0 To ($iTimes - 1)
-					PureClick($iX, $iY) ;Click once.
+					#Region Team AIO Mod++
+					If Not $g_bUseRandomClick Then
+						PureClick($iX, $iY) ;Click once.
+					Else
+						PureClickR($TypeTroops, $iX, $iY) ;Click once.
+					EndIf
+					#EndRegion
 				Next
 				If isProblemAffect(True) Then checkMainScreen(False) ; Check for BS/CoC errors
 				Local $sLogText = Default
@@ -55,7 +61,13 @@ Func TrainClick($iX, $iY, $iTimes, $iSpeed, $aWatchSpot, $sdebugtxt, $TypeTroops
 							; Detected the gray [i] and will exit and return
 							ExitLoop
 						EndIf
-						PureClick($iX, $iY) ;Click once.
+						#Region Team AIO Mod++
+						If Not $g_bUseRandomClick Then
+							PureClick($iX, $iY) ;Click once.
+						Else
+							PureClickR($TypeTroops, $iX, $iY) ;Click once.
+						EndIf
+						#EndRegion
 						If _Sleep($iSpeed, False) Then ExitLoop
 					Next
 				Else
@@ -66,7 +78,13 @@ Func TrainClick($iX, $iY, $iTimes, $iSpeed, $aWatchSpot, $sdebugtxt, $TypeTroops
 						If $g_bDebugClick Or $g_bDebugSetlogTrain Then SetLog("Camp is full", $COLOR_DEBUG)
 						Return ; Check to see if barrack full
 					EndIf
-					PureClick($iX, $iY, $iTimes, $iSpeed) ;Click $iTimes.
+					#Region Team AIO Mod++
+					If Not $g_bUseRandomClick Then
+						PureClick($iX, $iY, $iTimes, $iSpeed) ;Click $iTimes.
+					Else
+						PureClickR($TypeTroops, $iX, $iY, $iTimes, $iSpeed) ;Click $iTimes.
+					EndIf
+					#EndRegion
 					If _Sleep($iSpeed, False) Then Return
 				EndIf
 			EndIf
@@ -80,7 +98,13 @@ Func TrainClick($iX, $iY, $iTimes, $iSpeed, $aWatchSpot, $sdebugtxt, $TypeTroops
 				If $g_bDebugClick Or $g_bDebugSetlogTrain Then SetLog("Camp is FULL", $COLOR_DEBUG)
 				Return ; Check to see if barrack full
 			EndIf
-			PureClick($iX, $iY)
+			#Region Team AIO Mod++
+			If Not $g_bUseRandomClick Then
+				PureClick($iX, $iY)
+			Else
+				PureClickR($TypeTroops, $iX, $iY)
+			EndIf
+			#EndRegion
 
 			If _Sleep($iSpeed, False) Then Return
 		EndIf

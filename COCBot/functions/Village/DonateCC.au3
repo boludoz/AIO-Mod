@@ -145,8 +145,6 @@ Func DonateCC($bCheckForNewMsg = False)
 
 	Local $bDonateSiege = ($g_aiPrepDon[4] = 1)
 	Local $bDonateAllSiege = ($g_aiPrepDon[5] = 1)
-	
-	If $g_iActiveDonate = -1 Then PrepareDonateCC() ; Team AIO Mod++
 
 	Local $bDonate = ($g_iActiveDonate = 1)
 

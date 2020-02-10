@@ -18,6 +18,8 @@ Func getArmyCCSpells($bOpenArmyWindow = False, $bCloseArmyWindow = False, $bChec
 	Local $aSpellWSlot[1][3] = [[0, "", 0]] ; X-Coord, Spell Name index, Quantity
 
 	If $g_bDebugSetlogTrain Then SetLog("getArmyCCSpells():", $COLOR_DEBUG)
+	
+	If $g_iTownHallLevel < 8 And Not $g_iTownHallLevel < 1 Then Return ; Team AIO Mod++
 
 	If Not $bOpenArmyWindow Then
 		If $bCheckWindow And Not IsTrainPage() Then ; check for train page

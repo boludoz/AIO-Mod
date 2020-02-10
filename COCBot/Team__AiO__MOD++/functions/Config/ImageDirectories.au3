@@ -59,3 +59,5 @@ Global $g_sImgClanProfilePage = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Pa
 Global $g_sImgPotionsBtn = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\MagicItems\Btn"
 Global $g_sImgPotionsBtnArmy = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\MagicItems\BtnArmy"
 #EndRegion MagicItems
+
+Global $g_sImgArmyRequestCC = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Request"

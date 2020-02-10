@@ -6,7 +6,7 @@
 ; Return values .: None
 ; Author ........: MonkeyHunter (01-2016)
 ; Modified ......:
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2020
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
@@ -24,7 +24,13 @@ Func OpenArmyOverview($bCheckMain = True, $sWhereFrom = "Undefined")
 
 	If WaitforPixel(23, 505 + $g_iBottomOffsetY, 53, 507 + $g_iBottomOffsetY, Hex(0xEEB344, 6), 5, 10) Then
 		If $g_bDebugSetlogTrain Then SetLog("Click $aArmyTrainButton" & " (Called from " & $sWhereFrom & ")", $COLOR_SUCCESS)
-		ClickP($aArmyTrainButton, 1, 0, "#0293") ; Button Army Overview
+		#Region Team AIO Mod++
+		If Not $g_bUseRandomClick Then
+			ClickP($aArmyTrainButton, 1, 0, "#0293") ; Button Army Overview
+		Else
+			ClickR($aArmyTrainButtonRND, $aArmyTrainButton[0], $aArmyTrainButton[1], 1, 0)
+		EndIf
+		#EndRegion
 	EndIf
 
 	If _Sleep($DELAYRUNBOT6) Then Return ; wait for window to open

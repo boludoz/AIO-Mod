@@ -23,7 +23,27 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 	If $bDebug then SetLog(" == Double Train Army == ", $COLOR_ACTION)
 
 	Local $bNeedReCheckTroopTab = False, $bNeedReCheckSpellTab = False
-
+	
+	#Region - Team AIO Mod++
+	Local $bHasIncorrectTroop = False, $bHasIncorrectSpell = False
+	If $g_bPreciseArmy Then
+		Local $aWrongArmy = WhatToTrain(True)
+		If IsArray($aWrongArmy) Then
+			If $bDebug Then SetLog("$aWrongTroops: " & _ArrayToString($aWrongArmy), $COLOR_DEBUG)
+			If UBound($aWrongArmy) = 1 And $aWrongArmy[0][1] = "Arch" And $aWrongArmy[0][1] = 0 Then ; Default result of WhatToTrain
+			Else
+				For $i = 0 To UBound($aWrongArmy) - 1
+					If Not $bHasIncorrectTroop And _ArraySearch($g_asTroopShortNames, $aWrongArmy[$i][0]) >= 0 Then $bHasIncorrectTroop = True
+					If Not $bHasIncorrectSpell And _ArraySearch($g_asSpellShortNames, $aWrongArmy[$i][0]) >= 0 Then $bHasIncorrectSpell = True
+					If $bHasIncorrectTroop And $bHasIncorrectSpell Then ExitLoop
+				Next
+				If $bDebug Then SetLog("$bNeedReCheckTroopTab: " & $bNeedReCheckTroopTab & "$bNeedReCheckSpellTab: " & $bNeedReCheckSpellTab, $COLOR_DEBUG)
+				SetLog("Found incorrect " & ($bHasIncorrectTroop ? "Troops " & ($bHasIncorrectSpell ? "and Spells " : "") : "Spells ") & "in army")
+			EndIf
+		EndIf
+	EndIf
+	#EndRegion
+	
 	; Troop
 	If Not OpenTroopsTab(False, "DoubleTrain()") Then Return
 	If _Sleep(250) Then Return
@@ -36,7 +56,7 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 		If $TroopCamp[1] <> $g_iTotalCampSpace Then _
 			SetLog("Incorrect Troop combo: " & $g_iTotalCampSpace & " vs Total camp: " & $TroopCamp[1] & @CRLF & @TAB & "Double train may not work well", $COLOR_DEBUG)
 
-		If $bWarTroop Or $TroopCamp[0] < $TroopCamp[1] Then ; <280/280 ; Check Stop For War - Team AiO MOD++
+		If $bWarTroop Or $bHasIncorrectTroop Or $TroopCamp[0] < $TroopCamp[1] Then ; <280/280 ; Check Stop For War and DoubleTrain precise - Team AiO MOD++
 			If Not $bWarTroop And $g_bDonationEnabled And $g_bChkDonate And MakingDonatedTroops("Troops") Then ; Check Stop For War - Team AiO MOD++
 				If $bDebug Then SetLog($Step & ". MakingDonatedTroops('Troops')", $COLOR_DEBUG)
 				$Step += 1
@@ -85,7 +105,7 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 				$SpellCamp[1] = $TotalSpell
 			EndIf
 
-			If $bWarTroop Or $SpellCamp[0] < $SpellCamp[1] Then ; 0-10/11 ; Check Stop For War - Team AiO MOD++
+			If $bWarTroop Or $bHasIncorrectSpell Or $SpellCamp[0] < $SpellCamp[1] Then ; 0-10/11 ; Check Stop For War and DoubleTrain precise - Team AiO MOD++
 				If Not $bWarTroop And $g_bDonationEnabled And $g_bChkDonate And MakingDonatedTroops("Spells") Then ; Check Stop For War - Team AiO MOD++
 					If $bDebug Then SetLog($Step & ". MakingDonatedTroops('Spells')", $COLOR_DEBUG)
 					$Step += 1

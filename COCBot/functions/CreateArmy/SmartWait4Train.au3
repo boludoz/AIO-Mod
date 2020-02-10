@@ -187,11 +187,11 @@ Func SmartWait4Train($iTestSeconds = Default)
 	EndIf
 
 	; update CC remaining time till next request if request made and CC not full
-	If $g_iCCRemainTime = 0 And _ColorCheck(_GetPixelColor($aRequestTroopsAO[0], $aRequestTroopsAO[1] + 20, True), Hex($aRequestTroopsAO[3], 6), $aRequestTroopsAO[5]) And Not _ColorCheck(_GetPixelColor($aRequestTroopsAO[0], $aRequestTroopsAO[1], True), Hex($aRequestTroopsAO[4], 6), $aRequestTroopsAO[5]) Then
+	If $g_iCCRemainTime = 0 And IsToRequestCC(False) Then ; Team AIO Mod++
 		getArmyCCStatus()
 	EndIf
 
-	ClickP($aAway, 1, 0, "#0000") ;Click Away to close arny overview window
+	ClickP($aAway, 1, 0, "#0000") ;Click Away to close army overview window
 	If _Sleep($DELAYCHECKARMYCAMP4) Then Return
 
 	If $iTrainWaitCloseFlag = $TRAINWAIT_NOWAIT Then Return ; Check close game flag enabled or return back without close
