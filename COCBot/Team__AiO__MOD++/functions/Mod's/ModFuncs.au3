@@ -430,7 +430,7 @@ Func TimerRecordDonation($bUpdate = False)
 	If $iDateS <= 0 Or $iDateH > $g_iCmbRestartEvery Or $bUpdate Then
 		$g_sRestartTimer = '1000/01/01 00:00:00'
 	
-		$g_sRestartTimer = _DateAdd('n', Ceiling($g_iCmbRestartEvery), _NowCalc())
+		$g_sRestartTimer = _DateAdd('h', Ceiling($g_iCmbRestartEvery), _NowCalc())
 		$g_iTotalDonateStatsTroops = 0
 		$g_iTotalDonateStatsSpells = 0
 		$g_iTotalDonateStatsSiegeMachines = 0
