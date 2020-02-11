@@ -49,6 +49,9 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			GUICtrlSetState($g_hDeployCastleFirstDB, $g_bDeployCastleFirst[$DB] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hDeployCastleFirstAB, $g_bDeployCastleFirst[$LB] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			
+			; Skip first check
+			GUICtrlSetState($g_hSkipfirstcheck, $g_bSkipfirstcheck ? $GUI_CHECKED : $GUI_UNCHECKED)
+			
 			; DeployDelay
 			GUICtrlSetData($g_hDeployDelay[0], $g_iDeployDelay[0])
 			GUICtrlSetData($g_hDeployDelay[1], $g_iDeployDelay[1])
@@ -90,15 +93,37 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			GUICtrlSetState($g_hChkReqCCFromChat, $g_bChkReqCCFromChat ? $GUI_CHECKED : $GUI_UNCHECKED)
 			
 			; Donation records.
-			GUICtrlSetData($g_hDayLimitTroops, $g_iDayLimitTroops)
-			GUICtrlSetData($g_hDayLimitSpells, $g_iDayLimitSpells)
-			GUICtrlSetData($g_hDayLimitSieges, $g_iDayLimitSieges)
+			GUICtrlSetData($g_hDayLimitTroops, _NumberFormat($g_iDayLimitTroops, True))
+			GUICtrlSetData($g_hDayLimitSpells, _NumberFormat($g_iDayLimitSpells, True))
+			GUICtrlSetData($g_hDayLimitSieges, _NumberFormat($g_iDayLimitSieges, True))
+			GUICtrlSetData($g_hCmbRestartEvery, _NumberFormat($g_iCmbRestartEvery, True))
+			
+			
+			For $i = 0 To $eTroopCount - 1
+				GUICtrlSetData($g_hLblDayTroop[$i], _NumberFormat($g_aiDonateStatsTroops[$i][0], True)) ; Donation records - Team AIO Mod++
+			Next
 
+			GUICtrlSetData($g_hDayTotalTroops, _NumberFormat($g_iTotalDonateStatsTroops, True)) ; Donation records - Team AIO Mod++
+
+			For $i = 0 To $eSpellCount - 1
+				GUICtrlSetData($g_hLblDaySpell[$i], _NumberFormat($g_aiDonateStatsSpells[$i][0], True)) ; Donation records - Team AIO Mod++
+			Next
+				
+			GUICtrlSetData($g_hDayTotalSpells, _NumberFormat($g_iTotalDonateStatsSpells, True)) ; Donation records - Team AIO Mod++
+
+			For $i = 0 To $eSiegeMachineCount - 1
+				GUICtrlSetData($g_hLblDaySiege[$i], _NumberFormat($g_aiDonateStatsSieges[$i][0], True)) ; Donation records - Team AIO Mod++
+			Next
+
+			GUICtrlSetData($g_hDayTotalSieges, _NumberFormat($g_iTotalDonateStatsSiegeMachines, True)) ; Donation records - Team AIO Mod++
+			
+			
 			ChkReqCCAlways()
 			ChkReqCCFromChat()
 			ReadConfig_600_52_2()
 			ChkStopForWar()
 			chkDelayMod()
+			InputRecords()
 		Case "Save"
 			$g_bUseSleep = (GUICtrlRead($g_hUseSleep) = $GUI_CHECKED) ? 1 : 0
 			$g_iIntSleep = Int(GUICtrlRead($g_hIntSleep))
@@ -110,6 +135,9 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			$g_bDeployCastleFirst[$DB] = (GUICtrlRead($g_hDeployCastleFirstDB) = $GUI_CHECKED) ? 1 : 0
 			$g_bDeployCastleFirst[$LB] = (GUICtrlRead($g_hDeployCastleFirstAB) = $GUI_CHECKED) ? 1 : 0
 			
+			; Skip first check
+			$g_bSkipfirstcheck = GUICtrlRead($g_hSkipfirstcheck)  = $GUI_CHECKED
+
 			; DeployDelay
 			$g_iDeployDelay[0] = Int(GUICtrlRead($g_hDeployDelay[0]))
 			$g_iDeployDelay[1] = Int(GUICtrlRead($g_hDeployDelay[1]))
@@ -155,7 +183,27 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			$g_iDayLimitTroops = GUICtrlRead($g_hDayLimitTroops)
 			$g_iDayLimitSpells = GUICtrlRead($g_hDayLimitSpells) 
 			$g_iDayLimitSieges = GUICtrlRead($g_hDayLimitSieges)
-
+			$g_iCmbRestartEvery = GUICtrlRead($g_hCmbRestartEvery)
+			
+				; Tooops;
+				For $i = 0 To $eTroopCount - 1
+					$g_aiDonateStatsTroops[$i][0] = GUICtrlRead($g_hLblDayTroop[$i])
+				Next
+				$g_iTotalDonateStatsTroops = GUICtrlRead($g_hDayTotalTroops)
+	
+				; Spell;
+				For $i = 0 To $eSpellCount - 1
+					$g_aiDonateStatsSpells[$i][0] = GUICtrlRead($g_hLblDaySpell[$i])
+				Next
+				$g_iTotalDonateStatsSpells = GUICtrlRead($g_hDayTotalSpells)
+				
+				; Siege;
+				For $i = 0 To $eSiegeMachineCount - 1
+					$g_aiDonateStatsSieges[$i][0] = GUICtrlRead($g_hLblDaySiege[$i])
+				Next
+				$g_iTotalDonateStatsSiegeMachines = GUICtrlRead($g_hDayTotalSieges)
+			; ------------;
+			
 	EndSwitch
 
 EndFunc   ;==>ApplyConfig_MOD_MiscTab

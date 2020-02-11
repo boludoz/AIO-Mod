@@ -131,22 +131,19 @@ EndFunc   ;==>IsDonateQueueOnly
 Func DonateCC($bCheckForNewMsg = False)
 
 	#Region - Donation records - Team AIO Mod++
+	TimerRecordDonation()
 	If BitAND($g_iTotalDonateStatsTroops >= $g_iDayLimitTroops and $g_iDayLimitTroops > 0, $g_iTotalDonateStatsSpells >= $g_iDayLimitSpells and $g_iDayLimitSpells > 0, $g_iTotalDonateStatsSiegeMachines >= $g_iDayLimitSieges and $g_iDayLimitSieges > 0) Then
 		SetLog("Donate skip :  day limit reached.", $COLOR_INFO)
 		Return
 	EndIf
+	
+	PrepareDonateCC()
+	Local $bDonateTroop = ($g_aiPrepDon[0] = 1), $bDonateAllTroop = ($g_aiPrepDon[1] = 1), _
+	$bDonateSpell = ($g_aiPrepDon[2] = 1), $bDonateAllSpell = ($g_aiPrepDon[3] = 1), _
+	$bDonateSiege = ($g_aiPrepDon[4] = 1), $bDonateAllSiege = ($g_aiPrepDon[5] = 1)
+	
+	Local $bDonate = BitOR($bDonateTroop, $bDonateAllTroop, $bDonateSpell, $bDonateAllSpell, $bDonateSiege, $bDonateAllSiege) > 0 ; Team AIO Mod++
 	#EndRegion
-
-	Local $bDonateTroop = ($g_aiPrepDon[0] = 1)
-	Local $bDonateAllTroop = ($g_aiPrepDon[1] = 1)
-
-	Local $bDonateSpell = ($g_aiPrepDon[2] = 1)
-	Local $bDonateAllSpell = ($g_aiPrepDon[3] = 1)
-
-	Local $bDonateSiege = ($g_aiPrepDon[4] = 1)
-	Local $bDonateAllSiege = ($g_aiPrepDon[5] = 1)
-
-	Local $bDonate = ($g_iActiveDonate = 1)
 
 	Local $bOpen = True, $bClose = False
 

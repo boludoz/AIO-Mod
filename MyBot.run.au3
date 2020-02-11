@@ -1276,27 +1276,32 @@ Func FirstCheck()
 
 	SetDebugLog("-- FirstCheck Loop --")
 	If Not $g_bRunState Then Return
-	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
-
+	
 	#Region - Team AIO MOD++
+	VillageReport()
+	ProfileSwitch()
+	CheckFarmSchedule()
+	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
+	
+	; Skip first loop
+	If $g_bSkipfirstcheck Then Return
+
 	If not $g_bChkOnlyFarm Then
 		$g_bRestart = False
 		$g_bFullArmy = False
 		$g_iCommandStop = -1
 
-		VillageReport()
-		ProfileSwitch()
-		CheckFarmSchedule()
+		If $g_bEnableSuperXP = True And $g_iActivateOptionSX = 2 Then ;When Super Xp Only Farm Option is on skip all and just do the Goblin Xp Farming
+			MainSXHandler()
+			Return
+		EndIf
+		
 		MainGTFO()
 		MainKickout()
 		BotHumanization()	
 	EndIf
 	#EndRegion
 	
-	If $g_bChkOnlyFarm = False And $g_bEnableSuperXP = True And $g_iActivateOptionSX = 2 Then ;When Super Xp Only Farm Option is on skip all and just do the Goblin Xp Farming
-		MainSXHandler()
-		Return
-	EndIf
 
 	If Not $g_bRunState Then Return
 

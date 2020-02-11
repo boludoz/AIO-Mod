@@ -36,7 +36,10 @@ Func SaveConfig_MOD_MiscTab()
 	
 	_Ini_Add("MiscTab", "DeployCastleFirst" & $DB, $g_bDeployCastleFirst[$DB])
 	_Ini_Add("MiscTab", "DeployCastleFirst" & $LB, $g_bDeployCastleFirst[$LB])
-
+	
+	; Skip first check
+	_Ini_Add("Skipfirstcheck", "Enable", $g_bSkipfirstcheck ? 1 : 0)
+	
 	; DeployDelay
 	_Ini_Add("MiscTab", "DeployDelay0", $g_iDeployDelay[0])
 	_Ini_Add("MiscTab", "DeployDelay1", $g_iDeployDelay[1])
@@ -80,6 +83,27 @@ Func SaveConfig_MOD_MiscTab()
 	_Ini_Add("DonRecords", "DayLimitTroops", $g_iDayLimitTroops)
 	_Ini_Add("DonRecords", "DayLimitSpells", $g_iDayLimitSpells)
 	_Ini_Add("DonRecords", "DayLimitSieges", $g_iDayLimitSieges)
+	_Ini_Add("DonRecords", "CmbRestartEvery", $g_iCmbRestartEvery)
+	_Ini_Add("DonRecords", "RestartTimer", $g_sRestartTimer)
+
+		; Tooops;
+		For $i = 0 To $eTroopCount - 1
+			_Ini_Add("DonRecords", "DonateStatsTroops" & $i, $g_aiDonateStatsTroops[$i][0])
+		Next
+		_Ini_Add("DonRecords", "TotalDonateStatsTroops", $g_iTotalDonateStatsTroops)
+		
+		; Spell;
+		For $i = 0 To $eSpellCount - 1
+			_Ini_Add("DonRecords", "DonateStatsSpells" & $i, $g_aiDonateStatsSpells[$i][0])
+		Next
+		_Ini_Add("DonRecords", "TotalDonateStatsSpells", $g_iTotalDonateStatsSpells)
+
+		; Siege;
+		For $i = 0 To $eSiegeMachineCount - 1
+			_Ini_Add("DonRecords", "DonateStatsSieges" & $i, $g_aiDonateStatsSieges[$i][0])
+		Next
+		_Ini_Add("DonRecords", "TotalDonateStatsSieges", $g_iTotalDonateStatsSiegeMachines)
+		; ------------;
 
 EndFunc   ;==>SaveConfig_MOD_MiscTab
 

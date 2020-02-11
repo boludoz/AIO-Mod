@@ -90,9 +90,9 @@ EndFunc   ;==>CreateMODTab
 	GUICtrlSetFont(-1, 12, 500, 0, "Candara", $CLEARTYPE_QUALITY)
 	GUICtrlSetColor(-1, 0xFFCC00)
 
-;~ 	$g_hDeployCastleFirst = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "DeployCastleSiegeFirst",  "Deploy castle first (All modes)"), 32, 224, 161, 17)
-;~ 	GUICtrlSetOnEvent(-1, "chkDelayMod")
-;~ 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MiscMODs", "DeployCastleSiegeFirstTip", "Deploy CC / Sieges troops first, support for all modes."))
+  	$g_hSkipfirstcheck = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "Skipfirstcheck.",  "Skip first check."), 32, 224, 161, 17)
+  	GUICtrlSetOnEvent(-1, "chkDelayMod")
+  	_GUICtrlSetTip(-1, GetTranslatedFileIni("MiscMODs", "SkipfirstcheckTip", "Skip first check without attack first."))
 
 	$g_hDisableColorLog = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "DisableColorLog",  "No color attack log"), 32, 248, 113, 17)
 
@@ -221,7 +221,7 @@ Func CreateDonationsControlSubTab()
 		$g_hDayLimitTroops = GUICtrlCreateInput("0", $x + 25, -1 , 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 		GUICtrlSetOnEvent(-1, "InputRecords")
 		GUICtrlSetBkColor(-1, 0xD1DFE7)
-		GUICtrlCreateLabel("per day.   Total : ", $x + 60, -1)
+		GUICtrlCreateLabel("per hours.   Total : ", $x + 60, -1)
 		$g_hDayTotalTroops = GUICtrlCreateLabel("0", $x + 150, -1)
 		$y += 35
 
@@ -238,7 +238,7 @@ Func CreateDonationsControlSubTab()
 		$g_hDayLimitSpells = GUICtrlCreateInput("0", $x + 25, -1 , 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 		GUICtrlSetOnEvent(-1, "InputRecords")
 		GUICtrlSetBkColor(-1, 0xD1DFE7)
-		GUICtrlCreateLabel("per day.   Total : ", $x + 60, -1)
+		GUICtrlCreateLabel("per hours.   Total : ", $x + 60, -1)
 		$g_hDayTotalSpells = GUICtrlCreateLabel("0", $x + 150, -1)
 		$y += 35
 
@@ -253,8 +253,14 @@ Func CreateDonationsControlSubTab()
 		$g_hDayLimitSieges = GUICtrlCreateInput("0", $x + 25, -1 , 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 		GUICtrlSetOnEvent(-1, "InputRecords")
 		GUICtrlSetBkColor(-1, 0xD1DFE7)
-		GUICtrlCreateLabel("per day.   Total : ", $x + 60, -1)
+		GUICtrlCreateLabel("per hours.   Total : ", $x + 60, -1)
 		$g_hDayTotalSieges = GUICtrlCreateLabel("0", $x + 150, -1)
+		
+		$x += 200
+		GUICtrlCreateLabel("Restart every hours : ", $x, -1)
+		$g_hCmbRestartEvery = GUICtrlCreateInput("0", $x + 125, -1 , 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		GUICtrlSetOnEvent(-1, "InputRecords")
+		GUICtrlSetBkColor(-1, 0xD1DFE7)
 		
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 

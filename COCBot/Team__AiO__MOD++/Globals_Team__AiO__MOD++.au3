@@ -22,8 +22,14 @@ Global Enum $eIcnModKingGray = 1, $eIcnModKingBlue, $eIcnModKingGreen, $eIcnModK
 		$eIcnModAccountsS, $eIcnModProfilesS, $eIcnModFarmingS, $eIcnMiscMod, $eIcnSuperXP, $eIcnChatActions, $eIcnHumanization, $eIcnAIOMod, $eIcnDebugMod, _
 		$eIcnLabP, $eIcnShop, $eIcnGoldP, $eIcnElixirP, $eIcnDarkP, $eIcnGFTO, $eIcnMisc, $eIcnPrewar
 
+; Skip first check
+Global $g_bSkipfirstcheck = False, $g_hSkipfirstcheck
+
 ; Donation records.
 Global $g_iDayLimitTroops = 0, $g_iDayLimitSpells = 0, $g_iDayLimitSieges = 0
+Global $g_iCmbRestartEvery, $g_hCmbRestartEvery
+Global $g_iDiffRestartEvery = 0
+Global $g_sRestartTimer = '1000/01/01 00:00:00'
 
 ; Request form chat / on a loop.
 Global $g_hChkReqCCAlways = 0, $g_hChkReqCCFromChat = 0

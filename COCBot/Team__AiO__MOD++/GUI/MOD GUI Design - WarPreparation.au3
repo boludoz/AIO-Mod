@@ -151,6 +151,11 @@ Func CmbStopTime()
 		Sleep(3500)
 		ToolTip('')
 	EndIf
+	
+	$g_iStopTime = _GUICtrlComboBox_GetCurSel($g_hCmbStopTime)
+	If _GUICtrlComboBox_GetCurSel($g_hCmbStopBeforeBattle) = 0 Then $g_iStopTime = $g_iStopTime * -1
+	$g_iReturnTime = _GUICtrlComboBox_GetCurSel($g_hCmbReturnTime)
+
 EndFunc
 
 Func CmbReturnTime()
@@ -161,6 +166,11 @@ Func CmbReturnTime()
 		Sleep(3500)
 		ToolTip('')
 	EndIf
+	
+	$g_iStopTime = _GUICtrlComboBox_GetCurSel($g_hCmbStopTime)
+	If _GUICtrlComboBox_GetCurSel($g_hCmbStopBeforeBattle) = 0 Then $g_iStopTime = $g_iStopTime * -1		
+	$g_iReturnTime = _GUICtrlComboBox_GetCurSel($g_hCmbReturnTime)
+
 EndFunc
 
 Func ChkTrainWarTroop()

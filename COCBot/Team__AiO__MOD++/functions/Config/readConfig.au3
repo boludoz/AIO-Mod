@@ -35,6 +35,9 @@ Func ReadConfig_MOD_MiscTab()
 	IniReadS($g_bDeployCastleFirst[$DB], $g_sProfileConfigPath, "MiscTab", "DeployCastleFirst" & $DB, $g_bDeployCastleFirst[$DB], "Bool")
 	IniReadS($g_bDeployCastleFirst[$LB], $g_sProfileConfigPath, "MiscTab", "DeployCastleFirst" & $LB, $g_bDeployCastleFirst[$LB], "Bool")
 	
+	; Skip first check
+	IniReadS($g_bSkipfirstcheck, $g_sProfileConfigPath, "MiscTab", "Skipfirstcheck", $g_bSkipfirstcheck, "Bool")
+
 	; DeployDelay
 	IniReadS($g_iDeployDelay[0], $g_sProfileConfigPath, "MiscTab", "DeployDelay0", $g_iDeployDelay[0], "Int")
 	IniReadS($g_iDeployDelay[1], $g_sProfileConfigPath, "MiscTab", "DeployDelay1", $g_iDeployDelay[1], "Int")
@@ -78,6 +81,27 @@ Func ReadConfig_MOD_MiscTab()
 	IniReadS($g_iDayLimitTroops, $g_sProfileConfigPath, "DonRecords", "DayLimitTroops", $g_iDayLimitTroops, "Int")
 	IniReadS($g_iDayLimitSpells, $g_sProfileConfigPath, "DonRecords", "DayLimitSpells", $g_iDayLimitSpells, "Int")
 	IniReadS($g_iDayLimitSieges, $g_sProfileConfigPath, "DonRecords", "DayLimitSieges", $g_iDayLimitSieges, "Int")
+	IniReadS($g_iCmbRestartEvery, $g_sProfileConfigPath, "DonRecords", "CmbRestartEvery", $g_iCmbRestartEvery, "Int")
+	IniReadS($g_sRestartTimer, $g_sProfileConfigPath, "DonRecords", "RestartTimer", $g_sRestartTimer)
+	
+		; Tooops;
+		For $i = 0 To $eTroopCount - 1
+			IniReadS($g_aiDonateStatsTroops[$i][0], $g_sProfileConfigPath, "DonRecords", "DonateStatsTroops" & $i, $g_aiDonateStatsTroops[$i][0], "Int")
+		Next
+		IniReadS($g_iTotalDonateStatsTroops, $g_sProfileConfigPath, "DonRecords", "TotalDonateStatsTroops", $g_iTotalDonateStatsTroops, "Int")
+		
+		; Spell;
+		For $i = 0 To $eSpellCount - 1
+			IniReadS($g_aiDonateStatsSpells[$i][0], $g_sProfileConfigPath, "DonRecords", "DonateStatsSpells" & $i, $g_aiDonateStatsSpells[$i][0], "Int")
+		Next
+		IniReadS($g_iTotalDonateStatsSpells, $g_sProfileConfigPath, "DonRecords", "TotalDonateStatsSpells", $g_iTotalDonateStatsSpells, "Int")
+
+		; Siege;
+		For $i = 0 To $eSiegeMachineCount - 1
+			IniReadS($g_aiDonateStatsSieges[$i][0], $g_sProfileConfigPath, "DonRecords", "DonateStatsSieges" & $i, $g_aiDonateStatsSieges[$i][0], "Int")
+		Next
+		IniReadS($g_iTotalDonateStatsSiegeMachines, $g_sProfileConfigPath, "DonRecords", "TotalDonateStatsSieges", $g_iTotalDonateStatsSiegeMachines, "Int")
+		; ------------;
 
 EndFunc   ;==>ReadConfig_MOD_MiscTab
 

@@ -24,10 +24,39 @@ Global $g_bClanJoin = True
 Global $g_bFirstHop = True
 Global $g_bLeader = False
 Global $g_aiDonatePixel
+
 ; Make a Main Loop , replacing the Original Main Loop / Necessary Functions : Train - Donate - CheckResourcesValues
 Func MainGTFO()
-
+	
 	If $g_bChkUseGTFO = False Then Return
+
+	PrepareDonateCC()
+	Local $bDonateTroop = ($g_aiPrepDon[0] = 1), $bDonateAllTroop = ($g_aiPrepDon[1] = 1), _
+	$bDonateSpell = ($g_aiPrepDon[2] = 1), $bDonateAllSpell = ($g_aiPrepDon[3] = 1), _
+	$bDonateSiege = ($g_aiPrepDon[4] = 1), $bDonateAllSiege = ($g_aiPrepDon[5] = 1)
+	
+	Local $bDonate = BitOR($bDonateTroop, $bDonateAllTroop, $bDonateSpell, $bDonateAllSpell, $bDonateSiege, $bDonateAllSiege) > 0
+
+	If BitAND($g_iTotalDonateStatsTroops >= $g_iDayLimitTroops and $g_iDayLimitTroops > 0, $g_iTotalDonateStatsSpells >= $g_iDayLimitSpells and $g_iDayLimitSpells > 0, _
+	$g_iTotalDonateStatsSiegeMachines >= $g_iDayLimitSieges and $g_iDayLimitSieges > 0) Then
+	
+		SetLog("*** Donations : Day Limit. ***", $COLOR_ERROR)
+		VillageReport()
+		ProfileSwitch()
+		CheckFarmSchedule()
+		ProfileSwitchAccountEnabled()
+		Return False
+
+	ElseIf BitOr(Not $g_bChkDonate, Not $bDonate, Not $g_bDonationEnabled) Then
+	
+		SetLog("*** Setup donations. ***", $COLOR_ERROR)
+		VillageReport()
+		ProfileSwitch()
+		CheckFarmSchedule()
+		ProfileSwitchAccountEnabled()
+		Return False
+		
+	EndIf
 
 	; Donate Loop on Clan Chat
 	If $g_iLoop2 > $g_iTxtCyclesGTFO Then
@@ -272,10 +301,26 @@ Func DonateGTFO()
 			$firstrun = False
 			Setlog("Donate CC now.", $COLOR_INFO)
 			
-			If $g_iActiveDonate = -1 Then PrepareDonateCC()
+			PrepareDonateCC()
+			Local $bDonateTroop = ($g_aiPrepDon[0] = 1), $bDonateAllTroop = ($g_aiPrepDon[1] = 1), _
+			$bDonateSpell = ($g_aiPrepDon[2] = 1), $bDonateAllSpell = ($g_aiPrepDon[3] = 1), _
+			$bDonateSiege = ($g_aiPrepDon[4] = 1), $bDonateAllSiege = ($g_aiPrepDon[5] = 1)
+			
+			Local $bDonate = BitOR($bDonateTroop, $bDonateAllTroop, $bDonateSpell, $bDonateAllSpell, $bDonateSiege, $bDonateAllSiege) > 0
+
+			If BitAND($g_iTotalDonateStatsTroops >= $g_iDayLimitTroops and $g_iDayLimitTroops > 0, $g_iTotalDonateStatsSpells >= $g_iDayLimitSpells and $g_iDayLimitSpells > 0, $g_iTotalDonateStatsSiegeMachines >= $g_iDayLimitSieges and $g_iDayLimitSieges > 0) Then
+				SetLog("Donate skip :  limit reached.", $COLOR_INFO)
+				LeaveClanHop()
+				Return False
+			ElseIf Not $g_bChkDonate Or Not $bDonate Or Not $g_bDonationEnabled Then
+				If $g_bDebugSetlog Then SetDebugLog("Donate Clan Castle troops skip", $COLOR_DEBUG)
+				LeaveClanHop()
+				Return False
+			EndIf
+			
 			DonateCC()
 			
-			ClickAwayChat(Random(7500, 15000, 1))
+			ClickAwayChat(Random(1000, 2500, 1))
 
 			#cs
 			; Check Donate Pixel

@@ -24,9 +24,12 @@
 
 ; Donation records.
 Func InputRecords()
+		$g_iDiffRestartEvery = $g_iCmbRestartEvery
 		$g_iDayLimitTroops = (GUICtrlRead($g_hDayLimitTroops))
 		$g_iDayLimitSpells = (GUICtrlRead($g_hDayLimitSpells))
 		$g_iDayLimitSieges = (GUICtrlRead($g_hDayLimitSieges))
+		$g_iCmbRestartEvery = (GUICtrlRead($g_hCmbRestartEvery))
+		If $g_iDiffRestartEvery <> $g_iCmbRestartEvery Then TimerRecordDonation(True)
 EndFunc   ;==>ChkReqCCAlways
 
 ; Request form chat / on a loop - Team AiO MOD++
@@ -60,7 +63,9 @@ EndFunc   ;==>chkNoDropIfShield
 
 ; Misc tab - Team AiO MOD++
 Func chkDelayMod()
-
+	; Skip first loop
+	$g_bSkipfirstcheck = (GUICtrlRead($g_hSkipfirstcheck) = $GUI_CHECKED)
+	
 	For $i = 0 To UBound($g_hDeployWave) -1
 		$g_bChkEnableRandom[$i] = (GUICtrlRead($g_hChkEnableRandom[$i]) = $GUI_CHECKED)
 		

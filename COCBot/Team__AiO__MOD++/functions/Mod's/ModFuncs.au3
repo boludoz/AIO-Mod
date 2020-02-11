@@ -419,3 +419,26 @@ Func IsToRequestCC($ClickPAtEnd = True, $bSetLog = False, $bNeedCapture = True)
 	Return $bNeedRequest
 
 EndFunc   ;==>IsToRequestCC
+
+; Donation Record TimerDiff
+Func TimerRecordDonation($bUpdate = False)
+	Local $iDateS = Number(_DateDiff('s', $g_sRestartTimer, _NowCalc()))
+	Local $iDateH = Number(_DateDiff('h', $g_sRestartTimer, _NowCalc()))
+	
+	If $g_iCmbRestartEvery <= 0 Then $g_iCmbRestartEvery = 1
+	
+	If $iDateS <= 0 Or $iDateH > $g_iCmbRestartEvery Or $bUpdate Then
+		$g_sRestartTimer = '1000/01/01 00:00:00'
+	
+		$g_sRestartTimer = _DateAdd('n', Ceiling($g_iCmbRestartEvery), _NowCalc())
+		$g_iTotalDonateStatsTroops = 0
+		$g_iTotalDonateStatsSpells = 0
+		$g_iTotalDonateStatsSiegeMachines = 0
+		
+		GUICtrlSetData($g_hDayTotalTroops, _NumberFormat($g_iTotalDonateStatsTroops, True))
+		GUICtrlSetData($g_hDayTotalSpells, _NumberFormat($g_iTotalDonateStatsSpells, True))
+		GUICtrlSetData($g_hDayTotalSieges, _NumberFormat($g_iTotalDonateStatsSiegeMachines, True))
+
+	EndIf
+EndFunc   ;==>TimerRecordDonation
+
