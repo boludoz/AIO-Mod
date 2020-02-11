@@ -85,7 +85,8 @@ EndFunc
 
 Func BuilderPotionBoost($bDebug = False)
 	If not $g_bChkBuilderPotion Then Return
-	
+
+
 	Local Static $iLastTimeChecked[8] = [0, 0, 0, 0, 0, 0, 0, 0]
 	
 	If _Sleep($DELAYBOOSTHEROES2) Then Return False
@@ -93,6 +94,8 @@ Func BuilderPotionBoost($bDebug = False)
 	If $iLastTimeChecked[$g_iCurAccount] = 0 Then
 
 		If Abs($g_iTotalBuilderCount - $g_iFreeBuilderCount) >= $g_iInputBuilderPotion Then
+			If IsMainPage() Then Click(293, 32) ; click builder's nose for poping out information
+			Click(Random(500, 853, 1), Random(114, 129, 1))
  			If _Sleep($DELAYBOOSTHEROES2) Then Return
 			Click(Random(212, 453, 1), Random(114, 129, 1))
  			If _Sleep($DELAYBOOSTHEROES2) Then Return
@@ -121,7 +124,7 @@ EndFunc
 
 Func ResourceBoost($aPos1 = 0, $aPos2 = 0)
  		If not $g_bChkResourcePotion Then Return
-		
+
 		If Not BitAND($g_iInputGoldItems >= $g_aiTempGainCost[0], $g_iInputElixirItems >= $g_aiTempGainCost[1], $g_iInputDarkElixirItems >= $g_aiTempGainCost[2]) Then Return 
 		
 		Local Static $iLastTimeChecked[8] = [0, 0, 0, 0, 0, 0, 0, 0]

@@ -13,20 +13,25 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func PrepareAttackBB()
+Func PrepareAttackBB($bTest = False)
+	If $bTest Then $g_aiCurrentLootBB[$eLootTrophyBB] = 1004
+	If $bTest Then Setlog($g_aiCurrentLootBB[$eLootTrophyBB], $COLOR_INFO)
+	
 	Local $bIsToDropTrophies = False
 
 	If $g_bChkBBTrophyRange Then
+		SetDebugLog("Current Trophies: " & $g_aiCurrentLootBB[$eLootTrophyBB] & " Lower Limit: " & $g_iTxtBBTrophyLowerLimit & " Upper Limit: " & $g_iTxtBBTrophyUpperLimit)
+		
 		If ($g_aiCurrentLootBB[$eLootTrophyBB] > $g_iTxtBBTrophyUpperLimit) Then
 			SetLog("Trophies out of range.")
 			$bIsToDropTrophies = True
 		ElseIf  ($g_aiCurrentLootBB[$eLootTrophyBB] < $g_iTxtBBTrophyLowerLimit) Then
 			SetLog("Trophies out of range.")
-			SetDebugLog("Current Trophies: " & $g_aiCurrentLootBB[$eLootTrophyBB] & " Lower Limit: " & $g_iTxtBBTrophyLowerLimit & " Upper Limit: " & $g_iTxtBBTrophyUpperLimit)
-			If _Sleep(1500) Then Return ; Team AIO Mod++
 			Return False
 		EndIf
 	EndIf
+	
+	If _Sleep(1500) Then Return ; Team AIO Mod++
 
 	If Not ClickAttack() Then Return False
 

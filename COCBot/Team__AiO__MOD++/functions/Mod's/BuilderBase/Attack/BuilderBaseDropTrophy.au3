@@ -59,7 +59,7 @@ Func BuilderBaseDropTrophy()
 	Local $i = 0
 	local $iSide = Random(0, 1, 1) ; randomly choose top left or top right
 		
-	DeployBBTroop($aBBAttackBar[$i][0], $aBBAttackBar[$i][1], $aBBAttackBar[$i][2], Random(1, 3, 1), $iSide)
+	DeployBBTroop($aBBAttackBar[$i][0], $aBBAttackBar[$i][1], $aBBAttackBar[$i][2], Random(1, 4, 1), $iSide)
 
 	For $i = 0 To 15
 		; Surrender button [FC5D64]

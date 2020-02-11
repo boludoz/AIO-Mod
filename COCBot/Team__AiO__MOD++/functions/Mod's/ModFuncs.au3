@@ -179,7 +179,7 @@ EndFunc
 ; Parameters ....: $bCheckOneTime       - (optional) Boolean flag - only checks for Find a Match button once
 ; Return values .: Returns True if button found, if button not found, then returns False and sets @error = 1
 ; Author ........: NguyenAnhHD (2019-06)
-; Modified ......:
+; Modified ......: Boldina (2020-02)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -187,36 +187,31 @@ EndFunc
 ; Example .......: No
 ; ===============================================================================================================================
 Func ClickFindMatch($bCheckOneTime = False)
-	Local $i = 0
 	If _Sleep($DELAYSPECIALCLICK1) Then Return False ; Wait for Find a Match button window
-	While 1 ; Wait for window with Find a Match Button
-		Local $offColors[2][3] = [[0xF56B1B, 4, 0], [0xFFD155, 15, 0]]
-		Local $ButtonPixel = _MultiPixelSearch(570, 320 + $g_iMidOffsetY, 620, 400 + $g_iMidOffsetY, 1, 1, Hex(0xFFFBDE, 6), $offColors, 15)
-		If IsArray($ButtonPixel) Then
-			If $g_bDebugSetlog Then
-				SetDebugLog("ButtonPixelLocation = " & $ButtonPixel[0] & ", " & $ButtonPixel[1], $COLOR_DEBUG) ;Debug
-				SetDebugLog("Pixel color found #1: " & _GetPixelColor($ButtonPixel[0], $ButtonPixel[1], True) & _
-											", #2: " & _GetPixelColor($ButtonPixel[0] + 4, $ButtonPixel[1], True) & _
-											", #3: " & _GetPixelColor($ButtonPixel[0] + 15, $ButtonPixel[1], True), $COLOR_DEBUG)
-			EndIf
-			Local $aFindMatchButtonRND[4] = [$ButtonPixel[0] + 30, $ButtonPixel[1] + 20, $ButtonPixel[0] + 140, $ButtonPixel[1] + 50]
+	
+	For $i = 0 To 6 ; Wait for window with Find a Match Button
+		Local $aFindMatch = findButton("FindMatch", Default, 1, True)
+		
+		If IsArray($aFindMatch) And UBound($aFindMatch) = 2 Then
 			If Not $g_bUseRandomClick Then
-				PureClick($ButtonPixel[0] + 100, $ButtonPixel[1] + 30, 1, 0) ; Click Find a Match Button
+				PureClick($aFindMatch[0] + 100, $aFindMatch[1] + 30, 1, 0) ; Click Find a Match Button
 			Else
-				ClickR($aFindMatchButtonRND, $ButtonPixel[0] + 30, $ButtonPixel[1] + 20, 1, 0)
+				ClickR($aFindMatchButtonRND, $aFindMatch[0] + 30, $aFindMatch[1] + 20, 1, 0)
 			EndIf
 			ExitLoop
 		EndIf
 		If $bCheckOneTime Then Return False ; enable external control of loop count or follow on actions, return false if not clicked
-		If $i > 5 Then
-			SetLog("Can not find button for Find a Match, giving up", $COLOR_ERROR)
-			If $g_bDebugImageSave Then SaveDebugImage("FindMatch_ButtonCheck_")
-			SetError(1, @extended, False)
-			Return
-		EndIf
-		$i += 1
-		If _Sleep($DELAYSPECIALCLICK2) Then Return False ; improve pause button response
-	WEnd
+		If _Sleep($DELAYSPECIALCLICK1) Then Return False ; Wait for Find a Match button window
+	Next
+	
+	If $i > 5 Then
+		SetLog("Couldn't find the Find a Match Button!", $COLOR_ERROR)
+		If $g_bDebugImageSave Then SaveDebugImage("FindAMatchBUttonNotFound")
+		SetError(1, @extended, False)
+		Return
+	EndIf
+	
+	If _Sleep($DELAYSPECIALCLICK2) Then Return False ; improve pause button response
 	Return True
 EndFunc   ;==>ClickFindMatch
 
@@ -379,8 +374,9 @@ EndFunc   ;==>AttackClick
 
 Func IsToRequestCC($ClickPAtEnd = True, $bSetLog = False, $bNeedCapture = True)
 	Local $bNeedRequest = False
-	Local $sCCRequestDiamond = GetDiamondFromRect("715,576,845,617") ; RC Done ; Contains iXStart, $iYStart, $iXEnd, $iYEnd
+	Local $sCCRequestDiamond = GetDiamondFromRect("715, 576, 845, 617") ; Contains iXStart, $iYStart, $iXEnd, $iYEnd
 	Local $aCurrentCCRequest = findMultiple($g_sImgArmyRequestCC, $sCCRequestDiamond, $sCCRequestDiamond, 0, 1000, 0, "objectname,objectpoints", $bNeedCapture)
+	
 	Local $aTempCCRequestArray, $aCCRequestCoords
 	If UBound($aCurrentCCRequest, 1) >= 1 Then
 		For $i = 0 To UBound($aCurrentCCRequest, 1) - 1 ; Loop through found

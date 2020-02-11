@@ -145,16 +145,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 		EndIf
 	Until Not $bSignedUpLegendLeague
 
-	If Not $g_bLeagueAttack Then
-		Local $aFindMatch = findButton("FindMatch", Default, 1, True)
-		If IsArray($aFindMatch) And UBound($aFindMatch, 1) = 2 Then
-			ClickP($aFindMatch, 1, 0, "#0150")
-		Else
-			SetLog("Couldn't find the Find a Match Button!", $COLOR_ERROR)
-			If $g_bDebugImageSave Then SaveDebugImage("FindAMatchBUttonNotFound")
-			Return
-		EndIf
-	EndIf
+	If Not $g_bLeagueAttack And ClickFindMatch() = False Then Return False ; Custom findMatch - Team AIO Mod++ 
 
 	If $g_iTownHallLevel <> "" And $g_iTownHallLevel > 0 Then
 		$g_iSearchCost += $g_aiSearchCost[$g_iTownHallLevel - 1]

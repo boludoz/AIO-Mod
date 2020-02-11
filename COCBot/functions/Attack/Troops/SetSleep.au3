@@ -24,19 +24,31 @@ Func SetSleep($type)
 	EndIf
 
 	Local $iReturn = Random(1, 10) * Int(($type = 0) ? ($factor0) : ($factor1))
-	SetDebugLog("SetSleep Base : " & $iReturn)
 	Local $iCmbValue = $g_aiAttackAlgorithm[$DB]
+	
+	If BitAND(IsDeclared("g_bChkEnableRandom") <> 0, IsDeclared("g_iDeployDelay") <> 0, IsDeclared("$g_iDeployWave") <> 0) Then
+		If BitAND(IsArray($g_bChkEnableRandom), IsArray($g_iDeployDelay), IsArray($g_iDeployWave)) Then
+			If Not BitAND(UBound($g_bChkEnableRandom) > 2, UBound($g_iDeployDelay) > 2, UBound($g_iDeployWave) > 2) Then
+				SetDebugLog("SetSleep | UBound fail on SetSleep.")
+				Return $iReturn
+			EndIf
+		Else
+			SetDebugLog("SetSleep | IsArray fail on SetSleep.")
+			Return $iReturn
+		EndIf
+	Else
+		SetDebugLog("SetSleep | IsDeclared fail on SetSleep.")
+		Return $iReturn
+	EndIf
+
+	SetDebugLog("SetSleep Base : " & $iReturn)
 
 	If $g_iMatchMode = $DB Then
 		If BitAND($g_bChkEnableRandom[0], $iCmbValue = 0) Then ; DB + Standard
-			;	0	-	UnitDelay - $g_iDeployDelay[0]
-			;	1	-	WaveDelay - $g_iDeployWave[0]
 			$iReturn = ($type = 0) ? ($factor0 * Int($g_iDeployDelay[0])) : ($factor1 * Int($g_iDeployWave[0]))
 			SetDebugLog("SetSleep Mod + DB + Standard : " & $iReturn)
 			
-		ElseIf BitAND($g_bChkEnableRandom[1], $iCmbValue = 2) Then ; DB + Smart farm
-			;	0	-	UnitDelay - $g_iDeployDelay[1]
-			;	1	-	WaveDelay - $g_iDeployWave[1]
+			ElseIf BitAND($g_bChkEnableRandom[1], $iCmbValue = 2) Then ; DB + Smart farm
 			$iReturn = ($type = 0) ? ($factor0 * Int($g_iDeployDelay[1])) : ($factor1 * Int($g_iDeployWave[1]))
 			SetDebugLog("SetSleep Mod + DB + Smart farm : " & $iReturn)
 
