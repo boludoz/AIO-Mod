@@ -258,8 +258,9 @@ Func DonateGTFO()
 	Local $iLopardo = $g_iLoop
 	While 1
 			If _Sleep(100) Then Return
-			If not $g_bClanJoin Then ; Spend by...
+			If not $g_bChkGTFOClanHop Then ; Spend by...
 				If $iSetLogFuse > Random(55, 100, 1) And $iLopardo <> $g_iLoop Then 
+					If IfIsToStayInGTFO() = False Then Return False
 					TrainGTFO()
 					$iLopardo = $g_iLoop
 				EndIf
@@ -269,7 +270,7 @@ Func DonateGTFO()
 					$iSetLogFuse = 0
 				EndIf
 				
-				ClickAwayChat(Random(2000, 10000, 1))
+				ClickAwayChat(Random(30000, 50000, 1))
 				$iSetLogFuse += 1
 
 				If $g_iLoop < 2 And not _ColorCheck(_GetPixelColor(26, 342, True), Hex(0xEA0810, 6), 20) Then ContinueLoop
