@@ -49,13 +49,14 @@ Func Laboratory($debug=False)
 		EndIf
 	EndIf
 
- 	If ChkUpgradeInProgress() Then Return False ; see if we know about an upgrade in progress without checking the lab
+ 	;If ChkUpgradeInProgress() Then Return False ; see if we know about an upgrade in progress without checking the lab ; Team AIO Mod++
 
 	; Get updated village elixir and dark elixir values
 	VillageReport()
 
 	;Click Laboratory
-	BuildingClickP($g_aiLaboratoryPos, "#0197")
+	If not LabPotionBoost() Then BuildingClickP($g_aiLaboratoryPos, "#0197") ; Team AIO Mod++
+	
 	If _Sleep($DELAYLABORATORY3) Then Return ; Wait for window to open
 
 	If Not FindResearchButton() Then Return False ; cant start becuase we cannot find the research button

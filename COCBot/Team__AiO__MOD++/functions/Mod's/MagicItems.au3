@@ -86,17 +86,14 @@ EndFunc
 Func BuilderPotionBoost($bDebug = False)
 	If not $g_bChkBuilderPotion Then Return
 
-
-	Local Static $iLastTimeChecked[8] = [0, 0, 0, 0, 0, 0, 0, 0]
-	
-	If _Sleep($DELAYBOOSTHEROES2) Then Return False
-	
+	Static $iLastTimeChecked[8] = [0, 0, 0, 0, 0, 0, 0, 0]
 	If $iLastTimeChecked[$g_iCurAccount] = 0 Then
+	
+	If _Sleep($DELAYBOOSTHEROES2*3) Then Return False
 
 		If Abs($g_iTotalBuilderCount - $g_iFreeBuilderCount) >= $g_iInputBuilderPotion Then
 			If IsMainPage() Then Click(293, 32) ; click builder's nose for poping out information
-			Click(Random(500, 853, 1), Random(114, 129, 1))
- 			If _Sleep($DELAYBOOSTHEROES2) Then Return
+ 			If _Sleep($DELAYBOOSTHEROES2*2) Then Return
 			Click(Random(212, 453, 1), Random(114, 129, 1))
  			If _Sleep($DELAYBOOSTHEROES2) Then Return
 			ForceCaptureRegion()
@@ -132,7 +129,7 @@ Func ResourceBoost($aPos1 = 0, $aPos2 = 0)
 		If $iLastTimeChecked[$g_iCurAccount] = 0 And not Int($aPos1 + $aPos2 <= 0) Then
  			If _Sleep($DELAYBOOSTHEROES2) Then Return
 
- 			Click($aPos1, $aPos2 + 25, 1, 0, "#Resources")
+ 			BuildingClick($aPos1, $aPos2 + 25, 1, 0, "#Resources")
  			If _Sleep($DELAYBOOSTHEROES2) Then Return
  			ForceCaptureRegion()
  			Local $aResult = BuildingInfo(242, 490 + $g_iBottomOffsetY)
@@ -153,6 +150,38 @@ Func ResourceBoost($aPos1 = 0, $aPos2 = 0)
 			Else
 			;Setlog("Magic Items| Fail resource potion.", $COLOR_ERROR)
 			Return False
+		EndIf
+	Return False
+EndFunc
+
+Func LabPotionBoost()
+ 		If not $g_bChkLabPotion Then Return False
+
+		Local Static $iLastTimeChecked[8] = [0, 0, 0, 0, 0, 0, 0, 0]
+		
+		If $iLastTimeChecked[$g_iCurAccount] = 0 Then
+ 			If _Sleep($DELAYBOOSTHEROES2) Then Return
+			
+			;If $g_sLabUpgradeTime <> "" Then
+			;	If Not FindResearchButton() Then Return False ; cant start becuase we cannot find the research button
+			;	If ChkLabUpgradeInProgress() Then Return False ; cant start if something upgrading
+			;EndIf
+			
+			If $g_sLabUpgradeTime <> "" And (Number(_DateDiff("h", _NowCalc(), $g_sLabUpgradeTime)) > Int($g_iInputLabPotion)) Then	
+			
+				BuildingClickP($g_aiLaboratoryPos, "#0197")
+				If _Sleep($DELAYBOOSTHEROES2) Then Return
+				
+				ForceCaptureRegion()
+				
+				Local $aResearchButton = findButton("Research", Default, 1, True)
+				If IsArray($aResearchButton) And UBound($aResearchButton, 1) = 2 Then
+					If BoostPotionMod("LabPotion") Then 
+						$iLastTimeChecked[$g_iCurAccount] = 1
+					EndIf
+					Return True
+				EndIf
+			EndIf
 		EndIf
 	Return False
 EndFunc

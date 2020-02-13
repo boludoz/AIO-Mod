@@ -199,6 +199,7 @@ Func DonateCC($bCheckForNewMsg = False)
 	
 	If _Sleep($DELAYDONATECC4) Then Return
 
+	#cs Team AIO Mod++
 	; check for "I Understand" button
 	Local $aCoord = decodeSingleCoord(findImage("I Understand", $g_sImgChatIUnterstand, GetDiamondFromRect("50,400,280,550")))
 	If UBound($aCoord) > 1 Then
@@ -206,7 +207,11 @@ Func DonateCC($bCheckForNewMsg = False)
 		ClickP($aCoord)
 		If _Sleep($DELAYDONATECC2) Then Return
 	EndIf
-
+	#ce
+	
+	UnderstandChatRules() ; Team AIO Mod++
+	
+	
 	Local $Scroll
 	; add scroll here
 	While 1

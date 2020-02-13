@@ -317,14 +317,22 @@ Func UnderstandChatRules()
 	;RIGHT - 223, 448, 249, 479
 	;DDF685
 	Local $aClanBadgeNoClan[4] = [151, 307, 0xF05538, 20] ; OK - Orange Tile of Clan Logo on Chat Tab if you are not in a Clan
+	Local $bReturn = False
+	
 
-	If IsArray(MultiPSimple(68, 447, 92, 479, Hex(0xDDF685, 6), 15, 5000)) and _Wait4PixelGoneArray($aClanBadgeNoClan) Then
-		Click(Random(90, 248, 1), Random(448, 479, 1))
-		If _Sleep(500) Then Return
-		Return True
+	; check for "I Understand" button
+	Local $aCoord = decodeSingleCoord(findImage("I Understand", $g_sImgChatIUnterstand, GetDiamondFromRect("50,400,280,550")))
+	
+	If UBound($aCoord) > 1 and _Wait4PixelGoneArray($aClanBadgeNoClan) Then
+		SetLog('Clicking "I Understand" button', $COLOR_ACTION)
+		ClickP($aCoord)
+		If _Sleep($DELAYDONATECC2) Then Return
+		$bReturn = True
 	EndIf
-	Return False
 
+	If _Sleep($DELAYDONATECC2) Then Return
+	
+	Return $bReturn
 EndFunc
 
 ; #FUNCTION# ====================================================================================================================

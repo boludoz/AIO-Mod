@@ -19,7 +19,6 @@ Global $g_iClanlevel = 8
 Global $g_OutOfTroops = False
 Global $g_bSetDoubleArmy = False
 Global $g_iLoop = 0
-Global $g_iLoop2 = 0
 Global $g_bClanJoin = True
 Global $g_bFirstHop = True
 Global $g_bLeader = False
@@ -44,7 +43,7 @@ Func MainGTFO()
 		VillageReport()
 		ProfileSwitch()
 		CheckFarmSchedule()
-		ProfileSwitchAccountEnabled()
+		If ProfileSwitchAccountEnabled() Then checkSwitchAcc() ; Forced to switch
 		Return False
 
 	ElseIf BitOr(Not $g_bChkDonate, Not $bDonate, Not $g_bDonationEnabled) Then
@@ -53,13 +52,13 @@ Func MainGTFO()
 		VillageReport()
 		ProfileSwitch()
 		CheckFarmSchedule()
-		ProfileSwitchAccountEnabled()
+		If ProfileSwitchAccountEnabled() Then checkSwitchAcc() ; Forced to switch
 		Return False
 		
 	EndIf
 
 	; Donate Loop on Clan Chat
-	If $g_iLoop2 > $g_iTxtCyclesGTFO Then
+	If $g_iLoop > $g_iTxtCyclesGTFO Then
 		Setlog("Finished GTFO " & $g_iLoop2 & " Loop(s)", $COLOR_INFO)
 		If $g_bClanJoin = True Then
 			ClanHop(True)
@@ -106,7 +105,7 @@ Func MainGTFO()
 		checkAttackDisable($g_iTaBChkIdle)
 
 		; Custom Train to be accurate
-		TrainGTFO()
+		VillageReport()
 		$_bFirstLoop = False
 
 		MainKickout()
@@ -123,7 +122,7 @@ Func MainGTFO()
 			Next
 		WEnd
 
-		VillageReport()
+		TrainGTFO()
 
 		If $g_aiCurrentLoot[$eLootElixir] <> 0 And $g_aiCurrentLoot[$eLootElixir] < $g_iTxtMinSaveGTFO_Elixir Then
 			SetLog("Elixir Limits Reached!! Let's farm!", $COLOR_INFO)
@@ -142,16 +141,16 @@ Func MainGTFO()
 				ClanHop($g_bClanJoin)
 				$g_bClanJoin = False
 				Return
+			Else
+				LeaveClanHop()
+				
 			EndIf
 			Return
 		EndIf
 
 		; Update the Resources values , compare with a Limit to stop The GTFO and return to Farm
-		If Not IfIsToStayInGTFO() Then
-			; TurnOFF the GTFO
-			; $g_ichkGTFO = false
-			Return
-		EndIf
+		If Not IfIsToStayInGTFO() Then Return
+			
 	WEnd
 
 EndFunc   ;==>MainGTFO
@@ -163,17 +162,18 @@ Func TrainGTFO()
 	StartGainCost()
 	If Not $g_bRunState Then Return
 
+	If _Sleep(250) Then Return
+
+	; Is necessary to be Custom Train Troops to be accurate
+	If Not OpenArmyOverview(False, "TrainGTFO()") Then Return
+
+	If _Sleep(1250) Then Return
 
 	If $g_bDoubleTrain Then
 		DoubleTrain()
 		Return
 	EndIf
-
-	; Is necessary to be Custom Train Troops to be accurate
-	If Not OpenArmyOverview(True, "TrainGTFO()") Then Return
-
-	If _Sleep(250) Then Return
-
+	
 	CheckArmyCamp(False, False, False, True)
 
 	If Not $g_bRunState Then Return
@@ -235,8 +235,8 @@ EndFunc   ;==>TrainGTFO
 ; Open Chat / Click on Donate Button / Donate Slot 1 or 2 / Close donate window / stay on chat for [XX] remain train Troops
 Func DonateGTFO()
 
-	AutoItSetOption("MouseClickDelay", 1)
-	AutoItSetOption("MouseClickDownDelay", 1)
+	Opt("MouseClickDelay", 1)
+	Opt("MouseClickDownDelay", 1)
 
 	Local $_timer = TimerInit()
 	Local $_diffTimer = 0, $iTime2Exit = 20
@@ -246,10 +246,7 @@ Func DonateGTFO()
 
 	$g_OutOfTroops = False
 
-	; Open CHAT
-	OpenClanChat()
 
-	If _Sleep($DELAYRUNBOT3) Then Return
 
 ;~ 	; Scroll Up
 ;~ 	ScrollUp()
@@ -257,45 +254,47 @@ Func DonateGTFO()
 	; +++++++++++++++++++++++++++++
 	; MAIN DONATE LOOP ON CLAN CHAT
 	; +++++++++++++++++++++++++++++
+	Local $iSetLogFuse = 0
+	Local $iLopardo = $g_iLoop
 	While 1
-
-		; Function to take nmore responsive the GUI /STOP and PASUE
-		If Not $g_bRunState Then Return
-		If _Sleep($DELAYRUNBOT3) Then Return
-
-		If $y < 620 And Not $firstrun Then
-			$y += 30
-		Else
-			; Scroll Up
-			ScrollUp()
-
-			$y = 90
-		EndIf
-
-		; Verify if the remain train time is zero
-		$_diffTimer = (TimerDiff($_timer) / 1000) / 60
-		If $g_aiTimeTrain[0] <> 0 Then $iTime2Exit = $g_aiTimeTrain[0]
-		If $g_aiTimeTrain[1] <> 0 And $g_aiTimeTrain[1] < $g_aiTimeTrain[0] Then $iTime2Exit = $g_aiTimeTrain[1]
-
-		If $_diffTimer > $iTime2Exit Then ExitLoop
-
-	If $g_iLoop2 > $g_iTxtCyclesGTFO Then
-		LeaveClanHop()
-		Return False
-	EndIf
-
-		; +++++++++++++++++++++++++
-		; DONATE IT - WHEN EXIST REQUESTS
-		; +++++++++++++++++++++++++
-		While 1
-			$g_iLoop += 1
-			$g_iLoop2 += 1
-			If $g_iLoop2 > $g_iTxtCyclesGTFO Then
-				LeaveClanHop()
-				Return False
+			If _Sleep(100) Then Return
+			
+			If $iSetLogFuse > Random(55, 100, 1) And $iLopardo <> $g_iLoop Then 
+				TrainGTFO()
+				$iLopardo = $g_iLoop
 			EndIf
-			If $g_iLoop >= 2 Then ExitLoop
+			
+			If $iSetLogFuse = 5 Then
+				Setlog("Waiting chat. Training...", $COLOR_INFO)
+				$iSetLogFuse = 0
+			EndIf
+			
+			ClickAwayChat(Random(2000, 10000, 1))
+			$iSetLogFuse += 1
 
+			If $g_iLoop < 2 And not _ColorCheck(_GetPixelColor(26, 342, True), Hex(0xEA0810, 6), 20) Then ContinueLoop
+			
+
+			$g_iLoop += 1
+		
+			OpenClanChat()
+			If _Sleep($DELAYRUNBOT3) Then Return
+	
+			; Function to take more responsive the GUI /STOP and PASUE
+			If Not $g_bRunState Then Return
+			If _Sleep($DELAYRUNBOT3) Then Return
+	
+			; Verify if the remain train time is zero
+			$_diffTimer = (TimerDiff($_timer) / 1000) / 60
+			If $g_aiTimeTrain[0] <> 0 Then $iTime2Exit = $g_aiTimeTrain[0]
+			If $g_aiTimeTrain[1] <> 0 And $g_aiTimeTrain[1] < $g_aiTimeTrain[0] Then $iTime2Exit = $g_aiTimeTrain[1]
+	
+			If $_diffTimer > $iTime2Exit Then ExitLoop
+	
+	
+			If $g_iLoop > $g_iTxtCyclesGTFO Then Return False
+				
+	
 			$_bReturnT = False
 			$_bReturnS = False
 			$firstrun = False
@@ -307,93 +306,38 @@ Func DonateGTFO()
 			$bDonateSiege = ($g_aiPrepDon[4] = 1), $bDonateAllSiege = ($g_aiPrepDon[5] = 1)
 			
 			Local $bDonate = BitOR($bDonateTroop, $bDonateAllTroop, $bDonateSpell, $bDonateAllSpell, $bDonateSiege, $bDonateAllSiege) > 0
-
+	
 			If BitAND($g_iTotalDonateStatsTroops >= $g_iDayLimitTroops and $g_iDayLimitTroops > 0, $g_iTotalDonateStatsSpells >= $g_iDayLimitSpells and $g_iDayLimitSpells > 0, $g_iTotalDonateStatsSiegeMachines >= $g_iDayLimitSieges and $g_iDayLimitSieges > 0) Then
 				SetLog("Donate skip :  limit reached.", $COLOR_INFO)
-				LeaveClanHop()
+				; LeaveClanHop()
 				Return False
 			ElseIf Not $g_bChkDonate Or Not $bDonate Or Not $g_bDonationEnabled Then
 				If $g_bDebugSetlog Then SetDebugLog("Donate Clan Castle troops skip", $COLOR_DEBUG)
-				LeaveClanHop()
+				; LeaveClanHop()
 				Return False
 			EndIf
 			
 			DonateCC()
 			
-			ClickAwayChat(Random(1000, 2500, 1))
-
-			#cs
-			; Check Donate Pixel
-			$g_aiDonatePixel = _MultiPixelSearch(200, 90, 300, 700, -2, 1, Hex(0x6da725, 6), $aChatDonateBtnColors, 20)
-			If IsArray($g_aiDonatePixel) Then
-				$y = $g_aiDonatePixel[1] + 30
-
-				; Open Donate Window
-				If Not _DonateWindow() Then ContinueLoop
-
-				; Donate It : Troops & Spells [slot 2] is the Third slot from the left : [0 ,1 ,2 ,3 ,4 ]
-				If DonateIT(0) Then $_bReturnT = True ; Donated troops, lets Train it
-				If $g_OutOfTroops Then
-					ClickAwayChat()
-					CloseClanChat()
-					Return
-				EndIf
-				If DonateIT(10) Then $_bReturnS = True ; Donated Spells , lets Train it
-
-				; Close Donate Window - Return to Chat
-				ClickAwayChat()
-			Else
-				; Doesn't exist Requests lets exits from this loop
-;~ 				ClickP($aAway, 1, 0)
-				If ScrollDown() Then
-					$y = 200
-				Else
-					$firstrun = True
-				EndIf
-				ExitLoop
-			EndIf
-
-			If ($_bReturnT = False And $_bReturnS = False) Then $y += 50
-
-			; Check if exist other Donate button
-			$g_aiDonatePixel = _MultiPixelSearch(200, $y, 230, 660 + $g_iBottomOffsetY, -2, 1, Hex(0x6da725, 6), $aChatDonateBtnColors, 20)
-			If IsArray($g_aiDonatePixel) Then
-				If $g_bDebugSetlog Then SetDebugLog("More Donate buttons found, new $g_aiDonatePixel: (" & $g_aiDonatePixel[0] & "," & $g_aiDonatePixel[1] & ")", $COLOR_DEBUG)
-				ContinueLoop
-			Else
-				If ScrollDown() Then $y = 200
-				ContinueLoop
-			EndIf
-		#ce
-		WEnd
-
-		; A click just to mantain the 'Game active'
-		;If $g_iLoop >= 5 Then
 			If $g_bChkGTFOClanHop = True Then
-				ClanHop($g_bChkGTFOClanHop) ; Hop!!!
+				ClanHop() ; Hop!!!
 				$firstrun = True
 				$g_iLoop = 0
 			EndIf
-		;Else
-		;	If $g_iLoop >= 10 Then
-		;		ClickAwayChat(250)
-		;		$g_iLoop = 0
-		;	EndIf
-		;EndIf
 	WEnd
 
-	AutoItSetOption("MouseClickDelay", 10)
-	AutoItSetOption("MouseClickDownDelay", 10)
+	; The details differentiate me from you.
+	Opt("MouseClickDelay", GetClickUpDelay())
+	Opt("MouseClickDownDelay", GetClickDownDelay())
+	
 	CloseClanChat()
 
-	If $g_iLoop2 > $g_iTxtCyclesGTFO Then
-		LeaveClanHop()
-		Return False
-	EndIf
+	If $g_iLoop > $g_iTxtCyclesGTFO Then Return False
+
 EndFunc   ;==>DonateGTFO
 
 Func ClanHop($sClanJoin = True)
-	If BitOr($g_bLeader, not $sClanJoin) And (Not $g_bChkGTFOClanHop) Then Return
+	If $g_bLeader Then Return
 
 	SetLog("Start Clan Hopping", $COLOR_INFO)
 	Local $sTimeStartedHopping = _NowCalc()
@@ -474,7 +418,7 @@ Func ClanHop($sClanJoin = True)
 		EndIf
 		#EndRegion
 
-		If _Sleep(7500) Then Return
+		If _Sleep(1500) Then Return
 
 		; Open clans page
 		Local $aIsOnClanLabel = [640, 205, 0xDDF685, 20]
@@ -512,7 +456,7 @@ Func ClanHop($sClanJoin = True)
 				If $bIsInClan Then SetLog("GTFO|Leaved the clan for another.", $COLOR_INFO)
 
 				;If OpenClanChat() Then
-				If UnderstandChatRules() And BitOr(_WaitForCheckPixel($aChatTab, $g_bCapturePixel, Default, "Wait for Open ClanChat #1:"), _WaitForCheckPixel($aChatTab2, $g_bCapturePixel, Default, "Wait for Open ClanChat #2:"), _WaitForCheckPixel($aChatTab3, $g_bCapturePixel, Default, "Wait for Open ClanChat #3:")) Then
+				If UnderstandChatRules() And OpenClanChat() Then
 					Return True
 				EndIf
 			Else
@@ -529,6 +473,9 @@ EndFunc   ;==>ClanHop
 
 Func LeaveClanHop()
 	If not $g_bChkGTFOReturnClan Then Return
+	
+	OpenClanChat()
+	
     Local $aSendRequest[4] = [528, 213, 0xE2F98A, 20]
 	Local $g_aNoClanBtn[4] = [163, 515, 0x6DBB1F, 20] ; OK - Green Join Button on Chat Tab when you are not in a Clan
 
@@ -556,99 +503,13 @@ Func LeaveClanHop()
 
 	If _Sleep(200) Then Return
 	CloseClanChat()
-	Return
+	If ProfileSwitchAccountEnabled() Then checkSwitchAcc() ; Forced to switch
 EndFunc ;==> LeaveClanHop
 
 Func ClickAwayChat($iSleep = 10)
 	If _Sleep($iSleep) Then Return
 	Return SpecialAway()
 EndFunc   ;==>ClickAwayChat
-
-Func ScrollUp()
-	Local $aScroll, $i_attempts = 0
-
-	For $i = 0 To Random(0, 20, 1)
-		ForceCaptureRegion()
-		Local $y = 90
-		$aScroll = _PixelSearch(293, 8 + $y, 295, 23 + $y, Hex(0xFFFFFF, 6), 18)
-		If IsArray($aScroll) And _ColorCheck(_GetPixelColor(300, 110, True), Hex(0x509808, 6), 20) Then ; a second pixel for the green
-			Click($aScroll[0], $aScroll[1], 1, 0, "#0172")
-			If _Sleep($DELAYDONATECC2 + 100) Then Return
-			ContinueLoop
-		EndIf
-		ExitLoop
-	Next
-
-EndFunc   ;==>ScrollUp
-
-Func ScrollDown()
-	Local $Scroll
-	; Scroll Down
-	ForceCaptureRegion()
-	$Scroll = _PixelSearch(293, 687 - 30, 295, 693 - 30, Hex(0xFFFFFF, 6), 10)
-	If IsArray($Scroll) Then
-		Click($Scroll[0], $Scroll[1], 1, 0, "#0172")
-		If _Sleep($DELAYDONATECC2) Then Return
-		Return True
-	Else
-		Return False
-	EndIf
-EndFunc   ;==>ScrollDown
-
-Func DonateIT($Slot)
-
-	Local $iTroopIndex = $Slot, $YComp = 0, $NumberClick = 5
-	If $g_iClanlevel >= 4 Then $NumberClick = 6
-	If $g_iClanlevel >= 8 Then $NumberClick = 8
-
-	If $Slot < 9 Then
-
-		; TODO :  make the unconditional click slot 1 fast x8 ,
-		;         after that check if exist the next slot ... True click 8x
-		;         than check if the slot 1 is empty return to train troops
-
-		Click(395 + ($Slot * 68), $g_iDonationWindowY + 57 + $YComp, $NumberClick, $DELAYDONATECC3, "#0175")
-		SetLog(" - Donated Troops on Slot " & $Slot + 1, $COLOR_INFO)
-
-		$Slot += 1
-		$iTroopIndex = $Slot
-
-		Click(395 + ($Slot * 68), $g_iDonationWindowY + 57 + $YComp, $NumberClick, $DELAYDONATECC3, "#0175")
-		SetLog(" - Donated Troops on Slot " & $Slot + 1, $COLOR_INFO)
-
-		; dadad5 Out of troops on Slot 0
-		If _ColorCheck(_GetPixelColor(350, $g_iDonationWindowY + 105 + $YComp, True), Hex(0xDADAD5, 6), 5) Then
-			SetLog("No More troops let's train!", $COLOR_INFO)
-			$g_OutOfTroops = True
-			If _Sleep(1000) Then Return
-			Return False
-		Else
-			Return True
-		EndIf
-		Return False
-	EndIf
-
-	; Spells
-	If $Slot > 9 Then
-		$Slot = $Slot - 10
-		$iTroopIndex = $Slot
-		$YComp = 203 ; correct 860x780
-	EndIf
-
-	If _ColorCheck(_GetPixelColor(350 + ($Slot * 68), $g_iDonationWindowY + 105 + $YComp, True), Hex(0x6d45bd, 6), 20) Then ; check for 'purple'  6d45bd
-
-		Click(365 + ($Slot * 68), $g_iDonationWindowY + 57 + $YComp, 1, $DELAYDONATECC3, "#0175")
-
-		SetLog(" - Donated 1 Spell on Slot " & $Slot + 1, $COLOR_INFO)
-		$g_aiDonateStatsSpells[$iTroopIndex][0] += 1
-		$g_iSpellsNumber += 1
-		Return True
-	Else
-		SetLog(" - Spells Empty or Filled!", $COLOR_ERROR)
-		Return False
-	EndIf
-
-EndFunc   ;==>DonateIT
 
 ; Will update the Stats and check the resources to exist from GTFO and Farm again
 Func IfIsToStayInGTFO()
@@ -695,65 +556,3 @@ Func IfIsToStayInGTFO()
 	Return True
 EndFunc   ;==>IfIsToStayInGTFO
 
-Func _DonateWindow()
-	If $g_bDebugSetlog Then SetLog("_DonateWindow Open Start", $COLOR_DEBUG)
-
-	; Click on Donate Button and wait for the window
-	Local $iLeft = 0, $iTop = 0, $iRight = 0, $iBottom = 0, $i
-	For $i = 0 To UBound($aChatDonateBtnColors) - 1
-		If $aChatDonateBtnColors[$i][1] < $iLeft Then $iLeft = $aChatDonateBtnColors[$i][1]
-		If $aChatDonateBtnColors[$i][1] > $iRight Then $iRight = $aChatDonateBtnColors[$i][1]
-		If $aChatDonateBtnColors[$i][2] < $iTop Then $iTop = $aChatDonateBtnColors[$i][2]
-		If $aChatDonateBtnColors[$i][2] > $iBottom Then $iBottom = $aChatDonateBtnColors[$i][2]
-	Next
-	$iLeft += $g_aiDonatePixel[0]
-	$iTop += $g_aiDonatePixel[1]
-	$iRight += $g_aiDonatePixel[0] + 1
-	$iBottom += $g_aiDonatePixel[1] + 1
-
-	ForceCaptureRegion()
-	If $g_bDebugSetlog Then
-		SetDebugLog("$g_aiDonatePixel: " & _ArrayToString($g_aiDonatePixel), $COLOR_DEBUG)
-		SetDebugLog("$iLeft: " & $iLeft, $COLOR_DEBUG)
-		SetDebugLog("$iTop: " & $iTop, $COLOR_DEBUG)
-		SetDebugLog("$iRight: " & $iRight, $COLOR_DEBUG)
-		SetDebugLog("$iBottom: " & $iBottom, $COLOR_DEBUG)
-	EndIf
-
-	Local $g_aiDonatePixelCheck = _MultiPixelSearch($iLeft, $iTop - 4 , $iRight, $iBottom, -2, 1, Hex(0x6da725, 6), $aChatDonateBtnColors, 20)
-	If IsArray($g_aiDonatePixelCheck) Then
-		Click($g_aiDonatePixel[0] + 50, $g_aiDonatePixel[1] + 10, 1, 0, "#0174")
-	Else
-		If $g_bDebugSetlog Then SetDebugLog("Could not find the Donate Button!", $COLOR_DEBUG)
-		Return False
-	EndIf
-	If _Sleep($DELAYDONATEWINDOW1) Then Return
-
-	Local $iCount = 0
-	While Not (_ColorCheck(_GetPixelColor(331, $g_aiDonatePixel[1], True, "DonateWindow"), Hex(0xffffff, 6), 0))
-		If _Sleep($DELAYDONATEWINDOW2) Then Return
-		ForceCaptureRegion()
-		;_CaptureRegion(0, 0, 306, $g_aiDonatePixel[1] + 30 + $YComp)
-		$icount += 1
-		If $iCount = 20 Then ExitLoop
-	WEnd
-
-	; Determinate the right position of the new Donation Window
-	; Will search in $Y column = 410 for the first pure white color and determinate that position the $DonationWindowTemp
-	$g_iDonationWindowY = 0
-
-	ForceCaptureRegion()
-	Local $aDonWinOffColors[1][3] = [[0xFFFFFF, 0, 2]]
-	Local $aDonationWindow = _MultiPixelSearch(628, 0, 630, $g_iGAME_HEIGHT, 1, 1, Hex(0xFFFFFF, 6), $aDonWinOffColors, 10)
-
-	If IsArray($aDonationWindow) Then
-		$g_iDonationWindowY = $aDonationWindow[1]
-		If $g_bDebugSetlog Then SetDebugLog("$g_iDonationWindowY: " & $g_iDonationWindowY, $COLOR_DEBUG)
-	Else
-		SetLog("Could not find the Donate Window!", $COLOR_ERROR)
-		Return False
-	EndIf
-
-	If $g_bDebugSetlog Then SetDebugLog("_DonateWindow Open Exit", $COLOR_DEBUG)
-	Return True
-EndFunc   ;==>_DonateWindow
