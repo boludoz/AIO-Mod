@@ -68,27 +68,27 @@ Func BoostResourcePotion($aiTmp0 = 0, $aiTmp1 = 0)
 EndFunc   ;==>BoostTrainingPotion
 
 Func DbgBuilderPotionBoost($iDbgTotalBuilderCount = 5, $iDbgFreeBuilderCount = 5)
-	
+
 	Local $iTmpDbgTotalBuilderCount = $g_iTotalBuilderCount
 	Local $iTmpDbgFreeBuilderCount = $g_iFreeBuilderCount
 
 	$g_iTotalBuilderCount = $iDbgTotalBuilderCount
 	$g_iFreeBuilderCount = $iDbgFreeBuilderCount
-	
+
 	Local $bResult = BuilderPotionBoost(True)
 
 	$g_iTotalBuilderCount = $iTmpDbgTotalBuilderCount
 	$g_iFreeBuilderCount = $iTmpDbgFreeBuilderCount
-	
+
 	Return $bResult
-EndFunc 
+EndFunc
 
 Func BuilderPotionBoost($bDebug = False)
 	If not $g_bChkBuilderPotion Then Return
 
 	Static $iLastTimeChecked[8] = [0, 0, 0, 0, 0, 0, 0, 0]
 	If $iLastTimeChecked[$g_iCurAccount] = 0 Then
-	
+
 	If _Sleep($DELAYBOOSTHEROES2*3) Then Return False
 
 		If Abs($g_iTotalBuilderCount - $g_iFreeBuilderCount) >= $g_iInputBuilderPotion Then
@@ -100,7 +100,7 @@ Func BuilderPotionBoost($bDebug = False)
  			Local $aResult = getNameBuilding(242, 490 + $g_iBottomOffsetY)
 				If $aResult <> "" Then
 					If _Sleep($DELAYBOOSTHEROES2) Then Return
-					If BoostPotionMod("BuilderPotion", $bDebug) Then 
+					If BoostPotionMod("BuilderPotion", $bDebug) Then
 						$iLastTimeChecked[$g_iCurAccount] = 1
 						Return True
 						Else
@@ -122,14 +122,14 @@ EndFunc
 Func ResourceBoost($aPos1 = 0, $aPos2 = 0)
  		If not $g_bChkResourcePotion Then Return
 
-		If Not BitAND($g_iInputGoldItems >= $g_aiTempGainCost[0], $g_iInputElixirItems >= $g_aiTempGainCost[1], $g_iInputDarkElixirItems >= $g_aiTempGainCost[2]) Then Return 
-		
+		If Not BitAND($g_iInputGoldItems >= $g_aiTempGainCost[0], $g_iInputElixirItems >= $g_aiTempGainCost[1], $g_iInputDarkElixirItems >= $g_aiTempGainCost[2]) Then Return
+
 		Local Static $iLastTimeChecked[8] = [0, 0, 0, 0, 0, 0, 0, 0]
-		
+
 		If $iLastTimeChecked[$g_iCurAccount] = 0 And not Int($aPos1 + $aPos2 <= 0) Then
  			If _Sleep($DELAYBOOSTHEROES2) Then Return
 
- 			BuildingClick($aPos1, $aPos2 + 25, 1, 0, "#Resources")
+ 			BuildingClick($aPos1, $aPos2 + 25)
  			If _Sleep($DELAYBOOSTHEROES2) Then Return
  			ForceCaptureRegion()
  			Local $aResult = BuildingInfo(242, 490 + $g_iBottomOffsetY)
@@ -139,7 +139,7 @@ Func ResourceBoost($aPos1 = 0, $aPos2 = 0)
  				If Number($sL) > 0 Then ; Multi Language
  					; Structure located
  					SetLog("Find " & $sN & " (Level " & $sL & ") located at " & $aPos1 & ", " & $aPos2, $COLOR_SUCCESS)
- 					If BoostPotionMod("ResourcePotion") Then 
+ 					If BoostPotionMod("ResourcePotion") Then
 						$iLastTimeChecked[$g_iCurAccount] = 1
 						Return True
 						Else
@@ -158,25 +158,25 @@ Func LabPotionBoost()
  		If not $g_bChkLabPotion Then Return False
 
 		Local Static $iLastTimeChecked[8] = [0, 0, 0, 0, 0, 0, 0, 0]
-		
+
 		If $iLastTimeChecked[$g_iCurAccount] = 0 Then
  			If _Sleep($DELAYBOOSTHEROES2) Then Return
-			
+
 			;If $g_sLabUpgradeTime <> "" Then
 			;	If Not FindResearchButton() Then Return False ; cant start becuase we cannot find the research button
 			;	If ChkLabUpgradeInProgress() Then Return False ; cant start if something upgrading
 			;EndIf
-			
-			If $g_sLabUpgradeTime <> "" And (Number(_DateDiff("h", _NowCalc(), $g_sLabUpgradeTime)) > Int($g_iInputLabPotion)) Then	
-			
+
+			If $g_sLabUpgradeTime <> "" And (Number(_DateDiff("h", _NowCalc(), $g_sLabUpgradeTime)) > Int($g_iInputLabPotion)) Then
+
 				BuildingClickP($g_aiLaboratoryPos, "#0197")
 				If _Sleep($DELAYBOOSTHEROES2) Then Return
-				
+
 				ForceCaptureRegion()
-				
+
 				Local $aResearchButton = findButton("Research", Default, 1, True)
 				If IsArray($aResearchButton) And UBound($aResearchButton, 1) = 2 Then
-					If BoostPotionMod("LabPotion") Then 
+					If BoostPotionMod("LabPotion") Then
 						$iLastTimeChecked[$g_iCurAccount] = 1
 					EndIf
 					Return True
@@ -208,44 +208,44 @@ Func BoostPotionMod($sName, $bDebug = False)
 	EndSwitch
 
 	If _Sleep(500) Then Return False
-	
+
 	_ImageSearchXML($g_sImgPotionsBtn, 0, "134, 580, 730, 675", True, False, True, 25)
 	If not IsArray($g_aImageSearchXML) Then Return False
 	If $bDebug Then _ArrayDisplay($g_aImageSearchXML)
-	
+
 	For $iResult = 0 To UBound($g_aImageSearchXML) - 1
 		If _Sleep(100) Then Return False ; CPU Control
 		;$g_bChkBuilderPotion, $g_bChkClockTowerPotion, $g_bChkHeroPotion, $g_bChkLabPotion, $g_bChkPowerPotion, $g_bChkResourcePotion
-		
+
 		If Not ($g_aImageSearchXML[$iResult][0]) = $sName Then ContinueLoop
-		
+
 		$aClick1[0] = $g_aImageSearchXML[$iResult][1]
 		$aClick1[1] = $g_aImageSearchXML[$iResult][2]
 	Next
-	
-	
+
+
 	Setlog("Magic Items : Builder Potion boost " & $sName, $COLOR_SUCCESS)
 	ClickP($aClick1)
-	
+
 	;7C8AFF
 	;360, 395
 	;494, 451
 	Local $bFuse = False
-	
+
 	For $i = 0 To 5
 		If _Sleep(500) Then Return False ; CPU Control
-		If IsArray(MultiPSimple(362, 396, 493, 450, Hex(0x8490FF, 6), 15, 5000)) Then 
-				If $bDebug Then 
+		If IsArray(MultiPSimple(362, 396, 493, 450, Hex(0x8490FF, 6), 15, 5000)) Then
+				If $bDebug Then
 					Setlog(Random(360, 494, 1) & " / " & Random(395, 451, 1), $COLOR_ERROR)
 					Else
 					Click(Random(360, 494, 1), Random(395, 451, 1))
 				EndIf
-			$bFuse = True 
+			$bFuse = True
 			Else
 			If BitAND($i > 0, $bFuse) Then ExitLoop
 		EndIf
 	 Next
-		 
+
 	Return $bFuse
 EndFunc   ;==>BoostPotionMod
 

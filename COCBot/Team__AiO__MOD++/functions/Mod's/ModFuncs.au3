@@ -426,8 +426,8 @@ EndFunc   ;==>IsToRequestCC
 
 ; Donation Record TimerDiff
 Func TimerRecordDonation($bUpdate = False)
-	Local $iDateS = Number(_DateDiff('s', $g_sRestartTimer, _NowCalc()))
-	Local $iDateH = Number(_DateDiff('h', $g_sRestartTimer, _NowCalc()))
+	Local $iDateS = _DateDiff('s', $g_sRestartTimer, _NowCalc())
+	Local $iDateH = _DateDiff('h', $g_sRestartTimer, _NowCalc())
 	
 	If $g_iCmbRestartEvery <= 0 Then $g_iCmbRestartEvery = 1
 	

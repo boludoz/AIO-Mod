@@ -67,7 +67,7 @@ Func _Sleep($iDelay = $DELAYSLEEP, $iSleep = True, $CheckRunState = True, $Sleep
 		EndIf
 	EndIf
 
-	For $i = 0 To Int($iDelay, 100)
+	For $i = 0 To Round($iDelay / $iOri)
 	If $CheckRunState = True And $g_bRunState = False Then
 			ResumeAndroid()
 			Return True

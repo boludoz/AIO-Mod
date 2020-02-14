@@ -26,19 +26,19 @@ Global $g_aiDonatePixel
 
 ; Make a Main Loop , replacing the Original Main Loop / Necessary Functions : Train - Donate - CheckResourcesValues
 Func MainGTFO()
-	
+
 	If $g_bChkUseGTFO = False Then Return
 
 	PrepareDonateCC()
 	Local $bDonateTroop = ($g_aiPrepDon[0] = 1), $bDonateAllTroop = ($g_aiPrepDon[1] = 1), _
 	$bDonateSpell = ($g_aiPrepDon[2] = 1), $bDonateAllSpell = ($g_aiPrepDon[3] = 1), _
 	$bDonateSiege = ($g_aiPrepDon[4] = 1), $bDonateAllSiege = ($g_aiPrepDon[5] = 1)
-	
+
 	Local $bDonate = BitOR($bDonateTroop, $bDonateAllTroop, $bDonateSpell, $bDonateAllSpell, $bDonateSiege, $bDonateAllSiege) > 0
 
 	If BitAND($g_iTotalDonateStatsTroops >= $g_iDayLimitTroops and $g_iDayLimitTroops > 0, $g_iTotalDonateStatsSpells >= $g_iDayLimitSpells and $g_iDayLimitSpells > 0, _
 	$g_iTotalDonateStatsSiegeMachines >= $g_iDayLimitSieges and $g_iDayLimitSieges > 0) Then
-	
+
 		SetLog("*** Donations : Day Limit. ***", $COLOR_ERROR)
 		VillageReport()
 		ProfileSwitch()
@@ -47,23 +47,23 @@ Func MainGTFO()
 		Return False
 
 	ElseIf BitOr(Not $g_bChkDonate, Not $bDonate, Not $g_bDonationEnabled) Then
-	
+
 		SetLog("*** Setup donations. ***", $COLOR_ERROR)
 		VillageReport()
 		ProfileSwitch()
 		CheckFarmSchedule()
 		If ProfileSwitchAccountEnabled() Then checkSwitchAcc() ; Forced to switch
 		Return False
-		
+
 	EndIf
 
 	; Donate Loop on Clan Chat
 	If $g_iLoop > $g_iTxtCyclesGTFO Then
-		Setlog("Finished GTFO " & $g_iLoop2 & " Loop(s)", $COLOR_INFO)
-		If $g_bClanJoin = True Then
-			ClanHop(True)
-			Return
-		EndIf
+		Setlog("Finished GTFO " & $g_iLoop & " Loop(s)", $COLOR_INFO)
+;~ 		If $g_bClanJoin = True Then
+;~ 			ClanHop()
+;~ 			Return
+;~ 		EndIf
 	EndIf
 
 
@@ -122,7 +122,6 @@ Func MainGTFO()
 			Next
 		WEnd
 
-		TrainGTFO()
 
 		If $g_aiCurrentLoot[$eLootElixir] <> 0 And $g_aiCurrentLoot[$eLootElixir] < $g_iTxtMinSaveGTFO_Elixir Then
 			SetLog("Elixir Limits Reached!! Let's farm!", $COLOR_INFO)
@@ -133,24 +132,18 @@ Func MainGTFO()
 			ExitLoop
 		EndIf
 
+		TrainGTFO()
+
 		; Donate Loop on Clan Chat
-		Local $bDonate = DonateGTFO()
-		If Not $bDonate Then
+		If Not DonateGTFO() Then
 			Setlog("Finished GTFO", $COLOR_INFO)
-			If $g_bClanJoin = True Then
-				ClanHop($g_bClanJoin)
-				$g_bClanJoin = False
-				Return
-			Else
-				LeaveClanHop()
-				
-			EndIf
+			If $g_bChkGTFOClanHop and $g_bChkGTFOReturnClan Then LeaveClanHop()
 			Return
 		EndIf
 
 		; Update the Resources values , compare with a Limit to stop The GTFO and return to Farm
 		If Not IfIsToStayInGTFO() Then Return
-			
+
 	WEnd
 
 EndFunc   ;==>MainGTFO
@@ -173,7 +166,7 @@ Func TrainGTFO()
 		DoubleTrain()
 		Return
 	EndIf
-	
+
 	CheckArmyCamp(False, False, False, True)
 
 	If Not $g_bRunState Then Return
@@ -246,8 +239,6 @@ Func DonateGTFO()
 
 	$g_OutOfTroops = False
 
-
-
 ;~ 	; Scroll Up
 ;~ 	ScrollUp()
 
@@ -256,58 +247,73 @@ Func DonateGTFO()
 	; +++++++++++++++++++++++++++++
 	Local $iSetLogFuse = 0
 	Local $iLopardo = $g_iLoop
+	Local $bFirstSub = True
 	While 1
 			If _Sleep(100) Then Return
-			If not $g_bChkGTFOClanHop Then ; Spend by...
-				If $iSetLogFuse > Random(55, 100, 1) And $iLopardo <> $g_iLoop Then 
+				If not $g_bChkGTFOClanHop and not $bFirstSub Then ; Spend by...
+						
+				If $iSetLogFuse > Random(55, 100, 1) And $iLopardo <> $g_iLoop Then
 					If IfIsToStayInGTFO() = False Then Return False
 					TrainGTFO()
 					$iLopardo = $g_iLoop
-				EndIf
-				
-				If $iSetLogFuse = 5 Then
-					Setlog("Waiting chat. Training...", $COLOR_INFO)
 					$iSetLogFuse = 0
 				EndIf
 				
-				ClickAwayChat(Random(30000, 50000, 1))
+				Local $sDateSNew = _DateAdd('s', Ceiling(Random(25,55,1)), _NowCalc())
+				
+				While 1 ; Fake multitask.
+					If _ColorCheck(_GetPixelColor(26, 342, True), Hex(0xEA0810, 6), 20) Then ExitLoop
+					If Number(_DateDiff('s', $sDateSNew, _NowCalc())) <= 55 Then ContinueLoop
+					$sDateSNew = _DateAdd('s', Ceiling(Random(25,55,1)), _NowCalc())
+					SpecialAway()
+					If _Sleep(Random(100,200,1)) Then Return False
+				WEnd
+				
+				If $iSetLogFuse = 5 Then
+					Setlog("Waiting chat. Training...", $COLOR_INFO)
+				EndIf
+
 				$iSetLogFuse += 1
 
-				If $g_iLoop < 2 And not _ColorCheck(_GetPixelColor(26, 342, True), Hex(0xEA0810, 6), 20) Then ContinueLoop
-			EndIf
+				$g_iLoop += 1
 
-			$g_iLoop += 1
-		
+			Else
+				$g_iLoop += 1
+			EndIf
+			
+			$bFirstSub = False
+
+
 			OpenClanChat()
 			If _Sleep($DELAYRUNBOT3) Then Return
-	
+
 			; Function to take more responsive the GUI /STOP and PASUE
 			If Not $g_bRunState Then Return
 			If _Sleep($DELAYRUNBOT3) Then Return
-	
+
 			; Verify if the remain train time is zero
 			$_diffTimer = (TimerDiff($_timer) / 1000) / 60
 			If $g_aiTimeTrain[0] <> 0 Then $iTime2Exit = $g_aiTimeTrain[0]
 			If $g_aiTimeTrain[1] <> 0 And $g_aiTimeTrain[1] < $g_aiTimeTrain[0] Then $iTime2Exit = $g_aiTimeTrain[1]
-	
+
 			If $_diffTimer > $iTime2Exit Then ExitLoop
-	
-	
+
+
 			If $g_iLoop > $g_iTxtCyclesGTFO Then Return False
-				
-	
+
+
 			$_bReturnT = False
 			$_bReturnS = False
 			$firstrun = False
 			Setlog("Donate CC now.", $COLOR_INFO)
-			
+
 			PrepareDonateCC()
 			Local $bDonateTroop = ($g_aiPrepDon[0] = 1), $bDonateAllTroop = ($g_aiPrepDon[1] = 1), _
 			$bDonateSpell = ($g_aiPrepDon[2] = 1), $bDonateAllSpell = ($g_aiPrepDon[3] = 1), _
 			$bDonateSiege = ($g_aiPrepDon[4] = 1), $bDonateAllSiege = ($g_aiPrepDon[5] = 1)
-			
+
 			Local $bDonate = BitOR($bDonateTroop, $bDonateAllTroop, $bDonateSpell, $bDonateAllSpell, $bDonateSiege, $bDonateAllSiege) > 0
-	
+
 			If BitAND($g_iTotalDonateStatsTroops >= $g_iDayLimitTroops and $g_iDayLimitTroops > 0, $g_iTotalDonateStatsSpells >= $g_iDayLimitSpells and $g_iDayLimitSpells > 0, $g_iTotalDonateStatsSiegeMachines >= $g_iDayLimitSieges and $g_iDayLimitSieges > 0) Then
 				SetLog("Donate skip :  limit reached.", $COLOR_INFO)
 				; LeaveClanHop()
@@ -317,28 +323,25 @@ Func DonateGTFO()
 				; LeaveClanHop()
 				Return False
 			EndIf
-			
+
 			DonateCC()
-			
-			If $g_bChkGTFOClanHop = True Then
-				ClanHop() ; Hop!!!
-				$firstrun = True
-				$g_iLoop = 0
-			EndIf
+
+			ClanHop() ; Hop!!!
+;~ 			EndIf
 	WEnd
 
 	; The details differentiate me from you.
 	Opt("MouseClickDelay", GetClickUpDelay())
 	Opt("MouseClickDownDelay", GetClickDownDelay())
-	
+
 	CloseClanChat()
 
 	If $g_iLoop > $g_iTxtCyclesGTFO Then Return False
 
 EndFunc   ;==>DonateGTFO
 
-Func ClanHop($sClanJoin = True)
-	If $g_bLeader Then Return
+Func ClanHop()
+	If $g_bLeader Or not $g_bChkGTFOClanHop Then Return
 
 	SetLog("Start Clan Hopping", $COLOR_INFO)
 	Local $sTimeStartedHopping = _NowCalc()
@@ -474,9 +477,9 @@ EndFunc   ;==>ClanHop
 
 Func LeaveClanHop()
 	If not $g_bChkGTFOReturnClan Then Return
-	
+
 	OpenClanChat()
-	
+
     Local $aSendRequest[4] = [528, 213, 0xE2F98A, 20]
 	Local $g_aNoClanBtn[4] = [163, 515, 0x6DBB1F, 20] ; OK - Green Join Button on Chat Tab when you are not in a Clan
 
@@ -502,13 +505,12 @@ Func LeaveClanHop()
 
 	If _Sleep(1000) Then Return False
 
-	If _Sleep(200) Then Return
 	CloseClanChat()
 	If ProfileSwitchAccountEnabled() Then checkSwitchAcc() ; Forced to switch
 EndFunc ;==> LeaveClanHop
 
 Func ClickAwayChat($iSleep = 10)
-	If _Sleep($iSleep) Then Return
+	If _Sleep($iSleep) Then Return False
 	Return SpecialAway()
 EndFunc   ;==>ClickAwayChat
 
