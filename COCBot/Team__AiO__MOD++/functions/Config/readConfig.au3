@@ -32,8 +32,9 @@ Func ReadConfig_MOD_MiscTab()
 	IniReadS($g_bDisableColorLog, $g_sProfileConfigPath, "MiscTab", "DisableColorLog", $g_bDisableColorLog, "Bool")
 	IniReadS($g_bAvoidLocation, $g_sProfileConfigPath, "MiscTab", "AvoidLocation", $g_bAvoidLocation, "Bool")
 	
-	IniReadS($g_bDeployCastleFirst[$DB], $g_sProfileConfigPath, "MiscTab", "DeployCastleFirst" & $DB, $g_bDeployCastleFirst[$DB], "Bool")
-	IniReadS($g_bDeployCastleFirst[$LB], $g_sProfileConfigPath, "MiscTab", "DeployCastleFirst" & $LB, $g_bDeployCastleFirst[$LB], "Bool")
+	For $i = $DB To $LB
+		IniReadS($g_bDeployCastleFirst[$i], $g_sProfileConfigPath, "MiscTab", "DeployCastleFirst" & $i, $g_bDeployCastleFirst[$i], "Bool")
+	Next
 	
 	; Skip first check
 	IniReadS($g_bSkipfirstcheck, $g_sProfileConfigPath, "MiscTab", "Skipfirstcheck", $g_bSkipfirstcheck, "Bool")

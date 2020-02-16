@@ -88,8 +88,8 @@ Func chkDelayMod()
 	$g_bDisableColorLog = (GUICtrlRead($g_hDisableColorLog) = $GUI_CHECKED)
 	$g_bAvoidLocation = (GUICtrlRead($g_hAvoidLocation) = $GUI_CHECKED)
 	
-	$g_bDeployCastleFirst[$DB] = (GUICtrlRead($g_hDeployCastleFirstDB) = $GUI_CHECKED)
-	$g_bDeployCastleFirst[$LB] = (GUICtrlRead($g_hDeployCastleFirstAB) = $GUI_CHECKED)
+	$g_bDeployCastleFirst[$DB] = (GUICtrlRead($g_hDeployCastleFirst[$DB]) = $GUI_CHECKED)
+	$g_bDeployCastleFirst[$LB] = (GUICtrlRead($g_hDeployCastleFirst[$LB]) = $GUI_CHECKED)
 	
 
 	

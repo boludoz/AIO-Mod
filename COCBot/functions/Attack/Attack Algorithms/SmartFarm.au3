@@ -602,16 +602,13 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 	$g_aiDeployHeroesPosition[0] = -1
 	$g_aiDeployHeroesPosition[1] = -1
 	
-	#Region - Team AIO Mod++ (Samkie inspired|By Boludoz)
-	Switch $g_iMatchMode
-		Case $LB, $DB
-			If $g_bDeployCastleFirst[$g_iMatchMode] Then
-				Local $aCC = _ArraySearch($listInfoDeploy, "CC", 0, 0, 0, 0, 0, 0)
-				Local $aRem = _ArrayExtract($listInfoDeploy, $aCC, $aCC)
-				_ArrayDelete($listInfoDeploy, $aCC)
-				_ArrayInsert($listInfoDeploy, 0, $aRem)
-			EndIf
-	EndSwitch
+	#Region - Drop CC first - Team AIO Mod++ (By Boludoz)
+	If (Ubound($g_bDeployCastleFirst) > $g_iMatchMode) And $g_bDeployCastleFirst[$g_iMatchMode] Then
+		Local $aCC = _ArraySearch($listInfoDeploy, "CC", 0, 0, 0, 0, 0, 0)
+		Local $aRem = _ArrayExtract($listInfoDeploy, $aCC, $aCC)
+		_ArrayDelete($listInfoDeploy, $aCC)
+		_ArrayInsert($listInfoDeploy, 0, $aRem)
+	EndIf
     #EndRegion
 
 	LaunchTroopSmartFarm($listInfoDeploy, $g_iClanCastleSlot, $g_iKingSlot, $g_iQueenSlot, $g_iWardenSlot, $g_iChampionSlot, $SIDESNAMES)

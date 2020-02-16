@@ -250,7 +250,7 @@ Func DonateGTFO()
 	Local $bFirstSub = True
 	While 1
 			If _Sleep(100) Then Return
-				If not $g_bChkGTFOClanHop and not $bFirstSub Then ; Spend by...
+				If not BitAND($g_bChkGTFOClanHop, $bFirstSub) Then ; Spend by...
 						
 				If $iSetLogFuse > Random(55, 100, 1) And $iLopardo <> $g_iLoop Then
 					If IfIsToStayInGTFO() = False Then Return False

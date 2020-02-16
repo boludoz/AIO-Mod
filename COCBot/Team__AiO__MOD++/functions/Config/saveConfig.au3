@@ -34,8 +34,9 @@ Func SaveConfig_MOD_MiscTab()
 	_Ini_Add("MiscTab", "DisableColorLog", $g_bDisableColorLog)
 	_Ini_Add("MiscTab", "AvoidLocation", $g_bAvoidLocation)
 	
-	_Ini_Add("MiscTab", "DeployCastleFirst" & $DB, $g_bDeployCastleFirst[$DB])
-	_Ini_Add("MiscTab", "DeployCastleFirst" & $LB, $g_bDeployCastleFirst[$LB])
+	For $i = $DB To $LB
+		_Ini_Add("MiscTab", "DeployCastleFirst" & $i, $g_bDeployCastleFirst[$i])
+	Next			
 	
 	; Skip first check
 	_Ini_Add("Skipfirstcheck", "Enable", $g_bSkipfirstcheck ? 1 : 0)

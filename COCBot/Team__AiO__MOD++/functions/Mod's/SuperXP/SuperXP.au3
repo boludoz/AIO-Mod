@@ -205,7 +205,7 @@ Func MainSXHandler()
 			$CurrentXPgain += 11
 		EndIf
 
-		If Not SkipDonateNearFullTroops(False, $aHeroResult) And BalanceDonRec(False) Then
+		If BitAND(BalanceDonRec(False), Not SkipDonateNearFullTroops(False, $aHeroResult), not $g_bFastSuperXP, _ColorCheck(_GetPixelColor(26, 342, True), Hex(0xEA0810, 6), 20)) Then 
 			DonateCC(True)
 		EndIf
 
@@ -780,7 +780,7 @@ Func OpenGoblinMapSX()
 	Local $Counter = 0
 	While not BitAND(IsArray($rDragToGoblinMapSX), UBound($rDragToGoblinMapSX) = 2) and Not _ColorCheck(_GetPixelColor($rDragToGoblinMapSX[0], $rDragToGoblinMapSX[1] + 132, True, "OpenGoblinMapSX-AttackButton"), Hex(0xEC5012, 6), 30)
 		$rDragToGoblinMapSX = DragToGoblinMapSX()
-		Click($rDragToGoblinMapSX[0], $rDragToGoblinMapSX[1]) ; Click On Goblin Picnic Text To Show Attack Button
+		Click($rDragToGoblinMapSX[0] + Random(45,55,1), $rDragToGoblinMapSX[1] + Random(65,80,1)) ; Click On Goblin Picnic Text To Show Attack Button
 		If _Sleep(50) Or $Counter > 15 Then ExitLoop
 		$Counter += 1
 	WEnd
@@ -799,12 +799,12 @@ Func OpenGoblinMapSX()
 		Return False
 	EndIf
 
-	If $g_bDebugSX Then SetDebugLog("SX|OpenGoblinMapSX|Clicking On Attack Btn: " & $rDragToGoblinMapSX[0] & ", " & $rDragToGoblinMapSX[1] + 118)
-	Click($rDragToGoblinMapSX[0], $rDragToGoblinMapSX[1] + 118) ; Click On Attack Button
+	If $g_bDebugSX Then SetDebugLog("SX|OpenGoblinMapSX|Clicking On Attack Btn: " & $rDragToGoblinMapSX[0] & ", " & $rDragToGoblinMapSX[1] + 138)
+	Click($rDragToGoblinMapSX[0], $rDragToGoblinMapSX[1] + 138) ; Click On Attack Button
 
 	$Counter = 0
 	While IsInSPPage()
-		If _Sleep(50) Then ExitLoop
+		If _Sleep(50) Then Return
 		$Counter += 1
 		If $Counter > 150 Then
 			SetLog("Still in SinglePlayer Page!! Something Strange Happened", $COLOR_ERROR)
@@ -900,37 +900,20 @@ Func DragToGoblinMapSX()
 		If $g_bDebugSX Then SetDebugLog("SX|DragToGoblinMapSX|Failed to Drag To End, Still Middle")
 		Return False ; If Failed to Drag To End Then Return False
 	EndIf
-
-	Switch $posInSinglePlayer
-		Case "END"
-			While Not (IsArray($rIsGoblinMapSXFound))
-				If Not $g_bRunState Then ExitLoop
-				If $g_bDebugSX Then SetDebugLog("SX|DragToGoblinMapSX|Drag from End Loop #" & $Counter)
-				ClickDrag(Random(305, 310, 1), 145, Random(305, 310, 1), 645, 100)
-				If _Sleep(100) Then Return False
-				$rIsGoblinMapSXFound = IsGoblinMapSXFound()
-				If IsArray($rIsGoblinMapSXFound) Then ExitLoop
-				$Counter += 1
-				$posInSinglePlayer2 = GetPositionInSinglePlayer()
-				If $Counter > 15 Or $posInSinglePlayer2 = "FIRST" Then ExitLoop
-			WEnd
-			If $Counter > 15 Or $posInSinglePlayer2 And IsArray($rIsGoblinMapSXFound) = False Then Return False
-			Return $rIsGoblinMapSXFound
-		Case "FIRST"
-			While Not (IsArray($rIsGoblinMapSXFound))
-				If Not $g_bRunState Then ExitLoop
-				If $g_bDebugSX Then SetDebugLog("SX|DragToGoblinMapSX|Drag from First Loop #" & $Counter)
-				ClickDrag(Random(305, 310, 1), 645, Random(305, 310, 1), 145, 100)
-				If _Sleep(100) Then Return False
-				$rIsGoblinMapSXFound = IsGoblinMapSXFound()
-				If IsArray($rIsGoblinMapSXFound) Then ExitLoop
-				$Counter += 1
-				$posInSinglePlayer2 = GetPositionInSinglePlayer()
-				If $Counter > 15 Or $posInSinglePlayer2 = "FIRST" Then ExitLoop
-			WEnd
-			If $Counter > 15 Or $posInSinglePlayer2 And IsArray($rIsGoblinMapSXFound) = False Then Return False
-			Return $rIsGoblinMapSXFound
-	EndSwitch
+	
+	For $iCounter = 0 To 15
+		If (IsArray($rIsGoblinMapSXFound)) Then ExitLoop
+		If Not $g_bRunState Then ExitLoop
+		If $g_bDebugSX Then SetDebugLog( ($posInSinglePlayer = "END") ? ("SX|DragToGoblinMapSX|Drag from End Loop #") : ("SX|DragToGoblinMapSX|Drag from First Loop #") & $iCounter)
+		Execute(($posInSinglePlayer = "END") ? ("ClickDrag(Random(305, 310, 1), 145, Random(305, 310, 1), 645, 100)") : ("ClickDrag(Random(305, 310, 1), 645, Random(305, 310, 1), 145, 100)"))
+		If _Sleep(Random(500,1000,1)) Then Return False
+		$rIsGoblinMapSXFound = IsGoblinMapSXFound()
+		If IsArray($rIsGoblinMapSXFound) Then ExitLoop
+		$posInSinglePlayer2 = GetPositionInSinglePlayer()
+		If $posInSinglePlayer2 = "FIRST" Then ExitLoop
+	Next
+	If $iCounter > 15 Or $posInSinglePlayer2 And IsArray($rIsGoblinMapSXFound) = False Then Return False
+	Return $rIsGoblinMapSXFound
 EndFunc   ;==>DragToGoblinMapSX
 
 Func IsGoblinMapSXFound()

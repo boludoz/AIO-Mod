@@ -213,20 +213,22 @@ Func DonateCC($bCheckForNewMsg = False)
 	
 	
 	Local $Scroll
+	#Region - GTFO - Team AIO Mod++
+	ChatScroll()
+	
 	; add scroll here
 	While 1
 		ForceCaptureRegion()
-		$iScrollY = 77
-		$Scroll = _PixelSearch(293, 8 + $iScrollY, 295, 23 + $iScrollY, Hex(0xFFFFFF, 6), 20)
-		If IsArray($Scroll) And _ColorCheck(_GetPixelColor(300, 85, True), Hex(0x95CD0E, 6), 20) Then ; a second pixel for the green
+		$Scroll = _PixelSearch(293, 687 - 30, 295, 693 - 30, Hex(0xFFFFFF, 6), 20)
+		If IsArray($Scroll) Then
 			$bDonate = True
-			ClickP($Scroll, 1, 0, "#0172")
-			$iScrollY = 77
-			If _Sleep($DELAYDONATECC2 + 100) Then ExitLoop
+			Click($Scroll[0], $Scroll[1], 1, 0, "#0172")
+			If _Sleep($DELAYDONATECC2) Then ExitLoop
 			ContinueLoop
 		EndIf
 		ExitLoop
 	WEnd
+	#EndRegion
 
 	If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then SetLog("Checking for Donate Requests in Clan Chat", $COLOR_INFO)
 
@@ -619,21 +621,25 @@ Func DonateCC($bCheckForNewMsg = False)
 		Else
 			If $g_bDebugSetlog Then SetDebugLog("No more Donate buttons found, closing chat", $COLOR_DEBUG)
 		EndIf
-
+		
+		#Region - GTFO - Team AIO Mod++
 		;;; Scroll Down
 		ForceCaptureRegion()
-		$Scroll = _PixelSearch(293, 687 - 30, 295, 693 - 30, Hex(0xFFFFFF, 6), 20)
-		If IsArray($Scroll) Then
+		$iScrollY = 77
+		$Scroll = _PixelSearch(293, 8 + $iScrollY, 295, 23 + $iScrollY, Hex(0xFFFFFF, 6), 20)
+		If IsArray($Scroll) And _ColorCheck(_GetPixelColor(300, 85, True), Hex(0x95CD0E, 6), 20) Then ; a second pixel for the green
 			$bDonate = True
-			Click($Scroll[0], $Scroll[1], 1, 0, "#0172")
+			ClickP($Scroll, 1, 0, "#0172")
 			$aiSearchArray = $aiSearchArrayBackUp
-			If _Sleep($DELAYDONATECC2) Then ExitLoop
+			$iScrollY = 77
+			If _Sleep($DELAYDONATECC2 + 100) Then ExitLoop
 			ContinueLoop
 		EndIf
+		#EndRegion
 		$bDonate = False
 	WEnd
 
-	ClickP($aAway2, 1, 0, "#0176") ; click away any possible open window
+	ClickP($aAway2, 1, 0, "#0176") ; click away any possi+le open window
 	If _Sleep($DELAYDONATECC2) Then Return
 
 	If Not CloseClanChat() Then ; GTFO - Team AIO Mod++

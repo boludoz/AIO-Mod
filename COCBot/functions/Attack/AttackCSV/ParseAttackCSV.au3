@@ -38,53 +38,50 @@ Func ParseAttackCSV($debug = False)
 	If FileExists($g_sCSVAttacksPath & "\" & $filename & ".csv") Then
 	Local $aLines = FileReadToArray($g_sCSVAttacksPath & "\" & $filename & ".csv")
 
-	#Region - Drop CC first - Team AIO Mod++  (By Boludoz)
-	Switch $g_iMatchMode
-		Case $LB, $DB
-			If $g_bDeployCastleFirst[$g_iMatchMode] Then
-					Local $iFirstDrop = -1, $iCastlePosOld = -1, $iDbgSector = 0, $ichkDropCCFirst = 1, $aTmpCommand
-					Local $aShortAndCC = $g_asSiegeMachineShortNames
-					_ArrayAdd($aShortAndCC, "Castle")
-				
-					If $iDbgSector = 1 Then _ArrayDisplay($aShortAndCC)
-					If $iDbgSector = 1 Then _ArrayDisplay($aLines)
-				
-						For $ii = 0 To UBound($aShortAndCC) -1 ; CC, Sieges ($eWallW, $eBattleB, $eStoneS, $eCastle)
-							$iFirstDrop = -1
-							$iCastlePosOld = -1
-							$iDbgSector = 0
-							$ichkDropCCFirst = 1
-							$aTmpCommand = -1
-				
-							For $i = 0 To UBound($aLines) - 1
-								$aTmpCommand = StringSplit($aLines[$i], "|", 2)
-				
-								; Search first 'DROP'
-								If UBound($aTmpCommand) > 4 And StringInStr($aTmpCommand[0], "DROP") > 0 Then ; Pos. 1 for prevent commints and Notes.
-									$iFirstDrop = $i
-									ExitLoop
-								EndIf
-								Next
-				
-							For $i = 0 To UBound($aLines) - 1
-								$aTmpCommand = StringSplit($aLines[$i], "|", 2)
-				
-								; Search first 'Castle', if is in first position does not apply.
-								If UBound($aTmpCommand) > 4 And $iFirstDrop < $i And StringInStr($aTmpCommand[4], $aShortAndCC[$ii]) > 0 Then
-									$iCastlePosOld = $i
-									ExitLoop
-								EndIf
-								Next
-				
-							If $iCastlePosOld > -1 Then
-								_ArrayInsert($aLines, $iFirstDrop, $aLines[$iCastlePosOld], -1, -1, $ARRAYFILL_FORCE_STRING)
-								_ArrayDelete($aLines, $iCastlePosOld  + 1)
-								If $iDbgSector = 1 Then _ArrayDisplay($aLines)
-							EndIf
-						Next
+	#Region - Drop CC first - Team AIO Mod++ (By Boludoz)
+	If (Ubound($g_bDeployCastleFirst) > $g_iMatchMode) And $g_bDeployCastleFirst[$g_iMatchMode] Then
+		Local $iFirstDrop = -1, $iCastlePosOld = -1, $iDbgSector = 0, $ichkDropCCFirst = 1, $aTmpCommand
+		Local $aShortAndCC = $g_asSiegeMachineShortNames
+		_ArrayAdd($aShortAndCC, "Castle")
+		
+		If $iDbgSector = 1 Then _ArrayDisplay($aShortAndCC)
+		If $iDbgSector = 1 Then _ArrayDisplay($aLines)
+		
+		For $ii = 0 To UBound($aShortAndCC) -1 ; CC, Sieges ($eWallW, $eBattleB, $eStoneS, $eCastle)
+			$iFirstDrop = -1
+			$iCastlePosOld = -1
+			$iDbgSector = 0
+			$ichkDropCCFirst = 1
+			$aTmpCommand = -1
+		
+			For $i = 0 To UBound($aLines) - 1
+				$aTmpCommand = StringSplit($aLines[$i], "|", 2)
+		
+				; Search first 'DROP'
+				If UBound($aTmpCommand) > 4 And StringInStr($aTmpCommand[0], "DROP") > 0 Then ; Pos. 1 for prevent commints and Notes.
+					$iFirstDrop = $i
+					ExitLoop
 				EndIf
-	EndSwitch
-	#EndRegion - Drop CC first - Team AIO Mod++  (By Boludoz)
+				Next
+		
+			For $i = 0 To UBound($aLines) - 1
+				$aTmpCommand = StringSplit($aLines[$i], "|", 2)
+		
+				; Search first 'Castle', if is in first position does not apply.
+				If UBound($aTmpCommand) > 4 And $iFirstDrop < $i And StringInStr($aTmpCommand[4], $aShortAndCC[$ii]) > 0 Then
+					$iCastlePosOld = $i
+					ExitLoop
+				EndIf
+				Next
+		
+			If $iCastlePosOld > -1 Then
+				_ArrayInsert($aLines, $iFirstDrop, $aLines[$iCastlePosOld], -1, -1, $ARRAYFILL_FORCE_STRING)
+				_ArrayDelete($aLines, $iCastlePosOld  + 1)
+				If $iDbgSector = 1 Then _ArrayDisplay($aLines)
+			EndIf
+		Next
+	EndIf
+	#EndRegion
 				
 		; Read in lines of text until the EOF is reached
 		For $iLine = 0 To UBound($aLines) - 1

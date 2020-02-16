@@ -46,8 +46,9 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			GUICtrlSetState($g_hDisableColorLog, $g_bDisableColorLog = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hAvoidLocation, $g_bAvoidLocation = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			
-			GUICtrlSetState($g_hDeployCastleFirstDB, $g_bDeployCastleFirst[$DB] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hDeployCastleFirstAB, $g_bDeployCastleFirst[$LB] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			For $i = $DB To $LB
+				GUICtrlSetState($g_hDeployCastleFirst[$i], $g_bDeployCastleFirst[$i] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			Next			
 			
 			; Skip first check
 			GUICtrlSetState($g_hSkipfirstcheck, $g_bSkipfirstcheck ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -82,6 +83,7 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			For $i = 0 To $eTroopCount - 1
 				GUICtrlSetData($g_ahTxtTrainWarTroopCount[$i], $g_aiWarCompTroops[$i])
 			Next
+			
 			For $j = 0 To $eSpellCount - 1
 				GUICtrlSetData($g_ahTxtTrainWarSpellCount[$j], $g_aiWarCompSpells[$j])
 			Next
@@ -132,8 +134,9 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			$g_bDisableColorLog = (GUICtrlRead($g_hDisableColorLog) = $GUI_CHECKED) ? 1 : 0
 			$g_bAvoidLocation = (GUICtrlRead($g_hAvoidLocation) = $GUI_CHECKED) ? 1 : 0
 			
-			$g_bDeployCastleFirst[$DB] = (GUICtrlRead($g_hDeployCastleFirstDB) = $GUI_CHECKED) ? 1 : 0
-			$g_bDeployCastleFirst[$LB] = (GUICtrlRead($g_hDeployCastleFirstAB) = $GUI_CHECKED) ? 1 : 0
+			For $i = $DB To $LB
+				$g_bDeployCastleFirst[$i] = (GUICtrlRead($g_hDeployCastleFirst[$i]) = $GUI_CHECKED) ? 1 : 0
+			Next
 			
 			; Skip first check
 			$g_bSkipfirstcheck = GUICtrlRead($g_hSkipfirstcheck)  = $GUI_CHECKED

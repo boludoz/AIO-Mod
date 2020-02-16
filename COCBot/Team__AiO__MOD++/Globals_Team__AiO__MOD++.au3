@@ -80,17 +80,18 @@ Global $g_aIsDead[UBound($g_avAttackTroops, 1) -1]
 Global $g_iSlotNow = -1
 
 ; Misc tab - Team AiO MOD++
-Global $g_bUseSleep = False, $g_iIntSleep = 20, $g_bUseRandomSleep = False, $g_bNoAttackSleep = False, $g_bDeployCastleFirst = False, $g_bDisableColorLog = False, $g_bDelayLabel = False, $g_bAvoidLocation = False
+Global $g_bUseSleep = False, $g_iIntSleep = 20, $g_bUseRandomSleep = False, $g_bNoAttackSleep = False, $g_bDisableColorLog = False, $g_bDelayLabel = False, $g_bAvoidLocation = False
 
 ; GUI
 Global $g_hUseSleep, $g_hIntSleep, $g_hUseRandomSleep, $g_hNoAttackSleep, $g_hDisableColorLog, $g_hDelayLabel, $g_hAvoidLocation
 
 ; Attack extras - Team AiO MOD++
 Global $g_bDeployCastleFirst[2] = [False, False]
+
 Global $g_iDeployWave[3] = [5, 5, 5],  $g_iDeployDelay[3] = [5, 5, 5] ; $DB, $LB, $iCmbValue
 Global $g_bChkEnableRandom[3] = [True, True, True]
 ; GUI
-Global $g_hDeployCastleFirstAB, $g_hDeployCastleFirstDB 
+Global $g_hDeployCastleFirst[2] = [$LB, $DB] 
 Global $g_hDeployWave[3],  $g_hDeployDelay[3]
 Global $g_hChkEnableRandom[3]
 
