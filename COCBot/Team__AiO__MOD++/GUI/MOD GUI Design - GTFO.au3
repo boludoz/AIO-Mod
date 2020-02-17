@@ -10,7 +10,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 #include-once
-Global $g_hLblGFTO = 0, $g_hChkUseGTFO = 0, $g_hTxtMinSaveGTFO_Elixir = 0, $g_hTxtMinSaveGTFO_DE = 0, $g_hTxtCyclesGTFO = 0
+Global $g_hLblGFTO = 0, $g_hExitAfterCyclesGTFO = 0, $g_hChkUseGTFO = 0, $g_hTxtMinSaveGTFO_Elixir = 0, $g_hTxtMinSaveGTFO_DE = 0, $g_hTxtCyclesGTFO = 0
 Global $g_hLblKickout = 0, $g_hChkUseKickOut = 0, $g_hTxtDonatedCap = 0, $g_hTxtReceivedCap = 0, $g_hChkKickOutSpammers = 0, $g_hTxtKickLimit = 0
 Global $g_hLblInitialDonated = 0, $g_hLblCurrentDonated = 0, $g_hGUI_GTFOMOD = 0
 Global $g_hChkGTFOClanHop = False, $g_hChkGTFOReturnClan = False
@@ -71,7 +71,8 @@ Func TabGTFOGUI()
 	GUICtrlSetOnEvent(-1, "ApplyClanReturnGTFO")
 	GUICtrlSetBkColor(-1, 0xD1DFE7)
 
-	GUICtrlCreateLabel(GetTranslatedFileIni("MOD GUI Design - Misc", "LblMaxCyclesGTFO", "Exit after cycles") & ": ", $x + 25, $y + 150, -1, -1)
+	$g_hExitAfterCyclesGTFO = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design - Misc", "LblMaxCyclesGTFO", "Exit after cycles") & ": ", $x + 25, $y + 150, -1, -1)
+	GUICtrlSetOnEvent(-1, "ApplyCyclesGTFO")
 	$g_hTxtCyclesGTFO = GUICtrlCreateInput("200", $x + 160, $y + 147, 56, 21, BitOR($ES_CENTER, $ES_NUMBER))
 	GUICtrlSetFont(-1, 9, $FW_BOLD, "Arial", $CLEARTYPE_QUALITY)
 	GUICtrlSetColor(-1, $COLOR_BLACK)

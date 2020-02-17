@@ -39,6 +39,12 @@ EndFunc   ;==>ApplyDarkElixirGTFO
 Func ApplyCyclesGTFO()
 	$g_iTxtCyclesGTFO = Number(GUICtrlRead($g_hTxtCyclesGTFO))
 	$g_iTxtCyclesGTFO -= 1
+	$g_bExitAfterCyclesGTFO = (GUICtrlRead($g_hExitAfterCyclesGTFO) = $GUI_CHECKED)
+	If $g_bExitAfterCyclesGTFO Then
+	GUICtrlSetState($g_hTxtCyclesGTFO, $GUI_ENABLE)
+	Else 
+	GUICtrlSetState($g_hTxtCyclesGTFO, $GUI_DISABLE)
+	EndIf
 EndFunc   ;==>ApplyCyclesGTFO
 
 Func ApplyClanReturnGTFO()
@@ -47,7 +53,7 @@ EndFunc   ;==>ApplyClanReturnGTFO
 
 Func ApplyKickOut()
 	$g_bChkUseKickOut = (GUICtrlRead($g_hChkUseKickOut) = $GUI_CHECKED)
-	If $g_bChkUseKickOut = True Then
+	If $g_bChkUseKickOut Then
 		GUICtrlSetState($g_hTxtDonatedCap, $GUI_ENABLE)
 		GUICtrlSetState($g_hTxtReceivedCap, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkKickOutSpammers, $GUI_ENABLE)

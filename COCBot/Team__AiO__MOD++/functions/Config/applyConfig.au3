@@ -399,6 +399,7 @@ Func ApplyConfig_MOD_600_12($TypeReadSave)
 			$g_sTxtClanID = GUICtrlRead($g_hTxtClanID)
 
 			$g_bChkUseGTFO = (GUICtrlRead($g_hChkUseGTFO) = $GUI_CHECKED)
+			$g_bExitAfterCyclesGTFO = (GUICtrlRead($g_hExitAfterCyclesGTFO) = $GUI_CHECKED)
 			$g_iTxtMinSaveGTFO_Elixir = Number(GUICtrlRead($g_hTxtMinSaveGTFO_Elixir))
 			$g_iTxtMinSaveGTFO_DE = Number(GUICtrlRead($g_hTxtMinSaveGTFO_DE))
 			$g_bChkUseKickOut = (GUICtrlRead($g_hChkUseKickOut) = $GUI_CHECKED)

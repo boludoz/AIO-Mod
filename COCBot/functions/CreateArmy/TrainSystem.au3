@@ -62,31 +62,20 @@ Func TrainCustomArmy()
 	If Not $g_bRunState Then Return
 
 	If Not $g_bFullArmy Then
-		Local $rWhatToTrain = WhatToTrain(True) ; r in First means Result! Result of What To Train Function
-		#Region Team AIO Mod++
-			Local $rRemoveExtraTroops = RemoveExtraTroops($rWhatToTrain)
-
-			If $rRemoveExtraTroops = 1 Or $rRemoveExtraTroops = 2 Then
-				CheckIfArmyIsReady()
-
-				;Test for Train/Donate Only and Fullarmy
-				If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) And $g_bIsFullArmywithHeroesAndSpells Then
-					SetLog("You are in halt attack mode and your Army is prepared!", $COLOR_DEBUG) ;Debug
-					If $g_bFirstStart Then $g_bFirstStart = False
-					Return
-				EndIf
-
-			EndIf
-
-
-			If Not $g_bRunState Then Return
-
-			If $rRemoveExtraTroops = 2 Then
-				$rWhatToTrain = WhatToTrain(False, False)
-				TrainUsingWhatToTrain($rWhatToTrain)
-			EndIf
-
-		#EndRegion
+		;Local $rWhatToTrain = WhatToTrain(True) ; r in First means Result! Result of What To Train Function
+		;RemoveQueueTroops($rWhatToTrain)
+		;RemoveExtraTroops($rWhatToTrain)
+		;#Region Team AIO Mod++
+		;	Local $rRemoveExtraTroops = RemoveExtraTroops($rWhatToTrain)
+		;	
+		;	If Not $g_bRunState Then Return
+		;	
+		;	If $rRemoveExtraTroops = 2 Then
+		;		$rWhatToTrain = WhatToTrain(False, False)
+		;		TrainUsingWhatToTrain($rWhatToTrain)
+		;	EndIf
+		;
+		;#EndRegion
 	EndIf
 
 	If _Sleep($DELAYRESPOND) Then Return ; add 5ms delay to catch TrainIt errors, and force return to back to main loop
@@ -135,7 +124,7 @@ Func CheckIfArmyIsReady()
 	Next
 
 	If Number($g_iCurrentSpells) >= Number($g_iTotalSpellValue) Or Number($g_iCurrentSpells) >= Number($iTotalSpellsToBrew) Then $g_bFullArmySpells = True
-	
+
 	#cs - Team AIO Mod++
 	If (Not $g_bFullArmy And Not $g_bFullArmySpells) Or $g_bPreciseArmy Then
 		Local $avWrongTroops = WhatToTrain(True)
@@ -146,7 +135,7 @@ Func CheckIfArmyIsReady()
 		EndIf
 	EndIf
 	#ce
-	
+
 	$g_bCheckSpells = CheckSpells()
 
 	; add to the hereos available, the ones upgrading so that it ignores them... we need this logic or the bitwise math does not work out correctly
@@ -1144,7 +1133,7 @@ Func DeleteQueued($sArmyTypeQueued, $iOffsetQueued = 802)
 	If _Sleep(500) Then Return
 	Local $x = 0
 
-	While Not IsQueueEmpty($sArmyTypeQueued, True, False)
+	While Not _ColorCheck(_GetPixelColor(820, 208, True), Hex(0xD0D0C8, 6), 20)
 		If $x = 0 Then SetLog(" - Delete " & $sArmyTypeQueued & " Queued!", $COLOR_INFO)
 		If _Sleep(20) Then Return
 		If Not $g_bRunState Then Return

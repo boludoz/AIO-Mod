@@ -223,6 +223,7 @@ Global $g_iTxtMinSaveGTFO_Elixir = 200000, $g_iTxtMinSaveGTFO_DE = 2000, _
 		$g_iTxtKickLimit = 6
 Global $g_hTxtClanID, $g_sTxtClanID, $g_iTxtCyclesGTFO
 Global $g_bChkGTFOClanHop = False, $g_bChkGTFOReturnClan = False
+Global $g_bExitAfterCyclesGTFO = False
 Global $g_iCycle = 0
 
 Global $g_aClanBadgeNoClan[4] = [151, 307, 0xF05538, 20] ; OK - Orange Tile of Clan Logo on Chat Tab if you are not in a Clan

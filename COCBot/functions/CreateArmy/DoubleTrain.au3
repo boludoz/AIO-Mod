@@ -161,6 +161,80 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 
 EndFunc   ;==>DoubleTrain
 
+Func RemoveQueueTroops2($rWTT)
+
+	If UBound($rWTT) = 1 And $rWTT[0][0] = "Arch" And $rWTT[0][1] = 0 Then
+		Return True
+	EndIf
+
+	Local Const $y = 186, $yRemoveBtn = 200, $xDecreaseRemoveBtn = 10
+	Local $bColorCheck = False, $bGotRemoved = False
+	Local $x = 839
+	
+	Local $XQueueStart = 839
+	Local $vPinkPixel = MultiPSimple(840,261,18,256,Hex(0xD7AFA9, 6))
+	If $vPinkPixel <> 0 Then $XQueueStart = $vPinkPixel[0]
+	$sRegion = "18,182," & $XQueueStart & ",261"
+
+	For $i = 0 To (UBound($rWTT) - 1)
+		Local $PositionQueue = -1
+		Local $iIndex = TroopIndexLookup($rWTT[$i][0], "RemoveQueueTroops")
+		Local $sRegion
+
+		If $iIndex >= $eBarb And $iIndex <= $eIceG Then
+		$PositionQueue = FindImageInPlaces($rWTT[$i][0], $g_sImgArmyOverviewTroopQueued & $rWTT[$i][0], $sRegion);$g_sImgArmyOverviewTroopQueued & $rWTT[$i][0] becomes \imgxml\ArmyOverview\TroopQueued\Arch
+		ElseIf $iIndex >= $eLSpell And $iIndex <= $eBtSpell Then
+			Local $XQueueStart1 = 839
+			Local $vPinkPixel1 = MultiPSimple(840,261,18,256,Hex(0xD7AFA9, 6))
+			If $vPinkPixel1 <> 0 Then $XQueueStart1 = $vPinkPixel1[0]
+			If $g_bDebugSetlogTrain Then SetDebugLog("$iIndex = " & $iIndex & "$eLSpell = " & $eLSpell & "$eTroopCount = " & $eTroopCount, $COLOR_DEBUG)
+			If $g_bDebugSetlogTrain Then SetDebugLog("$g_aiArmyCompSpells [" & $iIndex - $eLSpell & "] = " & $g_aiArmyCompSpells[$iIndex - $eLSpell], $COLOR_DEBUG)
+;~ 			If $g_bForceBrewSpells Then
+				If $g_aiArmyCompSpells[$iIndex - $eLSpell] > 0 Then
+					If $g_bDebugSetlogTrain Then SetDebugLog("Force Brew Spells is Turned On Skipping " & $rWTT[$i][0], $COLOR_INFO)
+					ContinueLoop
+;~ 				EndIf
+			EndIf
+			$sRegion = "18,182," & $XQueueStart1 & ",261"
+			$PositionQueue = FindImageInPlaces($rWTT[$i][0], $g_sImgArmyOverviewSpellQueued & $rWTT[$i][0], $sRegion);$g_sImgArmyOverviewSpellQueued & $rWTT[$i][0] becomes \imgxml\ArmyOverview\SpellQueued\CSpell
+		EndIf
+
+		_ArraySort($PositionQueue)
+
+		If $PositionQueue <> -1 And $PositionQueue <> "" And $PositionQueue <> 0 Then
+			For $ii = 0 To (UBound($PositionQueue) - 1)
+				Local $QCords = decodeSingleCoord($PositionQueue[$ii])
+				Local $xQtnCords = 744
+				Local $xQtnCordsBtn = $xQtnCords + 51
+				$QCords[0] += 18
+				$QCords[1] += 182
+				For $x = 774 To 60 Step -70.5
+					If $QCords[0] > $x And $QCords[0] < ($x + 63) Then
+						$xQtnCords = $x
+						$xQtnCordsBtn = $x + 51
+						ExitLoop
+					EndIf
+				Next
+
+				Local $aQuantities = getQueueTroopsQuantity($xQtnCords, 192)
+				If $g_bDebugSetlogTrain Then SetDebugLog("$aQuantities Of " & $rWTT[$i][0] & " = " & $aQuantities, $COLOR_SUCCESS)
+				If $QCords[1] < 193 Or $QCords[1] > 208 Then $QCords[1] = 200
+				If $g_bDebugSetlogTrain Then SetDebugLog("$xQtnCordsBtn = " & $xQtnCordsBtn & " $xQtnCords = " & $xQtnCords & " $QCords = " & $QCords[1], $COLOR_SUCCESS)
+				If $aQuantities >= $rWTT[$i][1] Then
+					Click($xQtnCordsBtn, $QCords[1], $rWTT[$i][1], $g_iTrainClickDelay)
+					_Sleep(20)
+					ExitLoop
+				ElseIf $aQuantities < $rWTT[$i][1] Then
+					Click($xQtnCordsBtn, $QCords[1], $aQuantities, $g_iTrainClickDelay)
+					_Sleep(20)
+					$rWTT[$i][1] -= $aQuantities
+				EndIf
+			Next
+		EndIf
+		_Sleep(700)
+	Next
+EndFunc   ;==>RemoveQueueTroops
+
 Func TrainFullTroop($bQueue = False)
 	SetLog("Training " & ($bQueue ? "2nd Army..." : "1st Army..."))
 
@@ -280,8 +354,49 @@ Func CheckQueueTroopAndTrainRemain($ArmyCamp, $bDebug)
 	; check wrong queue
 	For $i = 0 To UBound($aiQueueTroops) - 1
 		If $aiQueueTroops[$i] - $g_aiArmyCompTroops[$i] > 0 Then
-			SetLog("Some wrong troops in queue")
-			Return False
+			;SetLog("Some wrong troops in queue")
+			;Return False
+
+			SetLog("Fixing Queue", $COLOR_INFO)
+			Local $XQueueStart = 839 ;	Troops Queue Position Check
+			For $i = 0 To 10
+				If _ColorCheck(_GetPixelColor(825 - $i * 70, 186, True), Hex(0xD7AFA9, 6), 20) Then ; Pink background found
+					$XQueueStart -= 70.5 * $i
+					ExitLoop
+				ElseIf $i = 10 Then
+					$XQueueStart = 18
+				EndIf
+			Next
+			$Troopsdetect = CheckQueueTroops(True, True, $XQueueStart)
+			
+			Local $TroopsToTrain = WhatToTrainQueue(False, False)
+			Local $TroopsToRemove = WhatToTrainQueue(True, False)
+			
+			If $Troopsdetect = "" Then SetLog("Troops are empty", $COLOR_DEBUG)
+			If $TroopsToTrain[0][0] = "Arch" And $TroopsToTrain[0][1] = 0 Then
+				SetLog("None Troops Left To Train", $COLOR_DEBUG)
+			Else
+				SetLog("Troops Left To Train : ", $COLOR_INFO)
+				For $i = 0 To (UBound($TroopsToTrain) - 1)
+					SetLog("  - " & $TroopsToTrain[$i][0] & ": " & $TroopsToTrain[$i][1] & "x", $COLOR_SUCCESS)
+				Next
+			EndIf
+
+			If $TroopsToRemove[0][0] = "Arch" And $TroopsToRemove[0][1] = 0 Then
+				SetLog("None Troops Left To Remove", $COLOR_DEBUG)
+			Else
+				SetLog("Troops Left To Remove : ", $COLOR_INFO)
+				For $i = 0 To (UBound($TroopsToRemove) - 1)
+					SetLog("  - " & $TroopsToRemove[$i][0] & ": " & $TroopsToRemove[$i][1] & "x", $COLOR_SUCCESS)
+				Next
+			EndIf
+			
+			If Not $g_bRunState Then Return
+			Local $TroopsQueueRemove = True
+			If $TroopsQueueRemove Then RemoveQueueTroops($TroopsToRemove)
+			
+			TrainUsingWhatToTrainQueue($TroopsToTrain)
+
 		EndIf
 	Next
 	If $ArmyCamp[0] < $ArmyCamp[1] * 2 Then
@@ -313,15 +428,13 @@ Func CheckQueueSpellAndTrainRemain($ArmyCamp, $bDebug, $iUnbalancedSpell = 0)
 
 	Local $iTotalQueue = 0
 	If $bDebug Then SetLog("Checking spell queue: " & $ArmyCamp[0] & "/" & $ArmyCamp[1] * 2, $COLOR_DEBUG)
-
+	
+	#Region - Team AIO Mod++
 	Local $XQueueStart = 839
-	For $i = 0 To 10
-		If _ColorCheck(_GetPixelColor(825 - $i * 70, 186, True), Hex(0xD7AFA9, 6), 20) Then ; Pink background found
-			$XQueueStart -= 70.5 * $i
-			ExitLoop
-		EndIf
-	Next
-
+	Local $vPinkPixel = MultiPSimple(840,261,18,256,Hex(0xD7AFA9, 6))
+	If $vPinkPixel <> 0 Then $XQueueStart = $vPinkPixel[0]
+	#EndRegion
+	
 	Local $aiQueueSpells = CheckQueueSpells(True, $bDebug, $XQueueStart)
 	If Not IsArray($aiQueueSpells) Then Return False
 	For $i = 0 To UBound($aiQueueSpells) - 1

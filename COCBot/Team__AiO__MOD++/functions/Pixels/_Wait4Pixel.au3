@@ -71,20 +71,45 @@ Func MultiPSimple($iLeft, $iTop, $iRight, $iBottom, $iHex, $iTolerance = 15, $iW
 
 	Local $hTimer = __TimerInit()
 	While BitOr($iWait > __TimerDiff($hTimer), $iWait <= 0) ; '-1' support
-	If _Sleep($iDelay) Then Return False
-	_CaptureRegion($iLeft, $iTop, $iRight, $iBottom)
-	Local $xRange = $iRight - $iLeft
-	Local $yRange = $iBottom - $iTop
+		If _Sleep($iDelay) Then Return False
+		
+		Local $xRange
+		Local $yRange
 
-		For $x = 0 To $xRange
-			For $y = 0 To $yRange
-				If _ColorCheck(_GetPixelColor($x, $y), $iHex, $iTolerance) Then
-					$aReturn[0] = $x + $iLeft
-					$aReturn[1] = $y + $iTop
-					Return $aReturn
-				EndIf
+		If ($iLeft < $iRight) Then
+			;Setlog("next")
+			_CaptureRegion($iLeft, $iTop, $iRight, $iBottom)
+			$xRange = Abs($iRight - $iLeft)
+			$yRange = Abs($iBottom - $iTop)
+			;Setlog("1. "&$xRange&" "&$yRange)
+			For $x = 0 To $xRange
+				For $y = 0 To $yRange
+				;Setlog("2. "&$x&" "&$y)
+					If _ColorCheck(_GetPixelColor($x, $y), $iHex, $iTolerance) Then
+						$aReturn[0] = $x + $iLeft
+						$aReturn[1] = $y + $iTop
+						Return $aReturn
+					EndIf
+				Next
 			Next
-		Next
+		Else
+			;Setlog("back")
+			_CaptureRegion($iRight, $iBottom, $iLeft, $iTop)
+			$xRange = Abs($iRight - $iLeft)
+			$yRange = Abs($iBottom - $iTop)
+			;Setlog("1. "&$xRange&" "&$yRange)
+			For $x = $xRange To 0 Step -1
+				For $y = $yRange To 0 Step -1
+				;Setlog("2. "&$x&" "&$y)
+					If _ColorCheck(_GetPixelColor($x, $y), $iHex, $iTolerance) Then
+						$aReturn[0] = $x + $iRight
+						$aReturn[1] = $y + $iBottom
+						Return $aReturn
+					EndIf
+				Next
+			Next
+		EndIf
+	
 		If ($iWait <= 0) Then ExitLoop ; Loop prevention.
 	WEnd
 

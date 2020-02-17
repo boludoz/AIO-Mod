@@ -201,6 +201,7 @@ Func SaveConfig_MOD_600_12()
 
 	_Ini_Add("GTFO", "txtClanID", $g_sTxtClanID)
 	_Ini_Add("GTFO", "txtMinSaveGTFO_Elixir", $g_iTxtMinSaveGTFO_Elixir)
+	_Ini_Add("GTFO", "chkCyclesGTFO", $g_bExitAfterCyclesGTFO)
 	_Ini_Add("GTFO", "txtCyclesGTFO", $g_iTxtCyclesGTFO)
 	_Ini_Add("GTFO", "TxtMinSaveGTFO_DE", $g_iTxtMinSaveGTFO_DE)
 	_Ini_Add("GTFO", "chkUseKickOut", $g_bChkUseKickOut)

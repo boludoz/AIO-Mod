@@ -445,4 +445,3 @@ Func TimerRecordDonation($bUpdate = False)
 
 	EndIf
 EndFunc   ;==>TimerRecordDonation
-

@@ -58,7 +58,7 @@ Func MainGTFO()
 	EndIf
 
 	; Donate Loop on Clan Chat
-	If $g_iLoop > $g_iTxtCyclesGTFO Then
+	If $g_iLoop > $g_iTxtCyclesGTFO and not $g_hExitAfterCyclesGTFO Then
 		Setlog("Finished GTFO " & $g_iLoop & " Loop(s)", $COLOR_INFO)
 ;~ 		If $g_bClanJoin = True Then
 ;~ 			ClanHop()
@@ -151,75 +151,25 @@ EndFunc   ;==>MainGTFO
 ; Train Troops / Train Spells / Necessary Remain Train Time
 Func TrainGTFO()
 
-	; Check Resources values
+	$g_sTimeBeforeTrain = _NowCalc()
 	StartGainCost()
-	If Not $g_bRunState Then Return
 
-	If _Sleep(250) Then Return
+	If $g_bQuickTrainEnable Then CheckQuickTrainTroop() ; update values of $g_aiArmyComTroops, $g_aiArmyComSpells
 
-	; Is necessary to be Custom Train Troops to be accurate
-	If Not OpenArmyOverview(False, "TrainGTFO()") Then Return
+	CheckIfArmyIsReady()
 
-	If _Sleep(1250) Then Return
-
-	If $g_bDoubleTrain Then
-		DoubleTrain()
-		Return
-	EndIf
-
-	CheckArmyCamp(False, False, False, True)
-
-	If Not $g_bRunState Then Return
-	Local $rWhatToTrain = WhatToTrain(True, False) ; r in First means Result! Result of What To Train Function
-	Local $rRemoveExtraTroops = RemoveExtraTroops($rWhatToTrain)
-
-	If $rRemoveExtraTroops = 1 Or $rRemoveExtraTroops = 2 Then
-		CheckArmyCamp(False, False, False, True)
-		If $g_bFullArmy Then
-			SetLog("- Your Army is Full , let's Donate", $COLOR_INFO)
-			If $g_bFirstStart Then $g_bFirstStart = False
-			Return
-		EndIf
-	EndIf
-
-	If Not $g_bRunState Then Return
-
-	If $rRemoveExtraTroops = 2 Then
-		$rWhatToTrain = WhatToTrain(False, False)
-		TrainUsingWhatToTrain($rWhatToTrain)
-	EndIf
-	If _Sleep($DELAYRESPOND) Then Return
-
-	If IsQueueEmpty("Troops") Then
-		If Not $g_bRunState Then Return
-		If Not OpenArmyTab(True, "TrainGTFO()") Then Return
-
-		$rWhatToTrain = WhatToTrain(False, False)
-		TrainUsingWhatToTrain($rWhatToTrain)
+	If $g_bQuickTrainEnable Then
+		QuickTrain()
 	Else
-		If Not $g_bRunState Then Return
-		If Not OpenArmyTab(True, "TrainGTFO()") Then Return
-	EndIf
-	If _Sleep($DELAYRESPOND) Then Return
-
-	$rWhatToTrain = WhatToTrain(False, False)
-	If DoWhatToTrainContainSpell($rWhatToTrain) Then
-		If IsQueueEmpty("Spells") Then
-			TrainUsingWhatToTrain($rWhatToTrain, True)
-		Else
-			If Not OpenArmyTab(True, "TrainGTFO()") Then Return
-		EndIf
+		TrainCustomArmy()
 	EndIf
 
-	If Not OpenArmyTab(True, "TrainGTFO()") Then Return
+    TrainSiege()
 
-	; After the train ...get the remain times
-	CheckArmyCamp(False, False, False, True)
+	If $g_bDonationEnabled And $g_bChkDonate Then ResetVariables("donated")
 
-	If _Sleep(250) Then Return
-	If Not $g_bRunState Then Return
 	ClickP($aAway, 2, 0, "#0346") ;Click Away
-	If _Sleep(250) Then Return
+	If _Sleep(500) Then Return ; Delay AFTER the click Away Prevents lots of coc restarts
 
 	EndGainCost("Train")
 
@@ -299,7 +249,7 @@ Func DonateGTFO()
 			If $_diffTimer > $iTime2Exit Then ExitLoop
 
 
-			If $g_iLoop > $g_iTxtCyclesGTFO Then Return False
+			If $g_iLoop > $g_iTxtCyclesGTFO and not $g_hExitAfterCyclesGTFO Then Return 
 
 
 			$_bReturnT = False
@@ -336,8 +286,9 @@ Func DonateGTFO()
 
 	CloseClanChat()
 
-	If $g_iLoop > $g_iTxtCyclesGTFO Then Return False
-
+	If $g_iLoop > $g_iTxtCyclesGTFO and not $g_hExitAfterCyclesGTFO Then Return 
+	
+	Return True
 EndFunc   ;==>DonateGTFO
 
 Func ClanHop()
