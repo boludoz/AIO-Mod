@@ -5,12 +5,28 @@
 
                     Based on MyBot.run v7.8.2 
 >> Next
-		• Builder:
-			- Drop thropy.
 
 		• CSV: 
 			- Add hero if it doesn't exist in CSV.
 			
+	**V3.2.6**
+		» Added:
+			• Donation limiter and stats V2.
+			
+		» Improved:
+			• CC : Donate from below..
+			• Clan hop : 
+				- If you donate without a clan hop, you will remain and donate realistically.
+				- Warnings to configure your castle.
+				
+			• Train system : The troops that are made are not completely erased in most cases..
+			• Random wave : GUI Improved for prevent confusion.
+
+		» Fixed:
+			• Goblin XP.
+			• Clan hop.
+			• Random wave : Lot of fixes.
+	
 	**V3.2.4**
 		» Added:
 			• Donation limiter and stats (beta).
