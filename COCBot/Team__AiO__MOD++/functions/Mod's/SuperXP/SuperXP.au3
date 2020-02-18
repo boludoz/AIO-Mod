@@ -934,8 +934,8 @@ Func IsGoblinMapSXFound()
 	EndIf
 
 	If $g_iGoblinMapOptSX = 2 Then
-		$x1 = 599
-		$x2 = 644
+		$x1 = 557
+		$x2 = 661
 		$result = multiMatchesPixelOnly(($g_sImgFindSX & "Arena" ), 0, "FV", "FV", "", 0, 1000, $x1, 132, $x2, 668)
 	EndIf
 
