@@ -62,14 +62,14 @@ Func TrainCustomArmy()
 	If Not $g_bRunState Then Return
 
 	If Not $g_bFullArmy Then
-		;Local $rWhatToTrain = WhatToTrain(True) ; r in First means Result! Result of What To Train Function
-		;RemoveQueueTroops($rWhatToTrain)
-		;RemoveExtraTroops($rWhatToTrain)
+		Local $rWhatToTrain = WhatToTrain(True) ; r in First means Result! Result of What To Train Function
+		RemoveQueueTroops($rWhatToTrain)
+		RemoveExtraTroops($rWhatToTrain)
 		;#Region Team AIO Mod++
-		;	Local $rRemoveExtraTroops = RemoveExtraTroops($rWhatToTrain)
-		;	
+;~ 			Local $rRemoveExtraTroops = RemoveExtraTroops($rWhatToTrain)
+		;
 		;	If Not $g_bRunState Then Return
-		;	
+		;
 		;	If $rRemoveExtraTroops = 2 Then
 		;		$rWhatToTrain = WhatToTrain(False, False)
 		;		TrainUsingWhatToTrain($rWhatToTrain)
@@ -554,30 +554,42 @@ Func DeleteInvalidTroopInArray(ByRef $aTroopArray)
 	EndSwitch
 EndFunc   ;==>DeleteInvalidTroopInArray
 
+#Region - Custom - Team AIO Mod++
 Func RemoveExtraTroopsQueue() ; Will remove All Extra troops in queue If there's a Low Opacity red color on them
-	;Local Const $DecreaseBy = 70
-	;Local $x = 834
-
-	Local Const $y = 186, $yRemoveBtn = 200, $xDecreaseRemoveBtn = 10
-	Local $bColorCheck = False, $bGotRemoved = False
-	For $x = 834 To 58 Step -70
-		If Not $g_bRunState Then Return
-		$bColorCheck = _ColorCheck(_GetPixelColor($x, $y, True), Hex(0xD7AFA9, 6), 20)
-		If $bColorCheck Then
-			$bGotRemoved = True
-			Do
-				Click($x - $xDecreaseRemoveBtn, $yRemoveBtn, 2, $g_iTrainClickDelay)
-				If _Sleep(20) Then Return
-				$bColorCheck = _ColorCheck(_GetPixelColor($x, $y, True), Hex(0xD7AFA9, 6), 20)
-			Until $bColorCheck = False
-
-		ElseIf Not $bColorCheck And $bGotRemoved Then
-			ExitLoop
-		EndIf
-	Next
-
-	Return True
+ 	Local $XQueueStart = 839
+	Local $vPinkPixel = MultiPSimple(840,261,18,256,Hex(0xD7AFA9, 6))
+	If $vPinkPixel <> 0 Then 
+		Local $sRegion = "18,190," & $vPinkPixel[0] & ",212"
+		Local $vCx = 0	
+		Local $vCy = 0	
+		Local $iCounter = 0
+		Local $aImg = 0
+		
+		While 1
+			$aImg = _ImageSearchXML(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\TRAIN\Delete", 0, $sRegion)
+			If IsArray($aImg) Then 
+				$vCx = Int($aImg[Random(0, UBound($aImg)-1, 1)][1]) + Random(1,5,1)
+				$vCy = Random(192,210,1)
+				
+				PureClick( $vCx,  $vCy, (UBound($aImg)-1 <= 2) ? (Random(0,10,1)) : (Random(20,50,1)), 0)
+				
+				$vPinkPixel = MultiPSimple(840,261,18,256,Hex(0xD7AFA9, 6))
+				If $vPinkPixel <> 0 Then 
+					$sRegion = "18,190," & $vPinkPixel[0] & ",212"
+					$iCounter = Int($iCounter / 2)
+					Else
+					Return True
+				EndIf
+			
+			EndIf
+			
+			$iCounter += 1
+			If $iCounter > 40 Or _Sleep(Random($g_iTrainClickDelay, $g_iTrainClickDelay + ($g_iTrainClickDelay /2),1)) Then Return True
+		Wend
+	EndIf
+	Return False
 EndFunc   ;==>RemoveExtraTroopsQueue
+#EndRegion
 
 Func IsQueueEmpty($sType = "Troops", $bSkipTabCheck = False, $removeExtraTroopsQueue = True)
 	Local $iArrowX, $iArrowY
@@ -1121,7 +1133,8 @@ Func TrainArmyNumber($Army)
 
 EndFunc   ;==>TrainArmyNumber
 
-Func DeleteQueued($sArmyTypeQueued, $iOffsetQueued = 802)
+#Region - Custom - Team AIO Mod++
+Func DeleteQueued($sArmyTypeQueued)
 
 	If $sArmyTypeQueued = "Troops" Then
 		If Not OpenTroopsTab(True, "DeleteQueued()") Then Return
@@ -1131,17 +1144,43 @@ Func DeleteQueued($sArmyTypeQueued, $iOffsetQueued = 802)
 		Return
 	EndIf
 	If _Sleep(500) Then Return
-	Local $x = 0
 
-	While Not _ColorCheck(_GetPixelColor(820, 208, True), Hex(0xD0D0C8, 6), 20)
-		If $x = 0 Then SetLog(" - Delete " & $sArmyTypeQueued & " Queued!", $COLOR_INFO)
-		If _Sleep(20) Then Return
-		If Not $g_bRunState Then Return
-		Click($iOffsetQueued + 24, 202, 2, 0)
-		$x += 1
-		If $x = 280 Then ExitLoop
-	WEnd
+	SetLog(" - Delete " & $sArmyTypeQueued & " Queued!", $COLOR_INFO)
+
+    Local $XQueueStart = 839
+    Local $vPinkPixel = MultiPSimple(18,190,840,212,Hex(0xE90B0B, 6))
+    If $vPinkPixel <> 0 Then 
+        Local $sRegion = "18,190,840,212"
+        Local $vCx = 0    
+        Local $vCy = 0    
+        Local $iCounter = 0
+        Local $aImg = 0
+        
+        While 1
+            $aImg = _ImageSearchXML(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\TRAIN\Delete", 0, $sRegion)
+            If IsArray($aImg) Then 
+				$vCx = Int($aImg[Random(0, UBound($aImg)-1, 1)][1]) + Random(1,5,1)
+                $vCy = Random(192,210,1)
+                
+				PureClick( $vCx,  $vCy, (UBound($aImg)-1 <= 2) ? (Random(0,10,1)) : (Random(20,50,1)), 0)
+                
+                $vPinkPixel = MultiPSimple(18,190,840,212,Hex(0xE90B0B, 6))
+                If $vPinkPixel <> 0 Then 
+                    $iCounter = Int($iCounter / 2)
+                    Else
+                    Return True
+                EndIf
+            
+            EndIf
+            
+            $iCounter += 1
+            If $iCounter > 40 Or _Sleep(Random($g_iTrainClickDelay, $g_iTrainClickDelay + ($g_iTrainClickDelay /2),1)) Then Return True
+        Wend
+    EndIf
+    Return False
+
 EndFunc   ;==>DeleteQueued
+#EndRegion - Custom - Team AIO Mod++
 
 Func MakingDonatedTroops($sType = "All")
 	Local $avDefaultTroopGroup[$eTroopCount][6]
