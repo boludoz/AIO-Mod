@@ -187,32 +187,43 @@ EndFunc
 ; Example .......: No
 ; ===============================================================================================================================
 Func ClickFindMatch($bCheckOneTime = False)
-	If _Sleep($DELAYSPECIALCLICK1) Then Return False ; Wait for Find a Match button window
+	Local $bExtraFix = False
+	Local $aFindMatch
 	
-	For $i = 0 To 6 ; Wait for window with Find a Match Button
-		Local $aFindMatch = findButton("FindMatch", Default, 1, True)
+	For $i = 0 To 10 ; Wait for window with Find a Match Button
+		$aFindMatch = findButton("FindMatch", Default, 1, True)
 		
 		If IsArray($aFindMatch) And UBound($aFindMatch) = 2 Then
+			
+			If $bExtraFix = True Then ContinueLoop
+			
 			If Not $g_bUseRandomClick Then
 				PureClick($aFindMatch[0] + 100, $aFindMatch[1] + 30, 1, 0) ; Click Find a Match Button
 			Else
 				ClickR($aFindMatchButtonRND, $aFindMatch[0] + 30, $aFindMatch[1] + 20, 1, 0)
 			EndIf
-			ExitLoop
+			
+			$bExtraFix = True
+			
+			If _Sleep($DELAYSPECIALCLICK1) Then Return False ; Wait for Find a Match button window
+			ContinueLoop
+			
+		ElseIf $bExtraFix = True Then
+		
+			If _Sleep($DELAYSPECIALCLICK2) Then Return False ; improve pause button response
+			Return True
+			
 		EndIf
 		If $bCheckOneTime Then Return False ; enable external control of loop count or follow on actions, return false if not clicked
-		If _Sleep($DELAYSPECIALCLICK1) Then Return False ; Wait for Find a Match button window
 	Next
 	
-	If $i > 5 Then
+	If $i > 9 Then
 		SetLog("Couldn't find the Find a Match Button!", $COLOR_ERROR)
 		If $g_bDebugImageSave Then SaveDebugImage("FindAMatchBUttonNotFound")
 		SetError(1, @extended, False)
-		Return
+		Return False
 	EndIf
-	
-	If _Sleep($DELAYSPECIALCLICK2) Then Return False ; improve pause button response
-	Return True
+	Return False
 EndFunc   ;==>ClickFindMatch
 
 Func ClickCollect($bCheckOneTime = False)

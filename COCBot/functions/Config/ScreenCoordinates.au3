@@ -134,7 +134,7 @@ Global Const $aProfileReport[4] = [619, 344, 0x4E4D79, 20] ; Dark Purple of Prof
 
 Global $aArmyTrainButtonRND[4] = [20, 540 + $g_iMidOffsetY, 55, 570 + $g_iMidOffsetY] ; Main Screen, Army Train Button, RND  Screen 860x732
 Global $aAttackButtonRND[4] = [20, 610 + $g_iMidOffsetY, 100, 670 + $g_iMidOffsetY] ; Attack Button, Main Screen, RND  Screen 860x732
-Global $aFindMatchButtonRND[4] = [200, 510 + $g_iMidOffsetY, 300, 530 + $g_iMidOffsetY] ; Find Multiplayer Match Button, Both Shield or without shield Screen 860x732
+Global $aFindMatchButtonRND[4] = [584, 361 + $g_iMidOffsetY, 776, 439 + $g_iMidOffsetY] ; Team AIO Mod++ - Find Multiplayer Match Button, Both Shield or without shield Screen 860x732
 Global $NextBtnRND[4] = [710, 530 + $g_iMidOffsetY, 830, 570 + $g_iMidOffsetY] ;  Next Button
 
 ;Switch Account
