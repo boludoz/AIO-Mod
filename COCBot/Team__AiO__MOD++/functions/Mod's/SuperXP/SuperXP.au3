@@ -989,12 +989,12 @@ EndFunc   ;==>DragToEndSinglePlayer
 Func GetPositionInSinglePlayer()
 	If $g_bDebugSX Then SetDebugLog("SX|Begin GetPositionInSinglePlayer", $COLOR_DEBUG)
 
-	Click(Random(280, 440, 1), Random(70, 110, 1)) ;Click 'Single Player' above To Hide Available Loot Info
+	Click(Random(280, 440, 1), Random(170, 210, 1)) ;Click 'Single Player' above To Hide Available Loot Info
 	Local $Counter = 0
 	While _ColorCheck(_GetPixelColor($aLootInfo[0], $aLootInfo[1], True, "GetPositionInSinglePlayer#1"), Hex($aLootInfo[2], 6), $aLootInfo[4]) And _
 		_ColorCheck(_GetPixelColor($aLootInfo[0] + 510, $aLootInfo[1], True, "GetPositionInSinglePlayer#2"), Hex($aLootInfo[3], 6), $aLootInfo[4])
 		If _Sleep(50) Then ExitLoop
-		Click(Random(280, 440, 1), Random(70, 110, 1)) ;Click 'Single Player' above To Hide Available Loot Info
+		Click(Random(280, 440, 1), Random(170, 210, 1)) ;Click 'Single Player' above To Hide Available Loot Info
 		$Counter += 1
 		If $Counter > 15 Then
 			If $g_bDebugSX Then SetDebugLog("SX|GPISP|Available Loot Not Hidden, Returning")
