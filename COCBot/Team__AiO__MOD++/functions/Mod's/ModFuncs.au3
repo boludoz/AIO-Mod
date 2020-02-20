@@ -189,26 +189,21 @@ EndFunc
 Func ClickFindMatch($bCheckOneTime = False)
 	Local $bExtraFix = False
 	Local $aFindMatch
+	Local $aRndX = [585, 780], $aRndY = [365 + $g_iMidOffsetY, 467 + $g_iMidOffsetY]
 	
 	For $i = 0 To 10 ; Wait for window with Find a Match Button
 		$aFindMatch = findButton("FindMatch", Default, 1, True)
 		
 		If IsArray($aFindMatch) And UBound($aFindMatch) = 2 Then
 			
-			If $bExtraFix = True Then ContinueLoop
-			
-			If Not $g_bUseRandomClick Then
-				PureClick($aFindMatch[0] + 100, $aFindMatch[1] + 30, 1, 0) ; Click Find a Match Button
-			Else
-				ClickR($aFindMatchButtonRND, $aFindMatch[0] + 30, $aFindMatch[1] + 20, 1, 0)
-			EndIf
+			PureClick(Random($aRndX[0], $aRndX[1], 1), Random($aRndY[0], $aRndY[1], 1), 1, 0) ; Click Find a Match Button
 			
 			$bExtraFix = True
 			
 			If _Sleep($DELAYSPECIALCLICK1) Then Return False ; Wait for Find a Match button window
 			ContinueLoop
 			
-		ElseIf $bExtraFix = True Then
+		ElseIf $bExtraFix = True Then ; It ensures that the button is no longer populated in all possible conditions. 
 		
 			If _Sleep($DELAYSPECIALCLICK2) Then Return False ; improve pause button response
 			Return True
@@ -221,8 +216,8 @@ Func ClickFindMatch($bCheckOneTime = False)
 		SetLog("Couldn't find the Find a Match Button!", $COLOR_ERROR)
 		If $g_bDebugImageSave Then SaveDebugImage("FindAMatchBUttonNotFound")
 		SetError(1, @extended, False)
-		Return False
 	EndIf
+	
 	Return False
 EndFunc   ;==>ClickFindMatch
 

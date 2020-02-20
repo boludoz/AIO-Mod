@@ -16,12 +16,12 @@ Global $aArmyTrainButtonBB = [46, 572, 0xE5A439, 10]
 Global Const $g_sImgPathFillArmyCampsWindow = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\FillArmyCamps\Window\" 
 Global Const $g_sImgPathTroopsTrain = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\FillArmyCamps\TroopsTrain\"
 Global Const $g_sImgPathCamps = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\FillArmyCamps\Bundles\Camps\"
-
 #EndRegion
 
 #Region SuperXP
 Global $g_sImgFindSX = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\SuperXP\Find\"
 Global $g_sImgVerifySX = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\SuperXP\Verify\"
+Global $g_sImgLockedSX = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\SuperXP\Locked\"
 #EndRegion
 
 #Region Humanization

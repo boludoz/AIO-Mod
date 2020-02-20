@@ -772,35 +772,45 @@ Func OpenGoblinMapSX()
 		Return False
 	EndIf
 	
+	If IsGoblinMapSXLocked($rDragToGoblinMapSX) = True Then
+		If $g_iGoblinMapOptSX = 2 Then
+			SetLog("Are you kidding me? " & $g_sGoblinMapOptSX & " is Locked, Goblin Picnic selected.", $COLOR_ERROR)
+			$g_iGoblinMapOptSX = 1
+			$g_sGoblinMapOptSX = "Goblin Picnic"
+			radGoblinMapOptSX()
+			PureClickP($aCloseSingleTab, 1, 0, "#CloseSingleTab") ;Clicks X
+			Return False
+		Else
+			SetLog("Are you kidding me? " & $g_sGoblinMapOptSX & " is Locked", $COLOR_ERROR)
+			DisableSX()
+			SafeReturnSX()
+			Return False
+		EndIf
+	EndIf
+		
 	If $g_bDebugSX Then SetDebugLog("SX|OpenGoblinMapSX|Clicking On GP Text: " & $rDragToGoblinMapSX[0] & ", " & $rDragToGoblinMapSX[1])
 	Click($rDragToGoblinMapSX[0], $rDragToGoblinMapSX[1]) ; Click On Goblin Picnic Text To Show Attack Button
 	SetLog("Waiting for Attack Button color", $COLOR_INFO)
 	If _Sleep(50) Then Return False
 
 	Local $Counter = 0
-	While not BitAND(IsArray($rDragToGoblinMapSX), UBound($rDragToGoblinMapSX) = 2) and Not _ColorCheck(_GetPixelColor($rDragToGoblinMapSX[0], $rDragToGoblinMapSX[1] + 132, True, "OpenGoblinMapSX-AttackButton"), Hex(0xEC5012, 6), 30)
+	While not BitAND(IsArray($rDragToGoblinMapSX), UBound($rDragToGoblinMapSX) = 2)
 		$rDragToGoblinMapSX = DragToGoblinMapSX()
-		Click($rDragToGoblinMapSX[0] + Random(45,55,1), $rDragToGoblinMapSX[1] + Random(65,80,1)) ; Click On Goblin Picnic Text To Show Attack Button
+		Click($rDragToGoblinMapSX[0] + Random(40,60,1), $rDragToGoblinMapSX[1] + Random(70,90,1)) ; Click On Goblin Picnic Text To Show Attack Button
 		If _Sleep(50) Or $Counter > 15 Then ExitLoop
 		$Counter += 1
 	WEnd
 	
 	; "Fuse" anti prohibition/bug
 	If $Counter > 15 Then
-		If IsGoblinMapSXLocked($rDragToGoblinMapSX) = True Then
-			SetLog("Are you kidding me? " & $g_sGoblinMapOptSX & " is Locked", $COLOR_ERROR)
-			DisableSX()
-			SafeReturnSX()
-			Return False
-		EndIf
 		SetLog("Attack Button Cannot be Verified", $COLOR_ERROR)
 		SaveDebugImage("SuperXP_", True, True, String(Number($rDragToGoblinMapSX[0], 2) & ", " & Number($rDragToGoblinMapSX[1], 2) & @CRLF & Number($rDragToGoblinMapSX[0], 2) & ", " & Number($rDragToGoblinMapSX[1] + 132, 2)))
 		SafeReturnSX()
 		Return False
 	EndIf
 
-	If $g_bDebugSX Then SetDebugLog("SX|OpenGoblinMapSX|Clicking On Attack Btn: " & $rDragToGoblinMapSX[0] & ", " & $rDragToGoblinMapSX[1] + 138)
-	Click($rDragToGoblinMapSX[0], $rDragToGoblinMapSX[1] + 138) ; Click On Attack Button
+	If $g_bDebugSX Then SetDebugLog("SX|OpenGoblinMapSX|Clicking On Attack Btn: " & $rDragToGoblinMapSX[0] & ", " & $rDragToGoblinMapSX[1])
+	Click($rDragToGoblinMapSX[0] + Random(20,30,1), $rDragToGoblinMapSX[1] + Random(125,135,1)) ; Click On Attack Button
 
 	$Counter = 0
 	While IsInSPPage()
@@ -831,16 +841,16 @@ Func OpenGoblinMapSX()
 EndFunc   ;==>OpenGoblinMapSX
 
 Func IsGoblinMapSXLocked($FoundCoord)
-	If not BitAND(IsArray($FoundCoord), UBound($FoundCoord) = 2) Or $FoundCoord = False Then Return True
+	If not IsArray($FoundCoord) Then Return True
 
 	Local $x = Int($FoundCoord[0]) - 100, _
 	$y = Int($FoundCoord[1]) - 100, _
-	$x1 = Int($FoundCoord[0]) + 100, _
-	$y1 = Int($FoundCoord[1]) + 100
+	$x1 = Int($FoundCoord[0]) + 110, _
+	$y1 = Int($FoundCoord[1]) + 110
 	
-	Local $bResult = (MultiPSimple($x, $y, $x1, $y1, Hex(0xEC5012, 6), 25) = 0)
+	Local $bResult = (IsArray(findMultipleQuick($g_sImgLockedSX, 1, $x & "," & $y & "," & $x1 & "," & $y1  )) = True)
 	
-	If $g_bDebugSX Then SetDebugLog("SX|IsGoblinMapSXLocked Return " & $bResult, $COLOR_DEBUG)
+	SetLog("Is Map Locked ?" & " " & $bResult & " / " & $x & "," & $y & "," & $x1 & "," & $y1, $COLOR_INFO)
 	
 	Return $bResult
 EndFunc   ;==>IsGoblinMapSXLocked
@@ -928,10 +938,10 @@ Func IsGoblinMapSXFound()
 	$x2 = 453
 	$result = multiMatchesPixelOnly(($g_sImgFindSX & "Picnic"), 0, "FV", "FV", "", 0, 1000, $x1, 132, $x2, 668)
 
-	If StringInStr($result, "|") > 0 and $g_iGoblinMapOptSX = 2 Then
-		$g_iGoblinMapOptSX = 1
-		Setlog("The arena locked.", $COLOR_ERROR)
-	EndIf
+	; If StringInStr($result, "|") > 0 and $g_iGoblinMapOptSX = 2 Then
+	; 	$g_iGoblinMapOptSX = 1
+	; 	Setlog("The arena locked.", $COLOR_ERROR)
+	; EndIf
 
 	If $g_iGoblinMapOptSX = 2 Then
 		$x1 = 557

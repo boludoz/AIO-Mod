@@ -100,7 +100,7 @@ Global $g_bEnableSuperXP = False, $g_bSkipZoomOutSX = False, $g_bFastSuperXP = F
 	$g_iActivateOptionSX = 1, $g_iGoblinMapOptSX = 2, $g_sGoblinMapOptSX = "The Arena", $g_iMaxXPtoGain = 500, _
 	$g_bBKingSX = False, $g_bAQueenSX = False, $g_bGWardenSX = False
 Global $g_iStartXP = 0, $g_iCurrentXP = 0, $g_iGainedXP = 0, $g_iGainedHourXP = 0, $g_sRunTimeXP = 0
-Global $g_bDebugSX = False
+Global $g_bDebugSX = True
 ; [0] = Queen, [1] = Warden, [2] = Barbarian King
 ; [0][0] = X, [0][1] = Y, [0][2] = XRandomOffset, [0][3] = YRandomOffset
 Global $g_aiDpGoblinPicnic[3][4] = [[310, 200, 5, 5], [340, 140, 5, 5], [290, 220, 5, 5]]

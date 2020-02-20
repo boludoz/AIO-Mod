@@ -145,7 +145,14 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 		EndIf
 	Until Not $bSignedUpLegendLeague
 
-	If Not $g_bLeagueAttack And ClickFindMatch() = False Then Return False ; Custom findMatch - Team AIO Mod++ 
+	#Region - Custom findMatch - Team AIO Mod++ 
+	If Not $g_bLeagueAttack Then
+		
+		; It ensures that the button is no longer populated in all possible conditions. 
+		If not ClickFindMatch() Then Return
+		
+	EndIf
+	#EndRegion
 
 	If $g_iTownHallLevel <> "" And $g_iTownHallLevel > 0 Then
 		$g_iSearchCost += $g_aiSearchCost[$g_iTownHallLevel - 1]
