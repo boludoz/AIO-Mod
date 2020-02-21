@@ -39,8 +39,8 @@ Func _SetLog($sLogMessage, $Color = Default, $Font = Default, $FontSize = Defaul
 	Local Static $hLogCheckFreeSpaceTimer = 0
 
 	If $Color = Default Then $Color = $COLOR_BLACK
-	If $Font = Default Then $Font = "Verdana"
-	If $FontSize = Default Then $FontSize = 7.5
+	If $Font = Default Then $Font = "Candara" ; Team AIO Mod++
+	If $FontSize = Default Then $FontSize = 9 ; Team AIO Mod++
 	If $statusbar = Default Then $statusbar = 1
     If $time = Default Then $time = Time()
 	Local $debugTime = TimeDebug()

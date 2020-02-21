@@ -4856,7 +4856,7 @@ Func CheckEmuNewVersions()
 		Case "BlueStacks2"
 			$NewVersion = GetVersionNormalized("4.111.0.0")
 		Case "MEmu"
-			$NewVersion = GetVersionNormalized("6.3.0.0")
+			$NewVersion = GetVersionNormalized("7.1.1.0")
 		Case "Nox"
 			$NewVersion = GetVersionNormalized("6.3.1.0")
 		Case Else

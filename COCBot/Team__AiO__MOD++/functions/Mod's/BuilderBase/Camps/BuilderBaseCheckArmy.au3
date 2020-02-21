@@ -89,7 +89,8 @@ Func DetectCamps()
 	Local $aTrainLikeBoss[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 	For $i = 0 To UBound($aCmbCampsInBBGUILimited) -1
-		$aTrainLikeBoss[$aCmbCampsInBBGUILimited[$i]] += 1
+		Local $i2 = $aCmbCampsInBBGUILimited[$i]
+		$aTrainLikeBoss[$i2] += 1
 	Next
 
 	_CaptureRegion()
