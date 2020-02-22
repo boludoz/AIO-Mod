@@ -88,12 +88,12 @@ Func DetectCamps()
 	; Train matrix
 	Local $aTrainLikeBoss[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-	For $i = 0 To UBound($aCmbCampsInBBGUILimited) -1
-		Local $i2 = $aCmbCampsInBBGUILimited[$i]
-		$aTrainLikeBoss[$i2] += 1
+	; Translate $aCmbCampsInBBGUILimited to $aTrainLikeBoss
+	For $iIn In $aCmbCampsInBBGUILimited
+		Local $i = (BitAnd(IsArray($aTrainLikeBoss), Int(UBound($aTrainLikeBoss) - 1) >= Number($iIn))) ? (Number($iIn)) : (0)
+		$aTrainLikeBoss[$i] += 1
 	Next
 
-	_CaptureRegion()
 	Local $iDiffSlot = Abs($aResults[0][1] - $aResults[1][1])
 	
 	;Troops detect
@@ -110,7 +110,7 @@ Func DetectCamps()
 							If $iArmyCampsInBBLimited[$i] = -1 Then $iArmyCampsInBBLimited[$i] = -2
 							_ArrayDelete($aTroops, $i2)
 						EndIf
-						_SleepMicro(500)
+						If _Sleep(Random((600*90)/100, (900*110)/100, 1), False) Then Return
 					Next
 				EndIf
 				;_ArrayDisplay($iArmyCampsInBBLimited)
@@ -136,7 +136,7 @@ Func DetectCamps()
 				EndIf
 				
 				
-			_SleepMicro(500)
+		If _Sleep(Random((600*90)/100, (900*110)/100, 1), False) Then Return
 		Next
 		
 	;Troops Train
@@ -157,7 +157,7 @@ Func DetectCamps()
 				MyTrainClick($iFillFix, $aTrainLikeBoss[$i]) ; Train 4 fill last "ok" (more smart)
 			EndIf
 		EndIf
-		If _Sleep(Random((400*90)/100, (400*110)/100, 1), False) Then Return
+		If _Sleep(Random((600*90)/100, (900*110)/100, 1), False) Then Return
 	Next
 
 EndFunc   ;==>DetectCamps

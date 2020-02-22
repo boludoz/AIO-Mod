@@ -64,6 +64,6 @@ Func CheckModVersion($bSilent = True)
 		EndIf
 	EndIf
 	
-	Local $aReturn[2] = [$g_sBotGitVersion, $bUpdate]
+	Local $aReturn[2] = ["v" & $g_sBotGitVersion, $bUpdate]
 	Return $aReturn
 EndFunc   ;==>CheckModVersion
