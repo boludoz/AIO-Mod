@@ -67,7 +67,7 @@ Global $g_aiCmbBBDropOrder[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_sBBDropOrder
 For $i = 1 To UBound($g_asAttackBarBB) -1
 	Local $iS = $g_asAttackBarBB[$i]
-	$g_sBBDropOrder &= (UBound($g_asAttackBarBB) -1 = $i) ? ($iS) : ($iS & "|") 
+	$g_sBBDropOrder &= (UBound($g_asAttackBarBB) -1 = $i) ? ($iS) : ($iS & "|")
 Next
 
 ; Drop trophy - Team AiO MOD++
@@ -91,7 +91,7 @@ Global $g_bDeployCastleFirst[2] = [False, False]
 Global $g_iDeployWave[3] = [5, 5, 5],  $g_iDeployDelay[3] = [5, 5, 5] ; $DB, $LB, $iCmbValue
 Global $g_bChkEnableRandom[3] = [True, True, True]
 ; GUI
-Global $g_hDeployCastleFirst[2] = [$LB, $DB] 
+Global $g_hDeployCastleFirst[2] = [$LB, $DB]
 Global $g_hDeployWave[3],  $g_hDeployDelay[3]
 Global $g_hChkEnableRandom[3]
 
@@ -241,3 +241,93 @@ Global $g_bChkCollectMagicItems, $g_bChkCollectFree, _
 $g_bChkBuilderPotion, $g_bChkClockTowerPotion, $g_bChkHeroPotion, $g_bChkLabPotion, $g_bChkPowerPotion, $g_bChkResourcePotion, _
 $g_iComboClockTowerPotion, $g_iComboHeroPotion, $g_iComboPowerPotion, _
 $g_iInputBuilderPotion, $g_iInputLabPotion, $g_iInputGoldItems = 250000, $g_iInputElixirItems = 300000, $g_iInputDarkElixirItems = 1000
+
+#Region - Builder Base !!!
+; Provisional globals BB Machine
+Global $g_aMachineBB[0][5], $g_bIsBBMachineD = False, $g_bBBIsFirst = True
+
+; Report
+Global $g_iAvailableAttacksBB = 0, $g_iLastDamage = 0
+Global $g_sTxtRegistrationToken = ""
+
+Global Enum $g_iAirDefense = 0, $g_iCrusher, $g_iGuardPost, $g_iCannon, $g_iBuilderHall, $g_iDeployPoints
+Global $g_aBuilderHallPos[1][2] = [[Null, Null]], $g_aAirdefensesPos[0][2], $g_aCrusherPos[0][2], $g_aCannonPos[0][2], $g_aGuardPostPos[0][2], $g_aDeployPoints
+Global $g_aBuilderHallPos[1][2] = [[Null, Null]], $g_aAirdefensesPos[0][2], $g_aCrusherPos[0][2], $g_aCannonPos[0][2], $g_aGuardPostPos[0][2], $g_aDeployPoints, $g_aDeployBestPoints
+Global $g_aOpponentBuildings[6] = [$g_aAirdefensesPos, $g_aCrusherPos, $g_aGuardPostPos, $g_aCannonPos, $g_aBuilderHallPos, $g_aDeployPoints]
+Global $g_aExternalEdges, $g_aBuilderBaseDiamond, $g_aOuterEdges, $g_aBuilderBaseOuterDiamond, $g_aBuilderBaseOuterPolygon, $g_aFinalOuter[4]
+
+; GUI
+Global Enum $g_eBBAttackCSV = 0, $g_eBBAttackSmart = 1
+Global $g_iCmbBBAttack = $g_eBBAttackCSV
+Global $g_hTabBuilderBase = 0, $g_hTabAttack = 0
+Global $g_hCmbBBAttack = 0
+
+; BB Drop Order
+Global $g_hBtnBBDropOrder = 0
+Global $g_hGUI_BBDropOrder = 0
+Global $g_hChkBBCustomDropOrderEnable = 0
+Global $g_hBtnBBDropOrderSet = 0, $g_hBtnBBRemoveDropOrder = 0, $g_hBtnBBClose = 0
+Global $g_bBBDropOrderSet = False
+;~ Global Const $g_iBBTroopCount = 10
+;~ Global Const $g_sBBDropOrderDefault = "Boxer Giant|Super Pekka|Drop Ship|Night Witch|Baby Dragon|Bomber|Raged Barbarian|Cannon Cart|Sneaky Archer|Beta Minion"
+Global $g_sBBDropOrder = $g_sBBDropOrderDefault
+Global $g_ahCmbBBDropOrder[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_iBBNextTroopDelay = 2000,  $g_iBBSameTroopDelay = 300; delay time between different and same troops
+
+; Attack CSV
+Global $g_bChkBBRandomAttack = False
+Global Const $g_sCSVBBAttacksPath = @ScriptDir & "\CSV\BuilderBase"
+Global $g_sAttackScrScriptNameBB[3] = ["", "", ""]
+Global $g_iBuilderBaseScript = 0
+
+; Upgrade Troops
+Global $g_bChkUpgradeTroops = False, $g_iCmbBBLaboratory, $g_bChkUpgradeMachine = False
+
+; Upgrade Walls
+Global $g_bChkBBUpgradeWalls = False, $g_iCmbBBWallLevel, $g_iTxtBBWallNumber = 0
+Global Const $g_aiWallBBInfoPerLevel[9][4] = [ _ ; Level, Gold, Qty, BH
+		[0, 0, 0, 0], _
+		[1, 4000, 20, 2], _
+		[2, 10000, 50, 3], _
+		[3, 100000, 50, 3], _
+		[4, 300000, 75, 4], _
+		[5, 800000, 100, 5], _
+		[6, 1200000, 120, 6], _
+		[7, 2000000, 140, 7], _
+		[8, 3000000, 160, 8]]
+
+; Troops
+Global Enum $eBBTroopBarbarian, $eBBTroopArcher, $eBBTroopGiant, $eBBTroopMinion, $eBBTroopBomber, $eBBTroopBabyDragon, $eBBTroopCannon, $eBBTroopNight, $eBBTroopDrop, $eBBTroopPekka, $eBBTroopMachine, $eBBTroopCount
+Global Const $g_asBBTroopNames[$eBBTroopCount] = ["Raged Barbarian", "Sneaky Archer", "Boxer Giant", "Beta Minion", "Bomber", "Baby Dragon", "Cannon Cart", "Night Witch", "Drop Ship", "Super Pekka", "Battle Machine"]
+Global Const $g_asBBTroopShortNames[$eBBTroopCount] = ["Barb", "Arch", "Giant", "Beta", "Bomb", "BabyDrag", "Cannon", "Night", "Drop", "Pekka", "Machine"]
+Global $g_bIsMachinePresent = False
+Global $g_iBBMachAbilityTime = 14000 ; time between abilities
+
+; Camps
+Global $g_aCamps[6] = ["", "", "", "", "", ""]
+
+; General
+Global $g_bChkBuilderAttack = False, $g_bChkBBStopAt3 = False, $g_bChkBBTrophiesRange = False, $g_iTxtBBDropTrophiesMin = 0, $g_iTxtBBDropTrophiesMax = 0
+Global $g_iCmbBBArmy1 = 0, $g_iCmbBBArmy2 = 0, $g_iCmbBBArmy3 = 0, $g_iCmbBBArmy4 = 0, $g_iCmbBBArmy5 = 0, $g_iCmbBBArmy6 = 0
+
+; Lib with Icons
+Global Const $g_sLibBBIconPath = $g_sLibPath & "\BuilderBase.dll" ; icon library
+Global Enum $eIcnBBBarb = 1, $eIcnBBArch, $eIcnBBGiant, $eIcnBBBeta, $eIcnBBBombn, $eIcnBBBabyDrag, $eIcnBBCannon, $eIcnBBNight, $eIcnBBDrop, $eIcnBBPekka, $eIcnBBEmpty, _
+		$eIcnBB, $eIcnLabBB, $eIcnBBElixir, $eIcnBBGold, $eIcnBBTrophies, $eIcnMachine, $eIcnBBWallInfo, $eIcnBBWallL1, $eIcnBBWallL2, $eIcnBBWallL3, $eIcnBBWallL4, $eIcnBBWallL5, _
+		$eIcnBBWallL6, $eIcnBBWallL7, $eIcnBBWallL8
+
+; Internal & External Polygon
+Global $CocDiamondECD = "ECD"
+Global $CocDiamondDCD = "DCD"
+Global $InternalArea[8][3]
+Global $ExternalArea[8][3]
+
+; Log
+Global $g_hBBAttackLogFile = 0
+
+Global $g_bChkCollectBuilderBase = False, $g_bChkStartClockTowerBoost = False, $g_bChkCTBoostBlderBz = False, $g_bChkCTBoostAtkAvailable = False, $g_bChkCleanYardBB = False, $g_bDebugBBattack = False
+
+Global $g_bChkPlayBBOnly = False
+
+Global $g_bChkBBGetFromCSV = False
+#EndRegion

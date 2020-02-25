@@ -258,6 +258,7 @@ Func UpdateStatusBar($sText)
 	_GUICtrlStatusBar_SetTextEx($g_hStatusBar, "Status : " & $sText)
 EndFunc   ;==>UpdateStatusBar
 
+#cs - Team AIO Mod++
 Func CheckPostponedLog($bNow = False)
 	;SetDebugLog("CheckPostponedLog: Entered, $bNow=" & $bNow & ", count=" & $g_oTxtLogInitText.Count & ", $g_hTxtLog=" & $g_hTxtLog & ", $g_iGuiMode=" & $g_iGuiMode)
 	Local $iLogs = 0
@@ -284,6 +285,7 @@ Func CheckPostponedLog($bNow = False)
 	$g_hTxtLogTimer = __TimerInit()
 	Return $iLogs
 EndFunc   ;==>CheckPostponedLog
+#ce
 
 Func _GUICtrlRichEdit_AppendTextColor($hWnd, $sText, $iColor, $bGotoEnd = True)
 	If $bGotoEnd Then _GUICtrlRichEdit_SetSel($hWnd, -1, -1)

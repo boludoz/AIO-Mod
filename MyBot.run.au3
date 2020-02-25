@@ -611,7 +611,7 @@ Func FinalInitialization(Const $sAI)
 	SetLog(" •  " & "Create a New Profile", $COLOR_SUCCESS, "Candara", 9)
 	SetLog(" •  " & "Participants and thanks: Nguyen, Chilly-Chill, Eloy, Boldina, Demen, Samkie, and ChacalGyn, all moders and MyBot/Aio Team.", $COLOR_SUCCESS, "Candara", 9)
 	SetLog(" ")
-	
+
 	; InitializeVariables();initialize variables used in extrawindows
 	CheckVersion() ; check latest version on mybot.run site
 	UpdateMultiStats()
@@ -732,7 +732,7 @@ Func runBot() ;Bot that runs everything in order
 		If $g_bRestart Then ContinueLoop
 
 		#Region - GTFO - Team AIO Mod++
-		If $g_bChkOnlyFarm = False Then 
+		If $g_bChkOnlyFarm = False Then
 			MainGTFO()
 			MainKickout()
 		EndIf
@@ -1228,39 +1228,41 @@ Func __RunFunction($action)
 			_Sleep($DELAYRUNBOT3)
 		Case "BuilderBase"
 			If BitAnd(Not BitOr($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
-			If isOnBuilderBase() Or (($g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_iChkBBSuggestedUpgrades Or $g_bChkEnableBBAttack) And SwitchBetweenBases()) Then
-				$g_bStayOnBuilderBase = True
-				If _Sleep($DELAYRUNBOT3) Then Return
-				If checkObstacles() Then Return
-				BuilderBaseReport()
-				If _Sleep($DELAYRUNBOT3) Then Return
-				If checkObstacles() Then Return
-				CollectBuilderBase()
-				If _Sleep($DELAYRUNBOT3) Then Return
-				If checkObstacles() Then Return
-				;AttackBuilderBase()
-				AttackBB()
-				If _Sleep($DELAYRUNBOT3) Then Return
-				If checkObstacles() Then Return
-				StartClockTowerBoost()
-				If _Sleep($DELAYRUNBOT3) Then Return
-				If checkObstacles() Then Return
-				StarLaboratory()
-				If _Sleep($DELAYRUNBOT3) Then Return
-				If checkObstacles() Then Return
-				CleanBBYard()
-				If _Sleep($DELAYRUNBOT3) Then Return
-				If checkObstacles() Then Return
-				MainSuggestedUpgradeCode()
-				If _Sleep($DELAYRUNBOT3) Then Return
-				If checkObstacles() Then Return
-				BuilderBaseReport()
-				If _Sleep($DELAYRUNBOT3) Then Return
-				If checkObstacles() Then Return
-				; switch back to normal village
-				SwitchBetweenBases()
-				$g_bStayOnBuilderBase = False
-			EndIf
+			   runBuilderBase()
+;~ 			If isOnBuilderBase() Or (($g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_iChkBBSuggestedUpgrades Or $g_bChkEnableBBAttack) And SwitchBetweenBases()) Then
+;~ 				$g_bStayOnBuilderBase = True
+;~ 				If _Sleep($DELAYRUNBOT3) Then Return
+;~ 				If checkObstacles() Then Return
+;~ 				BuilderBaseReport()
+;~ 				If _Sleep($DELAYRUNBOT3) Then Return
+;~ 				If checkObstacles() Then Return
+;~ 				CollectBuilderBase()
+;~ 				If _Sleep($DELAYRUNBOT3) Then Return
+;~ 				If checkObstacles() Then Return
+;~ 				AttackBuilderBase()
+;~ 				AttackBB()
+;~
+;~ 				If _Sleep($DELAYRUNBOT3) Then Return
+;~ 				If checkObstacles() Then Return
+;~ 				StartClockTowerBoost()
+;~ 				If _Sleep($DELAYRUNBOT3) Then Return
+;~ 				If checkObstacles() Then Return
+;~ 				StarLaboratory()
+;~ 				If _Sleep($DELAYRUNBOT3) Then Return
+;~ 				If checkObstacles() Then Return
+;~ 				CleanBBYard()
+;~ 				If _Sleep($DELAYRUNBOT3) Then Return
+;~ 				If checkObstacles() Then Return
+;~ 				MainSuggestedUpgradeCode()
+;~ 				If _Sleep($DELAYRUNBOT3) Then Return
+;~ 				If checkObstacles() Then Return
+;~ 				BuilderBaseReport()
+;~ 				If _Sleep($DELAYRUNBOT3) Then Return
+;~ 				If checkObstacles() Then Return
+;~ 				; switch back to normal village
+;~ 				SwitchBetweenBases()
+;~ 				$g_bStayOnBuilderBase = False
+;~ 			EndIf
 			_Sleep($DELAYRUNBOT3)
 		Case "CollectFreeMagicItems"
 			If BitAnd(Not BitOr($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
@@ -1278,13 +1280,13 @@ Func FirstCheck()
 
 	SetDebugLog("-- FirstCheck Loop --")
 	If Not $g_bRunState Then Return
-	
+
 	#Region - Team AIO MOD++
 	VillageReport()
 	ProfileSwitch()
 	CheckFarmSchedule()
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
-	
+
 	; Skip first loop
 	If $g_bSkipfirstcheck Then Return
 
@@ -1297,13 +1299,13 @@ Func FirstCheck()
 			MainSXHandler()
 			Return
 		EndIf
-		
+
 		MainGTFO()
 		MainKickout()
-		BotHumanization()	
+		BotHumanization()
 	EndIf
 	#EndRegion
-	
+
 
 	If Not $g_bRunState Then Return
 
