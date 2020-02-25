@@ -26,11 +26,6 @@
 ; Check Stop For War - Team AiO MOD++
 #include "functions\Mod's\CheckStopForWar.au3"
 
-; Builder base - Team AiO MOD++
-#include "functions\Mod's\BuilderBase\Camps\BuilderBaseCorrectAttackBar.au3"
-#include "functions\Mod's\BuilderBase\Camps\BuilderBaseCheckArmy.au3"
-#include "functions\Mod's\BuilderBase\Attack\BuilderBaseDropTrophy.au3"
-
 ; MagicItems - Team AiO MOD++
 #include "functions\Mod's\MagicItems.au3"
 
@@ -74,3 +69,31 @@
 #include "functions\Config\saveConfig.au3"
 #include "functions\Config\readConfig.au3"
 #include "functions\Config\applyConfig.au3"
+
+; Custom Builder Base
+#include "functions\Mod's\BuilderBase\ExtraFuncs.au3"
+#include "functions\Mod's\BuilderBase\BuilderBaseMain.au3"
+#include "functions\Mod's\BuilderBase\BuilderBaseDebugUI.au3"
+#include "functions\Mod's\BuilderBase\Attack\BuilderBaseImageDetection.au3"
+#include "functions\Mod's\BuilderBase\Attack\BuilderBaseCSV.au3"
+#include "functions\Mod's\BuilderBase\Attack\BuilderBaseAttack.au3"
+#include "functions\Mod's\BuilderBase\Village\BuilderBaseZoomOut.au3"
+;~ #include "functions\Mod's\BuilderBase\Attack\BuilderBaseAttackBar.au3"
+;~ #include "functions\Mod's\BuilderBase\Attack\BuilderBaseSmartAttack.au3"
+;~ #include "functions\Mod's\BuilderBase\Camps\BuilderBaseCheckArmy.au3"
+
+;#include "functions\Mod's\BuilderBase\Village\UpgradeWalls.au3"
+#include "functions\Mod's\BuilderBase\Village\BattleMachineUpgrade.au3"
+
+#include "functions\Mod's\BuilderBase\Camps\BuilderBaseCorrectAttackBar.au3"
+#include "functions\Mod's\BuilderBase\Camps\BuilderBaseCheckArmy.au3"
+#include "functions\Mod's\BuilderBase\Attack\BuilderBaseDropTrophy.au3"
+
+;~ #include "functions\Mod's\BuilderBase\Village\Collect.au3"
+;~ #include "functions\Mod's\BuilderBase\Village\StartClockTowerBoost.au3"
+;~ #include "functions\Mod's\BuilderBase\Village\BuilderBaseReport.au3"
+;~ #include "functions\Mod's\BuilderBase\Village\SuggestedUpgrades.au3"
+;~ #include "functions\Mod's\BuilderBase\Village\CleanBBYard.au3"
+;~ #include "functions\Mod's\BuilderBase\Village\StarLaboratory.au3"
+
+;---------------------------------------------------------------;
