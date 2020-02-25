@@ -516,20 +516,25 @@ Func ReadConfig_600_11()
 		If $i < $eSiegeMachineCount Then $g_aiCCSiegeExpected[$i] = 0
 	Next
 	For $i = 0 To 2
+		Local $iTempVar ; Fix Custom - Team AIO Mod++
+		
 		$g_aiClanCastleTroopWaitType[$i] = Int(IniRead($g_sProfileConfigPath, "donate", "cmbClanCastleTroop" & $i, $eTroopCount))
 		$g_aiClanCastleTroopWaitQty[$i] = Int(IniRead($g_sProfileConfigPath, "donate", "txtClanCastleTroop" & $i, "0"))
 		If $g_aiClanCastleTroopWaitType[$i] < $eTroopCount Then ; barb - IceG
-			$g_aiCCTroopsExpected[$g_aiClanCastleTroopWaitType[$i]] += $g_aiClanCastleTroopWaitQty[$i]
+			$iTempVar = $g_aiClanCastleTroopWaitType[$i] ; Fix Custom - Team AIO Mod++
+			$g_aiCCTroopsExpected[$iTempVar] += $g_aiClanCastleTroopWaitQty[$i] ; Fix Custom - Team AIO Mod++
 		EndIf
 
 		$g_aiClanCastleSpellWaitType[$i] = Int(IniRead($g_sProfileConfigPath, "donate", "cmbClanCastleSpell" & $i, $eSpellCount))
 		If $g_aiClanCastleSpellWaitType[$i] < $eSpellCount Then ; LSpell - BtSpell
-			$g_aiCCSpellsExpected[$g_aiClanCastleSpellWaitType[$i]] += 1
+			$iTempVar = $g_aiClanCastleSpellWaitType[$i] ; Fix Custom - Team AIO Mod++
+			$g_aiCCSpellsExpected[$iTempVar] += 1 ; Fix Custom - Team AIO Mod++
 		EndIf
 
 		If $i > 1 Then ContinueLoop ; Siege has only 2 combobox
 		$g_aiClanCastleSiegeWaitType[$i] = Int(IniRead($g_sProfileConfigPath, "donate", "cmbClanCastleSiege" & $i, $eSiegeMachineCount))
-		If $g_aiClanCastleSiegeWaitType[$i] < $eSiegeMachineCount Then $g_aiCCSiegeExpected[$g_aiClanCastleSiegeWaitType[$i]] = 1 ; WallW - StoneS
+		$iTempVar = $g_aiClanCastleSiegeWaitType[$i] ; Fix Custom - Team AIO Mod++
+		If $g_aiClanCastleSiegeWaitType[$i] < $eSiegeMachineCount Then $g_aiCCSiegeExpected[$iTempVar] = 1 ; WallW - StoneS ; Fix Custom - Team AIO Mod++
 	Next
 
 	$g_abRequestCCHours = StringSplit(IniRead($g_sProfileConfigPath, "planned", "RequestHours", "1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1"), "|", $STR_NOCOUNT)

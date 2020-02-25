@@ -410,7 +410,7 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag,
 	Local $aScrollPos[2] = [0, 0]
 	If UBound($CenterVillageBoolOrScrollPos) >= 2 Then
 		$aScrollPos[0] = $CenterVillageBoolOrScrollPos[0]
-		$aScrollPos[1] = $CenterVillageBoolOrScrollPos[1]
+		$aScrollPos[1] = $CenterVillageBoolOrScrollPos[1] - 160
 		$bCenterVillage = (Not $g_bDebugDisableVillageCentering)
 	EndIf
 
@@ -455,20 +455,21 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag,
 			$stone[1] = $village[5]
 			$aResult[0] = "zoomout:" & $village[6]
 			$aResult[1] = $x
-			$aResult[2] = $y
+			$aResult[2] = $y - 160
 			$g_bAndroidZoomoutModeFallback = False
 
-			If $bCenterVillage And ($bOnBuilderBase Or Not $bUpdateSharedPrefs) And ($x <> 0 Or $y <> 0) And ($UpdateMyVillage = False Or $x <> $g_iVILLAGE_OFFSET[0] Or $y <> $g_iVILLAGE_OFFSET[1]) Then
+			If $bCenterVillage And (BitOr($bOnBuilderBase, $g_bZoomFixBB) Or Not $bUpdateSharedPrefs) And ($x <> 0 Or $y <> 0) And ($UpdateMyVillage = False Or $x <> $g_iVILLAGE_OFFSET[0] Or $y <> $g_iVILLAGE_OFFSET[1]) Then ; Team AIO Mod++
+				If $g_bZoomFixBB = True Then $g_bZoomFixBB = False ; Team AIO Mod++
 				If $DebugLog Then SetDebugLog("Center Village" & $sSource & " by: " & $x & ", " & $y)
 				If $aScrollPos[0] = 0 And $aScrollPos[1] = 0 Then
 					;$aScrollPos[0] = $stone[0]
 					;$aScrollPos[1] = $stone[1]
 					; use fixed position now to prevent boat activation
-					$aScrollPos[0] = $aCenterHomeVillageClickDrag[0]
-					$aScrollPos[1] = $aCenterHomeVillageClickDrag[1]
+					$aScrollPos[0] = $aCenterHomeVillageClickDrag[0] 
+					$aScrollPos[1] = $aCenterHomeVillageClickDrag[1] - 160
 				EndIf
-				ClickP($aAway, 1, 0, "#0000") ; ensure field is clean
-				ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y)
+				;ClickP($aAway, 1, 0, "#0000") ; ensure field is clean
+				ClickDrag($aScrollPos[0], $aScrollPos[1] - 160, $aScrollPos[0] - $x, $aScrollPos[1] - $y)
 				If _Sleep(250) Then
 					$iCallCount = 0
 					Return FuncReturn($aResult)

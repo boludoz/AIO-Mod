@@ -547,7 +547,8 @@ Func FriendlyChallenge()
 				For $i = 0 To UBound($aBaseForShare) -1
 					If $aBaseForShare[$i][0] = $iRequested And $aBaseForShare[$i][1] = True Then
 						_ArrayDelete($aBaseForShare, $i)
-						Local $bIAdd[1][2] = [[$iRequested, $g_bFriendlyChallengeBase[$i]]]
+						Local $iTempFix = $g_bFriendlyChallengeBase[$i]
+						Local $bIAdd[1][2] = [[$iRequested, $iTempFix]]
 						_ArrayInsert($aBaseForShare, 0, $bIAdd)
 						SetLog("User request challenge base: " & $iRequested, $COLOR_INFO)
 						ExitLoop
