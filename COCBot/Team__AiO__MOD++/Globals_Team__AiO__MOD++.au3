@@ -24,6 +24,7 @@ Global Enum $eIcnModKingGray = 1, $eIcnModKingBlue, $eIcnModKingGreen, $eIcnModK
 
 ; ZoomMod
 Global $g_bZoomFixBB = False
+Global $g_aBoatPos[2] = [Null, Null], $Stonecoord
 
 ; Skip first check
 Global $g_bSkipfirstcheck = False, $g_hSkipfirstcheck

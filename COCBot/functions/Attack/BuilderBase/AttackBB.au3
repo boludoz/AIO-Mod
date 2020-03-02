@@ -14,8 +14,8 @@
 ; ===============================================================================================================================
 
 Func AttackBB()
+	#cs - Team AIO Mod++
 	If Not $g_bChkEnableBBAttack Then Return
-	
 	local $iSide = Random(0, 1, 1) ; randomly choose top left or top right
 	local $aBMPos = 0
 	ClickP($aAway)
@@ -63,15 +63,16 @@ Func AttackBB()
 			Return
 		EndIf
 	WEnd
+	#ce
 
 	; Get troops on attack bar and their quantities
 	local $aBBAttackBar = GetAttackBarBB()
 	If _Sleep($DELAYRESPOND) Then
-		$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
+;~ 		$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
 		If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Enabled")
 		Return
 	EndIf
-	
+
 	#Region - Custom BB Army - Team AIO Mod++
 	; Correct troops
 	If $g_bChkBBCustomArmyEnable Then BuilderBaseSelectCorrectScript($aBBAttackBar)
@@ -248,6 +249,7 @@ Func Okay()
 EndFunc
 
 Func DeployBBTroop($sName, $x, $y, $iAmount, $iSide)
+	If $sName = "Machine" Then Return ; Team AIO Mod++
 	SetLog("Deploying " & $sName & "x" & String($iAmount), $COLOR_ACTION)
 	PureClick($x, $y) ; select troop
 	If _Sleep($g_iBBSameTroopDelay) Then Return ; slow down selecting then dropping troops

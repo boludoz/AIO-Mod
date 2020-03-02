@@ -21,6 +21,7 @@
 #include "MOD GUI Control - GTFO.au3"
 #include "MOD GUI Control - AiO-Debug.au3"
 #include "MOD GUI Control - MagicItems.au3"
+#include "BBase\MOD GUI Control Tab - Builder Base.au3"
 
 ; Donation records.
 Func InputRecords()
@@ -65,17 +66,17 @@ EndFunc   ;==>chkNoDropIfShield
 Func chkDelayMod()
 	; Skip first loop
 	$g_bSkipfirstcheck = (GUICtrlRead($g_hSkipfirstcheck) = $GUI_CHECKED)
-	
+
 	For $i = 0 To UBound($g_hDeployWave) -1
 		$g_bChkEnableRandom[$i] = (GUICtrlRead($g_hChkEnableRandom[$i]) = $GUI_CHECKED)
-		
+
 		GUICtrlSetState($g_hDeployWave[$i], ($g_bChkEnableRandom[$i]) ? ($GUI_ENABLE) : ($GUI_DISABLE))
 		GUICtrlSetState($g_hDeployDelay[$i], ($g_bChkEnableRandom[$i]) ? ($GUI_ENABLE) : ($GUI_DISABLE))
 
 		; Deploy wave
 		$g_iDeployWave[$i] = Int(GUICtrlRead($g_hDeployWave[$i]))
 		GUICtrlSetData($g_hDeployWave[$i], $g_iDeployWave[$i])
-		
+
 		; Deploy delay
 		$g_iDeployDelay[$i] = Int(GUICtrlRead($g_hDeployDelay[$i]))
 		GUICtrlSetData($g_hDeployDelay[$i], $g_iDeployDelay[$i])
@@ -87,12 +88,12 @@ Func chkDelayMod()
 	$g_bNoAttackSleep = (GUICtrlRead($g_hNoAttackSleep) = $GUI_CHECKED)
 	$g_bDisableColorLog = (GUICtrlRead($g_hDisableColorLog) = $GUI_CHECKED)
 	$g_bAvoidLocation = (GUICtrlRead($g_hAvoidLocation) = $GUI_CHECKED)
-	
+
 	$g_bDeployCastleFirst[$DB] = (GUICtrlRead($g_hDeployCastleFirst[$DB]) = $GUI_CHECKED)
 	$g_bDeployCastleFirst[$LB] = (GUICtrlRead($g_hDeployCastleFirst[$LB]) = $GUI_CHECKED)
-	
 
-	
+
+
 	$g_iIntSleep = Int(GUICtrlRead($g_hIntSleep))
 	GUICtrlSetData($g_hDelayLabel, $g_iIntSleep)
 

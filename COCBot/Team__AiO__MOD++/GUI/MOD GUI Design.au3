@@ -24,6 +24,7 @@ $g_hGUI_MOD_TAB_ITEM6 = 0, $g_hGUI_MOD_TAB_ITEM7 = 0
 #include "MOD GUI Design - GTFO.au3"
 #include "MOD GUI Design - AiO-Debug.au3"
 #include "MOD GUI Design - WarPreparation.au3"
+#include "MOD GUI Design - Builder Base.au3"
 
 Func CreateMODTab()
 
@@ -44,7 +45,7 @@ Func CreateMODTab()
 			TabWarPreparationGUI()
 		$g_hGUI_MOD_TAB_ITEM6 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_06_STab_06", "Misc"))
 			TabMiscGUI()
-		
+
 	If $g_bDevMode Then
 		$g_hGUI_MOD_TAB_ITEM7 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_06_STab_07", "Debug"))
 			TabDebugGUI()
@@ -199,7 +200,7 @@ Func CreateDonationsControlSubTab()
 	Local $xStart = 20, $yStart = 20
 	Local $x = $xStart, $y = $yStart
 
-	
+
 	GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "GroupDonationslimiter", "Donations stats + limiter"), $x, $y, 436, 22, BitOR($SS_CENTER, $SS_CENTERIMAGE))
 	GUICtrlSetBkColor(-1, 0x333300) ; Blue
 	GUICtrlSetFont(-1, 12, 500, 0, "Candara", $CLEARTYPE_QUALITY)
@@ -215,7 +216,7 @@ Func CreateDonationsControlSubTab()
 				GUICtrlSetLimit(-1, 3)
 		Next
 		$y += 115
-		
+
 		GUICtrlCreateLabel("Limit ", $x, $y)
 		$g_hDayLimitTroops = GUICtrlCreateInput("0", $x + 25, -1 , 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 		GUICtrlSetOnEvent(-1, "InputRecords")
@@ -232,7 +233,7 @@ Func CreateDonationsControlSubTab()
 				GUICtrlSetLimit(-1, 3)
 		Next
 		$y += 50
-		
+
 		GUICtrlCreateLabel("Limit ", $x, $y)
 		$g_hDayLimitSpells = GUICtrlCreateInput("0", $x + 25, -1 , 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 		GUICtrlSetOnEvent(-1, "InputRecords")
@@ -247,20 +248,20 @@ Func CreateDonationsControlSubTab()
 				GUICtrlSetLimit(-1, 3)
 		Next
 		$y += 50
-		
+
 		GUICtrlCreateLabel("Limit ", $x, $y)
 		$g_hDayLimitSieges = GUICtrlCreateInput("0", $x + 25, -1 , 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 		GUICtrlSetOnEvent(-1, "InputRecords")
 		GUICtrlSetBkColor(-1, 0xD1DFE7)
 		GUICtrlCreateLabel("per hours.   Total : ", $x + 60, -1)
 		$g_hDayTotalSieges = GUICtrlCreateLabel("0", $x + 150, -1)
-		
+
 		$x += 200
 		GUICtrlCreateLabel("Restart every hours : ", $x, -1)
 		$g_hCmbRestartEvery = GUICtrlCreateInput("0", $x + 125, -1 , 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 		GUICtrlSetOnEvent(-1, "InputRecords")
 		GUICtrlSetBkColor(-1, 0xD1DFE7)
-		
+
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 EndFunc   ;==>CreateDonationsSubTab

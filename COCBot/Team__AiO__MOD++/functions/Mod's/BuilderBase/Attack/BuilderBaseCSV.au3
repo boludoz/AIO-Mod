@@ -181,8 +181,8 @@ Func BuilderBaseParseAttackCSV($AvailableTroops, $DeployPoints, $DeployBestPoint
 						; $aAvailableTroops_NXQ  [Name][Xaxis][Quantities]
 						For $i = 0 To UBound($aAvailableTroops_NXQ) - 1
 							If $sTroopName = $aAvailableTroops_NXQ[$i][0] Then ;We Just Need To redo the ocr for mentioned troop only
-								$aAvailableTroops_NXQ[$i][4] = Number(_getTroopCountSmall(Number($aAvailableTroops_NXQ[$i][1]), 640)) ; RC Done
-								If $aAvailableTroops_NXQ[$i][4] < 1 Then $aAvailableTroops_NXQ[$i][4] = Number(_getTroopCountBig(Number($aAvailableTroops_NXQ[$i][1]), 633)) ; RC Done ; For Big numbers when the troop is selected
+								$aAvailableTroops_NXQ[$i][4] = Number(getTroopCountSmall(Number($aAvailableTroops_NXQ[$i][1]), 640))
+								If $aAvailableTroops_NXQ[$i][4] < 1 Then $aAvailableTroops_NXQ[$i][4] = Number(getTroopCountBig(Number($aAvailableTroops_NXQ[$i][1]), 633)) ; For Big numbers when the troop is selected
 							EndIf
 						Next
 

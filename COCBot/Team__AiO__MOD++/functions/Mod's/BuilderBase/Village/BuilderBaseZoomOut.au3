@@ -13,8 +13,6 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Global $g_aBoatPos[2] = [Null, Null], $Stonecoord
-
 Func TestGetBuilderBaseSize()
 	Setlog("** TestGetBuilderBaseSize START**", $COLOR_DEBUG)
 	Local $Status = $g_bRunState
@@ -83,8 +81,9 @@ EndFunc   ;==>TestGetBuilderBaseSize
 Func BuilderBaseZoomOut()
 	SetDebugLog("BuilderBaseZoomOut")
 	If Not $g_bRunState Then Return
-	ZoomOut()
-	If IsArray(_ImageSearchXML($g_sImgZoomOutDirBB)) Then Return True
+	If ZoomOut() = True Then Return True
+	;Local $= _ImageSearchXML($g_sImgZoomOutDirBB)
+	;If IsArray() Then Return True
 	Return False
 EndFunc   ;==>BuilderBaseSendZoomOut
 

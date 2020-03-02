@@ -755,6 +755,8 @@ Func GUIControl_WM_NOTIFY($hWind, $iMsg, $wParam, $lParam)
 			tabDONATE()
 		Case $g_hGUI_ATTACK_TAB
 			tabAttack()
+		Case $g_hGUI_BUILDER_BASE_TAB ; BBase - Team AIO Mod++
+            tabBuilderBase()
 		Case $g_hGUI_TRAINARMY_TAB
 			tabARMY()
 		Case $g_hGUI_SEARCH_TAB
@@ -1162,12 +1164,14 @@ Func BotGuiModeToggle()
 			GUICtrlDelete($g_hTabMain)
 			GUICtrlDelete($g_hTabLog)
 			GUICtrlDelete($g_hTabVillage)
+            GUICtrlDelete($g_hTabBuilderBase) ; BBase - Team AIO Mod++
 			GUICtrlDelete($g_hTabAttack)
 			GUICtrlDelete($g_hTabMOD)
 			GUICtrlDelete($g_hTabBot)
 			GUICtrlDelete($g_hTabAbout)
 
 			GUICtrlDelete($g_hGUI_VILLAGE_TAB)
+            GUICtrlDelete($g_hGUI_BUILDER_BASE_TAB) ; BBase - Team AIO Mod++
 			GUICtrlDelete($g_hGUI_MISC_TAB)
 			GUICtrlDelete($g_hGUI_DONATE_TAB)
 			GUICtrlDelete($g_hGUI_UPGRADE_TAB)
@@ -1175,7 +1179,6 @@ Func BotGuiModeToggle()
 
 			GUICtrlDelete($g_hGUI_ATTACK_TAB)
 			GUICtrlDelete($g_hGUI_TRAINARMY_TAB)
-			GUICtrlDelete($g_hGUI_TRAINARMY_ARMY_TAB)
 			GUICtrlDelete($g_hGUI_SEARCH_TAB)
 			GUICtrlDelete($g_hGUI_DEADBASE_TAB)
 			GUICtrlDelete($g_hGUI_ACTIVEBASE_TAB)
@@ -1184,6 +1187,7 @@ Func BotGuiModeToggle()
 			GUICtrlDelete($g_hGUI_MOD_TAB)
 			GUICtrlDelete($g_hGUI_BOT_TAB)
 			GUICtrlDelete($g_hGUI_LOG_SA)
+            GUICtrlDelete($g_hGUI_LOG_BB) ; BBase - Team AIO Mod++
 			GUICtrlDelete($g_hGUI_SWITCH_OPTIONS_TAB)
 			GUICtrlDelete($g_hGUI_STATS_TAB)
 
@@ -1319,7 +1323,7 @@ Func BotCloseRequest()
 	$g_iBotAction = $eBotClose
 EndFunc   ;==>BotCloseRequest
 
-#CS Unutil code - Team AIO Mod++ 
+#CS Unutil code - Team AIO Mod++
 Func BotCloseRequestProcessed()
 	;Return False ; no stable yet, so disabled for now
 	Return $g_iBotAction = $eBotClose And $g_bAndroidEmbedded = False
@@ -1721,18 +1725,20 @@ Func tabMain()
 	Local $tabidx = GUICtrlRead($g_hTabMain)
 	Select
 		Case $tabidx = 0 ; Log
-			GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
+            GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
+            GUISetState(@SW_HIDE, $g_hGUI_BUILDER_BASE) ; BBase - Team AIO Mod++
 			GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
-			GUISetState(@SW_HIDE, $g_hGUI_MOD)
 			GUISetState(@SW_HIDE, $g_hGUI_BOT)
+			GUISetState(@SW_HIDE, $g_hGUI_MOD) ; BBase - Team AIO Mod++
 			GUISetState(@SW_HIDE, $g_hGUI_ABOUT)
 			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_LOG)
 
 		Case $tabidx = 1 ; Village
 			GUISetState(@SW_HIDE, $g_hGUI_LOG)
 			GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
-			GUISetState(@SW_HIDE, $g_hGUI_MOD)
 			GUISetState(@SW_HIDE, $g_hGUI_BOT)
+            GUISetState(@SW_HIDE, $g_hGUI_BUILDER_BASE) ; BBase - Team AIO Mod++
+			GUISetState(@SW_HIDE, $g_hGUI_MOD) ; BBase - Team AIO Mod++
 			GUISetState(@SW_HIDE, $g_hGUI_ABOUT)
 			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_VILLAGE)
 			tabVillage()
@@ -1740,45 +1746,61 @@ Func tabMain()
 		Case $tabidx = 2 ; Attack
 			GUISetState(@SW_HIDE, $g_hGUI_LOG)
 			GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
-			GUISetState(@SW_HIDE, $g_hGUI_MOD)
 			GUISetState(@SW_HIDE, $g_hGUI_BOT)
+            GUISetState(@SW_HIDE, $g_hGUI_BUILDER_BASE) ; BBase - Team AIO Mod++
+			GUISetState(@SW_HIDE, $g_hGUI_MOD) ; BBase - Team AIO Mod++
 			GUISetState(@SW_HIDE, $g_hGUI_ABOUT)
 			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_ATTACK)
 			tabAttack()
 
-		Case $tabidx = 3 ; Mods
-			GUISetState(@SW_HIDE, $g_hGUI_LOG)
-			GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
-			GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
-			GUISetState(@SW_HIDE, $g_hGUI_BOT)
-			GUISetState(@SW_HIDE, $g_hGUI_ABOUT)
-			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_MOD)
-			tabMod()
-
-		Case $tabidx = 4 ; Options
-			GUISetState(@SW_HIDE, $g_hGUI_LOG)
-			GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
-			GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
+		#Region - BBase - Team AIO Mod++
+        Case $tabidx = 3 ; Builder Base
+            GUISetState(@SW_HIDE, $g_hGUI_LOG)
+            GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
+            GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
+            GUISetState(@SW_HIDE, $g_hGUI_BOT)
+            GUISetState(@SW_HIDE, $g_hGUI_ABOUT)
 			GUISetState(@SW_HIDE, $g_hGUI_MOD)
-			GUISetState(@SW_HIDE, $g_hGUI_ABOUT)
-			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_BOT)
-			tabBot()
+            GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_BUILDER_BASE)
+            tabBuilderBase()
 
-		Case $tabidx = 5 ; About
+		Case $tabidx = 4  ; Mod
 			GUISetState(@SW_HIDE, $g_hGUI_LOG)
 			GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
 			GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
-			GUISetState(@SW_HIDE, $g_hGUI_MOD)
 			GUISetState(@SW_HIDE, $g_hGUI_BOT)
 			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_ABOUT)
+            GUISetState(@SW_HIDE, $g_hGUI_BUILDER_BASE)
+            GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_MOD)
+		#EndRegion - BBase - Team AIO Mod++
+
+        Case $tabidx = 5 ; Options
+            GUISetState(@SW_HIDE, $g_hGUI_LOG)
+            GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
+            GUISetState(@SW_HIDE, $g_hGUI_BUILDER_BASE) ; BBase - Team AIO Mod++
+            GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
+            GUISetState(@SW_HIDE, $g_hGUI_ABOUT)
+			GUISetState(@SW_HIDE, $g_hGUI_MOD) ; BBase - Team AIO Mod++
+            GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_BOT)
+            tabBot()
+
+		Case $tabidx = 6 ; About
+           GUISetState(@SW_HIDE, $g_hGUI_LOG)
+           GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
+           GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
+           GUISetState(@SW_HIDE, $g_hGUI_BOT)
+           GUISetState(@SW_HIDE, $g_hGUI_BUILDER_BASE)
+           GUISetState(@SW_HIDE, $g_hGUI_MOD)
+
+           GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_ABOUT)
 
 		Case Else
 			GUISetState(@SW_HIDE, $g_hGUI_LOG)
 			GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
 			GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
-			GUISetState(@SW_HIDE, $g_hGUI_MOD)
 			GUISetState(@SW_HIDE, $g_hGUI_BOT)
-			GUISetState(@SW_HIDE, $g_hGUI_ABOUT)
+            GUISetState(@SW_HIDE, $g_hGUI_BUILDER_BASE) ; BBase - Team AIO Mod++
+			GUISetState(@SW_HIDE, $g_hGUI_MOD) ; BBase - Team AIO Mod++
 	EndSelect
 
 EndFunc   ;==>tabMain
@@ -1945,6 +1967,39 @@ Func tabSEARCH()
 
 EndFunc   ;==>tabSEARCH
 
+#Region - BBase - Team AIO Mod++
+Func tabBuilderBase()
+	Local $tabidx = GUICtrlRead($g_hGUI_BUILDER_BASE_TAB)
+	Local $tabtsx = _GUICtrlTab_GetItemRect($g_hGUI_BUILDER_BASE_TAB, 2) ; use x,y coordinate of tabitem rectangle bottom right corner to dynamically reposition the checkbox control (for translated tabnames)
+
+	Select
+		Case $tabidx = 0 ; MISC & STATS tab
+			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_LOG_BB)
+			GUISetState(@SW_HIDE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE)
+			GUISetState(@SW_HIDE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV)
+			GUICtrlSetPos($g_hChkBuilderAttack, $tabtsx[2] - 18, $tabtsx[3] - 15)
+			;checkIfBBLogIsEmptyInitialize() ;When we switch to main from mini it then we need to initialize header
+		Case $tabidx = 1 ; UPGRADE tab
+			GUISetState(@SW_HIDE, $g_hGUI_LOG_BB)
+			GUISetState(@SW_HIDE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE)
+			GUISetState(@SW_HIDE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV)
+			GUICtrlSetPos($g_hChkBuilderAttack, $tabtsx[2] - 18, $tabtsx[3] - 15)
+		Case $tabidx = 2 ; ATTACK PLAN tab
+			GUISetState(@SW_HIDE, $g_hGUI_LOG_BB)
+			If GUICtrlRead($g_hChkBuilderAttack) = $GUI_CHECKED Then
+				GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE)
+				GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV)
+				GUICtrlSetState($g_hLblBuilderAttackDisabled, $GUI_HIDE)
+			Else
+				GUISetState(@SW_HIDE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE)
+				GUISetState(@SW_HIDE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV)
+				GUICtrlSetState($g_hLblBuilderAttackDisabled, $GUI_SHOW)
+			EndIf
+			GUICtrlSetPos($g_hChkBuilderAttack, $tabtsx[2] - 15, $tabtsx[3] - 17)
+	EndSelect
+EndFunc   ;==>tabBuilderBase
+#EndRegion - BBase - Team AIO Mod++
+
 ; Team AiO MOD++ (2019)
 Func tabDONATE()
 	If $g_iGuiMode <> 1 Then Return
@@ -1988,7 +2043,7 @@ Func tabDONATE()
 			GUISetState(@SW_HIDE, $g_hGUI_RequestCC)
 			GUISetState(@SW_HIDE, $g_hGUI_DONATECC)
 			GUISetState(@SW_HIDE, $g_hGUI_ScheduleCC)
-			
+
 			If GUICtrlRead($g_hChkDonate) = $GUI_CHECKED Then
 				GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_DonateLimiter)
 				GUICtrlSetState($g_hLblScheduleDisabled, $GUI_HIDE)
@@ -2114,10 +2169,12 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 	Local $tTcItem = DllStructCreate("uint;dword;dword;ptr;int;int;int")
 	DllStructSetData($tTcItem, 1, 0x0002)
 	Switch $nCtrl
+		#Region BBase - Team AIO Mod++
 		Case $g_hTabMain
 			; the icons for main tab
-            Local $aIconIndex = [$eIcnHourGlass, $eIcnTH13, $eIcnAttack, $eIcnAIOMod, $eIcnGUI, $eIcnInfo]
-			
+			Local $aIconIndex = [$eIcnHourGlass, $eIcnTH13, $eIcnAttack, $eIcnBuilderHall, $eIcnAIOMod, $eIcnGUI, $eIcnInfo]
+		#EndRegion BBase - Team AIO Mod++
+
 		Case $g_hGUI_VILLAGE_TAB
 			; the icons for village tab
 			Local $aIconIndex = [$eIcnTH1, $eIcnCC, $eIcnLaboratory, $eIcnAchievements, $eIcnTelegram]
@@ -2127,7 +2184,7 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 			Local $aIconIndex = [$eIcnTrain, $eIcnGem, $eIcnReOrder, $eIcnOptions]
 
 		Case $g_hGUI_MISC_TAB
-			Local $aIconIndex = [$eIcnTH1, $eIcnBuilderHall, $eIcnStrongMan, $eIcnPowerPotion]
+			Local $aIconIndex = [$eIcnTH1, $eIcnStrongMan, $eIcnPowerPotion] ; BBase - Team AIO Mod++
 
 		Case $g_hGUI_DONATE_TAB
 			; the icons for donate tab
@@ -2184,6 +2241,11 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 			; the icons for stats tab
 			Local $aIconIndex = [$eIcnGoldElixir, $eIcnOptions, $eIcnCamp, $eIcnCCRequest, $eIcnGoldElixir]
 
+		#Region BBase - Team AIO Mod++
+		Case $g_hGUI_BUILDER_BASE_TAB
+			; the icons for builder base tab
+			Local $aIconIndex = [$eIcnGold, $eIcnLaboratory, $eIcnTroops]
+		#EndRegion BBase - Team AIO Mod++
 		Case Else
 			;do nothing
 	EndSwitch
@@ -2196,7 +2258,7 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 			ElseIf $nCtrl = $g_hGUI_SWITCH_OPTIONS_TAB Then
 				AddImageToModTab($nCtrl, $hImageList, $i, $tTcItem, $g_sLibModIconPath, $aIconIndex[$i] - 1)
 			ElseIf $nCtrl = $g_hTabMain Then
-				If $i <> 3 Then
+				If $i <> 4 Then
 					AddImageToTab($nCtrl, $hImageList, $i, $tTcItem, $g_sLibIconPath, $aIconIndex[$i] - 1)
 				Else
 					AddImageToModTab($nCtrl, $hImageList, $i, $tTcItem, $g_sLibModIconPath, $aIconIndex[$i] - 1)

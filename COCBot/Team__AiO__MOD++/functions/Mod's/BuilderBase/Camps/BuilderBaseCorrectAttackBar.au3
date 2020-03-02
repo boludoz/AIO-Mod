@@ -55,14 +55,45 @@ Func BuilderBaseSelectCorrectScript(ByRef $AvailableTroops)
 
 	If Not $g_bRunState Then Return
 	Local $aLines[0]
-	Local $sName = "CAMP" & "|"
-	For $iName = 0 To UBound($g_iCmbCampsBB) - 1
-		$sName &= ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) <> "EmptyCamp" ? ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) : ("Barbarian")
-		$sName &= "|"
-		If $iName = 0 Then ContinueLoop
-		Local $aFakeCsv[1] = [$sName]
-		_ArrayAdd($aLines, $aFakeCsv)
-	Next
+	If ($g_iCmbBBAttack = $g_eBBAttackCSV) Then
+		Static $lastScript
+		If Not BitOR($g_bChkBBRandomAttack, $g_bChkBBGetFromCSV) Then
+			$g_iBuilderBaseScript = 0
+			$lastScript = $g_iBuilderBaseScript
+			Setlog("Attack using the " & $g_sAttackScrScriptNameBB[$g_iBuilderBaseScript] & " script.", $COLOR_INFO)
+			Return
+		EndIf
+
+		If $g_bChkBBGetFromCSV And Not $g_bChkBBRandomAttack Then
+			$lastScript = 0
+			$g_iBuilderBaseScript = 0
+		Else
+			; Random script , but not the last
+			For $i = 0 To 10
+				$g_iBuilderBaseScript = Random(0, 2, 1)
+				If $lastScript <> $g_iBuilderBaseScript Then
+					$lastScript = $g_iBuilderBaseScript
+					ExitLoop
+				EndIf
+			Next
+		EndIf
+		Setlog("Attack using the " & $g_sAttackScrScriptNameBB[$g_iBuilderBaseScript] & " script.", $COLOR_INFO)
+		; Let load the Command [Troop] from CSV
+		Local $FileNamePath = @ScriptDir & "\CSV\BuilderBase\" & $g_sAttackScrScriptNameBB[$g_iBuilderBaseScript] & ".csv"
+		If FileExists($FileNamePath) Then $aLines = FileReadToArray($FileNamePath)
+
+	Else
+		Local $aLines[0]
+		Local $aInCamp[6] = [$g_iCmbBBArmy1, $g_iCmbBBArmy2, $g_iCmbBBArmy3, $g_iCmbBBArmy4, $g_iCmbBBArmy5, $g_iCmbBBArmy6]
+		Local $sName = "CAMP" & "|"
+		For $iName = 0 To UBound($aInCamp) - 1
+			$sName &= ArmyCampSelectedNames($aInCamp[$iName]) <> "EmptyCamp" ? ArmyCampSelectedNames($aInCamp[$iName]) : ("Barb")
+			$sName &= "|"
+			If $iName = 0 Then ContinueLoop
+			Local $aFakeCsv[1] = [$sName]
+			_ArrayAdd($aLines, $aFakeCsv)
+		Next
+	EndIf
 
 	; Move backwards through the array deleting the blanks
 	For $i = UBound($AvailableTroops) - 1 To 0 Step -1

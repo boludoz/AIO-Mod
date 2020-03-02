@@ -87,7 +87,7 @@
 
 #include "functions\Mod's\BuilderBase\Camps\BuilderBaseCorrectAttackBar.au3"
 #include "functions\Mod's\BuilderBase\Camps\BuilderBaseCheckArmy.au3"
-#include "functions\Mod's\BuilderBase\Attack\BuilderBaseDropTrophy.au3"
+;~ #include "functions\Mod's\BuilderBase\Attack\BuilderBaseDropTrophy.au3"
 
 ;~ #include "functions\Mod's\BuilderBase\Village\Collect.au3"
 ;~ #include "functions\Mod's\BuilderBase\Village\StartClockTowerBoost.au3"

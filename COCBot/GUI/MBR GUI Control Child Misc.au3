@@ -600,7 +600,6 @@ Func ChkFreeMagicItems()
 		GUICtrlSetState($g_hChkFreeMagicItems, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
 	EndIf
 EndFunc   ;==>ChkFreeMagicItems
-#CE
 Func chkStartClockTowerBoost()
 	If GUICtrlRead($g_hChkStartClockTowerBoost) = $GUI_CHECKED Then
 		GUICtrlSetState($g_hChkCTBoostBlderBz, $GUI_ENABLE)
@@ -608,6 +607,7 @@ Func chkStartClockTowerBoost()
 		GUICtrlSetState($g_hChkCTBoostBlderBz, $GUI_DISABLE)
 	EndIf
 EndFunc   ;==>chkStartClockTowerBoost
+#CE
 
 Func chkActivateClangames()
 	If GUICtrlRead($g_hChkClanGamesEnabled) = $GUI_CHECKED Then

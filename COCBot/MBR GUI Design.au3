@@ -330,10 +330,15 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 
 	SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_05", "Loading Attack tab..."))
 	CreateAttackTab()
+	
+	#Region - Team AIO Mod++
+	SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_06", "Loading Builder Base tab...")) 
+	CreateBuilderBaseTab()
 
 	SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_10", "Loading Mods tab..."))
 	CreateMODTab()
-
+	#EndRegion
+	
 	SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_06", "Loading Bot tab..."))
 	CreateBotTab() ; also creates  $g_hLastControlToHide
 	If Not $bGuiModeUpdate Then DistributorsUpdateGUI() ; Now loading Distributors (during GUI switch it must be called outside CreateMainGUIControls()!)
@@ -358,7 +363,8 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 	$g_hTabLog = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_01", "Log"))
 	$g_hTabVillage = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_02", "Village"))
 	$g_hTabAttack = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_03", "Attack Plan"))
-	$g_hTabMOD = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_06", "Mods"))
+	$g_hTabBuilderBase = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_10", "B. Base"))  ; BBase - Team AIO Mod++
+	$g_hTabMOD = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_06", "Mods"))           ; Team AIO Mod++
 	$g_hTabBot = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_04", "Bot"))
 	$g_hTabAbout = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_05", "About Us"))
 	GUICtrlCreateTabItem("")
@@ -372,6 +378,8 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 	; Static to avoid GDI Handle leak
 	Static $g_hTabMain_ImageList = 0
 	Static $g_hGUI_VILLAGE_TAB_ImageList = 0
+	Static $g_hGUI_BUILDER_BASE_TAB_ImageList = 0 ; BBase - Team AIO Mod++
+	Static $g_hGUI_MOD_TAB_ImageList = 0 ; Team AIO Mod++
 	Static $g_hGUI_MISC_TAB_ImageList = 0
 	Static $g_hGUI_DONATE_TAB_ImageList = 0
 	Static $g_hGUI_UPGRADE_TAB_ImageList = 0
@@ -384,7 +392,6 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 	Static $g_hGUI_THSNIPE_TAB_ImageList = 0
 	Static $g_hGUI_ATTACKOPTION_TAB_ImageList = 0
 	Static $g_hGUI_STRATEGIES_TAB_ImageList = 0
-	Static $g_hGUI_MOD_TAB_ImageList = 0
 	Static $g_hGUI_BOT_TAB_ImageList = 0
 	Static $g_hGUI_SWITCH_OPTIONS_TAB_ImageList = 0
 	Static $g_hGUI_STATS_TAB_ImageList = 0
@@ -398,6 +405,7 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 	Bind_ImageList($g_hGUI_NOTIFY_TAB, $g_hGUI_NOTIFY_TAB_ImageList)
 
 	Bind_ImageList($g_hGUI_ATTACK_TAB, $g_hGUI_ATTACK_TAB_ImageList)
+	Bind_ImageList($g_hGUI_BUILDER_BASE_TAB, $g_hGUI_BUILDER_BASE_TAB_ImageList) ; Team AIO Mod++
 	Bind_ImageList($g_hGUI_TRAINARMY_TAB, $g_hGUI_TRAINARMY_TAB_ImageList)
 	Bind_ImageList($g_hGUI_SEARCH_TAB, $g_hGUI_SEARCH_TAB_ImageList)
 	Bind_ImageList($g_hGUI_DEADBASE_TAB, $g_hGUI_DEADBASE_TAB_ImageList)

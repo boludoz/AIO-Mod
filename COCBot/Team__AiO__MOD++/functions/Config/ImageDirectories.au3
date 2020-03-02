@@ -13,7 +13,7 @@
 #Region BuilderBaseCustomArmy
 Global $g_sImgCustomArmyBB = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\Attack\VersusBattle\ChangeTroops\"
 Global $aArmyTrainButtonBB = [46, 572, 0xE5A439, 10]
-Global Const $g_sImgPathFillArmyCampsWindow = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\FillArmyCamps\Window\" 
+Global Const $g_sImgPathFillArmyCampsWindow = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\FillArmyCamps\Window\"
 Global Const $g_sImgPathTroopsTrain = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\FillArmyCamps\TroopsTrain\"
 Global Const $g_sImgPathCamps = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\FillArmyCamps\Bundles\Camps\"
 #EndRegion
@@ -60,4 +60,45 @@ Global $g_sImgPotionsBtnArmy = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Mag
 Global $g_sImgArmyOverviewTroopQueued = @ScriptDir & "\imgxml\ArmyOverview\TroopQueued\"
 #EndRegion CustomArmy
 
+#Region CustomRequest
 Global $g_sImgArmyRequestCC = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Request"
+#EndRegion CustomRequest
+
+#Region Builder Base
+Global $g_sModImageLocation = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Old"
+
+;Machine Upgrade
+Global Const $g_sXMLTroopsUpgradeMachine = $g_sModImageLocation & "\BuildersBase\TroopsUpgrade\Machine"
+
+; Builder Base
+Global Const $g_sImgPathIsCTBoosted = $g_sModImageLocation & "\BuildersBase\ClockTowerBoosted"
+Global Const $g_sImgAvailableAttacks = $g_sModImageLocation & "\BuildersBase\AvailableAttacks"
+
+; Check Army Builder Base
+;Global $aArmyTrainButtonBB = [46, 572, 0xE5A439, 10]
+;Global Const $g_sImgPathFillArmyCampsWindow = $g_sModImageLocation & "\BuildersBase\FillArmyCamps\Window"
+;Global Const $g_sImgPathCamps = $g_sModImageLocation & "\BuildersBase\Bundles\Camps\"
+;Global Const $g_sImgPathTroopsTrain = $g_sModImageLocation & "\BuildersBase\FillArmyCamps\TroopsTrain"
+
+; Builder Base Attack
+Global $g_aOpponentVillageVisible[1][3] = [[0xFED5D4, 0, 1]] ; more ez ; samm0d
+
+;Global Const $g_sBundleAttackBarBB = $g_sModImageLocation & "\BuildersBase\Bundles\AttackBar"
+Global Const $g_sBundleBuilderHall = $g_sModImageLocation & "\BuildersBase\Bundles\AttackBuildings\BuilderHall"
+Global Const $g_sBundleDeployPointsBB = $g_sModImageLocation & "\BuildersBase\Bundles\AttackBuildings\DeployPoints"
+
+Global Const $g_sImgOpponentBuildingsBB = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\Buildings\"
+
+Global Const $g_sImgAttackBtnBB = $g_sModImageLocation & "\BuildersBase\Attack\AttackBtn\"
+Global Const $g_sImgVersusWindow = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\Window\"
+;~ Global Const $g_sImgFullArmyBB = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\ArmyStatus\Full\"
+;~ Global Const $g_sImgHeroStatusRec = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\ArmyStatus\Hero\Recovering\"
+;~ Global Const $g_sImgHeroStatusUpg = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\ArmyStatus\Hero\Upgrading\"
+;~ Global Const $g_sImgHeroStatusMachine = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\ArmyStatus\Hero\Battle Machine\"
+Global Const $g_sImgCloudSearch = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\Clouds\"
+
+; Report Window : Victory | Draw | Defeat
+Global Const $g_sImgReportWaitBB = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\Report\Waiting"
+Global Const $g_sImgReportFinishedBB = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\Report\Replay"
+Global Const $g_sImgReportResultBB = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\Report\Result"
+#EndRegion Builder Base Attack

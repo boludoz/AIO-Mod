@@ -16,12 +16,12 @@
 Func PrepareAttackBB($bTest = False)
 	If $bTest Then $g_aiCurrentLootBB[$eLootTrophyBB] = 1004
 	If $bTest Then Setlog($g_aiCurrentLootBB[$eLootTrophyBB], $COLOR_INFO)
-	
+
 	Local $bIsToDropTrophies = False
 
 	If $g_bChkBBTrophyRange Then
 		SetDebugLog("Current Trophies: " & $g_aiCurrentLootBB[$eLootTrophyBB] & " Lower Limit: " & $g_iTxtBBTrophyLowerLimit & " Upper Limit: " & $g_iTxtBBTrophyUpperLimit)
-		
+
 		If ($g_aiCurrentLootBB[$eLootTrophyBB] > $g_iTxtBBTrophyUpperLimit) Then
 			SetLog("Trophies out of range.")
 			$bIsToDropTrophies = True
@@ -30,7 +30,7 @@ Func PrepareAttackBB($bTest = False)
 			Return False
 		EndIf
 	EndIf
-	
+
 	If _Sleep(1500) Then Return ; Team AIO Mod++
 
 	If Not ClickAttack() Then Return False
@@ -48,14 +48,14 @@ Func PrepareAttackBB($bTest = False)
 			Return False
 		EndIf
 	EndIf
-	
+
 	#Region - Custom army BB - Team AIO Mod++
-	If $bIsToDropTrophies Then
-		SetLog("Trophies drop.")
-		If _Sleep(1500) Then Return ; Team AIO Mod++
-		BuilderBaseDropTrophy()
-		Return
-	EndIf
+;~ 	If $bIsToDropTrophies Then
+;~ 		SetLog("Trophies drop.")
+;~ 		If _Sleep(1500) Then Return ; Team AIO Mod++
+;~ 		BuilderBaseDropTrophy()
+;~ 		Return
+;~ 	EndIf
 	#EndRegion - Custom army BB - Team AIO Mod++
 
 	$g_bBBMachineReady = CheckMachReady()
@@ -131,7 +131,7 @@ Func CheckMachReady()
 		$bIsReaddy = False
 	EndIf
 	Return $bIsReaddy
-EndFunc   ;==>ArmyStatus
+EndFunc   ;==>CheckMachReady
 #EndRegion
 
 Func CheckArmyReady()
@@ -160,7 +160,7 @@ Func CheckArmyReady()
 		If $bTraining Then SetLog("Troops are training.")
 
 		#Region - Custom army BB - Team AIO Mod++
-			If $bNeedTrain Then 
+			If $bNeedTrain Then
 				ClickP($aAway, 1, 0, "#0000") ; ensure field is clean
 				If _Sleep(1500) Then Return ; Team AIO Mod++ Then Return
 				SetLog("Troops need to be trained in the training tab.")
