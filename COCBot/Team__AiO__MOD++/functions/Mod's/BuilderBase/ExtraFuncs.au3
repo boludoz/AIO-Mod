@@ -1,7 +1,7 @@
 #cs ----------------------------------------------------------------------------
 
  AutoIt Version: 3.3.14.5
- Author:         boludoz = boldina
+ Author:         boludoz = Boldina
 
  Script Function:
 	Extra BB Funcs.

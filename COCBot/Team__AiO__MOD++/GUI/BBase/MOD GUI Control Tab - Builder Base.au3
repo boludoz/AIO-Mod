@@ -4,7 +4,7 @@
 ; Syntax ........:
 ; Parameters ....: None
 ; Return values .: None
-; Author ........: Fahid.Mahmood (2018)
+; Author ........: Boldina (2018)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2018
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -12,35 +12,6 @@
 ; Example .......: No
 ; ===============================================================================================================================
 #include-once
-Func ChkBBWalls()
-	If GUICtrlRead($g_hChkBBUpgradeWalls) = $GUI_CHECKED Then
-		$g_bChkBBUpgradeWalls = True
-		GUICtrlSetState($g_hLblBBWallLevelInfo, $GUI_ENABLE)
-		GUICtrlSetState($g_hCmbBBWallLevel, $GUI_ENABLE)
-		GUICtrlSetState($g_hLblBBWallCostInfo, $GUI_ENABLE)
-		GUICtrlSetState($g_hLblBBWallCost, $GUI_ENABLE)
-		GUICtrlSetState($g_hPicBBWallUpgrade, $GUI_SHOW)
-		GUICtrlSetState($g_hTxtBBWallNumber, $GUI_SHOW)
-		GUICtrlSetState($g_hLblBBWallNumberInfo, $GUI_SHOW)
-	Else
-		$g_bChkBBUpgradeWalls = False
-		GUICtrlSetState($g_hLblBBWallLevelInfo, $GUI_DISABLE)
-		GUICtrlSetState($g_hCmbBBWallLevel, $GUI_DISABLE)
-		GUICtrlSetState($g_hLblBBWallCostInfo, $GUI_DISABLE)
-		GUICtrlSetState($g_hLblBBWallCost, $GUI_DISABLE)
-		GUICtrlSetState($g_hPicBBWallUpgrade, $GUI_HIDE)
-		GUICtrlSetState($g_hTxtBBWallNumber, $GUI_HIDE)
-		GUICtrlSetState($g_hLblBBWallNumberInfo, $GUI_HIDE)
-	EndIf
-EndFunc ;==>ChkBBWalls
-
-Func cmbBBWall()
-	$g_iCmbBBWallLevel = _GUICtrlComboBox_GetCurSel($g_hCmbBBWallLevel)
-	; Wall search level, 0 is not a level , this is the selected level to upgrade
-	GUICtrlSetData($g_hLblBBWallCost, _NumberFormat($g_aiWallBBInfoPerLevel[$g_iCmbBBWallLevel + 2][1]))
-	_GUICtrlSetImage($g_hPicBBWallUpgrade, $g_sLibBBIconPath, $g_iCmbBBWallLevel + 19)
-EndFunc   ;==>cmbBBWall
-
 Func btnBBAtkLogClear()
 	_GUICtrlRichEdit_SetText($g_hTxtBBAtkLog, "")
 	BBAtkLogHead()
@@ -103,6 +74,26 @@ Func chkBuilderAttack()
 	EndIf
 EndFunc   ;==>chkBuilderAttack
 
+Func cmbBBAttack()
+	If _GUICtrlComboBox_GetCurSel($g_hCmbBBAttack) = $g_eBBAttackCSV Then
+		GUICtrlSetState($g_hBtnBBDropOrder, $GUI_HIDE)
+		GUICtrlSetState($g_hChkBBGetFromCSV, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkBBRandomAttack, $GUI_ENABLE)
+		For $i=$g_hGrpAttackStyleBB To $g_hIcnBBCSV[3] ; enable all csv stuff
+			GUICtrlSetState($i, $GUI_ENABLE)
+		Next
+	Else
+		GUICtrlSetState($g_hChkBBRandomAttack, $GUI_UNCHECKED)
+		ChkBBRandomAttack()
+		GUICtrlSetState($g_hChkBBGetFromCSV, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkBBRandomAttack, $GUI_DISABLE)
+		For $i=$g_hGrpAttackStyleBB To $g_hIcnBBCSV[3] ; Disable all csv stuff
+			GUICtrlSetState($i, $GUI_DISABLE)
+		Next
+		GUICtrlSetState($g_hBtnBBDropOrder, $GUI_SHOW)
+	EndIf
+EndFunc
+
 Func chkBBtrophiesRange()
 	If GUICtrlRead($g_hChkBBTrophiesRange) = $GUI_CHECKED Then
 		GUICtrlSetState($g_hTxtBBDropTrophiesMin, $GUI_ENABLE)
@@ -112,27 +103,6 @@ Func chkBBtrophiesRange()
 		GUICtrlSetState($g_hTxtBBDropTrophiesMax, $GUI_DISABLE)
 	EndIf
 EndFunc   ;==>chkBBtrophiesRange
-
-Func chkBBArmyCamp()
-	Local $combo1 = _GUICtrlComboBox_GetCurSel($g_hCmbBBArmy1) = 0 ? 11 : _GUICtrlComboBox_GetCurSel($g_hCmbBBArmy1)
-	Local $combo2 = _GUICtrlComboBox_GetCurSel($g_hCmbBBArmy2) = 0 ? 11 : _GUICtrlComboBox_GetCurSel($g_hCmbBBArmy2)
-	Local $combo3 = _GUICtrlComboBox_GetCurSel($g_hCmbBBArmy3) = 0 ? 11 : _GUICtrlComboBox_GetCurSel($g_hCmbBBArmy3)
-	Local $combo4 = _GUICtrlComboBox_GetCurSel($g_hCmbBBArmy4) = 0 ? 11 : _GUICtrlComboBox_GetCurSel($g_hCmbBBArmy4)
-	Local $combo5 = _GUICtrlComboBox_GetCurSel($g_hCmbBBArmy5) = 0 ? 11 : _GUICtrlComboBox_GetCurSel($g_hCmbBBArmy5)
-	Local $combo6 = _GUICtrlComboBox_GetCurSel($g_hCmbBBArmy6) = 0 ? 11 : _GUICtrlComboBox_GetCurSel($g_hCmbBBArmy6)
-	_GUICtrlSetImage($g_hIcnBBarmy1, $g_sLibBBIconPath, $combo1)
-	_GUICtrlSetImage($g_hIcnBBarmy2, $g_sLibBBIconPath, $combo2)
-	_GUICtrlSetImage($g_hIcnBBarmy3, $g_sLibBBIconPath, $combo3)
-	_GUICtrlSetImage($g_hIcnBBarmy4, $g_sLibBBIconPath, $combo4)
-	_GUICtrlSetImage($g_hIcnBBarmy5, $g_sLibBBIconPath, $combo5)
-	_GUICtrlSetImage($g_hIcnBBarmy6, $g_sLibBBIconPath, $combo6)
-	$g_iCmbBBArmy1 = _GUICtrlComboBox_GetCurSel($g_hCmbBBArmy1)
-	$g_iCmbBBArmy2 = _GUICtrlComboBox_GetCurSel($g_hCmbBBArmy2)
-	$g_iCmbBBArmy3 = _GUICtrlComboBox_GetCurSel($g_hCmbBBArmy3)
-	$g_iCmbBBArmy4 = _GUICtrlComboBox_GetCurSel($g_hCmbBBArmy4)
-	$g_iCmbBBArmy5 = _GUICtrlComboBox_GetCurSel($g_hCmbBBArmy5)
-	$g_iCmbBBArmy6 = _GUICtrlComboBox_GetCurSel($g_hCmbBBArmy6)
-EndFunc   ;==>chkBBArmyCamp
 
 Func chkBBStyle()
 	For $i = 0 To 2
@@ -272,6 +242,10 @@ Func ChkBBRandomAttack()
 		GUICtrlSetState($g_hGrpGuideScriptBB[1], $GUI_SHOW)
 		GUICtrlSetState($g_hGrpGuideScriptBB[2], $GUI_SHOW)
 
+		GUICtrlSetPos($g_hChkBBGetFromCSV, 5, 190)
+		GUICtrlSetState($g_hChkBBGetFromCSV, BitOr($GUI_HIDE, $GUI_DISABLE)) ; AIO ++
+		$g_bChkBBGetFromCSV = false
+
 		GUICtrlSetPos($g_hGrpOptionsBB, -1, -1, $g_iSizeWGrpTab2 - 2, 45)
 		GUICtrlSetPos($g_hChkBBTrophiesRange, 100, 105)
 		GUICtrlSetPos($g_hTxtBBDropTrophiesMin, 203, 105)
@@ -296,14 +270,16 @@ Func ChkBBRandomAttack()
 		GUICtrlSetState($g_hGrpGuideScriptBB[1], $GUI_HIDE)
 		GUICtrlSetState($g_hGrpGuideScriptBB[2], $GUI_HIDE)
 
+		GUICtrlSetState($g_hChkBBGetFromCSV, $GUI_SHOW) ; AIO ++
+		GUICtrlSetPos($g_hChkBBGetFromCSV, 5, 190)
 
-		GUICtrlSetPos($g_hGrpOptionsBB, -1, -1, 200, 90)
-		GUICtrlSetPos($g_hChkBBTrophiesRange, 5, 125)
-		GUICtrlSetPos($g_hTxtBBDropTrophiesMin, 108, 126)
-		GUICtrlSetPos($g_hLblBBDropTrophiesDash, 150, 126 + 2)
-		GUICtrlSetPos($g_hTxtBBDropTrophiesMax, 155, 126)
-		GUICtrlSetPos($g_hChkBBRandomAttack, 5, 145)
-
+		GUICtrlSetPos($g_hGrpOptionsBB, -1, -1, 200, 130)
+		GUICtrlSetPos($g_hChkBBStopAt3, 5, 130)
+		GUICtrlSetPos($g_hChkBBTrophiesRange, 5, 150)
+		GUICtrlSetPos($g_hTxtBBDropTrophiesMin, 108, 151)
+		GUICtrlSetPos($g_hLblBBDropTrophiesDash, 150, 151 + 2)
+		GUICtrlSetPos($g_hTxtBBDropTrophiesMax, 155, 151)
+		GUICtrlSetPos($g_hChkBBRandomAttack, 5, 170)
 		WinMove($g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV, "", 200, 85, 240)
 		GUICtrlSetPos($g_hGrpAttackStyleBB, -1, -1, 233, $g_iSizeHGrpTab4 - 35)
 		GUICtrlSetState($g_hGrpGuideScriptBB[0], $GUI_HIDE)
@@ -316,3 +292,31 @@ Func ChkBBRandomAttack()
 	EndIf
 
 EndFunc   ;==>ChkBBRandomAttack
+
+; AIO
+Func ChkBBWalls()
+	If GUICtrlRead($g_hChkBBUpgradeWalls) = $GUI_CHECKED Then
+		$g_bChkBBUpgradeWalls = True
+		GUICtrlSetState($g_hLblBBWallLevelInfo, $GUI_ENABLE)
+		GUICtrlSetState($g_hCmbBBWallLevel, $GUI_ENABLE)
+		GUICtrlSetState($g_hPicBBWallUpgrade, $GUI_SHOW)
+		GUICtrlSetState($g_hTxtBBWallNumber, $GUI_SHOW)
+		GUICtrlSetState($g_hLblBBWallNumberInfo, $GUI_SHOW)
+	Else
+		$g_bChkBBUpgradeWalls = False
+		GUICtrlSetState($g_hLblBBWallLevelInfo, $GUI_DISABLE)
+		GUICtrlSetState($g_hCmbBBWallLevel, $GUI_DISABLE)
+		GUICtrlSetState($g_hPicBBWallUpgrade, $GUI_HIDE)
+		GUICtrlSetState($g_hTxtBBWallNumber, $GUI_HIDE)
+		GUICtrlSetState($g_hLblBBWallNumberInfo, $GUI_HIDE)
+	EndIf
+EndFunc ;==>ChkBBWalls
+
+Func cmbBBWall()
+	$g_iCmbBBWallLevel = _GUICtrlComboBox_GetCurSel($g_hCmbBBWallLevel)
+	_GUICtrlSetImage($g_hPicBBWallUpgrade, $g_sLibBBIconPath, $g_iCmbBBWallLevel + 19)
+EndFunc   ;==>cmbBBWall
+
+Func ChkBBGetFromCSV()
+	$g_bChkBBGetFromCSV = _IsChecked($g_hChkBBGetFromCSV)
+EndFunc   ;==>ChkBBGetFromCSV

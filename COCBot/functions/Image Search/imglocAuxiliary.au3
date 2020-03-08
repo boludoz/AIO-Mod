@@ -287,8 +287,6 @@ Func GetButtonDiamond($sButtonName)
 			$btnDiamond = GetDiamondFromRect("630,280,850,360")
 		Case "ArmyTab", "TrainTroopsTab", "BrewSpellsTab", "BuildSiegeMachinesTab", "QuickTrainTab"
 			$btnDiamond = GetDiamondFromRect("18,100,800,150")
-		Case "BoostTrainingPotionBtn"
-			$btnDiamond = GetDiamondFromRect("420,395(85,60)")
 		Case "MessagesButton"
 			$btnDiamond = GetDiamondFromRect("0,0,250,250")
 		Case "AttackLogTab", "ShareReplayButton"
@@ -297,6 +295,12 @@ Func GetButtonDiamond($sButtonName)
 			$btnDiamond = GetDiamondFromRect("1,570,140,628")
 		Case "Okay"
 			$btnDiamond = GetDiamondFromRect("241,249,616,478")
+		#Region - BoostPotion - Team AIO Mod
+		Case "MagicItems" ; Full size of object buttons at the bottom
+			$btnDiamond = GetDiamondFromRect("140,591,720,671")
+		Case "BoostTrainingPotionBtn"
+			$btnDiamond = GetDiamondFromRect("420,395(85,60)")
+		#EndRegion - BoostPotion - Team AIO Mod
 		Case Else
 			$btnDiamond = "FV" ; use full image to locate button
 	EndSwitch

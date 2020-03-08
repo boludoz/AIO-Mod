@@ -17,20 +17,79 @@ Func ApplyConfig_MOD_CustomArmyBB($TypeReadSave)
 	; <><><> CustomArmyBB <><><>
 	Switch $TypeReadSave
 		Case "Read"
-			GUICtrlSetState($g_hChkBBCustomArmyEnable, $g_bChkBBCustomArmyEnable = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			;GUICtrlSetState($g_hChkBBCustomArmyEnable, $g_bChkBBCustomArmyEnable = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 
 			For $i = 0 To UBound($g_hComboTroopBB) - 1
 				_GUICtrlComboBox_SetCurSel($g_hComboTroopBB[$i], $g_iCmbCampsBB[$i])
 				_GUICtrlSetImage($g_hIcnTroopBB[$i], $g_sLibIconPath, $g_avStarLabTroops[$g_iCmbCampsBB[$i]+1][4])
 			Next
 
-			chkBBCustomArmy()
+			; Builder base - Team AiO MOD++
+			GUICtrlSetState($g_hChkUpgradeMachine, $g_bChkUpgradeMachine ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkBBUpgradeWalls, $g_bChkBBUpgradeWalls ? $GUI_CHECKED : $GUI_UNCHECKED)
+			ChkBBWalls()
+			_GUICtrlComboBox_SetCurSel($g_hCmbBBWallLevel, $g_iCmbBBWallLevel)
+			cmbBBWall()
+			GUICtrlSetData($g_hTxtBBWallNumber, $g_iTxtBBWallNumber)
+			GUICtrlSetState($g_hChkPlacingNewBuildings, $g_iChkPlacingNewBuildings = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			chkActivateBBSuggestedUpgrades()
+			chkActivateBBSuggestedUpgradesGold()
+			chkActivateBBSuggestedUpgradesElixir()
+			chkPlacingNewBuildings()
+			GUICtrlSetState($g_hChkBuilderAttack, $g_bChkBuilderAttack ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkBBStopAt3, $g_bChkBBStopAt3 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkBBTrophiesRange, $g_bChkBBTrophiesRange ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkBBRandomAttack, $g_bChkBBRandomAttack ? $GUI_CHECKED : $GUI_UNCHECKED)
+			ChkBBRandomAttack()
+			chkBuilderAttack()
+			PopulateComboScriptsFilesBB()
+			For $i = 0 To 2
+				Local $tempindex = _GUICtrlComboBox_FindStringExact($g_hCmbBBAttackStyle[$i], $g_sAttackScrScriptNameBB[$i])
+				If $tempindex = -1 Then
+					$tempindex = 0
+					SetLog("Previous saved BB Scripted Attack not found (deleted, renamed?)", $COLOR_ERROR)
+					SetLog("Automatically setted a default script, please check your config", $COLOR_ERROR)
+				EndIf
+				_GUICtrlComboBox_SetCurSel($g_hCmbBBAttackStyle[$i], $tempindex)
+			Next
+			cmbScriptNameBB()
+			GUICtrlSetData($g_hTxtBBDropTrophiesMin, $g_iTxtBBDropTrophiesMin)
+			GUICtrlSetData($g_hTxtBBDropTrophiesMax, $g_iTxtBBDropTrophiesMax)
+			chkBBtrophiesRange()
+			; -- AIO BB
+			GUICtrlSetState($g_hChkBBGetFromCSV, $g_bChkBBGetFromCSV ? $GUI_CHECKED : $GUI_UNCHECKED)
+			_GUICtrlComboBox_SetCurSel($g_hCmbBBAttack, $g_iCmbBBAttack) ; switching between smart and csv attack
+			cmbBBAttack()
+
 		Case "Save"
-			$g_bChkBBCustomArmyEnable = (GUICtrlRead($g_hChkBBCustomArmyEnable) = $GUI_CHECKED) ? 1 : 0
+			;$g_bChkBBCustomArmyEnable = (GUICtrlRead($g_hChkBBCustomArmyEnable) = $GUI_CHECKED) ? 1 : 0
 
 			For $i = 0 To UBound($g_hComboTroopBB) - 1
 				$g_iCmbCampsBB[$i] = _GUICtrlComboBox_GetCurSel($g_hComboTroopBB[$i])
 			Next
+
+			; Builder base - Team AiO MOD++
+			$g_bChkUpgradeMachine = (GUICtrlRead($g_hChkUpgradeMachine) = $GUI_CHECKED)
+			$g_bChkBBUpgradeWalls = (GUICtrlRead($g_hChkBBUpgradeWalls) = $GUI_CHECKED)
+			$g_iCmbBBWallLevel = _GUICtrlComboBox_GetCurSel($g_hCmbBBWallLevel)
+			$g_iTxtBBWallNumber = Int(GUICtrlRead($g_hTxtBBWallNumber))
+			$g_iChkPlacingNewBuildings = (GUICtrlRead($g_hChkPlacingNewBuildings) = $GUI_CHECKED) ? 1 : 0
+			$g_bChkBuilderAttack = (GUICtrlRead($g_hChkBuilderAttack) = $GUI_CHECKED) ? 1 : 0
+			$g_bChkBBStopAt3 = (GUICtrlRead($g_hChkBBStopAt3) = $GUI_CHECKED) ? 1 : 0
+			$g_bChkBBTrophiesRange = (GUICtrlRead($g_hChkBBTrophiesRange) = $GUI_CHECKED) ? 1 : 0
+			$g_bChkBBRandomAttack = (GUICtrlRead($g_hChkBBRandomAttack) = $GUI_CHECKED) ? 1 : 0
+			For $i = 0 To 2
+				Local $indexofscript = _GUICtrlComboBox_GetCurSel($g_hCmbBBAttackStyle[$i])
+				Local $scriptname
+				_GUICtrlComboBox_GetLBText($g_hCmbBBAttackStyle[$i], $indexofscript, $scriptname)
+				$g_sAttackScrScriptNameBB[$i] = $scriptname
+				IniWriteS($g_sProfileConfigPath, "BuilderBase", "ScriptBB" & $i, $g_sAttackScrScriptNameBB[$i])
+			Next
+			$g_iTxtBBDropTrophiesMin = Int(GUICtrlRead($g_hTxtBBDropTrophiesMin))
+			$g_iTxtBBDropTrophiesMax = Int(GUICtrlRead($g_hTxtBBDropTrophiesMax))
+			; -- AIO BB
+			$g_bChkBBGetFromCSV = (GUICtrlRead($g_hChkBBGetFromCSV) = $GUI_CHECKED)
+			$g_iCmbBBAttack = _GUICtrlComboBox_GetCurSel($g_hCmbBBAttack)
 
 	EndSwitch
 EndFunc   ;==>ApplyConfig_MOD_CustomArmyBB

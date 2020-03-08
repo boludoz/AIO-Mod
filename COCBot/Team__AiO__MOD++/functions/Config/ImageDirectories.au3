@@ -102,3 +102,8 @@ Global Const $g_sImgReportWaitBB = $g_sModImageLocation & "\BuildersBase\Attack\
 Global Const $g_sImgReportFinishedBB = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\Report\Replay"
 Global Const $g_sImgReportResultBB = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\Report\Result"
 #EndRegion Builder Base Attack
+
+#Region Builder Base Walls Upgrade
+Global Const $g_sBundleWallsBB = $g_sModImageLocation & "\BuildersBase\Bundles\Walls"
+;Global Const $g_aBundleWallsBBParms[3] = [0, "0,50,860,732", False] ; [0] Quantity2Match [1] Area2Search [2] ForceArea
+#EndRegion Builder Base Walls Upgrade

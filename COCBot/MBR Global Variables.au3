@@ -1435,6 +1435,9 @@ Func TranslateTroopNames()
 			[516, 341 + $g_iMidOffsetY, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtDropShip", "Drop Ship"), $eIcnDropShip], _
 			[516, 449 + $g_iMidOffsetY, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtSuperPekka", "Super Pekka"), $eIcnSuperPekka], _
 			[622, 341 + $g_iMidOffsetY, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtHogGlider", "Hog Glider"), $eIcnHogGlider]]
+	
+	Global $g_sBBDropOrderDefault = _ArrayToString($g_avStarLabTroops, "", 1, -1, "|", 3, 3) ; Team AIO Mod++
+
 EndFunc   ;==>TranslateTroopNames
 
 ; Upgrading - Wall

@@ -21,7 +21,7 @@ Func TestBattleMachineUpgrade()
 	$g_bRunState = True
 	$g_bChkUpgradeMachine = True
 	$g_sMachineTime = '1000/01/01 00:00:00'
-	Local $Result = BattleMachineUpgrade(True)
+	Local $Result = BattleMachineUpgrade()
 	$g_bRunState = $bWasRunState
 	$g_sMachineTime = $sWasMachineTime
 	$g_bChkUpgradeMachine = $bWasChkUpgradeMachine
@@ -43,9 +43,6 @@ Func BattleMachineUpgrade($bTestRun = False)
 
 	Local $aElixirStorageCap
 
-	;Local Varibales
-	Local $MachineUpgTimes[25] = [12, 12, 12, 24, 24, 24, 24, 24, 24, 24, 48, 48, 48, 48, 48, 72, 72, 72, 72, 72, 72, 72, 72, 72, 72] ; Hours
-	Local $MachineUpgCost[25] = [900000, 1000000, 1100000, 1200000, 1300000, 1500000, 1600000, 1700000, 1800000, 1900000, 2100000, 2200000, 2300000, 2400000, 2500000, 2600000, 2700000, 2800000, 2900000, 3000000, 3100000, 3200000, 3300000, 3400000, 3500000]
 	Local $bDoNotProceedWithMachine = False
 
 	; ZoomOut Check
@@ -59,10 +56,7 @@ Func BattleMachineUpgrade($bTestRun = False)
 		$aElixirStorageCap = -1
 
 		; Verify Machine
-		If $g_bChkUpgradeMachine Then BuilderBaseCheckMachine($aMachineStatus, $bTestRun)
-
-		;Verify Elixir Storage Cap
-		If $g_bChkUpgradeMachine Then BuilderBaseCheckElixirStorageCap($aElixirStorageCap, $bTestRun)
+		BuilderBaseCheckMachine($aMachineStatus, $bTestRun)
 
 		If _Sleep(500) Then Return
 		ClickP($aAway, 2, 100, "#0900") ;Click Away
@@ -74,27 +68,13 @@ Func BattleMachineUpgrade($bTestRun = False)
 	EndIf
 
 	; Remain Times and if we are waiting or Not
-	Local $g_sMachineTime = '1000/01/01 00:00:00'
+	$g_sMachineTime = '1000/01/01 00:00:00'
 
-	; Verify Level and Cost from machine, if is not exist or is maxed
-	If $aMachineStatus[1] > 0 And $aMachineStatus[1] < 25 And $g_bChkUpgradeMachine Then
-		Local $MachineLevel = $aMachineStatus[1]
-		$aMachineStatus[0] = $MachineUpgTimes[$MachineLevel]
-		$aMachineStatus[2] = $MachineUpgCost[$MachineLevel]
-		Setlog("Current Machine level is " & $aMachineStatus[1], $COLOR_INFO)
-		Setlog("Next Upgrade will cost " & $MachineUpgCost[$MachineLevel], $COLOR_INFO)
-		Setlog("With remain time of " & $MachineUpgTimes[$MachineLevel] & " hours", $COLOR_INFO)
-		; Verifing Elixir Storage Cap and Machine Value
-		If Number($MachineUpgCost[$MachineLevel]) > Number($aElixirStorageCap) Then
-			$bDoNotProceedWithMachine = True
-			Setlog("Elixir Storage Capacity lower than Upg value!", $COLOR_WARNING)
-		EndIf
-	ElseIf $aMachineStatus[1] = 0 Then
-		Local $aArea[4] = [355,450,521,532]
-		If FastBottomGreen($aArea) Then
+	If $aMachineStatus[1] = 0 Then
+		If FastBottomGreen() Then
 			ClickP($g_iMultiPixelOffSet, 1)
 
-			If FastBottomGreen($aArea) Then
+			If FastBottomGreen() Then
 			; check for green button to use gems to finish upgrade, checking if upgrade actually started
 				SetLog("Something went wrong with Battle Machine Upgrade, try again.", $COLOR_ERROR)
 				ClickP($aAway, 2, $DELAYLABUPGRADE3, "#0900") ;Click Away
@@ -108,20 +88,10 @@ Func BattleMachineUpgrade($bTestRun = False)
 			EndIf
 
 		EndIf
-		FuncReturn()
-	Else
-		; Machine is not to Upgrade
-		$bDoNotProceedWithMachine = True
+		Return
 	EndIf
 
-	; Is Not to proceed with Machine
-	If $bDoNotProceedWithMachine = False Then
-		If Number($aMachineStatus[2]) < Number($g_aiCurrentLootBB[$eLootElixirBB]) Then
-			BuilderBaseUpgradeMachine($bTestRun)
-		Else
-			SetLog("Not Enough Elixir to Upgrade Machine!", $COLOR_INFO)
-		EndIf
-	EndIf
+	BuilderBaseUpgradeMachine($bTestRun)
 
 	If _Sleep(2000) Then Return
 	ClickP($aAway, 2, 1000, "#0900") ;Click Away
@@ -165,25 +135,6 @@ Func BuilderBaseCheckMachine(ByRef $aMachineStatus, $bTestRun = 0)
 	ClickP($aAway, 2, 300, "#900") ;Click Away
 EndFunc   ;==>BuilderBaseCheckMachine
 
-Func BuilderBaseCheckElixirStorageCap(ByRef $iElixirStorageCap, $bTestRun = False)
-	ClickP($aAway, 1, 1000, "#900") ;Click Away
-	If IsMainPageBuilderBase() Then
-		Local $ElixirStorageCapPosition[2] = [750, 80]
-		ClickP($ElixirStorageCapPosition, 1, 300, "ElixirCap")
-		For $i = 0 To 10
-			If _sleep(200) Then Return
-			$iElixirStorageCap = Number(getResourcesMainScreen(738, 113)) ;  coc-bonus
-			If $iElixirStorageCap = "" Then getResourcesBonus(738, 113) ; when reach the full Cap the numbers are bigger
-			If IsNumber($iElixirStorageCap) And $iElixirStorageCap > 0 Then ExitLoop
-			If $i = 10 Then Setlog("Error getting thge Elixir Storage Cap", $COLOR_ERROR)
-		Next
-	EndIf
-	If $bTestRun = True Then $g_aiCurrentLootBB[$eLootElixirBB] = 99999999999
-	If $bTestRun = True Then $iElixirStorageCap = 99999999999
-	If $bTestRun = False Then Setlog("Elixir Storage Cap: " & $iElixirStorageCap)
-	ClickP($aAway, 2, 300, "#900") ;Click Away
-EndFunc   ;==>BuilderBaseCheckElixirStorageCap
-
 ; Machine
 Func BuilderBaseUpgradeMachine($bTestRun = False)
 	If IsMainPageBuilderBase() Then
@@ -217,12 +168,9 @@ Func BattleMachineUpgradeUpgrade($sSelectedUpgrade, $iXMoved = 0, $iYMoved = 0, 
 			Return False
 		EndIf
 
-			; get upgrade time from window
+			; get upgrade time from window part 1
 			$Result = getLabUpgradeTime(554 + $iXMoved, 491 + $iYMoved) ; Try to read white text showing time for upgrade
 			Local $iMachineFinishTime = ConvertOCRTime("Machine Time", $Result, False)
-			SetLog($sSelectedUpgrade & " Upgrade OCR Time = " & $Result & ", $iMachineFinishTime = " & $iMachineFinishTime & " m", $COLOR_INFO)
-			$sStartTime = _NowCalc() ; what is date:time now
-			If $g_bDebugSetlog Then SetDebugLog($sSelectedUpgrade & " Upgrade Started @ " & $sStartTime, $COLOR_SUCCESS)
 			If $iMachineFinishTime > 0 Then
 				SetLog($sSelectedUpgrade & " Upgrade Finishes @ " & $Result & " (" & $g_sStarLabUpgradeTime & ")", $COLOR_SUCCESS)
 			Else
@@ -240,13 +188,18 @@ Func BattleMachineUpgradeUpgrade($sSelectedUpgrade, $iXMoved = 0, $iYMoved = 0, 
 					ClickP($aAway, 2, $DELAYLABUPGRADE3, "#0360")
 					Return False
 				EndIf
+				
 				SetLog("Upgrade " & $sSelectedUpgrade & " started with success...", $COLOR_SUCCESS)
 				PushMsg("BattleMachineUpgradeSuccess")
 				$g_sMachineTime = _DateAdd('n', Ceiling($iMachineFinishTime), $sStartTime)
 				If _Sleep($DELAYLABUPGRADE2) Then Return
 
+				; get upgrade time from window par 2
+				SetLog($sSelectedUpgrade & " Upgrade OCR Time = " & $Result & ", $iMachineFinishTime = " & $iMachineFinishTime & " m", $COLOR_INFO)
+				$sStartTime = _NowCalc() ; what is date:time now
+				If $g_bDebugSetlog Then SetDebugLog($sSelectedUpgrade & " Upgrade Started @ " & $sStartTime, $COLOR_SUCCESS)
+				
 				ClickP($aAway, 2, 0, "#0204")
-
 				Return True
 			Else
 				SetLog("Oops, Gems required for " & $sSelectedUpgrade & " Upgrade, try again.", $COLOR_ERROR)
@@ -256,9 +209,9 @@ Func BattleMachineUpgradeUpgrade($sSelectedUpgrade, $iXMoved = 0, $iYMoved = 0, 
 	Return False
 EndFunc   ;==>BattleMachineUpgrade
 
-Func FastBottomGreen($aArea = 0, $iDBG = 0)
-	; Samm0d
+Func FastBottomGreen($iDBG = 0)
 	If Not $g_bRunState Then Return
+	Local $aArea[4] = [355,450,521,532]
 
     Local $iSpecialColor[2][3] = [[0xE6FC96, 1, 0], [0xE6FC96, 2, 0]]
 

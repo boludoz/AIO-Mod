@@ -47,6 +47,7 @@ Global $g_bRequestCCForWar,	$g_sTxtRequestCCForWar
 
 ; Custom BB Army
 Global $g_bDebugBBattack = False
+
 ;GUI
 ; BB Drop Order
 Global $g_hBtnBBDropOrder = 0
@@ -62,17 +63,13 @@ Global $g_ahCmbBBDropOrder[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_iCmbCampsBB[6] = [0, 0, 0, 0, 0, 0]
 Global $g_hIcnTroopBB[6]
 Global $g_hComboTroopBB[6]
-Global $g_hChkBBCustomArmyEnable, $g_bChkBBCustomArmyEnable
+Global $g_bChkBBCustomArmyEnable = True, $g_hChkBBCustomArmyEnable
 
 Global $g_sIcnBBOrder[11]
-Global $g_sBBDropOrderDefault
 Global $g_asAttackBarBB[12] = ["", "Barbarian", "Archer", "BoxerGiant", "Minion", "WallBreaker", "BabyDrag", "CannonCart", "Witch", "DropShip", "SuperPekka", "HogGlider"]
 Global $g_aiCmbBBDropOrder[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_sBBDropOrder
-For $i = 1 To UBound($g_asAttackBarBB) -1
-	Local $iS = $g_asAttackBarBB[$i]
-	$g_sBBDropOrder &= (UBound($g_asAttackBarBB) -1 = $i) ? ($iS) : ($iS & "|")
-Next
+
+Global $g_sBBDropOrder = _ArrayToString($g_asAttackBarBB)
 
 ; Drop trophy - Team AiO MOD++
 Global $g_bChkNoDropIfShield = True, $g_bChkTrophyTroops = False, $g_bChkTrophyHeroesAndTroops = True
@@ -274,7 +271,6 @@ Global $g_hBtnBBDropOrderSet = 0, $g_hBtnBBRemoveDropOrder = 0, $g_hBtnBBClose =
 Global $g_bBBDropOrderSet = False
 ;~ Global Const $g_iBBTroopCount = 10
 ;~ Global Const $g_sBBDropOrderDefault = "Boxer Giant|Super Pekka|Drop Ship|Night Witch|Baby Dragon|Bomber|Raged Barbarian|Cannon Cart|Sneaky Archer|Beta Minion"
-Global $g_sBBDropOrder = $g_sBBDropOrderDefault
 Global $g_ahCmbBBDropOrder[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_iBBNextTroopDelay = 2000,  $g_iBBSameTroopDelay = 300; delay time between different and same troops
 
@@ -289,7 +285,7 @@ Global $g_bChkUpgradeTroops = False, $g_iCmbBBLaboratory, $g_bChkUpgradeMachine 
 
 ; Upgrade Walls
 Global $g_bChkBBUpgradeWalls = False, $g_iCmbBBWallLevel, $g_iTxtBBWallNumber = 0
-Global Const $g_aiWallBBInfoPerLevel[9][4] = [ _ ; Level, Gold, Qty, BH
+Global Const $g_aiWallBBInfoPerLevel[10][4] = [ _ ; Level, Gold, Qty, BH
 		[0, 0, 0, 0], _
 		[1, 4000, 20, 2], _
 		[2, 10000, 50, 3], _
@@ -298,7 +294,8 @@ Global Const $g_aiWallBBInfoPerLevel[9][4] = [ _ ; Level, Gold, Qty, BH
 		[5, 800000, 100, 5], _
 		[6, 1200000, 120, 6], _
 		[7, 2000000, 140, 7], _
-		[8, 3000000, 160, 8]]
+		[8, 3000000, 160, 8], _
+		[9, 4000000, 180, 9]]
 
 ; Troops
 Global Enum $eBBTroopBarbarian, $eBBTroopArcher, $eBBTroopGiant, $eBBTroopMinion, $eBBTroopBomber, $eBBTroopBabyDragon, $eBBTroopCannon, $eBBTroopNight, $eBBTroopDrop, $eBBTroopPekka, $eBBTroopMachine, $eBBTroopCount

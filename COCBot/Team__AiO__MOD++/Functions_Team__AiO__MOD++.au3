@@ -82,7 +82,7 @@
 ;~ #include "functions\Mod's\BuilderBase\Attack\BuilderBaseSmartAttack.au3"
 ;~ #include "functions\Mod's\BuilderBase\Camps\BuilderBaseCheckArmy.au3"
 
-;#include "functions\Mod's\BuilderBase\Village\UpgradeWalls.au3"
+#include "functions\Mod's\BuilderBase\Village\UpgradeWalls.au3"
 #include "functions\Mod's\BuilderBase\Village\BattleMachineUpgrade.au3"
 
 #include "functions\Mod's\BuilderBase\Camps\BuilderBaseCorrectAttackBar.au3"

@@ -45,17 +45,17 @@ Func ChkReqCCFromChat()
 EndFunc   ;==>ChkReqCCFromChat
 
 ; Custom army - Team AiO MOD++
-Func chkBBCustomArmy()
-		$g_bChkBBCustomArmyEnable = (GUICtrlRead($g_hChkBBCustomArmyEnable) = $GUI_CHECKED)
-
-		For $i = 0 To UBound($g_hComboTroopBB) - 1
-			If $g_bChkBBCustomArmyEnable Then
-				GUICtrlSetState($g_hComboTroopBB[$i], $GUI_ENABLE)
-			Else
-				GUICtrlSetState($g_hComboTroopBB[$i], $GUI_DISABLE)
-			EndIf
-		Next
-EndFunc   ;==>chkBBCustomArmy
+;Func chkBBCustomArmy()
+;		;$g_bChkBBCustomArmyEnable = (GUICtrlRead($g_hChkBBCustomArmyEnable) = $GUI_CHECKED)
+;
+;		For $i = 0 To UBound($g_hComboTroopBB) - 1
+;			;If $g_bChkBBCustomArmyEnable Then
+;				GUICtrlSetState($g_hComboTroopBB[$i], $GUI_ENABLE)
+;			;Else
+;			;	GUICtrlSetState($g_hComboTroopBB[$i], $GUI_DISABLE)
+;			;EndIf
+;		Next
+;EndFunc   ;==>chkBBCustomArmy
 
 ; Drop trophy - Team AiO MOD++
 Func chkNoDropIfShield()

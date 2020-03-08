@@ -27,11 +27,13 @@ Global $g_hBtnLocateSpellfactory = 0, $g_hBtnLocateDarkSpellFactory = 0
 Global $g_hBtnLocateKingAltar = 0, $g_hBtnLocateQueenAltar = 0, $g_hBtnLocateWardenAltar = 0, $g_hBtnLocateChampionAltar = 0, $g_hBtnLocateLaboratory = 0, $g_hBtnResetBuilding = 0
 Global $g_hChkTreasuryCollect = 0, $g_hTxtTreasuryGold = 0, $g_hTxtTreasuryElixir = 0, $g_hTxtTreasuryDark = 0, $g_hChkFreeMagicItems = 0, $g_hChkCollectRewards = 0
 
+#CS - BBase - Team AIO Mod++
 Global $g_alblBldBaseStats[4] = ["", "", ""]
 Global $g_hChkCollectBuilderBase = 0, $g_hChkStartClockTowerBoost = 0, $g_hChkCTBoostBlderBz = 0, $g_hChkCleanBBYard = 0
 Global $g_hChkCollectBldGE = 0, $g_hChkCollectBldGems = 0, $g_hChkActivateClockTower = 0
 Global $g_hChkBBSuggestedUpgrades = 0, $g_hChkBBSuggestedUpgradesIgnoreGold = 0 , $g_hChkBBSuggestedUpgradesIgnoreElixir , $g_hChkBBSuggestedUpgradesIgnoreHall = 0
 Global $g_hChkPlacingNewBuildings = 0, $g_hChkBBSuggestedUpgradesIgnoreWall = 0
+#CE - BBase - Team AIO Mod++
 
 Global $g_hChkClanGamesAir = 0, $g_hChkClanGamesGround = 0, $g_hChkClanGamesMisc = 0
 Global $g_hChkClanGamesEnabled = 0 , $g_hChkClanGames60 = 0
@@ -394,6 +396,7 @@ Func CreateMiscNormalVillageSubTab()
 
 EndFunc   ;==>CreateMiscNormalVillageSubTab
 
+#CS - BBase - Team AIO Mod++
 Func CreateMiscBuilderBaseSubTab()
 	Local $x = 15, $y = 45
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_05", "Builders Base Stats"), $x - 10, $y - 20, $g_iSizeWGrpTab3, 50)
@@ -500,6 +503,7 @@ Func CreateMiscBuilderBaseSubTab()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 EndFunc   ;==>CreateMiscBuilderBaseSubTab
+#CE - BBase - Team AIO Mod++
 
 ; Clan Games v3
 Func CreateMiscClanGamesV3SubTab()
@@ -559,14 +563,10 @@ EndFunc   ;==>CreateMiscClanGamesV3SubTab
 
 ; Builder base drop order gui
 Func CreateBBDropOrderGUI()
-	#Region - Custom BB Army - Team AIO Mod++
-	For $i = 1 To UBound($g_asAttackBarBB) -1
-		Local $iS = $g_avStarLabTroops[$i][3]
-		$g_sBBDropOrderDefault &= (UBound($g_asAttackBarBB) -1 = $i) ? ($iS) : ($iS & "|") 
-	Next
-
-	$g_hGUI_BBDropOrder = GUICreate("Army", 428, 451, 240, 124)
+	$g_hGUI_BBDropOrder = GUICreate("Custom Order", 428, 451, 240, 124)
+	#cs
 	GUICtrlCreateGroup("Army", 8, 8, 409, 117)
+
 
 	$g_hChkBBCustomArmyEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBChkCustomArmyEnable", "Enable Custom Army"), 16, 24, 150, 17)
 		GUICtrlSetState(-1, $GUI_UNCHECKED)
@@ -604,6 +604,7 @@ Func CreateBBDropOrderGUI()
 		GUICtrlSetData(-1,  $g_sBBDropOrderDefault)
 		GUICtrlSetState(-1, $GUI_DISABLE)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
+	#ce
 	GUICtrlCreateGroup("BB Custom dropping order.", 8, 128, 409, 278)
 
 	$g_hChkBBCustomDropOrderEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBChkCustomDropOrderEnable", "Enable Custom Dropping Order"), 16, 144, 162, 17)

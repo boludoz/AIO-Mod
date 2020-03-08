@@ -189,7 +189,7 @@ Func ChatClan() ; Handle Clan Chat Logic
 				EndIf
 
 				If $g_bCleverbot And Not $bSentMessage Then
-					Local $sResponse = runHelper($sOCRString, $g_bCleverbot)
+					Local $sResponse = runHelper($sOCRString)
 					If $sResponse = False Or StringStripWS($sOCRString, $STR_STRIPALL) <> "" Then
 						SetLog("Got Cleverbot Response : " & $sResponse, $COLOR_SUCCESS)
 						If Not ChatbotSelectChatInput("Clan") Then Return False
@@ -438,7 +438,7 @@ Func ChatbotClickLanguageButton() ; Click on language button in settings
 EndFunc   ;==>ChatbotClickLanguageButton
 
 ; Returns the response from cleverbot or simsimi, if any
-Func runHelper($msg, $g_bCleverbot) ; run a script to get a response from cleverbot.com or simsimi.com
+Func runHelper($msg) ; run a script to get a response from cleverbot.com or simsimi.com
 	Local $command, $DOS, $HelperStartTime, $Time_Difference
 	Dim $DOS, $g_sMessage = ''
 

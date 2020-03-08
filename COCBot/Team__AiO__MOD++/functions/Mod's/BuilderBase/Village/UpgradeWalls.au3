@@ -53,7 +53,7 @@ Func WallsUpgradeBB()
 
 		If $g_iFreeBuilderCountBB > 0 And $g_bChkBBUpgradeWalls = True And Number($g_aiCurrentLootBB[$eLootGoldBB]) > $iBBNextLevelCost Then
 			; Reurn an Array [xx][0] = Name , [xx][1] = Xaxis , [xx][2] = Yaxis , [xx][3] = Level
-			Local $WallsBBNXY = _ImageSearchXML($g_sBundleWallsBB, $g_aBundleWallsBBParms[0], $g_aBundleWallsBBParms[1], $g_aBundleWallsBBParms[2], $g_bDebugBBattack, True, "10", $iBBWallLevel)
+			Local $WallsBBNXY = _ImageSearchXML($g_sBundleWallsBB)
 			If $g_bDebugSetlog Then SetDebugLog("Image Detection for Walls in Builder Base : " & Round(_Timer_Diff($hStarttime), 2) & "'ms")
 			If IsArray($WallsBBNXY) And UBound($WallsBBNXY) > 0 Then
 				SetDebugLog("Total Walls Found: " & UBound($WallsBBNXY))

@@ -4,7 +4,7 @@
 ; Syntax ........:
 ; Parameters ....: None
 ; Return values .: None
-; Author ........: Fahid.Mahmood (2018)
+; Author ........: Boldina (2018)
 ; Remarks .......: This file is part of MultiBot, previously known as MyBot Copyright 2015-2018
 ;                  MultiBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -34,16 +34,16 @@ Func CreateBuilderBaseTab()
 	GUISwitch($g_hGUI_BUILDER_BASE)
 	$g_hGUI_BUILDER_BASE_TAB = GUICtrlCreateTab(0, 0, $g_iSizeWGrpTab1, $g_iSizeHGrpTab1, BitOR($TCS_MULTILINE, $TCS_RIGHTJUSTIFY))
 
-	$g_hGUI_BUILDER_BASE_TAB_ITEM1 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_06_STab_01", "Misc && Stats"))
+	$g_hGUI_BUILDER_BASE_TAB_ITEM1 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_006_STab_01", "Misc && Stats"))
 	CreateMiscBuilderBaseSubTab()
-  	$g_hGUI_BUILDER_BASE_TAB_ITEM2 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_06_STab_02", "Upgrade"))
+  	$g_hGUI_BUILDER_BASE_TAB_ITEM2 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_006_STab_02", "Upgrade"))
   	CreateUpgradeBuilderBaseSubTab()
-  	$g_hGUI_BUILDER_BASE_TAB_ITEM3 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_06_STab_03", "Versus Battles")& "     ")
+  	$g_hGUI_BUILDER_BASE_TAB_ITEM3 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_006_STab_03", "Versus Battles")& "     ")
   	; this tab will be empty because it is only used to display a child GUI
   	; below controls are only shown when the strategy is disabled and the child gui will be hidden.
-  	$g_hLblBuilderAttackDisabled = GUICtrlCreateLabel(GetTranslatedFileIni("MBR Main GUI", "disabled_Tab_03_STab_02_STab_Info_03", "Note: Builder Base Versus Battle is disabled, tick the check mark on the") & " " & _
-  			GetTranslatedFileIni("MBR Main GUI", "Tab_06_STab_03", -1) & " " & _
-  			GetTranslatedFileIni("MBR Main GUI", "disabled_Tab_03_STab_02_STab_Info_02", -1), 10, 30, $_GUI_MAIN_WIDTH - 40, 50)
+  	$g_hLblBuilderAttackDisabled = GUICtrlCreateLabel(GetTranslatedFileIni("MBR Main GUI", "disabled_Tab_006_STab_02_STab_Info_03", "Note: Builder Base Versus Battle is disabled, tick the check mark on the") & " " & _
+  			GetTranslatedFileIni("MBR Main GUI", "Tab_006_STab_03", -1) & " " & _
+  			GetTranslatedFileIni("MBR Main GUI", "disabled_Tab_006_STab_02_STab_Info_02", -1), 10, 30, $_GUI_MAIN_WIDTH - 40, 50)
 	GUICtrlSetState(-1, $GUI_HIDE)
 
 	CreateBBAttackLog()

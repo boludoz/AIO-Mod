@@ -67,6 +67,7 @@ Func getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpa
 EndFunc   ;==>getOcrAndCapture
 
 Func _ImageSearchXML($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "0,0,860,732", $bForceCapture = True, $bDebugLog = False, $bCheckDuplicatedpoints = False, $iDistance2check = 25, $iLevel = 0)
+	FuncEnter(_ImageSearchXML)
 	$g_aImageSearchXML = -1
 
 	Local $sSearchDiamond = GetDiamondFromRect($saiArea2SearchOri)
@@ -91,8 +92,9 @@ Func _ImageSearchXML($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "0,
 			_ArrayAdd($aAllResults, $aTmpResults)
 		Next
 		$iCount += 1
+		If BitAnd($iQuantity2Match < 0, $iCount <= $iQuantity2Match) Then ExitLoop
 	Next
-	If $iCount < 1 Then Return -1
+	;If $iCount < 1 Then Return -1 what
 
 	If $bCheckDuplicatedpoints And UBound($aAllResults) > 0 Then
 		; Sort by X axis
@@ -102,7 +104,6 @@ Func _ImageSearchXML($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "0,
 		Local $iD2Check = $iDistance2check
 
 		; check if is a double Detection, near in 10px
-		Local $iDime = 0
 		For $i = 0 To UBound($aAllResults) - 1
 			If $i > UBound($aAllResults) - 1 Then ExitLoop
 			Local $LastCoordinate[4] = [$aAllResults[$i][0], $aAllResults[$i][1], $aAllResults[$i][2], $aAllResults[$i][3]]
@@ -141,6 +142,7 @@ Func _ImageSearchXML($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "0,
 EndFunc
 
 Func findMultipleQuick($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "0,0,860,732", $bForceCapture = True, $bDebugLog = False, $iDistance2check = 25, $iLevel = 0)
+	FuncEnter(findMultipleQuick)
 	Local $sSearchDiamond = GetDiamondFromRect($saiArea2SearchOri)
 	Local $aResult = findMultiple($sDirectory , $sSearchDiamond, $sSearchDiamond, $iLevel, 1000, $iQuantity2Match, "objectname,objectlevel,objectpoints", $bForceCapture)
 	If Not IsArray($aResult) Then Return -1
@@ -163,7 +165,7 @@ Func findMultipleQuick($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "
 		Next
 		$iCount += 1
 	Next
-	If $iCount < 1 Then Return -1
+	;If $iCount < 1 Then Return -1 what
 
 	If (UBound($aAllResults) > 0) Then
 		Return $aAllResults

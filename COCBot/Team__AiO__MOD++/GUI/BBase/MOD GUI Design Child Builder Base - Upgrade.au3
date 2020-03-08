@@ -4,7 +4,7 @@
 ; Syntax ........:
 ; Parameters ....: None
 ; Return values .: None
-; Author ........: Fahid.Mahmood (2018)
+; Author ........: Boldina (2018)
 ; Remarks .......: This file is part of MultiBot, previously known as Mybot and ClashGameBot. Copyright 2015-2018
 ;                  MultiBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -18,12 +18,15 @@ Global $g_hChkPlacingNewBuildings = 0, $g_hChkUpgradeTroops = 0, $g_hChkUpgradeM
 Global $g_hDebugBBattack = 0, $g_hLblBBNextUpgrade = 0, $g_hCmbBBLaboratory = 0, $g_hPicBBLabUpgrade = ""
 Global $g_hChkBBUpgradeWalls = 0, $g_hLblBBWallLevelInfo = 0, $g_hLblBBWallNumberInfo = 0, $g_hCmbBBWallLevel = 0, $g_hPicBBWallUpgrade = "", $g_hTxtBBWallNumber = 0, $g_hLblBBWallCostInfo = 0, $g_hLblBBWallCost = 0
 
+Global $g_hChkBBSuggestedUpgrades = 0, $g_hChkBBSuggestedUpgradesIgnoreGold = 0 , $g_hChkBBSuggestedUpgradesIgnoreElixir , $g_hChkBBSuggestedUpgradesIgnoreHall = 0
+Global $g_hChkPlacingNewBuildings = 0, $g_hChkBBSuggestedUpgradesIgnoreWall = 0
+
 Func CreateUpgradeBuilderBaseSubTab()
 	Local $x = 15, $y = 45
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Upgrade", "Group_01", "Buildings Upgrades"), $x - 10, $y - 20, $g_iSizeWGrpTab2, 95)
 
 		; _GUICtrlCreatePic($g_sIcnMBisland, $x , $y , 64, 64)
-		_GUICtrlCreateIcon($g_sLibBBIconPath, $eIcnBB, $x , $y + 5, 48, 48)
+		_GUICtrlCreatePic($g_sIcnMBisland, $x , $y + 5, 48, 48)
 		$g_hChkBBSuggestedUpgrades = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Upgrade", "ChkBBSuggestedUpgrades", "Suggested Upgrades"), $x + 70, $y + 20, -1, -1)
 			GUICtrlSetOnEvent(-1, "chkActivateBBSuggestedUpgrades")
 		$g_hChkBBSuggestedUpgradesIgnoreGold = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Upgrade", "ChkBBSuggestedUpgradesIgnore_01", "Ignore Gold values"), $x + 200, $y - 5, -1, -1)
@@ -34,6 +37,8 @@ Func CreateUpgradeBuilderBaseSubTab()
 			GUICtrlSetOnEvent(-1, "chkActivateBBSuggestedUpgradesGold")
 		$g_hChkPlacingNewBuildings = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Upgrade", "ChkPlacingNewBuildings", "Build 'New' tagged buildings"), $x + 200, $y + 47, -1, -1)
 			GUICtrlSetOnEvent(-1, "chkPlacingNewBuildings")
+		$g_hChkBBSuggestedUpgradesIgnoreWall = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBSuggestedUpgradesIgnore_04", "Ignore Wall"), $x + 315, $y + 20, -1, -1)
+			GUICtrlSetOnEvent(-1, "chkActivateBBSuggestedUpgradesGold")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	$x = 15
@@ -68,7 +73,7 @@ Func CreateUpgradeBuilderBaseSubTab()
 		$g_hLblBBWallLevelInfo = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Upgrade", "LblBBWallLevelInfo", "Search for Walls Level") & ":", $x + 70, $y + 38, 120, -1)
 			GUICtrlSetState(-1, $GUI_DISABLE)
 		$g_hCmbBBWallLevel = GUICtrlCreateCombo("", $x + 185, $y + 35, 50, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL, $WS_VSCROLL))
-			GUICtrlSetData(-1, "1|2|3|4|5|6|7", GetTranslatedFileIni("MBR Global GUI Design", "Level1", "1"))
+			GUICtrlSetData(-1, "1|2|3|4|5|6|7|8", GetTranslatedFileIni("MBR Global GUI Design", "Level1", "1"))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Builder Base - Upgrade", "CmbBBWallLevel_Info_01", "Select the wall level to upgrade with this pull down menu") & @CRLF & _
 							   GetTranslatedFileIni("MMBR GUI Design Child Builder Base - Upgrade", "CmbBBWallLevel_Info_02", "The wall icon will appear below."))
 			GUICtrlSetState(-1, $GUI_DISABLE)
