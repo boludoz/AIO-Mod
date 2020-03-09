@@ -459,7 +459,6 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag,
 			$g_bAndroidZoomoutModeFallback = False
 
 			If $bCenterVillage And (BitOr($bOnBuilderBase, $g_bZoomFixBB) Or Not $bUpdateSharedPrefs) And ($x <> 0 Or $y <> 0) And ($UpdateMyVillage = False Or $x <> $g_iVILLAGE_OFFSET[0] Or $y <> $g_iVILLAGE_OFFSET[1]) Then ; Team AIO Mod++
-				If $g_bZoomFixBB = True Then $g_bZoomFixBB = False ; Team AIO Mod++
 				If $DebugLog Then SetDebugLog("Center Village" & $sSource & " by: " & $x & ", " & $y)
 				If $aScrollPos[0] = 0 And $aScrollPos[1] = 0 Then
 					;$aScrollPos[0] = $stone[0]
@@ -468,8 +467,12 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag,
 					$aScrollPos[0] = $aCenterHomeVillageClickDrag[0]
 					$aScrollPos[1] = $aCenterHomeVillageClickDrag[1]
 				EndIf
-				;ClickP($aAway, 1, 0, "#0000") ; ensure field is clean
-				ClickDrag($aScrollPos[0], $aScrollPos[1] - 160, $aScrollPos[0] - $x, $aScrollPos[1] - 160 - $y)
+				If not $g_bZoomFixBB Then ; Team AIO Mod++
+					ClickP($aAway, 1, 0, "#0000") ; ensure field is clean
+					ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y)
+					Else
+					$g_bZoomFixBB = False ; Team AIO Mod++
+				EndIf
 				If _Sleep(250) Then
 					$iCallCount = 0
 					Return FuncReturn($aResult)

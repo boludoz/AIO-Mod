@@ -81,10 +81,8 @@ EndFunc   ;==>TestGetBuilderBaseSize
 Func BuilderBaseZoomOut()
 	SetDebugLog("BuilderBaseZoomOut")
 	If Not $g_bRunState Then Return
-	If ZoomOut() = True Then Return True
-	;Local $= _ImageSearchXML($g_sImgZoomOutDirBB)
-	;If IsArray() Then Return True
-	Return False
+	ZoomOut()
+	Return (_ArraySearch(SearchZoomOut(), "") <> 0)
 EndFunc   ;==>BuilderBaseSendZoomOut
 
 Func GetBuilderBaseSize($WithClick = False, $DebugImage = False)

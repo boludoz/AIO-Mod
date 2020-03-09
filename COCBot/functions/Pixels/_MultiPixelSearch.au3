@@ -23,7 +23,12 @@
 ; Example .......: No
 ; ===============================================================================================================================
 ; rotate y first, x second: search in columns
+
 Func _MultiPixelSearch($iLeft, $iTop, $iRight, $iBottom, $xSkip, $ySkip, $firstColor, $offColor, $iColorVariation)
+	; Reset global if error
+	$g_iMultiPixelOffSet[0] = Null
+	$g_iMultiPixelOffSet[1] = Null
+
 	_CaptureRegion($iLeft, $iTop, $iRight, $iBottom)
 	Local $offColorVariation = UBound($offColor, 2) > 3
 	Local $xRange = $iRight - $iLeft
@@ -50,8 +55,9 @@ Func _MultiPixelSearch($iLeft, $iTop, $iRight, $iBottom, $xSkip, $ySkip, $firstC
 					EndIf
 				Next
 				If $allchecked Then
-					Local $Pos[2] = [$iLeft + $x, $iTop + $y]
-					Return $Pos
+                    $g_iMultiPixelOffSet[0] = $iLeft + $x
+                    $g_iMultiPixelOffSet[1] = $iTop + $y
+                    Return $g_iMultiPixelOffSet
 				EndIf
 			EndIf
 		Next

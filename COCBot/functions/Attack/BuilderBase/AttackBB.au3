@@ -15,6 +15,7 @@
 
 Func AttackBB()
 	local $iSide = Random(0, 1, 1) ; randomly choose top left or top right
+	local $iAndroidSuspendModeFlagsLast = $g_iAndroidSuspendModeFlags
 	#cs - Team AIO Mod++
 	If Not $g_bChkEnableBBAttack Then Return
 	local $aBMPos = 0
@@ -43,7 +44,6 @@ Func AttackBB()
 		Return
 	EndIf
 
-	local $iAndroidSuspendModeFlagsLast = $g_iAndroidSuspendModeFlags
 	$g_iAndroidSuspendModeFlags = 0 ; disable suspend and resume
 	If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Disabled")
 
@@ -75,7 +75,25 @@ Func AttackBB()
 
 	#Region - Custom BB Army - Team AIO Mod++
 	; Correct troops
-	If $g_bChkBBCustomArmyEnable Then BuilderBaseSelectCorrectScript($aBBAttackBar)
+		If $g_bChkBBCustomArmyEnable Then BuilderBaseSelectCorrectScript($aBBAttackBar)
+
+		Local $Size = GetBuilderBaseSize()
+		
+		If Not $g_bRunState Then Return
+
+		Setlog("Builder Base Diamond: " & $Size)
+		If ($Size < 575 And $Size > 620) Or $Size = 0 Then
+			Setlog("Builder Base Attack Zoomout.")
+			BuilderBaseZoomOut()
+			If _Sleep(1000) Then Return
+			$Size = GetBuilderBaseSize(False) ; WihtoutClicks
+		EndIf
+
+		$g_aBuilderBaseDiamond = BuilderBaseAttackDiamond()
+		$g_aExternalEdges = BuilderBaseGetEdges($g_aBuilderBaseDiamond, "External Edges")
+		
+		Local $aVar = $g_aExternalEdges[0]
+
 	#EndRegion - Custom BB Army - Team AIO Mod++
 
 	; Deploy all troops
@@ -90,7 +108,15 @@ Func AttackBB()
 				While $j < $iNumSlots And Not $bDone
 					;If $aBBAttackBar[$j][0] = $asBBDropOrder[$i+1] Then; Custom BB Army - Team AIO Mod++
 					If $aBBAttackBar[$j][0] = $g_asAttackBarBB[$g_aiCmbBBDropOrder[$i]+1] Then ; Custom BB Army - Team AIO Mod++
-						DeployBBTroop($aBBAttackBar[$j][0], $aBBAttackBar[$j][1], $aBBAttackBar[$j][2], $aBBAttackBar[$j][4], $iSide)
+						;DeployBBTroop($aBBAttackBar[$j][0], $aBBAttackBar[$j][1], $aBBAttackBar[$j][2], $aBBAttackBar[$j][4], $iSide)
+						SetLog("Deploying " & $aBBAttackBar[$j][0] & "x" & String($aBBAttackBar[$j][4]), $COLOR_ACTION)
+						PureClick($aBBAttackBar[$j][1], $aBBAttackBar[$j][2]) ; select troop
+						If _Sleep($g_iBBSameTroopDelay) Then Return ; slow down selecting then dropping troops
+						For $iamount = 0 To $aBBAttackBar[$i][4]
+						Local $vDP = Random(0, UBound($aVar), 1)
+						PureClick($aVar[$vDP][0], $aVar[$vDP][1])
+						Next
+						;---------------------------
 						If $j = $iNumSlots-1 Or $aBBAttackBar[$j][0] <> $aBBAttackBar[$j+1][0] Then
 							$bDone = True
 							If _Sleep($g_iBBNextTroopDelay) Then ; wait before next troop
@@ -105,7 +131,15 @@ Func AttackBB()
 			Next
 		Else
 			For $i=0 To $iNumSlots - 1
-				DeployBBTroop($aBBAttackBar[$i][0], $aBBAttackBar[$i][1], $aBBAttackBar[$i][2], $aBBAttackBar[$i][4], $iSide)
+				;DeployBBTroop($aBBAttackBar[$i][0], $aBBAttackBar[$i][1], $aBBAttackBar[$i][2], $aBBAttackBar[$i][4], $iSide)
+				SetLog("Deploying " & $aBBAttackBar[$i][0] & "x" & String($aBBAttackBar[$i][4]), $COLOR_ACTION)
+				PureClick($aBBAttackBar[$i][1], $aBBAttackBar[$i][2]) ; select troop
+				If _Sleep($g_iBBSameTroopDelay) Then Return ; slow down selecting then dropping troops
+				For $iamount = 0 To $aBBAttackBar[$i][4]
+				Local $vDP = Random(0, UBound($aVar), 1)
+				PureClick($aVar[$vDP][0], $aVar[$vDP][1])
+				Next
+				;---------------------------
 				If $i = $iNumSlots-1 Or $aBBAttackBar[$i][0] <> $aBBAttackBar[$i+1][0] Then
 					If _Sleep($g_iBBNextTroopDelay) Then ; wait before next troop
 						$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
@@ -253,13 +287,15 @@ Func DeployBBTroop($sName, $x, $y, $iAmount, $iSide)
 	SetLog("Deploying " & $sName & "x" & String($iAmount), $COLOR_ACTION)
 	PureClick($x, $y) ; select troop
 	If _Sleep($g_iBBSameTroopDelay) Then Return ; slow down selecting then dropping troops
-	For $j=0 To $iAmount - 1
-		local $iPoint = Random(0, 9, 1)
-		If $iSide Then ; pick random point on random side
-			PureClick($g_apTR[$iPoint][0], $g_apTR[$iPoint][1])
-		Else
-			PureClick($g_apTL[$iPoint][0], $g_apTL[$iPoint][1])
-		EndIf
-		If _Sleep($g_iBBSameTroopDelay) Then Return ; slow down dropping of troops
-	Next
+	PureClick($aVar[$vDP][0], $aVar[$vDP][1])
+
+	;For $j=0 To $iAmount - 1
+		;local $iPoint = Random(0, 9, 1)
+		;If $iSide Then ; pick random point on random side
+		;	PureClick($g_apTR[$iPoint][0], $g_apTR[$iPoint][1])
+		;Else
+		;	PureClick($g_apTL[$iPoint][0], $g_apTL[$iPoint][1])
+		;EndIf
+	;	If _Sleep($g_iBBSameTroopDelay) Then Return ; slow down dropping of troops
+	;Next
 EndFunc
