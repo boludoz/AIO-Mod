@@ -416,7 +416,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "PurgeMax", $g_iPurgeMax)
 
 	; Builder Base Attack
-	_Ini_Add("other", "ChkEnableBBAttack", $g_bChkEnableBBAttack)
+	;_Ini_Add("other", "ChkEnableBBAttack", $g_bChkEnableBBAttack)
 	_Ini_Add("other", "ChkBBTrophyRange", $g_bChkBBTrophyRange)
 	_Ini_Add("other", "TxtBBTrophyLowerLimit", $g_iTxtBBTrophyLowerLimit)
 	_Ini_Add("other", "TxtBBTrophyUpperLimit", $g_iTxtBBTrophyUpperLimit)

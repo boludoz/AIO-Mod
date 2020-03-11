@@ -179,10 +179,10 @@ Func BuilderBaseParseAttackCSV($AvailableTroops, $DeployPoints, $DeployBestPoint
 					Local $sQty = StringUpper($aDROP[1])
 					If $sQty = "ALL" Then ; All command will act like remain it will get attack bar troops.
 						; $aAvailableTroops_NXQ  [Name][Xaxis][Quantities]
-						For $i = 0 To UBound($aAvailableTroops_NXQ) - 1
-							If $sTroopName = $aAvailableTroops_NXQ[$i][0] Then ;We Just Need To redo the ocr for mentioned troop only
-								$aAvailableTroops_NXQ[$i][4] = Number(getTroopCountSmall(Number($aAvailableTroops_NXQ[$i][1]), 640))
-								If $aAvailableTroops_NXQ[$i][4] < 1 Then $aAvailableTroops_NXQ[$i][4] = Number(getTroopCountBig(Number($aAvailableTroops_NXQ[$i][1]), 633)) ; For Big numbers when the troop is selected
+						For $i = 0 To UBound($aAvaileTroops_NXQ) - 1
+							If StringInStr($aAvailableTroops_NXQ[$i][0], $sTroopName) <> 0 Then ;We Just Need To redo the ocr for mentioned troop only
+								$aAvailableTroops_NXQ[$i][4] = Number(_getTroopCountSmall(Number($aAvailableTroops_NXQ[$i][1]), 640))
+								If $aAvailableTroops_NXQ[$i][4] < 1 Then $aAvailableTroops_NXQ[$i][4] = Number(_getTroopCountBig(Number($aAvailableTroops_NXQ[$i][1]), 633)) ; For Big numbers when the troop is selected
 							EndIf
 						Next
 
@@ -195,7 +195,7 @@ Func BuilderBaseParseAttackCSV($AvailableTroops, $DeployPoints, $DeployBestPoint
 					; Gets Verify Quantities on Slot and what is necessary
 					Local $iTotalQtyByTroop = 0
 					For $i = 0 To UBound($aAvailableTroops_NXQ) - 1
-						If $sTroopName = $aAvailableTroops_NXQ[$i][0] Then
+						If StringInStr($aAvailableTroops_NXQ[$i][0], $sTroopName) <> 0  Then
 							$iTotalQtyByTroop += $aAvailableTroops_NXQ[$i][4]
 						EndIf
 					Next
@@ -373,11 +373,67 @@ Func BuilderBaseParseAttackCSV($AvailableTroops, $DeployPoints, $DeployBestPoint
 					Next
 			EndSwitch
 		Next
-		; ////
-		; "REMAIN" troops system here.
-		; ////
+
+		; Let's Assume That Our CSV Was Bad That None Of The Troops Was Deployed Let's Deploy Everything
+		; Let's make a Remain Just In Case deploy points problem somewhere in red zone OR Troop was not mentioned in CSV OR Hero Was not dropped. Let's drop All
+		Local $aAvailableTroops_NXQ = GetAttackBarBB()
+		If $aAvailableTroops_NXQ <> -1 And IsArray($aAvailableTroops_NXQ) Then
+			SetLog("CSV Does not deploy some of the troops. So Now just dropping troops in a waves", $COLOR_INFO)
+			; Main Side to attack
+			If $sFrontSide = "" Then
+				$sFrontSide = BuilderBaseAttackMainSide()
+				Setlog("Detected Front Side: " & $sFrontSide, $COLOR_INFO)
+			EndIf
+			Local $sSelectedDropSideName ;Using For AddTile But in this remain no use
+			Local $aSelectedDropSidePoints_XY = CorrectDropPoints($sFrontSide, "FRONTE", $aDeployBestPoints, $sSelectedDropSideName)
+			SortPoints($aSelectedDropSidePoints_XY, $bDebug)
+			; Just in Case
+			If UBound($aSelectedDropSidePoints_XY) > 0 Then
+				Local $iQtyOfSelectedSlot = 0 ; Quantities on current slot
+				Local $iSlotNumber = 20 ; just an impossible slot to initialize it
+				Local $aSlot_XY = [0, 0]
+				Local $sTroopName = ""
+				Local $iQtyToDrop = 0
+
+				For $i = 0 To UBound($aAvailableTroops_NXQ) - 1
+					$sTroopName = $aAvailableTroops_NXQ[$i][0]
+					TriggerMachineAbility()
+					; Let's select the slot VerifySlotTroops uses ByRef on $aSlot_XY , $iQtyOfSelectedSlot and $iSlotNumber
+					If Not VerifySlotTroop($sTroopName, $aSlot_XY, $iQtyOfSelectedSlot, $iSlotNumber, $aAvailableTroops_NXQ) Then
+						ContinueLoop
+					EndIf
+					$iQtyToDrop = $iQtyOfSelectedSlot ;Quantity We Want to Drop Is The Quantity Of The Slot
+					Local $iTroopsDropped = 0
+					While $iTroopsDropped < $iQtyToDrop
+						For $j = 0 To UBound($aSelectedDropSidePoints_XY) - 1
+							If ($iTroopsDropped < $iQtyToDrop) Then ; Check That Drop Troops Don't Get Exceeded By Slot Quantity
+								; get one Deploy point
+								Local $Point2Deploy = [$aSelectedDropSidePoints_XY[$j][0], $aSelectedDropSidePoints_XY[$j][1]]
+								DeployTroopBB($sTroopName, $aSlot_XY, $Point2Deploy, 1)
+								; Increment Troops Dropped
+								$iTroopsDropped += 1
+								; removing the deployed troop
+								$iQtyOfSelectedSlot -= 1
+								; Remove the Qty from the Original array :
+								$aAvailableTroops_NXQ[$iSlotNumber][2] = $iQtyOfSelectedSlot
+								; If is the Machine exist and deployed
+								If $g_bIsBBMachineD Then ExitLoop (2)
+								; Just a small Delay to Pause Function
+								If _Sleep(100) Then Return
+							Else
+								ExitLoop (2)
+							EndIf
+						Next
+					WEnd
+					TriggerMachineAbility()
+					; Add Delay To Make Like Wave Of Troops
+					If _Sleep(2000) Then Return
+				Next
+			EndIf
+		EndIf
 
 		; Machine Ability and Battle
+		TriggerMachineAbility()
 		BattleIsOver()
 
 	Else
@@ -631,7 +687,7 @@ Func VerifySlotTroop($sTroopName, ByRef $aSlot_XY, ByRef $iQtyOfSelectedSlot, By
 	For $i = 0 To UBound($aAvailableTroops_NXQ) - 1
 		If Not $g_bRunState Then Return
 		; verify Name and If is different then last slot
-		If $sTroopName = $aAvailableTroops_NXQ[$i][0] And $iSlotNumber <> $i Then
+		If StringInStr($aAvailableTroops_NXQ[$i][0], $sTroopName) <> 0 And $iSlotNumber <> $i Then
 			$iSlotX = $aAvailableTroops_NXQ[$i][1]
 			$iSlotY = $aAvailableTroops_NXQ[$i][2]
 			$iQtyOfSelectedSlot = $aAvailableTroops_NXQ[$i][4]

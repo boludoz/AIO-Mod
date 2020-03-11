@@ -382,7 +382,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			chkPurgeLimits()
 
 			; Builder Base Attack
-			GUICtrlSetState($g_hChkEnableBBAttack, $g_bChkEnableBBAttack ? $GUI_CHECKED : $GUI_UNCHECKED)
+			;GUICtrlSetState($g_hChkEnableBBAttack, $g_bChkEnableBBAttack ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkBBTrophyRange, $g_bChkBBTrophyRange ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hTxtBBTrophyLowerLimit, $g_iTxtBBTrophyLowerLimit)
 			GUICtrlSetData($g_hTxtBBTrophyUpperLimit, $g_iTxtBBTrophyUpperLimit)
@@ -393,10 +393,11 @@ Func ApplyConfig_600_6($TypeReadSave)
 			chkBBTrophyRange()
 			chkEnableBBAttack()
 
+			GUICtrlSetState($g_hBtnBBDropOrderSet, $GUI_ENABLE)
+		
 			; Builder Base Drop Order
 			If $g_bBBDropOrderSet Then
 				GUICtrlSetState($g_hChkBBCustomDropOrderEnable, $GUI_CHECKED)
-				GUICtrlSetState($g_hBtnBBDropOrderSet, $GUI_ENABLE)
 				GUICtrlSetState($g_hBtnBBRemoveDropOrder, $GUI_ENABLE)
 				#Region - Custom BB Army - Team AIO Mod++
 				;Local $asBBDropOrder = StringSplit($g_sBBDropOrder, "|")
@@ -468,7 +469,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_iPurgeMax = _GUICtrlComboBox_GetCurSel($g_hcmbPurgeLimit)
 
 			; Builder Base Attack
-			$g_bChkEnableBBAttack = (GUICtrlRead($g_hChkEnableBBAttack) = $GUI_CHECKED)
+			;$g_bChkEnableBBAttack = (GUICtrlRead($g_hChkEnableBBAttack) = $GUI_CHECKED)
 			$g_bChkBBTrophyRange = (GUICtrlRead($g_hChkBBTrophyRange) = $GUI_CHECKED)
 			$g_iTxtBBTrophyLowerLimit = GUICtrlRead($g_hTxtBBTrophyLowerLimit)
 			$g_iTxtBBTrophyUpperLimit = GUICtrlRead($g_hTxtBBTrophyUpperLimit)

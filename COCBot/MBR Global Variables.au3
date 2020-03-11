@@ -869,7 +869,8 @@ Global $g_bChkCollectBuilderBase = False, $g_bChkStartClockTowerBoost = False, $
 
 ; Builder Base Attack
 Global $g_hChkEnableBBAttack = 0, $g_hChkBBTrophyRange = 0, $g_hTxtBBTrophyLowerLimit = 0, $g_hTxtBBTrophyUpperLimit = 0, $g_hChkBBAttIfLootAvail = 0, $g_hChkBBWaitForMachine = 0
-Global $g_bChkEnableBBAttack = False, $g_bChkBBTrophyRange = False, $g_bChkBBAttIfLootAvail = False, $g_bChkBBWaitForMachine = False
+Global $g_bChkEnableBBAttack = True ; Team AIO Mod++
+Global $g_bChkBBTrophyRange = False, $g_bChkBBAttIfLootAvail = False, $g_bChkBBWaitForMachine = False ; Team AIO Mod++
 Global $g_iTxtBBTrophyLowerLimit = 0, $g_iTxtBBTrophyUpperLimit = 5000
 Global $g_bBBMachineReady = False
 Global $g_aBBMachine = [0,0] ; x,y coordinates of where to click for Battle machine on attack bar

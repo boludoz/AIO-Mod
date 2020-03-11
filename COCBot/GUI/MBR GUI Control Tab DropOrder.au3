@@ -31,13 +31,14 @@ Func CloseCustomDropOrder()
 EndFunc   ;==>CloseCustomDropOrder
 
 Func chkDropOrder()
+	GUICtrlSetState($g_hBtnRemoveDropOrder, $GUI_ENABLE)
+	
 	If GUICtrlRead($g_hChkCustomDropOrderEnable) = $GUI_CHECKED Then
 		$g_bCustomDropOrderEnable = True
 		GUICtrlSetBkColor($g_hBtnCustomDropOrderDB, $COLOR_GREEN)
 		GUICtrlSetBkColor($g_hBtnCustomDropOrderAB, $COLOR_GREEN)
 		GUICtrlSetBkColor($g_hBtnCustomDropOrderDB1, $COLOR_GREEN)
 		GUICtrlSetState($g_hBtnDropOrderSet, $GUI_ENABLE)
-		GUICtrlSetState($g_hBtnRemoveDropOrder, $GUI_ENABLE)
 		For $i = 0 To UBound($g_ahCmbDropOrder) - 1
 			GUICtrlSetState($g_ahCmbDropOrder[$i], $GUI_ENABLE)
 		Next
@@ -48,7 +49,7 @@ Func chkDropOrder()
 		GUICtrlSetBkColor($g_hBtnCustomDropOrderAB, $COLOR_RED)
 		GUICtrlSetBkColor($g_hBtnCustomDropOrderDB1, $COLOR_RED)
 		GUICtrlSetState($g_hBtnDropOrderSet, $GUI_DISABLE) ; disable button
-		GUICtrlSetState($g_hBtnRemoveDropOrder, $GUI_DISABLE)
+		;GUICtrlSetState($g_hBtnRemoveDropOrder, $GUI_DISABLE)
 		For $i = 0 To UBound($g_ahCmbDropOrder) - 1
 			GUICtrlSetState($g_ahCmbDropOrder[$i], $GUI_DISABLE) ; disable combo boxes
 		Next
