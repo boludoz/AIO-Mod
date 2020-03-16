@@ -179,7 +179,7 @@ Func BuilderBaseParseAttackCSV($AvailableTroops, $DeployPoints, $DeployBestPoint
 					Local $sQty = StringUpper($aDROP[1])
 					If $sQty = "ALL" Then ; All command will act like remain it will get attack bar troops.
 						; $aAvailableTroops_NXQ  [Name][Xaxis][Quantities]
-						For $i = 0 To UBound($aAvaileTroops_NXQ) - 1
+						For $i = 0 To UBound($aAvailableTroops_NXQ) - 1
 							If StringInStr($aAvailableTroops_NXQ[$i][0], $sTroopName) <> 0 Then ;We Just Need To redo the ocr for mentioned troop only
 								$aAvailableTroops_NXQ[$i][4] = Number(_getTroopCountSmall(Number($aAvailableTroops_NXQ[$i][1]), 640))
 								If $aAvailableTroops_NXQ[$i][4] < 1 Then $aAvailableTroops_NXQ[$i][4] = Number(_getTroopCountBig(Number($aAvailableTroops_NXQ[$i][1]), 633)) ; For Big numbers when the troop is selected
@@ -376,7 +376,7 @@ Func BuilderBaseParseAttackCSV($AvailableTroops, $DeployPoints, $DeployBestPoint
 
 		; Let's Assume That Our CSV Was Bad That None Of The Troops Was Deployed Let's Deploy Everything
 		; Let's make a Remain Just In Case deploy points problem somewhere in red zone OR Troop was not mentioned in CSV OR Hero Was not dropped. Let's drop All
-		Local $aAvailableTroops_NXQ = GetAttackBarBB()
+		Local $aAvailableTroops_NXQ = GetAttackBarBB(True)
 		If $aAvailableTroops_NXQ <> -1 And IsArray($aAvailableTroops_NXQ) Then
 			SetLog("CSV Does not deploy some of the troops. So Now just dropping troops in a waves", $COLOR_INFO)
 			; Main Side to attack

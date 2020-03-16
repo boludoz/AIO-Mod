@@ -145,14 +145,6 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	Next
 
 	If $stone[0] = 0 And $fixed[0] = 0 Then
-
-		#Region - Custom - Team AIO Mod++
-		If not $bOnBuilderBase and IsArray(_ImageSearchXML($g_sImgZoomOutDirBB)) Then
-			$g_bZoomFixBB = True
-			Return GetVillageSize($DebugLog, $sStonePrefix, $sTreePrefix, $sFixedPrefix, True) ; Team AIO Mod++
-		EndIf
-		#EndRegion
-
 		SetDebugLog("GetVillageSize cannot find stone", $COLOR_WARNING)
 		Return FuncReturn($aResult)
 	EndIf
