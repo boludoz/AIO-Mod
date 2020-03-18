@@ -180,31 +180,38 @@ Func isOnVersusBattleWindow()
 	EndIf
 EndFunc   ;==>isOnVersusBattleWindow
 
-Func ArmyStatus(ByRef $IsReaddy)
+Func ArmyStatus(ByRef $bIsReady)
 	If Not $g_bRunState Then Return
-	If QuickMis("BC1", $g_sImgFullArmyBB, 108, 355, 431, 459, True, False) Then ; DESRC Done
-		SetDebugLog("Full Army detected: " & $g_iQuickMISWOffSetX & "," & $g_iQuickMISWOffSetY)
+	If QuickMis("BC1", $g_sImgFullArmyBB, 108, 355, 431, 459, True, False) Then
+		SetDebugLog("Full Army detected.")
 		SetLog("Full Army detected", $COLOR_INFO)
-		$IsReaddy = True
-	ElseIf QuickMis("BC1", $g_sImgHeroStatusUpg, 108, 355, 431, 459, True, False) Then ; RC Done
+		$bIsReady = True
+	ElseIf QuickMis("BC1", $g_sImgHeroStatusUpg, 108, 355, 431, 459, True, False) Then
 		SetLog("Full Army detected, But Battle Machine is on Upgrade", $COLOR_INFO)
-		$IsReaddy = True
+		$bIsReady = True
 	Else
-		$IsReaddy = False
-		SetDebugLog("Your Army is not prepared...", $COLOR_WARNING)
+		$bIsReady = False
 	EndIf
+	
+	If $g_bChkBBWaitForMachine And QuickMis("BC1", $g_sImgHeroStatusRec, 108, 355, 431, 459, True, False) Then
+		SetLog("Battle Machine is not ready.", $COLOR_INFO)
+		$bIsReady = False
+	EndIf
+	
+	$g_bBBMachineReady = $bIsReady
+	
 EndFunc   ;==>ArmyStatus
 
 Func HeroStatus()
 	If Not $g_bRunState Then Return
 	Local $Status = "No Hero to use in Battle"
-	If QuickMis("BC1", $g_sImgHeroStatusRec, 108, 355, 431, 459, True, False) Then ; DESRC Done
+	If QuickMis("BC1", $g_sImgHeroStatusRec, 108, 355, 431, 459, True, False) Then
 		$Status = "Battle Machine Recovering"
 	EndIf
-	If QuickMis("BC1", $g_sImgHeroStatusMachine, 108, 355, 431, 459, True, False) Then ; DESRC Done
+	If QuickMis("BC1", $g_sImgHeroStatusMachine, 108, 355, 431, 459, True, False) Then
 		$Status = "Battle Machine ready to use"
 	EndIf
-	If QuickMis("BC1", $g_sImgHeroStatusUpg, 108, 355, 431, 459, True, False) Then ; DESRC Done
+	If QuickMis("BC1", $g_sImgHeroStatusUpg, 108, 355, 431, 459, True, False) Then
 		$Status = "Battle Machine Upgrading"
 	EndIf
 	Return $Status

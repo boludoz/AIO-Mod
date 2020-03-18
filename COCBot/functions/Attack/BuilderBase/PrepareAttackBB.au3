@@ -50,7 +50,7 @@ Func PrepareAttackBB($bTest = False)
 	EndIf
 
 	$g_bBBMachineReady = CheckMachReady()
-	If $g_bChkBBWaitForMachine And Not $g_bBBMachineReady Then
+	If Not $g_bBBMachineReady Then
 		SetLog("Battle Machine is not ready.")
 		If _Sleep(1500) Then Return ; Team AIO Mod++
 		ClickP($aAway)
@@ -91,7 +91,6 @@ Func CheckLootAvail()
 	Return $bRet
 EndFunc
 
-#cs - Custom army BB - Team AIO Mod++
 Func CheckMachReady()
 	local $aCoords = decodeSingleCoord(findImage("BBMachReady_bmp", $g_sImgBBMachReady, GetDiamondFromRect("113,388,170,448"), 1, True))
 	local $bRet = False
@@ -105,25 +104,6 @@ Func CheckMachReady()
 
 	Return $bRet
 EndFunc
-#ce
-
-#Region - Custom army BB - Team AIO Mod++
-Func CheckMachReady()
-	Local $bIsReaddy
-	If Not $g_bRunState Then Return
-	If QuickMis("BC1", $g_sImgFullArmyBB, 108, 355, 431, 459, True, False) Then
-		SetDebugLog("Full Army detected.")
-		SetLog("Full Army detected", $COLOR_INFO)
-		$bIsReaddy = True
-	ElseIf QuickMis("BC1", $g_sImgHeroStatusUpg, 108, 355, 431, 459, True, False) Then
-		SetLog("Full Army detected, But Battle Machine is on Upgrade", $COLOR_INFO)
-		$bIsReaddy = True
-	Else
-		$bIsReaddy = False
-	EndIf
-	Return $bIsReaddy
-EndFunc   ;==>CheckMachReady
-#EndRegion
 
 Func CheckArmyReady()
 	local $i = 0
