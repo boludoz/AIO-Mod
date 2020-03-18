@@ -66,7 +66,7 @@ Func AttackBB()
 	#ce
 
 	; Get troops on attack bar and their quantities
-	local $aBBAttackBar = GetAttackBarBB()
+	;local $aBBAttackBar = GetAttackBarBB()
 	If _Sleep($DELAYRESPOND) Then
 ;~ 		$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
 		If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Enabled")
@@ -75,7 +75,7 @@ Func AttackBB()
 
 	#Region - Custom BB Army - Team AIO Mod++
 	; Correct troops
-		If $g_bChkBBCustomArmyEnable Then BuilderBaseSelectCorrectScript($aBBAttackBar)
+		;If $g_bChkBBCustomArmyEnable Then BuilderBaseSelectCorrectScript($aBBAttackBar)
 
 		Local $Size = GetBuilderBaseSize()
 		
@@ -113,7 +113,7 @@ Func AttackBB()
 						PureClick($aBBAttackBar[$j][1], $aBBAttackBar[$j][2]) ; select troop
 						If _Sleep($g_iBBSameTroopDelay) Then Return ; slow down selecting then dropping troops
 						For $iamount = 0 To $aBBAttackBar[$i][4]
-						Local $vDP = Random(0, UBound($aVar), 1)
+						Local $vDP = Random(0, UBound($aVar))
 						PureClick($aVar[$vDP][0], $aVar[$vDP][1])
 						Next
 						;---------------------------
@@ -136,7 +136,7 @@ Func AttackBB()
 				PureClick($aBBAttackBar[$i][1], $aBBAttackBar[$i][2]) ; select troop
 				If _Sleep($g_iBBSameTroopDelay) Then Return ; slow down selecting then dropping troops
 				For $iamount = 0 To $aBBAttackBar[$i][4]
-				Local $vDP = Random(0, UBound($aVar), 1)
+				Local $vDP = Random(0, UBound($aVar))
 				PureClick($aVar[$vDP][0], $aVar[$vDP][1])
 				Next
 				;---------------------------
@@ -224,7 +224,7 @@ Func AttackBB()
 	SetLog("Waiting for opponent.", $COLOR_BLUE)
 	Okay()
 	SetLog("Done.", $COLOR_SUCCESS)
-	ZoomOut()
+	;ZoomOut()
 
 	$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast ; reset android suspend and resume stuff
 	If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Enabled")

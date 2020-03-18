@@ -101,7 +101,6 @@ Func BuilderBaseAttack($bTestRun = False)
 		; Verify the scripts and attack bar
 		If Not $IsToDropTrophies Then BuilderBaseSelectCorrectScript($AvailableTroops)
 
-
 		; Zoomout the Opponent Village
 		BuilderBaseZoomOut()
 		If $g_bRestart = True Then Return

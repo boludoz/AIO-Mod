@@ -76,6 +76,10 @@ EndFunc   ;==>chkBuilderAttack
 
 Func cmbBBAttack()
 	If _GUICtrlComboBox_GetCurSel($g_hCmbBBAttack) = $g_eBBAttackCSV Then
+		GUICtrlSetState($g_hLblBBNextTroopDelay, $GUI_HIDE)
+		GUICtrlSetState($g_hLblBBSameTroopDelay, $GUI_HIDE)
+		GUICtrlSetState($g_hCmbBBNextTroopDelay, $GUI_HIDE)
+		GUICtrlSetState($g_hCmbBBSameTroopDelay, $GUI_HIDE)
 		GUICtrlSetState($g_hBtnBBDropOrder, $GUI_HIDE)
 		GUICtrlSetState($g_hChkBBGetFromCSV, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkBBRandomAttack, $GUI_ENABLE)
@@ -83,6 +87,11 @@ Func cmbBBAttack()
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
 	Else
+		GUICtrlSetState($g_hLblBBNextTroopDelay, $GUI_SHOW)
+		GUICtrlSetState($g_hLblBBSameTroopDelay, $GUI_SHOW)
+		GUICtrlSetState($g_hCmbBBNextTroopDelay, $GUI_SHOW)
+		GUICtrlSetState($g_hCmbBBSameTroopDelay, $GUI_SHOW)
+		GUICtrlSetState($g_hBtnBBDropOrder, $GUI_SHOW)
 		GUICtrlSetState($g_hChkBBRandomAttack, $GUI_UNCHECKED)
 		ChkBBRandomAttack()
 		GUICtrlSetState($g_hChkBBGetFromCSV, $GUI_DISABLE)
@@ -90,7 +99,6 @@ Func cmbBBAttack()
 		For $i=$g_hGrpAttackStyleBB To $g_hIcnBBCSV[3] ; Disable all csv stuff
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
-		GUICtrlSetState($g_hBtnBBDropOrder, $GUI_SHOW)
 	EndIf
 EndFunc
 

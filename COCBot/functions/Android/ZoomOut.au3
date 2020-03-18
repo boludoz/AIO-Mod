@@ -486,7 +486,7 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag,
 					$aScrollPos[0] = $aCenterHomeVillageClickDrag[0]
 					$aScrollPos[1] = $aCenterHomeVillageClickDrag[1]
 				EndIf
-				If BitOr(IsArray(_ImageSearchXML($g_sImgIsOnBB, 0, "260,0,406,54", $bNeedCaptureRegion)), Not IsArray(_ImageSearchXML($g_sImgZoomOutDirBB, 0, "0,0,860,732", $bNeedCaptureRegion))) <> 0 Then  ; Team AIO Mod++
+				If BitOr(IsArray(_ImageSearchXML($g_sImgIsOnBB, 0, "260,0,406,54", True)), Not IsArray(_ImageSearchXML($g_sImgZoomOutDirBB, 0, "0,0,860,732", True))) <> 0 Then  ; Team AIO Mod++
 					ClickP($aAway, 1, 0, "#0000") ; ensure field is clean
 					ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y)
 				EndIf

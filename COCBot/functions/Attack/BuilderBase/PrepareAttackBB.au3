@@ -49,15 +49,6 @@ Func PrepareAttackBB($bTest = False)
 		EndIf
 	EndIf
 
-	#Region - Custom army BB - Team AIO Mod++
-;~ 	If $bIsToDropTrophies Then
-;~ 		SetLog("Trophies drop.")
-;~ 		If _Sleep(1500) Then Return ; Team AIO Mod++
-;~ 		BuilderBaseDropTrophy()
-;~ 		Return
-;~ 	EndIf
-	#EndRegion - Custom army BB - Team AIO Mod++
-
 	$g_bBBMachineReady = CheckMachReady()
 	If $g_bChkBBWaitForMachine And Not $g_bBBMachineReady Then
 		SetLog("Battle Machine is not ready.")
