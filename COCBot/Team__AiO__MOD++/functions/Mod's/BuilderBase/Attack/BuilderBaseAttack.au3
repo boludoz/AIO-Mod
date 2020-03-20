@@ -124,7 +124,7 @@ Func BuilderBaseAttack($bTestRun = False)
 				Setlog("Ready to Battle! BB Smart Attack... Let's Go!", $COLOR_SUCCESS)
 
 				; BB Smart Attack
-				AttackBB()
+				AttackBB($AvailableTroops)
 				If Not $g_bRunState Then Return
 			Case Else
 				$g_bRestart = ($bTestRun) ? (False) : (True)

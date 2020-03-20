@@ -515,7 +515,7 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag,
 					EndIf
 				EndIf
 				setVillageOffset($x, $y, $iZoomFactor)
-				ConvertInternalExternArea($sSource) ; generate correct internal/external diamond measures
+				ConvertInternalExternArea() ; generate correct internal/external diamond measures
 			EndIf
 		EndIf
 	EndIf

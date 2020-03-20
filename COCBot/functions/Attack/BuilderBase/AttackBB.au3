@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func AttackBB()
+Func AttackBB($aBBAttackBar = GetAttackBarBB())
 	local $iSide = Random(0, 1, 1) ; randomly choose top left or top right
 	local $iAndroidSuspendModeFlagsLast = $g_iAndroidSuspendModeFlags
 	#cs - Team AIO Mod++
@@ -161,6 +161,7 @@ Func AttackBB()
 	SetLog("All Troops Deployed", $COLOR_SUCCESS)
 
 	; place hero and activate ability
+	Local $aBMPos = 0
 	If $g_bBBMachineReady And Not $bBMDeployed Then SetLog("Deploying Battle Machine.", $COLOR_BLUE)
 	While Not $bBMDeployed And $g_bBBMachineReady
 		$aBMPos = GetMachinePos()

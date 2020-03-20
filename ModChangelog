@@ -9,6 +9,22 @@
 		• CSV: 
 			- Add hero if it doesn't exist in CSV.
 			
+	**V3.3.0**
+		» Added:
+			• Builder base tab:
+				- Attack from CSV and smart attack drop point improvement, based on map size. (Thx to @Chilly-Chill). (Experimental).
+				- Improve machine.
+				- BB Wall update.
+				
+			• Kings, queen and walls with new costs. (balance update).
+			
+			• Update checker.
+
+			• Zoom for builder base in attack.
+
+		» Fixed:
+			• Loot of fixes.
+			
 	**V3.2.8**
 		» Fixed:
 			• Find match : Cloud time and search fixed.
