@@ -12,7 +12,7 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-
+#cs - Team AIO Mod++
 Func PrepareAttackBB($bTest = False)
 	If $bTest Then $g_aiCurrentLootBB[$eLootTrophyBB] = 1004
 	If $bTest Then Setlog($g_aiCurrentLootBB[$eLootTrophyBB], $COLOR_INFO)
@@ -147,3 +147,4 @@ Func CheckArmyReady()
 
 	Return $bReady
 EndFunc
+#ce

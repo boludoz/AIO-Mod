@@ -9,6 +9,9 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+;Builder Base Walls
+Global $aWallUpgrade[4] = [521, 580 + $g_iMidOffsetY, 0x7B412B, 20] ; Upgrade Button main screen
+Global $aWallUpgradeOK[4] = [483, 496 + $g_iMidOffsetY, 0xFFDC15, 20] ; Ok Button on main screen
 
 Func TestRunWallsUpgradeBB()
 	SetDebugLog("** TestRunWallsUpgradeBB START**", $COLOR_DEBUG)

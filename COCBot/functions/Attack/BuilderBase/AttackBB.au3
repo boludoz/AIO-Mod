@@ -283,6 +283,7 @@ Func Okay()
 	Return True
 EndFunc
 
+#CS - Team AIO Mod++
 Func DeployBBTroop($sName, $x, $y, $iAmount, $iSide)
 	If $sName = "Machine" Then Return ; Team AIO Mod++
 	SetLog("Deploying " & $sName & "x" & String($iAmount), $COLOR_ACTION)
@@ -300,3 +301,4 @@ Func DeployBBTroop($sName, $x, $y, $iAmount, $iSide)
 	;	If _Sleep($g_iBBSameTroopDelay) Then Return ; slow down dropping of troops
 	;Next
 EndFunc
+#CE
