@@ -9,6 +9,15 @@
 		• CSV: 
 			- Add hero if it doesn't exist in CSV.
 			
+	**V3.3.1**
+		» Improved:
+			• Builder base:
+				- CheckArmyBuilderBase only if is necesesary.
+				
+		» Fixed:
+			• Builder base:
+				- Fixed images.
+
 	**V3.3.0**
 		» Added:
 			• Builder base tab:
