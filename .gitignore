@@ -150,6 +150,31 @@
 ![Cc]OCBot/Team__AiO__MOD++/Images/ChatActions/*.png
 ![Cc]OCBot/Team__AiO__MOD++/Images/ChatActions/Chat/*.png
 ![Cc]OCBot/Team__AiO__MOD++/Images/ChatActions/FriendlyChallenge/*.png
+# BB Base
+![Cc]OCBot/Team__AiO__MOD++/Images/Old/BuildersBase/Attack/AttackBtn/*.png
+![Cc]OCBot/Team__AiO__MOD++/Images/Old/BuildersBase/Attack/VersusBattle/ArmyStatus/Full/*.png
+![Cc]OCBot/Team__AiO__MOD++/Images/Old/BuildersBase/Attack/VersusBattle/ArmyStatus/Hero/Battle Machine/*.png
+![Cc]OCBot/Team__AiO__MOD++/Images/Old/BuildersBase/Attack/VersusBattle/ArmyStatus/Hero/Recovering/*.png
+![Cc]OCBot/Team__AiO__MOD++/Images/Old/BuildersBase/Attack/VersusBattle/ArmyStatus/Hero/Upgrading/*.png
+![Cc]OCBot/Team__AiO__MOD++/Images/Old/BuildersBase/Attack/VersusBattle/ChangeTroops/*.png
+![Cc]OCBot/Team__AiO__MOD++/Images/Old/BuildersBase/Attack/VersusBattle/Clouds/*.png
+![Cc]OCBot/Team__AiO__MOD++/Images/Old/BuildersBase/Attack/VersusBattle/FindNowbtn/*.png
+![Cc]OCBot/Team__AiO__MOD++/Images/Old/BuildersBase/Attack/VersusBattle/Report/Replay/*.png
+![Cc]OCBot/Team__AiO__MOD++/Images/Old/BuildersBase/Attack/VersusBattle/Report/Result/*.png
+![Cc]OCBot/Team__AiO__MOD++/Images/Old/BuildersBase/Attack/VersusBattle/Report/Waiting/*.png
+![Cc]OCBot/Team__AiO__MOD++/Images/Old/BuildersBase/Attack/VersusBattle/Window/*.png
+![Cc]OCBot/Team__AiO__MOD++/Images/Old/BuildersBase/AvailableAttacks/*.png
+![Cc]OCBot/Team__AiO__MOD++/Images/Old/BuildersBase/Bundles/AttackBuildings/AirDefenses/*.png
+![Cc]OCBot/Team__AiO__MOD++/Images/Old/BuildersBase/Bundles/AttackBuildings/BuilderHall/*.png
+![Cc]OCBot/Team__AiO__MOD++/Images/Old/BuildersBase/Bundles/AttackBuildings/Cannon/*.png
+![Cc]OCBot/Team__AiO__MOD++/Images/Old/BuildersBase/Bundles/AttackBuildings/Crusher/*.png
+![Cc]OCBot/Team__AiO__MOD++/Images/Old/BuildersBase/Bundles/AttackBuildings/DeployPoints/*.png
+![Cc]OCBot/Team__AiO__MOD++/Images/Old/BuildersBase/Bundles/AttackBuildings/GuardPost/*.png
+![Cc]OCBot/Team__AiO__MOD++/Images/Old/BuildersBase/Bundles/Camps/*.png
+![Cc]OCBot/Team__AiO__MOD++/Images/Old/BuildersBase/Bundles/Walls/*.png
+![Cc]OCBot/Team__AiO__MOD++/Images/Old/BuildersBase/FillArmyCamps/TroopsTrain/*.png
+![Cc]OCBot/Team__AiO__MOD++/Images/Old/BuildersBase/FillArmyCamps/Window/*.png
+![Cc]OCBot/Team__AiO__MOD++/Images/Old/BuildersBase/TroopsUpgrade/Machine/*.png
 
 # ignore test strategies
 [Ss]trategies/[Tt]est*.ini

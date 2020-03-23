@@ -604,14 +604,17 @@ Func FinalInitialization(Const $sAI)
 	DestroySplashScreen()
 
 	Local $aBotGitVersion = CheckModVersion(True)
-	SetLog(" ")
-	SetLog(" •  " & "AIO++ MOD " & $g_sModVersion, ($aBotGitVersion[1] = False) ? ($COLOR_SUCCESS) : ($COLOR_ERROR), "Candara", 9)
-	SetLog(" •  " & "AIO++ MOD LAST VERSION " & $aBotGitVersion[0], ($aBotGitVersion[1] = False) ? ($COLOR_SUCCESS) : ($COLOR_ERROR), "Candara", 9)
-	SetLog(" •  " & "Based On MBR " & $g_sBotVersion, $COLOR_SUCCESS, "Candara", 9)
-	SetLog(" •  " & "Create a New Profile", $COLOR_SUCCESS, "Candara", 9)
-	SetLog(" •  " & "Participants and thanks: Nguyen, Chilly-Chill, Eloy, Boldina, Demen, Samkie, and ChacalGyn, all moders and MyBot/Aio Team.", $COLOR_SUCCESS, "Candara", 9)
-	SetLog(" ")
-
+	
+	If IsArray($aBotGitVersion) And UBound($aBotGitVersion) < 1 Then
+		SetLog(" ")
+		SetLog(" •  " & "AIO++ MOD " & $g_sModVersion, ($aBotGitVersion[1] = False) ? ($COLOR_SUCCESS) : ($COLOR_ERROR), "Candara", 9)
+		SetLog(" •  " & "AIO++ MOD LAST VERSION " & $aBotGitVersion[0], ($aBotGitVersion[1] = False) ? ($COLOR_SUCCESS) : ($COLOR_ERROR), "Candara", 9)
+		SetLog(" •  " & "Based On MBR " & $g_sBotVersion, $COLOR_SUCCESS, "Candara", 9)
+		SetLog(" •  " & "Create a New Profile", $COLOR_SUCCESS, "Candara", 9)
+		SetLog(" •  " & "Participants and thanks: Nguyen, Chilly-Chill, Eloy, Boldina, Demen, Samkie, and ChacalGyn, all moders and MyBot/Aio Team.", $COLOR_SUCCESS, "Candara", 9)
+		SetLog(" ")
+	EndIf
+	
 	; InitializeVariables();initialize variables used in extrawindows
 	CheckVersion() ; check latest version on mybot.run site
 	UpdateMultiStats()
