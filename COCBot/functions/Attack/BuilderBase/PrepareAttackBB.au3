@@ -112,8 +112,8 @@ Func CheckArmyReady()
 
 	If _Sleep($DELAYCHECKFULLARMY2) Then Return False ; wait for window
 	While $i < 6 And $bReady ; wait for fight preview window
-		local $aNeedTrainCoords = decodeSingleCoord(findImage("NeedTrainBB", $g_sImgBBNeedTrainTroops, $sSearchDiamond, 1, True))
 		local $aTroopsTrainingCoords = decodeSingleCoord(findImage("TroopsTrainingBB", $g_sImgBBTroopsTraining, $sSearchDiamond, 1, False)) ; shouldnt need to capture again as it is the same diamond
+		local $aNeedTrainCoords = decodeSingleCoord(findImage("NeedTrainBB", $g_sImgBBNeedTrainTroops, $sSearchDiamond, 1, True))
 
 		If IsArray($aNeedTrainCoords) And UBound($aNeedTrainCoords) = 2 Then
 			$bReady = False
@@ -147,3 +147,4 @@ Func CheckArmyReady()
 
 	Return $bReady
 EndFunc
+#CE
