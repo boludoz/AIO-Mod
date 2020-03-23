@@ -76,7 +76,7 @@ Func runBuilderBase($bTestRun = False)
 	Local $boosted = False
 	; Fill/check Army Camps only If is necessary attack
 	If $g_bRestart Then Return
-	If $g_iAvailableAttacksBB > 0 Or Not $g_bChkBBStopAt3 Then CheckArmyBuilderBase()
+	;If $g_iAvailableAttacksBB > 0 Or Not $g_bChkBBStopAt3 Then CheckArmyBuilderBase()
 	; Just a loop to benefit from Clock Tower Boost
 	For $i = 0 To 10
 		; Zoomout
@@ -133,7 +133,7 @@ Func runBuilderBase($bTestRun = False)
 
 	If Not $g_bChkPlayBBOnly Then
 			; switch back to normal village
-			If BuilderBaseZoomOut() Then
+			If not IsOnBuilderBase() Then
 				If SwitchBetweenBases() Then $g_bStayOnBuilderBase = False ; AIO ++
 			EndIf
 		Else

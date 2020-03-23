@@ -147,4 +147,3 @@ Func CheckArmyReady()
 
 	Return $bReady
 EndFunc
-#ce

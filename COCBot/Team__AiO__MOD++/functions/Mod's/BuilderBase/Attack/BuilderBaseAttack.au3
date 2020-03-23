@@ -182,6 +182,23 @@ EndFunc   ;==>isOnVersusBattleWindow
 
 Func ArmyStatus(ByRef $bIsReady)
 	If Not $g_bRunState Then Return
+	
+	#Region Legacy Chilly-Chill fragment.
+	Local $sSearchDiamond = GetDiamondFromRect("114,384,190,450") ; start of trained troops bar untill a bit after the 'r' "in Your Troops"
+	Local $aNeedTrainCoords = decodeSingleCoord(findImage("NeedTrainBB", $g_sImgBBNeedTrainTroops, $sSearchDiamond, 1, True))
+
+	If IsArray($aNeedTrainCoords) And UBound($aNeedTrainCoords) = 2 Then
+		Local $bNeedTrain = True
+		
+		ClickP($aAway, 1, 0, "#0000") ; ensure field is clean
+		If _Sleep(1500) Then Return ; Team AIO Mod++ Then Return
+		SetLog("Troops need to be trained in the training tab.", $COLOR_INFO)
+		CheckArmyBuilderBase()
+		Return False
+
+	EndIf
+	#EndRegion
+	
 	If QuickMis("BC1", $g_sImgFullArmyBB, 108, 355, 431, 459, True, False) Then
 		SetDebugLog("Full Army detected.")
 		SetLog("Full Army detected", $COLOR_INFO)
