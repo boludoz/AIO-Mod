@@ -107,7 +107,7 @@ Func AttackBB($aBBAttackBar = GetAttackBarBB())
 				local $j=0, $bDone = 0
 				While $j < $iNumSlots And Not $bDone
 					;If $aBBAttackBar[$j][0] = $asBBDropOrder[$i+1] Then; Custom BB Army - Team AIO Mod++
-					If $aBBAttackBar[$j][0] = $g_asAttackBarBB[$g_aiCmbBBDropOrder[$i]+1] Then ; Custom BB Army - Team AIO Mod++
+					If $aBBAttackBar[$j][0] = $g_asAttackBarBB[Number($g_aiCmbBBDropOrder[$i])+1] Then ; Custom BB Army - Team AIO Mod++
 						;DeployBBTroop($aBBAttackBar[$j][0], $aBBAttackBar[$j][1], $aBBAttackBar[$j][2], $aBBAttackBar[$j][4], $iSide)
 						SetLog("Deploying " & $aBBAttackBar[$j][0] & "x" & String($aBBAttackBar[$j][4]), $COLOR_ACTION)
 						PureClick($aBBAttackBar[$j][1], $aBBAttackBar[$j][2]) ; select troop

@@ -9,7 +9,7 @@ GUIDE  |DROP_SIDE: BH - Builder Hall side will attack Only if exposed
 GUIDE  |DROP_SIDE: EDGEB - Will detect if exist Buildings on Corners
 GUIDE  |DROP_POINTS: Each side will have 10 points 1-10 , the 5 is the Middle , 1 = closest to BuilderHall
 GUIDE  |DROP_POINTS: Can Be Defined Like e.g Single Drop Point(5),Multi Drop Points(2,4,6),Multi Start To End(2-6)
-GUIDE  |TROOPNAME : Arch , Barb , BabyDrag , Minion , WallBreaker, Cannon , Drop , Giant , Machine , Witch , Pekka
+GUIDE  |TROOPNAME : Arch , Barb , BabyD , Minion , Breaker, Cannon , Drop , Giant , Machine , Witch , Pekka
 GUIDE  |ADDTILES: Is the distance from the red line. 1 Default Do Nothing - e.g (2) Means ADD 2 tile to drop point
 GUIDE  |QTY: 1,2,3 integer value quantity of troops, QTY=ALL Will act like remain for that troop and drop all of only that troops.(NOTE:QTY=ALL will use external edges)
 GUIDE  |CAMP: Define Camp(Slots) troops these define troops will be selected from BB attack bar this command will make sure u have correct troops according to CSV.

@@ -165,7 +165,7 @@ Func BuilderBaseParseAttackCSV($AvailableTroops, $DeployPoints, $DeployBestPoint
 						$aDROP[$i] = StringStripWS($aSplitLine[$i], $STR_STRIPALL)
 					Next
 
-					; TROOPNAME__: [ "Barb", "Arch", "Giant", "Beta", "Bomb", "BabyDrag", "Cannon", "Drop" , "Pekka", "Night", "Machine"]
+					; TROOPNAME__: [ "Barb", "Arch", "Giant", "Minion", "Breaker", "BabyD", "Cannon", "Witch", "Drop", "Pekka", "HogG", "Machine" ]
 					; $aDROP[2]
 					Local $sTroopName = $aDROP[2]
 

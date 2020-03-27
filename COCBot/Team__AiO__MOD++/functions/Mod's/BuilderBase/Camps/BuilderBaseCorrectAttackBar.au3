@@ -137,7 +137,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $AvailableTroops)
 	;First Find The Correct Index Of Camps In Attack Bar
 	For $i = 0 To UBound($aCamps) - 1
 		;Just In Case Someone Mentioned Wrong Troop Name Select Default Barbarian Troop
-		$aCamps[$i] = _ArraySearch($g_asAttackBarBB, $aCamps[$i]) < 0 ? 0 : _ArraySearch($g_asAttackBarBB, $aCamps[$i])
+		$aCamps[$i] = _ArraySearch($g_asAttackBarBB, CSVtoImageName($aCamps[$i])) < 0 ? 0 : _ArraySearch($g_asAttackBarBB, CSVtoImageName($aCamps[$i]))
 	Next
 	;After populate with the new priority position let's sort ascending column 1
 	_ArraySort($aCamps, 0, 0, 0, 1)
@@ -151,7 +151,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $AvailableTroops)
 
 	For $i = 0 To UBound($AvailableTroops) - 1
 		$NewAvailableTroops[$i][0] = $AvailableTroops[$i][0]
-		$NewAvailableTroops[$i][1] = _ArraySearch($g_asAttackBarBB, $AvailableTroops[$i][0])
+		$NewAvailableTroops[$i][1] = _ArraySearch($g_asAttackBarBB, CSVtoImageName($AvailableTroops[$i][0]))
 	Next
 
 	If $g_bDebugSetlog Then Setlog(_ArrayToString($NewAvailableTroops, "-", -1, -1, "|", -1, -1))
@@ -209,7 +209,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $AvailableTroops)
 
 	If Not $Waschanged Then Return
 
-	If _sleep(500) Then Return
+	If _Sleep(500) Then Return
 
 	; populate the correct array with correct Troops
 	For $i = 0 To UBound($NewAvailableTroops) - 1
@@ -230,3 +230,11 @@ Func BuilderBaseSelectCorrectScript(ByRef $AvailableTroops)
 		If $AvailableTroops[$i][0] <> "" Then SetLog("[" & $i + 1 & "] - " & $AvailableTroops[$i][4] & "x " & FullNametroops($AvailableTroops[$i][0]), $COLOR_SUCCESS)
 	Next
 EndFunc   ;==>BuilderBaseSelectCorrectScript
+
+; _ArraySearch($g_asAttackBarBB, $AvailableTroops[$i][0])
+Func CSVtoImageName($sTroop = "Barb", $asAttackTroopList = $g_asAttackBarBB)
+	For $vT In $asAttackTroopList
+		If (StringInStr($vT, $sTroop) <> 0) Then Return ($vT)
+	Next
+	Return $sTroop
+EndFunc   ;==>CSVtoImageName
