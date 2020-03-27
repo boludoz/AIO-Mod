@@ -27,7 +27,6 @@ EndFunc   ;==>TestGetAttackBarBB
 
 Func ArmyCampSelectedNames($g_iCmbBBArmy)
 	Local $aNames = $g_asAttackBarBB
-	;$aNames[0] = "EmptyCamp"
 	Return $aNames[$g_iCmbBBArmy + 1]
 EndFunc   ;==>ArmyCampSelectedNames
 
@@ -35,7 +34,7 @@ Func BuilderBaseSelectCorrectCampDebug()
 	Local $aLines[0]
 	Local $sName = "CAMP" & "|"
 	For $iName = 0 To UBound($g_iCmbCampsBB) - 1
-		$sName &= ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) <> "EmptyCamp" ? ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) : ("Barbarian")
+		$sName &= $g_asBBTroopShortNames[$g_iCmbCampsBB[$iName]]
 		$sName &= "|"
 		If $iName = 0 Then ContinueLoop
 		Local $aFakeCsv[1] = [$sName]
@@ -55,16 +54,11 @@ Func BuilderBaseSelectCorrectScript(ByRef $AvailableTroops)
 
 	If Not $g_bRunState Then Return
 	Local $aLines[0]
-	If ($g_iCmbBBAttack = $g_eBBAttackCSV) Then
-		Static $lastScript
-		If Not BitOR($g_bChkBBRandomAttack, $g_bChkBBGetFromCSV) Then
-			$g_iBuilderBaseScript = 0
-			$lastScript = $g_iBuilderBaseScript
-			Setlog("Attack using the " & $g_sAttackScrScriptNameBB[$g_iBuilderBaseScript] & " script.", $COLOR_INFO)
-			Return
-		EndIf
-
-		If $g_bChkBBGetFromCSV And Not $g_bChkBBRandomAttack Then
+	Static $lastScript
+	
+	If ($g_iCmbBBAttack = $g_eBBAttackCSV) And $g_bChkBBGetFromCSV Then
+	
+		If Not $g_bChkBBRandomAttack Then
 			$lastScript = 0
 			$g_iBuilderBaseScript = 0
 		Else
@@ -77,22 +71,25 @@ Func BuilderBaseSelectCorrectScript(ByRef $AvailableTroops)
 				EndIf
 			Next
 		EndIf
+		
 		Setlog("Attack using the " & $g_sAttackScrScriptNameBB[$g_iBuilderBaseScript] & " script.", $COLOR_INFO)
 		; Let load the Command [Troop] from CSV
 		Local $FileNamePath = @ScriptDir & "\CSV\BuilderBase\" & $g_sAttackScrScriptNameBB[$g_iBuilderBaseScript] & ".csv"
 		If FileExists($FileNamePath) Then $aLines = FileReadToArray($FileNamePath)
 
-	Else
+	ElseIf not ($g_iCmbBBAttack = $g_eBBAttackCSV) Then
 		Local $aLines[0]
-		Local $aInCamp[6] = [$g_iCmbBBArmy1, $g_iCmbBBArmy2, $g_iCmbBBArmy3, $g_iCmbBBArmy4, $g_iCmbBBArmy5, $g_iCmbBBArmy6]
 		Local $sName = "CAMP" & "|"
-		For $iName = 0 To UBound($aInCamp) - 1
-			$sName &= ArmyCampSelectedNames($aInCamp[$iName]) <> "EmptyCamp" ? ArmyCampSelectedNames($aInCamp[$iName]) : ("Barb")
+		For $iName = 0 To UBound($g_iCmbCampsBB) - 1
+			$sName &= $g_asBBTroopShortNames[$g_iCmbCampsBB[$iName]]
 			$sName &= "|"
 			If $iName = 0 Then ContinueLoop
 			Local $aFakeCsv[1] = [$sName]
 			_ArrayAdd($aLines, $aFakeCsv)
 		Next
+		ElseIf not $g_bChkBBGetFromCSV Then
+		Setlog("Get from CSV unselected.", $COLOR_ERROR)
+		Return
 	EndIf
 
 	; Move backwards through the array deleting the blanks
@@ -157,7 +154,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $AvailableTroops)
 		$NewAvailableTroops[$i][1] = _ArraySearch($g_asAttackBarBB, $AvailableTroops[$i][0])
 	Next
 
-	If $g_bDebugSetlog Then setlog(_ArrayToString($NewAvailableTroops, "-", -1, -1, "|", -1, -1))
+	If $g_bDebugSetlog Then Setlog(_ArrayToString($NewAvailableTroops, "-", -1, -1, "|", -1, -1))
 
 	Local $Waschanged = False
 	Local $avoidInfLoop = 0
@@ -184,7 +181,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $AvailableTroops)
 			EndIf
 
 			; Result [X][0] = NAME , [x][1] = Xaxis , [x][2] = Yaxis , [x][3] = Level
-			Local $aAttackBar = _ImageSearchXML($g_sImgDirBBTroops, 20, "0,523,861,615", True, False)
+			Local $aAttackBar = _ImageSearchXML($g_sImgDirBBTroops, 20, "0,523,861,615", True, False) ;GetAttackBarBB()
 			If $aAttackBar = -1 Then
 ;~ 				_DebugFailedImageDetection("Attackbar")
 				Return False
@@ -222,7 +219,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $AvailableTroops)
 	For $i = 0 To UBound($AvailableTroops) - 1
 		If Not $g_bRunState Then Return
 		If $AvailableTroops[$i][0] <> "" Then ;We Just Need To redo the ocr for mentioned troop only
-			$AvailableTroops[$i][4] = Number(getTroopCountBig(Number($AvailableTroops[$i][1]), 633))
+			$AvailableTroops[$i][4] = Number(_getTroopCountBig(Number($AvailableTroops[$i][1]), 633))
 			If $AvailableTroops[$i][4] < 1 Then $AvailableTroops[$i][4] = Number(getTroopCountSmall(Number($AvailableTroops[$i][1]), 640)) ; For Small numbers when the troop is selected
 			If $AvailableTroops[$i][0] = "Machine" Then $AvailableTroops[$i][4] = 1
 		EndIf
