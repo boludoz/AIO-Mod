@@ -15,10 +15,10 @@
 
 Func AttackBB($aBBAttackBar = GetAttackBarBB())
 	local $iSide = Random(0, 1, 1) ; randomly choose top left or top right
-	local $iAndroidSuspendModeFlagsLast = $g_iAndroidSuspendModeFlags
+	local $aBMPos = 0
+	;local $iAndroidSuspendModeFlagsLast = $g_iAndroidSuspendModeFlags
 	#cs - Team AIO Mod++
 	If Not $g_bChkEnableBBAttack Then Return
-	local $aBMPos = 0
 	ClickP($aAway)
 	SetLog("Going to attack.", $COLOR_BLUE)
 
@@ -67,8 +67,20 @@ Func AttackBB($aBBAttackBar = GetAttackBarBB())
 
 	; Get troops on attack bar and their quantities
 	;local $aBBAttackBar = GetAttackBarBB()
+	;If _Sleep($DELAYRESPOND) Then
+ 	;	$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
+	;	If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Enabled")
+	;	Return
+	;EndIf
+	
+	local $iAndroidSuspendModeFlagsLast = $g_iAndroidSuspendModeFlags
+	$g_iAndroidSuspendModeFlags = 0 ; disable suspend and resume
+	If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Disabled")
+
+	; Get troops on attack bar and their quantities
+	local $aBBAttackBar = GetAttackBarBB()
 	If _Sleep($DELAYRESPOND) Then
-;~ 		$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
+		$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
 		If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Enabled")
 		Return
 	EndIf
@@ -161,7 +173,6 @@ Func AttackBB($aBBAttackBar = GetAttackBarBB())
 	SetLog("All Troops Deployed", $COLOR_SUCCESS)
 
 	; place hero and activate ability
-	Local $aBMPos = 0
 	If $g_bBBMachineReady And Not $bBMDeployed Then SetLog("Deploying Battle Machine.", $COLOR_BLUE)
 	While Not $bBMDeployed And $g_bBBMachineReady
 		$aBMPos = GetMachinePos()
