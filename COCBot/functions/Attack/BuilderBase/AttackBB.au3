@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func AttackBB($aBBAttackBar = GetAttackBarBB())
+Func AttackBB($aBBAttackBarDeprecated = -1)
 	local $iSide = Random(0, 1, 1) ; randomly choose top left or top right
 	local $aBMPos = 0
 	;local $iAndroidSuspendModeFlagsLast = $g_iAndroidSuspendModeFlags
@@ -73,17 +73,6 @@ Func AttackBB($aBBAttackBar = GetAttackBarBB())
 	;	Return
 	;EndIf
 	
-	local $iAndroidSuspendModeFlagsLast = $g_iAndroidSuspendModeFlags
-	$g_iAndroidSuspendModeFlags = 0 ; disable suspend and resume
-	If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Disabled")
-
-	; Get troops on attack bar and their quantities
-	local $aBBAttackBar = GetAttackBarBB()
-	If _Sleep($DELAYRESPOND) Then
-		$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
-		If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Enabled")
-		Return
-	EndIf
 
 	#Region - Custom BB Army - Team AIO Mod++
 	; Correct troops
@@ -108,6 +97,18 @@ Func AttackBB($aBBAttackBar = GetAttackBarBB())
 
 	#EndRegion - Custom BB Army - Team AIO Mod++
 
+	local $iAndroidSuspendModeFlagsLast = $g_iAndroidSuspendModeFlags
+	$g_iAndroidSuspendModeFlags = 0 ; disable suspend and resume
+	If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Disabled")
+
+	; Get troops on attack bar and their quantities
+	local $aBBAttackBar = GetAttackBarBB()
+	If _Sleep($DELAYRESPOND) Then
+		$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
+		If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Enabled")
+		Return
+	EndIf
+	
 	; Deploy all troops
 	local $bTroopsDropped = False, $bBMDeployed = False
 	SetLog( $g_bBBDropOrderSet = True ? "Deploying Troops in Custom Order." : "Deploying Troops in Order of Attack Bar.", $COLOR_BLUE)

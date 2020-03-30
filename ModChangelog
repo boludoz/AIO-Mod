@@ -9,6 +9,14 @@
 		• CSV: 
 			- Add hero if it doesn't exist in CSV.
 			
+	**V3.3.2**
+
+		» Fixed:
+			• Big amount of errors in BB Attack.
+			• Zoom out.
+			
+			* The new costs had already been implemented prior to the update.
+
 	**V3.3.1**
 		» Improved:
 			• Builder base:

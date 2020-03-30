@@ -159,16 +159,17 @@ Func BuilderBaseSelectCorrectScript(ByRef $AvailableTroops)
 	Local $Waschanged = False
 	Local $avoidInfLoop = 0
 
-	Local $SwicthBtn[6] = [112, 180, 253, 327, 398, 471]
-
+	Local $aSwicthBtn[6] = [112, 180, 253, 327, 398, 471]
+	Local $aPointSwitch = [$aSwicthBtn[Random(0, UBound($aSwicthBtn)-1, 1)] + Random(0,5,1), 708 + Random(0,5,1)]
+	
 	For $i = 0 To $CampsQuantities - 1
 		If Not $g_bRunState Then Return
 		If StringCompare($NewAvailableTroops[$i][0], $aCamps[$i]) <> 0 Then
 			$Waschanged = True
 			Setlog("Incorrect troop On Camp " & $i + 1 & " - " & $NewAvailableTroops[$i][0] & " -> " & $aCamps[$i])
-			Local $PointSwitch = [$SwicthBtn[$i], 708]
+			Local $aPointSwitch = [$aSwicthBtn[$i] + Random(0,5,1), 708 + Random(0,5,1)]
 			Setlog("Click Switch Button " & $i, $COLOR_INFO)
-			PureClick($PointSwitch[0], $PointSwitch[1], 1, 0)
+			PureClick($aPointSwitch[0], $aPointSwitch[1], 1, 0)
 			If Not $g_bRunState Then Return
 			If _Sleep(500) Then Return
 
@@ -206,7 +207,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $AvailableTroops)
 			Next
 		EndIf
 	Next
-
+    If _WaitForCheckXML($g_sImgCustomArmyBB, "0,681,860,728", True, 1000, 100) Then ClickP($aPointSwitch)
 	If Not $Waschanged Then Return
 
 	If _Sleep(500) Then Return
@@ -220,7 +221,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $AvailableTroops)
 		If Not $g_bRunState Then Return
 		If $AvailableTroops[$i][0] <> "" Then ;We Just Need To redo the ocr for mentioned troop only
 			$AvailableTroops[$i][4] = Number(_getTroopCountBig(Number($AvailableTroops[$i][1]), 633))
-			If $AvailableTroops[$i][4] < 1 Then $AvailableTroops[$i][4] = Number(getTroopCountSmall(Number($AvailableTroops[$i][1]), 640)) ; For Small numbers when the troop is selected
+			If $AvailableTroops[$i][4] < 1 Then $AvailableTroops[$i][4] = Number(_getTroopCountSmall(Number($AvailableTroops[$i][1]), 640)) ; For Small numbers when the troop is selected
 			If $AvailableTroops[$i][0] = "Machine" Then $AvailableTroops[$i][4] = 1
 		EndIf
 	Next
