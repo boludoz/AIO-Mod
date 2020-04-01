@@ -154,7 +154,7 @@ Func _makerequest($aButtonPosition)
 		EndIf
 		If _Sleep($DELAYMAKEREQUEST2) Then Return ; wait time for text request to complete
 		$iCount = 0
-		While Not _ColorCheck(_GetPixelColor($aSendRequestCCBtn[0], $aSendRequestCCBtn[1], True), Hex(0x5fac10, 6), 20)
+		While Not _ColorCheck(_GetPixelColor($aSendRequestCCBtn[0], $aSendRequestCCBtn[1], True), Hex($aSendRequestCCBtn[2], 6), 20)
 			If _Sleep($DELAYMAKEREQUEST1) Then ExitLoop
 			$iCount += 1
 			If $g_bDebugSetlog Then SetDebugLog("$icount3 = " & $iCount & ", " & _GetPixelColor($aSendRequestCCBtn[0], $aSendRequestCCBtn[1], True), $COLOR_DEBUG)
@@ -254,7 +254,7 @@ Func CheckCCArmy()
 	Local $aTroopWSlot, $aSpellWSlot
 
 	For $i = 0 To 2
-		If $g_aiClanCastleTroopWaitQty[$i] = 0 And $g_aiClanCastleTroopWaitType[$i] < $eTroopCount Then $g_aiCCTroopsExpected[$g_aiClanCastleTroopWaitType[$i]] = 40 ; expect troop type only. Do not care about qty
+		If $g_aiClanCastleTroopWaitQty[$i] = 0 And $g_aiClanCastleTroopWaitType[$i] < $eTroopCount Then $g_aiCCTroopsExpected[$g_aiClanCastleTroopWaitType[$i]] = 45 ; expect troop type only. Do not care about qty
 	Next
 
 	SetLog("Getting current army in Clan Castle...")

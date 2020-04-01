@@ -126,7 +126,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 			$sArea = Int($x1) & "," & Int($y1) & "|" & Int($right) & "," & Int($y1) & "|" & Int($right) & "," & Int($bottom) & "|" & Int($x1) & "," & Int($bottom)
 			;SetDebugLog("GetVillageSize check for image " & $findImage)
 			$a = decodeSingleCoord(findImage($findImage, $sDirectory & $findImage, $sArea, 1, True))
-			If UBound($a) = 2 Then
+			If UBound($a) >= 2 Then
 				$x = Int($a[0])
 				$y = Int($a[1])
 				;SetDebugLog("Found stone image at " & $x & ", " & $y & ": " & $findImage)
@@ -166,7 +166,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 				$sArea = Int($x1) & "," & Int($y1) & "|" & Int($right) & "," & Int($y1) & "|" & Int($right) & "," & Int($bottom) & "|" & Int($x1) & "," & Int($bottom)
 				;SetDebugLog("GetVillageSize check for image " & $findImage)
 				$a = decodeMultipleCoords(findImage($findImage, $sDirectory & $findImage, $sArea, 2, True), Default, Default, 0) ; sort by x because there can be a 2nd at the right that should not be used
-				If UBound($a) > 0 Then
+				If UBound($a) <> 0 Then
 					$a = $a[0]
 					$x = Int($a[0])
 					$y = Int($a[1])
