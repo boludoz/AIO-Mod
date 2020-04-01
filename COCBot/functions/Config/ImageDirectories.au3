@@ -31,7 +31,7 @@ Global Const $g_sImgOutOfSync = @ScriptDir & "\imgxml\other\Oos[[Android]]*"
 
 #Region Main Village
 Global $g_sImgCollectRessources = @ScriptDir & "\imgxml\Resources\Collect"
-Global $g_sImgCollectLootCart = @ScriptDir & "\imgxml\Resources\CollectLootCart*"
+Global $g_sImgCollectLootCart = @ScriptDir & "\imgxml\Resources\LootCart\"
 Global $g_sImgBoat = @ScriptDir & "\imgxml\Boat\BoatNormalVillage_0_89.xml"
 Global $g_sImgZoomOutDir = @ScriptDir & "\imgxml\village\NormalVillage\"
 Global $g_sImgCheckWallDir = @ScriptDir & "\imgxml\Walls"

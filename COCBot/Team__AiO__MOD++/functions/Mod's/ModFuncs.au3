@@ -162,10 +162,9 @@ Func findMultipleQuick($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "
 			; Inspired in Chilly-chill
 			Local $aTmpResults[1][4] = [[$aArrays[0], Int($aCommaCoord[0]), Int($aCommaCoord[1]), Int($aArrays[1])]]
 			_ArrayAdd($aAllResults, $aTmpResults)
+			If $i > $iQuantity2Match Then ExitLoop 2
 		Next
-		$iCount += 1
 	Next
-	;If $iCount < 1 Then Return -1 what
 
 	If (UBound($aAllResults) > 0) Then
 		Return $aAllResults
