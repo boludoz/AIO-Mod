@@ -74,6 +74,7 @@ Func GetAttackBar($bRemaining = False, $pMatchMode = $DB, $bDebug = False)
 					_ArrayAdd($aSlotAmountX, $aTempCoords[0] & "|" & $aTempCoords[1] & "|" & $iRow, 0, "|", @CRLF, $ARRAYFILL_FORCE_NUMBER)
 					$aiOCRLocation[$iRow - 1] = $aTempCoords[1] ; Store any OCR Location for later use on Heroes
 				Else
+					$aTempArray[0] = (StringInStr($aTempArray[0], "Super") <> 0) ? StringTrimLeft($aTempArray[0], 5) : ($aTempArray[0]) ; Team AIO Mod++ SuperTroops fix
 					If StringRegExp($aTempArray[0], "(King)|(Queen)|(Warden)|(Champion)", 0) Then _ArrayAdd($aSlotAmountX, $aTempCoords[0] & "|" & $aTempCoords[1] & "|" & $iRow, 0, "|", @CRLF, $ARRAYFILL_FORCE_NUMBER)
 					Local $aTempElement[1][8] = [[$aTempArray[0], $aTempCoords[0], $aTempCoords[1], -1, -1, -1, -1, $iRow]] ; trick to get the right variable types into our array. Delimiter Adding only gets us string which can't be sorted....
 					_ArrayAdd($aAttackBar, $aTempElement)
@@ -221,6 +222,7 @@ Func ExtendedAttackBarCheck($aAttackBarFirstSearch, $bRemaining, $sSearchDiamond
 					_ArrayAdd($aSlotAmountX, $aTempCoords[0] & "|" & $aTempCoords[1] & "|" & $iRow, 0, "|", @CRLF, $ARRAYFILL_FORCE_NUMBER)
 					$aiOCRLocation[$iRow - 1] = $aTempCoords[1]
 				Else
+					$aTempArray[0] = (StringInStr($aTempArray[0], "Super") <> 0) ? StringTrimLeft($aTempArray[0], 5) : ($aTempArray[0]) ; Team AIO Mod++ SuperTroops fix
 					If StringRegExp($aTempArray[0], "(King)|(Queen)|(Warden)|(Champion)", 0) Then _ArrayAdd($aSlotAmountX, $aTempCoords[0] & "|" & $aTempCoords[1] & "|" & $iRow, 0, "|", @CRLF, $ARRAYFILL_FORCE_NUMBER)
 					Local $aTempElement[1][8] = [[$aTempArray[0], $aTempCoords[0], $aTempCoords[1], -1, -1, -1, -1, $iRow]]
 					_ArrayAdd($aAttackBar, $aTempElement)

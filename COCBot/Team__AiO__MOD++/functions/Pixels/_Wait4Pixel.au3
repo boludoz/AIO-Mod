@@ -66,7 +66,7 @@ EndFunc   ;==>_GetPixelColor2
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func MultiPSimple($iLeft, $iTop, $iRight, $iBottom, $iHex, $iTolerance = 15, $iWait = 5000, $iDelay = 50)
+Func MultiPSimple($iLeft, $iTop, $iRight, $iBottom, $iHex, $iTolerance = 15, $iWait = 5000, $iDelay = 50, $bCapture = True)
 	Local $aReturn[2] = [0, 0]
 
 	Local $hTimer = __TimerInit()
@@ -85,7 +85,7 @@ Func MultiPSimple($iLeft, $iTop, $iRight, $iBottom, $iHex, $iTolerance = 15, $iW
 			For $x = 0 To $xRange
 				For $y = 0 To $yRange
 				;Setlog("2. "&$x&" "&$y)
-					If _ColorCheck(_GetPixelColor($x, $y), $iHex, $iTolerance) Then
+					If _ColorCheck(_GetPixelColor($x, $y, $bCapture), $iHex, $iTolerance) Then
 						$aReturn[0] = $x + $iLeft
 						$aReturn[1] = $y + $iTop
 						Return $aReturn
@@ -101,7 +101,7 @@ Func MultiPSimple($iLeft, $iTop, $iRight, $iBottom, $iHex, $iTolerance = 15, $iW
 			For $x = $xRange To 0 Step -1
 				For $y = $yRange To 0 Step -1
 				;Setlog("2. "&$x&" "&$y)
-					If _ColorCheck(_GetPixelColor($x, $y), $iHex, $iTolerance) Then
+					If _ColorCheck(_GetPixelColor($x, $y, $bCapture), $iHex, $iTolerance) Then
 						$aReturn[0] = $x + $iRight
 						$aReturn[1] = $y + $iBottom
 						Return $aReturn
