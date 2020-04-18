@@ -1,4 +1,14 @@
-﻿; #FUNCTION# ====================================================================================================================
+﻿#NoTrayIcon
+#RequireAdmin
+#Region ;**** Directives created by AutoIt3Wrapper_GUI ****
+#AutoIt3Wrapper_Compression=4
+#AutoIt3Wrapper_Res_requestedExecutionLevel=requireAdministrator
+#AutoIt3Wrapper_Run_Tidy=y
+#AutoIt3Wrapper_Tidy_Stop_OnError=n
+#AutoIt3Wrapper_Run_Au3Stripper=y
+#Au3Stripper_Parameters=/rsln /MI=3
+#EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
+; #FUNCTION# ====================================================================================================================
 ; Name ..........: MBR Bot
 ; Description ...: This file contains the initialization and main loop sequences f0r the MBR Bot
 ; Author ........:  (2014)
@@ -11,13 +21,8 @@
 ; ===============================================================================================================================
 
 ; AutoIt pragmas
-#NoTrayIcon
-#RequireAdmin
-#AutoIt3Wrapper_UseX64=7n
 ;#AutoIt3Wrapper_Res_HiDpi=Y ; HiDpi will be set during run-time!
 ;#AutoIt3Wrapper_Run_AU3Check=n ; enable when running in folder with umlauts!
-#AutoIt3Wrapper_Run_Au3Stripper=y
-#Au3Stripper_Parameters=/rsln /MI=3
 
 #include "MyBot.run.version.au3"
 #pragma compile(ProductName, My Bot)
@@ -739,7 +744,7 @@ Func runBot() ;Bot that runs everything in order
 			MainGTFO()
 			MainKickout()
 		EndIf
-		#EndRegion
+		#EndRegion - GTFO - Team AIO Mod++
 
 		checkObstacles() ; trap common error messages also check for reconnecting animation
 		If $g_bRestart Then ContinueLoop
@@ -771,13 +776,13 @@ Func runBot() ;Bot that runs everything in order
 			checkMainScreen(False)
 			If $g_bRestart Then ContinueLoop
 			#Region - Request form chat / on a loop - Team AIO Mod++
-            If $g_bChkReqCCAlways Then
+			If $g_bChkReqCCAlways Then
 				$g_bCanRequestCC = True
 				RequestCC()
-                If _Sleep($DELAYRUNBOT1) = False Then checkMainScreen(False)
-            EndIf
+				If _Sleep($DELAYRUNBOT1) = False Then checkMainScreen(False)
+			EndIf
 			#EndRegion - Request form chat / on a loop - Team AIO Mod++
-            Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectFreeMagicItems', 'DailyChallenge'] ; AIO Mod
+			Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectFreeMagicItems', 'DailyChallenge'] ; AIO Mod
 			_ArrayShuffle($aRndFuncList)
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
@@ -798,7 +803,7 @@ Func runBot() ;Bot that runs everything in order
 					If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 				Next
 				If $g_bRestart Then ContinueLoop
-                Local $aRndFuncList = ['BoostBarracks', 'BoostSpellFactory', 'BoostWorkshop', 'BoostKing', 'BoostQueen', 'BoostWarden', 'BoostChampion']
+				Local $aRndFuncList = ['BoostBarracks', 'BoostSpellFactory', 'BoostWorkshop', 'BoostKing', 'BoostQueen', 'BoostWarden', 'BoostChampion']
 				_ArrayShuffle($aRndFuncList)
 				For $Index In $aRndFuncList
 					If Not $g_bRunState Then Return
@@ -840,7 +845,7 @@ Func runBot() ;Bot that runs everything in order
 			If $g_bFirstStart Then SetDebugLog("First loop completed!")
 			$g_bFirstStart = False ; already finished first loop since bot started.
 
-			If not $g_bChkOnlyFarm Then ChatActions() ; ChatActions - Team AiO MOD++
+			If Not $g_bChkOnlyFarm Then ChatActions() ; ChatActions - Team AiO MOD++
 
 			If ProfileSwitchAccountEnabled() And ($g_iCommandStop = 0 Or $g_iCommandStop = 3 Or $g_abDonateOnly[$g_iCurAccount]) Then checkSwitchAcc()
 			If IsSearchAttackEnabled() Then ; If attack scheduled has attack disabled now, stop wall upgrades, and attack.
@@ -911,10 +916,10 @@ Func _Idle() ;Sequence that runs until Full Army
 		If _Sleep($DELAYIDLE1) Then Return
 		If $g_iCommandStop = -1 Then SetLog("====== Waiting for full army ======", $COLOR_SUCCESS)
 
-		If not $g_bChkOnlyFarm Then ChatActions() ; ChatActions - Team AiO MOD++
+		If Not $g_bChkOnlyFarm Then ChatActions() ; ChatActions - Team AiO MOD++
 
 		Local $hTimer = __TimerInit()
-		If not $g_bChkOnlyFarm Then BotHumanization() ; Humanization - Team AiO MOD++
+		If Not $g_bChkOnlyFarm Then BotHumanization() ; Humanization - Team AiO MOD++
 
 		If _Sleep($DELAYIDLE1) Then ExitLoop
 		checkObstacles() ; trap common error messages also check for reconnecting animation
@@ -1009,7 +1014,7 @@ Func _Idle() ;Sequence that runs until Full Army
 
 		If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) And $g_bTrainEnabled = False Then ExitLoop ; If training is not enabled, run only 1 idle loop
 
-        If $g_iCommandStop = -1 and $g_bChkOnlyFarm = False Then ; AIO Mod ; Check if closing bot/emulator while training and not in halt mode
+		If $g_iCommandStop = -1 And $g_bChkOnlyFarm = False Then ; AIO Mod ; Check if closing bot/emulator while training and not in halt mode
 			SmartWait4Train()
 			If Not $g_bRunState Then Return
 			If $g_bRestart Then ExitLoop ; if smart wait activated, exit to runbot in case user adjusted GUI or left emulator/bot in bad state
@@ -1025,7 +1030,7 @@ Func AttackMain() ;Main control for attack functions
 		MainSXHandler()
 		Return
 	EndIf
-	#EndRegion
+	#EndRegion - SuperXP / GoblinXP - Team AiO MOD++
 	; getArmyTroopCapacity(True, True)
 	ClickP($aAway, 1, 0, "#0000") ;Click Away to prevent any pages on top
 	If IsSearchAttackEnabled() Then
@@ -1051,7 +1056,7 @@ Func AttackMain() ;Main control for attack functions
 				;SetLog("BullyMode: " & $g_abAttackTypeEnable[$TB] & ", Bully Hero: " & BitAND($g_aiAttackUseHeroes[$g_iAtkTBMode], $g_aiSearchHeroWaitEnable[$g_iAtkTBMode], $g_iHeroAvailable) & "|" & $g_aiSearchHeroWaitEnable[$g_iAtkTBMode] & "|" & $g_iHeroAvailable, $COLOR_DEBUG)
 			EndIf
 
-			If not $g_bChkOnlyFarm Then ChatActions() ; ChatActions - Team AiO MOD++
+			If Not $g_bChkOnlyFarm Then ChatActions() ; ChatActions - Team AiO MOD++
 
 			_ClanGames()
 			ClickP($aAway, 1, 0, "#0000") ;Click Away to prevent any pages on top
@@ -1120,18 +1125,18 @@ Func __RunFunction($action)
 	SetDebugLog("_RunFunction: " & $action & " BEGIN", $COLOR_DEBUG2)
 	Switch $action
 		Case "Collect"
-			If BitAnd(Not BitOr($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
+			If BitAND(Not BitOR($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
 			Collect()
 			_Sleep($DELAYRUNBOT1)
 		Case "CheckTombs"
-			If BitAnd(Not BitOr($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
+			If BitAND(Not BitOR($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
 			CheckTombs()
 			_Sleep($DELAYRUNBOT3)
 		Case "CleanYard"
-			If BitAnd(Not BitOr($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
+			If BitAND(Not BitOR($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
 			CleanYard()
 		Case "ReplayShare"
-			If BitAnd(Not BitOr($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
+			If BitAND(Not BitOR($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
 			ReplayShare($g_bShareAttackEnableNow)
 			_Sleep($DELAYRUNBOT3)
 		Case "NotifyReport"
@@ -1194,9 +1199,9 @@ Func __RunFunction($action)
 		Case "BoostWarden"
 			BoostWarden()
 			_Sleep($DELAYRESPOND)
-        Case "BoostChampion"
-            BoostChampion()
-            _Sleep($DELAYRESPOND)
+		Case "BoostChampion"
+			BoostChampion()
+			_Sleep($DELAYRESPOND)
 		Case "BoostEverything"
 			BoostEverything()
 			_Sleep($DELAYRESPOND)
@@ -1204,34 +1209,34 @@ Func __RunFunction($action)
 			DailyChallenges()
 			_Sleep($DELAYRUNBOT3)
 		Case "LabCheck"
-			If BitAnd(Not BitOr($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
+			If BitAND(Not BitOR($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
 			LabGuiDisplay()
 			_Sleep($DELAYRUNBOT3)
 		Case "RequestCC"
-			If not $g_bChkReqCCAlways Then RequestCC() ; Request form chat / on a loop - Team AIO Mod++
-            If Not _Sleep($DELAYRUNBOT1) Then checkMainScreen(False)
+			If Not $g_bChkReqCCAlways Then RequestCC() ; Request form chat / on a loop - Team AIO Mod++
+			If Not _Sleep($DELAYRUNBOT1) Then checkMainScreen(False)
 		Case "Laboratory"
-			If BitAnd(Not BitOr($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
+			If BitAND(Not BitOR($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
 			Laboratory()
-            If Not _Sleep($DELAYRUNBOT3) Then checkMainScreen(False)
+			If Not _Sleep($DELAYRUNBOT3) Then checkMainScreen(False)
 		Case "UpgradeHeroes"
-			If BitAnd(Not BitOr($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
+			If BitAND(Not BitOR($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
 			UpgradeHeroes()
 			_Sleep($DELAYRUNBOT3)
 		Case "UpgradeBuilding"
-			If BitAnd(Not BitOr($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
+			If BitAND(Not BitOR($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
 			UpgradeBuilding()
 			If _Sleep($DELAYRUNBOT3) Then Return
 			AutoUpgrade()
 			_Sleep($DELAYRUNBOT3)
 		Case "UpgradeWall"
-			If BitAnd(Not BitOr($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
+			If BitAND(Not BitOR($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
 			$g_iNbrOfWallsUpped = 0
 			UpgradeWall()
 			_Sleep($DELAYRUNBOT3)
 		Case "BuilderBase"
-			If BitAnd(Not BitOr($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
-			   runBuilderBase()
+			If BitAND(Not BitOR($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
+			runBuilderBase()
 ;~ 			If isOnBuilderBase() Or (($g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_iChkBBSuggestedUpgrades Or $g_bChkEnableBBAttack) And SwitchBetweenBases()) Then
 ;~ 				$g_bStayOnBuilderBase = True
 ;~ 				If _Sleep($DELAYRUNBOT3) Then Return
@@ -1268,7 +1273,7 @@ Func __RunFunction($action)
 ;~ 			EndIf
 			_Sleep($DELAYRUNBOT3)
 		Case "CollectFreeMagicItems"
-			If BitAnd(Not BitOr($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
+			If BitAND(Not BitOR($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
 			CollectFreeMagicItems()
 			_Sleep($DELAYRUNBOT3)
 		Case ""
@@ -1293,7 +1298,7 @@ Func FirstCheck()
 	; Skip first loop
 	If $g_bSkipfirstcheck Then Return
 
-	If not $g_bChkOnlyFarm Then
+	If Not $g_bChkOnlyFarm Then
 		$g_bRestart = False
 		$g_bFullArmy = False
 		$g_iCommandStop = -1
@@ -1307,7 +1312,7 @@ Func FirstCheck()
 		MainKickout()
 		BotHumanization()
 	EndIf
-	#EndRegion
+	#EndRegion - Team AIO MOD++
 
 
 	If Not $g_bRunState Then Return
@@ -1338,7 +1343,7 @@ Func FirstCheck()
 		SetDebugLog("Are you ready? " & String($g_bIsFullArmywithHeroesAndSpells))
 		If $g_bIsFullArmywithHeroesAndSpells Then
 			; Just in case of new profile! or BotDetectFirstTime() failed on Initiate()
-			If Not isInsideDiamond($g_aiTownHallPos) And (not $g_bChkOnlyFarm) Then BotDetectFirstTime() ; AIO Mod
+			If Not isInsideDiamond($g_aiTownHallPos) And (Not $g_bChkOnlyFarm) Then BotDetectFirstTime() ; AIO Mod
 			; Now the bot can attack
 			If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
 				Setlog("Before any other routine let's attack!", $COLOR_INFO)

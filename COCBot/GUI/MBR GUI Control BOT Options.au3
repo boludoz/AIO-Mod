@@ -1002,19 +1002,6 @@ Func btnTestGetLocationBuildingImage()
 
 EndFunc   ;==>btnTestGetLocationBuildingImage
 
-;~ Func btnTestFindButton()
-;~ 	BeginImageTest()
-;~ 	Local $result
-;~ 	Local $sButton = GUICtrlRead($g_hTxtTestFindButton)
-;~ 	SetLog("Testing findButton(""" & $sButton & """)", $COLOR_INFO)
-;~ 	$result = findButton($sButton)
-;~ 	$result = ((IsArray($result)) ? (_ArrayToString($result, ",")) : ($result))
-;~ 	If @error Then $result = "Error " & @error & ", " & @extended & ", "
-;~ 	SetLog("Result findButton(""" & $sButton & """) = " & $result, $COLOR_INFO)
-;~ 	SetLog("Testing findButton(""" & $sButton & """) DONE", $COLOR_INFO)
-;~ 	EndImageTest()
-;~ EndFunc   ;==>btnTestFindButton
-
 Func btnRunFunction()
 	Local $currentRunState = $g_bRunState
 	$g_bRunState = True
@@ -1022,7 +1009,10 @@ Func btnRunFunction()
 	Local $sFunc = GUICtrlRead($g_hTxtRunFunction)
 	SetLog("Run Function : " & $sFunc, $COLOR_INFO)
 
+	Local $hTimer = TimerInit() ; Begin the timer and store the handle in a variable.
 	Local $saExecResult = Execute($sFunc)
+	Setlog("Time Execution : " & TimerDiff($hTimer))
+	
 	If $saExecResult = "" And @error <> 0 Then
 		Setlog("Result : Error", $COLOR_ERROR)
 	ElseIf IsArray($saExecResult) Then

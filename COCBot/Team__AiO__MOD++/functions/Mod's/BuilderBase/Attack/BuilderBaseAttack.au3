@@ -53,10 +53,10 @@ Func BuilderBaseAttack($bTestRun = False)
 	If _Sleep(1500) Then Return ; Add Delay Before Check Builder Face As When Army Camp Get's Close Due To It's Effect Builder Face Is Dull and not recognized on slow pc
 
 	; Check for Builder face
-	If Not isOnBuilderBase() And (Not $bTestRun) Then Return
+	If Not isOnBuilderBase() Then Return
 
 	; Check Zoomout
-	If Not BuilderBaseZoomOut() Then Return
+	BuilderBaseZoomOut()
 
 	; Check Attack Button
 	If Not CheckAttackBtn() Then Return
@@ -148,15 +148,19 @@ Func BuilderBaseAttack($bTestRun = False)
 EndFunc   ;==>BuilderBaseAttack
 
 Func CheckAttackBtn()
-	If QuickMIS("BC1", $g_sImgAttackBtnBB, 0, 620, 120, 732, True, False) Then ; DESRC Done
-		SetDebugLog("Attack Button detected: " & $g_iQuickMISWOffSetX & "," & $g_iQuickMISWOffSetY)
-		Click($g_iQuickMISWOffSetX, $g_iQuickMISWOffSetY, 1)
-		If _Sleep(3000) Then Return
-		Return True
-	Else
-		SetLog("Attack Button not available...", $COLOR_WARNING)
-	EndIf
-	Return False
+	If QuickMIS("BC1", $g_sImgAttackBtnBB, 16, 627, 107, 713, True, False) Then
+		If $g_iQuickMISWOffSetX > 16 And $g_iQuickMISWOffSetX < 107 And $g_iQuickMISWOffSetY > 627 And $g_iQuickMISWOffSetY < 713 Then
+			SetDebugLog("Attack Button detected: " & $g_iQuickMISWOffSetX & "," & $g_iQuickMISWOffSetY)
+			Click(Random(16, 107, 1), Random(627, 713,1), 1)
+			If _Sleep(Random(200, 3000, 1)) Then Return
+			Return True
+		Else
+			SetLog("Attack Button not available...", $COLOR_WARNING)
+			If _Sleep(Random(200, 3000, 1)) Then Return
+			Return False
+		EndIf
+	EndIF
+	Return True
 EndFunc   ;==>CheckAttackBtn
 
 Func isOnVersusBattleWindow()
