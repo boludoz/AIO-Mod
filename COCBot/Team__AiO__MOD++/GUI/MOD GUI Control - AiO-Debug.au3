@@ -36,27 +36,6 @@ Func btnTestStopForWar()
 
 EndFunc   ;==>btnTestStopForWar
 
-Func btnTestExecuteButton()
-	Local $currentRunState = $g_bRunState
-	$g_bRunState = True
-
-	Local $sButton = GUICtrlRead($g_hTxtTestExecuteButton)
-	SetLog("Execute : " & $sButton, $COLOR_INFO)
-
-	Local $saExecResult = Execute($sButton)
-
-	If $saExecResult = "" And @error <> 0 Then
-		Setlog("Result : Error", $COLOR_ERROR)
-	ElseIf IsArray($saExecResult) Then
-		Setlog("Result (IsArray) : " & _ArrayToString($saExecResult, ","), $COLOR_INFO)
-		_ArrayDisplay($saExecResult, "Debug Func. Result")
-	Else
-		Setlog("Result : " & $saExecResult, $COLOR_INFO)
-	EndIf
-
-	$g_bRunState = $currentRunState
-EndFunc   ;==>btnTestFindButton
-
 Func btnTestSuperXP()
 	Local $currentRunState = $g_bRunState
 	Local $currentSetlog = $g_bDebugSetlog
@@ -213,5 +192,37 @@ Func btnTestGTFO()
 	$g_bRunState = $wasRunState
 
 	SetLog("Test GTFO Ended", $COLOR_DEBUG)
+
+EndFunc   ;==>btnTestGTFO
+
+Func btnTestCheckQueueTroops()
+	SetLog("Test CheckQueueTroops Started", $COLOR_DEBUG)
+
+	Local $wasRunState = $g_bRunState
+	;For Debug Purpose set run state to true temporarily
+	$g_bRunState = True
+	_GUICtrlTab_ClickTab($g_hTabMain, 0)
+	CheckQueueTroops()
+
+	;Reset to orignal state
+	$g_bRunState = $wasRunState
+
+	SetLog("Test CheckQueueTroops Ended", $COLOR_DEBUG)
+
+EndFunc   ;==>btnTestGTFO
+
+Func btnTestCheckQueueSpells()
+	SetLog("Test CheckQueueSpells Started", $COLOR_DEBUG)
+
+	Local $wasRunState = $g_bRunState
+	;For Debug Purpose set run state to true temporarily
+	$g_bRunState = True
+	_GUICtrlTab_ClickTab($g_hTabMain, 0)
+	CheckQueueSpells()
+
+	;Reset to orignal state
+	$g_bRunState = $wasRunState
+
+	SetLog("Test CheckQueueSpells Ended", $COLOR_DEBUG)
 
 EndFunc   ;==>btnTestGTFO

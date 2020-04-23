@@ -157,8 +157,9 @@ Func CreateBotDebug()
 	; now go up again
 	$x -= 145
 
-		$g_hTxtRunFunction = GUICtrlCreateInput("zoomOut()", $x - 145, $y + 3, 140, 20)
-		GUICtrlSetBkColor(-1, 0xD1DFE7)
+		$g_hTxtRunFunction = _GUICtrlCreateInput("zoomOut()", $x - 145, $y + 3, 140, 20)
+		
+
 		$g_hBtnRunFunction = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Bot - Debug", "RunFunction", "Run Function"), $x, $y, 140, 25)
 	$y -= $yNext
 

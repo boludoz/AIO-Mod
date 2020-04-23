@@ -77,8 +77,9 @@ Func TabWarPreparationGUI()
 			If $i >= 12 Then $x = 25
 			_GUICtrlCreateIcon($g_sLibIconPath, $aTroopsIcons[$i], $x + Int($i / 2) * 38, $y + Mod($i, 2) * 60, 32, 32)
 
-			$g_ahTxtTrainWarTroopCount[$i] = GUICtrlCreateInput("0", $x + Int($i / 2) * 38 + 1, $y + Mod($i, 2) * 60 + 34, 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
-				GUICtrlSetBkColor(-1, 0xD1DFE7)
+			$g_ahTxtTrainWarTroopCount[$i] = _GUICtrlCreateInput("0", $x + Int($i / 2) * 38 + 1, $y + Mod($i, 2) * 60 + 34, 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+				
+
 				GUICtrlSetLimit(-1, 3)
 				GUICtrlSetOnEvent(-1, "TrainWarTroopCountEdit")
 		Next
@@ -98,9 +99,10 @@ Func TabWarPreparationGUI()
 		For $i = 0 To $eSpellCount - 1 ; Spells
 			If $i >= 6 Then $x = 25
 			_GUICtrlCreateIcon($g_sLibIconPath, $aSpellsIcons[$i], $x + $i * 38, $y, 32, 32)
-			$g_ahTxtTrainWarSpellCount[$i] = GUICtrlCreateInput("0", $x +  $i * 38, $y + 34, 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+			$g_ahTxtTrainWarSpellCount[$i] = _GUICtrlCreateInput("0", $x +  $i * 38, $y + 34, 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 				GUICtrlSetLimit(-1, 3)
-				GUICtrlSetBkColor(-1, 0xD1DFE7)
+				
+
 				GUICtrlSetOnEvent(-1, "TrainWarSpellCountEdit")
 		Next
 
@@ -119,7 +121,7 @@ Func TabWarPreparationGUI()
 	$y += 25
 		$g_hChkRequestCCForWar = GUICtrlCreateCheckbox("Request CC before pausing", $x, $y, -1, -1)
 			GUICtrlSetOnEvent(-1, "ChkRequestCCForWar")
-		$g_hTxtRequestCCForWar = GUICtrlCreateInput("War troop please", $x + 180, $y, 120, -1, $SS_CENTER)
+		$g_hTxtRequestCCForWar = _GUICtrlCreateInput("War troop please", $x + 180, $y, 120, -1, $SS_CENTER)
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 

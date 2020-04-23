@@ -72,19 +72,21 @@ Func CreateAttackNewSmartZap()
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 200 + 9, $y + 11, 24, 24)
 		GUICtrlCreateGroup("", $x + 199, $y - 1, 192, 106)
 		$g_hLblSmartZap = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "LblSmartZap", "Min. amount of Dark Elixir") & ":", $x + 160 + 79, $y + 12, -1, -1)
-		$g_hTxtSmartZapMinDE = GUICtrlCreateInput("350", $x + 289, $y + 32, 90, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtSmartZapMinDE = _GUICtrlCreateInput("350", $x + 289, $y + 32, 90, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "LblSmartZap_Info_01", "Set the Value of the minimum amount of Dark Elixir in the Drills"))
 			GUICtrlSetLimit(-1, 3)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 			GUICtrlSetOnEvent(-1, "txtMinDark")
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			_GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 200 + 9, $y + 57, 24, 24)
 		$g_hLblNoobZap = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "LblNoobZap", "Expected gain of Dark Drills") & ":", $x + 160 + 79, $y + 58, -1, -1)
-		$g_hTxtSmartExpectedDE = GUICtrlCreateInput("320", $x + 289, $y + 78, 90, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtSmartExpectedDE = _GUICtrlCreateInput("320", $x + 289, $y + 78, 90, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "LblNoobZap_Info_01", "Set value for expected gain every dark drill") & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "LblNoobZap_Info_02", "NoobZap will be stopped if the last zap gained less DE than expected"))
 			GUICtrlSetLimit(-1, 3)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 			GUICtrlSetOnEvent(-1, "txtExpectedDE")
 			GUICtrlSetState(-1, $GUI_DISABLE)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)

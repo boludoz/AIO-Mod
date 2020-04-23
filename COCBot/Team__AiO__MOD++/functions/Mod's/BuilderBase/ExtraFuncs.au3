@@ -10,14 +10,14 @@
 Global $g_oTxtBBAtkLogInitText = ObjCreate("Scripting.Dictionary")
 
 Func _getTroopCountBig($x_start, $y_start, $DebugOCR = False)
-_CaptureRegion2($x_start, $y_start, $x_start + 53, $y_start + 17)
-Return getTroopCountBig($x_start, $y_start)
+	_CaptureRegion2($x_start, $y_start, $x_start + 53, $y_start + 17)
+	Return getTroopCountBig($x_start, $y_start)
 EndFunc   ;==>_getTroopCountBig
 
 Func _getTroopCountSmall($x_start, $y_start, $DebugOCR = False)
 	_CaptureRegion2($x_start, $y_start, $x_start + 53, $y_start + 16)
 	Return getTroopCountSmall($x_start, $y_start)
- EndFunc   ;==>_getTroopCountSmall
+EndFunc   ;==>_getTroopCountSmall
 
 Func BBAtkLogHead()
 	SetBBAtkLog(_PadStringCenter(" " & GetTranslatedFileIni("MBR Func_BBAtkLogHead", "BBAtkLogHead_Text_01", "ATTACK LOG") & " ", 43, "="), "", $COLOR_BLACK, "MS Shell Dlg", 8.5)
@@ -59,17 +59,17 @@ EndFunc   ;==>SetBBAtkLog
 ; ===============================================================================================================================
 Func CreateBBAttackLogFile()
 	If $g_hBBAttackLogFile <> 0 Then
-	   FileClose($g_hBBAttackLogFile)
-	   $g_hBBAttackLogFile = 0
-    EndIf
+		FileClose($g_hBBAttackLogFile)
+		$g_hBBAttackLogFile = 0
+	EndIf
 
 	Local $sBBAttackLogFName = "BBAttackLog" & "-" & @YEAR & "-" & @MON & ".log"
 	Local $sBBAttackLogPath = $g_sProfileLogsPath & $sBBAttackLogFName
 	$g_hBBAttackLogFile = FileOpen($sBBAttackLogPath, $FO_APPEND)
 	SetDebugLog("Created BB attack log file: " & $sBBAttackLogPath)
- EndFunc   ;==>CreateAttackLogFile
+EndFunc   ;==>CreateBBAttackLogFile
 
- Func CheckPostponedLog($bNow = False)
+Func CheckPostponedLog($bNow = False)
 	;SetDebugLog("CheckPostponedLog: Entered, $bNow=" & $bNow & ", count=" & $g_oTxtLogInitText.Count & ", $g_hTxtLog=" & $g_hTxtLog & ", $g_iGuiMode=" & $g_iGuiMode)
 	Local $iLogs = 0
 	If $g_bCriticalMessageProcessing Or ($bNow = False And __TimerDiff($g_hTxtLogTimer) < $g_iTxtLogTimerTimeout) Then Return 0
@@ -92,7 +92,7 @@ Func CreateBBAttackLogFile()
 ;~ 		$iLogs += FlushGuiLog($g_hTxtBBAtkLog, $g_oTxtBBAtkLogInitText, False, "txtBBAtkLog")
 ;~ 	EndIf
 
-   If $g_oTxtSALogInitText.Count > 0 And ($g_iGuiMode <> 1 Or ($g_hTxtSALog And BitAND(WinGetState($g_hGUI_LOG_SA), 2))) Then
+	If $g_oTxtSALogInitText.Count > 0 And ($g_iGuiMode <> 1 Or ($g_hTxtSALog And BitAND(WinGetState($g_hGUI_LOG_SA), 2))) Then
 		$iLogs += FlushGuiLog($g_hTxtSALog, $g_oTxtSALogInitText, False, "txtSALog")
 	EndIf
 
@@ -118,10 +118,10 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 	For $i = 0 To $iMax
 		$aArrays = $aResult[$i] ; should be return objectname,objectpoints,objectlevel
 		$aCoords = StringSplit($aArrays[2], "|", 2)
-		For $iCoords = 0 To UBound($aCoords) -1
+		For $iCoords = 0 To UBound($aCoords) - 1
 			$aCommaCoord = StringSplit($aCoords[$iCoords], ",", 2)
 			; Inspired in Chilly-chill
-			If BitOr(($aiPostFix[0] > $aCommaCoord[0]), ($aiPostFix[1] > $aCommaCoord[1]), ($aiPostFix[2] < $aCommaCoord[0]), ($aiPostFix[3] < $aCommaCoord[1])) Then ContinueLoop
+			If BitOR(($aiPostFix[0] > $aCommaCoord[0]), ($aiPostFix[1] > $aCommaCoord[1]), ($aiPostFix[2] < $aCommaCoord[0]), ($aiPostFix[3] < $aCommaCoord[1])) Then ContinueLoop
 			Local $aTmpResults[1][4] = [[$aArrays[0], Int($aCommaCoord[0]), Int($aCommaCoord[1]), Int($aArrays[1])]]
 			_ArrayAdd($AllResults, $aTmpResults)
 		Next
@@ -157,7 +157,7 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 				Next
 			EndIf
 		Next
-		Else
+	Else
 		Return -1
 	EndIf
 	Return $AllResults
@@ -179,5 +179,5 @@ EndFunc   ;==>_DebugFailedImageDetection
 
 # _IsChecked, From: https://www.autoitscript.com/autoit3/docs/functions/GUICtrlCreateCheckbox.htm
 Func _IsChecked($idControlID)
-    Return BitAND(GUICtrlRead($idControlID), $GUI_CHECKED) = $GUI_CHECKED
+	Return BitAND(GUICtrlRead($idControlID), $GUI_CHECKED) = $GUI_CHECKED
 EndFunc   ;==>_IsChecked

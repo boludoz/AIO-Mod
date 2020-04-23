@@ -277,18 +277,10 @@ Func InitializeControlVariables()
 	$oAlwaysEnabledControls($g_hTabLog) = 1
 	$oAlwaysEnabledControls($g_hTabVillage) = 1
 	$oAlwaysEnabledControls($g_hTabAttack) = 1
-	$oAlwaysEnabledControls($g_hTabMOD) = 1 ; Team AiO MOD++
 	$oAlwaysEnabledControls($g_hTabBot) = 1
 	$oAlwaysEnabledControls($g_hTabAbout) = 1
 #Region AiO MOD++
-	$oAlwaysEnabledControls($g_hBtnTestSuperXP) = 1
-	$oAlwaysEnabledControls($g_hBtnTestBotHumanization) = 1
-	$oAlwaysEnabledControls($g_hBtnTestClanChat) = 1
-	$oAlwaysEnabledControls($g_hBtnTestFriendChallenge) = 1
-	$oAlwaysEnabledControls($g_hBtnTestReadChat) = 1
-	$oAlwaysEnabledControls($g_hBtnTestDailyDiscounts) = 1
-	$oAlwaysEnabledControls($g_hBtnTestAttackBB) = 1
-	$oAlwaysEnabledControls($g_hBtnTestGTFO) = 1
+	$oAlwaysEnabledControls($g_hTabMOD) = 1 
 #EndRegion
 
 	For $i in $aTabControlsVillage

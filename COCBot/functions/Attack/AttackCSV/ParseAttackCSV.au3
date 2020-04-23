@@ -628,6 +628,8 @@ Func ParseAttackCSV($debug = False)
 							If $bBreakOnBKAct And Not $g_bCheckKingPower Then ContinueLoop 2
 							; Break on Warden Activation
 							If $bBreakOnGWAct And Not $g_bCheckWardenPower Then ContinueLoop 2
+							; Break on Champion Activation
+							If $bBreakOnRCAct And Not $g_bCheckChampionPower Then ContinueLoop 2
 							; When Break on Siege is active and troops dropped, return ASAP
 							If $bBreakOnSiege And CheckIfSiegeDroppedTheTroops($hSleepTimer, $aSiegeSlotPos) Then ContinueLoop 2
 							; When Break on TH Kill is active in case townhall destroyed, return ASAP
@@ -754,6 +756,7 @@ Func CheckIfTownHallGotDestroyed($hSleepTimer)
 	If $bIsTHDestroyed Then SetDebugLog("WAIT--> Town Hall Got Destroyed After " & Round(__TimerDiff($hSleepTimer)) & "ms.", $COLOR_SUCCESS)
 	Return $bIsTHDestroyed
 EndFunc   ;==>CheckIfTownHallGotDestroyed
+
 
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: ParseAttackCSV_MainSide
@@ -1180,3 +1183,4 @@ Func ParseAttackCSV_MainSide($debug = False)
 		SetLog("Cannot find attack file " & $g_sCSVAttacksPath & "\" & $filename & ".csv", $COLOR_ERROR)
 	EndIf
 EndFunc   ;==>ParseAttackCSV_MainSide
+

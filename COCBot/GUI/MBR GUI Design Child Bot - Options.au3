@@ -60,10 +60,11 @@ Func CreateBotOptions()
 			GUICtrlSetState(-1, $GUI_CHECKED)
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetOnEvent(-1, "chkDeleteLogs")
-		$g_hTxtDeleteLogsDays = GUICtrlCreateInput("2", $x + 120, $y + 2, 25, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtDeleteLogsDays = _GUICtrlCreateInput("2", $x + 120, $y + 2, 25, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 2)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "days", "days"), $x + 150, $y + 4, 27, 15)
 
 	$y += 20
@@ -71,10 +72,11 @@ Func CreateBotOptions()
 			GUICtrlSetState(-1, $GUI_CHECKED)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "ChkDeleteTemp_Info_01", "Delete temp files older than this specified No. of days."))
 			GUICtrlSetOnEvent(-1, "chkDeleteTemp")
-		$g_hTxtDeleteTempDays = GUICtrlCreateInput("5", $x + 120, $y + 2, 25, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtDeleteTempDays = _GUICtrlCreateInput("5", $x + 120, $y + 2, 25, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 2)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "days", -1), $x + 150, $y + 4, 27, 15)
 
 	$y += 20
@@ -83,10 +85,11 @@ Func CreateBotOptions()
 			GUICtrlSetState(-1, $GUI_CHECKED)
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetOnEvent(-1, "chkDeleteLoots")
-		$g_hTxtDeleteLootsDays = GUICtrlCreateInput("2", $x + 120, $y + 2, 25, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtDeleteLootsDays = _GUICtrlCreateInput("2", $x + 120, $y + 2, 25, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 2)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "days", -1), $x + 150, $y + 4, 27, 15)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
@@ -96,9 +99,10 @@ Func CreateBotOptions()
 		$g_hChkAutostart = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "ChkAutostart", "Auto START after") & ":", $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "ChkAutostart_Info_01", "Auto START the Bot after this No. of seconds."))
 			GUICtrlSetOnEvent(-1, "chkAutostart")
-		$g_hTxtAutostartDelay = GUICtrlCreateInput("10", $x + 120, $y + 2, 25, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtAutostartDelay = _GUICtrlCreateInput("10", $x + 120, $y + 2, 25, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			GUICtrlSetState(-1, $GUI_DISABLE)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "sec.", -1), $x + 150, $y + 4, 27, 18)
 
 	$y += 22
@@ -112,16 +116,18 @@ Func CreateBotOptions()
 			GUICtrlSetOnEvent(-1, "chkDisposeWindows")
 			_GUICtrlSetTip(-1, $sTxtTip)
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "LblAlignOffsetX", "Offset") & ":", $x + 60, $y + 4, 48, -1, $SS_RIGHT)
-		$g_hTxtAlignOffsetX = GUICtrlCreateInput("", $x + 110, $y + 2, 30, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtAlignOffsetX = _GUICtrlCreateInput("", $x + 110, $y + 2, 30, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "TxtAlignOffsetX_Info_01", "Offset horizontal pixels between Android Emulator and BOT windows.")
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 4)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
-		$g_hTxtAlignOffsetY= GUICtrlCreateInput("", $x + 145, $y + 2, 30, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+			
+
+		$g_hTxtAlignOffsetY= _GUICtrlCreateInput("", $x + 145, $y + 2, 30, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "TxtAlignOffsetY_Info_01", "Offset vertical pixels between Android Emulator and BOT windows.")
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 4)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 
 	$y += 23
 		$g_hCmbAlignmentOptions = GUICtrlCreateCombo("", $x, $y, 175, 20, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
@@ -141,31 +147,34 @@ Func CreateBotOptions()
 	$y += 52
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "Group_08", "Processor/Thread Advanced"), $x - 20, $y - 20, 210, 85)
 	$y -= 2
-		$g_hTxtGlobalActiveBotsAllowed = GUICtrlCreateInput($g_iGlobalActiveBotsAllowed, $x, $y + 2, 25, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtGlobalActiveBotsAllowed = _GUICtrlCreateInput($g_iGlobalActiveBotsAllowed, $x, $y + 2, 25, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "TxtGlobalActiveBotsAllowed_Info_01", "When running multiple bots, specify how many can run at the same time.\r\nThis reduces your CPU utilization significantly.\r\nHalf of available logical processors is a good number.\r\nThis configuration is shared across all profiles/instances and a restart of all bots is required (close all, wait, and start all again!).")
 			GUICtrlSetOnEvent(-1, "txtGlobalActiveBotsAllowed")
 			GUICtrlSetLimit(-1, 2)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 			_GUICtrlSetTip(-1, $sTxtTip)
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "LblGlobalActiveBotsAllowed_Info_01", "Bots can run at the same time"), $x + 30, $y + 3)
 			_GUICtrlSetTip(-1, $sTxtTip)
 
 	$y += 20
-		$g_hTxtGlobalThreads = GUICtrlCreateInput($g_iGlobalThreads, $x, $y + 2, 25, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtGlobalThreads = _GUICtrlCreateInput($g_iGlobalThreads, $x, $y + 2, 25, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "TxtGlobalThreads_Info_01", "When running multiple bots, specify how many global threads for image processing tasks can run at the same time.\r\nThis reduces your CPU utilization significantly.\r\nHalf of available logical processors is a good number.\r\nThis configuration is shared across all profiles/instances and a restart of all bots is required (close all, wait, and start all again!).")
 			GUICtrlSetOnEvent(-1, "txtGlobalThreads")
 			GUICtrlSetLimit(-1, 2)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 			_GUICtrlSetTip(-1, $sTxtTip)
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "LblGlobalThreads_Info_01", "Image Threads for all bots"), $x + 30, $y + 3)
 			_GUICtrlSetTip(-1, $sTxtTip)
 
 	$y += 20
-		$g_hTxtThreads = GUICtrlCreateInput($g_iThreads, $x, $y + 2, 25, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtThreads = _GUICtrlCreateInput($g_iThreads, $x, $y + 2, 25, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "TxtThreads_Info_01", "When images are processed, multiple threads are used. Here you specifiy how many threads this bot can use.\r\nLess threads reduce your CPU utilization significantly.\r\nHalf of available logical processors is a good number. Use 0 for all available. Global threads setting has priority.")
 			GUICtrlSetOnEvent(-1, "txtThreads")
 			GUICtrlSetLimit(-1, 2)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 			_GUICtrlSetTip(-1, $sTxtTip)
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "LblThreads_Info_01", "Image Threads for this bot"), $x + 30, $y + 3)
 			_GUICtrlSetTip(-1, $sTxtTip)
@@ -198,9 +207,10 @@ Func CreateBotOptions()
 		$g_hChkAutoResume = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "ChkAutoResume", "Auto resume Bot after") & ":", $x, $y, -1, -1)
 			_GUICtrlSetTip(-1,GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "ChkAutoResume_Info_01", "This will auto resume your bot after x minutes"))
 			GUICtrlSetOnEvent(-1, "chkAutoResume")
-		$g_hTxtAutoResumeTime = GUICtrlCreateInput("5",$x + 132, $y + 2, 30, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtAutoResumeTime = _GUICtrlCreateInput("5",$x + 132, $y + 2, 30, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			GUICtrlSetState(-1, $GUI_DISABLE)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "min.", -1), $x + 167, $y + 4, -1, -1)
 	$y += 19
 		$g_hChkDisableNotifications = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "ChkDisableNotifications", "Disable Notifications"), $x, $y, -1, -1)
@@ -229,10 +239,11 @@ Func CreateBotOptions()
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "LblTimeAnotherDevice", "When 'Another Device' wait") & ":", $x - 10, $y + 2, -1, -1)
 		$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "LblTimeAnotherDevice_Info_01", "Enter the time to wait (in Minutes) before the Bot reconnects when another device took control.")
 			_GUICtrlSetTip(-1, $sTxtTip)
-		$g_hTxtTimeAnotherDevice = GUICtrlCreateInput("2", $x + 132, $y, 30, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtTimeAnotherDevice = _GUICtrlCreateInput("2", $x + 132, $y, 30, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 3)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "min.", -1), $x + 167, $y + 2, -1, -1)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
@@ -241,7 +252,7 @@ Func CreateBotOptions()
 		$g_hChkSinglePBTForced = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "ChkSinglePBTForced", "Force Single PB logoff"), $x, $y, -1, -1)
 			GUICtrlSetOnEvent(-1, "chkSinglePBTForced")
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "ChkSinglePBTForced_Info_01", "This forces bot to exit CoC only one time prior to normal start of PB"))
-		$g_hTxtSinglePBTimeForced = GUICtrlCreateInput("18", $x + 132, $y + 2, 30, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtSinglePBTimeForced = _GUICtrlCreateInput("18", $x + 132, $y + 2, 30, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "TxtSinglePBTimeForced_Info_01", "Type in number of minutes to keep CoC closed. Set to 15 minimum to reset PB timer!"))
 			GUICtrlSetOnEvent(-1, "txtSinglePBTimeForced")
 			GUICtrlSetLimit(-1, 3)
@@ -252,7 +263,7 @@ Func CreateBotOptions()
 		GUICtrlCreateLabel( GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "LblPBTimeForcedExit", "Subtract time for early PB exit"), $x - 10, $y + 3)
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "LblPBTimeForcedExit_Info_01", "Type in number of minutes to quit CoC early! Setting below 10 minutes may not function!")
 			_GUICtrlSetTip(-1, $sTxtTip)
-		$g_hTxtPBTimeForcedExit = GUICtrlCreateInput("16", $x + 132, $y, 30, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtPBTimeForcedExit = _GUICtrlCreateInput("16", $x + 132, $y, 30, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetOnEvent(-1, "txtSinglePBTimeForced")
 			GUICtrlSetLimit(-1, 3)

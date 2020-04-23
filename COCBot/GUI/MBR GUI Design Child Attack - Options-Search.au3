@@ -37,20 +37,22 @@ Func CreateAttackSearchOptionsSearch()
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-Search", "LblSearchReduceCount", "Reduce targets every"), $x, $y + 3, -1, -1)
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Options-Search", "LblSearchReduceCount_Info_01", "Enter the No. of searches to wait before each reduction occurs.")
 			_GUICtrlSetTip(-1, $sTxtTip)
-		$g_hTxtSearchReduceCount = GUICtrlCreateInput("20", $x + 115, $y + 2, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtSearchReduceCount = _GUICtrlCreateInput("20", $x + 115, $y + 2, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 3)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "search(es).", -1), $x + 160, $y + 3, -1, -1)
 
 	$y += 21
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-Search", "LblSearchReduceGold", "- Reduce Gold"), $x, $y + 3, -1, 17)
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Options-Search", "LblSearchReduceGold_Info_01", "Lower value for Gold by this amount on each step.")
 			_GUICtrlSetTip(-1, $sTxtTip)
-		$g_hTxtSearchReduceGold = GUICtrlCreateInput("2000", $x + 115, $y, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtSearchReduceGold = _GUICtrlCreateInput("2000", $x + 115, $y, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 5)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 160, $y, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
 
@@ -58,10 +60,11 @@ Func CreateAttackSearchOptionsSearch()
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-Search", "LblSearchReduceElixir", "- Reduce Elixir"), $x, $y + 3, -1, 17)
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Options-Search", "LblSearchReduceElixir_Info_01", "Lower value for Elixir by this amount on each step.")
 			_GUICtrlSetTip(-1, $sTxtTip)
-		$g_hTxtSearchReduceElixir = GUICtrlCreateInput("2000", $x + 115, $y, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtSearchReduceElixir = _GUICtrlCreateInput("2000", $x + 115, $y, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 5)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnElixir, $x + 160, $y, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
 
@@ -69,10 +72,11 @@ Func CreateAttackSearchOptionsSearch()
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-Search", "LblSearchReduceGoldPlusElixir", "- Reduce Gold + Elixir"), $x, $y + 3, -1, 17)
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Options-Search", "LblSearchReduceGoldPlusElixir_Info_01", "Lower total sum for G+E by this amount on each step.")
 			_GUICtrlSetTip(-1, $sTxtTip)
-		$g_hTxtSearchReduceGoldPlusElixir = GUICtrlCreateInput("4000", $x + 115, $y, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtSearchReduceGoldPlusElixir = _GUICtrlCreateInput("4000", $x + 115, $y, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 5)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 160, $y + 1, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
 		GUICtrlCreateLabel("+", $x + 176, $y + 1, -1, -1)
@@ -84,10 +88,11 @@ Func CreateAttackSearchOptionsSearch()
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-Search", "LblSearchReduceDark", "- Reduce Dark Elixir"), $x, $y + 3, -1, 17)
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Options-Search", "LblSearchReduceDark_Info_01", "Lower value for Dark Elixir by this amount on each step.")
 			_GUICtrlSetTip(-1, $sTxtTip)
-		$g_hTxtSearchReduceDark = GUICtrlCreateInput("100", $x + 115, $y, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtSearchReduceDark = _GUICtrlCreateInput("100", $x + 115, $y, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 3)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 160, $y, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
 
@@ -95,10 +100,11 @@ Func CreateAttackSearchOptionsSearch()
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-Search", "LblSearchReduceTrophy", "- Reduce Tropies"), $x, $y + 3, -1, 17)
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Options-Search", "LblSearchReduceTrophy_Info_01", "Lower value for Trophies by this amount on each step.")
 			_GUICtrlSetTip(-1, $sTxtTip)
-		$g_hTxtSearchReduceTrophy = GUICtrlCreateInput("2", $x + 115, $y, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtSearchReduceTrophy = _GUICtrlCreateInput("2", $x + 115, $y, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 1)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnTrophy, $x + 160, $y, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
@@ -170,10 +176,11 @@ Func CreateAttackSearchOptionsSearch()
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetState(-1, $GUI_CHECKED)
 			GUICtrlSetOnEvent(-1, "chkRestartSearchLimit")
-		$g_hTxtRestartSearchlimit = GUICtrlCreateInput("50", $x + 15, $y + 15, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtRestartSearchlimit = _GUICtrlCreateInput("50", $x + 15, $y + 15, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 3)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 			;GUICtrlSetState(-1, $GUI_DISABLE)  ; Only needed when unchecked at bot start
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "search(es).", -1), $x + 47, $y + 17, -1, -1)
 

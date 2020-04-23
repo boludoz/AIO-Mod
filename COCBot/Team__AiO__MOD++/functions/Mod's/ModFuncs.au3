@@ -452,3 +452,9 @@ Func TimerRecordDonation($bUpdate = False)
 
 	EndIf
 EndFunc   ;==>TimerRecordDonation
+
+Func _GUICtrlCreateInput($sText, $iLeft, $iTop , $iWidth, $iHeight, $vStyle = -1, $vExStyle = -1)
+	Local $hReturn = GUICtrlCreateInput ($sText, $iLeft, $iTop , $iWidth, $iHeight, $vStyle, $vExStyle)
+	GUICtrlSetBkColor($hReturn, 0xD1DFE7)
+	Return $hReturn
+EndFunc

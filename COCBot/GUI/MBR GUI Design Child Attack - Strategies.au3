@@ -62,8 +62,9 @@ Func CreateAttackStrategies()
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Strategies", "LblSaveFilename", "Strategy file name") & ":", $x, $y + 4, 200, 25, $SS_RIGHT)
 
 	$x += 205
-		$g_hTxtPresetSaveFilename = GUICtrlCreateInput("strategy " &  @YEAR & "-" & @MON & "-" & @MDAY & " " & @HOUR & "." & @MIN & "." & @SEC, $x, $y, 200, 25)
-		GUICtrlSetBkColor(-1, 0xD1DFE7)
+		$g_hTxtPresetSaveFilename = _GUICtrlCreateInput("strategy " &  @YEAR & "-" & @MON & "-" & @MDAY & " " & @HOUR & "." & @MIN & "." & @SEC, $x, $y, 200, 25)
+		
+
 
 	$x = $xStart
 	$y += 30

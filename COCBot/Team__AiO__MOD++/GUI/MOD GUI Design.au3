@@ -140,26 +140,31 @@ Func CreateMiscMagicSubTab()
 	GUICtrlSetState (-1, $GUI_DISABLE)
 	$g_hChkResourcePotion = GUICtrlCreateCheckbox("Use resource potion only if storage are :", 56, 288, 225, 17)
 	GUICtrlSetOnEvent(-1, "ConfigRefresh")
-	$g_hInputBuilderPotion = GUICtrlCreateInput("Number", 296, 128, 41, 21)
-	GUICtrlSetBkColor(-1, 0xD1DFE7)
+	$g_hInputBuilderPotion = _GUICtrlCreateInput("Number", 296, 128, 41, 21)
+	
+
 	GUICtrlSetOnEvent(-1, "ConfigRefresh")
 	$g_hComboClockTowerPotion = GUICtrlCreateCombo("Select", 296, 160, 89, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
 	GUICtrlSetState (-1, $GUI_DISABLE)
 	$g_hComboHeroPotion = GUICtrlCreateCombo("Select", 296, 192, 89, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
 	GUICtrlSetState (-1, $GUI_HIDE)
-	$g_hInputLabPotion = GUICtrlCreateInput("Hours", 296, 224, 41, 21)
-	GUICtrlSetBkColor(-1, 0xD1DFE7)
+	$g_hInputLabPotion = _GUICtrlCreateInput("Hours", 296, 224, 41, 21)
+	
+
 	$g_hComboPowerPotion = GUICtrlCreateCombo("Select", 296, 256, 89, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
 	GUICtrlSetState (-1, $GUI_DISABLE)
-	$g_hInputGoldItems = GUICtrlCreateInput("1000000", 88, 320, 73, 21)
+	$g_hInputGoldItems = _GUICtrlCreateInput("1000000", 88, 320, 73, 21)
 	GUICtrlSetOnEvent(-1, "ConfigRefresh")
-	GUICtrlSetBkColor(-1, 0xD1DFE7)
-	$g_hInputElixirItems = GUICtrlCreateInput("1000000", 192, 320, 73, 21)
+	
+
+	$g_hInputElixirItems = _GUICtrlCreateInput("1000000", 192, 320, 73, 21)
 	GUICtrlSetOnEvent(-1, "ConfigRefresh")
-	GUICtrlSetBkColor(-1, 0xD1DFE7)
-	$g_hInputDarkElixirItems = GUICtrlCreateInput("1000", 296, 320, 49, 21)
+	
+
+	$g_hInputDarkElixirItems = _GUICtrlCreateInput("1000", 296, 320, 49, 21)
 	GUICtrlSetOnEvent(-1, "ConfigRefresh")
-	GUICtrlSetBkColor(-1, 0xD1DFE7)
+	
+
 	GUICtrlCreateLabel("Lower : ", 40, 320, 42, 17)
 	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnShop, 24, 46, 25, 25)
 	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModBuilderP, 24, 126, 25, 25)
@@ -218,9 +223,10 @@ Func CreateDonationsControlSubTab()
 		$y += 115
 
 		GUICtrlCreateLabel("Limit ", $x, $y)
-		$g_hDayLimitTroops = GUICtrlCreateInput("0", $x + 25, -1 , 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hDayLimitTroops = _GUICtrlCreateInput("0", $x + 25, -1 , 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 		GUICtrlSetOnEvent(-1, "InputRecords")
-		GUICtrlSetBkColor(-1, 0xD1DFE7)
+		
+
 		GUICtrlCreateLabel("per hours.   Total : ", $x + 60, -1)
 		$g_hDayTotalTroops = GUICtrlCreateLabel("0", $x + 150, -1)
 		$y += 35
@@ -235,9 +241,10 @@ Func CreateDonationsControlSubTab()
 		$y += 50
 
 		GUICtrlCreateLabel("Limit ", $x, $y)
-		$g_hDayLimitSpells = GUICtrlCreateInput("0", $x + 25, -1 , 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hDayLimitSpells = _GUICtrlCreateInput("0", $x + 25, -1 , 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 		GUICtrlSetOnEvent(-1, "InputRecords")
-		GUICtrlSetBkColor(-1, 0xD1DFE7)
+		
+
 		GUICtrlCreateLabel("per hours.   Total : ", $x + 60, -1)
 		$g_hDayTotalSpells = GUICtrlCreateLabel("0", $x + 150, -1)
 		$y += 35
@@ -250,17 +257,19 @@ Func CreateDonationsControlSubTab()
 		$y += 50
 
 		GUICtrlCreateLabel("Limit ", $x, $y)
-		$g_hDayLimitSieges = GUICtrlCreateInput("0", $x + 25, -1 , 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hDayLimitSieges = _GUICtrlCreateInput("0", $x + 25, -1 , 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 		GUICtrlSetOnEvent(-1, "InputRecords")
-		GUICtrlSetBkColor(-1, 0xD1DFE7)
+		
+
 		GUICtrlCreateLabel("per hours.   Total : ", $x + 60, -1)
 		$g_hDayTotalSieges = GUICtrlCreateLabel("0", $x + 150, -1)
 
 		$x += 200
 		GUICtrlCreateLabel("Restart every hours : ", $x, -1)
-		$g_hCmbRestartEvery = GUICtrlCreateInput("0", $x + 125, -1 , 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hCmbRestartEvery = _GUICtrlCreateInput("0", $x + 125, -1 , 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 		GUICtrlSetOnEvent(-1, "InputRecords")
-		GUICtrlSetBkColor(-1, 0xD1DFE7)
+		
+
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 

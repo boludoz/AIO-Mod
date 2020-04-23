@@ -158,11 +158,12 @@ Func CreateSwitchProfile()
 				GUICtrlSetData(-1, "Off|Donate|Active", "Donate")
 
 			$g_ahLbl_SwitchMax[$i] = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "Condition", "when") & " " & $asText[$i] & " >", $x + 262, $y + 11 + $i * 51, -1, -1)
-			$g_ahTxt_ConditionMax[$i] = GUICtrlCreateInput($aiValueMax[$i], $x + 352, $y + 7 + $i * 51, 55, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+			$g_ahTxt_ConditionMax[$i] = _GUICtrlCreateInput($aiValueMax[$i], $x + 352, $y + 7 + $i * 51, 55, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 				_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "Condition_Info_01", "Set the amount of") & " " & $asText[$i] &  " " & _
 								   GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "Condition_Info_02", "to trigger switching Profile & Bot Type."))
 				GUICtrlSetLimit(-1, $aiLimitMax[$i])
-				GUICtrlSetBkColor(-1, 0xD1DFE7)
+				
+
 
 		$y += 30
 			$g_ahChk_SwitchMin[$i] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "Switch", -1), $x - 10, $y + 5 + $i * 51, -1, -1)
@@ -176,11 +177,12 @@ Func CreateSwitchProfile()
 				GUICtrlSetData(-1, "Off|Donate|Active", "Active")
 
 			$g_ahLbl_SwitchMin[$i] = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "Condition", -1) & " " & $asText[$i] & " <", $x + 262, $y + 9 + $i * 51, -1, -1)
-			$g_ahTxt_ConditionMin[$i] = GUICtrlCreateInput($aiValueMin[$i], $x + 352, $y + 5 + $i * 51, 55, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+			$g_ahTxt_ConditionMin[$i] = _GUICtrlCreateInput($aiValueMin[$i], $x + 352, $y + 5 + $i * 51, 55, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 				_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "Condition_Info_01", -1) & " " & $asText[$i] & " " & _
 								   GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "Condition_Info_02", -1))
 				GUICtrlSetLimit(-1, $aiLimitMin[$i])
-				GUICtrlSetBkColor(-1, 0xD1DFE7)
+				
+
 
 		GUICtrlCreateGroup("", -99, -99, 1, 1)
 	Next
@@ -211,7 +213,7 @@ Func CreateFarmSchedule()
 			GUICtrlSetData(-1, "Gold >|Elixir >|DarkE >|Trop. >|Time:")
 			GUICtrlSetBkColor(-1, $COLOR_WHITE)
 			GUICtrlSetOnEvent(-1, "cmbCriteria1")
-		$g_ahTxtResource1[$i] = GUICtrlCreateInput("", $x + 187, $y + $i * 30, 50, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_ahTxtResource1[$i] = _GUICtrlCreateInput("", $x + 187, $y + $i * 30, 50, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 		$g_ahCmbTime1[$i] = GUICtrlCreateCombo("", $x + 187, $y + $i * 30, 50, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 			GUICtrlSetData(-1, 	"0 am|1 am|2 am|3 am|4 am|5 am|6 am|7 am|8 am|9 am|10am|11am|" & _
 								"12pm|1 pm|2 pm|3 pm|4 pm|5 pm|6 pm|7 pm|8 pm|9 pm|10pm|11pm")
@@ -225,7 +227,7 @@ Func CreateFarmSchedule()
 			GUICtrlSetData(-1, "Gold <|Elixir <|DarkE <|Trop. <|Time:")
 			GUICtrlSetBkColor(-1, $COLOR_WHITE)
 			GUICtrlSetOnEvent(-1, "cmbCriteria2")
-		$g_ahTxtResource2[$i] = GUICtrlCreateInput("", $x + 187, $y + $i * 30, 50, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_ahTxtResource2[$i] = _GUICtrlCreateInput("", $x + 187, $y + $i * 30, 50, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 		$g_ahCmbTime2[$i] = GUICtrlCreateCombo("", $x + 187, $y + $i * 30, 50, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 			GUICtrlSetData(-1, 	"0 am|1 am|2 am|3 am|4 am|5 am|6 am|7 am|8 am|9 am|10am|11am|" & _
 								"12pm|1 pm|2 pm|3 pm|4 pm|5 pm|6 pm|7 pm|8 pm|9 pm|10pm|11pm")

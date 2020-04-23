@@ -57,19 +57,21 @@ Func CreateAttackSearchActiveBaseSearch()
 							   GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkActivateSearches_Info_02", -1))
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
 			GUICtrlSetOnEvent(-1, "chkABActivateSearches")
-		$g_hTxtABSearchesMin = GUICtrlCreateInput("1", $x + 70, $y, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtABSearchesMin = _GUICtrlCreateInput("1", $x + 70, $y, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "LblActivateMinSearches_Info_01", -1) & @CRLF & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkActivateSearches_Info_01", -1) & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkActivateSearches_Info_02", -1))
 			GUICtrlSetLimit(-1, 6)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 		$g_hLblABSearches = GUICtrlCreateLabel("-", $x + 113, $y + 2, -1, -1)
-		$g_hTxtABSearchesMax = GUICtrlCreateInput("9999", $x + 120, $y, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER)) ;ChrW(8734)
+		$g_hTxtABSearchesMax = _GUICtrlCreateInput("9999", $x + 120, $y, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER)) ;ChrW(8734)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "LblActivateMaxSearches_Info_01", -1) & @CRLF & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkActivateSearches_Info_01", -1) & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkMeetTrophy_Info_01", -1))
 			GUICtrlSetLimit(-1, 6)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnMagnifier, $x + 163, $y + 1, 16, 16)
 
 	$y += 21
@@ -77,20 +79,22 @@ Func CreateAttackSearchActiveBaseSearch()
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkActivateTropies_Info_01", -1) & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkActivateTropies_Info_02", -1))
 			GUICtrlSetOnEvent(-1, "chkABActivateTropies")
-		$g_hTxtABTropiesMin = GUICtrlCreateInput("0", $x + 70, $y, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtABTropiesMin = _GUICtrlCreateInput("0", $x + 70, $y, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "LblActivateMinTropies_Info_01", -1) & @CRLF & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkActivateTropies_Info_02", -1))
 			GUICtrlSetLimit(-1, 6)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 		$g_hLblABTropies = GUICtrlCreateLabel("-", $x + 113, $y + 2, -1, -1)
 			GUICtrlSetState(-1, $GUI_DISABLE)
-		$g_hTxtABTropiesMax = GUICtrlCreateInput("6000", $x + 120, $y, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtABTropiesMax = _GUICtrlCreateInput("6000", $x + 120, $y, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "LblActivateMaxTropies_Info_01", -1) & @CRLF & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkActivateTropies_Info_02", -1))
 			GUICtrlSetLimit(-1, 6)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnTrophy, $x + 163, $y + 1, 16, 16)
 
 	$y += 21
@@ -101,11 +105,12 @@ Func CreateAttackSearchActiveBaseSearch()
 		$g_hLblABArmyCamps = GUICtrlCreateLabel(ChrW(8805), $x + 113 - 1, $y + 2, -1, -1)
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetState(-1, $GUI_DISABLE)
-		$g_hTxtABArmyCamps = GUICtrlCreateInput("100", $x + 120, $y, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtABArmyCamps = _GUICtrlCreateInput("100", $x + 120, $y, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			GUICtrlSetLimit(-1, 6)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 		GUICtrlCreateLabel("%", $x + 163 + 3, $y + 4, -1, -1)
 			GUICtrlSetState(-1, $GUI_DISABLE)
 
@@ -196,46 +201,52 @@ Func CreateAttackSearchActiveBaseSearch()
 
 Local $sMinUmbralTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "Txt_MinUmbralTip", "Recover what I spent in the army in minimum percentage, 0 = Disabled.")
 
-		$g_hTxtABMinGold = GUICtrlCreateInput("80000", $x + 85, $y, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtABMinGold = _GUICtrlCreateInput("80000", $x + 85, $y, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "TxtMinGold_Info_01", -1)
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 6)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 		; Gold AB - Team AiO MOD++
-;~ 		$g_hMinArmyUmbralGoldAB = GUICtrlCreateInput("0", $x + 85 + 75, $y, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
+;~ 		$g_hMinArmyUmbralGoldAB = _GUICtrlCreateInput("0", $x + 85 + 75, $y, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
 ;~ 			_GUICtrlSetTip(-1, $sMinUmbralTip)
-;~ 			GUICtrlSetBkColor(-1, 0xD1DFE7)
+;~ 			
+
 ;~ 			GUICtrlCreateLabel("%", $x + 85 + 85 + 20, $y, 12, 17)
 
 		$g_hPicABMinGold = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 137, $y, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
 
 	$y += 21
-		$g_hTxtABMinElixir = GUICtrlCreateInput("80000", $x + 85, $y, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtABMinElixir = _GUICtrlCreateInput("80000", $x + 85, $y, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "TxtMinElixir_Info_01", -1)
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 6)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 		; Elixir AB - Team AiO MOD++
-;~ 		$g_hMinArmyUmbralElixirAB = GUICtrlCreateInput("0", $x + 85 + 75, $y + 1, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
+;~ 		$g_hMinArmyUmbralElixirAB = _GUICtrlCreateInput("0", $x + 85 + 75, $y + 1, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
 ;~ 			_GUICtrlSetTip(-1, $sMinUmbralTip)
-;~ 			GUICtrlSetBkColor(-1, 0xD1DFE7)
+;~ 			
+
 ;~ 			GUICtrlCreateLabel("%", $x + 85 + 85 + 20, $y + 1, 12, 17)
 
 		$g_hPicABMinElixir = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnElixir, $x + 137, $y, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
 
 	$y -= 11
-		$g_hTxtABMinGoldPlusElixir = GUICtrlCreateInput("160000", $x + 85, $y, 50, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtABMinGoldPlusElixir = _GUICtrlCreateInput("160000", $x + 85, $y, 50, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "TxtMinGoldPlusElixir_Info_01", -1)
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 6)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 			GUICtrlSetState (-1, $GUI_HIDE)
 		; Plus AB - Team AiO MOD++
-;~ 		$g_hMinArmyUmbralPlusAB = GUICtrlCreateInput("0", $x + 85 + 75, $y + 35, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
+;~ 		$g_hMinArmyUmbralPlusAB = _GUICtrlCreateInput("0", $x + 85 + 75, $y + 35, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
 ;~ 			_GUICtrlSetTip(-1, $sMinUmbralTip)
-;~ 			GUICtrlSetBkColor(-1, 0xD1DFE7)
+;~ 			
+
 ;~ 			GUICtrlCreateLabel("%", $x + 85 + 85 + 20, $y + 35, 12, 17)
 
 		$g_hPicABMinGPEGold = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnGoldElixir, $x + 137, $y + 1, 16, 16)
@@ -246,16 +257,18 @@ Local $sMinUmbralTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Searc
 		$g_hChkABMeetDE = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkMeetDE", -1), $x, $y, -1, -1)
 			GUICtrlSetOnEvent(-1, "chkABMeetDE")
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkMeetDE_Info_01", -1))
-		$g_hTxtABMinDarkElixir = GUICtrlCreateInput("0", $x + 85, $y, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtABMinDarkElixir = _GUICtrlCreateInput("0", $x + 85, $y, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "TxtMinDarkElixir_Info_01", -1)
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 5)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 			_GUICtrlEdit_SetReadOnly(-1, True)
 		; Dark Elixir AB - Team AiO MOD++
-		$g_hMinArmyUmbralDarkAB = GUICtrlCreateInput("0", $x + 85 + 75, $y + 24, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
+		$g_hMinArmyUmbralDarkAB = _GUICtrlCreateInput("0", $x + 85 + 75, $y + 24, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
 			_GUICtrlSetTip(-1, $sMinUmbralTip)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 			GUICtrlCreateLabel("%", $x + 85 + 85 + 20, $y + 24, 12, 17)
 
 		$g_hPicABMinDarkElixir = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 137, $y, 16, 16)
@@ -265,19 +278,21 @@ Local $sMinUmbralTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Searc
 		$g_hChkABMeetTrophy = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkActivateTropies", -1), $x, $y, -1, -1)
 			GUICtrlSetOnEvent(-1, "chkABMeetTrophy")
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkMeetTrophy_Info_01", -1))
-		$g_hTxtABMinTrophy = GUICtrlCreateInput("0", $x + 85, $y, 20, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtABMinTrophy = _GUICtrlCreateInput("0", $x + 85, $y, 20, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkMeetTrophy_Info_02", -1)
 			_GUICtrlSetTip(-1, $sTxtTip)
 			_GUICtrlEdit_SetReadOnly(-1, True)
 			GUICtrlSetLimit(-1, 2)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 			GUICtrlCreateLabel("-", $x + 109, $y + 2, -1, -1)
-		$g_hTxtABMaxTrophy = GUICtrlCreateInput("0", $x + 115, $y, 20, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtABMaxTrophy = _GUICtrlCreateInput("0", $x + 115, $y, 20, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkMeetTrophy_Info_03", -1)
 			_GUICtrlSetTip(-1, $sTxtTip)
 			_GUICtrlEdit_SetReadOnly(-1, True)
 			GUICtrlSetLimit(-1, 2)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 		$g_hPicABMinTrophies = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnTrophy, $x + 137, $y, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
 

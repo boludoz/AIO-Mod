@@ -273,7 +273,7 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 		GUICtrlSetCursor(-1, 0)
 
 		GUISwitch($g_hFrmBot)
-		$g_hFrmBotEmbeddedShieldInput = GUICtrlCreateInput("", 0, 0, -1, -1, $WS_TABSTOP)
+		$g_hFrmBotEmbeddedShieldInput = _GUICtrlCreateInput("", 0, 0, -1, -1, $WS_TABSTOP)
 		;$g_hFrmBotEmbeddedShieldInput = GUICtrlCreateLabel("", 0, 0, 0, 0, $WS_TABSTOP)
 		;$g_hFrmBotEmbeddedShieldInput = GUICtrlCreateDummy()
 		GUICtrlSetState($g_hFrmBotEmbeddedShieldInput, $GUI_HIDE)

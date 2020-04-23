@@ -111,7 +111,7 @@ Func BuilderBaseAttack($bTestRun = False)
 				Setlog("Let's Drop some Trophies!", $COLOR_SUCCESS)
 
 				; Start the Attack realing one troop and surrender
-				BuilderBaseAttackToDrop(GetAttackBarBB(False, True))
+				BuilderBaseAttackToDrop(GetAttackBarBB(False))
 
 			Case $g_iCmbBBAttack = $g_eBBAttackCSV
 				Setlog("Ready to Battle! BB CSV... Let's Go!", $COLOR_SUCCESS)

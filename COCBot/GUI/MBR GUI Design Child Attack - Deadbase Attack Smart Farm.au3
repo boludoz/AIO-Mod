@@ -52,15 +52,17 @@ Func CreateAttackSearchDeadBaseSmartFarm()
 
 		$y += 40
 			GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "Lbl-TxtInsidePercentage", "Inside resources") & ":", $x, $y + 2, -1, -1)
-			$g_hTxtInsidePercentage = GUICtrlCreateInput("65" , $x + 90, $y , 25 , -1)
+			$g_hTxtInsidePercentage = _GUICtrlCreateInput("65" , $x + 90, $y , 25 , -1)
 				_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "txt-TxtInsidePercentage", "Percentage to force attack in one side only"))
-				GUICtrlSetBkColor(-1, 0xD1DFE7)
+				
+
 			GUICtrlCreateLabel("%" , $x + 117 , $y + 3)
 		$y += 22
 			GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "Lbl-TxtOutsidePercentage", "Outside resources") & ":", $x, $y + 2, -1, -1)
-			$g_hTxtOutsidePercentage = GUICtrlCreateInput("80" , $x + 90 , $y , 25 , -1)
+			$g_hTxtOutsidePercentage = _GUICtrlCreateInput("80" , $x + 90 , $y , 25 , -1)
 				_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "txt-TxtOutsidePercentage", "Percentage to force attack in 4 sides"))
-				GUICtrlSetBkColor(-1, 0xD1DFE7)
+				
+
 			GUICtrlCreateLabel("%" , $x + 117 , $y + 3)
 		$y += 40
 		$x = 98

@@ -537,7 +537,7 @@ Func GUIControl_WM_COMMAND($hWind, $iMsg, $wParam, $lParam)
 		Case $g_hChkDebugOCR
 			chkDebugOcr()
 		Case $g_hChkDebugImageSave
-			chkSaveDebugImage()
+			chkDebugImageSave()
 		Case $g_hChkdebugBuildingPos
 			chkDebugBuildingPos()
 		Case $g_hChkdebugTrain
@@ -609,37 +609,16 @@ Func GUIControl_WM_COMMAND($hWind, $iMsg, $wParam, $lParam)
 
 			Local $RuntimeA = $g_bRunState
 			$g_bRunState = True
-			Setlog("Queued Spells Test")
-			CheckQueueSpells()
+			Setlog("Prepare Attack test")
+			PrepareAttack($DB, False)
 			$g_bRunState = $RuntimeA
 		Case $g_hBtnTestQuickTrainsimgloc
 
 			Local $RuntimeA = $g_bRunState
 			$g_bRunState = True
-			Setlog("Queued Troops Test")
-			CheckQueueTroops()
+			Setlog("Prepare Attack test - Remaining troops")
+			PrepareAttack($DB, True)
 			$g_bRunState = $RuntimeA
-		; Debug - Team AiO MOD++
-		Case $g_hBtnTestSuperXP
-			btnTestSuperXP()
-		Case $g_hBtnTestExecuteButton
-			btnTestExecuteButton()
-		Case $g_hBtnTestBotHumanization
-			btnTestBotHumanization()
-		Case $g_hBtnTestClanChat
-			btnTestClanChat()
-		Case $g_hBtnTestFriendChallenge
-			btnTestFriendlyChallenge()
-		Case $g_hBtnTestReadChat
-			btnTestReadChat()
-		Case $g_hBtnTestDailyDiscounts
-			btnTestDailyDiscounts()
-		Case $g_hBtnTestAttackBB
-			btnTestAttackBB()
-		Case $g_hBtnTestGTFO
-			btnTestGTFO()
-		Case $g_hBtnTestStopForWar
-			btnTestStopForWar()
 	EndSwitch
 
 	If $lParam = $g_hCmbGUILanguage Then
@@ -1179,6 +1158,7 @@ Func BotGuiModeToggle()
 
 			GUICtrlDelete($g_hGUI_ATTACK_TAB)
 			GUICtrlDelete($g_hGUI_TRAINARMY_TAB)
+			GUICtrlDelete($g_hGUI_TRAINARMY_ARMY_TAB)
 			GUICtrlDelete($g_hGUI_SEARCH_TAB)
 			GUICtrlDelete($g_hGUI_DEADBASE_TAB)
 			GUICtrlDelete($g_hGUI_ACTIVEBASE_TAB)

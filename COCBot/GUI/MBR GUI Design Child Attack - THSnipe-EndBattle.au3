@@ -31,11 +31,12 @@ Func CreateAttackSearchTHSnipeEndBattle()
 		;Army camps %
 		$g_hLblTSArmyCamps2 = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "LblCamps", "Camps") & " >=", $x + 20, $y + 4, -1, -1)
 			GUICtrlSetState(-1, $GUI_DISABLE)
-		$g_hTxtTSArmyCamps2 = GUICtrlCreateInput("50", $x + 75, $y, 35, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtTSArmyCamps2 = _GUICtrlCreateInput("50", $x + 75, $y, 35, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - EndBattle", "TxtArmyCamps2_Info_01", "Set the % Army camps before activate this option"))
 			GUICtrlSetLimit(-1, 6)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 
 		;camps %
 		GUICtrlCreateLabel("%", $x + 115, $y + 4, -1, -1)

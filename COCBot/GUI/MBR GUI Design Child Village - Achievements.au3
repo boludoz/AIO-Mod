@@ -33,11 +33,12 @@ Func CreateVillageAchievements()
 
 	$x = 150
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Achievements", "LblUnbreakable", "Wait Time") & ":", $x - 10, $y + 3, 86, -1, $SS_RIGHT)
-		$g_hTxtUnbreakable = GUICtrlCreateInput("5", $x + 80, $y, 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtUnbreakable = _GUICtrlCreateInput("5", $x + 80, $y, 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Achievements", "TxtUnbreakable_Info_01", "Set the amount of time to stop CoC and wait for enemy attacks to gain defense wins. (1-99 minutes)"))
 			GUICtrlSetLimit(-1, 2)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "Minutes", "Minutes"), $x + 113, $y + 3, -1, -1)
 
 	$y += 28
@@ -45,51 +46,57 @@ Func CreateVillageAchievements()
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Achievements", "Lbl_SaveMin._Info_01", "Save Min."), $x + 115, $y, -1, -1)
 
 	$y += 16
-		$g_hTxtUnBrkMinGold = GUICtrlCreateInput("50000", $x + 20, $y, 58, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtUnBrkMinGold = _GUICtrlCreateInput("50000", $x + 20, $y, 58, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Achievements", "TxtUnBrkMinGold_Info_01", "Amount of Gold that stops Defense farming, switches to normal farming if below.") & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Achievements", "TxtUnBrkMinGold_Info_02", "Set this value to amount of Gold you need for searching or upgrades."))
 			GUICtrlSetLimit(-1, 7)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 80, $y + 2, 16, 16)
-		$g_hTxtUnBrkMaxGold = GUICtrlCreateInput("600000", $x + 110, $y, 58, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtUnBrkMaxGold = _GUICtrlCreateInput("600000", $x + 110, $y, 58, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Achievements", "TxtUnBrkMaxGold_Info_01", "Amount of Gold in Storage Required to Enable Defense Farming.") & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Achievements", "TxtUnBrkMaxGold_Info_02", "Input amount of Gold you need to attract enemy or for upgrades."))
 			GUICtrlSetLimit(-1, 7)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 170, $y + 2, 16, 16)
 
 	$y += 26
-		$g_hTxtUnBrkMinElixir = GUICtrlCreateInput("50000", $x + 20, $y, 58, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtUnBrkMinElixir = _GUICtrlCreateInput("50000", $x + 20, $y, 58, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Achievements", "TxtUnBrkMinElixir_Info_01", "Amount of Elixir that stops Defense farming, switches to normal farming if below.") & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Achievements", "TxtUnBrkMinElixir_Info_02", "Set this value to amount of Elixir you need for making troops or upgrades."))
 			GUICtrlSetLimit(-1, 7)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnElixir, $x + 80, $y, 16, 16)
-		$g_hTxtUnBrkMaxElixir = GUICtrlCreateInput("600000", $x + 110, $y, 58, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtUnBrkMaxElixir = _GUICtrlCreateInput("600000", $x + 110, $y, 58, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Achievements", "TxtUnBrkMaxElixir_Info_01", "Amount of Elixir in Storage Required to Enable Defense Farming.") & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Achievements", "TxtUnBrkMaxElixir_Info_02", "Input amount of Elixir you need to attract enemy or for upgrades."))
 			GUICtrlSetLimit(-1, 7)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnElixir, $x + 170, $y, 16, 16)
 
 	$y += 24
-		$g_hTxtUnBrkMinDark = GUICtrlCreateInput("5000", $x + 20, $y, 58, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtUnBrkMinDark = _GUICtrlCreateInput("5000", $x + 20, $y, 58, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Achievements", "TxtUnBrkMinDark_Info_01", "Amount of Dark Elixir that stops Defense farming, switches to normal farming if below.") & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Achievements", "TxtUnBrkMinDark_Info_02", "Set this value to amount of Dark Elixir you need for making troops or upgrades."))
 			GUICtrlSetLimit(-1, 6)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 80, $y, 16, 16)
-		$g_hTxtUnBrkMaxDark = GUICtrlCreateInput("6000", $x + 110, $y, 58, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtUnBrkMaxDark = _GUICtrlCreateInput("6000", $x + 110, $y, 58, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Achievements", "TxtUnBrkMaxDark_Info_01", "Amount of Dark Elixir in Storage Required to Enable Defense Farming.") & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Achievements", "TxtUnBrkMaxDark_Info_02", "Input amount of Dark Elixir you need to attract enemy or for upgrades."))
 			GUICtrlSetLimit(-1, 6)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 170, $y, 16, 16)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 

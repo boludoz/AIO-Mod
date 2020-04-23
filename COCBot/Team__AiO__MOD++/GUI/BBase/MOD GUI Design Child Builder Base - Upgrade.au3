@@ -84,7 +84,7 @@ Func CreateUpgradeBuilderBaseSubTab()
 		$g_hLblBBWallCost = GUICtrlCreateLabel("10 000", $x + 175, $y + 71, 50, -1, $SS_RIGHT)
 		$g_hLblBBWallNumberInfo = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Upgrade", "LblBBWallNumberInfo", "Wall Counter") & ":", $x + 290, $y + 71, 80, -1)
 			GUICtrlSetState(-1, $GUI_HIDE)
-		$g_hTxtBBWallNumber = GUICtrlCreateInput("0", $x + 360, $y + 68, 40, -1, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtBBWallNumber = _GUICtrlCreateInput("0", $x + 360, $y + 68, 40, -1, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			GUICtrlSetState(-1, $GUI_HIDE)
 
 		$g_hPicBBWallUpgrade = _GUICtrlCreateIcon($g_sLibBBIconPath, 11, $x + 345, $y, 64, 64)

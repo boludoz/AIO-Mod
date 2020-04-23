@@ -88,9 +88,9 @@ Func CreateAttackPlanBuilderBaseSubTab()
 
 		$g_hChkBBTrophiesRange = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "ChkBBDropTrophies", "Trophies Range") & ": ", $x + 100, $y + 15, -1, -1)
 			GUICtrlSetOnEvent(-1, "chkBBtrophiesRange")
-			$g_hTxtBBDropTrophiesMin = GUICtrlCreateInput("1250", $x + 203, $y + 15, 40, -1, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+			$g_hTxtBBDropTrophiesMin = _GUICtrlCreateInput("1250", $x + 203, $y + 15, 40, -1, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			$g_hLblBBDropTrophiesDash = GUICtrlCreateLabel("-", $x + 245, $y + 15 + 2)
-			$g_hTxtBBDropTrophiesMax = GUICtrlCreateInput("2500", $x + 250, $y + 15, 40, -1, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+			$g_hTxtBBDropTrophiesMax = _GUICtrlCreateInput("2500", $x + 250, $y + 15, 40, -1, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			
 		$g_hChkBBRandomAttack = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "ChkBBRandomAttack ", "Random Attack"), $x + 300, $y + 15, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "ChkBBRandomAttack_Info_01", "Select 3 attacks and the bot will select the best to use according with opponent!") & @CRLF & _

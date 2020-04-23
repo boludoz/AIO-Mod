@@ -33,9 +33,10 @@ Func CreateAttackSearchOptionsTrophySettings()
 	$x += 50
 		$g_hChkTrophyRange = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-TrophySettings", "ChkTrophyRange", "Trophy range") & ":", $x + 20, $y, -1, -1)
 			GUICtrlSetOnEvent(-1, "chkTrophyRange")
-		$g_hTxtDropTrophy = GUICtrlCreateInput("5000", $x + 110, $y, 35, -1, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtDropTrophy = _GUICtrlCreateInput("5000", $x + 110, $y, 35, -1, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			GUICtrlSetLimit(-1, 4)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-TrophySettings", "TxtDropTrophy_Info_01", "MIN: The Bot will drop trophies until below this value."))
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			GUICtrlSetOnEvent(-1, "TxtDropTrophy")
@@ -63,9 +64,10 @@ Func CreateAttackSearchOptionsTrophySettings()
 		GUICtrlSetColor(-1, $COLOR_BLACK)
 
 		GUICtrlCreateLabel("-", $x + 148, $y + 4, -1, -1)
-		$g_hTxtMaxTrophy = GUICtrlCreateInput("5000", $x + 155, $y, 35, -1, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtMaxTrophy = _GUICtrlCreateInput("5000", $x + 155, $y, 35, -1, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			GUICtrlSetLimit(-1, 4)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-TrophySettings", "TxtMaxTrophy_Info_01", "MAX: The Bot will drop trophies if your trophy count is greater than this value."))
 			GuiCtrlSetState(-1,$GUI_DISABLE)
 			GUICtrlSetOnEvent(-1, "TxtMaxTrophy")
@@ -143,10 +145,11 @@ Func CreateAttackSearchOptionsTrophySettings()
 		$g_hLblDropTrophyArmyMin = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-TrophySettings", "LblDropTrophyArmyMin", "Wait until Army Camp are at least") & " " & ChrW(8805), $x + 16, $y + 6, 200, -1, $SS_LEFT)
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Options-TrophySettings", "LblDropTrophyArmyMin_Info_01", "Enter the percent of full army required for dead base attack before starting trophy drop.")
 			_GUICtrlSetTip(-1, $sTxtTip)
-		$g_hTxtDropTrophyArmyMin = GUICtrlCreateInput("70", $x + 215, $y + 2, 27, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtDropTrophyArmyMin = _GUICtrlCreateInput("70", $x + 215, $y + 2, 27, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 2)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
+			
+
 			GUICtrlSetState (-1, $GUI_DISABLE)
 		$g_hLblDropTrophyArmyPercent = GUICtrlCreateLabel("%", $x + 245, $y + 6, -1, -1)
 	#Region - Drop trophy - Team AiO MOD++
