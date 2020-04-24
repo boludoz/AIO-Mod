@@ -9,6 +9,20 @@
 		• CSV: 
 			- Add hero if it doesn't exist in CSV.
 			
+	**V3.3.4**
+		» Fixed:
+			• Litle code in BB Attack changes.
+			
+			• Legacy MyBot code compared:
+				- Break on Champion Activation fixed.
+			
+			• Remain system more smart: it drop Heros and CC/Sieges one time.
+
+		» Improved:
+			• Code checked.
+				- GUI Improvements.
+				- Code cleaned.
+				
 	**V3.3.2**
 
 		» Fixed:

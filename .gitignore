@@ -18,3 +18,4 @@ build_compile_only.bat
 build_zip_only.bat
 BuildMBR.exe
 *.zip
+lib/

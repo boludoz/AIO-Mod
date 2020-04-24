@@ -13,6 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func ParseAttackCSV($debug = False)
+	Local $bFoundCC = False, $bRemainDropKing = False, $bRemainDropQueen = False, $bRemainDropWarden = False, $bRemainDropChampion = False ; Custom remain - Team AIO Mod++
 
 	Local $bForceSideExist = False
 	Local $sErrorText, $sTargetVectors = ""
@@ -427,22 +428,47 @@ Func ParseAttackCSV($debug = False)
 											EndIf
 										Next
 									Next
+									#EndRegion - Custom remain - Team AIO Mod++
 									; Loop on all detected troops And Check If Heroes Or Siege Was Not Dropped
 									For $i = 0 To UBound($g_avAttackTroops) - 1
-										Local $bFoundSpecialTroop = False
 										Local $iTroopKind = $g_avAttackTroops[$i][0]
 										If $iTroopKind = $eCastle Or $iTroopKind = $eWallW Or $iTroopKind = $eBattleB Or $iTroopKind = $eStoneS Or $iTroopKind = $eSiegeB Then
-											$bFoundSpecialTroop = True
+											If $bFoundCC = False Then
+												Setlog("- Remain CC drop: " & GetTroopName($iTroopKind, 0), $COLOR_INFO)
+												DropTroopFromINI($value1, $index1, $index2, $indexArray, 1, 1, GetTroopName($iTroopKind, 1, True), $delaypoints1, $delaypoints2, $delaydrop1, $delaydrop2, $sleepdrop1, $sleepdrop2, $sleepbeforedrop1, $sleepbeforedrop2, $debug)
+												CheckHeroesHealth()
+												If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
+												$bFoundCC = True
+											EndIf
 										ElseIf ($iTroopKind = $eKing And Not $g_bDropKing) Or ($iTroopKind = $eQueen And Not $g_bDropQueen) Or ($iTroopKind = $eWarden And Not $g_bDropWarden) Or ($iTroopKind = $eChampion And Not $g_bDropChampion) Then
-											$bFoundSpecialTroop = True
-										EndIf
-										If $bFoundSpecialTroop Then
-											Setlog("Name: " & GetTroopName($iTroopKind, 0), $COLOR_DEBUG)
-											DropTroopFromINI($value1, $index1, $index2, $indexArray, $g_avAttackTroops[$i][1], $g_avAttackTroops[$i][1], GetTroopName($iTroopKind, 1, True), $delaypoints1, $delaypoints2, $delaydrop1, $delaydrop2, $sleepdrop1, $sleepdrop2, $sleepbeforedrop1, $sleepbeforedrop2, $debug)
-											CheckHeroesHealth()
-											If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
+											
+											Local $bFoundHero = False
+											
+											Select
+												Case BitAnd(($iTroopKind = $eKing), not $bRemainDropKing)
+													$bFoundHero = True
+													$bRemainDropKing = True
+												Case BitAnd(($iTroopKind = $eQueen), not $bRemainDropQueen)
+													$bFoundHero = True
+													$bRemainDropQueen = True
+												Case BitAnd(($iTroopKind = $eWarden), not $bRemainDropWarden)
+													$bFoundHero = True
+													$bRemainDropWarden = True
+												Case BitAnd(($iTroopKind = $eChampion), not $bRemainDropChampion)
+													$bFoundHero = True
+													$bRemainDropChampion = True
+											EndSelect
+								
+											If $bFoundHero Then
+												Setlog("- Remain hero drop: " & GetTroopName($iTroopKind, 0), $COLOR_INFO)
+												DropTroopFromINI($value1, $index1, $index2, $indexArray, 1, 1, GetTroopName($iTroopKind, 1, True), $delaypoints1, $delaypoints2, $delaydrop1, $delaydrop2, $sleepdrop1, $sleepdrop2, $sleepbeforedrop1, $sleepbeforedrop2, $debug)
+												CheckHeroesHealth()
+												If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
+											EndIf
+											
 										EndIf
 									Next
+									#Region - Custom remain - Team AIO Mod++
 								EndIf
 							Else
 								DropTroopFromINI($value1, $index1, $index2, $indexArray, $qty1, $qty2, $value4, $delaypoints1, $delaypoints2, $delaydrop1, $delaydrop2, $sleepdrop1, $sleepdrop2, $sleepbeforedrop1, $sleepbeforedrop2, $debug)

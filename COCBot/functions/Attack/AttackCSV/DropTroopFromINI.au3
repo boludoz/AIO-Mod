@@ -232,30 +232,35 @@ Func DropTroopFromINI($vectors, $indexStart, $indexEnd, $indexArray, $qtaMin, $q
 							Else
 								dropHeroes($pixel[0], $pixel[1], $troopPosition, -1, -1) ; was $g_iKingSlot, Slot11+
 							EndIf
+							ExitLoop 2 ; Custom remain - Team AIO Mod++
 						Case $eQueen
 							If $debug = True Then
 								SetLog("dropHeroes(" & $pixel[0] & ", " & $pixel[1] & ",-1," & $troopPosition & ", -1) ")
 							Else
 								dropHeroes($pixel[0], $pixel[1], -1, $troopPosition, -1) ; was $g_iQueenSlot, Slot11+
 							EndIf
+							ExitLoop 2 ; Custom remain - Team AIO Mod++
 						Case $eWarden
 							If $debug = True Then
 								SetLog("dropHeroes(" & $pixel[0] & ", " & $pixel[1] & ", -1, -1," & $troopPosition & ") ")
 							Else
 								dropHeroes($pixel[0], $pixel[1], -1, -1, $troopPosition) ; was $g_iWardenSlot, Slot11+
 							EndIf
+							ExitLoop 2 ; Custom remain - Team AIO Mod++
 						Case $eChampion
 							If $debug = True Then
 								SetLog("dropHeroes(" & $pixel[0] & ", " & $pixel[1] & ",-1," & $troopPosition & ", -1) ")
 							Else
 								dropHeroes($pixel[0], $pixel[1], -1, $troopPosition, -1) ; was $g_iChampionSlot, Slot11+
 							EndIf
+							ExitLoop 2 ; Custom remain - Team AIO Mod++
 						Case $eCastle, $eWallW, $eBattleB, $eStoneS, $eSiegeB
 							If $debug = True Then
 								SetLog("dropCC(" & $pixel[0] & ", " & $pixel[1] & ", " & $troopPosition & ")")
 							Else
 								dropCC($pixel[0], $pixel[1], $troopPosition)
 							EndIf
+							ExitLoop 2
 						Case $eLSpell To $eBtSpell
 							If $debug = True Then
 								SetLog("Drop Spell AttackClick( " & $pixel[0] & ", " & $pixel[1] & " , " & $qty2 & ", " & $delayPoint & ",#0666)")
