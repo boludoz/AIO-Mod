@@ -227,11 +227,12 @@ Func SmartWait4Train($iTestSeconds = Default)
 			Return ; stop trying to close while training this time
 	EndSwitch
 
-	; Max logout time - Team AiO MOD++
+	#Region - Max logout time - Team AiO MOD++
 	If $g_bTrainLogoutMaxTime Then
 		SetLog("Train time = " & StringFormat("%.2f", $iTrainWaitTime) & " minutes, Max Logout Time enabled = " & Number($g_iTrainLogoutMaxTime) & " mins", $COLOR_SUCCESS)
 		$iTrainWaitTime = _Min($iTrainWaitTime, Number($g_iTrainLogoutMaxTime) - 0.4)
 	EndIf
+	#EndRegion - Max logout time - Team AiO MOD++
 
 	If $g_bDebugSetlogTrain Or $g_bDebugSetlog Or $bTest Then
 		SetLog("Training time values: " & StringFormat("%.2f", $g_aiTimeTrain[0]) & " : " & StringFormat("%.2f", $g_aiTimeTrain[1]) & " : " & StringFormat("%.2f", $g_aiTimeTrain[2]), $COLOR_DEBUG)
@@ -289,7 +290,7 @@ Func SmartWait4Train($iTestSeconds = Default)
 			;when no shield close game for $iTrainWaitTime time as determined above
 			SetLog("Smart Wait time = " & StringFormat("%.2f", $iTrainWaitTime / 60) & " Minutes", $COLOR_INFO)
 			If $g_bNotifyTGEnable And $g_bNotifyAlertSmartWaitTime Then NotifyPushToTelegram($g_sNotifyOrigin & " : " & "%0A" & GetTranslatedFileIni("MBR Func_Notify", "Smart-Wait-Time_Info_05", "Smart Wait Time = ") & StringFormat("%.2f", $iTrainWaitTime / 60) & GetTranslatedFileIni("MBR Func_Notify", "Smart-Wait-Time_Info_02", " Minutes") & "%0A" & GetTranslatedFileIni("MBR Func_Notify", "Smart-Wait-Time_Info_03", "Wait For Troops Ready"))
-				If $bTest Then $iTrainWaitTime = $iTestSeconds
+			If $bTest Then $iTrainWaitTime = $iTestSeconds
 			UniversalCloseWaitOpenCoC($iTrainWaitTime * 1000, "SmartWait4TrainNoShield_", $StopEmulator, $bFullRestart, $bSuspendComputer)
 			$g_bRestart = True ; Set flag to exit idle loop to deal with potential user changes to GUI
 			ResetTrainTimeArray()

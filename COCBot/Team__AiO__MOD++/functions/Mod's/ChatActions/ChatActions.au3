@@ -71,7 +71,7 @@ EndFunc   ;==>DelayTime
 
 Func ChatActions() ; run the chatbot
 
-	If BitOr($g_bChatClan, BitAND($g_bEnableFriendlyChallenge, Not $g_bStayOnBuilderBase)) Then
+	If $g_bChatClan Or BitAND($g_bEnableFriendlyChallenge, Not $g_bStayOnBuilderBase) Then
 		If Not OpenClanChat() Then
 			Setlog("ChatActions : OpenClanChat Error.", $COLOR_ERROR)
 			AndroidPageError("ChatActions")

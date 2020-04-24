@@ -10,3 +10,11 @@ MyBot.run.Wmi_stripped.au3
 MyBot.run.Wmi.exe
 MyBot.run_stripped.au3
 Profiles/
+build/
+build.bat
+build_retry.bat
+build_delete_compile.bat
+build_compile_only.bat
+build_zip_only.bat
+BuildMBR.exe
+*.zip

@@ -107,3 +107,7 @@ Global Const $g_sImgReportResultBB = $g_sModImageLocation & "\BuildersBase\Attac
 Global Const $g_sBundleWallsBB = $g_sModImageLocation & "\BuildersBase\Bundles\Walls"
 ;Global Const $g_aBundleWallsBBParms[3] = [0, "0,50,860,732", False] ; [0] Quantity2Match [1] Area2Search [2] ForceArea
 #EndRegion Builder Base Walls Upgrade
+
+#Region - MagicItems
+Global Const $g_sImgTraderMod = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Traderfix"
+#EndRegion - MagicItems

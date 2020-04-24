@@ -11,7 +11,7 @@
 
 Func _Wait4Pixel($x, $y, $sColor, $iColorVariation, $iWait = 1000, $iDelay = 100, $sMsglog = Default) ; Return true if pixel is true
 	Local $hTimer = __TimerInit()
-	While BitOr($iWait > __TimerDiff($hTimer), $iWait <= 0) ; '-1' support
+	While (BitOr($iWait > __TimerDiff($hTimer), ($iWait <= 0)) > 0) ; '-1' support
 		ForceCaptureRegion()
 		If _CheckColorPixel($x, $y, $sColor, $iColorVariation, True, $sMsglog) Then Return True
 		If _Sleep($iDelay) Then Return False
@@ -22,7 +22,7 @@ EndFunc   ;==>_Wait4Pixel
 
 Func _Wait4PixelGone($x, $y, $sColor, $iColorVariation, $iWait = 1000, $iDelay = 100, $sMsglog = Default) ; Return true if pixel is false
 	Local $hTimer = __TimerInit()
-	While BitOr($iWait > __TimerDiff($hTimer), ($iWait <= 0)) ; '-1' support
+	While (BitOr($iWait > __TimerDiff($hTimer), ($iWait <= 0)) > 0) ; '-1' support
 		ForceCaptureRegion()
 		If Not _CheckColorPixel($x, $y, $sColor, $iColorVariation, True, $sMsglog) Then Return True ; diff
 		If _Sleep($iDelay) Then Return False
@@ -70,7 +70,7 @@ Func MultiPSimple($iLeft, $iTop, $iRight, $iBottom, $iHex, $iTolerance = 15, $iW
 	Local $aReturn[2] = [0, 0]
 
 	Local $hTimer = __TimerInit()
-	While BitOr($iWait > __TimerDiff($hTimer), $iWait <= 0) ; '-1' support
+	While (BitOr($iWait > __TimerDiff($hTimer), ($iWait <= 0)) > 0) ; '-1' support
 		If _Sleep($iDelay) Then Return False
 		
 		Local $xRange
@@ -126,7 +126,7 @@ Func _Wait4PixelArray($aSettings) ; Return true if pixel is true
 	Local $sMsglog = (UBound($aSettings) > 6) ? ($aSettings[6]) : (Default)
 	
 	Local $hTimer = __TimerInit()
-	While BitOr($iWait > __TimerDiff($hTimer), $iWait <= 0) ; '-1' support
+	While (BitOr($iWait > __TimerDiff($hTimer), ($iWait <= 0)) > 0) ; '-1' support
 		ForceCaptureRegion()
 		If _CheckColorPixel($x, $y, $sColor, $iColorVariation, True, $sMsglog) Then Return True
 		If _Sleep($iDelay) Then Return False
@@ -145,7 +145,7 @@ Func _Wait4PixelGoneArray($aSettings) ; Return true if pixel is false
 	Local $sMsglog = (UBound($aSettings) > 6) ? ($aSettings[6]) : (Default)
 
 	Local $hTimer = __TimerInit()
-	While BitOr($iWait > __TimerDiff($hTimer), ($iWait <= 0)) ; '-1' support
+	While (BitOr($iWait > __TimerDiff($hTimer), ($iWait <= 0)) > 0) ; '-1' support
 		ForceCaptureRegion()
 		If Not _CheckColorPixel($x, $y, $sColor, $iColorVariation, True, $sMsglog) Then Return True ; diff
 		If _Sleep($iDelay) Then Return False
@@ -156,7 +156,7 @@ EndFunc   ;==>_Wait4PixelGoneArray
 
 Func _WaitForCheckXML($pathImage, $SearchZone, $ForceArea = True, $iWait = 10000, $iDelay = 250)
     Local $hTimer = __TimerInit()
-    While BitOr($iWait > __TimerDiff($hTimer), $iWait <= 0) ; '-1' support
+	While (BitOr($iWait > __TimerDiff($hTimer), ($iWait <= 0)) > 0) ; '-1' support
     Local $aRetutn = _ImageSearchXML($pathImage, 1000, $SearchZone)
         If (UBound($aRetutn) > 0) Then Return True
         If _Sleep($iDelay) Then Return False

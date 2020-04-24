@@ -121,7 +121,7 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 		For $iCoords = 0 To UBound($aCoords) - 1
 			$aCommaCoord = StringSplit($aCoords[$iCoords], ",", 2)
 			; Inspired in Chilly-chill
-			If BitOR(($aiPostFix[0] > $aCommaCoord[0]), ($aiPostFix[1] > $aCommaCoord[1]), ($aiPostFix[2] < $aCommaCoord[0]), ($aiPostFix[3] < $aCommaCoord[1])) Then ContinueLoop
+			If BitOR(($aiPostFix[0] > $aCommaCoord[0]), ($aiPostFix[1] > $aCommaCoord[1]), ($aiPostFix[2] < $aCommaCoord[0]), ($aiPostFix[3] < $aCommaCoord[1])) <> 0 Then ContinueLoop
 			Local $aTmpResults[1][4] = [[$aArrays[0], Int($aCommaCoord[0]), Int($aCommaCoord[1]), Int($aArrays[1])]]
 			_ArrayAdd($AllResults, $aTmpResults)
 		Next

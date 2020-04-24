@@ -57,7 +57,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $AvailableTroops)
 	Static $lastScript
 	
 	If ($g_iCmbBBAttack = $g_eBBAttackCSV) And $g_bChkBBGetFromCSV Then
-	
+		
 		If Not $g_bChkBBRandomAttack Then
 			$lastScript = 0
 			$g_iBuilderBaseScript = 0
@@ -77,7 +77,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $AvailableTroops)
 		Local $FileNamePath = @ScriptDir & "\CSV\BuilderBase\" & $g_sAttackScrScriptNameBB[$g_iBuilderBaseScript] & ".csv"
 		If FileExists($FileNamePath) Then $aLines = FileReadToArray($FileNamePath)
 
-	ElseIf not ($g_iCmbBBAttack = $g_eBBAttackCSV) Then
+	ElseIf Not ($g_iCmbBBAttack = $g_eBBAttackCSV) Then
 		Local $aLines[0]
 		Local $sName = "CAMP" & "|"
 		For $iName = 0 To UBound($g_iCmbCampsBB) - 1
@@ -87,7 +87,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $AvailableTroops)
 			Local $aFakeCsv[1] = [$sName]
 			_ArrayAdd($aLines, $aFakeCsv)
 		Next
-		ElseIf not $g_bChkBBGetFromCSV Then
+	ElseIf Not $g_bChkBBGetFromCSV Then
 		Setlog("Get from CSV unselected.", $COLOR_ERROR)
 		Return
 	EndIf
@@ -160,14 +160,14 @@ Func BuilderBaseSelectCorrectScript(ByRef $AvailableTroops)
 	Local $avoidInfLoop = 0
 
 	Local $aSwicthBtn[6] = [112, 180, 253, 327, 398, 471]
-	Local $aPointSwitch = [$aSwicthBtn[Random(0, UBound($aSwicthBtn)-1, 1)] + Random(0,5,1), 708 + Random(0,5,1)]
+	Local $aPointSwitch = [$aSwicthBtn[Random(0, UBound($aSwicthBtn) - 1, 1)] + Random(0, 5, 1), 708 + Random(0, 5, 1)]
 	
 	For $i = 0 To $CampsQuantities - 1
 		If Not $g_bRunState Then Return
 		If StringCompare($NewAvailableTroops[$i][0], $aCamps[$i]) <> 0 Then
 			$Waschanged = True
 			Setlog("Incorrect troop On Camp " & $i + 1 & " - " & $NewAvailableTroops[$i][0] & " -> " & $aCamps[$i])
-			Local $aPointSwitch = [$aSwicthBtn[$i] + Random(0,5,1), 708 + Random(0,5,1)]
+			Local $aPointSwitch = [$aSwicthBtn[$i] + Random(0, 5, 1), 708 + Random(0, 5, 1)]
 			Setlog("Click Switch Button " & $i, $COLOR_INFO)
 			PureClick($aPointSwitch[0], $aPointSwitch[1], 1, 0)
 			If Not $g_bRunState Then Return
@@ -207,7 +207,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $AvailableTroops)
 			Next
 		EndIf
 	Next
-    If _WaitForCheckXML($g_sImgCustomArmyBB, "0,681,860,728", True, 1000, 100) Then ClickP($aPointSwitch)
+	If _WaitForCheckXML($g_sImgCustomArmyBB, "0,681,860,728", True, 1000, 100) Then ClickP($aPointSwitch)
 	If Not $Waschanged Then Return
 
 	If _Sleep(500) Then Return

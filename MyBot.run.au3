@@ -597,6 +597,8 @@ Func FinalInitialization(Const $sAI)
 			SetDebugLog("Linked to GUI Process " & $g_iGuiPID)
 		EndIf
 	EndIf
+	
+	Local $aBotGitVersion = CheckModVersion(True) ; Update check without delay - Team AIO Mod++
 
 	; destroy splash screen here (so we witness the 100% ;)
 	DestroySplashScreen(False)
@@ -608,18 +610,19 @@ Func FinalInitialization(Const $sAI)
 	; allow now other bots to launch
 	DestroySplashScreen()
 
-	Local $aBotGitVersion = CheckModVersion(True)
-	
-	If IsArray($aBotGitVersion) And UBound($aBotGitVersion) < 1 Then
+	#Region - Update check without delay - Team AIO Mod++
+	If IsArray($aBotGitVersion) And UBound($aBotGitVersion) = 2 Then
 		SetLog(" ")
-		SetLog(" •  " & "AIO++ MOD " & $g_sModVersion, ($aBotGitVersion[1] = False) ? ($COLOR_SUCCESS) : ($COLOR_ERROR), "Candara", 9)
-		SetLog(" •  " & "AIO++ MOD LAST VERSION " & $aBotGitVersion[0], ($aBotGitVersion[1] = False) ? ($COLOR_SUCCESS) : ($COLOR_ERROR), "Candara", 9)
-		SetLog(" •  " & "Based On MBR " & $g_sBotVersion, $COLOR_SUCCESS, "Candara", 9)
-		SetLog(" •  " & "Create a New Profile", $COLOR_SUCCESS, "Candara", 9)
-		SetLog(" •  " & "Participants and thanks: Nguyen, Chilly-Chill, Eloy, Boldina, Demen, Samkie, and ChacalGyn, all moders and MyBot/Aio Team.", $COLOR_SUCCESS, "Candara", 9)
+		SetLog(" •  " & "AIO++ MOD " & $g_sModVersion, ($aBotGitVersion[1] = False) ? ($COLOR_SUCCESS) : ($COLOR_ERROR))
+		SetLog(" •  " & "AIO++ MOD LAST VERSION " & $aBotGitVersion[0], ($aBotGitVersion[1] = False) ? ($COLOR_SUCCESS) : ($COLOR_ERROR))
+		SetLog(" •  " & "Based On MBR " & $g_sBotVersion, $COLOR_SUCCESS)
+		SetLog(" •  " & "Create a New Profile", $COLOR_SUCCESS)
+		SetLog(" •  " & "Participants and thanks: Nguyen, Chilly-Chill, Eloy, Boldina, Demen,", $COLOR_SUCCESS)
+		SetLog(" •  " & "Samkie, and ChacalGyn, all moders and MyBot/Aio Team.", $COLOR_SUCCESS)
 		SetLog(" ")
 	EndIf
-	
+	#EndRegion - Update check without delay - Team AIO Mod++
+
 	; InitializeVariables();initialize variables used in extrawindows
 	CheckVersion() ; check latest version on mybot.run site
 	UpdateMultiStats()

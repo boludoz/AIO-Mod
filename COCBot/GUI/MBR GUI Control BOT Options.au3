@@ -457,7 +457,7 @@ Func chkDebugOcr()
 	SetDebugLog("DebugOcr " & ($g_bDebugOcr ? "enabled" : "disabled"))
 EndFunc   ;==>chkDebugOcr
 
-Func chkSaveDebugImage()
+Func chkDebugImageSave()
 	$g_bDebugImageSave = (GUICtrlRead($g_hChkDebugImageSave) = $GUI_CHECKED)
 	SetDebugLog("DebugImageSave " & ($g_bDebugImageSave ? "enabled" : "disabled"))
 EndFunc   ;==>chkDebugImageSave
@@ -634,16 +634,6 @@ Func btnTestImage()
 		SetLog("$aNoCloudsAttack pixel check: " & _CheckPixel($aNoCloudsAttack, $g_bCapturePixel))
 		SetLog("Testing WaitForClouds DONE", $COLOR_SUCCESS)
 
-		#cs
-			SetLog("Testing checkAttackDisable...", $COLOR_SUCCESS)
-			SetLog("Testing checkAttackDisable($g_iTaBChkAttack)...", $COLOR_SUCCESS)
-			SetLog("checkAttackDisable($g_iTaBChkAttack) = " & checkAttackDisable($g_iTaBChkAttack))
-			SetLog("Testing checkAttackDisable($g_iTaBChkIdle)...", $COLOR_SUCCESS)
-			SetLog("checkAttackDisable($g_iTaBChkIdle) = " & checkAttackDisable($g_iTaBChkIdle))
-			SetLog("Testing checkAttackDisable($g_iTaBChkTime)...", $COLOR_SUCCESS)
-			SetLog("checkAttackDisable($g_iTaBChkTime) = " & checkAttackDisable($g_iTaBChkTime))
-			SetLog("Testing checkAttackDisable DONE", $COLOR_SUCCESS)
-		#ce
 	Next
 
 	SetLog("Testing finished", $COLOR_INFO)
@@ -1150,16 +1140,16 @@ Func btnTestUpgradeWindow()
 EndFunc   ;==>btnTestUpgradeWindow
 
 Func btnTestSmartWait()
-	Local $currentRunState = $g_bRunState
-	Local $bCloseWhileTrainingEnable = $g_bCloseWhileTrainingEnable
+    Local $currentRunState = $g_bRunState
+    Local $bCloseWhileTrainingEnable = $g_bCloseWhileTrainingEnable
 
-	$g_bRunState = True
-	$g_bCloseWhileTrainingEnable = True
+    $g_bRunState = True
+    $g_bCloseWhileTrainingEnable = True
 
-	SmartWait4Train(20)
+    SmartWait4Train(20)
 
-	$g_bRunState = $currentRunState
-	$g_bCloseWhileTrainingEnable = $bCloseWhileTrainingEnable
+    $g_bRunState = $currentRunState
+    $g_bCloseWhileTrainingEnable = $bCloseWhileTrainingEnable
 EndFunc   ;==>btnTestSmartWait
 
 Func btnConsoleWindow()
