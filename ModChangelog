@@ -9,7 +9,7 @@
 		• CSV: 
 			- Add hero if it doesn't exist in CSV.
 			
-	**V3.3.4**
+	**V3.3.5** (ex V3.3.4)
 		» Fixed:
 			• Litle code in BB Attack changes.
 			
@@ -18,6 +18,12 @@
 			
 			• Remain system more smart: it drop Heros and CC/Sieges one time.
 
+			• March update compatibility tweaks:
+				- Daily deals fixed.
+				- Clan games fixed. (thx @sabit12358)
+				
+			• Drop Throphy fixed. (thx @esbestan)
+			
 		» Improved:
 			• Code checked.
 				- GUI Improvements.

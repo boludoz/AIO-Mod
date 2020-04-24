@@ -22,12 +22,14 @@ Func DropTrophy($bDebug = False) ; Drop Throphy - Team AIO Mod++
 		If $g_bChkNoDropIfShield Then
 			Local $aResult = getShieldInfo() ; get expire time of shield
 			If IsArray($aResult) Then
-				SetDebuglog("Drop trophy : " & $aResult[0], $COLOR_ERROR)
-				If BitOr($aResult[0] <> "none", $aResult[0] = "shield", $aResult[0] = "guard") Then 
-					Setlog("Active " & $aResult[0] & " , jumping Drop Trophy.", $COLOR_INFO)
+				SetDebuglog("Drop trophy : " & $aResult[0], $COLOR_DEBUG)
+				If ($aResult[0] = "shield") Then
+					Setlog("Active " & $aResult[0] & ", jumping drop trophy.", $COLOR_ACTION)
 					Return
+				ElseIf ($aResult[0] <> "none") Or ($aResult[0] = "guard") Then
+					Setlog("Active " & $aResult[0] & ", Drop Trophy on.", $COLOR_INFO)
 				EndIf
-				Else
+			Else
 				Setlog("Error In jumping Drop Trophy.", $COLOR_ERROR)
 			EndIf
 		EndIf
@@ -65,8 +67,8 @@ Func DropTrophy($bDebug = False) ; Drop Throphy - Team AIO Mod++
 				EndIf
 			EndIf
 		Next
-			
-		Local $bHaveHero = False	
+		
+		Local $bHaveHero = False
 
 		; if heroes enabled, check them and reset drop trophy disable
 		If $g_iHeroAvailable > 0 Then
@@ -103,9 +105,9 @@ Func DropTrophy($bDebug = False) ; Drop Throphy - Team AIO Mod++
 			SetLog("Trophy Count : " & $g_aiCurrentLoot[$eLootTrophy], $COLOR_SUCCESS)
 			If Number($g_aiCurrentLoot[$eLootTrophy]) > Number($g_iDropTrophyMaxNeedCheck) Then
 				
-				If not $bDebug Then ; Drop Throphy - Team AIO Mod++
+				If Not $bDebug Then ; Drop Throphy - Team AIO Mod++
 					; Check for enough troops before starting base search to save search costs
-					If $g_bDropTrophyAtkDead and not $g_bDropTrophyUseHeroes Then
+					If $g_bDropTrophyAtkDead And Not $g_bDropTrophyUseHeroes Then
 						; If attack dead bases during trophy drop is enabled then make sure we have enough army troops
 						If ($g_CurrentCampUtilization <= ($g_iTotalCampSpace * $DTArmyPercent)) Then ; check if current troops above setting
 							SetLog("Drop Trophy is waiting for " & $g_iDropTrophyArmyMinPct & "% full army to also attack Deadbases.", $COLOR_ACTION)
@@ -118,23 +120,23 @@ Func DropTrophy($bDebug = False) ; Drop Throphy - Team AIO Mod++
 						#Region - Drop Throphy - Team AIO Mod++
 						Switch True
 							Case $g_bChkTrophyHeroesAndTroops
-								If ($g_CurrentCampUtilization < 5) And ($g_iHeroAvailable = $eHeroNone) Then 
+								If ($g_CurrentCampUtilization < 5) And ($g_iHeroAvailable = $eHeroNone) Then
 									SetLog("DropTrophy, no hero or troops ready.", $COLOR_INFO)
 									ExitLoop ; no troops then cycle again
 								EndIf
 							Case $g_hChkTrophyTroops
-								If ($g_CurrentCampUtilization < 5) Then 
+								If ($g_CurrentCampUtilization < 5) Then
 									SetLog("DropTrophy, no troops ready.", $COLOR_INFO)
 									ExitLoop ; no troops then cycle again
 								EndIf
 							Case $g_bDropTrophyUseHeroes
-								If ($g_iHeroAvailable = $eHeroNone) Then 
+								If ($g_iHeroAvailable = $eHeroNone) Then
 									SetLog("DropTrophy, no hero ready.", $COLOR_INFO)
 									ExitLoop ; no troops then cycle again
 								EndIf
 							Case Else
 								SetLog("DropTrophy error, no radio selected.", $COLOR_ERROR)
-							ExitLoop ; no troops then cycle again
+								ExitLoop ; no troops then cycle again
 						EndSwitch
 					EndIf
 					#EndRegion - Drop Throphy - Team AIO Mod++

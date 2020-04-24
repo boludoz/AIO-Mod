@@ -420,9 +420,9 @@ EndFunc   ;==>_ClanGames
 Func IsClanGamesWindow($getCapture = True)
 	Local $aGameTime[4] = [384, 388, 0xFFFFFF, 10]
 
-	If QuickMIS("BC1", $g_sImgCaravan, 200, 55, 300, 135, $getCapture, False) Then
+	If QuickMIS("BC1", $g_sImgCaravan, 179, 48, 378, 177, $getCapture, False) Then
 		SetLog("Caravan available! Entering Clan Games", $COLOR_SUCCESS)
-		Click($g_iQuickMISX + 200, $g_iQuickMISY + 55)
+		Click($g_iQuickMISX + Random(170, 185, 1), $g_iQuickMISY + Random(35, 55, 1))
 		; Just wait for window open
 		If _Sleep(1500) Then Return
 		If QuickMIS("BC1", $g_sImgReward, 760, 480, 830, 570, $getCapture, $g_bChkClanGamesDebug) Then
