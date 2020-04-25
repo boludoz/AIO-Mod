@@ -515,27 +515,22 @@ Func ReadConfig_600_11()
 		If $i < $eSpellCount Then $g_aiCCSpellsExpected[$i] = 0
 		If $i < $eSiegeMachineCount Then $g_aiCCSiegeExpected[$i] = 0
 	Next
- 	For $i = 0 To 2
-;~ 		Local $iTempVar ; Fix Custom - Team AIO Mod++
-;~
- 		$g_aiClanCastleTroopWaitType[$i] = Int(IniRead($g_sProfileConfigPath, "donate", "cmbClanCastleTroop" & $i, $eTroopCount))
- 		$g_aiClanCastleTroopWaitQty[$i] = Int(IniRead($g_sProfileConfigPath, "donate", "txtClanCastleTroop" & $i, "0"))
-;~ 		If $g_aiClanCastleTroopWaitType[$i] < $eTroopCount Then ; barb - IceG
-;~ 			$iTempVar = $g_aiClanCastleTroopWaitType[$i] ; Fix Custom - Team AIO Mod++
-;~ 			$g_aiCCTroopsExpected[$iTempVar] += $g_aiClanCastleTroopWaitQty[$i] ; Fix Custom - Team AIO Mod++
-;~ 		EndIf
+	For $i = 0 To 2
+		$g_aiClanCastleTroopWaitType[$i] = Int(IniRead($g_sProfileConfigPath, "donate", "cmbClanCastleTroop" & $i, $eTroopCount))
+		$g_aiClanCastleTroopWaitQty[$i] = Int(IniRead($g_sProfileConfigPath, "donate", "txtClanCastleTroop" & $i, "0"))
+		If $g_aiClanCastleTroopWaitType[$i] < $eTroopCount And $g_aiClanCastleTroopWaitType[$i] > -1 Then ; barb - IceG
+			$g_aiCCTroopsExpected[$g_aiClanCastleTroopWaitType[$i]] += $g_aiClanCastleTroopWaitQty[$i]
+		EndIf
 
 		$g_aiClanCastleSpellWaitType[$i] = Int(IniRead($g_sProfileConfigPath, "donate", "cmbClanCastleSpell" & $i, $eSpellCount))
-;~ 		If $g_aiClanCastleSpellWaitType[$i] < $eSpellCount Then ; LSpell - BtSpell
-;~ 			$iTempVar = $g_aiClanCastleSpellWaitType[$i] ; Fix Custom - Team AIO Mod++
-;~ 			$g_aiCCSpellsExpected[$iTempVar] += 1 ; Fix Custom - Team AIO Mod++
-;~ 		EndIf
+		If $g_aiClanCastleSpellWaitType[$i] < $eSpellCount And $g_aiClanCastleSpellWaitType[$i] > -1 Then ; LSpell - BtSpell
+			$g_aiCCSpellsExpected[$g_aiClanCastleSpellWaitType[$i]] += 1
+		EndIf
 
 		If $i > 1 Then ContinueLoop ; Siege has only 2 combobox
 		$g_aiClanCastleSiegeWaitType[$i] = Int(IniRead($g_sProfileConfigPath, "donate", "cmbClanCastleSiege" & $i, $eSiegeMachineCount))
-;~ 		$iTempVar = $g_aiClanCastleSiegeWaitType[$i] ; Fix Custom - Team AIO Mod++
-;~ 		If $g_aiClanCastleSiegeWaitType[$i] < $eSiegeMachineCount Then $g_aiCCSiegeExpected[$iTempVar] = 1 ; WallW - StoneS ; Fix Custom - Team AIO Mod++
-  	Next
+		If $g_aiClanCastleSiegeWaitType[$i] < $eSiegeMachineCount Then $g_aiCCSiegeExpected[$g_aiClanCastleSiegeWaitType[$i]] = 1 ; WallW - StoneS
+	Next
 
 	$g_abRequestCCHours = StringSplit(IniRead($g_sProfileConfigPath, "planned", "RequestHours", "1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1"), "|", $STR_NOCOUNT)
 	For $i = 0 To 23

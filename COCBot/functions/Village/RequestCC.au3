@@ -254,6 +254,7 @@ Func CheckCCArmy()
 	Local $aTroopWSlot, $aSpellWSlot
 
 	For $i = 0 To 2
+		If $g_aiClanCastleTroopWaitType[$i] < 0 Then $g_aiClanCastleTroopWaitType[$i] = 0 ; Custom fix - Team AIO Mod++
 		If $g_aiClanCastleTroopWaitQty[$i] = 0 And $g_aiClanCastleTroopWaitType[$i] < $eTroopCount Then $g_aiCCTroopsExpected[$g_aiClanCastleTroopWaitType[$i]] = 45 ; expect troop type only. Do not care about qty
 	Next
 
