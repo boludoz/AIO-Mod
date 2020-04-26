@@ -6,9 +6,13 @@
                     Based on MyBot.run v7.8.2 
 >> Next
 
-		• CSV: 
-			- Add hero if it doesn't exist in CSV.
-			
+	**V3.3.6**
+		» Fixed:
+			• Request CC.
+
+		» Added:
+			• Request CC with "AI" system for recognize screen pos. variation.
+
 	**V3.3.5** (ex V3.3.4)
 		» Fixed:
 			• Litle code in BB Attack changes.

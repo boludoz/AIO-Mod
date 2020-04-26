@@ -29,19 +29,19 @@ Func RequestCC($bClickPAtEnd = True, $sText = "", $bRequestFast = $g_bChkReqCCFr
 
 	#Region - Request form chat / on a loop - Team AIO Mod++
 	If $bRequestFast Then
-	
+		
 		If _Sleep($DELAYREQUESTCC1) Then Return
 		SetLog("Requesting Clan Castle reinforcements from chat", $COLOR_INFO)
 		checkAttackDisable($g_iTaBChkIdle) ; Early Take-A-Break detection
 
-		If not OpenClanChat() Then
-				SetDebugLog("RequestCC | Chat open failed.")
-			Else
-				If _Sleep(Random(500, 700, 1)) Then Return
-				
-				Local $vGreen = 0xD7F37F
-				Local $aDonationChat_button = MultiPSimple(7, 688, 65, 723, $vGreen)
-				If IsArray($aDonationChat_button) And not IsArray(MultiPSimple(69, 695, 73, 717, $vGreen)) Then
+		If Not OpenClanChat() Then
+			SetDebugLog("RequestCC | Chat open failed.")
+		Else
+			If _Sleep(Random(500, 700, 1)) Then Return
+			
+			Local $vGreen = 0xD7F37F
+			Local $aDonationChat_button = MultiPSimple(7, 688, 65, 723, $vGreen)
+			If IsArray($aDonationChat_button) And Not IsArray(MultiPSimple(69, 695, 73, 717, $vGreen)) Then
 				
 				If _Sleep(Random(500, 700, 1)) Then Return
 				
@@ -124,6 +124,13 @@ Func RequestCC($bClickPAtEnd = True, $sText = "", $bRequestFast = $g_bChkReqCCFr
 
 EndFunc   ;==>RequestCC
 
+#Region - Custom request - Team AIO Mod++
+Func _makerequest($aButtonPosition)
+	Return FuncReturn(_makerequestCustom($aButtonPosition))
+EndFunc   ;==>_makerequest
+#EndRegion - Custom request - Team AIO Mod++
+
+#cs - Custom request - Team AIO Mod++
 Func _makerequest($aButtonPosition)
 	;click button request troops
 	ClickP($aButtonPosition, 1, 0, "0336") ;Select text for request
@@ -170,6 +177,7 @@ Func _makerequest($aButtonPosition)
 	EndIf
 
 EndFunc   ;==>_makerequest
+#ce - Custom request - Team AIO Mod++
 
 Func IsFullClanCastleType($CCType = 0) ; Troops = 0, Spells = 1, Siege Machine = 2
 	Local $aCheckCCNotFull[3] = [24, 455, 631], $sLog[3] = ["Troop", "Spell", "Siege Machine"]
@@ -254,7 +262,6 @@ Func CheckCCArmy()
 	Local $aTroopWSlot, $aSpellWSlot
 
 	For $i = 0 To 2
-		If $g_aiClanCastleTroopWaitType[$i] < 0 Then $g_aiClanCastleTroopWaitType[$i] = 0 ; Custom fix - Team AIO Mod++
 		If $g_aiClanCastleTroopWaitQty[$i] = 0 And $g_aiClanCastleTroopWaitType[$i] < $eTroopCount Then $g_aiCCTroopsExpected[$g_aiClanCastleTroopWaitType[$i]] = 45 ; expect troop type only. Do not care about qty
 	Next
 
