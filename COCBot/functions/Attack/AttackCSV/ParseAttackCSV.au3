@@ -409,26 +409,29 @@ Func ParseAttackCSV($debug = False)
 						Else
 							; REMAIN CMD from @chalicucu
 							If $value4 = "REMAIN" Then
+								#EndRegion - Custom remain - Team AIO Mod++
+								_ArrayShuffle($g_avAttackTroops)
 								ReleaseClicks()
 								SetLog("Drop|Remain:  Dropping left over troops", $COLOR_INFO)
 								; Let's get the troops again and quantities
 								If PrepareAttack($g_iMatchMode, True) > 0 Then
 									; a Loop from all troops
-									For $ii = $eBarb To $eIceG ; launch all remaining troops
-										; Loop on all detected troops
-										For $x = 0 To UBound($g_avAttackTroops) - 1
-											; If the Name exist and haves more than zero is deploy it
-											If $g_avAttackTroops[$x][0] = $ii And $g_avAttackTroops[$x][1] > 0 Then
-												Local $name = GetTroopName($g_avAttackTroops[$x][0], $g_avAttackTroops[$x][1])
-												SetLog("Name: " & $name, $COLOR_DEBUG)
-												SetLog("Qty: " & $g_avAttackTroops[$x][1], $COLOR_DEBUG)
-												DropTroopFromINI($value1, $index1, $index2, $indexArray, $g_avAttackTroops[$x][1], $g_avAttackTroops[$x][1], $g_asTroopShortNames[$ii], $delaypoints1, $delaypoints2, $delaydrop1, $delaydrop2, $sleepdrop1, $sleepdrop2, $sleepbeforedrop1, $sleepbeforedrop2, $debug)
-												CheckHeroesHealth()
-												If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
-											EndIf
-										Next
+									For $ii = $eBarb To $eSuperWall ; launch all remaining troops
+										If BitAND($iIndex >= $eSuperBarb, $iIndex <= $eSuperGiant) = True Or BitAND($iIndex >= $eBarb And $iIndex <= $eIceG) = True Then
+											; Loop on all detected troops
+											For $x = 0 To UBound($g_avAttackTroops) - 1
+												; If the Name exist and haves more than zero is deploy it
+												If $g_avAttackTroops[$x][0] = $ii And $g_avAttackTroops[$x][1] > 0 Then
+													Local $name = GetTroopName($g_avAttackTroops[$x][0], $g_avAttackTroops[$x][1])
+													SetLog("Name: " & $name, $COLOR_DEBUG)
+													SetLog("Qty: " & $g_avAttackTroops[$x][1], $COLOR_DEBUG)
+													DropTroopFromINI($value1, $index1, $index2, $indexArray, $g_avAttackTroops[$x][1], $g_avAttackTroops[$x][1], $g_asTroopShortNames[$ii], $delaypoints1, $delaypoints2, $delaydrop1, $delaydrop2, $sleepdrop1, $sleepdrop2, $sleepbeforedrop1, $sleepbeforedrop2, $debug)
+													CheckHeroesHealth()
+													If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
+												EndIf
+											Next
+										EndIf
 									Next
-									#EndRegion - Custom remain - Team AIO Mod++
 									; Loop on all detected troops And Check If Heroes Or Siege Was Not Dropped
 									For $i = 0 To UBound($g_avAttackTroops) - 1
 										Local $iTroopKind = $g_avAttackTroops[$i][0]

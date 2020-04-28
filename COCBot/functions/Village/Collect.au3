@@ -85,8 +85,7 @@ Func CollectLootCart()
 	If Not $g_abNotNeedAllTime[0] Then Return
 
 	SetLog("Searching for a Loot Cart", $COLOR_INFO)
-
-	Local $aLootCart = findMultipleQuick($g_sImgCollectLootCart, 1, "0,198,261,306")
+	Local $aLootCart = findMultipleQuick($g_sImgCollectLootCart, 1, "20,220,120,290")
 	If $aLootCart <> -1 Then
 		$aLootCart[2] += 15
 		If IsMainPage() Then Click($aLootCart[1], $aLootCart[2], 1, 0, "#0330")

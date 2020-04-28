@@ -3,9 +3,17 @@
             | | | _| / ▓ \| |\/| |    / ▓ \| | (_) |  |_   _||_   _|
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
-                    Based on MyBot.run v7.8.2 
+                    Based on MyBot.run v7.8.3 
 >> Next
+	**V3.3.7**
+		» Updated: MBR v7.8.3.
+			
+		» Added:
+			- CSV: Random remain for Troops, Super Troops, Sieges, Heros.
 
+		» Fixed:
+			- All fixes of v7.8.3.
+			
 	**V3.3.6**
 		» Fixed:
 			• Request CC.
