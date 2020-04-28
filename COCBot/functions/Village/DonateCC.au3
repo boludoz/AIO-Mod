@@ -275,7 +275,8 @@ Func DonateCC($bCheckForNewMsg = False)
 
                 For $i = 0 To UBound($Alphabets) - 1
                     If $i = 0 Then
-                        Local $coordinates[6] = [50, 125, 36, 101, 23, 88]						Local $OcrName = ($Alphabets[$i] = True) ? ("coc-latin-cyr") : ("coc-latinA")
+                        Local $coordinates[7] = [50, 125, 36, 101, 23, 88]						
+						Local $OcrName = ($Alphabets[$i] = True) ? ("coc-latin-cyr") : ("coc-latinA")
 						Local $log = "Latin"
 						If $Alphabets[$i] Then $log = $TextAlphabetsNames[$i]
 						$ClanString = ""
