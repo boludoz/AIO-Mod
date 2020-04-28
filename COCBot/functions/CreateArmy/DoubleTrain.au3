@@ -259,17 +259,11 @@ Func CheckQueueTroopAndTrainRemain($ArmyCamp, $bDebug)
 	Local $iTotalQueue = 0
 	If $bDebug Then SetLog("Checking troop queue: " & $ArmyCamp[0] & "/" & $ArmyCamp[1] * 2, $COLOR_DEBUG)
 
-	;Local $XQueueStart = 839
-	;Local $vPinkPixel = MultiPSimple(840,261,18,256,Hex(0xD7AFA9, 6))
-	;If $vPinkPixel <> 0 Then $XQueueStart = $vPinkPixel[0]
-
-	Local $XQueueStart = 839 ;	Troops Queue Position Check
+	Local $XQueueStart = 839
 	For $i = 0 To 10
 		If _ColorCheck(_GetPixelColor(825 - $i * 70, 186, True), Hex(0xD7AFA9, 6), 20) Then ; Pink background found
 			$XQueueStart -= 70.5 * $i
 			ExitLoop
-		ElseIf $i = 10 Then
-			$XQueueStart = 18
 		EndIf
 	Next
 
@@ -283,32 +277,34 @@ Func CheckQueueTroopAndTrainRemain($ArmyCamp, $bDebug)
 		SetLog("A big guy blocks our camp")
 		Return False
 	EndIf
-
-	#Region Team AIO Mod++
 	; check wrong queue
-	Local $bFixTroops = False
 	For $i = 0 To UBound($aiQueueTroops) - 1
 		If $aiQueueTroops[$i] - $g_aiArmyCompTroops[$i] > 0 Then
-			SetLog("Fixing Queue Troops", $COLOR_ACTION)
-			$bFixTroops = True
-			ExitLoop
+			SetLog("Some wrong troops in queue")
+			Return False
 		EndIf
 	Next
-
 	If $ArmyCamp[0] < $ArmyCamp[1] * 2 Then
-		$bFixTroops = True
+		; Train remain
+		SetLog("Checking troop queue:")
+		Local $rWTT[1][2] = [["Arch", 0]] ; what to train
+		For $i = 0 To UBound($aiQueueTroops) - 1
+			Local $iIndex = $g_aiTrainOrder[$i]
+			If $aiQueueTroops[$iIndex] > 0 Then SetLog("  - " & $g_asTroopNames[$iIndex] & ": " & $aiQueueTroops[$iIndex] & "x")
+			If $g_aiArmyCompTroops[$iIndex] - $aiQueueTroops[$iIndex] > 0 Then
+				$rWTT[UBound($rWTT) - 1][0] = $g_asTroopShortNames[$iIndex]
+				$rWTT[UBound($rWTT) - 1][1] = Abs($g_aiArmyCompTroops[$iIndex] - $aiQueueTroops[$iIndex])
+				SetLog("    missing: " & $g_asTroopNames[$iIndex] & " x" & $rWTT[UBound($rWTT) - 1][1])
+				ReDim $rWTT[UBound($rWTT) + 1][2]
+			EndIf
+		Next
+		TrainUsingWhatToTrain($rWTT, True)
+
+		If _Sleep(1000) Then Return
+		$ArmyCamp = GetCurrentArmy(48, 160)
+		SetLog("Checking troop tab: " & $ArmyCamp[0] & "/" & $ArmyCamp[1] * 2 & ($ArmyCamp[0] < $ArmyCamp[1] * 2 ? ". Top-up queue failed!" : ""))
+		If $ArmyCamp[0] < $ArmyCamp[1] * 2 Then Return False
 	EndIf
-
-	If $bFixTroops Then
-		If QueueFix($XQueueStart) = False Then Return False
-	EndIf
-
-	If _Sleep(1000) Then Return
-	$ArmyCamp = GetCurrentArmy(48, 160)
-	SetLog("Checking troop tab: " & $ArmyCamp[0] & "/" & $ArmyCamp[1] * 2 & ($ArmyCamp[0] < $ArmyCamp[1] * 2 ? ". Top-up queue failed!" : ""))
-	If $ArmyCamp[0] < $ArmyCamp[1] * 2 Then Return False
-	#EndRegion Team AIO Mod++
-
 	Return True
 EndFunc   ;==>CheckQueueTroopAndTrainRemain
 
@@ -318,11 +314,13 @@ Func CheckQueueSpellAndTrainRemain($ArmyCamp, $bDebug, $iUnbalancedSpell = 0)
 	Local $iTotalQueue = 0
 	If $bDebug Then SetLog("Checking spell queue: " & $ArmyCamp[0] & "/" & $ArmyCamp[1] * 2, $COLOR_DEBUG)
 
-	#Region - Team AIO Mod++
 	Local $XQueueStart = 839
-	Local $vPinkPixel = MultiPSimple(840,261,18,256,Hex(0xD7AFA9, 6))
-	If $vPinkPixel <> 0 Then $XQueueStart = $vPinkPixel[0]
-	#EndRegion
+	For $i = 0 To 10
+		If _ColorCheck(_GetPixelColor(825 - $i * 70, 186, True), Hex(0xD7AFA9, 6), 20) Then ; Pink background found
+			$XQueueStart -= 70.5 * $i
+			ExitLoop
+		EndIf
+	Next
 
 	Local $aiQueueSpells = CheckQueueSpells(True, $bDebug, $XQueueStart)
 	If Not IsArray($aiQueueSpells) Then Return False
