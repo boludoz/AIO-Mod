@@ -50,13 +50,13 @@ Func _Sleep($iDelay = $DELAYSLEEP, $iSleep = True, $CheckRunState = True, $Sleep
 					NotifyRemoteControl()
 					$hTimer_PBRemoteControlInterval = __TimerInit()
 				EndIf
-
+			
 			; Android & Bot Stuff
 				If (($g_iEmptyWorkingSetAndroid > 0 And __TimerDiff($hTimer_EmptyWorkingSetAndroid) >= $g_iEmptyWorkingSetAndroid * Int(1000 * $iOri)) Or $hTimer_EmptyWorkingSetAndroid = 0) And $g_bRunState And TestCapture() = False Then
 					If IsArray(getAndroidPos(True)) = 1 Then _WinAPI_EmptyWorkingSet(GetAndroidPid()) ; Reduce Working Set of Android Process
 					$hTimer_EmptyWorkingSetAndroid = __TimerInit()
 				EndIf
-
+				
 				If ($g_iEmptyWorkingSetBot > 0 And __TimerDiff($hTimer_EmptyWorkingSetBot) >= $g_iEmptyWorkingSetBot * Int(1000 * $iOri)) Or $hTimer_EmptyWorkingSetBot = 0 Then
 					ReduceBotMemory(False)
 					$hTimer_EmptyWorkingSetBot = __TimerInit()
@@ -89,9 +89,9 @@ Func _Sleep($iDelay = $DELAYSLEEP, $iSleep = True, $CheckRunState = True, $Sleep
 		$iRemaining = $iDelay - __TimerDiff($iBegin)
 		CheckBotRequests() ; check if bot window should be moved
 		If $iRemaining < 100 * $iOri Then ExitLoop
-		_Sleep(100 * $iOri)
+		Sleep(100 * $iOri)
 	Next
-	_Sleep($iDelay - __TimerDiff($iBegin))
+	Sleep($iDelay - __TimerDiff($iBegin))
 
 	Return False
 EndFunc   ;==>_Sleep
