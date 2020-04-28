@@ -409,7 +409,7 @@ Func ParseAttackCSV($debug = False)
 						Else
 							; REMAIN CMD from @chalicucu
 							If $value4 = "REMAIN" Then
-								#EndRegion - Custom remain - Team AIO Mod++
+								#Region - Custom remain - Team AIO Mod++
 								_ArrayShuffle($g_avAttackTroops)
 								ReleaseClicks()
 								SetLog("Drop|Remain:  Dropping left over troops", $COLOR_INFO)
@@ -417,7 +417,7 @@ Func ParseAttackCSV($debug = False)
 								If PrepareAttack($g_iMatchMode, True) > 0 Then
 									; a Loop from all troops
 									For $ii = $eBarb To $eSuperWall ; launch all remaining troops
-										If BitAND($iIndex >= $eSuperBarb, $iIndex <= $eSuperGiant) = True Or BitAND($iIndex >= $eBarb And $iIndex <= $eIceG) = True Then
+										If BitAND($ii >= $eSuperBarb, $ii <= $eSuperGiant) = True Or BitAND($ii >= $eBarb, $ii <= $eIceG) = True Then
 											; Loop on all detected troops
 											For $x = 0 To UBound($g_avAttackTroops) - 1
 												; If the Name exist and haves more than zero is deploy it
@@ -471,7 +471,7 @@ Func ParseAttackCSV($debug = False)
 											
 										EndIf
 									Next
-									#Region - Custom remain - Team AIO Mod++
+									#EndRegion - Custom remain - Team AIO Mod++
 								EndIf
 							Else
 								DropTroopFromINI($value1, $index1, $index2, $indexArray, $qty1, $qty2, $value4, $delaypoints1, $delaypoints2, $delaydrop1, $delaydrop2, $sleepdrop1, $sleepdrop2, $sleepbeforedrop1, $sleepbeforedrop2, $debug)
