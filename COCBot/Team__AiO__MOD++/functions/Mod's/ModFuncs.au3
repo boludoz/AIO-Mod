@@ -496,9 +496,10 @@ Func _GUICtrlCreateInput($sText, $iLeft, $iTop, $iWidth, $iHeight, $vStyle = -1,
 	Return $hReturn
 EndFunc   ;==>_GUICtrlCreateInput
 
-Func _makerequestCustom($aButtonPosition)
+Func _makerequestCustom($aButtonPosition = -1)
 	;click button request troops
-	ClickP($aButtonPosition, 1, 0, "0336") ;Select text for request
+	
+	If IsArray($aButtonPosition) Then ClickP($aButtonPosition, 1, 0, "0336") ;Select text for request
 
 	Local $iMinXSort = 0, $iMinYSort = 0, $iMaxXSort = 0, $iMaxYSort = 0
 	Local $aFindPencil, $aFindRequest

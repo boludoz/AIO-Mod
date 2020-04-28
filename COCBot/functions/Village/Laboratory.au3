@@ -49,7 +49,7 @@ Func Laboratory($debug=False)
 		EndIf
 	EndIf
 
- 	;If ChkUpgradeInProgress() Then Return False ; see if we know about an upgrade in progress without checking the lab ; Team AIO Mod++
+ 	If ChkUpgradeInProgress() Then Return False ; see if we know about an upgrade in progress without checking the lab
 
 	; Get updated village elixir and dark elixir values
 	VillageReport()
