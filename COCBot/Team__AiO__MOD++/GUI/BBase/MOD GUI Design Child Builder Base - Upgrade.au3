@@ -4,7 +4,7 @@
 ; Syntax ........:
 ; Parameters ....: None
 ; Return values .: None
-; Author ........: Boldina (2018)
+; Author ........: ProMac (03-2018)
 ; Remarks .......: This file is part of MultiBot, previously known as Mybot and ClashGameBot. Copyright 2015-2018
 ;                  MultiBot is distributed under the terms of the GNU GPL
 ; Related .......:

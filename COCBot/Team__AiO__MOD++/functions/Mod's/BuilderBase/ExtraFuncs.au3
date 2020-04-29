@@ -1,12 +1,17 @@
-#cs ----------------------------------------------------------------------------
-
- AutoIt Version: 3.3.14.5
- Author:         boludoz = Boldina
-
- Script Function:
-	Extra BB Funcs.
-
-#ce ----------------------------------------------------------------------------
+; #FUNCTION# ====================================================================================================================
+; Name ..........: BuilderBaseZoomOutOn
+; Description ...: Use on Builder Base attack
+; Syntax ........: BuilderBaseZoomOutOnAttack()
+; Parameters ....:
+; Return values .: None
+; Author ........: Boludoz (03-2018), contains funcs maked by ProMac (03-2018), Fahid.Mahmood
+; Modified ......:
+; Remarks .......: This file is part of MyBot, previously known as Multibot and ClashGameBot. Copyright 2015-2020
+;                  MyBot is distributed under the terms of the GNU GPL
+; Related .......:
+; Link ..........: https://github.com/MyBotRun/MyBot/wiki
+; Example .......: No
+; ===============================================================================================================================
 Global $g_oTxtBBAtkLogInitText = ObjCreate("Scripting.Dictionary")
 
 Func _getTroopCountBig($x_start, $y_start, $DebugOCR = False)

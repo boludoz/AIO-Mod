@@ -4,9 +4,9 @@
 ; Syntax ........: CheckArmyBuilderBase()
 ; Parameters ....:
 ; Return values .: None
-; Author ........: Boludoz (98 % like W. W.) (2018)
-; Modified ......:
-; Remarks .......: This file is part of MyBot, previously known as Mybot and ClashGameBot. Copyright 2015-2018
+; Author ........: Boludoz (redo) (2019), ProMac (03-2018), Fahid.Mahmood
+; Modified ......: 
+; Remarks .......: This file is part of MyBot, previously known as Multibot and ClashGameBot. Copyright 2015-2020
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
@@ -15,6 +15,7 @@
 #include-once
 Global $g_aTroopButton = 0
 
+; ProMac (03-2018), Fahid.Mahmood part.
 Func TestCheckArmyBuilderBase()
 	SetDebugLog("** TestCheckArmyBuilderBase START**", $COLOR_DEBUG)
 	Local $Status = $g_bRunState

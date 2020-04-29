@@ -4,8 +4,8 @@
 ; Syntax ........:
 ; Parameters ....: None
 ; Return values .: None
-; Author ........: Boludoz (2018)
-; Modifier ......: Chilly-Chill (5/2019)
+; Author ........: Chilly-Chill (5/2019) (redo), ProMac (03-2018)
+; Modifier ......: Boldina (01/2020)
 ; Remarks .......: This file is part of MyBot, previously known as Mybot and ClashGameBot. Copyright 2015-2018
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:

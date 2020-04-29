@@ -4,7 +4,7 @@
 ; Syntax ........: runBuilderBase()
 ; Parameters ....:
 ; Return values .: None
-; Author ........: Boludoz (03-2018)
+; Author ........: ProMac (03-2018), Fahid.Mahmood (03-2018)
 ; Modified ......:
 ; Remarks .......: This file is part of MyBot, previously known as Mybot and ClashGameBot. Copyright 2015-2018
 ;                  MyBot is distributed under the terms of the GNU GPL
