@@ -290,7 +290,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 			SetLog("      " & "Dead Base Found!", $COLOR_SUCCESS, "Lucida Console", 7.5)
 			$logwrited = True
 
-			; Check Collector Outside & Check No League for Dead Base - Team AiO MOD++
+			#Region Check collector outside - Team AIO Mod++
 			Local $g_bFlagSearchAnotherBase = False
 			If $g_bChkNoLeague[$DB] Then
 				If SearchNoLeague() Then
@@ -381,6 +381,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 					ExitLoop
 				EndIf
 			EndIf
+			#EndRegion Check collector outside - Team AIO Mod++
 
 		ElseIf $match[$LB] And Not $dbBase Then
 			SetLog($GetResourcesTXT, $COLOR_SUCCESS, "Lucida Console", 7.5)

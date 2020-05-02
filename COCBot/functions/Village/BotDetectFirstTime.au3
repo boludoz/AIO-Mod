@@ -28,13 +28,13 @@ Func BotDetectFirstTime()
 		If UBound($PixelTHHere) > 0 Then
 			Local $pixel = $PixelTHHere[0]
 			$g_aiTownHallPos[0] = $pixel[0]
-			$g_aiTownHallPos[1] = $pixel[1]
+			$g_aiTownHallPos[1] = $pixel[1] + 25
 			If $g_bDebugSetlog Then SetDebugLog("DLLc# Townhall: (" & $g_aiTownHallPos[0] & "," & $g_aiTownHallPos[1] & ")", $COLOR_ERROR)
 		EndIf
 		If $g_aiTownHallPos[1] = "" Or $g_aiTownHallPos[1] = -1 Then
 			imglocTHSearch(True, True) ; search th on myvillage
 			$g_aiTownHallPos[0] = $g_iTHx
-			$g_aiTownHallPos[1] = $g_iTHy
+			$g_aiTownHallPos[1] = $g_iTHy + 25
 			If $g_bDebugSetlog Then SetDebugLog("OldDDL Townhall: (" & $g_aiTownHallPos[0] & "," & $g_aiTownHallPos[1] & ")", $COLOR_ERROR)
 		EndIf
 		SetLog("Townhall: (" & $g_aiTownHallPos[0] & "," & $g_aiTownHallPos[1] & ")", $COLOR_DEBUG)
@@ -50,11 +50,6 @@ Func BotDetectFirstTime()
 		SetLog("Proceed with caution as errors may occur.", $COLOR_ERROR)
 	EndIf
 
-	If $g_iTownHallLevel < 2 Or ($g_aiTownHallPos[1] = "" Or $g_aiTownHallPos[1] = -1) And Not $g_bAvoidLocation Then LocateTownHall(False, False) ; AvoidLocation - Team AIO MOD++
-	If _Sleep($DELAYBOTDETECT1) Then Return
-	CheckImageType()
-	If _Sleep($DELAYBOTDETECT1) Then Return
-	
 	#Region AvoidLocation - Team AIO MOD++
 	If $g_bAvoidLocation Then 
 		SetLog("Detecting your buildings skipped", $COLOR_INFO)
@@ -68,6 +63,12 @@ Func BotDetectFirstTime()
 		Return
 	EndIf
 	#EndRegion AvoidLocation - Team AIO MOD++
+	
+	If $g_iTownHallLevel < 2 Or ($g_aiTownHallPos[1] = "" Or $g_aiTownHallPos[1] = -1) And Not $g_bAvoidLocation Then LocateTownHall(False, False) ; AvoidLocation - Team AIO MOD++
+	If _Sleep($DELAYBOTDETECT1) Then Return
+	CheckImageType()
+	If _Sleep($DELAYBOTDETECT1) Then Return
+	
 
 	If $g_bScreenshotHideName Then
 		If _Sleep($DELAYBOTDETECT3) Then Return

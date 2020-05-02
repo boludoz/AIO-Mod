@@ -108,7 +108,7 @@ Func getChatString($x_start, $y_start, $language) ; -> Get string chat request -
 EndFunc   ;==>getChatString
 
 Func getBuilders($x_start, $y_start) ;  -> Gets Builders number - main screen --> getBuilders(324,23)  coc-profile
-	Return getOcrAndCapture("coc-Builders", $x_start, $y_start, 40, 18, True)
+	Return getOcrAndCapture("coc-Builders", $x_start, $y_start, 45, 20, True)
 EndFunc   ;==>getBuilders
 
 Func getProfile($x_start, $y_start) ;  -> Gets Attack Win/Defense Win/Donated/Received values - profile screen --> getProfile(160,268)  troops donation

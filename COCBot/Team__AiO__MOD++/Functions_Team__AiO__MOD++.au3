@@ -95,4 +95,6 @@
 ;~ #include "functions\Mod's\BuilderBase\Village\CleanBBYard.au3"
 ;~ #include "functions\Mod's\BuilderBase\Village\StarLaboratory.au3"
 
+;
+;#include "functions\Mod's\GetCastle.au3"
 ;---------------------------------------------------------------;
