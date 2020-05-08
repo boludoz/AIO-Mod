@@ -23,6 +23,9 @@ Func TestrunBuilderBase()
 EndFunc   ;==>TestrunBuilderBase
 
 Func runBuilderBase($bTestRun = False)
+	
+	If not SwitchBetweenBases(True, "Builder Base") Then return false
+	$g_bStayOnBuilderBase = True
 
 	If Not $g_bRunState Then Return
 
@@ -51,8 +54,6 @@ Func runBuilderBase($bTestRun = False)
 		 SetLog("BB Don't detected.", $COLOR_ERROR)
 		 Return False
 	  EndIf
-
-	$g_bStayOnBuilderBase = True
 
 	SetLog("Builder Base Idle Starts", $COLOR_INFO)
 
@@ -133,12 +134,14 @@ Func runBuilderBase($bTestRun = False)
 
 	If Not $g_bChkPlayBBOnly Then
 			; switch back to normal village
-			If not IsOnBuilderBase() Then
-				If SwitchBetweenBases() Then $g_bStayOnBuilderBase = False ; AIO ++
-			EndIf
-		Else
-			If _Sleep($DELAYRUNBOT1 * 15) Then Return ;Add 15 Sec Delay Before Starting Again In BB Only
-		EndIf
+			SwitchBetweenBases(True, "Normal Village")
+			$g_bStayOnBuilderBase = False
+
+			If Not $g_bRunState Then Return
+
+	Else
+		If _Sleep($DELAYRUNBOT1 * 15) Then Return ;Add 15 Sec Delay Before Starting Again In BB Only
+	EndIf
 
 	If _Sleep($DELAYRUNBOT3) Then Return
 

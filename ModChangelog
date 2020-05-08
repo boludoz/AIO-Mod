@@ -4,6 +4,17 @@
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
                     Based on MyBot.run v7.8.3 
+	**V3.3.8**
+		» Fixed:
+			• Train system.
+			
+			• Builder Base.
+				- Attack bar for BB attack.
+				- Remain logic for builder base.
+				- Builder base CSV troops select.
+				- BB Machine builder base on CSV Attack.
+				- Enabled random wave for smart attack BB.
+			
 	**V3.3.7**
 		» Updated: MBR v7.8.3.
 			

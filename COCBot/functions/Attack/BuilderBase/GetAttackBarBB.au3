@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func GetAttackBarBB($bRemaining = False)
+Func GetAttackBarBB($bRemaining = False, $bMachineMode = True)
 	local $iTroopBanners = 640 ; y location of where to find troop quantities
 	local $aSlot1 = [85, 640] ; location of first slot
 	local $iSlotOffset = 73 ; slots are 73 pixels apart
@@ -59,7 +59,12 @@ Func GetAttackBarBB($bRemaining = False)
 			local $iSlot = Int(($aTempCoords[0] - $iBarOffset) / $iSlotOffset)
 			local $iCount = Number(getTroopCountSmall($aTempCoords[0], $iTroopBanners))
 			If $iCount == 0 Then $iCount = Number(getTroopCountBig($aTempCoords[0], $iTroopBanners-2))
-			If $iCount == 0 Then
+			If StringInStr($aTroop[0], "Machine") > 0 and $bMachineMode = True Then
+				Setlog("Found machine <3.", $COLOR_SUCCESS)
+				local $aTempElement[1][5] = [[$aTroop[0], $aTempCoords[0], $aTempCoords[1], $iSlot, 1]] ; element to add to attack bar list
+				_ArrayAdd($aBBAttackBar, $aTempElement)
+				ContinueLoop
+			ElseIf $iCount == 0 Then
 				SetLog("Could not get count for " & $aTroop[0] & " in slot " & String($iSlot), $COLOR_ERROR)
 				ContinueLoop
 			EndIf

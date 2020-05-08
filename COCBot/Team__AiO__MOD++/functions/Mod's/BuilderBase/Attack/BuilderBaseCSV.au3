@@ -272,6 +272,8 @@ Func BuilderBaseParseAttackCSV($AvailableTroops, $DeployPoints, $DeployBestPoint
 									$iTotalQtyByTroop -= 1
 									; Remove the Qty from the Original array :
 									$aAvailableTroops_NXQ[$iSlotNumber][4] = $iQtyOfSelectedSlot
+									; If is the Machine exist and depolyed
+									If $g_bIsBBMachineD Then ExitLoop (2)
 									; Just in case
 									If $iTotalQtyByTroop < 1 Then ExitLoop (2)
 									; Let's select another slot if this slot is empty
@@ -366,11 +368,6 @@ Func BuilderBaseParseAttackCSV($AvailableTroops, $DeployPoints, $DeployBestPoint
 					; A log user
 					SetLog(" - " & $aAvailableTroops_NXQ[$iSlotNumber][4] & "x/" & $iTotalQtyByTroop & "x " & FullNametroops($aAvailableTroops_NXQ[$iSlotNumber][0]) & " at slot " & $iSlotNumber + 1, $COLOR_WARNING)
 
-					For $i = 0 To Int($SleepAfter / 50)
-						; Machine Ability
-						TriggerMachineAbility()
-						If _Sleep(50) Then Return
-					Next
 			EndSwitch
 		Next
 
@@ -384,9 +381,10 @@ Func BuilderBaseParseAttackCSV($AvailableTroops, $DeployPoints, $DeployBestPoint
 				$sFrontSide = BuilderBaseAttackMainSide()
 				Setlog("Detected Front Side: " & $sFrontSide, $COLOR_INFO)
 			EndIf
-			Local $sSelectedDropSideName ;Using For AddTile But in this remain no use
-			Local $aSelectedDropSidePoints_XY = CorrectDropPoints($sFrontSide, "FRONTE", $aDeployBestPoints, $sSelectedDropSideName)
-			SortPoints($aSelectedDropSidePoints_XY, $bDebug)
+			;Local $sSelectedDropSideName ;Using For AddTile But in this remain no use
+			;Local $aSelectedDropSidePoints_XY = CorrectDropPoints($sFrontSide, "FRONTE", $aDeployBestPoints, $sSelectedDropSideName)
+			;SortPoints($aSelectedDropSidePoints_XY, $bDebug)
+			Local $aSelectedDropSidePoints_XY = $g_aExternalEdges[0]
 			; Just in Case
 			If UBound($aSelectedDropSidePoints_XY) > 0 Then
 				Local $iQtyOfSelectedSlot = 0 ; Quantities on current slot
@@ -397,7 +395,6 @@ Func BuilderBaseParseAttackCSV($AvailableTroops, $DeployPoints, $DeployBestPoint
 
 				For $i = 0 To UBound($aAvailableTroops_NXQ) - 1
 					$sTroopName = $aAvailableTroops_NXQ[$i][0]
-					TriggerMachineAbility()
 					; Let's select the slot VerifySlotTroops uses ByRef on $aSlot_XY , $iQtyOfSelectedSlot and $iSlotNumber
 					If Not VerifySlotTroop($sTroopName, $aSlot_XY, $iQtyOfSelectedSlot, $iSlotNumber, $aAvailableTroops_NXQ) Then
 						ContinueLoop
@@ -433,8 +430,12 @@ Func BuilderBaseParseAttackCSV($AvailableTroops, $DeployPoints, $DeployBestPoint
 		EndIf
 
 		; Machine Ability and Battle
-		TriggerMachineAbility()
-		BattleIsOver()
+		For $i = 0 To Int($SleepAfter / 50)
+			; Machine Ability
+			TriggerMachineAbility()
+			BattleIsOver()
+			If _Sleep(50) Then Return
+		Next
 
 	Else
 		SetLog($FileNamePath & " Doesn't exist!", $COLOR_WARNING)

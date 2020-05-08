@@ -659,24 +659,24 @@ Func chkPurgeLimits()
 EndFunc   ;==>chkPurgeLimits
 
 Func chkEnableBBAttack()
-	If GUICtrlRead($g_hChkEnableBBAttack) = $GUI_CHECKED Then
+	;If GUICtrlRead($g_hChkEnableBBAttack) = $GUI_CHECKED Then
 		GUICtrlSetState($g_hChkBBTrophyRange, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkBBAttIfLootAvail, $GUI_ENABLE)
-		;GUICtrlSetState($g_hChkBBWaitForMachine, $GUI_ENABLE)
-		;GUICtrlSetState($g_hBtnBBDropOrder, $GUI_ENABLE)
-		;GUICtrlSetState($g_hCmbBBSameTroopDelay, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkBBWaitForMachine, $GUI_ENABLE)
+		GUICtrlSetState($g_hBtnBBDropOrder, $GUI_ENABLE)
+		GUICtrlSetState($g_hCmbBBSameTroopDelay, $GUI_ENABLE)
 		GUICtrlSetState($g_hCmbBBNextTroopDelay, $GUI_ENABLE)
 		chkBBTrophyRange()
-	Else
-		GUICtrlSetState($g_hChkBBTrophyRange, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkBBAttIfLootAvail, $GUI_DISABLE)
-		GUICtrlSetState($g_hTxtBBTrophyLowerLimit, $GUI_DISABLE)
-		GUICtrlSetState($g_hTxtBBTrophyUpperLimit, $GUI_DISABLE)
-		;GUICtrlSetState($g_hChkBBWaitForMachine, $GUI_DISABLE)
-		;GUICtrlSetState($g_hBtnBBDropOrder, $GUI_DISABLE)
-		;GUICtrlSetState($g_hCmbBBSameTroopDelay, $GUI_DISABLE)
-		GUICtrlSetState($g_hCmbBBNextTroopDelay, $GUI_DISABLE)
-	EndIf
+	;Else
+	;	GUICtrlSetState($g_hChkBBTrophyRange, $GUI_DISABLE)
+	;	GUICtrlSetState($g_hChkBBAttIfLootAvail, $GUI_DISABLE)
+	;	GUICtrlSetState($g_hTxtBBTrophyLowerLimit, $GUI_DISABLE)
+	;	GUICtrlSetState($g_hTxtBBTrophyUpperLimit, $GUI_DISABLE)
+	;	GUICtrlSetState($g_hChkBBWaitForMachine, $GUI_DISABLE)
+	;	GUICtrlSetState($g_hBtnBBDropOrder, $GUI_DISABLE)
+	;	GUICtrlSetState($g_hCmbBBSameTroopDelay, $GUI_DISABLE)
+	;	GUICtrlSetState($g_hCmbBBNextTroopDelay, $GUI_DISABLE)
+	;EndIf
 EndFunc   ;==>chkEnableBBAttack
 
 Func cmbBBNextTroopDelay()

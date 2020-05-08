@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func AttackBB($aBBAttackBarDeprecated = -1)
+Func AttackBB()
 	local $iSide = Random(0, 1, 1) ; randomly choose top left or top right
 	local $aBMPos = 0
 	;local $iAndroidSuspendModeFlagsLast = $g_iAndroidSuspendModeFlags
@@ -102,7 +102,7 @@ Func AttackBB($aBBAttackBarDeprecated = -1)
 	If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Disabled")
 
 	; Get troops on attack bar and their quantities
-	local $aBBAttackBar = GetAttackBarBB()
+	local $aBBAttackBar = GetAttackBarBB(False, False)
 	If _Sleep($DELAYRESPOND) Then
 		$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
 		If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Enabled")
@@ -168,7 +168,7 @@ Func AttackBB($aBBAttackBarDeprecated = -1)
 				EndIf
 			Next
 		EndIf
-		$aBBAttackBar = GetAttackBarBB(True)
+		$aBBAttackBar = GetAttackBarBB(True, False)
 		If $aBBAttackBar = "" Then $bTroopsDropped = True
 	WEnd
 	SetLog("All Troops Deployed", $COLOR_SUCCESS)
@@ -218,7 +218,7 @@ Func AttackBB($aBBAttackBarDeprecated = -1)
 		EndIf
 	WEnd
 	If $bBMDeployed And Not $bMachineAlive Then SetLog("Battle Machine Dead")
-
+	
 	; wait for end of battle
 	SetLog("Waiting for end of battle.", $COLOR_BLUE)
 	If Not Okay() Then

@@ -92,7 +92,7 @@ Func TrainIt($iIndex, $iQuantity = 1, $iSleep = 400)
 	Next ; Until $iErrors = 0
 EndFunc   ;==>TrainIt
 
-Func GetTrainPos(Const $iIndex)
+Func GetTrainPos(Const $iIndex) 
 	If $g_bDebugSetlogTrain Then SetLog("GetTrainPos($iIndex=" & $iIndex & ")", $COLOR_DEBUG)
 
 	; Get the Image path to search
@@ -160,7 +160,7 @@ Func GetVariable(Const $asImageToUse, Const $iIndex)
 	_CaptureRegion2(25, 375, 840, 548)
 
 	Local $iError = ""
-	For $i = 1 To $asImageToUse[0]
+	For $i = 0 To UBound($asImageToUse) -1
 
 		Local $asResult = DllCallMyBot("FindTile", "handle", $g_hHBitmap2, "str", $asImageToUse[$i], "str", "FV", "int", 1)
 

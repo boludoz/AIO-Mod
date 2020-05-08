@@ -92,14 +92,14 @@ Func BuilderBaseAttack($bTestRun = False)
 		If Not $g_bRunState Then Return
 
 		; Attack Bar | [0] = Troops Name , [1] = X-axis , [2] - Y-axis, [3] - Slot starting at 0, [4] - Amount
-		; Local $AvailableTroops = BuilderBaseAttackBar()
-		Local $AvailableTroops = GetAttackBarBB()
-		If $AvailableTroops <> -1 Then SetDebugLog("Attack Bar Array: " & _ArrayToString($AvailableTroops, "-", -1, -1, "|", -1, -1))
+		; Local $aAvailableTroops = BuilderBaseAttackBar()
+		Local $aAvailableTroops = GetAttackBarBB()
+		If $aAvailableTroops <> -1 Then SetDebugLog("Attack Bar Array: " & _ArrayToString($aAvailableTroops, "-", -1, -1, "|", -1, -1))
 
-		If $AvailableTroops = -1 Then Return -1
+		If $aAvailableTroops = -1 Then Return -1
 
 		; Verify the scripts and attack bar
-		If Not $IsToDropTrophies Then BuilderBaseSelectCorrectScript($AvailableTroops)
+		If Not $IsToDropTrophies Then BuilderBaseSelectCorrectScript($aAvailableTroops)
 
 		; Zoomout the Opponent Village
 		BuilderBaseZoomOut()
@@ -117,14 +117,14 @@ Func BuilderBaseAttack($bTestRun = False)
 				Setlog("Ready to Battle! BB CSV... Let's Go!", $COLOR_SUCCESS)
 
 				; Parse CSV , Deploy Troops and Get Machine Status [attack algorithm] , waiting for Battle ends window
-				BuilderBaseCSVAttack($AvailableTroops)
+				BuilderBaseCSVAttack($aAvailableTroops)
 				If Not $g_bRunState Then Return
 
 			Case $g_iCmbBBAttack = $g_eBBAttackSmart
 				Setlog("Ready to Battle! BB Smart Attack... Let's Go!", $COLOR_SUCCESS)
 
 				; BB Smart Attack
-				AttackBB($AvailableTroops)
+				AttackBB()
 				If Not $g_bRunState Then Return
 			Case Else
 				$g_bRestart = ($bTestRun) ? (False) : (True)
@@ -311,7 +311,7 @@ Func WaitForVersusBattle()
 
 EndFunc   ;==>WaitForVersusBattle
 
-Func BuilderBaseAttackToDrop($AvailableTroops)
+Func BuilderBaseAttackToDrop($aAvailableTroops)
 	#comments-start
 		$aAttackBar[n][8]
 		[n][0] = Name of the found Troop/Spell/Hero/Siege
@@ -322,13 +322,13 @@ Func BuilderBaseAttackToDrop($AvailableTroops)
 	#comments-end
 
 	If Not $g_bRunState Then Return
-	If Not UBound($AvailableTroops) > 0 Then Return
+	If Not UBound($aAvailableTroops) > 0 Then Return
 
 	; Reset all variables
 	BuilderBaseResetAttackVariables()
 
-	Local $Troop = $AvailableTroops[0][0]
-	Local $Slot = [$AvailableTroops[0][1], $AvailableTroops[0][2]]
+	Local $Troop = $aAvailableTroops[0][0]
+	Local $Slot = [$aAvailableTroops[0][1], $aAvailableTroops[0][2]]
 
 	; Select the Troop
 	ClickP($Slot, 1, 0)
@@ -418,12 +418,12 @@ Func BuilderBaseAttackToDrop($AvailableTroops)
 
 EndFunc   ;==>BuilderBaseAttackToDrop
 
-Func BuilderBaseCSVAttack($AvailableTroops, $bDebug = False)
-	; $AvailableTroops[$x][0] = Name , $AvailableTroops[$x][1] = X axis
+Func BuilderBaseCSVAttack($aAvailableTroops, $bDebug = False)
+	; $aAvailableTroops[$x][0] = Name , $aAvailableTroops[$x][1] = X axis
 	If Not $g_bRunState Then Return
 	; Reset all variables
 	BuilderBaseResetAttackVariables()
-	; $AvailableTroops[$x][0] = Name , $AvailableTroops[$x][1] = X axis
+	; $aAvailableTroops[$x][0] = Name , $aAvailableTroops[$x][1] = X axis
 
 	; maybe will be necessary to click on attack bar to release the zoomout pinch
 	; x = 75 , y = 584
@@ -435,7 +435,7 @@ Func BuilderBaseCSVAttack($AvailableTroops, $bDebug = False)
 	BuilderBaseGetDeployPoints($FurtherFrom, $bDebug)
 	If Not $g_bRunState Then Return
 	; Parse CSV , Deploy Troops and Get Machine Status [attack algorithm] , waiting for Battle ends window
-	BuilderBaseParseAttackCSV($AvailableTroops, $g_aDeployPoints, $g_aDeployBestPoints, $bDebug)
+	BuilderBaseParseAttackCSV($aAvailableTroops, $g_aDeployPoints, $g_aDeployBestPoints, $bDebug)
 
 EndFunc   ;==>BuilderBaseCSVAttack
 

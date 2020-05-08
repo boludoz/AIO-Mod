@@ -30,22 +30,16 @@ DROP  |E-F-G-H    |1-10       |10         |arch       |0          |0          |0
 DROP  |A-B-C-D    |1-10       |10         |arch       |0          |0          |0          |           |
 DROP  |E-F-G-H    |1-10       |10         |arch       |0          |0          |0          |           |
 
-DROP  |A-B-C-D    |1-10       |10         |arch       |0          |0          |0          |           |3nd wave
-DROP  |E-F-G-H    |1-10       |10         |arch       |0          |0          |0          |           |
-DROP  |A-B-C-D    |1-10       |10         |arch       |0          |0          |0          |           |
-DROP  |E-F-G-H    |1-10       |10         |arch       |0          |0          |0          |           |
-
 DROP  |A          |3          |1          |king       |0          |0          |0          |           |heroes
 DROP  |A          |3          |1          |queen      |0          |0          |0          |           |
 DROP  |A          |3          |1          |castle     |0          |0          |0          |           |
 DROP  |A          |3          |1          |Warden     |0          |0          |0          |           |
-DROP  |A          |3          |1          |Champion     |0          |0          |0          |           |
 
 DROP  |A-B-C-D    |1-10       |20         |barb       |0          |0          |0          |           |drop barb just to get rid of
 
 RECALC|           |           |           |           |           |           |           |           |recalculate remaining troops and then launch...
 
-DROP  |D-C-B-A    |6          |1          |giant      |0          |0          |0          |           |4rd wave remaining
+DROP  |D-C-B-A    |6          |1          |giant      |0          |0          |0          |           |3rd wave remaining
 DROP  |D-C-B-A    |1,3,5,7,9  |5          |arch       |0          |0          |0          |           |
 DROP  |H-G-F-E    |6          |1          |giant      |0          |0          |0          |           |
 DROP  |H-G-F-E    |2,4,6,8,10 |5          |arch       |0          |0          |0          |           |

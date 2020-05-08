@@ -13,36 +13,78 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func SwitchBetweenBases($bCheckMainScreen = True)
+Func SwitchBetweenBases($bCheckMainScreen = True, $bGoTo = Default)
 	Local $sSwitchFrom, $sSwitchTo, $bIsOnBuilderBase = False, $aButtonCoords
 	Local $sTile, $sTileDir, $sRegionToSearch
 	Local $bSwitched = False
+	Local $bIsIn = False
+	Local $bIsFix = False
 
 	If Not $g_bRunState Then Return
 
+	
 	For $i = 0 To 2
-		If isOnBuilderBase(True) Then
-			$sSwitchFrom = "Builder Base"
-			$sSwitchTo = "Normal Village"
-			$bIsOnBuilderBase = True
-			$sTile = "BoatBuilderBase"
-			$sTileDir = $g_sImgBoatBB
-			$sRegionToSearch = "487,44,708,242"
-		Else
-			$sSwitchFrom = "Normal Village"
-			$sSwitchTo = "Builder Base"
-			$bIsOnBuilderBase = False
-			$sTile = "BoatNormalVillage"
-			$sTileDir = $g_sImgBoat
-			$sRegionToSearch = "66,432,388,627"
-		EndIf
 
+		If $bGoTo <> Default And (BitOR($bGoTo = "Builder Base", $bGoTo = "Normal Village") > 0) Then
+			$aButtonCoords = decodeSingleCoord(findImageInPlace( $bGoTo = ("Builder Base") ? ("BoatBuilderBase") : ("BoatNormalVillage"), $bGoTo = ("Builder Base") ? ($g_sImgBoatBB) : ($g_sImgBoat), $bGoTo = ("Builder Base") ? ("487,44,708,242") : ("66,432,388,627") ))
+			
+			If UBound($aButtonCoords) > 1 Then $bIsIn = True
+			SetLog("Is in " & $bGoTo & "? " & $bIsIn, $COLOR_INFO)
+		EndIf			
+	
+		Select
+			Case $bGoTo = "Builder Base" 
+				If $bIsIn = False Then
+					$sSwitchFrom = "Normal Village"
+					$sSwitchTo = "Builder Base"
+					$bIsOnBuilderBase = False
+					$sTile = "BoatNormalVillage"
+					$sTileDir = $g_sImgBoat
+					$sRegionToSearch = "66,432,388,627"
+					Else
+					$bIsFix = True
+				EndIf
+			
+			Case $bGoTo = "Normal Village"
+				If $bIsIn = False Then
+					$sSwitchFrom = "Builder Base"
+					$sSwitchTo = "Normal Village"
+					$bIsOnBuilderBase = True
+					$sTile = "BoatBuilderBase"
+					$sTileDir = $g_sImgBoatBB
+					$sRegionToSearch = "487,44,708,242"
+					Else
+					$bIsFix = True
+				EndIf
+				
+			Case Else
+				If isOnBuilderBase(True) Then
+					$sSwitchFrom = "Builder Base"
+					$sSwitchTo = "Normal Village"
+					$bIsOnBuilderBase = True
+					$sTile = "BoatBuilderBase"
+					$sTileDir = $g_sImgBoatBB
+					$sRegionToSearch = "487,44,708,242"
+				Else
+					$sSwitchFrom = "Normal Village"
+					$sSwitchTo = "Builder Base"
+					$bIsOnBuilderBase = False
+					$sTile = "BoatNormalVillage"
+					$sTileDir = $g_sImgBoat
+					$sRegionToSearch = "66,432,388,627"
+				EndIf
+		EndSelect
+		
 		If _sleep(1000) Then Return
 		If Not $g_bRunState Then Return
 
 		ZoomOut() ; ensure boat is visible
 		If Not $g_bRunState Then Return
-
+		
+		If $bCheckMainScreen And $bIsFix = True And checkMainScreen(True, Not $bIsOnBuilderBase) Then 
+				Return True
+		EndIf
+		
 		$aButtonCoords = decodeSingleCoord(findImageInPlace($sTile, $sTileDir, $sRegionToSearch))
 		If UBound($aButtonCoords) > 1 Then
 			SetLog("[" & $i & "] Going to " & $sSwitchTo, $COLOR_INFO)
