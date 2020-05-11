@@ -33,33 +33,10 @@ Global $aOpenedSelectLang[4] = [90, 113, 0xD7F37F, 20] ; On Setting screen langu
 Global $aLangSelected[4] = [118, 185, 0xCAFF40, 20] ; V color green to the left of the language
 Global $aLangSettingOK[4] = [506, 446, 0x6DBC1F, 20] ; Language Selection Dialog Ok button
 
-Global Const $aButtonLanguageEN[2] = [163, 180] ;English
-Global Const $aButtonLanguageFRA[2] = [163, 229] ;Franch
-Global Const $aButtonLanguageDE[2] = [163, 278] ;Deutsch
-Global Const $aButtonLanguageES[2] = [163, 327] ;Espanol
-Global Const $aButtonLanguageITA[2] = [163, 375] ;Italya
-Global Const $aButtonLanguageNL[2] = [163, 424] ;Nederlands
-Global Const $aButtonLanguageNO[2] = [163, 473] ;Norsk
-Global Const $aButtonLanguagePR[2] = [163, 521] ;Portugal
-Global Const $aButtonLanguageTR[2] = [163, 570] ;Turk
-Global Const $aButtonLanguageRU[2] = [163, 608] ;Russian
-
-Global Const $aLangSelectedEN[4] = [118, 185, 0xCAFF40, 20]
-Global Const $aLangSelectedFRA[4] = [118, 234, 0xCAFF40, 20]
-Global Const $aLangSelectedDE[4] = [118, 283, 0xCAFF40, 20]
-Global Const $aLangSelectedES[4] = [118, 332, 0xCAFF40, 20]
-Global Const $aLangSelectedITA[4] = [118, 380, 0xCAFF40, 20]
-Global Const $aLangSelectedNL[4] = [118, 429, 0xCAFF40, 20]
-Global Const $aLangSelectedNO[4] = [118, 478, 0xCAFF40, 20]
-Global Const $aLangSelectedPR[4] = [118, 526, 0xCAFF40, 20]
-Global Const $aLangSelectedTR[4] = [118, 575, 0xCAFF40, 20]
-Global Const $aLangSelectedRU[4] = [125, 615, 0xCAFF40, 20]
-
 Global $aButtonFriendlyChallenge[4] = [200, 695, 0xDDF685, 20]
 Global $aButtonFCChangeLayout[4] = [240, 286, 0XDDF685, 20]
 Global $aButtonFCBack[4] = [160, 106, 0xD5F27D, 20]
-Global $aButtonFCStart[4] = [523, 286, 0xDDF685, 20]
-Global $aButtonFCClose[4] = [688, 102, 0xFF8D95, 20]
+Global $aButtonFCStart[4] = [638, 285, 0xDDF685, 20]
 
 ; Super XP
 Global $aLootInfo[5] = [300, 590, 0xFFFFFF, 0xFFFFFF, 10] ; Color in the frame of Loot Available info
