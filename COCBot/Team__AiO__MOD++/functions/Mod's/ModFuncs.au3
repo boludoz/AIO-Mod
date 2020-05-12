@@ -141,11 +141,10 @@ Func _ImageSearchXML($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "0,
 	EndIf
 EndFunc   ;==>_ImageSearchXML
 
-Func findMultipleQuick($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "0,0,860,732", $bDForceCapture = Default, $sOnlyFind = Default, $bExactFind = False, $iDistance2check = 25, $bDebugLog = False, $iLevel = 1, $iMaxLevel = 1000)
+Func findMultipleQuick($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "0,0,860,732", $bForceCapture = Default, $sOnlyFind = Default, $bExactFind = False, $iDistance2check = 25, $bDebugLog = False, $iLevel = 1, $iMaxLevel = 1000)
 	FuncEnter(findMultipleQuick)
-	Local $bForceCapture = ($bDForceCapture = Default) ? (True) : ($bDForceCapture)
 	Local $sSearchDiamond = IsArray($saiArea2SearchOri) ? GetDiamondFromArray($saiArea2SearchOri) : GetDiamondFromRect($saiArea2SearchOri)
-	Local $aResult = findMultiple($sDirectory, $sSearchDiamond, $sSearchDiamond, $iLevel, $iMaxLevel, $iQuantity2Match, "objectname,objectlevel,objectpoints", $bForceCapture)
+	Local $aResult = findMultiple($sDirectory, $sSearchDiamond, $sSearchDiamond, $iLevel, $iMaxLevel, ($sOnlyFind = Default) ? ($iQuantity2Match) : (100), "objectname,objectlevel,objectpoints", ($bForceCapture = Default) ? (True) : ($bForceCapture))
 	If Not IsArray($aResult) Then Return -1
 
 	Local $iCount = 0
@@ -168,23 +167,26 @@ Func findMultipleQuick($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "
 					If StringInStr($aArrays[0], $sOnlyFind) = 0 Then ContinueLoop
 				EndIf
 			EndIf
-
+			
 			; Inspired in Chilly-chill
 			Local $aTmpResults[1][4] = [[$aArrays[0], Int($aCommaCoord[0]), Int($aCommaCoord[1]), Int($aArrays[1])]]
-			If $iCount >= $iQuantity2Match And Not $iQuantity2Match = 0 Then ContinueLoop
+			If $iCount >= $iQuantity2Match And Not $iQuantity2Match = 0 Then ExitLoop 2
 			_ArrayAdd($aAllResults, $aTmpResults)
 			$iCount += 1
 		Next
 	Next
-
-	If $iDistance2check <> 0 And UBound($aAllResults) > 0 Then
+	
+	; Sort by X axis
+	_ArraySort($aAllResults, 0, 0, 0, 1)
+	If $iDistance2check > 0 And UBound($aAllResults) > 0 Then
 		; Sort by X axis
 		_ArraySort($aAllResults, 0, 0, 0, 1)
 
 		; Distance in pixels to check if is a duplicated detection , for deploy point will be 5
-		Local $iD2Check = $iDistance2check
+		Local $D2Check = $iDistance2check
 
 		; check if is a double Detection, near in 10px
+		Local $Dime = 0
 		For $i = 0 To UBound($aAllResults) - 1
 			If $i > UBound($aAllResults) - 1 Then ExitLoop
 			Local $LastCoordinate[4] = [$aAllResults[$i][0], $aAllResults[$i][1], $aAllResults[$i][2], $aAllResults[$i][3]]
@@ -194,11 +196,12 @@ Func findMultipleQuick($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "
 					If $j > UBound($aAllResults) - 1 Then ExitLoop
 					Local $SingleCoordinate[4] = [$aAllResults[$j][0], $aAllResults[$j][1], $aAllResults[$j][2], $aAllResults[$j][3]]
 					If $LastCoordinate[1] <> $SingleCoordinate[1] Or $LastCoordinate[2] <> $SingleCoordinate[2] Then
-						If $SingleCoordinate[1] < $LastCoordinate[1] + $iD2Check And $SingleCoordinate[1] > $LastCoordinate[1] - $iD2Check Then
+						If Int($SingleCoordinate[1]) < Int($LastCoordinate[1]) + $D2Check And Int($SingleCoordinate[1]) > Int($LastCoordinate[1]) - $D2Check And _
+								Int($SingleCoordinate[2]) < Int($LastCoordinate[2]) + $D2Check And Int($SingleCoordinate[2]) > Int($LastCoordinate[2]) - $D2Check Then
 							_ArrayDelete($aAllResults, $j)
 						EndIf
 					Else
-						If $LastCoordinate[1] = $SingleCoordinate[1] And $LastCoordinate[2] = $SingleCoordinate[2] And $LastCoordinate[3] <> $SingleCoordinate[3] Then
+						If $LastCoordinate[1] = $SingleCoordinate[1] And $LastCoordinate[2] = $SingleCoordinate[2] And BitOr($LastCoordinate[3] <> $SingleCoordinate[3], $LastCoordinate[0] <> $SingleCoordinate[0]) > 0 Then
 							_ArrayDelete($aAllResults, $j)
 						EndIf
 					EndIf
@@ -206,7 +209,7 @@ Func findMultipleQuick($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "
 			EndIf
 		Next
 	EndIf
-
+	
 	Return (UBound($aAllResults) > 0) ? ($aAllResults) : (-1)
 EndFunc   ;==>findMultipleQuick
 

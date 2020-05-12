@@ -150,7 +150,7 @@ Func ChatClan() ; Handle Clan Chat Logic
 		Local $bIsLast = ChatbotIsLastChatNew()
 			If Not $bIsLast Then
 				; get text of the latest message
-				Local $sOCRString = "", $bChatMsg = False, $sCondition = ""
+				Local $sOCRString = "", $sCondition = ""
 
 				For $iRespInt = 0 To UBound($g_aClanResponses)-1
 					If $iRespInt = 0 Then
@@ -160,12 +160,12 @@ Func ChatClan() ; Handle Clan Chat Logic
 					EndIf
 				Next
 
-				$bChatMsg = ReadChatIA($sOCRString, $sCondition, True)
+				$bChatMsg = ReadChatIA($sCondition, True)
 
 				SetDebugLog("ChatActions : Condition " & $sCondition)
 
 				Local $bSentMessage = False
-				If Not $bChatMsg Then
+				If $sOCRString = -1 Then
 					If $g_bClanUseGeneric Then
 						If Not ChatbotSelectChatInput("Clan") Then Return False
 						If Not ChatbotChatInput($g_aClanGeneric[Random(0, UBound($g_aClanGeneric) - 1, 1)]) Then Return False
@@ -174,7 +174,7 @@ Func ChatClan() ; Handle Clan Chat Logic
 					EndIf
 				EndIf
 
-				If $bChatMsg And $g_bClanUseResponses And Not $bSentMessage Then
+				If $sOCRString <> -1 And $g_bClanUseResponses And Not $bSentMessage Then
 					For $a = 0 To UBound($g_aClanResponses) - 1
 						If StringInStr($g_aClanResponses[$iRespInt-1][0], $g_aClanResponses[$a][0]) Then
 							Local $sResponse = $g_aClanResponses[$a][1]
@@ -522,24 +522,19 @@ Func FriendlyChallenge()
 
 	ClickP($aAway2, 1, 0, "#0176") ;Click Away
 	Setlog("Checking Friendly Challenge at Clan Chat", $COLOR_INFO)
-	ForceCaptureRegion()
-
-	If Not _CheckPixel($aChatTab, $g_bCapturePixel) Or Not _CheckPixel($aChatTab2, $g_bCapturePixel) Or Not _CheckPixel($aChatTab3, $g_bCapturePixel) Then ClickP($aOpenChat, 1, 0, "#0168") ; Clicks chat tab
-	If _Sleep($DELAYCHATACTIONS3) Then Return
-
-	; check for "I Understand" button
-	Local $aCoord = decodeSingleCoord(findImage("I Understand", $g_sImgChatIUnterstand, GetDiamondFromRect("50,400,280,550")))
-	If UBound($aCoord) > 1 Then
-		SetDebugLog("Clicking 'I Understand' button", $COLOR_ACTION)
-		ClickP($aCoord)
-		If _Sleep($DELAYDONATECC2) Then Return
+	
+	If Not OpenClanChat() Then ; GTFO - Team AIO Mod++
+	SetLog("Error finding the Clan Tab Button", $COLOR_ERROR)
+		Return
 	EndIf
+
 
 	Local $bDoFriendlyChallenge = False
 	Local $sOCRString = "", $iRequested, $iTempR
 
 	If $g_bOnlyOnRequest Then
-		If ReadChatIA($sOCRString, $g_sKeywordFcRequest, False) = True Then
+		$sOCRString = ReadChatIA($g_sKeywordFcRequest, True)
+		If $sOCRString <> -1 Then
 			$bDoFriendlyChallenge = True
 			$iTempR = Number(StringReverse($sOCRString))
 			$iRequested = (BitAnd($iTempR > 0, $iTempR < 7)) ? ($iTempR-1) : (-1)

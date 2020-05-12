@@ -127,7 +127,7 @@ Func btnTestReadChat()
 	$g_bRunState = True
 
 	SetLog(_PadStringCenter(" Test ReadChat begin (" & $g_sBotVersion & ")", 54, "="), $COLOR_INFO)
-	ReadChatIA($sOCRString, $sCondition, True)
+	ReadChatIA($sCondition, True)
 	SetLog(_PadStringCenter(" Test ReadChat end ", 54, "="), $COLOR_INFO)
 
 	$g_bRunState = $currentRunState

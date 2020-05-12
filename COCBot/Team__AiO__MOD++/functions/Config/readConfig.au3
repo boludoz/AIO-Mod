@@ -186,8 +186,16 @@ Func ReadConfig_MOD_ChatActions()
 		$g_abFriendlyChallengeHours[$i] = ($g_abFriendlyChallengeHours[$i] = "1")
 	Next
 
-	IniReadS($g_sIAVar, $g_sProfileConfigPath, "ChatActions", "String", '0|0|0|0|0', Default)
-	$g_aIAVar = StringSplit($g_sIAVar, "|", $STR_NOCOUNT)
+	IniReadS($g_sIAVar, $g_sProfileConfigPath, "ChatActions", "String2D", $g_sIAVar, Default)
+	Local $aPreIAVar = StringSplit($g_sIAVar, "#", $STR_NOCOUNT)
+	
+	Global $g_aIAVar[0][2]
+	For $i = 0 To UBound($aPreIAVar) -1
+		Local $aSplitTmp = StringSplit($aPreIAVar[$i], ",", $STR_NOCOUNT)
+		Local $aTemp[1][2] = [[$aSplitTmp[0], $aSplitTmp[1]]]
+		_ArrayAdd($g_aIAVar, $aTemp) 
+	Next
+	
 EndFunc   ;==>ReadConfig_MOD_ChatActions
 
 Func ReadConfig_MOD_600_6()

@@ -199,8 +199,8 @@ Func SaveConfig_MOD_ChatActions()
 	Next
 	_Ini_Add("ChatActions", "FriendlyChallengePlannedRequestHours", $string)
 
-	$g_sIAVar = _ArrayToString($g_aIAVar)
-	_Ini_Add("ChatActions", "String", $g_sIAVar)
+	Local $sPreIAVar = _ArrayToString($g_aIAVar, ",", -1, -1, "#")
+	_Ini_Add("ChatActions", "String2D", $sPreIAVar)
 
 	_Ini_Add("ChatActions", "ResponseMsgClan", $g_sClanResponses)
 	_Ini_Add("ChatActions", "GenericMsgClan", $g_sClanGeneric)

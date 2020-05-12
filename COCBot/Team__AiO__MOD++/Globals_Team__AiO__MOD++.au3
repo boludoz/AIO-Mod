@@ -22,6 +22,9 @@ Global Enum $eIcnModKingGray = 1, $eIcnModKingBlue, $eIcnModKingGreen, $eIcnModK
 		$eIcnModAccountsS, $eIcnModProfilesS, $eIcnModFarmingS, $eIcnMiscMod, $eIcnSuperXP, $eIcnChatActions, $eIcnHumanization, $eIcnAIOMod, $eIcnDebugMod, _
 		$eIcnLabP, $eIcnShop, $eIcnGoldP, $eIcnElixirP, $eIcnDarkP, $eIcnGFTO, $eIcnMisc, $eIcnPrewar
 
+; Custom remain - Team AIO Mod++
+Global $g_bRemainTweak = True
+
 ; ZoomMod
 Global $g_bZoomFixBB = False
 Global $g_aBoatPos[2] = [Null, Null], $Stonecoord
@@ -133,7 +136,9 @@ Global $g_bFriendlyChallengeBase[6] = [False, False, False, False, False, False]
 Global $g_abFriendlyChallengeHours[24] = [True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True]
 Global $ChatbotStartTime, $ChatbotQueuedChats[0], $ChatbotReadQueued = False, $ChatbotReadInterval = 0, $ChatbotIsOnInterval = False, _
 	$g_sMessage = "", $g_sGlobalChatLastMsgSentTime = "", $g_sClanChatLastMsgSentTime = "", $g_sFCLastMsgSentTime = ""
-Global $g_aIAVar[5] = [0, 0, 0, 0, 0], $g_sIAVar = '0|0|0|0|0'
+
+Global $g_aIAVar[5][2] = [[0,0],[1,0],[2,0],[3,0],[4,0]] , $g_sIAVar = '0,0#1,0#2,0#3,0#4,0'
+
 Global $g_sGetOcrMod = "", $g_aImageSearchXML = -1
 Global $g_aClanResponses, $g_sClanResponses
 Global $g_aClanGeneric, $g_sClanGeneric

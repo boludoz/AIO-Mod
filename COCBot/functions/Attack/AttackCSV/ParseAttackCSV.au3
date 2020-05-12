@@ -410,11 +410,12 @@ Func ParseAttackCSV($debug = False)
 							; REMAIN CMD from @chalicucu
 							If $value4 = "REMAIN" Then
 								#Region - Custom remain - Team AIO Mod++
-								_ArrayShuffle($g_avAttackTroops)
 								ReleaseClicks()
 								SetLog("Drop|Remain:  Dropping left over troops", $COLOR_INFO)
 								; Let's get the troops again and quantities
+								$g_bRemainTweak = True
 								If PrepareAttack($g_iMatchMode, True) > 0 Then
+								_ArrayShuffle($g_avAttackTroops)
 									; a Loop from all troops
 									For $ii = $eBarb To $eSuperWall ; launch all remaining troops
 										If BitAND($ii >= $eSuperBarb, $ii <= $eSuperGiant) = True Or BitAND($ii >= $eBarb, $ii <= $eIceG) = True Then
