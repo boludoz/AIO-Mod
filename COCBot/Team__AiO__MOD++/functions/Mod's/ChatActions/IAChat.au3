@@ -112,7 +112,7 @@ Func getChatStringChineseMod($x_start, $y_start) ; -> Get string chat request - 
 	If StringLen(StringStripWS(getOcrAndCapture("chinese-bundle", $x_start, $y_start, 160, 14, Default, $bUseOcrImgLoc), $STR_STRIPALL)) > 2 Then
 		$sReturn &= $g_sGetOcrMod
 		For $i = 1 To 2
-			If getOcrAndCapture("chinese-bundle", $x_start, $y_start + ($i * 13), 160, 14, Default, $bUseOcrImgLoc), $STR_STRIPALL)) > 2 Then
+			If StringLen(StringStripWS(getOcrAndCapture("chinese-bundle", $x_start, $y_start + ($i * 13), 160, 14, Default, $bUseOcrImgLoc), $STR_STRIPALL)) > 2 Then
 				$sReturn &= " "
 				$sReturn &= $g_sGetOcrMod
 			Else
