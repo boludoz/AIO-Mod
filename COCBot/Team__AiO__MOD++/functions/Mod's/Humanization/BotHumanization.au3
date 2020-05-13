@@ -451,7 +451,7 @@ Func ReturnAtHome()
 	Local $CheckStep = 0
 	While Not IsMainScreen() And $CheckStep <= 5
 		AndroidBackButton()
-		If _Sleep(3000) Then Return
+		If randomSleep(3000) Then Return
 		$CheckStep += 1
 	WEnd
 	If Not IsMainScreen() Then
@@ -462,7 +462,7 @@ Func ReturnAtHome()
 EndFunc   ;==>ReturnAtHome
 
 Func IsMainScreen()
-	Local $Result = _Wait4Pixel(22, 49, 0x04579A, 20, 3000, "IsMainScreen") ;Wait for Main Screen To Be Appear
+	Local $Result = (BitOr(IsMainPage(2), IsMainPageBuilderBase(2)) > 0) ;Wait for Main Screen To Be Appear
 	Return $Result
 EndFunc   ;==>IsMainScreen
 
@@ -532,9 +532,9 @@ EndFunc   ;==>IsClanOverview
 ;EndFunc   ;==>IsWarMenu
 
 Func randomSleep($SleepTime, $Range = 0)
-	If $g_bRunState = False Then Return
+	If $g_bRunState = False Then Return True
 	If $Range = 0 Then $Range = Round($SleepTime / 5)
 	Local $SleepTimeF = Random($SleepTime - $Range, $SleepTime + $Range, 1)
 	If $g_bDebugClick Then SetLog("Default sleep : " & $SleepTime & " - Random sleep : " & $SleepTimeF, $COLOR_ORANGE)
-	If _Sleep($SleepTimeF) Then Return
+	Return _Sleep($SleepTimeF) 
 EndFunc   ;==>randomSleep
