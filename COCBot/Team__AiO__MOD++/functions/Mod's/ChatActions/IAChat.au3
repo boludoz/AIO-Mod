@@ -13,42 +13,27 @@
 ; Example .......: ReadChat()
 ; ===============================================================================================================================
 Func ChatScroll()
-	Local $aCapture = MultiPSimple(19, 673, 30, 678, Hex(0x70AC2A, 6), 15) ; Incomplete
-	If IsArray($aCapture) And UBound($aCapture) > 1 Then
-		$aCapture[0] = Random(15, 40, 1)
-		$aCapture[1] = Int($aCapture[1])
-		PureClickP($aCapture)
-		Return
+	Local $sDirectory = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ChatActions\Sprites"
+	Local $aButton = findMultipleQuick($sDirectory, 1, "5, 626, 24, 680", "Scroll", Default, False, 0)
+	If IsArray($aButton) and UBound($aButton) > 0 Then
+		Local $aClickP = [Random(12, 41, 1), Random($aButton[0][2], 673, 1)]
+		ClickP($aClickP)
+		Return True
 	EndIf
-	
-	Local $aCapture = MultiPSimple(17, 633, 35, 653, Hex(0xDCF984, 6), 15) ; Full
-	If IsArray($aCapture) And UBound($aCapture) > 1 Then
-		$aCapture[0] = Random(15, 40, 1)
-		$aCapture[1] += Random(1, 10, 1)
-		PureClickP($aCapture)
-		Return
-	EndIf
-	
-	Return False
 EndFunc   ;==>ChatScroll
 
-Func ReadChatIATest($sCondition = "Holesia", $bFast = True)
-	Local $sOCR = $sOCRString
-	ReadChatIA($sOCR, $sCondition, $bFast)
-	Setlog($sOCR)
-	_ArrayDisplay($g_aIAVar)
+Func ReadChatIATest($sCondition = "hola", $bFast = True)
+	Setlog(ReadChatIA($sCondition, $bFast))
 EndFunc
 
-Func ReadChatIA($sCondition = "Holesia", $bFast = True)
-	Local $bResult = False
+Func ReadChatIA($sCondition = "hola", $bFast = True)
+	Local $bResult = -1
 	Local $asFCKeyword = ""
 	Local $sDirectory = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ChatActions\Chat"
 
 	ChatScroll()
 	
-	ForceCaptureRegion()
-	
-	Local $aChatY = findMultipleQuick($sDirectory, 9, "259, 49, 269, 677", Default, Default, False, 0)
+	Local $aChatY = findMultipleQuick($sDirectory, 11, "259, 49, 269, 677", Default, Default, False, 0)
 	
 	If Not IsArray($aChatY) Then Return False
 	
@@ -56,17 +41,11 @@ Func ReadChatIA($sCondition = "Holesia", $bFast = True)
 	
 	For $i = 0 To UBound($aChatY) - 1
 
-		If MultiPSimple(32, Int($aChatY[$i][2] - 3), 135, Int($aChatY[$i][2] - 3) + 33, Hex(0x92ED4D, 6), 20) <> 0 Then
-			SetDebugLog("Chat AI : Own talk jumped.", $COLOR_INFO)
-			ContinueLoop
-		EndIf
-		
-		$sOCRString = ""
+		Local $sOCRString = ""
 		
 		;_ArraySort($g_aIAVar, 1, 0, 0, 1)
 		
 		For $ii = 0 To UBound($g_aIAVar) - 1
-			Local $bExit = False
 			If _Sleep(15) Then Return
 			
 			Select
@@ -87,7 +66,11 @@ Func ReadChatIA($sCondition = "Holesia", $bFast = True)
 					SetDebugLog("getChatStringPersianMod : " & $sOCRString)
 			EndSelect
 			
-			If $bExit = True Then ExitLoop
+			If StringLen(StringStripWS($sOCRString, $STR_STRIPALL)) <= 2 Then ContinueLoop
+			
+			Local $aIsOwn[4] = [Int($aChatY[$i][1]), Int($aChatY[$i][2] + 3), Int($aChatY[$i][1] + 79), Int($aChatY[$i][2] + 3 + 29)]
+			
+			If IsArray(findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ChatActions\Sprites\OwnChat", 1, $aIsOwn, Default, Default, False, 100)) Then ContinueLoop
 			
 			Local $sString = StringStripWS($sOCRString, $STR_STRIPLEADING + $STR_STRIPTRAILING + $STR_STRIPSPACES)
 			Local $aString = StringSplit($sString, " ", $STR_NOCOUNT)
@@ -96,11 +79,10 @@ Func ReadChatIA($sCondition = "Holesia", $bFast = True)
 				If StringInStr($sCondition, $aString[$iii]) > 0 Then
 					Setlog("Chat AI : " & $sCondition, $COLOR_SUCCESS)
 					$g_aIAVar[$ii][1] += 1
-					$bResult = True
+					$bResult = $sOCRString
 					If $bFast = True Then Return $bResult
 				EndIf
 			Next
-			|
 		Next
 	Next
 	
@@ -109,10 +91,10 @@ EndFunc   ;==>ReadChatIA
 
 Func getChatStringMod($x_start, $y_start, $language) ; -> Get string chat request - Latin Alphabetic - EN "DonateCC.au3"
 	Local $sReturn = ""
-	If getOcrAndCapture($language, $x_start, $y_start, 280, 16) <> "" Then
+	If StringLen(StringStripWS(getOcrAndCapture($language, $x_start, $y_start, 280, 16), $STR_STRIPALL)) > 2 Then
 		$sReturn &= $g_sGetOcrMod
 		For $i = 1 To 2
-			If getOcrAndCapture($language, $x_start, $y_start + ($i * 13), 280, 16) <> "" Then
+			If StringLen(StringStripWS(getOcrAndCapture($language, $x_start, $y_start + ($i * 13), 280, 16), $STR_STRIPALL)) > 2 Then
 				$sReturn &= " "
 				$sReturn &= $g_sGetOcrMod
 			Else
@@ -127,10 +109,10 @@ Func getChatStringChineseMod($x_start, $y_start) ; -> Get string chat request - 
 	Local $sReturn = ""
 	Local $bUseOcrImgLoc = True
 
-	If getOcrAndCapture("chinese-bundle", $x_start, $y_start, 160, 14, Default, $bUseOcrImgLoc) <> "" Then
+	If StringLen(StringStripWS(getOcrAndCapture("chinese-bundle", $x_start, $y_start, 160, 14, Default, $bUseOcrImgLoc), $STR_STRIPALL)) > 2 Then
 		$sReturn &= $g_sGetOcrMod
 		For $i = 1 To 2
-			If getOcrAndCapture("chinese-bundle", $x_start, $y_start + ($i * 13), 160, 14, Default, $bUseOcrImgLoc) <> "" Then
+			If getOcrAndCapture("chinese-bundle", $x_start, $y_start + ($i * 13), 160, 14, Default, $bUseOcrImgLoc), $STR_STRIPALL)) > 2 Then
 				$sReturn &= " "
 				$sReturn &= $g_sGetOcrMod
 			Else
@@ -145,10 +127,10 @@ Func getChatStringKoreanMod($x_start, $y_start) ; -> Get string chat request - K
 	Local $sReturn = ""
 	Local $bUseOcrImgLoc = True
 
-	If getOcrAndCapture("korean-bundle", $x_start, $y_start, 160, 14, Default, $bUseOcrImgLoc) <> "" Then
+	If StringLen(StringStripWS(getOcrAndCapture("korean-bundle", $x_start, $y_start, 160, 14, Default, $bUseOcrImgLoc), $STR_STRIPALL)) > 2 Then
 		$sReturn &= $g_sGetOcrMod
 		For $i = 1 To 2
-			If getOcrAndCapture("korean-bundle", $x_start, $y_start + ($i * 13), 160, 14, Default, $bUseOcrImgLoc) <> "" Then
+			If StringLen(StringStripWS(getOcrAndCapture("korean-bundle", $x_start, $y_start + ($i * 13), 160, 14, Default, $bUseOcrImgLoc), $STR_STRIPALL)) > 2 Then
 				$sReturn &= " "
 				$sReturn &= $g_sGetOcrMod
 			Else
@@ -163,10 +145,10 @@ Func getChatStringPersianMod($x_start, $y_start) ; -> Get string chat request - 
 	Local $sReturn = ""
 	Local $bUseOcrImgLoc = True
 
-	If getOcrAndCapture("persian-bundle", $x_start, $y_start, 240, 20, Default, $bUseOcrImgLoc, True) <> "" Then
+	If StringLen(StringStripWS(getOcrAndCapture("persian-bundle", $x_start, $y_start, 240, 20, Default, $bUseOcrImgLoc, True), $STR_STRIPALL)) > 2 Then
 		$sReturn &= $g_sGetOcrMod
 		For $i = 1 To 2
-			If getOcrAndCapture("persian-bundle", $x_start, $y_start + ($i * 13), 240, 20, Default, $bUseOcrImgLoc, True) <> "" Then
+			If StringLen(StringStripWS(getOcrAndCapture("persian-bundle", $x_start, $y_start + ($i * 13), 240, 20, Default, $bUseOcrImgLoc, True), $STR_STRIPALL)) > 2 Then
 				$sReturn &= " "
 				$sReturn &= $g_sGetOcrMod
 			Else

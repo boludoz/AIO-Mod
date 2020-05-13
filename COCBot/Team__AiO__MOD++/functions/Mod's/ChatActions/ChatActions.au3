@@ -150,7 +150,7 @@ Func ChatClan() ; Handle Clan Chat Logic
 		Local $bIsLast = ChatbotIsLastChatNew()
 			If Not $bIsLast Then
 				; get text of the latest message
-				Local $sOCRString = "", $sCondition = ""
+				Local $sOCRString = -1, $sCondition = ""
 
 				For $iRespInt = 0 To UBound($g_aClanResponses)-1
 					If $iRespInt = 0 Then
@@ -160,7 +160,7 @@ Func ChatClan() ; Handle Clan Chat Logic
 					EndIf
 				Next
 
-				$bChatMsg = ReadChatIA($sCondition, True)
+				$sOCRString = ReadChatIA($sCondition, True)
 
 				SetDebugLog("ChatActions : Condition " & $sCondition)
 
@@ -530,7 +530,7 @@ Func FriendlyChallenge()
 
 
 	Local $bDoFriendlyChallenge = False
-	Local $sOCRString = "", $iRequested, $iTempR
+	Local $sOCRString = -1, $iRequested, $iTempR
 
 	If $g_bOnlyOnRequest Then
 		$sOCRString = ReadChatIA($g_sKeywordFcRequest, True)
