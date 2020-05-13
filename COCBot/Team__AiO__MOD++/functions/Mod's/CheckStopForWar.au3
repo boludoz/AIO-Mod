@@ -139,6 +139,14 @@ Func CheckStopForWar()
 EndFunc   ;==>CheckStopForWar
 
 Func IsWarMenu()
+	Local $sDirectory = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\WarPage\Window"
+	
+	If _WaitForCheckXML($sDirectory, "805, 75, 846, 119", True, 20000, 250) Then
+		Click(Random(807, 842, 1), Random(79, 114, 1))
+	EndIf
+	
+	If RandomSleep(250) Then Return
+	
 	Local $Result = _ColorCheck(_GetPixelColor(826, 34, True), "FFFFFF", 20)
 	Return $Result
 EndFunc   ;==>IsWarMenu
@@ -184,7 +192,7 @@ Func CheckWarTime(ByRef $sResult, ByRef $bResult) ; return [Success + $sResult =
 				EndIf
 			EndIf
 			$sWarDay = QuickMIS("N1", $directoryDay, 360, 85, 360 + 145, 85 + 28, True) ; Prepare or Battle
-			$bResult = Not(QuickMIS("BC1", $directoryDay, 359, 127, 510, 154, True)); $bInWar.... Fixed (08/2019)
+			$bResult = Not (QuickMIS("BC1", $directoryDay, 359, 127, 510, 154, True)) ; $bInWar.... Fixed (08/2019)
 			If $g_bDebugSetlog Then SetDebugLog("$sResult QuickMIS N1/BC1: " & $sWarDay & "/ " & $bResult)
 			If $sWarDay = "none" Then Return SetError(1, 0, "Error reading war day")
 		EndIf
@@ -253,7 +261,7 @@ Func StopAndPrepareForWar($iSleepTime)
 			If Not OpenArmyTab(False, "StopAndPrepareForWar()") Then Return
 			If _Sleep(300) Then Return
 			Local $toTrainFake[2][2] = [["Barb", 1], ["BtSpell", 1]] ; if the user had a bat spell or barb, delete the left over
-			local $toRemove = WhatToTrain(True)
+			Local $toRemove = WhatToTrain(True)
 			RemoveExtraTroops($toRemove) ; delete all troops except one barb and a bat spell
 			getArmySpells(False, False, False, False)
 			For $i = 0 To $eSpellCount - 1

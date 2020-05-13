@@ -16,7 +16,7 @@
 ; ===============================================================================================================================
 #include-once
 
-Func _Sleep($iDelay = $DELAYSLEEP, $iSleep = True, $CheckRunState = True, $SleepWhenPaused = True)
+Func _Sleep($iDelay = $DELAYSLEEP, $iSleep = True, $bCheckRunState = True, $SleepWhenPaused = True)
 	Local $iBegin = __TimerInit()
 	Local $iRemaining = $iDelay - __TimerDiff($iBegin)
 
@@ -28,13 +28,13 @@ Func _Sleep($iDelay = $DELAYSLEEP, $iSleep = True, $CheckRunState = True, $Sleep
 
 	#Region - AIO ++ - Random / Custom delay
 	Local $iOri = 100
-	If $g_bUseSleep and not BitAND($g_bNoAttackSleep, $g_bAttackActive) Then
-        $iOri = Int($iOri + ($iOri * $g_iIntSleep) / 100)
-		If $g_bUseRandomSleep Then $iOri = Random(($iOri * 90)/100, ($iOri * 110)/100)
+	If $g_bUseSleep And Not BitAND($g_bNoAttackSleep, $g_bAttackActive) Then
+		$iOri = Int($iOri + ($iOri * $g_iIntSleep) / 100)
+		If $g_bUseRandomSleep Then $iOri = Random(($iOri * 90) / 100, ($iOri * 110) / 100)
 	EndIf
 	$iOri /= 100
 	;Setlog($iOri)
-    #EndRegion
+	#EndRegion - AIO ++ - Random / Custom delay
 
 	debugGdiHandle("_Sleep")
 	CheckBotRequests() ; check if bot window should be moved, minized etc.
@@ -46,21 +46,21 @@ Func _Sleep($iDelay = $DELAYSLEEP, $iSleep = True, $CheckRunState = True, $Sleep
 		If $iDelay > 0 And __TimerDiff($g_hTxtLogTimer) >= $g_iTxtLogTimerTimeout Then
 
 			; Notify stuff
-				If __TimerDiff($hTimer_PBRemoteControlInterval) * $iOri >= $g_iPBRemoteControlInterval Or ($hTimer_PBRemoteControlInterval = 0 And $g_bNotifyRemoteEnable) Then
-					NotifyRemoteControl()
-					$hTimer_PBRemoteControlInterval = __TimerInit()
-				EndIf
+			If __TimerDiff($hTimer_PBRemoteControlInterval) * $iOri >= $g_iPBRemoteControlInterval Or ($hTimer_PBRemoteControlInterval = 0 And $g_bNotifyRemoteEnable) Then
+				NotifyRemoteControl()
+				$hTimer_PBRemoteControlInterval = __TimerInit()
+			EndIf
 			
 			; Android & Bot Stuff
-				If (($g_iEmptyWorkingSetAndroid > 0 And __TimerDiff($hTimer_EmptyWorkingSetAndroid) >= $g_iEmptyWorkingSetAndroid * Int(1000 * $iOri)) Or $hTimer_EmptyWorkingSetAndroid = 0) And $g_bRunState And TestCapture() = False Then
-					If IsArray(getAndroidPos(True)) = 1 Then _WinAPI_EmptyWorkingSet(GetAndroidPid()) ; Reduce Working Set of Android Process
-					$hTimer_EmptyWorkingSetAndroid = __TimerInit()
-				EndIf
-				
-				If ($g_iEmptyWorkingSetBot > 0 And __TimerDiff($hTimer_EmptyWorkingSetBot) >= $g_iEmptyWorkingSetBot * Int(1000 * $iOri)) Or $hTimer_EmptyWorkingSetBot = 0 Then
-					ReduceBotMemory(False)
-					$hTimer_EmptyWorkingSetBot = __TimerInit()
-				EndIf
+			If (($g_iEmptyWorkingSetAndroid > 0 And __TimerDiff($hTimer_EmptyWorkingSetAndroid) >= $g_iEmptyWorkingSetAndroid * Int(1000 * $iOri)) Or $hTimer_EmptyWorkingSetAndroid = 0) And $g_bRunState And TestCapture() = False Then
+				If IsArray(getAndroidPos(True)) = 1 Then _WinAPI_EmptyWorkingSet(GetAndroidPid())     ; Reduce Working Set of Android Process
+				$hTimer_EmptyWorkingSetAndroid = __TimerInit()
+			EndIf
+			
+			If ($g_iEmptyWorkingSetBot > 0 And __TimerDiff($hTimer_EmptyWorkingSetBot) >= $g_iEmptyWorkingSetBot * Int(1000 * $iOri)) Or $hTimer_EmptyWorkingSetBot = 0 Then
+				ReduceBotMemory(False)
+				$hTimer_EmptyWorkingSetBot = __TimerInit()
+			EndIf
 
 			CheckPostponedLog()
 
@@ -68,7 +68,7 @@ Func _Sleep($iDelay = $DELAYSLEEP, $iSleep = True, $CheckRunState = True, $Sleep
 	EndIf
 
 	For $i = 0 To Round($iDelay / $iOri)
-	If $CheckRunState = True And $g_bRunState = False Then
+		If $bCheckRunState And $g_bRunState = False Then
 			ResumeAndroid()
 			Return True
 		EndIf
@@ -77,7 +77,7 @@ Func _Sleep($iDelay = $DELAYSLEEP, $iSleep = True, $CheckRunState = True, $Sleep
 			If $g_bTogglePauseUpdateState Then TogglePauseUpdateState("_Sleep") ; Update Pause GUI states
 			If $g_bMakeScreenshotNow = True Then MakeScreenshot($g_sProfileTempPath, ($g_bScreenshotPNGFormat = False) ? ("jpg") : ("png"))
 			If __TimerDiff($g_hTxtLogTimer) >= $g_iTxtLogTimerTimeout * Int(1000 * $iOri) Then
-				If $g_bRunState And Not $g_bSearchMode And Not $g_bBotPaused And ($hTimer_SetTime = 0 Or __TimerDiff($hTimer_SetTime) >=  Int(750 * $iOri)) Then
+				If $g_bRunState And Not $g_bSearchMode And Not $g_bBotPaused And ($hTimer_SetTime = 0 Or __TimerDiff($hTimer_SetTime) >= Int(750 * $iOri)) Then
 					SetTime()
 					$hTimer_SetTime = __TimerInit()
 				EndIf

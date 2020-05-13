@@ -64,7 +64,7 @@ Func GemClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
 	EndIf
 
 EndFunc   ;==>GemClick
-#ce
+#ce; ================================================== RANDOM CLICK/SLEEP PART ================================================== ;
 ; ================================================== HUMAN FUNCTIONS PART ================================================== ;
 
 Func BotHumanization()
@@ -187,14 +187,14 @@ EndFunc   ;==>IsReplayWindow
 
 Func GetReplayDuration($g_iReplayToPause) ; will work with this but can update to make time exact.
 	Local $MaxSpeed = _GUICtrlComboBox_GetCurSel($g_acmbMaxSpeed[$g_iReplayToPause])
-	Local $Result = QuickMIS("N1", $g_sImgHumanizationDuration, 375, 535 + $g_iBottomOffsetY, 430, 570 + $g_iBottomOffsetY)
-	If $Result = "OneMinute" Then
+	Local $bResult = QuickMIS("N1", $g_sImgHumanizationDuration, 375, 535 + $g_iBottomOffsetY, 430, 570 + $g_iBottomOffsetY)
+	If $bResult = "OneMinute" Then
 		$g_aReplayDuration[0] = 1
 		$g_aReplayDuration[1] = 90000
-	ElseIf $Result = "TwoMinutes" Then
+	ElseIf $bResult = "TwoMinutes" Then
 		$g_aReplayDuration[0] = 2
 		$g_aReplayDuration[1] = 150000
-	ElseIf $Result = "ThreeMinutes" Then
+	ElseIf $bResult = "ThreeMinutes" Then
 		$g_aReplayDuration[0] = 3
 		$g_aReplayDuration[1] = 180000
 	Else
@@ -462,73 +462,81 @@ Func ReturnAtHome()
 EndFunc   ;==>ReturnAtHome
 
 Func IsMainScreen()
-	Local $Result = (BitOr(IsMainPage(2), IsMainPageBuilderBase(2)) > 0) ;Wait for Main Screen To Be Appear
-	Return $Result
+	;Wait for Main Screen To Be Appear
+	Local $bResult = False
+	
+	If IsMainPage(2) Then
+		$bResult = True
+	ElseIf IsMainPageBuilderBase(2) Then
+		$bResult = True
+	EndIf
+	
+	Return $bResult
 EndFunc   ;==>IsMainScreen
 
 Func IsMessagesReplayWindow()
-	Local $Result = _Wait4Pixel(750, 93 + $g_iMidOffsetY, 0xED1115, 20, 3000, "IsMessagesReplayWindow") ;Wait for Replay Message Window To Be Appear
-	Return $Result
+	Local $bResult = _Wait4Pixel(750, 93 + $g_iMidOffsetY, 0xED1115, 20, 3000, "IsMessagesReplayWindow") ;Wait for Replay Message Window To Be Appear
+	Return $bResult
 EndFunc   ;==>IsMessagesReplayWindow
 
 Func IsDefensesTab()
-	Local $Result = _Wait4Pixel(180, 80 + $g_iMidOffsetY, 0xF0F4F0, 20, 3000, "IsDefensesTab") ;Wait for Defence To Be Selected
-	Return $Result
+	Local $bResult = _Wait4Pixel(180, 80 + $g_iMidOffsetY, 0xF0F4F0, 20, 3000, "IsDefensesTab") ;Wait for Defence To Be Selected
+	Return $bResult
 EndFunc   ;==>IsDefensesTab
 
 Func IsAttacksTab()
-	Local $Result = _Wait4Pixel(380, 110 + $g_iMidOffsetY, 0xF0F4F0, 20, 3000, "IsAttacksTab") ;Wait for Attack To Be Selected
-	Return $Result
+	Local $bResult = _Wait4Pixel(380, 110 + $g_iMidOffsetY, 0xF0F4F0, 20, 3000, "IsAttacksTab") ;Wait for Attack To Be Selected
+	Return $bResult
 EndFunc   ;==>IsAttacksTab
 
 Func IsBestPlayers()
-	Local $Result = _Wait4Pixel(530, 60 + $g_iMidOffsetY, 0xF0F4F0, 20, 3000, "IsBestPlayers") ;Wait for Best Player Screen To Be Appear
-	Return $Result
+	Local $bResult = _Wait4Pixel(530, 60 + $g_iMidOffsetY, 0xF0F4F0, 20, 3000, "IsBestPlayers") ;Wait for Best Player Screen To Be Appear
+	Return $bResult
 EndFunc   ;==>IsBestPlayers
 
 Func IsBestClans()
-	Local $Result = _Wait4Pixel(350, 60 + $g_iMidOffsetY, 0xF0F4F0, 20, 3000, "IsBestClans") ;Wait for Best Clan Screen To Be Appear
-	Return $Result
+	Local $bResult = _Wait4Pixel(350, 60 + $g_iMidOffsetY, 0xF0F4F0, 20, 3000, "IsBestClans") ;Wait for Best Clan Screen To Be Appear
+	Return $bResult
 EndFunc   ;==>IsBestClans
 
 Func ChatOpen()
-	Local $Result = _Wait4Pixel(330, 382 + $g_iMidOffsetY, 0xC75315, 20, 3000, "ChatOpen") ;Wait for Chat To Be Appear
-	Return $Result
+	Local $bResult = _Wait4Pixel(330, 382 + $g_iMidOffsetY, 0xC75315, 20, 3000, "ChatOpen") ;Wait for Chat To Be Appear
+	Return $bResult
 EndFunc   ;==>ChatOpen
 
 Func IsClanChat()
-	Local $Result = _Wait4Pixel(220, 10, 0x787458, 20, 3000, "IsClanChat") ;Wait for Clan Chat To Be Appear
-	Return $Result
+	Local $bResult = _Wait4Pixel(220, 10, 0x787458, 20, 3000, "IsClanChat") ;Wait for Clan Chat To Be Appear
+	Return $bResult
 EndFunc   ;==>IsClanChat
 
 Func IsGlobalChat()
-	Local $Result = _Wait4Pixel(80, 10, 0x787458, 20, 3000, "IsGlobalChat") ;Wait for Global Chat To Be Appear
-	Return $Result
+	Local $bResult = _Wait4Pixel(80, 10, 0x787458, 20, 3000, "IsGlobalChat") ;Wait for Global Chat To Be Appear
+	Return $bResult
 EndFunc   ;==>IsGlobalChat
 
 Func IsTextBox()
-	Local $Result = _Wait4Pixel(190, 650 + $g_iBottomOffsetY, 0xFFFFFF, 20, 3000, "IsTextBox") ;Wait for Text Box To Be Appear
-	Return $Result
+	Local $bResult = _Wait4Pixel(190, 650 + $g_iBottomOffsetY, 0xFFFFFF, 20, 3000, "IsTextBox") ;Wait for Text Box To Be Appear
+	Return $bResult
 EndFunc   ;==>IsTextBox
 
 Func IsChallengeWindow()
-	Local $Result = _Wait4Pixel(700, 110 , 0xFFFFFF, 20, 3000, "IsChallengeWindow") ;Wait for Challenge Window To Be Appear
-	Return $Result
+	Local $bResult = _Wait4Pixel(700, 110, 0xFFFFFF, 20, 3000, "IsChallengeWindow")  ;Wait for Challenge Window To Be Appear
+	Return $bResult
 EndFunc   ;==>IsChallengeWindow
 
 Func IsChangeLayoutMenu()
-	Local $Result = _Wait4Pixel(180, 110 , 0xFFFFFF, 20, 3000, "IsChangeLayoutMenu") ;Wait for Is Change Layout Menu To Be Appear
-	Return $Result
+	Local $bResult = _Wait4Pixel(180, 110, 0xFFFFFF, 20, 3000, "IsChangeLayoutMenu")  ;Wait for Is Change Layout Menu To Be Appear
+	Return $bResult
 EndFunc   ;==>IsChangeLayoutMenu
 
 Func IsClanOverview()
-	Local $Result = _Wait4Pixel(822, 40 + $g_iMidOffsetY, 0xFFFFFF, 20, 3000, "IsClanOverview") ;Wait for Is Clan Overview To Be Appear
-	Return $Result
+	Local $bResult = _Wait4Pixel(822, 40 + $g_iMidOffsetY, 0xFFFFFF, 20, 3000, "IsClanOverview") ;Wait for Is Clan Overview To Be Appear
+	Return $bResult
 EndFunc   ;==>IsClanOverview
 
 ;Func IsWarMenu()
-;	Local $Result = _ColorCheck(_GetPixelColor(826, 34, True), "FFFFFF", 20)
-;	Return $Result
+;	Local $bResult = _ColorCheck(_GetPixelColor(826, 34, True), "FFFFFF", 20)
+;	Return $bResult
 ;EndFunc   ;==>IsWarMenu
 
 Func randomSleep($SleepTime, $Range = 0)
@@ -536,5 +544,5 @@ Func randomSleep($SleepTime, $Range = 0)
 	If $Range = 0 Then $Range = Round($SleepTime / 5)
 	Local $SleepTimeF = Random($SleepTime - $Range, $SleepTime + $Range, 1)
 	If $g_bDebugClick Then SetLog("Default sleep : " & $SleepTime & " - Random sleep : " & $SleepTimeF, $COLOR_ORANGE)
-	Return _Sleep($SleepTimeF) 
+	Return _Sleep($SleepTimeF)
 EndFunc   ;==>randomSleep

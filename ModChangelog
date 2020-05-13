@@ -22,9 +22,12 @@
 			
 			• Humanization : Check main screen (Click ok) fixed (thx @esbestan).
 			
+			• General funcs fixed and code embellished by Tidy: IsWarMenu(), Humanization, etc.
+			
 		» Improved:
 			• Switch BB Base.
 			• Chat AI : Much, much faster (thx @AceOf$pades).
+			• Funcs improved.
 			
 	**V3.3.7**
 		» Updated: MBR v7.8.3.

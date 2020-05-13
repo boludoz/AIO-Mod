@@ -195,7 +195,7 @@ Func BuilderBaseParseAttackCSV($AvailableTroops, $DeployPoints, $DeployBestPoint
 					; Gets Verify Quantities on Slot and what is necessary
 					Local $iTotalQtyByTroop = 0
 					For $i = 0 To UBound($aAvailableTroops_NXQ) - 1
-						If StringInStr($aAvailableTroops_NXQ[$i][0], $sTroopName) <> 0  Then
+						If StringInStr($aAvailableTroops_NXQ[$i][0], $sTroopName) <> 0 Then
 							$iTotalQtyByTroop += $aAvailableTroops_NXQ[$i][4]
 						EndIf
 					Next
@@ -742,7 +742,7 @@ EndFunc   ;==>GetThePointNearBH
 
 Func TriggerMachineAbility()
 
-	If not $g_bIsBBMachineD Then Return
+	If Not $g_bIsBBMachineD Then Return
 
 	If UBound($g_aMachineBB) = 0 Then Return
 
@@ -753,13 +753,13 @@ Func TriggerMachineAbility()
 	If $g_bBBIsFirst And UBound($aMachine) > 2 Then
 
 		If MultiPSimple(Int($aMachine[0]) - 11, Int($aMachine[1]) - 21, Int($aMachine[0]) + 51, Int($aMachine[1]) + 73, Hex(0x5225C4, 6), 28, 1000, 30) <> 0 Then
-				ClickP($aMachine, 2, 0)
-				If _Sleep(300) Then Return
-				SetLog("- BB Machine : Skill enabled." , $COLOR_ACTION)
-				$g_bBBIsFirst = False
-				Return
-			Else
-			SetLog("- BB Machine : Skill not present." , $COLOR_INFO)
+			ClickP($aMachine, 2, 0)
+			If _Sleep(300) Then Return
+			SetLog("- BB Machine : Skill enabled.", $COLOR_ACTION)
+			$g_bBBIsFirst = False
+			Return
+		Else
+			SetLog("- BB Machine : Skill not present.", $COLOR_INFO)
 			$g_bIsBBMachineD = False
 			Return
 		EndIf
@@ -768,7 +768,7 @@ Func TriggerMachineAbility()
 	If MultiPSimple(Int($aMachine[0]) - 11, Int($aMachine[1]) - 21, Int($aMachine[0]) + 51, Int($aMachine[1]) + 73, Hex(0x5225C4, 6), 28, 200, 30) <> 0 Then
 		ClickP($aMachine, 2, 0)
 		If _Sleep(300) Then Return
-		SetLog("- BB Machine : Click on ability." , $COLOR_INFO)
+		SetLog("- BB Machine : Click on ability.", $COLOR_INFO)
 	EndIf
 EndFunc   ;==>TriggerMachineAbility
 
