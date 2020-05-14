@@ -53,7 +53,3 @@ Func radGoblinMapOptSX()
 	GUICtrlSetState($g_hRdoGoblinPicnic, $g_iGoblinMapOptSX = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 	GUICtrlSetState($g_hRdoTheArena, $g_iGoblinMapOptSX = 2 ? $GUI_CHECKED : $GUI_UNCHECKED)
 EndFunc   ;==>radGoblinMapOptSX
-
-Func SuperXPFixFunc()
-	ApplyConfig_MOD_SuperXP("Save")
-EndFunc

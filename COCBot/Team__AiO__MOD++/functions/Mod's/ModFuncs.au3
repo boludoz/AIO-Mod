@@ -179,9 +179,6 @@ Func findMultipleQuick($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "
 	; Sort by X axis
 	_ArraySort($aAllResults, 0, 0, 0, 1)
 	If $iDistance2check > 0 And UBound($aAllResults) > 0 Then
-		; Sort by X axis
-		_ArraySort($aAllResults, 0, 0, 0, 1)
-
 		; Distance in pixels to check if is a duplicated detection , for deploy point will be 5
 		Local $D2Check = $iDistance2check
 
@@ -261,66 +258,6 @@ Func ClickFindMatch($bCheckOneTime = False)
 
 	Return False
 EndFunc   ;==>ClickFindMatch
-
-Func ClickCollect($bCheckOneTime = False)
-	Local $i = 0
-	If _Sleep($DELAYSPECIALCLICK1) Then Return False ; Wait for 'Collect LootCard' button window
-	While 1 ; Wait for window with 'Collect LootCard' Button
-		Local $offColors[3][3] = [[0x0D0D0D, 82, 0], [0xFFFFFF, 36, 53], [0xFFFFFF, 62, 53]]
-		Local $ButtonPixel = _MultiPixelSearch(330, 555 + $g_iMidOffsetY, 530, 645 + $g_iMidOffsetY, 1, 1, Hex(0x0D0D0D, 6), $offColors, 15)
-		If IsArray($ButtonPixel) Then
-			If $g_bDebugSetlog Then
-				SetDebugLog("ButtonPixelLocation = " & $ButtonPixel[0] & ", " & $ButtonPixel[1], $COLOR_DEBUG) ;Debug
-				SetDebugLog("Pixel color found #1: " & _GetPixelColor($ButtonPixel[0], $ButtonPixel[1], True) & _
-						", #2: " & _GetPixelColor($ButtonPixel[0] + 82, $ButtonPixel[1], True) & _
-						", #3: " & _GetPixelColor($ButtonPixel[0] + 36, $ButtonPixel[1] + 53, True) & _
-						", #4: " & _GetPixelColor($ButtonPixel[0] + 62, $ButtonPixel[1] + 53, True), $COLOR_DEBUG)
-			EndIf
-			PureClick($ButtonPixel[0] + 40, $ButtonPixel[1] + 20, 1, 0) ; Click 'Collect LootCard' Button
-			ExitLoop
-		EndIf
-		If $bCheckOneTime Then Return False ; enable external control of loop count or follow on actions, return false if not clicked
-		If $i > 5 Then
-			SetLog("Can not find button for 'Collect LootCard', giving up", $COLOR_ERROR)
-			If $g_bDebugImageSave Then SaveDebugImage("Collect_ButtonCheck_")
-			SetError(1, @extended, False)
-			Return
-		EndIf
-		$i += 1
-		If _Sleep($DELAYSPECIALCLICK2) Then Return False ; improve pause button response
-	WEnd
-	Return True
-EndFunc   ;==>ClickCollect
-
-Func ClickRemoveObstacles($bCheckOneTime = False)
-	Local $i = 0
-	If _Sleep($DELAYSPECIALCLICK1) Then Return False ; Wait for 'Remove Obstacles' button window
-	While 1 ; Wait for window with 'Remove Obstacles' Button
-		Local $offColors[3][3] = [[0x0D0D0D, 82, 0], [0xFCFCFC, 17, 53], [0xFCFCFC, 35, 55]]
-		Local $ButtonPixel = _MultiPixelSearch(330, 555 + $g_iMidOffsetY, 530, 645 + $g_iMidOffsetY, 1, 1, Hex(0x0D0D0D, 6), $offColors, 15)
-		If IsArray($ButtonPixel) Then
-			If $g_bDebugSetlog Then
-				SetDebugLog("ButtonPixelLocation = " & $ButtonPixel[0] & ", " & $ButtonPixel[1], $COLOR_DEBUG) ;Debug
-				SetDebugLog("Pixel color found #1: " & _GetPixelColor($ButtonPixel[0], $ButtonPixel[1], True) & _
-						", #2: " & _GetPixelColor($ButtonPixel[0] + 82, $ButtonPixel[1], True) & _
-						", #3: " & _GetPixelColor($ButtonPixel[0] + 17, $ButtonPixel[1] + 53, True) & _
-						", #4: " & _GetPixelColor($ButtonPixel[0] + 35, $ButtonPixel[1] + 55, True), $COLOR_DEBUG)
-			EndIf
-			PureClick($ButtonPixel[0] + 40, $ButtonPixel[1] + 20, 1, 0) ; Click 'Remove Obstacles' Button
-			ExitLoop
-		EndIf
-		If $bCheckOneTime Then Return False ; enable external control of loop count or follow on actions, return false if not clicked
-		If $i > 5 Then
-			SetLog("Can not find button for 'Remove Obstacles', giving up", $COLOR_ERROR)
-			If $g_bDebugImageSave Then SaveDebugImage("Remove_ButtonCheck_")
-			SetError(1, @extended, False)
-			Return
-		EndIf
-		$i += 1
-		If _Sleep($DELAYSPECIALCLICK2) Then Return False ; improve pause button response
-	WEnd
-	Return True
-EndFunc   ;==>ClickRemoveObstacles
 
 Func SearchNoLeague($bCheckOneTime = False)
 	Local $i = 0

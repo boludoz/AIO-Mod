@@ -24,11 +24,10 @@ Global $g_hLblStartXP = 0, $g_hLblCurrentXP = 0, $g_hLblWonXP = 0, $g_hLblWonHou
 Func TabSuperXPGUI()
 
 	Local $x = 25, $y = 45
-	GUICtrlCreateGroup(GetTranslatedFileIni("MOD GUI Design - SuperXP", "Group_01", "Settings"), $x - 20, $y - 20, $g_iSizeWGrpTab2, $g_iSizeHGrpTab2)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MOD GUI Design - SuperXP", "Group_01", "Super XP"), $x - 20, $y - 20, $g_iSizeWGrpTab2, $g_iSizeHGrpTab2)
 	$x -= 5
 	$y -= 5
 		$g_hLblLockedSX = GUICtrlCreateLabel(GetTranslatedFileIni("MOD GUI Design - SuperXP", "Label_01", "LOCKED"), $x + 270, $y + 82, 173, 50)
-		    GUICtrlSetOnEvent(-1, "SuperXPFixFunc")
 			GUICtrlSetFont(-1, 25, 800, 0, "Arial")
 			GUICtrlSetColor(-1, 0xFF0000)
 			GUICtrlSetState(-1, $GUI_HIDE)
@@ -36,15 +35,12 @@ Func TabSuperXPGUI()
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design - SuperXP", "ChkEnableSuperXP_Info_01", "SuperXP Attacks Continuously the 'Goblin Picnic/The Arena' To Earn XP."))
 			GUICtrlSetOnEvent(-1, "chkEnableSuperXP")
 		$g_hChkSkipZoomOutSX = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design - SuperXP", "ChkSkipZoomOutSX", "Skip ZoomOut"), $x + 120, $y, -1, -1)
-		    GUICtrlSetOnEvent(-1, "SuperXPFixFunc")
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design - SuperXP", "ChkSkipZoomOutSX_Info_01", "Skip ZoomOut after Attack Finsihed."))
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
 		$g_hChkFastSuperXP = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design - SuperXP", "ChkFastSuperXP", "Fast SuperXP"), $x + 215, $y, -1, -1)
-		    GUICtrlSetOnEvent(-1, "SuperXPFixFunc")
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design - SuperXP", "ChkFastSuperXP_Info_01", "Skip Current Xp Check from main screen and make SuperXP Fast."))
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
 		$g_hChkSkipDragToEndSX = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design - SuperXP", "ChkSkipDragToEndSX", "Skip Drag To End"), $x + 310, $y, -1, -1)
-		    GUICtrlSetOnEvent(-1, "SuperXPFixFunc")
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design - SuperXP", "ChkSkipDragToEndSX_Info_01", "Skip End Drag To Start Finding 'Goblin Picnic/The Arena' From Current Mission.") & @CRLF & _
 					GetTranslatedFileIni("MOD GUI Design - SuperXP", "ChkSkipDragToEndSX_Info_02", "Note: Uncheck When You Have Unlocked All 'Goblin Picnic/The Arena'. It will be fast.") & @CRLF & _
 					GetTranslatedFileIni("MOD GUI Design - SuperXP", "ChkSkipDragToEndSX_Info_03", "Note: Check When You Have New Missions Locked. It will be fast."))
@@ -60,25 +56,21 @@ Func TabSuperXPGUI()
 	$y += 20
 		GUIStartGroup()
 		$g_hRdoTrainingSX = GUICtrlCreateRadio(GetTranslatedFileIni("MOD GUI Design - SuperXP", "RdoTrainingSX", "Farm XP during troops Training"), $x, $y, -1, -1)
-		    GUICtrlSetOnEvent(-1, "SuperXPFixFunc")
 			GUICtrlSetState(-1, $GUI_CHECKED)
 		$g_hRdoAttackingSX = GUICtrlCreateRadio(GetTranslatedFileIni("MOD GUI Design - SuperXP", "RdoAttackingSX", "Farm XP instead of Attacking"), $x, $y + 20, -1, -1)
-		    GUICtrlSetOnEvent(-1, "SuperXPFixFunc")
-			
+
 		GUIStartGroup()
 		$g_hRdoGoblinPicnic = GUICtrlCreateRadio(GetTranslatedFileIni("MOD GUI Design - SuperXP", "RdoGoblinPicnic", "Goblin Picnic"), $x + 220, $y, -1, -1)
-		    GUICtrlSetOnEvent(-1, "SuperXPFixFunc")
+			GUICtrlSetOnEvent(-1, "radLblGoblinMapOpt")
 		$g_hRdoTheArena = GUICtrlCreateRadio(GetTranslatedFileIni("MOD GUI Design - SuperXP", "RdoTheArena", "The Arena"), $x + 220, $y + 20, -1, -1)
-		    GUICtrlSetOnEvent(-1, "SuperXPFixFunc")
 			GUICtrlSetState(-1, $GUI_CHECKED)
+			GUICtrlSetOnEvent(-1, "radLblGoblinMapOpt")
 
 	$y += 42
 		GUICtrlCreateLabel(GetTranslatedFileIni("MOD GUI Design - SuperXP", "MaxXPToGain", "Max XP to Gain") & ":", $x, $y + 8, -1, -1)
-		$g_hTxtMaxXPToGain = _GUICtrlCreateInput("500", $x + 85, $y + 4, 70, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
-		    GUICtrlSetOnEvent(-1, "SuperXPFixFunc")
+		$g_hTxtMaxXPToGain = GUICtrlCreateInput("500", $x + 85, $y + 4, 70, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			GUICtrlSetLimit(-1, 8)
-			
-
+			GUICtrlSetBkColor(-1, 0xD1DFE7)
 
 	$x += 85
 	$y += 28
@@ -88,13 +80,10 @@ Func TabSuperXPGUI()
 	$y += 68
 		GUICtrlCreateLabel(GetTranslatedFileIni("MOD GUI Design - SuperXP", "Label_04", "Pick Hero/es:"), $x - 85, $y, -1, -1)
 		$g_hChkBKingSX = GUICtrlCreateCheckbox("", $x + 25, $y, 13, 13)
-		    GUICtrlSetOnEvent(-1, "SuperXPFixFunc")
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
 		$g_hChkAQueenSX = GUICtrlCreateCheckbox("", $x + 110, $y, 13, 13)
-		    GUICtrlSetOnEvent(-1, "SuperXPFixFunc")
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
 		$g_hChkGWardenSX = GUICtrlCreateCheckbox("", $x + 195, $y, 13, 13)
-		    GUICtrlSetOnEvent(-1, "SuperXPFixFunc")
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
 
 	$x -= 85

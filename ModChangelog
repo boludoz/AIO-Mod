@@ -5,29 +5,33 @@
 
                     Based on MyBot.run v7.8.3 
 					
-	**V3.3.8** (Quality update)
+		
+	**V3.3.9** (Quality update)
+
+		» Added:
+			• Kick Out.
+
 		» Fixed:
 			• Train system.
-			
+			• Remain system : Now it will drop the hero if it is not marked in the GUI..
 			• Builder Base.
 				- Attack bar for BB attack.
 				- Remain logic for builder base.
 				- Builder base CSV troops select.
 				- BB Machine builder base on CSV Attack.
 				- Enabled random wave for smart attack BB.
-
+				
 			• Friendly Challenge: Start button fixed (March update).
-
 			• Super XP: Image tolerance.
-			
 			• Humanization : Check main screen (Click ok) fixed (thx @esbestan).
-			
 			• General funcs fixed and code embellished by Tidy: IsWarMenu(), Humanization, etc.
-			
+
 		» Improved:
+			• Super XP : Restored GUI.
 			• Switch BB Base.
 			• Chat AI : Much, much faster (thx @AceOf$pades).
 			• Funcs improved.
+			• Update window : If the user does not respond, it will close in 10 seconds.
 			
 	**V3.3.7**
 		» Updated: MBR v7.8.3.

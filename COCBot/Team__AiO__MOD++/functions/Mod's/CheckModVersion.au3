@@ -55,7 +55,7 @@ Func CheckModVersion($bSilent = True)
 	EndIf
 	
 	If $bUpdate Then
-		Local $iNewVersion  = MsgBox (4, "New version " & $g_sBotGitVersion ,"Do you want to download the latest update?")
+		Local $iNewVersion  = MsgBox (4, "New version " & $g_sBotGitVersion ,"Do you want to download the latest update?", 10)
 			
 		If $iNewVersion = 6 Then
 			Local $sUrl='https://github.com/boludoz/AIO-Mod/releases/download/v' & $g_sBotGitVersion & '/MyBot.run.zip'

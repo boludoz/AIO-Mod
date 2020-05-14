@@ -69,77 +69,67 @@ Local $InternalAreaRef[8][3] = [ _
 		[$DiamondMiddleX + ($InnerDiamondRight - $DiamondMiddleX) / 2, $DiamondMiddleY + ($InnerDiamondBottom - $DiamondMiddleY) / 2, "BOTTOM-RIGHT"] _
 		]
 
-ConvertInternalExternArea("Initial", True) ; initial layout so variables are not empty
+ConvertInternalExternArea() ; initial layout so variables are not empty
 
-
-Func ConvertInternalExternArea($sFunctionName = "Initial", $bInitial = False)
-
+Func ConvertInternalExternArea()
 	Local $x, $y
-	
-	; ###### OFFSET WORK START #######
-	Local $OffsetRef[2] = [220, 104]
-	Local $offset2Use[2] = [0, 0]
-	
-	If $bInitial = False Then ; pro mac
-		Local $Offset = findMultipleQuick(@ScriptDir & "\imgxml\village\Offset\", 1, "170,75,270,240")
-		
-		If IsArray($Offset) Then
-			$offset2Use[0] = $Offset[0][1] - $OffsetRef[0]
-			$offset2Use[1] = $Offset[0][2] - $OffsetRef[1]
-		EndIf
-	EndIf
-	; ###### OFFSET WORK END #######
-	
-	SetDebugLog("ConvertInternalExternArea called from " & $sFunctionName)
 
 	; Update External coord.
 	For $i = 0 To 7
-		$x = $ExternalAreaRef[$i][0] + $offset2Use[0]
-		$y = $ExternalAreaRef[$i][1] + $offset2Use[1]
+		$x = $ExternalAreaRef[$i][0]
+		$y = $ExternalAreaRef[$i][1]
 		ConvertToVillagePos($x, $y)
 		$ExternalArea[$i][0] = $x
 		$ExternalArea[$i][1] = $y
 		$ExternalArea[$i][2] = $ExternalAreaRef[$i][2]
-		If $g_bDebugAttackCSV Then SetDebugLog("External Area Point " & $ExternalArea[$i][2] & ": " & $x & ", " & $y)
+		;debugAttackCSV("External Area Point " & $ExternalArea[$i][2] & ": " & $x & ", " & $y)
 	Next
 	; Full ECD Diamond $CocDiamondECD
-	$CocDiamondECD = $ExternalArea[2][0] & "," & $ExternalArea[2][1] & "|" & _
-			$ExternalArea[1][0] & "," & $ExternalArea[1][1] & "|" & _
-			$ExternalArea[3][0] & "," & $ExternalArea[3][1] & "|" & _
-			$ExternalArea[0][0] & "," & $ExternalArea[0][1]
+	; Top
+	$x = $ExternalAreaRef[2][0]
+	$y = $ExternalAreaRef[2][1] + $DiamandAdjY
+	ConvertToVillagePos($x, $y)
+	$CocDiamondECD = $x & "," & $y
+	; Right
+	$x = $ExternalAreaRef[1][0] - $DiamandAdjX
+	$y = $ExternalAreaRef[1][1]
+	ConvertToVillagePos($x, $y)
+	$CocDiamondECD &= "|" & $x & "," & $y
+	; Bottom
+	$x = $ExternalAreaRef[3][0]
+	$y = $ExternalAreaRef[3][1] - $DiamandAdjY
+	ConvertToVillagePos($x, $y)
+	$CocDiamondECD &= "|" & $x & "," & $y
+	; Left
+	$x = $ExternalAreaRef[0][0] + $DiamandAdjX
+	$y = $ExternalAreaRef[0][1]
+	ConvertToVillagePos($x, $y)
+	$CocDiamondECD &= "|" & $x & "," & $y
 
 	; Update Internal coord.
 	For $i = 0 To 7
-		$x = $InternalAreaRef[$i][0] + $offset2Use[0]
-		$y = $InternalAreaRef[$i][1] + $offset2Use[1]
+		$x = $InternalAreaRef[$i][0]
+		$y = $InternalAreaRef[$i][1]
 		ConvertToVillagePos($x, $y)
 		$InternalArea[$i][0] = $x
 		$InternalArea[$i][1] = $y
 		$InternalArea[$i][2] = $InternalAreaRef[$i][2]
-		If $g_bDebugAttackCSV Then SetDebugLog("Internal Area Point " & $InternalArea[$i][2] & ": " & $x & ", " & $y)
+		;debugAttackCSV("Internal Area Point " & $InternalArea[$i][2] & ": " & $x & ", " & $y)
 	Next
-
-	; Full DCD Diamond $CocDiamondDCD
 	$CocDiamondDCD = $InternalArea[2][0] & "," & $InternalArea[2][1] & "|" & _
 			$InternalArea[1][0] & "," & $InternalArea[1][1] & "|" & _
 			$InternalArea[3][0] & "," & $InternalArea[3][1] & "|" & _
 			$InternalArea[0][0] & "," & $InternalArea[0][1]
 
-	; $CocDiamondDCD
-	$DiamondMiddleX = $InternalArea[2][0]
-	$DiamondMiddleY = $InternalArea[0][1]
-
 EndFunc   ;==>ConvertInternalExternArea
 
-Func CheckAttackLocation(ByRef $x, ByRef $y)
-
-	If $y > $DeployableLRTB[3] Then
-		$y = $DeployableLRTB[3]
+Func CheckAttackLocation(ByRef $iX, ByRef $iY)
+	If $iY > $DeployableLRTB[3] Then
+		$iY = $DeployableLRTB[3]
 		Return False
 	EndIf
-	Return True
 
-	;debugAttackCSV("CheckAttackLocation: Failed: " & $x & ", " & $y)
+	Return True
 EndFunc   ;==>CheckAttackLocation
 
 Func GetMinPoint($PointList, $Dim)
