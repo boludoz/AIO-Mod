@@ -24,7 +24,7 @@ EndFunc   ;==>TestrunBuilderBase
 
 Func runBuilderBase($bTestRun = False)
 	
-	If not SwitchBetweenBases(True, "Builder Base") Then return false
+	If not SwitchBetweenBases() Then return false
 	$g_bStayOnBuilderBase = True
 
 	If Not $g_bRunState Then Return
@@ -134,7 +134,7 @@ Func runBuilderBase($bTestRun = False)
 
 	If Not $g_bChkPlayBBOnly Then
 			; switch back to normal village
-			SwitchBetweenBases(True, "Normal Village")
+			SwitchBetweenBases()
 			$g_bStayOnBuilderBase = False
 
 			If Not $g_bRunState Then Return
