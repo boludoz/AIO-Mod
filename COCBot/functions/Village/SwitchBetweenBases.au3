@@ -30,6 +30,12 @@ Func SwitchBetweenBases($bCheckMainScreen = True, $bGoTo = Default)
 			
 			If UBound($aButtonCoords) > 1 Then $bIsIn = True
 			SetLog("Is in " & $bGoTo & "? " & $bIsIn, $COLOR_INFO)
+			
+			If $bIsFix = True Then
+				If $bCheckMainScreen And checkMainScreen(True, $bGoTo = ("Builder Base") ? (True) : (False)) Then Return True
+				Return True
+			EndIf
+			
 		EndIf			
 	
 		Select
@@ -81,7 +87,7 @@ Func SwitchBetweenBases($bCheckMainScreen = True, $bGoTo = Default)
 		ZoomOut() ; ensure boat is visible
 		If Not $g_bRunState Then Return
 		
-		If $bCheckMainScreen And $bIsFix = True And checkMainScreen(True, Not $bIsOnBuilderBase) Then 
+		If $bCheckMainScreen And checkMainScreen(True, Not $bIsOnBuilderBase) Then 
 				Return True
 		EndIf
 		
