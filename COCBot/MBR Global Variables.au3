@@ -899,6 +899,8 @@ Func GetTroopName(Const $iIndex, $iQuantity = 1, $bShortName = False)
 		Else
 			Return "Castle"
 		EndIf
+	Else
+		Return -1
 	EndIf
 EndFunc   ;==>GetTroopName
 #EndRegion - Return short names - Team AiO MOD++
