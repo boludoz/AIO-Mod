@@ -59,16 +59,25 @@ Func BattleMachineUpgrade($bTestRun = False)
 		BuilderBaseCheckMachine($aMachineStatus, $bTestRun)
 
 		If _Sleep(500) Then Return
-		ClickP($aAway, 2, 100, "#0900") ;Click Away
 	Else
 		If _Sleep(500) Then Return
 		ClickP($aAway, 2, 100, "#0900") ;Click Away
 		Setlog("Battle machine skipped : upgrade in progress.", $COLOR_INFO)
 		Return
 	EndIf
-
+	
 	; Remain Times and if we are waiting or Not
 	$g_sMachineTime = '1000/01/01 00:00:00'
+
+	Local $aUpgradeButton = findButton("Upgrade", Default, 1, True)
+	If IsArray($aUpgradeButton) And UBound($aUpgradeButton, 1) = 2 Then
+		If _Sleep($DELAYUPGRADEHERO2) Then Return
+		ClickP($aUpgradeButton)
+		If _Sleep($DELAYUPGRADEHERO3) Then Return ; Wait for window to open
+		Else
+		Setlog("findButton error in BTM Upgrade.", $COLOR_ERROR)
+		Return False
+	EndIf
 
 	If $aMachineStatus[1] = 0 Then
 		If FastBottomGreen() Then
@@ -112,19 +121,18 @@ Func BuilderBaseCheckMachine(ByRef $aMachineStatus, $bTestRun = 0)
 			If $bTestRun > 0 Then Setlog("Machine Found: " & _ArrayToString($MachinePosition))
 			Click($MachinePosition[0][1], $MachinePosition[0][2], 1, 0, "#901")
 
-			For $i = 0 To 10
-				If _Sleep(200) Then Return
-				; $aResult[1] = Name , $aResult[2] = Level
-				Local $aResult = BuildingInfo(242, 520 - 30 + $g_iBottomOffsetY) ; 860x780
-				If Not IsArray($aResult) Then ExitLoop
-				Setlog("Machine LVL : " &  $aResult[2], $COLOR_INFO)
-				If UBound($aResult) >= 2 Then ExitLoop
-				If $i = 10 Then
-					Setlog("Error geting the Machine Info", $COLOR_ERROR)
-					ClickP($aAway, 2, 300, "#900") ;Click Away
-					Return
-				EndIf
-			Next
+			If _Sleep(200) Then Return
+			; $aResult[1] = Name , $aResult[2] = Level
+			Local $aResult = BuildingInfo(242, 490 + $g_iBottomOffsetY) ; 860x780
+			If Not IsArray($aResult) Then Return
+			Setlog("Machine LVL : " &  $aResult[2], $COLOR_INFO)
+			
+			If UBound($aResult) = 0 Then 
+				Setlog("Error geting the Machine Info", $COLOR_ERROR)
+				ClickP($aAway, 2, 300, "#900") ;Click Away
+				Return
+			EndIf
+			
 			$aMachineStatus[1] = $aResult[2] <> "Broken" ? Number($aResult[2]) : 0
 			If $bTestRun > 0 Then Setlog("Machine Level: " & $aMachineStatus[1])
 		Else
@@ -132,7 +140,6 @@ Func BuilderBaseCheckMachine(ByRef $aMachineStatus, $bTestRun = 0)
 			$aMachineStatus[1] = 0
 		EndIf
 	EndIf
-	ClickP($aAway, 2, 300, "#900") ;Click Away
 EndFunc   ;==>BuilderBaseCheckMachine
 
 ; Machine
@@ -183,11 +190,11 @@ Func BattleMachineUpgradeUpgrade($sSelectedUpgrade, $iXMoved = 0, $iYMoved = 0, 
 
 			If isGemOpen(True) = False Then ; check for gem window
 				; check for green button to use gems to finish upgrade, checking if upgrade actually started
-				If Not (_ColorCheck(_GetPixelColor(625 + $iXMoved, 218 + $g_iMidOffsetY + $iYMoved, True), Hex(0x6fbd1f, 6), 15) Or _ColorCheck(_GetPixelColor(660 + $iXMoved, 218 + $g_iMidOffsetY + $iYMoved, True), Hex(0x6fbd1f, 6), 15)) Then
-					SetLog("Something went wrong with " & $sSelectedUpgrade & " Upgrade, try again.", $COLOR_ERROR)
-					ClickP($aAway, 2, $DELAYLABUPGRADE3, "#0360")
-					Return False
-				EndIf
+				;If Not (_ColorCheck(_GetPixelColor(625 + $iXMoved, 218 + $g_iMidOffsetY + $iYMoved, True), Hex(0x6fbd1f, 6), 15) Or _ColorCheck(_GetPixelColor(660 + $iXMoved, 218 + $g_iMidOffsetY + $iYMoved, True), Hex(0x6fbd1f, 6), 15)) Then
+				;	SetLog("Something went wrong with " & $sSelectedUpgrade & " Upgrade, try again.", $COLOR_ERROR)
+				;	ClickP($aAway, 2, $DELAYLABUPGRADE3, "#0360")
+				;	Return False
+				;EndIf
 				
 				SetLog("Upgrade " & $sSelectedUpgrade & " started with success...", $COLOR_SUCCESS)
 				PushMsg("BattleMachineUpgradeSuccess")

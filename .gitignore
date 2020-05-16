@@ -1,14 +1,14 @@
 Features/
 Help/desktop.ini
-MyBot.run.MiniGui_stripped.au3
-MyBot.run.Watchdog_stripped.au3
+#MyBot.run.MiniGui_stripped.au3
+#MyBot.run.Watchdog_stripped.au3
+#MyBot.run.Wmi_stripped.au3
+#MyBot.run_stripped.au3
 MyBot.run.exe
 MyBot.run.MiniGui.exe
 MyBot.run.Watchdog.exe
 EnableMBRDebug.txt
-MyBot.run.Wmi_stripped.au3
 MyBot.run.Wmi.exe
-MyBot.run_stripped.au3
 Profiles/
 build/
 build.bat
@@ -18,4 +18,5 @@ build_compile_only.bat
 build_zip_only.bat
 BuildMBR.exe
 *.zip
-lib/
+#lib/
+lib/debug/ocr/ocr_20200516191535_coc-t-s.txt

@@ -12,13 +12,28 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+Global $g_aMachineBB = 0
+
+Func TestTriggerMachineAbility()
+	GetAttackBarBB()
+	SETLOG("1 Tigger")
+	$g_bBBIsFirst = True
+	_Sleep(10000)
+	SETLOG("2 Tigger")
+	TriggerMachineAbility(True)
+EndFunc
 
 Func GetAttackBarBB($bRemaining = False, $bMachineMode = True)
 	Local $iTroopBanners = 640 ; y location of where to find troop quantities
 	Local $aSlot1 = [85, 640] ; location of first slot
 	Local $iSlotOffset = 73 ; slots are 73 pixels apart
 	Local $iBarOffset = 66 ; 66 pixels from side to attack bar
-
+	
+	If not $bRemaining Then 
+		$g_aMachineBB = 0
+		$g_bBBIsFirst = True
+	EndIf
+	
 	; testing troop count logic
 	;PureClickP($aSlot1)
 	;local $iTroopCount = Number(getTroopCountSmall($aSlot1[0], $aSlot1[1]))
@@ -74,19 +89,28 @@ Func GetAttackBarBB($bRemaining = False, $bMachineMode = True)
 				Local $aTempElement[1][5] = [[$aTroop[0], $aTempCoords[0], $aTempCoords[1], $iSlot, $iCount]] ; element to add to attack bar list
 				_ArrayAdd($aBBAttackBar, $aTempElement)
 				
-			ElseIf $bMachineMode = True And $bMachineF Then
-				Setlog("Found machine <3.", $COLOR_SUCCESS)
+			ElseIf $bMachineF Then
+				If not $bRemaining Then 
+					Local $aTempElement[1][5] = [[$aTroop[0], $aTempCoords[0], $aTempCoords[1], $iSlot, 1]] ; element to add to attack bar list
+					Setlog("Found machine <3.", $COLOR_SUCCESS)
+					$g_aMachineBB = $aTempElement
 				
-				Local $aTempElement[1][5] = [[$aTroop[0], $aTempCoords[0], $aTempCoords[1], $iSlot, 1]] ; element to add to attack bar list
-				_ArrayAdd($aBBAttackBar, $aTempElement)
+					If $bMachineMode Then 
+						_ArrayAdd($aBBAttackBar, $aTempElement)
+					EndIf
+				EndIf
 			EndIf
 			#EndRegion - Builder base - Team AIO Mod++
 		Next
 
 	Next
-	_ArraySort($aBBAttackBar, 0, 0, 0, 3)
-	For $i = 0 To UBound($aBBAttackBar, 1) - 1
-		SetLog($aBBAttackBar[$i][0] & ", (" & String($aBBAttackBar[$i][1]) & "," & String($aBBAttackBar[$i][2]) & "), Slot: " & String($aBBAttackBar[$i][3]) & ", Count: " & String($aBBAttackBar[$i][4]), $COLOR_SUCCESS)
-	Next
-	Return $aBBAttackBar
+	If (UBound($aBBAttackBar) > 0) Then
+		_ArraySort($aBBAttackBar, 0, 0, 0, 3)
+		For $i = 0 To UBound($aBBAttackBar, 1) - 1
+			SetLog($aBBAttackBar[$i][0] & ", (" & String($aBBAttackBar[$i][1]) & "," & String($aBBAttackBar[$i][2]) & "), Slot: " & String($aBBAttackBar[$i][3]) & ", Count: " & String($aBBAttackBar[$i][4]), $COLOR_SUCCESS)
+		Next
+		Return $aBBAttackBar
+	Else 
+		Return ""
+	EndIf
 EndFunc   ;==>GetAttackBarBB

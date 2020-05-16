@@ -37,7 +37,7 @@ Func SetBBAtkLog($String1, $String2 = "", $Color = $COLOR_BLACK, $Font = "Lucida
 
 	;Local $txtLogMutex = AcquireMutex("txtBBAtkLog")
 	Dim $a[6]
-	$a[0] = $String1
+	$a[0] = $String1 & @CRLF
 	$a[1] = $Color
 	$a[2] = $Font
 	$a[3] = $FontSize
@@ -93,9 +93,9 @@ Func CheckPostponedLog($bNow = False)
 		$iLogs += FlushGuiLog($g_hTxtAtkLog, $g_oTxtAtkLogInitText, False, "txtAtkLog")
 	EndIf
 
-;~    If $g_oTxtBBAtkLogInitText.Count > 0 And ($g_iGuiMode <> 1 Or ($g_hTxtBBAtkLog And BitAND(WinGetState($g_hGUI_LOG_BB), 2))) Then
-;~ 		$iLogs += FlushGuiLog($g_hTxtBBAtkLog, $g_oTxtBBAtkLogInitText, False, "txtBBAtkLog")
-;~ 	EndIf
+    If $g_oTxtBBAtkLogInitText.Count > 0 And ($g_iGuiMode <> 1 Or ($g_hTxtBBAtkLog And BitAND(WinGetState($g_hGUI_LOG_BB), 2))) Then
+ 		$iLogs += FlushGuiLog($g_hTxtBBAtkLog, $g_oTxtBBAtkLogInitText, False, "txtBBAtkLog")
+ 	EndIf
 
 	If $g_oTxtSALogInitText.Count > 0 And ($g_iGuiMode <> 1 Or ($g_hTxtSALog And BitAND(WinGetState($g_hGUI_LOG_SA), 2))) Then
 		$iLogs += FlushGuiLog($g_hTxtSALog, $g_oTxtSALogInitText, False, "txtSALog")
@@ -116,7 +116,7 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 
 	Local $iCount = 0
 
-	Local $AllResults[0][4]
+	Local $aAllResults[0][4]
 
 	Local $aArrays = "", $aCoords, $aCommaCoord
 
@@ -128,44 +128,45 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 			; Inspired in Chilly-chill
 			If BitOR(($aiPostFix[0] > $aCommaCoord[0]), ($aiPostFix[1] > $aCommaCoord[1]), ($aiPostFix[2] < $aCommaCoord[0]), ($aiPostFix[3] < $aCommaCoord[1])) <> 0 Then ContinueLoop
 			Local $aTmpResults[1][4] = [[$aArrays[0], Int($aCommaCoord[0]), Int($aCommaCoord[1]), Int($aArrays[1])]]
-			_ArrayAdd($AllResults, $aTmpResults)
+			_ArrayAdd($aAllResults, $aTmpResults)
 		Next
 		$iCount += 1
 	Next
 	If $iCount < 1 Then Return -1
 
-	If UBound($AllResults) > 0 Then
+	If UBound($aAllResults) > 0 Then
 		; Sort by X axis
 		_ArraySort($AllResults, 0, 0, 0, 1)
 
-		Local $iAngle = 4
-		;Local $iDToCheck = 5
-
-		; check if is a double Detection, near in 10px
-		For $i = 0 To UBound($AllResults) - 1
-			If $i > UBound($AllResults) - 1 Then ExitLoop
-			Local $LastCoordinate[4] = [$AllResults[$i][0], $AllResults[$i][1], $AllResults[$i][2], $AllResults[$i][3]]
-			SetDebugLog("Coordinate to Check: " & _ArrayToString($LastCoordinate))
-			If UBound($AllResults) > 1 Then
-				For $j = 0 To UBound($AllResults) - 1
-					If $j > UBound($AllResults) - 1 Then ExitLoop
-					Local $SingleCoordinate[4] = [$AllResults[$j][0], $AllResults[$j][1], $AllResults[$j][2], $AllResults[$j][3]]
-					If $LastCoordinate[1] <> $SingleCoordinate[1] Or $LastCoordinate[2] <> $SingleCoordinate[2] Then
-						If Abs($SingleCoordinate[2] - $LastCoordinate[2]) < $iAngle Then
-							_ArrayDelete($AllResults, $j)
-						EndIf
-					Else
-						If $LastCoordinate[1] = $SingleCoordinate[1] And $LastCoordinate[2] = $SingleCoordinate[2] And $LastCoordinate[3] <> $SingleCoordinate[3] Then
-							_ArrayDelete($AllResults, $j)
-						EndIf
+		If UBound($aAllResults) > 0 Then
+				; Distance in pixels to check if is a duplicated detection , for deploy point will be 5
+				Local $D2Check = 25
+		
+				; check if is a double Detection, near in 10px
+				For $i = 0 To UBound($aAllResults) - 1
+					If $i > UBound($aAllResults) - 1 Then ExitLoop
+					Local $LastCoordinate[4] = [$aAllResults[$i][0], $aAllResults[$i][1], $aAllResults[$i][2], $aAllResults[$i][3]]
+					SetDebugLog("Coordinate to Check: " & _ArrayToString($LastCoordinate))
+					If UBound($aAllResults) > 1 Then
+						For $j = 0 To UBound($aAllResults) - 1
+							If $j > UBound($aAllResults) - 1 Then ExitLoop
+							Local $SingleCoordinate[4] = [$aAllResults[$j][0], $aAllResults[$j][1], $aAllResults[$j][2], $aAllResults[$j][3]]
+							If $LastCoordinate[1] <> $SingleCoordinate[1] Or $LastCoordinate[2] <> $SingleCoordinate[2] Then
+								If Int($SingleCoordinate[1]) < Int($LastCoordinate[1]) + $D2Check And Int($SingleCoordinate[1]) > Int($LastCoordinate[1]) - $D2Check And _
+										Int($SingleCoordinate[2]) < Int($LastCoordinate[2]) + $D2Check And Int($SingleCoordinate[2]) > Int($LastCoordinate[2]) - $D2Check Then
+									_ArrayDelete($aAllResults, $j)
+								EndIf
+							Else
+								If $LastCoordinate[1] = $SingleCoordinate[1] And $LastCoordinate[2] = $SingleCoordinate[2] And BitOr($LastCoordinate[3] <> $SingleCoordinate[3], $LastCoordinate[0] <> $SingleCoordinate[0]) > 0 Then
+									_ArrayDelete($aAllResults, $j)
+								EndIf
+							EndIf
+						Next
 					EndIf
 				Next
 			EndIf
-		Next
-	Else
-		Return -1
-	EndIf
-	Return $AllResults
+		EndIf
+	Return $aAllResults
 EndFunc   ;==>PointDeployBB
 
 Func _DebugFailedImageDetection($Text)

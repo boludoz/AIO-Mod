@@ -14,6 +14,21 @@
 ; ===============================================================================================================================
 #include-once
 
+Func TestStartClockTowerBoost()
+	Setlog("** TestStartClockTowerBoost START**", $COLOR_DEBUG)
+	Local $iAvailableAttacksBB = $g_iAvailableAttacksBB
+	Local $DebugSetlog = $g_bDebugSetlog
+	$g_bDebugSetlog = True
+	$g_iAvailableAttacksBB = 2
+	Local $Status = $g_bRunState
+	$g_bRunState = True
+	StartClockTowerBoost()
+	$g_iAvailableAttacksBB = $iAvailableAttacksBB
+	$g_bDebugSetlog = $DebugSetlog
+	$g_bRunState = $Status
+	Setlog("** TestStartClockTowerBoost END**", $COLOR_DEBUG)
+EndFunc   ;==>TestStartClockTowerBoost
+
 Func StartClockTowerBoost($bSwitchToBB = False, $bSwitchToNV = False)
 
 	If Not $g_bChkStartClockTowerBoost Then Return

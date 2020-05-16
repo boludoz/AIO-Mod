@@ -54,8 +54,11 @@ Func InitializeMainGUI($bGuiModeUpdate = False)
 	InitializeControlVariables()
 
 	; Initialize attack log
-	If Not $bGuiModeUpdate Then AtkLogHead()
-
+	If Not $bGuiModeUpdate Then 
+		AtkLogHead()
+		BBAtkLogHead() ; Team AIO Mod++
+	EndIf
+	
 	; Show Default Tab
 	tabMain()
 
@@ -1958,7 +1961,6 @@ Func tabBuilderBase()
 			GUISetState(@SW_HIDE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE)
 			GUISetState(@SW_HIDE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV)
 			GUICtrlSetPos($g_hChkBuilderAttack, $tabtsx[2] - 18, $tabtsx[3] - 15)
-			;checkIfBBLogIsEmptyInitialize() ;When we switch to main from mini it then we need to initialize header
 		Case $tabidx = 1 ; UPGRADE tab
 			GUISetState(@SW_HIDE, $g_hGUI_LOG_BB)
 			GUISetState(@SW_HIDE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE)

@@ -39,11 +39,11 @@ Func DebugUI()
 
 	$y += 30
 	; First Row
-;~ 		$btnLab = GUICtrlCreateButton("UpgTroop", $x, $y, 75, 25, $WS_GROUP)
-;~ 			GUICtrlSetOnEvent($btnLab, "TestBBUpgradeTroops")
-;~ 	$x += 75
-;~ 		$btnSize = GUICtrlCreateButton("UpgBuild", $x, $y, 75, 25, $WS_GROUP)
-;~ 			GUICtrlSetOnEvent($btnSize, "TestBBUpgradeBuilding")
+ 	;	$btnLab = GUICtrlCreateButton("UpgTroop", $x, $y, 75, 25, $WS_GROUP)
+ 	;		GUICtrlSetOnEvent($btnLab, "TestBBUpgradeTroops")
+ 	$x += 75
+ 	;	$btnSize = GUICtrlCreateButton("UpgBuild", $x, $y, 75, 25, $WS_GROUP)
+ 	;		GUICtrlSetOnEvent($btnSize, "TestBBUpgradeBuilding")
 	$x += 75
 		$btnHall = GUICtrlCreateButton("BuilderHall", $x, $y, 75, 25, $WS_GROUP)
 			GUICtrlSetOnEvent($btnHall, "TestBuilderBaseGetHall")
@@ -53,17 +53,17 @@ Func DebugUI()
 	$x += 75
 		$btnCSV = GUICtrlCreateButton("CSV", $x, $y, 60, 25, $WS_GROUP)
 			GUICtrlSetOnEvent($btnCSV, "TestBuilderBaseParseAttackCSV")
-;~ 	$x += 60
-;~ 		$btnCleanYard = GUICtrlCreateButton("Clean Yard", $x, $y, 60, 25, $WS_GROUP)
-;~ 			GUICtrlSetOnEvent($btnCleanYard, "TestrunCleanYardBB")
+ 	$x += 60
+ 	;	$btnCleanYard = GUICtrlCreateButton("Clean Yard", $x, $y, 60, 25, $WS_GROUP)
+ 	;		GUICtrlSetOnEvent($btnCleanYard, "TestrunCleanYardBB")
 	$y += 25
 	$x = 10
 	; Second Row
 		$btnFillArmy = GUICtrlCreateButton("Fill Army", $x, $y, 75, 25, $WS_GROUP)
 			GUICtrlSetOnEvent($btnFillArmy, "TestCheckArmyBuilderBase")
-;~ 	$x += 75
-;~ 		$btnZoom = GUICtrlCreateButton("ZoomOut", $x, $y, 75, 25, $WS_GROUP)
-;~ 			GUICtrlSetOnEvent($btnZoom, "TestBuilderBaseZoomOut")
+ 	$x += 75
+ 		$btnZoom = GUICtrlCreateButton("ZoomOut", $x, $y, 75, 25, $WS_GROUP)
+ 			GUICtrlSetOnEvent($btnZoom, "TestBuilderBaseZoomOut")
 	$x += 75
 		$btnDeploy = GUICtrlCreateButton("Deploy P.", $x, $y, 75, 25, $WS_GROUP)
 			GUICtrlSetOnEvent($btnDeploy, "TestBuilderBaseGetDeployPoints")
@@ -73,15 +73,15 @@ Func DebugUI()
 	$x += 75
 		$btnIMG = GUICtrlCreateButton("Collect", $x, $y, 60, 25, $WS_GROUP)
 			GUICtrlSetOnEvent($btnIMG, "CollectBuilderBase")
-;~ 	$x += 60
-;~ 		$btnClockTower = GUICtrlCreateButton("ClkTower", $x, $y, 60, 25, $WS_GROUP)
-;~ 			GUICtrlSetOnEvent($btnClockTower, "TestStartClockTowerBoost")
+ 	$x += 60
+ 		$btnClockTower = GUICtrlCreateButton("ClkTower", $x, $y, 60, 25, $WS_GROUP)
+ 			GUICtrlSetOnEvent($btnClockTower, "TestStartClockTowerBoost")
 
 	$y += 25
 	$x = 10
 	; 3 Row
-;~ 		$btnUpgradeWall = GUICtrlCreateButton("UpgradeWall", $x, $y, 75, 25, $WS_GROUP)
-;~ 			GUICtrlSetOnEvent($btnUpgradeWall, "TestRunWallsUpgradeBB")
+ 		$btnUpgradeWall = GUICtrlCreateButton("UpgradeWall", $x, $y, 75, 25, $WS_GROUP)
+ 			GUICtrlSetOnEvent($btnUpgradeWall, "TestRunWallsUpgradeBB")
 	$x += 75
 		$btnMachine = GUICtrlCreateButton("BattleMachine", $x, $y, 75, 25, $WS_GROUP)
 			GUICtrlSetOnEvent($btnMachine, "TestBattleMachineUpgrade")

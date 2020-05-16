@@ -26,6 +26,7 @@ Func TestRunWallsUpgradeBB()
 EndFunc   ;==>TestRunWallsUpgradeBB
 
 Func WallsUpgradeBB()
+#cs
 	If Not $g_bRunState Then Return
 	If Not $g_bChkBBUpgradeWalls Then Return
 
@@ -110,6 +111,7 @@ Func WallsUpgradeBB()
 		ClickP($aAway, 1, 300, "#0329") ;Click Away
 	EndIf
 	FuncReturn()
+#ce
 EndFunc   ;==>WallsUpgradeBB
 
 Func SwitchToNextWallBBLevel()

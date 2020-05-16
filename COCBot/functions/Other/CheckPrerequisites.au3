@@ -101,7 +101,7 @@ Func isEveryFileInstalled($bSilent = False)
 			$g_sLibPath & "\helper_functions.dll", _
 			$g_sLibPath & "\ImageSearchDLL.dll", _
 			$g_sLibPath & "\MBRBot.dll", _
-			$g_sLibPath & "\AIOMod.dll", _
+			$g_sLibPath & "\ModLibs\AIOMod.dll", _ ; Team AIO Mod++
 			$g_sLibPath & "\MyBot.run.dll", _
 			$g_sLibPath & "\Newtonsoft.Json.dll", _
 			$g_sLibPath & "\sqlite3.dll", _

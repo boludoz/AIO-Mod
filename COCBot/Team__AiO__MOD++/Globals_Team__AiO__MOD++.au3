@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 ; AIO Icons - Team AiO MOD++
-Global Const $g_sLibModIconPath = $g_sLibPath & "\AIOMod.dll" ; Mod icon library - Team AiO MOD++
+Global Const $g_sLibModIconPath = $g_sLibPath & "\ModLibs\AIOMod.dll" ; Mod icon library - Team AiO MOD++
 ; enumerated Icons 1-based index to IconLibMod
 Global Enum $eIcnModKingGray = 1, $eIcnModKingBlue, $eIcnModKingGreen, $eIcnModKingRed, $eIcnModQueenGray, $eIcnModQueenBlue, $eIcnModQueenGreen, $eIcnModQueenRed, _
 		$eIcnModWardenGray, $eIcnModWardenBlue, $eIcnModWardenGreen, $eIcnModWardenRed, $eIcnModLabGray, $eIcnModLabGreen, $eIcnModLabRed, _
@@ -284,7 +284,7 @@ Global $g_bChkUpgradeTroops = False, $g_iCmbBBLaboratory, $g_bChkUpgradeMachine 
 
 ; Upgrade Walls
 Global $g_bChkBBUpgradeWalls = False, $g_iCmbBBWallLevel, $g_iTxtBBWallNumber = 0
-Global Const $g_aiWallBBInfoPerLevel[10][4] = [ _ ; Level, Gold, Qty, BH
+Global Const $g_aiWallBBInfoPerLevel[11][4] = [ _ ; Level, Gold, Qty, BH
 		[0, 0, 0, 0], _
 		[1, 4000, 20, 2], _
 		[2, 10000, 50, 3], _
@@ -294,7 +294,8 @@ Global Const $g_aiWallBBInfoPerLevel[10][4] = [ _ ; Level, Gold, Qty, BH
 		[6, 1200000, 120, 6], _
 		[7, 2000000, 140, 7], _
 		[8, 3000000, 160, 8], _
-		[9, 4000000, 180, 9]]
+		[9, 4000000, 180, 9], _
+		[10, 5000000, 180, 10]]
 
 ; Troops
 Global $g_sIcnBBOrder[11]

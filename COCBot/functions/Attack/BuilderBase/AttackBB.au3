@@ -110,13 +110,13 @@ Func AttackBB()
 	EndIf
 	
 	; Deploy all troops
-	local $bTroopsDropped = False, $bBMDeployed = False
+	Local $bTroopsDropped = False
 	SetLog( $g_bBBDropOrderSet = True ? "Deploying Troops in Custom Order." : "Deploying Troops in Order of Attack Bar.", $COLOR_BLUE)
 	While Not $bTroopsDropped
 		local $iNumSlots = UBound($aBBAttackBar, 1)
 		If $g_bBBDropOrderSet = True Then
 	;		Local $asBBDropOrder = StringSplit($g_sBBDropOrder, "|") ; Custom BB Army - Team AIO Mod++
-			For $i=0 To $g_iBBTroopCount - 1 ; loop through each name in the drop order
+			For $i=0 To UBound($g_ahCmbBBDropOrder) - 1 ; loop through each name in the drop order
 				local $j=0, $bDone = 0
 				While $j < $iNumSlots And Not $bDone
 					;If $aBBAttackBar[$j][0] = $asBBDropOrder[$i+1] Then; Custom BB Army - Team AIO Mod++
@@ -124,10 +124,10 @@ Func AttackBB()
 						;DeployBBTroop($aBBAttackBar[$j][0], $aBBAttackBar[$j][1], $aBBAttackBar[$j][2], $aBBAttackBar[$j][4], $iSide)
 						SetLog("Deploying " & $aBBAttackBar[$j][0] & "x" & String($aBBAttackBar[$j][4]), $COLOR_ACTION)
 						PureClick($aBBAttackBar[$j][1], $aBBAttackBar[$j][2]) ; select troop
-						If _Sleep($g_iBBSameTroopDelay) Then Return ; slow down selecting then dropping troops
-						For $iamount = 0 To $aBBAttackBar[$i][4]
-						Local $vDP = Random(0, UBound($aVar))
-						PureClick($aVar[$vDP][0], $aVar[$vDP][1])
+						For $iAmount = 0 To UBound($aBBAttackBar) -1
+							Local $vDP = Random(0, UBound($aVar))
+							PureClick($aVar[$vDP][0], $aVar[$vDP][1])
+							If _Sleep($g_iBBSameTroopDelay) Then Return ; slow down selecting then dropping troops
 						Next
 						;---------------------------
 						If $j = $iNumSlots-1 Or $aBBAttackBar[$j][0] <> $aBBAttackBar[$j+1][0] Then
@@ -147,10 +147,10 @@ Func AttackBB()
 				;DeployBBTroop($aBBAttackBar[$i][0], $aBBAttackBar[$i][1], $aBBAttackBar[$i][2], $aBBAttackBar[$i][4], $iSide)
 				SetLog("Deploying " & $aBBAttackBar[$i][0] & "x" & String($aBBAttackBar[$i][4]), $COLOR_ACTION)
 				PureClick($aBBAttackBar[$i][1], $aBBAttackBar[$i][2]) ; select troop
-				If _Sleep($g_iBBSameTroopDelay) Then Return ; slow down selecting then dropping troops
-				For $iamount = 0 To $aBBAttackBar[$i][4]
-				Local $vDP = Random(0, UBound($aVar))
-				PureClick($aVar[$vDP][0], $aVar[$vDP][1])
+				For $iAmount = 0 To UBound($aBBAttackBar) -1
+					Local $vDP = Random(0, UBound($aVar))
+					PureClick($aVar[$vDP][0], $aVar[$vDP][1])
+					If _Sleep($g_iBBSameTroopDelay) Then Return ; slow down selecting then dropping troops
 				Next
 				;---------------------------
 				If $i = $iNumSlots-1 Or $aBBAttackBar[$i][0] <> $aBBAttackBar[$i+1][0] Then
@@ -173,6 +173,32 @@ Func AttackBB()
 	WEnd
 	SetLog("All Troops Deployed", $COLOR_SUCCESS)
 
+	; place hero and activate ability
+	If $g_bBBMachineReady Then SetLog("Deploying Battle Machine.", $COLOR_BLUE)
+	
+	If $g_bBBMachineReady Then
+		If IsArray($g_aMachineBB) Then
+				PureClick($g_aMachineBB[0][1], $g_aMachineBB[0][2])
+				Local $vDP = Random(0, UBound($aVar))
+				PureClick($aVar[$vDP][0], $aVar[$vDP][1])
+				;If $iSide Then
+				;	PureClick($g_apTR[$iPoint][0], $g_apTR[$iPoint][1])
+				;Else
+				;	PureClick($g_apTL[$iPoint][0], $g_apTL[$iPoint][1])
+				;EndIf
+				;Local $vDP = 
+
+				If _Sleep(500) Then ; wait before clicking ability
+					$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
+					If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Enabled")
+					Return
+				EndIf
+				
+				If $g_bIsBBMachineD = False Then $g_bIsBBMachineD = True
+		EndIf
+	EndIf
+
+	#cs
 	; place hero and activate ability
 	If $g_bBBMachineReady And Not $bBMDeployed Then SetLog("Deploying Battle Machine.", $COLOR_BLUE)
 	While Not $bBMDeployed And $g_bBBMachineReady
@@ -239,7 +265,8 @@ Func AttackBB()
 	ClickP($aAway)
 	SetLog("Done", $COLOR_SUCCESS)
 	ZoomOut()
-
+	#ce
+	
 	$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast ; reset android suspend and resume stuff
 	If $g_bDebugSetlog Then SetDebugLog("Android Suspend Mode Enabled")
 EndFunc

@@ -23,9 +23,6 @@ Func TestrunBuilderBase()
 EndFunc   ;==>TestrunBuilderBase
 
 Func runBuilderBase($bTestRun = False)
-	
-	If not SwitchBetweenBases() Then return false
-	$g_bStayOnBuilderBase = True
 
 	If Not $g_bRunState Then Return
 
@@ -42,22 +39,26 @@ Func runBuilderBase($bTestRun = False)
 			EndIf
 		SetLog("Play Only Builder Base Check Is On But BB Option's(Collect,Attack etc) Unchecked", $COLOR_ERROR)
 		SetLog("Please Check BB Options From Builder Base Tab", $COLOR_INFO)
+
 		Return False
+
+		ElseIf not SwitchBetweenBases() Then
+			Return false
+		Else
+		$g_bStayOnBuilderBase = True
 	EndIf
-
-
-	 SwitchBetweenBases()
 
 	 ZoomOut()
 
 	 If Not IsOnBuilderBase(True) Then
 		 SetLog("BB Don't detected.", $COLOR_ERROR)
+		 $g_bStayOnBuilderBase = False
 		 Return False
 	  EndIf
 
 	SetLog("Builder Base Idle Starts", $COLOR_INFO)
 
-	If _Sleep(1000) Then Return
+	If randomSleep(1000) Then Return
 
 	If $g_bRestart Then Return
 	; If $g_bRestart Then SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
@@ -68,18 +69,21 @@ Func runBuilderBase($bTestRun = False)
 
 	; Builder base Report - Get The number of available attacks
 	BuilderBaseReport()
+	RestAttacksInBB()
 	If $g_bRestart Then Return
 
 	; Upgrade Troops
 	If $g_bRestart Then Return
 	If ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Then BattleMachineUpgrade()
 	If ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Then StarLaboratory()
-	Local $boosted = False
+;~ 	Local $boosted = False
 	; Fill/check Army Camps only If is necessary attack
 	If $g_bRestart Then Return
-	;If $g_iAvailableAttacksBB > 0 Or Not $g_bChkBBStopAt3 Then CheckArmyBuilderBase()
+
+	If $g_iAvailableAttacksBB > 0 Or Not $g_bChkBBStopAt3 Then CheckArmyBuilderBase()
+
 	; Just a loop to benefit from Clock Tower Boost
-	For $i = 0 To 10
+	For $i = 0 To Random(4,10,1)
 		; Zoomout
 		If $g_bRestart Then Return
 		If Not $g_bRunState Then Return
@@ -107,37 +111,39 @@ Func runBuilderBase($bTestRun = False)
 		If $g_bRestart Then Return
 		If Not $g_bRunState Then Return
 
-		If Not $boosted Then $boosted = StartClockTowerBoost()
+;~ 		If Not $boosted Then $boosted = StartClockTowerBoost()
+		StartClockTowerBoost()
 		; Get Benfit of Boost and clean all yard
 		If $g_bRestart Then Return
 
 		CleanBBYard()
-;~ 		; BH Walls Upgrade
-;~ 		If $g_bRestart Then Return
-;~ 		If Not $g_bRunState Then Return
-;~ 		WallsUpgradeBB()
+ 		; BH Walls Upgrade
+ 		If $g_bRestart Then Return
+ 		If Not $g_bRunState Then Return
+ 		WallsUpgradeBB()
 
 		; Auto Upgrade just when you don't need more defenses to win battles
 		If $g_bRestart Then Return
 		If ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) And $g_iAvailableAttacksBB = 0 Then MainSuggestedUpgradeCode()
 
-		If Not $boosted Then ExitLoop
-		If $boosted Then
+;~ 		If Not $boosted Then ExitLoop
+;~ 		If $boosted Then
 			If $g_bRestart Then Return
 			If $g_iAvailableAttacksBB = 0 And $g_bChkBBStopAt3 Then ExitLoop
-		EndIf
+;~ 		EndIf
 		If $g_bRestart Then Return
 		If Not $g_bRunState Then Return
 
 		BuilderBaseReport()
+		RestAttacksInBB()
 	Next
 
 	If Not $g_bChkPlayBBOnly Then
-			; switch back to normal village
-			SwitchBetweenBases()
-			$g_bStayOnBuilderBase = False
+		; switch back to normal village
+		SwitchBetweenBases()
+		$g_bStayOnBuilderBase = False
 
-			If Not $g_bRunState Then Return
+		If Not $g_bRunState Then Return
 
 	Else
 		If _Sleep($DELAYRUNBOT1 * 15) Then Return ;Add 15 Sec Delay Before Starting Again In BB Only
@@ -150,3 +156,10 @@ Func runBuilderBase($bTestRun = False)
 	If ProfileSwitchAccountEnabled() Then Return
 
 EndFunc   ;==>runBuilderBase
+
+Func RestAttacksInBB()
+	$g_iAvailableAttacksBB = Ubound(findMultipleQuick($g_sImgAvailableAttacks, 0, "25, 626, 97, 651", Default, Default, False, 10))
+	If $g_iAvailableAttacksBB <> 0 and $g_bChkBBStopAt3 Then
+		Setlog("You have " & $g_iAvailableAttacksBB & " available attack(s).", $COLOR_SUCCESS)
+	EndIf
+EndFunc   ;==>RestAttacksInBB

@@ -141,10 +141,16 @@ Func _ImageSearchXML($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "0,
 	EndIf
 EndFunc   ;==>_ImageSearchXML
 
-Func findMultipleQuick($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "0,0,860,732", $bForceCapture = Default, $sOnlyFind = Default, $bExactFind = False, $iDistance2check = 25, $bDebugLog = False, $iLevel = 1, $iMaxLevel = 1000)
+Func findMultipleQuick($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "0,0,860,732", $bForceCapture = Default, $sOnlyFind = Default, $bExactFind = False, $iDistance2check = 25, $bDebugLog = False, $iLevel = 0, $iMaxLevel = 1000)
 	FuncEnter(findMultipleQuick)
-	Local $sSearchDiamond = IsArray($saiArea2SearchOri) ? GetDiamondFromArray($saiArea2SearchOri) : GetDiamondFromRect($saiArea2SearchOri)
-	Local $aResult = findMultiple($sDirectory, $sSearchDiamond, $sSearchDiamond, $iLevel, $iMaxLevel, ($sOnlyFind = Default) ? ($iQuantity2Match) : (100), "objectname,objectlevel,objectpoints", ($bForceCapture = Default) ? (True) : ($bForceCapture))
+	Local $bCapture, $sArea2Search, $sIsOnlyFind, $iQuantToMach
+	
+	$sArea2Search = (IsArray($saiArea2SearchOri)) ? (GetDiamondFromArray($saiArea2SearchOri)) : (GetDiamondFromRect($saiArea2SearchOri))
+	$bCapture = ($bForceCapture = Default) ? (True) : ($bForceCapture)
+	$sIsOnlyFind = ($sOnlyFind = Default) ? ("") : ($sOnlyFind)
+	$iQuantToMach = ($sOnlyFind = Default) ? ($iQuantity2Match) : (0)
+	
+	Local $aResult = findMultiple($sDirectory, $sArea2Search, $sArea2Search, $iLevel, $iMaxLevel, $iQuantToMach, "objectname,objectlevel,objectpoints", $bCapture)
 	If Not IsArray($aResult) Then Return -1
 
 	Local $iCount = 0
@@ -160,11 +166,11 @@ Func findMultipleQuick($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "
 		For $iCoords = 0 To UBound($aCoords) - 1
 			$aCommaCoord = StringSplit($aCoords[$iCoords], ",", 2)
 
-			If $sOnlyFind <> Default And $sOnlyFind <> "" Then
+			If $sIsOnlyFind <> "" Then
 				If $bExactFind Then
-					If StringCompare($sOnlyFind, $aArrays[0]) <> 0 Then ContinueLoop
+					If StringCompare($sIsOnlyFind, $aArrays[0]) <> 0 Then ContinueLoop
 				ElseIf Not $bExactFind Then
-					If StringInStr($aArrays[0], $sOnlyFind) = 0 Then ContinueLoop
+					If StringInStr($aArrays[0], $sIsOnlyFind) = 0 Then ContinueLoop
 				EndIf
 			EndIf
 			

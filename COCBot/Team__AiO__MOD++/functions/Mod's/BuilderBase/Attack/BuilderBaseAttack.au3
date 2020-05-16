@@ -113,14 +113,14 @@ Func BuilderBaseAttack($bTestRun = False)
 				; Start the Attack realing one troop and surrender
 				BuilderBaseAttackToDrop(GetAttackBarBB(False))
 
-			Case $g_iCmbBBAttack = $g_eBBAttackCSV
+			Case ($g_iCmbBBAttack = $g_eBBAttackCSV)
 				Setlog("Ready to Battle! BB CSV... Let's Go!", $COLOR_SUCCESS)
 
 				; Parse CSV , Deploy Troops and Get Machine Status [attack algorithm] , waiting for Battle ends window
 				BuilderBaseCSVAttack($aAvailableTroops)
 				If Not $g_bRunState Then Return
 
-			Case $g_iCmbBBAttack = $g_eBBAttackSmart
+			Case ($g_iCmbBBAttack = $g_eBBAttackSmart)
 				Setlog("Ready to Battle! BB Smart Attack... Let's Go!", $COLOR_SUCCESS)
 
 				; BB Smart Attack
@@ -443,7 +443,7 @@ Func BuilderBaseAttackReport()
 	; Verify the Window Report , Point[0] Archer Shadow Black Zone [155,460,000000], Point[1] Ok Green Button [430,590, 6DBC1F]
 	Local $SurrenderBtn = [76, 584] ; DESRC Done
 	Local $OKbtn = [435, 562] ; DESRC Done ;auxiliar click
-
+	
 	For $i = 0 To 60
 		If Not $g_bRunState Then Return
 		TriggerMachineAbility()
@@ -456,7 +456,7 @@ Func BuilderBaseAttackReport()
 		If $i = 60 Then Setlog("Window Report Problem!", $COLOR_WARNING)
 		If _Sleep(2000) Then Return
 	Next
-
+	
 	;If checkObstacles(True) Then
 	;	SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
 	;	Return

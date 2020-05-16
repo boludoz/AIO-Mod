@@ -31,10 +31,10 @@ EndFunc   ;==>btnBBAtkLogCopyClipboard
 Func chkStartClockTowerBoost()
 	If GUICtrlRead($g_hChkStartClockTowerBoost) = $GUI_CHECKED Then
 		GUICtrlSetState($g_hChkCTBoostBlderBz, $GUI_ENABLE)
-		GUICtrlSetState($g_hChkCTBoostAtkAvailable, $GUI_ENABLE)
+		;GUICtrlSetState($g_hChkCTBoostAtkAvailable, $GUI_ENABLE)
 	Else
 		GUICtrlSetState($g_hChkCTBoostBlderBz, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkCTBoostAtkAvailable, $GUI_DISABLE)
+		;GUICtrlSetState($g_hChkCTBoostAtkAvailable, $GUI_DISABLE)
 	EndIf
 EndFunc   ;==>chkStartClockTowerBoost
 

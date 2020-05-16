@@ -442,7 +442,7 @@ Func runHelper($msg) ; run a script to get a response from cleverbot.com or sims
 	Local $command, $DOS, $HelperStartTime, $Time_Difference
 	Dim $DOS, $g_sMessage = ''
 
-	$command = ' /c "phantomjs.exe phantom-cleverbot-helper.js '
+	$command = ' /c "ModLibs\phantomjs.exe "ModLibs\phantom-cleverbot-helper.js" '
 
 	$DOS = Run(@ComSpec & $command & $msg & '"', "", @SW_HIDE, 8)
 	$HelperStartTime = TimerInit()

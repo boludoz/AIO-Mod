@@ -374,61 +374,12 @@ Func BuilderBaseParseAttackCSV($AvailableTroops, $DeployPoints, $DeployBestPoint
 		; Let's Assume That Our CSV Was Bad That None Of The Troops Was Deployed Let's Deploy Everything
 		; Let's make a Remain Just In Case deploy points problem somewhere in red zone OR Troop was not mentioned in CSV OR Hero Was not dropped. Let's drop All
 		Local $aAvailableTroops_NXQ = GetAttackBarBB(True)
-		If $aAvailableTroops_NXQ <> -1 And IsArray($aAvailableTroops_NXQ) Then
+
+		If $aAvailableTroops_NXQ <> "" And IsArray($aAvailableTroops_NXQ) Then
 			SetLog("CSV Does not deploy some of the troops. So Now just dropping troops in a waves", $COLOR_INFO)
-			; Main Side to attack
-			If $sFrontSide = "" Then
-				$sFrontSide = BuilderBaseAttackMainSide()
-				Setlog("Detected Front Side: " & $sFrontSide, $COLOR_INFO)
-			EndIf
-			;Local $sSelectedDropSideName ;Using For AddTile But in this remain no use
-			;Local $aSelectedDropSidePoints_XY = CorrectDropPoints($sFrontSide, "FRONTE", $aDeployBestPoints, $sSelectedDropSideName)
-			;SortPoints($aSelectedDropSidePoints_XY, $bDebug)
-			Local $aSelectedDropSidePoints_XY = $g_aExternalEdges[0]
-			; Just in Case
-			If UBound($aSelectedDropSidePoints_XY) > 0 Then
-				Local $iQtyOfSelectedSlot = 0 ; Quantities on current slot
-				Local $iSlotNumber = 20 ; just an impossible slot to initialize it
-				Local $aSlot_XY = [0, 0]
-				Local $sTroopName = ""
-				Local $iQtyToDrop = 0
-
-				For $i = 0 To UBound($aAvailableTroops_NXQ) - 1
-					$sTroopName = $aAvailableTroops_NXQ[$i][0]
-					; Let's select the slot VerifySlotTroops uses ByRef on $aSlot_XY , $iQtyOfSelectedSlot and $iSlotNumber
-					If Not VerifySlotTroop($sTroopName, $aSlot_XY, $iQtyOfSelectedSlot, $iSlotNumber, $aAvailableTroops_NXQ) Then
-						ContinueLoop
-					EndIf
-					$iQtyToDrop = $iQtyOfSelectedSlot ;Quantity We Want to Drop Is The Quantity Of The Slot
-					Local $iTroopsDropped = 0
-					While $iTroopsDropped < $iQtyToDrop
-						For $j = 0 To UBound($aSelectedDropSidePoints_XY) - 1
-							If ($iTroopsDropped < $iQtyToDrop) Then ; Check That Drop Troops Don't Get Exceeded By Slot Quantity
-								; get one Deploy point
-								Local $Point2Deploy = [$aSelectedDropSidePoints_XY[$j][0], $aSelectedDropSidePoints_XY[$j][1]]
-								DeployTroopBB($sTroopName, $aSlot_XY, $Point2Deploy, 1)
-								; Increment Troops Dropped
-								$iTroopsDropped += 1
-								; removing the deployed troop
-								$iQtyOfSelectedSlot -= 1
-								; Remove the Qty from the Original array :
-								$aAvailableTroops_NXQ[$iSlotNumber][2] = $iQtyOfSelectedSlot
-								; If is the Machine exist and deployed
-								If $g_bIsBBMachineD Then ExitLoop (2)
-								; Just a small Delay to Pause Function
-								If _Sleep(100) Then Return
-							Else
-								ExitLoop (2)
-							EndIf
-						Next
-					WEnd
-					TriggerMachineAbility()
-					; Add Delay To Make Like Wave Of Troops
-					If _Sleep(2000) Then Return
-				Next
-			EndIf
+			AttackBB()
 		EndIf
-
+		
 		; Machine Ability and Battle
 		For $i = 0 To Int($SleepAfter / 50)
 			; Machine Ability
@@ -740,36 +691,48 @@ Func GetThePointNearBH($BHposition, $aDeployPoints)
 	Return $ReturnPoint
 EndFunc   ;==>GetThePointNearBH
 
-Func TriggerMachineAbility()
-
-	If Not $g_bIsBBMachineD Then Return
-
-	If UBound($g_aMachineBB) = 0 Then Return
-
-	Local $aMachine[2] = [$g_aMachineBB[0][1], $g_aMachineBB[0][2]]
-
+Func TriggerMachineAbility($bTest = False)
+	Local $hPixel 
+	If not $bTest Then
+		If Not $g_bIsBBMachineD Then Return
+	EndIf 
+	
+	If $g_aMachineBB = 0 Then 
+		Setlog("No machine.", $COLOR_ERROR)
+		Return 
+	EndIf
+	
+	If _ColorCheck(_GetPixelColor(Int($g_aMachineBB[0][1]), 723, True), Hex(0xFFFFFF, 6), 20) Then
+		Setlog("Machine fail.", $COLOR_ERROR)
+		$g_aMachineBB = 0
+		Return 
+	EndIf
+	
 	SetDebugLog("- BB Machine : Checking ability.")
+	
+	$hPixel = _GetPixelColor(Int($g_aMachineBB[0][1]), 721, True)
+	If $bTest Then Setlog($hPixel)
 
-	If $g_bBBIsFirst And UBound($aMachine) > 2 Then
-
-		If MultiPSimple(Int($aMachine[0]) - 11, Int($aMachine[1]) - 21, Int($aMachine[0]) + 51, Int($aMachine[1]) + 73, Hex(0x5225C4, 6), 28, 1000, 30) <> 0 Then
-			ClickP($aMachine, 2, 0)
+	If $g_bBBIsFirst And IsArray($g_aMachineBB) Then
+		If $bTest Then Setlog(_ArrayToString($g_aMachineBB))
+		If _ColorCheck($hPixel, Hex(0x472CC5, 6), 40) Then
+			Click(Int($g_aMachineBB[0][1]), Int($g_aMachineBB[0][2]), 2, 0)
 			If _Sleep(300) Then Return
 			SetLog("- BB Machine : Skill enabled.", $COLOR_ACTION)
 			$g_bBBIsFirst = False
 			Return
 		Else
 			SetLog("- BB Machine : Skill not present.", $COLOR_INFO)
-			$g_bIsBBMachineD = False
 			Return
 		EndIf
 	EndIf
-
-	If MultiPSimple(Int($aMachine[0]) - 11, Int($aMachine[1]) - 21, Int($aMachine[0]) + 51, Int($aMachine[1]) + 73, Hex(0x5225C4, 6), 28, 200, 30) <> 0 Then
-		ClickP($aMachine, 2, 0)
+	
+	If _ColorCheck($hPixel, Hex(0x432CCE, 6), 20) Then
+		Click(Int($g_aMachineBB[0][1]), Int($g_aMachineBB[0][2]), 2, 0)
 		If _Sleep(300) Then Return
-		SetLog("- BB Machine : Click on ability.", $COLOR_INFO)
+		SetLog("- BB Machine : Click on ability.", $COLOR_ACTION)
 	EndIf
+
 EndFunc   ;==>TriggerMachineAbility
 
 Func BattleIsOver()
