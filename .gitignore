@@ -20,3 +20,4 @@ BuildMBR.exe
 *.zip
 #lib/
 lib/debug/ocr/ocr_20200516191535_coc-t-s.txt
+lib/debug/
