@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func SwitchBetweenBases($bCheckMainScreen = True)
+Func SwitchBetweenBases($bCheckMainScreen = True) 
 	Local $sSwitchFrom, $sSwitchTo, $bIsOnBuilderBase = False, $aButtonCoords
 	Local $sTile, $sTileDir, $sRegionToSearch
 	Local $bSwitched = False

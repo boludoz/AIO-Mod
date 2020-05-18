@@ -29,39 +29,47 @@ Func _MultiPixelSearchMod($iLeft, $iTop, $iRight, $iBottom, $xSkip, $ySkip, $fir
 EndFunc   ;==>_MultiPixelSearchMod
 
 Func getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpace = Default, $bImgLoc = Default, $bForceCaptureRegion = Default)
-	$g_sGetOcrMod = ""
 	If $removeSpace = Default Then $removeSpace = False
 	If $bImgLoc = Default Then $bImgLoc = False
 	If $bForceCaptureRegion = Default Then $bForceCaptureRegion = $g_bOcrForceCaptureRegion
 	Static $_hHBitmap = 0
-	If $bForceCaptureRegion = True Then
-		_CaptureRegion2($x_start, $y_start, $x_start + $width, $y_start + $height)
-	Else
-		$_hHBitmap = GetHHBitmapArea($g_hHBitmap2, $x_start, $y_start, $x_start + $width, $y_start + $height)
-	EndIf
-	Local $result
-	If $bImgLoc Then
-		If $_hHBitmap <> 0 Then
-			$result = getOcrImgLoc($_hHBitmap, $language)
+	$g_sGetOcrMod = ""
+	
+	For $iTryIt = 0 To 5
+		If $bForceCaptureRegion = True Then
+			_CaptureRegion2($x_start, $y_start, $x_start + $width, $y_start + $height)
 		Else
-			$result = getOcrImgLoc($g_hHBitmap2, $language)
+			$_hHBitmap = GetHHBitmapArea($g_hHBitmap2, $x_start, $y_start, $x_start + $width, $y_start + $height)
 		EndIf
-	Else
-		If $_hHBitmap <> 0 Then
-			$result = getOcr($_hHBitmap, $language)
+		Local $result
+		If $bImgLoc Then
+			If $_hHBitmap <> 0 Then
+				$result = getOcrImgLoc($_hHBitmap, $language)
+			Else
+				$result = getOcrImgLoc($g_hHBitmap2, $language)
+			EndIf
 		Else
-			$result = getOcr($g_hHBitmap2, $language)
+			If $_hHBitmap <> 0 Then
+				$result = getOcr($_hHBitmap, $language)
+			Else
+				$result = getOcr($g_hHBitmap2, $language)
+			EndIf
 		EndIf
-	EndIf
-	If $_hHBitmap <> 0 Then
-		GdiDeleteHBitmap($_hHBitmap)
-	EndIf
-	$_hHBitmap = 0
-	If ($removeSpace) Then
-		$result = StringReplace($result, " ", "")
-	Else
-		$result = StringStripWS($result, BitOR($STR_STRIPLEADING, $STR_STRIPTRAILING, $STR_STRIPSPACES))
-	EndIf
+		If $_hHBitmap <> 0 Then
+			GdiDeleteHBitmap($_hHBitmap)
+		EndIf
+		$_hHBitmap = 0
+		If ($removeSpace) Then
+			$result = StringReplace($result, " ", "")
+		Else
+			$result = StringStripWS($result, BitOR($STR_STRIPLEADING, $STR_STRIPTRAILING, $STR_STRIPSPACES))
+		EndIf
+		
+		If $result <> 0 Then ExitLoop 
+		
+		If _Sleep(100) Then Return
+		
+	Next
 	$g_sGetOcrMod = $result
 	Return $result
 EndFunc   ;==>getOcrAndCapture

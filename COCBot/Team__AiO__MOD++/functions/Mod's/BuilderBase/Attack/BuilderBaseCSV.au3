@@ -375,7 +375,7 @@ Func BuilderBaseParseAttackCSV($AvailableTroops, $DeployPoints, $DeployBestPoint
 		; Let's make a Remain Just In Case deploy points problem somewhere in red zone OR Troop was not mentioned in CSV OR Hero Was not dropped. Let's drop All
 		Local $aAvailableTroops_NXQ = GetAttackBarBB(True)
 
-		If $aAvailableTroops_NXQ <> "" And IsArray($aAvailableTroops_NXQ) Then
+		If $aAvailableTroops_NXQ <> -1 And IsArray($aAvailableTroops_NXQ) Then
 			SetLog("CSV Does not deploy some of the troops. So Now just dropping troops in a waves", $COLOR_INFO)
 			AttackBB()
 		EndIf

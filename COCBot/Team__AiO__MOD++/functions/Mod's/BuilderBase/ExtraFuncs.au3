@@ -14,16 +14,6 @@
 ; ===============================================================================================================================
 Global $g_oTxtBBAtkLogInitText = ObjCreate("Scripting.Dictionary")
 
-Func _getTroopCountBig($x_start, $y_start, $DebugOCR = False)
-	_CaptureRegion2($x_start, $y_start, $x_start + 53, $y_start + 17)
-	Return getTroopCountBig($x_start, $y_start)
-EndFunc   ;==>_getTroopCountBig
-
-Func _getTroopCountSmall($x_start, $y_start, $DebugOCR = False)
-	_CaptureRegion2($x_start, $y_start, $x_start + 53, $y_start + 16)
-	Return getTroopCountSmall($x_start, $y_start)
-EndFunc   ;==>_getTroopCountSmall
-
 Func BBAtkLogHead()
 	SetBBAtkLog(_PadStringCenter(" " & GetTranslatedFileIni("MBR Func_BBAtkLogHead", "BBAtkLogHead_Text_01", "ATTACK LOG") & " ", 43, "="), "", $COLOR_BLACK, "MS Shell Dlg", 8.5)
 	SetBBAtkLog(GetTranslatedFileIni("MBR Func_BBAtkLogHead", "BBAtkLogHead_Text_02", '|     --------- VICTORY BONUS ----------   |'), "")
@@ -128,35 +118,35 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 			; Inspired in Chilly-chill
 			If BitOR(($aiPostFix[0] > $aCommaCoord[0]), ($aiPostFix[1] > $aCommaCoord[1]), ($aiPostFix[2] < $aCommaCoord[0]), ($aiPostFix[3] < $aCommaCoord[1])) <> 0 Then ContinueLoop
 			Local $aTmpResults[1][4] = [[$aArrays[0], Int($aCommaCoord[0]), Int($aCommaCoord[1]), Int($aArrays[1])]]
-			_ArrayAdd($aAllResults, $aTmpResults)
+			_ArrayAdd($AllResults, $aTmpResults)
 		Next
 		$iCount += 1
 	Next
 	If $iCount < 1 Then Return -1
 
-	If UBound($aAllResults) > 0 Then
+	If UBound($AllResults) > 0 Then
 		; Sort by X axis
-		_ArraySort($aAllResults, 0, 0, 0, 1)
+		_ArraySort($AllResults, 0, 0, 0, 1)
 
-		Local $iAngle = 25
+		Local $iAngle = 4
 		;Local $iDToCheck = 5
 
 		; check if is a double Detection, near in 10px
-		For $i = 0 To UBound($aAllResults) - 1
-			If $i > UBound($aAllResults) - 1 Then ExitLoop
-			Local $LastCoordinate[4] = [$aAllResults[$i][0], $aAllResults[$i][1], $aAllResults[$i][2], $aAllResults[$i][3]]
+		For $i = 0 To UBound($AllResults) - 1
+			If $i > UBound($AllResults) - 1 Then ExitLoop
+			Local $LastCoordinate[4] = [$AllResults[$i][0], $AllResults[$i][1], $AllResults[$i][2], $AllResults[$i][3]]
 			SetDebugLog("Coordinate to Check: " & _ArrayToString($LastCoordinate))
-			If UBound($aAllResults) > 1 Then
-				For $j = 0 To UBound($aAllResults) - 1
-					If $j > UBound($aAllResults) - 1 Then ExitLoop
-					Local $SingleCoordinate[4] = [$aAllResults[$j][0], $aAllResults[$j][1], $aAllResults[$j][2], $aAllResults[$j][3]]
+			If UBound($AllResults) > 1 Then
+				For $j = 0 To UBound($AllResults) - 1
+					If $j > UBound($AllResults) - 1 Then ExitLoop
+					Local $SingleCoordinate[4] = [$AllResults[$j][0], $AllResults[$j][1], $AllResults[$j][2], $AllResults[$j][3]]
 					If $LastCoordinate[1] <> $SingleCoordinate[1] Or $LastCoordinate[2] <> $SingleCoordinate[2] Then
-						If Abs($SingleCoordinate[2] - $LastCoordinate[2]) < $iAngle Then
-							_ArrayDelete($aAllResults, $j)
+						If Abs($SingleCoordinate[2] - $LastCoordinate[2]) < $iAngle And Abs($SingleCoordinate[1] - $LastCoordinate[1]) < $iAngle  Then
+							_ArrayDelete($AllResults, $j)
 						EndIf
 					Else
 						If $LastCoordinate[1] = $SingleCoordinate[1] And $LastCoordinate[2] = $SingleCoordinate[2] And $LastCoordinate[3] <> $SingleCoordinate[3] Then
-							_ArrayDelete($aAllResults, $j)
+							_ArrayDelete($AllResults, $j)
 						EndIf
 					EndIf
 				Next
@@ -165,29 +155,7 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 	Else
 		Return -1
 	EndIf
-	
-	_CaptureRegion2()
-
-	Local $sSubDir = $g_sProfileTempDebugPath & "PointDeployBB"
-
-	DirCreate($sSubDir)
-
-	Local $sDate = @YEAR & "-" & @MON & "-" & @MDAY, $sTime = @HOUR & "." & @MIN & "." & @SEC
-	Local $sDebugImageName = String($sDate & "_" & $sTime & "_.png")
-	Local $hEditedImage = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
-	Local $hGraphic = _GDIPlus_ImageGetGraphicsContext($hEditedImage)
-	Local $hPenRED = _GDIPlus_PenCreate(0xFFFF0000, 3)
-
-	For $i = 0 To UBound($aAllResults) - 1
-		addInfoToDebugImage($hGraphic, $hPenRED, $aAllResults[$i][0] & "_" & $aAllResults[$i][3], $aAllResults[$i][1], $aAllResults[$i][2])
-	Next
-
-	_GDIPlus_ImageSaveToFile($hEditedImage, $sSubDir & "\" & $sDebugImageName)
-	_GDIPlus_PenDispose($hPenRED)
-	_GDIPlus_GraphicsDispose($hGraphic)
-	_GDIPlus_BitmapDispose($hEditedImage)
-		
-	Return $aAllResults
+	Return $AllResults
 EndFunc   ;==>PointDeployBB
  
 Func _DebugFailedImageDetection($Text)

@@ -192,9 +192,9 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 				If Not $g_bRunState Then ExitLoop
 				If $aAttackBar[$j][0] = $aCamps[$i] Then
 					;Local $Point = [$aAttackBar[$j][1], $aAttackBar[$j][2]]
-					If _sleep(1000) Then Return
+					If RandomSleep(1000) Then Return
 					PureClick($aAttackBar[$j][1] + Random(1, 5, 1), $aAttackBar[$j][2] + Random(1, 5, 1), 1, 0)
-					If _sleep(1000) Then Return
+					If RandomSleep(1000) Then Return
 					Setlog("Selected " & FullNametroops($aCamps[$i]) & " X:| " & $aAttackBar[$j][1] & " Y:| " & $aAttackBar[$j][2], $COLOR_SUCCESS)
 					$NewAvailableTroops[$i][0] = $aCamps[$i]
 					$NewAvailableTroops[$i][1] = _ArraySearch($g_asAttackBarBB, $aCamps[$i])
@@ -213,26 +213,11 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	
 	If Not $Waschanged Then Return
 
-	If _Sleep(500) Then Return
+	If RandomSleep(500) Then Return
 
 	; populate the correct array with correct Troops
-	For $i = 0 To UBound($NewAvailableTroops) - 1
-		$aAvailableTroops[$i][0] = $NewAvailableTroops[$i][0]
-	Next
-
-	For $i = 0 To UBound($aAvailableTroops) - 1
-		If Not $g_bRunState Then Return
-		If $aAvailableTroops[$i][0] <> "" Then ;We Just Need To redo the ocr for mentioned troop only
-			$aAvailableTroops[$i][4] = Number(getTroopCountSmall(Number($aAvailableTroops[$i][1]), 640))
-			If $aAvailableTroops[$i][4] < 1 Then $aAvailableTroops[$i][4] = Number(getTroopCountBig(Number($aAvailableTroops[$i][1]) - 2, 640)) ; For Small numbers when the troop is selected
-			If StringInStr($aAvailableTroops[$i][0], "Machine") > 0 Then $aAvailableTroops[$i][4] = 1
-		EndIf
-	Next
-
-	For $i = 0 To UBound($aAvailableTroops) - 1
-		If Not $g_bRunState Then Return
-		If $aAvailableTroops[$i][0] <> "" Then SetLog("[" & $i + 1 & "] - " & $aAvailableTroops[$i][4] & "x " & FullNametroops($aAvailableTroops[$i][0]), $COLOR_SUCCESS)
-	Next
+	$aAvailableTroops = GetAttackBarBB()
+	Return $aAvailableTroops
 EndFunc   ;==>BuilderBaseSelectCorrectScript
 
 ; _ArraySearch($g_asAttackBarBB, $aAvailableTroops[$i][0])
@@ -242,3 +227,14 @@ Func CSVtoImageName($sTroop = "Barb", $asAttackTroopList = $g_asAttackBarBB)
 	Next
 	Return $sTroop
 EndFunc   ;==>CSVtoImageName
+
+Func MachineKick($a)
+	For $i = UBound($a) -1 To 0 Step -1 ; Optimized
+		If StringInStr($a[$i][0], "Machine") > 0 Then
+			_ArrayDelete($a, $i)
+			ExitLoop
+		EndIf
+	Next
+	
+	Return (UBound($a) < 1) ? (-1) : ($a)
+EndFunc   ;==>MachineOut
