@@ -76,7 +76,7 @@ Func GetAttackBarBB($bRemaining = False)
 			EndIf
 
 			Local $aTempElement[1][5] = [[$aTroop[0], $aTempCoords[0], $aTempCoords[1], $iSlot, $iCount]] ; element to add to attack bar list
-			If not $bRemaining Then $g_aMachineBB = $aTempElement ; Team AIO Mod++
+			If not $bRemaining and $bIsMachine Then $g_aMachineBB = $aTempElement ; Team AIO Mod++
 			_ArrayAdd($aBBAttackBar, $aTempElement)
 		Next
 

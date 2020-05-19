@@ -111,7 +111,8 @@ Func BuilderBaseAttack($bTestRun = False)
 				Setlog("Let's Drop some Trophies!", $COLOR_SUCCESS)
 
 				; Start the Attack realing one troop and surrender
-				BuilderBaseAttackToDrop(GetAttackBarBB(False))
+				BuilderBaseAttackToDrop($aAvailableTroops)
+				If Not $g_bRunState Then Return
 
 			Case ($g_iCmbBBAttack = $g_eBBAttackCSV)
 				Setlog("Ready to Battle! BB CSV... Let's Go!", $COLOR_SUCCESS)
@@ -124,8 +125,9 @@ Func BuilderBaseAttack($bTestRun = False)
 				Setlog("Ready to Battle! BB Smart Attack... Let's Go!", $COLOR_SUCCESS)
 
 				; BB Smart Attack
-				AttackBB()
+				AttackBB($aAvailableTroops)
 				If Not $g_bRunState Then Return
+				
 			Case Else
 				$g_bRestart = ($bTestRun) ? (False) : (True)
 				If $g_bRestart = True Then Return
@@ -447,9 +449,9 @@ Func BuilderBaseAttackReport()
 	For $i = 0 To 60
 		If Not $g_bRunState Then Return
 		TriggerMachineAbility()
-		Local $Damage = Number(getOcrOverAllDamage(780, 527 + 88)) ; DESRC Done
-		If Int($Damage) > Int($g_iLastDamage) Then
-			$g_iLastDamage = Int($Damage)
+		Local $sDamage = Number(getOcrOverAllDamage(780, 527 + 88)) ; DESRC Done
+		If Int($sDamage) > Int($g_iLastDamage) Then
+			$g_iLastDamage = Int($sDamage)
 			Setlog("Total Damage: " & $g_iLastDamage & "%")
 		EndIf
 		If Not _ColorCheck(_GetPixelColor($SurrenderBtn[0], $SurrenderBtn[1], True), Hex(0xFE5D65, 6), 10) Then ExitLoop
