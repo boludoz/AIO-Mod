@@ -38,8 +38,6 @@ Func CreateAttackSearchOptionsEndBattle()
 		$g_hTxtShareMinGold = _GUICtrlCreateInput("300000", $x + 120, $y - 2, 61, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-EndBattle", "TxtShareMinGold_Info_01", "Only Share Replay when the battle loot is more than this amount of Gold."))
 			GUICtrlSetLimit(-1, 6)
-			
-
 			GUICtrlSetState(-1, $GUI_DISABLE)
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 182, $y, 16, 16)
 
@@ -50,8 +48,6 @@ Func CreateAttackSearchOptionsEndBattle()
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-EndBattle", "TxtShareMinElixir_Info_01", "Only Share Replay when the battle loot is more than this amount of Elixir."))
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			GUICtrlSetLimit(-1, 6)
-			
-
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnElixir, $x + 182, $y, 16, 16)
 
 	$y += 22
@@ -61,8 +57,6 @@ Func CreateAttackSearchOptionsEndBattle()
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-EndBattle", "TxtShareMinDark_Info_01", "Only Share Replay when the battle loot is more than this amount of Dark Elixir."))
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			GUICtrlSetLimit(-1, 5)
-			
-
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 182, $y, 16, 16)
 
 	$y += 25

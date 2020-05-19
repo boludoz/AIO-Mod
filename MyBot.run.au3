@@ -597,7 +597,7 @@ Func FinalInitialization(Const $sAI)
 			SetDebugLog("Linked to GUI Process " & $g_iGuiPID)
 		EndIf
 	EndIf
-	
+
 	Local $aBotGitVersion = CheckModVersion(True) ; Update check without delay - Team AIO Mod++
 
 	; destroy splash screen here (so we witness the 100% ;)

@@ -40,8 +40,6 @@ Func CreateAttackSearchOptionsSearch()
 		$g_hTxtSearchReduceCount = _GUICtrlCreateInput("20", $x + 115, $y + 2, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 3)
-			
-
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "search(es).", -1), $x + 160, $y + 3, -1, -1)
 
 	$y += 21
@@ -51,8 +49,6 @@ Func CreateAttackSearchOptionsSearch()
 		$g_hTxtSearchReduceGold = _GUICtrlCreateInput("2000", $x + 115, $y, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 5)
-			
-
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 160, $y, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
 
@@ -63,8 +59,6 @@ Func CreateAttackSearchOptionsSearch()
 		$g_hTxtSearchReduceElixir = _GUICtrlCreateInput("2000", $x + 115, $y, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 5)
-			
-
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnElixir, $x + 160, $y, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
 
@@ -75,8 +69,6 @@ Func CreateAttackSearchOptionsSearch()
 		$g_hTxtSearchReduceGoldPlusElixir = _GUICtrlCreateInput("4000", $x + 115, $y, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 5)
-			
-
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 160, $y + 1, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
 		GUICtrlCreateLabel("+", $x + 176, $y + 1, -1, -1)
@@ -91,8 +83,6 @@ Func CreateAttackSearchOptionsSearch()
 		$g_hTxtSearchReduceDark = _GUICtrlCreateInput("100", $x + 115, $y, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 3)
-			
-
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 160, $y, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
 
@@ -103,8 +93,6 @@ Func CreateAttackSearchOptionsSearch()
 		$g_hTxtSearchReduceTrophy = _GUICtrlCreateInput("2", $x + 115, $y, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 1)
-			
-
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnTrophy, $x + 160, $y, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
@@ -179,8 +167,6 @@ Func CreateAttackSearchOptionsSearch()
 		$g_hTxtRestartSearchlimit = _GUICtrlCreateInput("50", $x + 15, $y + 15, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 3)
-			
-
 			;GUICtrlSetState(-1, $GUI_DISABLE)  ; Only needed when unchecked at bot start
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "search(es).", -1), $x + 47, $y + 17, -1, -1)
 

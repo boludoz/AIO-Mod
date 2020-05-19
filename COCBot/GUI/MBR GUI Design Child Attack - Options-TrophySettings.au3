@@ -35,8 +35,6 @@ Func CreateAttackSearchOptionsTrophySettings()
 			GUICtrlSetOnEvent(-1, "chkTrophyRange")
 		$g_hTxtDropTrophy = _GUICtrlCreateInput("5000", $x + 110, $y, 35, -1, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			GUICtrlSetLimit(-1, 4)
-			
-
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-TrophySettings", "TxtDropTrophy_Info_01", "MIN: The Bot will drop trophies until below this value."))
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			GUICtrlSetOnEvent(-1, "TxtDropTrophy")
@@ -66,8 +64,6 @@ Func CreateAttackSearchOptionsTrophySettings()
 		GUICtrlCreateLabel("-", $x + 148, $y + 4, -1, -1)
 		$g_hTxtMaxTrophy = _GUICtrlCreateInput("5000", $x + 155, $y, 35, -1, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			GUICtrlSetLimit(-1, 4)
-			
-
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-TrophySettings", "TxtMaxTrophy_Info_01", "MAX: The Bot will drop trophies if your trophy count is greater than this value."))
 			GuiCtrlSetState(-1,$GUI_DISABLE)
 			GUICtrlSetOnEvent(-1, "TxtMaxTrophy")
@@ -148,8 +144,6 @@ Func CreateAttackSearchOptionsTrophySettings()
 		$g_hTxtDropTrophyArmyMin = _GUICtrlCreateInput("70", $x + 215, $y + 2, 27, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 2)
-			
-
 			GUICtrlSetState (-1, $GUI_DISABLE)
 		$g_hLblDropTrophyArmyPercent = GUICtrlCreateLabel("%", $x + 245, $y + 6, -1, -1)
 	#Region - Drop trophy - Team AiO MOD++

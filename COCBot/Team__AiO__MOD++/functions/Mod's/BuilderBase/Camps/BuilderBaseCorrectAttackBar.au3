@@ -148,14 +148,14 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	Next
 
 	; [0] = Troops Name , [1] - Priority position
-	Local $NewAvailableTroops[UBound($aAvailableTroops)][2]
+	Local $aNewAvailableTroops[UBound($aAvailableTroops)][2]
 
 	For $i = 0 To UBound($aAvailableTroops) - 1
-		$NewAvailableTroops[$i][0] = $aAvailableTroops[$i][0]
-		$NewAvailableTroops[$i][1] = _ArraySearch($g_asAttackBarBB, CSVtoImageName($aAvailableTroops[$i][0]))
+		$aNewAvailableTroops[$i][0] = $aAvailableTroops[$i][0]
+		$aNewAvailableTroops[$i][1] = _ArraySearch($g_asAttackBarBB, CSVtoImageName($aAvailableTroops[$i][0]))
 	Next
 
-	If $g_bDebugSetlog Then Setlog(_ArrayToString($NewAvailableTroops, "-", -1, -1, "|", -1, -1))
+	If $g_bDebugSetlog Then Setlog(_ArrayToString($aNewAvailableTroops, "-", -1, -1, "|", -1, -1))
 
 	Local $Waschanged = False
 	Local $avoidInfLoop = 0
@@ -165,9 +165,9 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	
 	For $i = 0 To $CampsQuantities - 1
 		If Not $g_bRunState Then Return
-		If StringCompare($NewAvailableTroops[$i][0], $aCamps[$i]) <> 0 Then
+		If StringCompare($aNewAvailableTroops[$i][0], $aCamps[$i]) <> 0 Then
 			$Waschanged = True
-			Setlog("Incorrect troop On Camp " & $i + 1 & " - " & $NewAvailableTroops[$i][0] & " -> " & $aCamps[$i])
+			Setlog("Incorrect troop On Camp " & $i + 1 & " - " & $aNewAvailableTroops[$i][0] & " -> " & $aCamps[$i])
 			Local $aPointSwitch = [$aSwicthBtn[$i] + Random(0, 5, 1), 708 + Random(0, 5, 1)]
 			Setlog("Click Switch Button " & $i, $COLOR_INFO)
 			PureClick($aPointSwitch[0], $aPointSwitch[1], 1, 0)
@@ -196,11 +196,11 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 					PureClick($aAttackBar[$j][1] + Random(1, 5, 1), $aAttackBar[$j][2] + Random(1, 5, 1), 1, 0)
 					If RandomSleep(1000) Then Return
 					Setlog("Selected " & FullNametroops($aCamps[$i]) & " X:| " & $aAttackBar[$j][1] & " Y:| " & $aAttackBar[$j][2], $COLOR_SUCCESS)
-					$NewAvailableTroops[$i][0] = $aCamps[$i]
-					$NewAvailableTroops[$i][1] = _ArraySearch($g_asAttackBarBB, $aCamps[$i])
+					$aNewAvailableTroops[$i][0] = $aCamps[$i]
+					$aNewAvailableTroops[$i][1] = _ArraySearch($g_asAttackBarBB, $aCamps[$i])
 					; After populate with the new prio position let's sort ascending column 1
-					_ArraySort($NewAvailableTroops, 0, 0, 0, 1)
-					If $g_bDebugSetlog Then Setlog("New tab is " & _ArrayToString($NewAvailableTroops, "-", -1, -1, "|", -1, -1), $COLOR_INFO)
+					_ArraySort($aNewAvailableTroops, 0, 0, 0, 1)
+					If $g_bDebugSetlog Then Setlog("New tab is " & _ArrayToString($aNewAvailableTroops, "-", -1, -1, "|", -1, -1), $COLOR_INFO)
 					; Now let's restart the for loop , is a nesty way to do but is only to tests
 					$i = -1
 					ExitLoop
@@ -216,8 +216,40 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	If RandomSleep(500) Then Return
 
 	; populate the correct array with correct Troops
-	$aAvailableTroops = GetAttackBarBB()
-	Return $aAvailableTroops
+    For $i = 0 To UBound($aNewAvailableTroops) - 1
+        $aAvailableTroops[$i][0] = $aNewAvailableTroops[$i][0]
+    Next
+	
+	Local $iTroopBanners = 640 ; y location of where to find troop quantities
+
+    For $i = 0 To UBound($aAvailableTroops) - 1
+        If Not $g_bRunState Then Return
+        If $aAvailableTroops[$i][0] <> "" Then ;We Just Need To redo the ocr for mentioned troop only
+			Local $bIsMachine = (StringInStr(String($aAvailableTroops[$i][0]), "Machine") > 0) ; Team AIO Mod++
+			If $bIsMachine Then SetLog("Is Machine? " & $bIsMachine, $COLOR_INFO)
+			Local $iCount = 0
+			
+			If not $bIsMachine Then 
+				For $i = 0 To 5
+					$iCount = Number(_getTroopCountSmall($aAvailableTroops[$i][1], $iTroopBanners))
+					If $iCount = 0 Then $iCount = Number(_getTroopCountBig($aAvailableTroops[$i][1], $iTroopBanners-7))
+					If $iCount <> 0 Then ExitLoop
+					If _Sleep(50) Then Return
+				Next
+				
+				If $iCount = 0 Then
+					SetLog("Could not get count for " & $aAvailableTroops[$i][0] & " in slot " & String($aAvailableTroops[$i][3]), $COLOR_ERROR)
+					ContinueLoop
+				EndIf
+				
+			EndIf
+        EndIf
+    Next
+
+    For $i = 0 To UBound($aAvailableTroops) - 1
+        If Not $g_bRunState Then Return
+        If $aAvailableTroops[$i][0] <> "" Then SetLog("[" & $i + 1 & "] - " & $aAvailableTroops[$i][4] & "x " & FullNametroops($aAvailableTroops[$i][0]), $COLOR_SUCCESS)
+    Next
 EndFunc   ;==>BuilderBaseSelectCorrectScript
 
 ; _ArraySearch($g_asAttackBarBB, $aAvailableTroops[$i][0])
@@ -229,6 +261,8 @@ Func CSVtoImageName($sTroop = "Barb", $asAttackTroopList = $g_asAttackBarBB)
 EndFunc   ;==>CSVtoImageName
 
 Func MachineKick($a)
+	If Not IsArray($a) Then Return -1
+	
 	For $i = UBound($a) -1 To 0 Step -1 ; Optimized
 		If StringInStr($a[$i][0], "Machine") > 0 Then
 			_ArrayDelete($a, $i)

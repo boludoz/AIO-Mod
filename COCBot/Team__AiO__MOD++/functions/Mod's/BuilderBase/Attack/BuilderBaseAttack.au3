@@ -85,12 +85,17 @@ Func BuilderBaseAttack($bTestRun = False)
 	If $g_bRestart = True Then Return
 	If FindVersusBattlebtn() And $IsReaddy And BitOR($IsToDropTrophies, $g_iCmbBBAttack = $g_eBBAttackCSV, $g_iCmbBBAttack = $g_eBBAttackSmart) Then
 		ClickP($g_iMultiPixelOffSet, 1)
-		If _Sleep(3000) Then Return
+		If RandomSleep(3000) Then Return
 
 		; Clouds
 		If Not WaitForVersusBattle() Then Return
 		If Not $g_bRunState Then Return
 
+		; Zoomout the Opponent Village
+		BuilderBaseZoomOut()
+		If $g_bRestart = True Then Return
+		If Not $g_bRunState Then Return
+		
 		; Attack Bar | [0] = Troops Name , [1] = X-axis , [2] - Y-axis, [3] - Slot starting at 0, [4] - Amount
 		; Local $aAvailableTroops = BuilderBaseAttackBar()
 		Local $aAvailableTroops = GetAttackBarBB()
@@ -101,10 +106,6 @@ Func BuilderBaseAttack($bTestRun = False)
 		; Verify the scripts and attack bar
 		If Not $IsToDropTrophies Then BuilderBaseSelectCorrectScript($aAvailableTroops)
 
-		; Zoomout the Opponent Village
-		BuilderBaseZoomOut()
-		If $g_bRestart = True Then Return
-		If Not $g_bRunState Then Return
 
 		Select
 			Case $IsToDropTrophies = True

@@ -42,8 +42,6 @@ Func TabChatActionsGUI()
 		$g_hTxtDelayTimeClan = _GUICtrlCreateInput("2", $x + 138, $y - 2, 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design - ChatActions", "TxtDelayTime_Info_01", -1))
 			GUICtrlSetLimit(-1, 2)
-			
-
 
 	$y += 23
 		$g_hChkUseResponses = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design - ChatActions", "ChkUseResponses", "Response"), $x, $y, -1, -1)
@@ -85,8 +83,6 @@ Func TabChatActionsGUI()
 		$g_hTxtDelayTimeFC = _GUICtrlCreateInput("5", $x + 138, $y - 2, 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design - ChatActions", "TxtDelayTime_Info_01", -1))
 			GUICtrlSetLimit(-1, 2)
-			
-
 
 	$y += 20
 		$g_hChkOnlyOnRequest = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design - ChatActions", "ChkOnlyOnRequest", "Cond. in chat"), $x, $y, -1, -1)

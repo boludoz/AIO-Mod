@@ -4,17 +4,19 @@
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
                     Based on MyBot.run v7.8.3 
-					
+
 	**V3.4.0** (Quality update)
 		» Fixed:
-			- Battle machine update.
-			- Gitnore updated.
+			- Battle machine fixed in general.
 			- Train it fix.
 			- Switch base fixed.
 			- Available attacks fixed.
 			- Funcs fix.
-			- Log fixed.
-			- Icons fixed.
+			- Log BB fixed.
+			- Better GUI (@eloy work).
+
+		» Improved:
+			- BB Base attack in general.
 			
 	**V3.3.9** (Quality update)
 
@@ -30,7 +32,7 @@
 				- Builder base CSV troops select.
 				- BB Machine builder base on CSV Attack.
 				- Enabled random wave for smart attack BB.
-				
+
 			• Friendly Challenge: Start button fixed (March update).
 			• Super XP: Image tolerance.
 			• Humanization : Check main screen (Click ok) fixed (thx @esbestan).
@@ -43,16 +45,16 @@
 			• Chat AI : Much, much faster (thx @AceOf$pades).
 			• Funcs improved.
 			• Update window : If the user does not respond, it will close in 10 seconds.
-			
+
 	**V3.3.7**
 		» Updated: MBR v7.8.3.
-			
+
 		» Added:
 			- CSV: Random remain for Troops, Super Troops, Sieges, Heros.
 
 		» Fixed:
 			- All fixes of v7.8.3.
-			
+
 	**V3.3.6**
 		» Fixed:
 			• Request CC.
@@ -63,36 +65,36 @@
 	**V3.3.5** (ex V3.3.4)
 		» Fixed:
 			• Litle code in BB Attack changes.
-			
+
 			• Legacy MyBot code compared:
 				- Break on Champion Activation fixed.
-			
+
 			• Remain system more smart: it drop Heros and CC/Sieges one time.
 
 			• March update compatibility tweaks:
 				- Daily deals fixed.
 				- Clan games fixed. (thx @sabit12358)
-				
+
 			• Drop Throphy fixed. (thx @esbestan)
-			
+
 		» Improved:
 			• Code checked.
 				- GUI Improvements.
 				- Code cleaned.
-				
+
 	**V3.3.2**
 
 		» Fixed:
 			• Big amount of errors in BB Attack.
 			• Zoom out.
-			
+
 			* The new costs had already been implemented prior to the update.
 
 	**V3.3.1**
 		» Improved:
 			• Builder base:
 				- CheckArmyBuilderBase only if is necesesary.
-				
+
 		» Fixed:
 			• Auto update.
 			
@@ -105,16 +107,16 @@
 				- Attack from CSV and smart attack drop point improvement, based on map size. (Thx to @Chilly-Chill). (Experimental).
 				- Improve machine.
 				- BB Wall update.
-				
+
 			• Kings, queen and walls with new costs. (balance update).
-			
+
 			• Update checker.
 
 			• Zoom for builder base in attack.
 
 		» Fixed:
 			• Loot of fixes.
-			
+
 	**V3.2.8**
 		» Fixed:
 			• Find match : Cloud time and search fixed.
@@ -123,17 +125,17 @@
 	**V3.2.7**
 		» Fixed:
 			• Goblin XP : The Arena.
-			
+
 	**V3.2.6**
 		» Added:
 			• Donation limiter and stats V2.
-			
+
 		» Improved:
 			• CC : Donate from below..
 			• Clan hop : 
 				- If you donate without a clan hop, you will remain and donate realistically.
 				- Warnings to configure your castle.
-				
+
 			• Train system : The troops that are made are not completely erased in most cases..
 			• Random wave : GUI Improved for prevent confusion.
 
@@ -141,16 +143,16 @@
 			• Goblin XP.
 			• Clan hop.
 			• Random wave : Lot of fixes.
-	
+
 	**V3.2.4**
 		» Added:
 			• Donation limiter and stats (beta).
 			• Request fast and from chat (beta).
 			• New open and close chat for all improved (It works like butter).
-			
+
 		» Improved:
 			• Remove obstacles from BB.
-		
+
 		» Fixed:
 			• Stop for war troops fixed, GUI improved.
 
@@ -163,9 +165,9 @@
 
 		» Improved:
 			• Deploy Castle/SG first option for all.
-			
+
 			• Super XP.
-			
+
 			• Smart farm / Standard attack DB humanized:
 				- The dropping time is really random.
 				- Random delay / wave work and randomly.
@@ -175,7 +177,7 @@
 				- Totally improved (_ArraySearch now return -1).
 				- The witch was corrected.
 			• TH13 Filter.
-			
+
 	**V3.2.2**
 		» Added:
 			• GTFO.
@@ -186,19 +188,19 @@
 
 			• BB Army : 
 				- Fill camps beta.
-				
+
 			• Sleep : 
 				- Now it does not change the time, only the number of times it verifies the variables.
 				- The bot does not lock now if it is in sleep.
 				- Random sleep.
-				
+
 		» Fixed:
 			• BB Army : 
 				- Drop order.
-				
+
 			• DonateCC : 
 				Force PrepareDonateCC().
-				
+
 	**V3.2.1**
 		» Added:
 			• Double train siege. @Chakal-gyn inspired.
@@ -214,15 +216,15 @@
 				
 			• Check collectors outside: 
 				- TH13 support.
-				
+
 			• BB Army and Order troops translation support. 
 
 			• Builder base: 
 				- Troops train.
-			
+
 			• Drop trophies: 
 				- Drop hero/troops only option.
-		
+
 		» Improved:
 			• @Eloy GUI !!!. 
 
@@ -233,14 +235,14 @@
 	**V3.1.7**
 		» Fixed:
 			• Daily discounts.
-			
+
 	**V3.1.6**
 		» Added:
 			• Option: Drop trophies only if the shield is not available. @darksider007 idea.
-			
+
 		» Fixed:
 			• Magic items.
-			
+
 	**V3.1.5**
 		» Added:
 			• Magic items:
@@ -251,7 +253,7 @@
 				- Sleep as human (human time for all bot / attack / clicks / random option) (lower / higher CPU consumption).
 				- Deploy the castle first for all modes. (Include CSV - SamM0d inspired - THX Samkie)
 				- Avoid the location of buildings for the first time.
-				
+
 			• CSV: 
 				- Drop Remain hero / sieges !!!.
 
@@ -265,7 +267,7 @@
 				- No League / Meet one then attack fix.
 				- Restored and updated custom AIO MBRBot.dll. 
 				- Chilly-Chill name
-				
+
 		» Improved:
 				- Prevent dead slots re-click (Optimized real time).
 
@@ -296,7 +298,7 @@
 	**V3.0.1**
 		» Fixed:
 			• SwitchAccountVariablesReload : Error 66372 fixed
-		
+
 		» Improved:
 			• Chat AI: Scroll
 

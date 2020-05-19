@@ -1,6 +1,6 @@
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: MBR GUI Design
-; Description ...: This file creates the "About Us" tab
+; Description ...: This file creates the "About" tab
 ; Syntax ........:
 ; Parameters ....: None
 ; Return values .: None

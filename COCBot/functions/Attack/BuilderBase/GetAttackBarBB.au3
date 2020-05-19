@@ -18,7 +18,7 @@ Func GetAttackBarBB($bRemaining = False)
 	local $aSlot1 = [85, 640] ; location of first slot
 	local $iSlotOffset = 73 ; slots are 73 pixels apart
 	local $iBarOffset = 66 ; 66 pixels from side to attack bar
-	If $bRemaining = False Then $g_aMachineBB = 0 ; Team AIO Mod++
+	If $bRemaining = False Then $g_aMachineBB = 0
 	; testing troop count logic
 	;PureClickP($aSlot1)
 	;local $iTroopCount = Number(getTroopCountSmall($aSlot1[0], $aSlot1[1]))
@@ -45,7 +45,7 @@ Func GetAttackBarBB($bRemaining = False)
 			SetLog("Error in BBAttackBarCheck(): Search did not return any results!", $COLOR_ERROR)
 			If $g_bDebugImageSave Then SaveDebugImage("ErrorBBAttackBarCheck", False, Default, Default)
 		EndIf
-		Return -1
+		Return ""
 	EndIf
 
 	; parse data into attackbar array... not done
@@ -57,33 +57,23 @@ Func GetAttackBarBB($bRemaining = False)
 			local $aTempCoords = $aTempMultiCoords[$j]
 			If UBound($aTempCoords) < 2 Then ContinueLoop
 			local $iSlot = Int(($aTempCoords[0] - $iBarOffset) / $iSlotOffset)
-			Local $bIsMachine = (StringInStr($aTroop[0], "Machine") > 0) ; Team AIO Mod++
-			
-			If $bIsMachine Then 
-				$iCount = 1 ; Team AIO Mod++
-			Else
-				For $i = 0 To 15
-					local $iCount = Number(_getTroopCountSmall($aTempCoords[0], $iTroopBanners))
-					If $iCount == 0 Then $iCount = Number(_getTroopCountBig($aTempCoords[0], $iTroopBanners-7))
-					If $iCount <> 0 Then ExitLoop
-					If _Sleep(50) Then Return
-				Next
-			EndIf
-			
-			If $iCount == 0 Then
+			local $iCount = Number(_getTroopCountSmall($aTempCoords[0], $iTroopBanners))
+			If $iCount == 0 Then $iCount = Number(_getTroopCountBig($aTempCoords[0], $iTroopBanners-7))
+			If $iCount == 0 And not String($aTroop[0]) = "Machine" Then
 				SetLog("Could not get count for " & $aTroop[0] & " in slot " & String($iSlot), $COLOR_ERROR)
 				ContinueLoop
+				ElseIf String($aTroop[0]) = "Machine" Then
+				$iCount = 1
 			EndIf
-
-			Local $aTempElement[1][5] = [[$aTroop[0], $aTempCoords[0], $aTempCoords[1], $iSlot, $iCount]] ; element to add to attack bar list
-			If not $bRemaining and $bIsMachine Then $g_aMachineBB = $aTempElement ; Team AIO Mod++
+			local $aTempElement[1][5] = [[$aTroop[0], $aTempCoords[0], $aTempCoords[1], $iSlot, $iCount]] ; element to add to attack bar list
+			
+			If not $bRemaining and String($aTroop[0]) = "Machine" Then $g_aMachineBB = $aTempElement ; Team AIO Mod++
+			
 			_ArrayAdd($aBBAttackBar, $aTempElement)
+
 		Next
 
 	Next
-	
-	If UBound($aBBAttackBar) < 1 Then Return -1 ; Team AIO Mod++
-	
 	_ArraySort($aBBAttackBar, 0, 0, 0, 3)
 	For $i=0 To UBound($aBBAttackBar, 1) - 1
 		SetLog($aBBAttackBar[$i][0] & ", (" & String($aBBAttackBar[$i][1]) & "," & String($aBBAttackBar[$i][2]) & "), Slot: " & String($aBBAttackBar[$i][3]) & ", Count: " & String($aBBAttackBar[$i][4]), $COLOR_SUCCESS)

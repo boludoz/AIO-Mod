@@ -1002,7 +1002,7 @@ Func btnRunFunction()
 	Local $hTimer = TimerInit() ; Begin the timer and store the handle in a variable.
 	Local $saExecResult = Execute($sFunc)
 	Setlog("Time Execution : " & TimerDiff($hTimer))
-	
+
 	If $saExecResult = "" And @error <> 0 Then
 		Setlog("Result : Error", $COLOR_ERROR)
 	ElseIf IsArray($saExecResult) Then
@@ -1140,16 +1140,16 @@ Func btnTestUpgradeWindow()
 EndFunc   ;==>btnTestUpgradeWindow
 
 Func btnTestSmartWait()
-    Local $currentRunState = $g_bRunState
-    Local $bCloseWhileTrainingEnable = $g_bCloseWhileTrainingEnable
+	Local $currentRunState = $g_bRunState
+	Local $bCloseWhileTrainingEnable = $g_bCloseWhileTrainingEnable
 
-    $g_bRunState = True
-    $g_bCloseWhileTrainingEnable = True
+	$g_bRunState = True
+	$g_bCloseWhileTrainingEnable = True
 
-    SmartWait4Train(20)
+	SmartWait4Train(20)
 
-    $g_bRunState = $currentRunState
-    $g_bCloseWhileTrainingEnable = $bCloseWhileTrainingEnable
+	$g_bRunState = $currentRunState
+	$g_bCloseWhileTrainingEnable = $bCloseWhileTrainingEnable
 EndFunc   ;==>btnTestSmartWait
 
 Func btnConsoleWindow()

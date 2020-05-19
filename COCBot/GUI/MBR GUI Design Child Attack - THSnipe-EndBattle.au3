@@ -35,8 +35,6 @@ Func CreateAttackSearchTHSnipeEndBattle()
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - EndBattle", "TxtArmyCamps2_Info_01", "Set the % Army camps before activate this option"))
 			GUICtrlSetLimit(-1, 6)
-			
-
 
 		;camps %
 		GUICtrlCreateLabel("%", $x + 115, $y + 4, -1, -1)

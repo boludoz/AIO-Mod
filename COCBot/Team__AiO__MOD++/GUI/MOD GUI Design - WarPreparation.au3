@@ -78,8 +78,6 @@ Func TabWarPreparationGUI()
 			_GUICtrlCreateIcon($g_sLibIconPath, $aTroopsIcons[$i], $x + Int($i / 2) * 38, $y + Mod($i, 2) * 60, 32, 32)
 
 			$g_ahTxtTrainWarTroopCount[$i] = _GUICtrlCreateInput("0", $x + Int($i / 2) * 38 + 1, $y + Mod($i, 2) * 60 + 34, 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
-				
-
 				GUICtrlSetLimit(-1, 3)
 				GUICtrlSetOnEvent(-1, "TrainWarTroopCountEdit")
 		Next
@@ -101,8 +99,6 @@ Func TabWarPreparationGUI()
 			_GUICtrlCreateIcon($g_sLibIconPath, $aSpellsIcons[$i], $x + $i * 38, $y, 32, 32)
 			$g_ahTxtTrainWarSpellCount[$i] = _GUICtrlCreateInput("0", $x +  $i * 38, $y + 34, 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 				GUICtrlSetLimit(-1, 3)
-				
-
 				GUICtrlSetOnEvent(-1, "TrainWarSpellCountEdit")
 		Next
 
@@ -153,7 +149,7 @@ Func CmbStopTime()
 		Sleep(3500)
 		ToolTip('')
 	EndIf
-	
+
 	$g_iStopTime = _GUICtrlComboBox_GetCurSel($g_hCmbStopTime)
 	If _GUICtrlComboBox_GetCurSel($g_hCmbStopBeforeBattle) = 0 Then $g_iStopTime = $g_iStopTime * -1
 	$g_iReturnTime = _GUICtrlComboBox_GetCurSel($g_hCmbReturnTime)
@@ -168,7 +164,7 @@ Func CmbReturnTime()
 		Sleep(3500)
 		ToolTip('')
 	EndIf
-	
+
 	$g_iStopTime = _GUICtrlComboBox_GetCurSel($g_hCmbStopTime)
 	If _GUICtrlComboBox_GetCurSel($g_hCmbStopBeforeBattle) = 0 Then $g_iStopTime = $g_iStopTime * -1		
 	$g_iReturnTime = _GUICtrlComboBox_GetCurSel($g_hCmbReturnTime)

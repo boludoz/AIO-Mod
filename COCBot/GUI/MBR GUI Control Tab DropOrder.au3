@@ -32,7 +32,7 @@ EndFunc   ;==>CloseCustomDropOrder
 
 Func chkDropOrder()
 	GUICtrlSetState($g_hBtnRemoveDropOrder, $GUI_ENABLE)
-	
+
 	If GUICtrlRead($g_hChkCustomDropOrderEnable) = $GUI_CHECKED Then
 		$g_bCustomDropOrderEnable = True
 		GUICtrlSetBkColor($g_hBtnCustomDropOrderDB, $COLOR_GREEN)

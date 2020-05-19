@@ -52,18 +52,12 @@ Func TabHumanizationGUI()
 	GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModChat, $x, $y + 32, 32, 32)
 	$g_hLabel4 = GUICtrlCreateLabel(GetTranslatedFileIni("MOD GUI Design - BotHumanization", "Label_04", "Say"), $x + 40, $y + 30, 31, 17)
 	$g_ahumanMessage[0] = _GUICtrlCreateInput(GetTranslatedFileIni("MOD GUI Design - BotHumanization", "HumanMessage_01", "Hello !"), $x + 65, $y + 25, 121, 21)
-		
-
 	$g_hLabel3 = GUICtrlCreateLabel(GetTranslatedFileIni("MOD GUI Design - BotHumanization", "Label_03", "Or"), $x + 195, $y + 30, 15, 17)
 	$g_ahumanMessage[1] = _GUICtrlCreateInput(GetTranslatedFileIni("MOD GUI Design - BotHumanization", "HumanMessage_02", "Re !"), $x + 215, $y + 25, 116, 21)
-		
-
 	$g_acmbPriority[2] = GUICtrlCreateCombo("", $x + 342, $y + 25, 75, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 	GUICtrlSetData(-1, GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptions", -1), GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptionNever", -1))
 	$g_hLabel20 = GUICtrlCreateLabel(GetTranslatedFileIni("MOD GUI Design - BotHumanization", "Label_20", "Launch Challenges With Message"), $x + 40, $y + 55, 170, 17)
 	$g_hChallengeMessage = _GUICtrlCreateInput(GetTranslatedFileIni("MOD GUI Design - BotHumanization", "ChallengeMessage", "Ready to Challenge?"), $x + 215, $y + 50, 116, 21)
-		
-
 	$g_acmbPriority[12] = GUICtrlCreateCombo("", $x + 342, $y + 50, 75, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 	GUICtrlSetData(-1, GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptions", -1), GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptionNever", -1))
 

@@ -128,30 +128,52 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 		; Sort by X axis
 		_ArraySort($aAllResults, 0, 0, 0, 1)
 
-		Local $iAngle = 4
+		Local $iAngle = 10
 		;Local $iDToCheck = 5
-
-		; check if is a double Detection, near in 10px
-		For $i = 0 To UBound($aAllResults) - 1
-			If $i > UBound($aAllResults) - 1 Then ExitLoop
-			Local $LastCoordinate[4] = [$aAllResults[$i][0], $aAllResults[$i][1], $aAllResults[$i][2], $aAllResults[$i][3]]
-			SetDebugLog("Coordinate to Check: " & _ArrayToString($LastCoordinate))
-			If UBound($aAllResults) > 1 Then
-				For $j = 0 To UBound($aAllResults) - 1
-					If $j > UBound($aAllResults) - 1 Then ExitLoop
-					Local $SingleCoordinate[4] = [$aAllResults[$j][0], $aAllResults[$j][1], $aAllResults[$j][2], $aAllResults[$j][3]]
-					If $LastCoordinate[1] <> $SingleCoordinate[1] Or $LastCoordinate[2] <> $SingleCoordinate[2] Then
-						If Abs($SingleCoordinate[2] - $LastCoordinate[2]) < $iAngle And Abs($SingleCoordinate[1] - $LastCoordinate[1]) < $iAngle  Then
-							_ArrayDelete($aAllResults, $j)
+		For $i2 = 0 To 1 ; X2 filter.
+			; check if is a double Detection, near in 10px
+			For $i = 0 To UBound($aAllResults) - 1
+				If $i > UBound($aAllResults) - 1 Then ExitLoop
+				Local $LastCoordinate[4] = [$aAllResults[$i][0], $aAllResults[$i][1], $aAllResults[$i][2], $aAllResults[$i][3]]
+				SetDebugLog("Coordinate to Check: " & _ArrayToString($LastCoordinate) & " [" & $i2 & "]")
+				If UBound($aAllResults) > 1 Then
+					For $j = 0 To UBound($aAllResults) - 1
+						If $j > UBound($aAllResults) - 1 Then ExitLoop
+						Local $SingleCoordinate[4] = [$aAllResults[$j][0], $aAllResults[$j][1], $aAllResults[$j][2], $aAllResults[$j][3]]
+						If $LastCoordinate[1] <> $SingleCoordinate[1] Or $LastCoordinate[2] <> $SingleCoordinate[2] Then
+							If Abs($SingleCoordinate[2] - $LastCoordinate[2]) < $iAngle Or Abs($SingleCoordinate[1] - $LastCoordinate[1]) < $iAngle  Then
+								_ArrayDelete($aAllResults, $j)
+							EndIf
+						Else
+							If $LastCoordinate[1] = $SingleCoordinate[1] And $LastCoordinate[2] = $SingleCoordinate[2] And $LastCoordinate[3] <> $SingleCoordinate[3] Then
+								_ArrayDelete($aAllResults, $j)
+							EndIf
 						EndIf
-					Else
-						If $LastCoordinate[1] = $SingleCoordinate[1] And $LastCoordinate[2] = $SingleCoordinate[2] And $LastCoordinate[3] <> $SingleCoordinate[3] Then
-							_ArrayDelete($aAllResults, $j)
-						EndIf
-					EndIf
-				Next
-			EndIf
+					Next
+				EndIf
+			Next
 		Next
+		;_CaptureRegion2()
+		;
+		;Local $sSubDir = $g_sProfileTempDebugPath & "PointDeployBB"
+		;
+		;DirCreate($sSubDir)
+		;
+		;Local $sDate = @YEAR & "-" & @MON & "-" & @MDAY, $sTime = @HOUR & "." & @MIN & "." & @SEC
+		;Local $sDebugImageName = String($sDate & "_" & $sTime & "_.png")
+		;Local $hEditedImage = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
+		;Local $hGraphic = _GDIPlus_ImageGetGraphicsContext($hEditedImage)
+		;Local $hPenRED = _GDIPlus_PenCreate(0xFFFF0000, 3)
+		;
+		;For $i = 0 To UBound($aAllResults) - 1
+		;	addInfoToDebugImage($hGraphic, $hPenRED, $aAllResults[$i][0] & "_" & $aAllResults[$i][3], $aAllResults[$i][1], $aAllResults[$i][2])
+		;Next
+		;
+		;_GDIPlus_ImageSaveToFile($hEditedImage, $sSubDir & "\" & $sDebugImageName)
+		;_GDIPlus_PenDispose($hPenRED)
+		;_GDIPlus_GraphicsDispose($hGraphic)
+		;_GDIPlus_BitmapDispose($hEditedImage)
+        
 	Else
 		Return -1
 	EndIf

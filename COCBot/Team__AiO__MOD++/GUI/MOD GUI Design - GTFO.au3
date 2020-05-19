@@ -45,16 +45,12 @@ Func TabGTFOGUI()
 	GUICtrlSetFont(-1, 9, $FW_BOLD, "Arial", $CLEARTYPE_QUALITY)
 	GUICtrlSetColor(-1, $COLOR_BLACK)
 	GUICtrlSetOnEvent(-1, "ApplyElixirGTFO")
-	
-
 
 	GUICtrlCreateLabel(GetTranslatedFileIni("MOD GUI Design - Misc", "LblMinSaveGTFO_02", "Exit SKD when Dark Elixir") & " <", $x + 25, $y + 50, -1, -1)
 	$g_hTxtMinSaveGTFO_DE = _GUICtrlCreateInput("2000", $x + 160, $y + 47, 56, 21, BitOR($ES_CENTER, $ES_NUMBER))
 	GUICtrlSetFont(-1, 9, $FW_BOLD, "Arial", $CLEARTYPE_QUALITY)
 	GUICtrlSetColor(-1, $COLOR_BLACK)
 	GUICtrlSetOnEvent(-1, "ApplyDarkElixirGTFO")
-	
-
 
 	$g_hChkGTFOClanHop = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design - Misc", "GTFOClanHop", "Clan hop after jump donate"), $x + 30, $y + 75, -1, -1)
 	GUICtrlSetFont(-1, 9, $FW_BOLD, "Arial", $CLEARTYPE_QUALITY)
@@ -71,8 +67,6 @@ Func TabGTFOGUI()
 	GUICtrlSetFont(-1, 9, $FW_BOLD, "Arial", $CLEARTYPE_QUALITY)
 	GUICtrlSetColor(-1, $COLOR_BLACK)
 	GUICtrlSetOnEvent(-1, "ApplyClanReturnGTFO")
-	
-
 
 	$g_hExitAfterCyclesGTFO = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design - Misc", "LblMaxCyclesGTFO", "Exit after cycles") & ": ", $x + 25, $y + 150, -1, -1)
 	GUICtrlSetOnEvent(-1, "ApplyCyclesGTFO")
@@ -80,8 +74,6 @@ Func TabGTFOGUI()
 	GUICtrlSetFont(-1, 9, $FW_BOLD, "Arial", $CLEARTYPE_QUALITY)
 	GUICtrlSetColor(-1, $COLOR_BLACK)
 	GUICtrlSetOnEvent(-1, "ApplyCyclesGTFO")
-	
-
 	$x += 210
 	$y += 2
 	GUICtrlCreateLabel(GetTranslatedFileIni("MOD GUI Design - Misc", "Label_01", "Goal of SKD is lightning fast donation"), $x + 2, $y, 250, -1, $SS_CENTER)
@@ -127,8 +119,6 @@ Func TabGTFOGUI()
 	GUICtrlSetFont(-1, 9, $FW_BOLD, "Arial", $CLEARTYPE_QUALITY)
 	GUICtrlSetColor(-1, $COLOR_BLACK)
 	GUICtrlSetOnEvent(-1, "ApplyDonatedCap")
-	
-
 
 	$y += 25
 	GUICtrlCreateLabel(GetTranslatedFileIni("MOD GUI Design - Misc", "LblReceivedCap", "Received Cap"), $x + 20, $y, -1, -1)
@@ -137,8 +127,6 @@ Func TabGTFOGUI()
 	GUICtrlSetFont(-1, 9, $FW_BOLD, "Arial", $CLEARTYPE_QUALITY)
 	GUICtrlSetColor(-1, $COLOR_BLACK)
 	GUICtrlSetOnEvent(-1, "ApplyReceivedCap")
-	
-
 
 	$y -= 10
 	$g_hChkKickOutSpammers = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design - Misc", "ChkKickOutSpammers", "KickOut Spammers"), $x + 190, $y, -1, 17)
@@ -154,8 +142,6 @@ Func TabGTFOGUI()
 	GUICtrlSetFont(-1, 9, $FW_BOLD, "Arial", $CLEARTYPE_QUALITY)
 	GUICtrlSetColor(-1, $COLOR_BLACK)
 	GUICtrlSetOnEvent(-1, "ApplyKickLimits")
-	
-
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 EndFunc   ;==>TabGTFOGUI

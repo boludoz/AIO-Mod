@@ -63,8 +63,6 @@ Func CreateAttackStrategies()
 
 	$x += 205
 		$g_hTxtPresetSaveFilename = _GUICtrlCreateInput("strategy " &  @YEAR & "-" & @MON & "-" & @MDAY & " " & @HOUR & "." & @MIN & "." & @SEC, $x, $y, 200, 25)
-		
-
 
 	$x = $xStart
 	$y += 30

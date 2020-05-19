@@ -58,7 +58,7 @@ Func InitializeMainGUI($bGuiModeUpdate = False)
 		AtkLogHead()
 		BBAtkLogHead() ; Team AIO Mod++
 	EndIf
-	
+
 	; Show Default Tab
 	tabMain()
 
@@ -1708,8 +1708,8 @@ Func tabMain()
 	Local $tabidx = GUICtrlRead($g_hTabMain)
 	Select
 		Case $tabidx = 0 ; Log
-            GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
-            GUISetState(@SW_HIDE, $g_hGUI_BUILDER_BASE) ; BBase - Team AIO Mod++
+			GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
+			GUISetState(@SW_HIDE, $g_hGUI_BUILDER_BASE) ; BBase - Team AIO Mod++
 			GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
 			GUISetState(@SW_HIDE, $g_hGUI_BOT)
 			GUISetState(@SW_HIDE, $g_hGUI_MOD) ; BBase - Team AIO Mod++
@@ -1720,7 +1720,7 @@ Func tabMain()
 			GUISetState(@SW_HIDE, $g_hGUI_LOG)
 			GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
 			GUISetState(@SW_HIDE, $g_hGUI_BOT)
-            GUISetState(@SW_HIDE, $g_hGUI_BUILDER_BASE) ; BBase - Team AIO Mod++
+			GUISetState(@SW_HIDE, $g_hGUI_BUILDER_BASE) ; BBase - Team AIO Mod++
 			GUISetState(@SW_HIDE, $g_hGUI_MOD) ; BBase - Team AIO Mod++
 			GUISetState(@SW_HIDE, $g_hGUI_ABOUT)
 			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_VILLAGE)
@@ -1730,22 +1730,22 @@ Func tabMain()
 			GUISetState(@SW_HIDE, $g_hGUI_LOG)
 			GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
 			GUISetState(@SW_HIDE, $g_hGUI_BOT)
-            GUISetState(@SW_HIDE, $g_hGUI_BUILDER_BASE) ; BBase - Team AIO Mod++
+			GUISetState(@SW_HIDE, $g_hGUI_BUILDER_BASE) ; BBase - Team AIO Mod++
 			GUISetState(@SW_HIDE, $g_hGUI_MOD) ; BBase - Team AIO Mod++
 			GUISetState(@SW_HIDE, $g_hGUI_ABOUT)
 			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_ATTACK)
 			tabAttack()
 
 		#Region - BBase - Team AIO Mod++
-        Case $tabidx = 3 ; Builder Base
-            GUISetState(@SW_HIDE, $g_hGUI_LOG)
-            GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
-            GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
-            GUISetState(@SW_HIDE, $g_hGUI_BOT)
-            GUISetState(@SW_HIDE, $g_hGUI_ABOUT)
+		Case $tabidx = 3 ; Builder Base
+			GUISetState(@SW_HIDE, $g_hGUI_LOG)
+			GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
+			GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
+			GUISetState(@SW_HIDE, $g_hGUI_BOT)
+			GUISetState(@SW_HIDE, $g_hGUI_ABOUT)
 			GUISetState(@SW_HIDE, $g_hGUI_MOD)
-            GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_BUILDER_BASE)
-            tabBuilderBase()
+			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_BUILDER_BASE)
+			tabBuilderBase()
 
 		Case $tabidx = 4  ; Mod
 			GUISetState(@SW_HIDE, $g_hGUI_LOG)
@@ -1753,29 +1753,29 @@ Func tabMain()
 			GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
 			GUISetState(@SW_HIDE, $g_hGUI_BOT)
 			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_ABOUT)
-            GUISetState(@SW_HIDE, $g_hGUI_BUILDER_BASE)
-            GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_MOD)
+			GUISetState(@SW_HIDE, $g_hGUI_BUILDER_BASE)
+			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_MOD)
 		#EndRegion - BBase - Team AIO Mod++
 
-        Case $tabidx = 5 ; Options
-            GUISetState(@SW_HIDE, $g_hGUI_LOG)
-            GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
-            GUISetState(@SW_HIDE, $g_hGUI_BUILDER_BASE) ; BBase - Team AIO Mod++
-            GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
-            GUISetState(@SW_HIDE, $g_hGUI_ABOUT)
+		Case $tabidx = 5 ; Options
+			GUISetState(@SW_HIDE, $g_hGUI_LOG)
+			GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
+			GUISetState(@SW_HIDE, $g_hGUI_BUILDER_BASE) ; BBase - Team AIO Mod++
+			GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
+			GUISetState(@SW_HIDE, $g_hGUI_ABOUT)
 			GUISetState(@SW_HIDE, $g_hGUI_MOD) ; BBase - Team AIO Mod++
-            GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_BOT)
-            tabBot()
+			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_BOT)
+			tabBot()
 
 		Case $tabidx = 6 ; About
-           GUISetState(@SW_HIDE, $g_hGUI_LOG)
-           GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
-           GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
-           GUISetState(@SW_HIDE, $g_hGUI_BOT)
-           GUISetState(@SW_HIDE, $g_hGUI_BUILDER_BASE)
-           GUISetState(@SW_HIDE, $g_hGUI_MOD)
+			GUISetState(@SW_HIDE, $g_hGUI_LOG)
+			GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
+			GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
+			GUISetState(@SW_HIDE, $g_hGUI_BOT)
+			GUISetState(@SW_HIDE, $g_hGUI_BUILDER_BASE)
+			GUISetState(@SW_HIDE, $g_hGUI_MOD)
 
-           GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_ABOUT)
+			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_ABOUT)
 
 		Case Else
 			GUISetState(@SW_HIDE, $g_hGUI_LOG)
@@ -2170,7 +2170,7 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 
 		Case $g_hGUI_DONATE_TAB
 			; the icons for donate tab
-			Local $aIconIndex = [$eIcnCCRequest, $eIcnCCDonate, $eIcnHourGlass]
+			Local $aIconIndex = [$eIcnCCRequest, $eIcnCCDonate, $eIcnHourGlass, $eIcnCCTroops] ; Donations - Team AIO Mod++
 
 		Case $g_hGUI_UPGRADE_TAB
 			; the icons for upgrade tab

@@ -24,7 +24,7 @@ Global $g_hLblStartXP = 0, $g_hLblCurrentXP = 0, $g_hLblWonXP = 0, $g_hLblWonHou
 Func TabSuperXPGUI()
 
 	Local $x = 25, $y = 45
-	GUICtrlCreateGroup(GetTranslatedFileIni("MOD GUI Design - SuperXP", "Group_01", "Super XP"), $x - 20, $y - 20, $g_iSizeWGrpTab2, $g_iSizeHGrpTab2)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MOD GUI Design - SuperXP", "Group_01", "Settings"), $x - 20, $y - 20, $g_iSizeWGrpTab2, $g_iSizeHGrpTab2)
 	$x -= 5
 	$y -= 5
 		$g_hLblLockedSX = GUICtrlCreateLabel(GetTranslatedFileIni("MOD GUI Design - SuperXP", "Label_01", "LOCKED"), $x + 270, $y + 82, 173, 50)
@@ -70,7 +70,6 @@ Func TabSuperXPGUI()
 		GUICtrlCreateLabel(GetTranslatedFileIni("MOD GUI Design - SuperXP", "MaxXPToGain", "Max XP to Gain") & ":", $x, $y + 8, -1, -1)
 		$g_hTxtMaxXPToGain = GUICtrlCreateInput("500", $x + 85, $y + 4, 70, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			GUICtrlSetLimit(-1, 8)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
 
 	$x += 85
 	$y += 28

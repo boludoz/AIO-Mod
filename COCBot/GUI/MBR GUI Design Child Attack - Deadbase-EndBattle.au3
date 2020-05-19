@@ -39,8 +39,6 @@ Func CreateAttackSearchDeadBaseEndBattle()
 		$g_hTxtStopAtkDBNoLoot1 = _GUICtrlCreateInput("15", $x + 85, $y + 1, 30, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 2)
-			
-
 		$g_hLblStopAtkDBNoLoot1b = GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "sec.", -1), $x + 120, $y + 3, -1, -1)
 
 	$y += 20
@@ -55,8 +53,6 @@ Func CreateAttackSearchDeadBaseEndBattle()
 		$g_hTxtStopAtkDBNoLoot2 = _GUICtrlCreateInput("5", $x + 85, $y + 1, 30, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 2)
-			
-
 			GUICtrlSetState(-1, $GUI_DISABLE)
 		$g_hLblStopAtkDBNoLoot2b = GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "sec.", -1), $x + 120, $y + 3, -1, -1)
 
@@ -69,24 +65,18 @@ Func CreateAttackSearchDeadBaseEndBattle()
 		$g_hTxtDBMinGoldStopAtk2 = _GUICtrlCreateInput("2000", $x + 65, $y, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip & " gold.")
 			GUICtrlSetLimit(-1, 6)
-			
-
 			GUICtrlSetState(-1, $GUI_DISABLE)
 		$g_hPicDBMinGoldStopAtk2 = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 117, $y, 16, 16)
 	$y += 21
 		$g_hTxtDBMinElixirStopAtk2 = _GUICtrlCreateInput("2000", $x + 65, $y, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip & " elixir.")
 			GUICtrlSetLimit(-1, 6)
-			
-
 			GUICtrlSetState(-1, $GUI_DISABLE)
 		$g_hPicDBMinElixirStopAtk2 = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnElixir, $x + 117, $y, 16, 16)
 	$y += 21
 		$g_hTxtDBMinDarkElixirStopAtk2 = _GUICtrlCreateInput("50", $x + 65, $y, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip & " dark elixir.")
 			GUICtrlSetLimit(-1, 4)
-			
-
 			GUICtrlSetState(-1, $GUI_DISABLE)
 		$g_hPicDBMinDarkElixirStopAtk2 = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 117, $y, 16, 16)
 	$y += 21
@@ -111,8 +101,6 @@ Func CreateAttackSearchDeadBaseEndBattle()
 		$g_hTxtDBPercentHigher = _GUICtrlCreateInput("60", $x + 85, $y + 1, 30, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - EndBattle", "ChkEndPercentHigher_Info_01", -1))
 			GUICtrlSetLimit(-1, 3)
-			
-
 		$g_hLblDBPercentHigherSec = GUICtrlCreateLabel("%", $x + 120, $y + 3, -1, -1)
 	$y += 21
 		$g_hChkDBEndPercentChange = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - EndBattle", "ChkEndPercentChange", "When Percentage doesn't"), $x, $y, -1, -1)
@@ -124,8 +112,6 @@ Func CreateAttackSearchDeadBaseEndBattle()
 		$g_hTxtDBPercentChange = _GUICtrlCreateInput("15", $x + 85, $y + 1, 30, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - EndBattle", "ChkEndPercentChange_Info_01", -1))
 			GUICtrlSetLimit(-1, 2)
-			
-
 		$g_hLblDBPercentChangeSec = GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "sec.", -1), $x + 120, $y + 3, -1, -1)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 

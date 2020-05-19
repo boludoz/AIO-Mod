@@ -343,7 +343,7 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 	CreateBotTab() ; also creates  $g_hLastControlToHide
 	If Not $bGuiModeUpdate Then DistributorsUpdateGUI() ; Now loading Distributors (during GUI switch it must be called outside CreateMainGUIControls()!)
 
-	SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_07", "Loading About Us tab..."))
+	SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_07", "Loading About tab..."))
 	CreateAboutTab()
 
 	Local $sStepText = ""
@@ -366,7 +366,7 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 	$g_hTabBuilderBase = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_10", "B. Base"))  ; BBase - Team AIO Mod++
 	$g_hTabMOD = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_06", "Mods"))           ; Team AIO Mod++
 	$g_hTabBot = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_04", "Bot"))
-	$g_hTabAbout = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_05", "About Us"))
+	$g_hTabAbout = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_05", "About"))
 	GUICtrlCreateTabItem("")
 	GUICtrlSetResizing(-1, $GUI_DOCKBORDERS)
 

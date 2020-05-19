@@ -35,12 +35,11 @@ Func CreateAttackSearchActiveBaseEndBattle()
 			GUICtrlSetOnEvent(-1, "chkStopAtkABNoLoot1")
 			GUICtrlSetState(-1, $GUI_CHECKED)
 
-	$y +=20
+	$y += 20
 		$g_hLblABTimeStopAtka = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - EndBattle", "LblStopAtkNoLoot", -1) & ":", $x + 16, $y + 3, -1, -1)
 		$g_hTxtStopAtkABNoLoot1 = _GUICtrlCreateInput("20", $x + 85, $y + 1, 30, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 2)
-			GUICtrlSetBkColor(-1, 0xD1DFE7)
 		$g_hLblABTimeStopAtk = GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "sec.", -1), $x + 120, $y + 3, -1, -1)
 
 	$y += 20
@@ -69,8 +68,6 @@ Func CreateAttackSearchActiveBaseEndBattle()
 		$g_hTxtABMinGoldStopAtk2 = _GUICtrlCreateInput("2000", $x + 65, $y, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip & " gold.")
 			GUICtrlSetLimit(-1, 6)
-			
-
 			GUICtrlSetState(-1, $GUI_DISABLE)
 		$g_hPicABMinGoldStopAtk2 = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 117, $y, 16, 16)
 
@@ -78,8 +75,6 @@ Func CreateAttackSearchActiveBaseEndBattle()
 		$g_hTxtABMinElixirStopAtk2 = _GUICtrlCreateInput("2000", $x + 65, $y, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip & " elixir.")
 			GUICtrlSetLimit(-1, 6)
-			
-
 			GUICtrlSetState(-1, $GUI_DISABLE)
 		$g_hPicABMinElixirStopAtk2 = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnElixir, $x + 117, $y, 16, 16)
 
@@ -87,8 +82,6 @@ Func CreateAttackSearchActiveBaseEndBattle()
 		$g_hTxtABMinDarkElixirStopAtk2 = _GUICtrlCreateInput("50", $x + 65, $y, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip & "dark elixir.")
 			GUICtrlSetLimit(-1, 4)
-			
-
 			GUICtrlSetState(-1, $GUI_DISABLE)
 		$g_hPicABMinDarkElixirStopAtk2 = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 117, $y, 16, 16)
 
@@ -111,26 +104,22 @@ Func CreateAttackSearchActiveBaseEndBattle()
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - EndBattle", "ChkEndPercentHigher_Info_01", -1))
 			GUICtrlSetOnEvent(-1, "chkABEndPercentHigher")
 			GUICtrlSetState(-1, $GUI_ENABLE)
-	$y +=20
+	$y += 20
 		$g_hLblABPercentHigher = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - EndBattle", "LblPercentHigher", -1) & ":", $x + 16, $y + 2, -1, -1)
 		$g_hTxtABPercentHigher = _GUICtrlCreateInput("60", $x + 85, $y + 1, 30, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - EndBattle", "ChkEndPercentHigher_Info_01", -1))
 			GUICtrlSetLimit(-1, 2)
-			
-
 		$g_hLblABPercentHigherSec = GUICtrlCreateLabel("%", $x + 120, $y + 3, -1, -1)
 	$y += 21
 		$g_hChkABEndPercentChange = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - EndBattle", "ChkEndPercentChange", -1), $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - EndBattle", "ChkEndPercentChange_Info_01", -1))
 			GUICtrlSetOnEvent(-1, "chkABEndPercentChange")
 			GUICtrlSetState(-1, $GUI_ENABLE)
-	$y +=20
+	$y += 20
 		$g_hLblABPercentChange = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - EndBattle", "LblPercentChange", -1) & ":", $x + 16, $y + 3, -1, -1)
 		$g_hTxtABPercentChange = _GUICtrlCreateInput("15", $x + 85, $y + 1, 30, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - EndBattle", "ChkEndPercentChange_Info_01", -1))
 			GUICtrlSetLimit(-1, 2)
-			
-
 		$g_hLblABPercentChangeSec = GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "sec.", -1), $x + 120, $y + 3, -1, -1)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
@@ -149,8 +138,6 @@ Func CreateAttackSearchActiveBaseEndBattle()
 			$g_hTxtDELowEndMin = _GUICtrlCreateInput("25", $x + 92, $y, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 				_GUICtrlSetTip(-1, $sTxtTip)
 				GUICtrlSetLimit(-1, 2)
-				
-
 				GUICtrlSetState(-1, $GUI_DISABLE)
 			$g_hLblDELowEndMin = GUICtrlCreateLabel("%", $x + 136, $y + 2, -1, -1)
 			_GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 147, $y, 16, 16)

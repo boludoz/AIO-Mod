@@ -28,7 +28,7 @@ Global $g_hCmbDBSiege = 0, $g_hCmbDBWardenMode = 0, $g_hChkDBChampionAttack = 0,
 Func CreateAttackSearchDeadBaseAttack()
 	Local $sTxtTip = ""
 	Local $x = 25, $y = 40
-		GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Group_01", "Attack with"), $x - 20, $y - 15, 145, 263)
+		GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Group_01", "Attack with"), $x - 20, $y - 15, 145, 291)
 		$x -= 15
 		$y += 2
 			$g_hCmbDBAlgorithm = GUICtrlCreateCombo("", $x, $y, 135, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
@@ -77,28 +77,28 @@ Func CreateAttackSearchDeadBaseAttack()
 			$g_hChkDBChampionAttack = GUICtrlCreateCheckbox("", $x + 27, $y, 17, 17)
 				_GUICtrlSetTip(-1, $sTxtTip)
 
-        $y += 27
-        $x -= 92
+		$y += 27
+		$x -= 92
 			$g_hPicDBWardenAttack = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnWarden, $x, $y, 24, 24)
 				$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Chk-Use-Warden_Info_01", "Use your Warden when Attacking...") & @CRLF & _
 						   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Chk-Use-Warden_Info_02", "Enabled with Townhall 11")
 				_GUICtrlSetTip(-1, $sTxtTip)
 			$g_hChkDBWardenAttack = GUICtrlCreateCheckbox("", $x + 27, $y, 17, 17)
 				_GUICtrlSetTip(-1, $sTxtTip)
-                GUICtrlSetOnEvent(-1, "chkDBWardenAttack")
+				GUICtrlSetOnEvent(-1, "chkDBWardenAttack")
 
-        $x += 46
-            $g_hCmbDBWardenMode = GUICtrlCreateCombo("", $x, $y, 90, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
-                GUICtrlSetData(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Cmb-WardenMode_Item_01", "Ground mode") & "|" & _
-                                       GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Cmb-WardenMode_Item_02", "Air mode") & "|" & _
-                                       GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Cmb-WardenMode_Item_03", "Default mode"), GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Cmb-WardenMode_Item_03", -1))
+		$x += 46
+			$g_hCmbDBWardenMode = GUICtrlCreateCombo("", $x, $y, 89, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+				GUICtrlSetData(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Cmb-WardenMode_Item_01", "Ground mode") & "|" & _
+									   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Cmb-WardenMode_Item_02", "Air mode") & "|" & _
+									   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Cmb-WardenMode_Item_03", "Default mode"), GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Cmb-WardenMode_Item_03", -1))
 				$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Cmb-WardenMode_Tip", "Select Grand Warden's mode 'Ground' or 'Air'" & @CRLF & _
 												"The Bot will always check Grand Warden's mode before every attack" & @CRLF & _
 												"Choose 'Default mode' to bypass Grand Warden check")
 				_GUICtrlSetTip(-1, $sTxtTip)
 
-        $y += 27
-        $x -= 46
+		$y += 27
+		$x -= 46
 			$g_hPicDBDropCC = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnCC, $x, $y, 24, 24)
 				$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Chk-Use-Clan Castle_Info_01", "Drop your Clan Castle in battle if it contains troops.")
 				_GUICtrlSetTip(-1, $sTxtTip)
@@ -107,7 +107,7 @@ Func CreateAttackSearchDeadBaseAttack()
                 GUICtrlSetOnEvent(-1, "chkDBDropCC")
 
 		$x += 46
-			$g_hCmbDBSiege = GUICtrlCreateCombo("", $x, $y, 92, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+			$g_hCmbDBSiege = GUICtrlCreateCombo("", $x, $y, 89, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 			GUICtrlSetData(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Cmb-Siege_Item_01", "Castle only") & "|" & _
 								   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Cmb-Siege_Item_02", "Wall Wrecker") & "|" & _
 								   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Cmb-Siege_Item_03", "Battle Blimp") & "|" & _

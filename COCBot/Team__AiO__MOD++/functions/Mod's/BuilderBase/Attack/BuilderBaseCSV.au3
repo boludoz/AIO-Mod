@@ -373,11 +373,11 @@ Func BuilderBaseParseAttackCSV($AvailableTroops, $DeployPoints, $DeployBestPoint
 
 		; Let's Assume That Our CSV Was Bad That None Of The Troops Was Deployed Let's Deploy Everything
 		; Let's make a Remain Just In Case deploy points problem somewhere in red zone OR Troop was not mentioned in CSV OR Hero Was not dropped. Let's drop All
-		Local $aAvailableTroops_NXQ = GetAttackBarBB(True)
+		Local $aAvailableTroops_NXQ = GetAttackBarBB()
 
 		If $aAvailableTroops_NXQ <> -1 And IsArray($aAvailableTroops_NXQ) Then
 			SetLog("CSV Does not deploy some of the troops. So Now just dropping troops in a waves", $COLOR_INFO)
-			AttackBB()
+			AttackBB($aAvailableTroops_NXQ)
 		EndIf
 		
 		; Machine Ability and Battle
@@ -669,6 +669,15 @@ Func DeployTroopBB($sTroopName, $aSlot_XY, $Point2Deploy, $iQtyToDrop)
 	SetDebugLog("[" & _ArrayToString($aSlot_XY) & "] - Deploying " & $iQtyToDrop & " " & FullNametroops($sTroopName) & " At " & $Point2Deploy[0] & " x " & $Point2Deploy[1], $COLOR_INFO)
 	If $g_bIsBBMachineD = False Then $g_bIsBBMachineD = ($sTroopName = "Machine") ? (True) : (False)
 	ClickP($Point2Deploy, $iQtyToDrop, 0)
+	
+	;If $g_bIsBBMachineD = True And $g_aMachineBB <> 0 Then
+	;	If _Sleep(250) Then Return
+	;	If _ColorCheck(_GetPixelColor(Int($g_aMachineBB[0][1]), 723, True), Hex(0xFFFFFF, 6), 20) Or not _ColorCheck(_GetPixelColor(Int($g_aMachineBB[0][1]), 721, True), Hex(0x472CC5, 6), 20) Then
+	;		Setlog("Machine fail.", $COLOR_ERROR)
+	;		$g_aMachineBB = 0
+	;		Return 
+	;	EndIf
+	;EndIf
 EndFunc   ;==>DeployTroopBB
 
 Func GetThePointNearBH($BHposition, $aDeployPoints)
@@ -697,10 +706,7 @@ Func TriggerMachineAbility($bTest = False)
 		If Not $g_bIsBBMachineD Then Return
 	EndIf 
 	
-	If $g_aMachineBB = 0 Then 
-		Setlog("No machine.", $COLOR_ERROR)
-		Return 
-	EndIf
+	If $g_aMachineBB = 0 Then Return
 	
 	If _ColorCheck(_GetPixelColor(Int($g_aMachineBB[0][1]), 723, True), Hex(0xFFFFFF, 6), 20) Then
 		Setlog("Machine fail.", $COLOR_ERROR)
@@ -728,9 +734,9 @@ Func TriggerMachineAbility($bTest = False)
 	EndIf
 	
 	If _ColorCheck($hPixel, Hex(0x432CCE, 6), 20) Then
-		Click(Int($g_aMachineBB[0][1]), Int($g_aMachineBB[0][2]), 2, 0)
-		If _Sleep(300) Then Return
-		SetLog("- BB Machine : Click on ability.", $COLOR_ACTION)
+			Click(Int($g_aMachineBB[0][1]), Int($g_aMachineBB[0][2]), 2, 0)
+			If _Sleep(300) Then Return
+			SetLog("- BB Machine : Click on ability.", $COLOR_ACTION)
 	EndIf
 
 EndFunc   ;==>TriggerMachineAbility
