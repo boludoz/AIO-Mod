@@ -95,10 +95,10 @@ Func BuilderBaseAttack($bTestRun = False)
 		BuilderBaseZoomOut()
 		If $g_bRestart = True Then Return
 		If Not $g_bRunState Then Return
-		
+
 		; Attack Bar | [0] = Troops Name , [1] = X-axis , [2] - Y-axis, [3] - Slot starting at 0, [4] - Amount
 		; Local $aAvailableTroops = BuilderBaseAttackBar()
-		Local $aAvailableTroops = GetAttackBarBB()
+		Local $aAvailableTroops = GetAttackBarBB(True)
 		If $aAvailableTroops <> -1 Then SetDebugLog("Attack Bar Array: " & _ArrayToString($aAvailableTroops, "-", -1, -1, "|", -1, -1))
 
 		If $aAvailableTroops = -1 Then Return -1
@@ -106,7 +106,15 @@ Func BuilderBaseAttack($bTestRun = False)
 		; Verify the scripts and attack bar
 		If Not $IsToDropTrophies Then BuilderBaseSelectCorrectScript($aAvailableTroops)
 
+		; Avoid bugs in redlines (too fast MyBot).
+		If RandomSleep(1500) Then Return
 
+		; Reset vars.
+		$g_bIfMachineHasAbility = False
+		$g_bIsBBMachineD = False
+		$g_aMachineBB = 0
+
+		; Select mode.
 		Select
 			Case $IsToDropTrophies = True
 				Setlog("Let's Drop some Trophies!", $COLOR_SUCCESS)
@@ -128,7 +136,7 @@ Func BuilderBaseAttack($bTestRun = False)
 				; BB Smart Attack
 				AttackBB($aAvailableTroops)
 				If Not $g_bRunState Then Return
-				
+
 			Case Else
 				$g_bRestart = ($bTestRun) ? (False) : (True)
 				If $g_bRestart = True Then Return
@@ -189,14 +197,14 @@ EndFunc   ;==>isOnVersusBattleWindow
 
 Func ArmyStatus(ByRef $bIsReady)
 	If Not $g_bRunState Then Return
-	
+
 	#Region Legacy Chilly-Chill fragment.
 	Local $sSearchDiamond = GetDiamondFromRect("114,384,190,450") ; start of trained troops bar untill a bit after the 'r' "in Your Troops"
 	Local $aNeedTrainCoords = decodeSingleCoord(findImage("NeedTrainBB", $g_sImgBBNeedTrainTroops, $sSearchDiamond, 1, True))
 
 	If IsArray($aNeedTrainCoords) And UBound($aNeedTrainCoords) = 2 Then
 		Local $bNeedTrain = True
-		
+
 		ClickP($aAway, 1, 0, "#0000") ; ensure field is clean
 		If _Sleep(1500) Then Return ; Team AIO Mod++ Then Return
 		SetLog("Troops need to be trained in the training tab.", $COLOR_INFO)
@@ -205,7 +213,7 @@ Func ArmyStatus(ByRef $bIsReady)
 
 	EndIf
 	#EndRegion
-	
+
 	If QuickMis("BC1", $g_sImgFullArmyBB, 108, 355, 431, 459, True, False) Then
 		SetDebugLog("Full Army detected.")
 		SetLog("Full Army detected", $COLOR_INFO)
@@ -216,14 +224,14 @@ Func ArmyStatus(ByRef $bIsReady)
 	Else
 		$bIsReady = False
 	EndIf
-	
+
 	If $g_bChkBBWaitForMachine And QuickMis("BC1", $g_sImgHeroStatusRec, 108, 355, 431, 459, True, False) Then
 		SetLog("Battle Machine is not ready.", $COLOR_INFO)
 		$bIsReady = False
 	EndIf
-	
+
 	$g_bBBMachineReady = $bIsReady
-	
+
 EndFunc   ;==>ArmyStatus
 
 Func HeroStatus()
@@ -446,7 +454,7 @@ Func BuilderBaseAttackReport()
 	; Verify the Window Report , Point[0] Archer Shadow Black Zone [155,460,000000], Point[1] Ok Green Button [430,590, 6DBC1F]
 	Local $SurrenderBtn = [76, 584] ; DESRC Done
 	Local $OKbtn = [435, 562] ; DESRC Done ;auxiliar click
-	
+
 	For $i = 0 To 60
 		If Not $g_bRunState Then Return
 		TriggerMachineAbility()
@@ -459,7 +467,7 @@ Func BuilderBaseAttackReport()
 		If $i = 60 Then Setlog("Window Report Problem!", $COLOR_WARNING)
 		If _Sleep(2000) Then Return
 	Next
-	
+
 	;If checkObstacles(True) Then
 	;	SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
 	;	Return

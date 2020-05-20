@@ -54,6 +54,7 @@ EndFunc   ;==>FullNametroops
 Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 
 	If Not $g_bRunState Then Return
+	
 	Local $aLines[0]
 	Static $lastScript
 	
@@ -92,20 +93,25 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 		Setlog("Get from CSV unselected.", $COLOR_ERROR)
 		Return
 	EndIf
-
+	
+	Local $aTmpAttackBarMachine = -1
+	
 	; Move backwards through the array deleting the blanks
 	For $i = UBound($aAvailableTroops) - 1 To 0 Step -1
-		If $aAvailableTroops[$i][0] = "" Then
+		If $aAvailableTroops[$i][0] = "" Then _ArrayDelete($aAvailableTroops, $i)
+		If (String($aAvailableTroops[$i][0]) = "Machine") Then 
+			Local $aTempElement[1][5] = [[$aAvailableTroops[$i][0], $aAvailableTroops[$i][1], $aAvailableTroops[$i][2], $aAvailableTroops[$i][3], $aAvailableTroops[$i][4]]] ; element to add to attack bar list
+			$aTmpAttackBarMachine = $aTempElement
 			_ArrayDelete($aAvailableTroops, $i)
 		EndIf
 	Next
 
 	; Let's get the correct number of Army camps
-	Local $CampsQuantities = 0
+	Local $aCampsQuantities = 0
 	For $i = 0 To UBound($aAvailableTroops) - 1
-		If StringInStr($aAvailableTroops[$i][0], "Machine") > 0 Then $CampsQuantities += 1
+		If Not (String($aAvailableTroops[$i][0]) = "Machine") Then $aCampsQuantities += 1
 	Next
-	Setlog("Available " & $CampsQuantities & " Camps.", $COLOR_INFO)
+	Setlog("Available " & $aCampsQuantities & " Camps.", $COLOR_INFO)
 
 	Local $aCamps[0]
 
@@ -121,7 +127,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 				$aCamps[UBound($aCamps) - 1] = StringStripWS($aSplitLine[$i], $STR_STRIPALL)
 			Next
 			; Select the correct CAMP [cmd line] to use according with the first attack bar detection = how many camps do you have
-			If $CampsQuantities = UBound($aCamps) Then
+			If $aCampsQuantities = UBound($aCamps) Then
 				If $g_bDebugSetlog Then Setlog(_ArrayToString($aCamps, "-", -1, -1, "|", -1, -1))
 				ExitLoop
 			Else
@@ -163,7 +169,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	Local $aSwicthBtn[6] = [112, 180, 253, 327, 398, 471]
 	Local $aPointSwitch = [$aSwicthBtn[Random(0, UBound($aSwicthBtn) - 1, 1)] + Random(0, 5, 1), 708 + Random(0, 5, 1)]
 	
-	For $i = 0 To $CampsQuantities - 1
+	For $i = 0 To $aCampsQuantities - 1
 		If Not $g_bRunState Then Return
 		If StringCompare($aNewAvailableTroops[$i][0], $aCamps[$i]) <> 0 Then
 			$Waschanged = True
@@ -220,31 +226,25 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
         $aAvailableTroops[$i][0] = $aNewAvailableTroops[$i][0]
     Next
 	
+	
 	Local $iTroopBanners = 640 ; y location of where to find troop quantities
 
     For $i = 0 To UBound($aAvailableTroops) - 1
         If Not $g_bRunState Then Return
         If $aAvailableTroops[$i][0] <> "" Then ;We Just Need To redo the ocr for mentioned troop only
-			Local $bIsMachine = (StringInStr(String($aAvailableTroops[$i][0]), "Machine") > 0) ; Team AIO Mod++
-			If $bIsMachine Then SetLog("Is Machine? " & $bIsMachine, $COLOR_INFO)
-			Local $iCount = 0
-			
-			If not $bIsMachine Then 
-				For $i = 0 To 5
-					$iCount = Number(_getTroopCountSmall($aAvailableTroops[$i][1], $iTroopBanners))
-					If $iCount = 0 Then $iCount = Number(_getTroopCountBig($aAvailableTroops[$i][1], $iTroopBanners-7))
-					If $iCount <> 0 Then ExitLoop
-					If _Sleep(50) Then Return
-				Next
-				
-				If $iCount = 0 Then
-					SetLog("Could not get count for " & $aAvailableTroops[$i][0] & " in slot " & String($aAvailableTroops[$i][3]), $COLOR_ERROR)
-					ContinueLoop
-				EndIf
-				
-			EndIf
+			Local $iCount = Number(_getTroopCountSmall($aAvailableTroops[$i][1], $iTroopBanners))
+			If $iCount == 0 Then $iCount = Number(_getTroopCountBig($aAvailableTroops[$i][1], $iTroopBanners-7))
+			If $iCount == 0 And not String($aAvailableTroops[$i][0]) = "Machine" Then
+				SetLog("Could not get count for " & $aAvailableTroops[$i][0] & " in slot " & String($aAvailableTroops[$i][3]), $COLOR_ERROR)
+				ContinueLoop
+				ElseIf String($aAvailableTroops[$i][0]) = "Machine" Then
+				$iCount = 1
+			EndIf			
         EndIf
+		$aAvailableTroops[$i][4] = $iCount
     Next
+
+	If IsArray($aTmpAttackBarMachine) Then _ArrayAdd($aAvailableTroops, $aTmpAttackBarMachine)
 
     For $i = 0 To UBound($aAvailableTroops) - 1
         If Not $g_bRunState Then Return
@@ -269,6 +269,7 @@ Func MachineKick($a)
 			ExitLoop
 		EndIf
 	Next
-	
-	Return (UBound($a) < 1) ? (-1) : ($a)
+	Local $vReturn = (UBound($a) < 1) ? (-1) : ($a)
+	$a = $vReturn
+	Return $vReturn
 EndFunc   ;==>MachineOut

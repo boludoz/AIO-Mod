@@ -157,7 +157,7 @@ EndFunc   ;==>_Wait4PixelGoneArray
 Func _WaitForCheckXML($sPathImage, $sSearchZone, $bForceCapture = True, $iWait = 10000, $iDelay = 250)
 	Local $hTimer = __TimerInit()
 	While (BitOR($iWait > __TimerDiff($hTimer), ($iWait <= 0)) > 0) ; '-1' support
-		Local $aRetutn = _ImageSearchXML($sPathImage, 1000, $sSearchZone, $bForceCapture)
+		Local $aRetutn = _ImageSearchXML($sPathImage, 1, $sSearchZone, $bForceCapture)
 		If (UBound($aRetutn) > 0) Then Return True
 		If _Sleep($iDelay) Then Return False
 		If ($iWait <= 0) Then ExitLoop ; Loop prevention.

@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 #Region - Custom BB - Team AIO Mod++ ; Thx Chilly-Chill by you hard work.
-Func AttackBB($aAvailableTroops = -1)
+Func AttackBB($aAvailableTroops = GetAttackBarBB())
 	Local $iSide = Random(0, 1, 1) ; randomly choose top left or top right
 	Local $aBMPos = 0
 
@@ -89,7 +89,7 @@ Func AttackBB($aAvailableTroops = -1)
 				;DeployBBTroop($aBBAttackBar[$i][0], $aBBAttackBar[$i][1], $aBBAttackBar[$i][2], $aBBAttackBar[$i][4], $iSide)
 				SetLog("Deploying " & $aBBAttackBar[$i][0] & " x" & String($aBBAttackBar[$i][4]), $COLOR_ACTION)
 				PureClick($aBBAttackBar[$i][1] - Random(0, 5, 1), $aBBAttackBar[$i][2] - Random(0, 5, 1)) ; select troop
-				If $aBBAttackBar[$j][4] <> 0 Then
+				If $aBBAttackBar[$i][4] <> 0 Then
 					For $iAmount = 0 To $aBBAttackBar[$i][4]
 						Local $vDP = Random(0, UBound($aVar))
 						PureClick($aVar[$vDP][0] - Random(0, 10, 1), $aVar[$vDP][1] - Random(0, 10, 1))
@@ -129,6 +129,21 @@ Func AttackBB($aAvailableTroops = -1)
 			EndIf
 			If $g_bIsBBMachineD = False Then $g_bIsBBMachineD = True
 		EndIf
+		
+		If $g_bIfMachineHasAbility Then Return
+	
+		If $g_bIsBBMachineD = True And $g_aMachineBB <> 0 Then
+			If _Sleep(500) Then Return
+			If _ColorCheck(_GetPixelColor(Int($g_aMachineBB[0][1]), 723, True), Hex(0xFFFFFF, 6), 20) Or not _ColorCheck(_GetPixelColor(Int($g_aMachineBB[0][1]), 721, True), Hex(0x472CC5, 6), 20) Then
+				Setlog("The machine has no ability.", $COLOR_ERROR)
+				$g_aMachineBB = 0
+				;$g_bIsBBMachineD = False
+				$g_bIfMachineHasAbility = False
+				Else
+				$g_bIfMachineHasAbility = True
+			EndIf
+		EndIf
+
 	EndIf
 
 	$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast ; reset android suspend and resume stuff

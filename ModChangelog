@@ -4,19 +4,25 @@
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
                     Based on MyBot.run v7.8.3 
-
-	**V3.4.0** (Quality update - dev)
+	**V3.4.1** (Quality update)
+		» Improved:
+			- BB Base in general.
+			- Better GUI (@eloy work).
+			- GTFO v1.6.
+			
 		» Fixed:
+			- OCR.
 			- Battle machine fixed in general.
 			- Train it fix.
 			- Switch base fixed.
 			- Available attacks fixed.
 			- Funcs fix.
 			- Log BB fixed.
-			- Better GUI (@eloy work).
-
-		» Improved:
-			- BB Base attack in general.
+			- Deploy points fix.
+			- Get attack bar BB.
+			
+		» Disabled:
+			- Upgrade walls in BB.
 			
 	**V3.3.9** (Quality update)
 

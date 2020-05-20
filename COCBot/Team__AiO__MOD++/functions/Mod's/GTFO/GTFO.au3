@@ -5,7 +5,7 @@
 ; Parameters ....: ---
 ; Return values .: ---
 ; Author ........: ProMac (06/2017)
-; Modified ......: MHK2012(05/2018), Boludoz(19/08/2018), Boldina(10/10/2018), Boldina(12/2019)
+; Modified ......: MHK2012(05/2018), Boludoz(19/08/2018), Boldina(10/10/2018), Boldina(12/2019), Boldina(20/5/2020)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2020
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......: ---
@@ -84,7 +84,7 @@ Func MainGTFO()
 
 	; GTFO Main Loop
 	While 1
-		SetLogCentered(" GTFO v1.5 ", Default, Default, True)
+		SetLogCentered(" GTFO v1.6 ", Default, Default, True)
 		; Just a user log
 		$_diffTimer = (TimerDiff($_timer) / 1000) / 60
 		If Not $_bFirstLoop Then
@@ -93,7 +93,7 @@ Func MainGTFO()
 
 		; Function to take nmore responsive the GUI /STOP and PASUE
 		If Not $g_bRunState Then Return
-		If _Sleep($DELAYRUNBOT3) Then Return
+		If RandomSleep($DELAYRUNBOT3) Then Return
 		If checkAndroidReboot() Then ContinueLoop
 		; trap common error messages also check for reconnecting animation
 		checkObstacles()
@@ -135,9 +135,17 @@ Func MainGTFO()
 		TrainGTFO()
 
 		; Donate Loop on Clan Chat
+		If not OpenClanChat() Then
+			Setlog("GTFO | Fail.", $COLOR_ERROR)
+			Return
+		EndIf
+
 		If Not DonateGTFO() Then
 			Setlog("Finished GTFO", $COLOR_INFO)
 			If $g_bChkGTFOClanHop And $g_bChkGTFOReturnClan Then LeaveClanHop()
+
+			CloseClanChat()
+
 			Return
 		EndIf
 
@@ -169,7 +177,7 @@ Func TrainGTFO()
 	If $g_bDonationEnabled And $g_bChkDonate Then ResetVariables("donated")
 
 	ClickP($aAway, 2, 0, "#0346") ;Click Away
-	If _Sleep(500) Then Return ; Delay AFTER the click Away Prevents lots of coc restarts
+	If RandomSleep(500) Then Return ; Delay AFTER the click Away Prevents lots of coc restarts
 
 	EndGainCost("Train")
 
@@ -197,49 +205,46 @@ Func DonateGTFO()
 	; +++++++++++++++++++++++++++++
 	Local $iSetLogFuse = 0
 	Local $iLopardo = $g_iLoop
-	Local $bFirstSub = True
+	Local $bFirstSub = False
 	While 1
-		If _Sleep(100) Then Return
-		If Not BitAND($g_bChkGTFOClanHop, $bFirstSub) Then         ; Spend by...
-			
+
+		SetLog("GTFO | Clan donate loop.", $COLOR_ERROR)
+
+		If Not $g_bChkGTFOClanHop And not $bFirstSub Then         ; Spend by...
+
 			If $iSetLogFuse > Random(55, 100, 1) And $iLopardo <> $g_iLoop Then
 				If IfIsToStayInGTFO() = False Then Return False
 				TrainGTFO()
 				$iLopardo = $g_iLoop
 				$iSetLogFuse = 0
 			EndIf
-			
+
 			Local $sDateSNew = _DateAdd('s', Ceiling(Random(25, 55, 1)), _NowCalc())
-			
-			While 1     ; Fake multitask.
+
+			CloseClanChat()
+
+			While 1    ; Fake multitask.
 				If _ColorCheck(_GetPixelColor(26, 342, True), Hex(0xEA0810, 6), 20) Then ExitLoop
 				If Number(_DateDiff('s', $sDateSNew, _NowCalc())) <= 55 Then ContinueLoop
 				$sDateSNew = _DateAdd('s', Ceiling(Random(25, 55, 1)), _NowCalc())
 				SpecialAway()
-				If _Sleep(Random(100, 200, 1)) Then Return False
+				If RandomSleep(Random(5000, 6000, 1)) Then Return False
 			WEnd
-			
+
 			If $iSetLogFuse = 5 Then
 				Setlog("Waiting chat. Training...", $COLOR_INFO)
 			EndIf
 
 			$iSetLogFuse += 1
-
-			$g_iLoop += 1
-
-		Else
-			$g_iLoop += 1
 		EndIf
-		
-		$bFirstSub = False
 
+		$g_iLoop += 1
 
-		OpenClanChat()
-		If _Sleep($DELAYRUNBOT3) Then Return
+		$bFirstSub = True
 
 		; Function to take more responsive the GUI /STOP and PASUE
 		If Not $g_bRunState Then Return
-		If _Sleep($DELAYRUNBOT3) Then Return
+		If RandomSleep($DELAYRUNBOT3) Then Return
 
 		; Verify if the remain train time is zero
 		$_diffTimer = (TimerDiff($_timer) / 1000) / 60
@@ -255,7 +260,10 @@ Func DonateGTFO()
 		$_bReturnT = False
 		$_bReturnS = False
 		$firstrun = False
+
 		Setlog("Donate CC now.", $COLOR_INFO)
+;~ 		OpenClanChat()
+		If RandomSleep($DELAYRUNBOT3) Then Return
 
 		PrepareDonateCC()
 		Local $bDonateTroop = ($g_aiPrepDon[0] = 1), $bDonateAllTroop = ($g_aiPrepDon[1] = 1), _
@@ -274,25 +282,29 @@ Func DonateGTFO()
 			Return False
 		EndIf
 
+		OpenClanChat()
+
 		DonateCC()
 
-		ClanHop()     ; Hop!!!
-;~ 			EndIf
+		ClanHop() ; Hop!!!
+
+		CloseClanChat()
 	WEnd
 
 	; The details differentiate me from you.
 	Opt("MouseClickDelay", GetClickUpDelay())
 	Opt("MouseClickDownDelay", GetClickDownDelay())
 
-	CloseClanChat()
 
 	If $g_iLoop > $g_iTxtCyclesGTFO And Not $g_hExitAfterCyclesGTFO Then Return
-	
+
 	Return True
 EndFunc   ;==>DonateGTFO
 
 Func ClanHop()
 	If $g_bLeader Or Not $g_bChkGTFOClanHop Then Return
+
+	OpenClanChat()
 
 	SetLog("Start Clan Hopping", $COLOR_INFO)
 	Local $sTimeStartedHopping = _NowCalc()
@@ -306,7 +318,7 @@ Func ClanHop()
 
 		If $iErrors >= 10 Then
 			SetLog("Too Many Errors occured in current ClanHop Loop. Leaving ClanHopping!", $COLOR_ERROR)
-			CloseClanChat()
+;~ 			CloseClanChat()
 			ExitLoop
 		EndIf
 
@@ -317,13 +329,13 @@ Func ClanHop()
 		EndIf
 
 		; Check rules
-		UnderstandChatRules()
+;~ 		UnderstandChatRules()
 
 		#Region - If not is in clan
 		If _Wait4PixelGoneArray($g_aIsClanChat) And _Wait4PixelArray($g_aClanBadgeNoClan) Then ; If not Still in Clan
 			;CLick on green button if you dont is on clan, It is way 2
 			Click(Random(104, 216, 1), Random(471, 515, 1))
-			If _Sleep(250) Then Return
+			If RandomSleep(250) Then Return
 		EndIf
 		#EndRegion - If not is in clan
 
@@ -346,7 +358,7 @@ Func ClanHop()
 					Local $sData = ""
 					ClickP($g_aCopy)
 					Local $sData = ClipGet()
-					If _Sleep(250) Then Return
+					If RandomSleep(250) Then Return
 					GUICtrlSetData($g_hTxtClanID, $sData)
 					$g_sTxtClanID = $sData
 					$g_bFirstHop = False
@@ -373,7 +385,7 @@ Func ClanHop()
 		EndIf
 		#EndRegion - If is in clan
 
-		If _Sleep(1500) Then Return
+		If RandomSleep(1500) Then Return
 
 		; Open clans page
 		Local $aIsOnClanLabel = [640, 205, 0xDDF685, 20]
@@ -383,46 +395,57 @@ Func ClanHop()
 			Local $aBlueAnnouncementClick = [658, 283, 0xB9E484, 20]
 			If _Wait4PixelArray($aIsOnClanLabel) Then
 				ClickP($aBlueAnnouncementClick)
-				If _Sleep(100) Then Return
+				If RandomSleep(100) Then Return
 			EndIf
+
+
+			If RandomSleep(500) Then Return
+
+			; Join clan button
+			Local $sJoinDir = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\GTFO"
+			Local $sArea = "676, 177, 836, 596"
 
 			; Click on random clan
 			If _Wait4PixelArray($aClansBtns) Then
-				Click(295, 360 + (68 * Random(0, 6, 1)))
+				Click(Random(153, 200, 1), 360 + (68 * Random(0, 6, 1)))
 			Else
+				SetLog("Fail GTFO | Random clan.", $COLOR_ERROR)
 				$iErrors += 1
 				ContinueLoop
 			EndIf
 
-			If _Sleep(100) Then Return
-
-			If MultiPSimple(698, 397, 826, 426, Hex(0xDAF582, 6), 15) <> 0 Then
+			If _WaitForCheckXML($sJoinDir, $sArea) Then
 				Click(Random(698, 826, 1), Random(397, 426, 1))
 			Else
+				SetLog("Fail GTFO | Join.", $COLOR_ERROR)
 				$iErrors += 1
 				ContinueLoop
 			EndIf
 
-			If _Sleep(1000) Then Return
+			ClickOkay("ClanHop")
 
-			If $bIsInClan Then ClickOkay("ClanHop")
-
-			If _Sleep(1000) Then Return
 			If $bIsInClan Then SetLog("GTFO|Leaved the clan for another.", $COLOR_INFO)
 
-			;If OpenClanChat() Then
-			If UnderstandChatRules() And OpenClanChat() Then
-				Return True
+			If Not OpenClanChat() Then
+				$iErrors += 1
+				ContinueLoop
 			EndIf
+
+			SetLog("GTFO | Clan hop finished.", $COLOR_INFO)
+			Return True
+
 		Else
 			$iErrors += 1
 			ContinueLoop
 		EndIf
 	WEnd
 
-	Setlog("ClanSaveAndJoiner|End ERROR", $COLOR_ERROR)
-	Return False
+	If $iErrors >= 10 Then
+		Setlog("ClanSaveAndJoiner|End ERROR", $COLOR_ERROR)
+		Return False
+	EndIf
 
+	Return True
 	ClickAwayChat(400)
 EndFunc   ;==>ClanHop
 
@@ -440,28 +463,28 @@ Func LeaveClanHop()
 	Setlog("Send : " & $sClaID, $COLOR_INFO)
 	AndroidAdbSendShellCommand("am start -n com.supercell.clashofclans/com.supercell.clashofclans.GameApp -a android.intent.action.VIEW -d 'https://link.clashofclans.com/?action=OpenClanProfile&tag=" & $sClaID & "'", Default)
 	Setlog("Wait", $COLOR_INFO)
-	If _Sleep(5500) Then Return
+	If RandomSleep(5500) Then Return
 	$g_bLeader = True
 	ClickP($g_aNoClanBtn)
-	If _Sleep(200) Then Return
+	If RandomSleep(200) Then Return
 	ClickP($aSendRequest)
 
 	Local $i = 10
 
 	While $i > 0
 		If ClickOkay("ClanHop") Then ExitLoop
-		If _Sleep(1000) Then Return False
+		If RandomSleep(1000) Then Return False
 		$i -= 1
 	WEnd
 
-	If _Sleep(1000) Then Return False
+	If RandomSleep(1000) Then Return False
 
 	CloseClanChat()
 	If ProfileSwitchAccountEnabled() Then checkSwitchAcc() ; Forced to switch
 EndFunc   ;==>LeaveClanHop
 
 Func ClickAwayChat($iSleep = 10)
-	If _Sleep($iSleep) Then Return False
+	If RandomSleep($iSleep) Then Return False
 	Return SpecialAway()
 EndFunc   ;==>ClickAwayChat
 
@@ -473,7 +496,7 @@ Func IfIsToStayInGTFO()
 	; check values to keep
 	; return false or true
 
-	If _Sleep(2000) Then Return
+	If RandomSleep(2000) Then Return
 	checkMainScreen(False)
 	VillageReport()
 

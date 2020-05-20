@@ -12,13 +12,17 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-
+#Region - Custom - Team AIO Mod++
 Func GetAttackBarBB($bRemaining = False)
 	local $iTroopBanners = 640 ; y location of where to find troop quantities
 	local $aSlot1 = [85, 640] ; location of first slot
 	local $iSlotOffset = 73 ; slots are 73 pixels apart
 	local $iBarOffset = 66 ; 66 pixels from side to attack bar
+	
 	If $bRemaining = False Then $g_aMachineBB = 0
+	If $g_aMachineBB <> 0 Then TriggerMachineAbility()
+	If RandomSleep(500) Then Return -1
+
 	; testing troop count logic
 	;PureClickP($aSlot1)
 	;local $iTroopCount = Number(getTroopCountSmall($aSlot1[0], $aSlot1[1]))
@@ -81,6 +85,8 @@ Func GetAttackBarBB($bRemaining = False)
 	Return $aBBAttackBar
 EndFunc
 
+; Credits to DoCoc
+
 Func _getTroopCountSmall($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for non-selected troop kind
 	Return getOcrAndCapture("coc-t-s", $x_start, $y_start, 53, 16, True, Default, $bNeedNewCapture)
 EndFunc   ;==>getTroopCountSmall
@@ -88,3 +94,4 @@ EndFunc   ;==>getTroopCountSmall
 Func _getTroopCountBig($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for selected troop kind
 	Return getOcrAndCapture("coc-t-b", $x_start, $y_start, 53, 17, True, Default, $bNeedNewCapture)
 EndFunc   ;==>getTroopCountBig
+#EndRegion - Custom - Team AIO Mod++

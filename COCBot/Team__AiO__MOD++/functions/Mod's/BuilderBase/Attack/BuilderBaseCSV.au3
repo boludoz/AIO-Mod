@@ -75,9 +75,9 @@ Func BuilderBaseParseAttackCSV($AvailableTroops, $DeployPoints, $DeployBestPoint
 	Local $aAvailableTroops_NXQ = $AvailableTroops
 
 	; Machine Ability
-	Local $bIfMachineWasDeployed = False
-	Local $bIfMachineHasAbility = False
 	Local $aMachineSlot_XYA[3] = [0, 0, 0] ;3rd column is for Ability Pixel
+	;$g_bIfMachineWasDeployed = False
+	$g_bIfMachineHasAbility = False
 
 	; [0] - TopLeft ,[1] - TopRight , [2] - BottomRight , [3] - BottomLeft
 	Local $aDeployBestPoints = $DeployBestPoints ;Best Filtered 10 Points
@@ -631,7 +631,7 @@ EndFunc   ;==>AddTilesToEdgePoint
 Func VerifySlotTroop($sTroopName, ByRef $aSlot_XY, ByRef $iQtyOfSelectedSlot, ByRef $iSlotNumber, $aAvailableTroops_NXQ)
 
 	; Verify Battle Machine.
-	TriggerMachineAbility()
+	;TriggerMachineAbility()
 
 	; Select Slot.
 	Local $iSlotX = 0, $iSlotY = 0
@@ -657,10 +657,10 @@ Func VerifySlotTroop($sTroopName, ByRef $aSlot_XY, ByRef $iQtyOfSelectedSlot, By
 	EndIf
 
 	; Select Slot
-	$aSlot_XY[0] = $iSlotX
+	$aSlot_XY[0] = $iSlotX 
 	$aSlot_XY[1] = $iSlotY
 
-	Click($iSlotX, $iSlotY, 1, 0)
+	Click($iSlotX - RANDOM(0, 10, 1), $iSlotY - RANDOM(0, 10, 1), 1, 0)
 	If _Sleep(250) Then Return
 	Return True
 EndFunc   ;==>VerifySlotTroop
@@ -670,14 +670,20 @@ Func DeployTroopBB($sTroopName, $aSlot_XY, $Point2Deploy, $iQtyToDrop)
 	If $g_bIsBBMachineD = False Then $g_bIsBBMachineD = ($sTroopName = "Machine") ? (True) : (False)
 	ClickP($Point2Deploy, $iQtyToDrop, 0)
 	
-	;If $g_bIsBBMachineD = True And $g_aMachineBB <> 0 Then
-	;	If _Sleep(250) Then Return
-	;	If _ColorCheck(_GetPixelColor(Int($g_aMachineBB[0][1]), 723, True), Hex(0xFFFFFF, 6), 20) Or not _ColorCheck(_GetPixelColor(Int($g_aMachineBB[0][1]), 721, True), Hex(0x472CC5, 6), 20) Then
-	;		Setlog("Machine fail.", $COLOR_ERROR)
-	;		$g_aMachineBB = 0
-	;		Return 
-	;	EndIf
-	;EndIf
+	If $g_bIfMachineHasAbility Then Return
+	
+	If $g_bIsBBMachineD = True And $g_aMachineBB <> 0 Then
+		If _Sleep(500) Then Return
+		If _ColorCheck(_GetPixelColor(Int($g_aMachineBB[0][1]), 723, True), Hex(0xFFFFFF, 6), 20) Or not _ColorCheck(_GetPixelColor(Int($g_aMachineBB[0][1]), 721, True), Hex(0x472CC5, 6), 20) Then
+			Setlog("The machine has no ability.", $COLOR_ERROR)
+			$g_aMachineBB = 0
+			;$g_bIsBBMachineD = False
+			$g_bIfMachineHasAbility = False
+			Else
+			$g_bIfMachineHasAbility = True
+		EndIf
+	EndIf
+	
 EndFunc   ;==>DeployTroopBB
 
 Func GetThePointNearBH($BHposition, $aDeployPoints)
@@ -700,43 +706,21 @@ Func GetThePointNearBH($BHposition, $aDeployPoints)
 	Return $ReturnPoint
 EndFunc   ;==>GetThePointNearBH
 
-Func TriggerMachineAbility($bTest = False)
-	Local $hPixel 
-	If not $bTest Then
-		If Not $g_bIsBBMachineD Then Return
-	EndIf 
+Func TriggerMachineAbility()
+	If $g_bIfMachineHasAbility = False Then Return
+	
+	If $g_bIsBBMachineD = False Then Return
 	
 	If $g_aMachineBB = 0 Then Return
 	
-	If _ColorCheck(_GetPixelColor(Int($g_aMachineBB[0][1]), 723, True), Hex(0xFFFFFF, 6), 20) Then
-		Setlog("Machine fail.", $COLOR_ERROR)
-		$g_aMachineBB = 0
-		Return 
-	EndIf
+	If $g_bRunState = False Then Return
 	
 	SetDebugLog("- BB Machine : Checking ability.")
 	
-	$hPixel = _GetPixelColor(Int($g_aMachineBB[0][1]), 721, True)
-	If $bTest Then Setlog($hPixel)
-
-	If $g_bBBIsFirst And IsArray($g_aMachineBB) Then
-		If $bTest Then Setlog(_ArrayToString($g_aMachineBB))
-		If _ColorCheck($hPixel, Hex(0x472CC5, 6), 40) Then
-			Click(Int($g_aMachineBB[0][1]), Int($g_aMachineBB[0][2]), 2, 0)
-			If _Sleep(300) Then Return
-			SetLog("- BB Machine : Skill enabled.", $COLOR_ACTION)
-			$g_bBBIsFirst = False
-			Return
-		Else
-			SetLog("- BB Machine : Skill not present.", $COLOR_INFO)
-			Return
-		EndIf
-	EndIf
-	
-	If _ColorCheck($hPixel, Hex(0x432CCE, 6), 20) Then
-			Click(Int($g_aMachineBB[0][1]), Int($g_aMachineBB[0][2]), 2, 0)
-			If _Sleep(300) Then Return
-			SetLog("- BB Machine : Click on ability.", $COLOR_ACTION)
+	If _ColorCheck(_GetPixelColor(Int($g_aMachineBB[0][1]), 721, True), Hex(0x432CCE, 6), 20) Then
+		Click(Int($g_aMachineBB[0][1]), Int($g_aMachineBB[0][2]), 2, 0)
+		If _Sleep(300) Then Return
+		SetLog("- BB Machine : Click on ability.", $COLOR_ACTION)
 	EndIf
 
 EndFunc   ;==>TriggerMachineAbility

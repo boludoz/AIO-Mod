@@ -273,6 +273,8 @@ Global $g_bBBDropOrderSet = False
 Global $g_ahCmbBBDropOrder[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_iBBNextTroopDelay = 2000,  $g_iBBSameTroopDelay = 300; delay time between different and same troops
 
+Global $g_bIfMachineHasAbility = False
+
 ; Attack CSV
 Global $g_bChkBBRandomAttack = False
 Global Const $g_sCSVBBAttacksPath = @ScriptDir & "\CSV\BuilderBase"
