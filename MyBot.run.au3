@@ -1238,44 +1238,12 @@ Func __RunFunction($action)
 			$g_iNbrOfWallsUpped = 0
 			UpgradeWall()
 			_Sleep($DELAYRUNBOT3)
+		#Region Team AIO Mod++
 		Case "BuilderBase"
 			If BitAND(Not BitOR($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
 			runBuilderBase()
-;~ 			If isOnBuilderBase() Or (($g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_iChkBBSuggestedUpgrades Or $g_bChkEnableBBAttack) And SwitchBetweenBases()) Then
-;~ 				$g_bStayOnBuilderBase = True
-;~ 				If _Sleep($DELAYRUNBOT3) Then Return
-;~ 				If checkObstacles() Then Return
-;~ 				BuilderBaseReport()
-;~ 				If _Sleep($DELAYRUNBOT3) Then Return
-;~ 				If checkObstacles() Then Return
-;~ 				CollectBuilderBase()
-;~ 				If _Sleep($DELAYRUNBOT3) Then Return
-;~ 				If checkObstacles() Then Return
-;~ 				AttackBuilderBase()
-;~ 				AttackBB()
-;~
-;~ 				If _Sleep($DELAYRUNBOT3) Then Return
-;~ 				If checkObstacles() Then Return
-;~ 				StartClockTowerBoost()
-;~ 				If _Sleep($DELAYRUNBOT3) Then Return
-;~ 				If checkObstacles() Then Return
-;~ 				StarLaboratory()
-;~ 				If _Sleep($DELAYRUNBOT3) Then Return
-;~ 				If checkObstacles() Then Return
-;~ 				CleanBBYard()
-;~ 				If _Sleep($DELAYRUNBOT3) Then Return
-;~ 				If checkObstacles() Then Return
-;~ 				MainSuggestedUpgradeCode()
-;~ 				If _Sleep($DELAYRUNBOT3) Then Return
-;~ 				If checkObstacles() Then Return
-;~ 				BuilderBaseReport()
-;~ 				If _Sleep($DELAYRUNBOT3) Then Return
-;~ 				If checkObstacles() Then Return
-;~ 				; switch back to normal village
-;~ 				SwitchBetweenBases()
-;~ 				$g_bStayOnBuilderBase = False
-;~ 			EndIf
 			_Sleep($DELAYRUNBOT3)
+		#EndRegion Team AIO Mod++
 		Case "CollectFreeMagicItems"
 			If BitAND(Not BitOR($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
 			CollectFreeMagicItems()

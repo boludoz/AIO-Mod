@@ -80,15 +80,15 @@ Func Collect($bCheckTreasury = True)
 	EndGainCost("Collect")
 EndFunc   ;==>Collect
 
-#Region - Team Aio Mod++
 Func CollectLootCart()
 	If Not $g_abNotNeedAllTime[0] Then Return
 
 	SetLog("Searching for a Loot Cart", $COLOR_INFO)
-	Local $aLootCart = findMultipleQuick($g_sImgCollectLootCart, 1, "20,220,120,290")
-	If $aLootCart <> -1 Then
-		$aLootCart[2] += 15
-		If IsMainPage() Then Click($aLootCart[1], $aLootCart[2], 1, 0, "#0330")
+
+	Local $aLootCart = decodeSingleCoord(findImage("LootCart", $g_sImgCollectLootCart, GetDiamondFromRect("20,220,120,290"), 1, True))
+	If UBound($aLootCart) > 1 Then
+		$aLootCart[1] += 15
+		If IsMainPage() Then ClickP($aLootCart, 1, 0, "#0330")
 		If _Sleep(400) Then Return
 
 		Local $aiCollectButton = findButton("CollectLootCart", Default, 1, True)
@@ -105,5 +105,4 @@ Func CollectLootCart()
 
 	$g_abNotNeedAllTime[0] = False
 EndFunc   ;==>CollectLootCart
-#EndRegion - Team Aio Mod++
 

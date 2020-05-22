@@ -69,7 +69,8 @@ Func GetAttackBarBB($bRemaining = False)
 				ElseIf String($aTroop[0]) = "Machine" Then
 				$iCount = 1
 			EndIf
-			local $aTempElement[1][5] = [[$aTroop[0], $aTempCoords[0], $aTempCoords[1], $iSlot, $iCount]] ; element to add to attack bar list
+		
+			Local $aTempElement[1][5] = [[$aTroop[0], $aTempCoords[0], $aTempCoords[1], $iSlot, $iCount]] ; element to add to attack bar list
 			
 			If not $bRemaining and String($aTroop[0]) = "Machine" Then $g_aMachineBB = $aTempElement ; Team AIO Mod++
 			

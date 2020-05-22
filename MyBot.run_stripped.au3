@@ -10,7 +10,7 @@
 #Au3Stripper_Off
 #Au3Stripper_On
 Global $g_sBotVersion = "v7.8.3"
-Global $g_sModVersion = "v3.4.1"
+Global $g_sModVersion = "v3.4.2"
 Opt("MustDeclareVars", 1)
 Global $g_sBotTitle = ""
 Global $g_hFrmBot = 0
@@ -7836,7 +7836,6 @@ Global Const $DELAYCLOSEOPEN3000 = 3000
 Global $DELAYSMARTZAP1 = 1000
 Global $DELAYSMARTZAP4 = 4000
 Global $DELAYSMARTZAP10 = 10000
-Global $DELAYSWITCHBASES1 = 1000
 Global $DELAYCLOCKTOWER1 = 1000
 Global $DELAYCLOCKTOWER2 = 200
 Global $g_hSplash = 0, $g_hSplashProgress, $g_lSplashStatus, $g_lSplashPic, $g_lSplashTitle
@@ -43330,7 +43329,7 @@ ContinueLoop
 ElseIf String($aTroop[0]) = "Machine" Then
 $iCount = 1
 EndIf
-local $aTempElement[1][5] = [[$aTroop[0], $aTempCoords[0], $aTempCoords[1], $iSlot, $iCount]]
+Local $aTempElement[1][5] = [[$aTroop[0], $aTempCoords[0], $aTempCoords[1], $iSlot, $iCount]]
 If not $bRemaining and String($aTroop[0]) = "Machine" Then $g_aMachineBB = $aTempElement
 _ArrayAdd($aBBAttackBar, $aTempElement)
 Next
@@ -61353,10 +61352,10 @@ EndFunc
 Func CollectLootCart()
 If Not $g_abNotNeedAllTime[0] Then Return
 SetLog("Searching for a Loot Cart", $COLOR_INFO)
-Local $aLootCart = findMultipleQuick($g_sImgCollectLootCart, 1, "20,220,120,290")
-If $aLootCart <> -1 Then
-$aLootCart[2] += 15
-If IsMainPage() Then Click($aLootCart[1], $aLootCart[2], 1, 0, "#0330")
+Local $aLootCart = decodeSingleCoord(findImage("LootCart", $g_sImgCollectLootCart, GetDiamondFromRect("20,220,120,290"), 1, True))
+If UBound($aLootCart) > 1 Then
+$aLootCart[1] += 15
+If IsMainPage() Then ClickP($aLootCart, 1, 0, "#0330")
 If _Sleep(400) Then Return
 Local $aiCollectButton = findButton("CollectLootCart", Default, 1, True)
 If IsArray($aiCollectButton) And UBound($aiCollectButton) = 2 Then
@@ -64282,21 +64281,21 @@ EndIf
 If $bRequestFast Then
 If _Sleep($DELAYREQUESTCC1) Then Return
 SetLog("Requesting Clan Castle reinforcements from chat", $COLOR_INFO)
-checkAttackDisable($g_iTaBChkIdle)
-If Not OpenClanChat() Then
-SetDebugLog("RequestCC | Chat open failed.")
-Else
-If _Sleep(Random(500, 700, 1)) Then Return
-Local $vGreen = 0xD7F37F
-Local $aDonationChat_button = MultiPSimple(7, 688, 65, 723, $vGreen)
-If IsArray($aDonationChat_button) And Not IsArray(MultiPSimple(69, 695, 73, 717, $vGreen)) Then
-If _Sleep(Random(500, 700, 1)) Then Return
-_makerequest($aDonationChat_button)
+If Not OpenClanChat() Then SetDebugLog("RequestCC | Chat open failed.")
+If RandomSleep(400) Then Return
+Local $aFindRequest = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Request\Chat", 1, "2, 684, 116, 731")
+If Not IsArray($aFindRequest) Then
+SetDebugLog("No request from chat.")
 CloseClanChat()
-EndIf
-If $bClickPAtEnd Then ClickP($aAway, 2, 0, "#0335")
 Return
 EndIf
+If IsArray($aFindRequest) And $aFindRequest[0][1] < Int(70) Then
+SetLog("Requesting from the chat.", $COLOR_ACTION)
+Local $aDonationChat_button[2] = [$aFindRequest[0][1] - Random(10, 15, 1), $aFindRequest[0][2] - Random(10, 15, 1)]
+_makerequest($aDonationChat_button)
+EndIf
+CloseClanChat()
+Return
 EndIf
 If $sText <> "IsFullClanCastle" And Not OpenArmyOverview(True, "RequestCC()") Then Return
 If _Sleep($DELAYREQUESTCC1) Then Return
@@ -67313,61 +67312,45 @@ If Not $bToReturn Then SetLog("Train end time: " & $iTimeBeforeTrain1, $COLOR_DE
 If Not $bToReturn Then ClickP($aAway, 1, 0, "#0332")
 Return $bToReturn
 EndFunc
-Func SwitchBetweenBases($bCheckMainScreen = True)
-Local $sSwitchFrom, $sSwitchTo, $bIsOnBuilderBase = False, $aButtonCoords
-Local $sTile, $sTileDir, $sRegionToSearch
-Local $bSwitched = False
+Func SwitchBetweenBases($bCheckMainScreen = True, $bGoTo = Default)
+Local $bNoBoat = False, $bSwitch = True, $bIs = False, $vSwitch[0]
+For $i = 0 To 5
+SetLog("Try: [" & $i & "] " & "Switch between bases.", $COLOR_ACTION)
 If Not $g_bRunState Then Return
-For $i = 0 To 2
-If isOnBuilderBase(True) Then
-$sSwitchFrom = "Builder Base"
-$sSwitchTo = "Normal Village"
-$bIsOnBuilderBase = True
-$sTile = "BoatBuilderBase"
-$sTileDir = $g_sImgBoatBB
-$sRegionToSearch = "487,44,708,242"
-Else
-$sSwitchFrom = "Normal Village"
-$sSwitchTo = "Builder Base"
-$bIsOnBuilderBase = False
-$sTile = "BoatNormalVillage"
-$sTileDir = $g_sImgBoat
-$sRegionToSearch = "66,432,388,627"
+If($bGoTo <> Default) Then
+$bIs = isOnBuilderBase(True)
+$bSwitch =(($bGoTo = "Builder Base") <> $bIs)
 EndIf
-If _sleep(1000) Then Return
-If Not $g_bRunState Then Return
-ZoomOut()
-If Not $g_bRunState Then Return
-$aButtonCoords = decodeSingleCoord(findImageInPlace($sTile, $sTileDir, $sRegionToSearch))
-If UBound($aButtonCoords) > 1 Then
-SetLog("[" & $i & "] Going to " & $sSwitchTo, $COLOR_INFO)
-ClickP($aButtonCoords)
-If _Sleep($DELAYSWITCHBASES1) Then Return
-Local $hTimerHandle = __TimerInit()
-$bSwitched = False
-While __TimerDiff($hTimerHandle) < 3000 And Not $bSwitched
-If _Sleep(250) Then Return
-If Not $g_bRunState Then Return
-ForceCaptureRegion()
-$bSwitched = isOnBuilderBase(True) <> $bIsOnBuilderBase
-WEnd
-If $bSwitched Then
-If $bCheckMainScreen Then checkMainScreen(True, Not $bIsOnBuilderBase)
-Return True
-Else
-SetLog("Failed to go to the " & $sSwitchTo, $COLOR_ERROR)
-EndIf
-Else
-Setlog("[" & $i & "] SwitchBetweenBases Tile: " & $sTile, $COLOR_ERROR)
-Setlog("[" & $i & "] SwitchBetweenBases isOnBuilderBase: " & isOnBuilderBase(True), $COLOR_ERROR)
-If $bIsOnBuilderBase Then
-SetLog("Cannot find the Boat on the Coast", $COLOR_ERROR)
-Else
-SetLog("Cannot find the Boat on the Coast. Maybe it is still broken or not visible", $COLOR_ERROR)
-EndIf
-If $i >= 1 Then RestartAndroidCoC()
-EndIf
+For $i2 = 0 To 1
+$vSwitch = decodeSingleCoord(findImageInPlace(($i2 = 0) ?("BoatNormalVillage") :("BoatBuilderBase"),($i2 = 0) ?($g_sImgBoat) :($g_sImgBoatBB),($i2 = 0) ?("66,432,388,627") :("487,44,708,242")))
+If UBound($vSwitch) > 1 Then ExitLoop
 Next
+If UBound($vSwitch) <= 1 Then
+ZoomOut()
+If QuickMIS("N1", @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Noboat\", 66, 432, 388, 627) <> "none" Then
+SetLog("Apparently you don't have the boat.", $COLOR_INFO)
+$bNoBoat = True
+Else
+If Not $g_bRunState Then Return
+ContinueLoop
+EndIf
+EndIf
+Local $bSwitched = False
+If $bSwitch And Not $bNoBoat And UBound($vSwitch) > 1 Then
+Click($vSwitch[0], $vSwitch[1])
+$bSwitched =(Int($vSwitch[0]) < 388 ) ?(True) :(False)
+EndIf
+If $bCheckMainScreen Then
+Local $hTimerHandle = __TimerInit()
+Do
+If __TimerDiff($hTimerHandle) > 3000 Then ContinueLoop 2
+If _Sleep(100) Then Return
+Until checkMainScreen(True,($bSwitched <> $bIs))
+EndIf
+SetLog(($bSwitched <> $bIs) ?("Is switched to ? : Builder base.") :("Is switched to ? : Normal village."), $COLOR_SUCCESS)
+Return($bNoBoat) ?(False) :(True)
+Next
+SetLog("Fail SwitchBetweenBases 0x1", $COLOR_ERROR)
 Return False
 EndFunc
 Func ProfileSwitchAccountEnabled()
@@ -74967,7 +74950,7 @@ Local $bCapture, $sArea2Search, $sIsOnlyFind, $iQuantToMach
 $sArea2Search =(IsArray($saiArea2SearchOri)) ?(GetDiamondFromArray($saiArea2SearchOri)) :(GetDiamondFromRect($saiArea2SearchOri))
 $bCapture =($bForceCapture = Default) ?(True) :($bForceCapture)
 $sIsOnlyFind =($sOnlyFind = Default) ?("") :($sOnlyFind)
-$iQuantToMach =($sOnlyFind = Default) ?($iQuantity2Match) :(0)
+$iQuantToMach =($sOnlyFind = Default) ?($iQuantity2Match) :(20)
 Local $aResult = findMultiple($sDirectory, $sArea2Search, $sArea2Search, $iLevel, $iMaxLevel, $iQuantToMach, "objectname,objectlevel,objectpoints", $bCapture)
 If Not IsArray($aResult) Then Return -1
 Local $iCount = 0
@@ -74992,7 +74975,7 @@ $iCount += 1
 Next
 Next
 _ArraySort($aAllResults, 0, 0, 0, 1)
-If $iDistance2check > 0 And UBound($aAllResults) > 0 Then
+If $iDistance2check > 0 And UBound($aAllResults) > 1 Then
 Local $D2Check = $iDistance2check
 For $i = 0 To UBound($aAllResults) - 1
 If $i > UBound($aAllResults) - 1 Then ExitLoop
@@ -82474,13 +82457,12 @@ Func FullNametroops($aResults)
 For $i = 1 To UBound($g_asAttackBarBB) - 1
 If $aResults = $g_asAttackBarBB[$i] Then Return $g_avStarLabTroops[$i][3]
 Next
-Return $aResults
 EndFunc
-Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
+Func BuilderBaseSelectCorrectScript(ByRef $AvailableTroops)
 If Not $g_bRunState Then Return
 Local $aLines[0]
 Static $lastScript
-If($g_iCmbBBAttack = $g_eBBAttackCSV) Then
+If($g_iCmbBBAttack = $g_eBBAttackCSV) And $g_bChkBBGetFromCSV Then
 If Not $g_bChkBBRandomAttack Then
 $lastScript = 0
 $g_iBuilderBaseScript = 0
@@ -82510,20 +82492,16 @@ ElseIf Not $g_bChkBBGetFromCSV Then
 Setlog("Get from CSV unselected.", $COLOR_ERROR)
 Return
 EndIf
-Local $aTmpAttackBarMachine = -1
-For $i = UBound($aAvailableTroops) - 1 To 0 Step -1
-If $aAvailableTroops[$i][0] = "" Then _ArrayDelete($aAvailableTroops, $i)
-If(String($aAvailableTroops[$i][0]) = "Machine") Then
-Local $aTempElement[1][5] = [[$aAvailableTroops[$i][0], $aAvailableTroops[$i][1], $aAvailableTroops[$i][2], $aAvailableTroops[$i][3], $aAvailableTroops[$i][4]]]
-$aTmpAttackBarMachine = $aTempElement
-_ArrayDelete($aAvailableTroops, $i)
+For $i = UBound($AvailableTroops) - 1 To 0 Step -1
+If $AvailableTroops[$i][0] = "" Then
+_ArrayDelete($AvailableTroops, $i)
 EndIf
 Next
-Local $aCampsQuantities = 0
-For $i = 0 To UBound($aAvailableTroops) - 1
-If Not(String($aAvailableTroops[$i][0]) = "Machine") Then $aCampsQuantities += 1
+Local $CampsQuantities = 0
+For $i = 0 To UBound($AvailableTroops) - 1
+If $AvailableTroops[$i][0] <> "Machine" Then $CampsQuantities += 1
 Next
-Setlog("Available " & $aCampsQuantities & " Camps.", $COLOR_INFO)
+Setlog("Available " & $CampsQuantities & " Camps.", $COLOR_INFO)
 Local $aCamps[0]
 For $iLine = 0 To UBound($aLines) - 1
 If Not $g_bRunState Then Return
@@ -82535,7 +82513,7 @@ If $aSplitLine[$i] = "" Or StringIsSpace($aSplitLine[$i]) Then ExitLoop
 ReDim $aCamps[UBound($aCamps) + 1]
 $aCamps[UBound($aCamps) - 1] = StringStripWS($aSplitLine[$i], $STR_STRIPALL)
 Next
-If $aCampsQuantities = UBound($aCamps) Then
+If $CampsQuantities = UBound($aCamps) Then
 If $g_bDebugSetlog Then Setlog(_ArrayToString($aCamps, "-", -1, -1, "|", -1, -1))
 ExitLoop
 Else
@@ -82551,21 +82529,21 @@ _ArraySort($aCamps, 0, 0, 0, 1)
 For $i = 0 To UBound($aCamps) - 1
 $aCamps[$i] = $g_asAttackBarBB[$aCamps[$i]]
 Next
-Local $aNewAvailableTroops[UBound($aAvailableTroops)][2]
-For $i = 0 To UBound($aAvailableTroops) - 1
-$aNewAvailableTroops[$i][0] = $aAvailableTroops[$i][0]
-$aNewAvailableTroops[$i][1] = _ArraySearch($g_asAttackBarBB, CSVtoImageName($aAvailableTroops[$i][0]))
+Local $NewAvailableTroops[UBound($AvailableTroops)][2]
+For $i = 0 To UBound($AvailableTroops) - 1
+$NewAvailableTroops[$i][0] = $AvailableTroops[$i][0]
+$NewAvailableTroops[$i][1] = _ArraySearch($g_asAttackBarBB, CSVtoImageName($AvailableTroops[$i][0]))
 Next
-If $g_bDebugSetlog Then Setlog(_ArrayToString($aNewAvailableTroops, "-", -1, -1, "|", -1, -1))
+If $g_bDebugSetlog Then Setlog(_ArrayToString($NewAvailableTroops, "-", -1, -1, "|", -1, -1))
 Local $Waschanged = False
 Local $avoidInfLoop = 0
 Local $aSwicthBtn[6] = [112, 180, 253, 327, 398, 471]
 Local $aPointSwitch = [$aSwicthBtn[Random(0, UBound($aSwicthBtn) - 1, 1)] + Random(0, 5, 1), 708 + Random(0, 5, 1)]
-For $i = 0 To $aCampsQuantities - 1
+For $i = 0 To $CampsQuantities - 1
 If Not $g_bRunState Then Return
-If StringCompare($aNewAvailableTroops[$i][0], $aCamps[$i]) <> 0 Then
+If StringCompare($NewAvailableTroops[$i][0], $aCamps[$i]) <> 0 Then
 $Waschanged = True
-Setlog("Incorrect troop On Camp " & $i + 1 & " - " & $aNewAvailableTroops[$i][0] & " -> " & $aCamps[$i])
+Setlog("Incorrect troop On Camp " & $i + 1 & " - " & $NewAvailableTroops[$i][0] & " -> " & $aCamps[$i])
 Local $aPointSwitch = [$aSwicthBtn[$i] + Random(0, 5, 1), 708 + Random(0, 5, 1)]
 Setlog("Click Switch Button " & $i, $COLOR_INFO)
 PureClick($aPointSwitch[0], $aPointSwitch[1], 1, 0)
@@ -82585,14 +82563,14 @@ EndIf
 For $j = 0 To UBound($aAttackBar) - 1
 If Not $g_bRunState Then ExitLoop
 If $aAttackBar[$j][0] = $aCamps[$i] Then
-If RandomSleep(1000) Then Return
+If _sleep(1000) Then Return
 PureClick($aAttackBar[$j][1] + Random(1, 5, 1), $aAttackBar[$j][2] + Random(1, 5, 1), 1, 0)
-If RandomSleep(1000) Then Return
+If _sleep(1000) Then Return
 Setlog("Selected " & FullNametroops($aCamps[$i]) & " X:| " & $aAttackBar[$j][1] & " Y:| " & $aAttackBar[$j][2], $COLOR_SUCCESS)
-$aNewAvailableTroops[$i][0] = $aCamps[$i]
-$aNewAvailableTroops[$i][1] = _ArraySearch($g_asAttackBarBB, $aCamps[$i])
-_ArraySort($aNewAvailableTroops, 0, 0, 0, 1)
-If $g_bDebugSetlog Then Setlog("New tab is " & _ArrayToString($aNewAvailableTroops, "-", -1, -1, "|", -1, -1), $COLOR_INFO)
+$NewAvailableTroops[$i][0] = $aCamps[$i]
+$NewAvailableTroops[$i][1] = _ArraySearch($g_asAttackBarBB, $aCamps[$i])
+_ArraySort($NewAvailableTroops, 0, 0, 0, 1)
+If $g_bDebugSetlog Then Setlog("New tab is " & _ArrayToString($NewAvailableTroops, "-", -1, -1, "|", -1, -1), $COLOR_INFO)
 $i = -1
 ExitLoop
 EndIf
@@ -82601,29 +82579,21 @@ EndIf
 Next
 If _WaitForCheckXML($g_sImgCustomArmyBB, "0,681,860,728", True, 1000, 100) Then ClickP($aPointSwitch)
 If Not $Waschanged Then Return
-If RandomSleep(500) Then Return
-For $i = 0 To UBound($aNewAvailableTroops) - 1
-$aAvailableTroops[$i][0] = $aNewAvailableTroops[$i][0]
+If _Sleep(500) Then Return
+For $i = 0 To UBound($NewAvailableTroops) - 1
+$AvailableTroops[$i][0] = $NewAvailableTroops[$i][0]
 Next
-Local $iTroopBanners = 640
-For $i = 0 To UBound($aAvailableTroops) - 1
+For $i = 0 To UBound($AvailableTroops) - 1
 If Not $g_bRunState Then Return
-If $aAvailableTroops[$i][0] <> "" Then
-Local $iCount = Number(_getTroopCountSmall($aAvailableTroops[$i][1], $iTroopBanners))
-If $iCount == 0 Then $iCount = Number(_getTroopCountBig($aAvailableTroops[$i][1], $iTroopBanners-7))
-If $iCount == 0 And not String($aAvailableTroops[$i][0]) = "Machine" Then
-SetLog("Could not get count for " & $aAvailableTroops[$i][0] & " in slot " & String($aAvailableTroops[$i][3]), $COLOR_ERROR)
-ContinueLoop
-ElseIf String($aAvailableTroops[$i][0]) = "Machine" Then
-$iCount = 1
+If $AvailableTroops[$i][0] <> "" Then
+$AvailableTroops[$i][4] = Number(_getTroopCountBig(Number($AvailableTroops[$i][1]), 633))
+If $AvailableTroops[$i][4] < 1 Then $AvailableTroops[$i][4] = Number(_getTroopCountSmall(Number($AvailableTroops[$i][1]), 640))
+If $AvailableTroops[$i][0] = "Machine" Then $AvailableTroops[$i][4] = 1
 EndIf
-EndIf
-$aAvailableTroops[$i][4] = $iCount
 Next
-If IsArray($aTmpAttackBarMachine) Then _ArrayAdd($aAvailableTroops, $aTmpAttackBarMachine)
-For $i = 0 To UBound($aAvailableTroops) - 1
+For $i = 0 To UBound($AvailableTroops) - 1
 If Not $g_bRunState Then Return
-If $aAvailableTroops[$i][0] <> "" Then SetLog("[" & $i + 1 & "] - " & $aAvailableTroops[$i][4] & "x " & FullNametroops($aAvailableTroops[$i][0]), $COLOR_SUCCESS)
+If $AvailableTroops[$i][0] <> "" Then SetLog("[" & $i + 1 & "] - " & $AvailableTroops[$i][4] & "x " & FullNametroops($AvailableTroops[$i][0]), $COLOR_SUCCESS)
 Next
 EndFunc
 Func CSVtoImageName($sTroop = "Barb", $asAttackTroopList = $g_asAttackBarBB)

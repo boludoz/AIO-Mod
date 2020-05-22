@@ -41,20 +41,18 @@ Func runBuilderBase($bTestRun = False)
 		SetLog("Please Check BB Options From Builder Base Tab", $COLOR_INFO)
 
 		Return False
-
-		ElseIf not SwitchBetweenBases() Then
-			Return false
-		Else
-		$g_bStayOnBuilderBase = True
 	EndIf
+	
+	$g_bStayOnBuilderBase = True
+	If not SwitchBetweenBases(True, "Builder Base") Then Return False
+	
+	ZoomOut()
 
-	 ZoomOut()
-
-	 If Not IsOnBuilderBase(True) Then
+	If Not IsOnBuilderBase(True) Then
 		 SetLog("BB Don't detected.", $COLOR_ERROR)
 		 $g_bStayOnBuilderBase = False
 		 Return False
-	  EndIf
+	 EndIf
 
 	SetLog("Builder Base Idle Starts", $COLOR_INFO)
 
@@ -76,7 +74,8 @@ Func runBuilderBase($bTestRun = False)
 	If $g_bRestart Then Return
 	If ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Then BattleMachineUpgrade()
 	If ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Then StarLaboratory()
-;~ 	Local $boosted = False
+ 	Local $bBoosted = False
+	
 	; Fill/check Army Camps only If is necessary attack
 	If $g_bRestart Then Return
 
@@ -111,7 +110,7 @@ Func runBuilderBase($bTestRun = False)
 		If $g_bRestart Then Return
 		If Not $g_bRunState Then Return
 
-;~ 		If Not $boosted Then $boosted = StartClockTowerBoost()
+;~ 		If Not $bBoosted Then $bBoosted = StartClockTowerBoost()
 		StartClockTowerBoost()
 		; Get Benfit of Boost and clean all yard
 		If $g_bRestart Then Return
@@ -126,11 +125,12 @@ Func runBuilderBase($bTestRun = False)
 		If $g_bRestart Then Return
 		If ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) And $g_iAvailableAttacksBB = 0 Then MainSuggestedUpgradeCode()
 
-;~ 		If Not $boosted Then ExitLoop
-;~ 		If $boosted Then
+ 		If Not $bBoosted Then ExitLoop
+;~ 		If $bBoosted Then
 			If $g_bRestart Then Return
 			If $g_iAvailableAttacksBB = 0 And $g_bChkBBStopAt3 Then ExitLoop
 ;~ 		EndIf
+
 		If $g_bRestart Then Return
 		If Not $g_bRunState Then Return
 
@@ -138,18 +138,12 @@ Func runBuilderBase($bTestRun = False)
 		RestAttacksInBB()
 	Next
 
-	If Not $g_bChkPlayBBOnly Then
-		; switch back to normal village
-		SwitchBetweenBases()
-		$g_bStayOnBuilderBase = False
+	; switch back to normal village
+	If Not $g_bChkPlayBBOnly Then SwitchBetweenBases(True, "Normal Village")
+	
+	If Not $g_bRunState Then Return
 
-		If Not $g_bRunState Then Return
-
-	Else
-		If _Sleep($DELAYRUNBOT1 * 15) Then Return ;Add 15 Sec Delay Before Starting Again In BB Only
-	EndIf
-
-	If _Sleep($DELAYRUNBOT3) Then Return
+	If _Sleep($DELAYRUNBOT1 * 15) Then Return ;Add 15 Sec Delay Before Starting Again In BB Only
 
 	SetLog("Builder Base Idle Ends", $COLOR_INFO)
 

@@ -1,82 +1,69 @@
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: SwitchBetweenBases
-; Description ...: Switches Between Normal Village and Builder Base
+; Description ...: Switches Between Normal Village and Builder Base; Modified in such a way that it allows to distinguish if the boat is not present.
 ; Syntax ........: SwitchBetweenBases()
 ; Parameters ....:
 ; Return values .: True: Successfully switched Bases  -  False: Failed to switch Bases
-; Author ........: Fliegerfaust (05-2017)
+; Author ........: Fliegerfaust (05-2017), Boldina (05-2020)
 ; Modified ......:
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2020
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+Func SwitchBetweenBases($bCheckMainScreen = True, $bGoTo = Default)
+	Local $bNoBoat = False, $bSwitch = True, $bIs = False, $vSwitch[0]
+	
+	For $i = 0 To 5
+		
+		SetLog("Try: [" & $i & "] " & "Switch between bases.", $COLOR_ACTION)
+		
+		If Not $g_bRunState Then Return
 
-Func SwitchBetweenBases($bCheckMainScreen = True) 
-	Local $sSwitchFrom, $sSwitchTo, $bIsOnBuilderBase = False, $aButtonCoords
-	Local $sTile, $sTileDir, $sRegionToSearch
-	Local $bSwitched = False
-
-	If Not $g_bRunState Then Return
-
-	For $i = 0 To 2
-		If isOnBuilderBase(True) Then
-			$sSwitchFrom = "Builder Base"
-			$sSwitchTo = "Normal Village"
-			$bIsOnBuilderBase = True
-			$sTile = "BoatBuilderBase"
-			$sTileDir = $g_sImgBoatBB
-			$sRegionToSearch = "487,44,708,242"
-		Else
-			$sSwitchFrom = "Normal Village"
-			$sSwitchTo = "Builder Base"
-			$bIsOnBuilderBase = False
-			$sTile = "BoatNormalVillage"
-			$sTileDir = $g_sImgBoat
-			$sRegionToSearch = "66,432,388,627"
+		If ($bGoTo <> Default) Then
+			$bIs = isOnBuilderBase(True)
+			$bSwitch = (($bGoTo = "Builder Base") <> $bIs)
 		EndIf
-
-		If _sleep(1000) Then Return
-		If Not $g_bRunState Then Return
-
-		ZoomOut() ; ensure boat is visible
-		If Not $g_bRunState Then Return
-
-		$aButtonCoords = decodeSingleCoord(findImageInPlace($sTile, $sTileDir, $sRegionToSearch))
-		If UBound($aButtonCoords) > 1 Then
-			SetLog("[" & $i & "] Going to " & $sSwitchTo, $COLOR_INFO)
-			ClickP($aButtonCoords)
-			If _Sleep($DELAYSWITCHBASES1) Then Return
-
+		
+		For $i2 = 0 To 1
+			$vSwitch = decodeSingleCoord(findImageInPlace(($i2 = 0) ? ("BoatNormalVillage") : ("BoatBuilderBase"), ($i2 = 0) ? ($g_sImgBoat) : ($g_sImgBoatBB), ($i2 = 0) ? ("66,432,388,627") : ("487,44,708,242")))
+			If UBound($vSwitch) > 1 Then ExitLoop
+		Next
+		
+		If UBound($vSwitch) <= 1 Then
+			ZoomOut() ; ensure boat is visible
+			If QuickMIS("N1", @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Noboat\", 66, 432, 388, 627) <> "none" Then
+				SetLog("Apparently you don't have the boat.", $COLOR_INFO)
+				$bNoBoat = True
+			Else
+				If Not $g_bRunState Then Return
+				ContinueLoop
+			EndIf
+		EndIf
+		
+		Local $bSwitched = False
+		
+		If $bSwitch And Not $bNoBoat And UBound($vSwitch) > 1 Then
+			Click($vSwitch[0], $vSwitch[1])
+			$bSwitched = (Int($vSwitch[0]) < 388 ) ? (True) : (False)
+		EndIf
+		
+		If $bCheckMainScreen Then
 			; switch can take up to 2 Seconds, check for 3 additional Seconds...
 			Local $hTimerHandle = __TimerInit()
-			$bSwitched = False
-			While __TimerDiff($hTimerHandle) < 3000 And Not $bSwitched
-				If _Sleep(250) Then Return
-				If Not $g_bRunState Then Return
-				ForceCaptureRegion()
-				$bSwitched = isOnBuilderBase(True) <> $bIsOnBuilderBase
-			WEnd
-
-			If $bSwitched Then
-				If $bCheckMainScreen Then checkMainScreen(True, Not $bIsOnBuilderBase)
-				Return True
-			Else
-				SetLog("Failed to go to the " & $sSwitchTo, $COLOR_ERROR)
-			EndIf
-		Else
-			Setlog("[" & $i & "] SwitchBetweenBases Tile: " & $sTile, $COLOR_ERROR)
-			Setlog("[" & $i & "] SwitchBetweenBases isOnBuilderBase: " & isOnBuilderBase(True), $COLOR_ERROR)
-			If $bIsOnBuilderBase Then
-				SetLog("Cannot find the Boat on the Coast", $COLOR_ERROR)
-			Else
-				SetLog("Cannot find the Boat on the Coast. Maybe it is still broken or not visible", $COLOR_ERROR)
-			EndIf
-
-			If $i >= 1 Then RestartAndroidCoC() ; Need to try to restart CoC
+			Do
+				If __TimerDiff($hTimerHandle) > 3000 Then ContinueLoop 2
+				If _Sleep(100) Then Return
+			Until checkMainScreen(True, ($bSwitched <> $bIs)) ; You would not understand.
+			
 		EndIf
-	Next
+		
+		SetLog(($bSwitched <> $bIs) ? ("Is switched to ? : Builder base.") : ("Is switched to ? : Normal village."), $COLOR_SUCCESS)
+		Return ($bNoBoat) ? (False) : (True) ; Return false for avoid bugs in bb switch.
 
+	Next
+	
+	SetLog("Fail SwitchBetweenBases 0x1", $COLOR_ERROR)
 	Return False
 EndFunc   ;==>SwitchBetweenBases

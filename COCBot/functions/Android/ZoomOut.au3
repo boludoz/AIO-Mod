@@ -144,7 +144,7 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 				   SetLog("Warning ControlSend $aResult = "&$aResult1, $COLOR_DEBUG)
 			   EndIf
 			EndIF
-
+ 
 			If $i > $delayCount Then
 				If _Sleep($DELAYZOOMOUT3) Then Return True
 			EndIf

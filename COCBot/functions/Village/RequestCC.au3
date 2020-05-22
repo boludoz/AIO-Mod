@@ -32,26 +32,30 @@ Func RequestCC($bClickPAtEnd = True, $sText = "", $bRequestFast = $g_bChkReqCCFr
 		
 		If _Sleep($DELAYREQUESTCC1) Then Return
 		SetLog("Requesting Clan Castle reinforcements from chat", $COLOR_INFO)
-		checkAttackDisable($g_iTaBChkIdle) ; Early Take-A-Break detection
 
-		If Not OpenClanChat() Then
-			SetDebugLog("RequestCC | Chat open failed.")
-		Else
-			If _Sleep(Random(500, 700, 1)) Then Return
-			
-			Local $vGreen = 0xD7F37F
-			Local $aDonationChat_button = MultiPSimple(7, 688, 65, 723, $vGreen)
-			If IsArray($aDonationChat_button) And Not IsArray(MultiPSimple(69, 695, 73, 717, $vGreen)) Then
-				
-				If _Sleep(Random(500, 700, 1)) Then Return
-				
-				_makerequest($aDonationChat_button)
-				CloseClanChat()
-			EndIf
-			If $bClickPAtEnd Then ClickP($aAway, 2, 0, "#0335")
-
+		If Not OpenClanChat() Then SetDebugLog("RequestCC | Chat open failed.")
+		
+		If RandomSleep(400) Then Return
+		
+		; Normal request x63 - y706
+		; Already request x104 - y706
+		Local $aFindRequest = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Request\Chat", 1, "2, 684, 116, 731")
+		
+		If Not IsArray($aFindRequest) Then
+			SetDebugLog("No request from chat.")
+			CloseClanChat()
 			Return
 		EndIf
+		
+		If IsArray($aFindRequest) And $aFindRequest[0][1] < Int(70) Then
+			SetLog("Requesting from the chat.", $COLOR_ACTION)
+			Local $aDonationChat_button[2] = [$aFindRequest[0][1] - Random(10, 15, 1), $aFindRequest[0][2] - Random(10, 15, 1)]
+			_makerequest($aDonationChat_button)
+		EndIf
+		
+		CloseClanChat()
+
+		Return
 	EndIf
 	#EndRegion - Request form chat / on a loop - Team AIO Mod++
 	
@@ -129,55 +133,6 @@ Func _makerequest($aButtonPosition)
 	Return FuncReturn(_makerequestCustom($aButtonPosition))
 EndFunc   ;==>_makerequest
 #EndRegion - Custom request - Team AIO Mod++
-
-#cs - Custom request - Team AIO Mod++
-Func _makerequest($aButtonPosition)
-	;click button request troops
-	ClickP($aButtonPosition, 1, 0, "0336") ;Select text for request
-
-	;wait window
-	Local $iCount = 0
-	While Not ( _ColorCheck(_GetPixelColor($aCancRequestCCBtn[0], $aCancRequestCCBtn[1], True), Hex($aCancRequestCCBtn[2], 6), $aCancRequestCCBtn[3]))
-		If _Sleep($DELAYMAKEREQUEST1) Then ExitLoop
-		$iCount += 1
-		If $g_bDebugSetlog Then SetDebugLog("$icount2 = " & $iCount & ", " & _GetPixelColor($aCancRequestCCBtn[0], $aCancRequestCCBtn[1], True), $COLOR_DEBUG)
-		If $iCount > 20 Then ExitLoop ; wait 21*500ms = 10.5 seconds max
-	WEnd
-	If $iCount > 20 Then
-		SetLog("Request has already been made, or request window not available", $COLOR_ERROR)
-		ClickP($aAway, 2, 0, "#0257")
-		If _Sleep($DELAYMAKEREQUEST2) Then Return
-	Else
-		If $g_sRequestTroopsText <> "" Then
-			If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
-			; fix for Android send text bug sending symbols like ``"
-			AndroidSendText($g_sRequestTroopsText, True)
-			Click($atxtRequestCCBtn[0], $atxtRequestCCBtn[1], 1, 0, "#0254") ;Select text for request $atxtRequestCCBtn[2] = [335, 235]
-			If _Sleep($DELAYMAKEREQUEST2) Then Return
-			If SendText($g_sRequestTroopsText) = 0 Then
-				SetLog(" Request text entry failed, try again", $COLOR_ERROR)
-				Return
-			EndIf
-		EndIf
-		If _Sleep($DELAYMAKEREQUEST2) Then Return ; wait time for text request to complete
-		$iCount = 0
-		While Not _ColorCheck(_GetPixelColor($aSendRequestCCBtn[0], $aSendRequestCCBtn[1], True), Hex($aSendRequestCCBtn[2], 6), 20)
-			If _Sleep($DELAYMAKEREQUEST1) Then ExitLoop
-			$iCount += 1
-			If $g_bDebugSetlog Then SetDebugLog("$icount3 = " & $iCount & ", " & _GetPixelColor($aSendRequestCCBtn[0], $aSendRequestCCBtn[1], True), $COLOR_DEBUG)
-			If $iCount > 25 Then ExitLoop ; wait 26*500ms = 13 seconds max
-		WEnd
-		If $iCount > 25 Then
-			If $g_bDebugSetlog Then SetDebugLog("Send request button not found", $COLOR_DEBUG)
-			CheckMainScreen(False) ;emergency exit
-		EndIf
-		If $g_bChkBackgroundMode = False And $g_bNoFocusTampering = False Then ControlFocus($g_hAndroidWindow, "", "") ; make sure Android has window focus
-		Click($aSendRequestCCBtn[0], $aSendRequestCCBtn[1], 1, 100, "#0256") ; click send button
-		$g_bCanRequestCC = False
-	EndIf
-
-EndFunc   ;==>_makerequest
-#ce - Custom request - Team AIO Mod++
 
 Func IsFullClanCastleType($CCType = 0) ; Troops = 0, Spells = 1, Siege Machine = 2
 	Local $aCheckCCNotFull[3] = [24, 455, 631], $sLog[3] = ["Troop", "Spell", "Siege Machine"]

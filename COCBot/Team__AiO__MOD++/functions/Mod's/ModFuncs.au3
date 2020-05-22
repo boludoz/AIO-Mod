@@ -156,7 +156,7 @@ Func findMultipleQuick($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "
 	$sArea2Search = (IsArray($saiArea2SearchOri)) ? (GetDiamondFromArray($saiArea2SearchOri)) : (GetDiamondFromRect($saiArea2SearchOri))
 	$bCapture = ($bForceCapture = Default) ? (True) : ($bForceCapture)
 	$sIsOnlyFind = ($sOnlyFind = Default) ? ("") : ($sOnlyFind)
-	$iQuantToMach = ($sOnlyFind = Default) ? ($iQuantity2Match) : (0)
+	$iQuantToMach = ($sOnlyFind = Default) ? ($iQuantity2Match) : (20)
 	
 	Local $aResult = findMultiple($sDirectory, $sArea2Search, $sArea2Search, $iLevel, $iMaxLevel, $iQuantToMach, "objectname,objectlevel,objectpoints", $bCapture)
 	If Not IsArray($aResult) Then Return -1
@@ -192,7 +192,7 @@ Func findMultipleQuick($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "
 	
 	; Sort by X axis
 	_ArraySort($aAllResults, 0, 0, 0, 1)
-	If $iDistance2check > 0 And UBound($aAllResults) > 0 Then
+	If $iDistance2check > 0 And UBound($aAllResults) > 1 Then
 		; Distance in pixels to check if is a duplicated detection , for deploy point will be 5
 		Local $D2Check = $iDistance2check
 
