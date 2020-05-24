@@ -96,6 +96,7 @@ Func CheckPostponedLog($bNow = False)
 EndFunc   ;==>CheckPostponedLog
 
 Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, $bForceCapture = True, $DebugLog = False)
+;Return BuilderBaseBuildingsDetection(5)
 	Local $iMax = 0
 
 	Local $aiPostFix[4] = [130, 210, 745, 630]
@@ -127,10 +128,10 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 	If UBound($aAllResults) > 0 Then
 		; Sort by X axis
 		_ArraySort($aAllResults, 0, 0, 0, 1)
-
+		Local $iLastCount = 0
 		Local $iAngle = 10
 		;Local $iDToCheck = 5
-		For $i2 = 0 To 1 ; X2 filter.
+		For $i2 = 0 To UBound($aAllResults) -1 ; X filter.
 			; check if is a double Detection, near in 10px
 			For $i = 0 To UBound($aAllResults) - 1
 				If $i > UBound($aAllResults) - 1 Then ExitLoop
@@ -141,7 +142,7 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 						If $j > UBound($aAllResults) - 1 Then ExitLoop
 						Local $SingleCoordinate[4] = [$aAllResults[$j][0], $aAllResults[$j][1], $aAllResults[$j][2], $aAllResults[$j][3]]
 						If $LastCoordinate[1] <> $SingleCoordinate[1] Or $LastCoordinate[2] <> $SingleCoordinate[2] Then
-							If Abs($SingleCoordinate[2] - $LastCoordinate[2]) < $iAngle Or Abs($SingleCoordinate[1] - $LastCoordinate[1]) < $iAngle  Then
+							If Abs($SingleCoordinate[2] - $LastCoordinate[2]) < $iAngle And Abs($SingleCoordinate[1] - $LastCoordinate[1]) < $iAngle  Then
 								_ArrayDelete($aAllResults, $j)
 							EndIf
 						Else
@@ -152,6 +153,10 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 					Next
 				EndIf
 			Next
+			
+			; True fast LoL.
+			If UBound($aAllResults) = $iLastCount Then ExitLoop
+			$iLastCount = UBound($aAllResults) 
 		Next
 		;_CaptureRegion2()
 		;

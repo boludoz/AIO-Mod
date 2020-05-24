@@ -87,7 +87,7 @@ Global $g_aOpponentVillageVisible[1][3] = [[0xFED5D4, 0, 1]] ; more ez ; samm0d
 Global Const $g_sBundleBuilderHall = $g_sModImageLocation & "\BuildersBase\Bundles\AttackBuildings\BuilderHall"
 Global Const $g_sBundleDeployPointsBB = $g_sModImageLocation & "\BuildersBase\Bundles\AttackBuildings\DeployPoints"
 
-Global Const $g_sImgOpponentBuildingsBB = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\Buildings\"
+Global Const $g_sImgOpponentBuildingsBB = $g_sModImageLocation & "\BuildersBase\Bundles\AttackBuildings\"
 
 Global Const $g_sImgAttackBtnBB = $g_sModImageLocation & "\BuildersBase\Attack\AttackBtn\"
 Global Const $g_sImgVersusWindow = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\Window\"

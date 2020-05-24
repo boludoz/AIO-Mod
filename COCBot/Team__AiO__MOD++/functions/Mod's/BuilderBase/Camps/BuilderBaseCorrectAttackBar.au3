@@ -65,14 +65,56 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 
 	If Not $g_bRunState Then Return
 	Local $aLines[0]
-	Local $sName = "CAMP" & "|"
-	For $iName = 0 To UBound($g_iCmbCampsBB) - 1
-		$sName &= ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) <> "" ? ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) : ("Barb")
-		$sName &= "|"
-		If $iName = 0 Then ContinueLoop
-		Local $aFakeCsv[1] = [$sName]
-		_ArrayAdd($aLines, $aFakeCsv)
-	Next
+	Static $lastScript
+	
+	Select 
+		Case ($g_iCmbBBAttack = $g_eBBAttackCSV) Or $g_bChkBBGetFromCSV
+			
+			If Not $g_bChkBBRandomAttack Then
+				$lastScript = 0
+				$g_iBuilderBaseScript = 0
+			Else
+				; Random script , but not the last
+				For $i = 0 To 10
+					$g_iBuilderBaseScript = Random(0, 2, 1)
+					If $lastScript <> $g_iBuilderBaseScript Then
+						$lastScript = $g_iBuilderBaseScript
+						ExitLoop
+					EndIf
+				Next
+			EndIf
+			
+			Setlog("Attack using the " & $g_sAttackScrScriptNameBB[$g_iBuilderBaseScript] & " script.", $COLOR_INFO)
+			; Let load the Command [Troop] from CSV
+			Local $FileNamePath = @ScriptDir & "\CSV\BuilderBase\" & $g_sAttackScrScriptNameBB[$g_iBuilderBaseScript] & ".csv"
+			If FileExists($FileNamePath) Then $aLines = FileReadToArray($FileNamePath)
+			
+			; Special case if CSV dont have camps (open eye).
+			Local $bIsCampCSV = False
+			For $iLine = 0 To UBound($aLines) - 1
+				If Not $g_bRunState Then Return
+				Local $aSplitLine = StringSplit($aLines[$iLine], "|", $STR_NOCOUNT)
+				Local $command = StringStripWS(StringUpper($aSplitLine[0]), $STR_STRIPALL)
+				
+				If $command = "CAMP" Then 
+					$bIsCampCSV = True
+					ExitLoop
+				EndIf
+			Next
+			
+			If ($bIsCampCSV = False) Then ContinueCase
+			
+		Case Else
+		
+			Local $sName = "CAMP" & "|"
+			For $iName = 0 To UBound($g_iCmbCampsBB) - 1
+				$sName &= ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) <> "" ? ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) : ("Barb")
+				$sName &= "|"
+				If $iName = 0 Then ContinueLoop
+				Local $aFakeCsv[1] = [$sName]
+				_ArrayAdd($aLines, $aFakeCsv)
+			Next
+	EndSelect
 
 	; Move backwards through the array deleting the blanks
 	For $i = UBound($aAvailableTroops) - 1 To 0 Step -1
