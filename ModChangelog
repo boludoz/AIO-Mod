@@ -4,6 +4,13 @@
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
                     Based on MyBot.run v7.8.3 
+	**V3.4.3** (Quality update)
+		» Improved:
+			- Switch troops in BB.
+			- Builder base loop.
+			- Exelent deploy points in BB + randomly.
+			- Base switch detect broken boat now.
+			
 	**V3.4.1** (Quality update)
 		» Improved:
 			- BB Base in general.

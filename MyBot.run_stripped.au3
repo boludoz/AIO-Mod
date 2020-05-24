@@ -10,7 +10,7 @@
 #Au3Stripper_Off
 #Au3Stripper_On
 Global $g_sBotVersion = "v7.8.3"
-Global $g_sModVersion = "v3.4.2"
+Global $g_sModVersion = "v3.4.3"
 Opt("MustDeclareVars", 1)
 Global $g_sBotTitle = ""
 Global $g_hFrmBot = 0
@@ -7650,6 +7650,7 @@ Global $g_sIcnBBOrder[11]
 Global $g_asAttackBarBB[12] = ["", "Barbarian", "Archer", "BoxerGiant", "Minion", "WallBreaker", "BabyDrag", "CannonCart", "Witch", "DropShip", "SuperPekka", "HogGlider"]
 Global $g_aiCmbBBDropOrder[$g_iBBTroopCount] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 Global $g_sBBDropOrder = _ArrayToString($g_asAttackBarBB)
+Global $g_asAttackBarBB2[12] = ["Barbarian", "Archer", "BoxerGiant", "Minion", "WallBreaker", "BabyDrag", "CannonCart", "Witch", "DropShip", "SuperPekka", "HogGlider", "Machine"]
 Global $g_bIsMachinePresent = False
 Global $g_iBBMachAbilityTime = 14000
 Global $g_bChkBuilderAttack = False, $g_bChkBBStopAt3 = False, $g_bChkBBTrophiesRange = False, $g_iTxtBBDropTrophiesMin = 0, $g_iTxtBBDropTrophiesMax = 0
@@ -8211,7 +8212,7 @@ Global Const $g_sXMLTroopsUpgradeMachine = $g_sModImageLocation & "\BuildersBase
 Global Const $g_sImgAvailableAttacks = $g_sModImageLocation & "\BuildersBase\AvailableAttacks"
 Global Const $g_sBundleBuilderHall = $g_sModImageLocation & "\BuildersBase\Bundles\AttackBuildings\BuilderHall"
 Global Const $g_sBundleDeployPointsBB = $g_sModImageLocation & "\BuildersBase\Bundles\AttackBuildings\DeployPoints"
-Global Const $g_sImgOpponentBuildingsBB = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\Buildings\"
+Global Const $g_sImgOpponentBuildingsBB = $g_sModImageLocation & "\BuildersBase\Bundles\AttackBuildings\"
 Global Const $g_sImgAttackBtnBB = $g_sModImageLocation & "\BuildersBase\Attack\AttackBtn\"
 Global Const $g_sImgReportWaitBB = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\Report\Waiting"
 Global Const $g_sImgReportFinishedBB = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\Report\Replay"
@@ -23614,7 +23615,7 @@ $g_hChkBBRandomAttack = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Desi
 _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "ChkBBRandomAttack_Info_01", "Select 3 attacks and the bot will select the best to use according with opponent!") & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "ChkBBRandomAttack_Info_02", "Don't worry about the army, the bot will select correct army at attack bar!"))
 GUICtrlSetState(-1, $GUI_UNCHECKED)
 GUICtrlSetOnEvent(-1, "ChkBBRandomAttack")
-$g_hChkBBGetFromCSV = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "ChkBBGetFromCSV", "Get troops from CSV"), $x + 5, $y + 100, -1, -1)
+$g_hChkBBGetFromCSV = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "ChkBBGetFromCSV", "Force get troops from CSV in standard attack"), $x + 5, $y + 100, -1, -1)
 GUICtrlSetOnEvent(-1, "ChkBBGetFromCSV")
 $g_hChkBBWaitForMachine = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBWaitForMachine", "Wait For Battle Machine"), $x + 5, $y + 120, -1, -1)
 _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBWaitForMachine_Info_01", "Makes the bot not attack while Machine is down."))
@@ -31726,7 +31727,7 @@ GUICtrlSetState($g_hLblBBSameTroopDelay, $GUI_HIDE)
 GUICtrlSetState($g_hCmbBBNextTroopDelay, $GUI_HIDE)
 GUICtrlSetState($g_hCmbBBSameTroopDelay, $GUI_HIDE)
 GUICtrlSetState($g_hBtnBBDropOrder, $GUI_HIDE)
-GUICtrlSetState($g_hChkBBGetFromCSV, $GUI_ENABLE)
+GUICtrlSetState($g_hChkBBGetFromCSV, $GUI_DISABLE)
 GUICtrlSetState($g_hChkBBRandomAttack, $GUI_ENABLE)
 For $i=$g_hGrpAttackStyleBB To $g_hIcnBBCSV[3]
 GUICtrlSetState($i, $GUI_ENABLE)
@@ -31739,7 +31740,7 @@ GUICtrlSetState($g_hCmbBBSameTroopDelay, $GUI_SHOW)
 GUICtrlSetState($g_hBtnBBDropOrder, $GUI_SHOW)
 GUICtrlSetState($g_hChkBBRandomAttack, $GUI_UNCHECKED)
 ChkBBRandomAttack()
-GUICtrlSetState($g_hChkBBGetFromCSV, $GUI_DISABLE)
+GUICtrlSetState($g_hChkBBGetFromCSV, $GUI_ENABLE)
 GUICtrlSetState($g_hChkBBRandomAttack, $GUI_DISABLE)
 For $i=$g_hGrpAttackStyleBB To $g_hIcnBBCSV[3]
 GUICtrlSetState($i, $GUI_DISABLE)
@@ -80448,8 +80449,9 @@ Next
 If $iCount < 1 Then Return -1
 If UBound($aAllResults) > 0 Then
 _ArraySort($aAllResults, 0, 0, 0, 1)
+Local $iLastCount = 0
 Local $iAngle = 10
-For $i2 = 0 To 1
+For $i2 = 0 To UBound($aAllResults) -1
 For $i = 0 To UBound($aAllResults) - 1
 If $i > UBound($aAllResults) - 1 Then ExitLoop
 Local $LastCoordinate[4] = [$aAllResults[$i][0], $aAllResults[$i][1], $aAllResults[$i][2], $aAllResults[$i][3]]
@@ -80459,7 +80461,7 @@ For $j = 0 To UBound($aAllResults) - 1
 If $j > UBound($aAllResults) - 1 Then ExitLoop
 Local $SingleCoordinate[4] = [$aAllResults[$j][0], $aAllResults[$j][1], $aAllResults[$j][2], $aAllResults[$j][3]]
 If $LastCoordinate[1] <> $SingleCoordinate[1] Or $LastCoordinate[2] <> $SingleCoordinate[2] Then
-If Abs($SingleCoordinate[2] - $LastCoordinate[2]) < $iAngle Or Abs($SingleCoordinate[1] - $LastCoordinate[1]) < $iAngle Then
+If Abs($SingleCoordinate[2] - $LastCoordinate[2]) < $iAngle And Abs($SingleCoordinate[1] - $LastCoordinate[1]) < $iAngle Then
 _ArrayDelete($aAllResults, $j)
 EndIf
 Else
@@ -80470,6 +80472,8 @@ EndIf
 Next
 EndIf
 Next
+If UBound($aAllResults) = $iLastCount Then ExitLoop
+$iLastCount = UBound($aAllResults)
 Next
 Else
 Return -1
@@ -80776,26 +80780,31 @@ If $DeployPointsResult <> -1 And UBound($DeployPointsResult) > 0 Then
 Local $TopLeft[0][2], $TopRight[0][2], $BottomRight[0][2], $BottomLeft[0][2]
 Local $Point[2], $Local = ""
 For $i = 0 To UBound($DeployPointsResult) - 1
+Local $iFur = Random($FurtherFrom,$FurtherFrom+5, 1)
 $Point[0] = Int($DeployPointsResult[$i][1])
 $Point[1] = Int($DeployPointsResult[$i][2])
 SetDebugLog("[" & $i & "]Deploy Point: (" & $Point[0] & "," & $Point[1] & ")")
 Switch DeployPointsPosition($Point)
 Case 0
+If Not _ColorCheck(_GetPixelColor($Point[0] - $iFur, $Point[1] - $iFur, True), Hex(0x547C60, 6), 15) Then ContinueLoop
 ReDim $TopLeft[UBound($TopLeft) + 1][2]
-$TopLeft[UBound($TopLeft) - 1][0] = $Point[0] - $FurtherFrom
-$TopLeft[UBound($TopLeft) - 1][1] = $Point[1] - $FurtherFrom
+$TopLeft[UBound($TopLeft) - 1][0] = $Point[0] - $iFur
+$TopLeft[UBound($TopLeft) - 1][1] = $Point[1] - $iFur
 Case 1
+If Not _ColorCheck(_GetPixelColor($Point[0] + $iFur, $Point[1] - $iFur, True), Hex(0x547C60, 6), 15) Then ContinueLoop
 ReDim $TopRight[UBound($TopRight) + 1][2]
-$TopRight[UBound($TopRight) - 1][0] = $Point[0] + $FurtherFrom
-$TopRight[UBound($TopRight) - 1][1] = $Point[1] - $FurtherFrom
+$TopRight[UBound($TopRight) - 1][0] = $Point[0] + $iFur
+$TopRight[UBound($TopRight) - 1][1] = $Point[1] - $iFur
 Case 2
+If Not _ColorCheck(_GetPixelColor($Point[0] + $iFur, $Point[1] + $iFur, True), Hex(0x547C60, 6), 15) Then ContinueLoop
 ReDim $BottomRight[UBound($BottomRight) + 1][2]
-$BottomRight[UBound($BottomRight) - 1][0] = $Point[0] + $FurtherFrom
-$BottomRight[UBound($BottomRight) - 1][1] = $Point[1] + $FurtherFrom
+$BottomRight[UBound($BottomRight) - 1][0] = $Point[0] + $iFur
+$BottomRight[UBound($BottomRight) - 1][1] = $Point[1] + $iFur
 Case 3
+If Not _ColorCheck(_GetPixelColor($Point[0] - $iFur, $Point[1] + $iFur, True), Hex(0x547C60, 6), 15) Then ContinueLoop
 ReDim $BottomLeft[UBound($BottomLeft) + 1][2]
-$BottomLeft[UBound($BottomLeft) - 1][0] = $Point[0] - $FurtherFrom
-$BottomLeft[UBound($BottomLeft) - 1][1] = $Point[1] + $FurtherFrom
+$BottomLeft[UBound($BottomLeft) - 1][0] = $Point[0] - $iFur
+$BottomLeft[UBound($BottomLeft) - 1][1] = $Point[1] + $iFur
 EndSwitch
 SetDebugLog("[" & $i & "]Deploy Local: (" & $Local & ")")
 Next
@@ -82447,30 +82456,66 @@ $g_bDebugOcr = $TempDebug
 Setlog("** TestGetAttackBarBB END**", $COLOR_DEBUG)
 EndFunc
 Func ArmyCampSelectedNames($g_iCmbBBArmy)
-Local $aNames = $g_asAttackBarBB
-Return $aNames[$g_iCmbBBArmy + 1]
+Local $aNames = $g_asAttackBarBB2
+Return $aNames[$g_iCmbBBArmy]
 EndFunc
 Func FullNametroops($aResults)
-For $i = 1 To UBound($g_asAttackBarBB) - 1
-If $aResults = $g_asAttackBarBB[$i] Then Return $g_avStarLabTroops[$i][3]
+For $i = 0 To UBound($g_asAttackBarBB2) - 1
+If $aResults = $g_asAttackBarBB2[$i] Then
+If UBound($g_avStarLabTroops) -1 < $i+1 Then ExitLoop
+Return $g_avStarLabTroops[$i+1][3]
+EndIf
 Next
+Return $aResults
 EndFunc
 Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 If Not $g_bRunState Then Return
 Local $aLines[0]
+Static $lastScript
+Select
+Case($g_iCmbBBAttack = $g_eBBAttackCSV) Or $g_bChkBBGetFromCSV
+If Not $g_bChkBBRandomAttack Then
+$lastScript = 0
+$g_iBuilderBaseScript = 0
+Else
+For $i = 0 To 10
+$g_iBuilderBaseScript = Random(0, 2, 1)
+If $lastScript <> $g_iBuilderBaseScript Then
+$lastScript = $g_iBuilderBaseScript
+ExitLoop
+EndIf
+Next
+EndIf
+Setlog("Attack using the " & $g_sAttackScrScriptNameBB[$g_iBuilderBaseScript] & " script.", $COLOR_INFO)
+Local $FileNamePath = @ScriptDir & "\CSV\BuilderBase\" & $g_sAttackScrScriptNameBB[$g_iBuilderBaseScript] & ".csv"
+If FileExists($FileNamePath) Then $aLines = FileReadToArray($FileNamePath)
+Local $bIsCampCSV = False
+For $iLine = 0 To UBound($aLines) - 1
+If Not $g_bRunState Then Return
+Local $aSplitLine = StringSplit($aLines[$iLine], "|", $STR_NOCOUNT)
+Local $command = StringStripWS(StringUpper($aSplitLine[0]), $STR_STRIPALL)
+If $command = "CAMP" Then
+$bIsCampCSV = True
+ExitLoop
+EndIf
+Next
+If($bIsCampCSV = False) Then ContinueCase
+Case Else
 Local $sName = "CAMP" & "|"
 For $iName = 0 To UBound($g_iCmbCampsBB) - 1
-$sName &= ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) <> "EmptyCamp" ? ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) :("Barbarian")
+$sName &= ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) <> "" ? ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) :("Barb")
 $sName &= "|"
 If $iName = 0 Then ContinueLoop
 Local $aFakeCsv[1] = [$sName]
 _ArrayAdd($aLines, $aFakeCsv)
 Next
+EndSelect
 For $i = UBound($aAvailableTroops) - 1 To 0 Step -1
 If $aAvailableTroops[$i][0] = "" Then
 _ArrayDelete($aAvailableTroops, $i)
 EndIf
 Next
+_ArraySort($aAvailableTroops, 0, 0, 0, 1)
 Local $iCampsQuantities = 0
 For $i = 0 To UBound($aAvailableTroops) - 1
 If $aAvailableTroops[$i][0] <> "Machine" Then $iCampsQuantities += 1
@@ -82497,16 +82542,16 @@ EndIf
 Next
 If UBound($aCamps) < 1 Then Return
 For $i = 0 To UBound($aCamps) - 1
-$aCamps[$i] = _ArraySearch($g_asAttackBarBB, $aCamps[$i]) < 0 ? 0 : _ArraySearch($g_asAttackBarBB, $aCamps[$i])
+$aCamps[$i] = _ArraySearch($g_asAttackBarBB2, $aCamps[$i]) < 0 ?("Barb") : _ArraySearch($g_asAttackBarBB2, $aCamps[$i])
 Next
 _ArraySort($aCamps, 0, 0, 0, 1)
 For $i = 0 To UBound($aCamps) - 1
-$aCamps[$i] = $g_asAttackBarBB[$aCamps[$i]]
+$aCamps[$i] = $g_asAttackBarBB2[$aCamps[$i]]
 Next
 Local $aNewAvailableTroops[UBound($aAvailableTroops)][2]
 For $i = 0 To UBound($aAvailableTroops) - 1
 $aNewAvailableTroops[$i][0] = $aAvailableTroops[$i][0]
-$aNewAvailableTroops[$i][1] = _ArraySearch($g_asAttackBarBB, $aAvailableTroops[$i][0])
+$aNewAvailableTroops[$i][1] = _ArraySearch($g_asAttackBarBB2, $aAvailableTroops[$i][0])
 Next
 If $g_bDebugSetlog Then setlog(_ArrayToString($aNewAvailableTroops, "-", -1, -1, "|", -1, -1))
 Local $bWaschanged = False
@@ -82517,9 +82562,9 @@ If Not $g_bRunState Then Return
 If StringCompare($aNewAvailableTroops[$i][0], $aCamps[$i]) <> 0 Then
 $bWaschanged = True
 Setlog("Incorrect troop On Camp " & $i + 1 & " - " & $aNewAvailableTroops[$i][0] & " -> " & $aCamps[$i])
-Local $PointSwitch = [$aSwicthBtn[$i], 708]
+Local $aPointSwitch = [$aSwicthBtn[$i], 708]
 Setlog("Click Switch Button " & $i, $COLOR_INFO)
-PureClick($PointSwitch[0], $PointSwitch[1], 1, 0)
+PureClick($aPointSwitch[0], $aPointSwitch[1], 1, 0)
 If Not $g_bRunState Then Return
 If _Sleep(500) Then Return
 If Not _WaitForCheckXML($g_sImgCustomArmyBB, "0,681,860,728", True, 10000, 100) Then
@@ -82534,7 +82579,6 @@ If $aAttackBar = -1 Then
 Return False
 EndIf
 For $j = 0 To UBound($aAttackBar) - 1
-If String($aAttackBar[$j][0]) = "Machine" Then ContinueLoop
 If Not $g_bRunState Then ExitLoop
 If $aAttackBar[$j][0] = $aCamps[$i] Then
 If _sleep(1000) Then Return
@@ -82542,7 +82586,7 @@ PureClick($aAttackBar[$j][1] + Random(1, 5, 1), $aAttackBar[$j][2] + Random(1, 5
 If _sleep(1000) Then Return
 Setlog("Selected " & FullNametroops($aCamps[$i]) & " X:| " & $aAttackBar[$j][1] & " Y:| " & $aAttackBar[$j][2], $COLOR_SUCCESS)
 $aNewAvailableTroops[$i][0] = $aCamps[$i]
-$aNewAvailableTroops[$i][1] = _ArraySearch($g_asAttackBarBB, $aCamps[$i])
+$aNewAvailableTroops[$i][1] = _ArraySearch($g_asAttackBarBB2, $aCamps[$i])
 _ArraySort($aNewAvailableTroops, 0, 0, 0, 1)
 If $g_bDebugSetlog Then Setlog("New tab is " & _ArrayToString($aNewAvailableTroops, "-", -1, -1, "|", -1, -1), $COLOR_INFO)
 $i = -1
