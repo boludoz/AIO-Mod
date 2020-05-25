@@ -95,15 +95,21 @@ Func CheckPostponedLog($bNow = False)
 	Return $iLogs
 EndFunc   ;==>CheckPostponedLog
 
-Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, $bForceCapture = True, $DebugLog = False)
-;Return BuilderBaseBuildingsDetection(5)
-	Local $iMax = 0
+Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, $iFurMin = 5, $iFurMax = 10, $iCenterX = 450, $iCenterY = 425, $bForceCapture = True, $DebugLog = False)
+	
+	Local $aTopLeft[0][2], $aTopRight[0][2], $aBottomRight[0][2], $aBottomLeft[0][2]
 
 	Local $aiPostFix[4] = [130, 210, 745, 630]
-
-	Local $aResult = findMultiple($sDirectory, "ECD", "ECD", 0, 1000, $Quantity2Match, "objectname,objectlevel,objectpoints", $bForceCapture)
-
-	If Not IsArray($aResult) Then Return -1
+	Local $aResult[0]
+	
+	For $i = 0 To 1
+		Local $vResult = findMultiple($sDirectory, "ECD", "ECD", 0, 1000, $Quantity2Match, "objectname,objectlevel,objectpoints", $bForceCapture)
+		If Not IsArray($vResult) Or UBound($vResult) < 1 Then ContinueLoop
+		_ArrayAdd($aResult, $vResult)
+		If _Sleep(Random(400, 700, 1)) Then Return
+	Next
+	
+	If Not IsArray($aResult) Then Return -2
 
 	Local $iCount = 0
 
@@ -111,78 +117,54 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 
 	Local $aArrays = "", $aCoords, $aCommaCoord
 
-	For $i = 0 To $iMax
+	For $i = 0 To UBound($aResult) -1
 		$aArrays = $aResult[$i] ; should be return objectname,objectpoints,objectlevel
 		$aCoords = StringSplit($aArrays[2], "|", 2)
 		For $iCoords = 0 To UBound($aCoords) - 1
 			$aCommaCoord = StringSplit($aCoords[$iCoords], ",", 2)
 			; Inspired in Chilly-chill
 			If BitOR(($aiPostFix[0] > $aCommaCoord[0]), ($aiPostFix[1] > $aCommaCoord[1]), ($aiPostFix[2] < $aCommaCoord[0]), ($aiPostFix[3] < $aCommaCoord[1])) <> 0 Then ContinueLoop
-			Local $aTmpResults[1][4] = [[$aArrays[0], Int($aCommaCoord[0]), Int($aCommaCoord[1]), Int($aArrays[1])]]
-			_ArrayAdd($aAllResults, $aTmpResults)
+			If $Quantity2Match = 0 Then
+				;-------------------
+					Local $aPoint[2] = [Int($aCommaCoord[0]), Int($aCommaCoord[1])]
+ 					Local $iFur = Random($iFurMin,$iFurMax, 1)
+					SetDebugLog("[" & $i & "]Deploy Point: (" & $aPoint[0] & "," & $aPoint[1] & ")")
+					Switch DeployPointsPosition($aPoint)
+						Case 0 ; TopLeft
+							Local $P = _GetPixelColor($aPoint[0] - $iFur, $aPoint[1] - $iFur, True)
+							If Not _ColorCheck($P, Hex(0x447063, 6), 17) And Not _ColorCheck($P, Hex(0x547C60, 6), 8) And Not _ColorCheck($P, Hex(0x39535A, 6), 17) And Not _ColorCheck($P, Hex(0x355550, 6), 17) Then ContinueLoop
+							ReDim $aTopLeft[UBound($aTopLeft) + 1][2]
+							$aTopLeft[UBound($aTopLeft) - 1][0] = $aPoint[0] - $iFur
+							$aTopLeft[UBound($aTopLeft) - 1][1] = $aPoint[1] - $iFur
+						Case 1 ; TopRight
+							Local $P = _GetPixelColor($aPoint[0] + $iFur, $aPoint[1] - $iFur, True)
+							If Not _ColorCheck($P, Hex(0x447063, 6), 15) And Not _ColorCheck($P, Hex(0x547C60, 6), 8) And Not _ColorCheck($P, Hex(0x39535A, 6), 16) And Not _ColorCheck($P, Hex(0x355550, 6), 16) Then ContinueLoop
+							ReDim $aTopRight[UBound($aTopRight) + 1][2]
+							$aTopRight[UBound($aTopRight) - 1][0] = $aPoint[0] + $iFur
+							$aTopRight[UBound($aTopRight) - 1][1] = $aPoint[1] - $iFur
+						Case 2 ; BottomRight
+							Local $P = _GetPixelColor($aPoint[0] + $iFur, $aPoint[1] + $iFur, True)
+							If Not _ColorCheck($P, Hex(0x447063, 6), 17) And Not _ColorCheck($P, Hex(0x547C60, 6), 8) And Not _ColorCheck($P, Hex(0x39535A, 6), 17) And Not _ColorCheck($P, Hex(0x355550, 6), 17) Then ContinueLoop
+							ReDim $aBottomRight[UBound($aBottomRight) + 1][2]
+							$aBottomRight[UBound($aBottomRight) - 1][0] = $aPoint[0] + $iFur
+							$aBottomRight[UBound($aBottomRight) - 1][1] = $aPoint[1] + $iFur
+						Case 3 ;BottomLeft
+							Local $P = _GetPixelColor($aPoint[0] - $iFur, $aPoint[1] + $iFur, True)
+							If Not _ColorCheck($P, Hex(0x447063, 6), 17) And Not _ColorCheck($P, Hex(0x547C60, 6), 8) And Not _ColorCheck($P, Hex(0x39535A, 6), 17) And Not _ColorCheck($P, Hex(0x355550, 6), 17) Then ContinueLoop
+							ReDim $aBottomLeft[UBound($aBottomLeft) + 1][2]
+							$aBottomLeft[UBound($aBottomLeft) - 1][0] = $aPoint[0] - $iFur
+							$aBottomLeft[UBound($aBottomLeft) - 1][1] = $aPoint[1] + $iFur
+					EndSwitch
+				;-------------------
+			EndIf
 		Next
 		$iCount += 1
 	Next
-	If $iCount < 1 Then Return -1
+	If $iCount < 1 Then Return -3
 
-	If UBound($aAllResults) > 0 Then
-		; Sort by X axis
-		_ArraySort($aAllResults, 0, 0, 0, 1)
-		Local $iLastCount = 0
-		Local $iAngle = 10
-		;Local $iDToCheck = 5
-		For $i2 = 0 To UBound($aAllResults) -1 ; X filter.
-			; check if is a double Detection, near in 10px
-			For $i = 0 To UBound($aAllResults) - 1
-				If $i > UBound($aAllResults) - 1 Then ExitLoop
-				Local $LastCoordinate[4] = [$aAllResults[$i][0], $aAllResults[$i][1], $aAllResults[$i][2], $aAllResults[$i][3]]
-				SetDebugLog("Coordinate to Check: " & _ArrayToString($LastCoordinate) & " [" & $i2 & "]")
-				If UBound($aAllResults) > 1 Then
-					For $j = 0 To UBound($aAllResults) - 1
-						If $j > UBound($aAllResults) - 1 Then ExitLoop
-						Local $SingleCoordinate[4] = [$aAllResults[$j][0], $aAllResults[$j][1], $aAllResults[$j][2], $aAllResults[$j][3]]
-						If $LastCoordinate[1] <> $SingleCoordinate[1] Or $LastCoordinate[2] <> $SingleCoordinate[2] Then
-							If Abs($SingleCoordinate[2] - $LastCoordinate[2]) < $iAngle And Abs($SingleCoordinate[1] - $LastCoordinate[1]) < $iAngle  Then
-								_ArrayDelete($aAllResults, $j)
-							EndIf
-						Else
-							If $LastCoordinate[1] = $SingleCoordinate[1] And $LastCoordinate[2] = $SingleCoordinate[2] And $LastCoordinate[3] <> $SingleCoordinate[3] Then
-								_ArrayDelete($aAllResults, $j)
-							EndIf
-						EndIf
-					Next
-				EndIf
-			Next
-			
-			; True fast LoL.
-			If UBound($aAllResults) = $iLastCount Then ExitLoop
-			$iLastCount = UBound($aAllResults) 
-		Next
-		;_CaptureRegion2()
-		;
-		;Local $sSubDir = $g_sProfileTempDebugPath & "PointDeployBB"
-		;
-		;DirCreate($sSubDir)
-		;
-		;Local $sDate = @YEAR & "-" & @MON & "-" & @MDAY, $sTime = @HOUR & "." & @MIN & "." & @SEC
-		;Local $sDebugImageName = String($sDate & "_" & $sTime & "_.png")
-		;Local $hEditedImage = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
-		;Local $hGraphic = _GDIPlus_ImageGetGraphicsContext($hEditedImage)
-		;Local $hPenRED = _GDIPlus_PenCreate(0xFFFF0000, 3)
-		;
-		;For $i = 0 To UBound($aAllResults) - 1
-		;	addInfoToDebugImage($hGraphic, $hPenRED, $aAllResults[$i][0] & "_" & $aAllResults[$i][3], $aAllResults[$i][1], $aAllResults[$i][2])
-		;Next
-		;
-		;_GDIPlus_ImageSaveToFile($hEditedImage, $sSubDir & "\" & $sDebugImageName)
-		;_GDIPlus_PenDispose($hPenRED)
-		;_GDIPlus_GraphicsDispose($hGraphic)
-		;_GDIPlus_BitmapDispose($hEditedImage)
-        
-	Else
-		Return -1
-	EndIf
-	Return $aAllResults
+	Local $aSides[4] = [$aTopLeft, $aTopRight, $aBottomRight, $aBottomLeft]
+
+	Return $aSides
 EndFunc   ;==>PointDeployBB
  
 Func _DebugFailedImageDetection($Text)

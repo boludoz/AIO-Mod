@@ -71,7 +71,7 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = 5, $DebugImage = False)
 	Local $Name[4] = ["TopLeft", "TopRight", "BottomRight", "BottomLeft"]
 	Local $hStarttime = __TimerInit()
 
-	Local $BuilderHallPos = PointDeployBB($g_sBundleBuilderHall, 1)
+	Local $BuilderHallPos = findMultipleQuick($g_sBundleBuilderHall, 1)
 	If $BuilderHallPos <> -1 And UBound($BuilderHallPos) > 0 Then
 		$g_aBuilderHallPos[0][0] = $BuilderHallPos[0][1]
 		$g_aBuilderHallPos[0][1] = $BuilderHallPos[0][2]
@@ -89,42 +89,11 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = 5, $DebugImage = False)
 	Setlog("Builder Base Hall detection: " & Round(__timerdiff($hStarttime) / 1000, 2) & " seconds", $COLOR_DEBUG)
 	$hStarttime = __TimerInit()
 
-	Local $DeployPointsResult = PointDeployBB()
+	Local $DeployPointsResult = PointDeployBB($g_sBundleDeployPointsBB, 0, 5, 10, $g_aBuilderHallPos[0][0], $g_aBuilderHallPos[0][1])
 
 	If $DeployPointsResult <> -1 And UBound($DeployPointsResult) > 0 Then
-		Local $TopLeft[0][2], $TopRight[0][2], $BottomRight[0][2], $BottomLeft[0][2]
-		Local $Point[2], $Local = ""
-		For $i = 0 To UBound($DeployPointsResult) - 1
-			Local $iFur = Random($FurtherFrom,$FurtherFrom+5, 1)
-			$Point[0] = Int($DeployPointsResult[$i][1])
-			$Point[1] = Int($DeployPointsResult[$i][2])
-			SetDebugLog("[" & $i & "]Deploy Point: (" & $Point[0] & "," & $Point[1] & ")")
-			Switch DeployPointsPosition($Point)
-				Case 0 ; TopLeft
-					If Not _ColorCheck(_GetPixelColor($Point[0] - $iFur, $Point[1] - $iFur, True), Hex(0x547C60, 6), 15) Then ContinueLoop ; Open eyes
-					ReDim $TopLeft[UBound($TopLeft) + 1][2]
-					$TopLeft[UBound($TopLeft) - 1][0] = $Point[0] - $iFur
-					$TopLeft[UBound($TopLeft) - 1][1] = $Point[1] - $iFur
-				Case 1 ; TopRight
-					If Not _ColorCheck(_GetPixelColor($Point[0] + $iFur, $Point[1] - $iFur, True), Hex(0x547C60, 6), 15) Then ContinueLoop ; Open eyes
-					ReDim $TopRight[UBound($TopRight) + 1][2]
-					$TopRight[UBound($TopRight) - 1][0] = $Point[0] + $iFur
-					$TopRight[UBound($TopRight) - 1][1] = $Point[1] - $iFur
-				Case 2 ; BottomRight
-					If Not _ColorCheck(_GetPixelColor($Point[0] + $iFur, $Point[1] + $iFur, True), Hex(0x547C60, 6), 15) Then ContinueLoop ; Open eyes
-					ReDim $BottomRight[UBound($BottomRight) + 1][2]
-					$BottomRight[UBound($BottomRight) - 1][0] = $Point[0] + $iFur
-					$BottomRight[UBound($BottomRight) - 1][1] = $Point[1] + $iFur
-				Case 3 ;BottomLeft
-					If Not _ColorCheck(_GetPixelColor($Point[0] - $iFur, $Point[1] + $iFur, True), Hex(0x547C60, 6), 15) Then ContinueLoop ; Open eyes
-					ReDim $BottomLeft[UBound($BottomLeft) + 1][2]
-					$BottomLeft[UBound($BottomLeft) - 1][0] = $Point[0] - $iFur
-					$BottomLeft[UBound($BottomLeft) - 1][1] = $Point[1] + $iFur
-			EndSwitch
-			SetDebugLog("[" & $i & "]Deploy Local: (" & $Local & ")")
-		Next
 
-		Local $Sides[4] = [$TopLeft, $TopRight, $BottomRight, $BottomLeft]
+		Local $Sides = $DeployPointsResult
 
 		For $i = 0 To 3
 			If Not $g_bRunState Then Return
@@ -225,7 +194,7 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = 5, $DebugImage = False)
 
 EndFunc   ;==>BuilderBaseGetDeployPoints
 
-Func FindBestDropPoints($DropPoints, $MaxDropPoint = 10)
+Func FindBestDropPoints($DropPoints, $MaxDropPoint = 50)
 	;Find Best 10 points 1-10 , the 5 is the Middle , 1 = closest to BuilderHall
 	Local $aDeployP[0][2]
 	If Not $g_bRunState Then Return
@@ -661,7 +630,7 @@ Func BuilderBaseResetAttackVariables()
 	Global $g_aExternalEdges, $g_aBuilderBaseDiamond, $g_aOuterEdges, $g_aBuilderBaseOuterDiamond, $g_aBuilderBaseOuterPolygon, $g_aFinalOuter[4]
 
 	; Provisional globals BB Machine
-	Global $g_aMachineBB[0][5], $g_bIsBBMachineD = False, $g_bBBIsFirst = True
+	Global $g_bIsBBMachineD = False, $g_bBBIsFirst = True
 EndFunc   ;==>BuilderBaseResetAttackVariables
 
 Func BuilderBaseAttackMainSide()

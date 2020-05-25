@@ -16,7 +16,9 @@
 Func AttackBB($aAvailableTroops = GetAttackBarBB())
 	Local $iSide = Random(0, 1, 1) ; randomly choose top left or top right
 	Local $aBMPos = 0
-
+	
+	BuilderBaseResetAttackVariables()
+	
 	Local $Size = GetBuilderBaseSize()
 	
 	If Not $g_bRunState Then Return
@@ -32,9 +34,12 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 	$g_aBuilderBaseDiamond = BuilderBaseAttackDiamond()
 	$g_aExternalEdges = BuilderBaseGetEdges($g_aBuilderBaseDiamond, "External Edges")
 	
-	Local $aVar = $g_aExternalEdges[0]
+	Local $aVar = $g_aExternalEdges[Random(0, 1, 1)]
 
-
+	;BuilderBaseGetDeployPoints()
+	;
+	;$aVar = $g_aDeployPoints[1]
+	
 	Local $iAndroidSuspendModeFlagsLast = $g_iAndroidSuspendModeFlags
 	$g_iAndroidSuspendModeFlags = 0 ; disable suspend and resume
 	If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Disabled")
@@ -66,8 +71,9 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 						PureClick($aBBAttackBar[$j][1] - Random(0, 5, 1), $aBBAttackBar[$j][2] - Random(0, 5, 1)) ; select troop
 						If $aBBAttackBar[$j][4] <> 0 Then
 							For $iAmount = 0 To $aBBAttackBar[$j][4]
-								Local $vDP = Random(0, UBound($aVar))
-								PureClick($aVar[$vDP][0] - Random(0, 10, 1), $aVar[$vDP][1] - Random(0, 10, 1))
+								Local $vDP = Random(0, UBound($aVar)-1)
+								PureClick($aVar[$vDP][0], $aVar[$vDP][1])
+								TriggerMachineAbility()
 								If RandomSleep($g_iBBSameTroopDelay) Then Return ; slow down selecting then dropping troops
 							Next
 						EndIf
@@ -91,8 +97,9 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 				PureClick($aBBAttackBar[$i][1] - Random(0, 5, 1), $aBBAttackBar[$i][2] - Random(0, 5, 1)) ; select troop
 				If $aBBAttackBar[$i][4] <> 0 Then
 					For $iAmount = 0 To $aBBAttackBar[$i][4]
-						Local $vDP = Random(0, UBound($aVar))
-						PureClick($aVar[$vDP][0] - Random(0, 10, 1), $aVar[$vDP][1] - Random(0, 10, 1))
+						Local $vDP = Random(0, UBound($aVar) -1)
+						PureClick($aVar[$vDP][0], $aVar[$vDP][1])
+						TriggerMachineAbility()
 						If RandomSleep($g_iBBSameTroopDelay) Then Return ; slow down selecting then dropping troops
 					Next
 				EndIf
@@ -112,7 +119,10 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 				EndIf
 			Next
 		EndIf
-	Until not IsArray(MachineKick(GetAttackBarBB(True)))
+		
+		$aBBAttackBar = GetAttackBarBB(True)
+		
+	Until not IsArray(MachineKick($aBBAttackBar))
 	SetLog("All Troops Deployed", $COLOR_SUCCESS)
 
 	; place hero and activate ability
@@ -120,7 +130,7 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 		If IsArray($g_aMachineBB) Then
 			SetLog("Deploying Battle Machine.", $COLOR_BLUE)
 			PureClick($g_aMachineBB[0][1], $g_aMachineBB[0][2])
-			Local $vDP = Random(0, UBound($aVar))
+			Local $vDP = Random(0, UBound($aVar)-1)
 			PureClick($aVar[$vDP][0], $aVar[$vDP][1])
 			If _Sleep(500) Then     ; wait before clicking ability
 				$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast

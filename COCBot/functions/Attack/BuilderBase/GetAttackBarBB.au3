@@ -19,8 +19,10 @@ Func GetAttackBarBB($bRemaining = False)
 	local $iSlotOffset = 73 ; slots are 73 pixels apart
 	local $iBarOffset = 66 ; 66 pixels from side to attack bar
 	
-	If $bRemaining = False Then $g_aMachineBB = 0
+	If ($bRemaining = False) Then $g_aMachineBB = 0 ; Reset at first check.
+	
 	If $g_aMachineBB <> 0 Then TriggerMachineAbility()
+	
 	If RandomSleep(500) Then Return -1
 
 	; testing troop count logic
@@ -57,22 +59,23 @@ Func GetAttackBarBB($bRemaining = False)
 		local $aTroop = $aBBAttackBarResult[$i]
 
 		local $aTempMultiCoords = decodeMultipleCoords($aTroop[1])
-		For $j=0 To UBound($aTempMultiCoords, 1) - 1
+		For $j = 0 To UBound($aTempMultiCoords, 1) - 1
 			local $aTempCoords = $aTempMultiCoords[$j]
 			If UBound($aTempCoords) < 2 Then ContinueLoop
-			local $iSlot = Int(($aTempCoords[0] - $iBarOffset) / $iSlotOffset)
-			local $iCount = Number(_getTroopCountSmall($aTempCoords[0], $iTroopBanners))
-			If $iCount == 0 Then $iCount = Number(_getTroopCountBig($aTempCoords[0], $iTroopBanners-7))
-			If $iCount == 0 And not String($aTroop[0]) = "Machine" Then
-				SetLog("Could not get count for " & $aTroop[0] & " in slot " & String($iSlot), $COLOR_ERROR)
-				ContinueLoop
-				ElseIf String($aTroop[0]) = "Machine" Then
-				$iCount = 1
+			Local $iSlot = Int(($aTempCoords[0] - $iBarOffset) / $iSlotOffset)
+			Local $iCount = 1
+			If String($aTroop[0]) <> "Machine" Then 
+				local $iCount = Number(_getTroopCountSmall($aTempCoords[0], $iTroopBanners))
+				If $iCount == 0 Then $iCount = Number(_getTroopCountBig($aTempCoords[0], $iTroopBanners-7))
+				If $iCount == 0 Then
+					SetLog("Could not get count for " & $aTroop[0] & " in slot " & String($iSlot), $COLOR_ERROR)
+					ContinueLoop
+				EndIf
 			EndIf
-		
+			
 			Local $aTempElement[1][5] = [[$aTroop[0], $aTempCoords[0], $aTempCoords[1], $iSlot, $iCount]] ; element to add to attack bar list
 			
-			If not $bRemaining and String($aTroop[0]) = "Machine" Then $g_aMachineBB = $aTempElement ; Team AIO Mod++
+			If ($bRemaining = False) And (String($aTroop[0]) = "Machine") Then $g_aMachineBB = $aTempElement ; Team AIO Mod++
 			
 			_ArrayAdd($aBBAttackBar, $aTempElement)
 
