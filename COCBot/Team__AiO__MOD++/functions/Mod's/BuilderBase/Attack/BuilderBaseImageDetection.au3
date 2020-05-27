@@ -276,7 +276,7 @@ Func BuilderBaseBuildingsDetection($iBuilding = 4)
 			ReDim $aAllResults[UBound($aAllResults) + 1][4]
 			$aAllResults[UBound($aAllResults) - 1][0] = $aResults[$i][0] ; NAME
 			$aAllResults[UBound($aAllResults) - 1][1] = $aCoord[0] + $Screen[0] ; X axis
-			$aAllResults[UBound($aAllResults) - 1][2] = $aResults[$i][0] = "AirBombs" ? $aCoord[1] + $Screen[1] + 15 : $aCoord[1] + $Screen[1] ; Y axis
+			$aAllResults[UBound($aAllResults) - 1][2] = (StringInStr($aResults[$i][0], "AirBombs") > 0) ? $aCoord[1] + $Screen[1] + 15 : $aCoord[1] + $Screen[1] ; Y axis
 			$aAllResults[UBound($aAllResults) - 1][3] = $aResults[$i][2] ; Level
 		Next
 	Next
@@ -297,19 +297,14 @@ Func BuilderBaseBuildingsDetection($iBuilding = 4)
 		If UBound($aAllResults) > 1 Then
 			For $j = 0 To UBound($aAllResults) - 1
 				If $j > UBound($aAllResults) - 1 Then ExitLoop
-				; SetDebugLog("$j: " & $j)
-				; SetDebugLog("UBound($aAllResults) -1: " & UBound($aAllResults) - 1)
 				Local $SingleCoordinate[4] = [$aAllResults[$j][0], $aAllResults[$j][1], $aAllResults[$j][2], $aAllResults[$j][3]]
-				; SetDebugLog(" - Comparing with: " & _ArrayToString($SingleCoordinate))
 				If $LastCoordinate[1] <> $SingleCoordinate[1] Or $LastCoordinate[2] <> $SingleCoordinate[2] Then
 					If Int($SingleCoordinate[1]) < Int($LastCoordinate[1]) + $D2Check And Int($SingleCoordinate[1]) > Int($LastCoordinate[1]) - $D2Check And _
 							Int($SingleCoordinate[2]) < Int($LastCoordinate[2]) + $D2Check And Int($SingleCoordinate[2]) > Int($LastCoordinate[2]) - $D2Check Then
-						; SetDebugLog(" - removed : " & _ArrayToString($SingleCoordinate))
 						_ArrayDelete($aAllResults, $j)
 					EndIf
 				Else
 					If $LastCoordinate[1] = $SingleCoordinate[1] And $LastCoordinate[2] = $SingleCoordinate[2] And $LastCoordinate[3] <> $SingleCoordinate[3] Then
-						; SetDebugLog(" - removed equal level : " & _ArrayToString($SingleCoordinate))
 						_ArrayDelete($aAllResults, $j)
 					EndIf
 				EndIf

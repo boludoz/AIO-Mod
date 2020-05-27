@@ -111,23 +111,23 @@ Func BuilderBaseParseAttackCSV($AvailableTroops, $DeployPoints, $DeployBestPoint
 						If $command = 1 Then
 							; Remember the Buildings Arrays is :  [0] = name , [1] = Xaxis , [1] = Yaxis
 							Switch $i
-								Case $g_iAirDefense
-									$g_aAirdefensesPos = BuilderBaseBuildingsDetection($g_iAirDefense)
-									Setlog("Detected Air defenses: " & UBound($g_aCrusherPos), $COLOR_INFO)
+								Case 0
+									$g_aAirdefensesPos = BuilderBaseBuildingsDetection(0)
+									Setlog("Detected Air defenses: " & UBound($g_aAirdefensesPos), $COLOR_INFO)
 									ExitLoop
-								Case $g_iCrusher
-									$g_aCrusherPos = BuilderBaseBuildingsDetection($g_iCrusher)
+								Case 1
+									$g_aCrusherPos = BuilderBaseBuildingsDetection(1)
 									Setlog("Detected Crusher: " & UBound($g_aCrusherPos), $COLOR_INFO)
 									ExitLoop
-								Case $g_iGuardPost
-									$g_aGuardPostPos = BuilderBaseBuildingsDetection($g_iGuardPost)
-									Setlog("Detected GuardPost: " & UBound($g_aCrusherPos), $COLOR_INFO)
+								Case 2
+									$g_aGuardPostPos = BuilderBaseBuildingsDetection(2)
+									Setlog("Detected GuardPost: " & UBound($g_aGuardPostPos), $COLOR_INFO)
 									ExitLoop
-								Case $g_iCannon
-									$g_aCannonPos = BuilderBaseBuildingsDetection($g_iCannon)
-									Setlog("Detected Cannon: " & UBound($g_aCrusherPos), $COLOR_INFO)
+								Case 3
+									$g_aCannonPos = BuilderBaseBuildingsDetection(3)
+									Setlog("Detected Cannon: " & UBound($g_aCannonPos), $COLOR_INFO)
 									ExitLoop
-								Case $g_iBuilderHall
+								Case 4
 									; Is not necessary to get again if was detected when deploy point detection ran
 									If $g_aBuilderHallPos[0][0] = Null Then $g_aBuilderHallPos = BuilderBaseBuildingsDetection($i - 1)
 							EndSwitch
@@ -672,16 +672,17 @@ Func DeployTroopBB($sTroopName, $aSlot_XY, $Point2Deploy, $iQtyToDrop)
 	
 	If $g_bIfMachineHasAbility Then Return
 	
-	If $g_bIsBBMachineD = True And $g_aMachineBB <> 0 Then
+	If Not IsArray($g_aMachineBB) Then Return
+	
+	If $g_bIsBBMachineD = True And UBound($g_aMachineBB, 1) > 0 And UBound($g_aMachineBB) > 0 Then
 		If _Sleep(500) Then Return
 		If _ColorCheck(_GetPixelColor(Int($g_aMachineBB[0][1]), 723, True), Hex(0xFFFFFF, 6), 20) Or not _ColorCheck(_GetPixelColor(Int($g_aMachineBB[0][1]), 721, True), Hex(0x472CC5, 6), 20) Then
-			Setlog("The machine has no ability.", $COLOR_ERROR)
-			$g_aMachineBB = 0
-			;$g_bIsBBMachineD = False
+			Setlog("The machine has no ability.", $COLOR_INFO)
 			$g_bIfMachineHasAbility = False
 			Else
 			$g_bIfMachineHasAbility = True
 		EndIf
+		Setlog("The machine has ability.", $COLOR_SUCCESS)
 	EndIf
 	
 EndFunc   ;==>DeployTroopBB
@@ -707,13 +708,9 @@ Func GetThePointNearBH($BHposition, $aDeployPoints)
 EndFunc   ;==>GetThePointNearBH
 
 Func TriggerMachineAbility()
-	If $g_bIfMachineHasAbility = False Then Return
+	If $g_aMachineBB = 0 Or $g_bIsBBMachineD = False Then Return False
 	
-	If $g_bIsBBMachineD = False Then Return
-	
-	If $g_aMachineBB = 0 Then Return
-	
-	If $g_bRunState = False Then Return
+	If $g_bRunState = False Then Return False
 	
 	SetDebugLog("- BB Machine : Checking ability.")
 	
@@ -721,7 +718,10 @@ Func TriggerMachineAbility()
 		Click(Int($g_aMachineBB[0][1]), Int($g_aMachineBB[0][2]), 2, 0)
 		If _Sleep(300) Then Return
 		SetLog("- BB Machine : Click on ability.", $COLOR_ACTION)
+		Return True
 	EndIf
+	
+	Return False
 
 EndFunc   ;==>TriggerMachineAbility
 

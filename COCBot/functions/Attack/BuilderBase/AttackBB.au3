@@ -17,24 +17,55 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 	Local $iSide = Random(0, 1, 1) ; randomly choose top left or top right
 	Local $aBMPos = 0
 	
-	BuilderBaseResetAttackVariables()
-	
 	Local $Size = GetBuilderBaseSize()
 	
 	If Not $g_bRunState Then Return
 
 	Setlog("Builder Base Diamond: " & $Size)
-	If ($Size < 575 And $Size > 620) Or $Size = 0 Then
+	Local $i = 0 
+	Do
 		Setlog("Builder Base Attack Zoomout.")
-		BuilderBaseZoomOut()
-		If _Sleep(1000) Then Return
 		$Size = GetBuilderBaseSize(False) ; WihtoutClicks
+		
+		If ($Size < 575 And $Size > 620) Or ($Size = 0) Then 
+			BuilderBaseZoomOut()
+			If _Sleep(1000) Then Return
+		EndIf
+		
+		If $i > 5 Then ExitLoop
+		$i += 1 
+	Until ($Size >= 575 And $Size <= 620) Or ($Size <> 0)
+	
+	If $Size = 0 Then 
+		SetLog("Fail AttackBB 0x1")
+		Return False
 	EndIf
-
+	
 	$g_aBuilderBaseDiamond = BuilderBaseAttackDiamond()
 	$g_aExternalEdges = BuilderBaseGetEdges($g_aBuilderBaseDiamond, "External Edges")
 	
-	Local $aVar = $g_aExternalEdges[Random(0, 1, 1)]
+	
+	Local $sSideNames[4] = ["TopLeft", "TopRight", "BottomRight", "BottomLeft"]
+	
+	Local $BuilderHallPos = findMultipleQuick($g_sBundleBuilderHall, 1)
+	If $BuilderHallPos <> -1 And UBound($BuilderHallPos) > 0 Then
+		$g_aBuilderHallPos[0][0] = $BuilderHallPos[0][1]
+		$g_aBuilderHallPos[0][1] = $BuilderHallPos[0][2]
+	Else
+		_DebugFailedImageDetection("BuilderHall")
+		Setlog("Builder Hall detection Error!", $Color_Error)
+		$g_aBuilderHallPos[0][0] = 450
+		$g_aBuilderHallPos[0][1] = 425
+	EndIf
+
+	Local $iSide = _ArraySearch($sSideNames, BuilderBaseAttackMainSide(), 0, 0, 0, 0, 0, 0)
+
+	If $iSide < 0 Then 
+		SetLog("Fail AttackBB 0x2")
+		Return False
+	EndIf
+
+	Local $aVar = $g_aExternalEdges[$iSide]
 
 	;BuilderBaseGetDeployPoints()
 	;
@@ -73,7 +104,7 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 							For $iAmount = 0 To $aBBAttackBar[$j][4]
 								Local $vDP = Random(0, UBound($aVar)-1)
 								PureClick($aVar[$vDP][0], $aVar[$vDP][1])
-								TriggerMachineAbility()
+								If TriggerMachineAbility() Then PureClick($aBBAttackBar[$j][1] - Random(0, 5, 1), $aBBAttackBar[$j][2] - Random(0, 5, 1)) ; select troop
 								If RandomSleep($g_iBBSameTroopDelay) Then Return ; slow down selecting then dropping troops
 							Next
 						EndIf
@@ -99,7 +130,7 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 					For $iAmount = 0 To $aBBAttackBar[$i][4]
 						Local $vDP = Random(0, UBound($aVar) -1)
 						PureClick($aVar[$vDP][0], $aVar[$vDP][1])
-						TriggerMachineAbility()
+						If TriggerMachineAbility() Then PureClick($aBBAttackBar[$i][1] - Random(0, 5, 1), $aBBAttackBar[$i][2] - Random(0, 5, 1)) ; select troop
 						If RandomSleep($g_iBBSameTroopDelay) Then Return ; slow down selecting then dropping troops
 					Next
 				EndIf
