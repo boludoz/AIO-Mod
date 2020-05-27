@@ -95,7 +95,7 @@ Func CheckPostponedLog($bNow = False)
 	Return $iLogs
 EndFunc   ;==>CheckPostponedLog
 
-Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, $iFurMin = 5, $iFurMax = 10, $iCenterX = 450, $iCenterY = 425, $bForceCapture = True, $DebugLog = False)
+Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, $iFurMin = 5, $iFurMax = 10, $iCenterX = 450, $iCenterY = 425, $bForceCapture = True, $DebugLog = False) ; Return a large amount of quality deploy point with random and safe further from without theorem.
 	
 	Local $aTopLeft[0][2], $aTopRight[0][2], $aBottomRight[0][2], $aBottomLeft[0][2]
 
@@ -104,7 +104,7 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 
 	If $bForceCapture Then _CaptureRegion2($aiPostFix[0], $aiPostFix[1], $aiPostFix[2], $aiPostFix[3])
 
-	For $i2 = 0 To 1
+	For $i2 = 0 To 3
 		Local $aRes = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sDirectory, "str", "ECD", "Int", $Quantity2Match, "str", "ECD", "Int", 0, "Int", 1000)
 		Local $KeyValue = StringSplit($aRes[0], "|", $STR_NOCOUNT)
 		Local $Name = ""
@@ -113,9 +113,7 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 		Local $AllFilenamesFound[UBound($KeyValue)][3]
 		For $i = 0 To UBound($KeyValue) - 1
 			$aPositions = RetrieveImglocProperty($KeyValue[$i], "objectpoints")
-			;SetDebugLog("Name: " & $Name)
-			$aCoords = decodeMultipleCoords($aPositions, 0, 0, 0) ; dedup coords by x on 50 pixel ;
-			;SetDebugLog("How many $aCoords: " & UBound($aCoords))
+			$aCoords = decodeMultipleCoords($aPositions, 0, 0, 0)
 			For $iCoords = 0 To UBound($aCoords) - 1
 				Local $aCoordsM = $aCoords[$iCoords]
 				
@@ -123,187 +121,163 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 
 				If Int(130 + $aCoordsM[0]) < Int($iCenterX) Then
 					If Int(210 + $aCoordsM[1]) < Int($iCenterY) Then
-						Local $vResult[1][2] = [[130 + $aCoordsM[0] - $iFur, 210 + $aCoordsM[1] - $iFur]]
+						Local $vResult[1][2] = [[(130 + $aCoordsM[0]) - $iFur, (210 + $aCoordsM[1]) - $iFur]]
 						Local $P = _GetPixelColor($vResult[0][0], $vResult[0][1], True)
 						If _ColorCheck($P, Hex(0x447063, 6), 20) Then _ArrayAdd($aTopLeft, $vResult)
 					Else
-						Local $vResult[1][2] = [[130 + $aCoordsM[0] - $iFur, 210 + $aCoordsM[1] + $iFur]]
+						Local $vResult[1][2] = [[(130 + $aCoordsM[0]) - $iFur, (210 + $aCoordsM[1]) + $iFur]]
 						Local $P = _GetPixelColor($vResult[0][0], $vResult[0][1], True)
 						If _ColorCheck($P, Hex(0x447063, 6), 20) Then _ArrayAdd($aBottomLeft, $vResult)
 					EndIf
 				Else
 					If Int(210 + $aCoordsM[1]) < Int($iCenterY) Then
-						Local $vResult[1][2] = [[130 + $aCoordsM[0] + $iFur, 210 + $aCoordsM[1] - $iFur]]
+						Local $vResult[1][2] = [[(130 + $aCoordsM[0]) + $iFur, (210 + $aCoordsM[1]) - $iFur]]
 						Local $P = _GetPixelColor($vResult[0][0], $vResult[0][1], True)
 						If _ColorCheck($P, Hex(0x447063, 6), 20) Then _ArrayAdd($aTopRight, $vResult)
 					Else
-						Local $vResult[1][2] = [[130 + $aCoordsM[0] + $iFur, 210 + $aCoordsM[1] + $iFur]]
+						Local $vResult[1][2] = [[(130 + $aCoordsM[0]) + $iFur, (210 + $aCoordsM[1]) + $iFur]]
 						Local $P = _GetPixelColor($vResult[0][0], $vResult[0][1], True)
 						If _ColorCheck($P, Hex(0x447063, 6), 20) Then _ArrayAdd($aBottomRight, $vResult)
 					EndIf
 				EndIf
-				
-				
 			Next
 		Next
-		If _Sleep(Random(400, 700, 1)) Then Return
+		If _Sleep(155) Then Return
 	Next
 	
 	_ArraySort($aTopLeft, 0, 0, 0, 1)
-	;_ArrayDisplay($aTopLeft, 0)
 	
-	Local $iLastY = -1
+	Local $iLastY = -1, $iMaxX = -1
 	Local $aTopLeftNew[0][2]
 	
 	For $i2 = 0 To UBound($aTopLeft) - 1
 		
 		If $aTopLeft[$i2][1] <> $iLastY Then
+			$iMaxX = $aTopLeft[$i2][0]
 			$iLastY = $aTopLeft[$i2][1]
 			
-			Local $iMaxX = 0
 			Local $a3 = _ArrayFindAll($aTopLeft, $iLastY, Default, Default, Default, Default, 2)
-			;_ArrayDisplay($a3, 1)
 
 			If $a3 <> -1 Then
-				$iMaxX = $aTopLeft[Int($a3[0])][0]
 				For $i = UBound($a3) - 1 To 0 Step -1
 					If $aTopLeft[Int($a3[0])][0] > $iMaxX Then $iMaxX = $aTopLeft[$i][0]
 				Next
 			EndIf
 			Local $aArray[1][2] = [[$iMaxX, $iLastY]]
-			;_ArrayAdd($aTopLeftNew, $aArray)
+			_ArrayAdd($aTopLeftNew, $aArray)
 		EndIf
 	Next
 	
-	Global $aTopLeft = $aTopLeftNew
-	
-	;_ArrayDisplay($aTopLeftNew,2)
-	
-	For $i2 = UBound($aTopLeft) - 1 To 0 Step -1
-		Local $iTmp[2] = [$aTopLeft[$i2][0], $aTopLeft[$i2][1]]
-		For $i = UBound($aTopLeft) - 1 To 0 Step -1
+	For $i2 = UBound($aTopLeftNew) - 1 To 0 Step -1
+		Local $iTmp[2] = [$aTopLeftNew[$i2][0], $aTopLeftNew[$i2][1]]
+		For $i = UBound($aTopLeftNew) - 1 To 0 Step -1
 			If $i2 = $i Then ContinueLoop
-			Local $x = Abs($aTopLeft[$i][0] - $iTmp[0]), $y = Abs($aTopLeft[$i][1] - $iTmp[1])
+			Local $x = Abs($aTopLeftNew[$i][0] - $iTmp[0]), $y = Abs($aTopLeftNew[$i][1] - $iTmp[1])
 			If ($x < 10 And $y < 10) And Not ($x > 5 And $y > 5) Then ContinueLoop 2
-			If $i = 0 Then _ArrayDelete($aTopLeft, $i2)
+			If $i = 0 Then _ArrayDelete($aTopLeftNew, $i2)
 		Next
 	Next
 
 	_ArraySort($aTopRight, 0, 0, 0, 1)
-	;_ArrayDisplay($aTopRight, 0)
 	
-	Local $iLastY = -1
+	Local $iLastY = -1, $iMaxX = -1
 	Local $aTopRightNew[0][2]
 	
 	For $i2 = 0 To UBound($aTopRight) - 1
 		
 		If $aTopRight[$i2][1] <> $iLastY Then
+			$iMaxX = $aTopRight[$i2][0]
 			$iLastY = $aTopRight[$i2][1]
 			
-			Local $iMaxX = 0
 			Local $a3 = _ArrayFindAll($aTopRight, $iLastY, Default, Default, Default, Default, 2)
-			;_ArrayDisplay($a3, 1)
 
 			If $a3 <> -1 Then
-				$iMaxX = $aTopRight[Int($a3[0])][0]
 				For $i = UBound($a3) - 1 To 0 Step -1
 					If $aTopRight[Int($a3[0])][0] < $iMaxX Then $iMaxX = $aTopRight[$i][0]
 				Next
 			EndIf
 			Local $aArray[1][2] = [[$iMaxX, $iLastY]]
-			;_ArrayAdd($aTopRightNew, $aArray)
+			_ArrayAdd($aTopRightNew, $aArray)
 		EndIf
 	Next
 	
-	Global $aTopRight = $aTopRightNew
-	
-	For $i2 = UBound($aTopRight) - 1 To 0 Step -1
-		Local $iTmp[2] = [$aTopRight[$i2][0], $aTopRight[$i2][1]]
-		For $i = UBound($aTopRight) - 1 To 0 Step -1
+	For $i2 = UBound($aTopRightNew) - 1 To 0 Step -1
+		Local $iTmp[2] = [$aTopRightNew[$i2][0], $aTopRightNew[$i2][1]]
+		For $i = UBound($aTopRightNew) - 1 To 0 Step -1
 			If $i2 = $i Then ContinueLoop
-			Local $x = Abs($aTopRight[$i][0] - $iTmp[0]), $y = Abs($aTopRight[$i][1] - $iTmp[1])
+			Local $x = Abs($aTopRightNew[$i][0] - $iTmp[0]), $y = Abs($aTopRightNew[$i][1] - $iTmp[1])
 			If ($x < 10 And $y < 10) And Not ($x > 5 And $y > 5) Then ContinueLoop 2
-			If $i = 0 Then _ArrayDelete($aTopRight, $i2)
+			If $i = 0 Then _ArrayDelete($aTopRightNew, $i2)
 		Next
 	Next
 
 	_ArraySort($aBottomRight, 0, 0, 0, 1)
-	;_ArrayDisplay($aBottomRight, 0)
 	
-	Local $iLastY = -1
+	Local $iLastY = -1, $iMaxX = -1
 	Local $aBottomRightNew[0][2]
 	
 	For $i2 = 0 To UBound($aBottomRight) - 1
 		
 		If $aBottomRight[$i2][1] <> $iLastY Then
+			$iMaxX = $aBottomRight[$i2][0]
 			$iLastY = $aBottomRight[$i2][1]
 			
-			Local $iMaxX = 0
 			Local $a3 = _ArrayFindAll($aBottomRight, $iLastY, Default, Default, Default, Default, 2)
-			;_ArrayDisplay($a3, 1)
 
 			If $a3 <> -1 Then
-				$iMaxX = $aBottomRight[Int($a3[0])][0]
 				For $i = UBound($a3) - 1 To 0 Step -1
 					If $aBottomRight[Int($a3[0])][0] < $iMaxX Then $iMaxX = $aBottomRight[$i][0]
 				Next
 			EndIf
 			Local $aArray[1][2] = [[$iMaxX, $iLastY]]
-			;_ArrayAdd($aBottomRightNew, $aArray)
+			_ArrayAdd($aBottomRightNew, $aArray)
 		EndIf
 	Next
 	
-	Global $aBottomRight = $aBottomRightNew
-	
-	For $i2 = UBound($aBottomRight) - 1 To 0 Step -1
-		Local $iTmp[2] = [$aBottomRight[$i2][0], $aBottomRight[$i2][1]]
-		For $i = UBound($aBottomRight) - 1 To 0 Step -1
+	For $i2 = UBound($aBottomRightNew) - 1 To 0 Step -1
+		Local $iTmp[2] = [$aBottomRightNew[$i2][0], $aBottomRightNew[$i2][1]]
+		For $i = UBound($aBottomRightNew) - 1 To 0 Step -1
 			If $i2 = $i Then ContinueLoop
-			Local $x = Abs($aBottomRight[$i][0] - $iTmp[0]), $y = Abs($aBottomRight[$i][1] - $iTmp[1])
+			Local $x = Abs($aBottomRightNew[$i][0] - $iTmp[0]), $y = Abs($aBottomRightNew[$i][1] - $iTmp[1])
 			If ($x < 10 And $y < 10) And Not ($x > 5 And $y > 5) Then ContinueLoop 2
-			If $i = 0 Then _ArrayDelete($aBottomRight, $i2)
+			If $i = 0 Then _ArrayDelete($aBottomRightNew, $i2)
 		Next
 	Next
 
 	_ArraySort($aBottomLeft, 0, 0, 0, 1)
-	;_ArrayDisplay($aBottomLeft, 0)
-	
-	Local $iLastY = -1
+	Local $iLastY = -1, $iMaxX = -1
 	Local $aBottomLeftNew[0][2]
 	
 	For $i2 = 0 To UBound($aBottomLeft) - 1
 		
 		If $aBottomLeft[$i2][1] <> $iLastY Then
+			$iMaxX = $aBottomLeft[$i2][0]
 			$iLastY = $aBottomLeft[$i2][1]
 			
-			Local $iMaxX = 0
 			Local $a3 = _ArrayFindAll($aBottomLeft, $iLastY, Default, Default, Default, Default, 2)
-			;_ArrayDisplay($a3, 1)
 
 			If $a3 <> -1 Then
-				$iMaxX = $aBottomLeft[Int($a3[0])][0]
 				For $i = UBound($a3) - 1 To 0 Step -1
 					If $aBottomLeft[Int($a3[0])][0] > $iMaxX Then $iMaxX = $aBottomLeft[$i][0]
 				Next
 			EndIf
+			
 			Local $aArray[1][2] = [[$iMaxX, $iLastY]]
-			;_ArrayAdd($aBottomLeftNew, $aArray)
+			_ArrayAdd($aBottomLeftNew, $aArray)
 		EndIf
 	Next
-	
-	Global $aBottomLeft = $aBottomLeftNew
 
-	For $i2 = UBound($aBottomLeft) - 1 To 0 Step -1
-		Local $iTmp[2] = [$aBottomLeft[$i2][0], $aBottomLeft[$i2][1]]
-		For $i = UBound($aBottomLeft) - 1 To 0 Step -1
+	For $i2 = UBound($aBottomLeftNew) - 1 To 0 Step -1
+		Local $iTmp[2] = [$aBottomLeftNew[$i2][0], $aBottomLeftNew[$i2][1]]
+		For $i = UBound($aBottomLeftNew) - 1 To 0 Step -1
 			If $i2 = $i Then ContinueLoop
-			Local $x = Abs($aBottomLeft[$i][0] - $iTmp[0]), $y = Abs($aBottomLeft[$i][1] - $iTmp[1])
+			Local $x = Abs($aBottomLeftNew[$i][0] - $iTmp[0]), $y = Abs($aBottomLeftNew[$i][1] - $iTmp[1])
 			If ($x < 10 And $y < 10) And Not ($x > 5 And $y > 5) Then ContinueLoop 2
-			If $i = 0 Then _ArrayDelete($aBottomLeft, $i2)
+			If $i = 0 Then _ArrayDelete($aBottomLeftNew, $i2)
 		Next
 	Next
 
-	Local $aSides[4] = [$aTopLeft, $aTopRight, $aBottomRight, $aBottomLeft]
+	Local $aSides[4] = [$aTopLeftNew, $aTopRightNew, $aBottomRightNew, $aBottomLeftNew]
 
 	Return $aSides
 EndFunc   ;==>PointDeployBB
