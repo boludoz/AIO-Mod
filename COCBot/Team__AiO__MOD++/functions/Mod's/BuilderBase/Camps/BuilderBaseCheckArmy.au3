@@ -164,11 +164,13 @@ Func DetectCamps()
 EndFunc   ;==>DetectCamps
 
 Func DeleteTroop($X, $Y, $bOnlyCheck = False)
-	; FD8992 Is Light Red button to delete the troop :  X+93 and Y-91 are the offsets to Red Button  ; FD898D
-	SetDebugLog("Camp Coordinates: " & $X & "," & $Y)
-	SetDebugLog("Red Color Check: " & _GetPixelColor($X + 71, $Y - 101, True))
-	If _ColorCheck(_GetPixelColor($X + 71, $Y - 101, True), Hex(0xE40E0E, 6), 40) Or _ColorCheck(_GetPixelColor($X + 73, $Y - 104, True), Hex(0xE00D10, 6), 40) Then
-		If $bOnlyCheck = False Then Click($X + 93, $Y - 91, 1)
+
+	SetDebugLog("Red Coordinates: " & $X & "," & $Y)
+	Local $saiArea2SearchOri[4] = [$X, 244, $X + 95, 271]
+	Local $aAllResults = findMultipleQuick(@scriptdir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\FillArmyCamps\Bundles\", 0, $saiArea2SearchOri, True, "Del", False, 25)
+	If IsArray($aAllResults) Then
+		_ArraySort($aAllResults, 0, 0, 0, 1)
+		If $bOnlyCheck = False Then Click($aAllResults[0][1] + Random(0, 10, 1), Random(244, 271, 1), 1)
 		Return True
 	EndIf
 	If $bOnlyCheck = False Then Setlog("Builder base army: Fail DeleteTroop.", $COLOR_ERROR)

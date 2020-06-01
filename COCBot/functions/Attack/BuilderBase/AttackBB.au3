@@ -161,13 +161,14 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 		If IsArray($g_aMachineBB) Then
 			SetLog("Deploying Battle Machine.", $COLOR_BLUE)
 			PureClick($g_aMachineBB[0][1], $g_aMachineBB[0][2])
+			If RandomSleep(500) Then Return  ; wait before clicking ability
 			Local $vDP = Random(0, UBound($aVar)-1)
 			PureClick($aVar[$vDP][0], $aVar[$vDP][1])
-			If _Sleep(500) Then     ; wait before clicking ability
-				$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
-				If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Enabled")
-				Return
-			EndIf
+			If RandomSleep(500) Then Return  ; wait before clicking ability
+			;	$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
+			;	If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Enabled")
+			;	Return
+			;EndIf
 			If $g_bIsBBMachineD = False Then $g_bIsBBMachineD = True
 		EndIf
 		

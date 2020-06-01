@@ -674,7 +674,7 @@ Func DeployTroopBB($sTroopName, $aSlot_XY, $Point2Deploy, $iQtyToDrop)
 	
 	If Not IsArray($g_aMachineBB) Then Return
 	
-	If $g_bIsBBMachineD = True And UBound($g_aMachineBB, 1) > 0 And UBound($g_aMachineBB) > 0 Then
+	If $g_bIsBBMachineD = True And $g_aMachineBB <> 0 Then
 		If _Sleep(500) Then Return
 		If _ColorCheck(_GetPixelColor(Int($g_aMachineBB[0][1]), 723, True), Hex(0xFFFFFF, 6), 20) Or not _ColorCheck(_GetPixelColor(Int($g_aMachineBB[0][1]), 721, True), Hex(0x472CC5, 6), 20) Then
 			Setlog("The machine has no ability.", $COLOR_INFO)

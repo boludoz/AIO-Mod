@@ -67,8 +67,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	Local $aLines[0]
 	Static $lastScript
 	
-	Select 
-		Case ($g_iCmbBBAttack = $g_eBBAttackCSV) Or $g_bChkBBGetFromCSV
+	If ($g_iCmbBBAttack = $g_eBBAttackCSV) Or ($g_bChkBBGetFromCSV = True) Then
 			
 			If Not $g_bChkBBRandomAttack Then
 				$lastScript = 0
@@ -101,21 +100,24 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 					ExitLoop
 				EndIf
 			Next
-			
-			If ($bIsCampCSV = False) Then ContinueCase
-			
-		Case Else
-		
-			Local $sName = "CAMP" & "|"
-			For $iName = 0 To UBound($g_iCmbCampsBB) - 1
-				$sName &= ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) <> "" ? ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) : ("Barb")
-				$sName &= "|"
-				If $iName = 0 Then ContinueLoop
-				Local $aFakeCsv[1] = [$sName]
-				_ArrayAdd($aLines, $aFakeCsv)
-			Next
-	EndSelect
-
+	EndIf
+	
+	If ($bIsCampCSV = False) Or BitAND((Not $g_bChkBBGetFromCSV), ($g_iCmbBBAttack = $g_eBBAttackSmart)) <> 0 Then
+		Local $sName = "CAMP" & "|"
+		For $iName = 0 To UBound($g_iCmbCampsBB) - 1
+			$sName &= ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) <> "" ? ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) : ("Barb")
+			$sName &= "|"
+			If $iName = 0 Then ContinueLoop
+			Local $aFakeCsv[1] = [$sName]
+			_ArrayAdd($aLines, $aFakeCsv)
+		Next
+	EndIf
+	
+	If UBound($aLines) = 0 Then
+		SetLog("BuilderBaseSelectCorrectScript 0x12 error.", $COLOR_ERROR)
+		Return
+	EndIf
+	
 	; Move backwards through the array deleting the blanks
 	For $i = UBound($aAvailableTroops) - 1 To 0 Step -1
 		If $aAvailableTroops[$i][0] = "" Then
@@ -155,7 +157,10 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 		EndIf
 	Next
 
-	If UBound($aCamps) < 1 Then Return
+	If UBound($aCamps) = 0 Then
+		SetLog("BuilderBaseSelectCorrectScript 0x13 error.", $COLOR_ERROR)
+		Return
+	EndIf
 
 	;Result Of BelowCode e.g $aCamps
 	;$aCamps Before :Giant-Barbarian-Barbarian-Bomb-Cannon-Cannon
@@ -163,7 +168,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	;First Find The Correct Index Of Camps In Attack Bar
 	For $i = 0 To UBound($aCamps) - 1
 		;Just In Case Someone Mentioned Wrong Troop Name Select Default Barbarian Troop
-		$aCamps[$i] = _ArraySearch($g_asAttackBarBB2, $aCamps[$i]) < 0 ? ("Barb") : _ArraySearch($g_asAttackBarBB2, $aCamps[$i])
+		$aCamps[$i] = _ArraySearch($g_asBBTroopShortNames, $aCamps[$i]) < 0 ? ("Barb") : _ArraySearch($g_asBBTroopShortNames, $aCamps[$i])
 	Next
 	;After populate with the new priority position let's sort ascending column 1
 	_ArraySort($aCamps, 0, 0, 0, 1)
@@ -177,10 +182,10 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 
 	For $i = 0 To UBound($aAvailableTroops) - 1
 		$aNewAvailableTroops[$i][0] = $aAvailableTroops[$i][0]
-		$aNewAvailableTroops[$i][1] = _ArraySearch($g_asAttackBarBB2, $aAvailableTroops[$i][0])
+		$aNewAvailableTroops[$i][1] = _ArraySearch($g_asBBTroopShortNames, $aAvailableTroops[$i][0])
 	Next
 
-	If $g_bDebugSetlog Then setlog(_ArrayToString($aNewAvailableTroops, "-", -1, -1, "|", -1, -1))
+	If $g_bDebugSetlog Then SetLog(_ArrayToString($aNewAvailableTroops, "-", -1, -1, "|", -1, -1))
 
 	Local $bWaschanged = False
 	Local $iAvoidInfLoop = 0
@@ -188,8 +193,9 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	Local $aSwicthBtn[6] = [112, 180, 253, 327, 398, 471]
 
 	For $i = 0 To $iCampsQuantities - 1
+		If $iAvoidInfLoop > UBound($aCamps) Then ContinueLoop
 		If Not $g_bRunState Then Return
-		If StringCompare($aNewAvailableTroops[$i][0], $aCamps[$i]) <> 0 Then
+		If Not (StringInStr($aNewAvailableTroops[$i][0], $aCamps[$i]) > 0) Then
 			$bWaschanged = True
 			Setlog("Incorrect troop On Camp " & $i + 1 & " - " & $aNewAvailableTroops[$i][0] & " -> " & $aCamps[$i])
 			Local $aPointSwitch = [$aSwicthBtn[$i], 708]

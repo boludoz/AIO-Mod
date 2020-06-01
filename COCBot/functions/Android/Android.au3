@@ -3632,7 +3632,7 @@ Func AndroidMinitouchClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect =
 		ElseIf $ReleaseClicks = True Then
 		EndIf
 		Local $sleepTimer = __TimerInit()
-;~ 		If True Then
+		If True Then
 			;SetDebugLog("AndroidFastClick: $times=" & $times & ", $loops=" & $loops & ", $remaining=" & $remaining)
 			For $j = 0 To $recordsClicks - 1
 				Local $BTN_TOUCH_DOWN = True
@@ -3689,11 +3689,7 @@ Func AndroidMinitouchClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect =
 					Else
 						AndroidAdbSendMinitouchShellCommand($send)
 					EndIf
-
-					#Region - Random Sleep - Team AIO Mod++
-;~ 					_SleepMicro(($iDelay + $sleep) * 1000)
-				    If _Sleep(($iDelay + $sleep)) Then Return
-					#EndRegion
+					_SleepMicro(($iDelay + $sleep) * 1000)
 					If $g_bDebugClick Then SetDebugLog("minitouch: d 0 " & $x & " " & $y & " 50, speed=" & $sleep & ", delay=" & $iDelay)
 					;_SleepMicro(10000)
 				EndIf
@@ -3703,39 +3699,39 @@ Func AndroidMinitouchClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect =
 				EndIf
 				;TCPRecv($g_bAndroidAdbMinitouchSocket, 256, 1)
 			Next
-;~ 		EndIf
+		EndIf
 		$g_bSilentSetLog = True
 		$g_bSilentSetLog = $_SilentSetLog
-;~ 		If False Then
-;~ 			; disabled for now
-;~ 			If $speed > 0 Then
-;~ 				; speed was overwritten with $g_iAndroidAdbClickGroupDelay
-;~ 				;AndroidAdbSendShellCommand($sleep)
-;~ 				If $g_bDebugClick Then SetDebugLog("minitouch: wait between group clicks: " & $speed & " ms.")
-;~ 				$send = "w " & $speed & @LF
-;~ 				If $g_iAndroidAdbMinitouchMode = 0 Then
-;~ 					$bytes += TCPSend($g_bAndroidAdbMinitouchSocket, $send)
-;~ 				Else
-;~ 					AndroidAdbSendMinitouchShellCommand($send)
-;~ 				EndIf
-;~ 				_SleepMicro($speed * 1000)
-;~ 				;Local $sleepTime = $speed - __TimerDiff($sleepTimer)
-;~ 				;If $sleepTime > 0 Then _Sleep($sleepTime, False)
-;~ 			EndIf
-;~ 			If $adjustSpeed > 0 Then
-;~ 				; wait remaining time
-;~ 				Local $wait = Round($adjustSpeed - __TimerDiff($timer))
-;~ 				If $wait > 0 Then
-;~ 					If $g_bDebugAndroid Or $g_bDebugClick Then
-;~ 						$g_bSilentSetLog = True
-;~ 						SetDebugLog("AndroidMinitouchClick: Sleep " & $wait & " ms.")
-;~ 						$g_bSilentSetLog = $_SilentSetLog
-;~ 					EndIf
-;~ 					_Sleep($wait, False)
-;~ 				EndIf
-;~ 			EndIf
-;~ 		EndIf
-;~ 		$timeSlept += __TimerDiff($sleepTimer)
+		If False Then
+			; disabled for now
+			If $speed > 0 Then
+				; speed was overwritten with $g_iAndroidAdbClickGroupDelay
+				;AndroidAdbSendShellCommand($sleep)
+				If $g_bDebugClick Then SetDebugLog("minitouch: wait between group clicks: " & $speed & " ms.")
+				$send = "w " & $speed & @LF
+				If $g_iAndroidAdbMinitouchMode = 0 Then
+					$bytes += TCPSend($g_bAndroidAdbMinitouchSocket, $send)
+				Else
+					AndroidAdbSendMinitouchShellCommand($send)
+				EndIf
+				_SleepMicro($speed * 1000)
+				;Local $sleepTime = $speed - __TimerDiff($sleepTimer)
+				;If $sleepTime > 0 Then _Sleep($sleepTime, False)
+			EndIf
+			If $adjustSpeed > 0 Then
+				; wait remaining time
+				Local $wait = Round($adjustSpeed - __TimerDiff($timer))
+				If $wait > 0 Then
+					If $g_bDebugAndroid Or $g_bDebugClick Then
+						$g_bSilentSetLog = True
+						SetDebugLog("AndroidMinitouchClick: Sleep " & $wait & " ms.")
+						$g_bSilentSetLog = $_SilentSetLog
+					EndIf
+					_Sleep($wait, False)
+				EndIf
+			EndIf
+		EndIf
+		$timeSlept += __TimerDiff($sleepTimer)
 		If $g_bRunState = False Then ExitLoop
 		If $__TEST_ERROR_SLOW_ADB_CLICK_DELAY > 0 Then Sleep($__TEST_ERROR_SLOW_ADB_CLICK_DELAY)
 		;If $speed > 0 Then Sleep($speed)
@@ -4399,9 +4395,6 @@ Func UpdateAndroidBackgroundMode()
 	; update Android Brackground Mode support
 	Local $iMode = (($g_iAndroidBackgroundMode = 0) ? ($g_iAndroidBackgroundModeDefault) : ($g_iAndroidBackgroundMode))
 	Local $iBackgroundMode = Execute("Get" & $g_sAndroidEmulator & "BackgroundMode()")
-	
-	If _Sleep(150) Then Return ; Team AIO Mod++
-
 	If $iBackgroundMode = "" And @error <> 0 Then
 		; Not implemented
 		Local $sMode = "Unknown"
@@ -4439,8 +4432,6 @@ Func UpdateAndroidBackgroundMode()
 		EndSwitch
 	EndIf
 
-	If _Sleep(150) Then Return ; Team AIO Mod++
-	
 	Switch $iMode
 		Case 1 ; WinAPI mode (faster, but requires Android DirectX)
 			If BitAND($g_iAndroidSupportFeature, 1) = 0 Then
@@ -4869,5 +4860,3 @@ Func CheckEmuNewVersions()
 		SetLog($HelpLink, $COLOR_INFO)
 	EndIf
 EndFunc   ;==>CheckEmuNewVersions
-
-

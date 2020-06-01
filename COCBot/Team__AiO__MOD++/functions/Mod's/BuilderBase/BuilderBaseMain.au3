@@ -95,12 +95,14 @@ Func runBuilderBase($bTestRun = False)
 		EndIf
 
 		; Attack
-		If $g_bRestart Then Return
-		If Not $g_bRunState Then Return
-
-		BuilderBaseAttack($bTestRun)
-		If Not $g_bRunState Then Return
-
+		If ($g_iAvailableAttacksBB <> 0 and $g_bChkBBStopAt3) Or ($g_bChkBBStopAt3 = False) Then
+			If $g_bRestart Then Return
+			If Not $g_bRunState Then Return
+	
+			BuilderBaseAttack($bTestRun)
+			If Not $g_bRunState Then Return
+		EndIf
+		
 		; Zoomout
 		If $g_bRestart Then Return
 		BuilderBaseZoomOut()
@@ -128,7 +130,6 @@ Func runBuilderBase($bTestRun = False)
  		If Not $bBoosted Then ExitLoop
 ;~ 		If $bBoosted Then
 			If $g_bRestart Then Return
-			If $g_iAvailableAttacksBB = 0 And $g_bChkBBStopAt3 Then ExitLoop
 ;~ 		EndIf
 
 		If $g_bRestart Then Return
@@ -136,6 +137,8 @@ Func runBuilderBase($bTestRun = False)
 
 		BuilderBaseReport()
 		RestAttacksInBB()
+		
+		If $g_iAvailableAttacksBB = 0 Then ExitLoop ; Smart
 	Next
 
 	; switch back to normal village

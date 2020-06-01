@@ -248,72 +248,16 @@ EndFunc   ;==>DeployPointsPosition
 
 Func BuilderBaseBuildingsDetection($iBuilding = 4)
 
-	; Enum $g_iAirDefense = 0 , $g_iCrusher , $g_GuardPost, $g_iCannon, $g_iBuilderHall, $g_iDeployPoints
-	Local $sBuildings = ["AirDefenses", "Crusher", "GuardPost", "Cannon", "BuilderHall", "DeployPoints"]
-
-	Local $Screen[4] = [130, 210, 745, 630]
-	If Not $g_bRunState Then Return
-
+	Local $sBuildings = ["AirDefenses", "Crusher", "GuardPost", "Cannon", "BuilderHall"]
 	If UBound($sBuildings) < $iBuilding Then Return -1
+	
+	Local $sDirectory = $g_sImgOpponentBuildingsBB & $sBuildings[$iBuilding]
+	
+	Setlog("Initial detection for " & $sBuildings[$iBuilding], $COLOR_ACTION)
 
-	Local $sTilePath = $g_sImgOpponentBuildingsBB & $sBuildings[$iBuilding]
-
-	Setlog("initial detection for " & $sBuildings[$iBuilding])
-
-	Local $aResults = QuickMIS("NxCx", $sTilePath, $Screen[0], $Screen[1], $Screen[2], $Screen[3], True, False)
-	Local $aAllResults[0][4], $aCoordinates, $aCoord
-
-	If $aResults = 0 Then Return -1
-
-	For $i = 0 To UBound($aResults) - 1
-		If Not $g_bRunState Then Return
-		$aCoordinates = Null
-		$aCoordinates = $aResults[$i][1]
-		For $j = 0 To UBound($aCoordinates) - 1
-			$aCoord = Null
-			$aCoord = $aCoordinates[$j]
-			SetDebugLog(" - " & $aResults[$i][0] & " at (" & $aCoord[0] + $Screen[0] & "," & $aCoord[1] + $Screen[1] & ")")
-			ReDim $aAllResults[UBound($aAllResults) + 1][4]
-			$aAllResults[UBound($aAllResults) - 1][0] = $aResults[$i][0] ; NAME
-			$aAllResults[UBound($aAllResults) - 1][1] = $aCoord[0] + $Screen[0] ; X axis
-			$aAllResults[UBound($aAllResults) - 1][2] = (StringInStr($aResults[$i][0], "AirBombs") > 0) ? $aCoord[1] + $Screen[1] + 15 : $aCoord[1] + $Screen[1] ; Y axis
-			$aAllResults[UBound($aAllResults) - 1][3] = $aResults[$i][2] ; Level
-		Next
-	Next
-
-	; Sort by X axis
-	_ArraySort($aAllResults, 0, 0, 0, 1)
-
-	; Distance in pixels to check if is a duplicated detection , for deploy point will be 5
-	Local $D2Check = $iBuilding <> 5 ? 10 : 5
-
-	; check if is a double Detection, near in 10px
-	Local $Dime = 0
-	For $i = 0 To UBound($aAllResults) - 1
-		If Not $g_bRunState Then Return
-		If $i > UBound($aAllResults) - 1 Then ExitLoop
-		Local $LastCoordinate[4] = [$aAllResults[$i][0], $aAllResults[$i][1], $aAllResults[$i][2], $aAllResults[$i][3]]
-		SetDebugLog("Coordinate to Check: " & _ArrayToString($LastCoordinate))
-		If UBound($aAllResults) > 1 Then
-			For $j = 0 To UBound($aAllResults) - 1
-				If $j > UBound($aAllResults) - 1 Then ExitLoop
-				Local $SingleCoordinate[4] = [$aAllResults[$j][0], $aAllResults[$j][1], $aAllResults[$j][2], $aAllResults[$j][3]]
-				If $LastCoordinate[1] <> $SingleCoordinate[1] Or $LastCoordinate[2] <> $SingleCoordinate[2] Then
-					If Int($SingleCoordinate[1]) < Int($LastCoordinate[1]) + $D2Check And Int($SingleCoordinate[1]) > Int($LastCoordinate[1]) - $D2Check And _
-							Int($SingleCoordinate[2]) < Int($LastCoordinate[2]) + $D2Check And Int($SingleCoordinate[2]) > Int($LastCoordinate[2]) - $D2Check Then
-						_ArrayDelete($aAllResults, $j)
-					EndIf
-				Else
-					If $LastCoordinate[1] = $SingleCoordinate[1] And $LastCoordinate[2] = $SingleCoordinate[2] And $LastCoordinate[3] <> $SingleCoordinate[3] Then
-						_ArrayDelete($aAllResults, $j)
-					EndIf
-				EndIf
-			Next
-		EndIf
-	Next
-
-	Return $aAllResults
-
+	Local $aScreen[4] = [130, 210, 833, 610]
+	If Not $g_bRunState Then Return
+	Return findMultipleQuick($sDirectory, 1, $aScreen, Default, Default, Default, 10)
 
 EndFunc   ;==>BuilderBaseBuildingsDetection
 

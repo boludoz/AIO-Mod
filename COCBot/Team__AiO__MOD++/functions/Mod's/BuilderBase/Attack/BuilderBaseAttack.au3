@@ -34,7 +34,7 @@ Func BuilderBaseAttack($bTestRun = False)
 	If Not $g_bChkBuilderAttack Then Return
 
 	; Check if is to stop at 3 attacks won
-	If (Not $bTestRun) And BitAnd($g_iAvailableAttacksBB = 0, $g_bChkBBStopAt3) Then Return
+	;If (Not $bTestRun) And BitAnd($g_iAvailableAttacksBB = 0, $g_bChkBBStopAt3) Then Return
 
 	; Stop when reach the value set it as minimum of trophies
 	If (Not $bTestRun) And Int($g_aiCurrentLootBB[$eLootTrophyBB]) < Int($g_iTxtBBDropTrophiesMin) And $g_iAvailableAttacksBB = 0 Then
