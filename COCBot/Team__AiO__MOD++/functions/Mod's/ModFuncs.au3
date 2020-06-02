@@ -151,8 +151,8 @@ EndFunc   ;==>_ImageSearchXML
 
 Func findMultipleQuick($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "0,0,860,732", $bForceCapture = Default, $sOnlyFind = Default, $bExactFindP = Default, $iDistance2check = 25, $bDebugLog = False, $iLevel = 0, $iMaxLevel = 1000)
 	FuncEnter(findMultipleQuick)
-	Local $bCapture, $sArea2Search, $sIsOnlyFind, $iQuantToMach
 	
+	Local $bCapture, $sArea2Search, $sIsOnlyFind, $iQuantToMach, $bExactFind
 	$sArea2Search = (IsArray($saiArea2SearchOri)) ? (GetDiamondFromArray($saiArea2SearchOri)) : (GetDiamondFromRect($saiArea2SearchOri))
 	$bCapture = ($bForceCapture = Default) ? (True) : ($bForceCapture)
 	$sIsOnlyFind = ($sOnlyFind = Default) ? ("") : ($sOnlyFind)
