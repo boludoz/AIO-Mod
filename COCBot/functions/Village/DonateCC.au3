@@ -133,8 +133,8 @@ Func DonateCC($bCheckForNewMsg = False)
 	#Region - Donation records - Team AIO Mod++
 	TimerRecordDonation()
 	Local $bModCondition = (($g_iTotalDonateStatsTroops >= $g_iDayLimitTroops) and ($g_iDayLimitTroops > 0))
-	$bModCondition = (($g_iTotalDonateStatsSpells >= $g_iDayLimitSpells) and ($g_iDayLimitSpells > 0) and $bModCondition)
-	$bModCondition = (($g_iTotalDonateStatsSiegeMachines >= $g_iDayLimitSieges) and ($g_iDayLimitSieges > 0) and $bModCondition)
+	$bModCondition = (($g_iTotalDonateStatsSpells >= $g_iDayLimitSpells) and ($g_iDayLimitSpells > 0) ) and $bModCondition
+	$bModCondition = (($g_iTotalDonateStatsSiegeMachines >= $g_iDayLimitSieges) and ($g_iDayLimitSieges > 0)) and $bModCondition
 	
 	If $bModCondition Then
 		SetLog("Donate skip :  day limit reached.", $COLOR_INFO)

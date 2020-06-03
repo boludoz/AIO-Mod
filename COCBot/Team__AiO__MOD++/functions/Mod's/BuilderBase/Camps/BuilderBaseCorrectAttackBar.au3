@@ -64,9 +64,10 @@ EndFunc
 Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 
 	If Not $g_bRunState Then Return
+	Local $bIsCampCSV = False
 	Local $aLines[0]
 	Static $lastScript
-	
+
 	If ($g_iCmbBBAttack = $g_eBBAttackCSV) Or ($g_bChkBBGetFromCSV = True) Then
 			
 			If Not $g_bChkBBRandomAttack Then
@@ -89,7 +90,6 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 			If FileExists($FileNamePath) Then $aLines = FileReadToArray($FileNamePath)
 			
 			; Special case if CSV dont have camps (open eye).
-			Local $bIsCampCSV = False
 			For $iLine = 0 To UBound($aLines) - 1
 				If Not $g_bRunState Then Return
 				Local $aSplitLine = StringSplit($aLines[$iLine], "|", $STR_NOCOUNT)

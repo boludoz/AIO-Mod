@@ -35,7 +35,7 @@ Func getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpa
 	Static $_hHBitmap = 0
 	$g_sGetOcrMod = ""
 	
-	For $iTryIt = 0 To 5
+	For $iTryIt = 0 To 10
 		If $bForceCaptureRegion = True Then
 			_CaptureRegion2($x_start, $y_start, $x_start + $width, $y_start + $height)
 		Else
@@ -67,7 +67,7 @@ Func getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpa
 		
 		If $result <> 0 Then ExitLoop 
 		
-		If _Sleep(100) Then Return
+		If _Sleep(250) Then Return
 		
 	Next
 	$g_sGetOcrMod = $result

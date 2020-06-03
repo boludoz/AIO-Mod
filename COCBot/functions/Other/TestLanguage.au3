@@ -19,11 +19,12 @@ Func TestLanguage()
 	; test the word "Attack!" on the Attack Button in the lower left corner
 	If getOcrLanguage($aDetectLang[0], $aDetectLang[1]) = "english" Then
 		SetLog("Language setting is English: Correct.", $COLOR_INFO)
-		Return True
+		;Return True - Team AIO Mod++
 	ElseIf Not ChangeLanguage() Then
 		SetLog("Language setting is Wrong: Change CoC language to English!", $COLOR_ERROR)
-		btnStop()
+		;btnStop() - Team AIO Mod++
 	EndIf
+	Return True ; Team AIO Mod++
 EndFunc
 
 Func ChangeLanguage()

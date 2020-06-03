@@ -7623,7 +7623,6 @@ Global $g_aIsClanChat[4] = [86, 12, 0xC1BB91, 20]
 Global $g_bChkCollectMagicItems, $g_bChkCollectFree, $g_bChkBuilderPotion, $g_bChkClockTowerPotion, $g_bChkHeroPotion, $g_bChkLabPotion, $g_bChkPowerPotion, $g_bChkResourcePotion, $g_iComboClockTowerPotion, $g_iComboHeroPotion, $g_iComboPowerPotion, $g_iInputBuilderPotion, $g_iInputLabPotion, $g_iInputGoldItems = 250000, $g_iInputElixirItems = 300000, $g_iInputDarkElixirItems = 1000
 Global $g_aMachineBB[0][5], $g_bIsBBMachineD = False, $g_bBBIsFirst = True
 Global $g_iAvailableAttacksBB = 0, $g_iLastDamage = 0
-Global Enum $g_iAirDefense = 0, $g_iCrusher, $g_iGuardPost, $g_iCannon, $g_iBuilderHall, $g_iDeployPoints
 Global $g_aBuilderHallPos[1][2] = [[Null, Null]], $g_aAirdefensesPos[0][2], $g_aCrusherPos[0][2], $g_aCannonPos[0][2], $g_aGuardPostPos[0][2], $g_aDeployPoints
 Global $g_aBuilderHallPos[1][2] = [[Null, Null]], $g_aAirdefensesPos[0][2], $g_aCrusherPos[0][2], $g_aCannonPos[0][2], $g_aGuardPostPos[0][2], $g_aDeployPoints, $g_aDeployBestPoints
 Global $g_aOpponentBuildings[6] = [$g_aAirdefensesPos, $g_aCrusherPos, $g_aGuardPostPos, $g_aCannonPos, $g_aBuilderHallPos, $g_aDeployPoints]
@@ -7650,6 +7649,8 @@ Global $g_sIcnBBOrder[11]
 Global $g_asAttackBarBB[12] = ["", "Barbarian", "Archer", "BoxerGiant", "Minion", "WallBreaker", "BabyDrag", "CannonCart", "Witch", "DropShip", "SuperPekka", "HogGlider"]
 Global $g_aiCmbBBDropOrder[$g_iBBTroopCount] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 Global $g_sBBDropOrder = _ArrayToString($g_asAttackBarBB)
+Global Enum $eBBTroopBarbarian, $eBBTroopArcher, $eBBTroopGiant, $eBBTroopMinion, $eBBTroopBomber, $eBBTroopBabyDragon, $eBBTroopCannon, $eBBTroopNight, $eBBTroopDrop, $eBBTroopPekka, $eBBTroopHogG, $eBBTroopMachine, $eBBTroopCount
+Global Const $g_asBBTroopShortNames[$eBBTroopCount] = ["Barb", "Arch", "Giant", "Minion", "Breaker", "BabyD", "Cannon", "Witch", "Drop", "Pekka", "HogG", "Machine"]
 Global $g_asAttackBarBB2[12] = ["Barbarian", "Archer", "BoxerGiant", "Minion", "WallBreaker", "BabyDrag", "CannonCart", "Witch", "DropShip", "SuperPekka", "HogGlider", "Machine"]
 Global $g_bIsMachinePresent = False
 Global $g_iBBMachAbilityTime = 14000
@@ -11633,6 +11634,7 @@ $recordsClicks = $remaining
 ElseIf $ReleaseClicks = True Then
 EndIf
 Local $sleepTimer = __TimerInit()
+If True Then
 For $j = 0 To $recordsClicks - 1
 Local $BTN_TOUCH_DOWN = True
 Local $BTN_TOUCH_UP = True
@@ -11681,15 +11683,40 @@ $bytesSent += StringLen($send)
 Else
 AndroidAdbSendMinitouchShellCommand($send)
 EndIf
-If _Sleep(($iDelay + $sleep)) Then Return
+_SleepMicro(($iDelay + $sleep) * 1000)
 If $g_bDebugClick Then SetDebugLog("minitouch: d 0 " & $x & " " & $y & " 50, speed=" & $sleep & ", delay=" & $iDelay)
 EndIf
 If $g_iAndroidAdbMinitouchMode = 0 Then
 If $bytes < $bytesSent Then SetDebugLog("minitouch: Failed to send " &($bytesSent - $bytes) & " bytes!", $COLOR_ERROR)
 EndIf
 Next
+EndIf
 $g_bSilentSetLog = True
 $g_bSilentSetLog = $_SilentSetLog
+If False Then
+If $speed > 0 Then
+If $g_bDebugClick Then SetDebugLog("minitouch: wait between group clicks: " & $speed & " ms.")
+$send = "w " & $speed & @LF
+If $g_iAndroidAdbMinitouchMode = 0 Then
+$bytes += TCPSend($g_bAndroidAdbMinitouchSocket, $send)
+Else
+AndroidAdbSendMinitouchShellCommand($send)
+EndIf
+_SleepMicro($speed * 1000)
+EndIf
+If $adjustSpeed > 0 Then
+Local $wait = Round($adjustSpeed - __TimerDiff($timer))
+If $wait > 0 Then
+If $g_bDebugAndroid Or $g_bDebugClick Then
+$g_bSilentSetLog = True
+SetDebugLog("AndroidMinitouchClick: Sleep " & $wait & " ms.")
+$g_bSilentSetLog = $_SilentSetLog
+EndIf
+_Sleep($wait, False)
+EndIf
+EndIf
+EndIf
+$timeSlept += __TimerDiff($sleepTimer)
 If $g_bRunState = False Then ExitLoop
 If $__TEST_ERROR_SLOW_ADB_CLICK_DELAY > 0 Then Sleep($__TEST_ERROR_SLOW_ADB_CLICK_DELAY)
 Next
@@ -12217,7 +12244,6 @@ EndFunc
 Func UpdateAndroidBackgroundMode()
 Local $iMode =(($g_iAndroidBackgroundMode = 0) ?($g_iAndroidBackgroundModeDefault) :($g_iAndroidBackgroundMode))
 Local $iBackgroundMode = Execute("Get" & $g_sAndroidEmulator & "BackgroundMode()")
-If _Sleep(150) Then Return
 If $iBackgroundMode = "" And @error <> 0 Then
 Local $sMode = "Unknown"
 Switch $iMode
@@ -12251,7 +12277,6 @@ EndSwitch
 SetLog($g_sAndroidEmulator & " (" & $g_sAndroidInstance & ") unsupported Graphics Engine / Render Mode, using " & $sMode, $COLOR_WARNING)
 EndSwitch
 EndIf
-If _Sleep(150) Then Return
 Switch $iMode
 Case 1
 If BitAND($g_iAndroidSupportFeature, 1) = 0 Then
@@ -31727,7 +31752,6 @@ GUICtrlSetState($g_hLblBBSameTroopDelay, $GUI_HIDE)
 GUICtrlSetState($g_hCmbBBNextTroopDelay, $GUI_HIDE)
 GUICtrlSetState($g_hCmbBBSameTroopDelay, $GUI_HIDE)
 GUICtrlSetState($g_hBtnBBDropOrder, $GUI_HIDE)
-GUICtrlSetState($g_hChkBBGetFromCSV, $GUI_DISABLE)
 GUICtrlSetState($g_hChkBBRandomAttack, $GUI_ENABLE)
 For $i=$g_hGrpAttackStyleBB To $g_hIcnBBCSV[3]
 GUICtrlSetState($i, $GUI_ENABLE)
@@ -31740,7 +31764,6 @@ GUICtrlSetState($g_hCmbBBSameTroopDelay, $GUI_SHOW)
 GUICtrlSetState($g_hBtnBBDropOrder, $GUI_SHOW)
 GUICtrlSetState($g_hChkBBRandomAttack, $GUI_UNCHECKED)
 ChkBBRandomAttack()
-GUICtrlSetState($g_hChkBBGetFromCSV, $GUI_ENABLE)
 GUICtrlSetState($g_hChkBBRandomAttack, $GUI_DISABLE)
 For $i=$g_hGrpAttackStyleBB To $g_hIcnBBCSV[3]
 GUICtrlSetState($i, $GUI_DISABLE)
@@ -31879,7 +31902,6 @@ GUICtrlSetState($g_hGrpGuideScriptBB[1], $GUI_SHOW)
 GUICtrlSetState($g_hGrpGuideScriptBB[2], $GUI_SHOW)
 GUICtrlSetPos($g_hChkBBGetFromCSV, 5, 190)
 GUICtrlSetState($g_hChkBBGetFromCSV, BitOr($GUI_HIDE, $GUI_DISABLE))
-$g_bChkBBGetFromCSV = false
 GUICtrlSetPos($g_hGrpOptionsBB, -1, -1, $g_iSizeWGrpTab2 - 2, 65)
 GUICtrlSetPos($g_hChkBBTrophiesRange, 100, 105)
 GUICtrlSetPos($g_hTxtBBDropTrophiesMin, 203, 105)
@@ -43192,15 +43214,40 @@ Local $iSide = Random(0, 1, 1)
 Local $Size = GetBuilderBaseSize()
 If Not $g_bRunState Then Return
 Setlog("Builder Base Diamond: " & $Size)
-If($Size < 575 And $Size > 620) Or $Size = 0 Then
+Local $i = 0
+Do
 Setlog("Builder Base Attack Zoomout.")
+$Size = GetBuilderBaseSize(False)
+If($Size < 575 And $Size > 620) Or($Size = 0) Then
 BuilderBaseZoomOut()
 If _Sleep(1000) Then Return
-$Size = GetBuilderBaseSize(False)
+EndIf
+If $i > 5 Then ExitLoop
+$i += 1
+Until($Size >= 575 And $Size <= 620) Or($Size <> 0)
+If $Size = 0 Then
+SetLog("Fail AttackBB 0x1")
+Return False
 EndIf
 $g_aBuilderBaseDiamond = BuilderBaseAttackDiamond()
 $g_aExternalEdges = BuilderBaseGetEdges($g_aBuilderBaseDiamond, "External Edges")
-Local $aVar = $g_aExternalEdges[0]
+Local $sSideNames[4] = ["TopLeft", "TopRight", "BottomRight", "BottomLeft"]
+Local $BuilderHallPos = findMultipleQuick($g_sBundleBuilderHall, 1)
+If $BuilderHallPos <> -1 And UBound($BuilderHallPos) > 0 Then
+$g_aBuilderHallPos[0][0] = $BuilderHallPos[0][1]
+$g_aBuilderHallPos[0][1] = $BuilderHallPos[0][2]
+Else
+_DebugFailedImageDetection("BuilderHall")
+Setlog("Builder Hall detection Error!", $Color_Error)
+$g_aBuilderHallPos[0][0] = 450
+$g_aBuilderHallPos[0][1] = 425
+EndIf
+Local $iSide = _ArraySearch($sSideNames, BuilderBaseAttackMainSide(), 0, 0, 0, 0, 0, 0)
+If $iSide < 0 Then
+SetLog("Fail AttackBB 0x2")
+Return False
+EndIf
+Local $aVar = $g_aExternalEdges[$iSide]
 Local $iAndroidSuspendModeFlagsLast = $g_iAndroidSuspendModeFlags
 $g_iAndroidSuspendModeFlags = 0
 If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Disabled")
@@ -43223,8 +43270,9 @@ SetLog("Deploying " & $aBBAttackBar[$j][0] & " x" & String($aBBAttackBar[$j][4])
 PureClick($aBBAttackBar[$j][1] - Random(0, 5, 1), $aBBAttackBar[$j][2] - Random(0, 5, 1))
 If $aBBAttackBar[$j][4] <> 0 Then
 For $iAmount = 0 To $aBBAttackBar[$j][4]
-Local $vDP = Random(0, UBound($aVar))
-PureClick($aVar[$vDP][0] - Random(0, 10, 1), $aVar[$vDP][1] - Random(0, 10, 1))
+Local $vDP = Random(0, UBound($aVar)-1)
+PureClick($aVar[$vDP][0], $aVar[$vDP][1])
+If TriggerMachineAbility() Then PureClick($aBBAttackBar[$j][1] - Random(0, 5, 1), $aBBAttackBar[$j][2] - Random(0, 5, 1))
 If RandomSleep($g_iBBSameTroopDelay) Then Return
 Next
 EndIf
@@ -43246,8 +43294,9 @@ SetLog("Deploying " & $aBBAttackBar[$i][0] & " x" & String($aBBAttackBar[$i][4])
 PureClick($aBBAttackBar[$i][1] - Random(0, 5, 1), $aBBAttackBar[$i][2] - Random(0, 5, 1))
 If $aBBAttackBar[$i][4] <> 0 Then
 For $iAmount = 0 To $aBBAttackBar[$i][4]
-Local $vDP = Random(0, UBound($aVar))
-PureClick($aVar[$vDP][0] - Random(0, 10, 1), $aVar[$vDP][1] - Random(0, 10, 1))
+Local $vDP = Random(0, UBound($aVar) -1)
+PureClick($aVar[$vDP][0], $aVar[$vDP][1])
+If TriggerMachineAbility() Then PureClick($aBBAttackBar[$i][1] - Random(0, 5, 1), $aBBAttackBar[$i][2] - Random(0, 5, 1))
 If RandomSleep($g_iBBSameTroopDelay) Then Return
 Next
 EndIf
@@ -43266,19 +43315,17 @@ EndIf
 EndIf
 Next
 EndIf
-Until not IsArray(MachineKick(GetAttackBarBB(True)))
+$aBBAttackBar = GetAttackBarBB(True)
+Until not IsArray(MachineKick($aBBAttackBar))
 SetLog("All Troops Deployed", $COLOR_SUCCESS)
 If $g_bBBMachineReady Then
 If IsArray($g_aMachineBB) Then
 SetLog("Deploying Battle Machine.", $COLOR_BLUE)
 PureClick($g_aMachineBB[0][1], $g_aMachineBB[0][2])
-Local $vDP = Random(0, UBound($aVar))
+If RandomSleep(500) Then Return
+Local $vDP = Random(0, UBound($aVar)-1)
 PureClick($aVar[$vDP][0], $aVar[$vDP][1])
-If _Sleep(500) Then
-$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
-If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Enabled")
-Return
-EndIf
+If RandomSleep(500) Then Return
 If $g_bIsBBMachineD = False Then $g_bIsBBMachineD = True
 EndIf
 If $g_bIfMachineHasAbility Then Return
@@ -43300,7 +43347,7 @@ Func GetAttackBarBB($bRemaining = False)
 local $iTroopBanners = 640
 local $iSlotOffset = 73
 local $iBarOffset = 66
-If $bRemaining = False Then $g_aMachineBB = 0
+If($bRemaining = False) Then $g_aMachineBB = 0
 If $g_aMachineBB <> 0 Then TriggerMachineAbility()
 If RandomSleep(500) Then Return -1
 local $aBBAttackBar[0][5]
@@ -43316,20 +43363,21 @@ EndIf
 For $i = 0 To UBound($aBBAttackBarResult, 1) - 1
 local $aTroop = $aBBAttackBarResult[$i]
 local $aTempMultiCoords = decodeMultipleCoords($aTroop[1])
-For $j=0 To UBound($aTempMultiCoords, 1) - 1
+For $j = 0 To UBound($aTempMultiCoords, 1) - 1
 local $aTempCoords = $aTempMultiCoords[$j]
 If UBound($aTempCoords) < 2 Then ContinueLoop
-local $iSlot = Int(($aTempCoords[0] - $iBarOffset) / $iSlotOffset)
+Local $iSlot = Int(($aTempCoords[0] - $iBarOffset) / $iSlotOffset)
+Local $iCount = 1
+If String($aTroop[0]) <> "Machine" Then
 local $iCount = Number(_getTroopCountSmall($aTempCoords[0], $iTroopBanners))
 If $iCount == 0 Then $iCount = Number(_getTroopCountBig($aTempCoords[0], $iTroopBanners-7))
-If $iCount == 0 And not String($aTroop[0]) = "Machine" Then
+If $iCount == 0 Then
 SetLog("Could not get count for " & $aTroop[0] & " in slot " & String($iSlot), $COLOR_ERROR)
 ContinueLoop
-ElseIf String($aTroop[0]) = "Machine" Then
-$iCount = 1
+EndIf
 EndIf
 Local $aTempElement[1][5] = [[$aTroop[0], $aTempCoords[0], $aTempCoords[1], $iSlot, $iCount]]
-If not $bRemaining and String($aTroop[0]) = "Machine" Then $g_aMachineBB = $aTempElement
+If($bRemaining = False) And(String($aTroop[0]) = "Machine") Then $g_aMachineBB = $aTempElement
 _ArrayAdd($aBBAttackBar, $aTempElement)
 Next
 Next
@@ -55846,11 +55894,10 @@ Func TestLanguage()
 If Not $g_bRunState Then Return
 If getOcrLanguage($aDetectLang[0], $aDetectLang[1]) = "english" Then
 SetLog("Language setting is English: Correct.", $COLOR_INFO)
-Return True
 ElseIf Not ChangeLanguage() Then
 SetLog("Language setting is Wrong: Change CoC language to English!", $COLOR_ERROR)
-btnStop()
 EndIf
+Return True
 EndFunc
 Func ChangeLanguage()
 SetLog("Change Language To English", $COLOR_INFO)
@@ -61529,7 +61576,10 @@ If _Sleep($DELAYDONATECC2) Then Return
 EndFunc
 Func DonateCC($bCheckForNewMsg = False)
 TimerRecordDonation()
-If BitAND($g_iTotalDonateStatsTroops >= $g_iDayLimitTroops and $g_iDayLimitTroops > 0, $g_iTotalDonateStatsSpells >= $g_iDayLimitSpells and $g_iDayLimitSpells > 0, $g_iTotalDonateStatsSiegeMachines >= $g_iDayLimitSieges and $g_iDayLimitSieges > 0) Then
+Local $bModCondition =(($g_iTotalDonateStatsTroops >= $g_iDayLimitTroops) and($g_iDayLimitTroops > 0))
+$bModCondition =(($g_iTotalDonateStatsSpells >= $g_iDayLimitSpells) and($g_iDayLimitSpells > 0) ) and $bModCondition
+$bModCondition =(($g_iTotalDonateStatsSiegeMachines >= $g_iDayLimitSieges) and($g_iDayLimitSieges > 0)) and $bModCondition
+If $bModCondition Then
 SetLog("Donate skip :  day limit reached.", $COLOR_INFO)
 Return
 EndIf
@@ -74856,7 +74906,7 @@ If $bImgLoc = Default Then $bImgLoc = False
 If $bForceCaptureRegion = Default Then $bForceCaptureRegion = $g_bOcrForceCaptureRegion
 Static $_hHBitmap = 0
 $g_sGetOcrMod = ""
-For $iTryIt = 0 To 5
+For $iTryIt = 0 To 10
 If $bForceCaptureRegion = True Then
 _CaptureRegion2($x_start, $y_start, $x_start + $width, $y_start + $height)
 Else
@@ -74886,7 +74936,7 @@ Else
 $result = StringStripWS($result, BitOR($STR_STRIPLEADING, $STR_STRIPTRAILING, $STR_STRIPSPACES))
 EndIf
 If $result <> 0 Then ExitLoop
-If _Sleep(100) Then Return
+If _Sleep(250) Then Return
 Next
 $g_sGetOcrMod = $result
 Return $result
@@ -74943,13 +74993,14 @@ $g_aImageSearchXML = -1
 Return -1
 EndIf
 EndFunc
-Func findMultipleQuick($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "0,0,860,732", $bForceCapture = Default, $sOnlyFind = Default, $bExactFind = False, $iDistance2check = 25, $bDebugLog = False, $iLevel = 0, $iMaxLevel = 1000)
+Func findMultipleQuick($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "0,0,860,732", $bForceCapture = Default, $sOnlyFind = Default, $bExactFindP = Default, $iDistance2check = 25, $bDebugLog = False, $iLevel = 0, $iMaxLevel = 1000)
 FuncEnter(findMultipleQuick)
-Local $bCapture, $sArea2Search, $sIsOnlyFind, $iQuantToMach
+Local $bCapture, $sArea2Search, $sIsOnlyFind, $iQuantToMach, $bExactFind
 $sArea2Search =(IsArray($saiArea2SearchOri)) ?(GetDiamondFromArray($saiArea2SearchOri)) :(GetDiamondFromRect($saiArea2SearchOri))
 $bCapture =($bForceCapture = Default) ?(True) :($bForceCapture)
 $sIsOnlyFind =($sOnlyFind = Default) ?("") :($sOnlyFind)
 $iQuantToMach =($sOnlyFind = Default) ?($iQuantity2Match) :(20)
+$bExactFind =($bExactFindP = Default) ?($bExactFind) :(False)
 Local $aResult = findMultiple($sDirectory, $sArea2Search, $sArea2Search, $iLevel, $iMaxLevel, $iQuantToMach, "objectname,objectlevel,objectpoints", $bCapture)
 If Not IsArray($aResult) Then Return -1
 Local $iCount = 0
@@ -80427,58 +80478,152 @@ EndIf
 $g_hTxtLogTimer = __TimerInit()
 Return $iLogs
 EndFunc
-Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, $bForceCapture = True, $DebugLog = False)
-Local $iMax = 0
+Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, $iFurMin = 5, $iFurMax = 10, $iCenterX = 450, $iCenterY = 425, $bForceCapture = True, $DebugLog = False)
+Local $aTopLeft[0][2], $aTopRight[0][2], $aBottomRight[0][2], $aBottomLeft[0][2]
 Local $aiPostFix[4] = [130, 210, 745, 630]
-Local $aResult = findMultiple($sDirectory, "ECD", "ECD", 0, 1000, $Quantity2Match, "objectname,objectlevel,objectpoints", $bForceCapture)
-If Not IsArray($aResult) Then Return -1
-Local $iCount = 0
-Local $aAllResults[0][4]
-Local $aArrays = "", $aCoords, $aCommaCoord
-For $i = 0 To $iMax
-$aArrays = $aResult[$i]
-$aCoords = StringSplit($aArrays[2], "|", 2)
+If $bForceCapture Then _CaptureRegion2($aiPostFix[0], $aiPostFix[1], $aiPostFix[2], $aiPostFix[3])
+For $i2 = 0 To 3
+Local $aRes = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sDirectory, "str", "ECD", "Int", $Quantity2Match, "str", "ECD", "Int", 0, "Int", 1000)
+Local $KeyValue = StringSplit($aRes[0], "|", $STR_NOCOUNT)
+Local $aPositions, $aCoords, $aCord, $level, $aCoordsM
+SetDebugLog("Detected : " & UBound($KeyValue) & " tiles")
+For $i = 0 To UBound($KeyValue) - 1
+$aPositions = RetrieveImglocProperty($KeyValue[$i], "objectpoints")
+$aCoords = decodeMultipleCoords($aPositions, 0, 0, 0)
 For $iCoords = 0 To UBound($aCoords) - 1
-$aCommaCoord = StringSplit($aCoords[$iCoords], ",", 2)
-If BitOR(($aiPostFix[0] > $aCommaCoord[0]),($aiPostFix[1] > $aCommaCoord[1]),($aiPostFix[2] < $aCommaCoord[0]),($aiPostFix[3] < $aCommaCoord[1])) <> 0 Then ContinueLoop
-Local $aTmpResults[1][4] = [[$aArrays[0], Int($aCommaCoord[0]), Int($aCommaCoord[1]), Int($aArrays[1])]]
-_ArrayAdd($aAllResults, $aTmpResults)
-Next
-$iCount += 1
-Next
-If $iCount < 1 Then Return -1
-If UBound($aAllResults) > 0 Then
-_ArraySort($aAllResults, 0, 0, 0, 1)
-Local $iLastCount = 0
-Local $iAngle = 10
-For $i2 = 0 To UBound($aAllResults) -1
-For $i = 0 To UBound($aAllResults) - 1
-If $i > UBound($aAllResults) - 1 Then ExitLoop
-Local $LastCoordinate[4] = [$aAllResults[$i][0], $aAllResults[$i][1], $aAllResults[$i][2], $aAllResults[$i][3]]
-SetDebugLog("Coordinate to Check: " & _ArrayToString($LastCoordinate) & " [" & $i2 & "]")
-If UBound($aAllResults) > 1 Then
-For $j = 0 To UBound($aAllResults) - 1
-If $j > UBound($aAllResults) - 1 Then ExitLoop
-Local $SingleCoordinate[4] = [$aAllResults[$j][0], $aAllResults[$j][1], $aAllResults[$j][2], $aAllResults[$j][3]]
-If $LastCoordinate[1] <> $SingleCoordinate[1] Or $LastCoordinate[2] <> $SingleCoordinate[2] Then
-If Abs($SingleCoordinate[2] - $LastCoordinate[2]) < $iAngle And Abs($SingleCoordinate[1] - $LastCoordinate[1]) < $iAngle Then
-_ArrayDelete($aAllResults, $j)
+Local $aCoordsM = $aCoords[$iCoords]
+Local $iFur = Random($iFurMin, $iFurMax, 1)
+If Int(130 + $aCoordsM[0]) < Int($iCenterX) Then
+If Int(210 + $aCoordsM[1]) < Int($iCenterY) Then
+Local $vResult[1][2] = [[(130 + $aCoordsM[0]) - $iFur,(210 + $aCoordsM[1]) - $iFur]]
+Local $P = _GetPixelColor($vResult[0][0], $vResult[0][1], True)
+If _ColorCheck($P, Hex(0x447063, 6), 20) Then _ArrayAdd($aTopLeft, $vResult)
+Else
+Local $vResult[1][2] = [[(130 + $aCoordsM[0]) - $iFur,(210 + $aCoordsM[1]) + $iFur]]
+Local $P = _GetPixelColor($vResult[0][0], $vResult[0][1], True)
+If _ColorCheck($P, Hex(0x447063, 6), 20) Then _ArrayAdd($aBottomLeft, $vResult)
 EndIf
 Else
-If $LastCoordinate[1] = $SingleCoordinate[1] And $LastCoordinate[2] = $SingleCoordinate[2] And $LastCoordinate[3] <> $SingleCoordinate[3] Then
-_ArrayDelete($aAllResults, $j)
-EndIf
-EndIf
-Next
-EndIf
-Next
-If UBound($aAllResults) = $iLastCount Then ExitLoop
-$iLastCount = UBound($aAllResults)
-Next
+If Int(210 + $aCoordsM[1]) < Int($iCenterY) Then
+Local $vResult[1][2] = [[(130 + $aCoordsM[0]) + $iFur,(210 + $aCoordsM[1]) - $iFur]]
+Local $P = _GetPixelColor($vResult[0][0], $vResult[0][1], True)
+If _ColorCheck($P, Hex(0x447063, 6), 20) Then _ArrayAdd($aTopRight, $vResult)
 Else
-Return -1
+Local $vResult[1][2] = [[(130 + $aCoordsM[0]) + $iFur,(210 + $aCoordsM[1]) + $iFur]]
+Local $P = _GetPixelColor($vResult[0][0], $vResult[0][1], True)
+If _ColorCheck($P, Hex(0x447063, 6), 20) Then _ArrayAdd($aBottomRight, $vResult)
 EndIf
-Return $aAllResults
+EndIf
+Next
+Next
+If _Sleep(155) Then Return
+Next
+_ArraySort($aTopLeft, 0, 0, 0, 1)
+Local $iLastY = -1, $iMaxX = -1
+Local $aTopLeftNew[0][2]
+For $i2 = 0 To UBound($aTopLeft) - 1
+If $aTopLeft[$i2][1] <> $iLastY Then
+$iMaxX = $aTopLeft[$i2][0]
+$iLastY = $aTopLeft[$i2][1]
+Local $a3 = _ArrayFindAll($aTopLeft, $iLastY, Default, Default, Default, Default, 2)
+If $a3 <> -1 Then
+For $i = UBound($a3) - 1 To 0 Step -1
+If $aTopLeft[Int($a3[0])][0] > $iMaxX Then $iMaxX = $aTopLeft[$i][0]
+Next
+EndIf
+Local $aArray[1][2] = [[$iMaxX, $iLastY]]
+_ArrayAdd($aTopLeftNew, $aArray)
+EndIf
+Next
+For $i2 = UBound($aTopLeftNew) - 1 To 0 Step -1
+Local $iTmp[2] = [$aTopLeftNew[$i2][0], $aTopLeftNew[$i2][1]]
+For $i = UBound($aTopLeftNew) - 1 To 0 Step -1
+If $i2 = $i Then ContinueLoop
+Local $x = Abs($aTopLeftNew[$i][0] - $iTmp[0]), $y = Abs($aTopLeftNew[$i][1] - $iTmp[1])
+If($x < 10 And $y < 10) And Not($x > 5 And $y > 5) Then ContinueLoop 2
+If $i = 0 Then _ArrayDelete($aTopLeftNew, $i2)
+Next
+Next
+_ArraySort($aTopRight, 0, 0, 0, 1)
+Local $iLastY = -1, $iMaxX = -1
+Local $aTopRightNew[0][2]
+For $i2 = 0 To UBound($aTopRight) - 1
+If $aTopRight[$i2][1] <> $iLastY Then
+$iMaxX = $aTopRight[$i2][0]
+$iLastY = $aTopRight[$i2][1]
+Local $a3 = _ArrayFindAll($aTopRight, $iLastY, Default, Default, Default, Default, 2)
+If $a3 <> -1 Then
+For $i = UBound($a3) - 1 To 0 Step -1
+If $aTopRight[Int($a3[0])][0] < $iMaxX Then $iMaxX = $aTopRight[$i][0]
+Next
+EndIf
+Local $aArray[1][2] = [[$iMaxX, $iLastY]]
+_ArrayAdd($aTopRightNew, $aArray)
+EndIf
+Next
+For $i2 = UBound($aTopRightNew) - 1 To 0 Step -1
+Local $iTmp[2] = [$aTopRightNew[$i2][0], $aTopRightNew[$i2][1]]
+For $i = UBound($aTopRightNew) - 1 To 0 Step -1
+If $i2 = $i Then ContinueLoop
+Local $x = Abs($aTopRightNew[$i][0] - $iTmp[0]), $y = Abs($aTopRightNew[$i][1] - $iTmp[1])
+If($x < 10 And $y < 10) And Not($x > 5 And $y > 5) Then ContinueLoop 2
+If $i = 0 Then _ArrayDelete($aTopRightNew, $i2)
+Next
+Next
+_ArraySort($aBottomRight, 0, 0, 0, 1)
+Local $iLastY = -1, $iMaxX = -1
+Local $aBottomRightNew[0][2]
+For $i2 = 0 To UBound($aBottomRight) - 1
+If $aBottomRight[$i2][1] <> $iLastY Then
+$iMaxX = $aBottomRight[$i2][0]
+$iLastY = $aBottomRight[$i2][1]
+Local $a3 = _ArrayFindAll($aBottomRight, $iLastY, Default, Default, Default, Default, 2)
+If $a3 <> -1 Then
+For $i = UBound($a3) - 1 To 0 Step -1
+If $aBottomRight[Int($a3[0])][0] < $iMaxX Then $iMaxX = $aBottomRight[$i][0]
+Next
+EndIf
+Local $aArray[1][2] = [[$iMaxX, $iLastY]]
+_ArrayAdd($aBottomRightNew, $aArray)
+EndIf
+Next
+For $i2 = UBound($aBottomRightNew) - 1 To 0 Step -1
+Local $iTmp[2] = [$aBottomRightNew[$i2][0], $aBottomRightNew[$i2][1]]
+For $i = UBound($aBottomRightNew) - 1 To 0 Step -1
+If $i2 = $i Then ContinueLoop
+Local $x = Abs($aBottomRightNew[$i][0] - $iTmp[0]), $y = Abs($aBottomRightNew[$i][1] - $iTmp[1])
+If($x < 10 And $y < 10) And Not($x > 5 And $y > 5) Then ContinueLoop 2
+If $i = 0 Then _ArrayDelete($aBottomRightNew, $i2)
+Next
+Next
+_ArraySort($aBottomLeft, 0, 0, 0, 1)
+Local $iLastY = -1, $iMaxX = -1
+Local $aBottomLeftNew[0][2]
+For $i2 = 0 To UBound($aBottomLeft) - 1
+If $aBottomLeft[$i2][1] <> $iLastY Then
+$iMaxX = $aBottomLeft[$i2][0]
+$iLastY = $aBottomLeft[$i2][1]
+Local $a3 = _ArrayFindAll($aBottomLeft, $iLastY, Default, Default, Default, Default, 2)
+If $a3 <> -1 Then
+For $i = UBound($a3) - 1 To 0 Step -1
+If $aBottomLeft[Int($a3[0])][0] > $iMaxX Then $iMaxX = $aBottomLeft[$i][0]
+Next
+EndIf
+Local $aArray[1][2] = [[$iMaxX, $iLastY]]
+_ArrayAdd($aBottomLeftNew, $aArray)
+EndIf
+Next
+For $i2 = UBound($aBottomLeftNew) - 1 To 0 Step -1
+Local $iTmp[2] = [$aBottomLeftNew[$i2][0], $aBottomLeftNew[$i2][1]]
+For $i = UBound($aBottomLeftNew) - 1 To 0 Step -1
+If $i2 = $i Then ContinueLoop
+Local $x = Abs($aBottomLeftNew[$i][0] - $iTmp[0]), $y = Abs($aBottomLeftNew[$i][1] - $iTmp[1])
+If($x < 10 And $y < 10) And Not($x > 5 And $y > 5) Then ContinueLoop 2
+If $i = 0 Then _ArrayDelete($aBottomLeftNew, $i2)
+Next
+Next
+Local $aSides[4] = [$aTopLeftNew, $aTopRightNew, $aBottomRightNew, $aBottomLeftNew]
+Return $aSides
 EndFunc
 Func _DebugFailedImageDetection($Text)
 If $g_bDebugImageSave Or $g_bDebugSetlog Then
@@ -80548,10 +80693,12 @@ If checkObstacles(True) Then
 SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
 ExitLoop
 EndIf
+If($g_iAvailableAttacksBB <> 0 and $g_bChkBBStopAt3) Or($g_bChkBBStopAt3 = False) Then
 If $g_bRestart Then Return
 If Not $g_bRunState Then Return
 BuilderBaseAttack($bTestRun)
 If Not $g_bRunState Then Return
+EndIf
 If $g_bRestart Then Return
 BuilderBaseZoomOut()
 If Not $g_bRunState Then Return
@@ -80567,11 +80714,11 @@ If $g_bRestart Then Return
 If($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) And $g_iAvailableAttacksBB = 0 Then MainSuggestedUpgradeCode()
 If Not $bBoosted Then ExitLoop
 If $g_bRestart Then Return
-If $g_iAvailableAttacksBB = 0 And $g_bChkBBStopAt3 Then ExitLoop
 If $g_bRestart Then Return
 If Not $g_bRunState Then Return
 BuilderBaseReport()
 RestAttacksInBB()
+If $g_iAvailableAttacksBB = 0 Then ExitLoop
 Next
 If Not $g_bChkPlayBBOnly Then SwitchBetweenBases(True, "Normal Village")
 If Not $g_bRunState Then Return
@@ -80761,7 +80908,7 @@ If $g_bDebugBBattack Or $DebugImage Then $DebugLog = True
 Local $DeployPoints[4]
 Local $Name[4] = ["TopLeft", "TopRight", "BottomRight", "BottomLeft"]
 Local $hStarttime = __TimerInit()
-Local $BuilderHallPos = PointDeployBB($g_sBundleBuilderHall, 1)
+Local $BuilderHallPos = findMultipleQuick($g_sBundleBuilderHall, 1)
 If $BuilderHallPos <> -1 And UBound($BuilderHallPos) > 0 Then
 $g_aBuilderHallPos[0][0] = $BuilderHallPos[0][1]
 $g_aBuilderHallPos[0][1] = $BuilderHallPos[0][2]
@@ -80775,40 +80922,9 @@ If _sleep(250) Then Return
 If Not $g_bRunState Then Return
 Setlog("Builder Base Hall detection: " & Round(__timerdiff($hStarttime) / 1000, 2) & " seconds", $COLOR_DEBUG)
 $hStarttime = __TimerInit()
-Local $DeployPointsResult = PointDeployBB()
+Local $DeployPointsResult = PointDeployBB($g_sBundleDeployPointsBB, 0, 5, 10, $g_aBuilderHallPos[0][0], $g_aBuilderHallPos[0][1])
 If $DeployPointsResult <> -1 And UBound($DeployPointsResult) > 0 Then
-Local $TopLeft[0][2], $TopRight[0][2], $BottomRight[0][2], $BottomLeft[0][2]
-Local $Point[2], $Local = ""
-For $i = 0 To UBound($DeployPointsResult) - 1
-Local $iFur = Random($FurtherFrom,$FurtherFrom+5, 1)
-$Point[0] = Int($DeployPointsResult[$i][1])
-$Point[1] = Int($DeployPointsResult[$i][2])
-SetDebugLog("[" & $i & "]Deploy Point: (" & $Point[0] & "," & $Point[1] & ")")
-Switch DeployPointsPosition($Point)
-Case 0
-If Not _ColorCheck(_GetPixelColor($Point[0] - $iFur, $Point[1] - $iFur, True), Hex(0x547C60, 6), 15) Then ContinueLoop
-ReDim $TopLeft[UBound($TopLeft) + 1][2]
-$TopLeft[UBound($TopLeft) - 1][0] = $Point[0] - $iFur
-$TopLeft[UBound($TopLeft) - 1][1] = $Point[1] - $iFur
-Case 1
-If Not _ColorCheck(_GetPixelColor($Point[0] + $iFur, $Point[1] - $iFur, True), Hex(0x547C60, 6), 15) Then ContinueLoop
-ReDim $TopRight[UBound($TopRight) + 1][2]
-$TopRight[UBound($TopRight) - 1][0] = $Point[0] + $iFur
-$TopRight[UBound($TopRight) - 1][1] = $Point[1] - $iFur
-Case 2
-If Not _ColorCheck(_GetPixelColor($Point[0] + $iFur, $Point[1] + $iFur, True), Hex(0x547C60, 6), 15) Then ContinueLoop
-ReDim $BottomRight[UBound($BottomRight) + 1][2]
-$BottomRight[UBound($BottomRight) - 1][0] = $Point[0] + $iFur
-$BottomRight[UBound($BottomRight) - 1][1] = $Point[1] + $iFur
-Case 3
-If Not _ColorCheck(_GetPixelColor($Point[0] - $iFur, $Point[1] + $iFur, True), Hex(0x547C60, 6), 15) Then ContinueLoop
-ReDim $BottomLeft[UBound($BottomLeft) + 1][2]
-$BottomLeft[UBound($BottomLeft) - 1][0] = $Point[0] - $iFur
-$BottomLeft[UBound($BottomLeft) - 1][1] = $Point[1] + $iFur
-EndSwitch
-SetDebugLog("[" & $i & "]Deploy Local: (" & $Local & ")")
-Next
-Local $Sides[4] = [$TopLeft, $TopRight, $BottomRight, $BottomLeft]
+Local $Sides = $DeployPointsResult
 For $i = 0 To 3
 If Not $g_bRunState Then Return
 Setlog($Name[$i] & " points: " & UBound($Sides[$i]))
@@ -80887,7 +81003,7 @@ If $DebugImage Or $g_bDebugBBattack Then DebugBuilderBaseBuildingsDetection($Dep
 $g_aDeployPoints = $DeployPoints
 $g_aDeployBestPoints = $BestDeployPoints
 EndFunc
-Func FindBestDropPoints($DropPoints, $MaxDropPoint = 10)
+Func FindBestDropPoints($DropPoints, $MaxDropPoint = 50)
 Local $aDeployP[0][2]
 If Not $g_bRunState Then Return
 If Not UBound($DropPoints) > 0 Then Return
@@ -80925,54 +81041,13 @@ Return(Int($iPoint[1]) < Int($g_aBuilderHallPos[0][1])) ?(1) :(2)
 EndIf
 EndFunc
 Func BuilderBaseBuildingsDetection($iBuilding = 4)
-Local $sBuildings = ["AirDefenses", "Crusher", "GuardPost", "Cannon", "BuilderHall", "DeployPoints"]
-Local $Screen[4] = [130, 210, 745, 630]
-If Not $g_bRunState Then Return
+Local $sBuildings = ["AirDefenses", "Crusher", "GuardPost", "Cannon", "BuilderHall"]
 If UBound($sBuildings) < $iBuilding Then Return -1
-Local $sTilePath = $g_sImgOpponentBuildingsBB & $sBuildings[$iBuilding]
-Setlog("initial detection for " & $sBuildings[$iBuilding])
-Local $aResults = QuickMIS("NxCx", $sTilePath, $Screen[0], $Screen[1], $Screen[2], $Screen[3], True, False)
-Local $aAllResults[0][4], $aCoordinates, $aCoord
-If $aResults = 0 Then Return -1
-For $i = 0 To UBound($aResults) - 1
+Local $sDirectory = $g_sImgOpponentBuildingsBB & $sBuildings[$iBuilding]
+Setlog("Initial detection for " & $sBuildings[$iBuilding], $COLOR_ACTION)
+Local $aScreen[4] = [130, 210, 833, 610]
 If Not $g_bRunState Then Return
-$aCoordinates = Null
-$aCoordinates = $aResults[$i][1]
-For $j = 0 To UBound($aCoordinates) - 1
-$aCoord = Null
-$aCoord = $aCoordinates[$j]
-SetDebugLog(" - " & $aResults[$i][0] & " at (" & $aCoord[0] + $Screen[0] & "," & $aCoord[1] + $Screen[1] & ")")
-ReDim $aAllResults[UBound($aAllResults) + 1][4]
-$aAllResults[UBound($aAllResults) - 1][0] = $aResults[$i][0]
-$aAllResults[UBound($aAllResults) - 1][1] = $aCoord[0] + $Screen[0]
-$aAllResults[UBound($aAllResults) - 1][2] = $aResults[$i][0] = "AirBombs" ? $aCoord[1] + $Screen[1] + 15 : $aCoord[1] + $Screen[1]
-$aAllResults[UBound($aAllResults) - 1][3] = $aResults[$i][2]
-Next
-Next
-_ArraySort($aAllResults, 0, 0, 0, 1)
-Local $D2Check = $iBuilding <> 5 ? 10 : 5
-For $i = 0 To UBound($aAllResults) - 1
-If Not $g_bRunState Then Return
-If $i > UBound($aAllResults) - 1 Then ExitLoop
-Local $LastCoordinate[4] = [$aAllResults[$i][0], $aAllResults[$i][1], $aAllResults[$i][2], $aAllResults[$i][3]]
-SetDebugLog("Coordinate to Check: " & _ArrayToString($LastCoordinate))
-If UBound($aAllResults) > 1 Then
-For $j = 0 To UBound($aAllResults) - 1
-If $j > UBound($aAllResults) - 1 Then ExitLoop
-Local $SingleCoordinate[4] = [$aAllResults[$j][0], $aAllResults[$j][1], $aAllResults[$j][2], $aAllResults[$j][3]]
-If $LastCoordinate[1] <> $SingleCoordinate[1] Or $LastCoordinate[2] <> $SingleCoordinate[2] Then
-If Int($SingleCoordinate[1]) < Int($LastCoordinate[1]) + $D2Check And Int($SingleCoordinate[1]) > Int($LastCoordinate[1]) - $D2Check And Int($SingleCoordinate[2]) < Int($LastCoordinate[2]) + $D2Check And Int($SingleCoordinate[2]) > Int($LastCoordinate[2]) - $D2Check Then
-_ArrayDelete($aAllResults, $j)
-EndIf
-Else
-If $LastCoordinate[1] = $SingleCoordinate[1] And $LastCoordinate[2] = $SingleCoordinate[2] And $LastCoordinate[3] <> $SingleCoordinate[3] Then
-_ArrayDelete($aAllResults, $j)
-EndIf
-EndIf
-Next
-EndIf
-Next
-Return $aAllResults
+Return findMultipleQuick($sDirectory, 1, $aScreen, Default, Default, Default, 10)
 EndFunc
 Func DebugBuilderBaseBuildingsDetection($DeployPoints, $BestDeployPoints, $DebugText, $CSVDeployPoints = 0, $isCSVDeployPoints = False)
 _CaptureRegion2()
@@ -81187,7 +81262,7 @@ Func BuilderBaseResetAttackVariables()
 Global $g_aBuilderHallPos[1][2] = [[Null, Null]], $g_aAirdefensesPos[0][2], $g_aCrusherPos[0][2], $g_aCannonPos[0][2], $g_aGuardPostPos[0][2], $g_aDeployPoints, $g_aDeployBestPoints
 Global $g_aOpponentBuildings[6] = [$g_aAirdefensesPos, $g_aCrusherPos, $g_aGuardPostPos, $g_aCannonPos, $g_aBuilderHallPos, $g_aDeployPoints]
 Global $g_aExternalEdges, $g_aBuilderBaseDiamond, $g_aOuterEdges, $g_aBuilderBaseOuterDiamond, $g_aBuilderBaseOuterPolygon, $g_aFinalOuter[4]
-Global $g_aMachineBB[0][5], $g_bIsBBMachineD = False, $g_bBBIsFirst = True
+Global $g_bIsBBMachineD = False, $g_bBBIsFirst = True
 EndFunc
 Func BuilderBaseAttackMainSide()
 Local $sMainSide = "TopLeft"
@@ -81395,23 +81470,23 @@ For $i = 4 To 0 Step -1
 $command = Int(StringStripWS($aSplitLine[$i + 1], $STR_STRIPALL))
 If $command = 1 Then
 Switch $i
-Case $g_iAirDefense
-$g_aAirdefensesPos = BuilderBaseBuildingsDetection($g_iAirDefense)
-Setlog("Detected Air defenses: " & UBound($g_aCrusherPos), $COLOR_INFO)
+Case 0
+$g_aAirdefensesPos = BuilderBaseBuildingsDetection(0)
+Setlog("Detected Air defenses: " & UBound($g_aAirdefensesPos), $COLOR_INFO)
 ExitLoop
-Case $g_iCrusher
-$g_aCrusherPos = BuilderBaseBuildingsDetection($g_iCrusher)
+Case 1
+$g_aCrusherPos = BuilderBaseBuildingsDetection(1)
 Setlog("Detected Crusher: " & UBound($g_aCrusherPos), $COLOR_INFO)
 ExitLoop
-Case $g_iGuardPost
-$g_aGuardPostPos = BuilderBaseBuildingsDetection($g_iGuardPost)
-Setlog("Detected GuardPost: " & UBound($g_aCrusherPos), $COLOR_INFO)
+Case 2
+$g_aGuardPostPos = BuilderBaseBuildingsDetection(2)
+Setlog("Detected GuardPost: " & UBound($g_aGuardPostPos), $COLOR_INFO)
 ExitLoop
-Case $g_iCannon
-$g_aCannonPos = BuilderBaseBuildingsDetection($g_iCannon)
-Setlog("Detected Cannon: " & UBound($g_aCrusherPos), $COLOR_INFO)
+Case 3
+$g_aCannonPos = BuilderBaseBuildingsDetection(3)
+Setlog("Detected Cannon: " & UBound($g_aCannonPos), $COLOR_INFO)
 ExitLoop
-Case $g_iBuilderHall
+Case 4
 If $g_aBuilderHallPos[0][0] = Null Then $g_aBuilderHallPos = BuilderBaseBuildingsDetection($i - 1)
 EndSwitch
 EndIf
@@ -81775,15 +81850,16 @@ SetDebugLog("[" & _ArrayToString($aSlot_XY) & "] - Deploying " & $iQtyToDrop & "
 If $g_bIsBBMachineD = False Then $g_bIsBBMachineD =($sTroopName = "Machine") ?(True) :(False)
 ClickP($Point2Deploy, $iQtyToDrop, 0)
 If $g_bIfMachineHasAbility Then Return
+If Not IsArray($g_aMachineBB) Then Return
 If $g_bIsBBMachineD = True And $g_aMachineBB <> 0 Then
 If _Sleep(500) Then Return
 If _ColorCheck(_GetPixelColor(Int($g_aMachineBB[0][1]), 723, True), Hex(0xFFFFFF, 6), 20) Or not _ColorCheck(_GetPixelColor(Int($g_aMachineBB[0][1]), 721, True), Hex(0x472CC5, 6), 20) Then
-Setlog("The machine has no ability.", $COLOR_ERROR)
-$g_aMachineBB = 0
+Setlog("The machine has no ability.", $COLOR_INFO)
 $g_bIfMachineHasAbility = False
 Else
 $g_bIfMachineHasAbility = True
 EndIf
+Setlog("The machine has ability.", $COLOR_SUCCESS)
 EndIf
 EndFunc
 Func GetThePointNearBH($BHposition, $aDeployPoints)
@@ -81805,16 +81881,16 @@ Next
 Return $ReturnPoint
 EndFunc
 Func TriggerMachineAbility()
-If $g_bIfMachineHasAbility = False Then Return
-If $g_bIsBBMachineD = False Then Return
-If $g_aMachineBB = 0 Then Return
-If $g_bRunState = False Then Return
+If $g_aMachineBB = 0 Or $g_bIsBBMachineD = False Then Return False
+If $g_bRunState = False Then Return False
 SetDebugLog("- BB Machine : Checking ability.")
 If _ColorCheck(_GetPixelColor(Int($g_aMachineBB[0][1]), 721, True), Hex(0x432CCE, 6), 20) Then
 Click(Int($g_aMachineBB[0][1]), Int($g_aMachineBB[0][2]), 2, 0)
 If _Sleep(300) Then Return
 SetLog("- BB Machine : Click on ability.", $COLOR_ACTION)
+Return True
 EndIf
+Return False
 EndFunc
 Func BattleIsOver()
 Local $SurrenderBtn = [65, 607]
@@ -81845,7 +81921,6 @@ EndFunc
 Func BuilderBaseAttack($bTestRun = False)
 If Not $g_bRunState Then Return
 If Not $g_bChkBuilderAttack Then Return
-If(Not $bTestRun) And BitAnd($g_iAvailableAttacksBB = 0, $g_bChkBBStopAt3) Then Return
 If(Not $bTestRun) And Int($g_aiCurrentLootBB[$eLootTrophyBB]) < Int($g_iTxtBBDropTrophiesMin) And $g_iAvailableAttacksBB = 0 Then
 Setlog("You reach the value set it as minimum of trophies!", $COLOR_INFO)
 Setlog("And you don't have any attack available.", $COLOR_INFO)
@@ -81874,7 +81949,7 @@ If Not $g_bRunState Then Return
 BuilderBaseZoomOut()
 If $g_bRestart = True Then Return
 If Not $g_bRunState Then Return
-Local $aAvailableTroops = GetAttackBarBB(True)
+Local $aAvailableTroops = GetAttackBarBB()
 If $aAvailableTroops <> -1 Then SetDebugLog("Attack Bar Array: " & _ArrayToString($aAvailableTroops, "-", -1, -1, "|", -1, -1))
 If $aAvailableTroops = -1 Then Return -1
 If Not $IsToDropTrophies Then BuilderBaseSelectCorrectScript($aAvailableTroops)
@@ -82470,10 +82545,10 @@ Return $aResults
 EndFunc
 Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 If Not $g_bRunState Then Return
+Local $bIsCampCSV = False
 Local $aLines[0]
 Static $lastScript
-Select
-Case($g_iCmbBBAttack = $g_eBBAttackCSV) Or $g_bChkBBGetFromCSV
+If($g_iCmbBBAttack = $g_eBBAttackCSV) Or($g_bChkBBGetFromCSV = True) Then
 If Not $g_bChkBBRandomAttack Then
 $lastScript = 0
 $g_iBuilderBaseScript = 0
@@ -82489,7 +82564,6 @@ EndIf
 Setlog("Attack using the " & $g_sAttackScrScriptNameBB[$g_iBuilderBaseScript] & " script.", $COLOR_INFO)
 Local $FileNamePath = @ScriptDir & "\CSV\BuilderBase\" & $g_sAttackScrScriptNameBB[$g_iBuilderBaseScript] & ".csv"
 If FileExists($FileNamePath) Then $aLines = FileReadToArray($FileNamePath)
-Local $bIsCampCSV = False
 For $iLine = 0 To UBound($aLines) - 1
 If Not $g_bRunState Then Return
 Local $aSplitLine = StringSplit($aLines[$iLine], "|", $STR_NOCOUNT)
@@ -82499,8 +82573,8 @@ $bIsCampCSV = True
 ExitLoop
 EndIf
 Next
-If($bIsCampCSV = False) Then ContinueCase
-Case Else
+EndIf
+If($bIsCampCSV = False) Or BitAND((Not $g_bChkBBGetFromCSV),($g_iCmbBBAttack = $g_eBBAttackSmart)) <> 0 Then
 Local $sName = "CAMP" & "|"
 For $iName = 0 To UBound($g_iCmbCampsBB) - 1
 $sName &= ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) <> "" ? ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) :("Barb")
@@ -82509,7 +82583,11 @@ If $iName = 0 Then ContinueLoop
 Local $aFakeCsv[1] = [$sName]
 _ArrayAdd($aLines, $aFakeCsv)
 Next
-EndSelect
+EndIf
+If UBound($aLines) = 0 Then
+SetLog("BuilderBaseSelectCorrectScript 0x12 error.", $COLOR_ERROR)
+Return
+EndIf
 For $i = UBound($aAvailableTroops) - 1 To 0 Step -1
 If $aAvailableTroops[$i][0] = "" Then
 _ArrayDelete($aAvailableTroops, $i)
@@ -82540,9 +82618,12 @@ Local $aCamps[0]
 EndIf
 EndIf
 Next
-If UBound($aCamps) < 1 Then Return
+If UBound($aCamps) = 0 Then
+SetLog("BuilderBaseSelectCorrectScript 0x13 error.", $COLOR_ERROR)
+Return
+EndIf
 For $i = 0 To UBound($aCamps) - 1
-$aCamps[$i] = _ArraySearch($g_asAttackBarBB2, $aCamps[$i]) < 0 ?("Barb") : _ArraySearch($g_asAttackBarBB2, $aCamps[$i])
+$aCamps[$i] = _ArraySearch($g_asBBTroopShortNames, $aCamps[$i]) < 0 ?("Barb") : _ArraySearch($g_asBBTroopShortNames, $aCamps[$i])
 Next
 _ArraySort($aCamps, 0, 0, 0, 1)
 For $i = 0 To UBound($aCamps) - 1
@@ -82551,15 +82632,16 @@ Next
 Local $aNewAvailableTroops[UBound($aAvailableTroops)][2]
 For $i = 0 To UBound($aAvailableTroops) - 1
 $aNewAvailableTroops[$i][0] = $aAvailableTroops[$i][0]
-$aNewAvailableTroops[$i][1] = _ArraySearch($g_asAttackBarBB2, $aAvailableTroops[$i][0])
+$aNewAvailableTroops[$i][1] = _ArraySearch($g_asBBTroopShortNames, $aAvailableTroops[$i][0])
 Next
-If $g_bDebugSetlog Then setlog(_ArrayToString($aNewAvailableTroops, "-", -1, -1, "|", -1, -1))
+If $g_bDebugSetlog Then SetLog(_ArrayToString($aNewAvailableTroops, "-", -1, -1, "|", -1, -1))
 Local $bWaschanged = False
 Local $iAvoidInfLoop = 0
 Local $aSwicthBtn[6] = [112, 180, 253, 327, 398, 471]
 For $i = 0 To $iCampsQuantities - 1
+If $iAvoidInfLoop > UBound($aCamps) Then ContinueLoop
 If Not $g_bRunState Then Return
-If StringCompare($aNewAvailableTroops[$i][0], $aCamps[$i]) <> 0 Then
+If Not(StringInStr($aNewAvailableTroops[$i][0], $aCamps[$i]) > 0) Then
 $bWaschanged = True
 Setlog("Incorrect troop On Camp " & $i + 1 & " - " & $aNewAvailableTroops[$i][0] & " -> " & $aCamps[$i])
 Local $aPointSwitch = [$aSwicthBtn[$i], 708]
@@ -82736,10 +82818,12 @@ If _Sleep(Random((600*90)/100,(900*110)/100, 1), False) Then Return
 Next
 EndFunc
 Func DeleteTroop($X, $Y, $bOnlyCheck = False)
-SetDebugLog("Camp Coordinates: " & $X & "," & $Y)
-SetDebugLog("Red Color Check: " & _GetPixelColor($X + 71, $Y - 101, True))
-If _ColorCheck(_GetPixelColor($X + 71, $Y - 101, True), Hex(0xE40E0E, 6), 40) Or _ColorCheck(_GetPixelColor($X + 73, $Y - 104, True), Hex(0xE00D10, 6), 40) Then
-If $bOnlyCheck = False Then Click($X + 93, $Y - 91, 1)
+SetDebugLog("Red Coordinates: " & $X & "," & $Y)
+Local $saiArea2SearchOri[4] = [$X, 244, $X + 95, 271]
+Local $aAllResults = findMultipleQuick(@scriptdir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\FillArmyCamps\Bundles\", 0, $saiArea2SearchOri, True, "Del", False, 25)
+If IsArray($aAllResults) Then
+_ArraySort($aAllResults, 0, 0, 0, 1)
+If $bOnlyCheck = False Then Click($aAllResults[0][1] + Random(0, 10, 1), Random(244, 271, 1), 1)
 Return True
 EndIf
 If $bOnlyCheck = False Then Setlog("Builder base army: Fail DeleteTroop.", $COLOR_ERROR)
