@@ -10,7 +10,7 @@
 #Au3Stripper_Off
 #Au3Stripper_On
 Global $g_sBotVersion = "v7.8.3"
-Global $g_sModVersion = "v3.4.3"
+Global $g_sModVersion = "v3.4.4"
 Opt("MustDeclareVars", 1)
 Global $g_sBotTitle = ""
 Global $g_hFrmBot = 0
@@ -7579,7 +7579,7 @@ Global $g_bFriendlyChallengeBase[6] = [False, False, False, False, False, False]
 Global $g_abFriendlyChallengeHours[24] = [True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True]
 Global $ChatbotStartTime, $ChatbotQueuedChats[0], $ChatbotReadQueued = False, $ChatbotReadInterval = 0, $ChatbotIsOnInterval = False, $g_sMessage = "", $g_sGlobalChatLastMsgSentTime = "", $g_sClanChatLastMsgSentTime = "", $g_sFCLastMsgSentTime = ""
 Global $g_aIAVar[5][2] = [[0,0],[1,0],[2,0],[3,0],[4,0]] , $g_sIAVar = '0,0#1,0#2,0#3,0#4,0'
-Global $g_sGetOcrMod = "", $g_aImageSearchXML = -1
+Global $g_sGetOcrMod = "", $g_bDnAIO = False, $g_aImageSearchXML = -1
 Global $g_aClanResponses, $g_sClanResponses
 Global $g_aClanGeneric, $g_sClanGeneric
 Global $g_aChallengeText, $g_aKeywordFcRequest, $g_sChallengeText, $g_sKeywordFcRequest
@@ -58553,6 +58553,41 @@ Local $wasForce = $g_bOcrForceCaptureRegion
 $g_bOcrForceCaptureRegion = $bForce
 Return $wasForce
 EndFunc
+Func _getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpace = Default, $bImgLoc = Default, $bForceCaptureRegion = Default)
+If $removeSpace = Default Then $removeSpace = False
+If $bImgLoc = Default Then $bImgLoc = False
+If $bForceCaptureRegion = Default Then $bForceCaptureRegion = $g_bOcrForceCaptureRegion
+Static $_hHBitmap = 0
+If $bForceCaptureRegion = True Then
+_CaptureRegion2($x_start, $y_start, $x_start + $width, $y_start + $height)
+Else
+$_hHBitmap = GetHHBitmapArea($g_hHBitmap2, $x_start, $y_start, $x_start + $width, $y_start + $height)
+EndIf
+Local $result
+If $bImgLoc Then
+If $_hHBitmap <> 0 Then
+$result = getOcrImgLoc($_hHBitmap, $language)
+Else
+$result = getOcrImgLoc($g_hHBitmap2, $language)
+EndIf
+Else
+If $_hHBitmap <> 0 Then
+$result = getOcr($_hHBitmap, $language)
+Else
+$result = getOcr($g_hHBitmap2, $language)
+EndIf
+EndIf
+If $_hHBitmap <> 0 Then
+GdiDeleteHBitmap($_hHBitmap)
+EndIf
+$_hHBitmap = 0
+If($removeSpace) Then
+$result = StringReplace($result, " ", "")
+Else
+$result = StringStripWS($result, BitOR($STR_STRIPLEADING, $STR_STRIPTRAILING, $STR_STRIPSPACES))
+EndIf
+Return $result
+EndFunc
 Func getOcr(ByRef Const $_hHBitmap, $language)
 Local $result = DllCallMyBot("ocr", "ptr", $_hHBitmap, "str", $language, "int", $g_bDebugOcr ? 1 : 0)
 If IsArray($result) Then
@@ -61659,6 +61694,7 @@ $bDonate = False
 $g_bSkipDonTroops = False
 $g_bSkipDonSpells = False
 $g_bSkipDonSiege = False
+$g_bDnAIO = True
 If $bDonateTroop Or $bDonateSpell Or $bDonateSiege Then
 Local $Alphabets[4] = [$g_bChkExtraAlphabets, $g_bChkExtraChinese, $g_bChkExtraKorean, $g_bChkExtraPersian]
 Local $TextAlphabetsNames[4] = ["Cyrillic and Latin", "Chinese", "Korean", "Persian"]
@@ -61706,6 +61742,7 @@ EndIf
 EndIf
 EndIf
 Next
+$g_bDnAIO = False
 If $g_bDebugSetlog Then SetDebugLog("Get Request OCR in " & StringFormat("%.2f", TimerDiff($iTimer)) & "'ms", $COLOR_DEBUG)
 $iTimer = TimerInit()
 If $ClanString = "" Or $ClanString = " " Then
@@ -74900,47 +74937,6 @@ Return "Save(disabled)"
 EndIf
 Return "Save"
 EndFunc
-Func getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpace = Default, $bImgLoc = Default, $bForceCaptureRegion = Default)
-If $removeSpace = Default Then $removeSpace = False
-If $bImgLoc = Default Then $bImgLoc = False
-If $bForceCaptureRegion = Default Then $bForceCaptureRegion = $g_bOcrForceCaptureRegion
-Static $_hHBitmap = 0
-$g_sGetOcrMod = ""
-For $iTryIt = 0 To 10
-If $bForceCaptureRegion = True Then
-_CaptureRegion2($x_start, $y_start, $x_start + $width, $y_start + $height)
-Else
-$_hHBitmap = GetHHBitmapArea($g_hHBitmap2, $x_start, $y_start, $x_start + $width, $y_start + $height)
-EndIf
-Local $result
-If $bImgLoc Then
-If $_hHBitmap <> 0 Then
-$result = getOcrImgLoc($_hHBitmap, $language)
-Else
-$result = getOcrImgLoc($g_hHBitmap2, $language)
-EndIf
-Else
-If $_hHBitmap <> 0 Then
-$result = getOcr($_hHBitmap, $language)
-Else
-$result = getOcr($g_hHBitmap2, $language)
-EndIf
-EndIf
-If $_hHBitmap <> 0 Then
-GdiDeleteHBitmap($_hHBitmap)
-EndIf
-$_hHBitmap = 0
-If($removeSpace) Then
-$result = StringReplace($result, " ", "")
-Else
-$result = StringStripWS($result, BitOR($STR_STRIPLEADING, $STR_STRIPTRAILING, $STR_STRIPSPACES))
-EndIf
-If $result <> 0 Then ExitLoop
-If _Sleep(250) Then Return
-Next
-$g_sGetOcrMod = $result
-Return $result
-EndFunc
 Func _ImageSearchXML($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "0,0,860,732", $bForceCapture = True, $bDebugLog = False, $bCheckDuplicatedpoints = False, $iDistance2check = 25, $iLevel = 0)
 FuncEnter(_ImageSearchXML)
 $g_aImageSearchXML = -1
@@ -77835,7 +77831,7 @@ Return True
 EndIf
 EndFunc
 Func ReadChatIA($sCondition = "hola", $bFast = True)
-Local $bResult = -1
+Local $vResult = -1
 Local $sDirectory = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ChatActions\Chat"
 ChatScroll()
 Local $aChatY = findMultipleQuick($sDirectory, 11, "259, 49, 269, 677", Default, Default, False, 0)
@@ -77843,10 +77839,12 @@ If Not IsArray($aChatY) Then Return False
 _ArraySort($aChatY, 1, 0, 0, 2)
 For $i = 0 To UBound($aChatY) - 1
 Local $sOCRString = ""
+_ArraySort($g_aIAVar, 1, 0, 0, 1)
 For $ii = 0 To UBound($g_aIAVar) - 1
 If _Sleep(15) Then Return
-Select
-Case $ii = $g_aIAVar[$ii][0]
+$g_bDnAIO = True
+Switch Int($g_aIAVar[$ii][0])
+Case $ii
 $sOCRString = getChatStringMod(30, Int($aChatY[$i][2] - 3) + 43, "coc-latinA")
 SetDebugLog("getChatStringMod Latin : " & $sOCRString)
 Case $ii = $g_aIAVar[$ii][0]
@@ -77861,8 +77859,10 @@ SetDebugLog("getChatStringKoreanMod : " & $sOCRString)
 Case $ii = $g_aIAVar[$ii][0]
 $sOCRString = getChatStringPersianMod(30, Int($aChatY[$i][2] - 3) + 43)
 SetDebugLog("getChatStringPersianMod : " & $sOCRString)
-EndSelect
-If StringLen(StringStripWS($sOCRString, $STR_STRIPALL)) <= 2 Then ContinueLoop
+EndSwitch
+$g_bDnAIO = False
+SetDebugLog("Chat : " & $sOCRString & " Language : " & $g_aIAVar[$ii][0] & " $i " & $i, $COLOR_INFO)
+If StringLen(StringStripWS($sOCRString, $STR_STRIPALL)) < 2 Then ContinueLoop
 Local $aIsOwn[4] = [Int($aChatY[$i][1]), Int($aChatY[$i][2] + 3), Int($aChatY[$i][1] + 79), Int($aChatY[$i][2] + 3 + 29)]
 If IsArray(findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ChatActions\Sprites\OwnChat", 1, $aIsOwn, Default, Default, False, 100)) Then ContinueLoop
 Local $sString = StringStripWS($sOCRString, $STR_STRIPLEADING + $STR_STRIPTRAILING + $STR_STRIPSPACES)
@@ -77871,13 +77871,13 @@ For $iii = 0 To UBound($aString) -1
 If StringInStr($sCondition, $aString[$iii]) > 0 Then
 Setlog("Chat AI : " & $sCondition, $COLOR_SUCCESS)
 $g_aIAVar[$ii][1] += 1
-$bResult = $sOCRString
-If $bFast = True Then Return $bResult
+$vResult = $sOCRString
+If $bFast = True Then Return $vResult
 EndIf
 Next
 Next
 Next
-Return $bResult
+Return $vResult
 EndFunc
 Func getChatStringMod($x_start, $y_start, $language)
 Local $sReturn = ""
@@ -77975,6 +77975,17 @@ $sReturn = StringReplace($sReturn, "88", "لا")
 $sReturn = StringReplace($sReturn, "99", "ث")
 $sReturn = StringStripWS($sReturn, 1 + 2)
 Return $sReturn
+EndFunc
+Func getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpace = Default, $bImgLoc = Default, $bForceCaptureRegion = Default)
+Local $iTry = 0
+Local $iMax =($g_bDnAIO <> True) ?(20) :(0)
+While 1
+$g_sGetOcrMod = _getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpace, $bImgLoc, $bForceCaptureRegion)
+If $iMax = $iTry Or not StringIsSpace($g_sGetOcrMod) Then Return $g_sGetOcrMod
+$iTry += 1
+If _Sleep(100) Then Return
+Wend
+Return ""
 EndFunc
 Global Const $tagNOTIFYICONDATA = 'struct;dword Size;hwnd hWnd;uint ID;uint Flags;uint CallbackMessage;ptr hIcon;wchar Tip[128];dword State;dword StateMask;wchar Info[256];uint Version;wchar InfoTitle[64];dword InfoFlags;endstruct'
 Global Const $__DLG_WM_USER = 0x400

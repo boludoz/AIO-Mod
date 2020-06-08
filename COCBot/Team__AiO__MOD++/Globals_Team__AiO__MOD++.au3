@@ -139,7 +139,7 @@ Global $ChatbotStartTime, $ChatbotQueuedChats[0], $ChatbotReadQueued = False, $C
 
 Global $g_aIAVar[5][2] = [[0,0],[1,0],[2,0],[3,0],[4,0]] , $g_sIAVar = '0,0#1,0#2,0#3,0#4,0'
 
-Global $g_sGetOcrMod = "", $g_aImageSearchXML = -1
+Global $g_sGetOcrMod = "", $g_bDnAIO = False, $g_aImageSearchXML = -1
 Global $g_aClanResponses, $g_sClanResponses
 Global $g_aClanGeneric, $g_sClanGeneric
 Global $g_aChallengeText, $g_aKeywordFcRequest, $g_sChallengeText, $g_sKeywordFcRequest

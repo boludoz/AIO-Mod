@@ -47,8 +47,9 @@ Func CheckBaseQuick($bStopRecursion = False, $sReturnHome = "")
 			If $bStopRecursion Then $g_bDisableBreakCheck = False
 			Return
 		EndIf
-
+		
 		DonateCC() ; donate troops
+		
 		If _Sleep($DELAYRUNBOT1) Then Return
 		checkMainScreen(False) ; required here due to many possible function exits
 		If $g_bRestart Then

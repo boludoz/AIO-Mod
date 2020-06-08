@@ -129,7 +129,6 @@ Func IsDonateQueueOnly(ByRef $abDonateQueueOnly)
 EndFunc   ;==>IsDonateQueueOnly
 
 Func DonateCC($bCheckForNewMsg = False)
-
 	#Region - Donation records - Team AIO Mod++
 	TimerRecordDonation()
 	Local $bModCondition = (($g_iTotalDonateStatsTroops >= $g_iDayLimitTroops) and ($g_iDayLimitTroops > 0))
@@ -266,6 +265,8 @@ Func DonateCC($bCheckForNewMsg = False)
 			$g_bSkipDonTroops = False
 			$g_bSkipDonSpells = False
 			$g_bSkipDonSiege = False
+			
+			$g_bDnAIO = True ; Team AIO Mod
 
 			; Read chat request for DonateTroop and DonateSpell
 			If $bDonateTroop Or $bDonateSpell Or $bDonateSiege Then
@@ -317,6 +318,7 @@ Func DonateCC($bCheckForNewMsg = False)
 						EndIf
 					EndIf
 				Next
+				$g_bDnAIO = False ; Team AIO Mod
 
 				If $g_bDebugSetlog Then SetDebugLog("Get Request OCR in " & StringFormat("%.2f", TimerDiff($iTimer)) & "'ms", $COLOR_DEBUG)
 				$iTimer = TimerInit()

@@ -22,12 +22,12 @@ Func ChatScroll()
 	EndIf
 EndFunc   ;==>ChatScroll
 
-Func ReadChatIATest($sCondition = "hola", $bFast = True)
+Func ReadChatIATest($sCondition = "porque", $bFast = True)
 	Setlog(ReadChatIA($sCondition, $bFast))
 EndFunc
 
 Func ReadChatIA($sCondition = "hola", $bFast = True)
-	Local $bResult = -1
+	Local $vResult = -1
 	Local $asFCKeyword = ""
 	Local $sDirectory = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ChatActions\Chat"
 
@@ -43,13 +43,15 @@ Func ReadChatIA($sCondition = "hola", $bFast = True)
 
 		Local $sOCRString = ""
 		
-		;_ArraySort($g_aIAVar, 1, 0, 0, 1)
+		_ArraySort($g_aIAVar, 1, 0, 0, 1)
 		
 		For $ii = 0 To UBound($g_aIAVar) - 1
 			If _Sleep(15) Then Return
 			
-			Select
-				Case $ii = $g_aIAVar[$ii][0]
+			$g_bDnAIO = True ; Team AIO Mod
+			
+			Switch Int($g_aIAVar[$ii][0])
+				Case $ii 
 					$sOCRString = getChatStringMod(30, Int($aChatY[$i][2] - 3) + 43, "coc-latinA")
 					SetDebugLog("getChatStringMod Latin : " & $sOCRString)
 				Case $ii = $g_aIAVar[$ii][0]
@@ -64,9 +66,12 @@ Func ReadChatIA($sCondition = "hola", $bFast = True)
 				Case $ii = $g_aIAVar[$ii][0]
 					$sOCRString = getChatStringPersianMod(30, Int($aChatY[$i][2] - 3) + 43)
 					SetDebugLog("getChatStringPersianMod : " & $sOCRString)
-			EndSelect
+			EndSwitch
 			
-			If StringLen(StringStripWS($sOCRString, $STR_STRIPALL)) <= 2 Then ContinueLoop
+			$g_bDnAIO = False ; Team AIO Mod
+			
+			SetDebugLog("Chat : " & $sOCRString & " Language : " & $g_aIAVar[$ii][0] & " $i " & $i, $COLOR_INFO)
+            If StringLen(StringStripWS($sOCRString, $STR_STRIPALL)) < 2 Then ContinueLoop
 			
 			Local $aIsOwn[4] = [Int($aChatY[$i][1]), Int($aChatY[$i][2] + 3), Int($aChatY[$i][1] + 79), Int($aChatY[$i][2] + 3 + 29)]
 			
@@ -79,14 +84,14 @@ Func ReadChatIA($sCondition = "hola", $bFast = True)
 				If StringInStr($sCondition, $aString[$iii]) > 0 Then
 					Setlog("Chat AI : " & $sCondition, $COLOR_SUCCESS)
 					$g_aIAVar[$ii][1] += 1
-					$bResult = $sOCRString
-					If $bFast = True Then Return $bResult
+					$vResult = $sOCRString
+					If $bFast = True Then Return $vResult
 				EndIf
 			Next
 		Next
 	Next
 	
-	Return $bResult ; IF THE STATE = -1 CHAT TEXT IS RETURNED IN TEXT, ANOTHER BOOLEAN OF RETURN
+	Return $vResult ; IF THE STATE = -1 CHAT TEXT IS RETURNED IN TEXT, ANOTHER BOOLEAN OF RETURN
 EndFunc   ;==>ReadChatIA
 
 Func getChatStringMod($x_start, $y_start, $language) ; -> Get string chat request - Latin Alphabetic - EN "DonateCC.au3"
@@ -193,3 +198,16 @@ Func getChatStringPersianMod($x_start, $y_start) ; -> Get string chat request - 
 	$sReturn = StringStripWS($sReturn, 1 + 2)
 	Return $sReturn
 EndFunc   ;==>getChatStringPersianMod
+
+Func getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpace = Default, $bImgLoc = Default, $bForceCaptureRegion = Default)
+	Local $iTry = 0
+	Local $iMax = ($g_bDnAIO <> True) ? (20) : (0)
+	
+	While 1
+		$g_sGetOcrMod = _getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpace, $bImgLoc, $bForceCaptureRegion)
+		If $iMax = $iTry Or not StringIsSpace($g_sGetOcrMod) Then Return $g_sGetOcrMod
+		$iTry += 1
+		If _Sleep(100) Then Return
+	Wend
+	Return ""
+EndFunc   ;==>getOcrAndCapture
