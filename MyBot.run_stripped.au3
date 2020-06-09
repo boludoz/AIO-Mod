@@ -77978,12 +77978,12 @@ Return $sReturn
 EndFunc
 Func getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpace = Default, $bImgLoc = Default, $bForceCaptureRegion = Default)
 Local $iTry = 0
-Local $iMax =($g_bDnAIO <> True) ?(20) :(0)
+Local $iMax =($g_bDnAIO <> True) ?(5) :(0)
 While 1
 $g_sGetOcrMod = _getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpace, $bImgLoc, $bForceCaptureRegion)
 If $iMax = $iTry Or not StringIsSpace($g_sGetOcrMod) Then Return $g_sGetOcrMod
 $iTry += 1
-If _Sleep(100) Then Return
+If _Sleep(250) Then Return
 Wend
 Return ""
 EndFunc
