@@ -33,6 +33,8 @@ Func ReadChatIA($sCondition = "hola", $bFast = True)
 
 	ChatScroll()
 	
+	If RandomSleep(500) Then Return
+	
 	Local $aChatY = findMultipleQuick($sDirectory, 11, "259, 49, 269, 677", Default, Default, False, 0)
 	
 	If Not IsArray($aChatY) Then Return False
@@ -73,9 +75,7 @@ Func ReadChatIA($sCondition = "hola", $bFast = True)
 			SetDebugLog("Chat : " & $sOCRString & " Language : " & $g_aIAVar[$ii][0] & " $i " & $i, $COLOR_INFO)
             If StringLen(StringStripWS($sOCRString, $STR_STRIPALL)) < 2 Then ContinueLoop
 			
-			Local $aIsOwn[4] = [Int($aChatY[$i][1]), Int($aChatY[$i][2] + 3), Int($aChatY[$i][1] + 79), Int($aChatY[$i][2] + 3 + 29)]
-			
-			If IsArray(findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ChatActions\Sprites\OwnChat", 1, $aIsOwn, Default, Default, False, 100)) Then ContinueLoop
+			If QuickMIS("N1", @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ChatActions\Sprites\OwnChat", Int($aChatY[$i][1]), Int($aChatY[$i][2] + 3), Int($aChatY[$i][1] + 79), Int($aChatY[$i][2] + 3 + 29)) <> "none" Then ContinueLoop
 			
 			Local $sString = StringStripWS($sOCRString, $STR_STRIPLEADING + $STR_STRIPTRAILING + $STR_STRIPSPACES)
 			Local $aString = StringSplit($sString, " ", $STR_NOCOUNT)

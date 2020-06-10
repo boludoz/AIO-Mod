@@ -4,9 +4,20 @@
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
                     Based on MyBot.run v7.8.3 
+					
+	**v3.5.5** (Quality update)
+		» Fixed / Improved :
+			- ZoomOut Improved/fixed.
+			- Change troops in BB improved.
+			- Check obstacles improved.
+			- Improved/fixed switch between villages.
+			- Fixed attack BB.
+			- Improved not read own chats.
+			- Chat AI.
+			
 	**V3.4.4** (Quality update)
 		» Fixed / Improved :
-			- Unbug and improved, OCR
+			- Unbug and improved, OCR.
 			- BB Base attack.
 			- Chat AI fixed.
 			

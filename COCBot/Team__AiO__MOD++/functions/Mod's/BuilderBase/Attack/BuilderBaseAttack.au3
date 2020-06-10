@@ -528,13 +528,8 @@ Func BuilderBaseAttackReport()
 		EndIf
 	Next
 
-	If checkObstacles(True) Then
-		SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
-		Return
-	EndIf
-
 	; Small delay just to getout the slide resources to top left
-	If _sleep(5000) Then Return
+	If RandomSleep(3000) Then Return
 
 	; Get the LOOT :
 	Local $gain[3]
@@ -574,8 +569,14 @@ Func BuilderBaseAttackReport()
 	EndIf
 	; #######################################################################
 
+	
 	; Return to Main Page
 	ClickP($aAway, 2, 0, "#0332") ;Click Away
 
-	If _sleep(2000) Then Return
+	If RandomSleep(2000) Then Return
+	
+	If checkObstacles(True) Then
+		SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
+		Return
+	EndIf
 EndFunc   ;==>BuilderBaseAttackReport

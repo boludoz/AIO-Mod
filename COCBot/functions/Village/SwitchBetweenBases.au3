@@ -12,12 +12,12 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func SwitchBetweenBases($bCheckMainScreen = True, $bGoTo = Default)
+Func SwitchBetweenBases($bCheckMainScreen = True, $bGoTo = Default, $bSilent = Default)
 	Local $bNoBoat = False, $bSwitch = True, $bIs = False, $vSwitch[0]
 	
 	For $i = 0 To 5
 		
-		SetLog("Try: [" & $i & "] " & "Switch between bases.", $COLOR_ACTION)
+		If ($bSilent <> True) Then SetLog("Try: [" & $i & "] " & "Switch between bases.", $COLOR_ACTION)
 		
 		If Not $g_bRunState Then Return
 
@@ -32,9 +32,13 @@ Func SwitchBetweenBases($bCheckMainScreen = True, $bGoTo = Default)
 		Next
 		
 		If UBound($vSwitch) <= 1 Then
-			ZoomOut() ; ensure boat is visible
+			If isOnBuilderBase() <> isOnMainVillage() Then 
+				ZoomOut() ; ensure boat is visible
+				Else
+				ClickP($aAway, 2, 0, "#0332") ;Click Away
+			EndIf
 			If QuickMIS("N1", @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Noboat\", 66, 432, 388, 627) <> "none" Then
-				SetLog("Apparently you don't have the boat.", $COLOR_INFO)
+				If ($bSilent <> True) Then SetLog("Apparently you don't have the boat.", $COLOR_INFO)
 				$bNoBoat = True
 			Else
 				If Not $g_bRunState Then Return
@@ -59,7 +63,7 @@ Func SwitchBetweenBases($bCheckMainScreen = True, $bGoTo = Default)
 			
 		EndIf
 		
-		SetLog(($bSwitched <> $bIs) ? ("Is switched to ? : Builder base.") : ("Is switched to ? : Normal village."), $COLOR_SUCCESS)
+		If ($bSilent <> True) Then SetLog(($bSwitched <> $bIs) ? ("Is switched to ? : Builder base.") : ("Is switched to ? : Normal village."), $COLOR_SUCCESS)
 		Return ($bNoBoat) ? (False) : (True) ; Return false for avoid bugs in bb switch.
 
 	Next

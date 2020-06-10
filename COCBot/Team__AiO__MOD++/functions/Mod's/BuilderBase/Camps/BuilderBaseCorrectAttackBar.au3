@@ -189,20 +189,25 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 
 	Local $bWaschanged = False
 	Local $iAvoidInfLoop = 0
-
-	Local $aSwicthBtn[6] = [112, 180, 253, 327, 398, 471]
-
+	
+	Local $aSwicthBtn = findMultipleQuick($g_sImgCustomArmyBB, 20, "0,695,858,722", Default, "ChangeTroops", Default, 40, False)
+	
+	If not IsArray($aSwicthBtn) Then
+		Local $aSwicthBtn[6][2] = [[112, 708], [180, 708], [253, 708], [327, 708], [398, 708], [471, 708]]
+	EndIf
+	_ArraySort($aSwicthBtn, 0, 0, 0, 1)
+	
 	For $i = 0 To $iCampsQuantities - 1
 		If $iAvoidInfLoop > UBound($aCamps) Then ContinueLoop
 		If Not $g_bRunState Then Return
 		If Not (StringInStr($aNewAvailableTroops[$i][0], $aCamps[$i]) > 0) Then
 			$bWaschanged = True
 			Setlog("Incorrect troop On Camp " & $i + 1 & " - " & $aNewAvailableTroops[$i][0] & " -> " & $aCamps[$i])
-			Local $aPointSwitch = [$aSwicthBtn[$i], 708]
+			Local $aPointSwitch = [$aSwicthBtn[$i][1] + Random(0, 15, 1), $aSwicthBtn[$i][2] + Random(0, 10, 1)]
 			Setlog("Click Switch Button " & $i, $COLOR_INFO)
 			PureClick($aPointSwitch[0], $aPointSwitch[1], 1, 0)
 			If Not $g_bRunState Then Return
-			If _Sleep(500) Then Return
+			If RandomSleep(500) Then Return
 
 			If Not _WaitForCheckXML($g_sImgCustomArmyBB, "0,681,860,728", True, 10000, 100) Then
 				Setlog("_WaitForCheckXML Error at Camps!", $COLOR_ERROR)
@@ -222,12 +227,12 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 				If Not $g_bRunState Then ExitLoop
 				If $aAttackBar[$j][0] = $aCamps[$i] Then
 					;Local $Point = [$aAttackBar[$j][1], $aAttackBar[$j][2]]
-					If _sleep(1000) Then Return
+					If RandomSleep(1000) Then Return
 					PureClick($aAttackBar[$j][1] + Random(1, 5, 1), $aAttackBar[$j][2] + Random(1, 5, 1), 1, 0)
-					If _sleep(1000) Then Return
+					If RandomSleep(1000) Then Return
 					Setlog("Selected " & FullNametroops($aCamps[$i]) & " X:| " & $aAttackBar[$j][1] & " Y:| " & $aAttackBar[$j][2], $COLOR_SUCCESS)
 					$aNewAvailableTroops[$i][0] = $aCamps[$i]
-					$aNewAvailableTroops[$i][1] = _ArraySearch($g_asAttackBarBB2, $aCamps[$i])
+					$aNewAvailableTroops[$i][1] = _ArraySearch($g_asBBTroopShortNames, $aCamps[$i])
 					; After populate with the new prio position let's sort ascending column 1
 					_ArraySort($aNewAvailableTroops, 0, 0, 0, 1)
 					If $g_bDebugSetlog Then Setlog("New tab is " & _ArrayToString($aNewAvailableTroops, "-", -1, -1, "|", -1, -1), $COLOR_INFO)
@@ -239,10 +244,9 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 		EndIf
 	Next
 	
-	If $bWaschanged And _WaitForCheckXML($g_sImgCustomArmyBB, "0,681,860,728", True, 1000, 100) Then ClickP($aPointSwitch)
+	If $bWaschanged And IsArray(findMultipleQuick($g_sImgCustomArmyBB, 1, "0,695,858,722", Default, "ChangeTDis", Default, 40, False)) Then Click(Random(8, 858, 1), Random(632, 720, 1))
 	
 	If Not $bWaschanged Then Return
-	
 
 	If RandomSleep(500) Then Return
 

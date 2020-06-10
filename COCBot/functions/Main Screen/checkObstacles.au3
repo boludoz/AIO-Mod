@@ -45,21 +45,16 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		If checkObstacles_Network() Then Return True
 		If checkObstacles_GfxError() Then Return True
 	EndIf
-	Local $bIsOnBuilderIsland = isOnBuilderBase()
-	Local $bIsOnMainVillage = isOnMainVillage()
-	If $bBuilderBase <> $bIsOnBuilderIsland And ($bIsOnBuilderIsland Or $bIsOnBuilderIsland <> $bIsOnMainVillage) Then
-		If $bIsOnBuilderIsland Then
-			SetLog("Detected Builder Base, trying to switch back to Main Village")
-		Else
-			SetLog("Detected Main Village, trying to switch back to Builder Base")
-		EndIf
-		If SwitchBetweenBases() Then
+	
+	If (isOnBuilderBase() <> isOnMainVillage()) Then
+		SetLog("Verifying that you are in : " & ($bBuilderBase) ? ("Builder Base") : ("Normal Village"))
+		If SwitchBetweenBases(False, ($bBuilderBase) ? ("Builder Base") : ("Normal Village")) Then 
 			$g_bMinorObstacle = True
 			If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 			Return False
 		EndIf
 	EndIf
-
+	
 	If $g_sAndroidGameDistributor <> $g_sGoogle Then ; close an ads window for non google apks
 		Local $aXButton = FindAdsXButton()
 		If IsArray($aXButton) Then

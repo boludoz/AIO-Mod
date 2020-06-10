@@ -107,7 +107,7 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 	ForceCaptureRegion()
 	Local $aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "DefaultZoomOut", True)
 
-	If IsArray($aPicture) And StringInStr($aPicture[0], "zoomout") = 0 Then
+	If IsArray($aPicture) And StringIsSpace($aPicture[0]) Then
 		If $g_bDebugSetlog Then
 			SetDebugLog("Zooming Out (" & $sFunc & ")", $COLOR_INFO)
 		Else
@@ -120,7 +120,7 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 			$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
 		EndIf
 	    Local $tryCtrlWheelScroll = False
-		While StringInStr($aPicture[0], "zoomout") = 0 and Not $tryCtrlWheelScroll
+		While StringIsSpace($aPicture[0]) and Not $tryCtrlWheelScroll
 
 			AndroidShield("DefaultZoomOut") ; Update shield status
 			If $bAndroidZoomOut Then
@@ -181,7 +181,7 @@ Func ZoomOutCtrlWheelScroll($CenterMouseWhileZooming = True, $GlobalMouseWheel =
 	ForceCaptureRegion()
 	Local $aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "ZoomOutCtrlWheelScroll", True)
 
-	If IsArray($aPicture) And StringInStr($aPicture[0], "zoomout") = 0 Then
+	If IsArray($aPicture) And StringIsSpace($aPicture[0]) Then
 
 		If $g_bDebugSetlog Then
 			SetDebugLog("Zooming Out (" & $sFunc & ")", $COLOR_INFO)
@@ -199,7 +199,7 @@ Func ZoomOutCtrlWheelScroll($CenterMouseWhileZooming = True, $GlobalMouseWheel =
 		EndIf
 		Local $aMousePos = MouseGetPos()
 
-		While IsArray($aPicture) And StringInStr($aPicture[0], "zoomout") = 0
+		While IsArray($aPicture) And StringIsSpace($aPicture[0])
 
 			If $AndroidZoomOut Then
 			   AndroidZoomOut($i, Default, ($g_iAndroidZoomoutMode <> 2)) ; use new ADB zoom-out
@@ -282,7 +282,7 @@ Func ZoomOutCtrlClick($CenterMouseWhileZooming = False, $AlwaysControlFocus = Fa
 	ForceCaptureRegion()
 	Local $aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "ZoomOutCtrlClick", True)
 
-	If IsArray($aPicture) And StringInStr($aPicture[0], "zoomout") = 0 Then
+	If IsArray($aPicture) And StringIsSpace($aPicture[0]) Then
 
 		If $g_bDebugSetlog Then
 			SetDebugLog("Zooming Out (" & $sFunc & ")", $COLOR_INFO)
@@ -298,7 +298,7 @@ Func ZoomOutCtrlClick($CenterMouseWhileZooming = False, $AlwaysControlFocus = Fa
 		Local $aMousePos = MouseGetPos()
 
 		$i = 0
-		While IsArray($aPicture) And StringInStr($aPicture[0], "zoomout") = 0
+		While IsArray($aPicture) And StringIsSpace($aPicture[0])
 
 			If $AndroidZoomOut Then
 			   AndroidZoomOut($i, Default, ($g_iAndroidZoomoutMode <> 2)) ; use new ADB zoom-out
@@ -369,7 +369,7 @@ Func AndroidOnlyZoomOut() ;Zooms out
 	ForceCaptureRegion()
 	Local $aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "AndroidOnlyZoomOut", True)
 
-	If IsArray($aPicture) And StringInStr($aPicture[0], "zoomout") = 0 Then
+	If IsArray($aPicture) And StringIsSpace($aPicture[0]) Then
 
 		If $g_bDebugSetlog Then
 			SetDebugLog("Zooming Out (" & $sFunc & ")", $COLOR_INFO)
@@ -380,7 +380,7 @@ Func AndroidOnlyZoomOut() ;Zooms out
 		SetDebugLog("----- AndroidOnlyZoomOut ----- ")
 		ForceCaptureRegion()
 		$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "AndroidOnlyZoomOut", True)
-		While StringInStr($aPicture[0], "zoomout") = 0
+		While StringIsSpace($aPicture[0])
 
 			AndroidShield("AndroidOnlyZoomOut") ; Update shield status
 			AndroidZoomOut($i, Default, ($g_iAndroidZoomoutMode <> 2)) ; use new ADB zoom-out
@@ -486,7 +486,7 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag,
 					$aScrollPos[0] = $aCenterHomeVillageClickDrag[0]
 					$aScrollPos[1] = $aCenterHomeVillageClickDrag[1]
 				EndIf
-				If BitOr(IsArray(_ImageSearchXML($g_sImgIsOnBB, 0, "260,0,406,54", True)), Not IsArray(_ImageSearchXML($g_sImgZoomOutDirBB, 0, "0,0,860,732", True))) <> 0 Then  ; Team AIO Mod++
+				If (QuickMIS("N1", $g_sImgIsOnBB, "260,0,406,54") = "None") And (QuickMIS("N1", $g_sImgZoomOutDirBB, "0,0,860,732") = "None") Then  ; Team AIO Mod++
 					ClickP($aAway, 1, 0, "#0000") ; ensure field is clean
 					ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y)
 				EndIf

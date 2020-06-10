@@ -17,7 +17,11 @@ Func TestrunBuilderBase()
 	SetDebugLog("** TestrunBuilderBase START**", $COLOR_DEBUG)
 	Local $Status = $g_bRunState
 	$g_bRunState = True
+	
+	$g_bStayOnBuilderBase = True
 	runBuilderBase(False)
+	$g_bStayOnBuilderBase = False
+	
 	$g_bRunState = $Status
 	SetDebugLog("** TestrunBuilderBase END**", $COLOR_DEBUG)
 EndFunc   ;==>TestrunBuilderBase
@@ -29,6 +33,7 @@ Func runBuilderBase($bTestRun = False)
 	ClickP($aAway, 3, 400, "#0000") ;Click Away
 
 	; Check IF is Necessary run the Builder Base IDLE loop
+	$g_bStayOnBuilderBase = True
 
 	If Not $g_bChkBuilderAttack And Not $g_bChkCollectBuilderBase And Not $g_bChkStartClockTowerBoost And Not $g_iChkBBSuggestedUpgrades And Not $g_bChkCleanBBYard Then
 		If $g_bChkPlayBBOnly Then
@@ -43,14 +48,12 @@ Func runBuilderBase($bTestRun = False)
 		Return False
 	EndIf
 	
-	$g_bStayOnBuilderBase = True
 	If not SwitchBetweenBases(True, "Builder Base") Then Return False
 	
 	ZoomOut()
 
 	If Not IsOnBuilderBase(True) Then
 		 SetLog("BB Don't detected.", $COLOR_ERROR)
-		 $g_bStayOnBuilderBase = False
 		 Return False
 	 EndIf
 
