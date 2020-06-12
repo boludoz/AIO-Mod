@@ -96,13 +96,6 @@ Func _checkArmyCamp($bOpenArmyWindow, $bCloseArmyWindow, $bGetHeroesTime, $bSetL
 	If $g_bDebugFuncTime Then StopWatchStopLog()
 	If _Sleep($DELAYCHECKARMYCAMP6) Then Return ; 10ms improve pause button response
 	
-	#Region Team AIO Mod++
-	If $g_bDebugFuncTime Then StopWatchStart("getArmyCCTroops")
-	getArmyCCTroops(False, False, False, $bSetLog) ; Last parameter is to check the Army Window
-	If $g_bDebugFuncTime Then StopWatchStopLog()
-	If _Sleep($DELAYCHECKARMYCAMP6) Then Return ; 10ms improve pause button response
-	#EndRegion
-	
 	If $g_bDebugFuncTime Then StopWatchStart("getArmyCCSiegeMachines")
 	getArmyCCSiegeMachines(False, False, False, $bSetLog) ; Last parameter is to check the Army Window
 	If $g_bDebugFuncTime Then StopWatchStopLog()
@@ -228,15 +221,5 @@ Func DeleteExcessTroops()
 	ClickP($aButtonRemoveTroopsOK1, 1) ; Click on 'Okay' button to save changes
 
 	If _Sleep(400) Then Return
-
-	#CS
-	If _ColorCheck(_GetPixelColor(674, 436 + 44, True), Hex(0x60B010, 6), 5) Then
-		Click(674, 436 + 44) ; click CONFIRM EDIT
-	EndIf
-
-	If WaitforPixel(505, 411 + 44, 506, 412 + 44, Hex(0x60B010, 6), 5, 10) Then
-		Click(505, 411 + 44) ; click in REMOVE TROOPS [OK]
-	EndIf
-	#CE
 EndFunc   ;==>DeleteExcessTroops
 #EndRegion

@@ -46,7 +46,9 @@ Func getArmyCCTroops($bOpenArmyWindow = False, $bCloseArmyWindow = False, $bChec
 			$aTempTroopArray = $aCurrentCCTroops[$i] ; Declare Array to Temp Array
 
 			$iTroopIndex = TroopIndexLookup($aTempTroopArray[0], "getArmyTroops()") ; Get the Index of the Troop from the ShortName
-
+			
+			If $eSuperBarb >= (UBound($iTroopIndex) -1) Then ContinueLoop ; AIO Mod - Temp fix...
+			
 			If StringInStr($aTempTroopArray[1], "|") Then
 				$aTroops = StringSplit($aTempTroopArray[1], "|")
 				For $j = 1 To $aTroops[0]
