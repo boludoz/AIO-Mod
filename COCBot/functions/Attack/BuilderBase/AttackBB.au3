@@ -42,6 +42,8 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 	EndIf
 	
 	$g_aBuilderBaseDiamond = BuilderBaseAttackDiamond()
+	If IsArray($g_aBuilderBaseDiamond) <> True Or Not (UBound($g_aBuilderBaseDiamond) > 0) Then Return False
+	
 	$g_aExternalEdges = BuilderBaseGetEdges($g_aBuilderBaseDiamond, "External Edges")
 	
 	

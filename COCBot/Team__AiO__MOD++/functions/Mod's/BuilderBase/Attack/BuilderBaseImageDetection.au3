@@ -110,8 +110,9 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = 5, $DebugImage = False)
 	$hStarttime = __TimerInit()
 
 	$g_aBuilderBaseDiamond = BuilderBaseAttackDiamond()
-
-	If $g_aBuilderBaseDiamond = -1 Then
+	If IsArray($g_aBuilderBaseDiamond) <> True Or Not (UBound($g_aBuilderBaseDiamond) > 0) Then Return False
+	
+	If Not IsArray($g_aBuilderBaseDiamond) Then
 		_DebugFailedImageDetection("DeployPoints")
 		Setlog("Deploy $g_aBuilderBaseDiamond - Points detection Error!", $Color_Error)
 		$g_aExternalEdges = BuilderBaseGetFakeEdges()
@@ -312,7 +313,9 @@ Func DebugBuilderBaseBuildingsDetection($DeployPoints, $BestDeployPoints, $Debug
 	Local $hFormat = _GDIPlus_StringFormatCreate()
 	Local $hFamily = _GDIPlus_FontFamilyCreate("Arial")
 	Local $hFont = _GDIPlus_FontCreate($hFamily, 20)
-
+	
+	If IsArray($g_aBuilderBaseDiamond) <> True Or Not (UBound($g_aBuilderBaseDiamond) > 0) Then Return False
+	
 	Local $Size = $g_aBuilderBaseDiamond[0]
 
 	For $i = 1 To UBound($g_aBuilderBaseDiamond) - 1

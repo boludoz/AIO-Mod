@@ -43230,6 +43230,7 @@ SetLog("Fail AttackBB 0x1")
 Return False
 EndIf
 $g_aBuilderBaseDiamond = BuilderBaseAttackDiamond()
+If IsArray($g_aBuilderBaseDiamond) <> True Or Not(UBound($g_aBuilderBaseDiamond) > 0) Then Return False
 $g_aExternalEdges = BuilderBaseGetEdges($g_aBuilderBaseDiamond, "External Edges")
 Local $sSideNames[4] = ["TopLeft", "TopRight", "BottomRight", "BottomLeft"]
 Local $BuilderHallPos = findMultipleQuick($g_sBundleBuilderHall, 1)
@@ -48935,7 +48936,7 @@ If checkObstacles_GfxError() Then Return True
 EndIf
 If(isOnBuilderBase() <> isOnMainVillage()) Then
 SetLog("Verifying that you are in : " &($bBuilderBase) ?("Builder Base") :("Normal Village"))
-If SwitchBetweenBases(False,($bBuilderBase) ?("Builder Base") :("Normal Village")) Then
+If SwitchBetweenBases(False,($bBuilderBase) ?("Builder Base") :("Normal Village"), True) Then
 $g_bMinorObstacle = True
 If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 Return False
@@ -75030,7 +75031,7 @@ For $j = 0 To UBound($aAllResults) - 1
 If $j > UBound($aAllResults) - 1 Then ExitLoop
 Local $SingleCoordinate[4] = [$aAllResults[$j][0], $aAllResults[$j][1], $aAllResults[$j][2], $aAllResults[$j][3]]
 If $LastCoordinate[1] <> $SingleCoordinate[1] Or $LastCoordinate[2] <> $SingleCoordinate[2] Then
-If Int($SingleCoordinate[1]) < Int($LastCoordinate[1]) + $D2Check And Int($SingleCoordinate[1]) > Int($LastCoordinate[1]) - $D2Check And Int($SingleCoordinate[2]) < Int($LastCoordinate[2]) + $D2Check And Int($SingleCoordinate[2]) > Int($LastCoordinate[2]) - $D2Check Then
+If Abs($SingleCoordinate[1] - $LastCoordinate[1]) < $D2Check Or Abs($SingleCoordinate[2] - $LastCoordinate[2]) < $D2Check Then
 _ArrayDelete($aAllResults, $j)
 EndIf
 Else
@@ -75362,10 +75363,10 @@ If($iWait <= 0) Then ExitLoop
 WEnd
 Return False
 EndFunc
-Func _WaitForCheckXML($sPathImage, $sSearchZone, $bForceCapture = True, $iWait = 10000, $iDelay = 250)
+Func _WaitForCheckXML($sPathImage, $sSearchZone, $bForceCapture = True, $iWait = 10000, $iDelay = 250, $aText = Default)
 Local $hTimer = __TimerInit()
 While(BitOR($iWait > __TimerDiff($hTimer),($iWait <= 0)) > 0)
-Local $aRetutn = _ImageSearchXML($sPathImage, 1, $sSearchZone, $bForceCapture)
+Local $aRetutn = findMultipleQuick($sPathImage, 1, $sSearchZone, Default, $aText)
 If(UBound($aRetutn) > 0) Then Return True
 If _Sleep($iDelay) Then Return False
 If($iWait <= 0) Then ExitLoop
@@ -80948,7 +80949,8 @@ EndIf
 Setlog("Builder Base Internal Deploy Points: " & Round(__timerdiff($hStarttime) / 1000, 2) & " seconds", $COLOR_DEBUG)
 $hStarttime = __TimerInit()
 $g_aBuilderBaseDiamond = BuilderBaseAttackDiamond()
-If $g_aBuilderBaseDiamond = -1 Then
+If IsArray($g_aBuilderBaseDiamond) <> True Or Not(UBound($g_aBuilderBaseDiamond) > 0) Then Return False
+If Not IsArray($g_aBuilderBaseDiamond) Then
 _DebugFailedImageDetection("DeployPoints")
 Setlog("Deploy $g_aBuilderBaseDiamond - Points detection Error!", $Color_Error)
 $g_aExternalEdges = BuilderBaseGetFakeEdges()
@@ -81082,6 +81084,7 @@ Local $hBrush = _GDIPlus_BrushCreateSolid(0xFFFFFFFF)
 Local $hFormat = _GDIPlus_StringFormatCreate()
 Local $hFamily = _GDIPlus_FontFamilyCreate("Arial")
 Local $hFont = _GDIPlus_FontCreate($hFamily, 20)
+If IsArray($g_aBuilderBaseDiamond) <> True Or Not(UBound($g_aBuilderBaseDiamond) > 0) Then Return False
 Local $Size = $g_aBuilderBaseDiamond[0]
 For $i = 1 To UBound($g_aBuilderBaseDiamond) - 1
 Local $Coord = $g_aBuilderBaseDiamond[$i]
@@ -82153,6 +82156,7 @@ Next
 EndIf
 If $UniqueDeployPoint[0] = 0 Then
 $g_aBuilderBaseDiamond = BuilderBaseAttackDiamond()
+If IsArray($g_aBuilderBaseDiamond) <> True Or Not(UBound($g_aBuilderBaseDiamond) > 0) Then Return False
 $g_aExternalEdges = BuilderBaseGetEdges($g_aBuilderBaseDiamond, "External Edges")
 EndIf
 Local $UniqueDeploySide = $g_aExternalEdges[0]
@@ -82640,30 +82644,35 @@ For $i = 0 To UBound($aCamps) - 1
 $aCamps[$i] = $g_asAttackBarBB2[$aCamps[$i]]
 Next
 Local $aNewAvailableTroops[UBound($aAvailableTroops)][2]
-For $i = 0 To UBound($aAvailableTroops) - 1
+For $i = 0 To UBound($aAvailableTroops) -1
 $aNewAvailableTroops[$i][0] = $aAvailableTroops[$i][0]
-$aNewAvailableTroops[$i][1] = _ArraySearch($g_asBBTroopShortNames, $aAvailableTroops[$i][0])
+$aNewAvailableTroops[$i][1] = 0
+For $i2 = 0 To UBound($g_asBBTroopShortNames) -1
+If(StringInStr($aAvailableTroops[$i][0], $g_asBBTroopShortNames[$i2]) > 0) Then
+$aNewAvailableTroops[$i][1] = $i2
+ContinueLoop 2
+EndIf
+Next
 Next
 If $g_bDebugSetlog Then SetLog(_ArrayToString($aNewAvailableTroops, "-", -1, -1, "|", -1, -1))
 Local $bWaschanged = False
 Local $iAvoidInfLoop = 0
-Local $aSwicthBtn = findMultipleQuick($g_sImgCustomArmyBB, 20, "0,695,858,722", Default, "ChangeTroops", Default, 40, False)
-If not IsArray($aSwicthBtn) Then
-Local $aSwicthBtn[6][2] = [[112, 708], [180, 708], [253, 708], [327, 708], [398, 708], [471, 708]]
+Local $aSwicthBtn = findMultipleQuick($g_sImgCustomArmyBB, 20, "0,695,858,722", Default, "ChangeTroops", Default, 30, False)
+If not IsArray($aSwicthBtn) Or Not(UBound($aSwicthBtn) >= 6) Then
+Local $aSwicthBtn[6][3] = [[-1, 112, 708], [-1, 180, 708], [-1, 253, 708], [-1, 327, 708], [-1, 398, 708], [-1, 471, 708]]
 EndIf
 _ArraySort($aSwicthBtn, 0, 0, 0, 1)
 For $i = 0 To $iCampsQuantities - 1
-If $iAvoidInfLoop > UBound($aCamps) Then ContinueLoop
+If $iAvoidInfLoop > UBound($aCamps) Then ExitLoop
 If Not $g_bRunState Then Return
 If Not(StringInStr($aNewAvailableTroops[$i][0], $aCamps[$i]) > 0) Then
 $bWaschanged = True
 Setlog("Incorrect troop On Camp " & $i + 1 & " - " & $aNewAvailableTroops[$i][0] & " -> " & $aCamps[$i])
-Local $aPointSwitch = [$aSwicthBtn[$i][1] + Random(0, 15, 1), $aSwicthBtn[$i][2] + Random(0, 10, 1)]
 Setlog("Click Switch Button " & $i, $COLOR_INFO)
-PureClick($aPointSwitch[0], $aPointSwitch[1], 1, 0)
+Click($aSwicthBtn[$i][1] + Random(2, 10, 1), $aSwicthBtn[$i][2] + Random(2, 10, 1))
 If Not $g_bRunState Then Return
 If RandomSleep(500) Then Return
-If Not _WaitForCheckXML($g_sImgCustomArmyBB, "0,681,860,728", True, 10000, 100) Then
+If Not _WaitForCheckXML($g_sImgCustomArmyBB, "0,681,860,728", True, 10000, 100, "ChangeTDis") Then
 Setlog("_WaitForCheckXML Error at Camps!", $COLOR_ERROR)
 $i = $i - 1
 $iAvoidInfLoop += 1
@@ -82691,7 +82700,7 @@ EndIf
 Next
 EndIf
 Next
-If $bWaschanged And IsArray(findMultipleQuick($g_sImgCustomArmyBB, 1, "0,695,858,722", Default, "ChangeTDis", Default, 40, False)) Then Click(Random(8, 858, 1), Random(632, 720, 1))
+If $bWaschanged And _WaitForCheckXML($g_sImgCustomArmyBB, "0,681,860,728", True, 500, 100, "ChangeTDis") Then Click(Random(8, 858, 1), Random(632, 720, 1))
 If Not $bWaschanged Then Return
 If RandomSleep(500) Then Return
 For $i = 0 To UBound($aNewAvailableTroops) - 1

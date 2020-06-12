@@ -162,8 +162,8 @@ Func findMultipleQuick($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "
 					If $j > UBound($aAllResults) - 1 Then ExitLoop
 					Local $SingleCoordinate[4] = [$aAllResults[$j][0], $aAllResults[$j][1], $aAllResults[$j][2], $aAllResults[$j][3]]
 					If $LastCoordinate[1] <> $SingleCoordinate[1] Or $LastCoordinate[2] <> $SingleCoordinate[2] Then
-						If Int($SingleCoordinate[1]) < Int($LastCoordinate[1]) + $D2Check And Int($SingleCoordinate[1]) > Int($LastCoordinate[1]) - $D2Check And _
-								Int($SingleCoordinate[2]) < Int($LastCoordinate[2]) + $D2Check And Int($SingleCoordinate[2]) > Int($LastCoordinate[2]) - $D2Check Then
+						If Abs($SingleCoordinate[1] - $LastCoordinate[1]) < $D2Check Or _
+								Abs($SingleCoordinate[2] - $LastCoordinate[2]) < $D2Check Then
 							_ArrayDelete($aAllResults, $j)
 						EndIf
 					Else

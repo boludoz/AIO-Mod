@@ -154,10 +154,10 @@ Func _Wait4PixelGoneArray($aSettings) ; Return true if pixel is false
 	Return False
 EndFunc   ;==>_Wait4PixelGoneArray
 
-Func _WaitForCheckXML($sPathImage, $sSearchZone, $bForceCapture = True, $iWait = 10000, $iDelay = 250)
+Func _WaitForCheckXML($sPathImage, $sSearchZone, $bForceCapture = True, $iWait = 10000, $iDelay = 250, $aText = Default)
 	Local $hTimer = __TimerInit()
 	While (BitOR($iWait > __TimerDiff($hTimer), ($iWait <= 0)) > 0) ; '-1' support
-		Local $aRetutn = _ImageSearchXML($sPathImage, 1, $sSearchZone, $bForceCapture)
+		Local $aRetutn = findMultipleQuick($sPathImage, 1, $sSearchZone, Default, $aText)
 		If (UBound($aRetutn) > 0) Then Return True
 		If _Sleep($iDelay) Then Return False
 		If ($iWait <= 0) Then ExitLoop ; Loop prevention.

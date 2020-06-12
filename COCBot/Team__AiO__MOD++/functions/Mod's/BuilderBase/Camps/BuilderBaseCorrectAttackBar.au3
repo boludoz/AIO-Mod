@@ -179,37 +179,45 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 
 	; [0] = Troops Name , [1] - Priority position
 	Local $aNewAvailableTroops[UBound($aAvailableTroops)][2]
-
-	For $i = 0 To UBound($aAvailableTroops) - 1
-		$aNewAvailableTroops[$i][0] = $aAvailableTroops[$i][0]
-		$aNewAvailableTroops[$i][1] = _ArraySearch($g_asBBTroopShortNames, $aAvailableTroops[$i][0])
-	Next
-
+	
+		For $i = 0 To UBound($aAvailableTroops) -1
+			$aNewAvailableTroops[$i][0] = $aAvailableTroops[$i][0]
+			
+			$aNewAvailableTroops[$i][1] = 0
+			
+			For $i2 = 0 To UBound($g_asBBTroopShortNames) -1
+				If (StringInStr($aAvailableTroops[$i][0], $g_asBBTroopShortNames[$i2]) > 0) Then
+					$aNewAvailableTroops[$i][1] = $i2
+					ContinueLoop 2
+				EndIf
+			Next
+			
+		Next
 	If $g_bDebugSetlog Then SetLog(_ArrayToString($aNewAvailableTroops, "-", -1, -1, "|", -1, -1))
 
 	Local $bWaschanged = False
 	Local $iAvoidInfLoop = 0
 	
-	Local $aSwicthBtn = findMultipleQuick($g_sImgCustomArmyBB, 20, "0,695,858,722", Default, "ChangeTroops", Default, 40, False)
+	Local $aSwicthBtn = findMultipleQuick($g_sImgCustomArmyBB, 20, "0,695,858,722", Default, "ChangeTroops", Default, 30, False)
 	
-	If not IsArray($aSwicthBtn) Then
-		Local $aSwicthBtn[6][2] = [[112, 708], [180, 708], [253, 708], [327, 708], [398, 708], [471, 708]]
+	If not IsArray($aSwicthBtn) Or Not (UBound($aSwicthBtn) >= 6) Then ; Instrumental click.
+		Local $aSwicthBtn[6][3] = [[-1, 112, 708], [-1, 180, 708], [-1, 253, 708], [-1, 327, 708], [-1, 398, 708], [-1, 471, 708]]
 	EndIf
-	_ArraySort($aSwicthBtn, 0, 0, 0, 1)
 	
+	_ArraySort($aSwicthBtn, 0, 0, 0, 1)
+
 	For $i = 0 To $iCampsQuantities - 1
-		If $iAvoidInfLoop > UBound($aCamps) Then ContinueLoop
+		If $iAvoidInfLoop > UBound($aCamps) Then ExitLoop
 		If Not $g_bRunState Then Return
 		If Not (StringInStr($aNewAvailableTroops[$i][0], $aCamps[$i]) > 0) Then
 			$bWaschanged = True
-			Setlog("Incorrect troop On Camp " & $i + 1 & " - " & $aNewAvailableTroops[$i][0] & " -> " & $aCamps[$i])
-			Local $aPointSwitch = [$aSwicthBtn[$i][1] + Random(0, 15, 1), $aSwicthBtn[$i][2] + Random(0, 10, 1)]
+			Setlog("Incorrect troop On Camp " & $i + 1 & " - " & $aNewAvailableTroops[$i][0] & " -> " & $aCamps[$i])	
 			Setlog("Click Switch Button " & $i, $COLOR_INFO)
-			PureClick($aPointSwitch[0], $aPointSwitch[1], 1, 0)
+			Click($aSwicthBtn[$i][1] + Random(2, 10, 1), $aSwicthBtn[$i][2] + Random(2, 10, 1))
 			If Not $g_bRunState Then Return
 			If RandomSleep(500) Then Return
 
-			If Not _WaitForCheckXML($g_sImgCustomArmyBB, "0,681,860,728", True, 10000, 100) Then
+			If Not _WaitForCheckXML($g_sImgCustomArmyBB, "0,681,860,728", True, 10000, 100, "ChangeTDis") Then
 				Setlog("_WaitForCheckXML Error at Camps!", $COLOR_ERROR)
 				$i = $i - 1
 				$iAvoidInfLoop += 1
@@ -244,7 +252,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 		EndIf
 	Next
 	
-	If $bWaschanged And IsArray(findMultipleQuick($g_sImgCustomArmyBB, 1, "0,695,858,722", Default, "ChangeTDis", Default, 40, False)) Then Click(Random(8, 858, 1), Random(632, 720, 1))
+	If $bWaschanged And _WaitForCheckXML($g_sImgCustomArmyBB, "0,681,860,728", True, 500, 100, "ChangeTDis") Then Click(Random(8, 858, 1), Random(632, 720, 1))
 	
 	If Not $bWaschanged Then Return
 
