@@ -3255,7 +3255,7 @@ Global $g_ahCmbBBDropOrder[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_iCmbCampsBB[6] = [0, 0, 0, 0, 0, 0]
 Global $g_hComboTroopBB[6]
 Global $g_bChkNoDropIfShield = True, $g_bChkTrophyTroops = False, $g_bChkTrophyHeroesAndTroops = True
-Global $g_bUseSleep = False, $g_iIntSleep = 20, $g_bUseRandomSleep = False, $g_bNoAttackSleep = False, $g_bDisableColorLog = False, $g_bDelayLabel = False, $g_bAvoidLocation = False
+Global $g_bUseSleep = False, $g_iIntSleep = 20, $g_bUseRandomSleep = False, $g_bNoAttackSleep = False, $g_bDisableColorLog = False, $g_bDelayLabel = False, $g_bAvoidLocation = False, $g_bEdgeObstacle = False
 Global $g_bDeployCastleFirst[2] = [False, False]
 Global $g_iDeployWave[3] = [5, 5, 5], $g_iDeployDelay[3] = [5, 5, 5]
 Global $g_bChkEnableRandom[3] = [True, True, True]
@@ -6057,6 +6057,7 @@ For $i = $DB To $LB
 IniReadS($g_bDeployCastleFirst[$i], $g_sProfileConfigPath, "MiscTab", "DeployCastleFirst" & $i, $g_bDeployCastleFirst[$i], "Bool")
 Next
 IniReadS($g_bSkipfirstcheck, $g_sProfileConfigPath, "MiscTab", "Skipfirstcheck", $g_bSkipfirstcheck, "Bool")
+IniReadS($g_bEdgeObstacle, $g_sProfileConfigPath, "MiscTab", "EdgeObstacle", $g_bEdgeObstacle, "Bool")
 IniReadS($g_iDeployDelay[0], $g_sProfileConfigPath, "MiscTab", "DeployDelay0", $g_iDeployDelay[0], "Int")
 IniReadS($g_iDeployDelay[1], $g_sProfileConfigPath, "MiscTab", "DeployDelay1", $g_iDeployDelay[1], "Int")
 IniReadS($g_iDeployWave[0], $g_sProfileConfigPath, "MiscTab", "DeployWave0", $g_iDeployWave[0], "Int")

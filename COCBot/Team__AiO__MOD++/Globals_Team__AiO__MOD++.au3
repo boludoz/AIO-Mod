@@ -78,10 +78,10 @@ Global $g_aIsDead[UBound($g_avAttackTroops, 1) -1]
 Global $g_iSlotNow = -1
 
 ; Misc tab - Team AiO MOD++
-Global $g_bUseSleep = False, $g_iIntSleep = 20, $g_bUseRandomSleep = False, $g_bNoAttackSleep = False, $g_bDisableColorLog = False, $g_bDelayLabel = False, $g_bAvoidLocation = False
+Global $g_bUseSleep = False, $g_iIntSleep = 20, $g_bUseRandomSleep = False, $g_bNoAttackSleep = False, $g_bDisableColorLog = False, $g_bDelayLabel = False, $g_bAvoidLocation = False, $g_bEdgeObstacle = False
 
 ; GUI
-Global $g_hUseSleep, $g_hIntSleep, $g_hUseRandomSleep, $g_hNoAttackSleep, $g_hDisableColorLog, $g_hDelayLabel, $g_hAvoidLocation
+Global $g_hUseSleep, $g_hIntSleep, $g_hUseRandomSleep, $g_hNoAttackSleep, $g_hDisableColorLog, $g_hDelayLabel, $g_hAvoidLocation, $g_hEdgeObstacle
 
 ; Attack extras - Team AiO MOD++
 Global $g_bDeployCastleFirst[2] = [False, False]

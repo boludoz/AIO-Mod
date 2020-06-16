@@ -7541,8 +7541,8 @@ Global $g_bChkNoDropIfShield = True, $g_bChkTrophyTroops = False, $g_bChkTrophyH
 Global $g_hChkNoDropIfShield, $g_hChkTrophyTroops, $g_hChkTrophyHeroesAndTroops
 Global $g_aIsDead[UBound($g_avAttackTroops, 1) -1]
 Global $g_iSlotNow = -1
-Global $g_bUseSleep = False, $g_iIntSleep = 20, $g_bUseRandomSleep = False, $g_bNoAttackSleep = False, $g_bDisableColorLog = False, $g_bDelayLabel = False, $g_bAvoidLocation = False
-Global $g_hUseSleep, $g_hIntSleep, $g_hUseRandomSleep, $g_hNoAttackSleep, $g_hDisableColorLog, $g_hDelayLabel, $g_hAvoidLocation
+Global $g_bUseSleep = False, $g_iIntSleep = 20, $g_bUseRandomSleep = False, $g_bNoAttackSleep = False, $g_bDisableColorLog = False, $g_bDelayLabel = False, $g_bAvoidLocation = False, $g_bEdgeObstacle = False
+Global $g_hUseSleep, $g_hIntSleep, $g_hUseRandomSleep, $g_hNoAttackSleep, $g_hDisableColorLog, $g_hDelayLabel, $g_hAvoidLocation, $g_hEdgeObstacle
 Global $g_bDeployCastleFirst[2] = [False, False]
 Global $g_iDeployWave[3] = [5, 5, 5], $g_iDeployDelay[3] = [5, 5, 5]
 Global $g_bChkEnableRandom[3] = [True, True, True]
@@ -23802,7 +23802,8 @@ GUICtrlSetTip(-1, GetTranslatedFileIni("MiscMODs", "OtherSettingsTip", "Other se
 GUICtrlSetBkColor(-1, 0x333300)
 GUICtrlSetFont(-1, 12, 500, 0, "Candara", $CLEARTYPE_QUALITY)
 GUICtrlSetColor(-1, 0xFFCC00)
-$g_hAvoidLocation = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "AvoidLocation", "Skip buildings location."), 32, 312, 105, 17)
+$g_hAvoidLocation = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "AvoidLocation", "Skip buildings location."), 32, 312, 145, 17)
+$g_hEdgeObstacle = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "EdgeObstacles", "Remove edge obstacles."), 32, 332, 145, 17)
 GUICtrlSetOnEvent(-1, "chkDelayMod")
 GUICtrlCreateTabItem("")
 EndFunc
@@ -33119,6 +33120,9 @@ EndIf
 $g_bRunState = False
 $g_bBotPaused = False
 $g_iBotAction = $eBotClose
+EndFunc
+Func BotCloseRequestProcessed()
+Return $g_iBotAction = $eBotClose And $g_bAndroidEmbedded = False
 EndFunc
 Func BotClose($SaveConfig = Default, $bExit = True)
 If $SaveConfig = Default Then $SaveConfig = IsBotLaunched()
@@ -43497,10 +43501,6 @@ If $g_bDebugFuncTime Then StopWatchStart("getArmyCCSpellCapacity")
 getArmyCCSpellCapacity(False, False, False, $bSetLog)
 If $g_bDebugFuncTime Then StopWatchStopLog()
 If _Sleep($DELAYCHECKARMYCAMP6) Then Return
-If $g_bDebugFuncTime Then StopWatchStart("getArmyCCTroops")
-getArmyCCTroops(False, False, False, $bSetLog)
-If $g_bDebugFuncTime Then StopWatchStopLog()
-If _Sleep($DELAYCHECKARMYCAMP6) Then Return
 If $g_bDebugFuncTime Then StopWatchStart("getArmyCCSiegeMachines")
 getArmyCCSiegeMachines(False, False, False, $bSetLog)
 If $g_bDebugFuncTime Then StopWatchStopLog()
@@ -46940,6 +46940,7 @@ If UBound($aCurrentCCTroops, 1) >= 1 Then
 For $i = 0 To UBound($aCurrentCCTroops, 1) - 1
 $aTempTroopArray = $aCurrentCCTroops[$i]
 $iTroopIndex = TroopIndexLookup($aTempTroopArray[0], "getArmyTroops()")
+If $eSuperBarb >=(UBound($iTroopIndex) -1) Then ContinueLoop
 If StringInStr($aTempTroopArray[1], "|") Then
 $aTroops = StringSplit($aTempTroopArray[1], "|")
 For $j = 1 To $aTroops[0]
@@ -47558,46 +47559,15 @@ $g_abNotNeedAllTime[1] = False
 EndIf
 checkMainScreen(False)
 EndFunc
-Func CleanYard()
+Func CleanYard($bTest = False)
 If Not $g_bChkCleanYard And Not $g_bChkGemsBox And Not TestCapture() Then Return
 Local $hObstaclesTimer = __TimerInit()
 If Not getBuilderCount() Then Return
 If _Sleep($DELAYRESPOND) Then Return
-Local $Filename = ""
 Local $Locate = 0
-Local $CleanYardXY
 Local $sCocDiamond = $CocDiamondECD
-Local $redLines = $sCocDiamond
 Local $bNoBuilders = $g_iFreeBuilderCount < 1
-If $g_iFreeBuilderCount > 0 And $g_bChkCleanYard And Number($g_aiCurrentLoot[$eLootElixir]) > 50000 Then
-Local $aResult = findMultiple($g_iDetectedImageType = 1 ? $g_sImgCleanYardSnow : $g_sImgCleanYard, $sCocDiamond, $redLines, 0, 1000, 10, "objectname,objectlevel,objectpoints", True)
-If IsArray($aResult) Then
-For $matchedValues In $aResult
-Local $aPoints = decodeMultipleCoords($matchedValues[2])
-$Filename = $matchedValues[0]
-For $i = 0 To UBound($aPoints) - 1
-$CleanYardXY = $aPoints[$i]
-If UBound($CleanYardXY) > 1 And isInsideDiamondXY($CleanYardXY[0], $CleanYardXY[1]) Then
-If $g_bDebugSetlog Then SetDebugLog($Filename & " found (" & $CleanYardXY[0] & "," & $CleanYardXY[1] & ")", $COLOR_SUCCESS)
-If IsMainPage() Then Click($CleanYardXY[0], $CleanYardXY[1], 1, 0, "#0430")
-$Locate = 1
-If _Sleep($DELAYCOLLECT3) Then Return
-If Not ClickRemoveObstacle() Then ContinueLoop
-If _Sleep($DELAYCHECKTOMBS2) Then Return
-ClickP($aAway, 2, 300, "#0329")
-If _Sleep($DELAYCHECKTOMBS1) Then Return
-If Not getBuilderCount() Then Return
-If _Sleep($DELAYRESPOND) Then Return
-If $g_iFreeBuilderCount = 0 Then
-SetLog("No More Builders available")
-If _Sleep(2000) Then Return
-ExitLoop(2)
-EndIf
-EndIf
-Next
-Next
-EndIf
-EndIf
+If $g_bChkCleanYard Then _CleanYard(False, $bTest)
 Local $return[7] = ["None", "None", 0, 0, 0, "", ""]
 Local $GemBoxXY[2] = [0, 0]
 If($g_iFreeBuilderCount > 0 And $g_bChkGemsBox And Number($g_aiCurrentLoot[$eLootElixir]) > 50000) Or TestCapture() Then
@@ -54379,50 +54349,73 @@ Else
 DllCall('kernel32.dll', 'ptr', 'DebugActiveProcessStop', 'int', $iPIDorName)
 EndIf
 EndFunc
-Func _Sleep($iDelay = $DELAYSLEEP, $iSleep = True, $bCheckRunState = True, $SleepWhenPaused = True)
-Local $iBegin = __TimerInit()
-Local $iRemaining = $iDelay - __TimerDiff($iBegin)
+Func _Sleep($iDelayOri, $iSleep = True, $CheckRunState = True, $SleepWhenPaused = True)
 Static $hTimer_SetTime = 0
 Static $hTimer_PBRemoteControlInterval = 0
 Static $hTimer_EmptyWorkingSetAndroid = 0
 Static $hTimer_EmptyWorkingSetBot = 0
-Local $iOri = 100
-If $g_bUseSleep And Not BitAND($g_bNoAttackSleep, $g_bAttackActive) Then
-$iOri = Int($iOri +($iOri * $g_iIntSleep) / 100)
-If $g_bUseRandomSleep Then $iOri = Random(($iOri * 90) / 100,($iOri * 110) / 100)
-EndIf
-$iOri /= 100
+Static $b_Sleep_Active = False
+Local $iBegin = __TimerInit()
+$b_Sleep_Active = True
 debugGdiHandle("_Sleep")
 CheckBotRequests()
-If $g_bCriticalMessageProcessing = False Then
-If $g_bMoveDivider Then MoveDivider()
+If SetCriticalMessageProcessing() = False Then
+If $g_bMoveDivider Then
+MoveDivider()
+$g_bMoveDivider = False
+EndIf
+Local $iDelay = $iDelayOri
 If $iDelay > 0 And __TimerDiff($g_hTxtLogTimer) >= $g_iTxtLogTimerTimeout Then
-If __TimerDiff($hTimer_PBRemoteControlInterval) * $iOri >= $g_iPBRemoteControlInterval Or($hTimer_PBRemoteControlInterval = 0 And $g_bNotifyRemoteEnable) Then
+If $g_bUseSleep And Not($g_bNoAttackSleep And $g_bAttackActive) Then
+$iDelay = $iDelay + Int(($iDelay * $g_iIntSleep) / 100)
+If $g_bUseRandomSleep Then $iDelay = Random(($iDelay * 90) / 100,($iDelay * 110) / 100)
+EndIf
+$iDelay = Round($iDelay)
+If __TimerDiff($hTimer_PBRemoteControlInterval) >= $g_iPBRemoteControlInterval Or($hTimer_PBRemoteControlInterval = 0 And $g_bNotifyRemoteEnable) Then
 NotifyRemoteControl()
 $hTimer_PBRemoteControlInterval = __TimerInit()
 EndIf
-If(($g_iEmptyWorkingSetAndroid > 0 And __TimerDiff($hTimer_EmptyWorkingSetAndroid) >= $g_iEmptyWorkingSetAndroid * Int(1000 * $iOri)) Or $hTimer_EmptyWorkingSetAndroid = 0) And $g_bRunState And TestCapture() = False Then
+If(($g_iEmptyWorkingSetAndroid > 0 And __TimerDiff($hTimer_EmptyWorkingSetAndroid) >= $g_iEmptyWorkingSetAndroid * 1000) Or $hTimer_EmptyWorkingSetAndroid = 0) And $g_bRunState And TestCapture() = False Then
 If IsArray(getAndroidPos(True)) = 1 Then _WinAPI_EmptyWorkingSet(GetAndroidPid())
 $hTimer_EmptyWorkingSetAndroid = __TimerInit()
 EndIf
-If($g_iEmptyWorkingSetBot > 0 And __TimerDiff($hTimer_EmptyWorkingSetBot) >= $g_iEmptyWorkingSetBot * Int(1000 * $iOri)) Or $hTimer_EmptyWorkingSetBot = 0 Then
+If($g_iEmptyWorkingSetBot > 0 And __TimerDiff($hTimer_EmptyWorkingSetBot) >= $g_iEmptyWorkingSetBot * 1000) Or $hTimer_EmptyWorkingSetBot = 0 Then
 ReduceBotMemory(False)
 $hTimer_EmptyWorkingSetBot = __TimerInit()
 EndIf
 CheckPostponedLog()
-EndIf
-EndIf
-For $i = 0 To Round($iDelay / $iOri)
-If $bCheckRunState And $g_bRunState = False Then
-ResumeAndroid()
+If BotCloseRequestProcessed() Then
+BotClose()
+$b_Sleep_Active = False
 Return True
 EndIf
-If $g_bCriticalMessageProcessing = False Then
+EndIf
+EndIf
+If $CheckRunState And Not $g_bRunState Then
+ResumeAndroid()
+$b_Sleep_Active = False
+Return True
+EndIf
+Local $iRemaining = $iDelay - __TimerDiff($iBegin)
+While $iRemaining > 0
+DllCall($g_hLibNTDLL, "dword", "ZwYieldExecution")
+If $CheckRunState = True And $g_bRunState = False Then
+ResumeAndroid()
+$b_Sleep_Active = False
+Return True
+EndIf
+If SetCriticalMessageProcessing() = False Then
 If $g_bBotPaused And $SleepWhenPaused And $g_bTogglePauseAllowed Then TogglePauseSleep()
 If $g_bTogglePauseUpdateState Then TogglePauseUpdateState("_Sleep")
-If $g_bMakeScreenshotNow = True Then MakeScreenshot($g_sProfileTempPath,($g_bScreenshotPNGFormat = False) ?("jpg") :("png"))
-If __TimerDiff($g_hTxtLogTimer) >= $g_iTxtLogTimerTimeout * Int(1000 * $iOri) Then
-If $g_bRunState And Not $g_bSearchMode And Not $g_bBotPaused And($hTimer_SetTime = 0 Or __TimerDiff($hTimer_SetTime) >= Int(750 * $iOri)) Then
+If $g_bMakeScreenshotNow = True Then
+If $g_bScreenshotPNGFormat = False Then
+MakeScreenshot($g_sProfileTempPath, "jpg")
+Else
+MakeScreenshot($g_sProfileTempPath, "png")
+EndIf
+EndIf
+If __TimerDiff($g_hTxtLogTimer) >= $g_iTxtLogTimerTimeout Then
+If $g_bRunState And Not $g_bSearchMode And Not $g_bBotPaused And($hTimer_SetTime = 0 Or __TimerDiff($hTimer_SetTime) >= 750) Then
 SetTime()
 $hTimer_SetTime = __TimerInit()
 EndIf
@@ -54432,11 +54425,14 @@ CheckPostponedLog()
 EndIf
 EndIf
 $iRemaining = $iDelay - __TimerDiff($iBegin)
+If $iRemaining >= $DELAYSLEEP Then
+_SleepMilli($DELAYSLEEP)
+Else
+_SleepMilli($iRemaining)
+EndIf
 CheckBotRequests()
-If $iRemaining < 100 * $iOri Then ExitLoop
-Sleep(100 * $iOri)
-Next
-Sleep($iDelay - __TimerDiff($iBegin))
+WEnd
+$b_Sleep_Active = False
 Return False
 EndFunc
 Func _SleepMicro($iMicroSec)
@@ -58221,6 +58217,9 @@ If $g_bDebugSetlog Then SetDebugLog("Coordinate Inside Village, but Exclude BUIL
 Return False
 ElseIf $x > 692 And $y > 156 And $y < 210 Then
 If $g_bDebugSetlog Then SetDebugLog("Coordinate Inside Village, but Exclude GEMS")
+Return False
+ElseIf $x > 669 And $y > 489 Then
+If $g_bDebugSetlog Then SetDebugLog("Coordinate Inside Village, but Exclude SHOP")
 Return False
 EndIf
 Return True
@@ -69840,34 +69839,68 @@ EndIf
 Return False
 EndFunc
 Func CleanBBYard($bTest = False)
-If Not BitOR($g_bChkCleanBBYard, $bTest, TestCapture()) Then Return
+If Not $g_bChkCleanBBYard Then Return
+Return _CleanYard(True, $bTest)
+EndFunc
+Func _CleanYard($aIsBB = Default, $bTest = False)
+If $aIsBB Then
 If Not IsMainPageBuilderBase() Then Return
 If Not getBuilderCount(True, True) Then Return
 If _Sleep($DELAYRESPOND) Then Return
-If getBuilderCount(True, True) = False Then Return
 If $g_iFreeBuilderCountBB = 0 Then Return
-If Number($g_aiCurrentLootBB[$eLootElixirBB]) > 50000 Or $bTest Then
-Local $aResult = findMultipleQuick($g_sImgCleanBBYard, 0, "0,0,860,732", True)
+Else
+If Not IsMainPage() Then Return
+If Not getBuilderCount() Then Return
+If _Sleep($DELAYRESPOND) Then Return
+If $g_iFreeBuilderCount = 0 Then Return
+EndIf
+If(Number($g_aiCurrentLootBB[$eLootElixirBB]) > 50000 And $aIsBB) Or(Number($g_aiCurrentLoot[$eLootElixir]) > 50000 And not $aIsBB) Or $bTest Then
+Local $aResult, $aRTmp1, $aRTmp2
+If $aIsBB Then
+$aResult = findMultipleQuick($g_sImgCleanBBYard, 0, "0,0,860,732", Default, Default, Default, 1)
+Else
+$aRTmp1 = findMultipleQuick($g_sImgCleanYardSnow, 0, "0,0,860,732", Default, Default, Default, 1)
+$aRTmp2 = findMultipleQuick($g_sImgCleanYard, 0, "0,0,860,732", Default, Default, Default, 1)
+If IsArray($aRTmp1) Then
+$aResult = $aRTmp1
+If IsArray($aRTmp2) Then _ArrayAdd($aResult, $aRTmp2)
+ElseIf IsArray($aRTmp2) Then
+$aResult = $aRTmp2
+EndIf
+EndIf
+If Not IsArray($aResult) Then
+Return False
+Else
 _ArrayShuffle($aResult)
-If Not IsArray($aResult) Then Return False
-_ArrayShuffle($aResult)
+EndiF
+SetLog("- Removing some obstacles - Custom by AIO Mod ++.", $COLOR_ACTION)
 For $i = 0 To UBound($aResult) - 1
+If $g_bEdgeObstacle Then
+If(Not isOutsideDiamond($aResult[$i][1], $aResult[$i][2], 83, 156, 780, 680) and $aIsBB) Or(Not isOutsideDiamond($aResult[$i][1], $aResult[$i][2], 43, 50, 818, 634) And not $aIsBB) Then ContinueLoop
+Else
+If(Not isOutsideDiamond($aResult[$i][1], $aResult[$i][2], 83, 156, 780, 680) and $aIsBB) Or(Not isOutsideDiamond($aResult[$i][1], $aResult[$i][2]) And not $aIsBB) Then ContinueLoop
+EndIf
 If $g_bDebugSetlog Then SetDebugLog($aResult[$i][0] & " found (" & $aResult[$i][1] & "," & $aResult[$i][2] & ")", $COLOR_SUCCESS)
 If _Sleep($DELAYRESPOND) Then Return
-For $iSeconds = 0 To 60
-If _Sleep(1500) Then Return
-If getBuilderCount(True, True) = False Then Return
-If $g_iFreeBuilderCountBB > 0 Then
+For $iSeconds = 0 To Random(50, 120, 1)
+getBuilderCount(True,(($aIsBB) ?(True) :(False)))
+If($g_iFreeBuilderCountBB > 0 And $aIsBB) Or($g_iFreeBuilderCount > 0 And not $aIsBB) Then
+If getBuilderCount(True,(($aIsBB) ?(True) :(False))) = False Then Return
+If($g_iFreeBuilderCountBB > 0 And $aIsBB) Or($g_iFreeBuilderCount > 0 And not $aIsBB) Then
 PureClick($aResult[$i][1], $aResult[$i][2], 1, 0, "#0430")
 If _Sleep(Random(500, 700, 1)) Then Return
 If ClickRemoveObstacle() Then
 ContinueLoop 2
 Else
-SetDebugLog("CleanBBYard | Error here.")
+SetDebugLog(" - CleanYardAIO | 0x1 error.")
 ExitLoop
 EndIf
 EndIf
+Else
+If RandomSleep(3000) Then Return
+EndIf
 Next
+SetLog("- Removing some obstacles, wait. - Custom by AIO Mod ++.", $COLOR_INFO)
 Next
 EndIf
 UpdateStats()
@@ -74954,7 +74987,7 @@ Local $aTmpResults[1][4] = [[$aArrays[0], Int($aCommaCoord[0]), Int($aCommaCoord
 _ArrayAdd($aAllResults, $aTmpResults)
 Next
 $iCount += 1
-If BitAND($iQuantity2Match < 0, $iCount <= $iQuantity2Match) Then ExitLoop
+If($iQuantity2Match < 0) And($iCount <= $iQuantity2Match) Then ExitLoop
 Next
 If $bCheckDuplicatedpoints And UBound($aAllResults) > 0 Then
 _ArraySort($aAllResults, 0, 0, 0, 1)
@@ -75035,7 +75068,7 @@ If Abs($SingleCoordinate[1] - $LastCoordinate[1]) < $D2Check Or Abs($SingleCoord
 _ArrayDelete($aAllResults, $j)
 EndIf
 Else
-If $LastCoordinate[1] = $SingleCoordinate[1] And $LastCoordinate[2] = $SingleCoordinate[2] And BitOr($LastCoordinate[3] <> $SingleCoordinate[3], $LastCoordinate[0] <> $SingleCoordinate[0]) > 0 Then
+If $LastCoordinate[1] = $SingleCoordinate[1] And $LastCoordinate[2] = $SingleCoordinate[2] And($LastCoordinate[3] <> $SingleCoordinate[3] Or $LastCoordinate[0] <> $SingleCoordinate[0]) Then
 _ArrayDelete($aAllResults, $j)
 EndIf
 EndIf
@@ -75224,7 +75257,7 @@ SetDebuglog("SearchPixelDonate FindWhite " & _ArrayToString($aFindWhite))
 $aFixedMatrixPencil[0] = Abs(Int($aFindPencil[0][1] + 13 - 159))
 $aFixedMatrixPencil[1] = Abs(Int($aFindPencil[0][2] + 108 + 69))
 $aFixedMatrixPencil[2] = Abs(Int($aFindPencil[0][1] + 36))
-$aFixedMatrixPencil[3] = Abs(Int($aFindPencil[0][2] + 267 + 14))
+$aFixedMatrixPencil[3] = Abs(Int($aFindPencil[0][2] + 267 + 5))
 SetDebuglog("SearchPixelDonate FixedMatrixPencil " & _ArrayToString($aFixedMatrixPencil))
 $aFindRequest = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Request\ReqSpec", 0, $aFixedMatrixPencil, Default, "greenReq", False, 15)
 If Not IsArray($aFindRequest) Then
@@ -75736,7 +75769,7 @@ Return True
 EndFunc
 Func ResourceBoost($aPos1 = 0, $aPos2 = 0)
 If not $g_bChkResourcePotion Then Return
-If Not BitAND($g_iInputGoldItems >= $g_aiTempGainCost[0], $g_iInputElixirItems >= $g_aiTempGainCost[1], $g_iInputDarkElixirItems >= $g_aiTempGainCost[2]) Then Return
+If Not(($g_iInputGoldItems >= $g_aiTempGainCost[0]) And($g_iInputElixirItems >= $g_aiTempGainCost[1]) And($g_iInputDarkElixirItems >= $g_aiTempGainCost[2])) Then Return
 Local Static $iLastTimeChecked[8] = [0, 0, 0, 0, 0, 0, 0, 0]
 If $iLastTimeChecked[$g_iCurAccount] = 0 And not Int($aPos1 + $aPos2 <= 0) Then
 If _Sleep($DELAYBOOSTHEROES2) Then Return
@@ -75822,7 +75855,7 @@ Click(Random(360, 494, 1), Random(395, 451, 1))
 EndIf
 $bFuse = True
 Else
-If BitAND($i > 0, $bFuse) Then ExitLoop
+If(($i > 0) And $bFuse) Then ExitLoop
 EndIf
 Next
 Return $bFuse
@@ -76183,7 +76216,7 @@ $CurrentXPgain += 5
 ElseIf $g_iGoblinMapOptSX = 2 Then
 $CurrentXPgain += 11
 EndIf
-If BitAND(BalanceDonRec(False), Not SkipDonateNearFullTroops(False, $aHeroResult), not $g_bFastSuperXP, _ColorCheck(_GetPixelColor(26, 342, True), Hex(0xEA0810, 6), 20)) Then
+If((BalanceDonRec(False)) And(Not SkipDonateNearFullTroops(False, $aHeroResult)) And(not $g_bFastSuperXP) And((_ColorCheck(_GetPixelColor(26, 342, True), Hex(0xEA0810, 6), 20)))) Then
 DonateCC(True)
 EndIf
 If Not $g_bSkipZoomOutSX Then
@@ -76636,7 +76669,7 @@ SafeReturnSX()
 Return False
 EndIf
 Local $rDragToGoblinMapSX = DragToGoblinMapSX()
-If not BitAND(IsArray($rDragToGoblinMapSX), UBound($rDragToGoblinMapSX) = 2) Or $rDragToGoblinMapSX = False Then
+If not(IsArray($rDragToGoblinMapSX) And UBound($rDragToGoblinMapSX) = 2) Or $rDragToGoblinMapSX = False Then
 SetLog("Failed to find " & $g_sGoblinMapOptSX, $COLOR_ERROR)
 SaveDebugImage("SuperXP_", True, True, String(Random(5, 100, 1)) & ", " & String(Random(5, 100, 1)) & ", " & String(Random(5, 100, 1)))
 SafeReturnSX()
@@ -76662,7 +76695,7 @@ Click($rDragToGoblinMapSX[0], $rDragToGoblinMapSX[1])
 SetLog("Waiting for Attack Button color", $COLOR_INFO)
 If _Sleep(50) Then Return False
 Local $Counter = 0
-While not BitAND(IsArray($rDragToGoblinMapSX), UBound($rDragToGoblinMapSX) = 2)
+While not(IsArray($rDragToGoblinMapSX) And UBound($rDragToGoblinMapSX) = 2)
 $rDragToGoblinMapSX = DragToGoblinMapSX()
 Click($rDragToGoblinMapSX[0] + Random(40,60,1), $rDragToGoblinMapSX[1] + Random(70,90,1))
 If _Sleep(50) Or $Counter > 15 Then ExitLoop
@@ -78143,7 +78176,7 @@ EndIf
 EndSwitch
 EndFunc
 Func ChatActions()
-If $g_bChatClan Or BitAND($g_bEnableFriendlyChallenge, Not $g_bStayOnBuilderBase) Then
+If $g_bChatClan Or(($g_bEnableFriendlyChallenge) And(Not $g_bStayOnBuilderBase)) Then
 If Not OpenClanChat() Then
 Setlog("ChatActions : OpenClanChat Error.", $COLOR_ERROR)
 AndroidPageError("ChatActions")
@@ -78475,7 +78508,7 @@ $sOCRString = ReadChatIA($g_sKeywordFcRequest, True)
 If $sOCRString <> -1 Then
 $bDoFriendlyChallenge = True
 $iTempR = Number(StringReverse($sOCRString))
-$iRequested =(BitAnd($iTempR > 0, $iTempR < 7)) ?($iTempR-1) :(-1)
+$iRequested =($iTempR > 0 And $iTempR < 7) ?($iTempR-1) :(-1)
 If $iRequested <> -1 Then
 For $i = 0 To UBound($aBaseForShare) -1
 If $aBaseForShare[$i][0] = $iRequested And $aBaseForShare[$i][1] = True Then
@@ -78653,20 +78686,22 @@ SetLog("[" & UBound($g_aiPixelMine) & "] Gold Mines")
 SetLog("[" & UBound($g_aiPixelElixir) & "] Elixir Collectors")
 Global $minColOutside = Round($colNbr * $percent / 100)
 Global $radiusAdjustment = 1
-If $g_iSearchTH = "-" Or $g_iSearchTH = "" Then FindTownhall(True)
-If $g_iSearchTH <> "-" Then
-$radiusAdjustment *= Number($g_iSearchTH) / 10
+Local $iSearchTH = $g_iSearchTH
+If $iSearchTH > 10 Then $iSearchTH = 11
+If $iSearchTH = "-" Or $iSearchTH = "" Then FindTownhall(True)
+If $iSearchTH <> "-" Then
+$radiusAdjustment *= Number($iSearchTH) / 10
 Else
 If $g_iTownHallLevel > 0 Then
 $radiusAdjustment *= Number($g_iTownHallLevel) / 10
 EndIf
 EndIf
-If $g_bDebugSetlog Then SetLog("$g_iSearchTH: " & $g_iSearchTH)
+If $g_bDebugSetlog Then SetLog("$iSearchTH: " & $iSearchTH)
 For $i = 0 To $colNbr - 1
 Global $arrPixel = $g_aiPixelNearCollector[$i]
 If UBound($arrPixel) > 0 Then
 If isOutsideEllipse($arrPixel[0], $arrPixel[1], $CollectorsEllipseWidth * $radiusAdjustment, $CollectorsEllipseHeigth * $radiusAdjustment) Then
-If $g_bDebugSetlog Then SetDebugLog("Collector (" & $arrPixel[0] & ", " & $arrPixel[1] & ") is outside", $COLOR_DEBUG)
+If $g_bDebugSetlog Then SetLog("Collector (" & $arrPixel[0] & ", " & $arrPixel[1] & ") is outside", $COLOR_PURPLE)
 $colOutside += 1
 EndIf
 EndIf
@@ -78732,18 +78767,36 @@ EndIf
 If $g_bDebugMakeIMGCSV Then AttackCSVDEBUGIMAGE()
 Return False
 EndFunc
-Func isOutsideEllipse($coordX, $coordY, $ellipseWidth = 200, $ellipseHeigth = 150, $centerX = 430, $centerY = 335)
+Func isOutsideEllipse($coordX, $coordY, $ellipseWidth = 200, $ellipseHeigth = 150, $centerX = 430, $centerY = 339)
+Local $iXFix = 203
+Local $iXFixf = 0
+Local $a = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\IsSmartDiamond", 1, "197,160,312,193", Default, Default, Default, 100)
+If IsArray($a) Then $iXFixf = Int($a[0][1] - $iXFix)
 Global $normalizedX = $coordX - $centerX
-Global $normalizedY = $coordY - $centerY
+Global $normalizedY = $coordY - Int($centerY + $iXFixf)
 Local $result =($normalizedX * $normalizedX) /($ellipseWidth * $ellipseWidth) +($normalizedY * $normalizedY) /($ellipseHeigth * $ellipseHeigth) > 1
 If $g_bDebugSetlog Then
 If $result Then
-SetDebugLog("Coordinate Outside Ellipse (" & $ellipseWidth & ", " & $ellipseHeigth & ")", $COLOR_DEBUG)
+Setlog("Coordinate Outside Ellipse (" & $ellipseWidth & ", " & $ellipseHeigth & ")", $COLOR_PURPLE)
 Else
-SetDebugLog("Coordinate Inside Ellipse (" & $ellipseWidth & ", " & $ellipseHeigth & ")", $COLOR_DEBUG)
+Setlog("Coordinate Inside Ellipse (" & $ellipseWidth & ", " & $ellipseHeigth & ")", $COLOR_PURPLE)
 EndIf
 EndIf
 Return $result
+EndFunc
+Func isOutsideDiamond($iX, $iY, $iLeft = 116, $iTop = 94, $iRight = 751, $iBottom = 582)
+Local $bReturn = False
+Local $iXFix = 203
+Local $iXFixf = 0
+If Not(($iX < 68 And $iY > 316) Or($iY < 63) Or($iX > 692 And $iY > 156 And $iY < 210) Or($iX > 669 And $iY > 489)) Then
+Local $a = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\IsSmartDiamond", 1, "197,160,312,193", Default, Default, Default, 100)
+If IsArray($a) Then $iXFixf = Int($a[0][1] - $iXFix)
+Local $aMiddle[2] = [(($iLeft + $iRight) + $iXFixf) / 2,($iTop + $iBottom) / 2]
+Local $aSize[2] = [$aMiddle[0] - $iLeft, $aMiddle[1] - $iTop]
+$bReturn =((Abs($iX - $aMiddle[0]) / $aSize[0] + Abs($iY - $aMiddle[1]) / $aSize[1]) <= 1) ?(True) :(False)
+EndIf
+SetDebugLog("isOutsideDiamond | Is in diamond? " & $bReturn & " / Correction: " & $iXFixf)
+Return $bReturn
 EndFunc
 Func ProfileSwitch()
 For $i = 0 To 3
@@ -79006,15 +79059,15 @@ Func MainGTFO()
 If $g_bChkUseGTFO = False Then Return
 PrepareDonateCC()
 Local $bDonateTroop =($g_aiPrepDon[0] = 1), $bDonateAllTroop =($g_aiPrepDon[1] = 1), $bDonateSpell =($g_aiPrepDon[2] = 1), $bDonateAllSpell =($g_aiPrepDon[3] = 1), $bDonateSiege =($g_aiPrepDon[4] = 1), $bDonateAllSiege =($g_aiPrepDon[5] = 1)
-Local $bDonate = BitOR($bDonateTroop, $bDonateAllTroop, $bDonateSpell, $bDonateAllSpell, $bDonateSiege, $bDonateAllSiege) > 0
-If BitAND($g_iTotalDonateStatsTroops >= $g_iDayLimitTroops And $g_iDayLimitTroops > 0, $g_iTotalDonateStatsSpells >= $g_iDayLimitSpells And $g_iDayLimitSpells > 0, $g_iTotalDonateStatsSiegeMachines >= $g_iDayLimitSieges And $g_iDayLimitSieges > 0) Then
+Local $bDonate =(($bDonateTroop) Or($bDonateAllTroop) Or($bDonateSpell) Or($bDonateAllSpell) Or($bDonateSiege) Or($bDonateAllSiege))
+If(($g_iTotalDonateStatsTroops >= $g_iDayLimitTroops And $g_iDayLimitTroops > 0) And($g_iTotalDonateStatsSpells >= $g_iDayLimitSpells And $g_iDayLimitSpells > 0) And($g_iTotalDonateStatsSiegeMachines >= $g_iDayLimitSieges And $g_iDayLimitSieges > 0)) Then
 SetLog("*** Donations : Day Limit. ***", $COLOR_ERROR)
 VillageReport()
 ProfileSwitch()
 CheckFarmSchedule()
 If ProfileSwitchAccountEnabled() Then checkSwitchAcc()
 Return False
-ElseIf BitOR(Not $g_bChkDonate, Not $bDonate, Not $g_bDonationEnabled) Then
+ElseIf((Not $g_bChkDonate) Or(Not $bDonate) Or(Not $g_bDonationEnabled)) Then
 SetLog("*** Setup donations. ***", $COLOR_ERROR)
 VillageReport()
 ProfileSwitch()
@@ -79153,8 +79206,8 @@ Setlog("Donate CC now.", $COLOR_INFO)
 If RandomSleep($DELAYRUNBOT3) Then Return
 PrepareDonateCC()
 Local $bDonateTroop =($g_aiPrepDon[0] = 1), $bDonateAllTroop =($g_aiPrepDon[1] = 1), $bDonateSpell =($g_aiPrepDon[2] = 1), $bDonateAllSpell =($g_aiPrepDon[3] = 1), $bDonateSiege =($g_aiPrepDon[4] = 1), $bDonateAllSiege =($g_aiPrepDon[5] = 1)
-Local $bDonate = BitOR($bDonateTroop, $bDonateAllTroop, $bDonateSpell, $bDonateAllSpell, $bDonateSiege, $bDonateAllSiege) > 0
-If BitAND($g_iTotalDonateStatsTroops >= $g_iDayLimitTroops And $g_iDayLimitTroops > 0, $g_iTotalDonateStatsSpells >= $g_iDayLimitSpells And $g_iDayLimitSpells > 0, $g_iTotalDonateStatsSiegeMachines >= $g_iDayLimitSieges And $g_iDayLimitSieges > 0) Then
+Local $bDonate =(($bDonateTroop) Or($bDonateAllTroop) Or($bDonateSpell) Or($bDonateAllSpell) Or($bDonateSiege) Or($bDonateAllSiege))
+If(($g_iTotalDonateStatsTroops >= $g_iDayLimitTroops And $g_iDayLimitTroops > 0) And($g_iTotalDonateStatsSpells >= $g_iDayLimitSpells And $g_iDayLimitSpells > 0) And($g_iTotalDonateStatsSiegeMachines >= $g_iDayLimitSieges And $g_iDayLimitSieges > 0)) Then
 SetLog("Donate skip :  limit reached.", $COLOR_INFO)
 Return False
 ElseIf Not $g_bChkDonate Or Not $bDonate Or Not $g_bDonationEnabled Then
@@ -79525,6 +79578,7 @@ For $i = $DB To $LB
 _Ini_Add("MiscTab", "DeployCastleFirst" & $i, $g_bDeployCastleFirst[$i])
 Next
 _Ini_Add("Skipfirstcheck", "Enable", $g_bSkipfirstcheck ? 1 : 0)
+_Ini_Add("EdgeObstacle", "Enable", $g_bEdgeObstacle ? 1 : 0)
 _Ini_Add("MiscTab", "DeployDelay0", $g_iDeployDelay[0])
 _Ini_Add("MiscTab", "DeployDelay1", $g_iDeployDelay[1])
 _Ini_Add("MiscTab", "DeployWave0", $g_iDeployWave[0])
@@ -79748,6 +79802,7 @@ For $i = $DB To $LB
 IniReadS($g_bDeployCastleFirst[$i], $g_sProfileConfigPath, "MiscTab", "DeployCastleFirst" & $i, $g_bDeployCastleFirst[$i], "Bool")
 Next
 IniReadS($g_bSkipfirstcheck, $g_sProfileConfigPath, "MiscTab", "Skipfirstcheck", $g_bSkipfirstcheck, "Bool")
+IniReadS($g_bEdgeObstacle, $g_sProfileConfigPath, "MiscTab", "EdgeObstacle", $g_bEdgeObstacle, "Bool")
 IniReadS($g_iDeployDelay[0], $g_sProfileConfigPath, "MiscTab", "DeployDelay0", $g_iDeployDelay[0], "Int")
 IniReadS($g_iDeployDelay[1], $g_sProfileConfigPath, "MiscTab", "DeployDelay1", $g_iDeployDelay[1], "Int")
 IniReadS($g_iDeployWave[0], $g_sProfileConfigPath, "MiscTab", "DeployWave0", $g_iDeployWave[0], "Int")
@@ -80013,6 +80068,7 @@ GUICtrlSetState($g_hUseRandomSleep, $g_bUseRandomSleep = 1 ? $GUI_CHECKED : $GUI
 GUICtrlSetState($g_hNoAttackSleep, $g_bNoAttackSleep = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 GUICtrlSetState($g_hDisableColorLog, $g_bDisableColorLog = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 GUICtrlSetState($g_hAvoidLocation, $g_bAvoidLocation = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+GUICtrlSetState($g_hEdgeObstacle, $g_bEdgeObstacle = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 For $i = $DB To $LB
 GUICtrlSetState($g_hDeployCastleFirst[$i], $g_bDeployCastleFirst[$i] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 Next
@@ -80075,6 +80131,7 @@ For $i = $DB To $LB
 $g_bDeployCastleFirst[$i] =(GUICtrlRead($g_hDeployCastleFirst[$i]) = $GUI_CHECKED) ? 1 : 0
 Next
 $g_bSkipfirstcheck = GUICtrlRead($g_hSkipfirstcheck) = $GUI_CHECKED
+$g_bEdgeObstacle = GUICtrlRead($g_hEdgeObstacle) = $GUI_CHECKED
 $g_iDeployDelay[0] = Int(GUICtrlRead($g_hDeployDelay[0]))
 $g_iDeployDelay[1] = Int(GUICtrlRead($g_hDeployDelay[1]))
 $g_iDeployDelay[2] = Int(GUICtrlRead($g_hDeployDelay[2]))
@@ -80738,7 +80795,7 @@ SetLog("Builder Base Idle Ends", $COLOR_INFO)
 If ProfileSwitchAccountEnabled() Then Return
 EndFunc
 Func RestAttacksInBB()
-$g_iAvailableAttacksBB = Ubound(findMultipleQuick($g_sImgAvailableAttacks, 0, "25, 626, 97, 651", Default, Default, False, 10))
+$g_iAvailableAttacksBB = Ubound(findMultipleQuick($g_sImgAvailableAttacks, 0, "25, 626, 97, 651", Default, Default, False, 0))
 If $g_iAvailableAttacksBB <> 0 and $g_bChkBBStopAt3 Then
 Setlog("You have " & $g_iAvailableAttacksBB & " available attack(s).", $COLOR_SUCCESS)
 EndIf
@@ -81954,7 +82011,7 @@ SetLog(" - Are you ready to Battle? " & $IsReaddy, $COLOR_INFO)
 SetLog(" - Is To Drop Trophies? " & $IsToDropTrophies, $COLOR_INFO)
 SetLog(" - " & $HeroStatus, $COLOR_INFO)
 If $g_bRestart = True Then Return
-If FindVersusBattlebtn() And $IsReaddy And BitOR($IsToDropTrophies, $g_iCmbBBAttack = $g_eBBAttackCSV, $g_iCmbBBAttack = $g_eBBAttackSmart) Then
+If FindVersusBattlebtn() And $IsReaddy And(($IsToDropTrophies) Or($g_iCmbBBAttack = $g_eBBAttackCSV) Or($g_iCmbBBAttack = $g_eBBAttackSmart)) Then
 ClickP($g_iMultiPixelOffSet, 1)
 If RandomSleep(3000) Then Return
 If Not WaitForVersusBattle() Then Return
@@ -82344,7 +82401,7 @@ Local $aVillage = GetVillageSize(True, "stone", "tree", Default, True)
 If $aVillage <> 0 Then
 $g_aBoatPos[0] = Int($aVillage[7])
 $g_aBoatPos[1] = Int($aVillage[8])
-Local $aResul = Floor(Village_Distances($aVillage[4], $aVillage[5], $aVillage[7], $aVillage[8]))
+Local $aResul = Floor(Pixel_Distance($aVillage[4], $aVillage[5], $aVillage[7], $aVillage[8]))
 Return $aResul
 Else
 $g_aBoatPos[0] = Null
@@ -82352,18 +82409,6 @@ $g_aBoatPos[1] = Null
 EndIf
 SetDebugLog("[BBzoomout] GetDistance Boat to Stone Error", $COLOR_ERROR)
 Return 0
-EndFunc
-Func Village_Distances($x1, $y1, $x2, $y2)
-If Not $g_bRunState Then Return
-Local $a, $b, $c
-If $x2 = $x1 And $y2 = $y1 Then
-Return 0
-Else
-$a = $y2 - $y1
-$b = $x2 - $x1
-$c = Sqrt($a * $a + $b * $b)
-Return $c
-EndIf
 EndFunc
 Func TestRunWallsUpgradeBB()
 SetDebugLog("** TestRunWallsUpgradeBB START**", $COLOR_DEBUG)

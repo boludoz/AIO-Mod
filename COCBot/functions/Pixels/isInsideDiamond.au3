@@ -70,6 +70,10 @@ Func isInsideDiamond($aCoords)
 		ElseIf $x > 692 And $y > 156 And $y < 210 Then ; coordinates where the game will click on the GEMS button (safe margin)
 			If $g_bDebugSetlog Then SetDebugLog("Coordinate Inside Village, but Exclude GEMS")
 			Return False
+		; Custom - Team AIO Mod++
+		ElseIf $x > 669 And $y > 489 Then ; coordinates where the game will click on the SHOP button (safe margin)
+			If $g_bDebugSetlog Then SetDebugLog("Coordinate Inside Village, but Exclude SHOP")
+			Return False
 		EndIf
 		;If $g_bDebugSetlog Then SetDebugLog("Coordinate Inside Village", $COLOR_DEBUG)
 		Return True ; Inside Village

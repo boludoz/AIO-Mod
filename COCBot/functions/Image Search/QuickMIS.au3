@@ -13,17 +13,11 @@
 ; Example .......: ---
 ;================================================================================================================================
 Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME_WIDTH, $Bottom = $g_iGAME_HEIGHT, $bNeedCapture = True, $Debug = False, $OcrDecode = 3, $OcrSpace = 12) ; EDITED By FENIX MOD
-	;If ($ValueReturned <> "BC1") And ($ValueReturned <> "CX") And ($ValueReturned <> "N1") And ($ValueReturned <> "NX") And ($ValueReturned <> "Q1") And ($ValueReturned <> "QX") And ($ValueReturned <> "NxCx") And ($ValueReturned <> "N1Cx1") And ($ValueReturned <> "OCR") Then ; EDITED By FENIX MOD
-	;	SetLog("Bad parameters during QuickMIS call for MultiSearch...", $COLOR_RED)
-	;	Return
-	;EndIf
 	If $bNeedCapture Then _CaptureRegion2($Left, $Top, $Right, $Bottom)
 	Local $Res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $directory, "str", "FV", "Int", 0, "str", "FV", "Int", 0, "Int", 1000)
 	If @error Then _logErrorDLLCall($g_sLibMyBotPath, @error)
-;~ 	If $g_bDebugImageSave Then DebugImageSave("QuickMIS_" & $ValueReturned, False)
 
 	If IsArray($Res) Then
-		;If $Debug Then _ArrayDisplay($Res)
 		If $g_bDebugSetlog Then SetDebugLog("DLL Call succeeded " & $Res[0], $COLOR_PURPLE)
 
 		If $Res[0] = "" Or $Res[0] = "0" Then

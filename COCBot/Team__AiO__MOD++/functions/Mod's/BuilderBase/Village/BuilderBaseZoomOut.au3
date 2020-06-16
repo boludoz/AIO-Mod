@@ -89,7 +89,7 @@ Func GetBuilderBaseSize($WithClick = False, $DebugImage = False)
 		 $g_aBoatPos[0] = Int($aVillage[7])
 		 $g_aBoatPos[1] = Int($aVillage[8])
 
-		 Local $aResul = Floor(Village_Distances($aVillage[4], $aVillage[5], $aVillage[7], $aVillage[8]))
+		 Local $aResul = Floor(Pixel_Distance($aVillage[4], $aVillage[5], $aVillage[7], $aVillage[8]))
 		 Return $aResul
 
 	  Else
@@ -100,17 +100,3 @@ Func GetBuilderBaseSize($WithClick = False, $DebugImage = False)
 	 SetDebugLog("[BBzoomout] GetDistance Boat to Stone Error", $COLOR_ERROR)
 	 Return 0
 EndFunc   ;==>GetBuilderBaseSize
-
-Func Village_Distances($x1, $y1, $x2, $y2)
-	If Not $g_bRunState Then Return
-	;Pythagoras theorem for 2D
-	Local $a, $b, $c
-	If $x2 = $x1 And $y2 = $y1 Then
-		Return 0
-	Else
-		$a = $y2 - $y1
-		$b = $x2 - $x1
-		$c = Sqrt($a * $a + $b * $b)
-		Return $c
-	EndIf
-EndFunc   ;==>Village_Distances

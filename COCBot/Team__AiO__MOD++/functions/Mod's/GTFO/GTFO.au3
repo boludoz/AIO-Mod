@@ -34,10 +34,9 @@ Func MainGTFO()
 			$bDonateSpell = ($g_aiPrepDon[2] = 1), $bDonateAllSpell = ($g_aiPrepDon[3] = 1), _
 			$bDonateSiege = ($g_aiPrepDon[4] = 1), $bDonateAllSiege = ($g_aiPrepDon[5] = 1)
 
-	Local $bDonate = BitOR($bDonateTroop, $bDonateAllTroop, $bDonateSpell, $bDonateAllSpell, $bDonateSiege, $bDonateAllSiege) > 0
-
-	If BitAND($g_iTotalDonateStatsTroops >= $g_iDayLimitTroops And $g_iDayLimitTroops > 0, $g_iTotalDonateStatsSpells >= $g_iDayLimitSpells And $g_iDayLimitSpells > 0, _
-			$g_iTotalDonateStatsSiegeMachines >= $g_iDayLimitSieges And $g_iDayLimitSieges > 0) Then
+	Local $bDonate = (($bDonateTroop) Or ($bDonateAllTroop) Or ($bDonateSpell) Or ($bDonateAllSpell) Or ($bDonateSiege) Or ($bDonateAllSiege))
+	
+	If (($g_iTotalDonateStatsTroops >= $g_iDayLimitTroops And $g_iDayLimitTroops > 0) And ($g_iTotalDonateStatsSpells >= $g_iDayLimitSpells And $g_iDayLimitSpells > 0) And ($g_iTotalDonateStatsSiegeMachines >= $g_iDayLimitSieges And $g_iDayLimitSieges > 0)) Then
 
 		SetLog("*** Donations : Day Limit. ***", $COLOR_ERROR)
 		VillageReport()
@@ -46,8 +45,8 @@ Func MainGTFO()
 		If ProfileSwitchAccountEnabled() Then checkSwitchAcc() ; Forced to switch
 		Return False
 
-	ElseIf BitOR(Not $g_bChkDonate, Not $bDonate, Not $g_bDonationEnabled) Then
-
+	ElseIf ((Not $g_bChkDonate) Or (Not $bDonate) Or (Not $g_bDonationEnabled)) Then
+		
 		SetLog("*** Setup donations. ***", $COLOR_ERROR)
 		VillageReport()
 		ProfileSwitch()
@@ -270,9 +269,9 @@ Func DonateGTFO()
 				$bDonateSpell = ($g_aiPrepDon[2] = 1), $bDonateAllSpell = ($g_aiPrepDon[3] = 1), _
 				$bDonateSiege = ($g_aiPrepDon[4] = 1), $bDonateAllSiege = ($g_aiPrepDon[5] = 1)
 
-		Local $bDonate = BitOR($bDonateTroop, $bDonateAllTroop, $bDonateSpell, $bDonateAllSpell, $bDonateSiege, $bDonateAllSiege) > 0
+		Local $bDonate = (($bDonateTroop) Or ($bDonateAllTroop) Or ($bDonateSpell) Or ($bDonateAllSpell) Or ($bDonateSiege) Or ($bDonateAllSiege))
 
-		If BitAND($g_iTotalDonateStatsTroops >= $g_iDayLimitTroops And $g_iDayLimitTroops > 0, $g_iTotalDonateStatsSpells >= $g_iDayLimitSpells And $g_iDayLimitSpells > 0, $g_iTotalDonateStatsSiegeMachines >= $g_iDayLimitSieges And $g_iDayLimitSieges > 0) Then
+		If (($g_iTotalDonateStatsTroops >= $g_iDayLimitTroops And $g_iDayLimitTroops > 0) And ($g_iTotalDonateStatsSpells >= $g_iDayLimitSpells And $g_iDayLimitSpells > 0) And ($g_iTotalDonateStatsSiegeMachines >= $g_iDayLimitSieges And $g_iDayLimitSieges > 0)) Then
 			SetLog("Donate skip :  limit reached.", $COLOR_INFO)
 			; LeaveClanHop()
 			Return False

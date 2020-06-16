@@ -33,9 +33,6 @@ Func BuilderBaseAttack($bTestRun = False)
 	; Check if Builder Base is to run
 	If Not $g_bChkBuilderAttack Then Return
 
-	; Check if is to stop at 3 attacks won
-	;If (Not $bTestRun) And BitAnd($g_iAvailableAttacksBB = 0, $g_bChkBBStopAt3) Then Return
-
 	; Stop when reach the value set it as minimum of trophies
 	If (Not $bTestRun) And Int($g_aiCurrentLootBB[$eLootTrophyBB]) < Int($g_iTxtBBDropTrophiesMin) And $g_iAvailableAttacksBB = 0 Then
 		Setlog("You reach the value set it as minimum of trophies!", $COLOR_INFO)
@@ -83,7 +80,7 @@ Func BuilderBaseAttack($bTestRun = False)
 	SetLog(" - " & $HeroStatus, $COLOR_INFO)
 
 	If $g_bRestart = True Then Return
-	If FindVersusBattlebtn() And $IsReaddy And BitOR($IsToDropTrophies, $g_iCmbBBAttack = $g_eBBAttackCSV, $g_iCmbBBAttack = $g_eBBAttackSmart) Then
+	If FindVersusBattlebtn() And $IsReaddy And (($IsToDropTrophies) Or ($g_iCmbBBAttack = $g_eBBAttackCSV) Or ($g_iCmbBBAttack = $g_eBBAttackSmart)) Then
 		ClickP($g_iMultiPixelOffSet, 1)
 		If RandomSleep(3000) Then Return
 

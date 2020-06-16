@@ -73,7 +73,7 @@ Func CheckTombs()
 	checkMainScreen(False) ; check for screen errors while function was running
 EndFunc   ;==>CheckTombs
 
-Func CleanYard()
+Func CleanYard($bTest = False)
 
 	; Early exist if noting to do
 	If Not $g_bChkCleanYard And Not $g_bChkGemsBox And Not TestCapture() Then Return
@@ -95,35 +95,7 @@ Func CleanYard()
 	Local $redLines = $sCocDiamond
 	Local $bNoBuilders = $g_iFreeBuilderCount < 1
 
-	If $g_iFreeBuilderCount > 0 And $g_bChkCleanYard And Number($g_aiCurrentLoot[$eLootElixir]) > 50000 Then
-		Local $aResult = findMultiple($g_iDetectedImageType = 1 ? $g_sImgCleanYardSnow  : $g_sImgCleanYard, $sCocDiamond, $redLines, 0, 1000, 10, "objectname,objectlevel,objectpoints", True)
-		If IsArray($aResult) Then
-			For $matchedValues In $aResult
-				Local $aPoints = decodeMultipleCoords($matchedValues[2])
-				$Filename = $matchedValues[0] ; Filename
-				For $i = 0 To UBound($aPoints) - 1
-					$CleanYardXY = $aPoints[$i] ; Coords
-					If UBound($CleanYardXY) > 1 And isInsideDiamondXY($CleanYardXY[0], $CleanYardXY[1]) Then ; secure x because of clan chat tab
-						If $g_bDebugSetlog Then SetDebugLog($Filename & " found (" & $CleanYardXY[0] & "," & $CleanYardXY[1] & ")", $COLOR_SUCCESS)
-						If IsMainPage() Then Click($CleanYardXY[0], $CleanYardXY[1], 1, 0, "#0430")
-						$Locate = 1
-						If _Sleep($DELAYCOLLECT3) Then Return
-						If Not ClickRemoveObstacle() Then ContinueLoop
-						If _Sleep($DELAYCHECKTOMBS2) Then Return
-						ClickP($aAway, 2, 300, "#0329") ;Click Away
-						If _Sleep($DELAYCHECKTOMBS1) Then Return
-						If Not getBuilderCount() Then Return ; update builder data, return if problem
-						If _Sleep($DELAYRESPOND) Then Return
-						If $g_iFreeBuilderCount = 0 Then
-							SetLog("No More Builders available")
-							If _Sleep(2000) Then Return
-							ExitLoop (2)
-						EndIf
-					EndIf
-				Next
-			Next
-		EndIf
-	EndIf
+	If $g_bChkCleanYard Then _CleanYard(False, $bTest)
 
 	; Setup arrays, including default return values for $return
 	Local $return[7] = ["None", "None", 0, 0, 0, "", ""]

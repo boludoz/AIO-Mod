@@ -122,7 +122,7 @@ EndFunc
 Func ResourceBoost($aPos1 = 0, $aPos2 = 0)
  		If not $g_bChkResourcePotion Then Return
 
-		If Not BitAND($g_iInputGoldItems >= $g_aiTempGainCost[0], $g_iInputElixirItems >= $g_aiTempGainCost[1], $g_iInputDarkElixirItems >= $g_aiTempGainCost[2]) Then Return
+		If Not (($g_iInputGoldItems >= $g_aiTempGainCost[0]) And ($g_iInputElixirItems >= $g_aiTempGainCost[1]) And ($g_iInputDarkElixirItems >= $g_aiTempGainCost[2])) Then Return
 
 		Local Static $iLastTimeChecked[8] = [0, 0, 0, 0, 0, 0, 0, 0]
 
@@ -242,7 +242,7 @@ Func BoostPotionMod($sName, $bDebug = False)
 				EndIf
 			$bFuse = True
 			Else
-			If BitAND($i > 0, $bFuse) Then ExitLoop
+			If (($i > 0) And $bFuse) Then ExitLoop
 		EndIf
 	 Next
 

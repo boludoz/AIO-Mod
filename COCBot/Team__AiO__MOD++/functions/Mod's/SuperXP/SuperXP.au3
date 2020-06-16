@@ -205,7 +205,7 @@ Func MainSXHandler()
 			$CurrentXPgain += 11
 		EndIf
 
-		If BitAND(BalanceDonRec(False), Not SkipDonateNearFullTroops(False, $aHeroResult), not $g_bFastSuperXP, _ColorCheck(_GetPixelColor(26, 342, True), Hex(0xEA0810, 6), 20)) Then 
+		If ((BalanceDonRec(False)) And (Not SkipDonateNearFullTroops(False, $aHeroResult)) And (not $g_bFastSuperXP) And ((_ColorCheck(_GetPixelColor(26, 342, True), Hex(0xEA0810, 6), 20)))) Then 
 			DonateCC(True)
 		EndIf
 
@@ -765,7 +765,7 @@ Func OpenGoblinMapSX()
 	EndIf
 
 	Local $rDragToGoblinMapSX = DragToGoblinMapSX()
-	If not BitAND(IsArray($rDragToGoblinMapSX), UBound($rDragToGoblinMapSX) = 2) Or $rDragToGoblinMapSX = False Then
+	If not (IsArray($rDragToGoblinMapSX) And UBound($rDragToGoblinMapSX) = 2) Or $rDragToGoblinMapSX = False Then
 		SetLog("Failed to find " & $g_sGoblinMapOptSX, $COLOR_ERROR)
 		SaveDebugImage("SuperXP_", True, True, String(Random(5, 100, 1)) & ", " & String(Random(5, 100, 1)) & ", " & String(Random(5, 100, 1)))
 		SafeReturnSX()
@@ -794,7 +794,7 @@ Func OpenGoblinMapSX()
 	If _Sleep(50) Then Return False
 
 	Local $Counter = 0
-	While not BitAND(IsArray($rDragToGoblinMapSX), UBound($rDragToGoblinMapSX) = 2)
+	While not (IsArray($rDragToGoblinMapSX) And UBound($rDragToGoblinMapSX) = 2)
 		$rDragToGoblinMapSX = DragToGoblinMapSX()
 		Click($rDragToGoblinMapSX[0] + Random(40,60,1), $rDragToGoblinMapSX[1] + Random(70,90,1)) ; Click On Goblin Picnic Text To Show Attack Button
 		If _Sleep(50) Or $Counter > 15 Then ExitLoop

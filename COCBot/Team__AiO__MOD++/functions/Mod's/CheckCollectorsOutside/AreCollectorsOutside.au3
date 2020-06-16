@@ -6,7 +6,7 @@
 ; Return values .: True					more collectors outside than specified
 ;				 : False				less collectors outside than specified
 ; Author ........: McSlither (Jan-2016)
-; Modified ......: TheRevenor (Jul 2016), Samkie (13 Jan 2017), Team AiO MOD++ (2019)
+; Modified ......: TheRevenor (Jul 2016), Samkie (13 Jan 2017), Team AiO MOD++ (2020)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2016
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -16,29 +16,36 @@
 
 Func AreCollectorsOutside($percent)
 	If $g_bDBCollectorNearRedline Then Return AreCollectorsNearRedline($percent)
-
+	Return
+	
 	SetLog("Locating Mines & Collectors", $COLOR_INFO)
 	; reset variables
-	Global $g_aiPixelMine[0]
-	Global $g_aiPixelElixir[0]
-	Global $g_aiPixelNearCollector[0]
+	;Global $g_aiPixelMine[0]
+	;Global $g_aiPixelElixir[0]
+	;Global $g_aiPixelNearCollector[0]
 	Global $colOutside = 0
 	Global $hTimer = TimerInit()
 	Global $hBitmapFirst
 	_WinAPI_DeleteObject($hBitmapFirst)
 	$hBitmapFirst = _CaptureRegion2()
 
-	SuspendAndroid()
-	$g_aiPixelMine = GetLocationMine()
-	If (IsArray($g_aiPixelMine)) Then
-		_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelMine, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
+	;SuspendAndroid()
+	;$g_aiPixelMine = GetLocationMine()
+	;If (IsArray($g_aiPixelMine)) Then
+	;	_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelMine, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
+	;EndIf
+	;$g_aiPixelElixir = GetLocationElixir()
+	;If (IsArray($g_aiPixelElixir)) Then
+	;	_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
+	;EndIf
+	;ResumeAndroid()
+	
+	Local $aMines = SmartFarmDetection("Mines") ; Pro Killer
+	If not IsArray($aMines) Then
+		SetDebugLog("AreCollectorsOutside | No mines outside")
+		Return False
 	EndIf
-	$g_aiPixelElixir = GetLocationElixir()
-	If (IsArray($g_aiPixelElixir)) Then
-		_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
-	EndIf
-	ResumeAndroid()
-
+	
 	$g_bScanMineAndElixir = True
 
 	Global $colNbr = UBound($g_aiPixelNearCollector)
@@ -48,22 +55,25 @@ Func AreCollectorsOutside($percent)
 
 	Global $minColOutside = Round($colNbr * $percent / 100)
 	Global $radiusAdjustment = 1
-
-	If $g_iSearchTH = "-" Or $g_iSearchTH = "" Then FindTownhall(True)
-	If $g_iSearchTH <> "-" Then
-		$radiusAdjustment *= Number($g_iSearchTH) / 10
+	Local $iSearchTH = $g_iSearchTH
+	
+	If $iSearchTH > 10 Then $iSearchTH = 11
+	
+	If $iSearchTH = "-" Or $iSearchTH = "" Then FindTownhall(True)
+	If $iSearchTH <> "-" Then
+		$radiusAdjustment *= Number($iSearchTH) / 10
 	Else
 		If $g_iTownHallLevel > 0 Then
 			$radiusAdjustment *= Number($g_iTownHallLevel) / 10
 		EndIf
 	EndIf
-	If $g_bDebugSetlog Then SetLog("$g_iSearchTH: " & $g_iSearchTH)
+	If $g_bDebugSetlog Then SetLog("$iSearchTH: " & $iSearchTH)
 
 	For $i = 0 To $colNbr - 1
 		Global $arrPixel = $g_aiPixelNearCollector[$i]
 		If UBound($arrPixel) > 0 Then
 			If isOutsideEllipse($arrPixel[0], $arrPixel[1], $CollectorsEllipseWidth * $radiusAdjustment, $CollectorsEllipseHeigth * $radiusAdjustment) Then
-				If $g_bDebugSetlog Then SetDebugLog("Collector (" & $arrPixel[0] & ", " & $arrPixel[1] & ") is outside", $COLOR_DEBUG)
+				If $g_bDebugSetlog Then SetLog("Collector (" & $arrPixel[0] & ", " & $arrPixel[1] & ") is outside", $COLOR_PURPLE)
 				$colOutside += 1
 			EndIf
 		EndIf

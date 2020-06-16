@@ -57,6 +57,9 @@ Func ReadConfig_MOD_MiscTab()
 	; Skip first check
 	IniReadS($g_bSkipfirstcheck, $g_sProfileConfigPath, "MiscTab", "Skipfirstcheck", $g_bSkipfirstcheck, "Bool")
 
+	; Remove edge obstacles
+	IniReadS($g_bEdgeObstacle, $g_sProfileConfigPath, "MiscTab", "EdgeObstacle", $g_bEdgeObstacle, "Bool")
+
 	; DeployDelay
 	IniReadS($g_iDeployDelay[0], $g_sProfileConfigPath, "MiscTab", "DeployDelay0", $g_iDeployDelay[0], "Int")
 	IniReadS($g_iDeployDelay[1], $g_sProfileConfigPath, "MiscTab", "DeployDelay1", $g_iDeployDelay[1], "Int")

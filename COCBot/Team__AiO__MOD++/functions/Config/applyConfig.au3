@@ -104,7 +104,8 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			GUICtrlSetState($g_hNoAttackSleep, $g_bNoAttackSleep = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hDisableColorLog, $g_bDisableColorLog = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hAvoidLocation, $g_bAvoidLocation = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
-			
+			GUICtrlSetState($g_hEdgeObstacle, $g_bEdgeObstacle = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+
 			For $i = $DB To $LB
 				GUICtrlSetState($g_hDeployCastleFirst[$i], $g_bDeployCastleFirst[$i] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			Next			
@@ -199,7 +200,10 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			
 			; Skip first check
 			$g_bSkipfirstcheck = GUICtrlRead($g_hSkipfirstcheck)  = $GUI_CHECKED
-
+			
+			; Remove edge obstacles
+			$g_bEdgeObstacle = GUICtrlRead($g_hEdgeObstacle)  = $GUI_CHECKED
+			
 			; DeployDelay
 			$g_iDeployDelay[0] = Int(GUICtrlRead($g_hDeployDelay[0]))
 			$g_iDeployDelay[1] = Int(GUICtrlRead($g_hDeployDelay[1]))

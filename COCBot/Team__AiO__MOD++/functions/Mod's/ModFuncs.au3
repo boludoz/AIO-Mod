@@ -54,7 +54,7 @@ Func _ImageSearchXML($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "0,
 			_ArrayAdd($aAllResults, $aTmpResults)
 		Next
 		$iCount += 1
-		If BitAND($iQuantity2Match < 0, $iCount <= $iQuantity2Match) Then ExitLoop
+		If ($iQuantity2Match < 0) And ($iCount <= $iQuantity2Match) Then ExitLoop
 	Next
 	;If $iCount < 1 Then Return -1 what
 
@@ -167,7 +167,7 @@ Func findMultipleQuick($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "
 							_ArrayDelete($aAllResults, $j)
 						EndIf
 					Else
-						If $LastCoordinate[1] = $SingleCoordinate[1] And $LastCoordinate[2] = $SingleCoordinate[2] And BitOr($LastCoordinate[3] <> $SingleCoordinate[3], $LastCoordinate[0] <> $SingleCoordinate[0]) > 0 Then
+						If $LastCoordinate[1] = $SingleCoordinate[1] And $LastCoordinate[2] = $SingleCoordinate[2] And ($LastCoordinate[3] <> $SingleCoordinate[3] Or $LastCoordinate[0] <> $SingleCoordinate[0]) Then
 							_ArrayDelete($aAllResults, $j)
 						EndIf
 					EndIf
@@ -443,7 +443,7 @@ Func _makerequestCustom($aButtonPosition = -1)
 	$aFixedMatrixPencil[0] = Abs(Int($aFindPencil[0][1] + 13 - 159))
 	$aFixedMatrixPencil[1] = Abs(Int($aFindPencil[0][2] + 108 + 69))
 	$aFixedMatrixPencil[2] = Abs(Int($aFindPencil[0][1] + 36))
-	$aFixedMatrixPencil[3] = Abs(Int($aFindPencil[0][2] + 267 + 14))
+	$aFixedMatrixPencil[3] = Abs(Int($aFindPencil[0][2] + 267 + 5))
 	
 	SetDebuglog("SearchPixelDonate FixedMatrixPencil " & _ArrayToString($aFixedMatrixPencil))
 

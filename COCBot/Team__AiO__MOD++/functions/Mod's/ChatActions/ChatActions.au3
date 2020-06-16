@@ -71,7 +71,7 @@ EndFunc   ;==>DelayTime
 
 Func ChatActions() ; run the chatbot
 
-	If $g_bChatClan Or BitAND($g_bEnableFriendlyChallenge, Not $g_bStayOnBuilderBase) Then
+	If $g_bChatClan Or (($g_bEnableFriendlyChallenge) And (Not $g_bStayOnBuilderBase)) Then
 		If Not OpenClanChat() Then
 			Setlog("ChatActions : OpenClanChat Error.", $COLOR_ERROR)
 			AndroidPageError("ChatActions")
@@ -537,7 +537,7 @@ Func FriendlyChallenge()
 		If $sOCRString <> -1 Then
 			$bDoFriendlyChallenge = True
 			$iTempR = Number(StringReverse($sOCRString))
-			$iRequested = (BitAnd($iTempR > 0, $iTempR < 7)) ? ($iTempR-1) : (-1)
+			$iRequested = ($iTempR > 0 And $iTempR < 7) ? ($iTempR-1) : (-1)
 			If $iRequested <> -1 Then
 				For $i = 0 To UBound($aBaseForShare) -1
 					If $aBaseForShare[$i][0] = $iRequested And $aBaseForShare[$i][1] = True Then
