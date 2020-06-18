@@ -16,72 +16,64 @@
 
 Func AreCollectorsOutside($percent)
 	If $g_bDBCollectorNearRedline Then Return AreCollectorsNearRedline($percent)
-	Return
 	
 	SetLog("Locating Mines & Collectors", $COLOR_INFO)
 	; reset variables
-	;Global $g_aiPixelMine[0]
-	;Global $g_aiPixelElixir[0]
-	;Global $g_aiPixelNearCollector[0]
+	Global $g_aiPixelNearCollector[0]
+
 	Global $colOutside = 0
 	Global $hTimer = TimerInit()
-	Global $hBitmapFirst
-	_WinAPI_DeleteObject($hBitmapFirst)
-	$hBitmapFirst = _CaptureRegion2()
 
-	;SuspendAndroid()
-	;$g_aiPixelMine = GetLocationMine()
-	;If (IsArray($g_aiPixelMine)) Then
-	;	_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelMine, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
-	;EndIf
-	;$g_aiPixelElixir = GetLocationElixir()
-	;If (IsArray($g_aiPixelElixir)) Then
-	;	_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
-	;EndIf
-	;ResumeAndroid()
+	Global $g_aiPixelMine = GetLocationMine()
+	Global $g_aiPixelElixir = GetLocationElixir()
+	Global $g_aiPixelDarkElixir = GetLocationDarkElixir()
 	
-	Local $aMines = SmartFarmDetection("Mines") ; Pro Killer
-	If not IsArray($aMines) Then
-		SetDebugLog("AreCollectorsOutside | No mines outside")
+	If Not (IsArray($g_aiPixelMine) Or IsArray($g_aiPixelElixir) Or (IsArray($g_aiPixelDarkElixir) And ($g_iTownHallLevel > 6) And (Not $g_bSmartZapEnable))) Then
+		SetLog("Are collectors outside | No mines/collectors/drills detected.", $COLOR_INFO)
 		Return False
+	Else
+		If IsArray($g_aiPixelMine) Then _ArrayAdd($g_aiPixelNearCollector, $g_aiPixelMine, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
+		If IsArray($g_aiPixelElixir) Then _ArrayAdd($g_aiPixelNearCollector, $g_aiPixelElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
+		If IsArray($g_aiPixelDarkElixir) Then _ArrayAdd($g_aiPixelNearCollector, $g_aiPixelDarkElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
 	EndIf
-	
+
 	$g_bScanMineAndElixir = True
 
-	Global $colNbr = UBound($g_aiPixelNearCollector)
-	SetLog("Located collectors in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds")
-	SetLog("[" & UBound($g_aiPixelMine) & "] Gold Mines")
-	SetLog("[" & UBound($g_aiPixelElixir) & "] Elixir Collectors")
+	SetLog("Located collectors in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds", $COLOR_INFO)
+	SetLog("[" & UBound($g_aiPixelElixir) & "] Elixir collectors", $COLOR_INFO)
+	SetLog("[" & UBound($g_aiPixelMine) & "] Gold mines", $COLOR_INFO)
+	SetLog("[" & UBound($g_aiPixelDarkElixir) & "] Dark elixir drills", $COLOR_INFO)
 
-	Global $minColOutside = Round($colNbr * $percent / 100)
+	Global $minColOutside = Round(UBound($g_aiPixelNearCollector) * $percent / 100)
 	Global $radiusAdjustment = 1
+	
+	If $g_iSearchTH = "-" Or $g_iSearchTH = "" Then FindTownhall(True)
 	Local $iSearchTH = $g_iSearchTH
 	
-	If $iSearchTH > 10 Then $iSearchTH = 11
+	If ($iSearchTH > 10) Then $iSearchTH = 11
 	
-	If $iSearchTH = "-" Or $iSearchTH = "" Then FindTownhall(True)
 	If $iSearchTH <> "-" Then
 		$radiusAdjustment *= Number($iSearchTH) / 10
 	Else
-		If $g_iTownHallLevel > 0 Then
+		If ($g_iTownHallLevel > 0) Then
 			$radiusAdjustment *= Number($g_iTownHallLevel) / 10
+		Else
+			$radiusAdjustment *= Number(10) / 10
 		EndIf
 	EndIf
 	If $g_bDebugSetlog Then SetLog("$iSearchTH: " & $iSearchTH)
 
-	For $i = 0 To $colNbr - 1
-		Global $arrPixel = $g_aiPixelNearCollector[$i]
-		If UBound($arrPixel) > 0 Then
-			If isOutsideEllipse($arrPixel[0], $arrPixel[1], $CollectorsEllipseWidth * $radiusAdjustment, $CollectorsEllipseHeigth * $radiusAdjustment) Then
-				If $g_bDebugSetlog Then SetLog("Collector (" & $arrPixel[0] & ", " & $arrPixel[1] & ") is outside", $COLOR_PURPLE)
+	For $i = 0 To UBound($g_aiPixelNearCollector) - 1
+			Local $aXY = $g_aiPixelNearCollector[$i]
+			If isOutsideEllipse($aXY[0], $aXY[1], $CollectorsEllipseWidth * $radiusAdjustment, $CollectorsEllipseHeigth * $radiusAdjustment) Then
+				If $g_bDebugSetlog Then SetLog("Collector (" & $aXY[0] & ", " & $aXY[1] & ") is outside", $COLOR_PURPLE)
 				$colOutside += 1
 			EndIf
-		EndIf
 		If $colOutside >= $minColOutside Then
 			If $g_bDebugSetlog Then SetDebugLog("More than " & $percent & "% of the collectors are outside", $COLOR_DEBUG)
 			Return True
 		EndIf
 	Next
-	If $g_bDebugSetlog Then SetDebugLog($colOutside & " collectors found outside (out of " & $colNbr & ")", $COLOR_DEBUG)
+	If $g_bDebugSetlog Then SetDebugLog($colOutside & " collectors found outside (out of " & UBound($g_aiPixelNearCollector) & ")", $COLOR_DEBUG)
 	Return False
 EndFunc   ;==>AreCollectorsOutside

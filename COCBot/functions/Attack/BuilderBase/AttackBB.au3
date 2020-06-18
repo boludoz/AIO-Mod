@@ -80,13 +80,16 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 	; Get troops on attack bar and their quantities
 	Local $aBBAttackBar = MachineKick($aAvailableTroops)
 	
-	If $aBBAttackBar = -1 Then Return "Fail MachineKick."
+	If Not IsArray($aBBAttackBar) Then Return "Fail MachineKick."
 	
 	If RandomSleep($DELAYRESPOND) Then
 		$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
 		If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Enabled")
 		Return
 	EndIf
+	
+	Local $iLoopControl = 0, $iUBound1 = UBound($aBBAttackBar)
+
 	
 	; Deploy all troops
 	SetLog($g_bBBDropOrderSet = True ? "Deploying Troops in Custom Order." : "Deploying Troops in Order of Attack Bar.", $COLOR_BLUE)
@@ -97,6 +100,7 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 			For $i = 0 To UBound($g_ahCmbBBDropOrder) - 1 ; loop through each name in the drop order
 				Local $j = 0, $bDone = 0
 				While $j < $iNumSlots And Not $bDone
+					If $aBBAttackBar[$j][0] = "Machine" Then ContinueLoop
 					;If $aBBAttackBar[$j][0] = $asBBDropOrder[$i+1] Then; Custom BB Army - Team AIO Mod++
 					If $aBBAttackBar[$j][0] = $g_asAttackBarBB[Number($g_aiCmbBBDropOrder[$i]) + 1] Then ; Custom BB Army - Team AIO Mod++
 						;DeployBBTroop($aBBAttackBar[$j][0], $aBBAttackBar[$j][1], $aBBAttackBar[$j][2], $aBBAttackBar[$j][4], $iSide)
@@ -125,6 +129,7 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 			Next
 		Else
 			For $i = 0 To $iNumSlots - 1
+				If $aBBAttackBar[$i][0] = "Machine" Then ContinueLoop
 				;DeployBBTroop($aBBAttackBar[$i][0], $aBBAttackBar[$i][1], $aBBAttackBar[$i][2], $aBBAttackBar[$i][4], $iSide)
 				SetLog("Deploying " & $aBBAttackBar[$i][0] & " x" & String($aBBAttackBar[$i][4]), $COLOR_ACTION)
 				PureClick($aBBAttackBar[$i][1] - Random(0, 5, 1), $aBBAttackBar[$i][2] - Random(0, 5, 1)) ; select troop
@@ -153,7 +158,11 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 			Next
 		EndIf
 		
+		; Attack bar loop control.
 		$aBBAttackBar = GetAttackBarBB(True)
+		If UBound($aBBAttackBar) = $iUBound1 Then $iLoopControl += 1	
+		If ($iLoopControl > 3) Then ExitLoop
+		$iUBound1 = UBound($aBBAttackBar)
 		
 	Until not IsArray(MachineKick($aBBAttackBar))
 	SetLog("All Troops Deployed", $COLOR_SUCCESS)
@@ -167,10 +176,6 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 			Local $vDP = Random(0, UBound($aVar)-1)
 			PureClick($aVar[$vDP][0], $aVar[$vDP][1])
 			If RandomSleep(500) Then Return  ; wait before clicking ability
-			;	$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
-			;	If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Enabled")
-			;	Return
-			;EndIf
 			If $g_bIsBBMachineD = False Then $g_bIsBBMachineD = True
 		EndIf
 		

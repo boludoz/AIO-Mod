@@ -16,7 +16,7 @@ Func CleanRedArea(ByRef $InputVect, $side = "")
 	Local $TempVectStr = ""
 	For $i = 0 To UBound($InputVect) - 1
 		Local $pixel = $InputVect[$i]
-		If isInsideDiamondRedArea($pixel) Then
+		If isInDiamond($pixel[0], $pixel[1], 43, 50, 818, 634) Then ; Custom - Team AIO Mod++
 			$TempVectStr &= $pixel[0] & "-" & $pixel[1] & "|"
 		Else
 			debugAttackCSV("CleanRedArea removed (" & $pixel[0] & "," & $pixel[1] & ")")

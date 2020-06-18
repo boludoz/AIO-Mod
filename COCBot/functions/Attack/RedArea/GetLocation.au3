@@ -1,6 +1,7 @@
+#Region - Custom - Team AIO Mod++
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: GetLocationMine
-; Description ...:
+; Description ...: (Deprecated - Team AIO Mod++)
 ; Syntax ........: GetLocationMine()
 ; Parameters ....:
 ; Return values .: String with locations
@@ -14,55 +15,17 @@
 ; ===============================================================================================================================
 
 Func GetLocationMine()
-
-	Local $sDirectory = @ScriptDir & "\imgxml\Storages\GoldMines"
-	Local $sTxtName = "Mines"
-	Local $iMaxReturns = 7
-
-	; Snow Theme detected
-	If $g_iDetectedImageType = 1 Then
-		$sDirectory = @ScriptDir & "\imgxml\Storages\Mines_Snow"
-		$sTxtName = "SnowMines"
-	EndIf
-
-	Local $aTempResult = returnMultipleMatches($sDirectory, $iMaxReturns)
-	Local $aEndResult = ConvertImgloc2MBR($aTempResult, $iMaxReturns)
-	If $g_bDebugBuildingPos Then SetLog("#*# GetLocation" & $sTxtName & ": " & $aEndResult, $COLOR_DEBUG)
-	If $g_bDebugGetLocation Then DebugImageGetLocation($aEndResult, $sTxtName)
-
-	Return GetListPixel($aEndResult)
+	Return _GetLocationMine()
 EndFunc   ;==>GetLocationMine
 
 Func GetLocationElixir()
-	Local $sDirectory = @ScriptDir & "\imgxml\Storages\Collectors"
-	Local $sTxtName = "Collectors"
-	Local $iMaxReturns = 7
-
-	; Snow Theme detected
-	If $g_iDetectedImageType = 1 Then
-		$sDirectory = @ScriptDir & "\imgxml\Storages\Collectors_Snow"
-		$sTxtName = "SnowCollectors"
-	EndIf
-
-	Local $aTempResult = returnMultipleMatches($sDirectory, $iMaxReturns)
-	Local $aEndResult = ConvertImgloc2MBR($aTempResult, $iMaxReturns)
-	If $g_bDebugBuildingPos Then SetLog("#*# GetLocation" & $sTxtName & ": " & $aEndResult, $COLOR_DEBUG)
-	If $g_bDebugGetLocation Then DebugImageGetLocation($aEndResult, $sTxtName)
-
-	Return GetListPixel($aEndResult)
+	Return _GetLocationElixir()
 EndFunc   ;==>GetLocationElixir
 
 Func GetLocationDarkElixir()
-	Local $sDirectory = @ScriptDir & "\imgxml\Storages\Drills"
-	Local $iMaxReturns = 3
-	Local $aTempResult = returnMultipleMatches($sDirectory, $iMaxReturns)
-	Local $aEndResult = ConvertImgloc2MBR($aTempResult, $iMaxReturns)
-
-	If $g_bDebugBuildingPos Then SetLog("#*# GetLocationDarkElixir: " & $aEndResult, $COLOR_DEBUG)
-	If $g_bDebugGetLocation Then DebugImageGetLocation($aEndResult, "DarkElixir")
-
-	Return GetListPixel($aEndResult)
+	Return _GetLocationDarkElixir()
 EndFunc   ;==>GetLocationDarkElixir
+#EndRegion - Custom - Team AIO Mod++
 
 ; ###############################################################################################################
 
@@ -93,6 +56,7 @@ Func GetLocationDarkElixirStorage()
 	Return GetListPixel($aEndResult[0])
 EndFunc   ;==>GetLocationDarkElixirStorage
 
+#cs - Deprecated - Team AIO Mod++
 ; USES OLD OPENCV DETECTION
 Func GetLocationElixirWithLevel()
 	;Note about returned levels:
@@ -155,7 +119,7 @@ Func GetLocationDarkElixirWithLevel()
 
 	Return $aEndResult
 EndFunc   ;==>GetLocationDarkElixirWithLevel
-
+#ce
 
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: GetLocationBuilding

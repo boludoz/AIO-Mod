@@ -1,8 +1,8 @@
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: SetSleep
 ; Description ...: Randomizes deployment wait time
-; Syntax ........: SetSleep($type)
-; Parameters ....: $type                - Flag for type return desired.
+; Syntax ........: SetSleep($iType)
+; Parameters ....: $iType                - Flag for type return desired.
 ; Return values .: None
 ; Author ........:
 ; Modified ......: KnowJack (06-2015)
@@ -13,45 +13,38 @@
 ; Example .......: No
 ; ===============================================================================================================================
 #Region - Custom sleep Drop - Team AIO Mod++
-Func SetSleep($type)
-	If IsKeepClicksActive() = True Then Return 0 ; fast bulk deploy
-	Local $factor0 = 10
-	Local $factor1 = 100
+Func SetSleep($iType)
+	If IsKeepClicksActive() = True Then Return 128 ; fast bulk deploy
+	Local $iOffset0 = Round(128 / 2)
+	Local $iOffset1 = Round(416 / 2)
 	If $g_bAndroidAdbClick = True Then
 		; adjust for slow ADB clicks the delay factor
-		$factor0 = 10
-		$factor1 = 100
+		$iOffset0 = Round(128 / 2) ; Based on humane offset.
+		$iOffset1 = Round(416 / 2) ; Based on humane offset.
 	EndIf
 
-	Local $iReturn = Random(1, 10) * Int(($type = 0) ? ($factor0) : ($factor1))
+	Local $iReturn = Random(1, 10) * Int(($iType = 0) ? ($iOffset0) : ($iOffset1))
 	Local $iCmbValue = $g_aiAttackAlgorithm[$DB]
 	
-	If BitAND(IsDeclared("g_bChkEnableRandom") <> 0, IsDeclared("g_iDeployDelay") <> 0, IsDeclared("$g_iDeployWave") <> 0) Then
-		If BitAND(IsArray($g_bChkEnableRandom), IsArray($g_iDeployDelay), IsArray($g_iDeployWave)) Then
-			If Not BitAND(UBound($g_bChkEnableRandom) > 2, UBound($g_iDeployDelay) > 2, UBound($g_iDeployWave) > 2) Then
-				SetDebugLog("SetSleep | UBound fail on SetSleep.")
-				Return $iReturn
-			EndIf
-		Else
-			SetDebugLog("SetSleep | IsArray fail on SetSleep.")
-			Return $iReturn
+	If ((IsArray($g_bChkEnableRandom)) And (IsArray($g_iDeployDelay)) And (IsArray($g_iDeployWave))) Then
+		If Not ((UBound($g_bChkEnableRandom) > 2) And (UBound($g_iDeployDelay) > 2) And (UBound($g_iDeployWave) > 2)) Then
+			SetDebugLog("SetSleep | UBound fail on SetSleep.")
+			Return Round(Random(($iReturn*80)/100, ($iReturn*120)/100, 1))
 		EndIf
 	Else
-		SetDebugLog("SetSleep | IsDeclared fail on SetSleep.")
-		Return $iReturn
+		SetDebugLog("SetSleep | IsArray fail on SetSleep.")
+		Return Round(Random(($iReturn*80)/100, ($iReturn*120)/100, 1))
 	EndIf
 
 	SetDebugLog("SetSleep Base : " & $iReturn)
 
 	If $g_iMatchMode = $DB Then
-		If BitAND($g_bChkEnableRandom[0], $iCmbValue = 0) Then ; DB + Standard
-			$iReturn = ($type = 0) ? ($factor0 * Int($g_iDeployDelay[0])) : ($factor1 * Int($g_iDeployWave[0]))
+		If (($g_bChkEnableRandom[0]) And ($iCmbValue = 0)) Then ; DB + Standard
+			$iReturn = ($iType = 0) ? ($iOffset0 * Int($g_iDeployDelay[0])) : ($iOffset1 * Int($g_iDeployWave[0]))
 			SetDebugLog("SetSleep Mod + DB + Standard : " & $iReturn)
-			
-			ElseIf BitAND($g_bChkEnableRandom[1], $iCmbValue = 2) Then ; DB + Smart farm
-			$iReturn = ($type = 0) ? ($factor0 * Int($g_iDeployDelay[1])) : ($factor1 * Int($g_iDeployWave[1]))
+		ElseIf (($g_bChkEnableRandom[1]) And ($iCmbValue = 2)) Then ; DB + Smart farm
+			$iReturn = ($iType = 0) ? ($iOffset0 * Int($g_iDeployDelay[1])) : ($iOffset1 * Int($g_iDeployWave[1]))
 			SetDebugLog("SetSleep Mod + DB + Smart farm : " & $iReturn)
-
 		EndIf
 	EndIf
 

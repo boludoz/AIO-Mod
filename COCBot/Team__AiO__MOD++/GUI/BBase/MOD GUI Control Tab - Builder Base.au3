@@ -327,7 +327,7 @@ EndFunc ;==>ChkBBWalls
 
 Func cmbBBWall()
 	$g_iCmbBBWallLevel = _GUICtrlComboBox_GetCurSel($g_hCmbBBWallLevel)
-	_GUICtrlSetImage($g_hPicBBWallUpgrade, $g_sLibBBIconPath, $g_iCmbBBWallLevel + 19)
+	_GUICtrlSetImage($g_hPicBBWallUpgrade, $g_sLibBBIconPath, $g_iCmbBBWallLevel + 8)
 EndFunc   ;==>cmbBBWall
 
 Func ChkBBGetFromCSV()

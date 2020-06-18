@@ -10,7 +10,7 @@
 #Au3Stripper_Off
 #Au3Stripper_On
 Global $g_sBotVersion = "v7.8.3"
-Global $g_sModVersion = "v3.5.9"
+Global $g_sModVersion = "v4.0.5"
 Opt("MustDeclareVars", 1)
 Global $g_sBotTitle = ""
 Global $g_hFrmBot = 0
@@ -7543,6 +7543,8 @@ Global $g_aIsDead[UBound($g_avAttackTroops, 1) -1]
 Global $g_iSlotNow = -1
 Global $g_bUseSleep = False, $g_iIntSleep = 20, $g_bUseRandomSleep = False, $g_bNoAttackSleep = False, $g_bDisableColorLog = False, $g_bDelayLabel = False, $g_bAvoidLocation = False, $g_bEdgeObstacle = False
 Global $g_hUseSleep, $g_hIntSleep, $g_hUseRandomSleep, $g_hNoAttackSleep, $g_hDisableColorLog, $g_hDelayLabel, $g_hAvoidLocation, $g_hEdgeObstacle
+Global $g_bMaxSidesSF = True, $g_iCmbMaxSidesSF = 1
+Global $g_hMaxSidesSF, $g_hCmbMaxSidesSF
 Global $g_bDeployCastleFirst[2] = [False, False]
 Global $g_iDeployWave[3] = [5, 5, 5], $g_iDeployDelay[3] = [5, 5, 5]
 Global $g_bChkEnableRandom[3] = [True, True, True]
@@ -7657,7 +7659,7 @@ Global $g_iBBMachAbilityTime = 14000
 Global $g_bChkBuilderAttack = False, $g_bChkBBStopAt3 = False, $g_bChkBBTrophiesRange = False, $g_iTxtBBDropTrophiesMin = 0, $g_iTxtBBDropTrophiesMax = 0
 Global $g_iCmbBBArmy1 = 0, $g_iCmbBBArmy2 = 0, $g_iCmbBBArmy3 = 0, $g_iCmbBBArmy4 = 0, $g_iCmbBBArmy5 = 0, $g_iCmbBBArmy6 = 0
 Global Const $g_sLibBBIconPath = $g_sLibPath & "\BuilderBase.dll"
-Global Enum $eIcnBBBarb = 1, $eIcnBBArch, $eIcnBBGiant, $eIcnBBBeta, $eIcnBBBombn, $eIcnBBBabyDrag, $eIcnBBCannon, $eIcnBBNight, $eIcnBBDrop, $eIcnBBPekka, $eIcnBBEmpty, $eIcnBB, $eIcnLabBB, $eIcnBBElixir, $eIcnBBGold, $eIcnBBTrophies, $eIcnMachine, $eIcnBBWallInfo, $eIcnBBWallL1, $eIcnBBWallL2, $eIcnBBWallL3, $eIcnBBWallL4, $eIcnBBWallL5, $eIcnBBWallL6, $eIcnBBWallL7, $eIcnBBWallL8
+Global Enum $eIcnBB = 1 , $eIcnLabBB, $eIcnBBElixir, $eIcnBBGold, $eIcnBBTrophies, $eIcnMachine, $eIcnBBWallInfo, $eIcnBBWallL1, $eIcnBBWallL2, $eIcnBBWallL3, $eIcnBBWallL4, $eIcnBBWallL5, $eIcnBBWallL6, $eIcnBBWallL7, $eIcnBBWallL8, $eIcnBBWallL9
 Global $CocDiamondECD = "ECD"
 Global $CocDiamondDCD = "DCD"
 Global $InternalArea[8][3]
@@ -8218,6 +8220,7 @@ Global Const $g_sImgAttackBtnBB = $g_sModImageLocation & "\BuildersBase\Attack\A
 Global Const $g_sImgReportWaitBB = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\Report\Waiting"
 Global Const $g_sImgReportFinishedBB = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\Report\Replay"
 Global Const $g_sImgReportResultBB = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\Report\Result"
+Global Const $g_sBundleWallsBB = $g_sModImageLocation & "\BuildersBase\Bundles\Walls"
 Global Const $g_sImgTraderMod = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Traderfix"
 Func _StringSize($sText, $iSize = 8.5, $iWeight = 400, $iAttrib = 0, $sName = "", $iMaxWidth = 0, $hWnd = 0)
 If $iSize = Default Then $iSize = 8.5
@@ -15991,7 +15994,6 @@ GUICtrlCreateTabItem("")
 EndFunc
 Func CreateLaboratorySubTab()
 Local $sTxtNames = GetTranslatedFileIni("MBR Global GUI Design", "Any", "Any") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtBarbarians", "Barbarians") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtArchers", "Archers") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtGiants", "Giants") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtGoblins", "Goblins") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtWallBreakers", "Wall Breakers") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtBalloons", "Balloons") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtWizards", "Wizards") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtHealers", "Healers") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtDragons", "Dragons") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtPekkas", "Pekkas") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtBabyDragons", "Baby Dragons") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtMiners", "Miners") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtEDragon", "Electro Dragon") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtYeti", "Yeti") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtLightningSpells", "Lightning Spell") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtHealingSpells", "Healing Spell") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtRageSpells", "Rage Spell") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtJumpSpells", "Jump Spell") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtFreezeSpells", "Freeze Spell") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtCloneSpells", "Clone Spell")& "|" & GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtPoisonSpells", "Poison Spell") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtEarthQuakeSpells", "EarthQuake Spell") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtHasteSpells", "Haste Spell") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtSkeletonSpells", "Skeleton Spell") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtBatSpells", "Bat Spell") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtMinions", "Minions") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtHogRiders", "Hog Riders") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtValkyries", "Valkyries") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtGolems", "Golems") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtWitches", "Witches") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtLavaHounds", "Lava Hounds") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtBowlers", "Bowlers") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtIceGolems", "Ice Golems") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtWallWreckers", "Wall Wreckers") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtBattleBlimps", "Battle Blimps") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtStoneSlammers", "Stone Slammers") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSiegeBarracks", "Siege Barracks")
-Local $sTxtSLNames = GetTranslatedFileIni("MBR Global GUI Design", "Any", "Any") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtRagedBarbarian", "Raged Barbarian") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtSneakyArcher", "Sneaky Archer") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtBoxerGiant", "Boxer Giant") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtBetaMinion", "Beta Minion") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtBomber", "Bomber") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtBabyDragon", "Baby Dragon") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtCannonCart", "Cannon Cart") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtNightWitch", "Night Witch") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtDropShip", "Drop Ship") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtSuperPekka", "Super Pekka") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtHogGlider", "Hog Glider")
 Local $x = 25, $y = 45
 GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "Group_01", "Laboratory"), $x - 20, $y - 20, $g_iSizeWGrpTab3, 100)
 _GUICtrlCreateIcon($g_sLibIconPath, $eIcnLaboratory, $x, $y, 64, 64)
@@ -16012,28 +16014,6 @@ GUICtrlSetState(-1, $GUI_DISABLE)
 GUICtrlSetState(-1, $GUI_HIDE)
 GUICtrlSetOnEvent(-1, "ResetLabUpgradeTime")
 $g_hPicLabUpgrade = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnBlank, $x + 330, $y, 64, 64)
-GUICtrlSetState(-1, $GUI_HIDE)
-GUICtrlCreateGroup("", -99, -99, 1, 1)
-$y += 110
-GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "Group_02", "Star Laboratory"), $x - 20, $y - 20, $g_iSizeWGrpTab3, 100)
-_GUICtrlCreateIcon($g_sLibIconPath, $eIcnStarLaboratory, $x, $y, 64, 64)
-$g_hChkAutoStarLabUpgrades = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkAutoStarLabUpgrades", "Auto Star Laboratory Upgrades"), $x + 80, $y + 5, -1, -1)
-_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkAutoStarLabUpgrades_Info_01", "Check box to enable automatically starting Upgrades in star laboratory"))
-GUICtrlSetOnEvent(-1, "chkStarLab")
-$g_hLblNextSLUpgrade = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "LblNextUpgrade", "Next one") & ":", $x + 80, $y + 38, 50, -1)
-GUICtrlSetState(-1, $GUI_DISABLE)
-$g_hCmbStarLaboratory = GUICtrlCreateCombo("", $x + 135, $y + 35, 140, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL, $WS_VSCROLL))
-GUICtrlSetData(-1, $sTxtSLNames, GetTranslatedFileIni("MBR Global GUI Design", "Any", "Any"))
-_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "CmbLaboratory_Info_01", "Select the troop type to upgrade with this pull down menu") & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "CmbLaboratory_Info_02", "The troop icon will appear on the right."))
-GUICtrlSetState(-1, $GUI_DISABLE)
-GUICtrlSetOnEvent(-1, "cmbStarLab")
-$g_hBtnResetStarLabUpgradeTime = GUICtrlCreateButton("", $x + 120 + 172, $y + 36, 18, 18, BitOR($BS_PUSHLIKE,$BS_DEFPUSHBUTTON))
-GUICtrlSetBkColor(-1, $COLOR_ERROR)
-_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "BtnResetLabUpgradeTime_Info_01", "Visible Red button means that laboratory upgrade in process") & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "BtnResetLabUpgradeTime_Info_02", "This will automatically disappear when near time for upgrade to be completed.") & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "BtnResetLabUpgradeTime_Info_03", "If upgrade has been manually finished with gems before normal end time,") & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "BtnResetLabUpgradeTime_Info_04", "Click red button to reset internal upgrade timer BEFORE STARTING NEW UPGRADE") & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "BtnResetLabUpgradeTime_Info_05", "Caution - Unnecessary timer reset will force constant checks for lab status"))
-GUICtrlSetState(-1, $GUI_DISABLE)
-GUICtrlSetState(-1, $GUI_HIDE)
-GUICtrlSetOnEvent(-1, "ResetStarLabUpgradeTime")
-$g_hPicStarLabUpgrade = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnBlank, $x + 330, $y, 64, 64)
 GUICtrlSetState(-1, $GUI_HIDE)
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 EndFunc
@@ -17879,31 +17859,40 @@ Local $sTxtTip = ""
 Local $x = 25, $y = 20
 GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "Group_01", "Options"), $x - 20, $y - 20, 270, $g_iSizeHGrpTab4)
 $y += 25
-GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "Lbl-CmbStandardUnitDelay", "Delay Unit") & ":", $x, $y + 5, -1, -1)
+GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "Lbl-CmbStandardUnitDelay", "Delay Unit"), $x + 25, $y + 25, -1, -1)
 $sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "Lbl-CmbStandardUnitDelay_Info_01", "This delays the deployment of troops, 1 (fast) = like a Bot, 10 (slow) = Like a Human.") & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "Lbl-CmbStandardUnitDelay_Info_02", "Random will make bot more varied and closer to a person.")
 _GUICtrlSetTip(-1, $sTxtTip)
 $g_hDeployDelay[1] = GUICtrlCreateCombo("", $x + 55, $y, 36, 21, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 _GUICtrlSetTip(-1, $sTxtTip)
 GUICtrlSetData(-1, "1|2|3|4|5|6|7|8|9|10", "4")
 GUICtrlSetOnEvent(-1, "chkDelayMod")
-GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "Lbl-CmbStandardWaveDelay_Info_01", "Wave") & ":", $x + 100, $y + 5, -1, -1)
+GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "Lbl-CmbStandardWaveDelay_Info_01", "Wave"), $x + 140, $y + 25, -1, -1)
 _GUICtrlSetTip(-1, $sTxtTip)
 $g_hDeployWave[1] = GUICtrlCreateCombo("", $x + 140, $y, 36, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 _GUICtrlSetTip(-1, $sTxtTip)
 GUICtrlSetData(-1, "1|2|3|4|5|6|7|8|9|10", "4")
 GUICtrlSetOnEvent(-1, "chkDelayMod")
 $y += 22
-$g_hChkEnableRandom[1] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "ChkRandomSpeedAtk", "Randomize delay for Units && Waves"), $x, $y, -1, -1)
+$g_hChkEnableRandom[1] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "ChkRandomSpeedAtk", "Randomize delay for Units && Waves"), $x, $y-50, -1, -1)
 _GUICtrlSetTip(-1, $sTxtTip)
 GUICtrlSetOnEvent(-1, "chkDelayMod")
+$y += 20
+$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "HumaneSides", "Set a limit for places, the minimum limit is random.")
+$g_hMaxSidesSF = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "MaxSidesSM", "Max sides to attack") & ":", $x, $y, -1, -1)
+_GUICtrlSetTip(-1, $sTxtTip)
+GUICtrlSetOnEvent(-1, "chkMaxSidesSF")
+$y += 30
+$g_hCmbMaxSidesSF = GUICtrlCreateCombo("", $x + 90, $y, 36, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+GUICtrlSetData(-1, "1|2|3|4", "4")
+GUICtrlSetOnEvent(-1, "chkMaxSidesSF")
 $y += 40
 GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "Lbl-TxtInsidePercentage", "Inside resources") & ":", $x, $y + 2, -1, -1)
-$g_hTxtInsidePercentage = _GUICtrlCreateInput("65" , $x + 90, $y , 25 , -1)
+$g_hTxtInsidePercentage = _GUICtrlCreateInput("65" , $x + 140, $y , 25 , -1)
 _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "txt-TxtInsidePercentage", "Percentage to force attack in one side only"))
 GUICtrlCreateLabel("%" , $x + 117 , $y + 3)
 $y += 22
 GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "Lbl-TxtOutsidePercentage", "Outside resources") & ":", $x, $y + 2, -1, -1)
-$g_hTxtOutsidePercentage = _GUICtrlCreateInput("80" , $x + 90 , $y , 25 , -1)
+$g_hTxtOutsidePercentage = _GUICtrlCreateInput("80" , $x + 140 , $y , 25 , -1)
 _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "txt-TxtOutsidePercentage", "Percentage to force attack in 4 sides"))
 GUICtrlCreateLabel("%" , $x + 117 , $y + 3)
 $y += 40
@@ -23535,7 +23524,27 @@ GUICtrlCreateGroup("", -99, -99, 1, 1)
 $x = 15
 $y = 45 + 100
 GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Upgrade", "Group_02", "Troops Upgrade"), $x - 10, $y - 20, $g_iSizeWGrpTab2, 130)
+_GUICtrlCreateIcon($g_sLibBBIconPath, $eIcnLabBB, $x , $y - 3, 48, 48)
 _GUICtrlCreateIcon($g_sLibBBIconPath, $eIcnMachine, $x , $y + 50, 48, 48)
+Local $sTxtSLNames = GetTranslatedFileIni("MBR Global GUI Design", "Any", "Any") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtRagedBarbarian", "Raged Barbarian") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtSneakyArcher", "Sneaky Archer") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtBoxerGiant", "Boxer Giant") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtBetaMinion", "Beta Minion") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtBomber", "Bomber") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtBabyDragon", "Baby Dragon") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtCannonCart", "Cannon Cart") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtNightWitch", "Night Witch") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtDropShip", "Drop Ship") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtSuperPekka", "Super Pekka") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtHogGlider", "Hog Glider")
+$g_hChkAutoStarLabUpgrades = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkAutoStarLabUpgrades", "Auto Star Laboratory Upgrades"), $x + 70, $y + 5, -1, -1)
+_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkAutoStarLabUpgrades_Info_01", "Check box to enable automatically starting Upgrades in star laboratory"))
+GUICtrlSetOnEvent(-1, "chkStarLab")
+$g_hLblNextSLUpgrade = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "LblNextUpgrade", "Next one") & ":", $x + 70, $y + 38, 50, -1)
+GUICtrlSetState(-1, $GUI_DISABLE)
+$g_hCmbStarLaboratory = GUICtrlCreateCombo("", $x + 135, $y + 35, 140, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL, $WS_VSCROLL))
+GUICtrlSetData(-1, $sTxtSLNames, GetTranslatedFileIni("MBR Global GUI Design", "Any", "Any"))
+_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "CmbLaboratory_Info_01", "Select the troop type to upgrade with this pull down menu") & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "CmbLaboratory_Info_02", "The troop icon will appear on the right."))
+GUICtrlSetState(-1, $GUI_DISABLE)
+GUICtrlSetOnEvent(-1, "cmbStarLab")
+$g_hBtnResetStarLabUpgradeTime = GUICtrlCreateButton("", $x + 120 + 172, $y + 36, 18, 18, BitOR($BS_PUSHLIKE,$BS_DEFPUSHBUTTON))
+GUICtrlSetBkColor(-1, $COLOR_ERROR)
+_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "BtnResetLabUpgradeTime_Info_01", "Visible Red button means that laboratory upgrade in process") & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "BtnResetLabUpgradeTime_Info_02", "This will automatically disappear when near time for upgrade to be completed.") & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "BtnResetLabUpgradeTime_Info_03", "If upgrade has been manually finished with gems before normal end time,") & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "BtnResetLabUpgradeTime_Info_04", "Click red button to reset internal upgrade timer BEFORE STARTING NEW UPGRADE") & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "BtnResetLabUpgradeTime_Info_05", "Caution - Unnecessary timer reset will force constant checks for lab status"))
+GUICtrlSetState(-1, $GUI_DISABLE)
+GUICtrlSetState(-1, $GUI_HIDE)
+GUICtrlSetOnEvent(-1, "ResetStarLabUpgradeTime")
+$g_hPicStarLabUpgrade = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnBlank, $x + 330, $y, 64, 64)
+GUICtrlSetState(-1, $GUI_HIDE)
 $g_hChkUpgradeMachine = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Upgrade", "ChkUpgradeMachine", "Upgrades Machine"), $x + 70, $y + 68, -1, -1)
 _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Builder Base - Upgrade", "ChkUpgradeMachine_Info_01", "Prioritize the Machine upgrades if 'Any' was selected."))
 $g_hPicBBLabUpgrade = _GUICtrlCreateIcon($g_sLibBBIconPath, 11, $x + 330, $y, 64, 64)
@@ -31969,7 +31978,7 @@ EndIf
 EndFunc
 Func cmbBBWall()
 $g_iCmbBBWallLevel = _GUICtrlComboBox_GetCurSel($g_hCmbBBWallLevel)
-_GUICtrlSetImage($g_hPicBBWallUpgrade, $g_sLibBBIconPath, $g_iCmbBBWallLevel + 19)
+_GUICtrlSetImage($g_hPicBBWallUpgrade, $g_sLibBBIconPath, $g_iCmbBBWallLevel + 8)
 EndFunc
 Func ChkBBGetFromCSV()
 $g_bChkBBGetFromCSV = _IsChecked($g_hChkBBGetFromCSV)
@@ -32027,6 +32036,15 @@ Else
 GUICtrlSetState($g_hIntSleep, $GUI_DISABLE)
 GUICtrlSetState($g_hUseRandomSleep, $GUI_DISABLE)
 GUICtrlSetState($g_hNoAttackSleep, $GUI_DISABLE)
+EndIf
+EndFunc
+Func chkMaxSidesSF()
+$g_iCmbMaxSidesSF = Int(GUICtrlRead($g_hCmbMaxSidesSF))
+$g_bMaxSidesSF =(GUICtrlRead($g_hMaxSidesSF) = $GUI_CHECKED)
+If $g_bMaxSidesSF Then
+GUICtrlSetState($g_hCmbMaxSidesSF, $GUI_ENABLE)
+Else
+GUICtrlSetState($g_hCmbMaxSidesSF, $GUI_DISABLE)
 EndIf
 EndFunc
 Func cmbStandardDropSidesAB()
@@ -37319,6 +37337,17 @@ $redline[$i] = GetOffsetRedline($BestSideToAttack[$i], 5)
 Next
 DebugImageSmartFarm($THdetails, $aResourcesIN, $aResourcesOUT, Round(TimerDiff($hTimer) / 1000, 2) & "'s", _ArrayToString($BestSideToAttack), $redline)
 EndIf
+If $g_bMaxSidesSF Then
+Local $aSides2[4][2] = [ ["TL", $aMainSide[0]], ["TR", $aMainSide[1]], ["BL", $aMainSide[2]], ["BR", $aMainSide[3]] ]
+_ArraySort($aSides2, 0, 0, 0, 0)
+Local $iMaxL =((UBound($BestSideToAttack) -1) >($g_iCmbMaxSidesSF - 1)) ?($g_iCmbMaxSidesSF - 1) :(UBound($BestSideToAttack) - 1)
+Local $BestSideToAttack[0]
+For $i = 0 To $iMaxL
+Local $aClu[1] = [$aSides2[$i][0]]
+SetDebugLog("["&$i&"] ChkSmartFarm | $aClu: " & $aSides2[$i][0])
+_ArrayAdd($BestSideToAttack, $aClu)
+Next
+EndIf
 Local $Return[3] = [$AttackInside, UBound($BestSideToAttack), _ArrayToString($BestSideToAttack)]
 Return $Return
 EndFunc
@@ -40187,7 +40216,7 @@ Func CleanRedArea(ByRef $InputVect, $side = "")
 Local $TempVectStr = ""
 For $i = 0 To UBound($InputVect) - 1
 Local $pixel = $InputVect[$i]
-If isInsideDiamondRedArea($pixel) Then
+If isInDiamond($pixel[0], $pixel[1], 43, 50, 818, 634) Then
 $TempVectStr &= $pixel[0] & "-" & $pixel[1] & "|"
 Else
 debugAttackCSV("CleanRedArea removed (" & $pixel[0] & "," & $pixel[1] & ")")
@@ -41097,41 +41126,13 @@ debugRedArea($nameFunc & " OUT ")
 Return $infoDropTroop
 EndFunc
 Func GetLocationMine()
-Local $sDirectory = @ScriptDir & "\imgxml\Storages\GoldMines"
-Local $sTxtName = "Mines"
-Local $iMaxReturns = 7
-If $g_iDetectedImageType = 1 Then
-$sDirectory = @ScriptDir & "\imgxml\Storages\Mines_Snow"
-$sTxtName = "SnowMines"
-EndIf
-Local $aTempResult = returnMultipleMatches($sDirectory, $iMaxReturns)
-Local $aEndResult = ConvertImgloc2MBR($aTempResult, $iMaxReturns)
-If $g_bDebugBuildingPos Then SetLog("#*# GetLocation" & $sTxtName & ": " & $aEndResult, $COLOR_DEBUG)
-If $g_bDebugGetLocation Then DebugImageGetLocation($aEndResult, $sTxtName)
-Return GetListPixel($aEndResult)
+Return _GetLocationMine()
 EndFunc
 Func GetLocationElixir()
-Local $sDirectory = @ScriptDir & "\imgxml\Storages\Collectors"
-Local $sTxtName = "Collectors"
-Local $iMaxReturns = 7
-If $g_iDetectedImageType = 1 Then
-$sDirectory = @ScriptDir & "\imgxml\Storages\Collectors_Snow"
-$sTxtName = "SnowCollectors"
-EndIf
-Local $aTempResult = returnMultipleMatches($sDirectory, $iMaxReturns)
-Local $aEndResult = ConvertImgloc2MBR($aTempResult, $iMaxReturns)
-If $g_bDebugBuildingPos Then SetLog("#*# GetLocation" & $sTxtName & ": " & $aEndResult, $COLOR_DEBUG)
-If $g_bDebugGetLocation Then DebugImageGetLocation($aEndResult, $sTxtName)
-Return GetListPixel($aEndResult)
+Return _GetLocationElixir()
 EndFunc
 Func GetLocationDarkElixir()
-Local $sDirectory = @ScriptDir & "\imgxml\Storages\Drills"
-Local $iMaxReturns = 3
-Local $aTempResult = returnMultipleMatches($sDirectory, $iMaxReturns)
-Local $aEndResult = ConvertImgloc2MBR($aTempResult, $iMaxReturns)
-If $g_bDebugBuildingPos Then SetLog("#*# GetLocationDarkElixir: " & $aEndResult, $COLOR_DEBUG)
-If $g_bDebugGetLocation Then DebugImageGetLocation($aEndResult, "DarkElixir")
-Return GetListPixel($aEndResult)
+Return _GetLocationDarkElixir()
 EndFunc
 Func GetLocationTownHall()
 Local $aEndResult = DllCallMyBot("getLocationTownHall", "ptr", $g_hHBitmap2)
@@ -41366,30 +41367,6 @@ Next
 Case Else
 SetDebugLog("Bad Input on DebugImageGetLocation(). $sType does not support: " & $sType)
 EndSwitch
-EndFunc
-Func ConvertImgloc2MBR($aArray, $iMaxPositions, $bLevel = False)
-Local $sStringConverted = Null
-Local $iMax = 0
-If IsArray($aArray) Then
-For $i = 1 To UBound($aArray) - 1
-Local $aCoord = $aArray[$i][5]
-If IsArray($aCoord) Then
-For $t = 0 To UBound($aCoord) - 1
-If isInsideDiamondXY($aCoord[$t][0], $aCoord[$t][1]) Then
-If $bLevel Then $sStringConverted &= $aArray[$i][2] & "#" & $aCoord[$t][0] & "-" & $aCoord[$t][1] & "~"
-If Not $bLevel Then $sStringConverted &= $aCoord[$t][0] & "-" & $aCoord[$t][1] & "|"
-$iMax += 1
-If $iMax = $iMaxPositions Then ExitLoop(2)
-EndIf
-Next
-EndIf
-Next
-Else
-SetLog("Error on ConvertImgLoc2MBR(): First Value is no Array!", $COLOR_ERROR)
-EndIf
-$sStringConverted = StringTrimRight($sStringConverted, 1)
-If $g_bDebugSetlog Then SetDebugLog("$sStringConverted: " & $sStringConverted)
-Return $sStringConverted
 EndFunc
 Func GetOffestPixelRedArea2($pixel, $eVectorType, $offset = 3)
 Local $pixelOffest = $pixel
@@ -42458,37 +42435,32 @@ $aiReturnPosition[1] = $g_avAttackTroops[$iSlotIndex][5]
 EndIf
 Return $aiReturnPosition
 EndFunc
-Func SetSleep($type)
-If IsKeepClicksActive() = True Then Return 0
-Local $factor0 = 10
-Local $factor1 = 100
+Func SetSleep($iType)
+If IsKeepClicksActive() = True Then Return 128
+Local $iOffset0 = Round(128 / 2)
+Local $iOffset1 = Round(416 / 2)
 If $g_bAndroidAdbClick = True Then
-$factor0 = 10
-$factor1 = 100
+$iOffset0 = Round(128 / 2)
+$iOffset1 = Round(416 / 2)
 EndIf
-Local $iReturn = Random(1, 10) * Int(($type = 0) ?($factor0) :($factor1))
+Local $iReturn = Random(1, 10) * Int(($iType = 0) ?($iOffset0) :($iOffset1))
 Local $iCmbValue = $g_aiAttackAlgorithm[$DB]
-If BitAND(IsDeclared("g_bChkEnableRandom") <> 0, IsDeclared("g_iDeployDelay") <> 0, IsDeclared("$g_iDeployWave") <> 0) Then
-If BitAND(IsArray($g_bChkEnableRandom), IsArray($g_iDeployDelay), IsArray($g_iDeployWave)) Then
-If Not BitAND(UBound($g_bChkEnableRandom) > 2, UBound($g_iDeployDelay) > 2, UBound($g_iDeployWave) > 2) Then
+If((IsArray($g_bChkEnableRandom)) And(IsArray($g_iDeployDelay)) And(IsArray($g_iDeployWave))) Then
+If Not((UBound($g_bChkEnableRandom) > 2) And(UBound($g_iDeployDelay) > 2) And(UBound($g_iDeployWave) > 2)) Then
 SetDebugLog("SetSleep | UBound fail on SetSleep.")
-Return $iReturn
+Return Round(Random(($iReturn*80)/100,($iReturn*120)/100, 1))
 EndIf
 Else
 SetDebugLog("SetSleep | IsArray fail on SetSleep.")
-Return $iReturn
-EndIf
-Else
-SetDebugLog("SetSleep | IsDeclared fail on SetSleep.")
-Return $iReturn
+Return Round(Random(($iReturn*80)/100,($iReturn*120)/100, 1))
 EndIf
 SetDebugLog("SetSleep Base : " & $iReturn)
 If $g_iMatchMode = $DB Then
-If BitAND($g_bChkEnableRandom[0], $iCmbValue = 0) Then
-$iReturn =($type = 0) ?($factor0 * Int($g_iDeployDelay[0])) :($factor1 * Int($g_iDeployWave[0]))
+If(($g_bChkEnableRandom[0]) And($iCmbValue = 0)) Then
+$iReturn =($iType = 0) ?($iOffset0 * Int($g_iDeployDelay[0])) :($iOffset1 * Int($g_iDeployWave[0]))
 SetDebugLog("SetSleep Mod + DB + Standard : " & $iReturn)
-ElseIf BitAND($g_bChkEnableRandom[1], $iCmbValue = 2) Then
-$iReturn =($type = 0) ?($factor0 * Int($g_iDeployDelay[1])) :($factor1 * Int($g_iDeployWave[1]))
+ElseIf(($g_bChkEnableRandom[1]) And($iCmbValue = 2)) Then
+$iReturn =($iType = 0) ?($iOffset0 * Int($g_iDeployDelay[1])) :($iOffset1 * Int($g_iDeployWave[1]))
 SetDebugLog("SetSleep Mod + DB + Smart farm : " & $iReturn)
 EndIf
 EndIf
@@ -43256,7 +43228,7 @@ Local $aVar = $g_aExternalEdges[$iSide]
 Local $iAndroidSuspendModeFlagsLast = $g_iAndroidSuspendModeFlags
 $g_iAndroidSuspendModeFlags = 0
 If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Disabled")
-Local $aBBAttackBar = MachineKick($aAvailableTroops)
+Local $aBBAttackBar = $aAvailableTroops
 If $aBBAttackBar = -1 Then Return "Fail MachineKick."
 If RandomSleep($DELAYRESPOND) Then
 $g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
@@ -43270,6 +43242,7 @@ If $g_bBBDropOrderSet = True Then
 For $i = 0 To UBound($g_ahCmbBBDropOrder) - 1
 Local $j = 0, $bDone = 0
 While $j < $iNumSlots And Not $bDone
+If $aBBAttackBar[$j][0] = "Machine" Then ContinueLoop
 If $aBBAttackBar[$j][0] = $g_asAttackBarBB[Number($g_aiCmbBBDropOrder[$i]) + 1] Then
 SetLog("Deploying " & $aBBAttackBar[$j][0] & " x" & String($aBBAttackBar[$j][4]), $COLOR_ACTION)
 PureClick($aBBAttackBar[$j][1] - Random(0, 5, 1), $aBBAttackBar[$j][2] - Random(0, 5, 1))
@@ -43295,6 +43268,7 @@ WEnd
 Next
 Else
 For $i = 0 To $iNumSlots - 1
+If $aBBAttackBar[$i][0] = "Machine" Then ContinueLoop
 SetLog("Deploying " & $aBBAttackBar[$i][0] & " x" & String($aBBAttackBar[$i][4]), $COLOR_ACTION)
 PureClick($aBBAttackBar[$i][1] - Random(0, 5, 1), $aBBAttackBar[$i][2] - Random(0, 5, 1))
 If $aBBAttackBar[$i][4] <> 0 Then
@@ -43321,7 +43295,8 @@ EndIf
 Next
 EndIf
 $aBBAttackBar = GetAttackBarBB(True)
-Until not IsArray(MachineKick($aBBAttackBar))
+Local $aKickM = $aBBAttackBar
+Until not IsArray(MachineKick($aKickM))
 SetLog("All Troops Deployed", $COLOR_SUCCESS)
 If $g_bBBMachineReady Then
 If IsArray($g_aMachineBB) Then
@@ -58932,10 +58907,6 @@ EndIf
 $return[6] = $aResult[0][0]
 Return $return
 EndFunc
-Func returnMultipleMatches($directory, $maxReturnPoints = 0, $redLines = "DCD", $statFile = "", $minLevel = 0, $maxLevel = 1000, $forceCaptureRegion = True)
-Local $aResult = multiMatches($directory, $maxReturnPoints, "DCD", $redLines, $statFile, $minLevel, $maxLevel)
-Return $aResult
-EndFunc
 Func createWeakBaseStats()
 Local $aKeys = _FileListToArrayRec($g_sImgWeakBaseBuildingsDir, "*.xml", $FLTAR_FILES, $FLTAR_RECUR, $FLTAR_SORT, $FLTAR_NOPATH)
 Local $return[UBound($aKeys) - 1][2]
@@ -59488,6 +59459,7 @@ Next
 Next
 EndIf
 ChkAttackCSVConfig()
+waitMainScreen()
 If IsMainPage() Then
 If _Sleep($DELAYTREASURY4) Then Return
 If _CheckPixel($aAttackForTreasury, $g_bCapturePixel, Default, "Is attack for treasury:") Then
@@ -59582,7 +59554,14 @@ EndIf
 EndIf
 Until Not $bSignedUpLegendLeague
 If Not $g_bLeagueAttack Then
-If not ClickFindMatch() Then Return
+Local $aFindMatch = ClickFindMatch()
+If $aFindMatch Then
+SetLog("Looking for village!", $COLOR_SUCCESS)
+Else
+SetLog("Couldn't find the Find a Match Button!", $COLOR_ERROR)
+If $g_bDebugImageSave Then SaveDebugImage("FindAMatchBUttonNotFound")
+Return
+EndIf
 EndIf
 If $g_iTownHallLevel <> "" And $g_iTownHallLevel > 0 Then
 $g_iSearchCost += $g_aiSearchCost[$g_iTownHallLevel - 1]
@@ -62080,7 +62059,7 @@ Local $Slot = -1, $detectedSlot = -1
 Local $YComp = 0, $donaterow = -1
 Local $donateposinrow = -1
 Local $sTextToAll = ""
-If $g_iTotalDonateStatsTroops >= $g_iDayLimitTroops and $g_iDayLimitTroops > 0 Then
+If $g_iTotalDonateStatsTroops >= $g_iDayLimitTroops and $g_iDayLimitTroops <> 0 Then
 SetLog("Donate Troops skip :  day limit reached.", $COLOR_INFO)
 Return
 EndIf
@@ -62132,31 +62111,31 @@ SetLog("pos in row: " & $donateposinrow, $COLOR_ERROR)
 SetLog("coordinate: " & 365 +($Slot * 68) & "," & $g_iDonationWindowY + 100 + $YComp, $COLOR_ERROR)
 SaveDebugImage("LiveDonateCC-r" & $donaterow & "-c" & $donateposinrow & "-" & $g_asTroopNames[$iTroopIndex] & "_")
 EndIf
-Local $iCount = 0
-Local $bCanClick = True
+If $g_bQuickTrainEnable Then
+Local $icount = 0
 For $x = 0 To $Quant
 If _ColorCheck(_GetPixelColor(350 +($Slot * 68), $g_iDonationWindowY + 105 + $YComp, True), Hex(0x306ca8, 6), 20) Or  _ColorCheck(_GetPixelColor(355 +($Slot * 68), $g_iDonationWindowY + 106 + $YComp, True), Hex(0x306ca8, 6), 20) Or  _ColorCheck(_GetPixelColor(360 +($Slot * 68), $g_iDonationWindowY + 107 + $YComp, True), Hex(0x306ca8, 6), 20) Then
-If $g_iDayLimitTroops > 0 Then
-If Int($g_iTotalDonateStatsTroops + $iCount) >= $g_iDayLimitTroops Then
-SetLog("Donate Troops skip :  day limit reached.", $COLOR_INFO)
-$bCanClick = False
-EndIf
-EndIf
-If $bCanClick Then
 Click(365 +($Slot * 68), $g_iDonationWindowY + 100 + $YComp, 1, $DELAYDONATECC3, "#0175")
-Else
-ExitLoop
-EndIf
 If $g_iCommandStop = 3 Then
 $g_iCommandStop = 0
 $g_bFullArmy = False
 EndIf
-If _Sleep(500) Then Return
-$iCount += 1
+If _Sleep(1000) Then Return
+$icount += 1
 EndIf
 Next
-$Quant = $iCount
+$Quant = $icount
 $g_aiDonateStatsTroops[$iTroopIndex][0] += $Quant
+Else
+If _ColorCheck(_GetPixelColor(350 +($Slot * 68), $g_iDonationWindowY + 105 + $YComp, True), Hex(0x306ca8, 6), 20) Or  _ColorCheck(_GetPixelColor(355 +($Slot * 68), $g_iDonationWindowY + 106 + $YComp, True), Hex(0x306ca8, 6), 20) Or  _ColorCheck(_GetPixelColor(360 +($Slot * 68), $g_iDonationWindowY + 107 + $YComp, True), Hex(0x306ca8, 6), 20) Then
+Click(365 +($Slot * 68), $g_iDonationWindowY + 100 + $YComp, $Quant, $DELAYDONATECC3, "#0175")
+$g_aiDonateStatsTroops[$iTroopIndex][0] += $Quant
+If $g_iCommandStop = 3 Then
+$g_iCommandStop = 0
+$g_bFullArmy = False
+EndIf
+EndIf
+EndIf
 If $iTroopIndex >= $eTroopBarbarian And $iTroopIndex <= $eTroopIceGolem Then
 $g_iTotalDonateTroopCapacity -=($Quant * $g_aiTroopSpace[$iTroopIndex])
 If $g_iDonTroopsLimit = $Quant Then
@@ -69842,69 +69821,6 @@ Func CleanBBYard($bTest = False)
 If Not $g_bChkCleanBBYard Then Return
 Return _CleanYard(True, $bTest)
 EndFunc
-Func _CleanYard($aIsBB = Default, $bTest = False)
-If $aIsBB Then
-If Not IsMainPageBuilderBase() Then Return
-If Not getBuilderCount(True, True) Then Return
-If _Sleep($DELAYRESPOND) Then Return
-If $g_iFreeBuilderCountBB = 0 Then Return
-Else
-If Not IsMainPage() Then Return
-If Not getBuilderCount() Then Return
-If _Sleep($DELAYRESPOND) Then Return
-If $g_iFreeBuilderCount = 0 Then Return
-EndIf
-If(Number($g_aiCurrentLootBB[$eLootElixirBB]) > 50000 And $aIsBB) Or(Number($g_aiCurrentLoot[$eLootElixir]) > 50000 And not $aIsBB) Or $bTest Then
-Local $aResult, $aRTmp1, $aRTmp2
-If $aIsBB Then
-$aResult = findMultipleQuick($g_sImgCleanBBYard, 0, "0,0,860,732", Default, Default, Default, 1)
-Else
-$aRTmp1 = findMultipleQuick($g_sImgCleanYardSnow, 0, "0,0,860,732", Default, Default, Default, 1)
-$aRTmp2 = findMultipleQuick($g_sImgCleanYard, 0, "0,0,860,732", Default, Default, Default, 1)
-If IsArray($aRTmp1) Then
-$aResult = $aRTmp1
-If IsArray($aRTmp2) Then _ArrayAdd($aResult, $aRTmp2)
-ElseIf IsArray($aRTmp2) Then
-$aResult = $aRTmp2
-EndIf
-EndIf
-If Not IsArray($aResult) Then
-Return False
-Else
-_ArrayShuffle($aResult)
-EndiF
-SetLog("- Removing some obstacles - Custom by AIO Mod ++.", $COLOR_ACTION)
-For $i = 0 To UBound($aResult) - 1
-If $g_bEdgeObstacle Then
-If(Not isOutsideDiamond($aResult[$i][1], $aResult[$i][2], 83, 156, 780, 680) and $aIsBB) Or(Not isOutsideDiamond($aResult[$i][1], $aResult[$i][2], 43, 50, 818, 634) And not $aIsBB) Then ContinueLoop
-Else
-If(Not isOutsideDiamond($aResult[$i][1], $aResult[$i][2], 83, 156, 780, 680) and $aIsBB) Or(Not isOutsideDiamond($aResult[$i][1], $aResult[$i][2]) And not $aIsBB) Then ContinueLoop
-EndIf
-If $g_bDebugSetlog Then SetDebugLog($aResult[$i][0] & " found (" & $aResult[$i][1] & "," & $aResult[$i][2] & ")", $COLOR_SUCCESS)
-If _Sleep($DELAYRESPOND) Then Return
-For $iSeconds = 0 To Random(50, 120, 1)
-getBuilderCount(True,(($aIsBB) ?(True) :(False)))
-If($g_iFreeBuilderCountBB > 0 And $aIsBB) Or($g_iFreeBuilderCount > 0 And not $aIsBB) Then
-If getBuilderCount(True,(($aIsBB) ?(True) :(False))) = False Then Return
-If($g_iFreeBuilderCountBB > 0 And $aIsBB) Or($g_iFreeBuilderCount > 0 And not $aIsBB) Then
-PureClick($aResult[$i][1], $aResult[$i][2], 1, 0, "#0430")
-If _Sleep(Random(500, 700, 1)) Then Return
-If ClickRemoveObstacle() Then
-ContinueLoop 2
-Else
-SetDebugLog(" - CleanYardAIO | 0x1 error.")
-ExitLoop
-EndIf
-EndIf
-Else
-If RandomSleep(3000) Then Return
-EndIf
-Next
-SetLog("- Removing some obstacles, wait. - Custom by AIO Mod ++.", $COLOR_INFO)
-Next
-EndIf
-UpdateStats()
-EndFunc
 Global Const $sStarColorNA = Hex(0xD3D3CB, 6)
 Global Const $sStarColorNoLoot = Hex(0xFF7B72, 6)
 Global Const $sStarColorMaxLvl = Hex(0xFFFFFF, 6)
@@ -75021,14 +74937,29 @@ $g_aImageSearchXML = -1
 Return -1
 EndIf
 EndFunc
-Func findMultipleQuick($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "0,0,860,732", $bForceCapture = Default, $sOnlyFind = Default, $bExactFindP = Default, $iDistance2check = 25, $bDebugLog = False, $iLevel = 0, $iMaxLevel = 1000)
+Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri = Default, $bForceCapture = Default, $sOnlyFind = Default, $bExactFindP = Default, $iDistance2check = 25, $bDebugLog = False, $iLevel = 0, $iMaxLevel = 1000)
 FuncEnter(findMultipleQuick)
-Local $bCapture, $sArea2Search, $sIsOnlyFind, $iQuantToMach, $bExactFind
-$sArea2Search =(IsArray($saiArea2SearchOri)) ?(GetDiamondFromArray($saiArea2SearchOri)) :(GetDiamondFromRect($saiArea2SearchOri))
+Local $bCapture, $sArea2Search, $sIsOnlyFind, $iQuantToMach, $bExactFind, $iQuantity2Match
+$iQuantity2Match =($iQuantityMatch = Default) ?(0) :($iQuantityMatch)
 $bCapture =($bForceCapture = Default) ?(True) :($bForceCapture)
 $sIsOnlyFind =($sOnlyFind = Default) ?("") :($sOnlyFind)
 $iQuantToMach =($sOnlyFind = Default) ?($iQuantity2Match) :(20)
 $bExactFind =($bExactFindP = Default) ?($bExactFind) :(False)
+If $vArea2SearchOri = Default Then
+$sArea2Search = "FV"
+ElseIf(IsArray($vArea2SearchOri)) Then
+$sArea2Search =(GetDiamondFromArray($vArea2SearchOri))
+Else
+Switch UBound(StringSplit($vArea2SearchOri, ",", $STR_NOCOUNT))
+Case 4
+$sArea2Search = GetDiamondFromRect($vArea2SearchOri)
+Case 0, 5
+$sArea2Search = $vArea2SearchOri
+Case Else
+SetDebugLog("findMultipleQuick | Coords error. ")
+Return -1
+EndSwitch
+EndIf
 Local $aResult = findMultiple($sDirectory, $sArea2Search, $sArea2Search, $iLevel, $iMaxLevel, $iQuantToMach, "objectname,objectlevel,objectpoints", $bCapture)
 If Not IsArray($aResult) Then Return -1
 Local $iCount = 0
@@ -75064,11 +74995,11 @@ For $j = 0 To UBound($aAllResults) - 1
 If $j > UBound($aAllResults) - 1 Then ExitLoop
 Local $SingleCoordinate[4] = [$aAllResults[$j][0], $aAllResults[$j][1], $aAllResults[$j][2], $aAllResults[$j][3]]
 If $LastCoordinate[1] <> $SingleCoordinate[1] Or $LastCoordinate[2] <> $SingleCoordinate[2] Then
-If Abs($SingleCoordinate[1] - $LastCoordinate[1]) < $D2Check Or Abs($SingleCoordinate[2] - $LastCoordinate[2]) < $D2Check Then
+If Abs($SingleCoordinate[1] - $LastCoordinate[1]) <= $D2Check Or Abs($SingleCoordinate[2] - $LastCoordinate[2]) <= $D2Check Then
 _ArrayDelete($aAllResults, $j)
 EndIf
 Else
-If $LastCoordinate[1] = $SingleCoordinate[1] And $LastCoordinate[2] = $SingleCoordinate[2] And($LastCoordinate[3] <> $SingleCoordinate[3] Or $LastCoordinate[0] <> $SingleCoordinate[0]) Then
+If $LastCoordinate[1] = $SingleCoordinate[1] And $LastCoordinate[2] = $SingleCoordinate[2] And not($LastCoordinate[3] <> $SingleCoordinate[3] Or $LastCoordinate[0] <> $SingleCoordinate[0]) Then
 _ArrayDelete($aAllResults, $j)
 EndIf
 EndIf
@@ -75081,11 +75012,10 @@ EndFunc
 Func ClickFindMatch($bCheckOneTime = False)
 Local $bExtraFix = False
 Local $aFindMatch
-Local $aRndX = [585, 780], $aRndY = [365 + $g_iMidOffsetY, 467 + $g_iMidOffsetY]
 For $i = 0 To 10
-$aFindMatch = findButton("FindMatch", Default, 1, True)
-If IsArray($aFindMatch) And UBound($aFindMatch) = 2 Then
-PureClick(Random($aRndX[0], $aRndX[1], 1), Random($aRndY[0], $aRndY[1], 1), 1, 0)
+$aFindMatch = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", 1, "559, 315, 816, 541")
+If IsArray($aFindMatch) Then
+PureClick(Random($aFindMatch[0][1] + 28, $aFindMatch[0][1] + 180, 1), Random($aFindMatch[0][2] + 10, $aFindMatch[0][2] + 94, 1), 1, 0)
 $bExtraFix = True
 If _Sleep($DELAYSPECIALCLICK1) Then Return False
 ContinueLoop
@@ -75288,6 +75218,69 @@ If _Sleep($DELAYMAKEREQUEST2) Then Return
 If $g_bChkBackgroundMode = False And $g_bNoFocusTampering = False Then ControlFocus($g_hAndroidWindow, "", "")
 Click($aClickSend[0], $aClickSend[1], 1, 100, "#0256")
 $g_bCanRequestCC = False
+EndFunc
+Func _CleanYard($aIsBB = Default, $bTest = False)
+If $aIsBB Then
+If Not IsMainPageBuilderBase() Then Return
+If Not getBuilderCount(True, True) Then Return
+If _Sleep($DELAYRESPOND) Then Return
+If $g_iFreeBuilderCountBB = 0 Then Return
+Else
+If Not IsMainPage() Then Return
+If Not getBuilderCount() Then Return
+If _Sleep($DELAYRESPOND) Then Return
+If $g_iFreeBuilderCount = 0 Then Return
+EndIf
+If(Number($g_aiCurrentLootBB[$eLootElixirBB]) > 50000 And $aIsBB) Or(Number($g_aiCurrentLoot[$eLootElixir]) > 50000 And not $aIsBB) Or $bTest Then
+Local $aResult, $aRTmp1, $aRTmp2
+If $aIsBB Then
+$aResult = findMultipleQuick($g_sImgCleanBBYard, 0, "0,0,860,732", Default, Default, Default, 1)
+Else
+$aRTmp1 = findMultipleQuick($g_sImgCleanYardSnow, 0, "0,0,860,732", Default, Default, Default, 1)
+$aRTmp2 = findMultipleQuick($g_sImgCleanYard, 0, "0,0,860,732", Default, Default, Default, 1)
+If IsArray($aRTmp1) Then
+$aResult = $aRTmp1
+If IsArray($aRTmp2) Then _ArrayAdd($aResult, $aRTmp2)
+ElseIf IsArray($aRTmp2) Then
+$aResult = $aRTmp2
+EndIf
+EndIf
+If Not IsArray($aResult) Then
+Return False
+Else
+_ArrayShuffle($aResult)
+EndiF
+SetLog("- Removing some obstacles - Custom by AIO Mod ++.", $COLOR_ACTION)
+For $i = 0 To UBound($aResult) - 1
+If $g_bEdgeObstacle Then
+If(Not isInDiamond($aResult[$i][1], $aResult[$i][2], 83, 156, 780, 680) and $aIsBB) Or(Not isInDiamond($aResult[$i][1], $aResult[$i][2], 43, 50, 818, 634) And not $aIsBB) Then ContinueLoop
+Else
+If(Not isInDiamond($aResult[$i][1], $aResult[$i][2], 83, 156, 780, 680) and $aIsBB) Or(Not isInDiamond($aResult[$i][1], $aResult[$i][2]) And not $aIsBB) Then ContinueLoop
+EndIf
+If $g_bDebugSetlog Then SetDebugLog($aResult[$i][0] & " found (" & $aResult[$i][1] & "," & $aResult[$i][2] & ")", $COLOR_SUCCESS)
+If _Sleep($DELAYRESPOND) Then Return
+For $iSeconds = 0 To Random(50, 120, 1)
+getBuilderCount(True,(($aIsBB) ?(True) :(False)))
+If($g_iFreeBuilderCountBB > 0 And $aIsBB) Or($g_iFreeBuilderCount > 0 And not $aIsBB) Then
+If getBuilderCount(True,(($aIsBB) ?(True) :(False))) = False Then Return
+If($g_iFreeBuilderCountBB > 0 And $aIsBB) Or($g_iFreeBuilderCount > 0 And not $aIsBB) Then
+PureClick($aResult[$i][1], $aResult[$i][2], 1, 0, "#0430")
+If _Sleep(Random(500, 700, 1)) Then Return
+If ClickRemoveObstacle() Then
+ContinueLoop 2
+Else
+SetDebugLog(" - CleanYardAIO | 0x1 error.")
+ExitLoop
+EndIf
+EndIf
+Else
+If RandomSleep(3000) Then Return
+EndIf
+Next
+SetLog("- Removing some obstacles, wait. - Custom by AIO Mod ++.", $COLOR_INFO)
+Next
+EndIf
+UpdateStats()
 EndFunc
 Func _Wait4Pixel($x, $y, $sColor, $iColorVariation, $iWait = 1000, $iDelay = 100, $sMsglog = Default)
 Local $hTimer = __TimerInit()
@@ -78661,56 +78654,52 @@ EndFunc
 Func AreCollectorsOutside($percent)
 If $g_bDBCollectorNearRedline Then Return AreCollectorsNearRedline($percent)
 SetLog("Locating Mines & Collectors", $COLOR_INFO)
-Global $g_aiPixelMine[0]
-Global $g_aiPixelElixir[0]
 Global $g_aiPixelNearCollector[0]
 Global $colOutside = 0
 Global $hTimer = TimerInit()
-Global $hBitmapFirst
-_WinAPI_DeleteObject($hBitmapFirst)
-$hBitmapFirst = _CaptureRegion2()
-SuspendAndroid()
-$g_aiPixelMine = GetLocationMine()
-If(IsArray($g_aiPixelMine)) Then
-_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelMine, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
+Global $g_aiPixelMine = GetLocationMine()
+Global $g_aiPixelElixir = GetLocationElixir()
+Global $g_aiPixelDarkElixir = GetLocationDarkElixir()
+If Not(IsArray($g_aiPixelMine) Or IsArray($g_aiPixelElixir) Or(IsArray($g_aiPixelDarkElixir) And($g_iTownHallLevel > 6) And(Not $g_bSmartZapEnable))) Then
+SetLog("Are collectors outside | No mines/collectors/drills detected.", $COLOR_INFO)
+Return False
+Else
+If IsArray($g_aiPixelMine) Then _ArrayAdd($g_aiPixelNearCollector, $g_aiPixelMine, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
+If IsArray($g_aiPixelElixir) Then _ArrayAdd($g_aiPixelNearCollector, $g_aiPixelElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
+If IsArray($g_aiPixelDarkElixir) Then _ArrayAdd($g_aiPixelNearCollector, $g_aiPixelDarkElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
 EndIf
-$g_aiPixelElixir = GetLocationElixir()
-If(IsArray($g_aiPixelElixir)) Then
-_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
-EndIf
-ResumeAndroid()
 $g_bScanMineAndElixir = True
-Global $colNbr = UBound($g_aiPixelNearCollector)
-SetLog("Located collectors in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds")
-SetLog("[" & UBound($g_aiPixelMine) & "] Gold Mines")
-SetLog("[" & UBound($g_aiPixelElixir) & "] Elixir Collectors")
-Global $minColOutside = Round($colNbr * $percent / 100)
+SetLog("Located collectors in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds", $COLOR_INFO)
+SetLog("[" & UBound($g_aiPixelElixir) & "] Elixir collectors", $COLOR_INFO)
+SetLog("[" & UBound($g_aiPixelMine) & "] Gold mines", $COLOR_INFO)
+SetLog("[" & UBound($g_aiPixelDarkElixir) & "] Dark elixir drills", $COLOR_INFO)
+Global $minColOutside = Round(UBound($g_aiPixelNearCollector) * $percent / 100)
 Global $radiusAdjustment = 1
+If $g_iSearchTH = "-" Or $g_iSearchTH = "" Then FindTownhall(True)
 Local $iSearchTH = $g_iSearchTH
-If $iSearchTH > 10 Then $iSearchTH = 11
-If $iSearchTH = "-" Or $iSearchTH = "" Then FindTownhall(True)
+If($iSearchTH > 10) Then $iSearchTH = 11
 If $iSearchTH <> "-" Then
 $radiusAdjustment *= Number($iSearchTH) / 10
 Else
-If $g_iTownHallLevel > 0 Then
+If($g_iTownHallLevel > 0) Then
 $radiusAdjustment *= Number($g_iTownHallLevel) / 10
+Else
+$radiusAdjustment *= Number(10) / 10
 EndIf
 EndIf
 If $g_bDebugSetlog Then SetLog("$iSearchTH: " & $iSearchTH)
-For $i = 0 To $colNbr - 1
-Global $arrPixel = $g_aiPixelNearCollector[$i]
-If UBound($arrPixel) > 0 Then
-If isOutsideEllipse($arrPixel[0], $arrPixel[1], $CollectorsEllipseWidth * $radiusAdjustment, $CollectorsEllipseHeigth * $radiusAdjustment) Then
-If $g_bDebugSetlog Then SetLog("Collector (" & $arrPixel[0] & ", " & $arrPixel[1] & ") is outside", $COLOR_PURPLE)
+For $i = 0 To UBound($g_aiPixelNearCollector) - 1
+Local $aXY = $g_aiPixelNearCollector[$i]
+If isOutsideEllipse($aXY[0], $aXY[1], $CollectorsEllipseWidth * $radiusAdjustment, $CollectorsEllipseHeigth * $radiusAdjustment) Then
+If $g_bDebugSetlog Then SetLog("Collector (" & $aXY[0] & ", " & $aXY[1] & ") is outside", $COLOR_PURPLE)
 $colOutside += 1
-EndIf
 EndIf
 If $colOutside >= $minColOutside Then
 If $g_bDebugSetlog Then SetDebugLog("More than " & $percent & "% of the collectors are outside", $COLOR_DEBUG)
 Return True
 EndIf
 Next
-If $g_bDebugSetlog Then SetDebugLog($colOutside & " collectors found outside (out of " & $colNbr & ")", $COLOR_DEBUG)
+If $g_bDebugSetlog Then SetDebugLog($colOutside & " collectors found outside (out of " & UBound($g_aiPixelNearCollector) & ")", $COLOR_DEBUG)
 Return False
 EndFunc
 Func AreCollectorsNearRedline($percent)
@@ -78724,21 +78713,23 @@ Global $hBitmapFirst
 _WinAPI_DeleteObject($hBitmapFirst)
 $hBitmapFirst = _CaptureRegion2()
 _GetRedArea()
-SuspendAndroid()
 $g_aiPixelMine = GetLocationMine()
-If(IsArray($g_aiPixelMine)) Then
-_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelMine, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
-EndIf
 $g_aiPixelElixir = GetLocationElixir()
-If(IsArray($g_aiPixelElixir)) Then
-_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
+$g_aiPixelDarkElixir = GetLocationDarkElixir()
+If Not(IsArray($g_aiPixelMine) Or IsArray($g_aiPixelElixir) Or(IsArray($g_aiPixelDarkElixir) And($g_iTownHallLevel > 6) And(Not $g_bSmartZapEnable))) Then
+SetLog("Are collectors outside | No mines/collectors/drills detected.", $COLOR_INFO)
+Return False
+Else
+If IsArray($g_aiPixelMine) Then _ArrayAdd($g_aiPixelNearCollector, $g_aiPixelMine, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
+If IsArray($g_aiPixelElixir) Then _ArrayAdd($g_aiPixelNearCollector, $g_aiPixelElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
+If IsArray($g_aiPixelDarkElixir) Then _ArrayAdd($g_aiPixelNearCollector, $g_aiPixelDarkElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
 EndIf
-ResumeAndroid()
 $g_bScanMineAndElixir = True
 Global $colNbr = UBound($g_aiPixelNearCollector)
 SetLog("Located collectors in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds")
-SetLog("[" & UBound($g_aiPixelMine) & "] Gold Mines")
-SetLog("[" & UBound($g_aiPixelElixir) & "] Elixir Collectors")
+SetLog("[" & UBound($g_aiPixelElixir) & "] Elixir collectors", $COLOR_INFO)
+SetLog("[" & UBound($g_aiPixelMine) & "] Gold mines", $COLOR_INFO)
+SetLog("[" & UBound($g_aiPixelDarkElixir) & "] Dark elixir drills", $COLOR_INFO)
 Local $diamondx = $g_iMilkFarmOffsetX + $g_iMilkFarmOffsetXStep * $g_iCmbRedlineTiles
 Local $diamondy = $g_iMilkFarmOffsetY + $g_iMilkFarmOffsetYStep * $g_iCmbRedlineTiles
 Local $arrCollectorsFlag[0]
@@ -78749,8 +78740,8 @@ For $i = 0 To $iMaxRedArea
 Local $pixelCoord = $g_aiPixelRedArea[$i]
 For $j = 0 To $colNbr - 1
 If $arrCollectorsFlag[$j] <> True Then
-Local $pixelCoord2 = $g_aiPixelNearCollector[$j]
-If Abs(($pixelCoord[0] - $pixelCoord2[0]) / $diamondx) + Abs(($pixelCoord[1] - $pixelCoord2[1]) / $diamondy) <= 1 Then
+Local $aXY = $g_aiPixelNearCollector[$j]
+If Abs(($pixelCoord[0] - $aXY[0]) / $diamondx) + Abs(($pixelCoord[1] - $aXY[1]) / $diamondy) <= 1 Then
 $arrCollectorsFlag[$j] = True
 $iTotalCollectorNearRedline += 1
 EndIf
@@ -78784,7 +78775,7 @@ EndIf
 EndIf
 Return $result
 EndFunc
-Func isOutsideDiamond($iX, $iY, $iLeft = 116, $iTop = 94, $iRight = 751, $iBottom = 582)
+Func isInDiamond($iX, $iY, $iLeft = 116, $iTop = 94, $iRight = 751, $iBottom = 582)
 Local $bReturn = False
 Local $iXFix = 203
 Local $iXFixf = 0
@@ -78795,8 +78786,55 @@ Local $aMiddle[2] = [(($iLeft + $iRight) + $iXFixf) / 2,($iTop + $iBottom) / 2]
 Local $aSize[2] = [$aMiddle[0] - $iLeft, $aMiddle[1] - $iTop]
 $bReturn =((Abs($iX - $aMiddle[0]) / $aSize[0] + Abs($iY - $aMiddle[1]) / $aSize[1]) <= 1) ?(True) :(False)
 EndIf
-SetDebugLog("isOutsideDiamond | Is in diamond? " & $bReturn & " / Correction: " & $iXFixf)
+SetDebugLog("isInDiamond | Is in diamond? " & $bReturn & " / Correction: " & $iXFixf)
 Return $bReturn
+EndFunc
+Func _GetLocationMine()
+Local $vMines = findMultipleQuick(@ScriptDir & "\imgxml\Storages\GoldMines", 7, Default, Default, Default, Default, 5)
+Local $vMinesS = findMultipleQuick(@ScriptDir & "\imgxml\Storages\Mines_Snow", 7, Default, Default, Default, Default, 5)
+Local $aReturn[0]
+If IsArray($vMines) Then
+For $i = 0 To UBound($vMines)-1
+Local $aTmp[2] = [$vMines[$i][1], $vMines[$i][2]]
+_ArrayAdd($aReturn, $aTmp, 0, -1, -1, $ARRAYFILL_FORCE_SINGLEITEM)
+Next
+EndIf
+If IsArray($vMinesS) Then
+For $i = 0 To UBound($vMinesS)-1
+Local $aTmp[2] = [$vMinesS[$i][1], $vMinesS[$i][2]]
+_ArrayAdd($aReturn, $aTmp, 0, -1, -1, $ARRAYFILL_FORCE_SINGLEITEM)
+Next
+EndIf
+Return(UBound($aReturn)-1 > 0) ?($aReturn) :(-1)
+EndFunc
+Func _GetLocationElixir()
+Local $vCollectors = findMultipleQuick(@ScriptDir & "\imgxml\Storages\Collectors", 7, Default, Default, Default, Default, 5)
+Local $vCollectorsS = findMultipleQuick(@ScriptDir & "\imgxml\Storages\Collectors_Snow", 7, Default, Default, Default, Default, 5)
+Local $aReturn[0]
+If IsArray($vCollectors) Then
+For $i = 0 To UBound($vCollectors)-1
+Local $aTmp[2] = [$vCollectors[$i][1], $vCollectors[$i][2]]
+_ArrayAdd($aReturn, $aTmp, 0, -1, -1, $ARRAYFILL_FORCE_SINGLEITEM)
+Next
+EndIf
+If IsArray($vCollectorsS) Then
+For $i = 0 To UBound($vCollectorsS)-1
+Local $aTmp[2] = [$vCollectorsS[$i][1], $vCollectorsS[$i][2]]
+_ArrayAdd($aReturn, $aTmp, 0, -1, -1, $ARRAYFILL_FORCE_SINGLEITEM)
+Next
+EndIf
+Return(UBound($aReturn)-1 > 0) ?($aReturn) :(-1)
+EndFunc
+Func _GetLocationDarkElixir()
+Local $vCollectors = findMultipleQuick(@ScriptDir & "\imgxml\Storages\Drills", 3, Default, Default, Default, Default, 5)
+Local $aReturn[0]
+If IsArray($vCollectors) Then
+For $i = 0 To UBound($vCollectors)-1
+Local $aTmp[2] = [$vCollectors[$i][1], $vCollectors[$i][2]]
+_ArrayAdd($aReturn, $aTmp, 0, -1, -1, $ARRAYFILL_FORCE_SINGLEITEM)
+Next
+EndIf
+Return(UBound($aReturn)-1 > 0) ?($aReturn) :(-1)
 EndFunc
 Func ProfileSwitch()
 For $i = 0 To 3
@@ -79585,6 +79623,8 @@ _Ini_Add("MiscTab", "DeployWave0", $g_iDeployWave[0])
 _Ini_Add("MiscTab", "DeployWave1", $g_iDeployWave[1])
 _Ini_Add("MiscTab", "ChkEnableRandom0", $g_bChkEnableRandom[0])
 _Ini_Add("MiscTab", "ChkEnableRandom1", $g_bChkEnableRandom[1])
+_Ini_Add("MaxSidesSF", "Enable", $g_bMaxSidesSF ? 1 : 0)
+_Ini_Add("MaxSidesSF", "CmbMaxSidesSF", $g_iCmbMaxSidesSF)
 _Ini_Add("war preparation", "Enable", $g_bStopForWar ? 1 : 0)
 _Ini_Add("war preparation", "Stop Time", $g_iStopTime)
 _Ini_Add("war preparation", "Return Time", $g_iReturnTime)
@@ -79807,6 +79847,8 @@ IniReadS($g_iDeployDelay[0], $g_sProfileConfigPath, "MiscTab", "DeployDelay0", $
 IniReadS($g_iDeployDelay[1], $g_sProfileConfigPath, "MiscTab", "DeployDelay1", $g_iDeployDelay[1], "Int")
 IniReadS($g_iDeployWave[0], $g_sProfileConfigPath, "MiscTab", "DeployWave0", $g_iDeployWave[0], "Int")
 IniReadS($g_iDeployWave[1], $g_sProfileConfigPath, "MiscTab", "DeployWave1", $g_iDeployWave[1], "Int")
+IniReadS($g_bMaxSidesSF, $g_sProfileConfigPath, "MaxSidesSF", "Enable", $g_bMaxSidesSF, "Bool")
+IniReadS($g_iCmbMaxSidesSF, $g_sProfileConfigPath, "MaxSidesSF", "CmbMaxSidesSF", $g_iCmbMaxSidesSF, "Int")
 IniReadS($g_bChkEnableRandom[0], $g_sProfileConfigPath, "MiscTab", "ChkEnableRandom0", $g_bChkEnableRandom[0], "Bool")
 IniReadS($g_bChkEnableRandom[1], $g_sProfileConfigPath, "MiscTab", "ChkEnableRandom1", $g_bChkEnableRandom[1], "Bool")
 IniReadS($g_bStopForWar, $g_sProfileConfigPath, "war preparation", "Enable", False, "Bool")
@@ -80079,6 +80121,8 @@ GUICtrlSetData($g_hDeployWave[0], $g_iDeployWave[0])
 GUICtrlSetData($g_hDeployWave[1], $g_iDeployWave[1])
 GUICtrlSetState($g_hChkEnableRandom[0], $g_bChkEnableRandom[0] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 GUICtrlSetState($g_hChkEnableRandom[1], $g_bChkEnableRandom[1] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+GUICtrlSetState($g_hMaxSidesSF, $g_bMaxSidesSF =(1) ?($GUI_CHECKED) :($GUI_UNCHECKED))
+GUICtrlSetData($g_hCmbMaxSidesSF, $g_iCmbMaxSidesSF)
 GUICtrlSetState($g_hChkStopForWar, $g_bStopForWar ? $GUI_CHECKED : $GUI_UNCHECKED)
 _GUICtrlComboBox_SetCurSel($g_hCmbStopTime, Abs($g_iStopTime))
 _GUICtrlComboBox_SetCurSel($g_hCmbStopBeforeBattle, $g_iStopTime < 0 ? 0 : 1)
@@ -80114,6 +80158,7 @@ For $i = 0 To $eSiegeMachineCount - 1
 GUICtrlSetData($g_hLblDaySiege[$i], _NumberFormat($g_aiDonateStatsSieges[$i][0], True))
 Next
 GUICtrlSetData($g_hDayTotalSieges, _NumberFormat($g_iTotalDonateStatsSiegeMachines, True))
+chkMaxSidesSF()
 ChkReqCCAlways()
 ChkReqCCFromChat()
 ReadConfig_600_52_2()
@@ -80141,6 +80186,8 @@ $g_iDeployWave[2] = Int(GUICtrlRead($g_hDeployWave[2]))
 $g_bChkEnableRandom[0] =(GUICtrlRead($g_hChkEnableRandom[0]) = $GUI_CHECKED) ? 1 : 0
 $g_bChkEnableRandom[1] =(GUICtrlRead($g_hChkEnableRandom[1]) = $GUI_CHECKED) ? 1 : 0
 $g_bChkEnableRandom[2] =(GUICtrlRead($g_hChkEnableRandom[2]) = $GUI_CHECKED) ? 1 : 0
+$g_bMaxSidesSF =(GUICtrlRead($g_hMaxSidesSF) = $GUI_CHECKED) ? 1 : 0
+$g_iCmbMaxSidesSF = Int(GUICtrlRead($g_hCmbMaxSidesSF))
 $g_bStopForWar = GUICtrlRead($g_hChkStopForWar) = $GUI_CHECKED
 $g_iStopTime = _GUICtrlComboBox_GetCurSel($g_hCmbStopTime)
 If _GUICtrlComboBox_GetCurSel($g_hCmbStopBeforeBattle) = 0 Then $g_iStopTime = $g_iStopTime * -1
@@ -80742,15 +80789,14 @@ EndIf
 SetLog("Builder Base Idle Starts", $COLOR_INFO)
 If randomSleep(1000) Then Return
 If $g_bRestart Then Return
-If($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Then CollectBuilderBase()
+If $g_bFirstStart Then CollectBuilderBase()
 If $g_bRestart Then Return
 BuilderBaseReport()
 RestAttacksInBB()
 If $g_bRestart Then Return
 If $g_bRestart Then Return
-If($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Then BattleMachineUpgrade()
-If($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Then StarLaboratory()
-Local $bBoosted = False
+If $g_bFirstStart Then BattleMachineUpgrade()
+If $g_bFirstStart Then StarLaboratory()
 If $g_bRestart Then Return
 If $g_iAvailableAttacksBB > 0 Or Not $g_bChkBBStopAt3 Then CheckArmyBuilderBase()
 For $i = 0 To Random(4,10,1)
@@ -80765,6 +80811,7 @@ If($g_iAvailableAttacksBB <> 0 and $g_bChkBBStopAt3) Or($g_bChkBBStopAt3 = False
 If $g_bRestart Then Return
 If Not $g_bRunState Then Return
 BuilderBaseAttack($bTestRun)
+If $g_bRestart Then Return
 If Not $g_bRunState Then Return
 EndIf
 If $g_bRestart Then Return
@@ -80779,8 +80826,7 @@ If $g_bRestart Then Return
 If Not $g_bRunState Then Return
 WallsUpgradeBB()
 If $g_bRestart Then Return
-If($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) And $g_iAvailableAttacksBB = 0 Then MainSuggestedUpgradeCode()
-If Not $bBoosted Then ExitLoop
+If $g_bFirstStart And $g_iAvailableAttacksBB = 0 Then MainSuggestedUpgradeCode()
 If $g_bRestart Then Return
 If $g_bRestart Then Return
 If Not $g_bRunState Then Return
@@ -81998,6 +82044,8 @@ Return
 EndIf
 Local $IsReaddy = False, $IsToDropTrophies = False
 Setlog("Entering in Builder Base Attack!", $COLOR_INFO)
+If checkObstacles(True) Then Return
+If $g_bRestart Then Return
 If _Sleep(1500) Then Return
 If Not isOnBuilderBase() Then Return
 BuilderBaseZoomOut()
@@ -82169,6 +82217,7 @@ While $Time < 15 * 24
 If checkObstacles_Network(True, True) Then Return False
 If _MultiPixelSearch(375, 547, 450, 555, 1, 1, Hex(0xFE2D40, 6), $aCancelVersusBattleBtn, 15) <> 0 Then SetLog("Searching for opponents...")
 For $i = 0 To 5
+If checkObstacles_Network(True, True) Then Return False
 If _MultiPixelSearch(711, 2, 856, 55, 1, 1, Hex(0xFFFF99, 6), $aAttackerVersusBattle, 15) <> 0 And _MultiPixelSearch(375, 547, 450, 555, 1, 1, Hex(0xFE2D40, 6), $aCancelVersusBattleBtn, 5) = 0 Then
 SetLog("The Versus Battle begins NOW!", $COLOR_SUCCESS)
 If _Sleep(2000) Then ExitLoop
@@ -82410,6 +82459,7 @@ EndIf
 SetDebugLog("[BBzoomout] GetDistance Boat to Stone Error", $COLOR_ERROR)
 Return 0
 EndFunc
+Global $aWallUpgradeOK[4] = [483, 496 + $g_iMidOffsetY, 0xFFDC15, 20]
 Func TestRunWallsUpgradeBB()
 SetDebugLog("** TestRunWallsUpgradeBB START**", $COLOR_DEBUG)
 Local $Status = $g_bRunState
@@ -82422,6 +82472,96 @@ $g_bChkBBUpgradeWalls = $wasWallsBB
 SetDebugLog("** TestRunWallsUpgradeBB END**", $COLOR_DEBUG)
 EndFunc
 Func WallsUpgradeBB()
+Local $aWallBBInfoPerLevel[10][4] = [ [0, 0, 0, 0], [1, 4000, 20, 2], [2, 10000, 50, 3], [3, 100000, 50, 3], [4, 300000, 75, 4], [5, 800000, 100, 5], [6, 1200000, 120, 6], [7, 2000000, 140, 7], [8, 3000000, 160, 8], [9, 4000000, 170, 9]]
+If Not $g_bRunState Then Return
+If Not $g_bChkBBUpgradeWalls Then Return
+FuncEnter(WallsUpgradeBB)
+Local $bBuilderBase = True
+If isOnBuilderBase() Then
+SetLog("Start Upgrade BB Wall!", $COLOR_INFO)
+Local $hWallBBTimer = __TimerInit()
+If Not getBuilderCount(False, $bBuilderBase) Then Return
+If $g_aiCurrentLootBB[$eLootGoldBB] = 0 Then BuilderBaseReport()
+If _Sleep($DELAYRESPOND) Then Return
+Local $hStarttime = _Timer_Init()
+Local $iBBWallLevel = $g_iCmbBBWallLevel + 1
+Local $iBBNextLevelCost = $aWallBBInfoPerLevel[$iBBWallLevel + 1][1]
+SetDebugLog("Wall(s) to search lvl " & $iBBWallLevel)
+SetDebugLog("Level " & $iBBWallLevel + 1 & " value: " & $iBBNextLevelCost & " Current Gold: " & $g_aiCurrentLootBB[$eLootGoldBB])
+If $g_iFreeBuilderCountBB > 0 And $g_bChkBBUpgradeWalls = True And Number($g_aiCurrentLootBB[$eLootGoldBB]) > $iBBNextLevelCost Then
+Local $vWallsBBNXY = findMultipleQuick($g_sBundleWallsBB, Default, Default, Default, $iBBWallLevel, Default, 5, False)
+If $g_bDebugSetlog Then SetDebugLog("Image Detection for Walls in Builder Base : " & Round(_Timer_Diff($hStarttime), 2) & "'ms")
+If IsArray($vWallsBBNXY) And UBound($vWallsBBNXY) > 0 Then
+SetDebugLog("Total Walls Found: " & UBound($vWallsBBNXY))
+For $i = 0 To UBound($vWallsBBNXY) - 1
+If $g_bDebugSetlog Then SetDebugLog($vWallsBBNXY[$i][0] & " found at (" & $vWallsBBNXY[$i][1] & "," & $vWallsBBNXY[$i][2] & ")", $COLOR_SUCCESS)
+If Not isInDiamond($vWallsBBNXY[$i][1], $vWallsBBNXY[$i][2], 83, 156, 780, 680) Then ContinueLoop
+If IsMainPageBuilderBase() Then Click($vWallsBBNXY[$i][1], $vWallsBBNXY[$i][2], 1, 0, "#902")
+If _Sleep($DELAYCOLLECT3) Then Return
+Local $aResult = BuildingInfo(245, 490 + $g_iBottomOffsetY)
+If $aResult[0] = 2 Then
+If StringInStr($aResult[1], "wall") = True And Number($aResult[2]) = $iBBWallLevel Then
+SetLog("Position : " & $vWallsBBNXY[$i][1] & ", " & $vWallsBBNXY[$i][2] & " is a Wall Level: " & $iBBWallLevel & ".")
+If IsMainPageBuilderBase() Then
+Local $aButton = findMultipleQuick(@ScriptDir & "\imgxml\imglocbuttons", 1, "230,580,638,676", Default, "UpgradeBB", True, 5, False)
+If IsArray($aButton) Then
+Click($aButton[0][1], $aButton[0][2])
+Else
+SetLog("WallsUpgradeBB | Error in imglocbuttons.", $COLOR_ERROR)
+ClickP($aAway, 1, 0, "#0932")
+ContinueLoop
+EndIf
+EndIf
+If _Sleep($DELAYCHECKTOMBS2) Then Return
+If isGemOpen(True) Then
+ClickP($aAway, 1, 0, "#0932")
+SetLog("Upgrade stopped due no loot", $COLOR_ERROR)
+ExitLoop
+ElseIf _ColorCheck(_GetPixelColor($aWallUpgradeOK[0], $aWallUpgradeOK[1], True), Hex($aWallUpgradeOK[2], 6), $aWallUpgradeOK[3]) = True Then
+SetLog("Builder Base Wall Upgrade Successfully!")
+Click($aWallUpgradeOK[0], $aWallUpgradeOK[1], 1, 0, "#904")
+If _Sleep($DELAYRESPOND) Then Return
+ClickP($aAway, 1, 0, "#0932")
+Else
+SetLog("Builder Base Wall reached the maximum level allowed!", $COLOR_ERROR)
+ClickP($aAway, 1, 0, "#0932")
+ExitLoop
+EndIf
+EndIf
+Else
+SetLog("Position : " & $vWallsBBNXY[$i][1] & ", " & $vWallsBBNXY[$i][2] & " is not a Wall Level: " & $iBBWallLevel & ".", $COLOR_ERROR)
+ClickP($aAway, 1, 0, "#0932")
+EndIf
+If _Sleep($DELAYCHECKTOMBS2) Then Return
+BuilderBaseReport()
+If _Sleep($DELAYRESPOND) Then Return
+If Number($g_aiCurrentLootBB[$eLootGoldBB]) < $iBBNextLevelCost Then
+SetLog("Upgrade stopped due to insufficient Gold!", $COLOR_INFO)
+ExitLoop
+EndIf
+Next
+Else
+SwitchToNextWallBBLevel()
+EndIf
+ElseIf $g_iFreeBuilderCountBB > 0 And $g_bChkBBUpgradeWalls = True And Number($g_aiCurrentLootBB[$eLootGoldBB]) < $iBBNextLevelCost Then
+SetLog("Upgrade stopped due to insufficient Gold", $COLOR_INFO)
+Else
+SetLog("Builder not available to upgrade Wall!")
+EndIf
+ClickP($aAway, 1, 300, "#0329")
+EndIf
+FuncReturn()
+EndFunc
+Func SwitchToNextWallBBLevel()
+If $g_iCmbBBWallLevel >= 0 And $g_iCmbBBWallLevel < 8 Then
+EnableGuiControls()
+_GUICtrlComboBox_SetCurSel($g_hCmbBBWallLevel, $g_iCmbBBWallLevel + 1)
+cmbBBWall()
+SaveConfig()
+DisableGuiControls()
+Return True
+EndIf
+Return False
 EndFunc
 Global $g_sMachineTime = '1000/01/01 00:00:00'
 Func TestBattleMachineUpgrade()

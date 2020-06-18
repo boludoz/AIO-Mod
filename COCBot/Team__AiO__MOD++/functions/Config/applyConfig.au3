@@ -127,7 +127,11 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			GUICtrlSetState($g_hChkEnableRandom[0], $g_bChkEnableRandom[0] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkEnableRandom[1], $g_bChkEnableRandom[1] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			;GUICtrlSetState($g_hChkEnableRandom[2], $g_bChkEnableRandom[2] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
-			
+
+			; Max sides
+			GUICtrlSetState($g_hMaxSidesSF, $g_bMaxSidesSF = (1) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
+			GUICtrlSetData($g_hCmbMaxSidesSF, $g_iCmbMaxSidesSF)
+
 			; War Preparation
 			GUICtrlSetState($g_hChkStopForWar, $g_bStopForWar ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbStopTime, Abs($g_iStopTime))
@@ -179,7 +183,7 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 
 			GUICtrlSetData($g_hDayTotalSieges, _NumberFormat($g_iTotalDonateStatsSiegeMachines, True)) ; Donation records - Team AIO Mod++
 			
-			
+			chkMaxSidesSF()
 			ChkReqCCAlways()
 			ChkReqCCFromChat()
 			ReadConfig_600_52_2()
@@ -218,6 +222,10 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			$g_bChkEnableRandom[0] = (GUICtrlRead($g_hChkEnableRandom[0]) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkEnableRandom[1] = (GUICtrlRead($g_hChkEnableRandom[1]) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkEnableRandom[2] = (GUICtrlRead($g_hChkEnableRandom[2]) = $GUI_CHECKED) ? 1 : 0
+
+			; Max sides
+			$g_bMaxSidesSF = (GUICtrlRead($g_hMaxSidesSF) = $GUI_CHECKED) ? 1 : 0
+			$g_iCmbMaxSidesSF = Int(GUICtrlRead($g_hCmbMaxSidesSF))
 
 			; War Preparation
 			$g_bStopForWar = GUICtrlRead($g_hChkStopForWar)  = $GUI_CHECKED

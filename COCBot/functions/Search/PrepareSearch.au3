@@ -31,7 +31,9 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 	EndIf
 
 	ChkAttackCSVConfig()
-
+	
+	waitMainScreen() ; Custom - Team AIO Mod++ (@vDragon)
+	
 	If IsMainPage() Then
 		If _Sleep($DELAYTREASURY4) Then Return
 		If _CheckPixel($aAttackForTreasury, $g_bCapturePixel, Default, "Is attack for treasury:") Then
@@ -134,10 +136,14 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 
 	#Region - Custom findMatch - Team AIO Mod++ 
 	If Not $g_bLeagueAttack Then
-		
-		; It ensures that the button is no longer populated in all possible conditions. 
-		If not ClickFindMatch() Then Return
-		
+		Local $aFindMatch = ClickFindMatch()
+		If $aFindMatch Then
+			SetLog("Looking for village!", $COLOR_SUCCESS)
+		Else
+			SetLog("Couldn't find the Find a Match Button!", $COLOR_ERROR)
+			If $g_bDebugImageSave Then SaveDebugImage("FindAMatchBUttonNotFound")
+			Return
+		EndIf
 	EndIf
 	#EndRegion
 

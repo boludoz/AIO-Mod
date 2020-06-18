@@ -197,6 +197,21 @@ Func ChkSmartFarm($TypeResources = "All")
 		Next
 		DebugImageSmartFarm($THdetails, $aResourcesIN, $aResourcesOUT, Round(TimerDiff($hTimer) / 1000, 2) & "'s", _ArrayToString($BestSideToAttack), $redline)
 	EndIf
+	
+	#Region - Max Side - Team AIO Mod++
+	If $g_bMaxSidesSF Then
+		Local $aSides2[4][2] = [ ["TL", $aMainSide[0]], ["TR", $aMainSide[1]], ["BL", $aMainSide[2]], ["BR", $aMainSide[3]] ]
+		_ArraySort($aSides2, 0, 0, 0, 0)
+		
+		Local $iMaxL = ((UBound($BestSideToAttack) -1) > ($g_iCmbMaxSidesSF - 1)) ? ($g_iCmbMaxSidesSF - 1) : (UBound($BestSideToAttack) - 1)
+		Local $BestSideToAttack[0]
+		For $i = 0 To $iMaxL
+			Local $aClu[1] = [$aSides2[$i][0]]
+			SetDebugLog("["&$i&"] ChkSmartFarm | $aClu: " & $aSides2[$i][0])
+			_ArrayAdd($BestSideToAttack, $aClu)
+		Next
+	EndIf
+	#EndRegion - Max Side - Team AIO Mod++
 
 	; Variable to return : $Return[3]  [0] = To attack InSide  [1] = Quant. Sides  [2] = Name Sides
 	Local $Return[3] = [$AttackInside, UBound($BestSideToAttack), _ArrayToString($BestSideToAttack)]

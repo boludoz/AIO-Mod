@@ -92,8 +92,6 @@ Func chkDelayMod()
 	$g_bDeployCastleFirst[$DB] = (GUICtrlRead($g_hDeployCastleFirst[$DB]) = $GUI_CHECKED)
 	$g_bDeployCastleFirst[$LB] = (GUICtrlRead($g_hDeployCastleFirst[$LB]) = $GUI_CHECKED)
 
-
-
 	$g_iIntSleep = Int(GUICtrlRead($g_hIntSleep))
 	GUICtrlSetData($g_hDelayLabel, $g_iIntSleep)
 
@@ -114,7 +112,20 @@ Func chkDelayMod()
 		GUICtrlSetState($g_hUseRandomSleep, $GUI_DISABLE)
 		GUICtrlSetState($g_hNoAttackSleep, $GUI_DISABLE)
 	EndIf
+	
 EndFunc   ;==>chkDelayMod
+
+Func chkMaxSidesSF()
+	; Max Sides
+	$g_iCmbMaxSidesSF = Int(GUICtrlRead($g_hCmbMaxSidesSF))
+	$g_bMaxSidesSF = (GUICtrlRead($g_hMaxSidesSF) = $GUI_CHECKED)
+
+	If $g_bMaxSidesSF Then
+		GUICtrlSetState($g_hCmbMaxSidesSF, $GUI_ENABLE)
+	Else
+		GUICtrlSetState($g_hCmbMaxSidesSF, $GUI_DISABLE)
+	EndIf
+EndFunc   ;==>chkMaxSidesSF
 
 ; Classic Four Finger - Team AiO MOD++
 Func cmbStandardDropSidesAB() ; avoid conflict between FourFinger and SmartAttack

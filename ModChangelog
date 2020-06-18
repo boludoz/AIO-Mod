@@ -4,8 +4,27 @@
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
                     Based on MyBot.run v7.8.3 
-					
-	**v3.5.9** (Quality improvement update) (Thx @Approchable, @joosmega, @omora88, @vDragon, @esbestan and github beta test team for test <3)
+	**v4.0.5** (Quality improvement update) (Thx @Approchable, @joosmega, @omora88, @vDragon, @esbestan and github beta test team for test <3)
+		» Added:
+			- Smart farm : Max side limiter.
+			
+		» Fixed / Improved :
+			- Clan castle donation.
+			- FindMatch info fix.
+			- Smart farm / Standard attack : humane time offset.
+
+	**v4.0.2** (Quality improvement update) (Thx @Approchable, @joosmega, @omora88, @vDragon, @esbestan and github beta test team for test <3)
+		» Fixed / Improved :
+			- Accurate and self-correcting edges of the village.
+			- New drop point correction more precise.
+			- New mine, collectors, drills detect system.
+			- Check collector outside and collectors near redline fixed.
+			- New collectors levels.
+			- New obstacles system and detect obstacles in edges system.
+			- Castle supertroops bug prevention system.
+			- Builder base loop corrections.
+			
+	**v3.5.9** (Internal version.)
 		» Fixed / Improved :
 			- Change troops in BB error fixed. 
 			- Some internal funcs improved.

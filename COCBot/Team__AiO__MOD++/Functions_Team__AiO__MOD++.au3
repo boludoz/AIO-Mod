@@ -54,6 +54,7 @@
 #include "functions\Mod's\CheckCollectorsOutside\AreCollectorsOutside.au3"
 #include "functions\Mod's\CheckCollectorsOutside\AreCollectorsNearRedline.au3"
 #include "functions\Mod's\CheckCollectorsOutside\isOutsideEllipse.au3"
+#include "functions\Mod's\CheckCollectorsOutside\CustomDetect.au3"
 
 ; Switch Profiles - Team AiO MOD++
 #include "functions\Mod's\ProfilesOptions\SwitchProfiles.au3"

@@ -79,9 +79,15 @@ Global $g_iSlotNow = -1
 
 ; Misc tab - Team AiO MOD++
 Global $g_bUseSleep = False, $g_iIntSleep = 20, $g_bUseRandomSleep = False, $g_bNoAttackSleep = False, $g_bDisableColorLog = False, $g_bDelayLabel = False, $g_bAvoidLocation = False, $g_bEdgeObstacle = False
-
 ; GUI
 Global $g_hUseSleep, $g_hIntSleep, $g_hUseRandomSleep, $g_hNoAttackSleep, $g_hDisableColorLog, $g_hDelayLabel, $g_hAvoidLocation, $g_hEdgeObstacle
+;-------------------
+
+; Max sides SF
+Global $g_bMaxSidesSF = True, $g_iCmbMaxSidesSF = 1
+; GUI 
+Global $g_hMaxSidesSF, $g_hCmbMaxSidesSF
+;-------------------
 
 ; Attack extras - Team AiO MOD++
 Global $g_bDeployCastleFirst[2] = [False, False]
@@ -286,18 +292,6 @@ Global $g_bChkUpgradeTroops = False, $g_iCmbBBLaboratory, $g_bChkUpgradeMachine 
 
 ; Upgrade Walls
 Global $g_bChkBBUpgradeWalls = False, $g_iCmbBBWallLevel, $g_iTxtBBWallNumber = 0
-Global Const $g_aiWallBBInfoPerLevel[11][4] = [ _ ; Level, Gold, Qty, BH
-		[0, 0, 0, 0], _
-		[1, 4000, 20, 2], _
-		[2, 10000, 50, 3], _
-		[3, 100000, 50, 3], _
-		[4, 300000, 75, 4], _
-		[5, 800000, 100, 5], _
-		[6, 1200000, 120, 6], _
-		[7, 2000000, 140, 7], _
-		[8, 3000000, 160, 8], _
-		[9, 4000000, 180, 9], _
-		[10, 5000000, 180, 10]]
 
 ; Troops
 Global $g_sIcnBBOrder[11]
@@ -322,9 +316,8 @@ Global $g_iCmbBBArmy1 = 0, $g_iCmbBBArmy2 = 0, $g_iCmbBBArmy3 = 0, $g_iCmbBBArmy
 
 ; Lib with Icons
 Global Const $g_sLibBBIconPath = $g_sLibPath & "\BuilderBase.dll" ; icon library
-Global Enum $eIcnBBBarb = 1, $eIcnBBArch, $eIcnBBGiant, $eIcnBBBeta, $eIcnBBBombn, $eIcnBBBabyDrag, $eIcnBBCannon, $eIcnBBNight, $eIcnBBDrop, $eIcnBBPekka, $eIcnBBEmpty, _
-		$eIcnBB, $eIcnLabBB, $eIcnBBElixir, $eIcnBBGold, $eIcnBBTrophies, $eIcnMachine, $eIcnBBWallInfo, $eIcnBBWallL1, $eIcnBBWallL2, $eIcnBBWallL3, $eIcnBBWallL4, $eIcnBBWallL5, _
-		$eIcnBBWallL6, $eIcnBBWallL7, $eIcnBBWallL8
+Global Enum $eIcnBB = 1 , $eIcnLabBB, $eIcnBBElixir, $eIcnBBGold, $eIcnBBTrophies, $eIcnMachine, $eIcnBBWallInfo, $eIcnBBWallL1, $eIcnBBWallL2, $eIcnBBWallL3, $eIcnBBWallL4, $eIcnBBWallL5, _
+		$eIcnBBWallL6, $eIcnBBWallL7, $eIcnBBWallL8, $eIcnBBWallL9
 
 ; Internal & External Polygon
 Global $CocDiamondECD = "ECD"

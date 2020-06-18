@@ -47,8 +47,9 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 	EndIf
 	
 	If (isOnBuilderBase() <> isOnMainVillage()) Then
-		SetLog("Verifying that you are in : " & ($bBuilderBase) ? ("Builder Base") : ("Normal Village"))
-		If SwitchBetweenBases(False, ($bBuilderBase) ? ("Builder Base") : ("Normal Village"), True) Then 
+		Local $sViString = ($bBuilderBase) ? ("Builder Base") : ("Normal Village")
+		SetLog("Verifying that you are in : " & $sViString, $COLOR_INFO)
+		If SwitchBetweenBases(False, $sViString, True) Then 
 			$g_bMinorObstacle = True
 			If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 			Return False

@@ -26,9 +26,10 @@ Func CreateAttackSearchDeadBaseSmartFarm()
 	Local $sTxtTip = ""
 	Local $x = 25, $y = 20
 		GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "Group_01", "Options"), $x - 20, $y - 20, 270, $g_iSizeHGrpTab4)
-
+		
+		#Region - Custom - Team AIO Mod++
 		$y += 25
-			GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "Lbl-CmbStandardUnitDelay", "Delay Unit") & ":", $x, $y + 5, -1, -1)
+			GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "Lbl-CmbStandardUnitDelay", "Delay Unit"), $x + 25, $y + 25, -1, -1)
 				$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "Lbl-CmbStandardUnitDelay_Info_01", "This delays the deployment of troops, 1 (fast) = like a Bot, 10 (slow) = Like a Human.") & @CRLF & _
 						   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "Lbl-CmbStandardUnitDelay_Info_02", "Random will make bot more varied and closer to a person.")
 				_GUICtrlSetTip(-1, $sTxtTip)
@@ -36,28 +37,38 @@ Func CreateAttackSearchDeadBaseSmartFarm()
 				_GUICtrlSetTip(-1, $sTxtTip)
 				GUICtrlSetData(-1, "1|2|3|4|5|6|7|8|9|10", "4")
 				GUICtrlSetOnEvent(-1, "chkDelayMod")
-				;GUICtrlSetOnEvent(-1, "chkSpeedAtkDB")
-			GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "Lbl-CmbStandardWaveDelay_Info_01", "Wave") & ":", $x + 100, $y + 5, -1, -1)
+
+			GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "Lbl-CmbStandardWaveDelay_Info_01", "Wave"), $x + 140, $y + 25, -1, -1)
 				_GUICtrlSetTip(-1, $sTxtTip)
 			$g_hDeployWave[1] = GUICtrlCreateCombo("", $x + 140, $y, 36, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 				_GUICtrlSetTip(-1, $sTxtTip)
 				GUICtrlSetData(-1, "1|2|3|4|5|6|7|8|9|10", "4")
 				GUICtrlSetOnEvent(-1, "chkDelayMod")
-				;GUICtrlSetOnEvent(-1, "chkSpeedAtkDB")
+
 		$y += 22
-			$g_hChkEnableRandom[1] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "ChkRandomSpeedAtk", "Randomize delay for Units && Waves"), $x, $y, -1, -1)
+			$g_hChkEnableRandom[1] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "ChkRandomSpeedAtk", "Randomize delay for Units && Waves"), $x, $y-50, -1, -1)
 				_GUICtrlSetTip(-1, $sTxtTip)
 				GUICtrlSetOnEvent(-1, "chkDelayMod")
-				;GUICtrlSetOnEvent(-1, "chkRandomSpeedAtkDB")
 
+		$y += 20
+		$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "HumaneSides", "Set a limit for places, the minimum limit is random.")
+		$g_hMaxSidesSF = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "MaxSidesSM", "Max sides to attack") & ":", $x, $y, -1, -1)
+				_GUICtrlSetTip(-1, $sTxtTip)
+				GUICtrlSetOnEvent(-1, "chkMaxSidesSF")
+		$y += 30
+			$g_hCmbMaxSidesSF = GUICtrlCreateCombo("", $x + 90, $y, 36, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+				GUICtrlSetData(-1, "1|2|3|4", "4")
+				GUICtrlSetOnEvent(-1, "chkMaxSidesSF")
+		#EndRegion - Custom - Team AIO Mod++
+		
 		$y += 40
 			GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "Lbl-TxtInsidePercentage", "Inside resources") & ":", $x, $y + 2, -1, -1)
-			$g_hTxtInsidePercentage = _GUICtrlCreateInput("65" , $x + 90, $y , 25 , -1)
+			$g_hTxtInsidePercentage = _GUICtrlCreateInput("65" , $x + 140, $y , 25 , -1)
 				_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "txt-TxtInsidePercentage", "Percentage to force attack in one side only"))
 			GUICtrlCreateLabel("%" , $x + 117 , $y + 3)
 		$y += 22
 			GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "Lbl-TxtOutsidePercentage", "Outside resources") & ":", $x, $y + 2, -1, -1)
-			$g_hTxtOutsidePercentage = _GUICtrlCreateInput("80" , $x + 90 , $y , 25 , -1)
+			$g_hTxtOutsidePercentage = _GUICtrlCreateInput("80" , $x + 140 , $y , 25 , -1)
 				_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "txt-TxtOutsidePercentage", "Percentage to force attack in 4 sides"))
 			GUICtrlCreateLabel("%" , $x + 117 , $y + 3)
 		$y += 40

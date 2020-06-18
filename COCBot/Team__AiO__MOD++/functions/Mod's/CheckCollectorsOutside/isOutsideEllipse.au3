@@ -1,18 +1,18 @@
-#cs FUNCTION ====================================================================================================================
-	; Name ..........: isOutsideEllipse
-	; Description ...: This function can test if a given coordinate is inside (True) or outside (False) the village grass borders (a diamond shape).
-	;                  It will also exclude some special area's like the CHAT tab, BUILDER button and GEM shop button.
-	; Syntax ........: isInsideDiamondXY($Coordx, $Coordy), isInsideDiamond($aCoords)
-	; Parameters ....: ($coordx, $coordY) as coordinates or ($aCoords), an array of (x,y) to test
-	; Return values .: True or False
-	; Author ........: McSlither (Jan-2016)
-	; Modified ......: TheRevenor (Jul-2016)
-	; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2016
-	;                  MyBot is distributed under the terms of the GNU GPL
-	; Related .......: isInsideDiamond($aCoords)
-	; Link ..........: https://github.com/MyBotRun/MyBot/wiki
-	; Example .......: None
-#ce ===============================================================================================================================
+; FUNCTION ====================================================================================================================
+; Name ..........: isOutsideEllipse
+; Description ...: This function can test if a given coordinate is inside (True) or outside (False) the village grass borders (a diamond shape).
+;                  It will also exclude some special area's like the CHAT tab, BUILDER button and GEM shop button.
+; Syntax ........: isInsideDiamondXY($Coordx, $Coordy), isInsideDiamond($aCoords)
+; Parameters ....: ($coordx, $coordY) as coordinates or ($aCoords), an array of (x,y) to test
+; Return values .: True or False
+; Author ........: McSlither (Jan-2016)
+; Modified ......: TheRevenor (Jul-2016)
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2016
+;                  MyBot is distributed under the terms of the GNU GPL
+; Related .......: isInsideDiamond($aCoords)
+; Link ..........: https://github.com/MyBotRun/MyBot/wiki
+; Example .......: None
+; ===============================================================================================================================
 
 Func isOutsideEllipse($coordX, $coordY, $ellipseWidth = 200, $ellipseHeigth = 150, $centerX = 430, $centerY = 339)
 	Local $iXFix = 203
@@ -37,10 +37,10 @@ Func isOutsideEllipse($coordX, $coordY, $ellipseWidth = 200, $ellipseHeigth = 15
 EndFunc   ;==>isOutsideEllipse
 
 ; FUNCTION ====================================================================================================================
-; Name ..........: isOutsideDiamond
+; Name ..........: isInDiamond
 ; Description ...: Return True or False is if point is outside diamond.
 ;                  
-; Syntax ........: isOutsideDiamond($iX, $iY)
+; Syntax ........: isInDiamond($iX, $iY)
 ; Parameters ....: 
 ; Return values .: True or False
 ; Author ........: Boldina ! (16/6/2020) (port to au3, Based in model by Wladimir Palant)
@@ -52,7 +52,7 @@ EndFunc   ;==>isOutsideEllipse
 ; Example .......: None
 ; ===============================================================================================================================
 
-Func isOutsideDiamond($iX, $iY, $iLeft = 116, $iTop = 94, $iRight = 751, $iBottom = 582)
+Func isInDiamond($iX, $iY, $iLeft = 116, $iTop = 94, $iRight = 751, $iBottom = 582)
 	Local $bReturn = False
 	Local $iXFix = 203
 	Local $iXFixf = 0
@@ -63,6 +63,6 @@ Func isOutsideDiamond($iX, $iY, $iLeft = 116, $iTop = 94, $iRight = 751, $iBotto
 		Local $aSize[2] = [$aMiddle[0] - $iLeft, $aMiddle[1] - $iTop]
 		$bReturn = ((Abs($iX - $aMiddle[0]) / $aSize[0] + Abs($iY - $aMiddle[1]) / $aSize[1]) <= 1) ? (True) : (False)
 	EndIf
-	SetDebugLog("isOutsideDiamond | Is in diamond? " & $bReturn & " / Correction: " & $iXFixf)
+	SetDebugLog("isInDiamond | Is in diamond? " & $bReturn & " / Correction: " & $iXFixf)
 	Return $bReturn
 EndFunc

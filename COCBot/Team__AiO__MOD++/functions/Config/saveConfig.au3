@@ -84,6 +84,10 @@ Func SaveConfig_MOD_MiscTab()
 	_Ini_Add("MiscTab", "ChkEnableRandom1", $g_bChkEnableRandom[1])
 	;_Ini_Add("MiscTab", "ChkEnableRandom2", $g_bChkEnableRandom[2])
 
+	; Max sides
+	_Ini_Add("MaxSidesSF", "Enable", $g_bMaxSidesSF ? 1 : 0)
+	_Ini_Add("MaxSidesSF", "CmbMaxSidesSF", $g_iCmbMaxSidesSF)
+
 	; Village / Misc - War Preparation (Demen)
 	_Ini_Add("war preparation", "Enable", $g_bStopForWar ? 1 : 0)
 	_Ini_Add("war preparation", "Stop Time", $g_iStopTime)
