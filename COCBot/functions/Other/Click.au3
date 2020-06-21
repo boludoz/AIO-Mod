@@ -248,16 +248,16 @@ Func GemClickP($point, $howMuch = 1, $speed = 0, $debugtxt = "")
 	Return GemClick($point[0], $point[1], $howMuch, $speed, $debugtxt = "")
 EndFunc   ;==>GemClickP
 
-;Func AttackClick($x, $y, $times = 1, $speed = 0, $afterDelay = 0, $debugtxt = "")
-;	Local $timer = __TimerInit()
-;	; Protect the Attack Bar
-;	If $y > 555 + $g_iBottomOffsetY Then $y = 555 + $g_iBottomOffsetY
-;	AttackRemainingTime(False) ; flag attack started
-;	Local $result = PureClick($x, $y, $times, $speed, $debugtxt)
-;	Local $delay = $times * $speed + $afterDelay - __TimerDiff($timer)
-;	If IsKeepClicksActive() = False And $delay > 0 Then _Sleep($delay, False)
-;	Return $result
-;EndFunc   ;==>AttackClick
+Func AttackClick($x, $y, $times = 1, $speed = 0, $afterDelay = 0, $debugtxt = "")
+	Local $timer = __TimerInit()
+	; Protect the Attack Bar
+	If $y > 555 + $g_iBottomOffsetY Then $y = 555 + $g_iBottomOffsetY
+	AttackRemainingTime(False) ; flag attack started
+	Local $result = PureClick($x, $y, $times, $speed, $debugtxt)
+	Local $delay = $times * $speed + $afterDelay - __TimerDiff($timer)
+	If IsKeepClicksActive() = False And $delay > 0 Then _Sleep($delay, False)
+	Return $result
+EndFunc   ;==>AttackClick
 
 Func _DecodeDebug($message)
 	Local $separator = " | "

@@ -23,13 +23,6 @@ Func GetAttackBar($bRemaining = False, $pMatchMode = $DB, $bDebug = False)
 	;Reset All Static Variables if the AttackBarCheck is not for Remaining
 	If Not $bRemaining Then
 
-		#Region - No reddrop - Team AiO MOD++
-		For $i = 0 To UBound($g_aIsDead) - 1
-		 $g_aIsDead[$i] = 0
-		Next
-		$g_iSlotNow = -1
-		#EndRegion
-
 		$bCheckSlot12 = False
 		$bDoubleRow = False
 		Local $aDummyArray[0][8]

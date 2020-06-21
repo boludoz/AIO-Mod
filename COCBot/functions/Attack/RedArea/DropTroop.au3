@@ -28,9 +28,7 @@ Func DropTroop($troop, $nbSides, $number, $slotsPerEdge = 0, $indexToAttack = -1
 	If ($g_abAttackStdSmartAttack[$g_iMatchMode]) Then
 		If $slotsPerEdge = 0 Or $number < $slotsPerEdge Then $slotsPerEdge = Floor($number / $nbSides)
 		If _Sleep($DELAYDROPTROOP1) Then Return
-		#Region - No reddrop - Team AiO MOD++
-		If SelectDropTroop($troop) = False Then Return ;Select Troop
-		#EndRegion - No reddrop - Team AiO MOD++
+		SelectDropTroop($troop) ;Select Troop
 		If _Sleep($DELAYDROPTROOP2) Then Return
 
 		If $nbSides < 1 Then Return

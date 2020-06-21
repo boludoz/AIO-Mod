@@ -303,51 +303,6 @@ Func UnderstandChatRules()
 	Return $bReturn
 EndFunc   ;==>UnderstandChatRules
 
-; #FUNCTION# ====================================================================================================================
-; Name ..........: IsSlotDead
-; Description ...: If Is Slot Dead Return True
-; Syntax ........: IsSlotDead($iSlotNumber)
-; Parameters ....: $iSlotNumber               - an unknown value.
-; Return values .: None
-; Author ........: Boludoz/Boldina (8/3/2019)
-; Modified ......:
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
-;                  MyBot is distributed under the terms of the GNU GPL
-; Related .......:
-; Link ..........: https://github.com/MyBotRun/MyBot/wiki
-; Example .......: IsSlotDead(1)
-; ===============================================================================================================================
-Func IsSlotDead()
-	If _Wait4Pixel($g_avAttackTroops[$g_iSlotNow][4], 633, 0xFFFFFF, 15, 250, 10) Then
-		Return
-	ElseIf _Wait4Pixel($g_avAttackTroops[$g_iSlotNow][4], 638, 0x656565, 10, 250, 10) Then
-		SetLog("Troop Dead X: " & $g_iSlotNow, $COLOR_ORANGE)
-		$g_aIsDead[$g_iSlotNow] = 1
-	EndIf
-EndFunc   ;==>IsSlotDead
-
-Func AttackClick($x, $y, $times = 1, $speed = 0, $afterDelay = 0, $debugtxt = "")
-	Local $timer = __TimerInit(), $bReturn = True
-	; Protect the Attack Bar
-	If $y > 555 + $g_iBottomOffsetY Then $y = 555 + $g_iBottomOffsetY
-	AttackRemainingTime(False) ; flag attack started
-	If $times = 1 Then
-		$bReturn = PureClick($x, $y, 1, $speed, $debugtxt)
-	Else
-		For $i = 1 To $times
-			If $g_aIsDead[$g_iSlotNow] = 0 Then
-				IsSlotDead()
-			Else
-				Return False
-			EndIf
-			$bReturn = ($g_aIsDead[$g_iSlotNow] = 1) ? (False) : (PureClick($x, $y, 1, $speed, $debugtxt))
-		Next
-	EndIf
-	Local $delay = $times * $speed + $afterDelay - __TimerDiff($timer)
-	If IsKeepClicksActive() = False And $delay > 0 Then _Sleep($delay, False)
-	Return $bReturn
-EndFunc   ;==>AttackClick
-
 Func IsToRequestCC($ClickPAtEnd = True, $bSetLog = False, $bNeedCapture = True)
 	Local $bNeedRequest = False
 	Local $sCCRequestDiamond = GetDiamondFromRect("715, 576, 845, 617") ; Contains iXStart, $iYStart, $iXEnd, $iYEnd

@@ -333,7 +333,7 @@ Func chkUpgradeWarden()
 EndFunc   ;==>chkUpgradeWarden
 
 Func chkUpgradeChampion()
-	If $g_iTownHallLevel > 12 Then ; Must be TH13 to have Champion
+	If $g_iTownHallLevel > 12 Or $g_iTownHallLevel < 1 Then ; Must be TH13 to have Champion
 		If GUICtrlRead($g_hCmbBoostChampion) > 0 Then
 			GUICtrlSetState($g_hChkUpgradeChampion, $GUI_DISABLE)
 			GUICtrlSetState($g_hChkUpgradeChampion, $GUI_UNCHECKED)

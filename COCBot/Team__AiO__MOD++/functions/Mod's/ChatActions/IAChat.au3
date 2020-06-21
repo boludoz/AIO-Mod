@@ -201,7 +201,7 @@ EndFunc   ;==>getChatStringPersianMod
 
 Func getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpace = Default, $bImgLoc = Default, $bForceCaptureRegion = Default)
 	Local $iTry = 0
-	Local $iMax = ($g_bDnAIO <> True) ? (5) : (0)
+	Local $iMax = ($g_bDnAIO <> True) ? (8) : (0)
 	
 	While 1
 		$g_sGetOcrMod = _getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpace, $bImgLoc, $bForceCaptureRegion)

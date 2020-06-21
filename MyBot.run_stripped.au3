@@ -7539,8 +7539,6 @@ Global $g_hIcnTroopBB[6]
 Global $g_hComboTroopBB[6]
 Global $g_bChkNoDropIfShield = True, $g_bChkTrophyTroops = False, $g_bChkTrophyHeroesAndTroops = True
 Global $g_hChkNoDropIfShield, $g_hChkTrophyTroops, $g_hChkTrophyHeroesAndTroops
-Global $g_aIsDead[UBound($g_avAttackTroops, 1) -1]
-Global $g_iSlotNow = -1
 Global $g_bUseSleep = False, $g_iIntSleep = 20, $g_bUseRandomSleep = False, $g_bNoAttackSleep = False, $g_bDisableColorLog = False, $g_bDelayLabel = False, $g_bAvoidLocation = False, $g_bEdgeObstacle = False
 Global $g_hUseSleep, $g_hIntSleep, $g_hUseRandomSleep, $g_hNoAttackSleep, $g_hDisableColorLog, $g_hDelayLabel, $g_hAvoidLocation, $g_hEdgeObstacle
 Global $g_bMaxSidesSF = True, $g_iCmbMaxSidesSF = 1
@@ -28589,7 +28587,7 @@ GUICtrlSetState($g_hChkUpgradeWarden, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
 EndIf
 EndFunc
 Func chkUpgradeChampion()
-If $g_iTownHallLevel > 12 Then
+If $g_iTownHallLevel > 12 Or $g_iTownHallLevel < 1 Then
 If GUICtrlRead($g_hCmbBoostChampion) > 0 Then
 GUICtrlSetState($g_hChkUpgradeChampion, $GUI_DISABLE)
 GUICtrlSetState($g_hChkUpgradeChampion, $GUI_UNCHECKED)
@@ -36116,10 +36114,6 @@ Local $sSearchDiamond = GetDiamondFromRect("0,635,835,698")
 Local $iYBelowRowOne = 630, $aiOCRLocation[2] = [-1, -1], $aSlotAmountX[0][3]
 If $g_bDraggedAttackBar Then DragAttackBar($g_iTotalAttackSlot, True)
 If Not $bRemaining Then
-For $i = 0 To UBound($g_aIsDead) - 1
-$g_aIsDead[$i] = 0
-Next
-$g_iSlotNow = -1
 $bCheckSlot12 = False
 $bDoubleRow = False
 Local $aDummyArray[0][8]
@@ -38330,7 +38324,7 @@ Else
 If $g_iCSVLastTroopPositionDropTroopFromINI <> $troopSlotConst Then
 ReleaseClicks()
 If $bSelectTroop Then
-If SelectDropTroop($troopPosition) = False Then Return
+SelectDropTroop($troopPosition)
 ReleaseClicks()
 KeepClicks()
 EndIf
@@ -40986,7 +40980,7 @@ debugRedArea("troop : [" & $troop & "] / nbSides : [" & $nbSides & "] / number :
 If($g_abAttackStdSmartAttack[$g_iMatchMode]) Then
 If $slotsPerEdge = 0 Or $number < $slotsPerEdge Then $slotsPerEdge = Floor($number / $nbSides)
 If _Sleep($DELAYDROPTROOP1) Then Return
-If SelectDropTroop($troop) = False Then Return
+SelectDropTroop($troop)
 If _Sleep($DELAYDROPTROOP2) Then Return
 If $nbSides < 1 Then Return
 Local $nbTroopsLeft = $number
@@ -41876,7 +41870,7 @@ Func DropOnEdge($troop, $edge, $number, $slotsPerEdge = 0, $edge2 = -1, $x = -1)
 If isProblemAffect(True) Then Return
 If $number = 0 Then Return
 If _SleepAttack($DELAYDROPONEDGE1) Then Return
-If SelectDropTroop($troop) = False Then Return
+SelectDropTroop($troop)
 If _SleepAttack($DELAYDROPONEDGE2) Then Return
 If $slotsPerEdge = 0 Or $number < $slotsPerEdge Then $slotsPerEdge = $number
 If $number = 1 Or $slotsPerEdge = 1 Then
@@ -42348,7 +42342,7 @@ EndIf
 Return True
 EndFunc
 Func OldDropTroop($troop, $position, $nbperspot)
-If SelectDropTroop($troop) = False Then Return
+SelectDropTroop($troop)
 If _Sleep($DELAYOLDDROPTROOP1) Then Return
 For $i = 0 To 4
 Click($position[$i][0], $position[$i][1], $nbperspot, 1, "#0110")
@@ -42408,22 +42402,14 @@ Return _ColorCheck( Hex(_GDIPlus_BitmapGetPixel(_GDIPlus_BitmapCreateFromHBITMAP
 EndIf
 EndFunc
 Func SelectDropTroop($iSlotIndex, $iClicks = 1, $iDelay = Default, $bCheckAttackPage = Default)
-$g_iSlotNow = $iSlotIndex
-Local $aTropPosition = GetSlotPosition($iSlotIndex)
-If IsArray($aTropPosition) And BitAnd($aTropPosition[0] = 0, $aTropPosition[1] = 0) Then Return False
 If $iDelay = Default Then $iDelay = 0
 If $bCheckAttackPage = Default Then $bCheckAttackPage = True
-If Not $bCheckAttackPage Or IsAttackPage() Then ClickP($aTropPosition, $iClicks, $iDelay, "#0111")
-Return True
+If Not $bCheckAttackPage Or IsAttackPage() Then ClickP(GetSlotPosition($iSlotIndex), $iClicks, $iDelay, "#0111")
 EndFunc
 Func GetSlotPosition($iSlotIndex, $bOCRPosition = False)
 Local $aiReturnPosition[2] = [0, 0]
-If Not IsArray($g_aIsDead) Or UBound($g_aIsDead) < $iSlotIndex Then Return $aiReturnPosition
 If $iSlotIndex < 0 Or $iSlotIndex > UBound($g_avAttackTroops, 1) - 1 Then
 SetDebugLog("GetSlotPosition(" & $iSlotIndex & ", " & $bOCRPosition & "): Invalid slot index: " & $iSlotIndex)
-Return $aiReturnPosition
-ElseIf $g_aIsDead[$iSlotIndex] = 1 Then
-SetDebugLog("GetSlotPosition(" & $iSlotIndex & ", " & $bOCRPosition & "): Prevention of invalid clicks on dead troops. Slot index: " & $iSlotIndex)
 Return $aiReturnPosition
 EndIf
 If Not $bOCRPosition Then
@@ -43228,13 +43214,14 @@ Local $aVar = $g_aExternalEdges[$iSide]
 Local $iAndroidSuspendModeFlagsLast = $g_iAndroidSuspendModeFlags
 $g_iAndroidSuspendModeFlags = 0
 If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Disabled")
-Local $aBBAttackBar = $aAvailableTroops
-If $aBBAttackBar = -1 Then Return "Fail MachineKick."
+Local $aBBAttackBar = MachineKick($aAvailableTroops)
+If Not IsArray($aBBAttackBar) Then Return "Fail MachineKick."
 If RandomSleep($DELAYRESPOND) Then
 $g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
 If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Enabled")
 Return
 EndIf
+Local $iLoopControl = 0, $iUBound1 = UBound($aBBAttackBar)
 SetLog($g_bBBDropOrderSet = True ? "Deploying Troops in Custom Order." : "Deploying Troops in Order of Attack Bar.", $COLOR_BLUE)
 Do
 Local $iNumSlots = UBound($aBBAttackBar, 1)
@@ -43295,8 +43282,10 @@ EndIf
 Next
 EndIf
 $aBBAttackBar = GetAttackBarBB(True)
-Local $aKickM = $aBBAttackBar
-Until not IsArray(MachineKick($aKickM))
+If UBound($aBBAttackBar) = $iUBound1 Then $iLoopControl += 1
+If($iLoopControl > 3) Then ExitLoop
+$iUBound1 = UBound($aBBAttackBar)
+Until not IsArray(MachineKick($aBBAttackBar))
 SetLog("All Troops Deployed", $COLOR_SUCCESS)
 If $g_bBBMachineReady Then
 If IsArray($g_aMachineBB) Then
@@ -48880,8 +48869,9 @@ If checkObstacles_Network() Then Return True
 If checkObstacles_GfxError() Then Return True
 EndIf
 If(isOnBuilderBase() <> isOnMainVillage()) Then
-SetLog("Verifying that you are in : " &($bBuilderBase) ?("Builder Base") :("Normal Village"))
-If SwitchBetweenBases(False,($bBuilderBase) ?("Builder Base") :("Normal Village"), True) Then
+Local $sViString =($bBuilderBase) ?("Builder Base") :("Normal Village")
+SetLog("Verifying that you are in : " & $sViString, $COLOR_INFO)
+If SwitchBetweenBases(False, $sViString, True) Then
 $g_bMinorObstacle = True
 If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 Return False
@@ -54667,6 +54657,15 @@ SuspendAndroid($SuspendMode)
 EndFunc
 Func GemClickP($point, $howMuch = 1, $speed = 0, $debugtxt = "")
 Return GemClick($point[0], $point[1], $howMuch, $speed, $debugtxt = "")
+EndFunc
+Func AttackClick($x, $y, $times = 1, $speed = 0, $afterDelay = 0, $debugtxt = "")
+Local $timer = __TimerInit()
+If $y > 555 + $g_iBottomOffsetY Then $y = 555 + $g_iBottomOffsetY
+AttackRemainingTime(False)
+Local $result = PureClick($x, $y, $times, $speed, $debugtxt)
+Local $delay = $times * $speed + $afterDelay - __TimerDiff($timer)
+If IsKeepClicksActive() = False And $delay > 0 Then _Sleep($delay, False)
+Return $result
 EndFunc
 Func _DecodeDebug($message)
 Local $separator = " | "
@@ -64037,7 +64036,7 @@ Return $Result
 EndFunc
 Func _LocateWardenAltar($bCollect = True)
 Local $stext, $MsgBox, $iSilly = 0, $iStupid = 0, $sErrorText = "", $sInfo
-If Number($g_iTownHallLevel) < 11 Then
+If($g_iTownHallLevel < 11 And not $g_iTownHallLevel < 1) Then
 SetLog("Grand Warden requires TH11! Stop locating Altar", $COLOR_ERROR)
 Return
 EndIf
@@ -64155,7 +64154,7 @@ Return $Result
 EndFunc
 Func _LocateChampionAltar($bCollect = True)
 Local $stext, $MsgBox, $iSilly = 0, $iStupid = 0, $sErrorText = "", $sInfo
-If Number($g_iTownHallLevel) <= 12 Then
+If($g_iTownHallLevel < 13 And not $g_iTownHallLevel < 1) Then
 SetLog("Royal Champion requires TH13! Stop locating Altar", $COLOR_ERROR)
 Return
 EndIf
@@ -69503,7 +69502,7 @@ If Not $g_bChkStartClockTowerBoost Then Return
 If Not $g_bRunState Then Return
 If $bSwitchToBB Then
 ClickP($aAway, 1, 0, "#0332")
-If Not SwitchBetweenBases() Then Return
+If Not SwitchBetweenBases(True, "Builder Base") Then Return
 EndIf
 Local $bCTBoost = True
 If $g_bChkCTBoostBlderBz Then
@@ -69541,7 +69540,7 @@ SetLog("Clock Tower boost is not available!")
 EndIf
 EndIf
 ClickP($aAway, 1, 0, "#0329")
-If $bSwitchToNV Then SwitchBetweenBases()
+If $bSwitchToNV Then SwitchBetweenBases(True, "Normal Village")
 EndFunc
 Func BuilderBaseReport($bBypass = False, $bSetLog = True)
 PureClickP($aAway, 1, 0, "#0319")
@@ -75076,34 +75075,6 @@ EndIf
 If _Sleep($DELAYDONATECC2) Then Return
 Return $bReturn
 EndFunc
-Func IsSlotDead()
-If _Wait4Pixel($g_avAttackTroops[$g_iSlotNow][4], 633, 0xFFFFFF, 15, 250, 10) Then
-Return
-ElseIf _Wait4Pixel($g_avAttackTroops[$g_iSlotNow][4], 638, 0x656565, 10, 250, 10) Then
-SetLog("Troop Dead X: " & $g_iSlotNow, $COLOR_ORANGE)
-$g_aIsDead[$g_iSlotNow] = 1
-EndIf
-EndFunc
-Func AttackClick($x, $y, $times = 1, $speed = 0, $afterDelay = 0, $debugtxt = "")
-Local $timer = __TimerInit(), $bReturn = True
-If $y > 555 + $g_iBottomOffsetY Then $y = 555 + $g_iBottomOffsetY
-AttackRemainingTime(False)
-If $times = 1 Then
-$bReturn = PureClick($x, $y, 1, $speed, $debugtxt)
-Else
-For $i = 1 To $times
-If $g_aIsDead[$g_iSlotNow] = 0 Then
-IsSlotDead()
-Else
-Return False
-EndIf
-$bReturn =($g_aIsDead[$g_iSlotNow] = 1) ?(False) :(PureClick($x, $y, 1, $speed, $debugtxt))
-Next
-EndIf
-Local $delay = $times * $speed + $afterDelay - __TimerDiff($timer)
-If IsKeepClicksActive() = False And $delay > 0 Then _Sleep($delay, False)
-Return $bReturn
-EndFunc
 Func IsToRequestCC($ClickPAtEnd = True, $bSetLog = False, $bNeedCapture = True)
 Local $bNeedRequest = False
 Local $sCCRequestDiamond = GetDiamondFromRect("715, 576, 845, 617")
@@ -78003,7 +77974,7 @@ Return $sReturn
 EndFunc
 Func getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpace = Default, $bImgLoc = Default, $bForceCaptureRegion = Default)
 Local $iTry = 0
-Local $iMax =($g_bDnAIO <> True) ?(5) :(0)
+Local $iMax =($g_bDnAIO <> True) ?(8) :(0)
 While 1
 $g_sGetOcrMod = _getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpace, $bImgLoc, $bForceCaptureRegion)
 If $iMax = $iTry Or not StringIsSpace($g_sGetOcrMod) Then Return $g_sGetOcrMod
@@ -80781,58 +80752,28 @@ SetLog("Please Check BB Options From Builder Base Tab", $COLOR_INFO)
 Return False
 EndIf
 If not SwitchBetweenBases(True, "Builder Base") Then Return False
-ZoomOut()
-If Not IsOnBuilderBase(True) Then
-SetLog("BB Don't detected.", $COLOR_ERROR)
-Return False
-EndIf
-SetLog("Builder Base Idle Starts", $COLOR_INFO)
+SetLog("Builder loop starts.", $COLOR_INFO)
 If randomSleep(1000) Then Return
-If $g_bRestart Then Return
-If $g_bFirstStart Then CollectBuilderBase()
-If $g_bRestart Then Return
+If $g_bRestart Or(Not $g_bRunState) Then Return
+CollectBuilderBase()
+If $g_bRestart Or(Not $g_bRunState) Then Return
+If $g_bRestart Or(Not $g_bRunState) Then Return
 BuilderBaseReport()
 RestAttacksInBB()
-If $g_bRestart Then Return
-If $g_bRestart Then Return
-If $g_bFirstStart Then BattleMachineUpgrade()
-If $g_bFirstStart Then StarLaboratory()
-If $g_bRestart Then Return
-If $g_iAvailableAttacksBB > 0 Or Not $g_bChkBBStopAt3 Then CheckArmyBuilderBase()
-For $i = 0 To Random(4,10,1)
-If $g_bRestart Then Return
-If Not $g_bRunState Then Return
-ZoomOut()
-If checkObstacles(True) Then
-SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
-ExitLoop
-EndIf
-If($g_iAvailableAttacksBB <> 0 and $g_bChkBBStopAt3) Or($g_bChkBBStopAt3 = False) Then
-If $g_bRestart Then Return
-If Not $g_bRunState Then Return
-BuilderBaseAttack($bTestRun)
-If $g_bRestart Then Return
-If Not $g_bRunState Then Return
-EndIf
-If $g_bRestart Then Return
-BuilderBaseZoomOut()
-If Not $g_bRunState Then Return
-If $g_bRestart Then Return
-If Not $g_bRunState Then Return
-StartClockTowerBoost()
-If $g_bRestart Then Return
-CleanBBYard()
-If $g_bRestart Then Return
-If Not $g_bRunState Then Return
-WallsUpgradeBB()
-If $g_bRestart Then Return
-If $g_bFirstStart And $g_iAvailableAttacksBB = 0 Then MainSuggestedUpgradeCode()
-If $g_bRestart Then Return
-If $g_bRestart Then Return
-If Not $g_bRunState Then Return
-BuilderBaseReport()
-RestAttacksInBB()
-If $g_iAvailableAttacksBB = 0 Then ExitLoop
+If $g_bRestart Or(Not $g_bRunState) Then Return
+If RestAttacksInBB() = True Then CheckArmyBuilderBase()
+Local $aRndFuncList = ['ClockTower', 'AttackBB']
+_ArrayShuffle($aRndFuncList)
+For $iIndex In $aRndFuncList
+RunBBFuncs($iIndex)
+If $g_bRestart Or(Not $g_bRunState) Then Return
+Next
+If checkObstacles(True) Then SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
+Local $aRndFuncList = ['ElixirUpdate', 'GoldUpdate']
+_ArrayShuffle($aRndFuncList)
+For $iIndex In $aRndFuncList
+RunBBFuncs($iIndex)
+If $g_bRestart Or(Not $g_bRunState) Then Return
 Next
 If Not $g_bChkPlayBBOnly Then SwitchBetweenBases(True, "Normal Village")
 If Not $g_bRunState Then Return
@@ -80840,11 +80781,48 @@ If _Sleep($DELAYRUNBOT1 * 15) Then Return
 SetLog("Builder Base Idle Ends", $COLOR_INFO)
 If ProfileSwitchAccountEnabled() Then Return
 EndFunc
+Func RunBBFuncs($sBBFunc, $bTestRun = False)
+BuilderBaseReport()
+If $g_iFreeBuilderCountBB <> 0 Then BuilderBaseZoomOut()
+Switch $sBBFunc
+Case "ClockTower"
+If $g_iFreeBuilderCountBB = 0 Then Return
+BuilderBaseZoomOut()
+StartClockTowerBoost()
+CleanBBYard()
+Case "AttackBB"
+For $i = 0 To Random(3,5,1)
+BuilderBaseReport()
+RestAttacksInBB()
+If checkObstacles(True) Then
+SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
+ExitLoop
+EndIf
+If RestAttacksInBB() = True Then BuilderBaseAttack($bTestRun)
+RestAttacksInBB()
+If($g_iAvailableAttacksBB = 0) Then ExitLoop
+Next
+Case "ElixirUpdate"
+StarLaboratory()
+If $g_iFreeBuilderCountBB = 0 Then Return
+BuilderBaseZoomOut()
+BattleMachineUpgrade()
+Case "GoldUpdate"
+If $g_iFreeBuilderCountBB = 0 Then Return
+MainSuggestedUpgradeCode()
+WallsUpgradeBB()
+EndSwitch
+EndFunc
 Func RestAttacksInBB()
 $g_iAvailableAttacksBB = Ubound(findMultipleQuick($g_sImgAvailableAttacks, 0, "25, 626, 97, 651", Default, Default, False, 0))
 If $g_iAvailableAttacksBB <> 0 and $g_bChkBBStopAt3 Then
-Setlog("You have " & $g_iAvailableAttacksBB & " available attack(s).", $COLOR_SUCCESS)
+Setlog("You have " & $g_iAvailableAttacksBB & " available attack(s). I will stop attacking when there isn't.", $COLOR_SUCCESS)
+Return True
+ElseIf $g_bChkBBStopAt3 <> True Then
+Setlog("You have " & $g_iAvailableAttacksBB & " available attack(s).", $COLOR_INFO)
+Return True
 EndIf
+Return False
 EndFunc
 Global $g_hDegubUiForm = 0, $g_hlblSourceStatus = 0, $g_hPicLoaded = 0, $g_hGraphics = 0, $g_cmbBuildings = 0
 Global $g_sPath2Image = ""

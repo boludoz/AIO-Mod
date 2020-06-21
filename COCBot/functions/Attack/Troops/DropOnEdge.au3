@@ -24,9 +24,7 @@ Func DropOnEdge($troop, $edge, $number, $slotsPerEdge = 0, $edge2 = -1, $x = -1)
 	If isProblemAffect(True) Then Return
 	If $number = 0 Then Return
 	If _SleepAttack($DELAYDROPONEDGE1) Then Return
-	#Region - No reddrop - Team AiO MOD++
-	If SelectDropTroop($troop) = False Then Return  ;Select Troop
-	#EndRegion - No reddrop - Team AiO MOD++
+	SelectDropTroop($troop) ;Select Troop
 	If _SleepAttack($DELAYDROPONEDGE2) Then Return
 	If $slotsPerEdge = 0 Or $number < $slotsPerEdge Then $slotsPerEdge = $number
 	If $number = 1 Or $slotsPerEdge = 1 Then ; Drop on a single point per edge => on the middle
