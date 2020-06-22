@@ -180,9 +180,13 @@ Func BuilderBaseParseAttackCSV($AvailableTroops, $DeployPoints, $DeployBestPoint
 					If $sQty = "ALL" Then ; All command will act like remain it will get attack bar troops.
 						; $aAvailableTroops_NXQ  [Name][Xaxis][Quantities]
 						For $i = 0 To UBound($aAvailableTroops_NXQ) - 1
-							If StringInStr($aAvailableTroops_NXQ[$i][0], $sTroopName) <> 0 Then ;We Just Need To redo the ocr for mentioned troop only
-								$aAvailableTroops_NXQ[$i][4] = Number(_getTroopCountSmall(Number($aAvailableTroops_NXQ[$i][1]), 640))
-								If $aAvailableTroops_NXQ[$i][4] < 1 Then $aAvailableTroops_NXQ[$i][4] = Number(_getTroopCountBig(Number($aAvailableTroops_NXQ[$i][1]), 633)) ; For Big numbers when the troop is selected
+							If (StringInStr($aAvailableTroops[$i][0], $sTroopName) > 0) Then ;We Just Need To redo the ocr for mentioned troop only
+								If (StringInStr($sTroopName, "Machine") > 0) Then 
+									$aAvailableTroops_NXQ[$i][4] = 1
+								Else
+									$aAvailableTroops_NXQ[$i][4] = Number(_getTroopCountSmall(Number($aAvailableTroops_NXQ[$i][1]), 640))
+									If $aAvailableTroops_NXQ[$i][4] < 1 Then $aAvailableTroops_NXQ[$i][4] = Number(_getTroopCountBig(Number($aAvailableTroops_NXQ[$i][1]), 640-7)) ; For Big numbers when the troop is selected
+								EndIf
 							EndIf
 						Next
 

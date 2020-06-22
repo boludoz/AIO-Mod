@@ -273,7 +273,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 			If $iCount == 0 And not String($aAvailableTroops[$i][0]) = "Machine" Then
 				SetLog("Could not get count for " & $aAvailableTroops[$i][0] & " in slot " & String($aAvailableTroops[$i][3]), $COLOR_ERROR)
 				ContinueLoop
-				ElseIf String($aAvailableTroops[$i][0]) = "Machine" Then
+				ElseIf (StringInStr($aAvailableTroops[$i][0], "Machine") > 0) Then
 				$iCount = 1
 			EndIf			
         EndIf

@@ -195,6 +195,7 @@ Func ParseAttackCSV($debug = False)
 								debugAttackCSV($i & " - " & $pixel[0] & "," & $pixel[1])
 							Next
 						EndIf
+					#Region - Custom DROP - Team AIO Mod++
 					Case "DROP"
 						KeepClicks()
 						;index...
@@ -260,7 +261,7 @@ Func ParseAttackCSV($debug = False)
 										$qty2 = $qty1
 										SetLog($qtyvect[0] & "% Of x" & Number($g_avAttackTroops[$theTroopPosition][1]) & " " & GetTroopName($g_avAttackTroops[$theTroopPosition][0]) & " = " & $qty1, $COLOR_INFO)
 									Else
-										$index1 = 1
+										$qty1 = 1
 										$qty2 = 1
 									EndIf
 								Else
@@ -283,7 +284,7 @@ Func ParseAttackCSV($debug = False)
 									$qty1 = Int($qtyvect[0])
 									$qty2 = Int($qtyvect[1])
 								Else
-									$index1 = 1
+									$qty1 = 1
 									$qty2 = 1
 								EndIf
 							Else
@@ -296,86 +297,24 @@ Func ParseAttackCSV($debug = False)
 								EndIf
 							EndIf
 						EndIf
-						;delay between points
-						Local $delaypoints1, $delaypoints2, $delaypointsvect
-						$delaypointsvect = StringSplit($value5, "-", 2)
-						If UBound($delaypointsvect) > 1 Then
-							If Int($delaypointsvect[0]) >= 0 And Int($delaypointsvect[1]) >= 0 Then
-								$delaypoints1 = Int($delaypointsvect[0])
-								$delaypoints2 = Int($delaypointsvect[1])
-							Else
-								$delaypoints1 = 1
-								$delaypoints2 = 1
-							EndIf
-						Else
-							If Int($value5) >= 0 Then
-								$delaypoints1 = Int($value5)
-								$delaypoints2 = Int($value5)
-							Else
-								$delaypoints1 = 1
-								$delaypoints2 = 1
-							EndIf
-						EndIf
-						;delay between  drops in same point
-						Local $delaydrop1, $delaydrop2, $delaydropvect
-						$delaydropvect = StringSplit($value6, "-", 2)
-						If UBound($delaydropvect) > 1 Then
-							If Int($delaydropvect[0]) >= 0 And Int($delaydropvect[1]) >= 0 Then
-								$delaydrop1 = Int($delaydropvect[0])
-								$delaydrop2 = Int($delaydropvect[1])
-							Else
-								$delaydrop1 = 1
-								$delaydrop2 = 1
-							EndIf
-						Else
-							If Int($value6) >= 0 Then
-								$delaydrop1 = Int($value6)
-								$delaydrop2 = Int($value6)
-							Else
-								$delaydrop1 = 1
-								$delaydrop2 = 1
-							EndIf
-						EndIf
-						;sleep time after drop
-						Local $sleepdrop1, $sleepdrop2, $sleepdroppvect
-						$sleepdroppvect = StringSplit($value7, "-", 2)
-						If UBound($sleepdroppvect) > 1 Then
-							If Int($sleepdroppvect[0]) >= 0 And Int($sleepdroppvect[1]) >= 0 Then
-								$sleepdrop1 = Int($sleepdroppvect[0])
-								$sleepdrop2 = Int($sleepdroppvect[1])
-							Else
-								$index1 = 1
-								$sleepdrop2 = 1
-							EndIf
-						Else
-							If Int($value7) >= 0 Then
-								$sleepdrop1 = Int($value7)
-								$sleepdrop2 = Int($value7)
-							Else
-								$sleepdrop1 = 1
-								$sleepdrop2 = 1
-							EndIf
-						EndIf
-						;sleep time before drop
-						Local $sleepbeforedrop1 = 0, $sleepbeforedrop2 = 0, $sleepbeforedroppvect
-						$sleepbeforedroppvect = StringSplit($value8, "-", 2)
-						If UBound($sleepbeforedroppvect) > 1 Then
-							If Int($sleepbeforedroppvect[0]) > 0 And Int($sleepbeforedroppvect[1]) > 0 Then
-								$sleepbeforedrop1 = Int($sleepbeforedroppvect[0])
-								$sleepbeforedrop2 = Int($sleepbeforedroppvect[1])
-							Else
-								$sleepbeforedrop1 = 0
-								$sleepbeforedrop2 = 0
-							EndIf
-						Else
-							If Int($value3) > 0 Then
-								$sleepbeforedrop1 = Int($value8)
-								$sleepbeforedrop2 = Int($value8)
-							Else
-								$sleepbeforedrop1 = 0
-								$sleepbeforedrop2 = 0
-							EndIf
-						EndIf
+						
+						; Custom delay between points - Team AIO Mod++
+						Local $aTmp = StringSplit($value5, "-")
+						Local $aDelaypoints[2] = [Round($aTmp[1]), Round($aTmp[$aTmp[0])]]
+					
+						; Custom delay between  drops in same point - Team AIO Mod++
+						Local $aTmp = StringSplit($value6, "-")
+						Local $aDelaydrop[2] = [Round($aTmp[1]), Round($aTmp[$aTmp[0])]]
+						
+						; Custom sleep time after drop - Team AIO Mod++
+						Local $aTmp = StringSplit($value7, "-")
+						Local $aSleepdrop[2] = [Round($aTmp[1]), Round($aTmp[$aTmp[0])]]
+
+						; Custom sleep time before drop - Team AIO Mod++
+						Local $aTmp = StringSplit($value8, "-")
+						Local $aSleepbeforedrop[2] = [Round($aTmp[1]), Round($aTmp[$aTmp[0])]]
+						#EndRegion - Custom DROP - Team AIO Mod++
+						
 						; check for targeted vectors and validate index numbers, need too many values for check logic to use CheckCSVValues()
 						Local $tmpVectorList = StringSplit($value1, "-", $STR_NOCOUNT) ; get array with all vector(s) used
 						For $v = 0 To UBound($tmpVectorList) - 1 ; loop thru each vector in target list
@@ -426,7 +365,7 @@ Func ParseAttackCSV($debug = False)
 													Local $name = GetTroopName($g_avAttackTroops[$x][0], $g_avAttackTroops[$x][1])
 													SetLog("Name: " & $name, $COLOR_DEBUG)
 													SetLog("Qty: " & $g_avAttackTroops[$x][1], $COLOR_DEBUG)
-													DropTroopFromINI($value1, $index1, $index2, $indexArray, $g_avAttackTroops[$x][1], $g_avAttackTroops[$x][1], $g_asTroopShortNames[$ii], $delaypoints1, $delaypoints2, $delaydrop1, $delaydrop2, $sleepdrop1, $sleepdrop2, $sleepbeforedrop1, $sleepbeforedrop2, $debug)
+													DropTroopFromINI($value1, $index1, $index2, $indexArray, $g_avAttackTroops[$x][1], $g_avAttackTroops[$x][1], $g_asTroopShortNames[$ii], $aDelaypoints[0], $aDelaypoints[1], $aDelaydrop[0], $aDelaydrop[1], $aSleepdrop[0], $aSleepdrop[1], $aSleepbeforedrop[0], $aSleepbeforedrop[1], $debug)
 													CheckHeroesHealth()
 													If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
 												EndIf
@@ -439,7 +378,7 @@ Func ParseAttackCSV($debug = False)
 										If $iTroopKind = $eCastle Or $iTroopKind = $eWallW Or $iTroopKind = $eBattleB Or $iTroopKind = $eStoneS Or $iTroopKind = $eSiegeB Then
 											If $bFoundCC = False Then
 												Setlog("- Remain CC drop: " & GetTroopName($iTroopKind, 0), $COLOR_INFO)
-												DropTroopFromINI($value1, $index1, $index2, $indexArray, 1, 1, GetTroopName($iTroopKind, 1, True), $delaypoints1, $delaypoints2, $delaydrop1, $delaydrop2, $sleepdrop1, $sleepdrop2, $sleepbeforedrop1, $sleepbeforedrop2, $debug)
+												DropTroopFromINI($value1, $index1, $index2, $indexArray, 1, 1, GetTroopName($iTroopKind, 1, True), $aDelaypoints[0], $aDelaypoints[1], $aDelaydrop[0], $aDelaydrop[1], $aSleepdrop[0], $aSleepdrop[1], $aSleepbeforedrop[0], $aSleepbeforedrop[1], $debug)
 												CheckHeroesHealth()
 												If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
 												$bFoundCC = True
@@ -465,7 +404,7 @@ Func ParseAttackCSV($debug = False)
 								
 											If $bFoundHero Then
 												Setlog("- Remain hero drop: " & GetTroopName($iTroopKind, 0), $COLOR_INFO)
-												DropTroopFromINI($value1, $index1, $index2, $indexArray, 1, 1, GetTroopName($iTroopKind, 1, True), $delaypoints1, $delaypoints2, $delaydrop1, $delaydrop2, $sleepdrop1, $sleepdrop2, $sleepbeforedrop1, $sleepbeforedrop2, $debug)
+												DropTroopFromINI($value1, $index1, $index2, $indexArray, 1, 1, GetTroopName($iTroopKind, 1, True), $aDelaypoints[0], $aDelaypoints[1], $aDelaydrop[0], $aDelaydrop[1], $aSleepdrop[0], $aSleepdrop[1], $aSleepbeforedrop[0], $aSleepbeforedrop[1], $debug)
 												CheckHeroesHealth()
 												If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
 											EndIf
@@ -475,7 +414,7 @@ Func ParseAttackCSV($debug = False)
 									#EndRegion - Custom remain - Team AIO Mod++
 								EndIf
 							Else
-								DropTroopFromINI($value1, $index1, $index2, $indexArray, $qty1, $qty2, $value4, $delaypoints1, $delaypoints2, $delaydrop1, $delaydrop2, $sleepdrop1, $sleepdrop2, $sleepbeforedrop1, $sleepbeforedrop2, $debug)
+								DropTroopFromINI($value1, $index1, $index2, $indexArray, $qty1, $qty2, $value4, $aDelaypoints[0], $aDelaypoints[1], $aDelaydrop[0], $aDelaydrop[1], $aSleepdrop[0], $aSleepdrop[1], $aSleepbeforedrop[0], $aSleepbeforedrop[1], $debug)
 							EndIf
 						EndIf
 						ReleaseClicks($g_iAndroidAdbClicksTroopDeploySize)
@@ -483,7 +422,7 @@ Func ParseAttackCSV($debug = False)
 						;set flag if warden was dropped and sleep after delay was to short for icon to update properly
 						If $value4 <> "REMAIN" Then
 							$iTroopIndex = TroopIndexLookup($value4, "ParseAttackCSV") ; obtain enum
-							$bWardenDrop = ($iTroopIndex = $eWarden) And ($sleepdrop1 < 1000)
+							$bWardenDrop = ($iTroopIndex = $eWarden) And ($aSleepdrop[0] < 1000)
 						EndIf
 					Case "WAIT"
 						Local $hSleepTimer = __TimerInit() ; Initialize the timer at first
