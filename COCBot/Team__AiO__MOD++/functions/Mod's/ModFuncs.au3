@@ -10,24 +10,6 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func _MultiPixelSearchMod($iLeft, $iTop, $iRight, $iBottom, $xSkip, $ySkip, $firstColor, $offColor, $iColorVariation)
-
-	Local $aTmp = _MultiPixelSearch($iLeft, $iTop, $iRight, $iBottom, $xSkip, $ySkip, $firstColor, $offColor, $iColorVariation)
-
-	If $aTmp <> 0 Then
-		$g_iMultiPixelOffSet[0] = $aTmp[0]
-		$g_iMultiPixelOffSet[1] = $aTmp[1]
-
-		Return $g_iMultiPixelOffSet
-	Else
-		$g_iMultiPixelOffSet[0] = Null
-		$g_iMultiPixelOffSet[1] = Null
-
-		Return 0
-	EndIf
-
-EndFunc   ;==>_MultiPixelSearchMod
-
 Func _ImageSearchXML($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "0,0,860,732", $bForceCapture = True, $bDebugLog = False, $bCheckDuplicatedpoints = False, $iDistance2check = 25, $iLevel = 0)
 	FuncEnter(_ImageSearchXML)
 	$g_aImageSearchXML = -1
@@ -105,7 +87,8 @@ EndFunc   ;==>_ImageSearchXML
 
 Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri = Default, $bForceCapture = Default, $sOnlyFind = Default, $bExactFindP = Default, $iDistance2check = 25, $bDebugLog = False, $iLevel = 0, $iMaxLevel = 1000)
 	FuncEnter(findMultipleQuick)
-	
+	$g_aImageSearchXML = -1
+
 	Local $bCapture, $sArea2Search, $sIsOnlyFind, $iQuantToMach, $bExactFind, $iQuantity2Match
 	$iQuantity2Match = ($iQuantityMatch = Default) ? (0) : ($iQuantityMatch)
 	$bCapture = ($bForceCapture = Default) ? (True) : ($bForceCapture)
@@ -192,54 +175,52 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 		Next
 	EndIf
 	
-	Return (UBound($aAllResults) > 0) ? ($aAllResults) : (-1)
+	$g_aImageSearchXML = (UBound($aAllResults) > 0) ? ($aAllResults) : (-1)
+	Return $g_aImageSearchXML
 EndFunc   ;==>findMultipleQuick
 
-; #FUNCTION# ====================================================================================================================
-; Name ..........: ClickOther
-; Description ...: checks for window with 'Find a Match', 'Remove Obstacles', 'Collect LootCard' button, and clicks it
-; Syntax ........:
-; Parameters ....: $bCheckOneTime       - (optional) Boolean flag - only checks for Find a Match button once
-; Return values .: Returns True if button found, if button not found, then returns False and sets @error = 1
-; Author ........: NguyenAnhHD (2019-06)
-; Modified ......: Boldina (2020-02)
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
-;                  MyBot is distributed under the terms of the GNU GPL
-; Related .......:
-; Link ..........: https://github.com/MyBotRun/MyBot/wiki
-; Example .......: No
-; ===============================================================================================================================
-Func ClickFindMatch($bCheckOneTime = False)
-	Local $bExtraFix = False
-	Local $aFindMatch
+Func ClickFindMatch()
+	Local $iLoop = 0, $bClickC = False, $bFail = False
+	Do
+		$iLoop += 1
+		
+		WaitImage(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", "FindMatch", Abs($iLoop - 10), 250, "559, 315, 816, 541")
+		
+		Select
+			Case IsArray($g_aImageSearchXML)
+				SetDebugLog("ClickFindMatch | Clicking in find match.")
+				PureClick(Random($g_aImageSearchXML[0][1] + 28, $g_aImageSearchXML[0][1] + 180, 1), Random($g_aImageSearchXML[0][2] + 10, $g_aImageSearchXML[0][2] + 94, 1), 1, 0, "#0150") ; Click Find a Match Button
+				$bFail = False
+				ContinueCase
+			Case isGemOpen(True, True)
+				Return False
+			Case IsMainPage(1)
+				Setlog("ClickFindMatch | Main located fail.", $COLOR_ERROR)
+				$bFail = True
+				ExitLoop
+			Case WaitImage(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", "G", 2, 100, "356, 424, 518, 502") Then 
+				Setlog("ClickFindMatch | ClickFindMatch fail.", $COLOR_ERROR)
+				Click(Random(286, 740, 1), Random(67, 179, 1))
+				$bFail = True
+				ContinueLoop
+		EndSelect
+		
+		If _Sleep(500) Then Return
+	
+	Until (IsArray(findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", 1, "559, 315, 816, 541", "FindMatch")) And not $bFail) Or ($iLoop > 10)
 
-	For $i = 0 To 10 ; Wait for window with Find a Match Button
-		$aFindMatch = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", 1, "559, 315, 816, 541")
-
-		If IsArray($aFindMatch) Then
-
-			PureClick(Random($aFindMatch[0][1] + 28, $aFindMatch[0][1] + 180, 1), Random($aFindMatch[0][2] + 10, $aFindMatch[0][2] + 94, 1), 1, 0) ; Click Find a Match Button
-
-			$bExtraFix = True
-
-			If _Sleep($DELAYSPECIALCLICK1) Then Return False ; Wait for Find a Match button window
-			ContinueLoop
-
-		ElseIf $bExtraFix = True Then ; It ensures that the button is no longer populated in all possible conditions.
-
-			If _Sleep($DELAYSPECIALCLICK2) Then Return False ; improve pause button response
-			Return True
-
+	If ($bFail = False) And not ($iLoop > 9) Then 
+		SetDebugLog("ClickFindMatch | OK in loop : " & $iLoop)
+		Return True
+	Else
+		SetDebugLog("ClickFindMatch | Fail in loop : " & $iLoop)
+		AndroidPageError("PrepareSearch")
+		If checkMainScreen() = False Then
+			$g_bRestart = True
+			$g_bIsClientSyncError = False
 		EndIf
-		If $bCheckOneTime Then Return False ; enable external control of loop count or follow on actions, return false if not clicked
-	Next
-
-	If $i > 9 Then
-		SetLog("Couldn't find the Find a Match Button!", $COLOR_ERROR)
-		If $g_bDebugImageSave Then SaveDebugImage("FindAMatchBUttonNotFound")
-		SetError(1, @extended, False)
 	EndIf
-
+	
 	Return False
 EndFunc   ;==>ClickFindMatch
 
@@ -375,22 +356,22 @@ Func _GUICtrlCreateInput($sText, $iLeft, $iTop, $iWidth, $iHeight, $vStyle = -1,
 	Return $hReturn
 EndFunc   ;==>_GUICtrlCreateInput
 
+; Disastrous function, but it works for text.
 Func _makerequestCustom($aButtonPosition = -1)
 	;click button request troops
 	
 	If IsArray($aButtonPosition) Then ClickP($aButtonPosition, 1, 0, "0336") ;Select text for request
 
 	Local $iMinXSort = 0, $iMinYSort = 0, $iMaxXSort = 0, $iMaxYSort = 0
-	Local $aFindPencil, $aFindRequest
+	Local $aFindPencil, $aClickSend
 	Local $aFixedMatrixWhite[4]
 	Local $aFixedMatrixPencil[4]
 	Local $aFixedMatrixSend[4]
-	Local $aFindWhite[4]
 
 	For $i = 0 To 5
-		$aFindPencil = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Request\ReqSpec", 1, "0,0,860,732", Default, "edit", False, 25)
+		$aFindPencil = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Request\ReqSpec", 1, "0,207,656,568", Default, "edit", False, 25)
 		If IsArray($aFindPencil) Then ExitLoop
-		If _Sleep(Random(400, 1450, 1)) Then Return
+		If _Sleep(Random(200, 400, 1)) Then Return
 	Next
 	
 	If Not IsArray($aFindPencil) Then
@@ -399,48 +380,22 @@ Func _makerequestCustom($aButtonPosition = -1)
 		Return False
 	EndIf
 	
-	; x-334
-	; x+36, y+267
+	Local $ix = $aFindPencil[0][1], $iy = $aFindPencil[0][2]
+	Local $aClickText[2] = [Random($ix - 320, $ix + 13,1), Random($iy + 108, $iy + 177, 1)]
 	
-	
-	$aFindWhite[0] = Abs(Int($aFindPencil[0][1] - 320))
-	$aFindWhite[1] = Abs(Int($aFindPencil[0][2] + 108))
-	$aFindWhite[2] = Abs(Int($aFindPencil[0][1] + 13))
-	$aFindWhite[3] = Abs(Int($aFindPencil[0][2] + 108 + 69))
-	
-	SetDebuglog("SearchPixelDonate FindWhite " & _ArrayToString($aFindWhite))
+	SetDebuglog("SearchPixelDonate FindWhite " & _ArrayToString($aClickText))
+	SetDebuglog("SearchPixelDonate X, Y: " & $ix & "," & $iy)
 
-	$aFixedMatrixPencil[0] = Abs(Int($aFindPencil[0][1] + 13 - 159))
-	$aFixedMatrixPencil[1] = Abs(Int($aFindPencil[0][2] + 108 + 69))
-	$aFixedMatrixPencil[2] = Abs(Int($aFindPencil[0][1] + 36))
-	$aFixedMatrixPencil[3] = Abs(Int($aFindPencil[0][2] + 267 + 5))
+	$aClickSend = decodeSingleCoord(findImage("ReqSpec", @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Request\ReqSpec", GetDiamondFromRect(440 & "," & Int($iy + 190) & "," & 470 & "," & Int($iy + 220)), 1, True))
 	
-	SetDebuglog("SearchPixelDonate FixedMatrixPencil " & _ArrayToString($aFixedMatrixPencil))
-
-	$aFindRequest = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Request\ReqSpec", 0, $aFixedMatrixPencil, Default, "greenReq", False, 15)
-	
-	If Not IsArray($aFindRequest) Then
+	If Not IsArray($aClickSend) Or not UBound($aClickSend) = 2 Then
 		Setlog("SearchPixelDonate fail 0x2.", $COLOR_ERROR)
 		CheckMainScreen(False) ;emergency exit
 		Return False
 	EndIf
 	
-	; Crazy "AI".
-	_ArraySort($aFindRequest, 0, 0, 0, 1)
+	SetDebuglog("SearchPixelDonate FixedMatrixSend " & _ArrayToString($aClickSend))
 	
-	$aFixedMatrixSend[0] = $aFindRequest[0][1]
-	$aFixedMatrixSend[2] = $aFindRequest[UBound($aFindRequest) - 1][1]
-
-	_ArraySort($aFindRequest, 0, 0, 0, 2)
-	
-	$aFixedMatrixSend[1] = $aFindRequest[0][2]
-	$aFixedMatrixSend[3] = $aFindRequest[UBound($aFindRequest) - 1][2]
-
-	SetDebuglog("SearchPixelDonate FixedMatrixSend " & _ArrayToString($aFixedMatrixSend))
-	
-	Local $aClickText[2] = [Random($aFindWhite[0], $aFindWhite[2], 1), Random($aFindWhite[1], $aFindWhite[3], 1)]
-	Local $aClickSend[2] = [Random($aFixedMatrixSend[0], $aFixedMatrixSend[2], 1), Random($aFixedMatrixSend[1], $aFixedMatrixSend[3], 1)]
-
 	If $g_sRequestTroopsText <> "" Then
 		If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
 		; fix for Android send text bug sending symbols like ``"

@@ -4,15 +4,25 @@
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
                     Based on MyBot.run v7.8.3 
+
 	**v4.0.5** (Quality improvement update) (Thx @Approchable, @joosmega, @omora88, @vDragon, @esbestan and github beta test team for test <3)
-		» Added:
+		» Added :
 			- Smart farm : Max side limiter.
 			
 		» Fixed / Improved :
 			- Clan castle donation.
-			- FindMatch info fix.
+			- FindMatch smarter.
 			- Smart farm / Standard attack : humane time offset.
+			- Improved DeleteQueued, more fast and precise.
+			- Fixed fill camps.
+			
+		» Disabled :
+			- No drop on red pixel.
 
+		» Fixed from update :
+			- LS Spell from village.
+			- CheckBaseQuick.
+			
 	**v4.0.2** (Quality improvement update) (Thx @Approchable, @joosmega, @omora88, @vDragon, @esbestan and github beta test team for test <3)
 		» Fixed / Improved :
 			- Accurate and self-correcting edges of the village.

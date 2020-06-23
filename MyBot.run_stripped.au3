@@ -7651,7 +7651,7 @@ Global $g_aiCmbBBDropOrder[$g_iBBTroopCount] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
 Global $g_sBBDropOrder = _ArrayToString($g_asAttackBarBB)
 Global Enum $eBBTroopBarbarian, $eBBTroopArcher, $eBBTroopGiant, $eBBTroopMinion, $eBBTroopBomber, $eBBTroopBabyDragon, $eBBTroopCannon, $eBBTroopNight, $eBBTroopDrop, $eBBTroopPekka, $eBBTroopHogG, $eBBTroopMachine, $eBBTroopCount
 Global Const $g_asBBTroopShortNames[$eBBTroopCount] = ["Barb", "Arch", "Giant", "Minion", "Breaker", "BabyD", "Cannon", "Witch", "Drop", "Pekka", "HogG", "Machine"]
-Global $g_asAttackBarBB2[12] = ["Barbarian", "Archer", "BoxerGiant", "Minion", "WallBreaker", "BabyDrag", "CannonCart", "Witch", "DropShip", "SuperPekka", "HogGlider", "Machine"]
+Global $g_asAttackBarBB2[$eBBTroopCount] = ["Barbarian", "Archer", "BoxerGiant", "Minion", "WallBreaker", "BabyDrag", "CannonCart", "Witch", "DropShip", "SuperPekka", "HogGlider", "Machine"]
 Global $g_bIsMachinePresent = False
 Global $g_iBBMachAbilityTime = 14000
 Global $g_bChkBuilderAttack = False, $g_bChkBBStopAt3 = False, $g_bChkBBTrophiesRange = False, $g_iTxtBBDropTrophiesMin = 0, $g_iTxtBBDropTrophiesMax = 0
@@ -7997,8 +7997,6 @@ Global $aIsGemWindow2[4] = [577, 266 + $g_iMidOffsetY, 0xCC2025, 20]
 Global $aIsGemWindow3[4] = [586, 266 + $g_iMidOffsetY, 0xCC2025, 20]
 Global $aIsGemWindow4[4] = [595, 266 + $g_iMidOffsetY, 0xCC2025, 20]
 Global $aIsTrainPgChk1[4] = [813, 80 + $g_iMidOffsetY, 0xFF8D95, 10]
-Global $aRtnHomeCloud1[4] = [56, 592 + $g_iBottomOffsetY, 0x0A223F, 15]
-Global $aRtnHomeCloud2[4] = [72, 592 + $g_iBottomOffsetY, 0x103F7E, 15]
 Global $aDetectLang[2] = [16, 634 + $g_iBottomOffsetY]
 Global $aGreenArrowTrainTroops[2] = [310, 127]
 Global $aGreenArrowBrewSpells[2] = [467, 127]
@@ -39150,7 +39148,7 @@ $qty1 = Round((Number($qtyvect[0]) / 100) * Number($g_avAttackTroops[Number($the
 $qty2 = $qty1
 SetLog($qtyvect[0] & "% Of x" & Number($g_avAttackTroops[$theTroopPosition][1]) & " " & GetTroopName($g_avAttackTroops[$theTroopPosition][0]) & " = " & $qty1, $COLOR_INFO)
 Else
-$index1 = 1
+$qty1 = 1
 $qty2 = 1
 EndIf
 Else
@@ -39173,7 +39171,7 @@ If Int($qtyvect[0]) > 0 And Int($qtyvect[1]) > 0 Then
 $qty1 = Int($qtyvect[0])
 $qty2 = Int($qtyvect[1])
 Else
-$index1 = 1
+$qty1 = 1
 $qty2 = 1
 EndIf
 Else
@@ -39186,82 +39184,14 @@ $qty2 = 1
 EndIf
 EndIf
 EndIf
-Local $delaypoints1, $delaypoints2, $delaypointsvect
-$delaypointsvect = StringSplit($value5, "-", 2)
-If UBound($delaypointsvect) > 1 Then
-If Int($delaypointsvect[0]) >= 0 And Int($delaypointsvect[1]) >= 0 Then
-$delaypoints1 = Int($delaypointsvect[0])
-$delaypoints2 = Int($delaypointsvect[1])
-Else
-$delaypoints1 = 1
-$delaypoints2 = 1
-EndIf
-Else
-If Int($value5) >= 0 Then
-$delaypoints1 = Int($value5)
-$delaypoints2 = Int($value5)
-Else
-$delaypoints1 = 1
-$delaypoints2 = 1
-EndIf
-EndIf
-Local $delaydrop1, $delaydrop2, $delaydropvect
-$delaydropvect = StringSplit($value6, "-", 2)
-If UBound($delaydropvect) > 1 Then
-If Int($delaydropvect[0]) >= 0 And Int($delaydropvect[1]) >= 0 Then
-$delaydrop1 = Int($delaydropvect[0])
-$delaydrop2 = Int($delaydropvect[1])
-Else
-$delaydrop1 = 1
-$delaydrop2 = 1
-EndIf
-Else
-If Int($value6) >= 0 Then
-$delaydrop1 = Int($value6)
-$delaydrop2 = Int($value6)
-Else
-$delaydrop1 = 1
-$delaydrop2 = 1
-EndIf
-EndIf
-Local $sleepdrop1, $sleepdrop2, $sleepdroppvect
-$sleepdroppvect = StringSplit($value7, "-", 2)
-If UBound($sleepdroppvect) > 1 Then
-If Int($sleepdroppvect[0]) >= 0 And Int($sleepdroppvect[1]) >= 0 Then
-$sleepdrop1 = Int($sleepdroppvect[0])
-$sleepdrop2 = Int($sleepdroppvect[1])
-Else
-$index1 = 1
-$sleepdrop2 = 1
-EndIf
-Else
-If Int($value7) >= 0 Then
-$sleepdrop1 = Int($value7)
-$sleepdrop2 = Int($value7)
-Else
-$sleepdrop1 = 1
-$sleepdrop2 = 1
-EndIf
-EndIf
-Local $sleepbeforedrop1 = 0, $sleepbeforedrop2 = 0, $sleepbeforedroppvect
-$sleepbeforedroppvect = StringSplit($value8, "-", 2)
-If UBound($sleepbeforedroppvect) > 1 Then
-If Int($sleepbeforedroppvect[0]) > 0 And Int($sleepbeforedroppvect[1]) > 0 Then
-$sleepbeforedrop1 = Int($sleepbeforedroppvect[0])
-$sleepbeforedrop2 = Int($sleepbeforedroppvect[1])
-Else
-$sleepbeforedrop1 = 0
-$sleepbeforedrop2 = 0
-EndIf
-Else
-If Int($value3) > 0 Then
-$sleepbeforedrop1 = Int($value8)
-$sleepbeforedrop2 = Int($value8)
-Else
-$sleepbeforedrop1 = 0
-$sleepbeforedrop2 = 0
-EndIf
-EndIf
+Local $aTmp = StringSplit($value5, "-")
+Local $aDelaypoints[2] = [Round($aTmp[1]), Round($aTmp[$aTmp[0])]]
+Local $aTmp = StringSplit($value6, "-")
+Local $aDelaydrop[2] = [Round($aTmp[1]), Round($aTmp[$aTmp[0])]]
+Local $aTmp = StringSplit($value7, "-")
+Local $aSleepdrop[2] = [Round($aTmp[1]), Round($aTmp[$aTmp[0])]]
+Local $aTmp = StringSplit($value8, "-")
+Local $aSleepbeforedrop[2] = [Round($aTmp[1]), Round($aTmp[$aTmp[0])]]
 Local $tmpVectorList = StringSplit($value1, "-", $STR_NOCOUNT)
 For $v = 0 To UBound($tmpVectorList) - 1
 If StringInStr($sTargetVectors, $tmpVectorList[$v], $STR_NOCASESENSEBASIC) = True Then
@@ -39303,7 +39233,7 @@ If $g_avAttackTroops[$x][0] = $ii And $g_avAttackTroops[$x][1] > 0 Then
 Local $name = GetTroopName($g_avAttackTroops[$x][0], $g_avAttackTroops[$x][1])
 SetLog("Name: " & $name, $COLOR_DEBUG)
 SetLog("Qty: " & $g_avAttackTroops[$x][1], $COLOR_DEBUG)
-DropTroopFromINI($value1, $index1, $index2, $indexArray, $g_avAttackTroops[$x][1], $g_avAttackTroops[$x][1], $g_asTroopShortNames[$ii], $delaypoints1, $delaypoints2, $delaydrop1, $delaydrop2, $sleepdrop1, $sleepdrop2, $sleepbeforedrop1, $sleepbeforedrop2, $debug)
+DropTroopFromINI($value1, $index1, $index2, $indexArray, $g_avAttackTroops[$x][1], $g_avAttackTroops[$x][1], $g_asTroopShortNames[$ii], $aDelaypoints[0], $aDelaypoints[1], $aDelaydrop[0], $aDelaydrop[1], $aSleepdrop[0], $aSleepdrop[1], $aSleepbeforedrop[0], $aSleepbeforedrop[1], $debug)
 CheckHeroesHealth()
 If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
 EndIf
@@ -39315,7 +39245,7 @@ Local $iTroopKind = $g_avAttackTroops[$i][0]
 If $iTroopKind = $eCastle Or $iTroopKind = $eWallW Or $iTroopKind = $eBattleB Or $iTroopKind = $eStoneS Or $iTroopKind = $eSiegeB Then
 If $bFoundCC = False Then
 Setlog("- Remain CC drop: " & GetTroopName($iTroopKind, 0), $COLOR_INFO)
-DropTroopFromINI($value1, $index1, $index2, $indexArray, 1, 1, GetTroopName($iTroopKind, 1, True), $delaypoints1, $delaypoints2, $delaydrop1, $delaydrop2, $sleepdrop1, $sleepdrop2, $sleepbeforedrop1, $sleepbeforedrop2, $debug)
+DropTroopFromINI($value1, $index1, $index2, $indexArray, 1, 1, GetTroopName($iTroopKind, 1, True), $aDelaypoints[0], $aDelaypoints[1], $aDelaydrop[0], $aDelaydrop[1], $aSleepdrop[0], $aSleepdrop[1], $aSleepbeforedrop[0], $aSleepbeforedrop[1], $debug)
 CheckHeroesHealth()
 If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
 $bFoundCC = True
@@ -39338,7 +39268,7 @@ $bRemainDropChampion = True
 EndSelect
 If $bFoundHero Then
 Setlog("- Remain hero drop: " & GetTroopName($iTroopKind, 0), $COLOR_INFO)
-DropTroopFromINI($value1, $index1, $index2, $indexArray, 1, 1, GetTroopName($iTroopKind, 1, True), $delaypoints1, $delaypoints2, $delaydrop1, $delaydrop2, $sleepdrop1, $sleepdrop2, $sleepbeforedrop1, $sleepbeforedrop2, $debug)
+DropTroopFromINI($value1, $index1, $index2, $indexArray, 1, 1, GetTroopName($iTroopKind, 1, True), $aDelaypoints[0], $aDelaypoints[1], $aDelaydrop[0], $aDelaydrop[1], $aSleepdrop[0], $aSleepdrop[1], $aSleepbeforedrop[0], $aSleepbeforedrop[1], $debug)
 CheckHeroesHealth()
 If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
 EndIf
@@ -39346,14 +39276,14 @@ EndIf
 Next
 EndIf
 Else
-DropTroopFromINI($value1, $index1, $index2, $indexArray, $qty1, $qty2, $value4, $delaypoints1, $delaypoints2, $delaydrop1, $delaydrop2, $sleepdrop1, $sleepdrop2, $sleepbeforedrop1, $sleepbeforedrop2, $debug)
+DropTroopFromINI($value1, $index1, $index2, $indexArray, $qty1, $qty2, $value4, $aDelaypoints[0], $aDelaypoints[1], $aDelaydrop[0], $aDelaydrop[1], $aSleepdrop[0], $aSleepdrop[1], $aSleepbeforedrop[0], $aSleepbeforedrop[1], $debug)
 EndIf
 EndIf
 ReleaseClicks($g_iAndroidAdbClicksTroopDeploySize)
 If _Sleep($DELAYRESPOND) Then Return
 If $value4 <> "REMAIN" Then
 $iTroopIndex = TroopIndexLookup($value4, "ParseAttackCSV")
-$bWardenDrop =($iTroopIndex = $eWarden) And($sleepdrop1 < 1000)
+$bWardenDrop =($iTroopIndex = $eWarden) And($aSleepdrop[0] < 1000)
 EndIf
 Case "WAIT"
 Local $hSleepTimer = __TimerInit()
@@ -44820,13 +44750,19 @@ Else
 Return
 EndIf
 If _Sleep(500) Then Return
-Local $x = 0
-While Not _ColorCheck(_GetPixelColor(820, 208, True), Hex(0xD0D0C8, 6), 20)
+Local $x = 0, $iCiclo = 0
+While 1
 If $x = 0 Then SetLog(" - Delete " & $sArmyTypeQueued & " Queued!", $COLOR_INFO)
+If _Sleep(20) Then Return
 If Not $g_bRunState Then Return
-Click($iOffsetQueued + 24, 202, 10, 50)
+Click($iOffsetQueued + 24, 202, 2, 50)
 $x += 1
-If $x = 270 Then ExitLoop
+$iCiclo += 1
+If $iCiclo > Random(10, 15, 1) Then
+If Not IsQueueEmpty($sArmyTypeQueued, True, False) Then ExitLoop
+$iCiclo = 0
+EndIf
+If $x = 280 Then ExitLoop
 WEnd
 EndFunc
 Func MakingDonatedTroops($sType = "All")
@@ -61196,21 +61132,10 @@ EndIf
 EndFunc
 Func CheckBaseQuick($bStopRecursion = False, $sReturnHome = "")
 If $bStopRecursion Then $g_bDisableBreakCheck = True
-Switch $sReturnHome
-Case "cloud"
-If _CheckPixel($aRtnHomeCloud1, $g_bCapturePixel, Default, "Return Home Btn chk1", $COLOR_DEBUG) And  _CheckPixel($aRtnHomeCloud2, $g_bCapturePixel, Default, "Return Home Btn chk2", $COLOR_DEBUG) Then
-ClickP($aRtnHomeCloud1, 1, 0, "#0513")
-Local $wCount = 0
-While IsMainPage() = False
-If _Sleep($DELAYGETRESOURCES1) Then Return
-$wCount += 1
-If $wCount > 40 Then
-SetLog("Warning, Main page not found", $COLOR_WARNING)
-ExitLoop
+If($sReturnHome = "cloud") And(WaitImage(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", "ReturnVillage", 40, 500, "8,617,116,712")) Then
+Click($g_aImageSearchXML[0][1] + Random(0, 20, 1), $g_aImageSearchXML[0][2] + Random(0, 20, 1), 1, 0, "#0513")
+If Not WaitMainScreen() Then SetLog("Warning, Main page not found", $COLOR_WARNING)
 EndIf
-WEnd
-EndIf
-EndSwitch
 If IsMainPage() Then
 If $g_bDebugSetlog Then SetDebugLog("CheckBaseQuick now", $COLOR_DEBUG)
 RequestCC()
@@ -74938,6 +74863,7 @@ EndIf
 EndFunc
 Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri = Default, $bForceCapture = Default, $sOnlyFind = Default, $bExactFindP = Default, $iDistance2check = 25, $bDebugLog = False, $iLevel = 0, $iMaxLevel = 1000)
 FuncEnter(findMultipleQuick)
+$g_aImageSearchXML = -1
 Local $bCapture, $sArea2Search, $sIsOnlyFind, $iQuantToMach, $bExactFind, $iQuantity2Match
 $iQuantity2Match =($iQuantityMatch = Default) ?(0) :($iQuantityMatch)
 $bCapture =($bForceCapture = Default) ?(True) :($bForceCapture)
@@ -75006,28 +74932,44 @@ Next
 EndIf
 Next
 EndIf
-Return(UBound($aAllResults) > 0) ?($aAllResults) :(-1)
+$g_aImageSearchXML =(UBound($aAllResults) > 0) ?($aAllResults) :(-1)
+Return $g_aImageSearchXML
 EndFunc
-Func ClickFindMatch($bCheckOneTime = False)
-Local $bExtraFix = False
-Local $aFindMatch
-For $i = 0 To 10
-$aFindMatch = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", 1, "559, 315, 816, 541")
-If IsArray($aFindMatch) Then
-PureClick(Random($aFindMatch[0][1] + 28, $aFindMatch[0][1] + 180, 1), Random($aFindMatch[0][2] + 10, $aFindMatch[0][2] + 94, 1), 1, 0)
-$bExtraFix = True
-If _Sleep($DELAYSPECIALCLICK1) Then Return False
+Func ClickFindMatch()
+Local $iLoop = 0, $bClickC = False, $bFail = False
+Do
+$iLoop += 1
+WaitImage(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", "FindMatch", Abs($iLoop - 10), 250, "559, 315, 816, 541")
+Select
+Case IsArray($g_aImageSearchXML)
+SetDebugLog("ClickFindMatch | Clicking in find match.")
+PureClick(Random($g_aImageSearchXML[0][1] + 28, $g_aImageSearchXML[0][1] + 180, 1), Random($g_aImageSearchXML[0][2] + 10, $g_aImageSearchXML[0][2] + 94, 1), 1, 0, "#0150")
+$bFail = False
+ContinueCase
+Case isGemOpen(True, True)
+Return False
+Case IsMainPage(1)
+Setlog("ClickFindMatch | Main located fail.", $COLOR_ERROR)
+$bFail = True
+ExitLoop
+Case WaitImage(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", "G", 2, 100, "356, 424, 518, 502") Then
+Setlog("ClickFindMatch | ClickFindMatch fail.", $COLOR_ERROR)
+Click(Random(286, 740, 1), Random(67, 179, 1))
+$bFail = True
 ContinueLoop
-ElseIf $bExtraFix = True Then
-If _Sleep($DELAYSPECIALCLICK2) Then Return False
+EndSelect
+If _Sleep(500) Then Return
+Until(IsArray(findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", 1, "559, 315, 816, 541", "FindMatch")) And not $bFail) Or($iLoop > 10)
+If($bFail = False) And not($iLoop > 9) Then
+SetDebugLog("ClickFindMatch | OK in loop : " & $iLoop)
 Return True
+Else
+SetDebugLog("ClickFindMatch | Fail in loop : " & $iLoop)
+AndroidPageError("PrepareSearch")
+If checkMainScreen() = False Then
+$g_bRestart = True
+$g_bIsClientSyncError = False
 EndIf
-If $bCheckOneTime Then Return False
-Next
-If $i > 9 Then
-SetLog("Couldn't find the Find a Match Button!", $COLOR_ERROR)
-If $g_bDebugImageSave Then SaveDebugImage("FindAMatchBUttonNotFound")
-SetError(1, @extended, False)
 EndIf
 Return False
 EndFunc
@@ -75136,45 +75078,28 @@ Return $hReturn
 EndFunc
 Func _makerequestCustom($aButtonPosition = -1)
 If IsArray($aButtonPosition) Then ClickP($aButtonPosition, 1, 0, "0336")
-Local $aFindPencil, $aFindRequest
-Local $aFixedMatrixPencil[4]
-Local $aFixedMatrixSend[4]
-Local $aFindWhite[4]
+Local $aFindPencil, $aClickSend
 For $i = 0 To 5
-$aFindPencil = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Request\ReqSpec", 1, "0,0,860,732", Default, "edit", False, 25)
+$aFindPencil = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Request\ReqSpec", 1, "0,207,656,568", Default, "edit", False, 25)
 If IsArray($aFindPencil) Then ExitLoop
-If _Sleep(Random(400, 1450, 1)) Then Return
+If _Sleep(Random(200, 400, 1)) Then Return
 Next
 If Not IsArray($aFindPencil) Then
 Setlog("SearchPixelDonate fail 0x1.", $COLOR_ERROR)
 CheckMainScreen(False)
 Return False
 EndIf
-$aFindWhite[0] = Abs(Int($aFindPencil[0][1] - 320))
-$aFindWhite[1] = Abs(Int($aFindPencil[0][2] + 108))
-$aFindWhite[2] = Abs(Int($aFindPencil[0][1] + 13))
-$aFindWhite[3] = Abs(Int($aFindPencil[0][2] + 108 + 69))
-SetDebuglog("SearchPixelDonate FindWhite " & _ArrayToString($aFindWhite))
-$aFixedMatrixPencil[0] = Abs(Int($aFindPencil[0][1] + 13 - 159))
-$aFixedMatrixPencil[1] = Abs(Int($aFindPencil[0][2] + 108 + 69))
-$aFixedMatrixPencil[2] = Abs(Int($aFindPencil[0][1] + 36))
-$aFixedMatrixPencil[3] = Abs(Int($aFindPencil[0][2] + 267 + 5))
-SetDebuglog("SearchPixelDonate FixedMatrixPencil " & _ArrayToString($aFixedMatrixPencil))
-$aFindRequest = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Request\ReqSpec", 0, $aFixedMatrixPencil, Default, "greenReq", False, 15)
-If Not IsArray($aFindRequest) Then
+Local $ix = $aFindPencil[0][1], $iy = $aFindPencil[0][2]
+Local $aClickText[2] = [Random($ix - 320, $ix + 13,1), Random($iy + 108, $iy + 177, 1)]
+SetDebuglog("SearchPixelDonate FindWhite " & _ArrayToString($aClickText))
+SetDebuglog("SearchPixelDonate X, Y: " & $ix & "," & $iy)
+$aClickSend = decodeSingleCoord(findImage("ReqSpec", @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Request\ReqSpec", GetDiamondFromRect(440 & "," & Int($iy + 190) & "," & 470 & "," & Int($iy + 220)), 1, True))
+If Not IsArray($aClickSend) Or not UBound($aClickSend) = 2 Then
 Setlog("SearchPixelDonate fail 0x2.", $COLOR_ERROR)
 CheckMainScreen(False)
 Return False
 EndIf
-_ArraySort($aFindRequest, 0, 0, 0, 1)
-$aFixedMatrixSend[0] = $aFindRequest[0][1]
-$aFixedMatrixSend[2] = $aFindRequest[UBound($aFindRequest) - 1][1]
-_ArraySort($aFindRequest, 0, 0, 0, 2)
-$aFixedMatrixSend[1] = $aFindRequest[0][2]
-$aFixedMatrixSend[3] = $aFindRequest[UBound($aFindRequest) - 1][2]
-SetDebuglog("SearchPixelDonate FixedMatrixSend " & _ArrayToString($aFixedMatrixSend))
-Local $aClickText[2] = [Random($aFindWhite[0], $aFindWhite[2], 1), Random($aFindWhite[1], $aFindWhite[3], 1)]
-Local $aClickSend[2] = [Random($aFixedMatrixSend[0], $aFixedMatrixSend[2], 1), Random($aFixedMatrixSend[1], $aFixedMatrixSend[3], 1)]
+SetDebuglog("SearchPixelDonate FixedMatrixSend " & _ArrayToString($aClickSend))
 If $g_sRequestTroopsText <> "" Then
 If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
 AndroidSendText($g_sRequestTroopsText, True)
@@ -75360,14 +75285,22 @@ If($iWait <= 0) Then ExitLoop
 WEnd
 Return False
 EndFunc
-Func _WaitForCheckXML($sPathImage, $sSearchZone, $bForceCapture = True, $iWait = 10000, $iDelay = 250, $aText = Default)
+Func _WaitForCheckXML($sPathImage, $sSearchZone = Default, $bForceCaptureP = Default, $iWaitP = Default, $iDelayP = Default, $aTextP = Default)
+Local $bForceCapture =($bForceCaptureP = Default) ?(True) :($bForceCaptureP), $iWait =($iWaitP = Default) ?(10000) :($iWaitP), $iDelay =($iDelayP = Default) ?(250) :($iDelayP), $aText =($aTextP = Default) ?(Default) :($aTextP)
 Local $hTimer = __TimerInit()
 While(BitOR($iWait > __TimerDiff($hTimer),($iWait <= 0)) > 0)
 Local $aRetutn = findMultipleQuick($sPathImage, 1, $sSearchZone, Default, $aText)
-If(UBound($aRetutn) > 0) Then Return True
+If IsArray($aRetutn) Then Return True
 If _Sleep($iDelay) Then Return False
 If($iWait <= 0) Then ExitLoop
 WEnd
+Return False
+EndFunc
+Func WaitImage($sPathImage, $aText = Default, $iLoop = 1, $iDelay = 200, $sSearchArea = "FV")
+For $i = 0 To Abs($iLoop)
+If IsArray(findMultipleQuick($sPathImage, 1, $sSearchArea, Default, $aText)) Then Return True
+If _Sleep($iDelay) Then Return False
+Next
 Return False
 EndFunc
 Func CheckModVersion($bSilent = True)
@@ -81612,9 +81545,13 @@ Local $sDropSide = StringUpper($aDROP[5])
 Local $sQty = StringUpper($aDROP[1])
 If $sQty = "ALL" Then
 For $i = 0 To UBound($aAvailableTroops_NXQ) - 1
-If StringInStr($aAvailableTroops_NXQ[$i][0], $sTroopName) <> 0 Then
+If(StringInStr($aAvailableTroops[$i][0], $sTroopName) > 0) Then
+If(StringInStr($sTroopName, "Machine") > 0) Then
+$aAvailableTroops_NXQ[$i][4] = 1
+Else
 $aAvailableTroops_NXQ[$i][4] = Number(_getTroopCountSmall(Number($aAvailableTroops_NXQ[$i][1]), 640))
-If $aAvailableTroops_NXQ[$i][4] < 1 Then $aAvailableTroops_NXQ[$i][4] = Number(_getTroopCountBig(Number($aAvailableTroops_NXQ[$i][1]), 633))
+If $aAvailableTroops_NXQ[$i][4] < 1 Then $aAvailableTroops_NXQ[$i][4] = Number(_getTroopCountBig(Number($aAvailableTroops_NXQ[$i][1]), 640-7))
+EndIf
 EndIf
 Next
 If $sDropSide = "FRONT" Or $sDropSide = "BACK" Or $sDropSide = "LEFT" Or $sDropSide = "RIGHT" Then
@@ -82878,7 +82815,7 @@ If $iCount == 0 Then $iCount = Number(_getTroopCountBig($aAvailableTroops[$i][1]
 If $iCount == 0 And not String($aAvailableTroops[$i][0]) = "Machine" Then
 SetLog("Could not get count for " & $aAvailableTroops[$i][0] & " in slot " & String($aAvailableTroops[$i][3]), $COLOR_ERROR)
 ContinueLoop
-ElseIf String($aAvailableTroops[$i][0]) = "Machine" Then
+ElseIf(StringInStr($aAvailableTroops[$i][0], "Machine") > 0) Then
 $iCount = 1
 EndIf
 EndIf
@@ -82933,61 +82870,51 @@ FuncReturn()
 EndFunc
 Func DetectCamps()
 Local $iArmyCampsInBB[6] = [0, 0, 0, 0, 0, 0]
-Local $asAttackBarBB = _ArrayExtract($g_asAttackBarBB, 1, UBound($g_asAttackBarBB)-1)
+Local $asAttackBarBB = $g_asAttackBarBB2
 Local $bDebugLog = False
 If $g_bDebugBBattack Then $bDebugLog = True
 If _Sleep(Random(500, 1000, 1)) Then Return
-Local $aResults = _ImageSearchXML($g_sImgPathCamps, 100, "40,187,820,400", True, $bDebugLog)
+Local $aResults = _ImageSearchXML($g_sImgPathCamps, 10, "40,187,820,400", True, $bDebugLog)
 If $aResults = -1 Or Not IsArray($aResults) Then Return -1
 Setlog("Detected " & UBound($aResults) & " Camp(s).")
 Local $aCmbCampsInBBGUILimited = _ArrayExtract($g_iCmbCampsBB, 0, UBound($aResults)-1)
 Local $iArmyCampsInBBLimited = _ArrayExtract($iArmyCampsInBB, 0, UBound($aResults)-1)
 Local $aTroops = _ImageSearchXML($g_sImgPathTroopsTrain, 100, "40, 242, 820, 330", True, $bDebugLog)
-Local $aTrainLikeBoss[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-For $iIn In $aCmbCampsInBBGUILimited
-Local $i =(BitAnd(IsArray($aTrainLikeBoss), Int(UBound($aTrainLikeBoss) - 1) >= Number($iIn))) ?(Number($iIn)) :(0)
-$aTrainLikeBoss[$i] += 1
+Local $aTrainLikeBoss[$eBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+For $i = 0 To UBound($aCmbCampsInBBGUILimited) -1
+Local $i2 = $aCmbCampsInBBGUILimited[$i]
+$aTrainLikeBoss[$i2] += 1
 Next
-Local $iDiffSlot = Abs($aResults[0][1] - $aResults[1][1])
 For $i = 0 To UBound($aResults) - 1
-Local $X = $aResults[$i][1]
-Local $Y = $aResults[$i][2]
-If _ColorCheck(_GetPixelColor($X + 60, $Y - 75, True), Hex(0xCDCDC6, 6), 15) Then
-$iArmyCampsInBBLimited[$i] = -1
-Else
+Local $iX = $aResults[$i][1]
+Local $iY = $aResults[$i][2]
 For $i2 = UBound($aTroops) - 1 To 0 Step -1
-If BitAnd($X < $aTroops[$i2][1], Int($X + $iDiffSlot) > $aTroops[$i2][1] ) Then
-$iArmyCampsInBBLimited[$i] = _ArraySearch($asAttackBarBB, $aTroops[$i2][0], 0, 0, 0, 0, 0, 0)
-If $iArmyCampsInBBLimited[$i] = -1 Then $iArmyCampsInBBLimited[$i] = -2
-_ArrayDelete($aTroops, $i2)
+If((Int($iX - 20) < $aTroops[$i2][1]) And(Int($iX + 100) > $aTroops[$i2][1])) Then
+Local $i3 = -1
+For $iN2 = UBound($aTroops) -1 To 0 Step -1
+For $iN = 0 To UBound($asAttackBarBB) -1
+If String($asAttackBarBB[$iN]) == String($aTroops[$iN2][0]) Then
+$i3 = $iN
+If($i3 = -1) Then ExitLoop
+SetDebugLog("DetectCamps names: " & $asAttackBarBB[$iN] & " | " & $aTroops[$iN2][0])
+$aTrainLikeBoss[$iN] -= 1
+_ArrayDelete($aTroops, $iN2)
+ContinueLoop 2
 EndIf
-If _Sleep(Random((600*90)/100,(900*110)/100, 1), False) Then Return
 Next
+Next
+SetDebugLog("DetectCamps: " & $i3 & "|" & $aTroops[$i2][0])
 EndIf
-If $iArmyCampsInBBLimited[$i] = -2 Then
-DeleteTroop($X, $Y)
-Setlog("Builder base army: Troop not recognized, eliminated.", $COLOR_WARNING)
-$iArmyCampsInBBLimited[$i] = -1
-ContinueLoop
-EndIf
-Local $iIsInCamp = $iArmyCampsInBBLimited[$i]
-If $iIsInCamp <> -1 Then
-If $aTrainLikeBoss[$iIsInCamp] = 0 Then
-DeleteTroop($X, $Y)
-ElseIf $aTrainLikeBoss[$iIsInCamp] > 0 Then
-$aTrainLikeBoss[$iIsInCamp] -= 1
-If $aTrainLikeBoss[$iIsInCamp] <> -1 Then ContinueLoop
-DeleteTroop($X, $Y)
-$aTrainLikeBoss[$iIsInCamp] += 1
-EndIf
-EndIf
-If _Sleep(Random((600*90)/100,(900*110)/100, 1), False) Then Return
+If _Sleep(Random((200*90)/100,(300*110)/100, 1), False) Then Return
+Next
+If _ColorCheck(_GetPixelColor($iX + 60, $iY - 75, True), Hex(0xCDCDC6, 6), 15) Then ContinueLoop
+If DeleteTroop($iX, $iY) And Then Setlog("Builder base army: Troop not recognized, eliminated.", $COLOR_WARNING)
 Next
 Local $iFillFix = 0
 Local $bIsLlog = False
 For $i = 0 To UBound($aTrainLikeBoss) -1
-If $aTrainLikeBoss[$i] > 0 Then
-If LocateTroopButton($i) <> 0 Then
+If($aTrainLikeBoss[$i] > 0) Then
+If(LocateTroopButton($i) <> 0) Then
 If $bIsLlog = False Then
 SetLog("Builder base army - Train :", $COLOR_SUCCESS)
 $bIsLlog = True
@@ -83000,7 +82927,7 @@ SetLog("Builder base army: LocateTroopButton troop not unlocked or fail.", $COLO
 MyTrainClick($iFillFix, $aTrainLikeBoss[$i])
 EndIf
 EndIf
-If _Sleep(Random((600*90)/100,(900*110)/100, 1), False) Then Return
+If _Sleep(Random((200*90)/100,(300*110)/100, 1), False) Then Return
 Next
 EndFunc
 Func DeleteTroop($X, $Y, $bOnlyCheck = False)
@@ -83017,23 +82944,23 @@ Return False
 EndFunc
 Func LocateTroopButton($iTroopButton, $sImgTrain = $g_sImgPathTroopsTrain, $sRegionForScan = "37, 479, 891, 579")
 Global $g_aTroopButton[2] = [0, 0]
-Local $asAttackBarBB = _ArrayExtract($g_asAttackBarBB, 1, UBound($g_asAttackBarBB)-1)
-Local $iButtonIsIn
-If $iTroopButton > UBound($asAttackBarBB) -1 Then SetLog("Train army on BB: Troop not rocognized, it return first.", $COLOR_ERROR)
+Local $asAttackBarBB = $g_asAttackBarBB2
+Local $bDebugLog = False, $iButtonIsIn
+If($iTroopButton > UBound($asAttackBarBB) -1) Then SetLog("Train army on BB: Troop not rocognized, it return first.", $COLOR_ERROR)
 For $i = 0 To 5
 Local $aTroopPosition = _ImageSearchXML($g_sImgPathTroopsTrain, 0, $sRegionForScan, True, False, True, 25)
 If $aTroopPosition = 0 Or UBound($aTroopPosition) < 1 Then Return 0
-$iButtonIsIn = _ArraySearch($aTroopPosition, $asAttackBarBB[$iTroopButton], 0, 0, 0, 0, 0, 0)
+$iButtonIsIn = _ArraySearch($aTroopPosition, $asAttackBarBB[$iTroopButton], 0, 0, 0, 1)
 SetDebugLog("LocateTroopButton: " & "_ArraySearch($aTroopPosition, $asAttackBarBB[$iTroopButton]) " & $iButtonIsIn)
-If $iButtonIsIn > -1 Then
+If($iButtonIsIn > -1) Then
 $g_aTroopButton[0] = $aTroopPosition[$iButtonIsIn][1]
 $g_aTroopButton[1] = $aTroopPosition[$iButtonIsIn][2]
 Return $g_aTroopButton
-ElseIf _ArraySearch($g_asAttackBarBB , $aTroopPosition[0][0], 0, 0, 0, 0, 0, 0) < $iTroopButton Then
+ElseIf _ArraySearch($asAttackBarBB , $aTroopPosition[0][0], 0, 0, 0, 1) < $iTroopButton Then
 SetDebugLog("LocateTroopButton: " & "ClickDrag(575, 522, 280, 522, 50)")
 ClickDrag(575, 522, 280, 522, 50)
 If _Sleep(Random((400*90)/100,(400*110)/100, 1)) Then Return
-ElseIf _ArraySearch($asAttackBarBB, $aTroopPosition[UBound($aTroopPosition)-1][0], 0, 0, 0, 0, 0, 0) > $iTroopButton Then
+ElseIf _ArraySearch($asAttackBarBB, $aTroopPosition[UBound($aTroopPosition)-1][0], 0, 0, 0, 1) > $iTroopButton Then
 SetDebugLog("LocateTroopButton: " & "ClickDrag(280, 522, 575, 522, 50)")
 ClickDrag(280, 522, 575, 522, 50)
 If _Sleep(Random((400*90)/100,(400*110)/100, 1)) Then Return
@@ -83045,9 +82972,9 @@ SetLog("Cannot find " & $asAttackBarBB[$iTroopButton] & " for scan", $COLOR_ERRO
 Global $g_aTroopButton = 0
 Return 0
 EndFunc
-Func MyTrainClick($iXY, $iTimes = 1, $iSpeed = 0, $sdebugtxt="")
-If not IsArray($iXY) Then Return False
-Local $x = $iXY[0], $y = $iXY[1]
+Func MyTrainClick($aXY, $iTimes = 1, $iSpeed = 0, $sdebugtxt="")
+If not IsArray($aXY) Then Return False
+Local $x = $aXY[0], $y = $aXY[1]
 Local $iHLFClickMin = 7, $iHLFClickMax = 14
 Local $isldHLFClickDelayTime = 2000
 Local $iRandNum = Random($iHLFClickMin-1,$iHLFClickMax-1,1)
@@ -83055,13 +82982,13 @@ Local $iRandX = Random($x - 5,$x + 5,1),$iRandY = Random($y - 5,$y + 5,1)
 If isProblemAffect(True) Then Return
 For $i = 0 To $iTimes - 1
 PureClick(Random($iRandX-2,$iRandX+2,1), Random($iRandY-2,$iRandY+2,1))
-If $i >= $iRandNum Then
+If($i >= $iRandNum) Then
 $iRandNum = $iRandNum + Random($iHLFClickMin,$iHLFClickMax,1)
 $iRandX = Random($x - 5, $x + 5,1)
 $iRandY = Random($y - 5, $y + 5,1)
-If _Sleep(Random(($isldHLFClickDelayTime*50)/100,($isldHLFClickDelayTime*150)/100, 1), False) Then Return
+If _Sleep(Random(($isldHLFClickDelayTime*138))/100,(($isldHLFClickDelayTime*138)*2)/100, 1), False) Then Return
 Else
-If _Sleep(Random(($iSpeed*50)/100,($iSpeed*150)/100, 1), False) Then Return
+If _Sleep(Random(($isldHLFClickDelayTime*138)/100,(($isldHLFClickDelayTime*138)*3)/100, 1), False) Then Return
 EndIf
 Next
 EndFunc
