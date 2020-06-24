@@ -1110,7 +1110,6 @@ Func TrainArmyNumber($abQuickTrainArmy)
 
 EndFunc   ;==>TrainArmyNumber
 
-#Region - Custom - Team AIO Mod++
 Func DeleteQueued($sArmyTypeQueued, $iOffsetQueued = 802)
 
 	If $sArmyTypeQueued = "Troops" Then
@@ -1121,23 +1120,16 @@ Func DeleteQueued($sArmyTypeQueued, $iOffsetQueued = 802)
 		Return
 	EndIf
 	If _Sleep(500) Then Return
-	Local $x = 0, $iCiclo = 0
-	
-	While 1
+	Local $x = 0
+
+	While Not _ColorCheck(_GetPixelColor(820, 208, True), Hex(0xD0D0C8, 6), 20) ; check gray background at 1st training slot
 		If $x = 0 Then SetLog(" - Delete " & $sArmyTypeQueued & " Queued!", $COLOR_INFO)
-		If _Sleep(20) Then Return
 		If Not $g_bRunState Then Return
-		Click($iOffsetQueued + 24, 202, 2, 50)
+		Click($iOffsetQueued + 24, 202, 10, 50)
 		$x += 1
-		$iCiclo += 1
-		If $iCiclo > Random(10, 15, 1) Then
-			If Not IsQueueEmpty($sArmyTypeQueued, True, False) Then ExitLoop
-			$iCiclo = 0
-		EndIf
-		If $x = 280 Then ExitLoop
+		If $x = 270 Then ExitLoop
 	WEnd
 EndFunc   ;==>DeleteQueued
-#EndRegion - Custom - Team AIO Mod++
 
 Func MakingDonatedTroops($sType = "All")
 	Local $avDefaultTroopGroup[$eTroopCount][6]
