@@ -89,63 +89,57 @@ Func DetectCamps()
 
 	; Train matrix
 	Local $aTrainLikeBoss[$eBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+	Local $aTrainedLikeBoss[$eBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-	; Translate $aCmbCampsInBBGUILimited to $aTrainLikeBoss
+	; Translate $aCmbCampsInBBGUILimited to $aTrainLikeBoss.
     For $i = 0 To UBound($aCmbCampsInBBGUILimited) -1
         Local $i2 = $aCmbCampsInBBGUILimited[$i]
         $aTrainLikeBoss[$i2] += 1
 	Next
-
-	;Troops detect
+	
+	; Is in camp.
 	For $i = 0 To UBound($aResults) - 1
-		
 		Local $iX = $aResults[$i][1]
 		Local $iY = $aResults[$i][2]
-		
-		For $i2 = UBound($aTroops) - 1 To 0 Step -1
-			If ((Int($iX - 20) < $aTroops[$i2][1]) And (Int($iX + 100) > $aTroops[$i2][1])) Then
-				Local $i3 = -1
-				
-				For $iN2 = UBound($aTroops) -1 To 0 Step -1
-					For $iN = 0 To UBound($asAttackBarBB) -1
-						If String($asAttackBarBB[$iN]) == String($aTroops[$iN2][0]) Then 
-							$i3 = $iN
-							If ($i3 = -1) Then ExitLoop
-							SetDebugLog("DetectCamps names: " & $asAttackBarBB[$iN] & " | " & $aTroops[$iN2][0])
-							$aTrainLikeBoss[$iN] -= 1
-							_ArrayDelete($aTroops, $iN2)
-							ContinueLoop 2
-						EndIf
-					Next
-				Next
-				
-				SetDebugLog("DetectCamps: " & $i3 & "|" & $aTroops[$i2][0])
-			EndIf
-			If _Sleep(Random((200*90)/100, (300*110)/100, 1), False) Then Return
-		Next
-		
 		If _ColorCheck(_GetPixelColor($iX + 60, $iY - 75, True), Hex(0xCDCDC6, 6), 15) Then ContinueLoop
-		
-		If DeleteTroop($iX, $iY) Then Setlog("Builder base army: Troop not recognized, eliminated.", $COLOR_WARNING)
-		
+		For $i2 = 0 To UBound($aTroops) - 1
+			If ((Int($iX - 20) < $aTroops[$i2][1]) And (Int($iX + 100) > $aTroops[$i2][1])) Then
+				For	$iN = 0 To UBound($asAttackBarBB) -1
+					If (StringInStr($asAttackBarBB[$iN], $aTroops[$i2][0]) > 0) Then 
+						If ($aTrainLikeBoss[$iN] = Int($aTrainedLikeBoss[$iN])) Then 
+							$aTrainLikeBoss[$iN] -= 1
+							$aTrainedLikeBoss[$iN] -= 1
+							ElseIf ($aTrainLikeBoss[$iN] < Int($aTrainedLikeBoss[$iN])) Then 
+        $aTrainLikeBoss[$i2] -= 1
+							DeleteTroop($iX, $iY)
+							ElseIf ($aTrainLikeBoss[$iN] > Int($aTrainedLikeBoss[$iN])) Then 
+							$aTrainedLikeBoss[$iN] += 1
+        $aTrainLikeBoss[$i2] -= 1
+						EndIf
+						ContinueLoop 3
+					EndIf
+				Next
+			EndIf
+		Next
 	Next
-		
+	_ArrayDisplay($aTrainedLikeBoss)
+	_ArrayDisplay($aTrainLikeBoss)
 	;Troops Train
 	Local $iFillFix = 0 ; Barb Default
 	Local $bIsLlog = False
-	For $i = 0 To UBound($aTrainLikeBoss) -1
-		If ($aTrainLikeBoss[$i] > 0) Then
+	For $i = 0 To UBound($aTrainedLikeBoss) -1
+		If ($aTrainedLikeBoss[$i] > 0) Then
 			If (LocateTroopButton($i) <> 0) Then
 				If $bIsLlog = False Then
 					SetLog("Builder base army - Train :", $COLOR_SUCCESS)
 					$bIsLlog = True
 				EndIf
-				SetLog("- x" & $aTrainLikeBoss[$i] & " " & $g_avStarLabTroops[$i+1][3], $COLOR_SUCCESS)
-				MyTrainClick($g_aTroopButton, $aTrainLikeBoss[$i])
+				SetLog("- x" & $aTrainedLikeBoss[$i] & " " & $g_avStarLabTroops[$i+1][3], $COLOR_SUCCESS)
+				MyTrainClick($g_aTroopButton, $aTrainedLikeBoss[$i])
 				$iFillFix = $g_aTroopButton
 				Else
 				SetLog("Builder base army: LocateTroopButton troop not unlocked or fail.", $COLOR_ERROR)
-				MyTrainClick($iFillFix, $aTrainLikeBoss[$i]) ; Train 4 fill last "ok" (more smart)
+				MyTrainClick($iFillFix, $aTrainedLikeBoss[$i]) ; Train 4 fill last "ok" (more smart)
 			EndIf
 		EndIf
 		If _Sleep(Random((200*90)/100, (300*110)/100, 1), False) Then Return

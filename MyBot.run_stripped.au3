@@ -9,7 +9,7 @@
 #pragma compile(LegalCopyright, © https://mybot.run)
 #Au3Stripper_Off
 #Au3Stripper_On
-Global $g_sBotVersion = "v7.8.3.hotfix"
+Global $g_sBotVersion = "v7.8.3"
 Global $g_sModVersion = "v4.0.5"
 Opt("MustDeclareVars", 1)
 Global $g_sBotTitle = ""
@@ -49150,15 +49150,15 @@ SetLog("Your DPI has not been changed due some unknown error, Return= " & $aRet,
 EndIf
 EndIf
 EndFunc
-Func isGemOpen($bNeedCaptureRegion = False, $bClick = False)
+Func isGemOpen($bNeedCaptureRegion = False)
 If _Sleep($DELAYISGEMOPEN1) Then Return
 If _CheckPixel($aIsGemWindow1, $bNeedCaptureRegion) Then
 If $g_bDebugSetlog Then SetDebugLog("Gemclick Red X detect", $COLOR_DEBUG)
-If($bClick = False) Then PureClickP($aAway, 1, 0, "#0140")
+PureClickP($aAway, 1, 0, "#0140")
 Return True
 ElseIf _CheckPixel($aIsGemWindow2, $bNeedCaptureRegion) And  _CheckPixel($aIsGemWindow3, $bNeedCaptureRegion) And  _CheckPixel($aIsGemWindow4, $bNeedCaptureRegion) Then
 If $g_bDebugSetlog Then SetDebugLog("Gemclick Red Line detect", $COLOR_DEBUG)
-If($bClick = False) Then PureClickP($aAway, 1, 0, "#0141")
+PureClickP($aAway, 1, 0, "#0141")
 Return True
 EndIf
 Return False
@@ -74952,7 +74952,7 @@ Case IsMainPage(1)
 Setlog("ClickFindMatch | Main located fail.", $COLOR_ERROR)
 $bFail = True
 ExitLoop
-Case WaitImage(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", "G", 2, 100, "356, 424, 518, 502")
+Case WaitImage(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", "G", 2, 100, "356, 424, 518, 502") Then
 Setlog("ClickFindMatch | ClickFindMatch fail.", $COLOR_ERROR)
 Click(Random(286, 740, 1), Random(67, 179, 1))
 $bFail = True
@@ -81545,7 +81545,7 @@ Local $sDropSide = StringUpper($aDROP[5])
 Local $sQty = StringUpper($aDROP[1])
 If $sQty = "ALL" Then
 For $i = 0 To UBound($aAvailableTroops_NXQ) - 1
-If(StringInStr($aAvailableTroops_NXQ[$i][0], $sTroopName) > 0) Then
+If(StringInStr($aAvailableTroops[$i][0], $sTroopName) > 0) Then
 If(StringInStr($sTroopName, "Machine") > 0) Then
 $aAvailableTroops_NXQ[$i][4] = 1
 Else
@@ -82908,7 +82908,7 @@ EndIf
 If _Sleep(Random((200*90)/100,(300*110)/100, 1), False) Then Return
 Next
 If _ColorCheck(_GetPixelColor($iX + 60, $iY - 75, True), Hex(0xCDCDC6, 6), 15) Then ContinueLoop
-If DeleteTroop($iX, $iY) Then Setlog("Builder base army: Troop not recognized, eliminated.", $COLOR_WARNING)
+If DeleteTroop($iX, $iY) And Then Setlog("Builder base army: Troop not recognized, eliminated.", $COLOR_WARNING)
 Next
 Local $iFillFix = 0
 Local $bIsLlog = False
@@ -82986,7 +82986,7 @@ If($i >= $iRandNum) Then
 $iRandNum = $iRandNum + Random($iHLFClickMin,$iHLFClickMax,1)
 $iRandX = Random($x - 5, $x + 5,1)
 $iRandY = Random($y - 5, $y + 5,1)
-If _Sleep(Random(($isldHLFClickDelayTime*138)/100,(($isldHLFClickDelayTime*138)*2)/100, 1), False) Then Return
+If _Sleep(Random(($isldHLFClickDelayTime*138))/100,(($isldHLFClickDelayTime*138)*2)/100, 1), False) Then Return
 Else
 If _Sleep(Random(($isldHLFClickDelayTime*138)/100,(($isldHLFClickDelayTime*138)*3)/100, 1), False) Then Return
 EndIf
