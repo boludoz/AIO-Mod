@@ -19,7 +19,7 @@
 #pragma compile(LegalCopyright, © https://mybot.run)
 #Au3Stripper_On
 
-Global $g_sBotVersion = "v7.8.3" ;~ Don't add more here, but below. Version can't be longer than vX.y.z because it is also used in Checkversion()
+Global $g_sBotVersion = "v7.8.3.hotfix" ;~ Don't add more here, but below. Version can't be longer than vX.y.z because it is also used in Checkversion()
 
 ; Check Version - Team AiO MOD++
 Global $g_sModVersion = "v4.0.5" ;<== Just Change This to Version Number

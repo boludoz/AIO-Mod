@@ -9,7 +9,7 @@
 #pragma compile(LegalCopyright, © https://mybot.run)
 #Au3Stripper_Off
 #Au3Stripper_On
-Global $g_sBotVersion = "v7.8.3"
+Global $g_sBotVersion = "v7.8.3.hotfix"
 Global $g_sModVersion = "v4.0.5"
 Opt("MustDeclareVars", 1)
 Global $g_sBotTitle = ""
@@ -6806,7 +6806,7 @@ Global Const $g_aiSuperTroopSpace[$eTroopCount] = [ 5, 1, 10, 3, 8, 5, 4, 14, 20
 Global Enum $eSpellLightning, $eSpellHeal, $eSpellRage, $eSpellJump, $eSpellFreeze, $eSpellClone, $eSpellPoison, $eSpellEarthquake, $eSpellHaste, $eSpellSkeleton, $eSpellBat, $eSpellCount
 Global Const $g_asSpellNames[$eSpellCount] = ["Lightning", "Heal", "Rage", "Jump", "Freeze", "Clone", "Poison", "Earthquake", "Haste", "Skeleton", "Bat"]
 Global Const $g_asSpellShortNames[$eSpellCount] = ["LSpell", "HSpell", "RSpell", "JSpell", "FSpell", "CSpell", "PSpell", "ESpell", "HaSpell", "SkSpell", "BtSpell"]
-Global Const $g_aiSpellSpace[$eSpellCount] = [2, 2, 2, 2, 1, 3, 1, 1, 1, 1, 1]
+Global Const $g_aiSpellSpace[$eSpellCount] = [1, 2, 2, 2, 1, 3, 1, 1, 1, 1, 1]
 Global Const $g_aiSpellTrainTime[$eSpellCount] = [360, 360, 360, 360, 360, 720, 180, 180, 180, 180, 180]
 Global Const $g_aiSpellCostPerLevel[$eSpellCount][9] = [ [7, 15000, 16500, 18000, 20000, 22000, 24000, 26000], [8, 15000, 16500, 18000, 19000, 21000, 23000, 25000, 27000], [6, 20000, 22000, 24000, 26000, 28000, 30000], [4, 23000, 27000, 31000, 32000], [7, 6000, 7000, 8000, 9000, 10000, 11000, 12000], [5, 38000, 39000, 41000, 43000, 45000], [6, 95, 110, 125, 140, 155, 170], [5, 125, 140, 160, 180, 200], [5, 80, 85, 90, 95, 100], [7, 110, 120, 130, 140, 150, 160, 170], [5, 110, 120, 130, 140, 150]]
 Global Const $g_aiSpellDonateXP[$eSpellCount] = [10, 10, 10, 10, 10, 0, 5, 5, 5, 5, 5]
@@ -39185,13 +39185,13 @@ EndIf
 EndIf
 EndIf
 Local $aTmp = StringSplit($value5, "-")
-Local $aDelaypoints[2] = [Round($aTmp[1]), Round($aTmp[$aTmp[0])]]
+Local $aDelaypoints[2] = [Round($aTmp[1]), Round($aTmp[$aTmp[0]])]
 Local $aTmp = StringSplit($value6, "-")
-Local $aDelaydrop[2] = [Round($aTmp[1]), Round($aTmp[$aTmp[0])]]
+Local $aDelaydrop[2] = [Round($aTmp[1]), Round($aTmp[$aTmp[0]])]
 Local $aTmp = StringSplit($value7, "-")
-Local $aSleepdrop[2] = [Round($aTmp[1]), Round($aTmp[$aTmp[0])]]
+Local $aSleepdrop[2] = [Round($aTmp[1]), Round($aTmp[$aTmp[0]])]
 Local $aTmp = StringSplit($value8, "-")
-Local $aSleepbeforedrop[2] = [Round($aTmp[1]), Round($aTmp[$aTmp[0])]]
+Local $aSleepbeforedrop[2] = [Round($aTmp[1]), Round($aTmp[$aTmp[0]])]
 Local $tmpVectorList = StringSplit($value1, "-", $STR_NOCOUNT)
 For $v = 0 To UBound($tmpVectorList) - 1
 If StringInStr($sTargetVectors, $tmpVectorList[$v], $STR_NOCASESENSEBASIC) = True Then
@@ -49150,15 +49150,15 @@ SetLog("Your DPI has not been changed due some unknown error, Return= " & $aRet,
 EndIf
 EndIf
 EndFunc
-Func isGemOpen($bNeedCaptureRegion = False)
+Func isGemOpen($bNeedCaptureRegion = False, $bClick = False)
 If _Sleep($DELAYISGEMOPEN1) Then Return
 If _CheckPixel($aIsGemWindow1, $bNeedCaptureRegion) Then
 If $g_bDebugSetlog Then SetDebugLog("Gemclick Red X detect", $COLOR_DEBUG)
-PureClickP($aAway, 1, 0, "#0140")
+If($bClick = False) Then PureClickP($aAway, 1, 0, "#0140")
 Return True
 ElseIf _CheckPixel($aIsGemWindow2, $bNeedCaptureRegion) And  _CheckPixel($aIsGemWindow3, $bNeedCaptureRegion) And  _CheckPixel($aIsGemWindow4, $bNeedCaptureRegion) Then
 If $g_bDebugSetlog Then SetDebugLog("Gemclick Red Line detect", $COLOR_DEBUG)
-PureClickP($aAway, 1, 0, "#0141")
+If($bClick = False) Then PureClickP($aAway, 1, 0, "#0141")
 Return True
 EndIf
 Return False
@@ -74952,7 +74952,7 @@ Case IsMainPage(1)
 Setlog("ClickFindMatch | Main located fail.", $COLOR_ERROR)
 $bFail = True
 ExitLoop
-Case WaitImage(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", "G", 2, 100, "356, 424, 518, 502") Then
+Case WaitImage(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", "G", 2, 100, "356, 424, 518, 502")
 Setlog("ClickFindMatch | ClickFindMatch fail.", $COLOR_ERROR)
 Click(Random(286, 740, 1), Random(67, 179, 1))
 $bFail = True
@@ -81545,7 +81545,7 @@ Local $sDropSide = StringUpper($aDROP[5])
 Local $sQty = StringUpper($aDROP[1])
 If $sQty = "ALL" Then
 For $i = 0 To UBound($aAvailableTroops_NXQ) - 1
-If(StringInStr($aAvailableTroops[$i][0], $sTroopName) > 0) Then
+If(StringInStr($aAvailableTroops_NXQ[$i][0], $sTroopName) > 0) Then
 If(StringInStr($sTroopName, "Machine") > 0) Then
 $aAvailableTroops_NXQ[$i][4] = 1
 Else
@@ -82908,7 +82908,7 @@ EndIf
 If _Sleep(Random((200*90)/100,(300*110)/100, 1), False) Then Return
 Next
 If _ColorCheck(_GetPixelColor($iX + 60, $iY - 75, True), Hex(0xCDCDC6, 6), 15) Then ContinueLoop
-If DeleteTroop($iX, $iY) And Then Setlog("Builder base army: Troop not recognized, eliminated.", $COLOR_WARNING)
+If DeleteTroop($iX, $iY) Then Setlog("Builder base army: Troop not recognized, eliminated.", $COLOR_WARNING)
 Next
 Local $iFillFix = 0
 Local $bIsLlog = False
@@ -82986,7 +82986,7 @@ If($i >= $iRandNum) Then
 $iRandNum = $iRandNum + Random($iHLFClickMin,$iHLFClickMax,1)
 $iRandX = Random($x - 5, $x + 5,1)
 $iRandY = Random($y - 5, $y + 5,1)
-If _Sleep(Random(($isldHLFClickDelayTime*138))/100,(($isldHLFClickDelayTime*138)*2)/100, 1), False) Then Return
+If _Sleep(Random(($isldHLFClickDelayTime*138)/100,(($isldHLFClickDelayTime*138)*2)/100, 1), False) Then Return
 Else
 If _Sleep(Random(($isldHLFClickDelayTime*138)/100,(($isldHLFClickDelayTime*138)*3)/100, 1), False) Then Return
 EndIf

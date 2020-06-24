@@ -9,7 +9,7 @@
 #pragma compile(LegalCopyright, © https://mybot.run)
 #Au3Stripper_Off
 #Au3Stripper_On
-Global $g_sBotVersion = "v7.8.3"
+Global $g_sBotVersion = "v7.8.3.hotfix"
 Global $g_sModVersion = "v4.0.5"
 Opt("MustDeclareVars", 1)
 Global Const $WAIT_TIMEOUT = 258

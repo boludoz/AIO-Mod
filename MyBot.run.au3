@@ -851,7 +851,7 @@ Func runBot() ;Bot that runs everything in order
 
 			If Not $g_bChkOnlyFarm Then ChatActions() ; ChatActions - Team AiO MOD++
 
-            If ProfileSwitchAccountEnabled() And ($g_iCommandStop = 0 Or $g_iCommandStop = 3 Or $g_abDonateOnly[$g_iCurAccount] or $g_bForceSwitch) Then checkSwitchAcc()
+			If ProfileSwitchAccountEnabled() And ($g_iCommandStop = 0 Or $g_iCommandStop = 3 Or $g_abDonateOnly[$g_iCurAccount] Or $g_bForceSwitch) Then checkSwitchAcc()
 			If IsSearchAttackEnabled() Then ; If attack scheduled has attack disabled now, stop wall upgrades, and attack.
 				Idle()
 				;$g_bFullArmy1 = $g_bFullArmy
@@ -1238,7 +1238,7 @@ Func __RunFunction($action)
 			$g_iNbrOfWallsUpped = 0
 			UpgradeWall()
 			_Sleep($DELAYRUNBOT3)
-		#Region Team AIO Mod++
+			#Region Team AIO Mod++
 		Case "BuilderBase"
 			If BitAND(Not BitOR($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
 			
@@ -1247,7 +1247,7 @@ Func __RunFunction($action)
 			$g_bStayOnBuilderBase = False
 			
 			_Sleep($DELAYRUNBOT3)
-		#EndRegion Team AIO Mod++
+			#EndRegion Team AIO Mod++
 		Case "CollectFreeMagicItems"
 			If BitAND(Not BitOR($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
 			CollectFreeMagicItems()

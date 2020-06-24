@@ -126,7 +126,7 @@ Func DetectCamps()
 		
 		If _ColorCheck(_GetPixelColor($iX + 60, $iY - 75, True), Hex(0xCDCDC6, 6), 15) Then ContinueLoop
 		
-		If DeleteTroop($iX, $iY) And Then Setlog("Builder base army: Troop not recognized, eliminated.", $COLOR_WARNING)
+		If DeleteTroop($iX, $iY) Then Setlog("Builder base army: Troop not recognized, eliminated.", $COLOR_WARNING)
 		
 	Next
 		
@@ -220,7 +220,7 @@ Func MyTrainClick($aXY, $iTimes = 1, $iSpeed = 0, $sdebugtxt="")
 					$iRandNum = $iRandNum + Random($iHLFClickMin,$iHLFClickMax,1)
 					$iRandX = Random($x - 5, $x + 5,1)
 					$iRandY = Random($y - 5, $y + 5,1)
-					If _Sleep(Random(($isldHLFClickDelayTime*138))/100, (($isldHLFClickDelayTime*138)*2)/100, 1), False) Then Return
+					If _Sleep(Random(($isldHLFClickDelayTime*138)/100, (($isldHLFClickDelayTime*138)*2)/100, 1), False) Then Return
 				Else
 					If _Sleep(Random(($isldHLFClickDelayTime*138)/100, (($isldHLFClickDelayTime*138)*3)/100, 1), False) Then Return
 				EndIf

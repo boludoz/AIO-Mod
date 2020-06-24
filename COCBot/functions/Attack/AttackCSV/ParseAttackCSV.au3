@@ -300,19 +300,19 @@ Func ParseAttackCSV($debug = False)
 						
 						; Custom delay between points - Team AIO Mod++
 						Local $aTmp = StringSplit($value5, "-")
-						Local $aDelaypoints[2] = [Round($aTmp[1]), Round($aTmp[$aTmp[0])]]
+						Local $aDelaypoints[2] = [Round($aTmp[1]), Round($aTmp[$aTmp[0]])]
 					
 						; Custom delay between  drops in same point - Team AIO Mod++
 						Local $aTmp = StringSplit($value6, "-")
-						Local $aDelaydrop[2] = [Round($aTmp[1]), Round($aTmp[$aTmp[0])]]
+						Local $aDelaydrop[2] = [Round($aTmp[1]), Round($aTmp[$aTmp[0]])]
 						
 						; Custom sleep time after drop - Team AIO Mod++
 						Local $aTmp = StringSplit($value7, "-")
-						Local $aSleepdrop[2] = [Round($aTmp[1]), Round($aTmp[$aTmp[0])]]
+						Local $aSleepdrop[2] = [Round($aTmp[1]), Round($aTmp[$aTmp[0]])]
 
 						; Custom sleep time before drop - Team AIO Mod++
 						Local $aTmp = StringSplit($value8, "-")
-						Local $aSleepbeforedrop[2] = [Round($aTmp[1]), Round($aTmp[$aTmp[0])]]
+						Local $aSleepbeforedrop[2] = [Round($aTmp[1]), Round($aTmp[$aTmp[0]])]
 						#EndRegion - Custom DROP - Team AIO Mod++
 						
 						; check for targeted vectors and validate index numbers, need too many values for check logic to use CheckCSVValues()

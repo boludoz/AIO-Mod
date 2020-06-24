@@ -198,7 +198,7 @@ Func ClickFindMatch()
 				Setlog("ClickFindMatch | Main located fail.", $COLOR_ERROR)
 				$bFail = True
 				ExitLoop
-			Case WaitImage(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", "G", 2, 100, "356, 424, 518, 502") Then 
+			Case WaitImage(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", "G", 2, 100, "356, 424, 518, 502")
 				Setlog("ClickFindMatch | ClickFindMatch fail.", $COLOR_ERROR)
 				Click(Random(286, 740, 1), Random(67, 179, 1))
 				$bFail = True
