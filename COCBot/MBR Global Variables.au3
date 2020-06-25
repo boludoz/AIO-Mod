@@ -1738,12 +1738,12 @@ Global $g_iLSpellLevel = 1
 Global $g_iESpellLevel = 1
 Global Const $g_fDarkStealFactor = 0.75
 Global Const $g_fDarkFillLevel = 0.70
-; Array to hold Total HP of DE Drills at each level (1-7)
-Global Const $g_aDrillLevelHP[7] = [800, 860, 920, 980, 1060, 1160, 1280]
-; Array to hold Total Amount of DE available from Drill at each level (1-7)
-Global Const $g_aDrillLevelTotal[7] = [160, 300, 540, 840, 1280, 1800, 2400]
-; Array to hold Total Damage of Lightning Spell at each level (1-7)
-Global Const $g_aLSpellDmg[7] = [300, 360, 420, 480, 540, 600, 660]
+; Array to hold Total HP of DE Drills at each level (1-8)
+Global Const $g_aDrillLevelHP[8] = [800, 860, 920, 980, 1060, 1160, 1280, 1380]
+; Array to hold Total Amount of DE available from Drill at each level (1-8)
+Global Const $g_aDrillLevelTotal[8] = [160, 300, 540, 840, 1280, 1800, 2400, 3000]
+; Array to hold Total Damage of Lightning Spell at each level (1-9)
+Global Const $g_aLSpellDmg[9] = [150, 180, 210, 240, 270, 320, 400, 480, 580]
 ; Array to hold Total Damage of Earthquake Spell at each level (1-5)
 Global Const $g_aEQSpellDmg[5] = [0.14, 0.17, 0.21, 0.25, 0.29]
 

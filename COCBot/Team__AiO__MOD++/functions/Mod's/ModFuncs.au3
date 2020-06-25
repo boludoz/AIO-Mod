@@ -386,9 +386,10 @@ Func _makerequestCustom($aButtonPosition = -1)
 	SetDebuglog("SearchPixelDonate FindWhite " & _ArrayToString($aClickText))
 	SetDebuglog("SearchPixelDonate X, Y: " & $ix & "," & $iy)
 
-	$aClickSend = decodeSingleCoord(findImage("ReqSpec", @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Request\ReqSpec", GetDiamondFromRect(440 & "," & Int($iy + 190) & "," & 470 & "," & Int($iy + 220)), 1, True))
+	Local $aTmp[4] = [440, Int($iy + 190), 470, Int($iy + 220)] 
+	$aClickSend = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Request\ReqSpec", 1, $aTmp, Default, "ReqSpec", False, 25)
 	
-	If Not IsArray($aClickSend) Or not UBound($aClickSend) = 2 Then
+	If Not IsArray($aClickSend) Then
 		Setlog("SearchPixelDonate fail 0x2.", $COLOR_ERROR)
 		CheckMainScreen(False) ;emergency exit
 		Return False
@@ -411,7 +412,7 @@ Func _makerequestCustom($aButtonPosition = -1)
 	If _Sleep($DELAYMAKEREQUEST2) Then Return ; wait time for text request to complete
 	
 	If $g_bChkBackgroundMode = False And $g_bNoFocusTampering = False Then ControlFocus($g_hAndroidWindow, "", "") ; make sure Android has window focus
-	Click($aClickSend[0], $aClickSend[1], 1, 100, "#0256") ; click send button
+	Click($aClickSend[0][1], $aClickSend[0][2], 1, 100, "#0256") ; click send button
 	$g_bCanRequestCC = False
 
 EndFunc   ;==>_makerequestCustom

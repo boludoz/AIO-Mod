@@ -5,7 +5,7 @@
 
                     Based on MyBot.run v7.8.3.hotfix.
 
-	**v4.0.5** (Quality improvement update) (Thx @Approchable, @joosmega, @omora88, @vDragon, @esbestan and github beta test team for test <3)
+	**v4.0.5** (Quality improvement update) (Thx @Approchable, @joosmega, @omora88, @esbestan and github beta test team for test <3)
 		» Added :
 			- Smart farm : Max side limiter.
 			
@@ -27,6 +27,14 @@
 			- LS Spell from village.
 			- CheckBaseQuick.
 			- ClickFindMatch.
+		
+		» Github devs team: (@vDragon, @Approchable-123)
+			- Drills stats updated.
+			- Lightning spell fixed values for smart zap.
+			- BB Loops improvement
+			- Stop attacks at 3 wins in BB.
+			- Wait main screen before train and attack.
+			- Lot of fixes.
 			
 	**v4.0.2** (Quality improvement update) (Thx @Approchable, @joosmega, @omora88, @vDragon, @esbestan and github beta test team for test <3)
 		» Fixed / Improved :

@@ -20,7 +20,9 @@ Func TrainSystem()
 		If $g_bDebugSetlogTrain Then SetLog("Halt mode - training disabled", $COLOR_DEBUG)
 		Return
 	EndIf
-
+	
+	waitMainScreen() ; Custom - Team AIO Mod++ (@vDragon)
+	
 	$g_sTimeBeforeTrain = _NowCalc()
 	StartGainCost()
 
