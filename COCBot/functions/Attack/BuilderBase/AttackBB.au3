@@ -60,7 +60,7 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 		$g_aBuilderHallPos[0][1] = 425
 	EndIf
 
-	Local $iSide = _ArraySearch($sSideNames, BuilderBaseAttackMainSide(), 0, 0, 0, 0, 0, 0)
+	Local $iSide = __ArraySearch($sSideNames, BuilderBaseAttackMainSide(), 0, 0, 0, 0, 0, 0)
 
 	If $iSide < 0 Then 
 		SetLog("Fail AttackBB 0x2")

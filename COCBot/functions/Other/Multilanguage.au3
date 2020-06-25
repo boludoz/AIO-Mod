@@ -1040,7 +1040,7 @@ Func GetTranslatedFileIni($iSection = -1, $iKey = -1, $sText = "", $var1 = Defau
 
 	Local $sDefaultText, $g_sLanguageText
 	Local $SearchInLanguage = $iSection & "§" & $iKey
-	Local $result = _ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
+	Local $result = __ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
 	If $result <> -1 Then
 		Return GetTranslatedParsedText($aNewLanguage[$result][1], $var1, $var2, $var3)
 	EndIf
@@ -1052,7 +1052,7 @@ Func GetTranslatedFileIni($iSection = -1, $iKey = -1, $sText = "", $var1 = Defau
 		If $sText = "-1" Then  ; check for "-1" if text repeated
 			If $sDefaultText <> "-3" Then  ; check if text exists inside file
 				$sDefaultText = GetTranslatedParsedText($sDefaultText, $var1, $var2, $var3)
-				Local $result = _ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
+				Local $result = __ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
 				If $result <> -1 Then
 					$aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][0] = $SearchInLanguage
 					$aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][1] = $sDefaultText
@@ -1071,7 +1071,7 @@ Func GetTranslatedFileIni($iSection = -1, $iKey = -1, $sText = "", $var1 = Defau
 			Local $aKey = IniReadSection($ini_file, $iSection)
 			 If IsArray($aKey) Then
 				For $i = 1 To $aKey[0][0]
-					If _ArraySearch($aSection, $aKey[$i][0], 0, 0, 0, 0, 1, 0) = -1 Then
+					If __ArraySearch($aSection, $aKey[$i][0], 0, 0, 0, 0, 1, 0) = -1 Then
 						; add only unique keys
 						$Count += 1
 						ReDim $aSection[$Count][2]
@@ -1083,7 +1083,7 @@ Func GetTranslatedFileIni($iSection = -1, $iKey = -1, $sText = "", $var1 = Defau
 			_ArraySort($aSection, 0, 0, 0, 0)
 			IniWriteSection($ini_file, $iSection, $aSection, 0)
 			$sText = GetTranslatedParsedText($sText, $var1, $var2, $var3)
-			Local $result = _ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
+			Local $result = __ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
 			If $result <> -1 Then
 				$aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][0] = $SearchInLanguage
 				$aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][1] = $sText
@@ -1094,7 +1094,7 @@ Func GetTranslatedFileIni($iSection = -1, $iKey = -1, $sText = "", $var1 = Defau
 			Return $sText
 		Else
 			$sDefaultText = GetTranslatedParsedText($sDefaultText, $var1, $var2, $var3)
-			Local $result = _ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
+			Local $result = __ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
 			If $result <> -1 Then
 				$aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][0] = $SearchInLanguage
 				$aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][1] = $sDefaultText
@@ -1111,7 +1111,7 @@ Func GetTranslatedFileIni($iSection = -1, $iKey = -1, $sText = "", $var1 = Defau
 			If $g_sLanguageText = "-3" Then
 				$sDefaultText = IniRead($g_sDirLanguages & $g_sDefaultLanguage & ".ini", $iSection, $iKey, $sText)
 				$sDefaultText = GetTranslatedParsedText($sDefaultText, $var1, $var2, $var3)
-				Local $result = _ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
+				Local $result = __ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
 				If $result <> -1 Then
 					$aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][0] = $SearchInLanguage
 					$aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][1] = $sDefaultText
@@ -1122,7 +1122,7 @@ Func GetTranslatedFileIni($iSection = -1, $iKey = -1, $sText = "", $var1 = Defau
 				Return $sDefaultText ; will also return "-1" as debug if english.ini does not contain the correct section/key
 			Else
 				$g_sLanguageText = GetTranslatedParsedText($g_sLanguageText, $var1, $var2, $var3)
-				Local $result = _ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
+				Local $result = __ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
 				If $result <> -1 Then
 					$aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][0] = $SearchInLanguage
 					$aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][1] = $g_sLanguageText
@@ -1141,7 +1141,7 @@ Func GetTranslatedFileIni($iSection = -1, $iKey = -1, $sText = "", $var1 = Defau
 			Local $aKey = IniReadSection($ini_file, $iSection)
 			 If IsArray($aKey) Then
 				For $i = 1 To $aKey[0][0]
-					If _ArraySearch($aSection, $aKey[$i][0], 0, 0, 0, 0, 1, 0) = -1 Then
+					If __ArraySearch($aSection, $aKey[$i][0], 0, 0, 0, 0, 1, 0) = -1 Then
 						; add only unique keys
 						$Count += 1
 						ReDim $aSection[$Count][2]
@@ -1153,7 +1153,7 @@ Func GetTranslatedFileIni($iSection = -1, $iKey = -1, $sText = "", $var1 = Defau
 			_ArraySort($aSection, 0, 0, 0, 0)
 			IniWriteSection($ini_file, $iSection, $aSection, 0)
 			$sText = GetTranslatedParsedText($sText, $var1, $var2, $var3)
-			Local $result = _ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
+			Local $result = __ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
 			If $result <> -1 Then
 				$aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][0] = $SearchInLanguage
 				$aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][1] = $sText
@@ -1164,7 +1164,7 @@ Func GetTranslatedFileIni($iSection = -1, $iKey = -1, $sText = "", $var1 = Defau
 			Return $sText
 		EndIf
 		$g_sLanguageText = GetTranslatedParsedText($g_sLanguageText, $var1, $var2, $var3)
-			Local $result = _ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
+			Local $result = __ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
 			If $result <> -1 Then
 				$aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][0] = $SearchInLanguage
 				$aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][1] = $g_sLanguageText
@@ -1186,7 +1186,7 @@ Func _ReadFullIni()
 		If IsArray($aKey) Then ; Si la section n'est pas vide
 			ReDim $aNewLanguage[$Count + UBound($aKey) - 1][2] ; On redimentionne le tableau en ajoutant le nombre d'éléments de la section en cours
 			For $j = 1 To Ubound($aKey) - 1 ; Boucle de lecture
-				If _ArraySearch($aNewLanguage, $aSection[$i] & "§" & $aKey[$j][0], 0, 0, 0, 0, 1, 0) = -1 Then
+				If __ArraySearch($aNewLanguage, $aSection[$i] & "§" & $aKey[$j][0], 0, 0, 0, 0, 1, 0) = -1 Then
 					; add only unique keys
 					$aNewLanguage[$Count][0] = $aSection[$i] & "§" & $aKey[$j][0]; On stocke le nom de la section
 					$aNewLanguage[$Count][1] = $aKey[$j][1]; On stocke le nom de la clé

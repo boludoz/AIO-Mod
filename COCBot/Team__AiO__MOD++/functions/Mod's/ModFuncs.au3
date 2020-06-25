@@ -193,7 +193,7 @@ Func ClickFindMatch()
 				$bFail = False
 				ContinueCase
 			Case isGemOpen(True, True)
-				Return False
+				Return (isGemOpen(True, True)) ? (False) : (True)
 			Case IsMainPage(1)
 				Setlog("ClickFindMatch | Main located fail.", $COLOR_ERROR)
 				$bFail = True

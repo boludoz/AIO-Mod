@@ -3,7 +3,7 @@
             | | | _| / ▓ \| |\/| |    / ▓ \| | (_) |  |_   _||_   _|
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
-                    Based on MyBot.run v7.8.3 
+                    Based on MyBot.run v7.8.3.hotfix.
 
 	**v4.0.5** (Quality improvement update) (Thx @Approchable, @joosmega, @omora88, @vDragon, @esbestan and github beta test team for test <3)
 		» Added :
@@ -15,13 +15,18 @@
 			- Smart farm / Standard attack : humane time offset.
 			- Improved DeleteQueued, more fast and precise.
 			- Fixed fill camps.
+			- CheckArmyBuilderBase fixed.
+			- CheckArmyBuilderBase only if is necesesary.
+			- _ArraySearch "fix" 0 return.
 			
 		» Disabled :
 			- No drop on red pixel.
 
 		» Fixed from update :
+			- Updated to v7.8.3.hotfix.
 			- LS Spell from village.
 			- CheckBaseQuick.
+			- ClickFindMatch.
 			
 	**v4.0.2** (Quality improvement update) (Thx @Approchable, @joosmega, @omora88, @vDragon, @esbestan and github beta test team for test <3)
 		» Fixed / Improved :

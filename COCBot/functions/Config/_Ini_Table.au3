@@ -125,7 +125,7 @@ Func _Ini_Add($section, $key, $value)
 EndFunc   ;==>_Ini_Add
 
 Func _Ini_Update($section, $key, $value)
-	Local $iIndex = _ArraySearch($g_asIniTable, $section & "|" & $key)
+	Local $iIndex = __ArraySearch($g_asIniTable, $section & "|" & $key)
 
 	If $iIndex = -1 Then
 		_Ini_AddNewKeyValue($section, $key, $value)
@@ -135,7 +135,7 @@ Func _Ini_Update($section, $key, $value)
 EndFunc   ;==>_Ini_Update
 
 Func _Ini_Delete($section, $key)
-	Local $iIndex = _ArraySearch($g_asIniTable, $section & "|" & $key)
+	Local $iIndex = __ArraySearch($g_asIniTable, $section & "|" & $key)
 	If $iIndex <> -1 Then
 		_ArrayDelete($g_asIniTable, $iIndex)
 		$g_iIniLineCount -= 1

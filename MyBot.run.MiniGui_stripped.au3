@@ -2727,14 +2727,14 @@ Global $g_iAndroidSuspendModeFlags = 1
 Global $g_bNoFocusTampering = False
 Global $g_bAndroidAdbPortPerInstance = False
 Global $g_avAndroidAppConfig[8][16] = [ ["Nox", "nox", "No", "[CLASS:subWin; INSTANCE:1]", "", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 4, $g_iDEFAULT_HEIGHT - 10,0, "127.0.0.1:62001", 1+2+4+8+16+32 +256+512, '# ', '(nox Virtual Input|Android Input|Android_Input)', 0, 2], ["MEmu", "MEmu", "MEmu ", "[CLASS:subWin; INSTANCE:1]", "", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 51,$g_iDEFAULT_HEIGHT - 12,0, "127.0.0.1:21503", 2+4+8+16+32 +512, '# ', '(Microvirt Virtual Input|User Input)', 0, 2], ["BlueStacks2","Android", "BlueStacks ", "[CLASS:BlueStacksApp; INSTANCE:1]","_ctl.Window", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,0, "127.0.0.1:5555", 1+2+4+8+16+32 +128, '$ ', 'BlueStacks Virtual Touch', 0, 1], ["BlueStacks", "Android", "BlueStacks App Player","[CLASS:BlueStacksApp; INSTANCE:1]","_ctl.Window", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,0, "127.0.0.1:5555", 1 +8+16+32 +128, '$ ', 'BlueStacks Virtual Touch', 0, 1], ["LeapDroid", "vm1", "Leapd", "[CLASS:subWin; INSTANCE:1]", "", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,0, "emulator-5554", 1 +8+16+32 +512, '# ', 'qwerty2', 1, 1], ["iTools", "iToolsVM","iTools ", "[CLASS:subWin; INSTANCE:1]", "", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 2, $g_iDEFAULT_HEIGHT - 13,0, "127.0.0.1:54001", 1+2+4+8+16+32+64 +512, '# ', 'iTools Virtual PassThrough Input', 0, 1], ["KOPLAYER", "KOPLAYER","KOPLAYER", "[CLASS:subWin; INSTANCE:1]", "", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 64,$g_iDEFAULT_HEIGHT - 8, 0, "127.0.0.1:6555", 1+2+4+8+16+32 +512, '# ', '(ttVM Virtual Input|androidVM Virtual Input)', 0, 2], ["Droid4X", "droid4x", "Droid4X ", "[CLASS:subWin; INSTANCE:1]", "", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 10,$g_iDEFAULT_HEIGHT + 50,0, "127.0.0.1:26944", 2+4+8+16+32 +512, '# ', 'droid4x Virtual Input', 0, 2] ]
-Global $__Nox_Idx = _ArraySearch($g_avAndroidAppConfig, "Nox", 0, 0, 0, 0, 1, 0)
-Global $__MEmu_Idx = _ArraySearch($g_avAndroidAppConfig, "MEmu", 0, 0, 0, 0, 1, 0)
-Global $__BS2_Idx = _ArraySearch($g_avAndroidAppConfig, "BlueStacks2", 0, 0, 0, 0, 1, 0)
-Global $__BS_Idx = _ArraySearch($g_avAndroidAppConfig, "BlueStacks", 0, 0, 0, 0, 1, 0)
-Global $__LeapDroid_Idx = _ArraySearch($g_avAndroidAppConfig, "LeapDroid", 0, 0, 0, 0, 1, 0)
-Global $__iTools_Idx = _ArraySearch($g_avAndroidAppConfig, "iTools", 0, 0, 0, 0, 1, 0)
-Global $__KOPLAYER_Idx = _ArraySearch($g_avAndroidAppConfig, "KOPLAYER", 0, 0, 0, 0, 1, 0)
-Global $__Droid4X_Idx = _ArraySearch($g_avAndroidAppConfig, "Droid4X", 0, 0, 0, 0, 1, 0)
+Global $__Nox_Idx = __ArraySearch($g_avAndroidAppConfig, "Nox", 0, 0, 0, 0, 1, 0)
+Global $__MEmu_Idx = __ArraySearch($g_avAndroidAppConfig, "MEmu", 0, 0, 0, 0, 1, 0)
+Global $__BS2_Idx = __ArraySearch($g_avAndroidAppConfig, "BlueStacks2", 0, 0, 0, 0, 1, 0)
+Global $__BS_Idx = __ArraySearch($g_avAndroidAppConfig, "BlueStacks", 0, 0, 0, 0, 1, 0)
+Global $__LeapDroid_Idx = __ArraySearch($g_avAndroidAppConfig, "LeapDroid", 0, 0, 0, 0, 1, 0)
+Global $__iTools_Idx = __ArraySearch($g_avAndroidAppConfig, "iTools", 0, 0, 0, 0, 1, 0)
+Global $__KOPLAYER_Idx = __ArraySearch($g_avAndroidAppConfig, "KOPLAYER", 0, 0, 0, 0, 1, 0)
+Global $__Droid4X_Idx = __ArraySearch($g_avAndroidAppConfig, "Droid4X", 0, 0, 0, 0, 1, 0)
 Global $g_iAndroidBackgroundMode = 0
 Global $g_iAndroidBackgroundModeDefault = 1
 Global $g_iAndroidConfig = 0
@@ -3332,7 +3332,7 @@ Static $aNewLanguage[1][2]
 $sText = StringReplace($sText, @CRLF, "\r\n")
 Local $sDefaultText, $g_sLanguageText
 Local $SearchInLanguage = $iSection & "§" & $iKey
-Local $result = _ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
+Local $result = __ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
 If $result <> -1 Then
 Return GetTranslatedParsedText($aNewLanguage[$result][1], $var1, $var2, $var3)
 EndIf
@@ -3341,7 +3341,7 @@ $sDefaultText = IniRead($g_sDirLanguages & $g_sDefaultLanguage & ".ini", $iSecti
 If $sText = "-1" Then
 If $sDefaultText <> "-3" Then
 $sDefaultText = GetTranslatedParsedText($sDefaultText, $var1, $var2, $var3)
-Local $result = _ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
+Local $result = __ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
 If $result <> -1 Then
 $aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][0] = $SearchInLanguage
 $aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][1] = $sDefaultText
@@ -3359,7 +3359,7 @@ Local $Count = 1
 Local $aKey = IniReadSection($ini_file, $iSection)
 If IsArray($aKey) Then
 For $i = 1 To $aKey[0][0]
-If _ArraySearch($aSection, $aKey[$i][0], 0, 0, 0, 0, 1, 0) = -1 Then
+If __ArraySearch($aSection, $aKey[$i][0], 0, 0, 0, 0, 1, 0) = -1 Then
 $Count += 1
 ReDim $aSection[$Count][2]
 $aSection[$Count - 1][0] = $aKey[$i][0]
@@ -3370,7 +3370,7 @@ EndIf
 _ArraySort($aSection, 0, 0, 0, 0)
 IniWriteSection($ini_file, $iSection, $aSection, 0)
 $sText = GetTranslatedParsedText($sText, $var1, $var2, $var3)
-Local $result = _ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
+Local $result = __ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
 If $result <> -1 Then
 $aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][0] = $SearchInLanguage
 $aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][1] = $sText
@@ -3380,7 +3380,7 @@ EndIf
 Return $sText
 Else
 $sDefaultText = GetTranslatedParsedText($sDefaultText, $var1, $var2, $var3)
-Local $result = _ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
+Local $result = __ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
 If $result <> -1 Then
 $aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][0] = $SearchInLanguage
 $aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][1] = $sDefaultText
@@ -3395,7 +3395,7 @@ If $sText = "-1" Then
 If $g_sLanguageText = "-3" Then
 $sDefaultText = IniRead($g_sDirLanguages & $g_sDefaultLanguage & ".ini", $iSection, $iKey, $sText)
 $sDefaultText = GetTranslatedParsedText($sDefaultText, $var1, $var2, $var3)
-Local $result = _ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
+Local $result = __ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
 If $result <> -1 Then
 $aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][0] = $SearchInLanguage
 $aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][1] = $sDefaultText
@@ -3405,7 +3405,7 @@ EndIf
 Return $sDefaultText
 Else
 $g_sLanguageText = GetTranslatedParsedText($g_sLanguageText, $var1, $var2, $var3)
-Local $result = _ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
+Local $result = __ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
 If $result <> -1 Then
 $aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][0] = $SearchInLanguage
 $aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][1] = $g_sLanguageText
@@ -3422,7 +3422,7 @@ Local $Count = 1
 Local $aKey = IniReadSection($ini_file, $iSection)
 If IsArray($aKey) Then
 For $i = 1 To $aKey[0][0]
-If _ArraySearch($aSection, $aKey[$i][0], 0, 0, 0, 0, 1, 0) = -1 Then
+If __ArraySearch($aSection, $aKey[$i][0], 0, 0, 0, 0, 1, 0) = -1 Then
 $Count += 1
 ReDim $aSection[$Count][2]
 $aSection[$Count - 1][0] = $aKey[$i][0]
@@ -3433,7 +3433,7 @@ EndIf
 _ArraySort($aSection, 0, 0, 0, 0)
 IniWriteSection($ini_file, $iSection, $aSection, 0)
 $sText = GetTranslatedParsedText($sText, $var1, $var2, $var3)
-Local $result = _ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
+Local $result = __ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
 If $result <> -1 Then
 $aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][0] = $SearchInLanguage
 $aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][1] = $sText
@@ -3443,7 +3443,7 @@ EndIf
 Return $sText
 EndIf
 $g_sLanguageText = GetTranslatedParsedText($g_sLanguageText, $var1, $var2, $var3)
-Local $result = _ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
+Local $result = __ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
 If $result <> -1 Then
 $aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][0] = $SearchInLanguage
 $aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][1] = $g_sLanguageText
@@ -6458,6 +6458,17 @@ Return "- " & StringRegExpReplace(StringTrimLeft($Number, 1), "(\A\d{1,3}(?=(\d{
 Else
 Return StringRegExpReplace($Number, "(\A\d{1,3}(?=(\d{3})+\z)|\d{3}(?=\d))", "\1 ")
 EndIf
+EndFunc
+Func __ArraySearch(Const ByRef $aArray, $vValue, $iStart = 0, $iEnd = 0, $iCase = 0, $iCompare = 0, $iForward = 1, $iSubItem = -1, $bRow = False)
+If Not IsArray($aArray) Then Return -1
+Select
+Case($iCompare = 0)
+Return _ArraySearch($aArray, $vValue, $iStart, $iEnd, $iCase, 2, $iForward, $iSubItem, $bRow)
+Case($iCompare = 2)
+Return _ArraySearch($aArray, $vValue, $iStart, $iEnd, $iCase, 0, $iForward, $iSubItem, $bRow)
+Case Else
+Return _ArraySearch($aArray, $vValue, $iStart, $iEnd, $iCase, $iCompare, $iForward, $iSubItem, $bRow)
+EndSelect
 EndFunc
 Global Enum $eBotUpdateStats = $eBotClose + 1
 Func _GUICtrlCreateInput($sText, $iLeft, $iTop , $iWidth, $iHeight, $vStyle = -1, $vExStyle = -1)

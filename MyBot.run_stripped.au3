@@ -9,7 +9,7 @@
 #pragma compile(LegalCopyright, © https://mybot.run)
 #Au3Stripper_Off
 #Au3Stripper_On
-Global $g_sBotVersion = "v7.8.3"
+Global $g_sBotVersion = "v7.8.3.hotfix"
 Global $g_sModVersion = "v4.0.5"
 Opt("MustDeclareVars", 1)
 Global $g_sBotTitle = ""
@@ -6551,14 +6551,14 @@ Global $__MEmu_Window[4][5] = [ ["3.0.8", $g_iDEFAULT_WIDTH + 40, $g_iDEFAULT_HE
 Global $__Droid4X_Window[3][3] = [ ["0.10.0", $g_iDEFAULT_WIDTH + 6, $g_iDEFAULT_HEIGHT + 53], ["0.8.6", $g_iDEFAULT_WIDTH + 10, $g_iDEFAULT_HEIGHT + 50] ]
 Global $__Nox_Config[1][3] = [ ["3.3.0", "[CLASS:subWin; INSTANCE:1]|[CLASS:AnglePlayer_0; INSTANCE:1]", True] ]
 Global $g_avAndroidAppConfig[8][16] = [ ["Nox", "nox", "No", "[CLASS:subWin; INSTANCE:1]", "", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 4, $g_iDEFAULT_HEIGHT - 10,0, "127.0.0.1:62001", 1+2+4+8+16+32 +256+512, '# ', '(nox Virtual Input|Android Input|Android_Input)', 0, 2], ["MEmu", "MEmu", "MEmu ", "[CLASS:subWin; INSTANCE:1]", "", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 51,$g_iDEFAULT_HEIGHT - 12,0, "127.0.0.1:21503", 2+4+8+16+32 +512, '# ', '(Microvirt Virtual Input|User Input)', 0, 2], ["BlueStacks2","Android", "BlueStacks ", "[CLASS:BlueStacksApp; INSTANCE:1]","_ctl.Window", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,0, "127.0.0.1:5555", 1+2+4+8+16+32 +128, '$ ', 'BlueStacks Virtual Touch', 0, 1], ["BlueStacks", "Android", "BlueStacks App Player","[CLASS:BlueStacksApp; INSTANCE:1]","_ctl.Window", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,0, "127.0.0.1:5555", 1 +8+16+32 +128, '$ ', 'BlueStacks Virtual Touch', 0, 1], ["LeapDroid", "vm1", "Leapd", "[CLASS:subWin; INSTANCE:1]", "", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,0, "emulator-5554", 1 +8+16+32 +512, '# ', 'qwerty2', 1, 1], ["iTools", "iToolsVM","iTools ", "[CLASS:subWin; INSTANCE:1]", "", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 2, $g_iDEFAULT_HEIGHT - 13,0, "127.0.0.1:54001", 1+2+4+8+16+32+64 +512, '# ', 'iTools Virtual PassThrough Input', 0, 1], ["KOPLAYER", "KOPLAYER","KOPLAYER", "[CLASS:subWin; INSTANCE:1]", "", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 64,$g_iDEFAULT_HEIGHT - 8, 0, "127.0.0.1:6555", 1+2+4+8+16+32 +512, '# ', '(ttVM Virtual Input|androidVM Virtual Input)', 0, 2], ["Droid4X", "droid4x", "Droid4X ", "[CLASS:subWin; INSTANCE:1]", "", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 10,$g_iDEFAULT_HEIGHT + 50,0, "127.0.0.1:26944", 2+4+8+16+32 +512, '# ', 'droid4x Virtual Input', 0, 2] ]
-Global $__Nox_Idx = _ArraySearch($g_avAndroidAppConfig, "Nox", 0, 0, 0, 0, 1, 0)
-Global $__MEmu_Idx = _ArraySearch($g_avAndroidAppConfig, "MEmu", 0, 0, 0, 0, 1, 0)
-Global $__BS2_Idx = _ArraySearch($g_avAndroidAppConfig, "BlueStacks2", 0, 0, 0, 0, 1, 0)
-Global $__BS_Idx = _ArraySearch($g_avAndroidAppConfig, "BlueStacks", 0, 0, 0, 0, 1, 0)
-Global $__LeapDroid_Idx = _ArraySearch($g_avAndroidAppConfig, "LeapDroid", 0, 0, 0, 0, 1, 0)
-Global $__iTools_Idx = _ArraySearch($g_avAndroidAppConfig, "iTools", 0, 0, 0, 0, 1, 0)
-Global $__KOPLAYER_Idx = _ArraySearch($g_avAndroidAppConfig, "KOPLAYER", 0, 0, 0, 0, 1, 0)
-Global $__Droid4X_Idx = _ArraySearch($g_avAndroidAppConfig, "Droid4X", 0, 0, 0, 0, 1, 0)
+Global $__Nox_Idx = __ArraySearch($g_avAndroidAppConfig, "Nox", 0, 0, 0, 0, 1, 0)
+Global $__MEmu_Idx = __ArraySearch($g_avAndroidAppConfig, "MEmu", 0, 0, 0, 0, 1, 0)
+Global $__BS2_Idx = __ArraySearch($g_avAndroidAppConfig, "BlueStacks2", 0, 0, 0, 0, 1, 0)
+Global $__BS_Idx = __ArraySearch($g_avAndroidAppConfig, "BlueStacks", 0, 0, 0, 0, 1, 0)
+Global $__LeapDroid_Idx = __ArraySearch($g_avAndroidAppConfig, "LeapDroid", 0, 0, 0, 0, 1, 0)
+Global $__iTools_Idx = __ArraySearch($g_avAndroidAppConfig, "iTools", 0, 0, 0, 0, 1, 0)
+Global $__KOPLAYER_Idx = __ArraySearch($g_avAndroidAppConfig, "KOPLAYER", 0, 0, 0, 0, 1, 0)
+Global $__Droid4X_Idx = __ArraySearch($g_avAndroidAppConfig, "Droid4X", 0, 0, 0, 0, 1, 0)
 Global $g_bOnlyInstance = True
 Global $g_bFoundRunningAndroid = False
 Global $g_bFoundInstalledAndroid = False
@@ -11998,7 +11998,7 @@ Case Else
 $CorrectSCHED = "0"
 EndSwitch
 For $i = 1 To UBound($aPkgList)
-$iCols = _ArraySearch($aPkgList, "", 0, 0, 0, 0, 1, $i, True)
+$iCols = __ArraySearch($aPkgList, "", 0, 0, 0, 0, 1, $i, True)
 If $iCols > 9 And $aPkgList[$i - 1][$iCols - 1] = $g_sAndroidGamePackage Then
 If $bForeground = True And $aPkgList[$i - 1][8] <> $CorrectSCHED Then
 If $iRetryCount < 2 Then
@@ -12472,7 +12472,7 @@ If $g_bPullPushSharedPrefsAbdCommand Then SetDebugLog("ADB push failed, try to u
 $cmdOutput = AndroidAdbSendShellCommand("set result=$(ls -l /data/data/" & $g_sAndroidGamePackage & "/ >&2)")
 Local $aLs = Ls_l_ToArray($cmdOutput)
 SetDebugLog("Game folder: " & _ArrayToString($aLs))
-Local $iSharedPrefs = _ArraySearch($aLs, "shared_prefs")
+Local $iSharedPrefs = __ArraySearch($aLs, "shared_prefs")
 If StringInStr($cmdOutput, "Permission denied") = 0 And StringInStr($cmdOutput, "No such file or directory") = 0 And $iSharedPrefs > -1 Then
 Local $androidFolder = $g_sAndroidPicturesPath & $g_sAndroidPicturesHostFolder & $sProfileMD5
 AndroidAdbSendShellCommand("set result=$(rm -r """ & $androidFolder & """ >&2)")
@@ -12652,7 +12652,7 @@ Local $aDList[0]
 Local $bFirstTimeWDJ = True
 Local $iIndex, $wasSilentSetLog
 For $i = 1 To $aPkgList[0]
-$iIndex = _ArraySearch($_g_asDISTRIBUTORS, $aPkgList[$i], 0, 0, 0, 0, 1, 1)
+$iIndex = __ArraySearch($_g_asDISTRIBUTORS, $aPkgList[$i], 0, 0, 0, 0, 1, 1)
 If @error = 6 Then
 $wasSilentSetLog = $g_bSilentSetLog
 $g_bSilentSetLog = True
@@ -12676,7 +12676,7 @@ If UBound($aDList) = 0 Then Return FuncReturn(SetError(2, 0, ""))
 Return FuncReturn(SetError(0, 0, $aDList))
 EndFunc
 Func GetCOCPackage($sDistributor)
-Local $iIndex = _ArraySearch($_g_asDISTRIBUTORS, $sDistributor, 0, 0, 0, 0, 1, 3)
+Local $iIndex = __ArraySearch($_g_asDISTRIBUTORS, $sDistributor, 0, 0, 0, 0, 1, 3)
 If @error = 6 Then
 Return SetError(1, 0, "")
 Else
@@ -12684,7 +12684,7 @@ Return SetError(0, 0, $_g_asDISTRIBUTORS[$iIndex][1])
 EndIf
 EndFunc
 Func GetCOCClass($sDistributor)
-Local $iIndex = _ArraySearch($_g_asDISTRIBUTORS, $sDistributor, 0, 0, 0, 0, 1, 3)
+Local $iIndex = __ArraySearch($_g_asDISTRIBUTORS, $sDistributor, 0, 0, 0, 0, 1, 3)
 If @error = 6 Then
 Return SetError(1, 0, "")
 Else
@@ -12692,7 +12692,7 @@ Return SetError(0, 0, $_g_asDISTRIBUTORS[$iIndex][2])
 EndIf
 EndFunc
 Func GetCOCUnTranslated($sDistributor)
-Local $iIndex = _ArraySearch($_g_asDISTRIBUTORS, $sDistributor, 0, 0, 0, 0, 1, 3)
+Local $iIndex = __ArraySearch($_g_asDISTRIBUTORS, $sDistributor, 0, 0, 0, 0, 1, 3)
 If @error = 6 Then
 Return SetError(1, 0, $sDistributor)
 Else
@@ -12700,7 +12700,7 @@ Return SetError(0, 0, $_g_asDISTRIBUTORS[$iIndex][0])
 EndIf
 EndFunc
 Func GetCOCTranslated($sDistributor)
-Local $iIndex = _ArraySearch($_g_asDISTRIBUTORS, $sDistributor, 0, 0, 0, 0, 1, 0)
+Local $iIndex = __ArraySearch($_g_asDISTRIBUTORS, $sDistributor, 0, 0, 0, 0, 1, 0)
 If @error = 6 Then
 Return SetError(1, 0, $sDistributor)
 Else
@@ -29028,11 +29028,11 @@ Else
 _GUICtrlComboBoxEx_AddString($g_hCmbGUILanguage, $aLanguageFile[$i][1], $eMissingLangIcon, $eMissingLangIcon)
 EndIf
 Next
-_GUICtrlComboBoxEx_SetCurSel($g_hCmbGUILanguage, _GUICtrlComboBoxEx_FindStringExact($g_hCmbGUILanguage, $aLanguageFile[_ArraySearch($aLanguageFile, $g_sLanguage)][1]))
+_GUICtrlComboBoxEx_SetCurSel($g_hCmbGUILanguage, _GUICtrlComboBoxEx_FindStringExact($g_hCmbGUILanguage, $aLanguageFile[__ArraySearch($aLanguageFile, $g_sLanguage)][1]))
 EndFunc
 Func cmbLanguage()
 Local $aLanguage = _GUICtrlComboBox_GetListArray($g_hCmbGUILanguage)
-Local $g_sLanguageIndex = _ArraySearch($aLanguageFile, $aLanguage[_GUICtrlComboBox_GetCurSel($g_hCmbGUILanguage) + 1])
+Local $g_sLanguageIndex = __ArraySearch($aLanguageFile, $aLanguage[_GUICtrlComboBox_GetCurSel($g_hCmbGUILanguage) + 1])
 $g_sLanguage = $aLanguageFile[$g_sLanguageIndex][0]
 MsgBox("", "", GetTranslatedFileIni("MBR Popups", "Func_cmbLanguage", "Restart Bot to load program with new language:") & " " & $aLanguageFile[$g_sLanguageIndex][1] & " (" & $g_sLanguage & ")")
 IniWriteS($g_sProfileConfigPath, "other", "language", $g_sLanguage)
@@ -35720,7 +35720,7 @@ Func IsUnitUsed($iMatchMode, $iTroopIndex)
 If $iTroopIndex < $eKing Or($iTroopIndex >= $eSuperBarb And $iTroopIndex <= $eSuperWall) Then
 If $iMatchMode = $DT Or $iMatchMode = $TB Then Return True
 Local $aTempArray = $g_aaiTroopsToBeUsed[$g_aiAttackTroopSelection[$iMatchMode]]
-Local $iFoundAt = _ArraySearch($aTempArray, $iTroopIndex)
+Local $iFoundAt = __ArraySearch($aTempArray, $iTroopIndex)
 If $iFoundAt <> -1 Then Return True
 Return False
 Else
@@ -36278,7 +36278,7 @@ Local $aiOCRY = [-1, -1]
 Local $sKeepRemainTroops = "(King)|(Queen)|(Warden)|(Champion)|(WallW)|(BattleB)|(StoneS)"
 If Not $bRemaining Then
 $aiOCRY = GetOCRYLocation($aSlotAmountX)
-Local $iLastTroopIndex = _ArraySearch($aAttackBar, $sLastTroopName, 0, 0, 0, 0, 1, 0) + 1
+Local $iLastTroopIndex = __ArraySearch($aAttackBar, $sLastTroopName, 0, 0, 0, 0, 1, 0) + 1
 $aAttackBar = _ArrayExtract($aAttackBar, $iLastTroopIndex)
 $aSlotAmountX = _ArrayExtract($aSlotAmountX, $iLastTroopIndex)
 EndIf
@@ -36483,7 +36483,7 @@ $g_bIsHeroesDropped = False
 $g_aiDeployHeroesPosition[0] = -1
 $g_aiDeployHeroesPosition[1] = -1
 If(Ubound($g_bDeployCastleFirst) > $g_iMatchMode) And $g_bDeployCastleFirst[$g_iMatchMode] Then
-Local $aCC = _ArraySearch($listInfoDeploy, "CC", 0, 0, 0, 0, 0, 0)
+Local $aCC = __ArraySearch($listInfoDeploy, "CC", 0, 0, 0, 0, 0, 0)
 Local $aRem = _ArrayExtract($listInfoDeploy, $aCC, $aCC)
 _ArrayDelete($listInfoDeploy, $aCC)
 _ArrayInsert($listInfoDeploy, 0, $aRem)
@@ -37619,7 +37619,7 @@ $g_bIsHeroesDropped = False
 $g_aiDeployHeroesPosition[0] = -1
 $g_aiDeployHeroesPosition[1] = -1
 If(Ubound($g_bDeployCastleFirst) > $g_iMatchMode) And $g_bDeployCastleFirst[$g_iMatchMode] Then
-Local $aCC = _ArraySearch($listInfoDeploy, "CC", 0, 0, 0, 0, 0, 0)
+Local $aCC = __ArraySearch($listInfoDeploy, "CC", 0, 0, 0, 0, 0, 0)
 Local $aRem = _ArrayExtract($listInfoDeploy, $aCC, $aCC)
 _ArrayDelete($listInfoDeploy, $aCC)
 _ArrayInsert($listInfoDeploy, 0, $aRem)
@@ -38257,7 +38257,7 @@ SetLog("CSV troop name '" & $sTroopName & "' is unrecognized.")
 Return
 EndIf
 Local $bHeroDrop =($iTroopIndex = $eWarden ? True : False)
-If $iTroopIndex <= $eIceG And _ArraySearch($g_avAttackTroops, $iTroopIndex + $eSuperBarb) > -1 Then
+If $iTroopIndex <= $eIceG And __ArraySearch($g_avAttackTroops, $iTroopIndex + $eSuperBarb) > -1 Then
 SetLog("CSV contains normal troop but only super troop available, append drop quantity", $COLOR_INFO)
 $iTroopIndex += $eSuperBarb
 $qtyxpoint = Round($qtyxpoint / $g_aiSuperTroopSpace[$iTroopIndex - $eSuperBarb])
@@ -42087,7 +42087,7 @@ Local $iMaxNumberWaves = $listInfoDeploy[$i][3]
 Local $iSlotsPerEdge = $listInfoDeploy[$i][4]
 If $g_bDebugSetlog Then SetDebugLog("**ListInfoDeploy row " & $i & ": Use: " & $vTroopIndex & "|Sides: " & $iNumberSides & "|Wave: " & $iNumberWaves & "|Max Wavess: " & $iMaxNumberWaves & "|Slots per Edge " & $iSlotsPerEdge, $COLOR_DEBUG)
 If IsNumber($vTroopIndex) Then
-$iFoundTroopAt = _ArraySearch($g_avAttackTroops, $vTroopIndex, 0, 0, 0, 0, 1, 0)
+$iFoundTroopAt = __ArraySearch($g_avAttackTroops, $vTroopIndex, 0, 0, 0, 0, 1, 0)
 If $iFoundTroopAt <> -1 Then
 $iTroopAmount = Ceiling($g_avAttackTroops[$iFoundTroopAt][1] / $iMaxNumberWaves)
 $sTroopName = GetTroopName($vTroopIndex, $iTroopAmount)
@@ -42307,7 +42307,7 @@ If $iTroopIndex = -1 Then
 SetLog("'UpdateTroopQuantity' troop name '" & $sTroopName & "' is unrecognized.")
 Return
 EndIf
-Local $iFoundAt = _ArraySearch($g_avAttackTroops, $iTroopIndex)
+Local $iFoundAt = __ArraySearch($g_avAttackTroops, $iTroopIndex)
 If $iFoundAt = -1 Then
 SetLog("Couldn't find '" & $sTroopName & "' in $g_avAttackTroops", $COLOR_ERROR)
 EndIf
@@ -43135,7 +43135,7 @@ Setlog("Builder Hall detection Error!", $Color_Error)
 $g_aBuilderHallPos[0][0] = 450
 $g_aBuilderHallPos[0][1] = 425
 EndIf
-Local $iSide = _ArraySearch($sSideNames, BuilderBaseAttackMainSide(), 0, 0, 0, 0, 0, 0)
+Local $iSide = __ArraySearch($sSideNames, BuilderBaseAttackMainSide(), 0, 0, 0, 0, 0, 0)
 If $iSide < 0 Then
 SetLog("Fail AttackBB 0x2")
 Return False
@@ -44750,19 +44750,13 @@ Else
 Return
 EndIf
 If _Sleep(500) Then Return
-Local $x = 0, $iCiclo = 0
-While 1
+Local $x = 0
+While Not _ColorCheck(_GetPixelColor(820, 208, True), Hex(0xD0D0C8, 6), 20)
 If $x = 0 Then SetLog(" - Delete " & $sArmyTypeQueued & " Queued!", $COLOR_INFO)
-If _Sleep(20) Then Return
 If Not $g_bRunState Then Return
-Click($iOffsetQueued + 24, 202, 2, 50)
+Click($iOffsetQueued + 24, 202, 10, 50)
 $x += 1
-$iCiclo += 1
-If $iCiclo > Random(10, 15, 1) Then
-If Not IsQueueEmpty($sArmyTypeQueued, True, False) Then ExitLoop
-$iCiclo = 0
-EndIf
-If $x = 280 Then ExitLoop
+If $x = 270 Then ExitLoop
 WEnd
 EndFunc
 Func MakingDonatedTroops($sType = "All")
@@ -45388,8 +45382,8 @@ If $bDebug Then SetLog("$aWrongTroops: " & _ArrayToString($aWrongArmy), $COLOR_D
 If UBound($aWrongArmy) = 1 And $aWrongArmy[0][1] = "Arch" And $aWrongArmy[0][1] = 0 Then
 Else
 For $i = 0 To UBound($aWrongArmy) - 1
-If Not $bHasIncorrectTroop And _ArraySearch($g_asTroopShortNames, $aWrongArmy[$i][0]) >= 0 Then $bHasIncorrectTroop = True
-If Not $bHasIncorrectSpell And _ArraySearch($g_asSpellShortNames, $aWrongArmy[$i][0]) >= 0 Then $bHasIncorrectSpell = True
+If Not $bHasIncorrectTroop And __ArraySearch($g_asTroopShortNames, $aWrongArmy[$i][0]) >= 0 Then $bHasIncorrectTroop = True
+If Not $bHasIncorrectSpell And __ArraySearch($g_asSpellShortNames, $aWrongArmy[$i][0]) >= 0 Then $bHasIncorrectSpell = True
 If $bHasIncorrectTroop And $bHasIncorrectSpell Then ExitLoop
 Next
 If $bDebug Then SetLog("$bNeedReCheckTroopTab: " & $bNeedReCheckTroopTab & "$bNeedReCheckSpellTab: " & $bNeedReCheckSpellTab, $COLOR_DEBUG)
@@ -46180,7 +46174,7 @@ $aCurrentTroopsLog[$iTroopIndex][1] = $g_aiCurrentSuperTroops[$iTroopIndex]
 $aCurrentTroopsLog[$iTroopIndex][2] = Slot($aTroopCoords[0], $aTroopCoords[1])
 Else
 $g_aiCurrentTroops[$iTroopIndex] = Number(getBarracksNewTroopQuantity(Slot($aTroopCoords[0], $aTroopCoords[1]), 196, $bNeedCapture))
-$iDropTrophyIndex = _ArraySearch($g_avDTtroopsToBeUsed, $aTempTroopArray[0])
+$iDropTrophyIndex = __ArraySearch($g_avDTtroopsToBeUsed, $aTempTroopArray[0])
 If $iDropTrophyIndex <> -1 Then $g_avDTtroopsToBeUsed[$iDropTrophyIndex][1] += $g_aiCurrentTroops[$iTroopIndex]
 $sTroopName = $g_aiCurrentTroops[$iTroopIndex] >= 2 ? $g_asTroopNamesPlural[$iTroopIndex] : $g_asTroopNames[$iTroopIndex]
 $aCurrentTroopsLog[$iTroopIndex][0] = $sTroopName
@@ -49150,15 +49144,15 @@ SetLog("Your DPI has not been changed due some unknown error, Return= " & $aRet,
 EndIf
 EndIf
 EndFunc
-Func isGemOpen($bNeedCaptureRegion = False)
+Func isGemOpen($bNeedCaptureRegion = False, $bClick = False)
 If _Sleep($DELAYISGEMOPEN1) Then Return
 If _CheckPixel($aIsGemWindow1, $bNeedCaptureRegion) Then
 If $g_bDebugSetlog Then SetDebugLog("Gemclick Red X detect", $COLOR_DEBUG)
-PureClickP($aAway, 1, 0, "#0140")
+If($bClick = False) Then PureClickP($aAway, 1, 0, "#0140")
 Return True
 ElseIf _CheckPixel($aIsGemWindow2, $bNeedCaptureRegion) And  _CheckPixel($aIsGemWindow3, $bNeedCaptureRegion) And  _CheckPixel($aIsGemWindow4, $bNeedCaptureRegion) Then
 If $g_bDebugSetlog Then SetDebugLog("Gemclick Red Line detect", $COLOR_DEBUG)
-PureClickP($aAway, 1, 0, "#0141")
+If($bClick = False) Then PureClickP($aAway, 1, 0, "#0141")
 Return True
 EndIf
 Return False
@@ -56683,7 +56677,7 @@ _GUICtrlMenu_RemoveMenu($hSysMenu, $i)
 Else
 SetDebugLog("Show SystemMenu Item: " & $DebugInfo)
 EndIf
-ElseIf  _ArraySearch($aVisible, $id) = -1 Then
+ElseIf  __ArraySearch($aVisible, $id) = -1 Then
 _GUICtrlMenu_RemoveMenu($hSysMenu, $i)
 EndIf
 Next
@@ -67342,7 +67336,7 @@ Return False
 EndFunc
 Func ProfileSwitchAccountEnabled()
 If Not $g_bChkSwitchAcc Or Not aquireSwitchAccountMutex() Then Return False
-Return SetError(0, 0, _ArraySearch($g_asProfileName, $g_sProfileCurrentName) >= 0)
+Return SetError(0, 0, __ArraySearch($g_asProfileName, $g_sProfileCurrentName) >= 0)
 EndFunc
 Func SwitchAccountEnabled($IdxOrProfilename = $g_sProfileCurrentName)
 Local $sProfile
@@ -67352,7 +67346,7 @@ $iIdx = $IdxOrProfilename
 $sProfile = $g_asProfileName[$iIdx]
 Else
 $sProfile = $IdxOrProfilename
-$iIdx = _ArraySearch($g_asProfileName, $sProfile)
+$iIdx = __ArraySearch($g_asProfileName, $sProfile)
 EndIf
 If Not $sProfile Or $iIdx < 0 Or Not $g_abAccountNo[$iIdx] Then
 Return False
@@ -67517,7 +67511,7 @@ $g_bForceSwitch = false
 EndFunc
 Func SwitchCOCAcc($NextAccount)
 Local $abAccountNo = AccountNoActive()
-If $NextAccount < 0 And $NextAccount > $g_iTotalAcc Then $NextAccount = _ArraySearch(True, $abAccountNo)
+If $NextAccount < 0 And $NextAccount > $g_iTotalAcc Then $NextAccount = __ArraySearch(True, $abAccountNo)
 Static $iRetry = 0
 Local $bResult
 If Not $g_bRunState Then Return
@@ -70722,7 +70716,7 @@ EndFunc
 Func aquireProfileMutex($sProfile = Default, $bReturnOnlyMutex = Default, $bShowMsgBox = False)
 If $sProfile = Default Then $sProfile = $g_sProfileCurrentName
 If $bReturnOnlyMutex = Default Then $bReturnOnlyMutex = False
-Local $iProfile = _ArraySearch($g_ahMutex_Profile, $sProfile, 0, 0, 0, 0, 1, 0)
+Local $iProfile = __ArraySearch($g_ahMutex_Profile, $sProfile, 0, 0, 0, 0, 1, 0)
 If $iProfile >= 0 Then
 If $bReturnOnlyMutex Then
 Return $g_ahMutex_Profile[$iProfile][1]
@@ -70750,7 +70744,7 @@ Return 1
 EndFunc
 Func releaseProfileMutex($sProfile = Default)
 If $sProfile = Default Then $sProfile = $g_sProfileCurrentName
-Local $iProfile = _ArraySearch($g_ahMutex_Profile, $sProfile, 0, 0, 0, 0, 1, 0)
+Local $iProfile = __ArraySearch($g_ahMutex_Profile, $sProfile, 0, 0, 0, 0, 1, 0)
 If $iProfile >= 0 Then
 SetDebugLog("Release Mutex for Profile: " & $sProfile)
 ReleaseMutex($g_ahMutex_Profile[$iProfile][1])
@@ -74809,6 +74803,17 @@ Return "Save(disabled)"
 EndIf
 Return "Save"
 EndFunc
+Func __ArraySearch(Const ByRef $aArray, $vValue, $iStart = 0, $iEnd = 0, $iCase = 0, $iCompare = 0, $iForward = 1, $iSubItem = -1, $bRow = False)
+If Not IsArray($aArray) Then Return -1
+Select
+Case($iCompare = 0)
+Return _ArraySearch($aArray, $vValue, $iStart, $iEnd, $iCase, 2, $iForward, $iSubItem, $bRow)
+Case($iCompare = 2)
+Return _ArraySearch($aArray, $vValue, $iStart, $iEnd, $iCase, 0, $iForward, $iSubItem, $bRow)
+Case Else
+Return _ArraySearch($aArray, $vValue, $iStart, $iEnd, $iCase, $iCompare, $iForward, $iSubItem, $bRow)
+EndSelect
+EndFunc
 Func _ImageSearchXML($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "0,0,860,732", $bForceCapture = True, $bDebugLog = False, $bCheckDuplicatedpoints = False, $iDistance2check = 25, $iLevel = 0)
 FuncEnter(_ImageSearchXML)
 $g_aImageSearchXML = -1
@@ -74947,12 +74952,12 @@ PureClick(Random($g_aImageSearchXML[0][1] + 28, $g_aImageSearchXML[0][1] + 180, 
 $bFail = False
 ContinueCase
 Case isGemOpen(True, True)
-Return False
+Return(isGemOpen(True, True)) ?(False) :(True)
 Case IsMainPage(1)
 Setlog("ClickFindMatch | Main located fail.", $COLOR_ERROR)
 $bFail = True
 ExitLoop
-Case WaitImage(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", "G", 2, 100, "356, 424, 518, 502") Then
+Case WaitImage(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", "G", 2, 100, "356, 424, 518, 502")
 Setlog("ClickFindMatch | ClickFindMatch fail.", $COLOR_ERROR)
 Click(Random(286, 740, 1), Random(67, 179, 1))
 $bFail = True
@@ -75892,7 +75897,7 @@ $splitedToDelete = _StringEqualSplit($IndexesToDelete, StringLen($IndexesToDelet
 EndIf
 Local $searchResult = -1
 For $i = 0 To(UBound($Arr) - 1)
-$searchResult = _ArraySearch($splitedToDelete, $i)
+$searchResult = __ArraySearch($splitedToDelete, $i)
 If $searchResult > -1 And StringLen($splitedToDelete[$searchResult]) > 0 Then ContinueLoop
 $tmpArr[$i][0] = $Arr[$i][0]
 $tmpArr[$i][1] = $Arr[$i][1]
@@ -75960,7 +75965,7 @@ $splitedToDelete = _StringEqualSplit($IndexesToDelete, StringLen($IndexesToDelet
 EndIf
 Local $searchResult = -1
 For $i = 0 To(UBound($Arr) - 1)
-$searchResult = _ArraySearch($splitedToDelete, $i)
+$searchResult = __ArraySearch($splitedToDelete, $i)
 If $searchResult > -1 And StringLen($splitedToDelete[$searchResult]) > 0 Then ContinueLoop
 $tmpArr[$i][0] = $Arr[$i][0]
 $tmpArr[$i][1] = $Arr[$i][1]
@@ -80693,8 +80698,6 @@ If $g_bRestart Or(Not $g_bRunState) Then Return
 If $g_bRestart Or(Not $g_bRunState) Then Return
 BuilderBaseReport()
 RestAttacksInBB()
-If $g_bRestart Or(Not $g_bRunState) Then Return
-If RestAttacksInBB() = True Then CheckArmyBuilderBase()
 Local $aRndFuncList = ['ClockTower', 'AttackBB']
 _ArrayShuffle($aRndFuncList)
 For $iIndex In $aRndFuncList
@@ -81545,7 +81548,7 @@ Local $sDropSide = StringUpper($aDROP[5])
 Local $sQty = StringUpper($aDROP[1])
 If $sQty = "ALL" Then
 For $i = 0 To UBound($aAvailableTroops_NXQ) - 1
-If(StringInStr($aAvailableTroops[$i][0], $sTroopName) > 0) Then
+If(StringInStr($aAvailableTroops_NXQ[$i][0], $sTroopName) > 0) Then
 If(StringInStr($sTroopName, "Machine") > 0) Then
 $aAvailableTroops_NXQ[$i][4] = 1
 Else
@@ -82057,6 +82060,7 @@ ClickP($aAway, 1, 0, "#0000")
 If _Sleep(1500) Then Return
 SetLog("Troops need to be trained in the training tab.", $COLOR_INFO)
 CheckArmyBuilderBase()
+$bIsReady = False
 Return False
 EndIf
 If QuickMis("BC1", $g_sImgFullArmyBB, 108, 355, 431, 459, True, False) Then
@@ -82737,7 +82741,7 @@ SetLog("BuilderBaseSelectCorrectScript 0x13 error.", $COLOR_ERROR)
 Return
 EndIf
 For $i = 0 To UBound($aCamps) - 1
-$aCamps[$i] = _ArraySearch($g_asBBTroopShortNames, $aCamps[$i]) < 0 ?("Barb") : _ArraySearch($g_asBBTroopShortNames, $aCamps[$i])
+$aCamps[$i] = __ArraySearch($g_asBBTroopShortNames, $aCamps[$i]) < 0 ?("Barb") : __ArraySearch($g_asBBTroopShortNames, $aCamps[$i])
 Next
 _ArraySort($aCamps, 0, 0, 0, 1)
 For $i = 0 To UBound($aCamps) - 1
@@ -82791,7 +82795,7 @@ PureClick($aAttackBar[$j][1] + Random(1, 5, 1), $aAttackBar[$j][2] + Random(1, 5
 If RandomSleep(1000) Then Return
 Setlog("Selected " & FullNametroops($aCamps[$i]) & " X:| " & $aAttackBar[$j][1] & " Y:| " & $aAttackBar[$j][2], $COLOR_SUCCESS)
 $aNewAvailableTroops[$i][0] = $aCamps[$i]
-$aNewAvailableTroops[$i][1] = _ArraySearch($g_asBBTroopShortNames, $aCamps[$i])
+$aNewAvailableTroops[$i][1] = __ArraySearch($g_asBBTroopShortNames, $aCamps[$i])
 _ArraySort($aNewAvailableTroops, 0, 0, 0, 1)
 If $g_bDebugSetlog Then Setlog("New tab is " & _ArrayToString($aNewAvailableTroops, "-", -1, -1, "|", -1, -1), $COLOR_INFO)
 $i = -1
@@ -82881,44 +82885,30 @@ Local $aCmbCampsInBBGUILimited = _ArrayExtract($g_iCmbCampsBB, 0, UBound($aResul
 Local $iArmyCampsInBBLimited = _ArrayExtract($iArmyCampsInBB, 0, UBound($aResults)-1)
 Local $aTroops = _ImageSearchXML($g_sImgPathTroopsTrain, 100, "40, 242, 820, 330", True, $bDebugLog)
 Local $aTrainLikeBoss[$eBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Local $aTrainedLikeBoss[$eBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 For $i = 0 To UBound($aCmbCampsInBBGUILimited) -1
 Local $i2 = $aCmbCampsInBBGUILimited[$i]
 $aTrainLikeBoss[$i2] += 1
 Next
-For $i = 0 To UBound($aResults) - 1
-Local $iX = $aResults[$i][1]
-Local $iY = $aResults[$i][2]
-For $i2 = UBound($aTroops) - 1 To 0 Step -1
-If((Int($iX - 20) < $aTroops[$i2][1]) And(Int($iX + 100) > $aTroops[$i2][1])) Then
-Local $i3 = -1
-For $iN2 = UBound($aTroops) -1 To 0 Step -1
-For $iN = 0 To UBound($asAttackBarBB) -1
-If String($asAttackBarBB[$iN]) == String($aTroops[$iN2][0]) Then
-$i3 = $iN
-If($i3 = -1) Then ExitLoop
-SetDebugLog("DetectCamps names: " & $asAttackBarBB[$iN] & " | " & $aTroops[$iN2][0])
-$aTrainLikeBoss[$iN] -= 1
-_ArrayDelete($aTroops, $iN2)
-ContinueLoop 2
+For $i2 = 0 To UBound($aTroops) - 1
+Local $iA = __ArraySearch($asAttackBarBB, $aTroops[$i2][0])
+If($iA > -1) Then
+If(Int($aTrainLikeBoss[$iA]) < Int($aTrainedLikeBoss[$iA])) Then
+DeleteTroop($aTroops[$i2][1], $aTroops[$i2][2])
+Else
+$aTrainedLikeBoss[$iA] += 1
+$aTrainLikeBoss[$iA] -= 1
 EndIf
-Next
-Next
-SetDebugLog("DetectCamps: " & $i3 & "|" & $aTroops[$i2][0])
+Else
+DeleteTroop($aTroops[$i2][1], $aTroops[$i2][2])
 EndIf
-If _Sleep(Random((200*90)/100,(300*110)/100, 1), False) Then Return
-Next
-If _ColorCheck(_GetPixelColor($iX + 60, $iY - 75, True), Hex(0xCDCDC6, 6), 15) Then ContinueLoop
-If DeleteTroop($iX, $iY) And Then Setlog("Builder base army: Troop not recognized, eliminated.", $COLOR_WARNING)
 Next
 Local $iFillFix = 0
-Local $bIsLlog = False
 For $i = 0 To UBound($aTrainLikeBoss) -1
-If($aTrainLikeBoss[$i] > 0) Then
-If(LocateTroopButton($i) <> 0) Then
-If $bIsLlog = False Then
-SetLog("Builder base army - Train :", $COLOR_SUCCESS)
-$bIsLlog = True
-EndIf
+If($i = 0) Then SetLog("Builder base army - Train check.", $COLOR_SUCCESS)
+If($aTrainLikeBoss[$i] <> 0) And Not StringIsSpace($aTrainLikeBoss[$i]) Then
+Local $aLocateTroopButton = LocateTroopButton($i)
+If IsArray($aLocateTroopButton) Then
 SetLog("- x" & $aTrainLikeBoss[$i] & " " & $g_avStarLabTroops[$i+1][3], $COLOR_SUCCESS)
 MyTrainClick($g_aTroopButton, $aTrainLikeBoss[$i])
 $iFillFix = $g_aTroopButton
@@ -82942,25 +82932,24 @@ EndIf
 If $bOnlyCheck = False Then Setlog("Builder base army: Fail DeleteTroop.", $COLOR_ERROR)
 Return False
 EndFunc
-Func LocateTroopButton($iTroopButton, $sImgTrain = $g_sImgPathTroopsTrain, $sRegionForScan = "37, 479, 891, 579")
+Func LocateTroopButton($iTroopButton, $sImgTrain = $g_sImgPathTroopsTrain, $sRegionForScan = "37, 479, 891, 579", $bDebugLog = False)
 Global $g_aTroopButton[2] = [0, 0]
 Local $asAttackBarBB = $g_asAttackBarBB2
-Local $bDebugLog = False, $iButtonIsIn
-If($iTroopButton > UBound($asAttackBarBB) -1) Then SetLog("Train army on BB: Troop not rocognized, it return first.", $COLOR_ERROR)
-For $i = 0 To 5
-Local $aTroopPosition = _ImageSearchXML($g_sImgPathTroopsTrain, 0, $sRegionForScan, True, False, True, 25)
-If $aTroopPosition = 0 Or UBound($aTroopPosition) < 1 Then Return 0
-$iButtonIsIn = _ArraySearch($aTroopPosition, $asAttackBarBB[$iTroopButton], 0, 0, 0, 1)
-SetDebugLog("LocateTroopButton: " & "_ArraySearch($aTroopPosition, $asAttackBarBB[$iTroopButton]) " & $iButtonIsIn)
+Local $iButtonIsIn, $aTroopPosition
+If($iTroopButton >(UBound($asAttackBarBB) -1)) Then SetLog("Train army on BB: Troop not rocognized, it return first.", $COLOR_ERROR)
+For $i = 0 To 3
+Local $iButtonIsIn = __ArraySearch(_ImageSearchXML($g_sImgPathTroopsTrain, 0, $sRegionForScan, True, False, True, 25), $g_asAttackBarBB2[$iTroopButton])
+$aTroopPosition = $g_aImageSearchXML
+SetDebugLog("LocateTroopButton: " & "__ArraySearch($aTroopPosition, $asAttackBarBB[$iTroopButton]) " & $aTroopPosition)
 If($iButtonIsIn > -1) Then
 $g_aTroopButton[0] = $aTroopPosition[$iButtonIsIn][1]
 $g_aTroopButton[1] = $aTroopPosition[$iButtonIsIn][2]
 Return $g_aTroopButton
-ElseIf _ArraySearch($asAttackBarBB , $aTroopPosition[0][0], 0, 0, 0, 1) < $iTroopButton Then
+ElseIf __ArraySearch($asAttackBarBB , $aTroopPosition[0][0]) < $iTroopButton Then
 SetDebugLog("LocateTroopButton: " & "ClickDrag(575, 522, 280, 522, 50)")
 ClickDrag(575, 522, 280, 522, 50)
 If _Sleep(Random((400*90)/100,(400*110)/100, 1)) Then Return
-ElseIf _ArraySearch($asAttackBarBB, $aTroopPosition[UBound($aTroopPosition)-1][0], 0, 0, 0, 1) > $iTroopButton Then
+ElseIf __ArraySearch($asAttackBarBB, $aTroopPosition[UBound($aTroopPosition)-1][0]) > $iTroopButton Then
 SetDebugLog("LocateTroopButton: " & "ClickDrag(280, 522, 575, 522, 50)")
 ClickDrag(280, 522, 575, 522, 50)
 If _Sleep(Random((400*90)/100,(400*110)/100, 1)) Then Return
@@ -82979,14 +82968,13 @@ Local $iHLFClickMin = 7, $iHLFClickMax = 14
 Local $isldHLFClickDelayTime = 2000
 Local $iRandNum = Random($iHLFClickMin-1,$iHLFClickMax-1,1)
 Local $iRandX = Random($x - 5,$x + 5,1),$iRandY = Random($y - 5,$y + 5,1)
-If isProblemAffect(True) Then Return
 For $i = 0 To $iTimes - 1
 PureClick(Random($iRandX-2,$iRandX+2,1), Random($iRandY-2,$iRandY+2,1))
 If($i >= $iRandNum) Then
 $iRandNum = $iRandNum + Random($iHLFClickMin,$iHLFClickMax,1)
 $iRandX = Random($x - 5, $x + 5,1)
 $iRandY = Random($y - 5, $y + 5,1)
-If _Sleep(Random(($isldHLFClickDelayTime*138))/100,(($isldHLFClickDelayTime*138)*2)/100, 1), False) Then Return
+If _Sleep(Random(($isldHLFClickDelayTime*138)/100,(($isldHLFClickDelayTime*138)*2)/100, 1), False) Then Return
 Else
 If _Sleep(Random(($isldHLFClickDelayTime*138)/100,(($isldHLFClickDelayTime*138)*3)/100, 1), False) Then Return
 EndIf
@@ -83941,7 +83929,7 @@ Static $aNewLanguage[1][2]
 $sText = StringReplace($sText, @CRLF, "\r\n")
 Local $sDefaultText, $g_sLanguageText
 Local $SearchInLanguage = $iSection & "§" & $iKey
-Local $result = _ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
+Local $result = __ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
 If $result <> -1 Then
 Return GetTranslatedParsedText($aNewLanguage[$result][1], $var1, $var2, $var3)
 EndIf
@@ -83950,7 +83938,7 @@ $sDefaultText = IniRead($g_sDirLanguages & $g_sDefaultLanguage & ".ini", $iSecti
 If $sText = "-1" Then
 If $sDefaultText <> "-3" Then
 $sDefaultText = GetTranslatedParsedText($sDefaultText, $var1, $var2, $var3)
-Local $result = _ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
+Local $result = __ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
 If $result <> -1 Then
 $aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][0] = $SearchInLanguage
 $aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][1] = $sDefaultText
@@ -83968,7 +83956,7 @@ Local $Count = 1
 Local $aKey = IniReadSection($ini_file, $iSection)
 If IsArray($aKey) Then
 For $i = 1 To $aKey[0][0]
-If _ArraySearch($aSection, $aKey[$i][0], 0, 0, 0, 0, 1, 0) = -1 Then
+If __ArraySearch($aSection, $aKey[$i][0], 0, 0, 0, 0, 1, 0) = -1 Then
 $Count += 1
 ReDim $aSection[$Count][2]
 $aSection[$Count - 1][0] = $aKey[$i][0]
@@ -83979,7 +83967,7 @@ EndIf
 _ArraySort($aSection, 0, 0, 0, 0)
 IniWriteSection($ini_file, $iSection, $aSection, 0)
 $sText = GetTranslatedParsedText($sText, $var1, $var2, $var3)
-Local $result = _ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
+Local $result = __ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
 If $result <> -1 Then
 $aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][0] = $SearchInLanguage
 $aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][1] = $sText
@@ -83989,7 +83977,7 @@ EndIf
 Return $sText
 Else
 $sDefaultText = GetTranslatedParsedText($sDefaultText, $var1, $var2, $var3)
-Local $result = _ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
+Local $result = __ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
 If $result <> -1 Then
 $aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][0] = $SearchInLanguage
 $aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][1] = $sDefaultText
@@ -84004,7 +83992,7 @@ If $sText = "-1" Then
 If $g_sLanguageText = "-3" Then
 $sDefaultText = IniRead($g_sDirLanguages & $g_sDefaultLanguage & ".ini", $iSection, $iKey, $sText)
 $sDefaultText = GetTranslatedParsedText($sDefaultText, $var1, $var2, $var3)
-Local $result = _ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
+Local $result = __ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
 If $result <> -1 Then
 $aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][0] = $SearchInLanguage
 $aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][1] = $sDefaultText
@@ -84014,7 +84002,7 @@ EndIf
 Return $sDefaultText
 Else
 $g_sLanguageText = GetTranslatedParsedText($g_sLanguageText, $var1, $var2, $var3)
-Local $result = _ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
+Local $result = __ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
 If $result <> -1 Then
 $aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][0] = $SearchInLanguage
 $aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][1] = $g_sLanguageText
@@ -84031,7 +84019,7 @@ Local $Count = 1
 Local $aKey = IniReadSection($ini_file, $iSection)
 If IsArray($aKey) Then
 For $i = 1 To $aKey[0][0]
-If _ArraySearch($aSection, $aKey[$i][0], 0, 0, 0, 0, 1, 0) = -1 Then
+If __ArraySearch($aSection, $aKey[$i][0], 0, 0, 0, 0, 1, 0) = -1 Then
 $Count += 1
 ReDim $aSection[$Count][2]
 $aSection[$Count - 1][0] = $aKey[$i][0]
@@ -84042,7 +84030,7 @@ EndIf
 _ArraySort($aSection, 0, 0, 0, 0)
 IniWriteSection($ini_file, $iSection, $aSection, 0)
 $sText = GetTranslatedParsedText($sText, $var1, $var2, $var3)
-Local $result = _ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
+Local $result = __ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
 If $result <> -1 Then
 $aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][0] = $SearchInLanguage
 $aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][1] = $sText
@@ -84052,7 +84040,7 @@ EndIf
 Return $sText
 EndIf
 $g_sLanguageText = GetTranslatedParsedText($g_sLanguageText, $var1, $var2, $var3)
-Local $result = _ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
+Local $result = __ArraySearch($aNewLanguage, $SearchInLanguage, 0, 0, 0, 0, 0)
 If $result <> -1 Then
 $aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][0] = $SearchInLanguage
 $aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][1] = $g_sLanguageText
@@ -84072,7 +84060,7 @@ Local $aKey = IniReadSection($ini_file, $aSection[$i])
 If IsArray($aKey) Then
 ReDim $aNewLanguage[$Count + UBound($aKey) - 1][2]
 For $j = 1 To Ubound($aKey) - 1
-If _ArraySearch($aNewLanguage, $aSection[$i] & "§" & $aKey[$j][0], 0, 0, 0, 0, 1, 0) = -1 Then
+If __ArraySearch($aNewLanguage, $aSection[$i] & "§" & $aKey[$j][0], 0, 0, 0, 0, 1, 0) = -1 Then
 $aNewLanguage[$Count][0] = $aSection[$i] & "§" & $aKey[$j][0]
 $aNewLanguage[$Count][1] = $aKey[$j][1]
 $Count += 1
@@ -85127,7 +85115,7 @@ If Not $g_bRunState Then Return
 If $g_bFirstStart Then SetDebugLog("First loop completed!")
 $g_bFirstStart = False
 If Not $g_bChkOnlyFarm Then ChatActions()
-If ProfileSwitchAccountEnabled() And($g_iCommandStop = 0 Or $g_iCommandStop = 3 Or $g_abDonateOnly[$g_iCurAccount] or $g_bForceSwitch) Then checkSwitchAcc()
+If ProfileSwitchAccountEnabled() And($g_iCommandStop = 0 Or $g_iCommandStop = 3 Or $g_abDonateOnly[$g_iCurAccount] Or $g_bForceSwitch) Then checkSwitchAcc()
 If IsSearchAttackEnabled() Then
 Idle()
 If _Sleep($DELAYRUNBOT3) Then Return

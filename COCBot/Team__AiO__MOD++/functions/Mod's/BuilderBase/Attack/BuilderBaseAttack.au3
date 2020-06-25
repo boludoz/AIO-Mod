@@ -207,6 +207,7 @@ Func ArmyStatus(ByRef $bIsReady)
 		If _Sleep(1500) Then Return ; Team AIO Mod++ Then Return
 		SetLog("Troops need to be trained in the training tab.", $COLOR_INFO)
 		CheckArmyBuilderBase()
+		$bIsReady = False
 		Return False
 
 	EndIf

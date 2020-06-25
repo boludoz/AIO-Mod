@@ -128,7 +128,7 @@ Func _DelPosWithDiff1(ByRef $Arr, $xDiff, $yDiff, $ReturnAsString = True, $And =
 		Local $searchResult = -1
 
 		For $i = 0 To (UBound($Arr) - 1)
-			$searchResult = _ArraySearch($splitedToDelete, $i)
+			$searchResult = __ArraySearch($splitedToDelete, $i)
 			If $searchResult > -1 And StringLen($splitedToDelete[$searchResult]) > 0 Then ContinueLoop ; If The Array Index Should be Deleted
 			$tmpArr[$i][0] = $Arr[$i][0]
 			$tmpArr[$i][1] = $Arr[$i][1]
@@ -202,7 +202,7 @@ Func _DelPosWithDiff2(ByRef $sResult, $xDiff, $yDiff, $ReturnAsString = True, $A
 		Local $searchResult = -1
 
 		For $i = 0 To (UBound($Arr) - 1)
-			$searchResult = _ArraySearch($splitedToDelete, $i)
+			$searchResult = __ArraySearch($splitedToDelete, $i)
 			If $searchResult > -1 And StringLen($splitedToDelete[$searchResult]) > 0 Then ContinueLoop ; If The Array Index Should be Deleted
 			$tmpArr[$i][0] = $Arr[$i][0]
 			$tmpArr[$i][1] = $Arr[$i][1]

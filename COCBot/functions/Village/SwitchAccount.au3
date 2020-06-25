@@ -15,7 +15,7 @@
 ; Return True or False if Switch Account is enabled and current profile in configured list
 Func ProfileSwitchAccountEnabled()
 	If Not $g_bChkSwitchAcc Or Not aquireSwitchAccountMutex() Then Return False
-	Return SetError(0, 0, _ArraySearch($g_asProfileName, $g_sProfileCurrentName) >= 0)
+	Return SetError(0, 0, __ArraySearch($g_asProfileName, $g_sProfileCurrentName) >= 0)
 EndFunc   ;==>ProfileSwitchAccountEnabled
 
 ; Return True or False if specified Profile is enabled for Switch Account and controlled by this bot instance
@@ -27,7 +27,7 @@ Func SwitchAccountEnabled($IdxOrProfilename = $g_sProfileCurrentName)
 		$sProfile = $g_asProfileName[$iIdx]
 	Else
 		$sProfile = $IdxOrProfilename
-		$iIdx = _ArraySearch($g_asProfileName, $sProfile)
+		$iIdx = __ArraySearch($g_asProfileName, $sProfile)
 	EndIf
 
 	If Not $sProfile Or $iIdx < 0 Or Not $g_abAccountNo[$iIdx] Then
@@ -228,7 +228,7 @@ EndFunc   ;==>CheckSwitchAcc
 
 Func SwitchCOCAcc($NextAccount)
 	Local $abAccountNo = AccountNoActive()
-	If $NextAccount < 0 And $NextAccount > $g_iTotalAcc Then $NextAccount = _ArraySearch(True, $abAccountNo)
+	If $NextAccount < 0 And $NextAccount > $g_iTotalAcc Then $NextAccount = __ArraySearch(True, $abAccountNo)
 	Static $iRetry = 0
 	Local $bResult
 	If Not $g_bRunState Then Return

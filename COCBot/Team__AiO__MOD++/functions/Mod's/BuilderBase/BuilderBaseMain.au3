@@ -45,9 +45,9 @@ Func runBuilderBase($bTestRun = False)
 
 		Return False
 	EndIf
-	
+
 	If not SwitchBetweenBases(True, "Builder Base") Then Return False
-	
+
 	SetLog("Builder loop starts.", $COLOR_INFO)
 	If randomSleep(1000) Then Return
 	If $g_bRestart Or (Not $g_bRunState) Then Return
@@ -61,9 +61,9 @@ Func runBuilderBase($bTestRun = False)
 	BuilderBaseReport()
 	RestAttacksInBB()
 
-	; Fill/check Army Camps only If is necessary attack
-	If $g_bRestart Or (Not $g_bRunState) Then Return
-	If RestAttacksInBB() = True Then CheckArmyBuilderBase()
+;~ 	; Fill/check Army Camps only If is necessary attack
+;~ 	If $g_bRestart Or (Not $g_bRunState) Then Return
+;~ 	If RestAttacksInBB() = True Then CheckArmyBuilderBase()
 
 	; Logic here
 		Local $aRndFuncList = ['ClockTower', 'AttackBB']
@@ -73,10 +73,10 @@ Func runBuilderBase($bTestRun = False)
 			If $g_bRestart Or (Not $g_bRunState) Then Return
 		Next
 	; ----------
-	
+
 	; Check obstacles
 	If checkObstacles(True) Then SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
-	
+
 	; Logic here
 		Local $aRndFuncList = ['ElixirUpdate', 'GoldUpdate']
 		_ArrayShuffle($aRndFuncList)
@@ -88,7 +88,7 @@ Func runBuilderBase($bTestRun = False)
 
 	; switch back to normal village
 	If Not $g_bChkPlayBBOnly Then SwitchBetweenBases(True, "Normal Village")
-	
+
 	If Not $g_bRunState Then Return
 
 	If _Sleep($DELAYRUNBOT1 * 15) Then Return ;Add 15 Sec Delay Before Starting Again In BB Only
@@ -102,7 +102,7 @@ EndFunc   ;==>runBuilderBase
 Func RunBBFuncs($sBBFunc, $bTestRun = False)
 	; It will not be necessary if there are no constructors.
 	BuilderBaseReport()
-	
+
 	; Zoomout
 	If $g_iFreeBuilderCountBB <> 0 Then BuilderBaseZoomOut()
 
@@ -110,37 +110,37 @@ Func RunBBFuncs($sBBFunc, $bTestRun = False)
 		Case "ClockTower"
 			;It will not be necessary if there are no constructors.
 			If $g_iFreeBuilderCountBB = 0 Then Return
-			
+
 			; Zoomout
 			BuilderBaseZoomOut()
-			
+
 			; Clock Tower Boost
 			StartClockTowerBoost()
-		
+
 			; Get Benfit of Boost and clean all yard
 			CleanBBYard()
-	
+
 		Case "AttackBB"
 			; New logic to add speed to the attack.
 			For $i = 0 To Random(3,5,1)
 				; Builder base Report
 				BuilderBaseReport()
 				RestAttacksInBB()
-		
+
 				; Check obstacles
 				If checkObstacles(True) Then
 					SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
 					ExitLoop
 				EndIf
-			
+
 				; Attack
 				If RestAttacksInBB() = True Then BuilderBaseAttack($bTestRun)
 				RestAttacksInBB()
-		
+
 				; Get out of the useless loop.
 				If ($g_iAvailableAttacksBB = 0) Then ExitLoop
 			Next
-			
+
 		Case "ElixirUpdate"
 			; ELIXIR -----------
 			; It tends to be a little better, upgrade the troops first.
@@ -148,14 +148,14 @@ Func RunBBFuncs($sBBFunc, $bTestRun = False)
 
 			; It will not be necessary if there are no constructors.
 			If $g_iFreeBuilderCountBB = 0 Then Return
-			
+
 			; Zoomout
 			BuilderBaseZoomOut()
 
 			; Upgrade Machine
 			BattleMachineUpgrade()
 			; ------------------
-			
+
 		Case "GoldUpdate"
 			;It will not be necessary if there are no constructors.
 			If $g_iFreeBuilderCountBB = 0 Then Return
@@ -163,7 +163,7 @@ Func RunBBFuncs($sBBFunc, $bTestRun = False)
 			; GOLD -----------
 			; Upgrade builds.
 			MainSuggestedUpgradeCode()
-			
+
 			; The level of the walls does not matter so much.
 			WallsUpgradeBB()
 			; ------------------
@@ -172,7 +172,7 @@ EndFunc
 
 Func RestAttacksInBB()
 	$g_iAvailableAttacksBB = Ubound(findMultipleQuick($g_sImgAvailableAttacks, 0, "25, 626, 97, 651", Default, Default, False, 0))
-	If $g_iAvailableAttacksBB <> 0 and $g_bChkBBStopAt3 Then 
+	If $g_iAvailableAttacksBB <> 0 and $g_bChkBBStopAt3 Then
 		Setlog("You have " & $g_iAvailableAttacksBB & " available attack(s). I will stop attacking when there isn't.", $COLOR_SUCCESS)
 		Return True
 	ElseIf $g_bChkBBStopAt3 <> True Then

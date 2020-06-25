@@ -103,10 +103,12 @@ Global $g_hFrmBotEmbeddedMouse = 0
 
 #include "COCBot\MBR GUI Design Mini.au3"
 #include "COCBot\functions\Config\readConfig.au3"
+
 ; Team AiO MOD++ (2019)
 #include "COCBot\Team__AiO__MOD++\functions\Config\readConfig.au3"
 #include "COCBot\functions\Other\UpdateStats.Mini.au3"
 #include "COCBot\functions\Other\_NumberFormat.au3"
+#include "COCBot\Team__AiO__MOD++\functions\AU3\FixedArray.au3"
 
 Global Enum $eBotUpdateStats = $eBotClose + 1
 

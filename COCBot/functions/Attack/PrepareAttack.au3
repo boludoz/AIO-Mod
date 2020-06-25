@@ -302,7 +302,7 @@ Func IsUnitUsed($iMatchMode, $iTroopIndex)
 	If $iTroopIndex < $eKing Or ($iTroopIndex >= $eSuperBarb And $iTroopIndex <= $eSuperWall) Then ;Index is a Troop
 		If $iMatchMode = $DT Or $iMatchMode = $TB Then Return True
 		Local $aTempArray = $g_aaiTroopsToBeUsed[$g_aiAttackTroopSelection[$iMatchMode]]
-		Local $iFoundAt = _ArraySearch($aTempArray, $iTroopIndex)
+		Local $iFoundAt = __ArraySearch($aTempArray, $iTroopIndex)
 		If $iFoundAt <> -1 Then	Return True
 		Return False
 	Else ; Index is a Hero/Siege/Castle/Spell

@@ -24,7 +24,7 @@ Func WindowSystemMenu($HWnD, $iButton, $Action = Default, $DebugInfo = "")
 				Else
 					SetDebugLog("Show SystemMenu Item: " & $DebugInfo)
 				EndIf
-			ElseIf  _ArraySearch($aVisible, $id) = -1 Then
+			ElseIf  __ArraySearch($aVisible, $id) = -1 Then
 				_GUICtrlMenu_RemoveMenu($hSysMenu, $i)
 			EndIf
 
