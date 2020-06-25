@@ -39,4 +39,4 @@ DROP   |10 |Barb       |1-10        |1        |LEFT     |500        |launch barb
 DROP   |10 |Barb       |1-10        |1        |FRONT    |500        |launch barbarians on right side just to take some exposed buildings/trigger traps
 DROP   |10 |Barb       |1-10        |1        |FRONT    |500        |launch barbarians on right side just to take some exposed buildings/trigger traps
 DROP   |all|Barb       |2-5         |1        |FRONT    |0          |launch remaining barbarians on opposite Crusher side
-Drop   |1  |Machine    |5			|1		  |FRONT    |0          |launch Machine on opposite Crusher side
+DROP   |1  |Machine    |5			|1		  |FRONT    |0          |launch Machine on opposite Crusher side

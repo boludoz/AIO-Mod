@@ -254,7 +254,7 @@ Func ExtendedAttackBarCheck($aAttackBarFirstSearch, $bRemaining, $sSearchDiamond
 
 	If Not $bRemaining Then
 		$aiOCRY = GetOCRYLocation($aSlotAmountX)
-		Local $iLastTroopIndex = __ArraySearch($aAttackBar, $sLastTroopName, 0, 0, 0, 0, 1, 0) + 1
+		Local $iLastTroopIndex = _ArraySearch($aAttackBar, $sLastTroopName, 0, 0, 0, 0, 1, 0) + 1
 		$aAttackBar = _ArrayExtract($aAttackBar, $iLastTroopIndex)
 		$aSlotAmountX = _ArrayExtract($aSlotAmountX, $iLastTroopIndex)
 	EndIf

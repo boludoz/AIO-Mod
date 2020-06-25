@@ -619,7 +619,7 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 	
 	#Region - Drop CC first - Team AIO Mod++ (By Boludoz)
 	If (Ubound($g_bDeployCastleFirst) > $g_iMatchMode) And $g_bDeployCastleFirst[$g_iMatchMode] Then
-		Local $aCC = __ArraySearch($listInfoDeploy, "CC", 0, 0, 0, 0, 0, 0)
+		Local $aCC = _ArraySearch($listInfoDeploy, "CC", 0, 0, 0, 0, 0, 0)
 		Local $aRem = _ArrayExtract($listInfoDeploy, $aCC, $aCC)
 		_ArrayDelete($listInfoDeploy, $aCC)
 		_ArrayInsert($listInfoDeploy, 0, $aRem)

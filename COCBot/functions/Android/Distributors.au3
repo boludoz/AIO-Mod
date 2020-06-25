@@ -57,7 +57,7 @@ Func GetCOCDistributors()
 	Local $iIndex, $wasSilentSetLog
 
 	For $i = 1 To $aPkgList[0]
-		$iIndex = __ArraySearch($_g_asDISTRIBUTORS, $aPkgList[$i], 0, 0, 0, 0, 1, 1)
+		$iIndex = _ArraySearch($_g_asDISTRIBUTORS, $aPkgList[$i], 0, 0, 0, 0, 1, 1)
 		If @error = 6 Then ; not found
 			$wasSilentSetLog = $g_bSilentSetLog
 			$g_bSilentSetLog = True
@@ -82,7 +82,7 @@ Func GetCOCDistributors()
 EndFunc   ;==>GetCOCDistributors
 
 Func GetCOCPackage($sDistributor)
-	Local $iIndex = __ArraySearch($_g_asDISTRIBUTORS, $sDistributor, 0, 0, 0, 0, 1, 3)
+	Local $iIndex = _ArraySearch($_g_asDISTRIBUTORS, $sDistributor, 0, 0, 0, 0, 1, 3)
 	If @error = 6 Then ; not found
 		Return SetError(1, 0, "")
 	Else
@@ -91,7 +91,7 @@ Func GetCOCPackage($sDistributor)
 EndFunc   ;==>GetCOCPackage
 
 Func GetCOCClass($sDistributor)
-	Local $iIndex = __ArraySearch($_g_asDISTRIBUTORS, $sDistributor, 0, 0, 0, 0, 1, 3)
+	Local $iIndex = _ArraySearch($_g_asDISTRIBUTORS, $sDistributor, 0, 0, 0, 0, 1, 3)
 	If @error = 6 Then ; not found
 		Return SetError(1, 0, "")
 	Else
@@ -100,7 +100,7 @@ Func GetCOCClass($sDistributor)
 EndFunc   ;==>GetCOCClass
 
 Func GetCOCUnTranslated($sDistributor)
-	Local $iIndex = __ArraySearch($_g_asDISTRIBUTORS, $sDistributor, 0, 0, 0, 0, 1, 3)
+	Local $iIndex = _ArraySearch($_g_asDISTRIBUTORS, $sDistributor, 0, 0, 0, 0, 1, 3)
 	If @error = 6 Then ; not found
 		Return SetError(1, 0, $sDistributor)
 	Else
@@ -109,7 +109,7 @@ Func GetCOCUnTranslated($sDistributor)
 EndFunc   ;==>GetCOCUnTranslated
 
 Func GetCOCTranslated($sDistributor)
-	Local $iIndex = __ArraySearch($_g_asDISTRIBUTORS, $sDistributor, 0, 0, 0, 0, 1, 0)
+	Local $iIndex = _ArraySearch($_g_asDISTRIBUTORS, $sDistributor, 0, 0, 0, 0, 1, 0)
 	If @error = 6 Then ; not found
 		Return SetError(1, 0, $sDistributor)
 	Else

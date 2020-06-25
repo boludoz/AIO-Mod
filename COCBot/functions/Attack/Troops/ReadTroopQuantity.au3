@@ -45,7 +45,7 @@ Func UpdateTroopQuantity($sTroopName, $bNeedNewCapture = Default)
 		Return
 	EndIf
 
-	Local $iFoundAt = __ArraySearch($g_avAttackTroops, $iTroopIndex)
+	Local $iFoundAt = _ArraySearch($g_avAttackTroops, $iTroopIndex)
 	If $iFoundAt = -1 Then
 		SetLog("Couldn't find '" & $sTroopName & "' in $g_avAttackTroops", $COLOR_ERROR)
 	EndIf

@@ -233,7 +233,7 @@ Func aquireProfileMutex($sProfile = Default, $bReturnOnlyMutex = Default, $bShow
 	If $sProfile = Default Then $sProfile = $g_sProfileCurrentName
 	If $bReturnOnlyMutex = Default Then $bReturnOnlyMutex = False
 	; check if mutex is or can be aquired
-	Local $iProfile = __ArraySearch($g_ahMutex_Profile, $sProfile, 0, 0, 0, 0, 1, 0)
+	Local $iProfile = _ArraySearch($g_ahMutex_Profile, $sProfile, 0, 0, 0, 0, 1, 0)
 	If $iProfile >= 0 Then
 		; Mutex already aquired
 		If $bReturnOnlyMutex Then
@@ -273,7 +273,7 @@ EndFunc   ;==>aquireProfileMutex
 
 Func releaseProfileMutex($sProfile = Default)
 	If $sProfile = Default Then $sProfile = $g_sProfileCurrentName
-	Local $iProfile = __ArraySearch($g_ahMutex_Profile, $sProfile, 0, 0, 0, 0, 1, 0)
+	Local $iProfile = _ArraySearch($g_ahMutex_Profile, $sProfile, 0, 0, 0, 0, 1, 0)
 	If $iProfile >= 0 Then
 		SetDebugLog("Release Mutex for Profile: " & $sProfile)
 		ReleaseMutex($g_ahMutex_Profile[$iProfile][1])

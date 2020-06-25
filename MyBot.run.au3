@@ -617,8 +617,9 @@ Func FinalInitialization(Const $sAI)
 		SetLog(" •  " & "AIO++ MOD LAST VERSION " & $aBotGitVersion[0], ($aBotGitVersion[1] = False) ? ($COLOR_SUCCESS) : ($COLOR_ERROR))
 		SetLog(" •  " & "Based On MBR " & $g_sBotVersion, $COLOR_SUCCESS)
 		SetLog(" •  " & "Create a New Profile", $COLOR_SUCCESS)
-		SetLog(" •  " & "Participants and thanks: Nguyen, Chilly-Chill, Eloy, Boldina, Demen,", $COLOR_SUCCESS)
-		SetLog(" •  " & "Samkie, and ChacalGyn, all moders and MyBot/Aio Team.", $COLOR_SUCCESS)
+		SetLog(" •  " & "AIO++ Gang : @vDragon, @Eloy, @Approchable-123, @Boldina.", $COLOR_SUCCESS)
+		SetLog(" •  " & "Thanks: Nguyen, Chilly-Chill, Demen,", $COLOR_SUCCESS)
+		SetLog(" •  " & "Samkie, and ChacalGyn, all moders and MyBot/AIO++ Team.", $COLOR_SUCCESS)
 		SetLog(" ")
 	EndIf
 	#EndRegion - Update check without delay - Team AIO Mod++

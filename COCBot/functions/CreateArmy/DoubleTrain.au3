@@ -33,8 +33,8 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 			If UBound($aWrongArmy) = 1 And $aWrongArmy[0][1] = "Arch" And $aWrongArmy[0][1] = 0 Then ; Default result of WhatToTrain
 			Else
 				For $i = 0 To UBound($aWrongArmy) - 1
-					If Not $bHasIncorrectTroop And __ArraySearch($g_asTroopShortNames, $aWrongArmy[$i][0]) >= 0 Then $bHasIncorrectTroop = True
-					If Not $bHasIncorrectSpell And __ArraySearch($g_asSpellShortNames, $aWrongArmy[$i][0]) >= 0 Then $bHasIncorrectSpell = True
+					If Not $bHasIncorrectTroop And _ArraySearch($g_asTroopShortNames, $aWrongArmy[$i][0]) >= 0 Then $bHasIncorrectTroop = True
+					If Not $bHasIncorrectSpell And _ArraySearch($g_asSpellShortNames, $aWrongArmy[$i][0]) >= 0 Then $bHasIncorrectSpell = True
 					If $bHasIncorrectTroop And $bHasIncorrectSpell Then ExitLoop
 				Next
 				If $bDebug Then SetLog("$bNeedReCheckTroopTab: " & $bNeedReCheckTroopTab & "$bNeedReCheckSpellTab: " & $bNeedReCheckSpellTab, $COLOR_DEBUG)

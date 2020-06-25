@@ -4109,7 +4109,7 @@ Func GetAndroidProcessPID($sPackage = Default, $bForeground = True, $iRetryCount
 		EndSwitch
 
 		For $i = 1 To UBound($aPkgList)
-			$iCols = __ArraySearch($aPkgList, "", 0, 0, 0, 0, 1, $i, True)
+			$iCols = _ArraySearch($aPkgList, "", 0, 0, 0, 0, 1, $i, True)
 			If $iCols > 9 And $aPkgList[$i - 1][$iCols - 1] = $g_sAndroidGamePackage Then
 				; process running
 				If $bForeground = True And $aPkgList[$i - 1][8] <> $CorrectSCHED Then
@@ -4666,7 +4666,7 @@ Func PushSharedPrefs($sProfile = $g_sProfileCurrentName, $bCloseGameIfRunning = 
 		$cmdOutput = AndroidAdbSendShellCommand("set result=$(ls -l /data/data/" & $g_sAndroidGamePackage & "/ >&2)")
 		Local $aLs = Ls_l_ToArray($cmdOutput)
 		SetDebugLog("Game folder: " & _ArrayToString($aLs))
-		Local $iSharedPrefs = __ArraySearch($aLs, "shared_prefs")
+		Local $iSharedPrefs = _ArraySearch($aLs, "shared_prefs")
 		If StringInStr($cmdOutput, "Permission denied") = 0 And StringInStr($cmdOutput, "No such file or directory") = 0 And $iSharedPrefs > -1 Then
 			; shared_prefs exists
 			Local $androidFolder = $g_sAndroidPicturesPath & $g_sAndroidPicturesHostFolder & $sProfileMD5

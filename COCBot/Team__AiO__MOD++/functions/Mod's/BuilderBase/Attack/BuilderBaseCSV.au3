@@ -674,21 +674,17 @@ Func DeployTroopBB($sTroopName, $aSlot_XY, $Point2Deploy, $iQtyToDrop)
 	If $g_bIsBBMachineD = False Then $g_bIsBBMachineD = ($sTroopName = "Machine") ? (True) : (False)
 	ClickP($Point2Deploy, $iQtyToDrop, 0)
 	
-	If $g_bIfMachineHasAbility Then Return
-	
-	If Not IsArray($g_aMachineBB) Then Return
+	If $g_bIfMachineHasAbility = True Then Return
 	
 	If $g_bIsBBMachineD = True And $g_aMachineBB <> 0 Then
-		If _Sleep(500) Then Return
 		If _ColorCheck(_GetPixelColor(Int($g_aMachineBB[0][1]), 723, True), Hex(0xFFFFFF, 6), 20) Or not _ColorCheck(_GetPixelColor(Int($g_aMachineBB[0][1]), 721, True), Hex(0x472CC5, 6), 20) Then
-			Setlog("The machine has no ability.", $COLOR_INFO)
-			$g_bIfMachineHasAbility = False
-			Else
-			$g_bIfMachineHasAbility = True
-		EndIf
 		Setlog("The machine has ability.", $COLOR_SUCCESS)
+		$g_bIfMachineHasAbility = True
+		Else
+		Setlog("The machine has no ability.", $COLOR_INFO)
+		$g_bIfMachineHasAbility = False
+		EndIf
 	EndIf
-	
 EndFunc   ;==>DeployTroopBB
 
 Func GetThePointNearBH($BHposition, $aDeployPoints)
@@ -712,7 +708,7 @@ Func GetThePointNearBH($BHposition, $aDeployPoints)
 EndFunc   ;==>GetThePointNearBH
 
 Func TriggerMachineAbility()
-	If $g_aMachineBB = 0 Or $g_bIsBBMachineD = False Then Return False
+	If $g_bIfMachineHasAbility = False Then Return False
 	
 	If $g_bRunState = False Then Return False
 	

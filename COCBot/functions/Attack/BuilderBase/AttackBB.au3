@@ -60,7 +60,7 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 		$g_aBuilderHallPos[0][1] = 425
 	EndIf
 
-	Local $iSide = __ArraySearch($sSideNames, BuilderBaseAttackMainSide(), 0, 0, 0, 0, 0, 0)
+	Local $iSide = _ArraySearch($sSideNames, BuilderBaseAttackMainSide(), 0, 0, 0, 0, 0, 0)
 
 	If $iSide < 0 Then 
 		SetLog("Fail AttackBB 0x2")
@@ -78,7 +78,7 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 	If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Disabled")
 
 	; Get troops on attack bar and their quantities
-	Local $aBBAttackBar = MachineKick($aAvailableTroops)
+	Local $aBBAttackBar = $aAvailableTroops
 	
 	If Not IsArray($aBBAttackBar) Then Return "Fail MachineKick."
 	
@@ -179,7 +179,7 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 			If $g_bIsBBMachineD = False Then $g_bIsBBMachineD = True
 		EndIf
 		
-		If $g_bIfMachineHasAbility Then Return
+		;If $g_bIfMachineHasAbility Then Return
 	
 		If $g_bIsBBMachineD = True And $g_aMachineBB <> 0 Then
 			If _Sleep(500) Then Return
