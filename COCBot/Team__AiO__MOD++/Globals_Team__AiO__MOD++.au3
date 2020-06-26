@@ -246,7 +246,19 @@ $g_iInputBuilderPotion, $g_iInputLabPotion, $g_iInputGoldItems = 250000, $g_iInp
 
 #Region - Builder Base !!!
 ; Provisional globals BB Machine
-Global $g_aMachineBB[0][5], $g_bIsBBMachineD = False, $g_bBBIsFirst = True
+Global $aMachineSlot_XYA[3] = [0, 0, 0], $g_bIsBBMachineD = False, $g_bBBIsFirst = True
+
+; HEROES
+; Check healthy color RGB ( 220,255,19~27) ; the king and queen haves the same Y , but warden is a little lower ...
+; King Crown ; background pixel not at green bar
+Global $aKingHealth = [-1, 569 + $g_iBottomOffsetY, 0x00D500, 15] ; Attack Screen, Check King's Health, X coordinate is dynamic, not used from array   ;  -> with slot compensation 0xbfb29e
+; Queen purple between crown ; background pixel not at green bar
+Global $aQueenHealth = [-1, 569 + $g_iBottomOffsetY, 0x00D500, 15] ; Attack Screen, Check Queen's Health, X coordinate is dynamic, not used from array  ;  -> with slot compensation 0xe08227
+; Warden hair ; background pixel not at green bar
+Global $aWardenHealth = [-1, 569 + $g_iBottomOffsetY, 0x00D500, 15] ; Attack Screen, Check Warden's Health, X coordinate is dynamic, not used from array  ;  -> with slot compensation 0xe08227
+;Machine Ability Pixel Is different with Machine Level ;e.g With 7 $MachineSlot[2] = (7*72)-25 = 479 And Pixel It Contains 479x633 -> E7CE93 Or AE9A88
+Local $aMachineAbilityPixels[3] = [0xAE9A88, 0xE7CE93, 0xCEB385]
+Local $aMachineDeadPixels[3] = [0x4E4E4E, 0x676767, 0x5B5B5B]
 
 ; Report
 Global $g_iAvailableAttacksBB = 0, $g_iLastDamage = 0
@@ -275,7 +287,7 @@ Global $g_bBBDropOrderSet = False
 Global $g_ahCmbBBDropOrder[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_iBBNextTroopDelay = 2000,  $g_iBBSameTroopDelay = 300; delay time between different and same troops
 
-Global $g_bIfMachineHasAbility = False
+Global $g_bIfMachineHasAbility = False, $g_bIfMachineWasDeployed = False
 
 ; Attack CSV
 Global $g_bChkBBRandomAttack = False

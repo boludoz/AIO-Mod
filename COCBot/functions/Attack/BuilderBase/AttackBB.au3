@@ -22,21 +22,21 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 	If Not $g_bRunState Then Return
 
 	Setlog("Builder Base Diamond: " & $Size)
-	Local $i = 0 
+	Local $i = 0
 	Do
 		Setlog("Builder Base Attack Zoomout.")
 		$Size = GetBuilderBaseSize(False) ; WihtoutClicks
 		
-		If ($Size < 575 And $Size > 620) Or ($Size = 0) Then 
+		If ($Size < 575 And $Size > 620) Or ($Size = 0) Then
 			BuilderBaseZoomOut()
 			If _Sleep(1000) Then Return
 		EndIf
 		
 		If $i > 5 Then ExitLoop
-		$i += 1 
+		$i += 1
 	Until ($Size >= 575 And $Size <= 620) Or ($Size <> 0)
 	
-	If $Size = 0 Then 
+	If $Size = 0 Then
 		SetLog("Fail AttackBB 0x1")
 		Return False
 	EndIf
@@ -62,7 +62,7 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 
 	Local $iSide = _ArraySearch($sSideNames, BuilderBaseAttackMainSide(), 0, 0, 0, 0, 0, 0)
 
-	If $iSide < 0 Then 
+	If $iSide < 0 Then
 		SetLog("Fail AttackBB 0x2")
 		Return False
 	EndIf
@@ -100,20 +100,38 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 			For $i = 0 To UBound($g_ahCmbBBDropOrder) - 1 ; loop through each name in the drop order
 				Local $j = 0, $bDone = 0
 				While $j < $iNumSlots And Not $bDone
-					If $aBBAttackBar[$j][0] = "Machine" Then ContinueLoop
-					;If $aBBAttackBar[$j][0] = $asBBDropOrder[$i+1] Then; Custom BB Army - Team AIO Mod++
-					If $aBBAttackBar[$j][0] = $g_asAttackBarBB[Number($g_aiCmbBBDropOrder[$i]) + 1] Then ; Custom BB Army - Team AIO Mod++
-						;DeployBBTroop($aBBAttackBar[$j][0], $aBBAttackBar[$j][1], $aBBAttackBar[$j][2], $aBBAttackBar[$j][4], $iSide)
-						SetLog("Deploying " & $aBBAttackBar[$j][0] & " x" & String($aBBAttackBar[$j][4]), $COLOR_ACTION)
-						PureClick($aBBAttackBar[$j][1] - Random(0, 5, 1), $aBBAttackBar[$j][2] - Random(0, 5, 1)) ; select troop
-						If $aBBAttackBar[$j][4] <> 0 Then
-							For $iAmount = 0 To $aBBAttackBar[$j][4]
-								Local $vDP = Random(0, UBound($aVar)-1)
-								PureClick($aVar[$vDP][0], $aVar[$vDP][1])
-								If TriggerMachineAbility() Then PureClick($aBBAttackBar[$j][1] - Random(0, 5, 1), $aBBAttackBar[$j][2] - Random(0, 5, 1)) ; select troop
-								If RandomSleep($g_iBBSameTroopDelay) Then Return ; slow down selecting then dropping troops
-							Next
+					If $aBBAttackBar[$j][0] <> "Machine" Then
+						;If $aBBAttackBar[$j][0] = $asBBDropOrder[$i+1] Then; Custom BB Army - Team AIO Mod++
+						If $aBBAttackBar[$j][0] = $g_asAttackBarBB[Number($g_aiCmbBBDropOrder[$i]) + 1] Then ; Custom BB Army - Team AIO Mod++
+							;DeployBBTroop($aBBAttackBar[$j][0], $aBBAttackBar[$j][1], $aBBAttackBar[$j][2], $aBBAttackBar[$j][4], $iSide)
+							SetLog("Deploying " & $aBBAttackBar[$j][0] & " x" & String($aBBAttackBar[$j][4]), $COLOR_ACTION)
+							PureClick($aBBAttackBar[$j][1] - Random(0, 5, 1), $aBBAttackBar[$j][2] - Random(0, 5, 1)) ; select troop
+							If $aBBAttackBar[$j][4] <> 0 Then
+								For $iAmount = 0 To $aBBAttackBar[$j][4]
+									Local $vDP = Random(0, UBound($aVar) - 1)
+									PureClick($aVar[$vDP][0], $aVar[$vDP][1])
+									If TriggerMachineAbility() Then PureClick($aBBAttackBar[$j][1] - Random(0, 5, 1), $aBBAttackBar[$j][2] - Random(0, 5, 1)) ; select troop
+									If RandomSleep($g_iBBSameTroopDelay) Then Return ; slow down selecting then dropping troops
+								Next
+							EndIf
+						ElseIf $aBBAttackBar[$j][0] = "Machine" Then
+							Click($aBBAttackBar[$j][1], $aBBAttackBar[$j][2])
+							If RandomSleep($g_iBBSameTroopDelay) Then Return
+							Local $vDP = Random(0, UBound($aVar) - 1)
+							PureClick($aVar[$vDP][0], $aVar[$vDP][1])
+							; @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\Attack\Battle\"
+							; "x,y" : "458, 617, 479, 623"
+							Local $a[4] = [$aBBAttackBar[$j][1] - 5, 617, $aBBAttackBar[$j][1] + 5, 623]
+							Local $v = _WaitForCheckXML(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\Attack\Battle\", $a, Default, 1000, 100)
+							If ($v = False) Then
+								Setlog("The machine has no ability.", $COLOR_INFO)
+								$g_bIfMachineHasAbility = False
+							Else
+								Setlog("The machine has ability.", $COLOR_SUCCESS)
+								$g_bIfMachineHasAbility = True
+							EndIf
 						EndIf
+
 						;---------------------------
 						If $j = $iNumSlots - 1 Or $aBBAttackBar[$j][0] <> $aBBAttackBar[$j + 1][0] Then
 							$bDone = True
@@ -129,18 +147,36 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 			Next
 		Else
 			For $i = 0 To $iNumSlots - 1
-				If $aBBAttackBar[$i][0] = "Machine" Then ContinueLoop
-				;DeployBBTroop($aBBAttackBar[$i][0], $aBBAttackBar[$i][1], $aBBAttackBar[$i][2], $aBBAttackBar[$i][4], $iSide)
-				SetLog("Deploying " & $aBBAttackBar[$i][0] & " x" & String($aBBAttackBar[$i][4]), $COLOR_ACTION)
-				PureClick($aBBAttackBar[$i][1] - Random(0, 5, 1), $aBBAttackBar[$i][2] - Random(0, 5, 1)) ; select troop
-				If $aBBAttackBar[$i][4] <> 0 Then
-					For $iAmount = 0 To $aBBAttackBar[$i][4]
-						Local $vDP = Random(0, UBound($aVar) -1)
-						PureClick($aVar[$vDP][0], $aVar[$vDP][1])
-						If TriggerMachineAbility() Then PureClick($aBBAttackBar[$i][1] - Random(0, 5, 1), $aBBAttackBar[$i][2] - Random(0, 5, 1)) ; select troop
-						If RandomSleep($g_iBBSameTroopDelay) Then Return ; slow down selecting then dropping troops
-					Next
+				If $aBBAttackBar[$i][0] <> "Machine" Then
+					;DeployBBTroop($aBBAttackBar[$i][0], $aBBAttackBar[$i][1], $aBBAttackBar[$i][2], $aBBAttackBar[$i][4], $iSide)
+					SetLog("Deploying " & $aBBAttackBar[$i][0] & " x" & String($aBBAttackBar[$i][4]), $COLOR_ACTION)
+					PureClick($aBBAttackBar[$i][1] - Random(0, 5, 1), $aBBAttackBar[$i][2] - Random(0, 5, 1))     ; select troop
+					If $aBBAttackBar[$i][4] <> 0 Then
+						For $iAmount = 0 To $aBBAttackBar[$i][4]
+							Local $vDP = Random(0, UBound($aVar) - 1)
+							PureClick($aVar[$vDP][0], $aVar[$vDP][1])
+							If TriggerMachineAbility() Then PureClick($aBBAttackBar[$i][1] - Random(0, 5, 1), $aBBAttackBar[$i][2] - Random(0, 5, 1))     ; select troop
+							If RandomSleep($g_iBBSameTroopDelay) Then Return     ; slow down selecting then dropping troops
+						Next
+					EndIf
+				ElseIf $aBBAttackBar[$i][0] = "Machine" Then
+					Click($aBBAttackBar[$i][1], $aBBAttackBar[$i][2])
+					If RandomSleep($g_iBBSameTroopDelay) Then Return
+					Local $vDP = Random(0, UBound($aVar) - 1)
+					PureClick($aVar[$vDP][0], $aVar[$vDP][1])
+					; @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\Attack\Battle\"
+					; "x,y" : "458, 617, 479, 623"
+					Local $a[4] = [$aBBAttackBar[$i][1] - 5, 617, $aBBAttackBar[$i][1] + 5, 623]
+					Local $v = _WaitForCheckXML(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\Attack\Battle\", $a, Default, 1000, 100)
+					If ($v = False) Then
+						Setlog("The machine has no ability.", $COLOR_INFO)
+						$g_bIfMachineHasAbility = False
+					Else
+						Setlog("The machine has ability.", $COLOR_SUCCESS)
+						$g_bIfMachineHasAbility = True
+					EndIf
 				EndIf
+
 				;---------------------------
 				If $i = $iNumSlots - 1 Or $aBBAttackBar[$i][0] <> $aBBAttackBar[$i + 1][0] Then
 					If RandomSleep($g_iBBNextTroopDelay) Then ; wait before next troop
@@ -160,40 +196,12 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 		
 		; Attack bar loop control.
 		$aBBAttackBar = GetAttackBarBB(True)
-		If UBound($aBBAttackBar) = $iUBound1 Then $iLoopControl += 1	
+		If UBound($aBBAttackBar) = $iUBound1 Then $iLoopControl += 1
 		If ($iLoopControl > 3) Then ExitLoop
 		$iUBound1 = UBound($aBBAttackBar)
 		
-	Until not IsArray(MachineKick($aBBAttackBar))
+	Until Not IsArray(MachineKick($aBBAttackBar))
 	SetLog("All Troops Deployed", $COLOR_SUCCESS)
-
-	; place hero and activate ability
-	If $g_bBBMachineReady Then
-		If IsArray($g_aMachineBB) Then
-			SetLog("Deploying Battle Machine.", $COLOR_BLUE)
-			PureClick($g_aMachineBB[0][1], $g_aMachineBB[0][2])
-			If RandomSleep(500) Then Return  ; wait before clicking ability
-			Local $vDP = Random(0, UBound($aVar)-1)
-			PureClick($aVar[$vDP][0], $aVar[$vDP][1])
-			If RandomSleep(500) Then Return  ; wait before clicking ability
-			If $g_bIsBBMachineD = False Then $g_bIsBBMachineD = True
-		EndIf
-		
-		;If $g_bIfMachineHasAbility Then Return
-	
-		If $g_bIsBBMachineD = True And $g_aMachineBB <> 0 Then
-			If _Sleep(500) Then Return
-			If _ColorCheck(_GetPixelColor(Int($g_aMachineBB[0][1]), 723, True), Hex(0xFFFFFF, 6), 20) Or not _ColorCheck(_GetPixelColor(Int($g_aMachineBB[0][1]), 721, True), Hex(0x472CC5, 6), 20) Then
-				Setlog("The machine has no ability.", $COLOR_ERROR)
-				$g_aMachineBB = 0
-				;$g_bIsBBMachineD = False
-				$g_bIfMachineHasAbility = False
-				Else
-				$g_bIfMachineHasAbility = True
-			EndIf
-		EndIf
-
-	EndIf
 
 	$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast ; reset android suspend and resume stuff
 	If $g_bDebugSetlog Then SetDebugLog("Android Suspend Mode Enabled")

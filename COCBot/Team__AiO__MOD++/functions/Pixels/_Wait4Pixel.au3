@@ -171,6 +171,23 @@ Func _WaitForCheckXML($sPathImage, $sSearchZone = Default, $bForceCaptureP = Def
 	Return False
 EndFunc   ;==>_WaitForCheckXML
 
+Func _WaitForCheckXMLGone($sPathImage, $sSearchZone = Default, $bForceCaptureP = Default, $iWaitP = Default, $iDelayP = Default, $aTextP = Default)
+	
+	Local $bForceCapture = ($bForceCaptureP = Default) ? (True) : ($bForceCaptureP), _
+	$iWait = ($iWaitP = Default) ? (10000) : ($iWaitP), _
+	$iDelay = ($iDelayP = Default) ? (250) : ($iDelayP), _
+	$aText = ($aTextP = Default) ? (Default) : ($aTextP)
+
+	Local $hTimer = __TimerInit()
+	While (BitOR($iWait > __TimerDiff($hTimer), ($iWait <= 0)) > 0) ; '-1' support
+		Local $aRetutn = findMultipleQuick($sPathImage, 1, $sSearchZone, Default, $aText)
+		If Not IsArray($aRetutn) Then Return True
+		If _Sleep($iDelay) Then Return False
+		If ($iWait <= 0) Then ExitLoop ; Loop prevention.
+	WEnd
+	Return False
+EndFunc   ;==>_WaitForCheckXML
+
 Func WaitImage($sPathImage, $aText = Default, $iLoop = 1, $iDelay = 200, $sSearchArea = "FV") ; That quality that the function (Is Window Open) of Fliegerfaust has, since it is based on loops and not on time division, but more complete and with variability.
 	For $i = 0 To Abs($iLoop)
 		If IsArray(findMultipleQuick($sPathImage, 1, $sSearchArea, Default, $aText)) Then Return True

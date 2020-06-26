@@ -104,49 +104,52 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 
 	If $bForceCapture Then _CaptureRegion2($aiPostFix[0], $aiPostFix[1], $aiPostFix[2], $aiPostFix[3])
 
-	For $i2 = 0 To 3
-		Local $aRes = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sDirectory, "str", "ECD", "Int", $Quantity2Match, "str", "ECD", "Int", 0, "Int", 1000)
-		Local $KeyValue = StringSplit($aRes[0], "|", $STR_NOCOUNT)
-		Local $Name = ""
-		Local $aPositions, $aCoords, $aCord, $level, $aCoordsM
-		SetDebugLog("Detected : " & UBound($KeyValue) & " tiles")
-		Local $AllFilenamesFound[UBound($KeyValue)][3]
-		For $i = 0 To UBound($KeyValue) - 1
-			$aPositions = RetrieveImglocProperty($KeyValue[$i], "objectpoints")
-			$aCoords = decodeMultipleCoords($aPositions, 0, 0, 0)
-			For $iCoords = 0 To UBound($aCoords) - 1
-				Local $aCoordsM = $aCoords[$iCoords]
-				
-				Local $iFur = Random($iFurMin, $iFurMax, 1)
+	Local $aRes = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sDirectory, "str", "ECD", "Int", $Quantity2Match, "str", "ECD", "Int", 0, "Int", 1000)
+	Local $KeyValue = StringSplit($aRes[0], "|", $STR_NOCOUNT)
+	Local $Name = ""
+	Local $aPositions, $aCoords, $aCord, $level, $aCoordsM
+	SetDebugLog("Detected : " & UBound($KeyValue) & " tiles")
+	Local $AllFilenamesFound[UBound($KeyValue)][3]
+	For $i = 0 To UBound($KeyValue) - 1
+		$aPositions = RetrieveImglocProperty($KeyValue[$i], "objectpoints")
+		$aCoords = decodeMultipleCoords($aPositions, 0, 0, 0)
+		For $iCoords = 0 To UBound($aCoords) - 1
+			Local $aCoordsM = $aCoords[$iCoords]
+			
+			Local $iFur = Random($iFurMin, $iFurMax, 1)
 
-				If Int(130 + $aCoordsM[0]) < Int($iCenterX) Then
-					If Int(210 + $aCoordsM[1]) < Int($iCenterY) Then
-						Local $vResult[1][2] = [[(130 + $aCoordsM[0]) - $iFur, (210 + $aCoordsM[1]) - $iFur]]
-						Local $P = _GetPixelColor($vResult[0][0], $vResult[0][1], True)
-						If _ColorCheck($P, Hex(0x447063, 6), 20) Then _ArrayAdd($aTopLeft, $vResult)
-					Else
-						Local $vResult[1][2] = [[(130 + $aCoordsM[0]) - $iFur, (210 + $aCoordsM[1]) + $iFur]]
-						Local $P = _GetPixelColor($vResult[0][0], $vResult[0][1], True)
-						If _ColorCheck($P, Hex(0x447063, 6), 20) Then _ArrayAdd($aBottomLeft, $vResult)
-					EndIf
+			If Int(130 + $aCoordsM[0]) < Int($iCenterX) Then
+				If Int(210 + $aCoordsM[1]) < Int($iCenterY) Then
+					Local $vResult[1][2] = [[(130 + $aCoordsM[0]) - $iFur, (210 + $aCoordsM[1]) - $iFur]]
+					Local $P = _GetPixelColor($vResult[0][0], $vResult[0][1], True)
+					If _ColorCheck($P, Hex(0x447063, 6), 25) Then _ArrayAdd($aTopLeft, $vResult)
 				Else
-					If Int(210 + $aCoordsM[1]) < Int($iCenterY) Then
-						Local $vResult[1][2] = [[(130 + $aCoordsM[0]) + $iFur, (210 + $aCoordsM[1]) - $iFur]]
-						Local $P = _GetPixelColor($vResult[0][0], $vResult[0][1], True)
-						If _ColorCheck($P, Hex(0x447063, 6), 20) Then _ArrayAdd($aTopRight, $vResult)
-					Else
-						Local $vResult[1][2] = [[(130 + $aCoordsM[0]) + $iFur, (210 + $aCoordsM[1]) + $iFur]]
-						Local $P = _GetPixelColor($vResult[0][0], $vResult[0][1], True)
-						If _ColorCheck($P, Hex(0x447063, 6), 20) Then _ArrayAdd($aBottomRight, $vResult)
-					EndIf
+					Local $vResult[1][2] = [[(130 + $aCoordsM[0]) - $iFur, (210 + $aCoordsM[1]) + $iFur]]
+					Local $P = _GetPixelColor($vResult[0][0], $vResult[0][1], True)
+					If _ColorCheck($P, Hex(0x447063, 6), 25) Then _ArrayAdd($aBottomLeft, $vResult)
 				EndIf
-			Next
+			Else
+				If Int(210 + $aCoordsM[1]) < Int($iCenterY) Then
+					Local $vResult[1][2] = [[(130 + $aCoordsM[0]) + $iFur, (210 + $aCoordsM[1]) - $iFur]]
+					Local $P = _GetPixelColor($vResult[0][0], $vResult[0][1], True)
+					If _ColorCheck($P, Hex(0x447063, 6), 25) Then _ArrayAdd($aTopRight, $vResult)
+				Else
+					Local $vResult[1][2] = [[(130 + $aCoordsM[0]) + $iFur, (210 + $aCoordsM[1]) + $iFur]]
+					Local $P = _GetPixelColor($vResult[0][0], $vResult[0][1], True)
+					If _ColorCheck($P, Hex(0x447063, 6), 25) Then _ArrayAdd($aBottomRight, $vResult)
+				EndIf
+			EndIf
 		Next
-		If _Sleep(155) Then Return
 	Next
+	If _Sleep(200) Then Return
+	
+	Setlog(UBound($aTopLeft) & " aTopLeft", $COLOR_INFO)
+	Setlog(UBound($aTopRight) & " aTopRight", $COLOR_INFO)
+	Setlog(UBound($aBottomRight) & " aBottomRight", $COLOR_INFO)
+	Setlog(UBound($aBottomLeft) & " aBottomLeft", $COLOR_INFO)
 	
 	_ArraySort($aTopLeft, 0, 0, 0, 1)
-	
+
 	Local $iLastY = -1, $iMaxX = -1
 	Local $aTopLeftNew[0][2]
 	
@@ -255,7 +258,7 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 			$iLastY = $aBottomLeft[$i2][1]
 			
 			Local $a3 = _ArrayFindAll($aBottomLeft, $iLastY, Default, Default, Default, Default, 2)
-
+			
 			If $a3 <> -1 Then
 				For $i = UBound($a3) - 1 To 0 Step -1
 					If $aBottomLeft[Int($a3[0])][0] > $iMaxX Then $iMaxX = $aBottomLeft[$i][0]
@@ -276,7 +279,12 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 			If $i = 0 Then _ArrayDelete($aBottomLeftNew, $i2)
 		Next
 	Next
-
+	
+	Setlog(UBound($aTopLeftNew) & " aTopLeftNew", $COLOR_INFO)
+	Setlog(UBound($aTopRightNew) & " aTopRightNew", $COLOR_INFO)
+	Setlog(UBound($aBottomRightNew) & " aBottomRightNew", $COLOR_INFO)
+	Setlog(UBound($aBottomLeftNew) & " aBottomLeftNew", $COLOR_INFO)
+	
 	Local $aSides[4] = [$aTopLeftNew, $aTopRightNew, $aBottomRightNew, $aBottomLeftNew]
 
 	Return $aSides

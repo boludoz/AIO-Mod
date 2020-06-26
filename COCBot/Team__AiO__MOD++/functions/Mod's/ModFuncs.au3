@@ -180,31 +180,31 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 EndFunc   ;==>findMultipleQuick
 
 Func ClickFindMatch()
-	Local $iLoop = 0, $bClickC = False, $bFail = False
+	Local $iLoop = 0, $bFail = True
 	Do
 		$iLoop += 1
 		
-		WaitImage(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", "FindMatch", Abs($iLoop - 10), 250, "559, 315, 816, 541")
+		If _WaitForCheckXML(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch\Button\", "559, 315, 816, 541", Default, Default, Default, "FindMatch") Then
+			SetDebugLog("ClickFindMatch | Clicking in find match.")
+			PureClick(Random($g_aImageSearchXML[0][1] + 28, $g_aImageSearchXML[0][1] + 180, 1), Random($g_aImageSearchXML[0][2] + 10, $g_aImageSearchXML[0][2] + 94, 1), 1, 0, "#0150") ; Click Find a Match Button
+			$bFail = False
+		EndIf
 		
 		Select
-			Case IsArray($g_aImageSearchXML)
-				SetDebugLog("ClickFindMatch | Clicking in find match.")
-				PureClick(Random($g_aImageSearchXML[0][1] + 28, $g_aImageSearchXML[0][1] + 180, 1), Random($g_aImageSearchXML[0][2] + 10, $g_aImageSearchXML[0][2] + 94, 1), 1, 0, "#0150") ; Click Find a Match Button
-				$bFail = False
-				ContinueCase
 			Case isGemOpen(True, True)
 				Return (isGemOpen(True, True)) ? (False) : (True)
+			Case Not _WaitForCheckXMLGone(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch\Obstacle\", "440, 106, 469, 123", Default, 2500, 100, "Mostaza")
+				SetDebugLog("ClickFindMatch | ClickFindMatch fail.", $COLOR_ERROR)
+				Click(Random(300, 740, 1), Random(67, 179, 1))
+				$bFail = True
+				ContinueLoop
 			Case IsMainPage(1)
 				Setlog("ClickFindMatch | Main located fail.", $COLOR_ERROR)
 				$bFail = True
 				ExitLoop
-			Case WaitImage(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", "G", 2, 100, "356, 424, 518, 502")
-				Setlog("ClickFindMatch | ClickFindMatch fail.", $COLOR_ERROR)
-				Click(Random(286, 740, 1), Random(67, 179, 1))
-				$bFail = True
-				ContinueLoop
 		EndSelect
 		
+		If ($bFail = False) Then Return True
 		If _Sleep(500) Then Return
 	
 	Until (IsArray(findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", 1, "559, 315, 816, 541", "FindMatch")) And not $bFail) Or ($iLoop > 10)

@@ -19,12 +19,6 @@ Func GetAttackBarBB($bRemaining = False)
 	local $iSlotOffset = 73 ; slots are 73 pixels apart
 	local $iBarOffset = 66 ; 66 pixels from side to attack bar
 	
-	If ($bRemaining = False) Then $g_aMachineBB = 0 ; Reset at first check.
-	
-	If $g_aMachineBB <> 0 Then TriggerMachineAbility()
-	
-	If RandomSleep(500) Then Return -1
-
 	; testing troop count logic
 	;PureClickP($aSlot1)
 	;local $iTroopCount = Number(getTroopCountSmall($aSlot1[0], $aSlot1[1]))
@@ -72,10 +66,9 @@ Func GetAttackBarBB($bRemaining = False)
 					ContinueLoop
 				EndIf
 			EndIf
-			
+
 			Local $aTempElement[1][5] = [[$aTroop[0], $aTempCoords[0], $aTempCoords[1], $iSlot, $iCount]] ; element to add to attack bar list
-			
-			If ($bRemaining = False) And (String($aTroop[0]) = "Machine") Then $g_aMachineBB = $aTempElement ; Team AIO Mod++
+			If ($bRemaining = False) And (String($aTroop[0]) = "Machine") Then Global $aMachineSlot_XYA[3] = [$aTempElement[0][1], $aTempElement[0][2], 0] ; element to add to attack bar list
 			
 			_ArrayAdd($aBBAttackBar, $aTempElement)
 

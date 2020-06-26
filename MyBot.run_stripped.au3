@@ -6807,9 +6807,9 @@ Global Enum $eSpellLightning, $eSpellHeal, $eSpellRage, $eSpellJump, $eSpellFree
 Global Const $g_asSpellNames[$eSpellCount] = ["Lightning", "Heal", "Rage", "Jump", "Freeze", "Clone", "Poison", "Earthquake", "Haste", "Skeleton", "Bat"]
 Global Const $g_asSpellShortNames[$eSpellCount] = ["LSpell", "HSpell", "RSpell", "JSpell", "FSpell", "CSpell", "PSpell", "ESpell", "HaSpell", "SkSpell", "BtSpell"]
 Global Const $g_aiSpellSpace[$eSpellCount] = [1, 2, 2, 2, 1, 3, 1, 1, 1, 1, 1]
-Global Const $g_aiSpellTrainTime[$eSpellCount] = [360, 360, 360, 360, 360, 720, 180, 180, 180, 180, 180]
-Global Const $g_aiSpellCostPerLevel[$eSpellCount][9] = [ [7, 15000, 16500, 18000, 20000, 22000, 24000, 26000], [8, 15000, 16500, 18000, 19000, 21000, 23000, 25000, 27000], [6, 20000, 22000, 24000, 26000, 28000, 30000], [4, 23000, 27000, 31000, 32000], [7, 6000, 7000, 8000, 9000, 10000, 11000, 12000], [5, 38000, 39000, 41000, 43000, 45000], [6, 95, 110, 125, 140, 155, 170], [5, 125, 140, 160, 180, 200], [5, 80, 85, 90, 95, 100], [7, 110, 120, 130, 140, 150, 160, 170], [5, 110, 120, 130, 140, 150]]
-Global Const $g_aiSpellDonateXP[$eSpellCount] = [10, 10, 10, 10, 10, 0, 5, 5, 5, 5, 5]
+Global Const $g_aiSpellTrainTime[$eSpellCount] = [180, 360, 360, 360, 360, 720, 180, 180, 180, 180, 180]
+Global Const $g_aiSpellCostPerLevel[$eSpellCount][10] = [ [9, 7000, 8000, 9000, 10000, 11000, 12000, 13000, 14000, 15000], [8, 15000, 16500, 18000, 19000, 21000, 23000, 25000, 27000], [6, 20000, 22000, 24000, 26000, 28000, 30000], [4, 23000, 27000, 31000, 32000], [7, 6000, 7000, 8000, 9000, 10000, 11000, 12000], [5, 38000, 39000, 41000, 43000, 45000], [6, 95, 110, 125, 140, 155, 170], [5, 125, 140, 160, 180, 200], [5, 80, 85, 90, 95, 100], [7, 110, 120, 130, 140, 150, 160, 170], [5, 110, 120, 130, 140, 150]]
+Global Const $g_aiSpellDonateXP[$eSpellCount] = [5, 10, 10, 10, 10, 0, 5, 5, 5, 5, 5]
 Global Const $g_aiSpellOcrOffSet[$eSpellCount][2] = [[44, 29], [41, 27], [41, 27], [50, 19], [34, 50], [43, 25], [47, 19], [39, 45], [45, 22], [46, 18], [30, 46]]
 Global Enum $eSiegeWallWrecker, $eSiegeBattleBlimp, $eSiegeStoneSlammer, $eSiegeBarracks, $eSiegeMachineCount
 Global Const $g_asSiegeMachineNames[$eSiegeMachineCount] = ["Wall Wrecker", "Battle Blimp", "Stone Slammer", "Siege Barracks"]
@@ -7621,7 +7621,12 @@ Global $g_aClanPage[4] = [821, 400, 0xFB5D63, 20]
 Global $g_aClanLabel[4] = [522, 70, 0xEDEDE8, 20]
 Global $g_aIsClanChat[4] = [86, 12, 0xC1BB91, 20]
 Global $g_bChkCollectMagicItems, $g_bChkCollectFree, $g_bChkBuilderPotion, $g_bChkClockTowerPotion, $g_bChkHeroPotion, $g_bChkLabPotion, $g_bChkPowerPotion, $g_bChkResourcePotion, $g_iComboClockTowerPotion, $g_iComboHeroPotion, $g_iComboPowerPotion, $g_iInputBuilderPotion, $g_iInputLabPotion, $g_iInputGoldItems = 250000, $g_iInputElixirItems = 300000, $g_iInputDarkElixirItems = 1000
-Global $g_aMachineBB[0][5], $g_bIsBBMachineD = False, $g_bBBIsFirst = True
+Global $aMachineSlot_XYA[3] = [0, 0, 0], $g_bIsBBMachineD = False, $g_bBBIsFirst = True
+Global $aKingHealth = [-1, 569 + $g_iBottomOffsetY, 0x00D500, 15]
+Global $aQueenHealth = [-1, 569 + $g_iBottomOffsetY, 0x00D500, 15]
+Global $aWardenHealth = [-1, 569 + $g_iBottomOffsetY, 0x00D500, 15]
+Local $aMachineAbilityPixels[3] = [0xAE9A88, 0xE7CE93, 0xCEB385]
+Local $aMachineDeadPixels[3] = [0x4E4E4E, 0x676767, 0x5B5B5B]
 Global $g_iAvailableAttacksBB = 0, $g_iLastDamage = 0
 Global $g_aBuilderHallPos[1][2] = [[Null, Null]], $g_aAirdefensesPos[0][2], $g_aCrusherPos[0][2], $g_aCannonPos[0][2], $g_aGuardPostPos[0][2], $g_aDeployPoints
 Global $g_aBuilderHallPos[1][2] = [[Null, Null]], $g_aAirdefensesPos[0][2], $g_aCrusherPos[0][2], $g_aCannonPos[0][2], $g_aGuardPostPos[0][2], $g_aDeployPoints, $g_aDeployBestPoints
@@ -7638,7 +7643,7 @@ Global $g_hBtnBBDropOrderSet = 0, $g_hBtnBBRemoveDropOrder = 0, $g_hBtnBBClose =
 Global $g_bBBDropOrderSet = False
 Global $g_ahCmbBBDropOrder[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_iBBNextTroopDelay = 2000, $g_iBBSameTroopDelay = 300
-Global $g_bIfMachineHasAbility = False
+Global $g_bIfMachineHasAbility = False, $g_bIfMachineWasDeployed = False
 Global $g_bChkBBRandomAttack = False
 Global Const $g_sCSVBBAttacksPath = @ScriptDir & "\CSV\BuilderBase"
 Global $g_sAttackScrScriptNameBB[3] = ["", "", ""]
@@ -43159,17 +43164,32 @@ If $g_bBBDropOrderSet = True Then
 For $i = 0 To UBound($g_ahCmbBBDropOrder) - 1
 Local $j = 0, $bDone = 0
 While $j < $iNumSlots And Not $bDone
-If $aBBAttackBar[$j][0] = "Machine" Then ContinueLoop
+If $aBBAttackBar[$j][0] <> "Machine" Then
 If $aBBAttackBar[$j][0] = $g_asAttackBarBB[Number($g_aiCmbBBDropOrder[$i]) + 1] Then
 SetLog("Deploying " & $aBBAttackBar[$j][0] & " x" & String($aBBAttackBar[$j][4]), $COLOR_ACTION)
 PureClick($aBBAttackBar[$j][1] - Random(0, 5, 1), $aBBAttackBar[$j][2] - Random(0, 5, 1))
 If $aBBAttackBar[$j][4] <> 0 Then
 For $iAmount = 0 To $aBBAttackBar[$j][4]
-Local $vDP = Random(0, UBound($aVar)-1)
+Local $vDP = Random(0, UBound($aVar) - 1)
 PureClick($aVar[$vDP][0], $aVar[$vDP][1])
 If TriggerMachineAbility() Then PureClick($aBBAttackBar[$j][1] - Random(0, 5, 1), $aBBAttackBar[$j][2] - Random(0, 5, 1))
 If RandomSleep($g_iBBSameTroopDelay) Then Return
 Next
+EndIf
+ElseIf $aBBAttackBar[$j][0] = "Machine" Then
+Click($aBBAttackBar[$j][1], $aBBAttackBar[$j][2])
+If RandomSleep($g_iBBSameTroopDelay) Then Return
+Local $vDP = Random(0, UBound($aVar) - 1)
+PureClick($aVar[$vDP][0], $aVar[$vDP][1])
+Local $a[4] = [$aBBAttackBar[$j][1] - 5, 617, $aBBAttackBar[$j][1] + 5, 623]
+Local $v = _WaitForCheckXML(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\Attack\Battle\", $a, Default, 1000, 100)
+If($v = False) Then
+Setlog("The machine has no ability.", $COLOR_INFO)
+$g_bIfMachineHasAbility = False
+Else
+Setlog("The machine has ability.", $COLOR_SUCCESS)
+$g_bIfMachineHasAbility = True
+EndIf
 EndIf
 If $j = $iNumSlots - 1 Or $aBBAttackBar[$j][0] <> $aBBAttackBar[$j + 1][0] Then
 $bDone = True
@@ -43185,16 +43205,31 @@ WEnd
 Next
 Else
 For $i = 0 To $iNumSlots - 1
-If $aBBAttackBar[$i][0] = "Machine" Then ContinueLoop
+If $aBBAttackBar[$i][0] <> "Machine" Then
 SetLog("Deploying " & $aBBAttackBar[$i][0] & " x" & String($aBBAttackBar[$i][4]), $COLOR_ACTION)
 PureClick($aBBAttackBar[$i][1] - Random(0, 5, 1), $aBBAttackBar[$i][2] - Random(0, 5, 1))
 If $aBBAttackBar[$i][4] <> 0 Then
 For $iAmount = 0 To $aBBAttackBar[$i][4]
-Local $vDP = Random(0, UBound($aVar) -1)
+Local $vDP = Random(0, UBound($aVar) - 1)
 PureClick($aVar[$vDP][0], $aVar[$vDP][1])
 If TriggerMachineAbility() Then PureClick($aBBAttackBar[$i][1] - Random(0, 5, 1), $aBBAttackBar[$i][2] - Random(0, 5, 1))
 If RandomSleep($g_iBBSameTroopDelay) Then Return
 Next
+EndIf
+ElseIf $aBBAttackBar[$i][0] = "Machine" Then
+Click($aBBAttackBar[$i][1], $aBBAttackBar[$i][2])
+If RandomSleep($g_iBBSameTroopDelay) Then Return
+Local $vDP = Random(0, UBound($aVar) - 1)
+PureClick($aVar[$vDP][0], $aVar[$vDP][1])
+Local $a[4] = [$aBBAttackBar[$i][1] - 5, 617, $aBBAttackBar[$i][1] + 5, 623]
+Local $v = _WaitForCheckXML(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\Attack\Battle\", $a, Default, 1000, 100)
+If($v = False) Then
+Setlog("The machine has no ability.", $COLOR_INFO)
+$g_bIfMachineHasAbility = False
+Else
+Setlog("The machine has ability.", $COLOR_SUCCESS)
+$g_bIfMachineHasAbility = True
+EndIf
 EndIf
 If $i = $iNumSlots - 1 Or $aBBAttackBar[$i][0] <> $aBBAttackBar[$i + 1][0] Then
 If RandomSleep($g_iBBNextTroopDelay) Then
@@ -43215,29 +43250,8 @@ $aBBAttackBar = GetAttackBarBB(True)
 If UBound($aBBAttackBar) = $iUBound1 Then $iLoopControl += 1
 If($iLoopControl > 3) Then ExitLoop
 $iUBound1 = UBound($aBBAttackBar)
-Until not IsArray(MachineKick($aBBAttackBar))
+Until Not IsArray(MachineKick($aBBAttackBar))
 SetLog("All Troops Deployed", $COLOR_SUCCESS)
-If $g_bBBMachineReady Then
-If IsArray($g_aMachineBB) Then
-SetLog("Deploying Battle Machine.", $COLOR_BLUE)
-PureClick($g_aMachineBB[0][1], $g_aMachineBB[0][2])
-If RandomSleep(500) Then Return
-Local $vDP = Random(0, UBound($aVar)-1)
-PureClick($aVar[$vDP][0], $aVar[$vDP][1])
-If RandomSleep(500) Then Return
-If $g_bIsBBMachineD = False Then $g_bIsBBMachineD = True
-EndIf
-If $g_bIsBBMachineD = True And $g_aMachineBB <> 0 Then
-If _Sleep(500) Then Return
-If _ColorCheck(_GetPixelColor(Int($g_aMachineBB[0][1]), 723, True), Hex(0xFFFFFF, 6), 20) Or not _ColorCheck(_GetPixelColor(Int($g_aMachineBB[0][1]), 721, True), Hex(0x472CC5, 6), 20) Then
-Setlog("The machine has no ability.", $COLOR_ERROR)
-$g_aMachineBB = 0
-$g_bIfMachineHasAbility = False
-Else
-$g_bIfMachineHasAbility = True
-EndIf
-EndIf
-EndIf
 $g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
 If $g_bDebugSetlog Then SetDebugLog("Android Suspend Mode Enabled")
 EndFunc
@@ -43245,9 +43259,6 @@ Func GetAttackBarBB($bRemaining = False)
 local $iTroopBanners = 640
 local $iSlotOffset = 73
 local $iBarOffset = 66
-If($bRemaining = False) Then $g_aMachineBB = 0
-If $g_aMachineBB <> 0 Then TriggerMachineAbility()
-If RandomSleep(500) Then Return -1
 local $aBBAttackBar[0][5]
 local $sSearchDiamond = GetDiamondFromRect("0,630,860,732")
 local $aBBAttackBarResult = findMultiple($g_sImgDirBBTroops, $sSearchDiamond, $sSearchDiamond, 0, 1000, 0, "objectname,objectpoints", True)
@@ -43275,7 +43286,7 @@ ContinueLoop
 EndIf
 EndIf
 Local $aTempElement[1][5] = [[$aTroop[0], $aTempCoords[0], $aTempCoords[1], $iSlot, $iCount]]
-If($bRemaining = False) And(String($aTroop[0]) = "Machine") Then $g_aMachineBB = $aTempElement
+If($bRemaining = False) And(String($aTroop[0]) = "Machine") Then Global $aMachineSlot_XYA[3] = [$aTempElement[0][1], $aTempElement[0][2], 0]
 _ArrayAdd($aBBAttackBar, $aTempElement)
 Next
 Next
@@ -74941,28 +74952,28 @@ $g_aImageSearchXML =(UBound($aAllResults) > 0) ?($aAllResults) :(-1)
 Return $g_aImageSearchXML
 EndFunc
 Func ClickFindMatch()
-Local $iLoop = 0, $bClickC = False, $bFail = False
+Local $iLoop = 0, $bFail = True
 Do
 $iLoop += 1
-WaitImage(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", "FindMatch", Abs($iLoop - 10), 250, "559, 315, 816, 541")
-Select
-Case IsArray($g_aImageSearchXML)
+If _WaitForCheckXML(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch\Button\", "559, 315, 816, 541", Default, Default, Default, "FindMatch") Then
 SetDebugLog("ClickFindMatch | Clicking in find match.")
 PureClick(Random($g_aImageSearchXML[0][1] + 28, $g_aImageSearchXML[0][1] + 180, 1), Random($g_aImageSearchXML[0][2] + 10, $g_aImageSearchXML[0][2] + 94, 1), 1, 0, "#0150")
 $bFail = False
-ContinueCase
+EndIf
+Select
 Case isGemOpen(True, True)
 Return(isGemOpen(True, True)) ?(False) :(True)
+Case Not _WaitForCheckXMLGone(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch\Obstacle\", "440, 106, 469, 123", Default, 2500, 100, "Mostaza")
+SetDebugLog("ClickFindMatch | ClickFindMatch fail.", $COLOR_ERROR)
+Click(Random(300, 740, 1), Random(67, 179, 1))
+$bFail = True
+ContinueLoop
 Case IsMainPage(1)
 Setlog("ClickFindMatch | Main located fail.", $COLOR_ERROR)
 $bFail = True
 ExitLoop
-Case WaitImage(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", "G", 2, 100, "356, 424, 518, 502")
-Setlog("ClickFindMatch | ClickFindMatch fail.", $COLOR_ERROR)
-Click(Random(286, 740, 1), Random(67, 179, 1))
-$bFail = True
-ContinueLoop
 EndSelect
+If($bFail = False) Then Return True
 If _Sleep(500) Then Return
 Until(IsArray(findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", 1, "559, 315, 816, 541", "FindMatch")) And not $bFail) Or($iLoop > 10)
 If($bFail = False) And not($iLoop > 9) Then
@@ -75297,6 +75308,17 @@ Local $hTimer = __TimerInit()
 While(BitOR($iWait > __TimerDiff($hTimer),($iWait <= 0)) > 0)
 Local $aRetutn = findMultipleQuick($sPathImage, 1, $sSearchZone, Default, $aText)
 If IsArray($aRetutn) Then Return True
+If _Sleep($iDelay) Then Return False
+If($iWait <= 0) Then ExitLoop
+WEnd
+Return False
+EndFunc
+Func _WaitForCheckXMLGone($sPathImage, $sSearchZone = Default, $bForceCaptureP = Default, $iWaitP = Default, $iDelayP = Default, $aTextP = Default)
+Local $bForceCapture =($bForceCaptureP = Default) ?(True) :($bForceCaptureP), $iWait =($iWaitP = Default) ?(10000) :($iWaitP), $iDelay =($iDelayP = Default) ?(250) :($iDelayP), $aText =($aTextP = Default) ?(Default) :($aTextP)
+Local $hTimer = __TimerInit()
+While(BitOR($iWait > __TimerDiff($hTimer),($iWait <= 0)) > 0)
+Local $aRetutn = findMultipleQuick($sPathImage, 1, $sSearchZone, Default, $aText)
+If Not IsArray($aRetutn) Then Return True
 If _Sleep($iDelay) Then Return False
 If($iWait <= 0) Then ExitLoop
 WEnd
@@ -80506,7 +80528,6 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 Local $aTopLeft[0][2], $aTopRight[0][2], $aBottomRight[0][2], $aBottomLeft[0][2]
 Local $aiPostFix[4] = [130, 210, 745, 630]
 If $bForceCapture Then _CaptureRegion2($aiPostFix[0], $aiPostFix[1], $aiPostFix[2], $aiPostFix[3])
-For $i2 = 0 To 3
 Local $aRes = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sDirectory, "str", "ECD", "Int", $Quantity2Match, "str", "ECD", "Int", 0, "Int", 1000)
 Local $KeyValue = StringSplit($aRes[0], "|", $STR_NOCOUNT)
 Local $aPositions, $aCoords, $aCord, $level, $aCoordsM
@@ -80521,27 +80542,30 @@ If Int(130 + $aCoordsM[0]) < Int($iCenterX) Then
 If Int(210 + $aCoordsM[1]) < Int($iCenterY) Then
 Local $vResult[1][2] = [[(130 + $aCoordsM[0]) - $iFur,(210 + $aCoordsM[1]) - $iFur]]
 Local $P = _GetPixelColor($vResult[0][0], $vResult[0][1], True)
-If _ColorCheck($P, Hex(0x447063, 6), 20) Then _ArrayAdd($aTopLeft, $vResult)
+If _ColorCheck($P, Hex(0x447063, 6), 25) Then _ArrayAdd($aTopLeft, $vResult)
 Else
 Local $vResult[1][2] = [[(130 + $aCoordsM[0]) - $iFur,(210 + $aCoordsM[1]) + $iFur]]
 Local $P = _GetPixelColor($vResult[0][0], $vResult[0][1], True)
-If _ColorCheck($P, Hex(0x447063, 6), 20) Then _ArrayAdd($aBottomLeft, $vResult)
+If _ColorCheck($P, Hex(0x447063, 6), 25) Then _ArrayAdd($aBottomLeft, $vResult)
 EndIf
 Else
 If Int(210 + $aCoordsM[1]) < Int($iCenterY) Then
 Local $vResult[1][2] = [[(130 + $aCoordsM[0]) + $iFur,(210 + $aCoordsM[1]) - $iFur]]
 Local $P = _GetPixelColor($vResult[0][0], $vResult[0][1], True)
-If _ColorCheck($P, Hex(0x447063, 6), 20) Then _ArrayAdd($aTopRight, $vResult)
+If _ColorCheck($P, Hex(0x447063, 6), 25) Then _ArrayAdd($aTopRight, $vResult)
 Else
 Local $vResult[1][2] = [[(130 + $aCoordsM[0]) + $iFur,(210 + $aCoordsM[1]) + $iFur]]
 Local $P = _GetPixelColor($vResult[0][0], $vResult[0][1], True)
-If _ColorCheck($P, Hex(0x447063, 6), 20) Then _ArrayAdd($aBottomRight, $vResult)
+If _ColorCheck($P, Hex(0x447063, 6), 25) Then _ArrayAdd($aBottomRight, $vResult)
 EndIf
 EndIf
 Next
 Next
-If _Sleep(155) Then Return
-Next
+If _Sleep(200) Then Return
+Setlog(UBound($aTopLeft) & " aTopLeft", $COLOR_INFO)
+Setlog(UBound($aTopRight) & " aTopRight", $COLOR_INFO)
+Setlog(UBound($aBottomRight) & " aBottomRight", $COLOR_INFO)
+Setlog(UBound($aBottomLeft) & " aBottomLeft", $COLOR_INFO)
 _ArraySort($aTopLeft, 0, 0, 0, 1)
 Local $iLastY = -1, $iMaxX = -1
 Local $aTopLeftNew[0][2]
@@ -80646,6 +80670,10 @@ If($x < 10 And $y < 10) And Not($x > 5 And $y > 5) Then ContinueLoop 2
 If $i = 0 Then _ArrayDelete($aBottomLeftNew, $i2)
 Next
 Next
+Setlog(UBound($aTopLeftNew) & " aTopLeftNew", $COLOR_INFO)
+Setlog(UBound($aTopRightNew) & " aTopRightNew", $COLOR_INFO)
+Setlog(UBound($aBottomRightNew) & " aBottomRightNew", $COLOR_INFO)
+Setlog(UBound($aBottomLeftNew) & " aBottomLeftNew", $COLOR_INFO)
 Local $aSides[4] = [$aTopLeftNew, $aTopRightNew, $aBottomRightNew, $aBottomLeftNew]
 Return $aSides
 EndFunc
@@ -81882,17 +81910,11 @@ Return True
 EndFunc
 Func DeployTroopBB($sTroopName, $aSlot_XY, $Point2Deploy, $iQtyToDrop)
 SetDebugLog("[" & _ArrayToString($aSlot_XY) & "] - Deploying " & $iQtyToDrop & " " & FullNametroops($sTroopName) & " At " & $Point2Deploy[0] & " x " & $Point2Deploy[1], $COLOR_INFO)
-If $g_bIsBBMachineD = False Then $g_bIsBBMachineD =($sTroopName = "Machine") ?(True) :(False)
 ClickP($Point2Deploy, $iQtyToDrop, 0)
-If $g_bIfMachineHasAbility = True Then Return
-If $g_bIsBBMachineD = True And $g_aMachineBB <> 0 Then
-If _ColorCheck(_GetPixelColor(Int($g_aMachineBB[0][1]), 723, True), Hex(0xFFFFFF, 6), 20) Or not _ColorCheck(_GetPixelColor(Int($g_aMachineBB[0][1]), 721, True), Hex(0x472CC5, 6), 20) Then
-Setlog("The machine has ability.", $COLOR_SUCCESS)
-$g_bIfMachineHasAbility = True
-Else
-Setlog("The machine has no ability.", $COLOR_INFO)
-$g_bIfMachineHasAbility = False
-EndIf
+If $g_bIsBBMachineD = False Then $g_bIsBBMachineD =($sTroopName = "Machine") ?(True) :(False)
+If(IsArray($aMachineSlot_XYA) And(UBound($aMachineSlot_XYA, 1) > 0)) And $g_bIsBBMachineD Then
+IsMachineDepoloyed($sTroopName)
+TriggerMachineAbility(True)
 EndIf
 EndFunc
 Func GetThePointNearBH($BHposition, $aDeployPoints)
@@ -81913,16 +81935,77 @@ Next
 Next
 Return $ReturnPoint
 EndFunc
-Func TriggerMachineAbility()
-If $g_bIfMachineHasAbility = False Then Return False
-If $g_bRunState = False Then Return False
-SetDebugLog("- BB Machine : Checking ability.")
-If _ColorCheck(_GetPixelColor(Int($g_aMachineBB[0][1]), 721, True), Hex(0x432CCE, 6), 20) Then
-Click(Int($g_aMachineBB[0][1]), Int($g_aMachineBB[0][2]), 2, 0)
-If _Sleep(300) Then Return
-SetLog("- BB Machine : Click on ability.", $COLOR_ACTION)
+Func TriggerMachineAbility($isFirstTime = False)
+If Not $g_bIfMachineHasAbility Then Return
+If Not $g_bRunState Then Return
+Local $pColor = _GetPixelColor($aMachineSlot_XYA[2], 633, True, "Machine Ability Needed?")
+Static $hTimer = TimerInit()
+Local $fDiff = TimerDiff($hTimer)
+If $fDiff > 500 Or $isFirstTime Then
+If IsMachinePixelMactched($aMachineAbilityPixels, $pColor) Then
+SetLog("Machine Ability Triggered")
+ClickP($aMachineSlot_XYA, 1, 0)
+If _Sleep(150) Then Return
+ElseIf IsMachinePixelMactched($aMachineDeadPixels, $pColor) Then
+SetLog("Machine Dead Skip Ability Check")
+$g_bIfMachineHasAbility = False
+Else
+SetDebugLog("Machine Ability Needed?, Expected: " & _PixelArrayToString($aMachineAbilityPixels) & ", Tolerance: 25 at X,Y: " & $aMachineSlot_XYA[2] & ",633 Found: " & $pColor)
+SetDebugLog("Machine Dead?, Expected: " & _PixelArrayToString($aMachineDeadPixels) & ", Tolerance: 25 at X,Y: " & $aMachineSlot_XYA[2] & ",633 Found: " & $pColor)
+EndIf
+$hTimer = TimerInit()
+EndIf
+EndFunc
+Func FindMachinePosXAbilityPixel($iMachineSlotPosX)
+Local $iSlotStartingPoint = 14
+Local $bFoundAbilityPixel = False
+_CaptureRegion()
+For $iTroopsAbilityPixelPosX = $iMachineSlotPosX To $iMachineSlotPosX - $iSlotStartingPoint Step -1
+Local $pColor = _GetPixelColor($iTroopsAbilityPixelPosX, 633, False, "Find Machine Ability Pixel?")
+If IsMachinePixelMactched($aMachineAbilityPixels, $pColor) Then
+$bFoundAbilityPixel = True
+ExitLoop
+EndIf
+Next
+If $bFoundAbilityPixel Then Return $iTroopsAbilityPixelPosX
+Return -1
+EndFunc
+Func IsMachineDepoloyed($sTroopName)
+If $g_bIfMachineWasDeployed Then Return
+If Not $g_bRunState Then Return
+If $sTroopName = "Machine" Then
+$g_bIfMachineWasDeployed = True
+If _Sleep(1000) Then Return
+$aMachineSlot_XYA[0] = $aSlot_XY[0]
+$aMachineSlot_XYA[1] = $aSlot_XY[1]
+$aMachineSlot_XYA[2] = FindMachinePosXAbilityPixel($aSlot_XY[0])
+If $aMachineSlot_XYA[2] <> -1 Then
+ClickP($aSlot_XY, 1, 0)
+If _Sleep(150) Then Return
+$g_bIfMachineHasAbility = True
+Setlog("Machine Has Ability And Triggered", $COLOR_INFO)
+SetDebugLog("Machine Deployed And It's Ability Pixel Found At (" & $aMachineSlot_XYA[2] & ",633)", $COLOR_INFO)
+Else
+$aMachineSlot_XYA[2] = 0
+Setlog("Machine Deployed But Don't Have Ability...", $COLOR_INFO)
+EndIf
+EndIf
+Return $g_bIfMachineWasDeployed
+EndFunc
+Func _PixelArrayToString($aPixelsList)
+Local $sPixel = ""
+For $i = 0 To UBound($aPixelsList) - 1
+If $i = UBound($aPixelsList) - 1 Then $sPixel = $sPixel & Hex($aPixelsList[$i], 6)
+If $i <> UBound($aPixelsList) - 1 Then $sPixel = $sPixel & Hex($aPixelsList[$i], 6) & ","
+Next
+Return $sPixel
+EndFunc
+Func IsMachinePixelMactched($aMachinePixelsList, $pColor, $tolerance = 25)
+For $i = 0 To UBound($aMachinePixelsList) - 1
+If _ColorCheck($pColor, Hex($aMachinePixelsList[$i], 6), $tolerance) Then
 Return True
 EndIf
+Next
 Return False
 EndFunc
 Func BattleIsOver()
@@ -81989,9 +82072,10 @@ If $aAvailableTroops <> -1 Then SetDebugLog("Attack Bar Array: " & _ArrayToStrin
 If $aAvailableTroops = -1 Then Return -1
 If Not $IsToDropTrophies Then BuilderBaseSelectCorrectScript($aAvailableTroops)
 If RandomSleep(1500) Then Return
+Global $aMachineSlot_XYA[3] = [0, 0, 0]
 $g_bIfMachineHasAbility = False
+$g_bIfMachineWasDeployed = False
 $g_bIsBBMachineD = False
-$g_aMachineBB = 0
 Select
 Case $IsToDropTrophies = True
 Setlog("Let's Drop some Trophies!", $COLOR_SUCCESS)
@@ -82262,7 +82346,7 @@ If $i > 15 Then
 Return False
 Else
 SetLog("Return To Home.", $Color_Info)
-ClickP($g_iMultiPixelOffSet, 1, 0)
+Click($g_iMultiPixelOffSet[0] + 41 + Random(0, 20, 1), $g_iMultiPixelOffSet[1] + Random(0, 10, 1), 1, 0)
 EndIf
 Local $ResultName = ""
 For $i = 0 To 12
@@ -85076,6 +85160,7 @@ _RunFunction($Index)
 If $g_bRestart Then ContinueLoop 2
 If CheckAndroidReboot() Then ContinueLoop 2
 Next
+BoostEverything()
 If $g_bRestart Then ContinueLoop
 Local $aRndFuncList = ['BoostBarracks', 'BoostSpellFactory', 'BoostWorkshop', 'BoostKing', 'BoostQueen', 'BoostWarden', 'BoostChampion']
 _ArrayShuffle($aRndFuncList)

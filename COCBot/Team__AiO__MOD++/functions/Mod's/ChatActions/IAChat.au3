@@ -198,16 +198,3 @@ Func getChatStringPersianMod($x_start, $y_start) ; -> Get string chat request - 
 	$sReturn = StringStripWS($sReturn, 1 + 2)
 	Return $sReturn
 EndFunc   ;==>getChatStringPersianMod
-
-Func getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpace = Default, $bImgLoc = Default, $bForceCaptureRegion = Default)
-	Local $iTry = 0
-	Local $iMax = ($g_bDnAIO <> True) ? (8) : (0)
-	
-	While 1
-		$g_sGetOcrMod = _getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpace, $bImgLoc, $bForceCaptureRegion)
-		If $iMax = $iTry Or not StringIsSpace($g_sGetOcrMod) Then Return $g_sGetOcrMod
-		$iTry += 1
-		If _Sleep(250) Then Return
-	Wend
-	Return ""
-EndFunc   ;==>getOcrAndCapture

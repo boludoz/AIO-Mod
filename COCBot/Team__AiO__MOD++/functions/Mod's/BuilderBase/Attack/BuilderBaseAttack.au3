@@ -108,9 +108,10 @@ Func BuilderBaseAttack($bTestRun = False)
 		If RandomSleep(1500) Then Return
 
 		; Reset vars.
+		Global $aMachineSlot_XYA[3] = [0, 0, 0]
 		$g_bIfMachineHasAbility = False
+		$g_bIfMachineWasDeployed = False
 		$g_bIsBBMachineD = False
-		$g_aMachineBB = 0
 
 		; Select mode.
 		Select
@@ -502,7 +503,7 @@ Func BuilderBaseAttackReport()
 		Return False
 	Else
 		SetLog("Return To Home.", $Color_Info)
-		ClickP($g_iMultiPixelOffSet, 1, 0)
+		Click($g_iMultiPixelOffSet[0] + 41 + Random(0, 20, 1), $g_iMultiPixelOffSet[1] + Random(0, 10, 1), 1, 0)
 	EndIf
 
 	Local $ResultName = ""
