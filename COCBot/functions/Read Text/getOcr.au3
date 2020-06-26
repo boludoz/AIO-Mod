@@ -334,8 +334,7 @@ Func OcrForceCaptureRegion($bForce = Default)
 	Return $wasForce
 EndFunc   ;==>OcrForceCaptureRegion
 
-#Region - Team AiO++ MOD (ModFuncs.au3)
-Func _getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpace = Default, $bImgLoc = Default, $bForceCaptureRegion = Default)
+Func getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpace = Default, $bImgLoc = Default, $bForceCaptureRegion = Default)
 	If $removeSpace = Default Then $removeSpace = False
 	If $bImgLoc = Default Then $bImgLoc = False
 	If $bForceCaptureRegion = Default Then $bForceCaptureRegion = $g_bOcrForceCaptureRegion
@@ -370,7 +369,6 @@ Func _getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSp
 	EndIf
 	Return $result
 EndFunc   ;==>getOcrAndCapture
-#EndRegion - Team AiO++ MOD (ModFuncs.au3)
 
 Func getOcr(ByRef Const $_hHBitmap, $language)
 	Local $result = DllCallMyBot("ocr", "ptr", $_hHBitmap, "str", $language, "int", $g_bDebugOcr ? 1 : 0)

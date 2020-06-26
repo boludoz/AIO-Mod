@@ -119,17 +119,7 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 							If RandomSleep($g_iBBSameTroopDelay) Then Return
 							Local $vDP = Random(0, UBound($aVar) - 1)
 							PureClick($aVar[$vDP][0], $aVar[$vDP][1])
-							; @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\Attack\Battle\"
-							; "x,y" : "458, 617, 479, 623"
-							Local $a[4] = [$aBBAttackBar[$j][1] - 5, 617, $aBBAttackBar[$j][1] + 5, 623]
-							Local $v = _WaitForCheckXML(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\Attack\Battle\", $a, Default, 1000, 100)
-							If ($v = False) Then
-								Setlog("The machine has no ability.", $COLOR_INFO)
-								$g_bIfMachineHasAbility = False
-							Else
-								Setlog("The machine has ability.", $COLOR_SUCCESS)
-								$g_bIfMachineHasAbility = True
-							EndIf
+							$g_bIsBBMachineD = True
 						EndIf
 
 						;---------------------------
@@ -164,17 +154,7 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 					If RandomSleep($g_iBBSameTroopDelay) Then Return
 					Local $vDP = Random(0, UBound($aVar) - 1)
 					PureClick($aVar[$vDP][0], $aVar[$vDP][1])
-					; @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\Attack\Battle\"
-					; "x,y" : "458, 617, 479, 623"
-					Local $a[4] = [$aBBAttackBar[$i][1] - 5, 617, $aBBAttackBar[$i][1] + 5, 623]
-					Local $v = _WaitForCheckXML(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\Attack\Battle\", $a, Default, 1000, 100)
-					If ($v = False) Then
-						Setlog("The machine has no ability.", $COLOR_INFO)
-						$g_bIfMachineHasAbility = False
-					Else
-						Setlog("The machine has ability.", $COLOR_SUCCESS)
-						$g_bIfMachineHasAbility = True
-					EndIf
+					$g_bIsBBMachineD = True
 				EndIf
 
 				;---------------------------

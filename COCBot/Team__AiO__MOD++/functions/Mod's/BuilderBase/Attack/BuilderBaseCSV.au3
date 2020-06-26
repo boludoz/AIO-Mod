@@ -74,11 +74,6 @@ Func BuilderBaseParseAttackCSV($AvailableTroops, $DeployPoints, $DeployBestPoint
 	; [x][0] = Troops Name , [x][1] = X-axis , [x][2] - Y-Axis [x][3] - Slot starting at 0, [x][4] - Quantity
 	Local $aAvailableTroops_NXQ = $AvailableTroops
 
-	; Machine Ability
-	;Local $aMachineSlot_XYA[3] = [0, 0, 0] ;3rd column is for Ability Pixel
-	;$g_bIfMachineWasDeployed = False
-	$g_bIfMachineHasAbility = False
-
 	; [0] - TopLeft ,[1] - TopRight , [2] - BottomRight , [3] - BottomLeft
 	Local $aDeployBestPoints = $DeployBestPoints ;Best Filtered 10 Points
 	Local $aDeployPoints = $DeployPoints ; Non Filterd Deploy Points
@@ -322,7 +317,7 @@ Func BuilderBaseParseAttackCSV($AvailableTroops, $DeployPoints, $DeployBestPoint
 										; Remove the Qty from the Original array :
 										$aAvailableTroops_NXQ[$iSlotNumber][4] = $iQtyOfSelectedSlot
 										; If is the Machine exist and deployed
-										; If IsMachineDepoloyed($sTroopName, $iSlotNumber, $bIfMachineWasDeployed, $bIfMachineHasAbility, $aMachineSlot_XYA) Then ExitLoop (2)
+										; If IsMachineDepoloyed($sTroopName, $iSlotNumber, $bIfMachineWasDeployed, $bIfMachineHasAbility, $g_aMachineBB) Then ExitLoop (2)
 										If $g_bIsBBMachineD Then ExitLoop (2)
 
 										If $iTotalQtyByTroop < 1 Then ExitLoop (2)
@@ -671,12 +666,19 @@ EndFunc   ;==>VerifySlotTroop
 
 Func DeployTroopBB($sTroopName, $aSlot_XY, $Point2Deploy, $iQtyToDrop)
 	SetDebugLog("[" & _ArrayToString($aSlot_XY) & "] - Deploying " & $iQtyToDrop & " " & FullNametroops($sTroopName) & " At " & $Point2Deploy[0] & " x " & $Point2Deploy[1], $COLOR_INFO)
-	ClickP($Point2Deploy, $iQtyToDrop, 0)
-	If $g_bIsBBMachineD = False Then $g_bIsBBMachineD = ($sTroopName = "Machine") ? (True) : (False)
-	If (IsArray($aMachineSlot_XYA) And (UBound($aMachineSlot_XYA) > 0)) And $g_bIsBBMachineD Then 
-		IsMachineDepoloyed($sTroopName)
-		TriggerMachineAbility(True)
+	If $g_bIsBBMachineD = False Then 
+		$g_bIsBBMachineD = ($sTroopName = "Machine") ? (True) : (False)
+		If $g_bIsBBMachineD And $g_aMachineBB[0] <> 0 Then
+			If _ColorCheck(_GetPixelColor(Int($g_aMachineBB[0]), 723, True), Hex(0xFFFFFF, 6), 25) Then 
+				Setlog("Machine fail.", $COLOR_ERROR)
+				$g_bIsBBMachineD = False
+			EndIf
+			$g_bIsBBMachineD = False
+		EndIf
 	EndIf
+	
+	ClickP($Point2Deploy, $iQtyToDrop, 0)
+	
 EndFunc   ;==>DeployTroopBB
 
 Func GetThePointNearBH($BHposition, $aDeployPoints)
@@ -699,99 +701,43 @@ Func GetThePointNearBH($BHposition, $aDeployPoints)
 	Return $ReturnPoint
 EndFunc   ;==>GetThePointNearBH
 
-Func TriggerMachineAbility($isFirstTime = False)
-	If Not $g_bIfMachineHasAbility Then Return
-
-	If Not $g_bRunState Then Return
-
-	;$aMachineSlot_XYA[2] Contains e.g With 5 $aMachineSlot_XYA[2] = (5*72)+10 = 370 And Pixel It Contains 370x633 -> EFC88A Or AE9A88
-	Local $pColor = _GetPixelColor($aMachineSlot_XYA[2], 633, True, "Machine Ability Needed?")
-	Static $hTimer = TimerInit()
-	Local $fDiff = TimerDiff($hTimer)
-	If $fDiff > 500 Or $isFirstTime Then ; Although This Check is not needed now as we are using pixel logic but to avoid frequent check added a 2 sec delay
-
-		If IsMachinePixelMactched($aMachineAbilityPixels, $pColor) Then
-			SetLog("Machine Ability Triggered")
-			ClickP($aMachineSlot_XYA, 1, 0)
-			If _Sleep(150) Then Return
-		ElseIf IsMachinePixelMactched($aMachineDeadPixels, $pColor) Then
-			SetLog("Machine Dead Skip Ability Check")
-			$g_bIfMachineHasAbility = False ; No Need to click on ability when machine dead
+Func TriggerMachineAbility($bTest = False, $bBBIsFirst = $g_bBBIsFirst, $ix = 458, $iy = 723)
+	Local $hPixel 
+	If not $bTest Then
+		If Not $g_bIsBBMachineD Then Return
 		Else
-			SetDebugLog("Machine Ability Needed?, Expected: " & _PixelArrayToString($aMachineAbilityPixels) & ", Tolerance: 25 at X,Y: " & $aMachineSlot_XYA[2] & ",633 Found: " & $pColor)
-			SetDebugLog("Machine Dead?, Expected: " & _PixelArrayToString($aMachineDeadPixels) & ", Tolerance: 25 at X,Y: " & $aMachineSlot_XYA[2] & ",633 Found: " & $pColor)
-		EndIf
-		$hTimer = TimerInit()
-	EndIf
+		Global $g_aMachineBB[2] = [$ix, $iy]
+	EndIf 
+	
+	If Not IsArray($g_aMachineBB) Then Return
+	
+	SetDebugLog("- BB Machine : Checking ability.")
+	
+	$hPixel = _GetPixelColor(Int($g_aMachineBB[0]), 721, True)
+	If $bTest Then Setlog($hPixel & " ability", $COLOR_INFO)
 
-EndFunc   ;==>TriggerMachineAbility
-
-Func FindMachinePosXAbilityPixel($iMachineSlotPosX)
-	;e.g It Contains -> EFC88A Or AE9A88
-	Local $iSlotStartingPoint = 14 ;This is used in BuilderBaseAttackBarSlot it means slot starting point was -14 of $iMachineSlotPosX
-	Local $bFoundAbilityPixel = False
-	_CaptureRegion()
-	Local $aMachineAbilityPixels[3] = [0xAE9A88, 0xE7CE93, 0xCEB385]
-	For $i = 0 To UBound($aMachineAbilityPixels)-1
-		Local $aStart[4] = [$iMachineSlotPosX-14,619,$iMachineSlotPosX+14,675]
-		For $ix = $aStart[0] To $aStart[2]
-			For $iy = $aStart[1] To $aStart[3]
-				If _ColorCheck(_GetPixelColor($ix, $iy), $aMachineAbilityPixels[$i], 25) Then 
-					$bFoundAbilityPixel = True
-					Return $bFoundAbilityPixel
-				EndIf
-			Next
-		Next
-	Next
-	;For $iTroopsAbilityPixelPosX = $iMachineSlotPosX To $iMachineSlotPosX - $iSlotStartingPoint Step -1
-	;	Local $pColor = _GetPixelColor($iTroopsAbilityPixelPosX, 633, False, "Find Machine Ability Pixel?") ; RC Done
-	;	If IsMachinePixelMactched($aMachineAbilityPixels, $pColor) Then
-	;		$bFoundAbilityPixel = True
-	;		ExitLoop
-	;	EndIf
-	;Next
-	If $bFoundAbilityPixel Then Return $iTroopsAbilityPixelPosX
-	Return -1 ;If Ability Pixel Not Found
-EndFunc   ;==>FindMachinePosXAbilityPixel
-
-Func IsMachinePixelMactched($aMachinePixelsList, $pColor, $tolerance = 25)
-	For $i = 0 To UBound($aMachinePixelsList) - 1
-		If _ColorCheck($pColor, Hex($aMachinePixelsList[$i], 6), $tolerance) Then
+	If $bBBIsFirst And IsArray($g_aMachineBB) Then
+		If $bTest Then Setlog(_ArrayToString($g_aMachineBB))
+		If _ColorCheck($hPixel, Hex(0x472CC5, 6), 40) Then
+			Click(Int($g_aMachineBB[0]), Int($g_aMachineBB[1]), 2, 0)
+			If _Sleep(300) Then Return
+			SetLog("- BB Machine : Skill enabled.", $COLOR_ACTION)
+			$g_bBBIsFirst = False
 			Return True
-		EndIf
-	Next
-	Return False
-EndFunc   ;==>IsMachinePixelMactched
-
-Func IsMachineDepoloyed($sTroopName)
-	If $g_bIfMachineWasDeployed Then Return ;If already deployed no need to check again
-	If Not $g_bRunState Then Return
-	If $sTroopName = "Machine" Then
-		$g_bIfMachineWasDeployed = True
-		If _Sleep(1000) Then Return ;Delay So Hero Ability Effects Get Shown
-		$aMachineSlot_XYA[2] = FindMachinePosXAbilityPixel($aMachineSlot_XYA[0])
-		If $aMachineSlot_XYA[2] <> -1 Then
-			ClickP($aSlot_XY, 1, 0)
-			If _Sleep(150) Then Return
-			$g_bIfMachineHasAbility = True
-			Setlog("Machine Has Ability And Triggered", $COLOR_INFO)
-			SetDebugLog("Machine Deployed And It's Ability Pixel Found At (" & $aMachineSlot_XYA[2] & ",633)", $COLOR_INFO)
 		Else
-			$aMachineSlot_XYA[2] = 0
-			Setlog("Machine Deployed But Don't Have Ability...", $COLOR_INFO)
+			SetLog("- BB Machine : Skill not present.", $COLOR_INFO)
+			Return False
 		EndIf
 	EndIf
-	Return $g_bIfMachineWasDeployed
-EndFunc   ;==>IsMachineDepoloyed
-
-Func _PixelArrayToString($aPixelsList)
-	Local $sPixel = ""
-	For $i = 0 To UBound($aPixelsList) - 1
-		If $i = UBound($aPixelsList) - 1 Then $sPixel = $sPixel & Hex($aPixelsList[$i], 6)
-		If $i <> UBound($aPixelsList) - 1 Then $sPixel = $sPixel & Hex($aPixelsList[$i], 6) & ","
-	Next
-	Return $sPixel
-EndFunc   ;==>_PixelArrayToString
+	
+	If _ColorCheck($hPixel, Hex(0x432CCE, 6), 20) Then
+		Click(Int($g_aMachineBB[0]), Int($g_aMachineBB[1]), 2, 0)
+		If _Sleep(300) Then Return
+		SetLog("- BB Machine : Click on ability.", $COLOR_ACTION)
+		Return True
+	EndIf
+	Return False
+EndFunc   ;==>TriggerMachineAbility
 
 Func BattleIsOver()
 	Local $SurrenderBtn = [65, 607]

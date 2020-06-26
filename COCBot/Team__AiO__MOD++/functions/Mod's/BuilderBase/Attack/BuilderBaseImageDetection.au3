@@ -572,7 +572,7 @@ Func BuilderBaseResetAttackVariables()
 	Global $g_aExternalEdges, $g_aBuilderBaseDiamond, $g_aOuterEdges, $g_aBuilderBaseOuterDiamond, $g_aBuilderBaseOuterPolygon, $g_aFinalOuter[4]
 
 	; Provisional globals BB Machine
-	Global $g_bIsBBMachineD = False, $g_bBBIsFirst = True
+	;Global $g_bIsBBMachineD = False, $g_bBBIsFirst = True
 EndFunc   ;==>BuilderBaseResetAttackVariables
 
 Func BuilderBaseAttackMainSide()

@@ -108,7 +108,7 @@ Func BuilderBaseAttack($bTestRun = False)
 		If RandomSleep(1500) Then Return
 
 		; Reset vars.
-		Global $aMachineSlot_XYA[3] = [0, 0, 0]
+		Global $g_aMachineBB[2] = [0, 0]
 		$g_bIfMachineHasAbility = False
 		$g_bIfMachineWasDeployed = False
 		$g_bIsBBMachineD = False

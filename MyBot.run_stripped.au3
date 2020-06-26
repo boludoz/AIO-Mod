@@ -7621,7 +7621,7 @@ Global $g_aClanPage[4] = [821, 400, 0xFB5D63, 20]
 Global $g_aClanLabel[4] = [522, 70, 0xEDEDE8, 20]
 Global $g_aIsClanChat[4] = [86, 12, 0xC1BB91, 20]
 Global $g_bChkCollectMagicItems, $g_bChkCollectFree, $g_bChkBuilderPotion, $g_bChkClockTowerPotion, $g_bChkHeroPotion, $g_bChkLabPotion, $g_bChkPowerPotion, $g_bChkResourcePotion, $g_iComboClockTowerPotion, $g_iComboHeroPotion, $g_iComboPowerPotion, $g_iInputBuilderPotion, $g_iInputLabPotion, $g_iInputGoldItems = 250000, $g_iInputElixirItems = 300000, $g_iInputDarkElixirItems = 1000
-Global $aMachineSlot_XYA[3] = [0, 0, 0], $g_bIsBBMachineD = False, $g_bBBIsFirst = True
+Global $g_aMachineBB[3] = [0, 0, 0], $g_bIsBBMachineD = False, $g_bBBIsFirst = True
 Global $aKingHealth = [-1, 569 + $g_iBottomOffsetY, 0x00D500, 15]
 Global $aQueenHealth = [-1, 569 + $g_iBottomOffsetY, 0x00D500, 15]
 Global $aWardenHealth = [-1, 569 + $g_iBottomOffsetY, 0x00D500, 15]
@@ -43286,7 +43286,7 @@ ContinueLoop
 EndIf
 EndIf
 Local $aTempElement[1][5] = [[$aTroop[0], $aTempCoords[0], $aTempCoords[1], $iSlot, $iCount]]
-If($bRemaining = False) And(String($aTroop[0]) = "Machine") Then Global $aMachineSlot_XYA[3] = [$aTempElement[0][1], $aTempElement[0][2], 0]
+If($bRemaining = False) And(String($aTroop[0]) = "Machine") Then Global $g_aMachineBB[3] = [$aTempElement[0][1], $aTempElement[0][2], 0]
 _ArrayAdd($aBBAttackBar, $aTempElement)
 Next
 Next
@@ -81912,7 +81912,7 @@ Func DeployTroopBB($sTroopName, $aSlot_XY, $Point2Deploy, $iQtyToDrop)
 SetDebugLog("[" & _ArrayToString($aSlot_XY) & "] - Deploying " & $iQtyToDrop & " " & FullNametroops($sTroopName) & " At " & $Point2Deploy[0] & " x " & $Point2Deploy[1], $COLOR_INFO)
 ClickP($Point2Deploy, $iQtyToDrop, 0)
 If $g_bIsBBMachineD = False Then $g_bIsBBMachineD =($sTroopName = "Machine") ?(True) :(False)
-If(IsArray($aMachineSlot_XYA) And(UBound($aMachineSlot_XYA, 1) > 0)) And $g_bIsBBMachineD Then
+If(IsArray($g_aMachineBB) And(UBound($g_aMachineBB, 1) > 0)) And $g_bIsBBMachineD Then
 IsMachineDepoloyed($sTroopName)
 TriggerMachineAbility(True)
 EndIf
@@ -81938,20 +81938,20 @@ EndFunc
 Func TriggerMachineAbility($isFirstTime = False)
 If Not $g_bIfMachineHasAbility Then Return
 If Not $g_bRunState Then Return
-Local $pColor = _GetPixelColor($aMachineSlot_XYA[2], 633, True, "Machine Ability Needed?")
+Local $pColor = _GetPixelColor($g_aMachineBB[2], 633, True, "Machine Ability Needed?")
 Static $hTimer = TimerInit()
 Local $fDiff = TimerDiff($hTimer)
 If $fDiff > 500 Or $isFirstTime Then
 If IsMachinePixelMactched($aMachineAbilityPixels, $pColor) Then
 SetLog("Machine Ability Triggered")
-ClickP($aMachineSlot_XYA, 1, 0)
+ClickP($g_aMachineBB, 1, 0)
 If _Sleep(150) Then Return
 ElseIf IsMachinePixelMactched($aMachineDeadPixels, $pColor) Then
 SetLog("Machine Dead Skip Ability Check")
 $g_bIfMachineHasAbility = False
 Else
-SetDebugLog("Machine Ability Needed?, Expected: " & _PixelArrayToString($aMachineAbilityPixels) & ", Tolerance: 25 at X,Y: " & $aMachineSlot_XYA[2] & ",633 Found: " & $pColor)
-SetDebugLog("Machine Dead?, Expected: " & _PixelArrayToString($aMachineDeadPixels) & ", Tolerance: 25 at X,Y: " & $aMachineSlot_XYA[2] & ",633 Found: " & $pColor)
+SetDebugLog("Machine Ability Needed?, Expected: " & _PixelArrayToString($aMachineAbilityPixels) & ", Tolerance: 25 at X,Y: " & $g_aMachineBB[2] & ",633 Found: " & $pColor)
+SetDebugLog("Machine Dead?, Expected: " & _PixelArrayToString($aMachineDeadPixels) & ", Tolerance: 25 at X,Y: " & $g_aMachineBB[2] & ",633 Found: " & $pColor)
 EndIf
 $hTimer = TimerInit()
 EndIf
@@ -81976,17 +81976,17 @@ If Not $g_bRunState Then Return
 If $sTroopName = "Machine" Then
 $g_bIfMachineWasDeployed = True
 If _Sleep(1000) Then Return
-$aMachineSlot_XYA[0] = $aSlot_XY[0]
-$aMachineSlot_XYA[1] = $aSlot_XY[1]
-$aMachineSlot_XYA[2] = FindMachinePosXAbilityPixel($aSlot_XY[0])
-If $aMachineSlot_XYA[2] <> -1 Then
+$g_aMachineBB[0] = $aSlot_XY[0]
+$g_aMachineBB[1] = $aSlot_XY[1]
+$g_aMachineBB[2] = FindMachinePosXAbilityPixel($aSlot_XY[0])
+If $g_aMachineBB[2] <> -1 Then
 ClickP($aSlot_XY, 1, 0)
 If _Sleep(150) Then Return
 $g_bIfMachineHasAbility = True
 Setlog("Machine Has Ability And Triggered", $COLOR_INFO)
-SetDebugLog("Machine Deployed And It's Ability Pixel Found At (" & $aMachineSlot_XYA[2] & ",633)", $COLOR_INFO)
+SetDebugLog("Machine Deployed And It's Ability Pixel Found At (" & $g_aMachineBB[2] & ",633)", $COLOR_INFO)
 Else
-$aMachineSlot_XYA[2] = 0
+$g_aMachineBB[2] = 0
 Setlog("Machine Deployed But Don't Have Ability...", $COLOR_INFO)
 EndIf
 EndIf
@@ -82072,7 +82072,7 @@ If $aAvailableTroops <> -1 Then SetDebugLog("Attack Bar Array: " & _ArrayToStrin
 If $aAvailableTroops = -1 Then Return -1
 If Not $IsToDropTrophies Then BuilderBaseSelectCorrectScript($aAvailableTroops)
 If RandomSleep(1500) Then Return
-Global $aMachineSlot_XYA[3] = [0, 0, 0]
+Global $g_aMachineBB[3] = [0, 0, 0]
 $g_bIfMachineHasAbility = False
 $g_bIfMachineWasDeployed = False
 $g_bIsBBMachineD = False
