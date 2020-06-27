@@ -54,16 +54,22 @@ Func SwitchBetweenBases($bCheckMainScreen = True, $bGoTo = Default, $bSilent = D
 		EndIf
 		
 		If $bCheckMainScreen Then
+			$bIs = isOnBuilderBase(True)
 			; switch can take up to 2 Seconds, check for 3 additional Seconds...
 			Local $hTimerHandle = __TimerInit()
+			Local $iDo = 0
 			Do
+				$iDo += 1
 				If __TimerDiff($hTimerHandle) > 3000 Then ContinueLoop 2
 				If _Sleep(100) Then Return
-			Until checkMainScreen(True, ($bSwitched <> $bIs)) ; You would not understand.
+				
+			Until (checkMainScreen(True, $bIs) Or ($iDo > 3)) ; You would not understand.
 			
+			; If ($iDo > 3) Then ...
+			
+			If ($bSilent <> True) Then SetLog(($bSwitched <> $bIs) ? ("Is switched to ? : Builder base.") : ("Is switched to ? : Normal village."), $COLOR_SUCCESS)
 		EndIf
 		
-		If ($bSilent <> True) Then SetLog(($bSwitched <> $bIs) ? ("Is switched to ? : Builder base.") : ("Is switched to ? : Normal village."), $COLOR_SUCCESS)
 		Return ($bNoBoat) ? (False) : (True) ; Return false for avoid bugs in bb switch.
 
 	Next
