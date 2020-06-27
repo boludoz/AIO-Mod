@@ -43145,12 +43145,8 @@ Local $iAndroidSuspendModeFlagsLast = $g_iAndroidSuspendModeFlags
 $g_iAndroidSuspendModeFlags = 0
 If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Disabled")
 Local $aBBAttackBar = $aAvailableTroops
-If Not IsArray($aBBAttackBar) Then Return "Fail MachineKick."
-If RandomSleep($DELAYRESPOND) Then
-$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
-If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Enabled")
-Return
-EndIf
+If Not IsArray($aBBAttackBar) Then Return
+If RandomSleep($DELAYRESPOND) Then Return
 Local $iLoopControl = 0, $iUBound1 = UBound($aBBAttackBar)
 SetLog($g_bBBDropOrderSet = True ? "Deploying Troops in Custom Order." : "Deploying Troops in Order of Attack Bar.", $COLOR_BLUE)
 Do
@@ -43231,7 +43227,7 @@ $aBBAttackBar = GetAttackBarBB(True)
 If UBound($aBBAttackBar) = $iUBound1 Then $iLoopControl += 1
 If($iLoopControl > 3) Then ExitLoop
 $iUBound1 = UBound($aBBAttackBar)
-Until Not IsArray(MachineKick($aBBAttackBar))
+Until Not IsArray($aBBAttackBar)
 SetLog("All Troops Deployed", $COLOR_SUCCESS)
 $g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
 If $g_bDebugSetlog Then SetDebugLog("Android Suspend Mode Enabled")
@@ -67314,13 +67310,16 @@ Click($vSwitch[0], $vSwitch[1])
 $bSwitched =(Int($vSwitch[0]) < 388 ) ?(True) :(False)
 EndIf
 If $bCheckMainScreen Then
+$bIs = isOnBuilderBase(True)
 Local $hTimerHandle = __TimerInit()
+Local $iDo = 0
 Do
+$iDo += 1
 If __TimerDiff($hTimerHandle) > 3000 Then ContinueLoop 2
 If _Sleep(100) Then Return
-Until checkMainScreen(True,($bSwitched <> $bIs))
-EndIf
+Until(checkMainScreen(True, $bIs) Or($iDo > 3))
 If($bSilent <> True) Then SetLog(($bSwitched <> $bIs) ?("Is switched to ? : Builder base.") :("Is switched to ? : Normal village."), $COLOR_SUCCESS)
+EndIf
 Return($bNoBoat) ?(False) :(True)
 Next
 SetLog("Fail SwitchBetweenBases 0x1", $COLOR_ERROR)
@@ -82849,18 +82848,6 @@ For $i = 0 To UBound($aAvailableTroops) - 1
 If Not $g_bRunState Then Return
 If $aAvailableTroops[$i][0] <> "" Then SetLog("[" & $i + 1 & "] - " & $aAvailableTroops[$i][4] & "x " & FullNametroops($aAvailableTroops[$i][0]), $COLOR_SUCCESS)
 Next
-EndFunc
-Func MachineKick($a)
-If Not IsArray($a) Then Return -1
-For $i = UBound($a) -1 To 0 Step -1
-If StringInStr($a[$i][0], "Machine") > 0 Then
-_ArrayDelete($a, $i)
-ExitLoop
-EndIf
-Next
-Local $vReturn =(UBound($a) < 1) ?(-1) :($a)
-$a = $vReturn
-Return $vReturn
 EndFunc
 Global $g_aTroopButton = 0
 Func TestCheckArmyBuilderBase()

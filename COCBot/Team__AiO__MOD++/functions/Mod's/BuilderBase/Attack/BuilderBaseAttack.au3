@@ -97,10 +97,14 @@ Func BuilderBaseAttack($bTestRun = False)
 		; Attack Bar | [0] = Troops Name , [1] = X-axis , [2] - Y-axis, [3] - Slot starting at 0, [4] - Amount
 		; Local $aAvailableTroops = BuilderBaseAttackBar()
 		Local $aAvailableTroops = GetAttackBarBB()
-		If $aAvailableTroops <> -1 Then SetDebugLog("Attack Bar Array: " & _ArrayToString($aAvailableTroops, "-", -1, -1, "|", -1, -1))
-
-		If $aAvailableTroops = -1 Then Return -1
-
+		If IsArray($aAvailableTroops) Then 
+			SetDebugLog("Attack Bar Array: " & _ArrayToString($aAvailableTroops, "-", -1, -1, "|", -1, -1))
+		Else 
+			SetDebugLog("No troops AttackBar.", $COLOR_ERROR)
+			CheckMainScreen()
+			Return -1
+		EndIf
+		
 		; Verify the scripts and attack bar
 		If Not $IsToDropTrophies Then BuilderBaseSelectCorrectScript($aAvailableTroops)
 
