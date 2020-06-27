@@ -455,13 +455,13 @@ EndFunc   ;==>BuilderBaseCSVAttack
 
 Func BuilderBaseAttackReport()
 	; Verify the Window Report , Point[0] Archer Shadow Black Zone [155,460,000000], Point[1] Ok Green Button [430,590, 6DBC1F]
-	Local $SurrenderBtn = [76, 584] ; DESRC Done
-	Local $OKbtn = [435, 562] ; DESRC Done ;auxiliar click
+	Local $SurrenderBtn = [76, 584]
+	Local $OKbtn = [435, 562]
 
 	For $i = 0 To 60
 		If Not $g_bRunState Then Return
 		TriggerMachineAbility()
-		Local $sDamage = Number(getOcrOverAllDamage(780, 527 + 88)) ; DESRC Done
+		Local $sDamage = Number(getOcrOverAllDamage(780, 615))
 		If Int($sDamage) > Int($g_iLastDamage) Then
 			$g_iLastDamage = Int($sDamage)
 			Setlog("Total Damage: " & $g_iLastDamage & "%")
@@ -471,13 +471,8 @@ Func BuilderBaseAttackReport()
 		If _Sleep(2000) Then Return
 	Next
 
-	;If checkObstacles(True) Then
-	;	SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
-	;	Return
-	;EndIf
-
 	Local $Stars = 0
-	Local $StarsPositions[3][2] = [[326, 394], [452, 388], [546, 413]] ; des RC Done ?
+	Local $StarsPositions[3][2] = [[326, 394], [452, 388], [546, 413]]
 	Local $Color[3] = [0xD0D4D0, 0xDBDEDB, 0xDBDDD8]
 
 	If _Sleep(1500) Then Return

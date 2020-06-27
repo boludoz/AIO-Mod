@@ -104,7 +104,7 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 
 	If $bForceCapture Then _CaptureRegion2($aiPostFix[0], $aiPostFix[1], $aiPostFix[2], $aiPostFix[3])
 
-	Local $aRes = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sDirectory, "str", "ECD", "Int", $Quantity2Match, "str", "ECD", "Int", 0, "Int", 1000)
+	Local $aRes = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sDirectory, "str", GetDiamondFromRect("25, 103, 815, 712"), "Int", $Quantity2Match, "str", GetDiamondFromRect("25, 103, 815, 712"), "Int", 0, "Int", 1000)
 	Local $KeyValue = StringSplit($aRes[0], "|", $STR_NOCOUNT)
 	Local $Name = ""
 	Local $aPositions, $aCoords, $aCord, $level, $aCoordsM

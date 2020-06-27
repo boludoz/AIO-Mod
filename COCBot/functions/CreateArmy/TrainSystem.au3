@@ -879,7 +879,7 @@ Func CheckQueueTroops($bGetQuantity = True, $bSetLog = True, $x = 839, $bQtyWSlo
 EndFunc   ;==>CheckQueueTroops
 
 Func CheckQueueSpells($bGetQuantity = True, $bSetLog = True, $x = 839, $bQtyWSlot = False)
-	Local $aResult[1] = [""], $sImageDir = "trainwindow-SpellsInQueue-bundle"
+	Local $aResult[1] = [""], $sImageDir = @ScriptDir & "\imgxml\ArmyOverview\SpellsQueued" ; Custom - Team AIO Mod++
 	;$hTimer = TimerInit()
 	If $bSetLog Then SetLog("Checking Spells Queue...", $COLOR_INFO)
 

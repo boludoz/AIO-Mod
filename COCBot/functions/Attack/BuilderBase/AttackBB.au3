@@ -119,6 +119,7 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 							If RandomSleep($g_iBBSameTroopDelay) Then Return
 							Local $vDP = Random(0, UBound($aVar) - 1)
 							PureClick($aVar[$vDP][0], $aVar[$vDP][1])
+							Global $g_aMachineBB[2] = [$aBBAttackBar[$j][1], $aBBAttackBar[$j][2]]
 							$g_bIsBBMachineD = True
 						EndIf
 
@@ -154,6 +155,7 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 					If RandomSleep($g_iBBSameTroopDelay) Then Return
 					Local $vDP = Random(0, UBound($aVar) - 1)
 					PureClick($aVar[$vDP][0], $aVar[$vDP][1])
+					Global $g_aMachineBB[2] = [$aBBAttackBar[$i][1], $aBBAttackBar[$i][2]]
 					$g_bIsBBMachineD = True
 				EndIf
 
@@ -176,6 +178,7 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 		
 		; Attack bar loop control.
 		$aBBAttackBar = GetAttackBarBB(True)
+		
 		If UBound($aBBAttackBar) = $iUBound1 Then $iLoopControl += 1
 		If ($iLoopControl > 3) Then ExitLoop
 		$iUBound1 = UBound($aBBAttackBar)

@@ -666,19 +666,23 @@ EndFunc   ;==>VerifySlotTroop
 
 Func DeployTroopBB($sTroopName, $aSlot_XY, $Point2Deploy, $iQtyToDrop)
 	SetDebugLog("[" & _ArrayToString($aSlot_XY) & "] - Deploying " & $iQtyToDrop & " " & FullNametroops($sTroopName) & " At " & $Point2Deploy[0] & " x " & $Point2Deploy[1], $COLOR_INFO)
-	If $g_bIsBBMachineD = False Then 
-		$g_bIsBBMachineD = ($sTroopName = "Machine") ? (True) : (False)
-		If $g_bIsBBMachineD And $g_aMachineBB[0] <> 0 Then
-			If _ColorCheck(_GetPixelColor(Int($g_aMachineBB[0]), 723, True), Hex(0xFFFFFF, 6), 25) Then 
-				Setlog("Machine fail.", $COLOR_ERROR)
-				$g_bIsBBMachineD = False
-			EndIf
-			$g_bIsBBMachineD = False
-		EndIf
-	EndIf
-	
 	ClickP($Point2Deploy, $iQtyToDrop, 0)
 	
+	If ($sTroopName = "Machine") And ($g_bIsBBMachineD = False) Then
+		$g_bIsBBMachineD = True
+		If ($g_aMachineBB[0] <> 0) Then
+			If _Sleep(500) Then Return
+			Local $hPixel = _GetPixelColor(Int($g_aMachineBB[0]), 723, True)
+			SetDebugLog($hPixel & " : ability fail opcode is 0xFFFFFF", $COLOR_INFO)
+			
+			If _ColorCheck($hPixel, Hex(0xFFFFFF, 6), 30) Then 
+				Setlog("- BB Machine fail.", $COLOR_ERROR)
+				$g_bIsBBMachineD = False
+				Else
+				Setlog("- BB Machine detected.", $COLOR_INFO)
+			EndIf
+		EndIf
+	EndIf
 EndFunc   ;==>DeployTroopBB
 
 Func GetThePointNearBH($BHposition, $aDeployPoints)
@@ -701,7 +705,7 @@ Func GetThePointNearBH($BHposition, $aDeployPoints)
 	Return $ReturnPoint
 EndFunc   ;==>GetThePointNearBH
 
-Func TriggerMachineAbility($bTest = False, $bBBIsFirst = $g_bBBIsFirst, $ix = 458, $iy = 723)
+Func TriggerMachineAbility($bBBIsFirst = $g_bBBIsFirst, $ix = 458, $iy = 723, $bTest = False)
 	Local $hPixel 
 	If not $bTest Then
 		If Not $g_bIsBBMachineD Then Return
@@ -709,30 +713,31 @@ Func TriggerMachineAbility($bTest = False, $bBBIsFirst = $g_bBBIsFirst, $ix = 45
 		Global $g_aMachineBB[2] = [$ix, $iy]
 	EndIf 
 	
-	If Not IsArray($g_aMachineBB) Then Return
+	If (Not IsArray($g_aMachineBB)) Or ($g_aMachineBB[0] = 0) Then Return
 	
 	SetDebugLog("- BB Machine : Checking ability.")
 	
 	$hPixel = _GetPixelColor(Int($g_aMachineBB[0]), 721, True)
 	If $bTest Then Setlog($hPixel & " ability", $COLOR_INFO)
 
-	If $bBBIsFirst And IsArray($g_aMachineBB) Then
+	If $bBBIsFirst And ($g_aMachineBB[0] <> 0) Then
 		If $bTest Then Setlog(_ArrayToString($g_aMachineBB))
 		If _ColorCheck($hPixel, Hex(0x472CC5, 6), 40) Then
-			Click(Int($g_aMachineBB[0]), Int($g_aMachineBB[1]), 2, 0)
-			If _Sleep(300) Then Return
+			Click(Int($g_aMachineBB[0] - Random(20, 30, 1)), Int($g_aMachineBB[1] - Random(0, 15, 1)), 2, 0)
+			If RandomSleep(300) Then Return
 			SetLog("- BB Machine : Skill enabled.", $COLOR_ACTION)
-			$g_bBBIsFirst = False
+			$bBBIsFirst = False
+			$g_bBBIsFirst = $bBBIsFirst
 			Return True
 		Else
-			SetLog("- BB Machine : Skill not present.", $COLOR_INFO)
+			If $bBBIsFirst Then SetLog("- BB Machine : Skill not present.", $COLOR_INFO)
 			Return False
 		EndIf
 	EndIf
 	
 	If _ColorCheck($hPixel, Hex(0x432CCE, 6), 20) Then
-		Click(Int($g_aMachineBB[0]), Int($g_aMachineBB[1]), 2, 0)
-		If _Sleep(300) Then Return
+		Click(Int($g_aMachineBB[0] + Random(0, 15, 1)), Int($g_aMachineBB[1] - Random(20, 30, 1)), 2, 0)
+		If RandomSleep(300) Then Return
 		SetLog("- BB Machine : Click on ability.", $COLOR_ACTION)
 		Return True
 	EndIf
