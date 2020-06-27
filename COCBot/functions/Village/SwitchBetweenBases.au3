@@ -14,25 +14,25 @@
 ; ===============================================================================================================================
 Func SwitchBetweenBases($bCheckMainScreen = True, $bGoTo = Default, $bSilent = Default)
 	Local $bNoBoat = False, $bSwitch = True, $bIs = False, $vSwitch[0]
-
+	
 	For $i = 0 To 5
-
+		
 		If ($bSilent <> True) Then SetLog("Try: [" & $i & "] " & "Switch between bases.", $COLOR_ACTION)
-
+		
 		If Not $g_bRunState Then Return
 
 		If ($bGoTo <> Default) Then
 			$bIs = isOnBuilderBase(True)
 			$bSwitch = (($bGoTo = "Builder Base") <> $bIs)
 		EndIf
-
+		
 		For $i2 = 0 To 1
 			$vSwitch = decodeSingleCoord(findImageInPlace(($i2 = 0) ? ("BoatNormalVillage") : ("BoatBuilderBase"), ($i2 = 0) ? ($g_sImgBoat) : ($g_sImgBoatBB), ($i2 = 0) ? ("66,432,388,627") : ("487,44,708,242")))
 			If UBound($vSwitch) > 1 Then ExitLoop
 		Next
-
+		
 		If UBound($vSwitch) <= 1 Then
-			If isOnBuilderBase() <> isOnMainVillage() Then
+			If isOnBuilderBase() <> isOnMainVillage() Then 
 				ZoomOut() ; ensure boat is visible
 				Else
 				ClickP($aAway, 2, 0, "#0332") ;Click Away
@@ -45,30 +45,29 @@ Func SwitchBetweenBases($bCheckMainScreen = True, $bGoTo = Default, $bSilent = D
 				ContinueLoop
 			EndIf
 		EndIf
-
+		
 		Local $bSwitched = False
-
+		
 		If $bSwitch And Not $bNoBoat And UBound($vSwitch) > 1 Then
 			Click($vSwitch[0], $vSwitch[1])
 			$bSwitched = (Int($vSwitch[0]) < 388 ) ? (True) : (False)
 		EndIf
-
+		
 		If $bCheckMainScreen Then
 			; switch can take up to 2 Seconds, check for 3 additional Seconds...
 			Local $hTimerHandle = __TimerInit()
-			;Temp fix: to prevent rare cases of constant switch bases after BB attack.
-			;Do
+			Do
 				If __TimerDiff($hTimerHandle) > 3000 Then ContinueLoop 2
 				If _Sleep(100) Then Return
-			;Until checkMainScreen(True, ($bSwitched <> $bIs)) ; You would not understand.
-
+			Until checkMainScreen(True, ($bSwitched <> $bIs)) ; You would not understand.
+			
 		EndIf
-
+		
 		If ($bSilent <> True) Then SetLog(($bSwitched <> $bIs) ? ("Is switched to ? : Builder base.") : ("Is switched to ? : Normal village."), $COLOR_SUCCESS)
 		Return ($bNoBoat) ? (False) : (True) ; Return false for avoid bugs in bb switch.
 
 	Next
-
+	
 	SetLog("Fail SwitchBetweenBases 0x1", $COLOR_ERROR)
 	Return False
 EndFunc   ;==>SwitchBetweenBases
