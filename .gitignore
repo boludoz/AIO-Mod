@@ -21,3 +21,4 @@ BuildMBR.exe
 #lib/
 lib/debug/
 *.lnk
+Strategies/strategy *.ini
