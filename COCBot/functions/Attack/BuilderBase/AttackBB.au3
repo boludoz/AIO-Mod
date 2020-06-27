@@ -73,6 +73,10 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 	;
 	;$aVar = $g_aDeployPoints[1]
 	
+	Local $iAndroidSuspendModeFlagsLast = $g_iAndroidSuspendModeFlags
+	$g_iAndroidSuspendModeFlags = 0 ; disable suspend and resume
+	If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Disabled")
+	
 	; Get troops on attack bar and their quantities
 	Local $aBBAttackBar = $aAvailableTroops
 	
