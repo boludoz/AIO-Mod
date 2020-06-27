@@ -16,9 +16,9 @@
 Func AttackBB($aAvailableTroops = GetAttackBarBB())
 	Local $iSide = Random(0, 1, 1) ; randomly choose top left or top right
 	Local $aBMPos = 0
-	
+
 	Local $Size = GetBuilderBaseSize()
-	
+
 	If Not $g_bRunState Then Return
 
 	Setlog("Builder Base Diamond: " & $Size)
@@ -26,29 +26,29 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 	Do
 		Setlog("Builder Base Attack Zoomout.")
 		$Size = GetBuilderBaseSize(False) ; WihtoutClicks
-		
+
 		If ($Size < 575 And $Size > 620) Or ($Size = 0) Then
 			BuilderBaseZoomOut()
 			If _Sleep(1000) Then Return
 		EndIf
-		
+
 		If $i > 5 Then ExitLoop
 		$i += 1
 	Until ($Size >= 575 And $Size <= 620) Or ($Size <> 0)
-	
+
 	If $Size = 0 Then
 		SetLog("Fail AttackBB 0x1")
 		Return False
 	EndIf
-	
+
 	$g_aBuilderBaseDiamond = BuilderBaseAttackDiamond()
 	If IsArray($g_aBuilderBaseDiamond) <> True Or Not (UBound($g_aBuilderBaseDiamond) > 0) Then Return False
-	
+
 	$g_aExternalEdges = BuilderBaseGetEdges($g_aBuilderBaseDiamond, "External Edges")
-	
-	
+
+
 	Local $sSideNames[4] = ["TopLeft", "TopRight", "BottomRight", "BottomLeft"]
-	
+
 	Local $BuilderHallPos = findMultipleQuick($g_sBundleBuilderHall, 1)
 	If $BuilderHallPos <> -1 And UBound($BuilderHallPos) > 0 Then
 		$g_aBuilderHallPos[0][0] = $BuilderHallPos[0][1]
@@ -72,25 +72,25 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 	;BuilderBaseGetDeployPoints()
 	;
 	;$aVar = $g_aDeployPoints[1]
-	
+
 	Local $iAndroidSuspendModeFlagsLast = $g_iAndroidSuspendModeFlags
 	$g_iAndroidSuspendModeFlags = 0 ; disable suspend and resume
 	If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Disabled")
 
 	; Get troops on attack bar and their quantities
 	Local $aBBAttackBar = $aAvailableTroops
-	
-	If Not IsArray($aBBAttackBar) Then Return "Fail MachineKick."
-	
+
+	;If Not IsArray($aBBAttackBar) Then Return "Fail MachineKick." ; as backup machine drop.
+
 	If RandomSleep($DELAYRESPOND) Then
 		$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
 		If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Enabled")
 		Return
 	EndIf
-	
+
 	Local $iLoopControl = 0, $iUBound1 = UBound($aBBAttackBar)
 
-	
+
 	; Deploy all troops
 	SetLog($g_bBBDropOrderSet = True ? "Deploying Troops in Custom Order." : "Deploying Troops in Order of Attack Bar.", $COLOR_BLUE)
 	Do
@@ -175,14 +175,14 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 				EndIf
 			Next
 		EndIf
-		
+
 		; Attack bar loop control.
 		$aBBAttackBar = GetAttackBarBB(True)
-		
+
 		If UBound($aBBAttackBar) = $iUBound1 Then $iLoopControl += 1
 		If ($iLoopControl > 3) Then ExitLoop
 		$iUBound1 = UBound($aBBAttackBar)
-		
+
 	Until Not IsArray(MachineKick($aBBAttackBar))
 	SetLog("All Troops Deployed", $COLOR_SUCCESS)
 
