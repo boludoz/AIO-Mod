@@ -22,3 +22,4 @@ BuildMBR.exe
 lib/debug/
 *.lnk
 Strategies/strategy *.ini
+*.sqlite3
