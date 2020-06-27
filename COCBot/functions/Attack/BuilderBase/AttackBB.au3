@@ -183,5 +183,3 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 	If $g_bDebugSetlog Then SetDebugLog("Android Suspend Mode Enabled")
 EndFunc   ;==>AttackBB
 #EndRegion - Custom BB - Team AIO Mod++ ; Thx Chilly-Chill by you hard work.
-
-

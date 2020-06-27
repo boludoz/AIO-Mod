@@ -10,7 +10,7 @@
 #Au3Stripper_Off
 #Au3Stripper_On
 Global $g_sBotVersion = "v7.8.3.hotfix"
-Global $g_sModVersion = "v4.0.6"
+Global $g_sModVersion = "v4.0.7"
 Opt("MustDeclareVars", 1)
 Global $g_sBotTitle = ""
 Global $g_hFrmBot = 0
@@ -42352,12 +42352,11 @@ EndIf
 Return $aiReturnPosition
 EndFunc
 Func SetSleep($iType)
-If IsKeepClicksActive() = True Then Return 128
-Local $iOffset0 = Round(128 / 2)
-Local $iOffset1 = Round(416 / 2)
+If IsKeepClicksActive() = True Then Return 0
+Local $iOffset0 = Round(128 / 5), $iOffset1 = Round(416 / 5)
 If $g_bAndroidAdbClick = True Then
-$iOffset0 = Round(128 / 2)
-$iOffset1 = Round(416 / 2)
+$iOffset0 = Round(128 / 5)
+$iOffset1 = Round(416 / 5)
 EndIf
 Local $iReturn = Random(1, 10) * Int(($iType = 0) ?($iOffset0) :($iOffset1))
 Local $iCmbValue = $g_aiAttackAlgorithm[$DB]
@@ -43145,8 +43144,11 @@ Local $iAndroidSuspendModeFlagsLast = $g_iAndroidSuspendModeFlags
 $g_iAndroidSuspendModeFlags = 0
 If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Disabled")
 Local $aBBAttackBar = $aAvailableTroops
-If Not IsArray($aBBAttackBar) Then Return
-If RandomSleep($DELAYRESPOND) Then Return
+If Not IsArray($aBBAttackBar) Or RandomSleep($DELAYRESPOND) Then
+$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
+If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Enabled")
+Return
+EndIf
 Local $iLoopControl = 0, $iUBound1 = UBound($aBBAttackBar)
 SetLog($g_bBBDropOrderSet = True ? "Deploying Troops in Custom Order." : "Deploying Troops in Order of Attack Bar.", $COLOR_BLUE)
 Do
@@ -44532,9 +44534,10 @@ _ArrayReverse($aResult)
 Return $aResult
 EndFunc
 Func CheckQueueSpells($bGetQuantity = True, $bSetLog = True, $x = 839, $bQtyWSlot = False)
-Local $aResult[1] = [""], $sImageDir = @ScriptDir & "\imgxml\ArmyOverview\SpellsQueued"
+Local $aResult[1] = [""]
 If $bSetLog Then SetLog("Checking Spells Queue...", $COLOR_INFO)
-Local $aSearchResult = SearchArmy($sImageDir, 18, 215, $x, 230, $bGetQuantity ? "Queue" : "")
+Local $Dir = @ScriptDir & "\imgxml\ArmyOverview\SpellsQueued"
+Local $aSearchResult = SearchArmy($Dir, 18, 182, $x, 261, $bGetQuantity ? "Queue" : "")
 ReDim $aResult[UBound($aSearchResult)]
 If $aSearchResult[0][0] = "" Then
 Setlog("No Spells detected!", $COLOR_ERROR)
@@ -67310,7 +67313,7 @@ Click($vSwitch[0], $vSwitch[1])
 $bSwitched =(Int($vSwitch[0]) < 388 ) ?(True) :(False)
 EndIf
 If $bCheckMainScreen Then
-$bIs = isOnBuilderBase(True)
+$bIs =(((isOnBuilderBase(True) And($bGoTo = Default)) Or($bGoTo = "Builder Base")) ?(True) :(False))
 Local $hTimerHandle = __TimerInit()
 Local $iDo = 0
 Do
@@ -67318,7 +67321,8 @@ $iDo += 1
 If __TimerDiff($hTimerHandle) > 3000 Then ContinueLoop 2
 If _Sleep(100) Then Return
 Until(checkMainScreen(True, $bIs) Or($iDo > 3))
-If($bSilent <> True) Then SetLog(($bSwitched <> $bIs) ?("Is switched to ? : Builder base.") :("Is switched to ? : Normal village."), $COLOR_SUCCESS)
+If($iDo > 3) Then RestartAndroidCoC()
+If($bSilent <> True) Then SetLog(($bIs) ?("Is switched to ? : Builder base.") :("Is switched to ? : Normal village."), $COLOR_SUCCESS)
 EndIf
 Return($bNoBoat) ?(False) :(True)
 Next
@@ -82004,8 +82008,13 @@ BuilderBaseZoomOut()
 If $g_bRestart = True Then Return
 If Not $g_bRunState Then Return
 Local $aAvailableTroops = GetAttackBarBB()
-If $aAvailableTroops <> -1 Then SetDebugLog("Attack Bar Array: " & _ArrayToString($aAvailableTroops, "-", -1, -1, "|", -1, -1))
-If $aAvailableTroops = -1 Then Return -1
+If IsArray($aAvailableTroops) Then
+SetDebugLog("Attack Bar Array: " & _ArrayToString($aAvailableTroops, "-", -1, -1, "|", -1, -1))
+Else
+SetDebugLog("No troops AttackBar.", $COLOR_ERROR)
+CheckMainScreen()
+Return -1
+EndIf
 If Not $IsToDropTrophies Then BuilderBaseSelectCorrectScript($aAvailableTroops)
 If RandomSleep(1500) Then Return
 Global $g_aMachineBB[2] = [0, 0]
