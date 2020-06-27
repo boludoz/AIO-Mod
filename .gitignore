@@ -20,3 +20,4 @@ BuildMBR.exe
 *.zip
 #lib/
 lib/debug/
+*.lnk
