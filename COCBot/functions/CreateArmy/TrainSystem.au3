@@ -879,11 +879,14 @@ Func CheckQueueTroops($bGetQuantity = True, $bSetLog = True, $x = 839, $bQtyWSlo
 EndFunc   ;==>CheckQueueTroops
 
 Func CheckQueueSpells($bGetQuantity = True, $bSetLog = True, $x = 839, $bQtyWSlot = False)
-	Local $aResult[1] = [""], $sImageDir = @ScriptDir & "\imgxml\ArmyOverview\SpellsQueued" ; Custom - Team AIO Mod++
+	Local $aResult[1] = [""]
 	;$hTimer = TimerInit()
 	If $bSetLog Then SetLog("Checking Spells Queue...", $COLOR_INFO)
 
-	Local $aSearchResult = SearchArmy($sImageDir, 18, 215, $x, 230, $bGetQuantity ? "Queue" : "")
+	Local $Dir = @ScriptDir & "\imgxml\ArmyOverview\SpellsQueued" ; Custom - Team AIO Mod++
+
+	Local $aSearchResult = SearchArmy($Dir, 18, 182, $x, 261, $bGetQuantity ? "Queue" : "") ; Custom - Team AIO Mod++
+
 	ReDim $aResult[UBound($aSearchResult)]
 
 	If $aSearchResult[0][0] = "" Then
