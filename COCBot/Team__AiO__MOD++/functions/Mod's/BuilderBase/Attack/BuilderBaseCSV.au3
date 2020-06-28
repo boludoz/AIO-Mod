@@ -759,7 +759,7 @@ Func BattleIsOver()
 		If ($iBattleOverLoopCounter = 180) Then Setlog("Window Report Problem!", $COLOR_WARNING)
 		$iBattleOverLoopCounter += 1
 		If _Sleep(1000) Then Return
-	Until (Not _ColorCheck(_GetPixelColor($aSurrenderBtn[0], $aSurrenderBtn[1], True), Hex(0xFE5D65, 6), 10)) Or ($iBattleOverLoopCounter > 180)
+	Until (Not _ColorCheck(_GetPixelColor($aSurrenderBtn[0], $aSurrenderBtn[1], True), Hex(0xcf0d0e, 6), 10)) Or ($iBattleOverLoopCounter > 180)
 
 EndFunc   ;==>BattleIsOver
 
