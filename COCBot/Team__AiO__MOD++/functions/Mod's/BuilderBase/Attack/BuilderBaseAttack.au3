@@ -467,7 +467,7 @@ Func BuilderBaseAttackReport()
 	Do
 		If Not $g_bRunState Then Return
 		TriggerMachineAbility()
-		Local $sDamage = Number(getOcrOverAllDamage(780, 615))
+		Local $sDamage = Number(getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY))
 		If Int($sDamage) > Int($g_iLastDamage) Then
 			$g_iLastDamage = Int($sDamage)
 			Setlog("- Total Damage: " & $g_iLastDamage & "%", $COLOR_INFO)
@@ -484,7 +484,7 @@ Func BuilderBaseAttackReport()
 	
 	; in case BB Attack Ends in error
 	If _ColorCheck(_GetPixelColor($aSurrenderBtn[0], $aSurrenderBtn[1], True), Hex(0xFE5D65, 6), 10) Then 
-		Setlog("Surrender Button fail - battle end early - recursive call BuilderBaseAttack", $COLOR_ERROR)
+		Setlog("Surrender Button fail - battle end early - CheckMainScreen()", $COLOR_ERROR)
 		CheckMainScreen()
 		Return False
 	EndIf
