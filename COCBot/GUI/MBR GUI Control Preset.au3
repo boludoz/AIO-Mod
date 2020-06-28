@@ -208,12 +208,25 @@ Func MakeSavePresetMessage()
 						$message &= "Standard Attack > "
 					Case "1"
 						$message &= "Scripted Attack > "
+					Case "2"
+						$message &= "SmartFarm Attack > "
 				EndSwitch
 			EndIf
 
 			If ($i = $DB Or $i = $LB) And $g_aiAttackAlgorithm[$i] = 0 Then
 				Local $tmp = StringSplit("one side|two sides|three sides|four sides|DE side|TH side", "|", 2)
 				$message &= $tmp[$g_aiAttackStdDropSides[$i]] & @CRLF
+			EndIf
+			If ($i = $DB Or $i = $LB) And $g_aiAttackAlgorithm[$i] = 2 Then
+				$message &= "Inside resource: " & $g_iTxtInsidePercentage & " | "
+				$message &= "Outside resource: " & $g_iTxtOutsidePercentage
+				if ($i = $DB) And $g_bChkEnableRandom[1] = True Then
+					$message &= " | Delay Unit: " & $g_iDeployDelay[1]
+					$message &= " | Delay Wave: " & $g_iDeployWave[1]
+				EndIf
+				If ($i = $DB) And $g_bMaxSidesSF = True Then
+					$message &= " | Max Sides to Attack: " & $g_iCmbMaxSidesSF
+				EndIf
 			EndIf
 		EndIf
 	Next
