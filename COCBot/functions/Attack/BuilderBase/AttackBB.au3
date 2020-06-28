@@ -73,18 +73,12 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 	;
 	;$aVar = $g_aDeployPoints[1]
 
-    Local $iAndroidSuspendModeFlagsLast = $g_iAndroidSuspendModeFlags
-    $g_iAndroidSuspendModeFlags = 0 ; disable suspend and resume
     If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Disabled")
 
 	; Get troops on attack bar and their quantities
 	Local $aBBAttackBar = $aAvailableTroops
 	
-	If Not IsArray($aBBAttackBar) Or RandomSleep($DELAYRESPOND) Then
-        $g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
-        If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Enabled")
-        Return
-    EndIf
+	If Not IsArray($aBBAttackBar) Or RandomSleep($DELAYRESPOND) Then Return
 	
 	; Deploy all troops
 	Local $iLoopControl = 0, $iUBound1 = UBound($aBBAttackBar)
@@ -121,7 +115,6 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 						If $j = $iNumSlots - 1 Or $aBBAttackBar[$j][0] <> $aBBAttackBar[$j + 1][0] Then
 							$bDone = True
 							If RandomSleep($g_iBBNextTroopDelay) Then ; wait before next troop
-								$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
 								If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Enabled")
 								Return
 							EndIf
@@ -155,13 +148,11 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 				;---------------------------
 				If $i = $iNumSlots - 1 Or $aBBAttackBar[$i][0] <> $aBBAttackBar[$i + 1][0] Then
 					If RandomSleep($g_iBBNextTroopDelay) Then ; wait before next troop
-						$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
 						If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Enabled")
 						Return
 					EndIf
 				Else
 					If RandomSleep($DELAYRESPOND) Then ; we are still on same troop so lets drop them all down a bit faster
-						$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
 						If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Enabled")
 						Return
 					EndIf
@@ -179,7 +170,6 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 	Until Not IsArray($aBBAttackBar)
 	SetLog("All Troops Deployed", $COLOR_SUCCESS)
 
-	$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast ; reset android suspend and resume stuff
 	If $g_bDebugSetlog Then SetDebugLog("Android Suspend Mode Enabled")
 EndFunc   ;==>AttackBB
 #EndRegion - Custom BB - Team AIO Mod++ ; Thx Chilly-Chill by you hard work.

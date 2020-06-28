@@ -459,10 +459,9 @@ EndFunc   ;==>BuilderBaseCSVAttack
 
 Func BuilderBaseAttackReport()
 	; Verify the Window Report , Point[0] Archer Shadow Black Zone [155,460,000000], Point[1] Ok Green Button [430,590, 6DBC1F]
-	Local $SurrenderBtn = [76, 584]
 	Local $OKbtn = [435, 562]
 
-	Local $damageCheckLoop = 0
+	Local $iDamageCheckLoop = 0
 
 	Do
 		If Not $g_bRunState Then Return
@@ -470,20 +469,25 @@ Func BuilderBaseAttackReport()
 		Local $sDamage = Number(getOcrOverAllDamage(780, 615))
 		If Int($sDamage) > Int($g_iLastDamage) Then
 			$g_iLastDamage = Int($sDamage)
-			Setlog("Total Damage: " & $g_iLastDamage & "%")
+			Setlog("- Total Damage: " & $g_iLastDamage & "%", $COLOR_INFO)
 		EndIf
-		If $damageCheckLoop = 180 Then Setlog("Window Report Problem!", $COLOR_WARNING)
+		If $iDamageCheckLoop = 180 Then 
+			Setlog("Window Report Problem!", $COLOR_WARNING)
+		EndIf
 		If _Sleep(1000) Then Return
-		$damageCheckLoop++
-	Until Not _ColorCheck(_GetPixelColor($SurrenderBtn[0], $SurrenderBtn[1], True), Hex(0xFE5D65, 6), 10)
+		$iDamageCheckLoop += 1
+	Until (Not _ColorCheck(_GetPixelColor($aSurrenderBtn[0], $aSurrenderBtn[1], True), Hex(0xFE5D65, 6), 10)) Or ($iDamageCheckLoop > 180)
+	
 	;BB attack Ends
 	If _Sleep(2000) Then Return
-	;in case BB Attack Ends in error
-	If _ColorCheck(_GetPixelColor($SurrenderBtn[0], $SurrenderBtn[1], True), Hex(0xFE5D65, 6), 10) Then 
-		Setlog("Surrender Button fail - battle end early - recursive call BuilderBaseAttack")
-		BuilderBaseAttackReport()
+	
+	; in case BB Attack Ends in error
+	If _ColorCheck(_GetPixelColor($aSurrenderBtn[0], $aSurrenderBtn[1], True), Hex(0xFE5D65, 6), 10) Then 
+		Setlog("Surrender Button fail - battle end early - recursive call BuilderBaseAttack", $COLOR_ERROR)
+		CheckMainScreen()
+		Return False
 	EndIf
-
+	
 	Local $Stars = 0
 	Local $StarsPositions[3][2] = [[326, 394], [452, 388], [546, 413]]
 	Local $Color[3] = [0xD0D4D0, 0xDBDEDB, 0xDBDDD8]
@@ -508,6 +512,8 @@ Func BuilderBaseAttackReport()
 	Next
 
 	If $i > 15 Then
+		Setlog("Return home button fail.", $COLOR_ERROR)
+		CheckMainScreen()
 		Return False
 	Else
 		SetLog("Return To Home.", $Color_Info)
