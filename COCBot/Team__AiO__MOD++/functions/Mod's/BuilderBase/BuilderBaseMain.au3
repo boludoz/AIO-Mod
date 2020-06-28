@@ -40,7 +40,7 @@ Func runBuilderBase($bTestRun = False)
 				$g_bRunState = False ;Stop The Bot
 				btnStop()
 			EndIf
-		SetDebugLog("Builder Base options not enable, Skipping Builder Base routines!", $COLOR_DEBUG)
+		If $g_bDebugSetlog = True Then SetDebugLog("Builder Base options not enable, Skipping Builder Base routines!", $COLOR_DEBUG)
 		Return False
 	EndIf
 
