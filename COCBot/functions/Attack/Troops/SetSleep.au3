@@ -14,13 +14,16 @@
 ; ===============================================================================================================================
 #Region - Custom sleep Drop - Team AIO Mod++
 Func SetSleep($iType)
-	If IsKeepClicksActive() = True Then Return 128 ; fast bulk deploy
-	Local $iOffset0 = Round(128 / 2)
-	Local $iOffset1 = Round(416 / 2)
+	If IsKeepClicksActive() = True Then Return 0 ; fast bulk deploy
+
+	; Based on humane offset.
+	Local $iOffset0 = Round(128 / 5), $iOffset1 = Round(416 / 5)
+	
 	If $g_bAndroidAdbClick = True Then
 		; adjust for slow ADB clicks the delay factor
-		$iOffset0 = Round(128 / 2) ; Based on humane offset.
-		$iOffset1 = Round(416 / 2) ; Based on humane offset.
+		; Based on humane offset.
+		$iOffset0 = Round(128 / 5)
+		$iOffset1 = Round(416 / 5)
 	EndIf
 
 	Local $iReturn = Random(1, 10) * Int(($iType = 0) ? ($iOffset0) : ($iOffset1))
