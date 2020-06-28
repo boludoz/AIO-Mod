@@ -24,10 +24,12 @@ Func AreCollectorsOutside($percent)
 	Global $colOutside = 0
 	Global $hTimer = TimerInit()
 
+	SuspendAndroid()
 	Global $g_aiPixelMine = GetLocationMine()
 	Global $g_aiPixelElixir = GetLocationElixir()
 	Global $g_aiPixelDarkElixir = GetLocationDarkElixir()
-	
+	ResumeAndroid()
+
 	If Not (IsArray($g_aiPixelMine) Or IsArray($g_aiPixelElixir) Or (IsArray($g_aiPixelDarkElixir) And ($g_iTownHallLevel > 6) And (Not $g_bSmartZapEnable))) Then
 		SetLog("Are collectors outside | No mines/collectors/drills detected.", $COLOR_INFO)
 		Return False

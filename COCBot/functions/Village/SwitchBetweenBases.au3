@@ -54,7 +54,7 @@ Func SwitchBetweenBases($bCheckMainScreen = True, $bGoTo = Default, $bSilent = D
 		EndIf
 		
 		If $bCheckMainScreen Then
-			$bIs = isOnBuilderBase(True)
+			$bIs = (((isOnBuilderBase(True) And ($bGoTo = Default)) Or ($bGoTo = "Builder Base")) ? (True) : (False))
 			; switch can take up to 2 Seconds, check for 3 additional Seconds...
 			Local $hTimerHandle = __TimerInit()
 			Local $iDo = 0
@@ -63,11 +63,11 @@ Func SwitchBetweenBases($bCheckMainScreen = True, $bGoTo = Default, $bSilent = D
 				If __TimerDiff($hTimerHandle) > 3000 Then ContinueLoop 2
 				If _Sleep(100) Then Return
 				
-			Until (checkMainScreen(True, $bIs) Or ($iDo > 3)) ; You would not understand.
+			Until (checkMainScreen(True, $bIs) Or ($iDo > 3))
 			
-			; If ($iDo > 3) Then ...
+			If ($iDo > 3) Then RestartAndroidCoC()
 			
-			If ($bSilent <> True) Then SetLog(($bSwitched <> $bIs) ? ("Is switched to ? : Builder base.") : ("Is switched to ? : Normal village."), $COLOR_SUCCESS)
+			If ($bSilent <> True) Then SetLog(($bIs) ? ("Is switched to ? : Builder base.") : ("Is switched to ? : Normal village."), $COLOR_SUCCESS)
 		EndIf
 		
 		Return ($bNoBoat) ? (False) : (True) ; Return false for avoid bugs in bb switch.

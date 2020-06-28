@@ -97,10 +97,14 @@ Func BuilderBaseAttack($bTestRun = False)
 		; Attack Bar | [0] = Troops Name , [1] = X-axis , [2] - Y-axis, [3] - Slot starting at 0, [4] - Amount
 		; Local $aAvailableTroops = BuilderBaseAttackBar()
 		Local $aAvailableTroops = GetAttackBarBB()
-		If $aAvailableTroops <> -1 Then SetDebugLog("Attack Bar Array: " & _ArrayToString($aAvailableTroops, "-", -1, -1, "|", -1, -1))
-
-		If $aAvailableTroops = -1 Then Return -1
-
+		If IsArray($aAvailableTroops) Then 
+			SetDebugLog("Attack Bar Array: " & _ArrayToString($aAvailableTroops, "-", -1, -1, "|", -1, -1))
+		Else 
+			SetDebugLog("No troops AttackBar.", $COLOR_ERROR)
+			CheckMainScreen()
+			Return -1
+		EndIf
+		
 		; Verify the scripts and attack bar
 		If Not $IsToDropTrophies Then BuilderBaseSelectCorrectScript($aAvailableTroops)
 
@@ -441,8 +445,8 @@ Func BuilderBaseCSVAttack($aAvailableTroops, $bDebug = False)
 
 	; maybe will be necessary to click on attack bar to release the zoomout pinch
 	; x = 75 , y = 584
-	Local $slotZero[2] = [102, 684] ; DESRC DONE
-	ClickP($slotZero, 1, 0)
+	;Local $slotZero[2] = [102, 684] ; DESRC DONE
+	;ClickP($slotZero, 1, 0)
 
 	; [0] - TopLeft ,[1] - TopRight , [2] - BottomRight , [3] - BottomLeft
 	Local $FurtherFrom = 5 ; 5 pixels before the deploy point
@@ -455,22 +459,35 @@ EndFunc   ;==>BuilderBaseCSVAttack
 
 Func BuilderBaseAttackReport()
 	; Verify the Window Report , Point[0] Archer Shadow Black Zone [155,460,000000], Point[1] Ok Green Button [430,590, 6DBC1F]
-	Local $SurrenderBtn = [76, 584]
-	Local $OKbtn = [435, 562]
+	Local $aSurrenderBtn = [65, 607]
 
-	For $i = 0 To 60
+	Local $iDamageCheckLoop = 0
+
+	Do
 		If Not $g_bRunState Then Return
 		TriggerMachineAbility()
 		Local $sDamage = Number(getOcrOverAllDamage(780, 615))
 		If Int($sDamage) > Int($g_iLastDamage) Then
 			$g_iLastDamage = Int($sDamage)
-			Setlog("Total Damage: " & $g_iLastDamage & "%")
+			Setlog("- Total Damage: " & $g_iLastDamage & "%", $COLOR_INFO)
 		EndIf
-		If Not _ColorCheck(_GetPixelColor($SurrenderBtn[0], $SurrenderBtn[1], True), Hex(0xFE5D65, 6), 10) Then ExitLoop
-		If $i = 60 Then Setlog("Window Report Problem!", $COLOR_WARNING)
-		If _Sleep(2000) Then Return
-	Next
-
+		If $iDamageCheckLoop = 180 Then 
+			Setlog("Window Report Problem!", $COLOR_WARNING)
+		EndIf
+		If _Sleep(1000) Then Return
+		$iDamageCheckLoop += 1
+	Until (Not _ColorCheck(_GetPixelColor($aSurrenderBtn[0], $aSurrenderBtn[1], True), Hex(0xFE5D65, 6), 10)) Or ($iDamageCheckLoop > 180)
+	
+	;BB attack Ends
+	If _Sleep(2000) Then Return
+	
+	; in case BB Attack Ends in error
+	If _ColorCheck(_GetPixelColor($aSurrenderBtn[0], $aSurrenderBtn[1], True), Hex(0xFE5D65, 6), 10) Then 
+		Setlog("Surrender Button fail - battle end early - recursive call BuilderBaseAttack", $COLOR_ERROR)
+		CheckMainScreen()
+		Return False
+	EndIf
+	
 	Local $Stars = 0
 	Local $StarsPositions[3][2] = [[326, 394], [452, 388], [546, 413]]
 	Local $Color[3] = [0xD0D4D0, 0xDBDEDB, 0xDBDDD8]
@@ -495,6 +512,8 @@ Func BuilderBaseAttackReport()
 	Next
 
 	If $i > 15 Then
+		Setlog("Return home button fail.", $COLOR_ERROR)
+		CheckMainScreen()
 		Return False
 	Else
 		SetLog("Return To Home.", $Color_Info)

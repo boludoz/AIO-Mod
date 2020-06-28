@@ -77,6 +77,9 @@ Func _Ini_Save($filename)
 			If $g_sProfileSecondaryOutputFileName <> "" Then
 				If $sCurrentSection = "search" Or _
 						$sCurrentSection = "attack" Or _
+						$sCurrentSection = "SmartFarm" Or _
+						$sCurrentSection = "MaxSidesSF" Or _
+						$sCurrentSection = "MiscTab" Or _
 						$sCurrentSection = "troop" Or _
 						$sCurrentSection = "spells" Or _
 						$sCurrentSection = "endbattle" Or _
@@ -95,6 +98,9 @@ Func _Ini_Save($filename)
 		If $g_sProfileSecondaryOutputFileName <> "" Then
 			If $sCurrentSection = "search" Or _
 					$sCurrentSection = "attack" Or _
+					$sCurrentSection = "SmartFarm" Or _
+					$sCurrentSection = "MaxSidesSF" Or _
+					$sCurrentSection = "MiscTab" Or _
 					$sCurrentSection = "troop" Or _
 					$sCurrentSection = "spells" Or _
 					$sCurrentSection = "endbattle" Or _

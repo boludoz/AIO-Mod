@@ -40,9 +40,7 @@ Func runBuilderBase($bTestRun = False)
 				$g_bRunState = False ;Stop The Bot
 				btnStop()
 			EndIf
-		SetLog("Play Only Builder Base Check Is On But BB Option's(Collect,Attack etc) Unchecked", $COLOR_ERROR)
-		SetLog("Please Check BB Options From Builder Base Tab", $COLOR_INFO)
-
+		If $g_bDebugSetlog = True Then SetDebugLog("Builder Base options not enable, Skipping Builder Base routines!", $COLOR_DEBUG)
 		Return False
 	EndIf
 
@@ -61,10 +59,6 @@ Func runBuilderBase($bTestRun = False)
 	BuilderBaseReport()
 	RestAttacksInBB()
 
-;~ 	; Fill/check Army Camps only If is necessary attack
-;~ 	If $g_bRestart Or (Not $g_bRunState) Then Return
-;~ 	If RestAttacksInBB() = True Then CheckArmyBuilderBase()
-
 	; Logic here
 		Local $aRndFuncList = ['ClockTower', 'AttackBB']
 		_ArrayShuffle($aRndFuncList)
@@ -76,6 +70,9 @@ Func runBuilderBase($bTestRun = False)
 
 	; Check obstacles
 	If checkObstacles(True) Then SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
+
+	; It will not be necessary if there are no constructors.
+	BuilderBaseReport()
 
 	; Logic here
 		Local $aRndFuncList = ['ElixirUpdate', 'GoldUpdate']
@@ -100,8 +97,6 @@ Func runBuilderBase($bTestRun = False)
 EndFunc   ;==>runBuilderBase
 
 Func RunBBFuncs($sBBFunc, $bTestRun = False)
-	; It will not be necessary if there are no constructors.
-	BuilderBaseReport()
 
 	; Zoomout
 	If $g_iFreeBuilderCountBB <> 0 Then BuilderBaseZoomOut()

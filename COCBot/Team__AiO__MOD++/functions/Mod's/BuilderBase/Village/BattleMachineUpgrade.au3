@@ -41,26 +41,17 @@ Func BattleMachineUpgrade($bTestRun = False)
 	; [0] = Remain Upgrade time for next level  [1] = Machine next Level , [2] = Machine Next level cost
 	Local $aMachineStatus[3] = [0,0,0]
 
-	Local $aElixirStorageCap
-
 	Local $bDoNotProceedWithMachine = False
 
 	; ZoomOut Check
-	AndroidOnlyZoomOut()
+	BuilderBaseZoomOut()
+	
 	Local $iDateS = Number(_DateDiff('s', $g_sMachineTime, _NowCalc()))
 	Local $iDateH = Number(_DateDiff('h', $g_sMachineTime, _NowCalc()))
 
-	If $iDateS <= 0 Or $iDateH > 72 Or $bTestRun Then ; > 72 prevent infinite
-		;Reset and populate variables
-		Local $aMachineStatus[3] = [0,0,0]
-		$aElixirStorageCap = -1
-
-		; Verify Machine
-		BuilderBaseCheckMachine($aMachineStatus, $bTestRun)
-
-		If _Sleep(500) Then Return
-	Else
-		If _Sleep(500) Then Return
+	If _Sleep(500) Then Return
+	
+	If Not (($iDateS <= 0) Or ($iDateH > 72) Or $bTestRun) Then ; > 72 prevent infinite
 		ClickP($aAway, 2, 100, "#0900") ;Click Away
 		Setlog("Battle machine skipped : upgrade in progress.", $COLOR_INFO)
 		Return
@@ -69,168 +60,144 @@ Func BattleMachineUpgrade($bTestRun = False)
 	; Remain Times and if we are waiting or Not
 	$g_sMachineTime = '1000/01/01 00:00:00'
 
-	Local $aUpgradeButton = findButton("Upgrade", Default, 1, True)
-	If IsArray($aUpgradeButton) And UBound($aUpgradeButton, 1) = 2 Then
-		If _Sleep($DELAYUPGRADEHERO2) Then Return
-		ClickP($aUpgradeButton)
-		If _Sleep($DELAYUPGRADEHERO3) Then Return ; Wait for window to open
-		Else
-		Setlog("findButton error in BTM Upgrade.", $COLOR_ERROR)
-		Return False
-	EndIf
-
-	If $aMachineStatus[1] = 0 Then
-		If FastBottomGreen() Then
-			ClickP($g_iMultiPixelOffSet, 1)
-
-			If FastBottomGreen() Then
-			; check for green button to use gems to finish upgrade, checking if upgrade actually started
-				SetLog("Something went wrong with Battle Machine Upgrade, try again.", $COLOR_ERROR)
-				ClickP($aAway, 2, $DELAYLABUPGRADE3, "#0900") ;Click Away
-				Return False
-			ElseIf isGemOpen(True) = False Then ; check for gem window
-				SetLog("Oops, Gems required for " & "Battle Machine" & " Upgrade, try again.", $COLOR_ERROR)
-				ClickP($aAway, 2, $DELAYLABUPGRADE3, "#0900") ;Click Away
-				Return False
-				;Else
-				;$g_sMachineTime = _DateAdd('h', 12, $sStartTime)
-			EndIf
-
-		EndIf
-		Return
-	EndIf
-
 	BuilderBaseUpgradeMachine($bTestRun)
+	If _Sleep(1000) Then Return
 
-	If _Sleep(2000) Then Return
-	ClickP($aAway, 2, 1000, "#0900") ;Click Away
 	FuncReturn()
 EndFunc   ;==>BattleMachineUpgrade
 
+; Machine
+Func BuilderBaseUpgradeMachine($bTestRun = False)
+		Local $iXMoved = 0, $iYMoved = 0, $sSelectedUpgrade = "Battle Machine"
+		
+		If (Not IsMainPageBuilderBase()) Then
+			_DebugFailedImageDetection("UpgradeMachine")
+			Return False
+		EndIf
 
-; Extra Methods
-; First Check
-Func BuilderBaseCheckMachine(ByRef $aMachineStatus, $bTestRun = 0)
-	ClickP($aAway, 2, 300, "#900") ;Click Away
-	; $aMachineStatus[X][0] = Remain Upgrade time for next level  [1] = Machine next Level , [2] = Machine Next level cost
-
-	If IsMainPageBuilderBase() Then
 		; Machine Detection
-		Local $MachinePosition = _ImageSearchXML($g_sXMLTroopsUpgradeMachine, 1, "0,50,860,594", True, $bTestRun)
-		If IsArray($MachinePosition) And UBound($MachinePosition) > 0 Then
-			If $bTestRun > 0 Then Setlog("Machine Found: " & _ArrayToString($MachinePosition))
-			Click($MachinePosition[0][1], $MachinePosition[0][2], 1, 0, "#901")
+		Local $aMachinePosition = _ImageSearchXML($g_sXMLTroopsUpgradeMachine, 1, "0,50,860,594", True, $bTestRun)
+		
+		If (Not IsArray($aMachinePosition) Or not (UBound($aMachinePosition) > 0)) Then 
+			_DebugFailedImageDetection("UpgradeMachine")
+			Return False
+		EndIf
+		
+		SetDebugLog("Machine Found: " & _ArrayToString($aMachinePosition))
+		Click($aMachinePosition[UBound($aMachinePosition)-1][1], $aMachinePosition[UBound($aMachinePosition)-1][2], 1, 0, "#9010")
+		If RandomSleep(1000) Then Return
 
-			If _Sleep(200) Then Return
-			; $aResult[1] = Name , $aResult[2] = Level
-			Local $aResult = BuildingInfo(242, 490 + $g_iBottomOffsetY) ; 860x780
-			If Not IsArray($aResult) Then Return
-			Setlog("Machine LVL : " &  $aResult[2], $COLOR_INFO)
-			
-			If UBound($aResult) = 0 Then 
+		#Region - Mode
+        Local $aResult = BuildingInfo(242, 490 + $g_iBottomOffsetY)
+        If Not IsArray($aResult) Then 
+			If (StringIsSpace($aResult[2])) And not ($aResult[0] = "Battle Machine") Then
 				Setlog("Error geting the Machine Info", $COLOR_ERROR)
 				ClickP($aAway, 2, 300, "#900") ;Click Away
 				Return
 			EndIf
-			
-			$aMachineStatus[1] = $aResult[2] <> "Broken" ? Number($aResult[2]) : 0
-			If $bTestRun > 0 Then Setlog("Machine Level: " & $aMachineStatus[1])
-		Else
-			 _DebugFailedImageDetection("Machine")
-			$aMachineStatus[1] = 0
+			Return
 		EndIf
-	EndIf
-EndFunc   ;==>BuilderBaseCheckMachine
+		
+        Setlog("Machine level : " &  $aResult[2], $COLOR_INFO)
+        
+        Local $iMachineLevel = ($aResult[2] <> "Broken") ? (Number($aResult[2])) : ("Broken")
+        If ($bTestRun = True) Then Setlog("Machine Level: " & $iMachineLevel)
+		#EndRegion - Mode
 
-; Machine
-Func BuilderBaseUpgradeMachine($bTestRun = False)
-	If IsMainPageBuilderBase() Then
-		; Machine Detection
-		Local $MachinePosition = _ImageSearchXML($g_sXMLTroopsUpgradeMachine, 1, "0,50,860,594", True, $bTestRun)
-		If IsArray($MachinePosition) And UBound($MachinePosition) > 0 Then
-			SetDebugLog("Machine Found: " & _ArrayToString($MachinePosition))
-			Click($MachinePosition[0][1], $MachinePosition[0][2], 1, 0, "#9010")
-			If _Sleep(2000) Then Return
-			;If GetUpgradeButton("Elixir", $bTestRun) And not $bTestRun Then Return True
-			;If _Sleep(2000) Then Return
-			Local $iXMoved = 0, $iYMoved = 0
-			BattleMachineUpgradeUpgrade("Battle Machine", $iXMoved = 0, $iYMoved = 0, $bTestRun)
-		Else
-			 _DebugFailedImageDetection("UpgradeMachine")
-		EndIf
-	EndIf
-	Return False
-EndFunc   ;==>BuilderBaseUpgradeMachine
-
-Func BattleMachineUpgradeUpgrade($sSelectedUpgrade, $iXMoved = 0, $iYMoved = 0, $bTestRun = False)
-	Local $sStartTime, $EndTime, $EndPeriod, $Result, $TimeAdd = 0
-		If _Sleep(2000) Then Return
-
-		If QuickMIS("BC1", $g_sImgAutoUpgradeBtnDir, 300, 650, 600, 720, True, $bTestRun) Then
-			Click($g_iQuickMISX + 300, $g_iQuickMISY + 650, 1)
-			If _Sleep(1500) Then Return
-		Else
+		#Region - FindButton
+		Local $aUpgradeButton = findButton("Upgrade", Default, 1, True)
+		If IsArray($aUpgradeButton) And UBound($aUpgradeButton, 1) = 2 Then
+			If _Sleep($DELAYUPGRADEHERO2) Then Return
+			ClickP($aUpgradeButton)
+			If _Sleep($DELAYUPGRADEHERO3) Then Return ; Wait for window to open
+			Else
 			SetLog("Something went wrong with " & $sSelectedUpgrade & " Upgrade, try again.", $COLOR_ERROR)
 			ClickP($aAway, 2, 0, "#0204")
 			Return False
 		EndIf
+		#EndRegion - FindButton
+		
+		If RandomSleep(1500) Then Return
+		
+		#Region - Mode switch
+		Local $b = False
+		Switch $iMachineLevel
+			Case "Broken"
+				Local $iMachineFinishTime = Int(12*60)
+				$b = RebuildStructure()
+			Case Else
+				Local $iMachineFinishTime = "", $sSelectedUpgrade
+				$b = BattleMachineUpgradeUpgrade($iMachineFinishTime, $bTestRun)
+		EndSwitch
+		#EndRegion - Mode switch
+		
+		If ($b = False) Then 
+			SetLog("Machine upgrade not possible.", $COLOR_INFO)
+			Return False
+		EndIf
+		
+		#Region
+		If ($bTestRun = False)  Then Click(645, 530 + $g_iMidOffsetY, 1, 0, "#0202") ; Everything is good - Click the upgrade button
+		If _Sleep($DELAYLABUPGRADE1) Then Return
+		
+		If (isGemOpen(True) = False) And IsMainPageBuilderBase(2) Then ; check for gem window
 
-			; get upgrade time from window part 1
-			$Result = getLabUpgradeTime(554 + $iXMoved, 491 + $iYMoved) ; Try to read white text showing time for upgrade
-			Local $iMachineFinishTime = ConvertOCRTime("Machine Time", $Result, False)
-			If $iMachineFinishTime > 0 Then
-				SetLog($sSelectedUpgrade & " Upgrade Finishes @ " & $Result & " (" & $g_sStarLabUpgradeTime & ")", $COLOR_SUCCESS)
-			Else
-				SetLog("Error processing upgrade time required, try again!", $COLOR_WARNING)
-				Return False
-			EndIf
+			Local $sStartTime = _NowCalc() ; what is date:time now
+			Local $sResult = ($iMachineFinishTime / 60)
+			
+			SetLog($sSelectedUpgrade & " Upgrade Finishes @ " & $sResult & " (" & $sSelectedUpgrade & ")", $COLOR_SUCCESS)
+		
+			SetLog("Upgrade " & $sSelectedUpgrade & " started with success...", $COLOR_SUCCESS)
+			PushMsg("BattleMachineUpgradeSuccess")
+			$g_sMachineTime = _DateAdd('n', Ceiling($iMachineFinishTime), $sStartTime)
+			If _Sleep($DELAYLABUPGRADE2) Then Return
 
-			If Not $bTestRun Then Click(645 + $iXMoved, 530 + $g_iMidOffsetY + $iYMoved, 1, 0, "#0202") ; Everything is good - Click the upgrade button
-			If _Sleep($DELAYLABUPGRADE1) Then Return
+			; get upgrade time from window par 2
+			SetLog($sSelectedUpgrade & " Upgrade OCR Time = " & $sResult & ", $iMachineFinishTime = " & $iMachineFinishTime & " m", $COLOR_INFO)
+			If $g_bDebugSetlog Then SetDebugLog($sSelectedUpgrade & " Upgrade Started @ " & $sStartTime, $COLOR_SUCCESS)
+			
+			Return True
+		ElseIf Not IsMainPageBuilderBase(2) Then ; Trick in case the button is not pressed.
+			SetLog("Machine upgrade not possible. (2)", $COLOR_INFO)
+		Else
+			SetLog("Oops, Gems required for " & $sSelectedUpgrade & " Upgrade, try again.", $COLOR_ERROR)
+		EndIf
+		#EndRegion
+		
+		ClickP($aAway, 2, $DELAYLABUPGRADE3, "#0205")
+		Return False
+		
+EndFunc   ;==>BuilderBaseUpgradeMachine
 
-			If isGemOpen(True) = False Then ; check for gem window
-				; check for green button to use gems to finish upgrade, checking if upgrade actually started
-				;If Not (_ColorCheck(_GetPixelColor(625 + $iXMoved, 218 + $g_iMidOffsetY + $iYMoved, True), Hex(0x6fbd1f, 6), 15) Or _ColorCheck(_GetPixelColor(660 + $iXMoved, 218 + $g_iMidOffsetY + $iYMoved, True), Hex(0x6fbd1f, 6), 15)) Then
-				;	SetLog("Something went wrong with " & $sSelectedUpgrade & " Upgrade, try again.", $COLOR_ERROR)
-				;	ClickP($aAway, 2, $DELAYLABUPGRADE3, "#0360")
-				;	Return False
-				;EndIf
-				
-				SetLog("Upgrade " & $sSelectedUpgrade & " started with success...", $COLOR_SUCCESS)
-				PushMsg("BattleMachineUpgradeSuccess")
-				$g_sMachineTime = _DateAdd('n', Ceiling($iMachineFinishTime), $sStartTime)
-				If _Sleep($DELAYLABUPGRADE2) Then Return
-
-				; get upgrade time from window par 2
-				SetLog($sSelectedUpgrade & " Upgrade OCR Time = " & $Result & ", $iMachineFinishTime = " & $iMachineFinishTime & " m", $COLOR_INFO)
-				$sStartTime = _NowCalc() ; what is date:time now
-				If $g_bDebugSetlog Then SetDebugLog($sSelectedUpgrade & " Upgrade Started @ " & $sStartTime, $COLOR_SUCCESS)
-				
-				ClickP($aAway, 2, 0, "#0204")
-				Return True
-			Else
-				SetLog("Oops, Gems required for " & $sSelectedUpgrade & " Upgrade, try again.", $COLOR_ERROR)
-				ClickP($aAway, 2, $DELAYLABUPGRADE3, "#0205")
-			EndIf
-	ClickP($aAway, 2, $DELAYLABUPGRADE3, "#0205")
-	Return False
-EndFunc   ;==>BattleMachineUpgrade
-
-Func FastBottomGreen($iDBG = 0)
-	If Not $g_bRunState Then Return
-	Local $aArea[4] = [355,450,521,532]
-
-    Local $iSpecialColor[2][3] = [[0xE6FC96, 1, 0], [0xE6FC96, 2, 0]]
-
-    For $i = 0 to 15
-       If IsArray(_MultiPixelSearch($aArea[0], $aArea[1], $aArea[2], $aArea[3], 1, 1, Hex(0xE6FC96, 6), $iSpecialColor, 20)) Then ExitLoop
-		Sleep(10)
-	Next
-
-	If $i > 15 Then
+Func RebuildStructure()
+	Local $vButton
+	; Button - 360, 460, 520, 530
+	For $i = 0 To 3
+		$vButton = findMultipleQuick(@scriptdir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\Upgrade\Rebuild\", 10, "360, 460, 520, 530")
+		If IsArray($vButton) Then ExitLoop
+		If _Sleep(300) Then Return
+	Next 
+	
+	If Not IsArray($vButton) Then Return False
+	
+	If (__ArraySearch($vButton, "NoRes") <> -1) Then 
+		SetDebugLog("RebuildStructure fail", $COLOR_ERROR)
 		Return False
 	EndIf
-
-	SetDebugLog("FastBottomGreen : Button detected: " & $g_iMultiPixelOffSet[0] & "," & $g_iMultiPixelOffSet[1])
+	
+	Click($vButton[0][1], $vButton[0][2])
 	Return True
-EndFunc   ;==>FindVersusBattlebtn
+EndFunc
+
+Func BattleMachineUpgradeUpgrade(ByRef $iMachineFinishTime, $bTestRun = False)
+	If _ColorCheck(_GetPixelColor(398, 568, True), Hex(0xE1433F, 6), 20) Then Return False
+	; get upgrade time from window part 
+	$iMachineFinishTime = ConvertOCRTime("Machine Time", getLabUpgradeTime(581, 495), False)
+	If ($iMachineFinishTime > 0) Then
+		Return True
+	Else
+		SetLog("Error processing upgrade time required, try again!", $COLOR_WARNING)
+		Return False
+	EndIf
+	Return False
+EndFunc   ;==>BattleMachineUpgrade

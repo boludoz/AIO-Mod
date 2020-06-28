@@ -189,6 +189,10 @@ Func GoldElixirChangeEBO()
 			ExitLoop
 		EndIf
 
+		If ($txtDiff = "0s") Then
+			Return False	; End Battle
+		EndIf
+
 		;EXIT IF TWO STARS REACH
 		If $g_abStopAtkTwoStars[$g_iMatchMode] And _CheckPixel($aWonTwoStar, True) Then
 			SetLog("Two Star Reach, exit", $COLOR_SUCCESS)
