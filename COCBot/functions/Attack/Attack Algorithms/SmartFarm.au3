@@ -828,6 +828,7 @@ Func DropTroopSmartFarm($troop, $nbSides, $number, $slotsPerEdge = 0, $name = ""
 		; $listInfoPixelDropTroop = [$newPixelBottomRight, $newPixelTopLeft, $newPixelBottomLeft, $newPixelTopRight]
 		ReDim $listInfoPixelDropTroop[4]
 		$listInfoPixelDropTroop = GetPixelDropTroop($troop, $number, $slotsPerEdge)
+
 	Else
 		;;;;;;;; HERE WILL BE THE SIDE CHOISE ;;;;;;;;;
 		; $TEMPlistInfoPixelDropTroop = [$newPixelBottomRight, $newPixelTopLeft, $newPixelBottomLeft, $newPixelTopRight]
@@ -866,6 +867,10 @@ Func DropTroopSmartFarm($troop, $nbSides, $number, $slotsPerEdge = 0, $name = ""
 	EndIf
 
 	Local $infoDropTroop[6] = [$troop, $listInfoPixelDropTroop, $nbTroopsPerEdge, $slotsPerEdge, $number, $name]
+	;randomize side drop order
+	For $listSidePixel in $infoDropTroop[1]
+		$listSidePixel = _ArrayRandomShuffle($listSidePixel)
+	Next
 	Return $infoDropTroop
 
 EndFunc   ;==>DropTroopSmartFarm
