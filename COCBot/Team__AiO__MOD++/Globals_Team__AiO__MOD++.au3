@@ -61,7 +61,6 @@ Global $g_bBBDropOrderSet = False
 Global Const $g_iBBTroopCount = 11
 ;Global Const $g_sBBDropOrderDefault = "BoxerGiant|HogGlider|SuperPekka|DropShip|Witch|BabyDrag|WallBreaker|Barbarian|CannonCart|Archer|Minion" - Team AIO Mod++
 ;Global $g_sBBDropOrder = $g_sBBDropOrderDefault - Team AIO Mod++
-Global $g_ahCmbBBDropOrder[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ;CustomArmy
 Global $g_iCmbCampsBB[6] = [0, 0, 0, 0, 0, 0]
 Global $g_hIcnTroopBB[6]

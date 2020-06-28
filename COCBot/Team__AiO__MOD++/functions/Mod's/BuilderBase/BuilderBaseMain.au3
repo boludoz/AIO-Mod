@@ -40,9 +40,7 @@ Func runBuilderBase($bTestRun = False)
 				$g_bRunState = False ;Stop The Bot
 				btnStop()
 			EndIf
-		SetLog("Play Only Builder Base Check Is On But BB Option's(Collect,Attack etc) Unchecked", $COLOR_ERROR)
-		SetLog("Please Check BB Options From Builder Base Tab", $COLOR_INFO)
-
+		If $g_bDebugSetlog = True Then SetDebugLog("Builder Base options not enable, Skipping Builder Base routines!", $COLOR_DEBUG)
 		Return False
 	EndIf
 
