@@ -445,8 +445,8 @@ Func BuilderBaseCSVAttack($aAvailableTroops, $bDebug = False)
 
 	; maybe will be necessary to click on attack bar to release the zoomout pinch
 	; x = 75 , y = 584
-	Local $slotZero[2] = [102, 684] ; DESRC DONE
-	ClickP($slotZero, 1, 0)
+	;Local $slotZero[2] = [102, 684] ; DESRC DONE
+	;ClickP($slotZero, 1, 0)
 
 	; [0] - TopLeft ,[1] - TopRight , [2] - BottomRight , [3] - BottomLeft
 	Local $FurtherFrom = 5 ; 5 pixels before the deploy point
