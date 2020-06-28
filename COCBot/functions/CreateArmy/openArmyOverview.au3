@@ -22,6 +22,7 @@ Func OpenArmyOverview($bCheckMain = True, $sWhereFrom = "Undefined")
 		EndIf
 	EndIf
 
+	For $i=0 To 3 ;loop in case Random click fails.
 	If WaitforPixel(23, 505 + $g_iBottomOffsetY, 53, 507 + $g_iBottomOffsetY, Hex(0xEEB344, 6), 5, 10) Then
 		If $g_bDebugSetlogTrain Then SetLog("Click $aArmyTrainButton" & " (Called from " & $sWhereFrom & ")", $COLOR_SUCCESS)
 		#Region Team AIO Mod++
@@ -34,6 +35,8 @@ Func OpenArmyOverview($bCheckMain = True, $sWhereFrom = "Undefined")
 	EndIf
 
 	If _Sleep($DELAYRUNBOT6) Then Return ; wait for window to open
+	If IsTrainPage() Then ExitLoop
+	Next
 	If Not IsTrainPage() Then
 		SetError(1)
 		Return False ; exit if I'm not in train page
@@ -75,7 +78,10 @@ Func OpenTrainTab($sTab, $bSetLog = True, $sWhereFrom = "Undefined")
 		$aIsTabOpen[0] = $aTabButton[0]
 		If Not _CheckPixel($aIsTabOpen, True) Then
 			If $bSetLog Or $g_bDebugSetlogTrain Then SetLog("Open " & $sTab & ($g_bDebugSetlogTrain ? " (Called from " & $sWhereFrom & ")" : ""), $COLOR_INFO)
-			ClickP($aTabButton)
+			For $i=0 To 3 ;in case click fails.
+				ClickP($aTabButton)
+				 If _WaitForCheckPixel($aIsTabOpen, True) Then ExitLoop
+		 	Next
 			If Not _WaitForCheckPixel($aIsTabOpen, True) Then
 				SetLog("Error in OpenTrainTab: Cannot open " & $sTab & ". Pixel to check did not appear", $COLOR_ERROR)
 				SetError(1)
