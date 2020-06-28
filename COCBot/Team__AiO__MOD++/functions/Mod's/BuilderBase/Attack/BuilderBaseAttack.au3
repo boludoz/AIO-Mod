@@ -462,7 +462,9 @@ Func BuilderBaseAttackReport()
 	Local $SurrenderBtn = [76, 584]
 	Local $OKbtn = [435, 562]
 
-	For $i = 0 To 60
+	Local $damageCheckLoop = 0
+
+	Do
 		If Not $g_bRunState Then Return
 		TriggerMachineAbility()
 		Local $sDamage = Number(getOcrOverAllDamage(780, 615))
@@ -470,10 +472,17 @@ Func BuilderBaseAttackReport()
 			$g_iLastDamage = Int($sDamage)
 			Setlog("Total Damage: " & $g_iLastDamage & "%")
 		EndIf
-		If Not _ColorCheck(_GetPixelColor($SurrenderBtn[0], $SurrenderBtn[1], True), Hex(0xFE5D65, 6), 10) Then ExitLoop
-		If $i = 60 Then Setlog("Window Report Problem!", $COLOR_WARNING)
-		If _Sleep(2000) Then Return
-	Next
+		If $damageCheckLoop = 180 Then Setlog("Window Report Problem!", $COLOR_WARNING)
+		If _Sleep(1000) Then Return
+		$damageCheckLoop++
+	Until Not _ColorCheck(_GetPixelColor($SurrenderBtn[0], $SurrenderBtn[1], True), Hex(0xFE5D65, 6), 10)
+	;BB attack Ends
+	If _Sleep(2000) Then Return
+	;in case BB Attack Ends in error
+	If _ColorCheck(_GetPixelColor($SurrenderBtn[0], $SurrenderBtn[1], True), Hex(0xFE5D65, 6), 10) Then 
+		Setlog("Surrender Button fail - battle end early - recursive call BuilderBaseAttack")
+		BuilderBaseAttackReport()
+	EndIf
 
 	Local $Stars = 0
 	Local $StarsPositions[3][2] = [[326, 394], [452, 388], [546, 413]]

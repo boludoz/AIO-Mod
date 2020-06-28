@@ -746,7 +746,8 @@ EndFunc   ;==>TriggerMachineAbility
 
 Func BattleIsOver()
 	Local $SurrenderBtn = [65, 607]
-	For $i = 0 To 180
+	Local $battleOverLoopCounter = 0
+	Do
 		If Not $g_bRunState Then Return
 		TriggerMachineAbility()
 		Local $Damage = Number(getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY))
@@ -754,10 +755,11 @@ Func BattleIsOver()
 			$g_iLastDamage = Int($Damage)
 			Setlog("Total Damage: " & $g_iLastDamage & "%")
 		EndIf
-		If Not _ColorCheck(_GetPixelColor($SurrenderBtn[0], $SurrenderBtn[1], True), Hex(0xcf0d0e, 6), 10) Then ExitLoop
-		If $i = 180 Then Setlog("Window Report Problem!", $COLOR_WARNING)
+		
+		If $$battleOverLoopCounter = 180 Then Setlog("Window Report Problem!", $COLOR_WARNING)
+		$battleOverLoopCounter++
 		If _Sleep(1000) Then Return
-	Next
+	Until Not _ColorCheck(_GetPixelColor($SurrenderBtn[0], $SurrenderBtn[1], True), Hex(0xcf0d0e, 6), 10)
 
 EndFunc   ;==>BattleIsOver
 
