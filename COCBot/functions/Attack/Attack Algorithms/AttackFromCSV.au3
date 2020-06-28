@@ -353,9 +353,14 @@ Func Algorithm_AttackCSV($testattack = False, $captureredarea = True)
 	;04 - MINES, COLLECTORS, DRILLS -----------------------------------------------------------------------------------------------------------------------
 
 	;reset variables
-	Global $g_aiPixelMine[0]
-	Global $g_aiPixelElixir[0]
-	Global $g_aiPixelDarkElixir[0]
+	#Region - Check collector outside - Team AIO Mod++
+	If $g_bScanMineAndElixir = False Then
+		Global $g_aiPixelMine[0]
+		Global $g_aiPixelElixir[0]
+		Global $g_aiPixelDarkElixir[0]
+	EndIf
+	#EndRegion - Check collector outside - Team AIO Mod++
+	
 	Local $g_aiPixelNearCollectorTopLeftSTR = ""
 	Local $g_aiPixelNearCollectorBottomLeftSTR = ""
 	Local $g_aiPixelNearCollectorTopRightSTR = ""
@@ -365,9 +370,13 @@ Func Algorithm_AttackCSV($testattack = False, $captureredarea = True)
 	;04.01 If drop troop near gold mine
 	If $g_bCSVLocateMine Then
 		$hTimer = __timerinit()
-		SuspendAndroid()
-		$g_aiPixelMine = GetLocationMine()
-		ResumeAndroid()
+		#Region - Check collector outside - Team AIO Mod++
+		If $g_bScanMineAndElixir = False Then
+			SuspendAndroid()
+			$g_aiPixelMine = GetLocationMine()
+			ResumeAndroid()
+		EndIf
+		#EndRegion - Check collector outside - Team AIO Mod++
 		If _Sleep($DELAYRESPOND) Then Return
 		CleanRedArea($g_aiPixelMine)
 		Local $htimerMine = Round(__timerdiff($hTimer) / 1000, 2)
@@ -402,12 +411,16 @@ Func Algorithm_AttackCSV($testattack = False, $captureredarea = True)
 	EndIf
 	If _Sleep($DELAYRESPOND) Then Return
 
-	;04.02  If drop troop near elisir
+	;04.02  If drop troop near elixir
 	If $g_bCSVLocateElixir Then
 		$hTimer = __timerinit()
-		SuspendAndroid()
-		$g_aiPixelElixir = GetLocationElixir()
-		ResumeAndroid()
+		#Region - Check collector outside - Team AIO Mod++
+		If $g_bScanMineAndElixir = False Then
+			SuspendAndroid()
+			$g_aiPixelElixir = GetLocationElixir()
+			ResumeAndroid()
+		EndIf
+		#EndRegion - Check collector outside - Team AIO Mod++
 		If _Sleep($DELAYRESPOND) Then Return
 		CleanRedArea($g_aiPixelElixir)
 		Local $htimerMine = Round(__timerdiff($hTimer) / 1000, 2)
@@ -446,9 +459,13 @@ Func Algorithm_AttackCSV($testattack = False, $captureredarea = True)
 	If $g_bCSVLocateDrill Then
 		;SetLog("Locating drills")
 		$hTimer = __timerinit()
-		SuspendAndroid()
-		$g_aiPixelDarkElixir = GetLocationDarkElixir()
-		ResumeAndroid()
+		#Region - Check collector outside - Team AIO Mod++
+		If $g_bScanMineAndElixir = False Then
+			SuspendAndroid()
+			$g_aiPixelDarkElixir = GetLocationDarkElixir()
+			ResumeAndroid()
+		EndIf
+		#EndRegion - Check collector outside - Team AIO Mod++
 		If _Sleep($DELAYRESPOND) Then Return
 		CleanRedArea($g_aiPixelDarkElixir)
 		Local $htimerMine = Round(__timerdiff($hTimer) / 1000, 2)
@@ -482,6 +499,10 @@ Func Algorithm_AttackCSV($testattack = False, $captureredarea = True)
 		SetLog("> Drills detection not needed, skip", $COLOR_INFO)
 	EndIf
 	If _Sleep($DELAYRESPOND) Then Return
+
+	#Region - Check collector outside - Team AIO Mod++
+	$g_bScanMineAndElixir = False
+	#EndRegion - Check collector outside - Team AIO Mod++
 
 	If StringLen($g_aiPixelNearCollectorTopLeftSTR) > 0 Then $g_aiPixelNearCollectorTopLeftSTR = StringLeft($g_aiPixelNearCollectorTopLeftSTR, StringLen($g_aiPixelNearCollectorTopLeftSTR) - 1)
 	If StringLen($g_aiPixelNearCollectorTopRightSTR) > 0 Then $g_aiPixelNearCollectorTopRightSTR = StringLeft($g_aiPixelNearCollectorTopRightSTR, StringLen($g_aiPixelNearCollectorTopRightSTR) - 1)

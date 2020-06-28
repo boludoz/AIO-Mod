@@ -36823,18 +36823,22 @@ Else
 SetLog("> Townhall search not needed, skip")
 EndIf
 If _Sleep($DELAYRESPOND) Then Return
+If $g_bScanMineAndElixir = False Then
 Global $g_aiPixelMine[0]
 Global $g_aiPixelElixir[0]
 Global $g_aiPixelDarkElixir[0]
+EndIf
 Local $g_aiPixelNearCollectorTopLeftSTR = ""
 Local $g_aiPixelNearCollectorBottomLeftSTR = ""
 Local $g_aiPixelNearCollectorTopRightSTR = ""
 Local $g_aiPixelNearCollectorBottomRightSTR = ""
 If $g_bCSVLocateMine Then
 $hTimer = __timerinit()
+If $g_bScanMineAndElixir = False Then
 SuspendAndroid()
 $g_aiPixelMine = GetLocationMine()
 ResumeAndroid()
+EndIf
 If _Sleep($DELAYRESPOND) Then Return
 CleanRedArea($g_aiPixelMine)
 Local $htimerMine = Round(__timerdiff($hTimer) / 1000, 2)
@@ -36866,9 +36870,11 @@ EndIf
 If _Sleep($DELAYRESPOND) Then Return
 If $g_bCSVLocateElixir Then
 $hTimer = __timerinit()
+If $g_bScanMineAndElixir = False Then
 SuspendAndroid()
 $g_aiPixelElixir = GetLocationElixir()
 ResumeAndroid()
+EndIf
 If _Sleep($DELAYRESPOND) Then Return
 CleanRedArea($g_aiPixelElixir)
 Local $htimerMine = Round(__timerdiff($hTimer) / 1000, 2)
@@ -36900,9 +36906,11 @@ EndIf
 If _Sleep($DELAYRESPOND) Then Return
 If $g_bCSVLocateDrill Then
 $hTimer = __timerinit()
+If $g_bScanMineAndElixir = False Then
 SuspendAndroid()
 $g_aiPixelDarkElixir = GetLocationDarkElixir()
 ResumeAndroid()
+EndIf
 If _Sleep($DELAYRESPOND) Then Return
 CleanRedArea($g_aiPixelDarkElixir)
 Local $htimerMine = Round(__timerdiff($hTimer) / 1000, 2)
@@ -36932,6 +36940,7 @@ Else
 SetLog("> Drills detection not needed, skip", $COLOR_INFO)
 EndIf
 If _Sleep($DELAYRESPOND) Then Return
+$g_bScanMineAndElixir = False
 If StringLen($g_aiPixelNearCollectorTopLeftSTR) > 0 Then $g_aiPixelNearCollectorTopLeftSTR = StringLeft($g_aiPixelNearCollectorTopLeftSTR, StringLen($g_aiPixelNearCollectorTopLeftSTR) - 1)
 If StringLen($g_aiPixelNearCollectorTopRightSTR) > 0 Then $g_aiPixelNearCollectorTopRightSTR = StringLeft($g_aiPixelNearCollectorTopRightSTR, StringLen($g_aiPixelNearCollectorTopRightSTR) - 1)
 If StringLen($g_aiPixelNearCollectorBottomLeftSTR) > 0 Then $g_aiPixelNearCollectorBottomLeftSTR = StringLeft($g_aiPixelNearCollectorBottomLeftSTR, StringLen($g_aiPixelNearCollectorBottomLeftSTR) - 1)
@@ -58207,7 +58216,7 @@ EndIf
 Return $aResult
 EndFunc
 Func getNameBuilding($x_start, $y_start)
-Return getOcrAndCapture("coc-build", $x_start, $y_start, 450, 27)
+Return getOcrAndCapture("coc-build", $x_start, $y_start, 455, 27)
 EndFunc
 Func getGoldVillageSearch($x_start, $y_start)
 Return getOcrAndCapture("coc-v-g", $x_start, $y_start, 90, 16, True)
@@ -59718,16 +59727,16 @@ $match[$LB] = True
 EndIf
 EndIf
 If $match[$DB] And $dbBase Then
-SetLog($GetResourcesTXT, $COLOR_SUCCESS, "Lucida Console", 7.5)
-SetLog("      " & "Dead Base Found!", $COLOR_SUCCESS, "Lucida Console", 7.5)
+SetLog($GetResourcesTXT, $COLOR_INFO)
+SetLog("      " & "Dead Base Found!", $COLOR_INFO)
 $logwrited = True
 Local $g_bFlagSearchAnotherBase = False
 If $g_bChkNoLeague[$DB] Then
 If SearchNoLeague() Then
-SetLog("      " & "Dead Base is in No League, match found !", $COLOR_SUCCESS, "Lucida Console", 7.5)
+SetLog("      " & "Dead Base is in No League, match found !", $COLOR_SUCCESS)
 $g_bFlagSearchAnotherBase = False
 Else
-SetLog("      " & "Dead Base is in a League, skipping search !", $COLOR_ERROR, "Lucida Console", 7.5)
+SetLog("      " & "Dead Base is in a League, skipping search !", $COLOR_INFO)
 $match[$DB] = False
 $g_bFlagSearchAnotherBase = True
 EndIf
@@ -59738,44 +59747,44 @@ If Not $g_bFlagSearchAnotherBase Then
 If $g_bDBMeetCollectorOutside Then
 $g_bScanMineAndElixir = False
 If AreCollectorsOutside($g_iDBMinCollectorOutsidePercent) Then
-SetLog("Collectors are outside, match found !", $COLOR_SUCCESS, "Lucida Console", 7.5)
+SetLog("Collectors are outside, match found !", $COLOR_SUCCESS)
 $g_bFlagSearchAnotherBase = False
 Else
 $g_bFlagSearchAnotherBase = True
 If $g_bSkipCollectorCheck Then
 If Number($g_iTxtSkipCollectorGold) <> 0 And Number($g_iTxtSkipCollectorElixir) <> 0 And Number($g_iTxtSkipCollectorDark) <> 0 Then
 If Number($g_iSearchGold) >= Number($g_iTxtSkipCollectorGold) And Number($g_iSearchElixir) >= Number($g_iTxtSkipCollectorElixir) And Number($g_iSearchDark) >= Number($g_iTxtSkipCollectorDark) Then
-SetLog("Target Resource(G,E,D) over for skip collectors check, Prepare for attack...", $COLOR_SUCCESS, "Lucida Console", 7.5)
+SetLog("Target Resource(G,E,D) over for skip collectors check, Prepare for attack...", $COLOR_INFO)
 $g_bFlagSearchAnotherBase = False
 EndIf
 ElseIf Number($g_iTxtSkipCollectorGold) <> 0 And Number($g_iTxtSkipCollectorElixir) <> 0 Then
 If Number($g_iSearchGold) >= Number($g_iTxtSkipCollectorGold) And Number($g_iSearchElixir) >= Number($g_iTxtSkipCollectorElixir) Then
-SetLog("Target Resource(G,E) over for skip collectors check, Prepare for attack...", $COLOR_SUCCESS, "Lucida Console", 7.5)
+SetLog("Target Resource(G,E) over for skip collectors check, Prepare for attack...", $COLOR_INFO)
 $g_bFlagSearchAnotherBase = False
 EndIf
 ElseIf Number($g_iTxtSkipCollectorGold) <> 0 And Number($g_iTxtSkipCollectorDark) <> 0 Then
 If Number($g_iSearchGold) >= Number($g_iTxtSkipCollectorGold) And Number($g_iSearchDark) >= Number($g_iTxtSkipCollectorDark) Then
-SetLog("Target Resource(G,D) over for skip collectors check, Prepare for attack...", $COLOR_SUCCESS, "Lucida Console", 7.5)
+SetLog("Target Resource(G,D) over for skip collectors check, Prepare for attack...", $COLOR_INFO)
 $g_bFlagSearchAnotherBase = False
 EndIf
 ElseIf Number($g_iTxtSkipCollectorElixir) <> 0 And Number($g_iTxtSkipCollectorDark) <> 0 Then
 If Number($g_iSearchElixir) >= Number($g_iTxtSkipCollectorElixir) And Number($g_iSearchDark) >= Number($g_iTxtSkipCollectorDark) Then
-SetLog("Target Resource(E,D) over for skip collectors check, Prepare for attack...", $COLOR_SUCCESS, "Lucida Console", 7.5)
+SetLog("Target Resource(E,D) over for skip collectors check, Prepare for attack...", $COLOR_INFO)
 $g_bFlagSearchAnotherBase = False
 EndIf
 ElseIf Number($g_iTxtSkipCollectorGold) <> 0 Then
 If Number($g_iSearchGold) >= Number($g_iTxtSkipCollectorGold) Then
-SetLog("Target Resource(G) over for skip collectors check, Prepare for attack...", $COLOR_SUCCESS, "Lucida Console", 7.5)
+SetLog("Target Resource(G) over for skip collectors check, Prepare for attack...", $COLOR_INFO)
 $g_bFlagSearchAnotherBase = False
 EndIf
 ElseIf Number($g_iTxtSkipCollectorElixir) <> 0 Then
 If Number($g_iSearchElixir) >= Number($g_iTxtSkipCollectorElixir) Then
-SetLog("Target Resource(E) over for skip collectors check, Prepare for attack...", $COLOR_SUCCESS, "Lucida Console", 7.5)
+SetLog("Target Resource(E) over for skip collectors check, Prepare for attack...", $COLOR_INFO)
 $g_bFlagSearchAnotherBase = False
 EndIf
 ElseIf Number($g_iTxtSkipCollectorDark) <> 0 Then
 If Number($g_iSearchDark) >= Number($g_iTxtSkipCollectorDark) Then
-SetLog("Target Resource(D) over for skip collectors check, Prepare for attack...", $COLOR_SUCCESS, "Lucida Console", 7.5)
+SetLog("Target Resource(D) over for skip collectors check, Prepare for attack...", $COLOR_INFO)
 $g_bFlagSearchAnotherBase = False
 EndIf
 EndIf
@@ -59789,7 +59798,7 @@ If $g_bSkipCollectorCheckTH Then
 If $g_bFlagSearchAnotherBase Then
 If $g_iSearchTH <> "-" Then
 If Number($g_iSearchTH) <= $g_iCmbSkipCollectorCheckTH Then
-SetLog("Target TownHall Level is " & $g_iSearchTH & ", lower than or equal my setting " & $g_iCmbSkipCollectorCheckTH & ", Prepare for attack...", $COLOR_SUCCESS, "Lucida Console", 7.5)
+SetLog("Target TownHall Level is " & $g_iSearchTH & ", lower than or equal my setting " & $g_iCmbSkipCollectorCheckTH & ", Prepare for attack...", $COLOR_INFO)
 $g_bFlagSearchAnotherBase = False
 Else
 SetLog("Collectors are not outside, and TownHall Level is " & $g_iSearchTH & " Over " & $g_iCmbSkipCollectorCheckTH & ", skipping search !", $COLOR_ERROR, "Lucida Console", 7.5)
@@ -59810,21 +59819,21 @@ ExitLoop
 EndIf
 EndIf
 ElseIf $match[$LB] And Not $dbBase Then
-SetLog($GetResourcesTXT, $COLOR_SUCCESS, "Lucida Console", 7.5)
-SetLog("      " & "Live Base Found!", $COLOR_SUCCESS, "Lucida Console", 7.5)
+SetLog($GetResourcesTXT, $COLOR_INFO)
+SetLog("      " & "Live Base Found!", $COLOR_INFO)
 $logwrited = True
 $g_iMatchMode = $LB
 ExitLoop
 ElseIf $match[$LB] And $g_bCollectorFilterDisable Then
-SetLog($GetResourcesTXT, $COLOR_SUCCESS, "Lucida Console", 7.5)
-SetLog("      " & "Live Base Found!*", $COLOR_SUCCESS, "Lucida Console", 7.5)
+SetLog($GetResourcesTXT, $COLOR_INFO)
+SetLog("      " & "Live Base Found!*", $COLOR_INFO)
 $logwrited = True
 $g_iMatchMode = $LB
 ExitLoop
 ElseIf $g_abAttackTypeEnable[$TB] = 1 And($g_iSearchCount >= $g_iAtkTBEnableCount) Then
 If $g_iSearchTHLResult = 1 Then
-SetLog($GetResourcesTXT, $COLOR_SUCCESS, "Lucida Console", 7.5)
-SetLog("      " & "Not a match, but TH Bully Level Found! ", $COLOR_SUCCESS, "Lucida Console", 7.5)
+SetLog($GetResourcesTXT, $COLOR_INFO)
+SetLog("      " & "Not a match, but TH Bully Level Found! ", $COLOR_INFO)
 $logwrited = True
 $g_iMatchMode = $g_iAtkTBMode
 ExitLoop
@@ -60004,9 +60013,9 @@ If $g_abFilterMeetTrophyEnable[$x] Then $txtTrophies = " [T]:" & StringFormat("%
 If $g_abFilterMeetTH[$x] Then $txtTownhall = " [TH]:" & StringFormat("%2s", $g_aiMaxTH[$x])
 If $g_abFilterMeetTHOutsideEnable[$x] Then $txtTownhall &= ", Out"
 If $g_aiFilterMeetGE[$x] = 2 Then
-SetLog("Aim:           [G+E]:" & StringFormat("%7s", $g_iAimGoldPlusElixir[$x]) & " [D]:" & StringFormat("%5s", $g_iAimDark[$x]) & $txtTrophies & $txtTownhall & " for: " & $g_asModeText[$x], $COLOR_SUCCESS, "Lucida Console", 7.5)
+SetLog("Aim:           [G+E]:" & StringFormat("%7s", $g_iAimGoldPlusElixir[$x]) & " [D]:" & StringFormat("%5s", $g_iAimDark[$x]) & $txtTrophies & $txtTownhall & " for: " & $g_asModeText[$x], $COLOR_INFO)
 Else
-SetLog("Aim: [G]:" & StringFormat("%7s", $g_iAimGold[$x]) & " [E]:" & StringFormat("%7s", $g_iAimElixir[$x]) & " [D]:" & StringFormat("%5s", $g_iAimDark[$x]) & $txtTrophies & $txtTownhall & " for: " & $g_asModeText[$x], $COLOR_SUCCESS, "Lucida Console", 7.5)
+SetLog("Aim: [G]:" & StringFormat("%7s", $g_iAimGold[$x]) & " [E]:" & StringFormat("%7s", $g_iAimElixir[$x]) & " [D]:" & StringFormat("%5s", $g_iAimDark[$x]) & $txtTrophies & $txtTownhall & " for: " & $g_asModeText[$x], $COLOR_INFO)
 EndIf
 EndIf
 EndFunc
@@ -78562,9 +78571,11 @@ SetLog("Locating Mines & Collectors", $COLOR_INFO)
 Global $g_aiPixelNearCollector[0]
 Global $colOutside = 0
 Global $hTimer = TimerInit()
+SuspendAndroid()
 Global $g_aiPixelMine = GetLocationMine()
 Global $g_aiPixelElixir = GetLocationElixir()
 Global $g_aiPixelDarkElixir = GetLocationDarkElixir()
+ResumeAndroid()
 If Not(IsArray($g_aiPixelMine) Or IsArray($g_aiPixelElixir) Or(IsArray($g_aiPixelDarkElixir) And($g_iTownHallLevel > 6) And(Not $g_bSmartZapEnable))) Then
 SetLog("Are collectors outside | No mines/collectors/drills detected.", $COLOR_INFO)
 Return False
@@ -80707,6 +80718,7 @@ RunBBFuncs($iIndex)
 If $g_bRestart Or(Not $g_bRunState) Then Return
 Next
 If checkObstacles(True) Then SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
+BuilderBaseReport()
 Local $aRndFuncList = ['ElixirUpdate', 'GoldUpdate']
 _ArrayShuffle($aRndFuncList)
 For $iIndex In $aRndFuncList
@@ -80720,7 +80732,6 @@ SetLog("Builder Base Idle Ends", $COLOR_INFO)
 If ProfileSwitchAccountEnabled() Then Return
 EndFunc
 Func RunBBFuncs($sBBFunc, $bTestRun = False)
-BuilderBaseReport()
 If $g_iFreeBuilderCountBB <> 0 Then BuilderBaseZoomOut()
 Switch $sBBFunc
 Case "ClockTower"
@@ -82528,142 +82539,116 @@ Func BattleMachineUpgrade($bTestRun = False)
 If Not $g_bChkUpgradeMachine Then Return
 FuncEnter(BattleMachineUpgrade)
 ClickP($aAway, 1, 0, "#0900")
-Local $aMachineStatus[3] = [0,0,0]
-Local $aElixirStorageCap
-AndroidOnlyZoomOut()
+BuilderBaseZoomOut()
 Local $iDateS = Number(_DateDiff('s', $g_sMachineTime, _NowCalc()))
 Local $iDateH = Number(_DateDiff('h', $g_sMachineTime, _NowCalc()))
-If $iDateS <= 0 Or $iDateH > 72 Or $bTestRun Then
-Local $aMachineStatus[3] = [0,0,0]
-$aElixirStorageCap = -1
-BuilderBaseCheckMachine($aMachineStatus, $bTestRun)
 If _Sleep(500) Then Return
-Else
-If _Sleep(500) Then Return
+If Not(($iDateS <= 0) Or($iDateH > 72) Or $bTestRun) Then
 ClickP($aAway, 2, 100, "#0900")
 Setlog("Battle machine skipped : upgrade in progress.", $COLOR_INFO)
 Return
 EndIf
 $g_sMachineTime = '1000/01/01 00:00:00'
+BuilderBaseUpgradeMachine($bTestRun)
+If _Sleep(1000) Then Return
+FuncReturn()
+EndFunc
+Func BuilderBaseUpgradeMachine($bTestRun = False)
+Local $iXMoved = 0, $iYMoved = 0, $sSelectedUpgrade = "Battle Machine"
+If(Not IsMainPageBuilderBase()) Then
+_DebugFailedImageDetection("UpgradeMachine")
+Return False
+EndIf
+Local $aMachinePosition = _ImageSearchXML($g_sXMLTroopsUpgradeMachine, 1, "0,50,860,594", True, $bTestRun)
+If(Not IsArray($aMachinePosition) Or not(UBound($aMachinePosition) > 0)) Then
+_DebugFailedImageDetection("UpgradeMachine")
+Return False
+EndIf
+SetDebugLog("Machine Found: " & _ArrayToString($aMachinePosition))
+Click($aMachinePosition[UBound($aMachinePosition)-1][1], $aMachinePosition[UBound($aMachinePosition)-1][2], 1, 0, "#9010")
+If RandomSleep(1000) Then Return
+Local $aResult = BuildingInfo(242, 490 + $g_iBottomOffsetY)
+If Not IsArray($aResult) Then
+If(StringIsSpace($aResult[2])) And not($aResult[0] = "Battle Machine") Then
+Setlog("Error geting the Machine Info", $COLOR_ERROR)
+ClickP($aAway, 2, 300, "#900")
+Return
+EndIf
+Return
+EndIf
+Setlog("Machine level : " & $aResult[2], $COLOR_INFO)
+Local $iMachineLevel =($aResult[2] <> "Broken") ?(Number($aResult[2])) :("Broken")
+If($bTestRun = True) Then Setlog("Machine Level: " & $iMachineLevel)
 Local $aUpgradeButton = findButton("Upgrade", Default, 1, True)
 If IsArray($aUpgradeButton) And UBound($aUpgradeButton, 1) = 2 Then
 If _Sleep($DELAYUPGRADEHERO2) Then Return
 ClickP($aUpgradeButton)
 If _Sleep($DELAYUPGRADEHERO3) Then Return
 Else
-Setlog("findButton error in BTM Upgrade.", $COLOR_ERROR)
-Return False
-EndIf
-If $aMachineStatus[1] = 0 Then
-If FastBottomGreen() Then
-ClickP($g_iMultiPixelOffSet, 1)
-If FastBottomGreen() Then
-SetLog("Something went wrong with Battle Machine Upgrade, try again.", $COLOR_ERROR)
-ClickP($aAway, 2, $DELAYLABUPGRADE3, "#0900")
-Return False
-ElseIf isGemOpen(True) = False Then
-SetLog("Oops, Gems required for " & "Battle Machine" & " Upgrade, try again.", $COLOR_ERROR)
-ClickP($aAway, 2, $DELAYLABUPGRADE3, "#0900")
-Return False
-EndIf
-EndIf
-Return
-EndIf
-BuilderBaseUpgradeMachine($bTestRun)
-If _Sleep(2000) Then Return
-ClickP($aAway, 2, 1000, "#0900")
-FuncReturn()
-EndFunc
-Func BuilderBaseCheckMachine(ByRef $aMachineStatus, $bTestRun = 0)
-ClickP($aAway, 2, 300, "#900")
-If IsMainPageBuilderBase() Then
-Local $MachinePosition = _ImageSearchXML($g_sXMLTroopsUpgradeMachine, 1, "0,50,860,594", True, $bTestRun)
-If IsArray($MachinePosition) And UBound($MachinePosition) > 0 Then
-If $bTestRun > 0 Then Setlog("Machine Found: " & _ArrayToString($MachinePosition))
-Click($MachinePosition[0][1], $MachinePosition[0][2], 1, 0, "#901")
-If _Sleep(200) Then Return
-Local $aResult = BuildingInfo(242, 490 + $g_iBottomOffsetY)
-If Not IsArray($aResult) Then Return
-Setlog("Machine LVL : " & $aResult[2], $COLOR_INFO)
-If UBound($aResult) = 0 Then
-Setlog("Error geting the Machine Info", $COLOR_ERROR)
-ClickP($aAway, 2, 300, "#900")
-Return
-EndIf
-$aMachineStatus[1] = $aResult[2] <> "Broken" ? Number($aResult[2]) : 0
-If $bTestRun > 0 Then Setlog("Machine Level: " & $aMachineStatus[1])
-Else
-_DebugFailedImageDetection("Machine")
-$aMachineStatus[1] = 0
-EndIf
-EndIf
-EndFunc
-Func BuilderBaseUpgradeMachine($bTestRun = False)
-If IsMainPageBuilderBase() Then
-Local $MachinePosition = _ImageSearchXML($g_sXMLTroopsUpgradeMachine, 1, "0,50,860,594", True, $bTestRun)
-If IsArray($MachinePosition) And UBound($MachinePosition) > 0 Then
-SetDebugLog("Machine Found: " & _ArrayToString($MachinePosition))
-Click($MachinePosition[0][1], $MachinePosition[0][2], 1, 0, "#9010")
-If _Sleep(2000) Then Return
-Local $iXMoved = 0, $iYMoved = 0
-BattleMachineUpgradeUpgrade("Battle Machine", $iXMoved = 0, $iYMoved = 0, $bTestRun)
-Else
-_DebugFailedImageDetection("UpgradeMachine")
-EndIf
-EndIf
-Return False
-EndFunc
-Func BattleMachineUpgradeUpgrade($sSelectedUpgrade, $iXMoved = 0, $iYMoved = 0, $bTestRun = False)
-Local $sStartTime, $EndTime, $EndPeriod, $Result, $TimeAdd = 0
-If _Sleep(2000) Then Return
-If QuickMIS("BC1", $g_sImgAutoUpgradeBtnDir, 300, 650, 600, 720, True, $bTestRun) Then
-Click($g_iQuickMISX + 300, $g_iQuickMISY + 650, 1)
-If _Sleep(1500) Then Return
-Else
 SetLog("Something went wrong with " & $sSelectedUpgrade & " Upgrade, try again.", $COLOR_ERROR)
 ClickP($aAway, 2, 0, "#0204")
 Return False
 EndIf
-$Result = getLabUpgradeTime(554 + $iXMoved, 491 + $iYMoved)
-Local $iMachineFinishTime = ConvertOCRTime("Machine Time", $Result, False)
-If $iMachineFinishTime > 0 Then
-SetLog($sSelectedUpgrade & " Upgrade Finishes @ " & $Result & " (" & $g_sStarLabUpgradeTime & ")", $COLOR_SUCCESS)
-Else
-SetLog("Error processing upgrade time required, try again!", $COLOR_WARNING)
+If RandomSleep(1500) Then Return
+Local $b = False
+Switch $iMachineLevel
+Case "Broken"
+Local $iMachineFinishTime = Int(12*60)
+$b = RebuildStructure()
+Case Else
+Local $iMachineFinishTime = "", $sSelectedUpgrade
+$b = BattleMachineUpgradeUpgrade($iMachineFinishTime, $bTestRun)
+EndSwitch
+If($b = False) Then
+SetLog("Machine upgrade not possible.", $COLOR_INFO)
 Return False
 EndIf
-If Not $bTestRun Then Click(645 + $iXMoved, 530 + $g_iMidOffsetY + $iYMoved, 1, 0, "#0202")
+If($bTestRun = False) Then Click(645, 530 + $g_iMidOffsetY, 1, 0, "#0202")
 If _Sleep($DELAYLABUPGRADE1) Then Return
-If isGemOpen(True) = False Then
+If(isGemOpen(True) = False) And IsMainPageBuilderBase(2) Then
+Local $sStartTime = _NowCalc()
+Local $sResult =($iMachineFinishTime / 60)
+SetLog($sSelectedUpgrade & " Upgrade Finishes @ " & $sResult & " (" & $sSelectedUpgrade & ")", $COLOR_SUCCESS)
 SetLog("Upgrade " & $sSelectedUpgrade & " started with success...", $COLOR_SUCCESS)
 PushMsg("BattleMachineUpgradeSuccess")
 $g_sMachineTime = _DateAdd('n', Ceiling($iMachineFinishTime), $sStartTime)
 If _Sleep($DELAYLABUPGRADE2) Then Return
-SetLog($sSelectedUpgrade & " Upgrade OCR Time = " & $Result & ", $iMachineFinishTime = " & $iMachineFinishTime & " m", $COLOR_INFO)
-$sStartTime = _NowCalc()
+SetLog($sSelectedUpgrade & " Upgrade OCR Time = " & $sResult & ", $iMachineFinishTime = " & $iMachineFinishTime & " m", $COLOR_INFO)
 If $g_bDebugSetlog Then SetDebugLog($sSelectedUpgrade & " Upgrade Started @ " & $sStartTime, $COLOR_SUCCESS)
-ClickP($aAway, 2, 0, "#0204")
 Return True
+ElseIf Not IsMainPageBuilderBase(2) Then
+SetLog("Machine upgrade not possible. (2)", $COLOR_INFO)
 Else
 SetLog("Oops, Gems required for " & $sSelectedUpgrade & " Upgrade, try again.", $COLOR_ERROR)
-ClickP($aAway, 2, $DELAYLABUPGRADE3, "#0205")
 EndIf
 ClickP($aAway, 2, $DELAYLABUPGRADE3, "#0205")
 Return False
 EndFunc
-Func FastBottomGreen($iDBG = 0)
-If Not $g_bRunState Then Return
-Local $aArea[4] = [355,450,521,532]
-Local $iSpecialColor[2][3] = [[0xE6FC96, 1, 0], [0xE6FC96, 2, 0]]
-For $i = 0 to 15
-If IsArray(_MultiPixelSearch($aArea[0], $aArea[1], $aArea[2], $aArea[3], 1, 1, Hex(0xE6FC96, 6), $iSpecialColor, 20)) Then ExitLoop
-Sleep(10)
+Func RebuildStructure()
+Local $vButton
+For $i = 0 To 3
+$vButton = findMultipleQuick(@scriptdir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\Upgrade\Rebuild\", 10, "360, 460, 520, 530")
+If IsArray($vButton) Then ExitLoop
+If _Sleep(300) Then Return
 Next
-If $i > 15 Then
+If Not IsArray($vButton) Then Return False
+If(__ArraySearch($vButton, "NoRes") <> -1) Then
+SetDebugLog("RebuildStructure fail", $COLOR_ERROR)
 Return False
 EndIf
-SetDebugLog("FastBottomGreen : Button detected: " & $g_iMultiPixelOffSet[0] & "," & $g_iMultiPixelOffSet[1])
+Click($vButton[0][1], $vButton[0][2])
 Return True
+EndFunc
+Func BattleMachineUpgradeUpgrade(ByRef $iMachineFinishTime, $bTestRun = False)
+If _ColorCheck(_GetPixelColor(398, 568, True), Hex(0xE1433F, 6), 20) Then Return False
+$iMachineFinishTime = ConvertOCRTime("Machine Time", getLabUpgradeTime(581, 495), False)
+If($iMachineFinishTime > 0) Then
+Return True
+Else
+SetLog("Error processing upgrade time required, try again!", $COLOR_WARNING)
+Return False
+EndIf
+Return False
 EndFunc
 Func TestGetAttackBarBB()
 Setlog("** TestGetAttackBarBB START**", $COLOR_DEBUG)
