@@ -459,7 +459,7 @@ EndFunc   ;==>BuilderBaseCSVAttack
 
 Func BuilderBaseAttackReport()
 	; Verify the Window Report , Point[0] Archer Shadow Black Zone [155,460,000000], Point[1] Ok Green Button [430,590, 6DBC1F]
-	Local $SurrenderBtn = [76, 584]
+	Local $aSurrenderBtn = [76, 584]
 	Local $OKbtn = [435, 562]
 
 	Local $iDamageCheckLoop = 0
