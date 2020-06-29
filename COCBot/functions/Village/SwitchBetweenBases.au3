@@ -17,6 +17,8 @@ Func SwitchBetweenBases($bCheckMainScreen = True, $bGoTo = Default, $bSilent = D
 	
 	For $i = 0 To 5
 		
+		If $bCheckMainScreen Then (checkMainScreen(Default, isOnBuilderBase(True), True))
+		
 		If ($bSilent <> True) Then SetLog("Try: [" & $i & "] " & "Switch between bases.", $COLOR_ACTION)
 		
 		If Not $g_bRunState Then Return
@@ -31,12 +33,9 @@ Func SwitchBetweenBases($bCheckMainScreen = True, $bGoTo = Default, $bSilent = D
 			If UBound($vSwitch) > 1 Then ExitLoop
 		Next
 		
+		If ($i > 0) Then ZoomOut() ; ensure boat is visible
+		
 		If UBound($vSwitch) <= 1 Then
-			If isOnBuilderBase() <> isOnMainVillage() Then 
-				ZoomOut() ; ensure boat is visible
-				Else
-				ClickP($aAway, 2, 0, "#0332") ;Click Away
-			EndIf
 			If QuickMIS("N1", @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Noboat\", 66, 432, 388, 627) <> "none" Then
 				If ($bSilent <> True) Then SetLog("Apparently you don't have the boat.", $COLOR_INFO)
 				$bNoBoat = True
@@ -62,10 +61,12 @@ Func SwitchBetweenBases($bCheckMainScreen = True, $bGoTo = Default, $bSilent = D
 				$iDo += 1
 				If __TimerDiff($hTimerHandle) > 3000 Then ContinueLoop 2
 				If _Sleep(100) Then Return
-				
-			Until (checkMainScreen(True, $bIs) Or ($iDo > 3))
+				If ($iDo > 3) Then 
+					RestartAndroidCoC()
+					ExitLoop
+				EndIf
+			Until (checkMainScreen(Default, $bIs, True))
 			
-			If ($iDo > 3) Then RestartAndroidCoC()
 			
 			If ($bSilent <> True) Then SetLog(($bIs) ? ("Is switched to ? : Builder base.") : ("Is switched to ? : Normal village."), $COLOR_SUCCESS)
 		EndIf

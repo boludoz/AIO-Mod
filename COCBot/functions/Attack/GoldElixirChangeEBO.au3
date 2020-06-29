@@ -188,10 +188,12 @@ Func GoldElixirChangeEBO()
 			If _Sleep($DELAYGOLDELIXIRCHANGEEBO2) Then Return
 			ExitLoop
 		EndIf
-
+		
+		#Region - Custom - Team AIO Mod++
 		If ($txtDiff = "0s") Then
 			Return False	; End Battle
 		EndIf
+		#EndRegion - Custom - Team AIO Mod++
 
 		;EXIT IF TWO STARS REACH
 		If $g_abStopAtkTwoStars[$g_iMatchMode] And _CheckPixel($aWonTwoStar, True) Then

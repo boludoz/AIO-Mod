@@ -168,7 +168,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	;First Find The Correct Index Of Camps In Attack Bar
 	For $i = 0 To UBound($aCamps) - 1
 		;Just In Case Someone Mentioned Wrong Troop Name Select Default Barbarian Troop
-		$aCamps[$i] = __ArraySearch($g_asBBTroopShortNames, $aCamps[$i]) < 0 ? $g_asBBTroopShortNames[0] : __ArraySearch($g_asBBTroopShortNames, $aCamps[$i])
+		$aCamps[$i] = __ArraySearch($g_asBBTroopShortNames, $aCamps[$i]) < 0 ? ("Barb") : __ArraySearch($g_asBBTroopShortNames, $aCamps[$i])
 	Next
 	;After populate with the new priority position let's sort ascending column 1
 	_ArraySort($aCamps, 0, 0, 0, 1)
@@ -285,14 +285,3 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
         If $aAvailableTroops[$i][0] <> "" Then SetLog("[" & $i + 1 & "] - " & $aAvailableTroops[$i][4] & "x " & FullNametroops($aAvailableTroops[$i][0]), $COLOR_SUCCESS)
     Next
 EndFunc   ;==>BuilderBaseSelectCorrectScript
-
-; __ArraySearch($g_asAttackBarBB2, $aAvailableTroops[$i][0])
-Func CSVtoImageName($sTroop = Default, $asAttackTroopList = $g_asAttackBarBB2)
-	If $sTroop = Default Then
-		$sTroop = $g_asBBTroopShortNames[0]
-	EndIf
-	For $vT In $asAttackTroopList
-		If (StringInStr($vT, $sTroop) <> 0) Then Return ($vT)
-	Next
-	Return $sTroop
-EndFunc   ;==>CSVtoImageName
