@@ -71,7 +71,7 @@ Func runBuilderBase($bTestRun = False)
 	If checkObstacles(True) Then SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
 
 	; It will not be necessary if there are no constructors.
-	BuilderBaseReport()
+	If $g_bChkStartClockTowerBoost Or $g_bChkBuilderAttack Then BuilderBaseReport()
 
 	; Logic here
 		Local $aRndFuncList = ['ElixirUpdate', 'GoldUpdate']
@@ -118,7 +118,6 @@ Func RunBBFuncs($sBBFunc, $bTestRun = False)
 			; New logic to add speed to the attack.
 			For $i = 0 To Random(3,5,1)
 				; Builder base Report
-				BuilderBaseReport()
 				RestAttacksInBB()
 
 				; Check obstacles
@@ -165,8 +164,12 @@ Func RunBBFuncs($sBBFunc, $bTestRun = False)
 EndFunc
 
 Func RestAttacksInBB()
+	If $g_bChkBuilderAttack = False Then
+		$g_iAvailableAttacksBB = 0
+		Return False
+	EndIf
 	$g_iAvailableAttacksBB = Ubound(findMultipleQuick($g_sImgAvailableAttacks, 0, "25, 626, 97, 640", Default, Default, False, 0))
-	If $g_iAvailableAttacksBB <> 0 and $g_bChkBBStopAt3 Then
+	If $g_iAvailableAttacksBB > 0 And $g_bChkBBStopAt3 Then
 		Setlog("You have " & $g_iAvailableAttacksBB & " available attack(s). I will stop attacking when there isn't.", $COLOR_SUCCESS)
 		Return True
 	ElseIf $g_bChkBBStopAt3 <> True Then
