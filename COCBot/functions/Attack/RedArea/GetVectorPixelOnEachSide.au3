@@ -60,5 +60,10 @@ Func GetVectorPixelOnEachSide2($arrPixel, $vectorDirection, $slotsPerEdge)
 		Next
 
 	EndIf
+	;Randomize points along the line.
+	
+	If IsArray($vectorPixelEachSide) Then
+		_ArrayShuffle($vectorPixelEachSide)
+	EndIf
 	Return $vectorPixelEachSide
 EndFunc   ;==>GetVectorPixelOnEachSide2
