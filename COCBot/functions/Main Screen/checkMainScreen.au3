@@ -14,12 +14,12 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $bInSwitch = Default) ;Checks if in main screen
+Func checkMainScreen($bSetLog = Default, $bBuilderBase = Default) ;Checks if in main screen
 	FuncEnter(checkMainScreen)
 	Return FuncReturn(_checkMainScreen($bSetLog, $bBuilderBase))
 EndFunc   ;==>checkMainScreen
 
-Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $bInSwitch = Default) ;Checks if in main screen
+Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default) ;Checks if in main screen
 
 	If $bSetLog = Default Then $bSetLog = True
 	If $bBuilderBase = Default Then $bBuilderBase = $g_bStayOnBuilderBase
@@ -56,7 +56,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $bInSwitch = 
 		EndIf
 		WinGetAndroidHandle()
 
-		$bObstacleResult = checkObstacles($bBuilderBase, $bInSwitch)
+		$bObstacleResult = checkObstacles($bBuilderBase)
 		SetDebugLog("CheckObstacles[" & $i & "] Result = " & $bObstacleResult, $COLOR_DEBUG)
 
 		$bContinue = False
@@ -89,7 +89,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $bInSwitch = 
 			If _Sleep($DELAYCHECKMAINSCREEN1) Then Return
 		EndIf
 	WEnd
-	If $bLocated Then
+	If $bLocated Then 
 		; check that shared_prefs are pulled
 		If $g_bUpdateSharedPrefs And Not HaveSharedPrefs() Then PullSharedPrefs()
 		ZoomOut()

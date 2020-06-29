@@ -17,8 +17,6 @@ Func SwitchBetweenBases($bCheckMainScreen = True, $bGoTo = Default, $bSilent = D
 	
 	For $i = 0 To 5
 		
-		If $bCheckMainScreen Then checkMainScreen(Default, isOnBuilderBase(True), True)
-		
 		If ($bSilent <> True) Then SetLog("Try: [" & $i & "] " & "Switch between bases.", $COLOR_ACTION)
 		
 		If Not $g_bRunState Then Return
@@ -33,9 +31,12 @@ Func SwitchBetweenBases($bCheckMainScreen = True, $bGoTo = Default, $bSilent = D
 			If UBound($vSwitch) > 1 Then ExitLoop
 		Next
 		
-		If ($i > 0) Then ZoomOut() ; ensure boat is visible
-		
 		If UBound($vSwitch) <= 1 Then
+			If isOnBuilderBase() <> isOnMainVillage() Then 
+				ZoomOut() ; ensure boat is visible
+				Else
+				ClickP($aAway, 2, 0, "#0332") ;Click Away
+			EndIf
 			If QuickMIS("N1", @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Noboat\", 66, 432, 388, 627) <> "none" Then
 				If ($bSilent <> True) Then SetLog("Apparently you don't have the boat.", $COLOR_INFO)
 				$bNoBoat = True
@@ -53,7 +54,7 @@ Func SwitchBetweenBases($bCheckMainScreen = True, $bGoTo = Default, $bSilent = D
 		EndIf
 		
 		If $bCheckMainScreen Then
-			$bIs = (((isOnBuilderBase(True) And ($bGoTo = Default)) Or ($bGoTo = "Builder Base")) ? (True) : (False))
+			$bIs = isOnBuilderBase(True)
 			; switch can take up to 2 Seconds, check for 3 additional Seconds...
 			Local $hTimerHandle = __TimerInit()
 			Local $iDo = 0
@@ -61,14 +62,12 @@ Func SwitchBetweenBases($bCheckMainScreen = True, $bGoTo = Default, $bSilent = D
 				$iDo += 1
 				If __TimerDiff($hTimerHandle) > 3000 Then ContinueLoop 2
 				If _Sleep(100) Then Return
-				If ($iDo > 3) Then 
-					RestartAndroidCoC()
-					ExitLoop
-				EndIf
-			Until (checkMainScreen(Default, $bIs, True))
+				
+			Until (checkMainScreen(True, $bIs) Or ($iDo > 3)) ; You would not understand.
 			
+			; If ($iDo > 3) Then ...
 			
-			If ($bSilent <> True) Then SetLog(($bIs) ? ("Is switched to ? : Builder base.") : ("Is switched to ? : Normal village."), $COLOR_SUCCESS)
+			If ($bSilent <> True) Then SetLog(($bSwitched <> $bIs) ? ("Is switched to ? : Builder base.") : ("Is switched to ? : Normal village."), $COLOR_SUCCESS)
 		EndIf
 		
 		Return ($bNoBoat) ? (False) : (True) ; Return false for avoid bugs in bb switch.

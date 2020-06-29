@@ -17,6 +17,7 @@ Func TestrunBuilderBase()
 	SetDebugLog("** TestrunBuilderBase START**", $COLOR_DEBUG)
 	Local $Status = $g_bRunState
 	$g_bRunState = True
+	$g_bStayOnBuilderBase = True
 	runBuilderBase(False)
 	$g_bStayOnBuilderBase = False
 	$g_bRunState = $Status

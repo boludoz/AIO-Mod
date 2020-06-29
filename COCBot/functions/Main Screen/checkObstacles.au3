@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 ;
-Func checkObstacles($bBuilderBase = Default, $bInSwitch = Default) ;Checks if something is in the way for mainscreen
+Func checkObstacles($bBuilderBase = Default) ;Checks if something is in the way for mainscreen
 	FuncEnter(checkObstacles)
 	If $bBuilderBase = Default Then $bBuilderBase = $g_bStayOnBuilderBase
 	Static $iRecursive = 0
@@ -29,13 +29,13 @@ Func checkObstacles($bBuilderBase = Default, $bInSwitch = Default) ;Checks if so
 
 	Local $wasForce = OcrForceCaptureRegion(False)
 	$iRecursive += 1
-	Local $Result = _checkObstacles($bBuilderBase, $iRecursive > 5, $bInSwitch)
+	Local $Result = _checkObstacles($bBuilderBase, $iRecursive > 5)
 	OcrForceCaptureRegion($wasForce)
 	$iRecursive -= 1
 	Return FuncReturn($Result)
 EndFunc   ;==>checkObstacles
 
-Func _checkObstacles($bBuilderBase = False, $bRecursive = False, $bInSwitch = Default) ;Checks if something is in the way for mainscreen
+Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if something is in the way for mainscreen
 	Local $msg, $x, $y, $Result
 	$g_bMinorObstacle = False
 
@@ -46,23 +46,13 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False, $bInSwitch = De
 		If checkObstacles_GfxError() Then Return True
 	EndIf
 	
-	If ($bInSwitch <> True) Then
-		Local $bIsOnBuilderIsland = isOnBuilderBase()
-		Local $bIsOnMainVillage = isOnMainVillage()
-		If $bBuilderBase = True And $bIsOnBuilderIsland = False Then
-			SetLog("- Has to be in Builder Base, Switching to...", $COLOR_INFO)
-			If SwitchBetweenBases() Then
-				$g_bMinorObstacle = True
-				If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-				Return False
-			EndIf
-		ElseIf $bBuilderBase = False And $bIsOnBuilderIsland = True Then
-			SetLog("- Has to be in Main Village, Switching to...", $COLOR_INFO)
-			If SwitchBetweenBases() Then
-				$g_bMinorObstacle = True
-				If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-				Return False
-			EndIf
+	If (isOnBuilderBase() <> isOnMainVillage()) Then
+		Local $sViString = ($bBuilderBase) ? ("Builder Base") : ("Normal Village")
+		SetLog("Verifying that you are in : " & $sViString, $COLOR_INFO)
+		If SwitchBetweenBases(False, $sViString, True) Then 
+			$g_bMinorObstacle = True
+			If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+			Return False
 		EndIf
 	EndIf
 	
