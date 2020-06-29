@@ -745,7 +745,6 @@ Func TriggerMachineAbility($bBBIsFirst = $g_bBBIsFirst, $ix = 458, $iy = 723, $b
 EndFunc   ;==>TriggerMachineAbility
 
 Func BattleIsOver()
-	Local $aSurrenderBtn = [65, 607]
 	Local $iBattleOverLoopCounter = 0
 	Do
 		If Not $g_bRunState Then Return
@@ -758,8 +757,7 @@ Func BattleIsOver()
 		
 		If ($iBattleOverLoopCounter = 180) Then Setlog("Window Report Problem!", $COLOR_WARNING)
 		$iBattleOverLoopCounter += 1
-		If _Sleep(1000) Then Return
-	Until (Not _ColorCheck(_GetPixelColor($aSurrenderBtn[0], $aSurrenderBtn[1], True), Hex(0xcf0d0e, 6), 10)) Or ($iBattleOverLoopCounter > 180)
+	Until (_WaitForCheckXML($g_sImgOkButton, "345, 540, 524, 615", Default, "1000")) Or ($iBattleOverLoopCounter > 180)
 
 EndFunc   ;==>BattleIsOver
 

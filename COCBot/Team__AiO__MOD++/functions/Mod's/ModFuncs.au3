@@ -106,10 +106,20 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 				$sArea2Search = GetDiamondFromRect($vArea2SearchOri)
 			Case 0, 5
 				$sArea2Search = $vArea2SearchOri
-			Case Else
-				SetDebugLog("findMultipleQuick | Coords error. ")
-				Return -1
 		EndSwitch
+	EndIf
+
+	Local $sDrive = "", $sDir = "", $sFileName = "", $sExtension = ""
+	Local $aPathSplit = _PathSplit($sDirectory, $sDrive, $sDir, $sFileName, $sExtension)
+	If Not StringIsSpace($sExtension) Then
+		Local $sStrS = StringSplit($sFileName, "_", $STR_NOCOUNT)
+		Local $pa = decodeSingleCoord(findImage($sStrS[0], $sDirectory, $sArea2Search, 1, True))
+		If (IsArray($pa) And UBound($pa, 1) = 2) And (UBound($sStrS) > 1) Then 
+			Local $aFake[1][4] = [[$sStrS[0], $pa[0], $pa[1], $sStrS[1]]]
+			$g_aImageSearchXML = $aFake
+			Return $aFake
+		EndIf
+		Return (-1)
 	EndIf
 	
 	Local $aResult = findMultiple($sDirectory, $sArea2Search, $sArea2Search, $iLevel, $iMaxLevel, $iQuantToMach, "objectname,objectlevel,objectpoints", $bCapture)

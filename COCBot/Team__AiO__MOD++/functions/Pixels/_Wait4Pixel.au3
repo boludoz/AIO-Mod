@@ -187,11 +187,3 @@ Func _WaitForCheckXMLGone($sPathImage, $sSearchZone = Default, $bForceCaptureP =
 	WEnd
 	Return False
 EndFunc   ;==>_WaitForCheckXML
-
-Func WaitImage($sPathImage, $aText = Default, $iLoop = 1, $iDelay = 200, $sSearchArea = "FV") ; That quality that the function (Is Window Open) of Fliegerfaust has, since it is based on loops and not on time division, but more complete and with variability.
-	For $i = 0 To Abs($iLoop)
-		If IsArray(findMultipleQuick($sPathImage, 1, $sSearchArea, Default, $aText)) Then Return True
-		If _Sleep($iDelay) Then Return False
-	Next
-	Return False
-EndFunc   ;==>WaitImage
