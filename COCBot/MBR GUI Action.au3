@@ -217,15 +217,15 @@ Func BotStop()
 		;AdlibUnRegister("SetTime")
 		;$g_bRestart = True
 
-	   If $g_hLogFile <> 0 Then
-		  FileClose($g_hLogFile)
-		  $g_hLogFile = 0
-	   EndIf
+		If $g_hLogFile <> 0 Then
+			FileClose($g_hLogFile)
+			$g_hLogFile = 0
+		EndIf
 
-	   If $g_hAttackLogFile <> 0 Then
-		  FileClose($g_hAttackLogFile)
-		  $g_hAttackLogFile = 0
-	   EndIf
+		If $g_hAttackLogFile <> 0 Then
+			FileClose($g_hAttackLogFile)
+			$g_hAttackLogFile = 0
+		EndIf
 	Else
 		$g_bSearchMode = False
 	EndIf
