@@ -459,8 +459,7 @@ EndFunc   ;==>BuilderBaseCSVAttack
 
 Func BuilderBaseAttackReport()
 	; Verify the Window Report , Point[0] Archer Shadow Black Zone [155,460,000000], Point[1] Ok Green Button [430,590, 6DBC1F]
-	Local $aSurrenderBtn = [76, 584]
-	Local $OKbtn = [435, 562]
+	Local $aSurrenderBtn = [65, 607]
 
 	Local $iDamageCheckLoop = 0
 
@@ -475,9 +474,8 @@ Func BuilderBaseAttackReport()
 		If $iDamageCheckLoop = 180 Then 
 			Setlog("Window Report Problem!", $COLOR_WARNING)
 		EndIf
-		If _Sleep(1000) Then Return
 		$iDamageCheckLoop += 1
-	Until (Not _ColorCheck(_GetPixelColor($aSurrenderBtn[0], $aSurrenderBtn[1], True), Hex(0xFE5D65, 6), 10)) Or ($iDamageCheckLoop > 180)
+	Until (_WaitForCheckXML($g_sImgOkButton, "345, 540, 524, 615", Default, "1000")) Or ($iDamageCheckLoop > 180)
 	
 	;BB attack Ends
 	If _Sleep(2000) Then Return
@@ -518,7 +516,7 @@ Func BuilderBaseAttackReport()
 		Return False
 	Else
 		SetLog("Return To Home.", $Color_Info)
-		Click($g_iMultiPixelOffSet[0] + 41 + Random(0, 20, 1), $g_iMultiPixelOffSet[1] + Random(0, 10, 1), 1, 0)
+		Click($g_iMultiPixelOffSet[0] + Random(0, 20, 1), $g_iMultiPixelOffSet[1] + Random(0, 10, 1), 1, 0)
 	EndIf
 
 	Local $ResultName = ""

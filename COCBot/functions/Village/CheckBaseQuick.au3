@@ -20,9 +20,11 @@ Func CheckBaseQuick($bStopRecursion = False, $sReturnHome = "")
 	If $bStopRecursion Then $g_bDisableBreakCheck = True ; Set flag to stop checking for attackdisable messages, stop recursion
 
 	#Region - Custom - Team AIO Mod++
-	If ($sReturnHome = "cloud") And (WaitImage(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", "ReturnVillage", 40, 500, "8,617,116,712")) Then 
-		Click($g_aImageSearchXML[0][1] + Random(0, 20, 1), $g_aImageSearchXML[0][2] + Random(0, 20, 1), 1, 0, "#0513")
-		If Not WaitMainScreen() Then SetLog("Warning, Main page not found", $COLOR_WARNING)
+	If ($sReturnHome = "cloud") Then
+		If (_WaitForCheckXML(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", "8,617,116,712", Default, Default, Default, "ReturnVillage")) Then 
+			Click($g_aImageSearchXML[0][1] + Random(0, 20, 1), $g_aImageSearchXML[0][2] + Random(0, 20, 1), 1, 0, "#0513")
+			If Not WaitMainScreen() Then SetLog("Warning, Main page not found", $COLOR_WARNING)
+		EndIf
 	EndIf
 	#EndRegion - Custom - Team AIO Mod++
 	
