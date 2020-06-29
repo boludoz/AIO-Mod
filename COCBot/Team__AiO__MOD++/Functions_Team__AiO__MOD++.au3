@@ -15,7 +15,6 @@
 
 ; <><><><><><><><><><><><><><><> Team AiO MOD++ (2020) <><><><><><><><><><><><><><><>
 #include "functions\AU3\FixedArray.au3"
-#include "functions\AU3\ArrayRandomShuffle.au3"
 
 #include "functions\Mod's\ModFuncs.au3"
 #include "functions\Pixels\_Wait4Pixel.au3"
