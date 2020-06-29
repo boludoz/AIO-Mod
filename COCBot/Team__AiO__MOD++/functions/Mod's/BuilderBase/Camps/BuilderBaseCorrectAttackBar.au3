@@ -296,17 +296,3 @@ Func CSVtoImageName($sTroop = Default, $asAttackTroopList = $g_asAttackBarBB2)
 	Next
 	Return $sTroop
 EndFunc   ;==>CSVtoImageName
-
-Func MachineKick($a)
-	If Not IsArray($a) Then Return -1
-	
-	For $i = UBound($a) -1 To 0 Step -1 ; Optimized
-		If StringInStr($a[$i][0], "Machine") > 0 Then
-			_ArrayDelete($a, $i)
-			ExitLoop
-		EndIf
-	Next
-	Local $vReturn = (UBound($a) < 1) ? (-1) : ($a)
-	$a = $vReturn
-	Return $vReturn
-EndFunc   ;==>MachineOut
