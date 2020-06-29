@@ -50,8 +50,6 @@ Func ReadChatIA($sCondition = "hola", $bFast = True)
 		For $ii = 0 To UBound($g_aIAVar) - 1
 			If _Sleep(15) Then Return
 			
-			$g_bDnAIO = True ; Team AIO Mod
-			
 			Switch Int($g_aIAVar[$ii][0])
 				Case $ii 
 					$sOCRString = getChatStringMod(30, Int($aChatY[$i][2] - 3) + 43, "coc-latinA")
@@ -69,8 +67,6 @@ Func ReadChatIA($sCondition = "hola", $bFast = True)
 					$sOCRString = getChatStringPersianMod(30, Int($aChatY[$i][2] - 3) + 43)
 					SetDebugLog("getChatStringPersianMod : " & $sOCRString)
 			EndSwitch
-			
-			$g_bDnAIO = False ; Team AIO Mod
 			
 			SetDebugLog("Chat : " & $sOCRString & " Language : " & $g_aIAVar[$ii][0] & " $i " & $i, $COLOR_INFO)
             If StringLen(StringStripWS($sOCRString, $STR_STRIPALL)) < 2 Then ContinueLoop
@@ -96,10 +92,10 @@ EndFunc   ;==>ReadChatIA
 
 Func getChatStringMod($x_start, $y_start, $language) ; -> Get string chat request - Latin Alphabetic - EN "DonateCC.au3"
 	Local $sReturn = ""
-	If StringLen(StringStripWS(getOcrAndCapture($language, $x_start, $y_start, 280, 16), $STR_STRIPALL)) > 2 Then
+	If StringLen(StringStripWS(_getOcrAndCapture($language, $x_start, $y_start, 280, 16), $STR_STRIPALL)) > 2 Then
 		$sReturn &= $g_sGetOcrMod
 		For $i = 1 To 2
-			If StringLen(StringStripWS(getOcrAndCapture($language, $x_start, $y_start + ($i * 13), 280, 16), $STR_STRIPALL)) > 2 Then
+			If StringLen(StringStripWS(_getOcrAndCapture($language, $x_start, $y_start + ($i * 13), 280, 16), $STR_STRIPALL)) > 2 Then
 				$sReturn &= " "
 				$sReturn &= $g_sGetOcrMod
 			Else
@@ -114,10 +110,10 @@ Func getChatStringChineseMod($x_start, $y_start) ; -> Get string chat request - 
 	Local $sReturn = ""
 	Local $bUseOcrImgLoc = True
 
-	If StringLen(StringStripWS(getOcrAndCapture("chinese-bundle", $x_start, $y_start, 160, 14, Default, $bUseOcrImgLoc), $STR_STRIPALL)) > 2 Then
+	If StringLen(StringStripWS(_getOcrAndCapture("chinese-bundle", $x_start, $y_start, 160, 14, Default, $bUseOcrImgLoc), $STR_STRIPALL)) > 2 Then
 		$sReturn &= $g_sGetOcrMod
 		For $i = 1 To 2
-			If StringLen(StringStripWS(getOcrAndCapture("chinese-bundle", $x_start, $y_start + ($i * 13), 160, 14, Default, $bUseOcrImgLoc), $STR_STRIPALL)) > 2 Then
+			If StringLen(StringStripWS(_getOcrAndCapture("chinese-bundle", $x_start, $y_start + ($i * 13), 160, 14, Default, $bUseOcrImgLoc), $STR_STRIPALL)) > 2 Then
 				$sReturn &= " "
 				$sReturn &= $g_sGetOcrMod
 			Else
@@ -132,10 +128,10 @@ Func getChatStringKoreanMod($x_start, $y_start) ; -> Get string chat request - K
 	Local $sReturn = ""
 	Local $bUseOcrImgLoc = True
 
-	If StringLen(StringStripWS(getOcrAndCapture("korean-bundle", $x_start, $y_start, 160, 14, Default, $bUseOcrImgLoc), $STR_STRIPALL)) > 2 Then
+	If StringLen(StringStripWS(_getOcrAndCapture("korean-bundle", $x_start, $y_start, 160, 14, Default, $bUseOcrImgLoc), $STR_STRIPALL)) > 2 Then
 		$sReturn &= $g_sGetOcrMod
 		For $i = 1 To 2
-			If StringLen(StringStripWS(getOcrAndCapture("korean-bundle", $x_start, $y_start + ($i * 13), 160, 14, Default, $bUseOcrImgLoc), $STR_STRIPALL)) > 2 Then
+			If StringLen(StringStripWS(_getOcrAndCapture("korean-bundle", $x_start, $y_start + ($i * 13), 160, 14, Default, $bUseOcrImgLoc), $STR_STRIPALL)) > 2 Then
 				$sReturn &= " "
 				$sReturn &= $g_sGetOcrMod
 			Else
@@ -150,10 +146,10 @@ Func getChatStringPersianMod($x_start, $y_start) ; -> Get string chat request - 
 	Local $sReturn = ""
 	Local $bUseOcrImgLoc = True
 
-	If StringLen(StringStripWS(getOcrAndCapture("persian-bundle", $x_start, $y_start, 240, 20, Default, $bUseOcrImgLoc, True), $STR_STRIPALL)) > 2 Then
+	If StringLen(StringStripWS(_getOcrAndCapture("persian-bundle", $x_start, $y_start, 240, 20, Default, $bUseOcrImgLoc, True), $STR_STRIPALL)) > 2 Then
 		$sReturn &= $g_sGetOcrMod
 		For $i = 1 To 2
-			If StringLen(StringStripWS(getOcrAndCapture("persian-bundle", $x_start, $y_start + ($i * 13), 240, 20, Default, $bUseOcrImgLoc, True), $STR_STRIPALL)) > 2 Then
+			If StringLen(StringStripWS(_getOcrAndCapture("persian-bundle", $x_start, $y_start + ($i * 13), 240, 20, Default, $bUseOcrImgLoc, True), $STR_STRIPALL)) > 2 Then
 				$sReturn &= " "
 				$sReturn &= $g_sGetOcrMod
 			Else
@@ -198,3 +194,9 @@ Func getChatStringPersianMod($x_start, $y_start) ; -> Get string chat request - 
 	$sReturn = StringStripWS($sReturn, 1 + 2)
 	Return $sReturn
 EndFunc   ;==>getChatStringPersianMod
+
+Func _getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpace = Default, $bImgLoc = Default, $bForceCaptureRegion = Default)
+	$g_sGetOcrMod = ""
+	$g_sGetOcrMod = getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpace, $bImgLoc, $bForceCaptureRegion)
+	Return $g_sGetOcrMod
+EndFunc   ;==>_getOcrAndCapture

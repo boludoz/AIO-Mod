@@ -29,7 +29,7 @@ Func runBuilderBase($bTestRun = False)
 
 	ClickP($aAway, 3, 400, "#0000") ;Click Away
 
-	If Not $g_bChkBuilderAttack And Not $g_bChkCollectBuilderBase And Not $g_bChkStartClockTowerBoost And Not $g_iChkBBSuggestedUpgrades And Not $g_bChkCleanBBYard Then
+	If Not $g_bChkBuilderAttack And Not $g_bChkCollectBuilderBase And Not $g_bChkStartClockTowerBoost And Not $g_iChkBBSuggestedUpgrades And Not $g_bChkCleanBBYard And not $g_bChkUpgradeMachine Then
 		If $g_bChkPlayBBOnly Then
 				SetLog("Play Only Builder Base Check Is On But BB Option's(Collect,Attack etc) Unchecked", $COLOR_ERROR)
 				SetLog("Please Check BB Options From Builder Base Tab", $COLOR_INFO)
@@ -70,9 +70,6 @@ Func runBuilderBase($bTestRun = False)
 	; Check obstacles
 	If checkObstacles(True) Then SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
 
-	; It will not be necessary if there are no constructors.
-	If $g_bChkStartClockTowerBoost Or $g_bChkBuilderAttack Then BuilderBaseReport()
-
 	; Logic here
 		Local $aRndFuncList = ['ElixirUpdate', 'GoldUpdate']
 		_ArrayShuffle($aRndFuncList)
@@ -96,6 +93,10 @@ Func runBuilderBase($bTestRun = False)
 EndFunc   ;==>runBuilderBase
 
 Func RunBBFuncs($sBBFunc, $bTestRun = False)
+	
+	; Silent report.
+	BuilderBaseReport(False, False)
+	RestAttacksInBB(False)
 
 	; Zoomout
 	If $g_iFreeBuilderCountBB <> 0 Then BuilderBaseZoomOut()
@@ -163,17 +164,17 @@ Func RunBBFuncs($sBBFunc, $bTestRun = False)
 	EndSwitch
 EndFunc
 
-Func RestAttacksInBB()
+Func RestAttacksInBB($bSetLog = True)
 	If $g_bChkBuilderAttack = False Then
 		$g_iAvailableAttacksBB = 0
 		Return False
 	EndIf
 	$g_iAvailableAttacksBB = Ubound(findMultipleQuick($g_sImgAvailableAttacks, 0, "25, 626, 97, 640", Default, Default, False, 0))
 	If $g_iAvailableAttacksBB > 0 And $g_bChkBBStopAt3 Then
-		Setlog("You have " & $g_iAvailableAttacksBB & " available attack(s). I will stop attacking when there isn't.", $COLOR_SUCCESS)
+		If ($bSetLog = True) Then Setlog("You have " & $g_iAvailableAttacksBB & " available attack(s). I will stop attacking when there isn't.", $COLOR_SUCCESS)
 		Return True
 	ElseIf $g_bChkBBStopAt3 <> True Then
-		Setlog("You have " & $g_iAvailableAttacksBB & " available attack(s).", $COLOR_INFO)
+		If ($bSetLog = True) Then Setlog("You have " & $g_iAvailableAttacksBB & " available attack(s).", $COLOR_INFO)
 		Return True
 	EndIf
 	Return False

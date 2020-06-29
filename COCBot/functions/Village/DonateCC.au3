@@ -266,8 +266,6 @@ Func DonateCC($bCheckForNewMsg = False)
 			$g_bSkipDonSpells = False
 			$g_bSkipDonSiege = False
 			
-			$g_bDnAIO = True ; Team AIO Mod
-
 			; Read chat request for DonateTroop and DonateSpell
 			If $bDonateTroop Or $bDonateSpell Or $bDonateSiege Then
 				Local $Alphabets[4] = [$g_bChkExtraAlphabets, $g_bChkExtraChinese, $g_bChkExtraKorean, $g_bChkExtraPersian]
@@ -318,7 +316,6 @@ Func DonateCC($bCheckForNewMsg = False)
 						EndIf
 					EndIf
 				Next
-				$g_bDnAIO = False ; Team AIO Mod
 
 				If $g_bDebugSetlog Then SetDebugLog("Get Request OCR in " & StringFormat("%.2f", TimerDiff($iTimer)) & "'ms", $COLOR_DEBUG)
 				$iTimer = TimerInit()
