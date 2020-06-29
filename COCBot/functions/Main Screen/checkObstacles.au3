@@ -49,12 +49,15 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False, $bInSwitch = De
 	If ($bInSwitch <> True) Then
 		Local $bIsOnBuilderIsland = isOnBuilderBase()
 		Local $bIsOnMainVillage = isOnMainVillage()
-		If $bBuilderBase <> $bIsOnBuilderIsland And ($bIsOnBuilderIsland Or $bIsOnBuilderIsland <> $bIsOnMainVillage) Then
-			If $bIsOnBuilderIsland Then
-				SetLog("- Detected Builder Base, trying to switch back to Main Village.", $COLOR_INFO)
-			Else
-				SetLog("- Detected Main Village, trying to switch back to Builder Base.", $COLOR_INFO)
+		If $bBuilderBase = True And $bIsOnBuilderIsland = False Then
+			SetLog("- Has to be in Builder Base, Switching to...", $COLOR_INFO)
+			If SwitchBetweenBases() Then
+				$g_bMinorObstacle = True
+				If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+				Return False
 			EndIf
+		ElseIf $bBuilderBase = False And $bIsOnBuilderIsland = True Then
+			SetLog("- Has to be in Main Village, Switching to...", $COLOR_INFO)
 			If SwitchBetweenBases() Then
 				$g_bMinorObstacle = True
 				If _Sleep($DELAYCHECKOBSTACLES1) Then Return

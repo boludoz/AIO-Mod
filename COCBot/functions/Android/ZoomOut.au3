@@ -119,7 +119,10 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 			ForceCaptureRegion()
 			$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
 		EndIf
-	    Local $tryCtrlWheelScroll = False
+		Local $tryCtrlWheelScroll = False
+		If UBound($aPicture) - 1 < 0 Then
+			Return False
+		EndIf
 		While StringIsSpace($aPicture[0]) and Not $tryCtrlWheelScroll
 
 			AndroidShield("DefaultZoomOut") ; Update shield status

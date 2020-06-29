@@ -17,7 +17,6 @@ Func TestrunBuilderBase()
 	SetDebugLog("** TestrunBuilderBase START**", $COLOR_DEBUG)
 	Local $Status = $g_bRunState
 	$g_bRunState = True
-	$g_bStayOnBuilderBase = True
 	runBuilderBase(False)
 	$g_bStayOnBuilderBase = False
 	$g_bRunState = $Status
@@ -30,9 +29,6 @@ Func runBuilderBase($bTestRun = False)
 
 	ClickP($aAway, 3, 400, "#0000") ;Click Away
 
-	; Check IF is Necessary run the Builder Base IDLE loop
-	$g_bStayOnBuilderBase = True
-
 	If Not $g_bChkBuilderAttack And Not $g_bChkCollectBuilderBase And Not $g_bChkStartClockTowerBoost And Not $g_iChkBBSuggestedUpgrades And Not $g_bChkCleanBBYard Then
 		If $g_bChkPlayBBOnly Then
 				SetLog("Play Only Builder Base Check Is On But BB Option's(Collect,Attack etc) Unchecked", $COLOR_ERROR)
@@ -43,6 +39,9 @@ Func runBuilderBase($bTestRun = False)
 		If $g_bDebugSetlog = True Then SetDebugLog("Builder Base options not enable, Skipping Builder Base routines!", $COLOR_DEBUG)
 		Return False
 	EndIf
+
+	; Check IF is Necessary run the Builder Base IDLE loop
+	$g_bStayOnBuilderBase = True
 
 	If not SwitchBetweenBases(True, "Builder Base") Then Return False
 
@@ -72,7 +71,7 @@ Func runBuilderBase($bTestRun = False)
 	If checkObstacles(True) Then SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
 
 	; It will not be necessary if there are no constructors.
-	BuilderBaseReport()
+	If $g_bChkStartClockTowerBoost Or $g_bChkBuilderAttack Then BuilderBaseReport()
 
 	; Logic here
 		Local $aRndFuncList = ['ElixirUpdate', 'GoldUpdate']
@@ -119,7 +118,6 @@ Func RunBBFuncs($sBBFunc, $bTestRun = False)
 			; New logic to add speed to the attack.
 			For $i = 0 To Random(3,5,1)
 				; Builder base Report
-				BuilderBaseReport()
 				RestAttacksInBB()
 
 				; Check obstacles
@@ -166,8 +164,12 @@ Func RunBBFuncs($sBBFunc, $bTestRun = False)
 EndFunc
 
 Func RestAttacksInBB()
+	If $g_bChkBuilderAttack = False Then
+		$g_iAvailableAttacksBB = 0
+		Return False
+	EndIf
 	$g_iAvailableAttacksBB = Ubound(findMultipleQuick($g_sImgAvailableAttacks, 0, "25, 626, 97, 640", Default, Default, False, 0))
-	If $g_iAvailableAttacksBB <> 0 and $g_bChkBBStopAt3 Then
+	If $g_iAvailableAttacksBB > 0 And $g_bChkBBStopAt3 Then
 		Setlog("You have " & $g_iAvailableAttacksBB & " available attack(s). I will stop attacking when there isn't.", $COLOR_SUCCESS)
 		Return True
 	ElseIf $g_bChkBBStopAt3 <> True Then
