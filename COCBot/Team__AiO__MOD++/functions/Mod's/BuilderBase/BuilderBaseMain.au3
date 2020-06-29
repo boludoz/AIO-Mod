@@ -17,7 +17,6 @@ Func TestrunBuilderBase()
 	SetDebugLog("** TestrunBuilderBase START**", $COLOR_DEBUG)
 	Local $Status = $g_bRunState
 	$g_bRunState = True
-	$g_bStayOnBuilderBase = True
 	runBuilderBase(False)
 	$g_bStayOnBuilderBase = False
 	$g_bRunState = $Status
@@ -30,9 +29,6 @@ Func runBuilderBase($bTestRun = False)
 
 	ClickP($aAway, 3, 400, "#0000") ;Click Away
 
-	; Check IF is Necessary run the Builder Base IDLE loop
-	$g_bStayOnBuilderBase = True
-
 	If Not $g_bChkBuilderAttack And Not $g_bChkCollectBuilderBase And Not $g_bChkStartClockTowerBoost And Not $g_iChkBBSuggestedUpgrades And Not $g_bChkCleanBBYard Then
 		If $g_bChkPlayBBOnly Then
 				SetLog("Play Only Builder Base Check Is On But BB Option's(Collect,Attack etc) Unchecked", $COLOR_ERROR)
@@ -43,6 +39,9 @@ Func runBuilderBase($bTestRun = False)
 		If $g_bDebugSetlog = True Then SetDebugLog("Builder Base options not enable, Skipping Builder Base routines!", $COLOR_DEBUG)
 		Return False
 	EndIf
+
+	; Check IF is Necessary run the Builder Base IDLE loop
+	$g_bStayOnBuilderBase = True
 
 	If not SwitchBetweenBases(True, "Builder Base") Then Return False
 
