@@ -14,9 +14,10 @@
 ; ===============================================================================================================================
 Func CleanRedArea(ByRef $InputVect, $side = "")
 	Local $TempVectStr = ""
+	Local $a = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\IsSmartDiamond", 1, "197,160,312,193", Default, Default, Default, 100)
 	For $i = 0 To UBound($InputVect) - 1
 		Local $pixel = $InputVect[$i]
-		If isInDiamond($pixel[0], $pixel[1], 43, 50, 818, 634) Then ; Custom - Team AIO Mod++
+		If isInDiamond($pixel[0], $pixel[1], 43, 50, 818, 634, $a) Then ; Custom - Team AIO Mod++
 			$TempVectStr &= $pixel[0] & "-" & $pixel[1] & "|"
 		Else
 			debugAttackCSV("CleanRedArea removed (" & $pixel[0] & "," & $pixel[1] & ")")

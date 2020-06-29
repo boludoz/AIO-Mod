@@ -479,9 +479,9 @@ Func _CleanYard($aIsBB = Default, $bTest = False)
 		
 		For $i = 0 To UBound($aResult) - 1
 			If $g_bEdgeObstacle Then
-				If (Not isInDiamond($aResult[$i][1], $aResult[$i][2], 83, 156, 780, 680) and $aIsBB) Or (Not isInDiamond($aResult[$i][1], $aResult[$i][2], 43, 50, 818, 634) And not $aIsBB) Then ContinueLoop
+				If (Not isInDiamond($aResult[$i][1], $aResult[$i][2], 83, 156, 780, 680, 0) and $aIsBB) Or (Not isInDiamond($aResult[$i][1], $aResult[$i][2], 43, 50, 818, 634, 0) And not $aIsBB) Then ContinueLoop
 			Else
-				If (Not isInDiamond($aResult[$i][1], $aResult[$i][2], 83, 156, 780, 680) and $aIsBB) Or (Not isInDiamond($aResult[$i][1], $aResult[$i][2]) And not $aIsBB) Then ContinueLoop
+				If (Not isInDiamond($aResult[$i][1], $aResult[$i][2], 83, 156, 780, 680, 0) and $aIsBB) Or (Not isInDiamond($aResult[$i][1], $aResult[$i][2]) And not $aIsBB) Then ContinueLoop
 			EndIf
 			
 			If $g_bDebugSetlog Then SetDebugLog($aResult[$i][0] & " found (" & $aResult[$i][1] & "," & $aResult[$i][2] & ")", $COLOR_SUCCESS)

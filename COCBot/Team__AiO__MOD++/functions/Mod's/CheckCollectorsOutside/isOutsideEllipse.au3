@@ -52,12 +52,14 @@ EndFunc   ;==>isOutsideEllipse
 ; Example .......: None
 ; ===============================================================================================================================
 
-Func isInDiamond($iX, $iY, $iLeft = 116, $iTop = 94, $iRight = 751, $iBottom = 582)
+Func isInDiamond($iX, $iY, $iLeft = 116, $iTop = 94, $iRight = 751, $iBottom = 582, $a = 0)
 	Local $bReturn = False
 	Local $iXFix = 203
 	Local $iXFixf = 0
 	If Not (($iX < 68 And $iY > 316) Or ($iY < 63) Or ($iX > 692 And $iY > 156 And $iY < 210) Or ($iX > 669 And $iY > 489)) Then
-		Local $a = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\IsSmartDiamond", 1, "197,160,312,193", Default, Default, Default, 100)
+		If $a = 0 Then 
+			$a = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\IsSmartDiamond", 1, "197,160,312,193", Default, Default, Default, 100)
+		EndIf
 		If IsArray($a) Then $iXFixf = Int($a[0][1] - $iXFix)
 		Local $aMiddle[2] = [(($iLeft + $iRight) + $iXFixf) / 2, ($iTop + $iBottom) / 2]
 		Local $aSize[2] = [$aMiddle[0] - $iLeft, $aMiddle[1] - $iTop]
