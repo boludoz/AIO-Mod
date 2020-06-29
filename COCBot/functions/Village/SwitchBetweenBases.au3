@@ -17,7 +17,7 @@ Func SwitchBetweenBases($bCheckMainScreen = True, $bGoTo = Default, $bSilent = D
 	
 	For $i = 0 To 5
 		
-		If $bCheckMainScreen Then (checkMainScreen(Default, isOnBuilderBase(True), True))
+		If $bCheckMainScreen Then checkMainScreen(Default, isOnBuilderBase(True), True)
 		
 		If ($bSilent <> True) Then SetLog("Try: [" & $i & "] " & "Switch between bases.", $COLOR_ACTION)
 		

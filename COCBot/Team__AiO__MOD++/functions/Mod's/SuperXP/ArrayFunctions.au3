@@ -35,7 +35,7 @@ Func ArrayRemoveDuplicates(ByRef $Arr) ; Only 1D Array
 	Local $searchResult = -1
 
 	For $i = 0 To (UBound($Arr) - 1)
-		$searchResult = __ArraySearch($splitedToDelete, $i)
+		$searchResult = _ArraySearch($splitedToDelete, $i)
 		If $searchResult > -1 And StringLen($splitedToDelete[$searchResult]) > 0 Then ContinueLoop ; If The Array Index Should be Deleted
 		$tmpArr[$i] = $Arr[$i]
 	Next
