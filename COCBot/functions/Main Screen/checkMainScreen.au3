@@ -113,13 +113,16 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default) ;Checks if in
 	Return $bLocated
 EndFunc   ;==>_checkMainScreen
 
-Func _checkMainScreenImage(ByRef $bLocated, $aPixelToCheck, $bNeedCaptureRegion = $g_bNoCapturePixel)
-	$bLocated = _CheckPixel($aPixelToCheck, $bNeedCaptureRegion) And Not checkObstacles_Network(False, False)
+#Region - Custom - Team AIO Mod++
+Func _checkMainScreenImage(ByRef $bLocated, $aPixelToCheck, $bNeedCaptureRegion = (Not $g_bNoCapturePixel))
+	$bLocated = (_CheckPixel($aPixelToCheck, $bNeedCaptureRegion) And Not checkObstacles_Network(False, False))
 	Return $bLocated
 EndFunc
 
-Func isOnMainVillage($bNeedCaptureRegion = $g_bNoCapturePixel)
+Func isOnMainVillage($bNeedCaptureRegion = (Not $g_bNoCapturePixel))
 	Local $aPixelToCheck = $aIsMain
 	Local $bLocated = False
-	Return _checkMainScreenImage($bLocated, $aPixelToCheck)
+	_checkMainScreenImage($bLocated, $aIsMain, $bNeedCaptureRegion)
+	Return $bLocated
 EndFunc
+#EndRegion - Custom - Team AIO Mod++
