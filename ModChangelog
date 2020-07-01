@@ -5,7 +5,7 @@
 
                     Based on MyBot.run v7.8.3.hotfix.
 					
-	**v4.0.7** (Quality improvement update) (Thx @Approchable, @joosmega, @omora88, @esbestan and github beta test team for test <3)
+	**v4.0.8** (Quality improvement update) (Thx @Approchable, @joosmega, @omora88, @esbestan and github beta test team for test <3)
 		» Fixed / Improved :
 			- Smart farm more fast.
 			- Corrected drop points.
@@ -26,6 +26,7 @@
 			- First click fix in BB CSV. (by @vDragon).
 			- SuperXP Temp fix.
 			- Spells Queue fix and LSpell. (by @vDragon).
+			- Fixed SwitchBetweenBases and isOnMainVillage func.
 			
 	**v4.0.6** (Quality improvement update) (Thx @Approchable, @joosmega, @omora88, @esbestan and github beta test team for test <3)
 		» Fixed / Improved :

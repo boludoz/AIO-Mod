@@ -41,11 +41,12 @@ Local $bIsOnBuilderBase, $bSwitched = False
 		
 		; Capture info - Actual Village.
 		
-		;	Normal
-		Local $bNV = isOnMainVillage(True)
-		
 		;	Builder
 		Local $bBB = isOnBuilderBase(True)
+		
+		;	Normal
+		Local $bNV = (Not $bBB) ; more stable ;isOnMainVillage(True) 
+		
 		
 		Select 
 			; Travel to BB.

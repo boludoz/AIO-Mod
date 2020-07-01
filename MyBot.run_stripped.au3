@@ -10,7 +10,7 @@
 #Au3Stripper_Off
 #Au3Stripper_On
 Global $g_sBotVersion = "v7.8.3.hotfix"
-Global $g_sModVersion = "v4.0.7"
+Global $g_sModVersion = "v4.0.8"
 Opt("MustDeclareVars", 1)
 Global $g_sBotTitle = ""
 Global $g_hFrmBot = 0
@@ -7967,8 +7967,8 @@ EndFunc
 Global $aCenterEnemyVillageClickDrag = [65, 545]
 Global $aCenterHomeVillageClickDrag = [430, 650]
 Global $aIsReloadError[4] = [457, 301 + $g_iMidOffsetY, 0x33B5E5, 10]
-Global $aIsMain[4] = [280, 9, 0x77BDE0, 20]
-Global $aIsMainGrayed[4] = [278, 9, 0x3C5F70, 15]
+Global $aIsMain[4] = [278, 9, 0x7ABDDF, 25]
+Global $aIsMainGrayed[4] = [278, 9, 0x3C5F71, 20]
 Global $aIsOnBuilderBase[4] = [838, 18, 0xffff46, 10]
 Global $aIsConnectLost[4] = [255, 271 + $g_iMidOffsetY, 0x33B5E5, 20]
 Global $aIsCheckOOS[4] = [223, 272 + $g_iMidOffsetY, 0x33B5E5, 20]
@@ -48714,11 +48714,11 @@ Next
 EndIf
 Return False
 EndFunc
-Func checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $bInSwitch = Default)
+Func checkMainScreen($bSetLog = Default, $bBuilderBase = Default)
 FuncEnter(checkMainScreen)
 Return FuncReturn(_checkMainScreen($bSetLog, $bBuilderBase))
 EndFunc
-Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $bInSwitch = Default)
+Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default)
 If $bSetLog = Default Then $bSetLog = True
 If $bBuilderBase = Default Then $bBuilderBase = $g_bStayOnBuilderBase
 Local $i, $iErrorCount, $iCheckBeforeRestartAndroidCount, $bObstacleResult, $bContinue
@@ -48747,7 +48747,7 @@ SetLog("Main Screen not Located", $COLOR_ERROR)
 ExitLoop
 EndIf
 WinGetAndroidHandle()
-$bObstacleResult = checkObstacles($bBuilderBase, $bInSwitch)
+$bObstacleResult = checkObstacles($bBuilderBase)
 SetDebugLog("CheckObstacles[" & $i & "] Result = " & $bObstacleResult, $COLOR_DEBUG)
 $bContinue = False
 If Not $bObstacleResult Then
@@ -48795,16 +48795,16 @@ DisposeWindows()
 NotifyPendingActions()
 Return $bLocated
 EndFunc
-Func _checkMainScreenImage(ByRef $bLocated, $aPixelToCheck, $bNeedCaptureRegion = $g_bNoCapturePixel)
-$bLocated = _CheckPixel($aPixelToCheck, $bNeedCaptureRegion) And Not checkObstacles_Network(False, False)
+Func _checkMainScreenImage(ByRef $bLocated, $aPixelToCheck, $bNeedCaptureRegion =(Not $g_bNoCapturePixel))
+$bLocated =(_CheckPixel($aPixelToCheck, $bNeedCaptureRegion) And Not checkObstacles_Network(False, False))
 Return $bLocated
 EndFunc
-Func isOnMainVillage($bNeedCaptureRegion = $g_bNoCapturePixel)
-Local $aPixelToCheck = $aIsMain
+Func isOnMainVillage($bNeedCaptureRegion =(Not $g_bNoCapturePixel))
 Local $bLocated = False
-Return _checkMainScreenImage($bLocated, $aPixelToCheck)
+_checkMainScreenImage($bLocated, $aIsMain, $bNeedCaptureRegion)
+Return $bLocated
 EndFunc
-Func checkObstacles($bBuilderBase = Default, $bInSwitch = Default)
+Func checkObstacles($bBuilderBase = Default)
 FuncEnter(checkObstacles)
 If $bBuilderBase = Default Then $bBuilderBase = $g_bStayOnBuilderBase
 Static $iRecursive = 0
@@ -48817,12 +48817,12 @@ PureClick(383, 375 + $g_iMidOffsetY, 1, 0, "Click Cancel")
 EndIf
 Local $wasForce = OcrForceCaptureRegion(False)
 $iRecursive += 1
-Local $Result = _checkObstacles($bBuilderBase, $iRecursive > 5, $bInSwitch)
+Local $Result = _checkObstacles($bBuilderBase, $iRecursive > 5)
 OcrForceCaptureRegion($wasForce)
 $iRecursive -= 1
 Return FuncReturn($Result)
 EndFunc
-Func _checkObstacles($bBuilderBase = False, $bRecursive = False, $bInSwitch = Default)
+Func _checkObstacles($bBuilderBase = False, $bRecursive = False)
 Local $msg, $x, $y, $Result
 $g_bMinorObstacle = False
 _CaptureRegions()
@@ -48830,23 +48830,18 @@ If Not $bRecursive Then
 If checkObstacles_Network() Then Return True
 If checkObstacles_GfxError() Then Return True
 EndIf
-If($bInSwitch <> True) Then
 Local $bIsOnBuilderIsland = isOnBuilderBase()
 Local $bIsOnMainVillage = isOnMainVillage()
-If $bBuilderBase = True And $bIsOnBuilderIsland = False Then
-SetLog("- Has to be in Builder Base, Switching to...", $COLOR_INFO)
+If $bBuilderBase <> $bIsOnBuilderIsland And($bIsOnBuilderIsland Or $bIsOnBuilderIsland <> $bIsOnMainVillage) Then
+If $bIsOnBuilderIsland Then
+SetLog("Detected Builder Base, trying to switch back to Main Village")
+Else
+SetLog("Detected Main Village, trying to switch back to Builder Base")
+EndIf
 If SwitchBetweenBases() Then
 $g_bMinorObstacle = True
 If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 Return False
-EndIf
-ElseIf $bBuilderBase = False And $bIsOnBuilderIsland = True Then
-SetLog("- Has to be in Main Village, Switching to...", $COLOR_INFO)
-If SwitchBetweenBases() Then
-$g_bMinorObstacle = True
-If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-Return False
-EndIf
 EndIf
 EndIf
 If $g_sAndroidGameDistributor <> $g_sGoogle Then
@@ -67335,52 +67330,59 @@ If Not $bToReturn Then ClickP($aAway, 1, 0, "#0332")
 Return $bToReturn
 EndFunc
 Func SwitchBetweenBases($bCheckMainScreen = True, $bGoTo = Default, $bSilent = Default)
-Local $bNoBoat = False, $bSwitch = True, $bIs = False, $vSwitch[0]
-For $i = 0 To 5
-If $bCheckMainScreen Then checkMainScreen(Default, isOnBuilderBase(True), True)
-If($bSilent <> True) Then SetLog("Try: [" & $i & "] " & "Switch between bases.", $COLOR_ACTION)
-If Not $g_bRunState Then Return
-If($bGoTo <> Default) Then
-$bIs = isOnBuilderBase(True)
-$bSwitch =(($bGoTo = "Builder Base") <> $bIs)
-EndIf
-For $i2 = 0 To 1
-$vSwitch = decodeSingleCoord(findImageInPlace(($i2 = 0) ?("BoatNormalVillage") :("BoatBuilderBase"),($i2 = 0) ?($g_sImgBoat) :($g_sImgBoatBB),($i2 = 0) ?("66,432,388,627") :("487,44,708,242")))
-If UBound($vSwitch) > 1 Then ExitLoop
-Next
-If($i > 0) Then ZoomOut()
-If UBound($vSwitch) <= 1 Then
-If QuickMIS("N1", @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Noboat\", 66, 432, 388, 627) <> "none" Then
-If($bSilent <> True) Then SetLog("Apparently you don't have the boat.", $COLOR_INFO)
-$bNoBoat = True
-Else
-If Not $g_bRunState Then Return
-ContinueLoop
-EndIf
-EndIf
-Local $bSwitched = False
-If $bSwitch And Not $bNoBoat And UBound($vSwitch) > 1 Then
-Click($vSwitch[0], $vSwitch[1])
-$bSwitched =(Int($vSwitch[0]) < 388 ) ?(True) :(False)
-EndIf
-If $bCheckMainScreen Then
-$bIs =(((isOnBuilderBase(True) And($bGoTo = Default)) Or($bGoTo = "Builder Base")) ?(True) :(False))
-Local $hTimerHandle = __TimerInit()
-Local $iDo = 0
+Local $bIsOnBuilderBase, $bSwitched = False
+Local $iLoop = 0
 Do
-$iDo += 1
-If __TimerDiff($hTimerHandle) > 3000 Then ContinueLoop 2
-If _Sleep(100) Then Return
-If($iDo > 3) Then
-RestartAndroidCoC()
-ExitLoop
+Local $aNVoat = decodeSingleCoord(findImageInPlace("BoatNormalVillage", $g_sImgBoat, "66,432,388,627"))
+Local $aBBoat = decodeSingleCoord(findImageInPlace("BoatBuilderBase", $g_sImgBoatBB, "487,44,708,242"))
+Local $bBB = isOnBuilderBase(True)
+Local $bNV =(Not $bBB)
+Select
+Case(UBound($aNVoat) > 1)
+SetDebugLog("SwitchBetweenBases | 0 : 0")
+If($bNV And($bGoTo = "Normal Village")) Then Return True
+If($bGoTo = Default) Or($bGoTo = "Builder Base") Then
+ClickP($aNVoat)
+$bSwitched = True
+$bIsOnBuilderBase = $bBB
+$g_bStayOnBuilderBase = True
 EndIf
-Until(checkMainScreen(Default, $bIs, True))
-If($bSilent <> True) Then SetLog(($bIs) ?("Is switched to ? : Builder base.") :("Is switched to ? : Normal village."), $COLOR_SUCCESS)
+Case(UBound($aBBoat) > 1)
+SetDebugLog("SwitchBetweenBases | 0 : 1")
+If($bBB And($bGoTo = "Builder Base")) Then Return True
+If($bGoTo = Default) Or($bGoTo = "Normal Village") Then
+ClickP($aBBoat)
+$bSwitched = True
+$bIsOnBuilderBase = $bBB
+$g_bStayOnBuilderBase = False
 EndIf
-Return($bNoBoat) ?(False) :(True)
-Next
-SetLog("Fail SwitchBetweenBases 0x1", $COLOR_ERROR)
+Case(QuickMIS("N1", @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Noboat\", 66, 432, 388, 627) <> "none")
+SetDebugLog("SwitchBetweenBases | 0 : 2")
+$g_bStayOnBuilderBase = False
+Return False
+Case Else
+SetDebugLog("SwitchBetweenBases | 0 : 3")
+checkMainScreen(True, $bBB)
+ZoomOut()
+$iLoop += 1
+$bSwitched = False
+ContinueLoop
+EndSelect
+$iLoop += 1
+Local $hTimerHandle = __TimerInit()
+While __TimerDiff($hTimerHandle) < 3000 And Not $bSwitched
+If _Sleep(250) Then Return
+If Not $g_bRunState Then Return
+ForceCaptureRegion()
+$bSwitched = isOnBuilderBase(True) <> $bIsOnBuilderBase
+WEnd
+If $bSwitched Then
+If $bCheckMainScreen Then checkMainScreen(True, Not $bIsOnBuilderBase)
+Return True
+Else
+SetLog("Failed to go to the ...", $COLOR_ERROR)
+EndIf
+Until($iLoop > 3)
 Return False
 EndFunc
 Func ProfileSwitchAccountEnabled()
@@ -80743,6 +80745,7 @@ Func TestrunBuilderBase()
 SetDebugLog("** TestrunBuilderBase START**", $COLOR_DEBUG)
 Local $Status = $g_bRunState
 $g_bRunState = True
+$g_bStayOnBuilderBase = True
 runBuilderBase(False)
 $g_bStayOnBuilderBase = False
 $g_bRunState = $Status
