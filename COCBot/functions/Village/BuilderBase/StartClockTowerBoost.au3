@@ -36,7 +36,7 @@ Func StartClockTowerBoost($bSwitchToBB = False, $bSwitchToNV = False)
 
 	If $bSwitchToBB Then
 		ClickP($aAway, 1, 0, "#0332")
-		If Not SwitchBetweenBases(True, "Builder Base") Then Return ; Switching to Builders Base
+		If Not SwitchBetweenBases(True, True) Then Return ; Switching to Builders Base
 	EndIf
 
 	Local $bCTBoost = True
@@ -80,5 +80,5 @@ Func StartClockTowerBoost($bSwitchToBB = False, $bSwitchToNV = False)
 	EndIf
 	ClickP($aAway, 1, 0, "#0329")
 
-	If $bSwitchToNV Then SwitchBetweenBases(True, "Normal Village") ; Switching back to the normal Village if true
+	If $bSwitchToNV Then SwitchBetweenBases(True, False) ; Switching back to the normal Village if true
 EndFunc   ;==>StartClockTowerBoost

@@ -5,11 +5,29 @@
 
                     Based on MyBot.run v7.8.3.hotfix.
 					
-	**v4.0.7** (Quality improvement update) (Thx @Approchable, @joosmega, @omora88, @esbestan and github beta test team for test <3)
+	**v4.0.8** (Quality improvement update) (Thx @Approchable, @joosmega, @omora88, @esbestan and github beta test team for test <3)
 		» Fixed / Improved :
 			- Smart farm more fast.
 			- Corrected drop points.
 			- Upgrade BB Machine.
+			- GUI by (by @Eloy).
+			- Smart attack strategy (by @Dissociable).
+			- BB Base improvement (by @vDragon and @Dissociable).
+			- Drop point tolerance fixed in some emulator configs.
+			- Randomize SmartFarm Side drop order.
+			- Clouds time fixes.
+			- Open army (by @vDragon).
+			- Lot of fixes.
+			- Walls level 14 Upgrade (by @Dissociable).
+			- Special Check Obstacles for switch village. (by @vDragon).
+			- Improved switch village.
+			- BB Base machine improved.
+			- End battle fix in BB. (by @vDragon).
+			- First click fix in BB CSV. (by @vDragon).
+			- SuperXP Temp fix.
+			- Spells Queue fix and LSpell. (by @vDragon).
+			- Fixed SwitchBetweenBases and isOnMainVillage func.
+			- Spells and queue spells.
 			
 	**v4.0.6** (Quality improvement update) (Thx @Approchable, @joosmega, @omora88, @esbestan and github beta test team for test <3)
 		» Fixed / Improved :

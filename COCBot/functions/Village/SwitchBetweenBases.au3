@@ -1,6 +1,6 @@
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: SwitchBetweenBases
-; Description ...: Switches Between Normal Village and Builder Base; Modified in such a way that it allows to distinguish if the boat is not present.
+; Description ...: Switches Between Normal Village and Builder Base.
 ; Syntax ........: SwitchBetweenBases()
 ; Parameters ....:
 ; Return values .: True: Successfully switched Bases  -  False: Failed to switch Bases
@@ -12,69 +12,84 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func SwitchBetweenBases($bCheckMainScreen = True, $bGoTo = Default, $bSilent = Default)
-	Local $bNoBoat = False, $bSwitch = True, $bIs = False, $vSwitch[0]
-	
-	For $i = 0 To 5
-		
-		If $bCheckMainScreen Then (checkMainScreen(Default, isOnBuilderBase(True), True))
-		
-		If ($bSilent <> True) Then SetLog("Try: [" & $i & "] " & "Switch between bases.", $COLOR_ACTION)
-		
-		If Not $g_bRunState Then Return
 
-		If ($bGoTo <> Default) Then
-			$bIs = isOnBuilderBase(True)
-			$bSwitch = (($bGoTo = "Builder Base") <> $bIs)
+#Region - Custom - Team AIO Mod++
+Func SwitchBetweenBases($bCheckMainScreen = Default, $bGoToBB = Default, $bSilent = Default)
+	If $bCheckMainScreen = Default Then $bCheckMainScreen = True
+	Local $bSwitched = False, $iLoop = 0
+	$g_hTimerOffset = 0
+	
+	For $iLoop = 0 To 4
+
+		;	Builder base.
+		Local $aBBoat = decodeSingleCoord(findImageInPlace("BoatBuilderBase", $g_sImgBoatBB, "487,44,708,242"))
+		Local $bBB = isOnBuilderBase(True)
+		
+		;	Normal base.
+		Local $aNVoat = decodeSingleCoord(findImageInPlace("BoatNormalVillage", $g_sImgBoat, "66,432,388,627"))
+		Local $bNV = (Not $bBB) ; more stable than isOnMainVillage.
+
+		; Deconstructed boat.
+		If (QuickMIS("N1", @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Noboat\", 66, 432, 388, 627) <> "none") Then
+			$g_bStayOnBuilderBase = False
+			Return False
 		EndIf
 		
-		For $i2 = 0 To 1
-			$vSwitch = decodeSingleCoord(findImageInPlace(($i2 = 0) ? ("BoatNormalVillage") : ("BoatBuilderBase"), ($i2 = 0) ? ($g_sImgBoat) : ($g_sImgBoatBB), ($i2 = 0) ? ("66,432,388,627") : ("487,44,708,242")))
-			If UBound($vSwitch) > 1 Then ExitLoop
-		Next
-		
-		If ($i > 0) Then ZoomOut() ; ensure boat is visible
-		
-		If UBound($vSwitch) <= 1 Then
-			If QuickMIS("N1", @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Noboat\", 66, 432, 388, 627) <> "none" Then
-				If ($bSilent <> True) Then SetLog("Apparently you don't have the boat.", $COLOR_INFO)
-				$bNoBoat = True
-			Else
-				If Not $g_bRunState Then Return
-				ContinueLoop
-			EndIf
-		EndIf
-		
-		Local $bSwitched = False
-		
-		If $bSwitch And Not $bNoBoat And UBound($vSwitch) > 1 Then
-			Click($vSwitch[0], $vSwitch[1])
-			$bSwitched = (Int($vSwitch[0]) < 388 ) ? (True) : (False)
-		EndIf
-		
-		If $bCheckMainScreen Then
-			$bIs = (((isOnBuilderBase(True) And ($bGoTo = Default)) Or ($bGoTo = "Builder Base")) ? (True) : (False))
-			; switch can take up to 2 Seconds, check for 3 additional Seconds...
-			Local $hTimerHandle = __TimerInit()
-			Local $iDo = 0
-			Do
-				$iDo += 1
-				If __TimerDiff($hTimerHandle) > 3000 Then ContinueLoop 2
-				If _Sleep(100) Then Return
-				If ($iDo > 3) Then 
-					RestartAndroidCoC()
-					ExitLoop
+		Select
+			Case (UBound($aNVoat) > 1)
+
+				; Travel to BB.
+				If ($bGoToBB = Default Or $bGoToBB = True) Then
+					Click($aNVoat[0] + Random(0, 10, 1), $aNVoat[1] + Random(0, 10, 1))
+					$g_bStayOnBuilderBase = True
 				EndIf
-			Until (checkMainScreen(Default, $bIs, True))
-			
-			
-			If ($bSilent <> True) Then SetLog(($bIs) ? ("Is switched to ? : Builder base.") : ("Is switched to ? : Normal village."), $COLOR_SUCCESS)
+				
+				; Stay in BB.
+				If ($bNV And $bGoToBB = False) Then
+					$g_bStayOnBuilderBase = True
+					Return True
+				EndIf
+				
+			Case (UBound($aBBoat) > 1)
+					
+				; Travel to NV.
+				If ($bGoToBB = Default Or $bGoToBB = False) Then
+					Click($aBBoat[0] + Random(0, 10, 1), $aBBoat[1] + Random(0, 10, 1))
+					$g_bStayOnBuilderBase = False
+				EndIf
+				
+				; Stay in NV.
+				If ($bBB And $bGoToBB = True) Then 
+					$g_bStayOnBuilderBase = False
+					Return True
+				EndIf
+				
+			Case Else
+
+				; Check checkMainScreen and ZoomOut.
+				SetDebugLog("SwitchBetweenBases | 0 : 3")
+				If $bCheckMainScreen Then checkMainScreen(True, $bBB)
+				ZoomOut()
+				ContinueLoop
+				
+		EndSelect
+
+		; switch can take up to 2 Seconds, check for 3 additional Seconds...
+		Local $bIsOnBuilderBase = $bBB
+		Local $hTimerHandle = __TimerInit()
+		Do 
+			$bSwitched = (isOnBuilderBase(True) <> $bIsOnBuilderBase)
+			If $bSwitched Then ExitLoop
+			If (Not $g_bRunState) Or _Sleep(250) Then Return
+		Until (__TimerDiff($hTimerHandle) > 3000 And Not $bSwitched)
+
+		If $bSwitched Then
+			If $bCheckMainScreen Then checkMainScreen(True, Not $bIsOnBuilderBase)
+			Return True
 		EndIf
-		
-		Return ($bNoBoat) ? (False) : (True) ; Return false for avoid bugs in bb switch.
 
 	Next
 	
-	SetLog("Fail SwitchBetweenBases 0x1", $COLOR_ERROR)
 	Return False
 EndFunc   ;==>SwitchBetweenBases
+#EndRegion - Custom - Team AIO Mod++

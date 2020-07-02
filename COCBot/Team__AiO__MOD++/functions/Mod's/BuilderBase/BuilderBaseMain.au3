@@ -30,10 +30,7 @@ Func runBuilderBase($bTestRun = False)
 
 	ClickP($aAway, 3, 400, "#0000") ;Click Away
 
-	; Check IF is Necessary run the Builder Base IDLE loop
-	$g_bStayOnBuilderBase = True
-
-	If Not $g_bChkBuilderAttack And Not $g_bChkCollectBuilderBase And Not $g_bChkStartClockTowerBoost And Not $g_iChkBBSuggestedUpgrades And Not $g_bChkCleanBBYard Then
+	If Not $g_bChkBuilderAttack And Not $g_bChkCollectBuilderBase And Not $g_bChkStartClockTowerBoost And Not $g_iChkBBSuggestedUpgrades And Not $g_bChkCleanBBYard And not $g_bChkUpgradeMachine Then
 		If $g_bChkPlayBBOnly Then
 				SetLog("Play Only Builder Base Check Is On But BB Option's(Collect,Attack etc) Unchecked", $COLOR_ERROR)
 				SetLog("Please Check BB Options From Builder Base Tab", $COLOR_INFO)
@@ -44,7 +41,7 @@ Func runBuilderBase($bTestRun = False)
 		Return False
 	EndIf
 
-	If not SwitchBetweenBases(True, "Builder Base") Then Return False
+	If not SwitchBetweenBases(True, True) Then Return False
 
 	SetLog("Builder loop starts.", $COLOR_INFO)
 	If randomSleep(1000) Then Return
@@ -71,9 +68,6 @@ Func runBuilderBase($bTestRun = False)
 	; Check obstacles
 	If checkObstacles(True) Then SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
 
-	; It will not be necessary if there are no constructors.
-	BuilderBaseReport()
-
 	; Logic here
 		Local $aRndFuncList = ['ElixirUpdate', 'GoldUpdate']
 		_ArrayShuffle($aRndFuncList)
@@ -84,7 +78,7 @@ Func runBuilderBase($bTestRun = False)
 	; ----------
 
 	; switch back to normal village
-	If Not $g_bChkPlayBBOnly Then SwitchBetweenBases(True, "Normal Village")
+	If Not $g_bChkPlayBBOnly Then SwitchBetweenBases(True, False)
 
 	If Not $g_bRunState Then Return
 
@@ -97,12 +91,16 @@ Func runBuilderBase($bTestRun = False)
 EndFunc   ;==>runBuilderBase
 
 Func RunBBFuncs($sBBFunc, $bTestRun = False)
-
+	
+	; Silent report.
+	BuilderBaseReport(False, False)
+	
 	; Zoomout
 	If $g_iFreeBuilderCountBB <> 0 Then BuilderBaseZoomOut()
 
 	Switch $sBBFunc
 		Case "ClockTower"
+		
 			;It will not be necessary if there are no constructors.
 			If $g_iFreeBuilderCountBB = 0 Then Return
 
@@ -116,12 +114,13 @@ Func RunBBFuncs($sBBFunc, $bTestRun = False)
 			CleanBBYard()
 
 		Case "AttackBB"
+			
 			; New logic to add speed to the attack.
 			For $i = 0 To Random(3,5,1)
-				; Builder base Report
-				BuilderBaseReport()
-				RestAttacksInBB()
-
+				
+				; Builder base Report and get out of the useless loop.
+				If Not RestAttacksInBB() Then ExitLoop
+				
 				; Check obstacles
 				If checkObstacles(True) Then
 					SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
@@ -129,14 +128,12 @@ Func RunBBFuncs($sBBFunc, $bTestRun = False)
 				EndIf
 
 				; Attack
-				If RestAttacksInBB() = True Then BuilderBaseAttack($bTestRun)
-				RestAttacksInBB()
-
-				; Get out of the useless loop.
-				If ($g_iAvailableAttacksBB = 0) Then ExitLoop
+				BuilderBaseAttack($bTestRun)
+				
 			Next
 
 		Case "ElixirUpdate"
+		
 			; ELIXIR -----------
 			; It tends to be a little better, upgrade the troops first.
 			StarLaboratory()
@@ -152,6 +149,7 @@ Func RunBBFuncs($sBBFunc, $bTestRun = False)
 			; ------------------
 
 		Case "GoldUpdate"
+		
 			;It will not be necessary if there are no constructors.
 			If $g_iFreeBuilderCountBB = 0 Then Return
 
@@ -162,16 +160,21 @@ Func RunBBFuncs($sBBFunc, $bTestRun = False)
 			; The level of the walls does not matter so much.
 			WallsUpgradeBB()
 			; ------------------
+			
 	EndSwitch
 EndFunc
 
-Func RestAttacksInBB()
+Func RestAttacksInBB($bSetLog = True)
+	If $g_bChkBuilderAttack = False Then
+		$g_iAvailableAttacksBB = 0
+		Return False
+	EndIf
 	$g_iAvailableAttacksBB = Ubound(findMultipleQuick($g_sImgAvailableAttacks, 0, "25, 626, 97, 640", Default, Default, False, 0))
-	If $g_iAvailableAttacksBB <> 0 and $g_bChkBBStopAt3 Then
-		Setlog("You have " & $g_iAvailableAttacksBB & " available attack(s). I will stop attacking when there isn't.", $COLOR_SUCCESS)
+	If $g_iAvailableAttacksBB > 0 And $g_bChkBBStopAt3 Then
+		If ($bSetLog = True) Then Setlog("You have " & $g_iAvailableAttacksBB & " available attack(s). I will stop attacking when there isn't.", $COLOR_SUCCESS)
 		Return True
 	ElseIf $g_bChkBBStopAt3 <> True Then
-		Setlog("You have " & $g_iAvailableAttacksBB & " available attack(s).", $COLOR_INFO)
+		If ($bSetLog = True) Then Setlog("You have " & $g_iAvailableAttacksBB & " available attack(s).", $COLOR_INFO)
 		Return True
 	EndIf
 	Return False

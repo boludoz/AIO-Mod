@@ -1146,14 +1146,14 @@ Func BotGuiModeToggle()
 			GUICtrlDelete($g_hTabMain)
 			GUICtrlDelete($g_hTabLog)
 			GUICtrlDelete($g_hTabVillage)
-            GUICtrlDelete($g_hTabBuilderBase) ; BBase - Team AIO Mod++
+			GUICtrlDelete($g_hTabBuilderBase) ; BBase - Team AIO Mod++
 			GUICtrlDelete($g_hTabAttack)
 			GUICtrlDelete($g_hTabMOD)
 			GUICtrlDelete($g_hTabBot)
 			GUICtrlDelete($g_hTabAbout)
 
 			GUICtrlDelete($g_hGUI_VILLAGE_TAB)
-            GUICtrlDelete($g_hGUI_BUILDER_BASE_TAB) ; BBase - Team AIO Mod++
+			GUICtrlDelete($g_hGUI_BUILDER_BASE_TAB) ; BBase - Team AIO Mod++
 			GUICtrlDelete($g_hGUI_MISC_TAB)
 			GUICtrlDelete($g_hGUI_DONATE_TAB)
 			GUICtrlDelete($g_hGUI_UPGRADE_TAB)
@@ -1170,7 +1170,7 @@ Func BotGuiModeToggle()
 			GUICtrlDelete($g_hGUI_MOD_TAB)
 			GUICtrlDelete($g_hGUI_BOT_TAB)
 			GUICtrlDelete($g_hGUI_LOG_SA)
-            GUICtrlDelete($g_hGUI_LOG_BB) ; BBase - Team AIO Mod++
+			GUICtrlDelete($g_hGUI_LOG_BB) ; BBase - Team AIO Mod++
 			GUICtrlDelete($g_hGUI_SWITCH_OPTIONS_TAB)
 			GUICtrlDelete($g_hGUI_STATS_TAB)
 
@@ -1780,7 +1780,7 @@ Func tabMain()
 			GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
 			GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
 			GUISetState(@SW_HIDE, $g_hGUI_BOT)
-            GUISetState(@SW_HIDE, $g_hGUI_BUILDER_BASE) ; BBase - Team AIO Mod++
+			GUISetState(@SW_HIDE, $g_hGUI_BUILDER_BASE) ; BBase - Team AIO Mod++
 			GUISetState(@SW_HIDE, $g_hGUI_MOD) ; BBase - Team AIO Mod++
 	EndSelect
 

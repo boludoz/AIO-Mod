@@ -112,7 +112,7 @@ Func chkDelayMod()
 		GUICtrlSetState($g_hUseRandomSleep, $GUI_DISABLE)
 		GUICtrlSetState($g_hNoAttackSleep, $GUI_DISABLE)
 	EndIf
-	
+
 EndFunc   ;==>chkDelayMod
 
 Func chkMaxSidesSF()
