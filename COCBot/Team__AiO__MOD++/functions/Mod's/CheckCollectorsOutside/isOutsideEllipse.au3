@@ -21,13 +21,10 @@ Func VillageOffset()
 		$g_iXVOffset = 0
 		
 		Local $iXFix = 203
-		Local $a = QuickMIS("CX", @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\IsSmartDiamond", 197, 160, 312, 193)
-		If IsArray($a) and UBound($a) = 1 Then ; If it detects 2 images, it is preferable that this does nothing.
-			Local $as = StringSplit($a[0], ",", $STR_NOCOUNT)
-			If UBound($as) > 0 Then
-				$g_iXVOffset = Int(197 + Int($as[0]))
-				SetDebugLog("- Offset fix: " & $g_iXVOffset)
-			EndIf
+		Local $a = GetVillageSize()
+		If IsArray($a) And (UBound($a) > 2) Then ; If it detects 2 images, it is preferable that this does nothing.
+			$g_iXVOffset = Int($iXFix + Int($a[2]))
+			SetDebugLog("- Offset fix: " & $g_iXVOffset)
 		EndIf
 	EndIf
 	

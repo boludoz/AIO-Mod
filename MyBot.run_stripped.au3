@@ -29783,7 +29783,7 @@ SetLog("Run Function : " & $sFunc, $COLOR_INFO)
 Local $hTimer = TimerInit()
 Local $saExecResult = Execute($sFunc)
 Setlog("Time Execution : " & TimerDiff($hTimer))
-If $saExecResult = "" And @error <> 0 Then
+If StringIsSpace($saExecResult) And @error <> 0 Then
 Setlog("Result : Error", $COLOR_ERROR)
 ElseIf IsArray($saExecResult) Then
 Setlog("Result (IsArray) : " & _ArrayToString($saExecResult, ","), $COLOR_INFO)
@@ -43525,7 +43525,7 @@ SetError(1)
 Return False
 EndIf
 EndIf
-For $i=0 To 3
+For $i = 0 To 3
 If WaitforPixel(23, 505 + $g_iBottomOffsetY, 53, 507 + $g_iBottomOffsetY, Hex(0xEEB344, 6), 5, 10) Then
 If $g_bDebugSetlogTrain Then SetLog("Click $aArmyTrainButton" & " (Called from " & $sWhereFrom & ")", $COLOR_SUCCESS)
 If Not $g_bUseRandomClick Then
@@ -43569,9 +43569,10 @@ If IsArray($aTabButton) And UBound($aTabButton, 1) = 2 Then
 $aIsTabOpen[0] = $aTabButton[0]
 If Not _CheckPixel($aIsTabOpen, True) Then
 If $bSetLog Or $g_bDebugSetlogTrain Then SetLog("Open " & $sTab &($g_bDebugSetlogTrain ? " (Called from " & $sWhereFrom & ")" : ""), $COLOR_INFO)
-For $i=0 To 3
+For $i = 0 To 3
 ClickP($aTabButton)
 If _WaitForCheckPixel($aIsTabOpen, True) Then ExitLoop
+If _Sleep(250) Then Return
 Next
 If Not _WaitForCheckPixel($aIsTabOpen, True) Then
 SetLog("Error in OpenTrainTab: Cannot open " & $sTab & ". Pixel to check did not appear", $COLOR_ERROR)
@@ -48830,20 +48831,31 @@ If Not $bRecursive Then
 If checkObstacles_Network() Then Return True
 If checkObstacles_GfxError() Then Return True
 EndIf
-Local $bIsOnBuilderIsland = isOnBuilderBase()
-Local $bIsOnMainVillage = isOnMainVillage()
-If $bBuilderBase <> $bIsOnBuilderIsland And($bIsOnBuilderIsland Or $bIsOnBuilderIsland <> $bIsOnMainVillage) Then
-If $bIsOnBuilderIsland Then
-SetLog("Detected Builder Base, trying to switch back to Main Village")
-Else
-SetLog("Detected Main Village, trying to switch back to Builder Base")
+Local $iDo = 0
+Do
+Local $aImgX = FindMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Obstacles")
+If Not IsArray($aImgX) And Not((UBound($aImgX) - 1) > 1) Then ContinueLoop
+For $i = 0 To UBound($aImgX) - 1
+If(StringInStr($aImgX[$i][0], "X") > 0) Then
+Select
+Case(793 < $aImgX[$i][1] And 14 < $aImgX[$i][2] And 850 > $aImgX[$i][1] And 65 > $aImgX[$i][2])
+Click($aImgX[$i][1] + Random(0, 5, 1), $aImgX[$i][2] + Random(0, 5, 1))
+Case(801 < $aImgX[$i][1] And 48 < $aImgX[$i][2] And 855 > $aImgX[$i][1] And 102 > $aImgX[$i][2])
+Click($aImgX[$i][1] + Random(0, 5, 1), $aImgX[$i][2] + Random(0, 5, 1))
+Case(801 < $aImgX[$i][1] And 99 < $aImgX[$i][2] And 855 > $aImgX[$i][1] And 155 > $aImgX[$i][2])
+Click($aImgX[$i][1] + Random(0, 5, 1), $aImgX[$i][2] + Random(0, 5, 1))
+EndSelect
+ElseIf(StringInStr($aImgX[$i][0], "OK") > 0) Then
+Select
+Case(342 < $aImgX[$i][1] And 485 < $aImgX[$i][2] And 506 > $aImgX[$i][1] And 560 > $aImgX[$i][2])
+ClickP($aAway)
+Case(310 < $aImgX[$i][1] And 532 < $aImgX[$i][2] And 530 > $aImgX[$i][1] And 600 > $aImgX[$i][2])
+ClickP($aAway)
+EndSelect
 EndIf
-If SwitchBetweenBases() Then
-$g_bMinorObstacle = True
-If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-Return False
-EndIf
-EndIf
+Next
+$iDo += 1
+Until Not IsArray($aImgX) Or Not((UBound($aImgX) - 1) > 1) Or($iDo > 3)
 If $g_sAndroidGameDistributor <> $g_sGoogle Then
 Local $aXButton = FindAdsXButton()
 If IsArray($aXButton) Then
@@ -48852,6 +48864,17 @@ PureClickP($aXButton)
 $g_bMinorObstacle = True
 If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 Return False
+EndIf
+EndIf
+Local $bIsOnBuilderIsland = isOnBuilderBase()
+Local $bIsOnMainVillage = isOnMainVillage()
+If $bBuilderBase <> $bIsOnBuilderIsland And($bIsOnBuilderIsland Or $bIsOnBuilderIsland <> $bIsOnMainVillage) Then
+If $bIsOnBuilderIsland Then
+SetLog("Detected Builder Base, trying to switch back to Main Village.", $COLOR_INFO)
+Else
+SetLog("Detected Main Village, trying to switch back to Builder Base.", $COLOR_INFO)
+EndIf
+If SwitchBetweenBases(False) Then
 EndIf
 EndIf
 Local $aMessage = _PixelSearch($aIsReloadError[0], $aIsReloadError[1], $aIsReloadError[0] + 3, $aIsReloadError[1] + 11, Hex($aIsReloadError[2], 6), $aIsReloadError[3], $g_bNoCapturePixel)
@@ -49956,18 +49979,18 @@ If Not $g_bRunState Then
 SetDebugLog("Exit ZoomOut, bot not running")
 Return
 EndIf
-Local $aResult
+Local $Result
 If($g_iAndroidZoomoutMode = 0 Or $g_iAndroidZoomoutMode = 3) And($g_bAndroidEmbedded = False Or $g_iAndroidEmbedMode = 1) Then
-$aResult = Execute("ZoomOut" & $g_sAndroidEmulator & "()")
-If $aResult = "" And @error <> 0 Then
-$aResult = AndroidOnlyZoomOut()
+$Result = Execute("ZoomOut" & $g_sAndroidEmulator & "()")
+If $Result = "" And @error <> 0 Then
+$Result = AndroidOnlyZoomOut()
 EndIf
 $g_bSkipFirstZoomout = True
-Return FuncReturn($aResult)
+Return $Result
 EndIf
-$aResult = AndroidOnlyZoomOut()
+$Result = AndroidOnlyZoomOut()
 $g_bSkipFirstZoomout = True
-Return FuncReturn($aResult)
+Return $Result
 EndFunc
 Func ZoomOutBlueStacks()
 Return ZoomOutCtrlClick(False, False, False, 250)
@@ -49990,12 +50013,12 @@ Return ZoomOutCtrlWheelScroll(True, True, True,($g_iAndroidZoomoutMode <> 3), De
 EndFunc
 Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40, $bAndroidZoomOut = True)
 Local $sFunc = "DefaultZoomOut"
-Local $aResult0, $aResult1, $i = 0
+Local $result0, $result1, $i = 0
 Local $exitCount = 80
 Local $delayCount = 20
 ForceCaptureRegion()
-Local $aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "DefaultZoomOut", True)
-If IsArray($aPicture) And StringIsSpace($aPicture[0]) Then
+Local $aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
+If StringInStr($aPicture[0], "zoomou") = 0 Then
 If $g_bDebugSetlog Then
 SetDebugLog("Zooming Out (" & $sFunc & ")", $COLOR_INFO)
 Else
@@ -50008,10 +50031,7 @@ ForceCaptureRegion()
 $aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
 EndIf
 Local $tryCtrlWheelScroll = False
-If UBound($aPicture) - 1 < 0 Then
-Return False
-EndIf
-While StringIsSpace($aPicture[0]) and Not $tryCtrlWheelScroll
+While StringInStr($aPicture[0], "zoomou") = 0 and Not $tryCtrlWheelScroll
 AndroidShield("DefaultZoomOut")
 If $bAndroidZoomOut Then
 AndroidZoomOut($i, Default,($g_iAndroidZoomoutMode <> 2))
@@ -50021,16 +50041,16 @@ If Not $bAndroidZoomOut Then
 If $g_bDebugSetlog Then SetDebugLog("Index = "&$i, $COLOR_DEBUG)
 If _Sleep($DELAYZOOMOUT2) Then Return True
 If $g_bChkBackgroundMode = False And $g_bNoFocusTampering = False Then
-$aResult0 = ControlFocus($g_hAndroidWindow, "", "")
+$Result0 = ControlFocus($g_hAndroidWindow, "", "")
 Else
-$aResult0 = 1
+$Result0 = 1
 EndIf
-$aResult1 = ControlSend($g_hAndroidWindow, "", "", $ZoomOutKey)
-If $g_bDebugSetlog Then SetDebugLog("ControlFocus Result = "&$aResult0 & ", ControlSend Result = "&$aResult1& "|" & "@error= " & @error, $COLOR_DEBUG)
-If $aResult1 = 1 Then
+$Result1 = ControlSend($g_hAndroidWindow, "", "", $ZoomOutKey)
+If $g_bDebugSetlog Then SetDebugLog("ControlFocus Result = "&$Result0 & ", ControlSend Result = "&$Result1& "|" & "@error= " & @error, $COLOR_DEBUG)
+If $Result1 = 1 Then
 $i += 1
 Else
-SetLog("Warning ControlSend $aResult = "&$aResult1, $COLOR_DEBUG)
+SetLog("Warning ControlSend $Result = "&$Result1, $COLOR_DEBUG)
 EndIf
 EndIF
 If $i > $delayCount Then
@@ -50045,8 +50065,7 @@ If checkObstacles() = True Then SetLog("Error window cleared, continue Zoom out"
 EndIf
 $i += 1
 ForceCaptureRegion()
-$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "DefaultZoomOut", True)
-If Not IsArray($aPicture) Then Return False
+$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
 WEnd
 If $tryCtrlWheelScroll Then
 SetLog($g_sAndroidEmulator & " zoom-out with key " & $ZoomOutKey & " didn't work, try now Ctrl+MouseWheel...", $COLOR_INFO)
@@ -50060,12 +50079,12 @@ Func ZoomOutCtrlWheelScroll($CenterMouseWhileZooming = True, $GlobalMouseWheel =
 Local $sFunc = "ZoomOutCtrlWheelScroll"
 Local $exitCount = 80
 Local $delayCount = 20
-Local $aResult[4], $i = 0, $j
+Local $result[4], $i = 0, $j
 Local $ZoomActions[4] = ["ControlFocus", "Ctrl Down", "Mouse Wheel Scroll Down", "Ctrl Up"]
 If $hWin = Default Then $hWin =($g_bAndroidEmbedded = False ? $g_hAndroidWindow : $g_aiAndroidEmbeddedCtrlTarget[1])
 ForceCaptureRegion()
-Local $aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "ZoomOutCtrlWheelScroll", True)
-If IsArray($aPicture) And StringIsSpace($aPicture[0]) Then
+Local $aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
+If StringInStr($aPicture[0], "zoomou") = 0 Then
 If $g_bDebugSetlog Then
 SetDebugLog("Zooming Out (" & $sFunc & ")", $COLOR_INFO)
 Else
@@ -50076,11 +50095,10 @@ If _Sleep($DELAYZOOMOUT1) Then Return True
 If $AndroidZoomOut Then
 AndroidZoomOut(0, Default,($g_iAndroidZoomoutMode <> 2))
 ForceCaptureRegion()
-$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "ZoomOutCtrlWheelScroll", True)
-If Not IsArray($aPicture) Then Return False
+$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
 EndIf
 Local $aMousePos = MouseGetPos()
-While IsArray($aPicture) And StringIsSpace($aPicture[0])
+While StringInStr($aPicture[0], "zoomou") = 0
 If $AndroidZoomOut Then
 AndroidZoomOut($i, Default,($g_iAndroidZoomoutMode <> 2))
 If @error <> 0 Then $AndroidZoomOut = False
@@ -50089,33 +50107,33 @@ If Not $AndroidZoomOut Then
 If $g_bDebugSetlog Then SetDebugLog("Index = " & $i, $COLOR_DEBUG)
 If _Sleep($DELAYZOOMOUT2) Then ExitLoop
 If($g_bChkBackgroundMode = False And $g_bNoFocusTampering = False) Or $AlwaysControlFocus Then
-$aResult[0] = ControlFocus($hWin, "", "")
+$Result[0] = ControlFocus($hWin, "", "")
 Else
-$aResult[0] = 1
+$Result[0] = 1
 EndIf
-$aResult[1] = ControlSend($hWin, "", "", "{CTRLDOWN}")
+$Result[1] = ControlSend($hWin, "", "", "{CTRLDOWN}")
 If $CenterMouseWhileZooming Then MouseMove($g_aiBSpos[0] + Int($g_iDEFAULT_WIDTH / 2), $g_aiBSpos[1] + Int($g_iDEFAULT_HEIGHT / 2), 0)
 If $GlobalMouseWheel Then
-$aResult[2] = MouseWheel(($ScrollSteps < 0 ? "down" : "up"), Abs($ScrollSteps))
+$Result[2] = MouseWheel(($ScrollSteps < 0 ? "down" : "up"), Abs($ScrollSteps))
 Else
 Local $WM_WHEELMOUSE = 0x020A, $MK_CONTROL = 0x0008
 Local $wParam = BitOR($ScrollSteps * 0x10000, BitAND($MK_CONTROL, 0xFFFF))
 Local $lParam = BitOR(($g_aiBSpos[1] + Int($g_iDEFAULT_HEIGHT / 2)) * 0x10000, BitAND(($g_aiBSpos[0] + Int($g_iDEFAULT_WIDTH / 2)), 0xFFFF))
 _WinAPI_PostMessage($hWin, $WM_WHEELMOUSE, $wParam, $lParam)
-$aResult[2] =(@error = 0 ? 1 : 0)
+$Result[2] =(@error = 0 ? 1 : 0)
 EndIf
 If _Sleep($ClickDelay) Then ExitLoop
-$aResult[3] = ControlSend($hWin, "", "", "{CTRLUP}{SPACE}")
-If $g_bDebugSetlog Then SetDebugLog("ControlFocus Result = " & $aResult[0] & ", " & $ZoomActions[1] & " = " & $aResult[1] & ", " & $ZoomActions[2] & " = " & $aResult[2] & ", " & $ZoomActions[3] & " = " & $aResult[3] & " | " & "@error= " & @error, $COLOR_DEBUG)
+$Result[3] = ControlSend($hWin, "", "", "{CTRLUP}{SPACE}")
+If $g_bDebugSetlog Then SetDebugLog("ControlFocus Result = " & $Result[0] & ", " & $ZoomActions[1] & " = " & $Result[1] & ", " & $ZoomActions[2] & " = " & $Result[2] & ", " & $ZoomActions[3] & " = " & $Result[3] & " | " & "@error= " & @error, $COLOR_DEBUG)
 For $j = 1 To 3
-If $aResult[$j] = 1 Then
+If $Result[$j] = 1 Then
 $i += 1
 ExitLoop
 EndIf
 Next
 For $j = 1 To 3
-If $aResult[$j] = 0 Then
-SetLog("Warning " & $ZoomActions[$j] & " = " & $aResult[1], $COLOR_DEBUG)
+If $Result[$j] = 0 Then
+SetLog("Warning " & $ZoomActions[$j] & " = " & $Result[1], $COLOR_DEBUG)
 EndIf
 Next
 EndIf
@@ -50130,7 +50148,7 @@ If checkObstacles() = True Then SetLog("Error window cleared, continue Zoom out"
 EndIf
 $i += 1
 ForceCaptureRegion()
-$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "ZoomOutCtrlWheelScroll", True, False)
+$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
 WEnd
 If $CenterMouseWhileZooming And $AndroidZoomOut = False Then MouseMove($aMousePos[0], $aMousePos[1], 0)
 Return True
@@ -50141,23 +50159,22 @@ Func ZoomOutCtrlClick($CenterMouseWhileZooming = False, $AlwaysControlFocus = Fa
 Local $sFunc = "ZoomOutCtrlClick"
 Local $exitCount = 80
 Local $delayCount = 20
-Local $aResult[4], $i, $j
+Local $result[4], $i, $j
 Local $SendCtrlUp = False
 Local $ZoomActions[4] = ["ControlFocus", "Ctrl Down", "Click", "Ctrl Up"]
 ForceCaptureRegion()
-Local $aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "ZoomOutCtrlClick", True)
-If IsArray($aPicture) And StringIsSpace($aPicture[0]) Then
+Local $aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
+If StringInStr($aPicture[0], "zoomou") = 0 Then
 If $g_bDebugSetlog Then
 SetDebugLog("Zooming Out (" & $sFunc & ")", $COLOR_INFO)
 Else
 SetLog("Zooming Out", $COLOR_INFO)
 EndIf
-SetDebugLog("----- ZoomOutCtrlClick ----- ")
 AndroidShield("ZoomOutCtrlClick")
 If _Sleep($DELAYZOOMOUT1) Then Return True
 Local $aMousePos = MouseGetPos()
 $i = 0
-While IsArray($aPicture) And StringIsSpace($aPicture[0])
+While StringInStr($aPicture[0], "zoomou") = 0
 If $AndroidZoomOut Then
 AndroidZoomOut($i, Default,($g_iAndroidZoomoutMode <> 2))
 If @error <> 0 Then $AndroidZoomOut = False
@@ -50166,26 +50183,26 @@ If Not $AndroidZoomOut Then
 If $g_bDebugSetlog Then SetDebugLog("Index = " & $i, $COLOR_DEBUG)
 If _Sleep($DELAYZOOMOUT2) Then ExitLoop
 If($g_bChkBackgroundMode = False And $g_bNoFocusTampering = False) Or $AlwaysControlFocus Then
-$aResult[0] = ControlFocus($g_hAndroidWindow, "", "")
+$Result[0] = ControlFocus($g_hAndroidWindow, "", "")
 Else
-$aResult[0] = 1
+$Result[0] = 1
 EndIf
-$aResult[1] = ControlSend($g_hAndroidWindow, "", "", "{CTRLDOWN}")
+$Result[1] = ControlSend($g_hAndroidWindow, "", "", "{CTRLDOWN}")
 $SendCtrlUp = True
 If $CenterMouseWhileZooming Then MouseMove($g_aiBSpos[0] + Int($g_iDEFAULT_WIDTH / 2), $g_aiBSpos[1] + Int($g_iDEFAULT_HEIGHT / 2), 0)
-$aResult[2] = _ControlClick(Int($g_iDEFAULT_WIDTH / 2), 600)
+$Result[2] = _ControlClick(Int($g_iDEFAULT_WIDTH / 2), 600)
 If _Sleep($ClickDelay) Then ExitLoop
-$aResult[3] = ControlSend($g_hAndroidWindow, "", "", "{CTRLUP}{SPACE}")
+$Result[3] = ControlSend($g_hAndroidWindow, "", "", "{CTRLUP}{SPACE}")
 $SendCtrlUp = False
-If $g_bDebugSetlog Then SetDebugLog("ControlFocus Result = " & $aResult[0] & ", " & $ZoomActions[1] & " = " & $aResult[1] & ", " & $ZoomActions[2] & " = " & $aResult[2] & ", " & $ZoomActions[3] & " = " & $aResult[3] & " | " & "@error= " & @error, $COLOR_DEBUG)
+If $g_bDebugSetlog Then SetDebugLog("ControlFocus Result = " & $Result[0] & ", " & $ZoomActions[1] & " = " & $Result[1] & ", " & $ZoomActions[2] & " = " & $Result[2] & ", " & $ZoomActions[3] & " = " & $Result[3] & " | " & "@error= " & @error, $COLOR_DEBUG)
 For $j = 1 To 3
-If $aResult[$j] = 1 Then
+If $Result[$j] = 1 Then
 ExitLoop
 EndIf
 Next
 For $j = 1 To 3
-If $aResult[$j] = 0 Then
-SetLog("Warning " & $ZoomActions[$j] & " = " & $aResult[1], $COLOR_DEBUG)
+If $Result[$j] = 0 Then
+SetLog("Warning " & $ZoomActions[$j] & " = " & $Result[1], $COLOR_DEBUG)
 EndIf
 Next
 EndIf
@@ -50213,18 +50230,17 @@ Local $sFunc = "AndroidOnlyZoomOut"
 Local $i = 0
 Local $exitCount = 80
 ForceCaptureRegion()
-Local $aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "AndroidOnlyZoomOut", True)
-If IsArray($aPicture) And StringIsSpace($aPicture[0]) Then
+Local $aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
+If StringInStr($aPicture[0], "zoomout") = 0 Then
 If $g_bDebugSetlog Then
 SetDebugLog("Zooming Out (" & $sFunc & ")", $COLOR_INFO)
 Else
 SetLog("Zooming Out", $COLOR_INFO)
 EndIf
 AndroidZoomOut(0, Default,($g_iAndroidZoomoutMode <> 2))
-SetDebugLog("----- AndroidOnlyZoomOut ----- ")
 ForceCaptureRegion()
-$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "AndroidOnlyZoomOut", True)
-While StringIsSpace($aPicture[0])
+$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
+While StringInStr($aPicture[0], "zoomout") = 0
 AndroidShield("AndroidOnlyZoomOut")
 AndroidZoomOut($i, Default,($g_iAndroidZoomoutMode <> 2))
 If $i > $exitCount Then Return
@@ -50235,17 +50251,14 @@ If checkObstacles() Then SetLog("Error window cleared, continue Zoom out", $COLO
 EndIf
 $i += 1
 ForceCaptureRegion()
-$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "AndroidOnlyZoomOut", True)
-If Not IsArray($aPicture) Then Return False
+$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
 WEnd
 Return True
 EndIf
 Return False
 EndFunc
-Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag, $UpdateMyVillage = True, $sSource = "SearchZoomOut", $CaptureRegion = True, $DebugLog = False)
-If Not $g_bRunState Then Return
+Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag, $UpdateMyVillage = True, $sSource = "", $CaptureRegion = True, $DebugLog = $g_bDebugSetlog)
 FuncEnter(SearchZoomOut)
-If $g_bDebugSetlog Then $DebugLog = True
 If $sSource <> "" Then $sSource = " (" & $sSource & ")"
 Local $bCenterVillage = $CenterVillageBoolOrScrollPos
 If $bCenterVillage = Default Or $g_bDebugDisableVillageCentering Then $bCenterVillage =(Not $g_bDebugDisableVillageCentering)
@@ -50255,26 +50268,18 @@ $aScrollPos[0] = $CenterVillageBoolOrScrollPos[0]
 $aScrollPos[1] = $CenterVillageBoolOrScrollPos[1]
 $bCenterVillage =(Not $g_bDebugDisableVillageCentering)
 EndIf
-Local $x, $y, $iZoomFactor, $stone[2]
+Local $x, $y, $z, $stone[2]
 Local $villageSize = 0
 If $CaptureRegion Then _CaptureRegion2()
 Local $aResult = ["", 0, 0, 0, 0]
 Local $bUpdateSharedPrefs = $g_bUpdateSharedPrefs And $g_iAndroidZoomoutMode = 4
-If Not $g_bStayOnBuilderBase And $g_aiSearchZoomOutCounter[0] = 10 Then
-SetLog("Try secondary village measuring...", $COLOR_INFO)
-ClickDrag(Random(158,162), Random(587,592), Random(258,262), Random(640,644), 100)
-EndIf
-Local $village, $bOnBuilderBase = isOnBuilderBase(True)
+Local $village
+Local $bOnBuilderBase = isOnBuilderBase(True)
+If $g_aiSearchZoomOutCounter[0] = 10 Then SetLog("Try secondary village measuring...", $COLOR_INFO)
 If $g_aiSearchZoomOutCounter[0] < 10 Then
 $village = GetVillageSize($DebugLog, "stone", "tree", Default, $bOnBuilderBase)
 Else
 $village = GetVillageSize($DebugLog, "2stone", "2tree", Default, $bOnBuilderBase)
-EndIf
-If $bOnBuilderBase Then
-If BuilderBaseZoomOut() Then
-Local $array[1] = ["zoomout:"]
-Return $array
-EndIf
 EndIf
 Static $iCallCount = 0
 If $g_aiSearchZoomOutCounter[0] > 0 Then
@@ -50286,10 +50291,9 @@ EndIf
 If IsArray($village) = 1 Then
 $villageSize = $village[0]
 If $villageSize < 500 Or $g_bDebugDisableZoomout Then
-$iZoomFactor = $village[1]
+$z = $village[1]
 $x = $village[2]
 $y = $village[3]
-SetDebugLog("Village offset is: " & $x & " , " & $y)
 $stone[0] = $village[4]
 $stone[1] = $village[5]
 $aResult[0] = "zoomout:" & $village[6]
@@ -50302,17 +50306,13 @@ If $aScrollPos[0] = 0 And $aScrollPos[1] = 0 Then
 $aScrollPos[0] = $aCenterHomeVillageClickDrag[0]
 $aScrollPos[1] = $aCenterHomeVillageClickDrag[1]
 EndIf
-If(QuickMIS("N1", $g_sImgIsOnBB, "260,0,406,54") = "None") And(QuickMIS("N1", $g_sImgZoomOutDirBB, "0,0,860,732") = "None") Then
 ClickP($aAway, 1, 0, "#0000")
 ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y)
-EndIf
 If _Sleep(250) Then
 $iCallCount = 0
 Return FuncReturn($aResult)
 EndIf
 Local $aResult2 = SearchZoomOut(False, $UpdateMyVillage, "SearchZoomOut(1):" & $sSource, True, $DebugLog)
-If Not IsArray($aResult2) Or UBound($aResult2) <> 5 Then Return FuncReturn($aResult)
-If _Sleep(50) Then Return FuncReturn($aResult)
 $aResult2[3] = $aResult2[1] - $aResult[1]
 $aResult2[4] = $aResult2[2] - $aResult[2]
 If $DebugLog Then SetDebugLog("Centered Village Offset" & $sSource & ": " & $aResult2[1] & ", " & $aResult2[2] & ", change: " & $aResult2[3] & ", " & $aResult2[4])
@@ -50320,13 +50320,10 @@ $iCallCount = 0
 Return FuncReturn($aResult2)
 EndIf
 If $UpdateMyVillage Then
-If $x <> $g_iVILLAGE_OFFSET[0] Or $y <> $g_iVILLAGE_OFFSET[1] Or $iZoomFactor <> $g_iVILLAGE_OFFSET[2] Then
-If $DebugLog Or $sSource = " (VillageSearch)" Then
-SetDebugLog("Village Offset " & $sSource & " updated to " & $x & ", " & $y & ", " & $iZoomFactor)
-SetDebugLog("Village Offset was " & $g_iVILLAGE_OFFSET[0] & ", " & $g_iVILLAGE_OFFSET[1] & ", " & $g_iVILLAGE_OFFSET[2])
+If $x <> $g_iVILLAGE_OFFSET[0] Or $y <> $g_iVILLAGE_OFFSET[1] Or $z <> $g_iVILLAGE_OFFSET[2] Then
+If $DebugLog Then SetDebugLog("Village Offset" & $sSource & " updated to " & $x & ", " & $y & ", " & $z)
 EndIf
-EndIf
-setVillageOffset($x, $y, $iZoomFactor)
+setVillageOffset($x, $y, $z)
 ConvertInternalExternArea()
 EndIf
 EndIf
@@ -50355,7 +50352,7 @@ $iCallCount = 0
 Return FuncReturn($aResult)
 EndIf
 $aResult = SearchZoomOut($CenterVillageBoolOrScrollPos, $UpdateMyVillage, "SearchZoomOut(2):" & $sSource, True, $DebugLog)
-If $bUpdateSharedPrefs And StringInStr($aResult[0], "zoomout") = 0 Then
+If $bUpdateSharedPrefs And StringInStr($aResult[0], "zoomou") = 0 Then
 SetLog("Disable restarting CoC or Android on zoom-out failure", $COLOR_ERROR)
 SetLog("Please clean village to allow village measuring and start bot again", $COLOR_ERROR)
 $g_bZoomoutFailureNotRestartingAnything = True
@@ -67329,60 +67326,56 @@ If Not $bToReturn Then SetLog("Train end time: " & $iTimeBeforeTrain1, $COLOR_DE
 If Not $bToReturn Then ClickP($aAway, 1, 0, "#0332")
 Return $bToReturn
 EndFunc
-Func SwitchBetweenBases($bCheckMainScreen = True, $bGoTo = Default, $bSilent = Default)
-Local $bIsOnBuilderBase, $bSwitched = False
-Local $iLoop = 0
-Do
-Local $aNVoat = decodeSingleCoord(findImageInPlace("BoatNormalVillage", $g_sImgBoat, "66,432,388,627"))
+Func SwitchBetweenBases($bCheckMainScreen = Default, $bGoToBB = Default, $bSilent = Default)
+If $bCheckMainScreen = Default Then $bCheckMainScreen = True
+Local $bSwitched = False, $iLoop = 0
+$g_hTimerOffset = 0
+For $iLoop = 0 To 4
 Local $aBBoat = decodeSingleCoord(findImageInPlace("BoatBuilderBase", $g_sImgBoatBB, "487,44,708,242"))
 Local $bBB = isOnBuilderBase(True)
+Local $aNVoat = decodeSingleCoord(findImageInPlace("BoatNormalVillage", $g_sImgBoat, "66,432,388,627"))
 Local $bNV =(Not $bBB)
-Select
-Case(UBound($aNVoat) > 1)
-SetDebugLog("SwitchBetweenBases | 0 : 0")
-If($bNV And($bGoTo = "Normal Village")) Then Return True
-If($bGoTo = Default) Or($bGoTo = "Builder Base") Then
-ClickP($aNVoat)
-$bSwitched = True
-$bIsOnBuilderBase = $bBB
-$g_bStayOnBuilderBase = True
-EndIf
-Case(UBound($aBBoat) > 1)
-SetDebugLog("SwitchBetweenBases | 0 : 1")
-If($bBB And($bGoTo = "Builder Base")) Then Return True
-If($bGoTo = Default) Or($bGoTo = "Normal Village") Then
-ClickP($aBBoat)
-$bSwitched = True
-$bIsOnBuilderBase = $bBB
-$g_bStayOnBuilderBase = False
-EndIf
-Case(QuickMIS("N1", @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Noboat\", 66, 432, 388, 627) <> "none")
-SetDebugLog("SwitchBetweenBases | 0 : 2")
+If(QuickMIS("N1", @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Noboat\", 66, 432, 388, 627) <> "none") Then
 $g_bStayOnBuilderBase = False
 Return False
+EndIf
+Select
+Case(UBound($aNVoat) > 1)
+If($bGoToBB = Default Or $bGoToBB = True) Then
+Click($aNVoat[0] + Random(0, 10, 1), $aNVoat[1] + Random(0, 10, 1))
+$g_bStayOnBuilderBase = True
+EndIf
+If($bNV And $bGoToBB = False) Then
+$g_bStayOnBuilderBase = True
+Return True
+EndIf
+Case(UBound($aBBoat) > 1)
+If($bGoToBB = Default Or $bGoToBB = False) Then
+Click($aBBoat[0] + Random(0, 10, 1), $aBBoat[1] + Random(0, 10, 1))
+$g_bStayOnBuilderBase = False
+EndIf
+If($bBB And $bGoToBB = True) Then
+$g_bStayOnBuilderBase = False
+Return True
+EndIf
 Case Else
 SetDebugLog("SwitchBetweenBases | 0 : 3")
-checkMainScreen(True, $bBB)
+If $bCheckMainScreen Then checkMainScreen(True, $bBB)
 ZoomOut()
-$iLoop += 1
-$bSwitched = False
 ContinueLoop
 EndSelect
-$iLoop += 1
+Local $bIsOnBuilderBase = $bBB
 Local $hTimerHandle = __TimerInit()
-While __TimerDiff($hTimerHandle) < 3000 And Not $bSwitched
-If _Sleep(250) Then Return
-If Not $g_bRunState Then Return
-ForceCaptureRegion()
-$bSwitched = isOnBuilderBase(True) <> $bIsOnBuilderBase
-WEnd
+Do
+$bSwitched =(isOnBuilderBase(True) <> $bIsOnBuilderBase)
+If $bSwitched Then ExitLoop
+If(Not $g_bRunState) Or _Sleep(250) Then Return
+Until(__TimerDiff($hTimerHandle) > 3000 And Not $bSwitched)
 If $bSwitched Then
 If $bCheckMainScreen Then checkMainScreen(True, Not $bIsOnBuilderBase)
 Return True
-Else
-SetLog("Failed to go to the ...", $COLOR_ERROR)
 EndIf
-Until($iLoop > 3)
+Next
 Return False
 EndFunc
 Func ProfileSwitchAccountEnabled()
@@ -69472,7 +69465,7 @@ If Not $g_bChkStartClockTowerBoost Then Return
 If Not $g_bRunState Then Return
 If $bSwitchToBB Then
 ClickP($aAway, 1, 0, "#0332")
-If Not SwitchBetweenBases(True, "Builder Base") Then Return
+If Not SwitchBetweenBases(True, True) Then Return
 EndIf
 Local $bCTBoost = True
 If $g_bChkCTBoostBlderBz Then
@@ -69510,7 +69503,7 @@ SetLog("Clock Tower boost is not available!")
 EndIf
 EndIf
 ClickP($aAway, 1, 0, "#0329")
-If $bSwitchToNV Then SwitchBetweenBases(True, "Normal Village")
+If $bSwitchToNV Then SwitchBetweenBases(True, False)
 EndFunc
 Func BuilderBaseReport($bBypass = False, $bSetLog = True)
 PureClickP($aAway, 1, 0, "#0319")
@@ -69796,7 +69789,7 @@ Global Const $sStarColorMaxLvl = Hex(0xFFFFFF, 6)
 Global Const $sStarColorLabUgReq = Hex(0x757575, 6)
 Global Const $sStarColorMaxTroop = Hex(0xFFC360, 6)
 Global Const $sStarColorBG = Hex(0xD3D3CB, 6)
-Global Const $aiStarCloseDefaultPOS[2] = [706,143]
+Global Const $aiStarCloseDefaultPOS[2] = [706, 143]
 Func StarLaboratory($bTestRun = False)
 If Not $g_bAutoStarLabUpgradeEnable Then Return
 Local $aUpgradeValue[12] = [-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -69855,7 +69848,7 @@ EndIf
 ClickP($aAway, 2, $DELAYLABORATORY4, "#0328")
 Return False
 EndIf
-For $i = 1 to UBound($g_avStarLabTroops) - 1
+For $i = 1 To UBound($g_avStarLabTroops) - 1
 $g_avStarLabTroops[$i][0] = -1
 $g_avStarLabTroops[$i][1] = -1
 Next
@@ -69977,22 +69970,22 @@ Local $iLabFinishTime = ConvertOCRTime("Lab Time", $Result, False)
 SetLog($g_avStarLabTroops[$iSelectedUpgrade][3] & " Upgrade OCR Time = " & $Result & ", $iLabFinishTime = " & $iLabFinishTime & " m", $COLOR_INFO)
 $StartTime = _NowCalc()
 If $g_bDebugSetlog Then SetDebugLog($g_avStarLabTroops[$iSelectedUpgrade][3] & " Upgrade Started @ " & $StartTime, $COLOR_SUCCESS)
-If $iLabFinishTime > 0 Then
-$g_sStarLabUpgradeTime = _DateAdd('n', Ceiling($iLabFinishTime), $StartTime)
-SetLog($g_avStarLabTroops[$iSelectedUpgrade][3] & " Upgrade Finishes @ " & $Result & " (" & $g_sStarLabUpgradeTime & ")", $COLOR_SUCCESS)
-Else
+If(Not $iLabFinishTime > 0) Then
 SetLog("Error processing upgrade time required, try again!", $COLOR_WARNING)
 Return False
 EndIf
 If Not $bTestRun Then Click(645 + $iXMoved, 530 + $g_iMidOffsetY + $iYMoved, 1, 0, "#0202")
 If _Sleep($DELAYLABUPGRADE1) Then Return
 EndIf
+If _Sleep(1000) Then Return
 If isGemOpen(True) = False Then
-If Not(_ColorCheck(_GetPixelColor(625 + $iXMoved, 218 + $g_iMidOffsetY + $iYMoved, True), Hex(0x6fbd1f, 6), 15) Or _ColorCheck(_GetPixelColor(660 + $iXMoved, 218 + $g_iMidOffsetY + $iYMoved, True), Hex(0x6fbd1f, 6), 15)) Then
+If Not(_ColorCheck(_GetPixelColor(682 + $iXMoved, 199 + $g_iMidOffsetY + $iYMoved, True), Hex(0xE2F982, 6), 25)) Then
 SetLog("Something went wrong with " & $g_avStarLabTroops[$iSelectedUpgrade][3] & " Upgrade, try again.", $COLOR_ERROR)
 ClickP($aAway, 2, $DELAYLABUPGRADE3, "#0360")
 Return False
 EndIf
+$g_sStarLabUpgradeTime = _DateAdd('n', Ceiling($iLabFinishTime), $StartTime)
+SetLog($g_avStarLabTroops[$iSelectedUpgrade][3] & " Upgrade Finishes @ " & $Result & " (" & $g_sStarLabUpgradeTime & ")", $COLOR_SUCCESS)
 SetLog("Upgrade " & $g_avStarLabTroops[$iSelectedUpgrade][3] & " in your star laboratory started with success...", $COLOR_SUCCESS)
 StarLabStatusGUIUpdate()
 PushMsg("StarLabSuccess")
@@ -70053,7 +70046,7 @@ ClickP($aAway, 1, 0, "#0931")
 SetDebugLog("Stored Star Laboratory Position is not valid.", $COLOR_ERROR)
 SetDebugLog("Found instead: " & $aResult[1] & ", " & $aResult[2] & " !", $COLOR_DEBUG)
 SetDebugLog("Village position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
-ConvertToVillagePos($g_aiStarLaboratoryPos[0],$g_aiStarLaboratoryPos[1])
+ConvertToVillagePos($g_aiStarLaboratoryPos[0], $g_aiStarLaboratoryPos[1])
 SetDebugLog("Real position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
 $g_aiStarLaboratoryPos[0] = -1
 $g_aiStarLaboratoryPos[1] = -1
@@ -70062,7 +70055,7 @@ Else
 ClickP($aAway, 1, 0, "#0932")
 SetDebugLog("Stored Star Laboratory Position is not valid.", $COLOR_ERROR)
 SetDebugLog("Village position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
-ConvertToVillagePos($g_aiStarLaboratoryPos[0],$g_aiStarLaboratoryPos[1])
+ConvertToVillagePos($g_aiStarLaboratoryPos[0], $g_aiStarLaboratoryPos[1])
 SetDebugLog("Real position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
 $g_aiStarLaboratoryPos[0] = -1
 $g_aiStarLaboratoryPos[1] = -1
@@ -70097,7 +70090,7 @@ Local $tempObbj = StringSplit($tempObbjs[$j], ",", $STR_NOCOUNT)
 If UBound($tempObbj) = 2 Then
 $g_aiStarLaboratoryPos[0] = Number($tempObbj[0]) + 9
 $g_aiStarLaboratoryPos[1] = Number($tempObbj[1]) + 15
-ConvertFromVillagePos($g_aiStarLaboratoryPos[0],$g_aiStarLaboratoryPos[1])
+ConvertFromVillagePos($g_aiStarLaboratoryPos[0], $g_aiStarLaboratoryPos[1])
 ExitLoop 2
 EndIf
 Next
@@ -70106,7 +70099,7 @@ Local $tempObbj = StringSplit($aObjectpoints, ",", $STR_NOCOUNT)
 If UBound($tempObbj) = 2 Then
 $g_aiStarLaboratoryPos[0] = Number($tempObbj[0]) + 9
 $g_aiStarLaboratoryPos[1] = Number($tempObbj[1]) + 15
-ConvertFromVillagePos($g_aiStarLaboratoryPos[0],$g_aiStarLaboratoryPos[1])
+ConvertFromVillagePos($g_aiStarLaboratoryPos[0], $g_aiStarLaboratoryPos[1])
 ExitLoop
 EndIf
 EndIf
@@ -70126,7 +70119,7 @@ ClickP($aAway, 1, 0, "#0931")
 SetDebugLog("Found Star Laboratory Position is not valid.", $COLOR_ERROR)
 SetDebugLog("Found instead: " & $aResult[1] & ", " & $aResult[2] & " !", $COLOR_DEBUG)
 SetDebugLog("Village position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
-ConvertToVillagePos($g_aiStarLaboratoryPos[0],$g_aiStarLaboratoryPos[1])
+ConvertToVillagePos($g_aiStarLaboratoryPos[0], $g_aiStarLaboratoryPos[1])
 SetDebugLog("Real position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
 $g_aiStarLaboratoryPos[0] = -1
 $g_aiStarLaboratoryPos[1] = -1
@@ -70135,7 +70128,7 @@ Else
 ClickP($aAway, 1, 0, "#0932")
 SetDebugLog("Found Star Laboratory Position is not valid.", $COLOR_ERROR)
 SetDebugLog("Village position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
-ConvertToVillagePos($g_aiStarLaboratoryPos[0],$g_aiStarLaboratoryPos[1])
+ConvertToVillagePos($g_aiStarLaboratoryPos[0], $g_aiStarLaboratoryPos[1])
 SetDebugLog("Real position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
 $g_aiStarLaboratoryPos[0] = -1
 $g_aiStarLaboratoryPos[1] = -1
@@ -74890,18 +74883,18 @@ _ArraySort($aAllResults, 0, 0, 0, 1)
 Local $iD2Check = $iDistance2check
 For $i = 0 To UBound($aAllResults) - 1
 If $i > UBound($aAllResults) - 1 Then ExitLoop
-Local $LastCoordinate[4] = [$aAllResults[$i][0], $aAllResults[$i][1], $aAllResults[$i][2], $aAllResults[$i][3]]
-SetDebugLog("Coordinate to Check: " & _ArrayToString($LastCoordinate))
+Local $aLastCoordinate[4] = [$aAllResults[$i][0], $aAllResults[$i][1], $aAllResults[$i][2], $aAllResults[$i][3]]
+SetDebugLog("Coordinate to Check: " & _ArrayToString($aLastCoordinate))
 If UBound($aAllResults) > 1 Then
 For $j = 0 To UBound($aAllResults) - 1
 If $j > UBound($aAllResults) - 1 Then ExitLoop
-Local $SingleCoordinate[4] = [$aAllResults[$j][0], $aAllResults[$j][1], $aAllResults[$j][2], $aAllResults[$j][3]]
-If $LastCoordinate[1] <> $SingleCoordinate[1] Or $LastCoordinate[2] <> $SingleCoordinate[2] Then
-If $SingleCoordinate[1] < $LastCoordinate[1] + $iD2Check And $SingleCoordinate[1] > $LastCoordinate[1] - $iD2Check Then
+Local $aSingleCoordinate[4] = [$aAllResults[$j][0], $aAllResults[$j][1], $aAllResults[$j][2], $aAllResults[$j][3]]
+If $aLastCoordinate[1] <> $aSingleCoordinate[1] Or $aLastCoordinate[2] <> $aSingleCoordinate[2] Then
+If $aSingleCoordinate[1] < $aLastCoordinate[1] + $iD2Check And $aSingleCoordinate[1] > $aLastCoordinate[1] - $iD2Check Then
 _ArrayDelete($aAllResults, $j)
 EndIf
 Else
-If $LastCoordinate[1] = $SingleCoordinate[1] And $LastCoordinate[2] = $SingleCoordinate[2] And $LastCoordinate[3] <> $SingleCoordinate[3] Then
+If $aLastCoordinate[1] = $aSingleCoordinate[1] And $aLastCoordinate[2] = $aSingleCoordinate[2] And $aLastCoordinate[3] <> $aSingleCoordinate[3] Then
 _ArrayDelete($aAllResults, $j)
 EndIf
 EndIf
@@ -74953,7 +74946,7 @@ EndIf
 Local $aResult = findMultiple($sDirectory, $sArea2Search, $sArea2Search, $iLevel, $iMaxLevel, $iQuantToMach, "objectname,objectlevel,objectpoints", $bCapture)
 If Not IsArray($aResult) Then Return -1
 Local $iCount = 0
-Local $aAllResults[0][4]
+Local $aAR[0][4]
 Local $aArrays = "", $aCoords, $aCommaCoord
 For $i = 0 To UBound($aResult) - 1
 $aArrays = $aResult[$i]
@@ -74969,35 +74962,31 @@ EndIf
 EndIf
 Local $aTmpResults[1][4] = [[$aArrays[0], Int($aCommaCoord[0]), Int($aCommaCoord[1]), Int($aArrays[1])]]
 If $iCount >= $iQuantity2Match And Not $iQuantity2Match = 0 Then ExitLoop 2
-_ArrayAdd($aAllResults, $aTmpResults)
+_ArrayAdd($aAR, $aTmpResults)
 $iCount += 1
 Next
 Next
-_ArraySort($aAllResults, 0, 0, 0, 1)
-If $iDistance2check > 0 And UBound($aAllResults) > 1 Then
-Local $D2Check = $iDistance2check
-For $i = 0 To UBound($aAllResults) - 1
-If $i > UBound($aAllResults) - 1 Then ExitLoop
-Local $LastCoordinate[4] = [$aAllResults[$i][0], $aAllResults[$i][1], $aAllResults[$i][2], $aAllResults[$i][3]]
-SetDebugLog("Coordinate to Check: " & _ArrayToString($LastCoordinate))
-If UBound($aAllResults) > 1 Then
-For $j = 0 To UBound($aAllResults) - 1
-If $j > UBound($aAllResults) - 1 Then ExitLoop
-Local $SingleCoordinate[4] = [$aAllResults[$j][0], $aAllResults[$j][1], $aAllResults[$j][2], $aAllResults[$j][3]]
-If $LastCoordinate[1] <> $SingleCoordinate[1] Or $LastCoordinate[2] <> $SingleCoordinate[2] Then
-If Abs($SingleCoordinate[1] - $LastCoordinate[1]) <= $D2Check Or Abs($SingleCoordinate[2] - $LastCoordinate[2]) <= $D2Check Then
-_ArrayDelete($aAllResults, $j)
-EndIf
+_ArraySort($aAR, 0, 0, 0, 1)
+If $iDistance2check > 0 And UBound($aAR) > 1 Then
+_ArraySort($aAR, 0, 0, 0, 1)
+Local $iD2C = $iDistance2check
+For $i = 0 To UBound($aAR) - 1
+If $i > UBound($aAR) - 1 Then ExitLoop
+Local $aLC = [$aAR[$i][0], $aAR[$i][1], $aAR[$i][2], $aAR[$i][3]]
+If UBound($aAR) > 1 Then
+For $j = 0 To UBound($aAR) - 1
+If $j > UBound($aAR) - 1 Then ExitLoop
+Local $aSC[4] = [$aAR[$j][0], $aAR[$j][1], $aAR[$j][2], $aAR[$j][3]]
+If $aLC[1] <> $aSC[1] Or $aLC[2] <> $aSC[2] Then
+If Abs(Pixel_Distance($aSC[1], $aSC[2], $aLC[1], $aLC[2])) < $iD2C Then _ArrayDelete($aAR, $j)
 Else
-If $LastCoordinate[1] = $SingleCoordinate[1] And $LastCoordinate[2] = $SingleCoordinate[2] And not($LastCoordinate[3] <> $SingleCoordinate[3] Or $LastCoordinate[0] <> $SingleCoordinate[0]) Then
-_ArrayDelete($aAllResults, $j)
-EndIf
+If $aLC[1] = $aSC[1] And $aLC[2] = $aSC[2] And($aLC[3] <> $aSC[3] Or $aLC[0] <> $aSC[0]) Then _ArrayDelete($aAR, $j)
 EndIf
 Next
 EndIf
 Next
 EndIf
-$g_aImageSearchXML =(UBound($aAllResults) > 0) ?($aAllResults) :(-1)
+$g_aImageSearchXML =(UBound($aAR) > 0) ?($aAR) :(-1)
 Return $g_aImageSearchXML
 EndFunc
 Func ClickFindMatch()
@@ -78731,13 +78720,11 @@ Func VillageOffset()
 If $g_hTimerOffset = 0 Or(TimerDiff($g_hTimerOffset) > 10000) Then
 $g_hTimerOffset = TimerInit()
 $g_iXVOffset = 0
-Local $a = QuickMIS("CX", @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\IsSmartDiamond", 197, 160, 312, 193)
-If IsArray($a) and UBound($a) = 1 Then
-Local $as = StringSplit($a[0], ",", $STR_NOCOUNT)
-If UBound($as) > 0 Then
-$g_iXVOffset = Int(197 + Int($as[0]))
+Local $iXFix = 203
+Local $a = GetVillageSize()
+If IsArray($a) And(UBound($a) > 2) Then
+$g_iXVOffset = Int($iXFix + Int($a[2]))
 SetDebugLog("- Offset fix: " & $g_iXVOffset)
-EndIf
 EndIf
 EndIf
 Return $g_iXVOffset
@@ -80574,9 +80561,9 @@ Return $iLogs
 EndFunc
 Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, $iFurMin = 5, $iFurMax = 10, $iCenterX = 450, $iCenterY = 425, $bForceCapture = True, $DebugLog = False)
 Local $aTopLeft[0][2], $aTopRight[0][2], $aBottomRight[0][2], $aBottomLeft[0][2]
-Local $aiPostFix[4] = [130, 210, 745, 630]
+Local $aiPostFix[4] = [25, 103, 815, 712]
 If $bForceCapture Then _CaptureRegion2($aiPostFix[0], $aiPostFix[1], $aiPostFix[2], $aiPostFix[3])
-Local $aRes = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sDirectory, "str", GetDiamondFromRect("25, 103, 815, 712"), "Int", $Quantity2Match, "str", GetDiamondFromRect("25, 103, 815, 712"), "Int", 0, "Int", 1000)
+Local $aRes = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sDirectory, "str", GetDiamondFromArray($aiPostFix), "Int", $Quantity2Match, "str", GetDiamondFromArray($aiPostFix), "Int", 0, "Int", 1000)
 Local $KeyValue = StringSplit($aRes[0], "|", $STR_NOCOUNT)
 Local $aPositions, $aCoords, $aCord, $level, $aCoordsM
 SetDebugLog("Detected : " & UBound($KeyValue) & " tiles")
@@ -80586,23 +80573,23 @@ $aCoords = decodeMultipleCoords($aPositions, 0, 0, 0)
 For $iCoords = 0 To UBound($aCoords) - 1
 Local $aCoordsM = $aCoords[$iCoords]
 Local $iFur = Random($iFurMin, $iFurMax, 1)
-If Int(130 + $aCoordsM[0]) < Int($iCenterX) Then
-If Int(210 + $aCoordsM[1]) < Int($iCenterY) Then
-Local $vResult[1][2] = [[(130 + $aCoordsM[0]) - $iFur,(210 + $aCoordsM[1]) - $iFur]]
+If Int($aiPostFix[0] + $aCoordsM[0]) < Int($iCenterX) Then
+If Int($aiPostFix[1] + $aCoordsM[1]) < Int($iCenterY) Then
+Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) - $iFur,($aiPostFix[1] + $aCoordsM[1]) - $iFur]]
 Local $P = _GetPixelColor($vResult[0][0], $vResult[0][1], True)
 If _ColorCheck($P, Hex(0x447063, 6), 25) Then _ArrayAdd($aTopLeft, $vResult)
 Else
-Local $vResult[1][2] = [[(130 + $aCoordsM[0]) - $iFur,(210 + $aCoordsM[1]) + $iFur]]
+Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) - $iFur,($aiPostFix[1] + $aCoordsM[1]) + $iFur]]
 Local $P = _GetPixelColor($vResult[0][0], $vResult[0][1], True)
 If _ColorCheck($P, Hex(0x447063, 6), 25) Then _ArrayAdd($aBottomLeft, $vResult)
 EndIf
 Else
-If Int(210 + $aCoordsM[1]) < Int($iCenterY) Then
-Local $vResult[1][2] = [[(130 + $aCoordsM[0]) + $iFur,(210 + $aCoordsM[1]) - $iFur]]
+If Int($aiPostFix[1] + $aCoordsM[1]) < Int($iCenterY) Then
+Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) + $iFur,($aiPostFix[1] + $aCoordsM[1]) - $iFur]]
 Local $P = _GetPixelColor($vResult[0][0], $vResult[0][1], True)
 If _ColorCheck($P, Hex(0x447063, 6), 25) Then _ArrayAdd($aTopRight, $vResult)
 Else
-Local $vResult[1][2] = [[(130 + $aCoordsM[0]) + $iFur,(210 + $aCoordsM[1]) + $iFur]]
+Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) + $iFur,($aiPostFix[1] + $aCoordsM[1]) + $iFur]]
 Local $P = _GetPixelColor($vResult[0][0], $vResult[0][1], True)
 If _ColorCheck($P, Hex(0x447063, 6), 25) Then _ArrayAdd($aBottomRight, $vResult)
 EndIf
@@ -80764,8 +80751,7 @@ EndIf
 If $g_bDebugSetlog = True Then SetDebugLog("Builder Base options not enable, Skipping Builder Base routines!", $COLOR_DEBUG)
 Return False
 EndIf
-$g_bStayOnBuilderBase = True
-If not SwitchBetweenBases(True, "Builder Base") Then Return False
+If not SwitchBetweenBases(True, True) Then Return False
 SetLog("Builder loop starts.", $COLOR_INFO)
 If randomSleep(1000) Then Return
 If $g_bRestart Or(Not $g_bRunState) Then Return
@@ -80787,7 +80773,7 @@ For $iIndex In $aRndFuncList
 RunBBFuncs($iIndex)
 If $g_bRestart Or(Not $g_bRunState) Then Return
 Next
-If Not $g_bChkPlayBBOnly Then SwitchBetweenBases(True, "Normal Village")
+If Not $g_bChkPlayBBOnly Then SwitchBetweenBases(True, False)
 If Not $g_bRunState Then Return
 If _Sleep($DELAYRUNBOT1 * 15) Then Return
 SetLog("Builder Base Idle Ends", $COLOR_INFO)
@@ -80795,7 +80781,6 @@ If ProfileSwitchAccountEnabled() Then Return
 EndFunc
 Func RunBBFuncs($sBBFunc, $bTestRun = False)
 BuilderBaseReport(False, False)
-RestAttacksInBB(False)
 If $g_iFreeBuilderCountBB <> 0 Then BuilderBaseZoomOut()
 Switch $sBBFunc
 Case "ClockTower"
@@ -80805,14 +80790,12 @@ StartClockTowerBoost()
 CleanBBYard()
 Case "AttackBB"
 For $i = 0 To Random(3,5,1)
-RestAttacksInBB()
+If Not RestAttacksInBB() Then ExitLoop
 If checkObstacles(True) Then
 SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
 ExitLoop
 EndIf
-If RestAttacksInBB() = True Then BuilderBaseAttack($bTestRun)
-RestAttacksInBB()
-If($g_iAvailableAttacksBB = 0) Then ExitLoop
+BuilderBaseAttack($bTestRun)
 Next
 Case "ElixirUpdate"
 StarLaboratory()
@@ -85546,9 +85529,7 @@ UpgradeWall()
 _Sleep($DELAYRUNBOT3)
 Case "BuilderBase"
 If BitAND(Not BitOR($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
-$g_bStayOnBuilderBase = True
 runBuilderBase()
-$g_bStayOnBuilderBase = False
 _Sleep($DELAYRUNBOT3)
 Case "CollectFreeMagicItems"
 If BitAND(Not BitOR($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return

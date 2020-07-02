@@ -1003,7 +1003,7 @@ Func btnRunFunction()
 	Local $saExecResult = Execute($sFunc)
 	Setlog("Time Execution : " & TimerDiff($hTimer))
 
-	If $saExecResult = "" And @error <> 0 Then
+	If StringIsSpace($saExecResult) And @error <> 0 Then
 		Setlog("Result : Error", $COLOR_ERROR)
 	ElseIf IsArray($saExecResult) Then
 		Setlog("Result (IsArray) : " & _ArrayToString($saExecResult, ","), $COLOR_INFO)

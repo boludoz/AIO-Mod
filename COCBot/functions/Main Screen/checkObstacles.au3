@@ -45,21 +45,40 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		If checkObstacles_Network() Then Return True
 		If checkObstacles_GfxError() Then Return True
 	EndIf
-	Local $bIsOnBuilderIsland = isOnBuilderBase()
-	Local $bIsOnMainVillage = isOnMainVillage()
-	If $bBuilderBase <> $bIsOnBuilderIsland And ($bIsOnBuilderIsland Or $bIsOnBuilderIsland <> $bIsOnMainVillage) Then
-		If $bIsOnBuilderIsland Then
-			SetLog("Detected Builder Base, trying to switch back to Main Village")
-		Else
-			SetLog("Detected Main Village, trying to switch back to Builder Base")
-		EndIf
-		If SwitchBetweenBases() Then
-			$g_bMinorObstacle = True
-			If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-			Return False
-		EndIf
-	EndIf
-	
+
+	#Region - Custom - Team AIO Mod++
+	Local $iDo = 0
+	Do
+		Local $aImgX = FindMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Obstacles")
+		If Not IsArray($aImgX) And Not ((UBound($aImgX) - 1) > 1) Then ContinueLoop
+		For $i = 0 To UBound($aImgX) - 1
+			If (StringInStr($aImgX[$i][0], "X") > 0) Then
+				Select
+					; Shop X | Shield X.
+					Case (793 < $aImgX[$i][1] And 14 < $aImgX[$i][2] And 850 > $aImgX[$i][1] And 65 > $aImgX[$i][2])
+						Click($aImgX[$i][1] + Random(0, 5, 1), $aImgX[$i][2] + Random(0, 5, 1))
+						; Profile X | Trophy X.
+					Case (801 < $aImgX[$i][1] And 48 < $aImgX[$i][2] And 855 > $aImgX[$i][1] And 102 > $aImgX[$i][2])
+						Click($aImgX[$i][1] + Random(0, 5, 1), $aImgX[$i][2] + Random(0, 5, 1))
+						; Army X.
+					Case (801 < $aImgX[$i][1] And 99 < $aImgX[$i][2] And 855 > $aImgX[$i][1] And 155 > $aImgX[$i][2])
+						Click($aImgX[$i][1] + Random(0, 5, 1), $aImgX[$i][2] + Random(0, 5, 1))
+				EndSelect
+			ElseIf (StringInStr($aImgX[$i][0], "OK") > 0) Then
+				Select
+					; Season end.
+					Case (342 < $aImgX[$i][1] And 485 < $aImgX[$i][2] And 506 > $aImgX[$i][1] And 560 > $aImgX[$i][2])
+						ClickP($aAway)
+						; Season challenge.
+					Case (310 < $aImgX[$i][1] And 532 < $aImgX[$i][2] And 530 > $aImgX[$i][1] And 600 > $aImgX[$i][2])
+						ClickP($aAway)
+				EndSelect
+			EndIf
+		Next
+		$iDo += 1
+	Until Not IsArray($aImgX) Or Not ((UBound($aImgX) - 1) > 1) Or ($iDo > 3)
+	#EndRegion - Custom - Team AIO Mod++
+
 	If $g_sAndroidGameDistributor <> $g_sGoogle Then ; close an ads window for non google apks
 		Local $aXButton = FindAdsXButton()
 		If IsArray($aXButton) Then
@@ -68,6 +87,21 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 			$g_bMinorObstacle = True
 			If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 			Return False
+		EndIf
+	EndIf
+	
+	Local $bIsOnBuilderIsland = isOnBuilderBase()
+	Local $bIsOnMainVillage = isOnMainVillage()
+	If $bBuilderBase <> $bIsOnBuilderIsland And ($bIsOnBuilderIsland Or $bIsOnBuilderIsland <> $bIsOnMainVillage) Then
+		If $bIsOnBuilderIsland Then
+			SetLog("Detected Builder Base, trying to switch back to Main Village.", $COLOR_INFO)
+		Else
+			SetLog("Detected Main Village, trying to switch back to Builder Base.", $COLOR_INFO)
+		EndIf
+		If SwitchBetweenBases(False) Then ; Custom - Team AIO Mod++
+			;$g_bMinorObstacle = True
+			;If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+			;Return False
 		EndIf
 	EndIf
 
@@ -426,24 +460,24 @@ Func UpdateGame()
 	OpenPlayStoreGame()
 	#cs Finish that when time permits ;)
 		; wait 1 Minute to open
-
+	
 		; Check for Update button
 		SetLog("Play Store Game update available"
-
+	
 		; Check for Open button
 		SetLog("Play Store Game update not required"
 		Return Default
-
+	
 		; press update button
-
+	
 		; press accept button
-
+	
 		; track progress, area 17,317 - 805,335
-
+	
 		; Check for Open button
 		SetLog("Game updated"
 		Return True
-
+	
 		SetLog("Game updated failed"
 		Return False
 	#ce Finish that when time permits ;)

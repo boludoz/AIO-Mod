@@ -1242,11 +1242,7 @@ Func __RunFunction($action)
 			#Region Team AIO Mod++
 		Case "BuilderBase"
 			If BitAND(Not BitOR($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
-			
-			$g_bStayOnBuilderBase = True
 			runBuilderBase()
-			$g_bStayOnBuilderBase = False
-			
 			_Sleep($DELAYRUNBOT3)
 			#EndRegion Team AIO Mod++
 		Case "CollectFreeMagicItems"

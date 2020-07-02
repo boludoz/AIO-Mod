@@ -19,7 +19,7 @@ Global Const $sStarColorMaxLvl = Hex(0xFFFFFF, 6) ; relative location: 76,76 & 7
 Global Const $sStarColorLabUgReq = Hex(0x757575, 6) ; relative location: 0,20 or 93,20 lab upgrade required, Look for Gray pixel inside left border
 Global Const $sStarColorMaxTroop = Hex(0xFFC360, 6) ; relative location: 23,60; troop already MAX
 Global Const $sStarColorBG = Hex(0xD3D3CB, 6) ; background color in laboratory
-Global Const $aiStarCloseDefaultPOS[2] = [706,143]
+Global Const $aiStarCloseDefaultPOS[2] = [706, 143]
 
 Func TestStarLaboratory()
 	Local $bWasRunState = $g_bRunState
@@ -33,7 +33,7 @@ Func TestStarLaboratory()
 	$g_sStarLabUpgradeTime = $sWasStarLabUpgradeTime
 	$g_bAutoStarLabUpgradeEnable = $bWasStarLabUpgradeEnable
 	Return $Result
-EndFunc
+EndFunc   ;==>TestStarLaboratory
 
 Func StarLaboratory($bTestRun = False)
 
@@ -109,7 +109,7 @@ Func StarLaboratory($bTestRun = False)
 	EndIf
 
 	; reset lab troop positions to default
-	For $i = 1 to UBound($g_avStarLabTroops) - 1
+	For $i = 1 To UBound($g_avStarLabTroops) - 1
 		$g_avStarLabTroops[$i][0] = -1
 		$g_avStarLabTroops[$i][1] = -1
 	Next
@@ -195,7 +195,7 @@ Func StarLaboratory($bTestRun = False)
 	ClickP($aAway, 2, $DELAYLABORATORY4, "#0359")
 	Return False
 
-EndFunc   ;==>Laboratory
+EndFunc   ;==>StarLaboratory
 ;
 Func StarLabUpgrade($iSelectedUpgrade, $iXMoved = 0, $iYMoved = 0, $bTestRun = False)
 	Local $StartTime, $EndTime, $EndPeriod, $Result, $TimeAdd = 0
@@ -242,7 +242,8 @@ Func StarLabUpgrade($iSelectedUpgrade, $iXMoved = 0, $iYMoved = 0, $bTestRun = F
 				ClickP($aAway, 2, $DELAYLABUPGRADE3, "#0333")
 				Return False
 			EndIf
-
+			
+			#Region - Custom - Team AIO Mod++
 			; triple check for upgrade in process by gray upgrade button
 			If _ColorCheck(_GetPixelColor(625 + $iXMoved, 250 + $g_iMidOffsetY + $iYMoved, True), Hex(0x848484, 6), 20) And _ColorCheck(_GetPixelColor(660 + $iXMoved, 250 + $g_iMidOffsetY + $iYMoved, True), Hex(0x848484, 6), 20) Then
 				SetLog("Upgrade in progress, waiting for completion of other troops", $COLOR_WARNING)
@@ -256,10 +257,7 @@ Func StarLabUpgrade($iSelectedUpgrade, $iXMoved = 0, $iYMoved = 0, $bTestRun = F
 				SetLog($g_avStarLabTroops[$iSelectedUpgrade][3] & " Upgrade OCR Time = " & $Result & ", $iLabFinishTime = " & $iLabFinishTime & " m", $COLOR_INFO)
 				$StartTime = _NowCalc() ; what is date:time now
 				If $g_bDebugSetlog Then SetDebugLog($g_avStarLabTroops[$iSelectedUpgrade][3] & " Upgrade Started @ " & $StartTime, $COLOR_SUCCESS)
-				If $iLabFinishTime > 0 Then
-					$g_sStarLabUpgradeTime = _DateAdd('n', Ceiling($iLabFinishTime), $StartTime)
-					SetLog($g_avStarLabTroops[$iSelectedUpgrade][3] & " Upgrade Finishes @ " & $Result & " (" & $g_sStarLabUpgradeTime & ")", $COLOR_SUCCESS)
-				Else
+				If (Not $iLabFinishTime > 0) Then
 					SetLog("Error processing upgrade time required, try again!", $COLOR_WARNING)
 					Return False
 				EndIf
@@ -267,14 +265,18 @@ Func StarLabUpgrade($iSelectedUpgrade, $iXMoved = 0, $iYMoved = 0, $bTestRun = F
 				If Not $bTestRun Then Click(645 + $iXMoved, 530 + $g_iMidOffsetY + $iYMoved, 1, 0, "#0202") ; Everything is good - Click the upgrade button
 				If _Sleep($DELAYLABUPGRADE1) Then Return
 			EndIf
-
+			If _Sleep(1000) Then Return
 			If isGemOpen(True) = False Then ; check for gem window
 				; check for green button to use gems to finish upgrade, checking if upgrade actually started
-				If Not (_ColorCheck(_GetPixelColor(625 + $iXMoved, 218 + $g_iMidOffsetY + $iYMoved, True), Hex(0x6fbd1f, 6), 15) Or _ColorCheck(_GetPixelColor(660 + $iXMoved, 218 + $g_iMidOffsetY + $iYMoved, True), Hex(0x6fbd1f, 6), 15)) Then
+				If Not (_ColorCheck(_GetPixelColor(682 + $iXMoved, 199 + $g_iMidOffsetY + $iYMoved, True), Hex(0xE2F982, 6), 25)) Then
 					SetLog("Something went wrong with " & $g_avStarLabTroops[$iSelectedUpgrade][3] & " Upgrade, try again.", $COLOR_ERROR)
 					ClickP($aAway, 2, $DELAYLABUPGRADE3, "#0360")
 					Return False
 				EndIf
+				
+				$g_sStarLabUpgradeTime = _DateAdd('n', Ceiling($iLabFinishTime), $StartTime)
+				SetLog($g_avStarLabTroops[$iSelectedUpgrade][3] & " Upgrade Finishes @ " & $Result & " (" & $g_sStarLabUpgradeTime & ")", $COLOR_SUCCESS)
+				
 				SetLog("Upgrade " & $g_avStarLabTroops[$iSelectedUpgrade][3] & " in your star laboratory started with success...", $COLOR_SUCCESS)
 				StarLabStatusGUIUpdate()
 				PushMsg("StarLabSuccess")
@@ -286,6 +288,7 @@ Func StarLabUpgrade($iSelectedUpgrade, $iXMoved = 0, $iYMoved = 0, $bTestRun = F
 			Else
 				SetLog("Oops, Gems required for " & $g_avStarLabTroops[$iSelectedUpgrade][3] & " Upgrade, try again.", $COLOR_ERROR)
 			EndIf
+			#EndRegion - Custom - Team AIO Mod++
 	EndSelect
 	ClickP($aAway, 2, $DELAYLABUPGRADE3, "#0205")
 	Return False
@@ -297,7 +300,7 @@ Func StarDebugIconSave($sTxtName = "Unknown", $iLeft = 0, $iTop = 0) ; Debug Cod
 	Local $iIconLength = 94
 	Local $Date = @MDAY & "_" & @MON & "_" & @YEAR
 	Local $Time = @HOUR & "_" & @MIN & "_" & @SEC
-	Local $sName =  $g_sProfileTempDebugPath & "StarLabUpgrade\" & $sTxtName & "_" & $Date & "_" & $Time & ".png"
+	Local $sName = $g_sProfileTempDebugPath & "StarLabUpgrade\" & $sTxtName & "_" & $Date & "_" & $Time & ".png"
 	DirCreate($g_sProfileTempDebugPath & "StarLabUpgrade\")
 	ForceCaptureRegion()
 	_CaptureRegion($iLeft, $iTop, $iLeft + $iIconLength, $iTop + $iIconLength)
@@ -344,7 +347,7 @@ Func LocateStarLab()
 				SetDebugLog("Stored Star Laboratory Position is not valid.", $COLOR_ERROR)
 				SetDebugLog("Found instead: " & $aResult[1] & ", " & $aResult[2] & " !", $COLOR_DEBUG)
 				SetDebugLog("Village position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
-				ConvertToVillagePos($g_aiStarLaboratoryPos[0],$g_aiStarLaboratoryPos[1])
+				ConvertToVillagePos($g_aiStarLaboratoryPos[0], $g_aiStarLaboratoryPos[1])
 				SetDebugLog("Real position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
 				$g_aiStarLaboratoryPos[0] = -1
 				$g_aiStarLaboratoryPos[1] = -1
@@ -353,7 +356,7 @@ Func LocateStarLab()
 			ClickP($aAway, 1, 0, "#0932") ;Click Away
 			SetDebugLog("Stored Star Laboratory Position is not valid.", $COLOR_ERROR)
 			SetDebugLog("Village position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
-			ConvertToVillagePos($g_aiStarLaboratoryPos[0],$g_aiStarLaboratoryPos[1])
+			ConvertToVillagePos($g_aiStarLaboratoryPos[0], $g_aiStarLaboratoryPos[1])
 			SetDebugLog("Real position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
 			$g_aiStarLaboratoryPos[0] = -1
 			$g_aiStarLaboratoryPos[1] = -1
@@ -393,7 +396,7 @@ Func LocateStarLab()
 					If UBound($tempObbj) = 2 Then
 						$g_aiStarLaboratoryPos[0] = Number($tempObbj[0]) + 9
 						$g_aiStarLaboratoryPos[1] = Number($tempObbj[1]) + 15
-						ConvertFromVillagePos($g_aiStarLaboratoryPos[0],$g_aiStarLaboratoryPos[1])
+						ConvertFromVillagePos($g_aiStarLaboratoryPos[0], $g_aiStarLaboratoryPos[1])
 						ExitLoop 2
 					EndIf
 				Next
@@ -403,7 +406,7 @@ Func LocateStarLab()
 				If UBound($tempObbj) = 2 Then
 					$g_aiStarLaboratoryPos[0] = Number($tempObbj[0]) + 9
 					$g_aiStarLaboratoryPos[1] = Number($tempObbj[1]) + 15
-					ConvertFromVillagePos($g_aiStarLaboratoryPos[0],$g_aiStarLaboratoryPos[1])
+					ConvertFromVillagePos($g_aiStarLaboratoryPos[0], $g_aiStarLaboratoryPos[1])
 					ExitLoop
 				EndIf
 			EndIf
@@ -425,7 +428,7 @@ Func LocateStarLab()
 				SetDebugLog("Found Star Laboratory Position is not valid.", $COLOR_ERROR)
 				SetDebugLog("Found instead: " & $aResult[1] & ", " & $aResult[2] & " !", $COLOR_DEBUG)
 				SetDebugLog("Village position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
-				ConvertToVillagePos($g_aiStarLaboratoryPos[0],$g_aiStarLaboratoryPos[1])
+				ConvertToVillagePos($g_aiStarLaboratoryPos[0], $g_aiStarLaboratoryPos[1])
 				SetDebugLog("Real position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
 				$g_aiStarLaboratoryPos[0] = -1
 				$g_aiStarLaboratoryPos[1] = -1
@@ -434,7 +437,7 @@ Func LocateStarLab()
 			ClickP($aAway, 1, 0, "#0932") ;Click Away
 			SetDebugLog("Found Star Laboratory Position is not valid.", $COLOR_ERROR)
 			SetDebugLog("Village position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
-			ConvertToVillagePos($g_aiStarLaboratoryPos[0],$g_aiStarLaboratoryPos[1])
+			ConvertToVillagePos($g_aiStarLaboratoryPos[0], $g_aiStarLaboratoryPos[1])
 			SetDebugLog("Real position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
 			$g_aiStarLaboratoryPos[0] = -1
 			$g_aiStarLaboratoryPos[1] = -1
@@ -443,4 +446,4 @@ Func LocateStarLab()
 
 	SetLog("Can not find Star Laboratory.", $COLOR_ERROR)
 	Return False
-EndFunc   ;==>LocateStarLab()
+EndFunc   ;==>LocateStarLab

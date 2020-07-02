@@ -99,12 +99,11 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 	
 	Local $aTopLeft[0][2], $aTopRight[0][2], $aBottomRight[0][2], $aBottomLeft[0][2]
 
-	Local $aiPostFix[4] = [130, 210, 745, 630]
-	Local $aResult[0][4]
+	Local $aiPostFix[4] = [25, 103, 815, 712]
 
 	If $bForceCapture Then _CaptureRegion2($aiPostFix[0], $aiPostFix[1], $aiPostFix[2], $aiPostFix[3])
 
-	Local $aRes = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sDirectory, "str", GetDiamondFromRect("25, 103, 815, 712"), "Int", $Quantity2Match, "str", GetDiamondFromRect("25, 103, 815, 712"), "Int", 0, "Int", 1000)
+	Local $aRes = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sDirectory, "str", GetDiamondFromArray($aiPostFix), "Int", $Quantity2Match, "str", GetDiamondFromArray($aiPostFix), "Int", 0, "Int", 1000)
 	Local $KeyValue = StringSplit($aRes[0], "|", $STR_NOCOUNT)
 	Local $Name = ""
 	Local $aPositions, $aCoords, $aCord, $level, $aCoordsM
@@ -118,23 +117,23 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 			
 			Local $iFur = Random($iFurMin, $iFurMax, 1)
 
-			If Int(130 + $aCoordsM[0]) < Int($iCenterX) Then
-				If Int(210 + $aCoordsM[1]) < Int($iCenterY) Then
-					Local $vResult[1][2] = [[(130 + $aCoordsM[0]) - $iFur, (210 + $aCoordsM[1]) - $iFur]]
+			If Int($aiPostFix[0] + $aCoordsM[0]) < Int($iCenterX) Then
+				If Int($aiPostFix[1] + $aCoordsM[1]) < Int($iCenterY) Then
+					Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) - $iFur, ($aiPostFix[1] + $aCoordsM[1]) - $iFur]]
 					Local $P = _GetPixelColor($vResult[0][0], $vResult[0][1], True)
 					If _ColorCheck($P, Hex(0x447063, 6), 25) Then _ArrayAdd($aTopLeft, $vResult)
 				Else
-					Local $vResult[1][2] = [[(130 + $aCoordsM[0]) - $iFur, (210 + $aCoordsM[1]) + $iFur]]
+					Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) - $iFur, ($aiPostFix[1] + $aCoordsM[1]) + $iFur]]
 					Local $P = _GetPixelColor($vResult[0][0], $vResult[0][1], True)
 					If _ColorCheck($P, Hex(0x447063, 6), 25) Then _ArrayAdd($aBottomLeft, $vResult)
 				EndIf
 			Else
-				If Int(210 + $aCoordsM[1]) < Int($iCenterY) Then
-					Local $vResult[1][2] = [[(130 + $aCoordsM[0]) + $iFur, (210 + $aCoordsM[1]) - $iFur]]
+				If Int($aiPostFix[1] + $aCoordsM[1]) < Int($iCenterY) Then
+					Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) + $iFur, ($aiPostFix[1] + $aCoordsM[1]) - $iFur]]
 					Local $P = _GetPixelColor($vResult[0][0], $vResult[0][1], True)
 					If _ColorCheck($P, Hex(0x447063, 6), 25) Then _ArrayAdd($aTopRight, $vResult)
 				Else
-					Local $vResult[1][2] = [[(130 + $aCoordsM[0]) + $iFur, (210 + $aCoordsM[1]) + $iFur]]
+					Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) + $iFur, ($aiPostFix[1] + $aCoordsM[1]) + $iFur]]
 					Local $P = _GetPixelColor($vResult[0][0], $vResult[0][1], True)
 					If _ColorCheck($P, Hex(0x447063, 6), 25) Then _ArrayAdd($aBottomRight, $vResult)
 				EndIf

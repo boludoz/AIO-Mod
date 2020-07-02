@@ -50,23 +50,23 @@ Func _ImageSearchXML($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "0,
 		; check if is a double Detection, near in 10px
 		For $i = 0 To UBound($aAllResults) - 1
 			If $i > UBound($aAllResults) - 1 Then ExitLoop
-			Local $LastCoordinate[4] = [$aAllResults[$i][0], $aAllResults[$i][1], $aAllResults[$i][2], $aAllResults[$i][3]]
-			SetDebugLog("Coordinate to Check: " & _ArrayToString($LastCoordinate))
+			Local $aLastCoordinate[4] = [$aAllResults[$i][0], $aAllResults[$i][1], $aAllResults[$i][2], $aAllResults[$i][3]]
+			SetDebugLog("Coordinate to Check: " & _ArrayToString($aLastCoordinate))
 			If UBound($aAllResults) > 1 Then
 				For $j = 0 To UBound($aAllResults) - 1
 					If $j > UBound($aAllResults) - 1 Then ExitLoop
 					; SetDebugLog("$j: " & $j)
 					; SetDebugLog("UBound($aAllResults) -1: " & UBound($aAllResults) - 1)
-					Local $SingleCoordinate[4] = [$aAllResults[$j][0], $aAllResults[$j][1], $aAllResults[$j][2], $aAllResults[$j][3]]
-					; SetDebugLog(" - Comparing with: " & _ArrayToString($SingleCoordinate))
-					If $LastCoordinate[1] <> $SingleCoordinate[1] Or $LastCoordinate[2] <> $SingleCoordinate[2] Then
-						If $SingleCoordinate[1] < $LastCoordinate[1] + $iD2Check And $SingleCoordinate[1] > $LastCoordinate[1] - $iD2Check Then
-							; SetDebugLog(" - removed : " & _ArrayToString($SingleCoordinate))
+					Local $aSingleCoordinate[4] = [$aAllResults[$j][0], $aAllResults[$j][1], $aAllResults[$j][2], $aAllResults[$j][3]]
+					; SetDebugLog(" - Comparing with: " & _ArrayToString($aSingleCoordinate))
+					If $aLastCoordinate[1] <> $aSingleCoordinate[1] Or $aLastCoordinate[2] <> $aSingleCoordinate[2] Then
+						If $aSingleCoordinate[1] < $aLastCoordinate[1] + $iD2Check And $aSingleCoordinate[1] > $aLastCoordinate[1] - $iD2Check Then
+							; SetDebugLog(" - removed : " & _ArrayToString($aSingleCoordinate))
 							_ArrayDelete($aAllResults, $j)
 						EndIf
 					Else
-						If $LastCoordinate[1] = $SingleCoordinate[1] And $LastCoordinate[2] = $SingleCoordinate[2] And $LastCoordinate[3] <> $SingleCoordinate[3] Then
-							; SetDebugLog(" - removed equal level : " & _ArrayToString($SingleCoordinate))
+						If $aLastCoordinate[1] = $aSingleCoordinate[1] And $aLastCoordinate[2] = $aSingleCoordinate[2] And $aLastCoordinate[3] <> $aSingleCoordinate[3] Then
+							; SetDebugLog(" - removed equal level : " & _ArrayToString($aSingleCoordinate))
 							_ArrayDelete($aAllResults, $j)
 						EndIf
 					EndIf
@@ -128,7 +128,7 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 	Local $iCount = 0
 
 	; Result [X][0] = NAME , [x][1] = Xaxis , [x][2] = Yaxis , [x][3] = Level
-	Local $aAllResults[0][4]
+	Local $aAR[0][4]
 
 	Local $aArrays = "", $aCoords, $aCommaCoord
 
@@ -149,43 +149,39 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 			; Inspired in Chilly-chill
 			Local $aTmpResults[1][4] = [[$aArrays[0], Int($aCommaCoord[0]), Int($aCommaCoord[1]), Int($aArrays[1])]]
 			If $iCount >= $iQuantity2Match And Not $iQuantity2Match = 0 Then ExitLoop 2
-			_ArrayAdd($aAllResults, $aTmpResults)
+			_ArrayAdd($aAR, $aTmpResults)
 			$iCount += 1
 		Next
 	Next
 	
 	; Sort by X axis
-	_ArraySort($aAllResults, 0, 0, 0, 1)
-	If $iDistance2check > 0 And UBound($aAllResults) > 1 Then
-		; Distance in pixels to check if is a duplicated detection , for deploy point will be 5
-		Local $D2Check = $iDistance2check
+	_ArraySort($aAR, 0, 0, 0, 1)
+	If $iDistance2check > 0 And UBound($aAR) > 1 Then
+		; Sort by X axis
+		_ArraySort($aAR, 0, 0, 0, 1)
 
-		; check if is a double Detection, near in 10px
-		Local $Dime = 0
-		For $i = 0 To UBound($aAllResults) - 1
-			If $i > UBound($aAllResults) - 1 Then ExitLoop
-			Local $LastCoordinate[4] = [$aAllResults[$i][0], $aAllResults[$i][1], $aAllResults[$i][2], $aAllResults[$i][3]]
-			SetDebugLog("Coordinate to Check: " & _ArrayToString($LastCoordinate))
-			If UBound($aAllResults) > 1 Then
-				For $j = 0 To UBound($aAllResults) - 1
-					If $j > UBound($aAllResults) - 1 Then ExitLoop
-					Local $SingleCoordinate[4] = [$aAllResults[$j][0], $aAllResults[$j][1], $aAllResults[$j][2], $aAllResults[$j][3]]
-					If $LastCoordinate[1] <> $SingleCoordinate[1] Or $LastCoordinate[2] <> $SingleCoordinate[2] Then
-						If Abs($SingleCoordinate[1] - $LastCoordinate[1]) <= $D2Check Or _
-								Abs($SingleCoordinate[2] - $LastCoordinate[2]) <= $D2Check Then
-							_ArrayDelete($aAllResults, $j)
-						EndIf
+		; Distance in pixels to check if is a duplicated detection , for deploy point will be 5
+		Local $iD2C = $iDistance2check
+
+		; check if is a double Detection.
+		For $i = 0 To UBound($aAR) - 1
+			If $i > UBound($aAR) - 1 Then ExitLoop
+			Local $aLC = [$aAR[$i][0], $aAR[$i][1], $aAR[$i][2], $aAR[$i][3]]
+			If UBound($aAR) > 1 Then
+				For $j = 0 To UBound($aAR) - 1
+					If $j > UBound($aAR) - 1 Then ExitLoop
+					Local $aSC[4] = [$aAR[$j][0], $aAR[$j][1], $aAR[$j][2], $aAR[$j][3]]
+					If $aLC[1] <> $aSC[1] Or $aLC[2] <> $aSC[2] Then
+						If Abs(Pixel_Distance($aSC[1], $aSC[2], $aLC[1], $aLC[2])) < $iD2C Then _ArrayDelete($aAR, $j)
 					Else
-						If $LastCoordinate[1] = $SingleCoordinate[1] And $LastCoordinate[2] = $SingleCoordinate[2] And not ($LastCoordinate[3] <> $SingleCoordinate[3] Or $LastCoordinate[0] <> $SingleCoordinate[0]) Then
-							_ArrayDelete($aAllResults, $j)
-						EndIf
+						If $aLC[1] = $aSC[1] And $aLC[2] = $aSC[2] And ($aLC[3] <> $aSC[3] Or $aLC[0] <> $aSC[0]) Then _ArrayDelete($aAR, $j)
 					EndIf
 				Next
 			EndIf
 		Next
 	EndIf
 	
-	$g_aImageSearchXML = (UBound($aAllResults) > 0) ? ($aAllResults) : (-1)
+	$g_aImageSearchXML = (UBound($aAR) > 0) ? ($aAR) : (-1)
 	Return $g_aImageSearchXML
 EndFunc   ;==>findMultipleQuick
 

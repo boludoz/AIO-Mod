@@ -41,10 +41,7 @@ Func runBuilderBase($bTestRun = False)
 		Return False
 	EndIf
 
-	; Check IF is Necessary run the Builder Base IDLE loop
-	$g_bStayOnBuilderBase = True
-
-	If not SwitchBetweenBases(True, "Builder Base") Then Return False
+	If not SwitchBetweenBases(True, True) Then Return False
 
 	SetLog("Builder loop starts.", $COLOR_INFO)
 	If randomSleep(1000) Then Return
@@ -81,7 +78,7 @@ Func runBuilderBase($bTestRun = False)
 	; ----------
 
 	; switch back to normal village
-	If Not $g_bChkPlayBBOnly Then SwitchBetweenBases(True, "Normal Village")
+	If Not $g_bChkPlayBBOnly Then SwitchBetweenBases(True, False)
 
 	If Not $g_bRunState Then Return
 
@@ -97,13 +94,13 @@ Func RunBBFuncs($sBBFunc, $bTestRun = False)
 	
 	; Silent report.
 	BuilderBaseReport(False, False)
-	RestAttacksInBB(False)
-
+	
 	; Zoomout
 	If $g_iFreeBuilderCountBB <> 0 Then BuilderBaseZoomOut()
 
 	Switch $sBBFunc
 		Case "ClockTower"
+		
 			;It will not be necessary if there are no constructors.
 			If $g_iFreeBuilderCountBB = 0 Then Return
 
@@ -117,11 +114,13 @@ Func RunBBFuncs($sBBFunc, $bTestRun = False)
 			CleanBBYard()
 
 		Case "AttackBB"
+			
 			; New logic to add speed to the attack.
 			For $i = 0 To Random(3,5,1)
-				; Builder base Report
-				RestAttacksInBB()
-
+				
+				; Builder base Report and get out of the useless loop.
+				If Not RestAttacksInBB() Then ExitLoop
+				
 				; Check obstacles
 				If checkObstacles(True) Then
 					SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
@@ -129,14 +128,12 @@ Func RunBBFuncs($sBBFunc, $bTestRun = False)
 				EndIf
 
 				; Attack
-				If RestAttacksInBB() = True Then BuilderBaseAttack($bTestRun)
-				RestAttacksInBB()
-
-				; Get out of the useless loop.
-				If ($g_iAvailableAttacksBB = 0) Then ExitLoop
+				BuilderBaseAttack($bTestRun)
+				
 			Next
 
 		Case "ElixirUpdate"
+		
 			; ELIXIR -----------
 			; It tends to be a little better, upgrade the troops first.
 			StarLaboratory()
@@ -152,6 +149,7 @@ Func RunBBFuncs($sBBFunc, $bTestRun = False)
 			; ------------------
 
 		Case "GoldUpdate"
+		
 			;It will not be necessary if there are no constructors.
 			If $g_iFreeBuilderCountBB = 0 Then Return
 
@@ -162,6 +160,7 @@ Func RunBBFuncs($sBBFunc, $bTestRun = False)
 			; The level of the walls does not matter so much.
 			WallsUpgradeBB()
 			; ------------------
+			
 	EndSwitch
 EndFunc
 
