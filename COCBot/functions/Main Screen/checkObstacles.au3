@@ -230,6 +230,14 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 	EndIf
 
 	If UBound(decodeSingleCoord(FindImageInPlace("Maintenance", $g_sImgMaintenance, "270,70,640, 160", False))) > 1 Then ; Maintenance Break
+		If (QuickMIS("N1", $g_sImgMaintenanceMod, 150, 585, 175, 600) <> "none") Then ; Check if instead of Time, 'Soon' text is written in maintenance page
+			SetLog("Maintenance Break Ended up, Reloading CoC...", $COLOR_INFO)
+			Local $posReloadBtnMaintenance[2] = [677, 580]
+			$posReloadBtnMaintenance[0] += Random(1, 66, 1)
+			$posReloadBtnMaintenance[1] += Random(1, 25, 1)
+			If $g_bNotifyTGEnable And $g_bNotifyAlertMaintenance = True Then NotifyPushToTelegram("Maintenance Break Ended up.")
+			Return checkObstacles_ReloadCoC($posReloadBtnMaintenance, "MaintenanceSoonEndedUp", True)
+		EndIf
 		$Result = getOcrMaintenanceTime(310, 575, "Check Obstacles OCR Maintenance Break=")         ; OCR text to find wait time
 		Local $iMaintenanceWaitTime = 0
 		Local $avTime = StringRegExp($Result, "([\d]+)[Mm]|(soon)|([\d]+[Hh])", $STR_REGEXPARRAYMATCH)
