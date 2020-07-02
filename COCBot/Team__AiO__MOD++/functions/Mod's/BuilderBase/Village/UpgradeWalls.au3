@@ -74,7 +74,7 @@ Local $aWallBBInfoPerLevel[10][4] = [ _ ; Level, Gold, Qty, BH
 				SetDebugLog("Total Walls Found: " & UBound($vWallsBBNXY))
 				For $i = 0 To UBound($vWallsBBNXY) - 1
 					If $g_bDebugSetlog Then SetDebugLog($vWallsBBNXY[$i][0] & " found at (" & $vWallsBBNXY[$i][1] & "," & $vWallsBBNXY[$i][2] & ")", $COLOR_SUCCESS)
-					If Not isInDiamond($vWallsBBNXY[$i][1], $vWallsBBNXY[$i][2], 83, 156, 780, 680, 0) Then ContinueLoop
+					If Not isInDiamond($vWallsBBNXY[$i][1], $vWallsBBNXY[$i][2], 83, 156, 780, 680) Then ContinueLoop
 					If IsMainPageBuilderBase() Then Click($vWallsBBNXY[$i][1], $vWallsBBNXY[$i][2], 1, 0, "#902") ; Click in Wall
 					If _Sleep($DELAYCOLLECT3) Then Return
 					Local $aResult = BuildingInfo(245, 490 + $g_iBottomOffsetY) ; Get building name and level with OCR
