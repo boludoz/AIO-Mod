@@ -79,7 +79,11 @@ Func CollectFreeMagicItems($bTest = False)
 					SetLog("Daily Discounts: " & "X: " & $aOcrPositions[$i][0] & " | " & "Y: " & $aOcrPositions[$i][1], $COLOR_DEBUG)
 				EndIf
 				If _Sleep(200) Then Return
-				If Not $bTest And $g_bChkCollectMagicItems Then ConfirmPurchase()
+				If Not $bTest And $g_bChkCollectMagicItems Then
+					If ConfirmPurchase() = True Then
+						SetLog("Successfully purchased " & $aResultsProx[$i], $COLOR_SUCCESS)
+					EndIf
+				EndIf
 				If _Sleep(500) Then Return
 			Else
 				If _ColorCheck(_GetPixelColor(200, 439 + 5, True), Hex(0x5D79C5, 6), 5) Or _ColorCheck(_GetPixelColor(200, 439 + 5, True), Hex(0x0D9A7C, 6), 5) Then
@@ -152,19 +156,21 @@ Func ConfirmPurchase($bCheckOneTime = False)
 	Local $i = 0
 	If _Sleep($DELAYSPECIALCLICK1) Then Return False
 	While 1
-		Local $offColors[3][3] = [[0x0D0D0D, 144, 0], [0xBCE659, 13, 27], [0x7ECA26, 133, 27]]
-		Local $ButtonPixel = _MultiPixelSearch(340, 385, 506, 461, 1, 1, Hex(0x0D0D0D, 6), $offColors, 20)
-		If $g_bDebugSetlog Then SetDebugLog("ConfirmPurchase btn chk-#1: " & _GetPixelColor(355, 371 + $g_iMidOffsetY, True) & _
-															", #2: " & _GetPixelColor(355 + 144, 371 + $g_iMidOffsetY, True) & _
-															", #3: " & _GetPixelColor(355 + 13, 371 + 27 + $g_iMidOffsetY, True) & _
-															", #4: " & _GetPixelColor(355 + 133, 371 + 27 + $g_iMidOffsetY, True), $COLOR_DEBUG)
+		Local $offColors[3][3] = [[0x0D0D0D, 65, 6], [0x659B24, 18, 39], [0x0D0D0D, 160, 40]]
+		Local $ButtonPixel = _MultiPixelSearch(340, 385, 506, 461, 1, 1, Hex(0xE8E8E0, 6), $offColors, 20)
+		If $g_bDebugSetlog Then SetDebugLog("ConfirmPurchase btn chk-#1: " & _GetPixelColor(340, 385 + $g_iMidOffsetY, True) & _
+															", #2: " & _GetPixelColor(340 + $offColors[0][1], 385 + $offColors[0][2] + $g_iMidOffsetY, True) & _
+															", #3: " & _GetPixelColor(340 + $offColors[1][1], 385 + $offColors[1][2] + $g_iMidOffsetY, True) & _
+															", #4: " & _GetPixelColor(340 + $offColors[2][1], 385 + $offColors[2][2] + $g_iMidOffsetY, True), $COLOR_DEBUG)
 		If IsArray($ButtonPixel) Then
 			SetDebugLog("ButtonPixelLocation = " & $ButtonPixel[0] & ", " & $ButtonPixel[1], $COLOR_DEBUG) ;Debug
 			SetDebugLog("Pixel color found #1: " & _GetPixelColor($ButtonPixel[0], $ButtonPixel[1], True) & _
 										", #2: " & _GetPixelColor($ButtonPixel[0] + 144, $ButtonPixel[1], True) & _
 										", #3: " & _GetPixelColor($ButtonPixel[0] + 13, $ButtonPixel[1] + 27, True) & _
 										", #4: " & _GetPixelColor($ButtonPixel[0] + 133, $ButtonPixel[1] + 27, True), $COLOR_DEBUG)
-			PureClick($ButtonPixel[0] + 70, $ButtonPixel[1] + 20, 1, 0)
+			$ButtonPixel[0] += Random(50, 130, 1)
+			$ButtonPixel[1] += Random(37, 55, 1)
+			PureClick($ButtonPixel[0], $ButtonPixel[1], 1, 0)
 			ExitLoop
 		EndIf
 		If $bCheckOneTime Then Return False ; enable external control of loop count or follow on actions, return false if not clicked
@@ -172,7 +178,7 @@ Func ConfirmPurchase($bCheckOneTime = False)
 			SetLog("Error: Could not Confirm Purchase", $COLOR_ERROR)
 			If $g_bDebugImageSave Then SaveDebugImage("Confirm_ButtonCheck_")
 			SetError(1, @extended, False)
-			Return
+			Return False
 		EndIf
 		$i += 1
 		If _Sleep($DELAYSPECIALCLICK2) Then Return False ; improve pause button response
