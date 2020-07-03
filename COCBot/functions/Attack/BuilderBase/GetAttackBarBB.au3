@@ -42,10 +42,10 @@ Func GetAttackBarBB($bRemaining = False)
 
 	If UBound($aBBAttackBarResult) = 0 Then
 		If Not $bRemaining Then
-			SetLog("Error in BBAttackBarCheck(): Search did not return any results!", $COLOR_ERROR)
+			SetDebugLog("Error in BBAttackBarCheck(): Search did not return any results!", $COLOR_ERROR)
 			If $g_bDebugImageSave Then SaveDebugImage("ErrorBBAttackBarCheck", False, Default, Default)
 		EndIf
-		Return ""
+		Return -1
 	EndIf
 
 	; parse data into attackbar array... not done

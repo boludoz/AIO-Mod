@@ -115,6 +115,9 @@ Func RunBBFuncs($sBBFunc, $bTestRun = False)
 
 		Case "AttackBB"
 			
+			; Check if Builder Base is to run
+			If Not $g_bChkBuilderAttack Then Return
+
 			; New logic to add speed to the attack.
 			For $i = 0 To Random(3,5,1)
 				
