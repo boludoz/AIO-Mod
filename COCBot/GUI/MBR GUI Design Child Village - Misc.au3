@@ -635,13 +635,20 @@ Func CreateBBDropOrderGUI()
 					GUICtrlSetState(-1, $GUI_DISABLE)
 
 	$y += 68
-	
+
 	$g_sIcnBBOrder[10] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnBlank, 208, $y, 32, 32)
-	GUICtrlCreateLabel("11:", 176, $y + 36, 19, 17)
+	GUICtrlCreateLabel("11:", 184, $y + 36, 13, 17)
 	$g_ahCmbBBDropOrder[10] = GUICtrlCreateCombo("", 200, $y + 36, 49, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
 					GUICtrlSetOnEvent(-1, "GUIBBDropOrder")
 					GUICtrlSetData(-1,  $g_sBBDropOrderDefault)
 					_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtBBDropOrder", "Enter sequence order for drop of troop #" & 10 + 1))
+					GUICtrlSetState(-1, $GUI_DISABLE)
+	$g_sIcnBBOrder[11] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnBlank, 368, $y, 32, 32)
+	GUICtrlCreateLabel("12:", 336, $y + 36, 19, 17)
+	$g_ahCmbBBDropOrder[11] = GUICtrlCreateCombo("", 360, $y + 36, 49, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
+					GUICtrlSetOnEvent(-1, "GUIBBDropOrder")
+					GUICtrlSetData(-1,  $g_sBBDropOrderDefault)
+					_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtBBDropOrder", "Enter sequence order for drop of troop #" & 11 + 1))
 					GUICtrlSetState(-1, $GUI_DISABLE)
 
 	$y += 72

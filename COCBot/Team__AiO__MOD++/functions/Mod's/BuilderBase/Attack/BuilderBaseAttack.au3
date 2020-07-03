@@ -50,7 +50,7 @@ Func BuilderBaseAttack($bTestRun = False)
 	If $g_bRestart Then Return
 	If _Sleep(1500) Then Return ; Add Delay Before Check Builder Face As When Army Camp Get's Close Due To It's Effect Builder Face Is Dull and not recognized on slow pc
 	
-	; Check for Builder face
+	; Check for Builder bace.
 	If Not isOnBuilderBase() Then Return
 
 	; Check Zoomout
