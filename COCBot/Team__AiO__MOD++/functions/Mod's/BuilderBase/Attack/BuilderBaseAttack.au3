@@ -117,6 +117,8 @@ Func BuilderBaseAttack($bTestRun = False)
 		$g_bIfMachineWasDeployed = False
 		$g_bIsBBMachineD = False
 
+		RemoveChangeTroopsDialog()
+
 		; Select mode.
 		Select
 			Case $IsToDropTrophies = True
@@ -160,6 +162,18 @@ Func BuilderBaseAttack($bTestRun = False)
 	ClickP($aAway, 2, 0, "#0332") ;Click Away
 	If _Sleep(2000) Then Return
 EndFunc   ;==>BuilderBaseAttack
+
+Func RemoveChangeTroopsDialog()
+	If _ColorCheck(_GetPixelColor(103, 710, True), Hex(0x6C6E6F, 6), 25) Then
+		SetLog("Removing change troops dialog to start attack...", $COLOR_INFO)
+		Local $aClickPoints = [64, 648]
+		$aClickPoints[0] += Random(1, 282)
+		$aClickPoints[1] += Random(1, 35)
+		ClickP($aClickPoints)
+		Return True
+	EndIf
+	Return False
+EndFunc
 
 Func CheckAttackBtn()
 	If QuickMIS("BC1", $g_sImgAttackBtnBB, 16, 627, 107, 713, True, False) Then
