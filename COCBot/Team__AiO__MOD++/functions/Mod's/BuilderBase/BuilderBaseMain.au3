@@ -54,7 +54,7 @@ Func runBuilderBase($bTestRun = False)
 	; Builder base Report - Get The number of available attacks
 	If $g_bRestart Or (Not $g_bRunState) Then Return
 	BuilderBaseReport()
-	RestAttacksInBB()
+	RestAttacksInBB(False)
 
 	; Logic here
 		Local $aRndFuncList = ['ClockTower', 'AttackBB']

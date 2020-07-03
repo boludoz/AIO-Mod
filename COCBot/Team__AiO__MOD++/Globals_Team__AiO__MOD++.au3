@@ -22,6 +22,9 @@ Global Enum $eIcnModKingGray = 1, $eIcnModKingBlue, $eIcnModKingGreen, $eIcnModK
 		$eIcnModAccountsS, $eIcnModProfilesS, $eIcnModFarmingS, $eIcnMiscMod, $eIcnSuperXP, $eIcnChatActions, $eIcnHumanization, $eIcnAIOMod, $eIcnDebugMod, _
 		$eIcnLabP, $eIcnShop, $eIcnGoldP, $eIcnElixirP, $eIcnDarkP, $eIcnGFTO, $eIcnMisc, $eIcnPrewar
 
+; Offset
+Global $g_iXVOffset = 0, $g_hTimerOffset = 0
+
 ; Custom remain - Team AIO Mod++
 Global $g_bRemainTweak = True
 
@@ -281,7 +284,7 @@ Global $g_asAttackBarBB2[$eBBTroopCount] = ["Barbarian", "Archer", "BoxerGiant",
 Global Const $g_asBBTroopShortNames[$eBBTroopCount] = ["Barbarian", "Archer", "BoxerGiant", "Minion", "WallBreaker", "BabyDrag", "CannonCart", "Witch", "DropShip", "SuperPekka", "HogGlider", "Machine"]
 
 Global $g_bIsMachinePresent = False
-Global $g_iBBMachAbilityTime = 14000 ; time between abilities
+Global $g_iBBMachAbilityTime = 0 ; time between abilities
 
 ; BB Drop Order
 Global $g_hBtnBBDropOrder = 0

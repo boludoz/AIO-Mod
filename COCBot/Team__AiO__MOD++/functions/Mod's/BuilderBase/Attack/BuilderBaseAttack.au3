@@ -50,7 +50,7 @@ Func BuilderBaseAttack($bTestRun = False)
 	If $g_bRestart Then Return
 	If _Sleep(1500) Then Return ; Add Delay Before Check Builder Face As When Army Camp Get's Close Due To It's Effect Builder Face Is Dull and not recognized on slow pc
 	
-	; Check for Builder bace.
+	; Check for builder base.
 	If Not isOnBuilderBase() Then Return
 
 	; Check Zoomout
@@ -153,8 +153,6 @@ Func BuilderBaseAttack($bTestRun = False)
 		If $g_bRestart = True Then Return
 		If Not $g_bRunState Then Return
 
-		; Stats
-		; BuilderBaseAttackUpdStats()
 	EndIf
 
 	; Exit
@@ -167,8 +165,8 @@ Func RemoveChangeTroopsDialog()
 	If _ColorCheck(_GetPixelColor(103, 710, True), Hex(0x6C6E6F, 6), 25) Then
 		SetLog("Removing change troops dialog to start attack...", $COLOR_INFO)
 		Local $aClickPoints = [64, 648]
-		$aClickPoints[0] += Random(1, 282)
-		$aClickPoints[1] += Random(1, 35)
+		$aClickPoints[0] += Random(1, 282, 1)
+		$aClickPoints[1] += Random(1, 35, 1)
 		ClickP($aClickPoints)
 		Return True
 	EndIf

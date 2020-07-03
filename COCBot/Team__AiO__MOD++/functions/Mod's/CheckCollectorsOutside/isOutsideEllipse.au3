@@ -12,18 +12,15 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: None
 ; ===============================================================================================================================
-Global $g_iXVOffset = 0, $g_hTimerOffset = 0
-
 Func VillageOffset()
 
 	If $g_hTimerOffset = 0 Or (TimerDiff($g_hTimerOffset) > 10000) Then
 		$g_hTimerOffset = TimerInit()
 		$g_iXVOffset = 0
 		
-		Local $iXFix = 203
 		Local $a = GetVillageSize()
 		If IsArray($a) And (UBound($a) > 2) Then ; If it detects 2 images, it is preferable that this does nothing.
-			$g_iXVOffset = Int($iXFix + Int($a[2]))
+			$g_iXVOffset = Int($a[2])
 			SetDebugLog("- Offset fix: " & $g_iXVOffset)
 		EndIf
 	EndIf
@@ -48,8 +45,7 @@ EndFunc
 ; ===============================================================================================================================
 
 Func isOutsideEllipse($coordX, $coordY, $ellipseWidth = 200, $ellipseHeigth = 150, $centerX = 430, $centerY = 339)
-	Local $iXFix = 203
-	Local $iXFixf = Int(VillageOffset() - $iXFix)
+	Local $iXFixf = Int(VillageOffset())
 
 	Global $normalizedX = $coordX - $centerX
 	Global $normalizedY = $coordY - Int($centerY + $iXFixf)
@@ -85,8 +81,7 @@ EndFunc   ;==>isOutsideEllipse
 
 Func isInDiamond($iX, $iY, $iLeft = 116, $iTop = 94, $iRight = 751, $iBottom = 582)
 	Local $bReturn = False
-	Local $iXFix = 203
-	Local $iXFixf = Int(VillageOffset() - $iXFix)
+	Local $iXFixf = Int(VillageOffset())
 	
 	If Not (($iX < 68 And $iY > 316) Or ($iY < 63) Or ($iX > 692 And $iY > 156 And $iY < 210) Or ($iX > 669 And $iY > 489)) Then
 		Local $aMiddle[2] = [(($iLeft + $iRight) + $iXFixf) / 2, ($iTop + $iBottom) / 2]

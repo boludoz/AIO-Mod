@@ -706,28 +706,32 @@ Func GetThePointNearBH($BHposition, $aDeployPoints)
 EndFunc   ;==>GetThePointNearBH
 
 Func TriggerMachineAbility($bBBIsFirst = $g_bBBIsFirst, $ix = 458, $iy = 723, $bTest = False)
-	Local $hPixel 
+	
 	If not $bTest Then
 		If Not $g_bIsBBMachineD Then Return False
 		Else
 		Global $g_aMachineBB[2] = [$ix, $iy]
 	EndIf 
 	
-	If (Not IsArray($g_aMachineBB)) Or ($g_aMachineBB[0] = 0) Then Return False
+	If not (($g_iBBMachAbilityTime = 0) Or (TimerDiff($g_iBBMachAbilityTime) > 10000)) Then Return False
 	
+	If (Not IsArray($g_aMachineBB)) Or ($g_aMachineBB[0] = 0) Then Return False
+
 	SetDebugLog("- BB Machine : Checking ability.")
 	
+	Local $hPixel 
 	$hPixel = _GetPixelColor(Int($g_aMachineBB[0]), 721, True)
 	If $bTest Then Setlog($hPixel & " ability", $COLOR_INFO)
 
 	If $bBBIsFirst And ($g_aMachineBB[0] <> 0) Then
 		If $bTest Then Setlog(_ArrayToString($g_aMachineBB))
 		If _ColorCheck($hPixel, Hex(0x472CC5, 6), 40) Then
-			Click(Int($g_aMachineBB[0] - Random(20, 30, 1)), Int($g_aMachineBB[1] - Random(0, 15, 1)), 2, 0)
+			Click(Int($g_aMachineBB[0] + Random(0, 15, 1)), Int($g_aMachineBB[1] - Random(20, 30, 1)), 3, 100)
 			If RandomSleep(300) Then Return
 			SetLog("- BB Machine : Skill enabled.", $COLOR_ACTION)
 			$bBBIsFirst = False
 			$g_bBBIsFirst = $bBBIsFirst
+			$g_iBBMachAbilityTime = TimerInit()
 			Return True
 		Else
 			If $bBBIsFirst Then SetLog("- BB Machine : Skill not present.", $COLOR_INFO)
@@ -736,9 +740,10 @@ Func TriggerMachineAbility($bBBIsFirst = $g_bBBIsFirst, $ix = 458, $iy = 723, $b
 	EndIf
 	
 	If _ColorCheck($hPixel, Hex(0x432CCE, 6), 20) Then
-		Click(Int($g_aMachineBB[0] + Random(0, 15, 1)), Int($g_aMachineBB[1] - Random(20, 30, 1)), 2, 0)
+		Click(Int($g_aMachineBB[0] + Random(0, 15, 1)), Int($g_aMachineBB[1] - Random(20, 30, 1)), 3, 100)
 		If RandomSleep(300) Then Return
 		SetLog("- BB Machine : Click on ability.", $COLOR_ACTION)
+		$g_iBBMachAbilityTime = TimerInit()
 		Return True
 	EndIf
 	Return False
