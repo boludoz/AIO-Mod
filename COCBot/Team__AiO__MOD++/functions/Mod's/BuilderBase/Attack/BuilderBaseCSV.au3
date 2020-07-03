@@ -708,12 +708,12 @@ EndFunc   ;==>GetThePointNearBH
 Func TriggerMachineAbility($bBBIsFirst = $g_bBBIsFirst, $ix = 458, $iy = 723, $bTest = False)
 	Local $hPixel 
 	If not $bTest Then
-		If Not $g_bIsBBMachineD Then Return
+		If Not $g_bIsBBMachineD Then Return False
 		Else
 		Global $g_aMachineBB[2] = [$ix, $iy]
 	EndIf 
 	
-	If (Not IsArray($g_aMachineBB)) Or ($g_aMachineBB[0] = 0) Then Return
+	If (Not IsArray($g_aMachineBB)) Or ($g_aMachineBB[0] = 0) Then Return False
 	
 	SetDebugLog("- BB Machine : Checking ability.")
 	
@@ -746,7 +746,9 @@ EndFunc   ;==>TriggerMachineAbility
 
 Func BattleIsOver()
 	Local $iBattleOverLoopCounter = 0
+	Local $bIsEnded = False
 	Do
+		If _Sleep(1000) Then Return 
 		If Not $g_bRunState Then Return
 		TriggerMachineAbility()
 		Local $iDamage = Number(getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY))
@@ -756,8 +758,13 @@ Func BattleIsOver()
 		EndIf
 		
 		If ($iBattleOverLoopCounter = 180) Then Setlog("Window Report Problem!", $COLOR_WARNING)
+		_CaptureRegion()
+		Local $aOkayText[4] = [447, 575, 0xFFFFFF, 5]
+		Local $aBlackArts[4] = [520, 600, 0x000000, 1]
+		Local $aYourAttackText[4] = [442, 258, 0xFFFFFF, 5]
+		$bIsEnded = _CheckPixel($aOkayText, False) And _CheckPixel($aBlackArts, False) And _CheckPixel($aYourAttackText, False)
 		$iBattleOverLoopCounter += 1
-	Until (_WaitForCheckXML($g_sImgOkButton, "345, 540, 524, 615", Default, "1000")) Or ($iBattleOverLoopCounter > 180)
+	Until ($bIsEnded = True Or $iBattleOverLoopCounter > 180)
 
 EndFunc   ;==>BattleIsOver
 

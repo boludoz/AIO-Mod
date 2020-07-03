@@ -117,6 +117,8 @@ Func BuilderBaseAttack($bTestRun = False)
 		$g_bIfMachineWasDeployed = False
 		$g_bIsBBMachineD = False
 
+		RemoveChangeTroopsDialog()
+
 		; Select mode.
 		Select
 			Case $IsToDropTrophies = True
@@ -160,6 +162,18 @@ Func BuilderBaseAttack($bTestRun = False)
 	ClickP($aAway, 2, 0, "#0332") ;Click Away
 	If _Sleep(2000) Then Return
 EndFunc   ;==>BuilderBaseAttack
+
+Func RemoveChangeTroopsDialog()
+	If _ColorCheck(_GetPixelColor(103, 710, True), Hex(0x6C6E6F, 6), 25) Then
+		SetLog("Removing change troops dialog to start attack...", $COLOR_INFO)
+		Local $aClickPoints = [64, 648]
+		$aClickPoints[0] += Random(1, 282)
+		$aClickPoints[1] += Random(1, 35)
+		ClickP($aClickPoints)
+		Return True
+	EndIf
+	Return False
+EndFunc
 
 Func CheckAttackBtn()
 	If QuickMIS("BC1", $g_sImgAttackBtnBB, 16, 627, 107, 713, True, False) Then
@@ -462,8 +476,9 @@ Func BuilderBaseAttackReport()
 	Local $aSurrenderBtn = [65, 607]
 
 	Local $iDamageCheckLoop = 0
-
+	Local $bIsEnded = False
 	Do
+		If _Sleep(1000) Then Return 
 		If Not $g_bRunState Then Return
 		TriggerMachineAbility()
 		Local $sDamage = Number(getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY))
@@ -474,8 +489,13 @@ Func BuilderBaseAttackReport()
 		If $iDamageCheckLoop = 180 Then 
 			Setlog("Window Report Problem!", $COLOR_WARNING)
 		EndIf
+		_CaptureRegion()
+		Local $aOkayText[4] = [447, 575, 0xFFFFFF, 5]
+		Local $aBlackArts[4] = [520, 600, 0x000000, 1]
+		Local $aYourAttackText[4] = [442, 258, 0xFFFFFF, 5]
+		$bIsEnded = _CheckPixel($aOkayText, False) And _CheckPixel($aBlackArts, False) And _CheckPixel($aYourAttackText, False)
 		$iDamageCheckLoop += 1
-	Until (_WaitForCheckXML($g_sImgOkButton, "345, 540, 524, 615", Default, "1000")) Or ($iDamageCheckLoop > 180)
+	Until ($bIsEnded = True Or $iDamageCheckLoop > 180)
 	
 	;BB attack Ends
 	If _Sleep(2000) Then Return
