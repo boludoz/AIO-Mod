@@ -80778,6 +80778,10 @@ RestAttacksInBB(False)
 Local $aRndFuncList = ['ClockTower', 'AttackBB']
 _ArrayShuffle($aRndFuncList)
 For $iIndex In $aRndFuncList
+If not SwitchBetweenBases(True, True) Then
+$g_bStayOnBuilderBase = False
+Return False
+EndIf
 RunBBFuncs($iIndex)
 If $g_bRestart Or(Not $g_bRunState) Then Return
 Next
@@ -80785,6 +80789,10 @@ If checkObstacles(True) Then SetLog("Window clean required, but no problem for M
 Local $aRndFuncList = ['ElixirUpdate', 'GoldUpdate']
 _ArrayShuffle($aRndFuncList)
 For $iIndex In $aRndFuncList
+If not SwitchBetweenBases(True, True) Then
+$g_bStayOnBuilderBase = False
+Return False
+EndIf
 RunBBFuncs($iIndex)
 If $g_bRestart Or(Not $g_bRunState) Then Return
 Next

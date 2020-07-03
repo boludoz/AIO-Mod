@@ -11,6 +11,7 @@
 			- Troops on lab BB fixed.
 			- Improved builder machine (It is checked every intervals of seconds to avoid CPU consumption.).
 			- The base builder will no longer give the message of remaining attacks if the attack is not activated.
+			- Spell's.
 			
 		» New devs fixes/reports @Dissociable and @vDragon:
 			- Fixed drop machine in smart attack and custom order.

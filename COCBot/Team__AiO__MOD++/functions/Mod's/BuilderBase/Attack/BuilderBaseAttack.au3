@@ -97,9 +97,9 @@ Func BuilderBaseAttack($bTestRun = False)
 		; Attack Bar | [0] = Troops Name , [1] = X-axis , [2] - Y-axis, [3] - Slot starting at 0, [4] - Amount
 		; Local $aAvailableTroops = BuilderBaseAttackBar()
 		Local $aAvailableTroops = GetAttackBarBB()
-		If IsArray($aAvailableTroops) Then 
+		If IsArray($aAvailableTroops) Then
 			SetDebugLog("Attack Bar Array: " & _ArrayToString($aAvailableTroops, "-", -1, -1, "|", -1, -1))
-		Else 
+		Else
 			SetDebugLog("No troops AttackBar.", $COLOR_ERROR)
 			CheckMainScreen()
 			Return -1
@@ -171,13 +171,13 @@ Func RemoveChangeTroopsDialog()
 		Return True
 	EndIf
 	Return False
-EndFunc
+EndFunc   ;==>RemoveChangeTroopsDialog
 
 Func CheckAttackBtn()
 	If QuickMIS("BC1", $g_sImgAttackBtnBB, 16, 627, 107, 713, True, False) Then
 		If $g_iQuickMISWOffSetX > 16 And $g_iQuickMISWOffSetX < 107 And $g_iQuickMISWOffSetY > 627 And $g_iQuickMISWOffSetY < 713 Then
 			SetDebugLog("Attack Button detected: " & $g_iQuickMISWOffSetX & "," & $g_iQuickMISWOffSetY)
-			Click(Random(16, 107, 1), Random(627, 713,1), 1)
+			Click(Random(16, 107, 1), Random(627, 713, 1), 1)
 			If _Sleep(Random(200, 3000, 1)) Then Return
 			Return True
 		Else
@@ -185,7 +185,7 @@ Func CheckAttackBtn()
 			If _Sleep(Random(200, 3000, 1)) Then Return
 			Return False
 		EndIf
-	EndIF
+	EndIf
 	Return True
 EndFunc   ;==>CheckAttackBtn
 
@@ -228,7 +228,7 @@ Func ArmyStatus(ByRef $bIsReady)
 		Return False
 
 	EndIf
-	#EndRegion
+	#EndRegion Legacy Chilly-Chill fragment.
 
 	If QuickMis("BC1", $g_sImgFullArmyBB, 108, 355, 431, 459, True, False) Then
 		SetDebugLog("Full Army detected.")
@@ -298,7 +298,7 @@ Func FindVersusBattlebtn()
 		EndIf
 	Next
 
-	If $i > 15 Then
+	If ($i > 15) Or ($g_iMultiPixelOffSet[0] = Null) Then
 		SetLog("Find Now! Button not available...", $COLOR_DEBUG)
 		Return False
 	EndIf
@@ -476,7 +476,7 @@ Func BuilderBaseAttackReport()
 	Local $iDamageCheckLoop = 0
 	Local $bIsEnded = False
 	Do
-		If _Sleep(1000) Then Return 
+		If _Sleep(1000) Then Return
 		If Not $g_bRunState Then Return
 		TriggerMachineAbility()
 		Local $sDamage = Number(getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY))
@@ -484,7 +484,7 @@ Func BuilderBaseAttackReport()
 			$g_iLastDamage = Int($sDamage)
 			Setlog("- Total Damage: " & $g_iLastDamage & "%", $COLOR_INFO)
 		EndIf
-		If $iDamageCheckLoop = 180 Then 
+		If $iDamageCheckLoop = 180 Then
 			Setlog("Window Report Problem!", $COLOR_WARNING)
 		EndIf
 		_CaptureRegion()
@@ -499,7 +499,7 @@ Func BuilderBaseAttackReport()
 	If _Sleep(2000) Then Return
 	
 	; in case BB Attack Ends in error
-	If _ColorCheck(_GetPixelColor($aSurrenderBtn[0], $aSurrenderBtn[1], True), Hex(0xFE5D65, 6), 10) Then 
+	If _ColorCheck(_GetPixelColor($aSurrenderBtn[0], $aSurrenderBtn[1], True), Hex(0xFE5D65, 6), 10) Then
 		Setlog("Surrender Button fail - battle end early - CheckMainScreen()", $COLOR_ERROR)
 		CheckMainScreen()
 		Return False
