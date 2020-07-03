@@ -27,7 +27,7 @@ Global $g_bRemainTweak = True
 
 ; ZoomMod
 Global $g_bZoomFixBB = False
-Global $g_aBoatPos[2] = [Null, Null], $Stonecoord
+Global $g_aPosSizeVillage[2] = [Null, Null], $Stonecoord
 
 ; Skip first check
 Global $g_bSkipfirstcheck = False, $g_hSkipfirstcheck
