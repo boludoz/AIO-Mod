@@ -476,8 +476,9 @@ Func BuilderBaseAttackReport()
 	Local $aSurrenderBtn = [65, 607]
 
 	Local $iDamageCheckLoop = 0
-
+	Local $bIsEnded = False
 	Do
+		If _Sleep(1000) Then Return 
 		If Not $g_bRunState Then Return
 		TriggerMachineAbility()
 		Local $sDamage = Number(getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY))
@@ -488,8 +489,13 @@ Func BuilderBaseAttackReport()
 		If $iDamageCheckLoop = 180 Then 
 			Setlog("Window Report Problem!", $COLOR_WARNING)
 		EndIf
+		_CaptureRegion()
+		Local $aOkayText[4] = [447, 575, 0xFFFFFF, 5]
+		Local $aBlackArts[4] = [520, 600, 0x000000, 1]
+		Local $aYourAttackText[4] = [442, 258, 0xFFFFFF, 5]
+		$bIsEnded = _CheckPixel($aOkayText, False) And _CheckPixel($aBlackArts, False) And _CheckPixel($aYourAttackText, False)
 		$iDamageCheckLoop += 1
-	Until (_WaitForCheckXML($g_sImgOkButton, "345, 540, 524, 615", Default, "1000")) Or ($iDamageCheckLoop > 180)
+	Until ($bIsEnded = True Or $iDamageCheckLoop > 180)
 	
 	;BB attack Ends
 	If _Sleep(2000) Then Return
