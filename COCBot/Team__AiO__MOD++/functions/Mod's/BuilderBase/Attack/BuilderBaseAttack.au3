@@ -478,23 +478,26 @@ Func BuilderBaseAttackReport()
 	Do
 		If _Sleep(1000) Then Return
 		If Not $g_bRunState Then Return
+		
 		TriggerMachineAbility()
-		Local $sDamage = Number(getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY))
+		
+		Local $sDamage = Number(getOcrOverAllDamage(780, 587))
 		If Int($sDamage) > Int($g_iLastDamage) Then
 			$g_iLastDamage = Int($sDamage)
 			Setlog("- Total Damage: " & $g_iLastDamage & "%", $COLOR_INFO)
 		EndIf
-		If $iDamageCheckLoop = 180 Then
-			Setlog("Window Report Problem!", $COLOR_WARNING)
+		
+		Local $aBlackArts[4] = [520, 600, 0x000000, 5]
+		If _CheckPixel($aBlackArts, True) Then 
+			If _WaitForCheckXML($g_sImgOkButton, "345, 540, 524, 615", Default, "1000") Then $bIsEnded = True
+			SetDebugLog("$bIsEnded : " & $bIsEnded)
 		EndIf
-		_CaptureRegion()
-		Local $aOkayText[4] = [447, 575, 0xFFFFFF, 5]
-		Local $aBlackArts[4] = [520, 600, 0x000000, 1]
-		Local $aYourAttackText[4] = [442, 258, 0xFFFFFF, 5]
-		$bIsEnded = _CheckPixel($aOkayText, False) And _CheckPixel($aBlackArts, False) And _CheckPixel($aYourAttackText, False)
+
 		$iDamageCheckLoop += 1
-	Until ($bIsEnded = True Or $iDamageCheckLoop > 180)
+	Until $bIsEnded Or ($iDamageCheckLoop > 180)
 	
+	If ($iDamageCheckLoop > 180) Then Setlog("Window Report Problem!", $COLOR_WARNING)
+
 	;BB attack Ends
 	If _Sleep(2000) Then Return
 	

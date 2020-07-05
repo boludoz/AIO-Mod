@@ -67,7 +67,7 @@ Func SaveConfig_MOD_MiscTab()
 	_Ini_Add("Skipfirstcheck", "Enable", $g_bSkipfirstcheck ? 1 : 0)
 
 	; Remove edge obstacles
-	_Ini_Add("EdgeObstacle", "Enable", $g_bEdgeObstacle ? 1 : 0)
+	_Ini_Add("MiscTab", "EdgeObstacle", $g_bEdgeObstacle ? 1 : 0)
 
 	; DeployDelay
 	_Ini_Add("MiscTab", "DeployDelay0", $g_iDeployDelay[0])

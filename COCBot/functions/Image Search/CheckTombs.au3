@@ -95,7 +95,7 @@ Func CleanYard($bTest = False)
 	Local $redLines = $sCocDiamond
 	Local $bNoBuilders = $g_iFreeBuilderCount < 1
 
-	If $g_bChkCleanYard Then _CleanYard(False, $bTest)
+	_CleanYard(False, $bTest)
 
 	; Setup arrays, including default return values for $return
 	Local $return[7] = ["None", "None", 0, 0, 0, "", ""]

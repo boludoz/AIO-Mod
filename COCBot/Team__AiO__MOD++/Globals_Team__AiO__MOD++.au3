@@ -22,15 +22,19 @@ Global Enum $eIcnModKingGray = 1, $eIcnModKingBlue, $eIcnModKingGreen, $eIcnModK
 		$eIcnModAccountsS, $eIcnModProfilesS, $eIcnModFarmingS, $eIcnMiscMod, $eIcnSuperXP, $eIcnChatActions, $eIcnHumanization, $eIcnAIOMod, $eIcnDebugMod, _
 		$eIcnLabP, $eIcnShop, $eIcnGoldP, $eIcnElixirP, $eIcnDarkP, $eIcnGFTO, $eIcnMisc, $eIcnPrewar
 
+; Offset village.
+Global $g_aPosSizeVillage = 0
+
+; ZoomMod
+Global $g_bZoomFixBB = False
+Global $Stonecoord
+	
 ; Offset
 Global $g_iXVOffset = 0, $g_hTimerOffset = 0
 
 ; Custom remain - Team AIO Mod++
 Global $g_bRemainTweak = True
 
-; ZoomMod
-Global $g_bZoomFixBB = False
-Global $g_aPosSizeVillage[2] = [Null, Null], $Stonecoord
 
 ; Skip first check
 Global $g_bSkipfirstcheck = False, $g_hSkipfirstcheck

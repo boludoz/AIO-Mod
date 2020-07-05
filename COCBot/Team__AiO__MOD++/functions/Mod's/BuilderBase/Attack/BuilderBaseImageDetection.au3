@@ -19,8 +19,7 @@ Func TestBuilderBaseBuildingsDetection()
 	Local $Status = $g_bRunState
 	$g_bRunState = True
 	; Reset the Boat Position , only in tests
-	$g_aPosSizeVillage[0] = Null
-	$g_aPosSizeVillage[1] = Null
+	Global $g_aPosSizeVillage = 0
 	Local $SelectedItem = _GUICtrlComboBox_GetCurSel($g_cmbBuildings)
 	Local $temp = BuilderBaseBuildingsDetection($SelectedItem)
 	For $i = 0 To UBound($temp) - 1
@@ -36,8 +35,7 @@ Func TestBuilderBaseGetDeployPoints()
 	Local $Status = $g_bRunState
 	$g_bRunState = True
 	; Reset the Boat Position , only in tests
-	$g_aPosSizeVillage[0] = Null
-	$g_aPosSizeVillage[1] = Null
+	Global $g_aPosSizeVillage = 0
 	Local $FurtherFrom = 5 ; 5 pixels before the deploy point
 	BuilderBaseGetDeployPoints($FurtherFrom, True)
 	$g_bRunState = $Status
@@ -316,7 +314,7 @@ Func DebugBuilderBaseBuildingsDetection($DeployPoints, $BestDeployPoints, $Debug
 	
 	If IsArray($g_aBuilderBaseDiamond) <> True Or Not (UBound($g_aBuilderBaseDiamond) > 0) Then Return False
 	
-	Local $Size = $g_aBuilderBaseDiamond[0]
+	Local $iSize = $g_aBuilderBaseDiamond[0]
 
 	For $i = 1 To UBound($g_aBuilderBaseDiamond) - 1
 		Local $Coord = $g_aBuilderBaseDiamond[$i]
@@ -324,7 +322,7 @@ Func DebugBuilderBaseBuildingsDetection($DeployPoints, $BestDeployPoints, $Debug
 		_GDIPlus_GraphicsDrawLine($hGraphic, $Coord[0], $Coord[1], $NextCoord[0], $NextCoord[1], $hPenBlue)
 	Next
 
-	Local $Size = $g_aBuilderBaseOuterDiamond[0]
+	Local $iSize = $g_aBuilderBaseOuterDiamond[0]
 
 	For $i = 1 To UBound($g_aBuilderBaseOuterDiamond) - 1
 		Local $Coord = $g_aBuilderBaseOuterDiamond[$i]
@@ -373,7 +371,7 @@ Func DebugBuilderBaseBuildingsDetection($DeployPoints, $BestDeployPoints, $Debug
 		Next
 	EndIf
 
-	Local $filename = String($Date & "_" & $Time & "_" & $DebugText & "_" & $Size & "_.png")
+	Local $filename = String($Date & "_" & $Time & "_" & $DebugText & "_" & $iSize & "_.png")
 
 	_GDIPlus_ImageSaveToFile($editedImage, $subDirectory & "\" & $filename)
 	_GDIPlus_FontDispose($hFont)
@@ -391,82 +389,82 @@ EndFunc   ;==>DebugBuilderBaseBuildingsDetection
 
 Func BuilderBaseAttackDiamond()
 
-	Local $Size = GetBuilderBaseSize(False) ; Wihtout Clicks
+	Local $iSize = GetBuilderBaseSize(False) ; Wihtout Clicks
 	If Not $g_bRunState Then Return
-	Setlog("Builder Base Diamond: " & $Size)
-	If ($Size < 520 And $Size > 590) Or $Size = 0 Then
+	Setlog("Builder Base Diamond: " & $iSize)
+	If ($iSize < 575 And $iSize > 620) Or $iSize = 0 Then
 		Setlog("Builder Base Attack Zoomout.")
 		BuilderBaseZoomOut()
 		If _Sleep(1000) Then Return
-		$Size = GetBuilderBaseSize(False) ; Wihtout Clicks
+		$iSize = GetBuilderBaseSize(False) ; Wihtout Clicks
 	EndIf
 
-	If $Size = 0 Then Return -1
+	If ($iSize = 0) Or not IsArray($g_aPosSizeVillage) Then Return -1
 
 	; ZoomFactor
-	Local $CorrectSizeLR = Floor(($Size - 590) / 2)
-	Local $CorrectSizeT = Floor(($Size - 590) / 4)
-	Local $CorrectSizeB = ($Size - 590)
+	Local $CorrectSizeLR = Floor(($iSize - 590) / 2)
+	Local $CorrectSizeT = Floor(($iSize - 590) / 4)
+	Local $CorrectSizeB = ($iSize - 590)
 
 	; Polygon Points
 	Local $Top[2], $Right[2], $BottomR[2], $BottomL[2], $Left[2]
 
-	$Top[0] = $g_aPosSizeVillage[0] - (180 + $CorrectSizeT)
-	$Top[1] = $g_aPosSizeVillage[1] + 6
+	$Top[0] = $g_aPosSizeVillage[7] - (180 + $CorrectSizeT)
+	$Top[1] = $g_aPosSizeVillage[8] + 6
 
-	$Right[0] = $g_aPosSizeVillage[0] + (160 + $CorrectSizeLR)
-	$Right[1] = $g_aPosSizeVillage[1] + (260 + $CorrectSizeLR)
+	$Right[0] = $g_aPosSizeVillage[7] + (160 + $CorrectSizeLR)
+	$Right[1] = $g_aPosSizeVillage[8] + (260 + $CorrectSizeLR)
 
-	$Left[0] = $g_aPosSizeVillage[0] - (515 + $CorrectSizeB)
-	$Left[1] = $g_aPosSizeVillage[1] + (260 + $CorrectSizeLR)
+	$Left[0] = $g_aPosSizeVillage[7] - (515 + $CorrectSizeB)
+	$Left[1] = $g_aPosSizeVillage[8] + (260 + $CorrectSizeLR)
 
-	$BottomR[0] = $g_aPosSizeVillage[0] - (110 - $CorrectSizeB)
-	$BottomR[1] = 540 + 88
+	$BottomR[0] = $g_aPosSizeVillage[7] - (110 - $CorrectSizeB)
+	$BottomR[1] = 628
 
-	$BottomL[0] = $g_aPosSizeVillage[0] - (225 + $CorrectSizeB)
-	$BottomL[1] = 540 + 88
+	$BottomL[0] = $g_aPosSizeVillage[7] - (225 + $CorrectSizeB)
+	$BottomL[1] = 628
 
-	Local $BuilderBaseDiamond[6] = [$Size, $Top, $Right, $BottomR, $BottomL, $Left]
+	Local $BuilderBaseDiamond[6] = [$iSize, $Top, $Right, $BottomR, $BottomL, $Left]
 	Return $BuilderBaseDiamond
 EndFunc   ;==>BuilderBaseAttackDiamond
 
 Func BuilderBaseAttackOuterDiamond()
-	Local $Size = GetBuilderBaseSize(False) ; WihtoutClicks
+	Local $iSize = GetBuilderBaseSize(False) ; WihtoutClicks
 	If Not $g_bRunState Then Return
-	Setlog("Builder Base Diamond: " & $Size)
-	If ($Size < 520 And $Size > 590) Or $Size = 0 Then
+	Setlog("Builder Base Diamond: " & $iSize)
+	If ($iSize < 575 And $iSize > 620) Or $iSize = 0 Then
 		Setlog("Builder Base Attack Zoomout.")
 		BuilderBaseZoomOut()
 		If _Sleep(1000) Then Return
-		$Size = GetBuilderBaseSize(False) ; WihtoutClicks
+		$iSize = GetBuilderBaseSize(False) ; WihtoutClicks
 	EndIf
 
-	If $Size = 0 Then Return -1
+	If ($iSize = 0) Or not IsArray($g_aPosSizeVillage) Then Return -1
 
 	; ZoomFactor
-	Local $CorrectSizeLR = Floor(($Size - 590) / 2)
-	Local $CorrectSizeT = Floor(($Size - 590) / 4)
-	Local $CorrectSizeB = ($Size - 590)
+	Local $CorrectSizeLR = Floor(($iSize - 590) / 2)
+	Local $CorrectSizeT = Floor(($iSize - 590) / 4)
+	Local $CorrectSizeB = ($iSize - 590)
 
 	; Polygon Points
 	Local $Top[2], $Right[2], $BottomR[2], $BottomL[2], $Left[2]
 
-	$Top[0] = $g_aPosSizeVillage[0] - (180 + $CorrectSizeT)
-	$Top[1] = $g_aPosSizeVillage[1] - 25
+	$Top[0] = $g_aPosSizeVillage[7] - (180 + $CorrectSizeT)
+	$Top[1] = $g_aPosSizeVillage[8] - 25
 
-	$Right[0] = $g_aPosSizeVillage[0] + (205 + $CorrectSizeLR)
-	$Right[1] = $g_aPosSizeVillage[1] + (260 + $CorrectSizeLR)
+	$Right[0] = $g_aPosSizeVillage[7] + (205 + $CorrectSizeLR)
+	$Right[1] = $g_aPosSizeVillage[8] + (260 + $CorrectSizeLR)
 
-	$Left[0] = $g_aPosSizeVillage[0] - (560 + $CorrectSizeB)
-	$Left[1] = $g_aPosSizeVillage[1] + (260 + $CorrectSizeLR)
+	$Left[0] = $g_aPosSizeVillage[7] - (560 + $CorrectSizeB)
+	$Left[1] = $g_aPosSizeVillage[8] + (260 + $CorrectSizeLR)
 
-	$BottomR[0] = $g_aPosSizeVillage[0] - (70 - $CorrectSizeB)
-	$BottomR[1] = 540 + 88
+	$BottomR[0] = $g_aPosSizeVillage[7] - (70 - $CorrectSizeB)
+	$BottomR[1] = 628
 
-	$BottomL[0] = $g_aPosSizeVillage[0] - (275 + $CorrectSizeB)
-	$BottomL[1] = 540 + 88
+	$BottomL[0] = $g_aPosSizeVillage[7] - (275 + $CorrectSizeB)
+	$BottomL[1] = 628
 
-	Local $BuilderBaseDiamond[6] = [$Size, $Top, $Right, $BottomR, $BottomL, $Left]
+	Local $BuilderBaseDiamond[6] = [$iSize, $Top, $Right, $BottomR, $BottomL, $Left]
 	;This Format is for _IsPointInPoly function
 	Dim $g_aBuilderBaseOuterPolygon[7][2] = [[5, -1], [$Top[0], $Top[1]], [$Right[0], $Right[1]], [$BottomR[0], $BottomR[1]], [$BottomL[0], $BottomL[1]], [$Left[0], $Left[1]], [$Top[0], $Top[1]]] ; Make Polygon From Points
 	SetDebugLog("Builder Base Outer Polygon : " & _ArrayToString($g_aBuilderBaseOuterPolygon))
@@ -478,7 +476,7 @@ Func BuilderBaseGetEdges($BuilderBaseDiamond, $Text)
 	Local $TopLeft[0][2], $TopRight[0][2], $BottomRight[0][2], $BottomLeft[0][2]
 	If Not $g_bRunState Then Return
 
-	; $BuilderBaseDiamond[6] = [$Size, $Top, $Right, $BottomR, $BottomL, $Left]
+	; $BuilderBaseDiamond[6] = [$iSize, $Top, $Right, $BottomR, $BottomL, $Left]
 	Local $Top = $BuilderBaseDiamond[1], $Right = $BuilderBaseDiamond[2], $BottomR = $BuilderBaseDiamond[3], $BottomL = $BuilderBaseDiamond[4], $Left = $BuilderBaseDiamond[5]
 
 	Local $X = [$Top[0], $Right[0]]

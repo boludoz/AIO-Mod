@@ -755,21 +755,24 @@ Func BattleIsOver()
 	Do
 		If _Sleep(1000) Then Return 
 		If Not $g_bRunState Then Return
+		
 		TriggerMachineAbility()
-		Local $iDamage = Number(getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY))
+		
+		Local $iDamage = Number(getOcrOverAllDamage(780, 587))
 		If Int($iDamage) > Int($g_iLastDamage) Then
 			$g_iLastDamage = Int($iDamage)
 			Setlog("- Total Damage: " & $g_iLastDamage & "%", $COLOR_INFO)
 		EndIf
 		
-		If ($iBattleOverLoopCounter = 180) Then Setlog("Window Report Problem!", $COLOR_WARNING)
-		_CaptureRegion()
-		Local $aOkayText[4] = [447, 575, 0xFFFFFF, 5]
-		Local $aBlackArts[4] = [520, 600, 0x000000, 1]
-		Local $aYourAttackText[4] = [442, 258, 0xFFFFFF, 5]
-		$bIsEnded = _CheckPixel($aOkayText, False) And _CheckPixel($aBlackArts, False) And _CheckPixel($aYourAttackText, False)
+		Local $aBlackArts[4] = [520, 600, 0x000000, 5]
+		If _CheckPixel($aBlackArts, True) Then 
+			If _WaitForCheckXML($g_sImgOkButton, "345, 540, 524, 615", Default, "1000") Then $bIsEnded = True
+			SetDebugLog("$bIsEnded : " & $bIsEnded)
+		EndIf
+		
 		$iBattleOverLoopCounter += 1
-	Until ($bIsEnded = True Or $iBattleOverLoopCounter > 180)
+	Until $bIsEnded Or ($iBattleOverLoopCounter > 180)
 
+	If ($iBattleOverLoopCounter > 180) Then Setlog("Window Report Problem!", $COLOR_WARNING)
 EndFunc   ;==>BattleIsOver
 

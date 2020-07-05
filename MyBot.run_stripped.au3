@@ -7531,9 +7531,9 @@ Global $InternalArea[8][3]
 Global $ExternalArea[8][3]
 Global Const $g_sLibModIconPath = $g_sLibPath & "\ModLibs\AIOMod.dll"
 Global Enum $eIcnModKingGray = 1, $eIcnModKingBlue, $eIcnModKingGreen, $eIcnModKingRed, $eIcnModQueenGray, $eIcnModQueenBlue, $eIcnModQueenGreen, $eIcnModQueenRed, $eIcnModWardenGray, $eIcnModWardenBlue, $eIcnModWardenGreen, $eIcnModWardenRed, $eIcnModLabGray, $eIcnModLabGreen, $eIcnModLabRed, $eIcnModArrowLeft, $eIcnModArrowRight, $eIcnModTrainingP, $eIcnModResourceP, $eIcnModHeroP, $eIcnModClockTowerP, $eIcnModBuilderP, $eIcnModPowerP, $eIcnModChat, $eIcnModRepeat, $eIcnModClan, $eIcnModTarget, $eIcnModSettings, $eIcnModBKingSX, $eIcnModAQueenSX, $eIcnModGWardenSX, $eIcnModDebug, $eIcnModClanHop, $eIcnModPrecise, $eIcnModAccountsS, $eIcnModProfilesS, $eIcnModFarmingS, $eIcnMiscMod, $eIcnSuperXP, $eIcnChatActions, $eIcnHumanization, $eIcnAIOMod, $eIcnDebugMod, $eIcnLabP, $eIcnShop, $eIcnGoldP, $eIcnElixirP, $eIcnDarkP, $eIcnGFTO, $eIcnMisc, $eIcnPrewar
+Global $g_aPosSizeVillage = 0
 Global $g_iXVOffset = 0, $g_hTimerOffset = 0
 Global $g_bRemainTweak = True
-Global $g_aPosSizeVillage[2] = [Null, Null], $Stonecoord
 Global $g_bSkipfirstcheck = False, $g_hSkipfirstcheck
 Global $g_iDayLimitTroops = 0, $g_iDayLimitSpells = 0, $g_iDayLimitSieges = 0
 Global $g_iCmbRestartEvery, $g_hCmbRestartEvery
@@ -8137,6 +8137,7 @@ Global Const $g_sImgHeroStatusRec = @ScriptDir & "\imgxml\Attack\BuilderBase\Arm
 Global Const $g_sImgHeroStatusUpg = @ScriptDir & "\imgxml\Attack\BuilderBase\ArmyStatus\Hero\Upgrading\"
 Global Const $g_sImgHeroStatusMachine = @ScriptDir & "\imgxml\Attack\BuilderBase\ArmyStatus\Hero\Battle Machine\"
 Global $g_sImgBBNeedTrainTroops = @ScriptDir & "\imgxml\Attack\BuilderBase\TroopStatus\BBNeedTrainTroops_0_90.xml"
+Global $g_sImgOkButton = @ScriptDir & "\imgxml\Attack\BuilderBase\OkayButton\OkayButton_0_90.xml"
 Global $g_sImgDirBBTroops = @ScriptDir & "\imgxml\Attack\BuilderBase\BBTroops"
 Global $g_sImgDonateTroops = @ScriptDir & "\imgxml\DonateCC\Troops\"
 Global $g_sImgDonateSpells = @ScriptDir & "\imgxml\DonateCC\Spells\"
@@ -66822,8 +66823,7 @@ _GUICtrlStatusBar_SetTextEx($g_hStatusBar, "")
 EndFunc
 Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix = Default, $sFixedPrefix = Default, $bOnBuilderBase = Default)
 FuncEnter(GetVillageSize)
-$g_aPosSizeVillage[0] = Null
-$g_aPosSizeVillage[1] = Null
+Global $g_aPosSizeVillage = 0
 If $DebugLog = Default Then $DebugLog = False
 If $sStonePrefix = Default Then $sStonePrefix = "stone"
 If $sTreePrefix = Default Then $sTreePrefix = "tree"
@@ -66990,8 +66990,7 @@ $aResult[6] = $stone[5]
 $aResult[7] = $tree[0]
 $aResult[8] = $tree[1]
 $aResult[9] = $tree[5]
-$g_aPosSizeVillage[0] = Int($aResult[7])
-$g_aPosSizeVillage[1] = Int($aResult[8])
+Global $g_aPosSizeVillage = $aResult
 Return FuncReturn($aResult)
 Else
 Local $bReset = $g_bUpdateSharedPrefs And $c >= 500
@@ -67014,8 +67013,7 @@ $aResult[6] = $stone[5]
 $aResult[7] = $tree[0]
 $aResult[8] = $tree[1]
 $aResult[9] = $tree[5]
-$g_aPosSizeVillage[0] = Int($aResult[7])
-$g_aPosSizeVillage[1] = Int($aResult[8])
+Global $g_aPosSizeVillage = $aResult
 Return FuncReturn($aResult)
 EndIf
 FuncReturn()
@@ -80756,7 +80754,7 @@ EndFunc
 Func runBuilderBase($bTestRun = False)
 If Not $g_bRunState Then Return
 ClickP($aAway, 3, 400, "#0000")
-If Not $g_bChkBuilderAttack And Not $g_bChkCollectBuilderBase And Not $g_bChkStartClockTowerBoost And Not $g_iChkBBSuggestedUpgrades And Not $g_bChkCleanBBYard And not $g_bChkUpgradeMachine Then
+If Not $g_bChkBuilderAttack And Not $g_bChkCollectBuilderBase And Not $g_bChkStartClockTowerBoost And Not $g_iChkBBSuggestedUpgrades And Not $g_bChkCleanBBYard And Not $g_bChkUpgradeMachine Then
 If $g_bChkPlayBBOnly Then
 SetLog("Play Only Builder Base Check Is On But BB Option's(Collect,Attack etc) Unchecked", $COLOR_ERROR)
 SetLog("Please Check BB Options From Builder Base Tab", $COLOR_INFO)
@@ -80766,7 +80764,10 @@ EndIf
 If $g_bDebugSetlog = True Then SetDebugLog("Builder Base options not enable, Skipping Builder Base routines!", $COLOR_DEBUG)
 Return False
 EndIf
-If not SwitchBetweenBases(True, True) Then Return False
+If Not SwitchBetweenBases(True, True) Then
+$g_bStayOnBuilderBase = False
+Return False
+EndIf
 SetLog("Builder loop starts.", $COLOR_INFO)
 If randomSleep(1000) Then Return
 If $g_bRestart Or(Not $g_bRunState) Then Return
@@ -80778,7 +80779,7 @@ RestAttacksInBB(False)
 Local $aRndFuncList = ['ClockTower', 'AttackBB']
 _ArrayShuffle($aRndFuncList)
 For $iIndex In $aRndFuncList
-If not SwitchBetweenBases(True, True) Then
+If Not SwitchBetweenBases(True, True) Then
 $g_bStayOnBuilderBase = False
 Return False
 EndIf
@@ -80789,7 +80790,7 @@ If checkObstacles(True) Then SetLog("Window clean required, but no problem for M
 Local $aRndFuncList = ['ElixirUpdate', 'GoldUpdate']
 _ArrayShuffle($aRndFuncList)
 For $iIndex In $aRndFuncList
-If not SwitchBetweenBases(True, True) Then
+If Not SwitchBetweenBases(True, True) Then
 $g_bStayOnBuilderBase = False
 Return False
 EndIf
@@ -80813,12 +80814,8 @@ StartClockTowerBoost()
 CleanBBYard()
 Case "AttackBB"
 If Not $g_bChkBuilderAttack Then Return
-For $i = 0 To Random(3,5,1)
+For $i = 0 To Random(3, 5, 1)
 If Not RestAttacksInBB() Then ExitLoop
-If checkObstacles(True) Then
-SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
-ExitLoop
-EndIf
 BuilderBaseAttack($bTestRun)
 Next
 Case "ElixirUpdate"
@@ -80837,7 +80834,7 @@ If $g_bChkBuilderAttack = False Then
 $g_iAvailableAttacksBB = 0
 Return False
 EndIf
-$g_iAvailableAttacksBB = Ubound(findMultipleQuick($g_sImgAvailableAttacks, 0, "25, 626, 97, 640", Default, Default, False, 0))
+$g_iAvailableAttacksBB = UBound(findMultipleQuick($g_sImgAvailableAttacks, 0, "25, 626, 97, 640", Default, Default, False, 0))
 If $g_iAvailableAttacksBB > 0 And $g_bChkBBStopAt3 Then
 If($bSetLog = True) Then Setlog("You have " & $g_iAvailableAttacksBB & " available attack(s). I will stop attacking when there isn't.", $COLOR_SUCCESS)
 Return True
@@ -80997,8 +80994,7 @@ Func TestBuilderBaseGetDeployPoints()
 Setlog("** TestBuilderBaseGetDeployPoints START**", $COLOR_DEBUG)
 Local $Status = $g_bRunState
 $g_bRunState = True
-$g_aPosSizeVillage[0] = Null
-$g_aPosSizeVillage[1] = Null
+Global $g_aPosSizeVillage = 0
 Local $FurtherFrom = 5
 BuilderBaseGetDeployPoints($FurtherFrom, True)
 $g_bRunState = $Status
@@ -81189,13 +81185,13 @@ Local $hFormat = _GDIPlus_StringFormatCreate()
 Local $hFamily = _GDIPlus_FontFamilyCreate("Arial")
 Local $hFont = _GDIPlus_FontCreate($hFamily, 20)
 If IsArray($g_aBuilderBaseDiamond) <> True Or Not(UBound($g_aBuilderBaseDiamond) > 0) Then Return False
-Local $Size = $g_aBuilderBaseDiamond[0]
+Local $iSize = $g_aBuilderBaseDiamond[0]
 For $i = 1 To UBound($g_aBuilderBaseDiamond) - 1
 Local $Coord = $g_aBuilderBaseDiamond[$i]
 Local $NextCoord =($i = UBound($g_aBuilderBaseDiamond) - 1) ? $g_aBuilderBaseDiamond[1] : $g_aBuilderBaseDiamond[$i + 1]
 _GDIPlus_GraphicsDrawLine($hGraphic, $Coord[0], $Coord[1], $NextCoord[0], $NextCoord[1], $hPenBlue)
 Next
-Local $Size = $g_aBuilderBaseOuterDiamond[0]
+Local $iSize = $g_aBuilderBaseOuterDiamond[0]
 For $i = 1 To UBound($g_aBuilderBaseOuterDiamond) - 1
 Local $Coord = $g_aBuilderBaseOuterDiamond[$i]
 Local $NextCoord =($i = UBound($g_aBuilderBaseOuterDiamond) - 1) ? $g_aBuilderBaseOuterDiamond[1] : $g_aBuilderBaseOuterDiamond[$i + 1]
@@ -81236,7 +81232,7 @@ For $j = 0 To UBound($CSVDeployPoints) - 1
 _GDIPlus_GraphicsDrawRect($hGraphic, $CSVDeployPoints[$j][0], $CSVDeployPoints[$j][1] - 2, 4, 4, $hPenWhite)
 Next
 EndIf
-Local $filename = String($Date & "_" & $Time & "_" & $DebugText & "_" & $Size & "_.png")
+Local $filename = String($Date & "_" & $Time & "_" & $DebugText & "_" & $iSize & "_.png")
 _GDIPlus_ImageSaveToFile($editedImage, $subDirectory & "\" & $filename)
 _GDIPlus_FontDispose($hFont)
 _GDIPlus_FontFamilyDispose($hFamily)
@@ -81250,59 +81246,59 @@ _GDIPlus_GraphicsDispose($hGraphic)
 _GDIPlus_BitmapDispose($editedImage)
 EndFunc
 Func BuilderBaseAttackDiamond()
-Local $Size = GetBuilderBaseSize(False)
+Local $iSize = GetBuilderBaseSize(False)
 If Not $g_bRunState Then Return
-Setlog("Builder Base Diamond: " & $Size)
-If($Size < 520 And $Size > 590) Or $Size = 0 Then
+Setlog("Builder Base Diamond: " & $iSize)
+If($iSize < 575 And $iSize > 620) Or $iSize = 0 Then
 Setlog("Builder Base Attack Zoomout.")
 BuilderBaseZoomOut()
 If _Sleep(1000) Then Return
-$Size = GetBuilderBaseSize(False)
+$iSize = GetBuilderBaseSize(False)
 EndIf
-If $Size = 0 Then Return -1
-Local $CorrectSizeLR = Floor(($Size - 590) / 2)
-Local $CorrectSizeT = Floor(($Size - 590) / 4)
-Local $CorrectSizeB =($Size - 590)
+If($iSize = 0) Or not IsArray($g_aPosSizeVillage) Then Return -1
+Local $CorrectSizeLR = Floor(($iSize - 590) / 2)
+Local $CorrectSizeT = Floor(($iSize - 590) / 4)
+Local $CorrectSizeB =($iSize - 590)
 Local $Top[2], $Right[2], $BottomR[2], $BottomL[2], $Left[2]
-$Top[0] = $g_aPosSizeVillage[0] -(180 + $CorrectSizeT)
-$Top[1] = $g_aPosSizeVillage[1] + 6
-$Right[0] = $g_aPosSizeVillage[0] +(160 + $CorrectSizeLR)
-$Right[1] = $g_aPosSizeVillage[1] +(260 + $CorrectSizeLR)
-$Left[0] = $g_aPosSizeVillage[0] -(515 + $CorrectSizeB)
-$Left[1] = $g_aPosSizeVillage[1] +(260 + $CorrectSizeLR)
-$BottomR[0] = $g_aPosSizeVillage[0] -(110 - $CorrectSizeB)
-$BottomR[1] = 540 + 88
-$BottomL[0] = $g_aPosSizeVillage[0] -(225 + $CorrectSizeB)
-$BottomL[1] = 540 + 88
-Local $BuilderBaseDiamond[6] = [$Size, $Top, $Right, $BottomR, $BottomL, $Left]
+$Top[0] = $g_aPosSizeVillage[7] -(180 + $CorrectSizeT)
+$Top[1] = $g_aPosSizeVillage[8] + 6
+$Right[0] = $g_aPosSizeVillage[7] +(160 + $CorrectSizeLR)
+$Right[1] = $g_aPosSizeVillage[8] +(260 + $CorrectSizeLR)
+$Left[0] = $g_aPosSizeVillage[7] -(515 + $CorrectSizeB)
+$Left[1] = $g_aPosSizeVillage[8] +(260 + $CorrectSizeLR)
+$BottomR[0] = $g_aPosSizeVillage[7] -(110 - $CorrectSizeB)
+$BottomR[1] = 628
+$BottomL[0] = $g_aPosSizeVillage[7] -(225 + $CorrectSizeB)
+$BottomL[1] = 628
+Local $BuilderBaseDiamond[6] = [$iSize, $Top, $Right, $BottomR, $BottomL, $Left]
 Return $BuilderBaseDiamond
 EndFunc
 Func BuilderBaseAttackOuterDiamond()
-Local $Size = GetBuilderBaseSize(False)
+Local $iSize = GetBuilderBaseSize(False)
 If Not $g_bRunState Then Return
-Setlog("Builder Base Diamond: " & $Size)
-If($Size < 520 And $Size > 590) Or $Size = 0 Then
+Setlog("Builder Base Diamond: " & $iSize)
+If($iSize < 575 And $iSize > 620) Or $iSize = 0 Then
 Setlog("Builder Base Attack Zoomout.")
 BuilderBaseZoomOut()
 If _Sleep(1000) Then Return
-$Size = GetBuilderBaseSize(False)
+$iSize = GetBuilderBaseSize(False)
 EndIf
-If $Size = 0 Then Return -1
-Local $CorrectSizeLR = Floor(($Size - 590) / 2)
-Local $CorrectSizeT = Floor(($Size - 590) / 4)
-Local $CorrectSizeB =($Size - 590)
+If($iSize = 0) Or not IsArray($g_aPosSizeVillage) Then Return -1
+Local $CorrectSizeLR = Floor(($iSize - 590) / 2)
+Local $CorrectSizeT = Floor(($iSize - 590) / 4)
+Local $CorrectSizeB =($iSize - 590)
 Local $Top[2], $Right[2], $BottomR[2], $BottomL[2], $Left[2]
-$Top[0] = $g_aPosSizeVillage[0] -(180 + $CorrectSizeT)
-$Top[1] = $g_aPosSizeVillage[1] - 25
-$Right[0] = $g_aPosSizeVillage[0] +(205 + $CorrectSizeLR)
-$Right[1] = $g_aPosSizeVillage[1] +(260 + $CorrectSizeLR)
-$Left[0] = $g_aPosSizeVillage[0] -(560 + $CorrectSizeB)
-$Left[1] = $g_aPosSizeVillage[1] +(260 + $CorrectSizeLR)
-$BottomR[0] = $g_aPosSizeVillage[0] -(70 - $CorrectSizeB)
-$BottomR[1] = 540 + 88
-$BottomL[0] = $g_aPosSizeVillage[0] -(275 + $CorrectSizeB)
-$BottomL[1] = 540 + 88
-Local $BuilderBaseDiamond[6] = [$Size, $Top, $Right, $BottomR, $BottomL, $Left]
+$Top[0] = $g_aPosSizeVillage[7] -(180 + $CorrectSizeT)
+$Top[1] = $g_aPosSizeVillage[8] - 25
+$Right[0] = $g_aPosSizeVillage[7] +(205 + $CorrectSizeLR)
+$Right[1] = $g_aPosSizeVillage[8] +(260 + $CorrectSizeLR)
+$Left[0] = $g_aPosSizeVillage[7] -(560 + $CorrectSizeB)
+$Left[1] = $g_aPosSizeVillage[8] +(260 + $CorrectSizeLR)
+$BottomR[0] = $g_aPosSizeVillage[7] -(70 - $CorrectSizeB)
+$BottomR[1] = 628
+$BottomL[0] = $g_aPosSizeVillage[7] -(275 + $CorrectSizeB)
+$BottomL[1] = 628
+Local $BuilderBaseDiamond[6] = [$iSize, $Top, $Right, $BottomR, $BottomL, $Left]
 Dim $g_aBuilderBaseOuterPolygon[7][2] = [[5, -1], [$Top[0], $Top[1]], [$Right[0], $Right[1]], [$BottomR[0], $BottomR[1]], [$BottomL[0], $BottomL[1]], [$Left[0], $Left[1]], [$Top[0], $Top[1]]]
 SetDebugLog("Builder Base Outer Polygon : " & _ArrayToString($g_aBuilderBaseOuterPolygon))
 Return $BuilderBaseDiamond
@@ -82043,19 +82039,18 @@ Do
 If _Sleep(1000) Then Return
 If Not $g_bRunState Then Return
 TriggerMachineAbility()
-Local $iDamage = Number(getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY))
+Local $iDamage = Number(getOcrOverAllDamage(780, 587))
 If Int($iDamage) > Int($g_iLastDamage) Then
 $g_iLastDamage = Int($iDamage)
 Setlog("- Total Damage: " & $g_iLastDamage & "%", $COLOR_INFO)
 EndIf
-If($iBattleOverLoopCounter = 180) Then Setlog("Window Report Problem!", $COLOR_WARNING)
-_CaptureRegion()
-Local $aOkayText[4] = [447, 575, 0xFFFFFF, 5]
-Local $aBlackArts[4] = [520, 600, 0x000000, 1]
-Local $aYourAttackText[4] = [442, 258, 0xFFFFFF, 5]
-$bIsEnded = _CheckPixel($aOkayText, False) And _CheckPixel($aBlackArts, False) And _CheckPixel($aYourAttackText, False)
+Local $aBlackArts[4] = [520, 600, 0x000000, 5]
+If _CheckPixel($aBlackArts, True) Then
+If Not _WaitForCheckXMLGone($g_sImgOkButton, "345, 540, 524, 615", Default, "1000") Then $bIsEnded = True
+EndIf
 $iBattleOverLoopCounter += 1
 Until($bIsEnded = True Or $iBattleOverLoopCounter > 180)
+If($iBattleOverLoopCounter > 180) Then Setlog("Window Report Problem!", $COLOR_WARNING)
 EndFunc
 Func TestBuilderBaseAttack()
 Setlog("** TestBuilderBaseAttack START**", $COLOR_DEBUG)
@@ -82156,7 +82151,7 @@ Func CheckAttackBtn()
 If QuickMIS("BC1", $g_sImgAttackBtnBB, 16, 627, 107, 713, True, False) Then
 If $g_iQuickMISWOffSetX > 16 And $g_iQuickMISWOffSetX < 107 And $g_iQuickMISWOffSetY > 627 And $g_iQuickMISWOffSetY < 713 Then
 SetDebugLog("Attack Button detected: " & $g_iQuickMISWOffSetX & "," & $g_iQuickMISWOffSetY)
-Click(Random(16, 107, 1), Random(627, 713,1), 1)
+Click(Random(16, 107, 1), Random(627, 713, 1), 1)
 If _Sleep(Random(200, 3000, 1)) Then Return
 Return True
 Else
@@ -82164,7 +82159,7 @@ SetLog("Attack Button not available...", $COLOR_WARNING)
 If _Sleep(Random(200, 3000, 1)) Then Return
 Return False
 EndIf
-EndIF
+EndIf
 Return True
 EndFunc
 Func isOnVersusBattleWindow()
@@ -82253,7 +82248,7 @@ If _Sleep(100) Then Return False
 EndIf
 EndIf
 Next
-If $i > 15 Then
+If($i > 15) Or($g_iMultiPixelOffSet[0] = Null) Then
 SetLog("Find Now! Button not available...", $COLOR_DEBUG)
 Return False
 EndIf
@@ -82369,21 +82364,18 @@ Do
 If _Sleep(1000) Then Return
 If Not $g_bRunState Then Return
 TriggerMachineAbility()
-Local $sDamage = Number(getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY))
+Local $sDamage = Number(getOcrOverAllDamage(780, 587))
 If Int($sDamage) > Int($g_iLastDamage) Then
 $g_iLastDamage = Int($sDamage)
 Setlog("- Total Damage: " & $g_iLastDamage & "%", $COLOR_INFO)
 EndIf
-If $iDamageCheckLoop = 180 Then
-Setlog("Window Report Problem!", $COLOR_WARNING)
+Local $aBlackArts[4] = [520, 600, 0x000000, 5]
+If _CheckPixel($aBlackArts, True) Then
+If Not _WaitForCheckXMLGone($g_sImgOkButton, "345, 540, 524, 615", Default, "1000") Then $bIsEnded = True
 EndIf
-_CaptureRegion()
-Local $aOkayText[4] = [447, 575, 0xFFFFFF, 5]
-Local $aBlackArts[4] = [520, 600, 0x000000, 1]
-Local $aYourAttackText[4] = [442, 258, 0xFFFFFF, 5]
-$bIsEnded = _CheckPixel($aOkayText, False) And _CheckPixel($aBlackArts, False) And _CheckPixel($aYourAttackText, False)
 $iDamageCheckLoop += 1
 Until($bIsEnded = True Or $iDamageCheckLoop > 180)
+If($iDamageCheckLoop > 180) Then Setlog("Window Report Problem!", $COLOR_WARNING)
 If _Sleep(2000) Then Return
 If _ColorCheck(_GetPixelColor($aSurrenderBtn[0], $aSurrenderBtn[1], True), Hex(0xFE5D65, 6), 10) Then
 Setlog("Surrender Button fail - battle end early - CheckMainScreen()", $COLOR_ERROR)
@@ -82472,7 +82464,6 @@ SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
 Return
 EndIf
 EndFunc
-Global $g_aPosSizeVillage[2] = [Null, Null]
 Func TestBuilderBaseZoomOut()
 Setlog("** TestBuilderBaseZoomOutOnAttack START**", $COLOR_DEBUG)
 Local $Status = $g_bRunState

@@ -13,8 +13,6 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Global $g_aPosSizeVillage[2] = [Null, Null]
-
 Func TestGetBuilderBaseSize()
 	Setlog("** TestGetBuilderBaseSize START**", $COLOR_DEBUG)
 	Local $Status = $g_bRunState
