@@ -472,31 +472,9 @@ EndFunc   ;==>BuilderBaseCSVAttack
 Func BuilderBaseAttackReport()
 	; Verify the Window Report , Point[0] Archer Shadow Black Zone [155,460,000000], Point[1] Ok Green Button [430,590, 6DBC1F]
 	Local $aSurrenderBtn = [65, 607]
-
-	Local $iDamageCheckLoop = 0
-	Local $bIsEnded = False
-	Do
-		If _Sleep(1000) Then Return
-		If Not $g_bRunState Then Return
-		
-		TriggerMachineAbility()
-		
-		Local $sDamage = Number(getOcrOverAllDamage(780, 587))
-		If Int($sDamage) > Int($g_iLastDamage) Then
-			$g_iLastDamage = Int($sDamage)
-			Setlog("- Total Damage: " & $g_iLastDamage & "%", $COLOR_INFO)
-		EndIf
-		
-		Local $aBlackArts[4] = [520, 600, 0x000000, 5]
-		If _CheckPixel($aBlackArts, True) Then 
-			If _WaitForCheckXML($g_sImgOkButton, "345, 540, 524, 615", Default, "1000") Then $bIsEnded = True
-			SetDebugLog("$bIsEnded : " & $bIsEnded)
-		EndIf
-
-		$iDamageCheckLoop += 1
-	Until $bIsEnded Or ($iDamageCheckLoop > 180)
 	
-	If ($iDamageCheckLoop > 180) Then Setlog("Window Report Problem!", $COLOR_WARNING)
+	; Check if BattleIsOver.
+	BattleIsOver()	
 
 	;BB attack Ends
 	If _Sleep(2000) Then Return

@@ -142,11 +142,6 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 	Next
 	If _Sleep(200) Then Return
 	
-	Setlog(UBound($aTopLeft) & " aTopLeft", $COLOR_INFO)
-	Setlog(UBound($aTopRight) & " aTopRight", $COLOR_INFO)
-	Setlog(UBound($aBottomRight) & " aBottomRight", $COLOR_INFO)
-	Setlog(UBound($aBottomLeft) & " aBottomLeft", $COLOR_INFO)
-	
 	_ArraySort($aTopLeft, 0, 0, 0, 1)
 
 	Local $iLastY = -1, $iMaxX = -1
@@ -278,12 +273,7 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 			If $i = 0 Then _ArrayDelete($aBottomLeftNew, $i2)
 		Next
 	Next
-	
-	Setlog(UBound($aTopLeftNew) & " aTopLeftNew", $COLOR_INFO)
-	Setlog(UBound($aTopRightNew) & " aTopRightNew", $COLOR_INFO)
-	Setlog(UBound($aBottomRightNew) & " aBottomRightNew", $COLOR_INFO)
-	Setlog(UBound($aBottomLeftNew) & " aBottomLeftNew", $COLOR_INFO)
-	
+
 	Local $aSides[4] = [$aTopLeftNew, $aTopRightNew, $aBottomRightNew, $aBottomLeftNew]
 
 	Return $aSides

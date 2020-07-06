@@ -370,6 +370,21 @@ Func BuilderBaseParseAttackCSV($AvailableTroops, $DeployPoints, $DeployBestPoint
 			EndSwitch
 		Next
 
+		; Machine Ability and Battle
+		For $i = 0 To Int($SleepAfter / 50)
+			; Machine Ability
+			TriggerMachineAbility()
+			If _Sleep(50) Then Return
+			
+			Local $aBlackArts[4] = [520, 600, 0x000000, 5]
+			If _CheckPixel($aBlackArts, True) Then 
+				If _WaitForCheckImg($g_sImgOkButton, "345, 540, 524, 615") Then $bIsEnded = True
+				SetDebugLog("BattleIsOver | $bIsEnded : " & $bIsEnded)
+				ExitLoop
+			EndIf
+
+		Next
+
 		; Let's Assume That Our CSV Was Bad That None Of The Troops Was Deployed Let's Deploy Everything
 		; Let's make a Remain Just In Case deploy points problem somewhere in red zone OR Troop was not mentioned in CSV OR Hero Was not dropped. Let's drop All
 		Local $aAvailableTroops_NXQ = GetAttackBarBB()
@@ -379,14 +394,6 @@ Func BuilderBaseParseAttackCSV($AvailableTroops, $DeployPoints, $DeployBestPoint
 			AttackBB($aAvailableTroops_NXQ)
 		EndIf
 		
-		; Machine Ability and Battle
-		For $i = 0 To Int($SleepAfter / 50)
-			; Machine Ability
-			TriggerMachineAbility()
-			BattleIsOver()
-			If _Sleep(50) Then Return
-		Next
-
 	Else
 		SetLog($FileNamePath & " Doesn't exist!", $COLOR_WARNING)
 	EndIf
@@ -750,9 +757,10 @@ Func TriggerMachineAbility($bBBIsFirst = $g_bBBIsFirst, $ix = 458, $iy = 723, $b
 EndFunc   ;==>TriggerMachineAbility
 
 Func BattleIsOver()
-	Local $iBattleOverLoopCounter = 0
 	Local $bIsEnded = False
-	Do
+	Local $aBlackArts[4] = [520, 600, 0x000000, 5]
+	
+	For $iBattleOverLoopCounter = 0 To 190
 		If _Sleep(1000) Then Return 
 		If Not $g_bRunState Then Return
 		
@@ -764,14 +772,12 @@ Func BattleIsOver()
 			Setlog("- Total Damage: " & $g_iLastDamage & "%", $COLOR_INFO)
 		EndIf
 		
-		Local $aBlackArts[4] = [520, 600, 0x000000, 5]
 		If _CheckPixel($aBlackArts, True) Then 
-			If _WaitForCheckXML($g_sImgOkButton, "345, 540, 524, 615", Default, "1000") Then $bIsEnded = True
-			SetDebugLog("$bIsEnded : " & $bIsEnded)
+			If _WaitForCheckImg($g_sImgOkButton, "345, 540, 524, 615") Then $bIsEnded = True
+			SetDebugLog("BattleIsOver | $bIsEnded : " & $bIsEnded)
+			ExitLoop
 		EndIf
-		
-		$iBattleOverLoopCounter += 1
-	Until $bIsEnded Or ($iBattleOverLoopCounter > 180)
+	Next
 
 	If ($iBattleOverLoopCounter > 180) Then Setlog("Window Report Problem!", $COLOR_WARNING)
 EndFunc   ;==>BattleIsOver

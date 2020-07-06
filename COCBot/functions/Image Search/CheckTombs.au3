@@ -85,16 +85,14 @@ Func CleanYard($bTest = False)
 	If Not getBuilderCount() Then Return ; update builder data, return if problem
 	If _Sleep($DELAYRESPOND) Then Return
 
-	; Obstacles function to Parallel Search , will run all pictures inside the directory
-
 	; Setup arrays, including default return values for $return
-	Local $Filename = ""
-	Local $Locate = 0
-	Local $CleanYardXY
 	Local $sCocDiamond = $CocDiamondECD
-	Local $redLines = $sCocDiamond
-	Local $bNoBuilders = $g_iFreeBuilderCount < 1
-
+	
+	If ($g_iFreeBuilderCount < 1) Then
+		SetLog("No Builders available to remove Obstacles!")
+		Return
+	EndIf
+	
 	_CleanYard(False, $bTest)
 
 	; Setup arrays, including default return values for $return
@@ -102,7 +100,7 @@ Func CleanYard($bTest = False)
 	Local $GemBoxXY[2] = [0, 0]
 
 	; Perform a parallel search with all images inside the directory
-	If ($g_iFreeBuilderCount > 0 And $g_bChkGemsBox And Number($g_aiCurrentLoot[$eLootElixir]) > 50000) Or TestCapture() Then
+	If ($g_iFreeBuilderCount > 0 And $g_bChkGemsBox And Number($g_aiCurrentLoot[$eLootElixir]) > 50000) Or TestCapture() Or $bTest Then
 		Local $aResult = multiMatches($g_sImgGemBox, 1, $sCocDiamond, $sCocDiamond)
 		If UBound($aResult) > 1 Then
 			; Now loop through the array to modify values, select the highest entry to return
@@ -129,7 +127,6 @@ Func CleanYard($bTest = False)
 					If isInsideDiamondXY($GemBoxXY[$j][0], $GemBoxXY[$j][1]) Then
 						If IsMainPage() Then Click($GemBoxXY[$j][0], $GemBoxXY[$j][1], 1, 0, "#0430")
 						If _Sleep($DELAYCHECKTOMBS2) Then Return
-						$Locate = 1
 						If _Sleep($DELAYCOLLECT3) Then Return
 						If Not ClickRemoveObstacle() Then ContinueLoop
 						If _Sleep($DELAYCHECKTOMBS2) Then Return
@@ -151,12 +148,8 @@ Func CleanYard($bTest = False)
 		EndIf
 	EndIf
 
-	If $bNoBuilders Then
-		SetLog("No Builders available to remove Obstacles!")
-	Else
-		If $Locate = 0 And $g_bChkCleanYard And Number($g_aiCurrentLoot[$eLootElixir]) > 50000 Then SetLog("No Obstacles found, Yard is clean!", $COLOR_SUCCESS)
-		If $g_bDebugSetlog Then SetDebugLog("Time: " & Round(__TimerDiff($hObstaclesTimer) / 1000, 2) & "'s", $COLOR_SUCCESS)
-	EndIf
+	If $g_bDebugSetlog Then SetDebugLog("Time: " & Round(__TimerDiff($hObstaclesTimer) / 1000, 2) & "'s", $COLOR_SUCCESS)
+
 	UpdateStats()
 	ClickP($aAway, 1, 300, "#0329") ;Click Away
 
@@ -172,4 +165,4 @@ Func ClickRemoveObstacle()
 		SetLog("Cannot find Remove Button", $COLOR_ERROR)
 		Return False
 	EndIf
-EndFunc
+EndFunc   ;==>ClickRemoveObstacle

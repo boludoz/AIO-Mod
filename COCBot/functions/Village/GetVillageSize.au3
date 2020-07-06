@@ -50,6 +50,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	If $bOnBuilderBase = Default Then
 		$bOnBuilderBase = isOnBuilderBase(True)
 	EndIf
+	
 	If $bOnBuilderBase Then
 		$sDirectory = $g_sImgZoomOutDirBB
 	Else

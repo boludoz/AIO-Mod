@@ -47502,13 +47502,15 @@ If Not $g_bChkCleanYard And Not $g_bChkGemsBox And Not TestCapture() Then Return
 Local $hObstaclesTimer = __TimerInit()
 If Not getBuilderCount() Then Return
 If _Sleep($DELAYRESPOND) Then Return
-Local $Locate = 0
 Local $sCocDiamond = $CocDiamondECD
-Local $bNoBuilders = $g_iFreeBuilderCount < 1
-If $g_bChkCleanYard Then _CleanYard(False, $bTest)
+If($g_iFreeBuilderCount < 1) Then
+SetLog("No Builders available to remove Obstacles!")
+Return
+EndIf
+_CleanYard(False, $bTest)
 Local $return[7] = ["None", "None", 0, 0, 0, "", ""]
 Local $GemBoxXY[2] = [0, 0]
-If($g_iFreeBuilderCount > 0 And $g_bChkGemsBox And Number($g_aiCurrentLoot[$eLootElixir]) > 50000) Or TestCapture() Then
+If($g_iFreeBuilderCount > 0 And $g_bChkGemsBox And Number($g_aiCurrentLoot[$eLootElixir]) > 50000) Or TestCapture() Or $bTest Then
 Local $aResult = multiMatches($g_sImgGemBox, 1, $sCocDiamond, $sCocDiamond)
 If UBound($aResult) > 1 Then
 For $i = 1 To UBound($aResult) - 1
@@ -47529,7 +47531,6 @@ If $g_bDebugSetlog Then SetDebugLog("Coords :" & $GemBoxXY[$j][0] & "," & $GemBo
 If isInsideDiamondXY($GemBoxXY[$j][0], $GemBoxXY[$j][1]) Then
 If IsMainPage() Then Click($GemBoxXY[$j][0], $GemBoxXY[$j][1], 1, 0, "#0430")
 If _Sleep($DELAYCHECKTOMBS2) Then Return
-$Locate = 1
 If _Sleep($DELAYCOLLECT3) Then Return
 If Not ClickRemoveObstacle() Then ContinueLoop
 If _Sleep($DELAYCHECKTOMBS2) Then Return
@@ -47550,12 +47551,7 @@ Else
 SetLog("No GemBox Found!", $COLOR_SUCCESS)
 EndIf
 EndIf
-If $bNoBuilders Then
-SetLog("No Builders available to remove Obstacles!")
-Else
-If $Locate = 0 And $g_bChkCleanYard And Number($g_aiCurrentLoot[$eLootElixir]) > 50000 Then SetLog("No Obstacles found, Yard is clean!", $COLOR_SUCCESS)
 If $g_bDebugSetlog Then SetDebugLog("Time: " & Round(__TimerDiff($hObstaclesTimer) / 1000, 2) & "'s", $COLOR_SUCCESS)
-EndIf
 UpdateStats()
 ClickP($aAway, 1, 300, "#0329")
 EndFunc
@@ -61172,7 +61168,7 @@ EndFunc
 Func CheckBaseQuick($bStopRecursion = False, $sReturnHome = "")
 If $bStopRecursion Then $g_bDisableBreakCheck = True
 If($sReturnHome = "cloud") Then
-If(_WaitForCheckXML(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", "8,617,116,712", Default, Default, Default, "ReturnVillage")) Then
+If(_WaitForCheckImg(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", "8,617,116,712", Default, Default, Default, "ReturnVillage")) Then
 Click($g_aImageSearchXML[0][1] + Random(0, 20, 1), $g_aImageSearchXML[0][2] + Random(0, 20, 1), 1, 0, "#0513")
 If Not WaitMainScreen() Then SetLog("Warning, Main page not found", $COLOR_WARNING)
 EndIf
@@ -69797,7 +69793,6 @@ EndIf
 Return False
 EndFunc
 Func CleanBBYard($bTest = False)
-If Not $g_bChkCleanBBYard Then Return
 Return _CleanYard(True, $bTest)
 EndFunc
 Global Const $sStarColorNA = Hex(0xD3D3CB, 6)
@@ -75010,7 +75005,7 @@ Func ClickFindMatch()
 Local $iLoop = 0, $bFail = True
 Do
 $iLoop += 1
-If _WaitForCheckXML(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch\Button\", "559, 315, 816, 541", Default, Default, Default, "FindMatch") Then
+If _WaitForCheckImg(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch\Button\", "559, 315, 816, 541", Default, Default, Default, "FindMatch") Then
 SetDebugLog("ClickFindMatch | Clicking in find match.")
 PureClick(Random($g_aImageSearchXML[0][1] + 28, $g_aImageSearchXML[0][1] + 180, 1), Random($g_aImageSearchXML[0][2] + 10, $g_aImageSearchXML[0][2] + 94, 1), 1, 0, "#0150")
 $bFail = False
@@ -75018,7 +75013,7 @@ EndIf
 Select
 Case isGemOpen(True, True)
 Return(isGemOpen(True, True)) ?(False) :(True)
-Case Not _WaitForCheckXMLGone(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch\Obstacle\", "440, 106, 469, 123", Default, 2500, 100, "Mostaza")
+Case Not _WaitForCheckImgGone(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch\Obstacle\", "440, 106, 469, 123", Default, 2500, 100, "Mostaza")
 SetDebugLog("ClickFindMatch | ClickFindMatch fail.", $COLOR_ERROR)
 Click(Random(300, 740, 1), Random(67, 179, 1))
 $bFail = True
@@ -75030,8 +75025,8 @@ ExitLoop
 EndSelect
 If($bFail = False) Then Return True
 If _Sleep(500) Then Return
-Until(IsArray(findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", 1, "559, 315, 816, 541", "FindMatch")) And not $bFail) Or($iLoop > 10)
-If($bFail = False) And not($iLoop > 9) Then
+Until(IsArray(findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", 1, "559, 315, 816, 541", "FindMatch")) And Not $bFail) Or($iLoop > 10)
+If($bFail = False) And Not($iLoop > 9) Then
 SetDebugLog("ClickFindMatch | OK in loop : " & $iLoop)
 Return True
 Else
@@ -75161,7 +75156,7 @@ CheckMainScreen(False)
 Return False
 EndIf
 Local $ix = $aFindPencil[0][1], $iy = $aFindPencil[0][2]
-Local $aClickText[2] = [Random($ix - 320, $ix + 13,1), Random($iy + 108, $iy + 177, 1)]
+Local $aClickText[2] = [Random($ix - 320, $ix + 13, 1), Random($iy + 108, $iy + 177, 1)]
 SetDebuglog("SearchPixelDonate FindWhite " & _ArrayToString($aClickText))
 SetDebuglog("SearchPixelDonate X, Y: " & $ix & "," & $iy)
 Local $aTmp[4] = [440, Int($iy + 190), 470, Int($iy + 220)]
@@ -75188,24 +75183,28 @@ Click($aClickSend[0][1], $aClickSend[0][2], 1, 100, "#0256")
 $g_bCanRequestCC = False
 EndFunc
 Func _CleanYard($aIsBB = Default, $bTest = False)
+If $aIsBB = Default Then $aIsBB = $g_bStayOnBuilderBase
+ZoomOut()
 If $aIsBB Then
+If Not $g_bChkCleanBBYard And Not $bTest Then Return
 If Not IsMainPageBuilderBase() Then Return
 If Not getBuilderCount(True, True) Then Return
 If _Sleep($DELAYRESPOND) Then Return
 If $g_iFreeBuilderCountBB = 0 Then Return
 Else
+If Not $g_bChkCleanYard And Not $bTest Then Return
 If Not IsMainPage() Then Return
 If Not getBuilderCount() Then Return
 If _Sleep($DELAYRESPOND) Then Return
 If $g_iFreeBuilderCount = 0 Then Return
 EndIf
-If(Number($g_aiCurrentLootBB[$eLootElixirBB]) > 50000 And $aIsBB) Or(Number($g_aiCurrentLoot[$eLootElixir]) > 50000 And not $aIsBB) Or $bTest Then
+If(Number($g_aiCurrentLootBB[$eLootElixirBB]) > 50000 And $aIsBB) Or(Number($g_aiCurrentLoot[$eLootElixir]) > 50000 And Not $aIsBB) Or $bTest Then
 Local $aResult, $aRTmp1, $aRTmp2
 If $aIsBB Then
-$aResult = findMultipleQuick($g_sImgCleanBBYard, 0, "0,0,860,732", Default, Default, Default, 1)
+$aResult = findMultipleQuick($g_sImgCleanBBYard, 0, "83, 136, 844, 694", Default, Default, Default, 10)
 Else
-$aRTmp1 = findMultipleQuick($g_sImgCleanYardSnow, 0, "0,0,860,732", Default, Default, Default, 1)
-$aRTmp2 = findMultipleQuick($g_sImgCleanYard, 0, "0,0,860,732", Default, Default, Default, 1)
+$aRTmp1 = findMultipleQuick($g_sImgCleanYardSnow, 0, "15, 31, 859, 648", Default, Default, Default, 10)
+$aRTmp2 = findMultipleQuick($g_sImgCleanYard, 0, "15, 31, 859, 648", Default, Default, Default, 10)
 If IsArray($aRTmp1) Then
 $aResult = $aRTmp1
 If IsArray($aRTmp2) Then _ArrayAdd($aResult, $aRTmp2)
@@ -75217,35 +75216,40 @@ If Not IsArray($aResult) Then
 Return False
 Else
 _ArrayShuffle($aResult)
-EndiF
+EndIf
 SetLog("- Removing some obstacles - Custom by AIO Mod ++.", $COLOR_ACTION)
+Local $iError = 0, $iMaxLoop = 0, $aDigits =($aIsBB) ?($aBuildersDigitsBuilderBase) :($aBuildersDigits)
 For $i = 0 To UBound($aResult) - 1
-If $g_bEdgeObstacle Then
-If(Not isInDiamond($aResult[$i][1], $aResult[$i][2], 83, 156, 780, 680) and $aIsBB) Or(Not isInDiamond($aResult[$i][1], $aResult[$i][2], 43, 50, 818, 634) And not $aIsBB) Then ContinueLoop
-Else
-If(Not isInDiamond($aResult[$i][1], $aResult[$i][2], 83, 156, 780, 680) and $aIsBB) Or(Not isInDiamond($aResult[$i][1], $aResult[$i][2]) And not $aIsBB) Then ContinueLoop
-EndIf
-If $g_bDebugSetlog Then SetDebugLog($aResult[$i][0] & " found (" & $aResult[$i][1] & "," & $aResult[$i][2] & ")", $COLOR_SUCCESS)
-If _Sleep($DELAYRESPOND) Then Return
-For $iSeconds = 0 To Random(50, 120, 1)
-getBuilderCount(True,(($aIsBB) ?(True) :(False)))
-If($g_iFreeBuilderCountBB > 0 And $aIsBB) Or($g_iFreeBuilderCount > 0 And not $aIsBB) Then
-If getBuilderCount(True,(($aIsBB) ?(True) :(False))) = False Then Return
-If($g_iFreeBuilderCountBB > 0 And $aIsBB) Or($g_iFreeBuilderCount > 0 And not $aIsBB) Then
-PureClick($aResult[$i][1], $aResult[$i][2], 1, 0, "#0430")
-If _Sleep(Random(500, 700, 1)) Then Return
-If ClickRemoveObstacle() Then
-ContinueLoop 2
-Else
-SetDebugLog(" - CleanYardAIO | 0x1 error.")
-ExitLoop
-EndIf
-EndIf
-Else
-If RandomSleep(3000) Then Return
-EndIf
-Next
+$iMaxLoop = 0
+Select
+Case $g_bEdgeObstacle And Not $aIsBB And isInDiamond($aResult[$i][1], $aResult[$i][2], 15, 31, 859, 648)
+Case Not $g_bEdgeObstacle And Not $aIsBB And isInDiamond($aResult[$i][1], $aResult[$i][2], 92, 73, 781, 599)
+Case $g_bEdgeObstacle And $aIsBB And isInDiamond($aResult[$i][1], $aResult[$i][2], 83, 136, 844, 694)
+Case Not $g_bEdgeObstacle And $aIsBB And isInDiamond($aResult[$i][1], $aResult[$i][2], 138, 173, 780, 648)
+Case Else
+If $g_bDebugSetlog Then SetDebugLog("_CleanYard skipped.")
+ContinueLoop
+EndSelect
+If $g_bDebugSetlog Then SetDebugLog("_CleanYard found : - Is BB? " & $aIsBB & "- Is Edge ? " & $g_bEdgeObstacle & " - Coordinates X: " & $aResult[$i][1] & " | Coordinates X: " & $aResult[$i][2], $COLOR_SUCCESS)
 SetLog("- Removing some obstacles, wait. - Custom by AIO Mod ++.", $COLOR_INFO)
+Do
+$iMaxLoop += 1
+If RandomSleep(1000) Then Return
+Local $aCondition = StringSplit(getBuilders($aDigits[0], $aDigits[1]), "#", $STR_NOCOUNT)
+If($iMaxLoop > 50) Then Return
+Until Number($aCondition[0]) > 0
+If Not($i = 0) And($aResult[$i][1] > 428) Then ClickP($aAway)
+PureClick($aResult[$i][1], $aResult[$i][2], 1, 0, "#0430")
+If RandomSleep(500) Then Return
+If Not ClickRemoveObstacle() Then
+If isGemOpen(True) = True Then Return False
+Local $aiOkayButton = findButton("Okay", Default, 1, True)
+If IsArray($aiOkayButton) And UBound($aiOkayButton, 1) = 2 Then ClickP($aAway)
+SetDebugLog(" - CleanYardAIO | 0x1 error | Try x : " & $iError)
+$iError += 1
+If RandomSleep(250) Then Return
+If($iError > 5) Then ContinueLoop
+EndIf
 Next
 EndIf
 UpdateStats()
@@ -75357,7 +75361,7 @@ If($iWait <= 0) Then ExitLoop
 WEnd
 Return False
 EndFunc
-Func _WaitForCheckXML($sPathImage, $sSearchZone = Default, $bForceCaptureP = Default, $iWaitP = Default, $iDelayP = Default, $aTextP = Default)
+Func _WaitForCheckImg($sPathImage, $sSearchZone = Default, $bForceCaptureP = Default, $iWaitP = Default, $iDelayP = Default, $aTextP = Default)
 Local $bForceCapture =($bForceCaptureP = Default) ?(True) :($bForceCaptureP), $iWait =($iWaitP = Default) ?(10000) :($iWaitP), $iDelay =($iDelayP = Default) ?(250) :($iDelayP), $aText =($aTextP = Default) ?(Default) :($aTextP)
 Local $hTimer = __TimerInit()
 While(BitOR($iWait > __TimerDiff($hTimer),($iWait <= 0)) > 0)
@@ -75368,7 +75372,7 @@ If($iWait <= 0) Then ExitLoop
 WEnd
 Return False
 EndFunc
-Func _WaitForCheckXMLGone($sPathImage, $sSearchZone = Default, $bForceCaptureP = Default, $iWaitP = Default, $iDelayP = Default, $aTextP = Default)
+Func _WaitForCheckImgGone($sPathImage, $sSearchZone = Default, $bForceCaptureP = Default, $iWaitP = Default, $iDelayP = Default, $aTextP = Default)
 Local $bForceCapture =($bForceCaptureP = Default) ?(True) :($bForceCaptureP), $iWait =($iWaitP = Default) ?(10000) :($iWaitP), $iDelay =($iDelayP = Default) ?(250) :($iDelayP), $aText =($aTextP = Default) ?(Default) :($aTextP)
 Local $hTimer = __TimerInit()
 While(BitOR($iWait > __TimerDiff($hTimer),($iWait <= 0)) > 0)
@@ -75532,7 +75536,7 @@ EndIf
 EndFunc
 Func IsWarMenu()
 Local $sDirectory = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\WarPage\Window"
-If _WaitForCheckXML($sDirectory, "805, 75, 846, 119", True, 20000, 250) Then
+If _WaitForCheckImg($sDirectory, "805, 75, 846, 119", True, 20000, 250) Then
 Click(Random(807, 842, 1), Random(79, 114, 1))
 EndIf
 If RandomSleep(250) Then Return
@@ -79315,7 +79319,7 @@ SetLog("Fail GTFO | Random clan.", $COLOR_ERROR)
 $iErrors += 1
 ContinueLoop
 EndIf
-If _WaitForCheckXML($sJoinDir, $sArea) Then
+If _WaitForCheckImg($sJoinDir, $sArea) Then
 Click(Random(698, 826, 1), Random(397, 426, 1))
 Else
 SetLog("Fail GTFO | Join.", $COLOR_ERROR)
@@ -79596,7 +79600,7 @@ For $i = $DB To $LB
 _Ini_Add("MiscTab", "DeployCastleFirst" & $i, $g_bDeployCastleFirst[$i])
 Next
 _Ini_Add("Skipfirstcheck", "Enable", $g_bSkipfirstcheck ? 1 : 0)
-_Ini_Add("EdgeObstacle", "Enable", $g_bEdgeObstacle ? 1 : 0)
+_Ini_Add("MiscTab", "EdgeObstacle", $g_bEdgeObstacle ? 1 : 0)
 _Ini_Add("MiscTab", "DeployDelay0", $g_iDeployDelay[0])
 _Ini_Add("MiscTab", "DeployDelay1", $g_iDeployDelay[1])
 _Ini_Add("MiscTab", "DeployWave0", $g_iDeployWave[0])
@@ -82046,10 +82050,11 @@ Setlog("- Total Damage: " & $g_iLastDamage & "%", $COLOR_INFO)
 EndIf
 Local $aBlackArts[4] = [520, 600, 0x000000, 5]
 If _CheckPixel($aBlackArts, True) Then
-If Not _WaitForCheckXMLGone($g_sImgOkButton, "345, 540, 524, 615", Default, "1000") Then $bIsEnded = True
+If _WaitForCheckImg($g_sImgOkButton, "345, 540, 524, 615", Default, "1000") Then $bIsEnded = True
+SetDebugLog("$bIsEnded : " & $bIsEnded)
 EndIf
 $iBattleOverLoopCounter += 1
-Until($bIsEnded = True Or $iBattleOverLoopCounter > 180)
+Until $bIsEnded Or($iBattleOverLoopCounter > 180)
 If($iBattleOverLoopCounter > 180) Then Setlog("Window Report Problem!", $COLOR_WARNING)
 EndFunc
 Func TestBuilderBaseAttack()
@@ -82371,10 +82376,11 @@ Setlog("- Total Damage: " & $g_iLastDamage & "%", $COLOR_INFO)
 EndIf
 Local $aBlackArts[4] = [520, 600, 0x000000, 5]
 If _CheckPixel($aBlackArts, True) Then
-If Not _WaitForCheckXMLGone($g_sImgOkButton, "345, 540, 524, 615", Default, "1000") Then $bIsEnded = True
+If _WaitForCheckImg($g_sImgOkButton, "345, 540, 524, 615", Default, "1000") Then $bIsEnded = True
+SetDebugLog("$bIsEnded : " & $bIsEnded)
 EndIf
 $iDamageCheckLoop += 1
-Until($bIsEnded = True Or $iDamageCheckLoop > 180)
+Until $bIsEnded Or($iDamageCheckLoop > 180)
 If($iDamageCheckLoop > 180) Then Setlog("Window Report Problem!", $COLOR_WARNING)
 If _Sleep(2000) Then Return
 If _ColorCheck(_GetPixelColor($aSurrenderBtn[0], $aSurrenderBtn[1], True), Hex(0xFE5D65, 6), 10) Then
@@ -82886,8 +82892,8 @@ Setlog("Click Switch Button " & $i, $COLOR_INFO)
 Click($aSwicthBtn[$i][1] + Random(2, 10, 1), $aSwicthBtn[$i][2] + Random(2, 10, 1))
 If Not $g_bRunState Then Return
 If RandomSleep(500) Then Return
-If Not _WaitForCheckXML($g_sImgCustomArmyBB, "0,681,860,728", True, 10000, 100, "ChangeTDis") Then
-Setlog("_WaitForCheckXML Error at Camps!", $COLOR_ERROR)
+If Not _WaitForCheckImg($g_sImgCustomArmyBB, "0,681,860,728", True, 10000, 100, "ChangeTDis") Then
+Setlog("_WaitForCheckImg Error at Camps!", $COLOR_ERROR)
 $i = $i - 1
 $iAvoidInfLoop += 1
 If Not $g_bRunState Then ExitLoop
@@ -82914,7 +82920,7 @@ EndIf
 Next
 EndIf
 Next
-If $bWaschanged And _WaitForCheckXML($g_sImgCustomArmyBB, "0,681,860,728", True, 500, 100, "ChangeTDis") Then Click(Random(8, 858, 1), Random(632, 720, 1))
+If $bWaschanged And _WaitForCheckImg($g_sImgCustomArmyBB, "0,681,860,728", True, 500, 100, "ChangeTDis") Then Click(Random(8, 858, 1), Random(632, 720, 1))
 If Not $bWaschanged Then Return
 If RandomSleep(500) Then Return
 For $i = 0 To UBound($aNewAvailableTroops) - 1
@@ -82959,7 +82965,7 @@ Setlog("Entering troops", $COLOR_PURPLE)
 If Not _ColorCheck(_GetPixelColor($aArmyTrainButtonBB[0], $aArmyTrainButtonBB[1], True), Hex($aArmyTrainButtonBB[2], 6), $aArmyTrainButtonBB[3]) Then Return
 SetDebugLog("** Check the Train Button Detected**", $COLOR_DEBUG)
 Click($aArmyTrainButton[0], $aArmyTrainButton[1], 1, 0, "#0347")
-If Not _WaitForCheckXML($g_sImgPathFillArmyCampsWindow, "278, 409, 411, 464", True, 10000, 100) Then
+If Not _WaitForCheckImg($g_sImgPathFillArmyCampsWindow, "278, 409, 411, 464", True, 10000, 100) Then
 Setlog("Can't Open The Fill Army Camps Window!", $COLOR_DEBUG)
 ClickP($aAway, 1, 0, "#0332")
 Return

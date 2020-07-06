@@ -18,9 +18,8 @@ Func VillageOffset()
 		$g_hTimerOffset = TimerInit()
 		$g_iXVOffset = 0
 		
-		Local $a = GetVillageSize()
-		If IsArray($a) And (UBound($a) > 2) Then ; If it detects 2 images, it is preferable that this does nothing.
-			$g_iXVOffset = Int($a[2])
+		If IsArray($g_aPosSizeVillage) And (UBound($g_aPosSizeVillage) > 2) Then ; If it detects 2 images, it is preferable that this does nothing.
+			$g_iXVOffset = Int($g_aPosSizeVillage[2])
 			SetDebugLog("- Offset fix: " & $g_iXVOffset)
 		EndIf
 	EndIf
@@ -79,11 +78,11 @@ EndFunc   ;==>isOutsideEllipse
 ; Example .......: None
 ; ===============================================================================================================================
 
-Func isInDiamond($iX, $iY, $iLeft = 116, $iTop = 94, $iRight = 751, $iBottom = 582)
+Func isInDiamond($iX, $iY, $iLeft = 15, $iTop = 31, $iRight = 859, $iBottom = 648)
 	Local $bReturn = False
 	Local $iXFixf = Int(VillageOffset())
 	
-	If Not (($iX < 68 And $iY > 316) Or ($iY < 63) Or ($iX > 692 And $iY > 156 And $iY < 210) Or ($iX > 669 And $iY > 489)) Then
+	If Not (($iX < 68 And $iY > 316) Or ($iY < 63) Or ($iX > 692 And $iY > 156 And $iY < 210) Or ($iX > 669 And $iY > 489) Or (56 > $iY)) Then
 		Local $aMiddle[2] = [(($iLeft + $iRight) + $iXFixf) / 2, ($iTop + $iBottom) / 2]
 		Local $aSize[2] = [$aMiddle[0] - $iLeft, $aMiddle[1] - $iTop]
 		$bReturn = ((Abs($iX - $aMiddle[0]) / $aSize[0] + Abs($iY - $aMiddle[1]) / $aSize[1]) <= 1) ? (True) : (False)

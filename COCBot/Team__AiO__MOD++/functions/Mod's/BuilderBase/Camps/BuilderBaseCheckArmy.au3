@@ -47,7 +47,7 @@ Func CheckArmyBuilderBase($bDebug = False)
 	Click($aArmyTrainButton[0], $aArmyTrainButton[1], 1, 0, "#0347") ; Click Button Army Overview
 
 	; Wait for Window
-	If Not _WaitForCheckXML($g_sImgPathFillArmyCampsWindow, "278, 409, 411, 464", True, 10000, 100) Then
+	If Not _WaitForCheckImg($g_sImgPathFillArmyCampsWindow, "278, 409, 411, 464") Then
 		Setlog("Can't Open The Fill Army Camps Window!", $COLOR_DEBUG)
 		ClickP($aAway, 1, 0, "#0332") ;Click Away
 		Return

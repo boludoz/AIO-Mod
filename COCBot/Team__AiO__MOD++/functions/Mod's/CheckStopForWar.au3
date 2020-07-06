@@ -141,7 +141,7 @@ EndFunc   ;==>CheckStopForWar
 Func IsWarMenu()
 	Local $sDirectory = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\WarPage\Window"
 	
-	If _WaitForCheckXML($sDirectory, "805, 75, 846, 119", True, 20000, 250) Then
+	If _WaitForCheckImg($sDirectory, "805, 75, 846, 119") Then
 		Click(Random(807, 842, 1), Random(79, 114, 1))
 	EndIf
 	

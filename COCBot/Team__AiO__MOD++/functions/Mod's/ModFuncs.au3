@@ -85,16 +85,18 @@ Func _ImageSearchXML($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "0,
 	EndIf
 EndFunc   ;==>_ImageSearchXML
 
-Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri = Default, $bForceCapture = Default, $sOnlyFind = Default, $bExactFindP = Default, $iDistance2check = 25, $bDebugLog = False, $iLevel = 0, $iMaxLevel = 1000)
+Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri = Default, $bCapture = True, $sOnlyFind = Default, $bExactFind = Default, $iDistance2check = 25, $bDebugLog = False)
 	FuncEnter(findMultipleQuick)
 	$g_aImageSearchXML = -1
 
-	Local $bCapture, $sArea2Search, $sIsOnlyFind, $iQuantToMach, $bExactFind, $iQuantity2Match
+	If $bCapture = Default Then $bCapture = True
+	If $bExactFind = Default Then $bExactFind = False
+	
+	Local $sArea2Search, $sIsOnlyFind, $iQuantToMach, $iQuantity2Match
 	$iQuantity2Match = ($iQuantityMatch = Default) ? (0) : ($iQuantityMatch)
-	$bCapture = ($bForceCapture = Default) ? (True) : ($bForceCapture)
 	$sIsOnlyFind = ($sOnlyFind = Default) ? ("") : ($sOnlyFind)
 	$iQuantToMach = ($sOnlyFind = Default) ? ($iQuantity2Match) : (20)
-	$bExactFind = ($bExactFindP = Default) ? ($bExactFind) : (False)
+	
 
 	If $vArea2SearchOri = Default Then
 		$sArea2Search = "FV"
@@ -109,20 +111,7 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 		EndSwitch
 	EndIf
 
-	Local $sDrive = "", $sDir = "", $sFileName = "", $sExtension = ""
-	Local $aPathSplit = _PathSplit($sDirectory, $sDrive, $sDir, $sFileName, $sExtension)
-	If Not StringIsSpace($sExtension) Then
-		Local $sStrS = StringSplit($sFileName, "_", $STR_NOCOUNT)
-		Local $pa = decodeSingleCoord(findImage($sStrS[0], $sDirectory, $sArea2Search, 1, True))
-		If (IsArray($pa) And UBound($pa, 1) = 2) And (UBound($sStrS) > 1) Then
-			Local $aFake[1][4] = [[$sStrS[0], $pa[0], $pa[1], $sStrS[1]]]
-			$g_aImageSearchXML = $aFake
-			Return $aFake
-		EndIf
-		Return (-1)
-	EndIf
-
-	Local $aResult = findMultiple($sDirectory, $sArea2Search, $sArea2Search, $iLevel, $iMaxLevel, $iQuantToMach, "objectname,objectlevel,objectpoints", $bCapture)
+	Local $aResult = findMultiple($sDirectory, $sArea2Search, $sArea2Search, 0, 1000, $iQuantToMach, "objectname,objectlevel,objectpoints", $bCapture)
 	If Not IsArray($aResult) Then Return -1
 
 	Local $iCount = 0
@@ -154,11 +143,7 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 		Next
 	Next
 	
-	; Sort by X axis
-	_ArraySort($aAR, 0, 0, 0, 1)
 	If $iDistance2check > 0 And UBound($aAR) > 1 Then
-		; Sort by X axis
-		_ArraySort($aAR, 0, 0, 0, 1)
 
 		; Distance in pixels to check if is a duplicated detection , for deploy point will be 5
 		Local $iD2C = $iDistance2check
@@ -179,6 +164,17 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 				Next
 			EndIf
 		Next
+	ElseIf Not UBound($aAR) > 1 Then
+		Local $sDrive = "", $sDir = "", $sFileName = "", $sExtension = ""
+		Local $aPathSplit = _PathSplit($sDirectory, $sDrive, $sDir, $sFileName, $sExtension)
+		If Not StringIsSpace($sExtension) Then
+			Local $sStrS = StringSplit($sFileName, "_", $STR_NOCOUNT)
+			Local $pa = decodeSingleCoord(findImage($sStrS[0], $sDirectory, $sArea2Search, 1, $bCapture))
+			If (IsArray($pa) And UBound($pa, 1) = 2) And (UBound($sStrS) > 1) Then
+				Local $aAR[1][4] = [[$sStrS[0], $pa[0], $pa[1], $sStrS[1]]]
+			EndIf
+			$aAR = -1
+		EndIf
 	EndIf
 	
 	$g_aImageSearchXML = (UBound($aAR) > 0) ? ($aAR) : (-1)
@@ -190,7 +186,7 @@ Func ClickFindMatch()
 	Do
 		$iLoop += 1
 		
-		If _WaitForCheckXML(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch\Button\", "559, 315, 816, 541", Default, Default, Default, "FindMatch") Then
+		If _WaitForCheckImg(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch\Button\", "559, 315, 816, 541", "FindMatch") Then
 			SetDebugLog("ClickFindMatch | Clicking in find match.")
 			PureClick(Random($g_aImageSearchXML[0][1] + 28, $g_aImageSearchXML[0][1] + 180, 1), Random($g_aImageSearchXML[0][2] + 10, $g_aImageSearchXML[0][2] + 94, 1), 1, 0, "#0150") ; Click Find a Match Button
 			$bFail = False
@@ -199,7 +195,7 @@ Func ClickFindMatch()
 		Select
 			Case isGemOpen(True, True)
 				Return (isGemOpen(True, True)) ? (False) : (True)
-			Case Not _WaitForCheckXMLGone(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch\Obstacle\", "440, 106, 469, 123", Default, 2500, 100, "Mostaza")
+			Case Not _WaitForCheckImgGone(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch\Obstacle\", "440, 106, 469, 123", "Mostaza")
 				SetDebugLog("ClickFindMatch | ClickFindMatch fail.", $COLOR_ERROR)
 				Click(Random(300, 740, 1), Random(67, 179, 1))
 				$bFail = True
@@ -478,7 +474,7 @@ Func _CleanYard($aIsBB = Default, $bTest = False)
 		
 		SetLog("- Removing some obstacles - Custom by AIO Mod ++.", $COLOR_ACTION)
 		
-		Local $iError = 0, $iMaxLoop = 0
+		Local $iError = 0, $iMaxLoop = 0, $aDigits = ($aIsBB) ? ($aBuildersDigitsBuilderBase) : ($aBuildersDigits)
 		For $i = 0 To UBound($aResult) - 1
 			$iMaxLoop = 0
 			Select
@@ -497,21 +493,22 @@ Func _CleanYard($aIsBB = Default, $bTest = False)
 			
 			Do
 				$iMaxLoop += 1
-				If ($iMaxLoop > 50) Then Return
 				If RandomSleep(1000) Then Return
-				getBuilderCount(True, (($aIsBB) ? (True) : (False)))
-				Local $bCondition = (($g_iFreeBuilderCountBB > 0 And $aIsBB) Or ($g_iFreeBuilderCount > 0 And Not $aIsBB))
-				If $bCondition Then ExitLoop
-			Until $bCondition
+				Local $aCondition = StringSplit(getBuilders($aDigits[0], $aDigits[1]), "#", $STR_NOCOUNT)
+				If ($iMaxLoop > 50) Then Return
+			Until Number($aCondition[0]) > 0
 			
+			If Not ($i = 0) And ($aResult[$i][1] > 428) Then ClickP($aAway)
 			PureClick($aResult[$i][1], $aResult[$i][2], 1, 0, "#0430")
-			If RandomSleep(1000) Then Return
+			If RandomSleep(500) Then Return
 			If Not ClickRemoveObstacle() Then
+				If isGemOpen(True) = True Then Return False
 				Local $aiOkayButton = findButton("Okay", Default, 1, True)
 				If IsArray($aiOkayButton) And UBound($aiOkayButton, 1) = 2 Then ClickP($aAway)
 				SetDebugLog(" - CleanYardAIO | 0x1 error | Try x : " & $iError)
 				$iError += 1
-				If ($iError > 5) Then ExitLoop
+				If RandomSleep(250) Then Return
+				If ($iError > 5) Then ContinueLoop
 			EndIf
 			
 		Next

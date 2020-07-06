@@ -413,7 +413,7 @@ Func ClanHop()
 				ContinueLoop
 			EndIf
 
-			If _WaitForCheckXML($sJoinDir, $sArea) Then
+			If _WaitForCheckImg($sJoinDir, $sArea) Then
 				Click(Random(698, 826, 1), Random(397, 426, 1))
 			Else
 				SetLog("Fail GTFO | Join.", $COLOR_ERROR)
