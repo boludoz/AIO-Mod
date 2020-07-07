@@ -635,20 +635,23 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 	If Not $g_bRunState Then Return
 
 	CheckHeroesHealth()
-
 	If _Sleep($DELAYALGORITHM_ALLTROOPS4) Then Return
+
 	SetLog("Dropping left over troops", $COLOR_INFO)
 	For $x = 0 To 1
 		If PrepareAttack($g_iMatchMode, True) = 0 Then
 			If $g_bDebugSetlog Then SetDebugLog("No Wast time... exit, no troops usable left", $COLOR_DEBUG)
 			ExitLoop ;Check remaining quantities
 		EndIf
-		For $i = $eBarb To $eIceG ; launch all remaining troops
-			If LaunchTroop($i, $nbSides, 1, 1, 1) Then
-				CheckHeroesHealth()
-				If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
+		 For $i = $eBarb To $eSuperWall ; launch all remaining troops
+			If BitAND($i >= $eSuperBarb, $i <= $eSuperGiant) = True Or BitAND($i >= $eBarb, $i <= $eIceG) = True Then
+			   If LaunchTroop($i, $nbSides, 1, 1, 1) Then
+				   CheckHeroesHealth()
+				   If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
+			   EndIf
 			EndIf
-		Next
+		 Next
+
 	Next
 
 	CheckHeroesHealth()
