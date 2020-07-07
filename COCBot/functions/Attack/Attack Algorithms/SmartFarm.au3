@@ -12,7 +12,7 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
- 
+
 Func TestSmartFarm($bFast = True)
 
 	$g_iDetectedImageType = 0
@@ -22,7 +22,7 @@ Func TestSmartFarm($bFast = True)
 	$g_bRunState = True
 
 	Setlog("Starting the SmartFarm Attack Test()", $COLOR_INFO)
-	If $bFast = False Then 
+	If $bFast = False Then
 		checkMainScreen(False)
 		CheckIfArmyIsReady()
 		ClickP($aAway, 2, 0, "") ;Click Away
@@ -191,18 +191,18 @@ Func ChkSmartFarm($TypeResources = "All")
 
 	; DEBUG , image with all information
 	Local $redline[UBound($BestSideToAttack)]
-	If $g_bDebugSmartFarm Then 
+	If $g_bDebugSmartFarm Then
 		For $i = 0 To UBound($BestSideToAttack) - 1
 			$redline[$i] = GetOffsetRedline($BestSideToAttack[$i], 5)
 		Next
 		DebugImageSmartFarm($THdetails, $aResourcesIN, $aResourcesOUT, Round(TimerDiff($hTimer) / 1000, 2) & "'s", _ArrayToString($BestSideToAttack), $redline)
 	EndIf
-	
+
 	#Region - Max Side - Team AIO Mod++
 	If $g_bMaxSidesSF Then
 		Local $aSides2[4][2] = [ ["TL", $aMainSide[0]], ["TR", $aMainSide[1]], ["BL", $aMainSide[2]], ["BR", $aMainSide[3]] ]
 		_ArraySort($aSides2, 0, 0, 0, 0)
-		
+
 		Local $iMaxL = ((UBound($BestSideToAttack) -1) > ($g_iCmbMaxSidesSF - 1)) ? ($g_iCmbMaxSidesSF - 1) : (UBound($BestSideToAttack) - 1)
 		Local $BestSideToAttack[0]
 		For $i = 0 To $iMaxL
@@ -583,31 +583,35 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 				[MatchTroopDropName(22), $nbSides, MatchTroopWaveNb(22), 1, MatchSlotsPerEdge(22)], _
 				[MatchTroopDropName(23), $nbSides, MatchTroopWaveNb(23), 1, MatchSlotsPerEdge(23)]]
 	Else
-		Local $listInfoDeploy[24][5] = [[$eGole, $nbSides, 1, 1, 2] _
-				, [$eLava, $nbSides, 1, 1, 2] _
-				, [$eGiant, $nbSides, 1, 1, $g_iSlotsGiants] _
-				, [$eDrag, $nbSides, 1, 1, 0] _
-				, ["CC", 1, 1, 1, 1] _
-				, [$eBall, $nbSides, 1, 1, 0] _
-				, [$eBabyD, $nbSides, 1, 1, 0] _
-				, [$eHogs, $nbSides, 1, 1, 1] _
-				, [$eValk, $nbSides, 1, 1, 0] _
-				, [$eBowl, $nbSides, 1, 1, 0] _
-				, [$eIceG, $nbSides, 1, 1, 0] _
-				, [$eMine, $nbSides, 1, 1, 0] _
-				, [$eEDrag, $nbSides, 1, 1, 0] _
-				, [$eWall, $nbSides, 1, 1, 1] _
-				, [$eBarb, $nbSides, 1, 1, 0] _
-				, [$eArch, $nbSides, 1, 1, 0] _
-				, [$eWiza, $nbSides, 1, 1, 0] _
-				, [$eMini, $nbSides, 1, 1, 0] _
-				, [$eWitc, $nbSides, 1, 1, 1] _
-				, [$eGobl, $nbSides, 1, 1, 0] _
-				, [$eHeal, $nbSides, 1, 1, 1] _
-				, [$ePekk, $nbSides, 1, 1, 1] _
-				, [$eYeti, $nbSides, 1, 1, 1] _
-				, ["HEROES", 1, 2, 1, 1] _
-				]
+					Local $listInfoDeploy[28][5] = [[$eGole, $nbSides, 1, 1, 2] _
+							, [$eLava, $nbSides, 1, 1, 2] _
+							, [$eGiant, $nbSides, 1, 1, $g_iSlotsGiants] _
+							, [$eSuperGiant, $nbSides, 1, 1, $g_iSlotsGiants] _
+							, [$eDrag, $nbSides, 1, 1, 0] _
+							, ["CC", 1, 1, 1, 1] _
+							, [$eBall, $nbSides, 1, 1, 0] _
+							, [$eBabyD, $nbSides, 1, 1, 0] _
+							, [$eHogs, $nbSides, 1, 1, 1] _
+							, [$eValk, $nbSides, 1, 1, 0] _
+							, [$eBowl, $nbSides, 1, 1, 0] _
+							, [$eIceG, $nbSides, 1, 1, 0] _
+							, [$eMine, $nbSides, 1, 1, 0] _
+							, [$eEDrag, $nbSides, 1, 1, 0] _
+							, [$eBarb, $nbSides, 1, 1, 0] _
+							, [$eSuperBarb, $nbSides, 1, 1, 0] _
+							, [$eWall, $nbSides, 1, 1, 1] _
+							, [$eSuperWall, $nbSides, 1, 1, 1] _
+							, [$eArch, $nbSides, 1, 1, 0] _
+							, [$eWiza, $nbSides, 1, 1, 0] _
+							, [$eMini, $nbSides, 1, 1, 0] _
+							, [$eWitc, $nbSides, 1, 1, 1] _
+							, [$eGobl, $nbSides, 1, 1, 0] _
+							, [$eSneakyGobl, $nbSides, 1, 1, 0] _
+							, [$eHeal, $nbSides, 1, 1, 1] _
+							, [$ePekk, $nbSides, 1, 1, 1] _
+							, [$eYeti, $nbSides, 1, 1, 1] _
+							, ["HEROES", 1, 2, 1, 1] _
+							]
 	EndIf
 
 	$g_bIsCCDropped = False
@@ -616,7 +620,7 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 	$g_bIsHeroesDropped = False
 	$g_aiDeployHeroesPosition[0] = -1
 	$g_aiDeployHeroesPosition[1] = -1
-	
+
 	#Region - Drop CC first - Team AIO Mod++ (By Boludoz)
 	If (Ubound($g_bDeployCastleFirst) > $g_iMatchMode) And $g_bDeployCastleFirst[$g_iMatchMode] Then
 		Local $aCC = _ArraySearch($listInfoDeploy, "CC", 0, 0, 0, 0, 0, 0)
