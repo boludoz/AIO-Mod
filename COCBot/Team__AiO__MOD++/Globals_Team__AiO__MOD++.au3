@@ -22,12 +22,19 @@ Global Enum $eIcnModKingGray = 1, $eIcnModKingBlue, $eIcnModKingGreen, $eIcnModK
 		$eIcnModAccountsS, $eIcnModProfilesS, $eIcnModFarmingS, $eIcnMiscMod, $eIcnSuperXP, $eIcnChatActions, $eIcnHumanization, $eIcnAIOMod, $eIcnDebugMod, _
 		$eIcnLabP, $eIcnShop, $eIcnGoldP, $eIcnElixirP, $eIcnDarkP, $eIcnGFTO, $eIcnMisc, $eIcnPrewar
 
-; Custom remain - Team AIO Mod++
-Global $g_bRemainTweak = True
+; Offset village.
+Global $g_aPosSizeVillage = 0
 
 ; ZoomMod
 Global $g_bZoomFixBB = False
-Global $g_aBoatPos[2] = [Null, Null], $Stonecoord
+Global $Stonecoord
+	
+; Offset
+Global $g_iXVOffset = 0, $g_hTimerOffset = 0
+
+; Custom remain - Team AIO Mod++
+Global $g_bRemainTweak = True
+
 
 ; Skip first check
 Global $g_bSkipfirstcheck = False, $g_hSkipfirstcheck
@@ -58,9 +65,8 @@ Global $g_hGUI_BBDropOrder = 0
 Global $g_hChkBBCustomDropOrderEnable = 0
 Global $g_hBtnBBDropOrderSet = 0, $g_hBtnBBRemoveDropOrder = 0, $g_hBtnBBClose = 0
 Global $g_bBBDropOrderSet = False
-Global Const $g_iBBTroopCount = 11
-;Global Const $g_sBBDropOrderDefault = "BoxerGiant|HogGlider|SuperPekka|DropShip|Witch|BabyDrag|WallBreaker|Barbarian|CannonCart|Archer|Minion" - Team AIO Mod++
-;Global $g_sBBDropOrder = $g_sBBDropOrderDefault - Team AIO Mod++
+Global Const $g_iBBTroopCount = 12
+
 ;CustomArmy
 Global $g_iCmbCampsBB[6] = [0, 0, 0, 0, 0, 0]
 Global $g_hIcnTroopBB[6]
@@ -263,19 +269,6 @@ Global $g_iCmbBBAttack = $g_eBBAttackCSV
 Global $g_hTabBuilderBase = 0, $g_hTabAttack = 0
 Global $g_hCmbBBAttack = 0
 
-; BB Drop Order
-Global $g_hBtnBBDropOrder = 0
-Global $g_hGUI_BBDropOrder = 0
-Global $g_hChkBBCustomDropOrderEnable = 0
-Global $g_hBtnBBDropOrderSet = 0, $g_hBtnBBRemoveDropOrder = 0, $g_hBtnBBClose = 0
-Global $g_bBBDropOrderSet = False
-;~ Global Const $g_iBBTroopCount = 10
-;~ Global Const $g_sBBDropOrderDefault = "Boxer Giant|Super Pekka|Drop Ship|Night Witch|Baby Dragon|Bomber|Raged Barbarian|Cannon Cart|Sneaky Archer|Beta Minion"
-Global $g_ahCmbBBDropOrder[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_iBBNextTroopDelay = 2000,  $g_iBBSameTroopDelay = 300; delay time between different and same troops
-
-Global $g_bIfMachineHasAbility = False, $g_bIfMachineWasDeployed = False
-
 ; Attack CSV
 Global $g_bChkBBRandomAttack = False
 Global Const $g_sCSVBBAttacksPath = @ScriptDir & "\CSV\BuilderBase"
@@ -289,18 +282,28 @@ Global $g_bChkUpgradeTroops = False, $g_iCmbBBLaboratory, $g_bChkUpgradeMachine 
 Global $g_bChkBBUpgradeWalls = False, $g_iCmbBBWallLevel, $g_iTxtBBWallNumber = 0
 
 ; Troops
-Global $g_sIcnBBOrder[11]
-Global $g_asAttackBarBB[12] = ["", "Barbarian", "Archer", "BoxerGiant", "Minion", "WallBreaker", "BabyDrag", "CannonCart", "Witch", "DropShip", "SuperPekka", "HogGlider"]
-Global $g_aiCmbBBDropOrder[$g_iBBTroopCount] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-Global $g_sBBDropOrder = _ArrayToString($g_asAttackBarBB)
-
 Global Enum $eBBTroopBarbarian, $eBBTroopArcher, $eBBTroopGiant, $eBBTroopMinion, $eBBTroopBomber, $eBBTroopBabyDragon, $eBBTroopCannon, $eBBTroopNight, $eBBTroopDrop, $eBBTroopPekka, $eBBTroopHogG, $eBBTroopMachine, $eBBTroopCount
-Global Const $g_asBBTroopNames[$eBBTroopCount] = ["Raged Barbarian", "Sneaky Archer", "Boxer Giant", "Beta Minion", "Bomber", "Baby Dragon", "Cannon Cart", "Night Witch", "Drop Ship", "Super Pekka", "Hog Glider", "Battle Machine"]
-Global Const $g_asBBTroopShortNames[$eBBTroopCount] = ["Barbarian", "Archer", "BoxerGiant", "Minion", "WallBreaker", "BabyDrag", "CannonCart", "Witch", "DropShip", "SuperPekka", "HogGlider", "Machine"]
+Global $g_sIcnBBOrder[$eBBTroopCount]
 Global $g_asAttackBarBB2[$eBBTroopCount] = ["Barbarian", "Archer", "BoxerGiant", "Minion", "WallBreaker", "BabyDrag", "CannonCart", "Witch", "DropShip", "SuperPekka", "HogGlider", "Machine"]
+Global Const $g_asBBTroopShortNames[$eBBTroopCount] = ["Barbarian", "Archer", "BoxerGiant", "Minion", "WallBreaker", "BabyDrag", "CannonCart", "Witch", "DropShip", "SuperPekka", "HogGlider", "Machine"]
 
 Global $g_bIsMachinePresent = False
-Global $g_iBBMachAbilityTime = 14000 ; time between abilities
+Global $g_iBBMachAbilityTime = 0 ; time between abilities
+
+; BB Drop Order
+Global $g_hBtnBBDropOrder = 0
+Global $g_hGUI_BBDropOrder = 0
+Global $g_hChkBBCustomDropOrderEnable = 0
+Global $g_hBtnBBDropOrderSet = 0, $g_hBtnBBRemoveDropOrder = 0, $g_hBtnBBClose = 0
+Global $g_bBBDropOrderSet = False
+Global $g_aiCmbBBDropOrder[$eBBTroopCount] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+Global $g_ahCmbBBDropOrder[$eBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_iBBNextTroopDelay = 2000,  $g_iBBSameTroopDelay = 300; delay time between different and same troops
+
+Global $g_asAttackBarBB[$eBBTroopCount+1] = ["", "Barbarian", "Archer", "BoxerGiant", "Minion", "WallBreaker", "BabyDrag", "CannonCart", "Witch", "DropShip", "SuperPekka", "HogGlider", "Machine"]
+Global $g_sBBDropOrder = _ArrayToString($g_asAttackBarBB)
+
+Global $g_bIfMachineHasAbility = False, $g_bIfMachineWasDeployed = False
 
 ; Camps
 Global $g_aCamps[6] = ["", "", "", "", "", ""]

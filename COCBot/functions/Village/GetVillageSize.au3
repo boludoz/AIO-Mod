@@ -26,6 +26,11 @@
 
 Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix = Default, $sFixedPrefix = Default, $bOnBuilderBase = Default)
 	FuncEnter(GetVillageSize)
+	
+	#Region - Builder Base - Team AIO Mod++
+	Global $g_aPosSizeVillage = 0
+	#EndRegion - Builder Base - Team AIO Mod++
+	
 	If $DebugLog = Default Then $DebugLog = False
 	If $sStonePrefix = Default Then $sStonePrefix = "stone"
 	If $sTreePrefix = Default Then $sTreePrefix = "tree"
@@ -45,6 +50,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	If $bOnBuilderBase = Default Then
 		$bOnBuilderBase = isOnBuilderBase(True)
 	EndIf
+	
 	If $bOnBuilderBase Then
 		$sDirectory = $g_sImgZoomOutDirBB
 	Else
@@ -233,6 +239,9 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		$aResult[7] = $tree[0]
 		$aResult[8] = $tree[1]
 		$aResult[9] = $tree[5]
+		#Region - Builder Base - Team AIO Mod++
+		Global $g_aPosSizeVillage = $aResult
+		#EndRegion - Builder Base - Team AIO Mod++
 		Return FuncReturn($aResult)
 
 	Else
@@ -262,6 +271,9 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		$aResult[7] = $tree[0]
 		$aResult[8] = $tree[1]
 		$aResult[9] = $tree[5]
+		#Region - Builder Base - Team AIO Mod++
+		Global $g_aPosSizeVillage = $aResult
+		#EndRegion - Builder Base - Team AIO Mod++
 		Return FuncReturn($aResult)
 
 	EndIf

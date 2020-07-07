@@ -729,8 +729,8 @@ EndFunc   ;==>chkBBDropOrder
 Func GUIBBDropOrder()
 	Local $iGUI_CtrlId = @GUI_CtrlId
 	Local $iDropIndex = _GUICtrlComboBox_GetCurSel($iGUI_CtrlId)
-
-	For $i=0 To $g_iBBTroopCount - 1
+	Setlog($iDropIndex)
+	For $i = 0 To $g_iBBTroopCount - 1
 		If $iGUI_CtrlId = $g_ahCmbBBDropOrder[$i] Then 
 			_GUICtrlSetImage($g_sIcnBBOrder[$i], $g_sLibIconPath, $g_avStarLabTroops[$iDropIndex+1][4])
 		ElseIf $iDropIndex = _GUICtrlComboBox_GetCurSel($g_ahCmbBBDropOrder[$i]) Then

@@ -5,6 +5,21 @@
 
                     Based on MyBot.run v7.8.3.hotfix.
 					
+	**v4.0.9** 
+		» Fixed / Improved :
+			- Some bugs on zoomout.
+			- Troops on lab BB fixed.
+			- Improved builder machine (It is checked every intervals of seconds to avoid CPU consumption.).
+			- The base builder will no longer give the message of remaining attacks if the attack is not activated.
+			- Spell's.
+			
+		» New devs fixes/reports @Dissociable and @vDragon:
+			- Fixed drop machine in smart attack and custom order.
+			- Magic items buy fixed.
+			- Maintenance done fix.
+			- CPU Use fixed on some funcs.
+			- Funcs improved.
+			
 	**v4.0.8** (Quality improvement update) (Thx @Approchable, @joosmega, @omora88, @esbestan and github beta test team for test <3)
 		» Fixed / Improved :
 			- Smart farm more fast.
@@ -28,7 +43,7 @@
 			- Spells Queue fix and LSpell. (by @vDragon).
 			- Fixed SwitchBetweenBases and isOnMainVillage func.
 			- Spells and queue spells.
-			
+
 	**v4.0.6** (Quality improvement update) (Thx @Approchable, @joosmega, @omora88, @esbestan and github beta test team for test <3)
 		» Fixed / Improved :
 			- Chakal-gyn globals vars update. Thx.

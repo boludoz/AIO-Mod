@@ -154,36 +154,28 @@ Func _Wait4PixelGoneArray($aSettings) ; Return true if pixel is false
 	Return False
 EndFunc   ;==>_Wait4PixelGoneArray
 
-Func _WaitForCheckXML($sPathImage, $sSearchZone = Default, $bForceCaptureP = Default, $iWaitP = Default, $iDelayP = Default, $aTextP = Default)
-	
-	Local $bForceCapture = ($bForceCaptureP = Default) ? (True) : ($bForceCaptureP), _
-	$iWait = ($iWaitP = Default) ? (10000) : ($iWaitP), _
-	$iDelay = ($iDelayP = Default) ? (250) : ($iDelayP), _
-	$aText = ($aTextP = Default) ? (Default) : ($aTextP)
+Func _WaitForCheckImg($sPathImage, $sSearchZone = Default, $aText = Default, $iWait = 5000, $iDelay = 250)
+	If $iWait = Default Then $iWait = 5000
+	If $iDelay = Default Then $iDelay = 250
 
 	Local $hTimer = __TimerInit()
-	While (BitOR($iWait > __TimerDiff($hTimer), ($iWait <= 0)) > 0) ; '-1' support
-		Local $aRetutn = findMultipleQuick($sPathImage, 1, $sSearchZone, Default, $aText)
-		If IsArray($aRetutn) Then Return True
+	Do
+		Local $aRetutn = findMultipleQuick($sPathImage, 50, $sSearchZone, True, $aText)
+		If $aRetutn <> -1 Then Return True
 		If _Sleep($iDelay) Then Return False
-		If ($iWait <= 0) Then ExitLoop ; Loop prevention.
-	WEnd
+	Until ($iWait < __TimerDiff($hTimer))
 	Return False
-EndFunc   ;==>_WaitForCheckXML
+EndFunc   ;==>_WaitForCheckImg
 
-Func _WaitForCheckXMLGone($sPathImage, $sSearchZone = Default, $bForceCaptureP = Default, $iWaitP = Default, $iDelayP = Default, $aTextP = Default)
-	
-	Local $bForceCapture = ($bForceCaptureP = Default) ? (True) : ($bForceCaptureP), _
-	$iWait = ($iWaitP = Default) ? (10000) : ($iWaitP), _
-	$iDelay = ($iDelayP = Default) ? (250) : ($iDelayP), _
-	$aText = ($aTextP = Default) ? (Default) : ($aTextP)
+Func _WaitForCheckImgGone($sPathImage, $sSearchZone = Default, $aText = Default, $iWait = 5000, $iDelay = 250)
+	If $iWait = Default Then $iWait = 5000
+	If $iDelay = Default Then $iDelay = 250
 
 	Local $hTimer = __TimerInit()
-	While (BitOR($iWait > __TimerDiff($hTimer), ($iWait <= 0)) > 0) ; '-1' support
-		Local $aRetutn = findMultipleQuick($sPathImage, 1, $sSearchZone, Default, $aText)
-		If Not IsArray($aRetutn) Then Return True
+	Do
+		Local $aRetutn = findMultipleQuick($sPathImage, 50, $sSearchZone, True, $aText)
+		If $aRetutn = -1 Then Return True
 		If _Sleep($iDelay) Then Return False
-		If ($iWait <= 0) Then ExitLoop ; Loop prevention.
-	WEnd
+	Until ($iWait < __TimerDiff($hTimer))
 	Return False
-EndFunc   ;==>_WaitForCheckXML
+EndFunc   ;==>_WaitForCheckImg

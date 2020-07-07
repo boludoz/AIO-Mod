@@ -217,8 +217,8 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 			If Not $g_bRunState Then Return
 			If RandomSleep(500) Then Return
 
-			If Not _WaitForCheckXML($g_sImgCustomArmyBB, "0,681,860,728", True, 10000, 100, "ChangeTDis") Then
-				Setlog("_WaitForCheckXML Error at Camps!", $COLOR_ERROR)
+			If Not _WaitForCheckImg($g_sImgCustomArmyBB, "0,681,860,728", "ChangeTDis") Then
+				Setlog("_WaitForCheckImg Error at Camps!", $COLOR_ERROR)
 				$i = $i - 1
 				$iAvoidInfLoop += 1
 				If Not $g_bRunState Then ExitLoop
@@ -252,7 +252,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 		EndIf
 	Next
 	
-	If $bWaschanged And _WaitForCheckXML($g_sImgCustomArmyBB, "0,681,860,728", True, 500, 100, "ChangeTDis") Then Click(Random(8, 858, 1), Random(632, 720, 1))
+	If $bWaschanged And _WaitForCheckImg($g_sImgCustomArmyBB, "0,681,860,728", "ChangeTDis", 500, 100) Then Click(Random(8, 858, 1), Random(632, 720, 1))
 	
 	If Not $bWaschanged Then Return
 

@@ -21,7 +21,7 @@ Func CheckBaseQuick($bStopRecursion = False, $sReturnHome = "")
 
 	#Region - Custom - Team AIO Mod++
 	If ($sReturnHome = "cloud") Then
-		If (_WaitForCheckXML(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", "8,617,116,712", Default, Default, Default, "ReturnVillage")) Then 
+		If (_WaitForCheckImg(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", "8,617,116,712", "ReturnVillage")) Then 
 			Click($g_aImageSearchXML[0][1] + Random(0, 20, 1), $g_aImageSearchXML[0][2] + Random(0, 20, 1), 1, 0, "#0513")
 			If Not WaitMainScreen() Then SetLog("Warning, Main page not found", $COLOR_WARNING)
 		EndIf

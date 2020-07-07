@@ -87,29 +87,29 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 		Local $iNumSlots = UBound($aBBAttackBar, 1)
 		If $g_bBBDropOrderSet = True Then
 			;		Local $asBBDropOrder = StringSplit($g_sBBDropOrder, "|") ; Custom BB Army - Team AIO Mod++
-			For $i = 0 To UBound($g_ahCmbBBDropOrder) - 1 ; loop through each name in the drop order
+			For $i = 0 To UBound($g_aiCmbBBDropOrder) - 1 ; loop through each name in the drop order
 				Local $j = 0, $bDone = 0
 				While $j < $iNumSlots And Not $bDone
-					If $aBBAttackBar[$j][0] <> "Machine" Then
-						If $aBBAttackBar[$j][0] = $g_asAttackBarBB[Number($g_aiCmbBBDropOrder[$i]) + 1] Then ; Custom BB Army - Team AIO Mod++
-							SetLog("Deploying " & $aBBAttackBar[$j][0] & " x" & String($aBBAttackBar[$j][4]), $COLOR_ACTION)
-							PureClick($aBBAttackBar[$j][1] - Random(0, 5, 1), $aBBAttackBar[$j][2] - Random(0, 5, 1)) ; select troop
-							If $aBBAttackBar[$j][4] <> 0 Then
-								For $iAmount = 0 To $aBBAttackBar[$j][4]
-									Local $vDP = Random(0, UBound($aVar) - 1)
-									PureClick($aVar[$vDP][0], $aVar[$vDP][1])
-									If TriggerMachineAbility() Then PureClick($aBBAttackBar[$j][1] - Random(0, 5, 1), $aBBAttackBar[$j][2] - Random(0, 5, 1)) ; select troop
-									If RandomSleep($g_iBBSameTroopDelay) Then Return ; slow down selecting then dropping troops
-								Next
+						If $aBBAttackBar[$j][0] = $g_asAttackBarBB2[Number($g_aiCmbBBDropOrder[$i])] Then ; Custom BB Army - Team AIO Mod++
+							If Not ($aBBAttackBar[$j][0] == "Machine") Then
+								SetLog("Deploying " & $aBBAttackBar[$j][0] & " x" & String($aBBAttackBar[$j][4]), $COLOR_ACTION)
+								PureClick($aBBAttackBar[$j][1] - Random(0, 5, 1), $aBBAttackBar[$j][2] - Random(0, 5, 1)) ; select troop
+								If $aBBAttackBar[$j][4] <> 0 Then
+									For $iAmount = 0 To $aBBAttackBar[$j][4]
+										Local $vDP = Random(0, UBound($aVar) - 1)
+										PureClick($aVar[$vDP][0], $aVar[$vDP][1])
+										If TriggerMachineAbility() Then PureClick($aBBAttackBar[$j][1] - Random(0, 5, 1), $aBBAttackBar[$j][2] - Random(0, 5, 1)) ; select troop
+										If RandomSleep($g_iBBSameTroopDelay) Then Return ; slow down selecting then dropping troops
+									Next
+								EndIf
+							Else
+								Click($aBBAttackBar[$j][1], $aBBAttackBar[$j][2])
+								If RandomSleep($g_iBBSameTroopDelay) Then Return
+								Local $vDP = Random(0, UBound($aVar) - 1)
+								PureClick($aVar[$vDP][0], $aVar[$vDP][1])
+								Global $g_aMachineBB[2] = [$aBBAttackBar[$j][1], $aBBAttackBar[$j][2]]
+								$g_bIsBBMachineD = True
 							EndIf
-						ElseIf $aBBAttackBar[$j][0] = "Machine" Then
-							Click($aBBAttackBar[$j][1], $aBBAttackBar[$j][2])
-							If RandomSleep($g_iBBSameTroopDelay) Then Return
-							Local $vDP = Random(0, UBound($aVar) - 1)
-							PureClick($aVar[$vDP][0], $aVar[$vDP][1])
-							Global $g_aMachineBB[2] = [$aBBAttackBar[$j][1], $aBBAttackBar[$j][2]]
-							$g_bIsBBMachineD = True
-						EndIf
 
 						;---------------------------
 						If $j = $iNumSlots - 1 Or $aBBAttackBar[$j][0] <> $aBBAttackBar[$j + 1][0] Then
@@ -125,7 +125,7 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 			Next
 		Else
 			For $i = 0 To $iNumSlots - 1
-				If $aBBAttackBar[$i][0] <> "Machine" Then
+				If Not ($aBBAttackBar[$i][0] == "Machine") Then
 					SetLog("Deploying " & $aBBAttackBar[$i][0] & " x" & String($aBBAttackBar[$i][4]), $COLOR_ACTION)
 					PureClick($aBBAttackBar[$i][1] - Random(0, 5, 1), $aBBAttackBar[$i][2] - Random(0, 5, 1))     ; select troop
 					If $aBBAttackBar[$i][4] <> 0 Then
@@ -136,7 +136,7 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 							If RandomSleep($g_iBBSameTroopDelay) Then Return     ; slow down selecting then dropping troops
 						Next
 					EndIf
-				ElseIf $aBBAttackBar[$i][0] = "Machine" Then
+				Else
 					Click($aBBAttackBar[$i][1], $aBBAttackBar[$i][2])
 					If RandomSleep($g_iBBSameTroopDelay) Then Return
 					Local $vDP = Random(0, UBound($aVar) - 1)

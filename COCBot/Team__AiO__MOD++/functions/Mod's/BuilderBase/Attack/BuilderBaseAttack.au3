@@ -50,7 +50,7 @@ Func BuilderBaseAttack($bTestRun = False)
 	If $g_bRestart Then Return
 	If _Sleep(1500) Then Return ; Add Delay Before Check Builder Face As When Army Camp Get's Close Due To It's Effect Builder Face Is Dull and not recognized on slow pc
 	
-	; Check for Builder face
+	; Check for builder base.
 	If Not isOnBuilderBase() Then Return
 
 	; Check Zoomout
@@ -97,9 +97,9 @@ Func BuilderBaseAttack($bTestRun = False)
 		; Attack Bar | [0] = Troops Name , [1] = X-axis , [2] - Y-axis, [3] - Slot starting at 0, [4] - Amount
 		; Local $aAvailableTroops = BuilderBaseAttackBar()
 		Local $aAvailableTroops = GetAttackBarBB()
-		If IsArray($aAvailableTroops) Then 
+		If IsArray($aAvailableTroops) Then
 			SetDebugLog("Attack Bar Array: " & _ArrayToString($aAvailableTroops, "-", -1, -1, "|", -1, -1))
-		Else 
+		Else
 			SetDebugLog("No troops AttackBar.", $COLOR_ERROR)
 			CheckMainScreen()
 			Return -1
@@ -116,6 +116,8 @@ Func BuilderBaseAttack($bTestRun = False)
 		$g_bIfMachineHasAbility = False
 		$g_bIfMachineWasDeployed = False
 		$g_bIsBBMachineD = False
+
+		RemoveChangeTroopsDialog()
 
 		; Select mode.
 		Select
@@ -151,8 +153,6 @@ Func BuilderBaseAttack($bTestRun = False)
 		If $g_bRestart = True Then Return
 		If Not $g_bRunState Then Return
 
-		; Stats
-		; BuilderBaseAttackUpdStats()
 	EndIf
 
 	; Exit
@@ -161,11 +161,23 @@ Func BuilderBaseAttack($bTestRun = False)
 	If _Sleep(2000) Then Return
 EndFunc   ;==>BuilderBaseAttack
 
+Func RemoveChangeTroopsDialog()
+	If _ColorCheck(_GetPixelColor(103, 710, True), Hex(0x6C6E6F, 6), 25) Then
+		SetLog("Removing change troops dialog to start attack...", $COLOR_INFO)
+		Local $aClickPoints = [64, 648]
+		$aClickPoints[0] += Random(1, 282, 1)
+		$aClickPoints[1] += Random(1, 35, 1)
+		ClickP($aClickPoints)
+		Return True
+	EndIf
+	Return False
+EndFunc   ;==>RemoveChangeTroopsDialog
+
 Func CheckAttackBtn()
 	If QuickMIS("BC1", $g_sImgAttackBtnBB, 16, 627, 107, 713, True, False) Then
 		If $g_iQuickMISWOffSetX > 16 And $g_iQuickMISWOffSetX < 107 And $g_iQuickMISWOffSetY > 627 And $g_iQuickMISWOffSetY < 713 Then
 			SetDebugLog("Attack Button detected: " & $g_iQuickMISWOffSetX & "," & $g_iQuickMISWOffSetY)
-			Click(Random(16, 107, 1), Random(627, 713,1), 1)
+			Click(Random(16, 107, 1), Random(627, 713, 1), 1)
 			If _Sleep(Random(200, 3000, 1)) Then Return
 			Return True
 		Else
@@ -173,7 +185,7 @@ Func CheckAttackBtn()
 			If _Sleep(Random(200, 3000, 1)) Then Return
 			Return False
 		EndIf
-	EndIF
+	EndIf
 	Return True
 EndFunc   ;==>CheckAttackBtn
 
@@ -216,7 +228,7 @@ Func ArmyStatus(ByRef $bIsReady)
 		Return False
 
 	EndIf
-	#EndRegion
+	#EndRegion Legacy Chilly-Chill fragment.
 
 	If QuickMis("BC1", $g_sImgFullArmyBB, 108, 355, 431, 459, True, False) Then
 		SetDebugLog("Full Army detected.")
@@ -286,7 +298,7 @@ Func FindVersusBattlebtn()
 		EndIf
 	Next
 
-	If $i > 15 Then
+	If ($i > 15) Or ($g_iMultiPixelOffSet[0] = Null) Then
 		SetLog("Find Now! Button not available...", $COLOR_DEBUG)
 		Return False
 	EndIf
@@ -460,28 +472,15 @@ EndFunc   ;==>BuilderBaseCSVAttack
 Func BuilderBaseAttackReport()
 	; Verify the Window Report , Point[0] Archer Shadow Black Zone [155,460,000000], Point[1] Ok Green Button [430,590, 6DBC1F]
 	Local $aSurrenderBtn = [65, 607]
-
-	Local $iDamageCheckLoop = 0
-
-	Do
-		If Not $g_bRunState Then Return
-		TriggerMachineAbility()
-		Local $sDamage = Number(getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY))
-		If Int($sDamage) > Int($g_iLastDamage) Then
-			$g_iLastDamage = Int($sDamage)
-			Setlog("- Total Damage: " & $g_iLastDamage & "%", $COLOR_INFO)
-		EndIf
-		If $iDamageCheckLoop = 180 Then 
-			Setlog("Window Report Problem!", $COLOR_WARNING)
-		EndIf
-		$iDamageCheckLoop += 1
-	Until (_WaitForCheckXML($g_sImgOkButton, "345, 540, 524, 615", Default, "1000")) Or ($iDamageCheckLoop > 180)
 	
+	; Check if BattleIsOver.
+	BattleIsOver()	
+
 	;BB attack Ends
 	If _Sleep(2000) Then Return
 	
 	; in case BB Attack Ends in error
-	If _ColorCheck(_GetPixelColor($aSurrenderBtn[0], $aSurrenderBtn[1], True), Hex(0xFE5D65, 6), 10) Then 
+	If _ColorCheck(_GetPixelColor($aSurrenderBtn[0], $aSurrenderBtn[1], True), Hex(0xFE5D65, 6), 10) Then
 		Setlog("Surrender Button fail - battle end early - CheckMainScreen()", $COLOR_ERROR)
 		CheckMainScreen()
 		Return False

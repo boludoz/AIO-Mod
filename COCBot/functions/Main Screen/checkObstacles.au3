@@ -77,6 +77,12 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		Next
 		$iDo += 1
 	Until Not IsArray($aImgX) Or Not ((UBound($aImgX) - 1) > 1) Or ($iDo > 3)
+	
+	Local $bIsOnBuilderIsland = isOnBuilderBase(True)
+	If $bBuilderBase = False And $bIsOnBuilderIsland = True Then
+		SetLog("Detected Builder Base, trying to switch back to Main Village.", $COLOR_INFO)
+		SwitchBetweenBases(False) ; Prevent reclusion.
+	EndIf
 	#EndRegion - Custom - Team AIO Mod++
 
 	If $g_sAndroidGameDistributor <> $g_sGoogle Then ; close an ads window for non google apks
@@ -90,20 +96,6 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		EndIf
 	EndIf
 	
-	Local $bIsOnBuilderIsland = isOnBuilderBase()
-	Local $bIsOnMainVillage = isOnMainVillage()
-	If $bBuilderBase <> $bIsOnBuilderIsland And ($bIsOnBuilderIsland Or $bIsOnBuilderIsland <> $bIsOnMainVillage) Then
-		If $bIsOnBuilderIsland Then
-			SetLog("Detected Builder Base, trying to switch back to Main Village.", $COLOR_INFO)
-		Else
-			SetLog("Detected Main Village, trying to switch back to Builder Base.", $COLOR_INFO)
-		EndIf
-		If SwitchBetweenBases(False) Then ; Custom - Team AIO Mod++
-			;$g_bMinorObstacle = True
-			;If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-			;Return False
-		EndIf
-	EndIf
 
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	; Detect All Reload Button errors => 1- Another device, 2- Take a break, 3- Connection lost or error, 4- Out of sync, 5- Inactive, 6- Maintenance
@@ -230,6 +222,14 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 	EndIf
 
 	If UBound(decodeSingleCoord(FindImageInPlace("Maintenance", $g_sImgMaintenance, "270,70,640, 160", False))) > 1 Then ; Maintenance Break
+		If (QuickMIS("N1", $g_sImgMaintenanceMod, 150, 585, 175, 600) <> "none") Then ; Check if instead of Time, 'Soon' text is written in maintenance page
+			SetLog("Maintenance Break Ended up, Reloading CoC...", $COLOR_INFO)
+			Local $posReloadBtnMaintenance[2] = [677, 580]
+			$posReloadBtnMaintenance[0] += Random(1, 66, 1)
+			$posReloadBtnMaintenance[1] += Random(1, 25, 1)
+			If $g_bNotifyTGEnable And $g_bNotifyAlertMaintenance = True Then NotifyPushToTelegram("Maintenance Break Ended up.")
+			Return checkObstacles_ReloadCoC($posReloadBtnMaintenance, "MaintenanceSoonEndedUp", True)
+		EndIf
 		$Result = getOcrMaintenanceTime(310, 575, "Check Obstacles OCR Maintenance Break=")         ; OCR text to find wait time
 		Local $iMaintenanceWaitTime = 0
 		Local $avTime = StringRegExp($Result, "([\d]+)[Mm]|(soon)|([\d]+[Hh])", $STR_REGEXPARRAYMATCH)
