@@ -14,7 +14,7 @@
 ; ===============================================================================================================================
 
 Func BoostSuperTroop($iTroopIndex)
-	If $iTroopIndex < $eBarb Or $iTroopIndex > $eIceG Or $g_asSuperTroopShortNames[$iTroopIndex] == "" Then
+	If $iTroopIndex < $eBarb Or $iTroopIndex > $eHeadH Or $g_asSuperTroopShortNames[$iTroopIndex] == "" Then
 		SetLog("BoostSuperTroop(): $iTroopIndex out of boundary (" & $iTroopIndex & ")", $COLOR_ERROR)
 		Return False
 	EndIf

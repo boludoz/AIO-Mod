@@ -18,7 +18,7 @@
 
 Func TrainIt($iIndex, $iQuantity = 1, $iSleep = 400)
 	If $g_bDebugSetlogTrain Then SetLog("Func TrainIt $iIndex=" & $iIndex & " $howMuch=" & $iQuantity & " $iSleep=" & $iSleep, $COLOR_DEBUG)
-	Local $bDark = ($iIndex >= $eMini And $iIndex <= $eIceG)
+	Local $bDark = ($iIndex >= $eMini And $iIndex <= $eHeadH)
 
 	For $i = 1 To 5 ; Do
 
@@ -100,7 +100,7 @@ Func GetTrainPos(Const $iIndex)
 	Local $sPath = ""
 	
 	; Get the Image path to search
-	If ($iIndex >= $eBarb And $iIndex <= $eIceG) Or ($iIndex >= $eSuperBarb And $iIndex <= $eSuperGiant) Then
+	If ($iIndex >= $eBarb And $iIndex <= $eHeadH) Or ($iIndex >= $eSuperBarb And $iIndex <= $eSuperGiant) Then
 		Local $sFilter = GetTroopName($iIndex, 1, True)
 		Local $asImageToUse = _FileListToArray($g_sImgTrainTroops, "*.*", $FLTA_FILES, False)
 		$sPath = $g_sImgTrainTroops
@@ -131,7 +131,7 @@ EndFunc   ;==>GetTrainPos
 Func GetFullName(Const $iIndex, Const $aTrainPos)
 	If $g_bDebugSetlogTrain Then SetLog("GetFullName($iIndex=" & $iIndex & ")", $COLOR_DEBUG)
 
-	If $iIndex >= $eBarb And $iIndex <= $eIceG Then
+	If $iIndex >= $eBarb And $iIndex <= $eHeadH Then
 		Local $sTroopType = ($iIndex >= $eMini ? "Dark" : "Normal")
 		Return GetFullNameSlot($aTrainPos, $sTroopType)
 	EndIf

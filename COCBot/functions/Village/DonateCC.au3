@@ -446,7 +446,7 @@ Func DonateCC($bCheckForNewMsg = False)
 							For $i = 0 To 2
 								If $CorrectDonateCustom[$i][0] < $eBarb Then
 									$CorrectDonateCustom[$i][0] = $eArch ; Change strange small numbers to archer
-								ElseIf $CorrectDonateCustom[$i][0] > $eIceG Then
+								ElseIf $CorrectDonateCustom[$i][0] > $eHeadH Then
 									ContinueLoop ; If "Nothing" is selected then continue
 								EndIf
 								If $CorrectDonateCustom[$i][1] < 1 Then
@@ -538,7 +538,7 @@ Func DonateCC($bCheckForNewMsg = False)
 								For $i = 0 To 2
 									If $CorrectDonateCustom[$i][0] < $eBarb Then
 										$CorrectDonateCustom[$i][0] = $eArch ; Change strange small numbers to archer
-									ElseIf $CorrectDonateCustom[$i][0] > $eIceG Then
+									ElseIf $CorrectDonateCustom[$i][0] > $eHeadH Then
 										DonateWindow($aiDonateButton, $bClose)
 										$bDonate = True
 										$aiSearchArray[1] = $aiDonateButton[1] + 20

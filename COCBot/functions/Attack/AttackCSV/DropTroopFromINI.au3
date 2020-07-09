@@ -79,7 +79,7 @@ Func DropTroopFromINI($sDropVectors, $iStartIndex, $iEndIndex, $aiIndexArray, $i
 	Local $bHeroDrop = ($iTroopIndex = $eWarden ? True : False) ;set flag TRUE if Warden was dropped
 
 	;Super troop hotfix, if only super troop is available and normal troop is in csv, use the super troop
-	If $iTroopIndex <= $eIceG And _ArraySearch($g_avAttackTroops, $iTroopIndex + $eSuperBarb) > -1 Then
+	If $iTroopIndex <= $eHeadH And _ArraySearch($g_avAttackTroops, $iTroopIndex + $eSuperBarb) > -1 Then
 		SetLog("CSV contains normal troop but only super troop available, append drop quantity", $COLOR_INFO)
 		$iTroopIndex += $eSuperBarb
 		$qtyxpoint = Round($qtyxpoint / $g_aiSuperTroopSpace[$iTroopIndex - $eSuperBarb])
@@ -230,7 +230,7 @@ Func DropTroopFromINI($sDropVectors, $iStartIndex, $iEndIndex, $aiIndexArray, $i
 					debugAttackCSV("- Delay change deploy point: " & $delayPoint & " (x" & $g_CSVSpeedDivider[$g_iMatchMode] & " faster)")
 
 					Switch $iTroopIndex
-						Case $eBarb To $eIceG, $eSuperBarb To $eSuperWall ; drop normal/super troops
+						Case $eBarb To $eHeadH, $eSuperBarb To $eSuperWall ; drop normal/super troops
 							If $bDebug Then
 								SetLog("AttackClick( " & $pixel[0] & ", " & $pixel[1] & " , " & $qty2 & ", " & $delayPoint & ",#0666)")
 							Else

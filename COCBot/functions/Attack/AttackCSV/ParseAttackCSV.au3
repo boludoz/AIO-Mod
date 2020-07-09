@@ -357,7 +357,7 @@ Func ParseAttackCSV($debug = False)
 								_ArrayShuffle($g_avAttackTroops)
 									; a Loop from all troops
 									For $ii = $eBarb To $eSuperWall ; launch all remaining troops
-										If BitAND($ii >= $eSuperBarb, $ii <= $eSuperGiant) = True Or BitAND($ii >= $eBarb, $ii <= $eIceG) = True Then
+										If BitAND($ii >= $eSuperBarb, $ii <= $eSuperGiant) = True Or BitAND($ii >= $eBarb, $ii <= $eHeadH) = True Then
 											; Loop on all detected troops
 											For $x = 0 To UBound($g_avAttackTroops) - 1
 												; If the Name exist and haves more than zero is deploy it

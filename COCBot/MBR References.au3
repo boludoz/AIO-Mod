@@ -517,6 +517,7 @@ Func ReferenceGlobals()
 	$a1 = $eLava
 	$a1 = $eBowl
 	$a1 = $eIceG
+	$a1 = $eHeadH
 	$a1 = $eKing
 	$a1 = $eQueen
 	$a1 = $eWarden

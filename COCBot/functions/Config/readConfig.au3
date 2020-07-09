@@ -73,7 +73,7 @@ Func ReadBuildingConfig()
 		$locationsInvalid = True
 	EndIf
 
-	IniReadS($g_iTownHallLevel, $g_sProfileBuildingPath, "other", "LevelTownHall", 0, "int")
+	IniReadS($g_iTownHallLevel, $g_sProfileBuildingPath, "other", "LevelTownHall", 13, "int")
 
    If ($g_iTownHallLevel > $g_iMaxTHLevel) Then $g_iTownHallLevel = $g_iMaxTHLevel
 

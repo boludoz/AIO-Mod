@@ -22,9 +22,6 @@
 ; CheckModVersion - Team AiO MOD++
 #include "functions\Mod's\CheckModVersion.au3"
 
-; QueueFix - Team AiO MOD++
-#include "functions\Mod's\QueueFix.au3"
-
 ; Check Stop For War - Team AiO MOD++
 #include "functions\Mod's\CheckStopForWar.au3"
 

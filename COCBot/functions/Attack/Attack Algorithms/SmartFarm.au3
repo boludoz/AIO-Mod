@@ -583,7 +583,7 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 				[MatchTroopDropName(22), $nbSides, MatchTroopWaveNb(22), 1, MatchSlotsPerEdge(22)], _
 				[MatchTroopDropName(23), $nbSides, MatchTroopWaveNb(23), 1, MatchSlotsPerEdge(23)]]
 	Else
-					Local $listInfoDeploy[28][5] = [[$eGole, $nbSides, 1, 1, 2] _
+					Local $listInfoDeploy[29][5] = [[$eGole, $nbSides, 1, 1, 2] _
 							, [$eLava, $nbSides, 1, 1, 2] _
 							, [$eGiant, $nbSides, 1, 1, $g_iSlotsGiants] _
 							, [$eSuperGiant, $nbSides, 1, 1, $g_iSlotsGiants] _
@@ -596,6 +596,7 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 							, [$eBowl, $nbSides, 1, 1, 0] _
 							, [$eIceG, $nbSides, 1, 1, 0] _
 							, [$eMine, $nbSides, 1, 1, 0] _
+							, [$eHeadH, $nbSides, 1, 1, 0] _
 							, [$eEDrag, $nbSides, 1, 1, 0] _
 							, [$eBarb, $nbSides, 1, 1, 0] _
 							, [$eSuperBarb, $nbSides, 1, 1, 0] _
@@ -644,7 +645,7 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 			ExitLoop ;Check remaining quantities
 		EndIf
 		 For $i = $eBarb To $eSuperWall ; launch all remaining troops
-			If BitAND($i >= $eSuperBarb, $i <= $eSuperGiant) = True Or BitAND($i >= $eBarb, $i <= $eIceG) = True Then
+			If BitAND($i >= $eSuperBarb, $i <= $eSuperGiant) = True Or BitAND($i >= $eBarb, $i <= $eHeadH) = True Then
 			   If LaunchTroop($i, $nbSides, 1, 1, 1) Then
 				   CheckHeroesHealth()
 				   If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return

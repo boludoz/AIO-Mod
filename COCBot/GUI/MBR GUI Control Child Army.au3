@@ -564,7 +564,7 @@ Func BtnRemoveTroops()
 		For $j = 0 To UBound($g_asTroopOrderList) - 1
 			$sComboData &= $g_asTroopOrderList[$j] & "|"
 		Next
-	For $i = $eTroopBarbarian To $eTroopCount - 1
+	For $i = $eTroopBarbarian To $eTroopCount -1
 		$g_aiCmbCustomTrainOrder[$i] = -1
 		_GUICtrlComboBox_ResetContent($g_ahCmbTroopOrder[$i])
 		GUICtrlSetData($g_ahCmbTroopOrder[$i], $sComboData, "")

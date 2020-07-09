@@ -28,12 +28,12 @@ Func LoadTranslatedDropOrderList()
 		"Wall Breakers", "Balloons", "Wizards", "Healers", _
 		"Dragons", "Pekkas", "Baby Dragons", "Miners", "Electro Dragons", "Yetis", _
 		"Minions", "Hog Riders", "Valkyries", "Golems", _
-		"Witches", "Lava Hounds", "Bowlers", "Ice Golems", "Clan Castle", "Heroes"]
+		"Witches", "Lava Hounds", "Bowlers", "Ice Golems", "Headhunters", "Clan Castle", "Heroes"]
 EndFunc   ;==>LoadTranslatedDropOrderList
 
 Global $g_hChkCustomDropOrderEnable = 0
-Global $g_ahCmbDropOrder[$eDropOrderCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_ahImgDropOrder[$eDropOrderCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_ahCmbDropOrder[$eDropOrderCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_ahImgDropOrder[$eDropOrderCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_hBtnDropOrderSet = 0, $g_ahImgDropOrderSet = 0
 Global $g_hBtnRemoveDropOrder = 0
 
@@ -112,7 +112,7 @@ Func CreateDropOrderGUI()
 		Next
 
 	$x = 25
-	$y = 355
+	$y = 368
 		; Create push button to set training order once completed
 		$g_hBtnDropOrderSet = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "BtnDropOrderSet", "Apply New Order"), $x, $y, 100, 25)
 			GUICtrlSetState(-1, BitOR($GUI_UNCHECKED, $GUI_ENABLE))
@@ -129,7 +129,7 @@ Func CreateDropOrderGUI()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	; Create a button control.
-	Local $g_hBtnClose = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "BtnClose", "Close"), 229, 388, 85, 25)
+	Local $g_hBtnClose = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "BtnClose", "Close"), 229, 390, 85, 25)
 		GUICtrlSetOnEvent(-1, "CloseCustomDropOrder")
 
 EndFunc   ;==>CreateDropOrderGUI

@@ -379,7 +379,7 @@ EndFunc   ;==>IsElixirTroop
 
 Func IsDarkTroop($Troop)
 	Local $iIndex = TroopIndexLookup($Troop, "IsDarkTroop")
-	If $iIndex >= $eMini And $iIndex <= $eIceG Then Return True
+	If $iIndex >= $eMini And $iIndex <= $eHeadH Then Return True
 	Return False
 EndFunc   ;==>IsDarkTroop
 
@@ -643,7 +643,7 @@ Func GetSlotNumber($bSpells = False)
 	Select
 		Case $bSpells = False
 			Local Const $Orders = [$eBarb, $eArch, $eGiant, $eGobl, $eWall, $eBall, $eWiza, $eHeal, $eDrag, $eYeti, $ePekk, $eBabyD, $eMine, $eEDrag, _
-					$eMini, $eHogs, $eValk, $eGole, $eWitc, $eLava, $eBowl, $eIceG] ; Set Order of troop display in Army Tab
+					$eMini, $eHogs, $eValk, $eGole, $eWitc, $eLava, $eBowl, $eIceG, $eHeadH] ; Set Order of troop display in Army Tab
 
 			Local $allCurTroops[UBound($Orders)]
 
@@ -1447,7 +1447,7 @@ Func CheckValuesCost($Troop = "Arch", $troopQuantity = 1, $DebugLogs = 0)
 	Local $aTrainPos = GetTrainPos($iTroopIndex)
 	Local $iTempTroopCost, $iTempSpellCost
 	If IsArray($aTrainPos) And $aTrainPos[0] <> -1 Then
-		If $iTroopIndex >= $eBarb And $iTroopIndex <= $eIceG Then
+		If $iTroopIndex >= $eBarb And $iTroopIndex <= $eHeadH Then
 			$iTempTroopCost = getArmyResourcesFromButtons($aTrainPos[0] - $g_aiTroopOcrOffSet[$iTroopIndex][0], $aTrainPos[1] + $g_aiTroopOcrOffSet[$iTroopIndex][1])
 			If $iTempTroopCost <> "" Then
 				$troopCost = $iTempTroopCost
