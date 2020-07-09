@@ -25,9 +25,10 @@ Func AreCollectorsOutside($percent)
 	Global $hTimer = TimerInit()
 
 	SuspendAndroid()
-	Global $g_aiPixelMine = GetLocationMine()
-	Global $g_aiPixelElixir = GetLocationElixir()
-	Global $g_aiPixelDarkElixir = GetLocationDarkElixir()
+	_CaptureRegion2()
+	Global $g_aiPixelMine = _GetLocationMine(False)
+	Global $g_aiPixelElixir = _GetLocationElixir(False)
+	Global $g_aiPixelDarkElixir = _GetLocationDarkElixir(False)
 	ResumeAndroid()
 
 	If Not (IsArray($g_aiPixelMine) Or IsArray($g_aiPixelElixir) Or (IsArray($g_aiPixelDarkElixir) And ($g_iTownHallLevel > 6) And (Not $g_bSmartZapEnable))) Then

@@ -95,7 +95,7 @@ Func CheckPostponedLog($bNow = False)
 	Return $iLogs
 EndFunc   ;==>CheckPostponedLog
 
-Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, $iFurMin = 5, $iFurMax = 10, $iCenterX = 450, $iCenterY = 425, $bForceCapture = True, $DebugLog = False) ; Return a large amount of quality deploy point with random and safe further from without theorem.
+Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, $iFurMin = 5, $iFurMax = 5, $iCenterX = 450, $iCenterY = 425, $bForceCapture = True, $DebugLog = False) ; Return a large amount of quality deploy point with random and safe further from without theorem.
 	
 	Local $aTopLeft[0][2], $aTopRight[0][2], $aBottomRight[0][2], $aBottomLeft[0][2]
 
@@ -116,26 +116,21 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 			Local $aCoordsM = $aCoords[$iCoords]
 			
 			Local $iFur = Random($iFurMin, $iFurMax, 1)
-
 			If Int($aiPostFix[0] + $aCoordsM[0]) < Int($iCenterX) Then
 				If Int($aiPostFix[1] + $aCoordsM[1]) < Int($iCenterY) Then
 					Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) - $iFur, ($aiPostFix[1] + $aCoordsM[1]) - $iFur]]
-					Local $P = _GetPixelColor($vResult[0][0], $vResult[0][1], True)
-					If _ColorCheck($P, Hex(0x447063, 6), 25) Then _ArrayAdd($aTopLeft, $vResult)
+					If _ColorCheck(_GetPixelColor($vResult[0][0], $vResult[0][1], True), Hex(0x447063, 6), 0) Then _ArrayAdd($aTopLeft, $vResult)
 				Else
 					Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) - $iFur, ($aiPostFix[1] + $aCoordsM[1]) + $iFur]]
-					Local $P = _GetPixelColor($vResult[0][0], $vResult[0][1], True)
-					If _ColorCheck($P, Hex(0x447063, 6), 25) Then _ArrayAdd($aBottomLeft, $vResult)
+					If _ColorCheck(_GetPixelColor($vResult[0][0], $vResult[0][1], True), Hex(0x447063, 6), 0) Then _ArrayAdd($aBottomLeft, $vResult)
 				EndIf
 			Else
 				If Int($aiPostFix[1] + $aCoordsM[1]) < Int($iCenterY) Then
 					Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) + $iFur, ($aiPostFix[1] + $aCoordsM[1]) - $iFur]]
-					Local $P = _GetPixelColor($vResult[0][0], $vResult[0][1], True)
-					If _ColorCheck($P, Hex(0x447063, 6), 25) Then _ArrayAdd($aTopRight, $vResult)
+					If _ColorCheck(_GetPixelColor($vResult[0][0], $vResult[0][1], True), Hex(0x447063, 6), 0) Then _ArrayAdd($aTopRight, $vResult)
 				Else
 					Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) + $iFur, ($aiPostFix[1] + $aCoordsM[1]) + $iFur]]
-					Local $P = _GetPixelColor($vResult[0][0], $vResult[0][1], True)
-					If _ColorCheck($P, Hex(0x447063, 6), 25) Then _ArrayAdd($aBottomRight, $vResult)
+					If _ColorCheck(_GetPixelColor($vResult[0][0], $vResult[0][1], True), Hex(0x447063, 6), 0) Then _ArrayAdd($aBottomRight, $vResult)
 				EndIf
 			EndIf
 		Next
@@ -273,7 +268,16 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 			If $i = 0 Then _ArrayDelete($aBottomLeftNew, $i2)
 		Next
 	Next
-
+	
+	; In no 'DP' case.
+	If UBound($aTopLeftNew) < 11 Or UBound($aTopRightNew) < 11 Or UBound($aBottomRightNew) < 11 Or UBound($aBottomLeftNew) < 11 Then 
+		$g_aBuilderBaseOuterDiamond = BuilderBaseAttackOuterDiamond()
+	
+		If $g_aBuilderBaseOuterDiamond <> -1 Then
+			Return BuilderBaseGetEdges($g_aBuilderBaseOuterDiamond, "Outer Edges")
+		EndIf
+	EndIf
+	
 	Local $aSides[4] = [$aTopLeftNew, $aTopRightNew, $aBottomRightNew, $aBottomLeftNew]
 
 	Return $aSides

@@ -28,9 +28,12 @@ Func AreCollectorsNearRedline($percent)
 	$hBitmapFirst = _CaptureRegion2()
 	_GetRedArea()
 
-	$g_aiPixelMine = GetLocationMine()
-	$g_aiPixelElixir = GetLocationElixir()
-	$g_aiPixelDarkElixir = GetLocationDarkElixir()
+	SuspendAndroid()
+	_CaptureRegion2()
+	Global $g_aiPixelMine = _GetLocationMine(False)
+	Global $g_aiPixelElixir = _GetLocationElixir(False)
+	Global $g_aiPixelDarkElixir = _GetLocationDarkElixir(False)
+	ResumeAndroid()
 
 	If Not (IsArray($g_aiPixelMine) Or IsArray($g_aiPixelElixir) Or (IsArray($g_aiPixelDarkElixir) And ($g_iTownHallLevel > 6) And (Not $g_bSmartZapEnable))) Then
 		SetLog("Are collectors outside | No mines/collectors/drills detected.", $COLOR_INFO)

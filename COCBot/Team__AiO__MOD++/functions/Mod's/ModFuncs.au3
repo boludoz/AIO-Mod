@@ -93,7 +93,11 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 	If $bExactFind = Default Then $bExactFind = False
 	
 	Local $sArea2Search, $sIsOnlyFind, $iQuantToMach, $iQuantity2Match
-	$iQuantity2Match = ($iQuantityMatch = Default) ? (0) : ($iQuantityMatch)
+	If $iQuantityMatch <> 1 Then
+		$iQuantity2Match = ($iQuantityMatch = Default) ? (0) : ($iQuantityMatch)
+		Else
+		$iQuantityMatch = 2
+	EndIf
 	$sIsOnlyFind = ($sOnlyFind = Default) ? ("") : ($sOnlyFind)
 	$iQuantToMach = ($sOnlyFind = Default) ? ($iQuantity2Match) : (20)
 	

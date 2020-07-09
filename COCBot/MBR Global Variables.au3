@@ -598,6 +598,7 @@ Global Const $REDLINE_IMGLOC_RAW = 0
 Global Const $REDLINE_IMGLOC = 1
 Global Const $REDLINE_ORIGINAL = 2
 Global Const $REDLINE_NONE = 3
+Global Const $REDLINE_BB = 4
 
 ; 0 = Use fixed village corner (default), 1 = Find fist red line point, 2 = Fixed village corner on full drop line, 3 = First red line point on full drop line
 Global Const $DROPLINE_EDGE_FIXED = 0

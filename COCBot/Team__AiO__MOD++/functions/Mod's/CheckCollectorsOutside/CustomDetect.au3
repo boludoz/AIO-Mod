@@ -13,60 +13,63 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func _GetLocationMine()
-	Local $vMines = findMultipleQuick(@ScriptDir & "\imgxml\Storages\GoldMines", 7, Default, Default, Default, Default, 5)
-	Local $vMinesS = findMultipleQuick(@ScriptDir & "\imgxml\Storages\Mines_Snow", 7, Default, Default, Default, Default, 5)
+Func FastVillage($sDirectory, $iLimit = 7, $bNeedCapture = True)
+	Local $aRet[0]
 	
-	Local $aReturn[0]
-	If IsArray($vMines) Then
-		For $i = 0 To UBound($vMines)-1
-			Local $aTmp[2] = [$vMines[$i][1], $vMines[$i][2]]
-			_ArrayAdd($aReturn, $aTmp, 0, -1, -1, $ARRAYFILL_FORCE_SINGLEITEM)
-		Next
+	If $g_aPosSizeVillage <> 0 Then
+		Local $x = 92 + $g_aPosSizeVillage[2], $x2 = 781 + $g_aPosSizeVillage[2]
+	Else
+		Local $x = 92, $x2 = 781
 	EndIf
 	
-	If IsArray($vMinesS) Then
-		For $i = 0 To UBound($vMinesS)-1
-			Local $aTmp[2] = [$vMinesS[$i][1], $vMinesS[$i][2]]
-			_ArrayAdd($aReturn, $aTmp, 0, -1, -1, $ARRAYFILL_FORCE_SINGLEITEM)
-		Next
-	EndIf
+	Local $aiPostFix[4] = [$x, 73, $x2, 599]
 	
-	Return (UBound($aReturn)-1 > 0) ? ($aReturn) : (-1)
-EndFunc   ;==>GetLocationMine
+	If $bNeedCapture Then _CaptureRegion2()
+	If $iLimit = 1 Then $iLimit += 1 ; SearchMultipleTilesBetweenLevels support all <> 1. 
+	;Local $aRes = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sDirectory, "str", "FV", "Int", $iLimit, "str", "FV", "Int", 0, "Int", 1000)
+	Local $aRes = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sDirectory, "str", GetDiamondFromArray($aiPostFix), "Int", $iLimit, "str", GetDiamondFromArray($aiPostFix), "Int", 0, "Int", 1000)
+	If UBound($aRes[0]) > 1 Then Return -1
+	Local $aKeyValue = StringSplit($aRes[0], "|", $STR_NOCOUNT)
 
-Func _GetLocationElixir()
-	Local $vCollectors = findMultipleQuick(@ScriptDir & "\imgxml\Storages\Collectors", 7, Default, Default, Default, Default, 5)
-	Local $vCollectorsS = findMultipleQuick(@ScriptDir & "\imgxml\Storages\Collectors_Snow", 7, Default, Default, Default, Default, 5)
-
-	Local $aReturn[0]
-	If IsArray($vCollectors) Then
-		For $i = 0 To UBound($vCollectors)-1
-			Local $aTmp[2] = [$vCollectors[$i][1], $vCollectors[$i][2]]
-			_ArrayAdd($aReturn, $aTmp, 0, -1, -1, $ARRAYFILL_FORCE_SINGLEITEM)
+	For $i = 0 To UBound($aKeyValue) - 1
+		Local $vDLLRes = DllCallMyBot("GetProperty", "str", $aKeyValue[$i], "str", "objectpoints")
+		Local $vDLLSpl = StringSplit($vDLLRes[0], "|", $STR_NOCOUNT)
+		For $vC In $vDLLSpl
+			Local $a = StringSplit($vC, ",", $STR_NOCOUNT)
+			If UBound($a) <> 2 Then ContinueLoop
+			;$a[0] += $x
+			;$a[1] += 73
+			_ArrayAdd($aRet, $a, 0, -1, -1, $ARRAYFILL_FORCE_SINGLEITEM)
 		Next
-	EndIf
-	
-	If IsArray($vCollectorsS) Then
-		For $i = 0 To UBound($vCollectorsS)-1
-			Local $aTmp[2] = [$vCollectorsS[$i][1], $vCollectorsS[$i][2]]
-			_ArrayAdd($aReturn, $aTmp, 0, -1, -1, $ARRAYFILL_FORCE_SINGLEITEM)
-		Next
-	EndIf
-	
-	Return (UBound($aReturn)-1 > 0) ? ($aReturn) : (-1)
-EndFunc   ;==>GetLocationElixir
+	Next
+	Return (UBound($aRet) - 1 > 0) ? ($aRet) : (-1)
 
-Func _GetLocationDarkElixir()
-	Local $vCollectors = findMultipleQuick(@ScriptDir & "\imgxml\Storages\Drills", 3, Default, Default, Default, Default, 5)
+EndFunc   ;==>FastVillage
 
-	Local $aReturn[0]
-	If IsArray($vCollectors) Then
-		For $i = 0 To UBound($vCollectors)-1
-			Local $aTmp[2] = [$vCollectors[$i][1], $vCollectors[$i][2]]
-			_ArrayAdd($aReturn, $aTmp, 0, -1, -1, $ARRAYFILL_FORCE_SINGLEITEM)
-		Next
-	EndIf
+Func _GetLocationMine($bNeedCapture = True)
+
+	Local $vMines = FastVillage(@ScriptDir & "\imgxml\Storages\GoldMines\", 7, $bNeedCapture)
+	Local $vMinesS = FastVillage(@ScriptDir & "\imgxml\Storages\Mines_Snow\", 7, False)
 	
-	Return (UBound($aReturn)-1 > 0) ? ($aReturn) : (-1)
-EndFunc   ;==>GetLocationDarkElixir
+	If $vMines <> -1 Then Return $vMines
+	If $vMinesS <> -1 Then Return $vMinesS
+	Return -1
+EndFunc   ;==>_GetLocationMine
+
+Func _GetLocationElixir($bNeedCapture = True)
+
+	Local $vCollectors = FastVillage(@ScriptDir & "\imgxml\Storages\Collectors\", 7, $bNeedCapture)
+	Local $vCollectorsS = FastVillage(@ScriptDir & "\imgxml\Storages\Collectors_Snow\", 7, False)
+	
+	If $vCollectors <> -1 Then Return $vCollectors
+	If $vCollectorsS <> -1 Then Return $vCollectorsS
+	Return -1
+EndFunc   ;==>_GetLocationElixir
+
+Func _GetLocationDarkElixir($bNeedCapture = True)
+
+	Local $vDrills = FastVillage(@ScriptDir & "\imgxml\Storages\Drills\", 7, $bNeedCapture)
+	
+	If $vDrills <> -1 Then Return $vDrills
+	Return -1
+EndFunc   ;==>_GetLocationDarkElixir
