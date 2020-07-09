@@ -13,9 +13,13 @@
 Func _ImageSearchXML($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "0,0,860,732", $bForceCapture = True, $bDebugLog = False, $bCheckDuplicatedpoints = False, $iDistance2check = 25, $iLevel = 0)
 	FuncEnter(_ImageSearchXML)
 	$g_aImageSearchXML = -1
-
+	
+	; It does not support only 1 search.
+	Local $iMatchInteral = $iQuantity2Match
+	If $iQuantity2Match = 1 Then $iMatchInteral += 1
+	
 	Local $sSearchDiamond = GetDiamondFromRect($saiArea2SearchOri)
-	Local $aResult = findMultiple($sDirectory, $sSearchDiamond, $sSearchDiamond, $iLevel, 1000, $iQuantity2Match, "objectname,objectlevel,objectpoints", $bForceCapture)
+	Local $aResult = findMultiple($sDirectory, $sSearchDiamond, $sSearchDiamond, $iLevel, 1000, $iMatchInteral, "objectname,objectlevel,objectpoints", $bForceCapture)
 	If Not IsArray($aResult) Then Return -1
 
 	Local $iCount = 0

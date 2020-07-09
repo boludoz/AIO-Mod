@@ -5,6 +5,17 @@
 
                     Based on MyBot.run v7.8.3.hotfix.
 					
+	**v4.1.1** 
+		» New troop :
+			- Headhunter (Not suitable for donating.).
+			
+		» Fixed / Improved :
+			- Builder base.
+			- Smart farm supertroops.
+			- Do not remove the obstacles from the edge (Mod tab/Misc.).
+			- Improved 'mines / collectors / drills' detection time and quantity.
+			- Tolerance fix for spells.
+			
 	**v4.0.9** 
 		» Fixed / Improved :
 			- Some bugs on zoomout.

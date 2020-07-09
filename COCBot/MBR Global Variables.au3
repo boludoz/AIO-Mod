@@ -1131,7 +1131,7 @@ Global $g_aiTrainArmyTroopLevel[$eTroopCount] = [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0
 Global $g_aiTrainArmySpellLevel[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_aiTrainArmySiegeMachineLevel[$eSiegeMachineCount] = [0, 0, 0, 0]
 Global $g_iTrainArmyFullTroopPct = 100
-Global $g_bTotalCampForced = False, $g_iTotalCampForcedValue = 200
+Global $g_bTotalCampForced = False, $g_iTotalCampForcedValue = 240
 Global $g_iTotalSpellValue = 0
 Global $g_bDoubleTrain, $g_bPreciseArmy
 Global $g_bAllBarracksUpgd = False
@@ -1155,7 +1155,7 @@ Global $g_aiTrainOrder[$eTroopCount] = [ _
 		$eTroopBowler, $eTroopIceGolem, $eTroopHeadhunter]
 
 ; Spells Brew Order
-Global Const $g_aiSpellsOrderIcon[13] = [ _
+Global Const $g_aiSpellsOrderIcon[$eSpellCount+1] = [ _
 		$eIcnOptions, $eIcnLightSpell, $eIcnHealSpell,$eIcnRageSpell, $eIcnJumpSpell, $eIcnFreezeSpell, $eIcnCloneSpell,  _
 		$eIcnPoisonSpell, $eIcnEarthQuakeSpell, $eIcnHasteSpell, $eIcnSkeletonSpell, $eIcnBatSpell]
 
