@@ -93,6 +93,7 @@ Global $g_hFrmBotEmbeddedMouse = 0
 #include "COCBot\MBR Global Variables.au3"
 #include "COCBot\functions\Other\ExtendedErrorInfo.au3"
 #include "COCBot\functions\Other\MBRFunc.au3"
+#include "COCBot\functions\Other\DissociableFunc.au3"
 #include "COCBot\functions\Other\Multilanguage.au3"
 #include "COCBot\functions\Other\Base64.au3"
 #include "COCBot\functions\Other\Api.au3"

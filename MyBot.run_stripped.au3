@@ -6747,9 +6747,11 @@ Global $g_aiWeakBaseStats
 Global Const $g_sLibPath = @ScriptDir & "\lib"
 Global Const $g_sMBRLib = "MyBot.run.dll"
 Global Const $g_sSQLiteLib = "sqlite3.dll"
+Global Const $g_sDissociableOcrLib = "Dissociable.OCR.dll"
 Global $g_bLibMyBotActive = False
 Global Const $g_sLibMyBotPath = $g_sLibPath & "\" & $g_sMBRLib
 Global Const $g_sLibSQLitePath = $g_sLibPath & "\" & $g_sSQLiteLib
+Global Const $g_sLibDissociableOcrPath = $g_sLibPath & "\" & $g_sDissociableOcrLib
 Global $g_hLibMyBot = -1
 Global $g_hLibNTDLL = DllOpen("ntdll.dll")
 Global $g_hLibUser32DLL = DllOpen("user32.dll")
@@ -58322,7 +58324,7 @@ EndFunc
 Func getUpgradeResource($x_start, $y_start)
 Return getOcrAndCapture("coc-u-r", $x_start, $y_start, 98, 16, True)
 EndFunc
-Func getResourcesMainScreen($x_start, $y_start)
+Func getResourcesMainScreenDOCR($x_start, $y_start)
 Return getOcrAndCapture("coc-ms", $x_start, $y_start, 110, 16, True)
 EndFunc
 Func getResourcesLoot($x_start, $y_start)
@@ -64607,15 +64609,15 @@ If Not $bBypass Then BuilderPotionBoost()
 $g_aiCurrentLoot[$eLootTrophy] = getTrophyMainScreen($aTrophies[0], $aTrophies[1])
 If Not $bSuppressLog Then SetLog(" [T]: " & _NumberFormat($g_aiCurrentLoot[$eLootTrophy]), $COLOR_SUCCESS)
 If _CheckPixel($aVillageHasDarkElixir, $g_bCapturePixel) Then
-$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(696, 23)
-$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(696, 74)
-$g_aiCurrentLoot[$eLootDarkElixir] = getResourcesMainScreen(728, 123)
-$g_iGemAmount = getResourcesMainScreen(740, 171)
+$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreenDOCR(696, 23)
+$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreenDOCR(696, 74)
+$g_aiCurrentLoot[$eLootDarkElixir] = getResourcesMainScreenDOCR(728, 123)
+$g_iGemAmount = getResourcesMainScreenDOCR(740, 171)
 If Not $bSuppressLog Then SetLog(" [G]: " & _NumberFormat($g_aiCurrentLoot[$eLootGold]) & " [E]: " & _NumberFormat($g_aiCurrentLoot[$eLootElixir]) & " [D]: " & _NumberFormat($g_aiCurrentLoot[$eLootDarkElixir]) & " [GEM]: " & _NumberFormat($g_iGemAmount), $COLOR_SUCCESS)
 Else
-$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(701, 23)
-$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(701, 74)
-$g_iGemAmount = getResourcesMainScreen(719, 123)
+$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreenDOCR(701, 23)
+$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreenDOCR(701, 74)
+$g_iGemAmount = getResourcesMainScreenDOCR(719, 123)
 If Not $bSuppressLog Then SetLog(" [G]: " & _NumberFormat($g_aiCurrentLoot[$eLootGold]) & " [E]: " & _NumberFormat($g_aiCurrentLoot[$eLootElixir]) & " [GEM]: " & _NumberFormat($g_iGemAmount), $COLOR_SUCCESS)
 If ProfileSwitchAccountEnabled() Then $g_aiCurrentLoot[$eLootDarkElixir] = ""
 EndIf
@@ -66486,10 +66488,10 @@ Return
 EndIf
 If _Sleep($DELAYUPGRADEHERO1) Then Return
 If _CheckPixel($aVillageHasDarkElixir, $g_bCapturePixel) Then
-$g_aiCurrentLoot[$eLootDarkElixir] = Number(getResourcesMainScreen(728, 123))
+$g_aiCurrentLoot[$eLootDarkElixir] = Number(getResourcesMainScreenDOCR(728, 123))
 If $g_bDebugSetlog Then SetDebugLog("Updating village values [D]: " & $g_aiCurrentLoot[$eLootDarkElixir], $COLOR_DEBUG)
 Else
-If $g_bDebugSetlog Then SetDebugLog("getResourcesMainScreen didn't get the DE value", $COLOR_DEBUG)
+If $g_bDebugSetlog Then SetDebugLog("getResourcesMainScreenDOCR didn't get the DE value", $COLOR_DEBUG)
 EndIf
 If $g_aiCurrentLoot[$eLootDarkElixir] <($g_afQueenUpgCost[$aHeroLevel] * 1000) *(1 - Number($g_iBuilderBoostDiscount) / 100) + $g_iUpgradeMinDark Then
 SetLog("Insufficient DE for Upg Queen, requires: " &($g_afQueenUpgCost[$aHeroLevel] * 1000) *(1 - Number($g_iBuilderBoostDiscount) / 100) & " + " & $g_iUpgradeMinDark, $COLOR_INFO)
@@ -66575,10 +66577,10 @@ Return
 EndIf
 If _Sleep($DELAYUPGRADEHERO1) Then Return
 If _CheckPixel($aVillageHasDarkElixir, $g_bCapturePixel) Then
-$g_aiCurrentLoot[$eLootDarkElixir] = Number(getResourcesMainScreen(728, 123))
+$g_aiCurrentLoot[$eLootDarkElixir] = Number(getResourcesMainScreenDOCR(728, 123))
 If $g_bDebugSetlog Then SetDebugLog("Updating village values [D]: " & $g_aiCurrentLoot[$eLootDarkElixir], $COLOR_DEBUG)
 Else
-If $g_bDebugSetlog Then SetDebugLog("getResourcesMainScreen didn't get the DE value", $COLOR_DEBUG)
+If $g_bDebugSetlog Then SetDebugLog("getResourcesMainScreenDOCR didn't get the DE value", $COLOR_DEBUG)
 EndIf
 If _Sleep(100) Then Return
 If $g_aiCurrentLoot[$eLootDarkElixir] <($g_afKingUpgCost[$aHeroLevel] * 1000) *(1 - Number($g_iBuilderBoostDiscount) / 100) + $g_iUpgradeMinDark Then
@@ -66668,10 +66670,10 @@ Return
 EndIf
 If _Sleep($DELAYUPGRADEHERO1) Then Return
 If _CheckPixel($aVillageHasDarkElixir, $g_bCapturePixel) Then
-$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(705, 74)
+$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreenDOCR(705, 74)
 If $g_bDebugSetlog Then SetDebugLog("Updating village values [E]: " & $g_aiCurrentLoot[$eLootElixir], $COLOR_DEBUG)
 Else
-$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(710, 74)
+$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreenDOCR(710, 74)
 EndIf
 If _Sleep(100) Then Return
 If $g_aiCurrentLoot[$eLootElixir] <($g_afWardenUpgCost[$g_iWardenLevel] * 1000000) *(1 - Number($g_iBuilderBoostDiscount) / 100) + $g_iUpgradeMinElixir Then
@@ -66761,10 +66763,10 @@ Return
 EndIf
 If _Sleep($DELAYUPGRADEHERO1) Then Return
 If _CheckPixel($aVillageHasDarkElixir, $g_bCapturePixel) Then
-$g_aiCurrentLoot[$eLootDarkElixir] = Number(getResourcesMainScreen(728, 123))
+$g_aiCurrentLoot[$eLootDarkElixir] = Number(getResourcesMainScreenDOCR(728, 123))
 If $g_bDebugSetlog Then SetDebugLog("Updating village values [D]: " & $g_aiCurrentLoot[$eLootDarkElixir], $COLOR_DEBUG)
 Else
-If $g_bDebugSetlog Then SetDebugLog("getResourcesMainScreen didn't get the DE value", $COLOR_DEBUG)
+If $g_bDebugSetlog Then SetDebugLog("getResourcesMainScreenDOCR didn't get the DE value", $COLOR_DEBUG)
 EndIf
 If $g_aiCurrentLoot[$eLootDarkElixir] <($g_afChampionUpgCost[$aHeroLevel] * 1000) *(1 - Number($g_iBuilderBoostDiscount) / 100) + $g_iUpgradeMinDark Then
 SetLog("Insufficient DE for Upg Champion, requires: " &($g_afChampionUpgCost[$aHeroLevel] * 1000) *(1 - Number($g_iBuilderBoostDiscount) / 100) & " + " & $g_iUpgradeMinDark, $COLOR_INFO)
@@ -69568,8 +69570,8 @@ If Not $bSetLog Then SetLog("Builder Base Village Report", $COLOR_INFO)
 getBuilderCount($bSetLog, True)
 If _Sleep($DELAYRESPOND) Then Return
 $g_aiCurrentLootBB[$eLootTrophyBB] = getTrophyMainScreen(67, 84)
-$g_aiCurrentLootBB[$eLootGoldBB] = getResourcesMainScreen(705, 23)
-$g_aiCurrentLootBB[$eLootElixirBB] = getResourcesMainScreen(705, 72)
+$g_aiCurrentLootBB[$eLootGoldBB] = getResourcesMainScreenDOCR(705, 23)
+$g_aiCurrentLootBB[$eLootElixirBB] = getResourcesMainScreenDOCR(705, 72)
 If $bSetLog Then SetLog(" [G]: " & _NumberFormat($g_aiCurrentLootBB[$eLootGoldBB]) & " [E]: " & _NumberFormat($g_aiCurrentLootBB[$eLootElixirBB]) & "[T]: " & _NumberFormat($g_aiCurrentLootBB[$eLootTrophyBB]), $COLOR_SUCCESS)
 If Not $bBypass Then
 UpdateStats()
@@ -69853,7 +69855,7 @@ Else
 SetLog("Star Laboratory Upgrade in progress, waiting for completion", $COLOR_INFO)
 Return False
 EndIf
-$sElixirCount = getResourcesMainScreen(705, 74)
+$sElixirCount = getResourcesMainScreenDOCR(705, 74)
 SetLog("Updating village values [E]: " & $sElixirCount, $COLOR_SUCCESS)
 $iAvailElixir = Number($sElixirCount)
 If Not LocateStarLab() Then Return False

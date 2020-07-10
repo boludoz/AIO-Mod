@@ -214,6 +214,9 @@
 #include "functions\Read Text\getOcr.au3"
 #include "functions\Read Text\getPBTime.au3"
 #include "functions\Read Text\getShieldInfo.au3"
+; DOCR
+#include "functions\Read Text\DOCRBundles.au3"
+#include "functions\Read Text\getOcrDissociable.au3"
 
 #include "functions\Search\multiSearch.au3"
 #include "functions\Search\WeakBase.au3"

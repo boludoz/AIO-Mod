@@ -44,6 +44,7 @@ Global $g_hFrmBot = 0 ; The main GUI window
 #include "COCBot\Team__AiO__MOD++\functions\Config\ImageDirectories.au3" ; AIO Mod
 #include "COCBot\functions\Other\ExtMsgBox.au3"
 #include "COCBot\functions\Other\MBRFunc.au3"
+#include "COCBot\functions\Other\DissociableFunc.au3"
 #include "COCBot\functions\Android\Android.au3"
 #include "COCBot\functions\Android\Distributors.au3"
 #include "COCBot\MBR GUI Design.au3"
@@ -561,6 +562,7 @@ Func FinalInitialization(Const $sAI)
 	Local $bCheckPrerequisitesOK = CheckPrerequisites(True)
 	If $bCheckPrerequisitesOK Then
 		MBRFunc(True) ; start MyBot.run.dll, after this point .net is initialized and threads popup all the time
+		DissociableFunc(True)
 		setAndroidPID() ; set Android PID
 		SetBotGuiPID() ; set GUI PID
 	EndIf
