@@ -45,10 +45,11 @@ EndFunc   ;==>getTrophyVillageSearch
 Func getTrophyMainScreen($x_start, $y_start) ; -> Gets trophy value, top left of main screen "VillageReport.au3"
 	Return getOcrAndCapture("coc-ms", $x_start, $y_start, 50, 16, True)
 EndFunc   ;==>getTrophyMainScreen
-#CE - Team AIO Mod++ (Dissociable OCR)
+
 Func getTrophyLossAttackScreen($x_start, $y_start) ; 48,214 or 48,184 WO/DE -> Gets red number of trophy loss from attack screen, top left
 	Return getOcrAndCapture("coc-t-p", $x_start, $y_start, 50, 16, True)
 EndFunc   ;==>getTrophyLossAttackScreen
+#CE - Team AIO Mod++ (Dissociable OCR)
 
 Func getUpgradeResource($x_start, $y_start) ; -> Gets complete value of Gold/Elixir xxx,xxx , RED text on green upgrade button."UpgradeBuildings.au3"
 	Return getOcrAndCapture("coc-u-r", $x_start, $y_start, 98, 16, True)

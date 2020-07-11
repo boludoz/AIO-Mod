@@ -15,3 +15,8 @@ Global $g_sBaseDOCRPathB = @ScriptDir & "\COCBot\Team__AiO__MOD++\Blundes"
 Global $g_sMainResourcesDOCRB = $g_sBaseDOCRPathB & "\MainScreen\Resources"
 Global $g_sMainBuildersDOCRB = $g_sBaseDOCRPathB & "\MainScreen\Builders"
 Global $g_sAttackBarDOCRB = $g_sBaseDOCRPathB & "\AttackBar"
+
+Global $g_sAttackRGold = $g_sBaseDOCRPathB & "\AttackResources\Gold"
+Global $g_sAttackRPink = $g_sBaseDOCRPathB & "\AttackResources\Pink"
+Global $g_sAttackRBlack = $g_sBaseDOCRPathB & "\AttackResources\Black"
+Global $g_sAttackRRed = $g_sBaseDOCRPathB & "\AttackResources\Red"
