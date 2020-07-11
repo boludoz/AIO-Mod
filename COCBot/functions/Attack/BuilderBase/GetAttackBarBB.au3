@@ -81,14 +81,4 @@ Func GetAttackBarBB($bRemaining = False)
 	Next
 	Return $aBBAttackBar
 EndFunc
-
-; Credits to DoCoc
-
-Func _getTroopCountSmall($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for non-selected troop kind
-	Return getOcrAndCapture("coc-t-s", $x_start, $y_start, 53, 16, True, Default, $bNeedNewCapture)
-EndFunc   ;==>getTroopCountSmall
-
-Func _getTroopCountBig($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for selected troop kind
-	Return getOcrAndCapture("coc-t-b", $x_start, $y_start, 53, 17, True, Default, $bNeedNewCapture)
-EndFunc   ;==>getTroopCountBig
 #EndRegion - Custom - Team AIO Mod++

@@ -6753,6 +6753,9 @@ Global Const $g_sLibSQLitePath = $g_sLibPath & "\" & $g_sSQLiteLib
 Global $g_hLibMyBot = -1
 Global $g_hLibNTDLL = DllOpen("ntdll.dll")
 Global $g_hLibUser32DLL = DllOpen("user32.dll")
+Global Const $g_sDissociableOcrLib = "\ModLibs\Dissociable.OCR.dll"
+Global Const $g_sLibDissociableOcrPath = $g_sLibPath & "\" & $g_sDissociableOcrLib
+Global $g_hLibDissociableOcr = -1
 Global Const $g_sLibIconPath = $g_sLibPath & "\MBRBOT.dll"
 Global Const $g_sCSVAttacksPath = @ScriptDir & "\CSV\Attack"
 Global Const $g_sIcnMBisland = @ScriptDir & "\Images\bbico.png"
@@ -9061,6 +9064,42 @@ EndIf
 EndIf
 Next
 Next
+EndFunc
+Func DissociableFunc($bStart = True)
+Switch $bStart
+Case True
+$g_hLibDissociableOcr = DllOpen($g_sLibDissociableOcrPath)
+If $g_hLibDissociableOcr = -1 Then
+SetLog($g_sDissociableOcrLib & " not found.", $COLOR_ERROR)
+Return False
+EndIf
+SetDebugLog($g_sDissociableOcrLib & " opened.")
+Case False
+DllClose($g_hLibDissociableOcr)
+SetDebugLog($g_sDissociableOcrLib & " closed.")
+EndSwitch
+EndFunc
+Func DllCallDOCR($sFunc, $ReturnType, $sType1 = Default, $vParam1 = Default, $sType2 = Default, $vParam2 = Default)
+Local $bWasSuspended = SuspendAndroid()
+Local $aResult = DllCall($g_hLibDissociableOcr, $ReturnType, $sFunc, $sType1, $vParam1, $sType2, $vParam2)
+If @error Then
+SetLog("DOCR Issue | Fail 0x0: " & @error)
+Sleep(100)
+Local $aResult = DllCall($g_hLibDissociableOcr, $ReturnType, $sFunc, $sType1, $vParam1, $sType2, $vParam2)
+If @error Then
+SetLog("DOCR Issue | Fail 0x1: " & @error)
+Return ""
+EndIf
+EndIf
+If IsArray($aResult) Then
+If StringInStr($aResult[0], "ERROR") > 0 Then
+SetLog("DOCR Issue | Fail 0x2.", $COLOR_ERROR)
+Return ""
+EndIf
+Return $aResult[0]
+EndIf
+SetLog("DOCR Issue: Unknown DllCallDOCR Return: " & $aResult)
+Return ""
 EndFunc
 Global Const $g_sAdbScriptsPath = $g_sLibPath & "\adb.scripts"
 Global $g_sAndroidAdbPrompt = "mybot.run:"
@@ -58304,26 +58343,17 @@ EndFunc
 Func getElixirVillageSearch($x_start, $y_start)
 Return getOcrAndCapture("coc-v-e", $x_start, $y_start, 90, 16, True)
 EndFunc
-Func getResourcesValueTrainPage($x_start, $y_start)
-Return getOcrAndCapture("coc-ms", $x_start, $y_start, 100, 18, True)
-EndFunc
 Func getDarkElixirVillageSearch($x_start, $y_start)
 Return getOcrAndCapture("coc-v-de", $x_start, $y_start, 75, 18, True)
 EndFunc
 Func getTrophyVillageSearch($x_start, $y_start)
 Return getOcrAndCapture("coc-v-t", $x_start, $y_start, 75, 18, True)
 EndFunc
-Func getTrophyMainScreen($x_start, $y_start)
-Return getOcrAndCapture("coc-ms", $x_start, $y_start, 50, 16, True)
-EndFunc
 Func getTrophyLossAttackScreen($x_start, $y_start)
 Return getOcrAndCapture("coc-t-p", $x_start, $y_start, 50, 16, True)
 EndFunc
 Func getUpgradeResource($x_start, $y_start)
 Return getOcrAndCapture("coc-u-r", $x_start, $y_start, 98, 16, True)
-EndFunc
-Func getResourcesMainScreen($x_start, $y_start)
-Return getOcrAndCapture("coc-ms", $x_start, $y_start, 110, 16, True)
 EndFunc
 Func getResourcesLoot($x_start, $y_start)
 Return getOcrAndCapture("coc-loot", $x_start, $y_start, 160, 22, True)
@@ -58358,9 +58388,6 @@ EndFunc
 Func getChatString($x_start, $y_start, $language)
 Return getOcrAndCapture($language, $x_start, $y_start, 280, 14)
 EndFunc
-Func getBuilders($x_start, $y_start)
-Return getOcrAndCapture("coc-Builders", $x_start, $y_start, 45, 20, True)
-EndFunc
 Func getProfile($x_start, $y_start)
 Return getOcrAndCapture("coc-profile", $x_start, $y_start, 55, 13, True)
 EndFunc
@@ -58372,9 +58399,6 @@ Return getOcrAndCapture("coc-t-b", $x_start, $y_start, 55, 17, True, Default, $b
 EndFunc
 Func getTroopsSpellsLevel($x_start, $y_start)
 Return getOcrAndCapture("coc-spellslevel", $x_start, $y_start, 20, 14, True)
-EndFunc
-Func getArmyCampCap($x_start, $y_start, $bNeedCapture = True)
-Return getOcrAndCapture("coc-ms", $x_start, $y_start, 82, 16, True, False, $bNeedCapture)
 EndFunc
 Func getCastleDonateCap($x_start, $y_start)
 Return getOcrAndCapture("coc-army", $x_start, $y_start, 30, 14, True)
@@ -74905,6 +74929,55 @@ Case Else
 Return _ArraySearch($aArray, $vValue, $iStart, $iEnd, $iCase, $iCompare, $iForward, $iSubItem, $bRow)
 EndSelect
 EndFunc
+Global $g_sBaseDOCRPathB = @ScriptDir & "\COCBot\Team__AiO__MOD++\Blundes"
+Global $g_sMainResourcesDOCRB = $g_sBaseDOCRPathB & "\MainScreen\Resources"
+Global $g_sMainBuildersDOCRB = $g_sBaseDOCRPathB & "\MainScreen\Builders"
+Func getResourcesMainScreen($iX_start, $iY_start)
+Return getOcrAndCaptureDOCR($g_sMainResourcesDOCRB, $iX_start, $iY_start, 110, 16, True)
+EndFunc
+Func getTrophyMainScreen($x_start, $y_start)
+Return getOcrAndCaptureDOCR($g_sMainResourcesDOCRB, $x_start, $y_start, 50, 16, True)
+EndFunc
+Func getResourcesValueTrainPage($x_start, $y_start)
+Return getOcrAndCaptureDOCR($g_sMainResourcesDOCRB, $x_start, $y_start, 100, 18, True)
+EndFunc
+Func getArmyCampCap($x_start, $y_start, $bNeedCapture = True)
+Return getOcrAndCaptureDOCR($g_sMainResourcesDOCRB, $x_start, $y_start, 82, 16, True, $bNeedCapture)
+EndFunc
+Func getBuilders($x_start, $y_start)
+Return getOcrAndCaptureDOCR($g_sMainBuildersDOCRB, $x_start, $y_start, 45, 20, True)
+EndFunc
+Func getOcrAndCaptureDOCR($sBundle, $iX_start, $iY_start, $iWidth, $iHeight, $bRemoveSpace = Default, $bForceCaptureRegion = Default)
+If $bRemoveSpace = Default Then $bRemoveSpace = False
+If $bForceCaptureRegion = Default Then $bForceCaptureRegion = $g_bOcrForceCaptureRegion
+Static $_hHBitmap = 0
+If $bForceCaptureRegion = True Then
+_CaptureRegion2($iX_start, $iY_start, $iX_start + $iWidth, $iY_start + $iHeight)
+Else
+$_hHBitmap = GetHHBitmapArea($g_hHBitmap2, $iX_start, $iY_start, $iX_start + $iWidth, $iY_start + $iHeight)
+EndIf
+Local $aResult
+If $_hHBitmap <> 0 Then
+$aResult = getOcrDOCR($_hHBitmap, $sBundle)
+Else
+$aResult = getOcrDOCR($g_hHBitmap2, $sBundle)
+EndIf
+If $_hHBitmap <> 0 Then
+GdiDeleteHBitmap($_hHBitmap)
+EndIf
+$_hHBitmap = 0
+If($bRemoveSpace) Then
+$aResult = StringReplace($aResult, "|", "")
+$aResult = StringStripWS($aResult, $STR_STRIPALL)
+Else
+$aResult = StringStripWS($aResult, BitOR($STR_STRIPLEADING, $STR_STRIPTRAILING, $STR_STRIPSPACES))
+EndIf
+Return $aResult
+EndFunc
+Func getOcrDOCR(ByRef Const $_hHBitmap, $sBundle)
+Local $aResult = DllCallDOCR("Recognize", "str", "handle", $_hHBitmap, "str", $sBundle)
+Return $aResult
+EndFunc
 Func _ImageSearchXML($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "0,0,860,732", $bForceCapture = True, $bDebugLog = False, $bCheckDuplicatedpoints = False, $iDistance2check = 25, $iLevel = 0)
 FuncEnter(_ImageSearchXML)
 $g_aImageSearchXML = -1
@@ -85029,6 +85102,7 @@ Func FinalInitialization(Const $sAI)
 Local $bCheckPrerequisitesOK = CheckPrerequisites(True)
 If $bCheckPrerequisitesOK Then
 MBRFunc(True)
+DissociableFunc(True)
 setAndroidPID()
 SetBotGuiPID()
 EndIf
