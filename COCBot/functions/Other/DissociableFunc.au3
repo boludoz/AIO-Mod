@@ -49,7 +49,7 @@ Func DllCallDOCR($sFunc, $ReturnType, $sType1 = Default, $vParam1 = Default, $sT
 	
 	If IsArray($aResult) Then 
 		If StringInStr($aResult[0], "ERROR") > 0 Then
-			SetLog("DOCR Issue | Fail 0x2.", $COLOR_ERROR)
+			SetLog("DOCR Issue | Fail 0x2. | " & $aResult[0], $COLOR_ERROR)
 			Return ""
 		EndIf
 		Return $aResult[0]
