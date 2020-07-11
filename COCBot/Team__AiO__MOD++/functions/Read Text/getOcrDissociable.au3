@@ -45,19 +45,19 @@ Func getBuilders($x_start, $y_start) ;  -> Gets Builders number - main screen --
 EndFunc   ;==>getBuilders
 
 Func getTroopCountSmall($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for non-selected troop kind
-	Return SpecialOCRCut($g_sAttackBarDOCRB, $x_start, $y_start, 55, 17, True, $bNeedNewCapture)
+	Return SpecialOCRCut($g_sAttackBarDOCRB, $x_start, $y_start-8, 55, 17+8, True, $bNeedNewCapture)
 EndFunc   ;==>getTroopCountSmall
 
 Func getTroopCountBig($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for selected troop kind
-	Return SpecialOCRCut($g_sAttackBarDOCRB, $x_start, $y_start, 55, 17, True, $bNeedNewCapture)
+	Return SpecialOCRCut($g_sAttackBarDOCRB, $x_start, $y_start-8, 55, 17+8, True, $bNeedNewCapture)
 EndFunc   ;==>getTroopCountBig
 
 Func _getTroopCountSmall($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for non-selected troop kind
-	Return SpecialOCRCut($g_sAttackBarDOCRB, $x_start, $y_start, 53, 17, True, $bNeedNewCapture)
+	Return SpecialOCRCut($g_sAttackBarDOCRB, $x_start, $y_start-8, 55, 17+8, True, $bNeedNewCapture)
 EndFunc   ;==>_getTroopCountSmall
 
 Func _getTroopCountBig($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for selected troop kind
-	Return SpecialOCRCut($g_sAttackBarDOCRB, $x_start, $y_start, 53, 17, True, $bNeedNewCapture)
+	Return SpecialOCRCut($g_sAttackBarDOCRB, $x_start, $y_start-8, 55, 17+8, True, $bNeedNewCapture)
 EndFunc   ;==>_getTroopCountBig
 
 Func SpecialOCRCut($sBundle, $iX_start, $iY_start, $iWidth, $iHeight, $bRemoveSpace = Default, $bForceCaptureRegion = Default)
@@ -73,6 +73,7 @@ Func getOcrAndCaptureDOCR($sBundle, $iX_start, $iY_start, $iWidth, $iHeight, $bR
 	Else
 		$_hHBitmap = GetHHBitmapArea($g_hHBitmap2, $iX_start, $iY_start, $iX_start + $iWidth, $iY_start + $iHeight)
 	EndIf
+    If $g_bDebugOCR Then SaveDebugImage("OCRDissociable", $_hHBitmap)
 	Local $aResult
 	If $_hHBitmap <> 0 Then
 		$aResult = getOcrDOCR($_hHBitmap, $sBundle)

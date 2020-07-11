@@ -346,6 +346,7 @@ Func getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpa
 	Else
 		$_hHBitmap = GetHHBitmapArea($g_hHBitmap2, $x_start, $y_start, $x_start + $width, $y_start + $height)
 	EndIf
+    If $g_bDebugOCR Then SaveDebugImage("OCR", $_hHBitmap) ; Team AIO Mod++
 	Local $result
 	If $bImgLoc Then
 		If $_hHBitmap <> 0 Then
