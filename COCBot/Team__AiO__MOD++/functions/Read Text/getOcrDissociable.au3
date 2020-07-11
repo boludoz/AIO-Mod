@@ -31,11 +31,11 @@ Func getBuilders($x_start, $y_start) ;  -> Gets Builders number - main screen --
 EndFunc   ;==>getBuilders
 
 Func getTroopCountSmall($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for non-selected troop kind
-	Return SpecialOCRCut($g_sAttackBarDOCRB, $x_start, $y_start, 55, 17, True, Default, $bNeedNewCapture)
+	Return SpecialOCRCut($g_sAttackBarDOCRB, $x_start, $y_start, 55, 17, True, $bNeedNewCapture)
 EndFunc   ;==>getTroopCountSmall
 
 Func getTroopCountBig($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for selected troop kind
-	Return SpecialOCRCut($g_sAttackBarDOCRB, $x_start, $y_start, 55, 17, True, Default, $bNeedNewCapture)
+	Return SpecialOCRCut($g_sAttackBarDOCRB, $x_start, $y_start, 55, 17, True, $bNeedNewCapture)
 EndFunc   ;==>getTroopCountBig
 
 Func _getTroopCountSmall($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for non-selected troop kind
