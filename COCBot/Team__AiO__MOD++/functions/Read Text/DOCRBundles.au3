@@ -10,7 +10,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Global $g_sBaseDOCRPathB = @ScriptDir & "\COCBot\Team__AiO__MOD++\Blundes"
+Global $g_sBaseDOCRPathB = @ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles"
 
 Global $g_sMainResourcesDOCRB = $g_sBaseDOCRPathB & "\MainScreen\Resources"
 Global $g_sMainBuildersDOCRB = $g_sBaseDOCRPathB & "\MainScreen\Builders"
