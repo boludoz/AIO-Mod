@@ -9,6 +9,23 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+; Search village sector
+Func getGoldVillageSearch($x_start, $y_start) ;48, 69 -> Gets complete value of gold xxx,xxx while searching, top left, Getresources.au3
+	Return getOcrAndCapture("coc-v-g", $x_start, $y_start, 90, 16, True)
+EndFunc   ;==>getGoldVillageSearch
+
+Func getElixirVillageSearch($x_start, $y_start) ;48, 69+29 -> Gets complete value of Elixir xxx,xxx, top left,  Getresources.au3
+	Return getOcrAndCapture("coc-v-e", $x_start, $y_start, 90, 16, True)
+EndFunc   ;==>getElixirVillageSearch
+
+Func getDarkElixirVillageSearch($x_start, $y_start) ;48, 69+57 or 69+69  -> Gets complete value of Dark Elixir xxx,xxx, top left,  Getresources.au3
+	Return getOcrAndCapture("coc-v-de", $x_start, $y_start, 75, 18, True)
+EndFunc   ;==>getDarkElixirVillageSearch
+
+Func getTrophyVillageSearch($x_start, $y_start) ;48, 69+99 or 69+69 -> Gets complete value of Trophies xxx,xxx , top left, Getresources.au3
+	Return getOcrAndCapture("coc-v-t", $x_start, $y_start, 75, 18, True)
+EndFunc   ;==>getTrophyVillageSearch
+; Search village sector end.
 
 Func getResourcesMainScreen($iX_start, $iY_start) ; -> Gets complete value of Gold/Elixir/Dark Elixir/Trophies/Gems xxx,xxx "VillageReport.au3"
 	Return getOcrAndCaptureDOCR($g_sMainResourcesDOCRB, $iX_start, $iY_start, 110, 16, True)
@@ -31,11 +48,11 @@ Func getBuilders($x_start, $y_start) ;  -> Gets Builders number - main screen --
 EndFunc   ;==>getBuilders
 
 Func getTroopCountSmall($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for non-selected troop kind
-	Return SpecialOCRCut($g_sAttackBarDOCRB, $x_start, $y_start, 55, 17, True, Default, $bNeedNewCapture)
+	Return SpecialOCRCut($g_sAttackBarDOCRB, $x_start, $y_start, 55, 17, True, $bNeedNewCapture)
 EndFunc   ;==>getTroopCountSmall
 
 Func getTroopCountBig($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for selected troop kind
-	Return SpecialOCRCut($g_sAttackBarDOCRB, $x_start, $y_start, 55, 17, True, Default, $bNeedNewCapture)
+	Return SpecialOCRCut($g_sAttackBarDOCRB, $x_start, $y_start, 55, 17, True, $bNeedNewCapture)
 EndFunc   ;==>getTroopCountBig
 
 Func _getTroopCountSmall($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for non-selected troop kind

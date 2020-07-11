@@ -10,15 +10,14 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-
 Func getNameBuilding($x_start, $y_start) ; getNameBuilding(242,520) -> Gets complete name and level of the buildings, bottom of screen
 	Return getOcrAndCapture("coc-build", $x_start, $y_start, 455, 27) ; Custom - Team AIO Mod++
 EndFunc   ;==>getNameBuilding
-
+#CS - Team AIO Mod++ (Dissociable OCR)
 Func getGoldVillageSearch($x_start, $y_start) ;48, 69 -> Gets complete value of gold xxx,xxx while searching, top left, Getresources.au3
 	Return getOcrAndCapture("coc-v-g", $x_start, $y_start, 90, 16, True)
 EndFunc   ;==>getGoldVillageSearch
-
+#CE - Team AIO Mod++ (Dissociable OCR)
 Func getRemainTrainTimer($x_start, $y_start, $bNeedCapture = True) ;
 	Return getOcrAndCapture("coc-RemainTrain", $x_start, $y_start, 70, 12, True, False, $bNeedCapture)
 EndFunc   ;==>getRemainTrainTimer
@@ -26,15 +25,15 @@ EndFunc   ;==>getRemainTrainTimer
 Func getRemainBuildTimer($x_start, $y_start, $bNeedCapture = True) ;
 	Return getOcrAndCapture("coc-siegeremain", $x_start, $y_start, 50, 10, True, False, $bNeedCapture)
 EndFunc   ;==>getRemainTrainTimer
-
+#CS - Team AIO Mod++ (Dissociable OCR)
 Func getElixirVillageSearch($x_start, $y_start) ;48, 69+29 -> Gets complete value of Elixir xxx,xxx, top left,  Getresources.au3
 	Return getOcrAndCapture("coc-v-e", $x_start, $y_start, 90, 16, True)
 EndFunc   ;==>getElixirVillageSearch
-#CS - Team AIO Mod++ (Dissociable OCR)
+
 Func getResourcesValueTrainPage($x_start, $y_start) ; -> Gets CheckValuesCost on Train Window
 	Return getOcrAndCapture("coc-ms", $x_start, $y_start, 100, 18, True)
 EndFunc   ;==>getResourcesValueTrainPage
-#CE - Team AIO Mod++ (Dissociable OCR)
+
 Func getDarkElixirVillageSearch($x_start, $y_start) ;48, 69+57 or 69+69  -> Gets complete value of Dark Elixir xxx,xxx, top left,  Getresources.au3
 	Return getOcrAndCapture("coc-v-de", $x_start, $y_start, 75, 18, True)
 EndFunc   ;==>getDarkElixirVillageSearch
@@ -42,7 +41,7 @@ EndFunc   ;==>getDarkElixirVillageSearch
 Func getTrophyVillageSearch($x_start, $y_start) ;48, 69+99 or 69+69 -> Gets complete value of Trophies xxx,xxx , top left, Getresources.au3
 	Return getOcrAndCapture("coc-v-t", $x_start, $y_start, 75, 18, True)
 EndFunc   ;==>getTrophyVillageSearch
-#CS - Team AIO Mod++ (Dissociable OCR)
+
 Func getTrophyMainScreen($x_start, $y_start) ; -> Gets trophy value, top left of main screen "VillageReport.au3"
 	Return getOcrAndCapture("coc-ms", $x_start, $y_start, 50, 16, True)
 EndFunc   ;==>getTrophyMainScreen
