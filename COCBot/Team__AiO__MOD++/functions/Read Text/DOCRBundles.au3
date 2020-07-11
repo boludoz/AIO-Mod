@@ -19,3 +19,5 @@ Global $g_sAttackBarDOCRB = $g_sBaseDOCRPathB & "\AttackBar"
 Global $g_sAttackRGold = $g_sBaseDOCRPathB & "\AttackResources\Gold"
 Global $g_sAttackRPink = $g_sBaseDOCRPathB & "\AttackResources\Pink"
 Global $g_sAttackRBlack = $g_sBaseDOCRPathB & "\AttackResources\Black"
+
+Global $g_sAOverviewTotals = $g_sBaseDOCRPathB & "\ArmyOverview\ArmyPage-Totals"
