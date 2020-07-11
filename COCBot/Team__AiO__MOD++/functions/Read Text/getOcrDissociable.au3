@@ -37,7 +37,7 @@ Func getResourcesValueTrainPage($x_start, $y_start) ; -> Gets CheckValuesCost on
 EndFunc   ;==>getResourcesValueTrainPage
 
 Func getArmyCampCap($x_start, $y_start, $bNeedCapture = True) ;  -> Gets army camp capacity --> train.au3, and used to read CC request time remaining
-	Return getOcrAndCaptureDOCR($g_sMainResourcesDOCRB, $x_start, $y_start, 82, 16, True, $bNeedCapture)
+	Return getOcrAndCaptureDOCR($g_sAOverviewTotals, $x_start, $y_start, 82, 16, True, $bNeedCapture)
 EndFunc   ;==>getArmyCampCap
 
 Func getBuilders($x_start, $y_start) ;  -> Gets Builders number - main screen --> getBuilders(324,23)
