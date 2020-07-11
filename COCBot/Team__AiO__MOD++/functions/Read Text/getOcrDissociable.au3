@@ -22,14 +22,6 @@ Func getDarkElixirVillageSearch($x_start, $y_start) ;48, 69+57 or 69+69  -> Gets
 	Return getOcrAndCaptureDOCR($g_sAttackRBlack, $x_start, $y_start, 75, 18, True)
 EndFunc   ;==>getDarkElixirVillageSearch
 
-Func getTrophyVillageSearch($x_start, $y_start) ;48, 69+99 or 69+69 -> Gets complete value of Trophies xxx,xxx , top left, Getresources.au3
-	Return getOcrAndCapture("coc-v-t", $x_start, $y_start, 75, 18, True)
-EndFunc   ;==>getTrophyVillageSearch
-
-Func getTrophyLossAttackScreen($x_start, $y_start) ; 48,214 or 48,184 WO/DE -> Gets red number of trophy loss from attack screen, top left
-	Return getOcrAndCapture("coc-t-p", $x_start, $y_start, 50, 16, True)
-EndFunc   ;==>getTrophyLossAttackScreen
-
 ; Search village sector end.
 
 Func getResourcesMainScreen($iX_start, $iY_start) ; -> Gets complete value of Gold/Elixir/Dark Elixir/Trophies/Gems xxx,xxx "VillageReport.au3"
