@@ -57,7 +57,7 @@ Func StarLaboratory($bTestRun = False)
 		Return False
 	EndIf
 
-	$sElixirCount = getResourcesMainScreenDOCR(705, 74)
+	$sElixirCount = getResourcesMainScreen(705, 74)
 	SetLog("Updating village values [E]: " & $sElixirCount, $COLOR_SUCCESS)
 	$iAvailElixir = Number($sElixirCount)
 

@@ -14,7 +14,12 @@
 ; ===============================================================================================================================
 
 ; <><><><><><><><><><><><><><><> Team AiO MOD++ (2020) <><><><><><><><><><><><><><><>
+; Low level func order.
 #include "functions\AU3\FixedArray.au3"
+
+; DOCR
+#include "functions\Read Text\DOCRBundles.au3"
+#include "functions\Read Text\getOcrDissociable.au3"
 
 #include "functions\Mod's\ModFuncs.au3"
 #include "functions\Pixels\_Wait4Pixel.au3"

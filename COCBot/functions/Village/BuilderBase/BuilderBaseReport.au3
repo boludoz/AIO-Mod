@@ -32,8 +32,8 @@ Func BuilderBaseReport($bBypass = False, $bSetLog = True)
 	If _Sleep($DELAYRESPOND) Then Return
 
 	$g_aiCurrentLootBB[$eLootTrophyBB] = getTrophyMainScreen(67, 84)
-	$g_aiCurrentLootBB[$eLootGoldBB] = getResourcesMainScreenDOCR(705, 23)
-	$g_aiCurrentLootBB[$eLootElixirBB] = getResourcesMainScreenDOCR(705, 72)
+	$g_aiCurrentLootBB[$eLootGoldBB] = getResourcesMainScreen(705, 23)
+	$g_aiCurrentLootBB[$eLootElixirBB] = getResourcesMainScreen(705, 72)
 	If $bSetLog Then SetLog(" [G]: " & _NumberFormat($g_aiCurrentLootBB[$eLootGoldBB]) & " [E]: " & _NumberFormat($g_aiCurrentLootBB[$eLootElixirBB]) & "[T]: " & _NumberFormat($g_aiCurrentLootBB[$eLootTrophyBB]), $COLOR_SUCCESS)
 
 	If Not $bBypass Then ; update stats
