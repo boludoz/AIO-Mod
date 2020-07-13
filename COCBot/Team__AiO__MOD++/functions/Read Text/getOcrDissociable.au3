@@ -73,7 +73,7 @@ Func getOcrAndCaptureDOCR($sBundle, $iX_start, $iY_start, $iWidth, $iHeight, $bR
 	Else
 		$_hHBitmap = GetHHBitmapArea($g_hHBitmap2, $iX_start, $iY_start, $iX_start + $iWidth, $iY_start + $iHeight)
 	EndIf
-    If $g_bDebugOCR Then SaveDebugImage("OCRDissociable", $_hHBitmap)
+    ;If $g_bDebugOCR = True Then SaveDebugImage("OCRDissociable", $_hHBitmap)
 	Local $aResult
 	If $_hHBitmap <> 0 Then
 		$aResult = getOcrDOCR($_hHBitmap, $sBundle)

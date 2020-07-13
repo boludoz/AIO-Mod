@@ -12,12 +12,19 @@
 
 Global $g_sBaseDOCRPathB = @ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles"
 
-Global $g_sMainResourcesDOCRB = $g_sBaseDOCRPathB & "\MainScreen\Resources"
-Global $g_sMainBuildersDOCRB = $g_sBaseDOCRPathB & "\MainScreen\Builders"
-Global $g_sAttackBarDOCRB = $g_sBaseDOCRPathB & "\AttackBar"
+; MainScreen.
+Global $g_sMainResourcesDOCRB = $g_sBaseDOCRPathB & "\MainScreen\Resources.docr"
+Global $g_sMainBuildersDOCRB = $g_sBaseDOCRPathB & "\MainScreen\Builders.docr"
 
-Global $g_sAttackRGold = $g_sBaseDOCRPathB & "\AttackResources\Gold"
-Global $g_sAttackRPink = $g_sBaseDOCRPathB & "\AttackResources\Pink"
-Global $g_sAttackRBlack = $g_sBaseDOCRPathB & "\AttackResources\Black"
+; Search for villages.
+Global $g_sAttackRGold = $g_sBaseDOCRPathB & "\AttackResources\Gold.docr"
+Global $g_sAttackRPink = $g_sBaseDOCRPathB & "\AttackResources\Elixir.docr"
+Global $g_sAttackRBlack = $g_sBaseDOCRPathB & "\AttackResources\DarkE.docr"
 
-Global $g_sAOverviewTotals = $g_sBaseDOCRPathB & "\ArmyOverview\ArmyPage-Totals"
+Global $g_sAOverviewTotals = $g_sBaseDOCRPathB & "\ArmyOverview\ArmyPage-Totals.docr"
+
+; Attack, checkpoints.
+Global $g_sPointBB = $g_sBaseDOCRPathB & "\BB\PointConfirm.docr"
+
+; AttackBar.
+Global $g_sAttackBarDOCRB = $g_sBaseDOCRPathB & "\AttackBar.docr"

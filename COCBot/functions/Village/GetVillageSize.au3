@@ -29,6 +29,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	
 	#Region - Builder Base - Team AIO Mod++
 	Global $g_aPosSizeVillage = 0
+	Global $g_iXVOffset = 0
 	#EndRegion - Builder Base - Team AIO Mod++
 	
 	If $DebugLog = Default Then $DebugLog = False
@@ -241,6 +242,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		$aResult[9] = $tree[5]
 		#Region - Builder Base - Team AIO Mod++
 		Global $g_aPosSizeVillage = $aResult
+		$g_iXVOffset = $aResult[2]
 		#EndRegion - Builder Base - Team AIO Mod++
 		Return FuncReturn($aResult)
 
@@ -273,6 +275,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		$aResult[9] = $tree[5]
 		#Region - Builder Base - Team AIO Mod++
 		Global $g_aPosSizeVillage = $aResult
+		$g_iXVOffset = $aResult[2]
 		#EndRegion - Builder Base - Team AIO Mod++
 		Return FuncReturn($aResult)
 

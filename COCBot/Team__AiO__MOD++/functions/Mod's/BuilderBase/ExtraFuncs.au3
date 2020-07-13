@@ -104,6 +104,7 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 	If $bForceCapture Then _CaptureRegion2($aiPostFix[0], $aiPostFix[1], $aiPostFix[2], $aiPostFix[3])
 
 	Local $aRes = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sDirectory, "str", GetDiamondFromArray($aiPostFix), "Int", $Quantity2Match, "str", GetDiamondFromArray($aiPostFix), "Int", 0, "Int", 1000)
+	
 	Local $KeyValue = StringSplit($aRes[0], "|", $STR_NOCOUNT)
 	Local $Name = ""
 	Local $aPositions, $aCoords, $aCord, $level, $aCoordsM
@@ -118,19 +119,19 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 			Local $iFur = Random($iFurMin, $iFurMax, 1)
 			If Int($aiPostFix[0] + $aCoordsM[0]) < Int($iCenterX) Then
 				If Int($aiPostFix[1] + $aCoordsM[1]) < Int($iCenterY) Then
-					Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) - $iFur, ($aiPostFix[1] + $aCoordsM[1]) - $iFur]]
-					If _ColorCheck(_GetPixelColor($vResult[0][0], $vResult[0][1], True), Hex(0x447063, 6), 25) Then _ArrayAdd($aTopLeft, $vResult)
-				Else
-					Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) - $iFur, ($aiPostFix[1] + $aCoordsM[1]) + $iFur]]
-					If _ColorCheck(_GetPixelColor($vResult[0][0], $vResult[0][1], True), Hex(0x447063, 6), 25) Then _ArrayAdd($aBottomLeft, $vResult)
-				EndIf
-			Else
-				If Int($aiPostFix[1] + $aCoordsM[1]) < Int($iCenterY) Then
-					Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) + $iFur, ($aiPostFix[1] + $aCoordsM[1]) - $iFur]]
-					If _ColorCheck(_GetPixelColor($vResult[0][0], $vResult[0][1], True), Hex(0x447063, 6), 25) Then _ArrayAdd($aTopRight, $vResult)
-				Else
-					Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) + $iFur, ($aiPostFix[1] + $aCoordsM[1]) + $iFur]]
-					If _ColorCheck(_GetPixelColor($vResult[0][0], $vResult[0][1], True), Hex(0x447063, 6), 25) Then _ArrayAdd($aBottomRight, $vResult)
+					Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) - $iFur, ($aiPostFix[1] + $aCoordsM[1]) - $iFur]]                                          
+					If (StringIsSpace(getOcrAndCaptureDOCR($g_sPointBB, $vResult[0][0], $vResult[0][1], 2, 2, True, True)) = 0) Then _ArrayAdd($aTopLeft, $vResult)    
+				Else                                                                                                                                                 
+					Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) - $iFur, ($aiPostFix[1] + $aCoordsM[1]) + $iFur]]                                          
+					If (StringIsSpace(getOcrAndCaptureDOCR($g_sPointBB, $vResult[0][0], $vResult[0][1]-2, 2, 2, True, True)) = 0) Then _ArrayAdd($aBottomLeft, $vResult) 
+				EndIf                                                                                                                                                  
+			Else                                                                                                                                                       
+				If Int($aiPostFix[1] + $aCoordsM[1]) < Int($iCenterY) Then                                                                                         
+					Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) + $iFur, ($aiPostFix[1] + $aCoordsM[1]) - $iFur]]                                          
+					If (StringIsSpace(getOcrAndCaptureDOCR($g_sPointBB, $vResult[0][0]-2, $vResult[0][1]-2, 2, 2, True, True)) = 0) Then _ArrayAdd($aTopRight, $vResult)   
+				Else                                                                                                                                                   
+					Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) + $iFur, ($aiPostFix[1] + $aCoordsM[1]) + $iFur]]                                          
+					If (StringIsSpace(getOcrAndCaptureDOCR($g_sPointBB, $vResult[0][0]-2, $vResult[0][1]-2, 2, 2, True, True)) = 0) Then _ArrayAdd($aBottomRight, $vResult)
 				EndIf
 			EndIf
 		Next

@@ -56,6 +56,7 @@ Func DllCallDOCR($sFunc, $ReturnType, $sType1 = Default, $vParam1 = Default, $sT
 	EndIf
 	
 	SetLog("DOCR Issue: Unknown DllCallDOCR Return: " & $aResult)
+	If $bWasSuspended Then ResumeAndroid()
 	Return ""
 EndFunc   ;==>DllCallDOCR
 

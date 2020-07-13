@@ -7535,7 +7535,7 @@ Global $ExternalArea[8][3]
 Global Const $g_sLibModIconPath = $g_sLibPath & "\ModLibs\AIOMod.dll"
 Global Enum $eIcnModKingGray = 1, $eIcnModKingBlue, $eIcnModKingGreen, $eIcnModKingRed, $eIcnModQueenGray, $eIcnModQueenBlue, $eIcnModQueenGreen, $eIcnModQueenRed, $eIcnModWardenGray, $eIcnModWardenBlue, $eIcnModWardenGreen, $eIcnModWardenRed, $eIcnModLabGray, $eIcnModLabGreen, $eIcnModLabRed, $eIcnModArrowLeft, $eIcnModArrowRight, $eIcnModTrainingP, $eIcnModResourceP, $eIcnModHeroP, $eIcnModClockTowerP, $eIcnModBuilderP, $eIcnModPowerP, $eIcnModChat, $eIcnModRepeat, $eIcnModClan, $eIcnModTarget, $eIcnModSettings, $eIcnModBKingSX, $eIcnModAQueenSX, $eIcnModGWardenSX, $eIcnModDebug, $eIcnModClanHop, $eIcnModPrecise, $eIcnModAccountsS, $eIcnModProfilesS, $eIcnModFarmingS, $eIcnMiscMod, $eIcnSuperXP, $eIcnChatActions, $eIcnHumanization, $eIcnAIOMod, $eIcnDebugMod, $eIcnLabP, $eIcnShop, $eIcnGoldP, $eIcnElixirP, $eIcnDarkP, $eIcnGFTO, $eIcnMisc, $eIcnPrewar
 Global $g_aPosSizeVillage = 0
-Global $g_iXVOffset = 0, $g_hTimerOffset = 0
+Global $g_iXVOffset = 0
 Global $g_bRemainTweak = True
 Global $g_bSkipfirstcheck = False, $g_hSkipfirstcheck
 Global $g_iDayLimitTroops = 0, $g_iDayLimitSpells = 0, $g_iDayLimitSieges = 0
@@ -9093,7 +9093,7 @@ EndIf
 EndIf
 If IsArray($aResult) Then
 If StringInStr($aResult[0], "ERROR") > 0 Then
-SetLog("DOCR Issue | Fail 0x2.", $COLOR_ERROR)
+SetLog("DOCR Issue | Fail 0x2. | " & $aResult[0], $COLOR_ERROR)
 Return ""
 EndIf
 Return $aResult[0]
@@ -43393,12 +43393,6 @@ SetLog($aBBAttackBar[$i][0] & ", (" & String($aBBAttackBar[$i][1]) & "," & Strin
 Next
 Return $aBBAttackBar
 EndFunc
-Func _getTroopCountSmall($x_start, $y_start, $bNeedNewCapture = Default)
-Return getOcrAndCapture("coc-t-s", $x_start, $y_start, 53, 16, True, Default, $bNeedNewCapture)
-EndFunc
-Func _getTroopCountBig($x_start, $y_start, $bNeedNewCapture = Default)
-Return getOcrAndCapture("coc-t-b", $x_start, $y_start, 53, 17, True, Default, $bNeedNewCapture)
-EndFunc
 Func CheckOverviewFullArmy($bOpenArmyWindow = False, $bCloseArmyWindow = False)
 If $bOpenArmyWindow Then
 ClickP($aAway, 1, 0, "#0346")
@@ -58331,20 +58325,11 @@ EndFunc
 Func getNameBuilding($x_start, $y_start)
 Return getOcrAndCapture("coc-build", $x_start, $y_start, 455, 27)
 EndFunc
-Func getGoldVillageSearch($x_start, $y_start)
-Return getOcrAndCapture("coc-v-g", $x_start, $y_start, 90, 16, True)
-EndFunc
 Func getRemainTrainTimer($x_start, $y_start, $bNeedCapture = True)
 Return getOcrAndCapture("coc-RemainTrain", $x_start, $y_start, 70, 12, True, False, $bNeedCapture)
 EndFunc
 Func getRemainBuildTimer($x_start, $y_start, $bNeedCapture = True)
 Return getOcrAndCapture("coc-siegeremain", $x_start, $y_start, 50, 10, True, False, $bNeedCapture)
-EndFunc
-Func getElixirVillageSearch($x_start, $y_start)
-Return getOcrAndCapture("coc-v-e", $x_start, $y_start, 90, 16, True)
-EndFunc
-Func getDarkElixirVillageSearch($x_start, $y_start)
-Return getOcrAndCapture("coc-v-de", $x_start, $y_start, 75, 18, True)
 EndFunc
 Func getTrophyVillageSearch($x_start, $y_start)
 Return getOcrAndCapture("coc-v-t", $x_start, $y_start, 75, 18, True)
@@ -58390,12 +58375,6 @@ Return getOcrAndCapture($language, $x_start, $y_start, 280, 14)
 EndFunc
 Func getProfile($x_start, $y_start)
 Return getOcrAndCapture("coc-profile", $x_start, $y_start, 55, 13, True)
-EndFunc
-Func getTroopCountSmall($x_start, $y_start, $bNeedNewCapture = Default)
-Return getOcrAndCapture("coc-t-s", $x_start, $y_start, 55, 16, True, Default, $bNeedNewCapture)
-EndFunc
-Func getTroopCountBig($x_start, $y_start, $bNeedNewCapture = Default)
-Return getOcrAndCapture("coc-t-b", $x_start, $y_start, 55, 17, True, Default, $bNeedNewCapture)
 EndFunc
 Func getTroopsSpellsLevel($x_start, $y_start)
 Return getOcrAndCapture("coc-spellslevel", $x_start, $y_start, 20, 14, True)
@@ -58559,6 +58538,7 @@ _CaptureRegion2($x_start, $y_start, $x_start + $width, $y_start + $height)
 Else
 $_hHBitmap = GetHHBitmapArea($g_hHBitmap2, $x_start, $y_start, $x_start + $width, $y_start + $height)
 EndIf
+If $g_bDebugOCR Then SaveDebugImage("OCR", $_hHBitmap)
 Local $result
 If $bImgLoc Then
 If $_hHBitmap <> 0 Then
@@ -66879,6 +66859,7 @@ EndFunc
 Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix = Default, $sFixedPrefix = Default, $bOnBuilderBase = Default)
 FuncEnter(GetVillageSize)
 Global $g_aPosSizeVillage = 0
+Global $g_iXVOffset = 0
 If $DebugLog = Default Then $DebugLog = False
 If $sStonePrefix = Default Then $sStonePrefix = "stone"
 If $sTreePrefix = Default Then $sTreePrefix = "tree"
@@ -67046,6 +67027,7 @@ $aResult[7] = $tree[0]
 $aResult[8] = $tree[1]
 $aResult[9] = $tree[5]
 Global $g_aPosSizeVillage = $aResult
+$g_iXVOffset = $aResult[2]
 Return FuncReturn($aResult)
 Else
 Local $bReset = $g_bUpdateSharedPrefs And $c >= 500
@@ -67069,6 +67051,7 @@ $aResult[7] = $tree[0]
 $aResult[8] = $tree[1]
 $aResult[9] = $tree[5]
 Global $g_aPosSizeVillage = $aResult
+$g_iXVOffset = $aResult[2]
 Return FuncReturn($aResult)
 EndIf
 FuncReturn()
@@ -67395,7 +67378,7 @@ EndFunc
 Func SwitchBetweenBases($bCheckMainScreen = Default, $bGoToBB = Default, $bSilent = Default)
 If $bCheckMainScreen = Default Then $bCheckMainScreen = True
 Local $bSwitched = False, $iLoop = 0
-$g_hTimerOffset = 0
+$g_iXVOffset = 0
 For $iLoop = 0 To 4
 Local $aBBoat = decodeSingleCoord(findImageInPlace("BoatBuilderBase", $g_sImgBoatBB, "487,44,708,242"))
 Local $bBB = isOnBuilderBase(True)
@@ -74929,9 +74912,23 @@ Case Else
 Return _ArraySearch($aArray, $vValue, $iStart, $iEnd, $iCase, $iCompare, $iForward, $iSubItem, $bRow)
 EndSelect
 EndFunc
-Global $g_sBaseDOCRPathB = @ScriptDir & "\COCBot\Team__AiO__MOD++\Blundes"
+Global $g_sBaseDOCRPathB = @ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles"
 Global $g_sMainResourcesDOCRB = $g_sBaseDOCRPathB & "\MainScreen\Resources"
 Global $g_sMainBuildersDOCRB = $g_sBaseDOCRPathB & "\MainScreen\Builders"
+Global $g_sAttackBarDOCRB = $g_sBaseDOCRPathB & "\AttackBar"
+Global $g_sAttackRGold = $g_sBaseDOCRPathB & "\AttackResources\Gold"
+Global $g_sAttackRPink = $g_sBaseDOCRPathB & "\AttackResources\Pink"
+Global $g_sAttackRBlack = $g_sBaseDOCRPathB & "\AttackResources\Black"
+Global $g_sAOverviewTotals = $g_sBaseDOCRPathB & "\ArmyOverview\ArmyPage-Totals"
+Func getGoldVillageSearch($x_start, $y_start)
+Return getOcrAndCaptureDOCR($g_sAttackRGold, $x_start, $y_start, 90, 16, True)
+EndFunc
+Func getElixirVillageSearch($x_start, $y_start)
+Return getOcrAndCaptureDOCR($g_sAttackRPink, $x_start, $y_start, 90, 16, True)
+EndFunc
+Func getDarkElixirVillageSearch($x_start, $y_start)
+Return getOcrAndCaptureDOCR($g_sAttackRBlack, $x_start, $y_start, 75, 18, True)
+EndFunc
 Func getResourcesMainScreen($iX_start, $iY_start)
 Return getOcrAndCaptureDOCR($g_sMainResourcesDOCRB, $iX_start, $iY_start, 110, 16, True)
 EndFunc
@@ -74942,10 +74939,25 @@ Func getResourcesValueTrainPage($x_start, $y_start)
 Return getOcrAndCaptureDOCR($g_sMainResourcesDOCRB, $x_start, $y_start, 100, 18, True)
 EndFunc
 Func getArmyCampCap($x_start, $y_start, $bNeedCapture = True)
-Return getOcrAndCaptureDOCR($g_sMainResourcesDOCRB, $x_start, $y_start, 82, 16, True, $bNeedCapture)
+Return getOcrAndCaptureDOCR($g_sAOverviewTotals, $x_start, $y_start, 82, 16, True, $bNeedCapture)
 EndFunc
 Func getBuilders($x_start, $y_start)
 Return getOcrAndCaptureDOCR($g_sMainBuildersDOCRB, $x_start, $y_start, 45, 20, True)
+EndFunc
+Func getTroopCountSmall($x_start, $y_start, $bNeedNewCapture = Default)
+Return SpecialOCRCut($g_sAttackBarDOCRB, $x_start, $y_start-8, 55, 17+8, True, $bNeedNewCapture)
+EndFunc
+Func getTroopCountBig($x_start, $y_start, $bNeedNewCapture = Default)
+Return SpecialOCRCut($g_sAttackBarDOCRB, $x_start, $y_start-8, 55, 17+8, True, $bNeedNewCapture)
+EndFunc
+Func _getTroopCountSmall($x_start, $y_start, $bNeedNewCapture = Default)
+Return SpecialOCRCut($g_sAttackBarDOCRB, $x_start, $y_start-8, 55, 17+8, True, $bNeedNewCapture)
+EndFunc
+Func _getTroopCountBig($x_start, $y_start, $bNeedNewCapture = Default)
+Return SpecialOCRCut($g_sAttackBarDOCRB, $x_start, $y_start-8, 55, 17+8, True, $bNeedNewCapture)
+EndFunc
+Func SpecialOCRCut($sBundle, $iX_start, $iY_start, $iWidth, $iHeight, $bRemoveSpace = Default, $bForceCaptureRegion = Default)
+Return StringReplace(getOcrAndCaptureDOCR($sBundle, $iX_start, $iY_start, $iWidth, $iHeight, $bRemoveSpace, $bForceCaptureRegion), "#", "")
 EndFunc
 Func getOcrAndCaptureDOCR($sBundle, $iX_start, $iY_start, $iWidth, $iHeight, $bRemoveSpace = Default, $bForceCaptureRegion = Default)
 If $bRemoveSpace = Default Then $bRemoveSpace = False
@@ -74956,6 +74968,7 @@ _CaptureRegion2($iX_start, $iY_start, $iX_start + $iWidth, $iY_start + $iHeight)
 Else
 $_hHBitmap = GetHHBitmapArea($g_hHBitmap2, $iX_start, $iY_start, $iX_start + $iWidth, $iY_start + $iHeight)
 EndIf
+If $g_bDebugOCR Then SaveDebugImage("OCRDissociable", $_hHBitmap)
 Local $aResult
 If $_hHBitmap <> 0 Then
 $aResult = getOcrDOCR($_hHBitmap, $sBundle)
@@ -78767,16 +78780,16 @@ Global $minColOutside = Round(UBound($g_aiPixelNearCollector) * $percent / 100)
 Global $radiusAdjustment = 1
 If $g_iSearchTH = "-" Or $g_iSearchTH = "" Then FindTownhall(True)
 Local $iSearchTH = $g_iSearchTH
-If($iSearchTH > 10) Then $iSearchTH = 11
 If $iSearchTH <> "-" Then
-$radiusAdjustment *= Number($iSearchTH) / 10
+$radiusAdjustment *= Number($iSearchTH) / 13
 Else
 If($g_iTownHallLevel > 0) Then
-$radiusAdjustment *= Number($g_iTownHallLevel) / 10
+$radiusAdjustment *= Number($g_iTownHallLevel) / 13
 Else
-$radiusAdjustment *= Number(10) / 10
+$radiusAdjustment *= Number(13) / 13
 EndIf
 EndIf
+If(0 > $radiusAdjustment) Then $radiusAdjustment = 1
 If $g_bDebugSetlog Then SetLog("$iSearchTH: " & $iSearchTH)
 For $i = 0 To UBound($g_aiPixelNearCollector) - 1
 Local $aXY = $g_aiPixelNearCollector[$i]
@@ -78851,21 +78864,9 @@ EndIf
 If $g_bDebugMakeIMGCSV Then AttackCSVDEBUGIMAGE()
 Return False
 EndFunc
-Func VillageOffset()
-If $g_hTimerOffset = 0 Or(TimerDiff($g_hTimerOffset) > 10000) Then
-$g_hTimerOffset = TimerInit()
-$g_iXVOffset = 0
-If IsArray($g_aPosSizeVillage) And(UBound($g_aPosSizeVillage) > 2) Then
-$g_iXVOffset = Int($g_aPosSizeVillage[2])
-SetDebugLog("- Offset fix: " & $g_iXVOffset)
-EndIf
-EndIf
-Return $g_iXVOffset
-EndFunc
 Func isOutsideEllipse($coordX, $coordY, $ellipseWidth = 200, $ellipseHeigth = 150, $centerX = 430, $centerY = 339)
-Local $iXFixf = Int(VillageOffset())
 Global $normalizedX = $coordX - $centerX
-Global $normalizedY = $coordY - Int($centerY + $iXFixf)
+Global $normalizedY = $coordY - Int($centerY + $g_iXVOffset)
 Local $result =($normalizedX * $normalizedX) /($ellipseWidth * $ellipseWidth) +($normalizedY * $normalizedY) /($ellipseHeigth * $ellipseHeigth) > 1
 If $g_bDebugSetlog Then
 If $result Then
@@ -78878,13 +78879,12 @@ Return $result
 EndFunc
 Func isInDiamond($iX, $iY, $iLeft = 15, $iTop = 31, $iRight = 859, $iBottom = 648)
 Local $bReturn = False
-Local $iXFixf = Int(VillageOffset())
 If Not(($iX < 68 And $iY > 316) Or($iY < 63) Or($iX > 692 And $iY > 156 And $iY < 210) Or($iX > 669 And $iY > 489) Or(56 > $iY)) Then
-Local $aMiddle[2] = [(($iLeft + $iRight) + $iXFixf) / 2,($iTop + $iBottom) / 2]
+Local $aMiddle[2] = [(($iLeft + $iRight) + $g_iXVOffset) / 2,($iTop + $iBottom) / 2]
 Local $aSize[2] = [$aMiddle[0] - $iLeft, $aMiddle[1] - $iTop]
 $bReturn =((Abs($iX - $aMiddle[0]) / $aSize[0] + Abs($iY - $aMiddle[1]) / $aSize[1]) <= 1) ?(True) :(False)
 EndIf
-SetDebugLog("isInDiamond | Is in diamond? " & $bReturn & " / Correction: " & $iXFixf)
+SetDebugLog("isInDiamond | Is in diamond? " & $bReturn & " / Correction: " & $g_iXVOffset)
 Return $bReturn
 EndFunc
 Func FastVillage($sDirectory, $iLimit = 7, $bNeedCapture = True)
@@ -80703,18 +80703,18 @@ Local $iFur = Random($iFurMin, $iFurMax, 1)
 If Int($aiPostFix[0] + $aCoordsM[0]) < Int($iCenterX) Then
 If Int($aiPostFix[1] + $aCoordsM[1]) < Int($iCenterY) Then
 Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) - $iFur,($aiPostFix[1] + $aCoordsM[1]) - $iFur]]
-If _ColorCheck(_GetPixelColor($vResult[0][0], $vResult[0][1], True), Hex(0x447063, 6), 0) Then _ArrayAdd($aTopLeft, $vResult)
+If _ColorCheck(_GetPixelColor($vResult[0][0], $vResult[0][1], True), Hex(0x447063, 6), 25) Then _ArrayAdd($aTopLeft, $vResult)
 Else
 Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) - $iFur,($aiPostFix[1] + $aCoordsM[1]) + $iFur]]
-If _ColorCheck(_GetPixelColor($vResult[0][0], $vResult[0][1], True), Hex(0x447063, 6), 0) Then _ArrayAdd($aBottomLeft, $vResult)
+If _ColorCheck(_GetPixelColor($vResult[0][0], $vResult[0][1], True), Hex(0x447063, 6), 25) Then _ArrayAdd($aBottomLeft, $vResult)
 EndIf
 Else
 If Int($aiPostFix[1] + $aCoordsM[1]) < Int($iCenterY) Then
 Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) + $iFur,($aiPostFix[1] + $aCoordsM[1]) - $iFur]]
-If _ColorCheck(_GetPixelColor($vResult[0][0], $vResult[0][1], True), Hex(0x447063, 6), 0) Then _ArrayAdd($aTopRight, $vResult)
+If _ColorCheck(_GetPixelColor($vResult[0][0], $vResult[0][1], True), Hex(0x447063, 6), 25) Then _ArrayAdd($aTopRight, $vResult)
 Else
 Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) + $iFur,($aiPostFix[1] + $aCoordsM[1]) + $iFur]]
-If _ColorCheck(_GetPixelColor($vResult[0][0], $vResult[0][1], True), Hex(0x447063, 6), 0) Then _ArrayAdd($aBottomRight, $vResult)
+If _ColorCheck(_GetPixelColor($vResult[0][0], $vResult[0][1], True), Hex(0x447063, 6), 25) Then _ArrayAdd($aBottomRight, $vResult)
 EndIf
 EndIf
 Next

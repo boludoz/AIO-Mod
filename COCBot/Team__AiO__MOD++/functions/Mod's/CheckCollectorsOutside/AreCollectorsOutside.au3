@@ -53,17 +53,16 @@ Func AreCollectorsOutside($percent)
 	If $g_iSearchTH = "-" Or $g_iSearchTH = "" Then FindTownhall(True)
 	Local $iSearchTH = $g_iSearchTH
 	
-	If ($iSearchTH > 10) Then $iSearchTH = 11
-	
 	If $iSearchTH <> "-" Then
-		$radiusAdjustment *= Number($iSearchTH) / 10
+		$radiusAdjustment *= Number($iSearchTH) / 13
 	Else
 		If ($g_iTownHallLevel > 0) Then
-			$radiusAdjustment *= Number($g_iTownHallLevel) / 10
+			$radiusAdjustment *= Number($g_iTownHallLevel) / 13
 		Else
-			$radiusAdjustment *= Number(10) / 10
+			$radiusAdjustment *= Number(13) / 13
 		EndIf
 	EndIf
+	If (0 > $radiusAdjustment) Then $radiusAdjustment = 1
 	If $g_bDebugSetlog Then SetLog("$iSearchTH: " & $iSearchTH)
 
 	For $i = 0 To UBound($g_aiPixelNearCollector) - 1

@@ -30,7 +30,7 @@ Global $g_bZoomFixBB = False
 Global $Stonecoord
 	
 ; Offset
-Global $g_iXVOffset = 0, $g_hTimerOffset = 0
+Global $g_iXVOffset = 0
 
 ; Custom remain - Team AIO Mod++
 Global $g_bRemainTweak = True
