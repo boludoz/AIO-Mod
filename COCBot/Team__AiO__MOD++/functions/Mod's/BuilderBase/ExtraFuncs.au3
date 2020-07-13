@@ -120,18 +120,18 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 			If Int($aiPostFix[0] + $aCoordsM[0]) < Int($iCenterX) Then
 				If Int($aiPostFix[1] + $aCoordsM[1]) < Int($iCenterY) Then
 					Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) - $iFur, ($aiPostFix[1] + $aCoordsM[1]) - $iFur]]                                          
-					If (StringIsSpace(getOcrAndCaptureDOCR($g_sPointBB, $vResult[0][0], $vResult[0][1], 2, 2, True, True)) = 0) Then _ArrayAdd($aTopLeft, $vResult)    
+					If (StringIsSpace(getOcrAndCaptureDOCR($g_sPointBB, $vResult[0][0]-2, $vResult[0][1], 2, 2, True, True)) = 0) Then _ArrayAdd($aTopLeft, $vResult)    
 				Else                                                                                                                                                 
 					Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) - $iFur, ($aiPostFix[1] + $aCoordsM[1]) + $iFur]]                                          
-					If (StringIsSpace(getOcrAndCaptureDOCR($g_sPointBB, $vResult[0][0], $vResult[0][1]-2, 2, 2, True, True)) = 0) Then _ArrayAdd($aBottomLeft, $vResult) 
+					If (StringIsSpace(getOcrAndCaptureDOCR($g_sPointBB, $vResult[0][0]-2, $vResult[0][1], 2, 2, True, True)) = 0) Then _ArrayAdd($aBottomLeft, $vResult) 
 				EndIf                                                                                                                                                  
 			Else                                                                                                                                                       
 				If Int($aiPostFix[1] + $aCoordsM[1]) < Int($iCenterY) Then                                                                                         
 					Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) + $iFur, ($aiPostFix[1] + $aCoordsM[1]) - $iFur]]                                          
-					If (StringIsSpace(getOcrAndCaptureDOCR($g_sPointBB, $vResult[0][0]-2, $vResult[0][1]-2, 2, 2, True, True)) = 0) Then _ArrayAdd($aTopRight, $vResult)   
+					If (StringIsSpace(getOcrAndCaptureDOCR($g_sPointBB, $vResult[0][0]+2, $vResult[0][1], 2, 2, True, True)) = 0) Then _ArrayAdd($aTopRight, $vResult)   
 				Else                                                                                                                                                   
 					Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) + $iFur, ($aiPostFix[1] + $aCoordsM[1]) + $iFur]]                                          
-					If (StringIsSpace(getOcrAndCaptureDOCR($g_sPointBB, $vResult[0][0]-2, $vResult[0][1]-2, 2, 2, True, True)) = 0) Then _ArrayAdd($aBottomRight, $vResult)
+					If (StringIsSpace(getOcrAndCaptureDOCR($g_sPointBB, $vResult[0][0]+2, $vResult[0][1], 2, 2, True, True)) = 0) Then _ArrayAdd($aBottomRight, $vResult)
 				EndIf
 			EndIf
 		Next
@@ -145,17 +145,12 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 	
 	For $i2 = 0 To UBound($aTopLeft) - 1
 		
-		If $aTopLeft[$i2][1] <> $iLastY Then
+		If $aTopLeft[$i2][1] <> $iMaxX Then
 			$iMaxX = $aTopLeft[$i2][0]
 			$iLastY = $aTopLeft[$i2][1]
 			
-			Local $a3 = _ArrayFindAll($aTopLeft, $iLastY, Default, Default, Default, Default, 2)
-
-			If $a3 <> -1 Then
-				For $i = UBound($a3) - 1 To 0 Step -1
-					If $aTopLeft[Int($a3[0])][0] > $iMaxX Then $iMaxX = $aTopLeft[$i][0]
-				Next
-			EndIf
+			Local $a3 = _ArrayFindAll($aTopLeftNew, $iLastY, Default, Default, Default, Default, 2)
+			If $a3 <> -1 Then ContinueLoop
 			Local $aArray[1][2] = [[$iMaxX, $iLastY]]
 			_ArrayAdd($aTopLeftNew, $aArray)
 		EndIf
@@ -178,17 +173,12 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 	
 	For $i2 = 0 To UBound($aTopRight) - 1
 		
-		If $aTopRight[$i2][1] <> $iLastY Then
+		If $aTopRight[$i2][0] <> $iMaxX Then
 			$iMaxX = $aTopRight[$i2][0]
 			$iLastY = $aTopRight[$i2][1]
 			
-			Local $a3 = _ArrayFindAll($aTopRight, $iLastY, Default, Default, Default, Default, 2)
-
-			If $a3 <> -1 Then
-				For $i = UBound($a3) - 1 To 0 Step -1
-					If $aTopRight[Int($a3[0])][0] < $iMaxX Then $iMaxX = $aTopRight[$i][0]
-				Next
-			EndIf
+			Local $a3 = _ArrayFindAll($aTopRightNew, $iLastY, Default, Default, Default, Default, 2)
+			If $a3 <> -1 Then ContinueLoop
 			Local $aArray[1][2] = [[$iMaxX, $iLastY]]
 			_ArrayAdd($aTopRightNew, $aArray)
 		EndIf
@@ -211,17 +201,13 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 	
 	For $i2 = 0 To UBound($aBottomRight) - 1
 		
-		If $aBottomRight[$i2][1] <> $iLastY Then
+		If $aBottomRight[$i2][0] <> $iMaxX Then
 			$iMaxX = $aBottomRight[$i2][0]
 			$iLastY = $aBottomRight[$i2][1]
 			
-			Local $a3 = _ArrayFindAll($aBottomRight, $iLastY, Default, Default, Default, Default, 2)
-
-			If $a3 <> -1 Then
-				For $i = UBound($a3) - 1 To 0 Step -1
-					If $aBottomRight[Int($a3[0])][0] < $iMaxX Then $iMaxX = $aBottomRight[$i][0]
-				Next
-			EndIf
+			If 574 < $iMaxX Then ContinueLoop
+			Local $a3 = _ArrayFindAll($aBottomRightNew, $iLastY, Default, Default, Default, Default, 2)
+			If $a3 <> -1 Then ContinueLoop
 			Local $aArray[1][2] = [[$iMaxX, $iLastY]]
 			_ArrayAdd($aBottomRightNew, $aArray)
 		EndIf
@@ -243,18 +229,12 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 	
 	For $i2 = 0 To UBound($aBottomLeft) - 1
 		
-		If $aBottomLeft[$i2][1] <> $iLastY Then
+		If $aBottomLeft[$i2][0] <> $iMaxX Then
 			$iMaxX = $aBottomLeft[$i2][0]
 			$iLastY = $aBottomLeft[$i2][1]
-			
-			Local $a3 = _ArrayFindAll($aBottomLeft, $iLastY, Default, Default, Default, Default, 2)
-			
-			If $a3 <> -1 Then
-				For $i = UBound($a3) - 1 To 0 Step -1
-					If $aBottomLeft[Int($a3[0])][0] > $iMaxX Then $iMaxX = $aBottomLeft[$i][0]
-				Next
-			EndIf
-			
+			If 574 < $iMaxX Then ContinueLoop
+			Local $a3 = _ArrayFindAll($aBottomLeftNew, $iLastY, Default, Default, Default, Default, 2)
+			If $a3 <> -1 Then ContinueLoop
 			Local $aArray[1][2] = [[$iMaxX, $iLastY]]
 			_ArrayAdd($aBottomLeftNew, $aArray)
 		EndIf

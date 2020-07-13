@@ -24,7 +24,7 @@ Global $g_sAttackRBlack = $g_sBaseDOCRPathB & "\AttackResources\DarkE.docr"
 Global $g_sAOverviewTotals = $g_sBaseDOCRPathB & "\ArmyOverview\ArmyPage-Totals.docr"
 
 ; Attack, checkpoints.
-Global $g_sPointBB = $g_sBaseDOCRPathB & "\BB\PointConfirm.docr"
+Global $g_sPointBB = $g_sBaseDOCRPathB & "\BB\"
 
 ; AttackBar.
 Global $g_sAttackBarDOCRB = $g_sBaseDOCRPathB & "\AttackBar.docr"
