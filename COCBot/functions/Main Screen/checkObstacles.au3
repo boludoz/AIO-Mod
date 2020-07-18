@@ -41,47 +41,63 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 
 	_CaptureRegions()
 
+	#Region - Custom - Team AIO Mod++
 	If Not $bRecursive Then
 		If checkObstacles_Network() Then Return True
 		If checkObstacles_GfxError() Then Return True
-	EndIf
-
-	#Region - Custom - Team AIO Mod++
-	Local $iDo = 0
-	Do
-		Local $aImgX = FindMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Obstacles")
-		If Not IsArray($aImgX) And Not ((UBound($aImgX) - 1) > 1) Then ContinueLoop
-		For $i = 0 To UBound($aImgX) - 1
-			If (StringInStr($aImgX[$i][0], "X") > 0) Then
-				Select
-					; Shop X | Shield X.
-					Case (793 < $aImgX[$i][1] And 14 < $aImgX[$i][2] And 850 > $aImgX[$i][1] And 65 > $aImgX[$i][2])
-						Click($aImgX[$i][1] + Random(0, 5, 1), $aImgX[$i][2] + Random(0, 5, 1))
-						; Profile X | Trophy X.
-					Case (801 < $aImgX[$i][1] And 48 < $aImgX[$i][2] And 855 > $aImgX[$i][1] And 102 > $aImgX[$i][2])
-						Click($aImgX[$i][1] + Random(0, 5, 1), $aImgX[$i][2] + Random(0, 5, 1))
-						; Army X.
-					Case (801 < $aImgX[$i][1] And 99 < $aImgX[$i][2] And 855 > $aImgX[$i][1] And 155 > $aImgX[$i][2])
-						Click($aImgX[$i][1] + Random(0, 5, 1), $aImgX[$i][2] + Random(0, 5, 1))
-				EndSelect
-			ElseIf (StringInStr($aImgX[$i][0], "OK") > 0) Then
-				Select
-					; Season end.
-					Case (342 < $aImgX[$i][1] And 485 < $aImgX[$i][2] And 506 > $aImgX[$i][1] And 560 > $aImgX[$i][2])
-						ClickP($aAway)
+	;EndIf
+    ;
+	;If Not $bRecursive Then
+		Local $iDo = 0
+		Do
+			If $iDo > 0 Then _CaptureRegions()
+			Local $aImgX = _ImageSearchXML(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Obstacles", 0, "0,0,860,732", False)
+			If Not IsArray($aImgX) Then ExitLoop
+			For $i = 0 To UBound($aImgX) - 1
+				If (StringInStr($aImgX[$i][0], "X") > 0) Then
+					Select
+						; Shop X | Shield X.
+						Case (793 < $aImgX[$i][1] And 14 < $aImgX[$i][2] And 850 > $aImgX[$i][1] And 65 > $aImgX[$i][2])
+							Click($aImgX[$i][1] + Random(0, 5, 1), $aImgX[$i][2] + Random(0, 5, 1))
+							If RandomSleep(500) Then Return
+							; Profile X | Trophy X.
+						Case (801 < $aImgX[$i][1] And 48 < $aImgX[$i][2] And 855 > $aImgX[$i][1] And 102 > $aImgX[$i][2])
+							Click($aImgX[$i][1] + Random(0, 5, 1), $aImgX[$i][2] + Random(0, 5, 1))
+							If RandomSleep(500) Then Return
+							; Army X.
+						Case (801 < $aImgX[$i][1] And 99 < $aImgX[$i][2] And 855 > $aImgX[$i][1] And 155 > $aImgX[$i][2])
+							Click($aImgX[$i][1] + Random(0, 5, 1), $aImgX[$i][2] + Random(0, 5, 1))
+							If RandomSleep(500) Then Return
+					EndSelect
+				ElseIf (StringInStr($aImgX[$i][0], "OK") > 0) Then
+					Select
+						; Season end.
+						Case (342 < $aImgX[$i][1] And 485 < $aImgX[$i][2] And 506 > $aImgX[$i][1] And 560 > $aImgX[$i][2])
+							ClickP($aAway)
+							If RandomSleep(500) Then Return
 						; Season challenge.
-					Case (310 < $aImgX[$i][1] And 532 < $aImgX[$i][2] And 530 > $aImgX[$i][1] And 600 > $aImgX[$i][2])
-						ClickP($aAway)
-				EndSelect
-			EndIf
-		Next
-		$iDo += 1
-	Until Not IsArray($aImgX) Or Not ((UBound($aImgX) - 1) > 1) Or ($iDo > 3)
-	
-	Local $bIsOnBuilderIsland = isOnBuilderBase(True)
-	If $bBuilderBase = False And $bIsOnBuilderIsland = True Then
-		SetLog("Detected Builder Base, trying to switch back to Main Village.", $COLOR_INFO)
-		SwitchBetweenBases(False) ; Prevent reclusion.
+						Case (310 < $aImgX[$i][1] And 532 < $aImgX[$i][2] And 530 > $aImgX[$i][1] And 600 > $aImgX[$i][2])
+							ClickP($aAway)
+							If RandomSleep(500) Then Return
+					EndSelect
+				EndIf
+			Next
+			$iDo += 1
+		Until Not IsArray($aImgX) Or ($iDo > 3)
+		
+		If $iDo > 0 Then _CaptureRegions()
+		
+		Local $bIsOnBuilderIsland = isOnBuilderBase(False, True)
+		Local $bIsOnMainVillage = isOnMainVillage(False)
+		If Not $bBuilderBase And $bIsOnBuilderIsland Then
+			SetLog("Detected Builder Base, trying to switch back to Main Village.", $COLOR_INFO)
+			SwitchBetweenBases(False) ; Prevent reclusion.
+			$g_bMinorObstacle = True
+		ElseIf $bBuilderBase And (Not $bIsOnBuilderIsland And $bIsOnMainVillage) Then
+			SetLog("Detected Main Village, trying to switch back to Builder Base.", $COLOR_INFO)
+			SwitchBetweenBases(False) ; Prevent reclusion.
+			$g_bMinorObstacle = True
+		EndIf
 	EndIf
 	#EndRegion - Custom - Team AIO Mod++
 
