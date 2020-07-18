@@ -53,22 +53,22 @@ Func ReadChatIA($sCondition = "hola", $bFast = True)
 			Switch Int($g_aIAVar[$ii][0])
 				Case $ii 
 					$sOCRString = getChatStringMod(30, Int($aChatY[$i][2] - 3) + 43, "coc-latinA")
-					SetDebugLog("getChatStringMod Latin : " & $sOCRString)
+					If $g_bDebugSetlog Then SetDebugLog("getChatStringMod Latin : " & $sOCRString)
 				Case $ii = $g_aIAVar[$ii][0]
 					$sOCRString = getChatStringMod(30, Int($aChatY[$i][2] - 3) + 43, "coc-latin-cyr")
-					SetDebugLog("getChatStringMod Cyc : " & $sOCRString)
+					If $g_bDebugSetlog Then SetDebugLog("getChatStringMod Cyc : " & $sOCRString)
 				Case $ii = $g_aIAVar[$ii][0]
 					$sOCRString = getChatStringChineseMod(30, Int($aChatY[$i][2] - 3) + 43)
-					SetDebugLog("getChatStringChineseMod : " & $sOCRString)
+					If $g_bDebugSetlog Then SetDebugLog("getChatStringChineseMod : " & $sOCRString)
 				Case $ii = $g_aIAVar[$ii][0]
 					$sOCRString = getChatStringKoreanMod(30, Int($aChatY[$i][2] - 3) + 43)
-					SetDebugLog("getChatStringKoreanMod : " & $sOCRString)
+					If $g_bDebugSetlog Then SetDebugLog("getChatStringKoreanMod : " & $sOCRString)
 				Case $ii = $g_aIAVar[$ii][0]
 					$sOCRString = getChatStringPersianMod(30, Int($aChatY[$i][2] - 3) + 43)
-					SetDebugLog("getChatStringPersianMod : " & $sOCRString)
+					If $g_bDebugSetlog Then SetDebugLog("getChatStringPersianMod : " & $sOCRString)
 			EndSwitch
 			
-			SetDebugLog("Chat : " & $sOCRString & " Language : " & $g_aIAVar[$ii][0] & " $i " & $i, $COLOR_INFO)
+			If $g_bDebugSetlog Then SetDebugLog("Chat : " & $sOCRString & " Language : " & $g_aIAVar[$ii][0] & " $i " & $i, $COLOR_INFO)
             If StringLen(StringStripWS($sOCRString, $STR_STRIPALL)) < 2 Then ContinueLoop
 			
 			If QuickMIS("N1", @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ChatActions\Sprites\OwnChat", Int($aChatY[$i][1]), Int($aChatY[$i][2] + 3), Int($aChatY[$i][1] + 79), Int($aChatY[$i][2] + 3 + 29)) <> "none" Then ContinueLoop

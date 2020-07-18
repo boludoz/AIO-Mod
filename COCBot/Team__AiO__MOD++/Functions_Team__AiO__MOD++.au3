@@ -21,8 +21,10 @@
 #include "functions\Read Text\DOCRBundles.au3"
 #include "functions\Read Text\getOcrDissociable.au3"
 
+; Other
 #include "functions\Mod's\ModFuncs.au3"
 #include "functions\Pixels\_Wait4Pixel.au3"
+#include "functions\Pixels\ImgFuncs.au3"
 
 ; CheckModVersion - Team AiO MOD++
 #include "functions\Mod's\CheckModVersion.au3"

@@ -14,12 +14,12 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func VillageSearch()
-
+Func VillageSearch($bIncludePrepare = False)
+	
 	$g_bVillageSearchActive = True
 	$g_bCloudsActive = True
 
-	Local $Result = _VillageSearch()
+	Local $Result = _VillageSearch($bIncludePrepare)
 	If $g_bSearchAttackNowEnable Then
 		GUICtrlSetState($g_hBtnAttackNowDB, $GUI_HIDE)
 		GUICtrlSetState($g_hBtnAttackNowLB, $GUI_HIDE)
@@ -37,7 +37,7 @@ Func VillageSearch()
 
 EndFunc   ;==>VillageSearch
 
-Func _VillageSearch() ;Control for searching a village that meets conditions
+Func _VillageSearch($bIncludePrepare = False) ;Control for searching a village that meets conditions
 	Local $Result
 	Local $weakBaseValues
 	Local $logwrited = False
@@ -66,10 +66,14 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		Next
 	EndIf
 
-	If _Sleep($DELAYVILLAGESEARCH1) Then Return
-	$Result = getAttackDisable(346, 182) ; Grab Ocr for TakeABreak check
-	checkAttackDisable($g_iTaBChkAttack, $Result) ;last check to see If TakeABreak msg on screen for fast PC from PrepareSearch click
-	If $g_bRestart = True Then Return ; exit func
+	; Internal PrepareSearch - Custom - Team AIO Mod++.
+	If $bIncludePrepare = False Then
+		If _Sleep($DELAYVILLAGESEARCH1) Then Return
+		$Result = getAttackDisable(346, 182) ; Grab Ocr for TakeABreak check
+		checkAttackDisable($g_iTaBChkAttack, $Result) ;last check to see If TakeABreak msg on screen for fast PC from PrepareSearch click
+		If $g_bRestart = True Then Return ; exit func
+	EndIf
+	
 	If Not ($g_bIsSearchLimit) Then
 		SetLogCentered("=", "=", $COLOR_INFO)
 	EndIf
@@ -98,9 +102,17 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 
 	If $g_bIsSearchLimit = True Then $g_bIsSearchLimit = False
 
-	; reset page errors
+	; Reset page errors.
 	InitAndroidPageError()
-
+	
+	; Internal PrepareSearch - Custom - Team AIO Mod++.
+	If $bIncludePrepare = True Then
+		PrepareSearch()
+		If Not $g_bRunState Then Return
+		If $g_bOutOfGold Then Return ; Check flag for enough gold to search
+		If $g_bRestart Then Return
+	EndIf
+	
 	While 1 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;### Main Search Loop ###;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 		; cleanup some vars used by imgloc just in case. usend in TH and DeadBase ( imgloc functions)
@@ -474,8 +486,8 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 			If _Sleep($DELAYVILLAGESEARCH2) Then Return
 			$i += 1
 			_CaptureRegions()
-			If IsAttackPage(False) Then
-				If ( _ColorCheck(_GetPixelColor($NextBtn[0], $NextBtn[1]), Hex($NextBtn[2], 6), $NextBtn[3])) Then
+			If ( _ColorCheck(_GetPixelColor($NextBtn[0], $NextBtn[1]), Hex($NextBtn[2], 6), $NextBtn[3])) Then
+				If IsAttackPage(False) Then
 					$g_bCloudsActive = True
 					ClickP($NextBtn, 1, 0, "#0155") ;Click Next
 					ExitLoop

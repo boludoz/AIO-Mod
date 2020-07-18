@@ -67,7 +67,7 @@ Func ChkSmartFarm($TypeResources = "All")
 	; TL , TR , BL , BR
 	Local $aMainSide[4] = [0, 0, 0, 0]
 
-	SetDebugLog(" - INI|SmartFarm detection.", $COLOR_INFO)
+	If $g_bDebugSetlog Then SetDebugLog(" - INI|SmartFarm detection.", $COLOR_INFO)
 	; Local $aCollectores = SmartFarmDetection("Collectors")
 	; Local $aMines = SmartFarmDetection("Mines")
 	; Local $aDrills = SmartFarmDetection("Drills")
@@ -81,7 +81,7 @@ Func ChkSmartFarm($TypeResources = "All")
 
 	; [0] = x , [1] = y , [2] = Distance to Redline ,[3] = In/Out, [4] = Side,  [5]= Is array Dim[2] with 5 coordinates to deploy
 	Local $aAll = SmartFarmDetection($TypeResources)
-	SetDebugLog(" TOTAL detection Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
+	If $g_bDebugSetlog Then SetDebugLog(" TOTAL detection Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
 
 	; Let's determinate what resource is out or in side the village
 	; Collectors
@@ -118,12 +118,12 @@ Func ChkSmartFarm($TypeResources = "All")
 	If $g_bDebugSmartFarm Then
 		For $i = 0 To UBound($aResourcesIN) - 1
 			For $x = 0 To 4
-				SetDebugLog("$aResourcesIN[" & $i & "][" & $x & "]: " & $aResourcesIN[$i][$x], $COLOR_INFO)
+				If $g_bDebugSetlog Then SetDebugLog("$aResourcesIN[" & $i & "][" & $x & "]: " & $aResourcesIN[$i][$x], $COLOR_INFO)
 			Next
 		Next
 		For $i = 0 To UBound($aResourcesOUT) - 1
 			For $x = 0 To 4
-				SetDebugLog("$aResourcesOUT[" & $i & "][" & $x & "]: " & $aResourcesOUT[$i][$x], $COLOR_INFO)
+				If $g_bDebugSetlog Then SetDebugLog("$aResourcesOUT[" & $i & "][" & $x & "]: " & $aResourcesOUT[$i][$x], $COLOR_INFO)
 			Next
 		Next
 	EndIf
@@ -133,7 +133,7 @@ Func ChkSmartFarm($TypeResources = "All")
 	Setlog("Total of Resources: " & $TotalOfResources, $COLOR_INFO)
 	Setlog(" - Inside the Village: " & UBound($aResourcesIN), $COLOR_INFO)
 	Setlog(" - Outside the village: " & UBound($aResourcesOUT), $COLOR_INFO)
-	SetDebugLog("MainSide array: " & _ArrayToString($aMainSide))
+	If $g_bDebugSetlog Then SetDebugLog("MainSide array: " & _ArrayToString($aMainSide))
 
 	$g_sResourcesIN = UBound($aResourcesIN)
 	$g_sResourcesOUT = UBound($aResourcesOUT)

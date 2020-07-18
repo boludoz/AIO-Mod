@@ -38,7 +38,7 @@ Func _CheckColorPixel($x, $y, $sColor, $iColorVariation, $bFCapture = True, $sMs
 	Local $COLORMSG = ($bFound = True ? $COLOR_BLUE : $COLOR_RED)
 	If $sMsglog <> Default And IsString($sMsglog) Then
 		Local $String = $sMsglog & " - Ori Color: " & Hex($sColor,6) & " at X,Y: " & $x & "," & $y & " Found: " & $hPixelColor
-		SetDebugLog($String, $COLORMSG)
+		If $g_bDebugSetlog Then SetDebugLog($String, $COLORMSG)
 	EndIf
 	#ce - Fast
 	Return $bFound

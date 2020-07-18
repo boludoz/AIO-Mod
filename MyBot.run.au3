@@ -91,7 +91,7 @@ Func UpdateBotTitle()
 	; Update try icon title
 	TraySetToolTip($g_sBotTitle)
 
-	SetDebugLog("Bot title updated to: " & $g_sBotTitle)
+	If $g_bDebugSetlog Then SetDebugLog("Bot title updated to: " & $g_sBotTitle)
 EndFunc   ;==>UpdateBotTitle
 
 Func InitializeBot()
@@ -105,7 +105,7 @@ Func InitializeBot()
 			For $l = 0 To UBound($aText) - 1
 				If StringInStr($aText[$l], "DISABLEWATCHDOG", $STR_NOCASESENSEBASIC) <> 0 Then
 					$g_bBotLaunchOption_NoWatchdog = True
-					SetDebugLog("Watch Dog disabled by Developer Mode File Command", $COLOR_INFO)
+					If $g_bDebugSetlog Then SetDebugLog("Watch Dog disabled by Developer Mode File Command", $COLOR_INFO)
 				EndIf
 			Next
 		EndIf
@@ -231,7 +231,7 @@ Func ProcessCommandLine()
 						If ProcessExists($guidpid) Then
 							$g_iGuiPID = $guidpid
 						Else
-							SetDebugLog("GUI Process doesn't exist: " & $guidpid)
+							If $g_bDebugSetlog Then SetDebugLog("GUI Process doesn't exist: " & $guidpid)
 						EndIf
 					ElseIf StringInStr($CmdLine[$i], "/profiles=") = 1 Then
 						Local $sProfilePath = StringMid($CmdLine[$i], 11)
@@ -344,7 +344,7 @@ EndFunc   ;==>InitializeAndroid
 ; Example .......: No
 ; ===============================================================================================================================
 Func SetupProfileFolder()
-	SetDebugLog("SetupProfileFolder: " & $g_sProfilePath & "\" & $g_sProfileCurrentName)
+	If $g_bDebugSetlog Then SetDebugLog("SetupProfileFolder: " & $g_sProfilePath & "\" & $g_sProfileCurrentName)
 	$g_sProfileConfigPath = $g_sProfilePath & "\" & $g_sProfileCurrentName & "\config.ini"
 	$g_sProfileBuildingStatsPath = $g_sProfilePath & "\" & $g_sProfileCurrentName & "\stats_buildings.ini"
 	$g_sProfileBuildingPath = $g_sProfilePath & "\" & $g_sProfileCurrentName & "\building.ini"
@@ -445,7 +445,7 @@ Func InitializeMBR(ByRef $sAI, $bConfigRead)
 	; Check if we are already running for this instance
 	$sMsg = GetTranslatedFileIni("MBR GUI Design - Loading", "Msg_Android_instance_01", "My Bot for %s is already running.\r\n\r\n", $sAI)
 	If $g_hMutex_BotTitle = 0 Then
-		SetDebugLog($g_sBotTitle & " is already running, exit now")
+		If $g_bDebugSetlog Then SetDebugLog($g_sBotTitle & " is already running, exit now")
 		DestroySplashScreen()
 		MsgBox(BitOR($MB_OK, $MB_ICONINFORMATION, $MB_TOPMOST), $g_sBotTitle, $sMsg & $cmdLineHelp)
 		__GDIPlus_Shutdown()
@@ -466,7 +466,7 @@ Func InitializeMBR(ByRef $sAI, $bConfigRead)
 	; Get mutex
 	$g_hMutex_MyBot = CreateMutex("MyBot.run")
 	$g_bOnlyInstance = $g_hMutex_MyBot <> 0 ; And False
-	SetDebugLog("My Bot is " & ($g_bOnlyInstance ? "" : "not ") & "the only running instance")
+	If $g_bDebugSetlog Then SetDebugLog("My Bot is " & ($g_bOnlyInstance ? "" : "not ") & "the only running instance")
 
 EndFunc   ;==>InitializeMBR
 
@@ -537,9 +537,9 @@ Func SetupFilesAndFolders()
 		DeleteFiles($g_sProfileTempDebugPath, "*.*", $g_iDeleteTempDays, 0, $FLTAR_RECUR)
 	EndIf
 
-	SetDebugLog("$g_sProfilePath = " & $g_sProfilePath)
-	SetDebugLog("$g_sProfileCurrentName = " & $g_sProfileCurrentName)
-	SetDebugLog("$g_sProfileLogsPath = " & $g_sProfileLogsPath)
+	If $g_bDebugSetlog Then SetDebugLog("$g_sProfilePath = " & $g_sProfilePath)
+	If $g_bDebugSetlog Then SetDebugLog("$g_sProfileCurrentName = " & $g_sProfileCurrentName)
+	If $g_bDebugSetlog Then SetDebugLog("$g_sProfileLogsPath = " & $g_sProfileLogsPath)
 
 EndFunc   ;==>SetupFilesAndFolders
 
@@ -584,7 +584,7 @@ Func FinalInitialization(Const $sAI)
 	; wait for remote GUI to show when no GUI in this process
 	If $g_iGuiMode = 0 Then
 		SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "Waiting_for_Remote_GUI", "Waiting for remote GUI..."))
-		SetDebugLog("Wait for GUI Process...")
+		If $g_bDebugSetlog Then SetDebugLog("Wait for GUI Process...")
 
 		Local $timer = __TimerInit()
 		While $g_iGuiPID = @AutoItPID And __TimerDiff($timer) < 60000
@@ -592,11 +592,11 @@ Func FinalInitialization(Const $sAI)
 			Sleep(50) ; must be Sleep as no run state!
 		WEnd
 		If $g_iGuiPID = @AutoItPID Then
-			SetDebugLog("GUI Process not received, close bot")
+			If $g_bDebugSetlog Then SetDebugLog("GUI Process not received, close bot")
 			BotClose()
 			$bCheckPrerequisitesOK = False
 		Else
-			SetDebugLog("Linked to GUI Process " & $g_iGuiPID)
+			If $g_bDebugSetlog Then SetDebugLog("Linked to GUI Process " & $g_iGuiPID)
 		EndIf
 	EndIf
 
@@ -629,8 +629,8 @@ Func FinalInitialization(Const $sAI)
 	; InitializeVariables();initialize variables used in extrawindows
 	CheckVersion() ; check latest version on mybot.run site
 	UpdateMultiStats()
-	SetDebugLog("Maximum of " & $g_iGlobalActiveBotsAllowed & " bots running at same time configured")
-	SetDebugLog("MyBot.run launch time " & Round($g_iBotLaunchTime) & " ms.")
+	If $g_bDebugSetlog Then SetDebugLog("Maximum of " & $g_iGlobalActiveBotsAllowed & " bots running at same time configured")
+	If $g_bDebugSetlog Then SetDebugLog("MyBot.run launch time " & Round($g_iBotLaunchTime) & " ms.")
 
 	If $g_bAndroidShieldEnabled = False Then
 		SetLog(GetTranslatedFileIni("MBR GUI Design - Loading", "Msg_Android_instance_05", "Android Shield not available for %s", @OSVersion), $COLOR_ACTION)
@@ -1058,8 +1058,8 @@ Func AttackMain() ;Main control for attack functions
 				Return ; return to runbot, refill armycamps
 			EndIf
 			If $g_bDebugSetlog Then
-				SetDebugLog(_PadStringCenter(" Hero status check" & BitAND($g_aiAttackUseHeroes[$DB], $g_aiSearchHeroWaitEnable[$DB], $g_iHeroAvailable) & "|" & $g_aiSearchHeroWaitEnable[$DB] & "|" & $g_iHeroAvailable, 54, "="), $COLOR_DEBUG)
-				SetDebugLog(_PadStringCenter(" Hero status check" & BitAND($g_aiAttackUseHeroes[$LB], $g_aiSearchHeroWaitEnable[$LB], $g_iHeroAvailable) & "|" & $g_aiSearchHeroWaitEnable[$LB] & "|" & $g_iHeroAvailable, 54, "="), $COLOR_DEBUG)
+				If $g_bDebugSetlog Then SetDebugLog(_PadStringCenter(" Hero status check" & BitAND($g_aiAttackUseHeroes[$DB], $g_aiSearchHeroWaitEnable[$DB], $g_iHeroAvailable) & "|" & $g_aiSearchHeroWaitEnable[$DB] & "|" & $g_iHeroAvailable, 54, "="), $COLOR_DEBUG)
+				If $g_bDebugSetlog Then SetDebugLog(_PadStringCenter(" Hero status check" & BitAND($g_aiAttackUseHeroes[$LB], $g_aiSearchHeroWaitEnable[$LB], $g_iHeroAvailable) & "|" & $g_aiSearchHeroWaitEnable[$LB] & "|" & $g_iHeroAvailable, 54, "="), $COLOR_DEBUG)
 				;SetLog("BullyMode: " & $g_abAttackTypeEnable[$TB] & ", Bully Hero: " & BitAND($g_aiAttackUseHeroes[$g_iAtkTBMode], $g_aiSearchHeroWaitEnable[$g_iAtkTBMode], $g_iHeroAvailable) & "|" & $g_aiSearchHeroWaitEnable[$g_iAtkTBMode] & "|" & $g_iHeroAvailable, $COLOR_DEBUG)
 			EndIf
 
@@ -1068,11 +1068,11 @@ Func AttackMain() ;Main control for attack functions
 			_ClanGames()
 			ClickP($aAway, 1, 0, "#0000") ;Click Away to prevent any pages on top
 			If $g_bUpdateSharedPrefs Then PullSharedPrefs()
-			PrepareSearch()
-			If Not $g_bRunState Then Return
-			If $g_bOutOfGold Then Return ; Check flag for enough gold to search
-			If $g_bRestart Then Return
-			VillageSearch()
+			;PrepareSearch()
+			;If Not $g_bRunState Then Return
+			;If $g_bOutOfGold Then Return ; Check flag for enough gold to search
+			;If $g_bRestart Then Return
+			VillageSearch(True)
 			If $g_bOutOfGold Then Return ; Check flag for enough gold to search
 			If Not $g_bRunState Then Return
 			If $g_bRestart Then Return
@@ -1129,7 +1129,7 @@ Func _RunFunction($action)
 EndFunc   ;==>_RunFunction
 
 Func __RunFunction($action)
-	SetDebugLog("_RunFunction: " & $action & " BEGIN", $COLOR_DEBUG2)
+	If $g_bDebugSetlog Then SetDebugLog("_RunFunction: " & $action & " BEGIN", $COLOR_DEBUG2)
 	Switch $action
 		Case "Collect"
 			If BitAND(Not BitOR($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
@@ -1254,16 +1254,16 @@ Func __RunFunction($action)
 		Case "BoostSuperTroop"
 			If $g_iBoostSuperTroopIndex <> -1 Then BoostSuperTroop($g_iBoostSuperTroopIndex)
 		Case ""
-			SetDebugLog("Function call doesn't support empty string, please review array size", $COLOR_ERROR)
+			If $g_bDebugSetlog Then SetDebugLog("Function call doesn't support empty string, please review array size", $COLOR_ERROR)
 		Case Else
 			SetLog("Unknown function call: " & $action, $COLOR_ERROR)
 	EndSwitch
-	SetDebugLog("_RunFunction: " & $action & " END", $COLOR_DEBUG2)
+	If $g_bDebugSetlog Then SetDebugLog("_RunFunction: " & $action & " END", $COLOR_DEBUG2)
 EndFunc   ;==>__RunFunction
 
 Func FirstCheck()
 
-	SetDebugLog("-- FirstCheck Loop --")
+	If $g_bDebugSetlog Then SetDebugLog("-- FirstCheck Loop --")
 	If Not $g_bRunState Then Return
 
 	#Region - Team AIO MOD++
@@ -1314,10 +1314,10 @@ Func FirstCheck()
 
 	If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
 		; VERIFY THE TROOPS AND ATTACK IF IS FULL
-		SetDebugLog("-- FirstCheck on Train --")
+		If $g_bDebugSetlog Then SetDebugLog("-- FirstCheck on Train --")
 		TrainSystem()
 		If Not $g_bRunState Then Return
-		SetDebugLog("Are you ready? " & String($g_bIsFullArmywithHeroesAndSpells))
+		If $g_bDebugSetlog Then SetDebugLog("Are you ready? " & String($g_bIsFullArmywithHeroesAndSpells))
 		If $g_bIsFullArmywithHeroesAndSpells Then
 			; Just in case of new profile! or BotDetectFirstTime() failed on Initiate()
 			If Not isInsideDiamond($g_aiTownHallPos) And (Not $g_bChkOnlyFarm) Then BotDetectFirstTime() ; AIO Mod

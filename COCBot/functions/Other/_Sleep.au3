@@ -40,9 +40,11 @@ Func _Sleep($iDelayOri, $iSleep = True, $CheckRunState = True, $SleepWhenPaused 
         If $iDelay > 0 And __TimerDiff($g_hTxtLogTimer) >= $g_iTxtLogTimerTimeout Then
 			
 			#Region - AIO ++ - Random / Custom delay
-			If $g_bUseSleep And Not ($g_bNoAttackSleep And $g_bAttackActive) Then
-                $iDelay = $iDelay + Int(($iDelay * $g_iIntSleep) / 100)
-				If $g_bUseRandomSleep Then $iDelay = Random(($iDelay * 90) / 100, ($iDelay * 110) / 100)
+			If Not $g_bCloudsActive Then
+				If $g_bUseSleep And Not ($g_bNoAttackSleep And $g_bAttackActive) Then
+					$iDelay = $iDelay + Int(($iDelay * $g_iIntSleep) / 100)
+					If $g_bUseRandomSleep Then $iDelay = Random(($iDelay * 90) / 100, ($iDelay * 110) / 100)
+				EndIf
 			EndIf
 			$iDelay = Round($iDelay)
 			#EndRegion - AIO ++ - Random / Custom delay

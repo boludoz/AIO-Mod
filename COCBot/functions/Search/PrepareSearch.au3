@@ -48,6 +48,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 		Else
 			SetLog("Couldn't find the Attack Button!", $COLOR_ERROR)
 			If $g_bDebugImageSave Then SaveDebugImage("AttackButtonNotFound")
+			$g_bOutOfGold = True
 			Return
 		EndIf
 	EndIf
@@ -59,7 +60,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 		checkMainScreen()
 		$g_bRestart = True
 		$g_bIsClientSyncError = False
-		Return
+		Return False
 	EndIf
 
 	$g_bCloudsActive = True ; early set of clouds to ensure no android suspend occurs that might cause infinite waits
@@ -138,10 +139,14 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 	If Not $g_bLeagueAttack Then
 		Local $aFindMatch = ClickFindMatch()
 		If $aFindMatch Then
+			Local $bResult = getAttackDisable(346, 182) ; Grab Ocr for TakeABreak check
+			checkAttackDisable($g_iTaBChkAttack, $bResult) ;last check to see If TakeABreak msg on screen for fast PC from PrepareSearch click
+			If $g_bRestart = True Then Return ; exit func
 			SetLog("Looking for village!", $COLOR_SUCCESS)
 		Else
 			SetLog("Couldn't find the Find a Match Button!", $COLOR_ERROR)
 			If $g_bDebugImageSave Then SaveDebugImage("FindAMatchBUttonNotFound")
+			$g_bOutOfGold = True
 			Return
 		EndIf
 	EndIf

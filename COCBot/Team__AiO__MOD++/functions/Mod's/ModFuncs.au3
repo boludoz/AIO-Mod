@@ -10,192 +10,13 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func _ImageSearchXML($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "0,0,860,732", $bForceCapture = True, $bDebugLog = False, $bCheckDuplicatedpoints = False, $iDistance2check = 25, $iLevel = 0)
-	FuncEnter(_ImageSearchXML)
-	$g_aImageSearchXML = -1
-	
-	; It does not support only 1 search.
-	Local $iMatchInteral = $iQuantity2Match
-	If $iQuantity2Match = 1 Then $iMatchInteral += 1
-	
-	Local $sSearchDiamond = GetDiamondFromRect($saiArea2SearchOri)
-	Local $aResult = findMultiple($sDirectory, $sSearchDiamond, $sSearchDiamond, $iLevel, 1000, $iMatchInteral, "objectname,objectlevel,objectpoints", $bForceCapture)
-	If Not IsArray($aResult) Then Return -1
-
-	Local $iCount = 0
-
-	; Compatible with BuilderBaseBuildingsDetection()[old function] same return array
-	; Result [X][0] = NAME , [x][1] = Xaxis , [x][2] = Yaxis , [x][3] = Level
-	Local $aAllResults[0][4]
-
-	Local $aArrays = "", $aCoords, $aCommaCoord
-
-	For $i = 0 To UBound($aResult) - 1
-		$aArrays = $aResult[$i] ; should be return objectname,objectpoints,objectlevel
-		$aCoords = StringSplit($aArrays[2], "|", 2)
-		For $iCoords = 0 To UBound($aCoords) - 1
-			$aCommaCoord = StringSplit($aCoords[$iCoords], ",", 2)
-			; Inspired in Chilly-chill
-			Local $aTmpResults[1][4] = [[$aArrays[0], Int($aCommaCoord[0]), Int($aCommaCoord[1]), Int($aArrays[1])]]
-			_ArrayAdd($aAllResults, $aTmpResults)
-		Next
-		$iCount += 1
-		If ($iQuantity2Match < 0) And ($iCount <= $iQuantity2Match) Then ExitLoop
-	Next
-	;If $iCount < 1 Then Return -1 what
-
-	If $bCheckDuplicatedpoints And UBound($aAllResults) > 0 Then
-		; Sort by X axis
-		_ArraySort($aAllResults, 0, 0, 0, 1)
-
-		; Distance in pixels to check if is a duplicated detection , for deploy point will be 5
-		Local $iD2Check = $iDistance2check
-
-		; check if is a double Detection, near in 10px
-		For $i = 0 To UBound($aAllResults) - 1
-			If $i > UBound($aAllResults) - 1 Then ExitLoop
-			Local $aLastCoordinate[4] = [$aAllResults[$i][0], $aAllResults[$i][1], $aAllResults[$i][2], $aAllResults[$i][3]]
-			SetDebugLog("Coordinate to Check: " & _ArrayToString($aLastCoordinate))
-			If UBound($aAllResults) > 1 Then
-				For $j = 0 To UBound($aAllResults) - 1
-					If $j > UBound($aAllResults) - 1 Then ExitLoop
-					; SetDebugLog("$j: " & $j)
-					; SetDebugLog("UBound($aAllResults) -1: " & UBound($aAllResults) - 1)
-					Local $aSingleCoordinate[4] = [$aAllResults[$j][0], $aAllResults[$j][1], $aAllResults[$j][2], $aAllResults[$j][3]]
-					; SetDebugLog(" - Comparing with: " & _ArrayToString($aSingleCoordinate))
-					If $aLastCoordinate[1] <> $aSingleCoordinate[1] Or $aLastCoordinate[2] <> $aSingleCoordinate[2] Then
-						If $aSingleCoordinate[1] < $aLastCoordinate[1] + $iD2Check And $aSingleCoordinate[1] > $aLastCoordinate[1] - $iD2Check Then
-							; SetDebugLog(" - removed : " & _ArrayToString($aSingleCoordinate))
-							_ArrayDelete($aAllResults, $j)
-						EndIf
-					Else
-						If $aLastCoordinate[1] = $aSingleCoordinate[1] And $aLastCoordinate[2] = $aSingleCoordinate[2] And $aLastCoordinate[3] <> $aSingleCoordinate[3] Then
-							; SetDebugLog(" - removed equal level : " & _ArrayToString($aSingleCoordinate))
-							_ArrayDelete($aAllResults, $j)
-						EndIf
-					EndIf
-				Next
-			EndIf
-		Next
-	EndIf
-
-	If (UBound($aAllResults) > 0) Then
-		;_ArrayDisplay($aAllResults)
-		$g_aImageSearchXML = $aAllResults
-		Return $aAllResults
-	Else
-		$g_aImageSearchXML = -1
-		Return -1
-	EndIf
-EndFunc   ;==>_ImageSearchXML
-
-Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri = Default, $bCapture = True, $sOnlyFind = Default, $bExactFind = Default, $iDistance2check = 25, $bDebugLog = False)
-	FuncEnter(findMultipleQuick)
-	$g_aImageSearchXML = -1
-
-	If $bCapture = Default Then $bCapture = True
-	If $bExactFind = Default Then $bExactFind = False
-	
-	Local $sArea2Search, $sIsOnlyFind, $iQuantToMach, $iQuantity2Match
-	If $iQuantityMatch <> 1 Then
-		$iQuantity2Match = ($iQuantityMatch = Default) ? (0) : ($iQuantityMatch)
-		Else
-		$iQuantityMatch = 2
-	EndIf
-	$sIsOnlyFind = ($sOnlyFind = Default) ? ("") : ($sOnlyFind)
-	$iQuantToMach = ($sOnlyFind = Default) ? ($iQuantity2Match) : (20)
-	
-
-	If $vArea2SearchOri = Default Then
-		$sArea2Search = "FV"
-	ElseIf (IsArray($vArea2SearchOri)) Then
-		$sArea2Search = (GetDiamondFromArray($vArea2SearchOri))
-	Else
-		Switch UBound(StringSplit($vArea2SearchOri, ",", $STR_NOCOUNT))
-			Case 4
-				$sArea2Search = GetDiamondFromRect($vArea2SearchOri)
-			Case 0, 5
-				$sArea2Search = $vArea2SearchOri
-		EndSwitch
-	EndIf
-
-	Local $aResult = findMultiple($sDirectory, $sArea2Search, $sArea2Search, 0, 1000, $iQuantToMach, "objectname,objectlevel,objectpoints", $bCapture)
-	If Not IsArray($aResult) Then Return -1
-
-	Local $iCount = 0
-
-	; Result [X][0] = NAME , [x][1] = Xaxis , [x][2] = Yaxis , [x][3] = Level
-	Local $aAR[0][4]
-
-	Local $aArrays = "", $aCoords, $aCommaCoord
-
-	For $i = 0 To UBound($aResult) - 1
-		$aArrays = $aResult[$i] ; should be return objectname,objectpoints,objectlevel
-		$aCoords = StringSplit($aArrays[2], "|", 2)
-		For $iCoords = 0 To UBound($aCoords) - 1
-			$aCommaCoord = StringSplit($aCoords[$iCoords], ",", 2)
-
-			If $sIsOnlyFind <> "" Then
-				If $bExactFind Then
-					If StringCompare($sIsOnlyFind, $aArrays[0]) <> 0 Then ContinueLoop
-				ElseIf Not $bExactFind Then
-					If StringInStr($aArrays[0], $sIsOnlyFind) = 0 Then ContinueLoop
-				EndIf
-			EndIf
-			
-			; Inspired in Chilly-chill
-			Local $aTmpResults[1][4] = [[$aArrays[0], Int($aCommaCoord[0]), Int($aCommaCoord[1]), Int($aArrays[1])]]
-			If $iCount >= $iQuantity2Match And Not $iQuantity2Match = 0 Then ExitLoop 2
-			_ArrayAdd($aAR, $aTmpResults)
-			$iCount += 1
-		Next
-	Next
-	
-	If $iDistance2check > 0 And UBound($aAR) > 1 Then
-
-		; Distance in pixels to check if is a duplicated detection , for deploy point will be 5
-		Local $iD2C = $iDistance2check
-
-		; check if is a double Detection.
-		For $i = 0 To UBound($aAR) - 1
-			If $i > UBound($aAR) - 1 Then ExitLoop
-			Local $aLC = [$aAR[$i][0], $aAR[$i][1], $aAR[$i][2], $aAR[$i][3]]
-			If UBound($aAR) > 1 Then
-				For $j = 0 To UBound($aAR) - 1
-					If $j > UBound($aAR) - 1 Then ExitLoop
-					Local $aSC[4] = [$aAR[$j][0], $aAR[$j][1], $aAR[$j][2], $aAR[$j][3]]
-					If $aLC[1] <> $aSC[1] Or $aLC[2] <> $aSC[2] Then
-						If Abs(Pixel_Distance($aSC[1], $aSC[2], $aLC[1], $aLC[2])) < $iD2C Then _ArrayDelete($aAR, $j)
-					Else
-						If $aLC[1] = $aSC[1] And $aLC[2] = $aSC[2] And ($aLC[3] <> $aSC[3] Or $aLC[0] <> $aSC[0]) Then _ArrayDelete($aAR, $j)
-					EndIf
-				Next
-			EndIf
-		Next
-	ElseIf Not UBound($aAR) > 1 Then
-		Local $sDrive = "", $sDir = "", $sFileName = "", $sExtension = ""
-		Local $aPathSplit = _PathSplit($sDirectory, $sDrive, $sDir, $sFileName, $sExtension)
-		If Not StringIsSpace($sExtension) Then
-			Local $sStrS = StringSplit($sFileName, "_", $STR_NOCOUNT)
-			Local $pa = decodeSingleCoord(findImage($sStrS[0], $sDirectory, $sArea2Search, 1, $bCapture))
-			If (IsArray($pa) And UBound($pa, 1) = 2) And (UBound($sStrS) > 1) Then
-				Local $aAR[1][4] = [[$sStrS[0], $pa[0], $pa[1], $sStrS[1]]]
-			EndIf
-			$aAR = -1
-		EndIf
-	EndIf
-	
-	$g_aImageSearchXML = (UBound($aAR) > 0) ? ($aAR) : (-1)
-	Return $g_aImageSearchXML
-EndFunc   ;==>findMultipleQuick
-
 Func ClickFindMatch()
 	Local $iLoop = 0, $bFail = True
 	Do
 		$iLoop += 1
 		
 		If _WaitForCheckImg(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch\Button\", "559, 315, 816, 541", "FindMatch") Then
-			SetDebugLog("ClickFindMatch | Clicking in find match.")
+			If $g_bDebugSetlog Then SetDebugLog("ClickFindMatch | Clicking in find match.")
 			PureClick(Random($g_aImageSearchXML[0][1] + 28, $g_aImageSearchXML[0][1] + 180, 1), Random($g_aImageSearchXML[0][2] + 10, $g_aImageSearchXML[0][2] + 94, 1), 1, 0, "#0150") ; Click Find a Match Button
 			$bFail = False
 		EndIf
@@ -204,7 +25,7 @@ Func ClickFindMatch()
 			Case isGemOpen(True, True)
 				Return (isGemOpen(True, True)) ? (False) : (True)
 			Case Not _WaitForCheckImgGone(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch\Obstacle\", "440, 106, 469, 123", "Mostaza")
-				SetDebugLog("ClickFindMatch | ClickFindMatch fail.", $COLOR_ERROR)
+				If $g_bDebugSetlog Then SetDebugLog("ClickFindMatch | ClickFindMatch fail.", $COLOR_ERROR)
 				Click(Random(300, 740, 1), Random(67, 179, 1))
 				$bFail = True
 				ContinueLoop
@@ -220,10 +41,10 @@ Func ClickFindMatch()
 	Until (IsArray(findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", 1, "559, 315, 816, 541", "FindMatch")) And Not $bFail) Or ($iLoop > 10)
 
 	If ($bFail = False) And Not ($iLoop > 9) Then
-		SetDebugLog("ClickFindMatch | OK in loop : " & $iLoop)
+		If $g_bDebugSetlog Then SetDebugLog("ClickFindMatch | OK in loop : " & $iLoop)
 		Return True
 	Else
-		SetDebugLog("ClickFindMatch | Fail in loop : " & $iLoop)
+		If $g_bDebugSetlog Then SetDebugLog("ClickFindMatch | Fail in loop : " & $iLoop)
 		AndroidPageError("PrepareSearch")
 		If checkMainScreen() = False Then
 			$g_bRestart = True
@@ -245,8 +66,8 @@ Func SearchNoLeague($bCheckOneTime = False)
 				", #3: " & _GetPixelColor(13 + 15, 24 + 5, True), $COLOR_DEBUG)
 		If IsArray($NoLeaguePixel) Then
 			If $g_bDebugSetlog Then
-				SetDebugLog("NoLeaguePixelLocation = " & $NoLeaguePixel[0] & ", " & $NoLeaguePixel[1], $COLOR_DEBUG) ;Debug
-				SetDebugLog("Pixel color found #1: " & _GetPixelColor($NoLeaguePixel[0], $NoLeaguePixel[1], True) & _
+				If $g_bDebugSetlog Then SetDebugLog("NoLeaguePixelLocation = " & $NoLeaguePixel[0] & ", " & $NoLeaguePixel[1], $COLOR_DEBUG) ;Debug
+				If $g_bDebugSetlog Then SetDebugLog("Pixel color found #1: " & _GetPixelColor($NoLeaguePixel[0], $NoLeaguePixel[1], True) & _
 						", #2: " & _GetPixelColor($NoLeaguePixel[0] + 28, $NoLeaguePixel[1], True) & _
 						", #3: " & _GetPixelColor($NoLeaguePixel[0] + 15, $NoLeaguePixel[1] + 5, True), $COLOR_DEBUG)
 			EndIf
@@ -254,7 +75,7 @@ Func SearchNoLeague($bCheckOneTime = False)
 		EndIf
 		If $bCheckOneTime Then Return False ; enable external control of loop count or follow on actions, return false if not clicked
 		If $i > 5 Then
-			SetDebugLog("Can not find pixel for 'No League', giving up", $COLOR_ERROR)
+			If $g_bDebugSetlog Then SetDebugLog("Can not find pixel for 'No League', giving up", $COLOR_ERROR)
 			If $g_bDebugImageSave Then SaveDebugImage("NoLeague_")
 			SetError(1, @extended, False)
 			Return
@@ -306,7 +127,7 @@ Func IsToRequestCC($ClickPAtEnd = True, $bSetLog = False, $bNeedCapture = True)
 			$aCCRequestCoords = StringSplit($aTempCCRequestArray[1], ",", $STR_NOCOUNT) ; Split the Coordinates where the Button got found into X and Y
 
 			If $g_bDebugSetlog Then
-				SetDebugLog($aTempCCRequestArray[0] & " Found on Coord: (" & $aCCRequestCoords[0] & "," & $aCCRequestCoords[1] & ")")
+				If $g_bDebugSetlog Then SetDebugLog($aTempCCRequestArray[0] & " Found on Coord: (" & $aCCRequestCoords[0] & "," & $aCCRequestCoords[1] & ")")
 			EndIf
 
 			If $aTempCCRequestArray[0] = "RequestFilled" Then ; Clan Castle Full
@@ -317,7 +138,7 @@ Func IsToRequestCC($ClickPAtEnd = True, $bSetLog = False, $bNeedCapture = True)
 				$g_bCanRequestCC = False
 			ElseIf $aTempCCRequestArray[0] = "CanRequest" Then ; Can make a request
 				If Not $g_abRequestType[0] And Not $g_abRequestType[1] And Not $g_abRequestType[2] Then
-					SetDebugLog("Request for Specific CC is not enable!", $COLOR_INFO)
+					If $g_bDebugSetlog Then SetDebugLog("Request for Specific CC is not enable!", $COLOR_INFO)
 					$bNeedRequest = True
 				ElseIf Not $ClickPAtEnd Then
 					$bNeedRequest = True
@@ -393,8 +214,8 @@ Func _makerequestCustom($aButtonPosition = -1)
 	Local $ix = $aFindPencil[0][1], $iy = $aFindPencil[0][2]
 	Local $aClickText[2] = [Random($ix - 320, $ix + 13, 1), Random($iy + 108, $iy + 177, 1)]
 	
-	SetDebuglog("SearchPixelDonate FindWhite " & _ArrayToString($aClickText))
-	SetDebuglog("SearchPixelDonate X, Y: " & $ix & "," & $iy)
+	If $g_bDebugSetlog Then SetDebugLog("SearchPixelDonate FindWhite " & _ArrayToString($aClickText))
+	If $g_bDebugSetlog Then SetDebugLog("SearchPixelDonate X, Y: " & $ix & "," & $iy)
 
 	Local $aTmp[4] = [440, Int($iy + 190), 470, Int($iy + 220)]
 	$aClickSend = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Request\ReqSpec", 1, $aTmp, Default, "ReqSpec", False, 25)
@@ -405,7 +226,7 @@ Func _makerequestCustom($aButtonPosition = -1)
 		Return False
 	EndIf
 	
-	SetDebuglog("SearchPixelDonate FixedMatrixSend " & _ArrayToString($aClickSend))
+	If $g_bDebugSetlog Then SetDebugLog("SearchPixelDonate FixedMatrixSend " & _ArrayToString($aClickSend))
 	
 	If $g_sRequestTroopsText <> "" Then
 		If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
@@ -513,7 +334,7 @@ Func _CleanYard($aIsBB = Default, $bTest = False)
 				If isGemOpen(True) = True Then Return False
 				Local $aiOkayButton = findButton("Okay", Default, 1, True)
 				If IsArray($aiOkayButton) And UBound($aiOkayButton, 1) = 2 Then ClickP($aAway)
-				SetDebugLog(" - CleanYardAIO | 0x1 error | Try x : " & $iError)
+				If $g_bDebugSetlog Then SetDebugLog(" - CleanYardAIO | 0x1 error | Try x : " & $iError)
 				$iError += 1
 				If RandomSleep(250) Then Return
 				If ($iError > 5) Then ContinueLoop

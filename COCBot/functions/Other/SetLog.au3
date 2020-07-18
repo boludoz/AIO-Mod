@@ -157,11 +157,12 @@ Func SetLogText(ByRef $hTxtLog, ByRef $sLogMessage, ByRef $Color, ByRef $Font, B
 EndFunc   ;==>SetLogText
 
 Func SetDebugLog($sLogMessage, $sColor = $COLOR_DEBUG, $bSilentSetLog = Default, $Font = Default, $FontSize = Default, $statusbar = 0)
+	If not $g_bDebugSetlog Then Return ; Custom - Team AIO Mod++
 	Local $sLogPrefix = "D "
 	Local $sLog = $sLogPrefix & TimeDebug() & $sLogMessage
 	If $bSilentSetLog = Default Then $bSilentSetLog = $g_bSilentSetDebugLog
 
-	If $g_bDebugSetlog And Not $bSilentSetLog Then
+	If Not $bSilentSetLog Then
         _SetLog($sLogMessage, $sColor, $Font, $FontSize, $statusbar, Default, Default, Default, $sLogPrefix)
 	Else
 		If $sLogMessage <> "" Then _ConsoleWrite(GetLogLevel($sColor) & $sLog) ; Always write any log to console

@@ -14,14 +14,14 @@
 ; ===============================================================================================================================
 
 Func TestrunBuilderBase()
-	SetDebugLog("** TestrunBuilderBase START**", $COLOR_DEBUG)
+	If $g_bDebugSetlog Then SetDebugLog("** TestrunBuilderBase START**", $COLOR_DEBUG)
 	Local $Status = $g_bRunState
 	$g_bRunState = True
 	$g_bStayOnBuilderBase = True
 	runBuilderBase(False)
 	$g_bStayOnBuilderBase = False
 	$g_bRunState = $Status
-	SetDebugLog("** TestrunBuilderBase END**", $COLOR_DEBUG)
+	If $g_bDebugSetlog Then SetDebugLog("** TestrunBuilderBase END**", $COLOR_DEBUG)
 EndFunc   ;==>TestrunBuilderBase
 
 Func runBuilderBase($bTestRun = False)

@@ -17,7 +17,7 @@ Func WaitForClouds()
 
 	If $g_bDebugSetlog Then SetDebugLog("Begin WaitForClouds:", $COLOR_DEBUG1)
 	$g_bCloudsActive = True
-
+	
 	Local $iCount = 0
 	Local $bigCount = 0, $iLastTime = 0
 	Local $hMinuteTimer, $iSearchTime
@@ -154,10 +154,10 @@ Func EnableLongSearch()
 		EndIf
 
 		; Small delay
-		If _Sleep(5000) Then Return
+		If _Sleep(1000) Then Return
 		$iCount += 1
 		; Just in Case
-		If $iCount > 6 Then Return True ; 4500 + 5000 * 6 = 1 min
+		If $iCount > 6*5 Then Return True ; 4500 + 5000 * 6 = 1 min
 	WEnd
 
 EndFunc   ;==>EnableLongSearch

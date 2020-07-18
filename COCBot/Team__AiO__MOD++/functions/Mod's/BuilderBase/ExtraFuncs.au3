@@ -61,11 +61,11 @@ Func CreateBBAttackLogFile()
 	Local $sBBAttackLogFName = "BBAttackLog" & "-" & @YEAR & "-" & @MON & ".log"
 	Local $sBBAttackLogPath = $g_sProfileLogsPath & $sBBAttackLogFName
 	$g_hBBAttackLogFile = FileOpen($sBBAttackLogPath, $FO_APPEND)
-	SetDebugLog("Created BB attack log file: " & $sBBAttackLogPath)
+	If $g_bDebugSetlog Then SetDebugLog("Created BB attack log file: " & $sBBAttackLogPath)
 EndFunc   ;==>CreateBBAttackLogFile
 
 Func CheckPostponedLog($bNow = False)
-	;SetDebugLog("CheckPostponedLog: Entered, $bNow=" & $bNow & ", count=" & $g_oTxtLogInitText.Count & ", $g_hTxtLog=" & $g_hTxtLog & ", $g_iGuiMode=" & $g_iGuiMode)
+	;If $g_bDebugSetlog Then SetDebugLog("CheckPostponedLog: Entered, $bNow=" & $bNow & ", count=" & $g_oTxtLogInitText.Count & ", $g_hTxtLog=" & $g_hTxtLog & ", $g_iGuiMode=" & $g_iGuiMode)
 	Local $iLogs = 0
 	If $g_bCriticalMessageProcessing Or ($bNow = False And __TimerDiff($g_hTxtLogTimer) < $g_iTxtLogTimerTimeout) Then Return 0
 
@@ -108,30 +108,32 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 	Local $KeyValue = StringSplit($aRes[0], "|", $STR_NOCOUNT)
 	Local $Name = ""
 	Local $aPositions, $aCoords, $aCord, $level, $aCoordsM
-	SetDebugLog("Detected : " & UBound($KeyValue) & " tiles")
+	If $g_bDebugSetlog Then SetDebugLog("Detected : " & UBound($KeyValue) & " tiles")
 	Local $AllFilenamesFound[UBound($KeyValue)][3]
+	_CaptureRegion()
 	For $i = 0 To UBound($KeyValue) - 1
 		$aPositions = RetrieveImglocProperty($KeyValue[$i], "objectpoints")
 		$aCoords = decodeMultipleCoords($aPositions, 0, 0, 0)
 		For $iCoords = 0 To UBound($aCoords) - 1
+		_CaptureRegion2Sync()
 			Local $aCoordsM = $aCoords[$iCoords]
 			
 			Local $iFur = Random($iFurMin, $iFurMax, 1)
 			If Int($aiPostFix[0] + $aCoordsM[0]) < Int($iCenterX) Then
 				If Int($aiPostFix[1] + $aCoordsM[1]) < Int($iCenterY) Then
-					Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) - $iFur, ($aiPostFix[1] + $aCoordsM[1]) - $iFur]]                                          
-					If (StringIsSpace(getOcrAndCaptureDOCR($g_sPointBB, $vResult[0][0]-2, $vResult[0][1], 2, 2, True, True)) = 0) Then _ArrayAdd($aTopLeft, $vResult)    
+					Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) - $iFur, ($aiPostFix[1] + $aCoordsM[1]) - $iFur]]                                
+					If (StringIsSpace(getOcrAndCaptureDOCR($g_sPointBB, $vResult[0][0]-2, $vResult[0][1], 2, 2, True, False)) = 0) Then _ArrayAdd($aTopLeft, $vResult)    
 				Else                                                                                                                                                 
-					Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) - $iFur, ($aiPostFix[1] + $aCoordsM[1]) + $iFur]]                                          
-					If (StringIsSpace(getOcrAndCaptureDOCR($g_sPointBB, $vResult[0][0]-2, $vResult[0][1], 2, 2, True, True)) = 0) Then _ArrayAdd($aBottomLeft, $vResult) 
+					Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) - $iFur, ($aiPostFix[1] + $aCoordsM[1]) + $iFur]]                                       
+					If (StringIsSpace(getOcrAndCaptureDOCR($g_sPointBB, $vResult[0][0]-2, $vResult[0][1], 2, 2, True, False)) = 0) Then _ArrayAdd($aBottomLeft, $vResult) 
 				EndIf                                                                                                                                                  
-			Else                                                                                                                                                       
+			Else
 				If Int($aiPostFix[1] + $aCoordsM[1]) < Int($iCenterY) Then                                                                                         
-					Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) + $iFur, ($aiPostFix[1] + $aCoordsM[1]) - $iFur]]                                          
-					If (StringIsSpace(getOcrAndCaptureDOCR($g_sPointBB, $vResult[0][0]+2, $vResult[0][1], 2, 2, True, True)) = 0) Then _ArrayAdd($aTopRight, $vResult)   
+					Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) + $iFur, ($aiPostFix[1] + $aCoordsM[1]) - $iFur]]                                    
+					If (StringIsSpace(getOcrAndCaptureDOCR($g_sPointBB, $vResult[0][0]+2, $vResult[0][1], 2, 2, True, False)) = 0) Then _ArrayAdd($aTopRight, $vResult)   
 				Else                                                                                                                                                   
-					Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) + $iFur, ($aiPostFix[1] + $aCoordsM[1]) + $iFur]]                                          
-					If (StringIsSpace(getOcrAndCaptureDOCR($g_sPointBB, $vResult[0][0]+2, $vResult[0][1], 2, 2, True, True)) = 0) Then _ArrayAdd($aBottomRight, $vResult)
+					Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) + $iFur, ($aiPostFix[1] + $aCoordsM[1]) + $iFur]]                                         
+					If (StringIsSpace(getOcrAndCaptureDOCR($g_sPointBB, $vResult[0][0]+2, $vResult[0][1], 2, 2, True, False)) = 0) Then _ArrayAdd($aBottomRight, $vResult)
 				EndIf
 			EndIf
 		Next

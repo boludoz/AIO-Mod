@@ -1640,7 +1640,7 @@ Func ControlRedraw($hWin, $ConrolId)
 	DllStructSetData($tRECT, "Top", $top)
 	DllStructSetData($tRECT, "Right", $left + $width)
 	DllStructSetData($tRECT, "Bottom", $top + $height)
-	SetDebugLog("Control ID " & $ConrolId & " RedrawWindow Pos: " & $left & ", " & $top & ", " & $left + $width & ", " & $top + $height, Default, True)
+	If $g_bDebugSetlog Then SetDebugLog("Control ID " & $ConrolId & " RedrawWindow Pos: " & $left & ", " & $top & ", " & $left + $width & ", " & $top + $height, Default, True)
 	_WinAPI_RedrawWindow($hWin, $tRECT, 0, BitOR($RDW_INVALIDATE, $RDW_ALLCHILDREN))
 	$tRECT = 0
 	Return 1
