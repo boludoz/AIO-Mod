@@ -45,60 +45,65 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 	If Not $bRecursive Then
 		If checkObstacles_Network() Then Return True
 		If checkObstacles_GfxError() Then Return True
-	;EndIf
-    ;
-	;If Not $bRecursive Then
-		Local $iDo = 0
+
+		Local $iDo = 0, $bOut = False
 		Do
+			$bOut = False
 			If $iDo > 0 Then _CaptureRegions()
-			Local $aImgX = _ImageSearchXML(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Obstacles", 0, "0,0,860,732", False)
-			If Not IsArray($aImgX) Then ExitLoop
-			For $i = 0 To UBound($aImgX) - 1
-				If (StringInStr($aImgX[$i][0], "X") > 0) Then
-					Select
-						; Shop X | Shield X.
-						Case (793 < $aImgX[$i][1] And 14 < $aImgX[$i][2] And 850 > $aImgX[$i][1] And 65 > $aImgX[$i][2])
-							Click($aImgX[$i][1] + Random(0, 5, 1), $aImgX[$i][2] + Random(0, 5, 1))
-							If RandomSleep(500) Then Return
-							; Profile X | Trophy X.
-						Case (801 < $aImgX[$i][1] And 48 < $aImgX[$i][2] And 855 > $aImgX[$i][1] And 102 > $aImgX[$i][2])
-							Click($aImgX[$i][1] + Random(0, 5, 1), $aImgX[$i][2] + Random(0, 5, 1))
-							If RandomSleep(500) Then Return
-							; Army X.
-						Case (801 < $aImgX[$i][1] And 99 < $aImgX[$i][2] And 855 > $aImgX[$i][1] And 155 > $aImgX[$i][2])
-							Click($aImgX[$i][1] + Random(0, 5, 1), $aImgX[$i][2] + Random(0, 5, 1))
-							If RandomSleep(500) Then Return
-					EndSelect
-				ElseIf (StringInStr($aImgX[$i][0], "OK") > 0) Then
-					Select
-						; Season end.
-						Case (342 < $aImgX[$i][1] And 485 < $aImgX[$i][2] And 506 > $aImgX[$i][1] And 560 > $aImgX[$i][2])
-							ClickP($aAway)
-							If RandomSleep(500) Then Return
+			Local $aImgX = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Obstacles", 1, "FV", False, "X|OK")
+			If Not IsArray($aImgX) Then ContinueLoop
+			If (StringInStr($aImgX[0][0], "X") > 0) Then
+				Select
+					; Shop X | Shield X.
+					Case (793 < $aImgX[0][1] And 14 < $aImgX[0][2] And 850 > $aImgX[0][1] And 65 > $aImgX[0][2])
+						SetDebugLog("Detected _checkObstacles Shop X | Shield X.")
+						$bOut = True
+						; Profile X | Trophy X.
+					Case (801 < $aImgX[0][1] And 48 < $aImgX[0][2] And 855 > $aImgX[0][1] And 102 > $aImgX[0][2])
+						SetDebugLog("Detected _checkObstacles Trophy X.")
+						$bOut = True
+						; Army X.
+					Case (801 < $aImgX[0][1] And 99 < $aImgX[0][2] And 855 > $aImgX[0][1] And 155 > $aImgX[0][2])
+						SetDebugLog("Detected _checkObstacles Army X.")
+						$bOut = True
+				EndSelect
+			ElseIf (StringInStr($aImgX[0][0], "OK") > 0) Then
+				Select
+					; Season end.
+					Case (342 < $aImgX[0][1] And 485 < $aImgX[0][2] And 506 > $aImgX[0][1] And 560 > $aImgX[0][2])
+						SetDebugLog("Detected _checkObstacles Season end.")
+						$bOut = True
 						; Season challenge.
-						Case (310 < $aImgX[$i][1] And 532 < $aImgX[$i][2] And 530 > $aImgX[$i][1] And 600 > $aImgX[$i][2])
-							ClickP($aAway)
-							If RandomSleep(500) Then Return
-					EndSelect
-				EndIf
-			Next
+					Case (310 < $aImgX[0][1] And 532 < $aImgX[0][2] And 530 > $aImgX[0][1] And 600 > $aImgX[0][2])
+						SetDebugLog("Detected _checkObstacles Season challenge.")
+						$bOut = True
+				EndSelect
+			EndIf
 			$iDo += 1
-		Until Not IsArray($aImgX) Or ($iDo > 3)
-		
-		If $iDo > 0 Then _CaptureRegions()
-		
-		Local $bIsOnBuilderIsland = isOnBuilderBase(False, True)
-		Local $bIsOnMainVillage = isOnMainVillage(False)
-		If Not $bBuilderBase And $bIsOnBuilderIsland Then
-			SetLog("Detected Builder Base, trying to switch back to Main Village.", $COLOR_INFO)
-			SwitchBetweenBases(False) ; Prevent reclusion.
-			$g_bMinorObstacle = True
-		ElseIf $bBuilderBase And (Not $bIsOnBuilderIsland And $bIsOnMainVillage) Then
-			SetLog("Detected Main Village, trying to switch back to Builder Base.", $COLOR_INFO)
-			SwitchBetweenBases(False) ; Prevent reclusion.
-			$g_bMinorObstacle = True
-		EndIf
+			If $bOut = True Then
+				Click($aImgX[0][1] + Random(0, 5, 1), $aImgX[0][2] + Random(0, 5, 1))
+				If RandomSleep(1500) Then Return
+				ExitLoop
+			EndIf
+		Until Not IsArray($aImgX) Or ($iDo > 3) Or $bOut
 	EndIf
+	If $iDo > 0 Then _CaptureRegions()
+	
+	Local $bIsOnBuilderIsland = isOnBuilderBase(False, True)
+	Local $bIsOnMainVillage = isOnMainVillage(False)
+	If Not $bBuilderBase And $bIsOnBuilderIsland Then
+		SetLog("Detected Builder Base, trying to switch back to Main Village.", $COLOR_INFO)
+		SwitchBetweenBases() ; Prevent reclusion.
+		$g_bMinorObstacle = True
+		Return False
+	ElseIf $bBuilderBase And (Not $bIsOnBuilderIsland And $bIsOnMainVillage) Then
+		SetLog("Detected Main Village, trying to switch back to Builder Base.", $COLOR_INFO)
+		SwitchBetweenBases() ; Prevent reclusion.
+		$g_bMinorObstacle = True
+		Return False
+	EndIf
+	
+	_CaptureRegions()
 	#EndRegion - Custom - Team AIO Mod++
 
 	If $g_sAndroidGameDistributor <> $g_sGoogle Then ; close an ads window for non google apks

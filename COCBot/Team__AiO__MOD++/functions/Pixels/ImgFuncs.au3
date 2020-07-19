@@ -285,16 +285,16 @@ Func CompKick(ByRef $vFiles, $aof, $bType = -1)
 	If IsArray($vFiles) And IsArray($aof) And ($bType <> -1) Then
 		SetDebugLog(_ArrayToString($aof))
 		If $bType Then
-			For $s2 In $vFiles
-				Local $i2s = StringInStr($s2, "_") - 1
-				For $s In $aof
+			For $s In $aof
+				For $s2 In $vFiles
+					Local $i2s = StringInStr($s2, "_") - 1
 					If StringMid($s2, 1, $i2s) = $s Then _ArrayAdd($aRS, $s2)
 				Next
 			Next
 		Else
-			For $s2 In $vFiles
-				Local $i2s = StringInStr($s2, "_") - 1
-				For $s In $aof
+			For $s In $aof
+				For $s2 In $vFiles
+					Local $i2s = StringInStr($s2, "_") - 1
 					If StringMid($s2, 1, $i2s) == $s Then _ArrayAdd($aRS, $s2)
 				Next
 			Next
