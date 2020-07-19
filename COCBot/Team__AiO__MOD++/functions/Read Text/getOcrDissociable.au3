@@ -52,6 +52,7 @@ Func getTroopCountBig($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets
 	Return SpecialOCRCut($g_sAttackBarDOCRB, $x_start, $y_start-8, 55, 17+8, True, $bNeedNewCapture)
 EndFunc   ;==>getTroopCountBig
 
+;
 Func _getTroopCountSmall($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for non-selected troop kind
 	Return SpecialOCRCut($g_sAttackBarDOCRB, $x_start, $y_start-8, 55, 17+8, True, $bNeedNewCapture)
 EndFunc   ;==>_getTroopCountSmall
