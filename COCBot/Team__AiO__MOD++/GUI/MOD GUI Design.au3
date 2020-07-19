@@ -104,7 +104,6 @@ EndFunc   ;==>CreateMODTab
 	GUICtrlSetColor(-1, 0xFFCC00)
 
 	$g_hAvoidLocation = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "AvoidLocation", "Skip buildings location."), 32, 312, 145, 17)
-	$g_hEdgeObstacle = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "EdgeObstacles", "Remove edge obstacles."), 32, 332, 145, 17)
 	GUICtrlSetOnEvent(-1, "chkDelayMod")
 
 	GUICtrlCreateTabItem("")

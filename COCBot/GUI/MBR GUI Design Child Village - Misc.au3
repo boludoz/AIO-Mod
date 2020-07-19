@@ -309,9 +309,11 @@ Func CreateMiscNormalVillageSubTab()
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkGemsBox_Info_01", "Check this to automatically clear GemBox."))
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
 
+	#Region - Daily Discounts - Team AiO MOD++
 	$x = 220
-	$y -= 50
+	$y -= 56
 	#CS - Daily Discounts - Team AiO MOD++
+	$y -= 50
 		_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModPowerP, $x + 32, $y, 24, 24)
 		$g_hChkFreeMagicItems = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkFreeMagicItems", "Collect Free Magic Items"), $x + 60, $y + 4, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkFreeMagicItems_Info", "Check this to automatically collect free magic items.\r\nMust be at least Th8."))
@@ -322,8 +324,13 @@ Func CreateMiscNormalVillageSubTab()
 			GUICtrlSetOnEvent(-1, "btnDailyDiscounts")
 	#CE
 
-	$y += 25
+	$y += 28
+		$g_hEdgeObstacle = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "EdgeObstacles", "Remove edge obstacles."), $x + 60, $y + 4, -1, -1)
+		;GUICtrlSetOnEvent(-1, "chkDelayMod")
+
+	$y += 28
 		$g_hChkCollectRewards = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCollectRewards", "Collect Challenge Rewards"), $x + 60, $y + 4, -1, -1)
+	#EndRegion - Daily Discounts - Team AiO MOD++
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 

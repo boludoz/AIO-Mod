@@ -36,12 +36,10 @@ EndFunc   ;==>ChkReqCCAlways
 ; Request form chat / on a loop - Team AiO MOD++
 Func ChkReqCCAlways()
 		$g_bChkReqCCAlways = (GUICtrlRead($g_hChkReqCCAlways) = $GUI_CHECKED)
-
 EndFunc   ;==>ChkReqCCAlways
 
 Func ChkReqCCFromChat()
 		$g_bChkReqCCFromChat = (GUICtrlRead($g_hChkReqCCFromChat) = $GUI_CHECKED)
-
 EndFunc   ;==>ChkReqCCFromChat
 
 ; Custom army - Team AiO MOD++
