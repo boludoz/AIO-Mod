@@ -14,16 +14,9 @@
 ; ===============================================================================================================================
 Func CheckPrerequisites($bSilent = False)
 	Local $isAllOK = True
-	;Local $isNetFramework4Installed = isNetFramework4Installed()
-	Local $isNetFramework4dot5Installed = isNetFramework4dot5Installed()
+	Local $isNetFramework4dot5Installed = isNetFramework4_X_Installed(378389) ; Custom - Team AIO Mod++
 	Local $isVC2010Installed = isVC2010Installed()
 	If ($isNetFramework4dot5Installed = False Or $isVC2010Installed = False) Then
-		#cs
-			If ($isNetFramework4Installed = False And Not $bSilent) Then
-			SetLog("The .Net Framework 4.0 is not installed", $COLOR_ERROR)
-			SetLog("Please download here : https://www.microsoft.com/en-US/download/details.aspx?id=17718", $COLOR_ERROR)
-			EndIf
-		#ce
 		If ($isNetFramework4dot5Installed = False And Not $bSilent) Then
 			SetLog("The .Net Framework 4.5 is not installed", $COLOR_ERROR)
 			SetLog("Please download here : https://www.microsoft.com/en-US/download/details.aspx?id=30653", $COLOR_ERROR)
@@ -73,12 +66,44 @@ Func isNetFramework4Installed()
 	Return $success
 EndFunc   ;==>isNetFramework4Installed
 
-Func isNetFramework4dot5Installed()
-	;https://msdn.microsoft.com/it-it/library/hh925568%28v=vs.110%29.aspx#net_b
-	Local $z = 0, $sKeyValue, $success = False
-	$sKeyValue = RegRead("HKLM\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\", "Release")
-	If Number($sKeyValue) >= 378389 Then $success = True
-	Return $success
+; Custom - AIO Mod++
+Func isNetFramework4_X_Installed($iVersion = 378389)
+	; https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed?redirectedfrom=MSDN#net_b
+	Local $vReleaseKey = RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full", "Release")
+	
+	If @error Then
+		SetDebugLog("NET FRAMEWORK DETECT FAIL", $COLOR_ERROR)
+		Return False
+	EndIf
+	
+	If $g_bDebugSetlog Then
+		Switch Int($vReleaseKey)
+			Case ($vReleaseKey >= 528040)
+				SetDebugLog("isNetFramework4_X_Installed | 4.8 or later")
+			Case ($vReleaseKey >= 461808)
+				SetDebugLog("isNetFramework4_X_Installed | 4.7.2")
+			Case ($vReleaseKey >= 461308)
+				SetDebugLog("isNetFramework4_X_Installed | 4.7.1")
+			Case ($vReleaseKey >= 460798)
+				SetDebugLog("isNetFramework4_X_Installed | 4.7")
+			Case ($vReleaseKey >= 394802)
+				SetDebugLog("isNetFramework4_X_Installed | 4.6.2")
+			Case ($vReleaseKey >= 394254)
+				SetDebugLog("isNetFramework4_X_Installed | 4.6.1")
+			Case ($vReleaseKey >= 393295)
+				SetDebugLog("isNetFramework4_X_Installed | 4.6")
+			Case ($vReleaseKey >= 379893)
+				SetDebugLog("isNetFramework4_X_Installed | 4.5.2")
+			Case ($vReleaseKey >= 378675)
+				SetDebugLog("isNetFramework4_X_Installed | 4.5.1")
+			Case ($vReleaseKey >= 378389)
+				SetDebugLog("isNetFramework4_X_Installed | 4.5")
+			Case Else
+				SetDebugLog("isNetFramework4_X_Installed | No 4.5 or later version detected", $COLOR_ERROR)
+		EndSwitch
+	EndIf
+	
+	If (Int($vReleaseKey) >= $iVersion) Then Return True
 EndFunc   ;==>isNetFramework4dot5Installed
 
 Func isVC2010Installed()
