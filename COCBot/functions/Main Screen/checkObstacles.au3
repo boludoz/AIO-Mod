@@ -49,7 +49,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		Local $iDo = 0, $bOut = False
 		Do
 			$bOut = False
-			If $iDo > 0 Then _CaptureRegions()
+			If ($iDo > 0) Then _CaptureRegions()
 			Local $aImgX = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Obstacles", 1, "FV", False, "X|OK")
 			If Not IsArray($aImgX) Then ContinueLoop
 			If (StringInStr($aImgX[0][0], "X") > 0) Then
@@ -86,8 +86,8 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 				ExitLoop
 			EndIf
 		Until Not IsArray($aImgX) Or ($iDo > 3) Or $bOut
+		If ($iDo > 0) Then _CaptureRegions()
 	EndIf
-	If $iDo > 0 Then _CaptureRegions()
 	
 	Local $bIsOnBuilderIsland = isOnBuilderBase(False, True)
 	Local $bIsOnMainVillage = isOnMainVillage(False)
