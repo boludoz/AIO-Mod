@@ -54,56 +54,9 @@ Func CheckPrerequisites($bSilent = False)
 	Return $isAllOK
 EndFunc   ;==>CheckPrerequisites
 
-Func isNetFramework4Installed()
-	Local $z = 0, $sKeyName, $success = False
-	Do
-		$z += 1
-		$sKeyName = RegEnumKey("HKLM\SOFTWARE\Microsoft\NET Framework Setup\NDP", $z)
-		If StringRegExp($sKeyName, "v4|v4.\d+") Then
-			$success = True
-		EndIf
-	Until $sKeyName = '' Or $success
-	Return $success
-EndFunc   ;==>isNetFramework4Installed
-
 ; Custom - AIO Mod++
-Func isNetFramework4_X_Installed($iVersion = 378389)
-	; https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed?redirectedfrom=MSDN#net_b
-	Local $vReleaseKey = RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full", "Release")
-	
-	If @error Then
-		SetDebugLog("NET FRAMEWORK DETECT FAIL", $COLOR_ERROR)
-		Return False
-	EndIf
-	
-	If $g_bDebugSetlog Then
-		Switch Int($vReleaseKey)
-			Case ($vReleaseKey >= 528040)
-				SetDebugLog("isNetFramework4_X_Installed | 4.8 or later")
-			Case ($vReleaseKey >= 461808)
-				SetDebugLog("isNetFramework4_X_Installed | 4.7.2")
-			Case ($vReleaseKey >= 461308)
-				SetDebugLog("isNetFramework4_X_Installed | 4.7.1")
-			Case ($vReleaseKey >= 460798)
-				SetDebugLog("isNetFramework4_X_Installed | 4.7")
-			Case ($vReleaseKey >= 394802)
-				SetDebugLog("isNetFramework4_X_Installed | 4.6.2")
-			Case ($vReleaseKey >= 394254)
-				SetDebugLog("isNetFramework4_X_Installed | 4.6.1")
-			Case ($vReleaseKey >= 393295)
-				SetDebugLog("isNetFramework4_X_Installed | 4.6")
-			Case ($vReleaseKey >= 379893)
-				SetDebugLog("isNetFramework4_X_Installed | 4.5.2")
-			Case ($vReleaseKey >= 378675)
-				SetDebugLog("isNetFramework4_X_Installed | 4.5.1")
-			Case ($vReleaseKey >= 378389)
-				SetDebugLog("isNetFramework4_X_Installed | 4.5")
-			Case Else
-				SetDebugLog("isNetFramework4_X_Installed | No 4.5 or later version detected", $COLOR_ERROR)
-		EndSwitch
-	EndIf
-	
-	If (Int($vReleaseKey) >= $iVersion) Then Return True
+Func isNetFramework4_X_Installed($iVersion = 378389) ; >= 378389 Is Net Framework v4.5 (Legacy MBR + Dissociable OCR.).
+	Return (Int(RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full", "Release")) >= $iVersion) ; https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed?redirectedfrom=MSDN#net_b
 EndFunc   ;==>isNetFramework4dot5Installed
 
 Func isVC2010Installed()
