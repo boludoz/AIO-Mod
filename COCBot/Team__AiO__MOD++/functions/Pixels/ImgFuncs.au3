@@ -112,7 +112,40 @@ Func _ImageSearchXML($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "0,
 	EndIf
 EndFunc   ;==>_ImageSearchXML
 
-Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri = Default, $bForceCapture = True, $sOnlyFind = Default, $bExactFind = Default, $iDistance2check = 25, $bDebugLog = False)
+Func CompKick(ByRef $vFiles, $aof, $bType = False)
+	If (UBound($aof) = 1) And StringIsSpace($aof[0]) Then Return False
+	If $g_bDebugSetlog Then
+		SetDebugLog("CompKick : " & _ArrayToString($vFiles))
+		SetDebugLog("CompKick : " & _ArrayToString($aof))
+		SetDebugLog("CompKick : " & "Exact mode : " & $bType)
+	EndIf
+	If ($bType = Default) Then $bType = False
+
+	Local $aRS[0]
+
+	If IsArray($vFiles) And IsArray($aof) Then
+		If $g_bDebugSetlog Then SetDebugLog("CompKick compare : " & _ArrayToString($vFiles))
+		If $bType Then
+			For $s In $aof
+				For $s2 In $vFiles
+					Local $i2s = StringInStr($s2, "_") - 1
+					If StringInStr(StringMid($s2, 1, $i2s), $s, 0) = 1 And $i2s = StringLen($s) Then _ArrayAdd($aRS, $s2)
+				Next
+			Next
+		Else
+			For $s In $aof
+				For $s2 In $vFiles
+					Local $i2s = StringInStr($s2, "_") - 1
+					If StringInStr(StringMid($s2, 1, $i2s), $s) > 0 Then _ArrayAdd($aRS, $s2)
+				Next
+			Next
+		EndIf
+	EndIf
+	$vFiles = $aRS
+	Return (UBound($vFiles) = 0)
+EndFunc   ;==>CompKick
+
+Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri = Default, $bForceCapture = True, $sOnlyFind = "", $bExactFind = False, $iDistance2check = 25, $bDebugLog = False)
 	FuncEnter(findMultipleQuick)
 	$g_aImageSearchXML = -1
 	Local $aAR[0][4]
@@ -121,7 +154,7 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 	
 	Local $iQuantToMach, $iQuantity2Match
 
-	Local $bDefa = ($sOnlyFind = Default)
+	Local $bDefa = ($sOnlyFind = "")
 	If ($iQuantityMatch = Default) Then $iQuantityMatch = 0
 	If $bForceCapture = Default Then $bForceCapture = True
 	If $vArea2SearchOri = Default Then $vArea2SearchOri = "FV"
@@ -142,15 +175,15 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 		$iQuantity2Match = 2
 	EndIf
 	
-	$sOnlyFind = ($sOnlyFind = Default) ? ("") : ($sOnlyFind)
-	$iQuantToMach = ($sOnlyFind = Default) ? ($iQuantity2Match) : (20)
+	If ($sOnlyFind = Default) Then $sOnlyFind = ""
+	$iQuantToMach = ($sOnlyFind = "") ? ($iQuantity2Match) : (20)
 	Local $bIsDir = True
 	Local $sDrive = "", $sDir = "", $sFileName = "", $sExtension = ""
 	If Not IsDir($sDirectory) Then 
 		$bIsDir = False
 		Local $aPathSplit = _PathSplit($sDirectory, $sDrive, $sDir, $sFileName, $sExtension)
 		If Not StringIsSpace($sFileName) Then
-			$bExactFind = -1
+			$bExactFind = Default
 			$sOnlyFind = ""
 			$sDirectory = $sDrive & $sDir
 			$iQuantToMach = 0
@@ -185,7 +218,7 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 ;	_ArrayDisplay($resultArr, 1)
 	If Not $bDefa And $bIsDir Then
 		If $g_bDebugSetlog Then SetDebugLog(" ***  findMultipleQuick multiples **** ", $COLOR_ORANGE)
-		Local $aof = StringSplit($sOnlyFind, "|")
+		Local $aof = StringSplit($sOnlyFind, "|", $STR_NOCOUNT)
 		If CompKick($resultArr, $aof, $bExactFind) Then
 			If $g_bDebugSetlog Then SetDebugLog(" ***  findMultipleQuick has no result **** ", $COLOR_ORANGE)
 			$returnValues = -1
@@ -247,7 +280,7 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 	
 	If (UBound($aAR) > 0) Then
 		If ($g_bDebugImageSave Or $bDebugLog) Then ; Discard Deploy Points Touch much text on image
-			_CaptureRegion2()
+			;_CaptureRegion2()
 
 			Local $sSubDir = $g_sProfileTempDebugPath & "findMultipleQuick"
 
@@ -263,10 +296,11 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 				addInfoToDebugImage($hGraphic, $hPenRED, $aAR[$i][0] & "_" & $aAR[$i][3], $aAR[$i][1], $aAR[$i][2])
 			Next
 
-			_GDIPlus_ImageSaveToFile($hEditedImage, $sSubDir & "\" & $sDebugImageName)
+			_GDIPlus_ImageSaveToFile($hEditedImage, $sSubDir & "\" & $g_sFMQTag & $sDebugImageName )
 			_GDIPlus_PenDispose($hPenRED)
 			_GDIPlus_GraphicsDispose($hGraphic)
 			_GDIPlus_BitmapDispose($hEditedImage)
+			$g_sFMQTag = ""
 		EndIf
 		
 		;_ArrayDisplay($aAR)
@@ -277,29 +311,3 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 		Return -1
 	EndIf
 EndFunc   ;==>findMultipleQuick
-
-Func CompKick(ByRef $vFiles, $aof, $bType = -1)
-	If (IsArray($aof) And StringIsSpace($aof[0])) Then Return False
-	Local $aRS[0]
-	
-	If IsArray($vFiles) And IsArray($aof) And ($bType <> -1) Then
-		SetDebugLog(_ArrayToString($aof))
-		If $bType Then
-			For $s In $aof
-				For $s2 In $vFiles
-					Local $i2s = StringInStr($s2, "_") - 1
-					If StringMid($s2, 1, $i2s) = $s Then _ArrayAdd($aRS, $s2)
-				Next
-			Next
-		Else
-			For $s In $aof
-				For $s2 In $vFiles
-					Local $i2s = StringInStr($s2, "_") - 1
-					If StringMid($s2, 1, $i2s) == $s Then _ArrayAdd($aRS, $s2)
-				Next
-			Next
-		EndIf
-	EndIf
-	$vFiles = $aRS
-	Return (UBound($vFiles) = 0)
-EndFunc   ;==>CompKick

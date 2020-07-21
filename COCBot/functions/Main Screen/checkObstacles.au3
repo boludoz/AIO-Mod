@@ -89,21 +89,23 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		If ($iDo > 0) Then _CaptureRegions()
 	EndIf
 	
+	_CaptureRegions()
 	Local $bIsOnBuilderIsland = isOnBuilderBase(False, True)
 	Local $bIsOnMainVillage = isOnMainVillage(False)
-	If Not $bBuilderBase And $bIsOnBuilderIsland Then
-		SetLog("Detected Builder Base, trying to switch back to Main Village.", $COLOR_INFO)
-		SwitchBetweenBases() ; Prevent reclusion.
-		$g_bMinorObstacle = True
-		Return False
-	ElseIf $bBuilderBase And (Not $bIsOnBuilderIsland And $bIsOnMainVillage) Then
-		SetLog("Detected Main Village, trying to switch back to Builder Base.", $COLOR_INFO)
-		SwitchBetweenBases() ; Prevent reclusion.
-		$g_bMinorObstacle = True
-		Return False
+	If $bIsOnBuilderIsland <> $bIsOnMainVillage Then
+		If Not $bBuilderBase And $bIsOnBuilderIsland Then
+			SetLog("Detected Builder Base, trying to switch back to Main Village.", $COLOR_INFO)
+			SwitchBetweenBases(False, False) ; Prevent reclusion.
+			$g_bMinorObstacle = True
+			Return False
+		ElseIf $bBuilderBase And (Not $bIsOnBuilderIsland And $bIsOnMainVillage) Then
+			SetLog("Detected Main Village, trying to switch back to Builder Base.", $COLOR_INFO)
+			SwitchBetweenBases(False, True) ; Prevent reclusion.
+			$g_bMinorObstacle = True
+			Return False
+		EndIf
 	EndIf
 	
-	_CaptureRegions()
 	#EndRegion - Custom - Team AIO Mod++
 
 	If $g_sAndroidGameDistributor <> $g_sGoogle Then ; close an ads window for non google apks

@@ -68,7 +68,7 @@ Func drillSearch()
 EndFunc   ;==>drillSearch
 
 Func CheckDrillLvl($x, $y)
-	_CaptureRegion2($x - 25, $y - 25, $x + 25, $y + 25)
+	_CaptureRegion2($x - 12, $y - 12, $x + 12, $y + 12)
 
 	Local $aResult = multiMatches($g_sImgSearchDrillLevel, 1, "FV", "FV", "", 0, 1000, False)
 
