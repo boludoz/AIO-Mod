@@ -43,7 +43,7 @@ Func getPBTInfo()
 			If $g_bDebugSetlog Then SetDebugLog("Guard Active", $COLOR_DEBUG)
 		Case Else
 			SetLog("Sorry, Monkey needs more bananas to read shield type", $COLOR_ERROR) ; Check for pixel colors errors!
-			If $g_bDebugImageSave Then SaveDebugImage("ShieldInfo_", $g_bCapturePixel, "png", False)
+			If $g_bDebugImageSave Then DebugImageSave("ShieldInfo_", $g_bCapturePixel, "png", False)
 			SetError(1, "Bad shield type pixel read")
 			Return
 	EndSelect
@@ -64,8 +64,8 @@ Func getPBTInfo()
 		$iCount += 1
 		If $iCount > 20 Then ; Wait ~10-12 seconds for window to open before error return
 			SetLog("PBT information window failed to open", $COLOR_DEBUG)
-			If $g_bDebugImageSave Then SaveDebugImage("PBTInfo_", $g_bCapturePixel, "png", False)
-			ClickP($aAway, 1, 0, "#9999") ; close window if opened
+			If $g_bDebugImageSave Then DebugImageSave("PBTInfo_", $g_bCapturePixel, "png", False)
+			ClickAway()
 			If _Sleep($DELAYPERSONALSHIELD2) Then Return ; wait for close
 			Return
 		EndIf
@@ -82,7 +82,8 @@ Func getPBTInfo()
 			If $sTimeResult = "" Then ; error if no read value
 				SetLog("strange error, no PBT value found?", $COLOR_ERROR)
 				SetError(2, "Bad time value OCR read")
-				ClickP($aAway, 1, 0, "#9999") ; close window
+				;ClickP($aAway, 1, 0, "#9999") ; close window
+				ClickAway()
 				If _Sleep($DELAYPERSONALSHIELD2) Then Return ; wait for close
 				Return $aPBTReturnResult ; return zero value
 			EndIf
@@ -109,14 +110,16 @@ Func getPBTInfo()
 					Case Else
 						SetLog("strange error, unexpected PBT value?", $COLOR_ERROR)
 						SetError(3, "Error processing time string")
-						ClickP($aAway, 1, 0, "#9999") ; close window
+						;ClickP($aAway, 1, 0, "#9999") ; close window
+						ClickAway()
 						If _Sleep($DELAYPERSONALSHIELD2) Then Return ; wait for close
 						Return $aPBTReturnResult ; return zero value
 				EndSelect
 			Case Else
 				SetLog("Error processing PBT time string: " & $sTimeResult, $COLOR_ERROR)
 				SetError(4, "Error processing time string")
-				ClickP($aAway, 1, 0, "#9999") ; close window
+				;ClickP($aAway, 1, 0, "#9999") ; close window
+				ClickAway()
 				If _Sleep($DELAYPERSONALSHIELD2) Then Return ; wait for close
 				Return $aPBTReturnResult ; return zero value
 		EndSwitch
@@ -136,7 +139,8 @@ Func getPBTInfo()
 		If $g_bDebugSetlog Then SetDebugLog("PBT starts: " & $aPBTReturnResult[2], $COLOR_INFO)
 		If _Sleep($DELAYPERSONALSHIELD1) Then Return
 
-		ClickP($aAway, 1, 0, "#9999") ; close window
+		;ClickP($aAway, 1, 0, "#9999") ; close window
+		ClickAway()
 		If _Sleep($DELAYPERSONALSHIELD2) Then Return ; wait for close
 
 		Return $aPBTReturnResult

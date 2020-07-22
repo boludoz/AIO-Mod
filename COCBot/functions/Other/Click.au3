@@ -18,15 +18,15 @@
 
 Func Click($x, $y, $times = 1, $speed = 0, $debugtxt = "")
 
-	#Region AIO Mod ++
+	#Region - ClickAway - Team AIO Mod++
 	
 	#comments-start AIO Mod
 	Global $aAway[2] = [175, 10] ; Away click, moved from 1,1 to prevent scroll window from top, moved from 0,10 to 175,32 to prevent structure click or 175,10 to just fix MEmu 2.x opening and closing toolbar
 	Global $aAway2[2] = [235, 10] ; Second Away Position for Windows like Donate Window where at $aAway is a button
 	#comments-end
 
-	If ($x = $aAway[0] Or $x = $aAway2[0]) And $y = 10 Then Return SpecialAway()
-	#EndRegion
+	If ($x = $aAway[0] Or $x = $aAway2[0]) And $y = 10 Then Return ClickAway()
+	#EndRegion - ClickAway - Team AIO Mod++
 
 	Local $txt = "", $aPrevCoor[2] = [$x, $y]
     If $g_bUseRandomClick Then
@@ -259,11 +259,18 @@ Func AttackClick($x, $y, $times = 1, $speed = 0, $afterDelay = 0, $debugtxt = ""
 	Return $result
 EndFunc   ;==>AttackClick
 
+Func ClickAway()
+	Local $aiRegionToUse = Random(0, 1, 1) > 0 ? $aiClickAwayRegionLeft : $aiClickAwayRegionRight
+	Local $aiSpot[2] = [Random($aiRegionToUse[0], $aiRegionToUse[2], 1), Random($aiRegionToUse[1], $aiRegionToUse[3], 1)]
+	If $g_bDebugClick Then SetDebugLog("ClickAway(): on X:" & $aiSpot[0] & ", Y:" & $aiSpot[1], $COLOR_DEBUG)
+	ClickP($aiSpot, 1, 0, "#0000")
+EndFunc
+
 Func _DecodeDebug($message)
 	Local $separator = " | "
 	Switch $message
 		; AWAY CLICKS
-		Case "#0112", "#0115", "#0140", "#0141", "#0142", "#0143", "#0199", "#0328", "#0201", "#0204", "#0205", "#0206", "#0327", "#0207", "#0208", "#0209", "#0210", "#0211"
+		Case "#0000"
 			Return $separator & "Away"
 		Case "#0214", "#0215", "#0216", "#0217", "#0218", "#0219", "#0220", "#0221", "#0235", "#0242", "#0268", "#0291", "#0292", "#0295", "#0298", "#0300", "#0301", "#0302"
 			Return $separator & "Away"

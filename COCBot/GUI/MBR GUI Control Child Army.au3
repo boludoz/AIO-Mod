@@ -187,7 +187,7 @@ Func lblTotalCountTroop2()
 		EndIf
 	Next
 
-	For $i = $eTroopMinion To $eTroopIceGolem
+	For $i = $eTroopMinion To $eTroopHeadhunter
 		Local $NbrOfTroop = GUICtrlRead($g_ahTxtTrainArmyTroopCount[$i])
 		Local $LevOfTroop = $g_aiTrainArmyTroopLevel[$i] > 0 ? $g_aiTrainArmyTroopLevel[$i] : $g_aiTroopCostPerLevel[$i][0]
 
@@ -217,15 +217,11 @@ Func lblTotalCountSpell2()
 		$iTotalTotalTimeSpell += $g_aiArmyCustomSpells[$i] * $g_aiSpellTrainTime[$i]
 	Next
 
+	For $i = 0 To $eSpellCount - 1
+		GUICtrlSetBkColor($g_ahTxtTrainArmySpellCount[$i], $g_iTotalTrainSpaceSpell <= GUICtrlRead($g_hTxtTotalCountSpell) ? $COLOR_WHITE : $COLOR_RED)
+	Next
+
 	GUICtrlSetData($g_hLblTotalTimeSpell, CalculTimeTo($iTotalTotalTimeSpell))
-	GUICtrlSetData($g_hLblCountTotalSpell, $g_iTotalTrainSpaceSpell)
-	If $g_iTotalTrainSpaceSpell < GUICtrlRead($g_hTxtTotalCountSpell) Then
-		GUICtrlSetBkColor($g_hLblCountTotalSpell, $COLOR_ORANGE)
-	ElseIf $g_iTotalTrainSpaceSpell > GUICtrlRead($g_hTxtTotalCountSpell) Then
-		GUICtrlSetBkColor($g_hLblCountTotalSpell, $COLOR_RED)
-	ElseIf $g_iTotalTrainSpaceSpell = GUICtrlRead($g_hTxtTotalCountSpell) Then
-		GUICtrlSetBkColor($g_hLblCountTotalSpell, 0xD1DFE7)
-	EndIf
 
 	CalCostSpell()
 EndFunc   ;==>lblTotalCountSpell2
@@ -1021,7 +1017,7 @@ Func CalCostCamp()
 		$iElixirCostCamp += $g_aiArmyCustomTroops[$i] * $g_aiTroopCostPerLevel[$i][$indexLevel]
 	Next
 
-	For $i = $eTroopMinion To $eTroopIceGolem
+	For $i = $eTroopMinion To $eTroopHeadhunter
 		$indexLevel = $g_aiTrainArmyTroopLevel[$i] > 0 ? $g_aiTrainArmyTroopLevel[$i] : $g_aiTroopCostPerLevel[$i][0]
 		$iDarkCostCamp += $g_aiArmyCustomTroops[$i] * $g_aiTroopCostPerLevel[$i][$indexLevel]
 	Next

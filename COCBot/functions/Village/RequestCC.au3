@@ -124,7 +124,7 @@ Func RequestCC($bClickPAtEnd = True, $sText = "", $bRequestFast = $g_bChkReqCCFr
 
 	;exit from army overview
 	If _Sleep($DELAYREQUESTCC1) Then Return
-	If $bClickPAtEnd Then ClickP($aAway, 2, 0, "#0335")
+	If $bClickPAtEnd Then ClickAway()
 
 EndFunc   ;==>RequestCC
 
@@ -330,7 +330,7 @@ Func RemoveCastleArmy($aToRemove)
 		$counter += 1
 		If $counter <= 5 Then ContinueLoop
 		SetLog("Cannot find/verify 'Okay' Button in Army tab", $COLOR_WARNING)
-		ClickP($aAway, 2, 0, "#0346") ; Click Away, Necessary! due to possible errors/changes
+		ClickAway()
 		If _Sleep(400) Then OpenArmyOverview(True, "RemoveCastleSpell()") ; Open Army Window AGAIN
 		Return False ; Exit Function
 	WEnd
@@ -345,7 +345,7 @@ Func RemoveCastleArmy($aToRemove)
 		$counter += 1
 		If $counter <= 5 Then ContinueLoop
 		SetLog("Cannot find/verify 'Okay #2' Button in Army tab", $COLOR_WARNING)
-		ClickP($aAway, 2, 0, "#0346") ;Click Away
+		ClickAway()
 		Return False ; Exit function
 	WEnd
 

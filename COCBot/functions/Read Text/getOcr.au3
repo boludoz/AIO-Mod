@@ -116,7 +116,7 @@ EndFunc   ;==>getBuilders
 Func getProfile($x_start, $y_start) ;  -> Gets Attack Win/Defense Win/Donated/Received values - profile screen --> getProfile(160,268)  troops donation
 	Return getOcrAndCapture("coc-profile", $x_start, $y_start, 55, 13, True)
 EndFunc   ;==>getProfile
-#CS - Team AIO Mod++ (Dissociable OCR)
+
 Func getTroopCountSmall($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for non-selected troop kind
 	Return getOcrAndCapture("coc-t-s", $x_start, $y_start, 55, 16, True, Default, $bNeedNewCapture)
 EndFunc   ;==>getTroopCountSmall
@@ -124,15 +124,15 @@ EndFunc   ;==>getTroopCountSmall
 Func getTroopCountBig($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for selected troop kind
 	Return getOcrAndCapture("coc-t-b", $x_start, $y_start, 55, 17, True, Default, $bNeedNewCapture)
 EndFunc   ;==>getTroopCountBig
-#CE - Team AIO Mod++ (Dissociable OCR)
+
 Func getTroopsSpellsLevel($x_start, $y_start) ;  -> Gets spell level on Attack Screen for selected spell kind (could be used for troops too)
 	Return getOcrAndCapture("coc-spellslevel", $x_start, $y_start, 20, 14, True)
 EndFunc   ;==>getTroopsSpellsLevel
-#CS - Team AIO Mod++ (Dissociable OCR)
+
 Func getArmyCampCap($x_start, $y_start, $bNeedCapture = True) ;  -> Gets army camp capacity --> train.au3, and used to read CC request time remaining
 	Return getOcrAndCapture("coc-ms", $x_start, $y_start, 82, 16, True, False, $bNeedCapture)
 EndFunc   ;==>getArmyCampCap
-#CE - Team AIO Mod++ (Dissociable OCR)
+
 Func getCastleDonateCap($x_start, $y_start) ;  -> Gets clan castle capacity,  --> donatecc.au3
 	Return getOcrAndCapture("coc-army", $x_start, $y_start, 30, 14, True)
 EndFunc   ;==>getCastleDonateCap

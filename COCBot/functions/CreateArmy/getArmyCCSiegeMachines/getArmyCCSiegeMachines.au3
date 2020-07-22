@@ -17,8 +17,6 @@ Func getArmyCCSiegeMachines($bOpenArmyWindow = False, $bCloseArmyWindow = False,
 
 	If $g_bDebugSetlogTrain Then SetLog("getArmyCCSiegeMachines():", $COLOR_DEBUG)
 
-	If $g_iTownHallLevel < 10 And Not $g_iTownHallLevel < 1 Then Return ; Team AIO Mod++
-
 	If Not $bOpenArmyWindow Then
 		If $bCheckWindow And Not IsTrainPage() Then ; check for train page
 			SetError(1)
@@ -77,7 +75,8 @@ Func getArmyCCSiegeMachines($bOpenArmyWindow = False, $bCloseArmyWindow = False,
 	EndIf
 
 	If $bCloseArmyWindow Then
-		ClickP($aAway, 1, 0, "#0000") ;Click Away
+		;ClickP($aAway, 1, 0, "#0000") ;Click Away
+		ClickAway()
 		If _Sleep($DELAYCHECKARMYCAMP4) Then Return
 	EndIf
 EndFunc   ;==>getArmyTroops

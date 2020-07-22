@@ -1197,6 +1197,16 @@ Func CreateDonationsSubTab()
 			GUICtrlSetFont(-1, 9, $FW_BOLD, Default, "Arial", $CLEARTYPE_QUALITY)
 			GUICtrlSetColor(-1, $COLOR_BLACK)
 			_GUICtrlSetTip(-1, $sTxtTip)
+			
+		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnHeadhunter, $x + 95, $y, 24, 24)
+			$sTxtTip = ""
+			_GUICtrlSetTip(-1, $sTxtTip)
+		GUICtrlCreateLabel(":", $x + 122, $y + 4, -1, 17)
+			GUICtrlSetFont(-1, 9, $FW_BOLD, Default, "Arial", $CLEARTYPE_QUALITY)
+		$g_hLblDonTroop[$eTroopHeadhunter] = GUICtrlCreateLabel("0", $x + 100, $y + 4, 70, 17, $SS_RIGHT)
+			GUICtrlSetFont(-1, 9, $FW_BOLD, Default, "Arial", $CLEARTYPE_QUALITY)
+			GUICtrlSetColor(-1, $COLOR_BLACK)
+			_GUICtrlSetTip(-1, $sTxtTip)
 
 	$y += 28
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnGolem, $x - 10, $y, 24, 24)

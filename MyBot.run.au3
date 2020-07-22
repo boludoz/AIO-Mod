@@ -1038,8 +1038,7 @@ Func AttackMain() ;Main control for attack functions
 		Return
 	EndIf
 	#EndRegion - SuperXP / GoblinXP - Team AiO MOD++
-	; getArmyTroopCapacity(True, True)
-	ClickP($aAway, 1, 0, "#0000") ;Click Away to prevent any pages on top
+	ClickAway()
 	If IsSearchAttackEnabled() Then
 		If (IsSearchModeActive($DB) And checkCollectors(True, False)) Or IsSearchModeActive($LB) Then
 			If ProfileSwitchAccountEnabled() And ($g_aiAttackedCountSwitch[$g_iCurAccount] <= $g_aiAttackedCount - 2) Then checkSwitchAcc()
@@ -1066,13 +1065,14 @@ Func AttackMain() ;Main control for attack functions
 			If Not $g_bChkOnlyFarm Then ChatActions() ; ChatActions - Team AiO MOD++
 
 			_ClanGames()
-			ClickP($aAway, 1, 0, "#0000") ;Click Away to prevent any pages on top
+			ClickAway()
 			If $g_bUpdateSharedPrefs Then PullSharedPrefs()
-			;PrepareSearch()
-			;If Not $g_bRunState Then Return
-			;If $g_bOutOfGold Then Return ; Check flag for enough gold to search
-			;If $g_bRestart Then Return
-			VillageSearch(True)
+			If VillageSearch(True) = False Then
+				SetLog("Ops | AttackMain 0x1.", $COLOR_ERROR)
+				checkMainScreen()
+				$g_bIsClientSyncError = False
+				Return False
+			EndIf
 			If $g_bOutOfGold Then Return ; Check flag for enough gold to search
 			If Not $g_bRunState Then Return
 			If $g_bRestart Then Return

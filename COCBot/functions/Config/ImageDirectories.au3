@@ -30,6 +30,7 @@ Global Const $g_sImgError = @ScriptDir & "\imgxml\other\Error[[Android]]*"
 Global Const $g_sImgOutOfSync = @ScriptDir & "\imgxml\other\Oos[[Android]]*"
 Global Const $g_sImgConnectionLost = @ScriptDir & "\imgxml\other\ConnectionLost[[Android]]*"
 Global Const $g_sImgMaintenance = @ScriptDir & "\imgxml\other\Maintenance*"
+Global Const $g_sImgImportantNotice = @ScriptDir & "\imgxml\other\ImportantNotice[[Android]]*"
 #EndRegion
 
 #Region Main Village

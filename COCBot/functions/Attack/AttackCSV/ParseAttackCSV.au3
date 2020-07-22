@@ -357,11 +357,11 @@ Func ParseAttackCSV($debug = False)
 								_ArrayShuffle($g_avAttackTroops)
 									; a Loop from all troops
 									For $ii = $eBarb To $eSuperWall ; launch all remaining troops
-										If BitAND($ii >= $eSuperBarb, $ii <= $eSuperGiant) = True Or BitAND($ii >= $eBarb, $ii <= $eHeadH) = True Then
+										If BitAND($ii >= $eSuperBarb, $ii <= $eSuperGiant) = True Or BitAND($ii >= $eBarb, $ii <= $eHunt) = True Then
 											; Loop on all detected troops
 											For $x = 0 To UBound($g_avAttackTroops) - 1
 												; If the Name exist and haves more than zero is deploy it
-												If $g_avAttackTroops[$x][0] = $ii And $g_avAttackTroops[$x][1] > 0 Then
+												If ($g_avAttackTroops[$x][0] = $ii Or $g_avAttackTroops[$x][0] == ($ii + $eSuperBarb)) And $g_avAttackTroops[$x][1] > 0 Then
 													Local $name = GetTroopName($g_avAttackTroops[$x][0], $g_avAttackTroops[$x][1])
 													SetLog("Name: " & $name, $COLOR_DEBUG)
 													SetLog("Qty: " & $g_avAttackTroops[$x][1], $COLOR_DEBUG)

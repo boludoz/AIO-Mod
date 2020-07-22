@@ -107,10 +107,10 @@ Func _VillageSearch($bIncludePrepare = False) ;Control for searching a village t
 	
 	; Internal PrepareSearch - Custom - Team AIO Mod++.
 	If $bIncludePrepare = True Then
-		PrepareSearch()
+		If PrepareSearch() = False Then Return False
 		If Not $g_bRunState Then Return
-		If $g_bOutOfGold Then Return ; Check flag for enough gold to search
 		If $g_bRestart Then Return
+		If $g_bOutOfGold Then Return ; Check flag for enough gold to search
 	EndIf
 	
 	While 1 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;### Main Search Loop ###;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

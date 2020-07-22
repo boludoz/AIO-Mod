@@ -41,16 +41,23 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 			Return
 		EndIf
 		If _Sleep($DELAYTREASURY4) Then Return
-
-		Local $aAttack = findButton("AttackButton", Default, 1, True)
-		If IsArray($aAttack) And UBound($aAttack, 1) = 2 Then
-			ClickP($aAttack, 1, 0, "#0149")
-		Else
-			SetLog("Couldn't find the Attack Button!", $COLOR_ERROR)
-			If $g_bDebugImageSave Then SaveDebugImage("AttackButtonNotFound")
-			$g_bOutOfGold = True
-			Return
-		EndIf
+		
+		#Region - Custom findMatch - Team AIO Mod++ 
+		For $i = 0 To 4
+			Local $aAttack = findButton("AttackButton", Default, 1, True)
+			If IsArray($aAttack) And UBound($aAttack, 1) = 2 Then
+				ClickP($aAttack, 1, 0, "#0149")
+				ExitLoop
+			ElseIf $i > 3 Then
+				SetLog("Couldn't find the Attack Button!", $COLOR_ERROR)
+				If $g_bDebugImageSave Then SaveDebugImage("AttackButtonNotFound")
+				Return False
+			ElseIf $i = 1 Then
+				CloseClanChat()
+				CheckMainScreen()
+			EndIf
+		Next
+		#EndRegion - Custom findMatch - Team AIO Mod++ 
 	EndIf
 
 	If _Sleep($DELAYPREPARESEARCH1) Then Return
@@ -73,65 +80,77 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 	$g_bLeagueAttack = False
 	Do
 		Local $bSignedUpLegendLeague = False
-		If Number($g_aiCurrentLoot[$eLootTrophy] + 150) >= Number($g_asLeagueDetails[21][4]) Then
-			Local $sSearchDiamond = GetDiamondFromRect("271,185,834,659")
-			Local $avAttackButton = findMultiple($g_sImgPrepareLegendLeagueSearch, $sSearchDiamond, $sSearchDiamond, 0, 1000, 1, "objectname,objectpoints", True)
-			If IsArray($avAttackButton) And UBound($avAttackButton, 1) > 0 Then
-				$g_bLeagueAttack = True
-				Local $avAttackButtonSubResult = $avAttackButton[0]
-				Local $sButtonState = $avAttackButtonSubResult[0]
-				If StringInStr($sButtonState, "Ended", 0) > 0 Then
-					SetLog("League Day ended already! Trying again later", $COLOR_INFO)
-					$g_bRestart = True
-					;$g_bIsClientSyncError = False
-					ClickP($aAway, 1, 0, "#0000") ;Click Away to prevent any pages on top
-					$g_bForceSwitch = True ; set this switch accounts next check
-					Return
-				ElseIf StringInStr($sButtonState, "Made", 0) > 0 Then
-					SetLog("All Attacks already made! Returning home", $COLOR_INFO)
-					$g_bRestart = True
-					ClickP($aAway, 1, 0, "#0000") ;Click Away to prevent any pages on top
-					$g_bForceSwitch = True ; set this switch accounts next check
-					Return
-				ElseIf StringInStr($sButtonState, "Find", 0) > 0 Then
-					Local $aCoordinates = StringSplit($avAttackButtonSubResult[1], ",", $STR_NOCOUNT)
-					ClickP($aCoordinates, 1, 0, "#0149")
-					Local $aConfirmAttackButton
-					For $i = 0 To 10
-						If _Sleep(200) Then Return
-						$aConfirmAttackButton = findButton("ConfirmAttack", Default, 1, True)
-						If IsArray($aConfirmAttackButton) And UBound($aConfirmAttackButton, 1) = 2 Then
-							ClickP($aConfirmAttackButton, 1, 0)
-							ExitLoop
-						EndIf
-					Next
-					If Not IsArray($aConfirmAttackButton) And UBound($aConfirmAttackButton, 1) < 2 Then
-						SetLog("Couldn't find the confirm attack button!", $COLOR_ERROR)
-						Return
+		Local $sSearchDiamond = GetDiamondFromRect("271,185,834,659")
+		Local $avAttackButton = findMultiple($g_sImgPrepareLegendLeagueSearch, $sSearchDiamond, $sSearchDiamond, 0, 1000, 1, "objectname,objectpoints", True)
+		If IsArray($avAttackButton) And UBound($avAttackButton, 1) > 0 Then
+			$g_bLeagueAttack = True
+			Local $avAttackButtonSubResult = $avAttackButton[0]
+			Local $sButtonState = $avAttackButtonSubResult[0]
+			If StringInStr($sButtonState, "Ended", 0) > 0 Then
+				SetLog("League Day ended already! Trying again later", $COLOR_INFO)
+				$g_bRestart = True
+				ClickAway()
+				$g_bForceSwitch = True     ; set this switch accounts next check
+				Return
+			ElseIf StringInStr($sButtonState, "Made", 0) > 0 Then
+				SetLog("All Attacks already made! Returning home", $COLOR_INFO)
+				$g_bRestart = True
+				ClickAway()
+				$g_bForceSwitch = True     ; set this switch accounts next check
+				Return
+			ElseIf StringInStr($sButtonState, "FindMatchLegend", 0) > 0 Then
+				Local $aCoordinates = StringSplit($avAttackButtonSubResult[1], ",", $STR_NOCOUNT)
+				ClickP($aCoordinates, 1, 0, "#0149")
+				Local $aConfirmAttackButton
+				For $i = 0 To 10
+					If _Sleep(200) Then Return
+					$aConfirmAttackButton = findButton("ConfirmAttack", Default, 1, True)
+					If IsArray($aConfirmAttackButton) And UBound($aConfirmAttackButton, 1) = 2 Then
+						ClickP($aConfirmAttackButton, 1, 0)
+						ExitLoop
 					EndIf
-				ElseIf StringInStr($sButtonState, "Sign", 0) > 0 Then
-					SetLog("Sign-up to Legend League", $COLOR_INFO)
-					Local $aCoordinates = StringSplit($avAttackButtonSubResult[1], ",", $STR_NOCOUNT)
-					ClickP($aCoordinates, 1, 0, "#0000")
-					If _Sleep(1000) Then Return
-					$aCoordinates = findButton("OK")
-					If UBound($aCoordinates) > 1 Then
-						SetLog("Sign-up to Legend League done", $COLOR_INFO)
-						$bSignedUpLegendLeague = True
-						ClickP($aCoordinates, 1, 0, "#0000")
-						If _Sleep(1000) Then Return
-					Else
-						SetLog("Cannot find OK button to sign-up for Legend League...", $COLOR_WARNING)
-					EndIf
-				Else
-					$g_bLeagueAttack = False
-					SetLog("Unknown Find a Match Button State: " & $sButtonState, $COLOR_WARNING)
+				Next
+				If Not IsArray($aConfirmAttackButton) And UBound($aConfirmAttackButton, 1) < 2 Then
+					SetLog("Couldn't find the confirm attack button!", $COLOR_ERROR)
 					Return
 				EndIf
-			ElseIf Number($g_aiCurrentLoot[$eLootTrophy]) >= Number($g_asLeagueDetails[21][4]) Then
-				SetLog("Couldn't find the Attack Button!", $COLOR_ERROR)
+			ElseIf StringInStr($sButtonState, "FindMatchNormal") > 0 Then
+				Local $aCoordinates = StringSplit($avAttackButtonSubResult[1], ",", $STR_NOCOUNT)
+				If IsArray($aCoordinates) And UBound($aCoordinates, 1) = 2 Then
+					$g_bLeagueAttack = False
+					ClickP($aCoordinates, 1, 0, "#0150")
+					ExitLoop
+				Else
+					SetLog("Couldn't find the Find a Match Button!", $COLOR_ERROR)
+					If $g_bDebugImageSave Then SaveDebugImage("FindAMatchBUttonNotFound")
+					Return
+				EndIf
+			ElseIf StringInStr($sButtonState, "Sign", 0) > 0 Then
+				SetLog("Sign-up to Legend League", $COLOR_INFO)
+				Local $aCoordinates = StringSplit($avAttackButtonSubResult[1], ",", $STR_NOCOUNT)
+				ClickP($aCoordinates, 1, 0, "#0000")
+				If _Sleep(1000) Then Return
+				$aCoordinates = findButton("OK")
+				If UBound($aCoordinates) > 1 Then
+					SetLog("Sign-up to Legend League done", $COLOR_INFO)
+					$bSignedUpLegendLeague = True
+					ClickP($aCoordinates, 1, 0, "#0000")
+					If _Sleep(1000) Then Return
+				Else
+					SetLog("Cannot find OK button to sign-up for Legend League", $COLOR_WARNING)
+				EndIf
+			ElseIf StringInStr($sButtonState, "Oppo", 0) > 0 Then
+				SetLog("Finding opponents! Waiting 5 minutes and then try again to find a match", $COLOR_INFO)
+				If _Sleep(300000) Then Return     ; Wait 5mins before searching again
+				$bSignedUpLegendLeague = True
+			Else
+				$g_bLeagueAttack = False
+				SetLog("Unknown Find a Match Button State: " & $sButtonState, $COLOR_WARNING)
 				Return
 			EndIf
+		ElseIf Number($g_aiCurrentLoot[$eLootTrophy]) >= Number($g_asLeagueDetails[21][4]) Then
+			SetLog("Couldn't find the Attack Button!", $COLOR_ERROR)
+			Return
 		EndIf
 	Until Not $bSignedUpLegendLeague
 
@@ -146,11 +165,10 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 		Else
 			SetLog("Couldn't find the Find a Match Button!", $COLOR_ERROR)
 			If $g_bDebugImageSave Then SaveDebugImage("FindAMatchBUttonNotFound")
-			$g_bOutOfGold = True
-			Return
+			Return False
 		EndIf
 	EndIf
-	#EndRegion
+	#EndRegion - Custom findMatch - Team AIO Mod++ 
 
 	If $g_iTownHallLevel <> "" And $g_iTownHallLevel > 0 Then
 		$g_iSearchCost += $g_aiSearchCost[$g_iTownHallLevel - 1]
@@ -193,5 +211,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 			Click($ButtonPixel[0] + 75, $ButtonPixel[1] + 25, 1, 0, "#0153") ; Click Okay Button
 		EndIf
 	EndIf
-
+	
+	SetLog("PrepareSearch OK", $COLOR_INFO)
+	Return True
 EndFunc   ;==>PrepareSearch

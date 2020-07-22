@@ -61,6 +61,19 @@ Func chkNoDropIfShield()
 EndFunc   ;==>chkNoDropIfShield
 
 ; Misc tab - Team AiO MOD++
+Func chkEdgeObstacle()
+	$g_bChkCleanYard = (GUICtrlRead($g_hChkCleanYard) = $GUI_CHECKED)
+	$g_bEdgeObstacle = (GUICtrlRead($g_hEdgeObstacle) = $GUI_CHECKED)
+	
+	If $g_bChkCleanYard Then
+		GUICtrlSetState($g_hEdgeObstacle, $GUI_ENABLE)
+	Else
+		GUICtrlSetState($g_hEdgeObstacle, $GUI_DISABLE + $GUI_UNCHECKED)
+	EndIf
+
+EndFunc
+
+; Misc tab - Team AiO MOD++
 Func chkDelayMod()
 	; Skip first loop
 	$g_bSkipfirstcheck = (GUICtrlRead($g_hSkipfirstcheck) = $GUI_CHECKED)

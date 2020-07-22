@@ -248,14 +248,16 @@ Func BotSearchMode()
 	If _Sleep(100) Then Return FuncReturn()
 	$g_aiCurrentLoot[$eLootTrophy] = getTrophyMainScreen($aTrophies[0], $aTrophies[1]) ; get OCR to read current Village Trophies
 	If _Sleep(100) Then Return FuncReturn()
-	CheckIfArmyIsReady()
-	ClickP($aAway, 2, 0, "") ;Click Away
+	;CheckIfArmyIsReady() ; Custom - Team AIO Mod++
+	ClickAway()
 	If _Sleep(100) Then Return FuncReturn()
 	If (IsSearchModeActive($DB) And checkCollectors(True, False)) Or IsSearchModeActive($LB) Then
-		If _Sleep(100) Then Return FuncReturn()
-		PrepareSearch()
-		If _Sleep(1000) Then Return FuncReturn()
-		VillageSearch()
+		If VillageSearch(True) = False Then
+			SetLog("Ops | BotSearchMode 0x1.", $COLOR_ERROR)
+			checkMainScreen()
+			$g_bIsClientSyncError = False
+			Return False
+		EndIf
 		If _Sleep(100) Then Return FuncReturn()
 	Else
 		SetLog("Your Army is not prepared, check the Attack/train options")

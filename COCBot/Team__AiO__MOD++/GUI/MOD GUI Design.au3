@@ -184,7 +184,7 @@ Func CreateDonationsControlSubTab()
 	Local $g_ahTxtTrainWarTroopCount[$eTroopCount], $g_ahTxtTrainWarSpellCount[$eSpellCount], $g_ahTxtSiegeMachineCount[$eSiegeMachineCount]
 	Local $aTroopList[$eTroopCount] = [$eTroopBarbarian, $eTroopArcher, $eTroopGiant, $eTroopGoblin, $eTroopWallBreaker, $eTroopBalloon, _
 			$eTroopWizard, $eTroopHealer, $eTroopDragon, $eTroopPekka, $eTroopBabyDragon, $eTroopMiner, $eTroopElectroDragon, $eTroopYeti, $eTroopMinion, _
-			$eTroopHogRider, $eTroopValkyrie, $eTroopGolem, $eTroopWitch, $eTroopLavaHound, $eTroopBowler, $eTroopIceGolem]
+			$eTroopHogRider, $eTroopValkyrie, $eTroopGolem, $eTroopWitch, $eTroopLavaHound, $eTroopBowler, $eTroopIceGolem, $eTroopHeadhunter]
 	Local $aSpellList[$eSpellCount] = [$eSpellLightning, $eSpellHeal, $eSpellRage, $eSpellJump, $eSpellFreeze, _
 			$eSpellClone, $eSpellPoison, $eSpellEarthQuake, $eSpellHaste, $eSpellSkeleton, $eSpellBat]
 	Local $aSiegeList[$eSiegeMachineCount] = [$eSiegeBarracks, $eSiegeWallWrecker, $eSiegeBattleBlimp, $eSiegeStoneSlammer]

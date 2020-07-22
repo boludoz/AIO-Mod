@@ -189,6 +189,7 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			ReadConfig_600_52_2()
 			ChkStopForWar()
 			chkDelayMod()
+			chkEdgeObstacle()
 			InputRecords()
 		Case "Save"
 			$g_bUseSleep = (GUICtrlRead($g_hUseSleep) = $GUI_CHECKED) ? 1 : 0

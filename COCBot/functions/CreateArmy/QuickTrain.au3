@@ -413,7 +413,7 @@ Func CreateQuickTrainPreset($i)
 			Local $iIndex = $g_aiQuickSpellType[$i][$j]
 			If _ArrayIndexValid($g_aiArmyQuickSpells, $iIndex) Then
 				If $iArmyPage < 2 Then
-					If Not DragIfNeeded("IceG") Then Return
+					If Not DragIfNeeded("Hunt") Then Return
 					If _Sleep(1500) Then Return
 					$iArmyPage = 2
 				EndIf
