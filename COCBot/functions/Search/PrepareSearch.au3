@@ -112,7 +112,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 				Next
 				If Not IsArray($aConfirmAttackButton) And UBound($aConfirmAttackButton, 1) < 2 Then
 					SetLog("Couldn't find the confirm attack button!", $COLOR_ERROR)
-					Return
+					Return False
 				EndIf
 			ElseIf StringInStr($sButtonState, "FindMatchNormal") > 0 Then
 				Local $aCoordinates = StringSplit($avAttackButtonSubResult[1], ",", $STR_NOCOUNT)
@@ -123,7 +123,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 				Else
 					SetLog("Couldn't find the Find a Match Button!", $COLOR_ERROR)
 					If $g_bDebugImageSave Then SaveDebugImage("FindAMatchBUttonNotFound")
-					Return
+					Return False
 				EndIf
 			ElseIf StringInStr($sButtonState, "Sign", 0) > 0 Then
 				SetLog("Sign-up to Legend League", $COLOR_INFO)
@@ -146,15 +146,15 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 			Else
 				$g_bLeagueAttack = False
 				SetLog("Unknown Find a Match Button State: " & $sButtonState, $COLOR_WARNING)
-				Return
+				Return False
 			EndIf
 		ElseIf Number($g_aiCurrentLoot[$eLootTrophy]) >= Number($g_asLeagueDetails[21][4]) Then
 			SetLog("Couldn't find the Attack Button!", $COLOR_ERROR)
-			Return
+			Return False
 		EndIf
 	Until Not $bSignedUpLegendLeague
 
-	#Region - Custom findMatch - Team AIO Mod++ 
+	#cs Region - Custom findMatch - Team AIO Mod++ 
 	If Not $g_bLeagueAttack Then
 		Local $aFindMatch = ClickFindMatch()
 		If $aFindMatch Then
@@ -168,7 +168,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 			Return False
 		EndIf
 	EndIf
-	#EndRegion - Custom findMatch - Team AIO Mod++ 
+	#ce EndRegion - Custom findMatch - Team AIO Mod++ 
 
 	If $g_iTownHallLevel <> "" And $g_iTownHallLevel > 0 Then
 		$g_iSearchCost += $g_aiSearchCost[$g_iTownHallLevel - 1]

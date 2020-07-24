@@ -175,7 +175,7 @@ Func CreateRequestSubTab()
 
 	$y += 45
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "lblOnlyTake", "Only take"), $x + 70, $y + 3) ; Custom - Team AIO Mod++
-		Local $sCmbTroopList = GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtListOfTroops", _ArrayToString($g_asCastleTroopNames) & "|Any")
+		Local $sCmbTroopList = GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtListOfTroops", _ArrayToString($g_asTroopNames) & "|Any")
 		For $i = 0 To 2
 			$g_ahCmbClanCastleTroop[$i] = GUICtrlCreateCombo("", $x + 140, $y + $i * 25, 65, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 				GUICtrlSetData(-1, $sCmbTroopList, "Any")

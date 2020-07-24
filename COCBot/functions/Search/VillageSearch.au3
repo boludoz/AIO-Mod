@@ -480,6 +480,7 @@ Func _VillageSearch($bIncludePrepare = False) ;Control for searching a village t
 
 	$g_bIsClientSyncError = False
 
+	Return True ; Team AIO Mod++
 EndFunc   ;==>_VillageSearch
 
 Func SearchLimit($iSkipped, $bReturnToPickupHero = False)
