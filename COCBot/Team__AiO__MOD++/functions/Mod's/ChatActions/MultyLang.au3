@@ -16,7 +16,7 @@
 Func _SendExEx($sKeys, $iFlag = 0)
 	If @KBLayout = 0419 Then
 		Local $sANSI_Chars = "ёйцукенгшщзхъфывапролджэячсмитьбю.?"
-	   Local $sASCII_Chars = "`qwertyuiop[]asdfghjkl;'zxcvbnm,./&"
+		Local $sASCII_Chars = "`qwertyuiop[]asdfghjkl;'zxcvbnm,./&"
 
 		Local $aSplit_Keys = StringSplit($sKeys, "")
 		Local $sKey

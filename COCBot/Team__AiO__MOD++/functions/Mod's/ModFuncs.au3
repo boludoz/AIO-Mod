@@ -228,7 +228,10 @@ Func _makerequestCustom($aButtonPosition = -1)
 	
 	If $g_bDebugSetlog Then SetDebugLog("SearchPixelDonate FixedMatrixSend " & _ArrayToString($aClickSend))
 	
-	If $g_sRequestTroopsText <> "" Then
+	Static $sRequestTroopsText = ""
+	If Not StringIsSpace($g_sRequestTroopsText) And $sRequestTroopsText <> $g_sRequestTroopsText Then
+		$sRequestTroopsText = $g_sRequestTroopsText
+		
 		If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
 		; fix for Android send text bug sending symbols like ``"
 		AndroidSendText($g_sRequestTroopsText, True)

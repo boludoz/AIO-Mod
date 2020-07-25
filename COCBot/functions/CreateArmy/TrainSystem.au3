@@ -880,116 +880,108 @@ Func CheckQueueTroops($bGetQuantity = True, $bSetLog = True, $x = 839, $bQtyWSlo
 	Return $aResult
 EndFunc   ;==>CheckQueueTroops
 
+#Region - Custom - This worked well and was tested - Team AIO Mod++
 Func CheckQueueSpells($bGetQuantity = True, $bSetLog = True, $x = 839, $bQtyWSlot = False)
-	Local $avResult[$eSpellCount]
-	Local $sImageDir = @ScriptDir & "\imgxml\ArmyOverview\SpellsQueued"
+	Local $aResult[1] = [""]
+	;$hTimer = TimerInit()
+	If $bSetLog Then SetLog("Checking Spells Queue.", $COLOR_INFO)
 
-	If $bSetLog Then SetLog("Checking Spells Queue", $COLOR_INFO)
-	Local $avSearchResult = SearchArmy($sImageDir, 18, 213, $x, 230, $bGetQuantity ? "Queue" : "")
+	Local $sDir = @ScriptDir & "\imgxml\ArmyOverview\SpellsQueued" ; Custom - Team AIO Mod++
 
-	If $avSearchResult[0][0] = "" Then
+	Local $aSearchResult = SearchArmy($sDir, 18, 182, $x, 261, $bGetQuantity ? "Queue" : "") ; Custom - Team AIO Mod++
+
+	ReDim $aResult[UBound($aSearchResult)]
+
+	If $aSearchResult[0][0] = "" Then
 		Setlog("No Spells detected!", $COLOR_ERROR)
 		Return
 	EndIf
 
-	For $i = 0 To (UBound($avSearchResult) - 1)
+	For $i = 0 To (UBound($aSearchResult) - 1)
 		If Not $g_bRunState Then Return
-		;_ArrayAdd($avResult, $avSearchResult[$i][0])
-		$avResult[$i] = $avSearchResult[$i][0]
+		$aResult[$i] = $aSearchResult[$i][0]
 	Next
 
-;_ArrayDisplay($avSearchResult, "avSearchResult")
-;_ArrayDisplay($avResult, "avResult")
-
-	;Trim length to number of returned values
-	ReDim $avResult[UBound($avSearchResult)][1]
-
 	If $bGetQuantity Then
-		Local $aiQuantities[UBound($avResult)][2]
+		Local $aQuantities[UBound($aResult)][2]
 		Local $aQueueSpell[$eSpellCount]
-		For $i = 0 To (UBound($aiQuantities) - 1)
+		For $i = 0 To (UBound($aQuantities) - 1)
 			If Not $g_bRunState Then Return
-			$aiQuantities[$i][0] = $avSearchResult[$i][0]
-			$aiQuantities[$i][1] = $avSearchResult[$i][3]
-			If $bSetLog Then SetLog("  - " & $g_asSpellNames[TroopIndexLookup($aiQuantities[$i][0], "CheckQueueSpells") - $eLSpell] & ": " & $aiQuantities[$i][1] & "x", $COLOR_SUCCESS)
-			$aQueueSpell[TroopIndexLookup($aiQuantities[$i][0]) - $eLSpell] += $aiQuantities[$i][1]
+			$aQuantities[$i][0] = $aSearchResult[$i][0]
+			$aQuantities[$i][1] = $aSearchResult[$i][3]
+			If $bSetLog Then SetLog("  - " & $g_asSpellNames[TroopIndexLookup($aQuantities[$i][0], "CheckQueueSpells") - $eLSpell] & ": " & $aQuantities[$i][1] & "x", $COLOR_SUCCESS)
+			$aQueueSpell[TroopIndexLookup($aQuantities[$i][0]) - $eLSpell] += $aQuantities[$i][1]
 		Next
-		If $bQtyWSlot Then Return $aiQuantities
+		If $bQtyWSlot Then Return $aQuantities
 		Return $aQueueSpell
 	EndIf
 
-	_ArrayReverse($avResult)
-	Return $avResult
+	_ArrayReverse($aResult)
+	Return $aResult
 EndFunc   ;==>CheckQueueSpells
+#EndRegion - Custom - This worked well and was tested - Team AIO Mod++
 
 Func SearchArmy($sImageDir = "", $x = 0, $y = 0, $x1 = 0, $y1 = 0, $sArmyType = "", $bSkipReceivedTroopsCheck = False)
 	; Setup arrays, including default return values for $return
 	Local $aResult[1][4], $aCoordArray[1][2], $aCoords, $aCoordsSplit, $aValue
 
-	For $iCount = 0 To 10  ;Why is this loop here?
-		If Not $g_bRunState Then Return $aResult
-		If Not getReceivedTroops(162, 200, $bSkipReceivedTroopsCheck) Then
-			; Perform the search
-			_CaptureRegion2($x, $y, $x1, $y1)
-			Local $res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sImageDir, "str", "FV", "Int", 0, "str", "FV", "Int", 0, "Int", 1000)
-			
-;_ArrayDisplay($res, "Res")
-			
-			If $res[0] <> "" Then
-				; Get the keys for the dictionary item.
-				Local $aKeys = StringSplit($res[0], "|", $STR_NOCOUNT)
-
-				; Redimension the result array to allow for the new entries
-				ReDim $aResult[UBound($aKeys)][4]
-				Local $iResultAddDup = 0
-
-				; Loop through the array
-				For $i = 0 To UBound($aKeys) - 1
-					; Get the property values
-					$aResult[$i + $iResultAddDup][0] = RetrieveImglocProperty($aKeys[$i], "objectname")
-					; Get the coords property
-					$aValue = RetrieveImglocProperty($aKeys[$i], "objectpoints")
-					$aCoords = decodeMultipleCoords($aValue, 50) ; dedup coords by x on 50 pixel
-					$aCoordsSplit = $aCoords[0]
-					If UBound($aCoordsSplit) = 2 Then
-						; Store the coords into a two dimensional array
-						$aCoordArray[0][0] = $aCoordsSplit[0] + $x ; X coord.
-						$aCoordArray[0][1] = $aCoordsSplit[1] + $y ; Y coord.
-					Else
-						$aCoordArray[0][0] = -1
-						$aCoordArray[0][1] = -1
-					EndIf
-					; Store the coords array as a sub-array
-					$aResult[$i + $iResultAddDup][1] = Number($aCoordArray[0][0])
-					$aResult[$i + $iResultAddDup][2] = Number($aCoordArray[0][1])
-					SetDebugLog($aResult[$i + $iResultAddDup][0] & " | $aCoordArray: " & $aCoordArray[0][0] & "-" & $aCoordArray[0][1])
-					; If 1 troop type appears at more than 1 slot
-					Local $iMultipleCoords = UBound($aCoords)
-					If $iMultipleCoords > 1 Then
-						SetDebugLog($aResult[$i + $iResultAddDup][0] & " detected " & $iMultipleCoords & " times!")
-						For $j = 1 To $iMultipleCoords - 1
-							Local $aCoordsSplit2 = $aCoords[$j]
-							If UBound($aCoordsSplit2) = 2 Then
-								; add slot
-								$iResultAddDup += 1
-								ReDim $aResult[UBound($aKeys) + $iResultAddDup][4]
-								$aResult[$i + $iResultAddDup][0] = $aResult[$i + $iResultAddDup - 1][0] ; same objectname
-								$aResult[$i + $iResultAddDup][1] = $aCoordsSplit2[0] + $x
-								$aResult[$i + $iResultAddDup][2] = $aCoordsSplit2[1]
-								SetDebugLog($aResult[$i + $iResultAddDup][0] & " | $aCoordArray: " & $aResult[$i + $iResultAddDup][1] & "-" & $aResult[$i + $iResultAddDup][2])
-							EndIf
-						Next
-					EndIf
-				Next
-				ExitLoop
-			EndIf
-			ExitLoop
-		Else
-			If $iCount = 1 Then SetLog("You have received castle troops! Wait 5's...")
-			If _Sleep($DELAYTRAIN8) Then Return $aResult
+	If Not $g_bRunState Then Return $aResult
+	
+	#Region - Custom - The loop was very hard - Team AIO Mod++
+	If Not getReceivedTroops(162, 200, $bSkipReceivedTroopsCheck) Then
+		; Perform the search
+		_CaptureRegion2($x, $y, $x1, $y1)
+		Local $vRes = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sImageDir, "str", "FV", "Int", 0, "str", "FV", "Int", 0, "Int", 1000)
+		
+		If $vRes[0] <> "" Then
+			; Get the keys for the dictionary item.
+			Local $aKeys = StringSplit($vRes[0], "|", $STR_NOCOUNT)
+	
+			; Redimension the result array to allow for the new entries
+			ReDim $aResult[UBound($aKeys)][4]
+			Local $iResultAddDup = 0
+	
+			; Loop through the array
+			For $i = 0 To UBound($aKeys) - 1
+				; Get the property values
+				$aResult[$i + $iResultAddDup][0] = RetrieveImglocProperty($aKeys[$i], "objectname")
+				; Get the coords property
+				$aValue = RetrieveImglocProperty($aKeys[$i], "objectpoints")
+				$aCoords = decodeMultipleCoords($aValue, 50) ; dedup coords by x on 50 pixel
+				$aCoordsSplit = $aCoords[0]
+				If UBound($aCoordsSplit) = 2 Then
+					; Store the coords into a two dimensional array
+					$aCoordArray[0][0] = $aCoordsSplit[0] + $x ; X coord.
+					$aCoordArray[0][1] = $aCoordsSplit[1] + $y ; Y coord.
+				Else
+					$aCoordArray[0][0] = -1
+					$aCoordArray[0][1] = -1
+				EndIf
+				; Store the coords array as a sub-array
+				$aResult[$i + $iResultAddDup][1] = Number($aCoordArray[0][0])
+				$aResult[$i + $iResultAddDup][2] = Number($aCoordArray[0][1])
+				SetDebugLog($aResult[$i + $iResultAddDup][0] & " | $aCoordArray: " & $aCoordArray[0][0] & "-" & $aCoordArray[0][1])
+				; If 1 troop type appears at more than 1 slot
+				Local $iMultipleCoords = UBound($aCoords)
+				If $iMultipleCoords > 1 Then
+					SetDebugLog($aResult[$i + $iResultAddDup][0] & " detected " & $iMultipleCoords & " times!")
+					For $j = 1 To $iMultipleCoords - 1
+						Local $aCoordsSplit2 = $aCoords[$j]
+						If UBound($aCoordsSplit2) = 2 Then
+							; add slot
+							$iResultAddDup += 1
+							ReDim $aResult[UBound($aKeys) + $iResultAddDup][4]
+							$aResult[$i + $iResultAddDup][0] = $aResult[$i + $iResultAddDup - 1][0] ; same objectname
+							$aResult[$i + $iResultAddDup][1] = $aCoordsSplit2[0] + $x
+							$aResult[$i + $iResultAddDup][2] = $aCoordsSplit2[1]
+							SetDebugLog($aResult[$i + $iResultAddDup][0] & " | $aCoordArray: " & $aResult[$i + $iResultAddDup][1] & "-" & $aResult[$i + $iResultAddDup][2])
+						EndIf
+					Next
+				EndIf
+			Next
 		EndIf
-	Next
-
+	EndIf
+	#EndRegion - Custom - The loop was very hard - Team AIO Mod++
 	_ArraySort($aResult, 0, 0, 0, 1) ; Sort By X position , will be the Slot 0 to $i
 
 	While 1

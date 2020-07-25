@@ -460,7 +460,7 @@ Func LeaveClanHop()
 	Local $g_sTxtClanID = GUICtrlRead($g_hTxtClanID)
 	Local $sClaID = StringReplace($g_sTxtClanID, "#", "")
 	Setlog("Send : " & $sClaID, $COLOR_INFO)
-	AndroidAdbSendShellCommand("am start -n com.supercell.clashofclans/com.supercell.clashofclans.GameApp -a android.intent.action.VIEW -d 'https://link.clashofclans.com/?action=OpenClanProfile&tag=" & $sClaID & "'", Default)
+	AndroidAdbSendShellCommand("am start -n "& $g_sAndroidGamePackage&"/"&$g_sAndroidGameClass &" -a android.intent.action.VIEW -d 'https://link.clashofclans.com/?action=OpenClanProfile&tag=" & $sClaID & "'", Default)
 	Setlog("Wait", $COLOR_INFO)
 	If RandomSleep(5500) Then Return
 	$g_bLeader = True
