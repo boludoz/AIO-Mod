@@ -49,7 +49,7 @@ Func BuilderBaseAttack($bTestRun = False)
 	If checkObstacles(True) Then Return
 	If $g_bRestart Then Return
 	If _Sleep(1500) Then Return ; Add Delay Before Check Builder Face As When Army Camp Get's Close Due To It's Effect Builder Face Is Dull and not recognized on slow pc
-	
+
 	; Check for builder base.
 	If Not isOnBuilderBase() Then Return
 
@@ -104,7 +104,7 @@ Func BuilderBaseAttack($bTestRun = False)
 			CheckMainScreen()
 			Return -1
 		EndIf
-		
+
 		; Verify the scripts and attack bar
 		If Not $IsToDropTrophies Then BuilderBaseSelectCorrectScript($aAvailableTroops)
 
@@ -394,7 +394,7 @@ Func BuilderBaseAttackToDrop($aAvailableTroops)
 	If $UniqueDeployPoint[0] = 0 Then
 		$g_aBuilderBaseDiamond = BuilderBaseAttackDiamond()
 		If IsArray($g_aBuilderBaseDiamond) <> True Or Not (UBound($g_aBuilderBaseDiamond) > 0) Then Return False
-		
+
 		$g_aExternalEdges = BuilderBaseGetEdges($g_aBuilderBaseDiamond, "External Edges")
 	EndIf
 
@@ -472,20 +472,20 @@ EndFunc   ;==>BuilderBaseCSVAttack
 Func BuilderBaseAttackReport()
 	; Verify the Window Report , Point[0] Archer Shadow Black Zone [155,460,000000], Point[1] Ok Green Button [430,590, 6DBC1F]
 	Local $aSurrenderBtn = [65, 607]
-	
+
 	; Check if BattleIsOver.
-	BattleIsOver()	
+	BattleIsOver()
 
 	;BB attack Ends
 	If _Sleep(2000) Then Return
-	
+
 	; in case BB Attack Ends in error
 	If _ColorCheck(_GetPixelColor($aSurrenderBtn[0], $aSurrenderBtn[1], True), Hex(0xFE5D65, 6), 10) Then
 		Setlog("Surrender Button fail - battle end early - CheckMainScreen()", $COLOR_ERROR)
 		CheckMainScreen()
 		Return False
 	EndIf
-	
+
 	Local $Stars = 0
 	Local $StarsPositions[3][2] = [[326, 394], [452, 388], [546, 413]]
 	Local $Color[3] = [0xD0D4D0, 0xDBDEDB, 0xDBDDD8]
@@ -499,24 +499,33 @@ Func BuilderBaseAttackReport()
 
 	Setlog("Your Attack: " & $Stars & " Star(s)!", $COLOR_INFO)
 
-	If _Sleep(1500) Then Return
-
-	Local $iSpecialColor[4][3] = [[0xBEE758, 0, 1], [0xA9DD49, 0, 2], [0x7BC726, 0, 3], [0x79C426, 0, 4]]
-	Local $iSpecialPixel
-
-	For $i = 0 To 15
-		$iSpecialPixel = _MultiPixelSearch(345, 540, 510, 612, 1, 1, Hex(0xBFE85A, 6), $iSpecialColor, 20)
-		If IsArray($iSpecialPixel) Then ExitLoop
-	Next
-
-	If $i > 15 Then
-		Setlog("Return home button fail.", $COLOR_ERROR)
-		CheckMainScreen()
-		Return False
+	SetLog("Return To Home.", $Color_Info)
+	If Okay() Then
+	   SetLog("Return To Home.", $Color_Info)
 	Else
-		SetLog("Return To Home.", $Color_Info)
-		Click($g_iMultiPixelOffSet[0] + Random(0, 20, 1), $g_iMultiPixelOffSet[1] + Random(0, 10, 1), 1, 0)
-	EndIf
+	  Setlog("Return home button fail.", $COLOR_ERROR)
+	  CheckMainScreen()
+   EndIf
+
+
+;~ 	If _Sleep(1500) Then Return
+
+;~ 	Local $iSpecialColor[4][3] = [[0xBEE758, 0, 1], [0xA9DD49, 0, 2], [0x7BC726, 0, 3], [0x79C426, 0, 4]]
+;~ 	Local $iSpecialPixel
+
+;~ 	For $i = 0 To 15
+;~ 		$iSpecialPixel = _MultiPixelSearch(345, 540, 510, 612, 1, 1, Hex(0xBFE85A, 6), $iSpecialColor, 20)
+;~ 		If IsArray($iSpecialPixel) Then ExitLoop
+;~ 	Next
+
+;~ 	If $i > 15 Then
+;~ 		Setlog("Return home button fail.", $COLOR_ERROR)
+;~ 		CheckMainScreen()
+;~ 		Return False
+;~ 	Else
+;~ 		SetLog("Return To Home.", $Color_Info)
+;~ 		Click($g_iMultiPixelOffSet[0] + Random(0, 20, 1), $g_iMultiPixelOffSet[1] + Random(0, 10, 1), 1, 0)
+;~ 	EndIf
 
 	Local $ResultName = ""
 
@@ -584,12 +593,12 @@ Func BuilderBaseAttackReport()
 	EndIf
 	; #######################################################################
 
-	
+
 	; Return to Main Page
 	ClickP($aAway, 2, 0, "#0332") ;Click Away
 
 	If RandomSleep(2000) Then Return
-	
+
 	If checkObstacles(True) Then
 		SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
 		Return
