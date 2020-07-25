@@ -499,7 +499,6 @@ Func BuilderBaseAttackReport()
 
 	Setlog("Your Attack: " & $Stars & " Star(s)!", $COLOR_INFO)
 
-	SetLog("Return To Home.", $Color_Info)
 	If Okay() Then
 	   SetLog("Return To Home.", $Color_Info)
 	Else
