@@ -5,7 +5,7 @@
 ; Parameters ....: None
 ; Return values .: None
 ; Author ........: Chilly-Chill (04-2019)
-; Modified ......: Boldina & vDragon - AIO++ (06-2020) 
+; Modified ......: Boldina & vDragon - AIO++ (06-2020)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2017
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -16,9 +16,9 @@
 Func AttackBB($aAvailableTroops = GetAttackBarBB())
 	Local $iSide = Random(0, 1, 1) ; randomly choose top left or top right
 	Local $aBMPos = 0
-	
+
 	Local $Size = GetBuilderBaseSize()
-	
+
 	If Not $g_bRunState Then Return
 
 	Setlog("Builder Base Diamond: " & $Size)
@@ -26,29 +26,29 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 	Do
 		Setlog("Builder Base Attack Zoomout.")
 		$Size = GetBuilderBaseSize(False) ; WihtoutClicks
-		
+
 		If ($Size < 575 And $Size > 620) Or ($Size = 0) Then
 			BuilderBaseZoomOut()
 			If _Sleep(1000) Then Return
 		EndIf
-		
+
 		If $i > 5 Then ExitLoop
 		$i += 1
 	Until ($Size >= 575 And $Size <= 620) Or ($Size <> 0)
-	
+
 	If $Size = 0 Then
 		SetLog("Fail AttackBB 0x1")
 		Return False
 	EndIf
-	
+
 	$g_aBuilderBaseDiamond = BuilderBaseAttackDiamond()
 	If IsArray($g_aBuilderBaseDiamond) <> True Or Not (UBound($g_aBuilderBaseDiamond) > 0) Then Return False
-	
+
 	$g_aExternalEdges = BuilderBaseGetEdges($g_aBuilderBaseDiamond, "External Edges")
-	
-	
+
+
 	Local $sSideNames[4] = ["TopLeft", "TopRight", "BottomRight", "BottomLeft"]
-	
+
 	Local $BuilderHallPos = findMultipleQuick($g_sBundleBuilderHall, 1)
 	If $BuilderHallPos <> -1 And UBound($BuilderHallPos) > 0 Then
 		$g_aBuilderHallPos[0][0] = $BuilderHallPos[0][1]
@@ -77,9 +77,9 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 
 	; Get troops on attack bar and their quantities
 	Local $aBBAttackBar = $aAvailableTroops
-	
+
 	If Not IsArray($aBBAttackBar) Or RandomSleep($DELAYRESPOND) Then Return
-	
+
 	; Deploy all troops
 	Local $iLoopControl = 0, $iUBound1 = UBound($aBBAttackBar)
 	SetLog($g_bBBDropOrderSet = True ? "Deploying Troops in Custom Order." : "Deploying Troops in Order of Attack Bar.", $COLOR_BLUE)
@@ -159,17 +159,41 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 				EndIf
 			Next
 		EndIf
-		
+
 		; Attack bar loop control.
 		$aBBAttackBar = GetAttackBarBB(True)
-		
+
 		If UBound($aBBAttackBar) = $iUBound1 Then $iLoopControl += 1
 		If ($iLoopControl > 3) Then ExitLoop
 		$iUBound1 = UBound($aBBAttackBar)
-		
+
 	Until Not IsArray($aBBAttackBar)
 	SetLog("All Troops Deployed", $COLOR_SUCCESS)
 
 	If $g_bDebugSetlog Then SetDebugLog("Android Suspend Mode Enabled")
 EndFunc   ;==>AttackBB
 #EndRegion - Custom BB - Team AIO Mod++ ; Thx Chilly-Chill by you hard work.
+Func Okay()
+	local $timer = __TimerInit()
+
+	While 1
+		local $aCoords = decodeSingleCoord(findImage("OkayButton", $g_sImgOkButton, "FV", 1, True))
+		If IsArray($aCoords) And UBound($aCoords) = 2 Then
+			PureClickP($aCoords)
+			Return True
+		EndIf
+
+		If __TimerDiff($timer) >= 180000 Then
+			SetLog("Could not find button 'Okay'", $COLOR_ERROR)
+			If $g_bDebugImageSave Then SaveDebugImage("BBFindOkay")
+			Return False
+		EndIf
+
+		If Mod(__TimerDiff($timer), 3000) Then
+			If _Sleep($DELAYRESPOND) Then Return
+		EndIf
+
+	WEnd
+
+	Return True
+EndFunc
