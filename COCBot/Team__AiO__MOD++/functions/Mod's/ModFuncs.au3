@@ -228,19 +228,34 @@ Func _makerequestCustom($aButtonPosition = -1)
 	
 	If $g_bDebugSetlog Then SetDebugLog("SearchPixelDonate FixedMatrixSend " & _ArrayToString($aClickSend))
 	
-	Static $sRequestTroopsText = ""
-	If Not StringIsSpace($g_sRequestTroopsText) And $sRequestTroopsText <> $g_sRequestTroopsText Then
-		$sRequestTroopsText = $g_sRequestTroopsText
-		
-		If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
-		; fix for Android send text bug sending symbols like ``"
-		AndroidSendText($g_sRequestTroopsText, True)
-		Click($aClickText[0], $aClickText[1], 1, 0, "#0254") ;Select text for request
-		If _Sleep($DELAYMAKEREQUEST2) Then Return
-		If SendText($g_sRequestTroopsText) = 0 Then
-			SetLog(" Request text entry failed, try again", $COLOR_ERROR)
-			Return
+	; X[$g_sProfileCurrentName|$g_sRequestTroopsText]
+	Static $aRequestTroopsText[0][2]
+	
+	If Not StringIsSpace($g_sRequestTroopsText) Then
+	
+		Local $iUbi = __ArraySearch($aRequestTroopsText, $g_sRequestTroopsText)
+		Local $bCanReq = False
+		If $iUbi = -1 Then
+			$bCanReq = True
+			Local $aMatrixText[1][2] = [[$g_sProfileCurrentName,$g_sRequestTroopsText]]
+			_ArrayAdd($aRequestTroopsText, $aMatrixText)
+		ElseIf $aRequestTroopsText[$iUbi][1] <> $g_sRequestTroopsText Then
+			$bCanReq = True
+			$aRequestTroopsText[$iUbi][1] = $g_sRequestTroopsText
 		EndIf
+		
+		If $bCanReq Then
+			If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
+			; fix for Android send text bug sending symbols like ``"
+			AndroidSendText($g_sRequestTroopsText, True)
+			Click($aClickText[0], $aClickText[1], 1, 0, "#0254") ;Select text for request
+			If _Sleep($DELAYMAKEREQUEST2) Then Return
+			If SendText($g_sRequestTroopsText) = 0 Then
+				SetLog(" Request text entry failed, try again", $COLOR_ERROR)
+				Return
+			EndIf
+		EndIf
+		
 	EndIf
 	
 	If _Sleep($DELAYMAKEREQUEST2) Then Return ; wait time for text request to complete
