@@ -13,7 +13,7 @@ Global $_opencv_core, $_opencv_highgui, $_opencv_imgproc
 
 ; Boldina !
 Func _MatchPicturecollectExample() ; collect
-	Return _MatchPicture("C:\Github\AIOPLUS\COCBot\Team__AiO__MOD++\Bundles\2\")
+	Return _MatchPicture(@ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\2\")
 EndFunc
 
 ; #FUNCTION# ====================================================================================================================
