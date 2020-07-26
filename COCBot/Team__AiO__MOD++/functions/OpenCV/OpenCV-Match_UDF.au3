@@ -45,8 +45,8 @@ Func _MatchPicture($sDir, $iLeft = 0, $iTop = 0, $iRight = $g_iGAME_WIDTH, $iBot
 	Local $asImageToReturn = _FileListToArray($sDir, "*.png", $FLTA_FILES, False)
 	Local $iOld = 0
 	For $i = 1 To UBound($asImageToUse) -1
-		Local $iImgT = StringSplit($asImageToReturn[$i], "_", $STR_NOCOUNT)
-		Local $iTol = Number($iImgT[UBound($iImgT)-1])
+		Local $aImgT = StringSplit($asImageToReturn[$i], "_", $STR_NOCOUNT)
+		Local $iTol = Number($aImgT[UBound($aImgT)-1])
 		$Threshold = ($iTol = 0) ? ($iThresholdDefa) : ($iTol/100)
 		;SetDebugLog("_MatchPicture | Tolerance : " & $Threshold, $COLOR_INFO)
 		While 1
@@ -96,20 +96,48 @@ Func _MatchPicture($sDir, $iLeft = 0, $iTop = 0, $iRight = $g_iGAME_WIDTH, $iBot
 			_cvReleaseImage($hMain_Pic)
 	
 			;Check if found
-			If Not (DllStructGetData($tmaxloc, "x") = 0 And DllStructGetData($tmaxloc, "y") = 0 And $width2 = DllStructGetData($tmaxloc, "x") + $width2 And $height2 = DllStructGetData($tmaxloc, "y") + $height2) Then
+			If DllStructGetData($tmaxloc, "x") <> 0 And DllStructGetData($tmaxloc, "y") <> 0 Then
 					_cvReleaseImage($hMatch_Pic)
 					;_Internal_MatchLogger("Match found at: " & $Coordinates[0] & "|" & $Coordinates[1] & "|" & $Coordinates[2] & "|" & $Coordinates[3] & " // Loop counter: " & $iTries & " // Threshold: " & $Threshold & " // Total check time: " & Round(TimerDiff($Perf), 0) & " ms")
 					Local $hGraphic = _GDIPlus_ImageGetGraphicsContext($Bitmap)
 					Local $hBrush = _GDIPlus_BrushCreateSolid(0xFF00FF26)
 					_GDIPlus_GraphicsFillRect($hGraphic, $Coordinates[0], $Coordinates[1], $Coordinates[2], $Coordinates[3], $hBrush)
-					Local $aTemp[1][4] = [[$asImageToReturn[$i], $Coordinates[0] + $iLeft, $Coordinates[1] + $iTop, Number($iImgT[0])]]
+					Local $iLevel = (UBound($aImgT)-1 > 1) ? (Number($aImgT[2])) : (0)
+					Local $aTemp[1][4] = [[$asImageToReturn[$i], $Coordinates[0] + $iLeft, $Coordinates[1] + $iTop, $iLevel]]
 					_ArrayAdd($aResult, $aTemp)
 				Else 
 					ExitLoop
 			EndIf
 		WEnd
 	Next
-	Return (UBound($aResult) > 1) ? ($aResult) : (-1)
+	
+	If (UBound($aResult) > 0) Then
+		If ($g_bDebugImageSave) Then ; Discard Deploy Points Touch much text on image
+
+			Local $sSubDir = $g_sProfileTempDebugPath & "_MatchPicture"
+
+			DirCreate($sSubDir)
+
+			Local $sDate = @YEAR & "-" & @MON & "-" & @MDAY, $sTime = @HOUR & "." & @MIN & "." & @SEC
+			Local $sDebugImageName = String($sDate & "_" & $sTime & "_.png")
+			Local $hEditedImage = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
+			Local $hGraphic = _GDIPlus_ImageGetGraphicsContext($hEditedImage)
+			Local $hPenRED = _GDIPlus_PenCreate(0xFFFF0000, 3)
+
+			For $i = 0 To UBound($aResult) - 1
+				addInfoToDebugImage($hGraphic, $hPenRED, $aResult[$i][0] & "_" & $aResult[$i][3], $aResult[$i][1], $aResult[$i][2])
+			Next
+
+			_GDIPlus_ImageSaveToFile($hEditedImage, $sSubDir & "\" & $sDebugImageName )
+			_GDIPlus_PenDispose($hPenRED)
+			_GDIPlus_GraphicsDispose($hGraphic)
+			_GDIPlus_BitmapDispose($hEditedImage)
+		EndIf
+		
+		Return $aResult
+	Else
+		Return -1
+	EndIf
 EndFunc   ;==>_MatchPicture
 
 ; #FUNCTION# ====================================================================================================================
