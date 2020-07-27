@@ -92,35 +92,69 @@ Func TrainIt($iIndex, $iQuantity = 1, $iSleep = 400)
 	Next ; Until $iErrors = 0
 EndFunc   ;==>TrainIt
 
+;~ Func GetTrainPos(Const $iIndex)
+;~ 	If $g_bDebugSetlogTrain Then SetLog("GetTrainPos($iIndex=" & $iIndex & ")", $COLOR_DEBUG)
+
+;~ 	; Get the Image path to search
+;~ 	If ($iIndex >= $eBarb And $iIndex <= $eHunt) Or ($iIndex >= $eSuperBarb And $iIndex <= $eSuperGiant) Then
+;~ 		Local $sFilter = "*" & String($g_asTroopShortNames[$iIndex]) & "*"
+;~ 		Local $asImageToUse = _FileListToArray($g_sImgTrainTroops, $sFilter, $FLTA_FILES, True)
+;~ 		If Not @error Then
+;~ 			If $g_bDebugSetlogTrain Then SetLog("$asImageToUse Troops: " & _ArrayToString($asImageToUse, "|"))
+;~ 			Return GetVariable($asImageToUse, $iIndex)
+;~ 		Else
+;~ 			Return 0
+;~ 		EndIf
+;~ 	EndIf
+
+;~ 	If $iIndex >= $eLSpell And $iIndex <= $eBtSpell Then
+;~ 		Local $sFilter = String($g_asSpellShortNames[$iIndex - $eLSpell]) & "*"
+;~ 		Local $asImageToUse = _FileListToArray($g_sImgTrainSpells, $sFilter, $FLTA_FILES, True)
+;~ 		If Not @error Then
+;~ 			If $g_bDebugSetlogTrain Then SetLog("$asImageToUse Spell: " & $asImageToUse[1])
+;~ 			Return GetVariable($asImageToUse, $iIndex)
+;~ 		Else
+;~ 			Return 0
+;~ 		EndIf
+;~ 	EndIf
+
+;~ 	Return 0
+;~ EndFunc   ;==>GetTrainPos
+#Region - Custom fix - Team AIO Mod++
 Func GetTrainPos(Const $iIndex)
 	If $g_bDebugSetlogTrain Then SetLog("GetTrainPos($iIndex=" & $iIndex & ")", $COLOR_DEBUG)
 
+	Local $sImage = ""
+	Local $sPath = ""
+
 	; Get the Image path to search
-	If ($iIndex >= $eBarb And $iIndex <= $eHunt) Or ($iIndex >= $eSuperBarb And $iIndex <= $eSuperGiant) Then
-		Local $sFilter = "*" & String($g_asTroopShortNames[$iIndex]) & "*"
-		Local $asImageToUse = _FileListToArray($g_sImgTrainTroops, $sFilter, $FLTA_FILES, True)
-		If Not @error Then
-			If $g_bDebugSetlogTrain Then SetLog("$asImageToUse Troops: " & _ArrayToString($asImageToUse, "|"))
-			Return GetVariable($asImageToUse, $iIndex)
-		Else
-			Return 0
-		EndIf
+	If ($iIndex >= $eBarb And $iIndex <= $eHeadH) Or ($iIndex >= $eSuperBarb And $iIndex <= $eSuperGiant) Then
+		Local $sFilter = GetTroopName($iIndex, 1, True)
+		Local $asImageToUse = _FileListToArray($g_sImgTrainTroops, "*.*", $FLTA_FILES, False)
+		$sPath = $g_sImgTrainTroops
 	EndIf
 
 	If $iIndex >= $eLSpell And $iIndex <= $eBtSpell Then
-		Local $sFilter = String($g_asSpellShortNames[$iIndex - $eLSpell]) & "*"
-		Local $asImageToUse = _FileListToArray($g_sImgTrainSpells, $sFilter, $FLTA_FILES, True)
-		If Not @error Then
-			If $g_bDebugSetlogTrain Then SetLog("$asImageToUse Spell: " & $asImageToUse[1])
-			Return GetVariable($asImageToUse, $iIndex)
-		Else
-			Return 0
-		EndIf
+		Local $sFilter = GetTroopName($iIndex, 1, True)
+		Local $asImageToUse = _FileListToArray($g_sImgTrainSpells, "*.*", $FLTA_FILES, False)
+		$sPath = $g_sImgTrainSpells
+	EndIf
+
+	If $sFilter <> -1 Then
+		For $i = 1 To UBound($asImageToUse) -1
+			If StringInStr($asImageToUse[$i], $sFilter) = 1 Then
+				$sImage = $sPath & $asImageToUse[$i] ; = 1 for SuperTroops ;)
+				ExitLoop
+			EndIf
+		Next
+
+		If $g_bDebugSetlogTrain Then SetLog("$asImageToUse: " & $sImage)
+		Return GetVariable($sImage, $iIndex)
 	EndIf
 
 	Return 0
 EndFunc   ;==>GetTrainPos
-
+#EndRegion - Custom fix - Team AIO Mod++
 Func GetFullName(Const $iIndex, Const $aTrainPos)
 	If $g_bDebugSetlogTrain Then SetLog("GetFullName($iIndex=" & $iIndex & ")", $COLOR_DEBUG)
 
