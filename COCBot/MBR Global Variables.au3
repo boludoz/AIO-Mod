@@ -523,7 +523,11 @@ Global $g_hLibUser32DLL = DllOpen("user32.dll") ; handle to user32.dll, DllClose
 Global Const $g_sDissociableOcrLib = "\ModLibs\Dissociable.OCR.dll"
 Global Const $g_sLibDissociableOcrPath = $g_sLibPath & "\" & $g_sDissociableOcrLib
 Global $g_hLibDissociableOcr = -1 ; Handle to Dissociable.OCR.dll
-
+;Open CV
+Global Const $g_sOpencv_core = $g_sLibPath & "\ModLibs\opencv_core2413.dll"
+Global Const $g_sOpencv_highgui = $g_sLibPath & "\ModLibs\opencv_highgui2413.dll"
+Global Const $g_sOpencv_imgproc = $g_sLibPath & "\ModLibs\opencv_imgproc2413.dll"
+	
 Global Const $g_sLibIconPath = $g_sLibPath & "\MBRBOT.dll" ; icon library
 Global Const $g_sCSVAttacksPath = @ScriptDir & "\CSV\Attack"
 Global Const $g_sIcnMBisland = @ScriptDir & "\Images\bbico.png"

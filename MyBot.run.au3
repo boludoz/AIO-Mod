@@ -563,6 +563,7 @@ Func FinalInitialization(Const $sAI)
 	If $bCheckPrerequisitesOK Then
 		MBRFunc(True) ; start MyBot.run.dll, after this point .net is initialized and threads popup all the time
 		DissociableFunc(True)
+		__OpenCV_Startup()
 		setAndroidPID() ; set Android PID
 		SetBotGuiPID() ; set GUI PID
 	EndIf
