@@ -162,53 +162,52 @@ Func GetRNDName(Const $iIndex, Const $aTrainPos)
 	Return 0
 EndFunc   ;==>GetRNDName
 
-Func GetVariable(Const $asImageToUse, Const $iIndex)
+#Region - Custom fix - Team AIO Mod++
+Func GetVariable(Const $sImageToUse, Const $iIndex)
 	Local $aTrainPos[5] = [-1, -1, -1, -1, $eBarb]
 	; Capture the screen for comparison
 	_CaptureRegion2(25, 375, 840, 548)
 
 	Local $iError = ""
-	For $i = 1 To $asImageToUse[0]
 
-		Local $asResult = DllCallMyBot("FindTile", "handle", $g_hHBitmap2, "str", $asImageToUse[$i], "str", "FV", "int", 1)
+	Local $asResult = DllCallMyBot("FindTile", "handle", $g_hHBitmap2, "str", $sImageToUse, "str", "FV", "int", 1)
 
-		If @error Then _logErrorDLLCall($g_sLibMyBotPath, @error)
+	If @error Then _logErrorDLLCall($g_sLibMyBotPath, @error)
 
-		If IsArray($asResult) Then
-			If $asResult[0] = "0" Then
-				$iError = 0
-			ElseIf $asResult[0] = "-1" Then
-				$iError = -1
-			ElseIf $asResult[0] = "-2" Then
-				$iError = -2
-			Else
-				If $g_bDebugSetlogTrain Then SetLog("String: " & $asResult[0])
-				Local $aResult = StringSplit($asResult[0], "|", $STR_NOCOUNT)
-				If UBound($aResult) > 1 Then
-					Local $aCoordinates = StringSplit($aResult[1], ",", $STR_NOCOUNT)
-					If UBound($aCoordinates) > 1 Then
-						Local $iButtonX = 25 + Int($aCoordinates[0])
-						Local $iButtonY = 375 + Int($aCoordinates[1])
-						Local $sColorToCheck = "0x" & _GetPixelColor($iButtonX, $iButtonY, $g_bCapturePixel)
-						Local $iTolerance = 40
-						Local $aTrainPos[5] = [$iButtonX, $iButtonY, $sColorToCheck, $iTolerance, $eBarb]
-						If $g_bDebugSetlogTrain Then SetLog("Found: [" & $iButtonX & "," & $iButtonY & "]", $COLOR_SUCCESS)
-						If $g_bDebugSetlogTrain Then SetLog("$sColorToCheck: " & $sColorToCheck, $COLOR_SUCCESS)
-						If $g_bDebugSetlogTrain Then SetLog("$iTolerance: " & $iTolerance, $COLOR_SUCCESS)
-
-						If StringRegExp($asImageToUse[$i], "([Ss]uper)|([Ss]neaky)") Then $aTrainPos[4] = $eSuperBarb
-						Return $aTrainPos
-					Else
-						SetLog("Don't know how to train the troop with index " & $iIndex & " yet.")
-					EndIf
-				Else
-					SetLog("Don't know how to train the troop with index " & $iIndex & " yet")
-				EndIf
-			EndIf
+	If IsArray($asResult) Then
+		If $asResult[0] = "0" Then
+			$iError = 0
+		ElseIf $asResult[0] = "-1" Then
+			$iError = -1
+		ElseIf $asResult[0] = "-2" Then
+			$iError = -2
 		Else
-			SetLog("Don't know how to train the troop with index " & $iIndex & " yet")
+			If $g_bDebugSetlogTrain Then SetLog("String: " & $asResult[0])
+			Local $aResult = StringSplit($asResult[0], "|", $STR_NOCOUNT)
+			If UBound($aResult) > 1 Then
+				Local $aCoordinates = StringSplit($aResult[1], ",", $STR_NOCOUNT)
+				If UBound($aCoordinates) > 1 Then
+					Local $iButtonX = 25 + Int($aCoordinates[0])
+					Local $iButtonY = 375 + Int($aCoordinates[1])
+					Local $sColorToCheck = "0x" & _GetPixelColor($iButtonX, $iButtonY, $g_bCapturePixel)
+					Local $iTolerance = 40
+					Local $aTrainPos[5] = [$iButtonX, $iButtonY, $sColorToCheck, $iTolerance, $eBarb]
+					If $g_bDebugSetlogTrain Then SetLog("Found: [" & $iButtonX & "," & $iButtonY & "]", $COLOR_SUCCESS)
+					If $g_bDebugSetlogTrain Then SetLog("$sColorToCheck: " & $sColorToCheck, $COLOR_SUCCESS)
+					If $g_bDebugSetlogTrain Then SetLog("$iTolerance: " & $iTolerance, $COLOR_SUCCESS)
+
+					If StringRegExp($sImageToUse, "([Ss]uper)|([Ss]neaky)") Then $aTrainPos[4] = $eSuperBarb
+					Return $aTrainPos
+				Else
+					SetLog("Don't know how to train the troop with index " & $iIndex & " yet.")
+				EndIf
+			Else
+				SetLog("Don't know how to train the troop with index " & $iIndex & " yet")
+			EndIf
 		EndIf
-	Next
+	Else
+		SetLog("Don't know how to train the troop with index " & $iIndex & " yet")
+	EndIf
 
 	If $iError = 0 Then
 		SetLog("No " & GetTroopName($iIndex) & " Icon found!", $COLOR_ERROR)
@@ -220,6 +219,7 @@ Func GetVariable(Const $asImageToUse, Const $iIndex)
 
 	Return $aTrainPos
 EndFunc   ;==>GetVariable
+#EndRegion - Custom fix - Team AIO Mod++
 
 
 ; Function to use on GetFullName() , returns slot and correct [i] symbols position on train window
