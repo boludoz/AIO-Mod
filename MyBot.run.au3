@@ -601,7 +601,7 @@ Func FinalInitialization(Const $sAI)
 		EndIf
 	EndIf
 
-	Local $aBotGitVersion = CheckModVersion(True) ; Update check without delay - Team AIO Mod++
+	Local $aBotGitVersion = CheckModVersion(True) ; Update check without delay - Team AIO Mod++ - Must be Before Official CheckVersion()
 
 	; destroy splash screen here (so we witness the 100% ;)
 	DestroySplashScreen(False)

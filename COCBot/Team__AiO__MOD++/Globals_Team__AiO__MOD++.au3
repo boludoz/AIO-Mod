@@ -25,6 +25,8 @@ Global Enum $eIcnModKingGray = 1, $eIcnModKingBlue, $eIcnModKingGreen, $eIcnModK
 ; Offset village.
 Global $g_aPosSizeVillage = 0
 
+Global $g_bNewModAvailable = False
+
 ; ZoomMod
 Global $g_bZoomFixBB = False
 Global $Stonecoord

@@ -37,7 +37,11 @@ Func CheckVersion()
 		SetDebugLog("Your version is " & $g_iBotVersionN )
 
 		If _VersionCompare($g_iBotVersionN, $g_sBotGitVersion) = -1 Then
-			SetLog("WARNING, YOUR VERSION (" & $g_iBotVersionN & ") IS OUT OF DATE.", $COLOR_INFO)
+			If Not $g_bNewModAvailable Then
+				SetLog("Chief! There's a newer Official version however it's not yet Modded!", $COLOR_INFO)
+			Else
+				SetLog("Chief! There's also a newer Official version", $COLOR_INFO)
+			EndIf
 			Local $ChangelogTXT = GetLastChangeLog($Temp)
 			Local $Changelog = StringSplit($ChangelogTXT[0], '\r\n', $STR_ENTIRESPLIT + $STR_NOCOUNT)
 			For $i = 0 To UBound($Changelog) - 1

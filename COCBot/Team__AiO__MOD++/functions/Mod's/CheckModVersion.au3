@@ -38,6 +38,7 @@ Func CheckModVersion($bSilent = True)
 
 		If _VersionCompare($g_iBotVersionN, $g_sBotGitVersion) = -1 Then
 			If not $bSilent Then SetLog("WARNING, YOUR AIO VERSION (" & $g_iBotVersionN & ") IS OUT OF DATE.", $COLOR_INFO)
+			$g_bNewModAvailable = True
 			Local $ChangelogTXT = GetLastChangeLog($Temp)
 			Local $Changelog = StringSplit($ChangelogTXT[0], '\r\n', $STR_ENTIRESPLIT + $STR_NOCOUNT)
 			For $i = 0 To UBound($Changelog) - 1
@@ -47,8 +48,10 @@ Func CheckModVersion($bSilent = True)
 			$bUpdate = True
 		ElseIf _VersionCompare($g_iBotVersionN, $g_sBotGitVersion) = 0 Then
 			If not $bSilent Then SetLog("WELCOME CHIEF, YOU HAVE THE LATEST AIO MOD VERSION", $COLOR_SUCCESS)
+			$g_bNewModAvailable = False
 		Else
 			If not $bSilent Then SetLog("YOU ARE USING A FUTURE VERSION CHIEF!", $COLOR_ACTION)
+			$g_bNewModAvailable = False
 		EndIf
 	Else
 		SetDebugLog($Temp)
