@@ -530,7 +530,7 @@ Func ReadConfig_600_11()
 
 		If $i > 1 Then ContinueLoop ; Siege has only 2 combobox
 		$g_aiClanCastleSiegeWaitType[$i] = Int(IniRead($g_sProfileConfigPath, "donate", "cmbClanCastleSiege" & $i, $eSiegeMachineCount))
-		If $g_aiClanCastleSiegeWaitType[$i] < $eSiegeMachineCount Then $g_aiCCSiegeExpected[$g_aiClanCastleSiegeWaitType[$i]] = 1 ; WallW - StoneS
+		If $g_aiClanCastleSiegeWaitType[$i] < $eSiegeMachineCount And $g_aiClanCastleSiegeWaitType[$i] >= 0 Then $g_aiCCSiegeExpected[$g_aiClanCastleSiegeWaitType[$i]] = 1 ; WallW - StoneS
 	Next
 
 	$g_abRequestCCHours = StringSplit(IniRead($g_sProfileConfigPath, "planned", "RequestHours", "1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1"), "|", $STR_NOCOUNT)
