@@ -101,6 +101,7 @@ Func DropTrophy($bDebug = False) ; Drop Throphy - Team AIO Mod++
 		SetDebugLog("ChkBaseQuick delay time= " & $sWaitToDate & " Now= " & _NowCalc() & " Diff= " & _DateDiff('s', _NowCalc(), $sWaitToDate), $COLOR_DEBUG)
 
 		While Number($g_aiCurrentLoot[$eLootTrophy]) > Number($g_iDropTrophyMaxNeedCheck)
+			If _Sleep($DELAYDROPTROPHY4) Then ExitLoop
 			$g_aiCurrentLoot[$eLootTrophy] = getTrophyMainScreen($aTrophies[0], $aTrophies[1])
 			SetLog("Trophy Count : " & $g_aiCurrentLoot[$eLootTrophy], $COLOR_SUCCESS)
 			If Number($g_aiCurrentLoot[$eLootTrophy]) > Number($g_iDropTrophyMaxNeedCheck) Then
@@ -141,6 +142,8 @@ Func DropTrophy($bDebug = False) ; Drop Throphy - Team AIO Mod++
 					EndIf
 					#EndRegion - Drop Throphy - Team AIO Mod++
 				EndIf ; Drop Throphy - Team AIO Mod++
+
+				If _Sleep($DELAYDROPTROPHY4) Then ExitLoop
 
 				$g_iDropTrophyMaxNeedCheck = $g_iDropTrophyMin ; already checked above max trophy, so set target to min trophy value
 				SetLog("Dropping Trophies to " & $g_iDropTrophyMin, $COLOR_INFO)
