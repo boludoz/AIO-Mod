@@ -100,6 +100,7 @@ Func InitializeBot()
 
 	If FileExists(@ScriptDir & "\EnableMBRDebug.txt") Then ; Set developer mode
 		$g_bDevMode = True
+		$g_bDOCRDebugImages = True And $g_bDOCRDebugImages
 		Local $aText = FileReadToArray(@ScriptDir & "\EnableMBRDebug.txt") ; check if special debug flags set inside EnableMBRDebug.txt file
 		If Not @error Then
 			For $l = 0 To UBound($aText) - 1
@@ -211,6 +212,7 @@ Func ProcessCommandLine()
 					$g_bBotLaunchOption_NoBotSlot = True
 				Case "/debug", "/debugmode", "/dev", "/dm", "-debug", "-debugmode", "-dev", "-dm"
 					$g_bDevMode = True
+					$g_bDOCRDebugImages = True And $g_bDOCRDebugImages
 				Case "/minigui", "/mg", "-minigui", "-mg"
 					$g_iGuiMode = 2
 				Case "/nogui", "/ng", "-nogui", "-ng"
@@ -355,6 +357,7 @@ Func SetupProfileFolder()
 	$g_sProfileDonateCapturePath = $g_sProfilePath & "\" & $g_sProfileCurrentName & '\Donate\'
 	$g_sProfileDonateCaptureWhitelistPath = $g_sProfilePath & "\" & $g_sProfileCurrentName & '\Donate\White List\'
 	$g_sProfileDonateCaptureBlacklistPath = $g_sProfilePath & "\" & $g_sProfileCurrentName & '\Donate\Black List\'
+	$g_sProfileTempDebugDOCRPath = $g_sProfilePath & "\" & $g_sProfileCurrentName & "\Temp\Debug\DOCR\"
 EndFunc   ;==>SetupProfileFolder
 
 ; #FUNCTION# ====================================================================================================================
@@ -507,6 +510,7 @@ Func SetupFilesAndFolders()
 	DirCreate($g_sProfileLootsPath)
 	DirCreate($g_sProfileTempPath)
 	DirCreate($g_sProfileTempDebugPath)
+	DirCreate($g_sProfileTempDebugDOCRPath)
 
 	$g_sProfileDonateCapturePath = $g_sProfilePath & "\" & $g_sProfileCurrentName & '\Donate\'
 	$g_sProfileDonateCaptureWhitelistPath = $g_sProfilePath & "\" & $g_sProfileCurrentName & '\Donate\White List\'

@@ -334,3 +334,6 @@ Global $g_bChkPlayBBOnly = False
 
 Global $g_bChkBBGetFromCSV = False
 #EndRegion
+
+Global $g_iAttackTotalBLButtons = -1
+Global $g_aBLButtonsRegion[4] = [10, 570, 450, 55]

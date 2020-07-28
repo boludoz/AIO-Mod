@@ -28,3 +28,6 @@ Global $g_sPointBB = $g_sBaseDOCRPathB & "\BB\"
 
 ; AttackBar.
 Global $g_sAttackBarDOCRB = $g_sBaseDOCRPathB & "\AttackBar.docr"
+
+; AttackScreen Buttons
+Global $g_sASButtonsDOCRPath = $g_sBaseDOCRPathB & "\AttackScreen\Buttons"

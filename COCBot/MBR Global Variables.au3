@@ -19,6 +19,7 @@
 #include <WinAPI.au3>
 #include <WinAPIFiles.au3>
 #include <WinAPISys.au3>
+#include <WinAPIGdi.au3>
 #include <Process.au3>
 #include <Math.au3> ; Added for Weak Base
 #include <ButtonConstants.au3>
@@ -451,7 +452,7 @@ Global $g_sProfileCurrentName = "" ; Name of profile currently being used
 Global $g_sProfileConfigPath = "" ; Path to the current config.ini being used in this profile
 Global $g_sProfileBuildingStatsPath = "" ; Path to stats_chkweakbase.ini file for this profile
 Global $g_sProfileBuildingPath = "" ; Paths to building.ini file for this profile
-Global $g_sProfileLogsPath = "", $g_sProfileLootsPath = "", $g_sProfileTempPath = "", $g_sProfileTempDebugPath = "" ; Paths to log/image/temp folders for this profile
+Global $g_sProfileLogsPath = "", $g_sProfileLootsPath = "", $g_sProfileTempPath = "", $g_sProfileTempDebugPath = "", $g_sProfileTempDebugDOCRPath = "" ; Paths to log/image/temp folders for this profile
 Global $g_sProfileDonateCapturePath = "", $g_sProfileDonateCaptureWhitelistPath = "", $g_sProfileDonateCaptureBlacklistPath = "" ; Paths to donate related folders for this profile
 Global $g_sProfileSecondaryInputFileName = ""
 Global $g_sProfileSecondaryOutputFileName = ""
@@ -523,6 +524,7 @@ Global $g_hLibUser32DLL = DllOpen("user32.dll") ; handle to user32.dll, DllClose
 Global Const $g_sDissociableOcrLib = "\ModLibs\Dissociable.OCR.dll"
 Global Const $g_sLibDissociableOcrPath = $g_sLibPath & "\" & $g_sDissociableOcrLib
 Global $g_hLibDissociableOcr = -1 ; Handle to Dissociable.OCR.dll
+Global $g_bDOCRDebugImages = False
 ;Open CV
 Global Const $g_sOpencv_core = $g_sLibPath & "\ModLibs\opencv_core2413.dll"
 Global Const $g_sOpencv_highgui = $g_sLibPath & "\ModLibs\opencv_highgui2413.dll"
