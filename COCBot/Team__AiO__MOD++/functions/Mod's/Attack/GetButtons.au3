@@ -29,7 +29,30 @@ Func GetButtons($aRegion)
     While (StringRight($sButtons, 1) = "|")
         $sButtons = StringTrimRight($sButtons, 1)
     WEnd
-    Return $sButtons
+    Return FixButtonNames($sButtons)
+EndFunc
+
+Func FixButtonNames($sButtons)
+    Local $aSplittedButtons = StringSplit($sButtons, "|")
+    Local $sNameFixedButtons = ""
+    Local $sAdditional = ""
+    For $i = 1 To UBound($aSplittedButtons) - 1
+        If $aSplittedButtons[$i] = "|" Then
+            ContinueLoop
+        EndIf
+
+        If $i > 0 Then
+            $sAdditional = "|"
+        EndIf
+
+        Switch ($aSplittedButtons[$i])
+            Case "HBeoroosets"
+                $sNameFixedButtons &= $sAdditional & "Boost Heroes"
+            Case Else
+                $sNameFixedButtons &= $sAdditional & $aSplittedButtons[$i]
+        EndSwitch
+    Next
+    Return $sNameFixedButtons
 EndFunc
 
 Func FixButtonsWithSmallLength($sButtons, $iMinLength)
