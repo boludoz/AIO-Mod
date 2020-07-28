@@ -108,3 +108,6 @@
 ;
 ;#include "functions\Mod's\GetCastle.au3"
 ;---------------------------------------------------------------;
+
+#include "functions\Mod's\Attack\GetButtons.au3"
+#include "functions\Mod's\Attack\VerifyDropPoints.au3"

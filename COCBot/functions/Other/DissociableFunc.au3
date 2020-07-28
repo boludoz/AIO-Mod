@@ -42,6 +42,7 @@ Func DllCallDOCR($sFunc, $ReturnType, $sType1 = Default, $vParam1 = Default, $sT
 		Local $aResult = DllCall($g_hLibDissociableOcr, $ReturnType, $sFunc, $sType1, $vParam1, $sType2, $vParam2)
 		If @error Then
 			SetLog("DOCR Issue | Fail 0x1: " & @error)
+			If $bWasSuspended Then ResumeAndroid()
 			Return ""
 		EndIf
 	EndIf
@@ -50,8 +51,10 @@ Func DllCallDOCR($sFunc, $ReturnType, $sType1 = Default, $vParam1 = Default, $sT
 	If IsArray($aResult) Then 
 		If StringInStr($aResult[0], "ERROR") > 0 Then
 			SetLog("DOCR Issue | Fail 0x2. | " & $aResult[0], $COLOR_ERROR)
+			If $bWasSuspended Then ResumeAndroid()
 			Return ""
 		EndIf
+		If $bWasSuspended Then ResumeAndroid()
 		Return $aResult[0]
 	EndIf
 	

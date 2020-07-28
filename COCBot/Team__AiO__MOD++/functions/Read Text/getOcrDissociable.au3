@@ -9,6 +9,12 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+; Attack Screen
+Func getAttackScreenButtons($x_start, $y_start, $iWidth, $iHeight) ;48, 69 -> Gets complete value of gold xxx,xxx while searching, top left, Getresources.au3
+	Return getOcrAndCaptureDOCR($g_sASButtonsDOCRPath, $x_start, $y_start, $iWidth, $iHeight, False, True)
+EndFunc   ;==>getGoldVillageSearch
+; End Attack Screen
+
 ; Search village sector
 Func getGoldVillageSearch($x_start, $y_start) ;48, 69 -> Gets complete value of gold xxx,xxx while searching, top left, Getresources.au3
 	Return getOcrAndCaptureDOCR($g_sAttackRGold, $x_start, $y_start, 90, 16, True)
@@ -96,5 +102,38 @@ EndFunc   ;==>getOcrAndCaptureDOCR
 
 Func getOcrDOCR(ByRef Const $_hHBitmap, $sBundle)
 	Local $aResult = DllCallDOCR("Recognize", "str", "handle", $_hHBitmap, "str", $sBundle)
+	If $g_bDOCRDebugImages Then
+		DirCreate($g_sProfileTempDebugDOCRPath)
+		Local $isBundleFile = StringRight($sBundle, 5) = ".docr"
+		Local $sSubDirFolder = ""
+		If $isBundleFile Then
+			; Remove the Last Backslash from the directory path
+			While (StringRight($sBundle, 1) = "\")
+				$sBundle = StringTrimRight($sBundle, 1)
+			WEnd
+			Local $aSplittedPath = StringSplit($sBundle, "\")
+			$sSubDirFolder = $aSplittedPath[UBound($aSplittedPath, 1) - 2] & "_" & $aSplittedPath[UBound($aSplittedPath, 1) - 1]
+		Else
+			Local $sDrive = "", $sDir = "", $sFileName = "", $sExtension = ""
+			Local $aPathSplit = _PathSplit($sBundle, $sDrive, $sDir, $sFileName, $sExtension)
+			Local $aSplittedPath = StringSplit(StringTrimRight($sBundle, StringLen($sFileName & $sExtension) + 1), "\")
+			$sSubDirFolder = $aSplittedPath[UBound($aSplittedPath, 1) - 1] & "_" & $sFileName
+		EndIf
+		Local $sDir
+		If StringRight($g_sProfileTempDebugDOCRPath, 1) <> "\" Then
+			$sDir = $g_sProfileTempDebugDOCRPath & "\"
+		Else
+			$sDir = $g_sProfileTempDebugDOCRPath
+		EndIf
+		$sDir &= $sSubDirFolder & "\"
+		DirCreate($sDir)
+		
+		Local $sDateTime = @YEAR & "-" & @MON & "-" & @MDAY & "_" & @HOUR & "-" & @MIN & "-" & @SEC & "." & @MSEC
+		Local $hBitmap_debug = _GDIPlus_BitmapCreateFromHBITMAP($_hHBitmap)
+		Local $sFilePath = $sDir & StringRegExpReplace(StringReplace($aResult, "|", "-"), "[\[\]/\|\:\?""\*\\<>]", "") & ".png"
+		SetDebugLog("Save DOCR Debug Image: " & $sFilePath)
+		_GDIPlus_ImageSaveToFile($hBitmap_debug, $sFilePath)
+		_GDIPlus_BitmapDispose($hBitmap_debug)
+	EndIf
 	Return $aResult
 EndFunc   ;==>getOcrDOCR

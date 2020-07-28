@@ -194,6 +194,7 @@ Func ProcessCommandLine()
 					$g_bBotLaunchOption_NoBotSlot = True
 				Case "/debug", "/debugmode", "/dev", "-debug", "-dev"
 					$g_bDevMode = True
+					$g_bDOCRDebugImages = True And $g_bDOCRDebugImages
 				Case "/minigui", "/mg", "-minigui", "-mg"
 					$g_iGuiMode = 2
 				Case "/nogui", "/ng", "-nogui", "-ng"
