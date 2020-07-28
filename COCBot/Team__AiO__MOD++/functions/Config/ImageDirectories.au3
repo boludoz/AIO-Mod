@@ -13,7 +13,7 @@
 
 #Region Maintenance
 Global $g_sImgMaintenanceMod = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Maintenance\"
-#EndRegion
+#EndRegion Maintenance
 
 #Region BuilderBaseCustomArmy
 Global $g_sImgCustomArmyBB = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\Attack\VersusBattle\ChangeTroops\"
@@ -21,13 +21,13 @@ Global $aArmyTrainButtonBB = [46, 572, 0xE5A439, 10]
 Global Const $g_sImgPathFillArmyCampsWindow = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\FillArmyCamps\Window\"
 Global Const $g_sImgPathTroopsTrain = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\FillArmyCamps\TroopsTrain\"
 Global Const $g_sImgPathCamps = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\FillArmyCamps\Bundles\Camps\"
-#EndRegion
+#EndRegion BuilderBaseCustomArmy
 
 #Region SuperXP
 Global $g_sImgFindSX = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\SuperXP\Find\"
 Global $g_sImgVerifySX = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\SuperXP\Verify\"
 Global $g_sImgLockedSX = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\SuperXP\Locked\"
-#EndRegion
+#EndRegion SuperXP
 
 #Region Humanization
 Global $g_sImgHumanizationWarLog = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Humanization\WarLog"
@@ -39,17 +39,17 @@ Global $g_sImgHumanizationWarDetails = @ScriptDir & "\COCBot\Team__AiO__MOD++\Im
 Global $g_sImgHumanizationReplay = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Humanization\Replay"
 Global $g_sImgHumanizationVisit = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Humanization\Visit"
 Global $g_sImgChatIUnterstandMultiLang = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Humanization\Chat"
-#EndRegion
+#EndRegion Humanization
 
 #Region DailyDiscounts
 Global $g_sImgDirDailyDiscounts = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\DailyDiscounts"
 Global $g_sImgDDWallRingx5 = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\DailyDiscounts\WallRingAmount\x5_92.png"
 Global $g_sImgDDWallRingx10 = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\DailyDiscounts\WallRingAmount\x10_92.png"
-#EndRegion
+#EndRegion DailyDiscounts
 
 #Region ChatActions
 Global $g_sImgChatObstacles = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ChatActions\FriendlyChallenge"
-#EndRegion
+#EndRegion ChatActions
 
 #Region GTFO
 Global $g_sImgKickOut = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\GTFO\KickOut"
@@ -106,7 +106,7 @@ Global Const $g_sImgCloudSearch = $g_sModImageLocation & "\BuildersBase\Attack\V
 Global Const $g_sImgReportWaitBB = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\Report\Waiting"
 Global Const $g_sImgReportFinishedBB = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\Report\Replay"
 Global Const $g_sImgReportResultBB = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\Report\Result"
-#EndRegion Builder Base Attack
+#EndRegion Builder Base
 
 #Region Builder Base Walls Upgrade
 Global Const $g_sBundleWallsBB = $g_sModImageLocation & "\BuildersBase\Bundles\Walls"

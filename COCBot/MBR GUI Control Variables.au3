@@ -57,7 +57,7 @@ Global $g_aGroupLeague = ""
 Global $aTabControlsVillage, $aTabControlsMisc, $aTabControlsDonate, $aTabControlsUpgrade, $aTabControlsNotify
 Global $aTabControlsAttack, $aTabControlsArmy, $aTabControlsSearch, $aTabControlsDeadbase, $aTabControlsActivebase, $aTabControlsAttackOptions
 Global $aTabControlsStrategies, $aTabControlsBot, $aTabControlsStats
-Global $aTabControlsMOD, $aTabControlsSwitchOpt ; AIO MOD++
+Global $aTabControlsMOD, $aTabControlsBuilderBase, $aTabControlsSwitchOpt ; AIO MOD++
 
 Global $oAlwaysEnabledControls = ObjCreate("Scripting.Dictionary")
 
@@ -214,10 +214,11 @@ Func InitializeControlVariables()
    Dim $aTabControlsStats = [$g_hGUI_STATS_TAB, $g_hGUI_STATS_TAB_ITEM1, $g_hGUI_STATS_TAB_ITEM2, $g_hGUI_STATS_TAB_ITEM3, $g_hGUI_STATS_TAB_ITEM4, $g_hGUI_STATS_TAB_ITEM5]
 
    #Region AiO MOD++
-   Dim $aTabControlsMOD = [$g_hGUI_MOD_TAB, $g_hGUI_MOD_TAB_ITEM1, $g_hGUI_MOD_TAB_ITEM2, $g_hGUI_MOD_TAB_ITEM3, $g_hGUI_MOD_TAB_ITEM4, $g_hGUI_MOD_TAB_ITEM5, $g_hGUI_MOD_TAB_ITEM6]
+   Dim $aTabControlsMOD = [$g_hGUI_MOD_TAB, $g_hGUI_MOD_TAB_ITEM1, $g_hGUI_MOD_TAB_ITEM2, $g_hGUI_MOD_TAB_ITEM3, $g_hGUI_MOD_TAB_ITEM4, $g_hGUI_MOD_TAB_ITEM5, $g_hGUI_MOD_TAB_ITEM6, $g_hGUI_MOD_TAB_ITEM7]
    Dim $aTabControlsBot = [$g_hGUI_BOT_TAB, $g_hGUI_BOT_TAB_ITEM1, $g_hGUI_BOT_TAB_ITEM2, $g_hGUI_BOT_TAB_ITEM3, $g_hGUI_BOT_TAB_ITEM4, $g_hGUI_BOT_TAB_ITEM5]
    Dim $aTabControlsSwitchOpt = [$g_hGUI_SWITCH_OPTIONS_TAB, $g_hGUI_SWITCH_OPTIONS_TAB_ITEM1, $g_hGUI_SWITCH_OPTIONS_TAB_ITEM2, $g_hGUI_SWITCH_OPTIONS_TAB_ITEM3]
    Dim $aTabControlsStats = [$g_hGUI_STATS_TAB, $g_hGUI_STATS_TAB_ITEM1, $g_hGUI_STATS_TAB_ITEM2, $g_hGUI_STATS_TAB_ITEM3, $g_hGUI_STATS_TAB_ITEM4, $g_hGUI_STATS_TAB_ITEM5]
+   Dim $aTabControlsBuilderBase = [$g_hGUI_BUILDER_BASE_TAB, $g_hGUI_BUILDER_BASE_TAB_ITEM1, $g_hGUI_BUILDER_BASE_TAB_ITEM2, $g_hGUI_BUILDER_BASE_TAB_ITEM3]
    #EndRegion
 
 	; always enabled / unchanged controls during enabling/disabling all GUI controls function
@@ -278,9 +279,10 @@ Func InitializeControlVariables()
 	$oAlwaysEnabledControls($g_hTabAttack) = 1
 	$oAlwaysEnabledControls($g_hTabBot) = 1
 	$oAlwaysEnabledControls($g_hTabAbout) = 1
-#Region AiO MOD++
+	#Region AiO MOD++
 	$oAlwaysEnabledControls($g_hTabMOD) = 1 
-#EndRegion
+	$oAlwaysEnabledControls($g_hGUI_BUILDER_BASE) = 1 
+	#EndRegion
 
 	For $i in $aTabControlsVillage
 		$oAlwaysEnabledControls($i) = 1
@@ -318,21 +320,26 @@ Func InitializeControlVariables()
 	For $i in $aTabControlsStrategies
 		$oAlwaysEnabledControls($i) = 1
 	Next
+	For $i in $aTabControlsStats
+		$oAlwaysEnabledControls($i) = 1
+	Next
+	
 	#Region AiO MOD++
 	For $i in $aTabControlsMOD
 		$oAlwaysEnabledControls($i) = 1
 	Next
-	#EndRegion
+	
 	For $i in $aTabControlsBot
 		$oAlwaysEnabledControls($i) = 1
 	Next
-	#Region AiO MOD++
+	
 	For $i in $aTabControlsSwitchOpt
 		$oAlwaysEnabledControls($i) = 1
 	Next
-	#EndRegion
-	For $i in $aTabControlsStats
+	
+	For $i in $aTabControlsBuilderBase 
 		$oAlwaysEnabledControls($i) = 1
 	Next
-
+	#EndRegion
+	
 EndFunc

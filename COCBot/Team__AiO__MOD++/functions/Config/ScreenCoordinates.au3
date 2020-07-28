@@ -17,7 +17,7 @@ Global $aClanPage[4] = [725, 410, 0xEF5D5F, 20] ; Red Leave Clan Button on Clan 
 Global $aClanPageJoin[4] = [720, 407, 0xBCE764, 20] ; Green Join Clan Button on Clan Page
 Global $aJoinClanPage[4] = [755, 319, 0xE8C672, 20] ; Trophy Amount of Clan Background of first Clan
 Global $aClanChat[4] = [83, 650, 0x8BD004, 30] ; *Your Name* joined the Clan Message Check to verify loaded Clan Chat
-Global $aClanBadgeNoClan[4] = [150, 315, 0xEB4C30, 20]; Orange Tile of Clan Logo on Chat Tab if you are not in a Clan
+Global $aClanBadgeNoClan[4] = [150, 315, 0xEB4C30, 20] ; Orange Tile of Clan Logo on Chat Tab if you are not in a Clan
 Global $aClanChatRules[4] = [158, 493, 0x6CB531, 20]
 Global $aClanNameBtn[2] = [89, 63] ; Button to open Clan Page from Chat Tab
 
