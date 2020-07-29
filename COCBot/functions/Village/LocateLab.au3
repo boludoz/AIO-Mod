@@ -20,14 +20,6 @@ Func LocateLab($bCollect = True)
 		Return
 	EndIf
 
-	; Avoid Locate - Team AIO Mod++ 
-	If ($g_bAvoidLocate Or $g_bChkOnlyFarm) and $g_bIsReallyOn Then
-		$g_aiLaboratoryPos[0] = -1
-		$g_aiLaboratoryPos[1] = -1
-		SetLog("Avoid Locate Laboratory...", $COLOR_INFO)
-		Return False
-	EndIf
-	
 	SetLog("Locating Laboratory", $COLOR_INFO)
 
 	WinGetAndroidHandle()

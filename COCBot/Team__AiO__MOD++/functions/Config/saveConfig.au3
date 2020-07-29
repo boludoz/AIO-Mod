@@ -63,12 +63,8 @@ Func SaveConfig_MOD_MiscTab()
 		_Ini_Add("MiscTab", "DeployCastleFirst" & $i, $g_bDeployCastleFirst[$i])
 	Next
 	
-	; Save - Setlog limit - Team AIO Mod++
-	_Ini_Add("BotLogLineLimit", "Enable", (GUICtrlRead($g_hChkBotLogLineLimit) = ($GUI_CHECKED) ? (True) : (False) ))
-	_Ini_Add("BotLogLineLimit", "LimitValue", GUICtrlRead($g_hTxtLogLineLimit))
-
 	; Skip first check
-	_Ini_Add("AvoidLocate", "Enable", $g_bAvoidLocate ? 1 : 0)
+	_Ini_Add("Skipfirstcheck", "Enable", $g_bSkipfirstcheck ? 1 : 0)
 
 	; Remove edge obstacles
 	_Ini_Add("MiscTab", "EdgeObstacle", $g_bEdgeObstacle ? 1 : 0)

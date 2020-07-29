@@ -14,11 +14,9 @@
 ; ===============================================================================================================================
 
 Func AddIdleTime()
-	; Avoid Locate - Team AIO Mod++ 
-	If ($g_bAvoidLocate Or $g_bChkOnlyFarm) and $g_bIsReallyOn Then Return
 	If Not $g_bTrainAddRandomDelayEnable Then Return
 
-	Local $iTimeToWait = Random($g_iTrainAddRandomDelayMin, $g_iTrainAddRandomDelayMax, 1)
+	Local $iTimeToWait = Random(_Min($g_iTrainAddRandomDelayMin, $g_iTrainAddRandomDelayMax), _Max($g_iTrainAddRandomDelayMin, $g_iTrainAddRandomDelayMax), 1)
 	SetLog("Waiting, Add random delay of " & $iTimeToWait & " seconds", $COLOR_INFO)
 
 	If _SleepStatus($iTimeToWait * 1000) Then Return

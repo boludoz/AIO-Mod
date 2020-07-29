@@ -110,12 +110,8 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 				GUICtrlSetState($g_hDeployCastleFirst[$i], $g_bDeployCastleFirst[$i] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			Next
 			
-			; Setlog limit
-			GUICtrlSetState($g_hTxtLogLineLimit, ($g_bChkBotLogLineLimit) ? ($GUI_ENABLE) : ($GUI_DISABLE))
-			GUICtrlSetData($g_hTxtLogLineLimit, $g_iTxtLogLineLimit)
-
 			; Skip first check
-			GUICtrlSetState($g_hAvoidLocate, $g_bAvoidLocate ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hSkipfirstcheck, $g_bSkipfirstcheck ? $GUI_CHECKED : $GUI_UNCHECKED)
 			
 			; DeployDelay
 			GUICtrlSetData($g_hDeployDelay[0], $g_iDeployDelay[0])
@@ -207,12 +203,8 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 				$g_bDeployCastleFirst[$i] = (GUICtrlRead($g_hDeployCastleFirst[$i]) = $GUI_CHECKED) ? 1 : 0
 			Next
 			
-			; Setlog limit
-			$g_bChkBotLogLineLimit = (GUICtrlRead($g_hChkBotLogLineLimit) = $GUI_CHECKED) ? (True) : (False)
-			$g_iTxtLogLineLimit = Int(GUICtrlRead($g_hTxtLogLineLimit))
-
 			; Skip first check
-			$g_bAvoidLocate = GUICtrlRead($g_hAvoidLocate) = $GUI_CHECKED
+			$g_bSkipfirstcheck = GUICtrlRead($g_hSkipfirstcheck) = $GUI_CHECKED
 			
 			; Remove edge obstacles
 			$g_bEdgeObstacle = GUICtrlRead($g_hEdgeObstacle) = $GUI_CHECKED

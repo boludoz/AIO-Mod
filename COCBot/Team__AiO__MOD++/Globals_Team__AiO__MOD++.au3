@@ -22,11 +22,6 @@ Global Enum $eIcnModKingGray = 1, $eIcnModKingBlue, $eIcnModKingGreen, $eIcnModK
 		$eIcnModAccountsS, $eIcnModProfilesS, $eIcnModFarmingS, $eIcnMiscMod, $eIcnSuperXP, $eIcnChatActions, $eIcnHumanization, $eIcnAIOMod, $eIcnDebugMod, _
 		$eIcnLabP, $eIcnShop, $eIcnGoldP, $eIcnElixirP, $eIcnDarkP, $eIcnGFTO, $eIcnMisc, $eIcnPrewar
 
-#Region - Setlog limit - Team AIO Mod++
-Global $g_hChkBotLogLineLimit, $g_bChkBotLogLineLimit, _
-$g_hTxtLogLineLimit, $g_iTxtLogLineLimit
-#EndRegion - Setlog limit - Team AIO Mod++
-
 ; Offset village.
 Global $g_aPosSizeVillage = 0
 
@@ -44,7 +39,7 @@ Global $g_bRemainTweak = True
 
 
 ; Skip first check
-Global $g_bAvoidLocate  = False, $g_hAvoidLocate = 0, $g_bIsReallyOn = False
+Global $g_bSkipfirstcheck = False, $g_hSkipfirstcheck
 
 ; Donation records.
 Global $g_iDayLimitTroops = 0, $g_iDayLimitSpells = 0, $g_iDayLimitSieges = 0
@@ -255,10 +250,6 @@ Global $g_bChkCollectMagicItems, $g_bChkCollectFree, _
 $g_bChkBuilderPotion, $g_bChkClockTowerPotion, $g_bChkHeroPotion, $g_bChkLabPotion, $g_bChkPowerPotion, $g_bChkResourcePotion, _
 $g_iComboClockTowerPotion, $g_iComboHeroPotion, $g_iComboPowerPotion, _
 $g_iInputBuilderPotion, $g_iInputLabPotion, $g_iInputGoldItems = 250000, $g_iInputElixirItems = 300000, $g_iInputDarkElixirItems = 1000
-
-#Region - Mod TAB.
-Global $g_hTabMOD = 0
-#EndRegion - Mod TAB.
 
 #Region - Builder Base !!!
 ; Provisional globals BB Machine

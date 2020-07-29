@@ -16,14 +16,6 @@
 Func LocateClanCastle($bCollect = True)
 	Local $stext, $MsgBox, $iSilly = 0, $iStupid = 0, $sErrorText = "", $sInfo
 
-	; Avoid Locate - Team AIO Mod++ 
-	If ($g_bAvoidLocate Or $g_bChkOnlyFarm) and $g_bIsReallyOn Then
-		$g_aiClanCastlePos[0] = -1
-		$g_aiClanCastlePos[1] = -1
-		SetLog("Avoid Locate Clan Castle...", $COLOR_INFO)
-		Return False
-	EndIf
-	
 	SetLog("Locating Clan Castle", $COLOR_INFO)
 
 	WinGetAndroidHandle()

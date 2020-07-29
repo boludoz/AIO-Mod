@@ -23,34 +23,6 @@
 #include "MOD GUI Control - MagicItems.au3"
 #include "BBase\MOD GUI Control Tab - Builder Base.au3"
 
-#Region - Setlog limit - Team AIO Mod++
-Func LimitLines(ByRef $hRichText, $sDelimiter = @CR, $iMaxLength = 200) ;$iMaxLength
-    Local $asText
-    Local $iFirstLineLen
-    Local $iMax
-    Local $i
-    $asText = StringSplit(_GUICtrlRichEdit_GetText($hRichText), $sDelimiter, 2)
-    If UBound($asText) > ($iMaxLength + 1) Then ; $iMaxLength + 1 cause of 1 empty @CR on last text log
-        $iMax = UBound($asText) - ($iMaxLength + 1)
-        ;_SendMessage($hRichText, $WM_SETREDRAW, False, 0) ; disable redraw so logging has no visiual effect
-        For $i = 1 To $iMax
-            $iFirstLineLen = StringInStr(_GUICtrlRichEdit_GetText($hRichText), $sDelimiter)
-            _GUICtrlRichEdit_SetSel($hRichText, 0, $iFirstLineLen)
-            _GUICtrlRichEdit_ReplaceText($hRichText, "")
-        Next
-    EndIf
-EndFunc
-
-Func chkBotLogLineLimit()
-	$g_bChkBotLogLineLimit = (GUICtrlRead($g_hChkBotLogLineLimit) = ($GUI_CHECKED) ? (True) : (False))
-	GUICtrlSetState($g_hTxtLogLineLimit, ($g_bChkBotLogLineLimit) ? ($GUI_ENABLE) : ($GUI_DISABLE))
-EndFunc   ;==>chkBotLogLineLimit
-
-Func txtLogLineLimit()
-	$g_iTxtLogLineLimit = GUICtrlRead($g_hTxtLogLineLimit)
-EndFunc   ;==>txtLogLineLimit
-#EndRegion - Setlog limit - Team AIO Mod++
-
 ; Donation records.
 Func InputRecords()
 		$g_iDiffRestartEvery = $g_iCmbRestartEvery
@@ -69,6 +41,19 @@ EndFunc   ;==>ChkReqCCAlways
 Func ChkReqCCFromChat()
 		$g_bChkReqCCFromChat = (GUICtrlRead($g_hChkReqCCFromChat) = $GUI_CHECKED)
 EndFunc   ;==>ChkReqCCFromChat
+
+; Custom army - Team AiO MOD++
+;Func chkBBCustomArmy()
+;		;$g_bChkBBCustomArmyEnable = (GUICtrlRead($g_hChkBBCustomArmyEnable) = $GUI_CHECKED)
+;
+;		For $i = 0 To UBound($g_hComboTroopBB) - 1
+;			;If $g_bChkBBCustomArmyEnable Then
+;				GUICtrlSetState($g_hComboTroopBB[$i], $GUI_ENABLE)
+;			;Else
+;			;	GUICtrlSetState($g_hComboTroopBB[$i], $GUI_DISABLE)
+;			;EndIf
+;		Next
+;EndFunc   ;==>chkBBCustomArmy
 
 ; Drop trophy - Team AiO MOD++
 Func chkNoDropIfShield()
@@ -91,7 +76,7 @@ EndFunc
 ; Misc tab - Team AiO MOD++
 Func chkDelayMod()
 	; Skip first loop
-	$g_bAvoidLocate = (GUICtrlRead($g_hAvoidLocate) = $GUI_CHECKED)
+	$g_bSkipfirstcheck = (GUICtrlRead($g_hSkipfirstcheck) = $GUI_CHECKED)
 
 	For $i = 0 To UBound($g_hDeployWave) -1
 		$g_bChkEnableRandom[$i] = (GUICtrlRead($g_hChkEnableRandom[$i]) = $GUI_CHECKED)

@@ -54,12 +54,8 @@ Func ReadConfig_MOD_MiscTab()
 		IniReadS($g_bDeployCastleFirst[$i], $g_sProfileConfigPath, "MiscTab", "DeployCastleFirst" & $i, $g_bDeployCastleFirst[$i], "Bool")
 	Next
 	
-	; Read - Setlog limit - Team AIO Mod++
-	IniReadS($g_bChkBotLogLineLimit, $g_sProfileConfigPath, "BotLogLineLimit", "Enable", True, "Bool")
-	IniReadS($g_iTxtLogLineLimit, $g_sProfileConfigPath, "BotLogLineLimit", "LimitValue", "500","Int")
-
 	; Skip first check
-	IniReadS($g_bAvoidLocate, $g_sProfileConfigPath, "MiscTab", "AvoidLocate", $g_bAvoidLocate, "Bool")
+	IniReadS($g_bSkipfirstcheck, $g_sProfileConfigPath, "MiscTab", "Skipfirstcheck", $g_bSkipfirstcheck, "Bool")
 
 	; Remove edge obstacles
 	IniReadS($g_bEdgeObstacle, $g_sProfileConfigPath, "MiscTab", "EdgeObstacle", $g_bEdgeObstacle, "Bool")

@@ -18,14 +18,6 @@ Func LocateTownHall($bLocationOnly = False, $bCollect = True)
 	Local $sMsgBoxText, $MsgBox, $bGotTHLevel, $sLocMsg
 	Local $iStupid = 0, $iSilly = 0, $sErrorText = ""
 
-	; Avoid Locate - Team AIO Mod++ 
-	If ($g_bAvoidLocate Or $g_bChkOnlyFarm) and $g_bIsReallyOn Then
-		$g_aiTownHallPos[0] = -1
-		$g_aiTownHallPos[1] = -1
-		SetLog("Avoid Locate Town Hall...", $COLOR_INFO)
-		Return False
-	EndIf
-	
 	SetLog("Locating Town Hall", $COLOR_INFO)
 
 	WinGetAndroidHandle()
