@@ -190,7 +190,7 @@ Func CreateDonationsControlSubTab()
 	Local $sTxtTip = ""
 	Local $xStart = 30, $yStart = 45
 	$g_hGUI_DonateLimiter = _GUICreate("", $g_iSizeWGrpTab3, $g_iSizeHGrpTab3, $xStart - 32, $yStart - 20, BitOR($WS_CHILD, $WS_TABSTOP), -1, $g_hGUI_DONATE)
-	Local $xStart = 20, $yStart = 20
+	Local $xStart = 5, $yStart = 20
 	Local $x = $xStart, $y = $yStart
 
 	GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "GroupDonationslimiter", "Donations Stats + Limiter"), $x, $y, 436, 22, BitOR($SS_CENTER, $SS_CENTERIMAGE))
@@ -201,11 +201,12 @@ Func CreateDonationsControlSubTab()
 	$y += 35
 
 		For $i = 0 To $eTroopCount - 1 ; Troops
-			If $i >= 12 Then $x = 25
-			_GUICtrlCreateIcon($g_sLibIconPath, $aTroopsIcons[$i], $x + Int($i / 2) * 37, $y + Mod($i, 2) * 60, 32, 32)
-			$g_hLblDayTroop[$aTroopList[$i]] = GUICtrlCreateLabel("0", $x + Int($i / 2) * 37 + 1, $y + Mod($i, 2) * 60 + 34, 30, 20, BitOR($ES_CENTER, $ES_NUMBER))
+			If $i >= 14 Then $x = 25
+			_GUICtrlCreateIcon($g_sLibIconPath, $aTroopsIcons[$i], $x + Int($i / 2) * 33, $y + Mod($i, 2) * 60, 32, 32)
+			$g_hLblDayTroop[$aTroopList[$i]] = GUICtrlCreateLabel("0", $x + Int($i / 2) * 33 + 1, $y + Mod($i, 2) * 60 + 34, 30, 20, BitOR($ES_CENTER, $ES_NUMBER))
 				GUICtrlSetLimit(-1, 3)
 		Next
+		$x = $xStart
 		$y += 115
 
 		GUICtrlCreateLabel("Limit ", $x, $y)
@@ -222,6 +223,7 @@ Func CreateDonationsControlSubTab()
 			$g_hLblDaySpell[$aSpellList[$i]] = GUICtrlCreateLabel("0", $x +  $i * 37, $y + 34, 30, 20, BitOR($ES_CENTER, $ES_NUMBER))
 				GUICtrlSetLimit(-1, 3)
 		Next
+		$x = $xStart
 		$y += 50
 
 		GUICtrlCreateLabel("Limit ", $x, $y)
@@ -237,6 +239,7 @@ Func CreateDonationsControlSubTab()
 			$g_hLblDaySiege[$aSiegeList[$i]] = GUICtrlCreateLabel("0", $x +  $i * 37, $y + 34, 30, 20, BitOR($ES_CENTER, $ES_NUMBER))
 				GUICtrlSetLimit(-1, 3)
 		Next
+		$x = $xStart
 		$y += 50
 
 		GUICtrlCreateLabel("Limit ", $x, $y)
