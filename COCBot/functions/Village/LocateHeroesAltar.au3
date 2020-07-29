@@ -13,6 +13,12 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func LocateQueenAltar($bCollect = True)
+	; Avoid Locate - Team AIO Mod++ 
+	If ($g_bAvoidLocate Or $g_bChkOnlyFarm) and $g_bIsReallyOn Then
+		SetLog("Avoid Locate Queen Altar.", $COLOR_INFO)
+		Return
+	EndIf
+	
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
 	AndroidShield("LocateQueenAltar 1") ; Update shield status due to manual $g_bRunState
@@ -141,6 +147,12 @@ Func _LocateQueenAltar($bCollect = True)
 EndFunc   ;==>_LocateQueenAltar
 
 Func LocateKingAltar($bCollect = True)
+	; Avoid Locate - Team AIO Mod++ 
+	If ($g_bAvoidLocate Or $g_bChkOnlyFarm) and $g_bIsReallyOn Then
+		SetLog("Avoid Locate King Altar.", $COLOR_INFO)
+		Return
+	EndIf
+
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
 	AndroidShield("LocateKingAltar 1") ; Update shield status due to manual $g_bRunState
@@ -268,6 +280,12 @@ Func _LocateKingAltar($bCollect = True)
 EndFunc   ;==>_LocateKingAltar
 
 Func LocateWardenAltar($bCollect = True)
+	; Avoid Locate - Team AIO Mod++ 
+	If ($g_bAvoidLocate Or $g_bChkOnlyFarm) and $g_bIsReallyOn Then
+		SetLog("Avoid Locate Warden Altar.", $COLOR_INFO)
+		Return
+	EndIf
+
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
 	AndroidShield("LocateWardenAltar 1") ; Update shield status due to manual $g_bRunState
@@ -400,6 +418,12 @@ Func _LocateWardenAltar($bCollect = True)
 EndFunc   ;==>_LocateWardenAltar
 
 Func LocateChampionAltar($bCollect = True)
+	; Avoid Locate - Team AIO Mod++ 
+	If ($g_bAvoidLocate Or $g_bChkOnlyFarm) and $g_bIsReallyOn Then
+		SetLog("Avoid Locate Champion Altar.", $COLOR_INFO)
+		Return
+	EndIf
+
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
 	AndroidShield("LocateChampionAltar 1") ; Update shield status due to manual $g_bRunState

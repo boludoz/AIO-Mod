@@ -283,14 +283,14 @@ Func ChkBBRandomAttack()
 		GUICtrlSetState($g_hChkBBGetFromCSV, $GUI_SHOW) ; AIO ++
 		GUICtrlSetPos($g_hChkBBGetFromCSV, 5, 190)
 
-		GUICtrlSetPos($g_hGrpOptionsBB, -1, -1, 200, 165)
+		GUICtrlSetPos($g_hGrpOptionsBB, -1, -1, 200, 145)
 		GUICtrlSetPos($g_hChkBBTrophiesRange, 5, 150)
 		GUICtrlSetPos($g_hTxtBBDropTrophiesMin, 108, 151)
 		GUICtrlSetPos($g_hLblBBDropTrophiesDash, 150, 151 + 2)
 		GUICtrlSetPos($g_hTxtBBDropTrophiesMax, 155, 151)
 		GUICtrlSetPos($g_hChkBBRandomAttack, 5, 170)
 		GUICtrlSetPos($g_hChkBBStopAt3, 5, 130)
-		GUICtrlSetPos($g_hChkBBWaitForMachine, 5, 120 + 100)
+		GUICtrlSetPos($g_hChkBBWaitForMachine, 5, 120 + 90)
 
 		WinMove($g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV, "", 200, 85, 240)
 		GUICtrlSetPos($g_hGrpAttackStyleBB, -1, -1, 233, $g_iSizeHGrpTab4 - 35)

@@ -767,7 +767,7 @@ Func runBot() ;Bot that runs everything in order
 
 			checkMainScreen(False)
 			If $g_bRestart Then ContinueLoop
-			If _Sleep($DELAYRUNBOT3) Then Return
+			If RandomSleep($DELAYRUNBOT3) Then Return
 			VillageReport()
 			CheckStopForWar() ; War Preparation - Team AIO Mod++
 			ProfileSwitch()  ;  Team AIO Mod++
@@ -865,7 +865,7 @@ Func runBot() ;Bot that runs everything in order
 			If IsSearchAttackEnabled() Then ; If attack scheduled has attack disabled now, stop wall upgrades, and attack.
 				Idle()
 				;$g_bFullArmy1 = $g_bFullArmy
-				If _Sleep($DELAYRUNBOT3) Then Return
+				If RandomSleep($DELAYRUNBOT3) Then Return
 				If $g_bRestart = True Then ContinueLoop
 
 				If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
@@ -891,7 +891,7 @@ Func runBot() ;Bot that runs everything in order
 		Else ;When error occours directly goes to attack
 			Local $sRestartText = $g_bIsSearchLimit ? " due search limit" : " after Out of Sync Error: Attack Now"
 			SetLog("Restarted" & $sRestartText, $COLOR_INFO)
-			If _Sleep($DELAYRUNBOT3) Then Return
+			If RandomSleep($DELAYRUNBOT3) Then Return
 			;  OCR read current Village Trophies when OOS restart maybe due PB or else DropTrophy skips one attack cycle after OOS
 			$g_aiCurrentLoot[$eLootTrophy] = Number(getTrophyMainScreen($aTrophies[0], $aTrophies[1]))
 			If $g_bDebugSetlog Then SetDebugLog("Runbot Trophy Count: " & $g_aiCurrentLoot[$eLootTrophy], $COLOR_DEBUG)
@@ -1125,37 +1125,37 @@ Func Attack() ;Selects which algorithm
 	$g_bAttackActive = False
 EndFunc   ;==>Attack
 
-Func _RunFunction($action)
+#Region - Custom - Team AIO Mod++
+Func _RunFunction($sAction)
 	FuncEnter(_RunFunction)
 	; ensure that builder base flag is false
 	$g_bStayOnBuilderBase = False
-	Local $Result = __RunFunction($action)
+	checkMainScreen(False)
+	SetDebugLog("_RunFunction : " & $sAction, $COLOR_ACTION)
+	Local $bResult = __RunFunction($sAction)
+	If RandomSleep(Random($DELAYRESPOND, $DELAYRUNBOT3, 1)) Then Return
 	; ensure that builder base flag is false
 	$g_bStayOnBuilderBase = False
-	Return FuncReturn($Result)
+	Return FuncReturn($bResult)
 EndFunc   ;==>_RunFunction
 
-Func __RunFunction($action)
-	If $g_bDebugSetlog Then SetDebugLog("_RunFunction: " & $action & " BEGIN", $COLOR_DEBUG2)
-	Switch $action
+Func __RunFunction($sAction)
+	If $g_bDebugSetlog Then SetDebugLog("_RunFunction: " & $sAction & " BEGIN", $COLOR_DEBUG2)
+	Switch $sAction
 		Case "Collect"
-			If BitAND(Not BitOR($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
+			If Not ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Or $g_bChkOnlyFarm Then Return
 			Collect()
-			_Sleep($DELAYRUNBOT1)
 		Case "CheckTombs"
-			If BitAND(Not BitOR($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
+			If Not ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Or $g_bChkOnlyFarm Then Return
 			CheckTombs()
-			_Sleep($DELAYRUNBOT3)
 		Case "CleanYard"
-			If BitAND(Not BitOR($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
+			If Not ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Or $g_bChkOnlyFarm Then Return
 			CleanYard()
 		Case "ReplayShare"
-			If BitAND(Not BitOR($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
+			If Not ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Or $g_bChkOnlyFarm Then Return
 			ReplayShare($g_bShareAttackEnableNow)
-			_Sleep($DELAYRUNBOT3)
 		Case "NotifyReport"
 			NotifyReport()
-			_Sleep($DELAYRUNBOT3)
 		Case "DonateCC"
 			If $g_bChkOnlyFarm Then Return ; Team AiO MOD++
 			If $g_iActiveDonate And $g_bChkDonate Then
@@ -1197,76 +1197,59 @@ Func __RunFunction($action)
 			EndIf
 		Case "BoostBarracks"
 			BoostBarracks()
-			_Sleep($DELAYRESPOND)
 		Case "BoostSpellFactory"
 			BoostSpellFactory()
-			_Sleep($DELAYRESPOND)
 		Case "BoostWorkshop"
 			BoostWorkshop()
-			_Sleep($DELAYRESPOND)
 		Case "BoostKing"
 			BoostKing()
-			_Sleep($DELAYRESPOND)
 		Case "BoostQueen"
 			BoostQueen()
-			_Sleep($DELAYRESPOND)
 		Case "BoostWarden"
 			BoostWarden()
-			_Sleep($DELAYRESPOND)
 		Case "BoostChampion"
 			BoostChampion()
-			_Sleep($DELAYRESPOND)
 		Case "BoostEverything"
 			BoostEverything()
-			_Sleep($DELAYRESPOND)
 		Case "DailyChallenge"
 			DailyChallenges()
-			_Sleep($DELAYRUNBOT3)
 		Case "LabCheck"
-			If BitAND(Not BitOR($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
+			If Not ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Or $g_bChkOnlyFarm Then Return
 			LabGuiDisplay()
-			_Sleep($DELAYRUNBOT3)
 		Case "RequestCC"
 			If Not $g_bChkReqCCAlways Then RequestCC() ; Request form chat / on a loop - Team AIO Mod++
-			If Not _Sleep($DELAYRUNBOT1) Then checkMainScreen(False)
+			checkMainScreen(False)
 		Case "Laboratory"
-			If BitAND(Not BitOR($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
+			If Not ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Or $g_bChkOnlyFarm Then Return
 			Laboratory()
-			If Not _Sleep($DELAYRUNBOT3) Then checkMainScreen(False)
+			checkMainScreen(False)
 		Case "UpgradeHeroes"
-			If BitAND(Not BitOR($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
+			If Not ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Or $g_bChkOnlyFarm Then Return
 			UpgradeHeroes()
-			_Sleep($DELAYRUNBOT3)
 		Case "UpgradeBuilding"
-			If BitAND(Not BitOR($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
+			If Not ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Or $g_bChkOnlyFarm Then Return
 			UpgradeBuilding()
-			If _Sleep($DELAYRUNBOT3) Then Return
 			AutoUpgrade()
-			_Sleep($DELAYRUNBOT3)
 		Case "UpgradeWall"
-			If BitAND(Not BitOR($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
+			If Not ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Or $g_bChkOnlyFarm Then Return
 			$g_iNbrOfWallsUpped = 0
 			UpgradeWall()
-			_Sleep($DELAYRUNBOT3)
-			#Region Team AIO Mod++
 		Case "BuilderBase"
-			If BitAND(Not BitOR($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
+			If Not ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Or $g_bChkOnlyFarm Then Return
 			runBuilderBase()
-			_Sleep($DELAYRUNBOT3)
-			#EndRegion Team AIO Mod++
 		Case "CollectFreeMagicItems"
-			If BitAND(Not BitOR($g_iCmbBoostBarracks = 0, $g_bFirstStart), $g_bChkOnlyFarm) Then Return
+			If Not ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Or $g_bChkOnlyFarm Then Return
 			CollectFreeMagicItems()
-			_Sleep($DELAYRUNBOT3)
 		Case "BoostSuperTroop"
 			If $g_iBoostSuperTroopIndex <> -1 Then BoostSuperTroop($g_iBoostSuperTroopIndex)
 		Case ""
 			If $g_bDebugSetlog Then SetDebugLog("Function call doesn't support empty string, please review array size", $COLOR_ERROR)
 		Case Else
-			SetLog("Unknown function call: " & $action, $COLOR_ERROR)
+			SetLog("Unknown function call: " & $sAction, $COLOR_ERROR)
 	EndSwitch
-	If $g_bDebugSetlog Then SetDebugLog("_RunFunction: " & $action & " END", $COLOR_DEBUG2)
+	If $g_bDebugSetlog Then SetDebugLog("_RunFunction: " & $sAction & " END", $COLOR_DEBUG2)
 EndFunc   ;==>__RunFunction
+#EndRegion - Custom - Team AIO Mod++
 
 Func FirstCheck()
 
@@ -1280,7 +1263,7 @@ Func FirstCheck()
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
 
 	; Skip first loop
-	If $g_bSkipfirstcheck Then Return
+	If ($g_bAvoidLocate Or $g_bChkOnlyFarm) Then Return
 
 	If Not $g_bChkOnlyFarm Then
 		$g_bRestart = False
@@ -1297,7 +1280,6 @@ Func FirstCheck()
 		BotHumanization()
 	EndIf
 	#EndRegion - Team AIO MOD++
-
 
 	If Not $g_bRunState Then Return
 

@@ -1146,19 +1146,16 @@ Func BotGuiModeToggle()
 			GUICtrlDelete($g_hTabMain)
 			GUICtrlDelete($g_hTabLog)
 			GUICtrlDelete($g_hTabVillage)
-			GUICtrlDelete($g_hTabBuilderBase) ; BBase - Team AIO Mod++
 			GUICtrlDelete($g_hTabAttack)
-			GUICtrlDelete($g_hTabMOD)
 			GUICtrlDelete($g_hTabBot)
 			GUICtrlDelete($g_hTabAbout)
-
+			
 			GUICtrlDelete($g_hGUI_VILLAGE_TAB)
-			GUICtrlDelete($g_hGUI_BUILDER_BASE_TAB) ; BBase - Team AIO Mod++
 			GUICtrlDelete($g_hGUI_MISC_TAB)
 			GUICtrlDelete($g_hGUI_DONATE_TAB)
 			GUICtrlDelete($g_hGUI_UPGRADE_TAB)
 			GUICtrlDelete($g_hGUI_NOTIFY_TAB)
-
+			
 			GUICtrlDelete($g_hGUI_ATTACK_TAB)
 			GUICtrlDelete($g_hGUI_TRAINARMY_TAB)
 			GUICtrlDelete($g_hGUI_TRAINARMY_ARMY_TAB)
@@ -1167,12 +1164,18 @@ Func BotGuiModeToggle()
 			GUICtrlDelete($g_hGUI_ACTIVEBASE_TAB)
 			GUICtrlDelete($g_hGUI_ATTACKOPTION_TAB)
 			GUICtrlDelete($g_hGUI_STRATEGIES_TAB)
-			GUICtrlDelete($g_hGUI_MOD_TAB)
 			GUICtrlDelete($g_hGUI_BOT_TAB)
 			GUICtrlDelete($g_hGUI_LOG_SA)
-			GUICtrlDelete($g_hGUI_LOG_BB) ; BBase - Team AIO Mod++
 			GUICtrlDelete($g_hGUI_SWITCH_OPTIONS_TAB)
 			GUICtrlDelete($g_hGUI_STATS_TAB)
+			
+			#Region - Team__AiO__MOD
+			GUICtrlDelete($g_hTabBuilderBase)
+			GUICtrlDelete($g_hTabMOD)
+			GUICtrlDelete($g_hGUI_BUILDER_BASE_TAB) ; BBase - Team AIO Mod++
+			GUICtrlDelete($g_hGUI_MOD_TAB) ; Mod - Team AIO Mod++
+			GUICtrlDelete($g_hGUI_LOG_BB) ; BBase - Team AIO Mod++
+			#EndRegion - Team__AiO__MOD
 
 			For $i = $g_hFirstControlToHide To $g_hLastControlToHide
 				GUICtrlDelete($i)
