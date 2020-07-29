@@ -23,7 +23,6 @@ Global $g_hGUI_MOD_TAB = 0, $g_hGUI_MOD_TAB_ITEM1 = 0, $g_hGUI_MOD_TAB_ITEM2 = 0
 #include "MOD GUI Design - GTFO.au3"
 #include "MOD GUI Design - AiO-Debug.au3"
 #include "MOD GUI Design - WarPreparation.au3"
-#include "MOD GUI Design - Builder Base.au3"
 
 Func CreateMODTab()
 
