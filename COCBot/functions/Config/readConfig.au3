@@ -486,11 +486,16 @@ Func ReadConfig_600_6()
 	Local $aDetectDuplicates[$eBBTroopCount]
 	For $i = 0 To $eBBTroopCount - 1
 		IniReadS($g_aiCmbBBDropOrder[$i], $g_sProfileConfigPath, "other", "sBBDropOrderSet" & $i, $g_aiCmbBBDropOrder[$i], "int")
-		; Increase Duplicate item
-		$aDetectDuplicates[$g_aiCmbBBDropOrder[$i]] += 1
-		; Check if Custom Drop Order is True AND
-		; The Current Troop has been set more than once
-		If $g_bBBDropOrderSet = True And $aDetectDuplicates[$g_aiCmbBBDropOrder[$i]] > 1 Then
+		; Check if Drop Order is been set to a valid Troop ID
+		If $g_bBBDropOrderSet = True And $g_aiCmbBBDropOrder[$i] > -1 Then
+			; Increase Duplicate item
+			$aDetectDuplicates[$g_aiCmbBBDropOrder[$i]] += 1
+			; Check if Custom Drop Order is True AND
+			; The Current Troop has been set more than once
+			If $aDetectDuplicates[$g_aiCmbBBDropOrder[$i]] > 1 Then
+				$g_bBBDropOrderSet = False
+			EndIf
+		ElseIf $g_bBBDropOrderSet = True Then
 			$g_bBBDropOrderSet = False
 		EndIf
 	Next
