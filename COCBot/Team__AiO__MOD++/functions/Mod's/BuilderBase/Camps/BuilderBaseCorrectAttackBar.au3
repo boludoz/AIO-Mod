@@ -5,7 +5,7 @@
 ; Parameters ....:
 ; Return values .: None
 ; Author ........: ProMac (03-2018), Fahid.Mahmood
-; Modified ......: Boludoz (12/2018-31/12/2019)
+; Modified ......: Boludoz (12/2018-31/12/2019), Dissociable
 ; Remarks .......: This file is part of MyBot, previously known as Multibot and ClashGameBot. Copyright 2015-2020
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -134,7 +134,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	Next
 	Setlog("Available " & $iCampsQuantities & " Camps.", $COLOR_INFO)
 
-	Local $aCamps[0]
+	Local $aCamps
 
 	; Loop for every line on CSV
 	For $iLine = 0 To UBound($aLines) - 1
@@ -144,8 +144,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 		If $command = "CAMP" Then
 			For $i = 1 To UBound($aSplitLine) - 1
 				If $aSplitLine[$i] = "" Or StringIsSpace($aSplitLine[$i]) Then ExitLoop
-				ReDim $aCamps[UBound($aCamps) + 1]
-				$aCamps[UBound($aCamps) - 1] = StringStripWS($aSplitLine[$i], $STR_STRIPALL)
+				_ArrayAdd($aCamps, TranslateCsvTroopName(StringStripWS($aSplitLine[$i], $STR_STRIPALL)))
 			Next
 			; Select the correct CAMP [cmd line] to use according with the first attack bar detection = how many camps do you have
 			If $iCampsQuantities = UBound($aCamps) Then
@@ -285,3 +284,36 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
         If $aAvailableTroops[$i][0] <> "" Then SetLog("[" & $i + 1 & "] - " & $aAvailableTroops[$i][4] & "x " & FullNametroops($aAvailableTroops[$i][0]), $COLOR_SUCCESS)
     Next
 EndFunc   ;==>BuilderBaseSelectCorrectScript
+
+
+Func TranslateCsvTroopName($sName)
+	SetDebugLog("Translating " & $sName & " From Csv", $COLOR_INFO)
+	Switch ($sName)
+		Case "Arch"
+			Return "Archer"
+		Case "Barb"
+			Return "Barbarian"
+		Case "BabyD"
+			Return "BabyDrag"
+		Case "Minion"
+			Return "Minion"
+		Case "Breaker"
+			Return "WallBreaker"
+		Case "Cannon"
+			Return "CannonCart"
+		Case "Drop"
+			Return "DropShip"
+		Case "Giant"
+			Return "BoxerGiant"
+		Case "Machine"
+			Return "Machine"
+		Case "Witch"
+			Return "Witch"
+		Case "Pekka"
+			Return "SuperPekka"
+		Case "HogG"
+			Return "HogGlider"
+		Case Else
+			Return $sName
+	EndSwitch
+EndFunc
