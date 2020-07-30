@@ -252,7 +252,7 @@ $g_iInputBuilderPotion, $g_iInputLabPotion, $g_iInputGoldItems = 250000, $g_iInp
 
 #Region - Builder Base !!!
 ; Provisional globals BB Machine
-Global $g_aMachineBB[2] = [0, 0], $g_bIsBBMachineD = False, $g_bBBIsFirst = True
+Global $g_aMachineBB[2] = [-1, -1], $g_bIsBBMachineD = False, $g_bBBIsFirst = True
 
 ; Report
 Global $g_iAvailableAttacksBB = 0, $g_iLastDamage = 0
@@ -289,7 +289,7 @@ Global $g_asAttackBarBB2[$eBBTroopCount] = ["Barbarian", "Archer", "BoxerGiant",
 Global Const $g_asBBTroopShortNames[$eBBTroopCount] = ["Barbarian", "Archer", "BoxerGiant", "Minion", "WallBreaker", "BabyDrag", "CannonCart", "Witch", "DropShip", "SuperPekka", "HogGlider", "Machine"]
 
 Global $g_bIsMachinePresent = False
-Global $g_iBBMachAbilityTime = 0 ; time between abilities
+Global $g_iBBMachAbilityLastActivatedTime = -1 ; time between abilities
 
 ; BB Drop Order
 Global $g_hBtnBBDropOrder = 0

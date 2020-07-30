@@ -115,13 +115,18 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 									If RandomSleep($g_iBBSameTroopDelay) Then Return
 								Next
 							EndIf
-						Else
-							; The Slot is a Battle Machine!
+						ElseIf $g_bIsBBMachineD = False Then
+							; The Slot is a Battle Machine and we have not Deployed Battle Machine yet!
+							; Select the Battle Machine
 							Click($aBBAttackBar[$j][1], $aBBAttackBar[$j][2])
 							If RandomSleep($g_iBBSameTroopDelay) Then Return
+							; Pick a random point in the Edge
 							Local $vDP = Random(0, UBound($aVar) - 1)
+							; Drop the Battle Machine
 							PureClick($aVar[$vDP][0], $aVar[$vDP][1])
+							; Set The Battle Machine Slot Coordinates in Attack Bar
 							Global $g_aMachineBB[2] = [$aBBAttackBar[$j][1], $aBBAttackBar[$j][2]]
+							; Set the Boolean To True to Say Yeah! It's Deployed!
 							$g_bIsBBMachineD = True
 						EndIf
 
@@ -152,16 +157,26 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 						For $iAmount = 0 To $aBBAttackBar[$i][4]
 							Local $vDP = Random(0, UBound($aVar) - 1)
 							PureClick($aVar[$vDP][0], $aVar[$vDP][1])
-							If TriggerMachineAbility() Then PureClick($aBBAttackBar[$i][1] - Random(0, 5, 1), $aBBAttackBar[$i][2] - Random(0, 5, 1))     ; select troop
-							If RandomSleep($g_iBBSameTroopDelay) Then Return     ; slow down selecting then dropping troops
+							If TriggerMachineAbility() Then
+								; Battle Machine Ability Trigged, Then we have to reselect the Slot we were in.
+								PureClick($aBBAttackBar[$j][1] - Random(0, 5, 1), $aBBAttackBar[$j][2] - Random(0, 5, 1))
+							EndIf
+							; Sleep as much as the user wants for Same Troop Delay
+							If RandomSleep($g_iBBSameTroopDelay) Then Return
 						Next
 					EndIf
-				Else
-					Click($aBBAttackBar[$i][1], $aBBAttackBar[$i][2])
+				ElseIf $g_bIsBBMachineD = False Then
+					; The Slot is a Battle Machine and we have not Deployed Battle Machine yet!
+					; Select the Battle Machine
+					Click($aBBAttackBar[$j][1], $aBBAttackBar[$j][2])
 					If RandomSleep($g_iBBSameTroopDelay) Then Return
+					; Pick a random point in the Edge
 					Local $vDP = Random(0, UBound($aVar) - 1)
+					; Drop the Battle Machine
 					PureClick($aVar[$vDP][0], $aVar[$vDP][1])
-					Global $g_aMachineBB[2] = [$aBBAttackBar[$i][1], $aBBAttackBar[$i][2]]
+					; Set The Battle Machine Slot Coordinates in Attack Bar
+					Global $g_aMachineBB[2] = [$aBBAttackBar[$j][1], $aBBAttackBar[$j][2]]
+					; Set the Boolean To True to Say Yeah! It's Deployed!
 					$g_bIsBBMachineD = True
 				EndIf
 
