@@ -402,7 +402,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 				GUICtrlSetState($g_hBtnBBRemoveDropOrder, $GUI_ENABLE)
 				#Region - Custom BB Army - Team AIO Mod++
 				;Local $asBBDropOrder = StringSplit($g_sBBDropOrder, "|")
-				For $i=0 To $g_iBBTroopCount - 1
+				For $i=0 To $eBBTroopCount - 1
 					_GUICtrlComboBox_SetCurSel($g_ahCmbBBDropOrder[$i], $g_aiCmbBBDropOrder[$i])
 					_GUICtrlSetImage($g_sIcnBBOrder[$i], $g_sLibIconPath, $g_avStarLabTroops[$g_aiCmbBBDropOrder[$i]+1][4])
 				Next
@@ -479,7 +479,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bChkBBWaitForMachine = (GUICtrlRead($g_hChkBBWaitForMachine) = $GUI_CHECKED)
 			
 			#Region - Custom BB Army - Team AIO Mod++
-			For $i=0 To $g_iBBTroopCount - 1
+			For $i=0 To $eBBTroopCount - 1
 				$g_aiCmbBBDropOrder[$i] = Number(_GUICtrlComboBox_GetCurSel($g_ahCmbBBDropOrder[$i]))
 			Next
 			#EndRegion - Custom BB Army - Team AIO Mod++

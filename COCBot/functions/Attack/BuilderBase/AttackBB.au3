@@ -83,47 +83,67 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 	; Deploy all troops
 	Local $iLoopControl = 0, $iUBound1 = UBound($aBBAttackBar)
 	SetLog($g_bBBDropOrderSet = True ? "Deploying Troops in Custom Order." : "Deploying Troops in Order of Attack Bar.", $COLOR_BLUE)
+	; Loop until nothing has left in Attack Bar
 	Do
 		Local $iNumSlots = UBound($aBBAttackBar, 1)
 		If $g_bBBDropOrderSet = True Then
-			;		Local $asBBDropOrder = StringSplit($g_sBBDropOrder, "|") ; Custom BB Army - Team AIO Mod++
-			For $i = 0 To UBound($g_aiCmbBBDropOrder) - 1 ; loop through each name in the drop order
-				Local $j = 0, $bDone = 0
-				While $j < $iNumSlots And Not $bDone
-						If $aBBAttackBar[$j][0] = $g_asAttackBarBB2[Number($g_aiCmbBBDropOrder[$i])] Then ; Custom BB Army - Team AIO Mod++
-							If Not ($aBBAttackBar[$j][0] == "Machine") Then
-								SetLog("Deploying " & $aBBAttackBar[$j][0] & " x" & String($aBBAttackBar[$j][4]), $COLOR_ACTION)
-								PureClick($aBBAttackBar[$j][1] - Random(0, 5, 1), $aBBAttackBar[$j][2] - Random(0, 5, 1)) ; select troop
-								If $aBBAttackBar[$j][4] <> 0 Then
-									For $iAmount = 0 To $aBBAttackBar[$j][4]
-										Local $vDP = Random(0, UBound($aVar) - 1)
-										PureClick($aVar[$vDP][0], $aVar[$vDP][1])
-										If TriggerMachineAbility() Then PureClick($aBBAttackBar[$j][1] - Random(0, 5, 1), $aBBAttackBar[$j][2] - Random(0, 5, 1)) ; select troop
-										If RandomSleep($g_iBBSameTroopDelay) Then Return ; slow down selecting then dropping troops
-									Next
-								EndIf
-							Else
-								Click($aBBAttackBar[$j][1], $aBBAttackBar[$j][2])
-								If RandomSleep($g_iBBSameTroopDelay) Then Return
-								Local $vDP = Random(0, UBound($aVar) - 1)
-								PureClick($aVar[$vDP][0], $aVar[$vDP][1])
-								Global $g_aMachineBB[2] = [$aBBAttackBar[$j][1], $aBBAttackBar[$j][2]]
-								$g_bIsBBMachineD = True
+			; Dropping using Customer Order!
+			; Loop through each name in the drop order
+			For $i = 0 To UBound($g_aiCmbBBDropOrder) - 1
+				; There might be several slots containing same Troop, so even here we should make another loop
+				For $j = 0 To $iNumSlots - 1
+					; If The Troop name in Slot were the same as Troop name in Current Drop Order index
+					If $aBBAttackBar[$j][0] = $g_asAttackBarBB2[Number($g_aiCmbBBDropOrder[$i])] Then ; Custom BB Army - Team AIO Mod++
+						; Increase Total Dropped so at the end we can see if it hasn't dropped any, exit the For loop
+						If Not ($aBBAttackBar[$j][0] == "Machine") Then
+							; The Slot is not Battle Machine, is just a simple troop
+							SetLog("Deploying " & $aBBAttackBar[$j][0] & " x" & String($aBBAttackBar[$j][4]), $COLOR_ACTION)
+							 ; select troop
+							PureClick($aBBAttackBar[$j][1] - Random(0, 5, 1), $aBBAttackBar[$j][2] - Random(0, 5, 1))
+							; If the Quantity of the Slot is more than Zero, Start Dropping the Slot
+							If $aBBAttackBar[$j][4] > 0 Then
+								For $iAmount = 1 To $aBBAttackBar[$j][4]
+									Local $vDP = Random(0, UBound($aVar) - 1)
+									; Drop
+									PureClick($aVar[$vDP][0], $aVar[$vDP][1])
+									; Check for Battle Machine Ability
+									If TriggerMachineAbility() Then
+										; Battle Machine Ability Trigged, Then we have to reselect the Slot we were in.
+										PureClick($aBBAttackBar[$j][1] - Random(0, 5, 1), $aBBAttackBar[$j][2] - Random(0, 5, 1))
+									EndIf
+									; Sleep as much as the user wants for Same Troop Delay
+									If RandomSleep($g_iBBSameTroopDelay) Then Return
+								Next
 							EndIf
+						Else
+							; The Slot is a Battle Machine!
+							Click($aBBAttackBar[$j][1], $aBBAttackBar[$j][2])
+							If RandomSleep($g_iBBSameTroopDelay) Then Return
+							Local $vDP = Random(0, UBound($aVar) - 1)
+							PureClick($aVar[$vDP][0], $aVar[$vDP][1])
+							Global $g_aMachineBB[2] = [$aBBAttackBar[$j][1], $aBBAttackBar[$j][2]]
+							$g_bIsBBMachineD = True
+						EndIf
 
 						;---------------------------
-						If $j = $iNumSlots - 1 Or $aBBAttackBar[$j][0] <> $aBBAttackBar[$j + 1][0] Then
-							$bDone = True
-							If RandomSleep($g_iBBNextTroopDelay) Then ; wait before next troop
-								If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Enabled")
-								Return
+						; If the Attack Bar Array has one more index that can be checked, Then Check if the Current Slot troop is the same as the next slot
+						; If not the same, Add a Random Delay according to Next Troop delay in settings
+						If UBound($aBBAttackBar) > $j + 1 Then
+							If $aBBAttackBar[$j][0] <> $aBBAttackBar[$j + 1][0] Then
+								; The next Slot has a different troop, Here we Sleep as set in Next Troop delay settings
+								If RandomSleep($g_iBBNextTroopDelay) Then ; wait before next troop
+									If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Enabled")
+									Return
+								EndIf
+								; Now we exit the Slot Loop for the Troop Order, as the next slot has a different troop
+								ExitLoop
 							EndIf
 						EndIf
 					EndIf
-					$j += 1
-				WEnd
-			Next
+				Next ; Slot Loop
+			Next ; Custom Drop Order Loop
 		Else
+			; No Custom Drop Order has been set!
 			For $i = 0 To $iNumSlots - 1
 				If Not ($aBBAttackBar[$i][0] == "Machine") Then
 					SetLog("Deploying " & $aBBAttackBar[$i][0] & " x" & String($aBBAttackBar[$i][4]), $COLOR_ACTION)
@@ -166,7 +186,7 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 		If UBound($aBBAttackBar) = $iUBound1 Then $iLoopControl += 1
 		If ($iLoopControl > 3) Then ExitLoop
 		$iUBound1 = UBound($aBBAttackBar)
-
+		
 	Until Not IsArray($aBBAttackBar)
 	SetLog("All Troops Deployed", $COLOR_SUCCESS)
 

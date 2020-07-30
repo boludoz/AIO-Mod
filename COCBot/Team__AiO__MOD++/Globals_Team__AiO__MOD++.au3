@@ -67,7 +67,6 @@ Global $g_hGUI_BBDropOrder = 0
 Global $g_hChkBBCustomDropOrderEnable = 0
 Global $g_hBtnBBDropOrderSet = 0, $g_hBtnBBRemoveDropOrder = 0, $g_hBtnBBClose = 0
 Global $g_bBBDropOrderSet = False
-Global Const $g_iBBTroopCount = 12
 
 ;CustomArmy
 Global $g_iCmbCampsBB[6] = [0, 0, 0, 0, 0, 0]

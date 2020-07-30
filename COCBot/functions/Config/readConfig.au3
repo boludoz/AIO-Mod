@@ -480,10 +480,19 @@ Func ReadConfig_600_6()
 	IniReadS($g_iBBSameTroopDelay, $g_sProfileConfigPath, "other", "iBBSameTroopDelay", $g_iBBSameTroopDelayDefault, "int")
 
 	; Builder Base Drop Order
-	IniReadS($g_bBBDropOrderSet, $g_sProfileConfigPath, "other", "bBBDropOrderSet", False, "Bool")
+	;IniReadS($g_bBBDropOrderSet, $g_sProfileConfigPath, "other", "bBBDropOrderSet", False, "Bool")
 	#Region - Custom BB Army - Team AIO Mod++
-	For $i = 0 To $g_iBBTroopCount - 1
+	$g_bBBDropOrderSet = True
+	Local $aDetectDuplicates[$eBBTroopCount]
+	For $i = 0 To $eBBTroopCount - 1
 		IniReadS($g_aiCmbBBDropOrder[$i], $g_sProfileConfigPath, "other", "sBBDropOrderSet" & $i, $g_aiCmbBBDropOrder[$i], "int")
+		; Increase Duplicate item
+		$aDetectDuplicates[$g_aiCmbBBDropOrder[$i]] += 1
+		; Check if Custom Drop Order is True AND
+		; The Current Troop has been set more than once
+		If $g_bBBDropOrderSet = True And $aDetectDuplicates[$g_aiCmbBBDropOrder[$i]] > 1 Then
+			$g_bBBDropOrderSet = False
+		EndIf
 	Next
 	#EndRegion - Custom BB Army - Team AIO Mod++
 
