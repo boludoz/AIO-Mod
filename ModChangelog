@@ -7,6 +7,7 @@
 	**v4.1.2** 
 		- New: Dissociable.OCR - Faster text recognition system available for non-official developers too.
 		- Fix: Builder Base CSV Attack Changes All Camps to Barbarian
+		- Fix: Builder Base In-Attack Camp Switching is now Smarter, Can i call it AI LOL? No more mistakes on changing some Camps then fixing.
 		- Fix: Builder Base Standard Attack Loops through Barbarian several times.
 		- Fix: Builder Base Machine Ability.
 		- Fix: Drop Trophies no more clicks on Potion Buttons (Official version issue)
