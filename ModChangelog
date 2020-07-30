@@ -5,13 +5,14 @@
 
                     Based on MyBot.run v7.8.4 SP1.
 	**v4.1.2** 
-		- Loot cart fixed.
-		- New OCR System (@Dissociable).
-		- Loot cart fixed.
-		- Drop trophies fixed.
-		- Only farm/avoid locate buildings fixed.
-		- No league fixed.
-		- War preparation fixed.
+		- New: Dissociable.OCR - Faster text recognition system available for non-official developers too.
+		- Fix: Builder Base Standard Attack Loops through Barbarian several times.
+		- Fix: Builder Base Machine Ability.
+		- Fix: Drop Trophies no more clicks on Potion Buttons (Official version issue)
+		- Fix: Collect Loot Cart
+		- Fix: Only Farm/Avoid locate buildings.
+		- Fix: No League Search.
+		- Fix: War preparation
 		
 	**v4.1.1** 
 		» New troop :

@@ -29,6 +29,7 @@ Func CreateBuilderBaseTab()
 	GUICtrlSetState(-1, $GUI_UNCHECKED)
 	GUICtrlSetOnEvent(-1, "chkBuilderAttack")
 	CreateAttackPlanBuilderBaseSubTab()
+	$g_hGUI_LOG_BB = _GUICreate("", 310, 225, 130, 170, BitOR($WS_CHILD, 0), -1, $g_hGUI_BUILDER_BASE)
 	;creating subchilds first!
 	GUISwitch($g_hGUI_BUILDER_BASE)
 	$g_hGUI_BUILDER_BASE_TAB = GUICtrlCreateTab(0, 0, $g_iSizeWGrpTab1, $g_iSizeHGrpTab1, BitOR($TCS_MULTILINE, $TCS_RIGHTJUSTIFY))
@@ -48,11 +49,6 @@ Func CreateBuilderBaseTab()
 			  GetTranslatedFileIni("MBR Main GUI", "disabled_Tab_006_STab_02_STab_Info_02", -1), 10, 30, $_GUI_MAIN_WIDTH - 40, 50)
 	GUICtrlSetState(-1, $GUI_HIDE)
 	
-
-
-	
-	
-	$g_hGUI_LOG_BB = _GUICreate("", 310, 225, 130, 170, BitOR($WS_CHILD, 0), -1, $g_hGUI_BUILDER_BASE)
 	CreateBBAttackLog()
 
 	GUICtrlCreateTabItem("")
