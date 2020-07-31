@@ -103,9 +103,8 @@ Global Const $g_sImgVersusWindow = $g_sModImageLocation & "\BuildersBase\Attack\
 Global Const $g_sImgCloudSearch = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\Clouds\"
 
 ; Report Window : Victory | Draw | Defeat
-Global Const $g_sImgReportWaitBB = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\Report\Waiting"
-Global Const $g_sImgReportFinishedBB = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\Report\Replay"
-Global Const $g_sImgReportResultBB = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\Report\Result"
+Global Const $g_sImgReportWaitBB = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\Report\Waiting\"
+Global Const $g_sImgReportFinishedBB = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\Report\Thr\"
 #EndRegion Builder Base
 
 #Region Builder Base Walls Upgrade

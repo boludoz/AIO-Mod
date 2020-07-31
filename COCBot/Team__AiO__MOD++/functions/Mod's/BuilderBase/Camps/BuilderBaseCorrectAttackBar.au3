@@ -181,7 +181,6 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	
 	For $i = 0 To UBound($aAvailableTroops) -1
 		$aNewAvailableTroops[$i][0] = $aAvailableTroops[$i][0]
-		
 		$aNewAvailableTroops[$i][1] = 0
 		
 		For $i2 = 0 To UBound($g_asBBTroopShortNames) -1
@@ -190,7 +189,6 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 				ContinueLoop 2
 			EndIf
 		Next
-		
 	Next
 
 	If $g_bDebugSetlog Then SetLog(_ArrayToString($aNewAvailableTroops, "-", -1, -1, "|", -1, -1))
@@ -222,6 +220,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 		EndIF
 		$bWaschanged = True
 		Local $sMissingCamp = GetAMissingCamp($aNewAvailableTroopsOneD, $aCamps)
+		If $aNewAvailableTroops[$aWrongCamps[0]][0] = "Machine" Then ExitLoop
 		SetLog("Incorrect troop On Camp " & $aWrongCamps[0] + 1 & " - " & $aNewAvailableTroops[$aWrongCamps[0]][0] & " -> " & $sMissingCamp)
 		SetDebugLog("Click Switch Button " & $aWrongCamps[0], $COLOR_INFO)
 		Click($aSwicthBtn[$aWrongCamps[0]][1] + Random(2, 10, 1), $aSwicthBtn[$aWrongCamps[0]][2] + Random(2, 10, 1))

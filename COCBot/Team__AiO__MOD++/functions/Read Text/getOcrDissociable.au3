@@ -71,33 +71,46 @@ Func SpecialOCRCut($sBundle, $iX_start, $iY_start, $iWidth, $iHeight, $bRemoveSp
 	Return StringReplace(getOcrAndCaptureDOCR($sBundle, $iX_start, $iY_start, $iWidth, $iHeight, $bRemoveSpace, $bForceCaptureRegion), "#", "")
 EndFunc   ;==>getBuilders
 
-Func getOcrAndCaptureDOCR($sBundle, $iX_start, $iY_start, $iWidth, $iHeight, $bRemoveSpace = Default, $bForceCaptureRegion = Default)
+Func getOcrAndCaptureDOCR($sBundle, $iX_start = 0, $iY_start = 0, $iWidth = $g_iGAME_WIDTH, $iHeight = $g_iGAME_HEIGHT, $bRemoveSpace = False, $vCapture = True, $bArrayMode = False)
+	;	getOcrAndCaptureDOCR($g_sImgReportResultBB, Default, Default, Default, Default, Default, False, True)
+	If $iX_start = Default Then $iX_start = 0
+	If $iY_start = Default Then $iY_start = 0
+	If $iWidth = Default Then $iWidth = $g_iGAME_WIDTH
+	If $iHeight = Default Then $iHeight = $g_iGAME_HEIGHT
 	If $bRemoveSpace = Default Then $bRemoveSpace = False
-	If $bForceCaptureRegion = Default Then $bForceCaptureRegion = $g_bOcrForceCaptureRegion
-	Static $_hHBitmap = 0
-	If $bForceCaptureRegion = True Then
-		_CaptureRegion2($iX_start, $iY_start, $iX_start + $iWidth, $iY_start + $iHeight)
-	Else
-		$_hHBitmap = GetHHBitmapArea($g_hHBitmap2, $iX_start, $iY_start, $iX_start + $iWidth, $iY_start + $iHeight)
+	If $vCapture = Default Then $vCapture = $g_bOcrForceCaptureRegion
+	If $bArrayMode = Default Then $bArrayMode = False
+	
+	Local $_hHBitmap = 0
+	
+	If IsBool($vCapture) Then 
+		If $vCapture = True Then
+			_CaptureRegion2()
+			$_hHBitmap = GetHHBitmapArea($g_hHBitmap2, $iX_start, $iY_start, $iX_start + $iWidth, $iY_start + $iHeight)
+		Else
+			If Not IsPtr($g_hHBitmap2) Then 
+				SetLog("getOcrAndCaptureDOCR | Give a capture. (0x1).", $COLOR_ERROR)
+				Return -1
+			EndIf
+			$_hHBitmap = GetHHBitmapArea($g_hHBitmap2, $iX_start, $iY_start, $iX_start + $iWidth, $iY_start + $iHeight)
+		EndIf
+	ElseIf IsPtr($vCapture) Then
+		$_hHBitmap = GetHHBitmapArea($vCapture, $iX_start, $iY_start, $iX_start + $iWidth, $iY_start + $iHeight)
 	EndIf
-    ;If $g_bDebugOCR = True Then SaveDebugImage("OCRDissociable", $_hHBitmap)
-	Local $aResult
-	If $_hHBitmap <> 0 Then
-		$aResult = getOcrDOCR($_hHBitmap, $sBundle)
-	Else
-		$aResult = getOcrDOCR($g_hHBitmap2, $sBundle)
+	
+	Local $aResult = getOcrDOCR($_hHBitmap, $sBundle), $vResult = -1
+	If Not $bArrayMode Then
+		If ($bRemoveSpace) Then
+			Local $vResult = StringReplace($aResult, "|", "")
+			$vResult = StringStripWS($aResult, $STR_STRIPALL)
+		Else
+			Local $vResult = StringStripWS($aResult, BitOR($STR_STRIPLEADING, $STR_STRIPTRAILING, $STR_STRIPSPACES))
+		EndIf
+	ElseIf ($bArrayMode) Then
+		$vResult = StringSplit($aResult, '|', $STR_NOCOUNT)
 	EndIf
-	If $_hHBitmap <> 0 Then
-		GdiDeleteHBitmap($_hHBitmap)
-	EndIf
-	$_hHBitmap = 0
-	If ($bRemoveSpace) Then
-		$aResult = StringReplace($aResult, "|", "")
-		$aResult = StringStripWS($aResult, $STR_STRIPALL)
-	Else
-		$aResult = StringStripWS($aResult, BitOR($STR_STRIPLEADING, $STR_STRIPTRAILING, $STR_STRIPSPACES))
-	EndIf
-	Return $aResult
+	
+	Return $vResult
 EndFunc   ;==>getOcrAndCaptureDOCR
 
 Func getOcrDOCR(ByRef Const $_hHBitmap, $sBundle)
@@ -137,3 +150,5 @@ Func getOcrDOCR(ByRef Const $_hHBitmap, $sBundle)
 	EndIf
 	Return $aResult
 EndFunc   ;==>getOcrDOCR
+
+

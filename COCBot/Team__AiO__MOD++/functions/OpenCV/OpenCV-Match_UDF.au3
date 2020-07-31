@@ -30,16 +30,30 @@ EndFunc
 ; Related .......: https://www.autoitscript.com/forum/topic/160732-opencv-udf/
 ; Credits .....: @mylise 
 ; ===============================================================================================================================
-Func _MatchPicture($sDir, $iLeft = 0, $iTop = 0, $iRight = $g_iGAME_WIDTH, $iBottom = $g_iGAME_HEIGHT, $iThresholdDefa = 0.8, $bCaptureRegion = True)
+Func _MatchPicture($sDir, $iLeft = 0, $iTop = 0, $iRight = $g_iGAME_WIDTH, $iBottom = $g_iGAME_HEIGHT, $vCapture = True, $iThresholdDefa = 0.8)
 	Local $Bitmap = 0
 	Local $aResult[0][4]
 	Local $Threshold = 0.8
-	
 	;Performance Counters
 	Local $Perf = TimerInit()
 
 	;Capature Screen / Load as Main image
-	If $bCaptureRegion Then _CaptureRegion2($iLeft, $iTop, $iRight, $iBottom)
+	Local $hHBit = 0
+	
+	If IsBool($vCapture) Then 
+		If $vCapture = True Then
+			_CaptureRegion2()
+			$hHBit = GetHHBitmapArea($g_hHBitmap2, $iLeft, $iTop, $iRight, $iBottom)
+		Else
+			If Not IsPtr($g_hHBitmap2) Then 
+				SetLog("getOcrAndCaptureDOCR | Give a capture. (0x1).", $COLOR_ERROR)
+				Return -1
+			EndIf
+			$hHBit = GetHHBitmapArea($g_hHBitmap2, $iLeft, $iTop, $iRight, $iBottom)
+		EndIf
+	ElseIf IsPtr($vCapture) Then
+		$hHBit = GetHHBitmapArea($vCapture, $iLeft, $iTop, $iRight, $iBottom)
+	EndIf
 	
 	Local $asImageToUse = _FileListToArray($sDir, "*.png", $FLTA_FILES, True)
 	Local $asImageToReturn = _FileListToArray($sDir, "*.png", $FLTA_FILES, False)
@@ -52,8 +66,8 @@ Func _MatchPicture($sDir, $iLeft = 0, $iTop = 0, $iRight = $g_iGAME_WIDTH, $iBot
 		While 1
 			If $iOld <> $i Then
 				$iOld = $i
-				Local $fBitmap = GetHHBitmapArea($g_hHBitmap2)
-				Local $Bitmap = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
+				Local $fBitmap = GetHHBitmapArea($hHBit)
+				Local $Bitmap = _GDIPlus_BitmapCreateFromHBITMAP($fBitmap)
 			EndIf
 		
 			;Load Match Image
@@ -103,7 +117,7 @@ Func _MatchPicture($sDir, $iLeft = 0, $iTop = 0, $iRight = $g_iGAME_WIDTH, $iBot
 					Local $hBrush = _GDIPlus_BrushCreateSolid(0xFF00FF26)
 					_GDIPlus_GraphicsFillRect($hGraphic, $Coordinates[0], $Coordinates[1], $Coordinates[2], $Coordinates[3], $hBrush)
 					Local $iLevel = (UBound($aImgT)-1 > 1) ? (Number($aImgT[2])) : (0)
-					Local $aTemp[1][4] = [[$asImageToReturn[$i], $Coordinates[0] + $iLeft, $Coordinates[1] + $iTop, $iLevel]]
+					Local $aTemp[1][4] = [[$aImgT[0], $Coordinates[0] + $iLeft, $Coordinates[1] + $iTop, $iLevel]]
 					_ArrayAdd($aResult, $aTemp)
 				Else 
 					ExitLoop
@@ -112,7 +126,7 @@ Func _MatchPicture($sDir, $iLeft = 0, $iTop = 0, $iRight = $g_iGAME_WIDTH, $iBot
 	Next
 	
 	If (UBound($aResult) > 0) Then
-		If ($g_bDebugImageSave) Then ; Discard Deploy Points Touch much text on image
+		If ($g_bDebugImageSave) Then
 
 			Local $sSubDir = $g_sProfileTempDebugPath & "_MatchPicture"
 
@@ -120,7 +134,7 @@ Func _MatchPicture($sDir, $iLeft = 0, $iTop = 0, $iRight = $g_iGAME_WIDTH, $iBot
 
 			Local $sDate = @YEAR & "-" & @MON & "-" & @MDAY, $sTime = @HOUR & "." & @MIN & "." & @SEC
 			Local $sDebugImageName = String($sDate & "_" & $sTime & "_.png")
-			Local $hEditedImage = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
+			Local $hEditedImage = _GDIPlus_BitmapCreateFromHBITMAP($hHBit)
 			Local $hGraphic = _GDIPlus_ImageGetGraphicsContext($hEditedImage)
 			Local $hPenRED = _GDIPlus_PenCreate(0xFFFF0000, 3)
 
