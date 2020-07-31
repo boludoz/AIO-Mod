@@ -22,6 +22,11 @@ Global Enum $eIcnModKingGray = 1, $eIcnModKingBlue, $eIcnModKingGreen, $eIcnModK
 		$eIcnModAccountsS, $eIcnModProfilesS, $eIcnModFarmingS, $eIcnMiscMod, $eIcnSuperXP, $eIcnChatActions, $eIcnHumanization, $eIcnAIOMod, $eIcnDebugMod, _
 		$eIcnLabP, $eIcnShop, $eIcnGoldP, $eIcnElixirP, $eIcnDarkP, $eIcnGFTO, $eIcnMisc, $eIcnPrewar
 
+#Region - Setlog limit - Team AIO Mod++
+Global $g_hChkBotLogLineLimit, $g_bChkBotLogLineLimit, _
+$g_hTxtLogLineLimit, $g_iTxtLogLineLimit
+#EndRegion - Setlog limit - Team AIO Mod++
+
 ; Offset village.
 Global $g_aPosSizeVillage = 0
 
@@ -39,7 +44,7 @@ Global $g_bRemainTweak = True
 
 
 ; Skip first check
-Global $g_bSkipfirstcheck = False, $g_hSkipfirstcheck
+Global $g_bAvoidLocate  = False, $g_hAvoidLocate = 0, $g_bIsReallyOn = False
 
 ; Donation records.
 Global $g_iDayLimitTroops = 0, $g_iDayLimitSpells = 0, $g_iDayLimitSieges = 0

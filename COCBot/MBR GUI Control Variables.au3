@@ -272,18 +272,11 @@ Func InitializeControlVariables()
 
 	$oAlwaysEnabledControls($g_hBtnMakeScreenshot) = 1
 	$oAlwaysEnabledControls($g_hDivider) = 1
-
-	$oAlwaysEnabledControls($g_hTabMain) = 1
-	$oAlwaysEnabledControls($g_hTabLog) = 1
-	$oAlwaysEnabledControls($g_hTabVillage) = 1
-	$oAlwaysEnabledControls($g_hTabAttack) = 1
-	$oAlwaysEnabledControls($g_hTabBot) = 1
-	$oAlwaysEnabledControls($g_hTabAbout) = 1
-	#Region AiO MOD++
-	$oAlwaysEnabledControls($g_hTabMOD) = 1 
-	$oAlwaysEnabledControls($g_hGUI_BUILDER_BASE) = 1 
-	#EndRegion
-
+	
+	#cs - Custom - Team AIO Mod++
+	...
+	#ce - Custom - Team AIO Mod++
+	
 	For $i in $aTabControlsVillage
 		$oAlwaysEnabledControls($i) = 1
 	Next

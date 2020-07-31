@@ -15,11 +15,11 @@
 
 Func ReadClanChat()
 	Click(20, 380 + $g_iMidOffsetY) ; open chat
-	randomSleep(3000)
+	If randomSleep(3000) Then Return
 
 	If ChatOpen() Then
 		Click(230, 20) ; go to clan chat
-		randomSleep(1500)
+		If randomSleep(1500) Then Return
 		If Not IsClanChat() Then SetLog("Warning, We Will Scroll Global Chat ...", $COLOR_WARNING) ;=> Note: Global Chat has been Removed
 		ClickIUnderstandIfExist()
 		Local $MaxScroll = Random(0, 3, 1)
@@ -29,7 +29,7 @@ Func ReadClanChat()
 			Local $yStart = Random(110 - 10, 110 + 10, 1)
 			Local $yEnd = Random(570 - 10, 570 + 10, 1)
 			ClickDrag($x, $yStart, $x, $yEnd) ; scroll the chat
-			randomSleep(10000, 3000)
+			If randomSleep(10000, 3000) Then Return
 		Next
 		Click(330, 380 + $g_iMidOffsetY) ; close chat
 	Else
@@ -39,11 +39,11 @@ EndFunc   ;==>ReadClanChat
 
 Func ReadGlobalChat()
 	Click(20, 380 + $g_iMidOffsetY) ; open chat
-	randomSleep(3000)
+	If randomSleep(3000) Then Return
 
 	If ChatOpen() Then
 		Click(80, 20) ; go to global chat
-		randomSleep(1500)
+		If randomSleep(1500) Then Return
 		If Not IsGlobalChat() Then SetLog("Warning, We Will Scroll Clan Chat ...", $COLOR_WARNING)
 		ClickIUnderstandIfExist()
 		Local $MaxScroll = Random(0, 3, 1)
@@ -53,7 +53,7 @@ Func ReadGlobalChat()
 			Local $yStart = Random(110 - 10, 110 + 10, 1)
 			Local $yEnd = Random(570 - 10, 570 + 10, 1)
 			ClickDrag($x, $yStart, $x, $yEnd) ; scroll the chat
-			randomSleep(10000, 3000)
+			If randomSleep(10000, 3000) Then Return
 		Next
 		Click(330, 380 + $g_iMidOffsetY) ; close chat
 	Else
@@ -63,25 +63,25 @@ EndFunc   ;==>ReadGlobalChat
 
 Func SaySomeChat()
 	Click(20, 380 + $g_iMidOffsetY) ; open chat
-	randomSleep(3000)
+	If randomSleep(3000) Then Return
 
 	If ChatOpen() Then
 		Click(230, 20) ; go to clan chat
-		randomSleep(1500)
+		If randomSleep(1500) Then Return
 		If Not IsClanChat() Then SetLog("Warning, We Will Chat On Global Chat ... ", $COLOR_WARNING) ;=> Note: Global Chat has been Removed
 		ClickIUnderstandIfExist()
 		Click(280, 650 + $g_iBottomOffsetY) ; click message button
-		randomSleep(2000)
+		If randomSleep(2000) Then Return
 		If IsTextBox() Then
 			Local $ChatToSay = Random(0, 1, 1)
 			Local $CleanMessage = SecureMessage(GUICtrlRead($g_ahumanMessage[$ChatToSay]))
 			SetLog("Writing """ & $CleanMessage & """ To The Chat Box ...", $COLOR_OLIVE)
 			SendText($CleanMessage)
 
-			randomSleep(500)
+			If randomSleep(500) Then Return
 			Click(840, 650 + $g_iBottomOffsetY) ; click send message
 
-			randomSleep(1500)
+			If randomSleep(1500) Then Return
 			Click(330, 380 + $g_iMidOffsetY) ; close chat
 		Else
 			SetLog("Error When Trying To Open Text Box For Chatting ... Skipping...", $COLOR_WARNING)
@@ -93,23 +93,23 @@ EndFunc   ;==>SaySomeChat
 
 Func LaunchChallenges()
 	Click(20, 380 + $g_iMidOffsetY) ; open chat
-	randomSleep(3000)
+	If randomSleep(3000) Then Return
 
 	If ChatOpen() Then
 		Click(230, 20) ; go to clan chat
-		randomSleep(1500)
+		If randomSleep(1500) Then Return
 		If IsClanChat() Then
 			ClickIUnderstandIfExist()
 			Click(200, 650 + $g_iBottomOffsetY) ; click challenge button
-			randomSleep(1500)
+			If randomSleep(1500) Then Return
 			If IsChallengeWindow() Then
 				Click(530, 175 + $g_iMidOffsetY) ; click text box
 				SendText(SecureMessage(GUICtrlRead($g_hChallengeMessage)))
-				randomSleep(1500)
+				If randomSleep(1500) Then Return
 				Local $Layout = Random(1, 2, 1) ; choose a layout between normal or war base
 				If $Layout <> $g_iLastLayout Then
 					Click(240, 300) ; click choose layout button
-					randomSleep(1000)
+					If randomSleep(1000) Then Return
 					If IsChangeLayoutMenu() Then
 						Switch $Layout
 							Case 1
@@ -125,9 +125,9 @@ Func LaunchChallenges()
 								Local $xEnd = Random(20 - 10, 20 + 10, 1)
 								ClickDrag($xStart, $y, $xEnd, $y) ; scroll the layout bar to see war bases
 						EndSwitch
-						randomSleep(2000)
+						If randomSleep(2000) Then Return
 						Click(240, 180) ; click first layout
-						randomSleep(1500)
+						If randomSleep(1500) Then Return
 						Click(180, 110) ; click top left return button
 					Else
 						SetLog("Error When Trying To Open Change Layout Menu ... Skipping...", $COLOR_WARNING)
@@ -135,9 +135,9 @@ Func LaunchChallenges()
 				EndIf
 
 				If IsChallengeWindow() Then
-					randomSleep(1500)
+					If randomSleep(1500) Then Return
 					Click(530, 300) ; click start button
-					randomSleep(1500)
+					If randomSleep(1500) Then Return
 					Click(330, 380 + $g_iMidOffsetY) ; close chat
 				Else
 					SetLog("We Are Not Anymore On Start Challenge Window ... Skipping ...", $COLOR_WARNING)

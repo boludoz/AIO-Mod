@@ -15,14 +15,14 @@
 
 Func LookAtCurrentWar()
 	Click(40, 470 + $g_iBottomOffsetY) ; open war menu
-	randomSleep(5000)
+	If randomSleep(5000) Then Return
 
 	If IsWarMenu() Then
 		Local $bWarType = QuickMIS("N1", $g_sImgHumanizationCurrentWar, 740, 290 + $g_iMidOffsetY, 850, 600 + $g_iMidOffsetY) ;October Update
 		If $bWarType = "CurrentWar" Or $bWarType = "CurrentWarCwl" Then ;Check if it is Simple War Or Cwl War
 			SetLog("Let's Examine The " & $bWarType & " Map ...", $COLOR_OLIVE)
 			Scroll(Random(2, 5, 1)) ; scroll enemy
-			randomSleep(3000)
+			If randomSleep(3000) Then Return
 
 			If $bWarType = "CurrentWar" Then
 				Local $LookAtHome = Random(0, 1, 1)
@@ -30,14 +30,14 @@ Func LookAtCurrentWar()
 					SetLog("Looking At Home Territory ...", $COLOR_OLIVE)
 					Click(790, 340 + $g_iMidOffsetY) ; go to home territory
 					Scroll(Random(2, 5, 1)) ; scroll home
-					randomSleep(3000)
+					If randomSleep(3000) Then Return
 				EndIf
 			EndIf
 
 			SetLog("Open War Details Menu ...", $COLOR_OLIVE)
 			If $bWarType = "CurrentWar" Then Click(800, 610 + $g_iBottomOffsetY) ; go to war details
 			If $bWarType = "CurrentWarCwl" Then Click(810, 540 + $g_iMidOffsetY) ; go to Cwl war details
-			randomSleep(1500)
+			If randomSleep(1500) Then Return
 
 			If IsClanOverview() Then
 				Local $FirstMenu = Random(1, 2, 1)
@@ -49,7 +49,7 @@ Func LookAtCurrentWar()
 						SetLog("Looking At Second Tab ...", $COLOR_OLIVE)
 						Click(360, 50 + $g_iMidOffsetY) ; click second tab
 				EndSwitch
-				randomSleep(1500)
+				If randomSleep(1500) Then Return
 
 				Scroll(Random(1, 3, 1)) ; scroll the tab
 
@@ -62,19 +62,19 @@ Func LookAtCurrentWar()
 						SetLog("Looking At Fourth Tab ...", $COLOR_OLIVE)
 						Click(700, 50 + $g_iMidOffsetY) ; click the fourth tab
 				EndSwitch
-				randomSleep(1500)
+				If randomSleep(1500) Then Return
 
 				Scroll(Random(2, 4, 1)) ; scroll the tab
 
 				Click(830, 50 + $g_iMidOffsetY) ; close window
-				randomSleep(1500)
+				If randomSleep(1500) Then Return
 				Click(70, 620 + $g_iBottomOffsetY) ; return home
 			Else
 				SetLog("Error When Trying To Open War Details Window ... Skipping ...", $COLOR_WARNING)
 			EndIf
 		Else
 			SetLog("Your Clan Is Not In Active War yet ... Skipping ...", $COLOR_WARNING)
-			randomSleep(1500)
+			If randomSleep(1500) Then Return
 			Click(70, 620 + $g_iBottomOffsetY) ; return home
 		EndIf
 	Else
@@ -84,18 +84,18 @@ EndFunc   ;==>LookAtCurrentWar
 
 Func WatchWarReplays()
 	Click(40, 470 + $g_iBottomOffsetY) ; open war menu
-	randomSleep(5000)
+	If randomSleep(5000) Then Return
 	Local $bWarType = QuickMIS("N1", $g_sImgHumanizationCurrentWar, 740, 290 + $g_iMidOffsetY, 850, 600 + $g_iMidOffsetY) ;October Update
 	If (QuickMIS("BC1", $g_sImgHumanizationWarDetails, 740, 560 + $g_iBottomOffsetY, 850, 660 + $g_iBottomOffsetY) And $bWarType = "CurrentWar") Or $bWarType = "CurrentWarCwl" Then
 		SetLog("Open War Details Menu ...", $COLOR_OLIVE)
 		If $bWarType = "CurrentWar" Then Click(800, 610 + $g_iBottomOffsetY) ; go to war details
 		If $bWarType = "CurrentWarCwl" Then Click(810, 540 + $g_iMidOffsetY) ; go to Cwl war details
-		randomSleep(1500)
+		If randomSleep(1500) Then Return
 
 		If IsClanOverview() Then
 			SetLog("Looking At Second Tab ...", $COLOR_OLIVE)
 			Click(360, 50 + $g_iMidOffsetY) ; go to replays tab
-			randomSleep(1500)
+			If randomSleep(1500) Then Return
 
 			If IsBestClans() Then
 				Local $ReplayNumber = QuickMIS("Q1", $g_sImgHumanizationReplay, 780, 210 + $g_iMidOffsetY, 840, 610 + $g_iBottomOffsetY)
@@ -110,19 +110,19 @@ Func WatchWarReplays()
 
 					If IsReplayWindow() Then
 						GetReplayDuration(1)
-						randomSleep(1000)
+						If randomSleep(1000) Then Return
 
 						If IsReplayWindow() Then
 							AccelerateReplay(1)
 						EndIf
 
-						randomSleep($g_aReplayDuration[1] / 3)
+						If randomSleep($g_aReplayDuration[1] / 3) Then Return
 
 						If IsReplayWindow() Then
 							DoAPauseDuringReplay(1)
 						EndIf
 
-						randomSleep($g_aReplayDuration[1] / 3)
+						If randomSleep($g_aReplayDuration[1] / 3) Then Return
 
 						If IsReplayWindow() And $g_aReplayDuration[0] <> 0 Then
 							DoAPauseDuringReplay(1)
@@ -131,10 +131,10 @@ Func WatchWarReplays()
 						SetLog("Waiting For Replay End ...", $COLOR_ACTION)
 
 						While IsReplayWindow()
-							Sleep(2000)
+							If randomSleep(1000) Then Return
 						WEnd
 
-						randomSleep(1000)
+						If randomSleep(1000) Then Return
 						Click(70, 620 + $g_iBottomOffsetY) ; return home
 					EndIf
 				Else
@@ -148,11 +148,11 @@ Func WatchWarReplays()
 		EndIf
 
 		Click(830, 50 + $g_iMidOffsetY) ; close window
-		randomSleep(3500)
+		If randomSleep(3500) Then Return
 		Click(70, 620 + $g_iBottomOffsetY) ; return home
 	Else
 		SetLog("Your Clan Is Not In Active War Yet ... Skipping ...", $COLOR_WARNING)
-		randomSleep(1500)
+		If randomSleep(1500) Then Return
 		Click(70, 620 + $g_iBottomOffsetY) ; return home
 	EndIf
 EndFunc   ;==>WatchWarReplays

@@ -10,6 +10,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
+#cs
 Func ClickFindMatch()
 	Local $iLoop = 0, $bFail = True
 	Do
@@ -54,36 +55,18 @@ Func ClickFindMatch()
 	
 	Return False
 EndFunc   ;==>ClickFindMatch
+#ce
 
-Func SearchNoLeague($bCheckOneTime = False)
-	Local $i = 0
-	If _Sleep($DELAYSPECIALCLICK1) Then Return False ; Wait for 'Remove Obstacles' button window
-	While 1 ; Wait for window with 'Remove Obstacles' Button
+Func SearchNoLeague()
 		Local $offColors[2][3] = [[0xFBFDFB, 28, 0], [0x626462, 15, 5]]
-		Local $NoLeaguePixel = _MultiPixelSearch(5, 10, 50, 50, 1, 1, Hex(0xFFFFFF, 6), $offColors, 15)
+		Local $vNoLeaguePixel = _MultiPixelSearch(5, 10, 50, 50, 1, 1, Hex(0xFFFFFF, 6), $offColors, 15)
+		
 		If $g_bDebugSetlog Then SetDebugLog("NoLeague pixel chk-#1: " & _GetPixelColor(13, 24, True) & _
-				", #2: " & _GetPixelColor(13 + 28, 24, True) & _
-				", #3: " & _GetPixelColor(13 + 15, 24 + 5, True), $COLOR_DEBUG)
-		If IsArray($NoLeaguePixel) Then
-			If $g_bDebugSetlog Then
-				If $g_bDebugSetlog Then SetDebugLog("NoLeaguePixelLocation = " & $NoLeaguePixel[0] & ", " & $NoLeaguePixel[1], $COLOR_DEBUG) ;Debug
-				If $g_bDebugSetlog Then SetDebugLog("Pixel color found #1: " & _GetPixelColor($NoLeaguePixel[0], $NoLeaguePixel[1], True) & _
-						", #2: " & _GetPixelColor($NoLeaguePixel[0] + 28, $NoLeaguePixel[1], True) & _
-						", #3: " & _GetPixelColor($NoLeaguePixel[0] + 15, $NoLeaguePixel[1] + 5, True), $COLOR_DEBUG)
-			EndIf
-			ExitLoop
-		EndIf
-		If $bCheckOneTime Then Return False ; enable external control of loop count or follow on actions, return false if not clicked
-		If $i > 5 Then
-			If $g_bDebugSetlog Then SetDebugLog("Can not find pixel for 'No League', giving up", $COLOR_ERROR)
-			If $g_bDebugImageSave Then SaveDebugImage("NoLeague_")
-			SetError(1, @extended, False)
-			Return
-		EndIf
-		$i += 1
-		If _Sleep($DELAYSPECIALCLICK2) Then Return False ; improve pause button response
-	WEnd
-	Return True
+		", #2: " & _GetPixelColor(13 + 28, 24, True) & _
+		", #3: " & _GetPixelColor(13 + 15, 24 + 5, True), $COLOR_DEBUG)
+		
+		If IsArray($vNoLeaguePixel) Then Return True
+		Return False
 EndFunc   ;==>SearchNoLeague
 
 Func SpecialAway()
@@ -243,7 +226,7 @@ Func _makerequestCustom($aButtonPosition = -1)
 			$bCanReq = True
 			$aRequestTroopsText[$iUbi][1] = $g_sRequestTroopsText
 		EndIf
-		
+
 		If $bCanReq Then
 			If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
 			; fix for Android send text bug sending symbols like ``"
