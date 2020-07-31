@@ -218,9 +218,21 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 			$bDone = True
 			ExitLoop
 		EndIF
-		$bWaschanged = True
 		Local $sMissingCamp = GetAMissingCamp($aNewAvailableTroopsOneD, $aCamps)
-		If $aNewAvailableTroops[$aWrongCamps[0]][0] = "Machine" Then ExitLoop
+		If $sMissingCamp = "-" Then
+			; No Camps are missing
+			SetDebugLog("All camps are fixed and nothing is missing, Exiting Switch Troops loop.", $COLOR_INFO)
+			$bDone = True
+			ExitLoop
+		EndIf
+		; Check if Troop index is Equal or Higher than the Builder Machine, it's not a switchable Slot!
+		If $aNewAvailableTroops[$aWrongCamps[0]][1] >= $eBBTroopMachine Then
+			; Slot is Builder machine or things like that.
+			SetDebugLog("Read to Builder Machine Slot or even the next ones, Exiting switch troops loop.", $COLOR_INFO)
+			$bDone = True
+			ExitLoop
+		EndIf
+		$bWaschanged = True
 		SetLog("Incorrect troop On Camp " & $aWrongCamps[0] + 1 & " - " & $aNewAvailableTroops[$aWrongCamps[0]][0] & " -> " & $sMissingCamp)
 		SetDebugLog("Click Switch Button " & $aWrongCamps[0], $COLOR_INFO)
 		Click($aSwicthBtn[$aWrongCamps[0]][1] + Random(2, 10, 1), $aSwicthBtn[$aWrongCamps[0]][2] + Random(2, 10, 1))
@@ -302,7 +314,7 @@ Func GetAMissingCamp($aCurCamps, $aCorrectCamps)
         Local $iNeeded = GetTroopCampCounts($aCorrectCamps[$i], $aCorrectCamps)
         If $iNeeded > $iCurrentlyAvailable Then Return $aCorrectCamps[$i]
     Next
-    Return "Barbarian"
+    Return "-"
 EndFunc
 
 Func GetWrongCamps($aCurCamps, $aCorrectCamps)
