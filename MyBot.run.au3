@@ -74,6 +74,7 @@ InitializeBot()
 MainLoop(CheckPrerequisites())
 
 Func UpdateBotTitle()
+	If $g_bDebugFuncCall Then SetLog('@@ (76) :(' & @MIN & ':' & @SEC & ') UpdateBotTitle()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 	Local $sTitle = "My Bot " & $g_sBotVersion & " - " & "AiO++ MOD " & $g_sModVersion & " -" ; AIO Mod
 	Local $sConsoleTitle ; Console title has also Android Emulator Name
 	If $g_sBotTitle = "" Then
@@ -97,6 +98,7 @@ Func UpdateBotTitle()
 EndFunc   ;==>UpdateBotTitle
 
 Func InitializeBot()
+	If $g_bDebugFuncCall Then SetLog('@@ (100) :(' & @MIN & ':' & @SEC & ') InitializeBot()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 
 	ProcessCommandLine()
 
@@ -191,6 +193,7 @@ EndFunc   ;==>InitializeBot
 ; Example .......: No
 ; ===============================================================================================================================
 Func ProcessCommandLine()
+	If $g_bDebugFuncCall Then SetLog('@@ (195) :(' & @MIN & ':' & @SEC & ') ProcessCommandLine()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 
 	; Handle Command Line Launch Options and fill $g_asCmdLine
 	If $CmdLine[0] > 0 Then
@@ -287,6 +290,7 @@ EndFunc   ;==>ProcessCommandLine
 ; Example .......: No
 ; ===============================================================================================================================
 Func InitializeAndroid($bConfigRead)
+	If $g_bDebugFuncCall Then SetLog('@@ (292) :(' & @MIN & ':' & @SEC & ') InitializeAndroid()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 
 	Local $s = GetTranslatedFileIni("MBR GUI Design - Loading", "StatusBar_Item_06", "Initializing Android...")
 	SplashStep($s)
@@ -348,6 +352,7 @@ EndFunc   ;==>InitializeAndroid
 ; Example .......: No
 ; ===============================================================================================================================
 Func SetupProfileFolder()
+	If $g_bDebugFuncCall Then SetLog('@@ (354) :(' & @MIN & ':' & @SEC & ') SetupProfileFolder()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 	If $g_bDebugSetlog Then SetDebugLog("SetupProfileFolder: " & $g_sProfilePath & "\" & $g_sProfileCurrentName)
 	$g_sProfileConfigPath = $g_sProfilePath & "\" & $g_sProfileCurrentName & "\config.ini"
 	$g_sProfileBuildingStatsPath = $g_sProfilePath & "\" & $g_sProfileCurrentName & "\stats_buildings.ini"
@@ -378,6 +383,7 @@ EndFunc   ;==>SetupProfileFolder
 ; Example .......: No
 ; ===============================================================================================================================
 Func InitializeMBR(ByRef $sAI, $bConfigRead)
+	If $g_bDebugFuncCall Then SetLog('@@ (385) :(' & @MIN & ':' & @SEC & ') InitializeMBR()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 
 	; license
 	If Not FileExists(@ScriptDir & "\License.txt") Then
@@ -490,6 +496,7 @@ EndFunc   ;==>InitializeMBR
 ; Example .......: No
 ; ===============================================================================================================================
 Func SetupFilesAndFolders()
+	If $g_bDebugFuncCall Then SetLog('@@ (498) :(' & @MIN & ':' & @SEC & ') SetupFilesAndFolders()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 
 	;Migrate old shared_prefs locations
 	Local $sOldProfiles = @MyDocumentsDir & "\MyBot.run-Profiles"
@@ -564,6 +571,7 @@ EndFunc   ;==>SetupFilesAndFolders
 ; Example .......: No
 ; ===============================================================================================================================
 Func FinalInitialization(Const $sAI)
+	If $g_bDebugFuncCall Then SetLog('@@ (573) :(' & @MIN & ':' & @SEC & ') FinalInitialization()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 	; check for VC2010, .NET software and MyBot Files and Folders
 	Local $bCheckPrerequisitesOK = CheckPrerequisites(True)
 	If $bCheckPrerequisitesOK Then
@@ -664,6 +672,7 @@ EndFunc   ;==>FinalInitialization
 ; Example .......: No
 ; ===============================================================================================================================
 Func MainLoop($bCheckPrerequisitesOK = True)
+	If $g_bDebugFuncCall Then SetLog('@@ (674) :(' & @MIN & ':' & @SEC & ') MainLoop()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 	Local $iStartDelay = 0
 
 	If $bCheckPrerequisitesOK And ($g_bAutoStart Or $g_bRestarted) Then
@@ -723,6 +732,7 @@ Func MainLoop($bCheckPrerequisitesOK = True)
 EndFunc   ;==>MainLoop
 
 Func runBot() ;Bot that runs everything in order
+	If $g_bDebugFuncCall Then SetLog('@@ (734) :(' & @MIN & ':' & @SEC & ') runBot()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 	Local $iWaitTime
 
 	InitiateSwitchAcc()
@@ -795,7 +805,13 @@ Func runBot() ;Bot that runs everything in order
 				If _Sleep($DELAYRUNBOT1) = False Then checkMainScreen(False)
 			EndIf
 			#EndRegion - Request form chat / on a loop - Team AIO Mod++
-			Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectFreeMagicItems', 'DailyChallenge', 'BoostSuperTroop'] ; AIO Mod
+			#Region - Only farm - Team AIO Mod++ 
+			If Not $g_bChkOnlyFarm Then
+				Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectFreeMagicItems', 'DailyChallenge', 'BoostSuperTroop'] ; AIO Mod
+			Else
+				Local $aRndFuncList = ['Collect', 'CollectFreeMagicItems', 'DailyChallenge', 'BoostSuperTroop'] ; AIO Mod
+			EndIf 
+			#EndRegion - Only farm - Team AIO Mod++ 
 			_ArrayShuffle($aRndFuncList)
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
@@ -807,7 +823,13 @@ Func runBot() ;Bot that runs everything in order
 			If Not $g_bRunState Then Return
 			If $g_bRestart Then ContinueLoop
 			If IsSearchAttackEnabled() Then ; if attack is disabled skip reporting, requesting, donating, training, and boosting
-				Local $aRndFuncList = ['ReplayShare', 'NotifyReport', 'DonateCC,Train', 'RequestCC']
+				#Region - Only farm - Team AIO Mod++ 
+				If Not $g_bChkOnlyFarm Then
+					Local $aRndFuncList = ['ReplayShare', 'NotifyReport', 'DonateCC,Train', 'RequestCC']
+				Else
+					Local $aRndFuncList = ['NotifyReport', 'DonateCC,Train', 'RequestCC']
+				EndIf 
+				#EndRegion - Only farm - Team AIO Mod++ 
 				_ArrayShuffle($aRndFuncList)
 				For $Index In $aRndFuncList
 					If Not $g_bRunState Then Return
@@ -817,7 +839,13 @@ Func runBot() ;Bot that runs everything in order
 				Next
 				BoostEverything() ; 1st Check if is to use Training Potion
 				If $g_bRestart Then ContinueLoop
-				Local $aRndFuncList = ['BoostBarracks', 'BoostSpellFactory', 'BoostWorkshop', 'BoostKing', 'BoostQueen', 'BoostWarden', 'BoostChampion']
+				#Region - Only farm - Team AIO Mod++ 
+				If Not $g_bChkOnlyFarm Then
+					Local $aRndFuncList = ['BoostBarracks', 'BoostSpellFactory', 'BoostWorkshop', 'BoostKing', 'BoostQueen', 'BoostWarden', 'BoostChampion']
+				Else
+					Local $aRndFuncList = ['BoostBarracks', 'BoostSpellFactory', 'BoostWorkshop', 'BoostKing', 'BoostQueen', 'BoostWarden', 'BoostChampion']
+				EndIf 
+				#EndRegion - Only farm - Team AIO Mod++ 
 				_ArrayShuffle($aRndFuncList)
 				For $Index In $aRndFuncList
 					If Not $g_bRunState Then Return
@@ -837,7 +865,21 @@ Func runBot() ;Bot that runs everything in order
 			If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) Then _RunFunction('DonateCC,Train')
 			If $g_bRestart Then ContinueLoop
 			If $g_bChkOnlyFarm = False Then MainSXHandler() ; Super XP - Team AIO Mod++
-			Local $aRndFuncList = ['Laboratory', 'UpgradeHeroes', 'UpgradeBuilding']
+			#Region - Only farm - Team AIO Mod++ 
+			If Not $g_bChkOnlyFarm Then
+				Local $aRndFuncList = ['Laboratory', 'UpgradeHeroes', 'UpgradeBuilding']
+			Else
+				Local $aRndFuncList = []
+				; 	Don't eat glass.
+				If $g_bUpgradeKingEnable Or $g_bUpgradeQueenEnable Or $g_bUpgradeWardenEnable Or $g_bUpgradeChampionEnable Then _ArrayAdd($aRndFuncList, 'UpgradeHeroes')
+	
+				;	667, 27, F5DD71 ; Full gold.	668, 77, E292E2 ; Full elixir.
+				If _ColorCheck(_GetPixelColor(667, 27, True), Hex(0xF5DD71, 6), 25) Or _ColorCheck(_GetPixelColor(668, 77, True), Hex(0xE292E2, 6), 25) Then _ArrayAdd($aRndFuncList, 'UpgradeBuilding')
+				
+				;	668, 77, E292E2 ; Full elixir.
+				If $g_bAutoLabUpgradeEnable And _ColorCheck(_GetPixelColor(668, 77, True), Hex(0xE292E2, 6), 25) Then _ArrayAdd($aRndFuncList, 'Laboratory')
+			EndIf 
+			#EndRegion - Only farm - Team AIO Mod++ 
 			_ArrayShuffle($aRndFuncList)
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
@@ -846,7 +888,13 @@ Func runBot() ;Bot that runs everything in order
 				If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 			Next
 			; Ensure, that wall upgrade is last of the upgrades
-			Local $aRndFuncList = ['UpgradeWall', 'BuilderBase']
+			#Region - Only farm - Team AIO Mod++ 
+			Local $aRndFuncList = ['BuilderBase']
+			If $g_bAutoUpgradeWallsEnable = True Then
+				;	667, 27, F5DD71 ; Full gold. Or 668, 77, E292E2 ; Full elixir.
+				If Not $g_bChkOnlyFarm Or (_ColorCheck(_GetPixelColor(667, 27, True), Hex(0xF5DD71, 6), 25) Or _ColorCheck(_GetPixelColor(668, 77, True), Hex(0xE292E2, 6), 25)) Then _ArrayAdd($aRndFuncList, 'UpgradeWall')
+			EndIf 
+			#EndRegion - Only farm - Team AIO Mod++ 
 			_ArrayShuffle($aRndFuncList)
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
@@ -910,6 +958,7 @@ Func runBot() ;Bot that runs everything in order
 EndFunc   ;==>runBot
 
 Func Idle() ;Sequence that runs until Full Army
+	If $g_bDebugFuncCall Then SetLog('@@ (922) :(' & @MIN & ':' & @SEC & ') Idle()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 	$g_bIdleState = True
 	Local $Result = _Idle()
 	$g_bIdleState = False
@@ -917,6 +966,7 @@ Func Idle() ;Sequence that runs until Full Army
 EndFunc   ;==>Idle
 
 Func _Idle() ;Sequence that runs until Full Army
+	If $g_bDebugFuncCall Then SetLog('@@ (930) :(' & @MIN & ':' & @SEC & ') _Idle()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 
 	Local $TimeIdle = 0 ;In Seconds
 	If $g_bDebugSetlog Then SetDebugLog("Func Idle ", $COLOR_DEBUG)
@@ -1038,6 +1088,7 @@ Func _Idle() ;Sequence that runs until Full Army
 EndFunc   ;==>_Idle
 
 Func AttackMain() ;Main control for attack functions
+	If $g_bDebugFuncCall Then SetLog('@@ (1052) :(' & @MIN & ':' & @SEC & ') AttackMain()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
 	#Region - SuperXP / GoblinXP - Team AiO MOD++
 	If $g_bChkOnlyFarm = False And $g_bEnableSuperXP = True And $g_iActivateOptionSX = 2 Then
@@ -1107,6 +1158,7 @@ Func AttackMain() ;Main control for attack functions
 EndFunc   ;==>AttackMain
 
 Func Attack() ;Selects which algorithm
+	If $g_bDebugFuncCall Then SetLog('@@ (1122) :(' & @MIN & ':' & @SEC & ') Attack()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 	$g_bAttackActive = True
 	SetLog(" ====== Start Attack ====== ", $COLOR_SUCCESS)
 	If ($g_iMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 1) Or ($g_iMatchMode = $LB And $g_aiAttackAlgorithm[$LB] = 1) Then
@@ -1127,60 +1179,58 @@ EndFunc   ;==>Attack
 
 #Region - Custom - Team AIO Mod++
 Func _RunFunction($sAction)
+	If $g_bDebugFuncCall Then SetLog('@@ (1143) :(' & @MIN & ':' & @SEC & ') _RunFunction()' & @CRLF, $COLOR_ACTION) ;### Function Trace
+	If $g_bDebugFuncCall Then SetLog('@ _RunFunction @ (1143) :(' & @MIN & ':' & @SEC & ')' & $sAction & @CRLF, $COLOR_ACTION) ;### Function Trace
 	FuncEnter(_RunFunction)
 	; ensure that builder base flag is false
 	$g_bStayOnBuilderBase = False
 	checkMainScreen(False)
 	Local $bResult = __RunFunction($sAction)
-	If Not $bResult Then 
-		If RandomSleep(Random($DELAYRESPOND, $DELAYRUNBOT3 / 2, 1)) Then Return
-	EndIf
 	; ensure that builder base flag is false
 	$g_bStayOnBuilderBase = False
 	Return FuncReturn($bResult)
 EndFunc   ;==>_RunFunction
 
 Func __RunFunction($sAction)
+	If $g_bDebugFuncCall Then SetLog('@@ (1158) :(' & @MIN & ':' & @SEC & ') __RunFunction()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 	If $g_bDebugSetlog Then SetDebugLog("_RunFunction: " & $sAction & " BEGIN", $COLOR_DEBUG2)
 	Switch $sAction
 		Case "Collect"
-			If Not ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Or $g_bChkOnlyFarm Then Return True 
 			Collect()
+			If RandomSleep($DELAYRUNBOT1) Then Return
 		Case "CheckTombs"
-			If Not ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Or $g_bChkOnlyFarm Then Return True 
 			CheckTombs()
+			If RandomSleep($DELAYRUNBOT3) Then Return
 		Case "CleanYard"
-			If Not ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Or $g_bChkOnlyFarm Then Return True 
 			CleanYard()
 		Case "ReplayShare"
-			If Not ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Or $g_bChkOnlyFarm Then Return True 
 			ReplayShare($g_bShareAttackEnableNow)
+			If RandomSleep($DELAYRUNBOT3) Then Return
 		Case "NotifyReport"
 			NotifyReport()
+			If RandomSleep($DELAYRUNBOT3) Then Return
 		Case "DonateCC"
-			If $g_bChkOnlyFarm Then Return ; Team AiO MOD++
-			If $g_iActiveDonate And $g_bChkDonate Then
+			If $g_iActiveDonate And $g_bChkDonate And Not $g_bChkOnlyFarm Then ; Only farm - Team AIO Mod++
 				; if in "Halt/Donate" don't skip near full army
 				If (Not SkipDonateNearFullTroops(True) Or $g_iCommandStop = 3 Or $g_iCommandStop = 0) And BalanceDonRec(True) Then DonateCC()
-				If _Sleep($DELAYRUNBOT1) = False Then checkMainScreen(False)
+				If If RandomSleep($DELAYRUNBOT1) Then Return = False Then checkMainScreen(False)
 			EndIf
 		Case "DonateCC,Train"
-			If Not $g_abDonateOnly[$g_iCurAccount] Then Return ; AIO Mod
-			If $g_iActiveDonate And $g_bChkDonate And not $g_bChkOnlyFarm Then
+			If $g_iActiveDonate And $g_bChkDonate And Not $g_bChkOnlyFarm Then ; Only farm - Team AIO Mod++
 				If $g_bFirstStart Then
 					getArmyTroopCapacity(True, False)
-					If _Sleep($DELAYRESPOND) Then Return
+					If RandomSleep($DELAYRESPOND) Then Return
 					getArmySpellCapacity(False, True)
-					If _Sleep($DELAYRESPOND) Then Return
+					If RandomSleep($DELAYRESPOND) Then Return
 				EndIf
 				; if in "Halt/Donate" don't skip near full army
 				If (Not SkipDonateNearFullTroops(True) Or $g_iCommandStop = 3 Or $g_iCommandStop = 0) And BalanceDonRec(True) Then DonateCC()
 			EndIf
-			If Not _Sleep($DELAYRUNBOT1) Then checkMainScreen(False)
+			If Not RandomSleep($DELAYRUNBOT1) Then checkMainScreen(False)
 			If $g_bTrainEnabled Then ; check for training enabled in halt mode
 				If $g_iActualTrainSkip < $g_iMaxTrainSkip Then
 					TrainSystem()
-					_Sleep($DELAYRUNBOT1)
+					If RandomSleep($DELAYRUNBOT1) Then Return
 				Else
 					SetLog("Humanize bot, prevent to delete and recreate troops " & $g_iActualTrainSkip + 1 & "/" & $g_iMaxTrainSkip, $color_blue)
 					$g_iActualTrainSkip = $g_iActualTrainSkip + 1
@@ -1188,9 +1238,9 @@ Func __RunFunction($sAction)
 						$g_iActualTrainSkip = 0
 					EndIf
 					CheckOverviewFullArmy(True, False) ; use true parameter to open train overview window
-					If _Sleep($DELAYRESPOND) Then Return
+					If RandomSleep($DELAYRESPOND) Then Return
 					getArmySpells()
-					If _Sleep($DELAYRESPOND) Then Return
+					If RandomSleep($DELAYRESPOND) Then Return
 					getArmyHeroCount(False, True)
 				EndIf
 			Else
@@ -1198,53 +1248,63 @@ Func __RunFunction($sAction)
 			EndIf
 		Case "BoostBarracks"
 			BoostBarracks()
+			If RandomSleep($DELAYRESPOND) Then Return
 		Case "BoostSpellFactory"
 			BoostSpellFactory()
+			If RandomSleep($DELAYRESPOND) Then Return
 		Case "BoostWorkshop"
 			BoostWorkshop()
+			If RandomSleep($DELAYRESPOND) Then Return
 		Case "BoostKing"
 			BoostKing()
+			If RandomSleep($DELAYRESPOND) Then Return
 		Case "BoostQueen"
 			BoostQueen()
+			If RandomSleep($DELAYRESPOND) Then Return
 		Case "BoostWarden"
 			BoostWarden()
+			If RandomSleep($DELAYRESPOND) Then Return
 		Case "BoostChampion"
 			BoostChampion()
+			If RandomSleep($DELAYRESPOND) Then Return
 		Case "BoostEverything"
 			BoostEverything()
+			If RandomSleep($DELAYRESPOND) Then Return
 		Case "DailyChallenge"
 			DailyChallenges()
+			If RandomSleep($DELAYRUNBOT3) Then Return
 		Case "LabCheck"
-			If Not ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Or $g_bChkOnlyFarm Then Return True 
 			LabGuiDisplay()
+			If RandomSleep($DELAYRUNBOT3) Then Return
 		Case "RequestCC"
-			If Not $g_bChkReqCCAlways Then RequestCC() ; Request form chat / on a loop - Team AIO Mod++
-			checkMainScreen(False)
+			RequestCC()
+			If Not RandomSleep($DELAYRUNBOT1) Then checkMainScreen(False)
 		Case "Laboratory"
-			If Not ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Or $g_bChkOnlyFarm Then Return True 
 			Laboratory()
-			checkMainScreen(False)
+			If Not RandomSleep($DELAYRUNBOT3) Then checkMainScreen(False)
 		Case "UpgradeHeroes"
-			If Not ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Or $g_bChkOnlyFarm Then Return True 
 			UpgradeHeroes()
+			If RandomSleep($DELAYRUNBOT3) Then Return
 		Case "UpgradeBuilding"
-			If Not ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Or $g_bChkOnlyFarm Then Return True 
 			UpgradeBuilding()
+			If RandomSleep($DELAYRUNBOT3) Then Return
 			AutoUpgrade()
+			If RandomSleep($DELAYRUNBOT3) Then Return
 		Case "UpgradeWall"
-			If Not ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Or $g_bChkOnlyFarm Then Return True 
 			$g_iNbrOfWallsUpped = 0
 			UpgradeWall()
+			If RandomSleep($DELAYRUNBOT3) Then Return
+		; BBase - Team AIO Mod++
 		Case "BuilderBase"
-			If Not ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Or $g_bChkOnlyFarm Then Return True 
+			If Not ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Then Return True
 			runBuilderBase()
 		Case "CollectFreeMagicItems"
-			If Not ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Or $g_bChkOnlyFarm Then Return True 
 			CollectFreeMagicItems()
+			If RandomSleep($DELAYRUNBOT3) Then Return
 		Case "BoostSuperTroop"
 			If $g_iBoostSuperTroopIndex <> -1 Then BoostSuperTroop($g_iBoostSuperTroopIndex)
 		Case ""
-			If $g_bDebugSetlog Then SetDebugLog("Function call doesn't support empty string, please review array size", $COLOR_ERROR)
+			SetDebugLog("Function call doesn't support empty string, please review array size", $COLOR_ERROR)
 		Case Else
 			SetLog("Unknown function call: " & $sAction, $COLOR_ERROR)
 	EndSwitch
@@ -1253,6 +1313,7 @@ EndFunc   ;==>__RunFunction
 #EndRegion - Custom - Team AIO Mod++
 
 Func FirstCheck()
+	If $g_bDebugFuncCall Then SetLog('@@ (1271) :(' & @MIN & ':' & @SEC & ') FirstCheck()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 
 	If $g_bDebugSetlog Then SetDebugLog("-- FirstCheck Loop --")
 	If Not $g_bRunState Then Return
