@@ -89,7 +89,7 @@ Func TrainIt($iIndex, $iQuantity = 1, $iSleep = 400)
 			EndIf
 		EndIf
 
-	Next ; Until $iErrors = 0
+	Next
 EndFunc   ;==>TrainIt
 
 Func GetTrainPos(Const $iIndex)
@@ -101,15 +101,21 @@ Func GetTrainPos(Const $iIndex)
 	; Get the Image path to search
     If $bIsSpell Or $bIsNTroop Or $bIsSTroop Then
 		Local $sFilter = String(GetTroopName($iIndex, 1, True)) & "_" & "*"
-		
-		Local $asImageToUse = _FileListToArray(($bIsSpell) ? ($g_sImgTrainSpells) : ($g_sImgTrainTroops), $sFilter, $FLTA_FILES, True)
+		Local $sDir = ($bIsSpell) ? ($g_sImgTrainSpells) : ($g_sImgTrainTroops)
+		Local $asImageToUse = _FileListToArray($sDir, $sFilter, $FLTA_FILES, False)
 		If IsArray($asImageToUse) Then
 			; This is about finding the image.
 			For $sFile In $asImageToUse
-				If StringInStr($sFile, "\") > 0 Then
+				If StringInStr($sFile, "_") > 0 Then
 					If $g_bDebugSetlogTrain Then SetLog("$asImageToUse img.: " & $sFile)
-					$aTrainPos = GetVariable($sFile, $iIndex)
-					If IsArray($aTrainPos) And ($aTrainPos[0] <> -1) Then Return $aTrainPos
+					$aTrainPos = GetVariable($sDir & "\" & $sFile, $iIndex)
+					If IsArray($aTrainPos) And ($aTrainPos[0] <> -1) Then
+						; This will return the true index.
+						Local $sTmpCut = StringSplit($sFile, "_", $STR_NOCOUNT)
+						$aTrainPos[4] = TroopIndexLookup($sTmpCut[0])
+						If $g_bDebugSetlogTrain Then SetLog("$aTrainPos[4]: " & $aTrainPos[4])
+						Return $aTrainPos
+					EndIf
 				EndIf
 			Next
 		EndIf
@@ -183,7 +189,7 @@ Func GetVariable(Const $ImageToUse, Const $iIndex)
 			Local $iButtonY = 375 + Int($aCoordinates[1])
 			Local $sColorToCheck = "0x" & _GetPixelColor($iButtonX, $iButtonY, $g_bCapturePixel)
 			Local $iTolerance = 40
-			Local $aTrainPos[5] = [$iButtonX, $iButtonY, $sColorToCheck, $iTolerance, $iIndex]
+			Local $aTrainPos[5] = [$iButtonX, $iButtonY, $sColorToCheck, $iTolerance, -1]
 			If $g_bDebugSetlogTrain Then SetLog("Found: [" & $iButtonX & "," & $iButtonY & "]", $COLOR_SUCCESS)
 			If $g_bDebugSetlogTrain Then SetLog("$sColorToCheck: " & $sColorToCheck, $COLOR_SUCCESS)
 			If $g_bDebugSetlogTrain Then SetLog("$iTolerance: " & $iTolerance, $COLOR_SUCCESS)
