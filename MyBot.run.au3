@@ -1213,7 +1213,7 @@ Func __RunFunction($sAction)
 			If $g_iActiveDonate And $g_bChkDonate And Not $g_bChkOnlyFarm Then ; Only farm - Team AIO Mod++
 				; if in "Halt/Donate" don't skip near full army
 				If (Not SkipDonateNearFullTroops(True) Or $g_iCommandStop = 3 Or $g_iCommandStop = 0) And BalanceDonRec(True) Then DonateCC()
-				If If RandomSleep($DELAYRUNBOT1) Then Return = False Then checkMainScreen(False)
+				If RandomSleep($DELAYRUNBOT1) Then Return = False Then checkMainScreen(False)
 			EndIf
 		Case "DonateCC,Train"
 			If $g_iActiveDonate And $g_bChkDonate And Not $g_bChkOnlyFarm Then ; Only farm - Team AIO Mod++

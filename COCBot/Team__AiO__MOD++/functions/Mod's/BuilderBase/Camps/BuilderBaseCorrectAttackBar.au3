@@ -208,6 +208,9 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	While ($bDone = False And $iAvoidInfLoop < 4)
 		Local $aWrongCamps = GetWrongCamps($aNewAvailableTroops, $aCamps)
 		$bDone = UBound($aWrongCamps) < 1
+		If $bDone = True Then
+			ExitLoop
+		EndIf
 		Local $aNewAvailableTroopsOneD[UBound($aNewAvailableTroops)]
 		For $i = 0 To UBound($aNewAvailableTroops) - 1
 			$aNewAvailableTroopsOneD[$i] = $aNewAvailableTroops[$i][0]

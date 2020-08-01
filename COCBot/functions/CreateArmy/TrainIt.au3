@@ -96,25 +96,12 @@ Func GetTrainPos(Const $iIndex)
 	If $g_bDebugSetlogTrain Then SetLog("GetTrainPos($iIndex=" & $iIndex & ")", $COLOR_DEBUG)
 
 	; Get the Image path to search
-	If ($iIndex >= $eBarb And $iIndex <= $eHunt) Or ($iIndex >= $eSuperBarb And $iIndex <= $eSuperGiant) Then
-		Local $sFilter = "*" & String($g_asTroopShortNames[$iIndex]) & "*"
+	If ($iIndex >= $eLSpell And $iIndex <= $eBtSpell) Or ($iIndex >= $eBarb And $iIndex <= $eHunt) Or ($iIndex >= $eSuperBarb And $iIndex <= $eSuperGiant) Then
+		Local $sFilter = "*" & String(GetTroopName($iIndex, 1, True)) & "*"
 		Local $asImageToUse = _FileListToArray($g_sImgTrainTroops, $sFilter, $FLTA_FILES, True)
-		If Not @error Then
-			If $g_bDebugSetlogTrain Then SetLog("$asImageToUse Troops: " & _ArrayToString($asImageToUse, "|"))
+		If Not @error And IsArray($asImageToUse) Then
+			If $g_bDebugSetlogTrain Then SetLog("$asImageToUse 'Troops/Spells' : " & _ArrayToString($asImageToUse, "|"))
 			Return GetVariable($asImageToUse, $iIndex)
-		Else
-			Return 0
-		EndIf
-	EndIf
-
-	If $iIndex >= $eLSpell And $iIndex <= $eBtSpell Then
-		Local $sFilter = String($g_asSpellShortNames[$iIndex - $eLSpell]) & "*"
-		Local $asImageToUse = _FileListToArray($g_sImgTrainSpells, $sFilter, $FLTA_FILES, True)
-		If Not @error Then
-			If $g_bDebugSetlogTrain Then SetLog("$asImageToUse Spell: " & $asImageToUse[1])
-			Return GetVariable($asImageToUse, $iIndex)
-		Else
-			Return 0
 		EndIf
 	EndIf
 
@@ -166,11 +153,13 @@ Func GetVariable(Const $asImageToUse, Const $iIndex)
 	Local $aTrainPos[5] = [-1, -1, -1, -1, $eBarb]
 	; Capture the screen for comparison
 	_CaptureRegion2(25, 375, 840, 548)
-
+	
 	Local $iError = ""
-	For $i = 1 To $asImageToUse[0]
-
-		Local $asResult = DllCallMyBot("FindTile", "handle", $g_hHBitmap2, "str", $asImageToUse[$i], "str", "FV", "int", 1)
+	If Not (IsArray($asImageToUse) And UBound($asImageToUse) > 1) Then Return $aTrainPos
+	For $sImg In $asImageToUse
+		If FileGetAttrib($sImg) <> "A" Then ContinueLoop
+		
+		Local $asResult = DllCallMyBot("FindTile", "handle", $g_hHBitmap2, "str", $sImg, "str", "FV", "int", 1)
 
 		If @error Then _logErrorDLLCall($g_sLibMyBotPath, @error)
 
@@ -196,7 +185,7 @@ Func GetVariable(Const $asImageToUse, Const $iIndex)
 						If $g_bDebugSetlogTrain Then SetLog("$sColorToCheck: " & $sColorToCheck, $COLOR_SUCCESS)
 						If $g_bDebugSetlogTrain Then SetLog("$iTolerance: " & $iTolerance, $COLOR_SUCCESS)
 
-						If StringRegExp($asImageToUse[$i], "([Ss]uper)|([Ss]neaky)") Then $aTrainPos[4] = $eSuperBarb
+						If StringRegExp($sImg, "([Ss]uper)|([Ss]neaky)") Then $aTrainPos[4] = $eSuperBarb
 						Return $aTrainPos
 					Else
 						SetLog("Don't know how to train the troop with index " & $iIndex & " yet.")
@@ -220,7 +209,6 @@ Func GetVariable(Const $asImageToUse, Const $iIndex)
 
 	Return $aTrainPos
 EndFunc   ;==>GetVariable
-
 
 ; Function to use on GetFullName() , returns slot and correct [i] symbols position on train window
 Func GetFullNameSlot(Const $iTrainPos, Const $sTroopType)

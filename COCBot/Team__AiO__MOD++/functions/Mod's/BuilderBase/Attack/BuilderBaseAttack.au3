@@ -509,24 +509,22 @@ Func BuilderBaseAttackReport()
 	Local $sResultName = "Draw"
 	
 	For $i = 0 To 24 ; 120 seconds
-		_CaptureRegion2()
 		If Not $g_bRunState Then Return
-		If isOnBuilderBase(False, True) Then
+		If isOnBuilderBase(True, True) Then
 			SetLog("BuilderBaseAttackReport | Something weird happened here. Leave the screen alone.", $COLOR_ERROR)
 			If checkObstacles(True) Then SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
 			Return
 		EndIf
 		; Wait
 		If _Sleep(2500) Then Return ; 2,5 seconds
-		If QuickMIS("BC1", $g_sImgReportWaitBB, 538, 326, 647, 378, False, False) Then ; DESRC Done
+		If QuickMIS("BC1", $g_sImgReportWaitBB, 529, 324, 652, 372, True, False) Then
 			If (Mod($i+1, 4) = 0) Then Setlog("...Opponent is Attacking!", $COLOR_INFO)
 			ContinueLoop
 		EndIf
-		If QuickMIS("BC1", $g_sImgReportFinishedBB, 465, 493, 490, 505, False, False) Then  ; DESRC Done
-			If _Sleep(1000) Then Return
-			If _ColorCheck(_GetPixelColor(150, 192, True), Hex(0x8DBE51, 6), 25) Then
+		If _WaitForCheckImg($g_sImgReportFinishedBB, "465, 493, 490, 505", Default, 5000, 250) Then
+			If _ColorCheck(_GetPixelColor(150, 192, True), Hex(0x8DBE51, 6), 40) Then
 				$sResultName = "Victory"
-			ElseIf _ColorCheck(_GetPixelColor(150, 192, True), Hex(0xD0262C, 6), 25) Then
+			ElseIf _ColorCheck(_GetPixelColor(150, 192, True), Hex(0xD0262C, 6), 40) Then
 				$sResultName = "Defeat"
 			EndIf
 			Setlog("Attack Result: " & $sResultName, ($sResultName = "Victory") ? ($COLOR_SUCCESS) : ($COLOR_ERROR))
@@ -535,7 +533,7 @@ Func BuilderBaseAttackReport()
 	Next
 	
 	; Small delay just to getout the slide resources to top left
-	If RandomSleep(3000) Then Return
+	;If RandomSleep(3000) Then Return
 	
 	; Get the LOOT :
 	Local $gain[3]
