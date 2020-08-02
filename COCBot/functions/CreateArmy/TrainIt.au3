@@ -89,19 +89,35 @@ Func TrainIt($iIndex, $iQuantity = 1, $iSleep = 400)
 			EndIf
 		EndIf
 
-	Next ; Until $iErrors = 0
+	Next
 EndFunc   ;==>TrainIt
 
 Func GetTrainPos(Const $iIndex)
 	If $g_bDebugSetlogTrain Then SetLog("GetTrainPos($iIndex=" & $iIndex & ")", $COLOR_DEBUG)
-
+	
+	Local $bIsSTroop = ($iIndex >= $eSuperBarb And $iIndex <= $eSuperGiant), $bIsNTroop = ($iIndex >= $eBarb And $iIndex <= $eHunt), $bIsSpell = ($iIndex >= $eLSpell And $iIndex <= $eBtSpell)
+	Local $aTrainPos
+	
 	; Get the Image path to search
-	If ($iIndex >= $eLSpell And $iIndex <= $eBtSpell) Or ($iIndex >= $eBarb And $iIndex <= $eHunt) Or ($iIndex >= $eSuperBarb And $iIndex <= $eSuperGiant) Then
-		Local $sFilter = "*" & String(GetTroopName($iIndex, 1, True)) & "*"
-		Local $asImageToUse = _FileListToArray($g_sImgTrainTroops, $sFilter, $FLTA_FILES, True)
-		If Not @error And IsArray($asImageToUse) Then
-			If $g_bDebugSetlogTrain Then SetLog("$asImageToUse 'Troops/Spells' : " & _ArrayToString($asImageToUse, "|"))
-			Return GetVariable($asImageToUse, $iIndex)
+    If $bIsSpell Or $bIsNTroop Or $bIsSTroop Then
+		Local $sFilter = String(GetTroopName($iIndex, 1, True)) & "_" & "*"
+		Local $sDir = ($bIsSpell) ? ($g_sImgTrainSpells) : ($g_sImgTrainTroops)
+		Local $asImageToUse = _FileListToArray($sDir, $sFilter, $FLTA_FILES, False)
+		If IsArray($asImageToUse) Then
+			; This is about finding the image.
+			For $sFile In $asImageToUse
+				If StringInStr($sFile, "_") > 0 Then
+					If $g_bDebugSetlogTrain Then SetLog("$asImageToUse img.: " & $sFile)
+					$aTrainPos = GetVariable($sDir & "\" & $sFile, $iIndex)
+					If IsArray($aTrainPos) And ($aTrainPos[0] <> -1) Then
+						; This will return the true index.
+						Local $sTmpCut = StringSplit($sFile, "_", $STR_NOCOUNT)
+						$aTrainPos[4] = TroopIndexLookup($sTmpCut[0])
+						If $g_bDebugSetlogTrain Then SetLog("$aTrainPos[4]: " & $aTrainPos[4])
+						Return $aTrainPos
+					EndIf
+				EndIf
+			Next
 		EndIf
 	EndIf
 
@@ -149,64 +165,39 @@ Func GetRNDName(Const $iIndex, Const $aTrainPos)
 	Return 0
 EndFunc   ;==>GetRNDName
 
-Func GetVariable(Const $asImageToUse, Const $iIndex)
+Func GetVariable(Const $ImageToUse, Const $iIndex)
 	Local $aTrainPos[5] = [-1, -1, -1, -1, $eBarb]
 	; Capture the screen for comparison
 	_CaptureRegion2(25, 375, 840, 548)
-	
-	Local $iError = ""
-	If Not (IsArray($asImageToUse) And UBound($asImageToUse) > 1) Then Return $aTrainPos
-	For $sImg In $asImageToUse
-		If FileGetAttrib($sImg) <> "A" Then ContinueLoop
-		
-		Local $asResult = DllCallMyBot("FindTile", "handle", $g_hHBitmap2, "str", $sImg, "str", "FV", "int", 1)
 
-		If @error Then _logErrorDLLCall($g_sLibMyBotPath, @error)
+	Local $asResult = DllCallMyBot("FindTile", "handle", $g_hHBitmap2, "str", $ImageToUse, "str", "FV", "int", 1)
 
-		If IsArray($asResult) Then
-			If $asResult[0] = "0" Then
-				$iError = 0
-			ElseIf $asResult[0] = "-1" Then
-				$iError = -1
-			ElseIf $asResult[0] = "-2" Then
-				$iError = -2
-			Else
-				If $g_bDebugSetlogTrain Then SetLog("String: " & $asResult[0])
-				Local $aResult = StringSplit($asResult[0], "|", $STR_NOCOUNT)
-				If UBound($aResult) > 1 Then
-					Local $aCoordinates = StringSplit($aResult[1], ",", $STR_NOCOUNT)
-					If UBound($aCoordinates) > 1 Then
-						Local $iButtonX = 25 + Int($aCoordinates[0])
-						Local $iButtonY = 375 + Int($aCoordinates[1])
-						Local $sColorToCheck = "0x" & _GetPixelColor($iButtonX, $iButtonY, $g_bCapturePixel)
-						Local $iTolerance = 40
-						Local $aTrainPos[5] = [$iButtonX, $iButtonY, $sColorToCheck, $iTolerance, $eBarb]
-						If $g_bDebugSetlogTrain Then SetLog("Found: [" & $iButtonX & "," & $iButtonY & "]", $COLOR_SUCCESS)
-						If $g_bDebugSetlogTrain Then SetLog("$sColorToCheck: " & $sColorToCheck, $COLOR_SUCCESS)
-						If $g_bDebugSetlogTrain Then SetLog("$iTolerance: " & $iTolerance, $COLOR_SUCCESS)
+	If @error Then _logErrorDLLCall($g_sLibMyBotPath, @error)
 
-						If StringRegExp($sImg, "([Ss]uper)|([Ss]neaky)") Then $aTrainPos[4] = $eSuperBarb
-						Return $aTrainPos
-					Else
-						SetLog("Don't know how to train the troop with index " & $iIndex & " yet.")
-					EndIf
-				Else
-					SetLog("Don't know how to train the troop with index " & $iIndex & " yet")
-				EndIf
-			EndIf
+	If IsArray($asResult) Then
+		If $asResult[0] = "0" Then
+			SetLog("No " & GetTroopName($iIndex) & " Icon found!", $COLOR_ERROR)
+		ElseIf $asResult[0] = "-1" Then
+			SetLog("TrainIt.au3 GetVariable(): ImgLoc DLL Error Occured!", $COLOR_ERROR)
+		ElseIf $asResult[0] = "-2" Then
+			SetLog("TrainIt.au3 GetVariable(): Wrong Resolution used for ImgLoc Search!", $COLOR_ERROR)
 		Else
-			SetLog("Don't know how to train the troop with index " & $iIndex & " yet")
+			If $g_bDebugSetlogTrain Then SetLog("String: " & $asResult[0])
+			Local $aResult = StringSplit($asResult[0], "|", $STR_NOCOUNT)
+			Local $aCoordinates = StringSplit($aResult[1], ",", $STR_NOCOUNT)
+			Local $iButtonX = 25 + Int($aCoordinates[0])
+			Local $iButtonY = 375 + Int($aCoordinates[1])
+			Local $sColorToCheck = "0x" & _GetPixelColor($iButtonX, $iButtonY, $g_bCapturePixel)
+			Local $iTolerance = 40
+			Local $aTrainPos[5] = [$iButtonX, $iButtonY, $sColorToCheck, $iTolerance, -1]
+			If $g_bDebugSetlogTrain Then SetLog("Found: [" & $iButtonX & "," & $iButtonY & "]", $COLOR_SUCCESS)
+			If $g_bDebugSetlogTrain Then SetLog("$sColorToCheck: " & $sColorToCheck, $COLOR_SUCCESS)
+			If $g_bDebugSetlogTrain Then SetLog("$iTolerance: " & $iTolerance, $COLOR_SUCCESS)
+			Return $aTrainPos
 		EndIf
-	Next
-
-	If $iError = 0 Then
-		SetLog("No " & GetTroopName($iIndex) & " Icon found!", $COLOR_ERROR)
-	ElseIf $iError = -1 Then
-		SetLog("TrainIt.au3 GetVariable(): ImgLoc DLL Error Occured!", $COLOR_ERROR)
-	ElseIf $iError = -2 Then
-		SetLog("TrainIt.au3 GetVariable(): Wrong Resolution used for ImgLoc Search!", $COLOR_ERROR)
+	Else
+		SetLog("Don't know how to train the troop with index " & $iIndex & " yet")
 	EndIf
-
 	Return $aTrainPos
 EndFunc   ;==>GetVariable
 
