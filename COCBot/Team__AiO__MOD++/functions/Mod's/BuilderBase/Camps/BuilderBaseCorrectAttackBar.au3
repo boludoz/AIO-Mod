@@ -66,22 +66,33 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	If Not $g_bRunState Then Return
 	Local $bIsCampCSV = False
 	Local $aLines[0]
-	Static $lastScript
 
 	If ($g_iCmbBBAttack = $g_eBBAttackCSV) Or ($g_bChkBBGetFromCSV = True) Then
 			
-			If Not $g_bChkBBRandomAttack Then
-				$lastScript = 0
+			If Not $g_bChkBBCustomAttack Then
 				$g_iBuilderBaseScript = 0
 			Else
-				; Random script , but not the last
-				For $i = 0 To 10
-					$g_iBuilderBaseScript = Random(0, 2, 1)
-					If $lastScript <> $g_iBuilderBaseScript Then
-						$lastScript = $g_iBuilderBaseScript
-						ExitLoop
-					EndIf
+				Local $aMode[2] = [0, 0] ; Ground - Air
+				Local $aBuildings[4] = ["AirDefenses", "Crusher", "GuardPost", "Cannon"]
+				For $i = 0 To UBound($aBuildings) -1
+					Local $a = BuilderBaseBuildingsDetection($i)
+					If $a = -1 Then ContinueLoop
+					Local $iTotal = UBound($a) -1
+					Local $i3 = ($i <> 0)  ? (0) : (1)
+					Local $aModeTmp[2] = [0, 0] ; Ground - Air
+					For $i2 = 0 To $iTotal
+						$aModeTmp[$i3] += $a[$i2][3]
+					Next
+					$aMode[$i3] += $aModeTmp[$i3]
+					$aMode[$i3] /= 2
 				Next
+				
+				$g_iBuilderBaseScript = 0
+				
+				If ($aMode[0] <> $aMode[1]) Then $g_iBuilderBaseScript = _ArrayMinIndex($aMode, 1) + 1
+				
+				SetLog("Script mode : " & $g_iBuilderBaseScript & " / " & " Ground calc : " & $aMode[0] & " Air calc : " & $aMode[1], $COLOR_INFO)
+
 			EndIf
 			
 			Setlog("Attack using the " & $g_sAttackScrScriptNameBB[$g_iBuilderBaseScript] & " script.", $COLOR_INFO)

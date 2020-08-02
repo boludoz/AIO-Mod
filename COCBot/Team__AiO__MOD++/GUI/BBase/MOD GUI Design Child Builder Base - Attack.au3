@@ -19,7 +19,7 @@ Global $g_hCmbBBArmy1 = 0, $g_hCmbBBArmy2 = 0, $g_hCmbBBArmy3 = 0, $g_hCmbBBArmy
 Global $g_hIcnBBarmy1 = 0, $g_hIcnBBarmy2 = 0, $g_hIcnBBarmy3 = 0, $g_hIcnBBarmy4 = 0, $g_hIcnBBarmy5 = 0, $g_hIcnBBarmy6 = 0
 Global $g_hLblNotesScriptBB[3] = [0,0,0], $g_hGrpOptionsBB = 0, $g_hGrpAttackStyleBB = 0 ,$g_hGrpGuideScriptBB[3] = [0,0,0], $g_hIcnBBCSV[4] = [0,0,0,0]
 Global $g_hGUI_ATTACK_PLAN_BUILDER_BASE = 0, $g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV = 0
-Global $g_hChkBBRandomAttack = 0
+Global $g_hChkBBCustomAttack = 0
 Global $g_hChkBBGetFromCSV = 0 ;AIO ++
 
 Func CreateAttackPlanBuilderBaseSubTab()
@@ -92,11 +92,11 @@ Func CreateAttackPlanBuilderBaseSubTab()
 			$g_hLblBBDropTrophiesDash = GUICtrlCreateLabel("-", $x + 245, $y + 15 + 2)
 			$g_hTxtBBDropTrophiesMax = _GUICtrlCreateInput("2500", $x + 250, $y + 15, 40, -1, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			
-		$g_hChkBBRandomAttack = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "ChkBBRandomAttack ", "Random Attack"), $x + 300, $y + 15, -1, -1)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "ChkBBRandomAttack_Info_01", "Select 3 attacks and the bot will select the best to use according with opponent!") & @CRLF & _
-							   GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "ChkBBRandomAttack_Info_02", "Don't worry about the army, the bot will select correct army at attack bar!"))
+		$g_hChkBBCustomAttack = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "ChkBBCustomAttack ", "Random Attack"), $x + 300, $y + 15, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "ChkBBCustomAttack_Info_01", "Select 3 attacks and the bot will select the best to use according with opponent!") & @CRLF & _
+							   GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "ChkBBCustomAttack_Info_02", "Don't worry about the army, the bot will select correct army at attack bar!"))
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
-			GUICtrlSetOnEvent(-1, "ChkBBRandomAttack")
+			GUICtrlSetOnEvent(-1, "ChkBBCustomAttack")
 			
 		$g_hChkBBGetFromCSV = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "ChkBBGetFromCSV", "Force get troops from CSV in standard attack"), $x + 5, $y + 100, 180, 30, $BS_MULTILINE)
 			GUICtrlSetOnEvent(-1, "ChkBBGetFromCSV")

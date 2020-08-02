@@ -31,7 +31,7 @@ Func SaveConfig_MOD_CustomArmyBB()
 	_Ini_Add("BuilderBase", "BuilderAttack", $g_bChkBuilderAttack ? 1 : 0)
 	_Ini_Add("BuilderBase", "BBStopAt3", $g_bChkBBStopAt3 ? 1 : 0)
 	_Ini_Add("BuilderBase", "BBTrophiesRange", $g_bChkBBTrophiesRange ? 1 : 0)
-	_Ini_Add("BuilderBase", "BBRandomAttack", $g_bChkBBRandomAttack ? 1 : 0)
+	_Ini_Add("BuilderBase", "BBRandomAttack", $g_bChkBBCustomAttack ? 1 : 0)
 	For $i = 0 To 2
 		_Ini_Add("BuilderBase", "ScriptBB" & $i, $g_sAttackScrScriptNameBB[$i])
 	Next
