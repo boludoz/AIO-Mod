@@ -201,7 +201,7 @@ Func ChkSmartFarm($sTypeResources = "All")
 	#Region - Max Side - Team AIO Mod++
 	If $g_bMaxSidesSF Then
 		Local $aSides2[4][2] = [ ["TL", $aMainSide[0]], ["TR", $aMainSide[1]], ["BL", $aMainSide[2]], ["BR", $aMainSide[3]] ]
-		_ArraySort($aSides2, 0, 0, 0, 0)
+		_ArraySort($aSides2, 0, 0, 0, 1)
 
 		Local $iMaxL = ((UBound($BestSideToAttack) -1) > ($g_iCmbMaxSidesSF - 1)) ? ($g_iCmbMaxSidesSF - 1) : (UBound($BestSideToAttack) - 1)
 		Local $BestSideToAttack[0]
