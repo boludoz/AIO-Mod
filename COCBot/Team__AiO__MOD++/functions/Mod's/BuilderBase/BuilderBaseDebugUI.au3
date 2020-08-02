@@ -23,68 +23,73 @@ Func DebugUI()
 	If $g_hDegubUiForm <> 0 Then Return
 
 	; Variables
-	Local $btnLoadImageSource = 0, $lblSourceImage = 0, $btnClose = 0, $btnFillArmy = 0, $btnLab = 0, $btnAllLoop = 0, $btnSize = 0, $btnZoom = 0, $btnDeploy = 0, $btnHall = 0, $btnDrop = 0, $btnAttackBar = 0, $btnCSV = 0, $btnCleanYard = 0, $btnIMG = 0, $btnImage = 0, $btnClockTower = 0, $btnUpgradeWall = 0, $btnMachine = 0
+	Local $btnLoadImageSource = 0, $lblSourceImage = 0, $btnClose = 0, $btnFillArmy = 0, $btnLab = 0, _
+			$btnAllLoop = 0, $btnSize = 0, $btnZoom = 0, $btnDeploy = 0, $btnHall = 0, $btnDrop = 0, _
+			$btnAttackBar = 0, $btnCSV = 0, $btnCleanYard = 0, $btnIMG = 0, $btnImage = 0, $btnClockTower = 0, _
+			$btnUpgradeWall = 0, $btnMachine = 0, $btnSmartAttack
+	
 	Local $x = 10, $y = 20
 	; GUI
 	$g_hDegubUiForm = GUICreate("MyBotRun Builder Base DebugUI", 440, 320, -1, -1, $WS_BORDER)
 
-#Tidy_Off
 	GUICtrlCreateGroup("Debug tests at Emulator", 3, 0, 430, 135)
 
-		$btnAllLoop = GUICtrlCreateButton("Idle loop", $x, $y, 75, 25, $WS_GROUP)
-			GUICtrlSetOnEvent($btnAllLoop, "TestrunBuilderBase")
+	$btnAllLoop = GUICtrlCreateButton("Idle loop", $x, $y, 75, 25, $WS_GROUP)
+	GUICtrlSetOnEvent($btnAllLoop, "TestrunBuilderBase")
 
-		$g_cmbBuildings = GUICtrlCreateCombo("", $x + 15 + 75 + 75 + 75, $y, 125, 20)
-			GUICtrlSetData($g_cmbBuildings, "AirDefense|Crusher|GuardPost|Cannon|BuilderHall", "Crusher")
+	$g_cmbBuildings = GUICtrlCreateCombo("", $x + 15 + 75 + 75 + 75, $y, 125, 20)
+	GUICtrlSetData($g_cmbBuildings, "AirDefense|Crusher|GuardPost|Cannon|BuilderHall", "Crusher")
 
 	$y += 30
 	; First Row
- 	;	$btnLab = GUICtrlCreateButton("UpgTroop", $x, $y, 75, 25, $WS_GROUP)
- 	;		GUICtrlSetOnEvent($btnLab, "TestBBUpgradeTroops")
- 	$x += 75
- 	;	$btnSize = GUICtrlCreateButton("UpgBuild", $x, $y, 75, 25, $WS_GROUP)
- 	;		GUICtrlSetOnEvent($btnSize, "TestBBUpgradeBuilding")
+	;	$btnLab = GUICtrlCreateButton("UpgTroop", $x, $y, 75, 25, $WS_GROUP)
+	;		GUICtrlSetOnEvent($btnLab, "TestBBUpgradeTroops")
+	;$x += 75
+	;	$btnSize = GUICtrlCreateButton("UpgBuild", $x, $y, 75, 25, $WS_GROUP)
+	;		GUICtrlSetOnEvent($btnSize, "TestBBUpgradeBuilding")
+	$btnSmartAttack = GUICtrlCreateButton("AttackBB", $x, $y, 75, 25, $WS_GROUP)
+	GUICtrlSetOnEvent($btnSmartAttack, "TestBuilderBaseAttackBB")
 	$x += 75
-		$btnHall = GUICtrlCreateButton("BuilderHall", $x, $y, 75, 25, $WS_GROUP)
-			GUICtrlSetOnEvent($btnHall, "TestBuilderBaseGetHall")
+	$btnHall = GUICtrlCreateButton("BuilderHall", $x, $y, 75, 25, $WS_GROUP)
+	GUICtrlSetOnEvent($btnHall, "TestBuilderBaseGetHall")
 	$x += 75
-		$btnDrop = GUICtrlCreateButton("Attack", $x, $y, 75, 25, $WS_GROUP)
-			GUICtrlSetOnEvent($btnDrop, "TestBuilderBaseAttack")
+	$btnDrop = GUICtrlCreateButton("Attack (MAIN).", $x, $y, 75, 25, $WS_GROUP)
+	GUICtrlSetOnEvent($btnDrop, "TestBuilderBaseAttack")
 	$x += 75
-		$btnCSV = GUICtrlCreateButton("CSV", $x, $y, 60, 25, $WS_GROUP)
-			GUICtrlSetOnEvent($btnCSV, "TestBuilderBaseParseAttackCSV")
- 	$x += 60
- 	;	$btnCleanYard = GUICtrlCreateButton("Clean Yard", $x, $y, 60, 25, $WS_GROUP)
- 	;		GUICtrlSetOnEvent($btnCleanYard, "TestrunCleanYardBB")
+	$btnCSV = GUICtrlCreateButton("CSV", $x, $y, 60, 25, $WS_GROUP)
+	GUICtrlSetOnEvent($btnCSV, "TestBuilderBaseParseAttackCSV")
+	$x += 60
+	;	$btnCleanYard = GUICtrlCreateButton("Clean Yard", $x, $y, 60, 25, $WS_GROUP)
+	;		GUICtrlSetOnEvent($btnCleanYard, "TestrunCleanYardBB")
 	$y += 25
 	$x = 10
 	; Second Row
-		$btnFillArmy = GUICtrlCreateButton("Fill Army", $x, $y, 75, 25, $WS_GROUP)
-			GUICtrlSetOnEvent($btnFillArmy, "TestCheckArmyBuilderBase")
- 	$x += 75
- 		$btnZoom = GUICtrlCreateButton("ZoomOut", $x, $y, 75, 25, $WS_GROUP)
- 			GUICtrlSetOnEvent($btnZoom, "TestBuilderBaseZoomOut")
+	$btnFillArmy = GUICtrlCreateButton("Fill Army", $x, $y, 75, 25, $WS_GROUP)
+	GUICtrlSetOnEvent($btnFillArmy, "TestCheckArmyBuilderBase")
 	$x += 75
-		$btnDeploy = GUICtrlCreateButton("Deploy P.", $x, $y, 75, 25, $WS_GROUP)
-			GUICtrlSetOnEvent($btnDeploy, "TestBuilderBaseGetDeployPoints")
+	$btnZoom = GUICtrlCreateButton("ZoomOut", $x, $y, 75, 25, $WS_GROUP)
+	GUICtrlSetOnEvent($btnZoom, "TestBuilderBaseZoomOut")
 	$x += 75
-		$btnAttackBar = GUICtrlCreateButton("AttackBar", $x, $y, 75, 25, $WS_GROUP)
-			GUICtrlSetOnEvent($btnAttackBar, "TestGetAttackBarBB")
+	$btnDeploy = GUICtrlCreateButton("Deploy P.", $x, $y, 75, 25, $WS_GROUP)
+	GUICtrlSetOnEvent($btnDeploy, "TestBuilderBaseGetDeployPoints")
 	$x += 75
-		$btnIMG = GUICtrlCreateButton("Collect", $x, $y, 60, 25, $WS_GROUP)
-			GUICtrlSetOnEvent($btnIMG, "CollectBuilderBase")
- 	$x += 60
- 		$btnClockTower = GUICtrlCreateButton("ClkTower", $x, $y, 60, 25, $WS_GROUP)
- 			GUICtrlSetOnEvent($btnClockTower, "TestStartClockTowerBoost")
+	$btnAttackBar = GUICtrlCreateButton("AttackBar", $x, $y, 75, 25, $WS_GROUP)
+	GUICtrlSetOnEvent($btnAttackBar, "TestGetAttackBarBB")
+	$x += 75
+	$btnIMG = GUICtrlCreateButton("Collect", $x, $y, 60, 25, $WS_GROUP)
+	GUICtrlSetOnEvent($btnIMG, "CollectBuilderBase")
+	$x += 60
+	$btnClockTower = GUICtrlCreateButton("ClkTower", $x, $y, 60, 25, $WS_GROUP)
+	GUICtrlSetOnEvent($btnClockTower, "TestStartClockTowerBoost")
 
 	$y += 25
 	$x = 10
 	; 3 Row
- 		$btnUpgradeWall = GUICtrlCreateButton("UpgradeWall", $x, $y, 75, 25, $WS_GROUP)
- 			GUICtrlSetOnEvent($btnUpgradeWall, "TestRunWallsUpgradeBB")
+	$btnUpgradeWall = GUICtrlCreateButton("UpgradeWall", $x, $y, 75, 25, $WS_GROUP)
+	GUICtrlSetOnEvent($btnUpgradeWall, "TestRunWallsUpgradeBB")
 	$x += 75
-		$btnMachine = GUICtrlCreateButton("BattleMachine", $x, $y, 75, 25, $WS_GROUP)
-			GUICtrlSetOnEvent($btnMachine, "TestBattleMachineUpgrade")
+	$btnMachine = GUICtrlCreateButton("BattleMachine", $x, $y, 75, 25, $WS_GROUP)
+	GUICtrlSetOnEvent($btnMachine, "TestBattleMachineUpgrade")
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
@@ -93,24 +98,23 @@ Func DebugUI()
 
 	GUICtrlCreateGroup("Debug tests on Images", 3, $y, 430, 155)
 	$y += 15
-		$lblSourceImage = GUICtrlCreateLabel("ScreenCapture", $x, $y, 75, 17)
+	$lblSourceImage = GUICtrlCreateLabel("ScreenCapture", $x, $y, 75, 17)
 	$y += 15
-		$btnLoadImageSource = GUICtrlCreateButton("Load Image", $x, $y, 75, 25, $WS_GROUP)
-			GUICtrlSetOnEvent($btnLoadImageSource, "LoadImageFile")
+	$btnLoadImageSource = GUICtrlCreateButton("Load Image", $x, $y, 75, 25, $WS_GROUP)
+	GUICtrlSetOnEvent($btnLoadImageSource, "LoadImageFile")
 
-		$g_hlblSourceStatus = GUICtrlCreateLabel("Empty", 98, $y + 4, 100, 17)
+	$g_hlblSourceStatus = GUICtrlCreateLabel("Empty", 98, $y + 4, 100, 17)
 	$y += 25
-		$btnDebufOSI = GUICtrlCreateButton("Debug OS", $x, $y, 75, 25, $WS_GROUP)
-			GUICtrlSetOnEvent($btnDebufOSI, "GuiDebug")
+	$btnDebufOSI = GUICtrlCreateButton("Debug OS", $x, $y, 75, 25, $WS_GROUP)
+	GUICtrlSetOnEvent($btnDebufOSI, "GuiDebug")
 
-		$btnDebufOSE = GUICtrlCreateButton("Debug Exit", $x + 80, $y, 75, 25, $WS_GROUP)
-			GUICtrlSetOnEvent($btnDebufOSE, "GuiDebugEnds")
+	$btnDebufOSE = GUICtrlCreateButton("Debug Exit", $x + 80, $y, 75, 25, $WS_GROUP)
+	GUICtrlSetOnEvent($btnDebufOSE, "GuiDebugEnds")
 
-		$btnClose = GUICtrlCreateButton("Exit", $x, 235, 75, 25, $WS_GROUP)
-			GUICtrlSetOnEvent($btnClose, "CloseDebugUI")
+	$btnClose = GUICtrlCreateButton("Exit", $x, 235, 75, 25, $WS_GROUP)
+	GUICtrlSetOnEvent($btnClose, "CloseDebugUI")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
-#Tidy_On
 	GUISetState(@SW_SHOW)
 
 EndFunc   ;==>DebugUI

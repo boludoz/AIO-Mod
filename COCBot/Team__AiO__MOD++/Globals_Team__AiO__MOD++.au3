@@ -276,7 +276,7 @@ Global $g_hTabBuilderBase = 0, $g_hTabAttack = 0
 Global $g_hCmbBBAttack = 0
 
 ; Attack CSV
-Global $g_bChkBBRandomAttack = False
+Global $g_bChkBBCustomAttack = False
 Global Const $g_sCSVBBAttacksPath = @ScriptDir & "\CSV\BuilderBase"
 Global $g_sAttackScrScriptNameBB[3] = ["", "", ""]
 Global $g_iBuilderBaseScript = 0

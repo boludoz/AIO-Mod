@@ -39,8 +39,8 @@ Func ApplyConfig_MOD_CustomArmyBB($TypeReadSave)
 			GUICtrlSetState($g_hChkBuilderAttack, $g_bChkBuilderAttack ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkBBStopAt3, $g_bChkBBStopAt3 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkBBTrophiesRange, $g_bChkBBTrophiesRange ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkBBRandomAttack, $g_bChkBBRandomAttack ? $GUI_CHECKED : $GUI_UNCHECKED)
-			ChkBBRandomAttack()
+			GUICtrlSetState($g_hChkBBCustomAttack, $g_bChkBBCustomAttack ? $GUI_CHECKED : $GUI_UNCHECKED)
+			ChkBBCustomAttack()
 			chkBuilderAttack()
 			PopulateComboScriptsFilesBB()
 			For $i = 0 To 2
@@ -77,7 +77,7 @@ Func ApplyConfig_MOD_CustomArmyBB($TypeReadSave)
 			$g_bChkBuilderAttack = (GUICtrlRead($g_hChkBuilderAttack) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkBBStopAt3 = (GUICtrlRead($g_hChkBBStopAt3) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkBBTrophiesRange = (GUICtrlRead($g_hChkBBTrophiesRange) = $GUI_CHECKED) ? 1 : 0
-			$g_bChkBBRandomAttack = (GUICtrlRead($g_hChkBBRandomAttack) = $GUI_CHECKED) ? 1 : 0
+			$g_bChkBBCustomAttack = (GUICtrlRead($g_hChkBBCustomAttack) = $GUI_CHECKED) ? 1 : 0
 			For $i = 0 To 2
 				Local $indexofscript = _GUICtrlComboBox_GetCurSel($g_hCmbBBAttackStyle[$i])
 				Local $scriptname

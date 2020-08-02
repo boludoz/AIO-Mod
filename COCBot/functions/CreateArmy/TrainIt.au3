@@ -91,7 +91,7 @@ Func TrainIt($iIndex, $iQuantity = 1, $iSleep = 400)
 
 	Next
 EndFunc   ;==>TrainIt
-
+#Region - Custom fix - Team AIO Mod++ (Support SuperT maybe)
 Func GetTrainPos(Const $iIndex)
 	If $g_bDebugSetlogTrain Then SetLog("GetTrainPos($iIndex=" & $iIndex & ")", $COLOR_DEBUG)
 	
@@ -123,7 +123,7 @@ Func GetTrainPos(Const $iIndex)
 
 	Return 0
 EndFunc   ;==>GetTrainPos
-
+#EndRegion - Custom fix - Team AIO Mod++ (Support SuperT maybe)
 Func GetFullName(Const $iIndex, Const $aTrainPos)
 	If $g_bDebugSetlogTrain Then SetLog("GetFullName($iIndex=" & $iIndex & ")", $COLOR_DEBUG)
 
@@ -164,7 +164,7 @@ Func GetRNDName(Const $iIndex, Const $aTrainPos)
 	SetLog("Don't know how to find the RND name of troop with index " & $iIndex & " yet!", $COLOR_ERROR)
 	Return 0
 EndFunc   ;==>GetRNDName
-
+#Region - Custom fix - Team AIO Mod++ (Compatible with Quick Train)
 Func GetVariable(Const $ImageToUse, Const $iIndex)
 	Local $aTrainPos[5] = [-1, -1, -1, -1, $eBarb]
 	; Capture the screen for comparison
@@ -200,7 +200,7 @@ Func GetVariable(Const $ImageToUse, Const $iIndex)
 	EndIf
 	Return $aTrainPos
 EndFunc   ;==>GetVariable
-
+#EndRegion - Custom fix - Team AIO Mod++ (Compatible with Quick Train)
 ; Function to use on GetFullName() , returns slot and correct [i] symbols position on train window
 Func GetFullNameSlot(Const $iTrainPos, Const $sTroopType)
 

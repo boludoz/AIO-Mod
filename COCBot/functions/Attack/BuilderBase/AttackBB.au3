@@ -13,6 +13,42 @@
 ; Example .......: No
 ; ===============================================================================================================================
 #Region - Custom BB - Team AIO Mod++ ; Thx Chilly-Chill by you hard work.
+Func TestBuilderBaseAttackBB()
+	Setlog("** TestBuilderBaseAttackBB START**", $COLOR_DEBUG)
+	Local $bStatus = $g_bRunState
+	$g_bRunState = True
+
+	Local $bTempDebug = $g_bDOCRDebugImages
+	$g_bDOCRDebugImages = True
+	
+	BuilderBaseResetAttackVariables()
+
+	; Attack Bar | [0] = Troops Name , [1] = X-axis , [2] - Quantities
+	;Local $aAvailableTroops = BuilderBaseAttackBar()
+	Local $aAvailableTroops = GetAttackBarBB()
+
+	If IsArray($aAvailableTroops) Then
+
+		; Zoomout the Opponent Village.
+		BuilderBaseZoomOut()
+		
+		; Correct Script.
+		BuilderBaseSelectCorrectScript($aAvailableTroops)
+		
+		; AttackBB
+		AttackBB($aAvailableTroops)
+
+		; Attack Report Window.
+		BuilderBaseAttackReport()
+
+	EndIf
+
+	$g_bDOCRDebugImages = $bTempDebug
+	$g_bRunState = $bStatus
+
+	Setlog("** TestBuilderBaseAttackBB END**", $COLOR_DEBUG)
+EndFunc   ;==>TestBuilderBaseAttackBB
+
 Func AttackBB($aAvailableTroops = GetAttackBarBB())
 	Local $iSide = Random(0, 1, 1) ; randomly choose top left or top right
 	Local $aBMPos = 0

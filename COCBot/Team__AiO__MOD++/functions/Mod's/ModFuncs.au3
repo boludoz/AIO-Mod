@@ -58,15 +58,15 @@ EndFunc   ;==>ClickFindMatch
 #ce
 
 Func SearchNoLeague()
-		Local $offColors[2][3] = [[0xFBFDFB, 28, 0], [0x626462, 15, 5]]
-		Local $vNoLeaguePixel = _MultiPixelSearch(5, 10, 50, 50, 1, 1, Hex(0xFFFFFF, 6), $offColors, 15)
-		
-		If $g_bDebugSetlog Then SetDebugLog("NoLeague pixel chk-#1: " & _GetPixelColor(13, 24, True) & _
-		", #2: " & _GetPixelColor(13 + 28, 24, True) & _
-		", #3: " & _GetPixelColor(13 + 15, 24 + 5, True), $COLOR_DEBUG)
-		
-		If IsArray($vNoLeaguePixel) Then Return True
-		Return False
+	Local $offColors[2][3] = [[0xFBFDFB, 28, 0], [0x626462, 15, 5]]
+	Local $vNoLeaguePixel = _MultiPixelSearch(5, 10, 50, 50, 1, 1, Hex(0xFFFFFF, 6), $offColors, 15)
+	
+	If $g_bDebugSetlog Then SetDebugLog("NoLeague pixel chk-#1: " & _GetPixelColor(13, 24, True) & _
+			", #2: " & _GetPixelColor(13 + 28, 24, True) & _
+			", #3: " & _GetPixelColor(13 + 15, 24 + 5, True), $COLOR_DEBUG)
+	
+	If IsArray($vNoLeaguePixel) Then Return True
+	Return False
 EndFunc   ;==>SearchNoLeague
 
 Func SpecialAway()
@@ -215,12 +215,12 @@ Func _makerequestCustom($aButtonPosition = -1)
 	Static $aRequestTroopsText[0][2]
 	
 	If Not StringIsSpace($g_sRequestTroopsText) Then
-	
+		
 		Local $iUbi = __ArraySearch($aRequestTroopsText, $g_sRequestTroopsText)
 		Local $bCanReq = False
 		If $iUbi = -1 Then
 			$bCanReq = True
-			Local $aMatrixText[1][2] = [[$g_sProfileCurrentName,$g_sRequestTroopsText]]
+			Local $aMatrixText[1][2] = [[$g_sProfileCurrentName, $g_sRequestTroopsText]]
 			_ArrayAdd($aRequestTroopsText, $aMatrixText)
 		ElseIf $aRequestTroopsText[$iUbi][1] <> $g_sRequestTroopsText Then
 			$bCanReq = True
@@ -250,12 +250,12 @@ Func _makerequestCustom($aButtonPosition = -1)
 EndFunc   ;==>_makerequestCustom
 
 #Region - Custom Yard - Team AIO Mod++
-Func _CleanYard($aIsBB = Default, $bTest = False)
-	If $aIsBB = Default Then $aIsBB = $g_bStayOnBuilderBase
+Func _CleanYard($bIsBB = Default, $bTest = False)
+	If $bIsBB = Default Then $bIsBB = $g_bStayOnBuilderBase
 	
 	ZoomOut()
 	
-	If $aIsBB Then
+	If $bIsBB Then
 		If Not $g_bChkCleanBBYard And Not $bTest Then Return
 		
 		; Check if is in Builder Base
@@ -279,10 +279,10 @@ Func _CleanYard($aIsBB = Default, $bTest = False)
 		If $g_iFreeBuilderCount = 0 Then Return
 	EndIf
 	
-	If (Number($g_aiCurrentLootBB[$eLootElixirBB]) > 50000 And $aIsBB) Or (Number($g_aiCurrentLoot[$eLootElixir]) > 50000 And Not $aIsBB) Or $bTest Then
+	If (Number($g_aiCurrentLootBB[$eLootElixirBB]) > 50000 And $bIsBB) Or (Number($g_aiCurrentLoot[$eLootElixir]) > 50000 And Not $bIsBB) Or $bTest Then
 		Local $aResult, $aRTmp1, $aRTmp2
 		
-		If $aIsBB Then
+		If $bIsBB Then
 			$aResult = findMultipleQuick($g_sImgCleanBBYard, 0, "83, 136, 844, 694", Default, Default, Default, 10)
 		Else
 			$aRTmp1 = findMultipleQuick($g_sImgCleanYardSnow, 0, "15, 31, 859, 648", Default, Default, Default, 10)
@@ -304,20 +304,13 @@ Func _CleanYard($aIsBB = Default, $bTest = False)
 		
 		SetLog("- Removing some obstacles - Custom by AIO Mod ++.", $COLOR_ACTION)
 		
-		Local $iError = 0, $iMaxLoop = 0, $aDigits = ($aIsBB) ? ($aBuildersDigitsBuilderBase) : ($aBuildersDigits)
+		Local $iError = 0, $iMaxLoop = 0, $aDigits = ($bIsBB) ? ($aBuildersDigitsBuilderBase) : ($aBuildersDigits)
+		Local $aSearch[4] = [0, 0, 0, 0] ; Edge - NV.
+		ReturnPreVD($aSearch, $bIsBB, $g_bEdgeObstacle)
 		For $i = 0 To UBound($aResult) - 1
 			$iMaxLoop = 0
-			Select
-				Case $g_bEdgeObstacle And Not $aIsBB And isInDiamond($aResult[$i][1], $aResult[$i][2], 15, 31, 859, 648)
-				Case Not $g_bEdgeObstacle And Not $aIsBB And isInDiamond($aResult[$i][1], $aResult[$i][2], 92, 73, 781, 599)
-				Case $g_bEdgeObstacle And $aIsBB And isInDiamond($aResult[$i][1], $aResult[$i][2], 83, 136, 844, 694)
-				Case Not $g_bEdgeObstacle And $aIsBB And isInDiamond($aResult[$i][1], $aResult[$i][2], 138, 173, 780, 648)
-				Case Else
-					If $g_bDebugSetlog Then SetDebugLog("_CleanYard skipped.")
-					ContinueLoop
-			EndSelect
-			
-			If $g_bDebugSetlog Then SetDebugLog("_CleanYard found : - Is BB? " & $aIsBB & "- Is Edge ? " & $g_bEdgeObstacle & " - Coordinates X: " & $aResult[$i][1] & " | Coordinates X: " & $aResult[$i][2], $COLOR_SUCCESS)
+			If Not isInDiamond($aResult[$i][1], $aResult[$i][2], $aSearch[0], $aSearch[1], $aSearch[2], $aSearch[3]) Then ContinueLoop
+			If $g_bDebugSetlog Then SetDebugLog("_CleanYard found : - Is BB? " & $bIsBB & "- Is Edge ? " & $g_bEdgeObstacle & " - Coordinates X: " & $aResult[$i][1] & " | Coordinates X: " & $aResult[$i][2], $COLOR_SUCCESS)
 			
 			SetLog("- Removing some obstacles, wait. - Custom by AIO Mod ++.", $COLOR_INFO)
 			

@@ -247,16 +247,16 @@ EndFunc   ;==>DeployPointsPosition
 
 Func BuilderBaseBuildingsDetection($iBuilding = 4)
 
-	Local $sBuildings = ["AirDefenses", "Crusher", "GuardPost", "Cannon", "BuilderHall"]
-	If UBound($sBuildings) < $iBuilding Then Return -1
+	Local $aBuildings[5] = ["AirDefenses", "Crusher", "GuardPost", "Cannon", "BuilderHall"]
+	If UBound($aBuildings) < $iBuilding Then Return -1
 	
-	Local $sDirectory = $g_sImgOpponentBuildingsBB & $sBuildings[$iBuilding]
+	Local $sDirectory = $g_sImgOpponentBuildingsBB & "\" & $aBuildings[$iBuilding]
 	
-	Setlog("Initial detection for " & $sBuildings[$iBuilding], $COLOR_ACTION)
+	Setlog("Initial detection for " & $aBuildings[$iBuilding], $COLOR_ACTION)
 
-	Local $aScreen[4] = [130, 210, 833, 610]
+	Local $aScreen[4] = [83, 136, 844, 694]
 	If Not $g_bRunState Then Return
-	Return findMultipleQuick($sDirectory, 1, $aScreen, Default, Default, Default, 10)
+	Return findMultipleQuick($sDirectory, 10, $aScreen, Default, Default, Default, 10)
 
 EndFunc   ;==>BuilderBaseBuildingsDetection
 
