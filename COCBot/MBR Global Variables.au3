@@ -285,14 +285,14 @@ Global $g_avAndroidAppConfig[8][16] = [ _ ;           |                         
 ]
 
 ; Android Configutions, see COCBot\functions\Android\Android Status & Information.txt for more details
-Global $__Nox_Idx = __ArraySearch($g_avAndroidAppConfig, "Nox", 0, 0, 0, 0, 1, 0) ; http://en.bignox.com/
-Global $__MEmu_Idx = __ArraySearch($g_avAndroidAppConfig, "MEmu", 0, 0, 0, 0, 1, 0) ; http://www.memuplay.com/
-Global $__BS2_Idx = __ArraySearch($g_avAndroidAppConfig, "BlueStacks2", 0, 0, 0, 0, 1, 0) ; http://www.bluestacks.com/
-Global $__BS_Idx = __ArraySearch($g_avAndroidAppConfig, "BlueStacks", 0, 0, 0, 0, 1, 0) ; https://filehippo.com/de/download_bluestacks_app_player/64518/
-Global $__LeapDroid_Idx = __ArraySearch($g_avAndroidAppConfig, "LeapDroid", 0, 0, 0, 0, 1, 0) ; https://mybot.run/forums/index.php?/topic/22912-new-leapdroid-support
-Global $__iTools_Idx = __ArraySearch($g_avAndroidAppConfig, "iTools", 0, 0, 0, 0, 1, 0) ; https://pro.itools.cn/simulate/
-Global $__KOPLAYER_Idx = __ArraySearch($g_avAndroidAppConfig, "KOPLAYER", 0, 0, 0, 0, 1, 0) ; http://www.koplayer.com/
-Global $__Droid4X_Idx = __ArraySearch($g_avAndroidAppConfig, "Droid4X", 0, 0, 0, 0, 1, 0) ; http://droid4x.haimawan.com/
+Global $__Nox_Idx = _ArraySearch($g_avAndroidAppConfig, "Nox", 0, 0, 0, 0, 1, 0) ; http://en.bignox.com/
+Global $__MEmu_Idx = _ArraySearch($g_avAndroidAppConfig, "MEmu", 0, 0, 0, 0, 1, 0) ; http://www.memuplay.com/
+Global $__BS2_Idx = _ArraySearch($g_avAndroidAppConfig, "BlueStacks2", 0, 0, 0, 0, 1, 0) ; http://www.bluestacks.com/
+Global $__BS_Idx = _ArraySearch($g_avAndroidAppConfig, "BlueStacks", 0, 0, 0, 0, 1, 0) ; https://filehippo.com/de/download_bluestacks_app_player/64518/
+Global $__LeapDroid_Idx = _ArraySearch($g_avAndroidAppConfig, "LeapDroid", 0, 0, 0, 0, 1, 0) ; https://mybot.run/forums/index.php?/topic/22912-new-leapdroid-support
+Global $__iTools_Idx = _ArraySearch($g_avAndroidAppConfig, "iTools", 0, 0, 0, 0, 1, 0) ; https://pro.itools.cn/simulate/
+Global $__KOPLAYER_Idx = _ArraySearch($g_avAndroidAppConfig, "KOPLAYER", 0, 0, 0, 0, 1, 0) ; http://www.koplayer.com/
+Global $__Droid4X_Idx = _ArraySearch($g_avAndroidAppConfig, "Droid4X", 0, 0, 0, 0, 1, 0) ; http://droid4x.haimawan.com/
 
 ; Startup detection
 Global $g_bOnlyInstance = True
@@ -697,24 +697,23 @@ Global Const $g_asSuperTroopNames[$eSuperTroopCount] = [ _
 		"Super Barbarian", "Archer", "Super Giant", "Sneaky Goblin", "Super Wall Breaker", "Balloon", "Wizard", "Healer", "Dragon", "Pekka", "Inferno Dragon", "Miner", "Electro Dragon", "Yeti", _
 		"Minion", "Hog Rider", "Valkyrie", "Golem", "Super Witch", "Lava Hound", "Bowler", "Ice Golem", "Headhunter"]
 
-Global Const $g_asSuperTroopNamesPlural[$eTroopCount] = [ _
+Global Const $g_asSuperTroopNamesPlural[$eSuperTroopCount] = [ _
 		"Super Barbarians", "Archers", "Super Giants", "Sneaky Goblins", "Super Wall Breakers", "Balloosn", "Wizards", "Healers", "Dragons", "Pekkas", "Inferno Dragons", "Miners", "Electro Dragons", "Yetis", _
 		"Minions", "Hog Riders", "Valkyries", "Golems", "Super Witches", "Lava Hounds", "Bowlers", "Ice Golems", "Headhunters"]
 
-Global Const $g_asSuperTroopShortNames[$eTroopCount] = [ _
+Global Const $g_asSuperTroopShortNames[$eSuperTroopCount] = [ _
 		"SuperBarb", "Archer", "SuperGiant", "SneakyGobl", "SuperWall", "Balloon", "Wizard", "Healer", "Dragon", "Pekka", "InfernoDrag", "Miner", "Electro Dragon", "Yeti", _
 		"Minion", "Hog Rider", "Valkyrie", "Golem", "SuperWitc", "Lava Hound", "Bowler", "Ice Golem", "Headhunter"]
 
-Global Const $g_aiSuperTroopSpace[$eTroopCount] = [ _
+Global Const $g_aiSuperTroopSpace[$eSuperTroopCount] = [ _
 		5, 1, 10, 3, 8, 5, 4, 14, 20, 25, 15, 6, 30, 18, _
 		2, 5, 8, 30, 40, 30, 6, 15, 6]
 
-Global Const $g_aiSuperTroopTrainTime[$eTroopCount] = [ _
+Global Const $g_aiSuperTroopTrainTime[$eSuperTroopCount] = [ _
         25, 24, 60, 21, 60, 120, 120, 480, 720, 720, 135, 120, 1440, 720, _
 		36, 90, 180, 600, 360, 600, 120, 180, 60]
 
-
-Global Const $g_aiSuperTroopCostPerLevel[$eTroopCount][11] = [ _
+Global Const $g_aiSuperTroopCostPerLevel[$eSuperTroopCount][11] = [ _
 		[9, -1, -1, -1, -1, -1, -1, -1, 1500, 1700], _ 			        ; Super Barbarian
 		[8, 50, 80, 120, 200, 300, 400, 500, 600], _ 			        ; Archer
 		[9, -1, -1, -1, -1, -1, -1, -1, -1, 9000], _ 	    		    ; Super Giant
