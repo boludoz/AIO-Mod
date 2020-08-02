@@ -804,13 +804,13 @@ Func runBot() ;Bot that runs everything in order
 				If _Sleep($DELAYRUNBOT1) = False Then checkMainScreen(False)
 			EndIf
 			#EndRegion - Request form chat / on a loop - Team AIO Mod++
-			#Region - Only farm - Team AIO Mod++ 
+			#Region - Only farm - Team AIO Mod++
 			If Not $g_bChkOnlyFarm Then
 				Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectFreeMagicItems', 'DailyChallenge', 'BoostSuperTroop'] ; AIO Mod
 			Else
 				Local $aRndFuncList = ['Collect', 'CollectFreeMagicItems', 'DailyChallenge', 'BoostSuperTroop'] ; AIO Mod
-			EndIf 
-			#EndRegion - Only farm - Team AIO Mod++ 
+			EndIf
+			#EndRegion - Only farm - Team AIO Mod++
 			_ArrayShuffle($aRndFuncList)
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
@@ -822,13 +822,13 @@ Func runBot() ;Bot that runs everything in order
 			If Not $g_bRunState Then Return
 			If $g_bRestart Then ContinueLoop
 			If IsSearchAttackEnabled() Then ; if attack is disabled skip reporting, requesting, donating, training, and boosting
-				#Region - Only farm - Team AIO Mod++ 
+				#Region - Only farm - Team AIO Mod++
 				If Not $g_bChkOnlyFarm Then
 					Local $aRndFuncList = ['ReplayShare', 'NotifyReport', 'DonateCC,Train', 'RequestCC']
 				Else
 					Local $aRndFuncList = ['NotifyReport', 'DonateCC,Train', 'RequestCC']
-				EndIf 
-				#EndRegion - Only farm - Team AIO Mod++ 
+				EndIf
+				#EndRegion - Only farm - Team AIO Mod++
 				_ArrayShuffle($aRndFuncList)
 				For $Index In $aRndFuncList
 					If Not $g_bRunState Then Return
@@ -838,13 +838,13 @@ Func runBot() ;Bot that runs everything in order
 				Next
 				BoostEverything() ; 1st Check if is to use Training Potion
 				If $g_bRestart Then ContinueLoop
-				#Region - Only farm - Team AIO Mod++ 
+				#Region - Only farm - Team AIO Mod++
 				If Not $g_bChkOnlyFarm Then
 					Local $aRndFuncList = ['BoostBarracks', 'BoostSpellFactory', 'BoostWorkshop', 'BoostKing', 'BoostQueen', 'BoostWarden', 'BoostChampion']
 				Else
 					Local $aRndFuncList = ['BoostBarracks', 'BoostSpellFactory', 'BoostWorkshop', 'BoostKing', 'BoostQueen', 'BoostWarden', 'BoostChampion']
-				EndIf 
-				#EndRegion - Only farm - Team AIO Mod++ 
+				EndIf
+				#EndRegion - Only farm - Team AIO Mod++
 				_ArrayShuffle($aRndFuncList)
 				For $Index In $aRndFuncList
 					If Not $g_bRunState Then Return
@@ -864,21 +864,21 @@ Func runBot() ;Bot that runs everything in order
 			If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) Then _RunFunction('DonateCC,Train')
 			If $g_bRestart Then ContinueLoop
 			If $g_bChkOnlyFarm = False Then MainSXHandler() ; Super XP - Team AIO Mod++
-			#Region - Only farm - Team AIO Mod++ 
+			#Region - Only farm - Team AIO Mod++
 			If Not $g_bChkOnlyFarm Then
 				Local $aRndFuncList = ['Laboratory', 'UpgradeHeroes', 'UpgradeBuilding']
 			Else
 				Local $aRndFuncList = []
 				; 	Don't eat glass.
 				If $g_bUpgradeKingEnable Or $g_bUpgradeQueenEnable Or $g_bUpgradeWardenEnable Or $g_bUpgradeChampionEnable Then _ArrayAdd($aRndFuncList, 'UpgradeHeroes')
-	
+				
 				;	667, 27, F5DD71 ; Full gold.	668, 77, E292E2 ; Full elixir.
 				If _ColorCheck(_GetPixelColor(667, 27, True), Hex(0xF5DD71, 6), 25) Or _ColorCheck(_GetPixelColor(668, 77, True), Hex(0xE292E2, 6), 25) Then _ArrayAdd($aRndFuncList, 'UpgradeBuilding')
 				
 				;	668, 77, E292E2 ; Full elixir.
 				If $g_bAutoLabUpgradeEnable And _ColorCheck(_GetPixelColor(668, 77, True), Hex(0xE292E2, 6), 25) Then _ArrayAdd($aRndFuncList, 'Laboratory')
-			EndIf 
-			#EndRegion - Only farm - Team AIO Mod++ 
+			EndIf
+			#EndRegion - Only farm - Team AIO Mod++
 			_ArrayShuffle($aRndFuncList)
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
@@ -887,13 +887,13 @@ Func runBot() ;Bot that runs everything in order
 				If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 			Next
 			; Ensure, that wall upgrade is last of the upgrades
-			#Region - Only farm - Team AIO Mod++ 
+			#Region - Only farm - Team AIO Mod++
 			Local $aRndFuncList = ['BuilderBase']
 			If $g_bAutoUpgradeWallsEnable = True Then
 				;	667, 27, F5DD71 ; Full gold. Or 668, 77, E292E2 ; Full elixir.
 				If Not $g_bChkOnlyFarm Or (_ColorCheck(_GetPixelColor(667, 27, True), Hex(0xF5DD71, 6), 25) Or _ColorCheck(_GetPixelColor(668, 77, True), Hex(0xE292E2, 6), 25)) Then _ArrayAdd($aRndFuncList, 'UpgradeWall')
-			EndIf 
-			#EndRegion - Only farm - Team AIO Mod++ 
+			EndIf
+			#EndRegion - Only farm - Team AIO Mod++
 			_ArrayShuffle($aRndFuncList)
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
@@ -1212,7 +1212,7 @@ Func __RunFunction($sAction)
 			If $g_iActiveDonate And $g_bChkDonate And Not $g_bChkOnlyFarm Then ; Only farm - Team AIO Mod++
 				; if in "Halt/Donate" don't skip near full army
 				If (Not SkipDonateNearFullTroops(True) Or $g_iCommandStop = 3 Or $g_iCommandStop = 0) And BalanceDonRec(True) Then DonateCC()
-				If RandomSleep($DELAYRUNBOT1) Then Return = False Then checkMainScreen(False)
+				If Not RandomSleep($DELAYRUNBOT1) Then checkMainScreen(False)
 			EndIf
 		Case "DonateCC,Train"
 			If $g_iActiveDonate And $g_bChkDonate And Not $g_bChkOnlyFarm Then ; Only farm - Team AIO Mod++
@@ -1293,7 +1293,7 @@ Func __RunFunction($sAction)
 			$g_iNbrOfWallsUpped = 0
 			UpgradeWall()
 			If RandomSleep($DELAYRUNBOT3) Then Return
-		; BBase - Team AIO Mod++
+			; BBase - Team AIO Mod++
 		Case "BuilderBase"
 			If Not ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Then Return True
 			runBuilderBase()

@@ -20,7 +20,7 @@ Func ReturnPreVD(ByRef $aS, $bBB = False, $bEdge = False)
 			Select
 				Case $bEdge ; Edge - BB.
 					Local $aSearch[4] = [83, 136, 844, 694] 
-				Case Else Not $bEdge ; No Edge - BB.
+				Case Not $bEdge ; No Edge - BB.
 					Local $aSearch[4] = [138, 173, 780, 648] 
 			EndSelect
 		Case Else

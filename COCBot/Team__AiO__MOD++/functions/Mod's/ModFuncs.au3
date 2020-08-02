@@ -58,15 +58,15 @@ EndFunc   ;==>ClickFindMatch
 #ce
 
 Func SearchNoLeague()
-		Local $offColors[2][3] = [[0xFBFDFB, 28, 0], [0x626462, 15, 5]]
-		Local $vNoLeaguePixel = _MultiPixelSearch(5, 10, 50, 50, 1, 1, Hex(0xFFFFFF, 6), $offColors, 15)
-		
-		If $g_bDebugSetlog Then SetDebugLog("NoLeague pixel chk-#1: " & _GetPixelColor(13, 24, True) & _
-		", #2: " & _GetPixelColor(13 + 28, 24, True) & _
-		", #3: " & _GetPixelColor(13 + 15, 24 + 5, True), $COLOR_DEBUG)
-		
-		If IsArray($vNoLeaguePixel) Then Return True
-		Return False
+	Local $offColors[2][3] = [[0xFBFDFB, 28, 0], [0x626462, 15, 5]]
+	Local $vNoLeaguePixel = _MultiPixelSearch(5, 10, 50, 50, 1, 1, Hex(0xFFFFFF, 6), $offColors, 15)
+	
+	If $g_bDebugSetlog Then SetDebugLog("NoLeague pixel chk-#1: " & _GetPixelColor(13, 24, True) & _
+			", #2: " & _GetPixelColor(13 + 28, 24, True) & _
+			", #3: " & _GetPixelColor(13 + 15, 24 + 5, True), $COLOR_DEBUG)
+	
+	If IsArray($vNoLeaguePixel) Then Return True
+	Return False
 EndFunc   ;==>SearchNoLeague
 
 Func SpecialAway()
@@ -215,12 +215,12 @@ Func _makerequestCustom($aButtonPosition = -1)
 	Static $aRequestTroopsText[0][2]
 	
 	If Not StringIsSpace($g_sRequestTroopsText) Then
-	
+		
 		Local $iUbi = __ArraySearch($aRequestTroopsText, $g_sRequestTroopsText)
 		Local $bCanReq = False
 		If $iUbi = -1 Then
 			$bCanReq = True
-			Local $aMatrixText[1][2] = [[$g_sProfileCurrentName,$g_sRequestTroopsText]]
+			Local $aMatrixText[1][2] = [[$g_sProfileCurrentName, $g_sRequestTroopsText]]
 			_ArrayAdd($aRequestTroopsText, $aMatrixText)
 		ElseIf $aRequestTroopsText[$iUbi][1] <> $g_sRequestTroopsText Then
 			$bCanReq = True
@@ -250,7 +250,7 @@ Func _makerequestCustom($aButtonPosition = -1)
 EndFunc   ;==>_makerequestCustom
 
 #Region - Custom Yard - Team AIO Mod++
-Func _CleanYard($aIsBB = Default, $bTest = False)
+Func _CleanYard($bIsBB = Default, $bTest = False)
 	If $bIsBB = Default Then $bIsBB = $g_bStayOnBuilderBase
 	
 	ZoomOut()
@@ -304,7 +304,7 @@ Func _CleanYard($aIsBB = Default, $bTest = False)
 		
 		SetLog("- Removing some obstacles - Custom by AIO Mod ++.", $COLOR_ACTION)
 		
-		Local $iError = 0, $iMaxLoop = 0, $aDigits = ($aIsBB) ? ($aBuildersDigitsBuilderBase) : ($aBuildersDigits)
+		Local $iError = 0, $iMaxLoop = 0, $aDigits = ($bIsBB) ? ($aBuildersDigitsBuilderBase) : ($aBuildersDigits)
 		Local $aSearch[4] = [0, 0, 0, 0] ; Edge - NV.
 		ReturnPreVD($aSearch, $bIsBB, $g_bEdgeObstacle)
 		For $i = 0 To UBound($aResult) - 1
