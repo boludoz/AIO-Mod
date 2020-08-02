@@ -145,7 +145,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	Next
 	Setlog("Available " & $iCampsQuantities & " Camps.", $COLOR_INFO)
 
-	Local $aCamps
+	Local $aCamps[0]
 
 	; Loop for every line on CSV
 	For $iLine = 0 To UBound($aLines) - 1
