@@ -2653,7 +2653,7 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 	EndIf
 
 	FileDelete($hostPath & $Filename)
-	$s = AndroidAdbSendShellCommand("screencap """ & $androidPath & $Filename & """", $g_iAndroidAdbScreencapWaitAdbTimeout, $wasRunState)
+	AndroidAdbSendShellCommand("screencap """ & $androidPath & $Filename & """", $g_iAndroidAdbScreencapWaitAdbTimeout, $wasRunState)
 	;$s = AndroidAdbSendShellCommand("screencap """ & $androidPath & $filename & """", -1, $wasRunState)
 	If $__TEST_ERROR_SLOW_ADB_SCREENCAP_DELAY > 0 Then Sleep($__TEST_ERROR_SLOW_ADB_SCREENCAP_DELAY)
 	Local $shellLogInfo = @extended
