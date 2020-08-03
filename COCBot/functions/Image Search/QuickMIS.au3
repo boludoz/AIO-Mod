@@ -12,19 +12,11 @@
 ; Link ..........: https://www.mybot.run
 ; Example .......: ---
 ;================================================================================================================================
-Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME_WIDTH, $Bottom = $g_iGAME_HEIGHT, $bNeedCapture = True, $Debug = False, $OcrDecode = 3, $OcrSpace = 12) ; EDITED By FENIX MOD
-	Local $hHBit
-	If $bNeedCapture Then 
-		_CaptureRegion2($Left, $Top, $Right, $Bottom)
-		Local $hHBit = $g_hHBitmap2
-	ElseIf $g_hHBitmap2 <> 0 Then
-		Local $hHBit = $g_hHBitmap2
-		GetHHBitmapArea($hHBit, $Left, $Top, $Right, $Bottom)
-	EndIf
+Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME_WIDTH, $Bottom = $g_iGAME_HEIGHT, $bNeedCapture = True, $Debug = False, $OcrDecode = 3, $OcrSpace = 12)
+	If $bNeedCapture Then _CaptureRegion2($Left, $Top, $Right, $Bottom)
 
-	Local $Res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $hHBit, "str", $directory, "str", "FV", "Int", 0, "str", "FV", "Int", 0, "Int", 1000)
+	Local $Res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $directory, "str", "FV", "Int", 0, "str", "FV", "Int", 0, "Int", 1000)
 	If @error Then _logErrorDLLCall($g_sLibMyBotPath, @error)
-		
 	If IsArray($Res) Then
 		If $g_bDebugSetlog Then SetDebugLog("DLL Call succeeded " & $Res[0], $COLOR_PURPLE)
 

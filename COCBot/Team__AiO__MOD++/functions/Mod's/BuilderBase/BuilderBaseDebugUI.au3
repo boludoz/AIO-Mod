@@ -23,11 +23,11 @@ Func DebugUI()
 	If $g_hDegubUiForm <> 0 Then Return
 
 	; Variables
-	Local $btnLoadImageSource = 0, $lblSourceImage = 0, $btnClose = 0, $btnFillArmy = 0, $btnLab = 0, _
-			$btnAllLoop = 0, $btnSize = 0, $btnZoom = 0, $btnDeploy = 0, $btnHall = 0, $btnDrop = 0, _
-			$btnAttackBar = 0, $btnCSV = 0, $btnCleanYard = 0, $btnIMG = 0, $btnImage = 0, $btnClockTower = 0, _
+	Local $btnLoadImageSource = 0, $lblSourceImage = 0, $btnClose = 0, $btnFillArmy = 0, _
+			$btnAllLoop = 0, $btnZoom = 0, $btnDeploy = 0, $btnHall = 0, $btnDrop = 0, _
+			$btnAttackBar = 0, $btnCSV = 0, $btnIMG = 0, $btnClockTower = 0, _
 			$btnUpgradeWall = 0, $btnMachine = 0, $btnSmartAttack
-	
+
 	Local $x = 10, $y = 20
 	; GUI
 	$g_hDegubUiForm = GUICreate("MyBotRun Builder Base DebugUI", 440, 320, -1, -1, $WS_BORDER)

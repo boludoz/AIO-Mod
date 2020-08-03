@@ -137,9 +137,15 @@ Func RunBBFuncs($sBBFunc, $bTestRun = False)
 
 				; Builder base Report and get out of the useless loop.
 				If Not RestAttacksInBB() Then ExitLoop
+				
+				;  $g_bCloudsActive fast network fix.
+				$g_bCloudsActive = True
 
 				; Attack
 				BuilderBaseAttack($bTestRun)
+				
+				;  $g_bCloudsActive fast network fix.
+				$g_bCloudsActive = False
 
 			Next
 

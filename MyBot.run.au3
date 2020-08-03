@@ -839,11 +839,7 @@ Func runBot() ;Bot that runs everything in order
 				BoostEverything() ; 1st Check if is to use Training Potion
 				If $g_bRestart Then ContinueLoop
 				#Region - Only farm - Team AIO Mod++
-				If Not $g_bChkOnlyFarm Then
-					Local $aRndFuncList = ['BoostBarracks', 'BoostSpellFactory', 'BoostWorkshop', 'BoostKing', 'BoostQueen', 'BoostWarden', 'BoostChampion']
-				Else
-					Local $aRndFuncList = ['BoostBarracks', 'BoostSpellFactory', 'BoostWorkshop', 'BoostKing', 'BoostQueen', 'BoostWarden', 'BoostChampion']
-				EndIf
+				Local $aRndFuncList = ['BoostBarracks', 'BoostSpellFactory', 'BoostWorkshop', 'BoostKing', 'BoostQueen', 'BoostWarden', 'BoostChampion']
 				#EndRegion - Only farm - Team AIO Mod++
 				_ArrayShuffle($aRndFuncList)
 				For $Index In $aRndFuncList
@@ -868,13 +864,13 @@ Func runBot() ;Bot that runs everything in order
 			If Not $g_bChkOnlyFarm Then
 				Local $aRndFuncList = ['Laboratory', 'UpgradeHeroes', 'UpgradeBuilding']
 			Else
-				Local $aRndFuncList = []
+				Local $aRndFuncList[0]
 				; 	Don't eat glass.
 				If $g_bUpgradeKingEnable Or $g_bUpgradeQueenEnable Or $g_bUpgradeWardenEnable Or $g_bUpgradeChampionEnable Then _ArrayAdd($aRndFuncList, 'UpgradeHeroes')
-				
+
 				;	667, 27, F5DD71 ; Full gold.	668, 77, E292E2 ; Full elixir.
 				If _ColorCheck(_GetPixelColor(667, 27, True), Hex(0xF5DD71, 6), 25) Or _ColorCheck(_GetPixelColor(668, 77, True), Hex(0xE292E2, 6), 25) Then _ArrayAdd($aRndFuncList, 'UpgradeBuilding')
-				
+
 				;	668, 77, E292E2 ; Full elixir.
 				If $g_bAutoLabUpgradeEnable And _ColorCheck(_GetPixelColor(668, 77, True), Hex(0xE292E2, 6), 25) Then _ArrayAdd($aRndFuncList, 'Laboratory')
 			EndIf
@@ -888,7 +884,8 @@ Func runBot() ;Bot that runs everything in order
 			Next
 			; Ensure, that wall upgrade is last of the upgrades
 			#Region - Only farm - Team AIO Mod++
-			Local $aRndFuncList = ['BuilderBase']
+			Local $aRndFuncList[0]
+			If Not $g_bChkOnlyFarm Then _ArrayAdd($aRndFuncList, 'BuilderBase')
 			If $g_bAutoUpgradeWallsEnable = True Then
 				;	667, 27, F5DD71 ; Full gold. Or 668, 77, E292E2 ; Full elixir.
 				If Not $g_bChkOnlyFarm Or (_ColorCheck(_GetPixelColor(667, 27, True), Hex(0xF5DD71, 6), 25) Or _ColorCheck(_GetPixelColor(668, 77, True), Hex(0xE292E2, 6), 25)) Then _ArrayAdd($aRndFuncList, 'UpgradeWall')
@@ -1323,10 +1320,10 @@ Func FirstCheck()
 	CheckFarmSchedule()
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
 
+	$g_bRestart = False
+	$g_bFullArmy = False
+	$g_iCommandStop = -1
 	If Not $g_bChkOnlyFarm Then
-		$g_bRestart = False
-		$g_bFullArmy = False
-		$g_iCommandStop = -1
 
 		If $g_bEnableSuperXP = True And $g_iActivateOptionSX = 2 Then ;When Super Xp Only Farm Option is on skip all and just do the Goblin Xp Farming
 			MainSXHandler()

@@ -40,16 +40,6 @@ Global $g_ahPicDBMaxTH[14]
 Global $g_hChkDBNoLeague = 0
 
 Func CreateAttackSearchDeadBaseSearch()
-	Local $sTxtLightningSpells = GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortLightningSpells", -1)
-	Local $sTxtHealSpells = GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortHealSpells", -1)
-	Local $sTxtRageSpells = GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortRageSpells", -1)
-	Local $sTxtJumpSpells = GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortJumpSpells", -1)
-	Local $sTxtFreezeSpells = GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortFreezeSpells", -1)
-	Local $sTxtPoisonSpells = GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortPoisonSpells", -1)
-	Local $sTxtEarthquakeSpells = GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortEarthquakeSpells", -1)
-	Local $sTxtHasteSpells = GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortHasteSpells", -1)
-	Local $sTxtSkeletonSpells = GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortSkeletonSpells", -1)
-	Local $sTxtBatSpells = GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortBatSpells", -1)
 
 	Local $sTxtTip = ""
 	Local $x = 25, $y = 45
@@ -181,7 +171,8 @@ Func CreateAttackSearchDeadBaseSearch()
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkWaitForCastle_Info_01", "Wait until your Clan Castle is filled, as requested."))
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
-	Local $x = 220, $y = 45
+	$x = 220
+	$y = 45
 	$g_hGrpDBFilter = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "Group_02", "Filters"), $x - 20, $y - 20, 225, $g_iSizeHGrpTab4)
 	$x -= 15
 		$g_hCmbDBMeetGE = GUICtrlCreateCombo("", $x, $y + 10, 65, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
@@ -194,7 +185,7 @@ Func CreateAttackSearchDeadBaseSearch()
 							   GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "CmbMeetGE_Info_04", "+ (PLUS): Total amount of Gold + Elixir must meet."))
 			GUICtrlSetOnEvent(-1, "cmbDBGoldElixir")
 
-Local $sMinUmbralTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "Txt_MinUmbralTip", "Recover what I spent in the army in minimum percentage, 0 = Disabled.")
+;~ Local $sMinUmbralTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "Txt_MinUmbralTip", "Recover what I spent in the army in minimum percentage, 0 = Disabled.")
 
 		$g_hTxtDBMinGold = _GUICtrlCreateInput("80000", $x + 85, $y, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "TxtMinGold_Info_01", "Set the Min. amount of Gold to search for on a village to attack.")
@@ -407,7 +398,7 @@ Local $sMinUmbralTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Searc
 		$g_hChkDBNoLeague = GUICtrlCreateCheckbox("No League", $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, "Search for a Dead bases that has no league.")
 			GUICtrlSetOnEvent(-1, "chkDBNoLeague")
-	#EndRegion
+	#EndRegion - Check Collector Outside & Check No League for Dead Base - Team AiO MOD++
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 EndFunc   ;==>CreateAttackSearchDeadBaseSearch

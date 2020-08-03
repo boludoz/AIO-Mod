@@ -44,7 +44,7 @@ Func CreateSplashScreen($iSteps = Default)
 	EndIf
 
 	Local $sSplashImg = $g_sLogoLoading
-	Local $hImage, $iX, $iY
+	Local $iX, $iY
 	Local $iT = 4 ; Top of logo (additional space)
 	Local $iB = 0 ; Bottom of logo (additional space)
 
@@ -70,10 +70,11 @@ Func CreateSplashScreen($iSteps = Default)
 		Local $iHeight = $iY + $iT + $iB + 60 ; size = image+Top space+Bottom space+60
 		Local $iCenterX = @DesktopWidth / 2 ; find center of main display
 		Local $iCenterY = @DesktopHeight / 2
+		Local $iTop
 		If $g_bMyBotDance Then
-			Local $iTop = @DesktopHeight - 50 - $iHeight ; position splash UI near task bar
+			$iTop = @DesktopHeight - 50 - $iHeight ; position splash UI near task bar
 		Else
-			Local $iTop = $iCenterY - $iHeight / 2
+			$iTop = $iCenterY - $iHeight / 2
 		EndIf
 		Local $iLeft = $iCenterX - $iX / 2 ; position splash UI centered on width
 

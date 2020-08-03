@@ -19,7 +19,7 @@ Func isOnBuilderBase($bNeedCaptureRegion = True, $bSoft = False)
 	If (_ImageSearchXML($g_sImgIsOnBB, 1, "260,0,406,54", False) <> -1) Then
 		SetDebugLog("Builder Base Builder detected. (Normal).", $COLOR_INFO)
 		Return True
-	ElseIf ((_ImageSearchXML($g_sImgZoomOutDirBB, 1, "0,0,860,732", False) <> -1) And Not $bSoft) Then
+	ElseIf (QuickMIS("N1", $g_sImgZoomOutDirBB, 0,0,860,732, False) <> "None") And Not $bSoft Then
 		SetDebugLog("Builder Base Builder detected. (Battle).", $COLOR_INFO)
 		Return True
 	EndIf

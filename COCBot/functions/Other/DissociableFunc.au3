@@ -31,35 +31,46 @@ EndFunc   ;==>DissociableFunc
 Func DllCallDOCR($sFunc, $ReturnType, $sType1 = Default, $vParam1 = Default, $sType2 = Default, $vParam2 = Default)
 	; SetLog("DOCR: sFunc: " & $sFunc & " - Return Type: " & $ReturnType & " - sType1: " & $sType1 & " - vParam1: " & $vParam1 & " - sType2: " & $sType2 & " - vParam2: " & $vParam2)
 	; suspend Android now
-	Local $bWasSuspended = SuspendAndroid()
+	$g_bLibMyBotActive = True
 
-	Local $aResult = DllCall($g_hLibDissociableOcr, $ReturnType, $sFunc, $sType1, $vParam1, $sType2, $vParam2)
+	Local $bWasSuspended = SuspendAndroid()
+	Local $aResult
+	$aResult = DllCall($g_hLibDissociableOcr, $ReturnType, $sFunc, $sType1, $vParam1, $sType2, $vParam2)
 	If @error Then
 		SetLog("DOCR Issue | Fail 0x0: " & @error)
-		
+
 		Sleep(100)
-		
-		Local $aResult = DllCall($g_hLibDissociableOcr, $ReturnType, $sFunc, $sType1, $vParam1, $sType2, $vParam2)
+
+		$aResult = DllCall($g_hLibDissociableOcr, $ReturnType, $sFunc, $sType1, $vParam1, $sType2, $vParam2)
 		If @error Then
 			SetLog("DOCR Issue | Fail 0x1: " & @error)
-			If $bWasSuspended Then ResumeAndroid()
+			; resume Android again (if it was not already suspended)
+			SuspendAndroid($bWasSuspended)
+			$g_bLibMyBotActive = False
 			Return ""
 		EndIf
 	EndIf
-	
-	
-	If IsArray($aResult) Then 
+
+
+	If IsArray($aResult) Then
 		If StringInStr($aResult[0], "ERROR") > 0 Then
 			SetLog("DOCR Issue | Fail 0x2. | " & $aResult[0], $COLOR_ERROR)
-			If $bWasSuspended Then ResumeAndroid()
+			; resume Android again (if it was not already suspended)
+			SuspendAndroid($bWasSuspended)
+			$g_bLibMyBotActive = False
 			Return ""
 		EndIf
-		If $bWasSuspended Then ResumeAndroid()
+		; resume Android again (if it was not already suspended)
+		SuspendAndroid($bWasSuspended)
+		$g_bLibMyBotActive = False
+
 		Return $aResult[0]
 	EndIf
-	
+
 	SetLog("DOCR Issue: Unknown DllCallDOCR Return: " & $aResult)
-	If $bWasSuspended Then ResumeAndroid()
+	; resume Android again (if it was not already suspended)
+	SuspendAndroid($bWasSuspended)
+	$g_bLibMyBotActive = False
 	Return ""
 EndFunc   ;==>DllCallDOCR
 

@@ -35,7 +35,7 @@ Global $g_bNewModAvailable = False
 ; ZoomMod
 Global $g_bZoomFixBB = False
 Global $Stonecoord
-	
+
 ; Offset
 Global $g_iXVOffset = 0
 
@@ -66,13 +66,6 @@ Global $g_bRequestCCForWar,	$g_sTxtRequestCCForWar
 Global $g_bDebugBBattack = False
 
 ;GUI
-; BB Drop Order
-Global $g_hBtnBBDropOrder = 0
-Global $g_hGUI_BBDropOrder = 0
-Global $g_hChkBBCustomDropOrderEnable = 0
-Global $g_hBtnBBDropOrderSet = 0, $g_hBtnBBRemoveDropOrder = 0, $g_hBtnBBClose = 0
-Global $g_bBBDropOrderSet = False
-
 ;CustomArmy
 Global $g_iCmbCampsBB[6] = [0, 0, 0, 0, 0, 0]
 Global $g_hIcnTroopBB[6]
@@ -92,7 +85,7 @@ Global $g_hUseSleep, $g_hIntSleep, $g_hUseRandomSleep, $g_hNoAttackSleep, $g_hDi
 
 ; Max sides SF
 Global $g_bMaxSidesSF = True, $g_iCmbMaxSidesSF = 1
-; GUI 
+; GUI
 Global $g_hMaxSidesSF, $g_hCmbMaxSidesSF
 ;-------------------
 
@@ -148,7 +141,7 @@ Global $g_bEnableFriendlyChallenge = False, $g_sDelayTimeFC = 5, $g_bOnlyOnReque
 Global $g_bFriendlyChallengeBase[6] = [False, False, False, False, False, False]
 Global $g_abFriendlyChallengeHours[24] = [True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True]
 Global $ChatbotStartTime, $ChatbotQueuedChats[0], $ChatbotReadQueued = False, $ChatbotReadInterval = 0, $ChatbotIsOnInterval = False, _
-	$g_sMessage = "", $g_sGlobalChatLastMsgSentTime = "", $g_sClanChatLastMsgSentTime = "", $g_sFCLastMsgSentTime = ""
+	$g_sGlobalChatLastMsgSentTime = "", $g_sClanChatLastMsgSentTime = "", $g_sFCLastMsgSentTime = ""
 
 Global $g_aIAVar[5][2] = [[0,0],[1,0],[2,0],[3,0],[4,0]] , $g_sIAVar = '0,0#1,0#2,0#3,0#4,0'
 
@@ -264,7 +257,6 @@ Global $g_iAvailableAttacksBB = 0, $g_iLastDamage = 0
 Global $g_sTxtRegistrationToken = ""
 
 Global Enum $g_iAirDefense = 0, $g_iCrusher, $g_iGuardPost, $g_iCannon, $g_iBuilderHall, $g_iDeployPoints
-Global $g_aBuilderHallPos[1][2] = [[Null, Null]], $g_aAirdefensesPos[0][2], $g_aCrusherPos[0][2], $g_aCannonPos[0][2], $g_aGuardPostPos[0][2], $g_aDeployPoints
 Global $g_aBuilderHallPos[1][2] = [[Null, Null]], $g_aAirdefensesPos[0][2], $g_aCrusherPos[0][2], $g_aCannonPos[0][2], $g_aGuardPostPos[0][2], $g_aDeployPoints, $g_aDeployBestPoints
 Global $g_aOpponentBuildings[6] = [$g_aAirdefensesPos, $g_aCrusherPos, $g_aGuardPostPos, $g_aCannonPos, $g_aBuilderHallPos, $g_aDeployPoints]
 Global $g_aExternalEdges, $g_aBuilderBaseDiamond, $g_aOuterEdges, $g_aBuilderBaseOuterDiamond, $g_aBuilderBaseOuterPolygon, $g_aFinalOuter[4]
@@ -324,15 +316,15 @@ Global Enum $eIcnBB = 1 , $eIcnLabBB, $eIcnBBElixir, $eIcnBBGold, $eIcnBBTrophie
 		$eIcnBBWallL6, $eIcnBBWallL7, $eIcnBBWallL8, $eIcnBBWallL9
 
 ; Internal & External Polygon
-Global $CocDiamondECD = "ECD"
-Global $CocDiamondDCD = "DCD"
+;~ Global $CocDiamondECD = "ECD"
+;~ Global $CocDiamondDCD = "DCD"
 Global $InternalArea[8][3]
 Global $ExternalArea[8][3]
 
 ; Log
 Global $g_hBBAttackLogFile = 0
 
-Global $g_bChkCollectBuilderBase = False, $g_bChkStartClockTowerBoost = False, $g_bChkCTBoostBlderBz = False, $g_bChkCTBoostAtkAvailable = False, $g_bChkCleanYardBB = False, $g_bDebugBBattack = False
+;~ Global $g_bChkCollectBuilderBase = False, $g_bChkStartClockTowerBoost = False, $g_bChkCTBoostBlderBz = False, $g_bChkCTBoostAtkAvailable = False, $g_bChkCleanYardBB = False, $g_bDebugBBattack = False
 
 Global $g_bChkPlayBBOnly = False
 

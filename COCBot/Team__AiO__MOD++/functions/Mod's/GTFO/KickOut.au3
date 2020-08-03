@@ -16,10 +16,8 @@ Global $g_bNotKick = False
 
 Func MainKickout()
 	If Not $g_bChkUseKickOut Or $g_bNotKick Then Return
-	Local $Screencap = True
-	Local $Debug = False
 	Local $iLastSlot = 0
-	
+
 	SetLog("Start The Kickout Feature![" & $g_iTxtKickLimit & "]....", $COLOR_INFO)
 	Local $Number2Kick = 0
 
@@ -36,37 +34,37 @@ Func MainKickout()
 
 				#Region - Nucleus
 				If RandomSleep(1500) Then Return
-				
+
 				Local $aXPStar = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\KickOut", 0, "140, 167, 190, 667", Default, "Star", True, 44)
-				
+
 				If Not IsArray($aXPStar) Then
 					Setlog("- KickOut fail : $aXPStar", $COLOR_ERROR)
 					Return False
 				EndIf
-				
+
 				If RandomSleep(1500) Then Return
 
 				Local $iLocalSlot = SuperSlotInt($aXPStar)
-				
+
 				If $iLastSlot = $iLocalSlot Then Return True
-				
+
 				$iLastSlot = $iLocalSlot
-				
+
 				Go2Bottom()
-				
+
 				_ArrayShuffle($aXPStar)
-				
+
 				For $i = 0 To UBound($aXPStar) - 1
 					; Get the Red from 'New' Word
 					Local $iNewWord = _PixelSearch(197, $aXPStar[$i][2] + 19, 214, $aXPStar[$i][2] + 28, Hex(0xE73838, 6), 10)
 					Local $iRank = _PixelSearch(197, $aXPStar[$i][2] + 19, 214, $aXPStar[$i][2] + 28, Hex(0x646051, 6), 10)
-					
+
 					; Return 0 let's proceed with a new loop
 					If $iNewWord = 0 Or $iRank <> 0 Then ContinueLoop
-					
+
 					Local $iDonated = 0
 					Local $iReceived = 0
-					
+
 					; Confirming the array and the Dimension
 					If IsArray($iNewWord) Then
 						$iDonated = Int(Number(getOcrAndCapture("coc-army", 515, $aXPStar[$i][2] + 12, 580, $aXPStar[$i][2] + 27, True)))
@@ -76,38 +74,38 @@ Func MainKickout()
 					Else
 						ContinueLoop
 					EndIf
-					
+
 					Local $bIsKick = False
-					
+
 					Select
 						Case ($iDonated = 0 And $iReceived = 0) Or ($iDonated < $g_iTxtDonatedCap And $iReceived < $g_iTxtReceivedCap)
 							$bIsKick = False
-							
+
 						Case ($g_bChkKickOutSpammers = True And $iDonated > 0 And $iReceived = 0) Or ($g_bChkKickOutSpammers = False And $iDonated >= $g_iTxtDonatedCap) Or ($g_bChkKickOutSpammers = False And $iReceived >= $g_iTxtReceivedCap)
 							$bIsKick = True
-							
+
 					EndSelect
-					
+
 					If $g_bDebugSetlog Then SetDebugLog("Is This member 2 Kick? " & $bIsKick, $COLOR_DEBUG)
 					If Not $bIsKick Then ContinueLoop
-					
+
 					Local $aFixC[4] = [18, $aXPStar[$i][2], 68, $aXPStar[$i][2] + 36]
 					Local $bFixOne = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\KickOut", 2, $aFixC, Default, "FixC", True, 10)
-					
+
 					Click(Random(166, 708, 1), Random($aXPStar[$i][2] - 7, $aXPStar[$i][2] + 29, 1))
 					If RandomSleep(500) Then Return
-					
+
 					Local $aClickMod = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\KickOut", 10, "556, 1, 579, 731", Default, "Btn", True, 40)
-					
+
 					If Not IsArray($aClickMod) Then
 						Setlog("- KickOut fail : $aClickMod", $COLOR_ERROR)
 						Return False
 					Else
 						_ArraySort($aClickMod, 1, 0, 0, 2)
-						
+
 						SetDebugLog("Is fix : " & IsArray($bFixOne), $COLOR_DEBUG)
 						SetDebugLog("Is fix : " & _ArrayToString($aClickMod), $COLOR_DEBUG)
-						
+
 						If IsArray($bFixOne) Then
 							Click(Random(462, 566, 1), $aClickMod[1][2] - Random(4, 15, 1))
 							If RandomSleep(500) Then Return
@@ -115,17 +113,17 @@ Func MainKickout()
 							Click(Random(462, 566, 1), $aClickMod[0][2] - Random(4, 15, 1))
 							If RandomSleep(500) Then Return
 						EndIf
-						
+
 						Local $aSendOut = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\KickOut", 1, "457, 205, 585, 263", Default, "SendKick", True, 0)
-						
+
 						If Not IsArray($aSendOut) Then
 							Setlog("- KickOut fail : $aSendOut", $COLOR_ERROR)
 							Return False
 						EndIf
-						
+
 						Click(Random(445, 585, 1), Random($aSendOut[0][1], $aSendOut[0][1] + 30))
 						If RandomSleep(500) Then Return
-						
+
 						$Number2Kick += 1
 
 					EndIf
@@ -146,22 +144,22 @@ EndFunc   ;==>MainKickout
 Func SuperSlotInt($aXPStar = -1)
 	;Local $aXPStar = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\KickOut", 0, "140, 167, 190, 667", Default, "Star", True, 44)
 	Local $vLastIntKickOut
-	
+
 	If IsArray($aXPStar) Then
 		_ArraySort($aXPStar, 0, 0, 0, 2)
 		$vLastIntKickOut = getOcrAndCapture("coc-v-t", 30, $aXPStar[UBound($aXPStar) - 1][2] - 2, 55, $aXPStar[UBound($aXPStar) - 1][2] - 20, True)
 		If $vLastIntKickOut = 0 And UBound($vLastIntKickOut) > 2 Then $vLastIntKickOut = getOcrAndCapture("coc-v-t", 30, $aXPStar[UBound($aXPStar) - 2][2] - 2, 55, $aXPStar[UBound($aXPStar) - 2][2] - 20, True)
 		$vLastIntKickOut += 1
 	EndIf
-	
+
 	Return $vLastIntKickOut
-	
+
 EndFunc   ;==>SuperSlotInt
 
 Func Go2Bottom()
 
 	SetLog(" ## Go2Bottom | ClickDrag ## ", $COLOR_DEBUG)
-	
+
 	Swipe(421 - Random(0, 50, 1), 580 - Random(0, 50, 1), 421 - Random(0, 50, 1), 50 + Random(0, 10, 1), Random(900, 1100, 1))
 	If @error Then
 		SetLog("Swipe ISSUE|error: " & @error, $COLOR_DEBUG)
@@ -176,9 +174,8 @@ Func OpenClanPage()
 
 	$g_bDebugOcr = True
 
-	Local Static $FirstRun = True
-	Local $_aClanColor[4] = [360, 19, 0xf0f4f0, 5]
-	Local $_aClanMainVillage = [360, 81, 0xc8c8b8, 5]
+;~ 	Local $_aClanColor[4] = [360, 19, 0xf0f4f0, 5]
+;~ 	Local $_aClanMainVillage = [360, 81, 0xc8c8b8, 5]
 
 	; ********* OPEN TAB AND CHECK IT PROFILE ***********
 

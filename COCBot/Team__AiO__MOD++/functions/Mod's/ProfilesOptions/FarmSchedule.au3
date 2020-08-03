@@ -17,7 +17,7 @@ Func CheckFarmSchedule()
 	Static $aiActionDone[8] = [0, 0, 0, 0, 0, 0, 0, 0]
 	Static $iStartHour = @HOUR
 	Static $iDay = @YDay
-	Local $bNeedSwitchAcc = False, $bNeedRunBot = False
+	Local $bNeedRunBot = False
 
 	If $g_bFirstStart And $iStartHour = -1 Then $iStartHour = @HOUR
 	Local $bActionDone = False
