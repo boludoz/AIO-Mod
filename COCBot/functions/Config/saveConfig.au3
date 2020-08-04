@@ -999,7 +999,7 @@ EndFunc   ;==>SaveConfig_600_30_LB
 Func SaveConfig_600_31()
 	; <><><><> Attack Plan / Search & Attack / Deadbase / Collectors <><><><>
 	ApplyConfig_600_31(GetApplyConfigSaveAction())
-	For $i = 6 To 13
+	For $i = 6 To ubound($g_aiCollectorLevelFill) -1
 		_Ini_Add("collectors", "lvl" & $i & "Enabled", $g_abCollectorLevelEnabled[$i] ? 1 : 0)
 		_Ini_Add("collectors", "lvl" & $i & "fill", $g_aiCollectorLevelFill[$i])
 	Next

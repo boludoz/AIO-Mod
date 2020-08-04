@@ -211,13 +211,12 @@ Func _makerequestCustom($aButtonPosition = -1)
 	
 	If $g_bDebugSetlog Then SetDebugLog("SearchPixelDonate FixedMatrixSend " & _ArrayToString($aClickSend))
 	
-	; X[$g_sProfileCurrentName|$g_sRequestTroopsText]
-	Static $aRequestTroopsText[0][2]
-	
+	; 	X[$g_sProfileCurrentName|$g_sRequestTroopsText]
+	;	Static $aRequestTroopsText[0][2]
 	If Not StringIsSpace($g_sRequestTroopsText) Then
-		
+		#cs - Prerelease
 		Local $iUbi = __ArraySearch($aRequestTroopsText, $g_sRequestTroopsText)
-		Local $bCanReq = False
+		Local $bCanReq = True
 		If $iUbi = -1 Then
 			$bCanReq = True
 			Local $aMatrixText[1][2] = [[$g_sProfileCurrentName, $g_sRequestTroopsText]]
@@ -226,8 +225,8 @@ Func _makerequestCustom($aButtonPosition = -1)
 			$bCanReq = True
 			$aRequestTroopsText[$iUbi][1] = $g_sRequestTroopsText
 		EndIf
-
-		If $bCanReq Then
+		#ce - Prerelease
+		;If $bCanReq Then ;Prerelease
 			If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
 			; fix for Android send text bug sending symbols like ``"
 			AndroidSendText($g_sRequestTroopsText, True)
@@ -237,8 +236,7 @@ Func _makerequestCustom($aButtonPosition = -1)
 				SetLog(" Request text entry failed, try again", $COLOR_ERROR)
 				Return
 			EndIf
-		EndIf
-		
+		;EndIf ;Prerelease
 	EndIf
 	
 	If _Sleep($DELAYMAKEREQUEST2) Then Return ; wait time for text request to complete
