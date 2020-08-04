@@ -86,9 +86,9 @@ EndFunc   ;==>_CaptureRegion2
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Global $g_bdbgimh = True
+;Global $g_bdbgimh = True
 Func _CaptureGameScreen(ByRef $_hHBitmap, Const $iLeft = 0, Const $iTop = 0, Const $iRight = $g_iGAME_WIDTH, Const $iBottom = $g_iGAME_HEIGHT)
-	
+	#cs
 	If $g_bdbgimh Then 
 		Local $hBMP = 0, $hHBMP = 0
 		Local $sImageFile = FileOpenDialog("Select CoC screenshot to test, cancel to use live screenshot", $g_sProfileTempPath, "Image (*.png)", $FD_FILEMUSTEXIST, "", $g_hFrmBot)
@@ -104,7 +104,7 @@ Func _CaptureGameScreen(ByRef $_hHBitmap, Const $iLeft = 0, Const $iTop = 0, Con
 			Return
 		EndIf
 	EndIf
-	
+	#ce
 	Local $SuspendMode
 
 	If $g_hHBitmapTest = 0 Then
