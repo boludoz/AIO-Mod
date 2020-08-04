@@ -6,6 +6,8 @@
                     Based on MyBot.run v7.8.4 SP1.
 	**v4.2.0** 
 		- New: Dissociable.OCR - Faster text recognition system available for non-official developers too.
+		- New: Dissociable.Matching - Fast, Multi-Threaded Image Matching, Supports Alpha Channel and CIE1976 / CIE2000 Color Comparsion.
+		- New: Elixir Collector Level 14 Detection for DeadBase.
 		- Fix: Builder Base CSV Attack Changes All Camps to Barbarian
 		- Fix: Builder Base In-Attack Camp Switching is now Smarter, Can i call it AI LOL? No more mistakes on changing some Camps then fixing.
 		- Fix: Builder Base Standard Attack Loops through Barbarian several times.
