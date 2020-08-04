@@ -15,6 +15,7 @@
 
 ; Counts Matches found by Dissociable.Matching.dll, $sObjectNameAndLevel = Default will Count all matches, $sObjectNameAndLevel = "Eagle-2" Will Count all Level 2 Found Eagles
 Func CountDMatchingMatches($sMatches, $sObjectNameAndLevel = Default)
+    If StringInStr($sMatches, "|", $STR_CASESENSE) = 0 Then Return 0
 	Local $aMatches = StringSplit($sMatches, "|")
 	Local $iSearchLen = 0
 	If $sObjectNameAndLevel <> Default Then
@@ -110,7 +111,7 @@ Func DFind($sBundle, $iRegionX = 0, $iRegionY = 0, $iRegionWidth = 0, $iRegionHe
 
     If $bForceCapture Then _CaptureRegion2() ;to have FULL screen image to work with
 
-    Local $sResult = DllCallDMatching("Find", "str", "handle", $g_hHBitmap2, "str", $sBundle, "ushort", $iLevelStart, "ushort", $iLevelEnd, "ushort", $iRegionX, "ushort", $iRegionY, "ushort", $iRegionWidth, "ushort", $iRegionHeight, "ushort", $g_iDMatchingThreads, "ushort", 0, "boolean", $g_iDMatchingThreads)
+    Local $sResult = DllCallDMatching("Find", "str", "handle", $g_hHBitmap2, "str", $sBundle, "ushort", $iLevelStart, "ushort", $iLevelEnd, "ushort", $iRegionX, "ushort", $iRegionY, "ushort", $iRegionWidth, "ushort", $iRegionHeight, "ushort", $g_iDMatchingThreads, "ushort", 0, "boolean", $g_bDMatchingDebugImages)
 
     Return $sResult
 EndFunc
