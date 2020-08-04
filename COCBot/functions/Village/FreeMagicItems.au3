@@ -14,7 +14,7 @@
 ; ===============================================================================================================================
 
 Func CollectFreeMagicItems($bTest = False)
-	If Not BitOR($g_bChkCollectFree, $g_bChkCollectMagicItems) Then Return
+	If Not ($g_bChkCollectFree Or $g_bChkCollectMagicItems) Then Return
 	If Not $g_bRunState Then Return
 
 	Local Static $iLastTimeChecked[8] = [0, 0, 0, 0, 0, 0, 0, 0]
@@ -23,7 +23,7 @@ Func CollectFreeMagicItems($bTest = False)
 	ClickP($aAway, 1, 0, "#0332") ;Click Away
 	If Not IsMainPage() Then Return
 
-	Local $sSetLog = $g_bChkCollectMagicItems ? "Collecting Magic Items" : "Collecting Free Magic Items"
+	Local $sSetLog = ($g_bChkCollectMagicItems) ? ("Collecting Magic Items") : ("Collecting Free Magic Items")
 	SetLog($sSetLog, $COLOR_INFO)
 	If _Sleep($DELAYCOLLECT2) Then Return
 
@@ -31,18 +31,16 @@ Func CollectFreeMagicItems($bTest = False)
 	If QuickMIS("BC1", $g_sImgTrader, 120, 155, 230, 250, True, False) Then
 		SetLog("Trader available, Entering Daily Discounts", $COLOR_SUCCESS)
 		Click($g_iQuickMISX + Random(115, 125, 1), $g_iQuickMISY + Random(150, 170, 1))
-		If _Sleep(1500) Then Return
 	ElseIf QuickMIS("BC1", $g_sImgTraderMod, 72, 113, 280, 220, True, False) Then
 		SetLog("Trader available, Entering Daily Discounts", $COLOR_SUCCESS)
 		Click($g_iQuickMISX - Random(70, 82, 1) + 72, $g_iQuickMISY + Random(0, 37, 1)  + 113)
-		If _Sleep(1500) Then Return
 	Else
 		SetLog("Trader unavailable", $COLOR_INFO)
 		Return
 	EndIf
 
 	; Check Daily Discounts Window
-	If _Wait4PixelGone(430, 531, 0xF6F9EB, 15, 1500, 100, "Not Daily Discounts Window") Then
+	If Not _Wait4Pixel(706, 198, 0xFFFFFF, 15, 3000, 500, "Not Daily Discounts Window") Then ; White in 'X'.
 		ClickP($aAway, 1, 0, "#0332") ;Click Away
 		Return False
 	EndIf

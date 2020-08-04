@@ -149,32 +149,11 @@ Func CleanSecureFiles($iAgeInUTCSeconds = 600)
 	Next
 EndFunc   ;==>CleanSecureFiles
 
-#cs
-	Global $CALG_SHA1 = 1
-	Func _Crypt_Startup()
-	EndFunc
-	Func _Crypt_Shutdown()
-	EndFunc
-	Func _Crypt_HashData($sData, $iAlgorythm)
-	Local $s = "0x"
-	Static $chars = "0123456789ABCDEF"
-	Local $l = StringLen($sData)
-	For $i = 1 To 40
-	If $i <= $l Then
-	$s &= StringMid($chars, Mod(ASC(StringMid($sData, $i, 1)), 16) + 1, 1)
-	Else
-	$s &= StringMid($chars, Random(1, 16, 1), 1)
-	EndIf
-	Next
-	Return $s
-	EndFunc
-#ce
-
-Func GetSecureFilename($Filename)
-	If BitAND($g_iAndroidSecureFlags, 1) = 0 Then
-		Return $Filename
-	EndIf
-	Return StringMid(_Crypt_HashData($Filename, $CALG_SHA1), 3)
+; Custom - Team AIO Mod++
+Func GetSecureFilename(ByRef $sFilename)
+	If $g_iAndroidSecureFlags = 0 Then Return $sFilename
+	$sFilename = StringMid(_Crypt_HashData($sFilename, $CALG_SHA1), 3)
+	Return $sFilename
 EndFunc   ;==>GetSecureFilename
 
 ; Update Global Android variables based on $g_iAndroidConfig index
@@ -2580,13 +2559,9 @@ EndFunc   ;==>__GDIPlus_BitmapCreateFromMemory
 
 Func AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 	Local $wasAllowed = $g_bTogglePauseAllowed
+	Local $hostPath = $g_sAndroidPicturesHostPath & $g_sAndroidPicturesHostFolder
 	$g_bTogglePauseAllowed = False
-	Local $Result = _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount)
-	$g_bTogglePauseAllowed = $wasAllowed
-	Return SetError(@error, @extended, $Result)
-EndFunc   ;==>AndroidScreencap
-
-Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
+	
 	; ensure dimensions are not exceeding buffer, DLL might crash with exception code c0000005
 	If $iWidth > $g_iGAME_WIDTH Then $iWidth = $g_iGAME_WIDTH
 	If $iHeight > $g_iGAME_HEIGHT Then $iHeight = $g_iGAME_HEIGHT
@@ -2598,18 +2573,33 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 	If $iTop < 0 Then $iTop = 0
 	If $iLeft + $iWidth > $g_iGAME_WIDTH Then $iWidth = $g_iGAME_WIDTH - $iLeft
 	If $iTop + $iHeight > $g_iGAME_HEIGHT Then $iHeight = $g_iGAME_HEIGHT - $iTop
+	Local $hResult
+	
+	Local $sBotTitleEx = $g_sAndroidEmulator & $g_sAndroidInstance
+	$sBotTitleEx = ($g_iAndroidSecureFlags <> 0) ? (GetSecureFilename($sBotTitleEx)) : (StringRegExpReplace($sBotTitleEx, '[/:*?"<>|]', '_'))
+	Local $Filename = $sBotTitleEx & ".rgba"
+	If $g_bAndroidAdbScreencapPngEnabled = True Then $Filename = $sBotTitleEx & ".png"
+	
+	; Wait for capture.
+	$hResult = Execute(_AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount, GetSecureFilename($sBotTitleEx)))
+	Local $error = SetError(@error, @extended, $hResult)
+	
+	; delete file
+	If $g_iAndroidSecureFlags <> 0 Then FileDelete($hostPath & $Filename)
+	
+	$g_bTogglePauseAllowed = $wasAllowed
+	Return $error
+EndFunc   ;==>AndroidScreencap
+
+Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0, $Filename = -1)
 	Local $startTimer = __TimerInit()
 	Local $hostPath = $g_sAndroidPicturesHostPath & $g_sAndroidPicturesHostFolder
 	Local $androidPath = $g_sAndroidPicturesPath & StringReplace($g_sAndroidPicturesHostFolder, "\", "/")
 
 	If $hostPath = "" Or $androidPath = "" Then
-		If $hostPath = "" Then
-			SetLog($g_sAndroidEmulator & " shared folder not configured for host", $COLOR_ERROR)
-		Else
-			SetLog($g_sAndroidEmulator & " shared folder not configured for Android", $COLOR_ERROR)
-		EndIf
+		SetLog($g_sAndroidEmulator & " shared folder not configured for " & ($hostPath = "") ? ("host") : ("Android"), $COLOR_ERROR)
 		SetLog($g_sAndroidEmulator & " ADB screen capture disabled", $COLOR_ERROR)
-		If BitAND($g_iAndroidSupportFeature, 1) = 0 Then $g_bChkBackgroundMode = False ; disable also background mode the hard way
+		If ($g_iAndroidSupportFeature < 2) Then $g_bChkBackgroundMode = False ; disable also background mode the hard way
 		$g_bAndroidAdbScreencap = False
 	EndIf
 
@@ -2617,13 +2607,14 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 	Local $wasRunState = $g_bRunState
 	AndroidAdbLaunchShellInstance($wasRunState)
 	If @error <> 0 Then Return SetError(2, 0)
-
-	Local $sBotTitleEx = StringRegExpReplace($g_sBotTitle, '[/:*?"<>|]', '_')
-	Local $Filename = $sBotTitleEx & ".rgba"
-	If $g_bAndroidAdbScreencapPngEnabled = True Then $Filename = $sBotTitleEx & ".png"
-	$Filename = GetSecureFilename($Filename)
-;~ 	Local $s
-
+	
+	If $Filename = -1 Then
+		Local $sBotTitleEx = $g_sAndroidEmulator & $g_sAndroidInstance
+		$sBotTitleEx = ($g_iAndroidSecureFlags <> 0) ? (GetSecureFilename($sBotTitleEx)) : (StringRegExpReplace($sBotTitleEx, '[/:*?"<>|]', '_'))
+		$Filename = $sBotTitleEx & ".rgba"
+		If $g_bAndroidAdbScreencapPngEnabled = True Then $Filename = $sBotTitleEx & ".png"
+	EndIf
+	
 	; Create 32 bits-per-pixel device-independent bitmap (DIB)
 	Local $tBIV5HDR = 0
 	If $g_bAndroidAdbScreencapPngEnabled = False Then
@@ -2652,7 +2643,7 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 		EndIf
 	EndIf
 
-	FileDelete($hostPath & $Filename)
+	;FileDelete($hostPath & $Filename)
 	AndroidAdbSendShellCommand("screencap """ & $androidPath & $Filename & """", $g_iAndroidAdbScreencapWaitAdbTimeout, $wasRunState)
 	;$s = AndroidAdbSendShellCommand("screencap """ & $androidPath & $filename & """", -1, $wasRunState)
 	If $__TEST_ERROR_SLOW_ADB_SCREENCAP_DELAY > 0 Then Sleep($__TEST_ERROR_SLOW_ADB_SCREENCAP_DELAY)
@@ -2748,12 +2739,12 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 				SetDebugLog("Captured screen size " & $g_iAndroidAdbScreencapWidth & " x " & $g_iAndroidAdbScreencapHeight, $COLOR_ERROR)
 				SetDebugLog("Captured screen bytes read (header/datata): " & $iReadHeader & " / " & $iReadData, $COLOR_ERROR)
 			EndIf
-			If $iRetryCount < 10 Then
+			If $iRetryCount < 20 Then
 				SetDebugLog("ADB retry screencap in 1000 ms. (restarting ADB session)", $COLOR_ACTION)
 				_Sleep(1000)
 				AndroidAdbTerminateShellInstance()
 				AndroidAdbLaunchShellInstance($wasRunState)
-				Return AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount + 1)
+				Return _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount + 1, $Filename)
 			EndIf
 			SetLog($g_sAndroidEmulator & " screen not captured using ADB", $COLOR_ERROR)
 			If $g_aiAndroidAdbStatsTotal[$AdbStatsType][0] < 50 And AndroidControlAvailable() Then
@@ -2821,23 +2812,18 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 		Local $pStream = _WinAPI_CreateStreamOnHGlobal($hData)
 
 		$hBitmap = _GDIPlus_BitmapCreateFromStream($pStream)
-		;Local $hBitmap = _GDIPlus_BitmapCreateHBITMAPFromBitmap($hImage)
-		;Local $iWidth = _GDIPlus_ImageGetWidth($hImage)
-		;Local $iHeight = _GDIPlus_ImageGetHeight($hImage)
 		_WinAPI_ReleaseStream($pStream)
 		$msg &= ", " & Round(__TimerDiff($testTimer), 2)
-		;_GDIPlus_ImageDispose($hImage)
-
 
 		;_GDIPlus_BitmapCreateFromMemory
 		If $hBitmap = 0 Then
 			; problem creating Bitmap
-			If $iRetryCount < 10 Then
+			If $iRetryCount < 20 Then
 				SetDebugLog("ADB retry screencap in 1000 ms. (restarting ADB session)", $COLOR_ACTION)
 				_Sleep(1000)
 				AndroidAdbTerminateShellInstance()
 				AndroidAdbLaunchShellInstance($wasRunState)
-				Return AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount + 1)
+				Return _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount + 1, $Filename)
 			EndIf
 			SetLog($g_sAndroidEmulator & " screen not captured using ADB", $COLOR_ERROR)
 			If FileExists($hostPath & $Filename) = 0 Then SetLog("File not found: " & $hostPath & $Filename, $COLOR_ERROR)
@@ -2867,12 +2853,10 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 			;$hHBitmap = _GDIPlus_BitmapCreateDIBFromBitmap($hBitmap)
 		EndIf
 	EndIf
-
-	If BitAND($g_iAndroidSecureFlags, 2) = 2 Then
-		; delete file
-		FileDelete($hostPath & $Filename)
-	EndIf
-
+	
+	; delete file
+	If $Filename = -1 And $g_iAndroidSecureFlags <> 0 Then FileDelete($hostPath & $Filename)
+	
 	Local $duration = Int(__TimerDiff($startTimer))
 	; dynamically adjust $g_iAndroidAdbScreencapTimeout to 3 x of current duration ($g_iAndroidAdbScreencapTimeoutDynamic)
 	$g_iAndroidAdbScreencapTimeout = ($g_iAndroidAdbScreencapTimeoutDynamic = 0 ? $g_iAndroidAdbScreencapTimeoutMax : $duration * $g_iAndroidAdbScreencapTimeoutDynamic)
@@ -2905,7 +2889,7 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 			SetDebugLog("AdbScreencap: " & $totalAvg & "/" & $lastAvg & "/" & $duration & " ms (all/" & $iLastCount & "/1)," & $shellLogInfo & "," & $iLoopCountFile & ",l=" & $iLeft & ",t=" & $iTop & ",w=" & $iWidth & ",h=" & $iHeight & ", " & $Filename & ": w=" & $g_iAndroidAdbScreencapWidth & ",h=" & $g_iAndroidAdbScreencapHeight & ",f=" & $iF)
 		EndIf
 	EndIf
-
+	
 	$tBIV5HDR = 0 ; Release the resources used by the structure
 	Return $hHBitmap
 EndFunc   ;==>_AndroidScreencap

@@ -85,11 +85,8 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 
 	Local $sSideNames[4] = ["TopLeft", "TopRight", "BottomRight", "BottomLeft"]
 
-	Local $BuilderHallPos = findMultipleQuick($g_sBundleBuilderHall, 1)
-	If $BuilderHallPos <> -1 And UBound($BuilderHallPos) > 0 Then
-		$g_aBuilderHallPos[0][0] = $BuilderHallPos[0][1]
-		$g_aBuilderHallPos[0][1] = $BuilderHallPos[0][2]
-	Else
+	Local $g_aBuilderHallPos = findMultipleQuick($g_sBundleBuilderHall, 1)
+	If Not IsArray($g_aBuilderHallPos) Then
 		_DebugFailedImageDetection("BuilderHall")
 		Setlog("Builder Hall detection Error!", $Color_Error)
 		$g_aBuilderHallPos[0][0] = 450
