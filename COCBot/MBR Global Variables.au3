@@ -526,6 +526,13 @@ Global Const $g_sLibDissociableOcrPath = $g_sLibPath & "\" & $g_sDissociableOcrL
 Global $g_hLibDissociableOcr = -1 ; Handle to Dissociable.OCR.dll
 Global $g_bDOCRDebugImages = False
 #EndRegion - Dissociable.OCR - Team AIO Mod++
+#Region - Dissociable.Matching - Team AIO Mod++
+Global Const $g_sDissociableMatchLib = "\ModLibs\Dissociable.Matching.dll"
+Global Const $g_sLibDissociableMatchPath = $g_sLibPath & "\" & $g_sDissociableMatchLib
+Global $g_hLibDissociableMatch = -1 ; Handle to Dissociable.Matching.dll
+Global $g_bDMatchingDebugImages = False
+Global $g_iDMatchingThreads = 32
+#EndRegion - Dissociable.Matching - Team AIO Mod++
 Global Const $g_sLibIconPath = $g_sLibPath & "\MBRBOT.dll" ; icon library
 Global Const $g_sCSVAttacksPath = @ScriptDir & "\CSV\Attack"
 Global Const $g_sIcnMBisland = @ScriptDir & "\Images\bbico.png"
