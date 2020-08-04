@@ -280,7 +280,7 @@ Func checkDeadBaseSuperNew($bForceCapture = True, $sFillDirectory = @ScriptDir &
 	
 	If $bForceCapture Then _CaptureRegion2() ; Custom match - Team AIO Mod++
 	
-	For $i = $iStartLevel To $iEndLevelD ; ; I still don't understand the imaging system but I guess we can prepare it for the future that way.
+	For $i = $iStartLevel To $iEndLevelD ; I still don't understand the imaging system but I guess we can prepare it for the future that way.
 		; Check for the Level 14 Collectors at first, as it's Image matching and the Dll differs.
 		Local $bLvlHalfPercentage = $g_aiCollectorLevelFill[$i] = 0
 		Local $bLvlFull = $g_aiCollectorLevelFill[$i] = 1

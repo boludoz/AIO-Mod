@@ -1280,7 +1280,7 @@ Global $g_iPercentageDamage = 0
 
 ; <><><><> Attack Plan / Search & Attack / Deadbase / Collectors <><><><>
 Global $g_abCollectorLevelEnabled[15] = [-1, -1, -1, -1, -1, -1, True, True, True, True, True, True, True, True, True] ; elements 0 thru 5 are never referenced; Custom - Team AiO MOD++
-Global $g_aiCollectorLevelFill[15] = [-1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1] ; elements 0 thru 5 are never referenced ; Custom - Team AiO MOD++
+Global $g_aiCollectorLevelFill[15] = [-1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 0] ; elements 0 thru 5 are never referenced ; Custom - Team AiO MOD++
 
 Global $g_bCollectorFilterDisable = False
 Global $g_iCollectorMatchesMin = 3
