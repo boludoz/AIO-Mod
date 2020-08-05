@@ -284,7 +284,8 @@ Func checkDeadBaseSuperNew($bForceCapture = True, $sFillDirectory = @ScriptDir &
 		; Check for the Level 14 Collectors at first, as it's Image matching and the Dll differs.
 		Local $bLvlHalfPercentage = $g_aiCollectorLevelFill[$i] = 0
 		Local $bLvlFull = $g_aiCollectorLevelFill[$i] = 1
-		If $bLvlHalfPercentage = True Or $bLvlFull = True Then
+		; Check if Level 14 Collectors are Enabled and It's set to check for 50% or 100%
+		If $g_abCollectorLevelEnabled[$i] = True And ($bLvlHalfPercentage = True Or $bLvlFull = True) Then
 			SetDebugLog("Checking for level 14 Elixir Collectors", $COLOR_DEBUG)
 			Local $sDFindPercentageFolder = "50"
 			If $bLvlFull = True Then $sDFindPercentageFolder = "100"
