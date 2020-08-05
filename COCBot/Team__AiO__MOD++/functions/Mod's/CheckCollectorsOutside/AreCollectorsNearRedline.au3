@@ -15,7 +15,9 @@
 ; ===============================================================================================================================
 
 Func AreCollectorsNearRedline($percent)
-	SetLog("Locating Mines & Collectors", $COLOR_INFO)
+#cs
+	SetLog("Are collectors near redline ? | Locating Mines & Collectors", $COLOR_INFO)
+	
 	; reset variables
 	Global $g_aiPixelMine[0]
 	Global $g_aiPixelElixir[0]
@@ -75,4 +77,5 @@ Func AreCollectorsNearRedline($percent)
 	EndIf
 	If $g_bDebugMakeIMGCSV Then AttackCSVDEBUGIMAGE()
 	Return False
+	#ce
 EndFunc   ;==>AreCollectorsNearRedline
