@@ -15,7 +15,6 @@
 ; ===============================================================================================================================
 
 Func AreCollectorsNearRedline($percent)
-#cs
 	SetLog("Are collectors near redline ? | Locating Mines & Collectors", $COLOR_INFO)
 	
 	; reset variables
@@ -75,7 +74,6 @@ Func AreCollectorsNearRedline($percent)
 			Return True
 		EndIf
 	EndIf
-	If $g_bDebugMakeIMGCSV Then AttackCSVDEBUGIMAGE()
+	;If $g_bDebugMakeIMGCSV Then AttackCSVDEBUGIMAGE()
 	Return False
-	#ce
 EndFunc   ;==>AreCollectorsNearRedline

@@ -80,7 +80,16 @@ Func ChkSmartFarm($sTypeResources = "All")
 	setlog("TH Details: " & _ArrayToString($THdetails, "|"))
 
 	; [0] = x , [1] = y , [2] = Distance to Redline ,[3] = In/Out, [4] = Side,  [5]= Is array Dim[2] with 5 coordinates to deploy
-	Local $aAll = SmartFarmDetection($sTypeResources)
+	#Region - AreCollectorsOutside - Team AIO Mod++
+	Local $aAll
+	If $g_vSmartFarmScanOut <> 0 Then 
+		$aAll = $g_vSmartFarmScanOut
+		$g_vSmartFarmScanOut = 0
+	Else
+		$aAll = SmartFarmDetection($sTypeResources)
+	EndIf
+	#EndRegion - AreCollectorsOutside - Team AIO Mod++
+	
 	If $g_bDebugSetlog Then SetDebugLog(" TOTAL detection Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
 
 	; Let's determinate what resource is out or in side the village

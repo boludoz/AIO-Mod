@@ -13,26 +13,24 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: None
 ; ===============================================================================================================================
-
+Global $g_vSmartFarmScanOut = 0
 Func AreCollectorsOutside($bTest = False)
-#cs
-	Local $iPercent = $g_iDBMinCollectorOutsidePercent
-	If $g_bDBCollectorNearRedline And not $bTest Then Return AreCollectorsNearRedline($iPercent)
+	If $g_bDBCollectorNearRedline And not $bTest Then Return AreCollectorsNearRedline()
 	Local $hTimer = TimerInit()
 	Local $bAreOutside = False
 	SetLog("Are collectors outside ? | Locating Mines & Collectors", $COLOR_ACTION)
 	Local $aAllCollectors = SmartFarmDetection("All")
 	SetLog("Are collectors outside ? | Located collectors in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds", $COLOR_ACTION)
 	If ($aAllCollectors <> 0) Then
+		$g_vSmartFarmScanOut = $aAllCollectors
 		Local $iLocated = UBound($aAllCollectors), $iOut = 0 
 		For $i = 0 To $iLocated-1
 			If ($aAllCollectors[$i][3] = "Out") Then $iOut += 1
 		Next
-		$bAreOutside = ($iOut >= Round($iLocated * $iPercent / 100))
+		$bAreOutside = ($g_iDBMinCollectorOutsidePercent <= Round($iOut / $iLocated) * 100)
 		SetLog("Are collectors outside ? | " & $bAreOutside & " - Out: " & $iOut & " - Located: " & $iLocated, $COLOR_INFO)
 		Return $bAreOutside
 	EndIf
 	SetLog("Are collectors outside ? | No collectors found, presumed true.", $COLOR_ACTION)
 	Return True
-	#ce
 EndFunc   ;==>AreCollectorsOutside
