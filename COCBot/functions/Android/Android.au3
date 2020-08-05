@@ -150,7 +150,7 @@ Func CleanSecureFiles($iAgeInUTCSeconds = 600)
 EndFunc   ;==>CleanSecureFiles
 
 ; Custom - Team AIO Mod++
-Func GetSecureFilename(ByRef $sFilename)
+Func GetSecureFilename($sFilename)
 	If $g_iAndroidSecureFlags = 0 Then Return $sFilename
 	$sFilename = StringMid(_Crypt_HashData($sFilename, $CALG_SHA1), 3)
 	Return $sFilename

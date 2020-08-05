@@ -233,7 +233,8 @@ Func SmartFarmDetection($txtBuildings = "Mines")
 	; This Function will fill an Array with several informations after Mines, Collectores or Drills detection with Imgloc
 	; [0] = x , [1] = y , [2] = Distance to Redline ,[3] = In/Out, [4] = Side,  [5]= Is array Dim[2] with 5 coordinates to deploy
 	Local $aReturn[0][6]
-	Local $sdirectory, $iMaxReturnPoints, $iMaxLevel, $offsetx, $offsety
+	Local $sdirectory, $iMaxLevel = 20, $offsetx, $offsety ; Team AIO Mod++
+	Local $iMaxReturnPoints = 40 ; DoublePoint.. - Team AIO Mod++
 	If Not $g_bRunState Then Return
 
 
@@ -249,7 +250,6 @@ Func SmartFarmDetection($txtBuildings = "Mines")
 				$sdirectory = @ScriptDir & "\imgxml\Storages\GoldMines"
 			EndIf
 			$iMaxReturnPoints = 7
-			$iMaxLevel = 13
 		Case "Collectors"
 			If $g_iDetectedImageType = 1 Then
 				$sdirectory = @ScriptDir & "\imgxml\Storages\Collectors_Snow"
@@ -257,19 +257,15 @@ Func SmartFarmDetection($txtBuildings = "Mines")
 				$sdirectory = @ScriptDir & "\imgxml\Storages\Collectors"
 			EndIf
 			$iMaxReturnPoints = 7
-			$iMaxLevel = 13
 		Case "Drills"
 			$sdirectory = @ScriptDir & "\imgxml\Storages\Drills"
 			$iMaxReturnPoints = 3
-			$iMaxLevel = 7
 		Case "All"
 			If $g_iDetectedImageType = 1 Then
 				$sdirectory = @ScriptDir & "\imgxml\Storages\All_Snow"
 			Else
 				$sdirectory = @ScriptDir & "\imgxml\Storages\All"
 			EndIf
-			$iMaxReturnPoints = 21
-			$iMaxLevel = 13
 	EndSwitch
 
 	; Necessary Variables

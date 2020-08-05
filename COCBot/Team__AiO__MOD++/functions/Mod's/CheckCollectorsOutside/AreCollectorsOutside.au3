@@ -13,7 +13,6 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: None
 ; ===============================================================================================================================
-Global $g_vSmartFarmScanOut = 0
 Func AreCollectorsOutside($bTest = False)
 	If $g_bDBCollectorNearRedline And not $bTest Then Return AreCollectorsNearRedline()
 	Local $hTimer = TimerInit()

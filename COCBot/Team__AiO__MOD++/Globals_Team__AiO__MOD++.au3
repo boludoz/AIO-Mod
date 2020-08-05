@@ -175,6 +175,7 @@ Global $g_bDBMeetCollectorOutside = False, $g_iDBMinCollectorOutsidePercent = 80
 Global $g_bDBCollectorNearRedline = False, $g_iCmbRedlineTiles = 1
 Global $g_bSkipCollectorCheck = False, $g_iTxtSkipCollectorGold = 400000, $g_iTxtSkipCollectorElixir = 400000, $g_iTxtSkipCollectorDark = 0
 Global $g_bSkipCollectorCheckTH = False, $g_iCmbSkipCollectorCheckTH = 1
+Global $g_vSmartFarmScanOut = 0 ; No spam smart detection.
 ; constants
 Global Const $THEllipseWidth = 200, $THEllipseHeigth = 150, $CollectorsEllipseWidth = 130, $CollectorsEllipseHeigth = 97.5
 #EndRegion Check Collectors Outside
