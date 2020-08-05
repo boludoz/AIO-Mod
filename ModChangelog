@@ -13,6 +13,7 @@
 		- Fix: Builder Base Standard Attack Loops through Barbarian several times.
 		- Fix: Builder Base Machine Ability.
 		- Fix: Drop Trophies no more clicks on Potion Buttons (Official version issue)
+		- Fix: 'All Troops' Attack Algorithm Error due to incorrect variable subscripts.  (Official version issue)
 		- Fix: Collect Loot Cart
 		- Fix: Only Farm/Avoid locate buildings.
 		- Fix: No League Search.
