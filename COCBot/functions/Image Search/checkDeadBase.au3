@@ -289,13 +289,13 @@ Func checkDeadBaseSuperNew($bForceCapture = True, $sFillDirectory = @ScriptDir &
 			SetDebugLog("Checking for level 14 Elixir Collectors", $COLOR_DEBUG)
 			Local $sDFindPercentageFolder = "50"
 			If $bLvlFull = True Then $sDFindPercentageFolder = "100"
-			Local $sDFindResult = DFind($g_sECollector14DMatB & "\" & $sDFindPercentageFolder & "\", 19, 74, 805, 518, $iStartLevel, $iEndLevelD, False)
+			Local $sDFindResult = DFind($g_sECollector14DMatB & "\" & $sDFindPercentageFolder & "\", 19, 74, 805, 518, $iStartLevel, $iEndLevelD, $g_iCollectorMatchesMin, False)
 			$TotalMatched += CountDMatchingMatches($sDFindResult)
 			SetDebugLog("Found " & $TotalMatched & " level " & $i & " collectors at first phase, " & $sDFindPercentageFolder & "% Fill", $COLOR_DEBUG)
 			; Check if TotalMatched Collectors are not yet Enough and The Collectors been set to 50%, that's the minimum! so we check for the 100% collectors too. thank me later
 			If $TotalMatched < $g_iCollectorMatchesMin And $bLvlFull = False Then
 				$sDFindPercentageFolder = "100"
-				Local $sDFindResult = DFind($g_sECollector14DMatB & "\" & $sDFindPercentageFolder & "\", 19, 74, 805, 518, $iStartLevel, $iEndLevelD, False)
+				Local $sDFindResult = DFind($g_sECollector14DMatB & "\" & $sDFindPercentageFolder & "\", 19, 74, 805, 518, $iStartLevel, $iEndLevelD, $g_iCollectorMatchesMin, False)
 				$TotalMatched += CountDMatchingMatches($sDFindResult)
 				SetDebugLog("Found a Total of " & $TotalMatched & " level " & $i & " collectors with second phase, " & $sDFindPercentageFolder & "% Fill", $COLOR_DEBUG)
 			EndIf
