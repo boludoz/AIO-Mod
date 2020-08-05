@@ -4,7 +4,7 @@
 ; Syntax ........: BuilderBaseCSV()
 ; Parameters ....:
 ; Return values .: None
-; Author ........: ProMac (03-2018), Fahid.Mahmood, Team AIO Mod++ ! (2018-2020)
+; Author ........: ProMac (03-2018), Fahid.Mahmood, Team AIO Mod++ ! (2018-2020), Dissociable (08-2020)
 ; Modified ......:
 ; Remarks .......: This file is part of MyBot, previously known as Multibot and ClashGameBot. Copyright 2015-2020
 ;                  MyBot is distributed under the terms of the GNU GPL
@@ -665,6 +665,11 @@ Func VerifySlotTroop($sTroopName, ByRef $aSlot_XY, ByRef $iQtyOfSelectedSlot, By
 	$aSlot_XY[0] = $iSlotX
 	$aSlot_XY[1] = $iSlotY
 
+	If $sTroopName = "Machine" Then
+		; Set The Battle Machine Slot Coordinates in Attack Bar
+		Global $g_aMachineBB[2] = [$iSlotX, $iSlotY]
+	EndIf
+
 	Click($iSlotX - Random(0, 10, 1), $iSlotY - Random(0, 10, 1), 1, 0)
 	If _Sleep(250) Then Return
 	Return True
@@ -675,6 +680,7 @@ Func DeployTroopBB($sTroopName, $aSlot_XY, $Point2Deploy, $iQtyToDrop)
 	ClickP($Point2Deploy, $iQtyToDrop, 0)
 	
 	If ($sTroopName = "Machine") And ($g_bIsBBMachineD = False) Then
+		; Set the Boolean To True to Say Yeah! It's Deployed!
 		$g_bIsBBMachineD = True
 		If ($g_aMachineBB[0] <> 0) Then
 			If _Sleep(500) Then Return
