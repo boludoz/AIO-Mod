@@ -68,7 +68,6 @@ Func GetAttackBarBB($bRemaining = False)
 			EndIf
 
 			Local $aTempElement[1][5] = [[$aTroop[0], $aTempCoords[0], $aTempCoords[1], $iSlot, $iCount]] ; element to add to attack bar list
-			If ($bRemaining = False) And (String($aTroop[0]) = "Machine") Then Global $g_aMachineBB[2] = [$aTempElement[0][1], $aTempElement[0][2]] ; element to add to attack bar list
 			
 			_ArrayAdd($aBBAttackBar, $aTempElement)
 

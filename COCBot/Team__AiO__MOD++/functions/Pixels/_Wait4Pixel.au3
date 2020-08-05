@@ -21,14 +21,8 @@ Func _Wait4Pixel($x, $y, $sColor, $iColorVariation, $iWait = 1000, $iDelay = 100
 EndFunc   ;==>_Wait4Pixel
 
 Func _Wait4PixelGone($x, $y, $sColor, $iColorVariation, $iWait = 1000, $iDelay = 100, $sMsglog = Default) ; Return true if pixel is false
-	Local $hTimer = __TimerInit()
-	While (BitOR($iWait > __TimerDiff($hTimer), ($iWait <= 0)) > 0) ; '-1' support
-		ForceCaptureRegion()
-		If Not _CheckColorPixel($x, $y, $sColor, $iColorVariation, True, $sMsglog) Then Return True ; diff
-		If _Sleep($iDelay) Then Return False
-		If ($iWait <= 0) Then ExitLoop ; Loop prevention.
-	WEnd
-	Return False
+	; We can only affirm what is not true.
+	Return (_Wait4Pixel($x, $y, $sColor, $iColorVariation, $iWait, $iDelay, $sMsglog) <> True)
 EndFunc   ;==>_Wait4PixelGone
 
 Func _CheckColorPixel($x, $y, $sColor, $iColorVariation, $bFCapture = True, $sMsglog = Default)
@@ -58,7 +52,7 @@ EndFunc   ;==>_GetPixelColor2
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: MultiPSimple
 ; Description ...:
-; Author ........: Boludoz
+; Author ........: Boldina !
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2020
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -116,6 +110,16 @@ Func MultiPSimple($iLeft, $iTop, $iRight, $iBottom, $iHex, $iTolerance = 15, $iW
 	Return 0
 EndFunc   ;==>MultiPSimple
 
+; #FUNCTION# ====================================================================================================================
+; Name ..........: _Wait4PixelArray & _Wait4PixelGoneArray
+; Description ...: Put array and return true or false if pixel is not found in time + delay.
+; Author ........: Boldina !
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2020
+;                  MyBot is distributed under the terms of the GNU GPL
+; Related .......:
+; Link ..........: https://github.com/MyBotRun/MyBot/wiki
+; Example .......: No
+; ===============================================================================================================================
 Func _Wait4PixelArray($aSettings) ; Return true if pixel is true
 	Local $x = $aSettings[0]
 	Local $y = $aSettings[1]
@@ -136,24 +140,20 @@ Func _Wait4PixelArray($aSettings) ; Return true if pixel is true
 EndFunc   ;==>_Wait4PixelArray
 
 Func _Wait4PixelGoneArray($aSettings) ; Return true if pixel is false
-	Local $x = $aSettings[0]
-	Local $y = $aSettings[1]
-	Local $sColor = $aSettings[2]
-	Local $iColorVariation = (UBound($aSettings) > 3) ? ($aSettings[3]) : (15)
-	Local $iWait = (UBound($aSettings) > 4) ? ($aSettings[4]) : (1000)
-	Local $iDelay = (UBound($aSettings) > 5) ? ($aSettings[5]) : (100)
-	Local $sMsglog = (UBound($aSettings) > 6) ? ($aSettings[6]) : (Default)
-
-	Local $hTimer = __TimerInit()
-	While (BitOR($iWait > __TimerDiff($hTimer), ($iWait <= 0)) > 0) ; '-1' support
-		ForceCaptureRegion()
-		If Not _CheckColorPixel($x, $y, $sColor, $iColorVariation, True, $sMsglog) Then Return True ; diff
-		If _Sleep($iDelay) Then Return False
-		If ($iWait <= 0) Then ExitLoop ; Loop prevention.
-	WEnd
-	Return False
+	; We can only affirm what is not true. What part are you missing ?.
+	Return (_Wait4PixelArray($aSettings) <> True)
 EndFunc   ;==>_Wait4PixelGoneArray
 
+; #FUNCTION# ====================================================================================================================
+; Name ..........: _WaitForCheckImg & _WaitForCheckImgGone
+; Description ...: Return true if img. is found in time (_WaitForCheckImg) or if img. is not found in time (_WaitForCheckImgGone).
+; Author ........: Boldina !
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2020
+;                  MyBot is distributed under the terms of the GNU GPL
+; Related .......: You can use multiple img. in a folder and find ($aText = "a|b|c|d").
+; Link ..........: https://github.com/MyBotRun/MyBot/wiki
+; Example .......: No
+; ===============================================================================================================================
 Func _WaitForCheckImg($sPathImage, $sSearchZone = Default, $aText = Default, $iWait = 5000, $iDelay = 250)
 	If $iWait = Default Then $iWait = 5000
 	If $iDelay = Default Then $iDelay = 250
@@ -168,14 +168,6 @@ Func _WaitForCheckImg($sPathImage, $sSearchZone = Default, $aText = Default, $iW
 EndFunc   ;==>_WaitForCheckImg
 
 Func _WaitForCheckImgGone($sPathImage, $sSearchZone = Default, $aText = Default, $iWait = 5000, $iDelay = 250)
-	If $iWait = Default Then $iWait = 5000
-	If $iDelay = Default Then $iDelay = 250
-
-	Local $hTimer = __TimerInit()
-	Do
-		Local $aRetutn = findMultipleQuick($sPathImage, 50, $sSearchZone, True, $aText)
-		If $aRetutn = -1 Then Return True
-		If _Sleep($iDelay) Then Return False
-	Until ($iWait < __TimerDiff($hTimer))
-	Return False
+	; We can only affirm what is not true. Denial must be comprehensive.
+	Return (_WaitForCheckImgGone($sPathImage, $sSearchZone, $aText, $iWait, $iDelay) <> True)
 EndFunc   ;==>_WaitForCheckImg

@@ -270,7 +270,7 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 									; Remove the Qty from the Original array :
 									$aAvailableTroops_NXQ[$iSlotNumber][4] = $iQtyOfSelectedSlot
 									; If is the Machine exist and depolyed
-									If $g_bIsBBMachineD Then ExitLoop (2)
+									If IsArray($g_aMachineBB) And UBound($g_aMachineBB) > 2 And $g_aMachineBB[2] Then ExitLoop (2)
 									; Just in case
 									If $iTotalQtyByTroop < 1 Then ExitLoop (2)
 									; Let's select another slot if this slot is empty
@@ -316,7 +316,7 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 										$aAvailableTroops_NXQ[$iSlotNumber][4] = $iQtyOfSelectedSlot
 										; If is the Machine exist and deployed
 										; If IsMachineDepoloyed($sTroopName, $iSlotNumber, $bIfMachineWasDeployed, $bIfMachineHasAbility, $g_aMachineBB) Then ExitLoop (2)
-										If $g_bIsBBMachineD Then ExitLoop (2)
+										If IsArray($g_aMachineBB) And UBound($g_aMachineBB) > 2 And $g_aMachineBB[2] Then ExitLoop (2)
 
 										If $iTotalQtyByTroop < 1 Then ExitLoop (2)
 										; Let's select another slot if this slot is empty
@@ -345,9 +345,8 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 										; Remove the Qty from the Original array :
 										$aAvailableTroops_NXQ[$iSlotNumber][4] = $iQtyOfSelectedSlot
 										; If is the Machine exist and deployed
-										;If IsMachineDepoloyed() Then ExitLoop
-										If $g_bIsBBMachineD Then ExitLoop
-
+										; If IsMachineDepoloyed() Then ExitLoop
+										If IsArray($g_aMachineBB) And UBound($g_aMachineBB) > 2 And $g_aMachineBB[2] Then ExitLoop
 										If $iTotalQtyByTroop < 1 Then ExitLoop
 										; Let's select another slot if this slot is empty
 										If $iQtyOfSelectedSlot < 1 Then
@@ -661,9 +660,10 @@ Func VerifySlotTroop($sTroopName, ByRef $aSlot_XY, ByRef $iQtyOfSelectedSlot, By
 	$aSlot_XY[0] = $iSlotX
 	$aSlot_XY[1] = $iSlotY
 
+	; Set The Battle Machine Slot Coordinates in Attack Bar
 	If $sTroopName = "Machine" Then
-		; Set The Battle Machine Slot Coordinates in Attack Bar
-		Global $g_aMachineBB[2] = [$iSlotX, $iSlotY]
+		$g_aMachineBB[0] = $iSlotX
+		$g_aMachineBB[1] = $iSlotY
 	EndIf
 	
 	Click($iSlotX - Random(0, 5, 1), $iSlotY - Random(0, 5, 1), 1, 0)
@@ -675,15 +675,14 @@ Func DeployTroopBB($sTroopName, $aSlot_XY, $Point2Deploy, $iQtyToDrop)
 	SetDebugLog("[" & _ArrayToString($aSlot_XY) & "] - Deploying " & $iQtyToDrop & " " & FullNametroops($sTroopName) & " At " & $Point2Deploy[0] & " x " & $Point2Deploy[1], $COLOR_INFO)
 	ClickP($Point2Deploy, $iQtyToDrop, 0)
 	
-	If ($sTroopName = "Machine") And ($g_bIsBBMachineD = False) Then
+	If IsArray($g_aMachineBB) And ($sTroopName = "Machine") And ($g_aMachineBB[2] = False) Then
 		; Set the Boolean To True to Say Yeah! It's Deployed!
-		$g_bIsBBMachineD = True
+		$g_aMachineBB[2] = True
+		
+		; It look for the white border in case it failed to launch.
 		If ($g_aMachineBB[0] <> -1) Then
-			If _Sleep(500) Then Return ; I hope it is generated.
-			Local $hPixel = _GetPixelColor(Int($g_aMachineBB[0]), 723, True)
-			SetDebugLog($hPixel & " : ability fail opcode is 0xFFFFFF", $COLOR_INFO)
-			$g_bIsBBMachineD = (Not _ColorCheck($hPixel, Hex(0xFFFFFF, 6), 30))
-			SetLog("- BB Machine is ok? " & $g_bIsBBMachineD, $COLOR_INFO)
+			$g_aMachineBB[2] = _Wait4PixelGone($g_aMachineBB[0], 723, Hex(0xFFFFFF, 6), 30, 600, 100, False)
+			SetLog("- BB Machine is ok? " & $g_aMachineBB[2], $COLOR_INFO)
 		EndIf
 	EndIf
 EndFunc   ;==>DeployTroopBB
@@ -708,17 +707,25 @@ Func GetThePointNearBH($BHposition, $aDeployPoints)
 	Return $ReturnPoint
 EndFunc   ;==>GetThePointNearBH
 
-Func TriggerMachineAbility($bBBIsFirst = $g_bBBIsFirst, $ix = -1, $iy = -1, $bTest = False)
+Func TriggerMachineAbility($bBBIsFirst = -1, $ix = -1, $iy = -1, $bTest = False)
 	Local $sFuncName = "TriggerMachineAbility: "
-
+	
+	If UBound($g_aMachineBB) < 4 Then
+		Setlog("TriggerMachineAbility | This will not work 0x1.", $COLOR_ERROR)
+		Return False
+	EndIf
+	
+	If ($bBBIsFirst = -1) Then $bBBIsFirst = $g_aMachineBB[3]
+	
 	; If it's not just a test, Exit the Function if Machine is not yet deployed
-	If $bTest = False And $g_bIsBBMachineD = False Then Return False
+	If $bTest = False And $g_aMachineBB[2] = False Then Return False
 
 	; Check and set the Coordinates of Machine Slot in Attack Bar
-	If UBound($g_aMachineBB) < 2 Or $g_aMachineBB[0] = -1 Then
+	If $g_aMachineBB[0] = -1 Then
 		If $ix > -1 And $iy > -1 Then
 			SetDebugLog($sFuncName & "Setting Coordinates to the Machine Slot manually! [" & $ix & ", " & $iy & "]", $COLOR_INFO)
-			Global $g_aMachineBB[2] = [$ix, $iy]
+			$g_aMachineBB[0] = $ix
+			$g_aMachineBB[1] = $iy
 		Else
 			SetLog($sFuncName & "I have no coordinates to the Machine Slot Position", $COLOR_ERROR)
 			Return False
@@ -741,12 +748,12 @@ Func TriggerMachineAbility($bBBIsFirst = $g_bBBIsFirst, $ix = -1, $iy = -1, $bTe
 			Click(Int($g_aMachineBB[0] + Random(5, 15, 1)), Int($g_aMachineBB[1] + Random(5, 15, 1)), Random(1, 3, 1), 100)
 			SetLog("- BB Machine : Activated Ability for the first time.", $COLOR_ACTION)
 			$bBBIsFirst = False
-			$g_bBBIsFirst = $bBBIsFirst
+			$g_aMachineBB[3] = $bBBIsFirst
 			$g_iBBMachAbilityLastActivatedTime = __TimerInit()
 			If RandomSleep(300) Then Return
 			Return True
 		Else
-			If $bBBIsFirst Then SetLog("- BB Machine : Skill not present.", $COLOR_INFO)
+			If $g_aMachineBB[3] Then SetLog("- BB Machine : Skill not present.", $COLOR_INFO)
 			Return False
 		EndIf
 	EndIf

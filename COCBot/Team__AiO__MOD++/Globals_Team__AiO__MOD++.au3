@@ -250,8 +250,10 @@ $g_iComboClockTowerPotion, $g_iComboHeroPotion, $g_iComboPowerPotion, _
 $g_iInputBuilderPotion, $g_iInputLabPotion, $g_iInputGoldItems = 250000, $g_iInputElixirItems = 300000, $g_iInputDarkElixirItems = 1000
 
 #Region - Builder Base !!!
-; Provisional globals BB Machine
-Global $g_aMachineBB[2] = [-1, -1], $g_bIsBBMachineD = False, $g_bBBIsFirst = True
+; Globals for BB Machine
+; X, Y, g_bIsBBMachineD, g_bBBIsFirst
+Global Const $g_aMachineBBReset[4] = [-1, -1, False, True]
+Global $g_aMachineBB[4] = [-1, -1, False, True]
 
 ; Report
 Global $g_iAvailableAttacksBB = 0, $g_iLastDamage = 0
@@ -301,8 +303,6 @@ Global $g_iBBNextTroopDelay = 2000,  $g_iBBSameTroopDelay = 300; delay time betw
 
 Global $g_asAttackBarBB[$eBBTroopCount+1] = ["", "Barbarian", "Archer", "BoxerGiant", "Minion", "WallBreaker", "BabyDrag", "CannonCart", "Witch", "DropShip", "SuperPekka", "HogGlider", "Machine"]
 Global $g_sBBDropOrder = _ArrayToString($g_asAttackBarBB)
-
-Global $g_bIfMachineHasAbility = False, $g_bIfMachineWasDeployed = False
 
 ; Camps
 Global $g_aCamps[6] = ["", "", "", "", "", ""]

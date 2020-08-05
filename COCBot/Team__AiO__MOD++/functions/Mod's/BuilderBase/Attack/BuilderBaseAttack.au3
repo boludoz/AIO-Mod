@@ -111,11 +111,8 @@ Func BuilderBaseAttack($bTestRun = False)
 		; Avoid bugs in redlines (too fast MyBot).
 		If RandomSleep(1500) Then Return
 
-		; Reset vars.
-		Global $g_aMachineBB[2] = [-1, -1]
-		$g_bIfMachineHasAbility = False
-		$g_bIfMachineWasDeployed = False
-		$g_bIsBBMachineD = False
+		; Reset vars machine.
+		$g_aMachineBB = $g_aMachineBBReset
 
 		RemoveChangeTroopsDialog()
 
@@ -578,11 +575,8 @@ Func BuilderBaseAttackReport()
 	ClickP($aAway, 2, 0, "#0332") ;Click Away
 	
 	; Reset Variables
-	Global $g_aMachineBB[2] = [-1, -1]
-	$g_bIsBBMachineD = False
-	$g_bBBIsFirst = True
+	$g_aMachineBB = $g_aMachineBBReset
 	$g_iBBMachAbilityLastActivatedTime = -1
-	
 	
 	If RandomSleep(2000) Then Return
 	

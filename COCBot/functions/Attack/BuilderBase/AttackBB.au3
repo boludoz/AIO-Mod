@@ -148,7 +148,7 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 									If RandomSleep($g_iBBSameTroopDelay) Then Return
 								Next
 							EndIf
-						ElseIf $g_bIsBBMachineD = False Then
+						ElseIf IsArray($g_aMachineBB) And (UBound($g_aMachineBB) > 2) And (Not $g_aMachineBB[2]) Then
 							; The Slot is a Battle Machine and we have not Deployed Battle Machine yet!
 							; Select the Battle Machine
 							Click($aBBAttackBar[$j][1], $aBBAttackBar[$j][2])
@@ -157,10 +157,10 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 							Local $vDP = Random(0, UBound($aVar) - 1)
 							; Drop the Battle Machine
 							PureClick($aVar[$vDP][0], $aVar[$vDP][1])
-							; Set The Battle Machine Slot Coordinates in Attack Bar
-							Global $g_aMachineBB[2] = [$aBBAttackBar[$j][1], $aBBAttackBar[$j][2]]
-							; Set the Boolean To True to Say Yeah! It's Deployed!
-							$g_bIsBBMachineD = True
+							; Set The Battle Machine Slot Coordinates in Attack Bar. Set the Boolean To True to Say Yeah! It's Deployed!
+							$g_aMachineBB[0] = $aBBAttackBar[$j][1]
+							$g_aMachineBB[1] = $aBBAttackBar[$j][2]
+							$g_aMachineBB[2] = True
 						EndIf
 
 						;---------------------------
@@ -198,7 +198,7 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 							If RandomSleep($g_iBBSameTroopDelay) Then Return
 						Next
 					EndIf
-				ElseIf $g_bIsBBMachineD = False Then
+				ElseIf IsArray($g_aMachineBB) And (UBound($g_aMachineBB) > 2) And (Not $g_aMachineBB[2]) Then
 					; The Slot is a Battle Machine and we have not Deployed Battle Machine yet!
 					; Select the Battle Machine
 					Click($aBBAttackBar[$i][1], $aBBAttackBar[$i][2])
@@ -207,10 +207,10 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 					Local $vDP = Random(0, UBound($aVar) - 1)
 					; Drop the Battle Machine
 					PureClick($aVar[$vDP][0], $aVar[$vDP][1])
-					; Set The Battle Machine Slot Coordinates in Attack Bar
-					Global $g_aMachineBB[2] = [$aBBAttackBar[$i][1], $aBBAttackBar[$i][2]]
-					; Set the Boolean To True to Say Yeah! It's Deployed!
-					$g_bIsBBMachineD = True
+					; Set The Battle Machine Slot Coordinates in Attack Bar. Set the Boolean To True to Say Yeah! It's Deployed!
+					$g_aMachineBB[0] = $aBBAttackBar[$i][1]
+					$g_aMachineBB[1] = $aBBAttackBar[$i][2]
+					$g_aMachineBB[2] = True
 				EndIf
 
 				;---------------------------
@@ -240,7 +240,7 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 
 	If $g_bDebugSetlog Then SetDebugLog("Android Suspend Mode Enabled")
 EndFunc   ;==>AttackBB
-#EndRegion - Custom BB - Team AIO Mod++ ; Thx Chilly-Chill by you hard work.
+
 Func Okay()
 	local $timer = __TimerInit()
 
@@ -265,3 +265,4 @@ Func Okay()
 
 	Return True
 EndFunc
+#EndRegion - Custom BB - Team AIO Mod++ ; Thx Chilly-Chill by you hard work.
