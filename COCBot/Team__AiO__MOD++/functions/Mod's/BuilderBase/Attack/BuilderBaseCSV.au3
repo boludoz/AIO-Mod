@@ -634,10 +634,6 @@ Func AddTilesToEdgePoint(ByRef $aSelectedEdgePoints_XYS, $iAddTiles, $bDebug)
 EndFunc   ;==>AddTilesToEdgePoint
 
 Func VerifySlotTroop($sTroopName, ByRef $aSlot_XY, ByRef $iQtyOfSelectedSlot, ByRef $iSlotNumber, $aAvailableTroops_NXQ)
-
-	; Verify Battle Machine.
-	;TriggerMachineAbility()
-
 	; Select Slot.
 	Local $iSlotX = 0, $iSlotY = 0
 	; Lets check all available troops
@@ -669,8 +665,8 @@ Func VerifySlotTroop($sTroopName, ByRef $aSlot_XY, ByRef $iQtyOfSelectedSlot, By
 		; Set The Battle Machine Slot Coordinates in Attack Bar
 		Global $g_aMachineBB[2] = [$iSlotX, $iSlotY]
 	EndIf
-
-	Click($iSlotX - Random(0, 10, 1), $iSlotY - Random(0, 10, 1), 1, 0)
+	
+	Click($iSlotX - Random(0, 5, 1), $iSlotY - Random(0, 5, 1), 1, 0)
 	If _Sleep(250) Then Return
 	Return True
 EndFunc   ;==>VerifySlotTroop
@@ -682,17 +678,12 @@ Func DeployTroopBB($sTroopName, $aSlot_XY, $Point2Deploy, $iQtyToDrop)
 	If ($sTroopName = "Machine") And ($g_bIsBBMachineD = False) Then
 		; Set the Boolean To True to Say Yeah! It's Deployed!
 		$g_bIsBBMachineD = True
-		If ($g_aMachineBB[0] <> 0) Then
-			If _Sleep(500) Then Return
+		If ($g_aMachineBB[0] <> -1) Then
+			If _Sleep(500) Then Return ; I hope it is generated.
 			Local $hPixel = _GetPixelColor(Int($g_aMachineBB[0]), 723, True)
 			SetDebugLog($hPixel & " : ability fail opcode is 0xFFFFFF", $COLOR_INFO)
-			
-			If _ColorCheck($hPixel, Hex(0xFFFFFF, 6), 30) Then
-				Setlog("- BB Machine fail.", $COLOR_ERROR)
-				$g_bIsBBMachineD = False
-			Else
-				Setlog("- BB Machine detected.", $COLOR_INFO)
-			EndIf
+			$g_bIsBBMachineD = (Not _ColorCheck($hPixel, Hex(0xFFFFFF, 6), 30))
+			SetLog("- BB Machine is ok? " & $g_bIsBBMachineD, $COLOR_INFO)
 		EndIf
 	EndIf
 EndFunc   ;==>DeployTroopBB
@@ -721,9 +712,7 @@ Func TriggerMachineAbility($bBBIsFirst = $g_bBBIsFirst, $ix = -1, $iy = -1, $bTe
 	Local $sFuncName = "TriggerMachineAbility: "
 
 	; If it's not just a test, Exit the Function if Machine is not yet deployed
-	If $bTest = False And $g_bIsBBMachineD = False Then
-		Return False
-	EndIf
+	If $bTest = False And $g_bIsBBMachineD = False Then Return False
 
 	; Check and set the Coordinates of Machine Slot in Attack Bar
 	If UBound($g_aMachineBB) < 2 Or $g_aMachineBB[0] = -1 Then
@@ -738,20 +727,18 @@ Func TriggerMachineAbility($bBBIsFirst = $g_bBBIsFirst, $ix = -1, $iy = -1, $bTe
 	
 	; If it's too early for a check, exit the Function! NOTE: If $g_iBBMachAbilityLastActivatedTime here is -1, it means Machine is Deployed but the Ability is not yet Activated!
 	; We use random to not always get activated in an specific Time Delay
-	If $g_iBBMachAbilityLastActivatedTime > -1 And __TimerDiff($g_iBBMachAbilityLastActivatedTime) < Random($g_iBBMachAbilityTime - 2000, $g_iBBMachAbilityTime + 2000, 1) Then
-		Return False
-	EndIf
+	If $g_iBBMachAbilityLastActivatedTime > -1 And __TimerDiff($g_iBBMachAbilityLastActivatedTime) < Random($g_iBBMachAbilityTime - 2000, $g_iBBMachAbilityTime + 2000, 1) Then Return False
 
 	SetDebugLog($sFuncName & "Checking ability.")
 	
 	Local $hPixel
 	$hPixel = _GetPixelColor(Int($g_aMachineBB[0]), 721, True)
-	If $bTest Then Setlog($hPixel & " ability", $COLOR_INFO)
+	If $bTest Or $g_bDebugSetlog Then Setlog($hPixel & " ability", $COLOR_INFO)
 
-	If $bBBIsFirst And ($g_aMachineBB[0] <> 0) Then
-		If $bTest Then Setlog(_ArrayToString($g_aMachineBB))
+	If $bBBIsFirst And ($g_aMachineBB[0] <> -1) Then
+		If $bTest Or $g_bDebugSetlog Then Setlog(_ArrayToString($g_aMachineBB), $COLOR_INFO)
 		If _ColorCheck($hPixel, Hex(0x472CC5, 6), 40) Then
-			Click(Int($g_aMachineBB[0] + Random(0, 15, 1)), Int($g_aMachineBB[1] - Random(20, 30, 1)), Random(1, 3, 1), 100)
+			Click(Int($g_aMachineBB[0] + Random(5, 15, 1)), Int($g_aMachineBB[1] + Random(5, 15, 1)), Random(1, 3, 1), 100)
 			SetLog("- BB Machine : Activated Ability for the first time.", $COLOR_ACTION)
 			$bBBIsFirst = False
 			$g_bBBIsFirst = $bBBIsFirst
@@ -765,7 +752,7 @@ Func TriggerMachineAbility($bBBIsFirst = $g_bBBIsFirst, $ix = -1, $iy = -1, $bTe
 	EndIf
 	
 	If _ColorCheck($hPixel, Hex(0x432CCE, 6), 20) Then
-		Click(Int($g_aMachineBB[0] + Random(0, 15, 1)), Int($g_aMachineBB[1] - Random(20, 30, 1)), Random(1, 3, 1), 100)
+		Click(Int($g_aMachineBB[0] + Random(5, 15, 1)), Int($g_aMachineBB[1] + Random(5, 15, 1)), Random(1, 3, 1), 100)
 		SetLog("- BB Machine : Activated Ability.", $COLOR_ACTION)
 		$g_iBBMachAbilityLastActivatedTime = __TimerInit()
 		If RandomSleep(300) Then Return
