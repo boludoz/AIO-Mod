@@ -24,7 +24,7 @@ Func isOnBuilderBase($bNeedCaptureRegion = True, $bSoft = False)
 		Return True
 	EndIf
 	
-	SetDebugLog("Builder Base Builder not detected.", $COLOR_ERROR)
+	SetDebugLog("We're on Main Base.")
 	Return False
 EndFunc   ;==>isOnBuilderBase
 #EndRegion - Custom - Team AIO Mod++
