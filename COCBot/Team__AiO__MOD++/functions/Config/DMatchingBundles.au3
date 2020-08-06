@@ -9,8 +9,7 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-
 Global $g_sBaseDMatchingPathB = @ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\Image Matching"
 
-; Deadbase, Elixir Collectors Level 14
-Global $g_sECollector14DMatB = $g_sBaseDMatchingPathB & "\deadbase\Elixir\14"
+; Deadbase, Elixir Collectors.
+Global $g_sECollectorDMatB = $g_sBaseDMatchingPathB & "\deadbase\Elixir"

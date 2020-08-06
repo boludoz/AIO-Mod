@@ -27,6 +27,9 @@ Global $g_hChkBotLogLineLimit, $g_bChkBotLogLineLimit, _
 $g_hTxtLogLineLimit, $g_iTxtLogLineLimit
 #EndRegion - Setlog limit - Team AIO Mod++
 
+; Advanced debugging.
+Global $g_bdbgimh = False
+
 ; Offset village.
 Global $g_aPosSizeVillage = 0
 
@@ -171,6 +174,7 @@ Global $g_CSVSpeedDivider[2] = [1, 1] ; default CSVSpeed for DB & LB
 Global $g_bScanMineAndElixir = False
 
 ; Collectors Outside Filter
+Global $g_bDBCollectorNone = True
 Global $g_bDBMeetCollectorOutside = False, $g_iDBMinCollectorOutsidePercent = 80
 Global $g_bDBCollectorNearRedline = False, $g_iCmbRedlineTiles = 1
 Global $g_bSkipCollectorCheck = False, $g_iTxtSkipCollectorGold = 400000, $g_iTxtSkipCollectorElixir = 400000, $g_iTxtSkipCollectorDark = 0

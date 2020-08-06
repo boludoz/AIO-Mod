@@ -154,8 +154,8 @@ EndFunc   ;==>_Wait4PixelGoneArray
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func _WaitForCheckImg($sPathImage, $sSearchZone = Default, $aText = Default, $iWait = 5000, $iDelay = 250)
-	If $iWait = Default Then $iWait = 5000
+Func _WaitForCheckImg($sPathImage, $sSearchZone = Default, $aText = Default, $iWait = 2000, $iDelay = 250)
+	If $iWait = Default Then $iWait = 2000
 	If $iDelay = Default Then $iDelay = 250
 
 	Local $hTimer = __TimerInit()
@@ -167,7 +167,7 @@ Func _WaitForCheckImg($sPathImage, $sSearchZone = Default, $aText = Default, $iW
 	Return False
 EndFunc   ;==>_WaitForCheckImg
 
-Func _WaitForCheckImgGone($sPathImage, $sSearchZone = Default, $aText = Default, $iWait = 5000, $iDelay = 250)
+Func _WaitForCheckImgGone($sPathImage, $sSearchZone = Default, $aText = Default, $iWait = 2000, $iDelay = 250)
 	; We can only affirm what is not true. Denial must be comprehensive.
 	Return (_WaitForCheckImgGone($sPathImage, $sSearchZone, $aText, $iWait, $iDelay) <> True)
 EndFunc   ;==>_WaitForCheckImg

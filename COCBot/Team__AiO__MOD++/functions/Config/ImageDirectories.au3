@@ -10,6 +10,9 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+#Region DMatching
+#include "DMatchingBundles.au3"
+#EndRegion DMatching
 
 #Region Maintenance
 Global $g_sImgMaintenanceMod = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Maintenance\"

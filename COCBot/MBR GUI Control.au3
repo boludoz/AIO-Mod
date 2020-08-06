@@ -570,8 +570,8 @@ Func GUIControl_WM_COMMAND($hWind, $iMsg, $wParam, $lParam)
 			btnTestVillageSize()
 		Case $g_hBtnTestDeadBase
 			btnTestDeadBase()
-		Case $g_hBtnTestDeadBaseFolder
-			btnTestDeadBaseFolder()
+		Case $g_hbtnExecuteCapture
+			btnExecuteCapture()
 		Case $g_hBtnTestTHimgloc
 			imglocTHSearch()
 		Case $g_hBtnTestAttackCSV

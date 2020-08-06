@@ -57,16 +57,9 @@ Func ClickFindMatch()
 EndFunc   ;==>ClickFindMatch
 #ce
 
-Func SearchNoLeague()
-	Local $offColors[2][3] = [[0xFBFDFB, 28, 0], [0x626462, 15, 5]]
-	Local $vNoLeaguePixel = _MultiPixelSearch(5, 10, 50, 50, 1, 1, Hex(0xFFFFFF, 6), $offColors, 15)
-	
-	If $g_bDebugSetlog Then SetDebugLog("NoLeague pixel chk-#1: " & _GetPixelColor(13, 24, True) & _
-			", #2: " & _GetPixelColor(13 + 28, 24, True) & _
-			", #3: " & _GetPixelColor(13 + 15, 24 + 5, True), $COLOR_DEBUG)
-	
-	If IsArray($vNoLeaguePixel) Then Return True
-	Return False
+Func SearchNoLeague($bForceCapture = False)
+	Local $sImg = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch\NoLeague\"
+	Return IsArray(findMultipleQuick($sImg, Default, "6, 14, 45, 28", $bForceCapture))
 EndFunc   ;==>SearchNoLeague
 
 Func SpecialAway()

@@ -529,6 +529,7 @@ Func ApplyConfig_MOD_600_31($TypeReadSave)
 	Switch $TypeReadSave
 		Case "Read"
 			GUICtrlSetState($g_hChkDBMeetCollectorOutside, $g_bDBMeetCollectorOutside = True ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkDBCollectorNone, $g_bDBCollectorNone = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hTxtDBMinCollectorOutsidePercent, $g_iDBMinCollectorOutsidePercent)
 
 			GUICtrlSetState($g_hChkDBCollectorNearRedline, $g_bDBCollectorNearRedline = True ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -541,9 +542,10 @@ Func ApplyConfig_MOD_600_31($TypeReadSave)
 
 			GUICtrlSetState($g_hChkSkipCollectorCheckTH, $g_bSkipCollectorCheckTH = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbSkipCollectorCheckTH, $g_iCmbSkipCollectorCheckTH)
-			chkDBMeetCollectorOutside()
+			aplCollectorsAndRedLines()
 		Case "Save"
 			$g_bDBMeetCollectorOutside = (GUICtrlRead($g_hChkDBMeetCollectorOutside) = $GUI_CHECKED)
+			$g_bDBCollectorNone = (GUICtrlRead($g_hChkDBCollectorNone) = $GUI_CHECKED)
 			$g_iDBMinCollectorOutsidePercent = GUICtrlRead($g_hTxtDBMinCollectorOutsidePercent)
 
 			$g_bDBCollectorNearRedline = (GUICtrlRead($g_hChkDBCollectorNearRedline) = $GUI_CHECKED)

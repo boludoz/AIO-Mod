@@ -261,6 +261,7 @@ EndFunc   ;==>ReadConfig_MOD_600_29
 Func ReadConfig_MOD_600_31()
 	; <><><> Check Collectors Outside <><><>
 	IniReadS($g_bDBMeetCollectorOutside, $g_sProfileConfigPath, "search", "DBMeetCollectorOutside", $g_bDBMeetCollectorOutside, "Bool")
+	IniReadS($g_bDBCollectorNone, $g_sProfileConfigPath, "search", "DBCollectorNone", $g_bDBCollectorNone, "Bool")
 	IniReadS($g_iDBMinCollectorOutsidePercent, $g_sProfileConfigPath, "search", "TxtDBMinCollectorOutsidePercent", $g_iDBMinCollectorOutsidePercent, "int")
 
 	IniReadS($g_bDBCollectorNearRedline, $g_sProfileConfigPath, "search", "DBCollectorNearRedline", $g_bDBCollectorNearRedline, "Bool")

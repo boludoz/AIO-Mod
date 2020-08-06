@@ -173,31 +173,37 @@ Func cmbStandardDropSidesDB() ; avoid conflict between FourFinger and SmartAttac
 EndFunc   ;==>g_hCmbStandardDropSidesDB
 
 ; Check Collectors Outside
-Func chkDBMeetCollectorOutside()
-	If GUICtrlRead($g_hChkDBMeetCollectorOutside) = $GUI_CHECKED Then
-		For $i = $g_hLblDBMinCollectorOutside To $g_hTxtDBMinCollectorOutsidePercent
-			GUICtrlSetState($i, $GUI_ENABLE)
-		Next
-		_GUI_Value_STATE("ENABLE", $g_hChkDBCollectorNearRedline & "#" & $g_hChkSkipCollectorCheck & "#" & $g_hChkSkipCollectorCheckTH)
-		chkDBCollectorNearRedline()
-		chkSkipCollectorCheck()
-		chkSkipCollectorCheckTH()
-	Else
-		For $i = $g_hLblDBMinCollectorOutside To $g_hCmbSkipCollectorCheckTH
-			GUICtrlSetState($i, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
-		Next
-	EndIf
-EndFunc   ;==>chkDBMeetCollOutside
+Func chkCollectorsAndRedLines()
+	Select
+		Case @GUI_CtrlId = $g_hChkDBCollectorNone
+			_GUI_Value_STATE("DISABLE", $g_hChkSkipCollectorCheck & "#" & $g_hChkSkipCollectorCheckTH & "#" & $g_hTxtDBMinCollectorOutsidePercent & "#" & $g_hCmbRedlineTiles)
+		Case @GUI_CtrlId = $g_hChkDBCollectorNearRedline
+			_GUI_Value_STATE("ENABLE", $g_hChkSkipCollectorCheck & "#" & $g_hChkSkipCollectorCheckTH & "#" & $g_hCmbRedlineTiles)
+			_GUI_Value_STATE("DISABLE", $g_hTxtDBMinCollectorOutsidePercent)
+		Case @GUI_CtrlId = $g_hChkDBMeetCollectorOutside
+			_GUI_Value_STATE("ENABLE", $g_hChkSkipCollectorCheck & "#" & $g_hChkSkipCollectorCheckTH & "#" & $g_hTxtDBMinCollectorOutsidePercent)
+			_GUI_Value_STATE("DISABLE", $g_hCmbRedlineTiles)
+	EndSelect
+	chkSkipCollectorCheck()
+	chkSkipCollectorCheckTH()
+EndFunc   ;==>chkCollectorsAndRedLines
 
-Func chkDBCollectorNearRedline()
-	If GUICtrlRead($g_hChkDBCollectorNearRedline) = $GUI_CHECKED Then
-		_GUI_Value_STATE("ENABLE", $g_hLblRedlineTiles & "#" & $g_hCmbRedlineTiles)
-	Else
-		_GUI_Value_STATE("DISABLE", $g_hLblRedlineTiles & "#" & $g_hCmbRedlineTiles)
-	EndIf
-EndFunc   ;==>chkDBCollectorsNearRedline
+Func aplCollectorsAndRedLines()
+	Select
+		Case $g_bDBCollectorNone
+			_GUI_Value_STATE("DISABLE", $g_hChkSkipCollectorCheck & "#" & $g_hChkSkipCollectorCheckTH & "#" & $g_hTxtDBMinCollectorOutsidePercent & "#" & $g_hCmbRedlineTiles)
+		Case $g_bDBCollectorNearRedline
+			_GUI_Value_STATE("ENABLE", $g_hChkSkipCollectorCheck & "#" & $g_hChkSkipCollectorCheckTH & "#" & $g_hCmbRedlineTiles)
+			_GUI_Value_STATE("DISABLE", $g_hTxtDBMinCollectorOutsidePercent)
+		Case $g_bDBMeetCollectorOutside
+			_GUI_Value_STATE("ENABLE", $g_hChkSkipCollectorCheck & "#" & $g_hChkSkipCollectorCheckTH & "#" & $g_hTxtDBMinCollectorOutsidePercent)
+			_GUI_Value_STATE("DISABLE", $g_hCmbRedlineTiles)
+	EndSelect
+	chkSkipCollectorCheck()
+	chkSkipCollectorCheckTH()
+EndFunc   ;==>aplCollectorsAndRedLines
 
-Func chkSkipCollectorCheck()
+Func chkSkipCollectorCheck() ; Not put in cfg.
 	If GUICtrlRead($g_hChkSkipCollectorCheck) = $GUI_CHECKED Then
 		For $i = $g_hLblSkipCollectorCheck To $g_hTxtSkipCollectorDark
 			GUICtrlSetState($i, $GUI_ENABLE)
@@ -209,7 +215,7 @@ Func chkSkipCollectorCheck()
 	EndIf
 EndFunc   ;==>chkSkipCollectorCheck
 
-Func chkSkipCollectorCheckTH()
+Func chkSkipCollectorCheckTH() ; Not put in cfg.
 	If GUICtrlRead($g_hChkSkipCollectorCheckTH) = $GUI_CHECKED Then
 		For $i = $g_hLblSkipCollectorCheckTH To $g_hCmbSkipCollectorCheckTH
 			GUICtrlSetState($i, $GUI_ENABLE)

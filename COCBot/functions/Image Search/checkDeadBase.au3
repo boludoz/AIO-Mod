@@ -6,7 +6,7 @@
 ; Parameters ....: None
 ; Return values .: True if it is, returns false if it is not a dead base
 ; Author ........:  AtoZ , DinoBot (01-2015)
-; Modified ......: CodeSlinger69 (01-2017)
+; Modified ......: CodeSlinger69 (01-2017), Team AIO Mod++ (2020)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -91,152 +91,13 @@ Func setZombie($RaidedElixir = -1, $AvailableElixir = -1, $Matched = -1, $Search
 	Return $g_aZombie[0]
 EndFunc   ;==>setZombie
 
-Func checkDeadBaseNew()
-
-	If $g_bCollectorFilterDisable Then
-		Return True
-	EndIf
-	Local $minCollectorLevel = 0
-	Local $maxCollectorLevel = 0
-	Local $anyFillLevel[2] = [False, False] ; 50% and 100%
-	If $g_bDebugSetlog Then SetDebugLog("Checking Deadbase With IMGLOC START", $COLOR_WARNING)
-
-	For $i = 6 To ubound($g_aiCollectorLevelFill) -1
-		If $g_abCollectorLevelEnabled[$i] Then
-			If $minCollectorLevel = 0 Then $minCollectorLevel = $i
-			If $i > $maxCollectorLevel Then $maxCollectorLevel = $i
-			$anyFillLevel[$g_aiCollectorLevelFill[$i]] = True
-		EndIf
-	Next
-
-	If $maxCollectorLevel = 0 Then
-		Return True
-	EndIf
-
-	If $g_bDebugSetlog Then SetDebugLog("Checking Deadbase With IMGLOC START", $COLOR_WARNING)
-
-	Local $TotalMatched = 0
-	Local $Matched[2] = [-1, -1]
-	Local $aPoints[0]
-
-	; only one capture here, very important for consistent zombies
-	_CaptureRegion2()
-
-	;retry with imgloc 50% Fill collectors
-	If $anyFillLevel[0] = True Then
-		$Matched[0] = imglocIsDeadBase($aPoints, 50, $minCollectorLevel, $maxCollectorLevel, True, False) ; try half full collectors
-		If $Matched[0] > 0 Then $TotalMatched += $Matched[0]
-	EndIf
-
-	If $TotalMatched < $g_iCollectorMatchesMin Then ;retry with imgloc 100% Fill collectors
-		$Matched[1] = imglocIsDeadBase($aPoints, 100, $minCollectorLevel, $maxCollectorLevel, True, False) ; try full collectors
-		If $Matched[1] > 0 Then $TotalMatched += $Matched[1]
-	EndIf
-
-	Local $dbFound = $TotalMatched >= $g_iCollectorMatchesMin
-	If $dbFound Then
-		If $g_bDebugSetlog Then SetDebugLog("IMGLOC : FOUND DEADBASE !!! Matched: " & $TotalMatched & "/" & $g_iCollectorMatchesMin & ": " & UBound($aPoints), $COLOR_GREEN)
-	Else
-		If $g_bDebugSetlog Then
-			If $Matched[0] = -1 And $Matched[1] = -1 Then
-				SetDebugLog("IMGLOC : NOT A DEADBASE!!! ", $COLOR_INFO)
-			Else
-				SetDebugLog("IMGLOC : DEADBASE NOT MATCHED Matched: " & $TotalMatched & "/" & $g_iCollectorMatchesMin, $COLOR_WARNING)
-			EndIf
-		EndIf
-	EndIf
-
-	; always update $g_aZombie[3], current matched collectors count
-	$g_aZombie[3] = $TotalMatched
-	If $g_bDebugDeadBaseImage Then
-		setZombie(0, $g_iSearchElixir, $TotalMatched, $g_iSearchCount, $g_sImglocRedline)
-	EndIf
-
-	Return $dbFound
-EndFunc   ;==>checkDeadBaseNew
-
-Func checkDeadBase()
-	Return checkDeadBaseSuperNew(False)
-EndFunc   ;==>checkDeadBase
-
 Func GetCollectorIndexByFillLevel($level)
 	If Number($level) >= 85 Then Return 1
 	Return 0
 EndFunc   ;==>GetCollectorIndexByFillLevel
 
-Func imglocIsDeadBase(ByRef $aPos, $FillLevel = 100, $minCollectorLevel = 0, $maxCollectorLevel = 1000, $CheckConfig = False, $bForceCapture = True)
-	;only supports 50 and 100
-	;accepts "regular,dark,spells"
-	;returns array with all found objects
-	Local $sCocDiamond = "ECD" ;
-	Local $redLines = $g_sImglocRedline ; if TH was Search then redline is set!
-	Local $minLevel = $minCollectorLevel ; We only support TH6+
-	Local $maxLevel = $maxCollectorLevel
-	Local $maxReturnPoints = 0 ; all positions
-	Local $returnProps = "objectname,objectpoints,objectlevel"
-	Local $sDirectory = @ScriptDir & "\imgxml\deadbase\elix\" & $FillLevel & "\"
-	Local $matchedValues
-	Local $TotalMatched = 0
-	Local $fillIndex = GetCollectorIndexByFillLevel($FillLevel)
-
-	If $g_bDebugSetlog Then SetDebugLog("IMGLOC : Searching Deadbase for FillLevel/MinLevel/MaxLevel: " & $FillLevel & "/" & $minLevel & "/" & $maxLevel & " using " & $sDirectory, $COLOR_INFO)
-
-	Local $result = findMultiple($sDirectory, $sCocDiamond, $redLines, $minLevel, $maxLevel, $maxReturnPoints, $returnProps, $bForceCapture)
-	If IsArray($result) Then
-		For $matchedValues In $result
-			Local $aPoints = StringSplit($matchedValues[1], "|", $STR_NOCOUNT) ; multiple points splited by | char
-			Local $found = UBound($aPoints)
-
-			If $CheckConfig = True Then
-				Local $level = Number($matchedValues[2])
-				If $g_abCollectorLevelEnabled[$level] Then
-					If $fillIndex < $g_aiCollectorLevelFill[$level] Then
-						; collector fill level not reached
-						$found = 0
-					EndIf
-				Else
-					; collector is not enabled
-					$found = 0
-				EndIf
-			EndIf
-
-			If $found > 0 Then
-				For $sPoint In $aPoints
-					Local $aP = StringSplit($sPoint, ",", $STR_NOCOUNT)
-					Local $bSkipPoint = False
-					For $bP In $aPos
-						Local $a = $aP[1] - $bP[1]
-						Local $b = $aP[0] - $bP[0]
-						Local $c = Sqrt($a * $a + $b * $b)
-						If $c < 25 Then
-							; duplicate point: skip
-							If $g_bDebugSetlog Then SetDebugLog("IMGLOC : Searching Deadbase ignore duplicate collector " & $matchedValues[0] & " at " & $aP[0] & ", " & $aP[1], $COLOR_INFO)
-							$bSkipPoint = True
-							$found -= 1
-							ExitLoop
-						EndIf
-					Next
-					If $bSkipPoint = False Then
-						Local $i = UBound($aPos)
-						ReDim $aPos[$i + 1]
-						$aPos[$i] = $aP
-					EndIf
-				Next
-
-			EndIf
-
-			$TotalMatched += $found
-		Next
-	Else
-		$TotalMatched = -1
-	EndIf
-
-	Return $TotalMatched
-
-EndFunc   ;==>imglocIsDeadBase
-
 #Region - Custom - Team AIO Mod++
-Func checkDeadBaseSuperNew($bForceCapture = True, $sFillDirectory = @ScriptDir & "\imgxml\deadbase\elix\fill\", $sLvlDirectory = @ScriptDir & "\imgxml\deadbase\elix\lvl\")
+Func checkDeadBase($bForceCapture = False, $sFillDirectory = @ScriptDir & "\imgxml\deadbase\elix\fill\", $sLvlDirectory = @ScriptDir & "\imgxml\deadbase\elix\lvl\")
 
 	If $g_bCollectorFilterDisable Then Return True
 
@@ -280,22 +141,26 @@ Func checkDeadBaseSuperNew($bForceCapture = True, $sFillDirectory = @ScriptDir &
 	
 	If $bForceCapture Then _CaptureRegion2() ; Custom match - Team AIO Mod++
 	
+	Local $sDir
+	
 	For $i = $iStartLevel To $iEndLevelD ; I still don't understand the imaging system but I guess we can prepare it for the future that way.
-		; Check for the Level 14 Collectors at first, as it's Image matching and the Dll differs.
+		; Check for the Level Collectors at first, as it's Image matching and the Dll differs.
 		Local $bLvlHalfPercentage = $g_aiCollectorLevelFill[$i] = 0
 		Local $bLvlFull = $g_aiCollectorLevelFill[$i] = 1
-		; Check if Level 14 Collectors are Enabled and It's set to check for 50% or 100%
+		; Check if Level Collectors are Enabled and It's set to check for 50% or 100%
 		If $g_abCollectorLevelEnabled[$i] = True And ($bLvlHalfPercentage = True Or $bLvlFull = True) Then
-			SetDebugLog("Checking for level 14 Elixir Collectors", $COLOR_DEBUG)
-			Local $sDFindPercentageFolder = "50"
-			If $bLvlFull = True Then $sDFindPercentageFolder = "100"
-			Local $sDFindResult = DFind($g_sECollector14DMatB & "\" & $sDFindPercentageFolder & "\", 19, 74, 805, 518, $iStartLevel, $iEndLevelD, $g_iCollectorMatchesMin, False)
+			SetDebugLog("Checking for level " & $i &" Elixir Collectors", $COLOR_DEBUG)
+			Local $sDFindPercentageFolder = 50
+			If $bLvlFull = True Then $sDFindPercentageFolder = 100
+			$sDir = $g_sECollectorDMatB & "\" & $i & "\" & $sDFindPercentageFolder & "\"
+			Local $sDFindResult = DFind($sDir, 19, 74, 805, 518, $i, $i, $g_iCollectorMatchesMin, False)
 			$TotalMatched += CountDMatchingMatches($sDFindResult)
 			SetDebugLog("Found " & $TotalMatched & " level " & $i & " collectors at first phase, " & $sDFindPercentageFolder & "% Fill", $COLOR_DEBUG)
 			; Check if TotalMatched Collectors are not yet Enough and The Collectors been set to 50%, that's the minimum! so we check for the 100% collectors too. thank me later
 			If $TotalMatched < $g_iCollectorMatchesMin And $bLvlFull = False Then
 				$sDFindPercentageFolder = "100"
-				Local $sDFindResult = DFind($g_sECollector14DMatB & "\" & $sDFindPercentageFolder & "\", 19, 74, 805, 518, $iStartLevel, $iEndLevelD, $g_iCollectorMatchesMin, False)
+				$sDir = $g_sECollectorDMatB & "\" & $i & "\" & $sDFindPercentageFolder & "\"
+				Local $sDFindResult = DFind($sDir, 19, 74, 805, 518, $i, $i, $g_iCollectorMatchesMin, False)
 				$TotalMatched += CountDMatchingMatches($sDFindResult)
 				SetDebugLog("Found a Total of " & $TotalMatched & " level " & $i & " collectors with second phase, " & $sDFindPercentageFolder & "% Fill", $COLOR_DEBUG)
 			EndIf
@@ -427,9 +292,19 @@ Func checkDeadBaseSuperNew($bForceCapture = True, $sFillDirectory = @ScriptDir &
 	Return $dbFound
 
 EndFunc   ;==>checkDeadBaseSuperNew
-#EndRegion - Custom - Team AIO Mod++
 
-Func checkDeadBaseFolder($directory, $executeOldCode = "checkDeadBaseNew()", $executeNewCode = "checkDeadBaseSuperNew()")
+Func checkDeadBaseFolder($directory, $sFillDirectory = $g_sImgElixirCollectorFill, $sLvlDirectory = $g_sImgElixirCollectorLvl)
+
+	If Not FileExists($directory) Then
+		SetLog("checkDeadBaseFolder Directory doen't exist", $COLOR_WARNING)
+		Return False
+	ElseIf Not FileExists($sFillDirectory) Then
+		Return False
+		SetLog("checkDeadBaseFolder ElixirCollectorFill doen't exist", $COLOR_WARNING)
+	ElseIf Not FileExists($sLvlDirectory) Then
+		SetLog("checkDeadBaseFolder ElixirCollectorLvl doen't exist", $COLOR_WARNING)
+		Return False
+	EndIf
 
 	Local $aFiles = _FileListToArray($directory, "*.png", $FLTA_FILES)
 
@@ -471,24 +346,24 @@ Func checkDeadBaseFolder($directory, $executeOldCode = "checkDeadBaseNew()", $ex
 		SearchRedLines()
 		; measure village
 		SearchZoomOut(False, True, "checkDeadBaseFolder", False, False)
-		ConvertInternalExternArea() ; generate correct internal/external diamond measures
+		ConvertInternalExternArea("checkDeadBaseFolder") ; generate correct internal/external diamond measures
 
 		For $j = 1 To 2
 
 			If Mod($i + $j, 2) = 0 Then
-				; checkDeadBaseNew
+				; checkDeadBaseSuperNew with OLD path images
 				Local $hTimer = __TimerInit()
-				Execute($executeOldCode)
+				checkDeadBaseSuperNew(False)
 				Local $iMsNew = __TimerDiff($hTimer)
 				$iTotalMsNew += $iMsNew
 				$iMsNew = Round($iMsNew)
 				Local $new = $g_aZombie[3]
 				$iNewFound += $new
 			Else
-				; checkDeadBaseSuperNew
+				; checkDeadBaseNew with a NEW images path
 				$hTimer = __TimerInit()
-				Execute($executeNewCode)
 				Local $iMsSuperNew = __TimerDiff($hTimer)
+				checkDeadBaseSuperNew(False, $sFillDirectory, $sLvlDirectory)
 				$iTotalMsSuperNew += $iMsSuperNew
 				$iMsSuperNew = Round($iMsSuperNew)
 				Local $superNew = $g_aZombie[3]
@@ -531,3 +406,4 @@ Func checkDeadBaseFolder($directory, $executeOldCode = "checkDeadBaseNew()", $ex
 	Return True
 
 EndFunc   ;==>checkDeadBaseFolder
+#EndRegion - Custom - Team AIO Mod++

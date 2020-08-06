@@ -20,7 +20,7 @@ Global $g_ahCmbDBCollectorLevel[15] = [-1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 0, 0,
 Global $g_hCmbMinCollectorMatches = 0, $g_hSldCollectorTolerance = 0, $g_hLblCollectorWarning = 0
 
 ; Check Collectors Outside - Team AiO MOD++
-Global $g_hChkDBMeetCollectorOutside = 0, $g_hLblDBMinCollectorOutside = 0, $g_hTxtDBMinCollectorOutsidePercent = 0
+Global $g_hChkDBMeetCollectorOutside = 0, $g_hLblDBMinCollectorOutside = 0, $g_hTxtDBMinCollectorOutsidePercent = 0, $g_hChkDBCollectorNone = 0
 Global $g_hChkDBCollectorNearRedline = 0, $g_hCmbRedlineTiles = 0, $g_hLblRedlineTiles = 0
 Global $g_hChkSkipCollectorCheck = 0, $g_hLblSkipCollectorCheck = 0, _
 		$g_hTxtSkipCollectorGold = 0, $g_hLblSkipCollectorGold = 0, _
@@ -31,7 +31,7 @@ Global $g_hChkSkipCollectorCheckTH = 0, $g_hCmbSkipCollectorCheckTH = 0, $g_hLbl
 Func CreateAttackSearchDeadBaseCollectors()
 	Local $x = 10, $y = 45
 	Local $s_TxtTip1 = GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkCollectorLevel_Info_01", "If this box is checked, then the bot will look")
-	Local $g_hTxtFull = GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkCollectorLevel_Info_02", "Full")
+	;Local $g_hTxtFull = GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkCollectorLevel_Info_02", "Full")
 	Local $sTxtTip = ""
 
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "Group_01", "Collectors"), $x - 5, $y - 20, $g_iSizeWGrpTab4, $g_iSizeHGrpTab4)
@@ -56,7 +56,7 @@ Func CreateAttackSearchDeadBaseCollectors()
 				_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "LblCollectorLevel" & $i & "_Info_01", "Select how full a level " & $i & ' collector needs to be for it to be marked "dead"'))
 				GUICtrlSetData(-1, "50%|100%", "100%")
 				GUICtrlSetOnEvent(-1, "cmbDBCollector")
-			GUICtrlCreateLabel($g_hTxtFull, $x + 205, $y + 3)
+			;GUICtrlCreateLabel($g_hTxtFull, $x + 205, $y + 3)
 	Next
 
 	$y += 25
@@ -96,12 +96,18 @@ Func CreateAttackSearchDeadBaseCollectors()
 			GUICtrlSetState(-1, $GUI_HIDE)
 
 	; Check Collectors Outside - Team AiO MOD++
-	$y -= 240
+	$y -= 270
 	$x += 240
-		$g_hChkDBMeetCollectorOutside = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkDBMeetCollectorOutside", "Check Collectors Outside"), $x, $y, -1, -1)
+		$g_hChkDBCollectorNone = GUICtrlCreateRadio(GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkDBNone", "None"), $x, $y, -1, -1)
+			GUICtrlSetState(-1, $GUI_UNCHECKED)
+			GUICtrlSetOnEvent(-1, "chkCollectorsAndRedLines")
+
+	$y += 20
+		$g_hChkDBMeetCollectorOutside = GUICtrlCreateRadio(GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkDBMeetCollectorOutside", "Check Collectors Outside"), $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkDBMeetCollectorOutside_Info_01", "Search for bases that has their collectors outside."))
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
-			GUICtrlSetOnEvent(-1, "chkDBMeetCollectorOutside")
+			GUICtrlSetOnEvent(-1, "chkCollectorsAndRedLines")
+
 	$y += 28
 		$g_hLblDBMinCollectorOutside = GUICtrlCreateLabel("Min" & ": ", $x + 20, $y, -1, -1)
 		GUICtrlCreateLabel("%", $x + 85, $y, -1, -1)
@@ -110,10 +116,10 @@ Func CreateAttackSearchDeadBaseCollectors()
 			GUICtrlSetLimit(-1, 3)
 
 	$y += 20
-		$g_hChkDBCollectorNearRedline = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkDBCollectorNearRedline", "Collectors Near Redline"), $x, $y, -1, -1)
+		$g_hChkDBCollectorNearRedline = GUICtrlCreateRadio(GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkDBCollectorNearRedline", "Collectors Near Redline"), $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkDBCollectorNearRedline_Info_01", "Check how many collectors are near redline. If more than % you set then attack."))
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
-			GUICtrlSetOnEvent(-1, "chkDBCollectorNearRedline")
+			GUICtrlSetOnEvent(-1, "chkCollectorsAndRedLines")
 	$y += 28
 		$g_hLblRedlineTiles = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "LblRedlineTiles", "Tiles") & ": ", $x + 20, $y, -1, -1)
 		$g_hCmbRedlineTiles = GUICtrlCreateCombo("", $x + 50, $y - 3, 31, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))

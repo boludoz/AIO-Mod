@@ -71,9 +71,11 @@ Local $InternalAreaRef[8][3] = [ _
 
 ConvertInternalExternArea() ; initial layout so variables are not empty
 
-Func ConvertInternalExternArea()
-	Local $x, $y
+Func ConvertInternalExternArea($sCallfrom = "")
+	If ($sCallfrom <> "") Then SetDebugLog("ConvertInternalExternArea | called from : " & $sCallfrom, $COLOR_ACTION)
 
+	Local $x, $y
+	
 	; Update External coord.
 	For $i = 0 To 7
 		$x = $ExternalAreaRef[$i][0]

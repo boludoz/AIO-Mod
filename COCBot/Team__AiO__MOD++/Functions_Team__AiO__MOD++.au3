@@ -22,7 +22,6 @@
 #include "functions\Read Text\getOcrDissociable.au3"
 
 ; DMatching
-#include "functions\Pixels\DMatchingBundles.au3"
 #include "functions\Pixels\DMatching.au3"
 
 ; Other
@@ -61,8 +60,7 @@
 #include "functions\Mod's\AutoHideDockMinimize.au3"
 
 ; Check Collector Outside - Team AiO MOD++
-#include "functions\Mod's\CheckCollectorsOutside\AreCollectorsOutside.au3"
-#include "functions\Mod's\CheckCollectorsOutside\AreCollectorsNearRedline.au3"
+#include "functions\Mod's\CheckCollectorsOutside\CollectorsAndRedLines.au3"
 #include "functions\Mod's\CheckCollectorsOutside\isOutsideEllipse.au3"
 #include "functions\Mod's\CheckCollectorsOutside\CustomDetect.au3"
 

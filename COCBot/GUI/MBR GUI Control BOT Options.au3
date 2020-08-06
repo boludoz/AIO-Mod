@@ -716,20 +716,34 @@ Func btnTestDeadBase()
 	$g_bRunState = $currentRunState
 EndFunc   ;==>btnTestDeadBase
 
-Func btnTestDeadBaseFolder()
+#Region - Custom - Team AIO Mod++
+Func btnExecuteCapture()
+	$g_bdbgimh = True
+	
+	Local $currentRunState = $g_bRunState
+	$g_bRunState = True
+	$g_bdbgimh = True
+	Local $sFunc = GUICtrlRead($g_hTxtRunFunction)
+	SetLog("Run Function : " & $sFunc, $COLOR_INFO)
 
-	;Local $directory = FileOpenDialog("Select folder of CoC village screenshot to test for dead base", $g_sProfileTempPath, "Image (*.png)", $FD_PATHMUSTEXIST, "", $g_hFrmBot)
-	Local $directory = FileSelectFolder("Select folder of CoC village screenshot to test for dead base", "", $FSF_NEWDIALOG, @ScriptDir, $g_hFrmBot)
-	If @error <> 0 Then
-		SetLog("btnTestDeadBaseFolder cancelled", $COLOR_INFO)
+	Local $hTimer2 = TimerInit() ; Begin the timer and store the handle in a variable.
+	Local $saExecResult = Execute($sFunc)
+	Setlog("Time Execution : " & TimerDiff($hTimer2))
+
+	If StringIsSpace($saExecResult) And @error <> 0 Then
+		Setlog("Result : Error", $COLOR_ERROR)
+	ElseIf IsArray($saExecResult) Then
+		Setlog("Result (IsArray) : " & _ArrayToString($saExecResult, ","), $COLOR_INFO)
+		_ArrayDisplay($saExecResult, "Debug Func. Result")
+	Else
+		Setlog("Result : " & $saExecResult, $COLOR_INFO)
 	EndIf
+	
+	$g_bdbgimh = False
 
-	;checkDeadBaseFolder($directory, "checkDeadBaseNew()", "checkDeadBaseSuperNew()")
-	Local $oldFill = 'checkDeadBaseSuperNew(False, "' & @ScriptDir & "\imgxml\deadbase\elix\fill\old\" & '")'
-	Local $newFill = 'checkDeadBaseSuperNew(False, "' & @ScriptDir & "\imgxml\deadbase\elix\fill\new\" & '")'
-	checkDeadBaseFolder($directory, $oldFill, $newFill)
-
-EndFunc   ;==>btnTestDeadBaseFolder
+	$g_bRunState = $currentRunState
+EndFunc   ;==>btnExecuteCapture
+#EndRegion - Custom - Team AIO Mod++
 
 Func btnTestAttackCSV()
 
