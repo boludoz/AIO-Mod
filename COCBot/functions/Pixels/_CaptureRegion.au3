@@ -90,7 +90,7 @@ Func _CaptureGameScreen(ByRef $_hHBitmap, Const $iLeft = 0, Const $iTop = 0, Con
 	If $g_bdbgimh = True Then 
 		Local $hBMP = 0, $hHBMP = 0
 		Local $sImageFile = FileOpenDialog("Select screenshot to test, cancel to use live screenshot | Called measurements : " & $iLeft & ", " & $iTop & ", " & $iRight & ", " & $iBottom, $g_sProfileTempPath, "Image (*.png)", $FD_FILEMUSTEXIST, "", $g_hFrmBot)
-		If @error <> 0 Then
+		If @error = 0 Then
 			SetLog("Testing image " & $sImageFile, $COLOR_INFO)
 			; load test image
 			$hBMP = _GDIPlus_BitmapCreateFromFile($sImageFile)
