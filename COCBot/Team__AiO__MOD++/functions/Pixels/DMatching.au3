@@ -35,22 +35,26 @@ Func CountDMatchingMatches($sMatches, $sObjectNameAndLevel = Default)
 	Return $iCounter
 EndFunc
 
-; Decodes Matches string to an Array, $sMatches must be like: Inferno-5-50-50-100-100|Inferno-6-200-200-100-100 . Representing: ObjectName-ObjectLevel-PointX-PointY-Width-Height
-Func DMDecodeMatches($sMatches)
+
+Func DMDecodeMatches($sMatches = "Inferno-5-50-50-100-100|Inferno-6-200-200-100-100")
+	Local $aMatches[0][6]
+	_ArrayAdd($aMatches, $sMatches, 0, "-", "|", $ARRAYFILL_FORCE_DEFAULT)
+    Return $aMatches
+#cs
     Local $aSplittedMatches = StringSplit($sMatches, "|", $STR_NOCOUNT)
     Local $aMatches[UBound($aSplittedMatches)][6]
     For $i = 0 To UBound($aSplittedMatches) - 1
         Local $aDecodedMatch = DMDecodeMatch($aSplittedMatches[$i])
         If IsArray($aDecodedMatch) Then
-            $aMatches[$i][0] = $aDecodedMatch[0]
-            $aMatches[$i][1] = $aDecodedMatch[1]
-            $aMatches[$i][2] = $aDecodedMatch[2]
-            $aMatches[$i][3] = $aDecodedMatch[3]
-            $aMatches[$i][4] = $aDecodedMatch[4]
-            $aMatches[$i][5] = $aDecodedMatch[5]
+            $aMatches[$i][0] = $aDecodedMatch[0] ; ObjectName
+            $aMatches[$i][1] = $aDecodedMatch[1] ; ObjectLevel
+            $aMatches[$i][2] = $aDecodedMatch[2] ; PointX
+            $aMatches[$i][3] = $aDecodedMatch[3] ; PointY
+            $aMatches[$i][4] = $aDecodedMatch[4] ; Width
+            $aMatches[$i][5] = $aDecodedMatch[5] ; Height
         EndIf
     Next
-    Return $aMatches
+#ce
 EndFunc
 
 ; Decodes a Match to an Array, $sMatch must be like: Inferno-14-50-50-100-100 . Representing: ObjectName-ObjectLevel-PointX-PointY-Width-Height
@@ -87,7 +91,7 @@ Func IsImageFound($sBundle, $iRegionX = 0, $iRegionY = 0, $iRegionWidth = 0, $iR
 
     Local $sResult = DllCallDMatching("Find", "str", "handle", $g_hHBitmap2, "str", $sBundle, "ushort", $iLevelStart, "ushort", $iLevelEnd, "ushort", $iRegionX, "ushort", $iRegionY, "ushort", $iRegionWidth, "ushort", $iRegionHeight, "ushort", $g_iDMatchingThreads, "ushort", 1, "boolean", $g_bDMatchingDebugImages)
 
-    Return StringLen($aResult) > 0
+    Return StringLen($sResult) > 0
 EndFunc
 
 Func DFind($sBundle, $iRegionX = 0, $iRegionY = 0, $iRegionWidth = 0, $iRegionHeight = 0, $iLevelStart = 0, $iLevelEnd = 0, $iLimit = 0, $bForceCapture = True)
@@ -118,3 +122,54 @@ Func DFind($sBundle, $iRegionX = 0, $iRegionY = 0, $iRegionWidth = 0, $iRegionHe
 
     Return $sResult
 EndFunc
+; $g_sECollectorDMatB & "\" & 14 & "\" & 50 & "\"
+; DFind($g_sECollectorDMatB & "\" & 14 & "\" & 50 & "\", 19, 74, 805, 518, $i, $i, 100, True)
+; DMClasicArray(DFind("D:\Github\AIO Mod\dp", 19, 74, 805, 518, 0, 1000, 500, True), 18, True)
+Func DMClasicArray($sMatches, $iDis = 18, $bDebugLog = False)
+	Local $aAR[0][4], $vDecodedMatch
+    Local $aSplittedMatches = StringSplit($sMatches, "|", $STR_NOCOUNT)
+    For $i = 0 To UBound($aSplittedMatches) - 1
+        $vDecodedMatch = DMDecodeMatch($aSplittedMatches[$i])
+        If $vDecodedMatch <> -1 Then
+			If DMduplicated($aAR, $vDecodedMatch[2], $vDecodedMatch[3], $iDis) Then ContinueLoop
+			Local $aMatchesMatrix[1][4] = [[$vDecodedMatch[0], $vDecodedMatch[2], $vDecodedMatch[3], $vDecodedMatch[1]]]
+			_ArrayAdd($aAR, $aMatchesMatrix)
+        EndIf
+    Next
+	
+	If (UBound($aAR) > 0) Then
+		If ($g_bDebugImageSave Or $bDebugLog) And ($g_hHBitmap2 <> 0) And IsPtr($g_hHBitmap2) Then ; Discard Deploy Points Touch much text on image
+
+			Local $sSubDir = $g_sProfileTempDebugPath & "DMClasicArray"
+
+			DirCreate($sSubDir)
+
+			Local $sDate = @YEAR & "-" & @MON & "-" & @MDAY, $sTime = @HOUR & "." & @MIN & "." & @SEC
+			Local $sDebugImageName = String($sDate & "_" & $sTime & "_.png")
+			Local $hEditedImage = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
+			Local $hGraphic = _GDIPlus_ImageGetGraphicsContext($hEditedImage)
+			Local $hPenRED = _GDIPlus_PenCreate(0xFFFF0000, 1)
+
+			For $i = 0 To UBound($aAR) - 1
+				addInfoToDebugImage($hGraphic, $hPenRED, $aAR[$i][0] & "_" & $aAR[$i][3], $aAR[$i][1], $aAR[$i][2])
+			Next
+
+			_GDIPlus_ImageSaveToFile($hEditedImage, $sSubDir & "\" & $g_sFMQTag & $sDebugImageName )
+			_GDIPlus_PenDispose($hPenRED)
+			_GDIPlus_GraphicsDispose($hGraphic)
+			_GDIPlus_BitmapDispose($hEditedImage)
+			$g_sFMQTag = ""
+		EndIf
+		Return $aAR
+	Else
+		Return -1
+	EndIf
+EndFunc
+
+Func DMduplicated($aXYs, $x1, $y1, $iDistance = 18)
+	For $i = 0 To UBound($aXYs) - 1
+		If Not $g_bRunState Then Return
+		If Pixel_Distance($aXYs[$i][1], $aXYs[$i][2], $x1, $y1) < $iDistance Then Return True
+	Next
+	Return False
+EndFunc   ;==>DoublePoint

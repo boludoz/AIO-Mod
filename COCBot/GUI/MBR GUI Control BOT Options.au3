@@ -726,14 +726,14 @@ Func btnExecuteCapture()
 	Local $sFunc = GUICtrlRead($g_hTxtRunFunction)
 	SetLog("Run Function : " & $sFunc, $COLOR_INFO)
 
-	Local $hTimer2 = TimerInit() ; Begin the timer and store the handle in a variable.
+	Local $hTimer = TimerInit() ; Begin the timer and store the handle in a variable.
 	Local $saExecResult = Execute($sFunc)
-	Setlog("Time Execution : " & TimerDiff($hTimer2))
+	Setlog("Time Execution : " & TimerDiff($hTimer))
 
 	If StringIsSpace($saExecResult) And @error <> 0 Then
 		Setlog("Result : Error", $COLOR_ERROR)
 	ElseIf IsArray($saExecResult) Then
-		Setlog("Result (IsArray) : " & _ArrayToString($saExecResult, ","), $COLOR_INFO)
+		Setlog("Result (IsArray) : " & _ArrayToString($saExecResult, "|" -1, -1, "#"), $COLOR_INFO)
 		_ArrayDisplay($saExecResult, "Debug Func. Result")
 	Else
 		Setlog("Result : " & $saExecResult, $COLOR_INFO)
@@ -1020,7 +1020,7 @@ Func btnRunFunction()
 	If StringIsSpace($saExecResult) And @error <> 0 Then
 		Setlog("Result : Error", $COLOR_ERROR)
 	ElseIf IsArray($saExecResult) Then
-		Setlog("Result (IsArray) : " & _ArrayToString($saExecResult, ","), $COLOR_INFO)
+		Setlog("Result (IsArray) : " & _ArrayToString($saExecResult, "|" -1, -1, "#"), $COLOR_INFO)
 		_ArrayDisplay($saExecResult, "Debug Func. Result")
 	Else
 		Setlog("Result : " & $saExecResult, $COLOR_INFO)

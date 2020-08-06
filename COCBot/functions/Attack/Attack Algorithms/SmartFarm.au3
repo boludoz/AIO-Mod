@@ -228,7 +228,7 @@ Func ChkSmartFarm($sTypeResources = "All")
 
 EndFunc   ;==>ChkSmartFarm
 
-Func SmartFarmDetection($txtBuildings = "Mines")
+Func SmartFarmDetection($txtBuildings = "All")
 
 	; This Function will fill an Array with several informations after Mines, Collectores or Drills detection with Imgloc
 	; [0] = x , [1] = y , [2] = Distance to Redline ,[3] = In/Out, [4] = Side,  [5]= Is array Dim[2] with 5 coordinates to deploy
@@ -244,28 +244,16 @@ Func SmartFarmDetection($txtBuildings = "Mines")
 	; Prepared for Winter Theme
 	Switch $txtBuildings
 		Case "Mines"
-			If $g_iDetectedImageType = 1 Then
-				$sdirectory = @ScriptDir & "\imgxml\Storages\Mines_Snow"
-			Else
-				$sdirectory = @ScriptDir & "\imgxml\Storages\GoldMines"
-			EndIf
+			$sdirectory = ($g_iDetectedImageType = 1) ? (@ScriptDir & "\imgxml\Storages\Mines_Snow") : (@ScriptDir & "\imgxml\Storages\GoldMines")
 			$iMaxReturnPoints = 7
 		Case "Collectors"
-			If $g_iDetectedImageType = 1 Then
-				$sdirectory = @ScriptDir & "\imgxml\Storages\Collectors_Snow"
-			Else
-				$sdirectory = @ScriptDir & "\imgxml\Storages\Collectors"
-			EndIf
+			$sdirectory = ($g_iDetectedImageType = 1) ? (@ScriptDir & "\imgxml\Storages\Collectors_Snow") : (@ScriptDir & "\imgxml\Storages\Collectors")
 			$iMaxReturnPoints = 7
 		Case "Drills"
 			$sdirectory = @ScriptDir & "\imgxml\Storages\Drills"
 			$iMaxReturnPoints = 3
 		Case "All"
-			If $g_iDetectedImageType = 1 Then
-				$sdirectory = @ScriptDir & "\imgxml\Storages\All_Snow"
-			Else
-				$sdirectory = @ScriptDir & "\imgxml\Storages\All"
-			EndIf
+			$sdirectory = ($g_iDetectedImageType = 1) ? (@ScriptDir & "\imgxml\Storages\All_Snow") : (@ScriptDir & "\imgxml\Storages\All")
 	EndSwitch
 
 	; Necessary Variables
@@ -277,25 +265,27 @@ Func SmartFarmDetection($txtBuildings = "Mines")
 
 	; DETECTION IMGLOC
 	Local $aResult = findMultiple($sdirectory, $sCocDiamond, $sRedLines, $iMinLevel, $iMaxLevel, $iMaxReturnPoints, $sReturnProps, $bForceCapture)
-	Local $aTEMP, $sObjectname, $aObjectpoints, $sNear, $sRedLineDistance
-	Local $tempObbj, $sNearTemp, $Distance, $tempObbjs, $sString
+	Local $tempObbj, $sNearTemp, $Distance, $aXY, $sString
 	Local $distance2RedLine = 40
 
+	; RETURN
+	Local $aReturn[0][6]
+
+	If _Sleep(10) Then Return ; just in case on PAUSE
+	If Not $g_bRunState Then Return ; Stop Button
 	; Get properties from detection
 	If IsArray($aResult) And UBound($aResult) > 0 Then
 		For $buildings = 0 To UBound($aResult) - 1
-			If _Sleep(50) Then Return ; just in case on PAUSE
-			If Not $g_bRunState Then Return ; Stop Button
-			SetDebugLog(_ArrayToString($aResult[$buildings]))
-			$aTEMP = $aResult[$buildings]
-			$sObjectname = String($aTEMP[0])
-			SetDebugLog("Building name: " & String($aTEMP[0]), $COLOR_INFO)
-			$aObjectpoints = $aTEMP[1] ; number of  objects returned
-			SetDebugLog("Object points: " & String($aTEMP[1]), $COLOR_INFO)
-			$sNear = $aTEMP[2] ;
-			SetDebugLog("Near points: " & String($aTEMP[2]), $COLOR_INFO)
-			$sRedLineDistance = $aTEMP[3] ;
-			SetDebugLog("Near points: " & String($aTEMP[3]), $COLOR_INFO)
+			;SetDebugLog(_ArrayToString($aResult[$buildings]))
+			Local $aTEMP = $aResult[$buildings]
+			Local $sObjectname = String($aTEMP[0])
+			;SetDebugLog("Building name: " & String($aTEMP[0]), $COLOR_INFO)
+			Local $aObjectpoints = $aTEMP[1] ; number of  objects returned
+			;SetDebugLog("Object points: " & String($aTEMP[1]), $COLOR_INFO)
+			Local $sNear = $aTEMP[2] ;
+			;SetDebugLog("Near points: " & String($aTEMP[2]), $COLOR_INFO)
+			Local $sRedLineDistance = $aTEMP[3] ;
+			;SetDebugLog("Near points: " & String($aTEMP[3]), $COLOR_INFO)
 
 			Switch String($aTEMP[0])
 				Case "Mines"
@@ -309,57 +299,25 @@ Func SmartFarmDetection($txtBuildings = "Mines")
 					$offsety = 14
 			EndSwitch
 
-			If StringInStr($aObjectpoints, "|") Then
-				$aObjectpoints = StringReplace($aObjectpoints, "||", "|")
-				$sString = StringRight($aObjectpoints, 1)
-				If $sString = "|" Then $aObjectpoints = StringTrimRight($aObjectpoints, 1)
-				$tempObbj = StringSplit($aObjectpoints, "|", $STR_NOCOUNT) ; several detected points
-				$sNearTemp = StringSplit($sNear, "#", $STR_NOCOUNT) ; several detected 5 near points
-				$Distance = StringSplit($sRedLineDistance, "#", $STR_NOCOUNT) ; several detected distances points
-				For $i = 0 To UBound($tempObbj) - 1
-					; Test the coordinates
-					$tempObbjs = StringSplit($tempObbj[$i], ",", $STR_NOCOUNT) ;  will be a string : 708,360
-					If UBound($tempObbjs) <> 2 Then ContinueLoop
-					; Check double detections
-					Local $DetectedPoint[2] = [Number($tempObbjs[0] + $offsetx), Number($tempObbjs[1] + $offsety)]
-					If DoublePoint($aTEMP[0], $aReturn, $DetectedPoint) Then ContinueLoop
-					; Include one more dimension
-					ReDim $aReturn[UBound($aReturn) + 1][6]
-					$aReturn[UBound($aReturn) - 1][0] = $DetectedPoint[0] ; X
-					$aReturn[UBound($aReturn) - 1][1] = $DetectedPoint[1] ; Y
-					$aReturn[UBound($aReturn) - 1][4] = Side($tempObbjs)
-					$distance2RedLine = $aReturn[UBound($aReturn) - 1][4] = "BL" ? 50 : 45
-					$aReturn[UBound($aReturn) - 1][5] = $sNearTemp[$i] <> "" ? $sNearTemp[$i] : "0,0" ; will be a string inside : 708,360|705,358|720,370|705,353|722,371
-					$aReturn[UBound($aReturn) - 1][2] = Number($Distance[$i]) > 0 ? Number($Distance[$i]) : 200
-					$aReturn[UBound($aReturn) - 1][3] = ($aReturn[UBound($aReturn) - 1][2] > $distance2RedLine) ? ("In") : ("Out") ; > 40 pixels the resource is far away from redline
-				Next
-			Else
-				; Test the coordinate
-				$tempObbj = StringSplit($aObjectpoints, ",", $STR_NOCOUNT) ;  will be a string : 708,360
-				If UBound($tempObbj) <> 2 Then ContinueLoop
+			$aObjectpoints = StringReplace($aObjectpoints, "||", "|")
+			$sString = StringRight($aObjectpoints, 1)
+			If $sString = "|" Then $aObjectpoints = StringTrimRight($aObjectpoints, 1)
+			$tempObbj = StringSplit($aObjectpoints, "|", $STR_NOCOUNT) ; several detected points
+			$sNearTemp = StringSplit($sNear, "#", $STR_NOCOUNT) ; several detected 5 near points
+			$Distance = StringSplit($sRedLineDistance, "#", $STR_NOCOUNT) ; several detected distances points
+			For $i = 0 To UBound($tempObbj) - 1
+				; Test the coordinates
+				$aXY = StringSplit($tempObbj[$i], ",", $STR_NOCOUNT) ;  will be a string : 708,360
+				If UBound($aXY) <> 2 Then ContinueLoop
 				; Check double detections
-				Local $DetectedPoint[2] = [Number($tempObbj[0] + $offsetx), Number($tempObbj[1] + $offsety)]
-				If DoublePoint($aTEMP[0], $aReturn, $DetectedPoint) Then ContinueLoop
+				$aXY[0] += $offsetx
+				$aXY[1] += $offsety
+				If DoublePointF($aReturn, $aXY[0], $aXY[1]) Then ContinueLoop
 				; Include one more dimension
-				ReDim $aReturn[UBound($aReturn) + 1][6]
-				$aReturn[UBound($aReturn) - 1][0] = $DetectedPoint[0] ; X
-				$aReturn[UBound($aReturn) - 1][1] = $DetectedPoint[1] ; Y
-				$aReturn[UBound($aReturn) - 1][4] = Side($tempObbj)
-				$distance2RedLine = $aReturn[UBound($aReturn) - 1][4] = "BL" ? 50 : 45
-				$aReturn[UBound($aReturn) - 1][5] = $sNear ; will be a string inside : 708,360|705,358|720,370|705,353|722,371
-				$aReturn[UBound($aReturn) - 1][2] = Number($sRedLineDistance)
-				$aReturn[UBound($aReturn) - 1][3] = ($aReturn[UBound($aReturn) - 1][2] > $distance2RedLine) ? ("In") : ("Out") ; > 40 pixels the resource is far away from redline
-			EndIf
-			; Reset
-			$aTEMP = Null
-			$sObjectname = Null
-			$aObjectpoints = Null
-			$sNear = Null
-			$sRedLineDistance = Null
-			$tempObbj = Null
-			$sNearTemp = Null
-			$Distance = Null
-			$tempObbjs = Null
+				Local $sTmpS = Side($aXY)
+				Local $iD2RedLine = ($sTmpS = "BL") ? (50) : (45)
+				_ArrayAdd($aReturn, String($aXY[0]) &"&"& String($aXY[1]) &"&"& String(($Distance[$i] > 0) ? ($Distance[$i]) : (200)) &"&"& String(($iD2RedLine > $sTmpS) ? ("In") : ("Out")) &"&"& String($sTmpS) &"&"& String(($sNearTemp[$i] <> "") ? ($sNearTemp[$i]) : ("0,0")), 0, "&", "=", $ARRAYFILL_FORCE_DEFAULT )
+			Next
 		Next
 		; End of building loop
 		SetDebugLog($txtBuildings & " Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
@@ -369,6 +327,14 @@ Func SmartFarmDetection($txtBuildings = "Mines")
 	EndIf
 
 EndFunc   ;==>SmartFarmDetection
+
+Func DoublePointF($aXYs, $x1, $y1, $iDistance = 18)
+	If Not $g_bRunState Then Return
+	For $i = 0 To UBound($aXYs) - 1
+		If Pixel_Distance($aXYs[$i][1], $aXYs[$i][2], $x1, $y1) < $iDistance Then Return True
+	Next
+	Return False
+EndFunc   ;==>DoublePoint
 
 Func DoublePoint($sName, $aReturn, $aPoint, $iDistance = 18)
 	Local $x, $y
@@ -380,7 +346,7 @@ Func DoublePoint($sName, $aReturn, $aPoint, $iDistance = 18)
 		$x = Number($aReturn[$i][0])
 		$y = Number($aReturn[$i][1])
 		If Pixel_Distance($x, $y, $x1, $y1) < $iDistance Then
-			SetDebugLog("Detected a " & $sName & " double detection at (" & $x & "," & $y & ")")
+			;SetDebugLog("Detected a " & $sName & " double detection at (" & $x & "," & $y & ")")
 			Return True
 		EndIf
 	Next

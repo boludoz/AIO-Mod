@@ -327,7 +327,7 @@ Func _VillageSearch($bIncludePrepare = False) ;Control for searching a village t
                 If $g_bDBMeetCollectorOutside Then ; check is that collector  near outside
                     $g_bScanMineAndElixir = False
 
-                    If CollectorsAndRedLines($g_iDBMinCollectorOutsidePercent) Then
+                    If CollectorsAndRedLines() Then
                         SetLog("Collectors are outside, match found !", $COLOR_SUCCESS)
                         $bFlagSearchAnotherBase = False
                     Else
