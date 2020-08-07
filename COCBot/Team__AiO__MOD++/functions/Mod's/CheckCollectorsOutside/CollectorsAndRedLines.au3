@@ -13,14 +13,14 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: None
 ; ===============================================================================================================================
-Func CollectorsAndRedLines()
+Func CollectorsAndRedLines($bForceCapture = False)
 	If Not ($g_bDBCollectorNearRedline Or $g_bDBMeetCollectorOutside) Then Return True
 	
 	Local $hTimer = TimerInit()
 	Local $bReturn = True
 	Local $sText = ($g_bDBCollectorNearRedline) ? ("Are collectors near redline ?") : ("Are collectors outside ?")
 	SetLog($sText & " | Locating Mines & Collectors", $COLOR_ACTION)
-	Local $aAllCollectors = SmartFarmDetection("All")
+	Local $aAllCollectors = SmartFarmDetection("All", $bForceCapture)
 	SetLog($sText & " | Located collectors in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds", $COLOR_ACTION)
 	If ($aAllCollectors <> 0) Then
 		$g_vSmartFarmScanOut = $aAllCollectors

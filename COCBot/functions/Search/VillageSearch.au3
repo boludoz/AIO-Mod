@@ -303,7 +303,7 @@ Func _VillageSearch($bIncludePrepare = False) ;Control for searching a village t
             #Region - Custom - Team AIO Mod++
             Local $bFlagSearchAnotherBase = False
             If $g_bChkNoLeague[$DB] Then
-				If SearchNoLeague() Then
+				If SearchNoLeague(False) Then
 					SetLog(" - Dead Base is in No League, match found.", $COLOR_SUCCESS)
                     $bFlagSearchAnotherBase = False
                 Else
@@ -327,7 +327,7 @@ Func _VillageSearch($bIncludePrepare = False) ;Control for searching a village t
                 If $g_bDBMeetCollectorOutside Then ; check is that collector  near outside
                     $g_bScanMineAndElixir = False
 
-                    If CollectorsAndRedLines() Then
+                    If CollectorsAndRedLines(False) Then
                         SetLog("Collectors are outside, match found !", $COLOR_SUCCESS)
                         $bFlagSearchAnotherBase = False
                     Else

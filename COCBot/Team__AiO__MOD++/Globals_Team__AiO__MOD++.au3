@@ -28,7 +28,7 @@ $g_hTxtLogLineLimit, $g_iTxtLogLineLimit
 #EndRegion - Setlog limit - Team AIO Mod++
 
 ; Advanced debugging.
-Global $g_bdbgimh = False
+Global $g_bExecuteCapture = False
 
 ; Offset village.
 Global $g_aPosSizeVillage = 0

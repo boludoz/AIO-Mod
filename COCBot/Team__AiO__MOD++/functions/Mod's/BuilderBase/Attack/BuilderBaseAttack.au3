@@ -140,7 +140,7 @@ Func BuilderBaseAttack($bTestRun = False)
 				If Not $g_bRunState Then Return
 
 			Case Else
-				$g_bRestart = ($bTestRun) ? (False) : (True)
+				$g_bRestart = ($bTestRun = True) ? (False) : (True)
 				If $g_bRestart = True Then Return
 
 		EndSelect
