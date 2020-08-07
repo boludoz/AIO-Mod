@@ -35,26 +35,23 @@ Func CountDMatchingMatches($sMatches, $sObjectNameAndLevel = Default)
 	Return $iCounter
 EndFunc
 
-
-Func DMDecodeMatches($sMatches = "Inferno-5-50-50-100-100|Inferno-6-200-200-100-100")
-	Local $aMatches[0][6]
-	_ArrayAdd($aMatches, $sMatches, 0, "-", "|", $ARRAYFILL_FORCE_DEFAULT)
-    Return $aMatches
-#cs
-    Local $aSplittedMatches = StringSplit($sMatches, "|", $STR_NOCOUNT)
-    Local $aMatches[UBound($aSplittedMatches)][6]
-    For $i = 0 To UBound($aSplittedMatches) - 1
-        Local $aDecodedMatch = DMDecodeMatch($aSplittedMatches[$i])
-        If IsArray($aDecodedMatch) Then
-            $aMatches[$i][0] = $aDecodedMatch[0] ; ObjectName
-            $aMatches[$i][1] = $aDecodedMatch[1] ; ObjectLevel
-            $aMatches[$i][2] = $aDecodedMatch[2] ; PointX
-            $aMatches[$i][3] = $aDecodedMatch[3] ; PointY
-            $aMatches[$i][4] = $aDecodedMatch[4] ; Width
-            $aMatches[$i][5] = $aDecodedMatch[5] ; Height
-        EndIf
-    Next
-#ce
+Func DMDecodeMatches($sMatches = "Inferno-5-50-50-100-100|Inferno-6-200-200-100-100", $sDelim_Item = "-", $sDelim_Row =  "|")
+	Local $iValDim_1, $iValDim_2 = 0, $iColCount
+	Local $aSplit_1 = StringSplit($sMatches, $sDelim_Row, $STR_NOCOUNT + $STR_ENTIRESPLIT)
+	$iValDim_1 = UBound($aSplit_1, $UBOUND_ROWS)
+	Local $aTmp[$iValDim_1][0], $aSplit_2
+	For $i = 0 To $iValDim_1 - 1
+		$aSplit_2 = StringSplit($aSplit_1[$i], $sDelim_Item, $STR_NOCOUNT + $STR_ENTIRESPLIT)
+		$iColCount = UBound($aSplit_2)
+		If $iColCount > $iValDim_2 Then
+			$iValDim_2 = $iColCount
+			ReDim $aTmp[$iValDim_1][$iValDim_2]
+		EndIf
+		For $j = 0 To $iColCount - 1
+			$aTmp[$i][$j] = $aSplit_2[$j]
+		Next
+	Next
+	Return $aTmp
 EndFunc
 
 ; Decodes a Match to an Array, $sMatch must be like: Inferno-14-50-50-100-100 . Representing: ObjectName-ObjectLevel-PointX-PointY-Width-Height
