@@ -302,7 +302,7 @@ Func MakeTargetDropPoints($side, $pointsQty, $addtiles, $building)
 		$pointsQtyCleaned = Abs(Int($pointsQty))
 	EndIf
 	;Building Vector Can Only Be An Odd Number
-	If _MathCheckDiv(Int($pointsQtyCleaned), 2) = $MATH_ISNOTDIVISIBLE Then
+	If Mod(Int($pointsQtyCleaned), 2) = 1 Then ; _MathCheckDiv deprecated - Team AIO Mod++
 		;First Check Add Tiles To Buildings Location
 		$x += $aLocation[0]
 		$y += $aLocation[1]

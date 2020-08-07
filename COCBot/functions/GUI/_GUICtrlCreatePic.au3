@@ -5,15 +5,14 @@
 ; Parameters ....: $sFilename_or_hBitmap - Path of image file or $g_hBitmap (then not disposed!)
 ; Return values .: Control ID
 ; Author ........: UEZ
-; Modified ......: Melba23, guinness, jpm, cosote
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
+; Modified ......: Melba23, guinness, jpm, cosote, boldina !
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2020
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
 Func _GUICtrlCreatePic($sFilename_or_hBitmap, $iLeft, $iTop, $iWidth = -1, $iHeight = -1, $iStyle = -1, $iExStyle = -1)
-	Local $idPic = GUICtrlCreatePic("", $iLeft, $iTop, $iWidth, $iHeight, $iStyle, $iExStyle)
 	Local $hBMP
 	If IsPtr($sFilename_or_hBitmap) Then
 		$hBMP = $sFilename_or_hBitmap
@@ -22,10 +21,11 @@ Func _GUICtrlCreatePic($sFilename_or_hBitmap, $iLeft, $iTop, $iWidth = -1, $iHei
 	EndIf
 	Local $iBmpWidth = _GDIPlus_ImageGetWidth($hBMP)
 	Local $iBmpHeight = _GDIPlus_ImageGetHeight($hBMP)
-	Local $g_hBitmap_Resized = 0
-	Local $hBMP_Ctxt = 0
 	If $iWidth = -1 Then $iWidth = $iBmpWidth
 	If $iHeight = -1 Then $iHeight = $iBmpHeight
+	Local $idPic = GUICtrlCreatePic("", $iLeft, $iTop, $iWidth, $iHeight, $iStyle, $iExStyle)
+	Local $g_hBitmap_Resized = 0
+	Local $hBMP_Ctxt = 0
 	If $iWidth <> $iBmpWidth Or $iHeight <> $iBmpHeight Then
 		$g_hBitmap_Resized = _GDIPlus_BitmapCreateFromScan0($iWidth, $iHeight)
 		$hBMP_Ctxt = _GDIPlus_ImageGetGraphicsContext($g_hBitmap_Resized)

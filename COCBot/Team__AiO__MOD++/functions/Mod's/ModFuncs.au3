@@ -295,7 +295,7 @@ Func _CleanYard($bIsBB = Default, $bTest = False)
 		
 		SetLog("- Removing some obstacles - Custom by AIO Mod ++.", $COLOR_ACTION)
 		
-		Local $iError = 0, $iMaxLoop = 0, $aDigits = ($bIsBB) ? ($aBuildersDigitsBuilderBase) : ($aBuildersDigits)
+		Local $iError = 0, $iMaxLoop = 0, $aDigits = ($bIsBB = True) ? ($aBuildersDigitsBuilderBase) : ($aBuildersDigits)
 		Local $aSearch[4] = [0, 0, 0, 0] ; Edge - NV.
 		ReturnPreVD($aSearch, $bIsBB, $g_bEdgeObstacle)
 		For $i = 0 To UBound($aResult) - 1

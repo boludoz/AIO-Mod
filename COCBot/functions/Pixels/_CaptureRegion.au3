@@ -87,7 +87,7 @@ EndFunc   ;==>_CaptureRegion2
 ; Example .......: No
 ; ===============================================================================================================================
 Func _CaptureGameScreen(ByRef $_hHBitmap, Const $iLeft = 0, Const $iTop = 0, Const $iRight = $g_iGAME_WIDTH, Const $iBottom = $g_iGAME_HEIGHT)
-	If $g_bdbgimh = True Then 
+	If $g_bExecuteCapture = True Then 
 		Local $hBMP = 0, $hHBMP = 0
 		Local $sImageFile = FileOpenDialog("Select screenshot to test, cancel to use live screenshot | Called measurements : " & $iLeft & ", " & $iTop & ", " & $iRight & ", " & $iBottom, $g_sProfileTempPath, "Image (*.png)", $FD_FILEMUSTEXIST, "", $g_hFrmBot)
 		If @error = 0 Then
@@ -101,7 +101,7 @@ Func _CaptureGameScreen(ByRef $_hHBitmap, Const $iLeft = 0, Const $iTop = 0, Con
 			_WinAPI_DeleteObject($hHBitmap_full)
 			Return
 		Else
-			$g_bdbgimh = False
+			$g_bExecuteCapture = False
 		EndIf
 	EndIf
 	

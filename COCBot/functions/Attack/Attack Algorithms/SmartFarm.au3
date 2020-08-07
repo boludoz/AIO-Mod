@@ -228,12 +228,12 @@ Func ChkSmartFarm($sTypeResources = "All")
 
 EndFunc   ;==>ChkSmartFarm
 
-Func SmartFarmDetection($txtBuildings = "All")
+Func SmartFarmDetection($iTxtBuildings = "All", $bForceCapture = True)
 
 	; This Function will fill an Array with several informations after Mines, Collectores or Drills detection with Imgloc
 	; [0] = x , [1] = y , [2] = Distance to Redline ,[3] = In/Out, [4] = Side,  [5]= Is array Dim[2] with 5 coordinates to deploy
 	Local $aReturn[0][6]
-	Local $sdirectory, $iMaxLevel = 20, $offsetx, $offsety ; Team AIO Mod++
+	Local $sDirectory, $iMaxLevel = 20, $iOffsetx, $iOffsety ; Team AIO Mod++
 	Local $iMaxReturnPoints = 40 ; DoublePoint.. - Team AIO Mod++
 	If Not $g_bRunState Then Return
 
@@ -242,18 +242,18 @@ Func SmartFarmDetection($txtBuildings = "All")
 	Local $hTimer = TimerInit()
 
 	; Prepared for Winter Theme
-	Switch $txtBuildings
+	Switch $iTxtBuildings
 		Case "Mines"
-			$sdirectory = ($g_iDetectedImageType = 1) ? (@ScriptDir & "\imgxml\Storages\Mines_Snow") : (@ScriptDir & "\imgxml\Storages\GoldMines")
+			$sDirectory = ($g_iDetectedImageType = 1) ? (@ScriptDir & "\imgxml\Storages\Mines_Snow") : (@ScriptDir & "\imgxml\Storages\GoldMines")
 			$iMaxReturnPoints = 7
 		Case "Collectors"
-			$sdirectory = ($g_iDetectedImageType = 1) ? (@ScriptDir & "\imgxml\Storages\Collectors_Snow") : (@ScriptDir & "\imgxml\Storages\Collectors")
+			$sDirectory = ($g_iDetectedImageType = 1) ? (@ScriptDir & "\imgxml\Storages\Collectors_Snow") : (@ScriptDir & "\imgxml\Storages\Collectors")
 			$iMaxReturnPoints = 7
 		Case "Drills"
-			$sdirectory = @ScriptDir & "\imgxml\Storages\Drills"
+			$sDirectory = @ScriptDir & "\imgxml\Storages\Drills"
 			$iMaxReturnPoints = 3
 		Case "All"
-			$sdirectory = ($g_iDetectedImageType = 1) ? (@ScriptDir & "\imgxml\Storages\All_Snow") : (@ScriptDir & "\imgxml\Storages\All")
+			$sDirectory = ($g_iDetectedImageType = 1) ? (@ScriptDir & "\imgxml\Storages\All_Snow") : (@ScriptDir & "\imgxml\Storages\All")
 	EndSwitch
 
 	; Necessary Variables
@@ -261,15 +261,14 @@ Func SmartFarmDetection($txtBuildings = "All")
 	Local $sRedLines = ""
 	Local $iMinLevel = 1
 	Local $sReturnProps = "objectname,objectpoints,nearpoints,redlinedistance"
-	Local $bForceCapture = True
 
 	; DETECTION IMGLOC
-	Local $aResult = findMultiple($sdirectory, $sCocDiamond, $sRedLines, $iMinLevel, $iMaxLevel, $iMaxReturnPoints, $sReturnProps, $bForceCapture)
-	Local $tempObbj, $sNearTemp, $Distance, $aXY, $sString
-	Local $distance2RedLine = 40
+	Local $aResult = findMultiple($sDirectory, $sCocDiamond, $sRedLines, $iMinLevel, $iMaxLevel, $iMaxReturnPoints, $sReturnProps, $bForceCapture)
+	Local $aTempObj, $sNearTemp, $aDistance, $aXY, $sString
+	Local $aDistance2RedLine = 40
 
 	; RETURN
-	Local $aReturn[0][6]
+	Local $aReturn[0][6], $sTmpS, $iD2RedLine, $iD2Fix
 
 	If _Sleep(10) Then Return ; just in case on PAUSE
 	If Not $g_bRunState Then Return ; Stop Button
@@ -289,41 +288,42 @@ Func SmartFarmDetection($txtBuildings = "All")
 
 			Switch String($aTEMP[0])
 				Case "Mines"
-					$offsetx = 3
-					$offsety = 12
+					$iOffsetx = 3
+					$iOffsety = 12
 				Case "Collector"
-					$offsetx = -9
-					$offsety = 9
+					$iOffsetx = -9
+					$iOffsety = 9
 				Case "Drill"
-					$offsetx = 2
-					$offsety = 14
+					$iOffsetx = 2
+					$iOffsety = 14
 			EndSwitch
 
 			$aObjectpoints = StringReplace($aObjectpoints, "||", "|")
 			$sString = StringRight($aObjectpoints, 1)
 			If $sString = "|" Then $aObjectpoints = StringTrimRight($aObjectpoints, 1)
-			$tempObbj = StringSplit($aObjectpoints, "|", $STR_NOCOUNT) ; several detected points
+			$aTempObj = StringSplit($aObjectpoints, "|", $STR_NOCOUNT) ; several detected points
 			$sNearTemp = StringSplit($sNear, "#", $STR_NOCOUNT) ; several detected 5 near points
-			$Distance = StringSplit($sRedLineDistance, "#", $STR_NOCOUNT) ; several detected distances points
-			For $i = 0 To UBound($tempObbj) - 1
+			$aDistance = StringSplit($sRedLineDistance, "#", $STR_NOCOUNT) ; several detected distances points
+			For $i = 0 To UBound($aTempObj) - 1
 				; Test the coordinates
-				$aXY = StringSplit($tempObbj[$i], ",", $STR_NOCOUNT) ;  will be a string : 708,360
+				$aXY = StringSplit($aTempObj[$i], ",", $STR_NOCOUNT) ;  will be a string : 708,360
 				If UBound($aXY) <> 2 Then ContinueLoop
 				; Check double detections
-				$aXY[0] += $offsetx
-				$aXY[1] += $offsety
+				$aXY[0] += $iOffsetx
+				$aXY[1] += $iOffsety
 				If DoublePointF($aReturn, $aXY[0], $aXY[1]) Then ContinueLoop
 				; Include one more dimension
-				Local $sTmpS = Side($aXY)
-				Local $iD2RedLine = ($sTmpS = "BL") ? (50) : (45)
-				_ArrayAdd($aReturn, String($aXY[0]) &"&"& String($aXY[1]) &"&"& String(($Distance[$i] > 0) ? ($Distance[$i]) : (200)) &"&"& String(($iD2RedLine > $sTmpS) ? ("In") : ("Out")) &"&"& String($sTmpS) &"&"& String(($sNearTemp[$i] <> "") ? ($sNearTemp[$i]) : ("0,0")), 0, "&", "=", $ARRAYFILL_FORCE_DEFAULT )
+				$sTmpS = Side($aXY)
+				$iD2RedLine = ($aDistance[$i] > 0) ? ($aDistance[$i]) : (200)
+				$iD2Fix = ($sTmpS = "BL") ? (50) : (45) 
+				_ArrayAdd($aReturn, String($aXY[0]) &"&"& String($aXY[1]) &"&"& String($iD2RedLine) &"&"& String(($iD2RedLine > $iD2Fix) ? ("In") : ("Out")) &"&"& String($sTmpS) &"&"& String(($sNearTemp[$i] <> "") ? ($sNearTemp[$i]) : ("0,0")), 0, "&", "=", $ARRAYFILL_FORCE_DEFAULT )
 			Next
 		Next
 		; End of building loop
-		SetDebugLog($txtBuildings & " Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
+		SetDebugLog($iTxtBuildings & " Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
 		Return $aReturn
 	Else
-		SetLog("ERROR|NONE Building - Detection: " & $txtBuildings, $COLOR_INFO)
+		SetLog("ERROR|NONE Building - Detection: " & $iTxtBuildings, $COLOR_INFO)
 	EndIf
 
 EndFunc   ;==>SmartFarmDetection

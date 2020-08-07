@@ -81,7 +81,7 @@ Func CreateSplashScreen($iSteps = Default)
 		; Create Splash container
 		$g_hSplash = GUICreate("", $iX, $iHeight, $iLeft, $iTop, BitOR($WS_POPUP, $WS_BORDER, $DS_MODALFRAME), BitOR($WS_EX_TOPMOST, $WS_EX_WINDOWEDGE, $WS_EX_TOOLWINDOW))
 		GUISetBkColor($COLOR_WHITE, $g_hSplash)
-		$g_lSplashPic = _GUICtrlCreatePic($hSplashImg, 0, $iT) ; Splash Image
+		$g_lSplashPic = _GUICtrlCreatePic($hSplashImg, 0, $iT, $iX, $iY) ; Splash Image
 		GUICtrlSetOnEvent(-1, "MoveSplashScreen")
 		If Not $bCustomWindow Then
 			$g_lSplashTitle = GUICtrlCreateLabel($g_sBotTitle, 15, $iY + $iT + $iB + 3, $iX - 30, 15, $SS_CENTER) ; Splash Title
