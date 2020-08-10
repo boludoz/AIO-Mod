@@ -15,8 +15,7 @@
 #include-once
 
 Global $g_hGUI_MOD = 0
-Global $g_hGUI_MOD_TAB = 0, $g_hGUI_MOD_TAB_ITEM1 = 0, $g_hGUI_MOD_TAB_ITEM2 = 0, $g_hGUI_MOD_TAB_ITEM3 = 0, $g_hGUI_MOD_TAB_ITEM4 = 0, $g_hGUI_MOD_TAB_ITEM5 = 0, _
-$g_hGUI_MOD_TAB_ITEM6 = 0, $g_hGUI_MOD_TAB_ITEM7 = 0
+Global $g_hGUI_MOD_TAB = 0, $g_hGUI_MOD_TAB_ITEM1 = 0, $g_hGUI_MOD_TAB_ITEM2 = 0, $g_hGUI_MOD_TAB_ITEM3 = 0, $g_hGUI_MOD_TAB_ITEM4 = 0, $g_hGUI_MOD_TAB_ITEM5 = 0, $g_hGUI_MOD_TAB_ITEM6 = 0, $g_hGUI_MOD_TAB_ITEM7 = 0
 
 #include "MOD GUI Design - SuperXP.au3"
 #include "MOD GUI Design - Humanization.au3"
@@ -24,7 +23,6 @@ $g_hGUI_MOD_TAB_ITEM6 = 0, $g_hGUI_MOD_TAB_ITEM7 = 0
 #include "MOD GUI Design - GTFO.au3"
 #include "MOD GUI Design - AiO-Debug.au3"
 #include "MOD GUI Design - WarPreparation.au3"
-#include "MOD GUI Design - Builder Base.au3"
 
 Func CreateMODTab()
 
@@ -91,13 +89,13 @@ EndFunc   ;==>CreateMODTab
 	GUICtrlSetFont(-1, 12, 500, 0, "Candara", $CLEARTYPE_QUALITY)
 	GUICtrlSetColor(-1, 0xFFCC00)
 
-  	$g_hSkipfirstcheck = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "Skipfirstcheck.",  "Skip first check."), 32, 224, 161, 17)
+  	$g_hAvoidLocate = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "AvoidLocate.",  "Skip first check."), 32, 224, 161, 17)
   	GUICtrlSetOnEvent(-1, "chkDelayMod")
-  	_GUICtrlSetTip(-1, GetTranslatedFileIni("MiscMODs", "SkipfirstcheckTip", "Skip first check without attack first."))
+  	_GUICtrlSetTip(-1, GetTranslatedFileIni("MiscMODs", "AvoidLocateTip", "Skip first check without attack first."))
 
-	$g_hDisableColorLog = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "DisableColorLog",  "No color attack log"), 32, 248, 113, 17)
+	$g_hDisableColorLog = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "DisableColorLog",  "No color attack log"), 32, 249, 113, 17)
 
-	GUICtrlCreateLabel(GetTranslatedFileIni("MiscMODs", "OtherSettingsLabel", "Other"), 7, 280, 436, 22, BitOR($SS_CENTER,$SS_CENTERIMAGE))
+	GUICtrlCreateLabel(GetTranslatedFileIni("MiscMODs", "OtherSettingsLabel", "Other"), 7, 280, 436, 22, BitOR($SS_CENTER, $SS_CENTERIMAGE))
 	GUICtrlSetTip(-1, GetTranslatedFileIni("MiscMODs", "OtherSettingsTip", "Other settings"))
 	GUICtrlSetBkColor(-1, 0x333300)
 	GUICtrlSetFont(-1, 12, 500, 0, "Candara", $CLEARTYPE_QUALITY)
@@ -105,6 +103,17 @@ EndFunc   ;==>CreateMODTab
 
 	$g_hAvoidLocation = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "AvoidLocation", "Skip buildings location."), 32, 312, 145, 17)
 	GUICtrlSetOnEvent(-1, "chkDelayMod")
+
+	Local $iX = 32, $iY = 312
+	$iY += 25
+	$g_hChkBotLogLineLimit = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "BotLogLineLimit", "Disable clear bot log, and line limit to: "), $iX, $iY, -1, -1)
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MiscMODs", "BotLogLineLimitTips", "Bot log will never clear after battle, and clear bot log will replace will line limit."))
+	GUICtrlSetOnEvent(-1, "chkBotLogLineLimit")
+	
+	$g_hTxtLogLineLimit = GUICtrlCreateInput("240", $iX + 300, $iY + 2, 35, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MiscMODs", "BotLogLineLimitValue", "Please enter how many line to limit for the bot log."))
+	GUICtrlSetLimit(-1, 4)
+	GUICtrlSetOnEvent(-1, "txtLogLineLimit")
 
 	GUICtrlCreateTabItem("")
 EndFunc   ;==>TabMiscGUI
@@ -192,7 +201,7 @@ Func CreateDonationsControlSubTab()
 	Local $sTxtTip = ""
 	Local $xStart = 30, $yStart = 45
 	$g_hGUI_DonateLimiter = _GUICreate("", $g_iSizeWGrpTab3, $g_iSizeHGrpTab3, $xStart - 32, $yStart - 20, BitOR($WS_CHILD, $WS_TABSTOP), -1, $g_hGUI_DONATE)
-	Local $xStart = 20, $yStart = 20
+	Local $xStart = 5, $yStart = 20
 	Local $x = $xStart, $y = $yStart
 
 	GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "GroupDonationslimiter", "Donations Stats + Limiter"), $x, $y, 436, 22, BitOR($SS_CENTER, $SS_CENTERIMAGE))
@@ -203,11 +212,12 @@ Func CreateDonationsControlSubTab()
 	$y += 35
 
 		For $i = 0 To $eTroopCount - 1 ; Troops
-			If $i >= 12 Then $x = 25
-			_GUICtrlCreateIcon($g_sLibIconPath, $aTroopsIcons[$i], $x + Int($i / 2) * 37, $y + Mod($i, 2) * 60, 32, 32)
-			$g_hLblDayTroop[$aTroopList[$i]] = GUICtrlCreateLabel("0", $x + Int($i / 2) * 37 + 1, $y + Mod($i, 2) * 60 + 34, 30, 20, BitOR($ES_CENTER, $ES_NUMBER))
+			If $i >= 14 Then $x = 25
+			_GUICtrlCreateIcon($g_sLibIconPath, $aTroopsIcons[$i], $x + Int($i / 2) * 33, $y + Mod($i, 2) * 60, 32, 32)
+			$g_hLblDayTroop[$aTroopList[$i]] = GUICtrlCreateLabel("0", $x + Int($i / 2) * 33 + 1, $y + Mod($i, 2) * 60 + 34, 30, 20, BitOR($ES_CENTER, $ES_NUMBER))
 				GUICtrlSetLimit(-1, 3)
 		Next
+		$x = $xStart
 		$y += 115
 
 		GUICtrlCreateLabel("Limit ", $x, $y)
@@ -224,6 +234,7 @@ Func CreateDonationsControlSubTab()
 			$g_hLblDaySpell[$aSpellList[$i]] = GUICtrlCreateLabel("0", $x +  $i * 37, $y + 34, 30, 20, BitOR($ES_CENTER, $ES_NUMBER))
 				GUICtrlSetLimit(-1, 3)
 		Next
+		$x = $xStart
 		$y += 50
 
 		GUICtrlCreateLabel("Limit ", $x, $y)
@@ -239,6 +250,7 @@ Func CreateDonationsControlSubTab()
 			$g_hLblDaySiege[$aSiegeList[$i]] = GUICtrlCreateLabel("0", $x +  $i * 37, $y + 34, 30, 20, BitOR($ES_CENTER, $ES_NUMBER))
 				GUICtrlSetLimit(-1, 3)
 		Next
+		$x = $xStart
 		$y += 50
 
 		GUICtrlCreateLabel("Limit ", $x, $y)

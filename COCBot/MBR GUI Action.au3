@@ -16,6 +16,8 @@
 Func BotStart($bAutostartDelay = 0)
 	FuncEnter(BotStart)
 
+	$g_bIsReallyOn = True ; Team AIO Mod++
+
 	If Not $g_bSearchMode Then
 		If $g_hLogFile = 0 Then CreateLogFile() ; only create new log file when doesn't exist yet
 		CreateAttackLogFile()
@@ -149,6 +151,8 @@ Func BotStop()
 	FuncEnter(BotStop)
 	; release bot slot
 	LockBotSlot(False)
+
+	$g_bIsReallyOn = False ; Team AIO Mod++
 
 	; release other switch accounts
 	releaseProfilesMutex()

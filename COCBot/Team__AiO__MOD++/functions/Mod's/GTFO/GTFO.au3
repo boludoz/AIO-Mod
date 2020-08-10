@@ -35,7 +35,7 @@ Func MainGTFO()
 			$bDonateSiege = ($g_aiPrepDon[4] = 1), $bDonateAllSiege = ($g_aiPrepDon[5] = 1)
 
 	Local $bDonate = (($bDonateTroop) Or ($bDonateAllTroop) Or ($bDonateSpell) Or ($bDonateAllSpell) Or ($bDonateSiege) Or ($bDonateAllSiege))
-	
+
 	If (($g_iTotalDonateStatsTroops >= $g_iDayLimitTroops And $g_iDayLimitTroops > 0) And ($g_iTotalDonateStatsSpells >= $g_iDayLimitSpells And $g_iDayLimitSpells > 0) And ($g_iTotalDonateStatsSiegeMachines >= $g_iDayLimitSieges And $g_iDayLimitSieges > 0)) Then
 
 		SetLog("*** Donations : Day Limit. ***", $COLOR_ERROR)
@@ -46,7 +46,7 @@ Func MainGTFO()
 		Return False
 
 	ElseIf ((Not $g_bChkDonate) Or (Not $bDonate) Or (Not $g_bDonationEnabled)) Then
-		
+
 		SetLog("*** Setup donations. ***", $COLOR_ERROR)
 		VillageReport()
 		ProfileSwitch()
@@ -190,7 +190,7 @@ Func DonateGTFO()
 
 	Local $_timer = TimerInit()
 	Local $_diffTimer = 0, $iTime2Exit = 20
-	Local $_bReturnT = False
+;~ 	Local $_bReturnT = False
 	Local $_bReturnS = False
 	Local $y = 90, $firstrun = True
 
@@ -256,7 +256,7 @@ Func DonateGTFO()
 		If $g_iLoop > $g_iTxtCyclesGTFO And Not $g_hExitAfterCyclesGTFO Then Return
 
 
-		$_bReturnT = False
+		;$_bReturnT = False
 		$_bReturnS = False
 		$firstrun = False
 
@@ -306,8 +306,8 @@ Func ClanHop()
 	OpenClanChat()
 
 	SetLog("Start Clan Hopping", $COLOR_INFO)
-	Local $sTimeStartedHopping = _NowCalc()
-	Local $iPosJoinedClans = 0, $iScrolls = 0, $iHopLoops = 0, $iErrors = 0
+;~ 	Local $sTimeStartedHopping = _NowCalc()
+	Local $iErrors = 0
 
 
 	$g_iCommandStop = 0 ; Halt Attacking
@@ -353,10 +353,10 @@ Func ClanHop()
 					Return False
 				EndIf
 
+				Local $sData = ""
 				If _Wait4PixelArray($g_aCopy) Then
-					Local $sData = ""
 					ClickP($g_aCopy)
-					Local $sData = ClipGet()
+					$sData = ClipGet()
 					If RandomSleep(250) Then Return
 					GUICtrlSetData($g_hTxtClanID, $sData)
 					$g_sTxtClanID = $sData

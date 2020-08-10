@@ -23,6 +23,8 @@ Global Const $DELAYCHATACTIONS6 = 1250
 Global Const $DELAYCHATACTIONS7 = 1500
 
 Func DelayTime($chatType)
+	Local $sDateTimeDiffOfLastMsgInMin, $sDateTimeDiffOfLastMsgInSec
+	Local $hour = 0, $min = 0, $sec = 0
 	Local $aHour = StringSplit(_NowTime(4), ":", $STR_NOCOUNT)
 	If Not $g_abFriendlyChallengeHours[$aHour[0]] Then
 		SetLog("ChatActions not planned, Skipped..", $COLOR_INFO)
@@ -33,14 +35,13 @@ Func DelayTime($chatType)
 		Case "CLAN"
 			If $g_sClanChatLastMsgSentTime = "" Then Return True ;If ClanLastMsgSentTime sent time is empty means it's first time sms allow it
 
-				Local $sDateTimeDiffOfLastMsgInMin = _DateDiff("s", $g_sClanChatLastMsgSentTime, _NowCalc()) / 60 ;For getting float value of minutes(s) we divided the diffsec by 60
+				$sDateTimeDiffOfLastMsgInMin = _DateDiff("s", $g_sClanChatLastMsgSentTime, _NowCalc()) / 60 ;For getting float value of minutes(s) we divided the diffsec by 60
 				SetDebugLog("$g_iTxtDelayTimeClan = " & $g_sDelayTimeClan)
 				SetDebugLog("$g_sClanChatLastMsgSentTime = " & $g_sClanChatLastMsgSentTime & ", $sDateTimeDiffOfLastMsgInMin = " & $sDateTimeDiffOfLastMsgInMin)
 				If $sDateTimeDiffOfLastMsgInMin > $g_sDelayTimeClan Then ;If ClanLastMsgSentTime sent time is empty means it's first time sms
 					Return True
 				Else
-					Local $hour = 0, $min = 0, $sec = 0
-					Local $sDateTimeDiffOfLastMsgInSec = _DateDiff("s", _NowCalc(), _DateAdd('n', $g_sDelayTimeClan, $g_sClanChatLastMsgSentTime))
+					$sDateTimeDiffOfLastMsgInSec = _DateDiff("s", _NowCalc(), _DateAdd('n', $g_sDelayTimeClan, $g_sClanChatLastMsgSentTime))
 					SetDebugLog("$sDateTimeDiffOfLastMsgInSec = " & $sDateTimeDiffOfLastMsgInSec)
 					_TicksToTime($sDateTimeDiffOfLastMsgInSec * 1000, $hour, $min, $sec)
 
@@ -51,14 +52,13 @@ Func DelayTime($chatType)
 		Case "FC"
 			If $g_sFCLastMsgSentTime = "" Then Return True ;If ClanLastMsgSentTime sent time is empty means it's first time sms allow it
 
-				Local $sDateTimeDiffOfLastMsgInMin = _DateDiff("s", $g_sFCLastMsgSentTime, _NowCalc()) / 60 ;For getting float value of minutes(s) we divided the diffsec by 60
+				$sDateTimeDiffOfLastMsgInMin = _DateDiff("s", $g_sFCLastMsgSentTime, _NowCalc()) / 60 ;For getting float value of minutes(s) we divided the diffsec by 60
 				SetDebugLog("$g_iTxtDelayTimeFC = " & $g_sDelayTimeFC)
 				SetDebugLog("$g_sFCLastMsgSentTime = " & $g_sFCLastMsgSentTime & ", $sDateTimeDiffOfLastMsgInMin = " & $sDateTimeDiffOfLastMsgInMin)
 				If $sDateTimeDiffOfLastMsgInMin > $g_sDelayTimeFC Then ;If ClanLastMsgSentTime sent time is empty means it's first time sms
 					Return True
 				Else
-					Local $hour = 0, $min = 0, $sec = 0
-					Local $sDateTimeDiffOfLastMsgInSec = _DateDiff("s", _NowCalc(), _DateAdd('n', $g_sDelayTimeFC, $g_sFCLastMsgSentTime))
+					$sDateTimeDiffOfLastMsgInSec = _DateDiff("s", _NowCalc(), _DateAdd('n', $g_sDelayTimeFC, $g_sFCLastMsgSentTime))
 					SetDebugLog("$sDateTimeDiffOfLastMsgInSec = " & $sDateTimeDiffOfLastMsgInSec)
 					_TicksToTime($sDateTimeDiffOfLastMsgInSec * 1000, $hour, $min, $sec)
 
@@ -234,7 +234,7 @@ Func OpenClanChat($iDelay = 200, $bIUnders = True)
 		Else
 			ClickP($aAway2, 1, 0, "#0176")
 		EndIf
-		
+
 		If _Sleep(Round( Int($iDelay * Random(90, 120)) / 100)) Then Return
 	Next
 	Return False
@@ -251,7 +251,7 @@ Func CloseClanChat($iDelay = 200) ; close chat area
 		Else
 			ClickP($aAway2, 1, 0, "#0176")
 		EndIf
-		
+
 		If _Sleep(Round( Int($iDelay * Random(90, 120)) / 100)) Then Return
 	Next
 	Return False
@@ -438,34 +438,32 @@ Func ChatbotClickLanguageButton() ; Click on language button in settings
 EndFunc   ;==>ChatbotClickLanguageButton
 
 ; Returns the response from cleverbot or simsimi, if any
-Func runHelper($msg) ; run a script to get a response from cleverbot.com or simsimi.com
-	Local $command, $DOS, $HelperStartTime, $Time_Difference
-	Dim $DOS, $g_sMessage = ''
+Func runHelper($sMsg) ; run a script to get a response from cleverbot.com or simsimi.com
+	Local $sCommand, $sDOS, $tHelperStartTime, $tTime_Difference
+	Static $sMessage = ''
 
-	$command = ' /c "ModLibs\phantomjs.exe "ModLibs\phantom-cleverbot-helper.js" '
+	$sCommand = ' /c "ModLibs\phantomjs.exe "ModLibs\phantom-cleverbot-helper.js" '
 
-	$DOS = Run(@ComSpec & $command & $msg & '"', "", @SW_HIDE, 8)
-	$HelperStartTime = TimerInit()
+	$sDOS = Run(@ComSpec & $sCommand & $sMsg & '"', "", @SW_HIDE, 8)
+	$tHelperStartTime = TimerInit()
 	SetLog("Waiting for chatbot helper...")
-	While ProcessExists($DOS)
-		ProcessWaitClose($DOS, 10)
+	While ProcessExists($sDOS)
+		ProcessWaitClose($sDOS, 10)
 		SetLog("Still waiting for chatbot helper...")
-		$Time_Difference = TimerDiff($HelperStartTime)
-		If $Time_Difference > 50000 Then
+		$tTime_Difference = TimerDiff($tHelperStartTime)
+		If $tTime_Difference > 50000 Then
 			SetLog("Chatbot helper is taking too long!", $COLOR_RED)
-			ProcessClose($DOS)
+			ProcessClose($sDOS)
 			_RunDos("taskkill -f -im phantomjs.exe") ; force kill
 			Return ""
 		EndIf
 	WEnd
-	$g_sMessage = ''
+	$sMessage = ''
 	While 1
-		$g_sMessage &= StdoutRead($DOS)
-		If @error Then
-			ExitLoop
-		EndIf
+		$sMessage &= StdoutRead($sDOS)
+		If @error Then ExitLoop
 	WEnd
-	Return StringStripWS($g_sMessage, 7)
+	Return StringStripWS($sMessage, 7)
 EndFunc   ;==>runHelper
 
 Func _Encoding_JavaUnicodeDecode($sString)
@@ -522,7 +520,7 @@ Func FriendlyChallenge()
 
 	ClickP($aAway2, 1, 0, "#0176") ;Click Away
 	Setlog("Checking Friendly Challenge at Clan Chat", $COLOR_INFO)
-	
+
 	If Not OpenClanChat() Then ; GTFO - Team AIO Mod++
 	SetLog("Error finding the Clan Tab Button", $COLOR_ERROR)
 		Return

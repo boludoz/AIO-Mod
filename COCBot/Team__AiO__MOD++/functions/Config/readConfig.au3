@@ -29,7 +29,7 @@ Func ReadConfig_MOD_CustomArmyBB()
 	IniReadS($g_bChkBuilderAttack, $g_sProfileConfigPath, "BuilderBase", "BuilderAttack", False, "Bool")
 	IniReadS($g_bChkBBStopAt3, $g_sProfileConfigPath, "BuilderBase", "BBStopAt3", False, "Bool")
 	IniReadS($g_bChkBBTrophiesRange, $g_sProfileConfigPath, "BuilderBase", "BBTrophiesRange", False, "Bool")
-	IniReadS($g_bChkBBRandomAttack, $g_sProfileConfigPath, "BuilderBase", "BBRandomAttack", False, "Bool")
+	IniReadS($g_bChkBBCustomAttack, $g_sProfileConfigPath, "BuilderBase", "BBRandomAttack", False, "Bool")
 	For $i = 0 To 2
 		IniReadS($g_sAttackScrScriptNameBB[$i], $g_sProfileConfigPath, "BuilderBase", "ScriptBB" & $i, "Barch four fingers")
 	Next
@@ -39,7 +39,7 @@ Func ReadConfig_MOD_CustomArmyBB()
 	IniReadS($g_bChkBBGetFromCSV, $g_sProfileConfigPath, "BuilderBase", "ChkBBGetFromCSV", False, "Bool")
 	IniReadS($g_iCmbBBAttack, $g_sProfileConfigPath, "BuilderBase", "CmbBBAttack", $g_iCmbBBAttack, "Int")
 
-EndFunc   ;==>SaveConfig_MOD_CustomArmyBB
+EndFunc   ;==>ReadConfig_MOD_CustomArmyBB
 
 Func ReadConfig_MOD_MiscTab()
 	; <><><> MiscTab <><><>
@@ -54,8 +54,12 @@ Func ReadConfig_MOD_MiscTab()
 		IniReadS($g_bDeployCastleFirst[$i], $g_sProfileConfigPath, "MiscTab", "DeployCastleFirst" & $i, $g_bDeployCastleFirst[$i], "Bool")
 	Next
 	
+	; Read - Setlog limit - Team AIO Mod++
+	IniReadS($g_bChkBotLogLineLimit, $g_sProfileConfigPath, "BotLogLineLimit", "Enable", True, "Bool")
+	IniReadS($g_iTxtLogLineLimit, $g_sProfileConfigPath, "BotLogLineLimit", "LimitValue", "500","Int")
+
 	; Skip first check
-	IniReadS($g_bSkipfirstcheck, $g_sProfileConfigPath, "MiscTab", "Skipfirstcheck", $g_bSkipfirstcheck, "Bool")
+	IniReadS($g_bAvoidLocate, $g_sProfileConfigPath, "MiscTab", "AvoidLocate", $g_bAvoidLocate, "Bool")
 
 	; Remove edge obstacles
 	IniReadS($g_bEdgeObstacle, $g_sProfileConfigPath, "MiscTab", "EdgeObstacle", $g_bEdgeObstacle, "Bool")
@@ -110,24 +114,24 @@ Func ReadConfig_MOD_MiscTab()
 	IniReadS($g_iCmbRestartEvery, $g_sProfileConfigPath, "DonRecords", "CmbRestartEvery", $g_iCmbRestartEvery, "Int")
 	IniReadS($g_sRestartTimer, $g_sProfileConfigPath, "DonRecords", "RestartTimer", $g_sRestartTimer)
 	
-		; Tooops;
-		For $i = 0 To $eTroopCount - 1
-			IniReadS($g_aiDonateStatsTroops[$i][0], $g_sProfileConfigPath, "DonRecords", "DonateStatsTroops" & $i, $g_aiDonateStatsTroops[$i][0], "Int")
-		Next
-		IniReadS($g_iTotalDonateStatsTroops, $g_sProfileConfigPath, "DonRecords", "TotalDonateStatsTroops", $g_iTotalDonateStatsTroops, "Int")
-		
-		; Spell;
-		For $i = 0 To $eSpellCount - 1
-			IniReadS($g_aiDonateStatsSpells[$i][0], $g_sProfileConfigPath, "DonRecords", "DonateStatsSpells" & $i, $g_aiDonateStatsSpells[$i][0], "Int")
-		Next
-		IniReadS($g_iTotalDonateStatsSpells, $g_sProfileConfigPath, "DonRecords", "TotalDonateStatsSpells", $g_iTotalDonateStatsSpells, "Int")
+	; Tooops;
+	For $i = 0 To $eTroopCount - 1
+		IniReadS($g_aiDonateStatsTroops[$i][0], $g_sProfileConfigPath, "DonRecords", "DonateStatsTroops" & $i, $g_aiDonateStatsTroops[$i][0], "Int")
+	Next
+	IniReadS($g_iTotalDonateStatsTroops, $g_sProfileConfigPath, "DonRecords", "TotalDonateStatsTroops", $g_iTotalDonateStatsTroops, "Int")
+	
+	; Spell;
+	For $i = 0 To $eSpellCount - 1
+		IniReadS($g_aiDonateStatsSpells[$i][0], $g_sProfileConfigPath, "DonRecords", "DonateStatsSpells" & $i, $g_aiDonateStatsSpells[$i][0], "Int")
+	Next
+	IniReadS($g_iTotalDonateStatsSpells, $g_sProfileConfigPath, "DonRecords", "TotalDonateStatsSpells", $g_iTotalDonateStatsSpells, "Int")
 
-		; Siege;
-		For $i = 0 To $eSiegeMachineCount - 1
-			IniReadS($g_aiDonateStatsSieges[$i][0], $g_sProfileConfigPath, "DonRecords", "DonateStatsSieges" & $i, $g_aiDonateStatsSieges[$i][0], "Int")
-		Next
-		IniReadS($g_iTotalDonateStatsSiegeMachines, $g_sProfileConfigPath, "DonRecords", "TotalDonateStatsSieges", $g_iTotalDonateStatsSiegeMachines, "Int")
-		; ------------;
+	; Siege;
+	For $i = 0 To $eSiegeMachineCount - 1
+		IniReadS($g_aiDonateStatsSieges[$i][0], $g_sProfileConfigPath, "DonRecords", "DonateStatsSieges" & $i, $g_aiDonateStatsSieges[$i][0], "Int")
+	Next
+	IniReadS($g_iTotalDonateStatsSiegeMachines, $g_sProfileConfigPath, "DonRecords", "TotalDonateStatsSieges", $g_iTotalDonateStatsSiegeMachines, "Int")
+	; ------------;
 
 EndFunc   ;==>ReadConfig_MOD_MiscTab
 
@@ -159,15 +163,15 @@ Func ReadConfig_MOD_MagicItems()
 	IniReadS($g_iComboHeroPotion, $g_sProfileConfigPath, "MagicItems", "ComboHeroPotion", $g_iComboHeroPotion, "int")
 	IniReadS($g_iComboPowerPotion, $g_sProfileConfigPath, "MagicItems", "ComboPowerPotion", $g_iComboPowerPotion, "int")
 
-	IniReadS($g_bChkCollectMagicItems , $g_sProfileConfigPath, "MagicItems", "CollectMagicItems", $g_bChkCollectMagicItems, "Bool")
-	IniReadS($g_bChkCollectFree , $g_sProfileConfigPath, "MagicItems", "ChkCollectFree", $g_bChkCollectFree, "Bool")
+	IniReadS($g_bChkCollectMagicItems, $g_sProfileConfigPath, "MagicItems", "CollectMagicItems", $g_bChkCollectMagicItems, "Bool")
+	IniReadS($g_bChkCollectFree, $g_sProfileConfigPath, "MagicItems", "ChkCollectFree", $g_bChkCollectFree, "Bool")
 
-	IniReadS($g_bChkBuilderPotion , $g_sProfileConfigPath, "MagicItems", "ChkBuilderPotion", $g_bChkBuilderPotion, "Bool")
-	IniReadS($g_bChkClockTowerPotion , $g_sProfileConfigPath, "MagicItems", "ChkClockTowerPotion", $g_bChkClockTowerPotion, "Bool")
-	IniReadS($g_bChkHeroPotion , $g_sProfileConfigPath, "MagicItems", "ChkHeroPotion", $g_bChkHeroPotion, "Bool")
-	IniReadS($g_bChkLabPotion , $g_sProfileConfigPath, "MagicItems", "ChkLabPotion", $g_bChkLabPotion, "Bool")
-	IniReadS($g_bChkPowerPotion , $g_sProfileConfigPath, "MagicItems", "ChkPowerPotion", $g_bChkPowerPotion, "Bool")
-	IniReadS($g_bChkResourcePotion , $g_sProfileConfigPath, "MagicItems", "ChkResourcePotion", $g_bChkResourcePotion, "Bool")
+	IniReadS($g_bChkBuilderPotion, $g_sProfileConfigPath, "MagicItems", "ChkBuilderPotion", $g_bChkBuilderPotion, "Bool")
+	IniReadS($g_bChkClockTowerPotion, $g_sProfileConfigPath, "MagicItems", "ChkClockTowerPotion", $g_bChkClockTowerPotion, "Bool")
+	IniReadS($g_bChkHeroPotion, $g_sProfileConfigPath, "MagicItems", "ChkHeroPotion", $g_bChkHeroPotion, "Bool")
+	IniReadS($g_bChkLabPotion, $g_sProfileConfigPath, "MagicItems", "ChkLabPotion", $g_bChkLabPotion, "Bool")
+	IniReadS($g_bChkPowerPotion, $g_sProfileConfigPath, "MagicItems", "ChkPowerPotion", $g_bChkPowerPotion, "Bool")
+	IniReadS($g_bChkResourcePotion, $g_sProfileConfigPath, "MagicItems", "ChkResourcePotion", $g_bChkResourcePotion, "Bool")
 
 EndFunc   ;==>ReadConfig_MOD_MagicItems
 
@@ -197,10 +201,10 @@ Func ReadConfig_MOD_ChatActions()
 	Local $aPreIAVar = StringSplit($g_sIAVar, "#", $STR_NOCOUNT)
 	
 	Global $g_aIAVar[0][2]
-	For $i = 0 To UBound($aPreIAVar) -1
+	For $i = 0 To UBound($aPreIAVar) - 1
 		Local $aSplitTmp = StringSplit($aPreIAVar[$i], ",", $STR_NOCOUNT)
 		Local $aTemp[1][2] = [[$aSplitTmp[0], $aSplitTmp[1]]]
-		_ArrayAdd($g_aIAVar, $aTemp) 
+		_ArrayAdd($g_aIAVar, $aTemp)
 	Next
 	
 EndFunc   ;==>ReadConfig_MOD_ChatActions

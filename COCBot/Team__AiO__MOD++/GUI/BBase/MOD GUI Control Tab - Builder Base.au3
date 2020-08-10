@@ -82,7 +82,7 @@ Func cmbBBAttack()
 		GUICtrlSetState($g_hCmbBBSameTroopDelay, $GUI_HIDE)
 		GUICtrlSetState($g_hBtnBBDropOrder, $GUI_HIDE)
 		;GUICtrlSetState($g_hChkBBGetFromCSV, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkBBRandomAttack, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkBBCustomAttack, $GUI_ENABLE)
 		For $i=$g_hGrpAttackStyleBB To $g_hIcnBBCSV[3] ; enable all csv stuff
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
@@ -92,10 +92,10 @@ Func cmbBBAttack()
 		GUICtrlSetState($g_hCmbBBNextTroopDelay, $GUI_SHOW)
 		GUICtrlSetState($g_hCmbBBSameTroopDelay, $GUI_SHOW)
 		GUICtrlSetState($g_hBtnBBDropOrder, $GUI_SHOW)
-		GUICtrlSetState($g_hChkBBRandomAttack, $GUI_UNCHECKED)
-		ChkBBRandomAttack()
+		GUICtrlSetState($g_hChkBBCustomAttack, $GUI_UNCHECKED)
+		ChkBBCustomAttack()
 		;GUICtrlSetState($g_hChkBBGetFromCSV, $GUI_ENABLE)
-		GUICtrlSetState($g_hChkBBRandomAttack, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkBBCustomAttack, $GUI_DISABLE)
 		For $i=$g_hGrpAttackStyleBB To $g_hIcnBBCSV[3] ; Disable all csv stuff
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
@@ -241,8 +241,8 @@ Func DuplicateScriptBB()
 	EndIf
 EndFunc   ;==>DuplicateScriptBB
 
-Func ChkBBRandomAttack()
-	If GUICtrlRead($g_hChkBBRandomAttack) = $GUI_CHECKED Then
+Func ChkBBCustomAttack()
+	If GUICtrlRead($g_hChkBBCustomAttack) = $GUI_CHECKED Then
 		GUICtrlSetState($g_hCmbBBAttackStyle[1], $GUI_SHOW)
 		GUICtrlSetState($g_hCmbBBAttackStyle[2], $GUI_SHOW)
 		GUICtrlSetState($g_hLblNotesScriptBB[1], $GUI_SHOW)
@@ -259,7 +259,7 @@ Func ChkBBRandomAttack()
 		GUICtrlSetPos($g_hTxtBBDropTrophiesMin, 203, 105)
 		GUICtrlSetPos($g_hLblBBDropTrophiesDash, 245, 105 + 2)
 		GUICtrlSetPos($g_hTxtBBDropTrophiesMax, 250, 105)
-		GUICtrlSetPos($g_hChkBBRandomAttack, 300, 105)
+		GUICtrlSetPos($g_hChkBBCustomAttack, 300, 105)
 		GUICtrlSetPos($g_hChkBBWaitForMachine, 100, 130)
 		GUICtrlSetPos($g_hChkBBStopAt3, 300, 130)
 		WinMove($g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV, "", 0, 140, $g_iSizeWGrpTab2 - 2)
@@ -271,7 +271,7 @@ Func ChkBBRandomAttack()
 		For $i = 0 To UBound($g_hIcnBBCSV) - 1
 			GUICtrlSetPos($g_hIcnBBCSV[$i], 416)
 		Next
-		$g_bChkBBRandomAttack = True
+		$g_bChkBBCustomAttack = True
 	Else
 		GUICtrlSetState($g_hCmbBBAttackStyle[1], $GUI_HIDE)
 		GUICtrlSetState($g_hCmbBBAttackStyle[2], $GUI_HIDE)
@@ -283,14 +283,14 @@ Func ChkBBRandomAttack()
 		GUICtrlSetState($g_hChkBBGetFromCSV, $GUI_SHOW) ; AIO ++
 		GUICtrlSetPos($g_hChkBBGetFromCSV, 5, 190)
 
-		GUICtrlSetPos($g_hGrpOptionsBB, -1, -1, 200, 145)
+		GUICtrlSetPos($g_hGrpOptionsBB, -1, -1, 200, 165)
 		GUICtrlSetPos($g_hChkBBTrophiesRange, 5, 150)
 		GUICtrlSetPos($g_hTxtBBDropTrophiesMin, 108, 151)
 		GUICtrlSetPos($g_hLblBBDropTrophiesDash, 150, 151 + 2)
 		GUICtrlSetPos($g_hTxtBBDropTrophiesMax, 155, 151)
-		GUICtrlSetPos($g_hChkBBRandomAttack, 5, 170)
+		GUICtrlSetPos($g_hChkBBCustomAttack, 5, 170)
 		GUICtrlSetPos($g_hChkBBStopAt3, 5, 130)
-		GUICtrlSetPos($g_hChkBBWaitForMachine, 5, 120 + 90)
+		GUICtrlSetPos($g_hChkBBWaitForMachine, 5, 120 + 100)
 
 		WinMove($g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV, "", 200, 85, 240)
 		GUICtrlSetPos($g_hGrpAttackStyleBB, -1, -1, 233, $g_iSizeHGrpTab4 - 35)
@@ -301,10 +301,10 @@ Func ChkBBRandomAttack()
 		For $i = 0 To UBound($g_hIcnBBCSV) - 1
 			GUICtrlSetPos($g_hIcnBBCSV[$i], 215)
 		Next
-		$g_bChkBBRandomAttack = False
+		$g_bChkBBCustomAttack = False
 	EndIf
 
-EndFunc   ;==>ChkBBRandomAttack
+EndFunc   ;==>ChkBBCustomAttack
 
 ; AIO
 Func ChkBBWalls()

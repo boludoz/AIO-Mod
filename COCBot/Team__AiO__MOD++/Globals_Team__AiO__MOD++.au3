@@ -22,6 +22,11 @@ Global Enum $eIcnModKingGray = 1, $eIcnModKingBlue, $eIcnModKingGreen, $eIcnModK
 		$eIcnModAccountsS, $eIcnModProfilesS, $eIcnModFarmingS, $eIcnMiscMod, $eIcnSuperXP, $eIcnChatActions, $eIcnHumanization, $eIcnAIOMod, $eIcnDebugMod, _
 		$eIcnLabP, $eIcnShop, $eIcnGoldP, $eIcnElixirP, $eIcnDarkP, $eIcnGFTO, $eIcnMisc, $eIcnPrewar
 
+#Region - Setlog limit - Team AIO Mod++
+Global $g_hChkBotLogLineLimit, $g_bChkBotLogLineLimit, _
+$g_hTxtLogLineLimit, $g_iTxtLogLineLimit
+#EndRegion - Setlog limit - Team AIO Mod++
+
 ; Offset village.
 Global $g_aPosSizeVillage = 0
 
@@ -30,7 +35,7 @@ Global $g_bNewModAvailable = False
 ; ZoomMod
 Global $g_bZoomFixBB = False
 Global $Stonecoord
-	
+
 ; Offset
 Global $g_iXVOffset = 0
 
@@ -39,7 +44,7 @@ Global $g_bRemainTweak = True
 
 
 ; Skip first check
-Global $g_bSkipfirstcheck = False, $g_hSkipfirstcheck
+Global $g_bAvoidLocate  = False, $g_hAvoidLocate = 0, $g_bIsReallyOn = False
 
 ; Donation records.
 Global $g_iDayLimitTroops = 0, $g_iDayLimitSpells = 0, $g_iDayLimitSieges = 0
@@ -61,14 +66,6 @@ Global $g_bRequestCCForWar,	$g_sTxtRequestCCForWar
 Global $g_bDebugBBattack = False
 
 ;GUI
-; BB Drop Order
-Global $g_hBtnBBDropOrder = 0
-Global $g_hGUI_BBDropOrder = 0
-Global $g_hChkBBCustomDropOrderEnable = 0
-Global $g_hBtnBBDropOrderSet = 0, $g_hBtnBBRemoveDropOrder = 0, $g_hBtnBBClose = 0
-Global $g_bBBDropOrderSet = False
-Global Const $g_iBBTroopCount = 12
-
 ;CustomArmy
 Global $g_iCmbCampsBB[6] = [0, 0, 0, 0, 0, 0]
 Global $g_hIcnTroopBB[6]
@@ -88,7 +85,7 @@ Global $g_hUseSleep, $g_hIntSleep, $g_hUseRandomSleep, $g_hNoAttackSleep, $g_hDi
 
 ; Max sides SF
 Global $g_bMaxSidesSF = True, $g_iCmbMaxSidesSF = 1
-; GUI 
+; GUI
 Global $g_hMaxSidesSF, $g_hCmbMaxSidesSF
 ;-------------------
 
@@ -144,7 +141,7 @@ Global $g_bEnableFriendlyChallenge = False, $g_sDelayTimeFC = 5, $g_bOnlyOnReque
 Global $g_bFriendlyChallengeBase[6] = [False, False, False, False, False, False]
 Global $g_abFriendlyChallengeHours[24] = [True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True]
 Global $ChatbotStartTime, $ChatbotQueuedChats[0], $ChatbotReadQueued = False, $ChatbotReadInterval = 0, $ChatbotIsOnInterval = False, _
-	$g_sMessage = "", $g_sGlobalChatLastMsgSentTime = "", $g_sClanChatLastMsgSentTime = "", $g_sFCLastMsgSentTime = ""
+	$g_sGlobalChatLastMsgSentTime = "", $g_sClanChatLastMsgSentTime = "", $g_sFCLastMsgSentTime = ""
 
 Global $g_aIAVar[5][2] = [[0,0],[1,0],[2,0],[3,0],[4,0]] , $g_sIAVar = '0,0#1,0#2,0#3,0#4,0'
 
@@ -253,14 +250,13 @@ $g_iInputBuilderPotion, $g_iInputLabPotion, $g_iInputGoldItems = 250000, $g_iInp
 
 #Region - Builder Base !!!
 ; Provisional globals BB Machine
-Global $g_aMachineBB[2] = [0, 0], $g_bIsBBMachineD = False, $g_bBBIsFirst = True
+Global $g_aMachineBB[2] = [-1, -1], $g_bIsBBMachineD = False, $g_bBBIsFirst = True
 
 ; Report
 Global $g_iAvailableAttacksBB = 0, $g_iLastDamage = 0
 Global $g_sTxtRegistrationToken = ""
 
 Global Enum $g_iAirDefense = 0, $g_iCrusher, $g_iGuardPost, $g_iCannon, $g_iBuilderHall, $g_iDeployPoints
-Global $g_aBuilderHallPos[1][2] = [[Null, Null]], $g_aAirdefensesPos[0][2], $g_aCrusherPos[0][2], $g_aCannonPos[0][2], $g_aGuardPostPos[0][2], $g_aDeployPoints
 Global $g_aBuilderHallPos[1][2] = [[Null, Null]], $g_aAirdefensesPos[0][2], $g_aCrusherPos[0][2], $g_aCannonPos[0][2], $g_aGuardPostPos[0][2], $g_aDeployPoints, $g_aDeployBestPoints
 Global $g_aOpponentBuildings[6] = [$g_aAirdefensesPos, $g_aCrusherPos, $g_aGuardPostPos, $g_aCannonPos, $g_aBuilderHallPos, $g_aDeployPoints]
 Global $g_aExternalEdges, $g_aBuilderBaseDiamond, $g_aOuterEdges, $g_aBuilderBaseOuterDiamond, $g_aBuilderBaseOuterPolygon, $g_aFinalOuter[4]
@@ -272,7 +268,7 @@ Global $g_hTabBuilderBase = 0, $g_hTabAttack = 0
 Global $g_hCmbBBAttack = 0
 
 ; Attack CSV
-Global $g_bChkBBRandomAttack = False
+Global $g_bChkBBCustomAttack = False
 Global Const $g_sCSVBBAttacksPath = @ScriptDir & "\CSV\BuilderBase"
 Global $g_sAttackScrScriptNameBB[3] = ["", "", ""]
 Global $g_iBuilderBaseScript = 0
@@ -290,7 +286,7 @@ Global $g_asAttackBarBB2[$eBBTroopCount] = ["Barbarian", "Archer", "BoxerGiant",
 Global Const $g_asBBTroopShortNames[$eBBTroopCount] = ["Barbarian", "Archer", "BoxerGiant", "Minion", "WallBreaker", "BabyDrag", "CannonCart", "Witch", "DropShip", "SuperPekka", "HogGlider", "Machine"]
 
 Global $g_bIsMachinePresent = False
-Global $g_iBBMachAbilityTime = 0 ; time between abilities
+Global $g_iBBMachAbilityLastActivatedTime = -1 ; time between abilities
 
 ; BB Drop Order
 Global $g_hBtnBBDropOrder = 0
@@ -320,15 +316,15 @@ Global Enum $eIcnBB = 1 , $eIcnLabBB, $eIcnBBElixir, $eIcnBBGold, $eIcnBBTrophie
 		$eIcnBBWallL6, $eIcnBBWallL7, $eIcnBBWallL8, $eIcnBBWallL9
 
 ; Internal & External Polygon
-Global $CocDiamondECD = "ECD"
-Global $CocDiamondDCD = "DCD"
+;~ Global $CocDiamondECD = "ECD"
+;~ Global $CocDiamondDCD = "DCD"
 Global $InternalArea[8][3]
 Global $ExternalArea[8][3]
 
 ; Log
 Global $g_hBBAttackLogFile = 0
 
-Global $g_bChkCollectBuilderBase = False, $g_bChkStartClockTowerBoost = False, $g_bChkCTBoostBlderBz = False, $g_bChkCTBoostAtkAvailable = False, $g_bChkCleanYardBB = False, $g_bDebugBBattack = False
+;~ Global $g_bChkCollectBuilderBase = False, $g_bChkStartClockTowerBoost = False, $g_bChkCTBoostBlderBz = False, $g_bChkCTBoostAtkAvailable = False, $g_bChkCleanYardBB = False, $g_bDebugBBattack = False
 
 Global $g_bChkPlayBBOnly = False
 

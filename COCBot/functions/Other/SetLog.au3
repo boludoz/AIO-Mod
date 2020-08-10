@@ -235,6 +235,14 @@ Func FlushGuiLog(ByRef $hTxtLog, ByRef $oTxtLog, $bUpdateStatus = False, $sLogMu
 	Local $iLogs = $oTxtLog.Count
 	$oTxtLog.RemoveAll
 
+    #Region - Setlog limit - Team AIO Mod++
+    If $g_bChkBotLogLineLimit Or $g_bDebugSetlog Then
+        If $hTxtLog = $g_hTxtLog And $iLogs Then
+            LimitLines($hTxtLog, @CR, ($g_bDebugSetlog) ? (3500) : ($g_iTxtLogLineLimit))
+        EndIf
+    EndIf
+    #EndRegion - Setlog limit - Team AIO Mod++
+
 	If $hTxtLog Then
 		_WinAPI_EnableWindow($hTxtLog, True) ; enabled RichEdit again
 		_GUICtrlRichEdit_SetSel($hTxtLog, -1, -1) ; select end (scroll to end)
@@ -243,7 +251,6 @@ Func FlushGuiLog(ByRef $hTxtLog, ByRef $oTxtLog, $bUpdateStatus = False, $sLogMu
 		If $activeBot And $hCtrl <> $hTxtLog Then _WinAPI_SetFocus($hCtrl) ; Restore Focus
 	EndIf
 
-	;ReleaseMutex($txtLogMutex) ; end of synchronized block
 	AndroidShieldLock($wasLock) ; unlock Android Shield
 	$g_bFlushGuiLogActive = False
 	Return $iLogs
@@ -352,7 +359,8 @@ EndFunc   ;==>__FileWriteLog
 
 Func ClearLog($hRichEditCtrl = $g_hTxtLog)
 	Switch $hRichEditCtrl
-		Case $g_hTxtLog
+        Case $g_hTxtLog
+            If $g_bChkBotLogLineLimit Then Return ; Setlog limit - Team AIO Mod++
 			$g_oTxtLogInitText($g_oTxtLogInitText.Count + 1) = 0
 		Case $g_hTxtAtkLog
 			$g_oTxtAtkLogInitText($g_oTxtAtkLogInitText.Count + 1) = 0

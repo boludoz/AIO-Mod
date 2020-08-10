@@ -14,7 +14,7 @@
 ; ===============================================================================================================================
 #include-once
 
-#include "functions\Other\GUICtrlGetBkColor.au3" ; Included here to use on GUI Control
+#include "functions\Other\GUICtrlGetBkColor.au3" ; Included here To use on GUI Control
 
 Global $g_bRedrawBotWindow[3] = [True, False, False] ; [0] = window redraw enabled, [1] = window redraw required, [2] = window redraw requird by some controls, see CheckRedrawControls()
 Global $g_hFrmBot_WNDPROC = 0
@@ -54,7 +54,7 @@ Func InitializeMainGUI($bGuiModeUpdate = False)
 	InitializeControlVariables()
 
 	; Initialize attack log
-	If Not $bGuiModeUpdate Then 
+	If Not $bGuiModeUpdate Then
 		AtkLogHead()
 		BBAtkLogHead() ; Team AIO Mod++
 	EndIf
@@ -207,7 +207,7 @@ Func GUIControl_WM_SHELLHOOK($hWin, $iMsg, $wParam, $lParam)
 					; show Android without activating
 					HideAndroidWindow(False, False)
 					;AndroidToFront()
-				#ce
+				#ce moved to GUIControl_WM_ACTIVATEAPP as it enters here without activating the bot
 		EndSelect
 	EndIf
 EndFunc   ;==>GUIControl_WM_SHELLHOOK
@@ -580,7 +580,7 @@ Func GUIControl_WM_COMMAND($hWind, $iMsg, $wParam, $lParam)
 			Local $RuntimeA = $g_bRunState
 			$g_bRunState = True
 			Setlog("Army Window Test")
-			_checkArmyCamp(False,False,False, True)
+			_checkArmyCamp(False, False, False, True)
 			$g_bRunState = $RuntimeA
 		Case $g_hBtnTestBuildingLocation
 			btnTestGetLocationBuilding()
@@ -738,7 +738,7 @@ Func GUIControl_WM_NOTIFY($hWind, $iMsg, $wParam, $lParam)
 		Case $g_hGUI_ATTACK_TAB
 			tabAttack()
 		Case $g_hGUI_BUILDER_BASE_TAB ; BBase - Team AIO Mod++
-            tabBuilderBase()
+			tabBuilderBase()
 		Case $g_hGUI_TRAINARMY_TAB
 			tabARMY()
 		Case $g_hGUI_SEARCH_TAB
@@ -841,7 +841,7 @@ Func CheckBotZOrder($bCheckOnly = False, $bForceZOrder = False)
 		Local $hCtrlTarget = $g_aiAndroidEmbeddedCtrlTarget[0]
 		Local $targetIsHWnD = $hCtrlTarget = $g_hAndroidWindow
 		If Not $targetIsHWnD Then
-			Local $bCheck = ($bForceZOrder Or _WinAPI_GetWindow($hCtrlTarget, $GW_HWNDNEXT) <>  $g_hAndroidWindow)
+			Local $bCheck = ($bForceZOrder Or _WinAPI_GetWindow($hCtrlTarget, $GW_HWNDNEXT) <> $g_hAndroidWindow)
 			If $bCheckOnly Then Return $bCheck
 			If $bCheck Then
 				SetDebugLog("CheckBotZOrder: Ajust docked Android Window")
@@ -1146,19 +1146,16 @@ Func BotGuiModeToggle()
 			GUICtrlDelete($g_hTabMain)
 			GUICtrlDelete($g_hTabLog)
 			GUICtrlDelete($g_hTabVillage)
-			GUICtrlDelete($g_hTabBuilderBase) ; BBase - Team AIO Mod++
 			GUICtrlDelete($g_hTabAttack)
-			GUICtrlDelete($g_hTabMOD)
 			GUICtrlDelete($g_hTabBot)
 			GUICtrlDelete($g_hTabAbout)
-
+			
 			GUICtrlDelete($g_hGUI_VILLAGE_TAB)
-			GUICtrlDelete($g_hGUI_BUILDER_BASE_TAB) ; BBase - Team AIO Mod++
 			GUICtrlDelete($g_hGUI_MISC_TAB)
 			GUICtrlDelete($g_hGUI_DONATE_TAB)
 			GUICtrlDelete($g_hGUI_UPGRADE_TAB)
 			GUICtrlDelete($g_hGUI_NOTIFY_TAB)
-
+			
 			GUICtrlDelete($g_hGUI_ATTACK_TAB)
 			GUICtrlDelete($g_hGUI_TRAINARMY_TAB)
 			GUICtrlDelete($g_hGUI_TRAINARMY_ARMY_TAB)
@@ -1167,12 +1164,18 @@ Func BotGuiModeToggle()
 			GUICtrlDelete($g_hGUI_ACTIVEBASE_TAB)
 			GUICtrlDelete($g_hGUI_ATTACKOPTION_TAB)
 			GUICtrlDelete($g_hGUI_STRATEGIES_TAB)
-			GUICtrlDelete($g_hGUI_MOD_TAB)
 			GUICtrlDelete($g_hGUI_BOT_TAB)
 			GUICtrlDelete($g_hGUI_LOG_SA)
-			GUICtrlDelete($g_hGUI_LOG_BB) ; BBase - Team AIO Mod++
 			GUICtrlDelete($g_hGUI_SWITCH_OPTIONS_TAB)
 			GUICtrlDelete($g_hGUI_STATS_TAB)
+			
+			#Region - Team__AiO__MOD
+			GUICtrlDelete($g_hTabBuilderBase)
+			GUICtrlDelete($g_hTabMOD)
+			GUICtrlDelete($g_hGUI_BUILDER_BASE_TAB) ; BBase - Team AIO Mod++
+			GUICtrlDelete($g_hGUI_MOD_TAB) ; Mod - Team AIO Mod++
+			GUICtrlDelete($g_hGUI_LOG_BB) ; BBase - Team AIO Mod++
+			#EndRegion - Team__AiO__MOD
 
 			For $i = $g_hFirstControlToHide To $g_hLastControlToHide
 				GUICtrlDelete($i)
@@ -1734,7 +1737,7 @@ Func tabMain()
 			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_ATTACK)
 			tabAttack()
 
-		#Region - BBase - Team AIO Mod++
+			#Region - BBase - Team AIO Mod++
 		Case $tabidx = 3 ; Builder Base
 			GUISetState(@SW_HIDE, $g_hGUI_LOG)
 			GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
@@ -1753,7 +1756,7 @@ Func tabMain()
 			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_ABOUT)
 			GUISetState(@SW_HIDE, $g_hGUI_BUILDER_BASE)
 			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_MOD)
-		#EndRegion - BBase - Team AIO Mod++
+			#EndRegion - BBase - Team AIO Mod++
 
 		Case $tabidx = 5 ; Options
 			GUISetState(@SW_HIDE, $g_hGUI_LOG)
@@ -2153,7 +2156,7 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 		Case $g_hTabMain
 			; the icons for main tab
 			Local $aIconIndex = [$eIcnHourGlass, $eIcnTH13, $eIcnAttack, $eIcnBuilderHall, $eIcnAIOMod, $eIcnGUI, $eIcnInfo]
-		#EndRegion BBase - Team AIO Mod++
+			#EndRegion BBase - Team AIO Mod++
 
 		Case $g_hGUI_VILLAGE_TAB
 			; the icons for village tab
@@ -2198,7 +2201,7 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 			; the icons for Attack Options tab
 			Local $aIconIndex = [$eIcnMagnifier, $eIcnCamp, $eIcnLightSpell, $eIcnSilverStar, $eIcnTrophy]
 
-		; Team AiO MOD++ (2019)
+			; Team AiO MOD++ (2019)
 		Case $g_hGUI_MOD_TAB
 			; the icons for Mods tab
 			; $eIcnMiscMod, $eIcnWarPreparation
@@ -2221,11 +2224,11 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 			; the icons for stats tab
 			Local $aIconIndex = [$eIcnGoldElixir, $eIcnOptions, $eIcnCamp, $eIcnCCRequest, $eIcnGoldElixir]
 
-		#Region BBase - Team AIO Mod++
+			#Region BBase - Team AIO Mod++
 		Case $g_hGUI_BUILDER_BASE_TAB
 			; the icons for builder base tab
 			Local $aIconIndex = [$eIcnGold, $eIcnLaboratory, $eIcnTroops]
-		#EndRegion BBase - Team AIO Mod++
+			#EndRegion BBase - Team AIO Mod++
 		Case Else
 			;do nothing
 	EndSwitch
@@ -2282,7 +2285,7 @@ Func AddImageToModTab($nCtrl, ByRef $hImageList, $nTabIndex, $nItem, $g_sLibModI
 			DllCall("user32.dll", "int", "DestroyIcon", "hwnd", DllStructGetData($hIcon, 1))
 		EndIf
 	EndIf
-EndFunc   ;==>AddImageToTab
+EndFunc   ;==>AddImageToModTab
 
 Func _GUICtrlListView_SetItemHeightByFont($hListView, $iHeight)
 	; Get font of ListView control
@@ -2428,4 +2431,4 @@ Func ConsoleWindow($bShow = Default)
 		_WinAPI_FreeConsole()
 		$bConsoleAllocated = False
 	EndIf
-EndFunc
+EndFunc   ;==>ConsoleWindow

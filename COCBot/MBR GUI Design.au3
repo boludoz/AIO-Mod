@@ -51,8 +51,10 @@ Global $g_bBotDockedShrinked = False ; Bot is shrinked or not when docked
 Global $g_hFrmBotButtons, $g_hFrmBotLogoUrlSmall, $g_hFrmBotEx = 0, $g_hLblBotTitle, $g_hLblBotShrink = 0, $g_hLblBotExpand = 0, $g_hLblBotMiniGUI = 0, $g_hLblBotNormalGUI = 0 _
 		, $g_hLblBotMinimize = 0, $g_hLblBotClose = 0, $g_hFrmBotBottom = 0, $g_hFrmBotEmbeddedShield = 0, $g_hFrmBotEmbeddedShieldInput = 0, $g_hFrmBotEmbeddedGraphics = 0
 Global $g_hFrmBot_MAIN_PIC = 0, $g_hFrmBot_URL_PIC = 0, $g_hFrmBot_URL_PIC2 = 0
-Global $g_hTabMain = 0, $g_hTabLog = 0, $g_hTabVillage = 0, $g_hTabAttack = 0, $g_hTabMOD = 0, $g_hTabBot = 0, $g_hTabAbout = 0
+Global $g_hTabMain = 0, $g_hTabLog = 0, $g_hTabVillage = 0, $g_hTabAttack = 0, $g_hTabBot = 0, $g_hTabAbout = 0
+Global $g_hTabBuilderBase = 0, $g_hTabMOD = 0 ; Team AIO Mod++
 Global $g_hStatusBar = 0
+
 Global $g_hTiShow = 0, $g_hTiHide = 0, $g_hTiDonate = 0, $g_hTiAbout = 0, $g_hTiStartStop = 0, $g_hTiPause = 0, $g_hTiExit = 0
 Global $g_aFrmBotPosInit[8] = [0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_hFirstControlToHide = 0, $g_hLastControlToHide = 0, $g_aiControlPrevState[1]
@@ -69,8 +71,10 @@ Global $g_oGuiNotInMini = ObjCreate("Scripting.Dictionary")
 #include "GUI\MBR GUI Design Attack.au3"
 #include "GUI\MBR GUI Design Bot.au3"
 #include "GUI\MBR GUI Design About.au3"
-; Team AiO MOD++ (2019)
+#Region - Team AiO MOD++ (2020)
+#include "Team__AiO__MOD++\GUI\MOD GUI Design - Builder Base.au3"
 #include "Team__AiO__MOD++\GUI\MOD GUI Design.au3"
+#EndRegion - Team AiO MOD++ (2020)
 
 Func CreateMainGUI()
 
@@ -281,25 +285,25 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 		$g_hFrmBotBottom = GUICreate("My Bot Buttons", $_GUI_MAIN_WIDTH, $_GUI_BOTTOM_HEIGHT, 0, $_GUI_MAIN_HEIGHT - $_GUI_BOTTOM_HEIGHT + $_GUI_MAIN_TOP, _
 				BitOR($WS_CHILD, $WS_TABSTOP), 0, $g_hFrmBot)
 
-	;~ ------------------------------------------------------
-	;~ Header Menu
-	;~ ------------------------------------------------------
+;~ ------------------------------------------------------
+;~ Header Menu
+;~ ------------------------------------------------------
 		GUISwitch($g_hFrmBot)
 		;$idMENU_DONATE = GUICtrlCreateMenu("&" & GetTranslatedFileIni("MBR GUI Design Bottom", "g_hLblDonate_Info_01", "Paypal Donate?"))
 		;_GUICtrlMenu_SetItemType(_GUICtrlMenu_GetMenu($g_hFrmBot), 0, $MFT_RIGHTJUSTIFY) ; move to right
 		;$idMENU_DONATE_SUPPORT = GUICtrlCreateMenuItem(GetTranslatedFileIni("MBR GUI Design Bottom", "g_hLblDonate", "Support the development"), $idMENU_DONATE)
 		;GUICtrlSetOnEvent(-1, "")
 
-	;~ ------------------------------------------------------
-	;~ GUI Bottom Panel
-	;~ ------------------------------------------------------
+;~ ------------------------------------------------------
+;~ GUI Bottom Panel
+;~ ------------------------------------------------------
 		SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_02", "Loading GUI Bottom..."))
 		GUISwitch($g_hFrmBotBottom)
 		CreateBottomPanel()
 
-	;~ ------------------------------------------------------
-	;~ GUI Child Tab Files
-	;~ ------------------------------------------------------
+;~ ------------------------------------------------------
+;~ GUI Child Tab Files
+;~ ------------------------------------------------------
 		GUISwitch($g_hFrmBotEx)
 
 		; Bottom status bar
@@ -332,12 +336,12 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 	CreateAttackTab()
 	
 	#Region - Team AIO Mod++
-	SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_06", "Loading Builder Base tab...")) 
+	SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_06", "Loading Builder Base tab..."))
 	CreateBuilderBaseTab()
 
 	SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_10", "Loading Mods tab..."))
 	CreateMODTab()
-	#EndRegion
+	#EndRegion - Team AIO Mod++
 	
 	SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_06", "Loading Bot tab..."))
 	CreateBotTab() ; also creates  $g_hLastControlToHide
@@ -363,8 +367,8 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 	$g_hTabLog = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_01", "Log"))
 	$g_hTabVillage = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_02", "Village"))
 	$g_hTabAttack = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_03", "Attack Plan"))
-	$g_hTabBuilderBase = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_10", "B. Base"))  ; BBase - Team AIO Mod++
-	$g_hTabMOD = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_06", "Mods"))           ; Team AIO Mod++
+	$g_hTabBuilderBase = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_10", "BBase"))  ; BBase - Team AIO Mod++
+	$g_hTabMOD = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_06", "Mods")) ; Team AIO Mod++
 	$g_hTabBot = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_04", "Bot"))
 	$g_hTabAbout = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_05", "About"))
 	GUICtrlCreateTabItem("")
@@ -378,8 +382,6 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 	; Static to avoid GDI Handle leak
 	Static $g_hTabMain_ImageList = 0
 	Static $g_hGUI_VILLAGE_TAB_ImageList = 0
-	Static $g_hGUI_BUILDER_BASE_TAB_ImageList = 0 ; BBase - Team AIO Mod++
-	Static $g_hGUI_MOD_TAB_ImageList = 0 ; Team AIO Mod++
 	Static $g_hGUI_MISC_TAB_ImageList = 0
 	Static $g_hGUI_DONATE_TAB_ImageList = 0
 	Static $g_hGUI_UPGRADE_TAB_ImageList = 0
@@ -395,7 +397,15 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 	Static $g_hGUI_BOT_TAB_ImageList = 0
 	Static $g_hGUI_SWITCH_OPTIONS_TAB_ImageList = 0
 	Static $g_hGUI_STATS_TAB_ImageList = 0
+	
+	#Region - Team__AiO__MOD
+	Static $g_hGUI_BUILDER_BASE_TAB_ImageList = 0
+	Static $g_hGUI_MOD_TAB_ImageList = 0
 
+	Bind_ImageList($g_hGUI_MOD_TAB, $g_hGUI_MOD_TAB_ImageList)
+	Bind_ImageList($g_hGUI_BUILDER_BASE_TAB, $g_hGUI_BUILDER_BASE_TAB_ImageList)
+	#EndRegion - Team__AiO__MOD
+	
 	Bind_ImageList($g_hTabMain, $g_hTabMain_ImageList)
 
 	Bind_ImageList($g_hGUI_VILLAGE_TAB, $g_hGUI_VILLAGE_TAB_ImageList)
@@ -405,15 +415,14 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 	Bind_ImageList($g_hGUI_NOTIFY_TAB, $g_hGUI_NOTIFY_TAB_ImageList)
 
 	Bind_ImageList($g_hGUI_ATTACK_TAB, $g_hGUI_ATTACK_TAB_ImageList)
-	Bind_ImageList($g_hGUI_BUILDER_BASE_TAB, $g_hGUI_BUILDER_BASE_TAB_ImageList) ; Team AIO Mod++
 	Bind_ImageList($g_hGUI_TRAINARMY_TAB, $g_hGUI_TRAINARMY_TAB_ImageList)
 	Bind_ImageList($g_hGUI_SEARCH_TAB, $g_hGUI_SEARCH_TAB_ImageList)
 	Bind_ImageList($g_hGUI_DEADBASE_TAB, $g_hGUI_DEADBASE_TAB_ImageList)
 	Bind_ImageList($g_hGUI_ACTIVEBASE_TAB, $g_hGUI_ACTIVEBASE_TAB_ImageList)
 	Bind_ImageList($g_hGUI_ATTACKOPTION_TAB, $g_hGUI_ATTACKOPTION_TAB_ImageList)
 	Bind_ImageList($g_hGUI_STRATEGIES_TAB, $g_hGUI_STRATEGIES_TAB_ImageList)
+	
 
-	Bind_ImageList($g_hGUI_MOD_TAB, $g_hGUI_MOD_TAB_ImageList)
 	Bind_ImageList($g_hGUI_BOT_TAB, $g_hGUI_BOT_TAB_ImageList)
 	Bind_ImageList($g_hGUI_SWITCH_OPTIONS_TAB, $g_hGUI_SWITCH_OPTIONS_TAB_ImageList)
 	Bind_ImageList($g_hGUI_STATS_TAB, $g_hGUI_STATS_TAB_ImageList)
@@ -517,7 +526,7 @@ Func CheckDpiAwareness($bCheckOnlyIfAlreadyAware = False, $bForceDpiAware = Fals
 		$bDpiAware = $bForceDpiAware = True _ ; override to set DPI Awareness regardless of current state
 				Or $g_bChkBackgroundMode = False _ ; in non background mode Desktop screen capture is totally wrong due to the scaling
 				Or GetProcessDpiAwareness(GetAndroidPid()) ; in normal background mode using WinAPI and Android is DPI Aware, bot must be too or window will be scaled and blury
-				; 2019-04-19 cosote: removed "$g_bAndroidAdbScreencap = False And" from line above
+		; 2019-04-19 cosote: removed "$g_bAndroidAdbScreencap = False And" from line above
 		$bChanged = $bDpiAware And Not $sbDpiAware
 		If $bChanged Then ; only required when not running with screencap, but even if screencap is running, change it
 			$sbDpiAware = True ; do it only once, assume bot will become DPI aware

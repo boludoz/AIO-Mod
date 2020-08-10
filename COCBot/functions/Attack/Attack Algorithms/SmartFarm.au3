@@ -55,7 +55,7 @@ Func TestSmartFarm($bFast = True)
 EndFunc   ;==>TestSmartFarm
 
 ; Collectors | Mines | Drills | All (Default)
-Func ChkSmartFarm($TypeResources = "All")
+Func ChkSmartFarm($sTypeResources = "All")
 
 	; Initial Timer
 	Local $hTimer = TimerInit()
@@ -80,7 +80,7 @@ Func ChkSmartFarm($TypeResources = "All")
 	setlog("TH Details: " & _ArrayToString($THdetails, "|"))
 
 	; [0] = x , [1] = y , [2] = Distance to Redline ,[3] = In/Out, [4] = Side,  [5]= Is array Dim[2] with 5 coordinates to deploy
-	Local $aAll = SmartFarmDetection($TypeResources)
+	Local $aAll = SmartFarmDetection($sTypeResources)
 	If $g_bDebugSetlog Then SetDebugLog(" TOTAL detection Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
 
 	; Let's determinate what resource is out or in side the village
@@ -201,7 +201,7 @@ Func ChkSmartFarm($TypeResources = "All")
 	#Region - Max Side - Team AIO Mod++
 	If $g_bMaxSidesSF Then
 		Local $aSides2[4][2] = [ ["TL", $aMainSide[0]], ["TR", $aMainSide[1]], ["BL", $aMainSide[2]], ["BR", $aMainSide[3]] ]
-		_ArraySort($aSides2, 0, 0, 0, 0)
+		_ArraySort($aSides2, 0, 0, 0, 1)
 
 		Local $iMaxL = ((UBound($BestSideToAttack) -1) > ($g_iCmbMaxSidesSF - 1)) ? ($g_iCmbMaxSidesSF - 1) : (UBound($BestSideToAttack) - 1)
 		Local $BestSideToAttack[0]

@@ -86,7 +86,7 @@ Func BotHumanization()
 			$g_iMaxActionsNumber = Random(1, _GUICtrlComboBox_GetCurSel($g_hCmbMaxActionsNumber) + 1, 1)
 			SetLog("AiO++ Will Do " & $g_iMaxActionsNumber & " Human Actions During This Loop ...", $COLOR_INFO)
 			For $i = 1 To $g_iMaxActionsNumber
-				randomSleep(4000)
+				If randomSleep(4000) Then Return
 				ReturnAtHome()
 				RandomHumanAction()
 			Next
@@ -94,7 +94,7 @@ Func BotHumanization()
 			SetLog("All Actions Disabled, Skipping ...", $COLOR_WARNING)
 		EndIf
 		SetLog("Bot Humanization Finished !", $COLOR_SUCCESS1)
-		randomSleep(3000)
+		If randomSleep(3000) Then Return
 	EndIf
 EndFunc   ;==>BotHumanization
 
@@ -168,8 +168,6 @@ Func MatchPriorityNValue($ActionNumber)
 	EndSwitch
 EndFunc   ;==>MatchPriorityNValue
 
-
-
 Func WaitForReplayWindow()
 	SetLog("Waiting For Replay Screen...", $COLOR_ACTION)
 	Local $CheckStep = 0
@@ -216,7 +214,7 @@ Func AccelerateReplay($g_iReplayToPause)
 	If $CurrentSpeed <> $MaxSpeed Then SetLog("Let's Make The Replay Faster ...", $COLOR_OLIVE)
 	While $CurrentSpeed < $MaxSpeed
 		Click(820, 630 + $g_iBottomOffsetY) ; click on the speed button
-		randomSleep(500)
+		If randomSleep(500) Then Return
 		$CurrentSpeed += 1
 	WEnd
 EndFunc   ;==>AccelerateReplay
@@ -239,7 +237,7 @@ Func DoAPauseDuringReplay($g_iReplayToPause)
 		If $PauseScore > $MinimumToPause Then
 			SetLog("Let's Do a Small Pause To See What Happens ...", $COLOR_OLIVE)
 			Click(750, 630 + $g_iBottomOffsetY) ; click pause button
-			randomSleep(10000, 3000)
+			If randomSleep(10000, 3000) Then Return
 			SetLog("Pause Finished, Let's Relaunch Replay!", $COLOR_OLIVE)
 			Click(750, 630 + $g_iBottomOffsetY) ; click play button
 		EndIf
@@ -247,22 +245,22 @@ Func DoAPauseDuringReplay($g_iReplayToPause)
 EndFunc   ;==>DoAPauseDuringReplay
 
 Func VisitAPlayer()
-	randomSleep(1000)
+	If randomSleep(1000) Then Return
 	SetLog("Let's Visit a Player ...", $COLOR_INFO)
 	If QuickMIS("BC1", $g_sImgHumanizationVisit) Then
 		Click($g_iQuickMISX, $g_iQuickMISY)
-		randomSleep(8000)
+		If randomSleep(8000) Then Return
 		For $i = 0 To Random(1, 4, 1)
 			SetLog("We Will Click On a Random Builing ...", $COLOR_OLIVE)
 			Local $xInfo = Random(300, 500, 1)
 			Local $yInfo = Random(300, 402 + $g_iMidOffsetY, 1)
 			Click($xInfo, $yInfo) ; click on a random builing
-			randomSleep(1500)
+			If randomSleep(1500) Then Return
 			SetLog("... And Open His Info Window ...", $COLOR_OLIVE)
 			Click(430, 575 + $g_iBottomOffsetY) ; open the info window about building
-			randomSleep(8000)
+			If randomSleep(8000) Then Return
 			Click(685, 145 + $g_iMidOffsetY) ;Click Away
-			randomSleep(3000)
+			If randomSleep(3000) Then Return
 		Next
 	Else
 		SetLog("Error When Trying to Find Visit Button ... Skipping ...", $COLOR_WARNING)
@@ -271,7 +269,7 @@ EndFunc   ;==>VisitAPlayer
 
 Func DoNothing()
 	SetLog("Let The Bot Wait a Little Before Continue ...", $COLOR_OLIVE)
-	randomSleep(8000, 3000)
+	If randomSleep(8000, 3000) Then Return
 EndFunc   ;==>DoNothing
 
 Func LookAtRedNotifications()
@@ -281,9 +279,9 @@ Func LookAtRedNotifications()
 	If _ColorCheck(_GetPixelColor(50, 137, True), "F5151D", 20) Then
 		SetLog("You Have a New Message ...", $COLOR_OLIVE)
 		Click(40, 150) ; open Messages button
-		randomSleep(8000, 3000)
+		If randomSleep(8000, 3000) Then Return
 		Click(765, 87 + $g_iMidOffsetY) ; close window
-		randomSleep(2000)
+		If randomSleep(2000) Then Return
 	Else
 		$NoNotif += 1
 	EndIf
@@ -291,11 +289,11 @@ Func LookAtRedNotifications()
 	If _ColorCheck(_GetPixelColor(50, 76, True), "F5151D", 20) Then
 		SetLog("Let's See The Current League You Are In ...", $COLOR_OLIVE)
 		Click(40, 90) ; open Cup button
-		randomSleep(4000)
+		If randomSleep(4000) Then Return
 		Click(445, 580 + $g_iMidOffsetY) ; click Okay
-		randomSleep(1500)
+		If randomSleep(1500) Then Return
 		Click(830, 50 + $g_iMidOffsetY) ; close window
-		randomSleep(2000)
+		If randomSleep(2000) Then Return
 	Else
 		$NoNotif += 1
 	EndIf
@@ -303,9 +301,9 @@ Func LookAtRedNotifications()
 	If _ColorCheck(_GetPixelColor(50, 451 + $g_iBottomOffsetY, True), "F5151D", 20) Then
 		SetLog("Current War To Look At ...", $COLOR_OLIVE)
 		Click(40, 490 + $g_iMidOffsetY) ; open War menu
-		randomSleep(8000, 3000)
+		If randomSleep(8000, 3000) Then Return
 		Click(70, 620 + $g_iBottomOffsetY) ; return home
-		randomSleep(2000)
+		If randomSleep(2000) Then Return
 	Else
 		$NoNotif += 1
 	EndIf
@@ -313,9 +311,9 @@ Func LookAtRedNotifications()
 	If _ColorCheck(_GetPixelColor(28, 323 + $g_iMidOffsetY, True), "F5151D", 20) Then
 		SetLog("New Messages On The Chat Room ...", $COLOR_OLIVE)
 		Click(20, 380 + $g_iMidOffsetY) ; open chat
-		randomSleep(3000)
+		If randomSleep(3000) Then Return
 		Click(330, 380 + $g_iMidOffsetY) ; close chat
-		randomSleep(2000)
+		If randomSleep(2000) Then Return
 	Else
 		$NoNotif += 1
 	EndIf
@@ -323,18 +321,18 @@ Func LookAtRedNotifications()
 	If _ColorCheck(_GetPixelColor(722, 614 + $g_iBottomOffsetY, True), "F5151D", 20) Then
 		SetLog("New Messages Or Events From SC To Read ...", $COLOR_OLIVE)
 		Click(715, 630 + $g_iBottomOffsetY) ; open events
-		randomSleep(3000)
+		If randomSleep(3000) Then Return
 
 		If _ColorCheck(_GetPixelColor(245, 80 + $g_iMidOffsetY, True), "F0F4F0", 20) Then ; check if we are on events/news tab
 			Click(435, 80 + $g_iMidOffsetY) ; open new tab
-			randomSleep(3000)
+			If randomSleep(3000) Then Return
 		Else
 			Click(245, 80 + $g_iMidOffsetY) ; open events tab
-			randomSleep(3000)
+			If randomSleep(3000) Then Return
 		EndIf
 
 		Click(760, 90 + $g_iMidOffsetY) ; close settings
-		randomSleep(2000)
+		If randomSleep(2000) Then Return
 	Else
 		$NoNotif += 1
 	EndIf
@@ -342,7 +340,7 @@ Func LookAtRedNotifications()
 	If _ColorCheck(_GetPixelColor(832, 578 + $g_iBottomOffsetY, True), "683072", 20) Or _ColorCheck(_GetPixelColor(832, 577 + $g_iBottomOffsetY, True), "F5151D", 20) Then
 		SetLog("There Is Something New On The Shop ...", $COLOR_OLIVE)
 		Click(800, 610 + $g_iBottomOffsetY) ; open Shop
-		randomSleep(2000)
+		If randomSleep(2000) Then Return
 		Local $NeedScroll = Random(0, 1, 1)
 		Local $NeedScroll2 = Random(0, 1, 1)
 		If $NeedScroll = 1 Then
@@ -351,7 +349,7 @@ Func LookAtRedNotifications()
 			Local $y = Random(330 - 10 + $g_iMidOffsetY, 330 + 10 + $g_iMidOffsetY, 1)
 			ClickDrag($xStart, $y, $xEnd, $y) ; scroll the shop
 			If $NeedScroll2 = 1 Then
-				randomSleep(2000)
+				If randomSleep(2000) Then Return
 				$xEnd = Random(300, 800, 1)
 				$xStart = Random($xEnd - 250, $xEnd - 220, 1)
 				$y = Random(330 - 10 + $g_iMidOffsetY, 330 + 10 + $g_iMidOffsetY, 1)
@@ -359,9 +357,9 @@ Func LookAtRedNotifications()
 			EndIf
 		EndIf
 
-		randomSleep(2000)
+		If randomSleep(2000) Then Return
 		Click(820, 40) ; return home
-		randomSleep(2000)
+		If randomSleep(2000) Then Return
 	Else
 		$NoNotif += 1
 	EndIf
@@ -369,16 +367,16 @@ Func LookAtRedNotifications()
 	If _ColorCheck(_GetPixelColor(50, 17, True), "F5151D", 20) Then
 		SetLog("Maybe You Have a New Friend Request, Let Me Check ...", $COLOR_OLIVE)
 		Click(40, 40) ; open profile
-		randomSleep(2000)
+		If randomSleep(2000) Then Return
 
 		If IsClanOverview() Then
 			If _ColorCheck(_GetPixelColor(773, 63, True), "E20814", 20) Then
 				SetLog("It's Confirmed, You Have a New Friend Request, Let Me Check ...", $COLOR_OLIVE)
 				Click(720, 50 + $g_iMidOffsetY)
-				randomSleep(2000)
+				If randomSleep(2000) Then Return
 				If QuickMIS("BC1", $g_sImgHumanizationFriend, 720, 130 + $g_iMidOffsetY, 780, 570 + $g_iMidOffsetY) Then
 					Click($g_iQuickMISWOffSetX, $g_iQuickMISWOffSetY)
-					randomSleep(1500)
+					If randomSleep(1500) Then Return
 					If QuickMIS("BC1", $g_sImgHumanizationFriend, 440, 350 + $g_iMidOffsetY, 590, 440 + $g_iMidOffsetY) Then
 						Click($g_iQuickMISWOffSetX, $g_iQuickMISWOffSetY)
 					Else
@@ -393,7 +391,7 @@ Func LookAtRedNotifications()
 		Else
 			SetLog("Error When Trying To Open Social Tab ... Skipping ...", $COLOR_WARNING)
 		EndIf
-		randomSleep(2000)
+		If randomSleep(2000) Then Return
 	Else
 		$NoNotif += 1
 	EndIf
@@ -406,19 +404,19 @@ Func CollectAchievements()
 	If _ColorCheck(_GetPixelColor(50, 17, True), "F5151D", 20) Then
 		SetLog("WoW, Maybe An Achievement To Collect !", $COLOR_OLIVE)
 		Click(40, 40) ; open profile
-		randomSleep(4000)
+		If randomSleep(4000) Then Return
 
 		If IsClanOverview() Then
 			If QuickMIS("BC1", $g_sImgHumanizationClaimReward, 680) Then
 				Click($g_iQuickMISWOffSetX, $g_iQuickMISY)
 				SetLog("Reward Collected! Good Job Chief!", $COLOR_SUCCESS)
-				randomSleep(3000)
+				If randomSleep(3000) Then Return
 			Else
 				SetLog("No 'Claim Reward' Button Found ... Let Me Retry ...", $COLOR_ERROR)
 				If QuickMIS("BC1", $g_sImgHumanizationClaimReward, 680) Then
 					Click($g_iQuickMISWOffSetX, $g_iQuickMISY)
 					SetLog("Reward Collected! Good Job Chief!", $COLOR_SUCCESS)
-					randomSleep(3000)
+					If randomSleep(3000) Then Return
 				Else
 					SetLog("No 'Claim Reward' Button Found ... Skipping ...", $COLOR_ERROR)
 				EndIf
@@ -437,7 +435,7 @@ Func Scroll($MaxScroll)
 		Local $yStart = Random(600 - 20 + $g_iMidOffsetY, 600 + 20 + $g_iMidOffsetY, 1)
 		Local $yEnd = Random(200 - 20 + $g_iMidOffsetY, 200 + 20 + $g_iMidOffsetY, 1)
 		ClickDrag($x, $yStart, $x, $yEnd) ; generic random scroll
-		randomSleep(4000)
+		If randomSleep(4000) Then Return
 	Next
 EndFunc   ;==>Scroll
 
@@ -545,4 +543,4 @@ Func randomSleep($SleepTime, $Range = 0)
 	Local $SleepTimeF = Random($SleepTime - $Range, $SleepTime + $Range, 1)
 	If $g_bDebugClick Then SetLog("Default sleep : " & $SleepTime & " - Random sleep : " & $SleepTimeF, $COLOR_ORANGE)
 	Return _Sleep($SleepTimeF)
-EndFunc   ;==>randomSleep
+EndFunc   ;==>If randomSleep

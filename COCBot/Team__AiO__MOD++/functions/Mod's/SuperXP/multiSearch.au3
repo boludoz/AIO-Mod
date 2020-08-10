@@ -17,9 +17,9 @@ Func getCurrentXP($x_start, $y_start) ; -> Get Current/Total XP, Used in SuperXP
 	Return getOcrAndCapture("coc-ms", $x_start, $y_start, 100, 15, True)
 EndFunc   ;==>getCurrentXP
 
-Func multiMatchesPixelOnly($directory, $maxReturnPoints = 0, $fullCocAreas = "ECD", $redLines = "", $statFile = "", $minLevel = 0, $maxLevel = 1000, $x1 = 0, $y1 = 0, $x2 = $g_iGAME_WIDTH, $y2 = $g_iGAME_HEIGHT, $bCaptureNew = True, $xDiff = Default, $yDiff = Default, $forceReturnString = False, $saveSourceImg = False)
+Func multiMatchesPixelOnly($directory, $maxReturnPoints = 0, $fullCocAreas = "ECD", $redLines = "", $minLevel = 0, $maxLevel = 1000, $x1 = 0, $y1 = 0, $x2 = $g_iGAME_WIDTH, $y2 = $g_iGAME_HEIGHT, $bCaptureNew = True, $xDiff = Default, $yDiff = Default, $saveSourceImg = False)
 	; Setup arrays, including default return values for $return
-	Local $Result = ""
+	Local $sResult = ""
 	Local $res
 
 	; Capture the screen for comparison
@@ -47,22 +47,22 @@ Func multiMatchesPixelOnly($directory, $maxReturnPoints = 0, $fullCocAreas = "EC
 
 		; Loop through the array
 		For $i = 0 To UBound($aKeys) - 1
-			$Result &= RetrieveImglocProperty($aKeys[$i], "objectpoints") & "|"
+			$sResult &= RetrieveImglocProperty($aKeys[$i], "objectpoints") & "|"
 		Next
 	EndIf
 
-	If StringLen($Result) > 0 Then
-		If StringRight($Result, 1) = "|" Then $Result = StringLeft($Result, (StringLen($Result) - 1))
+	If StringLen($sResult) > 0 Then
+		If StringRight($sResult, 1) = "|" Then $sResult = StringLeft($sResult, (StringLen($sResult) - 1))
 		If ($xDiff <> Default) Or ($yDiff <> Default) Then
 			If $xDiff = Default Then $xDiff = 0
 			If $yDiff = Default Then $yDiff = 0
 
-			DelPosWithDiff($Result, $xDiff, $yDiff, True)
+			DelPosWithDiff($sResult, $xDiff, $yDiff, True)
 
-			Return $Result
+			Return $sResult
 		EndIf
 	EndIf
-	Return $Result
+	Return $sResult
 EndFunc   ;==>multiMatchesPixelOnly
 
 Func CloneAreaToSearch($x, $y, $x1, $y1)

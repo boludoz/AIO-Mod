@@ -15,11 +15,11 @@
 
 Func WatchDefense()
 	Click(40, 150) ; open messages tab - defenses tab
-	randomSleep(1500)
+	If randomSleep(1500) Then Return
 
 	If IsMessagesReplayWindow() Then
 		Click(190, 90 + $g_iMidOffsetY) ; open defenses tab
-		randomSleep(1500)
+		If randomSleep(1500) Then Return
 
 		If IsDefensesTab() Then
 			Click(710, (180 + $g_iMidOffsetY + (145 * Random(0, 2, 1)))) ; click on a random replay
@@ -27,13 +27,13 @@ Func WatchDefense()
 
 			If IsReplayWindow() Then
 				GetReplayDuration(0)
-				randomSleep(1000)
+				If randomSleep(1000) Then Return
 
 				If IsReplayWindow() Then
 					AccelerateReplay(0)
 				EndIf
 
-				randomSleep($g_aReplayDuration[1] / 3)
+				If randomSleep($g_aReplayDuration[1] / 3) Then Return
 
 				Local $IsBoring = Random(1, 5, 1)
 				If $IsBoring >= 4 Then
@@ -46,7 +46,7 @@ Func WatchDefense()
 						DoAPauseDuringReplay(0)
 					EndIf
 
-					randomSleep($g_aReplayDuration[1] / 3)
+					If randomSleep($g_aReplayDuration[1] / 3) Then Return
 
 					If IsReplayWindow() And $g_aReplayDuration[0] <> 0 Then
 						DoAPauseDuringReplay(0)
@@ -55,10 +55,10 @@ Func WatchDefense()
 					If IsReplayWindow() Then SetLog("Waiting For Replay End ...", $COLOR_ACTION)
 
 					While IsReplayWindow()
-						Sleep(2000)
+						If randomSleep(2000) Then Return
 					WEnd
 
-					randomSleep(1000)
+					If randomSleep(1000) Then Return
 					Click(70, 620 + $g_iBottomOffsetY) ; return home
 				EndIf
 			EndIf
@@ -72,11 +72,11 @@ EndFunc   ;==>WatchDefense
 
 Func WatchAttack()
 	Click(40, 150) ; open messages tab - defenses tab
-	randomSleep(1500)
+	If randomSleep(1500) Then Return
 
 	If IsMessagesReplayWindow() Then
 		Click(380, 90 + $g_iMidOffsetY) ; open attacks tab
-		randomSleep(1500)
+		If randomSleep(1500) Then Return
 
 		If IsAttacksTab() Then
 			Click(710, (180 + $g_iMidOffsetY + (145 * Random(0, 2, 1)))) ; click on a random replay
@@ -84,19 +84,19 @@ Func WatchAttack()
 
 			If IsReplayWindow() Then
 				GetReplayDuration(0)
-				randomSleep(1000)
+				If randomSleep(1000) Then Return
 
 				If IsReplayWindow() Then
 					AccelerateReplay(0)
 				EndIf
 
-				randomSleep($g_aReplayDuration[1] / 3)
+				If randomSleep($g_aReplayDuration[1] / 3) Then Return
 
 				Local $IsBoring = Random(1, 5, 1)
 				If $IsBoring >= 4 Then
 					If IsReplayWindow() Then
 						SetLog("This Replay Is Boring, Let Me Go Out ...", $COLOR_OLIVE)
-						randomSleep(1000)
+						If randomSleep(1000) Then Return
 						Click(70, 620 + $g_iBottomOffsetY) ; return home
 					EndIf
 				Else
@@ -104,7 +104,7 @@ Func WatchAttack()
 						DoAPauseDuringReplay(0)
 					EndIf
 
-					randomSleep($g_aReplayDuration[1] / 3)
+					If randomSleep($g_aReplayDuration[1] / 3) Then Return
 
 					If IsReplayWindow() And $g_aReplayDuration[0] <> 0 Then
 						DoAPauseDuringReplay(0)
@@ -113,10 +113,10 @@ Func WatchAttack()
 					If IsReplayWindow() Then SetLog("Waiting For Replay End ...", $COLOR_ACTION)
 
 					While IsReplayWindow()
-						Sleep(2000)
+						If randomSleep(2000) Then Return
 					WEnd
 
-					randomSleep(1000)
+					If randomSleep(1000) Then Return
 					Click(70, 620 + $g_iBottomOffsetY) ; return home
 				EndIf
 			EndIf

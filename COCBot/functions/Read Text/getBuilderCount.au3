@@ -16,8 +16,9 @@
 ; ===============================================================================================================================
 
 Func getBuilderCount($bSuppressLog = False, $bBuilderBase = False)
-	If $g_bChkOnlyFarm Then Return ; AIO Team - Only farm
 
+	If $g_bChkOnlyFarm Then SetLog("Only farm mode ON.", $COLOR_INFO) ; AIO Team - Only farm
+	
 	Local $sBuilderInfo, $aGetBuilders, $bIsMainPage = False
 
 	If Not $bBuilderBase Then

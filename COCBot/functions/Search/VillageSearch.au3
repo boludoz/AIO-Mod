@@ -241,11 +241,13 @@ Func _VillageSearch($bIncludePrepare = False) ;Control for searching a village t
 		; check deadbase
 		Local $checkDeadBase = $match[$DB] Or $match[$LB]
 		If $checkDeadBase Then
-			;$dbBase = checkDeadBase()
+			#Region - No League - Team AIO Mod++
 			If $g_bChkNoLeague[$DB] Then
-					If SearchNoLeague() Then
+					If SearchNoLeague() And $match[$DB] Then
 						SetLog("Dead Base is in No League, match found !", $COLOR_SUCCESS)
 						$dbBase = True
+					ElseIf $g_iSearchCount > 50 Then
+						$dbBase = checkDeadBase()
 					Else
 						SetLog("Dead Base is in a League, skipping search !", $COLOR_INFO)
 						$dbBase = False
@@ -253,6 +255,7 @@ Func _VillageSearch($bIncludePrepare = False) ;Control for searching a village t
 				Else
 				$dbBase = checkDeadBase()
 			EndIf
+			#EndRegion - No League - Team AIO Mod++
 		EndIf
 
 		; ----------------- CHECK WEAK BASE -------------------------------------------------

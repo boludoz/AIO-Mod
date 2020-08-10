@@ -15,27 +15,27 @@
 
 Func VisitBestPlayers()
 	Click(40, 80) ; open the cup menu
-	randomSleep(1500)
+	If randomSleep(1500) Then Return
 
 	If IsClanOverview() Then
 		Click(540, 80 + $g_iMidOffsetY) ; open best players menu
-		randomSleep(3000)
+		If randomSleep(3000) Then Return
 
 		If IsBestPlayers() Then
 			Local $PlayerList = Random(1, 2, 1)
 			Switch $PlayerList
 				Case 1
 					Click(270, 110 + $g_iMidOffsetY) ; look at global list
-					randomSleep(1000)
+					If randomSleep(1000) Then Return
 					Click(580, 320 + $g_iMidOffsetY + (52 * Random(0, 6, 1)))
-					randomSleep(500)
+					If randomSleep(500) Then Return
 					VisitAPlayer()
 					Click(70, 620 + $g_iBottomOffsetY) ; return home
 				Case 2
 					Click(640, 110 + $g_iMidOffsetY) ; look at local list
-					randomSleep(1000)
+					If randomSleep(1000) Then Return
 					Click(580, 160 + $g_iMidOffsetY + (52 * Random(0, 9, 1)))
-					randomSleep(500)
+					If randomSleep(500) Then Return
 					VisitAPlayer()
 					Click(70, 620 + $g_iBottomOffsetY) ; return home
 			EndSwitch
@@ -49,11 +49,11 @@ EndFunc   ;==>VisitBestPlayers
 
 Func LookAtBestClans()
 	Click(40, 80) ; open the cup menu
-	randomSleep(1500)
+	If randomSleep(1500) Then Return
 
 	If IsClanOverview() Then
 		Click(360, 50 + $g_iMidOffsetY) ; open best clans menu
-		randomSleep(3000)
+		If randomSleep(3000) Then Return
 
 		If IsBestClans() Then
 			Local $PlayerList = Random(1, 2, 1)
@@ -65,21 +65,21 @@ Func LookAtBestClans()
 					Click(640, 110 + $g_iMidOffsetY) ; look at local list
 					Click(580, 160 + $g_iMidOffsetY + (52 * Random(0, 9, 1)))
 			EndSwitch
-			randomSleep(1500)
+			If randomSleep(1500) Then Return
 
 			If QuickMIS("BC1", $g_sImgHumanizationWarLog) Then
 				SetLog("We Have Found a War Log Button, Let's Look At It ...", $COLOR_OLIVE)
 				Click(100, 370 + $g_iMidOffsetY) ; open war log if available
-				randomSleep(1500)
+				If randomSleep(1500) Then Return
 				Click(270, 105 + $g_iMidOffsetY) ; classic war
-				randomSleep(1500)
+				If randomSleep(1500) Then Return
 				SetLog("Let's Scrolling The War Log ...", $COLOR_OLIVE)
 				Scroll(Random(0, 2, 1)) ; scroll the war log
 				SetLog("Exiting War Log Window ...", $COLOR_OLIVE)
 				Click(50, 50 + $g_iMidOffsetY) ; click Return
 			EndIf
 
-			randomSleep(1500)
+			If randomSleep(1500) Then Return
 			SetLog("Let's Scrolling The Clan Member List...", $COLOR_OLIVE)
 			Scroll(Random(3, 5, 1)) ; scroll the member list
 

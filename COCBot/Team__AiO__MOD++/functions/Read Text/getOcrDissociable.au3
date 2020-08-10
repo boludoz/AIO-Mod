@@ -112,7 +112,7 @@ Func getOcrDOCR(ByRef Const $_hHBitmap, $sBundle)
 				$sBundle = StringTrimRight($sBundle, 1)
 			WEnd
 			Local $aSplittedPath = StringSplit($sBundle, "\")
-			$sSubDirFolder = $aSplittedPath[UBound($aSplittedPath, 1) - 2] & "_" & $aSplittedPath[UBound($aSplittedPath, 1) - 1]
+			$sSubDirFolder = $aSplittedPath[UBound($aSplittedPath, 1) - 2] & "_" & StringReplace($aSplittedPath[UBound($aSplittedPath, 1) - 1], ".docr", "")
 		Else
 			Local $sDrive = "", $sDir = "", $sFileName = "", $sExtension = ""
 			Local $aPathSplit = _PathSplit($sBundle, $sDrive, $sDir, $sFileName, $sExtension)

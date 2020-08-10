@@ -31,7 +31,7 @@ Func SaveConfig_MOD_CustomArmyBB()
 	_Ini_Add("BuilderBase", "BuilderAttack", $g_bChkBuilderAttack ? 1 : 0)
 	_Ini_Add("BuilderBase", "BBStopAt3", $g_bChkBBStopAt3 ? 1 : 0)
 	_Ini_Add("BuilderBase", "BBTrophiesRange", $g_bChkBBTrophiesRange ? 1 : 0)
-	_Ini_Add("BuilderBase", "BBRandomAttack", $g_bChkBBRandomAttack ? 1 : 0)
+	_Ini_Add("BuilderBase", "BBRandomAttack", $g_bChkBBCustomAttack ? 1 : 0)
 	For $i = 0 To 2
 		_Ini_Add("BuilderBase", "ScriptBB" & $i, $g_sAttackScrScriptNameBB[$i])
 	Next
@@ -61,10 +61,14 @@ Func SaveConfig_MOD_MiscTab()
 	
 	For $i = $DB To $LB
 		_Ini_Add("MiscTab", "DeployCastleFirst" & $i, $g_bDeployCastleFirst[$i])
-	Next			
+	Next
 	
+	; Save - Setlog limit - Team AIO Mod++
+	_Ini_Add("BotLogLineLimit", "Enable", (GUICtrlRead($g_hChkBotLogLineLimit) = ($GUI_CHECKED) ? (True) : (False) ))
+	_Ini_Add("BotLogLineLimit", "LimitValue", GUICtrlRead($g_hTxtLogLineLimit))
+
 	; Skip first check
-	_Ini_Add("Skipfirstcheck", "Enable", $g_bSkipfirstcheck ? 1 : 0)
+	_Ini_Add("AvoidLocate", "Enable", $g_bAvoidLocate ? 1 : 0)
 
 	; Remove edge obstacles
 	_Ini_Add("MiscTab", "EdgeObstacle", $g_bEdgeObstacle ? 1 : 0)
@@ -119,24 +123,24 @@ Func SaveConfig_MOD_MiscTab()
 	_Ini_Add("DonRecords", "CmbRestartEvery", $g_iCmbRestartEvery)
 	_Ini_Add("DonRecords", "RestartTimer", $g_sRestartTimer)
 
-		; Tooops;
-		For $i = 0 To $eTroopCount - 1
-			_Ini_Add("DonRecords", "DonateStatsTroops" & $i, $g_aiDonateStatsTroops[$i][0])
-		Next
-		_Ini_Add("DonRecords", "TotalDonateStatsTroops", $g_iTotalDonateStatsTroops)
-		
-		; Spell;
-		For $i = 0 To $eSpellCount - 1
-			_Ini_Add("DonRecords", "DonateStatsSpells" & $i, $g_aiDonateStatsSpells[$i][0])
-		Next
-		_Ini_Add("DonRecords", "TotalDonateStatsSpells", $g_iTotalDonateStatsSpells)
+	; Tooops;
+	For $i = 0 To $eTroopCount - 1
+		_Ini_Add("DonRecords", "DonateStatsTroops" & $i, $g_aiDonateStatsTroops[$i][0])
+	Next
+	_Ini_Add("DonRecords", "TotalDonateStatsTroops", $g_iTotalDonateStatsTroops)
+	
+	; Spell;
+	For $i = 0 To $eSpellCount - 1
+		_Ini_Add("DonRecords", "DonateStatsSpells" & $i, $g_aiDonateStatsSpells[$i][0])
+	Next
+	_Ini_Add("DonRecords", "TotalDonateStatsSpells", $g_iTotalDonateStatsSpells)
 
-		; Siege;
-		For $i = 0 To $eSiegeMachineCount - 1
-			_Ini_Add("DonRecords", "DonateStatsSieges" & $i, $g_aiDonateStatsSieges[$i][0])
-		Next
-		_Ini_Add("DonRecords", "TotalDonateStatsSieges", $g_iTotalDonateStatsSiegeMachines)
-		; ------------;
+	; Siege;
+	For $i = 0 To $eSiegeMachineCount - 1
+		_Ini_Add("DonRecords", "DonateStatsSieges" & $i, $g_aiDonateStatsSieges[$i][0])
+	Next
+	_Ini_Add("DonRecords", "TotalDonateStatsSieges", $g_iTotalDonateStatsSiegeMachines)
+	; ------------;
 
 EndFunc   ;==>SaveConfig_MOD_MiscTab
 

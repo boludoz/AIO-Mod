@@ -873,7 +873,7 @@ Func IsInGoblinMapSX($Retry = True, $maxRetry = 30, $timeBetweenEachRet = 300)
             ContinueLoop
         EndIf
 
-		$result = multiMatchesPixelOnly($directory, 0, "FV", "FV", "", 0, 1000, 0, 0, 150, 31)
+		$result = multiMatchesPixelOnly($directory, 0, "FV", "FV", 0, 1000, 0, 0, 150, 31)
 		If $g_bDebugSX Then SetDebugLog("SX|IsInGoblinMapSX|$result = " & $result)
 		$Found = (StringLen($result) > 2 And StringInStr($result, ","))
 
@@ -936,7 +936,7 @@ Func IsGoblinMapSXFound()
 	
 	$x1 = 418
 	$x2 = 453
-	$result = multiMatchesPixelOnly(($g_sImgFindSX & "Picnic"), 0, "FV", "FV", "", 0, 1000, $x1, 132, $x2, 668)
+	$result = multiMatchesPixelOnly(($g_sImgFindSX & "Picnic"), 0, "FV", "FV", 0, 1000, $x1, 132, $x2, 668)
 
 	; If StringInStr($result, "|") > 0 and $g_iGoblinMapOptSX = 2 Then
 	; 	$g_iGoblinMapOptSX = 1
@@ -946,7 +946,7 @@ Func IsGoblinMapSXFound()
 	If $g_iGoblinMapOptSX = 2 Then
 		$x1 = 557
 		$x2 = 661
-		$result = multiMatchesPixelOnly(($g_sImgFindSX & "Arena" ), 0, "FV", "FV", "", 0, 1000, $x1, 132, $x2, 668)
+		$result = multiMatchesPixelOnly(($g_sImgFindSX & "Arena" ), 0, "FV", "FV", 0, 1000, $x1, 132, $x2, 668)
 	EndIf
 
 	If $g_bDebugSX Then SetDebugLog("SX|IGMSX|$result = " & $result)

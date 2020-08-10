@@ -29,29 +29,23 @@ Func AreCollectorsNearRedline($percent)
 	_GetRedArea()
 
 	SuspendAndroid()
-	_CaptureRegion2()
-	Global $g_aiPixelMine = _GetLocationMine(False)
-	Global $g_aiPixelElixir = _GetLocationElixir(False)
-	Global $g_aiPixelDarkElixir = _GetLocationDarkElixir(False)
-	ResumeAndroid()
-
-	If Not (IsArray($g_aiPixelMine) Or IsArray($g_aiPixelElixir) Or (IsArray($g_aiPixelDarkElixir) And ($g_iTownHallLevel > 6) And (Not $g_bSmartZapEnable))) Then
-		SetLog("Are collectors outside | No mines/collectors/drills detected.", $COLOR_INFO)
-		Return False
-	Else
-		If IsArray($g_aiPixelMine) Then _ArrayAdd($g_aiPixelNearCollector, $g_aiPixelMine, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
-		If IsArray($g_aiPixelElixir) Then _ArrayAdd($g_aiPixelNearCollector, $g_aiPixelElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
-		If IsArray($g_aiPixelDarkElixir) Then _ArrayAdd($g_aiPixelNearCollector, $g_aiPixelDarkElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
+	$g_aiPixelMine = GetLocationMine()
+	If (IsArray($g_aiPixelMine)) Then
+		_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelMine, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
 	EndIf
+	$g_aiPixelElixir = GetLocationElixir()
+	If (IsArray($g_aiPixelElixir)) Then
+		_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
+	EndIf
+	ResumeAndroid()
 
 	$g_bScanMineAndElixir = True
 
 	Global $colNbr = UBound($g_aiPixelNearCollector)
 
 	SetLog("Located collectors in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds")
-	SetLog("[" & UBound($g_aiPixelElixir) & "] Elixir collectors", $COLOR_INFO)
-	SetLog("[" & UBound($g_aiPixelMine) & "] Gold mines", $COLOR_INFO)
-	SetLog("[" & UBound($g_aiPixelDarkElixir) & "] Dark elixir drills", $COLOR_INFO)
+	SetLog("[" & UBound($g_aiPixelMine) & "] Gold Mines")
+	SetLog("[" & UBound($g_aiPixelElixir) & "] Elixir Collectors")
 
  	Local $diamondx = $g_iMilkFarmOffsetX + $g_iMilkFarmOffsetXStep * $g_iCmbRedlineTiles
  	Local $diamondy = $g_iMilkFarmOffsetY + $g_iMilkFarmOffsetYStep * $g_iCmbRedlineTiles
@@ -64,8 +58,8 @@ Func AreCollectorsNearRedline($percent)
 			Local $pixelCoord = $g_aiPixelRedArea[$i]
 			For $j = 0 To $colNbr - 1
 				If $arrCollectorsFlag[$j] <> True Then
-					Local $aXY = $g_aiPixelNearCollector[$j]
-					If Abs(($pixelCoord[0] - $aXY[0]) / $diamondx) + Abs(($pixelCoord[1] - $aXY[1]) / $diamondy) <= 1 Then
+					Local $pixelCoord2 = $g_aiPixelNearCollector[$j]
+					If Abs(($pixelCoord[0] - $pixelCoord2[0]) / $diamondx) + Abs(($pixelCoord[1] - $pixelCoord2[1]) / $diamondy) <= 1 Then
 						$arrCollectorsFlag[$j] = True
 						$iTotalCollectorNearRedline += 1
 					EndIf

@@ -15,21 +15,21 @@
 
 Func LookAtWarLog()
 	Click(20, 380 + $g_iMidOffsetY) ; open chat
-	randomSleep(3000)
+	If randomSleep(3000) Then Return
 
 	If ChatOpen() Then
-		randomSleep(1500)
+		If randomSleep(1500) Then Return
 
 		If IsClanChat() Then
 			Click(120, 30) ; open the clan menu
-			randomSleep(1500)
+			If randomSleep(1500) Then Return
 
 			If IsClanOverview() Then
 				If QuickMIS("BC1", $g_sImgHumanizationWarLog) Then ; October Update Changed
 					Click($g_iQuickMISWOffSetX, $g_iQuickMISWOffSetY) ; open war log
-					randomSleep(500)
+					If randomSleep(500) Then Return
 					Click(258, 135) ;Click Classic War Log
-					randomSleep(500)
+					If randomSleep(500) Then Return
 					SetLog("Let's Scrolling The War Log ...", $COLOR_OLIVE)
 					Scroll(Random(1, 3, 1)) ; scroll the war log
 				Else
@@ -37,7 +37,7 @@ Func LookAtWarLog()
 				EndIf
 
 				Click(830, 45 + $g_iMidOffsetY) ; close window
-				randomSleep(1000)
+				If randomSleep(1000) Then Return
 				Click(330, 380 + $g_iMidOffsetY) ; close chat
 			Else
 				SetLog("Error When Trying To Open Clan Overview ... Skipping ...", $COLOR_WARNING)
@@ -52,21 +52,21 @@ EndFunc   ;==>LookAtWarLog
 
 Func VisitClanmates()
 	Click(20, 380 + $g_iMidOffsetY) ; open chat
-	randomSleep(3000)
+	If randomSleep(3000) Then Return
 
 	If ChatOpen() Then
-		randomSleep(1500)
+		If randomSleep(1500) Then Return
 
 		If IsClanChat() Then
 			Click(120, 30) ; open the clan menu
-			randomSleep(1500)
+			If randomSleep(1500) Then Return
 
 			If IsClanOverview() Then
 				SetLog("Let's Visit a Random Player ...", $COLOR_OLIVE)
 				Click(660, 428 + $g_iMidOffsetY + (52 * Random(0, 5, 1))) ; click on a random player
-				randomSleep(1500) ;Was less due to that bot was unable to detect visit button
+				If randomSleep(1500) Then Return ;Was less due to that bot was unable to detect visit button
 				VisitAPlayer()
-				randomSleep(500)
+				If randomSleep(500) Then Return
 				Click(70, 620 + $g_iBottomOffsetY) ; return home
 			Else
 				SetLog("Error When Trying To Open Clan overview ... Skipping ...", $COLOR_WARNING)

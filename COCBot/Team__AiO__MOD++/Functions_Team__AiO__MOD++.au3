@@ -21,8 +21,9 @@
 #include "functions\Read Text\DOCRBundles.au3"
 #include "functions\Read Text\getOcrDissociable.au3"
 
-; OpenCV
-#include "functions\OpenCV\OpenCV-Match_UDF.au3"
+; DMatching
+#include "functions\Pixels\DMatchingBundles.au3"
+#include "functions\Pixels\DMatching.au3"
 
 ; Other
 #include "functions\Mod's\ModFuncs.au3"

@@ -13,21 +13,30 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func FastVillage($sDirectory, $iLimit = 7, $bNeedCapture = True)
+Func ReturnPreVD(ByRef $aS, $bBB = False, $bEdge = False)
+	Local $aSearch[4] = [15, 31, 859, 648] ; Edge - NV.
+	Select
+		Case $bBB
+			Select
+				Case $bEdge ; Edge - BB.
+					Local $aSearch[4] = [83, 136, 844, 694] 
+				Case Not $bEdge ; No Edge - BB.
+					Local $aSearch[4] = [138, 173, 780, 648] 
+			EndSelect
+		Case Else
+			Local $aSearch[4] = [92, 73, 781, 599] ; No Edge - NV.
+	EndSelect
+	$aS = $aSearch
+	If $g_bDebugSetlog Then SetDebugLog("ReturnPreVD | " & String(_ArrayToString($aS)), $COLOR_INFO)
+EndFunc
+
+Func FastVillage($sDirectory, $iLimit = 7, $bNeedCapture = True, $bBB = False, $bEdge = False)
 	Local $aRet[0]
-	
-	If $g_aPosSizeVillage <> 0 Then
-		Local $x = 92 + $g_aPosSizeVillage[2], $x2 = 781 + $g_aPosSizeVillage[2]
-	Else
-		Local $x = 92, $x2 = 781
-	EndIf
-	
-	Local $aiPostFix[4] = [$x, 73, $x2, 599]
-	
+	Local $aSearch[4]
+	ReturnPreVD($aSearch, $bBB, $bEdge)
 	If $bNeedCapture Then _CaptureRegion2()
-	If $iLimit = 1 Then $iLimit += 1 ; SearchMultipleTilesBetweenLevels support all <> 1. 
-	;Local $aRes = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sDirectory, "str", "FV", "Int", $iLimit, "str", "FV", "Int", 0, "Int", 1000)
-	Local $aRes = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sDirectory, "str", GetDiamondFromArray($aiPostFix), "Int", $iLimit, "str", GetDiamondFromArray($aiPostFix), "Int", 0, "Int", 1000)
+	If $iLimit = 1 Then $iLimit += 1
+	Local $aRes = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sDirectory, "str", GetDiamondFromArray($aSearch), "Int", $iLimit, "str", GetDiamondFromArray($aSearch), "Int", 0, "Int", 1000)
 	If UBound($aRes[0]) > 1 Then Return -1
 	Local $aKeyValue = StringSplit($aRes[0], "|", $STR_NOCOUNT)
 
@@ -37,8 +46,7 @@ Func FastVillage($sDirectory, $iLimit = 7, $bNeedCapture = True)
 		For $vC In $vDLLSpl
 			Local $a = StringSplit($vC, ",", $STR_NOCOUNT)
 			If UBound($a) <> 2 Then ContinueLoop
-			;$a[0] += $x
-			;$a[1] += 73
+			If Not isInDiamond($a[0], $a[1], $aSearch[0], $aSearch[1], $aSearch[2], $aSearch[3]) Then ContinueLoop
 			_ArrayAdd($aRet, $a, 0, -1, -1, $ARRAYFILL_FORCE_SINGLEITEM)
 		Next
 	Next

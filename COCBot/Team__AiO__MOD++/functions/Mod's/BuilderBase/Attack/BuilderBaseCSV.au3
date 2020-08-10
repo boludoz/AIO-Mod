@@ -4,7 +4,7 @@
 ; Syntax ........: BuilderBaseCSV()
 ; Parameters ....:
 ; Return values .: None
-; Author ........: ProMac (03-2018), Fahid.Mahmood
+; Author ........: ProMac (03-2018), Fahid.Mahmood, Team AIO Mod++ ! (2018-2020)
 ; Modified ......:
 ; Remarks .......: This file is part of MyBot, previously known as Multibot and ClashGameBot. Copyright 2015-2020
 ;                  MyBot is distributed under the terms of the GNU GPL
@@ -17,47 +17,45 @@
 ; PARSE CSV FILE
 Func TestBuilderBaseParseAttackCSV()
 	Setlog("** TestBuilderBaseParseAttackCSV START**", $COLOR_DEBUG)
-	Local $Status = $g_bRunState
+	Local $bStatus = $g_bRunState
 	$g_bRunState = True
 
-	Local $TempDebug = $g_bDebugOcr
-	$g_bDebugOcr = True
+	Local $bTempDebug = $g_bDOCRDebugImages
+	$g_bDOCRDebugImages = True
 
 	BuilderBaseResetAttackVariables()
 
 	; Attack Bar | [0] = Troops Name , [1] = X-axis , [2] - Quantities
-	;Local $AvailableTroops = BuilderBaseAttackBar()
-	Local $AvailableTroops = GetAttackBarBB()
+	;Local $aAvailableTroops = BuilderBaseAttackBar()
+	Local $aAvailableTroops = GetAttackBarBB()
 
-	If $AvailableTroops <> -1 Then
+	If IsArray($aAvailableTroops) Then
 
-		BuilderBaseSelectCorrectScript($AvailableTroops)
-
-		; Zoomout the Opponent Village
+		; Zoomout the Opponent Village.
 		BuilderBaseZoomOut()
-
-		Local $FurtherFrom = 5 ; 5 pixels before the deploy point
+		
+		; Correct script.
+		BuilderBaseSelectCorrectScript($aAvailableTroops)
+		
+		Local $FurtherFrom = 5 ; 5 pixels before the deploy point.
 		BuilderBaseGetDeployPoints($FurtherFrom, True)
 
-		; Parse CSV , Deploy Troops and Get Machine Status [attack algorithm] , waiting for Battle ends window
-		BuilderBaseParseAttackCSV($AvailableTroops, $g_aDeployPoints, $g_aDeployBestPoints, True)
+		; Parse CSV , Deploy Troops and Get Machine Status [attack algorithm] , waiting for Battle ends window.
+		BuilderBaseParseAttackCSV($aAvailableTroops, $g_aDeployPoints, $g_aDeployBestPoints, True)
 
-		; Attack Report Window
+		; Attack Report Window.
 		BuilderBaseAttackReport()
 
-		; Stats
-		; BuilderBaseAttackUpdStats()
 	EndIf
 
-	$g_bDebugOcr = $TempDebug
-	$g_bRunState = $Status
+	$g_bDOCRDebugImages = $bTempDebug
+	$g_bRunState = $bStatus
 
 	Setlog("** TestBuilderBaseParseAttackCSV END**", $COLOR_DEBUG)
 EndFunc   ;==>TestBuilderBaseParseAttackCSV
 
-
 ; Main Function
-Func BuilderBaseParseAttackCSV($AvailableTroops, $DeployPoints, $DeployBestPoints, $bDebug = False)
+Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoints, $bDebug = False)
 
 	; Reset Stats
 	$g_iLastDamage = 0
@@ -72,7 +70,7 @@ Func BuilderBaseParseAttackCSV($AvailableTroops, $DeployPoints, $DeployBestPoint
 	Local $aSplitLine, $command
 
 	; [x][0] = Troops Name , [x][1] = X-axis , [x][2] - Y-Axis [x][3] - Slot starting at 0, [x][4] - Quantity
-	Local $aAvailableTroops_NXQ = $AvailableTroops
+	Local $aAvailableTroops_NXQ = $aAvailableTroops
 
 	; [0] - TopLeft ,[1] - TopRight , [2] - BottomRight , [3] - BottomLeft
 	Local $aDeployBestPoints = $DeployBestPoints ;Best Filtered 10 Points
@@ -176,11 +174,11 @@ Func BuilderBaseParseAttackCSV($AvailableTroops, $DeployPoints, $DeployBestPoint
 						; $aAvailableTroops_NXQ  [Name][Xaxis][Quantities]
 						For $i = 0 To UBound($aAvailableTroops_NXQ) - 1
 							If (StringInStr($aAvailableTroops_NXQ[$i][0], $sTroopName) > 0) Then ;We Just Need To redo the ocr for mentioned troop only
-								If (StringInStr($sTroopName, "Machine") > 0) Then 
+								If (StringInStr($sTroopName, "Machine") > 0) Then
 									$aAvailableTroops_NXQ[$i][4] = 1
 								Else
 									$aAvailableTroops_NXQ[$i][4] = Number(_getTroopCountSmall(Number($aAvailableTroops_NXQ[$i][1]), 640))
-									If $aAvailableTroops_NXQ[$i][4] < 1 Then $aAvailableTroops_NXQ[$i][4] = Number(_getTroopCountBig(Number($aAvailableTroops_NXQ[$i][1]), 640-7)) ; For Big numbers when the troop is selected
+									If $aAvailableTroops_NXQ[$i][4] < 1 Then $aAvailableTroops_NXQ[$i][4] = Number(_getTroopCountBig(Number($aAvailableTroops_NXQ[$i][1]), 640 - 7)) ; For Big numbers when the troop is selected
 								EndIf
 							EndIf
 						Next
@@ -377,8 +375,8 @@ Func BuilderBaseParseAttackCSV($AvailableTroops, $DeployPoints, $DeployBestPoint
 			TriggerMachineAbility()
 			If _Sleep(50) Then Return
 			
-			If _CheckPixel($aBlackArts, True) Then 
-				If _WaitForCheckImg($g_sImgOkButton, "345, 540, 524, 615") Then 
+			If _CheckPixel($aBlackArts, True) Then
+				If _WaitForCheckImg($g_sImgOkButton, "345, 540, 524, 615") Then
 					SetDebugLog("BattleIsOver | $bIsEnded.")
 					ExitLoop
 				EndIf
@@ -664,10 +662,10 @@ Func VerifySlotTroop($sTroopName, ByRef $aSlot_XY, ByRef $iQtyOfSelectedSlot, By
 	EndIf
 
 	; Select Slot
-	$aSlot_XY[0] = $iSlotX 
+	$aSlot_XY[0] = $iSlotX
 	$aSlot_XY[1] = $iSlotY
 
-	Click($iSlotX - RANDOM(0, 10, 1), $iSlotY - RANDOM(0, 10, 1), 1, 0)
+	Click($iSlotX - Random(0, 10, 1), $iSlotY - Random(0, 10, 1), 1, 0)
 	If _Sleep(250) Then Return
 	Return True
 EndFunc   ;==>VerifySlotTroop
@@ -683,10 +681,10 @@ Func DeployTroopBB($sTroopName, $aSlot_XY, $Point2Deploy, $iQtyToDrop)
 			Local $hPixel = _GetPixelColor(Int($g_aMachineBB[0]), 723, True)
 			SetDebugLog($hPixel & " : ability fail opcode is 0xFFFFFF", $COLOR_INFO)
 			
-			If _ColorCheck($hPixel, Hex(0xFFFFFF, 6), 30) Then 
+			If _ColorCheck($hPixel, Hex(0xFFFFFF, 6), 30) Then
 				Setlog("- BB Machine fail.", $COLOR_ERROR)
 				$g_bIsBBMachineD = False
-				Else
+			Else
 				Setlog("- BB Machine detected.", $COLOR_INFO)
 			EndIf
 		EndIf
@@ -713,33 +711,46 @@ Func GetThePointNearBH($BHposition, $aDeployPoints)
 	Return $ReturnPoint
 EndFunc   ;==>GetThePointNearBH
 
-Func TriggerMachineAbility($bBBIsFirst = $g_bBBIsFirst, $ix = 458, $iy = 723, $bTest = False)
-	
-	If not $bTest Then
-		If Not $g_bIsBBMachineD Then Return False
-		Else
-		Global $g_aMachineBB[2] = [$ix, $iy]
-	EndIf 
-	
-	If not (($g_iBBMachAbilityTime = 0) Or (TimerDiff($g_iBBMachAbilityTime) > 10000)) Then Return False
-	
-	If (Not IsArray($g_aMachineBB)) Or ($g_aMachineBB[0] = 0) Then Return False
+Func TriggerMachineAbility($bBBIsFirst = $g_bBBIsFirst, $ix = -1, $iy = -1, $bTest = False)
+	Local $sFuncName = "TriggerMachineAbility: "
 
-	SetDebugLog("- BB Machine : Checking ability.")
+	; If it's not just a test, Exit the Function if Machine is not yet deployed
+	If $bTest = False And $g_bIsBBMachineD = False Then
+		Return False
+	EndIf
+
+	; Check and set the Coordinates of Machine Slot in Attack Bar
+	If UBound($g_aMachineBB) < 2 Or $g_aMachineBB[0] = -1 Then
+		If $ix > -1 And $iy > -1 Then
+			SetDebugLog($sFuncName & "Setting Coordinates to the Machine Slot manually! [" & $ix & ", " & $iy & "]", $COLOR_INFO)
+			Global $g_aMachineBB[2] = [$ix, $iy]
+		Else
+			SetLog($sFuncName & "I have no coordinates to the Machine Slot Position", $COLOR_ERROR)
+			Return False
+		EndIf
+	EndIf
 	
-	Local $hPixel 
+	; If it's too early for a check, exit the Function! NOTE: If $g_iBBMachAbilityLastActivatedTime here is -1, it means Machine is Deployed but the Ability is not yet Activated!
+	; We use random to not always get activated in an specific Time Delay
+	If $g_iBBMachAbilityLastActivatedTime > -1 And __TimerDiff($g_iBBMachAbilityLastActivatedTime) < Random($g_iBBMachAbilityTime - 2000, $g_iBBMachAbilityTime + 2000, 1) Then
+		Return False
+	EndIf
+
+	SetDebugLog($sFuncName & "Checking ability.")
+	
+	Local $hPixel
 	$hPixel = _GetPixelColor(Int($g_aMachineBB[0]), 721, True)
 	If $bTest Then Setlog($hPixel & " ability", $COLOR_INFO)
 
 	If $bBBIsFirst And ($g_aMachineBB[0] <> 0) Then
 		If $bTest Then Setlog(_ArrayToString($g_aMachineBB))
 		If _ColorCheck($hPixel, Hex(0x472CC5, 6), 40) Then
-			Click(Int($g_aMachineBB[0] + Random(0, 15, 1)), Int($g_aMachineBB[1] - Random(20, 30, 1)), 3, 100)
-			If RandomSleep(300) Then Return
-			SetLog("- BB Machine : Skill enabled.", $COLOR_ACTION)
+			Click(Int($g_aMachineBB[0] + Random(0, 15, 1)), Int($g_aMachineBB[1] - Random(20, 30, 1)), Random(1, 3, 1), 100)
+			SetLog("- BB Machine : Activated Ability for the first time.", $COLOR_ACTION)
 			$bBBIsFirst = False
 			$g_bBBIsFirst = $bBBIsFirst
-			$g_iBBMachAbilityTime = TimerInit()
+			$g_iBBMachAbilityLastActivatedTime = __TimerInit()
+			If RandomSleep(300) Then Return
 			Return True
 		Else
 			If $bBBIsFirst Then SetLog("- BB Machine : Skill not present.", $COLOR_INFO)
@@ -748,10 +759,10 @@ Func TriggerMachineAbility($bBBIsFirst = $g_bBBIsFirst, $ix = 458, $iy = 723, $b
 	EndIf
 	
 	If _ColorCheck($hPixel, Hex(0x432CCE, 6), 20) Then
-		Click(Int($g_aMachineBB[0] + Random(0, 15, 1)), Int($g_aMachineBB[1] - Random(20, 30, 1)), 3, 100)
+		Click(Int($g_aMachineBB[0] + Random(0, 15, 1)), Int($g_aMachineBB[1] - Random(20, 30, 1)), Random(1, 3, 1), 100)
+		SetLog("- BB Machine : Activated Ability.", $COLOR_ACTION)
+		$g_iBBMachAbilityLastActivatedTime = __TimerInit()
 		If RandomSleep(300) Then Return
-		SetLog("- BB Machine : Click on ability.", $COLOR_ACTION)
-		$g_iBBMachAbilityTime = TimerInit()
 		Return True
 	EndIf
 	Return False
@@ -762,7 +773,7 @@ Func BattleIsOver()
 	Local $aBlackArts[4] = [520, 600, 0x000000, 5]
 	
 	For $iBattleOverLoopCounter = 0 To 190
-		If _Sleep(1000) Then Return 
+		If _Sleep(1000) Then Return
 		If Not $g_bRunState Then Return
 		
 		TriggerMachineAbility()
@@ -773,7 +784,7 @@ Func BattleIsOver()
 			Setlog("- Total Damage: " & $g_iLastDamage & "%", $COLOR_INFO)
 		EndIf
 		
-		If _CheckPixel($aBlackArts, True) Then 
+		If _CheckPixel($aBlackArts, True) Then
 			If _WaitForCheckImg($g_sImgOkButton, "345, 540, 524, 615") Then $bIsEnded = True
 			SetDebugLog("BattleIsOver | $bIsEnded : " & $bIsEnded)
 			ExitLoop

@@ -21,7 +21,7 @@ Func ApplyConfig_MOD_CustomArmyBB($TypeReadSave)
 
 			For $i = 0 To UBound($g_hComboTroopBB) - 1
 				_GUICtrlComboBox_SetCurSel($g_hComboTroopBB[$i], $g_iCmbCampsBB[$i])
-				_GUICtrlSetImage($g_hIcnTroopBB[$i], $g_sLibIconPath, $g_avStarLabTroops[$g_iCmbCampsBB[$i]+1][4])
+				_GUICtrlSetImage($g_hIcnTroopBB[$i], $g_sLibIconPath, $g_avStarLabTroops[$g_iCmbCampsBB[$i] + 1][4])
 			Next
 
 			; Builder base - Team AiO MOD++
@@ -39,8 +39,8 @@ Func ApplyConfig_MOD_CustomArmyBB($TypeReadSave)
 			GUICtrlSetState($g_hChkBuilderAttack, $g_bChkBuilderAttack ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkBBStopAt3, $g_bChkBBStopAt3 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkBBTrophiesRange, $g_bChkBBTrophiesRange ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkBBRandomAttack, $g_bChkBBRandomAttack ? $GUI_CHECKED : $GUI_UNCHECKED)
-			ChkBBRandomAttack()
+			GUICtrlSetState($g_hChkBBCustomAttack, $g_bChkBBCustomAttack ? $GUI_CHECKED : $GUI_UNCHECKED)
+			ChkBBCustomAttack()
 			chkBuilderAttack()
 			PopulateComboScriptsFilesBB()
 			For $i = 0 To 2
@@ -77,7 +77,7 @@ Func ApplyConfig_MOD_CustomArmyBB($TypeReadSave)
 			$g_bChkBuilderAttack = (GUICtrlRead($g_hChkBuilderAttack) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkBBStopAt3 = (GUICtrlRead($g_hChkBBStopAt3) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkBBTrophiesRange = (GUICtrlRead($g_hChkBBTrophiesRange) = $GUI_CHECKED) ? 1 : 0
-			$g_bChkBBRandomAttack = (GUICtrlRead($g_hChkBBRandomAttack) = $GUI_CHECKED) ? 1 : 0
+			$g_bChkBBCustomAttack = (GUICtrlRead($g_hChkBBCustomAttack) = $GUI_CHECKED) ? 1 : 0
 			For $i = 0 To 2
 				Local $indexofscript = _GUICtrlComboBox_GetCurSel($g_hCmbBBAttackStyle[$i])
 				Local $scriptname
@@ -108,10 +108,14 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 
 			For $i = $DB To $LB
 				GUICtrlSetState($g_hDeployCastleFirst[$i], $g_bDeployCastleFirst[$i] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
-			Next			
+			Next
 			
+			; Setlog limit
+			GUICtrlSetState($g_hTxtLogLineLimit, ($g_bChkBotLogLineLimit) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+			GUICtrlSetData($g_hTxtLogLineLimit, $g_iTxtLogLineLimit)
+
 			; Skip first check
-			GUICtrlSetState($g_hSkipfirstcheck, $g_bSkipfirstcheck ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hAvoidLocate, $g_bAvoidLocate ? $GUI_CHECKED : $GUI_UNCHECKED)
 			
 			; DeployDelay
 			GUICtrlSetData($g_hDeployDelay[0], $g_iDeployDelay[0])
@@ -174,7 +178,7 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			For $i = 0 To $eSpellCount - 1
 				GUICtrlSetData($g_hLblDaySpell[$i], _NumberFormat($g_aiDonateStatsSpells[$i][0], True)) ; Donation records - Team AIO Mod++
 			Next
-				
+			
 			GUICtrlSetData($g_hDayTotalSpells, _NumberFormat($g_iTotalDonateStatsSpells, True)) ; Donation records - Team AIO Mod++
 
 			For $i = 0 To $eSiegeMachineCount - 1
@@ -203,11 +207,15 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 				$g_bDeployCastleFirst[$i] = (GUICtrlRead($g_hDeployCastleFirst[$i]) = $GUI_CHECKED) ? 1 : 0
 			Next
 			
+			; Setlog limit
+			$g_bChkBotLogLineLimit = (GUICtrlRead($g_hChkBotLogLineLimit) = $GUI_CHECKED) ? (True) : (False)
+			$g_iTxtLogLineLimit = Int(GUICtrlRead($g_hTxtLogLineLimit))
+
 			; Skip first check
-			$g_bSkipfirstcheck = GUICtrlRead($g_hSkipfirstcheck)  = $GUI_CHECKED
+			$g_bAvoidLocate = GUICtrlRead($g_hAvoidLocate) = $GUI_CHECKED
 			
 			; Remove edge obstacles
-			$g_bEdgeObstacle = GUICtrlRead($g_hEdgeObstacle)  = $GUI_CHECKED
+			$g_bEdgeObstacle = GUICtrlRead($g_hEdgeObstacle) = $GUI_CHECKED
 			
 			; DeployDelay
 			$g_iDeployDelay[0] = Int(GUICtrlRead($g_hDeployDelay[0]))
@@ -229,7 +237,7 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			$g_iCmbMaxSidesSF = Int(GUICtrlRead($g_hCmbMaxSidesSF))
 
 			; War Preparation
-			$g_bStopForWar = GUICtrlRead($g_hChkStopForWar)  = $GUI_CHECKED
+			$g_bStopForWar = GUICtrlRead($g_hChkStopForWar) = $GUI_CHECKED
 
 			$g_iStopTime = _GUICtrlComboBox_GetCurSel($g_hCmbStopTime)
 			If _GUICtrlComboBox_GetCurSel($g_hCmbStopBeforeBattle) = 0 Then $g_iStopTime = $g_iStopTime * -1
@@ -256,27 +264,27 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			
 			; Donation records.
 			$g_iDayLimitTroops = GUICtrlRead($g_hDayLimitTroops)
-			$g_iDayLimitSpells = GUICtrlRead($g_hDayLimitSpells) 
+			$g_iDayLimitSpells = GUICtrlRead($g_hDayLimitSpells)
 			$g_iDayLimitSieges = GUICtrlRead($g_hDayLimitSieges)
 			$g_iCmbRestartEvery = GUICtrlRead($g_hCmbRestartEvery)
 			
-				; Tooops;
-				For $i = 0 To $eTroopCount - 1
-					$g_aiDonateStatsTroops[$i][0] = GUICtrlRead($g_hLblDayTroop[$i])
-				Next
-				$g_iTotalDonateStatsTroops = GUICtrlRead($g_hDayTotalTroops)
-	
-				; Spell;
-				For $i = 0 To $eSpellCount - 1
-					$g_aiDonateStatsSpells[$i][0] = GUICtrlRead($g_hLblDaySpell[$i])
-				Next
-				$g_iTotalDonateStatsSpells = GUICtrlRead($g_hDayTotalSpells)
-				
-				; Siege;
-				For $i = 0 To $eSiegeMachineCount - 1
-					$g_aiDonateStatsSieges[$i][0] = GUICtrlRead($g_hLblDaySiege[$i])
-				Next
-				$g_iTotalDonateStatsSiegeMachines = GUICtrlRead($g_hDayTotalSieges)
+			; Tooops;
+			For $i = 0 To $eTroopCount - 1
+				$g_aiDonateStatsTroops[$i][0] = GUICtrlRead($g_hLblDayTroop[$i])
+			Next
+			$g_iTotalDonateStatsTroops = GUICtrlRead($g_hDayTotalTroops)
+			
+			; Spell;
+			For $i = 0 To $eSpellCount - 1
+				$g_aiDonateStatsSpells[$i][0] = GUICtrlRead($g_hLblDaySpell[$i])
+			Next
+			$g_iTotalDonateStatsSpells = GUICtrlRead($g_hDayTotalSpells)
+			
+			; Siege;
+			For $i = 0 To $eSiegeMachineCount - 1
+				$g_aiDonateStatsSieges[$i][0] = GUICtrlRead($g_hLblDaySiege[$i])
+			Next
+			$g_iTotalDonateStatsSiegeMachines = GUICtrlRead($g_hDayTotalSieges)
 			; ------------;
 			
 	EndSwitch

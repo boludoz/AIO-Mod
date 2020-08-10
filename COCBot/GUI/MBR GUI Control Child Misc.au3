@@ -712,13 +712,13 @@ Func chkBBDropOrder()
 	If GUICtrlRead($g_hChkBBCustomDropOrderEnable) = $GUI_CHECKED Then
 		GUICtrlSetState($g_hBtnBBDropOrderSet, $GUI_ENABLE)
 		GUICtrlSetState($g_hBtnBBRemoveDropOrder, $GUI_ENABLE)
-		For $i=0 To $g_iBBTroopCount-1
+		For $i=0 To $eBBTroopCount-1
 			GUICtrlSetState($g_ahCmbBBDropOrder[$i], $GUI_ENABLE)
 		Next
 	Else
 		GUICtrlSetState($g_hBtnBBDropOrderSet, $GUI_DISABLE)
 		GUICtrlSetState($g_hBtnBBRemoveDropOrder, $GUI_DISABLE)
-		For $i=0 To $g_iBBTroopCount-1
+		For $i=0 To $eBBTroopCount-1
 			GUICtrlSetState($g_ahCmbBBDropOrder[$i], $GUI_DISABLE)
 		Next
 		GUICtrlSetBkColor($g_hBtnBBDropOrder, $COLOR_RED)
@@ -731,7 +731,7 @@ Func GUIBBDropOrder()
 	Local $iGUI_CtrlId = @GUI_CtrlId
 	Local $iDropIndex = _GUICtrlComboBox_GetCurSel($iGUI_CtrlId)
 	Setlog($iDropIndex)
-	For $i = 0 To $g_iBBTroopCount - 1
+	For $i = 0 To $eBBTroopCount - 1
 		If $iGUI_CtrlId = $g_ahCmbBBDropOrder[$i] Then 
 			_GUICtrlSetImage($g_sIcnBBOrder[$i], $g_sLibIconPath, $g_avStarLabTroops[$iDropIndex+1][4])
 		ElseIf $iDropIndex = _GUICtrlComboBox_GetCurSel($g_ahCmbBBDropOrder[$i]) Then
@@ -759,15 +759,15 @@ EndFunc   ;==>GUIBBDropOrder
 Func BtnBBDropOrderSet()
 	$g_sBBDropOrder = ""
 	; loop through reading and disabling all combo boxes
-	For $i=0 To $g_iBBTroopCount - 1
+	For $i=0 To $eBBTroopCount - 1
 		GUICtrlSetState($g_ahCmbBBDropOrder[$i], $GUI_DISABLE)
 		If GUICtrlRead($g_ahCmbBBDropOrder[$i]) = "" Then ; if not picked assign from default list in order
 			local $asDefaultOrderSplit = StringSplit($g_sBBDropOrderDefault, "|")
 			local $bFound = False, $bSet = False
 			local $j=0
-			While $j < $g_iBBTroopCount And Not $bSet ; loop through troops
+			While $j < $eBBTroopCount And Not $bSet ; loop through troops
 				local $k=0
-				While $k < $g_iBBTroopCount And Not $bFound ; loop through handles
+				While $k < $eBBTroopCount And Not $bFound ; loop through handles
 					If $g_ahCmbBBDropOrder[$i] <> $g_ahCmbBBDropOrder[$k] Then
 						SetDebugLog("Word: " & $asDefaultOrderSplit[$j+1] & " " & " Word in slot: " & GUICtrlRead($g_ahCmbBBDropOrder[$k]))
 						If $asDefaultOrderSplit[$j+1] = GUICtrlRead($g_ahCmbBBDropOrder[$k]) Then $bFound = True
@@ -793,7 +793,7 @@ Func BtnBBDropOrderSet()
 EndFunc   ;==>BtnBBDropOrderSet
 
 Func BtnBBRemoveDropOrder()
-	For $i=0 To $g_iBBTroopCount-1
+	For $i=0 To $eBBTroopCount-1
 			_GUICtrlSetImage($g_sIcnBBOrder[$i], $g_sLibIconPath, $g_avStarLabTroops[0][4]) ; Custom BB Army - Team AIO Mod++
 			_GUICtrlComboBox_SetCurSel($g_ahCmbBBDropOrder[$i], -1)
 			GUICtrlSetState($g_ahCmbBBDropOrder[$i], $GUI_ENABLE)

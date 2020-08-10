@@ -429,7 +429,7 @@ Func SaveConfig_600_6()
 	; Builder Base Drop Order
 	_Ini_Add("other", "bBBDropOrderSet", $g_bBBDropOrderSet)
 	#Region - Custom BB Army - Team AIO Mod++
-	For $i = 0 To $g_iBBTroopCount - 1
+	For $i = 0 To $eBBTroopCount - 1
 		_Ini_Add("other", "sBBDropOrderSet" & $i, $g_aiCmbBBDropOrder[$i]) 
 	Next
 	#EndRegion - Custom BB Army - Team AIO Mod++
@@ -999,7 +999,7 @@ EndFunc   ;==>SaveConfig_600_30_LB
 Func SaveConfig_600_31()
 	; <><><><> Attack Plan / Search & Attack / Deadbase / Collectors <><><><>
 	ApplyConfig_600_31(GetApplyConfigSaveAction())
-	For $i = 6 To 13
+	For $i = 6 To ubound($g_aiCollectorLevelFill) -1
 		_Ini_Add("collectors", "lvl" & $i & "Enabled", $g_abCollectorLevelEnabled[$i] ? 1 : 0)
 		_Ini_Add("collectors", "lvl" & $i & "fill", $g_aiCollectorLevelFill[$i])
 	Next

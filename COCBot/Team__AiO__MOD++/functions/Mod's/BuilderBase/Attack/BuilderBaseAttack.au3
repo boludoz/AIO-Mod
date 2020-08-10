@@ -49,7 +49,7 @@ Func BuilderBaseAttack($bTestRun = False)
 	If checkObstacles(True) Then Return
 	If $g_bRestart Then Return
 	If _Sleep(1500) Then Return ; Add Delay Before Check Builder Face As When Army Camp Get's Close Due To It's Effect Builder Face Is Dull and not recognized on slow pc
-	
+
 	; Check for builder base.
 	If Not isOnBuilderBase() Then Return
 
@@ -104,7 +104,7 @@ Func BuilderBaseAttack($bTestRun = False)
 			CheckMainScreen()
 			Return -1
 		EndIf
-		
+
 		; Verify the scripts and attack bar
 		If Not $IsToDropTrophies Then BuilderBaseSelectCorrectScript($aAvailableTroops)
 
@@ -112,7 +112,7 @@ Func BuilderBaseAttack($bTestRun = False)
 		If RandomSleep(1500) Then Return
 
 		; Reset vars.
-		Global $g_aMachineBB[2] = [0, 0]
+		Global $g_aMachineBB[2] = [-1, -1]
 		$g_bIfMachineHasAbility = False
 		$g_bIfMachineWasDeployed = False
 		$g_bIsBBMachineD = False
@@ -394,7 +394,7 @@ Func BuilderBaseAttackToDrop($aAvailableTroops)
 	If $UniqueDeployPoint[0] = 0 Then
 		$g_aBuilderBaseDiamond = BuilderBaseAttackDiamond()
 		If IsArray($g_aBuilderBaseDiamond) <> True Or Not (UBound($g_aBuilderBaseDiamond) > 0) Then Return False
-		
+
 		$g_aExternalEdges = BuilderBaseGetEdges($g_aBuilderBaseDiamond, "External Edges")
 	EndIf
 
@@ -472,20 +472,20 @@ EndFunc   ;==>BuilderBaseCSVAttack
 Func BuilderBaseAttackReport()
 	; Verify the Window Report , Point[0] Archer Shadow Black Zone [155,460,000000], Point[1] Ok Green Button [430,590, 6DBC1F]
 	Local $aSurrenderBtn = [65, 607]
-	
+
 	; Check if BattleIsOver.
-	BattleIsOver()	
+	BattleIsOver()
 
 	;BB attack Ends
 	If _Sleep(2000) Then Return
-	
+
 	; in case BB Attack Ends in error
 	If _ColorCheck(_GetPixelColor($aSurrenderBtn[0], $aSurrenderBtn[1], True), Hex(0xFE5D65, 6), 10) Then
 		Setlog("Surrender Button fail - battle end early - CheckMainScreen()", $COLOR_ERROR)
 		CheckMainScreen()
 		Return False
 	EndIf
-	
+
 	Local $Stars = 0
 	Local $StarsPositions[3][2] = [[326, 394], [452, 388], [546, 413]]
 	Local $Color[3] = [0xD0D4D0, 0xDBDEDB, 0xDBDDD8]
@@ -499,53 +499,42 @@ Func BuilderBaseAttackReport()
 
 	Setlog("Your Attack: " & $Stars & " Star(s)!", $COLOR_INFO)
 
-	If _Sleep(1500) Then Return
-
-	Local $iSpecialColor[4][3] = [[0xBEE758, 0, 1], [0xA9DD49, 0, 2], [0x7BC726, 0, 3], [0x79C426, 0, 4]]
-	Local $iSpecialPixel
-
-	For $i = 0 To 15
-		$iSpecialPixel = _MultiPixelSearch(345, 540, 510, 612, 1, 1, Hex(0xBFE85A, 6), $iSpecialColor, 20)
-		If IsArray($iSpecialPixel) Then ExitLoop
-	Next
-
-	If $i > 15 Then
-		Setlog("Return home button fail.", $COLOR_ERROR)
-		CheckMainScreen()
-		Return False
+	If Okay() Then
+	   SetLog("Return To Home.", $Color_Info)
 	Else
-		SetLog("Return To Home.", $Color_Info)
-		Click($g_iMultiPixelOffSet[0] + Random(0, 20, 1), $g_iMultiPixelOffSet[1] + Random(0, 10, 1), 1, 0)
-	EndIf
+	  Setlog("Return home button fail.", $COLOR_ERROR)
+	  CheckMainScreen()
+   EndIf
 
-	Local $ResultName = ""
-
-	For $i = 0 To 12 ; 120 seconds
+	Local $sResultName = "Draw"
+	
+	For $i = 0 To 24 ; 120 seconds
 		If Not $g_bRunState Then Return
+		If isOnBuilderBase(True, True) Then
+			SetLog("BuilderBaseAttackReport | Something weird happened here. Leave the screen alone.", $COLOR_ERROR)
+			If checkObstacles(True) Then SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
+			Return
+		EndIf
 		; Wait
-		If _Sleep(5000) Then Return ; 5seconds
-		If QuickMIS("BC1", $g_sImgReportWaitBB, 538, 326, 647, 378, True, False) Then ; DESRC Done
-			Setlog("...Opponent is Attacking!", $COLOR_INFO)
-			If _Sleep(5000) Then Return ; 5seconds
+		If _Sleep(2500) Then Return ; 2,5 seconds
+		If QuickMIS("BC1", $g_sImgReportWaitBB, 529, 324, 652, 372, True, False) Then
+			If (Mod($i+1, 4) = 0) Then Setlog("...Opponent is Attacking!", $COLOR_INFO)
 			ContinueLoop
 		EndIf
-		If QuickMIS("BC1", $g_sImgReportFinishedBB, 538, 320, 648, 366, True, False) Then  ; DESRC Done
-			If _Sleep(1000) Then Return
-			Local $aResults = QuickMIS("NxCx", $g_sImgReportResultBB, 534, 164, 730, 223, True, False) ; DESRC Done
-			; Name $aResults[0][0]
-			If $aResults = 0 Then
-				Setlog("Attack Result Problem!!", $COLOR_WARNING)
-				ExitLoop
+		If _WaitForCheckImg($g_sImgReportFinishedBB, "465, 493, 490, 505", Default, 5000, 250) Then
+			If _ColorCheck(_GetPixelColor(150, 192, True), Hex(0x8DBE51, 6), 40) Then
+				$sResultName = "Victory"
+			ElseIf _ColorCheck(_GetPixelColor(150, 192, True), Hex(0xD0262C, 6), 40) Then
+				$sResultName = "Defeat"
 			EndIf
-			Setlog("Attack Result: " & $aResults[0][0], $COLOR_SUCCESS)
-			$ResultName = $aResults[0][0]
+			Setlog("Attack Result: " & $sResultName, ($sResultName = "Victory") ? ($COLOR_SUCCESS) : ($COLOR_ERROR))
 			ExitLoop
 		EndIf
 	Next
-
+	
 	; Small delay just to getout the slide resources to top left
-	If RandomSleep(3000) Then Return
-
+	;If RandomSleep(3000) Then Return
+	
 	; Get the LOOT :
 	Local $gain[3]
 	; To get trophies getOcrOverAllDamage(493, 480 + $g_iMidOffsetYNew)
@@ -554,15 +543,15 @@ Func BuilderBaseAttackReport()
 	$gain[$eLootElixirBB] = Int(getTrophyVillageSearch(310, 483))
 	Local $iLastDamage = Int(_getTroopCountBig(222, 304))
 	If $iLastDamage > $g_iLastDamage Then $g_iLastDamage = $iLastDamage
-
-	If StringInStr($ResultName, "Victory") > 0 Then
+	
+	If StringInStr($sResultName, "Victory") > 0 Then
 		$gain[$eLootTrophyBB] = Abs($gain[$eLootTrophyBB])
-	ElseIf StringInStr($ResultName, "Defeat") > 0 Then
+	ElseIf StringInStr($sResultName, "Defeat") > 0 Then
 		$gain[$eLootTrophyBB] = $gain[$eLootTrophyBB] * -1
 	Else
 		$gain[$eLootTrophyBB] = 0
 	EndIf
-
+	
 	; #######################################################################
 	; Just a temp log for BB attacks , this needs a new TAB like a stats tab
 	Local $AtkLogTxt
@@ -574,20 +563,27 @@ Func BuilderBaseAttackReport()
 	$AtkLogTxt &= StringFormat("%1d", $Stars) & "|"
 	$AtkLogTxt &= StringFormat("%3d", $g_iLastDamage) & "|"
 	$AtkLogTxt &= StringFormat("%1d", $g_iBuilderBaseScript + 1) & "|"
-
-	If StringInStr($ResultName, "Victory") > 0 Then
+	
+	If StringInStr($sResultName, "Victory") > 0 Then
 		SetBBAtkLog($AtkLogTxt, "", $COLOR_GREEN)
-	ElseIf StringInStr($ResultName, "Defeat") > 0 Then
+	ElseIf StringInStr($sResultName, "Defeat") > 0 Then
 		SetBBAtkLog($AtkLogTxt, "", $COLOR_ERROR)
 	Else
 		SetBBAtkLog($AtkLogTxt, "", $COLOR_INFO)
 	EndIf
 	; #######################################################################
-
+	
 	
 	; Return to Main Page
 	ClickP($aAway, 2, 0, "#0332") ;Click Away
-
+	
+	; Reset Variables
+	Global $g_aMachineBB[2] = [-1, -1]
+	$g_bIsBBMachineD = False
+	$g_bBBIsFirst = True
+	$g_iBBMachAbilityLastActivatedTime = -1
+	
+	
 	If RandomSleep(2000) Then Return
 	
 	If checkObstacles(True) Then
