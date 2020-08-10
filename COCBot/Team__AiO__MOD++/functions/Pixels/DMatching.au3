@@ -135,15 +135,15 @@ Func DMClasicArray($sMatches, $iDis = 18, $bDebugLog = False)
     Next
 	
 	If (UBound($aAR) > 0) Then
-		If ($g_bDebugImageSave Or $bDebugLog) And ($g_hHBitmap2 <> 0) And IsPtr($g_hHBitmap2) Then ; Discard Deploy Points Touch much text on image
-
+		If ($g_bDebugImageSave Or $bDebugLog) Then ; Discard Deploy Points Touch much text on image
+			_CaptureRegion()
 			Local $sSubDir = $g_sProfileTempDebugPath & "DMClasicArray"
 
 			DirCreate($sSubDir)
 
 			Local $sDate = @YEAR & "-" & @MON & "-" & @MDAY, $sTime = @HOUR & "." & @MIN & "." & @SEC
 			Local $sDebugImageName = String($sDate & "_" & $sTime & "_.png")
-			Local $hEditedImage = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
+			Local $hEditedImage = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap)
 			Local $hGraphic = _GDIPlus_ImageGetGraphicsContext($hEditedImage)
 			Local $hPenRED = _GDIPlus_PenCreate(0xFFFF0000, 1)
 

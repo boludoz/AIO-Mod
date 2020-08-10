@@ -39,7 +39,6 @@
 #include "functions\Mod's\MagicItems.au3"
 
 ; SuperXP / GoblinXP - Team AiO MOD++
-#include "functions\Mod's\SuperXP\ArrayFunctions.au3"
 #include "functions\Mod's\SuperXP\multiSearch.au3"
 #include "functions\Mod's\SuperXP\SuperXP.au3"
 
@@ -87,9 +86,6 @@
 #include "functions\Mod's\BuilderBase\Attack\BuilderBaseCSV.au3"
 #include "functions\Mod's\BuilderBase\Attack\BuilderBaseAttack.au3"
 #include "functions\Mod's\BuilderBase\Village\BuilderBaseZoomOut.au3"
-;~ #include "functions\Mod's\BuilderBase\Attack\BuilderBaseAttackBar.au3"
-;~ #include "functions\Mod's\BuilderBase\Attack\BuilderBaseSmartAttack.au3"
-;~ #include "functions\Mod's\BuilderBase\Camps\BuilderBaseCheckArmy.au3"
 
 #include "functions\Mod's\BuilderBase\Village\UpgradeWalls.au3"
 #include "functions\Mod's\BuilderBase\Village\BattleMachineUpgrade.au3"
@@ -103,10 +99,6 @@
 ;~ #include "functions\Mod's\BuilderBase\Village\SuggestedUpgrades.au3"
 ;~ #include "functions\Mod's\BuilderBase\Village\CleanBBYard.au3"
 ;~ #include "functions\Mod's\BuilderBase\Village\StarLaboratory.au3"
-
-;
-;#include "functions\Mod's\GetCastle.au3"
-;---------------------------------------------------------------;
 
 #include "functions\Mod's\Attack\GetButtons.au3"
 #include "functions\Mod's\Attack\VerifyDropPoints.au3"

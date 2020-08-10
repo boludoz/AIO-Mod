@@ -13,47 +13,45 @@
 ; Example .......: No
 ; ===============================================================================================================================
 #include-once
-
+#Region - Custom - Team AIO Mod++
 Func PopulateComboScriptsFilesDB()
-	Dim $FileSearch, $NewFile
-	$FileSearch = FileFindFirstFile($g_sCSVAttacksPath & "\*.csv")
-	Dim $output = ""
-	While True
-		$NewFile = FileFindNextFile($FileSearch)
+	Local $sNewFile, $sOut = ""
+	Local $FileSearch = FileFindFirstFile($g_sCSVAttacksPath & "\*.csv")
+	While 1
+		$sNewFile = FileFindNextFile($FileSearch)
 		If @error Then ExitLoop
-		$output = $output & StringLeft($NewFile, StringLen($NewFile) - 4) & "|"
+		$sOut &= StringTrimRight($sNewFile, 4) & "|"
 	WEnd
 	FileClose($FileSearch)
-	;remove last |
-	$output = StringLeft($output, StringLen($output) - 1)
-	;reset combo box
+
+	; Reset combo box
 	_GUICtrlComboBox_ResetContent($g_hCmbScriptNameDB)
-	;set combo box
-	GUICtrlSetData($g_hCmbScriptNameDB, $output)
+	
+	; Set combo box
+	GUICtrlSetData($g_hCmbScriptNameDB, StringTrimRight($sOut, 1))
 	_GUICtrlComboBox_SetCurSel($g_hCmbScriptNameDB, _GUICtrlComboBox_FindStringExact($g_hCmbScriptNameDB, ""))
 	GUICtrlSetData($g_hLblNotesScriptDB, "")
 EndFunc   ;==>PopulateComboScriptsFilesDB
 
 Func PopulateComboScriptsFilesAB()
-	Dim $FileSearch, $NewFile
-	$FileSearch = FileFindFirstFile($g_sCSVAttacksPath & "\*.csv")
-	Dim $output = ""
-	While True
-		$NewFile = FileFindNextFile($FileSearch)
+	Local $sNewFile, $sOut = ""
+	Local $FileSearch = FileFindFirstFile($g_sCSVAttacksPath & "\*.csv")
+	While 1
+		$sNewFile = FileFindNextFile($FileSearch)
 		If @error Then ExitLoop
-		$output = $output & StringLeft($NewFile, StringLen($NewFile) - 4) & "|"
+		$sOut &= StringTrimRight($sNewFile, 4) & "|"
 	WEnd
 	FileClose($FileSearch)
-	;remove last |
-	$output = StringLeft($output, StringLen($output) - 1)
-	;reset combo box
+	
+	; Reset combo box
 	_GUICtrlComboBox_ResetContent($g_hCmbScriptNameAB)
-	;set combo box
-	GUICtrlSetData($g_hCmbScriptNameAB, $output)
+	
+	; Set combo box
+	GUICtrlSetData($g_hCmbScriptNameAB, StringTrimRight($sOut, 1))
 	_GUICtrlComboBox_SetCurSel($g_hCmbScriptNameAB, _GUICtrlComboBox_FindStringExact($g_hCmbScriptNameAB, ""))
 	GUICtrlSetData($g_hLblNotesScriptAB, "")
 EndFunc   ;==>PopulateComboScriptsFilesAB
-
+#EndRegion - Custom - Team AIO Mod++
 
 Func cmbScriptNameDB()
 

@@ -10,10 +10,6 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-#Region DMatching
-#include "DMatchingBundles.au3"
-#EndRegion DMatching
-
 #Region Maintenance
 Global $g_sImgMaintenanceMod = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Maintenance\"
 #EndRegion Maintenance
@@ -82,12 +78,6 @@ Global Const $g_sXMLTroopsUpgradeMachine = $g_sModImageLocation & "\BuildersBase
 Global Const $g_sImgPathIsCTBoosted = $g_sModImageLocation & "\BuildersBase\ClockTowerBoosted"
 Global Const $g_sImgAvailableAttacks = $g_sModImageLocation & "\BuildersBase\AvailableAttacks"
 
-; Check Army Builder Base
-;Global $aArmyTrainButtonBB = [46, 572, 0xE5A439, 10]
-;Global Const $g_sImgPathFillArmyCampsWindow = $g_sModImageLocation & "\BuildersBase\FillArmyCamps\Window"
-;Global Const $g_sImgPathCamps = $g_sModImageLocation & "\BuildersBase\Bundles\Camps\"
-;Global Const $g_sImgPathTroopsTrain = $g_sModImageLocation & "\BuildersBase\FillArmyCamps\TroopsTrain"
-
 ; Builder Base Attack
 Global $g_aOpponentVillageVisible[1][3] = [[0xFED5D4, 0, 1]] ; more ez ; samm0d
 
@@ -99,10 +89,6 @@ Global Const $g_sImgOpponentBuildingsBB = $g_sModImageLocation & "\BuildersBase\
 
 Global Const $g_sImgAttackBtnBB = $g_sModImageLocation & "\BuildersBase\Attack\AttackBtn\"
 Global Const $g_sImgVersusWindow = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\Window\"
-;~ Global Const $g_sImgFullArmyBB = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\ArmyStatus\Full\"
-;~ Global Const $g_sImgHeroStatusRec = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\ArmyStatus\Hero\Recovering\"
-;~ Global Const $g_sImgHeroStatusUpg = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\ArmyStatus\Hero\Upgrading\"
-;~ Global Const $g_sImgHeroStatusMachine = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\ArmyStatus\Hero\Battle Machine\"
 Global Const $g_sImgCloudSearch = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\Clouds\"
 
 ; Report Window : Victory | Draw | Defeat
@@ -118,3 +104,21 @@ Global Const $g_sBundleWallsBB = $g_sModImageLocation & "\BuildersBase\Bundles\W
 #Region - MagicItems
 Global Const $g_sImgTraderMod = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Traderfix"
 #EndRegion - MagicItems
+
+#Region - DMatchingBundles.au3
+; #FUNCTION# ====================================================================================================================
+; Name ..........: DMatchingBundles.au3
+; Description ...: Dissociable.Matching.dll Bundles
+; Author ........: Dissociable (2020)
+; Modified ......:
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2020
+;                  MyBot is distributed under the terms of the GNU GPL
+; Related .......:
+; Link ..........: https://github.com/MyBotRun/MyBot/wiki
+; Example .......: No
+; ===============================================================================================================================
+Global $g_sBaseDMatchingPathB = @ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\Image Matching"
+
+; Deadbase, Elixir Collectors.
+Global $g_sECollectorDMatB = $g_sBaseDMatchingPathB & "\deadbase\Elixir"
+#EndRegion - DMatchingBundles.au3

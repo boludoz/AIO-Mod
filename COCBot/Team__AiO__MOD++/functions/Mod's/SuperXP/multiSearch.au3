@@ -4,7 +4,7 @@
 ; Syntax ........:
 ; Parameters ....: None
 ; Return values .: None
-; Author ........: Boludoz (Fev-2017)
+; Author ........: Mr.Viper, Team AIO Mod++ (2019-2020)
 ; Modified ......:
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
@@ -223,3 +223,65 @@ Func _DelPosWithDiff2(ByRef $sResult, $xDiff, $yDiff, $ReturnAsString = True, $A
 
 	Return $Arr
 EndFunc   ;==>_DelPosWithDiff2
+
+Func _ArryRemoveBlanksMod(ByRef $Array)
+	Switch (UBound($Array, 2) > 0) ; If Array Is 2D Array
+		Case True
+			Local $canKeep = True
+			Local $2DBound = UBound($Array, 2)
+			Local $Counter = 0
+			For $i = 0 To (UBound($Array) - 1)
+				For $j = 0 To (UBound($Array, 2) - 1)
+					If $Array[$i][$j] = "" Then
+						$canKeep = False
+					Else
+						$canKeep = True
+						ExitLoop
+					EndIf
+				Next
+				If $canKeep = True Then
+					For $j = 0 To (UBound($Array, 2) - 1)
+						$Array[$Counter][$j] = $Array[$i][$j]
+					Next
+					$Counter += 1
+				EndIf
+			Next
+			ReDim $Array[$Counter][$2DBound]
+		Case Else
+			Local $Counter = 0
+			For $i = 0 To (UBound($Array) - 1)
+				If $Array[$i] <> "" Then
+					$Array[$Counter] = $Array[$i]
+					$Counter += 1
+				EndIf
+			Next
+			ReDim $Array[$Counter]
+	EndSwitch
+EndFunc   ;==>_ArryRemoveBlanks
+
+Func _StringEqualSplit($sString, $iNumChars = Default)
+	If $iNumChars = Default Then $iNumChars = StringLen($sString)
+	If Not IsString($sString) Or $sString = "" Then Return SetError(1, 0, 0)
+	If Not IsInt($iNumChars) Or $iNumChars < 1 Then Return SetError(2, 0, 0)
+	Return StringRegExp($sString, "(?s).{1," & $iNumChars & "}", 3)
+EndFunc   ;==>_StringEqualSplit
+
+Func _ArrayMerge(ByRef $a_base, ByRef $a_add, $i_start = 0)
+	Local $X
+	For $X = $i_start To UBound($a_add) - 1
+		_ArrayAdd($a_base, $a_add[$X], 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
+	Next
+EndFunc   ;==>_ArrayMerge
+
+Func _ArrayClear(ByRef $aArray)
+    Local $iCols = UBound($aArray, 2)
+    Local $iDim = UBound($aArray, 0)
+    Local $iRows = UBound($aArray, 1)
+    If $iDim = 1 Then
+        Local $aArray1D[$iRows]
+        $aArray = $aArray1D
+    Else
+        Local $aArray2D[$iRows][$iCols]
+        $aArray = $aArray2D
+    EndIf
+EndFunc   ;==>_ArrayClear
