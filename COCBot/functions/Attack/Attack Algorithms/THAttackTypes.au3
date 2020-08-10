@@ -30,11 +30,7 @@ Func AttackTHParseCSV($test = False)
 		Case $LB
 			$attackCSVtoUse = $g_iTHSnipeBeforeScript[$LB]
 		Case $DB
-			If $g_bDuringMilkingAttack = True Then
-				$attackCSVtoUse = $g_sMilkFarmAlgorithmTh
-			Else
-				$attackCSVtoUse = $g_iTHSnipeBeforeScript[$DB]
-			EndIf
+			$attackCSVtoUse = $g_iTHSnipeBeforeScript[$DB]
 	EndSwitch
 
 
