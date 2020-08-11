@@ -994,10 +994,11 @@ Func btnRunFunction($bExecuteCapture = False)
 	
 	Setlog($sSCap & "| Run Function : " & $sFunc, $COLOR_ACTION)
 
-	Local $hTimer = TimerInit() ; Begin the timer and store the handle in a variable.
+	Local $iTimer = __TimerInit()
 	Local $saExecResult = Execute($sFunc)
 	$iError = @error
-	Setlog($sSCap & "| Time Execution : " & TimerDiff($hTimer), $COLOR_INFO)
+	Local $iCalc = Round(__TimerDiff($iTimer)/1000, 2)
+	Setlog($sSCap & "| Time Execution : " & $iCalc & " sec", $COLOR_INFO)
 
 	If $iError <> 0 Then
 		Setlog($sSCap & "| Result : Error.", $COLOR_ERROR)

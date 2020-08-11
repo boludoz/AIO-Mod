@@ -2563,32 +2563,34 @@ Func AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 	$g_bTogglePauseAllowed = False
 	
 	; ensure dimensions are not exceeding buffer, DLL might crash with exception code c0000005
-	If $iWidth > $g_iGAME_WIDTH Then $iWidth = $g_iGAME_WIDTH
-	If $iHeight > $g_iGAME_HEIGHT Then $iHeight = $g_iGAME_HEIGHT
-	If $iWidth < 1 Then $iWidth = 1
-	If $iHeight < 1 Then $iHeight = 1
-	If $iLeft > $g_iGAME_WIDTH - 1 Then $iLeft = $g_iGAME_WIDTH - 1
-	If $iTop > $g_iGAME_HEIGHT - 1 Then $iTop = $g_iGAME_HEIGHT - 1
-	If $iLeft < 0 Then $iLeft = 0
-	If $iTop < 0 Then $iTop = 0
-	If $iLeft + $iWidth > $g_iGAME_WIDTH Then $iWidth = $g_iGAME_WIDTH - $iLeft
-	If $iTop + $iHeight > $g_iGAME_HEIGHT Then $iHeight = $g_iGAME_HEIGHT - $iTop
-	Local $hResult
-	
+	If $iWidth > $g_iGAME_WIDTH Or $iHeight > $g_iGAME_HEIGHT Or $iWidth < 1 Or $iHeight < 1 Or $iLeft < 0 Or $iTop < 0 Or $iLeft > $g_iGAME_WIDTH - 1 Or $iTop > $g_iGAME_HEIGHT - 1 Then
+		SetLog("AndroidScreencap | Capture out of dimensions : " & $iLeft & "-" & $iTop & "-" & $iWidth & "-" & $iHeight, $COLOR_ERROR)
+		If $iWidth > $g_iGAME_WIDTH Then $iWidth = $g_iGAME_WIDTH
+		If $iHeight > $g_iGAME_HEIGHT Then $iHeight = $g_iGAME_HEIGHT
+		If $iWidth < 1 Then $iWidth = 1
+		If $iHeight < 1 Then $iHeight = 1
+		If $iLeft < 0 Then $iLeft = 0
+		If $iTop < 0 Then $iTop = 0
+		If $iLeft > $g_iGAME_WIDTH - 1 Then $iLeft = $g_iGAME_WIDTH - 1
+		If $iTop > $g_iGAME_HEIGHT - 1 Then $iTop = $g_iGAME_HEIGHT - 1
+	EndIf
+
 	Local $sBotTitleEx = $g_sAndroidEmulator & $g_sAndroidInstance
-	$sBotTitleEx = ($g_iAndroidSecureFlags <> 0) ? (GetSecureFilename($sBotTitleEx)) : (StringRegExpReplace($sBotTitleEx, '[/:*?"<>|]', '_'))
+	$sBotTitleEx = ($g_iAndroidSecureFlags <> 0) ? (GetSecureFilename(StringRegExpReplace($sBotTitleEx, '[/:*?"<>|]', '_'))) : (StringRegExpReplace($sBotTitleEx, '[/:*?"<>|]', '_'))
 	Local $Filename = $sBotTitleEx & ".rgba"
 	If $g_bAndroidAdbScreencapPngEnabled = True Then $Filename = $sBotTitleEx & ".png"
 	
 	; Wait for capture.
-	$hResult = Execute(_AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount, GetSecureFilename($sBotTitleEx)))
-	Local $error = SetError(@error, @extended, $hResult)
-	
+	Local $hResult = _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount, GetSecureFilename($sBotTitleEx))
+	Local $error = @error 
+
 	; delete file
-	If $g_iAndroidSecureFlags <> 0 Then FileDelete($hostPath & $Filename)
+	If $g_iAndroidSecureFlags <> 0 Then 
+		FileDelete($hostPath & $Filename)
+	EndIf
 	
 	$g_bTogglePauseAllowed = $wasAllowed
-	Return $error
+	Return SetError($error, @extended, $hResult)
 EndFunc   ;==>AndroidScreencap
 
 Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0, $Filename = -1)
@@ -2645,7 +2647,6 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0, $File
 
 	;FileDelete($hostPath & $Filename)
 	AndroidAdbSendShellCommand("screencap """ & $androidPath & $Filename & """", $g_iAndroidAdbScreencapWaitAdbTimeout, $wasRunState)
-	;$s = AndroidAdbSendShellCommand("screencap """ & $androidPath & $filename & """", -1, $wasRunState)
 	If $__TEST_ERROR_SLOW_ADB_SCREENCAP_DELAY > 0 Then Sleep($__TEST_ERROR_SLOW_ADB_SCREENCAP_DELAY)
 	Local $shellLogInfo = @extended
 
@@ -2669,24 +2670,20 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0, $File
 		Local $iHeaderSize = DllStructGetSize($tHeader)
 		Local $iDataSize = DllStructGetSize($g_aiAndroidAdbScreencapBuffer)
 
-		; wait for file (required for Droid4X)
+		; wait for file.
 		$ExpectedFileSize = $g_iAndroidClientWidth * $g_iAndroidClientHeight * 4 + $iHeaderSize
-		#cs
-			While __TimerDiff($hTimer) < $g_iAndroidAdbScreencapWaitFileTimeout And FileGetSize($hostPath & $filename) < $ExpectedFileSize ; wait max. 5 seconds
+		While $iSize < $ExpectedFileSize And __TimerDiff($hTimer) < $g_iAndroidAdbScreencapWaitFileTimeout
+			If $hFile = 0 Then 
+				$hFile = _WinAPI_CreateFile($hostPath & $Filename, 2, 2, 7)
+			EndIf
+			If $hFile <> 0 Then 
+				$iSize = _WinAPI_GetFileSizeEx($hFile)
+			EndIf
+			If $iSize >= $ExpectedFileSize Then 
+				ExitLoop
+			EndIf
 			Sleep(10)
 			If $wasRunState = True And $g_bRunState = False Then Return SetError(1, 0)
-			$iLoopCountFile += 1
-			WEnd
-		#ce
-		While $iSize < $ExpectedFileSize And __TimerDiff($hTimer) < $g_iAndroidAdbScreencapWaitFileTimeout
-			If $hFile = 0 Then $hFile = _WinAPI_CreateFile($hostPath & $Filename, 2, 2, 7)
-			If $hFile <> 0 Then $iSize = _WinAPI_GetFileSizeEx($hFile)
-			If $iSize >= $ExpectedFileSize Then ExitLoop
-			Sleep(10)
-			If $wasRunState = True And $g_bRunState = False Then
-				If $hFile <> 0 Then _WinAPI_CloseHandle($hFile)
-				Return SetError(1, 0)
-			EndIf
 			$iLoopCountFile += 1
 		WEnd
 
@@ -2772,13 +2769,6 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0, $File
 			$g_hAndroidAdbScreencapBufferPngHandle = 0
 		EndIf
 		Local $hBitmap = 0
-		#cs causes open file handles
-			While $hBitmap = 0 And __TimerDiff($hTimer) < $g_iAndroidAdbScreencapWaitFileTimeout
-			;$hBitmap = _GDIPlus_ImageLoadFromFile($hostPath & $filename)
-			$hBitmap = _GDIPlus_BitmapCreateFromFile($hostPath & $filename)
-			If $hBitmap = 0 Then Sleep(10)
-			WEnd
-		#ce
 
 		While $iSize < $ExpectedFileSize And __TimerDiff($hTimer) < $g_iAndroidAdbScreencapWaitFileTimeout
 			If $hFile = 0 Then $hFile = _WinAPI_CreateFile($hostPath & $Filename, 2, 2, 7)
@@ -2788,7 +2778,6 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0, $File
 			If $wasRunState = True And $g_bRunState = False Then Return SetError(1, 0)
 			$iLoopCountFile += 1
 		WEnd
-
 
 		Local $hData = _MemGlobalAlloc($iSize, $GMEM_MOVEABLE)
 		Local $pData = _MemGlobalLock($hData)
@@ -2857,39 +2846,10 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0, $File
 	; delete file
 	If $Filename = -1 And $g_iAndroidSecureFlags <> 0 Then FileDelete($hostPath & $Filename)
 	
-	Local $duration = Int(__TimerDiff($startTimer))
-	; dynamically adjust $g_iAndroidAdbScreencapTimeout to 3 x of current duration ($g_iAndroidAdbScreencapTimeoutDynamic)
-	$g_iAndroidAdbScreencapTimeout = ($g_iAndroidAdbScreencapTimeoutDynamic = 0 ? $g_iAndroidAdbScreencapTimeoutMax : $duration * $g_iAndroidAdbScreencapTimeoutDynamic)
-	If $g_iAndroidAdbScreencapTimeout < $g_iAndroidAdbScreencapTimeoutMin Then $g_iAndroidAdbScreencapTimeout = $g_iAndroidAdbScreencapTimeoutMin
-	If $g_iAndroidAdbScreencapTimeout > $g_iAndroidAdbScreencapTimeoutMax Then $g_iAndroidAdbScreencapTimeout = $g_iAndroidAdbScreencapTimeoutMax
-	;SetDebugLog("AndroidScreencap (" & $duration & "ms," & $shellLogInfo & "," & $iLoopCountFile & "): l=" & $iLeft & ",t=" & $iTop & ",w=" & $iWidth & ",h=" & $iHeight & ", " & $filename & ": w=" & $g_iAndroidAdbScreencapWidth & ",h=" & $g_iAndroidAdbScreencapHeight & ",f=" & $iF)
-
-	$g_iAndroidAdbScreencapTimer = __TimerInit() ; timeout starts now
-
-	; update total stats
-	$g_aiAndroidAdbStatsTotal[$AdbStatsType][0] += 1
-	$g_aiAndroidAdbStatsTotal[$AdbStatsType][1] += $duration
-	Local $iLastCount = UBound($g_aiAndroidAdbStatsLast, 2) - 2
-	; Last 10 screencap durations, 0 is sum of durations, 1 is 0-based index to oldest, 2-11 last 10 durations
-	If $g_aiAndroidAdbStatsTotal[$AdbStatsType][0] <= $iLastCount Then
-		$g_aiAndroidAdbStatsLast[$AdbStatsType][0] += $duration
-		$g_aiAndroidAdbStatsLast[$AdbStatsType][$g_aiAndroidAdbStatsTotal[$AdbStatsType][0] + 1] = $duration
-		If $g_aiAndroidAdbStatsTotal[$AdbStatsType][0] = $iLastCount Then $g_aiAndroidAdbStatsLast[$AdbStatsType][1] = 0 ; init last index
-	Else
-		Local $iLastIdx = $g_aiAndroidAdbStatsLast[$AdbStatsType][1] + 2
-		$g_aiAndroidAdbStatsLast[$AdbStatsType][0] -= $g_aiAndroidAdbStatsLast[$AdbStatsType][$iLastIdx] ; remove last duration
-		$g_aiAndroidAdbStatsLast[$AdbStatsType][0] += $duration ; add current duration
-		$g_aiAndroidAdbStatsLast[$AdbStatsType][$iLastIdx] = $duration ; update current duration
-		$g_aiAndroidAdbStatsLast[$AdbStatsType][1] = Mod($g_aiAndroidAdbStatsLast[$AdbStatsType][1] + 1, $iLastCount) ; update oldest index
+	If $g_bDebugAndroid Or Mod($g_aiAndroidAdbStatsTotal[$AdbStatsType][0], 100) = 0 Then
+		Local $duration = Int(__TimerDiff($startTimer))
+		If $g_bDebugAndroid Then SetLog("AdbScreencap: " & $duration & " ms " & $shellLogInfo & "," & $iLoopCountFile & ",l=" & $iLeft & ",t=" & $iTop & ",w=" & $iWidth & ",h=" & $iHeight & ", " & $Filename & ": w=" & $g_iAndroidAdbScreencapWidth & ",h=" & $g_iAndroidAdbScreencapHeight)
 	EndIf
-	If $g_aiAndroidAdbStatsLast[$AdbStatsType][1] = 0 Then
-		Local $totalAvg = Round($g_aiAndroidAdbStatsTotal[$AdbStatsType][1] / $g_aiAndroidAdbStatsTotal[$AdbStatsType][0])
-		Local $lastAvg = Round($g_aiAndroidAdbStatsLast[$AdbStatsType][0] / $iLastCount)
-		If $g_bDebugAndroid Or Mod($g_aiAndroidAdbStatsTotal[$AdbStatsType][0], 100) = 0 Then
-			SetDebugLog("AdbScreencap: " & $totalAvg & "/" & $lastAvg & "/" & $duration & " ms (all/" & $iLastCount & "/1)," & $shellLogInfo & "," & $iLoopCountFile & ",l=" & $iLeft & ",t=" & $iTop & ",w=" & $iWidth & ",h=" & $iHeight & ", " & $Filename & ": w=" & $g_iAndroidAdbScreencapWidth & ",h=" & $g_iAndroidAdbScreencapHeight & ",f=" & $iF)
-		EndIf
-	EndIf
-	
 	$tBIV5HDR = 0 ; Release the resources used by the structure
 	Return $hHBitmap
 EndFunc   ;==>_AndroidScreencap

@@ -90,14 +90,13 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 
 	Local $aiPostFix[4] = [25, 103, 815, 712]
 
-	If $bForceCapture Then _CaptureRegion2($aiPostFix[0], $aiPostFix[1], $aiPostFix[2], $aiPostFix[3])
+	If $bForceCapture Then _CaptureRegions($aiPostFix[0], $aiPostFix[1], $aiPostFix[2], $aiPostFix[3])
 
 	Local $aRes = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sDirectory, "str", GetDiamondFromArray($aiPostFix), "Int", $Quantity2Match, "str", GetDiamondFromArray($aiPostFix), "Int", 0, "Int", 1000)
 
 	Local $KeyValue = StringSplit($aRes[0], "|", $STR_NOCOUNT)
 	Local $aPositions, $aCoords, $aCoordsM
 	If $g_bDebugSetlog Then SetDebugLog("Detected : " & UBound($KeyValue) & " tiles")
-	_CaptureRegion()
 	For $i = 0 To UBound($KeyValue) - 1
 		$aPositions = RetrieveImglocProperty($KeyValue[$i], "objectpoints")
 		$aCoords = decodeMultipleCoords($aPositions, 0, 0, 0)
@@ -277,9 +276,3 @@ Func _DebugFailedImageDetection($Text)
 		_GDIPlus_BitmapDispose($hEditedImage)
 	EndIf
 EndFunc   ;==>_DebugFailedImageDetection
-
-#Region - _IsChecked, From: https://www.autoitscript.com/autoit3/docs/functions/GUICtrlCreateCheckbox.htm
-Func _IsChecked($idControlID)
-	Return BitAND(GUICtrlRead($idControlID), $GUI_CHECKED) = $GUI_CHECKED
-EndFunc   ;==>_IsChecked
-#EndRegion - _IsChecked, From: https://www.autoitscript.com/autoit3/docs/functions/GUICtrlCreateCheckbox.htm

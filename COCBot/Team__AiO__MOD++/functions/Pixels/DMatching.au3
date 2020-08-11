@@ -96,8 +96,8 @@ Func DFind($sBundle, $iRegionX = 0, $iRegionY = 0, $iRegionWidth = 0, $iRegionHe
     If $iRegionX = Default Then
         $iRegionX = 0
         $iRegionY = 0
-        $iRegionWidth = 0
-        $iRegionHeight = 0
+        $iRegionWidth = $g_iGAME_WIDTH
+        $iRegionHeight = $g_iGAME_HEIGHT
     EndIf
     If $iLevelStart = Default Then
         $iLevelStart = 0
@@ -113,60 +113,69 @@ Func DFind($sBundle, $iRegionX = 0, $iRegionY = 0, $iRegionWidth = 0, $iRegionHe
     EndIf
     ; End Setting Parameters
 
-    If $bForceCapture Then _CaptureRegion2() ;to have FULL screen image to work with
+    If $bForceCapture Then _CaptureRegion2() ; To have FULL screen image to work with
 
     Local $sResult = DllCallDMatching("Find", "str", "handle", $g_hHBitmap2, "str", $sBundle, "ushort", $iLevelStart, "ushort", $iLevelEnd, "ushort", $iRegionX, "ushort", $iRegionY, "ushort", $iRegionWidth, "ushort", $iRegionHeight, "ushort", $g_iDMatchingThreads, "ushort", $iLimit, "boolean", $g_bDMatchingDebugImages)
 
     Return $sResult
 EndFunc
-; $g_sECollectorDMatB & "\" & 14 & "\" & 50 & "\"
-; DFind($g_sECollectorDMatB & "\" & 14 & "\" & 50 & "\", 19, 74, 805, 518, $i, $i, 100, True)
-; DMClasicArray(DFind("D:\Github\AIO Mod\dp", 19, 74, 805, 518, 0, 1000, 500, True), 18, True)
-Func DMClasicArray($sMatches, $iDis = 18, $bDebugLog = False)
-	Local $aAR[0][4], $vDecodedMatch
+
+Func DMClasicArray($sMatches, $iDis = 18, $bDebugLog = $g_bDebugImageSave)
     Local $aSplittedMatches = StringSplit($sMatches, "|", $STR_NOCOUNT)
-    For $i = 0 To UBound($aSplittedMatches) - 1
-        $vDecodedMatch = DMDecodeMatch($aSplittedMatches[$i])
-        If $vDecodedMatch <> -1 Then
-			If DMduplicated($aAR, $vDecodedMatch[2], $vDecodedMatch[3], $iDis) Then ContinueLoop
-			Local $aMatchesMatrix[1][4] = [[$vDecodedMatch[0], $vDecodedMatch[2], $vDecodedMatch[3], $vDecodedMatch[1]]]
-			_ArrayAdd($aAR, $aMatchesMatrix)
-        EndIf
+	Local $aAR[UBound($aSplittedMatches)][4], $vDeMatch = "", $i2 = 0, $i3 = 0
+    For $i = 0 To UBound($aSplittedMatches) -1
+	    $vDeMatch = StringSplit($aSplittedMatches[$i], "-", $STR_NOCOUNT) ; Dissociable don't fail.
+		If DMduplicated($aAR, $vDeMatch[2], $vDeMatch[3], $i-$i3, $iDis) Then 
+			$i3 += 1
+			ContinueLoop
+		EndIf
+		$i2 = ($i-$i3)
+		$aAR[$i2][0] = $vDeMatch[0]
+		$aAR[$i2][1] = $vDeMatch[2]
+		$aAR[$i2][2] = $vDeMatch[3]
+		$aAR[$i2][3] = $vDeMatch[1]
     Next
 	
-	If (UBound($aAR) > 0) Then
-		If ($g_bDebugImageSave Or $bDebugLog) Then ; Discard Deploy Points Touch much text on image
-			_CaptureRegion()
-			Local $sSubDir = $g_sProfileTempDebugPath & "DMClasicArray"
+	Redim $aAR[$i-$i3][4]
 
-			DirCreate($sSubDir)
-
-			Local $sDate = @YEAR & "-" & @MON & "-" & @MDAY, $sTime = @HOUR & "." & @MIN & "." & @SEC
-			Local $sDebugImageName = String($sDate & "_" & $sTime & "_.png")
-			Local $hEditedImage = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap)
-			Local $hGraphic = _GDIPlus_ImageGetGraphicsContext($hEditedImage)
-			Local $hPenRED = _GDIPlus_PenCreate(0xFFFF0000, 1)
-
-			For $i = 0 To UBound($aAR) - 1
-				addInfoToDebugImage($hGraphic, $hPenRED, $aAR[$i][0] & "_" & $aAR[$i][3], $aAR[$i][1], $aAR[$i][2])
-			Next
-
-			_GDIPlus_ImageSaveToFile($hEditedImage, $sSubDir & "\" & $g_sFMQTag & $sDebugImageName )
-			_GDIPlus_PenDispose($hPenRED)
-			_GDIPlus_GraphicsDispose($hGraphic)
-			_GDIPlus_BitmapDispose($hEditedImage)
-			$g_sFMQTag = ""
-		EndIf
+	If (UBound($aAR) <> 0) Then
+		If $bDebugLog Then DebugImgArrayClassic($aAR)
 		Return $aAR
 	Else
 		Return -1
 	EndIf
 EndFunc
 
-Func DMduplicated($aXYs, $x1, $y1, $iDistance = 18)
-	For $i = 0 To UBound($aXYs) - 1
+Func DMduplicated($aXYs, $x1, $y1, $i3, $iD = 18)
+	For $i = 0 To $i3
 		If Not $g_bRunState Then Return
-		If Pixel_Distance($aXYs[$i][1], $aXYs[$i][2], $x1, $y1) < $iDistance Then Return True
+		If Pixel_Distance($aXYs[$i][1], $aXYs[$i][2], $x1, $y1) < $iD Then Return True
 	Next
 	Return False
 EndFunc   ;==>DoublePoint
+
+Func DebugImgArrayClassic($aAR = 0)
+	If $g_hHBitmap2 = 0 Then
+		Return
+	EndIf
+	
+	Local $sSubDir = $g_sProfileTempDebugPath & "DMClasicArray"
+
+	DirCreate($sSubDir)
+
+	Local $sDate = @YEAR & "-" & @MON & "-" & @MDAY, $sTime = @HOUR & "." & @MIN & "." & @SEC
+	Local $sDebugImageName = String($sDate & "_" & $sTime & "_.png")
+	Local $hEditedImage = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
+	Local $hGraphic = _GDIPlus_ImageGetGraphicsContext($hEditedImage)
+	Local $hPenRED = _GDIPlus_PenCreate(0xFFFF0000, 1)
+
+	For $i = 0 To UBound($aAR) - 1
+		addInfoToDebugImage($hGraphic, $hPenRED, $aAR[$i][0] & "_" & $aAR[$i][3], $aAR[$i][1], $aAR[$i][2])
+	Next
+
+	_GDIPlus_ImageSaveToFile($hEditedImage, $sSubDir & "\" & $g_sFMQTag & $sDebugImageName )
+	_GDIPlus_PenDispose($hPenRED)
+	_GDIPlus_GraphicsDispose($hGraphic)
+	_GDIPlus_BitmapDispose($hEditedImage)
+	$g_sFMQTag = ""
+EndFunc

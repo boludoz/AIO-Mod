@@ -331,5 +331,9 @@ Func cmbBBWall()
 EndFunc   ;==>cmbBBWall
 
 Func ChkBBGetFromCSV()
-	$g_bChkBBGetFromCSV = _IsChecked($g_hChkBBGetFromCSV)
+	If GUICtrlRead($g_hChkBBGetFromCSV) = $GUI_CHECKED Then
+		$g_bChkBBGetFromCSV = True
+	Else
+		$g_bChkBBGetFromCSV = False
+	EndIf
 EndFunc   ;==>ChkBBGetFromCSV

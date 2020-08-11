@@ -227,7 +227,7 @@ Func ChkSmartFarm($sTypeResources = "All")
 	Return $Return
 
 EndFunc   ;==>ChkSmartFarm
-
+; Old way : 8.11 sec, New way : 7.3 sec.
 Func SmartFarmDetection($iTxtBuildings = "All", $bForceCapture = True)
 
 	; This Function will fill an Array with several informations after Mines, Collectores or Drills detection with Imgloc
@@ -325,7 +325,6 @@ Func SmartFarmDetection($iTxtBuildings = "All", $bForceCapture = True)
 	Else
 		SetLog("ERROR|NONE Building - Detection: " & $iTxtBuildings, $COLOR_INFO)
 	EndIf
-
 EndFunc   ;==>SmartFarmDetection
 
 Func DoublePointF($aXYs, $x1, $y1, $iDistance = 18)

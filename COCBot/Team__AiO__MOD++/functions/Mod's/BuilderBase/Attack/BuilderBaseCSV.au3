@@ -230,7 +230,7 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 						Local $sSelectedDropSideName ;Using For AddTile That Which Side Was Choosed To Attack
 						; Correct FRONT - BACK - LEFT - RIGHT - BH - EDGEB
 						Local $aSelectedDropSidePoints_XY = CorrectDropPoints($sFrontSide, $sDropSide, $aDeployBestPoints, $sSelectedDropSideName)
-						SortPoints($aSelectedDropSidePoints_XY, $bDebug)
+						_ArrayShuffle($aSelectedDropSidePoints_XY)
 						; Just in Case
 						If UBound($aSelectedDropSidePoints_XY) = 0 Then
 							TriggerMachineAbility()
@@ -451,12 +451,12 @@ Func CorrectDropPoints($FrontSide, $sDropSide, $aDeployBestPoints, ByRef $sSelec
 	$sSelectedDropSideName = $sSideNames[$DimToReturn] ;Save Choosed Site
 
 	If ($sDropSide = "FRONTE" Or $sDropSide = "BACKE" Or $sDropSide = "LEFTE" Or $sDropSide = "RIGHTE") And IsArray($g_aFinalOuter) And $DimToReturn < UBound($g_aFinalOuter) Then
-		$ToReturn = FindBestDropPoints($g_aFinalOuter[$DimToReturn], 10)
+		$ToReturn = FindBestDropPoints($g_aFinalOuter[$DimToReturn], 50)
 	Else
 		If IsArray($aDeployBestPoints) And $DimToReturn < UBound($aDeployBestPoints) Then
 			$ToReturn = $aDeployBestPoints[$DimToReturn]
 		ElseIf IsArray($g_aFinalOuter) And $DimToReturn < UBound($g_aFinalOuter) Then ; In Worst Case Senerio If Depoly Points Was Not detected then use outer points.
-			$ToReturn = FindBestDropPoints($g_aFinalOuter[$DimToReturn], 10)
+			$ToReturn = FindBestDropPoints($g_aFinalOuter[$DimToReturn], 50)
 		EndIf
 	EndIf
 
@@ -534,14 +534,6 @@ Func ParseCSVDropPoints($sDropPoints, $aSelectedDropSidePoints_XY, $bDebug)
 
 	Return $aCSVParsedDeployPoint_XY
 EndFunc   ;==>ParseCSVDropPoints
-
-Func SortPoints(ByRef $aSelectedDropSidePoints_XY, $bDebug = False)
-	; SORT by X-axis - column 0
-	If Not $g_bRunState Then Return
-	If UBound($aSelectedDropSidePoints_XY) > 1 Then _ArraySort($aSelectedDropSidePoints_XY, 0, 0, 0, 0)
-	SetDebugLog(UBound($aSelectedDropSidePoints_XY) & " points to deploy in this side!", $COLOR_DEBUG)
-	If $bDebug Then _ArrayToString($aSelectedDropSidePoints_XY)
-EndFunc   ;==>SortPoints
 
 Func AddTilesToDeployPoint(ByRef $aSelectedDropSidePoints_XY, $iAddTiles, $sSelectedDropSideName, $bDebug)
 	If $iAddTiles = 1 Then Return ;Default Value Is 1 Do Nothing
