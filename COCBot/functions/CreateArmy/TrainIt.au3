@@ -101,7 +101,7 @@ Func GetTrainPos(Const $iIndex)
 	; Get the Image path to search
     If $bIsSpell Or $bIsNTroop Or $bIsSTroop Then
 		Local $sFilter = String(GetTroopName($iIndex, 1, True)) & "_" & "*"
-		Local $sDir = ($bIsSpell) ? ($g_sImgTrainSpells) : ($g_sImgTrainTroops)
+		Local $sDir = ($bIsSpell = True) ? ($g_sImgTrainSpells) : ($g_sImgTrainTroops)
 		Local $asImageToUse = _FileListToArray($sDir, $sFilter, $FLTA_FILES, False)
 		If IsArray($asImageToUse) Then
 			; This is about finding the image.
