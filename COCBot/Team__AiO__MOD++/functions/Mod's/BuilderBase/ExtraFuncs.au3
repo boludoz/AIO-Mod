@@ -84,181 +84,62 @@ Func CheckPostponedLog($bNow = False)
 	Return $iLogs
 EndFunc   ;==>CheckPostponedLog
 
-Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, $iFurMin = 5, $iFurMax = 5, $iCenterX = 450, $iCenterY = 425, $bForceCapture = True) ; Return a large amount of quality deploy point with random and safe further from without theorem.
-
+Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, $iFurMin = 5, $iFurMax = 5, $iCenterX = 450, $iCenterY = 425, $bForceCapture = True, $DebugLog = False) ; Return a large amount of quality deploy point with random and safe further from without theorem.
+	Local $vResult[1][2]
 	Local $aTopLeft[0][2], $aTopRight[0][2], $aBottomRight[0][2], $aBottomLeft[0][2]
-
 	Local $aiPostFix[4] = [25, 103, 815, 712]
-
-	If $bForceCapture Then _CaptureRegions($aiPostFix[0], $aiPostFix[1], $aiPostFix[2], $aiPostFix[3])
-
-	Local $aRes = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sDirectory, "str", GetDiamondFromArray($aiPostFix), "Int", $Quantity2Match, "str", GetDiamondFromArray($aiPostFix), "Int", 0, "Int", 1000)
-
-	Local $KeyValue = StringSplit($aRes[0], "|", $STR_NOCOUNT)
-	Local $aPositions, $aCoords, $aCoordsM
-	If $g_bDebugSetlog Then SetDebugLog("Detected : " & UBound($KeyValue) & " tiles")
+	If $bForceCapture Then _CaptureRegion2($aiPostFix[0], $aiPostFix[1], $aiPostFix[2], $aiPostFix[3])
+	If $g_iThreads > 0 And $g_iDMatchingThreads <> $g_iThreads Then
+        $g_iDMatchingThreads = $g_iThreads
+    Else
+        $g_iDMatchingThreads = 32
+    EndIf
+    Local $sResult = DllCallDMatching("Find", "str", "handle", $g_hHBitmap2, "str", $sDirectory, "ushort", 0, "ushort", 0, "ushort", 0, "ushort", 0, "ushort", 0, "ushort", 0, "ushort", $g_iDMatchingThreads, "ushort", 0, "boolean", $g_bDMatchingDebugImages)
+	Local $aPositions, $aCord, $level, $aCoordsM
+	If $g_bDebugSetlog Then SetDebugLog("Detected : " & UBound($sResult) & " tiles")
+	Local $KeyValue = StringSplit($sResult, "|", $STR_NOCOUNT)
+	_CaptureRegion()
 	For $i = 0 To UBound($KeyValue) - 1
-		$aPositions = RetrieveImglocProperty($KeyValue[$i], "objectpoints")
-		$aCoords = decodeMultipleCoords($aPositions, 0, 0, 0)
-		For $iCoords = 0 To UBound($aCoords) - 1
 		_CaptureRegion2Sync()
-			$aCoordsM = $aCoords[$iCoords]
+		Local $aMatches = DMDecodeMatch($KeyValue[$i])
+		If IsArray($aMatches) Then
+			Local $aCoordsM[4] = [$aMatches[2], $aMatches[3], $aMatches[4], $aMatches[5]]
+			If Not isInDiamond($aMatches[2], $aMatches[3], $aiPostFix[0], $aiPostFix[1], $aiPostFix[2], $aiPostFix[3]) Then ContinueLoop
 
 			Local $iFur = Random($iFurMin, $iFurMax, 1)
 			If Int($aiPostFix[0] + $aCoordsM[0]) < Int($iCenterX) Then
 				If Int($aiPostFix[1] + $aCoordsM[1]) < Int($iCenterY) Then
-					Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) - $iFur, ($aiPostFix[1] + $aCoordsM[1]) - $iFur]]
-					If (StringIsSpace(getOcrAndCaptureDOCR($g_sPointBB, $vResult[0][0]-2, $vResult[0][1], 2, 2, True, False)) = 0) Then _ArrayAdd($aTopLeft, $vResult)
-				Else
-					Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) - $iFur, ($aiPostFix[1] + $aCoordsM[1]) + $iFur]]
-					If (StringIsSpace(getOcrAndCaptureDOCR($g_sPointBB, $vResult[0][0]-2, $vResult[0][1], 2, 2, True, False)) = 0) Then _ArrayAdd($aBottomLeft, $vResult)
-				EndIf
+					$vResult[0][0] = ($aiPostFix[0] + $aCoordsM[0]) - ($aCoordsM[2])
+					$vResult[0][1] = ($aiPostFix[1] + $aCoordsM[1]) - ($aCoordsM[3])                            
+					_ArrayAdd($aTopLeft, $vResult)
+				Else                                                                                                                                                 
+					$vResult[0][0] = ($aiPostFix[0] + $aCoordsM[0]) - ($aCoordsM[2])
+					$vResult[0][1] = ($aiPostFix[1] + $aCoordsM[1]) + ($aCoordsM[3])     
+					_ArrayAdd($aBottomLeft, $vResult)
+				EndIf                                                                                                                                                  
 			Else
-				If Int($aiPostFix[1] + $aCoordsM[1]) < Int($iCenterY) Then
-					Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) + $iFur, ($aiPostFix[1] + $aCoordsM[1]) - $iFur]]
-					If (StringIsSpace(getOcrAndCaptureDOCR($g_sPointBB, $vResult[0][0]+2, $vResult[0][1], 2, 2, True, False)) = 0) Then _ArrayAdd($aTopRight, $vResult)
-				Else
-					Local $vResult[1][2] = [[($aiPostFix[0] + $aCoordsM[0]) + $iFur, ($aiPostFix[1] + $aCoordsM[1]) + $iFur]]
-					If (StringIsSpace(getOcrAndCaptureDOCR($g_sPointBB, $vResult[0][0]+2, $vResult[0][1], 2, 2, True, False)) = 0) Then _ArrayAdd($aBottomRight, $vResult)
+				If Int($aiPostFix[1] + $aCoordsM[1]) < Int($iCenterY) Then                                                                                         
+					$vResult[0][0] = ($aiPostFix[0] + $aCoordsM[0]) + ($aCoordsM[2])
+					$vResult[0][1] = ($aiPostFix[1] + $aCoordsM[1]) - ($aCoordsM[3])                          
+					_ArrayAdd($aTopRight, $vResult)                 
+				Else                                                                                                                                                                         
+					$vResult[0][0] = ($aiPostFix[0] + $aCoordsM[0]) + ($aCoordsM[2])
+					$vResult[0][1] = ($aiPostFix[1] + $aCoordsM[1]) + ($aCoordsM[3])                         
+					_ArrayAdd($aBottomRight, $vResult)
 				EndIf
 			EndIf
-		Next
-	Next
-	If _Sleep(200) Then Return
-
-	_ArraySort($aTopLeft, 0, 0, 0, 1)
-
-	Local $iLastY = -1, $iMaxX = -1, $a3, $x, $y
-	Local $aTopLeftNew[0][2]
-
-	For $i2 = 0 To UBound($aTopLeft) - 1
-
-		If $aTopLeft[$i2][1] <> $iMaxX Then
-			$iMaxX = $aTopLeft[$i2][0]
-			$iLastY = $aTopLeft[$i2][1]
-
-			$a3 = _ArrayFindAll($aTopLeftNew, $iLastY, Default, Default, Default, Default, 2)
-			If $a3 <> -1 Then ContinueLoop
-			Local $aArray[1][2] = [[$iMaxX, $iLastY]]
-			_ArrayAdd($aTopLeftNew, $aArray)
 		EndIf
 	Next
-
-	For $i2 = UBound($aTopLeftNew) - 1 To 0 Step -1
-		Local $iTmp[2] = [$aTopLeftNew[$i2][0], $aTopLeftNew[$i2][1]]
-		For $i = UBound($aTopLeftNew) - 1 To 0 Step -1
-			If $i2 = $i Then ContinueLoop
-			$x = Abs($aTopLeftNew[$i][0] - $iTmp[0])
-			$y = Abs($aTopLeftNew[$i][1] - $iTmp[1])
-			If ($x < 10 And $y < 10) And Not ($x > 5 And $y > 5) Then ContinueLoop 2
-			If $i = 0 Then _ArrayDelete($aTopLeftNew, $i2)
-		Next
-	Next
-
-	_ArraySort($aTopRight, 0, 0, 0, 1)
-
-	$iLastY = -1
-	$iMaxX = -1
-
-	Local $aTopRightNew[0][2]
-
-	For $i2 = 0 To UBound($aTopRight) - 1
-
-		If $aTopRight[$i2][0] <> $iMaxX Then
-			$iMaxX = $aTopRight[$i2][0]
-			$iLastY = $aTopRight[$i2][1]
-
-			$a3 = _ArrayFindAll($aTopRightNew, $iLastY, Default, Default, Default, Default, 2)
-			If $a3 <> -1 Then ContinueLoop
-			Local $aArray[1][2] = [[$iMaxX, $iLastY]]
-			_ArrayAdd($aTopRightNew, $aArray)
-		EndIf
-	Next
-
-	For $i2 = UBound($aTopRightNew) - 1 To 0 Step -1
-		Local $iTmp[2] = [$aTopRightNew[$i2][0], $aTopRightNew[$i2][1]]
-		For $i = UBound($aTopRightNew) - 1 To 0 Step -1
-			If $i2 = $i Then ContinueLoop
-			$x = Abs($aTopRightNew[$i][0] - $iTmp[0])
-			$y = Abs($aTopRightNew[$i][1] - $iTmp[1])
-			If ($x < 10 And $y < 10) And Not ($x > 5 And $y > 5) Then ContinueLoop 2
-			If $i = 0 Then _ArrayDelete($aTopRightNew, $i2)
-		Next
-	Next
-
-	_ArraySort($aBottomRight, 0, 0, 0, 1)
-
-	$iLastY = -1
-	$iMaxX = -1
-
-	Local $aBottomRightNew[0][2]
-
-	For $i2 = 0 To UBound($aBottomRight) - 1
-
-		If $aBottomRight[$i2][0] <> $iMaxX Then
-			$iMaxX = $aBottomRight[$i2][0]
-			$iLastY = $aBottomRight[$i2][1]
-
-			If 574 < $iMaxX Then ContinueLoop
-			$a3 = _ArrayFindAll($aBottomRightNew, $iLastY, Default, Default, Default, Default, 2)
-			If $a3 <> -1 Then ContinueLoop
-			Local $aArray[1][2] = [[$iMaxX, $iLastY]]
-			_ArrayAdd($aBottomRightNew, $aArray)
-		EndIf
-	Next
-
-	For $i2 = UBound($aBottomRightNew) - 1 To 0 Step -1
-		Local $iTmp[2] = [$aBottomRightNew[$i2][0], $aBottomRightNew[$i2][1]]
-		For $i = UBound($aBottomRightNew) - 1 To 0 Step -1
-			If $i2 = $i Then ContinueLoop
-			$x = Abs($aBottomRightNew[$i][0] - $iTmp[0])
-			$y = Abs($aBottomRightNew[$i][1] - $iTmp[1])
-			If ($x < 10 And $y < 10) And Not ($x > 5 And $y > 5) Then ContinueLoop 2
-			If $i = 0 Then _ArrayDelete($aBottomRightNew, $i2)
-		Next
-	Next
-
-	_ArraySort($aBottomLeft, 0, 0, 0, 1)
-
-	$iLastY = -1
-	$iMaxX = -1
-
-	Local $aBottomLeftNew[0][2]
-
-	For $i2 = 0 To UBound($aBottomLeft) - 1
-
-		If $aBottomLeft[$i2][0] <> $iMaxX Then
-			$iMaxX = $aBottomLeft[$i2][0]
-			$iLastY = $aBottomLeft[$i2][1]
-			If 574 < $iMaxX Then ContinueLoop
-			$a3 = _ArrayFindAll($aBottomLeftNew, $iLastY, Default, Default, Default, Default, 2)
-			If $a3 <> -1 Then ContinueLoop
-			Local $aArray[1][2] = [[$iMaxX, $iLastY]]
-			_ArrayAdd($aBottomLeftNew, $aArray)
-		EndIf
-	Next
-
-	For $i2 = UBound($aBottomLeftNew) - 1 To 0 Step -1
-		Local $iTmp[2] = [$aBottomLeftNew[$i2][0], $aBottomLeftNew[$i2][1]]
-		For $i = UBound($aBottomLeftNew) - 1 To 0 Step -1
-			If $i2 = $i Then ContinueLoop
-			$x = Abs($aBottomLeftNew[$i][0] - $iTmp[0])
-			$y = Abs($aBottomLeftNew[$i][1] - $iTmp[1])
-			If ($x < 10 And $y < 10) And Not ($x > 5 And $y > 5) Then ContinueLoop 2
-			If $i = 0 Then _ArrayDelete($aBottomLeftNew, $i2)
-		Next
-	Next
-
+	
 	; In no 'DP' case.
-	If UBound($aTopLeftNew) < 11 Or UBound($aTopRightNew) < 11 Or UBound($aBottomRightNew) < 11 Or UBound($aBottomLeftNew) < 11 Then
+	If UBound($aTopLeft) < 4 Or UBound($aTopRight) < 4 Or UBound($aBottomRight) < 4 Or UBound($aBottomLeft) < 4 Then 
 		$g_aBuilderBaseOuterDiamond = BuilderBaseAttackOuterDiamond()
-
+	
 		If $g_aBuilderBaseOuterDiamond <> -1 Then
 			Return BuilderBaseGetEdges($g_aBuilderBaseOuterDiamond, "Outer Edges")
 		EndIf
 	EndIf
-
-	Local $aSides[4] = [$aTopLeftNew, $aTopRightNew, $aBottomRightNew, $aBottomLeftNew]
+	Local $aSides[4] = [$aTopLeft, $aTopRight, $aBottomRight, $aBottomLeft]
 
 	Return $aSides
 EndFunc   ;==>PointDeployBB

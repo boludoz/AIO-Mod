@@ -56,41 +56,45 @@ Func TestBuilderBaseGetHall()
 	Setlog("** TestBuilderBaseGetHall END**", $COLOR_DEBUG)
 EndFunc   ;==>TestBuilderBaseGetHall
 
-Func BuilderBaseGetDeployPoints($FurtherFrom = 5, $DebugImage = False)
+Func BuilderBaseGetDeployPoints($FurtherFrom = 0, $DebugImage = False)
 
 	If Not $g_bRunState Then Return
 
 	Local $DebugLog
-	If $g_bDebugBBattack Or $DebugImage Then $DebugLog = True
-
+	If $g_bDebugBBattack Or $DebugImage Then 
+		$DebugLog = True
+	EndIf
+	
 	; [0] - TopLeft ,[1] - TopRight , [2] - BottomRight , [3] - BottomLeft
 	; Each with an Array [$i][2] =[x,y]  for Xaxis and Yaxis
 	Local $DeployPoints[4]
 	Local $Name[4] = ["TopLeft", "TopRight", "BottomRight", "BottomLeft"]
 	Local $hStarttime = __TimerInit()
 
-	Local $BuilderHallPos = findMultipleQuick($g_sBundleBuilderHall, 1)
-	If $BuilderHallPos <> -1 And UBound($BuilderHallPos) > 0 Then
-		$g_aBuilderHallPos[0][0] = $BuilderHallPos[0][1]
-		$g_aBuilderHallPos[0][1] = $BuilderHallPos[0][2]
+	Local $aBuilderHallPos
+	For $i = 0 To 3
+		$aBuilderHallPos = findMultipleQuick($g_sBundleBuilderHall, 1)
+		If IsArray($aBuilderHallPos) Then ExitLoop
+		If _Sleep(250) Then Return
+	Next
+	
+	If IsArray($aBuilderHallPos) And UBound($aBuilderHallPos) > 0 Then
+		$g_aBuilderHallPos = $aBuilderHallPos
 	Else
 		_DebugFailedImageDetection("BuilderHall")
 		Setlog("Builder Hall detection Error!", $Color_Error)
-		$g_aBuilderHallPos[0][0] = 450
-		$g_aBuilderHallPos[0][1] = 425
+		Local $aBuilderHall[1][4] = [["BuilderHall", 450, 425, 92]]
+		$g_aBuilderHallPos = $aBuilderHall
 	EndIf
 
-	If _sleep(250) Then Return
-	;If $i = 2 Then Return -1
 	If Not $g_bRunState Then Return
 
 	Setlog("Builder Base Hall detection: " & Round(__timerdiff($hStarttime) / 1000, 2) & " seconds", $COLOR_DEBUG)
 	$hStarttime = __TimerInit()
 
-	Local $DeployPointsResult = PointDeployBB($g_sBundleDeployPointsBB, 0, 5, 10, $g_aBuilderHallPos[0][0], $g_aBuilderHallPos[0][1])
+	Local $DeployPointsResult = PointDeployBB($g_sBundleDeployPointsBB, 0, 5, 10, $g_aBuilderHallPos[0][1], $g_aBuilderHallPos[0][2])
 
 	If $DeployPointsResult <> -1 And UBound($DeployPointsResult) > 0 Then
-
 		Local $Sides = $DeployPointsResult
 
 		For $i = 0 To 3
@@ -104,13 +108,13 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = 5, $DebugImage = False)
 		Return -1
 	EndIf
 
+
 	Setlog("Builder Base Internal Deploy Points: " & Round(__timerdiff($hStarttime) / 1000, 2) & " seconds", $COLOR_DEBUG)
 	$hStarttime = __TimerInit()
 
 	$g_aBuilderBaseDiamond = BuilderBaseAttackDiamond()
-	If IsArray($g_aBuilderBaseDiamond) <> True Or Not (UBound($g_aBuilderBaseDiamond) > 0) Then Return False
-	
-	If Not IsArray($g_aBuilderBaseDiamond) Then
+
+	If $g_aBuilderBaseDiamond = -1 Then
 		_DebugFailedImageDetection("DeployPoints")
 		Setlog("Deploy $g_aBuilderBaseDiamond - Points detection Error!", $Color_Error)
 		$g_aExternalEdges = BuilderBaseGetFakeEdges()
@@ -134,24 +138,42 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = 5, $DebugImage = False)
 
 	; Let's get the correct side by BH position  for Outer Points
 	Local $TopLeft[0][2], $TopRight[0][2], $BottomRight[0][2], $BottomLeft[0][2]
-	Local $aSides[4] = [$TopLeft, $TopRight, $BottomRight, $BottomLeft]
 
 	For $i = 0 To 3
 		If Not $g_bRunState Then Return
 		Local $CorrectSide = $g_aOuterEdges[$i]
 		For $j = 0 To UBound($CorrectSide) - 1
 			Local $Point[2] = [$CorrectSide[$j][0], $CorrectSide[$j][1]]
-			Local $ia = DeployPointsPosition($Point)
-			Local $atmp = $aSides[$ia]
-			_ArrayAdd($atmp, $Point)
-			$aSides[$ia] = $atmp
+			Local $Local = DeployPointsPosition($Point)
+			Select
+				Case $Local = "TopLeft"
+					ReDim $TopLeft[UBound($TopLeft) + 1][2]
+					$TopLeft[UBound($TopLeft) - 1][0] = $Point[0]
+					$TopLeft[UBound($TopLeft) - 1][1] = $Point[1]
+
+				Case $Local = "TopRight"
+					ReDim $TopRight[UBound($TopRight) + 1][2]
+					$TopRight[UBound($TopRight) - 1][0] = $Point[0]
+					$TopRight[UBound($TopRight) - 1][1] = $Point[1]
+
+				Case $Local = "BottomRight"
+					ReDim $BottomRight[UBound($BottomRight) + 1][2]
+					$BottomRight[UBound($BottomRight) - 1][0] = $Point[0]
+					$BottomRight[UBound($BottomRight) - 1][1] = $Point[1]
+
+				Case $Local = "BottomLeft"
+					ReDim $BottomLeft[UBound($BottomLeft) + 1][2]
+					$BottomLeft[UBound($BottomLeft) - 1][0] = $Point[0]
+					$BottomLeft[UBound($BottomLeft) - 1][1] = $Point[1]
+			EndSelect
 		Next
 	Next
-
 	; Final array
-	For $i = 0 To 3
-		$g_aFinalOuter[$i] = $aSides[$i]
-	Next
+	$g_aFinalOuter[0] = $TopLeft
+	$g_aFinalOuter[1] = $TopRight
+	$g_aFinalOuter[2] = $BottomRight
+	$g_aFinalOuter[3] = $BottomLeft
+
 	; Verify how many point and if needs OuterEdges points [10 points]
 	For $i = 0 To 3
 		If Not $g_bRunState Then Return
@@ -193,7 +215,7 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = 5, $DebugImage = False)
 
 EndFunc   ;==>BuilderBaseGetDeployPoints
 
-Func FindBestDropPoints($DropPoints, $MaxDropPoint = 50)
+Func FindBestDropPoints($DropPoints, $MaxDropPoint = 10)
 	;Find Best 10 points 1-10 , the 5 is the Middle , 1 = closest to BuilderHall
 	Local $aDeployP[0][2]
 	If Not $g_bRunState Then Return
@@ -232,23 +254,38 @@ Func FindBestDropPoints($DropPoints, $MaxDropPoint = 50)
 	Return $aDeployP
 EndFunc   ;==>FindBestDropPoints
 
-Func DeployPointsPosition($iPoint)
+Func DeployPointsPosition($aPixel, $bIsBH = False)
 	If Not $g_bRunState Then Return
-	If Not IsArray($g_aBuilderHallPos) Then Return (0)
-
-	; Open eyes
-	If Int($iPoint[0]) < Int($g_aBuilderHallPos[0][0]) Then
-		Return (Int($iPoint[1]) < Int($g_aBuilderHallPos[0][1])) ? (0) : (3) ; ("TopLeft") : ("BottomLeft")
+	Local $sReturn = "", $aXY[2]
+	
+	If $bIsBH = True And IsArray($g_aBuilderHallPos) Then
+		$aXY[0] = $g_aBuilderHallPos[0][1]
+		$aXY[1] = $g_aBuilderHallPos[0][2]
 	Else
-		Return (Int($iPoint[1]) < Int($g_aBuilderHallPos[0][1])) ? (1) : (2) ; ("TopRight") : ("BottomRight")
+		$aXY[0] = 441
+		$aXY[1] = 422
 	EndIf
-
+	
+	; Using to determinate the Side position on Screen |Bottom Right|Bottom Left|Top Left|Top Right|
+	If IsArray($aPixel) Then
+		If $aPixel[0] < $aXY[0] And $aPixel[1] <= $aXY[1] Then $sReturn = "TopLeft"
+		If $aPixel[0] >= $aXY[0] And $aPixel[1] < $aXY[1] Then $sReturn = "TopRight"
+		If $aPixel[0] < $aXY[0] And $aPixel[1] > $aXY[1] Then $sReturn = "BottomLeft"
+		If $aPixel[0] >= $aXY[0] And $aPixel[1] >= $aXY[1] Then $sReturn = "BottomRight"
+		If $sReturn = "" Then
+			Setlog("Error on SIDE: " & _ArrayToString($aPixel), $COLOR_ERROR)
+			$sReturn = "TopLeft"
+		EndIf
+		Return $sReturn
+	Else
+		Setlog("ERROR SIDE|DeployPointsPosition!", $COLOR_ERROR)
+	EndIf
 EndFunc   ;==>DeployPointsPosition
 
 Func BuilderBaseBuildingsDetection($iBuilding = 4)
 
 	Local $aBuildings[5] = ["AirDefenses", "Crusher", "GuardPost", "Cannon", "BuilderHall"]
-	If UBound($aBuildings) < $iBuilding Then Return -1
+	If UBound($aBuildings) -1 < $iBuilding Then Return -1
 	
 	Local $sDirectory = $g_sImgOpponentBuildingsBB & "\" & $aBuildings[$iBuilding]
 	
@@ -298,10 +335,10 @@ Func DebugBuilderBaseBuildingsDetection($DeployPoints, $BestDeployPoints, $Debug
 	Local $hPenYellow = _GDIPlus_PenCreate(0xFFEEF017, 3) ; Create a pencil Color EEF017/YELLOW
 	Local $hPenBlue = _GDIPlus_PenCreate(0xFF6052F9, 3) ; Create a pencil Color 6052F9/BLUE
 
-	If $g_aBuilderHallPos[0][1] <> Null Then
-		_GDIPlus_GraphicsDrawRect($hGraphic, $g_aBuilderHallPos[0][0] - 5, $g_aBuilderHallPos[0][1] - 5, 10, 10, $hPenRED)
-		_GDIPlus_GraphicsDrawLine($hGraphic, 0, $g_aBuilderHallPos[0][1], 860, $g_aBuilderHallPos[0][1], $hPenWhite)
-		_GDIPlus_GraphicsDrawLine($hGraphic, $g_aBuilderHallPos[0][0], 0, $g_aBuilderHallPos[0][0], 628, $hPenWhite)
+	If IsArray($g_aBuilderHallPos) Then
+		_GDIPlus_GraphicsDrawRect($hGraphic, $g_aBuilderHallPos[0][1] - 5, $g_aBuilderHallPos[0][2] - 5, 10, 10, $hPenRED)
+		_GDIPlus_GraphicsDrawLine($hGraphic, 0, $g_aBuilderHallPos[0][2], 860, $g_aBuilderHallPos[0][2], $hPenWhite)
+		_GDIPlus_GraphicsDrawLine($hGraphic, $g_aBuilderHallPos[0][1], 0, $g_aBuilderHallPos[0][1], 628, $hPenWhite)
 	EndIf
 
 	Local $Text = ["TL", "TR", "BR", "BL"]
@@ -564,7 +601,7 @@ Func BuilderBaseGetFakeEdges()
 EndFunc   ;==>BuilderBaseGetFakeEdges
 
 Func BuilderBaseResetAttackVariables()
-	Global $g_aBuilderHallPos[1][2] = [[Null, Null]], $g_aAirdefensesPos[0][2], $g_aCrusherPos[0][2], $g_aCannonPos[0][2], $g_aGuardPostPos[0][2], $g_aDeployPoints, $g_aDeployBestPoints
+	Global $g_aBuilderHallPos = -1, $g_aAirdefensesPos = -1, $g_aCrusherPos = -1, $g_aCannonPos = -1, $g_aGuardPostPos = -1, $g_aDeployPoints, $g_aDeployBestPoints
 	Global $g_aOpponentBuildings[6] = [$g_aAirdefensesPos, $g_aCrusherPos, $g_aGuardPostPos, $g_aCannonPos, $g_aBuilderHallPos, $g_aDeployPoints]
 	Global $g_aExternalEdges, $g_aBuilderBaseDiamond, $g_aOuterEdges, $g_aBuilderBaseOuterDiamond, $g_aBuilderBaseOuterPolygon, $g_aFinalOuter[4]
 EndFunc   ;==>BuilderBaseResetAttackVariables
@@ -572,22 +609,22 @@ EndFunc   ;==>BuilderBaseResetAttackVariables
 Func BuilderBaseAttackMainSide()
 	Local $sMainSide = "TopLeft"
 	Local $sSideNames[4] = ["TopLeft", "TopRight", "BottomRight", "BottomLeft"]
-	Local $sBuilderNames[4] = ["Airdefenses", "Crusher", "GuardPost", "Cannon"]
+	Local $sBuilderNames[5] = ["Airdefenses", "Crusher", "GuardPost", "Cannon", "BuilderHall"]
 	Local $QuantitiesDetected[4] = [0, 0, 0, 0]
 	Local $QuantitiesAttackSide[4] = [0, 0, 0, 0]
-	Local $Buildings[4] = [$g_aAirdefensesPos, $g_aCrusherPos, $g_aGuardPostPos, $g_aCannonPos]
+	Local $Buildings[5] = [$g_aAirdefensesPos, $g_aCrusherPos, $g_aGuardPostPos, $g_aCannonPos, $g_aBuilderHallPos]
 
-	; $g_aAirdefensesPos, $g_aCrusherPos, $g_aGuardPostPos, $g_aCannonPos
-	For $Index = 0 To 3
+	; $g_aAirdefensesPos, $g_aCrusherPos, $g_aGuardPostPos, $g_aCannonPos, $g_aBuilderHallPos
+	For $Index = 0 To UBound($Buildings) -1
 		If Not $g_bRunState Then Return
 		Local $tempBuilders = $Buildings[$Index]
 		SetDebugLog("BuilderBaseAttackMainSide - Builder Name : " & $sBuilderNames[$Index])
 		SetDebugLog("BuilderBaseAttackMainSide - All points: " & _ArrayToString($tempBuilders))
 		; Can exist more than One Building detected
 		For $Howmany = 0 To UBound($tempBuilders) - 1
-			If $tempBuilders[$Howmany][0] = Null Then ExitLoop ; goes to next Builder Type
+			If Not IsArray($tempBuilders) Then ExitLoop ; goes to next Builder Type
 			Local $TempBuilder = [$tempBuilders[$Howmany][1], $tempBuilders[$Howmany][2]]
-			Local $side = DeployPointsPosition($TempBuilder)
+			Local $side = DeployPointsPosition($TempBuilder, ($Howmany = 4))
 			SetDebugLog("BuilderBaseAttackMainSide - Point: " & _ArrayToString($TempBuilder))
 			SetDebugLog("BuilderBaseAttackMainSide - " & $sBuilderNames[$Index] & " Side : " & $side)
 			For $Sides = 0 To UBound($sSideNames) - 1

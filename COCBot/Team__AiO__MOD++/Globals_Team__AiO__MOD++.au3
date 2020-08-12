@@ -265,7 +265,7 @@ Global $g_iAvailableAttacksBB = 0, $g_iLastDamage = 0
 Global $g_sTxtRegistrationToken = ""
 
 Global Enum $g_iAirDefense = 0, $g_iCrusher, $g_iGuardPost, $g_iCannon, $g_iBuilderHall, $g_iDeployPoints
-Global $g_aBuilderHallPos[1][2] = [[Null, Null]], $g_aAirdefensesPos[0][2], $g_aCrusherPos[0][2], $g_aCannonPos[0][2], $g_aGuardPostPos[0][2], $g_aDeployPoints, $g_aDeployBestPoints
+Global $g_aBuilderHallPos = -1, $g_aAirdefensesPos = -1, $g_aCrusherPos = -1, $g_aCannonPos = -1, $g_aGuardPostPos = -1, $g_aDeployPoints, $g_aDeployBestPoints
 Global $g_aOpponentBuildings[6] = [$g_aAirdefensesPos, $g_aCrusherPos, $g_aGuardPostPos, $g_aCannonPos, $g_aBuilderHallPos, $g_aDeployPoints]
 Global $g_aExternalEdges, $g_aBuilderBaseDiamond, $g_aOuterEdges, $g_aBuilderBaseOuterDiamond, $g_aBuilderBaseOuterPolygon, $g_aFinalOuter[4]
 

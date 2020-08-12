@@ -83,7 +83,7 @@ Global $g_aOpponentVillageVisible[1][3] = [[0xFED5D4, 0, 1]] ; more ez ; samm0d
 
 ;Global Const $g_sBundleAttackBarBB = $g_sModImageLocation & "\BuildersBase\Bundles\AttackBar"
 Global Const $g_sBundleBuilderHall = $g_sModImageLocation & "\BuildersBase\Bundles\AttackBuildings\BuilderHall"
-Global Const $g_sBundleDeployPointsBB = $g_sModImageLocation & "\BuildersBase\Bundles\AttackBuildings\DeployPoints"
+Global Const $g_sBundleDeployPointsBB = @ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\Image Matching\DropPoints\BuilderBase"
 
 Global Const $g_sImgOpponentBuildingsBB = $g_sModImageLocation & "\BuildersBase\Bundles\AttackBuildings\"
 

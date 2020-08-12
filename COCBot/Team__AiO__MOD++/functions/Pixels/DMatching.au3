@@ -35,6 +35,25 @@ Func CountDMatchingMatches($sMatches, $sObjectNameAndLevel = Default)
 	Return $iCounter
 EndFunc
 
+; Decodes Matches string to an Array, $sMatches must be like: Inferno-5-50-50-100-100|Inferno-6-200-200-100-100 . Representing: ObjectName-ObjectLevel-PointX-PointY-Width-Height
+Func DMDecodeMatches($sMatches)
+    Local $aSplittedMatches = StringSplit($sMatches, "|", $STR_NOCOUNT)
+    Local $aMatches[UBound($aSplittedMatches)][6]
+    For $i = 0 To UBound($aSplittedMatches) - 1
+        Local $aDecodedMatch = DMDecodeMatch($aSplittedMatches[$i])
+        If IsArray($aDecodedMatch) Then
+            $aMatches[$i][0] = $aDecodedMatch[0]
+            $aMatches[$i][1] = $aDecodedMatch[1]
+            $aMatches[$i][2] = $aDecodedMatch[2]
+            $aMatches[$i][3] = $aDecodedMatch[3]
+            $aMatches[$i][4] = $aDecodedMatch[4]
+            $aMatches[$i][5] = $aDecodedMatch[5]
+        EndIf
+    Next
+    Return $aMatches
+EndFunc
+
+#cs
 Func DMDecodeMatches($sMatches = "Inferno-5-50-50-100-100|Inferno-6-200-200-100-100", $sDelim_Item = "-", $sDelim_Row =  "|")
 	Local $iValDim_1, $iValDim_2 = 0, $iColCount
 	Local $aSplit_1 = StringSplit($sMatches, $sDelim_Row, $STR_NOCOUNT + $STR_ENTIRESPLIT)
@@ -53,6 +72,7 @@ Func DMDecodeMatches($sMatches = "Inferno-5-50-50-100-100|Inferno-6-200-200-100-
 	Next
 	Return $aTmp
 EndFunc
+#ce
 
 ; Decodes a Match to an Array, $sMatch must be like: Inferno-14-50-50-100-100 . Representing: ObjectName-ObjectLevel-PointX-PointY-Width-Height
 Func DMDecodeMatch($sMatch)
@@ -96,8 +116,8 @@ Func DFind($sBundle, $iRegionX = 0, $iRegionY = 0, $iRegionWidth = 0, $iRegionHe
     If $iRegionX = Default Then
         $iRegionX = 0
         $iRegionY = 0
-        $iRegionWidth = $g_iGAME_WIDTH
-        $iRegionHeight = $g_iGAME_HEIGHT
+        $iRegionWidth = 0
+        $iRegionHeight = 0
     EndIf
     If $iLevelStart = Default Then
         $iLevelStart = 0

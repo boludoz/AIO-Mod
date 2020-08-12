@@ -82,15 +82,17 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 
 	$g_aExternalEdges = BuilderBaseGetEdges($g_aBuilderBaseDiamond, "External Edges")
 
-
 	Local $sSideNames[4] = ["TopLeft", "TopRight", "BottomRight", "BottomLeft"]
 
-	Local $g_aBuilderHallPos = findMultipleQuick($g_sBundleBuilderHall, 1)
-	If Not IsArray($g_aBuilderHallPos) Then
+	Local $aBuilderHallPos = findMultipleQuick($g_sBundleBuilderHall, 1)
+	
+	If IsArray($aBuilderHallPos) And UBound($aBuilderHallPos) > 0 Then
+		$g_aBuilderHallPos = $aBuilderHallPos
+	Else
 		_DebugFailedImageDetection("BuilderHall")
 		Setlog("Builder Hall detection Error!", $Color_Error)
-		$g_aBuilderHallPos[0][0] = 450
-		$g_aBuilderHallPos[0][1] = 425
+		Local $aBuilderHall[1][4] = [["BuilderHall", 450, 425, 92]]
+		$g_aBuilderHallPos = $aBuilderHall
 	EndIf
 
 	Local $iSide = _ArraySearch($sSideNames, BuilderBaseAttackMainSide(), 0, 0, 0, 0, 0, 0)

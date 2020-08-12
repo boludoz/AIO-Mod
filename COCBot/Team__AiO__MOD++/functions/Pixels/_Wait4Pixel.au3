@@ -22,7 +22,7 @@ EndFunc   ;==>_Wait4Pixel
 
 Func _Wait4PixelGone($x, $y, $sColor, $iColorVariation, $iWait = 1000, $iDelay = 100, $sMsglog = Default) ; Return true if pixel is false
 	; We can only affirm what is not true.
-	Return (_Wait4Pixel($x, $y, $sColor, $iColorVariation, $iWait, $iDelay, $sMsglog) <> True)
+	Return (Not _Wait4Pixel($x, $y, $sColor, $iColorVariation, $iWait, $iDelay, $sMsglog))
 EndFunc   ;==>_Wait4PixelGone
 
 Func _CheckColorPixel($x, $y, $sColor, $iColorVariation, $bFCapture = True, $sMsglog = Default)
@@ -141,7 +141,7 @@ EndFunc   ;==>_Wait4PixelArray
 
 Func _Wait4PixelGoneArray($aSettings) ; Return true if pixel is false
 	; We can only affirm what is not true. What part are you missing ?.
-	Return (_Wait4PixelArray($aSettings) <> True)
+	Return (Not _Wait4PixelArray($aSettings))
 EndFunc   ;==>_Wait4PixelGoneArray
 
 ; #FUNCTION# ====================================================================================================================
@@ -169,5 +169,5 @@ EndFunc   ;==>_WaitForCheckImg
 
 Func _WaitForCheckImgGone($sPathImage, $sSearchZone = Default, $aText = Default, $iWait = 2000, $iDelay = 250)
 	; We can only affirm what is not true. Denial must be comprehensive.
-	Return (_WaitForCheckImgGone($sPathImage, $sSearchZone, $aText, $iWait, $iDelay) <> True)
+	Return (Not _WaitForCheckImgGone($sPathImage, $sSearchZone, $aText, $iWait, $iDelay)
 EndFunc   ;==>_WaitForCheckImg
