@@ -98,14 +98,13 @@ Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, 
 	Local $aPositions, $aCord, $level, $aCoordsM
 	If $g_bDebugSetlog Then SetDebugLog("Detected : " & UBound($sResult) & " tiles")
 	Local $KeyValue = StringSplit($sResult, "|", $STR_NOCOUNT)
-	_CaptureRegion()
 	For $i = 0 To UBound($KeyValue) - 1
-		_CaptureRegion2Sync()
 		Local $aMatches = DMDecodeMatch($KeyValue[$i])
 		If IsArray($aMatches) Then
 			Local $aCoordsM[4] = [$aMatches[2], $aMatches[3], $aMatches[4], $aMatches[5]]
+			; Rotate algorithm.
 			If Not isInDiamond($aMatches[2], $aMatches[3], $aiPostFix[0], $aiPostFix[1], $aiPostFix[2], $aiPostFix[3]) Then ContinueLoop
-
+			
 			Local $iFur = Random($iFurMin, $iFurMax, 1)
 			If Int($aiPostFix[0] + $aCoordsM[0]) < Int($iCenterX) Then
 				If Int($aiPostFix[1] + $aCoordsM[1]) < Int($iCenterY) Then

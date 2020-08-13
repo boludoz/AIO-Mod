@@ -25,26 +25,26 @@ IMGL   |           0|      0|         0|         0|           1|Detectable Build
 FORC   |	     0|      0|         0|         0|           1|Force the FRONT side to be the detectable building , 0/1 = Off/On , select just ONE
 
        |QTY|TROOPNAME__|DROP_POINTS_|ADDTILES_|DROP_SIDE|SLEEPAFTER_|DROP TROOPS
-DROP   |1  |Giant      |2           |0        |BH    |100       |launch Giant on Builder hall to trigger traps and Tank
-DROP   |1  |Giant      |5           |0        |BH    |100       |launch Giant on Builder hall to trigger traps and Tank
-DROP   |1  |Giant      |8           |0        |BH    |2000       |launch Giant on Builder hall to trigger traps and Tank
-DROP   |1  |Breaker    |2           |1        |BH    |100       |launch bombers to open walls up
-DROP   |1  |Breaker    |4           |1        |BH    |100       |launch bombers to open walls up
-DROP   |1  |Breaker    |6           |1        |BH    |100       |launch bombers to open walls up
-DROP   |1  |Breaker    |8           |1        |BH    |500       |launch bombers to open walls up
-DROP   |all|Breaker    |5           |1        |BH    |3000        |launch all remaining bombers to open walls up
-DROP   |1  |Cannon     |1           |1        |BH    |100        |launch cannons on Edges to funnel
-DROP   |1  |Cannon     |2           |1        |BH    |100        |launch cannons on Edges to funnel
-DROP   |1  |Cannon     |9           |1        |BH    |150        |launch cannons on Edges to funnel
-DROP   |1  |Cannon     |10          |1        |BH    |1000        |launch cannons on Edges to funnel
-DROP   |1  |Machine    |5           |0        |BH    |700       |launch Machine 
-DROP   |1  |Giant      |3           |0        |BH    |100        |launch giants for final push tanking
-DROP   |1  |Giant      |5           |0        |BH    |150        |launch giants for final push tanking
-DROP   |1  |Giant      |7           |0        |BH    |200        |launch giants for final push tanking
-DROP   |all|Giant      |5           |0        |BH    |800        |launch all remaining giants
-DROP   |1  |Cannon     |2           |0        |BH    |100        |launch cannon for main push
-DROP   |1  |Cannon     |8           |0        |BH    |150        |launch cannon for main push
-DROP   |1  |Cannon     |3           |1        |BH    |100        |launch cannon for main push
-DROP   |1  |Cannon     |5           |1        |BH    |150        |launch cannon for main push
-DROP   |1  |Cannon     |7           |1        |BH    |100        |launch cannon for main push
-DROP   |all|Cannon     |5           |1        |BH    |200         |launch all remaining canons for push
+DROP   |1  |Giant      |2           |0        |FRONT    |100       |launch Giant on Builder hall to trigger traps and Tank
+DROP   |1  |Giant      |5           |0        |FRONT    |100       |launch Giant on Builder hall to trigger traps and Tank
+DROP   |1  |Giant      |8           |0        |FRONT    |2000       |launch Giant on Builder hall to trigger traps and Tank
+DROP   |1  |Breaker    |2           |1        |FRONT    |100       |launch bombers to open walls up
+DROP   |1  |Breaker    |4           |1        |FRONT    |100       |launch bombers to open walls up
+DROP   |1  |Breaker    |6           |1        |FRONT    |100       |launch bombers to open walls up
+DROP   |1  |Breaker    |8           |1        |FRONT    |500       |launch bombers to open walls up
+DROP   |all|Breaker    |5           |1        |FRONT    |3000        |launch all remaining bombers to open walls up
+DROP   |1  |Cannon     |1           |1        |FRONT    |100        |launch cannons on Edges to funnel
+DROP   |1  |Cannon     |2           |1        |FRONT    |100        |launch cannons on Edges to funnel
+DROP   |1  |Cannon     |9           |1        |FRONT    |150        |launch cannons on Edges to funnel
+DROP   |1  |Cannon     |10          |1        |FRONT    |1000        |launch cannons on Edges to funnel
+DROP   |1  |Machine    |5           |0        |FRONT    |700       |launch Machine 
+DROP   |1  |Giant      |3           |0        |FRONT    |100        |launch giants for final push tanking
+DROP   |1  |Giant      |5           |0        |FRONT    |150        |launch giants for final push tanking
+DROP   |1  |Giant      |7           |0        |FRONT    |200        |launch giants for final push tanking
+DROP   |all|Giant      |5           |0        |FRONT    |800        |launch all remaining giants
+DROP   |1  |Cannon     |2           |0        |FRONT    |100        |launch cannon for main push
+DROP   |1  |Cannon     |8           |0        |FRONT    |150        |launch cannon for main push
+DROP   |1  |Cannon     |3           |1        |FRONT    |100        |launch cannon for main push
+DROP   |1  |Cannon     |5           |1        |FRONT    |150        |launch cannon for main push
+DROP   |1  |Cannon     |7           |1        |FRONT    |100        |launch cannon for main push
+DROP   |all|Cannon     |5           |1        |FRONT    |200         |launch all remaining canons for push

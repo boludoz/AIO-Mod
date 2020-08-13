@@ -2562,18 +2562,33 @@ Func AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 	Local $hostPath = $g_sAndroidPicturesHostPath & $g_sAndroidPicturesHostFolder
 	$g_bTogglePauseAllowed = False
 	
-	; ensure dimensions are not exceeding buffer, DLL might crash with exception code c0000005
-	If $iWidth > $g_iGAME_WIDTH Or $iHeight > $g_iGAME_HEIGHT Or $iWidth < 1 Or $iHeight < 1 Or $iLeft < 0 Or $iTop < 0 Or $iLeft > $g_iGAME_WIDTH - 1 Or $iTop > $g_iGAME_HEIGHT - 1 Then
-		SetLog("AndroidScreencap | Capture out of dimensions : " & $iLeft & "-" & $iTop & "-" & $iWidth & "-" & $iHeight, $COLOR_ERROR)
-		If $iWidth > $g_iGAME_WIDTH Then $iWidth = $g_iGAME_WIDTH
-		If $iHeight > $g_iGAME_HEIGHT Then $iHeight = $g_iGAME_HEIGHT
-		If $iWidth < 1 Then $iWidth = 1
-		If $iHeight < 1 Then $iHeight = 1
-		If $iLeft < 0 Then $iLeft = 0
-		If $iTop < 0 Then $iTop = 0
-		If $iLeft > $g_iGAME_WIDTH - 1 Then $iLeft = $g_iGAME_WIDTH - 1
-		If $iTop > $g_iGAME_HEIGHT - 1 Then $iTop = $g_iGAME_HEIGHT - 1
-	EndIf
+	; Okay, we must do this, but in an optimized way.
+	Local $bOutDim = True
+	Switch True
+		; First Check
+		Case ($iLeft < 0), ($iTop < 0), ($iWidth < 1), ($iHeight < 1)
+			$iLeft = ($iLeft < 0) ? (0) : ($iLeft)
+			$iTop = ($iTop < 0) ? (0) : ($iTop)
+			$iWidth = ($iWidth < 1) ? (1) : ($iWidth)
+			$iHeight = ($iHeight < 1) ? (1) : ($iHeight)
+		
+		; Second Check If higher than WIDTH or HEIGHT
+		Case ($iLeft > $g_iGAME_WIDTH - 1), ($iTop > $g_iGAME_HEIGHT - 1), ($iWidth > $g_iGAME_WIDTH), ($iHeight > $g_iGAME_HEIGHT)
+			$iLeft = ($iLeft > $g_iGAME_WIDTH - 1) ? ($g_iGAME_WIDTH - 1) : ($iLeft)
+			$iTop = ($iTop > $g_iGAME_HEIGHT - 1) ? ($g_iGAME_HEIGHT - 1) :($iTop)
+			$iWidth = ($iWidth > $g_iGAME_WIDTH) ? ($g_iGAME_WIDTH) : ($iWidth)
+			$iHeight = ($iHeight > $g_iGAME_HEIGHT) ? ($g_iGAME_HEIGHT) : ($iHeight)
+		
+		; Third Check
+		Case ($iLeft + $iWidth > $g_iGAME_WIDTH), ($iTop + $iHeight > $g_iGAME_HEIGHT)
+			If ($iLeft + $iWidth > $g_iGAME_WIDTH) Then $iWidth = $g_iGAME_WIDTH - $iLeft
+			If ($iTop + $iHeight > $g_iGAME_HEIGHT) Then $iHeight = $g_iGAME_HEIGHT - $iTop
+		
+		Case Else
+			$bOutDim = False
+	EndSwitch
+	If $bOutDim Then SetLog("AndroidScreencap | Capture out of dimensions : " & $iLeft & "-" & $iTop & "-" & $iWidth & "-" & $iHeight, $COLOR_ERROR)
+
 
 	Local $sBotTitleEx = $g_sAndroidEmulator & $g_sAndroidInstance
 	$sBotTitleEx = ($g_iAndroidSecureFlags <> 0) ? (GetSecureFilename(StringRegExpReplace($sBotTitleEx, '[/:*?"<>|]', '_'))) : (StringRegExpReplace($sBotTitleEx, '[/:*?"<>|]', '_'))
