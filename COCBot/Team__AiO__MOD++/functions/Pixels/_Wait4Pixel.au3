@@ -49,66 +49,6 @@ Func _GetPixelColor2($iX, $iY, $bNeedCapture = False)
 	Return Hex($aPixelColor, 6)
 EndFunc   ;==>_GetPixelColor2
 
-; #FUNCTION# ====================================================================================================================
-; Name ..........: MultiPSimple
-; Description ...:
-; Author ........: Boldina !
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2020
-;                  MyBot is distributed under the terms of the GNU GPL
-; Related .......:
-; Link ..........: https://github.com/MyBotRun/MyBot/wiki
-; Example .......: No
-; ===============================================================================================================================
-
-Func MultiPSimple($iLeft, $iTop, $iRight, $iBottom, $iHex, $iTolerance = 15, $iWait = 5000, $iDelay = 50, $bCapture = True)
-	Local $aReturn[2] = [0, 0]
-
-	Local $hTimer = __TimerInit()
-	While (BitOR($iWait > __TimerDiff($hTimer), ($iWait <= 0)) > 0) ; '-1' support
-		If _Sleep($iDelay) Then Return False
-		
-		Local $xRange
-		Local $yRange
-
-		If ($iLeft < $iRight) Then
-			;Setlog("next")
-			_CaptureRegion($iLeft, $iTop, $iRight, $iBottom)
-			$xRange = Abs($iRight - $iLeft)
-			$yRange = Abs($iBottom - $iTop)
-			;Setlog("1. "&$xRange&" "&$yRange)
-			For $x = 0 To $xRange
-				For $y = 0 To $yRange
-					;Setlog("2. "&$x&" "&$y)
-					If _ColorCheck(_GetPixelColor($x, $y, $bCapture), $iHex, $iTolerance) Then
-						$aReturn[0] = $x + $iLeft
-						$aReturn[1] = $y + $iTop
-						Return $aReturn
-					EndIf
-				Next
-			Next
-		Else
-			;Setlog("back")
-			_CaptureRegion($iRight, $iBottom, $iLeft, $iTop)
-			$xRange = Abs($iRight - $iLeft)
-			$yRange = Abs($iBottom - $iTop)
-			;Setlog("1. "&$xRange&" "&$yRange)
-			For $x = $xRange To 0 Step -1
-				For $y = $yRange To 0 Step -1
-					;Setlog("2. "&$x&" "&$y)
-					If _ColorCheck(_GetPixelColor($x, $y, $bCapture), $iHex, $iTolerance) Then
-						$aReturn[0] = $x + $iRight
-						$aReturn[1] = $y + $iBottom
-						Return $aReturn
-					EndIf
-				Next
-			Next
-		EndIf
-		
-		If ($iWait <= 0) Then ExitLoop ; Loop prevention.
-	WEnd
-
-	Return 0
-EndFunc   ;==>MultiPSimple
 
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: _Wait4PixelArray & _Wait4PixelGoneArray

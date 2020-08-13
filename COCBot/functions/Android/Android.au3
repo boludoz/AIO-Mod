@@ -2563,7 +2563,7 @@ Func AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 	$g_bTogglePauseAllowed = False
 	
 	; Okay, we must do this, but in an optimized way.
-	Local $bOutDim = True
+	Local $bOutDim = True, $iFailX = -1
 	Switch True
 		; First Check
 		Case ($iLeft < 0), ($iTop < 0), ($iWidth < 1), ($iHeight < 1)
@@ -2571,23 +2571,29 @@ Func AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 			$iTop = ($iTop < 0) ? (0) : ($iTop)
 			$iWidth = ($iWidth < 1) ? (1) : ($iWidth)
 			$iHeight = ($iHeight < 1) ? (1) : ($iHeight)
-		
+			$iFailX += 64
+			ContinueCase
+			
 		; Second Check If higher than WIDTH or HEIGHT
 		Case ($iLeft > $g_iGAME_WIDTH - 1), ($iTop > $g_iGAME_HEIGHT - 1), ($iWidth > $g_iGAME_WIDTH), ($iHeight > $g_iGAME_HEIGHT)
 			$iLeft = ($iLeft > $g_iGAME_WIDTH - 1) ? ($g_iGAME_WIDTH - 1) : ($iLeft)
 			$iTop = ($iTop > $g_iGAME_HEIGHT - 1) ? ($g_iGAME_HEIGHT - 1) :($iTop)
 			$iWidth = ($iWidth > $g_iGAME_WIDTH) ? ($g_iGAME_WIDTH) : ($iWidth)
 			$iHeight = ($iHeight > $g_iGAME_HEIGHT) ? ($g_iGAME_HEIGHT) : ($iHeight)
-		
+			$iFailX += 128
+			ContinueCase
+
 		; Third Check
 		Case ($iLeft + $iWidth > $g_iGAME_WIDTH), ($iTop + $iHeight > $g_iGAME_HEIGHT)
 			If ($iLeft + $iWidth > $g_iGAME_WIDTH) Then $iWidth = $g_iGAME_WIDTH - $iLeft
 			If ($iTop + $iHeight > $g_iGAME_HEIGHT) Then $iHeight = $g_iGAME_HEIGHT - $iTop
-		
+			$iFailX += 256
+			ContinueCase
+			
 		Case Else
 			$bOutDim = False
 	EndSwitch
-	If $bOutDim Then SetLog("AndroidScreencap | Capture out of dimensions : " & $iLeft & "-" & $iTop & "-" & $iWidth & "-" & $iHeight, $COLOR_ERROR)
+	If $bOutDim Then SetLog("AndroidScreencap | Capture out of dimensions : " & $iLeft & "-" & $iTop & "-" & $iWidth & "-" & $iHeight & " -" & $iFailX, $COLOR_ERROR)
 
 
 	Local $sBotTitleEx = $g_sAndroidEmulator & $g_sAndroidInstance

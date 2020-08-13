@@ -136,8 +136,16 @@ Func checkImglocError(ByRef $imglocvalue, $funcName, $sTileSource = "", $sImageA
 	EndIf
 EndFunc   ;==>checkImglocError
 
-Func ClickB($sButtonName, $buttonTileArrayOrPatternOrFullPath = Default, $iDelay = 100)
-	Local $aiButton = findButton($sButtonName, $buttonTileArrayOrPatternOrFullPath, 1, True)
+Func ClickB($sButtonName, $buttonTileArrayOrPatternOrFullPath = Default, $iDelay = 100, $iLoop = 1)
+	Local $aiButton = -1
+	
+	For $i = 1 To $iLoop
+		$aiButton = findButton($sButtonName, $buttonTileArrayOrPatternOrFullPath, 1, True)
+		If $iLoop = 1 Then ExitLoop
+		If _Sleep($iDelay) Then Return
+		If IsArray($aiButton) And UBound($aiButton) >= 2 Then ExitLoop
+	Next
+	
 	If IsArray($aiButton) And UBound($aiButton) >= 2 Then
 		ClickP($aiButton, 1)
 		If _Sleep($iDelay) Then Return
@@ -161,19 +169,12 @@ Func findButton($sButtonName, $buttonTileArrayOrPatternOrFullPath = Default, $ma
 		$sButtons = $buttonTileArrayOrPatternOrFullPath
 		If StringInStr($buttonTileArrayOrPatternOrFullPath, "*") > 0 Then
 			Local $aFiles = _FileListToArray($g_sImgImgLocButtons, $sButtons, $FLTA_FILES, True)
-			If UBound($aFiles) < 2 Or $aFiles[0] < 1 Then
-				Return SetError(1, 1, "No files in " & $g_sImgImgLocButtons) ; Set external error code = 1 for bad input values
+			If @error Then
+				Local $vError = SetError(1, 1, False)
+				Setlog("findButton | No files in " & $g_sImgImgLocButtons, $COLOR_ERROR)
+				Return $vError
 			EndIf
-			Local $a[0], $j
-			$j = 0
-			For $i = 1 To $aFiles[0]
-				If StringRegExp($aFiles[$i], ".+[.](xml|png|bmp)$") Then
-					$j += 1
-					ReDim $a[$j]
-					$a[$i - 1] = $aFiles[$i]
-				EndIf
-			Next
-			$aButtons = $a
+			$aButtons = $aFiles
 		Else
 			Local $a[1] = [$sButtons]
 			$aButtons = $a
@@ -193,13 +194,8 @@ Func findButton($sButtonName, $buttonTileArrayOrPatternOrFullPath = Default, $ma
 	For $buttonTile In $aButtons
 
 		; Check function parameters
-		If FileExists($buttonTile) = 0 Then
-			Return SetError(1, 4, "Bad Input Values : Button Image NOT FOUND : " & $buttonTile) ; Set external error code = 1 for bad input values
-		EndIf
+		If FileExists($buttonTile) = 0 Then ContinueLoop ; Team AIO Mod++
 
-		; Capture the screen for comparison
-		; _CaptureRegion2() or similar must be used before
-		; Perform the search
 		If $bForceCapture Then _CaptureRegion2() ;to have FULL screen image to work with
 
 		If $g_bDebugSetlog Then SetDebugLog(" imgloc searching for: " & $sButtonName & " : " & $buttonTile)
@@ -304,6 +300,8 @@ Func GetButtonDiamond($sButtonName)
 			$btnDiamond = GetDiamondFromRect("140,591,720,671")
 		Case "BoostTrainingPotionBtn"
 			$btnDiamond = GetDiamondFromRect("420,395(85,60)")
+		Case "Btnconfirm"
+			$btnDiamond = GetDiamondFromRect("237,185(378,323)")
 		#EndRegion - BoostPotion - Team AIO Mod
 		Case Else
 			$btnDiamond = "FV" ; use full image to locate button

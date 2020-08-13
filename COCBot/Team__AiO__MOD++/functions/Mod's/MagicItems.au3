@@ -189,7 +189,7 @@ EndFunc
 Func BoostPotionMod($sName, $bDebug = False)
 
 	Local $aClick1[2] = [0, 0]
-
+	
 	; Security check
 	Switch $sName
 		Case "BuilderPotion"
@@ -206,46 +206,40 @@ Func BoostPotionMod($sName, $bDebug = False)
 			Setlog("Magic Items : Invalid item " & $sName, $COLOR_ERROR)
 			Return False
 	EndSwitch
-
+	
 	If _Sleep(500) Then Return False
-
+	
 	_ImageSearchXML($g_sImgPotionsBtn, 0, "134, 580, 730, 675", True, False, True, 25)
 	If not IsArray($g_aImageSearchXML) Then Return False
 	If $bDebug Then _ArrayDisplay($g_aImageSearchXML)
-
+	
 	For $iResult = 0 To UBound($g_aImageSearchXML) - 1
 		If _Sleep(100) Then Return False ; CPU Control
 		;$g_bChkBuilderPotion, $g_bChkClockTowerPotion, $g_bChkHeroPotion, $g_bChkLabPotion, $g_bChkPowerPotion, $g_bChkResourcePotion
-
+	
 		If Not ($g_aImageSearchXML[$iResult][0]) = $sName Then ContinueLoop
-
+	
 		$aClick1[0] = $g_aImageSearchXML[$iResult][1]
 		$aClick1[1] = $g_aImageSearchXML[$iResult][2]
 	Next
-
-
-	Setlog("Magic Items : Builder Potion boost " & $sName, $COLOR_SUCCESS)
+	
+	
+	Setlog("Magic Items : boost " & $sName, $COLOR_SUCCESS)
 	ClickP($aClick1)
-
-	;7C8AFF
-	;360, 395
-	;494, 451
-	Local $bFuse = False
-
-	For $i = 0 To 5
-		If _Sleep(500) Then Return False ; CPU Control
-		If IsArray(MultiPSimple(362, 396, 493, 450, Hex(0x8490FF, 6), 15, 5000)) Then
-				If $bDebug Then
-					Setlog(Random(360, 494, 1) & " / " & Random(395, 451, 1), $COLOR_ERROR)
-					Else
-					Click(Random(360, 494, 1), Random(395, 451, 1))
-				EndIf
-			$bFuse = True
-			Else
-			If (($i > 0) And $bFuse) Then ExitLoop
-		EndIf
-	 Next
-
-	Return $bFuse
+	
+	Local $sDir = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\MagicItems\Btnconfirm\"
+	
+	; findButton uses array in this case.
+	Local $aFiles = _FileListToArray($sDir, "Btnconfirm*", $FLTA_FILES, True)
+	If @error = 0 And IsArray($aFiles) Then
+			_ArrayDelete($aFiles, 0)
+			If ClickB("Btnconfirm", $aFiles, 100, 3) Then
+				SetLog("Potion used: " & $sName & ".", $COLOR_ACTION)
+				Return True
+			EndIf
+		Else
+		Setlog("BoostPotionMod | Error in files.", $COLOR_ERROR)
+	EndIf
+	Return False
 EndFunc   ;==>BoostPotionMod
 
