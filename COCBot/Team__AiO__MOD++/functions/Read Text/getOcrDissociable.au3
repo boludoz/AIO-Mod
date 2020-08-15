@@ -10,66 +10,103 @@
 ; Example .......: No
 ; ===============================================================================================================================
 ; Attack Screen
-Func getAttackScreenButtons($x_start, $y_start, $iWidth, $iHeight) ;48, 69 -> Gets complete value of gold xxx,xxx while searching, top left, Getresources.au3
+Func getAttackScreenButtons($x_start, $y_start, $iWidth, $iHeight)
 	Return getOcrAndCaptureDOCR($g_sASButtonsDOCRPath, $x_start, $y_start, $iWidth, $iHeight, False, True)
 EndFunc   ;==>getGoldVillageSearch
 ; End Attack Screen
 
 ; Search village sector
 Func getGoldVillageSearch($x_start, $y_start) ;48, 69 -> Gets complete value of gold xxx,xxx while searching, top left, Getresources.au3
+	If $g_bAndroidAdbScreencap = False Then 
+		Return _getGoldVillageSearch($x_start, $y_start)
+	EndIf
+		
 	Return getOcrAndCaptureDOCR($g_sAttackRGold, $x_start, $y_start, 90, 16, True)
 EndFunc   ;==>getGoldVillageSearch
 
 Func getElixirVillageSearch($x_start, $y_start) ;48, 69+29 -> Gets complete value of Elixir xxx,xxx, top left,  Getresources.au3
+	If $g_bAndroidAdbScreencap = False Then 
+		Return _getElixirVillageSearch($x_start, $y_start)
+	EndIf
+
 	Return getOcrAndCaptureDOCR($g_sAttackRPink, $x_start, $y_start, 90, 16, True)
 EndFunc   ;==>getElixirVillageSearch
 
 Func getDarkElixirVillageSearch($x_start, $y_start) ;48, 69+57 or 69+69  -> Gets complete value of Dark Elixir xxx,xxx, top left,  Getresources.au3
+	If $g_bAndroidAdbScreencap = False Then 
+		Return _getDarkElixirVillageSearch($x_start, $y_start)
+	EndIf
+
 	Return getOcrAndCaptureDOCR($g_sAttackRBlack, $x_start, $y_start, 75, 18, True)
 EndFunc   ;==>getDarkElixirVillageSearch
 
 ; Search village sector end.
 
-Func getResourcesMainScreen($iX_start, $iY_start) ; -> Gets complete value of Gold/Elixir/Dark Elixir/Trophies/Gems xxx,xxx "VillageReport.au3"
-	Return getOcrAndCaptureDOCR($g_sMainResourcesDOCRB, $iX_start, $iY_start, 110, 16, True)
+Func getResourcesMainScreen($x_start, $y_start) ; -> Gets complete value of Gold/Elixir/Dark Elixir/Trophies/Gems xxx,xxx "VillageReport.au3"
+	If $g_bAndroidAdbScreencap = False Then 
+		Return _getResourcesMainScreen($x_start, $y_start)
+	EndIf
+
+	Return getOcrAndCaptureDOCR($g_sMainResourcesDOCRB, $x_start, $y_start, 110, 16, True)
 EndFunc   ;==>getResourcesMainScreen
 
 Func getTrophyMainScreen($x_start, $y_start) ; -> Gets trophy value, top left of main screen "VillageReport.au3"
+	If $g_bAndroidAdbScreencap = False Then 
+		Return _getTrophyMainScreen($x_start, $y_start)
+	EndIf
+
 	Return getOcrAndCaptureDOCR($g_sMainResourcesDOCRB, $x_start, $y_start, 50, 16, True)
 EndFunc   ;==>getTrophyMainScreen
 
 Func getResourcesValueTrainPage($x_start, $y_start) ; -> Gets CheckValuesCost on Train Window
+	If $g_bAndroidAdbScreencap = False Then 
+		Return _getResourcesValueTrainPage($x_start, $y_start)
+	EndIf
+
 	Return getOcrAndCaptureDOCR($g_sMainResourcesDOCRB, $x_start, $y_start, 100, 18, True)
 EndFunc   ;==>getResourcesValueTrainPage
 
-;Func getArmyCampCap($x_start, $y_start, $bNeedCapture = True) ;  -> Gets army camp capacity --> train.au3, and used to read CC request time remaining
-;	Return getOcrAndCaptureDOCR($g_sAOverviewTotals, $x_start, $y_start, 82, 16, True, $bNeedCapture)
-;EndFunc   ;==>getArmyCampCap
-
 Func getBuilders($x_start, $y_start) ;  -> Gets Builders number - main screen --> getBuilders(324,23)
+	If $g_bAndroidAdbScreencap = False Then 
+		Return _getBuilders($x_start, $y_start)
+	EndIf
+
 	Return getOcrAndCaptureDOCR($g_sMainBuildersDOCRB, $x_start, $y_start, 45, 20, True)
 EndFunc   ;==>getBuilders
 
-;Func getTroopCountSmall($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for non-selected troop kind
-;	Return SpecialOCRCut($g_sAttackBarDOCRB, $x_start, $y_start-8, 55, 17+8, True, $bNeedNewCapture)
-;EndFunc   ;==>getTroopCountSmall
-;
-;Func getTroopCountBig($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for selected troop kind
-;	Return SpecialOCRCut($g_sAttackBarDOCRB, $x_start, $y_start-8, 55, 17+8, True, $bNeedNewCapture)
-;EndFunc   ;==>getTroopCountBig
-
-;
 Func _getTroopCountSmall($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for non-selected troop kind
+	If $g_bAndroidAdbScreencap = False Then 
+		Return __getTroopCountSmall($x_start, $y_start, $bNeedNewCapture)
+	EndIf
+
 	Return SpecialOCRCut($g_sAttackBarDOCRB, $x_start, $y_start-8, 55, 17+8, True, $bNeedNewCapture)
 EndFunc   ;==>_getTroopCountSmall
 
 Func _getTroopCountBig($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for selected troop kind
+	If $g_bAndroidAdbScreencap = False Then 
+		Return __getTroopCountBig($x_start, $y_start, $bNeedNewCapture)
+	EndIf
+
 	Return SpecialOCRCut($g_sAttackBarDOCRB, $x_start, $y_start-8, 55, 17+8, True, $bNeedNewCapture)
 EndFunc   ;==>_getTroopCountBig
 
 Func SpecialOCRCut($sBundle, $iX_start, $iY_start, $iWidth, $iHeight, $bRemoveSpace = Default, $bForceCaptureRegion = Default)
 	Return StringReplace(getOcrAndCaptureDOCR($sBundle, $iX_start, $iY_start, $iWidth, $iHeight, $bRemoveSpace, $bForceCaptureRegion), "#", "")
 EndFunc   ;==>getBuilders
+
+#CS - OCR Betas.
+Func getArmyCampCap($x_start, $y_start, $bNeedCapture = True) ;  -> Gets army camp capacity --> train.au3, and used to read CC request time remaining
+	Return getOcrAndCaptureDOCR($g_sAOverviewTotals, $x_start, $y_start, 82, 16, True, $bNeedCapture)
+EndFunc   ;==>getArmyCampCap
+
+Func getTroopCountSmall($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for non-selected troop kind
+	Return SpecialOCRCut($g_sAttackBarDOCRB, $x_start, $y_start-8, 55, 17+8, True, $bNeedNewCapture)
+EndFunc   ;==>getTroopCountSmall
+
+Func getTroopCountBig($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for selected troop kind
+	Return SpecialOCRCut($g_sAttackBarDOCRB, $x_start, $y_start-8, 55, 17+8, True, $bNeedNewCapture)
+EndFunc   ;==>getTroopCountBig
+#CE - OCR Betas.
 
 Func getOcrAndCaptureDOCR($sBundle, $iX_start, $iY_start, $iWidth, $iHeight, $bRemoveSpace = Default, $bForceCaptureRegion = Default)
 	If $bRemoveSpace = Default Then $bRemoveSpace = False

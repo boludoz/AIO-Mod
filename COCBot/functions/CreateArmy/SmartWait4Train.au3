@@ -69,7 +69,7 @@ Func SmartWait4Train($iTestSeconds = Default)
 	If _Sleep($DELAYRESPOND) Then Return
 
 	; verify shield info & update if not already exist
-	If IsArray($g_asShieldStatus) = 0 Or $g_asShieldStatus[0] = "" Or $g_asShieldStatus[0] = "none" Then
+	If Not IsArray($g_asShieldStatus) And ($g_asShieldStatus[0] = "" Or $g_asShieldStatus[0] = "none") Then
 		$aResult = getShieldInfo()
 		If @error Then
 			SetLog("SmartWait4Train Shield OCR error = " & @error & "Extended = " & @extended, $COLOR_ERROR)
@@ -77,7 +77,7 @@ Func SmartWait4Train($iTestSeconds = Default)
 		Else
 			$g_asShieldStatus = $aResult ; Update new values
 		EndIf
-		If IsArray($g_asShieldStatus) And (StringInStr($g_asShieldStatus[0], "shield", $STR_NOCASESENSEBASIC) Or StringInStr($g_asShieldStatus[0], "guard", $STR_NOCASESENSEBASIC)) Then ; check shield after update
+		If IsArray($g_asShieldStatus) And UBound($g_asShieldStatus) = 3 And (StringInStr($g_asShieldStatus[0], "shield", $STR_NOCASESENSEBASIC) Or StringInStr($g_asShieldStatus[0], "guard", $STR_NOCASESENSEBASIC)) Then ; check shield after update ; Custom Fix - Team AIO Mod++
 			If $g_bDebugSetlogTrain Or $g_bDebugSetlog Then SetLog("Have shield till " & $g_asShieldStatus[2] & ", close game while wait for train)", $COLOR_DEBUG)
 			$iTrainWaitCloseFlag = BitOR($iTrainWaitCloseFlag, $TRAINWAIT_SHIELD)
 		EndIf

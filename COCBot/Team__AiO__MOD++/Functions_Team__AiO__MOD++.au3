@@ -18,7 +18,6 @@
 #include "functions\AU3\FixedArray.au3"
 
 ; DOCR
-#include "functions\Read Text\DOCRBundles.au3"
 #include "functions\Read Text\getOcrDissociable.au3"
 
 ; DMatching
@@ -60,23 +59,16 @@
 
 ; Check Collector Outside - Team AiO MOD++
 #include "functions\Mod's\CheckCollectorsOutside\CollectorsAndRedLines.au3"
-#include "functions\Mod's\CheckCollectorsOutside\isOutsideEllipse.au3"
-#include "functions\Mod's\CheckCollectorsOutside\CustomDetect.au3"
 
 ; Switch Profiles - Team AiO MOD++
 #include "functions\Mod's\ProfilesOptions\SwitchProfiles.au3"
 
 ; Farm Schedule - Team AiO MOD++
-#include "functions\Mod's\ProfilesOptions\FarmSchedule.au3"
+#include "functions\Mod's\ProfilesOptions.au3"
 
 ; GTFO
 #include "functions\Mod's\GTFO\GTFO.au3"
 #include "functions\Mod's\GTFO\KickOut.au3"
-
-; Moved to the end to avoid any global declare issues - Team AiO MOD++
-#include "functions\Config\saveConfig.au3"
-#include "functions\Config\readConfig.au3"
-#include "functions\Config\applyConfig.au3"
 
 ; Custom Builder Base
 #include "functions\Mod's\BuilderBase\ExtraFuncs.au3"
@@ -93,12 +85,10 @@
 #include "functions\Mod's\BuilderBase\Camps\BuilderBaseCorrectAttackBar.au3"
 #include "functions\Mod's\BuilderBase\Camps\BuilderBaseCheckArmy.au3"
 
-;~ #include "functions\Mod's\BuilderBase\Village\Collect.au3"
-;~ #include "functions\Mod's\BuilderBase\Village\StartClockTowerBoost.au3"
-;~ #include "functions\Mod's\BuilderBase\Village\BuilderBaseReport.au3"
-;~ #include "functions\Mod's\BuilderBase\Village\SuggestedUpgrades.au3"
-;~ #include "functions\Mod's\BuilderBase\Village\CleanBBYard.au3"
-;~ #include "functions\Mod's\BuilderBase\Village\StarLaboratory.au3"
-
 #include "functions\Mod's\Attack\GetButtons.au3"
 #include "functions\Mod's\Attack\VerifyDropPoints.au3"
+
+; Moved to the end to avoid any global declare issues - Team AiO MOD++
+#include "functions\Config\saveConfig.au3"
+#include "functions\Config\readConfig.au3"
+#include "functions\Config\applyConfig.au3"

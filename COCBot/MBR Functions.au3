@@ -294,5 +294,5 @@
 #include "functions\Config\readConfig.au3"
 #include "functions\Config\saveConfig.au3"
 
-; Team AiO MOD++ (2019)
+; Team AiO MOD++ (2020)
 #include "Team__AiO__MOD++\Functions_Team__AiO__MOD++.au3"

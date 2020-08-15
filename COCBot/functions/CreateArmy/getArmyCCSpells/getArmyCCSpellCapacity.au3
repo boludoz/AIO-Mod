@@ -34,6 +34,18 @@ Func getArmyCCSpellCapacity($bOpenArmyWindow = False, $bCloseArmyWindow = False,
 			If _Sleep($DELAYCHECKARMYCAMP5) Then Return
 		EndIf
 	EndIf
+	
+	#Region - Low TH Custom - Team AIO Mod++
+	Local $aUnlockedSpellsCC[4] = [460, 475, 0xD0D0C0, 25] ; Low TH Custom - Team AIO Mod++
+	If _ColorCheck(_GetPixelColor($aUnlockedSpellsCC[0], $aUnlockedSpellsCC[1], True), Hex($aUnlockedSpellsCC[2], 6), $aUnlockedSpellsCC[3]) = True Then ; Without being invasive.
+		$g_iTotalCCSpells = 0
+		$g_iCurrentCCSpells = 0
+		If $bCloseArmyWindow Then
+			ClickAway()
+		EndIf
+		Return
+	EndIf
+	#EndRegion - Low TH Custom - Team AIO Mod++
 
 	; Verify spell current and total capacity
 	Local $sCCSpellsInfo = getArmyCampCap($g_aArmyCCSpellSize[0], $g_aArmyCCSpellSize[1], $bNeedCapture) ; OCR read Spells and total capacity

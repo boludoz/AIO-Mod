@@ -13,11 +13,11 @@
 Func getNameBuilding($x_start, $y_start) ; getNameBuilding(242,520) -> Gets complete name and level of the buildings, bottom of screen
 	Return getOcrAndCapture("coc-build", $x_start, $y_start, 455, 27) ; Custom - Team AIO Mod++
 EndFunc   ;==>getNameBuilding
-#CS - Team AIO Mod++ (Dissociable OCR)
-Func getGoldVillageSearch($x_start, $y_start) ;48, 69 -> Gets complete value of gold xxx,xxx while searching, top left, Getresources.au3
+#Region - Team AIO Mod++ (Dissociable OCR)
+Func _getGoldVillageSearch($x_start, $y_start) ;48, 69 -> Gets complete value of gold xxx,xxx while searching, top left, Getresources.au3
 	Return getOcrAndCapture("coc-v-g", $x_start, $y_start, 90, 16, True)
 EndFunc   ;==>getGoldVillageSearch
-#CE - Team AIO Mod++ (Dissociable OCR)
+#EndRegion - Team AIO Mod++ (Dissociable OCR)
 Func getRemainTrainTimer($x_start, $y_start, $bNeedCapture = True) ;
 	Return getOcrAndCapture("coc-RemainTrain", $x_start, $y_start, 70, 12, True, False, $bNeedCapture)
 EndFunc   ;==>getRemainTrainTimer
@@ -25,25 +25,23 @@ EndFunc   ;==>getRemainTrainTimer
 Func getRemainBuildTimer($x_start, $y_start, $bNeedCapture = True) ;
 	Return getOcrAndCapture("coc-siegeremain", $x_start, $y_start, 50, 10, True, False, $bNeedCapture)
 EndFunc   ;==>getRemainTrainTimer
-#CS - Team AIO Mod++ (Dissociable OCR)
-Func getElixirVillageSearch($x_start, $y_start) ;48, 69+29 -> Gets complete value of Elixir xxx,xxx, top left,  Getresources.au3
+#Region - Team AIO Mod++ (Dissociable OCR)
+Func _getElixirVillageSearch($x_start, $y_start) ;48, 69+29 -> Gets complete value of Elixir xxx,xxx, top left,  Getresources.au3
 	Return getOcrAndCapture("coc-v-e", $x_start, $y_start, 90, 16, True)
 EndFunc   ;==>getElixirVillageSearch
 
-Func getResourcesValueTrainPage($x_start, $y_start) ; -> Gets CheckValuesCost on Train Window
+Func _getResourcesValueTrainPage($x_start, $y_start) ; -> Gets CheckValuesCost on Train Window
 	Return getOcrAndCapture("coc-ms", $x_start, $y_start, 100, 18, True)
 EndFunc   ;==>getResourcesValueTrainPage
 
-Func getDarkElixirVillageSearch($x_start, $y_start) ;48, 69+57 or 69+69  -> Gets complete value of Dark Elixir xxx,xxx, top left,  Getresources.au3
+Func _getDarkElixirVillageSearch($x_start, $y_start) ;48, 69+57 or 69+69  -> Gets complete value of Dark Elixir xxx,xxx, top left,  Getresources.au3
 	Return getOcrAndCapture("coc-v-de", $x_start, $y_start, 75, 18, True)
 EndFunc   ;==>getDarkElixirVillageSearch
 
-
-Func getTrophyMainScreen($x_start, $y_start) ; -> Gets trophy value, top left of main screen "VillageReport.au3"
+Func _getTrophyMainScreen($x_start, $y_start) ; -> Gets trophy value, top left of main screen "VillageReport.au3"
 	Return getOcrAndCapture("coc-ms", $x_start, $y_start, 50, 16, True)
 EndFunc   ;==>getTrophyMainScreen
-
-#CE - Team AIO Mod++ (Dissociable OCR)
+#EndRegion - Team AIO Mod++ (Dissociable OCR)
 
 Func getTrophyVillageSearch($x_start, $y_start) ;48, 69+99 or 69+69 -> Gets complete value of Trophies xxx,xxx , top left, Getresources.au3
 	Return getOcrAndCapture("coc-v-t", $x_start, $y_start, 75, 18, True)
@@ -56,11 +54,11 @@ EndFunc   ;==>getTrophyLossAttackScreen
 Func getUpgradeResource($x_start, $y_start) ; -> Gets complete value of Gold/Elixir xxx,xxx , RED text on green upgrade button."UpgradeBuildings.au3"
 	Return getOcrAndCapture("coc-u-r", $x_start, $y_start, 98, 16, True)
 EndFunc   ;==>getUpgradeResource
-#CS - Team AIO Mod++ (Dissociable OCR)
-Func getResourcesMainScreen($x_start, $y_start) ; -> Gets complete value of Gold/Elixir/Dark Elixir/Trophies/Gems xxx,xxx "VillageReport.au3"
+#Region - Team AIO Mod++ (Dissociable OCR)
+Func _getResourcesMainScreen($x_start, $y_start) ; -> Gets complete value of Gold/Elixir/Dark Elixir/Trophies/Gems xxx,xxx "VillageReport.au3"
 	Return getOcrAndCapture("coc-ms", $x_start, $y_start, 110, 16, True)
 EndFunc   ;==>getResourcesMainScreen
-#CE - Team AIO Mod++ (Dissociable OCR)
+#EndRegion - Team AIO Mod++ (Dissociable OCR)
 Func getResourcesLoot($x_start, $y_start) ; -> Gets complete value of Gold/Elixir after attack xxx,xxx "AttackReport"
 	Return getOcrAndCapture("coc-loot", $x_start, $y_start, 160, 22, True)
 EndFunc   ;==>getResourcesLoot
@@ -108,15 +106,18 @@ EndFunc   ;==>getHeroUpgradeTime
 Func getChatString($x_start, $y_start, $language) ; -> Get string chat request - Latin Alphabetic - EN "DonateCC.au3"
 	Return getOcrAndCapture($language, $x_start, $y_start, 280, 14)
 EndFunc   ;==>getChatString
-#CS - Team AIO Mod++ (Dissociable OCR)
-Func getBuilders($x_start, $y_start) ;  -> Gets Builders number - main screen --> getBuilders(324,23)  coc-profile
+
+#Region - Team AIO Mod++ (Dissociable OCR)
+Func _getBuilders($x_start, $y_start) ;  -> Gets Builders number - main screen --> getBuilders(324,23)  coc-profile
 	Return getOcrAndCapture("coc-Builders", $x_start, $y_start, 45, 20, True)
 EndFunc   ;==>getBuilders
-#CE - Team AIO Mod++ (Dissociable OCR)
+#EndRegion - Team AIO Mod++ (Dissociable OCR)
+
 Func getProfile($x_start, $y_start) ;  -> Gets Attack Win/Defense Win/Donated/Received values - profile screen --> getProfile(160,268)  troops donation
 	Return getOcrAndCapture("coc-profile", $x_start, $y_start, 55, 13, True)
 EndFunc   ;==>getProfile
 
+#Region - Team AIO Mod++ (Dissociable OCR)
 Func getTroopCountSmall($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for non-selected troop kind
 	Return getOcrAndCapture("coc-t-s", $x_start, $y_start, 55, 16, True, Default, $bNeedNewCapture)
 EndFunc   ;==>getTroopCountSmall
@@ -124,6 +125,16 @@ EndFunc   ;==>getTroopCountSmall
 Func getTroopCountBig($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for selected troop kind
 	Return getOcrAndCapture("coc-t-b", $x_start, $y_start, 55, 17, True, Default, $bNeedNewCapture)
 EndFunc   ;==>getTroopCountBig
+
+Func __getTroopCountSmall($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for non-selected troop kind
+	Return getOcrAndCapture("coc-t-s", $x_start, $y_start, 55, 16, True, Default, $bNeedNewCapture)
+EndFunc   ;==>getTroopCountSmall
+
+Func __getTroopCountBig($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for selected troop kind
+	Return getOcrAndCapture("coc-t-b", $x_start, $y_start, 55, 17, True, Default, $bNeedNewCapture)
+EndFunc   ;==>getTroopCountBig
+
+#EndRegion - Team AIO Mod++ (Dissociable OCR)
 
 Func getTroopsSpellsLevel($x_start, $y_start) ;  -> Gets spell level on Attack Screen for selected spell kind (could be used for troops too)
 	Return getOcrAndCapture("coc-spellslevel", $x_start, $y_start, 20, 14, True)
