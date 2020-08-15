@@ -162,7 +162,8 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 				If $g_bDebugSetlog Then Setlog(_ArrayToString($aCamps, "-", -1, -1, "|", -1, -1))
 				ExitLoop
 			Else
-				Local $aCamps[0]
+				Return
+				; Local $aCamps[0]
 			EndIf
 		EndIf
 	Next
