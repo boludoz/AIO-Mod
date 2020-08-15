@@ -60,9 +60,6 @@
 ; Check Collector Outside - Team AiO MOD++
 #include "functions\Mod's\CheckCollectorsOutside\CollectorsAndRedLines.au3"
 
-; Switch Profiles - Team AiO MOD++
-#include "functions\Mod's\ProfilesOptions\SwitchProfiles.au3"
-
 ; Farm Schedule - Team AiO MOD++
 #include "functions\Mod's\ProfilesOptions.au3"
 
