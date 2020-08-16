@@ -824,6 +824,11 @@ EndFunc   ;==>ReadConfig_600_17
 
 Func ReadConfig_600_18()
 	; <><><><> Village / Notify <><><><>
+	#Region - Discord - Team AIO Mod++
+	IniReadS($g_bNotifyDSEnable, $g_sProfileConfigPath, "notify", "DSEnabled", False, "Bool")
+	IniReadS($g_sNotifyDSToken, $g_sProfileConfigPath, "notify", "DSToken", "")
+	IniReadS($g_iNotifyMode, $g_sProfileConfigPath, "notify", "CmbNotify", 0, "Int")
+	#EndRegion - Discord - Team AIO Mod++
 	;Telegram
 	IniReadS($g_bNotifyTGEnable, $g_sProfileConfigPath, "notify", "TGEnabled", False, "Bool")
 	IniReadS($g_sNotifyTGToken, $g_sProfileConfigPath, "notify", "TGToken", "")

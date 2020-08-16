@@ -13,6 +13,31 @@
 ; Example .......: No
 ; ===============================================================================================================================
 #include-once
+#Region - Discord - Team AIO Mod++
+Global $g_sTxtNotifyDSToken, $g_bNotifyDSEnable, $g_hChkNotifyDSEnable, $g_hIcnNotifyMode, _
+$g_hLblNotifyTGToken, $g_hLblNotifyDSToken, $g_hTxtNotifyDSToken, $g_sNotifyDSToken, $g_hCmbNotifyMode, $g_iNotifyMode
+
+Func cmbNotifyMode()
+	$g_iNotifyMode = _GUICtrlComboBox_GetCurSel($g_hCmbNotifyMode)
+	Switch $g_iNotifyMode
+		Case 0 ; Telegram.
+			; $g_hLblNotifyTGToken, $g_hTxtNotifyTGToken
+			GUICtrlSetState($g_hLblNotifyTGToken, $GUI_SHOW)
+			GUICtrlSetState($g_hTxtNotifyTGToken, $GUI_SHOW)
+			GUICtrlSetState($g_hLblNotifyDSToken, $GUI_HIDE)
+			GUICtrlSetState($g_hTxtNotifyDSToken, $GUI_HIDE)
+			GUICtrlSetState($g_hChkNotifyRemote, $GUI_SHOW)
+
+		Case 1 ; Discord.
+			; $g_hLblNotifyDSToken, $g_hTxtNotifyDSToken
+			GUICtrlSetState($g_hLblNotifyDSToken, $GUI_SHOW)
+			GUICtrlSetState($g_hTxtNotifyDSToken, $GUI_SHOW)
+			GUICtrlSetState($g_hLblNotifyTGToken, $GUI_HIDE)
+			GUICtrlSetState($g_hTxtNotifyTGToken, $GUI_HIDE)
+			GUICtrlSetState($g_hChkNotifyRemote, $GUI_HIDE)
+
+	EndSwitch
+EndFunc   ;==>cmbNotifyMode
 
 Func chkPBTGenabled()
 
@@ -24,8 +49,21 @@ Func chkPBTGenabled()
 		GUICtrlSetState($g_hTxtNotifyTGToken, $GUI_DISABLE)
 	EndIf
 
+	If GUICtrlRead($g_hChkNotifyDSEnable) = $GUI_CHECKED Then
+		$g_bNotifyDSEnable = True
+		GUICtrlSetState($g_hTxtNotifyDSToken, $GUI_ENABLE)
+	Else
+		$g_bNotifyDSEnable = False
+		GUICtrlSetState($g_hTxtNotifyDSToken, $GUI_DISABLE)
+	EndIf
+
 	If $g_bNotifyTGEnable = True Then
 		GUICtrlSetState($g_hChkNotifyRemote, $GUI_ENABLE)
+	Else
+		GUICtrlSetState($g_hChkNotifyRemote, $GUI_DISABLE)
+	EndIf
+	
+	If $g_bNotifyTGEnable = True Or $g_bNotifyDSEnable = True Then
 		GUICtrlSetState($g_hTxtNotifyOrigin, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkNotifyAlertMatchFound, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkNotifyAlertLastRaidIMG, $GUI_ENABLE)
@@ -44,7 +82,6 @@ Func chkPBTGenabled()
 		GUICtrlSetState($g_hChkNotifyAlertSmartWaitTime, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkNotifyAlertLaboratoryIdle, $GUI_ENABLE)
 	Else
-		GUICtrlSetState($g_hChkNotifyRemote, $GUI_DISABLE)
 		GUICtrlSetState($g_hTxtNotifyOrigin, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkNotifyAlertMatchFound, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkNotifyAlertLastRaidIMG, $GUI_DISABLE)
@@ -64,6 +101,7 @@ Func chkPBTGenabled()
 		GUICtrlSetState($g_hChkNotifyAlertLaboratoryIdle, $GUI_DISABLE)
 	EndIf
 EndFunc   ;==>chkPBTGenabled
+#EndRegion - Discord - Team AIO Mod++
 
 Func chkNotifyHours()
 	Local $b = GUICtrlRead($g_hChkNotifyOnlyHours) = $GUI_CHECKED

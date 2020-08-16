@@ -76,14 +76,25 @@ EndFunc   ;==>NotifyPendingActions
 
 ; ONLY PUSH TELEGRAM MSG
 Func NotifyPushToTelegram($pMessage)
+	#Region - Discord - Team AIO Mod++
 
-	If $g_bDebugSetlog Then SetDebugLog("NotifyPushToTelegram(" & $pMessage & " ): ")
-
-	If Not $g_bNotifyTGEnable Or $g_sNotifyTGToken = "" Then Return
+	If (Not $g_bNotifyTGEnable Or $g_sNotifyTGToken = "") And (Not $g_bNotifyDSEnable Or $g_sNotifyDSToken = "") Or StringIsSpace($pMessage) Then Return
 
 	If Not IsPlanUseTelegram($pMessage) Then Return
+	
+	If $g_bNotifyDSEnable And $g_sNotifyDSToken <> "" Then
+		If $g_bDebugSetlog Then SetDebugLog("NotifyPushToDiscord(" & $pMessage & " ): ")
+		Local $sUrl = $g_sNotifyDSToken
+		Local $oHTTP = ObjCreate("winhttp.winhttprequest.5.1")
+		Local $sPacket = '{"content": "' & $pMessage & '"}'
+		$oHTTP.open('POST',$sUrl)
+		$oHTTP.setRequestHeader("Content-Type","application/json")
+		$oHTTP.send($sPacket)
+	EndIf
 
 	If $g_bNotifyTGEnable And $g_sNotifyTGToken <> "" Then
+		If $g_bDebugSetlog Then SetDebugLog("NotifyPushToTelegram(" & $pMessage & " ): ")
+	#EndRegion - Discord - Team AIO Mod++
 		Local $Date = @YEAR & '-' & @MON & '-' & @MDAY
 		Local $Time = @HOUR & '.' & @MIN
 		Local $text = $pMessage & '%0A' & $Date & '_' & $Time
@@ -102,8 +113,98 @@ Func NotifyPushToTelegram($pMessage)
 	EndIf
 EndFunc   ;==>NotifyPushToTelegram
 
+#Region - Discord - Team AIO Mod++
+Func _HTTP_Upload_Discord($strUploadUrl = '', $strFilePath = '', $strFileField = '', $strDataPairs = '', $strFilename = Default)
+	If $strFilename = Default Then $strFilename = StringMid($strFilePath, StringInStr($strFilePath, "\", 0, -1) + 1)
+
+	Local $MULTIPART_BOUNDARY = "----WebKitFormBoundary"
+	Local $aSpace[3]
+	For $i = 1 To 16
+		$aSpace[0] = Chr(Random(65, 90, 1)) ;A-Z
+		$aSpace[1] = Chr(Random(97, 122, 1)) ;a-z
+		$aSpace[2] = Chr(Random(48, 57, 1)) ;0-9
+		$MULTIPART_BOUNDARY &= $aSpace[Random(0, 2, 1)]
+	Next
+
+	If Not FileExists($strFilePath) Then Return SetError(4, 0, 0)
+
+	Local $h = FileOpen($strFilePath, $FO_BINARY)
+	Local $bytFile = FileRead($h)
+	FileClose($h)
+
+	; Create the multipart form data - Define the end of form
+	Local $strFormEnd = @CRLF & "--" & $MULTIPART_BOUNDARY & "--" & @CRLF
+	Local $strFormStart
+
+	; First add any ordinary form data pairs
+	If $strDataPairs Then
+		Local $split = StringSplit($strDataPairs, "&")
+		Local $splitagain
+		For $i = 1 To $split[0]
+			$splitagain = StringSplit($split[$i], "=")
+			$strFormStart &= "--" & $MULTIPART_BOUNDARY & @CRLF & _
+					"Content-Disposition: form-data; " & _
+					"name=""" & $splitagain[1] & """" & _
+					@CRLF & @CRLF & _
+					URLDecode($splitagain[2]) & @CRLF
+		Next
+	EndIf
+
+	; Now add the header for the uploaded file
+	$strFormStart &= "--" & $MULTIPART_BOUNDARY & @CRLF & _
+			"Content-Disposition: form-data; " & _
+			"name=""" & $strFileField & """; " & _
+			"filename=""" & $strFilename & """" & @CRLF & _
+			"Content-Type: application/upload" & _ ; bogus, but it works
+			@CRLF & @CRLF
+
+	; Now merge it all
+	Local $bytFormData = StringToBinary($strFormStart) & $bytFile & StringToBinary($strFormEnd)
+
+	; Upload it
+	Local $oHTTP = ObjCreate("winhttp.winhttprequest.5.1")
+	$oHTTP.Open("POST", $strUploadUrl, False)
+	If @error Then Return SetError(1, 0, 0)
+
+	$oHTTP.SetRequestHeader("Content-Type", "multipart/form-data; boundary=" & $MULTIPART_BOUNDARY)
+	$oHTTP.Send($bytFormData)
+	If @error Then Return SetError(2, 0, 0)
+
+	Local $sReceived = $oHTTP.ResponseText
+	Local $iStatus = $oHTTP.Status
+	If $iStatus = 200 Then Return $sReceived
+
+	Return SetError(3, $iStatus, $sReceived)
+EndFunc   ;==>_HTTP_Upload_Discord
+
+Func URLDecode($urlText)
+	$urlText = StringReplace($urlText, "+", " ")
+	Local $matches = StringRegExp($urlText, "\%([abcdefABCDEF0-9]{2})", 3)
+	If Not @error Then
+		For $match In $matches
+			$urlText = StringReplace($urlText, "%" & $match, BinaryToString('0x' & $match))
+		Next
+	EndIf
+	Return $urlText
+EndFunc   ;==>URLDecode
+
+#EndRegion - Discord - Team AIO Mod++
+
 ; ONLY PUSH TELEGRAM FILES
 Func NotifyPushFileToTelegram($File, $Folder, $FileType, $body)
+	#Region - Discord - Team AIO Mod++
+
+	If (Not $g_bNotifyTGEnable Or $g_sNotifyTGToken = "") And (Not $g_bNotifyDSEnable Or $g_sNotifyDSToken = "") Then Return
+
+	If Not IsPlanUseTelegram($pMessage) Then Return
+	
+	If $g_bNotifyDSEnable And $g_sNotifyDSToken <> "" Then
+		If FileExists($g_sProfilePath & "\" & $g_sProfileCurrentName & '\' & $Folder & '\' & $File) Then
+		_HTTP_Upload_Discord($g_sNotifyDSToken, ($g_sProfilePath & "\" & $g_sProfileCurrentName & '\' & $Folder & '\' & $File), '', '', Default)
+		EndIf
+	EndIf
+
+	#EndRegion - Discord - Team AIO Mod++
 
 	If $g_bDebugSetlog Then SetDebugLog("Notify | NotifyPushFileToTelegram($File, $Folder, $FileType, $body): " & $File & "," & $Folder & "," & $FileType & "," & $body)
 

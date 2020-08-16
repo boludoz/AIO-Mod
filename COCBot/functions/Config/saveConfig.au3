@@ -611,6 +611,11 @@ EndFunc   ;==>SaveConfig_600_17
 Func SaveConfig_600_18()
 	; <><><><> Village / Notify <><><><>
 	ApplyConfig_600_18(GetApplyConfigSaveAction())
+	#Region - Discord - Team AIO Mod++
+	_Ini_Add("notify", "DSEnabled", $g_bNotifyDSEnable ? 1 : 0)
+	_Ini_Add("notify", "DSToken", $g_sNotifyDSToken)
+	_Ini_Add("notify", "CmbNotify", $g_iNotifyMode)
+	#EndRegion - Discord - Team AIO Mod++
 	_Ini_Add("notify", "TGEnabled", $g_bNotifyTGEnable ? 1 : 0)
 	_Ini_Add("notify", "TGToken", $g_sNotifyTGToken)
 	_Ini_Add("notify", "TGUserID", $g_sTGChatID)

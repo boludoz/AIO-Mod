@@ -925,7 +925,13 @@ Func ApplyConfig_600_18($TypeReadSave)
 		Case "Read"
 
 			GUICtrlSetState($g_hChkNotifyTGEnable, $g_bNotifyTGEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
+			#Region - Discord - Team AIO Mod++
+			GUICtrlSetState($g_hChkNotifyDSEnable, $g_bNotifyDSEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
 			chkPBTGenabled()
+			_GUICtrlComboBox_SetCurSel($g_hCmbNotifyMode, $g_iNotifyMode)
+			cmbNotifyMode() 
+			GUICtrlSetData($g_hTxtNotifyDSToken, $g_sNotifyDSToken)
+			#EndRegion - Discord - Team AIO Mod++
 			GUICtrlSetData($g_hTxtNotifyTGToken, $g_sNotifyTGToken)
 			;Remote Control
 			GUICtrlSetState($g_hChkNotifyRemote, $g_bNotifyRemoteEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -948,6 +954,11 @@ Func ApplyConfig_600_18($TypeReadSave)
 			GUICtrlSetState($g_hChkNotifyAlertSmartWaitTime, $g_bNotifyAlertSmartWaitTime ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkNotifyAlertLaboratoryIdle, $g_bNotifyAlertLaboratoryIdle ? $GUI_CHECKED : $GUI_UNCHECKED)
 		Case "Save"
+			#Region - Discord - Team AIO Mod++
+			$g_iNotifyMode = _GUICtrlComboBox_GetCurSel($g_hCmbNotifyMode)
+			$g_bNotifyDSEnable = (GUICtrlRead($g_hChkNotifyDSEnable) = $GUI_CHECKED)
+			$g_sNotifyDSToken = GUICtrlRead($g_hTxtNotifyDSToken)
+			#EndRegion - Discord - Team AIO Mod++
 			; Telegram
 			$g_bNotifyTGEnable = (GUICtrlRead($g_hChkNotifyTGEnable) = $GUI_CHECKED)
 			$g_sNotifyTGToken = GUICtrlRead($g_hTxtNotifyTGToken)
