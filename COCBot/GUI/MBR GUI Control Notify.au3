@@ -14,9 +14,6 @@
 ; ===============================================================================================================================
 #include-once
 #Region - Discord - Team AIO Mod++
-Global $g_sTxtNotifyDSToken, $g_bNotifyDSEnable, $g_hChkNotifyDSEnable, $g_hIcnNotifyMode, _
-$g_hLblNotifyTGToken, $g_hLblNotifyDSToken, $g_hTxtNotifyDSToken, $g_sNotifyDSToken, $g_hCmbNotifyMode, $g_iNotifyMode
-
 Func cmbNotifyMode()
 	$g_iNotifyMode = _GUICtrlComboBox_GetCurSel($g_hCmbNotifyMode)
 	Switch $g_iNotifyMode
@@ -27,7 +24,8 @@ Func cmbNotifyMode()
 			GUICtrlSetState($g_hLblNotifyDSToken, $GUI_HIDE)
 			GUICtrlSetState($g_hTxtNotifyDSToken, $GUI_HIDE)
 			GUICtrlSetState($g_hChkNotifyRemote, $GUI_SHOW)
-
+			GUICtrlSetState($g_ahIcnNotifyMode[1], $GUI_HIDE)
+			GUICtrlSetState($g_ahIcnNotifyMode[0], $GUI_SHOW)
 		Case 1 ; Discord.
 			; $g_hLblNotifyDSToken, $g_hTxtNotifyDSToken
 			GUICtrlSetState($g_hLblNotifyDSToken, $GUI_SHOW)
@@ -35,6 +33,8 @@ Func cmbNotifyMode()
 			GUICtrlSetState($g_hLblNotifyTGToken, $GUI_HIDE)
 			GUICtrlSetState($g_hTxtNotifyTGToken, $GUI_HIDE)
 			GUICtrlSetState($g_hChkNotifyRemote, $GUI_HIDE)
+			GUICtrlSetState($g_ahIcnNotifyMode[0], $GUI_HIDE)
+			GUICtrlSetState($g_ahIcnNotifyMode[1], $GUI_SHOW)
 
 	EndSwitch
 EndFunc   ;==>cmbNotifyMode

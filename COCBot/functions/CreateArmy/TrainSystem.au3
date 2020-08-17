@@ -183,7 +183,9 @@ Func CheckIfArmyIsReady()
 	If StringRight($sLogText, 1) = "," Then $sLogText = StringTrimRight($sLogText, 1) ; Remove last "," as it is not needed
 
 	If $g_bIsFullArmywithHeroesAndSpells Then
-		If $g_bNotifyTGEnable And $g_bNotifyAlertCampFull Then PushMsg("CampFull")
+		#Region - Discord - Team AIO Mod++
+		If ($g_bNotifyTGEnable Or $g_bNotifyDSEnable) And $g_bNotifyAlertCampFull Then PushMsg("CampFull")
+		#EndRegion - Discord - Team AIO Mod++
 		SetLog("Chief, is your Army ready? Yes, it is!", $COLOR_SUCCESS)
 	Else
 		SetLog("Chief, is your Army ready? No, not yet!", $COLOR_ACTION)

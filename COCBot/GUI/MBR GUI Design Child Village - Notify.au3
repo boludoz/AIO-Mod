@@ -39,12 +39,12 @@ Func CreateVillageNotify()
 	GUISwitch($g_hGUI_NOTIFY)
 	$g_hGUI_NOTIFY_TAB = GUICtrlCreateTab(0, 0, $g_iSizeWGrpTab2, $g_iSizeHGrpTab2, BitOR($TCS_MULTILINE, $TCS_RIGHTJUSTIFY))
 	$g_hGUI_NOTIFY_TAB_ITEM2 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_02_STab_05_STab_01", "Telegram"))
-		CreatePushBulletTelegramSubTab()
+		CreateDiscordTelegramSubTab()
 	GUICtrlCreateTabItem("")
 
 EndFunc   ;==>CreateVillageNotify
 
-Func CreatePushBulletTelegramSubTab()
+Func CreateDiscordTelegramSubTab()
 	Local $sTxtTip = ""
 	Local $x = 25, $y = 45
 	$g_hGrpNotify = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Notify", "Group_01", "Telegram Notify") & " " & $g_sNotifyVersion, $x - 20, $y - 20, $g_iSizeWGrpTab3, $g_iSizeHGrpTab3)
@@ -58,7 +58,11 @@ Func CreatePushBulletTelegramSubTab()
 	#CE - Discord - Team AIO Mod++
 		$x += 3
 		
-	$g_hIcnNotifyMode = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnTelegram, $x, $y, 32, 32)
+	$g_ahIcnNotifyMode[0] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnTelegram, $x, $y, 32, 32)
+			GUICtrlSetState(-1, $GUI_SHOW)
+	$g_ahIcnNotifyMode[1] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnDiscord, $x, $y, 32, 32)
+			GUICtrlSetState(-1, $GUI_HIDE)
+
 	$x += 40
 	$y += 5
 	$g_hCmbNotifyMode = GUICtrlCreateCombo("", $x, $y, 105, 25, BitOR($CBS_DROPDOWNLIST,$CBS_AUTOHSCROLL))
@@ -252,5 +256,5 @@ Func CreatePushBulletTelegramSubTab()
 			GUICtrlSetColor(-1, $COLOR_NAVY)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
-EndFunc   ;==>CreatePushBulletTelegramSubTab
+EndFunc   ;==>CreateDiscordTelegramSubTab
 

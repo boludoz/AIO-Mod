@@ -4,9 +4,9 @@
 ; Syntax ........:
 ; Parameters ....: None
 ; Return values .: None
-; Author ........: Full revamp of Notify by IceCube (2016-09)
-; Modified ......: IceCube (2016-12) v1.5.1, CodeSLinger69 (2017), ProMac 2018-08
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
+; Author ........: Full revamp of Notify by IceCube (2016-09) 
+; Modified ......: IceCube (2016-12) v1.5.1, CodeSLinger69 (2017), ProMac 2018-08, Boldina ! (For AIO Mod++)
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2020
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
@@ -82,7 +82,12 @@ Func NotifyPushToTelegram($pMessage)
 
 	If Not IsPlanUseTelegram($pMessage) Then Return
 	
+	Local $Date = @YEAR & '-' & @MON & '-' & @MDAY
+	Local $Time = @HOUR & '.' & @MIN
+	Local $text = $pMessage & '%0A' & $Date & '_' & $Time
+
 	If $g_bNotifyDSEnable And $g_sNotifyDSToken <> "" Then
+		$pMessage = StringReplace($pMessage, "%0A", "\n")
 		If $g_bDebugSetlog Then SetDebugLog("NotifyPushToDiscord(" & $pMessage & " ): ")
 		Local $sUrl = $g_sNotifyDSToken
 		Local $oHTTP = ObjCreate("winhttp.winhttprequest.5.1")
@@ -95,9 +100,6 @@ Func NotifyPushToTelegram($pMessage)
 	If $g_bNotifyTGEnable And $g_sNotifyTGToken <> "" Then
 		If $g_bDebugSetlog Then SetDebugLog("NotifyPushToTelegram(" & $pMessage & " ): ")
 	#EndRegion - Discord - Team AIO Mod++
-		Local $Date = @YEAR & '-' & @MON & '-' & @MDAY
-		Local $Time = @HOUR & '.' & @MIN
-		Local $text = $pMessage & '%0A' & $Date & '_' & $Time
 		; Telegram Message
 		Local $SdtOut = InetRead("https://api.telegram.org/bot" & $g_sNotifyTGToken & "/sendMessage?chat_id=" & $g_sTGChatID & "&text=" & $text, $INET_FORCERELOAD)
 		If @error Or $SdtOut = "" Then Return
@@ -196,7 +198,7 @@ Func NotifyPushFileToTelegram($File, $Folder, $FileType, $body)
 
 	If (Not $g_bNotifyTGEnable Or $g_sNotifyTGToken = "") And (Not $g_bNotifyDSEnable Or $g_sNotifyDSToken = "") Then Return
 
-	If Not IsPlanUseTelegram($pMessage) Then Return
+	If Not IsPlanUseTelegram("Photo") Then Return
 	
 	If $g_bNotifyDSEnable And $g_sNotifyDSToken <> "" Then
 		If FileExists($g_sProfilePath & "\" & $g_sProfileCurrentName & '\' & $Folder & '\' & $File) Then
@@ -669,7 +671,7 @@ Func NotifyPushMessageToBoth($Message, $Source = "")
 			EndIf
 			If $g_bNotifyAlerLastRaidIMG Then
 
-				;create a temporary file to send with pushbullet...
+				;create a temporary file to send with Discord...
 				Local $Date = @YEAR & "-" & @MON & "-" & @MDAY
 				Local $Time = @HOUR & "." & @MIN
 				If $g_bScreenshotLootInfo Then

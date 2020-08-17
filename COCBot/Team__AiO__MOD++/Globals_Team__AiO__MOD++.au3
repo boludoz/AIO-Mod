@@ -22,6 +22,12 @@ Global Enum $eIcnModKingGray = 1, $eIcnModKingBlue, $eIcnModKingGreen, $eIcnModK
 		$eIcnModAccountsS, $eIcnModProfilesS, $eIcnModFarmingS, $eIcnMiscMod, $eIcnSuperXP, $eIcnChatActions, $eIcnHumanization, $eIcnAIOMod, $eIcnDebugMod, _
 		$eIcnLabP, $eIcnShop, $eIcnGoldP, $eIcnElixirP, $eIcnDarkP, $eIcnGFTO, $eIcnMisc, $eIcnPrewar
 
+#Region - Discord - Team AIO Mod++
+Global $g_sTxtNotifyDSToken, $g_bNotifyDSEnable, $g_hChkNotifyDSEnable, _
+$g_hLblNotifyTGToken, $g_hLblNotifyDSToken, $g_hTxtNotifyDSToken, $g_sNotifyDSToken, $g_hCmbNotifyMode, $g_iNotifyMode, _
+$g_ahIcnNotifyMode[2]
+#EndRegion - Discord - Team AIO Mod++
+
 #Region - Setlog limit - Team AIO Mod++
 Global $g_hChkBotLogLineLimit, $g_bChkBotLogLineLimit, _
 $g_hTxtLogLineLimit, $g_iTxtLogLineLimit

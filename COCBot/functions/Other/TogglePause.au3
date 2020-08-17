@@ -87,7 +87,9 @@ Func TogglePauseSleep()
 			TogglePause()
 		EndIf
 		$counter = $counter + 1
-		If $g_bNotifyTGEnable And $g_bNotifyRemoteEnable And $counter = 200 Then
+		#Region - Discord - Team AIO Mod++
+		If ($g_bNotifyTGEnable Or $g_bNotifyDSEnable) And $g_bNotifyRemoteEnable And $counter = 200 Then
+		#EndRegion - Discord - Team AIO Mod++
 			NotifyRemoteControl()
 			$counter = 0
 		EndIf
