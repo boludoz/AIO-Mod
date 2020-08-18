@@ -83,8 +83,13 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 	$g_aExternalEdges = BuilderBaseGetEdges($g_aBuilderBaseDiamond, "External Edges")
 
 	Local $sSideNames[4] = ["TopLeft", "TopRight", "BottomRight", "BottomLeft"]
-
-	Local $aBuilderHallPos = findMultipleQuick($g_sBundleBuilderHall, 1)
+	
+	Local $aBuilderHallPos
+	For $i = 0 To 3
+		$aBuilderHallPos = findMultipleQuick($g_sBundleBuilderHall, 1)
+		If IsArray($aBuilderHallPos) Then ExitLoop
+		If _Sleep(250) Then Return
+	Next
 	
 	If IsArray($aBuilderHallPos) And UBound($aBuilderHallPos) > 0 Then
 		$g_aBuilderHallPos = $aBuilderHallPos
@@ -246,7 +251,7 @@ EndFunc   ;==>AttackBB
 Func Okay()
 	local $timer = __TimerInit()
 
-	While 1
+	While Not isOnBuilderBase(True, True)
 		local $aCoords = decodeSingleCoord(findImage("OkayButton", $g_sImgOkButton, "FV", 1, True))
 		If IsArray($aCoords) And UBound($aCoords) = 2 Then
 			PureClickP($aCoords)

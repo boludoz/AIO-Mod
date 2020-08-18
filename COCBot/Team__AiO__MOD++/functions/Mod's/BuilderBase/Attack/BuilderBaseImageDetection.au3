@@ -57,7 +57,8 @@ Func TestBuilderBaseGetHall()
 EndFunc   ;==>TestBuilderBaseGetHall
 
 Func BuilderBaseGetDeployPoints($FurtherFrom = 0, $DebugImage = False)
-
+	Local $bBadPoints = False, $Sides = -1
+	
 	If Not $g_bRunState Then Return
 
 	Local $DebugLog
@@ -83,7 +84,7 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = 0, $DebugImage = False)
 	Else
 		_DebugFailedImageDetection("BuilderHall")
 		Setlog("Builder Hall detection Error!", $Color_Error)
-		Local $aBuilderHall[1][4] = [["BuilderHall", 450, 425, 92]]
+		Local $aBuilderHall[1][4] = [["BuilderHall", 450, 425, -1]]
 		$g_aBuilderHallPos = $aBuilderHall
 	EndIf
 
@@ -92,22 +93,58 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = 0, $DebugImage = False)
 	Setlog("Builder Base Hall detection: " & Round(__timerdiff($hStarttime) / 1000, 2) & " seconds", $COLOR_DEBUG)
 	$hStarttime = __TimerInit()
 
-	Local $DeployPointsResult = PointDeployBB($g_sBundleDeployPointsBB, 0, 5, 10, $g_aBuilderHallPos[0][1], $g_aBuilderHallPos[0][2])
+	Local $DeployPointsResult = PointDeployBB() ;_ImageSearchBundlesMultibot($g_sBundleDeployPointsBB, $g_aBundleDeployPointsBBParms[0], $g_aBundleDeployPointsBBParms[1], $g_aBundleDeployPointsBBParms[2], $DebugLog)
+	If Not $g_bRunState Then Return
 
 	If $DeployPointsResult <> -1 And UBound($DeployPointsResult) > 0 Then
-		Local $Sides = $DeployPointsResult
+		Local $TopLeft[0][2], $TopRight[0][2], $BottomRight[0][2], $BottomLeft[0][2]
+		Local $Point[2], $Local = ""
+		For $i = 0 To UBound($DeployPointsResult) - 1
+			$Point[0] = Int($DeployPointsResult[$i][0])
+			$Point[1] = Int($DeployPointsResult[$i][1])
+			SetDebugLog("[" & $i & "]Deploy Point: (" & $Point[0] & "," & $Point[1] & ")")
+			$Local = DeployPointsPosition($Point)
+			SetDebugLog("[" & $i & "]Deploy Local: (" & $Local & ")")
+			Select
+				Case $Local = "TopLeft"
+					ReDim $TopLeft[UBound($TopLeft) + 1][2]
+					$TopLeft[UBound($TopLeft) - 1][0] = $Point[0] - $FurtherFrom
+					$TopLeft[UBound($TopLeft) - 1][1] = $Point[1] - $FurtherFrom
 
+				Case $Local = "TopRight"
+					ReDim $TopRight[UBound($TopRight) + 1][2]
+					$TopRight[UBound($TopRight) - 1][0] = $Point[0] + $FurtherFrom
+					$TopRight[UBound($TopRight) - 1][1] = $Point[1] - $FurtherFrom
+
+				Case $Local = "BottomRight"
+					ReDim $BottomRight[UBound($BottomRight) + 1][2]
+					$BottomRight[UBound($BottomRight) - 1][0] = $Point[0] + $FurtherFrom
+					$BottomRight[UBound($BottomRight) - 1][1] = $Point[1] + $FurtherFrom
+
+				Case $Local = "BottomLeft"
+					ReDim $BottomLeft[UBound($BottomLeft) + 1][2]
+					$BottomLeft[UBound($BottomLeft) - 1][0] = $Point[0] - $FurtherFrom
+					$BottomLeft[UBound($BottomLeft) - 1][1] = $Point[1] + $FurtherFrom
+
+			EndSelect
+		Next
+
+		Local $aTmpSides[4] = [$TopLeft, $TopRight, $BottomRight, $BottomLeft]
+		$Sides = $aTmpSides
+		Else
+		$bBadPoints = True
+	EndIf
+	
+	If Not $g_bRunState Then Return
+	
+	If $bBadPoints = False Then
 		For $i = 0 To 3
-			If Not $g_bRunState Then Return
 			Setlog($Name[$i] & " points: " & UBound($Sides[$i]))
 			$DeployPoints[$i] = $Sides[$i]
 		Next
-	Else
-		_DebugFailedImageDetection("DeployPoints")
-		Setlog("Deploy Points detection Error!", $Color_Error)
-		Return -1
 	EndIf
-
+	
+	If Not $g_bRunState Then Return
 
 	Setlog("Builder Base Internal Deploy Points: " & Round(__timerdiff($hStarttime) / 1000, 2) & " seconds", $COLOR_DEBUG)
 	$hStarttime = __TimerInit()
@@ -174,10 +211,27 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = 0, $DebugImage = False)
 	$g_aFinalOuter[2] = $BottomRight
 	$g_aFinalOuter[3] = $BottomLeft
 
-	; Verify how many point and if needs OuterEdges points [10 points]
+	#Region - Bad Points
+	; In no 'DP' case.
+	If $bBadPoints = True Then
+		Setlog("BuilderBaseGetDeployPoints | No DP,	GET FROM EDGE.", $Color_Error)
+		
+		If Not $g_bRunState Then Return
+	
+		$Sides = $g_aOuterEdges
+		
+		For $i = 0 To 3
+			Setlog($Name[$i] & " points: " & UBound($Sides[$i]))
+			$DeployPoints[$i] = $Sides[$i]
+		Next
+
+	EndIf
+	#EndRegion - Bad Points
+	
+	; Verify how many point and if needs OuterEdges points [5 points]
 	For $i = 0 To 3
 		If Not $g_bRunState Then Return
-		If UBound($DeployPoints[$i]) < 10 Then
+		If UBound($DeployPoints[$i]) < 5 Then
 			Setlog($Name[$i] & " doesn't have enough deploy points(" & UBound($DeployPoints[$i]) & ") let's use Outer points", $COLOR_DEBUG)
 			;When arrayconcatenate does not work so just simply use outer points(Because it can happen due to non array etc)
 			If UBound($DeployPoints[$i], $UBOUND_COLUMNS) <> UBound($g_aFinalOuter[$i], $UBOUND_COLUMNS) Then

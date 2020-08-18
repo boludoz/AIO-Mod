@@ -97,6 +97,8 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 			SetDebugLog("[CMD]: " & $command)
 			Switch $command
 				Case "IMGL"
+					; Global Enum $g_iAirDefense = 0 , $g_iCrusher , $g_iGuardPost, $g_iCannon, $g_iBuilderHall, $g_iDeployPoints
+					; Global $g_aBuilderHallPos[1][2] = [[Null, Null]], $g_aAirdefensesPos[0][2], $g_aCrusherPos[0][2], $g_aCannonPos[0][2] , $g_aGuardPostPos[0][2]
 					For $i = 4 To 0 Step -1
 						$command = Int(StringStripWS($aSplitLine[$i + 1], $STR_STRIPALL))
 						If $command = 1 Then
@@ -120,7 +122,7 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 									ExitLoop
 								Case 4
 									; Is not necessary to get again if was detected when deploy point detection ran
-									If Not IsArray($g_aBuilderHallPos) Then $g_aBuilderHallPos = BuilderBaseBuildingsDetection(4)
+									If $g_aBuilderHallPos[0][0] = Null Then $g_aBuilderHallPos = BuilderBaseBuildingsDetection($i - 1)
 							EndSwitch
 						EndIf
 					Next
@@ -134,7 +136,7 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 					; Main Side to attack If necessary
 					If UBound($aIMGL) = UBound($aSplitLine) - 1 Then
 						; Just 4 : Global Enum $g_iAirDefense = 0 , $g_iCrusher, $g_iGuardPost, $g_iCannon
-						For $i = 0 To 4
+						For $i = 0 To 3
 							$command = Int(StringStripWS($aSplitLine[$i + 1], $STR_STRIPALL))
 							If $command = 1 Then
 								; Get the Array inside the array $bDefenses
@@ -144,7 +146,7 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 								Local $BuildPosition = [$BuildPositionArray[0][1], $BuildPositionArray[0][2]]
 								; Get in string the FORCED Side name
 								If $sFrontSide = "" Then
-									$sFrontSide = DeployPointsPosition($BuildPosition, ($i = 4))
+									$sFrontSide = DeployPointsPosition($BuildPosition)
 									Setlog("Forced Front Side: " & $sFrontSide, $COLOR_INFO)
 								EndIf
 							EndIf
@@ -181,13 +183,12 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 							EndIf
 						Next
 
-						If $sDropSide = "FRONT" Or $sDropSide = "BACK" Or $sDropSide = "LEFT" Or $sDropSide = "RIGHT" Or $sDropSide = "BH" Then ; Use external edges Point
+						If $sDropSide = "FRONT" Or $sDropSide = "BACK" Or $sDropSide = "LEFT" Or $sDropSide = "RIGHT" Then ; Use external edges Point
 							$sDropSide = $sDropSide & "E"
 						Else ;If BH Or EDGEB defined For All Command Change It to FRONTE because there is chance that they are problamtic
 							$sDropSide = "FRONTE"
 						EndIf
 					EndIf
-					
 					; Gets Verify Quantities on Slot and what is necessary
 					Local $iTotalQtyByTroop = 0
 					For $i = 0 To UBound($aAvailableTroops_NXQ) - 1
@@ -211,14 +212,8 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 
 					; SLEEPAFTER_: Sleep after in ms
 					; $aDROP[6]
-					Local $SleepAfter = 250
-					If StringInStr($aDROP[6], "-") > 0 Then
-						Local $aRand = StringSplit($aDROP[6], "-", $STR_NOCOUNT)
-						$SleepAfter = Random(Int($aRand[0]), Int($aRand[1]), 1)
-						Else
-						$SleepAfter = Int($aDROP[6])
-					EndIf
-					
+					Local $SleepAfter = Int($aDROP[6])
+
 					SetDebugLog("$iQtyToDrop : " & $iQtyToDrop & ", $sQty : " & $sQty & ", $sTroopName : " & $sTroopName & ", $aSelectedDropSidePoints_XY : " & $sDropPoints & ", $iAddTiles : " & $iAddTiles & ", $sDropSide : " & $sDropSide & ", $SleepAfter : " & $SleepAfter)
 
 					Local $iQtyOfSelectedSlot = 0 ; Quantities on current slot
@@ -230,40 +225,69 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 						TriggerMachineAbility() ;Click On Ability Before Skipping The Loop
 						ContinueLoop
 					EndIf
-					Switch $sDropSide
-						Case "BH", "BHE"
-							If IsArray($g_aBuilderHallPos) Then
-								Local $BHposition = [$g_aBuilderHallPos[0][1], $g_aBuilderHallPos[0][2]]
-								; Get/Check if the distance from any deploy point is less than 75px
-								Local $aPoints = GetThePointNearBH($BHposition, $aDeployPoints, $sDropSide), $aPoints2Deploy[2] = ["", ""]
-								For $i = 0 To UBound($aPoints) -1
-									$aPoints2Deploy[0] = $aPoints[$i][0]
-									$aPoints2Deploy[1] = $aPoints[$i][1]
-									If $aPoints2Deploy[0] <> "" Then
-										For $i = 0 To $iQtyToDrop - 1
-											DeployTroopBB($sTroopName, $aSlot_XY, $aPoints2Deploy, 1)
-											$iQtyOfSelectedSlot -= 1
-											$iTotalQtyByTroop -= 1
-											; Remove the Qty from the Original array :
-											$aAvailableTroops_NXQ[$iSlotNumber][4] = $iQtyOfSelectedSlot
-											; If is the Machine exist and deployed
-											; If IsMachineDepoloyed() Then ExitLoop 2
-											If IsArray($g_aMachineBB) And UBound($g_aMachineBB) > 2 And $g_aMachineBB[2] Then ExitLoop 2 
-											If $iTotalQtyByTroop < 1 Then ExitLoop 2
-											; Let's select another slot if this slot is empty
-											If $iQtyOfSelectedSlot < 1 Then
-												; VerifySlotTroops uses ByRef on $aSlot_XY , $iQtyOfSelectedSlot and $iSlotNumber
-												If Not VerifySlotTroop($sTroopName, $aSlot_XY, $iQtyOfSelectedSlot, $iSlotNumber, $aAvailableTroops_NXQ) Then ExitLoop 2
-											EndIf
-											; Just a small Delay to Pause Function
-											If RandomSleep(100) Then Return
-											
-											ContinueLoop 2
-										Next
+
+					If $sDropSide <> "BH" And $sDropSide <> "EDGEB" Then
+						Local $sSelectedDropSideName ;Using For AddTile That Which Side Was Choosed To Attack
+						; Correct FRONT - BACK - LEFT - RIGHT - BH - EDGEB
+						Local $aSelectedDropSidePoints_XY = CorrectDropPoints($sFrontSide, $sDropSide, $aDeployBestPoints, $sSelectedDropSideName)
+						SortPoints($aSelectedDropSidePoints_XY, $bDebug)
+						; Just in Case
+						If UBound($aSelectedDropSidePoints_XY) = 0 Then
+							TriggerMachineAbility()
+							ContinueLoop
+						EndIf
+
+						DebugPrintDropPoint($aSelectedDropSidePoints_XY, "Original", $bDebug)
+
+						; Before Parsing Points Do Add Tiles Distance if defined
+						AddTilesToDeployPoint($aSelectedDropSidePoints_XY, $iAddTiles, $sSelectedDropSideName, $bDebug)
+
+						If $bDebug And $iAddTiles > 1 Then DebugBuilderBaseBuildingsDetection($aDeployPoints, $aDeployBestPoints, "CSVAddTile_" & $iAddTiles, $aSelectedDropSidePoints_XY, True) ;Take ScreenShot After AddTile For Debug
+						;Get Points which is mentioned in CSV
+						Local $aCSVParsedDeployPoint_XY = ParseCSVDropPoints($sDropPoints, $aSelectedDropSidePoints_XY, $bDebug)
+						; Just in Case
+						If UBound($aCSVParsedDeployPoint_XY) = 0 Then
+							TriggerMachineAbility()
+							ContinueLoop
+						EndIf
+
+						DebugPrintDropPoint($aCSVParsedDeployPoint_XY, "CSV Selected", $bDebug)
+
+						; Deploy Troops
+						Local $iTroopsDropped = 0
+						While $iTroopsDropped < $iQtyToDrop
+							For $i = 0 To UBound($aCSVParsedDeployPoint_XY) - 1
+								If Not $g_bRunState Then Return
+								If ($iTroopsDropped < $iQtyToDrop Or $sQty = "ALL") Then ; Check That Drop Troops Don't Get Exceeded By CSV DROP Quantity OR Drop all troops if Qunanity is ALL
+									; get one Deploy point
+									Local $Point2Deploy = $aCSVParsedDeployPoint_XY[$i]
+									DeployTroopBB($sTroopName, $aSlot_XY, $Point2Deploy, 1)
+									; Increment Troops Dropped
+									$iTroopsDropped += 1
+									; removing the deployed troop
+									$iQtyOfSelectedSlot -= 1
+									$iTotalQtyByTroop -= 1
+									; Remove the Qty from the Original array :
+									$aAvailableTroops_NXQ[$iSlotNumber][4] = $iQtyOfSelectedSlot
+									; If is the Machine exist and depolyed
+									If IsArray($g_aMachineBB) And UBound($g_aMachineBB) > 2 And $g_aMachineBB[2] Then ExitLoop (2)
+									; Just in case
+									If $iTotalQtyByTroop < 1 Then ExitLoop (2)
+									; Let's select another slot if this slot is empty
+									If $iQtyOfSelectedSlot < 1 Then
+										; VerifySlotTroops uses ByRef on $aSlot_XY , $iQtyOfSelectedSlot and $iSlotNumber
+										If Not VerifySlotTroop($sTroopName, $aSlot_XY, $iQtyOfSelectedSlot, $iSlotNumber, $aAvailableTroops_NXQ) Then ExitLoop (2)
 									EndIf
-								Next
-							EndIf
-						Case "EDGEB"
+									; Just a small Delay to Pause Function
+									If _Sleep(100) Then Return
+								Else
+									ExitLoop (2)
+								EndIf
+							Next
+						WEnd
+
+					Else
+						If $sDropSide = "EDGEB" Then
 							; Detect all coordinates return an Array[X][3] Index 3 Contains Edge Side Name
 							Local $aSelectedEdgePoints_XYS = BuilderBaseBuildingsOnEdge($aDeployPoints)
 							If $aSelectedEdgePoints_XYS = "-1" Then ContinueLoop
@@ -307,67 +331,35 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 									EndIf
 								Next
 							WEnd
-						Case Else
-							Local $sSelectedDropSideName ;Using For AddTile That Which Side Was Choosed To Attack
-							; Correct FRONT - BACK - LEFT - RIGHT - BH - EDGEB
-							Local $aSelectedDropSidePoints_XY = CorrectDropPoints($sFrontSide, $sDropSide, $aDeployBestPoints, $sSelectedDropSideName)
-							_ArrayShuffle($aSelectedDropSidePoints_XY)
-							; Just in Case
-							If UBound($aSelectedDropSidePoints_XY) = 0 Then
-								TriggerMachineAbility()
-								ContinueLoop
-							EndIf
-	
-							DebugPrintDropPoint($aSelectedDropSidePoints_XY, "Original", $bDebug)
-	
-							; Before Parsing Points Do Add Tiles Distance if defined
-							AddTilesToDeployPoint($aSelectedDropSidePoints_XY, $iAddTiles, $sSelectedDropSideName, $bDebug)
-	
-							If $bDebug And $iAddTiles > 1 Then DebugBuilderBaseBuildingsDetection($aDeployPoints, $aDeployBestPoints, "CSVAddTile_" & $iAddTiles, $aSelectedDropSidePoints_XY, True) ;Take ScreenShot After AddTile For Debug
-							;Get Points which is mentioned in CSV
-							Local $aCSVParsedDeployPoint_XY = ParseCSVDropPoints($sDropPoints, $aSelectedDropSidePoints_XY, $bDebug)
-							; Just in Case
-							If UBound($aCSVParsedDeployPoint_XY) = 0 Then
-								TriggerMachineAbility()
-								ContinueLoop
-							EndIf
-	
-							DebugPrintDropPoint($aCSVParsedDeployPoint_XY, "CSV Selected", $bDebug)
-	
-							; Deploy Troops
-							Local $iTroopsDropped = 0
-							While $iTroopsDropped < $iQtyToDrop
-								For $i = 0 To UBound($aCSVParsedDeployPoint_XY) - 1
-									If Not $g_bRunState Then Return
-									If ($iTroopsDropped < $iQtyToDrop Or $sQty = "ALL") Then ; Check That Drop Troops Don't Get Exceeded By CSV DROP Quantity OR Drop all troops if Qunanity is ALL
-										; get one Deploy point
-										Local $Point2Deploy = $aCSVParsedDeployPoint_XY[$i]
+
+						ElseIf $sDropSide = "BH" Then
+							If $g_aBuilderHallPos[0][0] <> Null Then
+								Local $BHposition = [$g_aBuilderHallPos[0][0], $g_aBuilderHallPos[0][1]]
+								; Get/Check if the distance from any deploy point is less than 75px
+								Local $Point2Deploy = GetThePointNearBH($BHposition, $aDeployPoints)
+								If $Point2Deploy[0] <> "" Then
+									For $i = 0 To $iQtyToDrop - 1
 										DeployTroopBB($sTroopName, $aSlot_XY, $Point2Deploy, 1)
-										; Increment Troops Dropped
-										$iTroopsDropped += 1
-										; removing the deployed troop
 										$iQtyOfSelectedSlot -= 1
 										$iTotalQtyByTroop -= 1
 										; Remove the Qty from the Original array :
 										$aAvailableTroops_NXQ[$iSlotNumber][4] = $iQtyOfSelectedSlot
-										; If is the Machine exist and depolyed
-										If IsArray($g_aMachineBB) And UBound($g_aMachineBB) > 2 And $g_aMachineBB[2] Then ExitLoop (2)
-										; Just in case
-										If $iTotalQtyByTroop < 1 Then ExitLoop (2)
+										; If is the Machine exist and deployed
+										; If IsMachineDepoloyed() Then ExitLoop
+										If IsArray($g_aMachineBB) And UBound($g_aMachineBB) > 2 And $g_aMachineBB[2] Then ExitLoop
+										If $iTotalQtyByTroop < 1 Then ExitLoop
 										; Let's select another slot if this slot is empty
 										If $iQtyOfSelectedSlot < 1 Then
 											; VerifySlotTroops uses ByRef on $aSlot_XY , $iQtyOfSelectedSlot and $iSlotNumber
-											If Not VerifySlotTroop($sTroopName, $aSlot_XY, $iQtyOfSelectedSlot, $iSlotNumber, $aAvailableTroops_NXQ) Then ExitLoop (2)
+											If Not VerifySlotTroop($sTroopName, $aSlot_XY, $iQtyOfSelectedSlot, $iSlotNumber, $aAvailableTroops_NXQ) Then ExitLoop
 										EndIf
 										; Just a small Delay to Pause Function
 										If _Sleep(100) Then Return
-									Else
-										ExitLoop (2)
-									EndIf
-								Next
-							WEnd
-
-					EndSwitch
+									Next
+								EndIf
+							EndIf
+						EndIf
+					EndIf
 
 					; A log user
 					SetLog(" - " & $aAvailableTroops_NXQ[$iSlotNumber][4] & "x/" & $iTotalQtyByTroop & "x " & FullNametroops($aAvailableTroops_NXQ[$iSlotNumber][0]) & " at slot " & $iSlotNumber + 1, $COLOR_WARNING)
@@ -543,6 +535,14 @@ Func ParseCSVDropPoints($sDropPoints, $aSelectedDropSidePoints_XY, $bDebug)
 	Return $aCSVParsedDeployPoint_XY
 EndFunc   ;==>ParseCSVDropPoints
 
+Func SortPoints(ByRef $aSelectedDropSidePoints_XY, $bDebug = False)
+	; SORT by X-axis - column 0
+	If Not $g_bRunState Then Return
+	If UBound($aSelectedDropSidePoints_XY) > 1 Then _ArraySort($aSelectedDropSidePoints_XY, 0, 0, 0, 0)
+	SetDebugLog(UBound($aSelectedDropSidePoints_XY) & " points to deploy in this side!", $COLOR_DEBUG)
+	If $bDebug Then _ArrayToString($aSelectedDropSidePoints_XY)
+EndFunc   ;==>SortPoints
+
 Func AddTilesToDeployPoint(ByRef $aSelectedDropSidePoints_XY, $iAddTiles, $sSelectedDropSideName, $bDebug)
 	If $iAddTiles = 1 Then Return ;Default Value Is 1 Do Nothing
 	If IsArray($g_aBuilderBaseOuterPolygon) = 0 Then Return ;If Builder Base Outer Polygon not defined skip
@@ -682,27 +682,30 @@ Func DeployTroopBB($sTroopName, $aSlot_XY, $Point2Deploy, $iQtyToDrop)
 		; It look for the white border in case it failed to launch.
 		If ($g_aMachineBB[0] <> -1) Then
 			If _Sleep(500) Then Return
-			$g_aMachineBB[2] = (Not _Wait4Pixel($g_aMachineBB[0], 723, Hex(0xFFFFFF, 6), 30, 100, 25, False))
+			$g_aMachineBB[2] = _Wait4PixelGone($g_aMachineBB[0], 635, Hex(0xFFFFFF, 6), 30, 100, 25, False)
 			SetLog("- BB Machine is ok? " & $g_aMachineBB[2], $COLOR_INFO)
 		EndIf
 	EndIf
 EndFunc   ;==>DeployTroopBB
 
-Func GetThePointNearBH($aBHposition, $aDeployPoints, $sMode = "BH")
-	Local $aResult[1][3], $aReturn[0][3], $aPoints[1][2]
-	Local $aName[4] = ["TopLeft", "TopRight", "BottomRight", "BottomLeft"]
-	For $i = 0 To UBound($aName) -1
-		$aPoints = $g_aDeployPoints[$i]
-		For $j = 0 To UBound($aPoints) -1
-			$aResult[0][0] = $aPoints[$j][0]
-			$aResult[0][1] = $aPoints[$j][1]                    
-			$aResult[0][2] = Pixel_Distance(Int($aBHposition[0]), Int($aBHposition[1]), Int($aResult[0][0]), Int($aResult[0][1]))
-			_ArrayAdd($aReturn, $aResult)
+Func GetThePointNearBH($BHposition, $aDeployPoints)
+	Local $ReturnPoint[2] = ["", ""]
+	Local $Name[4] = ["TopLeft", "TopRight", "BottomRight", "BottomLeft"]
+	Local $MostNear = 45
+	For $i = 0 To UBound($aDeployPoints) - 1
+		If Not $g_bRunState Then Return
+		Local $TempCoordinatesBySide = $aDeployPoints[$i]
+		For $j = 0 To UBound($TempCoordinatesBySide) - 1
+			Local $SingleCoordinate = [$TempCoordinatesBySide[$j][0], $TempCoordinatesBySide[$j][1]]
+			Local $Distance = Pixel_Distance(Int($BHposition[0]), Int($BHposition[1]), Int($SingleCoordinate[0]), Int($SingleCoordinate[1]))
+			If $Distance < $MostNear Then
+				$MostNear = $Distance
+				$ReturnPoint[0] = Int($SingleCoordinate[0])
+				$ReturnPoint[1] = Int($SingleCoordinate[1])
+			EndIf
 		Next
 	Next
-	_ArraySort($aReturn, 0, 0, 2)
-	;_ArrayDisplay($aReturn)
-	Return $aReturn
+	Return $ReturnPoint
 EndFunc   ;==>GetThePointNearBH
 
 Func TriggerMachineAbility($bBBIsFirst = -1, $ix = -1, $iy = -1, $bTest = False)

@@ -159,17 +159,14 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 			Next
 			; Select the correct CAMP [cmd line] to use according with the first attack bar detection = how many camps do you have
 			If $iCampsQuantities = UBound($aCamps) Then
-				If $g_bDebugSetlog Then Setlog(_ArrayToString($aCamps, "-", -1, -1, "|", -1, -1))
+				If $g_bDebugSetlog Then Setlog("BuilderBaseSelectCorrectScript | " & _ArrayToString($aCamps, "-", -1, -1, "|", -1, -1), $COLOR_DEBUG)
 				ExitLoop
-			Else
-				Return
-				; Local $aCamps[0]
 			EndIf
 		EndIf
 	Next
 
 	If UBound($aCamps) = 0 Then
-		SetLog("BuilderBaseSelectCorrectScript 0x13 error.", $COLOR_ERROR)
+		SetLog("Your script does not seem to support such a small amount of camps.", $COLOR_ERROR)
 		Return
 	EndIf
 
@@ -215,7 +212,8 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	EndIf
 	
 	_ArraySort($aSwicthBtn, 0, 0, 0, 1)
-
+	
+	Local $aAttackBar = -1
 	Local $bDone = False
 	While ($bDone = False And $iAvoidInfLoop < 4)
 		Local $aWrongCamps = GetWrongCamps($aNewAvailableTroops, $aCamps)
@@ -252,7 +250,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 		SetDebugLog("Click Switch Button " & $aWrongCamps[0], $COLOR_INFO)
 		Click($aSwicthBtn[$aWrongCamps[0]][1] + Random(2, 10, 1), $aSwicthBtn[$aWrongCamps[0]][2] + Random(2, 10, 1))
 		If Not $g_bRunState Then Return
-		If RandomSleep(500) Then Return
+		If RandomSleep(250) Then Return
 
 		If Not _WaitForCheckImg($g_sImgCustomArmyBB, "0,681,860,728", "ChangeTDis") Then
 			Setlog("_WaitForCheckImg Error at Camps!", $COLOR_ERROR)
@@ -262,18 +260,19 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 		EndIf
 
 		; Result [X][0] = NAME , [x][1] = Xaxis , [x][2] = Yaxis , [x][3] = Level
-		Local $aAttackBar = _ImageSearchXML($g_sImgDirBBTroops, 20, "0,523,861,615", True, False)
+		$aAttackBar = _ImageSearchXML($g_sImgDirBBTroops, 20, "0,523,861,615", True, False)
 		If $aAttackBar = -1 Then
 			Return False
 		EndIf
+
 		For $j = 0 To UBound($aAttackBar) - 1
 			If Not $g_bRunState Then ExitLoop
 			; If The item is The Troop that We Missing
 			If $aAttackBar[$j][0] = $sMissingCamp Then
-				If RandomSleep(1000) Then Return
+				If RandomSleep(250) Then Return
 				; Select The New Troop
 				PureClick($aAttackBar[$j][1] + Random(1, 5, 1), $aAttackBar[$j][2] + Random(1, 5, 1), 1, 0)
-				If RandomSleep(1000) Then Return
+				If RandomSleep(250) Then Return
 				SetDebugLog("Selected " & FullNametroops($sMissingCamp) & " X:| " & $aAttackBar[$j][1] & " Y:| " & $aAttackBar[$j][2], $COLOR_SUCCESS)
 				$aNewAvailableTroops[$aWrongCamps[0]][0] = $sMissingCamp
 				; Set the Priority Again

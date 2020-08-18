@@ -85,63 +85,69 @@ Func CheckPostponedLog($bNow = False)
 EndFunc   ;==>CheckPostponedLog
 
 Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, $iFurMin = 5, $iFurMax = 5, $iCenterX = 450, $iCenterY = 425, $bForceCapture = True, $DebugLog = False) ; Return a large amount of quality deploy point with random and safe further from without theorem.
-	Local $vResult[1][2]
-	Local $aTopLeft[0][2], $aTopRight[0][2], $aBottomRight[0][2], $aBottomLeft[0][2]
+	Local $vResult[1][2], $aSides[0][2], $sHex = 0x000000, $aHex = [[0x447063, 20], [0x446661, 5], [0x446761, 5], [0x1F383B, 5], [0x639581, 5], [0x6A9C7F, 5], [0x609278, 5]] ;$aHex = [[0x447063, 20], [0x6A9C7F, 5], [0x609278, 5]], $sHex = 0x000000
 	Local $aiPostFix[4] = [25, 103, 815, 712]
-	If $bForceCapture Then _CaptureRegion2($aiPostFix[0], $aiPostFix[1], $aiPostFix[2], $aiPostFix[3])
-	If $g_iThreads > 0 And $g_iDMatchingThreads <> $g_iThreads Then
-        $g_iDMatchingThreads = $g_iThreads
-    Else
-        $g_iDMatchingThreads = 32
-    EndIf
-    Local $sResult = DllCallDMatching("Find", "str", "handle", $g_hHBitmap2, "str", $sDirectory, "ushort", 0, "ushort", 0, "ushort", 0, "ushort", 0, "ushort", 0, "ushort", 0, "ushort", $g_iDMatchingThreads, "ushort", 0, "boolean", $g_bDMatchingDebugImages)
-	Local $aPositions, $aCord, $level, $aCoordsM
-	If $g_bDebugSetlog Then SetDebugLog("Detected : " & UBound($sResult) & " tiles")
-	Local $KeyValue = StringSplit($sResult, "|", $STR_NOCOUNT)
+
+	If $bForceCapture Then _CaptureRegions()
+
+	Local $aRes = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sDirectory, "str", GetDiamondFromArray($aiPostFix), "Int", $Quantity2Match, "str", GetDiamondFromArray($aiPostFix), "Int", 0, "Int", 1000)
+	Local $KeyValue = StringSplit($aRes[0], "|", $STR_NOCOUNT)
+	Local $Name = ""
+	Local $aPositions, $aCoords, $aCord, $level, $aCoordsM
+	SetDebugLog("Detected : " & UBound($KeyValue) & " tiles")
+	Local $AllFilenamesFound[UBound($KeyValue)][3]
+	Local $iFur = Random($iFurMin, $iFurMax, 1)
 	For $i = 0 To UBound($KeyValue) - 1
-		Local $aMatches = DMDecodeMatch($KeyValue[$i])
-		If IsArray($aMatches) Then
-			Local $aCoordsM[4] = [$aMatches[2], $aMatches[3], $aMatches[4], $aMatches[5]]
-			; Rotate algorithm.
-			If Not isInDiamond($aMatches[2], $aMatches[3], $aiPostFix[0], $aiPostFix[1], $aiPostFix[2], $aiPostFix[3]) Then ContinueLoop
+		$aPositions = RetrieveImglocProperty($KeyValue[$i], "objectpoints")
+		$aCoords = decodeMultipleCoords($aPositions, 0, 0, 0)
+		For $iCoords = 0 To UBound($aCoords) - 1
+			Local $aCoordsM = $aCoords[$iCoords]
 			
-			Local $iFur = Random($iFurMin, $iFurMax, 1)
-			If Int($aiPostFix[0] + $aCoordsM[0]) < Int($iCenterX) Then
-				If Int($aiPostFix[1] + $aCoordsM[1]) < Int($iCenterY) Then
-					$vResult[0][0] = ($aiPostFix[0] + $aCoordsM[0]) - ($aCoordsM[2])
-					$vResult[0][1] = ($aiPostFix[1] + $aCoordsM[1]) - ($aCoordsM[3])                            
-					_ArrayAdd($aTopLeft, $vResult)
-				Else                                                                                                                                                 
-					$vResult[0][0] = ($aiPostFix[0] + $aCoordsM[0]) - ($aCoordsM[2])
-					$vResult[0][1] = ($aiPostFix[1] + $aCoordsM[1]) + ($aCoordsM[3])     
-					_ArrayAdd($aBottomLeft, $vResult)
-				EndIf                                                                                                                                                  
+			If Int($aCoordsM[0]) < Int($iCenterX) Then
+				If Int($aCoordsM[1]) < Int($iCenterY) Then
+					$vResult[0][0] = $aCoordsM[0] - $iFur
+					$vResult[0][1] = $aCoordsM[1] - $iFur
+				Else
+					$vResult[0][0] = $aCoordsM[0] - $iFur
+					$vResult[0][1] = $aCoordsM[1] + $iFur
+				EndIf
 			Else
-				If Int($aiPostFix[1] + $aCoordsM[1]) < Int($iCenterY) Then                                                                                         
-					$vResult[0][0] = ($aiPostFix[0] + $aCoordsM[0]) + ($aCoordsM[2])
-					$vResult[0][1] = ($aiPostFix[1] + $aCoordsM[1]) - ($aCoordsM[3])                          
-					_ArrayAdd($aTopRight, $vResult)                 
-				Else                                                                                                                                                                         
-					$vResult[0][0] = ($aiPostFix[0] + $aCoordsM[0]) + ($aCoordsM[2])
-					$vResult[0][1] = ($aiPostFix[1] + $aCoordsM[1]) + ($aCoordsM[3])                         
-					_ArrayAdd($aBottomRight, $vResult)
+				If Int($aCoordsM[1]) < Int($iCenterY) Then
+					$vResult[0][0] = $aCoordsM[0] + $iFur
+					$vResult[0][1] = $aCoordsM[1] - $iFur
+				Else
+					$vResult[0][0] = $aCoordsM[0] + $iFur
+					$vResult[0][1] = $aCoordsM[1] + $iFur
 				EndIf
 			EndIf
-		EndIf
+			
+			$sHex = _GetPixelColor($vResult[0][0], $vResult[0][1], False)
+			For $i = 0 To UBound($aHex) -1
+				If _ColorCheck($sHex, Hex($aHex[$i][0], 6), $aHex[$i][1]) = True Then
+					PointBB($aSides, $vResult[0][0], $vResult[0][1])
+					ContinueLoop
+				EndIf
+			Next
+			
+		Next
 	Next
 	
-	; In no 'DP' case.
-	If UBound($aTopLeft) < 4 Or UBound($aTopRight) < 4 Or UBound($aBottomRight) < 4 Or UBound($aBottomLeft) < 4 Then 
-		$g_aBuilderBaseOuterDiamond = BuilderBaseAttackOuterDiamond()
-	
-		If $g_aBuilderBaseOuterDiamond <> -1 Then
-			Return BuilderBaseGetEdges($g_aBuilderBaseOuterDiamond, "Outer Edges")
-		EndIf
-	EndIf
-	Local $aSides[4] = [$aTopLeft, $aTopRight, $aBottomRight, $aBottomLeft]
-
 	Return $aSides
 EndFunc   ;==>PointDeployBB
+
+Func PointBB(ByRef $aXYs, $x1, $y1, $iD = 18)
+	
+	; Check distance fast.
+	For $i = 0 To UBound($aXYs) -1
+		If Pixel_Distance($aXYs[$i][0], $aXYs[$i][1], $x1, $y1) < $iD Then Return
+	Next
+	
+	; Add point.
+	ReDim $aXYs[UBound($aXYs) + 1][2]
+	$aXYs[UBound($aXYs) -1][0] = $x1
+	$aXYs[UBound($aXYs) -1][1] = $y1
+	
+EndFunc   ;==>PointBB
 
 Func _DebugFailedImageDetection($Text)
 	If $g_bDebugImageSave Or $g_bDebugSetlog Then
