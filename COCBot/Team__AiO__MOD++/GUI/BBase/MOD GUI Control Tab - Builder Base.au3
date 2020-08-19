@@ -250,9 +250,7 @@ Func ChkBBCustomAttack()
 		GUICtrlSetState($g_hGrpGuideScriptBB[1], $GUI_SHOW)
 		GUICtrlSetState($g_hGrpGuideScriptBB[2], $GUI_SHOW)
 
-		GUICtrlSetPos($g_hChkBBGetFromCSV, 5, 190)
-		GUICtrlSetState($g_hChkBBGetFromCSV, BitOr($GUI_HIDE, $GUI_DISABLE)) ; AIO ++
-		;$g_bChkBBGetFromCSV = false
+		GUICtrlSetState($g_hChkBBGetFromCSV, $GUI_HIDE) ; AIO ++
 
 		GUICtrlSetPos($g_hGrpOptionsBB, -1, -1, $g_iSizeWGrpTab2 - 2, 65)
 		GUICtrlSetPos($g_hChkBBTrophiesRange, 100, 105)
@@ -260,7 +258,8 @@ Func ChkBBCustomAttack()
 		GUICtrlSetPos($g_hLblBBDropTrophiesDash, 245, 105 + 2)
 		GUICtrlSetPos($g_hTxtBBDropTrophiesMax, 250, 105)
 		GUICtrlSetPos($g_hChkBBCustomAttack, 300, 105)
-		GUICtrlSetPos($g_hChkBBWaitForMachine, 100, 130)
+		GUICtrlSetPos($g_hChkBBGetFromCSV, 5, 187)
+		; GUICtrlSetPos($g_hChkBBWaitForMachine, 100, 130)
 		GUICtrlSetPos($g_hChkBBStopAt3, 300, 130)
 		WinMove($g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV, "", 0, 140, $g_iSizeWGrpTab2 - 2)
 		GUICtrlSetPos($g_hGrpAttackStyleBB, -1, -1, $g_iSizeWGrpTab2 - 12, $g_iSizeHGrpTab4 - 90)
@@ -281,16 +280,16 @@ Func ChkBBCustomAttack()
 		GUICtrlSetState($g_hGrpGuideScriptBB[2], $GUI_HIDE)
 
 		GUICtrlSetState($g_hChkBBGetFromCSV, $GUI_SHOW) ; AIO ++
-		GUICtrlSetPos($g_hChkBBGetFromCSV, 5, 190)
 
-		GUICtrlSetPos($g_hGrpOptionsBB, -1, -1, 200, 165)
+		GUICtrlSetPos($g_hGrpOptionsBB, -1, -1, 200, 135)
 		GUICtrlSetPos($g_hChkBBTrophiesRange, 5, 150)
 		GUICtrlSetPos($g_hTxtBBDropTrophiesMin, 108, 151)
 		GUICtrlSetPos($g_hLblBBDropTrophiesDash, 150, 151 + 2)
 		GUICtrlSetPos($g_hTxtBBDropTrophiesMax, 155, 151)
 		GUICtrlSetPos($g_hChkBBCustomAttack, 5, 170)
 		GUICtrlSetPos($g_hChkBBStopAt3, 5, 130)
-		GUICtrlSetPos($g_hChkBBWaitForMachine, 5, 120 + 100)
+		GUICtrlSetPos($g_hChkBBGetFromCSV, 5, 187)
+		; GUICtrlSetPos($g_hChkBBWaitForMachine, 5, 120 + 100)
 
 		WinMove($g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV, "", 200, 85, 240)
 		GUICtrlSetPos($g_hGrpAttackStyleBB, -1, -1, 233, $g_iSizeHGrpTab4 - 35)

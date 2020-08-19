@@ -238,10 +238,10 @@ Func ArmyStatus(ByRef $bIsReady)
 		$bIsReady = False
 	EndIf
 
-	If $g_bChkBBWaitForMachine And QuickMis("BC1", $g_sImgHeroStatusRec, 108, 355, 431, 459, True, False) Then
-		SetLog("Battle Machine is not ready.", $COLOR_INFO)
-		$bIsReady = False
-	EndIf
+	; If $g_bChkBBWaitForMachine And QuickMis("BC1", $g_sImgHeroStatusRec, 108, 355, 431, 459, True, False) Then
+		; SetLog("Battle Machine is not ready.", $COLOR_INFO)
+		; $bIsReady = False
+	; EndIf
 
 	$g_bBBMachineReady = $bIsReady
 

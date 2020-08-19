@@ -115,9 +115,6 @@ Func RunBBFuncs($sBBFunc, $bTestRun = False)
 	Switch $sBBFunc
 		Case "ClockTower"
 
-			;It will not be necessary if there are no constructors.
-			If $g_iFreeBuilderCountBB = 0 Then Return
-
 			; Zoomout
 			BuilderBaseZoomOut()
 

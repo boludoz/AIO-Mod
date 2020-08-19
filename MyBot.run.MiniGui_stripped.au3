@@ -3031,7 +3031,7 @@ Global $g_iTxtTreasuryGold = 0
 Global $g_iTxtTreasuryElixir = 0
 Global $g_iTxtTreasuryDark = 0
 Global $g_bChkCollectBuilderBase = False, $g_bChkStartClockTowerBoost = False, $g_bChkCTBoostBlderBz = False, $g_bChkCleanBBYard = False
-Global $g_bChkBBTrophyRange = False, $g_bChkBBAttIfLootAvail = False, $g_bChkBBWaitForMachine = False
+Global $g_bChkBBTrophyRange = False, $g_bChkBBAttIfLootAvail = False
 Global $g_iTxtBBTrophyLowerLimit = 0, $g_iTxtBBTrophyUpperLimit = 5000
 Global Const $g_iBBNextTroopDelayDefault = 2000, $g_iBBSameTroopDelayDefault = 300
 Global $g_iBBNextTroopDelay = $g_iBBNextTroopDelayDefault, $g_iBBSameTroopDelay = $g_iBBSameTroopDelayDefault
@@ -5313,7 +5313,6 @@ IniReadS($g_bChkBBTrophyRange, $g_sProfileConfigPath, "other", "ChkBBTrophyRange
 IniReadS($g_iTxtBBTrophyLowerLimit, $g_sProfileConfigPath, "other", "TxtBBTrophyLowerLimit", 0, "int")
 IniReadS($g_iTxtBBTrophyUpperLimit, $g_sProfileConfigPath, "other", "TxtBBTrophyUpperLimit", 5000, "int")
 IniReadS($g_bChkBBAttIfLootAvail, $g_sProfileConfigPath, "other", "ChkBBAttIfLootAvail", False, "Bool")
-IniReadS($g_bChkBBWaitForMachine, $g_sProfileConfigPath, "other", "ChkBBWaitForMachine", False, "Bool")
 IniReadS($g_iBBNextTroopDelay, $g_sProfileConfigPath, "other", "iBBNextTroopDelay", $g_iBBNextTroopDelayDefault, "int")
 IniReadS($g_iBBSameTroopDelay, $g_sProfileConfigPath, "other", "iBBSameTroopDelay", $g_iBBSameTroopDelayDefault, "int")
 $g_bBBDropOrderSet = True

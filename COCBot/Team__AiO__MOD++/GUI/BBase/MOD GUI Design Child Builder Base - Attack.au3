@@ -20,7 +20,7 @@ Global $g_hIcnBBarmy1 = 0, $g_hIcnBBarmy2 = 0, $g_hIcnBBarmy3 = 0, $g_hIcnBBarmy
 Global $g_hLblNotesScriptBB[3] = [0, 0, 0], $g_hGrpOptionsBB = 0, $g_hGrpAttackStyleBB = 0, $g_hGrpGuideScriptBB[3] = [0, 0, 0], $g_hIcnBBCSV[4] = [0, 0, 0, 0]
 Global $g_hGUI_ATTACK_PLAN_BUILDER_BASE = 0, $g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV = 0
 Global $g_hChkBBCustomAttack = 0
-Global $g_hChkBBGetFromCSV = 0 ;AIO ++
+Global $g_hChkBBGetFromCSV = 0
 
 Func CreateAttackPlanBuilderBaseSubTab()
 
@@ -78,7 +78,7 @@ Func CreateAttackPlanBuilderBaseSubTab()
 
 	$x = 0
 	$y = 90
-	$g_hGrpOptionsBB = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "Group_02", "Options"), $x, $y, $g_iSizeWGrpTab2 - 2, $g_iSizeHGrpTab4 - 90)
+	$g_hGrpOptionsBB = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "Group_02", "Options"), $x, $y, $g_iSizeWGrpTab2 - 2, $g_iSizeHGrpTab4 - 135)
 	$g_hCmbBBAttack = GUICtrlCreateCombo( GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "CmbAttackStyle", ""), $x + 5, $y + 15, 80, -1, $CBS_DROPDOWNLIST)
 	GUICtrlSetData(-1, "CSV|Smart Attack")
 	GUICtrlSetOnEvent(-1, "cmbBBAttack")
@@ -101,9 +101,9 @@ Func CreateAttackPlanBuilderBaseSubTab()
 	$g_hChkBBGetFromCSV = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "ChkBBGetFromCSV", "Force get troops from CSV in standard attack"), $x + 5, $y + 100, 180, 30, $BS_MULTILINE)
 	GUICtrlSetOnEvent(-1, "ChkBBGetFromCSV")
 
-	$g_hChkBBWaitForMachine = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBWaitForMachine", "Wait For Battle Machine"), $x + 5, $y + 120, 180, -1)
-	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBWaitForMachine_Info_01", "Makes the bot not attack while Machine is down."))
-	;GUICtrlSetState(-1, $GUI_DISABLE)
+	; $g_hChkBBWaitForMachine = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBWaitForMachine", "Wait For Battle Machine"), $x + 5, $y + 120, 180, -1)
+	; _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBWaitForMachine_Info_01", "Makes the bot not attack while Machine is down."))
+	; GUICtrlSetState(-1, $GUI_DISABLE)
 
 	$g_hLblBBNextTroopDelay = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "LblBBNextTroopDelay", "Next Troop Delay"), $x + 40, $y + 37 + 130)
 	$g_hCmbBBNextTroopDelay = GUICtrlCreateCombo("", $x + 70, $y + 54 + 130, 30, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))

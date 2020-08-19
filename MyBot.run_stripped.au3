@@ -7253,9 +7253,9 @@ Global $g_iTxtTreasuryGold = 0
 Global $g_iTxtTreasuryElixir = 0
 Global $g_iTxtTreasuryDark = 0
 Global $g_bChkCollectBuilderBase = False, $g_bChkStartClockTowerBoost = False, $g_bChkCTBoostBlderBz = False, $g_bChkCleanBBYard = False
-Global $g_hChkEnableBBAttack = 0, $g_hChkBBTrophyRange = 0, $g_hTxtBBTrophyLowerLimit = 0, $g_hTxtBBTrophyUpperLimit = 0, $g_hChkBBAttIfLootAvail = 0, $g_hChkBBWaitForMachine = 0
+Global $g_hChkEnableBBAttack = 0, $g_hChkBBTrophyRange = 0, $g_hTxtBBTrophyLowerLimit = 0, $g_hTxtBBTrophyUpperLimit = 0, $g_hChkBBAttIfLootAvail = 0
 Global $g_bChkEnableBBAttack = True
-Global $g_bChkBBTrophyRange = False, $g_bChkBBAttIfLootAvail = False, $g_bChkBBWaitForMachine = False
+Global $g_bChkBBTrophyRange = False, $g_bChkBBAttIfLootAvail = False
 Global $g_iTxtBBTrophyLowerLimit = 0, $g_iTxtBBTrophyUpperLimit = 5000
 Global $g_bBBMachineReady = True
 Global $g_iBBMachAbilityTime = 14000
@@ -23212,7 +23212,7 @@ $g_hIcnTroopBB[5] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnBlank, $x + 355 + 1
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 $x = 0
 $y = 90
-$g_hGrpOptionsBB = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "Group_02", "Options"), $x, $y, $g_iSizeWGrpTab2 - 2, $g_iSizeHGrpTab4 - 90)
+$g_hGrpOptionsBB = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "Group_02", "Options"), $x, $y, $g_iSizeWGrpTab2 - 2, $g_iSizeHGrpTab4 - 135)
 $g_hCmbBBAttack = GUICtrlCreateCombo( GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "CmbAttackStyle", ""), $x + 5, $y + 15, 80, -1, $CBS_DROPDOWNLIST)
 GUICtrlSetData(-1, "CSV|Smart Attack")
 GUICtrlSetOnEvent(-1, "cmbBBAttack")
@@ -23229,8 +23229,6 @@ GUICtrlSetState(-1, $GUI_UNCHECKED)
 GUICtrlSetOnEvent(-1, "ChkBBCustomAttack")
 $g_hChkBBGetFromCSV = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "ChkBBGetFromCSV", "Force get troops from CSV in standard attack"), $x + 5, $y + 100, 180, 30, $BS_MULTILINE)
 GUICtrlSetOnEvent(-1, "ChkBBGetFromCSV")
-$g_hChkBBWaitForMachine = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBWaitForMachine", "Wait For Battle Machine"), $x + 5, $y + 120, 180, -1)
-_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBWaitForMachine_Info_01", "Makes the bot not attack while Machine is down."))
 $g_hLblBBNextTroopDelay = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "LblBBNextTroopDelay", "Next Troop Delay"), $x + 40, $y + 37 + 130)
 $g_hCmbBBNextTroopDelay = GUICtrlCreateCombo("", $x + 70, $y + 54 + 130, 30, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "CmbBBNextTroopDelay_Info_01", "Set the delay between different troops. 1 fastest to 9 slowest."))
@@ -31237,7 +31235,6 @@ EndFunc
 Func chkEnableBBAttack()
 GUICtrlSetState($g_hChkBBTrophyRange, $GUI_ENABLE)
 GUICtrlSetState($g_hChkBBAttIfLootAvail, $GUI_ENABLE)
-GUICtrlSetState($g_hChkBBWaitForMachine, $GUI_ENABLE)
 GUICtrlSetState($g_hBtnBBDropOrder, $GUI_ENABLE)
 GUICtrlSetState($g_hCmbBBSameTroopDelay, $GUI_ENABLE)
 GUICtrlSetState($g_hCmbBBNextTroopDelay, $GUI_ENABLE)
@@ -32266,7 +32263,6 @@ $g_bRunState = True
 $g_bChkEnableBBAttack = True
 $g_bChkBBTrophyRange = True
 $g_bChkBBAttIfLootAvail = True
-$g_bChkBBWaitForMachine = True
 AndroidOnlyZoomOut()
 SetLog(_PadStringCenter(" Test Attack BuilderBase begin (" & $g_sBotVersion & ")", 54, "="), $COLOR_INFO)
 AttackBB()
@@ -32514,15 +32510,14 @@ GUICtrlSetState($g_hLblNotesScriptBB[1], $GUI_SHOW)
 GUICtrlSetState($g_hLblNotesScriptBB[2], $GUI_SHOW)
 GUICtrlSetState($g_hGrpGuideScriptBB[1], $GUI_SHOW)
 GUICtrlSetState($g_hGrpGuideScriptBB[2], $GUI_SHOW)
-GUICtrlSetPos($g_hChkBBGetFromCSV, 5, 190)
-GUICtrlSetState($g_hChkBBGetFromCSV, BitOr($GUI_HIDE, $GUI_DISABLE))
+GUICtrlSetState($g_hChkBBGetFromCSV, $GUI_HIDE)
 GUICtrlSetPos($g_hGrpOptionsBB, -1, -1, $g_iSizeWGrpTab2 - 2, 65)
 GUICtrlSetPos($g_hChkBBTrophiesRange, 100, 105)
 GUICtrlSetPos($g_hTxtBBDropTrophiesMin, 203, 105)
 GUICtrlSetPos($g_hLblBBDropTrophiesDash, 245, 105 + 2)
 GUICtrlSetPos($g_hTxtBBDropTrophiesMax, 250, 105)
 GUICtrlSetPos($g_hChkBBCustomAttack, 300, 105)
-GUICtrlSetPos($g_hChkBBWaitForMachine, 100, 130)
+GUICtrlSetPos($g_hChkBBGetFromCSV, 5, 187)
 GUICtrlSetPos($g_hChkBBStopAt3, 300, 130)
 WinMove($g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV, "", 0, 140, $g_iSizeWGrpTab2 - 2)
 GUICtrlSetPos($g_hGrpAttackStyleBB, -1, -1, $g_iSizeWGrpTab2 - 12, $g_iSizeHGrpTab4 - 90)
@@ -32542,15 +32537,14 @@ GUICtrlSetState($g_hLblNotesScriptBB[2], $GUI_HIDE)
 GUICtrlSetState($g_hGrpGuideScriptBB[1], $GUI_HIDE)
 GUICtrlSetState($g_hGrpGuideScriptBB[2], $GUI_HIDE)
 GUICtrlSetState($g_hChkBBGetFromCSV, $GUI_SHOW)
-GUICtrlSetPos($g_hChkBBGetFromCSV, 5, 190)
-GUICtrlSetPos($g_hGrpOptionsBB, -1, -1, 200, 165)
+GUICtrlSetPos($g_hGrpOptionsBB, -1, -1, 200, 135)
 GUICtrlSetPos($g_hChkBBTrophiesRange, 5, 150)
 GUICtrlSetPos($g_hTxtBBDropTrophiesMin, 108, 151)
 GUICtrlSetPos($g_hLblBBDropTrophiesDash, 150, 151 + 2)
 GUICtrlSetPos($g_hTxtBBDropTrophiesMax, 155, 151)
 GUICtrlSetPos($g_hChkBBCustomAttack, 5, 170)
 GUICtrlSetPos($g_hChkBBStopAt3, 5, 130)
-GUICtrlSetPos($g_hChkBBWaitForMachine, 5, 120 + 100)
+GUICtrlSetPos($g_hChkBBGetFromCSV, 5, 187)
 WinMove($g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV, "", 200, 85, 240)
 GUICtrlSetPos($g_hGrpAttackStyleBB, -1, -1, 233, $g_iSizeHGrpTab4 - 35)
 GUICtrlSetState($g_hGrpAttackStyleBB, $GUI_SHOW)
@@ -43817,7 +43811,12 @@ $g_aBuilderBaseDiamond = BuilderBaseAttackDiamond()
 If IsArray($g_aBuilderBaseDiamond) <> True Or Not(UBound($g_aBuilderBaseDiamond) > 0) Then Return False
 $g_aExternalEdges = BuilderBaseGetEdges($g_aBuilderBaseDiamond, "External Edges")
 Local $sSideNames[4] = ["TopLeft", "TopRight", "BottomRight", "BottomLeft"]
-Local $aBuilderHallPos = findMultipleQuick($g_sBundleBuilderHall, 1)
+Local $aBuilderHallPos
+For $i = 0 To 3
+$aBuilderHallPos = findMultipleQuick($g_sBundleBuilderHall, 1)
+If IsArray($aBuilderHallPos) Then ExitLoop
+If _Sleep(250) Then Return
+Next
 If IsArray($aBuilderHallPos) And UBound($aBuilderHallPos) > 0 Then
 $g_aBuilderHallPos = $aBuilderHallPos
 Else
@@ -48935,10 +48934,15 @@ Else
 Return $g_iImglocTHLevel
 EndIf
 EndFunc
-Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME_WIDTH, $Bottom = $g_iGAME_HEIGHT, $bNeedCapture = True, $Debug = False, $OcrDecode = 3, $OcrSpace = 12)
+Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME_WIDTH, $Bottom = $g_iGAME_HEIGHT, $bNeedCapture = True, $Debug = False)
+If($ValueReturned <> "BC1") And($ValueReturned <> "CX") And($ValueReturned <> "N1") And($ValueReturned <> "NX") And($ValueReturned <> "Q1") And($ValueReturned <> "QX") And($ValueReturned <> "N1Cx1") And($ValueReturned <> "NxCx") And($ValueReturned <> "OCR") Then
+SetLog("Bad parameters during QuickMIS call for MultiSearch...", $COLOR_RED)
+Return
+EndIf
 If $bNeedCapture Then _CaptureRegion2($Left, $Top, $Right, $Bottom)
 Local $Res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $directory, "str", "FV", "Int", 0, "str", "FV", "Int", 0, "Int", 1000)
 If @error Then _logErrorDLLCall($g_sLibMyBotPath, @error)
+If $g_bDebugImageSave Then SaveDebugImage("QuickMIS_" & $ValueReturned, False)
 If IsArray($Res) Then
 If $g_bDebugSetlog Then SetDebugLog("DLL Call succeeded " & $Res[0], $COLOR_PURPLE)
 If StringIsSpace($Res[0]) Or $Res[0] = "0" Then
@@ -48968,7 +48972,7 @@ SetLog("DLL Error", $COLOR_RED)
 Else
 Switch $ValueReturned
 Case "BC1"
-Local $Result = "", $Name = ""
+Local $Result = "" , $Name = ""
 Local $KeyValue = StringSplit($Res[0], "|", $STR_NOCOUNT)
 For $i = 0 To UBound($KeyValue) - 1
 Local $DLLRes = DllCallMyBot("GetProperty", "str", $KeyValue[$i], "str", "objectpoints")
@@ -70166,26 +70170,12 @@ EndIf
 If _Sleep($DELAYCOLLECT3) Then Return
 If $bSwitchToNV Then SwitchBetweenBases()
 EndFunc
-Func TestStartClockTowerBoost()
-Setlog("** TestStartClockTowerBoost START**", $COLOR_DEBUG)
-Local $iAvailableAttacksBB = $g_iAvailableAttacksBB
-Local $DebugSetlog = $g_bDebugSetlog
-$g_bDebugSetlog = True
-$g_iAvailableAttacksBB = 2
-Local $Status = $g_bRunState
-$g_bRunState = True
-StartClockTowerBoost()
-$g_iAvailableAttacksBB = $iAvailableAttacksBB
-$g_bDebugSetlog = $DebugSetlog
-$g_bRunState = $Status
-Setlog("** TestStartClockTowerBoost END**", $COLOR_DEBUG)
-EndFunc
 Func StartClockTowerBoost($bSwitchToBB = False, $bSwitchToNV = False)
 If Not $g_bChkStartClockTowerBoost Then Return
 If Not $g_bRunState Then Return
 If $bSwitchToBB Then
-ClickP($aAway, 1, 0, "#0332")
-If Not SwitchBetweenBases(True, True) Then Return
+ClickAway()
+If Not SwitchBetweenBases() Then Return
 EndIf
 Local $bCTBoost = True
 If $g_bChkCTBoostBlderBz Then
@@ -70222,8 +70212,8 @@ Else
 SetLog("Clock Tower boost is not available!")
 EndIf
 EndIf
-ClickP($aAway, 1, 0, "#0329")
-If $bSwitchToNV Then SwitchBetweenBases(True, False)
+ClickAway()
+If $bSwitchToNV Then SwitchBetweenBases()
 EndFunc
 Func BuilderBaseReport($bBypass = False, $bSetLog = True)
 ClickAway()
@@ -71846,7 +71836,6 @@ GUICtrlSetState($g_hChkBBTrophyRange, $g_bChkBBTrophyRange ? $GUI_CHECKED : $GUI
 GUICtrlSetData($g_hTxtBBTrophyLowerLimit, $g_iTxtBBTrophyLowerLimit)
 GUICtrlSetData($g_hTxtBBTrophyUpperLimit, $g_iTxtBBTrophyUpperLimit)
 GUICtrlSetState($g_hChkBBAttIfLootAvail, $g_bChkBBAttIfLootAvail ? $GUI_CHECKED : $GUI_UNCHECKED)
-GUICtrlSetState($g_hChkBBWaitForMachine, $g_bChkBBWaitForMachine ? $GUI_CHECKED : $GUI_UNCHECKED)
 _GUICtrlComboBox_SetCurSel($g_hCmbBBNextTroopDelay,(($g_iBBNextTroopDelay - $g_iBBNextTroopDelayDefault) / $g_iBBNextTroopDelayIncrement) + 4)
 _GUICtrlComboBox_SetCurSel($g_hCmbBBSameTroopDelay,(($g_iBBSameTroopDelay - $g_iBBSameTroopDelayDefault) / $g_iBBSameTroopDelayIncrement) + 4)
 chkBBTrophyRange()
@@ -71918,7 +71907,6 @@ $g_bChkBBTrophyRange =(GUICtrlRead($g_hChkBBTrophyRange) = $GUI_CHECKED)
 $g_iTxtBBTrophyLowerLimit = GUICtrlRead($g_hTxtBBTrophyLowerLimit)
 $g_iTxtBBTrophyUpperLimit = GUICtrlRead($g_hTxtBBTrophyUpperLimit)
 $g_bChkBBAttIfLootAvail =(GUICtrlRead($g_hChkBBAttIfLootAvail) = $GUI_CHECKED)
-$g_bChkBBWaitForMachine =(GUICtrlRead($g_hChkBBWaitForMachine) = $GUI_CHECKED)
 For $i=0 To $eBBTroopCount - 1
 $g_aiCmbBBDropOrder[$i] = Number(_GUICtrlComboBox_GetCurSel($g_ahCmbBBDropOrder[$i]))
 Next
@@ -73819,7 +73807,6 @@ IniReadS($g_bChkBBTrophyRange, $g_sProfileConfigPath, "other", "ChkBBTrophyRange
 IniReadS($g_iTxtBBTrophyLowerLimit, $g_sProfileConfigPath, "other", "TxtBBTrophyLowerLimit", 0, "int")
 IniReadS($g_iTxtBBTrophyUpperLimit, $g_sProfileConfigPath, "other", "TxtBBTrophyUpperLimit", 5000, "int")
 IniReadS($g_bChkBBAttIfLootAvail, $g_sProfileConfigPath, "other", "ChkBBAttIfLootAvail", False, "Bool")
-IniReadS($g_bChkBBWaitForMachine, $g_sProfileConfigPath, "other", "ChkBBWaitForMachine", False, "Bool")
 IniReadS($g_iBBNextTroopDelay, $g_sProfileConfigPath, "other", "iBBNextTroopDelay", $g_iBBNextTroopDelayDefault, "int")
 IniReadS($g_iBBSameTroopDelay, $g_sProfileConfigPath, "other", "iBBSameTroopDelay", $g_iBBSameTroopDelayDefault, "int")
 $g_bBBDropOrderSet = True
@@ -74900,7 +74887,6 @@ _Ini_Add("other", "ChkBBTrophyRange", $g_bChkBBTrophyRange)
 _Ini_Add("other", "TxtBBTrophyLowerLimit", $g_iTxtBBTrophyLowerLimit)
 _Ini_Add("other", "TxtBBTrophyUpperLimit", $g_iTxtBBTrophyUpperLimit)
 _Ini_Add("other", "ChkBBAttIfLootAvail", $g_bChkBBAttIfLootAvail)
-_Ini_Add("other", "ChkBBWaitForMachine", $g_bChkBBWaitForMachine)
 _Ini_Add("other", "iBBNextTroopDelay", $g_iBBNextTroopDelay)
 _Ini_Add("other", "iBBSameTroopDelay", $g_iBBSameTroopDelay)
 _Ini_Add("other", "bBBDropOrderSet", $g_bBBDropOrderSet)
@@ -80258,57 +80244,54 @@ $g_hTxtLogTimer = __TimerInit()
 Return $iLogs
 EndFunc
 Func PointDeployBB($sDirectory = $g_sBundleDeployPointsBB, $Quantity2Match = 0, $iFurMin = 5, $iFurMax = 5, $iCenterX = 450, $iCenterY = 425, $bForceCapture = True, $DebugLog = False)
-Local $vResult[1][2], $aSides[0][2]
+Local $vResult[1][2], $aSides[0][2], $sHex = 0x000000, $aHex = [[0x447063, 20], [0x446661, 5], [0x446761, 5], [0x1F383B, 5], [0x639581, 5], [0x6A9C7F, 5], [0x609278, 5]]
 Local $aiPostFix[4] = [25, 103, 815, 712]
 If $bForceCapture Then _CaptureRegions()
 Local $aRes = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sDirectory, "str", GetDiamondFromArray($aiPostFix), "Int", $Quantity2Match, "str", GetDiamondFromArray($aiPostFix), "Int", 0, "Int", 1000)
 Local $KeyValue = StringSplit($aRes[0], "|", $STR_NOCOUNT)
 Local $aPositions, $aCoords, $aCord, $level, $aCoordsM
 SetDebugLog("Detected : " & UBound($KeyValue) & " tiles")
+Local $iFur = Random($iFurMin, $iFurMax, 1)
 For $i = 0 To UBound($KeyValue) - 1
 $aPositions = RetrieveImglocProperty($KeyValue[$i], "objectpoints")
 $aCoords = decodeMultipleCoords($aPositions, 0, 0, 0)
 For $iCoords = 0 To UBound($aCoords) - 1
 Local $aCoordsM = $aCoords[$iCoords]
-Local $iFur = Random($iFurMin, $iFurMax, 1)
 If Int($aCoordsM[0]) < Int($iCenterX) Then
 If Int($aCoordsM[1]) < Int($iCenterY) Then
 $vResult[0][0] = $aCoordsM[0] - $iFur
 $vResult[0][1] = $aCoordsM[1] - $iFur
-If _ColorCheck(_GetPixelColor($vResult[0][0], $vResult[0][1], True), Hex(0x447063, 6), 25) = False Then ContinueLoop
-If PointBB($aSides, $vResult[0][0], $vResult[0][1]) Then ContinueLoop
-_ArrayAdd($aSides, $vResult)
 Else
 $vResult[0][0] = $aCoordsM[0] - $iFur
 $vResult[0][1] = $aCoordsM[1] + $iFur
-If _ColorCheck(_GetPixelColor($vResult[0][0], $vResult[0][1], True), Hex(0x447063, 6), 25) = False Then ContinueLoop
-If PointBB($aSides, $vResult[0][0], $vResult[0][1]) Then ContinueLoop
-_ArrayAdd($aSides, $vResult)
 EndIf
 Else
 If Int($aCoordsM[1]) < Int($iCenterY) Then
 $vResult[0][0] = $aCoordsM[0] + $iFur
 $vResult[0][1] = $aCoordsM[1] - $iFur
-If _ColorCheck(_GetPixelColor($vResult[0][0], $vResult[0][1], True), Hex(0x447063, 6), 25) = False Then ContinueLoop
-If PointBB($aSides, $vResult[0][0], $vResult[0][1]) Then ContinueLoop
-_ArrayAdd($aSides, $vResult)
 Else
 $vResult[0][0] = $aCoordsM[0] + $iFur
 $vResult[0][1] = $aCoordsM[1] + $iFur
-If _ColorCheck(_GetPixelColor($vResult[0][0], $vResult[0][1], True), Hex(0x447063, 6), 25) = False Then ContinueLoop
-If PointBB($aSides, $vResult[0][0], $vResult[0][1]) Then ContinueLoop
-_ArrayAdd($aSides, $vResult)
 EndIf
 EndIf
+$sHex = _GetPixelColor($vResult[0][0], $vResult[0][1], False)
+For $i = 0 To UBound($aHex) -1
+If _ColorCheck($sHex, Hex($aHex[$i][0], 6), $aHex[$i][1]) = True Then
+PointBB($aSides, $vResult[0][0], $vResult[0][1])
+ContinueLoop
+EndIf
+Next
 Next
 Next
 Return $aSides
 EndFunc
-Func PointBB($aXYs, $x1, $y1, $iD = 18)
+Func PointBB(ByRef $aXYs, $x1, $y1, $iD = 18)
 For $i = 0 To UBound($aXYs) -1
-If Pixel_Distance($aXYs[$i][0], $aXYs[$i][1], $x1, $y1) < $iD Then Return True
+If Pixel_Distance($aXYs[$i][0], $aXYs[$i][1], $x1, $y1) < $iD Then Return
 Next
-Return False
+ReDim $aXYs[UBound($aXYs) + 1][2]
+$aXYs[UBound($aXYs) -1][0] = $x1
+$aXYs[UBound($aXYs) -1][1] = $y1
 EndFunc
 Func _DebugFailedImageDetection($Text)
 If $g_bDebugImageSave Or $g_bDebugSetlog Then
@@ -80618,7 +80601,7 @@ $g_aBuilderHallPos = $aBuilderHallPos
 Else
 _DebugFailedImageDetection("BuilderHall")
 Setlog("Builder Hall detection Error!", $Color_Error)
-Local $aBuilderHall[1][4] = [["BuilderHall", 450, 425, 92]]
+Local $aBuilderHall[1][4] = [["BuilderHall", 450, 425, -1]]
 $g_aBuilderHallPos = $aBuilderHall
 EndIf
 If Not $g_bRunState Then Return
@@ -80729,7 +80712,7 @@ Next
 EndIf
 For $i = 0 To 3
 If Not $g_bRunState Then Return
-If UBound($DeployPoints[$i]) < 10 Then
+If UBound($DeployPoints[$i]) < 5 Then
 Setlog($Name[$i] & " doesn't have enough deploy points(" & UBound($DeployPoints[$i]) & ") let's use Outer points", $COLOR_DEBUG)
 If UBound($DeployPoints[$i], $UBOUND_COLUMNS) <> UBound($g_aFinalOuter[$i], $UBOUND_COLUMNS) Then
 SetDebugLog("$DeployPoints Array dimension array diff from $g_aFinalOuter array", $COLOR_DEBUG)
@@ -81871,10 +81854,6 @@ ElseIf QuickMis("BC1", $g_sImgHeroStatusUpg, 108, 355, 431, 459, True, False) Th
 SetLog("Full Army detected, But Battle Machine is on Upgrade", $COLOR_INFO)
 $bIsReady = True
 Else
-$bIsReady = False
-EndIf
-If $g_bChkBBWaitForMachine And QuickMis("BC1", $g_sImgHeroStatusRec, 108, 355, 431, 459, True, False) Then
-SetLog("Battle Machine is not ready.", $COLOR_INFO)
 $bIsReady = False
 EndIf
 $g_bBBMachineReady = $bIsReady
@@ -83710,7 +83689,6 @@ $g_bChkBBTrophyRange =(GUICtrlRead($g_hChkBBTrophyRange) = $GUI_CHECKED)
 $g_iTxtBBTrophyLowerLimit = GUICtrlRead($g_hTxtBBTrophyLowerLimit)
 $g_iTxtBBTrophyUpperLimit = GUICtrlRead($g_hTxtBBTrophyUpperLimit)
 $g_bChkBBAttIfLootAvail =(GUICtrlRead($g_hChkBBAttIfLootAvail) = $GUI_CHECKED)
-$g_bChkBBWaitForMachine =(GUICtrlRead($g_hChkBBWaitForMachine) = $GUI_CHECKED)
 EndSwitch
 EndFunc
 Func ApplyConfig_MOD_600_12($TypeReadSave)

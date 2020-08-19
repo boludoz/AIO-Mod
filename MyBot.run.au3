@@ -1,16 +1,4 @@
-﻿#NoTrayIcon
-#RequireAdmin
-#Region ;**** Directives created by AutoIt3Wrapper_GUI ****
-#AutoIt3Wrapper_Outfile=MyBot.run.exe
-#AutoIt3Wrapper_Compression=4
-#AutoIt3Wrapper_UseUpx=y
-#AutoIt3Wrapper_UseX64=n
-#AutoIt3Wrapper_Res_requestedExecutionLevel=requireAdministrator
-#AutoIt3Wrapper_Run_Tidy=y
-#AutoIt3Wrapper_Run_Au3Stripper=y
-#Au3Stripper_Parameters=/rsln /MI=3
-#EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
-; #FUNCTION# ====================================================================================================================
+﻿; #FUNCTION# ====================================================================================================================
 ; Name ..........: MBR Bot
 ; Description ...: This file contains the initialization and main loop sequences f0r the MBR Bot
 ; Author ........:  (2014)
@@ -23,8 +11,13 @@
 ; ===============================================================================================================================
 
 ; AutoIt pragmas
+#NoTrayIcon
+#RequireAdmin
+#AutoIt3Wrapper_UseX64=7n
 ;#AutoIt3Wrapper_Res_HiDpi=Y ; HiDpi will be set during run-time!
 ;#AutoIt3Wrapper_Run_AU3Check=n ; enable when running in folder with umlauts!
+#AutoIt3Wrapper_Run_Au3Stripper=y
+#Au3Stripper_Parameters=/rsln /MI=3
 
 #include "MyBot.run.version.au3"
 #pragma compile(ProductName, My Bot)
@@ -32,7 +25,6 @@
 
 ; Enforce variable declarations
 Opt("MustDeclareVars", 1)
-
 Global $g_sBotTitle = "" ;~ Don't assign any title here, use Func UpdateBotTitle()
 Global $g_hFrmBot = 0 ; The main GUI window
 

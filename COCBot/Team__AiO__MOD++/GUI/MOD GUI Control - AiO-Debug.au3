@@ -164,7 +164,7 @@ Func btnTestAttackBB()
 	$g_bChkEnableBBAttack = True
 	$g_bChkBBTrophyRange = True
 	$g_bChkBBAttIfLootAvail = True
-	$g_bChkBBWaitForMachine = True
+	; $g_bChkBBWaitForMachine = True
 
 	AndroidOnlyZoomOut()
 	SetLog(_PadStringCenter(" Test Attack BuilderBase begin (" & $g_sBotVersion & ")", 54, "="), $COLOR_INFO)

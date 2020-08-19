@@ -424,7 +424,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "TxtBBTrophyLowerLimit", $g_iTxtBBTrophyLowerLimit)
 	_Ini_Add("other", "TxtBBTrophyUpperLimit", $g_iTxtBBTrophyUpperLimit)
 	_Ini_Add("other", "ChkBBAttIfLootAvail", $g_bChkBBAttIfLootAvail)
-	_Ini_Add("other", "ChkBBWaitForMachine", $g_bChkBBWaitForMachine)
+	; _Ini_Add("other", "ChkBBWaitForMachine", $g_bChkBBWaitForMachine)
 	_Ini_Add("other", "iBBNextTroopDelay", $g_iBBNextTroopDelay)
 	_Ini_Add("other", "iBBSameTroopDelay", $g_iBBSameTroopDelay)
 
