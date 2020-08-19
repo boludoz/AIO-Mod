@@ -20,7 +20,7 @@ Global $g_hIcnBBarmy1 = 0, $g_hIcnBBarmy2 = 0, $g_hIcnBBarmy3 = 0, $g_hIcnBBarmy
 Global $g_hLblNotesScriptBB[3] = [0, 0, 0], $g_hGrpOptionsBB = 0, $g_hGrpAttackStyleBB = 0, $g_hGrpGuideScriptBB[3] = [0, 0, 0], $g_hIcnBBCSV[4] = [0, 0, 0, 0]
 Global $g_hGUI_ATTACK_PLAN_BUILDER_BASE = 0, $g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV = 0
 Global $g_hChkBBCustomAttack = 0
-Global $g_hChkBBGetFromCSV = 0
+Global $g_hChkBBGetFromCSV = 0, $g_hChkBBGetFromArmy = 0
 
 Func CreateAttackPlanBuilderBaseSubTab()
 
@@ -98,8 +98,13 @@ Func CreateAttackPlanBuilderBaseSubTab()
 	GUICtrlSetState(-1, $GUI_UNCHECKED)
 	GUICtrlSetOnEvent(-1, "ChkBBCustomAttack")
 
-	$g_hChkBBGetFromCSV = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "ChkBBGetFromCSV", "Force get troops from CSV in standard attack"), $x + 5, $y + 100, 180, 30, $BS_MULTILINE)
-	GUICtrlSetOnEvent(-1, "ChkBBGetFromCSV")
+	$g_hChkBBGetFromCSV = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "ChkBBGetFromCSV", "Force get troops from CSV in Army mode."), $x + 5, $y + 100, 180, 30, $BS_MULTILINE)
+	GUICtrlSetOnEvent($g_hChkBBGetFromCSV, "ChkBBGetFromCSV")
+	GUICtrlSetState($g_hChkBBGetFromCSV, $GUI_SHOW)
+
+	$g_hChkBBGetFromArmy = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "ChkBBGetFromArmy", "Force get troops from Army in CSV mode."), $x + 5, $y + 100, 180, 30, $BS_MULTILINE)
+	GUICtrlSetOnEvent($g_hChkBBGetFromArmy, "ChkBBGetFromArmy")
+	GUICtrlSetState($g_hChkBBGetFromArmy, $GUI_HIDE)
 
 	; $g_hChkBBWaitForMachine = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBWaitForMachine", "Wait For Battle Machine"), $x + 5, $y + 120, 180, -1)
 	; _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBWaitForMachine_Info_01", "Makes the bot not attack while Machine is down."))

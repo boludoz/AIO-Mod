@@ -336,7 +336,7 @@ Func DeployPointsPosition($aPixel, $bIsBH = False)
 	EndIf
 EndFunc   ;==>DeployPointsPosition
 
-Func BuilderBaseBuildingsDetection($iBuilding = 4)
+Func BuilderBaseBuildingsDetection($iBuilding = 4, $bScreenCap = True)
 
 	Local $aBuildings[5] = ["AirDefenses", "Crusher", "GuardPost", "Cannon", "BuilderHall"]
 	If UBound($aBuildings) -1 < $iBuilding Then Return -1
@@ -344,10 +344,12 @@ Func BuilderBaseBuildingsDetection($iBuilding = 4)
 	Local $sDirectory = $g_sImgOpponentBuildingsBB & "\" & $aBuildings[$iBuilding]
 	
 	Setlog("Initial detection for " & $aBuildings[$iBuilding], $COLOR_ACTION)
-
+	
+	If $bScreenCap = True Then _CaptureRegion2()
+	
 	Local $aScreen[4] = [83, 136, 844, 694]
 	If Not $g_bRunState Then Return
-	Return findMultipleQuick($sDirectory, 10, $aScreen, Default, Default, Default, 10)
+	Return findMultipleQuick($sDirectory, 10, $aScreen, False, Default, Default, 10)
 
 EndFunc   ;==>BuilderBaseBuildingsDetection
 

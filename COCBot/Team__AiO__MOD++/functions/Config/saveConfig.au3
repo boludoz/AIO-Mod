@@ -45,6 +45,7 @@ Func SaveConfig_MOD_CustomArmyBB()
 	_Ini_Add("BuilderBase", "BBArmy6", $g_iCmbBBArmy6)
 	; -- AIO BB
 	_Ini_Add("BuilderBase", "ChkBBGetFromCSV", $g_bChkBBGetFromCSV)
+	_Ini_Add("BuilderBase", "ChkBBGetFromArmy", $g_bChkBBGetFromArmy)
 	_Ini_Add("BuilderBase", "CmbBBAttack", $g_iCmbBBAttack)
 
 EndFunc   ;==>SaveConfig_MOD_CustomArmyBB

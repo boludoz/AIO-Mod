@@ -66,63 +66,73 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	If Not $g_bRunState Then Return
 	Local $bIsCampCSV = False
 	Local $aLines[0]
-
-	If ($g_iCmbBBAttack = $g_eBBAttackCSV) Or ($g_bChkBBGetFromCSV = True) Then
-		
-		If Not $g_bChkBBCustomAttack Then
-			$g_iBuilderBaseScript = 0
-		Else
-			Local $aMode[2] = [0, 0]     ; Ground - Air
-			Local $aBuildings[4] = ["AirDefenses", "Crusher", "GuardPost", "Cannon"]
-			For $i = 0 To UBound($aBuildings) - 1
-				Local $a = BuilderBaseBuildingsDetection($i)
-				If $a = -1 Then ContinueLoop
-				Local $iTotal = UBound($a) - 1
-				Local $i3 = ($i <> 0) ? (0) : (1)
-				Local $aModeTmp[2] = [0, 0]     ; Ground - Air
-				For $i2 = 0 To $iTotal
-					$aModeTmp[$i3] += $a[$i2][3]
+	
+	Select
+		Case ($g_iCmbBBAttack = $g_eBBAttackCSV) Or ($g_iCmbBBAttack = $g_eBBAttackSmart And $g_bChkBBGetFromCSV = True)
+			
+			If Not $g_bChkBBCustomAttack Then
+				$g_iBuilderBaseScript = 0
+			Else
+				Local $aMode[2] = [0, 0]     ; Ground - Air
+				Local $aBuildings[4] = ["AirDefenses", "Crusher", "GuardPost", "Cannon"]
+				Local $a, $iTotal, $i3, $aModeTmp[2] = [0, 0]
+				_CaptureRegion2()
+				For $i = 0 To UBound($aBuildings) - 1
+					$a = BuilderBaseBuildingsDetection($i, False)
+					If $a = -1 Then ContinueLoop
+					$iTotal = UBound($a) - 1
+					$i3 = ($i <> 0) ? (0) : (1)
+					$aModeTmp[0] = 0
+					$aModeTmp[1] = 0
+					For $i2 = 0 To $iTotal
+						$aModeTmp[$i3] += $a[$i2][3]
+					Next
+					$aMode[$i3] += $aModeTmp[$i3]
+					$aMode[$i3] /= 2
 				Next
-				$aMode[$i3] += $aModeTmp[$i3]
-				$aMode[$i3] /= 2
+				
+				$g_iBuilderBaseScript = 0
+				If ($aMode[0] <> $aMode[1]) Then 
+					$g_iBuilderBaseScript = _ArrayMinIndex($aMode, 1) + 1
+				EndIf
+				
+				SetLog("Script mode : " & $g_iBuilderBaseScript & " / " & " Ground calc : " & $aMode[0] & " Air calc : " & $aMode[1], $COLOR_INFO)
+			EndIf
+			
+			Setlog("Attack using the " & $g_sAttackScrScriptNameBB[$g_iBuilderBaseScript] & " script.", $COLOR_INFO)
+			; Let load the Command [Troop] from CSV
+			Local $FileNamePath = @ScriptDir & "\CSV\BuilderBase\" & $g_sAttackScrScriptNameBB[$g_iBuilderBaseScript] & ".csv"
+			If FileExists($FileNamePath) Then $aLines = FileReadToArray($FileNamePath)
+			
+			; Special case if CSV dont have camps.
+			For $iLine = 0 To UBound($aLines) - 1
+				If Not $g_bRunState Then Return
+				Local $aSplitLine = StringSplit($aLines[$iLine], "|", $STR_NOCOUNT)
+				Local $command = StringStripWS(StringUpper($aSplitLine[0]), $STR_STRIPALL)
+				
+				If $command = "CAMP" Then
+					$bIsCampCSV = True
+					ExitLoop
+				EndIf
 			Next
 			
-			$g_iBuilderBaseScript = 0
+			If $bIsCampCSV = False Then ContinueCase
 			
-			If ($aMode[0] <> $aMode[1]) Then $g_iBuilderBaseScript = _ArrayMinIndex($aMode, 1) + 1
-			
-			SetLog("Script mode : " & $g_iBuilderBaseScript & " / " & " Ground calc : " & $aMode[0] & " Air calc : " & $aMode[1], $COLOR_INFO)
-
-		EndIf
-		
-		Setlog("Attack using the " & $g_sAttackScrScriptNameBB[$g_iBuilderBaseScript] & " script.", $COLOR_INFO)
-		; Let load the Command [Troop] from CSV
-		Local $FileNamePath = @ScriptDir & "\CSV\BuilderBase\" & $g_sAttackScrScriptNameBB[$g_iBuilderBaseScript] & ".csv"
-		If FileExists($FileNamePath) Then $aLines = FileReadToArray($FileNamePath)
-		
-		; Special case if CSV dont have camps (open eye).
-		For $iLine = 0 To UBound($aLines) - 1
-			If Not $g_bRunState Then Return
-			Local $aSplitLine = StringSplit($aLines[$iLine], "|", $STR_NOCOUNT)
-			Local $command = StringStripWS(StringUpper($aSplitLine[0]), $STR_STRIPALL)
-			
-			If $command = "CAMP" Then
-				$bIsCampCSV = True
-				ExitLoop
-			EndIf
-		Next
-	EndIf
-	
-	If ($bIsCampCSV = False) Or BitAND((Not $g_bChkBBGetFromCSV), ($g_iCmbBBAttack = $g_eBBAttackSmart)) <> 0 Then
-		Local $sName = "CAMP" & "|"
-		For $iName = 0 To UBound($g_iCmbCampsBB) - 1
-			$sName &= ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) <> "" ? ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) : ("Barb")
-			$sName &= "|"
-			If $iName = 0 Then ContinueLoop
-			Local $aFakeCsv[1] = [$sName]
-			_ArrayAdd($aLines, $aFakeCsv)
-		Next
-	EndIf
+		Case ($g_iCmbBBAttack = $g_eBBAttackSmart) Or ($g_iCmbBBAttack = $g_eBBAttackCSV And $g_bChkBBGetFromArmy = True)
+			Local $sName = "CAMP" & "|"
+			For $iName = 0 To UBound($g_iCmbCampsBB) - 1
+				$sName &= ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) <> "" ? ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) : ("Barb")
+				$sName &= "|"
+				If $iName = 0 Then ContinueLoop
+				Local $aFakeCsv[1] = [$sName]
+				_ArrayAdd($aLines, $aFakeCsv)
+			Next
+		Case Else
+			$g_bChkBBGetFromCSV = False
+			$g_bChkBBGetFromArmy = False
+			SetLog("BuilderBaseSelectCorrectScript 0x11 error.", $COLOR_ERROR)
+			Return 
+	EndSelect
 	
 	If UBound($aLines) = 0 Then
 		SetLog("BuilderBaseSelectCorrectScript 0x12 error.", $COLOR_ERROR)

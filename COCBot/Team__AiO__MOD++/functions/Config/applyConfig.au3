@@ -58,9 +58,11 @@ Func ApplyConfig_MOD_CustomArmyBB($TypeReadSave)
 			chkBBtrophiesRange()
 			; -- AIO BB
 			GUICtrlSetState($g_hChkBBGetFromCSV, $g_bChkBBGetFromCSV ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkBBGetFromArmy, $g_bChkBBGetFromArmy ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbBBAttack, $g_iCmbBBAttack) ; switching between smart and csv attack
 			cmbBBAttack()
-
+			ChkBBGetFromArmy()
+			ChkBBGetFromCSV()
 		Case "Save"
 			;$g_bChkBBCustomArmyEnable = (GUICtrlRead($g_hChkBBCustomArmyEnable) = $GUI_CHECKED) ? 1 : 0
 
@@ -88,9 +90,9 @@ Func ApplyConfig_MOD_CustomArmyBB($TypeReadSave)
 			$g_iTxtBBDropTrophiesMin = Int(GUICtrlRead($g_hTxtBBDropTrophiesMin))
 			$g_iTxtBBDropTrophiesMax = Int(GUICtrlRead($g_hTxtBBDropTrophiesMax))
 			; -- AIO BB
+			$g_bChkBBGetFromArmy = (GUICtrlRead($g_hChkBBGetFromArmy) = $GUI_CHECKED)
 			$g_bChkBBGetFromCSV = (GUICtrlRead($g_hChkBBGetFromCSV) = $GUI_CHECKED)
 			$g_iCmbBBAttack = _GUICtrlComboBox_GetCurSel($g_hCmbBBAttack)
-
 	EndSwitch
 EndFunc   ;==>ApplyConfig_MOD_CustomArmyBB
 
