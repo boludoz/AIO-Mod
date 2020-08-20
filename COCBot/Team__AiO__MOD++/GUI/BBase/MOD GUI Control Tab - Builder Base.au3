@@ -110,7 +110,8 @@ Func ChkBBGetFromCSV()
 		$g_bChkBBGetFromCSV = False
 	EndIf
 	
-	If $g_bChkBBGetFromCSV = True Then
+	$g_iCmbBBAttack = _GUICtrlComboBox_GetCurSel($g_hCmbBBAttack)
+	If $g_bChkBBGetFromCSV = True Or ($g_iCmbBBAttack = $g_eBBAttackCSV) Then
 		For $i=$g_hGrpAttackStyleBB To $g_hIcnBBCSV[3] ; enable all csv stuff
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
