@@ -40,7 +40,6 @@ Func ApplyConfig_MOD_CustomArmyBB($TypeReadSave)
 			GUICtrlSetState($g_hChkBBStopAt3, $g_bChkBBStopAt3 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkBBTrophiesRange, $g_bChkBBTrophiesRange ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkBBCustomAttack, $g_bChkBBCustomAttack ? $GUI_CHECKED : $GUI_UNCHECKED)
-			ChkBBCustomAttack()
 			chkBuilderAttack()
 			PopulateComboScriptsFilesBB()
 			For $i = 0 To 2
@@ -63,6 +62,7 @@ Func ApplyConfig_MOD_CustomArmyBB($TypeReadSave)
 			cmbBBAttack()
 			ChkBBGetFromArmy()
 			ChkBBGetFromCSV()
+			ChkBBCustomAttack()
 		Case "Save"
 			;$g_bChkBBCustomArmyEnable = (GUICtrlRead($g_hChkBBCustomArmyEnable) = $GUI_CHECKED) ? 1 : 0
 

@@ -1195,10 +1195,10 @@ EndFunc   ;==>ReadConfig_600_30_LB
 Func ReadConfig_600_31()
 	; <><><><> Attack Plan / Search & Attack / Deadbase / Collectors <><><><>
 	$g_abCollectorLevelEnabled[6] = 0
-	For $i = 7 To 13
+	For $i = 7 To UBound($g_aiCollectorLevelFill) -1
 		IniReadS($g_abCollectorLevelEnabled[$i], $g_sProfileConfigPath, "collectors", "lvl" & $i & "Enabled", True, "Bool")
 	Next
-	For $i = 6 To ubound($g_aiCollectorLevelFill) -1
+	For $i = 6 To UBound($g_aiCollectorLevelFill) -1
 		IniReadS($g_aiCollectorLevelFill[$i], $g_sProfileConfigPath, "collectors", "lvl" & $i & "fill", 0, "int")
 		If $g_aiCollectorLevelFill[$i] > 1 Then $g_aiCollectorLevelFill[$i] = 1
 	Next

@@ -101,11 +101,10 @@ Func _checkArmyCamp($bOpenArmyWindow, $bCloseArmyWindow, $bGetHeroesTime, $bSetL
 	If $g_bDebugFuncTime Then StopWatchStopLog()
 	If _Sleep($DELAYCHECKARMYCAMP6) Then Return ; 10ms improve pause button response
 
-	;If Not $g_bFullArmy Then
-		;If $g_bDebugFuncTime Then StopWatchStart("DeleteExcessTroops")
-		;DeleteExcessTroops() ; Team AIO Mod++
-		;If $g_bDebugFuncTime Then StopWatchStopLog()
-	;EndIf
+	If Not $g_bFullArmy Then
+		If $g_bDebugFuncTime Then StopWatchStart("DeleteExcessTroops")
+		If $g_bDebugFuncTime Then StopWatchStopLog()
+	EndIf
 
 	If $bCloseArmyWindow Then
 		ClickAway()
@@ -141,85 +140,3 @@ Func IsTroopToDonateOnly($pTroopType)
 	Return True
 
 EndFunc   ;==>IsTroopToDonateOnly
-
-#cs - Region Team AIO Mod++
-Func DeleteExcessTroops()
-
-	Local $SlotTemp, $Delete
-	Local $IsNecessaryDeleteTroop = 0
-	Local $CorrectDonation
-
-	; Prevent delete Troop from Army and waste Elixir just because of excess of train+donateCC variable
-	For $i = 0 To $eTroopCount - 1
-		$CorrectDonation = 0
-		If IsTroopToDonateOnly($i) Then
-			If ($g_aiCurrentTroops[$i] * -1) > $g_aiArmyCompTroops[$i] Then ; Will Balance The Comp and Donate removing the excess to Donate Train
-				$IsNecessaryDeleteTroop = 1 ; Flag to continue to the next loop
-				$g_aiDonateTroops[$i] = 0
-			EndIf
-			If ($g_aiCurrentTroops[$i] * -1) = $g_aiArmyCompTroops[$i] Then ; Will Balance The Comp and Donate removing the excess to Donate Train
-				$g_aiDonateTroops[$i] = 0
-			EndIf
-			If ($g_aiCurrentTroops[$i] * -1) + $g_aiDonateTroops[$i] >= $g_aiArmyCompTroops[$i] Then ; Will Balance The Comp and Donate removing the excess to Donate Train
-				$CorrectDonation = $g_aiCurrentTroops[$i] + $g_aiArmyCompTroops[$i]
-				$g_aiDonateTroops[$i] = $CorrectDonation
-			EndIf
-		EndIf
-	Next
-
-	If $IsNecessaryDeleteTroop = 0 Then Return
-
-	; Click 'Edit Army'
-	If Not _CheckPixel($aButtonEditArmy, True) Then ; If no 'Edit Army' Button found in army tab to edit troops
-		SetLog("Cannot find/verify 'Edit Army' Button in Army tab", $COLOR_WARNING)
-		Return False ; Exit function
-	EndIf
-
-	ClickP($aButtonEditArmy, 1) ; Click Edit Army Button
-	If Not $g_bRunState Then Return
-
-	If _Sleep(500) Then Return
-
-	SetLog("Deleting troops", $COLOR_INFO)
-	If $g_bDebugSetlogTrain Then SetLog("Start-Loop Regular Troops Only To Donate ")
-	For $i = 0 To $eTroopCount - 1
-		If IsTroopToDonateOnly($i) Then ; Will delete ONLY the Excess quantity of troop for donations , the rest is to use in Attack
-			If $g_bDebugSetlogTrain Then SetLog("Troop :" & $g_asTroopNames[$i])
-			If ($g_aiCurrentTroops[$i] * -1) > $g_aiArmyCompTroops[$i] Then ; verify if the exist excess of troops
-
-				$Delete = ($g_aiCurrentTroops[$i] * -1) - $g_aiArmyCompTroops[$i] ; existent troops - troops selected in GUI
-				If $g_bDebugSetlogTrain Then SetLog("$Delete :" & $Delete)
-				$SlotTemp = $g_aiSlotInArmy[$i]
-				If $g_bDebugSetlogTrain Then SetLog("$SlotTemp :" & $SlotTemp)
-
-				If _Sleep(250) Then Return
-				If _ColorCheck(_GetPixelColor(170 + (62 * $SlotTemp), 235 + 44, True), Hex(0xD40003, 6), 10) Then ; Verify if existe the RED [-] button
-					Click(170 + (62 * 1), 235 + 44, 10, 300)
-					SetLog("~Deleted " & $Delete & " " & $g_asTroopNames[$i], $COLOR_ERROR)
-					$g_aiCurrentTroops[$i] += $Delete ; Remove From $CurTroop the deleted Troop quantity
-				EndIf
-			EndIf
-		EndIf
-	Next
-
-	If $g_bDebugSetlogTrain Then SetLog("Start-Loop Dark Troops Only To Donate ")
-	
-	If _Sleep(400) Then Return
-
-	; Click Okay & confirm
-	Local $counter = 0
-	While Not _CheckPixel($aButtonRemoveTroopsOK1, True) ; If no 'Okay' button found in army tab to save changes
-		If _Sleep(200) Then Return
-		$counter += 1
-		If $counter <= 5 Then ContinueLoop
-		SetLog("Cannot find/verify 'Okay' Button in Army tab", $COLOR_WARNING)
-		ClickP($aAway, 2, 0, "#0346") ; Click Away, Necessary! due to possible errors/changes
-		If _Sleep(400) Then OpenArmyOverview(True, "RemoveCastleSpell()") ; Open Army Window AGAIN
-		Return False ; Exit Function
-	WEnd
-
-	ClickP($aButtonRemoveTroopsOK1, 1) ; Click on 'Okay' button to save changes
-
-	If _Sleep(400) Then Return
-EndFunc   ;==>DeleteExcessTroops
-#ce - EndRegion

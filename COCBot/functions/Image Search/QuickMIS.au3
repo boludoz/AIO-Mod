@@ -27,7 +27,7 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 		;If $Debug Then _ArrayDisplay($Res)
 		If $g_bDebugSetlog Then SetDebugLog("DLL Call succeeded " & $Res[0], $COLOR_PURPLE)
 
-		If StringIsSpace($Res[0]) Or $Res[0] = "0" Then ; Custom - Team AIO Mod++
+		If StringIsSpace($Res[0]) Or $Res[0] = "0" Or StringInStr($Res[0], "-1") <> 0 Then ; Custom - Team AIO Mod++
 			If $g_bDebugSetlog Then SetDebugLog("No Button found")
 			Switch $ValueReturned
 				Case "BC1"
@@ -51,8 +51,8 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 					Return "none"
 				#EndRegion - Custom - Team AIO Mod++
 			EndSwitch
-		ElseIf StringInStr($Res[0], "-1") <> 0 Then
-			SetLog("DLL Error", $COLOR_RED)
+		;ElseIf StringInStr($Res[0], "-1") <> 0 Then ; Custom - Team AIO Mod++
+		;	SetLog("DLL Error", $COLOR_RED)
 
 		Else
 			Switch $ValueReturned

@@ -4,6 +4,18 @@
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
                     Based on MyBot.run v7.8.4 SP1.
+	**v4.2.5** 
+		- New: You can force get army troops or CSV now.
+		- New: Discord integration (WebHook).
+		- Fix: Level 14 Elixir Collector can be disabled.
+		- Fix: Spells.
+		- Fix: Out screen click in train.
+		- Fix: Builder base sides fixed.
+		- Fix: Clock tower boost.
+		- Fix: OCR Detection with WinAPI.
+		- Improved: Builder base drop points.
+		- Improved: Fast android screencap and fixed file not found.
+
 	**v4.2.0** 
 		- New: Dissociable.OCR - Faster text recognition system available for non-official developers too.
 		- New: Dissociable.Matching - Fast, Multi-Threaded Image Matching, Supports Alpha Channel and CIE1976 / CIE2000 Color Comparsion.

@@ -882,46 +882,47 @@ Func CheckQueueTroops($bGetQuantity = True, $bSetLog = True, $x = 839, $bQtyWSlo
 	Return $aResult
 EndFunc   ;==>CheckQueueTroops
 
-#Region - Custom - This worked well and was tested - Team AIO Mod++
 Func CheckQueueSpells($bGetQuantity = True, $bSetLog = True, $x = 839, $bQtyWSlot = False)
-	Local $aResult[1] = [""]
-	;$hTimer = TimerInit()
-	If $bSetLog Then SetLog("Checking Spells Queue.", $COLOR_INFO)
+	Local $avResult[$eSpellCount]
+	Local $sImageDir = @ScriptDir & "\imgxml\ArmyOverview\SpellsQueued"
 
-	Local $sDir = @ScriptDir & "\imgxml\ArmyOverview\SpellsQueued" ; Custom - Team AIO Mod++
+	If $bSetLog Then SetLog("Checking Spells Queue", $COLOR_INFO)
+	Local $avSearchResult = SearchArmy($sImageDir, 18, 213, $x, 230, $bGetQuantity ? "Queue" : "")
 
-	Local $aSearchResult = SearchArmy($sDir, 18, 182, $x, 261, $bGetQuantity ? "Queue" : "") ; Custom - Team AIO Mod++
-
-	ReDim $aResult[UBound($aSearchResult)]
-
-	If $aSearchResult[0][0] = "" Then
+	If $avSearchResult[0][0] = "" Then
 		Setlog("No Spells detected!", $COLOR_ERROR)
 		Return
 	EndIf
 
-	For $i = 0 To (UBound($aSearchResult) - 1)
+	For $i = 0 To (UBound($avSearchResult) - 1)
 		If Not $g_bRunState Then Return
-		$aResult[$i] = $aSearchResult[$i][0]
+		;_ArrayAdd($avResult, $avSearchResult[$i][0])
+		$avResult[$i] = $avSearchResult[$i][0]
 	Next
 
+;_ArrayDisplay($avSearchResult, "avSearchResult")
+;_ArrayDisplay($avResult, "avResult")
+
+	;Trim length to number of returned values
+	ReDim $avResult[UBound($avSearchResult)][1]
+
 	If $bGetQuantity Then
-		Local $aQuantities[UBound($aResult)][2]
+		Local $aiQuantities[UBound($avResult)][2]
 		Local $aQueueSpell[$eSpellCount]
-		For $i = 0 To (UBound($aQuantities) - 1)
+		For $i = 0 To (UBound($aiQuantities) - 1)
 			If Not $g_bRunState Then Return
-			$aQuantities[$i][0] = $aSearchResult[$i][0]
-			$aQuantities[$i][1] = $aSearchResult[$i][3]
-			If $bSetLog Then SetLog("  - " & $g_asSpellNames[TroopIndexLookup($aQuantities[$i][0], "CheckQueueSpells") - $eLSpell] & ": " & $aQuantities[$i][1] & "x", $COLOR_SUCCESS)
-			$aQueueSpell[TroopIndexLookup($aQuantities[$i][0]) - $eLSpell] += $aQuantities[$i][1]
+			$aiQuantities[$i][0] = $avSearchResult[$i][0]
+			$aiQuantities[$i][1] = $avSearchResult[$i][3]
+			If $bSetLog Then SetLog("  - " & $g_asSpellNames[TroopIndexLookup($aiQuantities[$i][0], "CheckQueueSpells") - $eLSpell] & ": " & $aiQuantities[$i][1] & "x", $COLOR_SUCCESS)
+			$aQueueSpell[TroopIndexLookup($aiQuantities[$i][0]) - $eLSpell] += $aiQuantities[$i][1]
 		Next
-		If $bQtyWSlot Then Return $aQuantities
+		If $bQtyWSlot Then Return $aiQuantities
 		Return $aQueueSpell
 	EndIf
 
-	_ArrayReverse($aResult)
-	Return $aResult
+	_ArrayReverse($avResult)
+	Return $avResult
 EndFunc   ;==>CheckQueueSpells
-#EndRegion - Custom - This worked well and was tested - Team AIO Mod++
 
 Func SearchArmy($sImageDir = "", $x = 0, $y = 0, $x1 = 0, $y1 = 0, $sArmyType = "", $bSkipReceivedTroopsCheck = False)
 	; Setup arrays, including default return values for $return
