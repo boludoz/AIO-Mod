@@ -235,7 +235,7 @@ Func DropTrophy($bDebug = False) ; Drop Throphy - Team AIO Mod++
 					;b) calculate random drop point...
 					If $g_bDebugSetlog Then SetDebugLog("Bottom-Left Buttons Black Region: [" & $aBlackButtonRegion[0] & ", " & $aBlackButtonRegion[1] & ", " & $aBlackButtonRegion[2] & ", " & $aBlackButtonRegion[3] & "]", $COLOR_DEBUG)
 					While (Not IsArray($iRandomXY))
-						$aRandomEdge = $g_aaiEdgeDropPoints[Round(Random(0, 3))]
+						$aRandomEdge = $g_aaiEdgeDropPoints[Round(Random(0, 3, 1))]
 						$iRandomXY = PickUpRandomVerifiedDropPoint($aRandomEdge, $aBlackButtonRegion)
 					WEnd
 					If $g_bDebugSetlog Then SetDebugLog("Hero Loc = " & $iRandomXY & ", X:Y= " & $iRandomXY[0] & "|" & $iRandomXY[1], $COLOR_DEBUG)

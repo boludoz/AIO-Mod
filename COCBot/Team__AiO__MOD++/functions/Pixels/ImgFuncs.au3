@@ -112,7 +112,6 @@ Func _ImageSearchXML($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "0,
 	EndIf
 EndFunc   ;==>_ImageSearchXML
 
-Global $g_sFMQTag = "" ; For debug folder.
 Func CompKick(ByRef $vFiles, $aof, $bType = False)
 	If (UBound($aof) = 1) And StringIsSpace($aof[0]) Then Return False
 	If $g_bDebugSetlog Then

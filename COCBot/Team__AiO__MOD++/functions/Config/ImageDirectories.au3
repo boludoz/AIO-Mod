@@ -120,7 +120,11 @@ Global Const $g_sImgTraderMod = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Tr
 Global $g_sBaseDMatchingPathB = @ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\Image Matching"
 
 ; Deadbase, Elixir Collectors.
-Global $g_sECollectorDMatB = $g_sBaseDMatchingPathB & "\deadbase\Elixir"
+Global $g_sECollectorDMatB = $g_sBaseDMatchingPathB & "\deadbase\Elixir\"
+
+; DPBB !
+Global Const $g_sBundleDeployPointsBBD = $g_sBaseDMatchingPathB & "\DPBB\"
+
 #EndRegion - DMatchingBundles.au3
 
 ; #FUNCTION# ====================================================================================================================

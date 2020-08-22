@@ -68,7 +68,6 @@
 #include "functions\Mod's\GTFO\KickOut.au3"
 
 ; Custom Builder Base
-#include "functions\Mod's\BuilderBase\ExtraFuncs.au3"
 #include "functions\Mod's\BuilderBase\BuilderBaseMain.au3"
 #include "functions\Mod's\BuilderBase\BuilderBaseDebugUI.au3"
 #include "functions\Mod's\BuilderBase\Attack\BuilderBaseImageDetection.au3"

@@ -56,7 +56,7 @@ Func TestBuilderBaseGetHall()
 	Setlog("** TestBuilderBaseGetHall END**", $COLOR_DEBUG)
 EndFunc   ;==>TestBuilderBaseGetHall
 
-Func BuilderBaseGetDeployPoints($FurtherFrom = 0, $DebugImage = False)
+Func BuilderBaseGetDeployPoints($FurtherFrom = $g_iFurtherFromBBDefault, $DebugImage = False)
 	Local $bBadPoints = False, $Sides = -1
 	
 	If Not $g_bRunState Then Return
@@ -93,40 +93,53 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = 0, $DebugImage = False)
 	Setlog("Builder Base Hall detection: " & Round(__timerdiff($hStarttime) / 1000, 2) & " seconds", $COLOR_DEBUG)
 	$hStarttime = __TimerInit()
 
-	Local $DeployPointsResult = PointDeployBB() ;_ImageSearchBundlesMultibot($g_sBundleDeployPointsBB, $g_aBundleDeployPointsBBParms[0], $g_aBundleDeployPointsBBParms[1], $g_aBundleDeployPointsBBParms[2], $DebugLog)
+	; Dissociable drop points.
+	Local $DeployPointsResult = DMClasicArray(DFind($g_sBundleDeployPointsBBD, 0, 0, 0, 0, 0, 0, 1000, True), 18, ($g_bDebugImageSave Or $DebugImage))
 	If Not $g_bRunState Then Return
-
-	If $DeployPointsResult <> -1 And UBound($DeployPointsResult) > 0 Then
-		Local $TopLeft[0][2], $TopRight[0][2], $BottomRight[0][2], $BottomLeft[0][2]
+	
+	If IsArray($DeployPointsResult) And UBound($DeployPointsResult) > 0 Then
 		Local $Point[2], $Local = ""
+		Local $TopLeft[0][2], $TopRight[0][2], $BottomRight[0][2], $BottomLeft[0][2]
 		For $i = 0 To UBound($DeployPointsResult) - 1
-			$Point[0] = Int($DeployPointsResult[$i][0])
-			$Point[1] = Int($DeployPointsResult[$i][1])
+			$Point[0] = Int($DeployPointsResult[$i][1])
+			$Point[1] = Int($DeployPointsResult[$i][2])
 			SetDebugLog("[" & $i & "]Deploy Point: (" & $Point[0] & "," & $Point[1] & ")")
 			$Local = DeployPointsPosition($Point)
 			SetDebugLog("[" & $i & "]Deploy Local: (" & $Local & ")")
-			Select
-				Case $Local = "TopLeft"
-					ReDim $TopLeft[UBound($TopLeft) + 1][2]
-					$TopLeft[UBound($TopLeft) - 1][0] = $Point[0] - $FurtherFrom
-					$TopLeft[UBound($TopLeft) - 1][1] = $Point[1] - $FurtherFrom
-
-				Case $Local = "TopRight"
-					ReDim $TopRight[UBound($TopRight) + 1][2]
-					$TopRight[UBound($TopRight) - 1][0] = $Point[0] + $FurtherFrom
-					$TopRight[UBound($TopRight) - 1][1] = $Point[1] - $FurtherFrom
-
-				Case $Local = "BottomRight"
-					ReDim $BottomRight[UBound($BottomRight) + 1][2]
-					$BottomRight[UBound($BottomRight) - 1][0] = $Point[0] + $FurtherFrom
-					$BottomRight[UBound($BottomRight) - 1][1] = $Point[1] + $FurtherFrom
-
-				Case $Local = "BottomLeft"
-					ReDim $BottomLeft[UBound($BottomLeft) + 1][2]
-					$BottomLeft[UBound($BottomLeft) - 1][0] = $Point[0] - $FurtherFrom
-					$BottomLeft[UBound($BottomLeft) - 1][1] = $Point[1] + $FurtherFrom
-
-			EndSelect
+			Switch $Local
+				Case "TopLeft"
+					$Point[0] -= $FurtherFrom
+					$Point[1] -= $FurtherFrom
+					If InDiamondBB($Point[0], $Point[1], $g_aBuilderBaseOuterPolygon) Then
+						ReDim $TopLeft[UBound($TopLeft) + 1][2]
+						$TopLeft[UBound($TopLeft) - 1][0] = $Point[0]
+						$TopLeft[UBound($TopLeft) - 1][1] = $Point[1]
+					EndIf
+				Case "TopRight"
+					$Point[0] += $FurtherFrom
+					$Point[1] -= $FurtherFrom
+					If InDiamondBB($Point[0], $Point[1], $g_aBuilderBaseOuterPolygon) Then
+						ReDim $TopRight[UBound($TopRight) + 1][2]
+						$TopRight[UBound($TopRight) - 1][0] = $Point[0]
+						$TopRight[UBound($TopRight) - 1][1] = $Point[1]
+					EndIf
+				Case "BottomRight"
+					$Point[0] += $FurtherFrom
+					$Point[1] += $FurtherFrom
+					If InDiamondBB($Point[0], $Point[1], $g_aBuilderBaseOuterPolygon) Then
+						ReDim $BottomRight[UBound($BottomRight) + 1][2]
+						$BottomRight[UBound($BottomRight) - 1][0] = $Point[0]
+						$BottomRight[UBound($BottomRight) - 1][1] = $Point[1]
+					EndIf
+				Case "BottomLeft"
+					$Point[0] -= $FurtherFrom
+					$Point[1] += $FurtherFrom
+					If InDiamondBB($Point[0], $Point[1], $g_aBuilderBaseOuterPolygon) Then
+						ReDim $BottomLeft[UBound($BottomLeft) + 1][2]
+						$BottomLeft[UBound($BottomLeft) - 1][0] = $Point[0]
+						$BottomLeft[UBound($BottomLeft) - 1][1] = $Point[1]
+					EndIf
+			EndSwitch
 		Next
 
 		Local $aTmpSides[4] = [$TopLeft, $TopRight, $BottomRight, $BottomLeft]
@@ -559,7 +572,8 @@ Func BuilderBaseAttackOuterDiamond()
 
 	Local $BuilderBaseDiamond[6] = [$iSize, $Top, $Right, $BottomR, $BottomL, $Left]
 	;This Format is for _IsPointInPoly function
-	Dim $g_aBuilderBaseOuterPolygon[7][2] = [[5, -1], [$Top[0], $Top[1]], [$Right[0], $Right[1]], [$BottomR[0], $BottomR[1]], [$BottomL[0], $BottomL[1]], [$Left[0], $Left[1]], [$Top[0], $Top[1]]] ; Make Polygon From Points
+	Local $aTmpBuilderBaseOuterPolygon[7][2] = [[5, -1], [$Top[0], $Top[1]], [$Right[0], $Right[1]], [$BottomR[0], $BottomR[1]], [$BottomL[0], $BottomL[1]], [$Left[0], $Left[1]], [$Top[0], $Top[1]]] ; Make Polygon From Points
+	$g_aBuilderBaseOuterPolygon = $aTmpBuilderBaseOuterPolygon
 	SetDebugLog("Builder Base Outer Polygon : " & _ArrayToString($g_aBuilderBaseOuterPolygon))
 	Return $BuilderBaseDiamond
 EndFunc   ;==>BuilderBaseAttackOuterDiamond
@@ -848,4 +862,14 @@ Func BuilderBaseBuildingsOnEdge($g_aDeployPoints)
 
 EndFunc   ;==>BuilderBaseBuildingsOnEdge
 
-
+Func InDiamondBB($iX, $iY, $aBuilderBaseOuterPolygon, $bDebug = False)
+	Local $bReturn = False
+	If Not IsArray($aBuilderBaseOuterPolygon) Then Return True
+	If (Int($iY) < 573) Then
+		Local $aMiddle[2] = [(($aBuilderBaseOuterPolygon[5][0] + $aBuilderBaseOuterPolygon[2][0])) / 2, ($aBuilderBaseOuterPolygon[1][1] + $aBuilderBaseOuterPolygon[3][1] + 55) / 2]
+		Local $aSize[2] = [$aMiddle[0] - $aBuilderBaseOuterPolygon[5][0], $aMiddle[1] - $aBuilderBaseOuterPolygon[1][1]]
+		$bReturn = ((Abs(Int($iX) - $aMiddle[0]) / $aSize[0] + Abs(Int($iY) - $aMiddle[1]) / $aSize[1]) <= 1) ? (True) : (False)
+	EndIf
+	If $bDebug Or $g_bDebugAndroid Then SetLog("InDiamondBB | Is in diamond? " & $bReturn & "X = " & Int($iX) & "Y = " & Int($iY), $COLOR_DEBUG)
+	Return $bReturn
+EndFunc

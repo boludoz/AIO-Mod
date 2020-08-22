@@ -294,8 +294,6 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 
 							DebugPrintDropPoint($aSelectedEdgePoints_XYS, "Edge", $bDebug)
 
-							;AddTilesToEdgePoint($aSelectedEdgePoints_XYS, $iAddTiles, $bDebug); No Need Use Add Tiles Logic As Edge Using Outer Points Already
-
 							; On CSV is the quantities BY edge
 							$iQtyToDrop = (UBound($aSelectedEdgePoints_XYS) > 0) ? ($iQtyToDrop * UBound($aSelectedEdgePoints_XYS)) : ($iQtyToDrop)
 
@@ -552,12 +550,14 @@ Func AddTilesToDeployPoint(ByRef $aSelectedDropSidePoints_XY, $iAddTiles, $sSele
 		Local $x = $aSelectedDropSidePoints_XY[$i][0]
 		Local $y = $aSelectedDropSidePoints_XY[$i][1]
 		Local $pixel[2]
-		; use ADDTILES * 8 pixels per tile to add offset to vector location
-		For $u = 8 * Abs(Int($iAddTiles)) To 0 Step -1 ; count down to zero pixels till find valid drop point
+		Local $l
+		Local $iTWithOutFF = Abs(8 - $g_iFurtherFromBBDefault)
+		; use ADDTILES * X pixels per tile to add offset to vector location
+		For $u = $iTWithOutFF * Abs(Int($iAddTiles)) To 0 Step -1 ; count down to zero pixels till find valid drop point
 			If Int($iAddTiles) > 0 Then ; adjust for positive or negative ADDTILES value
-				Local $l = $u
+				$l = $u
 			Else
-				Local $l = -$u
+				$l = -$u
 			EndIf
 
 			Switch $sSelectedDropSideName
@@ -574,63 +574,18 @@ Func AddTilesToDeployPoint(ByRef $aSelectedDropSidePoints_XY, $iAddTiles, $sSele
 					$pixel[0] = $x + $l
 					$pixel[1] = $y + $l
 			EndSwitch
-			If _IsPointInPoly($pixel[0], $pixel[1], $g_aBuilderBaseOuterPolygon) Then ; Check if X,Y is inside Builderbase or outside
+			If InDiamondBB($pixel[0], $pixel[1], $g_aBuilderBaseOuterPolygon) Then ; Check if X,Y is inside Builderbase or outside
 				If $bDebug Then SetDebugLog("After AddTile: " & $iAddTiles & ", DropSide: " & $sSelectedDropSideName & ", Deploy Point: " & $i + 1 & " - " & $pixel[0] & " x " & $pixel[1])
 				$aSelectedDropSidePoints_XY[$i][0] = $pixel[0]
 				$aSelectedDropSidePoints_XY[$i][1] = $pixel[1]
 				ExitLoop
 			Else
-				If $bDebug Then SetDebugLog("Outside Polygon DropSide: " & $sSelectedDropSideName & ", Deploy Point: " & $i + 1 & " - " & $pixel[0] & " x " & $pixel[1])
+				If $bDebug Or $g_bDebugAndroid Then SetLog("Outside Polygon DropSide, restored secure: " & $sSelectedDropSideName & ", Deploy Point: " & $i + 1 & " - " & $pixel[0] & " x " & $pixel[1], $COLOR_DEBUG)
 			EndIf
 		Next
 	Next
 
 EndFunc   ;==>AddTilesToDeployPoint
-
-Func AddTilesToEdgePoint(ByRef $aSelectedEdgePoints_XYS, $iAddTiles, $bDebug)
-	If $iAddTiles = 1 Then Return ;Default Value Is 1 Do Nothing
-	If IsArray($g_aBuilderBaseOuterPolygon) = 0 Then Return ;If Builder Base Outer Polygon not defined skip
-	SetDebugLog("AddTilesToEdgePoint $iAddTiles: " & $iAddTiles)
-	For $i = 0 To UBound($aSelectedEdgePoints_XYS) - 1
-		If Not $g_bRunState Then Return
-		Local $x = $aSelectedEdgePoints_XYS[$i][0]
-		Local $y = $aSelectedEdgePoints_XYS[$i][1]
-		Local $sSelectedDropSideName = $aSelectedEdgePoints_XYS[$i][2]
-		Local $pixel[2]
-		; use ADDTILES * 8 pixels per tile to add offset to vector location
-		For $u = 8 * Abs(Int($iAddTiles)) To 0 Step -1 ; count down to zero pixels till find valid drop point
-			If Int($iAddTiles) > 0 Then ; adjust for positive or negative ADDTILES value
-				Local $l = $u
-			Else
-				Local $l = -$u
-			EndIf
-
-			Switch $sSelectedDropSideName
-				Case "TopLeft"
-					$pixel[0] = $x - $l
-					$pixel[1] = $y - $l
-				Case "TopRight"
-					$pixel[0] = $x + $l
-					$pixel[1] = $y - $l
-				Case "BottomLeft"
-					$pixel[0] = $x - $l
-					$pixel[1] = $y + $l
-				Case "BottomRight"
-					$pixel[0] = $x + $l
-					$pixel[1] = $y + $l
-			EndSwitch
-			If _IsPointInPoly($pixel[0], $pixel[1], $g_aBuilderBaseOuterPolygon) Then ; Check if X,Y is inside Builderbase or outside
-				If $bDebug Then SetDebugLog("After AddTile: " & $iAddTiles & ", DropSide: " & $sSelectedDropSideName & ", Edges Deploy Point: " & $i + 1 & " - " & $pixel[0] & " x " & $pixel[1])
-				$aSelectedEdgePoints_XYS[$i][0] = $pixel[0]
-				$aSelectedEdgePoints_XYS[$i][1] = $pixel[1]
-				ExitLoop
-			Else
-				If $bDebug Then SetDebugLog("Outside Polygon DropSide: " & $sSelectedDropSideName & ", Edges Deploy Point: " & $i + 1 & " - " & $pixel[0] & " x " & $pixel[1])
-			EndIf
-		Next
-	Next
-
-EndFunc   ;==>AddTilesToEdgePoint
 
 Func VerifySlotTroop($sTroopName, ByRef $aSlot_XY, ByRef $iQtyOfSelectedSlot, ByRef $iSlotNumber, $aAvailableTroops_NXQ)
 	; Select Slot.

@@ -38,6 +38,10 @@ Global $g_hChkBotLogLineLimit, $g_bChkBotLogLineLimit, _
 $g_hTxtLogLineLimit, $g_iTxtLogLineLimit
 #EndRegion - Setlog limit - Team AIO Mod++
 
+; Debug tag for some capture modes.
+Global $g_sFMQTag = "" ; For debug folder.
+
+
 ; Advanced debugging.
 Global $g_bExecuteCapture = False
 
@@ -270,6 +274,7 @@ $g_iInputBuilderPotion, $g_iInputLabPotion, $g_iInputGoldItems = 250000, $g_iInp
 ; X, Y, g_bIsBBMachineD, g_bBBIsFirst
 Global Const $g_aMachineBBReset[4] = [-1, -1, False, True]
 Global $g_aMachineBB[4] = [-1, -1, False, True]
+Global $g_iFurtherFromBBDefault = 3
 
 ; Report
 Global $g_iAvailableAttacksBB = 0, $g_iLastDamage = 0

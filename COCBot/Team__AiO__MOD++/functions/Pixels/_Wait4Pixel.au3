@@ -109,5 +109,5 @@ EndFunc   ;==>_WaitForCheckImg
 
 Func _WaitForCheckImgGone($sPathImage, $sSearchZone = Default, $aText = Default, $iWait = 2000, $iDelay = 250)
 	; We can only affirm what is not true. Denial must be comprehensive.
-	Return _WaitForCheckImgGone($sPathImage, $sSearchZone, $aText, $iWait, $iDelay) = False
+	Return _WaitForCheckImg($sPathImage, $sSearchZone, $aText, $iWait, $iDelay) = False
 EndFunc   ;==>_WaitForCheckImg

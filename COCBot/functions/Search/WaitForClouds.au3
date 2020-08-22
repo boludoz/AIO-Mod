@@ -88,6 +88,23 @@ Func WaitForClouds()
 		If $iSearchTime >= $iLastTime + 1 Then
 			SetLog("Cloud wait time " & StringFormat("%.1f", $iSearchTime) & " minute(s)", $COLOR_INFO)
 			$iLastTime += 1
+		
+			#Region - Custom findMatch - Team AIO Mod++ 
+			Local $iCount
+			While _CheckPixel($aIsMainGrayed, $g_bCapturePixel, Default, "IsMainGrayed") Or _CheckPixel($aIsMain, $g_bCapturePixel, Default, "IsMain")
+				$iCount += 1
+				If _Sleep($DELAYATTACKREPORT1) Then Return
+				If $g_bDebugSetlog Then SetDebugLog("Waiting WaitForClouds, " & ($iCount / 2) & " Seconds.", $COLOR_DEBUG)
+				If $iCount > 15 Then ExitLoop ; wait 15*500ms = 7,5 seconds max for the window to render
+			WEnd
+			
+			If $iCount > 15 Then
+				$g_bRestart = True ; Set flag for OOS restart condition
+				SetLog("Bad WaitForClouds.", $COLOR_ERROR)
+				ExitLoop
+			EndIf	
+			#EndRegion - Custom findMatch - Team AIO Mod++ 
+			
 			; once a minute safety checks for search fail/retry msg and Personal Break events and early detection if CoC app has crashed inside emulator (Bluestacks issue mainly)
 			If chkAttackSearchFail() = 2 Or chkAttackSearchPersonalBreak() = True Or GetAndroidProcessPID() = 0 Then
 				resetAttackSearch()

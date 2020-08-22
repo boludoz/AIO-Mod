@@ -141,24 +141,26 @@ Func DFind($sBundle, $iRegionX = 0, $iRegionY = 0, $iRegionWidth = 0, $iRegionHe
 EndFunc
 
 Func DMClasicArray($sMatches, $iDis = 18, $bDebugLog = $g_bDebugImageSave)
-    Local $aSplittedMatches = StringSplit($sMatches, "|", $STR_NOCOUNT)
+    Local $aSplittedMatches = StringSplit($sMatches, "|", $STR_NOCOUNT), $aDecodedMatch = -1
 	Local $aAR[UBound($aSplittedMatches)][4], $vDeMatch = "", $i2 = 0, $i3 = 0
     For $i = 0 To UBound($aSplittedMatches) -1
-	    $vDeMatch = StringSplit($aSplittedMatches[$i], "-", $STR_NOCOUNT) ; Dissociable don't fail.
-		If DMduplicated($aAR, $vDeMatch[2], $vDeMatch[3], $i-$i3, $iDis) Then 
-			$i3 += 1
-			ContinueLoop
+        $vDeMatch = DMDecodeMatch($aSplittedMatches[$i])
+        If IsArray($vDeMatch) Then
+			If DMduplicated($aAR, $vDeMatch[2], $vDeMatch[3], $i-$i3, $iDis) Then 
+				$i3 += 1
+				ContinueLoop
+			EndIf
+			$i2 = ($i-$i3)
+			$aAR[$i2][0] = $vDeMatch[0]
+			$aAR[$i2][1] = $vDeMatch[2]
+			$aAR[$i2][2] = $vDeMatch[3]
+			$aAR[$i2][3] = $vDeMatch[1]
 		EndIf
-		$i2 = ($i-$i3)
-		$aAR[$i2][0] = $vDeMatch[0]
-		$aAR[$i2][1] = $vDeMatch[2]
-		$aAR[$i2][2] = $vDeMatch[3]
-		$aAR[$i2][3] = $vDeMatch[1]
     Next
 	
 	Redim $aAR[$i-$i3][4]
 
-	If (UBound($aAR) <> 0) Then
+	If UBound($aAR) > 1 Then
 		If $bDebugLog Then DebugImgArrayClassic($aAR)
 		Return $aAR
 	Else

@@ -114,6 +114,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 					SetLog("Couldn't find the confirm attack button!", $COLOR_ERROR)
 					Return False
 				EndIf
+			#CS - Custom findMatch - Team AIO Mod++ 
 			ElseIf StringInStr($sButtonState, "FindMatchNormal") > 0 Then
 				Local $aCoordinates = StringSplit($avAttackButtonSubResult[1], ",", $STR_NOCOUNT)
 				If IsArray($aCoordinates) And UBound($aCoordinates, 1) = 2 Then
@@ -125,6 +126,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 					If $g_bDebugImageSave Then SaveDebugImage("FindAMatchBUttonNotFound")
 					Return False
 				EndIf
+			#CE - Custom findMatch - Team AIO Mod++ 
 			ElseIf StringInStr($sButtonState, "Sign", 0) > 0 Then
 				SetLog("Sign-up to Legend League", $COLOR_INFO)
 				Local $aCoordinates = StringSplit($avAttackButtonSubResult[1], ",", $STR_NOCOUNT)
@@ -143,8 +145,15 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 				SetLog("Finding opponents! Waiting 5 minutes and then try again to find a match", $COLOR_INFO)
 				If _Sleep(300000) Then Return     ; Wait 5mins before searching again
 				$bSignedUpLegendLeague = True
+			#Region - Custom findMatch - Team AIO Mod++ 
+			ElseIf ClickFindMatch() = True Then
+				If $g_bRestart = True Then Return False ; exit func
+				SetLog("Looking for village!", $COLOR_SUCCESS)
+				$bSignedUpLegendLeague = True
+			#EndRegion - Custom findMatch - Team AIO Mod++ 
 			Else
 				$g_bLeagueAttack = False
+				If $g_bDebugImageSave Then SaveDebugImage("PrepareSearchFail") ; Custom findMatch - Team AIO Mod++
 				SetLog("Unknown Find a Match Button State: " & $sButtonState, $COLOR_WARNING)
 				Return False
 			EndIf
@@ -153,22 +162,6 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 			Return False
 		EndIf
 	Until Not $bSignedUpLegendLeague
-
-	#cs Region - Custom findMatch - Team AIO Mod++ 
-	If Not $g_bLeagueAttack Then
-		Local $aFindMatch = ClickFindMatch()
-		If $aFindMatch Then
-			Local $bResult = getAttackDisable(346, 182) ; Grab Ocr for TakeABreak check
-			checkAttackDisable($g_iTaBChkAttack, $bResult) ;last check to see If TakeABreak msg on screen for fast PC from PrepareSearch click
-			If $g_bRestart = True Then Return ; exit func
-			SetLog("Looking for village!", $COLOR_SUCCESS)
-		Else
-			SetLog("Couldn't find the Find a Match Button!", $COLOR_ERROR)
-			If $g_bDebugImageSave Then SaveDebugImage("FindAMatchBUttonNotFound")
-			Return False
-		EndIf
-	EndIf
-	#ce EndRegion - Custom findMatch - Team AIO Mod++ 
 
 	If $g_iTownHallLevel <> "" And $g_iTownHallLevel > 0 Then
 		$g_iSearchCost += $g_aiSearchCost[$g_iTownHallLevel - 1]
@@ -212,6 +205,21 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 		EndIf
 	EndIf
 	
-	SetLog("PrepareSearch OK", $COLOR_INFO)
+	#Region - Custom findMatch - Team AIO Mod++ 
+	; Bad findmatch.
+	Local $iCount
+	While _CheckPixel($aIsMainGrayed, $g_bCapturePixel, Default, "IsMainGrayed") Or _CheckPixel($aIsMain, $g_bCapturePixel, Default, "IsMain")
+		$iCount += 1
+		If _Sleep($DELAYATTACKREPORT1) Then Return
+		If $g_bDebugSetlog Then SetDebugLog("Waiting PrepareSearch, " & ($iCount / 2) & " Seconds.", $COLOR_DEBUG)
+		If $iCount > 15 Then ExitLoop ; wait 15*500ms = 7,5 seconds max for the window to render
+	WEnd
+	
+	If $iCount > 15 Then
+		SetLog("Bad prepareSearch.", $COLOR_ERROR)
+		Return False
+	EndIf	
+	#EndRegion - Custom findMatch - Team AIO Mod++ 
+
 	Return True
 EndFunc   ;==>PrepareSearch
