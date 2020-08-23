@@ -77,6 +77,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 		Return
 	EndIf
 
+	#Region - Custom findMatch - Team AIO Mod++ 
 	$g_bLeagueAttack = False
 	Do
 		Local $bSignedUpLegendLeague = False
@@ -114,19 +115,6 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 					SetLog("Couldn't find the confirm attack button!", $COLOR_ERROR)
 					Return False
 				EndIf
-			#CS - Custom findMatch - Team AIO Mod++ 
-			ElseIf StringInStr($sButtonState, "FindMatchNormal") > 0 Then
-				Local $aCoordinates = StringSplit($avAttackButtonSubResult[1], ",", $STR_NOCOUNT)
-				If IsArray($aCoordinates) And UBound($aCoordinates, 1) = 2 Then
-					$g_bLeagueAttack = False
-					ClickP($aCoordinates, 1, 0, "#0150")
-					ExitLoop
-				Else
-					SetLog("Couldn't find the Find a Match Button!", $COLOR_ERROR)
-					If $g_bDebugImageSave Then SaveDebugImage("FindAMatchBUttonNotFound")
-					Return False
-				EndIf
-			#CE - Custom findMatch - Team AIO Mod++ 
 			ElseIf StringInStr($sButtonState, "Sign", 0) > 0 Then
 				SetLog("Sign-up to Legend League", $COLOR_INFO)
 				Local $aCoordinates = StringSplit($avAttackButtonSubResult[1], ",", $STR_NOCOUNT)
@@ -145,12 +133,12 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 				SetLog("Finding opponents! Waiting 5 minutes and then try again to find a match", $COLOR_INFO)
 				If _Sleep(300000) Then Return     ; Wait 5mins before searching again
 				$bSignedUpLegendLeague = True
-			#Region - Custom findMatch - Team AIO Mod++ 
 			ElseIf ClickFindMatch() = True Then
 				If $g_bRestart = True Then Return False ; exit func
 				SetLog("Looking for village!", $COLOR_SUCCESS)
-				$bSignedUpLegendLeague = True
-			#EndRegion - Custom findMatch - Team AIO Mod++ 
+				$bSignedUpLegendLeague = False
+				$g_bLeagueAttack = False
+				ExitLoop
 			Else
 				$g_bLeagueAttack = False
 				If $g_bDebugImageSave Then SaveDebugImage("PrepareSearchFail") ; Custom findMatch - Team AIO Mod++
@@ -162,6 +150,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 			Return False
 		EndIf
 	Until Not $bSignedUpLegendLeague
+	#EndRegion - Custom findMatch - Team AIO Mod++ 
 
 	If $g_iTownHallLevel <> "" And $g_iTownHallLevel > 0 Then
 		$g_iSearchCost += $g_aiSearchCost[$g_iTownHallLevel - 1]
