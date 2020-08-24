@@ -68,7 +68,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	Local $aLines[0]
 	
 	Select
-		Case ($g_iCmbBBAttack = $g_eBBAttackCSV) Or ($g_iCmbBBAttack = $g_eBBAttackSmart And $g_bChkBBGetFromCSV = True)
+		Case ($g_iCmbBBAttack = $g_eBBAttackCSV And not $g_bChkBBGetFromArmy = True) Or ($g_iCmbBBAttack = $g_eBBAttackSmart And $g_bChkBBGetFromCSV = True)
 			
 			If Not $g_bChkBBCustomAttack Then
 				$g_iBuilderBaseScript = 0
@@ -118,7 +118,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 			
 			If $bIsCampCSV = False Then ContinueCase
 			
-		Case ($g_iCmbBBAttack = $g_eBBAttackSmart) Or ($g_iCmbBBAttack = $g_eBBAttackCSV And $g_bChkBBGetFromArmy = True)
+		Case ($g_iCmbBBAttack = $g_eBBAttackSmart And not $g_bChkBBGetFromCSV = True) Or ($g_iCmbBBAttack = $g_eBBAttackCSV And $g_bChkBBGetFromArmy = True)
 			Local $sName = "CAMP" & "|"
 			For $iName = 0 To UBound($g_iCmbCampsBB) - 1
 				$sName &= ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) <> "" ? ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) : ("Barb")
