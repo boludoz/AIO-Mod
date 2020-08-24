@@ -257,10 +257,8 @@ Func BotSearchMode()
 	If _Sleep(100) Then Return FuncReturn()
 	If (IsSearchModeActive($DB) And checkCollectors(True, False)) Or IsSearchModeActive($LB) Then
 		If VillageSearch(True) = False Then
-			SetLog("Ops | BotSearchMode 0x1.", $COLOR_ERROR)
-			checkMainScreen()
-			$g_bIsClientSyncError = False
-			Return False
+			SetLog("BotSearchMode | Error 0x1.", $COLOR_ERROR)
+			If _Sleep(100) Then Return FuncReturn()
 		EndIf
 		If _Sleep(100) Then Return FuncReturn()
 	Else

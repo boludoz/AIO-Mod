@@ -2867,6 +2867,8 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0, $File
 	; delete file
 	If $Filename = -1 And $g_iAndroidSecureFlags <> 0 Then FileDelete($hostPath & $Filename)
 	
+	$g_iAndroidAdbScreencapTimer = __TimerInit() ; timeout starts now
+	
 	If $g_bDebugAndroid Or Mod($g_aiAndroidAdbStatsTotal[$AdbStatsType][0], 100) = 0 Then
 		Local $duration = Int(__TimerDiff($startTimer))
 		If $g_bDebugAndroid Then SetLog("AdbScreencap: " & $duration & " ms " & $shellLogInfo & "," & $iLoopCountFile & ",l=" & $iLeft & ",t=" & $iTop & ",w=" & $iWidth & ",h=" & $iHeight & ", " & $Filename & ": w=" & $g_iAndroidAdbScreencapWidth & ",h=" & $g_iAndroidAdbScreencapHeight)

@@ -197,7 +197,9 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 	#Region - Custom findMatch - Team AIO Mod++ 
 	; Bad findmatch.
 	Local $iCount
-	While _CheckPixel($aIsMainGrayed, $g_bCapturePixel, Default, "IsMainGrayed") Or _CheckPixel($aIsMain, $g_bCapturePixel, Default, "IsMain")
+	_CaptureRegion()
+	While _CheckPixel($aIsMainGrayed, False, Default, "IsMainGrayed") Or _CheckPixel($aIsMain, False, Default, "IsMain")
+		_CaptureRegion()
 		$iCount += 1
 		If _Sleep($DELAYATTACKREPORT1) Then Return
 		If $g_bDebugSetlog Then SetDebugLog("Waiting PrepareSearch, " & ($iCount / 2) & " Seconds.", $COLOR_DEBUG)
@@ -206,6 +208,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 	
 	If $iCount > 15 Then
 		SetLog("Bad prepareSearch.", $COLOR_ERROR)
+		CheckMainScreen()
 		Return False
 	EndIf	
 	#EndRegion - Custom findMatch - Team AIO Mod++ 

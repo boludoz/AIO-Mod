@@ -89,21 +89,6 @@ Func WaitForClouds()
 			SetLog("Cloud wait time " & StringFormat("%.1f", $iSearchTime) & " minute(s)", $COLOR_INFO)
 			$iLastTime += 1
 		
-			#Region - Custom findMatch - Team AIO Mod++ 
-			Local $iCount
-			While _CheckPixel($aIsMainGrayed, $g_bCapturePixel, Default, "IsMainGrayed") Or _CheckPixel($aIsMain, $g_bCapturePixel, Default, "IsMain")
-				$iCount += 1
-				If _Sleep($DELAYATTACKREPORT1) Then Return
-				If $g_bDebugSetlog Then SetDebugLog("Waiting WaitForClouds, " & ($iCount / 2) & " Seconds.", $COLOR_DEBUG)
-				If $iCount > 15 Then ExitLoop ; wait 15*500ms = 7,5 seconds max for the window to render
-			WEnd
-			
-			If $iCount > 15 Then
-				$g_bRestart = True ; Set flag for OOS restart condition
-				SetLog("Bad WaitForClouds.", $COLOR_ERROR)
-				ExitLoop
-			EndIf	
-			#EndRegion - Custom findMatch - Team AIO Mod++ 
 			
 			; once a minute safety checks for search fail/retry msg and Personal Break events and early detection if CoC app has crashed inside emulator (Bluestacks issue mainly)
 			If chkAttackSearchFail() = 2 Or chkAttackSearchPersonalBreak() = True Or GetAndroidProcessPID() = 0 Then
@@ -111,12 +96,24 @@ Func WaitForClouds()
 				ExitLoop
 			EndIf
 			; Check if CoC app restarted without notice (where android restarted app automatically with same PID), and returned to main base
-			If _CheckPixel($aIsMain, $g_bCapturePixel) Then
+			#Region - Custom findMatch - Team AIO Mod++ 
+			Local $iCount
+			_CaptureRegion()
+			While _CheckPixel($aIsMainGrayed, False, Default, "IsMainGrayed") Or _CheckPixel($aIsMain, False, Default, "IsMain")
+				_CaptureRegion()
+				$iCount += 1
+				If _Sleep($DELAYATTACKREPORT1) Then Return
+				If $g_bDebugSetlog Then SetDebugLog("Waiting WaitForClouds, " & ($iCount / 2) & " Seconds.", $COLOR_DEBUG)
+				If $iCount > 15 Then ExitLoop ; wait 15*500ms = 7,5 seconds max for the window to render
+			WEnd
+			
+			If $iCount > 15 Then
 				SetLog("Strange error detected! 'WaitforClouds' returned to main base unexpectedly, OOS restart initiated", $COLOR_ERROR)
 				$g_bRestart = True ; Set flag for OOS restart condition
 				resetAttackSearch()
 				ExitLoop
-			EndIf
+			EndIf	
+			#EndRegion - Custom findMatch - Team AIO Mod++ 
 			; attempt to enable GUI during long wait?
 			If $iSearchTime > 2 And Not $bEnabledGUI Then
 				AndroidShieldForceDown(True)
@@ -148,6 +145,7 @@ Func EnableLongSearch()
 	; Also checks for common error events, search fail/retry, and Personal Break that happen during long searches
 	Local $result = ""
 	Local $iCount
+	Static $aKeepAlive[2] = [271, 351 + $g_iMidOffsetY]
 
 	If $g_bDebugSetlog Then SetDebugLog("Begin EnableLongSearch:", $COLOR_DEBUG1)
 
@@ -166,8 +164,7 @@ Func EnableLongSearch()
 			If $g_bDebugSetlog Then SetDebugLog("Cloud Search Text not found...", $COLOR_DEBUG)
 			Return False
 		Else
-			Local $KeepAlive[2] = [271, 351 + $g_iMidOffsetY]
-			ClickP($KeepAlive, 1, 0, "#0514") ; click on text just to keep game alive
+			ClickP($aKeepAlive, 1, 0, "#0514") ; click on text just to keep game alive
 		EndIf
 
 		; Small delay

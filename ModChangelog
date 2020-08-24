@@ -13,6 +13,7 @@
 		- Fix: Builder base sides fixed.
 		- Fix: Clock tower boost.
 		- Fix: OCR Detection with WinAPI.
+		- Fix: Builder base edges.
 		- Improved: Builder base drop points.
 		- Improved: Fast android screencap and fixed file not found.
 
