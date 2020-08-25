@@ -5,7 +5,7 @@
 ; Parameters ....:
 ; Return values .: None
 ; Author ........: ProMac (03-2018), Fahid.Mahmood
-; Modified ......: Boludoz (12/2018-31/12/2019), Dissociable (07-2020)
+; Modified ......: Boludoz (12/2018-  31/12/2019, 25/08/2020), Dissociable (07-2020)
 ; Remarks .......: This file is part of MyBot, previously known as Multibot and ClashGameBot. Copyright 2015-2020
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -61,14 +61,15 @@ Func TestBuilderBaseSelectCorrectScript()
 	Return $aAvailableTroops
 EndFunc   ;==>TestBuilderBaseSelectCorrectScript
 
-Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
+Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops, $bForceFix = False)
 
 	If Not $g_bRunState Then Return
 	Local $bIsCampCSV = False
 	Local $aLines[0]
 	
 	Select
-		Case ($g_iCmbBBAttack = $g_eBBAttackCSV And not $g_bChkBBGetFromArmy = True) Or ($g_iCmbBBAttack = $g_eBBAttackSmart And $g_bChkBBGetFromCSV = True)
+		Case ($g_iCmbBBAttack = $g_eBBAttackCSV And Not $g_bChkBBGetFromArmy = True) Or ($g_iCmbBBAttack = $g_eBBAttackSmart And $g_bChkBBGetFromCSV = True)
+			If $bForceFix Then ContinueCase
 			
 			If Not $g_bChkBBCustomAttack Then
 				$g_iBuilderBaseScript = 0
@@ -92,7 +93,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 				Next
 				
 				$g_iBuilderBaseScript = 0
-				If ($aMode[0] <> $aMode[1]) Then 
+				If ($aMode[0] <> $aMode[1]) Then
 					$g_iBuilderBaseScript = _ArrayMinIndex($aMode, 1) + 1
 				EndIf
 				
@@ -118,7 +119,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 			
 			If $bIsCampCSV = False Then ContinueCase
 			
-		Case ($g_iCmbBBAttack = $g_eBBAttackSmart And not $g_bChkBBGetFromCSV = True) Or ($g_iCmbBBAttack = $g_eBBAttackCSV And $g_bChkBBGetFromArmy = True)
+		Case ($g_iCmbBBAttack = $g_eBBAttackSmart And Not $g_bChkBBGetFromCSV = True) Or ($g_iCmbBBAttack = $g_eBBAttackCSV And $g_bChkBBGetFromArmy = True)
 			Local $sName = "CAMP" & "|"
 			For $iName = 0 To UBound($g_iCmbCampsBB) - 1
 				$sName &= ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) <> "" ? ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) : ("Barb")
@@ -131,8 +132,9 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 			$g_bChkBBGetFromCSV = False
 			$g_bChkBBGetFromArmy = False
 			SetLog("BuilderBaseSelectCorrectScript 0x11 error.", $COLOR_ERROR)
-			Return 
+			Return
 	EndSelect
+
 	
 	If UBound($aLines) = 0 Then
 		SetLog("BuilderBaseSelectCorrectScript 0x12 error.", $COLOR_ERROR)
@@ -155,8 +157,8 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	Next
 	Setlog("Available " & $iCampsQuantities & " Camps.", $COLOR_INFO)
 
-	Local $aCamps[0]
-
+	Local $aCamps[0], $bOkCamps = True
+	
 	; Loop for every line on CSV
 	For $iLine = 0 To UBound($aLines) - 1
 		If Not $g_bRunState Then Return
@@ -168,20 +170,29 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 				_ArrayAdd($aCamps, TranslateCsvTroopName(StringStripWS($aSplitLine[$i], $STR_STRIPALL)))
 			Next
 			; Select the correct CAMP [cmd line] to use according with the first attack bar detection = how many camps do you have
-			If $iCampsQuantities = UBound($aCamps) Then
-				If $g_bDebugSetlog Then Setlog("BuilderBaseSelectCorrectScript | " & _ArrayToString($aCamps, "-", -1, -1, "|", -1, -1), $COLOR_DEBUG)
+			$bOkCamps = $iCampsQuantities = UBound($aCamps)
+			If $bOkCamps Then
+				If $g_bDebugSetlog Then Setlog(_ArrayToString($aCamps, "-", -1, -1, "|", -1, -1))
 				ExitLoop
 			EndIf
 		EndIf
 	Next
 
+	; An exquisite piece of software.
+	If ($bOkCamps) Then
+		If ($bForceFix = False) And Not (($g_iCmbBBAttack = $g_eBBAttackSmart And Not $g_bChkBBGetFromCSV = True) Or ($g_iCmbBBAttack = $g_eBBAttackCSV And $g_bChkBBGetFromArmy = True)) Then
+			SetLog("The CSV is not compatible with the number of camps, it will be selected from the GUI Army.", $COLOR_ERROR)
+			Return BuilderBaseSelectCorrectScript($aAvailableTroops, True)
+		ElseIf ($bForceFix = True) Then
+			SetLog("Corrects CSV or GUI Camps.", $COLOR_ERROR)
+			Return
+		EndIf
+	EndIf
+	
 	If UBound($aCamps) = 0 Then
-		SetLog("Your script does not seem to support such a small amount of camps.", $COLOR_ERROR)
+		SetLog("BuilderBaseSelectCorrectScript 0x09 error.", $COLOR_ERROR)
 		Return
 	EndIf
-
-	;Result Of BelowCode e.g $aCamps
-	;$aCamps Before :Giant-Barbarian-Barbarian-Bomb-Cannon-Cannon
 
 	;First Find The Correct Index Of Camps In Attack Bar
 	For $i = 0 To UBound($aCamps) - 1
