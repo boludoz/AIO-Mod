@@ -45,7 +45,7 @@ Func PureClickR($boundingBox, $x, $y, $times = 1, $speed = 0, $OutScreen = (680 
 	Local $boxWidth = $boundingBox[2] - $boundingBox[0]
 	Local $boxHeight = $boundingBox[3] - $boundingBox[1]
 	$g_bUseRandomClick = False
-	Local $aXY[2]
+	Local $aXY[2] = [$x,$y]
 	
 	If $times <> 1 Then
 		For $i = 0 To ($times - 1)
