@@ -69,14 +69,16 @@ Func CreateDiscordTelegramSubTab()
 			GUICtrlSetData($g_hCmbNotifyMode, "Telegram|Discord", "Telegram")
 			GUICtrlSetOnEvent($g_hCmbNotifyMode, "cmbNotifyMode")
 	$x += 135
-	$y -= 13
+	;$y -= 13
 	$g_hChkNotifyTGEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Notify", "ChkNotifyTGEnable", "Enable Telegram"), $x, $y, 177, 17)
 			GUICtrlSetOnEvent(-1, "chkPBTGenabled")
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Notify", "ChkNotifyTGEnable_Info_01", "Enable Telegram notifications"))
-	$y += 20
+			GUICtrlSetState(-1, $GUI_SHOW)
+	;$y += 20
 	$g_hChkNotifyDSEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Notify", "ChkNotifyDSEnable", "Enable Discord"), $x, $y, 177, 17)
 			GUICtrlSetOnEvent(-1, "chkPBTGenabled")
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Notify", "ChkNotifyDSEnable_Info_01", "Enable Discord notifications"))
+			GUICtrlSetState(-1, $GUI_HIDE)
 
     $x = 25
     $y = 45

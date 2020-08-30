@@ -1866,6 +1866,10 @@ Func _RunDos($sCommand)
 Local $iResult = RunWait(@ComSpec & " /C " & $sCommand, "", @SW_HIDE)
 Return SetError(@error, @extended, $iResult)
 EndFunc
+Global Const $MATH_DEGREES = 57.2957795130823
+Func _Degree($iRadians)
+Return IsNumber($iRadians) ? $iRadians * $MATH_DEGREES : SetError(1, 0, 0)
+EndFunc
 Func _Max($iNum1, $iNum2)
 If Not IsNumber($iNum1) Then Return SetError(1, 0, 0)
 If Not IsNumber($iNum2) Then Return SetError(2, 0, 0)
@@ -1875,6 +1879,9 @@ Func _Min($iNum1, $iNum2)
 If Not IsNumber($iNum1) Then Return SetError(1, 0, 0)
 If Not IsNumber($iNum2) Then Return SetError(2, 0, 0)
 Return($iNum1 > $iNum2) ? $iNum2 : $iNum1
+EndFunc
+Func _Radian($iDegrees)
+Return Number($iDegrees) ? $iDegrees / $MATH_DEGREES : SetError(1, 0, 0)
 EndFunc
 Global Const $BS_DEFPUSHBUTTON = 0x0001
 Global Const $BS_MULTILINE = 0x2000
@@ -3214,7 +3221,7 @@ Global Const $ARRAYDISPLAY_NOROW = 64
 Global Const $ARRAYDISPLAY_CHECKERROR = 128
 Global Const $_ARRAYCONSTANT_tagHDITEM = "uint Mask;int XY;ptr Text;handle hBMP;int TextMax;int Fmt;lparam Param;int Image;int Order;uint Type;ptr pFilter;uint State"
 Global Const $_ARRAYCONSTANT_tagLVITEM = "struct;uint Mask;int Item;int SubItem;uint State;uint StateMask;ptr Text;int TextMax;int Image;lparam Param;" & "int Indent;int GroupID;uint Columns;ptr pColumns;ptr piColFmt;int iGroup;endstruct"
-Func __ArrayDisplay_Share(Const ByRef $aArray, $sTitle = Default, $sArrayRange = Default, $iFlags = Default, $vUser_Separator = Default, $sHeader = Default, $iMax_ColWidth = Default, $hUser_Function = Default, $bDebug = True, Const $_iScriptLineNumber =  3217, Const $_iCallerError = @error, Const $_iCallerExtended = @extended)
+Func __ArrayDisplay_Share(Const ByRef $aArray, $sTitle = Default, $sArrayRange = Default, $iFlags = Default, $vUser_Separator = Default, $sHeader = Default, $iMax_ColWidth = Default, $hUser_Function = Default, $bDebug = True, Const $_iScriptLineNumber =  3224, Const $_iCallerError = @error, Const $_iCallerExtended = @extended)
 Local $vTmp, $sMsgBoxTitle =(($bDebug) ?("_DebugArrayDisplay") :("_ArrayDisplay"))
 If $sTitle = Default Then $sTitle = $sMsgBoxTitle
 If $sArrayRange = Default Then $sArrayRange = ""
@@ -16799,14 +16806,14 @@ $g_hCmbNotifyMode = GUICtrlCreateCombo("", $x, $y, 105, 25, BitOR($CBS_DROPDOWNL
 GUICtrlSetData($g_hCmbNotifyMode, "Telegram|Discord", "Telegram")
 GUICtrlSetOnEvent($g_hCmbNotifyMode, "cmbNotifyMode")
 $x += 135
-$y -= 13
 $g_hChkNotifyTGEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Notify", "ChkNotifyTGEnable", "Enable Telegram"), $x, $y, 177, 17)
 GUICtrlSetOnEvent(-1, "chkPBTGenabled")
 _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Notify", "ChkNotifyTGEnable_Info_01", "Enable Telegram notifications"))
-$y += 20
+GUICtrlSetState(-1, $GUI_SHOW)
 $g_hChkNotifyDSEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Notify", "ChkNotifyDSEnable", "Enable Discord"), $x, $y, 177, 17)
 GUICtrlSetOnEvent(-1, "chkPBTGenabled")
 _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Notify", "ChkNotifyDSEnable_Info_01", "Enable Discord notifications"))
+GUICtrlSetState(-1, $GUI_HIDE)
 $x = 25
 $y = 45
 $y += 40
@@ -28762,6 +28769,8 @@ GUICtrlSetState($g_hTxtNotifyDSToken, $GUI_HIDE)
 GUICtrlSetState($g_hChkNotifyRemote, $GUI_SHOW)
 GUICtrlSetState($g_ahIcnNotifyMode[1], $GUI_HIDE)
 GUICtrlSetState($g_ahIcnNotifyMode[0], $GUI_SHOW)
+GUICtrlSetState($g_hChkNotifyTGEnable, $GUI_SHOW)
+GUICtrlSetState($g_hChkNotifyDSEnable, $GUI_HIDE)
 Case 1
 GUICtrlSetState($g_hLblNotifyDSToken, $GUI_SHOW)
 GUICtrlSetState($g_hTxtNotifyDSToken, $GUI_SHOW)
@@ -28770,6 +28779,8 @@ GUICtrlSetState($g_hTxtNotifyTGToken, $GUI_HIDE)
 GUICtrlSetState($g_hChkNotifyRemote, $GUI_HIDE)
 GUICtrlSetState($g_ahIcnNotifyMode[0], $GUI_HIDE)
 GUICtrlSetState($g_ahIcnNotifyMode[1], $GUI_SHOW)
+GUICtrlSetState($g_hChkNotifyDSEnable, $GUI_SHOW)
+GUICtrlSetState($g_hChkNotifyTGEnable, $GUI_HIDE)
 EndSwitch
 EndFunc
 Func chkPBTGenabled()
@@ -30370,7 +30381,7 @@ $iError = @error
 Local $iCalc = Round(__TimerDiff($iTimer)/1000, 2)
 Setlog($sSCap & "| Time Execution : " & $iCalc & " sec", $COLOR_INFO)
 If $iError <> 0 Then
-Setlog($sSCap & "| Result : Error.", $COLOR_ERROR)
+Setlog($sSCap & "| Result : Error N° = " & $iError, $COLOR_ERROR)
 ElseIf IsArray($saExecResult) Then
 Setlog($sSCap & "| Result (IsArray) : " & _ArrayToString($saExecResult, "|" -1, -1, "#"), $COLOR_INFO)
 _ArrayDisplay($saExecResult, "Debug Func. Result")
@@ -38069,80 +38080,131 @@ EndIf
 Local $Return[3] = [$AttackInside, UBound($BestSideToAttack), _ArrayToString($BestSideToAttack)]
 Return $Return
 EndFunc
-Func SmartFarmDetection($iTxtBuildings = "All", $bForceCapture = True)
+Func SmartFarmDetection($txtBuildings = "Mines", $bForceCapture = True)
 Local $aReturn[0][6]
-Local $sDirectory, $iMaxLevel = 20, $iOffsetx, $iOffsety
-Local $iMaxReturnPoints = 40
+Local $sdirectory, $iMaxReturnPoints, $iMaxLevel, $offsetx, $offsety
 If Not $g_bRunState Then Return
 Local $hTimer = TimerInit()
-Switch $iTxtBuildings
+Switch $txtBuildings
 Case "Mines"
-$sDirectory =($g_iDetectedImageType = 1) ?(@ScriptDir & "\imgxml\Storages\Mines_Snow") :(@ScriptDir & "\imgxml\Storages\GoldMines")
+If $g_iDetectedImageType = 1 Then
+$sdirectory = @ScriptDir & "\imgxml\Storages\Mines_Snow"
+Else
+$sdirectory = @ScriptDir & "\imgxml\Storages\GoldMines"
+EndIf
 $iMaxReturnPoints = 7
+$iMaxLevel = 13
 Case "Collectors"
-$sDirectory =($g_iDetectedImageType = 1) ?(@ScriptDir & "\imgxml\Storages\Collectors_Snow") :(@ScriptDir & "\imgxml\Storages\Collectors")
+If $g_iDetectedImageType = 1 Then
+$sdirectory = @ScriptDir & "\imgxml\Storages\Collectors_Snow"
+Else
+$sdirectory = @ScriptDir & "\imgxml\Storages\Collectors"
+EndIf
 $iMaxReturnPoints = 7
+$iMaxLevel = 13
 Case "Drills"
-$sDirectory = @ScriptDir & "\imgxml\Storages\Drills"
+$sdirectory = @ScriptDir & "\imgxml\Storages\Drills"
 $iMaxReturnPoints = 3
+$iMaxLevel = 7
 Case "All"
-$sDirectory =($g_iDetectedImageType = 1) ?(@ScriptDir & "\imgxml\Storages\All_Snow") :(@ScriptDir & "\imgxml\Storages\All")
+$sdirectory = @ScriptDir & "\imgxml\Storages\All"
+$iMaxReturnPoints = 21
+$iMaxLevel = 13
 EndSwitch
 Local $sCocDiamond = "ECD"
 Local $sRedLines = ""
 Local $iMinLevel = 1
 Local $sReturnProps = "objectname,objectpoints,nearpoints,redlinedistance"
-Local $aResult = findMultiple($sDirectory, $sCocDiamond, $sRedLines, $iMinLevel, $iMaxLevel, $iMaxReturnPoints, $sReturnProps, $bForceCapture)
-Local $aTempObj, $sNearTemp, $aDistance, $aXY, $sString
-Local $aReturn[0][6], $sTmpS, $iD2RedLine, $iD2Fix
-If _Sleep(10) Then Return
-If Not $g_bRunState Then Return
+Local $aResult = findMultiple($sdirectory, $sCocDiamond, $sRedLines, $iMinLevel, $iMaxLevel, $iMaxReturnPoints, $sReturnProps, $bForceCapture)
+Local $aTEMP, $sObjectname, $aObjectpoints, $sNear, $sRedLineDistance
+Local $tempObbj, $sNearTemp, $Distance, $tempObbjs, $sString
+Local $distance2RedLine = 40
 If IsArray($aResult) And UBound($aResult) > 0 Then
 For $buildings = 0 To UBound($aResult) - 1
-Local $aTEMP = $aResult[$buildings]
-Local $sObjectname = String($aTEMP[0])
-Local $aObjectpoints = $aTEMP[1]
-Local $sNear = $aTEMP[2]
-Local $sRedLineDistance = $aTEMP[3]
+If _Sleep(50) Then Return
+If Not $g_bRunState Then Return
+SetDebugLog(_ArrayToString($aResult[$buildings]))
+$aTEMP = $aResult[$buildings]
+$sObjectname = String($aTEMP[0])
+SetDebugLog("Building name: " & String($aTEMP[0]), $COLOR_INFO)
+$aObjectpoints = $aTEMP[1]
+SetDebugLog("Object points: " & String($aTEMP[1]), $COLOR_INFO)
+$sNear = $aTEMP[2]
+SetDebugLog("Near points: " & String($aTEMP[2]), $COLOR_INFO)
+$sRedLineDistance = $aTEMP[3]
+SetDebugLog("Near points: " & String($aTEMP[3]), $COLOR_INFO)
 Switch String($aTEMP[0])
 Case "Mines"
-$iOffsetx = 3
-$iOffsety = 12
+$offsetx = 3
+$offsety = 12
 Case "Collector"
-$iOffsetx = -9
-$iOffsety = 9
+$offsetx = -9
+$offsety = 9
 Case "Drill"
-$iOffsetx = 2
-$iOffsety = 14
+$offsetx = 2
+$offsety = 14
 EndSwitch
+If StringInStr($aObjectpoints, "|") Then
 $aObjectpoints = StringReplace($aObjectpoints, "||", "|")
 $sString = StringRight($aObjectpoints, 1)
 If $sString = "|" Then $aObjectpoints = StringTrimRight($aObjectpoints, 1)
-$aTempObj = StringSplit($aObjectpoints, "|", $STR_NOCOUNT)
+$tempObbj = StringSplit($aObjectpoints, "|", $STR_NOCOUNT)
 $sNearTemp = StringSplit($sNear, "#", $STR_NOCOUNT)
-$aDistance = StringSplit($sRedLineDistance, "#", $STR_NOCOUNT)
-For $i = 0 To UBound($aTempObj) - 1
-$aXY = StringSplit($aTempObj[$i], ",", $STR_NOCOUNT)
-If UBound($aXY) <> 2 Then ContinueLoop
-$aXY[0] += $iOffsetx
-$aXY[1] += $iOffsety
-If DoublePointF($aReturn, $aXY[0], $aXY[1]) Then ContinueLoop
-$sTmpS = Side($aXY)
-$iD2RedLine =($aDistance[$i] > 0) ?($aDistance[$i]) :(200)
-$iD2Fix =($sTmpS = "BL") ?(50) :(45)
-_ArrayAdd($aReturn, String($aXY[0]) &"&"& String($aXY[1]) &"&"& String($iD2RedLine) &"&"& String(($iD2RedLine > $iD2Fix) ?("In") :("Out")) &"&"& String($sTmpS) &"&"& String(($sNearTemp[$i] <> "") ?($sNearTemp[$i]) :("0,0")), 0, "&", "=", $ARRAYFILL_FORCE_DEFAULT )
+$Distance = StringSplit($sRedLineDistance, "#", $STR_NOCOUNT)
+For $i = 0 To UBound($tempObbj) - 1
+$tempObbjs = StringSplit($tempObbj[$i], ",", $STR_NOCOUNT)
+If UBound($tempObbjs) <> 2 Then ContinueLoop
+Local $DetectedPoint[2] = [Number($tempObbjs[0] + $offsetx), Number($tempObbjs[1] + $offsety)]
+If DoublePoint($aTEMP[0], $aReturn, $DetectedPoint) Then ContinueLoop
+ReDim $aReturn[UBound($aReturn) + 1][6]
+$aReturn[UBound($aReturn) - 1][0] = $DetectedPoint[0]
+$aReturn[UBound($aReturn) - 1][1] = $DetectedPoint[1]
+$aReturn[UBound($aReturn) - 1][4] = Side($tempObbjs)
+$distance2RedLine = $aReturn[UBound($aReturn) - 1][4] = "BL" ? 50 : 45
+If $i < UBound($sNearTemp) Then
+$aReturn[UBound($aReturn) - 1][5] = $sNearTemp[$i] <> "" ? $sNearTemp[$i] : "0,0"
+Else
+$aReturn[UBound($aReturn) - 1][5] = "0,0"
+EndIf
+If $i < UBound($Distance) Then
+$aReturn[UBound($aReturn) - 1][2] = Number($Distance[$i]) > 0 ? Number($Distance[$i]) : 200
+Else
+$aReturn[UBound($aReturn) - 1][2] = 200
+EndIf
+$aReturn[UBound($aReturn) - 1][3] =($aReturn[UBound($aReturn) - 1][2] > $distance2RedLine) ?("In") :("Out")
 Next
+Else
+$tempObbj = StringSplit($aObjectpoints, ",", $STR_NOCOUNT)
+If UBound($tempObbj) <> 2 Then ContinueLoop
+Local $DetectedPoint[2] = [Number($tempObbj[0] + $offsetx), Number($tempObbj[1] + $offsety)]
+If DoublePoint($aTEMP[0], $aReturn, $DetectedPoint) Then ContinueLoop
+ReDim $aReturn[UBound($aReturn) + 1][6]
+$aReturn[UBound($aReturn) - 1][0] = $DetectedPoint[0]
+$aReturn[UBound($aReturn) - 1][1] = $DetectedPoint[1]
+$aReturn[UBound($aReturn) - 1][4] = Side($tempObbj)
+$distance2RedLine = $aReturn[UBound($aReturn) - 1][4] = "BL" ? 50 : 45
+$aReturn[UBound($aReturn) - 1][5] = $sNear
+$aReturn[UBound($aReturn) - 1][2] = Number($sRedLineDistance)
+$aReturn[UBound($aReturn) - 1][3] =($aReturn[UBound($aReturn) - 1][2] > $distance2RedLine) ?("In") :("Out")
+EndIf
 Next
-SetDebugLog($iTxtBuildings & " Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
+SetDebugLog($txtBuildings & " Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
 Return $aReturn
 Else
-SetLog("ERROR|NONE Building - Detection: " & $iTxtBuildings, $COLOR_INFO)
+SetLog("ERROR|NONE Building - Detection: " & $txtBuildings, $COLOR_INFO)
 EndIf
 EndFunc
-Func DoublePointF($aXYs, $x1, $y1, $iDistance = 18)
+Func DoublePoint($sName, $aReturn, $aPoint, $iDistance = 18)
+Local $x, $y
+Local $x1 = Number($aPoint[0])
+Local $y1 = Number($aPoint[1])
+For $i = 0 To UBound($aReturn) - 1
 If Not $g_bRunState Then Return
-For $i = 0 To UBound($aXYs) - 1
-If Pixel_Distance($aXYs[$i][1], $aXYs[$i][2], $x1, $y1) < $iDistance Then Return True
+$x = Number($aReturn[$i][0])
+$y = Number($aReturn[$i][1])
+If Pixel_Distance($x, $y, $x1, $y1) < $iDistance Then
+Return True
+EndIf
 Next
 Return False
 EndFunc
@@ -38181,6 +38243,7 @@ DirCreate($subDirectory)
 Local $Date = @YEAR & "-" & @MON & "-" & @MDAY
 Local $Time = @HOUR & "." & @MIN & "." & @SEC
 Local $fileName = "SmartFarm" & "_" & $Date & "_" & $Time & ".png"
+Local $fileNameUntouched = "SmartFarm" & "_" & $Date & "_" & $Time & "_1.png"
 Local $hGraphic = _GDIPlus_ImageGetGraphicsContext($editedImage)
 Local $hPen = _GDIPlus_PenCreate(0xFFFF0000, 2)
 Local $hPen2 = _GDIPlus_PenCreate(0xFF000000, 2)
@@ -38229,10 +38292,12 @@ Next
 Next
 _GDIPlus_GraphicsDrawString($hGraphic, $sTime & " - " & $BestSideToAttack, 370, 70, "ARIAL", 20)
 _GDIPlus_ImageSaveToFile($editedImage, $subDirectory & $fileName)
+_CaptureRegion()
+_GDIPlus_ImageSaveToFile($g_hBitmap, $subDirectory & $fileNameUntouched)
 _GDIPlus_PenDispose($hPen)
 _GDIPlus_PenDispose($hPen2)
 _GDIPlus_GraphicsDispose($hGraphic)
-Setlog("Debug Image saved!")
+Setlog(" » Debug Image saved!")
 EndFunc
 Func AttackSmartFarm($Nside, $SIDESNAMES)
 Setlog(" ====== Start Smart Farm Attack ====== ", $COLOR_INFO)
@@ -44141,6 +44206,7 @@ If $g_bDebugFuncTime Then StopWatchStopLog()
 Return $HeroesRegenTime
 EndFunc
 Func OpenArmyOverview($bCheckMain = True, $sWhereFrom = "Undefined")
+CloseClanChat()
 If $bCheckMain Then
 If Not IsMainPage() Then
 SetLog("Cannot open Army Overview window", $COLOR_ERROR)
@@ -44148,9 +44214,8 @@ SetError(1)
 Return False
 EndIf
 EndIf
-For $i = 0 To 3
-If WaitforPixel(23, 505 + $g_iBottomOffsetY, 53, 507 + $g_iBottomOffsetY, Hex(0xEEB344, 6), 5, 10) Then
 If $g_bDebugSetlogTrain Then SetLog("Click $aArmyTrainButton" & " (Called from " & $sWhereFrom & ")", $COLOR_SUCCESS)
+If _Wait4Pixel(52, 565, 0xEEB344, 25, 2500, 50) Then
 If Not $g_bUseRandomClick Then
 ClickP($aArmyTrainButton, 1, 0, "#0293")
 Else
@@ -44158,8 +44223,6 @@ ClickR($aArmyTrainButtonRND, $aArmyTrainButton[0], $aArmyTrainButton[1], 1, 0)
 EndIf
 EndIf
 If _Sleep($DELAYRUNBOT6) Then Return
-If IsTrainPage() Then ExitLoop
-Next
 If Not IsTrainPage() Then
 SetError(1)
 Return False
@@ -44187,21 +44250,24 @@ SetDebugLog("Error in OpenTrainTab: Cannot find the Army Overview Window", $COLO
 SetError(1)
 Return False
 EndIf
+If $bSetLog Or $g_bDebugSetlogTrain Then SetLog("Open " & $sTab &($g_bDebugSetlogTrain ? " (Called from " & $sWhereFrom & ")" : ""), $COLOR_INFO)
+Local $i = 0
 Local $aTabButton = findButton(StringStripWS($sTab, 8), Default, 1, True)
 If IsArray($aTabButton) And UBound($aTabButton, 1) = 2 Then
 $aIsTabOpen[0] = $aTabButton[0]
-If Not _CheckPixel($aIsTabOpen, True) Then
-If $bSetLog Or $g_bDebugSetlogTrain Then SetLog("Open " & $sTab &($g_bDebugSetlogTrain ? " (Called from " & $sWhereFrom & ")" : ""), $COLOR_INFO)
-For $i = 0 To 3
+Do
+$i += 1
+If _Wait4PixelGone($aIsTabOpen[0], $aIsTabOpen[1], $aIsTabOpen[2], $aIsTabOpen[3], 100, 25) Then
 ClickP($aTabButton)
-If _WaitForCheckPixel($aIsTabOpen, True) Then ExitLoop
-If _Sleep(250) Then Return
-Next
-If Not _WaitForCheckPixel($aIsTabOpen, True) Then
+Else
+ExitLoop
+EndIf
+If($i > 3) Then ExitLoop
+Until _Wait4Pixel($aIsTabOpen[0], $aIsTabOpen[1], $aIsTabOpen[2], $aIsTabOpen[3], 1000, 50)
+If($i > 3) Then
 SetLog("Error in OpenTrainTab: Cannot open " & $sTab & ". Pixel to check did not appear", $COLOR_ERROR)
 SetError(1)
 Return False
-EndIf
 EndIf
 Else
 SetDebugLog("Error in OpenTrainTab: $aTabButton is no valid Array", $COLOR_ERROR)
@@ -46026,7 +46092,7 @@ If Not OpenTroopsTab(False, "DoubleTrain()") Then Return
 If _Sleep(250) Then Return
 Local $Step = 1
 While 1
-Local $TroopCamp = GetCurrentArmy(48, 160)
+Local $TroopCamp = GetCurrentArmy(48, 160, "DoubleTrain Troops")
 SetLog("Checking Troop tab: " & $TroopCamp[0] & "/" & $TroopCamp[1] * 2)
 If $TroopCamp[1] = 0 Then ExitLoop
 If $TroopCamp[1] <> $g_iTotalCampSpace Then SetLog("Incorrect Troop combo: " & $g_iTotalCampSpace & " vs Total camp: " & $TroopCamp[1] & @CRLF & @TAB & "Double train may not work well", $COLOR_DEBUG)
@@ -46066,7 +46132,7 @@ If Not OpenSpellsTab(False, "DoubleTrain()") Then Return
 If _Sleep(250) Then Return
 $Step = 1
 While 1
-Local $SpellCamp = GetCurrentArmy(43, 160)
+Local $SpellCamp = GetCurrentArmy(43, 160, "DoubleTrain Spells")
 SetLog("Checking Spell tab: " & $SpellCamp[0] & "/" & $SpellCamp[1] * 2)
 If $SpellCamp[1] > $TotalSpell Then
 SetLog("Unbalance Total spell setting vs actual spell capacity: " & $TotalSpell & "/" & $SpellCamp[1] & @CRLF & @TAB & "Double train may not work well", $COLOR_DEBUG)
@@ -46136,7 +46202,7 @@ Next
 If $ToReturn[0][0] = "Arch" And $ToReturn[0][1] = 0 Then Return
 TrainUsingWhatToTrain($ToReturn, $bQueue)
 If _Sleep(500) Then Return
-Local $CampOCR = GetCurrentArmy(48, 160)
+Local $CampOCR = GetCurrentArmy(48, 160, "TrainFullTroop army")
 SetDebugLog("Checking troop tab: " & $CampOCR[0] & "/" & $CampOCR[1] * 2)
 EndFunc
 Func BrewFullSpell($bQueue = False)
@@ -46153,7 +46219,7 @@ Next
 If $ToReturn[0][0] = "Arch" And $ToReturn[0][1] = 0 Then Return
 BrewUsingWhatToTrain($ToReturn, $bQueue)
 If _Sleep(750) Then Return
-Local $CampOCR = GetCurrentArmy(43, 160)
+Local $CampOCR = GetCurrentArmy(43, 160, "BrewFullSpell army")
 SetDebugLog("Checking spell tab: " & $CampOCR[0] & "/" & $CampOCR[1] * 2)
 EndFunc
 Func TopUpUnbalancedSpell($iUnbalancedSpell = 0)
@@ -46177,7 +46243,7 @@ EndIf
 EndIf
 If _Sleep(750) Then Return
 EndFunc
-Func GetCurrentArmy($x_start, $y_start)
+Func GetCurrentArmy($x_start, $y_start, $sCalledFrom = "")
 Local $aResult[3] = [0, 0, 0]
 If Not $g_bRunState Then Return $aResult
 Local $iOCRResult = getArmyCapacityOnTrainTroops($x_start, $y_start)
@@ -46187,7 +46253,7 @@ $aResult[0] = Number($aTempResult[0])
 $aResult[1] = Number($aTempResult[1]) / 2
 $aResult[2] = $aResult[1] - $aResult[0]
 Else
-SetLog("DEBUG | ERROR on GetCurrentArmy", $COLOR_ERROR)
+SetLog("DEBUG | ERROR on GetCurrentArmy " & $sCalledFrom, $COLOR_ERROR)
 EndIf
 Return $aResult
 EndFunc
@@ -46232,7 +46298,7 @@ EndIf
 Next
 TrainUsingWhatToTrain($rWTT, True)
 If _Sleep(1000) Then Return
-$ArmyCamp = GetCurrentArmy(48, 160)
+$ArmyCamp = GetCurrentArmy(48, 160, "CheckQueueTroopAndTrainRemain army")
 SetLog("Checking troop tab: " & $ArmyCamp[0] & "/" & $ArmyCamp[1] * 2 &($ArmyCamp[0] < $ArmyCamp[1] * 2 ? ". Top-up queue failed!" : ""))
 If $ArmyCamp[0] < $ArmyCamp[1] * 2 Then Return False
 EndIf
@@ -46284,7 +46350,7 @@ EndIf
 Next
 BrewUsingWhatToTrain($rWTT, True)
 If _Sleep(1000) Then Return
-Local $NewSpellCamp = GetCurrentArmy(43, 160)
+Local $NewSpellCamp = GetCurrentArmy(43, 160, "CheckQueueSpellAndTrainRemain brew")
 SetLog("Checking spell tab: " & $NewSpellCamp[0] & "/" & $NewSpellCamp[1] * 2 &($NewSpellCamp[0] < $ArmyCamp[1] * 2 ? ". Top-up queue failed!" : ""))
 If $NewSpellCamp[0] < $ArmyCamp[1] * 2 Then Return False
 EndIf
@@ -54949,7 +55015,10 @@ $iHours = Mod($iHours, 24)
 Return 1
 EndFunc
 Func Click($x, $y, $times = 1, $speed = 0, $debugtxt = "")
-If($x = $aAway[0] Or $x = $aAway2[0]) And $y = 10 Then Return ClickAway()
+If($x = $aAway[0] Or $x = $aAway2[0]) And $y = 10 Then
+If $g_bDebugClick Then SetLog("Force random ClickAway.", $COLOR_ACTION)
+Return ClickAway()
+EndIf
 Local $txt = "", $aPrevCoor[2] = [$x, $y]
 If $g_bUseRandomClick Then
 $x = Random($x - 5, $x + 5, 1)
@@ -55154,11 +55223,16 @@ Local $delay = $times * $speed + $afterDelay - __TimerDiff($timer)
 If IsKeepClicksActive() = False And $delay > 0 Then _Sleep($delay, False)
 Return $result
 EndFunc
-Func ClickAway()
-Local $aiRegionToUse = Random(0, 1, 1) > 0 ? $aiClickAwayRegionLeft : $aiClickAwayRegionRight
+Func ClickAway($bForce = False)
+_CaptureRegions()
+Local $bSkip =(_CheckPixel($aIsMain, False, Default, "IsMain") Or _CheckPixel($aIsOnBuilderBase, False, Default, "IsOnBuilderBase") Or _PixelSearch(381, 563, 437, 567, Hex(0xFFFFB7, 6), 25, False)) And not(QuickMIS("N1", @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Obstacles", 0, 0, $g_iGAME_WIDTH, $g_iGAME_HEIGHT, False) <> "none")
+If $g_bDebugClick Then SetLog("ClickAway ? " & $bSkip, $COLOR_ACTION)
+If(Not $bSkip) Or $bForce Then
+Local $aiRegionToUse =(Random(0, 1, 1) > 0) ?($aiClickAwayRegionLeft) :($aiClickAwayRegionRight)
 Local $aiSpot[2] = [Random($aiRegionToUse[0], $aiRegionToUse[2], 1), Random($aiRegionToUse[1], $aiRegionToUse[3], 1)]
-If $g_bDebugClick Then SetDebugLog("ClickAway(): on X:" & $aiSpot[0] & ", Y:" & $aiSpot[1], $COLOR_DEBUG)
+If $g_bDebugClick Then SetLog("ClickAway(): on X:" & $aiSpot[0] & ", Y:" & $aiSpot[1], $COLOR_ACTION)
 ClickP($aiSpot, 1, 0, "#0000")
+EndIf
 EndFunc
 Func _DecodeDebug($message)
 Local $separator = " | "
@@ -76098,6 +76172,114 @@ If _Sleep($iDelay) Then Return False
 Until($iWait < __TimerDiff($hTimer))
 Return False
 EndFunc
+Func _ColorCheckCie2000($nColor1 = 0x00FF00, $nColor2 = 0x00FF6C, $sVari = 5, $Ignore = Default)
+Local $iPixelDiff = ciede2000(xyz2lab(StandardRGBXTOXZY($nColor1)), xyz2lab(StandardRGBXTOXZY($nColor2)))
+If $g_bDebugSetlog Then SetLog("_ColorCheckCie2000 | $iPixelDiff " & $iPixelDiff, $COLOR_INFO)
+If $iPixelDiff > $sVari Then
+Return False
+EndIf
+Return True
+EndFunc
+Func StandardRGBXTOXZY($nColor)
+Local $aRGB[3] = [Dec(StringMid(String($nColor), 1, 2)), Dec(StringMid(String($nColor), 3, 2)), Dec(StringMid(String($nColor), 5, 2))]
+For $i = 0 To 2
+$aRGB[$i] /= 255
+If($aRGB[$i] > 0.04045) Then
+$aRGB[$i] =((($aRGB[$i] + 0.055) / 1.055) ^ 2.4)
+Else
+$aRGB[$i] =($aRGB[$i] / 12.92)
+EndIf
+$aRGB[$i] *= 100
+Next
+Local $aXYZ[3] = [Null, Null, Null]
+$aXYZ[0] = $aRGB[0] * 0.412453 + $aRGB[1] * 0.357580 + $aRGB[2] * 0.180423
+$aXYZ[1] = $aRGB[0] * 0.212671 + $aRGB[1] * 0.715160 + $aRGB[2] * 0.072169
+$aXYZ[2] = $aRGB[0] * 0.019334 + $aRGB[1] * 0.119193 + $aRGB[2] * 0.950227
+Return $aXYZ
+EndFunc
+Func xyz2lab($aXYZ)
+$aXYZ[0] /= 95.047
+$aXYZ[1] /= 100
+$aXYZ[2] /= 108.883
+For $i = 0 To 2
+If $aXYZ[$i] > 0.008856 Then
+$aXYZ[$i] = $aXYZ[$i] ^(1 / 3)
+Else
+$aXYZ[$i] =(7.787 * $aXYZ[$i]) +(16 / 116)
+EndIf
+Next
+Local $aLab[3] = [Null, Null, Null]
+$aLab[0] =(116 * $aXYZ[1]) - 16.0
+$aLab[1] = 500 *($aXYZ[0] - $aXYZ[1])
+$aLab[2] = 200 *($aXYZ[1] - $aXYZ[2])
+Return $aLab
+EndFunc
+Func ciede2000($laB1, $laB2)
+Static $kL = 1, $kC = 1, $kH = 1, $aC1C2 = 0, $G = 0, $A1P = 0, $A2P = 0, $c1P = 0, $c2P = 0, $h1p = 0, $h2p = 0, $dLP = 0, $dCP = 0, $dhP = 0, $aL = 0, $aCP = 0, $aHP = 0, $T = 0, $dRO = 0, $rC = 0, $sL = 0, $sC = 0, $sH = 0, $rT = 0, $c1 = 0, $c2 = 0
+$c1 = Sqrt(($laB1[1] ^ 2.0) +($laB1[2] ^ 2.0))
+$c2 = Sqrt(($laB2[1] ^ 2.0) +($laB2[2] ^ 2.0))
+$aC1C2 =($c1 + $c2) / 2.0
+$G = 0.5 *(1.0 - Sqrt(($aC1C2 ^ 7.0) /(($aC1C2 ^ 7.0) +(25.0 ^ 7.0))))
+$A1P =(1.0 + $G) * $laB1[1]
+$A2P =(1.0 + $G) * $laB2[1]
+$c1P = Sqrt(($A1P ^ 2.0) +($laB1[2] ^ 2.0))
+$c2P = Sqrt(($A2P ^ 2.0) +($laB2[2] ^ 2.0))
+$h1p = hpf($laB1[2], $A1P)
+$h2p = hpf($laB2[2], $A2P)
+$dLP = $laB2[0] - $laB1[0]
+$dCP = $c2P - $c1P
+$dhP = dhpf($c1, $c2, $h1p, $h2p)
+$dhP = 2.0 * Sqrt($c1P * $c2P) * Sin(_Radian($dhP) / 2.0)
+$aL =($laB1[0] + $laB2[0]) / 2.0
+$aCP =($c1P + $c2P) / 2.0
+$aHP = ahpf($c1, $c2, $h1p, $h2p)
+$T = 1.0 - 0.17 * Cos(_Radian($aHP - 39)) + 0.24 * Cos(_Radian(2.0 * $aHP)) + 0.32 * Cos(_Radian(3.0 * $aHP + 6.0)) - 0.2 * Cos(_Radian(4.0 * $aHP - 63.0))
+$dRO = 30. * Exp(-1.0 *((($aHP - 275.0) / 25.0) ^ 2.0))
+$rC = Sqrt(($aCP ^ 7.0) /(($aCP ^ 7.0) +(25.0 ^ 7.0)))
+$sL = 1.0 +((0.015 *(($aL - 50.0) ^ 2.0)) / Sqrt(20.0 +(($aL - 50.0) ^ 2.0)))
+$sC = 1.0 + 0.045 * $aCP
+$sH = 1.0 + 0.015 * $aCP * $T
+$rT = -2.0 * $rC * Sin(_Radian(2.0 * $dRO))
+Return Sqrt((($dLP /($sL * $kL)) ^ 2.0) +(($dCP /($sC * $kC)) ^ 2.0) +(($dhP /($sH * $kH)) ^ 2.0) + $rT *($dCP /($sC * $kC)) *($dhP /($sH * $kH)))
+EndFunc
+Func hpf($x, $y)
+Static $tmphp
+If $x = 0 And $y = 0 Then
+Return 0
+Else
+$tmphp = _Degree((2 * ATan($y /($x + Sqrt($x * $x + $y * $y)))))
+EndIf
+If $tmphp >= 0 Then
+Return $tmphp
+Else
+Return $tmphp + 360.0
+EndIf
+Return Null
+EndFunc
+Func dhpf($c1, $c2, $h1p, $h2p)
+If $c1 * $c2 = 0 Then
+Return 0
+ElseIf Abs($h2p - $h1p) <= 180 Then
+Return $h2p - $h1p
+ElseIf $h2p - $h1p > 180 Then
+Return($h2p - $h1p) - 360.0
+ElseIf $h2p - $h1p < 180 Then
+Return($h2p - $h1p) + 360.0
+EndIf
+Return Null
+EndFunc
+Func ahpf($c1, $c2, $h1p, $h2p)
+If $c1 * $c2 = 0 Then
+Return $h1p + $h2p
+ElseIf Abs($h1p - $h2p) <= 180 Then
+Return($h1p + $h2p) / 2.0
+ElseIf Abs($h1p - $h2p) > 180 And $h1p + $h2p < 360 Then
+Return($h1p + $h2p + 360.0) / 2.0
+ElseIf Abs($h1p - $h2p) > 180 And $h1p + $h2p >= 360 Then
+Return($h1p + $h2p - 360.0) / 2.0
+EndIf
+Return Null
+EndFunc
 Func _ImageSearchXML($sDirectory, $iQuantity2Match = 0, $saiArea2SearchOri = "0,0,860,732", $bForceCapture = True, $bDebugLog = False, $bCheckDuplicatedpoints = False, $iDistance2check = 25, $iLevel = 0)
 FuncEnter(_ImageSearchXML)
 $g_aImageSearchXML = -1
@@ -81637,8 +81819,8 @@ ClickP($Point2Deploy, $iQtyToDrop, 0)
 If IsArray($g_aMachineBB) And($sTroopName = "Machine") And($g_aMachineBB[2] = False) Then
 $g_aMachineBB[2] = True
 If($g_aMachineBB[0] <> -1) Then
-If _Sleep(500) Then Return
-$g_aMachineBB[2] = _Wait4PixelGone($g_aMachineBB[0], 635, Hex(0xFFFFFF, 6), 30, 100, 25, False)
+If _Sleep(1000) Then Return
+$g_aMachineBB[2] = Not _ColorCheckCie2000(_GetPixelColor($g_aMachineBB[0], 635, True), Hex(0xFFFFFF, 6), 5)
 SetLog("- BB Machine is ok? " & $g_aMachineBB[2], $COLOR_INFO)
 EndIf
 EndIf
@@ -81686,7 +81868,7 @@ $hPixel = _GetPixelColor(Int($g_aMachineBB[0]), 721, True)
 If $bTest Or $g_bDebugSetlog Then Setlog($hPixel & " ability", $COLOR_INFO)
 If $bBBIsFirst And($g_aMachineBB[0] <> -1) Then
 If $bTest Or $g_bDebugSetlog Then Setlog(_ArrayToString($g_aMachineBB), $COLOR_INFO)
-If _ColorCheck($hPixel, Hex(0x472CC5, 6), 40) Then
+If _ColorCheckCie2000($hPixel, Hex(0x472CC5, 6), 5) Then
 Click(Int($g_aMachineBB[0] + Random(5, 15, 1)), Int($g_aMachineBB[1] + Random(5, 15, 1)), Random(1, 3, 1), 100)
 SetLog("- BB Machine : Activated Ability for the first time.", $COLOR_ACTION)
 $bBBIsFirst = False
@@ -81699,7 +81881,7 @@ If $g_aMachineBB[3] Then SetLog("- BB Machine : Skill not present.", $COLOR_INFO
 Return False
 EndIf
 EndIf
-If _ColorCheck($hPixel, Hex(0x432CCE, 6), 20) Then
+If _ColorCheckCie2000($hPixel, Hex(0x432CCE, 6), 8) Then
 Click(Int($g_aMachineBB[0] + Random(5, 15, 1)), Int($g_aMachineBB[1] + Random(5, 15, 1)), Random(1, 3, 1), 100)
 SetLog("- BB Machine : Activated Ability.", $COLOR_ACTION)
 $g_iBBMachAbilityLastActivatedTime = __TimerInit()
@@ -82417,12 +82599,13 @@ EndIf
 Next
 Return $aResults
 EndFunc
-Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
+Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops, $bForceFix = False)
 If Not $g_bRunState Then Return
 Local $bIsCampCSV = False
 Local $aLines[0]
 Select
-Case($g_iCmbBBAttack = $g_eBBAttackCSV And not $g_bChkBBGetFromArmy = True) Or($g_iCmbBBAttack = $g_eBBAttackSmart And $g_bChkBBGetFromCSV = True)
+Case($g_iCmbBBAttack = $g_eBBAttackCSV And Not $g_bChkBBGetFromArmy = True) Or($g_iCmbBBAttack = $g_eBBAttackSmart And $g_bChkBBGetFromCSV = True)
+If $bForceFix Then ContinueCase
 If Not $g_bChkBBCustomAttack Then
 $g_iBuilderBaseScript = 0
 Else
@@ -82462,7 +82645,7 @@ ExitLoop
 EndIf
 Next
 If $bIsCampCSV = False Then ContinueCase
-Case($g_iCmbBBAttack = $g_eBBAttackSmart And not $g_bChkBBGetFromCSV = True) Or($g_iCmbBBAttack = $g_eBBAttackCSV And $g_bChkBBGetFromArmy = True)
+Case($g_iCmbBBAttack = $g_eBBAttackSmart And Not $g_bChkBBGetFromCSV = True) Or($g_iCmbBBAttack = $g_eBBAttackCSV And $g_bChkBBGetFromArmy = True)
 Local $sName = "CAMP" & "|"
 For $iName = 0 To UBound($g_iCmbCampsBB) - 1
 $sName &= ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) <> "" ? ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) :("Barb")
@@ -82492,7 +82675,7 @@ For $i = 0 To UBound($aAvailableTroops) - 1
 If $aAvailableTroops[$i][0] <> "Machine" Then $iCampsQuantities += 1
 Next
 Setlog("Available " & $iCampsQuantities & " Camps.", $COLOR_INFO)
-Local $aCamps[0]
+Local $aCamps[0], $bOkCamps = True
 For $iLine = 0 To UBound($aLines) - 1
 If Not $g_bRunState Then Return
 Local $aSplitLine = StringSplit($aLines[$iLine], "|", $STR_NOCOUNT)
@@ -82502,14 +82685,24 @@ For $i = 1 To UBound($aSplitLine) - 1
 If $aSplitLine[$i] = "" Or StringIsSpace($aSplitLine[$i]) Then ExitLoop
 _ArrayAdd($aCamps, TranslateCsvTroopName(StringStripWS($aSplitLine[$i], $STR_STRIPALL)))
 Next
-If $iCampsQuantities = UBound($aCamps) Then
-If $g_bDebugSetlog Then Setlog("BuilderBaseSelectCorrectScript | " & _ArrayToString($aCamps, "-", -1, -1, "|", -1, -1), $COLOR_DEBUG)
+$bOkCamps = $iCampsQuantities = UBound($aCamps)
+If $bOkCamps Then
+If $g_bDebugSetlog Then Setlog(_ArrayToString($aCamps, "-", -1, -1, "|", -1, -1))
 ExitLoop
 EndIf
 EndIf
 Next
+If($bOkCamps) Then
+If($bForceFix = False) And Not(($g_iCmbBBAttack = $g_eBBAttackSmart And Not $g_bChkBBGetFromCSV = True) Or($g_iCmbBBAttack = $g_eBBAttackCSV And $g_bChkBBGetFromArmy = True)) Then
+SetLog("The CSV is not compatible with the number of camps, it will be selected from the GUI Army.", $COLOR_ERROR)
+Return BuilderBaseSelectCorrectScript($aAvailableTroops, True)
+ElseIf($bForceFix = True) Then
+SetLog("Corrects CSV or GUI Camps.", $COLOR_ERROR)
+Return
+EndIf
+EndIf
 If UBound($aCamps) = 0 Then
-SetLog("Your script does not seem to support such a small amount of camps.", $COLOR_ERROR)
+SetLog("BuilderBaseSelectCorrectScript 0x09 error.", $COLOR_ERROR)
 Return
 EndIf
 For $i = 0 To UBound($aCamps) - 1

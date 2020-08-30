@@ -13,6 +13,9 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func OpenArmyOverview($bCheckMain = True, $sWhereFrom = "Undefined")
+	
+	; Test clan chat - Custom - Team AIO Mod++
+	CloseClanChat()
 
 	If $bCheckMain Then
 		If Not IsMainPage() Then ; check for main page, avoid random troop drop
@@ -21,22 +24,21 @@ Func OpenArmyOverview($bCheckMain = True, $sWhereFrom = "Undefined")
 			Return False
 		EndIf
 	EndIf
-
+	
 	#Region - Custom - Team AIO Mod++
-	For $i = 0 To 3 ;loop in case Random click fails.
-		If WaitforPixel(23, 505 + $g_iBottomOffsetY, 53, 507 + $g_iBottomOffsetY, Hex(0xEEB344, 6), 5, 10) Then
-			If $g_bDebugSetlogTrain Then SetLog("Click $aArmyTrainButton" & " (Called from " & $sWhereFrom & ")", $COLOR_SUCCESS)
-			If Not $g_bUseRandomClick Then
-				ClickP($aArmyTrainButton, 1, 0, "#0293") ; Button Army Overview
-			Else
-				ClickR($aArmyTrainButtonRND, $aArmyTrainButton[0], $aArmyTrainButton[1], 1, 0)
-			EndIf
+	If $g_bDebugSetlogTrain Then SetLog("Click $aArmyTrainButton" & " (Called from " & $sWhereFrom & ")", $COLOR_SUCCESS)
+	
+	If _Wait4Pixel(52, 565, 0xEEB344, 25, 2500, 50) Then
+		If Not $g_bUseRandomClick Then
+			ClickP($aArmyTrainButton, 1, 0, "#0293") ; Button Army Overview
+		Else
+			ClickR($aArmyTrainButtonRND, $aArmyTrainButton[0], $aArmyTrainButton[1], 1, 0)
 		EndIf
-		
-		If _Sleep($DELAYRUNBOT6) Then Return ; wait for window to open
-		If IsTrainPage() Then ExitLoop
-	Next
+	EndIf
 	#EndRegion - Custom - Team AIO Mod++
+
+	If _Sleep($DELAYRUNBOT6) Then Return ; wait for window to open
+	
 	If Not IsTrainPage() Then
 		SetError(1)
 		Return False ; exit if I'm not in train page
@@ -73,27 +75,34 @@ Func OpenTrainTab($sTab, $bSetLog = True, $sWhereFrom = "Undefined")
 		Return False
 	EndIf
 
+	#Region - Custom - Team AIO Mod++
+	If $bSetLog Or $g_bDebugSetlogTrain Then SetLog("Open " & $sTab & ($g_bDebugSetlogTrain ? " (Called from " & $sWhereFrom & ")" : ""), $COLOR_INFO)
+
+	Local $i = 0
 	Local $aTabButton = findButton(StringStripWS($sTab, 8), Default, 1, True)
 	If IsArray($aTabButton) And UBound($aTabButton, 1) = 2 Then
 		$aIsTabOpen[0] = $aTabButton[0]
-		If Not _CheckPixel($aIsTabOpen, True) Then
-			If $bSetLog Or $g_bDebugSetlogTrain Then SetLog("Open " & $sTab & ($g_bDebugSetlogTrain ? " (Called from " & $sWhereFrom & ")" : ""), $COLOR_INFO)
-			For $i = 0 To 3 ;in case click fails.
+		Do
+			$i += 1
+			If _Wait4PixelGone($aIsTabOpen[0], $aIsTabOpen[1], $aIsTabOpen[2], $aIsTabOpen[3], 100, 25) Then
 				ClickP($aTabButton)
-				If _WaitForCheckPixel($aIsTabOpen, True) Then ExitLoop
-				If _Sleep(250) Then Return
-			Next
-			If Not _WaitForCheckPixel($aIsTabOpen, True) Then
-				SetLog("Error in OpenTrainTab: Cannot open " & $sTab & ". Pixel to check did not appear", $COLOR_ERROR)
-				SetError(1)
-				Return False
+				Else
+				ExitLoop
 			EndIf
+			If ($i > 3) Then ExitLoop
+		Until _Wait4Pixel($aIsTabOpen[0], $aIsTabOpen[1], $aIsTabOpen[2], $aIsTabOpen[3], 1000, 50)
+		
+		If ($i > 3) Then
+			SetLog("Error in OpenTrainTab: Cannot open " & $sTab & ". Pixel to check did not appear", $COLOR_ERROR)
+			SetError(1)
+			Return False
 		EndIf
 	Else
 		SetDebugLog("Error in OpenTrainTab: $aTabButton is no valid Array", $COLOR_ERROR)
 		SetError(1)
 		Return False
 	EndIf
+	#EndRegion - Custom - Team AIO Mod++
 
 	If _Sleep(200) Then Return
 	Return True

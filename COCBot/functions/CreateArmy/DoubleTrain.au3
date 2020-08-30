@@ -47,10 +47,10 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 	; Troop
 	If Not OpenTroopsTab(False, "DoubleTrain()") Then Return
 	If _Sleep(250) Then Return
-
+	
 	Local $Step = 1
 	While 1
-		Local $TroopCamp = GetCurrentArmy(48, 160)
+		Local $TroopCamp = GetCurrentArmy(48, 160, "DoubleTrain Troops")
 		SetLog("Checking Troop tab: " & $TroopCamp[0] & "/" & $TroopCamp[1] * 2)
 		If $TroopCamp[1] = 0 Then ExitLoop
 		If $TroopCamp[1] <> $g_iTotalCampSpace Then _
@@ -96,7 +96,7 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 		If _Sleep(250) Then Return
 		$Step = 1
 		While 1
-			Local $SpellCamp = GetCurrentArmy(43, 160)
+			Local $SpellCamp = GetCurrentArmy(43, 160, "DoubleTrain Spells")
 			SetLog("Checking Spell tab: " & $SpellCamp[0] & "/" & $SpellCamp[1] * 2)
 
 			If $SpellCamp[1] > $TotalSpell Then
@@ -179,7 +179,7 @@ Func TrainFullTroop($bQueue = False)
 	TrainUsingWhatToTrain($ToReturn, $bQueue)
 	If _Sleep(500) Then Return
 
-	Local $CampOCR = GetCurrentArmy(48, 160)
+	Local $CampOCR = GetCurrentArmy(48, 160, "TrainFullTroop army")
 	SetDebugLog("Checking troop tab: " & $CampOCR[0] & "/" & $CampOCR[1] * 2)
 EndFunc   ;==>TrainFullTroop
 
@@ -201,7 +201,7 @@ Func BrewFullSpell($bQueue = False)
 	BrewUsingWhatToTrain($ToReturn, $bQueue)
 	If _Sleep(750) Then Return
 
-	Local $CampOCR = GetCurrentArmy(43, 160)
+	Local $CampOCR = GetCurrentArmy(43, 160, "BrewFullSpell army")
 	SetDebugLog("Checking spell tab: " & $CampOCR[0] & "/" & $CampOCR[1] * 2)
 EndFunc   ;==>BrewFullSpell
 
@@ -232,7 +232,7 @@ Func TopUpUnbalancedSpell($iUnbalancedSpell = 0)
 
 EndFunc   ;==>IsBrewOnlyOneType
 
-Func GetCurrentArmy($x_start, $y_start)
+Func GetCurrentArmy($x_start, $y_start, $sCalledFrom = "")
 
 	Local $aResult[3] = [0, 0, 0]
 	If Not $g_bRunState Then Return $aResult
@@ -246,7 +246,7 @@ Func GetCurrentArmy($x_start, $y_start)
 		$aResult[1] = Number($aTempResult[1]) / 2
 		$aResult[2] = $aResult[1] - $aResult[0]
 	Else
-		SetLog("DEBUG | ERROR on GetCurrentArmy", $COLOR_ERROR)
+		SetLog("DEBUG | ERROR on GetCurrentArmy " & $sCalledFrom, $COLOR_ERROR)
 	EndIf
 
 	Return $aResult
@@ -301,7 +301,7 @@ Func CheckQueueTroopAndTrainRemain($ArmyCamp, $bDebug)
 		TrainUsingWhatToTrain($rWTT, True)
 
 		If _Sleep(1000) Then Return
-		$ArmyCamp = GetCurrentArmy(48, 160)
+		$ArmyCamp = GetCurrentArmy(48, 160, "CheckQueueTroopAndTrainRemain army")
 		SetLog("Checking troop tab: " & $ArmyCamp[0] & "/" & $ArmyCamp[1] * 2 & ($ArmyCamp[0] < $ArmyCamp[1] * 2 ? ". Top-up queue failed!" : ""))
 		If $ArmyCamp[0] < $ArmyCamp[1] * 2 Then Return False
 	EndIf
@@ -361,7 +361,7 @@ Func CheckQueueSpellAndTrainRemain($ArmyCamp, $bDebug, $iUnbalancedSpell = 0)
 		BrewUsingWhatToTrain($rWTT, True)
 
 		If _Sleep(1000) Then Return
-		Local $NewSpellCamp = GetCurrentArmy(43, 160)
+		Local $NewSpellCamp = GetCurrentArmy(43, 160, "CheckQueueSpellAndTrainRemain brew")
 		SetLog("Checking spell tab: " & $NewSpellCamp[0] & "/" & $NewSpellCamp[1] * 2 & ($NewSpellCamp[0] < $ArmyCamp[1] * 2 ? ". Top-up queue failed!" : ""))
 		If $NewSpellCamp[0] < $ArmyCamp[1] * 2 Then Return False
 	EndIf

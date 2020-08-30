@@ -636,8 +636,8 @@ Func DeployTroopBB($sTroopName, $aSlot_XY, $Point2Deploy, $iQtyToDrop)
 		
 		; It look for the white border in case it failed to launch.
 		If ($g_aMachineBB[0] <> -1) Then
-			If _Sleep(500) Then Return
-			$g_aMachineBB[2] = _Wait4PixelGone($g_aMachineBB[0], 635, Hex(0xFFFFFF, 6), 30, 100, 25, False)
+			If _Sleep(1000) Then Return
+			$g_aMachineBB[2] = Not _ColorCheckCie2000(_GetPixelColor($g_aMachineBB[0], 635, True), Hex(0xFFFFFF, 6), 5)
 			SetLog("- BB Machine is ok? " & $g_aMachineBB[2], $COLOR_INFO)
 		EndIf
 	EndIf
@@ -700,7 +700,7 @@ Func TriggerMachineAbility($bBBIsFirst = -1, $ix = -1, $iy = -1, $bTest = False)
 
 	If $bBBIsFirst And ($g_aMachineBB[0] <> -1) Then
 		If $bTest Or $g_bDebugSetlog Then Setlog(_ArrayToString($g_aMachineBB), $COLOR_INFO)
-		If _ColorCheck($hPixel, Hex(0x472CC5, 6), 40) Then
+		If _ColorCheckCie2000($hPixel, Hex(0x472CC5, 6), 5) Then
 			Click(Int($g_aMachineBB[0] + Random(5, 15, 1)), Int($g_aMachineBB[1] + Random(5, 15, 1)), Random(1, 3, 1), 100)
 			SetLog("- BB Machine : Activated Ability for the first time.", $COLOR_ACTION)
 			$bBBIsFirst = False
@@ -713,8 +713,7 @@ Func TriggerMachineAbility($bBBIsFirst = -1, $ix = -1, $iy = -1, $bTest = False)
 			Return False
 		EndIf
 	EndIf
-	
-	If _ColorCheck($hPixel, Hex(0x432CCE, 6), 20) Then
+	If _ColorCheckCie2000($hPixel, Hex(0x432CCE, 6), 8) Then
 		Click(Int($g_aMachineBB[0] + Random(5, 15, 1)), Int($g_aMachineBB[1] + Random(5, 15, 1)), Random(1, 3, 1), 100)
 		SetLog("- BB Machine : Activated Ability.", $COLOR_ACTION)
 		$g_iBBMachAbilityLastActivatedTime = __TimerInit()

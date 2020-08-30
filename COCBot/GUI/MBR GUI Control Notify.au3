@@ -26,6 +26,8 @@ Func cmbNotifyMode()
 			GUICtrlSetState($g_hChkNotifyRemote, $GUI_SHOW)
 			GUICtrlSetState($g_ahIcnNotifyMode[1], $GUI_HIDE)
 			GUICtrlSetState($g_ahIcnNotifyMode[0], $GUI_SHOW)
+			GUICtrlSetState($g_hChkNotifyTGEnable, $GUI_SHOW)
+			GUICtrlSetState($g_hChkNotifyDSEnable, $GUI_HIDE)
 		Case 1 ; Discord.
 			; $g_hLblNotifyDSToken, $g_hTxtNotifyDSToken
 			GUICtrlSetState($g_hLblNotifyDSToken, $GUI_SHOW)
@@ -35,12 +37,13 @@ Func cmbNotifyMode()
 			GUICtrlSetState($g_hChkNotifyRemote, $GUI_HIDE)
 			GUICtrlSetState($g_ahIcnNotifyMode[0], $GUI_HIDE)
 			GUICtrlSetState($g_ahIcnNotifyMode[1], $GUI_SHOW)
+			GUICtrlSetState($g_hChkNotifyDSEnable, $GUI_SHOW)
+			GUICtrlSetState($g_hChkNotifyTGEnable, $GUI_HIDE)
 
 	EndSwitch
 EndFunc   ;==>cmbNotifyMode
 
 Func chkPBTGenabled()
-
 	If GUICtrlRead($g_hChkNotifyTGEnable) = $GUI_CHECKED Then
 		$g_bNotifyTGEnable = True
 		GUICtrlSetState($g_hTxtNotifyTGToken, $GUI_ENABLE)
@@ -48,7 +51,7 @@ Func chkPBTGenabled()
 		$g_bNotifyTGEnable = False
 		GUICtrlSetState($g_hTxtNotifyTGToken, $GUI_DISABLE)
 	EndIf
-
+	
 	If GUICtrlRead($g_hChkNotifyDSEnable) = $GUI_CHECKED Then
 		$g_bNotifyDSEnable = True
 		GUICtrlSetState($g_hTxtNotifyDSToken, $GUI_ENABLE)
