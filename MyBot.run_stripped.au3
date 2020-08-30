@@ -7861,6 +7861,10 @@ Global Const $g_sLibBBIconPath = $g_sLibPath & "\ModLibs\BuilderBase.dll"
 Global Enum $eIcnBB = 1 , $eIcnLabBB, $eIcnBBElixir, $eIcnBBGold, $eIcnBBTrophies, $eIcnMachine, $eIcnBBWallInfo, $eIcnBBWallL1, $eIcnBBWallL2, $eIcnBBWallL3, $eIcnBBWallL4, $eIcnBBWallL5, $eIcnBBWallL6, $eIcnBBWallL7, $eIcnBBWallL8, $eIcnBBWallL9
 Global $g_sTxtNotifyDSToken, $g_bNotifyDSEnable, $g_hChkNotifyDSEnable, $g_hLblNotifyTGToken, $g_hLblNotifyDSToken, $g_hTxtNotifyDSToken, $g_sNotifyDSToken, $g_hCmbNotifyMode, $g_iNotifyMode, $g_ahIcnNotifyMode[2]
 Global $g_hChkBotLogLineLimit, $g_bChkBotLogLineLimit, $g_hTxtLogLineLimit, $g_iTxtLogLineLimit
+Global $g_hChkRequestOneTimeEnable
+Global $g_bRequestOneTimeEnable = False
+Global $g_aRequestTroopsTextOT[0][2]
+Global $g_aRequestTroopsTextOTR[0][2]
 Global $g_sFMQTag = ""
 Global $g_bExecuteCapture = False
 Global $g_aPosSizeVillage = 0
@@ -10483,6 +10487,7 @@ EndFunc
 Func ResetAndroidProcess()
 $g_iAndroidCoCPid = 0
 $g_bMainWindowOk = False
+$g_aRequestTroopsTextOT = $g_aRequestTroopsTextOTR
 EndFunc
 Func CloseAndroid($sSource)
 FuncEnter(CloseAndroid)
@@ -14181,6 +14186,7 @@ GUICtrlSetOnEvent(-1, "chkRequestCCHours")
 $g_hTxtRequestCC = GUICtrlCreateInput(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "TxtRequestCC", "Anything please"), $x + 40 + 30, $y + 15, 214, 20, BitOR($SS_CENTER, $ES_AUTOHSCROLL))
 GUICtrlSetState(-1, $GUI_DISABLE)
 _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "TxtRequestCC_Info_01", "This text is used on your request for troops in the Clan chat."))
+$g_hChkRequestOneTimeEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "ChkRequestOneTimeEnable", "Don't always write the same thing."), $x + 40 + 30, $y + 35)
 $y += 23
 $g_hChkReqCCAlways = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "ChkReqCCAlways", "Request always"), $x + 295, $y - 27)
 _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "ChkReqCCAlways_Info", "Request troops on loop."))
@@ -67999,7 +68005,7 @@ Func PureClickR($boundingBox, $x, $y, $times = 1, $speed = 0, $OutScreen =(680 +
 Local $AncVal = " ValIn: X=" & $x & " Y=" & $y
 Local $bRandomStatus = $g_bUseRandomClick, $bReturn, $aBoxCenter[2]
 $g_bUseRandomClick = False
-Local $aXY[2]
+Local $aXY[2] = [$x,$y]
 If $times <> 1 Then
 For $i = 0 To($times - 1)
 $aXY[0] = Random($boundingBox[0], $boundingBox[2], 1)
@@ -75975,13 +75981,32 @@ Return False
 EndIf
 If $g_bDebugSetlog Then SetDebugLog("SearchPixelDonate FixedMatrixSend " & _ArrayToString($aClickSend))
 If Not StringIsSpace($g_sRequestTroopsText) Then
-If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
+Local $bCanReq = True, $bAddNew = True
+If $g_bRequestOneTimeEnable Then
+For $i = 0 To UBound($g_aRequestTroopsTextOT) -1
+If $g_aRequestTroopsTextOT[$i][0] = $g_sProfileCurrentName Then
+$bAddNew = False
+If $g_aRequestTroopsTextOT[$i][1] = $g_sRequestTroopsText Then
+$bCanReq = False
+ElseIf $g_aRequestTroopsTextOT[$i][1] <> $g_sRequestTroopsText Then
+$g_aRequestTroopsTextOT[$i][1] = $g_sRequestTroopsText
+EndIf
+ExitLoop
+EndIf
+Next
+If $bAddNew = True Then
+Local $aMatrixText[1][2] = [[$g_sProfileCurrentName, $g_sRequestTroopsText]]
+_ArrayAdd($g_aRequestTroopsTextOT, $aMatrixText)
+EndIf
+EndIf
+If $bCanReq = True Then
 AndroidSendText($g_sRequestTroopsText, True)
 Click($aClickText[0], $aClickText[1], 1, 0, "#0254")
 If _Sleep($DELAYMAKEREQUEST2) Then Return
 If SendText($g_sRequestTroopsText) = 0 Then
 SetLog(" Request text entry failed, try again", $COLOR_ERROR)
 Return
+EndIf
 EndIf
 EndIf
 If _Sleep($DELAYMAKEREQUEST2) Then Return
@@ -76234,7 +76259,7 @@ $aL =($laB1[0] + $laB2[0]) / 2.0
 $aCP =($c1P + $c2P) / 2.0
 $aHP = ahpf($c1, $c2, $h1p, $h2p)
 $T = 1.0 - 0.17 * Cos(_Radian($aHP - 39)) + 0.24 * Cos(_Radian(2.0 * $aHP)) + 0.32 * Cos(_Radian(3.0 * $aHP + 6.0)) - 0.2 * Cos(_Radian(4.0 * $aHP - 63.0))
-$dRO = 30. * Exp(-1.0 *((($aHP - 275.0) / 25.0) ^ 2.0))
+$dRO = 30.0 * Exp(-1.0 *((($aHP - 275.0) / 25.0) ^ 2.0))
 $rC = Sqrt(($aCP ^ 7.0) /(($aCP ^ 7.0) +(25.0 ^ 7.0)))
 $sL = 1.0 +((0.015 *(($aL - 50.0) ^ 2.0)) / Sqrt(20.0 +(($aL - 50.0) ^ 2.0)))
 $sC = 1.0 + 0.045 * $aCP
@@ -83174,6 +83199,7 @@ _Ini_Add("war preparation", "RequestCC War", $g_bRequestCCForWar ? 1 : 0)
 _Ini_Add("war preparation", "RequestCC War Text", $g_sTxtRequestCCForWar)
 _Ini_Add("ReqCCOptions", "ReqCCAlways", $g_bChkReqCCAlways)
 _Ini_Add("ReqCCOptions", "ReqCCFromChat", $g_bChkReqCCFromChat)
+_Ini_Add("ReqCCOptions", "RequestOneTime", $g_bRequestOneTimeEnable)
 _Ini_Add("DonRecords", "DayLimitTroops", $g_iDayLimitTroops)
 _Ini_Add("DonRecords", "DayLimitSpells", $g_iDayLimitSpells)
 _Ini_Add("DonRecords", "DayLimitSieges", $g_iDayLimitSieges)
@@ -83404,6 +83430,7 @@ IniReadS($g_bRequestCCForWar, $g_sProfileConfigPath, "war preparation", "Request
 $g_sTxtRequestCCForWar = IniRead($g_sProfileConfigPath, "war preparation", "RequestCC War Text", "War troop please")
 IniReadS($g_bChkReqCCAlways, $g_sProfileConfigPath, "ReqCCOptions", "ReqCCAlways", $g_bChkReqCCAlways, "Bool")
 IniReadS($g_bChkReqCCFromChat, $g_sProfileConfigPath, "ReqCCOptions", "ReqCCFromChat", $g_bChkReqCCFromChat, "Bool")
+IniReadS($g_bRequestOneTimeEnable, $g_sProfileConfigPath, "ReqCCOptions", "RequestOneTime", $g_bRequestOneTimeEnable, "Bool")
 IniReadS($g_iDayLimitTroops, $g_sProfileConfigPath, "DonRecords", "DayLimitTroops", $g_iDayLimitTroops, "Int")
 IniReadS($g_iDayLimitSpells, $g_sProfileConfigPath, "DonRecords", "DayLimitSpells", $g_iDayLimitSpells, "Int")
 IniReadS($g_iDayLimitSieges, $g_sProfileConfigPath, "DonRecords", "DayLimitSieges", $g_iDayLimitSieges, "Int")
@@ -83684,6 +83711,7 @@ GUICtrlSetState($g_hChkRequestCCForWar, $g_bRequestCCForWar ? $GUI_CHECKED : $GU
 GUICtrlSetData($g_hTxtRequestCCForWar, $g_sTxtRequestCCForWar)
 GUICtrlSetState($g_hChkReqCCAlways, $g_bChkReqCCAlways ? $GUI_CHECKED : $GUI_UNCHECKED)
 GUICtrlSetState($g_hChkReqCCFromChat, $g_bChkReqCCFromChat ? $GUI_CHECKED : $GUI_UNCHECKED)
+GUICtrlSetState($g_hChkRequestOneTimeEnable, $g_bRequestOneTimeEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
 GUICtrlSetData($g_hDayLimitTroops, _NumberFormat($g_iDayLimitTroops, True))
 GUICtrlSetData($g_hDayLimitSpells, _NumberFormat($g_iDayLimitSpells, True))
 GUICtrlSetData($g_hDayLimitSieges, _NumberFormat($g_iDayLimitSieges, True))
@@ -83752,6 +83780,7 @@ $g_bRequestCCForWar = GUICtrlRead($g_hChkRequestCCForWar) = $GUI_CHECKED
 $g_sTxtRequestCCForWar = GUICtrlRead($g_hTxtRequestCCForWar)
 $g_bChkReqCCAlways = GUICtrlRead($g_hChkReqCCAlways) = $GUI_CHECKED
 $g_bChkReqCCFromChat = GUICtrlRead($g_hChkReqCCFromChat) = $GUI_CHECKED
+$g_bRequestOneTimeEnable = GUICtrlRead($g_hChkRequestOneTimeEnable) = $GUI_CHECKED
 $g_iDayLimitTroops = GUICtrlRead($g_hDayLimitTroops)
 $g_iDayLimitSpells = GUICtrlRead($g_hDayLimitSpells)
 $g_iDayLimitSieges = GUICtrlRead($g_hDayLimitSieges)

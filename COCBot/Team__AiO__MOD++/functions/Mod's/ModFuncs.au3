@@ -166,23 +166,35 @@ Func _makerequestCustom($aButtonPosition = -1)
 	
 	If $g_bDebugSetlog Then SetDebugLog("SearchPixelDonate FixedMatrixSend " & _ArrayToString($aClickSend))
 	
-	; 	X[$g_sProfileCurrentName|$g_sRequestTroopsText]
-	;	Static $aRequestTroopsText[0][2]
 	If Not StringIsSpace($g_sRequestTroopsText) Then
-		#cs - Prerelease
-		Local $iUbi = __ArraySearch($aRequestTroopsText, $g_sRequestTroopsText)
-		Local $bCanReq = True
-		If $iUbi = -1 Then
-			$bCanReq = True
-			Local $aMatrixText[1][2] = [[$g_sProfileCurrentName, $g_sRequestTroopsText]]
-			_ArrayAdd($aRequestTroopsText, $aMatrixText)
-		ElseIf $aRequestTroopsText[$iUbi][1] <> $g_sRequestTroopsText Then
-			$bCanReq = True
-			$aRequestTroopsText[$iUbi][1] = $g_sRequestTroopsText
+		
+		#Region - Type once - Team AIO Mod++
+		; 	X[$g_sProfileCurrentName|$g_sRequestTroopsText]
+		Local $bCanReq = True, $bAddNew = True
+		
+		If $g_bRequestOneTimeEnable Then
+			For $i = 0 To UBound($g_aRequestTroopsTextOT) -1
+				If $g_aRequestTroopsTextOT[$i][0] = $g_sProfileCurrentName Then
+					$bAddNew = False
+					
+					If $g_aRequestTroopsTextOT[$i][1] = $g_sRequestTroopsText Then
+						$bCanReq = False
+					ElseIf $g_aRequestTroopsTextOT[$i][1] <> $g_sRequestTroopsText Then
+						$g_aRequestTroopsTextOT[$i][1] = $g_sRequestTroopsText
+					EndIf
+					
+					ExitLoop
+				EndIf
+			Next
+			
+			If $bAddNew = True Then
+				Local $aMatrixText[1][2] = [[$g_sProfileCurrentName, $g_sRequestTroopsText]]
+				_ArrayAdd($g_aRequestTroopsTextOT, $aMatrixText)
+			EndIf
 		EndIf
-		#ce - Prerelease
-		;If $bCanReq Then ;Prerelease
-			If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
+		
+		If $bCanReq = True Then
+			; If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
 			; fix for Android send text bug sending symbols like ``"
 			AndroidSendText($g_sRequestTroopsText, True)
 			Click($aClickText[0], $aClickText[1], 1, 0, "#0254") ;Select text for request
@@ -191,7 +203,8 @@ Func _makerequestCustom($aButtonPosition = -1)
 				SetLog(" Request text entry failed, try again", $COLOR_ERROR)
 				Return
 			EndIf
-		;EndIf ;Prerelease
+		EndIf
+		#EndRegion - Type once - Team AIO Mod++
 	EndIf
 	
 	If _Sleep($DELAYMAKEREQUEST2) Then Return ; wait time for text request to complete

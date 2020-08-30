@@ -113,9 +113,10 @@ Func SaveConfig_MOD_MiscTab()
 	_Ini_Add("war preparation", "RequestCC War", $g_bRequestCCForWar ? 1 : 0)
 	_Ini_Add("war preparation", "RequestCC War Text", $g_sTxtRequestCCForWar)
 
-	; Request form chat / on a loop.
+	; Request form chat / on a loop / Type once - Team AIO Mod++
 	_Ini_Add("ReqCCOptions", "ReqCCAlways", $g_bChkReqCCAlways)
 	_Ini_Add("ReqCCOptions", "ReqCCFromChat", $g_bChkReqCCFromChat)
+	_Ini_Add("ReqCCOptions", "RequestOneTime", $g_bRequestOneTimeEnable)
 
 	; Donation records.
 	_Ini_Add("DonRecords", "DayLimitTroops", $g_iDayLimitTroops)

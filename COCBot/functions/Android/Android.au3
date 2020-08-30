@@ -1275,6 +1275,9 @@ EndFunc   ;==>_RestartAndroidCoC
 Func ResetAndroidProcess()
 	$g_iAndroidCoCPid = 0
 	$g_bMainWindowOk = False
+	
+	; Type once - Team AIO Mod++
+	$g_aRequestTroopsTextOT = $g_aRequestTroopsTextOTR
 EndFunc   ;==>ResetAndroidProcess
 
 Func CloseAndroid($sSource)

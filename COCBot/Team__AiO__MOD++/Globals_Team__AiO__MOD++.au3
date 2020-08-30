@@ -38,6 +38,13 @@ Global $g_hChkBotLogLineLimit, $g_bChkBotLogLineLimit, _
 $g_hTxtLogLineLimit, $g_iTxtLogLineLimit
 #EndRegion - Setlog limit - Team AIO Mod++
 
+#Region - Type once - Team AIO Mod++
+Global $g_hChkRequestOneTimeEnable
+Global $g_bRequestOneTimeEnable = False
+Global $g_aRequestTroopsTextOT[0][2]
+Global $g_aRequestTroopsTextOTR[0][2]
+#EndRegion - Type once - Team AIO Mod++
+
 ; Debug tag for some capture modes.
 Global $g_sFMQTag = "" ; For debug folder.
 

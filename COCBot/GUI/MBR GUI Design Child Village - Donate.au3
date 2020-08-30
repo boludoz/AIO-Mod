@@ -122,6 +122,10 @@ Func CreateRequestSubTab()
 		$g_hTxtRequestCC = GUICtrlCreateInput(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "TxtRequestCC", "Anything please"), $x + 40 + 30, $y + 15, 214, 20, BitOR($SS_CENTER, $ES_AUTOHSCROLL))
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "TxtRequestCC_Info_01", "This text is used on your request for troops in the Clan chat."))
+     #Region - Type once - Team AIO Mod++
+		$g_hChkRequestOneTimeEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "ChkRequestOneTimeEnable", "Don't always write the same thing."), $x + 40 + 30, $y + 35)
+
+	 #EndRegion - Type once - Team AIO Mod++
 
      #Region - Request form chat / on a loop - Team AIO Mod++
 	 $y += 23

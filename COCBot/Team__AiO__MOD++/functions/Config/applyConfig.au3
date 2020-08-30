@@ -160,10 +160,11 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			GUICtrlSetState($g_hChkRequestCCForWar, $g_bRequestCCForWar ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hTxtRequestCCForWar, $g_sTxtRequestCCForWar)
 
-			; Request form chat / on a loop.
+			; Request form chat / on a loop / Type once - Team AIO Mod++
 			GUICtrlSetState($g_hChkReqCCAlways, $g_bChkReqCCAlways ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkReqCCFromChat, $g_bChkReqCCFromChat ? $GUI_CHECKED : $GUI_UNCHECKED)
-			
+			GUICtrlSetState($g_hChkRequestOneTimeEnable, $g_bRequestOneTimeEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
+
 			; Donation records.
 			GUICtrlSetData($g_hDayLimitTroops, _NumberFormat($g_iDayLimitTroops, True))
 			GUICtrlSetData($g_hDayLimitSpells, _NumberFormat($g_iDayLimitSpells, True))
@@ -260,10 +261,11 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			$g_bRequestCCForWar = GUICtrlRead($g_hChkRequestCCForWar) = $GUI_CHECKED
 			$g_sTxtRequestCCForWar = GUICtrlRead($g_hTxtRequestCCForWar)
 
-			; Request form chat / on a loop.
+			; Request form chat / on a loop / Type once - Team AIO Mod++
 			$g_bChkReqCCAlways = GUICtrlRead($g_hChkReqCCAlways) = $GUI_CHECKED
 			$g_bChkReqCCFromChat = GUICtrlRead($g_hChkReqCCFromChat) = $GUI_CHECKED
-			
+			$g_bRequestOneTimeEnable = GUICtrlRead($g_hChkRequestOneTimeEnable) = $GUI_CHECKED
+
 			; Donation records.
 			$g_iDayLimitTroops = GUICtrlRead($g_hDayLimitTroops)
 			$g_iDayLimitSpells = GUICtrlRead($g_hDayLimitSpells)
