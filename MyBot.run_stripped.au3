@@ -67982,61 +67982,90 @@ EndFunc
 Func ClickR($boundingBox, $x, $y, $times = 1, $speed = 0, $OutScreen =(680 + $g_iBottomOffsetY), $scale = 3, $density = 1, $centerX = 0, $centerY = 0)
 Local $AncVal = " ValIn: X=" & $x & " Y=" & $y
 Local $bRandomStatus = $g_bUseRandomClick, $bReturn, $aBoxCenter[2]
+Local $boxWidth = Abs($boundingBox[2] - $boundingBox[0])
+Local $boxHeight = Abs($boundingBox[3] - $boundingBox[1])
 $g_bUseRandomClick = False
-Local $aXY[2]
-If $times <> 1 Then
+Local $aXY[2] = [$x, $y]
+Local $iCenterX = $boxWidth / 2
+Local $iat, $irt
+$iat = random() * 2 * 3.14159265358
+$irt =($iCenterX / $scale) * sqrt(random())
+$aXY[0] = Round($boundingBox[0] +($iCenterX / $scale) * cos($iat))
+$aXY[1] = Round($boundingBox[1] +($iCenterX / $scale) * sin($irt))
+If $times > 1 Then
 For $i = 0 To($times - 1)
-$aXY[0] = Random($boundingBox[0], $boundingBox[2], 1)
-$aXY[1] = Random($boundingBox[1], $boundingBox[3], 1)
-If $g_bDebugClick Then SetLog("ClickR " & "X=" & $x & " Y=" & $y & " ,t" & $times & ",s" & $speed & $AncVal, $COLOR_ACTION)
+$iat = random() * 2 * 3.14159265358
+$irt =($iCenterX / $scale) * sqrt(random())
+$aXY[0] = Round($boundingBox[0] +($iCenterX / $scale) * cos($iat))
+$aXY[1] = Round($boundingBox[1] +($iCenterX / $scale) * sin($irt))
+If $g_bDebugClick Then SetLog("ClickR " & "X=" & $aXY[0] & " Y=" & $aXY[1] & " ,t" & $times & ",s" & $speed & $AncVal, $COLOR_ACTION)
 $bReturn = ClickP($aXY)
 If RandomSleep($speed, False) Then Return
 Next
 Else
-$aXY[0] = Random($boundingBox[0], $boundingBox[2], 1)
-$aXY[1] = Random($boundingBox[1], $boundingBox[3], 1)
-If $g_bDebugClick Then SetLog("ClickR " & "X=" & $x & " Y=" & $y & $AncVal, $COLOR_ACTION)
+If $g_bDebugClick Then SetLog("ClickR " & "X=" & $aXY[0] & " Y=" & $aXY[1] & " ,t" & $times & ",s" & $speed & $AncVal, $COLOR_ACTION)
 $bReturn = ClickP($aXY)
+If RandomSleep($speed, False) Then Return
 EndIf
 $g_bUseRandomClick = $bRandomStatus
 Return $bReturn
 EndFunc
-Func PureClickR($boundingBox, $x, $y, $times = 1, $speed = 0, $OutScreen =(680 + $g_iBottomOffsetY), $scale = 3, $density = 1, $centerX = 0, $centerY = 0)
+Func PureClickR($boundingBox, $x, $y, $times = 1, $speed = 0, $OutScreen =(680 + $g_iBottomOffsetY), $scale = 2, $density = 1, $centerX = 0, $centerY = 0)
 Local $AncVal = " ValIn: X=" & $x & " Y=" & $y
 Local $bRandomStatus = $g_bUseRandomClick, $bReturn, $aBoxCenter[2]
+Local $boxWidth = $boundingBox[2] - $boundingBox[0]
 $g_bUseRandomClick = False
-Local $aXY[2] = [$x,$y]
-If $times <> 1 Then
+Local $aXY[2] = [$x, $y]
+Local $iCenterX = $boxWidth / 2
+Local $iat, $irt
+$iat = random() * 2 * 3.14159265358
+$irt =($iCenterX / $scale) * sqrt(random())
+$aXY[0] = Round($boundingBox[0] +($iCenterX / $scale) * cos($iat))
+$aXY[1] = Round($boundingBox[1] +($iCenterX / $scale) * sin($irt))
+If $times > 1 Then
 For $i = 0 To($times - 1)
-$aXY[0] = Random($boundingBox[0], $boundingBox[2], 1)
-$aXY[1] = Random($boundingBox[1], $boundingBox[3], 1)
-If $g_bDebugClick Then SetLog("PureClickR " & "X=" & $x & " Y=" & $y & " ,t" & $times & ",s" & $speed & $AncVal, $COLOR_ACTION)
+$iat = random() * 2 * 3.14159265358
+$irt =($iCenterX / $scale) * sqrt(random())
+$aXY[0] = Round($boundingBox[0] +($iCenterX / $scale) * cos($iat))
+$aXY[1] = Round($boundingBox[1] +($iCenterX / $scale) * sin($irt))
+If $g_bDebugClick Then SetLog("PureClickR " & "X=" & $aXY[0] & " Y=" & $aXY[1] & " ,t" & $times & ",s" & $speed & $AncVal, $COLOR_ACTION)
 $bReturn = PureClickP($aXY)
 If RandomSleep($speed, False) Then Return
 Next
 Else
-If $g_bDebugClick Then SetLog("PureClickR " & "X=" & $x & " Y=" & $y & $AncVal, $COLOR_ACTION)
+If $g_bDebugClick Then SetLog("PureClickR " & "X=" & $aXY[0] & " Y=" & $aXY[1] & $AncVal, $COLOR_ACTION)
 $bReturn = PureClickP($aXY)
+If RandomSleep($speed, False) Then Return
 EndIf
 $g_bUseRandomClick = $bRandomStatus
 Return $bReturn
 EndFunc
-Func GemClickR($boundingBox,$x, $y, $times = 1, $speed = 0, $debugtxt = "", $OutScreen =(680 + $g_iBottomOffsetY), $scale = 3, $density = 1, $centerX = 0, $centerY = 0)
+Func GemClickR($boundingBox,$x, $y, $times = 1, $speed = 0, $debugtxt = "", $OutScreen =(680 + $g_iBottomOffsetY), $scale = 2, $density = 1, $centerX = 0, $centerY = 0)
 Local $AncVal = " ValIn: X=" & $x & " Y=" & $y
 Local $bRandomStatus = $g_bUseRandomClick, $bReturn, $aBoxCenter[2]
+Local $boxWidth = $boundingBox[2] - $boundingBox[0]
 $g_bUseRandomClick = False
-Local $aXY[2]
-If $times <> 1 Then
+Local $aXY[2] = [$x, $y]
+Local $iCenterX = $boxWidth / 2
+Local $iat, $irt
+$iat = random() * 2 * 3.14159265358
+$irt =($iCenterX / $scale) * sqrt(random())
+$aXY[0] = Round($boundingBox[0] +($iCenterX / $scale) * cos($iat))
+$aXY[1] = Round($boundingBox[1] +($iCenterX / $scale) * sin($irt))
+If $times > 1 Then
 For $i = 0 To($times - 1)
-$aXY[0] = Random($boundingBox[0], $boundingBox[2], 1)
-$aXY[1] = Random($boundingBox[1], $boundingBox[3], 1)
-If $g_bDebugClick Then SetLog("GemClickR " & "X=" & $x & " Y=" & $y & " ,t" & $times & ",s" & $speed & $AncVal, $COLOR_ACTION)
+$iat = random() * 2 * 3.14159265358
+$irt =($iCenterX / $scale) * sqrt(random())
+$aXY[0] = Round($boundingBox[0] +($iCenterX / $scale) * cos($iat))
+$aXY[1] = Round($boundingBox[1] +($iCenterX / $scale) * sin($irt))
+If $g_bDebugClick Then SetLog("GemClickR " & "X=" & $aXY[0] & " Y=" & $aXY[1] & " ,t" & $times & ",s" & $speed & $AncVal, $COLOR_ACTION)
 $bReturn = GemClickP($aXY)
 If RandomSleep($speed, False) Then Return
 Next
 Else
-If $g_bDebugClick Then SetLog("GemClickR " & "X=" & $x & " Y=" & $y & $AncVal, $COLOR_ACTION)
+If $g_bDebugClick Then SetLog("GemClickR " & "X=" & $aXY[0] & " Y=" & $aXY[1] & $AncVal, $COLOR_ACTION)
 $bReturn = GemClickP($aXY)
+If RandomSleep($speed, False) Then Return
 EndIf
 $g_bUseRandomClick = $bRandomStatus
 Return $bReturn
