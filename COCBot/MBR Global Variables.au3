@@ -571,7 +571,7 @@ Global Enum $eIcnArcher = 1, $eIcnDonArcher, $eIcnBalloon, $eIcnDonBalloon, $eIc
 		$eIcnBattleB, $eIcnWallW, $eIcnSiegeCost, $eIcnBoostPotion, $eIcnBatSpell, $eIcnStoneS, $eIcnIceGolem, $eIcnStarLaboratory, $eIcnRagedBarbarian, $eIcnSneakyArcher, $eIcnBoxerGiant, $eIcnBetaMinion, _
 		$eIcnBomber, $eIcnBBBabyDragon, $eIcnCannonCart, $eIcnNightWitch, $eIcnDropShip, $eIcnSuperPekka, $eIcnBBWall01, $eIcnBBWall02, $eIcnBBWall03, $eIcnBBWall04, $eIcnBBWall05, $eIcnBBWall06, $eIcnBBWall07, $eIcnBBWall08, _
 		$eIcnWorkshopBoost, $eIcnStrongMan, $eIcnPowerPotion, $eIcnHogGlider, $eIcnYeti, $eIcnSiegeB, $eIcnChampion, $eIcnChampionUpgr, $eIcnChampionBoost, $eHdV13, $eIcnScattershot, $eIcnChampionBoostLocate, $eIcnTH13, $eWall14, _
-		$eIcnMachineA, $eIcnHeadhunter, $eIcnDiscord; Team__AiO__MOD
+		$eIcnMachineA, $eIcnHeadhunter, $eIcnDiscord, $eIcnCollectAchievements ; Team__AiO__MOD
 
 Global $eIcnDonBlank = $eIcnDonBlacklist
 Global $eIcnOptions = $eIcnDonBlacklist
@@ -1283,7 +1283,6 @@ Global $g_iPercentageDamage = 0
 ; <><><><> Attack Plan / Search & Attack / Deadbase / Collectors <><><><>
 Global $g_abCollectorLevelEnabled[15] = [-1, -1, -1, -1, -1, -1, True, True, True, True, True, True, True, True, True] ; elements 0 thru 5 are never referenced
 Global $g_aiCollectorLevelFill[15] = [-1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1] ; elements 0 thru 5 are never referenced
-
 Global $g_bCollectorFilterDisable = False
 Global $g_iCollectorMatchesMin = 3
 Global $g_iCollectorToleranceOffset = 0
@@ -1318,7 +1317,7 @@ Global $g_iActivateQueen = 0, $g_iActivateKing = 0, $g_iActivateWarden = 0, $g_i
 Global $g_iDelayActivateQueen = 9000, $g_iDelayActivateKing = 9000, $g_iDelayActivateWarden = 10000, $g_iDelayActivateChampion = 9000
 Global $g_aHeroesTimerActivation[$eHeroCount] = [0, 0, 0, 0] ; $eHeroBarbarianKing | $eHeroArcherQueen | $eHeroGrandWarden | $eHeroRoyalChampion
 Global $g_bAttackPlannerEnable = False, $g_bAttackPlannerCloseCoC = False, $g_bAttackPlannerCloseAll = False, $g_bAttackPlannerSuspendComputer = False, $g_bAttackPlannerRandomEnable = False, _
-		$g_iAttackPlannerRandomTime = 0, $g_bAttackPlannerDayLimit = False, $g_iAttackPlannerDayMin = 12, $g_iAttackPlannerDayMax = 15
+		$g_iAttackPlannerRandomTime = 0, $g_iAttackPlannerRandomTime = 0, $g_bAttackPlannerDayLimit = False, $g_iAttackPlannerDayMin = 12, $g_iAttackPlannerDayMax = 15
 Global $g_abPlannedAttackWeekDays[7] = [True, True, True, True, True, True, True]
 Global $g_abPlannedattackHours[24] = [True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True]
 Global $g_bPlannedDropCCHoursEnable = False, $g_bUseCCBalanced = False, $g_iCCDonated = 0, $g_iCCReceived = 0, $g_bCheckDonateOften = False
@@ -1326,7 +1325,7 @@ Global $g_abPlannedDropCCHours[24] = [True, True, True, True, True, True, True, 
 
 ; <><><><> Attack Plan / Search & Attack / Options / SmartZap <><><><>
 Global $g_bSmartZapEnable = False, $g_bEarthQuakeZap = False, $g_bNoobZap = False, $g_bSmartZapDB = True, $g_bSmartZapSaveHeroes = True, _
-		$g_bSmartZapFTW = False, $g_iSmartZapMinDE = 350, $g_iSmartZapExpectedDE = 320
+		$g_bSmartZapFTW = False, $g_iSmartZapMinDE = 350, $g_iSmartZapExpectedDE = 320, $g_bDebugSmartZap = False
 
 ; <><><><> Attack Plan / Search & Attack / Options / End Battle <><><><>
 Global $g_bShareAttackEnable = 0, $g_iShareMinGold = 300000, $g_iShareMinElixir = 300000, $g_iShareMinDark = 0, $g_sShareMessage = "Nice|Good|Thanks|Wowwww", _
@@ -1376,7 +1375,6 @@ Global $g_abAccountNo[8], $g_asProfileName[8], $g_abDonateOnly[8]
 Global $g_aiAttackedCountSwitch[8], $g_iActiveSwitchCounter = 0, $g_iDonateSwitchCounter = 0
 Global $g_asTrainTimeFinish[8], $g_abPBActive[8]
 Global $g_aiRunTime[8], $g_ahTimerSinceSwitched[8]
-
 ; <><><><> Bot / Stats <><><><>
 ; <<< nothing here >>>
 
@@ -1472,6 +1470,7 @@ Global $g_avLabTroops[38][3]
 Global $g_avStarLabTroops[12][5]
 
 ; [0] Name, [1] Icon [2] ShortName
+Global $g_sBBTroopsOrderDefault, $g_sBBDropOrderDefault ; Team AIO Mod++
 Func TranslateTroopNames()
 	Dim $g_avLabTroops[39][3] = [ _
 			[GetTranslatedFileIni("MBR Global GUI Design", "Any", "Any"), $eIcnBlank], _
@@ -1529,8 +1528,8 @@ Func TranslateTroopNames()
 			[622, 341 + $g_iMidOffsetY, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtHogGlider", "Hog Glider"), $eIcnHogGlider], _
 			[-1, -1, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtMachine", "Machine"), $eIcnMachineA]] ; Team AIO Mod++
 
-	Global $g_sBBTroopsOrderDefault = _ArrayToString($g_avStarLabTroops, "", 1, UBound($g_avStarLabTroops)-2, "|", 3, 3) ; Team AIO Mod++
-	Global $g_sBBDropOrderDefault = _ArrayToString($g_avStarLabTroops, "", 1, UBound($g_avStarLabTroops)-1, "|", 3, 3) ; Team AIO Mod++
+			$g_sBBTroopsOrderDefault = _ArrayToString($g_avStarLabTroops, "", 1, UBound($g_avStarLabTroops)-2, "|", 3, 3) ; Team AIO Mod++
+			$g_sBBDropOrderDefault = _ArrayToString($g_avStarLabTroops, "", 1, UBound($g_avStarLabTroops)-1, "|", 3, 3) ; Team AIO Mod++
 
 EndFunc   ;==>TranslateTroopNames
 

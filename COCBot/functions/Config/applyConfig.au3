@@ -336,8 +336,9 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetState($g_hChkCleanYard, $g_bChkCleanYard ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkGemsBox, $g_bChkGemsBox ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkTreasuryCollect, $g_bChkTreasuryCollect ? $GUI_CHECKED : $GUI_UNCHECKED)
-		;	GUICtrlSetState($g_hChkFreeMagicItems, $g_bChkCollectFreeMagicItems ? $GUI_CHECKED : $GUI_UNCHECKED) ; AIO MOD++
-		;	ChkFreeMagicItems() ; AIO MOD++
+			GUICtrlSetState($g_hChkCollectAchievements, $g_bChkCollectAchievements ? $GUI_CHECKED : $GUI_UNCHECKED)
+;			GUICtrlSetState($g_hChkFreeMagicItems, $g_bChkCollectFreeMagicItems ? $GUI_CHECKED : $GUI_UNCHECKED) ; AIO MOD++
+;			ChkFreeMagicItems() ; AIO MOD++
 			ChkTreasuryCollect()
 			GUICtrlSetData($g_hTxtTreasuryGold, $g_iTxtTreasuryGold)
 			GUICtrlSetData($g_hTxtTreasuryElixir, $g_iTxtTreasuryElixir)
@@ -437,7 +438,8 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_iTxtCollectDark = GUICtrlRead($g_hTxtCollectDark)
 			$g_bChkTombstones = (GUICtrlRead($g_hChkTombstones) = $GUI_CHECKED)
 			$g_bChkCleanYard = (GUICtrlRead($g_hChkCleanYard) = $GUI_CHECKED)
-		;	$g_bChkCollectFreeMagicItems = (GUICtrlRead($g_hChkFreeMagicItems) = $GUI_CHECKED) ; AIO MOD++
+			$g_bChkCollectAchievements = (GUICtrlRead($g_hChkCollectAchievements) = $GUI_CHECKED)
+;			$g_bChkCollectFreeMagicItems = (GUICtrlRead($g_hChkFreeMagicItems) = $GUI_CHECKED) ; AIO MOD++
 			$g_bChkGemsBox = (GUICtrlRead($g_hChkGemsBox) = $GUI_CHECKED)
 			$g_bChkTreasuryCollect = (GUICtrlRead($g_hChkTreasuryCollect) = $GUI_CHECKED)
 			$g_iTxtTreasuryGold = GUICtrlRead($g_hTxtTreasuryGold)

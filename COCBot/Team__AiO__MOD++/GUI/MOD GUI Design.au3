@@ -110,7 +110,7 @@ EndFunc   ;==>CreateMODTab
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MiscMODs", "BotLogLineLimitTips", "Bot log will never clear after battle, and clear bot log will replace will line limit."))
 	GUICtrlSetOnEvent(-1, "chkBotLogLineLimit")
 	
-	$g_hTxtLogLineLimit = GUICtrlCreateInput("240", $iX + 300, $iY + 2, 35, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+	$g_hTxtLogLineLimit = _GUICtrlCreateInput("240", $iX + 300, $iY + 2, 35, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MiscMODs", "BotLogLineLimitValue", "Please enter how many line to limit for the bot log."))
 	GUICtrlSetLimit(-1, 4)
 	GUICtrlSetOnEvent(-1, "txtLogLineLimit")

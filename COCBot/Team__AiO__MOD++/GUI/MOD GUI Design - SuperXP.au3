@@ -68,7 +68,7 @@ Func TabSuperXPGUI()
 
 	$y += 42
 		GUICtrlCreateLabel(GetTranslatedFileIni("MOD GUI Design - SuperXP", "MaxXPToGain", "Max XP to Gain") & ":", $x, $y + 8, -1, -1)
-		$g_hTxtMaxXPToGain = GUICtrlCreateInput("500", $x + 85, $y + 4, 70, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtMaxXPToGain = _GUICtrlCreateInput("500", $x + 85, $y + 4, 70, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			GUICtrlSetLimit(-1, 8)
 
 	$x += 85
