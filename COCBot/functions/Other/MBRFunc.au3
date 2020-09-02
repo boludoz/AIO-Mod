@@ -74,7 +74,7 @@ Func DllCallMyBot($sFunc, $sType1 = Default, $vParam1 = Default, $sType2 = Defau
 	While Not $error And $aResult[0] = "<GetAsyncResult>"
 		; when receiving "<GetAsyncResult>", dll waited already 100ms, and android should be resumed after 500ms for 100ms
 		If Mod($i + 5, 10) = 0 Then
-			SetDebugLog("Waiting for DLL async function " & $sFunc & " ...")
+			SetDebugLog("Waiting for DLL async function " & $sFunc & " Params : " & " " & $vParam1 & " " & $vParam2 & " " & $vParam3 & " " & $vParam4 & " " & $vParam5 & " " & $vParam6 & " " & $vParam7 & " " & $vParam8 & " " & $vParam9 & " " & $vParam10)
 			ResumeAndroid()
 		EndIf
 		$i += 1

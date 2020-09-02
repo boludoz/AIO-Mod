@@ -138,7 +138,7 @@ Func ReadBuildingConfig()
 		$g_abBuildingUpgradeEnable[$iz] = (IniRead($g_sProfileBuildingPath, "upgrade", "upgradechk" & $iz, 0) = "1")
 		$g_abUpgradeRepeatEnable[$iz] = (IniRead($g_sProfileBuildingPath, "upgrade", "upgraderepeat" & $iz, 0) = "1")
 		$g_aiPicUpgradeStatus[$iz] = IniRead($g_sProfileBuildingPath, "upgrade", "upgradestatusicon" & $iz, $eIcnRedLight)
-		
+
 		If $locationsInvalid = True Then
 			$g_avBuildingUpgrades[$iz][0] = -1
 			$g_avBuildingUpgrades[$iz][1] = -1
@@ -465,6 +465,10 @@ Func ReadConfig_600_6()
 
 	IniReadS($g_bChkClanGamesLoot, $g_sProfileConfigPath, "other", "ChkClanGamesLoot", False, "Bool")
 	IniReadS($g_bChkClanGamesBattle, $g_sProfileConfigPath, "other", "ChkClanGamesBattle", False, "Bool")
+
+	IniReadS($g_bChkClanGamesSuperTroop, $g_sProfileConfigPath, "other", "ChkClanGamesSuperTroop", False, "Bool")
+	IniReadS($g_bChkClanGamesSpell, $g_sProfileConfigPath, "other", "ChkClanGamesSpell", False, "Bool")
+
 	IniReadS($g_bChkClanGamesDestruction, $g_sProfileConfigPath, "other", "ChkClanGamesDestruction", False, "Bool")
 	IniReadS($g_bChkClanGamesAirTroop, $g_sProfileConfigPath, "other", "ChkClanGamesAirTroop", False, "Bool")
 	IniReadS($g_bChkClanGamesGroundTroop, $g_sProfileConfigPath, "other", "ChkClanGamesGroundTroop", False, "Bool")
@@ -643,7 +647,7 @@ Func ReadConfig_600_12()
 
 	$g_asTxtDonateTroop[$eTroopIceGolem] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateIceGolems", "ice golem|ice golems"), "|", @CRLF)
 	$g_asTxtBlacklistTroop[$eTroopIceGolem] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtBlacklistIceGolems", "no ice golem|ice golem no"), "|", @CRLF)
-	
+
 	$g_asTxtDonateTroop[$eTroopHeadhunter] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateHeadhunters", "headhunter|hunt"), "|", @CRLF)
 	$g_asTxtBlacklistTroop[$eTroopHeadhunter] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtBlacklistHeadhunters", "no headhunt|no hunt"), "|", @CRLF)
 

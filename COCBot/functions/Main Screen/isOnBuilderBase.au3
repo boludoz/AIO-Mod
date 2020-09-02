@@ -20,11 +20,11 @@ Func isOnBuilderBase($bNeedCaptureRegion = True, $bSoft = False)
 		SetDebugLog("Builder Base Builder detected. (Normal).", $COLOR_INFO)
 		Return True
 	ElseIf (QuickMIS("N1", $g_sImgZoomOutDirBB, 0,0,860,732, False) <> "None") And Not $bSoft Then
-		SetDebugLog("Builder Base Builder detected. (Battle).", $COLOR_INFO)
+		SetDebugLog("Builder Base Builder detected.", $COLOR_INFO)
 		Return True
 	EndIf
 	
-	SetDebugLog("We're on Main Base.")
+	SetDebugLog("Base Builder not detected.")
 	Return False
 EndFunc   ;==>isOnBuilderBase
 #EndRegion - Custom - Team AIO Mod++

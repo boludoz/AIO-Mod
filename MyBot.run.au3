@@ -725,7 +725,6 @@ EndFunc   ;==>MainLoop
 Func runBot() ;Bot that runs everything in order
 	If $g_bDebugFuncCall Then SetLog('@@ (734) :(' & @MIN & ':' & @SEC & ') runBot()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 	Local $iWaitTime
-
 	InitiateSwitchAcc()
 	If ProfileSwitchAccountEnabled() And $g_bReMatchAcc Then
 		SetLog("Rematching Account [" & $g_iNextAccount + 1 & "] with Profile [" & GUICtrlRead($g_ahCmbProfile[$g_iNextAccount]) & "]")
@@ -798,7 +797,7 @@ Func runBot() ;Bot that runs everything in order
 			#EndRegion - Request form chat / on a loop - Team AIO Mod++
 			#Region - Only farm - Team AIO Mod++
 			If Not $g_bChkOnlyFarm Then
-				Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectFreeMagicItems', 'DailyChallenge', 'BoostSuperTroop'] ; AIO Mod
+				Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge', 'BoostSuperTroop'] ; AIO Mod
 			Else
 				Local $aRndFuncList = ['Collect', 'CollectFreeMagicItems', 'DailyChallenge', 'BoostSuperTroop'] ; AIO Mod
 			EndIf
@@ -1167,7 +1166,7 @@ EndFunc   ;==>Attack
 
 #Region - Custom - Team AIO Mod++
 Func _RunFunction($sAction)
-	If $g_bDebugFuncCall Then SetLog('@@ (1143) :(' & @MIN & ':' & @SEC & ') _RunFunction()' & @CRLF, $COLOR_ACTION) ;### Function Trace
+;	If $g_bDebugFuncCall Then SetLog('@@ (1143) :(' & @MIN & ':' & @SEC & ') _RunFunction()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 	If $g_bDebugFuncCall Then SetLog('@ _RunFunction @ (1143) :(' & @MIN & ':' & @SEC & ')' & $sAction & @CRLF, $COLOR_ACTION) ;### Function Trace
 	FuncEnter(_RunFunction)
 	; ensure that builder base flag is false
@@ -1185,18 +1184,18 @@ Func __RunFunction($sAction)
 	Switch $sAction
 		Case "Collect"
 			Collect()
-			If RandomSleep($DELAYRUNBOT1) Then Return
+			;If RandomSleep($DELAYRUNBOT1) Then Return
 		Case "CheckTombs"
 			CheckTombs()
-			If RandomSleep($DELAYRUNBOT3) Then Return
+			;If RandomSleep($DELAYRUNBOT3) Then Return
 		Case "CleanYard"
 			CleanYard()
 		Case "ReplayShare"
 			ReplayShare($g_bShareAttackEnableNow)
-			If RandomSleep($DELAYRUNBOT3) Then Return
+			;If RandomSleep($DELAYRUNBOT3) Then Return
 		Case "NotifyReport"
 			NotifyReport()
-			If RandomSleep($DELAYRUNBOT3) Then Return
+			;If RandomSleep($DELAYRUNBOT3) Then Return
 		Case "DonateCC"
 			If $g_iActiveDonate And $g_bChkDonate And Not $g_bChkOnlyFarm Then ; Only farm - Team AIO Mod++
 				; if in "Halt/Donate" don't skip near full army
@@ -1236,34 +1235,34 @@ Func __RunFunction($sAction)
 			EndIf
 		Case "BoostBarracks"
 			BoostBarracks()
-			If RandomSleep($DELAYRESPOND) Then Return
+			;If RandomSleep($DELAYRESPOND) Then Return
 		Case "BoostSpellFactory"
 			BoostSpellFactory()
-			If RandomSleep($DELAYRESPOND) Then Return
+			;If RandomSleep($DELAYRESPOND) Then Return
 		Case "BoostWorkshop"
 			BoostWorkshop()
-			If RandomSleep($DELAYRESPOND) Then Return
+			;If RandomSleep($DELAYRESPOND) Then Return
 		Case "BoostKing"
 			BoostKing()
-			If RandomSleep($DELAYRESPOND) Then Return
+			;If RandomSleep($DELAYRESPOND) Then Return
 		Case "BoostQueen"
 			BoostQueen()
-			If RandomSleep($DELAYRESPOND) Then Return
+			;If RandomSleep($DELAYRESPOND) Then Return
 		Case "BoostWarden"
 			BoostWarden()
-			If RandomSleep($DELAYRESPOND) Then Return
+			;If RandomSleep($DELAYRESPOND) Then Return
 		Case "BoostChampion"
 			BoostChampion()
-			If RandomSleep($DELAYRESPOND) Then Return
+			;If RandomSleep($DELAYRESPOND) Then Return
 		Case "BoostEverything"
 			BoostEverything()
-			If RandomSleep($DELAYRESPOND) Then Return
+			;If RandomSleep($DELAYRESPOND) Then Return
 		Case "DailyChallenge"
 			DailyChallenges()
-			If RandomSleep($DELAYRUNBOT3) Then Return
+			;If RandomSleep($DELAYRUNBOT3) Then Return
 		Case "LabCheck"
 			LabGuiDisplay()
-			If RandomSleep($DELAYRUNBOT3) Then Return
+			;If RandomSleep($DELAYRUNBOT3) Then Return
 		Case "RequestCC"
 			RequestCC()
 			If Not RandomSleep($DELAYRUNBOT1) Then checkMainScreen(False)
@@ -1272,23 +1271,26 @@ Func __RunFunction($sAction)
 			If Not RandomSleep($DELAYRUNBOT3) Then checkMainScreen(False)
 		Case "UpgradeHeroes"
 			UpgradeHeroes()
-			If RandomSleep($DELAYRUNBOT3) Then Return
+			;If RandomSleep($DELAYRUNBOT3) Then Return
 		Case "UpgradeBuilding"
 			UpgradeBuilding()
 			If RandomSleep($DELAYRUNBOT3) Then Return
 			AutoUpgrade()
-			If RandomSleep($DELAYRUNBOT3) Then Return
+			;If RandomSleep($DELAYRUNBOT3) Then Return
 		Case "UpgradeWall"
 			$g_iNbrOfWallsUpped = 0
 			UpgradeWall()
-			If RandomSleep($DELAYRUNBOT3) Then Return
+			;If RandomSleep($DELAYRUNBOT3) Then Return
 			; BBase - Team AIO Mod++
 		Case "BuilderBase"
 			If Not ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Then Return True
 			runBuilderBase()
-		Case "CollectFreeMagicItems"
-			CollectFreeMagicItems()
-			If RandomSleep($DELAYRUNBOT3) Then Return
+		Case "CollectAchievements"
+			CollectAchievements()
+			;If RandomSleep($DELAYRUNBOT3) Then Return
+ 		Case "CollectFreeMagicItems"
+ 			CollectFreeMagicItems()
+			;If RandomSleep($DELAYRUNBOT3) Then Return
 		Case "BoostSuperTroop"
 			If $g_iBoostSuperTroopIndex <> -1 Then BoostSuperTroop($g_iBoostSuperTroopIndex)
 		Case ""
@@ -1305,6 +1307,21 @@ Func FirstCheck()
 
 	If $g_bDebugSetlog Then SetDebugLog("-- FirstCheck Loop --")
 	If Not $g_bRunState Then Return
+	
+	;;;;;Check Town Hall level
+	Local $iTownHallLevel = $g_iTownHallLevel
+	SetDebugLog("Detecting Town Hall level", $COLOR_INFO)
+	SetDebugLog("Town Hall level is currently saved as " &  $g_iTownHallLevel, $COLOR_INFO)
+	imglocTHSearch(False, True, True)
+	SetDebugLog("Detected Town Hall level is " &  $g_iTownHallLevel, $COLOR_INFO)
+	If $g_iTownHallLevel = $iTownHallLevel Then
+		SetDebugLog("Town Hall level has not changed", $COLOR_INFO)
+	Else
+		SetDebugLog("Town Hall level has changed!", $COLOR_INFO)
+		SetDebugLog("New Town hall level detected as " &  $g_iTownHallLevel, $COLOR_INFO)
+		saveConfig()
+		applyConfig()
+	EndIf
 
 	#Region - Team AIO MOD++
 	VillageReport()

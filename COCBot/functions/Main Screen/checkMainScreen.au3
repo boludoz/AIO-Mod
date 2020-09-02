@@ -94,6 +94,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default) ;Checks if in
 		If $g_bUpdateSharedPrefs And Not HaveSharedPrefs() Then PullSharedPrefs()
 		ZoomOut()
 	EndIf
+	
 	If Not $g_bRunState Then Return False
 
 	If $bSetLog Then
@@ -114,10 +115,30 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default) ;Checks if in
 EndFunc   ;==>_checkMainScreen
 
 #Region - Custom - Team AIO Mod++
-Func _checkMainScreenImage(ByRef $bLocated, $aPixelToCheck, $bNeedCaptureRegion = (Not $g_bNoCapturePixel))
-	$bLocated = (_CheckPixel($aPixelToCheck, $bNeedCaptureRegion) And Not checkObstacles_Network(False, False))
-	Return $bLocated
-EndFunc
+ Func _checkMainScreenImage(ByRef $bLocated, $aPixelToCheck, $bNeedCaptureRegion = $g_bNoCapturePixel)
+    $bLocated = _CheckPixel($aPixelToCheck, $bNeedCaptureRegion) And Not checkObstacles_Network(False, False) And checkChatTabPixel()
+     Return $bLocated
+ EndFunc
+
+Func checkChatTabPixel()
+    SetDebugLog("Checking chat tab pixel exists to ensure images have loaded correctly")
+	
+	Local $b = False
+	Local $iLoopStartTime = __TimerInit()
+	ForceCaptureRegion()
+	Do
+		$b = _ColorCheckCie2000("FDA923", _GetPixelColor(20, 355, True), 15)
+		If $b = True Then 
+			SetDebugLog("ChatTabPixel found", $COLOR_SUCCESS)
+			Return True
+		EndIf
+		CloseClanChat()
+		If _Sleep(100) Then Return
+	Until __TimerDiff($iLoopStartTime) > 600
+	SetLog("ChatTabPixel not found", $COLOR_ERROR)
+
+	Return False
+EndFunc   ;==>checkChatTabPixel
 
 Func isOnMainVillage($bNeedCaptureRegion = (Not $g_bNoCapturePixel))
 	Local $aPixelToCheck = $aIsMain

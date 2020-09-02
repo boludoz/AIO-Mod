@@ -412,6 +412,10 @@ Func SaveConfig_600_6()
 
 	_Ini_Add("other", "ChkClanGamesLoot", $g_bChkClanGamesLoot ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesBattle", $g_bChkClanGamesBattle ? 1 : 0)
+
+	_Ini_Add("other", "ChkClanGamesSuperTroop", $g_bChkClanGamesSuperTroop ? 1 : 0)
+	_Ini_Add("other", "ChkClanGamesSpell", $g_bChkClanGamesSpell ? 1 : 0)
+
 	_Ini_Add("other", "ChkClanGamesDestruction", $g_bChkClanGamesDestruction ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesAirTroop", $g_bChkClanGamesAirTroop ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesGroundTroop ", $g_bChkClanGamesGroundTroop ? 1 : 0)

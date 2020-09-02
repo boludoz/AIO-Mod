@@ -398,6 +398,7 @@ Func LookAtRedNotifications()
 	If $NoNotif = 7 Then SetLog("No Notification Found, Nothing To Look At ...", $COLOR_OLIVE)
 EndFunc   ;==>LookAtRedNotifications
 
+#CS
 Func CollectAchievements()
 	SetLog("Looking For Achievement To Collect ...", $COLOR_INFO)
 	ReturnAtHome()
@@ -428,7 +429,7 @@ Func CollectAchievements()
 		SetLog("No Achievement To Collect ...", $COLOR_OLIVE)
 	EndIf
 EndFunc   ;==>CollectAchievements
-
+#CE
 Func Scroll($MaxScroll)
 	For $i = 0 To $MaxScroll
 		Local $x = Random(430 - 20, 430 + 20, 1)

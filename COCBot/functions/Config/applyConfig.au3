@@ -344,7 +344,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetData($g_hTxtTreasuryDark, $g_iTxtTreasuryDark)
 			GUICtrlSetState($g_hChkCollectRewards, $g_bChkCollectRewards ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkSellRewards, $g_bChkSellRewards ? $GUI_CHECKED : $GUI_UNCHECKED)
-			
+
 			GUICtrlSetState($g_hChkCollectBuilderBase, $g_bChkCollectBuilderBase ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkCleanBBYard, $g_bChkCleanBBYard ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkStartClockTowerBoost, $g_bChkStartClockTowerBoost ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -373,6 +373,10 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetState($g_hChkClanGamesDebug, $g_bChkClanGamesDebug ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkClanGamesLoot, $g_bChkClanGamesLoot ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkClanGamesBattle, $g_bChkClanGamesBattle ? $GUI_CHECKED : $GUI_UNCHECKED)
+
+			GUICtrlSetState($g_hChkClanGamesSuperTroop, $g_bChkClanGamesSuperTroop ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkClanGamesSpell, $g_bChkClanGamesSpell ? $GUI_CHECKED : $GUI_UNCHECKED)
+
 			GUICtrlSetState($g_hChkClanGamesDestruction, $g_bChkClanGamesDestruction ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkClanGamesAirTroop, $g_bChkClanGamesAirTroop ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkClanGamesGroundTroop, $g_bChkClanGamesGroundTroop ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -464,6 +468,10 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bChkClanGamesDebug = (GUICtrlRead($g_hChkClanGamesDebug) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkClanGamesLoot = (GUICtrlRead($g_hChkClanGamesLoot) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkClanGamesBattle = (GUICtrlRead($g_hChkClanGamesBattle) = $GUI_CHECKED) ? 1 : 0
+
+			$g_bChkClanGamesSuperTroop = (GUICtrlRead($g_hChkClanGamesSuperTroop) = $GUI_CHECKED) ? 1 : 0
+			$g_bChkClanGamesSpell = (GUICtrlRead($g_hChkClanGamesSpell) = $GUI_CHECKED) ? 1 : 0
+
 			$g_bChkClanGamesDestruction = (GUICtrlRead($g_hChkClanGamesDestruction) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkClanGamesAirTroop = (GUICtrlRead($g_hChkClanGamesAirTroop) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkClanGamesGroundTroop = (GUICtrlRead($g_hChkClanGamesGroundTroop) = $GUI_CHECKED) ? 1 : 0

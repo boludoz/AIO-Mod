@@ -253,7 +253,7 @@ Func SmartFarmDetection($txtBuildings = "Mines", $bForceCapture = True)
 				$sdirectory = @ScriptDir & "\imgxml\Storages\GoldMines"
 			EndIf
 			$iMaxReturnPoints = 7
-			$iMaxLevel = 13
+			$iMaxLevel = 14
 		Case "Collectors"
 			If $g_iDetectedImageType = 1 Then
 				$sdirectory = @ScriptDir & "\imgxml\Storages\Collectors_Snow"
@@ -261,17 +261,20 @@ Func SmartFarmDetection($txtBuildings = "Mines", $bForceCapture = True)
 				$sdirectory = @ScriptDir & "\imgxml\Storages\Collectors"
 			EndIf
 			$iMaxReturnPoints = 7
-			$iMaxLevel = 13
+			$iMaxLevel = 14
 		Case "Drills"
 			$sdirectory = @ScriptDir & "\imgxml\Storages\Drills"
 			$iMaxReturnPoints = 3
-			$iMaxLevel = 7
+			$iMaxLevel = 8
 		Case "All"
-			$sdirectory = @ScriptDir & "\imgxml\Storages\All"
+			If $g_iDetectedImageType = 1 Then
+				$sdirectory = @ScriptDir & "\imgxml\Storages\All_Snow"
+			Else
+				$sdirectory = @ScriptDir & "\imgxml\Storages\All"
+			EndIf
 			$iMaxReturnPoints = 21
-			$iMaxLevel = 13
+			$iMaxLevel = 14
 	EndSwitch
-
 	; Necessary Variables
 	Local $sCocDiamond = "ECD"
 	Local $sRedLines = ""
@@ -595,36 +598,39 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 				[MatchTroopDropName(23), $nbSides, MatchTroopWaveNb(23), 1, MatchSlotsPerEdge(23)], _
 				[MatchTroopDropName(24), $nbSides, MatchTroopWaveNb(24), 1, MatchSlotsPerEdge(24)]]
 	Else
-					Local $listInfoDeploy[29][5] = [[$eGole, $nbSides, 1, 1, 2] _
-							, [$eLava, $nbSides, 1, 1, 2] _
-							, [$eGiant, $nbSides, 1, 1, $g_iSlotsGiants] _
-							, [$eSuperGiant, $nbSides, 1, 1, $g_iSlotsGiants] _
-							, [$eDrag, $nbSides, 1, 1, 0] _
-							, ["CC", 1, 1, 1, 1] _
-							, [$eBall, $nbSides, 1, 1, 0] _
-							, [$eBabyD, $nbSides, 1, 1, 0] _
-							, [$eHogs, $nbSides, 1, 1, 1] _
-							, [$eValk, $nbSides, 1, 1, 0] _
-							, [$eBowl, $nbSides, 1, 1, 0] _
-							, [$eIceG, $nbSides, 1, 1, 0] _
-							, [$eMine, $nbSides, 1, 1, 0] _
-							, [$eEDrag, $nbSides, 1, 1, 0] _
-							, [$eBarb, $nbSides, 1, 1, 0] _
-							, [$eSuperBarb, $nbSides, 1, 1, 0] _
-							, [$eWall, $nbSides, 1, 1, 1] _
-							, [$eSuperWall, $nbSides, 1, 1, 1] _
-							, [$eArch, $nbSides, 1, 1, 0] _
-							, [$eWiza, $nbSides, 1, 1, 0] _
-							, [$eMini, $nbSides, 1, 1, 0] _
-							, [$eWitc, $nbSides, 1, 1, 1] _
-							, [$eGobl, $nbSides, 1, 1, 0] _
-							, [$eSneakyGobl, $nbSides, 1, 1, 0] _
-							, [$eHeal, $nbSides, 1, 1, 1] _
-							, [$ePekk, $nbSides, 1, 1, 1] _
-							, [$eYeti, $nbSides, 1, 1, 1] _
-							, [$eHunt, $nbSides, 1, 1, 0] _
-							, ["HEROES", 1, 2, 1, 1] _
-							]
+		Local $listInfoDeploy[32][5] = [[$eGole, $nbSides, 1, 1, 2] _
+				, [$eLava, $nbSides, 1, 1, 2] _
+				, [$eGiant, $nbSides, 1, 1, $g_iSlotsGiants] _
+				, [$eSuperGiant, $nbSides, 1, 1, $g_iSlotsGiants] _
+				, [$eDrag, $nbSides, 1, 1, 0] _
+				, [$eBall, $nbSides, 1, 1, 0] _
+				, [$eBabyD, $nbSides, 1, 1, 0] _
+				, [$eInfernoDrag, $nbSides, 1, 1, 0] _
+				, [$eHogs, $nbSides, 1, 1, 1] _
+				, [$eValk, $nbSides, 1, 1, 0] _
+				, [$eBowl, $nbSides, 1, 1, 0] _
+				, [$eIceG, $nbSides, 1, 1, 0] _
+				, [$eMine, $nbSides, 1, 1, 0] _
+				, [$eEDrag, $nbSides, 1, 1, 0] _
+				, [$eWall, $nbSides, 1, 1, 1] _
+				, [$eSuperWall, $nbSides, 1, 1, 1] _
+				, [$eBarb, $nbSides, 1, 1, 0] _
+				, [$eSuperBarb, $nbSides, 1, 1, 0] _
+				, [$eArch, $nbSides, 1, 1, 0] _
+				, [$eSuperArch, $nbSides, 1, 1, 0] _
+				, [$eWiza, $nbSides, 1, 1, 0] _
+				, [$eMini, $nbSides, 1, 1, 0] _
+				, [$eWitc, $nbSides, 1, 1, 1] _
+				, [$eSuperWitc, $nbSides, 1, 1, 1] _
+				, [$eGobl, $nbSides, 1, 1, 0] _
+				, [$eSneakyGobl, $nbSides, 1, 1, 0] _
+				, [$eHeal, $nbSides, 1, 1, 1] _
+				, [$ePekk, $nbSides, 1, 1, 1] _
+				, [$eYeti, $nbSides, 1, 1, 1] _
+				, [$eHunt, $nbSides, 1, 1, 0] _
+				, ["CC", 1, 1, 1, 1] _
+				, ["HEROES", 1, 2, 1, 1] _
+				]
 	EndIf
 
 	$g_bIsCCDropped = False
@@ -656,15 +662,12 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 			If $g_bDebugSetlog Then SetDebugLog("No Wast time... exit, no troops usable left", $COLOR_DEBUG)
 			ExitLoop ;Check remaining quantities
 		EndIf
-		 For $i = $eBarb To $eSuperWall ; launch all remaining troops
-			If BitAND($i >= $eSuperBarb, $i <= $eSuperGiant) = True Or BitAND($i >= $eBarb, $i <= $eHunt) = True Then
-			   If LaunchTroop($i, $nbSides, 1, 1, 1) Then
-				   CheckHeroesHealth()
-				   If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
-			   EndIf
+		For $i = $eBarb To $eHunt ; launch all remaining troops
+			If LaunchTroop($i, $nbSides, 1, 1, 1) Then
+				CheckHeroesHealth()
+				If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
 			EndIf
-		 Next
-
+		Next
 	Next
 
 	CheckHeroesHealth()
