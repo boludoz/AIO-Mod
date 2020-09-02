@@ -140,7 +140,7 @@ Func _makerequestCustom($aButtonPosition = -1)
 	For $i = 0 To 5
 		$aFindPencil = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Request\ReqSpec", 1, "0,207,656,568", Default, "edit", False, 25)
 		If IsArray($aFindPencil) Then ExitLoop
-		If _Sleep(Random(200, 400, 1)) Then Return
+		If RandomSleep(400) Then Return
 	Next
 	
 	If Not IsArray($aFindPencil) Then
@@ -194,7 +194,7 @@ Func _makerequestCustom($aButtonPosition = -1)
 		EndIf
 		
 		If $bCanReq = True Then
-			; If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
+			If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
 			; fix for Android send text bug sending symbols like ``"
 			AndroidSendText($g_sRequestTroopsText, True)
 			Click($aClickText[0], $aClickText[1], 1, 0, "#0254") ;Select text for request
@@ -210,7 +210,9 @@ Func _makerequestCustom($aButtonPosition = -1)
 	If _Sleep($DELAYMAKEREQUEST2) Then Return ; wait time for text request to complete
 	
 	If $g_bChkBackgroundMode = False And $g_bNoFocusTampering = False Then ControlFocus($g_hAndroidWindow, "", "") ; make sure Android has window focus
-	Click($aClickSend[0][1], $aClickSend[0][2], 1, 100, "#0256") ; click send button
+	
+	Local $aBoundingBox[4] = [$aFindPencil[0][1] - 133, $aFindPencil[0][2] + 222, $aFindPencil[0][1], $aFindPencil[0][2] + 253]
+	ClickR($aBoundingBox, $aBoundingBox[0], $aBoundingBox[1], 1, 100, $g_iDEFAULT_HEIGHT, 3)
 	$g_bCanRequestCC = False
 
 EndFunc   ;==>_makerequestCustom

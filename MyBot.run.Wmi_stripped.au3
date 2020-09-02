@@ -6,7 +6,7 @@
 #pragma compile(Icon, "Images\MyBot.ico")
 #pragma compile(FileDescription, Clash of Clans Bot - A Free Clash of Clans bot - https://mybot.run)
 #pragma compile(ProductVersion, 7.8)
-#pragma compile(FileVersion, 7.8.4)
+#pragma compile(FileVersion, 7.8.5)
 #pragma compile(LegalCopyright, © https://mybot.run)
 #Au3Stripper_Off
 #Au3Stripper_On
