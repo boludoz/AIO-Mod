@@ -212,7 +212,13 @@ Func _makerequestCustom($aButtonPosition = -1)
 	If $g_bChkBackgroundMode = False And $g_bNoFocusTampering = False Then ControlFocus($g_hAndroidWindow, "", "") ; make sure Android has window focus
 	
 	Local $aBoundingBox[4] = [$aFindPencil[0][1] - 133, $aFindPencil[0][2] + 222, $aFindPencil[0][1], $aFindPencil[0][2] + 253]
-	ClickR($aBoundingBox, $aBoundingBox[0], $aBoundingBox[1], 1, 100, $g_iDEFAULT_HEIGHT, 3)
+	
+	If Not $g_bUseRandomClick Then
+		ClickP($g_avWindowCoordinates, 1, 100, "#0256")
+	Else
+		ClickR($aBoundingBox, $aBoundingBox[0], $aBoundingBox[1], 1, 100, $g_iDEFAULT_HEIGHT, 3)
+	EndIf
+	
 	$g_bCanRequestCC = False
 
 EndFunc   ;==>_makerequestCustom
