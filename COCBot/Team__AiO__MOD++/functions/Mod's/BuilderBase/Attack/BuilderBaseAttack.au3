@@ -295,7 +295,7 @@ Func FindVersusBattlebtn()
 		EndIf
 	Next
 
-	If ($i > 15) Or ($g_iMultiPixelOffSet[0] = Null) Then
+	If ($i >= 5) Or ($g_iMultiPixelOffSet[0] = Null) Then
 		SetLog("Find Now! Button not available...", $COLOR_DEBUG)
 		Return False
 	EndIf
@@ -424,7 +424,7 @@ Func BuilderBaseAttackToDrop($aAvailableTroops)
 		If _Sleep(500) Then ExitLoop
 	Next
 
-	If $i > 15 Then Setlog("Surrender button Problem!", $COLOR_WARNING)
+	If $i >= 15 Then Setlog("Surrender button Problem!", $COLOR_WARNING)
 
 	; Get the Surrender Window [Cancel] [Ok]
 	Local $CancelBtn = [350, 445] ; DESRC Done
@@ -504,7 +504,7 @@ Func BuilderBaseAttackReport()
    EndIf
 
 	Local $sResultName = "Draw"
-	
+
 	For $i = 0 To 24 ; 120 seconds
 		If Not $g_bRunState Then Return
 		If isOnBuilderBase(True, True) Then
@@ -528,10 +528,10 @@ Func BuilderBaseAttackReport()
 			ExitLoop
 		EndIf
 	Next
-	
+
 	; Small delay just to getout the slide resources to top left
 	;If RandomSleep(3000) Then Return
-	
+
 	; Get the LOOT :
 	Local $gain[3]
 	; To get trophies getOcrOverAllDamage(493, 480 + $g_iMidOffsetYNew)
@@ -540,7 +540,7 @@ Func BuilderBaseAttackReport()
 	$gain[$eLootElixirBB] = Int(getTrophyVillageSearch(310, 483))
 	Local $iLastDamage = Int(_getTroopCountBig(222, 304))
 	If $iLastDamage > $g_iLastDamage Then $g_iLastDamage = $iLastDamage
-	
+
 	If StringInStr($sResultName, "Victory") > 0 Then
 		$gain[$eLootTrophyBB] = Abs($gain[$eLootTrophyBB])
 	ElseIf StringInStr($sResultName, "Defeat") > 0 Then
@@ -548,7 +548,7 @@ Func BuilderBaseAttackReport()
 	Else
 		$gain[$eLootTrophyBB] = 0
 	EndIf
-	
+
 	; #######################################################################
 	; Just a temp log for BB attacks , this needs a new TAB like a stats tab
 	Local $AtkLogTxt
@@ -560,7 +560,7 @@ Func BuilderBaseAttackReport()
 	$AtkLogTxt &= StringFormat("%1d", $Stars) & "|"
 	$AtkLogTxt &= StringFormat("%3d", $g_iLastDamage) & "|"
 	$AtkLogTxt &= StringFormat("%1d", $g_iBuilderBaseScript + 1) & "|"
-	
+
 	If StringInStr($sResultName, "Victory") > 0 Then
 		SetBBAtkLog($AtkLogTxt, "", $COLOR_GREEN)
 	ElseIf StringInStr($sResultName, "Defeat") > 0 Then
@@ -569,17 +569,17 @@ Func BuilderBaseAttackReport()
 		SetBBAtkLog($AtkLogTxt, "", $COLOR_INFO)
 	EndIf
 	; #######################################################################
-	
-	
+
+
 	; Return to Main Page
 	ClickP($aAway, 2, 0, "#0332") ;Click Away
-	
+
 	; Reset Variables
 	$g_aMachineBB = $g_aMachineBBReset
 	$g_iBBMachAbilityLastActivatedTime = -1
-	
+
 	If RandomSleep(2000) Then Return
-	
+
 	If checkObstacles(True) Then
 		SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
 		Return

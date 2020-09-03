@@ -66,7 +66,12 @@ Func ReturnPreVD(ByRef $aS, $bBB = False, $bEdge = False)
 					Local $aSearch[4] = [138, 173, 780, 648] 
 			EndSelect
 		Case Else
-			Local $aSearch[4] = [92, 73, 781, 599] ; No Edge - NV.
+			Select
+				Case $bEdge ; Edge - NV.
+					Local $aSearch[4] = [15, 31, 859, 648] ; Edge - NV.
+				Case Not $bEdge ; No Edge - NV.
+					Local $aSearch[4] = [92, 73, 781, 599] ; No Edge - NV.			
+			EndSelect
 	EndSelect
 	$aS = $aSearch
 	If $g_bDebugSetlog Then SetDebugLog("ReturnPreVD | " & String(_ArrayToString($aS)), $COLOR_INFO)
