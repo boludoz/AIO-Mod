@@ -29,30 +29,6 @@ Func chkUseBotHumanization()
 		Next
 	EndIf
 EndFunc   ;==>chkUseBotHumanization
-#cs
-Func chkUseAltRClick()
-	If GUICtrlRead($g_hChkUseAltRClick) = $GUI_CHECKED Then
-		Local $UserChoice = MsgBox(4 + 48, "  •••  Warning !!", GetTranslatedFileIni("MOD GUI Design - BotHumanization", "chkUseAltRClick_Info_01", "Full Random Click Is a Good Feature To Be As Less Bot-Like As Possible Because It Makes All Bot Clicks Random.") & _
-				@CRLF & "" & @CRLF & GetTranslatedFileIni("MOD GUI Design - BotHumanization", "chkUseAltRClick_Info_02", "It Still An Experimental Feature Which May Cause Unpredictable Problems.") & _
-				@CRLF & "" & @CRLF & GetTranslatedFileIni("MOD GUI Design - BotHumanization", "chkUseAltRClick_Info_03", "So, Do You Want To Use It ?!"))
-		If $UserChoice = 6 Then
-			$g_bUseAltRClick = True
-		Else
-			$g_bUseAltRClick = False
-			GUICtrlSetState($g_hChkUseAltRClick, $GUI_UNCHECKED)
-		EndIf
-	Else
-		$g_bUseAltRClick = False
-	EndIf
-EndFunc   ;==>chkUseAltRClick
-#ce
-Func chkCollectAchievements()
-	If GUICtrlRead($g_hChkCollectAchievements) = $GUI_CHECKED Then
-		$g_bCollectAchievements = True
-	Else
-		$g_bCollectAchievements = False
-	EndIf
-EndFunc   ;==>chkCollectAchievements
 
 Func chkLookAtRedNotifications()
 	If GUICtrlRead($g_hChkLookAtRedNotifications) = $GUI_CHECKED Then

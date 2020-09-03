@@ -30,7 +30,7 @@ Func ClickZone($x, $y, $Offset = 7, $debugtxt = "", $times = 1, $speed = 0, $Out
 	$g_bUseRandomClick = $bRandomStatus
 EndFunc
 
-Func ClickR($boundingBox, $x, $y, $times = 1, $speed = 0, $OutScreen = $g_iDEFAULT_HEIGHT, $iScaled = 2, $bRandomLoop = True, $centerX = 0, $centerY = 0)
+Func ClickR($boundingBox, $x, $y, $times = 1, $speed = 0, $OutScreen = $g_iDEFAULT_HEIGHT, $bRandomLoop = True, $iScaled = 2, $centerX = 0, $centerY = 0)
 	Local $bRandomStatus = $g_bUseRandomClick
 	$g_bUseRandomClick = False
 
@@ -78,7 +78,7 @@ Func ClickR($boundingBox, $x, $y, $times = 1, $speed = 0, $OutScreen = $g_iDEFAU
 	$g_bUseRandomClick = $bRandomStatus
 EndFunc   ;==>ClickR
 
-Func PureClickR($boundingBox, $x, $y, $times = 1, $speed = 0, $OutScreen = $g_iDEFAULT_HEIGHT, $iScaled = 3, $bRandomLoop = True, $centerX = 0, $centerY = 0)
+Func PureClickR($boundingBox, $x, $y, $times = 1, $speed = 0, $OutScreen = $g_iDEFAULT_HEIGHT, $bRandomLoop = True, $iScaled = 3, $centerX = 0, $centerY = 0)
 	Local $bRandomStatus = $g_bUseRandomClick
 	$g_bUseRandomClick = False
 	
@@ -126,7 +126,10 @@ Func PureClickR($boundingBox, $x, $y, $times = 1, $speed = 0, $OutScreen = $g_iD
 	$g_bUseRandomClick = $bRandomStatus
 EndFunc   ;==>ClickR
 
-Func GemClickR($boundingBox,$x, $y, $times = 1, $speed = 0, $debugtxt = "", $OutScreen = $g_iDEFAULT_HEIGHT, $bRandomLoop = True, $density = 1, $centerX = 0, $centerY = 0)
+Func GemClickR($boundingBox,$x, $y, $times = 1, $speed = 0, $debugtxt = "", $OutScreen = $g_iDEFAULT_HEIGHT, $bRandomLoop = True, $iScaled = 3, $centerX = 0, $centerY = 0)
+	Local $bRandomStatus = $g_bUseRandomClick
+	$g_bUseRandomClick = False
+
 	Local $AncVal = " ValIn: X=" & $x & " Y=" & $y
 	Local $boxWidth = $boundingBox[2] - $boundingBox[0]
 	Local $boxHeight = $boundingBox[3] - $boundingBox[1]

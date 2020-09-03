@@ -152,7 +152,7 @@ Global $g_aSetActionPriority[13] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 Global $g_sFrequenceChain = "Never|Sometimes|Frequently|Often|Very Often"
 Global $g_sReplayChain = "1|2|4"
-Global $g_bUseBotHumanization = False, $g_bUseAltRClick = False, $g_iCmbMaxActionsNumber = 1, $g_bCollectAchievements = False, $g_bLookAtRedNotifications = False
+Global $g_bUseBotHumanization = False, $g_bUseAltRClick = False, $g_iCmbMaxActionsNumber = 1, $g_bLookAtRedNotifications = False
 
 Global $g_aReplayDuration[2] = [0, 0] ; An array, [0] = Minute | [1] = Seconds
 Global $g_bOnReplayWindow, $g_iReplayToPause

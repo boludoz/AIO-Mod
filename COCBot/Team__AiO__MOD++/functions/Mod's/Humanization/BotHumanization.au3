@@ -74,7 +74,6 @@ Func BotHumanization()
 		SetLog("OK, Let AiO++ Makes The Bot More Human Like!", $COLOR_SUCCESS1)
 
 		If $g_bLookAtRedNotifications = True Then LookAtRedNotifications()
-		If $g_bCollectAchievements = True Then CollectAchievements()
 		ReturnAtHome()
 
 		For $i = 0 To 12

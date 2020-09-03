@@ -534,7 +534,7 @@ Func BuilderBaseAttackReport()
 
 	; Get the LOOT :
 	Local $gain[3]
-	; To get trophies getOcrOverAllDamage(493, 480 + $g_iMidOffsetYNew)
+	; To get trophies getOcrOverAllDamage(493, 480)
 	$gain[$eLootTrophyBB] = Int(getOcrOverAllDamage(493, 480))
 	$gain[$eLootGoldBB] = Int(getTrophyVillageSearch(150, 483))
 	$gain[$eLootElixirBB] = Int(getTrophyVillageSearch(310, 483))

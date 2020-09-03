@@ -19,7 +19,7 @@ Global $g_hLabel5 = 0, $g_hLabel6 = 0, $g_hLabel7 = 0, $g_hLabel8 = 0
 Global $g_hLabel9 = 0, $g_hLabel10 = 0, $g_hLabel11 = 0, $g_hLabel12 = 0
 Global $g_hLabel14 = 0, $g_hLabel15 = 0, $g_hLabel16 = 0, $g_hLabel13 = 0
 Global $g_hLabel17 = 0, $g_hLabel18 = 0, $g_hLabel20 = 0
-Global $g_hChkCollectAchievements = 0, $g_hChkLookAtRedNotifications = 0, $g_hCmbMaxActionsNumber = 0
+Global $g_hChkLookAtRedNotifications = 0, $g_hCmbMaxActionsNumber = 0
 Global $g_acmbPriority[13] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_acmbMaxSpeed[2] = [0, 0]
 Global $g_acmbPause[2] = [0, 0]
@@ -37,10 +37,6 @@ Func TabHumanizationGUI()
 
 	$g_hChkLookAtRedNotifications = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design - BotHumanization", "chkLookAtRedNotifications", "Look at Red/Purple Flag on Buttons"), 50, $y + 11, 187, 17)
 	GUICtrlSetOnEvent(-1, "chkLookAtRedNotifications")
-	GUICtrlSetState(-1, $GUI_UNCHECKED)
-
-	$g_hChkCollectAchievements = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design - BotHumanization", "chkCollectAchievements", "Collect Achievements Automatically"), 50, $y + 31, 182, 17)
-	GUICtrlSetOnEvent(-1, "chkCollectAchievements")
 	GUICtrlSetState(-1, $GUI_UNCHECKED)
 
 	$x += 6
