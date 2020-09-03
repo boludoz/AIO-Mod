@@ -22,9 +22,9 @@ Func TrainSystem()
 		If $g_bDebugSetlogTrain Then SetLog("Halt mode - training disabled", $COLOR_DEBUG)
 		Return
 	EndIf
-	
+
 	waitMainScreen() ; Custom - Team AIO Mod++ (@vDragon)
-	
+
 	$g_sTimeBeforeTrain = _NowCalc()
 	StartGainCost()
 
@@ -551,13 +551,16 @@ Func RemoveExtraTroopsQueue() ; Will remove All Extra troops in queue If there's
 
 	Local Const $y = 186, $yRemoveBtn = 200, $xDecreaseRemoveBtn = 10
 	Local $bColorCheck = False, $bGotRemoved = False
-	For $x = 834 To 58 Step -70
+
+	For $x = 58 To 834 Step 70 ;left to right
 		If Not $g_bRunState Then Return
+
 		$bColorCheck = _ColorCheck(_GetPixelColor($x, $y, True), Hex(0xD7AFA9, 6), 20)
+
 		If $bColorCheck Then
 			$bGotRemoved = True
 			Do
-				Click($x - $xDecreaseRemoveBtn, $yRemoveBtn, 2, $g_iTrainClickDelay)
+				Click($x - $xDecreaseRemoveBtn, $yRemoveBtn, 10, $g_iTrainClickDelay)
 				If _Sleep(20) Then Return
 				$bColorCheck = _ColorCheck(_GetPixelColor($x, $y, True), Hex(0xD7AFA9, 6), 20)
 			Until $bColorCheck = False
@@ -565,8 +568,8 @@ Func RemoveExtraTroopsQueue() ; Will remove All Extra troops in queue If there's
 		ElseIf Not $bColorCheck And $bGotRemoved Then
 			ExitLoop
 		EndIf
-	Next
-
+	 Next
+  
 	Return True
 EndFunc   ;==>RemoveExtraTroopsQueue
 
@@ -929,21 +932,21 @@ Func SearchArmy($sImageDir = "", $x = 0, $y = 0, $x1 = 0, $y1 = 0, $sArmyType = 
 	Local $aResult[1][4], $aCoordArray[1][2], $aCoords, $aCoordsSplit, $aValue
 
 	If Not $g_bRunState Then Return $aResult
-	
+
 	#Region - Custom - The loop was very hard - Team AIO Mod++
 	If Not getReceivedTroops(162, 200, $bSkipReceivedTroopsCheck) Then
 		; Perform the search
 		_CaptureRegion2($x, $y, $x1, $y1)
 		Local $vRes = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sImageDir, "str", "FV", "Int", 0, "str", "FV", "Int", 0, "Int", 1000)
-		
+
 		If $vRes[0] <> "" Then
 			; Get the keys for the dictionary item.
 			Local $aKeys = StringSplit($vRes[0], "|", $STR_NOCOUNT)
-	
+
 			; Redimension the result array to allow for the new entries
 			ReDim $aResult[UBound($aKeys)][4]
 			Local $iResultAddDup = 0
-	
+
 			; Loop through the array
 			For $i = 0 To UBound($aKeys) - 1
 				; Get the property values
