@@ -43,7 +43,7 @@ Func getPBTInfo()
 			If $g_bDebugSetlog Then SetDebugLog("Guard Active", $COLOR_DEBUG)
 		Case Else
 			SetLog("Sorry, Monkey needs more bananas to read shield type", $COLOR_ERROR) ; Check for pixel colors errors!
-			If $g_bDebugImageSave Then DebugImageSave("ShieldInfo_", $g_bCapturePixel, "png", False)
+			If $g_bDebugImageSave Then SaveDebugImage("ShieldInfo_", $g_bCapturePixel, "png", False)
 			SetError(1, "Bad shield type pixel read")
 			Return
 	EndSelect
@@ -64,7 +64,7 @@ Func getPBTInfo()
 		$iCount += 1
 		If $iCount > 20 Then ; Wait ~10-12 seconds for window to open before error return
 			SetLog("PBT information window failed to open", $COLOR_DEBUG)
-			If $g_bDebugImageSave Then DebugImageSave("PBTInfo_", $g_bCapturePixel, "png", False)
+			If $g_bDebugImageSave Then SaveDebugImage("PBTInfo_", $g_bCapturePixel, "png", False)
 			ClickAway()
 			If _Sleep($DELAYPERSONALSHIELD2) Then Return ; wait for close
 			Return

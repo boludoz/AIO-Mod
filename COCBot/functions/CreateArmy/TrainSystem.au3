@@ -548,8 +548,9 @@ EndFunc   ;==>DeleteInvalidTroopInArray
 Func RemoveExtraTroopsQueue() ; Will remove All Extra troops in queue If there's a Low Opacity red color on them
 	;Local Const $DecreaseBy = 70
 	;Local $x = 834
-
-	Local Const $y = 186, $yRemoveBtn = 200, $xDecreaseRemoveBtn = 10
+	Local $bOriginalUse = $g_bUseRandomClick
+	$g_bUseRandomClick =  False
+	Local Const $y = 186, $yRemoveBtn = 200
 	Local $bColorCheck = False, $bGotRemoved = False
 
 	For $x = 58 To 834 Step 70 ;left to right
@@ -560,8 +561,8 @@ Func RemoveExtraTroopsQueue() ; Will remove All Extra troops in queue If there's
 		If $bColorCheck Then
 			$bGotRemoved = True
 			Do
-				Click($x - $xDecreaseRemoveBtn, $yRemoveBtn, 10, $g_iTrainClickDelay)
-				If _Sleep(20) Then Return
+				Click($x + Random(-6, 3, 1), $yRemoveBtn + Random(-1 , 1, 1), Random(5,15,1), 50)
+				If RandomSleep($g_iTrainClickDelay) Then ExitLoop
 				$bColorCheck = _ColorCheck(_GetPixelColor($x, $y, True), Hex(0xD7AFA9, 6), 20)
 			Until $bColorCheck = False
 
@@ -569,7 +570,7 @@ Func RemoveExtraTroopsQueue() ; Will remove All Extra troops in queue If there's
 			ExitLoop
 		EndIf
 	 Next
-  
+	$g_bUseRandomClick = $bOriginalUse
 	Return True
 EndFunc   ;==>RemoveExtraTroopsQueue
 
