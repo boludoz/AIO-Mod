@@ -43,6 +43,10 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 		If _Sleep($DELAYTREASURY4) Then Return
 		
 		#Region - Custom findMatch - Team AIO Mod++ 
+		; ZoomOut for update measurements
+		ZoomOut()
+		
+		; Find attack button.
 		For $i = 0 To 4
 			Local $aAttack = findButton("AttackButton", Default, 1, True)
 			If IsArray($aAttack) And UBound($aAttack, 1) = 2 Then

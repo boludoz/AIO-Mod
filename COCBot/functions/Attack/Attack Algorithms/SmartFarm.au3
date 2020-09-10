@@ -5,13 +5,14 @@
 ; Parameters ....: None
 ; Return values .: None
 ; Author ........: ProMac Jan 2017
-; Modified ......: ProMac Jul 2018
+; Modified ......: ProMac (2020), Team AIO Mod++ (2020)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2016
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+Global $g_aGreenTiles[0], $g_iRandomSides[4] = [0, 1, 2, 3], $g_sRandomSidesNames[4] = ["BR", "TL", "BL", "TR"]
 
 Func TestSmartFarm($bFast = True)
 
@@ -59,12 +60,24 @@ Func TestSmartFarm($bFast = True)
 EndFunc   ;==>TestSmartFarm
 
 ; Collectors | Mines | Drills | All (Default)
-Func ChkSmartFarm($sTypeResources = "All")
+Func ChkSmartFarm($sTypeResources = "All", $bTH = False)
 
 	; Initial Timer
+	Local $iRandomSides[4] = [0, 1, 2, 3]
+	Local $Sides = ["BR", "TL", "BL", "TR"]
+	For $x = 0 To UBound($g_iRandomSides) - 1
+		Local $i = Random(0, UBound($iRandomSides) - 1, 1)
+		$g_iRandomSides[$x] = $iRandomSides[$i]
+		$g_sRandomSidesNames[$x] = $Sides[$i]
+		_ArrayDelete($iRandomSides, $i)
+		_ArrayDelete($Sides, $i)
+	Next
+	SetLog("Next Side Order is " & _ArrayToString($g_sRandomSidesNames))
+	SetDebugLog("Original $g_iRandomSides: " & _ArrayToString($g_iRandomSides))
 	Local $hTimer = TimerInit()
 
 	; [0] = x , [1] = y , [2] = Side , [3] = In/out , [4] = Side,  [5]= Is string with 5 coordinates to deploy
+	Local $g_bUseSmartFarmRedLine = True
 	Local $aResourcesOUT[0][6]
 	Local $aResourcesIN[0][6]
 
@@ -72,17 +85,26 @@ Func ChkSmartFarm($sTypeResources = "All")
 	Local $aMainSide[4] = [0, 0, 0, 0]
 
 	If $g_bDebugSetlog Then SetDebugLog(" - INI|SmartFarm detection.", $COLOR_INFO)
-	; Local $aCollectores = SmartFarmDetection("Collectors")
-	; Local $aMines = SmartFarmDetection("Mines")
-	; Local $aDrills = SmartFarmDetection("Drills")
-
+	_CaptureRegion2()
+	ConvertInternalExternArea("ChkSmartFarm")
+	Local $temp[0]
+	$g_aGreenTiles = $temp
+	If $g_bUseSmartFarmRedLine Then
+		SetDebugLog("Using Green Tiles -> Red Lines -> Edges")
+		NewRedLines()
+	Else
+		SetDebugLog("Classic Redlines, mix with edges.")
+		_GetRedArea()
+	EndIf
 	$hTimer = TimerInit()
-
-	If $g_iSearchTH = "-" Then FindTownHall(True, True)
-	; [0] = Level , [1] = Xaxis , [2] = Yaxis , [3] = Distances to redlines
-	Local $THdetails[4] = [$g_iSearchTH, $g_iTHx, $g_iTHy, _ObjGetValue($g_oBldgAttackInfo, $eBldgTownHall & "_REDLINEDISTANCE")]
-	setlog("TH Details: " & _ArrayToString($THdetails, "|"))
-
+	If $bTH Then
+		If $g_iSearchTH = "-" Then FindTownHall(True, True)
+		Local $THdetails[4] = [$g_iSearchTH, $g_iTHx, $g_iTHy, _ObjGetValue($g_oBldgAttackInfo, $eBldgTownHall & "_REDLINEDISTANCE")]
+		SetLog("TH Details: " & _ArrayToString($THdetails, "|"))
+	Else
+		Local $THdetails[4] = ["-", 0, 0, ""]
+	EndIf
+	
 	; [0] = x , [1] = y , [2] = Distance to Redline ,[3] = In/Out, [4] = Side,  [5]= Is array Dim[2] with 5 coordinates to deploy
 	#Region - AreCollectorsOutside - Team AIO Mod++
 	Local $aAll
@@ -140,14 +162,20 @@ Func ChkSmartFarm($sTypeResources = "All")
 			Next
 		Next
 	EndIf
-
-	; Total of Resources and %
 	Local $TotalOfResources = UBound($aResourcesIN) + UBound($aResourcesOUT)
-	Setlog("Total of Resources: " & $TotalOfResources, $COLOR_INFO)
-	Setlog(" - Inside the Village: " & UBound($aResourcesIN), $COLOR_INFO)
-	Setlog(" - Outside the village: " & UBound($aResourcesOUT), $COLOR_INFO)
-	If $g_bDebugSetlog Then SetDebugLog("MainSide array: " & _ArrayToString($aMainSide))
-
+	SetLog("Total of Resources: " & $TotalOfResources, $COLOR_INFO)
+	SetLog(" - Inside the Village: " & UBound($aResourcesIN), $COLOR_INFO)
+	SetLog(" - Outside the village: " & UBound($aResourcesOUT), $COLOR_INFO)
+	SetDebugLog("MainSide array: " & _ArrayToString($aMainSide))
+	If $g_bDebugSmartFarm Then
+		If Number($g_iTownHallLevel) < 6 And $TotalOfResources < 7 Then
+			SaveDebugImage("SmartFarm_Collectors", False)
+		ElseIf Number($g_iTownHallLevel) < 9 And $TotalOfResources < 8 Then
+			SaveDebugImage("SmartFarm_Collectors", False)
+		ElseIf Number($g_iTownHallLevel) < 14 And $TotalOfResources < 12 Then
+			SaveDebugImage("SmartFarm_Collectors", False)
+		EndIf
+	EndIf
 	$g_sResourcesIN = UBound($aResourcesIN)
 	$g_sResourcesOUT = UBound($aResourcesOUT)
 	$g_sResBySide = _ArrayToString($aMainSide)
@@ -213,14 +241,14 @@ Func ChkSmartFarm($sTypeResources = "All")
 
 	#Region - Max Side - Team AIO Mod++
 	If $g_bMaxSidesSF Then
-		Local $aSides2[4][2] = [ ["TL", $aMainSide[0]], ["TR", $aMainSide[1]], ["BL", $aMainSide[2]], ["BR", $aMainSide[3]] ]
+		Local $aSides2[4][2] = [["TL", $aMainSide[0]], ["TR", $aMainSide[1]], ["BL", $aMainSide[2]], ["BR", $aMainSide[3]]]
 		_ArraySort($aSides2, 0, 0, 0, 1)
 
-		Local $iMaxL = ((UBound($BestSideToAttack) -1) > ($g_iCmbMaxSidesSF - 1)) ? ($g_iCmbMaxSidesSF - 1) : (UBound($BestSideToAttack) - 1)
+		Local $iMaxL = ((UBound($BestSideToAttack) - 1) > ($g_iCmbMaxSidesSF - 1)) ? ($g_iCmbMaxSidesSF - 1) : (UBound($BestSideToAttack) - 1)
 		Local $BestSideToAttack[0]
 		For $i = 0 To $iMaxL
 			Local $aClu[1] = [$aSides2[$i][0]]
-			SetDebugLog("["&$i&"] ChkSmartFarm | $aClu: " & $aSides2[$i][0])
+			SetDebugLog("[" & $i & "] ChkSmartFarm | $aClu: " & $aSides2[$i][0])
 			_ArrayAdd($BestSideToAttack, $aClu)
 		Next
 	EndIf
@@ -242,8 +270,19 @@ Func SmartFarmDetection($txtBuildings = "Mines", $bForceCapture = True)
 
 
 	; Initial Timer
+	Local $iMinLevel = 0
+	Local $iMaxLevel = 0
+	If "Drills" <> $txtBuildings Then
+		For $i = 6 To UBound($g_abCollectorLevelEnabled) - 1
+			If $g_abCollectorLevelEnabled[$i] Then
+				If $iMinLevel = 0 Then $iMinLevel = $i
+				If $i > $iMaxLevel Then $iMaxLevel = $i
+			EndIf
+		Next
+	EndIf
+	SetDebugLog("Detection Resources with Min Level of " & $iMinLevel & " and Max of " & $iMaxLevel)
 	Local $hTimer = TimerInit()
-
+	
 	; Prepared for Winter Theme
 	Switch $txtBuildings
 		Case "Mines"
@@ -253,7 +292,6 @@ Func SmartFarmDetection($txtBuildings = "Mines", $bForceCapture = True)
 				$sdirectory = @ScriptDir & "\imgxml\Storages\GoldMines"
 			EndIf
 			$iMaxReturnPoints = 7
-			$iMaxLevel = 14
 		Case "Collectors"
 			If $g_iDetectedImageType = 1 Then
 				$sdirectory = @ScriptDir & "\imgxml\Storages\Collectors_Snow"
@@ -261,7 +299,6 @@ Func SmartFarmDetection($txtBuildings = "Mines", $bForceCapture = True)
 				$sdirectory = @ScriptDir & "\imgxml\Storages\Collectors"
 			EndIf
 			$iMaxReturnPoints = 7
-			$iMaxLevel = 14
 		Case "Drills"
 			$sdirectory = @ScriptDir & "\imgxml\Storages\Drills"
 			$iMaxReturnPoints = 3
@@ -273,37 +310,30 @@ Func SmartFarmDetection($txtBuildings = "Mines", $bForceCapture = True)
 				$sdirectory = @ScriptDir & "\imgxml\Storages\All"
 			EndIf
 			$iMaxReturnPoints = 21
-			$iMaxLevel = 14
 	EndSwitch
-	; Necessary Variables
+
 	Local $sCocDiamond = "ECD"
 	Local $sRedLines = ""
-	Local $iMinLevel = 1
 	Local $sReturnProps = "objectname,objectpoints,nearpoints,redlinedistance"
-
-	; DETECTION IMGLOC
 	Local $aResult = findMultiple($sdirectory, $sCocDiamond, $sRedLines, $iMinLevel, $iMaxLevel, $iMaxReturnPoints, $sReturnProps, $bForceCapture)
-	Local $aTEMP, $sObjectname, $aObjectpoints, $sNear, $sRedLineDistance
+	Local $aTemp, $sObjectname, $aObjectpoints, $sNear, $sRedLineDistance
 	Local $tempObbj, $sNearTemp, $Distance, $tempObbjs, $sString
 	Local $distance2RedLine = 40
-
-	; Get properties from detection
 	If IsArray($aResult) And UBound($aResult) > 0 Then
 		For $buildings = 0 To UBound($aResult) - 1
-			If _Sleep(50) Then Return ; just in case on PAUSE
-			If Not $g_bRunState Then Return ; Stop Button
+			If _Sleep(50) Then Return
+			If Not $g_bRunState Then Return
 			SetDebugLog(_ArrayToString($aResult[$buildings]))
-			$aTEMP = $aResult[$buildings]
-			$sObjectname = String($aTEMP[0])
-			SetDebugLog("Building name: " & String($aTEMP[0]), $COLOR_INFO)
-			$aObjectpoints = $aTEMP[1] ; number of  objects returned
-			SetDebugLog("Object points: " & String($aTEMP[1]), $COLOR_INFO)
-			$sNear = $aTEMP[2] ;
-			SetDebugLog("Near points: " & String($aTEMP[2]), $COLOR_INFO)
-			$sRedLineDistance = $aTEMP[3] ;
-			SetDebugLog("Near points: " & String($aTEMP[3]), $COLOR_INFO)
-
-			Switch String($aTEMP[0])
+			$aTemp = $aResult[$buildings]
+			$sObjectname = String($aTemp[0])
+			SetDebugLog("Building name: " & String($aTemp[0]), $COLOR_INFO)
+			$aObjectpoints = $aTemp[1]
+			SetDebugLog("Object points: " & String($aTemp[1]), $COLOR_INFO)
+			$sNear = $aTemp[2]
+			SetDebugLog("Near points: " & String($aTemp[2]), $COLOR_INFO)
+			$sRedLineDistance = $aTemp[3]
+			SetDebugLog("Near points: " & String($aTemp[3]), $COLOR_INFO)
+			Switch String($aTemp[0])
 				Case "Mines"
 					$offsetx = 3
 					$offsety = 12
@@ -386,7 +416,7 @@ Func DoublePoint($sName, $aReturn, $aPoint, $iDistance = 18)
 		$x = Number($aReturn[$i][0])
 		$y = Number($aReturn[$i][1])
 		If Pixel_Distance($x, $y, $x1, $y1) < $iDistance Then
-			;SetDebugLog("Detected a " & $sName & " double detection at (" & $x & "," & $y & ")")
+			SetDebugLog("Detected a " & $sName & " double detection at (" & $x & "," & $y & ")")
 			Return True
 		EndIf
 	Next
@@ -406,16 +436,15 @@ Func Pixel_Distance($x, $y, $x1, $y1)
 	EndIf
 EndFunc   ;==>Pixel_Distance
 
-Func Side($Pixel)
+Func Side($pixel)
 	Local $sReturn = ""
-	; Using to determinate the Side position on Screen |Bottom Right|Bottom Left|Top Left|Top Right|
-	If IsArray($Pixel) And UBound($Pixel) = 2 Then
-		If $Pixel[0] < 430 And $Pixel[1] <= 330 Then $sReturn = "TL"
-		If $Pixel[0] >= 430 And $Pixel[1] < 330 Then $sReturn = "TR"
-		If $Pixel[0] < 430 And $Pixel[1] > 330 Then $sReturn = "BL"
-		If $Pixel[0] >= 430 And $Pixel[1] >= 330 Then $sReturn = "BR"
+	If IsArray($pixel) And UBound($pixel) = 2 Then
+		If $pixel[0] < $DiamondMiddleX And $pixel[1] <= $DiamondMiddleY Then $sReturn = "TL"
+		If $pixel[0] >= $DiamondMiddleX And $pixel[1] < $DiamondMiddleY Then $sReturn = "TR"
+		If $pixel[0] < $DiamondMiddleX And $pixel[1] > $DiamondMiddleY Then $sReturn = "BL"
+		If $pixel[0] >= $DiamondMiddleX And $pixel[1] >= $DiamondMiddleY Then $sReturn = "BR"
 		If $sReturn = "" Then
-			Setlog("Error on SIDE...: " & _ArrayToString($Pixel), $COLOR_RED)
+			SetLog("Error on SIDE...: " & _ArrayToString($pixel), $COLOR_RED)
 			$sReturn = "ERROR"
 		EndIf
 		Return $sReturn
@@ -449,6 +478,12 @@ Func DebugImageSmartFarm($THdetails, $aIn, $aOut, $sTime, $BestSideToAttack, $re
 	addInfoToDebugImage($hGraphic, $hPen, "TH_" & $THdetails[0] & "|" & $THdetails[3], $THdetails[1], $THdetails[2])
 	_GDIPlus_GraphicsDrawRect($hGraphic, $THdetails[1] - 5, $THdetails[2] - 5, 10, 10, $hPen2)
 
+	$hPen2 = _GDIPlus_PenCreate(0xFFFFFFFF, 2)
+	_GDIPlus_GraphicsDrawRect($hGraphic, $DiamondMiddleX - 5, $DiamondMiddleY - 5, 10, 10, $hPen2)
+	$hPen2 = _GDIPlus_PenCreate(0xFFFFFFFF, 1)
+	_GDIPlus_GraphicsDrawLine($hGraphic, 0, $DiamondMiddleY, 860, $DiamondMiddleY, $hPen2)
+	_GDIPlus_GraphicsDrawLine($hGraphic, $DiamondMiddleX, 0, $DiamondMiddleX, 644, $hPen2)
+	$hPen2 = _GDIPlus_PenCreate(0xFF000000, 2)
 	Local $tempObbj, $tempObbjs
 	For $i = 0 To UBound($aIn) - 1
 		; Objects Detected Inside the village
@@ -490,8 +525,26 @@ Func DebugImageSmartFarm($THdetails, $aIn, $aOut, $sTime, $BestSideToAttack, $re
 	Next
 
 	; ############################# Best Side to attack INSIDE ###################################
-	$hPen2 = _GDIPlus_PenCreate(0xFF0038ff, 2) ; Create a pencil Color BLUE
-	Local $aTEMP, $DecodeEachPoint
+	If IsArray($g_aGreenTiles) And UBound($g_aGreenTiles) > 0 Then
+		$hPen2 = _GDIPlus_PenCreate(0xFF40FF9F, 2)
+		For $i = 0 To UBound($g_aGreenTiles) - 1
+			_GDIPlus_GraphicsDrawRect($hGraphic, $g_aGreenTiles[$i][0], $g_aGreenTiles[$i][1], 10, 10, $hPen2)
+		Next
+	EndIf
+	Local $aiGreenTilesBySide = GetDiamondGreenTiles()
+	If IsArray($aiGreenTilesBySide) And UBound($aiGreenTilesBySide) > 1 Then
+		$hPen2 = _GDIPlus_PenCreate(0xFF000000, 2)
+		For $i = 0 To 3
+			Local $OneSide = $aiGreenTilesBySide[$i]
+			If IsArray($OneSide) And UBound($OneSide) > 0 Then
+				For $j = 0 To UBound($OneSide) - 1
+					_GDIPlus_GraphicsDrawRect($hGraphic, $OneSide[$j][0], $OneSide[$j][1], 15, 15, $hPen2)
+				Next
+			EndIf
+		Next
+	EndIf
+	$hPen2 = _GDIPlus_PenCreate(0xFF0038ff, 2)
+	Local $aTemp, $DecodeEachPoint
 	SetDebugLog("$redline: " & _ArrayToString($redline))
 	For $l = 0 To UBound($redline) - 1
 		$aTEMP = StringSplit($redline[$l], "|", 2)
@@ -502,10 +555,46 @@ Func DebugImageSmartFarm($THdetails, $aIn, $aOut, $sTime, $BestSideToAttack, $re
 	Next
 
 	;############################################################################################
+	$hPen2 = _GDIPlus_PenCreate(0xFFFF0000, 2)
+	Local $aTemp, $DecodeEachPoint
+	Local $pixel
+	For $i = 0 To UBound($g_aiPixelTopLeft) - 1
+		$pixel = $g_aiPixelTopLeft[$i]
+		_GDIPlus_GraphicsDrawEllipse($hGraphic, $pixel[0], $pixel[1], 2, 2, $hPen2)
+	Next
+	For $i = 0 To UBound($g_aiPixelTopRight) - 1
+		$pixel = $g_aiPixelTopRight[$i]
+		_GDIPlus_GraphicsDrawEllipse($hGraphic, $pixel[0], $pixel[1], 2, 2, $hPen2)
+	Next
+	For $i = 0 To UBound($g_aiPixelBottomLeft) - 1
+		$pixel = $g_aiPixelBottomLeft[$i]
+		_GDIPlus_GraphicsDrawEllipse($hGraphic, $pixel[0], $pixel[1], 2, 2, $hPen2)
+	Next
+	For $i = 0 To UBound($g_aiPixelBottomRight) - 1
+		$pixel = $g_aiPixelBottomRight[$i]
+		_GDIPlus_GraphicsDrawEllipse($hGraphic, $pixel[0], $pixel[1], 2, 2, $hPen2)
+	Next
+	$hPen2 = _GDIPlus_PenCreate(0xFFEE940B, 2)
+	For $i = 0 To UBound($g_aiPixelTopLeftFurther) - 1
+		$pixel = $g_aiPixelTopLeftFurther[$i]
+		_GDIPlus_GraphicsDrawEllipse($hGraphic, $pixel[0], $pixel[1], 2, 2, $hPen2)
+	Next
+	For $i = 0 To UBound($g_aiPixelTopRightFurther) - 1
+		$pixel = $g_aiPixelTopRightFurther[$i]
+		_GDIPlus_GraphicsDrawEllipse($hGraphic, $pixel[0], $pixel[1], 2, 2, $hPen2)
+	Next
+	For $i = 0 To UBound($g_aiPixelBottomLeftFurther) - 1
+		$pixel = $g_aiPixelBottomLeftFurther[$i]
+		_GDIPlus_GraphicsDrawEllipse($hGraphic, $pixel[0], $pixel[1], 2, 2, $hPen2)
+	Next
+	For $i = 0 To UBound($g_aiPixelBottomRightFurther) - 1
+		$pixel = $g_aiPixelBottomRightFurther[$i]
+		_GDIPlus_GraphicsDrawEllipse($hGraphic, $pixel[0], $pixel[1], 2, 2, $hPen2)
+	Next
 	_GDIPlus_GraphicsDrawString($hGraphic, $sTime & " - " & $BestSideToAttack, 370, 70, "ARIAL", 20)
 
 	; Save the image and release any memory
-	_GDIPlus_ImageSaveToFile($editedImage, $subDirectory & $fileName)
+	_GDIPlus_ImageSaveToFile($EditedImage, $subDirectory & $Filename)
 	_CaptureRegion()
 	_GDIPlus_ImageSaveToFile($g_hBitmap, $subDirectory & $fileNameUntouched)
 	_GDIPlus_PenDispose($hPen)
@@ -562,7 +651,9 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 			$g_iSlotsGiants = 2
 		Case Else
 			Switch $nbSides
-				Case 1 To 2
+				Case 2
+					$g_iSlotsGiants = 2
+				Case 1
 					$g_iSlotsGiants = 4
 				Case Else
 					$g_iSlotsGiants = 0
@@ -641,50 +732,57 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 	$g_aiDeployHeroesPosition[1] = -1
 
 	#Region - Drop CC first - Team AIO Mod++ (By Boludoz)
-	If (Ubound($g_bDeployCastleFirst) > $g_iMatchMode) And $g_bDeployCastleFirst[$g_iMatchMode] Then
+	If (UBound($g_bDeployCastleFirst) > $g_iMatchMode) And $g_bDeployCastleFirst[$g_iMatchMode] Then
 		Local $aCC = _ArraySearch($listInfoDeploy, "CC", 0, 0, 0, 0, 0, 0)
 		Local $aRem = _ArrayExtract($listInfoDeploy, $aCC, $aCC)
 		_ArrayDelete($listInfoDeploy, $aCC)
 		_ArrayInsert($listInfoDeploy, 0, $aRem)
 	EndIf
-    #EndRegion
+	#EndRegion - Drop CC first - Team AIO Mod++ (By Boludoz)
 
 	LaunchTroopSmartFarm($listInfoDeploy, $g_iClanCastleSlot, $g_iKingSlot, $g_iQueenSlot, $g_iWardenSlot, $g_iChampionSlot, $SIDESNAMES)
-
 	If Not $g_bRunState Then Return
-
 	CheckHeroesHealth()
 	If _Sleep($DELAYALGORITHM_ALLTROOPS4) Then Return
-
-	SetLog("Dropping left over troops", $COLOR_INFO)
-	For $x = 0 To 1
-		If PrepareAttack($g_iMatchMode, True) = 0 Then
-			If $g_bDebugSetlog Then SetDebugLog("No Wast time... exit, no troops usable left", $COLOR_DEBUG)
-			ExitLoop ;Check remaining quantities
-		EndIf
-		For $i = $eBarb To $eHunt ; launch all remaining troops
-			If LaunchTroop($i, $nbSides, 1, 1, 1) Then
-				CheckHeroesHealth()
-				If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
+	If PrepareAttack($g_iMatchMode, True) <> 0 Then
+		SetLog("Dropping left over Troops", $COLOR_INFO)
+		For $i = $eBarb To $eArmyCount - 1 ; launch all remaining troops
+			If ($i >= $eSuperBarb And $i <= $eArmyCount - 1) Or ($i >= $eBarb And $i <= $eTroopCount - 1) Then
+				If LaunchTroop($i, $nbSides, 1, 1, 1) Then
+					CheckHeroesHealth()
+					If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
+				EndIf
 			EndIf
 		Next
-	Next
-
+		Local $iKingSlot = Not $g_bDropKing ? $g_iKingSlot : -1
+		Local $iQueenSlot = Not $g_bDropQueen ? $g_iQueenSlot : -1
+		Local $iWardenSlot = Not $g_bDropWarden ? $g_iWardenSlot : -1
+		Local $iChampionSlot = Not $g_bDropChampion ? $g_iChampionSlot : -1
+		If $iKingSlot <> -1 Or $iQueenSlot <> -1 Or $iWardenSlot <> -1 Or $iChampionSlot <> -1 Then
+			SetLog("Dropping left over heroes", $COLOR_INFO)
+			Local $HeroesInfoDeploy[1][5] = [["HEROES", 1, 2, 1, 1]]
+			LaunchTroopSmartFarm($HeroesInfoDeploy, $g_iClanCastleSlot, $iKingSlot, $iQueenSlot, $iWardenSlot, $iChampionSlot, $SIDESNAMES)
+			CheckHeroesHealth()
+		EndIf
+	EndIf
 	CheckHeroesHealth()
-
 	SetLog("Finished Attacking, waiting for the battle to end")
-
 EndFunc   ;==>AttackSmartFarm
 
 Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iChampion, $SIDESNAMES = "TR|TL|BR|BL")
-
 	If $g_bDebugSetlog Then SetDebugLog("LaunchTroopSmartFarm with CC " & $iCC & ", K " & $iKing & ", Q " & $iQueen & ", W " & $iWarden & ", C " & $iChampion, $COLOR_DEBUG)
-	; $ListInfoDeploy = [Troop, No. of Sides, $WaveNb, $MaxWaveNb, $slotsPerEdge]
 	Local $listListInfoDeployTroopPixel[0]
 	Local $pixelRandomDrop[2]
 	Local $pixelRandomDropcc[2]
 	Local $troop, $troopNb, $name
 
+	Local $iHowManySides = 0
+	Local $aWhatSides = StringSplit($SIDESNAMES, "|", $STR_NOCOUNT)
+	If @error Then
+		$iHowManySides = 1
+	Else
+		$iHowManySides = UBound($aWhatSides)
+	EndIf
 	For $i = 0 To UBound($listInfoDeploy) - 1
 		; Reset the variables
 		Local $troop = -1
@@ -704,7 +802,9 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 				If $g_avAttackTroops[$j][0] = $troopKind Then
 					$troop = $j
 					$troopNb = Ceiling($g_avAttackTroops[$j][1] / $maxWaveNb)
-					$name = GetTroopName($troopKind, $troopNb)
+					Local $Plural = 0
+					If $troopNb > 1 Then $Plural = 1
+					$name = GetTroopName($troopKind, $Plural)
 				EndIf
 			Next
 		EndIf
@@ -719,11 +819,10 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 			$listInfoDeployTroopPixel = $listListInfoDeployTroopPixel[$waveNb - 1]
 
 			ReDim $listInfoDeployTroopPixel[UBound($listInfoDeployTroopPixel) + 1]
-			If (IsString($troopKind)) Then ; Heroes or Castle
+			If (IsString($troopKind)) Then
 				Local $arrCCorHeroes[1] = [$troopKind]
 				$listInfoDeployTroopPixel[UBound($listInfoDeployTroopPixel) - 1] = $arrCCorHeroes
 			Else
-				; $infoDropTroop = [$troop, $listInfoPixelDropTroop, $nbTroopsPerEdge, $slotsPerEdge, $number, $name]
 				Local $infoDropTroop = DropTroopSmartFarm($troop, $nbSides, $troopNb, $slotsPerEdge, $name, $SIDESNAMES)
 				$listInfoDeployTroopPixel[UBound($listInfoDeployTroopPixel) - 1] = $infoDropTroop
 			EndIf
@@ -738,7 +837,6 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 		Local $listInfoDeployTroopPixel = $listListInfoDeployTroopPixel[$numWave]
 		If (UBound($listInfoDeployTroopPixel) > 0) Then
 			Local $infoTroopListArrPixel = $listInfoDeployTroopPixel[0]
-
 			For $i = 0 To UBound($listInfoDeployTroopPixel) - 1
 				$infoTroopListArrPixel = $listInfoDeployTroopPixel[$i]
 				If (UBound($infoTroopListArrPixel) > 1) Then
@@ -747,20 +845,20 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 					ExitLoop
 				EndIf
 			Next
-
 			If ($numberSidesDropTroop > 0) Then
 				For $i = 0 To $numberSidesDropTroop - 1
+					Local $sSide = ""
 					For $j = 0 To UBound($listInfoDeployTroopPixel) - 1
 						$infoTroopListArrPixel = $listInfoDeployTroopPixel[$j]
 						If (IsString($infoTroopListArrPixel[0]) And ($infoTroopListArrPixel[0] = "CC" Or $infoTroopListArrPixel[0] = "HEROES")) Then
-
+							SetDebugLog("Wave " & $numWave & " Side " & $i + 1 & "/" & $numberSidesDropTroop & " Dropping a CC & Heroes at troop loop " & $j & "/" & (UBound($listInfoDeployTroopPixel) - 1))
 							If $g_aiDeployHeroesPosition[0] <> -1 Then
 								$pixelRandomDrop[0] = $g_aiDeployHeroesPosition[0]
 								$pixelRandomDrop[1] = $g_aiDeployHeroesPosition[1]
 								If $g_bDebugSetlog Then SetDebugLog("Deploy Heroes $g_aiDeployHeroesPosition")
 							Else
 								$pixelRandomDrop[0] = $g_aaiBottomRightDropPoints[2][0]
-								$pixelRandomDrop[1] = $g_aaiBottomRightDropPoints[2][1] ;
+								$pixelRandomDrop[1] = $g_aaiBottomRightDropPoints[2][1]
 								If $g_bDebugSetlog Then SetDebugLog("Deploy Heroes $g_aaiBottomRightDropPoints")
 							EndIf
 							If $g_aiDeployCCPosition[0] <> -1 Then
@@ -769,30 +867,45 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 								If $g_bDebugSetlog Then SetDebugLog("Deploy CC $g_aiDeployHeroesPosition")
 							Else
 								$pixelRandomDropcc[0] = $g_aaiBottomRightDropPoints[2][0]
-								$pixelRandomDropcc[1] = $g_aaiBottomRightDropPoints[2][1] ;
+								$pixelRandomDropcc[1] = $g_aaiBottomRightDropPoints[2][1]
 								If $g_bDebugSetlog Then SetDebugLog("Deploy CC $g_aaiBottomRightDropPoints")
 							EndIf
-
 							If ($g_bIsCCDropped = False And $infoTroopListArrPixel[0] = "CC" And $i = $numberSidesDropTroop - 1) Then
+								$sSide = Side($pixelRandomDropcc)
+								SetLog("Dropping CC at " & $sSide & " - " & _ArrayToString($pixelRandomDrop), $COLOR_SUCCESS)
 								dropCC($pixelRandomDropcc[0], $pixelRandomDropcc[1], $iCC)
 								$g_bIsCCDropped = True
 							ElseIf ($g_bIsHeroesDropped = False And $infoTroopListArrPixel[0] = "HEROES" And $i = $numberSidesDropTroop - 1) Then
+								$sSide = Side($pixelRandomDrop)
+								SetLog("Dropping Hero at " & $sSide & " - " & _ArrayToString($pixelRandomDrop), $COLOR_SUCCESS)
 								dropHeroes($pixelRandomDrop[0], $pixelRandomDrop[1], $iKing, $iQueen, $iWarden, $iChampion)
 								$g_bIsHeroesDropped = True
 							EndIf
 						Else
-							;
-							; $infoTroopListArrPixel[  $troop, $listInfoPixelDropTroop, $nbTroopsPerEdge, $slotsPerEdge, $number, $name ]
-							;
-							$infoListArrPixel = $infoTroopListArrPixel[1] ; $listInfoPixelDropTroop
+							$infoListArrPixel = $infoTroopListArrPixel[1]
 							Local $listPixel = $infoListArrPixel[$i]
-							;infoPixelDropTroop : First element in array contains troop and list of array to drop troop
-							If _Sleep($DELAYLAUNCHTROOP21) Then Return
-							SelectDropTroop($infoTroopListArrPixel[0]) ;Select Troop - $troop
-							If _Sleep($DELAYLAUNCHTROOP23) Then Return
-							SetLog("Dropping " & $infoTroopListArrPixel[2] & "  of " & $infoTroopListArrPixel[5] & " Points Per Side: " & $infoTroopListArrPixel[3] & " (side " & $i + 1 & ")", $COLOR_SUCCESS)
 							Local $pixelDropTroop[1] = [$listPixel]
-							DropOnPixel($infoTroopListArrPixel[0], $pixelDropTroop, $infoTroopListArrPixel[2], $infoTroopListArrPixel[3])
+							Local $arrPixel = $pixelDropTroop[0]
+							Local $index = Ceiling(UBound($arrPixel) / 2) <= UBound($arrPixel) - 1 ? Ceiling(UBound($arrPixel) / 2) : 0
+							Local $currentPixel = $arrPixel[$index]
+							$sSide = Side($currentPixel)
+							SetDebugLog($index & " - Deploy Point check " & _ArrayToString($currentPixel) & " side: " & $sSide)
+							SetDebugLog(UBound($arrPixel) & " deploy point(s) at " & $sSide, $COLOR_DEBUG)
+							If _Sleep($DELAYLAUNCHTROOP21) Then Return
+							SelectDropTroop($infoTroopListArrPixel[0])
+							If _Sleep($DELAYLAUNCHTROOP23) Then Return
+							SetLog("Dropping " & $infoTroopListArrPixel[2] & " " & $infoTroopListArrPixel[5] & ", Points Per Side: " & $infoTroopListArrPixel[3] & " - ('" & $i + 1 & "' Name: " & $sSide & ")", $COLOR_SUCCESS)
+							Local $LastSide = ($i = $numberSidesDropTroop - 1) ? True : False
+							Local $Clicked = DropOnPixel($infoTroopListArrPixel[0], $pixelDropTroop, $infoTroopListArrPixel[2], $infoTroopListArrPixel[3], True, $LastSide)
+							$g_avAttackTroops[$infoTroopListArrPixel[0]][1] -= $Clicked
+							If ($numberSidesDropTroop = 1) Or ($i = $numberSidesDropTroop - 2) Then
+								SetLog($infoTroopListArrPixel[5] & " Next side with " & $g_avAttackTroops[$infoTroopListArrPixel[0]][1] & "x", $COLOR_SUCCESS)
+								$infoTroopListArrPixel[2] = $g_avAttackTroops[$infoTroopListArrPixel[0]][1]
+								$listInfoDeployTroopPixel[$j] = $infoTroopListArrPixel
+								$listListInfoDeployTroopPixel[$numWave] = $listInfoDeployTroopPixel
+							Else
+								If $g_avAttackTroops[$infoTroopListArrPixel[0]][1] > 0 Then SetLog($infoTroopListArrPixel[5] & " Remain quantities " & $g_avAttackTroops[$infoTroopListArrPixel[0]][1] & "x", $COLOR_SUCCESS)
+							EndIf
 						EndIf
 						If ($g_bIsHeroesDropped) Then
 							If _sleep(1000) Then Return ; delay Queen Image  has to be at maximum size : CheckHeroesHealth checks the y = 573
@@ -834,62 +947,262 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 EndFunc   ;==>LaunchTroopSmartFarm
 
 Func DropTroopSmartFarm($troop, $nbSides, $number, $slotsPerEdge = 0, $name = "", $SIDESNAMES = "TR|TL|BR|BL")
-
 	Local $listInfoPixelDropTroop[0]
-
 	If $slotsPerEdge = 0 Or $number < $slotsPerEdge Then $slotsPerEdge = Ceiling($number / $nbSides)
-
 	If $nbSides < 1 Then Return
 	Local $nbTroopsLeft = $number
 	Local $nbTroopsPerEdge = Round($nbTroopsLeft / $nbSides)
-
 	If ($number > 0 And $nbTroopsPerEdge = 0) Then $nbTroopsPerEdge = 1
-
-	If $g_bDebugSmartFarm Then Setlog(" - " & GetTroopName($troop) & " Number: " & $number & " Sides: " & $nbSides & " SlotsPerEdge: " & $slotsPerEdge)
-
+	If $g_bDebugSmartFarm Then SetLog(" - " & $name & " Number: " & $number & " Sides: " & $nbSides & " SlotsPerEdge: " & $slotsPerEdge)
 	If $nbSides = 4 Then
-		; $listInfoPixelDropTroop = [$newPixelBottomRight, $newPixelTopLeft, $newPixelBottomLeft, $newPixelTopRight]
 		ReDim $listInfoPixelDropTroop[4]
 		$listInfoPixelDropTroop = GetPixelDropTroop($troop, $number, $slotsPerEdge)
 	Else
-		;;;;;;;; HERE WILL BE THE SIDE CHOISE ;;;;;;;;;
-		; $TEMPlistInfoPixelDropTroop = [$newPixelBottomRight, $newPixelTopLeft, $newPixelBottomLeft, $newPixelTopRight]
 		Local $TEMPlistInfoPixelDropTroop = GetPixelDropTroop($troop, $nbTroopsPerEdge, $slotsPerEdge)
-
 		If StringInStr($SIDESNAMES, "|") <> 0 Then
-
 			Local $iTempSides = StringSplit($SIDESNAMES, "|", $STR_NOCOUNT)
-			ReDim $listInfoPixelDropTroop[UBound($iTempSides)]
-			For $i = 0 To UBound($iTempSides) - 1
-				Switch $iTempSides[$i]
-					Case "BR"
-						$listInfoPixelDropTroop[$i] = $TEMPlistInfoPixelDropTroop[0]
-					Case "TL"
-						$listInfoPixelDropTroop[$i] = $TEMPlistInfoPixelDropTroop[1]
-					Case "BL"
-						$listInfoPixelDropTroop[$i] = $TEMPlistInfoPixelDropTroop[2]
-					Case "TR"
-						$listInfoPixelDropTroop[$i] = $TEMPlistInfoPixelDropTroop[3]
-				EndSwitch
+			SetDebugLog("Original $g_sRandomSidesNames: " & _ArrayToString($g_sRandomSidesNames))
+			SetDebugLog("Original $iTempSides: " & _ArrayToString($iTempSides))
+			For $x = 0 To UBound($g_sRandomSidesNames) - 1
+				For $i = 0 To UBound($iTempSides) - 1
+					If $g_sRandomSidesNames[$x] = $iTempSides[$i] Then
+						If $g_bDebugSetlog Then SetDebugLog("$iTempSides[" & $i & "] : " & $iTempSides & " $g_sRandomSidesNames[" & $x & "]: " & $g_sRandomSidesNames[$x])
+						ReDim $listInfoPixelDropTroop[UBound($listInfoPixelDropTroop) + 1]
+						$listInfoPixelDropTroop[UBound($listInfoPixelDropTroop) - 1] = $TEMPlistInfoPixelDropTroop[$x]
+						ExitLoop
+					EndIf
+				Next
 			Next
 		Else
 			ReDim $listInfoPixelDropTroop[1]
-			Switch $SIDESNAMES
-				Case "BR"
-					$listInfoPixelDropTroop[0] = $TEMPlistInfoPixelDropTroop[0]
-				Case "TL"
-					$listInfoPixelDropTroop[0] = $TEMPlistInfoPixelDropTroop[1]
-				Case "BL"
-					$listInfoPixelDropTroop[0] = $TEMPlistInfoPixelDropTroop[2]
-				Case "TR"
-					$listInfoPixelDropTroop[0] = $TEMPlistInfoPixelDropTroop[3]
-			EndSwitch
+			SetDebugLog("Original $g_sRandomSidesNames: " & _ArrayToString($g_sRandomSidesNames))
+			SetDebugLog("Original $SIDESNAMES: " & $SIDESNAMES)
+			For $x = 0 To UBound($g_sRandomSidesNames) - 1
+				If $SIDESNAMES = $g_sRandomSidesNames[$x] Then
+					If $g_bDebugSetlog Then SetDebugLog("$SIDESNAMES : " & $SIDESNAMES & " $g_sRandomSidesNames[" & $x & "]: " & $g_sRandomSidesNames[$x])
+					$listInfoPixelDropTroop[0] = $TEMPlistInfoPixelDropTroop[$x]
+				EndIf
+			Next
 		EndIf
-
 	EndIf
-
 	Local $infoDropTroop[6] = [$troop, $listInfoPixelDropTroop, $nbTroopsPerEdge, $slotsPerEdge, $number, $name]
 	Return $infoDropTroop
-
 EndFunc   ;==>DropTroopSmartFarm
 
+Func _GetMoreDeployPoints()
+	Local $More[0][2]
+	Local $aGreenTiles = DMClasicArray(DFind(@ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\Image Matching\DPSM\", 0, 0, 0, 0, 0, 0, 0, True), 0, $g_bDebugImageSave)
+	If IsArray($aGreenTiles) And $aGreenTiles[0][0] <> "" Then
+		SetDebugLog("$aGreenTiles Image Search array: " & _ArrayToString($aGreenTiles, ",", -1, -1, "|"))
+		For $c = 0 To UBound($aGreenTiles) - 1
+			Local $coord = [$aGreenTiles[$c][1], $aGreenTiles[$c][2]]
+			If Not DoublePoint("_GMDP", $More, $coord, 15) Then
+				ReDim $More[UBound($More) + 1][2]
+				$More[UBound($More) - 1][0] = $aGreenTiles[$c][1]
+				$More[UBound($More) - 1][1] = $aGreenTiles[$c][2]
+			EndIf
+		Next
+	Else
+		SetDebugLog("Green Tiles errors", $COLOR_DEBUG)
+		_DebugFailedImageDetection("GreenTiles")
+	EndIf
+	Return $More
+EndFunc   ;==>_GetMoreDeployPoints
+
+Func GetDiamondGreenTiles($HnowManyPoints = 10)
+	If Not IsArray($g_aGreenTiles) Or UBound($g_aGreenTiles) < 0 Then Return -1
+	Local $TL[0][3], $BL[0][3], $TR[0][3], $BR[0][3]
+	Local $aCentre = [$DiamondMiddleX, $DiamondMiddleY]
+	_ArraySort($g_aGreenTiles, 0, 0, 0, 0)
+	For $each = 0 To UBound($g_aGreenTiles) - 1
+		Local $Coordinate = [$g_aGreenTiles[$each][0], $g_aGreenTiles[$each][1]]
+		If Side($Coordinate) = "TL" Then
+			ReDim $TL[UBound($TL) + 1][3]
+			$TL[UBound($TL) - 1][0] = $Coordinate[0]
+			$TL[UBound($TL) - 1][1] = $Coordinate[1]
+			$TL[UBound($TL) - 1][2] = Int(Pixel_Distance($aCentre[0], $aCentre[1], $Coordinate[0], $Coordinate[1]))
+		EndIf
+		If Side($Coordinate) = "BL" Then
+			ReDim $BL[UBound($BL) + 1][3]
+			$BL[UBound($BL) - 1][0] = $Coordinate[0]
+			$BL[UBound($BL) - 1][1] = $Coordinate[1]
+			$BL[UBound($BL) - 1][2] = Int(Pixel_Distance($aCentre[0], $aCentre[1], $Coordinate[0], $Coordinate[1]))
+		EndIf
+		If Side($Coordinate) = "TR" Then
+			ReDim $TR[UBound($TR) + 1][3]
+			$TR[UBound($TR) - 1][0] = $Coordinate[0]
+			$TR[UBound($TR) - 1][1] = $Coordinate[1]
+			$TR[UBound($TR) - 1][2] = Int(Pixel_Distance($aCentre[0], $aCentre[1], $Coordinate[0], $Coordinate[1]))
+		EndIf
+		If Side($Coordinate) = "BR" Then
+			ReDim $BR[UBound($BR) + 1][3]
+			$BR[UBound($BR) - 1][0] = $Coordinate[0]
+			$BR[UBound($BR) - 1][1] = $Coordinate[1]
+			$BR[UBound($BR) - 1][2] = Int(Pixel_Distance($aCentre[0], $aCentre[1], $Coordinate[0], $Coordinate[1]))
+		EndIf
+	Next
+	SetDebugLog("GreenTiles at TL are " & UBound($TL))
+	SetDebugLog("GreenTiles at BL are " & UBound($BL))
+	SetDebugLog("GreenTiles at TR are " & UBound($TR))
+	SetDebugLog("GreenTiles at BR are " & UBound($BR))
+	Local $AllSides[4] = [$TL, $BL, $TR, $BR]
+	Local $aiGreenTilesBySide[4]
+	Local $SIDESNAMES[4] = ["TL", "BL", "TR", "BR"]
+	Local $oNumberOfDeployPoints = $HnowManyPoints
+	For $iAllSides = 0 To 3
+		Local $OneSide = $AllSides[$iAllSides]
+		_ArraySort($OneSide, 0, 0, 0, 2)
+		Local $OneFinalSide[0][2]
+		SetDebugLog(" --- Side " & $SIDESNAMES[$iAllSides] & " --- ")
+		For $i = 0 To $oNumberOfDeployPoints - 1
+			If $i < UBound($OneSide) Then
+				ReDim $OneFinalSide[UBound($OneFinalSide) + 1][2]
+				$OneFinalSide[UBound($OneFinalSide) - 1][0] = $OneSide[$i][0]
+				$OneFinalSide[UBound($OneFinalSide) - 1][1] = $OneSide[$i][1]
+			EndIf
+		Next
+		_ArraySort($OneFinalSide, 0)
+		$aiGreenTilesBySide[$iAllSides] = $OneFinalSide
+		SetDebugLog("Final GreenTiles at " & $SIDESNAMES[$iAllSides] & ": " & _ArrayToString($OneFinalSide, ",", -1, -1, "|"))
+	Next
+	Return $aiGreenTilesBySide
+EndFunc   ;==>GetDiamondGreenTiles
+
+Func NewRedLines()
+	$g_aGreenTiles = _GetMoreDeployPoints()
+	Local $aiGreenTilesBySide = GetDiamondGreenTiles(20)
+	Local $offsetArcher = 15
+	Local $OldCode = False
+	Global $g_aiPixelTopLeftFurther[0], $g_aiPixelTopLeft[0]
+	Global $g_aiPixelBottomLeftFurther[0], $g_aiPixelBottomLeft[0]
+	Global $g_aiPixelTopRightFurther[0], $g_aiPixelTopRight[0]
+	Global $g_aiPixelBottomRightFurther[0], $g_aiPixelBottomRight[0]
+	SetDebugLog("TL using Green Tiles")
+	Local $More = $aiGreenTilesBySide[0]
+	If IsArray($aiGreenTilesBySide) And IsArray($More) And UBound($More) > 10 Then
+		For $x = 0 To UBound($More) - 1
+			Local $Coordinate[2] = [$More[$x][0], $More[$x][1]]
+			ReDim $g_aiPixelTopLeft[UBound($g_aiPixelTopLeft) + 1]
+			$g_aiPixelTopLeft[UBound($g_aiPixelTopLeft) - 1] = $Coordinate
+		Next
+		$g_aiPixelTopLeftFurther = $g_aiPixelTopLeft
+	Else
+		If Not $OldCode Then SearchRedLinesMultipleTimes()
+		If $g_bDebugAndroid Then
+			SetDebugLog("Using External Vector, doesn't have Green Tiles for TL")
+			SetDebugLog("IsArray($aiGreenTilesBySide): " & IsArray($aiGreenTilesBySide))
+			SetDebugLog("IsArray($More): " & IsArray($More))
+			SetDebugLog("UBound($More): " & UBound($More))
+		EndIf
+		SetLog("TL using Red Lines to deploy")
+		Local $TL = GetOffsetRedline("TL", 5)
+		$g_aiPixelTopLeft = GetListPixel($TL, ",")
+		CleanRedArea($g_aiPixelTopLeft)
+		$OldCode = True
+		ReDim $g_aiPixelTopLeftFurther[UBound($g_aiPixelTopLeft)]
+		For $i = 0 To UBound($g_aiPixelTopLeft) - 1
+			$g_aiPixelTopLeftFurther[$i] = _GetOffsetTroopFurther($g_aiPixelTopLeft[$i], $eVectorLeftTop, $offsetArcher)
+		Next
+	EndIf
+	If UBound($g_aiPixelTopLeft) < 10 Then
+		SetLog("TL using Edges to deploy")
+		$g_aiPixelTopLeft = _GetVectorOutZone($eVectorLeftTop)
+		$g_aiPixelTopLeftFurther = $g_aiPixelTopLeft
+	EndIf
+	SetDebugLog("BL using Green Tiles")
+	$More = $aiGreenTilesBySide[1]
+	If IsArray($aiGreenTilesBySide) And IsArray($More) And UBound($More) > 10 Then
+		For $x = 0 To UBound($More) - 1
+			Local $Coordinate[2] = [$More[$x][0], $More[$x][1]]
+			ReDim $g_aiPixelBottomLeft[UBound($g_aiPixelBottomLeft) + 1]
+			$g_aiPixelBottomLeft[UBound($g_aiPixelBottomLeft) - 1] = $Coordinate
+		Next
+		$g_aiPixelBottomLeftFurther = $g_aiPixelBottomLeft
+	Else
+		If Not $OldCode Then SearchRedLinesMultipleTimes()
+		If $g_bDebugAndroid Then
+			SetDebugLog("Using External Vector, doesn't have Green Tiles for BL")
+			SetDebugLog("IsArray($aiGreenTilesBySide): " & IsArray($aiGreenTilesBySide))
+			SetDebugLog("IsArray($More): " & IsArray($More))
+			SetDebugLog("UBound($More): " & UBound($More))
+		EndIf
+		SetLog("BL using Red Lines to deploy")
+		Local $BL = GetOffsetRedline("BL", 5)
+		$g_aiPixelBottomLeft = GetListPixel($BL, ",")
+		CleanRedArea($g_aiPixelBottomLeft)
+		$OldCode = True
+		ReDim $g_aiPixelBottomLeftFurther[UBound($g_aiPixelBottomLeft)]
+		For $i = 0 To UBound($g_aiPixelBottomLeft) - 1
+			$g_aiPixelBottomLeftFurther[$i] = _GetOffsetTroopFurther($g_aiPixelBottomLeft[$i], $eVectorLeftBottom, $offsetArcher)
+		Next
+	EndIf
+	If UBound($g_aiPixelBottomLeft) < 10 Then
+		SetLog("BL using Edges to deploy")
+		$g_aiPixelBottomLeft = _GetVectorOutZone($eVectorLeftBottom)
+		$g_aiPixelBottomLeftFurther = $g_aiPixelBottomLeft
+	EndIf
+	SetDebugLog("TR using Green Tiles")
+	Local $More = $aiGreenTilesBySide[2]
+	If IsArray($aiGreenTilesBySide) And IsArray($More) And UBound($More) > 10 Then
+		For $x = 0 To UBound($More) - 1
+			Local $Coordinate[2] = [$More[$x][0], $More[$x][1]]
+			ReDim $g_aiPixelTopRight[UBound($g_aiPixelTopRight) + 1]
+			$g_aiPixelTopRight[UBound($g_aiPixelTopRight) - 1] = $Coordinate
+		Next
+		$g_aiPixelTopRightFurther = $g_aiPixelTopRight
+	Else
+		If Not $OldCode Then SearchRedLinesMultipleTimes()
+		If $g_bDebugAndroid Then
+			SetDebugLog("Using External Vector, doesn't have Green Tiles for TR")
+			SetDebugLog("IsArray($aiGreenTilesBySide): " & IsArray($aiGreenTilesBySide))
+			SetDebugLog("IsArray($More): " & IsArray($More))
+			SetDebugLog("UBound($More): " & UBound($More))
+		EndIf
+		SetLog("TR using Red Lines to deploy")
+		Local $TR = GetOffsetRedline("TR", 5)
+		$g_aiPixelTopRight = GetListPixel($TR, ",")
+		CleanRedArea($g_aiPixelTopRight)
+		$OldCode = True
+		ReDim $g_aiPixelTopRightFurther[UBound($g_aiPixelTopRight)]
+		For $i = 0 To UBound($g_aiPixelTopRight) - 1
+			$g_aiPixelTopRightFurther[$i] = _GetOffsetTroopFurther($g_aiPixelTopRight[$i], $eVectorRightTop, $offsetArcher)
+		Next
+	EndIf
+	If UBound($g_aiPixelTopRight) < 10 Then
+		SetLog("TR using Edges to deploy")
+		$g_aiPixelTopRight = _GetVectorOutZone($eVectorRightTop)
+		$g_aiPixelTopRightFurther = $g_aiPixelTopRight
+	EndIf
+	SetDebugLog("BR using Green Tiles")
+	Local $More = $aiGreenTilesBySide[3]
+	If IsArray($aiGreenTilesBySide) And IsArray($More) And UBound($More) > 10 Then
+		For $x = 0 To UBound($More) - 1
+			Local $Coordinate[2] = [$More[$x][0], $More[$x][1]]
+			ReDim $g_aiPixelBottomRight[UBound($g_aiPixelBottomRight) + 1]
+			$g_aiPixelBottomRight[UBound($g_aiPixelBottomRight) - 1] = $Coordinate
+		Next
+		$g_aiPixelBottomRightFurther = $g_aiPixelBottomRight
+	Else
+		If Not $OldCode Then SearchRedLinesMultipleTimes()
+		If $g_bDebugAndroid Then
+			SetDebugLog("Using External Vector, doesn't have Green Tiles for BR")
+			SetDebugLog("IsArray($aiGreenTilesBySide): " & IsArray($aiGreenTilesBySide))
+			SetDebugLog("IsArray($More): " & IsArray($More))
+			SetDebugLog("UBound($More): " & UBound($More))
+		EndIf
+		SetLog("BR using Red Lines to deploy")
+		Local $BR = GetOffsetRedline("BR", 5)
+		$g_aiPixelBottomRight = GetListPixel($BR, ",")
+		CleanRedArea($g_aiPixelBottomRight)
+		$OldCode = True
+		ReDim $g_aiPixelBottomRightFurther[UBound($g_aiPixelBottomRight)]
+		For $i = 0 To UBound($g_aiPixelBottomRight) - 1
+			$g_aiPixelBottomRightFurther[$i] = _GetOffsetTroopFurther($g_aiPixelBottomRight[$i], $eVectorRightBottom, $offsetArcher)
+		Next
+	EndIf
+	If UBound($g_aiPixelBottomRight) < 10 Then
+		SetLog("BR using Edges to deploy")
+		$g_aiPixelBottomRight = _GetVectorOutZone($eVectorRightBottom)
+		$g_aiPixelBottomRightFurther = $g_aiPixelBottomRight
+	EndIf
+EndFunc   ;==>NewRedLines

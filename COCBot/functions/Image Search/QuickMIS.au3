@@ -17,206 +17,210 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 		SetLog("Bad parameters during QuickMIS call for MultiSearch...", $COLOR_RED)
 		Return
 	EndIf
+	
+	#Region - Custom - Team AIO Mod++
+	Local $aSize = DirGetSize($directory, $DIR_EXTENDED), $Res = Null
+	If @error Then
+		SetLog("Directory Path error: " & @error & " | " & $directory, $COLOR_ERROR)
+	ElseIf $aSize[1] = 0 Then
+		SetLog("Directory Path is empty: " & $directory, $COLOR_ERROR)
+	ElseIf $aSize[1] > 0 Then
+		SetDebugLog("Path Dir with " & $aSize[1] & " Images")
+		If $bNeedCapture Then _CaptureRegion2($Left, $Top, $Right, $Bottom)
+		$Res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $directory, "str", "FV", "Int", 0, "str", "FV", "Int", 0, "Int", 1000)
+		If @error Then _logErrorDLLCall($g_sLibMyBotPath, @error)
+		If $g_bDebugImageSave Then SaveDebugImage("QuickMIS_" & $ValueReturned, False)
+	EndIf
+	#EndRegion - Custom - Team AIO Mod++
 
-	If $bNeedCapture Then _CaptureRegion2($Left, $Top, $Right, $Bottom)
-	Local $Res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $directory, "str", "FV", "Int", 0, "str", "FV", "Int", 0, "Int", 1000)
-	If @error Then _logErrorDLLCall($g_sLibMyBotPath, @error)
-	If $g_bDebugImageSave Then SaveDebugImage("QuickMIS_" & $ValueReturned, False)
+	If Not IsArray($Res) Or StringIsSpace($Res[0]) Or $Res[0] = "0" Or StringInStr($Res[0], "-1") <> 0 Then ; Custom - Team AIO Mod++
+		If $g_bDebugSetlog Then SetDebugLog("No Button found")
+		Switch $ValueReturned
+			Case "BC1"
+				Return False
+			Case "CX"
+				Return -1
+			Case "N1"
+				Return "none"
+			Case "NX"
+				Return "none"
+			Case "Q1"
+				Return 0
+			Case "QX"
+				Return 0
+				#Region - Custom - Team AIO Mod++
+			Case "N1Cx1"
+				Return 0
+			Case "NxCx"
+				Return 0
+			Case "OCR"
+				Return "none"
+				#EndRegion - Custom - Team AIO Mod++
+		EndSwitch
 
-	If IsArray($Res) Then
-		;If $Debug Then _ArrayDisplay($Res)
+	Else
 		If $g_bDebugSetlog Then SetDebugLog("DLL Call succeeded " & $Res[0], $COLOR_PURPLE)
+		Switch $ValueReturned
 
-		If StringIsSpace($Res[0]) Or $Res[0] = "0" Or StringInStr($Res[0], "-1") <> 0 Then ; Custom - Team AIO Mod++
-			If $g_bDebugSetlog Then SetDebugLog("No Button found")
-			Switch $ValueReturned
-				Case "BC1"
-					Return False
-				Case "CX"
-					Return -1
-				Case "N1"
-					Return "none"
-				Case "NX"
-					Return "none"
-				Case "Q1"
-					Return 0
-				Case "QX"
-					Return 0
+			Case "BC1" ; coordinates of first/one image found + boolean value
+
+				Local $Result = "", $Name = ""
+				Local $KeyValue = StringSplit($Res[0], "|", $STR_NOCOUNT)
+				For $i = 0 To UBound($KeyValue) - 1
+					Local $DLLRes = DllCallMyBot("GetProperty", "str", $KeyValue[$i], "str", "objectpoints")
+					If UBound(decodeSingleCoord($DLLRes[0])) > 1 Then $Result &= $DLLRes[0] & "|"
+				Next
+				If StringRight($Result, 1) = "|" Then $Result = StringLeft($Result, (StringLen($Result) - 1))
+				Local $aCords = decodeMultipleCoords($Result, 60, 10, 1)
+				If UBound($aCords) = 0 Then Return False ; should never happen, but it did...
+				Local $aCord = $aCords[0] ; sorted by Y
+				If UBound($aCord) < 2 Then Return False ; should never happen, but anyway...
+				$g_iQuickMISX = $aCord[0]
+				$g_iQuickMISY = $aCord[1]
+				$g_iQuickMISWOffSetX = $aCord[0] + $Left ;Update X with offset of Left
+				$g_iQuickMISWOffSetY = $aCord[1] + $Top ;Update Y with offset of Top
+				$Name = RetrieveImglocProperty($KeyValue[0], "objectname")
+
+				If $g_bDebugSetlog Or $Debug Then
+					SetDebugLog($ValueReturned & " Found: " & $Result & ", using " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_PURPLE)
+					If $g_bDebugImageSave Then DebugQuickMIS($Left, $Top, "BC1_detected[" & $Name & "_" & $g_iQuickMISWOffSetX & "x" & $g_iQuickMISWOffSetY & "]")
+				EndIf
+
+				Return True
+
+			Case "CX" ; coordinates of each image found - eg: $Array[0] = [X1, Y1] ; $Array[1] = [X2, Y2]
+
+				Local $Result = ""
+				Local $KeyValue = StringSplit($Res[0], "|", $STR_NOCOUNT)
+				For $i = 0 To UBound($KeyValue) - 1
+					Local $DLLRes = DllCallMyBot("GetProperty", "str", $KeyValue[$i], "str", "objectpoints")
+					If UBound(decodeSingleCoord($DLLRes[0])) > 1 Then $Result &= $DLLRes[0] & "|"
+				Next
+				If StringRight($Result, 1) = "|" Then $Result = StringLeft($Result, (StringLen($Result) - 1))
+				If $g_bDebugSetlog Then SetDebugLog($ValueReturned & " Found: " & $Result, $COLOR_PURPLE)
+				Local $CoordsInArray = StringSplit($Result, "|", $STR_NOCOUNT)
+				Return $CoordsInArray
+
+			Case "N1" ; name of first file found
+
+				Local $MultiImageSearchResult = StringSplit($Res[0], "|")
+				Local $FilenameFound = StringSplit($MultiImageSearchResult[1], "_")
+				Return $FilenameFound[1]
+
+			Case "NX" ; names of all files found
+
+				Local $AllFilenamesFound = ""
+				Local $MultiImageSearchResult = StringSplit($Res[0], "|")
+				For $i = 1 To $MultiImageSearchResult[0]
+					Local $FilenameFound = StringSplit($MultiImageSearchResult[$i], "_")
+					$AllFilenamesFound &= $FilenameFound[1] & "|"
+				Next
+				If StringRight($AllFilenamesFound, 1) = "|" Then $AllFilenamesFound = StringLeft($AllFilenamesFound, (StringLen($AllFilenamesFound) - 1))
+				Return $AllFilenamesFound
+
+			Case "Q1" ; quantity of first/one tiles found
+
+				Local $Result = ""
+				Local $KeyValue = StringSplit($Res[0], "|", $STR_NOCOUNT)
+				For $i = 0 To UBound($KeyValue) - 1
+					Local $DLLRes = DllCallMyBot("GetProperty", "str", $KeyValue[$i], "str", "totalobjects")
+					$Result &= $DLLRes[0] & "|"
+				Next
+				If StringRight($Result, 1) = "|" Then $Result = StringLeft($Result, (StringLen($Result) - 1))
+				If $g_bDebugSetlog Then SetDebugLog($ValueReturned & " Found: " & $Result, $COLOR_PURPLE)
+				Local $QuantityInArray = StringSplit($Result, "|", $STR_NOCOUNT)
+				Return $QuantityInArray[0]
+
+			Case "QX" ; quantity of files found
+
+				Local $MultiImageSearchResult = StringSplit($Res[0], "|", $STR_NOCOUNT)
+				Return UBound($MultiImageSearchResult)
+
+			Case "N1Cx1" ;Name of first File Found And it's 1st Cords Array[2] -> Array[0] = Name , Array[1] = [X, Y]
+
+				Local $NameAndCords[2]
+				Local $Result = "", $Name = ""
+				Local $KeyValue = StringSplit($Res[0], "|", $STR_NOCOUNT)
+				For $i = 0 To UBound($KeyValue) - 1
+					Local $DLLRes = DllCallMyBot("GetProperty", "str", $KeyValue[$i], "str", "objectpoints")
+					If UBound(decodeSingleCoord($DLLRes[0])) > 1 Then $Result &= $DLLRes[0] & "|"
+				Next
+				If StringRight($Result, 1) = "|" Then $Result = StringLeft($Result, (StringLen($Result) - 1))
+				Local $aCords = decodeMultipleCoords($Result, 60, 10, 1)
+				If UBound($aCords) = 0 Then Return 0 ; should never happen, but it did...
+				Local $aCord = $aCords[0]
+				If UBound($aCord) < 2 Then Return 0 ; should never happen, but anyway...
+				$aCord[0] = $aCord[0] + $Left
+				$aCord[1] = $aCord[1] + $Top
+
+				$Name = RetrieveImglocProperty($KeyValue[0], "objectname")
+
+				$NameAndCords[0] = $Name
+				$NameAndCords[1] = $aCord
+
+				If $g_bDebugSetlog Or $Debug Then
+					SetDebugLog($ValueReturned & " Found: " & $Name & ", using " & $aCord[0] & "," & $aCord[1], $COLOR_PURPLE)
+				EndIf
+
+				Return $NameAndCords
 				#Region - Custom - Team AIO Mod++
-				Case "N1Cx1"
-					Return 0
-				Case "NxCx"
-					Return 0
-				Case "OCR"
-					Return "none"
-				#EndRegion - Custom - Team AIO Mod++
-			EndSwitch
-		;ElseIf StringInStr($Res[0], "-1") <> 0 Then ; Custom - Team AIO Mod++
-		;	SetLog("DLL Error", $COLOR_RED)
+			Case "NxCx" ; Array[x][2]  , Array[x][0] = Name , Array[x][1] = is an Array with Coordinates
+				Local $KeyValue = StringSplit($Res[0], "|", $STR_NOCOUNT)
+				Local $Name = ""
+				Local $aPositions, $aCoords, $aCord, $level
+				SetDebugLog("Detected : " & UBound($KeyValue) & " tiles")
+				Local $AllFilenamesFound[UBound($KeyValue)][3]
+				For $i = 0 To UBound($KeyValue) - 1
+					$Name = RetrieveImglocProperty($KeyValue[$i], "objectname")
+					$aPositions = RetrieveImglocProperty($KeyValue[$i], "objectpoints")
+					$level = RetrieveImglocProperty($KeyValue[$i], "objectlevel")
+					SetDebugLog("Name: " & $Name)
+					$aCoords = decodeMultipleCoords($aPositions, 20, 0, 0) ; dedup coords by x on 50 pixel ;
+					SetDebugLog("How many $aCoords: " & UBound($aCoords))
+					$AllFilenamesFound[$i][0] = $Name
+					$AllFilenamesFound[$i][1] = $aCoords
+					$AllFilenamesFound[$i][2] = $level
+				Next
+				Return $AllFilenamesFound
+			Case "OCR" ; Names of all files found, put together as a string in accordance with their coordinates left - right
 
-		Else
-			Switch $ValueReturned
+				Local $sOCRString = ""
+				Local $aResults[1][2] = [[-1, ""]] ; X_Coord & Name
 
-				Case "BC1" ; coordinates of first/one image found + boolean value
+				Local $KeyValue = StringSplit($Res[0], "|", $STR_NOCOUNT)
+				For $i = 0 To UBound($KeyValue) - 1
+					Local $DLLRes = DllCallMyBot("GetProperty", "str", $KeyValue[$i], "str", "objectpoints")
+					Local $Name = RetrieveImglocProperty($KeyValue[$i], "objectname")
 
-					Local $Result = "" , $Name = ""
-					Local $KeyValue = StringSplit($Res[0], "|", $STR_NOCOUNT)
-					For $i = 0 To UBound($KeyValue) - 1
-						Local $DLLRes = DllCallMyBot("GetProperty", "str", $KeyValue[$i], "str", "objectpoints")
-						If UBound(decodeSingleCoord($DLLRes[0])) > 1 Then $Result &= $DLLRes[0] & "|"
+					Local $aCoords = StringSplit($DLLRes[0], "|", $STR_NOCOUNT)
+
+					For $j = 0 To UBound($aCoords) - 1 ; In case found 1 char multiple times, $j > 0
+						Local $aXY = StringSplit($aCoords[$j], ",", $STR_NOCOUNT)
+						ReDim $aResults[UBound($aResults) + 1][2]
+						$aResults[UBound($aResults) - 2][0] = Number($aXY[0])
+						$aResults[UBound($aResults) - 2][1] = $Name
 					Next
-					If StringRight($Result, 1) = "|" Then $Result = StringLeft($Result, (StringLen($Result) - 1))
-					Local $aCords = decodeMultipleCoords($Result, 60, 10, 1)
-					If UBound($aCords) = 0 Then Return False ; should never happen, but it did...
-					Local $aCord = $aCords[0] ; sorted by Y
-					If UBound($aCord) < 2 Then Return False ; should never happen, but anyway...
-					$g_iQuickMISX = $aCord[0]
-					$g_iQuickMISY = $aCord[1]
-					$g_iQuickMISWOffSetX = $aCord[0] + $Left ;Update X with offset of Left
-					$g_iQuickMISWOffSetY = $aCord[1] + $Top ;Update Y with offset of Top
-					$Name = RetrieveImglocProperty($KeyValue[0], "objectname")
+				Next
 
-					If $g_bDebugSetlog Or $Debug Then
-						SetDebugLog($ValueReturned & " Found: " & $Result & ", using " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_PURPLE)
-						If $g_bDebugImageSave Then DebugQuickMIS($Left, $Top, "BC1_detected[" & $Name & "_" & $g_iQuickMISWOffSetX & "x" & $g_iQuickMISWOffSetY & "]")
+				_ArrayDelete($aResults, UBound($aResults) - 1)
+				_ArraySort($aResults)
+
+				For $i = 0 To UBound($aResults) - 1
+					SetDebugLog($i & ". $Name = " & $aResults[$i][1] & ", Coord = " & $aResults[$i][0])
+					If $i >= 1 Then
+						If $aResults[$i][1] = $aResults[$i - 1][1] And Abs($aResults[$i][0] - $aResults[$i - 1][0]) <= $OcrDecode Then ContinueLoop
+						If Abs($aResults[$i][0] - $aResults[$i - 1][0]) > $OcrSpace Then $sOCRString &= " "
 					EndIf
+					$sOCRString &= $aResults[$i][1]
+				Next
+				SetDebugLog("QuickMIS " & $ValueReturned & ", $sOCRString: " & $sOCRString)
 
-					Return True
-
-				Case "CX" ; coordinates of each image found - eg: $Array[0] = [X1, Y1] ; $Array[1] = [X2, Y2]
-
-					Local $Result = ""
-					Local $KeyValue = StringSplit($Res[0], "|", $STR_NOCOUNT)
-					For $i = 0 To UBound($KeyValue) - 1
-						Local $DLLRes = DllCallMyBot("GetProperty", "str", $KeyValue[$i], "str", "objectpoints")
-						If UBound(decodeSingleCoord($DLLRes[0])) > 1 Then $Result &= $DLLRes[0] & "|"
-					Next
-					If StringRight($Result, 1) = "|" Then $Result = StringLeft($Result, (StringLen($Result) - 1))
-					If $g_bDebugSetlog Then SetDebugLog($ValueReturned & " Found: " & $Result, $COLOR_PURPLE)
-					Local $CoordsInArray = StringSplit($Result, "|", $STR_NOCOUNT)
-					Return $CoordsInArray
-
-				Case "N1" ; name of first file found
-
-					Local $MultiImageSearchResult = StringSplit($Res[0], "|")
-					Local $FilenameFound = StringSplit($MultiImageSearchResult[1], "_")
-					Return $FilenameFound[1]
-
-				Case "NX" ; names of all files found
-
-					Local $AllFilenamesFound = ""
-					Local $MultiImageSearchResult = StringSplit($Res[0], "|")
-					For $i = 1 To $MultiImageSearchResult[0]
-						Local $FilenameFound = StringSplit($MultiImageSearchResult[$i], "_")
-						$AllFilenamesFound &= $FilenameFound[1] & "|"
-					Next
-					If StringRight($AllFilenamesFound, 1) = "|" Then $AllFilenamesFound = StringLeft($AllFilenamesFound, (StringLen($AllFilenamesFound) - 1))
-					Return $AllFilenamesFound
-
-				Case "Q1" ; quantity of first/one tiles found
-
-					Local $Result = ""
-					Local $KeyValue = StringSplit($Res[0], "|", $STR_NOCOUNT)
-					For $i = 0 To UBound($KeyValue) - 1
-						Local $DLLRes = DllCallMyBot("GetProperty", "str", $KeyValue[$i], "str", "totalobjects")
-						$Result &= $DLLRes[0] & "|"
-					Next
-					If StringRight($Result, 1) = "|" Then $Result = StringLeft($Result, (StringLen($Result) - 1))
-					If $g_bDebugSetlog Then SetDebugLog($ValueReturned & " Found: " & $Result, $COLOR_PURPLE)
-					Local $QuantityInArray = StringSplit($Result, "|", $STR_NOCOUNT)
-					Return $QuantityInArray[0]
-
-				Case "QX" ; quantity of files found
-
-					Local $MultiImageSearchResult = StringSplit($Res[0], "|", $STR_NOCOUNT)
-					Return UBound($MultiImageSearchResult)
-
-				Case "N1Cx1" ;Name of first File Found And it's 1st Cords Array[2] -> Array[0] = Name , Array[1] = [X, Y]
-
-					Local $NameAndCords[2]
-					Local $Result = "", $Name = ""
-					Local $KeyValue = StringSplit($Res[0], "|", $STR_NOCOUNT)
-					For $i = 0 To UBound($KeyValue) - 1
-						Local $DLLRes = DllCallMyBot("GetProperty", "str", $KeyValue[$i], "str", "objectpoints")
-						If UBound(decodeSingleCoord($DLLRes[0])) > 1 Then $Result &= $DLLRes[0] & "|"
-					Next
-					If StringRight($Result, 1) = "|" Then $Result = StringLeft($Result, (StringLen($Result) - 1))
-					Local $aCords = decodeMultipleCoords($Result, 60, 10, 1)
-					If UBound($aCords) = 0 Then Return 0 ; should never happen, but it did...
-					Local $aCord = $aCords[0]
-					If UBound($aCord) < 2 Then Return 0 ; should never happen, but anyway...
-					$aCord[0] = $aCord[0] + $Left
-					$aCord[1] = $aCord[1] + $Top
-
-					$Name = RetrieveImglocProperty($KeyValue[0], "objectname")
-
-					$NameAndCords[0] = $Name
-					$NameAndCords[1] = $aCord
-
-					If $g_bDebugSetlog Or $Debug Then
-						SetDebugLog($ValueReturned & " Found: " & $Name & ", using " & $aCord[0] & "," & $aCord[1], $COLOR_PURPLE)
-					EndIf
-
-					Return $NameAndCords
-				#Region - Custom - Team AIO Mod++
-				Case "NxCx" ; Array[x][2]  , Array[x][0] = Name , Array[x][1] = is an Array with Coordinates
-					Local $KeyValue = StringSplit($Res[0], "|", $STR_NOCOUNT)
-					Local $Name = ""
-					Local $aPositions, $aCoords, $aCord, $level
-					SetDebugLog("Detected : " & UBound($KeyValue) & " tiles")
-					Local $AllFilenamesFound[UBound($KeyValue)][3]
-					For $i = 0 To UBound($KeyValue) - 1
-						$Name = RetrieveImglocProperty($KeyValue[$i], "objectname")
-						$aPositions = RetrieveImglocProperty($KeyValue[$i], "objectpoints")
-						$level = RetrieveImglocProperty($KeyValue[$i], "objectlevel")
-						SetDebugLog("Name: " & $Name)
-						$aCoords = decodeMultipleCoords($aPositions, 20, 0, 0) ; dedup coords by x on 50 pixel ;
-						SetDebugLog("How many $aCoords: " & UBound($aCoords))
-						$AllFilenamesFound[$i][0] = $Name
-						$AllFilenamesFound[$i][1] = $aCoords
-						$AllFilenamesFound[$i][2] = $level
-					Next
-					Return $AllFilenamesFound
-				Case "OCR" ; Names of all files found, put together as a string in accordance with their coordinates left - right
-
-					Local $sOCRString = ""
-					Local $aResults[1][2] = [[-1, ""]] ; X_Coord & Name
-
-					Local $KeyValue = StringSplit($Res[0], "|", $STR_NOCOUNT)
-					For $i = 0 To UBound($KeyValue) - 1
-						Local $DLLRes = DllCallMyBot("GetProperty", "str", $KeyValue[$i], "str", "objectpoints")
-						Local $Name = RetrieveImglocProperty($KeyValue[$i], "objectname")
-
-						Local $aCoords = StringSplit($DLLRes[0], "|", $STR_NOCOUNT)
-
-						For $j = 0 To UBound($aCoords) - 1 ; In case found 1 char multiple times, $j > 0
-							Local $aXY = StringSplit($aCoords[$j], ",", $STR_NOCOUNT)
-							ReDim $aResults[UBound($aResults) + 1][2]
-							$aResults[UBound($aResults) - 2][0] = Number($aXY[0])
-							$aResults[UBound($aResults) - 2][1] = $Name
-						Next
-					Next
-
-					_ArrayDelete($aResults, UBound($aResults) - 1)
-					_ArraySort($aResults)
-
-					For $i = 0 To UBound($aResults) - 1
-						SetDebugLog($i & ". $Name = " & $aResults[$i][1] & ", Coord = " & $aResults[$i][0])
-						If $i >= 1 Then
-							If $aResults[$i][1] = $aResults[$i - 1][1] And Abs($aResults[$i][0] - $aResults[$i - 1][0]) <= $OcrDecode Then ContinueLoop
-							If Abs($aResults[$i][0] - $aResults[$i - 1][0]) > $OcrSpace Then $sOCRString &= " "
-						EndIf
-						$sOCRString &= $aResults[$i][1]
-					Next
-					SetDebugLog("QuickMIS " & $ValueReturned & ", $sOCRString: " & $sOCRString)
-
-					Return $sOCRString
-				Case Else
-					SetLog("Bad parameters during QuickMIS call for MultiSearch...", $COLOR_RED)
-					Return
+				Return $sOCRString
+			Case Else
+				SetLog("Bad parameters during QuickMIS call for MultiSearch...", $COLOR_RED)
+				Return
 				#EndRegion - Custom - Team AIO Mod++
-			EndSwitch
-		EndIf
+		EndSwitch
 	EndIf
 EndFunc   ;==>QuickMIS
 

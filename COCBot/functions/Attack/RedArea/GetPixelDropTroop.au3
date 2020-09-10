@@ -15,13 +15,13 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func GetPixelDropTroop($troop, $number, $slotsPerEdge)
+#Region - Custom SmartFarm - Team AIO Mod++
+Func GetPixelDropTroop($Troop, $Number, $slotsPerEdge)
 	Local $newPixelTopLeft
 	Local $newPixelBottomLeft
 	Local $newPixelTopRight
 	Local $newPixelBottomRight
-
-	If ($troop = $eArch Or $troop = $eWiza Or $troop = $eMini Or $troop = $eBarb) Then
+	If ($Troop = $eArch Or $Troop = $eWiza Or $Troop = $eMini Or $Troop = $eBarb Or $Troop = $eGobl) Then
 		If UBound($g_aiPixelTopLeftFurther) > 0 Then
 			$newPixelTopLeft = $g_aiPixelTopLeftFurther
 		Else
@@ -48,12 +48,16 @@ Func GetPixelDropTroop($troop, $number, $slotsPerEdge)
 		$newPixelTopRight = $g_aiPixelTopRight
 		$newPixelBottomRight = $g_aiPixelBottomRight
 	EndIf
-
 	$newPixelTopLeft = GetVectorPixelOnEachSide2($newPixelTopLeft, 0, $slotsPerEdge)
 	$newPixelBottomLeft = GetVectorPixelOnEachSide2($newPixelBottomLeft, 1, $slotsPerEdge)
 	$newPixelTopRight = GetVectorPixelOnEachSide2($newPixelTopRight, 1, $slotsPerEdge)
 	$newPixelBottomRight = GetVectorPixelOnEachSide2($newPixelBottomRight, 0, $slotsPerEdge)
-
-	Local $g_aaiEdgeDropPointsPixelToDrop[4] = [$newPixelBottomRight, $newPixelTopLeft, $newPixelBottomLeft, $newPixelTopRight]
+	Local $NumberArray[4] = [$newPixelBottomRight, $newPixelTopLeft, $newPixelBottomLeft, $newPixelTopRight]
+	Local $g_aaiEdgeDropPointsPixelToDrop[4]
+	For $x = 0 To UBound($g_aaiEdgeDropPointsPixelToDrop) - 1
+		$g_aaiEdgeDropPointsPixelToDrop[$x] = $NumberArray[$g_iRandomSides[$x]]
+		If $g_bDebugSetlog Then SetDebugLog("$g_aaiEdgeDropPointsPixelToDrop[" & $x & "] : $g_iRandomSides[$x]: " & $g_iRandomSides[$x] & " name:" & $g_sRandomSidesNames[$x])
+	Next
 	Return $g_aaiEdgeDropPointsPixelToDrop
 EndFunc   ;==>GetPixelDropTroop
+#EndRegion - Custom SmartFarm - Team AIO Mod++
