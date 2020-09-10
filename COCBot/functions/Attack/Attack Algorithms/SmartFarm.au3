@@ -989,26 +989,6 @@ Func DropTroopSmartFarm($troop, $nbSides, $number, $slotsPerEdge = 0, $name = ""
 	Return $infoDropTroop
 EndFunc   ;==>DropTroopSmartFarm
 
-Func _GetMoreDeployPoints()
-	Local $More[0][2]
-	Local $aGreenTiles = DMClasicArray(DFind(@ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\Image Matching\DPSM\", 0, 0, 0, 0, 0, 0, 0, True), 0, $g_bDebugImageSave)
-	If IsArray($aGreenTiles) And $aGreenTiles[0][0] <> "" Then
-		SetDebugLog("$aGreenTiles Image Search array: " & _ArrayToString($aGreenTiles, ",", -1, -1, "|"))
-		For $c = 0 To UBound($aGreenTiles) - 1
-			Local $coord = [$aGreenTiles[$c][1], $aGreenTiles[$c][2]]
-			If Not DoublePoint("_GMDP", $More, $coord, 15) Then
-				ReDim $More[UBound($More) + 1][2]
-				$More[UBound($More) - 1][0] = $aGreenTiles[$c][1]
-				$More[UBound($More) - 1][1] = $aGreenTiles[$c][2]
-			EndIf
-		Next
-	Else
-		SetDebugLog("Green Tiles errors", $COLOR_DEBUG)
-		_DebugFailedImageDetection("GreenTiles")
-	EndIf
-	Return $More
-EndFunc   ;==>_GetMoreDeployPoints
-
 Func GetDiamondGreenTiles($HnowManyPoints = 10)
 	If Not IsArray($g_aGreenTiles) Or UBound($g_aGreenTiles) < 0 Then Return -1
 	Local $TL[0][3], $BL[0][3], $TR[0][3], $BR[0][3]
@@ -1018,26 +998,26 @@ Func GetDiamondGreenTiles($HnowManyPoints = 10)
 		Local $Coordinate = [$g_aGreenTiles[$each][0], $g_aGreenTiles[$each][1]]
 		If Side($Coordinate) = "TL" Then
 			ReDim $TL[UBound($TL) + 1][3]
-			$TL[UBound($TL) - 1][0] = $Coordinate[0]
-			$TL[UBound($TL) - 1][1] = $Coordinate[1]
+			$TL[UBound($TL) - 1][0] = $Coordinate[0] - $g_aGreenTiles[$each][2]
+			$TL[UBound($TL) - 1][1] = $Coordinate[1] - $g_aGreenTiles[$each][3]
 			$TL[UBound($TL) - 1][2] = Int(Pixel_Distance($aCentre[0], $aCentre[1], $Coordinate[0], $Coordinate[1]))
 		EndIf
 		If Side($Coordinate) = "BL" Then
 			ReDim $BL[UBound($BL) + 1][3]
-			$BL[UBound($BL) - 1][0] = $Coordinate[0]
-			$BL[UBound($BL) - 1][1] = $Coordinate[1]
+			$BL[UBound($BL) - 1][0] = $Coordinate[0] - $g_aGreenTiles[$each][2]
+			$BL[UBound($BL) - 1][1] = $Coordinate[1] + $g_aGreenTiles[$each][3]
 			$BL[UBound($BL) - 1][2] = Int(Pixel_Distance($aCentre[0], $aCentre[1], $Coordinate[0], $Coordinate[1]))
 		EndIf
 		If Side($Coordinate) = "TR" Then
 			ReDim $TR[UBound($TR) + 1][3]
-			$TR[UBound($TR) - 1][0] = $Coordinate[0]
-			$TR[UBound($TR) - 1][1] = $Coordinate[1]
+			$TR[UBound($TR) - 1][0] = $Coordinate[0] + $g_aGreenTiles[$each][2]
+			$TR[UBound($TR) - 1][1] = $Coordinate[1] - $g_aGreenTiles[$each][3]
 			$TR[UBound($TR) - 1][2] = Int(Pixel_Distance($aCentre[0], $aCentre[1], $Coordinate[0], $Coordinate[1]))
 		EndIf
 		If Side($Coordinate) = "BR" Then
 			ReDim $BR[UBound($BR) + 1][3]
-			$BR[UBound($BR) - 1][0] = $Coordinate[0]
-			$BR[UBound($BR) - 1][1] = $Coordinate[1]
+			$BR[UBound($BR) - 1][0] = $Coordinate[0] + $g_aGreenTiles[$each][2]
+			$BR[UBound($BR) - 1][1] = $Coordinate[1] + $g_aGreenTiles[$each][3]
 			$BR[UBound($BR) - 1][2] = Int(Pixel_Distance($aCentre[0], $aCentre[1], $Coordinate[0], $Coordinate[1]))
 		EndIf
 	Next
@@ -1069,7 +1049,7 @@ Func GetDiamondGreenTiles($HnowManyPoints = 10)
 EndFunc   ;==>GetDiamondGreenTiles
 
 Func NewRedLines()
-	$g_aGreenTiles = _GetMoreDeployPoints()
+	$g_aGreenTiles = DMDecodeCoords(DFind(@ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\Image Matching\DPSM\"), 15) 
 	Local $aiGreenTilesBySide = GetDiamondGreenTiles(20)
 	Local $offsetArcher = 15
 	Local $OldCode = False
