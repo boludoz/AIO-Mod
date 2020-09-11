@@ -229,19 +229,10 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 
 		If $DebugLog Then SetDebugLog("GetVillageSize measured: " & $c & ", Zoom factor: " & $z & ", Offset: " & $x & ", " & $y, $COLOR_INFO)
 
-		Dim $aResult[10]
-		$aResult[0] = $c
-		$aResult[1] = $z
-		$aResult[2] = $x
-		$aResult[3] = $y
-		$aResult[4] = $stone[0]
-		$aResult[5] = $stone[1]
-		$aResult[6] = $stone[5]
-		$aResult[7] = $tree[0]
-		$aResult[8] = $tree[1]
-		$aResult[9] = $tree[5]
 		#Region - Builder Base - Team AIO Mod++
-		Global $g_aPosSizeVillage = $aResult
+		Local $aTempResult[10] = [$c, $z, $x, $y, $stone[0], $stone[1], $stone[5], $tree[0], $tree[1], $tree[5]]
+		$aResult = $aTempResult
+		$g_aPosSizeVillage = $aResult
 		$g_iXVOffset = $aResult[2]
 		#EndRegion - Builder Base - Team AIO Mod++
 		Return FuncReturn($aResult)
@@ -262,19 +253,10 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 
 		If $DebugLog Then SetDebugLog("GetVillageSize measured (fixed): " & $c & ", Zoom factor: " & $z & ", Offset: " & $x & ", " & $y, $COLOR_INFO)
 
-		Dim $aResult[10]
-		$aResult[0] = $c
-		$aResult[1] = $z
-		$aResult[2] = $x
-		$aResult[3] = $y
-		$aResult[4] = $stone[0]
-		$aResult[5] = $stone[1]
-		$aResult[6] = $stone[5]
-		$aResult[7] = $tree[0]
-		$aResult[8] = $tree[1]
-		$aResult[9] = $tree[5]
 		#Region - Builder Base - Team AIO Mod++
-		Global $g_aPosSizeVillage = $aResult
+		Local $aTempResultn[10] = [$c, $z, $x, $y, $stone[0], $stone[1], $stone[5], $tree[0], $tree[1], $tree[5]]
+		$aResult = $aTempResultn
+		$g_aPosSizeVillage = $aResult
 		$g_iXVOffset = $aResult[2]
 		#EndRegion - Builder Base - Team AIO Mod++
 		Return FuncReturn($aResult)

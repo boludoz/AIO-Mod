@@ -108,7 +108,7 @@ Func ChkSmartFarm($sTypeResources = "All", $bTH = False)
 	; [0] = x , [1] = y , [2] = Distance to Redline ,[3] = In/Out, [4] = Side,  [5]= Is array Dim[2] with 5 coordinates to deploy
 	#Region - AreCollectorsOutside - Team AIO Mod++
 	Local $aAll
-	If $g_vSmartFarmScanOut <> 0 And $sTypeResources = "All" Then 
+	If $g_vSmartFarmScanOut <> 0 And $sTypeResources = "All" Then
 		$aAll = $g_vSmartFarmScanOut
 		$g_vSmartFarmScanOut = 0
 	Else
@@ -168,11 +168,8 @@ Func ChkSmartFarm($sTypeResources = "All", $bTH = False)
 	SetLog(" - Outside the village: " & UBound($aResourcesOUT), $COLOR_INFO)
 	SetDebugLog("MainSide array: " & _ArrayToString($aMainSide))
 	If $g_bDebugSmartFarm Then
-		If Number($g_iTownHallLevel) < 6 And $TotalOfResources < 7 Then
-			SaveDebugImage("SmartFarm_Collectors", False)
-		ElseIf Number($g_iTownHallLevel) < 9 And $TotalOfResources < 8 Then
-			SaveDebugImage("SmartFarm_Collectors", False)
-		ElseIf Number($g_iTownHallLevel) < 14 And $TotalOfResources < 12 Then
+		If Number($g_iTownHallLevel) < 6 And $TotalOfResources < 7 Or Number($g_iTownHallLevel) < 9 And _
+				$TotalOfResources < 8 Or Number($g_iTownHallLevel) < 14 And $TotalOfResources < 12 Then
 			SaveDebugImage("SmartFarm_Collectors", False)
 		EndIf
 	EndIf
@@ -358,7 +355,7 @@ Func SmartFarmDetection($txtBuildings = "Mines", $bForceCapture = True)
 					If UBound($tempObbjs) <> 2 Then ContinueLoop
 					; Check double detections
 					Local $DetectedPoint[2] = [Number($tempObbjs[0] + $offsetx), Number($tempObbjs[1] + $offsety)]
-					If DoublePoint($aTEMP[0], $aReturn, $DetectedPoint) Then ContinueLoop
+					If DoublePoint($aTemp[0], $aReturn, $DetectedPoint) Then ContinueLoop
 					; Include one more dimension
 					ReDim $aReturn[UBound($aReturn) + 1][6]
 					$aReturn[UBound($aReturn) - 1][0] = $DetectedPoint[0] ; X
@@ -385,7 +382,7 @@ Func SmartFarmDetection($txtBuildings = "Mines", $bForceCapture = True)
 				If UBound($tempObbj) <> 2 Then ContinueLoop
 				; Check double detections
 				Local $DetectedPoint[2] = [Number($tempObbj[0] + $offsetx), Number($tempObbj[1] + $offsety)]
-				If DoublePoint($aTEMP[0], $aReturn, $DetectedPoint) Then ContinueLoop
+				If DoublePoint($aTemp[0], $aReturn, $DetectedPoint) Then ContinueLoop
 				; Include one more dimension
 				ReDim $aReturn[UBound($aReturn) + 1][6]
 				$aReturn[UBound($aReturn) - 1][0] = $DetectedPoint[0] ; X
@@ -547,9 +544,9 @@ Func DebugImageSmartFarm($THdetails, $aIn, $aOut, $sTime, $BestSideToAttack, $re
 	Local $aTemp, $DecodeEachPoint
 	SetDebugLog("$redline: " & _ArrayToString($redline))
 	For $l = 0 To UBound($redline) - 1
-		$aTEMP = StringSplit($redline[$l], "|", 2)
-		For $i = 0 To UBound($aTEMP) - 1
-			$DecodeEachPoint = StringSplit($aTEMP[$i], ",", 2)
+		$aTemp = StringSplit($redline[$l], "|", 2)
+		For $i = 0 To UBound($aTemp) - 1
+			$DecodeEachPoint = StringSplit($aTemp[$i], ",", 2)
 			If UBound($DecodeEachPoint) > 1 Then _GDIPlus_GraphicsDrawRect($hGraphic, $DecodeEachPoint[0], $DecodeEachPoint[1], 5, 5, $hPen2)
 		Next
 	Next
@@ -594,7 +591,7 @@ Func DebugImageSmartFarm($THdetails, $aIn, $aOut, $sTime, $BestSideToAttack, $re
 	_GDIPlus_GraphicsDrawString($hGraphic, $sTime & " - " & $BestSideToAttack, 370, 70, "ARIAL", 20)
 
 	; Save the image and release any memory
-	_GDIPlus_ImageSaveToFile($EditedImage, $subDirectory & $Filename)
+	_GDIPlus_ImageSaveToFile($editedImage, $subDirectory & $fileName)
 	_CaptureRegion()
 	_GDIPlus_ImageSaveToFile($g_hBitmap, $subDirectory & $fileNameUntouched)
 	_GDIPlus_PenDispose($hPen)
@@ -929,7 +926,7 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 					Local $aiSlotPos = GetSlotPosition($infoDropTroop[0])
 					SetDebugLog("Slot Nun= " & $infoPixelDropTroop[0])
 					SetDebugLog("Slot Xaxis= " & $aiSlotPos[0])
-				    SetDebugLog($infoPixelDropTroop[5] & " - NumberLeft : " & $numberLeft)
+					SetDebugLog($infoPixelDropTroop[5] & " - NumberLeft : " & $numberLeft)
 				EndIf
 				If ($numberLeft > 0) Then
 					If _Sleep($DELAYLAUNCHTROOP21) Then Return
@@ -998,26 +995,26 @@ Func GetDiamondGreenTiles($HnowManyPoints = 10)
 		Local $Coordinate = [$g_aGreenTiles[$each][0], $g_aGreenTiles[$each][1]]
 		If Side($Coordinate) = "TL" Then
 			ReDim $TL[UBound($TL) + 1][3]
-			$TL[UBound($TL) - 1][0] = $Coordinate[0] - $g_aGreenTiles[$each][2]
-			$TL[UBound($TL) - 1][1] = $Coordinate[1] - $g_aGreenTiles[$each][3]
+			$TL[UBound($TL) - 1][0] = $Coordinate[0]
+			$TL[UBound($TL) - 1][1] = $Coordinate[1]
 			$TL[UBound($TL) - 1][2] = Int(Pixel_Distance($aCentre[0], $aCentre[1], $Coordinate[0], $Coordinate[1]))
 		EndIf
 		If Side($Coordinate) = "BL" Then
 			ReDim $BL[UBound($BL) + 1][3]
-			$BL[UBound($BL) - 1][0] = $Coordinate[0] - $g_aGreenTiles[$each][2]
-			$BL[UBound($BL) - 1][1] = $Coordinate[1] + $g_aGreenTiles[$each][3]
+			$BL[UBound($BL) - 1][0] = $Coordinate[0]
+			$BL[UBound($BL) - 1][1] = $Coordinate[1]
 			$BL[UBound($BL) - 1][2] = Int(Pixel_Distance($aCentre[0], $aCentre[1], $Coordinate[0], $Coordinate[1]))
 		EndIf
 		If Side($Coordinate) = "TR" Then
 			ReDim $TR[UBound($TR) + 1][3]
-			$TR[UBound($TR) - 1][0] = $Coordinate[0] + $g_aGreenTiles[$each][2]
-			$TR[UBound($TR) - 1][1] = $Coordinate[1] - $g_aGreenTiles[$each][3]
+			$TR[UBound($TR) - 1][0] = $Coordinate[0]
+			$TR[UBound($TR) - 1][1] = $Coordinate[1]
 			$TR[UBound($TR) - 1][2] = Int(Pixel_Distance($aCentre[0], $aCentre[1], $Coordinate[0], $Coordinate[1]))
 		EndIf
 		If Side($Coordinate) = "BR" Then
 			ReDim $BR[UBound($BR) + 1][3]
-			$BR[UBound($BR) - 1][0] = $Coordinate[0] + $g_aGreenTiles[$each][2]
-			$BR[UBound($BR) - 1][1] = $Coordinate[1] + $g_aGreenTiles[$each][3]
+			$BR[UBound($BR) - 1][0] = $Coordinate[0]
+			$BR[UBound($BR) - 1][1] = $Coordinate[1]
 			$BR[UBound($BR) - 1][2] = Int(Pixel_Distance($aCentre[0], $aCentre[1], $Coordinate[0], $Coordinate[1]))
 		EndIf
 	Next
@@ -1049,7 +1046,7 @@ Func GetDiamondGreenTiles($HnowManyPoints = 10)
 EndFunc   ;==>GetDiamondGreenTiles
 
 Func NewRedLines()
-	$g_aGreenTiles = DMDecodeCoords(DFind(@ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\Image Matching\DPSM\"), 15) 
+	$g_aGreenTiles = DMDecodeCoords(DFind(@ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\Image Matching\DPSM\"), 15)
 	Local $aiGreenTilesBySide = GetDiamondGreenTiles(20)
 	Local $offsetArcher = 15
 	Local $OldCode = False
