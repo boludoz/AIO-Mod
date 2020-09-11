@@ -56,12 +56,12 @@ Func DMDecodeMatches($sMatches)
 EndFunc
 
 ; Decodes Matches string to an Array, $sMatches must be like: Inferno-5-50-50-100-100|Inferno-6-200-200-100-100 . Representing: PointX-PointY-Width-Height
-Func DMDecodeCoords($sMatches, $iDi = 15)
+Func DMDecodeCoords($sMatches, $iDis = 15)
     Local $aSplittedMatches = StringSplit($sMatches, "|", $STR_NOCOUNT)
     Local $aMatches[UBound($aSplittedMatches)][4], $iRedim = 0
     For $i = 0 To UBound($aSplittedMatches) - 1
         Local $aDecodedMatch = DMDecodeMatch($aSplittedMatches[$i])
-        If IsArray($aDecodedMatch) And Not DMduplicated2($aMatches, $aDecodedMatch[2], $aDecodedMatch[3], $iRedim, $iDi) Then
+        If IsArray($aDecodedMatch) And Not DMduplicated2($aMatches, $aDecodedMatch[2], $aDecodedMatch[3], $iRedim, $iDis) Then
             $aMatches[$iRedim][0] = $aDecodedMatch[2]
             $aMatches[$iRedim][1] = $aDecodedMatch[3]
             $aMatches[$iRedim][2] = $aDecodedMatch[4]
@@ -70,7 +70,8 @@ Func DMDecodeCoords($sMatches, $iDi = 15)
         EndIf
     Next
 	Redim $aMatches[$iRedim][4]
-    Return $aMatches
+	If UBound($aMatches) < 1 Then Return -1
+	Return $aMatches
 EndFunc
 
 Func DMduplicated2($aXYs, $x1, $y1, $i3, $iD = 18)
@@ -79,28 +80,7 @@ Func DMduplicated2($aXYs, $x1, $y1, $i3, $iD = 18)
 		If Pixel_Distance($aXYs[$i][0], $aXYs[$i][1], $x1, $y1) < $iD Then Return True
 	Next
 	Return False
-EndFunc   ;==>DMduplicated
-
-#cs
-Func DMDecodeMatches($sMatches = "Inferno-5-50-50-100-100|Inferno-6-200-200-100-100", $sDelim_Item = "-", $sDelim_Row =  "|")
-	Local $iValDim_1, $iValDim_2 = 0, $iColCount
-	Local $aSplit_1 = StringSplit($sMatches, $sDelim_Row, $STR_NOCOUNT + $STR_ENTIRESPLIT)
-	$iValDim_1 = UBound($aSplit_1, $UBOUND_ROWS)
-	Local $aTmp[$iValDim_1][0], $aSplit_2
-	For $i = 0 To $iValDim_1 - 1
-		$aSplit_2 = StringSplit($aSplit_1[$i], $sDelim_Item, $STR_NOCOUNT + $STR_ENTIRESPLIT)
-		$iColCount = UBound($aSplit_2)
-		If $iColCount > $iValDim_2 Then
-			$iValDim_2 = $iColCount
-			ReDim $aTmp[$iValDim_1][$iValDim_2]
-		EndIf
-		For $j = 0 To $iColCount - 1
-			$aTmp[$i][$j] = $aSplit_2[$j]
-		Next
-	Next
-	Return $aTmp
-EndFunc
-#ce
+EndFunc   ;==>DMduplicated2
 
 ; Decodes a Match to an Array, $sMatch must be like: Inferno-14-50-50-100-100 . Representing: ObjectName-ObjectLevel-PointX-PointY-Width-Height
 Func DMDecodeMatch($sMatch)
@@ -168,32 +148,24 @@ Func DFind($sBundle, $iRegionX = 0, $iRegionY = 0, $iRegionWidth = 0, $iRegionHe
     Return $sResult
 EndFunc
 
+; Decodes a Match to an Array, $sMatch must be like: Inferno-14-50-50-100-100 . Representing: ObjectName-PointX-PointY-ObjectLevel
 Func DMClasicArray($sMatches, $iDis = 18, $bDebugLog = $g_bDebugImageSave)
-    Local $aSplittedMatches = StringSplit($sMatches, "|", $STR_NOCOUNT), $aDecodedMatch = -1
-	Local $aAR[UBound($aSplittedMatches)][4], $vDeMatch = "", $i2 = 0, $i3 = 0
-    For $i = 0 To UBound($aSplittedMatches) -1
-        $vDeMatch = DMDecodeMatch($aSplittedMatches[$i])
-        If IsArray($vDeMatch) Then
-			If DMduplicated($aAR, $vDeMatch[2], $vDeMatch[3], $i-$i3, $iDis) Then 
-				$i3 += 1
-				ContinueLoop
-			EndIf
-			$i2 = ($i-$i3)
-			$aAR[$i2][0] = $vDeMatch[0]
-			$aAR[$i2][1] = $vDeMatch[2]
-			$aAR[$i2][2] = $vDeMatch[3]
-			$aAR[$i2][3] = $vDeMatch[1]
-		EndIf
+    Local $aSplittedMatches = StringSplit($sMatches, "|", $STR_NOCOUNT)
+    Local $aMatches[UBound($aSplittedMatches)][4], $iRedim = 0
+    For $i = 0 To UBound($aSplittedMatches) - 1
+        Local $aDecodedMatch = DMDecodeMatch($aSplittedMatches[$i])
+        If IsArray($aDecodedMatch) And Not DMduplicated($aMatches, $aDecodedMatch[2], $aDecodedMatch[3], $iRedim, $iDis) Then
+            $aMatches[$iRedim][0] = $aDecodedMatch[0]
+            $aMatches[$iRedim][1] = $aDecodedMatch[2]
+            $aMatches[$iRedim][2] = $aDecodedMatch[3]
+            $aMatches[$iRedim][3] = $aDecodedMatch[1]
+			$iRedim += 1
+        EndIf
     Next
-	
-	Redim $aAR[$i-$i3][4]
-
-	If UBound($aAR) > 1 Then
-		If $bDebugLog Then DebugImgArrayClassic($aAR)
-		Return $aAR
-	Else
-		Return -1
-	EndIf
+	Redim $aMatches[$iRedim][4]
+	If UBound($aMatches) < 1 Then Return -1
+	If $bDebugLog Then DebugImgArrayClassic($aMatches)
+	Return $aMatches
 EndFunc
 
 Func DMduplicated($aXYs, $x1, $y1, $i3, $iD = 18)
