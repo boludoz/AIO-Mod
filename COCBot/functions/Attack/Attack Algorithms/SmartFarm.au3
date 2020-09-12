@@ -106,7 +106,7 @@ Func ChkSmartFarm($sTypeResources = "All", $bTH = False)
 	Else
 		Local $THdetails[4] = ["-", 0, 0, ""]
 	EndIf
-	
+
 	; [0] = x , [1] = y , [2] = Distance to Redline ,[3] = In/Out, [4] = Side,  [5]= Is array Dim[2] with 5 coordinates to deploy
 	#Region - AreCollectorsOutside - Team AIO Mod++
 	Local $aAll
@@ -117,7 +117,7 @@ Func ChkSmartFarm($sTypeResources = "All", $bTH = False)
 		$aAll = SmartFarmDetection($sTypeResources)
 	EndIf
 	#EndRegion - AreCollectorsOutside - Team AIO Mod++
-	
+
 	If $g_bDebugSetlog Then SetDebugLog(" TOTAL detection Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
 
 	; Let's determinate what resource is out or in side the village
@@ -281,7 +281,7 @@ Func SmartFarmDetection($txtBuildings = "Mines", $bForceCapture = True)
 	EndIf
 	SetDebugLog("Detection Resources with Min Level of " & $iMinLevel & " and Max of " & $iMaxLevel)
 	Local $hTimer = TimerInit()
-	
+
 	; Prepared for Winter Theme
 	Switch $txtBuildings
 		Case "Mines"
@@ -1065,8 +1065,11 @@ Func NewRedLines()
 	Local $aiGreenTilesBySide = GetDiamondGreenTiles(20)
 	Local $offsetArcher = 15
 	Local $OldCode = False
+	Local $More
 	SetDebugLog("TL using Green Tiles")
-	Local $More = $aiGreenTilesBySide[0]
+	If IsArray($aiGreenTilesBySide) Then
+	  $More = $aiGreenTilesBySide[0]
+    EndIf
 	If IsArray($aiGreenTilesBySide) And IsArray($More) And UBound($More) > 10 Then
 		For $x = 0 To UBound($More) - 1
 			Local $Coordinate[2] = [$More[$x][0], $More[$x][1]]
@@ -1098,7 +1101,10 @@ Func NewRedLines()
 		$g_aiPixelTopLeftFurther = $g_aiPixelTopLeft
 	EndIf
 	SetDebugLog("BL using Green Tiles")
-	$More = $aiGreenTilesBySide[1]
+	If IsArray($aiGreenTilesBySide) Then
+	  $More = $aiGreenTilesBySide[1]
+    EndIf
+
 	If IsArray($aiGreenTilesBySide) And IsArray($More) And UBound($More) > 10 Then
 		For $x = 0 To UBound($More) - 1
 			Local $Coordinate[2] = [$More[$x][0], $More[$x][1]]
@@ -1130,7 +1136,10 @@ Func NewRedLines()
 		$g_aiPixelBottomLeftFurther = $g_aiPixelBottomLeft
 	EndIf
 	SetDebugLog("TR using Green Tiles")
-	Local $More = $aiGreenTilesBySide[2]
+	If IsArray($aiGreenTilesBySide) Then
+	  $More = $aiGreenTilesBySide[2]
+    EndIf
+
 	If IsArray($aiGreenTilesBySide) And IsArray($More) And UBound($More) > 10 Then
 		For $x = 0 To UBound($More) - 1
 			Local $Coordinate[2] = [$More[$x][0], $More[$x][1]]
@@ -1162,7 +1171,10 @@ Func NewRedLines()
 		$g_aiPixelTopRightFurther = $g_aiPixelTopRight
 	EndIf
 	SetDebugLog("BR using Green Tiles")
-	Local $More = $aiGreenTilesBySide[3]
+	If IsArray($aiGreenTilesBySide) Then
+	  $More = $aiGreenTilesBySide[3]
+    EndIf
+
 	If IsArray($aiGreenTilesBySide) And IsArray($More) And UBound($More) > 10 Then
 		For $x = 0 To UBound($More) - 1
 			Local $Coordinate[2] = [$More[$x][0], $More[$x][1]]
