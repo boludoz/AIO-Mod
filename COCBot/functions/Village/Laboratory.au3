@@ -5,8 +5,8 @@
 ; Parameters ....:
 ; Return values .: None
 ; Author ........: summoner
-; Modified ......: KnowJack (06/2015), Sardo (08/2015), Monkeyhunter(04/2016), MMHK(06/2018), Chilly-Chill (12/2019)
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
+; Modified ......: KnowJack (06/2015), Sardo (08/2015), Monkeyhunter(04/2016), MMHK(06/2018), Chilly-Chill (12/2019), Boldina ! (2020)
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2020
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
@@ -110,7 +110,56 @@ Func Laboratory($debug=False)
 		EndIf
 		If _Sleep($DELAYLABORATORY2) Then Return
 		ClickAway()
-
+	#Region - Custom lab - Team AIO Mod++
+	ElseIf $g_bPriorityLab Then ; users choice is any upgrade + $g_bPriorityLab
+		Local $aPriority = GetTroopsResources()
+		Local $aArray = ["Elixir", "Dark", "Gold"]
+		_ArraySwap($aArray, 0, $g_iCmbPriorityLab)
+		For $sMode In $aArray
+			While($iCurPage <= $iPages)
+				local $aPageUpgrades = findMultiple($g_sImgLabResearch, $sLabTroopsSectionDiam, $sLabTroopsSectionDiam, 0, 1000, 0, "objectname,objectpoints", True)
+				If UBound($aPageUpgrades, 1) >= 1 Then ; if we found any troops
+					For $i = 0 To UBound($aPageUpgrades, 1) - 1 ; Loop through found upgrades
+						
+						Local $aTempTroopArray = $aPageUpgrades[$i] ; Declare Array to Temp Array
+						
+						Local $iSwitch = _ArraySearch($g_avLabTroops, $aTempTroopArray[0], 0, 0, 0, 2, 1, 3, False)
+						Switch $sMode
+							Case "Dark"
+								If Not ($iSwitch >= $aPriority[2][0] And $iSwitch <= $aPriority[2][1]) And Not ($iSwitch >= $aPriority[3][0] And $iSwitch <= $aPriority[3][1]) Then
+									ContinueLoop
+								EndIf
+							Case "Elixir"
+								If Not ($iSwitch >= $aPriority[0][0] And $iSwitch <= $aPriority[0][1]) And Not ($iSwitch >= $aPriority[1][0] And $iSwitch <= $aPriority[1][1]) Then
+									ContinueLoop
+								EndIf
+							Case "Gold"
+								If Not ($iSwitch >= $aPriority[4][0] And $iSwitch <= $aPriority[4][1]) Then
+									ContinueLoop
+								EndIf
+						EndSwitch
+						
+						; find image slot that we found so that we can read the cost to see if we can upgrade it... slots read 1-12 top to bottom so barb = 1, arch = 2, giant = 3, etc...
+						Local $aCoords = decodeSingleCoord($aTempTroopArray[1])
+						$sCostResult = GetLabCostResult($aCoords) ; get cost of the current upgrade option
+		
+						If $sCostResult = "" Then ; not enough resources
+							If $g_bDebugSetlog Then SetDebugLog("Lab Upgrade " & $aTempTroopArray[0] & " - Not enough Resources")
+						ElseIf StringSplit($sCostResult, "1")[0] = StringLen($sCostResult)+1 or StringSplit($sCostResult, "1")[1] = "0" Then ; max level if all ones returned from ocr or if the first letter is a 0.
+								If $g_bDebugSetlog Then SetDebugLog("Lab Upgrade " & $aTempTroopArray[0] & " - Max Level")
+						Else
+							Return LaboratoryUpgrade($aTempTroopArray[0], $aCoords, $sCostResult, $debug) ; return whether or not we successfully upgraded
+						EndIf
+						If _Sleep($DELAYLABORATORY2) Then Return
+					Next
+				EndIf
+		
+				LabNextPage($iCurPage, $iPages, $iYMidPoint) ; go to next page of upgrades
+				$iCurPage += 1 ; Next page
+				If _Sleep($DELAYLABORATORY2) Then Return
+			WEnd
+		Next
+	#EndRegion - Custom lab - Team AIO Mod++
 	Else ; users choice is any upgrade
 		While($iCurPage <= $iPages)
 			local $aPageUpgrades = findMultiple($g_sImgLabResearch, $sLabTroopsSectionDiam, $sLabTroopsSectionDiam, 0, 1000, 0, "objectname,objectpoints", True) ; Returns $aCurrentTroops[index] = $aArray[2] = ["TroopShortName", CordX,CordY]
@@ -137,12 +186,11 @@ Func Laboratory($debug=False)
 			$iCurPage += 1 ; Next page
 			If _Sleep($DELAYLABORATORY2) Then Return
 		WEnd
-
-		; If We got to here without returning, then nothing available for upgrade
-		SetLog("Nothing available for upgrade at the moment, try again later.")
-		ClickAway()
 	EndIf
 
+	; If We got to here without returning, then nothing available for upgrade
+	SetLog("Nothing available for upgrade at the moment, try again later.")
+	ClickAway()
 	Return False ; No upgrade started
 EndFunc
 
@@ -284,3 +332,84 @@ Func FindResearchButton()
 		Return False
 	EndIf
 EndFunc
+
+#Region
+func asd123()
+	Local $aRequestButton = findMultiple($g_sImgRequestCCButton, GetDiamondFromRect("718,580,780,614"), GetDiamondFromRect("718,580,780,614"), 0, 1000, 1, "objectname,objectpoints", True)
+	If Not IsArray($aRequestButton) Then
+		Return
+	EndIf
+	For $i = 0 To UBound($aRequestButton) -1
+		Local $a123 = $aRequestButton[$i]
+		_ArrayDisplay($a123)
+	Next
+endfunc
+
+Func TestPriorityLab()
+		Local $a0[2] = ["Barb","1,2"]
+		Local $a1[2] = ["IceG","1,2"]
+		Local $a2[2] = ["Siege","1,2"]
+		Local $aFakeFind[3] = [$a0,$a1,$a2]
+		Local $iCurPage = 1, $iPages = 4
+		Local $aPriority = GetTroopsResources()
+		Local $aArray = ["Elixir", "Dark", "Gold"]
+		_ArraySwap($aArray, 0, $g_iCmbPriorityLab)
+		_ArrayDisplay($aArray)
+		For $sMode In $aArray
+			While ($iCurPage <= $iPages)
+				local $aPageUpgrades = $aFakeFind
+				If UBound($aPageUpgrades, 1) >= 1 Then ; if we found any troops
+					For $i = 0 To UBound($aPageUpgrades, 1) - 1 ; Loop through found upgrades
+						
+						Local $aTempTroopArray = $aPageUpgrades[$i] ; Declare Array to Temp Array
+						
+						Local $iSwitch = _ArraySearch($g_avLabTroops, $aTempTroopArray[0], 0, 0, 0, 2, 1, 3, False)
+						Switch $sMode
+							Case "Dark"
+								If Not ($iSwitch >= $aPriority[2][0] And $iSwitch <= $aPriority[2][1]) And Not ($iSwitch >= $aPriority[3][0] And $iSwitch <= $aPriority[3][1]) Then
+									ContinueLoop
+								EndIf
+							Case "Elixir"
+								If Not ($iSwitch >= $aPriority[0][0] And $iSwitch <= $aPriority[0][1]) And Not ($iSwitch >= $aPriority[1][0] And $iSwitch <= $aPriority[1][1]) Then
+									ContinueLoop
+								EndIf
+							Case "Gold"
+								If Not ($iSwitch >= $aPriority[4][0] And $iSwitch <= $aPriority[4][1]) Then
+									ContinueLoop
+								EndIf
+						EndSwitch
+						
+					Return $aTempTroopArray
+					Next
+				EndIf
+			WEnd
+		Next
+		Return False
+EndFunc
+
+Func GetTroopsResources()
+
+	Local $aiGetObjects[5][2]
+	$aiGetObjects[0][0] = _ArraySearch($g_avLabTroops, "Barb", 0, 0, 0, 2, 1, 3, False)
+	$aiGetObjects[1][0] = _ArraySearch($g_avLabTroops, "LSpell", 0, 0, 0, 2, 1, 3, False)
+	$aiGetObjects[2][0] = _ArraySearch($g_avLabTroops, "PSpell", 0, 0, 0, 2, 1, 3, False)
+	$aiGetObjects[3][0] = _ArraySearch($g_avLabTroops, "Mini", 0, 0, 0, 2, 1, 3, False)
+	$aiGetObjects[4][0] = _ArraySearch($g_avLabTroops, "Siege", 0, 0, 0, 2, 1, 3, False)
+	
+	$aiGetObjects[0][1] = $aiGetObjects[1][0] -1
+	$aiGetObjects[1][1] = $aiGetObjects[2][0] -1
+	$aiGetObjects[2][1] = $aiGetObjects[3][0] -1
+	$aiGetObjects[3][1] = $aiGetObjects[4][0] -1
+	$aiGetObjects[4][1] = UBound($g_avLabTroops) -1
+	
+	If $g_bDebugSetlog Then 
+		SetDebugLog("Max T E : " & $g_avLabTroops[$aiGetObjects[0][1]][0] & " / min T E : " & $g_avLabTroops[$aiGetObjects[0][0]][0], $COLOR_INFO)
+		SetDebugLog("Max T DE : " & $g_avLabTroops[$aiGetObjects[1][1]][0] & " / min T DE : " & $g_avLabTroops[$aiGetObjects[1][0]][0], $COLOR_INFO)
+		SetDebugLog("Max SP E : " & $g_avLabTroops[$aiGetObjects[2][1]][0] & " / min SP E : " & $g_avLabTroops[$aiGetObjects[2][0]][0], $COLOR_INFO)
+		SetDebugLog("Max SP DE : " & $g_avLabTroops[$aiGetObjects[3][1]][0] & " / min SP DE : " & $g_avLabTroops[$aiGetObjects[3][0]][0], $COLOR_INFO)
+		SetDebugLog("Max SI : " & $g_avLabTroops[$aiGetObjects[4][1]][0] & " / min SI : " & $g_avLabTroops[$aiGetObjects[4][0]][0], $COLOR_INFO)
+	EndIf
+	
+	Return $aiGetObjects
+EndFunc
+#EndRegion

@@ -217,6 +217,7 @@ Func chkLab()
 		GUICtrlSetState($g_hCmbLaboratory, $GUI_DISABLE)
 		_GUICtrlSetImage($g_hPicLabUpgrade, $g_sLibIconPath, $g_avLabTroops[0][1])
 	EndIf
+	chkLabPriority() ;Custom lab - Team AIO Mod++
 	LabStatusGUIUpdate()
 EndFunc   ;==>chkLab
 
@@ -274,6 +275,7 @@ EndFunc   ;==>StarLabStatusGUIUpdate
 Func cmbLab()
 	$g_iCmbLaboratory = _GUICtrlComboBox_GetCurSel($g_hCmbLaboratory)
 	_GUICtrlSetImage($g_hPicLabUpgrade, $g_sLibIconPath, $g_avLabTroops[$g_iCmbLaboratory][1])
+	chkLabPriority() ;Custom lab - Team AIO Mod++
 EndFunc   ;==>cmbLab
 
 Func cmbStarLab()

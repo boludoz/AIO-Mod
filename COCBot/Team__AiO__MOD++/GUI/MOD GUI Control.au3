@@ -277,3 +277,25 @@ EndFunc   ;==>UpdateChkOnlyFarm
 Func chkDBNoLeague()
 	$g_bChkNoLeague[$DB] = (GUICtrlRead($g_hChkDBNoLeague) = $GUI_CHECKED)
 EndFunc   ;==>chkDBNoLeague
+
+; Lab Priority System 
+func chkPriorityResourceLab()
+	$g_bPriorityLab = (GUICtrlRead($g_hChkPriorityLab) = $GUI_CHECKED)
+	GUICtrlSetState($g_hCmbPriorityLab, ($g_bPriorityLab) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+EndFunc   ;==>chkPriorityResourceLab
+
+func cmbPriorityResourceLab()
+	; Hahaha I wonder how "_ GUICtrlComboBox_GetCurSel ($ g_hCm Priority System) ... Case "Elixir" " worked this if it returns the index.
+	$g_iCmbPriorityLab = _GUICtrlComboBox_GetCurSel($g_hCmbPriorityLab)
+EndFunc   ;==>cmbPriorityResourceLab
+
+Func chkLabPriority()
+	If _GUICtrlComboBox_GetCurSel($g_hCmbLaboratory) = 0 And (GUICtrlRead($g_hChkAutoLabUpgrades) = $GUI_CHECKED) Then
+		GUICtrlSetState($g_hChkPriorityLab, $GUI_ENABLE)
+		GUICtrlSetState($g_hCmbPriorityLab, $GUI_ENABLE)
+	Else
+		GUICtrlSetState($g_hChkPriorityLab, $GUI_DISABLE)
+		GUICtrlSetState($g_hCmbPriorityLab, $GUI_DISABLE)
+	EndIf
+	chkPriorityResourceLab()
+EndFunc   ;==>chkLabPriority

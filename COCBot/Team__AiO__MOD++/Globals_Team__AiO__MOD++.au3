@@ -25,7 +25,13 @@ Global Enum $eIcnModKingGray = 1, $eIcnModKingBlue, $eIcnModKingGreen, $eIcnModK
 Global Const $g_sLibBBIconPath = $g_sLibPath & "\ModLibs\BuilderBase.dll" ; icon library
 Global Enum $eIcnBB = 1 , $eIcnLabBB, $eIcnBBElixir, $eIcnBBGold, $eIcnBBTrophies, $eIcnMachine, $eIcnBBWallInfo, $eIcnBBWallL1, $eIcnBBWallL2, $eIcnBBWallL3, $eIcnBBWallL4, $eIcnBBWallL5, _
 		$eIcnBBWallL6, $eIcnBBWallL7, $eIcnBBWallL8, $eIcnBBWallL9
+		
 #EndRegion - Icn - Team AIO Mod++
+
+#Region - Lab Priority System 
+Global $g_bPriorityLab, $g_iCmbPriorityLab, _
+$g_hChkPriorityLab, $g_hCmbPriorityLab 
+#EndRegion - Lab Priority System 
 
 #Region - Discord - Team AIO Mod++
 Global $g_sTxtNotifyDSToken, $g_bNotifyDSEnable, $g_hChkNotifyDSEnable, _
@@ -353,7 +359,7 @@ Global $g_hBBAttackLogFile = 0
 Global $g_bChkPlayBBOnly = False
 
 Global $g_bChkBBGetFromCSV = False, $g_bChkBBGetFromArmy
-#EndRegion
+#EndRegion - Builder Base !!!
 
 Global $g_iAttackTotalBLButtons = -1
 Global $g_aBLButtonsRegion[4] = [10, 570, 450, 55]
