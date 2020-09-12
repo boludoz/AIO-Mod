@@ -29,8 +29,7 @@ Global Enum $eIcnBB = 1 , $eIcnLabBB, $eIcnBBElixir, $eIcnBBGold, $eIcnBBTrophie
 #EndRegion - Icn - Team AIO Mod++
 
 #Region - Lab Priority System 
-Global $g_bPriorityLab, $g_iCmbPriorityLab, _
-$g_hChkPriorityLab, $g_hCmbPriorityLab 
+Global $g_hChkPriorityLab, $g_bChkPriorityLab, $g_hCmbPriorityLab, $g_iCmbPriorityLab 
 #EndRegion - Lab Priority System 
 
 #Region - Discord - Team AIO Mod++

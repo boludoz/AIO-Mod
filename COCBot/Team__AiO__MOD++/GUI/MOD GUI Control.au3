@@ -280,8 +280,8 @@ EndFunc   ;==>chkDBNoLeague
 
 ; Lab Priority System 
 func chkPriorityResourceLab()
-	$g_bPriorityLab = (GUICtrlRead($g_hChkPriorityLab) = $GUI_CHECKED)
-	GUICtrlSetState($g_hCmbPriorityLab, ($g_bPriorityLab) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+	$g_bChkPriorityLab = (GUICtrlRead($g_hChkPriorityLab) = $GUI_CHECKED)
+	GUICtrlSetState($g_hCmbPriorityLab, ($g_bChkPriorityLab) ? ($GUI_ENABLE) : ($GUI_DISABLE))
 EndFunc   ;==>chkPriorityResourceLab
 
 func cmbPriorityResourceLab()

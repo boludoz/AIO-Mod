@@ -765,7 +765,7 @@ Func ApplyConfig_600_14($TypeReadSave)
 			_GUICtrlSetImage($g_hPicLabUpgrade, $g_sLibIconPath, $g_avLabTroops[$g_iCmbLaboratory][1])
 			chkLab()
 			#Region - Custom lab - Team AIO Mod++
-			GUICtrlSetState($g_hChkPriorityLab, $g_bPriorityLab ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkPriorityLab, $g_bChkPriorityLab ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbPriorityLab, $g_iCmbPriorityLab)
 			chkPriorityResourceLab()
 			chkLabPriority()
@@ -775,10 +775,8 @@ Func ApplyConfig_600_14($TypeReadSave)
 			_GUICtrlSetImage($g_hPicStarLabUpgrade, $g_sLibIconPath, $g_avStarLabTroops[$g_iCmbStarLaboratory][4])
 			chkStarLab()
 		Case "Save"
-			$g_bPriorityLab = (GUICtrlRead($g_hChkPriorityLab) = $GUI_CHECKED)
-			$g_iCmbLaboratory = _GUICtrlComboBox_GetCurSel($g_hCmbLaboratory)
 			#Region - Custom lab - Team AIO Mod++
-			$g_bPriorityLab = (GUICtrlRead($g_hChkPriorityLab) = $GUI_CHECKED)
+			$g_bChkPriorityLab = (GUICtrlRead($g_hChkPriorityLab) = $GUI_CHECKED)
 			$g_iCmbPriorityLab = _GUICtrlComboBox_GetCurSel($g_hCmbPriorityLab)
 			#EndRegion - Custom lab - Team AIO Mod++
 			$g_bAutoStarLabUpgradeEnable = (GUICtrlRead($g_hChkAutoStarLabUpgrades) = $GUI_CHECKED)

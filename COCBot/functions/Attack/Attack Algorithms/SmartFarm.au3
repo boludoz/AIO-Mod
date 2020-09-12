@@ -12,7 +12,11 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Global $g_aGreenTiles[0], $g_iRandomSides[4] = [0, 1, 2, 3], $g_sRandomSidesNames[4] = ["BR", "TL", "BL", "TR"]
+Global $g_aGreenTiles = -1, $g_iRandomSides[4] = [0, 1, 2, 3], $g_sRandomSidesNames[4] = ["BR", "TL", "BL", "TR"]
+Global $g_aiPixelTopLeftFurther[0], $g_aiPixelTopLeft[0]
+Global $g_aiPixelBottomLeftFurther[0], $g_aiPixelBottomLeft[0]
+Global $g_aiPixelTopRightFurther[0], $g_aiPixelTopRight[0]
+Global $g_aiPixelBottomRightFurther[0], $g_aiPixelBottomRight[0]
 
 Func TestSmartFarm($bFast = True)
 
@@ -87,8 +91,6 @@ Func ChkSmartFarm($sTypeResources = "All", $bTH = False)
 	If $g_bDebugSetlog Then SetDebugLog(" - INI|SmartFarm detection.", $COLOR_INFO)
 	_CaptureRegion2()
 	ConvertInternalExternArea("ChkSmartFarm")
-	Local $temp[0]
-	$g_aGreenTiles = $temp
 	If $g_bUseSmartFarmRedLine Then
 		SetDebugLog("Using Green Tiles -> Red Lines -> Edges")
 		NewRedLines()
@@ -987,12 +989,15 @@ Func DropTroopSmartFarm($troop, $nbSides, $number, $slotsPerEdge = 0, $name = ""
 EndFunc   ;==>DropTroopSmartFarm
 
 Func GetDiamondGreenTiles($HnowManyPoints = 10)
+	$g_aGreenTiles = -1
+	Local $aTmp = DMDecodeCoords(DFind(@ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\Image Matching\DPSM\", 19, 74, 805, 518, 0, 1000, 9999, True), 15)
+	$g_aGreenTiles = IsArray($aTmp) ? ($aTmp) : (-1)
 	If Not IsArray($g_aGreenTiles) Or UBound($g_aGreenTiles) < 0 Then Return -1
 	Local $TL[0][3], $BL[0][3], $TR[0][3], $BR[0][3]
 	Local $aCentre = [$DiamondMiddleX, $DiamondMiddleY]
-	_ArraySort($g_aGreenTiles, 0, 0, 0, 0)
+	_ArraySort($g_aGreenTiles, 0, 0, 0, 1)
 	For $each = 0 To UBound($g_aGreenTiles) - 1
-		Local $Coordinate = [$g_aGreenTiles[$each][0], $g_aGreenTiles[$each][1]]
+		Local $Coordinate = [$g_aGreenTiles[$each][1], $g_aGreenTiles[$each][2]]
 		If Side($Coordinate) = "TL" Then
 			ReDim $TL[UBound($TL) + 1][3]
 			$TL[UBound($TL) - 1][0] = $Coordinate[0]
@@ -1046,14 +1051,20 @@ Func GetDiamondGreenTiles($HnowManyPoints = 10)
 EndFunc   ;==>GetDiamondGreenTiles
 
 Func NewRedLines()
-	$g_aGreenTiles = DMDecodeCoords(DFind(@ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\Image Matching\DPSM\"), 15)
+	; Reset
+	Local $aLocalReset[0]
+	$g_aiPixelTopLeftFurther = $aLocalReset
+	$g_aiPixelTopLeft = $aLocalReset
+	$g_aiPixelBottomLeftFurther = $aLocalReset
+	$g_aiPixelBottomLeft = $aLocalReset
+	$g_aiPixelTopRightFurther = $aLocalReset
+	$g_aiPixelTopRight = $aLocalReset
+	$g_aiPixelBottomRightFurther = $aLocalReset
+	$g_aiPixelBottomRight = $aLocalReset
+
 	Local $aiGreenTilesBySide = GetDiamondGreenTiles(20)
 	Local $offsetArcher = 15
 	Local $OldCode = False
-	Global $g_aiPixelTopLeftFurther[0], $g_aiPixelTopLeft[0]
-	Global $g_aiPixelBottomLeftFurther[0], $g_aiPixelBottomLeft[0]
-	Global $g_aiPixelTopRightFurther[0], $g_aiPixelTopRight[0]
-	Global $g_aiPixelBottomRightFurther[0], $g_aiPixelBottomRight[0]
 	SetDebugLog("TL using Green Tiles")
 	Local $More = $aiGreenTilesBySide[0]
 	If IsArray($aiGreenTilesBySide) And IsArray($More) And UBound($More) > 10 Then

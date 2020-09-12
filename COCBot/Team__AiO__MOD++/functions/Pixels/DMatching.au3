@@ -74,6 +74,14 @@ Func DMDecodeCoords($sMatches, $iDis = 15)
 	Return $aMatches
 EndFunc
 
+Func DMduplicated($aXYs, $x1, $y1, $i3, $iD = 18)
+	For $i = 0 To $i3
+		If Not $g_bRunState Then Return
+		If Pixel_Distance($aXYs[$i][1], $aXYs[$i][2], $x1, $y1) < $iD Then Return True
+	Next
+	Return False
+EndFunc   ;==>DMduplicated
+
 Func DMduplicated2($aXYs, $x1, $y1, $i3, $iD = 18)
 	For $i = 0 To $i3
 		If Not $g_bRunState Then Return
@@ -164,24 +172,16 @@ Func DMClasicArray($sMatches, $iDis = 18, $bDebugLog = $g_bDebugImageSave)
     Next
 	Redim $aMatches[$iRedim][4]
 	If UBound($aMatches) < 1 Then Return -1
-	If $bDebugLog Then DebugImgArrayClassic($aMatches)
+	If $bDebugLog Then DebugImgArrayClassic($aMatches, "DMClasicArray")
 	Return $aMatches
 EndFunc
 
-Func DMduplicated($aXYs, $x1, $y1, $i3, $iD = 18)
-	For $i = 0 To $i3
-		If Not $g_bRunState Then Return
-		If Pixel_Distance($aXYs[$i][1], $aXYs[$i][2], $x1, $y1) < $iD Then Return True
-	Next
-	Return False
-EndFunc   ;==>DMduplicated
-
-Func DebugImgArrayClassic($aAR = 0)
+Func DebugImgArrayClassic($aAR = 0, $sFrom = "")
 	If $g_hHBitmap2 = 0 Then
 		Return
 	EndIf
-	
-	Local $sSubDir = $g_sProfileTempDebugPath & "DMClasicArray"
+	Local $sDir = ($sFrom <> "") ? ($sFrom) : ("DebugImgArrayClassic")
+	Local $sSubDir = $g_sProfileTempDebugPath & $sDir
 
 	DirCreate($sSubDir)
 

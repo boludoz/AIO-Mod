@@ -111,7 +111,7 @@ Func Laboratory($debug=False)
 		If _Sleep($DELAYLABORATORY2) Then Return
 		ClickAway()
 	#Region - Custom lab - Team AIO Mod++
-	ElseIf $g_bPriorityLab Then ; users choice is any upgrade + $g_bPriorityLab
+	ElseIf $g_bChkPriorityLab Then ; users choice is any upgrade + $g_bChkPriorityLab
 		Local $aPriority = GetTroopsResources()
 		Local $aArray = ["Elixir", "Dark", "Gold"]
 		_ArraySwap($aArray, 0, $g_iCmbPriorityLab)

@@ -133,7 +133,7 @@ Func CreateLaboratorySubTab()
 	#ce - Custom - Team AIO Mod++
 
 	Local $x = 25, $y = 45
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "Group_01", "Laboratory"), $x - 20, $y - 20, $g_iSizeWGrpTab3, 100)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "Group_01", "Laboratory"), $x - 20, $y - 20, $g_iSizeWGrpTab3, 170) ; Custom lab - Team AIO Mod++
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnLaboratory, $x, $y, 64, 64)
 		$g_hChkAutoLabUpgrades = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkAutoLabUpgrades", "Auto Laboratory Upgrades"), $x + 80, $y + 5, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkAutoLabUpgrades_Info_01", "Check box to enable automatically starting Upgrades in laboratory"))
@@ -164,6 +164,7 @@ Func CreateLaboratorySubTab()
 	#Region - Custom lab - Team AIO Mod++
 		$g_hChkPriorityLab = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Upgrade_Laboratory", "ChkPriorityResourceLab_01", "Priority resource") & ": ", $x + 80, $y + 75, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Upgrade_Laboratory", "ChkPriorityResourceLab_02", "Enable this function to select resource priorities"))
+			GUICtrlSetState(-1, $GUI_DISABLE)
 			GUICtrlSetOnEvent(-1, "chkPriorityResourceLab")
 		$g_hCmbPriorityLab = GUICtrlCreateCombo("", $x + 135, $y + 105, 70, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 			GUICtrlSetData(-1, "Elixir|Dark|Gold", "Elixir")
