@@ -111,7 +111,7 @@ Func Laboratory($debug=False)
 		If _Sleep($DELAYLABORATORY2) Then Return
 		ClickAway()
 	#Region - Custom lab - Team AIO Mod++
-	ElseIf $g_bChkPriorityLab Then ; users choice is any upgrade + $g_bChkPriorityLab
+	ElseIf $g_bPriorityLab Then ; users choice is any upgrade + $g_bPriorityLab
 		Local $aPriority = GetTroopsResources()
 		Local $aArray = ["Elixir", "Dark", "Gold"]
 		_ArraySwap($aArray, 0, $g_iCmbPriorityLab)
@@ -122,8 +122,23 @@ Func Laboratory($debug=False)
 					For $i = 0 To UBound($aPageUpgrades, 1) - 1 ; Loop through found upgrades
 						
 						Local $aTempTroopArray = $aPageUpgrades[$i] ; Declare Array to Temp Array
-						
 						Local $iSwitch = _ArraySearch($g_avLabTroops, $aTempTroopArray[0], 0, 0, 0, 2, 1, 3, False)
+
+						Select
+							Case ($iSwitch >= $aPriority[0][0] And $iSwitch <= $aPriority[0][1]) Or ($iSwitch >= $aPriority[3][0] And $iSwitch <= $aPriority[3][1]) ; Barb + Mini
+								If $g_bPriorityLabTroops = False Then
+									ContinueLoop
+								EndIf
+							Case ($iSwitch >= $aPriority[1][0] And $iSwitch <= $aPriority[1][1]) Or ($iSwitch >= $aPriority[2][0] And $iSwitch <= $aPriority[2][1]) ; LSpell + PSpell
+								If $g_bPriorityLabSpells = False Then
+									ContinueLoop
+								EndIf
+							Case ($iSwitch >= $aPriority[4][0] And $iSwitch <= $aPriority[4][1]) ; Siege
+								If $g_bPriorityLabSieges = False Then
+									ContinueLoop
+								EndIf
+						EndSelect
+						
 						Switch $sMode
 							Case "Dark"
 								If Not ($iSwitch >= $aPriority[2][0] And $iSwitch <= $aPriority[2][1]) And Not ($iSwitch >= $aPriority[3][0] And $iSwitch <= $aPriority[3][1]) Then
@@ -161,11 +176,29 @@ Func Laboratory($debug=False)
 		Next
 	#EndRegion - Custom lab - Team AIO Mod++
 	Else ; users choice is any upgrade
+		Local $aPriority = GetTroopsResources()
 		While($iCurPage <= $iPages)
 			local $aPageUpgrades = findMultiple($g_sImgLabResearch, $sLabTroopsSectionDiam, $sLabTroopsSectionDiam, 0, 1000, 0, "objectname,objectpoints", True) ; Returns $aCurrentTroops[index] = $aArray[2] = ["TroopShortName", CordX,CordY]
 			If UBound($aPageUpgrades, 1) >= 1 Then ; if we found any troops
 				For $i = 0 To UBound($aPageUpgrades, 1) - 1 ; Loop through found upgrades
 					Local $aTempTroopArray = $aPageUpgrades[$i] ; Declare Array to Temp Array
+
+						Local $iSwitch = _ArraySearch($g_avLabTroops, $aTempTroopArray[0], 0, 0, 0, 2, 1, 3, False)
+
+						Select
+							Case ($iSwitch >= $aPriority[0][0] And $iSwitch <= $aPriority[0][1]) Or ($iSwitch >= $aPriority[3][0] And $iSwitch <= $aPriority[3][1]) ; Barb + Mini
+								If $g_bPriorityLabTroops = False Then
+									ContinueLoop
+								EndIf
+							Case ($iSwitch >= $aPriority[1][0] And $iSwitch <= $aPriority[1][1]) Or ($iSwitch >= $aPriority[2][0] And $iSwitch <= $aPriority[2][1]) ; LSpell + PSpell
+								If $g_bPriorityLabSpells = False Then
+									ContinueLoop
+								EndIf
+							Case ($iSwitch >= $aPriority[4][0] And $iSwitch <= $aPriority[4][1]) ; Siege
+								If $g_bPriorityLabSieges = False Then
+									ContinueLoop
+								EndIf
+						EndSelect
 
 					; find image slot that we found so that we can read the cost to see if we can upgrade it... slots read 1-12 top to bottom so barb = 1, arch = 2, giant = 3, etc...
 					Local $aCoords = decodeSingleCoord($aTempTroopArray[1])

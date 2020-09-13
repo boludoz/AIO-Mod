@@ -128,8 +128,12 @@ Func SaveBuildingConfig()
 	_Ini_Add("upgrade", "upgradestartroopname", $g_iCmbStarLaboratory)
 
 	#Region - Custom lab - Team AIO Mod++
-	_Ini_Add("upgrade", "ChkPriorityLab", $g_bChkPriorityLab ? 1 : 0)
+	_Ini_Add("upgrade", "ChkPriorityLab", $g_bPriorityLab ? 1 : 0)
 	_Ini_Add("upgrade", "CmbPriorityLab", $g_iCmbPriorityLab)
+	
+	_Ini_Add("upgrade", "ChkPriorityLabTroops", $g_bPriorityLabTroops ? 1 : 0)
+	_Ini_Add("upgrade", "ChkPriorityLabSpells", $g_bPriorityLabSpells ? 1 : 0)
+	_Ini_Add("upgrade", "ChkPriorityLabSieges", $g_bPriorityLabSieges ? 1 : 0)
 	#EndRegion - Custom lab - Team AIO Mod++
 	
 	; <><><><> Village / Upgrade - Buildings <><><><>

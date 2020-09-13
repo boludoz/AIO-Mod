@@ -779,8 +779,12 @@ Func ReadConfig_600_14()
 	IniReadS($g_iLaboratoryElixirCost, $g_sProfileBuildingPath, "upgrade", "upgradelabelexircost", 0, "int")
 	IniReadS($g_iLaboratoryDElixirCost, $g_sProfileBuildingPath, "upgrade", "upgradelabdelexircost", 0, "int")
 	#Region - Custom lab - Team AIO Mod++
-	IniReadS($g_bChkPriorityLab, $g_sProfileBuildingPath, "upgrade", "ChkPriorityLab", False, "Bool")
+	IniReadS($g_bPriorityLab, $g_sProfileBuildingPath, "upgrade", "ChkPriorityLab", False, "Bool")
 	IniReadS($g_iCmbPriorityLab, $g_sProfileBuildingPath, "upgrade", "CmbPriorityLab", $g_iCmbPriorityLab, "int")
+
+	IniReadS($g_bPriorityLabTroops, $g_sProfileBuildingPath, "upgrade", "ChkPriorityLabTroops", $g_bPriorityLabTroops, "Bool")
+	IniReadS($g_bPriorityLabSpells, $g_sProfileBuildingPath, "upgrade", "ChkPriorityLabSpells", $g_bPriorityLabSpells, "Bool")
+	IniReadS($g_bPriorityLabSieges, $g_sProfileBuildingPath, "upgrade", "ChkPriorityLabSieges", $g_bPriorityLabSieges, "Bool")
 	#EndRegion - Custom lab - Team AIO Mod++
 	IniReadS($g_bAutoStarLabUpgradeEnable, $g_sProfileBuildingPath, "upgrade", "upgradestartroops", False, "Bool")
 	IniReadS($g_iCmbStarLaboratory, $g_sProfileBuildingPath, "upgrade", "upgradestartroopname", 0, "int")

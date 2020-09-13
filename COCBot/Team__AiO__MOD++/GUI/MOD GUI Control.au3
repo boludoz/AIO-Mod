@@ -275,14 +275,8 @@ EndFunc   ;==>UpdateChkOnlyFarm
 
 ; Check No League for Dead Base - Team AiO MOD++
 Func chkDBNoLeague()
-	$g_bChkNoLeague[$DB] = (GUICtrlRead($g_hChkDBNoLeague) = $GUI_CHECKED)
+	$g_bChkNoLeague[$DB] = GUICtrlRead($g_hChkDBNoLeague) = $GUI_CHECKED
 EndFunc   ;==>chkDBNoLeague
-
-; Lab Priority System 
-func chkPriorityResourceLab()
-	$g_bChkPriorityLab = (GUICtrlRead($g_hChkPriorityLab) = $GUI_CHECKED)
-	GUICtrlSetState($g_hCmbPriorityLab, ($g_bChkPriorityLab) ? ($GUI_ENABLE) : ($GUI_DISABLE))
-EndFunc   ;==>chkPriorityResourceLab
 
 func cmbPriorityResourceLab()
 	; Hahaha I wonder how "_ GUICtrlComboBox_GetCurSel ($ g_hCm Priority System) ... Case "Elixir" " worked this if it returns the index.
@@ -290,12 +284,16 @@ func cmbPriorityResourceLab()
 EndFunc   ;==>cmbPriorityResourceLab
 
 Func chkLabPriority()
-	If _GUICtrlComboBox_GetCurSel($g_hCmbLaboratory) = 0 And (GUICtrlRead($g_hChkAutoLabUpgrades) = $GUI_CHECKED) Then
-		GUICtrlSetState($g_hChkPriorityLab, $GUI_ENABLE)
-		GUICtrlSetState($g_hCmbPriorityLab, $GUI_ENABLE)
-	Else
-		GUICtrlSetState($g_hChkPriorityLab, $GUI_DISABLE)
-		GUICtrlSetState($g_hCmbPriorityLab, $GUI_DISABLE)
-	EndIf
+	Local $hMode = ($g_iCmbLaboratory = 0 And $g_bAutoLabUpgradeEnable = True) ? ($GUI_ENABLE) : ($GUI_DISABLE)
+	Local $ah = [$g_hChkPriorityLab, $g_hCmbPriorityLab, $g_hChkPriorityLabTroops, $g_hChkPriorityLabSpells, $g_hChkPriorityLabSieges, $g_hLblOnlyUpgrade]
+	For $h In $ah
+		GUICtrlSetState($h, $hMode)
+	Next
 	chkPriorityResourceLab()
 EndFunc   ;==>chkLabPriority
+
+; Lab Priority System 
+func chkPriorityResourceLab()
+	$g_bPriorityLab = (GUICtrlRead($g_hChkPriorityLab) = $GUI_CHECKED)
+	GUICtrlSetState($g_hCmbPriorityLab, ($g_bPriorityLab = True And $g_bAutoLabUpgradeEnable = True And $g_iCmbLaboratory = 0) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+EndFunc   ;==>chkPriorityResourceLab

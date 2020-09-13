@@ -760,24 +760,32 @@ Func ApplyConfig_600_14($TypeReadSave)
 	; <><><><> Village / Upgrade - Lab <><><><>
 	Switch $TypeReadSave
 		Case "Read"
+			#Region - Custom lab - Team AIO Mod++
+			GUICtrlSetState($g_hChkPriorityLab, $g_bPriorityLab ? $GUI_CHECKED : $GUI_UNCHECKED)
+			_GUICtrlComboBox_SetCurSel($g_hCmbPriorityLab, $g_iCmbPriorityLab)
+
+			GUICtrlSetState($g_hChkPriorityLabTroops, $g_bPriorityLabTroops ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkPriorityLabSpells, $g_bPriorityLabSpells ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkPriorityLabSieges, $g_bPriorityLabSieges ? $GUI_CHECKED : $GUI_UNCHECKED)
+			#EndRegion - Custom lab - Team AIO Mod++
 			GUICtrlSetState($g_hChkAutoLabUpgrades, $g_bAutoLabUpgradeEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbLaboratory, $g_iCmbLaboratory)
 			_GUICtrlSetImage($g_hPicLabUpgrade, $g_sLibIconPath, $g_avLabTroops[$g_iCmbLaboratory][1])
 			chkLab()
-			#Region - Custom lab - Team AIO Mod++
-			GUICtrlSetState($g_hChkPriorityLab, $g_bChkPriorityLab ? $GUI_CHECKED : $GUI_UNCHECKED)
-			_GUICtrlComboBox_SetCurSel($g_hCmbPriorityLab, $g_iCmbPriorityLab)
-			chkPriorityResourceLab()
-			chkLabPriority()
-			#EndRegion - Custom lab - Team AIO Mod++
 			GUICtrlSetState($g_hChkAutoStarLabUpgrades, $g_bAutoStarLabUpgradeEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbStarLaboratory, $g_iCmbStarLaboratory)
 			_GUICtrlSetImage($g_hPicStarLabUpgrade, $g_sLibIconPath, $g_avStarLabTroops[$g_iCmbStarLaboratory][4])
 			chkStarLab()
 		Case "Save"
+			$g_bAutoLabUpgradeEnable = (GUICtrlRead($g_hChkAutoLabUpgrades) = $GUI_CHECKED)
+			$g_iCmbLaboratory = _GUICtrlComboBox_GetCurSel($g_hCmbLaboratory)
 			#Region - Custom lab - Team AIO Mod++
-			$g_bChkPriorityLab = (GUICtrlRead($g_hChkPriorityLab) = $GUI_CHECKED)
+			$g_bPriorityLab = (GUICtrlRead($g_hChkPriorityLab) = $GUI_CHECKED)
 			$g_iCmbPriorityLab = _GUICtrlComboBox_GetCurSel($g_hCmbPriorityLab)
+
+			$g_bPriorityLabTroops = (GUICtrlRead($g_hChkPriorityLabTroops) = $GUI_CHECKED)
+			$g_bPriorityLabSpells = (GUICtrlRead($g_hChkPriorityLabSpells) = $GUI_CHECKED)
+			$g_bPriorityLabSieges = (GUICtrlRead($g_hChkPriorityLabSieges) = $GUI_CHECKED)
 			#EndRegion - Custom lab - Team AIO Mod++
 			$g_bAutoStarLabUpgradeEnable = (GUICtrlRead($g_hChkAutoStarLabUpgrades) = $GUI_CHECKED)
 			$g_iCmbStarLaboratory = _GUICtrlComboBox_GetCurSel($g_hCmbStarLaboratory)
