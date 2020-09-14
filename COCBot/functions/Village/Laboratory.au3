@@ -179,7 +179,7 @@ Func Laboratory($debug=False)
 	Else ; users choice is any upgrade
 		Local $aPriority = GetTroopsResources() ; Custom lab - Team AIO Mod++
 		While($iCurPage <= $iPages)
-			local $aPageUpgrades = findMultiple($g_sImgLabResearch, $sLabTroopsSectionDiam, $sLabTroopsSectionDiam, 0, 1000, 0, "objectname,objectpoints", True)rdY]
+			local $aPageUpgrades = findMultiple($g_sImgLabResearch, $sLabTroopsSectionDiam, $sLabTroopsSectionDiam, 0, 1000, 0, "objectname,objectpoints", True)
 			If UBound($aPageUpgrades, 1) >= 1 Then ; if we found any troops
 				For $i = 0 To UBound($aPageUpgrades, 1) - 1 ; Loop through found upgrades
 					Local $aTempTroopArray = $aPageUpgrades[$i] ; Declare Array to Temp Array

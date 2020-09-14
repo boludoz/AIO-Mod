@@ -77,17 +77,17 @@ Func SaveConfig_MOD_MiscTab()
 	; DeployDelay
 	_Ini_Add("MiscTab", "DeployDelay0", $g_iDeployDelay[0])
 	_Ini_Add("MiscTab", "DeployDelay1", $g_iDeployDelay[1])
-	;_Ini_Add("MiscTab", "DeployDelay2", $g_iDeployDelay[2])
+	_Ini_Add("MiscTab", "DeployDelay2", $g_iDeployDelay[2])
 	
 	; DeployWave
 	_Ini_Add("MiscTab", "DeployWave0", $g_iDeployWave[0])
 	_Ini_Add("MiscTab", "DeployWave1", $g_iDeployWave[1])
-	;_Ini_Add("MiscTab", "DeployWave2", $g_iDeployWave[2])
+	_Ini_Add("MiscTab", "DeployWave2", $g_iDeployWave[2])
 
 	; ChkEnableRandom
 	_Ini_Add("MiscTab", "ChkEnableRandom0", $g_bChkEnableRandom[0])
 	_Ini_Add("MiscTab", "ChkEnableRandom1", $g_bChkEnableRandom[1])
-	;_Ini_Add("MiscTab", "ChkEnableRandom2", $g_bChkEnableRandom[2])
+	_Ini_Add("MiscTab", "ChkEnableRandom2", $g_bChkEnableRandom[2])
 
 	; Max sides
 	_Ini_Add("MaxSidesSF", "Enable", $g_bMaxSidesSF ? 1 : 0)

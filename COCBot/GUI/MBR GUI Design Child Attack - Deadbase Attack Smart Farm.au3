@@ -35,14 +35,14 @@ Func CreateAttackSearchDeadBaseSmartFarm()
 				_GUICtrlSetTip(-1, $sTxtTip)
 			$g_hDeployDelay[1] = GUICtrlCreateCombo("", $x + 55, $y, 36, 21, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 				_GUICtrlSetTip(-1, $sTxtTip)
-				GUICtrlSetData(-1, "1|2|3|4|5|6|7|8|9|10", "4")
+				GUICtrlSetData(-1, "1|2|3|4|5|6|7|8|9|10|11|12|13|14|15", "4")
 				GUICtrlSetOnEvent(-1, "chkDelayMod")
 
 			GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "Lbl-CmbStandardWaveDelay_Info_01", "Wave"), $x + 140, $y + 25, -1, -1)
 				_GUICtrlSetTip(-1, $sTxtTip)
 			$g_hDeployWave[1] = GUICtrlCreateCombo("", $x + 140, $y, 36, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 				_GUICtrlSetTip(-1, $sTxtTip)
-				GUICtrlSetData(-1, "1|2|3|4|5|6|7|8|9|10", "4")
+				GUICtrlSetData(-1, "1|2|3|4|5|6|7|8|9|10|11|12|13|14|15", "4")
 				GUICtrlSetOnEvent(-1, "chkDelayMod")
 
 		$y += 22

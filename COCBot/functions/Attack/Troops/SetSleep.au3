@@ -4,8 +4,8 @@
 ; Syntax ........: SetSleep($iType)
 ; Parameters ....: $iType                - Flag for type return desired.
 ; Return values .: None
-; Author ........:
-; Modified ......: KnowJack (06-2015)
+; Author ........: KnowJack (06-2015)
+; Modified ......: Boldina ! (2020)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2020
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -14,46 +14,23 @@
 ; ===============================================================================================================================
 #Region - Custom sleep Drop - Team AIO Mod++
 Func SetSleep($iType)
-	If IsKeepClicksActive() = True Then Return 0 ; fast bulk deploy
-
-	; Based on humane offset.
-	Local $iOffset0 = Round(128 / 5), $iOffset1 = Round(416 / 5)
-	
-	If $g_bAndroidAdbClick = True Then
-		; adjust for slow ADB clicks the delay factor
-		; Based on humane offset.
-		$iOffset0 = Round(128 / 5)
-		$iOffset1 = Round(416 / 5)
-	EndIf
-
-	Local $iReturn = Random(1, 10) * Int(($iType = 0) ? ($iOffset0) : ($iOffset1))
-	Local $iCmbValue = $g_aiAttackAlgorithm[$DB]
-	
-	If ((IsArray($g_bChkEnableRandom)) And (IsArray($g_iDeployDelay)) And (IsArray($g_iDeployWave))) Then
-		If Not ((UBound($g_bChkEnableRandom) > 2) And (UBound($g_iDeployDelay) > 2) And (UBound($g_iDeployWave) > 2)) Then
-			SetDebugLog("SetSleep | UBound fail on SetSleep.")
-			Return Round(Random(($iReturn*80)/100, ($iReturn*120)/100, 1))
-		EndIf
-	Else
-		SetDebugLog("SetSleep | IsArray fail on SetSleep.")
-		Return Round(Random(($iReturn*80)/100, ($iReturn*120)/100, 1))
-	EndIf
-
-	SetDebugLog("SetSleep Base : " & $iReturn)
-
-	If $g_iMatchMode = $DB Then
-		If (($g_bChkEnableRandom[0]) And ($iCmbValue = 0)) Then ; DB + Standard
-			$iReturn = ($iType = 0) ? ($iOffset0 * Int($g_iDeployDelay[0])) : ($iOffset1 * Int($g_iDeployWave[0]))
-			SetDebugLog("SetSleep Mod + DB + Standard : " & $iReturn)
-		ElseIf (($g_bChkEnableRandom[1]) And ($iCmbValue = 2)) Then ; DB + Smart farm
-			$iReturn = ($iType = 0) ? ($iOffset0 * Int($g_iDeployDelay[1])) : ($iOffset1 * Int($g_iDeployWave[1]))
-			SetDebugLog("SetSleep Mod + DB + Smart farm : " & $iReturn)
-		EndIf
-	EndIf
-
-	Return Round(Random(($iReturn*80)/100, ($iReturn*120)/100, 1))
+	If IsKeepClicksActive() = True Then Return 0
+	Local $iOffset0 = 19.2, $iOffset1 = 166.4, $iMode = ($g_iMatchMode = $DB) ? (($g_aiAttackAlgorithm[$DB] = 0) ? (0) : (1)) : (2)
+	Switch $iType
+		Case 0
+			If $g_bChkEnableRandom[$iMode] Then
+				Return Round(Random(1, 1.25) * (($g_iDeployDelay[$iMode] + 1) * $iOffset0))
+				Else
+				Return Round(Random(1, 15) * $iOffset0)
+			EndIf
+		Case 1
+			If $g_bChkEnableRandom[$iMode] Then
+				Return Round(Random(1, 1.25) * (($g_iDeployWave[$iMode] + 1) * $iOffset1))
+				Else   
+				Return Round(Random(1, 15) * $iOffset1)
+			EndIf
+	EndSwitch
 EndFunc   ;==>SetSleep
-#EndRegion
 
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: _SleepAttack
@@ -64,7 +41,7 @@ EndFunc   ;==>SetSleep
 ; Author ........: cosote (2016)
 ; Modified ......:
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
-;                  MyBot is distributed under the terms of the GNU GPL
+                 ; MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
@@ -75,5 +52,6 @@ Func _SleepAttack($iDelay, $iSleep = True)
 		Return True
 	EndIf
 	If IsKeepClicksActive() Then Return False
-	Return _Sleep(Random(($iDelay*80)/100, ($iDelay*120)/100, 1), $iSleep) ; Team AIO Mod++
+	Return RandomSleep($iDelay) ; Team AIO Mod++
 EndFunc   ;==>_SleepAttack
+#EndRegion - Custom sleep Drop - Team AIO Mod++

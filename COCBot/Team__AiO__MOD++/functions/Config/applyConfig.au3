@@ -122,17 +122,17 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			; DeployDelay
 			GUICtrlSetData($g_hDeployDelay[0], $g_iDeployDelay[0])
 			GUICtrlSetData($g_hDeployDelay[1], $g_iDeployDelay[1])
-			;GUICtrlSetData($g_hDeployDelay[2], $g_iDeployDelay[2])
+			GUICtrlSetData($g_hDeployDelay[2], $g_iDeployDelay[2])
 
 			; DeployWave
 			GUICtrlSetData($g_hDeployWave[0], $g_iDeployWave[0])
 			GUICtrlSetData($g_hDeployWave[1], $g_iDeployWave[1])
-			;GUICtrlSetData($g_hDeployWave[2], $g_iDeployWave[2])
+			GUICtrlSetData($g_hDeployWave[2], $g_iDeployWave[2])
 
 			; ChkEnableRandom
 			GUICtrlSetState($g_hChkEnableRandom[0], $g_bChkEnableRandom[0] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkEnableRandom[1], $g_bChkEnableRandom[1] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
-			;GUICtrlSetState($g_hChkEnableRandom[2], $g_bChkEnableRandom[2] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkEnableRandom[2], $g_bChkEnableRandom[2] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 
 			; Max sides
 			GUICtrlSetState($g_hMaxSidesSF, $g_bMaxSidesSF = (1) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))

@@ -540,7 +540,7 @@ EndFunc   ;==>IsClanOverview
 Func randomSleep($SleepTime, $Range = 0)
 	If $g_bRunState = False Then Return True
 	If $Range = 0 Then $Range = Round($SleepTime / 5)
-	Local $SleepTimeF = Random($SleepTime - $Range, $SleepTime + $Range, 1)
+	Local $SleepTimeF = Round(Random($SleepTime - $Range, $SleepTime + $Range, 1))
 	If $g_bDebugClick Then SetLog("Default sleep : " & $SleepTime & " - Random sleep : " & $SleepTimeF, $COLOR_ORANGE)
 	If Not $g_bRunState Or $g_bRestart Then Return
 	Return _Sleep($SleepTimeF) = True

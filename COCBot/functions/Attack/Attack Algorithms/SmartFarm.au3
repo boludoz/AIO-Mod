@@ -997,7 +997,8 @@ Func GetDiamondGreenTiles($HnowManyPoints = 10)
 	Local $aCentre = [$DiamondMiddleX, $DiamondMiddleY]
 	_ArraySort($g_aGreenTiles, 0, 0, 0, 1)
 	For $each = 0 To UBound($g_aGreenTiles) - 1
-		Local $Coordinate = [$g_aGreenTiles[$each][1], $g_aGreenTiles[$each][2]]
+		Local $Coordinate = [$g_aGreenTiles[$each][0], $g_aGreenTiles[$each][1]]
+		If not IsInsideDiamond($Coordinate) Then ContinueLoop
 		If Side($Coordinate) = "TL" Then
 			ReDim $TL[UBound($TL) + 1][3]
 			$TL[UBound($TL) - 1][0] = $Coordinate[0]
