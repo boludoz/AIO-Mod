@@ -63,7 +63,7 @@ Func _ImageSearchXML($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = "FV", 
 					$aXY = StringSplit($aC[$i], ",", $STR_NOCOUNT)
 					If UBound($aXY) <> 2 Then ContinueLoop 3
 					If $iD2C > 0 And $bCheckDuplicatedpoints Then
-						If DMduplicated($aAR, Int($aXY[0]), Int($aXY[1]), $iCount, $iD2C) Then
+						If DMduplicated($aAR, Int($aXY[0]), Int($aXY[1]), UBound($aAR)-1, $iD2C) Then
 							ContinueLoop
 						EndIf
 					EndIf
@@ -127,7 +127,6 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 	Local $iQuantToMach, $iQuantity2Match
 
 	Local $bDefa = ($sOnlyFind = "")
-	If ($iQuantityMatch = Default) Then $iQuantityMatch = 0
 	If $bForceCapture = Default Then $bForceCapture = True
 	If $vArea2SearchOri = Default Then $vArea2SearchOri = "FV"
 	
@@ -137,6 +136,7 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 		$vArea2SearchOri = GetDiamondFromRect($vArea2SearchOri)
 	EndIf
 	
+	If ($iQuantityMatch = Default) Then $iQuantityMatch = 0
 	If $iQuantityMatch <> 1 Then
 		$iQuantity2Match = ($iQuantityMatch = Default) ? (0) : ($iQuantityMatch)
 	Else
@@ -180,10 +180,10 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 		Return -1
 	EndIf
 
-	Local $resultArr = StringSplit($result[0], "|", $STR_NOCOUNT)
+	Local $resultArr = StringSplit($result[0], "|", $STR_NOCOUNT), $sSlipt = StringSplit($sOnlyFind, "|", $STR_NOCOUNT)
 	If Not $bDefa And $bIsDir Then
 		If $g_bDebugSetlog Then SetDebugLog(" ***  findMultipleQuick multiples **** ", $COLOR_ORANGE)
-		If CompKick($resultArr, StringSplit($sOnlyFind, "|", $STR_NOCOUNT), $bExactFind) Then
+		If CompKick($resultArr, $sSlipt, $bExactFind) Then
 			If $g_bDebugSetlog Then SetDebugLog(" ***  findMultipleQuick has no result **** ", $COLOR_ORANGE)
 			Return -1
 		EndIf
@@ -212,7 +212,7 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 					$aXY = StringSplit($aC[$i], ",", $STR_NOCOUNT)
 					If UBound($aXY) <> 2 Then ContinueLoop 3
 					If $iD2C > 0 Then
-						If DMduplicated($aAR, Int($aXY[0]), Int($aXY[1]), $iCount, $iD2C) Then
+						If DMduplicated($aAR, Int($aXY[0]), Int($aXY[1]), UBound($aAR)-1, $iD2C) Then
 							ContinueLoop
 						EndIf
 					EndIf

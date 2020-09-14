@@ -75,18 +75,22 @@ Func DMDecodeCoords($sMatches, $iDis = 15)
 EndFunc
 
 Func DMduplicated($aXYs, $x1, $y1, $i3, $iD = 18)
-	For $i = 0 To $i3
-		If Not $g_bRunState Then Return
-		If Pixel_Distance($aXYs[$i][1], $aXYs[$i][2], $x1, $y1) < $iD Then Return True
-	Next
+	If $i3 > 0 Then
+		For $i = 0 To $i3
+			If Not $g_bRunState Then Return
+			If Pixel_Distance($aXYs[$i][1], $aXYs[$i][2], $x1, $y1) < $iD Then Return True
+		Next
+	EndIf
 	Return False
 EndFunc   ;==>DMduplicated
 
 Func DMduplicated2($aXYs, $x1, $y1, $i3, $iD = 18)
-	For $i = 0 To $i3
-		If Not $g_bRunState Then Return
-		If Pixel_Distance($aXYs[$i][0], $aXYs[$i][1], $x1, $y1) < $iD Then Return True
-	Next
+	If $i3 > 0 Then
+		For $i = 0 To $i3
+			If Not $g_bRunState Then Return
+			If Pixel_Distance($aXYs[$i][0], $aXYs[$i][1], $x1, $y1) < $iD Then Return True
+		Next
+	EndIf
 	Return False
 EndFunc   ;==>DMduplicated2
 

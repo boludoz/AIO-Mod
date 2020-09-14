@@ -257,10 +257,10 @@ Func _CleanYard($bIsBB = Default, $bTest = False)
 		Local $aResult, $aRTmp1, $aRTmp2
 		
 		If $bIsBB Then
-			$aResult = findMultipleQuick($g_sImgCleanBBYard, 0, "83, 136, 844, 694", Default, Default, Default, 10)
+			$aResult = findMultipleQuick($g_sImgCleanBBYard, 0, "FV", Default, Default, Default, 10)
 		Else
-			$aRTmp1 = findMultipleQuick($g_sImgCleanYardSnow, 0, "15, 31, 859, 648", Default, Default, Default, 10)
-			$aRTmp2 = findMultipleQuick($g_sImgCleanYard, 0, "15, 31, 859, 648", Default, Default, Default, 10)
+			$aRTmp1 = findMultipleQuick($g_sImgCleanYardSnow, 0, "FV", Default, Default, Default, 10)
+			$aRTmp2 = findMultipleQuick($g_sImgCleanYard, 0, "FV", Default, Default, Default, 10)
 
 			If IsArray($aRTmp1) Then
 				$aResult = $aRTmp1
