@@ -44,7 +44,7 @@ Func _LocateQueenAltar($bCollect = True)
 		$MsgBox = _ExtMsgBox(0, GetTranslatedFileIni("MBR Popups", "Ok_Cancel", "Ok|Cancel"), GetTranslatedFileIni("MBR Popups", "Func_Locate_Queen_Altar_02", "Locate Queen Altar"), $stext, 15)
 		If $MsgBox = 1 Then
 			WinGetAndroidHandle()
-			ClickAway()
+			ClickAway(True)
 			Local $aPos = FindPos()
 			$g_aiQueenAltarPos[0] = $aPos[0]
 			$g_aiQueenAltarPos[1] = $aPos[1]
@@ -66,20 +66,20 @@ Func _LocateQueenAltar($bCollect = True)
 						ContinueLoop
 					Case $iStupid > 4
 						SetLog(" Operator Error - Bad Queen Altar Location: " & "(" & $g_aiQueenAltarPos[0] & "," & $g_aiQueenAltarPos[1] & ")", $COLOR_ERROR)
-						ClickAway()
+						ClickAway(True)
 						Return False
 					Case Else
 						SetLog(" Operator Error - Bad Queen Altar Location: " & "(" & $g_aiQueenAltarPos[0] & "," & $g_aiQueenAltarPos[1] & ")", $COLOR_ERROR)
 						$g_aiQueenAltarPos[0] = -1
 						$g_aiQueenAltarPos[1] = -1
-						ClickAway()
+						ClickAway(True)
 						Return False
 				EndSelect
 			EndIf
 			SetLog("Queen Altar: " & "(" & $g_aiQueenAltarPos[0] & "," & $g_aiQueenAltarPos[1] & ")", $COLOR_SUCCESS)
 		Else
 			SetLog("Locate Queen Altar Cancelled", $COLOR_INFO)
-			ClickAway()
+			ClickAway(True)
 			Return
 		EndIf
 
@@ -121,7 +121,7 @@ Func _LocateQueenAltar($bCollect = True)
 						SetLog("Quit joking, Click the Queen Altar, or restart bot and try again", $COLOR_ERROR)
 						$g_aiQueenAltarPos[0] = -1
 						$g_aiQueenAltarPos[1] = -1
-						ClickAway()
+						ClickAway(True)
 						Return False
 				EndSelect
 			EndIf
@@ -129,13 +129,13 @@ Func _LocateQueenAltar($bCollect = True)
 			SetLog(" Operator Error - Bad Queen Altar Location: " & "(" & $g_aiQueenAltarPos[0] & "," & $g_aiQueenAltarPos[1] & ")", $COLOR_ERROR)
 			$g_aiQueenAltarPos[0] = -1
 			$g_aiQueenAltarPos[1] = -1
-			ClickAway()
+			ClickAway(True)
 			Return False
 		EndIf
 		ExitLoop
 	WEnd
 
-	ClickAway()
+	ClickAway(True)
 	If _Sleep(1000) Then Return
 
 	_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 500)
@@ -172,7 +172,7 @@ Func _LocateKingAltar($bCollect = True)
 
 	SetLog("Locating King Altar", $COLOR_INFO)
 	While 1
-		ClickAway()
+		ClickAway(True)
 		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 500)
 		$stext = $sErrorText & @CRLF & GetTranslatedFileIni("MBR Popups", "Func_Locate_King_Altar_01", "Click OK then click on your King Altar") & @CRLF & @CRLF & _
 				GetTranslatedFileIni("MBR Popups", "Locate_building_01", "Do not move mouse quickly after clicking location") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Locate_building_02", "Make sure the building name is visible for me!") & @CRLF
@@ -200,20 +200,20 @@ Func _LocateKingAltar($bCollect = True)
 						ContinueLoop
 					Case $iStupid > 4
 						SetLog(" Operator Error - Bad King Altar Location: " & "(" & $g_aiKingAltarPos[0] & "," & $g_aiKingAltarPos[1] & ")", $COLOR_ERROR)
-						ClickAway()
+						ClickAway(True)
 						Return False
 					Case Else
 						SetLog(" Operator Error - Bad King Altar Location: " & "(" & $g_aiKingAltarPos[0] & "," & $g_aiKingAltarPos[1] & ")", $COLOR_ERROR)
 						$g_aiKingAltarPos[0] = -1
 						$g_aiKingAltarPos[1] = -1
-						ClickAway()
+						ClickAway(True)
 						Return False
 				EndSelect
 			EndIf
 			SetLog("King Altar: " & "(" & $g_aiKingAltarPos[0] & "," & $g_aiKingAltarPos[1] & ")", $COLOR_SUCCESS)
 		Else
 			SetLog("Locate King Altar Cancelled", $COLOR_INFO)
-			ClickAway()
+			ClickAway(True)
 			Return
 		EndIf
 
@@ -254,7 +254,7 @@ Func _LocateKingAltar($bCollect = True)
 						SetLog("Quit joking, Click the King Altar, or restart bot and try again", $COLOR_ERROR)
 						$g_aiKingAltarPos[0] = -1
 						$g_aiKingAltarPos[1] = -1
-						ClickAway()
+						ClickAway(True)
 						Return False
 				EndSelect
 			EndIf
@@ -262,13 +262,13 @@ Func _LocateKingAltar($bCollect = True)
 			SetLog(" Operator Error - Bad King Altar Location: " & "(" & $g_aiKingAltarPos[0] & "," & $g_aiKingAltarPos[1] & ")", $COLOR_ERROR)
 			$g_aiKingAltarPos[0] = -1
 			$g_aiKingAltarPos[1] = -1
-			ClickAway()
+			ClickAway(True)
 			Return False
 		EndIf
 		ExitLoop
 	WEnd
 
-	ClickAway()
+	ClickAway(True)
 	If _Sleep(1000) Then Return
 
 	_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 500)
@@ -309,7 +309,7 @@ Func _LocateWardenAltar($bCollect = True)
 
 	SetLog("Locating Grand Warden Altar", $COLOR_INFO)
 	While 1
-		ClickAway()
+		ClickAway(True)
 		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 500)
 		$stext = $sErrorText & @CRLF & GetTranslatedFileIni("MBR Popups", "Func_Locate_Warden_Altar_01", "Click OK then click on your Grand Warden Altar") & @CRLF & @CRLF & _
 				GetTranslatedFileIni("MBR Popups", "Locate_building_01", "Do not move mouse quickly after clicking location") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Locate_building_02", "Make sure the building name is visible for me!") & @CRLF
@@ -337,20 +337,20 @@ Func _LocateWardenAltar($bCollect = True)
 						ContinueLoop
 					Case $iStupid > 4
 						SetLog(" Operator Error - Bad Grand Warden Altar Location: " & "(" & $g_aiWardenAltarPos[0] & "," & $g_aiWardenAltarPos[1] & ")", $COLOR_ERROR)
-						ClickAway()
+						ClickAway(True)
 						Return False
 					Case Else
 						SetLog(" Operator Error - Bad Grand Warden Altar Location: " & "(" & $g_aiWardenAltarPos[0] & "," & $g_aiWardenAltarPos[1] & ")", $COLOR_ERROR)
 						$g_aiWardenAltarPos[0] = -1
 						$g_aiWardenAltarPos[1] = -1
-						ClickAway()
+						ClickAway(True)
 						Return False
 				EndSelect
 			EndIf
 			SetLog("Grand Warden Altar: " & "(" & $g_aiWardenAltarPos[0] & "," & $g_aiWardenAltarPos[1] & ")", $COLOR_SUCCESS)
 		Else
 			SetLog("Locate Grand Warden Altar Cancelled", $COLOR_INFO)
-			ClickAway()
+			ClickAway(True)
 			Return
 		EndIf
 
@@ -392,7 +392,7 @@ Func _LocateWardenAltar($bCollect = True)
 						SetLog("Quit joking, Click the Grand Warden Altar, or restart bot and try again", $COLOR_ERROR)
 						$g_aiWardenAltarPos[0] = -1
 						$g_aiWardenAltarPos[1] = -1
-						ClickAway()
+						ClickAway(True)
 						Return False
 				EndSelect
 			EndIf
@@ -400,13 +400,13 @@ Func _LocateWardenAltar($bCollect = True)
 			SetLog(" Operator Error - Bad Grand Warden Altar Location: " & "(" & $g_aiWardenAltarPos[0] & "," & $g_aiWardenAltarPos[1] & ")", $COLOR_ERROR)
 			$g_aiWardenAltarPos[0] = -1
 			$g_aiWardenAltarPos[1] = -1
-			ClickAway()
+			ClickAway(True)
 			Return False
 		EndIf
 		ExitLoop
 	WEnd
 
-	ClickAway()
+	ClickAway(True)
 	If _Sleep(1000) Then Return
 
 	_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 500)
@@ -447,7 +447,7 @@ Func _LocateChampionAltar($bCollect = True)
 
 	SetLog("Locating Royal Champion Altar", $COLOR_INFO)
 	While 1
-		ClickAway()
+		ClickAway(True)
 		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 500)
 		$stext = $sErrorText & @CRLF & GetTranslatedFileIni("MBR Popups", "Func_Locate_Champion_Altar_01", "Click OK then click on your Royal Champion Altar") & @CRLF & @CRLF & _
 				GetTranslatedFileIni("MBR Popups", "Locate_building_01", "Do not move mouse quickly after clicking location") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Locate_building_02", "Make sure the building name is visible for me!") & @CRLF
@@ -475,20 +475,20 @@ Func _LocateChampionAltar($bCollect = True)
 						ContinueLoop
 					Case $iStupid > 4
 						SetLog(" Operator Error - Bad Royal Champion Altar Location: " & "(" & $g_aiChampionAltarPos[0] & "," & $g_aiChampionAltarPos[1] & ")", $COLOR_ERROR)
-						ClickAway()
+						ClickAway(True)
 						Return False
 					Case Else
 						SetLog(" Operator Error - Bad Royal Champion Altar Location: " & "(" & $g_aiChampionAltarPos[0] & "," & $g_aiChampionAltarPos[1] & ")", $COLOR_ERROR)
 						$g_aiChampionAltarPos[0] = -1
 						$g_aiChampionAltarPos[1] = -1
-						ClickAway()
+						ClickAway(True)
 						Return False
 				EndSelect
 			EndIf
 			SetLog("Royal Champion Altar: " & "(" & $g_aiChampionAltarPos[0] & "," & $g_aiChampionAltarPos[1] & ")", $COLOR_SUCCESS)
 		Else
 			SetLog("Locate Royal Champion Altar Cancelled", $COLOR_INFO)
-			ClickAway()
+			ClickAway(True)
 			Return
 		EndIf
 
@@ -530,7 +530,7 @@ Func _LocateChampionAltar($bCollect = True)
 						SetLog("Quit joking, Click the Royal Champion Altar, or restart bot and try again", $COLOR_ERROR)
 						$g_aiChampionAltarPos[0] = -1
 						$g_aiChampionAltarPos[1] = -1
-						ClickAway()
+						ClickAway(True)
 						Return False
 				EndSelect
 			EndIf
@@ -538,13 +538,13 @@ Func _LocateChampionAltar($bCollect = True)
 			SetLog(" Operator Error - Bad Royal Champion Altar Location: " & "(" & $g_aiChampionAltarPos[0] & "," & $g_aiChampionAltarPos[1] & ")", $COLOR_ERROR)
 			$g_aiChampionAltarPos[0] = -1
 			$g_aiChampionAltarPos[1] = -1
-			ClickAway()
+			ClickAway(True)
 			Return False
 		EndIf
 		ExitLoop
 	WEnd
 
-	ClickAway()
+	ClickAway(True)
 	If _Sleep(1000) Then Return
 
 	_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 500)

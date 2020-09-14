@@ -17,13 +17,13 @@
 Func chkEnableSuperXP()
 	If GUICtrlRead($g_hChkEnableSuperXP) = $GUI_CHECKED Then
 		$g_bEnableSuperXP = True
-		For $i = $g_hChkSkipZoomOutSX To $g_hLblRunTimeXP
+		For $i = $g_hChkEnableSuperXP To $g_hLblRunTimeXP
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
 		GUICtrlSetState($g_hLblLockedSX, $GUI_HIDE)
 	Else
 		$g_bEnableSuperXP = False
-		For $i = $g_hChkSkipZoomOutSX To $g_hLblRunTimeXP
+		For $i = $g_hChkEnableSuperXP To $g_hLblRunTimeXP
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
 	EndIf

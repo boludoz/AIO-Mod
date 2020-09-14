@@ -285,8 +285,7 @@ EndFunc   ;==>cmbPriorityResourceLab
 
 Func chkLabPriority()
 	Local $hMode = ($g_iCmbLaboratory = 0 And $g_bAutoLabUpgradeEnable = True) ? ($GUI_ENABLE) : ($GUI_DISABLE)
-	Local $ah = [$g_hChkPriorityLab, $g_hCmbPriorityLab, $g_hChkPriorityLabTroops, $g_hChkPriorityLabSpells, $g_hChkPriorityLabSieges, $g_hLblOnlyUpgrade]
-	For $h In $ah
+	For $h = $g_hChkPriorityLab To $g_hChkPriorityLabSieges
 		GUICtrlSetState($h, $hMode)
 	Next
 	chkPriorityResourceLab()

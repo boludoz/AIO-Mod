@@ -150,7 +150,7 @@ Func SaveConfig_MOD_SuperXP()
 	; <><><> SuperXP / GoblinXP <><><>
 	ApplyConfig_MOD_SuperXP(GetApplyConfigSaveAction())
 	_Ini_Add("SuperXP", "EnableSuperXP", $g_bEnableSuperXP ? 1 : 0)
-	_Ini_Add("SuperXP", "SkipZoomOutSX", $g_bSkipZoomOutSX ? 1 : 0)
+	; _Ini_Add("SuperXP", "SkipZoomOutSX", $g_bSkipZoomOutSX ? 1 : 0)
 	_Ini_Add("SuperXP", "FastSuperXP", $g_bFastSuperXP ? 1 : 0)
 	_Ini_Add("SuperXP", "SkipDragToEndSX", $g_bSkipDragToEndSX ? 1 : 0)
 	_Ini_Add("SuperXP", "ActivateOptionSX", $g_iActivateOptionSX)

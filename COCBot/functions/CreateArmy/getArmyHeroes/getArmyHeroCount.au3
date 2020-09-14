@@ -324,7 +324,7 @@ Func LabGuiDisplay() ; called from main loop to get an early status for indictor
 	ClickAway()
 	If _Sleep(1500) Then Return ; Delay AFTER the click Away Prevents lots of coc restarts
 
-	If $g_iTownHallLevel < 3 Then
+	If $g_iTownHallLevel < 3 And not $g_iTownHallLevel < 1 Then ;
 		SetDebugLog("TH reads as Lvl " & $g_iTownHallLevel & ", has no Lab.")
 		;============Hide Red  Hide Green  Show Gray==
 		GUICtrlSetState($g_hPicLabGreen, $GUI_HIDE)

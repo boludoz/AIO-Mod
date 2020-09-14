@@ -108,11 +108,12 @@ EndFunc   ;==>isProblemAffectBeforeClick
 
 ; ClickP : takes an array[2] (or array[4]) as a parameter [x,y]
 Func ClickP($point, $howMuch = 1, $speed = 0, $debugtxt = "")
-	If IsArray($point) And UBound($point) > 1 Then Click($point[0], $point[1], $howMuch, $speed, $debugtxt) ; AIO Mod
+	If IsArray($point) And UBound($point) > 1 Then Click($point[0], $point[1], $howMuch, $speed, $debugtxt) ; Custom Fix - Team AIO Mod++
 EndFunc   ;==>ClickP
 
 Func BuildingClick($x, $y, $debugtxt = "")
 	Local $point[2] = [$x, $y]
+	ZoomOut() ; Custom Fix - Team AIO Mod++
 	ConvertToVillagePos($x, $y)
 	If $g_bDebugClick Then
 		Local $txt = _DecodeDebug($debugtxt)
@@ -128,8 +129,8 @@ EndFunc   ;==>BuildingClickP
 Func PureClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
 	Local $txt = "", $aPrevCoor[2] = [$x, $y]
     If $g_bUseRandomClick Then
-		$x = Random($x - 5, $x + 5, 1)
-		$y = Random($y - 5, $y + 5, 1)
+		$x = Random($x - 3, $x + 3, 1) ; Custom Fix - Team AIO Mod++
+		$y = Random($y - 3, $y + 3, 1) ; Custom Fix - Team AIO Mod++
 		If $g_bDebugClick Then
 			$txt = _DecodeDebug($debugtxt)
 			SetLog("Random PureClick X: " & $aPrevCoor[0] & " To " & $x & ", Y: " & $aPrevCoor[1] & " To " & $y & ", Times: " & $times & ", Speed: " & $speed & " " & $debugtxt & $txt, $COLOR_ACTION, "Verdana", "7.5", 0)

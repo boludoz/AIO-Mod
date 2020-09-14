@@ -29,9 +29,8 @@ Global Enum $eIcnBB = 1 , $eIcnLabBB, $eIcnBBElixir, $eIcnBBGold, $eIcnBBTrophie
 #EndRegion - Icn - Team AIO Mod++
 
 #Region - Lab Priority System 
-Global $g_hChkPriorityLab, $g_bPriorityLab, $g_hCmbPriorityLab, $g_iCmbPriorityLab, $g_hLblOnlyUpgrade
-Global $g_bPriorityLabSpells = True, $g_bPriorityLabTroops = True, $g_bPriorityLabSieges = True, _
-$g_hChkPriorityLabSpells = 0, $g_hChkPriorityLabTroops = 0, $g_hChkPriorityLabSieges = 0
+Global $g_hChkPriorityLab, $g_hCmbPriorityLab, $g_hLblOnlyUpgrade, $g_hChkPriorityLabTroops, $g_hChkPriorityLabSpells, $g_hChkPriorityLabSieges
+Global  $g_bPriorityLab, $g_iCmbPriorityLab, $g_bPriorityLabSpells = True, $g_bPriorityLabTroops = True, $g_bPriorityLabSieges = True
 #EndRegion - Lab Priority System 
 
 #Region - Discord - Team AIO Mod++
@@ -132,9 +131,9 @@ Global $g_hDeployWave[3],  $g_hDeployDelay[3]
 Global $g_hChkEnableRandom[3]
 
 ; SuperXP / GoblinXP - Team AiO MOD++
-Global $g_bEnableSuperXP = False, $g_bSkipZoomOutSX = False, $g_bFastSuperXP = False, $g_bSkipDragToEndSX = False, _
+Global $g_bEnableSuperXP = False, $g_bFastSuperXP = False, $g_bSkipDragToEndSX = False, _
 	$g_iActivateOptionSX = 1, $g_iGoblinMapOptSX = 2, $g_sGoblinMapOptSX = "The Arena", $g_iMaxXPtoGain = 500, _
-	$g_bBKingSX = False, $g_bAQueenSX = False, $g_bGWardenSX = False
+	$g_bBKingSX = False, $g_bAQueenSX = False, $g_bGWardenSX = False;, $g_bSkipZoomOutSX = False
 Global $g_iStartXP = 0, $g_iCurrentXP = 0, $g_iGainedXP = 0, $g_iGainedHourXP = 0, $g_sRunTimeXP = 0
 Global $g_bDebugSX = True
 ; [0] = Queen, [1] = Warden, [2] = Barbarian King

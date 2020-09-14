@@ -15,7 +15,7 @@
 Func LocateLab($bCollect = True)
 	Local $stext, $MsgBox, $iStupid = 0, $iSilly = 0, $sErrorText = ""
 	
-	If $g_iTownHallLevel < 3 Then
+	If $g_iTownHallLevel < 3 And Not $g_iTownHallLevel < 1 Then
 		SetLog("Townhall Lvl " & $g_iTownHallLevel & " has no Lab, so skip locating.", $COLOR_ACTION)
 		Return
 	EndIf
@@ -41,7 +41,7 @@ Func LocateLab($bCollect = True)
 		$MsgBox = _ExtMsgBox(0, GetTranslatedFileIni("MBR Popups", "Ok_Cancel", "Ok|Cancel"), GetTranslatedFileIni("MBR Popups", "Func_Locate_Laboratory_02", "Locate Laboratory"), $stext, 15)
 		If $MsgBox = 1 Then
 			WinGetAndroidHandle()
-			ClickAway()
+			ClickAway(True)
 			Local $aPos = FindPos()
 			$g_aiLaboratoryPos[0] = Int($aPos[0])
 			$g_aiLaboratoryPos[1] = Int($aPos[1])
@@ -63,13 +63,13 @@ Func LocateLab($bCollect = True)
 						ContinueLoop
 					Case $iStupid > 4
 						SetLog(" Operator Error - Bad Laboratory Location.", $COLOR_ERROR)
-						ClickAway()
+						ClickAway(True)
 						Return False
 				EndSelect
 			EndIf
 		Else
 			SetLog("Locate Laboratory Cancelled", $COLOR_INFO)
-			ClickAway()
+			ClickAway(True)
 			Return
 		EndIf
 		Local $sLabInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY); 860x780
@@ -93,7 +93,7 @@ Func LocateLab($bCollect = True)
 						ContinueLoop
 					Case $iSilly > 4
 						SetLog("Ok, you really think that's a Laboratory?" & @CRLF & "I don't care anymore, go ahead with it!", $COLOR_ERROR)
-						ClickAway()
+						ClickAway(True)
 						ExitLoop
 				EndSelect
 			EndIf
@@ -101,12 +101,12 @@ Func LocateLab($bCollect = True)
 			SetLog(" Operator Error - Bad Laboratory Location: " & "(" & $g_aiLaboratoryPos[0] & "," & $g_aiLaboratoryPos[1] & ")", $COLOR_ERROR)
 			$g_aiLaboratoryPos[0] = -1
 			$g_aiLaboratoryPos[1] = -1
-			ClickAway()
+			ClickAway(True)
 			Return False
 		EndIf
 		SetLog("Locate Laboratory Success: " & "(" & $g_aiLaboratoryPos[0] & "," & $g_aiLaboratoryPos[1] & ")", $COLOR_SUCCESS)
 		ExitLoop
 	WEnd
-	ClickAway()
+	ClickAway(True)
 
 EndFunc   ;==>LocateLab
