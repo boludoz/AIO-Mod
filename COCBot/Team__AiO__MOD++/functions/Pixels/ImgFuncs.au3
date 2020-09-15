@@ -21,7 +21,8 @@ Func _ImageSearchXML($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = "FV", 
 	
 	If (IsArray($vArea2SearchOri)) Then
 		$vArea2SearchOri = GetDiamondFromArray($vArea2SearchOri)
-	ElseIf (StringSplit($vArea2SearchOri, ",", $STR_NOCOUNT)) = 4 Then
+	EndIf
+	If 3 = ((StringReplace($vArea2SearchOri, ",", ",") <> "") ? (@extended) : (0)) Then
 		$vArea2SearchOri = GetDiamondFromRect($vArea2SearchOri)
 	EndIf
 	
@@ -122,36 +123,28 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 	FuncEnter(findMultipleQuick)
 	$g_aImageSearchXML = -1
 	Local $iCount = 0, $returnProps = "objectname,objectlevel,objectpoints"
-	Local $error, $extError
 	
-	Local $iQuantToMach, $iQuantity2Match
-
-	Local $bDefa = ($sOnlyFind = "")
 	If $bForceCapture = Default Then $bForceCapture = True
 	If $vArea2SearchOri = Default Then $vArea2SearchOri = "FV"
-	
+	If $iQuantityMatch = Default Then $iQuantityMatch = 0
+	If $sOnlyFind = Default Then $sOnlyFind = ""
+	Local $bOnlyFindIsSpace = StringIsSpace($sOnlyFind)
+
 	If (IsArray($vArea2SearchOri)) Then
 		$vArea2SearchOri = GetDiamondFromArray($vArea2SearchOri)
-	ElseIf (StringSplit($vArea2SearchOri, ",", $STR_NOCOUNT)) = 4 Then
+	EndIf
+	If 3 = ((StringReplace($vArea2SearchOri, ",", ",") <> "") ? (@extended) : (0)) Then
 		$vArea2SearchOri = GetDiamondFromRect($vArea2SearchOri)
 	EndIf
-	
-	If ($iQuantityMatch = Default) Then $iQuantityMatch = 0
-	If $iQuantityMatch <> 1 Then
-		$iQuantity2Match = ($iQuantityMatch = Default) ? (0) : ($iQuantityMatch)
-	Else
-		$iQuantity2Match = 2
-	EndIf
-	
-	If ($sOnlyFind = Default) Then $sOnlyFind = ""
-	$iQuantToMach = ($sOnlyFind = "") ? ($iQuantity2Match) : (20)
+
+	Local $iQuantToMach = ($bOnlyFindIsSpace = True) ? ($iQuantityMatch) : (0)
 	Local $bIsDir = True
 	Local $sDrive = "", $sDir = "", $sFileName = "", $sExtension = ""
 	If Not IsDir($sDirectory) Then
 		$bIsDir = False
 		Local $aPathSplit = _PathSplit($sDirectory, $sDrive, $sDir, $sFileName, $sExtension)
 		If Not StringIsSpace($sFileName) Then
-			$bExactFind = Default
+			$bExactFind = False
 			$sOnlyFind = ""
 			$sDirectory = $sDrive & $sDir
 			$iQuantToMach = 0
@@ -165,6 +158,7 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 	; Capture the screen for comparison
 	If $bForceCapture Then _CaptureRegion2() ;to have FULL screen image to work with
 
+	Local $error, $extError
 	Local $result = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sDirectory, "str", $vArea2SearchOri, "Int", $iQuantToMach, "str", $vArea2SearchOri, "Int", $minLevel, "Int", $maxLevel)
 	$error = @error ; Store error values as they reset at next function call
 	$extError = @extended
@@ -181,7 +175,7 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 	EndIf
 
 	Local $resultArr = StringSplit($result[0], "|", $STR_NOCOUNT), $sSlipt = StringSplit($sOnlyFind, "|", $STR_NOCOUNT)
-	If Not $bDefa And $bIsDir Then
+	If Not $bOnlyFindIsSpace And $bIsDir Then
 		If $g_bDebugSetlog Then SetDebugLog(" ***  findMultipleQuick multiples **** ", $COLOR_ORANGE)
 		If CompKick($resultArr, $sSlipt, $bExactFind) Then
 			If $g_bDebugSetlog Then SetDebugLog(" ***  findMultipleQuick has no result **** ", $COLOR_ORANGE)
@@ -199,14 +193,12 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 		EndIf
 	EndIf
 
-	; Distance in pixels to check if is a duplicated detection , for deploy point will be 5
 	Local $iD2C = $iDistance2check
 	Local $aAR[0][4], $aXY
 	For $rs = 0 To UBound($resultArr) - 1
 		For $rD = 0 To UBound($returnData) - 1 ; cycle props
 			$returnLine[$rD] = RetrieveImglocProperty($resultArr[$rs], $returnData[$rD])
 			If $returnData[$rD] = "objectpoints" Then
-				; Inspired in Chilly-chill
 				Local $aC = StringSplit($returnLine[2], "|", $STR_NOCOUNT)
 				For $i = 0 To UBound($aC) - 1
 					$aXY = StringSplit($aC[$i], ",", $STR_NOCOUNT)

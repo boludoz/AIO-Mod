@@ -11,7 +11,7 @@
 ; ===============================================================================================================================
 
 Func ClickFindMatch()
-	If _WaitForCheckImg(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch\Button\", "559, 315, 816, 541", "FindMatch") Then
+	If _WaitForCheckImg(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch\Button\", "559, 315, 816, 541", "FindMatch") Then ; findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch\Button\", 50, "559, 315, 816, 541", True, "FindMatch")
 		If $g_bDebugSetlog Then SetDebugLog("ClickFindMatch | Clicking in find match.")
 		PureClick(Random($g_aImageSearchXML[0][1] + 28, $g_aImageSearchXML[0][1] + 180, 1), Random($g_aImageSearchXML[0][2] + 10, $g_aImageSearchXML[0][2] + 94, 1), 1, 0, "#0150") ; Click Find a Match Button
 		Return True

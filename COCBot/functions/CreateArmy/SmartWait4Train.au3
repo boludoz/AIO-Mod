@@ -35,7 +35,13 @@ Func SmartWait4Train($iTestSeconds = Default)
 		EndIf
 	WEnd
 
-	If Not $g_bCloseWhileTrainingEnable And Not $g_bCloseWithoutShield Then Return ; skip if nothing selected in GUI
+	#Region - Custom smart wait - Team AIO Mod++
+	If Not $g_bCloseWhileTrainingEnable And Not $g_bCloseWithoutShield Then Return
+	If ProfileSwitchAccountEnabled() And $g_bChkSmartSwitch = False Then
+		If $g_bDebugSetlogTrain Or $g_bDebugSetlog Then SetLog("SmartWait4Train | $g_bChkSmartSwitch: " & $g_bChkSmartSwitch)
+		Return
+	EndIf
+	#EndRegion - Custom smart wait - Team AIO Mod++
 
 	Local $aResult, $iActiveHero
 	Local $aHeroResult[$eHeroCount]
@@ -89,7 +95,51 @@ Func SmartWait4Train($iTestSeconds = Default)
 		If $g_bDebugImageSave Or $g_bDebugSetlogTrain Then SaveDebugImage("SmartWait4Troop2_")
 	EndIf
 	If _Sleep($DELAYRESPOND) Then Return
-
+	#Region - Custom smart wait - Team AIO Mod++
+	If ProfileSwitchAccountEnabled() Then
+		CheckTroopTimeAllAccount()
+		Local $LessTime = 999, $account = -1
+		Local $abAccountNo = AccountNoActive()
+		For $i = 0 To $g_iTotalAcc
+			If $abAccountNo[$i] And Not $g_abDonateOnly[$i] Then
+				If $g_asTrainTimeFinish[$i] < $LessTime Then
+					$LessTime = $g_asTrainTimeFinish[$i]
+					$account = $i
+				EndIf
+			EndIf
+		Next
+		#Region - Custom smart wait - Team AIO Mod++
+		If $g_bDebugSetlogTrain Or $g_bDebugSetlog Then
+			SetLog("SmartWait4Train|$LessTime: " & $LessTime)
+			SetLog("SmartWait4Train|$g_iCloseMinimumTime: " & $g_iCloseMinimumTime)
+			SetLog("SmartWait4Train|$iTrainWaitCloseFlag: " & $iTrainWaitCloseFlag)
+		EndIf
+		#EndRegion - Custom smart wait - Team AIO Mod++
+		If $LessTime < $g_iCloseMinimumTime Then
+			If $LessTime = -999 Then
+				SetLog("SmartWait will not run, acc " & $g_asProfileName[$account] & " never ran.")
+			Else
+				SetLog("SmartWait will not run, acc " & $g_asProfileName[$account] & " is ready to attack!")
+			EndIf
+			ClickAway()
+			If _Sleep($DELAYCHECKARMYCAMP4) Then Return
+			Return
+		Else
+			SetLog("SmartWait will proceed with acc " & $g_asProfileName[$account] & " will be ready with " & $LessTime & "min")
+			$g_aiTimeTrain[0] = $LessTime
+			$g_aiTimeTrain[1] = 0
+			$g_aiTimeTrain[2] = 0
+			$g_aiTimeTrain[3] = 0
+		EndIf
+	EndIf
+	
+	#Region - Custom smart wait - Team AIO Mod++
+	If $g_bDebugSetlogTrain Or $g_bDebugSetlog Then
+		SetLog("SmartWait4Train|$g_aiTimeTrain: " & _ArrayToString($g_aiTimeTrain))
+		SetLog("SmartWait4Train|$g_iCCRemainTime: " & $g_iCCRemainTime)
+		SetLog("SmartWait4Train|$iTrainWaitCloseFlag: " & $iTrainWaitCloseFlag)
+	EndIf
+	#EndRegion - Custom smart wait - Team AIO Mod++
 
 	; Get troop training time remaining if enabled
 	If $g_bCloseWithoutShield Or BitAND($iTrainWaitCloseFlag, $TRAINWAIT_SHIELD) = $TRAINWAIT_SHIELD Then
@@ -105,6 +155,14 @@ Func SmartWait4Train($iTestSeconds = Default)
 		EndIf
 		If $g_bDebugSetlogTrain Or $g_bDebugSetlog Then SetLog("$iTrainWaitCloseFlag:" & $iTrainWaitCloseFlag & ", troop time = " & StringFormat("%.2f", $g_aiTimeTrain[0]), $COLOR_DEBUG)
 	EndIf
+	
+	#Region - Custom smart wait - Team AIO Mod++
+	If $g_bDebugSetlogTrain Or $g_bDebugSetlog Then
+		SetLog("SmartWait4Train|$g_aiTimeTrain: " & _ArrayToString($g_aiTimeTrain))
+		SetLog("SmartWait4Train|$g_iCCRemainTime: " & $g_iCCRemainTime)
+		SetLog("SmartWait4Train|$iTrainWaitCloseFlag: " & $iTrainWaitCloseFlag)
+	EndIf
+	#EndRegion - Custom smart wait - Team AIO Mod++
 
 	; get spell training time remaining if enabled
 	If ($g_bCloseWithoutShield Or BitAND($iTrainWaitCloseFlag, $TRAINWAIT_SHIELD) = $TRAINWAIT_SHIELD) And IsWaitforSpellsActive() Then
@@ -123,6 +181,10 @@ Func SmartWait4Train($iTestSeconds = Default)
 	Else
 		$ichkCloseWaitSpell = 0
 	EndIf
+	
+	SetDebugLog("SmartWait4Train|$g_aiTimeTrain: " & _ArrayToString($g_aiTimeTrain))
+	SetDebugLog("SmartWait4Train|$g_iCCRemainTime: " & $g_iCCRemainTime)
+	SetDebugLog("SmartWait4Train|$iTrainWaitCloseFlag: " & $iTrainWaitCloseFlag)
 
 	; get hero regen time remaining if enabled
 	If ($g_bCloseWithoutShield Or BitAND($iTrainWaitCloseFlag, $TRAINWAIT_SHIELD) = $TRAINWAIT_SHIELD) And IsWaitforHeroesActive() Then
@@ -141,9 +203,9 @@ Func SmartWait4Train($iTestSeconds = Default)
 			SetLog("getArmyHeroTime OCR fail, exit SmartWait!", $COLOR_ERROR)
 			Return ; quit when ocr fai, stop trying to close while training this time
 		EndIf
-		If $g_bDebugSetlogTrain Or $g_bDebugSetlog Then SetLog("getArmyHeroTime returned: " & $aHeroResult[0] & ":" & $aHeroResult[1] & ":" & $aHeroResult[2], $COLOR_DEBUG)
+		If $g_bDebugSetlogTrain Or $g_bDebugSetlog Then SetLog("getArmyHeroTime returned: " & $aHeroResult[0] & ":" & $aHeroResult[1] & ":" & $aHeroResult[2] & ":" & $aHeroResult[3], $COLOR_DEBUG) ; Custom smart wait - Team AIO Mod++
 		If _Sleep($DELAYRESPOND) Then Return
-		If $aHeroResult[0] > 0 Or $aHeroResult[1] > 0 Or $aHeroResult[2] > 0 Then ; check if hero is enabled to use/wait and set wait time
+		If $aHeroResult[0] > 0 Or $aHeroResult[1] > 0 Or $aHeroResult[2] > 0 Or $aHeroResult[3] > 0 Then ; check if hero is enabled to use/wait and set wait time ; Custom smart wait - Team AIO Mod++
 			For $pTroopType = $eKing To $eChampion ; check all 3 hero
 				Local $iHeroIdx = $pTroopType - $eKing
 				For $pMatchMode = $DB To $LB ; check only DB and LB (TS has no wait option!)
@@ -190,6 +252,14 @@ Func SmartWait4Train($iTestSeconds = Default)
 	If $g_iCCRemainTime = 0 And IsToRequestCC(False) Then ; Team AIO Mod++
 		getArmyCCStatus()
 	EndIf
+	
+	#Region - Custom smart wait - Team AIO Mod++
+	If $g_bDebugSetlogTrain Or $g_bDebugSetlog Then
+		SetLog("SmartWait4Train|$g_aiTimeTrain: " & _ArrayToString($g_aiTimeTrain))
+		SetLog("SmartWait4Train|$g_iCCRemainTime: " & $g_iCCRemainTime)
+		SetLog("SmartWait4Train|$iTrainWaitCloseFlag: " & $iTrainWaitCloseFlag)
+	EndIf
+	#EndRegion - Custom smart wait - Team AIO Mod++
 
 	ClickAway()
 	If _Sleep($DELAYCHECKARMYCAMP4) Then Return
@@ -305,6 +375,7 @@ Func SmartWait4Train($iTestSeconds = Default)
 			If $g_bDebugSetlogTrain Or $g_bDebugSetlog Then SetLog("$ichkCloseWaitHero=" & $ichkCloseWaitHero & ", $g_aiTimeTrain[2]=" & $g_aiTimeTrain[2], $COLOR_DEBUG)
 			If $g_bDebugSetlogTrain Or $g_bDebugSetlog Then SetLog("Troop training with time remaining not enabled, skip SmartWait game exit", $COLOR_DEBUG)
 		EndIf
+		CheckTroopTimeAllAccount(True) ; Custom smart wait - Team AIO Mod++
 	Else
 		SetLog("Smart Wait Time < Minimum Time Required To Close [" & ($MinimumTimeClose / 60) & " Min]", $COLOR_INFO)
 		SetLog("Wait Train Time = " & StringFormat("%.2f", $iTrainWaitTime / 60) & " Minutes", $COLOR_INFO)

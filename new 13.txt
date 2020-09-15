@@ -1,0 +1,4 @@
+- Fix click in army.
+- Gems claim.
+- Time limit.
+- Android switch.

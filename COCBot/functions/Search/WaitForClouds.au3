@@ -180,7 +180,7 @@ Func chkSearchText()
 	; boolean 50-60ms OCR check for yellow text "Searching for oponents..." message that appears during attack search with long cloud times
 	Local $result
 	$result = getCloudTextShort(388, 348 + $g_iMidOffsetY, "Cloud Search Text: for=", $COLOR_DEBUG, Default) ; OCR "Searching for oponents..." text
-	If $result <> "" And StringInStr($result, "for", $STR_NOCASESENSEBASIC) <> 0 Then ; found "for" characters in text?
+	If $result <> "" And StringLen($result) > 2 Then ; found "for" characters in text?
 		Return True
 	EndIf
 	Return False
