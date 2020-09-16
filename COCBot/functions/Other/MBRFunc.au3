@@ -53,8 +53,7 @@ Func DllCallMyBotIsActive()
 EndFunc   ;==>DllCallMyBotIsActive
 
 ; Public DllCall MyBot.run.dll function call
-Func DllCallMyBot($sFunc, $sType1 = Default, $vParam1 = Default, $sType2 = Default, $vParam2 = Default, $sType3 = Default, $vParam3 = Default, $sType4 = Default, $vParam4 = Default, $sType5 = Default, $vParam5 = Default _
-		, $sType6 = Default, $vParam6 = Default, $sType7 = Default, $vParam7 = Default, $sType8 = Default, $vParam8 = Default, $sType9 = Default, $vParam9 = Default, $sType10 = Default, $vParam10 = Default)
+Func DllCallMyBot($sFunc, $sType1 = Default, $vParam1 = Default, $sType2 = Default, $vParam2 = Default, $sType3 = Default, $vParam3 = Default, $sType4 = Default, $vParam4 = Default, $sType5 = Default, $vParam5 = Default, $sType6 = Default, $vParam6 = Default, $sType7 = Default, $vParam7 = Default, $sType8 = Default, $vParam8 = Default, $sType9 = Default, $vParam9 = Default, $sType10 = Default, $vParam10 = Default)
 	$g_bLibMyBotActive = True
 	Local $aResult
 	Local $sFileOrFolder = Default
@@ -70,18 +69,23 @@ Func DllCallMyBot($sFunc, $sType1 = Default, $vParam1 = Default, $sType2 = Defau
 	Local $bWasSuspended = SuspendAndroid()
 	$aResult = _DllCallMyBot($sFunc, $sType1, $vParam1, $sType2, $vParam2, $sType3, $vParam3, $sType4, $vParam4, $sType5, $vParam5, $sType6, $vParam6, $sType7, $vParam7, $sType8, $vParam8, $sType9, $vParam9, $sType10, $vParam10)
 	Local $error = @error
-	Local $i = 1
+	Local $i = 1, $i2 = 0
 	While Not $error And $aResult[0] = "<GetAsyncResult>"
 		; when receiving "<GetAsyncResult>", dll waited already 100ms, and android should be resumed after 500ms for 100ms
 		If Mod($i + 5, 10) = 0 Then
 			SetDebugLog("Waiting for DLL async function " & $sFunc & " Params : " & " " & $vParam1 & " " & $vParam2 & " " & $vParam3 & " " & $vParam4 & " " & $vParam5 & " " & $vParam6 & " " & $vParam7 & " " & $vParam8 & " " & $vParam9 & " " & $vParam10)
+			$i2 += 1
+			If $g_sTagCallMybotCall <> "" Then 
+				SetDebugLog("Waiting for DLL async function " & $g_sTagCallMybotCall)
+			EndIf
 			ResumeAndroid()
 		EndIf
 		$i += 1
-		If _Sleep(100) Then
+		If _Sleep(100) Or 20 < $i2 Then
 			ResumeAndroid()
 			$aResult[0] = ""
 			$g_bLibMyBotActive = False
+			$g_sTagCallMybotCall = ""
 			Return SetError(0, 0, $aResult)
 		EndIf
 		SuspendAndroid()
@@ -92,6 +96,7 @@ Func DllCallMyBot($sFunc, $sType1 = Default, $vParam1 = Default, $sType2 = Defau
 	; resume Android again (if it was not already suspended)
 	SuspendAndroid($bWasSuspended)
 	$g_bLibMyBotActive = False
+	$g_sTagCallMybotCall = ""
 	Return SetError($error, @extended, $aResult)
 EndFunc   ;==>DllCallMyBot
 

@@ -199,7 +199,7 @@ Func findButton($sButtonName, $buttonTileArrayOrPatternOrFullPath = Default, $ma
 		If $bForceCapture Then _CaptureRegion2() ;to have FULL screen image to work with
 
 		If $g_bDebugSetlog Then SetDebugLog(" imgloc searching for: " & $sButtonName & " : " & $buttonTile)
-
+		$g_sTagCallMybotCall = $sButtonName ; Tag - DllCall - Team AIO Mod++
 		Local $result = DllCallMyBot("FindTile", "handle", $g_hHBitmap2, "str", $buttonTile, "str", $searchArea, "Int", $maxReturnPoints)
 		$error = @error ; Store error values as they reset at next function call
 		$extError = @extended
@@ -376,6 +376,7 @@ Func findImage($sImageName, $sImageTile, $sImageArea, $maxReturnPoints = 1, $bFo
 	; Capture the screen for comparison
 	; _CaptureRegion2() or similar must be used before
 	; Perform the search
+	$g_sTagCallMybotCall = "findImage " & $sImageName ; Tag - DllCall - Team AIO Mod++
 	If $bForceCapture Then _CaptureRegion2() ;to have FULL screen image to work with
 
 	Local $result = DllCallMyBot("FindTile", "handle", $g_hHBitmap2, "str", $sImageTile, "str", $sImageArea, "Int", $maxReturnPoints)

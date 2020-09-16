@@ -25,13 +25,13 @@ Global Enum $eIcnModKingGray = 1, $eIcnModKingBlue, $eIcnModKingGreen, $eIcnModK
 Global Const $g_sLibBBIconPath = $g_sLibPath & "\ModLibs\BuilderBase.dll" ; icon library
 Global Enum $eIcnBB = 1 , $eIcnLabBB, $eIcnBBElixir, $eIcnBBGold, $eIcnBBTrophies, $eIcnMachine, $eIcnBBWallInfo, $eIcnBBWallL1, $eIcnBBWallL2, $eIcnBBWallL3, $eIcnBBWallL4, $eIcnBBWallL5, _
 		$eIcnBBWallL6, $eIcnBBWallL7, $eIcnBBWallL8, $eIcnBBWallL9
-		
+
 #EndRegion - Icn - Team AIO Mod++
 
-#Region - Lab Priority System 
+#Region - Lab Priority System
 Global $g_hChkPriorityLab, $g_hCmbPriorityLab, $g_hLblOnlyUpgrade, $g_hChkPriorityLabTroops, $g_hChkPriorityLabSpells, $g_hChkPriorityLabSieges
 Global  $g_bPriorityLab, $g_iCmbPriorityLab, $g_bPriorityLabSpells = True, $g_bPriorityLabTroops = True, $g_bPriorityLabSieges = True
-#EndRegion - Lab Priority System 
+#EndRegion - Lab Priority System
 
 #Region - Discord - Team AIO Mod++
 Global $g_sTxtNotifyDSToken, $g_bNotifyDSEnable, $g_hChkNotifyDSEnable, _
@@ -53,7 +53,7 @@ Global $g_aRequestTroopsTextOTR[0][2]
 
 ; Debug tag for some capture modes.
 Global $g_sFMQTag = "" ; For debug folder.
-
+Global $g_sTagCallMybotCall = ""
 
 ; Advanced debugging.
 Global $g_bExecuteCapture = False

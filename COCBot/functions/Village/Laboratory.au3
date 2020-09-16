@@ -303,11 +303,17 @@ EndFunc
 
 ; if we are on last page, smaller clickdrag... for future dev: this is whatever is enough distance to move 6 off to the left and have the next page similarily aligned
 Func LabNextPage($iCurPage, $iPages, $iYMidPoint)
-	If $iCurPage >= $iPages Then Return ; nothing left to scroll
+	If $iCurPage >= $iPages Then 
+		For $i = 0 To 6
+			ClickDrag(600, $iYMidPoint, 720, $iYMidPoint, True)
+			If _Sleep(100) Then Return
+		Next
+		Return ; nothing left to scroll
+	EndIf
 	If $iCurPage = $iPages-1 Then ; last page
-		ClickDrag(720, $iYMidPoint, 600, $iYMidPoint)
+		ClickDrag(720, $iYMidPoint, 600, $iYMidPoint, True)
 	Else
-		ClickDrag(720, $iYMidPoint, 85, $iYMidPoint)
+		ClickDrag(720, $iYMidPoint, 85, $iYMidPoint, True)
 	EndIf
 EndFunc
 

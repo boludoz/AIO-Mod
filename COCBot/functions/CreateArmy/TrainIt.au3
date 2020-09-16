@@ -167,13 +167,9 @@ EndFunc   ;==>GetRNDName
 #Region - Custom fix - Team AIO Mod++ (Compatible with Quick Train)
 Func GetVariable(Const $ImageToUse, Const $iIndex)
 	Local $aTrainPos[5] = [-1, -1, -1, -1, $eBarb]
-	; Capture the screen for comparison
 	_CaptureRegion2(25, 375, 840, 548)
-
 	Local $asResult = DllCallMyBot("FindTile", "handle", $g_hHBitmap2, "str", $ImageToUse, "str", "FV", "int", 1)
-
 	If @error Then _logErrorDLLCall($g_sLibMyBotPath, @error)
-
 	If IsArray($asResult) Then
 		If $asResult[0] = "0" Then
 			SetLog("No " & GetTroopName($iIndex) & " Icon found!", $COLOR_ERROR)
@@ -183,20 +179,28 @@ Func GetVariable(Const $ImageToUse, Const $iIndex)
 			SetLog("TrainIt.au3 GetVariable(): Wrong Resolution used for ImgLoc Search!", $COLOR_ERROR)
 		Else
 			If $g_bDebugSetlogTrain Then SetLog("String: " & $asResult[0])
-			; If $g_bDebugSetlogTrain Then _ArrayDisplay($asResult)
 			Local $aResult = StringSplit($asResult[0], "|", $STR_NOCOUNT)
-			; If $g_bDebugSetlogTrain Then _ArrayDisplay($aResult)
-			Local $aCoordinates = StringSplit($aResult[1], ",", $STR_NOCOUNT)
-			; If $g_bDebugSetlogTrain Then _ArrayDisplay($aCoordinates)
-			Local $iButtonX = 25 + Int($aCoordinates[0])
-			Local $iButtonY = 375 + Int($aCoordinates[1])
-			Local $sColorToCheck = "0x" & _GetPixelColor($iButtonX, $iButtonY, $g_bCapturePixel)
-			Local $iTolerance = 40
-			Local $aTrainPos[5] = [$iButtonX, $iButtonY, $sColorToCheck, $iTolerance, -1]
-			If $g_bDebugSetlogTrain Then SetLog("Found: [" & $iButtonX & "," & $iButtonY & "]", $COLOR_SUCCESS)
-			If $g_bDebugSetlogTrain Then SetLog("$sColorToCheck: " & $sColorToCheck, $COLOR_SUCCESS)
-			If $g_bDebugSetlogTrain Then SetLog("$iTolerance: " & $iTolerance, $COLOR_SUCCESS)
-			Return $aTrainPos
+			If UBound($aResult) > 1 Then
+				Local $aCoordinates = StringSplit($aResult[1], ",", $STR_NOCOUNT)
+				If UBound($aCoordinates) > 1 Then
+					Local $iButtonX = 25 + Int($aCoordinates[0])
+					Local $iButtonY = 375 + Int($aCoordinates[1])
+					Local $sColorToCheck = "0x" & _GetPixelColor($iButtonX, $iButtonY, $g_bCapturePixel)
+					Local $iTolerance = 40
+					Local $aTrainPosTmp[5] = [$iButtonX, $iButtonY, $sColorToCheck, $iTolerance, -1]
+					$aTrainPos = $aTrainPosTmp
+					If $g_bDebugSetlogTrain Then 
+						SetLog("Found: [" & $iButtonX & "," & $iButtonY & "]", $COLOR_SUCCESS)
+						SetLog("$sColorToCheck: " & $sColorToCheck, $COLOR_SUCCESS)
+						SetLog("$iTolerance: " & $iTolerance, $COLOR_SUCCESS)
+					EndIf
+					Return $aTrainPos
+				Else
+					SetLog("Don't know how to train the troop with index " & $iIndex & " yet.")
+				EndIf
+			Else
+				SetLog("Don't know how to train the troop with index " & $iIndex & " yet..")
+			EndIf
 		EndIf
 	Else
 		SetLog("Don't know how to train the troop with index " & $iIndex & " yet")
