@@ -16,34 +16,42 @@
 #include-once
 #include <WinAPISys.au3>
 
-Func Click($x, $y, $times = 1, $speed = 0, $debugtxt = "")
+Func Click($x, $y, $times = 1, $speed = 0, $debugtxt = "", $bRandomInLoop = True)
 
-	#Region - ClickAway - Team AIO Mod++
+	#Region - Custom click - Team AIO Mod++
 	If ($x = $aAway[0] Or $x = $aAway2[0]) And $y = 10 Then
 		If $g_bDebugClick Then SetLog("Force random ClickAway.", $COLOR_ACTION)
-		Return ClickAway()
+		Return ClickAway(True)
 	EndIf
-	#EndRegion - ClickAway - Team AIO Mod++
 
 	Local $txt = "", $aPrevCoor[2] = [$x, $y]
     If $g_bUseRandomClick Then
-		$x = Random($x - 5, $x + 5, 1)
-		$y = Random($y - 5, $y + 5, 1)
-		If $g_bDebugClick Then
-			$txt = _DecodeDebug($debugtxt)
-			SetLog("Random Click X: " & $aPrevCoor[0] & " To " & $x & ", Y: " & $aPrevCoor[1] & " To " & $y & ", Times: " & $times & ", Speed: " & $speed & " " & $debugtxt & $txt, $COLOR_ACTION, "Verdana", "7.5", 0)
-		EndIf
-    Else
-		If $g_bDebugClick Or TestCapture() Then
-			$txt = _DecodeDebug($debugtxt)
-			SetLog("Click " & $x & "," & $y & "," & $times & "," & $speed & " " & $debugtxt & $txt, $COLOR_ACTION, "Verdana", "7.5", 0)
-        EndIf
+		$x += Random(-5, 5, 1)
+		$y += Random(-5, 5, 1)
+		If $x <= 0 Or $x >= $g_iGAME_WIDTH Then $x = $aPrevCoor[0]
+		If $y <= 0 Or $y >= $g_iGAME_HEIGHT Then $y = $aPrevCoor[1]
 	EndIf
+	
+	If $g_bDebugClick Or TestCapture() Then
+		$txt = _DecodeDebug($debugtxt)
+		SetLog("Click " & $x & "," & $y & "," & $times & "," & $speed & " " & $debugtxt & $txt, $COLOR_ACTION)
+	EndIf
+	#EndRegion - Custom click - Team AIO Mod++
 
 	If TestCapture() Then Return
 
 	If $g_bAndroidAdbClick = True Then
-		AndroidClick($x, $y, $times, $speed)
+		For $i = 1 To $times 
+			If $g_bUseRandomClick And $bRandomInLoop Then
+				$x = $aPrevCoor[0] + Random(-5, 5, 1)
+				$y = $aPrevCoor[1] + Random(-5, 5, 1)
+				If $x <= 0 Or $x >= $g_iGAME_WIDTH Then $x = $aPrevCoor[0]
+				If $y <= 0 Or $y >= $g_iGAME_HEIGHT Then $y = $aPrevCoor[1]
+			EndIf
+			AndroidClick($x, $y, 1, $speed)
+			
+			If _Sleep(Round(Random(0.80, 1.25) * $speed), False) Then ExitLoop
+		Next
 		Return
 	EndIf
 
@@ -129,24 +137,23 @@ EndFunc   ;==>BuildingClickP
 Func PureClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
 	Local $txt = "", $aPrevCoor[2] = [$x, $y]
     If $g_bUseRandomClick Then
-		$x = Random($x - 3, $x + 3, 1) ; Custom Fix - Team AIO Mod++
-		$y = Random($y - 3, $y + 3, 1) ; Custom Fix - Team AIO Mod++
-		If $g_bDebugClick Then
-			$txt = _DecodeDebug($debugtxt)
-			SetLog("Random PureClick X: " & $aPrevCoor[0] & " To " & $x & ", Y: " & $aPrevCoor[1] & " To " & $y & ", Times: " & $times & ", Speed: " & $speed & " " & $debugtxt & $txt, $COLOR_ACTION, "Verdana", "7.5", 0)
-		EndIf
-    Else
-		If $g_bDebugClick Then
-			$txt = _DecodeDebug($debugtxt)
-			SetLog("PureClick " & $x & "," & $y & "," & $times & "," & $speed & " " & $debugtxt & $txt, $COLOR_ACTION, "Verdana", "7.5", 0)
-        EndIf
+		$x += Random(-5, 5, 1)
+		$y += Random(-5, 5, 1)
+		If $x <= 0 Or $x >= $g_iGAME_WIDTH Then $x = $aPrevCoor[0]
+		If $y <= 0 Or $y >= $g_iGAME_HEIGHT Then $y = $aPrevCoor[1]
+	EndIf
+	
+	If $g_bDebugClick Or TestCapture() Then
+		$txt = _DecodeDebug($debugtxt)
+		SetLog("PureClick X" & $x & "," & $y & "," & $times & "," & $speed & " " & $debugtxt & $txt, $COLOR_ACTION)
 	EndIf
 
 	If TestCapture() Then Return
 
 	If $g_bAndroidAdbClick = True Then
-		For $i = 1 To $times
-			AndroidClick($x, $y, 1, $speed, False)
+		For $i = 1 To $times 
+			AndroidClick($x, $y, 1, $speed)
+			If _Sleep($speed, False) Then ExitLoop
 		Next
 		Return
 	EndIf
@@ -172,27 +179,36 @@ EndFunc   ;==>PureClickP
 
 Func GemClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
 	Local $txt = "", $aPrevCoor[2] = [$x, $y]
-    If $g_bUseRandomClick Then
-		$x = Random($x - 5, $x + 5, 1)
-		$y = Random($y - 5, $y + 5, 1)
-		If $g_bDebugClick Then
-			$txt = _DecodeDebug($debugtxt)
-			SetLog("Random GemClick X: " & $aPrevCoor[0] & " To " & $x & ", Y: " & $aPrevCoor[1] & " To " & $y & ", Times: " & $times & ", Speed: " & $speed & " " & $debugtxt & $txt, $COLOR_ACTION, "Verdana", "7.5", 0)
-		EndIf
-    Else
-		If $g_bDebugClick Then
-			Local $txt = _DecodeDebug($debugtxt)
-			SetLog("GemClick " & $x & "," & $y & "," & $times & "," & $speed & " " & $debugtxt & $txt, $COLOR_ACTION, "Verdana", "7.5", 0)
-		EndIf
+
+	#Region - Custom click - Team AIO Mod++
+	If ($x = $aAway[0] Or $x = $aAway2[0]) And $y = 10 Then
+		If $g_bDebugClick Then SetLog("Force random ClickAway.", $COLOR_ACTION)
+		Return ClickAway(True)
 	EndIf
+
+	Local $txt = "", $aPrevCoor[2] = [$x, $y]
+    If $g_bUseRandomClick Then
+		$x += Random(-5, 5, 1)
+		$y += Random(-5, 5, 1)
+		If $x <= 0 Or $x >= $g_iGAME_WIDTH Then $x = $aPrevCoor[0]
+		If $y <= 0 Or $y >= $g_iGAME_HEIGHT Then $y = $aPrevCoor[1]
+	EndIf
+	
+	If $g_bDebugClick Or TestCapture() Then
+		$txt = _DecodeDebug($debugtxt)
+		SetLog("GemClick " & $x & "," & $y & "," & $times & "," & $speed & " " & $debugtxt & $txt, $COLOR_ACTION)
+	EndIf
+	#EndRegion - Custom click - Team AIO Mod++
 
 	If TestCapture() Then Return
 
 	If $g_bAndroidAdbClick = True Then
-		If isGemOpen(True) Then
-			Return False
-		EndIf
-		AndroidClick($x, $y, $times, $speed)
+		For $i = 1 To $times 
+			If isGemOpen(True) Then Return False
+			AndroidClick($x, $y, 1, $speed)
+			If _Sleep($speed, False) Then ExitLoop
+		Next
+		Return
 	EndIf
 	If $g_bAndroidAdbClick = True Then
 		Return

@@ -125,101 +125,67 @@ Func _GUICtrlCreateInput($sText, $iLeft, $iTop, $iWidth, $iHeight, $vStyle = -1,
 	Return $hReturn
 EndFunc   ;==>_GUICtrlCreateInput
 
-; Disastrous function, but it works for text.
-Func _makerequestCustom($aButtonPosition = -1)
-	;click button request troops
-	
-	If IsArray($aButtonPosition) Then ClickP($aButtonPosition, 1, 0, "0336") ;Select text for request
+Func _makerequestCustom($aRequestButtonPos)
+	Local $sSendButtonArea = GetDiamondFromRect("220,150,650,650")
 
-	Local $iMinXSort = 0, $iMinYSort = 0, $iMaxXSort = 0, $iMaxYSort = 0
-	Local $aFindPencil, $aClickSend
-	Local $aFixedMatrixWhite[4]
-	Local $aFixedMatrixPencil[4]
-	Local $aFixedMatrixSend[4]
+	ClickP($aRequestButtonPos, 1, 0, "0336") ;click button request troops
 
-	For $i = 0 To 5
-		$aFindPencil = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Request\ReqSpec", 1, "0,207,656,568", Default, "edit", False, 25)
-		If IsArray($aFindPencil) Then ExitLoop
-		If RandomSleep(400) Then Return
-	Next
-	
-	If Not IsArray($aFindPencil) Then
-		Setlog("SearchPixelDonate fail 0x1.", $COLOR_ERROR)
-		CheckMainScreen(False) ;emergency exit
-		Return False
-	EndIf
-	
-	Local $ix = $aFindPencil[0][1], $iy = $aFindPencil[0][2]
-	Local $aClickText[2] = [Random($ix - 320, $ix + 13, 1), Random($iy + 108, $iy + 177, 1)]
-	
-	If $g_bDebugSetlog Then SetDebugLog("SearchPixelDonate FindWhite " & _ArrayToString($aClickText))
-	If $g_bDebugSetlog Then SetDebugLog("SearchPixelDonate X, Y: " & $ix & "," & $iy)
-
-	Local $aTmp[4] = [440, Int($iy + 190), 470, Int($iy + 220)]
-	$aClickSend = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Request\ReqSpec", 1, $aTmp, Default, "ReqSpec", False, 25)
-	
-	If Not IsArray($aClickSend) Then
-		Setlog("SearchPixelDonate fail 0x2.", $COLOR_ERROR)
-		CheckMainScreen(False) ;emergency exit
-		Return False
-	EndIf
-	
-	If $g_bDebugSetlog Then SetDebugLog("SearchPixelDonate FixedMatrixSend " & _ArrayToString($aClickSend))
-	
-	If Not StringIsSpace($g_sRequestTroopsText) Then
-		
+	If Not IsWindowOpen($g_sImgSendRequestButton, 20, 100, $sSendButtonArea) Then
+		SetLog("Request has already been made, or request window not available", $COLOR_ERROR)
+		ClickAway()
+		If _Sleep($DELAYMAKEREQUEST2) Then Return
+	Else
 		#Region - Type once - Team AIO Mod++
-		; 	X[$g_sProfileCurrentName|$g_sRequestTroopsText]
-		Local $bCanReq = True, $bAddNew = True
-		
-		If $g_bRequestOneTimeEnable Then
-			For $i = 0 To UBound($g_aRequestTroopsTextOT) -1
-				If $g_aRequestTroopsTextOT[$i][0] = $g_sProfileCurrentName Then
-					$bAddNew = False
-					
-					If $g_aRequestTroopsTextOT[$i][1] = $g_sRequestTroopsText Then
-						$bCanReq = False
-					ElseIf $g_aRequestTroopsTextOT[$i][1] <> $g_sRequestTroopsText Then
-						$g_aRequestTroopsTextOT[$i][1] = $g_sRequestTroopsText
-					EndIf
-					
-					ExitLoop
-				EndIf
-			Next
+		If Not StringIsSpace($g_sRequestTroopsText) Then
 			
-			If $bAddNew = True Then
-				Local $aMatrixText[1][2] = [[$g_sProfileCurrentName, $g_sRequestTroopsText]]
-				_ArrayAdd($g_aRequestTroopsTextOT, $aMatrixText)
+			; 	X[$g_sProfileCurrentName|$g_sRequestTroopsText]
+			Local $bCanReq = True, $bAddNew = True
+			
+			If $g_bRequestOneTimeEnable Then
+				For $i = 0 To UBound($g_aRequestTroopsTextOT) -1
+					If $g_aRequestTroopsTextOT[$i][0] = $g_sProfileCurrentName Then
+						$bAddNew = False
+						
+						If $g_aRequestTroopsTextOT[$i][1] = $g_sRequestTroopsText Then
+							$bCanReq = False
+						ElseIf $g_aRequestTroopsTextOT[$i][1] <> $g_sRequestTroopsText Then
+							$g_aRequestTroopsTextOT[$i][1] = $g_sRequestTroopsText
+						EndIf
+						
+						ExitLoop
+					EndIf
+				Next
+				
+				If $bAddNew = True Then
+					Local $aMatrixText[1][2] = [[$g_sProfileCurrentName, $g_sRequestTroopsText]]
+					_ArrayAdd($g_aRequestTroopsTextOT, $aMatrixText)
+				EndIf
 			EndIf
-		EndIf
-		
-		If $bCanReq = True Then
-			If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
-			; fix for Android send text bug sending symbols like ``"
-			AndroidSendText($g_sRequestTroopsText, True)
-			Click($aClickText[0], $aClickText[1], 1, 0, "#0254") ;Select text for request
-			If _Sleep($DELAYMAKEREQUEST2) Then Return
-			If SendText($g_sRequestTroopsText) = 0 Then
-				SetLog(" Request text entry failed, try again", $COLOR_ERROR)
-				Return
+			
+			If $bCanReq = True Then
+				If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
+				; fix for Android send text bug sending symbols like ``"
+				AndroidSendText($g_sRequestTroopsText, True)
+				Click(Int($g_avWindowCoordinates[0]), Int($g_avWindowCoordinates[1] - 75), 1, 0, "#0254")
+				If _Sleep($DELAYMAKEREQUEST2) Then Return
+				If SendText($g_sRequestTroopsText) = 0 Then
+					SetLog(" Request text entry failed, try again", $COLOR_ERROR)
+					Return
+				EndIf
 			EndIf
 		EndIf
 		#EndRegion - Type once - Team AIO Mod++
-	EndIf
-	
-	If _Sleep($DELAYMAKEREQUEST2) Then Return ; wait time for text request to complete
-	
-	If $g_bChkBackgroundMode = False And $g_bNoFocusTampering = False Then ControlFocus($g_hAndroidWindow, "", "") ; make sure Android has window focus
-	
-	Local $aBoundingBox[4] = [$aFindPencil[0][1] - 133, $aFindPencil[0][2] + 222, $aFindPencil[0][1], $aFindPencil[0][2] + 253]
-	
-	If Not $g_bUseRandomClick Then
+		If _Sleep($DELAYMAKEREQUEST2) Then Return ; wait time for text request to complete
+
+		If Not IsWindowOpen($g_sImgSendRequestButton, 20, 100, $sSendButtonArea) Then
+			If $g_bDebugSetlog Then SetDebugLog("Send request button not found", $COLOR_DEBUG)
+			CheckMainScreen(False) ;emergency exit
+		EndIf
+
+		If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "") ; make sure Android has window focus
 		ClickP($g_avWindowCoordinates, 1, 100, "#0256")
-	Else
-		ClickR($aBoundingBox, $aBoundingBox[0], $aBoundingBox[1], 1, 100, $g_iDEFAULT_HEIGHT, 3)
+		$g_bCanRequestCC = False
 	EndIf
-	
-	$g_bCanRequestCC = False
 
 EndFunc   ;==>_makerequestCustom
 

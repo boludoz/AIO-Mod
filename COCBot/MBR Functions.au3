@@ -267,7 +267,7 @@
 #include "functions\Village\GetVillageSize.au3"
 #include "functions\Village\GainCost.au3"
 #include "functions\Village\ConvertOCRTime.au3"
-#include "functions\Other\ClickZoneR.au3"
+; #include "functions\Other\ClickZoneR.au3"
 #include "functions\Village\CheckNeedOpenTrain.au3"
 #include "functions\Village\SwitchBetweenBases.au3"
 #include "functions\Village\SwitchAccount.au3"

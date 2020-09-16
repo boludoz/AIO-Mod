@@ -1037,11 +1037,17 @@ Func OpenSinglePlayerPage()
 
 	SetLog("Going to Gain XP...", $COLOR_INFO)
 	If IsMainPage() Then
-		If $g_bUseRandomClick = 0 Then
-			ClickP($aAttackButton, 1, 0, "#0149") ; Click Attack Button
-		Else
-			ClickR($aAttackButtonRND, $aAttackButton[0], $aAttackButton[1], 1, 0)
-		EndIf
+        ; If $g_bUseRandomClick = 0 Then
+            ; ClickP($aAttackButton, 1, 0, "#0149") ; Click Attack Button
+        ; Else
+            ; ClickR($aAttackButtonRND, $aAttackButton[0], $aAttackButton[1], 1, 0)
+        ; EndIf		
+		ClickP($aAttackButton, 1, 0, "#0149") ; Click Attack Button
+		Else 
+		CheckMainScreen()
+		If _Sleep(100) Then Return
+		ClickP($aAttackButton, 1, 0, "#0149") ; Click Attack Button
+		If _Sleep(100) Then Return
 	EndIf
 	If _Sleep(70) Then Return
 

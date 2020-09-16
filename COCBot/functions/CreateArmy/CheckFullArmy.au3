@@ -24,13 +24,15 @@ Func CheckOverviewFullArmy($bOpenArmyWindow = False, $bCloseArmyWindow = False)
 		;ClickP($aAway, 1, 0, "#0346") ;Click Away
 		ClickAway()
 		If _Sleep($DELAYCHECKFULLARMY1) Then Return
+        
 		#Region - Custom - Team AIO Mod++
-		If Not $g_bUseRandomClick Then
-			Click($aArmyTrainButton[0], $aArmyTrainButton[1], 1, 0, "#0347") ; Click Button Army Overview
-		Else
-			ClickR($aArmyTrainButtonRND, $aArmyTrainButton[0], $aArmyTrainButton[1], 1, 0)
-		EndIf
-		#EndRegion - Custom - Team AIO Mod++
+		Click($aArmyTrainButton[0], $aArmyTrainButton[1], 1, 0, "#0347") ; Click Button Army Overview
+        ; If Not $g_bUseRandomClick Then
+            ; Click($aArmyTrainButton[0], $aArmyTrainButton[1], 1, 0, "#0347") ; Click Button Army Overview
+        ; Else
+            ; ClickR($aArmyTrainButtonRND, $aArmyTrainButton[0], $aArmyTrainButton[1], 1, 0)
+        ; EndIf
+        #EndRegion - Custom - Team AIO Mod++
 		If _Sleep($DELAYCHECKFULLARMY2) Then Return
 		Local $j = 0
 		While Not _ColorCheck(_GetPixelColor(136, 129, True), Hex(0xE8E8E0, 6), 20) ; "ARMY tab"

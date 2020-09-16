@@ -33,11 +33,12 @@ Func TrainClick($iX, $iY, $iTimes, $iSpeed, $aWatchSpot, $sdebugtxt, $TypeTroops
 			If IsKeepClicksActive() Then
 				For $i = 0 To ($iTimes - 1)
 					#Region - Custom - Team AIO Mod++
-					If Not $g_bUseRandomClick Then
-						PureClick($iX, $iY) ;Click once.
-					Else
-						PureClickR($TypeTroops, $iX, $iY) ;Click once.
-					EndIf
+					Click($iX, $iY) ;Click once.
+					; If Not $g_bUseRandomClick Then
+						; PureClick($iX, $iY) ;Click once.
+					; Else
+						; PureClickR($TypeTroops, $iX, $iY) ;Click once.
+					; EndIf
 					#EndRegion - Custom - Team AIO Mod++
 				Next
 				If isProblemAffect(True) Then checkMainScreen(False) ; Check for BS/CoC errors
@@ -62,11 +63,12 @@ Func TrainClick($iX, $iY, $iTimes, $iSpeed, $aWatchSpot, $sdebugtxt, $TypeTroops
 							ExitLoop
 						EndIf
 						#Region - Custom - Team AIO Mod++
-						If Not $g_bUseRandomClick Then
-							PureClick($iX, $iY) ;Click once.
-						Else
-							PureClickR($TypeTroops, $iX, $iY) ;Click once.
-						EndIf
+						Click($iX, $iY) ;Click once.
+						; If Not $g_bUseRandomClick Then
+							; PureClick($iX, $iY) ;Click once.
+						; Else
+							; PureClickR($TypeTroops, $iX, $iY) ;Click once.
+						; EndIf
 						#EndRegion - Custom - Team AIO Mod++
 						If _Sleep($iSpeed, False) Then ExitLoop
 					Next
@@ -79,11 +81,12 @@ Func TrainClick($iX, $iY, $iTimes, $iSpeed, $aWatchSpot, $sdebugtxt, $TypeTroops
 						Return ; Check to see if barrack full
 					EndIf
 					#Region - Custom - Team AIO Mod++
-					If Not $g_bUseRandomClick Then
-						PureClick($iX, $iY, $iTimes, $iSpeed) ;Click $iTimes.
-					Else
-						PureClickR($TypeTroops, $iX, $iY, $iTimes, $iSpeed) ;Click $iTimes.
-					EndIf
+					Click($iX, $iY, $iTimes, 100) ;Click once.
+					; If Not $g_bUseRandomClick Then
+						; PureClick($iX, $iY, $iTimes, $iSpeed) ;Click $iTimes.
+					; Else
+						; PureClickR($TypeTroops, $iX, $iY, $iTimes, $iSpeed) ;Click $iTimes.
+					; EndIf
 					#EndRegion - Custom - Team AIO Mod++
 					If _Sleep($iSpeed, False) Then Return
 				EndIf
@@ -99,11 +102,12 @@ Func TrainClick($iX, $iY, $iTimes, $iSpeed, $aWatchSpot, $sdebugtxt, $TypeTroops
 				Return ; Check to see if barrack full
 			EndIf
 			#Region - Custom - Team AIO Mod++
-			If Not $g_bUseRandomClick Then
-				PureClick($iX, $iY)
-			Else
-				PureClickR($TypeTroops, $iX, $iY)
-			EndIf
+			Click($iX, $iY) ;Click once.
+			; If Not $g_bUseRandomClick Then
+				; PureClick($iX, $iY)
+			; Else
+				; PureClickR($TypeTroops, $iX, $iY)
+			; EndIf
 			#EndRegion - Custom - Team AIO Mod++
 
 			If _Sleep($iSpeed, False) Then Return

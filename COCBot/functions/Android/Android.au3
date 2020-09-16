@@ -3042,11 +3042,6 @@ Func AndroidAdbClickSupported()
 EndFunc   ;==>AndroidAdbClickSupported
 
 Func AndroidClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect = True)
-	If Not ($x = Default) Then $x = Int($x) + $g_aiMouseOffset[0]
-	If Not ($x = Default) Then $y = Int($y) + $g_aiMouseOffset[1]
-	ForceCaptureRegion()
-	;AndroidSlowClick($x, $y, $times, $speed)
-	;AndroidFastClick($x, $y, $times, $speed, $checkProblemAffect)
 	AndroidMinitouchClick($x, $y, $times, $speed, $checkProblemAffect)
 EndFunc   ;==>AndroidClick
 
@@ -3613,15 +3608,15 @@ Func AndroidMinitouchClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect =
 			For $j = 0 To $recordsClicks - 1
 				Local $BTN_TOUCH_DOWN = True
 				Local $BTN_TOUCH_UP = True
-				If $ReleaseClicks = True Then
-					$Click = $aiAndroidAdbClicks[($i - 1) * $recordsClicks + $j + 1] ; seen here incorrect number of subscripts error
-					$x = $Click[0]
-					$y = $Click[1]
-					Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x,$y)")
-					Local $up_down = $Click[2]
-					$BTN_TOUCH_DOWN = StringInStr($up_down, "down") > 0
-					$BTN_TOUCH_UP = StringInStr($up_down, "up") > 0
-				EndIf
+				; If $ReleaseClicks = True Then
+					; $Click = $aiAndroidAdbClicks[($i - 1) * $recordsClicks + $j + 1] ; seen here incorrect number of subscripts error
+					; $x = $Click[0]
+					; $y = $Click[1]
+					; Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x,$y)")
+					; Local $up_down = $Click[2]
+					; $BTN_TOUCH_DOWN = StringInStr($up_down, "down") > 0
+					; $BTN_TOUCH_UP = StringInStr($up_down, "up") > 0
+				; EndIf
 				Local $send = ""
 				$bytes = 0
 				$bytesSent = 0
@@ -3678,6 +3673,7 @@ Func AndroidMinitouchClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect =
 		EndIf
 		$g_bSilentSetLog = True
 		$g_bSilentSetLog = $_SilentSetLog
+		#cs
 		If False Then
 			; disabled for now
 			If $speed > 0 Then
@@ -3707,6 +3703,7 @@ Func AndroidMinitouchClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect =
 				EndIf
 			EndIf
 		EndIf
+		#ce
 		$timeSlept += __TimerDiff($sleepTimer)
 		If $g_bRunState = False Then ExitLoop
 		If $__TEST_ERROR_SLOW_ADB_CLICK_DELAY > 0 Then Sleep($__TEST_ERROR_SLOW_ADB_CLICK_DELAY)
@@ -3721,7 +3718,7 @@ Func AndroidMinitouchClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect =
 	If IsKeepClicksActive(False) = False Then ; Invalidate ADB screencap (not when troops are deployed to speed up clicks)
 		$g_iAndroidAdbScreencapTimer = 0 ; invalidate ADB screencap timer/timeout
 	EndIf
-
+	#Cs
 	; update total stats
 	Local $duration = Round((__TimerDiff($hDuration) - $timeSlept) / $loops)
 	$g_aiAndroidAdbStatsTotal[$AdbStatsType][0] += 1
@@ -3746,6 +3743,7 @@ Func AndroidMinitouchClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect =
 			SetDebugLog("AndroidMinitouchClick: " & $totalAvg & "/" & $lastAvg & "/" & $duration & " ms (all/" & $iLastCount & "/1), $x=" & $x & ", $y=" & $y & ", $times=" & $times & ", $speed = " & $speed & ", $checkProblemAffect=" & $checkProblemAffect)
 		EndIf
 	EndIf
+	#ce
 EndFunc   ;==>AndroidMinitouchClick
 
 Func AndroidSendText($sText, $SymbolFix = False, $wasRunState = $g_bRunState)

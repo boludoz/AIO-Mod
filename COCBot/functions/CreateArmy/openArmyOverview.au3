@@ -29,11 +29,14 @@ Func OpenArmyOverview($bCheckMain = True, $sWhereFrom = "Undefined")
 	If $g_bDebugSetlogTrain Then SetLog("Click $aArmyTrainButton" & " (Called from " & $sWhereFrom & ")", $COLOR_SUCCESS)
 	
 	If _Wait4Pixel(52, 565, 0xEEB344, 25, 2500, 50) Then
-		If Not $g_bUseRandomClick Then
-			ClickP($aArmyTrainButton, 1, 0, "#0293") ; Button Army Overview
+		; If Not $g_bUseRandomClick Then
+			; ClickP($aArmyTrainButton, 1, 0, "#0293") ; Button Army Overview
+		; Else
+			; ClickR($aArmyTrainButtonRND, $aArmyTrainButton[0], $aArmyTrainButton[1], 1, 0)
+		; EndIf
+		ClickP($aArmyTrainButton, 1, 0, "#0293") ; Button Army Overview
 		Else
-			ClickR($aArmyTrainButtonRND, $aArmyTrainButton[0], $aArmyTrainButton[1], 1, 0)
-		EndIf
+		Return False
 	EndIf
 	#EndRegion - Custom - Team AIO Mod++
 
