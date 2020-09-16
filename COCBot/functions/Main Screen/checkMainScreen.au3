@@ -42,6 +42,15 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default) ;Checks if in
 		If $g_bAndroidAdbScreencap = False And _WinAPI_IsIconic($g_hAndroidWindow) Then WinSetState($g_hAndroidWindow, "", @SW_RESTORE)
 	EndIf
 
+	#Region - Custom fix - Team AIO Mod++
+	; This check if coc is active in first plane.
+	Local $sDumpsys = AndroidAdbSendShellCommand("dumpsys activity activities | grep mFocusedActivity", Default)
+	If StringInStr($sDumpsys, "mFocusedActivity") > 0 And StringInStr($sDumpsys, $g_sAndroidGamePackage) < 1 Then 
+		SetLog("Clash of Clans is not active, the bot solves it.", $COLOR_INFO)
+		OpenCoC()
+	EndIf
+	#EndRegion - Custom fix - Team AIO Mod++
+
 	$i = 0
 	$iErrorCount = 0
 	$iCheckBeforeRestartAndroidCount = 5

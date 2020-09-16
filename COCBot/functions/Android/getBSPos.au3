@@ -5,7 +5,7 @@
 ; Parameters ....:
 ; Return values .: None
 ; Author ........:
-; Modified ......: KnowJack(07-2015), Boldina ! (09-2020)
+; Modified ......: KnowJack(07-2015)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -176,7 +176,7 @@ Func getAndroidPos($FastCheck = False, $RetryCount1 = 0, $RetryCount2 = 0, $bWid
 			EndIf
 			;DisposeWindows()
 			;WinActivate($g_hAndroidWindow)
-			SetDebugLog($sPre & "Unsupported " & $g_sAndroidEmulator & " screen size of " & $aControlSize[2] & " x " & $aControlSize[3] & " at " & $aControlSize[0] & ", " & $aControlSize[1] & " (expect " & $g_iAndroidClientWidth & " x " & $g_iAndroidClientHeight & ")", $COLOR_ACTION)
+			SetDebugLog($sPre & "Unsupported " & $g_sAndroidEmulator & " screen size of " & $aControlSize[2] & " x " & $aControlSize[3] & " at " & $aControlSize[0] & ", " & $aControlSize[1]  & " (expect " & $g_iAndroidClientWidth & " x " & $g_iAndroidClientHeight & ")", $COLOR_ACTION)
 			Local $aAdj0 = [0, 0]
 			If $RetryCount1 = 0 And $RetryCount2 = 0 Then
 				; resize window first to an invalid size
@@ -256,9 +256,9 @@ Func getAndroidPos($FastCheck = False, $RetryCount1 = 0, $RetryCount2 = 0, $bWid
 			$aAndroidWindow[1] += $aAdj[1]
 			SetDebugLog($sPre & $g_sAndroidTitle & " Adjusted Window Size: " & $aAndroidWindow[0] & " x " & $aAndroidWindow[1] & " (by " & $aAdj[0] + $aAdj0[0] & ", " & $aAdj[1] + $aAdj0[1] & ")", $COLOR_INFO)
 
-			If $bExpectControlResize And $RetryCount1 < 1 Then
+			If $bExpectControlResize And $RetryCount1 < 6 Then
 				WinMove($g_hAndroidWindow, "", $AndroidWinPos[0], $AndroidWinPos[1], $aAndroidWindow[0] - 2, $aAndroidWindow[1] - 2) ; force invalid resize (triggers Android rendering control resize)
-				_Sleep(100)
+				;Sleep($DELAYSLEEP)
 				$AndroidWinPos = WinGetPos($g_hAndroidWindow)
 				If UBound($AndroidWinPos) > 3 Then
 					$WinWidth = $AndroidWinPos[2]
@@ -292,7 +292,7 @@ Func getAndroidPos($FastCheck = False, $RetryCount1 = 0, $RetryCount2 = 0, $bWid
 								Else
 									SetLog($g_sAndroidEmulator & " window resize didn't work, screen is " & $aControlSize[2] & " x " & $aControlSize[3], $COLOR_ERROR)
 								EndIf
-								If $RetryCount1 > 0 And $RetryCount1 < 1 And $RetryCount2 = 0 Then
+								If $RetryCount1 > 0 And $RetryCount1 < 6 And $RetryCount2 = 0 Then
 									; early abort when cannot be resized
 									Local $bXinc = $aControlSize[0] > $asControlSize[$RetryCount1][0] And $asControlSize[$RetryCount1][0] > $asControlSize[$RetryCount1 - 1][0]
 									Local $bYinc = $aControlSize[1] > $asControlSize[$RetryCount1][1] And $asControlSize[$RetryCount1][1] > $asControlSize[$RetryCount1 - 1][1]
@@ -303,8 +303,8 @@ Func getAndroidPos($FastCheck = False, $RetryCount1 = 0, $RetryCount2 = 0, $bWid
 								EndIf
 							EndIf
 							; added for MEmu in hires with DPI > 100%
-							If $RetryCount1 < 1 Then
-								_Sleep(250)
+							If $RetryCount1 < 6 Then
+								Sleep(250)
 								Return getAndroidPos($FastCheck, $RetryCount1 + 1, $RetryCount2, $bWidthFirst)
 							EndIf
 						Else
@@ -312,8 +312,8 @@ Func getAndroidPos($FastCheck = False, $RetryCount1 = 0, $RetryCount2 = 0, $bWid
 						EndIf
 					Else
 						; added for Nox that reports during launch a client size of 1x1
-						If $RetryCount2 < 1 Then
-							_Sleep(250)
+						If $RetryCount2 < 5 Then
+							Sleep(250)
 							Return getAndroidPos($FastCheck, $RetryCount1, $RetryCount2 + 1, $bWidthFirst)
 						EndIf
 					EndIf
@@ -323,8 +323,8 @@ Func getAndroidPos($FastCheck = False, $RetryCount1 = 0, $RetryCount2 = 0, $bWid
 
 			Else
 				; added for Nox that reports during launch a client size of 1x1
-				If $RetryCount2 < 1 Then
-					_Sleep(250)
+				If $RetryCount2 < 5 Then
+					Sleep(250)
 					Return getAndroidPos($FastCheck, $RetryCount1, $RetryCount2 + 1, $bWidthFirst)
 				EndIf
 			EndIf
@@ -337,7 +337,7 @@ Func getAndroidPos($FastCheck = False, $RetryCount1 = 0, $RetryCount2 = 0, $bWid
 		SetDebugLog($sPre & "WARNING: Cannot resize " & $g_sAndroidEmulator & " window, control '" & $g_sAppClassInstance & "' not available", $COLOR_ERROR)
 	EndIf
 
-	If $bResizedOk Then
+	If $bResizedOK Then
 		;RedrawAndroidWindow()
 		If $g_bDebugSetlog Then
 			SetDebugLog($sPre & $g_sAndroidEmulator & " window resized to work with MyBot", $COLOR_SUCCESS)
@@ -374,7 +374,7 @@ Func getAndroidPosWait(ByRef $aControlSize, $aNewControlSize = 0)
 
 	Local $hTimer = __TimerInit()
 	While __TimerDiff($hTimer) < 3000 And UBound($aNewControlSize) > 2 And ($aControlSize[2] = $aNewControlSize[2] Or $aControlSize[3] = $aNewControlSize[3]) And $aNewControlSize[2] <> $g_iAndroidClientWidth And $aNewControlSize[3] <> $g_iAndroidClientHeight
-		_Sleep(100)
+		Sleep($DELAYSLEEP)
 		$aNewControlSize = getAndroidPos(True)
 	WEnd
 	Return $aNewControlSize

@@ -115,48 +115,47 @@ Func Laboratory($debug=False)
 		Local $aPriority = GetTroopsResources()
 		Local $aArray = ["Elixir", "Dark", "Gold"]
 		_ArraySwap($aArray, 0, $g_iCmbPriorityLab)
-		For $sMode In $aArray
 			While($iCurPage <= $iPages)
 				local $aPageUpgrades = findMultiple($g_sImgLabResearch, $sLabTroopsSectionDiam, $sLabTroopsSectionDiam, 0, 1000, 0, "objectname,objectpoints", True)
 				If UBound($aPageUpgrades, 1) >= 1 Then ; if we found any troops
-					For $i = 0 To UBound($aPageUpgrades, 1) - 1 ; Loop through found upgrades
-						
-						Local $aTempTroopArray = $aPageUpgrades[$i] ; Declare Array to Temp Array
-						Local $iSwitch = _ArraySearch($g_avLabTroops, $aTempTroopArray[0], 0, 0, 0, 2, 1, 3, False)
-
-						If $g_bPriorityLabTroops = False And $g_bPriorityLabSpells = False And $g_bPriorityLabSieges = False Then
-							SetLog("Laboratory : The lab will never work with all unmarked troops, repaired configuration.", $COLOR_ACTION)
-							$g_bPriorityLabTroops = True
-							$g_bPriorityLabSpells = True
-							$g_bPriorityLabSieges = True
-							ApplyConfig_600_14("Read")
-						EndIf
-						
-						If ((($iSwitch >= $aPriority[0][0] And $iSwitch <= $aPriority[0][1]) Or ($iSwitch >= $aPriority[3][0] And $iSwitch <= $aPriority[3][1])) And $g_bPriorityLabTroops = False) Or _
-							(($iSwitch >= $aPriority[4][0] And $iSwitch <= $aPriority[4][1]) And $g_bPriorityLabSieges = False) Or _ 
-							((($iSwitch >= $aPriority[1][0] And $iSwitch <= $aPriority[1][1]) Or ($iSwitch >= $aPriority[2][0] And $iSwitch <= $aPriority[2][1])) And $g_bPriorityLabSpells = False) Then
-							ContinueLoop
-						EndIf
-						
-						Switch $sMode
-							Case "Dark"
-								If Not ($iSwitch >= $aPriority[2][0] And $iSwitch <= $aPriority[2][1]) And Not ($iSwitch >= $aPriority[3][0] And $iSwitch <= $aPriority[3][1]) Then
-									ContinueLoop
-								EndIf
-							Case "Elixir"
-								If Not ($iSwitch >= $aPriority[0][0] And $iSwitch <= $aPriority[0][1]) And Not ($iSwitch >= $aPriority[1][0] And $iSwitch <= $aPriority[1][1]) Then
-									ContinueLoop
-								EndIf
-							Case "Gold"
-								If Not ($iSwitch >= $aPriority[4][0] And $iSwitch <= $aPriority[4][1]) Then
-									ContinueLoop
-								EndIf
-						EndSwitch
-						
+					Local $bFound = False
+					For $sMode In $aArray
+						For $i = 0 To UBound($aPageUpgrades, 1) - 1 ; Loop through found upgrades
+							
+							Local $aTempTroopArray = $aPageUpgrades[$i] ; Declare Array to Temp Array
+							Local $iSwitch = _ArraySearch($g_avLabTroops, $aTempTroopArray[0], 0, 0, 0, 2, 1, 3, False)
+					
+							If $g_bPriorityLabTroops = False And $g_bPriorityLabSpells = False And $g_bPriorityLabSieges = False Then
+								SetLog("Laboratory : The lab will never work with all unmarked troops, repaired configuration.", $COLOR_ACTION)
+								$g_bPriorityLabTroops = True
+								$g_bPriorityLabSpells = True
+								$g_bPriorityLabSieges = True
+								ApplyConfig_600_14("Read")
+							EndIf
+							
+							If ((($iSwitch >= $aPriority[0][0] And $iSwitch <= $aPriority[0][1]) Or ($iSwitch >= $aPriority[3][0] And $iSwitch <= $aPriority[3][1])) And $g_bPriorityLabTroops = False) Or _
+								(($iSwitch >= $aPriority[4][0] And $iSwitch <= $aPriority[4][1]) And $g_bPriorityLabSieges = False) Or _ 
+								((($iSwitch >= $aPriority[1][0] And $iSwitch <= $aPriority[1][1]) Or ($iSwitch >= $aPriority[2][0] And $iSwitch <= $aPriority[2][1])) And $g_bPriorityLabSpells = False) Then
+								ContinueLoop
+							EndIf
+							
+							; The priority is soft.
+							If (("Dark" = $sMode) And Not ($iSwitch >= $aPriority[2][0] And $iSwitch <= $aPriority[2][1]) And Not ($iSwitch >= $aPriority[3][0] And $iSwitch <= $aPriority[3][1])) Or _ 
+								(("Elixir" = $sMode) And Not ($iSwitch >= $aPriority[0][0] And $iSwitch <= $aPriority[0][1]) And Not ($iSwitch >= $aPriority[1][0] And $iSwitch <= $aPriority[1][1])) Or _
+								(("Gold" = $sMode) And Not ($iSwitch >= $aPriority[4][0] And $iSwitch <= $aPriority[4][1])) Then
+								ContinueLoop
+							EndIf
+							
+							$bFound = True
+							ExitLoop 2
+						Next
+					Next
+					
+					If $bFound = True Then
 						; find image slot that we found so that we can read the cost to see if we can upgrade it... slots read 1-12 top to bottom so barb = 1, arch = 2, giant = 3, etc...
 						Local $aCoords = decodeSingleCoord($aTempTroopArray[1])
 						$sCostResult = GetLabCostResult($aCoords) ; get cost of the current upgrade option
-		
+						
 						If $sCostResult = "" Then ; not enough resources
 							If $g_bDebugSetlog Then SetDebugLog("Lab Upgrade " & $aTempTroopArray[0] & " - Not enough Resources")
 						ElseIf StringSplit($sCostResult, "1")[0] = StringLen($sCostResult)+1 or StringSplit($sCostResult, "1")[1] = "0" Then ; max level if all ones returned from ocr or if the first letter is a 0.
@@ -166,15 +165,13 @@ Func Laboratory($debug=False)
 							Return LaboratoryUpgrade($aTempTroopArray[0], $aCoords, $sCostResult, $debug) ; return whether or not we successfully upgraded
 						EndIf
 						If _Sleep($DELAYLABORATORY2) Then Return
-					Next
+					EndIf
 				EndIf
 		
 				LabNextPage($iCurPage, $iPages, $iYMidPoint) ; go to next page of upgrades
 				$iCurPage += 1 ; Next page
 				If _Sleep($DELAYLABORATORY2) Then Return
 			WEnd
-			$iCurPage = 0
-		Next
 	#EndRegion - Custom lab - Team AIO Mod++
 	Else ; users choice is any upgrade
 		Local $aPriority = GetTroopsResources() ; Custom lab - Team AIO Mod++
@@ -303,13 +300,7 @@ EndFunc
 
 ; if we are on last page, smaller clickdrag... for future dev: this is whatever is enough distance to move 6 off to the left and have the next page similarily aligned
 Func LabNextPage($iCurPage, $iPages, $iYMidPoint)
-	If $iCurPage >= $iPages Then 
-		For $i = 0 To 6
-			ClickDrag(600, $iYMidPoint, 720, $iYMidPoint, True)
-			If _Sleep(100) Then Return
-		Next
-		Return ; nothing left to scroll
-	EndIf
+	If $iCurPage >= $iPages Then Return ; nothing left to scroll
 	If $iCurPage = $iPages-1 Then ; last page
 		ClickDrag(720, $iYMidPoint, 600, $iYMidPoint, True)
 	Else

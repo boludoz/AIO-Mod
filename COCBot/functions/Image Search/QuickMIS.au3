@@ -21,16 +21,18 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 	#Region - Custom - Team AIO Mod++
 	Local $aSize = DirGetSize($directory, $DIR_EXTENDED), $Res = Null
 	If @error Then
-		SetLog("Directory Path error: " & @error & " | " & $directory, $COLOR_ERROR)
+		SetDebugLog("QuickMIS | Directory Path error: " & @error & " | " & $directory, $COLOR_ERROR)
 	ElseIf $aSize[1] = 0 Then
-		SetLog("Directory Path is empty: " & $directory, $COLOR_ERROR)
-	ElseIf $aSize[1] > 0 Then
-		SetDebugLog("Path Dir with " & $aSize[1] & " Images")
+		SetDebugLog("QuickMIS | Directory Path is empty: " & $directory, $COLOR_ERROR)
+	EndIf
+	
+	If $aSize[1] > 0 Then
 		If $bNeedCapture Then _CaptureRegion2($Left, $Top, $Right, $Bottom)
 		$Res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $directory, "str", "FV", "Int", 0, "str", "FV", "Int", 0, "Int", 1000)
 		If @error Then _logErrorDLLCall($g_sLibMyBotPath, @error)
 		If $g_bDebugImageSave Then SaveDebugImage("QuickMIS_" & $ValueReturned, False)
 	EndIf
+	
 	#EndRegion - Custom - Team AIO Mod++
 
 	If Not IsArray($Res) Or StringIsSpace($Res[0]) Or $Res[0] = "0" Or StringInStr($Res[0], "-1") <> 0 Then ; Custom - Team AIO Mod++

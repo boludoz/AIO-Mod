@@ -64,10 +64,103 @@ Func cmbCOCDistributors()
 	EndIf
 EndFunc   ;==>cmbCOCDistributors
 
+#region
 Func DistributorsUpdateGUI()
 	LoadCOCDistributorsComboBox()
 	SetCurSelCmbCOCDistributors()
 EndFunc   ;==>DistributorsUpdateGUI
+
+Func cmbEmulators()
+	getAllEmulatorsInstances()
+	Local $emulator = GUICtrlRead($g_hCmbEmulators)
+	If MsgBox($MB_YESNO, "Emulator Selection", $emulator & ", Is correct?" & @CRLF & "Any mistake and your profile will be not useful!", 10) = $IDYES Then
+		SetLog("Emulator " & $emulator & " Selected. Please select an Instance.")
+		$g_sAndroidEmulator = $emulator
+	Else
+		_GUICtrlComboBox_SelectString($g_hCmbEmulators, $g_sAndroidEmulator)
+		getAllEmulatorsInstances()
+	EndIf
+EndFunc   ;==>cmbEmulators
+
+Func cmbInstances()
+	Local $instance = GUICtrlRead($g_hCmbInstances)
+	If MsgBox($MB_YESNO, "Instance Selection", $instance & ", Is correct?" & @CRLF & "If 'yes' is necessary reboot the 'bot'.", 10) = $IDYES Then
+		SetLog("Instance " & $instance & " Selected.")
+		$g_sAndroidInstance = $instance
+		BtnSaveprofile()
+	Else
+		getAllEmulatorsInstances()
+	EndIf
+EndFunc   ;==>cmbInstances
+
+Func getAllEmulators()
+	Local $cmbString = ""
+	GUICtrlSetData($g_hCmbEmulators, '')
+	$__BlueStacks_Version = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks\", "Version")
+	If Not @error Then
+		If GetVersionNormalized($__BlueStacks_Version) < GetVersionNormalized("0.10") Then $cmbString &= "BlueStacks|"
+		If GetVersionNormalized($__BlueStacks_Version) > GetVersionNormalized("1.0") Then $cmbString &= "BlueStacks2|"
+	EndIf
+	Local $Version = RegRead($g_sHKLM & "\SOFTWARE" & $g_sWow6432Node & "\Microsoft\Windows\CurrentVersion\Uninstall\Nox\", "DisplayVersion")
+	If Not @error Then
+		$cmbString &= "Nox|"
+	EndIf
+	Local $MEmuVersion = RegRead($g_sHKLM & "\SOFTWARE" & $g_sWow6432Node & "\Microsoft\Windows\CurrentVersion\Uninstall\MEmu\", "DisplayVersion")
+	If Not @error Then
+		$cmbString &= "MEmu|"
+	EndIf
+	Local $iToolsVersion = RegRead($g_sHKLM & "\SOFTWARE" & $g_sWow6432Node & "\ThinkSky\iToolsAVM\", "DisplayVersion")
+	If Not @error Then
+		$cmbString &= "iTools|"
+	EndIf
+	Local $result = StringRight($cmbString, 1)
+	If $result == "|" Then $cmbString = StringTrimRight($cmbString, 1)
+	SetLog("All Emulator found in your machine: " & $cmbString)
+	GUICtrlSetData($g_hCmbEmulators, $cmbString)
+	_GUICtrlComboBox_SelectString($g_hCmbEmulators, $g_sAndroidEmulator)
+	getAllEmulatorsInstances()
+EndFunc   ;==>getAllEmulators
+
+Func getAllEmulatorsInstances()
+	GUICtrlSetData($g_hCmbInstances, '')
+	Local $emulator = GUICtrlRead($g_hCmbEmulators)
+	Local $path = ""
+	Switch $emulator
+		Case "BlueStacks"
+			GUICtrlSetData($g_hCmbInstances, "Android", "Android")
+			Return
+		Case "BlueStacks2"
+			GUICtrlSetData($g_hCmbInstances, "Android", "Android")
+			Return
+		Case "Nox"
+			$path = GetNoxPath() & "\BignoxVMS"
+		Case "MEmu"
+			$path = GetMEmuPath() & "\MemuHyperv VMs"
+		Case "iTools"
+			$path = GetiToolsPath() & "\Repos\VMs"
+		Case Else
+			GUICtrlSetData($g_hCmbInstances, "Android", "Android")
+		Return
+	EndSwitch
+	$path = StringReplace($path, "\\", "\")
+	Local $folders = _FileListToArray($path, "*", $FLTA_FOLDERS)
+	If @error = 1 Then
+		SetLog($emulator & " -- Path was invalid. " & $path)
+		Return
+	EndIf
+	If @error = 4 Then
+		SetLog($emulator & " -- No file(s) were found. " & $path)
+		Return
+	EndIf
+	_ArrayDelete($folders, 0)
+	GUICtrlSetData($g_hCmbInstances, _ArrayToString($folders))
+	If $emulator == $g_sAndroidEmulator Then
+		_GUICtrlComboBox_SelectString($g_hCmbInstances, $g_sAndroidInstance)
+	Else
+		_GUICtrlComboBox_SetCurSel($g_hCmbInstances, 0)
+	EndIf
+EndFunc   ;==>getAllEmulatorsInstances
+#endRegion
 
 Func AndroidSuspendFlagsToIndex($iFlags)
 	Local $idx = 0

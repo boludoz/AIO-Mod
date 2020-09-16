@@ -162,7 +162,7 @@ Func CreateLaboratorySubTab()
 		$g_hPicLabUpgrade = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnBlank, $x + 330, $y, 64, 64)
 			GUICtrlSetState(-1, $GUI_HIDE)
 	#Region - Custom lab - Team AIO Mod++
-		$g_hChkPriorityLab = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Upgrade_Laboratory", "PriorityResourceLab_01", "Priority resource") & ": ", $x + 80, $y + 75, -1, -1)
+		$g_hChkPriorityLab = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Upgrade_Laboratory", "PriorityResourceLab_001", "Priority resource (Only when choosing between another)") & ": ", $x + 80, $y + 75, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Upgrade_Laboratory", "PriorityResourceLab_02", "Enable this function to select resource priorities"))
 			GUICtrlSetOnEvent(-1, "chkPriorityResourceLab")
 			GUICtrlSetState(-1, $GUI_DISABLE)
