@@ -69,23 +69,27 @@ Func DllCallMyBot($sFunc, $sType1 = Default, $vParam1 = Default, $sType2 = Defau
 	Local $bWasSuspended = SuspendAndroid()
 	$aResult = _DllCallMyBot($sFunc, $sType1, $vParam1, $sType2, $vParam2, $sType3, $vParam3, $sType4, $vParam4, $sType5, $vParam5, $sType6, $vParam6, $sType7, $vParam7, $sType8, $vParam8, $sType9, $vParam9, $sType10, $vParam10)
 	Local $error = @error
-	Local $i = 1, $i2 = 0
+	Local $i = 1
+	Local $i2 = 0, $aResultTmp[5] ; Custom fix - Team AIO Mod++
 	While Not $error And $aResult[0] = "<GetAsyncResult>"
 		; when receiving "<GetAsyncResult>", dll waited already 100ms, and android should be resumed after 500ms for 100ms
 		If Mod($i + 5, 10) = 0 Then
-			SetDebugLog("Waiting for DLL async function " & $sFunc & " Params : " & " " & $vParam1 & " " & $vParam2 & " " & $vParam3 & " " & $vParam4 & " " & $vParam5 & " " & $vParam6 & " " & $vParam7 & " " & $vParam8 & " " & $vParam9 & " " & $vParam10)
 			$i2 += 1
+			#Region - Custom fix - Team AIO Mod++
 			If $g_sTagCallMybotCall <> "" Then 
-				SetDebugLog("Waiting for DLL async function " & $g_sTagCallMybotCall)
+				SetDebugLog("Waiting for DLL async function | Func : " & $sFunc & " Params : " & " " & $vParam1 & " " & $vParam2 & " " & $vParam3 & " " & $vParam4 & " " & $vParam5 & " " & $vParam6 & " " & $vParam7 & " " & $vParam8 & " " & $vParam9 & " " & $vParam10)
+				Else
+				SetDebugLog("Waiting for DLL async function | Tag : " & $g_sTagCallMybotCall & " Func : " & $sFunc & " Params : " & " " & $vParam1 & " " & $vParam2 & " " & $vParam3 & " " & $vParam4 & " " & $vParam5 & " " & $vParam6 & " " & $vParam7 & " " & $vParam8 & " " & $vParam9 & " " & $vParam10)
 			EndIf
+			#EndRegion - Custom fix - Team AIO Mod++
 			ResumeAndroid()
 		EndIf
 		$i += 1
-		If _Sleep(100) Or 20 < $i2 Then
+		If _Sleep(100) Or 20 < $i2 Then ; Custom fix - Team AIO Mod++
 			ResumeAndroid()
-			$aResult[0] = ""
+			$aResult = $aResultTmp ; Custom fix - Team AIO Mod++
+			$g_sTagCallMybotCall = "" ; Custom fix - Team AIO Mod++
 			$g_bLibMyBotActive = False
-			$g_sTagCallMybotCall = ""
 			Return SetError(0, 0, $aResult)
 		EndIf
 		SuspendAndroid()

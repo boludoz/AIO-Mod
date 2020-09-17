@@ -419,14 +419,10 @@ Func NotifyRemoteControlProc()
 						SetLog("Notify Telegram: Your request has been received. Bot is now stopped", $COLOR_SUCCESS)
 						If $g_bRunState = True Then
 							NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_02", "Request to Stop...") & "%0A" & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_19", "Please wait..."))
-							$g_iAndroidCoCPid = GetAndroidProcessPID(Default, False) ; check is CoC app is still open
-							While $g_iAndroidCoCPid <> 0
-								; Close Game
-								CloseCoC()
-								; Check is CoC app is still open
-								$g_iAndroidCoCPid = GetAndroidProcessPID(Default, False)
-								If $g_iAndroidCoCPid = 0 Then ExitLoop
-							WEnd
+							#Region - Custom - Team AIO Mod++
+							; Close Game
+							CloseCoC()
+							#EndRegion - Custom - Team AIO Mod++
 							NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_02", "Request to Stop...") & "%0A" & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_03", "Your bot is now stopped"))
 							btnStop()
 						Else

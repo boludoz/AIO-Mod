@@ -4085,54 +4085,36 @@ Func GetAndroidProcessPID($sPackage = Default, $bForeground = True, $iRetryCount
 	;USER      PID   PPID  VSIZE  RSS  PRIO  NICE  RTPRI SCHED  WCHAN            PC  NAME
 	;u0_a54    12560 84    1336996 189660 10    -10   0     0     futex_wait b7725424 S com.supercell.clashofclans
 	;u0_a54    13303 84    1338548 188464 16    -4    0     0     sys_epoll_ b7725424 S com.supercell.clashofclans
+	#Region - Custom fix - Team AIO Mod++
 	If AndroidInvalidState() Then Return 0
-	Local $cmd = "set result=$(ps -p|grep """ & $g_sAndroidGamePackage & """ >&2)"
-	Local $output = AndroidAdbSendShellCommand($cmd)
-	Local $error = @error
-	SetError(0)
-	If $error = 0 Then
-		SetDebugLog("$g_sAndroidGamePackage: " & $g_sAndroidGamePackage)
-		SetDebugLog("GetAndroidProcessPID StdOut :" & $output)
-		$output = StringStripWS($output, 7)
-		Local $aPkgList[0][26] ; adjust to any suffisent size to accommodate
-		Local $iCols
-		_ArrayAdd($aPkgList, $output, 0, " ", @LF, $ARRAYFILL_FORCE_STRING)
-
-		Local $CorrectSCHED = "0"
-		Switch $g_sAndroidGamePackage
-			Case $g_sAndroidGamePackage = "com.tencent.tmgp.supercell.clashofclans"
-				; scheduling policy : SCHED_BATCH = 3
-				$CorrectSCHED = "3"
-			Case Else
-				; scheduling policy : SCHED_NORMAL = 0
-				$CorrectSCHED = "0"
-		EndSwitch
-
-		For $i = 1 To UBound($aPkgList)
-			$iCols = _ArraySearch($aPkgList, "", 0, 0, 0, 0, 1, $i, True)
-			If $iCols > 9 And $aPkgList[$i - 1][$iCols - 1] = $g_sAndroidGamePackage Then
-				; process running
-				If $bForeground = True And $aPkgList[$i - 1][8] <> $CorrectSCHED Then
-					; not foreground
-					If $iRetryCount < 2 Then
-						; retry 2 times
-						Sleep(100)
-						Return GetAndroidProcessPID($sPackage, $bForeground, $iRetryCount + 1)
-					EndIf
-					SetDebugLog("Android process " & $sPackage & " not running in foreground")
-					Return 0
-				EndIf
-				Return Int($aPkgList[$i - 1][1])
+	Local $sDumpsys = AndroidAdbSendShellCommand("dumpsys activity activities | grep mFocusedActivity", Default)
+	If @error = 0 Then
+		; This check if coc is foreground.
+		If $bForeground = True And StringInStr($sDumpsys, "mFocusedActivity") > 0 And StringInStr($sDumpsys, $sPackage) > 0 Then 
+			$sDumpsys = StringSplit(StringStripWS(AndroidAdbSendShellCommand("set result=$(ps -p|grep """ & $sPackage & """ >&2)"), $STR_STRIPSPACES), " ", $STR_NOCOUNT)
+			If UBound($sDumpsys) > 2 Then
+				SetDebugLog("GetAndroidProcessPID | Foreground? " & $bForeground & " $g_sAndroidGamePackage : " & $sPackage &" | StdOut : " & $sDumpsys)
+				Return $sDumpsys[1]
 			EndIf
-		Next
+		ElseIf $bForeground = False Or StringInStr($sDumpsys, "mFocusedActivity") < 1 Then 
+			$sDumpsys = StringSplit(StringStripWS(AndroidAdbSendShellCommand("set result=$(ps -p|grep """ & $sPackage & """ >&2)"), $STR_STRIPSPACES), " ", $STR_NOCOUNT)
+			If UBound($sDumpsys) > 2 Then
+				SetDebugLog("GetAndroidProcessPID | Foreground? " & $bForeground & " $g_sAndroidGamePackage : " & $sPackage &" | StdOut : " & $sDumpsys)
+				Return $sDumpsys[1]
+			EndIf
+		EndIf
 	EndIf
+	
+	; retry 2 times
 	If $iRetryCount < 2 Then
-		; retry 2 times
-		Sleep(100)
+		If _Sleep(100) Then Return
 		Return GetAndroidProcessPID($sPackage, $bForeground, $iRetryCount + 1)
 	EndIf
+	
 	SetDebugLog("Android process " & $sPackage & " not running")
-	Return SetError($error, 0, 0)
+	Return 0
+    #EndRegion - Custom fix - Team AIO Mod++
+
 EndFunc   ;==>GetAndroidProcessPID
 
 Func AndroidToFront($hHWndAfter = Default, $sSource = "Unknown")

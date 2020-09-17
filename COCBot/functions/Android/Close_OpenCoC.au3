@@ -21,15 +21,35 @@ Func CloseCoC($ReOpenCoC = False, $bCheckRunState = True)
 
 	Local $Adb = ""
 	If $ReOpenCoC Then
-		SetLog("Please wait for CoC restart......", $COLOR_ERROR) ; Let user know we need time...
+		SetLog("Please wait for CoC restart.", $COLOR_ERROR) ; Let user know we need time...
 	Else
-		SetLog("Closing CoC......", $COLOR_ERROR) ; Let user know what we do...
+		SetLog("Closing CoC.", $COLOR_ERROR) ; Let user know what we do...
 	EndIf
 	WinGetAndroidHandle()
 	If $bCheckRunState And Not $g_bRunState Then Return FuncReturn()
-	;SendAdbCommand("shell am force-stop " & $g_sAndroidGamePackage)
-	;AndroidHomeButton()
-	AndroidAdbSendShellCommand("am force-stop " & $g_sAndroidGamePackage, Default, Default, False)
+	
+	#Region - Custom - Team AIO Mod++
+	$g_iAndroidCoCPid = GetAndroidProcessPID(Default, False) ; check is CoC app is still open
+	Local $i = 0
+	Do
+		; Check if is necessary  return.
+		If $bCheckRunState And Not $g_bRunState Then Return FuncReturn()
+
+		; Sleep
+		If $i > 0 Then _Sleep(500)
+		
+		; Close Game
+		AndroidAdbSendShellCommand("am force-stop " & $g_sAndroidGamePackage, Default, Default, False)
+		
+		; Check is CoC app is still open
+		$g_iAndroidCoCPid = GetAndroidProcessPID(Default, False)
+		
+		; Limit
+		$i += 1
+		
+	Until $g_iAndroidCoCPid < 1 Or $i > 3
+	#EndRegion - Custom - Team AIO Mod++
+	
 	ResetAndroidProcess()
 	_Sleep($DELAYCLOSEOPEN3000)
 	If $bCheckRunState And Not $g_bRunState Then Return FuncReturn()
