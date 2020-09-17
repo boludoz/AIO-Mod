@@ -90,7 +90,7 @@ Func WaitForClouds()
 			$iLastTime += 1
 			#Region - Return Home by Time - Team AIO Mod++
 			If $g_bReturnTimerEnable = True Then
-				If $iSearchTime > $g_iTxtReturnTimer Then
+				If $iSearchTime > Random(0.80, 1.20) * $g_iTxtReturnTimer Then
 				    SetLog("Return home by time due to the long wait in the cloud.", $COLOR_INFO)
 					Click(70, 680) ; Return Home
 					$g_bIsClientSyncError = True ; disable fast OOS restart if not simple error and restarting CoC
