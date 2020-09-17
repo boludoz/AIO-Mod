@@ -189,6 +189,12 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			Next
 
 			GUICtrlSetData($g_hDayTotalSieges, _NumberFormat($g_iTotalDonateStatsSiegeMachines, True)) ; Donation records - Team AIO Mod++
+
+			#Region - Return Home by Time - Team AIO Mod++
+			GUICtrlSetState($g_hChkReturnTimerEnable, $g_bReturnTimerEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetData($g_hTxtReturnTimer, $g_iTxtReturnTimer)
+			chkReturnTimer()
+			#EndRegion - Return Home by Time - Team AIO Mod++
 			
 			chkMaxSidesSF()
 			ChkReqCCAlways()
@@ -291,6 +297,10 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			$g_iTotalDonateStatsSiegeMachines = GUICtrlRead($g_hDayTotalSieges)
 			; ------------;
 			
+			#Region - Return Home by Time - Team AIO Mod++
+			$g_bReturnTimerEnable = (GUICtrlRead($g_hChkReturnTimerEnable) = $GUI_CHECKED)
+			$g_iTxtReturnTimer = GUICtrlRead($g_hTxtReturnTimer)
+			#EndRegion - Return Home by Time - Team AIO Mod++
 	EndSwitch
 
 EndFunc   ;==>ApplyConfig_MOD_MiscTab

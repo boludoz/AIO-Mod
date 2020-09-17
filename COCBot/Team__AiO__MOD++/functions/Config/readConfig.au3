@@ -135,6 +135,11 @@ Func ReadConfig_MOD_MiscTab()
 	IniReadS($g_iTotalDonateStatsSiegeMachines, $g_sProfileConfigPath, "DonRecords", "TotalDonateStatsSieges", $g_iTotalDonateStatsSiegeMachines, "Int")
 	; ------------;
 
+	#Region - Return Home by Time - Team AIO Mod++
+	IniReadS($g_bReturnTimerEnable, $g_sProfileConfigPath, "search", "ChkReturnTimerEnable", False, "Bool")
+	IniReadS($g_iTxtReturnTimer, $g_sProfileConfigPath, "search", "ReturnTimer", 5, "int")
+	#EndRegion - Return Home by Time - Team AIO Mod++
+
 EndFunc   ;==>ReadConfig_MOD_MiscTab
 
 Func ReadConfig_MOD_SuperXP()

@@ -144,6 +144,11 @@ Func SaveConfig_MOD_MiscTab()
 	_Ini_Add("DonRecords", "TotalDonateStatsSieges", $g_iTotalDonateStatsSiegeMachines)
 	; ------------;
 
+	#Region - Return Home by Time - Team AIO Mod++
+	_Ini_Add("search", "ChkReturnTimerEnable", $g_bReturnTimerEnable ? 1 : 0)
+	_Ini_Add("search", "ReturnTimer", $g_iTxtReturnTimer)
+	#EndRegion - Return Home by Time - Team AIO Mod++
+
 EndFunc   ;==>SaveConfig_MOD_MiscTab
 
 Func SaveConfig_MOD_SuperXP()

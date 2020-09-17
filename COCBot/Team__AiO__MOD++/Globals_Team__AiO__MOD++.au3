@@ -28,6 +28,11 @@ Global Enum $eIcnBB = 1 , $eIcnLabBB, $eIcnBBElixir, $eIcnBBGold, $eIcnBBTrophie
 
 #EndRegion - Icn - Team AIO Mod++
 
+#Region - Return Home by Time - Team AIO Mod++
+Global $g_hChkReturnTimerEnable = 0, $g_hTxtReturnTimer = 0
+Global $g_bReturnTimerEnable = False, $g_iTxtReturnTimer = 5
+#EndRegion - Return Home by Time - Team AIO Mod++
+
 #Region - Lab Priority System
 Global $g_hChkPriorityLab, $g_hCmbPriorityLab, $g_hLblOnlyUpgrade, $g_hChkPriorityLabTroops, $g_hChkPriorityLabSpells, $g_hChkPriorityLabSieges
 Global  $g_bPriorityLab, $g_iCmbPriorityLab, $g_bPriorityLabSpells = True, $g_bPriorityLabTroops = True, $g_bPriorityLabSieges = True
