@@ -4093,13 +4093,13 @@ Func GetAndroidProcessPID($sPackage = Default, $bForeground = True, $iRetryCount
 		If $bForeground = True And StringInStr($sDumpsys, "mFocusedActivity") > 0 And StringInStr($sDumpsys, $sPackage) > 0 Then 
 			$sDumpsys = StringSplit(StringStripWS(AndroidAdbSendShellCommand("set result=$(ps -p|grep """ & $sPackage & """ >&2)"), $STR_STRIPSPACES), " ", $STR_NOCOUNT)
 			If UBound($sDumpsys) > 2 Then
-				SetDebugLog("GetAndroidProcessPID | Foreground? " & $bForeground & " $g_sAndroidGamePackage : " & $sPackage &" | StdOut : " & $sDumpsys)
+				If $g_bDebugAndroid Or $g_bDebugSetlog Then SetLog("GetAndroidProcessPID | Foreground? " & $bForeground & " $g_sAndroidGamePackage : " & $sPackage &" | StdOut : " & $sDumpsys, $COLOR_INFO)
 				Return $sDumpsys[1]
 			EndIf
 		ElseIf $bForeground = False Or StringInStr($sDumpsys, "mFocusedActivity") < 1 Then 
 			$sDumpsys = StringSplit(StringStripWS(AndroidAdbSendShellCommand("set result=$(ps -p|grep """ & $sPackage & """ >&2)"), $STR_STRIPSPACES), " ", $STR_NOCOUNT)
 			If UBound($sDumpsys) > 2 Then
-				SetDebugLog("GetAndroidProcessPID | Foreground? " & $bForeground & " $g_sAndroidGamePackage : " & $sPackage &" | StdOut : " & $sDumpsys)
+				If $g_bDebugAndroid Or $g_bDebugSetlog Then SetLog("GetAndroidProcessPID | Foreground? " & $bForeground & " $g_sAndroidGamePackage : " & $sPackage &" | StdOut : " & $sDumpsys, $COLOR_INFO)
 				Return $sDumpsys[1]
 			EndIf
 		EndIf
