@@ -31,7 +31,7 @@ Func Click($x, $y, $times = 1, $speed = 0, $debugtxt = "", $bRandomInLoop = True
 		If $x <= 0 Or $x >= $g_iGAME_WIDTH Then $x = $aPrevCoor[0]
 		If $y <= 0 Or $y >= $g_iGAME_HEIGHT Then $y = $aPrevCoor[1]
 	EndIf
-	
+
 	If $g_bDebugClick Or TestCapture() Then
 		$txt = _DecodeDebug($debugtxt)
 		SetLog("Click " & $x & "," & $y & "," & $times & "," & $speed & " " & $debugtxt & $txt, $COLOR_ACTION)
@@ -41,7 +41,7 @@ Func Click($x, $y, $times = 1, $speed = 0, $debugtxt = "", $bRandomInLoop = True
 	If TestCapture() Then Return
 
 	If $g_bAndroidAdbClick = True Then
-		For $i = 1 To $times 
+		For $i = 1 To $times
 			If $g_bUseRandomClick And $bRandomInLoop Then
 				$x = $aPrevCoor[0] + Random(-5, 5, 1)
 				$y = $aPrevCoor[1] + Random(-5, 5, 1)
@@ -49,7 +49,7 @@ Func Click($x, $y, $times = 1, $speed = 0, $debugtxt = "", $bRandomInLoop = True
 				If $y <= 0 Or $y >= $g_iGAME_HEIGHT Then $y = $aPrevCoor[1]
 			EndIf
 			AndroidClick($x, $y, 1, $speed)
-			
+
 			If _Sleep(Round(Random(0.80, 1.25) * $speed), False) Then ExitLoop
 		Next
 		Return
@@ -142,7 +142,7 @@ Func PureClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
 		If $x <= 0 Or $x >= $g_iGAME_WIDTH Then $x = $aPrevCoor[0]
 		If $y <= 0 Or $y >= $g_iGAME_HEIGHT Then $y = $aPrevCoor[1]
 	EndIf
-	
+
 	If $g_bDebugClick Or TestCapture() Then
 		$txt = _DecodeDebug($debugtxt)
 		SetLog("PureClick X" & $x & "," & $y & "," & $times & "," & $speed & " " & $debugtxt & $txt, $COLOR_ACTION)
@@ -151,8 +151,8 @@ Func PureClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
 	If TestCapture() Then Return
 
 	If $g_bAndroidAdbClick = True Then
-		For $i = 1 To $times 
-			AndroidClick($x, $y, 1, $speed)
+		For $i = 1 To $times
+			AndroidClick($x, $y, 1, $speed, False)
 			If _Sleep($speed, False) Then ExitLoop
 		Next
 		Return
@@ -193,7 +193,7 @@ Func GemClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
 		If $x <= 0 Or $x >= $g_iGAME_WIDTH Then $x = $aPrevCoor[0]
 		If $y <= 0 Or $y >= $g_iGAME_HEIGHT Then $y = $aPrevCoor[1]
 	EndIf
-	
+
 	If $g_bDebugClick Or TestCapture() Then
 		$txt = _DecodeDebug($debugtxt)
 		SetLog("GemClick " & $x & "," & $y & "," & $times & "," & $speed & " " & $debugtxt & $txt, $COLOR_ACTION)
@@ -203,7 +203,7 @@ Func GemClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
 	If TestCapture() Then Return
 
 	If $g_bAndroidAdbClick = True Then
-		For $i = 1 To $times 
+		For $i = 1 To $times
 			If isGemOpen(True) Then Return False
 			AndroidClick($x, $y, 1, $speed)
 			If _Sleep($speed, False) Then ExitLoop
