@@ -61,7 +61,7 @@ Opt("TrayOnEventMode", 1)
 
 ; All executable code is in a function block, to detect coding errors, such as variable declaration scope problems
 InitializeBot()
-getAllEmulators()
+getAllEmulators() ; Custom - Team AIO Mod++
 
 ; Hand over control to main loop
 MainLoop(CheckPrerequisites())
@@ -1114,7 +1114,7 @@ Func AttackMain() ;Main control for attack functions
 			ClickAway()
 			If $g_bUpdateSharedPrefs Then PullSharedPrefs()
 			If VillageSearch(True) = False Then
-				SetLog("Ops | AttackMain 0x1.", $COLOR_ERROR)
+				SetLog("AttackMain | Return from.", $COLOR_ERROR)
 				checkMainScreen()
 				$g_bIsClientSyncError = False
 				Return False

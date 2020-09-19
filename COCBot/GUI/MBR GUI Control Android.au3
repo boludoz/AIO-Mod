@@ -115,7 +115,7 @@ Func getAllEmulators()
 	EndIf
 	Local $result = StringRight($cmbString, 1)
 	If $result == "|" Then $cmbString = StringTrimRight($cmbString, 1)
-	SetLog("All Emulator found in your machine: " & $cmbString)
+	If $g_bDebugAndroid Then SetLog("All Emulator found in your machine: " & $cmbString, $COLOR_INFO)
 	GUICtrlSetData($g_hCmbEmulators, $cmbString)
 	_GUICtrlComboBox_SelectString($g_hCmbEmulators, $g_sAndroidEmulator)
 	getAllEmulatorsInstances()

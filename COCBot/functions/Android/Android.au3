@@ -1537,7 +1537,7 @@ Func ConnectAndroidAdb($rebootAndroidIfNeccessary = $g_bRunState, $bStartOnlyAnd
 	Return FuncReturn(_ConnectAndroidAdb($rebootAndroidIfNeccessary, $bStartOnlyAndroid, $timeout))
 EndFunc   ;==>ConnectAndroidAdb
 
-Func _ConnectAndroidAdb($rebootAndroidIfNeccessary = $g_bRunState, $bStartOnlyAndroid = False, $timeout = 15000)
+Func _ConnectAndroidAdb($rebootAndroidIfNeccessary = $g_bRunState, $bStartOnlyAndroid = False, $timeout = 15000, $iRecursive = 0) ; Custom Fix - Team AIO Mod++
 	If $g_sAndroidAdbPath = "" Or FileExists($g_sAndroidAdbPath) = 0 Then
 		SetLog($g_sAndroidEmulator & " ADB Path not valid: " & $g_sAndroidAdbPath, $COLOR_ERROR)
 		Return 0
@@ -1604,7 +1604,9 @@ Func _ConnectAndroidAdb($rebootAndroidIfNeccessary = $g_bRunState, $bStartOnlyAn
 				$bRebooted = RebootAndroid()
 				If Not $bRebooted Then Return 0
 			Else
-				SetDebugLog("ConnectAndroidAdb: Reboot Android nor ADB Daemon not allowed", $COLOR_ERROR)
+				; Custom Fix - Team AIO Mod++
+				SetDebugLog("ConnectAndroidAdb: Reboot Android not ADB Daemon not allowed. Try x" & $iRecursive + 1, $COLOR_ERROR)
+				If $iRecursive < 3 Then Return _ConnectAndroidAdb($rebootAndroidIfNeccessary, $bStartOnlyAndroid, $timeout, $iRecursive + 1)
 				Return 0
 			EndIf
 
