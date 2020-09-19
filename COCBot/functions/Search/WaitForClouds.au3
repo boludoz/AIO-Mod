@@ -13,7 +13,7 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func WaitForClouds()
+Func WaitForClouds($hBigMinuteTimer = 0) ; Return Home by Time - Team AIO Mod++
 
 	If $g_bDebugSetlog Then SetDebugLog("Begin WaitForClouds:", $COLOR_DEBUG1)
 	$g_bCloudsActive = True
@@ -25,6 +25,18 @@ Func WaitForClouds()
 
 	Local $maxSearchCount = 720 ; $maxSearchCount * 250ms ($DELAYGETRESOURCES1) = seconds wait time before reset in lower leagues: 720*250ms = 3 minutes
 	Local $maxLongSearchCount = 7 ; $maxLongSearchCount * $maxSearchCount = seconds total wait time in higher leagues: ; 21 minutes, set a value here but is never used unless error
+
+	#Region - Return Home by Time - Team AIO Mod++
+	If $g_bReturnTimerEnable = True And $hBigMinuteTimer > 0 Then
+		If (__TimerDiff($hBigMinuteTimer) / 60000) > Random(0.80, 1.20) * $g_iTxtReturnTimer Then
+		    SetLog("Return home by time due to the long wait in the cloud.", $COLOR_INFO)
+			Click(70, 680) ; Return Home
+			$g_bIsClientSyncError = True ; disable fast OOS restart if not simple error and restarting CoC
+			$g_bRestart = True
+			Return
+		EndIf
+	EndIf
+	#EndRegion - Return Home by Time - Team AIO Mod++
 
 	Switch Int($g_aiCurrentLoot[$eLootTrophy]) ; add randomization to SearchCounters (long cloud keep alive time) for higher leagues
 		Case 3700 To 4099 ; champion 1 league
@@ -89,8 +101,8 @@ Func WaitForClouds()
 			SetLog("Cloud wait time " & StringFormat("%.1f", $iSearchTime) & " minute(s)", $COLOR_INFO)
 			$iLastTime += 1
 			#Region - Return Home by Time - Team AIO Mod++
-			If $g_bReturnTimerEnable = True Then
-				If $iSearchTime > Random(0.80, 1.20) * $g_iTxtReturnTimer Then
+			If $g_bReturnTimerEnable = True And $hBigMinuteTimer > 0 Then
+				If (__TimerDiff($hBigMinuteTimer) / 60000) > Random(0.80, 1.20) * $g_iTxtReturnTimer Then
 				    SetLog("Return home by time due to the long wait in the cloud.", $COLOR_INFO)
 					Click(70, 680) ; Return Home
 					$g_bIsClientSyncError = True ; disable fast OOS restart if not simple error and restarting CoC

@@ -532,16 +532,10 @@ Func IsClanOverview()
 	Return $bResult
 EndFunc   ;==>IsClanOverview
 
-;Func IsWarMenu()
-;	Local $bResult = _ColorCheck(_GetPixelColor(826, 34, True), "FFFFFF", 20)
-;	Return $bResult
-;EndFunc   ;==>IsWarMenu
-
-Func randomSleep($SleepTime, $Range = 0)
-	If $g_bRunState = False Then Return True
-	If $Range = 0 Then $Range = Round($SleepTime / 5)
-	Local $SleepTimeF = Round(Random($SleepTime - $Range, $SleepTime + $Range, 1))
-	If $g_bDebugClick Then SetLog("Default sleep : " & $SleepTime & " - Random sleep : " & $SleepTimeF, $COLOR_ORANGE)
+Func randomSleep($iSleepTime, $iRange = Default)
 	If Not $g_bRunState Or $g_bRestart Then Return
-	Return _Sleep($SleepTimeF) = True
+	If $iRange = Default Then $iRange = $iSleepTime * 0.20
+	Local $iSleepTimeF = Abs(Round($iSleepTime + Random( -Abs($iRange), Abs($iRange))))
+	If $g_bDebugClick Or $g_bDebugSetlog Then SetLog("Default sleep : " & $iSleepTime & " - Random sleep : " & $iSleepTimeF, $COLOR_ORANGE)
+	Return _Sleep($iSleepTimeF)
 EndFunc   ;==>If randomSleep

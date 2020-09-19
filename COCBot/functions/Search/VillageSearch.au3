@@ -113,6 +113,7 @@ Func _VillageSearch($bIncludePrepare = False) ;Control for searching a village t
 		If $g_bOutOfGold Then Return ; Check flag for enough gold to search
 	EndIf
 	
+	Local $hBigMinuteTimer = __TimerInit() ; Return Home by Time - Team AIO Mod++
 	While 1 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;### Main Search Loop ###;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 		; cleanup some vars used by imgloc just in case. usend in TH and DeadBase ( imgloc functions)
@@ -131,7 +132,7 @@ Func _VillageSearch($bIncludePrepare = False) ;Control for searching a village t
 		If $g_bRestart Then Return ; exit func
 
 		; ----------------- READ ENEMY VILLAGE RESOURCES  -----------------------------------
-		WaitForClouds() ; Wait for clouds to disappear
+		WaitForClouds($hBigMinuteTimer) ; Return Home by Time - Team AIO Mod++
 		AttackRemainingTime(True) ; Timer for knowing when attack starts, in 30 Sec. attack automatically starts and lasts for 3 Minutes
 		If $g_bRestart Then Return ; exit func
 

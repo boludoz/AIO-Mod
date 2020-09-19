@@ -42,51 +42,34 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 	_CaptureRegions()
 
 	#Region - Custom - Team AIO Mod++
+	If checkObstacles_Network() Then Return True
+	
 	If Not $bRecursive Then
-		If checkObstacles_Network() Then Return True
 		If checkObstacles_GfxError() Then Return True
 
-		Local $iDo = 0, $bOut = False
-		Do
-			$bOut = False
-			If ($iDo > 0) Then _CaptureRegions()
-			Local $aImgX = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Obstacles", 1, "FV", False, "X|OK")
-			If Not IsArray($aImgX) Then ContinueLoop
+		Local $aImgX = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Obstacles", 1, "FV", False, "X|OK")
+		If IsArray($aImgX) Then
 			If (StringInStr($aImgX[0][0], "X") > 0) Then
-				Select
-					; Shop X | Shield X.
-					Case (793 < $aImgX[0][1] And 14 < $aImgX[0][2] And 850 > $aImgX[0][1] And 65 > $aImgX[0][2])
-						SetDebugLog("Detected _checkObstacles Shop X | Shield X.")
-						$bOut = True
-						; Profile X | Trophy X.
-					Case (801 < $aImgX[0][1] And 48 < $aImgX[0][2] And 855 > $aImgX[0][1] And 102 > $aImgX[0][2])
-						SetDebugLog("Detected _checkObstacles Trophy X.")
-						$bOut = True
-						; Army X.
-					Case (801 < $aImgX[0][1] And 99 < $aImgX[0][2] And 855 > $aImgX[0][1] And 155 > $aImgX[0][2])
-						SetDebugLog("Detected _checkObstacles Army X.")
-						$bOut = True
-				EndSelect
-			ElseIf (StringInStr($aImgX[0][0], "OK") > 0) Then
-				Select
-					; Season end.
-					Case (342 < $aImgX[0][1] And 485 < $aImgX[0][2] And 506 > $aImgX[0][1] And 560 > $aImgX[0][2])
-						SetDebugLog("Detected _checkObstacles Season end.")
-						$bOut = True
-						; Season challenge.
-					Case (310 < $aImgX[0][1] And 532 < $aImgX[0][2] And 530 > $aImgX[0][1] And 600 > $aImgX[0][2])
-						SetDebugLog("Detected _checkObstacles Season challenge.")
-						$bOut = True
-				EndSelect
+				; Shop X | Shield X.
+				If (793 < $aImgX[0][1] And 14 < $aImgX[0][2] And 850 > $aImgX[0][1] And 65 > $aImgX[0][2]) Then
+					SetDebugLog("Detected _checkObstacles Shop X | Shield X.")
+					Click($aImgX[0][1], $aImgX[0][2])
+					If RandomSleep(1500) Then Return
+				; Profile X | Trophy X.
+				ElseIf (801 < $aImgX[0][1] And 48 < $aImgX[0][2] And 855 > $aImgX[0][1] And 102 > $aImgX[0][2]) Then
+					SetDebugLog("Detected _checkObstacles Trophy X.")
+					Click($aImgX[0][1], $aImgX[0][2])
+					If RandomSleep(1500) Then Return
+				; Army X
+				ElseIf (801 < $aImgX[0][1] And 99 < $aImgX[0][2] And 855 > $aImgX[0][1] And 155 > $aImgX[0][2]) Then
+					SetDebugLog("Detected _checkObstacles Army X.")
+					Click($aImgX[0][1], $aImgX[0][2])
+					If RandomSleep(1500) Then Return
+				EndIf
+			ElseIf (StringInStr($aImgX[0][0], "OK") > 0) And _CheckPixel($aIsMainGrayed, False) Then
+				ClickAway(True)
 			EndIf
-			$iDo += 1
-			If $bOut = True Then
-				Click($aImgX[0][1] + Random(0, 5, 1), $aImgX[0][2] + Random(0, 5, 1))
-				If RandomSleep(1500) Then Return
-				ExitLoop
-			EndIf
-		Until Not IsArray($aImgX) Or ($iDo > 3) Or $bOut
-		If ($iDo > 0) Then _CaptureRegions()
+		EndIF
 	EndIf
 	
 	_CaptureRegions()

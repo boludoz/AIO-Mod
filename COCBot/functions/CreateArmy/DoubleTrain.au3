@@ -238,7 +238,6 @@ Func GetCurrentArmy($x_start, $y_start, $sCalledFrom = "")
 	If Not $g_bRunState Then Return $aResult
 
 	; [0] = Current Army  | [1] = Total Army Capacity  | [2] = Remain Space for the current Army
-	For $i=0 To 5
 	Local $iOCRResult = getArmyCapacityOnTrainTroops($x_start, $y_start)
 
 	If StringInStr($iOCRResult, "#") Then
@@ -246,13 +245,9 @@ Func GetCurrentArmy($x_start, $y_start, $sCalledFrom = "")
 		$aResult[0] = Number($aTempResult[0])
 		$aResult[1] = Number($aTempResult[1]) / 2
 		$aResult[2] = $aResult[1] - $aResult[0]
-		ExitLoop
 	Else
 		SetLog("DEBUG | ERROR on GetCurrentArmy " & $sCalledFrom, $COLOR_ERROR)
-		SetDebugLog("GetCurrentArmy Attempt#"&($i+1))
-		If _Sleep(750) Then Return
 	EndIf
-	Next
 
 	Return $aResult
 

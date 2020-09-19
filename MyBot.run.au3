@@ -1167,12 +1167,15 @@ EndFunc   ;==>Attack
 
 #Region - Custom - Team AIO Mod++
 Func _RunFunction($sAction)
-;	If $g_bDebugFuncCall Then SetLog('@@ (1143) :(' & @MIN & ':' & @SEC & ') _RunFunction()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 	If $g_bDebugFuncCall Then SetLog('@ _RunFunction @ (1143) :(' & @MIN & ':' & @SEC & ')' & $sAction & @CRLF, $COLOR_ACTION) ;### Function Trace
 	FuncEnter(_RunFunction)
+	Static $hTimeForCheck = __TimerInit()
 	; ensure that builder base flag is false
 	$g_bStayOnBuilderBase = False
-	checkMainScreen(False)
+	If __TimerDiff($hTimeForCheck) > 3000 Then 
+		checkMainScreen(False)
+		$hTimeForCheck = __TimerInit()
+	EndIf
 	Local $bResult = __RunFunction($sAction)
 	; ensure that builder base flag is false
 	$g_bStayOnBuilderBase = False
@@ -1185,23 +1188,18 @@ Func __RunFunction($sAction)
 	Switch $sAction
 		Case "Collect"
 			Collect()
-			;If RandomSleep($DELAYRUNBOT1) Then Return
 		Case "CheckTombs"
 			CheckTombs()
-			;If RandomSleep($DELAYRUNBOT3) Then Return
 		Case "CleanYard"
 			CleanYard()
 		Case "ReplayShare"
 			ReplayShare($g_bShareAttackEnableNow)
-			;If RandomSleep($DELAYRUNBOT3) Then Return
 		Case "NotifyReport"
 			NotifyReport()
-			;If RandomSleep($DELAYRUNBOT3) Then Return
 		Case "DonateCC"
 			If $g_iActiveDonate And $g_bChkDonate And Not $g_bChkOnlyFarm Then ; Only farm - Team AIO Mod++
 				; if in "Halt/Donate" don't skip near full army
 				If (Not SkipDonateNearFullTroops(True) Or $g_iCommandStop = 3 Or $g_iCommandStop = 0) And BalanceDonRec(True) Then DonateCC()
-				If Not RandomSleep($DELAYRUNBOT1) Then checkMainScreen(False)
 			EndIf
 		Case "DonateCC,Train"
 			If $g_iActiveDonate And $g_bChkDonate And Not $g_bChkOnlyFarm Then ; Only farm - Team AIO Mod++
@@ -1209,7 +1207,6 @@ Func __RunFunction($sAction)
 					getArmyTroopCapacity(True, False)
 					If RandomSleep($DELAYRESPOND) Then Return
 					getArmySpellCapacity(False, True)
-					If RandomSleep($DELAYRESPOND) Then Return
 				EndIf
 				; if in "Halt/Donate" don't skip near full army
 				If (Not SkipDonateNearFullTroops(True) Or $g_iCommandStop = 3 Or $g_iCommandStop = 0) And BalanceDonRec(True) Then DonateCC()
@@ -1218,7 +1215,6 @@ Func __RunFunction($sAction)
 			If $g_bTrainEnabled Then ; check for training enabled in halt mode
 				If $g_iActualTrainSkip < $g_iMaxTrainSkip Then
 					TrainSystem()
-					If RandomSleep($DELAYRUNBOT1) Then Return
 				Else
 					SetLog("Humanize bot, prevent to delete and recreate troops " & $g_iActualTrainSkip + 1 & "/" & $g_iMaxTrainSkip, $color_blue)
 					$g_iActualTrainSkip = $g_iActualTrainSkip + 1
@@ -1236,62 +1232,45 @@ Func __RunFunction($sAction)
 			EndIf
 		Case "BoostBarracks"
 			BoostBarracks()
-			;If RandomSleep($DELAYRESPOND) Then Return
 		Case "BoostSpellFactory"
 			BoostSpellFactory()
-			;If RandomSleep($DELAYRESPOND) Then Return
 		Case "BoostWorkshop"
 			BoostWorkshop()
-			;If RandomSleep($DELAYRESPOND) Then Return
 		Case "BoostKing"
 			BoostKing()
-			;If RandomSleep($DELAYRESPOND) Then Return
 		Case "BoostQueen"
 			BoostQueen()
-			;If RandomSleep($DELAYRESPOND) Then Return
 		Case "BoostWarden"
 			BoostWarden()
-			;If RandomSleep($DELAYRESPOND) Then Return
 		Case "BoostChampion"
 			BoostChampion()
-			;If RandomSleep($DELAYRESPOND) Then Return
 		Case "BoostEverything"
 			BoostEverything()
-			;If RandomSleep($DELAYRESPOND) Then Return
 		Case "DailyChallenge"
 			DailyChallenges()
-			;If RandomSleep($DELAYRUNBOT3) Then Return
 		Case "LabCheck"
 			LabGuiDisplay()
-			;If RandomSleep($DELAYRUNBOT3) Then Return
 		Case "RequestCC"
 			RequestCC()
-			If Not RandomSleep($DELAYRUNBOT1) Then checkMainScreen(False)
 		Case "Laboratory"
 			Laboratory()
-			If Not RandomSleep($DELAYRUNBOT3) Then checkMainScreen(False)
 		Case "UpgradeHeroes"
 			UpgradeHeroes()
-			;If RandomSleep($DELAYRUNBOT3) Then Return
 		Case "UpgradeBuilding"
 			UpgradeBuilding()
 			If RandomSleep($DELAYRUNBOT3) Then Return
 			AutoUpgrade()
-			;If RandomSleep($DELAYRUNBOT3) Then Return
 		Case "UpgradeWall"
 			$g_iNbrOfWallsUpped = 0
 			UpgradeWall()
-			;If RandomSleep($DELAYRUNBOT3) Then Return
 			; BBase - Team AIO Mod++
 		Case "BuilderBase"
 			If Not ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Then Return True
 			runBuilderBase()
 		Case "CollectAchievements"
 			CollectAchievements()
-			;If RandomSleep($DELAYRUNBOT3) Then Return
  		Case "CollectFreeMagicItems"
  			CollectFreeMagicItems()
-			;If RandomSleep($DELAYRUNBOT3) Then Return
 		Case "BoostSuperTroop"
 			If $g_iBoostSuperTroopIndex <> -1 Then BoostSuperTroop($g_iBoostSuperTroopIndex)
 		Case ""
