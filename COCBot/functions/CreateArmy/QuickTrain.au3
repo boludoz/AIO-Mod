@@ -402,10 +402,12 @@ Func CreateQuickTrainPreset($i)
 				EndIf
 				Local $sFilter = String($g_asTroopShortNames[$iIndex]) & "*"
 				Local $asImageToUse = _FileListToArray($g_sImgTrainTroops, $sFilter, $FLTA_FILES, True)
-				Local $aTrainPos = GetVariable($asImageToUse[1], $iIndex)
-				If IsArray($aTrainPos) And $aTrainPos[0] <> -1 Then
-					SetLog("Adding " & $g_aiQuickTroopQty[$i][$j] & "x " & $g_asTroopNames[$iIndex], $COLOR_SUCCESS)
-					ClickP($aTrainPos, $g_aiQuickTroopQty[$i][$j], $g_iTrainClickDelay, "QTrain")
+				If Not @error Then
+					Local $aTrainPos = GetVariable($asImageToUse, $iIndex)
+					If IsArray($aTrainPos) And $aTrainPos[0] <> -1 Then
+						SetLog("Adding " & $g_aiQuickTroopQty[$i][$j] & "x " & $g_asTroopNames[$iIndex], $COLOR_SUCCESS)
+						ClickP($aTrainPos, $g_aiQuickTroopQty[$i][$j], $g_iTrainClickDelay, "QTrain")
+					EndIf
 				EndIf
 			EndIf
 		Next
@@ -419,10 +421,12 @@ Func CreateQuickTrainPreset($i)
 				EndIf
 				Local $sFilter = String($g_asSpellShortNames[$iIndex]) & "*"
 				Local $asImageToUse = _FileListToArray($g_sImgTrainSpells, $sFilter, $FLTA_FILES, True)
-				Local $aTrainPos = GetVariable($asImageToUse[1], $iIndex + $eLSpell)
-				If IsArray($aTrainPos) And $aTrainPos[0] <> -1 Then
-					SetLog("Adding " & $g_aiQuickSpellQty[$i][$j] & "x " & $g_asSpellNames[$iIndex], $COLOR_SUCCESS)
-					ClickP($aTrainPos, $g_aiQuickSpellQty[$i][$j], $g_iTrainClickDelay, "QTrain")
+				If Not @error Then
+					Local $aTrainPos = GetVariable($asImageToUse, $iIndex + $eLSpell)
+					If IsArray($aTrainPos) And $aTrainPos[0] <> -1 Then
+						SetLog("Adding " & $g_aiQuickSpellQty[$i][$j] & "x " & $g_asSpellNames[$iIndex], $COLOR_SUCCESS)
+						ClickP($aTrainPos, $g_aiQuickSpellQty[$i][$j], $g_iTrainClickDelay, "QTrain")
+					EndIf
 				EndIf
 			EndIf
 		Next
