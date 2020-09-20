@@ -1606,14 +1606,13 @@ Func _ConnectAndroidAdb($rebootAndroidIfNeccessary = $g_bRunState, $bStartOnlyAn
 			Else
 				; Custom Fix - Team AIO Mod++
 				SetDebugLog("ConnectAndroidAdb: Reboot Android not ADB Daemon not allowed. Try x" & $iRecursive + 1, $COLOR_ERROR)
-				If $iRecursive < 3 Then Return _ConnectAndroidAdb($rebootAndroidIfNeccessary, $bStartOnlyAndroid, $timeout, $iRecursive + 1)
-				Return 0
+				If $iRecursive < 3 Then Return 0
 			EndIf
 
 			; ok, now try to connect again
 			$connected_to = IsAdbConnected()
 
-			If Not $connected_to Then
+			If Not $connected_to Or $iRecursive > 3 Then
 				; not connected... strange, kill any Adb now
 				SetDebugLog("Stop ADB daemon!", $COLOR_ERROR)
 				LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "kill-server", $process_killed)
@@ -1634,7 +1633,7 @@ Func _ConnectAndroidAdb($rebootAndroidIfNeccessary = $g_bRunState, $bStartOnlyAn
 				EndIf
 			EndIf
 	EndSwitch
-
+	If $iRecursive > 3 Then Return _ConnectAndroidAdb($rebootAndroidIfNeccessary, $bStartOnlyAndroid, $timeout, $iRecursive + 1)
 	Return (($connected_to) ? (($bRebooted) ? (2) : (1)) : (0)) ; ADB is connected or not
 EndFunc   ;==>_ConnectAndroidAdb
 
@@ -1807,7 +1806,7 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 		; check shared folder
 		Local $pathFound = False
 		Local $iMount
-		For $iMount = 0 To 29
+		For $iMount = 0 To 3
 			$s = LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "-s " & $g_sAndroidAdbDevice & " shell" & $g_sAndroidAdbShellOptions & " mount", $process_killed)
 			Local $path = $g_sAndroidPicturesPath
 			If StringRight($path, 1) = "/" Then $path = StringLeft($path, StringLen($path) - 1)
