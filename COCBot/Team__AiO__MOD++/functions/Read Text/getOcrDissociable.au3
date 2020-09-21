@@ -9,6 +9,8 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+Global $g_bForceDocr = True
+
 ; Attack Screen
 Func getAttackScreenButtons($x_start, $y_start, $iWidth, $iHeight)
 	Return getOcrAndCaptureDOCR($g_sASButtonsDOCRPath, $x_start, $y_start, $iWidth, $iHeight, False, True)
@@ -17,7 +19,7 @@ EndFunc   ;==>getGoldVillageSearch
 
 ; Search village sector
 Func getGoldVillageSearch($x_start, $y_start) ;48, 69 -> Gets complete value of gold xxx,xxx while searching, top left, Getresources.au3
-	If $g_bAndroidAdbScreencap = False Then 
+	If $g_bAndroidAdbScreencap = False And not $g_bForceDocr = True Then 
 		Return _getGoldVillageSearch($x_start, $y_start)
 	EndIf
 		
@@ -25,7 +27,7 @@ Func getGoldVillageSearch($x_start, $y_start) ;48, 69 -> Gets complete value of 
 EndFunc   ;==>getGoldVillageSearch
 
 Func getElixirVillageSearch($x_start, $y_start) ;48, 69+29 -> Gets complete value of Elixir xxx,xxx, top left,  Getresources.au3
-	If $g_bAndroidAdbScreencap = False Then 
+	If $g_bAndroidAdbScreencap = False And not $g_bForceDocr = True Then 
 		Return _getElixirVillageSearch($x_start, $y_start)
 	EndIf
 
@@ -33,7 +35,7 @@ Func getElixirVillageSearch($x_start, $y_start) ;48, 69+29 -> Gets complete valu
 EndFunc   ;==>getElixirVillageSearch
 
 Func getDarkElixirVillageSearch($x_start, $y_start) ;48, 69+57 or 69+69  -> Gets complete value of Dark Elixir xxx,xxx, top left,  Getresources.au3
-	If $g_bAndroidAdbScreencap = False Then 
+	If $g_bAndroidAdbScreencap = False And not $g_bForceDocr = True Then 
 		Return _getDarkElixirVillageSearch($x_start, $y_start)
 	EndIf
 
@@ -43,7 +45,7 @@ EndFunc   ;==>getDarkElixirVillageSearch
 ; Search village sector end.
 
 Func getResourcesMainScreen($x_start, $y_start) ; -> Gets complete value of Gold/Elixir/Dark Elixir/Trophies/Gems xxx,xxx "VillageReport.au3"
-	If $g_bAndroidAdbScreencap = False Then 
+	If $g_bAndroidAdbScreencap = False And not $g_bForceDocr = True Then 
 		Return _getResourcesMainScreen($x_start, $y_start)
 	EndIf
 
@@ -51,7 +53,7 @@ Func getResourcesMainScreen($x_start, $y_start) ; -> Gets complete value of Gold
 EndFunc   ;==>getResourcesMainScreen
 
 Func getTrophyMainScreen($x_start, $y_start) ; -> Gets trophy value, top left of main screen "VillageReport.au3"
-	If $g_bAndroidAdbScreencap = False Then 
+	If $g_bAndroidAdbScreencap = False And not $g_bForceDocr = True Then 
 		Return _getTrophyMainScreen($x_start, $y_start)
 	EndIf
 
@@ -59,7 +61,7 @@ Func getTrophyMainScreen($x_start, $y_start) ; -> Gets trophy value, top left of
 EndFunc   ;==>getTrophyMainScreen
 
 Func getResourcesValueTrainPage($x_start, $y_start) ; -> Gets CheckValuesCost on Train Window
-	If $g_bAndroidAdbScreencap = False Then 
+	If $g_bAndroidAdbScreencap = False And not $g_bForceDocr = True Then 
 		Return _getResourcesValueTrainPage($x_start, $y_start)
 	EndIf
 
@@ -67,7 +69,7 @@ Func getResourcesValueTrainPage($x_start, $y_start) ; -> Gets CheckValuesCost on
 EndFunc   ;==>getResourcesValueTrainPage
 
 Func getBuilders($x_start, $y_start) ;  -> Gets Builders number - main screen --> getBuilders(324,23)
-	If $g_bAndroidAdbScreencap = False Then 
+	If $g_bAndroidAdbScreencap = False And not $g_bForceDocr = True Then 
 		Return _getBuilders($x_start, $y_start)
 	EndIf
 
@@ -75,7 +77,7 @@ Func getBuilders($x_start, $y_start) ;  -> Gets Builders number - main screen --
 EndFunc   ;==>getBuilders
 
 Func _getTroopCountSmall($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for non-selected troop kind
-	If $g_bAndroidAdbScreencap = False Then 
+	If $g_bAndroidAdbScreencap = False And not $g_bForceDocr = True Then 
 		Return __getTroopCountSmall($x_start, $y_start, $bNeedNewCapture)
 	EndIf
 
@@ -83,7 +85,7 @@ Func _getTroopCountSmall($x_start, $y_start, $bNeedNewCapture = Default) ;  -> G
 EndFunc   ;==>_getTroopCountSmall
 
 Func _getTroopCountBig($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for selected troop kind
-	If $g_bAndroidAdbScreencap = False Then 
+	If $g_bAndroidAdbScreencap = False And not $g_bForceDocr = True Then 
 		Return __getTroopCountBig($x_start, $y_start, $bNeedNewCapture)
 	EndIf
 
