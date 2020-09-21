@@ -64,7 +64,7 @@ Func cmbCOCDistributors()
 	EndIf
 EndFunc   ;==>cmbCOCDistributors
 
-#region
+#Region - Custom Instances - Team AIO Mod++
 Func DistributorsUpdateGUI()
 	LoadCOCDistributorsComboBox()
 	SetCurSelCmbCOCDistributors()
@@ -74,8 +74,11 @@ Func cmbEmulators()
 	getAllEmulatorsInstances()
 	Local $emulator = GUICtrlRead($g_hCmbEmulators)
 	If MsgBox($MB_YESNO, "Emulator Selection", $emulator & ", Is correct?" & @CRLF & "Any mistake and your profile will be not useful!", 10) = $IDYES Then
-		SetLog("Emulator " & $emulator & " Selected. Please select an Instance.")
+		SetLog("Emulator " & $emulator & " Selected at first instance. Please reboot or select instance and reboot.", $COLOR_INFO)
+		InitAndroidConfig(True)
 		$g_sAndroidEmulator = $emulator
+		$g_sAndroidInstance = GUICtrlRead($g_hCmbInstances)
+		BtnSaveprofile()
 	Else
 		_GUICtrlComboBox_SelectString($g_hCmbEmulators, $g_sAndroidEmulator)
 		getAllEmulatorsInstances()
@@ -85,7 +88,8 @@ EndFunc   ;==>cmbEmulators
 Func cmbInstances()
 	Local $instance = GUICtrlRead($g_hCmbInstances)
 	If MsgBox($MB_YESNO, "Instance Selection", $instance & ", Is correct?" & @CRLF & "If 'yes' is necessary reboot the 'bot'.", 10) = $IDYES Then
-		SetLog("Instance " & $instance & " Selected.")
+		SetLog("Instance " & $instance & " Selected. Please reset.", $COLOR_INFO)
+		InitAndroidConfig(True)
 		$g_sAndroidInstance = $instance
 		BtnSaveprofile()
 	Else
@@ -126,12 +130,14 @@ Func getAllEmulatorsInstances()
 	Local $emulator = GUICtrlRead($g_hCmbEmulators)
 	Local $path = ""
 	Switch $emulator
+		#CS
 		Case "BlueStacks"
 			GUICtrlSetData($g_hCmbInstances, "Android", "Android")
 			Return
 		Case "BlueStacks2"
 			GUICtrlSetData($g_hCmbInstances, "Android", "Android")
 			Return
+		#CE
 		Case "Nox"
 			$path = GetNoxPath() & "\BignoxVMS"
 		Case "MEmu"
@@ -140,7 +146,7 @@ Func getAllEmulatorsInstances()
 			$path = GetiToolsPath() & "\Repos\VMs"
 		Case Else
 			GUICtrlSetData($g_hCmbInstances, "Android", "Android")
-		Return
+			Return
 	EndSwitch
 	$path = StringReplace($path, "\\", "\")
 	Local $folders = _FileListToArray($path, "*", $FLTA_FOLDERS)
@@ -160,7 +166,7 @@ Func getAllEmulatorsInstances()
 		_GUICtrlComboBox_SetCurSel($g_hCmbInstances, 0)
 	EndIf
 EndFunc   ;==>getAllEmulatorsInstances
-#endRegion
+#EndRegion - Custom Instances - Team AIO Mod++
 
 Func AndroidSuspendFlagsToIndex($iFlags)
 	Local $idx = 0

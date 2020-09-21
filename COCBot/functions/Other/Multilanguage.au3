@@ -1036,10 +1036,8 @@ EndFunc   ;==>DetectLanguage
 
 Func GetTranslatedFileIni($iSection = -1, $iKey = -1, $sText = "", $var1 = Default, $var2 = Default, $var3 = Default)
 	Static $aNewLanguage[1][2] ;undimmed language array
-	Local $iFixCombo = 0
-	If StringIsSpace($iFixCombo) <> 0 Then
-		$iFixCombo = StringSplit($sText, '|') ; Custom Fix - Team AIO Mod++
-	EndIf
+	Local $iFixCombo = StringSplit($sText, '|') ; Custom Fix - Team AIO Mod++
+	Local $bOK = Not @error
 	$sText = StringReplace($sText, @CRLF, "\r\n")
 
 	Local $sDefaultText, $g_sLanguageText
@@ -1113,7 +1111,9 @@ Func GetTranslatedFileIni($iSection = -1, $iKey = -1, $sText = "", $var1 = Defau
 		
 		#Region - Custom Fix - Team AIO Mod++
 		Local $iFixComboLocal = StringSplit($g_sLanguageText, '|') ; Fix combos bad translated.
-		If @error = 0 And ($iFixCombo[0] <> $iFixComboLocal[0]) Then $g_sLanguageText = "-3"
+		If Not @error And $bOK Then
+			If ($iFixCombo[0] <> $iFixComboLocal[0]) Then $g_sLanguageText = "-3"
+		EndIf
 		#EndRegion - Custom Fix - Team AIO Mod++
 
 		If $sText = "-1" Then

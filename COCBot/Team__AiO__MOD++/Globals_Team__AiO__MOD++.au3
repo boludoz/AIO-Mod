@@ -28,6 +28,10 @@ Global Enum $eIcnBB = 1 , $eIcnLabBB, $eIcnBBElixir, $eIcnBBGold, $eIcnBBTrophie
 
 #EndRegion - Icn - Team AIO Mod++
 
+#Region - Randomize points along the line - Team AIO Mod++
+Global $g_hChkRandomDPSFAL, $g_bRandomDPSFAL = True
+#EndRegion - Randomize points along the line - Team AIO Mod++
+
 #Region - Return Home by Time - Team AIO Mod++
 Global $g_hChkReturnTimerEnable = 0, $g_hTxtReturnTimer = 0
 Global $g_bReturnTimerEnable = False, $g_iTxtReturnTimer = 5

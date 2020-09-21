@@ -15,7 +15,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 #Region - Custom SmartFarm - Team AIO Mod++
-Func GetVectorPixelOnEachSide2($arrPixel, $vectorDirection, $slotsPerEdge)
+Func GetVectorPixelOnEachSide2($arrPixel, $vectorDirection, $slotsPerEdge, $bRandomDP = False) ; Randomize points along the line.
 	Local $vectorPixelEachSide[$slotsPerEdge]
 	If (UBound($arrPixel) > 1) Then
 		Local $pixelSearch[2] = [-1, -1]
@@ -35,11 +35,11 @@ Func GetVectorPixelOnEachSide2($arrPixel, $vectorDirection, $slotsPerEdge)
 		Next
 	 EndIf
 
-	;Randomize points along the line.
-
-	If IsArray($vectorPixelEachSide) Then
+	#Region - Randomize points along the line - Team AIO Mod++
+	If $bRandomDP = True And IsArray($vectorPixelEachSide) Then
 		_ArrayShuffle($vectorPixelEachSide)
 	EndIf
+	#EndRegion - Randomize points along the line - Team AIO Mod++
 	Return $vectorPixelEachSide
 EndFunc   ;==>GetVectorPixelOnEachSide2
 #EndRegion - Custom SmartFarm - Team AIO Mod++

@@ -156,7 +156,7 @@ Func ReferenceFunctions()
 	GetiToolsProgramParameter()
 	GetiToolsPath()
 	GetiToolsAdbPath()
-	InitiTools()
+	InitTools() ; Custom fix - Team AIO Mod++
 	SetScreeniTools()
 	RebootiToolsSetScreen()
 	CloseiTools()

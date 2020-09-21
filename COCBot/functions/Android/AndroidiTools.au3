@@ -99,7 +99,7 @@ Func GetiToolsAdbPath()
 	Return ""
 EndFunc   ;==>GetiToolsAdbPath
 
-Func InitiTools($bCheckOnly = False)
+Func InitTools($bCheckOnly = False) ; Custom fix - Team AIO Mod++
 	Local $process_killed, $aRegExResult, $g_sAndroidAdbDeviceHost, $g_sAndroidAdbDevicePort, $oops = 0
 	;Local $iToolsVersion = RegRead($g_sHKLM & "\SOFTWARE" & $g_sWow6432Node & "\Microsoft\Windows\CurrentVersion\Uninstall\iTools\", "DisplayVersion")
 	SetError(0, 0, 0)

@@ -1848,7 +1848,8 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 		Next
 		$g_sAndroidPicturesPathAvailable = $pathFound
 		If $pathFound = False Then
-			SetLog($g_sAndroidEmulator & " cannot use ADB on shared folder, """ & $g_sAndroidPicturesPath & """ not found", $COLOR_ERROR)
+			SetLog("Please, enable root in you emulator.", $COLOR_WARNING)
+			SetDebugLog($g_sAndroidEmulator & " cannot use ADB on shared folder, """ & $g_sAndroidPicturesPath & """ not found", $COLOR_ERROR)
 		EndIf
 
 		; if shared folder is not available, configure it
@@ -3179,13 +3180,13 @@ Func _AndroidFastClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect = Tru
 	Local $adjustSpeed = 0
 	Local $timer = __TimerInit()
 	If $times > $g_iAndroidAdbClickGroup Then
-		$speed = $g_iAndroidAdbClickGroupDelay
+        $speed = $speed + $g_iAndroidAdbClickGroupDelay
 		$remaining = Mod($times, $g_iAndroidAdbClickGroup)
 		$loops = Int($times / $g_iAndroidAdbClickGroup) + ($remaining > 0 ? 1 : 0)
 		$times = $g_iAndroidAdbClickGroup
 	Else
 		If $ReleaseClicks = False Then $adjustSpeed = $speed
-		$speed = 0 ; no need for speed now!
+		; $speed = 0 ; no need for speed now!
 	EndIf
 	Local $recordsNum = 10
 	Local $recordsClicks = ($times < $g_iAndroidAdbClickGroup ? $times : $g_iAndroidAdbClickGroup)
@@ -3562,13 +3563,13 @@ Func AndroidMinitouchClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect =
 	Local $adjustSpeed = 0
 	Local $timer = __TimerInit()
 	If $times > $g_iAndroidAdbClickGroup Then
-		$speed = $g_iAndroidAdbClickGroupDelay
+        $speed += $g_iAndroidAdbClickGroupDelay
 		$remaining = Mod($times, $g_iAndroidAdbClickGroup)
 		$loops = Int($times / $g_iAndroidAdbClickGroup) + ($remaining > 0 ? 1 : 0)
 		$times = $g_iAndroidAdbClickGroup
 	Else
 		If $ReleaseClicks = False Then $adjustSpeed = $speed
-		$speed = 0 ; no need for speed now!
+		; $speed = 0 ; no need for speed now!
 	EndIf
 	Local $recordsClicks = ($times < $g_iAndroidAdbClickGroup ? $times : $g_iAndroidAdbClickGroup)
 	If $ReleaseClicks = True Then
@@ -3601,15 +3602,15 @@ Func AndroidMinitouchClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect =
 			For $j = 0 To $recordsClicks - 1
 				Local $BTN_TOUCH_DOWN = True
 				Local $BTN_TOUCH_UP = True
-				; If $ReleaseClicks = True Then
-					; $Click = $aiAndroidAdbClicks[($i - 1) * $recordsClicks + $j + 1] ; seen here incorrect number of subscripts error
-					; $x = $Click[0]
-					; $y = $Click[1]
-					; Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x,$y)")
-					; Local $up_down = $Click[2]
-					; $BTN_TOUCH_DOWN = StringInStr($up_down, "down") > 0
-					; $BTN_TOUCH_UP = StringInStr($up_down, "up") > 0
-				; EndIf
+				If $ReleaseClicks = True Then
+					$Click = $aiAndroidAdbClicks[($i - 1) * $recordsClicks + $j + 1] ; seen here incorrect number of subscripts error
+					$x = $Click[0]
+					$y = $Click[1]
+					Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x,$y)")
+					Local $up_down = $Click[2]
+					$BTN_TOUCH_DOWN = StringInStr($up_down, "down") > 0
+					$BTN_TOUCH_UP = StringInStr($up_down, "up") > 0
+				EndIf
 				Local $send = ""
 				$bytes = 0
 				$bytesSent = 0
@@ -3629,7 +3630,7 @@ Func AndroidMinitouchClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect =
 					$send = ""
 					; wait
 					Local $sleep = $minSleep
-					If $speed > $minSleep And $times = 1 Then
+					If $speed > $minSleep Then
 						$sleep = $speed
 					EndIf
 					;TCPSend($g_bAndroidAdbMinitouchSocket, "w " & $sleep & @CRLF)

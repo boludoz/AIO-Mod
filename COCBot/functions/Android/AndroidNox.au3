@@ -85,7 +85,7 @@ EndFunc   ;==>IsNoxCommandLine
 
 Func GetNoxProgramParameter($bAlternative = False)
 	; see http://en.bignox.com/blog/?p=354
-	Local $customScreen = "-resolution:" & $g_iAndroidClientWidth & "x" & $g_iAndroidClientHeight & " -dpi:160"
+	Local $customScreen = "-root:true -resolution:" & $g_iAndroidClientWidth & "x" & $g_iAndroidClientHeight & " -dpi:160" ; Custom fix - Team AIO Mod++
 	Local $clone = """-clone:" & ($g_sAndroidInstance = "" ? $g_avAndroidAppConfig[$g_iAndroidConfig][1] : $g_sAndroidInstance) & """"
 	If $bAlternative = False Then
 		; should be launched with these parameter

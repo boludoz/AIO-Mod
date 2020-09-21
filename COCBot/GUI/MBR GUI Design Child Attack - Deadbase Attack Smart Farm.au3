@@ -51,11 +51,18 @@ Func CreateAttackSearchDeadBaseSmartFarm()
 				GUICtrlSetOnEvent(-1, "chkDelayMod")
 
 		$y += 20
+		$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "RandomDP_01", "Random drop point deployment in the line.")
+		$g_hChkRandomDPSFAL = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "RandomDP_02", "Random drop points along line."), $x, $y, -1, -1)
+				_GUICtrlSetTip(-1, $sTxtTip)
+				; GUICtrlSetOnEvent(-1, "RandomDPSFAL")
+				
+		$y += 20
 		$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "HumaneSides", "Set a limit for places, the minimum limit is random.")
 		$g_hMaxSidesSF = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "MaxSidesSM", "Max sides to attack") & ":", $x, $y, -1, -1)
 				_GUICtrlSetTip(-1, $sTxtTip)
 				GUICtrlSetOnEvent(-1, "chkMaxSidesSF")
-		$y += 30
+
+		$y += 25
 			$g_hCmbMaxSidesSF = GUICtrlCreateCombo("", $x + 90, $y, 36, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 				GUICtrlSetData(-1, "1|2|3|4", "4")
 				GUICtrlSetOnEvent(-1, "chkMaxSidesSF")
@@ -71,7 +78,7 @@ Func CreateAttackSearchDeadBaseSmartFarm()
 			$g_hTxtOutsidePercentage = _GUICtrlCreateInput("80" , $x + 140 , $y , 25 , -1)
 				_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "txt-TxtOutsidePercentage", "Percentage to force attack in 4 sides"))
 			GUICtrlCreateLabel("%" , $x + 117 , $y + 3)
-		$y += 40
+		$y += 25
 		$x = 98
 			$g_hBtnCustomDropOrderDB1 = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "BtnCustomDropOrder", -1), $x, $y, 85, 25)
 				_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "BtnCustomDropOrder_Info_01", -1))
