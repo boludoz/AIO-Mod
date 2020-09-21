@@ -148,7 +148,7 @@ Func MatchSlotsPerEdge($Num)
 			Return 0
 		Case 21 ;$eIceG
 			Return 2
-		Case 22 ; $eHunt
+		Case 22 ;$eHunt
 			Return 0
 		Case 23 ;CC
 			Return 1
@@ -159,7 +159,7 @@ EndFunc   ;==>MatchSlotsPerEdge
 
 Func MatchSidesDrop($Num)
 	Switch _GUICtrlComboBox_GetCurSel($g_ahCmbDropOrder[$Num])
-		Case 0 To 20 ;$eBarb to $eHunt
+		Case 0 To 22 ;$eBarb to $eHunt
 			If $g_aiAttackStdDropSides[$g_iMatchMode] = 0 Then Return 1
 			If $g_aiAttackStdDropSides[$g_iMatchMode] = 1 Then Return 2
 			If $g_aiAttackStdDropSides[$g_iMatchMode] = 2 Then Return 3

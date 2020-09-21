@@ -386,6 +386,7 @@ Func CloseBattle()
 
 EndFunc   ;==>CloseBattle
 
+
 Func SmartAttackStrategy($imode)
 		If ($g_abAttackStdSmartAttack[$imode]) Then
 			SetLog("Calculating Smart Attack Strategy", $COLOR_INFO)
@@ -404,39 +405,21 @@ Func SmartAttackStrategy($imode)
 				Global $g_aiPixelNearCollector[0]
 				; If drop troop near gold mine
 				If $g_abAttackStdSmartNearCollectors[$imode][0] Then
-					; #Region - Check collector outside - Team AIO Mod++
-					; If $g_bScanMineAndElixir = False Then
-						; SuspendAndroid()
-						$g_aiPixelMine = GetLocationMine()
-						; ResumeAndroid()
-					; EndIf
-					; #EndRegion - Check collector outside - Team AIO Mod++
+					$g_aiPixelMine = GetLocationMine()
 					If (IsArray($g_aiPixelMine)) Then
 						_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelMine, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
 					EndIf
 				EndIf
 				; If drop troop near elixir collector
 				If $g_abAttackStdSmartNearCollectors[$imode][1] Then
-					; #Region - Check collector outside - Team AIO Mod++
-					; If $g_bScanMineAndElixir = False Then
-						; SuspendAndroid()
-						$g_aiPixelElixir = GetLocationElixir()
-						; ResumeAndroid()
-					; EndIf
-					; #EndRegion - Check collector outside - Team AIO Mod++
+					$g_aiPixelElixir = GetLocationElixir()
 					If (IsArray($g_aiPixelElixir)) Then
 						_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
 					EndIf
 				EndIf
 				; If drop troop near dark elixir drill
 				If $g_abAttackStdSmartNearCollectors[$imode][2] Then
-					; #Region - Check collector outside - Team AIO Mod++
-					; If $g_bScanMineAndElixir = False Then
-						; SuspendAndroid()
-						$g_aiPixelDarkElixir = GetLocationDarkElixir()
-						; ResumeAndroid()
-					; EndIf
-					; #EndRegion - Check collector outside - Team AIO Mod++
+					$g_aiPixelDarkElixir = GetLocationDarkElixir()
 					If (IsArray($g_aiPixelDarkElixir)) Then
 						_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelDarkElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
 					EndIf
