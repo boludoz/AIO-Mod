@@ -25,3 +25,4 @@ Strategies/strategy *.ini
 *.sqlite3
 lib/ModLibs/Dissociable.Imaging.DebugImages/*
 SmartFarm/
+lib/TempAdb/
