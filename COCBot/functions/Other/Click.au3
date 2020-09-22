@@ -41,7 +41,7 @@ Func Click($x, $y, $times = 1, $speed = 0, $debugtxt = "", $bRandomInLoop = True
 	If TestCapture() Then Return
 	Local $aCoorR[2] = [$x, $y]
 	If $g_bAndroidAdbClick = True Then
-		If $g_bUseRandomClick And $bRandomInLoop And $speed <> 0 Then
+		If $g_bUseRandomClick And $bRandomInLoop And $speed > 0 Then
 			For $i = 1 To $times 
 				$x = $aCoorR[0] + Random(-1, 1, 1)
 				$y = $aCoorR[1] + Random(-1, 1, 1)
