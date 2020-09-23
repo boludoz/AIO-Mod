@@ -3611,6 +3611,7 @@ Func AndroidMinitouchClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect =
 	Local $_SilentSetLog = $g_bSilentSetLog
 	Local $hDuration = __TimerInit()
 	If $times < 1 Then Return SetError(0, 0)
+    Local $iTimesCopy = $times
 	Local $i = 0, $j = 0
 	Local $Click = [$x, $y, "down-up"]
 	Local $aiAndroidAdbClicks
@@ -3770,7 +3771,6 @@ Func AndroidMinitouchClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect =
 					$send &= "u 0" & @LF
 					$send &= "c" & @LF
 					$send &= "w " & $iDelay & @LF
-					;$send &= "w " & $iDelay & @LF
 					If $g_iAndroidAdbMinitouchMode = 0 Then
 						$bytes += TCPSend($g_bAndroidAdbMinitouchSocket, $send)
 						$bytesSent += StringLen($send)
@@ -3778,7 +3778,7 @@ Func AndroidMinitouchClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect =
 						AndroidAdbSendMinitouchShellCommand($send)
 					EndIf
 					_SleepMicro(($iDelay + $sleep) * 1000)
-					If $g_bDebugClick Then SetDebugLog("minitouch: d 0 " & $x & " " & $y & " 50, speed=" & $sleep & ", delay=" & $iDelay)
+                    If $g_bDebugClick Then SetDebugLog("minitouch: d 0 " & $x & " " & $y & " "  & $iTimesCopy & ", speed=" & $sleep & ", delay=" & $iDelay)					
 					;_SleepMicro(10000)
 				EndIf
 

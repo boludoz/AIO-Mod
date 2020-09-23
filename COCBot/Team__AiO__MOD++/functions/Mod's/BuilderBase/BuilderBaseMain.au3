@@ -91,14 +91,14 @@ Func runBuilderBase($bTestRun = False)
 	Next
 	; ----------
 
+	SetLog("Builder Base Idle Ends", $COLOR_INFO)
+	
 	; switch back to normal village
 	If Not $g_bChkPlayBBOnly Then SwitchBetweenBases(True, False)
 
 	If Not $g_bRunState Then Return
 
 	If _Sleep($DELAYRUNBOT1 * 15) Then Return ;Add 15 Sec Delay Before Starting Again In BB Only
-
-	SetLog("Builder Base Idle Ends", $COLOR_INFO)
 
 	If ProfileSwitchAccountEnabled() Then Return
 
