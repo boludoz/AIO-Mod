@@ -76,7 +76,7 @@ Func DllCallMyBot($sFunc, $sType1 = Default, $vParam1 = Default, $sType2 = Defau
 		If Mod($i + 5, 10) = 0 Then
 			$i2 += 1
 			#Region - Custom fix - Team AIO Mod++
-			If not StringIsSpace($g_sTagCallMybotCall) Then 
+			If StringIsSpace($g_sTagCallMybotCall) Then 
 				SetDebugLog("Waiting for DLL async function | Func : " & $sFunc & " Params : " & " " & $vParam1 & " " & $vParam2 & " " & $vParam3 & " " & $vParam4 & " " & $vParam5 & " " & $vParam6 & " " & $vParam7 & " " & $vParam8 & " " & $vParam9 & " " & $vParam10)
 				Else
 				SetDebugLog("Waiting for DLL async function | Tag : " & $g_sTagCallMybotCall & " Func : " & $sFunc & " Params : " & " " & $vParam1 & " " & $vParam2 & " " & $vParam3 & " " & $vParam4 & " " & $vParam5 & " " & $vParam6 & " " & $vParam7 & " " & $vParam8 & " " & $vParam9 & " " & $vParam10)

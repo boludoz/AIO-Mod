@@ -3066,6 +3066,84 @@ Func AndroidSlowClick($x, $y, $times = 1, $speed = 0)
 	EndIf
 EndFunc   ;==>AndroidSlowClick
 
+Func AndroidMiniClick($x, $y, $iPressure = 255, $iTimes = 1, $iSpeed = 0)
+	
+	Local $sCmd = "", $iTimer = 0, $iBytes = 0
+	
+	$g_iAndroidAdbScreencapTimer = 0 ; invalidate ADB screencap timer/timeout
+	
+	; Launch ADB.
+	AndroidAdbLaunchShellInstance($g_bRunState)
+	
+	Local $error = @error
+	If $error = 0 Then
+		; Get configs.
+		Local $iMinSleep = GetClickDownDelay()
+		Local $iDelay = GetClickUpDelay()
+		
+		; Add android settings delay.
+		$iDelay += $g_iAndroidAdbClickGroupDelay
+		
+		; Replace sleep in case set sleep time is slower than minimum sleep time.
+		If $iMinSleep > $iSpeed Then $iSpeed = $iMinSleep
+		
+		; Adjust click to BlueStacks
+		Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x,$y)")
+		
+		; Randomize.
+		Local $aPrevCoor[2] = [$x, $y]
+		If $g_bUseRandomClick Then
+			$x += Random(-5, 5, 1)
+			$y += Random(-5, 5, 1)
+			If $x <= 0 Or $x >= $g_iGAME_WIDTH Then $x = $aPrevCoor[0]
+			If $y <= 0 Or $y >= $g_iGAME_HEIGHT Then $y = $aPrevCoor[1]
+		EndIf
+		
+		$aPrevCoor[0] = $x
+		$aPrevCoor[1] = $y
+		
+		; Matrix
+		For $i = 1 To $iTimes
+			
+			; Randomize soft in loops.
+			If $g_bUseRandomClick Then
+				$x = $aPrevCoor[0] + Random(-1, 1, 1)
+				$y = $aPrevCoor[1] + Random(-1, 1, 1)
+				If $x <= 0 Or $x >= $g_iGAME_WIDTH Then $x = $aPrevCoor[0]
+				If $y <= 0 Or $y >= $g_iGAME_HEIGHT Then $y = $aPrevCoor[1]
+			EndIf
+			
+			; Random sleep '80% / 120%' range.
+			$iTimer = Round($iSpeed * Random(0.80, 1.20))
+			
+			; Matrix string.
+			$sCmd = "d 0 " & $x & " " & $y & " " & $iPressure & @LF & "c" & @LF & "w "& $iTimer & @LF & "u 0" & @LF & "c" & @LF & "w " & $iDelay & @LF 
+			
+			; Launch 'sCmd'
+			If $g_iAndroidAdbMinitouchMode = 0 Then
+				$iBytes += TCPSend($g_bAndroidAdbMinitouchSocket, $sCmd)
+			Else
+				AndroidAdbSendMinitouchShellCommand($sCmd)
+				If @error Then
+					Return SetError(@error, 0, 0)
+				Else
+					$iBytes += StringLen($sCmd)
+				EndIf
+			EndIf
+			
+			; Precise sleep : $iSpeed + $iDelay.
+			_SleepMicro(($iSpeed + $iDelay) * 1000)
+			
+		Next
+	Else
+		SetDebugLog("Disabled " & $g_sAndroidEmulator & " ADB mouse click, error " & $error, $COLOR_ERROR)
+		$g_bAndroidAdbClick = False
+		Return SetError($error, 0)
+	EndIf
+	
+	Return $iBytes
+EndFunc   ;==>AndroidMiniClick
+
 Func AndroidMoveMouseAnywhere()
 	Local $_SilentSetLog = $g_bSilentSetLog
 	Local $hostPath = $g_sAndroidPicturesHostPath & $g_sAndroidPicturesHostFolder

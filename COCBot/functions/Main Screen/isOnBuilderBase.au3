@@ -16,10 +16,10 @@
 Func isOnBuilderBase($bNeedCaptureRegion = True, $bSoft = False)
 	If _Sleep($DELAYISBUILDERBASE) Then Return
 	If $bNeedCaptureRegion = True Or $bNeedCaptureRegion = Default Then _CaptureRegion2()
-	If (_ImageSearchXML($g_sImgIsOnBB, 1, "260,0,406,54", False) <> -1) Then
+	If IsArray(FindmultipleQuick($g_sImgIsOnBB, 1, "260,0,406,54", False)) Then
 		SetDebugLog("Builder Base Builder detected. (Normal).", $COLOR_INFO)
 		Return True
-	ElseIf (QuickMIS("N1", $g_sImgZoomOutDirBB, 0,0,860,732, False) <> "None") And Not $bSoft Then
+	ElseIf IsArray(FindmultipleQuick($g_sImgZoomOutDirBB, 1, "FV", False)) And $bSoft = False Then
 		SetDebugLog("Builder Base Builder detected.", $COLOR_INFO)
 		Return True
 	EndIf
