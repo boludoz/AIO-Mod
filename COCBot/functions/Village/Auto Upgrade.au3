@@ -190,7 +190,8 @@ Func _AutoUpgrade()
 		EndSwitch
 		; if boolean still False, we can't launch upgrade, exiting...
 		If Not $bSufficentResourceToUpgrade Then
-            SetLog("Insufficent " & $g_aUpgradeResourceCostDuration[0] & " to launch this upgrade, looking Next...", $COLOR_WARNING)			$g_iNextLineOffset = $g_iCurrentLineOffset
+            SetLog("Insufficent " & $g_aUpgradeResourceCostDuration[0] & " to launch this upgrade, looking Next...", $COLOR_WARNING)
+			$g_iNextLineOffset = $g_iCurrentLineOffset
 			ContinueLoop
 		EndIf
 
