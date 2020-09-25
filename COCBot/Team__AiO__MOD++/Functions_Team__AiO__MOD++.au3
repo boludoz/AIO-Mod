@@ -14,19 +14,16 @@
 ; ===============================================================================================================================
 
 ; <><><><><><><><><><><><><><><> Team AiO MOD++ (2020) <><><><><><><><><><><><><><><>
-; Low level func order.
-#include "functions\AU3\FixedArray.au3"
+; Other
+#include "functions\Mod's\ModFuncs.au3"
+#include "functions\Pixels\_Wait4Pixel.au3"
+#include "functions\Pixels\ImgFuncs.au3"
 
 ; DOCR
 #include "functions\Read Text\getOcrDissociable.au3"
 
 ; DMatching
 #include "functions\Pixels\DMatching.au3"
-
-; Other
-#include "functions\Mod's\ModFuncs.au3"
-#include "functions\Pixels\_Wait4Pixel.au3"
-#include "functions\Pixels\ImgFuncs.au3"
 
 ; CheckModVersion - Team AiO MOD++
 #include "functions\Mod's\CheckModVersion.au3"
@@ -38,16 +35,10 @@
 #include "functions\Mod's\MagicItems.au3"
 
 ; SuperXP / GoblinXP - Team AiO MOD++
-#include "functions\Mod's\SuperXP\multiSearch.au3"
 #include "functions\Mod's\SuperXP\SuperXP.au3"
 
 ; Humanization - Team AiO MOD++
-#include "functions\Mod's\Humanization\BotHumanization.au3"
-#include "functions\Mod's\Humanization\AttackNDefenseActions.au3"
-#include "functions\Mod's\Humanization\BestClansNPlayersActions.au3"
-#include "functions\Mod's\Humanization\ChatActions.au3"
-#include "functions\Mod's\Humanization\ClanActions.au3"
-#include "functions\Mod's\Humanization\ClanWarActions.au3"
+#include "functions\Mod's\Humanization.au3"
 
 ; ChatActions - Team AiO MOD++
 #include "functions\Mod's\ChatActions\MultyLang.au3"

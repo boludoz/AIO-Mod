@@ -14,11 +14,6 @@
 ; ===============================================================================================================================
 
 Func PickUpRandomVerifiedDropPoint($aDropPoints, $aBlackRegion)
-    ; If (IsArray($aDropPoints) = False Or UBound($aDropPoints) < 2) Or (IsArray($aBlackRegion) = False Or UBound($aBlackRegion) < 4) Then
-       ; SetLog("Wrong parameters passed to PickUpRandomVerifiedDropPoint Function", $COLOR_ERROR)
-       ; Return False
-    ; EndIf
-	
 	; Random
    _ArrayShuffle($aDropPoints)
    
@@ -35,11 +30,6 @@ Func PickUpRandomVerifiedDropPoint($aDropPoints, $aBlackRegion)
 EndFunc
 
 Func VerifyDropPointA($aDropPoint, $aBlackRegion)
-    ;If (IsArray($aDropPoint) = False Or UBound($aDropPoint) < 2) Or (IsArray($aBlackRegion) = False Or UBound($aBlackRegion) < 4) Then
-    ;    SetLog("Wrong parameters passed to VerifyDropPointA Function", $COLOR_ERROR)
-    ;    Return False
-    ;EndIf
-    ; We have disabled the Parameter function to to let it run unsafe, Devs has to take care of it, not the CPU!
     Return VerifyDropPoint($aDropPoint[0], $aDropPoint[1], $aBlackRegion[0], $aBlackRegion[1], $aBlackRegion[2], $aBlackRegion[3])
 EndFunc
 

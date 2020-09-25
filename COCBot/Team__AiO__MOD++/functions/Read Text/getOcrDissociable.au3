@@ -11,6 +11,10 @@
 ; ===============================================================================================================================
 Global $g_bForceDocr = True
 
+Func getUpgradeResources($x_start = 352, $y_start = 377, $iWidth = 155, $iHeight = 40)
+	Return getOcrAndCaptureDOCR($g_sASUpgradeResourcesDOCRPath, $x_start, $y_start, $iWidth, $iHeight, True, True)
+EndFunc   ;==>getGoldVillageSearch
+
 ; Attack Screen
 Func getAttackScreenButtons($x_start, $y_start, $iWidth, $iHeight)
 	Return getOcrAndCaptureDOCR($g_sASButtonsDOCRPath, $x_start, $y_start, $iWidth, $iHeight, False, True)
