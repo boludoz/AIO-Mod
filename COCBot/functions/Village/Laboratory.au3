@@ -302,9 +302,9 @@ EndFunc
 Func LabNextPage($iCurPage, $iPages, $iYMidPoint)
 	If $iCurPage >= $iPages Then Return ; nothing left to scroll
 	If $iCurPage = $iPages-1 Then ; last page
-		ClickDrag(720, $iYMidPoint, 600, $iYMidPoint, True)
+		ClickDrag(720, $iYMidPoint, 600, $iYMidPoint)
 	Else
-		ClickDrag(720, $iYMidPoint, 85, $iYMidPoint, True)
+		ClickDrag(720, $iYMidPoint, 85, $iYMidPoint)
 	EndIf
 EndFunc
 

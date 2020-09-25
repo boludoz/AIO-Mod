@@ -25,21 +25,23 @@ Global Enum $eIcnModKingGray = 1, $eIcnModKingBlue, $eIcnModKingGreen, $eIcnModK
 Global Const $g_sLibBBIconPath = $g_sLibPath & "\ModLibs\BuilderBase.dll" ; icon library
 Global Enum $eIcnBB = 1 , $eIcnLabBB, $eIcnBBElixir, $eIcnBBGold, $eIcnBBTrophies, $eIcnMachine, $eIcnBBWallInfo, $eIcnBBWallL1, $eIcnBBWallL2, $eIcnBBWallL3, $eIcnBBWallL4, $eIcnBBWallL5, _
 		$eIcnBBWallL6, $eIcnBBWallL7, $eIcnBBWallL8, $eIcnBBWallL9
-
 #EndRegion - Icn - Team AIO Mod++
+
+#Region - Legend trophy protection - Team AIO Mod++
+Global $g_hChkProtectInLL, $g_hChkForceProtectLL, $g_bProtectInLL = True, $g_bForceProtectLL = False
+#EndRegion - Legend trophy protection - Team AIO Mod++
 
 #Region - Randomize points along the line - Team AIO Mod++
 Global $g_hChkRandomDPSFAL, $g_bRandomDPSFAL = True
 #EndRegion - Randomize points along the line - Team AIO Mod++
 
 #Region - Return Home by Time - Team AIO Mod++
-Global $g_hChkReturnTimerEnable = 0, $g_hTxtReturnTimer = 0
-Global $g_bReturnTimerEnable = False, $g_iTxtReturnTimer = 5
+Global $g_hChkReturnTimerEnable = 0, $g_hTxtReturnTimer = 0, $g_bReturnTimerEnable = False, $g_iTxtReturnTimer = 5
 #EndRegion - Return Home by Time - Team AIO Mod++
 
 #Region - Lab Priority System
-Global $g_hChkPriorityLab, $g_hCmbPriorityLab, $g_hLblOnlyUpgrade, $g_hChkPriorityLabTroops, $g_hChkPriorityLabSpells, $g_hChkPriorityLabSieges
-Global  $g_bPriorityLab, $g_iCmbPriorityLab, $g_bPriorityLabSpells = True, $g_bPriorityLabTroops = True, $g_bPriorityLabSieges = True
+Global $g_hChkPriorityLab, $g_hCmbPriorityLab, $g_hLblOnlyUpgrade, $g_hChkPriorityLabTroops, $g_hChkPriorityLabSpells, $g_hChkPriorityLabSieges, _ 
+$g_bPriorityLab, $g_iCmbPriorityLab, $g_bPriorityLabSpells = True, $g_bPriorityLabTroops = True, $g_bPriorityLabSieges = True
 #EndRegion - Lab Priority System
 
 #Region - Discord - Team AIO Mod++

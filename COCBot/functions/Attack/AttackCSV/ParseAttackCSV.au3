@@ -608,25 +608,29 @@ Func ParseAttackCSV($debug = False)
 
 							If $g_bDebugSetlog Then SetDebugLog("Detected [G]: " & $Gold & " [E]: " & $Elixir & " [DE]: " & $DarkElixir, $COLOR_INFO)
 							;EXIT IF RESOURCES = 0
-							If $g_abStopAtkNoResources[$g_iMatchMode] And Number($Gold) = 0 And Number($Elixir) = 0 And Number($DarkElixir) = 0 Then
+							; Legend trophy protection - Team AIO Mod++
+							If Not (($g_bLeagueAttack Or $g_bForceProtectLL) And $g_bProtectInLL) And $g_abStopAtkNoResources[$g_iMatchMode] And Number($Gold) = 0 And Number($Elixir) = 0 And Number($DarkElixir) = 0 Then
 								If $g_bDebugSetlog Then SetDebugLog("Detected [G]: " & $Gold & " [E]: " & $Elixir & " [DE]: " & $DarkElixir, $COLOR_INFO) ; log if not down above
 								If $g_bDebugSetlog Then SetDebugLog("From Attackcsv: Gold & Elixir & DE = 0, end battle ", $COLOR_DEBUG)
 								$exitNoResources = 1
 								ExitLoop
 							EndIf
 							;CALCULATE TWO STARS REACH
-							If $g_abStopAtkTwoStars[$g_iMatchMode] And _CheckPixel($aWonTwoStar, True) Then
+							; Legend trophy protection - Team AIO Mod++
+							If Not (($g_bLeagueAttack Or $g_bForceProtectLL) And $g_bProtectInLL) And $g_abStopAtkTwoStars[$g_iMatchMode] And _CheckPixel($aWonTwoStar, True) Then
 								If $g_bDebugSetlog Then SetDebugLog("From Attackcsv: Two Star Reach, exit", $COLOR_SUCCESS)
 								$exitTwoStars = 1
 								ExitLoop
 							EndIf
 							;CALCULATE ONE STARS REACH
-							If $g_abStopAtkOneStar[$g_iMatchMode] And _CheckPixel($aWonOneStar, True) Then
+							; Legend trophy protection - Team AIO Mod++
+							If Not (($g_bLeagueAttack Or $g_bForceProtectLL) And $g_bProtectInLL) And $g_abStopAtkOneStar[$g_iMatchMode] And _CheckPixel($aWonOneStar, True) Then
 								If $g_bDebugSetlog Then SetDebugLog("From Attackcsv: One Star Reach, exit", $COLOR_SUCCESS)
 								$exitOneStar = 1
 								ExitLoop
 							EndIf
-							If $g_abStopAtkPctHigherEnable[$g_iMatchMode] And Number($Damage) > Int($g_aiStopAtkPctHigherAmt[$g_iMatchMode]) Then
+							; Legend trophy protection - Team AIO Mod++
+							If Not (($g_bLeagueAttack Or $g_bForceProtectLL) And $g_bProtectInLL) And $g_abStopAtkPctHigherEnable[$g_iMatchMode] And Number($Damage) > Int($g_aiStopAtkPctHigherAmt[$g_iMatchMode]) Then
 								ExitLoop
 							EndIf
 							If _CheckPixel($aEndFightSceneBtn, True) And _CheckPixel($aEndFightSceneAvl, True) And _CheckPixel($aEndFightSceneReportGold, True) Then
@@ -636,7 +640,8 @@ Func ParseAttackCSV($debug = False)
 							EndIf
 							If _Sleep($DELAYRESPOND) Then Return ; check for pause/stop
 						WEnd
-						If $exitOneStar = 1 Or $exitTwoStars = 1 Or $exitNoResources = 1 Or $exitAttackEnded = 1 Then ExitLoop ;stop parse CSV file, start exit battle procedure
+						; Legend trophy protection - Team AIO Mod++
+						If Not (($g_bLeagueAttack Or $g_bForceProtectLL) And $g_bProtectInLL) And $exitOneStar = 1 Or $exitTwoStars = 1 Or $exitNoResources = 1 Or $exitAttackEnded = 1 Then ExitLoop ;stop parse CSV file, start exit battle procedure
 
 					Case "RECALC"
 						ReleaseClicks()

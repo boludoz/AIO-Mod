@@ -14,6 +14,12 @@
 ; ===============================================================================================================================
 
 Func CompareResources($pMode) ;Compares resources and returns true if conditions meet, otherwise returns false
+	#Region - Legend trophy protection - Team AIO Mod++
+	If (($g_bLeagueAttack Or $g_bForceProtectLL) And $g_bProtectInLL) Then
+		SetLog("Legend League protection: Skipped Compare Resources.", $COLOR_ACTION)
+		Return True
+	EndIf
+	#EndRegion - Legend trophy protection - Team AIO Mod++
 	If $g_bSearchReductionEnable Then
 		If $g_iSearchCount <> 0 And Mod($g_iSearchCount, $g_iSearchReductionCount) = 0 Then
 			If $g_iAimGold[$pMode] - $g_iSearchReductionGold >= 0 Then $g_iAimGold[$pMode] -= $g_iSearchReductionGold

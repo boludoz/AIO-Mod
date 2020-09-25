@@ -303,3 +303,10 @@ Func chkReturnTimer()
 EndFunc   ;==>chkReturnTimer
 #EndRegion - Return Home by Time - Team AIO Mod++
 
+#Region - Legend trophy protection - Team AIO Mod++
+Func ChkProtectInLL()
+	$g_bProtectInLL = (GUICtrlRead($g_hChkProtectInLL) = $GUI_CHECKED)
+	GUICtrlSetState($g_hChkForceProtectLL, ($g_bProtectInLL = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+	$g_bForceProtectLL = (GUICtrlRead($g_hChkForceProtectLL) = $GUI_CHECKED)
+EndFunc   ;==>ChkProtectInLL
+#EndRegion - Legend trophy protection - Team AIO Mod++

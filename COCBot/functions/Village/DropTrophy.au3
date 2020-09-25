@@ -16,8 +16,16 @@
 Func DropTrophy($bDebug = False) ; Drop Throphy - Team AIO Mod++
 
 	If $g_bDropTrophyEnable Then
+		#Region - Legend trophy protection - Team AIO Mod++
+		If $g_bProtectInLL Or ($g_bForceProtectLL And $g_bProtectInLL) Then
+			SetLog("Legend League protection: Skipped Drop Trophy.", $COLOR_ACTION)
+			Return
+		EndIf
+		#EndRegion - Legend trophy protection - Team AIO Mod++
+		
 		SetDebugLog("Drop Trophy()", $COLOR_DEBUG)
 		
+
 		#Region - Drop Throphy - Team AIO Mod++
 		If $g_bChkNoDropIfShield Then
 			Local $aResult = getShieldInfo() ; get expire time of shield

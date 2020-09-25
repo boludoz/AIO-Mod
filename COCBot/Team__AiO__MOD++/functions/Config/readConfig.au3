@@ -143,6 +143,11 @@ Func ReadConfig_MOD_MiscTab()
 	IniReadS($g_iTxtReturnTimer, $g_sProfileConfigPath, "search", "ReturnTimer", 5, "int")
 	#EndRegion - Return Home by Time - Team AIO Mod++
 
+	#Region - Legend trophy protection - Team AIO Mod++
+	IniReadS($g_bProtectInLL, $g_sProfileConfigPath, "attack", "ChkProtectInLL", $g_bProtectInLL, "Bool")
+	IniReadS($g_bForceProtectLL, $g_sProfileConfigPath, "attack", "ChkForceProtectLL", $g_bForceProtectLL, "Bool")
+	#EndRegion - Legend trophy protection - Team AIO Mod++
+
 EndFunc   ;==>ReadConfig_MOD_MiscTab
 
 Func ReadConfig_MOD_SuperXP()

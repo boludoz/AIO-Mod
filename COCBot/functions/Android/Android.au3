@@ -756,26 +756,26 @@ EndFunc   ;==>DetectInstalledAndroid
 ; Find preferred Adb Path. Current Android ADB is used and saved in profile.ini and shared across instances.
 Func FindPreferredAdbPath()
 
-	Local $adbPath, $iPID, $sOutput, $sStringOut
+	Local $sADBPath = "", $iPID, $sOutput, $sStringOut, $sDirPath
 	Local $sPathAdbv141 = @ScriptDir & "\lib\adb\adb.exe"
 	Local $sPathAdbvdll = @ScriptDir & "\lib\adb\AdbWinApi.dll"
 	Local $sPathAdbvdll1 = @ScriptDir & "\lib\adb\AdbWinUsbApi.dll"
 	Switch $g_iAndroidAdbReplace
 		Case 0
-			$adbPath = Execute("Get" & $g_sAndroidEmulator & "AdbPath()")
-			If Not FileExists($adbPath) Then
+			$sADBPath = Execute("Get" & $g_sAndroidEmulator & "AdbPath()")
+			If Not FileExists($sADBPath) Then
 				Local $sPath = Execute("Get" & $g_sAndroidEmulator & "Path()"), $aFiles
 				If not @error Then
 					$aFiles = _FileListToArrayRec($sPath, "*.exe", $FLTA_FILES, -1, $FLTAR_FASTSORT, $FLTAR_FULLPATH)
 					If not @error Then
 						For $s In $aFiles
 							If StringInStr($s, "adb") > 0 Then
-								Setlog("Find adb path : " & $s)
+								If $g_bDebugAndroid Then Setlog("FindPreferredAdbPath | Find adb path : " & $s, $COLOR_GREEN)
 								$iPID = Run($s, "", @SW_HIDE, $STDOUT_CHILD)
 								ProcessWaitClose($iPID, 10)
 								$sOutput = StdoutRead($iPID)
 								If StringInStr($sOutput, "Android Debug Bridge") > 0 Then 
-									$adbPath = $s
+									$sADBPath = $s
 									ExitLoop
 								EndIf
 							EndIf
@@ -784,56 +784,41 @@ Func FindPreferredAdbPath()
 				EndIf
 				
 				; It can be problematic.
-				; If Not FileExists($adbPath) Then
+				; If Not FileExists($sADBPath) Then
 					; first first of support Android
 					; For $i = 0 To UBound($g_avAndroidAppConfig) - 1
-						; $adbPath = Execute("Get" & $g_avAndroidAppConfig[$i][0] & "AdbPath()")
-						; If Not StringIsSpace($adbPath) Then ExitLoop
+						; $sADBPath = Execute("Get" & $g_avAndroidAppConfig[$i][0] & "AdbPath()")
+						; If Not StringIsSpace($sADBPath) Then ExitLoop
 					; Next
 				; EndIf
 				
 			EndIf
-			If Not FileExists($adbPath) Then ContinueCase
+			If Not FileExists($sADBPath) Then ContinueCase
 		Case 1
 			If FileExists($sPathAdbv141) And FileExists($sPathAdbvdll) And FileExists($sPathAdbvdll1) Then
-				$adbPath = $sPathAdbv141
+				$sADBPath = $sPathAdbv141
 			Else
 				ContinueCase
 			EndIf
-		Case 2
-			$adbPath = @ScriptDir & "\lib\TempAdb\" & $g_sAndroidInstance & "\"
-			Local $sAndroidADBversion
-			$g_sAndroidAdbPath = $adbPath
-			If DirCreate($adbPath) = 0 Then
-				SetLog("Adb Directory error!", $COLOR_ERROR)
-				$adbPath = ""
+		Case 2, Else
+			$sADBPath = @ScriptDir & "\lib\TempAdb\" & $g_sAndroidInstance & "\"
+			If DirCreate($sADBPath) = 0 Then
+				If $g_bDebugAndroid Then Setlog("FindPreferredAdbPath | Adb Directory error!", $COLOR_ERROR)
 			Else
-				$adbPath = $adbPath & "adb.exe"
+				$sADBPath = $sADBPath & "adb.exe"
 			EndIf
-			$iPID = Run($adbPath & " version", "", @SW_HIDE, $STDOUT_CHILD)
-			ProcessWaitClose($iPID, 10)
-			$sOutput = StdoutRead($iPID)
-			$sStringOut = StringSplit($sOutput, @CRLF, $STR_NOCOUNT)
-			If UBound($sStringOut) > 1 Then
-				$sAndroidADBversion = StringReplace($sStringOut[0], "Android Debug Bridge version ", "")
-				SetDebugLog("Adb Version: " & $sAndroidADBversion)
-			Else
-				SetDebugLog("Adb Get version Error!")
-			EndIf
-			Local $Version = GetVersionNormalized($sAndroidADBversion)
-			Local $NewVersion = GetVersionNormalized("1.0.40")
-			If $Version < $NewVersion Then
-				SetDebugLog("Let's Update the adb version!", $COLOR_ACTION)
-				Local $DirPath = @ScriptDir & "\lib\TempAdb\" & $g_sAndroidInstance & "\"
-				SetDebugLog("ADB Destination Dir: " & $DirPath)
-				SetDebugLog("ADB EXE : " & $DirPath & "adb.exe")
-				If FileCopy($sPathAdbv141, $DirPath & "adb.exe", $FC_OVERWRITE) = 0 Then SetDebugLog("Adb was not updated!", $COLOR_ERROR)
-				If FileCopy($sPathAdbvdll, $DirPath & "AdbWinApi.dll", $FC_OVERWRITE) = 0 Then SetDebugLog("AdbWinApi was not updated!", $COLOR_ERROR)
-				If FileCopy($sPathAdbvdll1, $DirPath & "AdbWinUsbApi.dll", $FC_OVERWRITE) = 0 Then SetDebugLog("AdbWinUsbApi was not updated!", $COLOR_ERROR)
+			If FileGetSize($sPathAdbv141) <> FileGetSize($sADBPath & "adb.exe") Then
+				If $g_bDebugAndroid Then Setlog("FindPreferredAdbPath | Let's Update the adb version!", $COLOR_GREEN)
+				$sDirPath = @ScriptDir & "\lib\TempAdb\" & $g_sAndroidInstance & "\"
+				If $g_bDebugAndroid Then Setlog("FindPreferredAdbPath | ADB Destination Dir: " & $sDirPath, $COLOR_GREEN)
+				If $g_bDebugAndroid Then Setlog("FindPreferredAdbPath | ADB EXE : " & $sDirPath & "adb.exe", $COLOR_GREEN)
+				If FileCopy($sPathAdbv141, $sDirPath & "adb.exe", $FC_OVERWRITE) <> 1 And FileCopy($sPathAdbvdll, $sDirPath & "AdbWinApi.dll", $FC_OVERWRITE) <> 1 And FileCopy($sPathAdbvdll1, $sDirPath & "AdbWinUsbApi.dll", $FC_OVERWRITE) <> 1 Then 
+					If $g_bDebugAndroid Then Setlog("FindPreferredAdbPath | Adb was not updated!", $COLOR_ERROR)
+				EndIf
 			EndIf
 	EndSwitch
-	$g_sAndroidAdbPath = $adbPath
-	Return $adbPath
+	$g_sAndroidAdbPath = $sADBPath
+	Return $sADBPath
 EndFunc   ;==>FindPreferredAdbPath
 
 Func CompareAndUpdate(ByRef $UpdateWhenDifferent, Const $New)
@@ -4920,9 +4905,9 @@ Func CheckEmuNewVersions()
 		Case "BlueStacks2"
 			$NewVersion = GetVersionNormalized("4.111.0.0")
 		Case "MEmu"
-			$NewVersion = GetVersionNormalized("7.1.1.0")
+			$NewVersion = GetVersionNormalized("7.2.7.0")
          Case "Nox"
-			$NewVersion = GetVersionNormalized("6.6.0.9")
+			$NewVersion = GetVersionNormalized("6.6.1.1")
 		Case Else
 			; diabled of the others
 			$NewVersion = GetVersionNormalized("99.0.0.0")

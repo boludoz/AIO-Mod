@@ -210,22 +210,26 @@ Func _VillageSearch($bIncludePrepare = False) ;Control for searching a village t
 			$THString = FindTownhall(True, False)
 		EndIf
 
-		For $i = 0 To $g_iModeCount - 2
-			If $isModeActive[$i] Then
-				If $g_abFilterMeetOneConditionEnable[$i] Then
-					If $g_abFilterMeetTH[$i] = False And $g_abFilterMeetTHOutsideEnable[$i] = False Then
-						;ignore, conditions not checked
+		#Region - Legend trophy protection - Team AIO Mod++
+		If Not $g_bLeagueAttack Then
+			For $i = 0 To $g_iModeCount - 2
+				If $isModeActive[$i] Then
+					If $g_abFilterMeetOneConditionEnable[$i] Then
+						If $g_abFilterMeetTH[$i] = False And $g_abFilterMeetTHOutsideEnable[$i] = False Then
+							;ignore, conditions not checked
+						Else
+							If CompareTH($i) Then $match[$i] = True ;have a match if meet one enabled & a TH condition is met. ; UPDATE THE VARIABLE $g_iSearchTHLResult
+						EndIf
 					Else
-						If CompareTH($i) Then $match[$i] = True ;have a match if meet one enabled & a TH condition is met. ; UPDATE THE VARIABLE $g_iSearchTHLResult
+						If Not CompareTH($i) Then $match[$i] = False ;if TH condition not met, skip. if it is, match is determined based on resources ; UPDATE THE VARIABLE $g_iSearchTHLResult
 					EndIf
-				Else
-					If Not CompareTH($i) Then $match[$i] = False ;if TH condition not met, skip. if it is, match is determined based on resources ; UPDATE THE VARIABLE $g_iSearchTHLResult
 				EndIf
-			EndIf
-		Next
-
-		; Check the TH Level for BullyMode conditional
-		If $g_iSearchTHLResult = -1 Then CompareTH(0) ; inside have a conditional to update $g_iSearchTHLResult
+			Next
+		
+			; Check the TH Level for BullyMode conditional
+			If $g_iSearchTHLResult = -1 Then CompareTH(0) ; inside have a conditional to update $g_iSearchTHLResult
+		EndIf
+		#EndRegion - Legend trophy protection - Team AIO Mod++
 
 		; ----------------- WRITE LOG OF ENEMY RESOURCES -----------------------------------
 		Local $GetResourcesTXT = StringFormat("%3s", $g_iSearchCount) & "> [G]:" & StringFormat("%7s", $g_iSearchGold) & " [E]:" & StringFormat("%7s", $g_iSearchElixir) & " [D]:" & StringFormat("%5s", $g_iSearchDark) & " [T]:" & StringFormat("%2s", $g_iSearchTrophy) & $THString
@@ -244,56 +248,63 @@ Func _VillageSearch($bIncludePrepare = False) ;Control for searching a village t
 		If $checkDeadBase Then $dbBase = checkDeadBase()
 
 		; ----------------- CHECK WEAK BASE -------------------------------------------------
-		If (IsWeakBaseActive($DB) And $dbBase And ($match[$DB] Or $g_abFilterMeetOneConditionEnable[$DB])) Or _
-				(IsWeakBaseActive($LB) And ($match[$LB] Or $g_abFilterMeetOneConditionEnable[$LB])) Then
-			; check twice if Eagle is active
-			Local $maxTry = 1
-			For $i = 0 To $g_iModeCount - 2
-				If $g_abFilterMaxEagleEnable[$i] Then $maxTry = 2
-			Next
-			For $try = 1 To $maxTry ; check twice to be sure due to walking heroes
-				;let try to reduce weekbase time
-				If ($g_iSearchTH <> "-") Then
-					$weakBaseValues = IsWeakBase($g_iImglocTHLevel, $g_sImglocRedline, False)
-				Else
-					$weakBaseValues = IsWeakBase($g_iMaxTHLevel, "", False)
-				EndIf
-				Local $bIsWeak = False
+		#Region - Legend trophy protection - Team AIO Mod++
+		If Not $g_bLeagueAttack Then
+			If (IsWeakBaseActive($DB) And $dbBase And ($match[$DB] Or $g_abFilterMeetOneConditionEnable[$DB])) Or _
+					(IsWeakBaseActive($LB) And ($match[$LB] Or $g_abFilterMeetOneConditionEnable[$LB])) Then
+				; check twice if Eagle is active
+				Local $maxTry = 1
 				For $i = 0 To $g_iModeCount - 2
-					If IsWeakBaseActive($i) And (($i = $DB And $dbBase) Or $i <> $DB) And ($match[$i] Or $g_abFilterMeetOneConditionEnable[$i]) Then
-						If getIsWeak($weakBaseValues, $i) Then
-							$match[$i] = True
-							$bIsWeak = True
-						Else
-							$match[$i] = False
-							$noMatchTxt &= ", Not a Weak Base for " & $g_asModeText[$i]
-							; don't check again
-							$try = 2
+					If $g_abFilterMaxEagleEnable[$i] Then $maxTry = 2
+				Next
+				For $try = 1 To $maxTry ; check twice to be sure due to walking heroes
+					;let try to reduce weekbase time
+					If ($g_iSearchTH <> "-") Then
+						$weakBaseValues = IsWeakBase($g_iImglocTHLevel, $g_sImglocRedline, False)
+					Else
+						$weakBaseValues = IsWeakBase($g_iMaxTHLevel, "", False)
+					EndIf
+					Local $bIsWeak = False
+					For $i = 0 To $g_iModeCount - 2
+						If IsWeakBaseActive($i) And (($i = $DB And $dbBase) Or $i <> $DB) And ($match[$i] Or $g_abFilterMeetOneConditionEnable[$i]) Then
+							If getIsWeak($weakBaseValues, $i) Then
+								$match[$i] = True
+								$bIsWeak = True
+							Else
+								$match[$i] = False
+								$noMatchTxt &= ", Not a Weak Base for " & $g_asModeText[$i]
+								; don't check again
+								$try = 2
+							EndIf
 						EndIf
+					Next
+	
+					If $bIsWeak And $try = 1 Then
+						ResumeAndroid()
+						If RandomSleep(3000) Then Return ; wait 5 Seconds to give heroes time to "walk away"
+						ForceCaptureRegion()
+						_CaptureRegion2()
+						SuspendAndroid()
 					EndIf
 				Next
-
-				If $bIsWeak And $try = 1 Then
-					ResumeAndroid()
-					If RandomSleep(3000) Then Return ; wait 5 Seconds to give heroes time to "walk away"
-					ForceCaptureRegion()
-					_CaptureRegion2()
-					SuspendAndroid()
-				EndIf
-			Next
-		EndIf
-
-		ResumeAndroid()
-
-		If $g_bLeagueAttack Then
-			If $dbBase And Not $match[$DB] Then
-				SetLog("Force attacking League Dead Base")
-				$match[$DB] = True
-			ElseIf Not $match[$LB] Then
-				SetLog("Force attacking League Live Base")
-				$match[$LB] = True
 			EndIf
+
+			ResumeAndroid()
+		Else
+			SetLog($GetResourcesTXT, $COLOR_SUCCESS, "Lucida Console", 7.5)
+			If $match[$DB] And $dbBase Then
+				SetLog("      " & "Legend League: Dead Base Found!*", $COLOR_SUCCESS, "Lucida Console", 7.5)
+				$g_iMatchMode = $DB
+			ElseIf $match[$LB] Then
+				SetLog("      " & "Legend League: Live Base Found!", $COLOR_SUCCESS, "Lucida Console", 7.5)
+				$g_iMatchMode = $LB
+			ElseIf $match[$DB] Then
+				SetLog("      " & "Legend League: Live Base Found But Will Use Dead Base Attack Type!", $COLOR_SUCCESS, "Lucida Console", 7.5)
+				$g_iMatchMode = $DB
+			EndIf
+			ExitLoop
 		EndIf
+		#EndRegion - Legend trophy protection - Team AIO Mod++
 
 		; ----------------- WRITE LOG VILLAGE FOUND AND ASSIGN VALUE AT $g_iMatchMode and exitloop  IF CONTITIONS MEET ---------------------------
 		If $match[$DB] And $dbBase Then
@@ -607,6 +618,12 @@ Func WriteLogVillageSearch($x)
 	;[18.07.30] - Meet: Gold and Elixir
 	;[18.07.30] - Weak Base(Mortar: 5, WizTower: 5)
 
+	If $g_bLeagueAttack Then
+		If $g_bDebugSetlog Then SetLogCentered(" Searching For " & $g_asModeText[$x] & " ", Default, $COLOR_INFO)
+		SetLog("In Legend League Bot will attack any " & $g_asModeText[$x] & " it get's.", $COLOR_INFO)
+		Return
+	EndIf
+	
 	Local $MeetGxEtext = "", $MeetGorEtext = "", $MeetGplusEtext = "", $MeetDEtext = "", $MeetTrophytext = "", $MeetTHtext = "", $MeetTHOtext = "", $MeetWeakBasetext = "", $EnabledAftertext = ""
 	If $g_aiFilterMeetGE[$x] = 0 Then $MeetGxEtext = "- Meet: Gold and Elixir"
 	If $g_aiFilterMeetGE[$x] = 1 Then $MeetGorEtext = "- Meet: Gold or Elixir"
