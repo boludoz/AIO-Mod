@@ -21,13 +21,13 @@ Func SetSleep($iType)
 			If $g_bChkEnableRandom[$iMode] Then
 				Return Round(Random(1, 1.25) * (($g_iDeployDelay[$iMode] + 1) * $iOffset0))
 				Else
-				Return Round(Random(1, 15) * $iOffset0)
+				Return Round(Random(4, 15) * $iOffset0)
 			EndIf
 		Case 1
 			If $g_bChkEnableRandom[$iMode] Then
 				Return Round(Random(1, 1.25) * (($g_iDeployWave[$iMode] + 1) * $iOffset1))
-				Else   
-				Return Round(Random(1, 15) * $iOffset1)
+				Else
+				Return Round(Random(4, 15) * $iOffset1)
 			EndIf
 	EndSwitch
 EndFunc   ;==>SetSleep

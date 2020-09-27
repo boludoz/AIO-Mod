@@ -11,8 +11,14 @@
 ; ===============================================================================================================================
 Global $g_bForceDocr = True
 
+Func getUpgradeResourcesItems($x_start = 560, $y_start = 445, $iWidth = 185, $iHeight = 50)
+	Local $i = getOcrAndCaptureDOCR($g_sASUpgradeResourcesDOCRPath, $x_start, $y_start, $iWidth, $iHeight, True, True) 
+	Return (StringLen($i) > 2) ? (Number($i) & "|OK") : (Number(getOcrAndCaptureDOCR($g_sASUpgradeResourcesRedDOCRPath, $x_start, $y_start, $iWidth, $iHeight, True, True)) & "|RED")
+EndFunc   ;==>getGoldVillageSearch
+
 Func getUpgradeResources($x_start = 352, $y_start = 377, $iWidth = 155, $iHeight = 40)
-	Return getOcrAndCaptureDOCR($g_sASUpgradeResourcesDOCRPath, $x_start, $y_start, $iWidth, $iHeight, True, True)
+	Local $i = getOcrAndCaptureDOCR($g_sASUpgradeResourcesDOCRPath, $x_start, $y_start, $iWidth, $iHeight, True, True)
+	Return (StringLen($i) > 2) ? (Number($i) & "|OK") : (Number(getOcrAndCaptureDOCR($g_sASUpgradeResourcesRedDOCRPath, $x_start, $y_start, $iWidth, $iHeight, True, True)) & "|RED")
 EndFunc   ;==>getGoldVillageSearch
 
 ; Attack Screen

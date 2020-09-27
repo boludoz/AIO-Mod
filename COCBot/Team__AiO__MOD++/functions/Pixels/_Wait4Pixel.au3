@@ -125,9 +125,9 @@ EndFunc   ;==>_WaitForCheckImgGone
 ; Example .......: No
 ; ===============================================================================================================================
 ; _ColorCheckCie2000(0x00FF00, 0x00F768, 5) ; 4.74575054233923 ; Old | 6.66013616882879 | 3.25675649923578
-Func _ColorCheckCie2000($nColor1 = 0x00FF00, $nColor2 = 0x00FF6C, $sVari = 5, $Ignore = Default)
+Func _ColorCheckCie2000($nColor1 = 0x00FF00, $nColor2 = 0x00FF6C, $sVari = 5, $sIgnore = Default)
 	Local $iPixelDiff = ciede2000(xyz2lab(StandardRGBXTOXZY($nColor1)), xyz2lab(StandardRGBXTOXZY($nColor2)))
-	If $g_bDebugSetlog Then SetLog("_ColorCheckCie2000 | $iPixelDiff " & $iPixelDiff, $COLOR_INFO)
+		If $g_bDebugSetlog Then SetLog("_ColorCheckCie2000 | $iPixelDiff " & $iPixelDiff, $COLOR_INFO)
 	If $iPixelDiff > $sVari Then
 		Return False
 	EndIf
@@ -136,8 +136,20 @@ Func _ColorCheckCie2000($nColor1 = 0x00FF00, $nColor2 = 0x00FF6C, $sVari = 5, $I
 EndFunc   ;==>_ColorCheckCie2000
 
 ; XYZ - D65 / 10° - 1964
-Func StandardRGBXTOXZY($nColor)
+Func StandardRGBXTOXZY($nColor, $sIgnore = Default)
 	Local $aRGB[3] = [Dec(StringMid(String($nColor), 1, 2)), Dec(StringMid(String($nColor), 3, 2)), Dec(StringMid(String($nColor), 5, 2))]
+	
+	Switch $sIgnore
+		Case "Red" ; mask RGB - Red
+			$aRGB[1] = 0
+			$aRGB[2] = 0
+		Case "Heroes" ; mask RGB - Green
+			$aRGB[0] = 0
+			$aRGB[1] = 0
+		Case "Red+Blue" ; mask RGB - Red
+			$aRGB[2] = 0
+	EndSwitch
+	
 	For $i = 0 To 2
 		$aRGB[$i] /= 255
 		If ($aRGB[$i] > 0.04045) Then

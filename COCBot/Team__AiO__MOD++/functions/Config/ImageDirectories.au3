@@ -162,4 +162,5 @@ Global $g_sAttackBarDOCRB = $g_sBaseDOCRPathB & "\AttackBar.docr"
 Global $g_sASButtonsDOCRPath = $g_sBaseDOCRPathB & "\AttackScreen\Buttons"
 
 ; Upgrade resources.
-Global $g_sASUpgradeResourcesDOCRPath = $g_sBaseDOCRPathB & "\Upgrade resources\"
+Global $g_sASUpgradeResourcesDOCRPath = $g_sBaseDOCRPathB & "\Upgrade resources\OK"
+Global $g_sASUpgradeResourcesRedDOCRPath = $g_sBaseDOCRPathB & "\Upgrade resources\Red"
