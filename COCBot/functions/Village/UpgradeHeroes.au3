@@ -60,7 +60,7 @@ Func UpgradeHeroes()
 				SetLog("Not enough Builders available to upgrade the Archer Queen")
 				Return
 			EndIf
-			QueenUpgrade()
+			HeroUpgrade("Queen") ; QueenUpgrade()
 
 			If _Sleep($DELAYUPGRADEHERO1) Then Return
 		EndIf
@@ -72,7 +72,7 @@ Func UpgradeHeroes()
 				SetLog("Not enough Builders available to upgrade the Barbarian King")
 				Return
 			EndIf
-			KingUpgrade()
+			HeroUpgrade("King") ; KingUpgrade()
 
 			If _Sleep($DELAYUPGRADEHERO1) Then Return
 		EndIf
@@ -84,7 +84,7 @@ Func UpgradeHeroes()
 				SetLog("Not enough Builders available to upgrade the Royal Champion")
 				Return
 			EndIf
-			ChampionUpgrade()
+			HeroUpgrade("Champion") ; ChampionUpgrade()
 
 			If _Sleep($DELAYUPGRADEHERO1) Then Return
 		EndIf
@@ -102,441 +102,140 @@ Func UpgradeHeroes()
 			SetLog("Not enough Builders available to upgrade the Grand Warden")
 			Return
 		EndIf
-		WardenUpgrade()
+		HeroUpgrade("Warden") ; WardenUpgrade()
 	EndIf
 EndFunc   ;==>UpgradeHeroes
 
-Func QueenUpgrade()
+Func HeroUpgrade($sHero = "")
+	If Not Execute("$g_bUpgrade" & $sHero & "Enable") Then Return
+	If @error Then Return
 
-	If Not $g_bUpgradeQueenEnable Then Return
-	Local $aHeroLevel = 0
-
-	SetLog("Upgrade Queen")
-	ClickAway()
-	If _Sleep($DELAYUPGRADEHERO2) Then Return
-	BuildingClickP($g_aiQueenAltarPos) ;Click Queen Altar
-	If _Sleep($DELAYUPGRADEHERO2) Then Return
-
-	;Get Queen info and Level
-	Local $sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY) ; 860x780
-	If @error Then SetError(0, 0, 0)
-	Local $CountGetInfo = 0
-	While IsArray($sInfo) = False
-		$sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY) ; 860x780
-		If @error Then SetError(0, 0, 0)
-		Sleep(100)
-		$CountGetInfo += 1
-		If $CountGetInfo >= 50 Then Return
-	WEnd
-	If $g_bDebugSetlog Then SetDebugLog(_ArrayToString($sInfo, " "), $COLOR_DEBUG)
-	If @error Then Return SetError(0, 0, 0)
-
-
-	If $sInfo[0] > 1 Or $sInfo[0] = "" Then
-		If StringInStr($sInfo[1], "Quee") = 0 Then
-			SetLog("Bad Archer Queen location", $COLOR_ACTION)
-			Return
-		Else
-			If $sInfo[2] <> "" Then
-				$aHeroLevel = Number($sInfo[2]) ; grab hero level from building info array
-				SetLog("Your Archer Queen level read as: " & $aHeroLevel, $COLOR_SUCCESS)
-				If $aHeroLevel = $g_iMaxQueenLevel Then ; max hero
-					SetLog("Your Archer Queen is at max level, cannot upgrade anymore!", $COLOR_INFO)
-					$g_bUpgradeQueenEnable = False ; turn Off the Queens upgrade
-					Return
-				EndIf
-			Else
-				SetLog("Your Queen Level was not found!", $COLOR_INFO)
-				Return
-			EndIf
-		EndIf
-	Else
-		SetLog("Bad Queen OCR", $COLOR_ERROR)
-		Return
-	EndIf
-
-	If _Sleep($DELAYUPGRADEHERO1) Then Return
-
-	;##### Get updated village elixir and dark elixir values
-	If _CheckPixel($aVillageHasDarkElixir, $g_bCapturePixel) Then ; check if the village have a Dark Elixir Storage
-		$g_aiCurrentLoot[$eLootDarkElixir] = Number(getResourcesMainScreen(728, 123))
-		If $g_bDebugSetlog Then SetDebugLog("Updating village values [D]: " & $g_aiCurrentLoot[$eLootDarkElixir], $COLOR_DEBUG)
-	Else
-		If $g_bDebugSetlog Then SetDebugLog("getResourcesMainScreen didn't get the DE value", $COLOR_DEBUG)
-	EndIf
-
-	If $g_aiCurrentLoot[$eLootDarkElixir] < ($g_afQueenUpgCost[$aHeroLevel] * 1000) * (1 - Number($g_iBuilderBoostDiscount) / 100) + $g_iUpgradeMinDark Then
-		SetLog("Insufficient DE for Upg Queen, requires: " & ($g_afQueenUpgCost[$aHeroLevel] * 1000) * (1 - Number($g_iBuilderBoostDiscount) / 100) & " + " & $g_iUpgradeMinDark, $COLOR_INFO)
-		Return
-	EndIf
-
-	Local $aUpgradeButton = findButton("Upgrade", Default, 1, True)
-	If IsArray($aUpgradeButton) And UBound($aUpgradeButton, 1) = 2 Then
-		If _Sleep($DELAYUPGRADEHERO2) Then Return
-		ClickP($aUpgradeButton)
-		If _Sleep($DELAYUPGRADEHERO3) Then Return ; Wait for window to open
-		If $g_bDebugImageSave Then SaveDebugImage("UpgradeDarkBtn1")
-		If _ColorCheck(_GetPixelColor(721, 118 + $g_iMidOffsetY, True), Hex(0xE00408, 6), 20) Then ; Check if the Hero Upgrade window is open
-
-			Local $aWhiteZeros = decodeSingleCoord(findImage("UpgradeWhiteZero" ,$g_sImgUpgradeWhiteZero, GetDiamondFromRect("408,519,747,606"), 1, True, Default))
-			If IsArray($aWhiteZeros) And UBound($aWhiteZeros, 1) = 2 Then
-				ClickP($aWhiteZeros, 1, 0) ; Click upgrade buttton
-				ClickAway()
-
-				If _Sleep($DELAYUPGRADEHERO1) Then Return
-				If $g_bDebugImageSave Then SaveDebugImage("UpgradeDarkBtn2")
-				If _ColorCheck(_GetPixelColor(573, 256 + $g_iMidOffsetY, True), Hex(0xDB0408, 6), 20) Then ; Redundant Safety Check if the use Gem window opens
-					SetLog("Queen Upgrade Fail! Gem Window popped up!", $COLOR_ERROR)
-					ClickAway()
-					Return
-				EndIf
-				SetLog("Queen Upgrade complete", $COLOR_SUCCESS)
-				If _Sleep($DELAYUPGRADEHERO2) Then Return ; Wait for window to close
-				$g_iNbrOfHeroesUpped += 1
-				$g_iCostDElixirHero += $g_afQueenUpgCost[$aHeroLevel - 1] * 1000 * (1 - Number($g_iBuilderBoostDiscount) / 100)
-				UpdateStats()
-			Else
-				SetLog("Queen Upgrade Fail! No DE!", $COLOR_ERROR)
-				ClickAway()
-				Return
-			EndIf
-		Else
-			SetLog("Upgrade Queen window open fail", $COLOR_ERROR)
-		EndIf
-	Else
-		SetLog("Upgrade Queen error finding button", $COLOR_ERROR)
-	EndIf
-
-	ClickAway()
-EndFunc   ;==>QueenUpgrade
-
-Func KingUpgrade()
-	;upgradeking
-	If Not $g_bUpgradeKingEnable Then Return
-	Local $aHeroLevel = 0
-
-	SetLog("Upgrade King")
-	ClickAway()
-	If _Sleep($DELAYUPGRADEHERO2) Then Return
-	BuildingClickP($g_aiKingAltarPos) ;Click King Altar
-	If _Sleep($DELAYUPGRADEHERO2) Then Return
-
-	;Get King info
-	Local $sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY) ; 860x780
-	If @error Then SetError(0, 0, 0)
-	Local $CountGetInfo = 0
-	While IsArray($sInfo) = False
-		$sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY) ; 860x780
-		If @error Then SetError(0, 0, 0)
-		If _Sleep(100) Then Return
-		$CountGetInfo += 1
-		If $CountGetInfo >= 50 Then Return
-	WEnd
-	If $g_bDebugSetlog Then SetDebugLog(_ArrayToString($sInfo, " "), $COLOR_DEBUG)
-	If @error Then Return SetError(0, 0, 0)
-
-	If $sInfo[0] > 1 Or $sInfo[0] = "" Then
-		If StringInStr($sInfo[1], "Barbarian") = 0 Then
-			SetLog("Bad Barbarian King location", $COLOR_ACTION)
-			Return
-		Else
-			If $sInfo[2] <> "" Then
-				$aHeroLevel = Number($sInfo[2]) ; grab hero level from building info array
-				SetLog("Your King Level read as: " & $aHeroLevel, $COLOR_SUCCESS)
-				If $aHeroLevel = $g_iMaxKingLevel Then ; max hero
-					SetLog("Your Babarian King is at max level, cannot upgrade anymore!", $COLOR_INFO)
-					$g_bUpgradeKingEnable = False ; Turn Off the King's Upgrade
-					Return
-				EndIf
-			Else
-				SetLog("Your Barbarian King Level was not found!", $COLOR_INFO)
-				Return
-			EndIf
-		EndIf
-	Else
-		SetLog("Bad King OCR", $COLOR_ERROR)
-		Return
-	EndIf
-
-	If _Sleep($DELAYUPGRADEHERO1) Then Return
-
-	;##### Get updated village elixir and dark elixir values
-	If _CheckPixel($aVillageHasDarkElixir, $g_bCapturePixel) Then ; check if the village have a Dark Elixir Storage
-		$g_aiCurrentLoot[$eLootDarkElixir] = Number(getResourcesMainScreen(728, 123))
-		If $g_bDebugSetlog Then SetDebugLog("Updating village values [D]: " & $g_aiCurrentLoot[$eLootDarkElixir], $COLOR_DEBUG)
-	Else
-		If $g_bDebugSetlog Then SetDebugLog("getResourcesMainScreen didn't get the DE value", $COLOR_DEBUG)
-	EndIf
-	If _Sleep(100) Then Return
-
-	If $g_aiCurrentLoot[$eLootDarkElixir] < ($g_afKingUpgCost[$aHeroLevel] * 1000) * (1 - Number($g_iBuilderBoostDiscount) / 100) + $g_iUpgradeMinDark Then
-		SetLog("Insufficient DE for Upg King, requires: " & ($g_afKingUpgCost[$aHeroLevel] * 1000) * (1 - Number($g_iBuilderBoostDiscount) / 100) & " + " & $g_iUpgradeMinDark, $COLOR_INFO)
-		Return
-	EndIf
-
-	Local $aUpgradeButton = findButton("Upgrade", Default, 1, True)
-	If IsArray($aUpgradeButton) And UBound($aUpgradeButton, 1) = 2 Then
-		If _Sleep($DELAYUPGRADEHERO2) Then Return
-		ClickP($aUpgradeButton)
-		If _Sleep($DELAYUPGRADEHERO3) Then Return ; Wait for window to open
-		If $g_bDebugImageSave Then SaveDebugImage("UpgradeDarkBtn1")
-
-		If _ColorCheck(_GetPixelColor(715, 120 + $g_iMidOffsetY, True), Hex(0xE01C20, 6), 20) Then ; Check if the Hero Upgrade window is open
-			Local $aWhiteZeros = decodeSingleCoord(findImage("UpgradeWhiteZero" ,$g_sImgUpgradeWhiteZero, GetDiamondFromRect("408,519,747,606"), 1, True, Default))
-			If IsArray($aWhiteZeros) And UBound($aWhiteZeros, 1) = 2 Then
-				ClickP($aWhiteZeros, 1, 0) ; Click upgrade buttton
-				ClickAway()
-
-				If _Sleep($DELAYUPGRADEHERO1) Then Return
-				If $g_bDebugImageSave Then SaveDebugImage("UpgradeDarkBtn2")
-				If _ColorCheck(_GetPixelColor(573, 256 + $g_iMidOffsetY, True), Hex(0xDB0408, 6), 20) Then ; Redundant Safety Check if the use Gem window opens
-					SetLog("King Upgrade Fail! Gem Window popped up!", $COLOR_ERROR)
-					ClickAway()
-					Return
-				EndIf
-				SetLog("King Upgrade complete", $COLOR_SUCCESS)
-				If _Sleep($DELAYUPGRADEHERO2) Then Return ; Wait for window to close
-				$g_iNbrOfHeroesUpped += 1
-				$g_iCostDElixirHero += $g_afKingUpgCost[$aHeroLevel - 1] * 1000 * (1 - Number($g_iBuilderBoostDiscount) / 100)
-				UpdateStats()
-			Else
-				SetLog("King Upgrade Fail! No DE!", $COLOR_ERROR)
-				ClickAway()
-				Return
-			EndIf
-
-		Else
-			SetLog("Upgrade King window open fail", $COLOR_ERROR)
-		EndIf
-	Else
-		SetLog("Upgrade King error finding button", $COLOR_ERROR)
-	EndIf
-
-	ClickAway()
-EndFunc   ;==>KingUpgrade
-
-Func WardenUpgrade()
-	If Not $g_bUpgradeWardenEnable Then Return
-
-	If Number($g_iTownHallLevel) <= 10 Then
-		SetLog("Must have atleast Townhall 11 for Grand Warden Upgrade", $COLOR_ERROR)
-		Return
-	EndIf
-
-	SetLog("Upgrade Grand Warden")
-	ClickAway()
-
-	If _Sleep($DELAYUPGRADEHERO2) Then Return
-
-	ClickP($g_aiWardenAltarPos, 1, 0, "#8888") ;Click Warden Altar
-
-	If _Sleep($DELAYUPGRADEHERO2) Then Return
-
-	;Get Warden info
-	Local $sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY) ; 860x780
-	If @error Then SetError(0, 0, 0)
-	Local $CountGetInfo = 0
-	While IsArray($sInfo) = False
-		$sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY) ; 860x780
-		If @error Then SetError(0, 0, 0)
-		If _Sleep(100) Then Return
-		$CountGetInfo += 1
-		If $CountGetInfo = 50 Then Return
-	WEnd
-	If $g_bDebugSetlog Then SetDebugLog(_ArrayToString($sInfo, " "))
-	If @error Then Return SetError(0, 0, 0)
-
-	If $sInfo[0] > 1 Or $sInfo[0] = "" Then
-		If StringInStr($sInfo[1], "Grand") = 0 Then
-			SetLog("Bad Warden location", $COLOR_ACTION)
-			Return
-		Else
-			If $sInfo[2] <> "" Then
-				$g_iWardenLevel = Number($sInfo[2]) ; grab hero level from building info array
-				SetLog("Your Grand Warden Warden Level read as: " & $g_iWardenLevel, $COLOR_SUCCESS)
-				If $g_iWardenLevel = $g_iMaxWardenLevel Then ; max hero
-					SetLog("Your Grand Warden is at max level, cannot upgrade anymore!", $COLOR_INFO)
-					$g_bUpgradeWardenEnable = False ; turn OFF the Wardn's Upgrade
-					Return
-				EndIf
-			Else
-				SetLog("Your Grand Warden Level was not found!", $COLOR_INFO)
-				Return
-			EndIf
-		EndIf
-	Else
-		SetLog("Bad Warden OCR", $COLOR_ERROR)
-		Return
-	EndIf
-
-	If _Sleep($DELAYUPGRADEHERO1) Then Return
+	Static $s_KingMin[8] = [False, False, False, False, False, False, False, False]
+	Static $s_QueenMin[8] = [False, False, False, False, False, False, False, False]
+	Static $s_WardenMin[8] = [False, False, False, False, False, False, False, False]
+	Static $s_ChampionMin[8] = [False, False, False, False, False, False, False, False]
 
 	;##### Get updated village elixir values
-	If _CheckPixel($aVillageHasDarkElixir, $g_bCapturePixel) Then ; check if the village have a Dark Elixir Storage
-		$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(705, 74)
-		If $g_bDebugSetlog Then SetDebugLog("Updating village values [E]: " & $g_aiCurrentLoot[$eLootElixir], $COLOR_DEBUG)
-	Else
-		$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(710, 74)
-	EndIf
-
-	If _Sleep(100) Then Return
-
-	If $g_aiCurrentLoot[$eLootElixir] < ($g_afWardenUpgCost[$g_iWardenLevel] * 1000000) * (1 - Number($g_iBuilderBoostDiscount) / 100) + $g_iUpgradeMinElixir Then
-		SetLog("Insufficient Elixir for Warden Upgrade, requires: " & ($g_afWardenUpgCost[$g_iWardenLevel] * 1000000) * (1 - Number($g_iBuilderBoostDiscount) / 100) & " + " & $g_iUpgradeMinElixir, $COLOR_INFO)
+	VillageReport(True, True)
+	If _Sleep($DELAYUPGRADEHERO2) Then Return
+	
+	Local $vRequisite = Execute("$s_"& $sHero &"Min[$g_iCurAccount]")
+	If @error Then Return
+	If Not $vRequisite = False And $g_aiCurrentLoot[($sHero = "Warden") ? ($eLootElixir) : ($eLootDarkElixir)] < $vRequisite Then
+		SetLog("You don't have enough resources to improve : " & $sHero & " skip.", $COLOR_INFO)
+		ClickAway()
+		CheckMainScreen(False)
 		Return
 	EndIf
-
-	If _Sleep($DELAYUPGRADEHERO2) Then Return
-
-	Local $aUpgradeButton = findButton("Upgrade", Default, 1, True)
-	If IsArray($aUpgradeButton) And UBound($aUpgradeButton, 1) = 2 Then
-		If _Sleep($DELAYUPGRADEHERO2) Then Return
-		ClickP($aUpgradeButton)
-		If _Sleep($DELAYUPGRADEHERO3) Then Return ; Wait for window to open
-
-		If $g_bDebugSetlog Then SaveDebugImage("UpgradeElixirBtn1")
-
-		If $g_bDebugSetlog Then SetDebugLog("pixel: " & _GetPixelColor(718, 120 + $g_iMidOffsetY, True) & " expected " & Hex(0xDD0408, 6) & " result: " & _ColorCheck(_GetPixelColor(718, 120 + $g_iMidOffsetY, True), Hex(0xDD0408, 6), 20), $COLOR_DEBUG)
-		If _ColorCheck(_GetPixelColor(718, 120 + $g_iMidOffsetY, True), Hex(0xDD0408, 6), 20) Then ; Check if the Hero Upgrade window is open
-
-			Local $aWhiteZeros = decodeSingleCoord(findImage("UpgradeWhiteZero" ,$g_sImgUpgradeWhiteZero, GetDiamondFromRect("408,519,747,606"), 1, True, Default))
-			If IsArray($aWhiteZeros) And UBound($aWhiteZeros, 1) = 2 Then
-				ClickP($aWhiteZeros, 1, 0) ; Click upgrade buttton
-				ClickAway()
-
-				If _Sleep($DELAYUPGRADEHERO1) Then Return
-
-				If $g_bDebugSetlog Then SaveDebugImage("UpgradeElixirBtn2")
-				If _ColorCheck(_GetPixelColor(573, 256 + $g_iMidOffsetY, True), Hex(0xDB0408, 6), 20) Then ; Redundant Safety Check if the use Gem window opens
-					SetLog("Warden Upgrade Fail! Gem Window popped up!", $COLOR_ERROR)
-					ClickAway()
-					Return
-				EndIf
-
-				SetLog("Warden Upgrade Started", $COLOR_SUCCESS)
-				If _Sleep($DELAYUPGRADEHERO2) Then Return ; Wait for window to close
-				$g_iNbrOfHeroesUpped += 1
-				$g_iCostElixirBuilding += $g_afWardenUpgCost[$g_iWardenLevel - 1] * 1000 * (1 - Number($g_iBuilderBoostDiscount) / 100)
-				$g_iWardenLevel += 1
-				UpdateStats()
-			Else
-				SetLog("Warden Upgrade Fail! Not enough Elixir!", $COLOR_ERROR)
-				ClickAway()
-				Return
-			EndIf
-		Else
-			SetLog("Upgrade Warden window open fail", $COLOR_ERROR)
+	
+	Local $aAltarPos = Execute("$g_ai" & $sHero & "AltarPos")
+	If Not @error Then
+		If $aAltarPos < 1 Then 
+			SetDebugLog("Set " & $sHero & " Pos", $COLOR_ERROR)
+			Return False
 		EndIf
 	Else
-		SetLog("Upgrade Warden error finding button", $COLOR_ERROR)
+		SetDebugLog("Set " & $sHero & " Pos execute fail.", $COLOR_ERROR)
+		Return False
 	EndIf
-
-	ClickAway()
-EndFunc   ;==>WardenUpgrade
-
-Func ChampionUpgrade()
-
-	If Not $g_bUpgradeChampionEnable Then Return
-	Local $aHeroLevel = 0
-
-	SetLog("Upgrade Champion")
-	ClickAway()
-	If _Sleep($DELAYUPGRADEHERO2) Then Return
-	BuildingClickP($g_aiChampionAltarPos) ;Click Champion Altar
+	
+	CheckMainScreen(False)
+	SetLog("Upgrading " & $sHero, $COLOR_ACTION)
+	
+	BuildingClickP($aAltarPos)
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
 
-	;Get Champion info and Level
-	Local $sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY) ; 860x780
-	If @error Then SetError(0, 0, 0)
-	Local $CountGetInfo = 0
-	While IsArray($sInfo) = False
+	;Get Hero info
+	Local $sInfo 
+	Local $i = 0
+	Do
 		$sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY) ; 860x780
-		If @error Then SetError(0, 0, 0)
-		Sleep(100)
-		$CountGetInfo += 1
-		If $CountGetInfo >= 50 Then Return
-	WEnd
-	If $g_bDebugSetlog Then SetDebugLog(_ArrayToString($sInfo, " "), $COLOR_DEBUG)
+		If @error Then Return
+		If _Sleep(100) Then Return
+		$i += 1
+	Until IsArray($sInfo) Or $i > 50
+	
+	If $g_bDebugSetlog Then SetDebugLog(_ArrayToString($sInfo, " "))
 	If @error Then Return SetError(0, 0, 0)
-
-
-	If $sInfo[0] > 1 Or $sInfo[0] = "" Then
-		If StringInStr($sInfo[1], "Champ") = 0 Then
-			SetLog("Bad Royal Champion location", $COLOR_ACTION)
-			Return
-		Else
-			If $sInfo[2] <> "" Then
-				$aHeroLevel = Number($sInfo[2]) ; grab hero level from building info array
-				SetLog("Your Royal Champion level read as: " & $aHeroLevel, $COLOR_SUCCESS)
-				If $aHeroLevel = $g_iMaxChampionLevel Then ; max hero
-					SetLog("Your Royal Champion is at max level, cannot upgrade anymore!", $COLOR_INFO)
-					$g_bUpgradeChampionEnable = False ; turn Off the Champions upgrade
-					Return
-				EndIf
-			Else
-				SetLog("Your Royal Champion Level was not found!", $COLOR_INFO)
-				Return
-			EndIf
-		EndIf
+	
+	Local $iHeroLevel
+	If $sInfo[2] <> "" Then
+		$iHeroLevel = Number($sInfo[2]) ; grab hero level from building info array
+		SetLog("Your Hero Level read as: " & $iHeroLevel, $COLOR_SUCCESS)
 	Else
-		SetLog("Bad Royal Champion OCR", $COLOR_ERROR)
-		Return
+		SetLog("Your Hero Level was not found!", $COLOR_INFO)
+		; ClickAway() ;Click Away to close windows
+		; CheckMainScreen(False)
+		; Return
 	EndIf
 
 	If _Sleep($DELAYUPGRADEHERO1) Then Return
-
-	;##### Get updated village elixir and dark elixir values
-	If _CheckPixel($aVillageHasDarkElixir, $g_bCapturePixel) Then ; check if the village have a Dark Elixir Storage
-		$g_aiCurrentLoot[$eLootDarkElixir] = Number(getResourcesMainScreen(728, 123))
-		If $g_bDebugSetlog Then SetDebugLog("Updating village values [D]: " & $g_aiCurrentLoot[$eLootDarkElixir], $COLOR_DEBUG)
-	Else
-		If $g_bDebugSetlog Then SetDebugLog("getResourcesMainScreen didn't get the DE value", $COLOR_DEBUG)
-	EndIf
-
-	If $g_aiCurrentLoot[$eLootDarkElixir] < ($g_afChampionUpgCost[$aHeroLevel] * 1000) * (1 - Number($g_iBuilderBoostDiscount) / 100) + $g_iUpgradeMinDark Then
-		SetLog("Insufficient DE for Upg Champion, requires: " & ($g_afChampionUpgCost[$aHeroLevel] * 1000) * (1 - Number($g_iBuilderBoostDiscount) / 100) & " + " & $g_iUpgradeMinDark, $COLOR_INFO)
-		Return
-	EndIf
-
+	
 	Local $aUpgradeButton = findButton("Upgrade", Default, 1, True)
 	If IsArray($aUpgradeButton) And UBound($aUpgradeButton, 1) = 2 Then
+		
 		If _Sleep($DELAYUPGRADEHERO2) Then Return
 		ClickP($aUpgradeButton)
 		If _Sleep($DELAYUPGRADEHERO3) Then Return ; Wait for window to open
-		If $g_bDebugImageSave Then SaveDebugImage("UpgradeDarkBtn1")
-		If _ColorCheck(_GetPixelColor(721, 118 + $g_iMidOffsetY, True), Hex(0xE00408, 6), 20) Then ; Check if the Hero Upgrade window is open
-
-			Local $aWhiteZeros = decodeSingleCoord(findImage("UpgradeWhiteZero" ,$g_sImgUpgradeWhiteZero, GetDiamondFromRect("408,519,747,606"), 1, True, Default))
-			If IsArray($aWhiteZeros) And UBound($aWhiteZeros, 1) = 2 Then
-				ClickP($aWhiteZeros, 1, 0) ; Click upgrade buttton
-				ClickAway()
-
-				If _Sleep($DELAYUPGRADEHERO1) Then Return
-				If $g_bDebugImageSave Then SaveDebugImage("UpgradeDarkBtn2")
-				If _ColorCheck(_GetPixelColor(573, 256 + $g_iMidOffsetY, True), Hex(0xDB0408, 6), 20) Then ; Redundant Safety Check if the use Gem window opens
-					SetLog("Champion Upgrade Fail! Gem Window popped up!", $COLOR_ERROR)
+		
+		Local $iCost
+		If _ColorCheck(_GetPixelColor(544, 560, True), Hex(0xE8E8E0, 6), 20) Then
+			
+			$iCost = Number(getUpgradeResources())
+			If $iCost > 100 Then
+				Local $aWhiteZeros = decodeSingleCoord(findImage("UpgradeWhiteZero" ,$g_sImgUpgradeWhiteZero, GetDiamondFromRect("408,519,747,606"), 1, True, Default))
+				If IsArray($aWhiteZeros) And UBound($aWhiteZeros, 1) = 2 Then
+					ClickP($aWhiteZeros, 1, 0) ; Click upgrade buttton
 					ClickAway()
-					Return
+
+					If _Sleep($DELAYUPGRADEHERO1) Then Return
+					If $g_bDebugImageSave Then SaveDebugImage("UpgradeHeroes")
+					If _ColorCheck(_GetPixelColor(573, 256 + $g_iMidOffsetY, True), Hex(0xDB0408, 6), 20) Then ; Redundant Safety Check if the use Gem window opens
+						SetLog("King Upgrade Fail! Gem Window popped up!", $COLOR_ERROR)
+						ClickAway() ;Click Away to close windows
+						CheckMainScreen(False)
+						Return
+					EndIf
+					SetLog($sHero & " Upgrade complete", $COLOR_SUCCESS)
+					$g_iNbrOfHeroesUpped += 1
+					Switch $sHero
+						Case "Warden"
+							$g_iCostElixirBuilding += $iCost
+							$g_iWardenLevel += 1
+						Case Else
+							$g_iCostDElixirHero += $iCost
+					EndSwitch
+					UpdateStats()
 				EndIf
-				SetLog("Champion Upgrade complete", $COLOR_SUCCESS)
-				If _Sleep($DELAYUPGRADEHERO2) Then Return ; Wait for window to close
-				$g_iNbrOfHeroesUpped += 1
-				$g_iCostDElixirHero += $g_afChampionUpgCost[$aHeroLevel - 1] * 1000 * (1 - Number($g_iBuilderBoostDiscount) / 100)
-				UpdateStats()
 			Else
-				SetLog("Champion Upgrade Fail! No DE!", $COLOR_ERROR)
-				ClickAway()
-				Return
+				$iCost = Number(getUpgradeResourcesRed())
+				If $iCost > 100 Then
+					; This is autoit AutoIt limit (Assign/eval bad work)...
+					Setlog("You can't seem to improve " & $sHero & ", the goblins write down the cost for later.", $COLOR_INFO)
+					Switch $sHero
+						Case "King"
+							$s_KingMin[$g_iCurAccount] = $iCost
+						Case "Queen"
+							$s_QueenMin[$g_iCurAccount] = $iCost
+						Case "Warden"
+							$s_WardenMin[$g_iCurAccount] = $iCost
+						Case "Champion"
+							$s_ChampionMin[$g_iCurAccount] = $iCost
+					EndSwitch
+				EndIf
 			EndIf
+
 		Else
-			SetLog("Upgrade Royal Champion window open fail", $COLOR_ERROR)
+			SetLog("Upgrade "&$sHero&" window open fail", $COLOR_ERROR)
 		EndIf
 	Else
-		SetLog("Upgrade Royal Champion error finding button", $COLOR_ERROR)
+		SetLog("Upgrade "&$sHero&" error finding button", $COLOR_ERROR)
 	EndIf
 
-	ClickAway()
-EndFunc   ;==>ChampionUpgrade
+	ClickAway() ;Click Away to close windows
+	CheckMainScreen(False)
+
+EndFunc   ;==>HeroUpgrade
 
 Func ReservedBuildersForHeroes()
 	Local $iUsedBuildersForHeroes = Number(BitAND($g_iHeroUpgradingBit, $eHeroKing) = $eHeroKing ? 1 : 0) + Number(BitAND($g_iHeroUpgradingBit, $eHeroQueen) = $eHeroQueen ? 1 : 0) + Number(BitAND($g_iHeroUpgradingBit, $eHeroWarden) = $eHeroWarden ? 1 : 0) + Number(BitAND($g_iHeroUpgradingBit, $eHeroChampion) = $eHeroChampion ? 1 : 0)
