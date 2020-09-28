@@ -119,12 +119,15 @@ Func HeroUpgrade($sHero = "")
 	VillageReport(True, True)
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
 	
-	Local $vRequisite = Execute("$s_"& $sHero &"Min[$g_iCurAccount]")
+	Local $vRequirement = Execute("$s_"& $sHero &"Min[$g_iCurAccount]")
 	If @error Then Return
-	If Not $vRequisite = False And $g_aiCurrentLoot[($sHero = "Warden") ? ($eLootElixir) : ($eLootDarkElixir)] < $vRequisite Then
-		SetLog("You don't have enough resources to improve : " & $sHero & " skip.", $COLOR_INFO)
-		ClickAway()
-		CheckMainScreen(False)
+	If StringInStr($vRequirement, "MAX|" & $g_iTownHallLevel) < 1 Or $g_iTownHallLevel < 1 Then
+		If Not $vRequirement = False And $g_aiCurrentLoot[($sHero = "Warden") ? ($eLootElixir) : ($eLootDarkElixir)] < $vRequirement Then
+			SetLog("You don't have enough resources to improve : " & $sHero & " skip.", $COLOR_INFO)
+			Return
+		EndIf
+	Else
+		SetLog($sHero & " max level for this TH Level.", $COLOR_INFO)
 		Return
 	EndIf
 	
@@ -191,7 +194,7 @@ Func HeroUpgrade($sHero = "")
 					If _Sleep($DELAYUPGRADEHERO1) Then Return
 					If $g_bDebugImageSave Then SaveDebugImage("UpgradeHeroes")
 					If _ColorCheck(_GetPixelColor(573, 256 + $g_iMidOffsetY, True), Hex(0xDB0408, 6), 20) Then ; Redundant Safety Check if the use Gem window opens
-						SetLog("King Upgrade Fail! Gem Window popped up!", $COLOR_ERROR)
+						SetLog($sHero & " Upgrade Fail! Gem Window popped up!", $COLOR_ERROR)
 						ClickAway() ;Click Away to close windows
 						CheckMainScreen(False)
 						Return
@@ -224,12 +227,23 @@ Func HeroUpgrade($sHero = "")
 					EndSwitch
 				EndIf
 			EndIf
-
+		ElseIf _ColorCheck(_GetPixelColor(544, 560, True), Hex(0xE1433F, 6), 20) Then
+			SetLog("Maximum " & $sHero & " level reached for this TH level.", $COLOR_ERROR)
+			Switch $sHero
+				Case "King"
+					$s_KingMin[$g_iCurAccount] = "MAX|" & $g_iTownHallLevel
+				Case "Queen"
+					$s_QueenMin[$g_iCurAccount] = "MAX|" & $g_iTownHallLevel
+				Case "Warden"
+					$s_WardenMin[$g_iCurAccount] = "MAX|" & $g_iTownHallLevel
+				Case "Champion"
+					$s_ChampionMin[$g_iCurAccount] = "MAX|" & $g_iTownHallLevel
+			EndSwitch
 		Else
-			SetLog("Upgrade "&$sHero&" window open fail", $COLOR_ERROR)
+			SetLog("Upgrade " & $sHero & " window open fail", $COLOR_ERROR)
 		EndIf
 	Else
-		SetLog("Upgrade "&$sHero&" error finding button", $COLOR_ERROR)
+		SetLog("Upgrade " & $sHero & " error finding button", $COLOR_ERROR)
 	EndIf
 
 	ClickAway() ;Click Away to close windows
