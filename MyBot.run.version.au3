@@ -22,5 +22,5 @@
 Global $g_sBotVersion = "v7.8.7" ;~ Don't add more here, but below. Version can't be longer than vX.y.z because it is also used in Checkversion()
 
 ; Check Version - Team AiO MOD++
-Global $g_sModVersion = "v4.2.6" ;<== Just Change This to Version Number
+Global $g_sModVersion = "v4.2.7" ;<== Just Change This to Version Number
 Global $g_sModSupportUrl = "https://github.com/boludoz/AIO-Mod/releases" ;<== Our Website Link Download

@@ -60,7 +60,7 @@ Func UpgradeHeroes()
 				SetLog("Not enough Builders available to upgrade the Archer Queen")
 				Return
 			EndIf
-			HeroUpgrade("Queen") ; QueenUpgrade()
+			HeroUpgrade("Queen") ; Custom hero - Team AIO Mod++
 
 			If _Sleep($DELAYUPGRADEHERO1) Then Return
 		EndIf
@@ -72,7 +72,7 @@ Func UpgradeHeroes()
 				SetLog("Not enough Builders available to upgrade the Barbarian King")
 				Return
 			EndIf
-			HeroUpgrade("King") ; KingUpgrade()
+			HeroUpgrade("King") ; Custom hero - Team AIO Mod++
 
 			If _Sleep($DELAYUPGRADEHERO1) Then Return
 		EndIf
@@ -84,7 +84,7 @@ Func UpgradeHeroes()
 				SetLog("Not enough Builders available to upgrade the Royal Champion")
 				Return
 			EndIf
-			HeroUpgrade("Champion") ; ChampionUpgrade()
+			HeroUpgrade("Champion") ; Custom hero - Team AIO Mod++
 
 			If _Sleep($DELAYUPGRADEHERO1) Then Return
 		EndIf
@@ -102,10 +102,11 @@ Func UpgradeHeroes()
 			SetLog("Not enough Builders available to upgrade the Grand Warden")
 			Return
 		EndIf
-		HeroUpgrade("Warden") ; WardenUpgrade()
+		HeroUpgrade("Warden") ; Custom hero - Team AIO Mod++
 	EndIf
 EndFunc   ;==>UpgradeHeroes
 
+#Region - Custom hero - Team AIO Mod++
 Func HeroUpgrade($sHero = "")
 	If Not Execute("$g_bUpgrade" & $sHero & "Enable") Then Return
 	If @error Then Return
@@ -204,7 +205,7 @@ Func HeroUpgrade($sHero = "")
 					Switch $sHero
 						Case "Warden"
 							$g_iCostElixirBuilding += $iCost
-							$g_iWardenLevel += 1
+							$g_iWardenCost = -1 ; Reset for walls.
 						Case Else
 							$g_iCostDElixirHero += $iCost
 					EndSwitch
@@ -222,6 +223,7 @@ Func HeroUpgrade($sHero = "")
 							$s_QueenMin[$g_iCurAccount] = $iCost
 						Case "Warden"
 							$s_WardenMin[$g_iCurAccount] = $iCost
+							$g_iWardenCost = $iCost
 						Case "Champion"
 							$s_ChampionMin[$g_iCurAccount] = $iCost
 					EndSwitch
@@ -250,6 +252,7 @@ Func HeroUpgrade($sHero = "")
 	CheckMainScreen(False)
 
 EndFunc   ;==>HeroUpgrade
+#EndRegion - Custom hero - Team AIO Mod++
 
 Func ReservedBuildersForHeroes()
 	Local $iUsedBuildersForHeroes = Number(BitAND($g_iHeroUpgradingBit, $eHeroKing) = $eHeroKing ? 1 : 0) + Number(BitAND($g_iHeroUpgradingBit, $eHeroQueen) = $eHeroQueen ? 1 : 0) + Number(BitAND($g_iHeroUpgradingBit, $eHeroWarden) = $eHeroWarden ? 1 : 0) + Number(BitAND($g_iHeroUpgradingBit, $eHeroChampion) = $eHeroChampion ? 1 : 0)

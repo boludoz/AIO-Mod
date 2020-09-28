@@ -3,7 +3,15 @@
             | | | _| / ▓ \| |\/| |    / ▓ \| | (_) |  |_   _||_   _|
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
-                    Based on MyBot.run v7.8.5
+                    Based on MyBot.run v7.8.7
+	**v4.2.7** 
+		- New: League Legend protection.
+		- Improved: Remaked Hero Upgrade.
+		- Improved: Smart farm improved.
+		- Improved: DeadBase detection.
+		- Fix: Docr WinApi support.
+		- Fix: Unbalanced '|' in Languages detection and fix.
+
 	**v4.2.6** 
 		- New: Don't ask for the troop in Clan Castle again.
 		- New CIE2000 pixel comparation.
