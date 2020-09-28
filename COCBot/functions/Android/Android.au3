@@ -791,7 +791,9 @@ Func FindPreferredAdbPath()
 			EndIf
 		Case Else
 			$sADBPath = @ScriptDir & "\lib\TempAdb\" & $g_sAndroidInstance & "\"
-			If Round(DirGetSize(@ScriptDir & "\lib\adb\")) <> Round(DirGetSize($sADBPath)) Then
+			If DirGetSize(@ScriptDir & "\lib\adb\") <> DirGetSize(@ScriptDir & "\lib\TempAdb\" & $g_sAndroidInstance & "\") Then
+				; KillAdbDaemon(False) - This can kill your pc in true.
+				_RunDos("RMDIR /Q/S " & $sADBPath)
 				If $g_bDebugAndroid Then 
 					Setlog("FindPreferredAdbPath | Let's Update the adb version!", $COLOR_GREEN)
 					Setlog("FindPreferredAdbPath | ADB Destination Dir: " & $sADBPath, $COLOR_GREEN)
@@ -806,7 +808,9 @@ Func FindPreferredAdbPath()
 	$iPID = Run($sADBPath, "", @SW_HIDE, $STDOUT_CHILD)
 	ProcessWaitClose($iPID, 10)
 	If StringInStr(StdoutRead($iPID), "Android Debug Bridge") > 0 Then
-		Setlog("FindPreferredAdbPath | ADB OK.", $COLOR_GREEN)
+		SetDebugLog("FindPreferredAdbPath | ADB OK.", $COLOR_GREEN)
+		Else
+		Setlog("FindPreferredAdbPath | ADB BAD.", $COLOR_ERROR)
 	EndIf
 	$g_sAndroidAdbPath = $sADBPath
 	Return $g_sAndroidAdbPath
