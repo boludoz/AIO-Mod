@@ -380,8 +380,6 @@ Func ApplyConfig_MOD_MagicItems($TypeReadSave)
 			_GUICtrlComboBox_SetCurSel($g_hComboPowerPotion, $g_iComboPowerPotion)
 
 			GUICtrlSetState($g_hChkCollectMagicItems, $g_bChkCollectMagicItems = True ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkCollectFree, $g_bChkCollectFree = True ? $GUI_CHECKED : $GUI_UNCHECKED)
-			ChkFreeMagicItems()
 
 			GUICtrlSetState($g_hChkBuilderPotion, $g_bChkBuilderPotion = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkClockTowerPotion, $g_bChkClockTowerPotion = True ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -403,7 +401,6 @@ Func ApplyConfig_MOD_MagicItems($TypeReadSave)
 			$g_iComboClockTowerPotion = _GUICtrlComboBox_GetCurSel($g_hComboClockTowerPotion)
 
 			$g_bChkCollectMagicItems = (GUICtrlRead($g_hChkCollectMagicItems) = $GUI_CHECKED)
-			$g_bChkCollectFree = (GUICtrlRead($g_hChkCollectFree) = $GUI_CHECKED)
 
 			$g_bChkBuilderPotion = (GUICtrlRead($g_hChkBuilderPotion) = $GUI_CHECKED)
 			$g_bChkClockTowerPotion = (GUICtrlRead($g_hChkClockTowerPotion) = $GUI_CHECKED)

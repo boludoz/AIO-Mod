@@ -1270,7 +1270,7 @@ Func __RunFunction($sAction)
 		Case "CollectAchievements"
 			CollectAchievements()
  		Case "CollectFreeMagicItems"
- 			CollectFreeMagicItems()
+ 			CollectMagicItems()
 		Case "BoostSuperTroop"
 			If $g_iBoostSuperTroopIndex <> -1 Then BoostSuperTroop($g_iBoostSuperTroopIndex)
 		Case ""

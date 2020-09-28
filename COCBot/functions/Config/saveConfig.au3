@@ -389,7 +389,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "chkTombstones", $g_bChkTombstones ? 1 : 0)
     _Ini_Add("other", "chkCleanYard", $g_bChkCleanYard ? 1 : 0)
     _Ini_Add("other", "ChkCollectAchievements", $g_bChkCollectAchievements ? 1 : 0)
-;	_Ini_Add("other", "ChkCollectFreeMagicItems", $g_bChkCollectFreeMagicItems ? 1 : 0) ; AIO MOD++
+	_Ini_Add("other", "ChkCollectFreeMagicItems", $g_bChkCollectFreeMagicItems ? 1 : 0) ; AIO MOD++
 	_Ini_Add("other", "ChkCollectRewards", $g_bChkCollectRewards ? 1 : 0)
 	_Ini_Add("other", "ChkSellRewards", $g_bChkSellRewards ? 1 : 0)
 	_Ini_Add("other", "chkGemsBox", $g_bChkGemsBox ? 1 : 0)

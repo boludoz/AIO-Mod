@@ -190,7 +190,6 @@ Func SaveConfig_MOD_MagicItems()
 	_Ini_Add("MagicItems", "ComboPowerPotion", $g_iComboPowerPotion)
 
 	_Ini_Add("MagicItems", "CollectMagicItems", $g_bChkCollectMagicItems ? 1 : 0)
-	_Ini_Add("MagicItems", "ChkCollectFree", $g_bChkCollectFree ? 1 : 0)
 
 	_Ini_Add("MagicItems", "ChkBuilderPotion", $g_bChkBuilderPotion ? 1 : 0)
 	_Ini_Add("MagicItems", "ChkClockTowerPotion", $g_bChkClockTowerPotion ? 1 : 0)

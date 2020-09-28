@@ -288,7 +288,7 @@ Global $g_aNoClanBtn[4] = [163, 515, 0x6DBB1F, 20] ; OK - Green Join Button on C
 
 ; Magic Items
 
-Global $g_bChkCollectMagicItems, $g_bChkCollectFree, _
+Global $g_bChkCollectMagicItems, _ ;$g_bChkCollectFree, _
 $g_bChkBuilderPotion, $g_bChkClockTowerPotion, $g_bChkHeroPotion, $g_bChkLabPotion, $g_bChkPowerPotion, $g_bChkResourcePotion, _
 $g_iComboClockTowerPotion, $g_iComboHeroPotion, $g_iComboPowerPotion, _
 $g_iInputBuilderPotion, $g_iInputLabPotion, $g_iInputGoldItems = 250000, $g_iInputElixirItems = 300000, $g_iInputDarkElixirItems = 1000

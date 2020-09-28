@@ -146,7 +146,7 @@ Func btnTestDailyDiscounts()
 
 	AndroidOnlyZoomOut()
 	SetLog(_PadStringCenter(" Test DailyDiscounts begin (" & $g_sBotVersion & ")", 54, "="), $COLOR_INFO)
-	CollectFreeMagicItems()
+	CollectMagicItems()
 	SetLog(_PadStringCenter(" Test DailyDiscounts end ", 54, "="), $COLOR_INFO)
 
 	$g_bChkCollectMagicItems = $currentDD_DealsSet

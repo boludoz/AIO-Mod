@@ -1908,7 +1908,7 @@ Global $g_sClanGamesScore = "N/A", $g_sClanGamesTimeRemaining = "N/A"
 Global $g_bChkCollectAchievements = True
 
 ; Collect Free Magic Items
-; Global $g_bChkCollectFreeMagicItems = True ; AIO MOD++
+Global $g_bChkCollectFreeMagicItems = True ; AIO MOD++
 
 ; Daily challenge
 Global $g_bChkCollectRewards = True

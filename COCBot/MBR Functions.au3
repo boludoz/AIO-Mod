@@ -267,15 +267,16 @@
 #include "functions\Village\GetVillageSize.au3"
 #include "functions\Village\GainCost.au3"
 #include "functions\Village\ConvertOCRTime.au3"
-; #include "functions\Other\ClickZoneR.au3"
+; #include "functions\Other\ClickZoneR.au3" ; Team AIO Mod++
 #include "functions\Village\CheckNeedOpenTrain.au3"
 #include "functions\Village\SwitchBetweenBases.au3"
 #include "functions\Village\SwitchAccount.au3"
 #include "functions\Village\SwitchAccountVariablesReload.au3"
 #include "functions\Village\Clan Games\ClanGames.au3"
-#include "functions\Village\FreeMagicItems.au3"
+; #include "functions\Village\FreeMagicItems.au3" ; Team AIO Mod++
 #include "functions\Village\Personal Challenges\DailyChallenges.au3"
 #include "functions\Village\BoostSuperTroop.au3"
+#include "functions\Village\MagicItems.au3" ; Team AIO Mod++
 
 #include "functions\Village\BuilderBase\Collect.au3"
 #include "functions\Village\BuilderBase\StartClockTowerBoost.au3"

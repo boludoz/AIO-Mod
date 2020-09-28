@@ -118,7 +118,7 @@ EndFunc   ;==>CreateMODTab
 	GUICtrlCreateTabItem("")
 EndFunc   ;==>TabMiscGUI
 
-Global $g_hChkCollectMagicItems, $g_hChkCollectFree, _
+Global $g_hChkCollectMagicItems, _ ;$g_hChkCollectFree, _
 $g_hBtnMagicItemsConfig, _
 $g_hChkBuilderPotion, $g_hChkClockTowerPotion, $g_hChkHeroPotion, $g_hChkLabPotion, $g_hChkPowerPotion, $g_hChkResourcePotion, _
 $g_hComboClockTowerPotion, $g_hComboHeroPotion, $g_hComboPowerPotion, _
@@ -129,17 +129,18 @@ Func CreateMiscMagicSubTab()
 	; GUI SubTab
 	Local $x = 15, $y = 45
 
-	GUICtrlCreateGroup("Collect Items", 16, 24, 449, 65)
-	$g_hChkCollectMagicItems = GUICtrlCreateCheckbox("Collect magic items", 56, 48, 113, 17)
+	GUICtrlCreateGroup("Collect Items", 16, 24, 408, 78)
+	$g_hChkCollectMagicItems = GUICtrlCreateCheckbox("Collect magic items", 56, 48, 200, 17)
 	GUICtrlSetOnEvent(-1, "btnDDApply")
-	$g_hChkCollectFree = GUICtrlCreateCheckbox("Collect FREE items", 320, 48, 113, 17)
+	$g_hChkFreeMagicItems = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkFreeMagicItems", "Collect Free Magic Items"), 56, 73, 200, 17)
 	GUICtrlSetOnEvent(-1, "ChkFreeMagicItems")
 	$g_hBtnMagicItemsConfig = GUICtrlCreateButton("Settings", 176, 48, 97, 25)
 	GUICtrlSetOnEvent(-1, "btnDailyDiscounts")
+	
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
-	GUICtrlCreateGroup("Magic Items", 16, 104, 449, 257)
+	GUICtrlCreateGroup("Magic Items", 16, 104, 408, 257)
 	$g_hChkBuilderPotion = GUICtrlCreateCheckbox("Use builder potion when busy builders is > = : ", 56, 128, 225, 17)
-	GUICtrlSetOnEvent(-1, "ConfigRefresh")
+	GUICtrlSetOnEvent(-1, "MagicItemsRefresh")
 	$g_hChkClockTowerPotion = GUICtrlCreateCheckbox("Use clock tower potion when :", 56, 160, 217, 17)
 	GUICtrlSetState (-1, $GUI_DISABLE)
 	$g_hChkHeroPotion = GUICtrlCreateCheckbox("Use hero potion whem are avariable : ", 56, 192, 217, 17)
@@ -148,9 +149,9 @@ Func CreateMiscMagicSubTab()
 	$g_hChkPowerPotion = GUICtrlCreateCheckbox("Use power potion during : ", 56, 256, 225, 17)
 	GUICtrlSetState (-1, $GUI_DISABLE)
 	$g_hChkResourcePotion = GUICtrlCreateCheckbox("Use resource potion only if storage are :", 56, 288, 225, 17)
-	GUICtrlSetOnEvent(-1, "ConfigRefresh")
+	GUICtrlSetOnEvent(-1, "MagicItemsRefresh")
 	$g_hInputBuilderPotion = _GUICtrlCreateInput("Number", 296, 128, 41, 21)
-	GUICtrlSetOnEvent(-1, "ConfigRefresh")
+	GUICtrlSetOnEvent(-1, "MagicItemsRefresh")
 	$g_hComboClockTowerPotion = GUICtrlCreateCombo("Select", 296, 160, 89, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
 	GUICtrlSetState (-1, $GUI_DISABLE)
 	$g_hComboHeroPotion = GUICtrlCreateCombo("Select", 296, 192, 89, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
@@ -159,11 +160,11 @@ Func CreateMiscMagicSubTab()
 	$g_hComboPowerPotion = GUICtrlCreateCombo("Select", 296, 256, 89, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
 	GUICtrlSetState (-1, $GUI_DISABLE)
 	$g_hInputGoldItems = _GUICtrlCreateInput("1000000", 88, 320, 73, 21)
-	GUICtrlSetOnEvent(-1, "ConfigRefresh")
+	GUICtrlSetOnEvent(-1, "MagicItemsRefresh")
 	$g_hInputElixirItems = _GUICtrlCreateInput("1000000", 192, 320, 73, 21)
-	GUICtrlSetOnEvent(-1, "ConfigRefresh")
+	GUICtrlSetOnEvent(-1, "MagicItemsRefresh")
 	$g_hInputDarkElixirItems = _GUICtrlCreateInput("1000", 296, 320, 49, 21)
-	GUICtrlSetOnEvent(-1, "ConfigRefresh")
+	GUICtrlSetOnEvent(-1, "MagicItemsRefresh")
 	GUICtrlCreateLabel("Lower : ", 40, 320, 42, 17)
 	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnShop, 24, 46, 25, 25)
 	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModBuilderP, 24, 126, 25, 25)

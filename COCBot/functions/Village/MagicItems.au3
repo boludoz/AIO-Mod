@@ -1,27 +1,30 @@
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: Collect Free Magic Items from trader
-; Description ...:
-; Syntax ........: CollectFreeMagicItems()
+; Description ...: Inspired in CollectFreeMagicItems() (ProMac (03-2018))
+; Syntax ........: CollectMagicItems()
 ; Parameters ....:
 ; Return values .: None
-; Author ........: ProMac (03-2018)
-; Modified ......: Chill, Boldina (boludoz) - (7/5/2019), Dissociable (3/5/2020)
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
+; Author ........: Chilly-Chill, Boldina (boludoz) (7/5/2019), NguyenAnhHD, Dissociable (3/5/2020), Team AIO Mod++ (2020)
+; Modified ......: 
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2020
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func CollectFreeMagicItems($bTest = False)
-	If Not ($g_bChkCollectFree Or $g_bChkCollectMagicItems) Then Return
+Func CollectMagicItems($bTest = False)
 	If Not $g_bRunState Then Return
+	
+	If Not ($g_iTownHallLevel >= 8 Or $g_iTownHallLevel = 0) Then Return ; Must be Th8 or more to use the Trader
+	
+	If Not ($g_bChkCollectFreeMagicItems Or $g_bChkCollectMagicItems) Then Return
+
 
 	Local Static $iLastTimeChecked[8] = [0, 0, 0, 0, 0, 0, 0, 0]
-	If (Not $bTest) And ($iLastTimeChecked[$g_iCurAccount] = @MDAY) Then Return
-
-	ClickP($aAway, 1, 0, "#0332") ;Click Away
-	If Not IsMainPage() Then Return
+	If $bTest = False And $iLastTimeChecked[$g_iCurAccount] = @MDAY Then Return
+	
+	CheckMainScreen(False)
 
 	Local $sSetLog = ($g_bChkCollectMagicItems) ? ("Collecting Magic Items") : ("Collecting Free Magic Items")
 	SetLog($sSetLog, $COLOR_INFO)
@@ -40,8 +43,8 @@ Func CollectFreeMagicItems($bTest = False)
 	EndIf
 
 	; Check Daily Discounts Window
-	If Not _Wait4Pixel(706, 198, 0xFFFFFF, 15, 3000, 500, "Not Daily Discounts Window") Then ; White in 'X'.
-		ClickP($aAway, 1, 0, "#0332") ;Click Away
+	If _WaitForCheckImgGone(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Obstacles", "FV", "X") Then ; White in 'X'.
+		CheckMainScreen(False)
 		Return False
 	EndIf
 
@@ -58,7 +61,7 @@ Func CollectFreeMagicItems($bTest = False)
 	For $i = 0 To 2
 		; Positioned precisely the item, and determines if this is enabled your purchase, if it is not enabled, add N / A, Exits the loop avoiding adding more than one item.
 		For $iResult = 0 To UBound($g_aImageSearchXML) - 1
-			If BitAND(($g_aImageSearchXML[$iResult][1]) > ($aOcrPositions[$i][0] - 41), ($g_aImageSearchXML[$iResult][1]) < ($aOcrPositions[$i][0] + 135)) Then
+			If ($g_aImageSearchXML[$iResult][1]) > ($aOcrPositions[$i][0] - 41) And ($g_aImageSearchXML[$iResult][1]) < ($aOcrPositions[$i][0] + 135) Then
 				$aResultsProx[$i] = ($g_abChkDD_Deals[GetDealIndex($g_aImageSearchXML[$iResult][0])] = True) ? ($g_aImageSearchXML[$iResult][0]) : ("#" & $i+1 & ": " & $g_aImageSearchXML[$iResult][0])
 				_ArrayDelete($g_aImageSearchXML, $iResult) ; Optimization
 				ExitLoop
@@ -67,9 +70,8 @@ Func CollectFreeMagicItems($bTest = False)
 		If $bTest Then _ArrayDisplay($aResultsProx)
 		$aResults[$i] = getOcrAndCapture("coc-freemagicitems", $aOcrPositions[$i][0], $aOcrPositions[$i][1], 80, 25, True)
 
-		; 5D79C5 ; >Blue Background price
 		If $aResults[$i] <> "" Then
-			If (BitAND($g_bChkCollectMagicItems, $g_aImageSearchXML <> -1, 1 > StringInStr($aResultsProx[$i], "#" & $i+1), $aResultsProx[$i] <> "")) Or (BitAND($aResults[$i] = "FREE", $g_bChkCollectFree)) Then
+			If (BitAND($g_bChkCollectMagicItems, $g_aImageSearchXML <> -1, 1 > StringInStr($aResultsProx[$i], "#" & $i+1), $aResultsProx[$i] <> "")) Or (BitAND($aResults[$i] = "FREE", $g_bChkCollectFreeMagicItems)) Then
 				SetLog("Magic Item detected : " & $aResultsProx[$i], $COLOR_INFO)
 				If Not $bTest Then
 					Click($aOcrPositions[$i][0], $aOcrPositions[$i][1], 1, 0)
@@ -78,7 +80,7 @@ Func CollectFreeMagicItems($bTest = False)
 				EndIf
 				If _Sleep(200) Then Return
 				If Not $bTest And $g_bChkCollectMagicItems Then
-					If ConfirmPurchase() = True Then
+					If ButtonClickDM("D:\Github\AIO Mod\COCBot\Team__AiO__MOD++\Bundles\Button\GemItems", 225, 71, 490, 509) Then
 						SetLog("Successfully purchased " & $aResultsProx[$i], $COLOR_SUCCESS)
 					EndIf
 				EndIf
@@ -98,7 +100,7 @@ Func CollectFreeMagicItems($bTest = False)
 	Next
 
 	SetLog("Daily Discounts: " & $aResultsProx[0] & " " & $aResults[0] & " | " & $aResultsProx[1] & " " & $aResults[1] & " | " & $aResultsProx[2] & " " & $aResults[2], $COLOR_INFO)
-	ClickP($aAway, 2, 0, "#0332") ;Click Away
+	ClickAway() ;Click Away
 	If _Sleep(1000) Then Return
 EndFunc   ;==>CollectFreeMagicItems
 
@@ -149,37 +151,3 @@ Func GetDealIndex($sName)
 			Return -1 ; error
 	EndSwitch
 EndFunc   ;==>GetDealIndex
-
-Func ConfirmPurchase($bCheckOneTime = False)
-	Local $i = 0
-	If _Sleep($DELAYSPECIALCLICK1) Then Return False
-	While 1
-		Local $offColors[3][3] = [[0x0D0D0D, 65, 6], [0x659B24, 18, 39], [0x0D0D0D, 160, 40]]
-		Local $ButtonPixel = _MultiPixelSearch(340, 385, 506, 461, 1, 1, Hex(0xE8E8E0, 6), $offColors, 20)
-		If $g_bDebugSetlog Then SetDebugLog("ConfirmPurchase btn chk-#1: " & _GetPixelColor(340, 385 + $g_iMidOffsetY, True) & _
-															", #2: " & _GetPixelColor(340 + $offColors[0][1], 385 + $offColors[0][2] + $g_iMidOffsetY, True) & _
-															", #3: " & _GetPixelColor(340 + $offColors[1][1], 385 + $offColors[1][2] + $g_iMidOffsetY, True) & _
-															", #4: " & _GetPixelColor(340 + $offColors[2][1], 385 + $offColors[2][2] + $g_iMidOffsetY, True), $COLOR_DEBUG)
-		If IsArray($ButtonPixel) Then
-			SetDebugLog("ButtonPixelLocation = " & $ButtonPixel[0] & ", " & $ButtonPixel[1], $COLOR_DEBUG) ;Debug
-			SetDebugLog("Pixel color found #1: " & _GetPixelColor($ButtonPixel[0], $ButtonPixel[1], True) & _
-										", #2: " & _GetPixelColor($ButtonPixel[0] + 144, $ButtonPixel[1], True) & _
-										", #3: " & _GetPixelColor($ButtonPixel[0] + 13, $ButtonPixel[1] + 27, True) & _
-										", #4: " & _GetPixelColor($ButtonPixel[0] + 133, $ButtonPixel[1] + 27, True), $COLOR_DEBUG)
-			$ButtonPixel[0] += Random(50, 130, 1)
-			$ButtonPixel[1] += Random(37, 55, 1)
-			PureClick($ButtonPixel[0], $ButtonPixel[1], 1, 0)
-			ExitLoop
-		EndIf
-		If $bCheckOneTime Then Return False ; enable external control of loop count or follow on actions, return false if not clicked
-		If $i > 5 Then
-			SetLog("Error: Could not Confirm Purchase", $COLOR_ERROR)
-			If $g_bDebugImageSave Then SaveDebugImage("Confirm_ButtonCheck_")
-			SetError(1, @extended, False)
-			Return False
-		EndIf
-		$i += 1
-		If _Sleep($DELAYSPECIALCLICK2) Then Return False ; improve pause button response
-	WEnd
-	Return True
-EndFunc   ;==>ConfirmPurchase

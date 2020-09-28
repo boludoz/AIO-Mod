@@ -205,3 +205,43 @@ Func DebugImgArrayClassic($aAR = 0, $sFrom = "")
 	_GDIPlus_BitmapDispose($hEditedImage)
 	$g_sFMQTag = ""
 EndFunc
+
+; Check if an image in the Bundle can be found
+Func ButtonClickDM($sBundle, $iRegionX = 0, $iRegionY = 0, $iRegionWidth = 0, $iRegionHeight = 0, $iLevelStart = 0, $iLevelEnd = 0, $iLimit = 0, $bForceCapture = True)
+    ; Set Parameters
+    If $iRegionX = Default Then
+        $iRegionX = 0
+        $iRegionY = 0
+        $iRegionWidth = 0
+        $iRegionHeight = 0
+    EndIf
+    If $iLevelStart = Default Then
+        $iLevelStart = 0
+        $iLevelEnd = 0
+    EndIf
+    If $iLimit = Default Then
+        $iLimit = 0
+    EndIf
+    If $g_iThreads > 0 And $g_iDMatchingThreads <> $g_iThreads Then
+        $g_iDMatchingThreads = $g_iThreads
+    Else
+        $g_iDMatchingThreads = 32
+    EndIf
+    ; End Setting Parameters
+
+    If $bForceCapture Then _CaptureRegion2() ; To have FULL screen image to work with
+
+    Local $sResult = DllCallDMatching("Find", "str", "handle", $g_hHBitmap2, "str", $sBundle, "ushort", $iLevelStart, "ushort", $iLevelEnd, "ushort", $iRegionX, "ushort", $iRegionY, "ushort", $iRegionWidth, "ushort", $iRegionHeight, "ushort", $g_iDMatchingThreads, "ushort", $iLimit, "boolean", $g_bDMatchingDebugImages)
+    Local $aSplittedMatches = StringSplit($sResult, "|", $STR_NOCOUNT)
+    For $i = 0 To UBound($aSplittedMatches) - 1
+        Local $aDecodedMatch = DMDecodeMatch($aSplittedMatches[$i])
+        If IsArray($aDecodedMatch) Then
+			Local $bRdn = $g_bUseRandomClick
+			$g_bUseRandomClick = False
+			Click(Random($aDecodedMatch[2], $aDecodedMatch[2] + $aDecodedMatch[4],1), Random($aDecodedMatch[3], $aDecodedMatch[3] + $aDecodedMatch[5],1))
+			If $bRdn = True Then $g_bUseRandomClick = True
+			Return True
+        EndIf
+    Next
+	Return False
+EndFunc

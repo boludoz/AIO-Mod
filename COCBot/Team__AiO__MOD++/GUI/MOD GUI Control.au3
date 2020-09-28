@@ -20,7 +20,6 @@
 #include "MOD GUI Control - ChatActions.au3"
 #include "MOD GUI Control - GTFO.au3"
 #include "MOD GUI Control - AiO-Debug.au3"
-#include "MOD GUI Control - MagicItems.au3"
 #include "BBase\MOD GUI Control Tab - Builder Base.au3"
 
 #Region - Setlog limit - Team AIO Mod++
