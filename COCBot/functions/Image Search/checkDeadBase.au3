@@ -99,13 +99,13 @@ EndFunc   ;==>GetCollectorIndexByFillLevel
 #Region - Custom - Team AIO Mod++
 Func checkDeadBase($bForceCapture = False, $sFillDirectory = @ScriptDir & "\imgxml\deadbase\elix\fill\", $sLvlDirectory = @ScriptDir & "\imgxml\deadbase\elix\lvl\")
 
-	If $g_bCollectorFilterDisable Then Return True
-	
 	Local $sDFindEagle = DFind($g_sBundleDefensesEagle, 91, 69, 723, 527, 0, 0, 0, False)
 	If StringInStr($sDFindEagle, "ALive") > 0 Then
 		SetLog("Active defenses, skipped base.", $COLOR_INFO)
 		Return False
 	EndIf
+	
+	If $g_bCollectorFilterDisable Then Return True
 	
 	Local $minCollectorLevel = 0
 	Local $maxCollectorLevel = 0
