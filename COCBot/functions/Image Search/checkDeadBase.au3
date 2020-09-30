@@ -98,14 +98,23 @@ EndFunc   ;==>GetCollectorIndexByFillLevel
 
 #Region - Custom - Team AIO Mod++
 Func checkDeadBase($bForceCapture = False, $sFillDirectory = @ScriptDir & "\imgxml\deadbase\elix\fill\", $sLvlDirectory = @ScriptDir & "\imgxml\deadbase\elix\lvl\")
-
-	Local $sDFindEagle = DFind($g_sBundleDefensesEagle, 91, 69, 723, 527, 0, 0, 0, False)
-	If StringInStr($sDFindEagle, "ALive") > 0 Then
-		SetLog("Active defenses, skipped base.", $COLOR_INFO)
-		Return False
-	EndIf
 	
+	Local $bStatusFilter = $g_bCollectorFilterDisable 
+	Local $sDFindEagle = DFind($g_sBundleDefensesEagle, 91, 69, 723, 527, 0, 0, 0, False)
+	Local $bALiveSimbol = StringInStr($sDFindEagle, "ALive") > 0, $bDeadSimbol = StringInStr($sDFindEagle, "DEeagle") > 0
+	If $bALiveSimbol = True Then
+		SetLog("      " & ">> We have found active defenses, skipped.", $COLOR_ACTION)
+		Return False
+	ElseIf $bALiveSimbol = False And $bDeadSimbol = False And $g_bCollectorFilterDisable = True Then
+		SetLog("      " & ">> We did not find live or dead defenses, we will check in depth.", $COLOR_ACTION)
+		$g_bCollectorFilterDisable = False
+	ElseIf $bALiveSimbol = False And $bDeadSimbol = True And $g_bCollectorFilterDisable = True Then
+		SetLog("      " & ">> We find dead defenses and the filters are deactivated, we better attack.", $COLOR_ACTION)
+		Return True
+	EndIf
+
 	If $g_bCollectorFilterDisable Then Return True
+	$g_bCollectorFilterDisable = $bStatusFilter
 	
 	Local $minCollectorLevel = 0
 	Local $maxCollectorLevel = 0
