@@ -61,6 +61,19 @@ Func LaunchConsole($cmd, $param, ByRef $process_killed, $timeout = 10000, $bUseS
 	CleanLaunchOutput($data)
 
 	If Not $bNoLog Then SetDebugLog("Func LaunchConsole Output: " & $data, $COLOR_DEBUG) ; Debug Run Output
+	
+	Local $aFixedPort, $iEvaluate = 0
+	If StringInStr($data, "already connected") Then
+		$aFixedPort = StringSplit($data, ':', $STR_NOCOUNT)
+		If Not @error Then
+			$iEvaluate = Number($aFixedPort[UBound($aFixedPort)-1])
+			If $iEvaluate > 0 Then
+				$g_sAndroidAdbPort = $iEvaluate
+				SetLog("Port intercepted : " & $g_sAndroidAdbPort, $COLOR_GREEN)
+			EndIf
+		EndIf
+	EndIf
+	
 	If $bUseSemaphore Then UnlockSemaphore($hSemaphore)
 	Return SetError(0, 0, $data)
 EndFunc   ;==>LaunchConsole

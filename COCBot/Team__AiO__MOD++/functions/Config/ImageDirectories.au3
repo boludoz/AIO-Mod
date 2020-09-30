@@ -125,6 +125,14 @@ Global $g_sECollectorDMatB = $g_sBaseDMatchingPathB & "\deadbase\Elixir\"
 ; DPBB !
 Global Const $g_sBundleDeployPointsBBD = $g_sBaseDMatchingPathB & "\DPBB\"
 
+; Heroes !
+Global Const $g_sBundleHeroesUbiKing = $g_sBaseDMatchingPathB & "\Heroes\King\"
+Global Const $g_sBundleHeroesUbiQueen = $g_sBaseDMatchingPathB & "\Heroes\Queen\"
+Global Const $g_sBundleHeroesUbiWarden = $g_sBaseDMatchingPathB & "\Heroes\Warden\"
+Global Const $g_sBundleHeroesUbiChampion = $g_sBaseDMatchingPathB & "\Heroes\Champion\"
+
+; New DB.
+Global Const $g_sBundleDefensesEagle = $g_sBaseDMatchingPathB & "\deadbase\Defenses\Eagle\"
 #EndRegion - DMatchingBundles.au3
 
 ; #FUNCTION# ====================================================================================================================

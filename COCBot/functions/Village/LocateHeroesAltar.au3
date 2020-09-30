@@ -1,7 +1,7 @@
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: LocateQueenAltar & LocateKingAltar & LocateWardenAltar
 ; Description ...:
-; Syntax ........: LocateKingAltar() & LocateQueenAltar() &  LocateWardenAltar()
+; Syntax ........: LocateKingAltar() & LocateQueenAltar() &  LocateWardenAltar() & LocateChampionAltar()
 ; Parameters ....:
 ; Return values .: None
 ; Author ........: ProMac(07/2015)
@@ -13,14 +13,13 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func LocateQueenAltar($bCollect = True)
-	; Avoid Locate - Team AIO Mod++ 
-	If ($g_bAvoidLocate Or $g_bChkOnlyFarm) and $g_bIsReallyOn Then
+	Local $wasRunState = $g_bRunState
+	$g_bRunState = True
+	; Only farm - Team AIO Mod++ 
+	If $g_bChkOnlyFarm and $g_bIsReallyOn Then
 		SetLog("Avoid Locate Queen Altar.", $COLOR_INFO)
 		Return
 	EndIf
-	
-	Local $wasRunState = $g_bRunState
-	$g_bRunState = True
 	AndroidShield("LocateQueenAltar 1") ; Update shield status due to manual $g_bRunState
 	Local $Result = _LocateQueenAltar($bCollect)
 	$g_bRunState = $wasRunState
@@ -33,10 +32,62 @@ Func _LocateQueenAltar($bCollect = True)
 	Local $stext, $MsgBox, $iSilly = 0, $iStupid = 0, $sErrorText = "", $sInfo
 
 	WinGetAndroidHandle()
+	
 	checkMainScreen(False)
 	If $bCollect Then Collect(False)
-
+	
 	SetLog("Locating Queen Altar", $COLOR_INFO)
+	
+	#Region - Auto locate hero - Team AIO Mod++
+	ZoomOut()
+	Local $aAltarPos[2]
+	Local $aLocateHero = DMClasicArray(DFind($g_sBundleHeroesUbiQueen, 0, 0, 0, 0, 0, 0, 0, True), 18)
+	If IsArray($aLocateHero) Then
+		For $i = 0 To UBound($aLocateHero) -1
+			$aAltarPos[0] = $aLocateHero[$i][1]
+			$aAltarPos[1] = $aLocateHero[$i][2]
+			
+			If IsInsideDiamond($aAltarPos) = False Then ContinueLoop
+			
+			ClickP($aAltarPos)
+			
+			Local $CountGetInfo = 0
+			Do
+				$sInfo = BuildingInfo(242, 550)
+				If @error Then SetError(0, 0, 0)
+				If _Sleep(100) Then Return
+				$CountGetInfo += 1
+				If $CountGetInfo = 10 Then Return
+			Until IsArray($sInfo)
+			
+			If $g_bDebugSetlog Then SetDebugLog($sInfo[1] & $sInfo[2])
+			If @error Then Return SetError(0, 0, 0)
+		
+			If $sInfo[0] > 1 Or $sInfo[0] = "" Then
+				If @error Then Return SetError(0, 0, 0)
+		
+				If StringInStr($sInfo[1], "Quee") > 0 Then
+					$g_aiQueenAltarPos = $aAltarPos
+					IniWrite($g_sProfileBuildingPath, "other", "xQueenAltarPos", $g_aiQueenAltarPos[0])
+					IniWrite($g_sProfileBuildingPath, "other", "yQueenAltarPos", $g_aiQueenAltarPos[1])
+					Setlog("Queen located", $COLOR_SUCCESS)
+					ClickAway(True)
+					Return True
+				EndIf
+				
+			EndIf
+			
+			ClickAway(True)
+			
+		Next
+	EndIf
+	
+	If ($g_bAvoidLocate And $g_aiQueenAltarPos[0] < 1) and $g_bIsReallyOn Then
+		SetLog("Avoid Locate Queen Altar.", $COLOR_INFO)
+		Return
+	EndIf
+	#EndRegion - Auto locate hero - Team AIO Mod++
+	
 	While 1
 		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 500)
 		$stext = $sErrorText & @CRLF & GetTranslatedFileIni("MBR Popups", "Func_Locate_Queen_Altar_01", "Click OK then click on your Queen Altar") & @CRLF & @CRLF & _
@@ -84,16 +135,15 @@ Func _LocateQueenAltar($bCollect = True)
 		EndIf
 
 		;get Queen info
-		$sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY); 860x780
-		If @error Then SetError(0, 0, 0)
 		Local $CountGetInfo = 0
-		While Not IsArray($sInfo)
-			$sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY); 860x780
+		Do
+			$sInfo = BuildingInfo(242, 550)
 			If @error Then SetError(0, 0, 0)
-			Sleep(100)
+			If _Sleep(100) Then Return
 			$CountGetInfo += 1
-			If $CountGetInfo = 50 Then Return
-		WEnd
+			If $CountGetInfo = 25 Then Return
+		Until IsArray($sInfo)
+
 		If $g_bDebugSetlog Then SetDebugLog($sInfo[1] & $sInfo[2])
 		If @error Then Return SetError(0, 0, 0)
 
@@ -147,14 +197,13 @@ Func _LocateQueenAltar($bCollect = True)
 EndFunc   ;==>_LocateQueenAltar
 
 Func LocateKingAltar($bCollect = True)
-	; Avoid Locate - Team AIO Mod++ 
-	If ($g_bAvoidLocate Or $g_bChkOnlyFarm) and $g_bIsReallyOn Then
+	Local $wasRunState = $g_bRunState
+	$g_bRunState = True
+	; Only farm - Team AIO Mod++ 
+	If $g_bChkOnlyFarm and $g_bIsReallyOn Then
 		SetLog("Avoid Locate King Altar.", $COLOR_INFO)
 		Return
 	EndIf
-
-	Local $wasRunState = $g_bRunState
-	$g_bRunState = True
 	AndroidShield("LocateKingAltar 1") ; Update shield status due to manual $g_bRunState
 	Local $Result = _LocateKingAltar($bCollect)
 	$g_bRunState = $wasRunState
@@ -171,6 +220,57 @@ Func _LocateKingAltar($bCollect = True)
 	If $bCollect Then Collect(False)
 
 	SetLog("Locating King Altar", $COLOR_INFO)
+	
+	#Region - Auto locate hero - Team AIO Mod++
+	ZoomOut()
+	Local $aAltarPos[2]
+	Local $aLocateHero = DMClasicArray(DFind($g_sBundleHeroesUbiKing, 0, 0, 0, 0, 0, 0, 0, True), 18)
+	If IsArray($aLocateHero) Then
+		For $i = 0 To UBound($aLocateHero) -1
+			$aAltarPos[0] = $aLocateHero[$i][1]
+			$aAltarPos[1] = $aLocateHero[$i][2]
+			
+			If IsInsideDiamond($aAltarPos) = False Then ContinueLoop
+			
+			ClickP($aAltarPos)
+			
+			Local $CountGetInfo = 0
+			Do
+				$sInfo = BuildingInfo(242, 550)
+				If @error Then SetError(0, 0, 0)
+				If _Sleep(100) Then Return
+				$CountGetInfo += 1
+				If $CountGetInfo = 10 Then Return
+			Until IsArray($sInfo)
+			
+			If $g_bDebugSetlog Then SetDebugLog($sInfo[1] & $sInfo[2])
+			If @error Then Return SetError(0, 0, 0)
+		
+			If $sInfo[0] > 1 Or $sInfo[0] = "" Then
+				If @error Then Return SetError(0, 0, 0)
+		
+				If (StringInStr($sInfo[1], "Barb") > 0) Or (StringInStr($sInfo[1], "King") > 0) Then
+					$g_aiKingAltarPos = $aAltarPos
+					IniWrite($g_sProfileBuildingPath, "other", "xKingAltarPos", $g_aiKingAltarPos[0])
+					IniWrite($g_sProfileBuildingPath, "other", "yKingAltarPos", $g_aiKingAltarPos[1])
+					Setlog("King located", $COLOR_SUCCESS)
+					ClickAway(True)
+					Return True
+				EndIf
+				
+			EndIf
+			
+			ClickAway(True)
+			
+		Next
+	EndIf
+	
+	If ($g_bAvoidLocate And $g_aiKingAltarPos[0] < 1) and $g_bIsReallyOn Then
+		SetLog("Avoid Locate King Altar.", $COLOR_INFO)
+		Return
+	EndIf
+	#EndRegion - Auto locate hero - Team AIO Mod++
+
 	While 1
 		ClickAway(True)
 		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 500)
@@ -218,16 +318,15 @@ Func _LocateKingAltar($bCollect = True)
 		EndIf
 
 		;Get King info
-		$sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY); 860x780
-		If @error Then SetError(0, 0, 0)
 		Local $CountGetInfo = 0
-		While Not IsArray($sInfo)
-			$sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY); 860x780
+		Do
+			$sInfo = BuildingInfo(242, 550)
 			If @error Then SetError(0, 0, 0)
-			Sleep(100)
+			If _Sleep(100) Then Return
 			$CountGetInfo += 1
-			If $CountGetInfo = 50 Then Return
-		WEnd
+			If $CountGetInfo = 25 Then Return
+		Until IsArray($sInfo)
+
 		If $g_bDebugSetlog Then SetDebugLog($sInfo[1] & $sInfo[2])
 		If @error Then Return SetError(0, 0, 0)
 
@@ -280,14 +379,13 @@ Func _LocateKingAltar($bCollect = True)
 EndFunc   ;==>_LocateKingAltar
 
 Func LocateWardenAltar($bCollect = True)
-	; Avoid Locate - Team AIO Mod++ 
-	If ($g_bAvoidLocate Or $g_bChkOnlyFarm) and $g_bIsReallyOn Then
+	Local $wasRunState = $g_bRunState
+	$g_bRunState = True
+	; Only farm - Team AIO Mod++ 
+	If $g_bChkOnlyFarm and $g_bIsReallyOn Then
 		SetLog("Avoid Locate Warden Altar.", $COLOR_INFO)
 		Return
 	EndIf
-
-	Local $wasRunState = $g_bRunState
-	$g_bRunState = True
 	AndroidShield("LocateWardenAltar 1") ; Update shield status due to manual $g_bRunState
 	Local $Result = _LocateWardenAltar($bCollect)
 	$g_bRunState = $wasRunState
@@ -308,6 +406,57 @@ Func _LocateWardenAltar($bCollect = True)
 	If $bCollect Then Collect(False)
 
 	SetLog("Locating Grand Warden Altar", $COLOR_INFO)
+	
+	#Region - Auto locate hero - Team AIO Mod++
+	ZoomOut()
+	Local $aAltarPos[2]
+	Local $aLocateHero = DMClasicArray(DFind($g_sBundleHeroesUbiWarden, 0, 0, 0, 0, 0, 0, 0, True), 18)
+	If IsArray($aLocateHero) Then
+		For $i = 0 To UBound($aLocateHero) -1
+			$aAltarPos[0] = $aLocateHero[$i][1]
+			$aAltarPos[1] = $aLocateHero[$i][2]
+			
+			If IsInsideDiamond($aAltarPos) = False Then ContinueLoop
+			
+			ClickP($aAltarPos)
+			
+			Local $CountGetInfo = 0
+			Do
+				$sInfo = BuildingInfo(242, 550)
+				If @error Then SetError(0, 0, 0)
+				If _Sleep(100) Then Return
+				$CountGetInfo += 1
+				If $CountGetInfo = 10 Then Return
+			Until IsArray($sInfo)
+			
+			If $g_bDebugSetlog Then SetDebugLog($sInfo[1] & $sInfo[2])
+			If @error Then Return SetError(0, 0, 0)
+		
+			If $sInfo[0] > 1 Or $sInfo[0] = "" Then
+				If @error Then Return SetError(0, 0, 0)
+		
+				If StringInStr($sInfo[1], "Warden") > 0 Then
+					$g_aiWardenAltarPos = $aAltarPos
+					IniWrite($g_sProfileBuildingPath, "other", "xWardenAltarPos", $g_aiWardenAltarPos[0])
+					IniWrite($g_sProfileBuildingPath, "other", "yWardenAltarPos", $g_aiWardenAltarPos[1])
+					Setlog("Warden located", $COLOR_SUCCESS)
+					ClickAway(True)
+					Return True
+				EndIf
+				
+			EndIf
+			
+			ClickAway(True)
+			
+		Next
+	EndIf
+	
+	If ($g_bAvoidLocate And $g_aiWardenAltarPos[0] < 1) and $g_bIsReallyOn Then
+		SetLog("Avoid Locate Warden Altar.", $COLOR_INFO)
+		Return
+	EndIf
+	#EndRegion - Auto locate hero - Team AIO Mod++
+
 	While 1
 		ClickAway(True)
 		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 500)
@@ -355,16 +504,15 @@ Func _LocateWardenAltar($bCollect = True)
 		EndIf
 
 		;get GrandWarden info
-		$sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY) ;<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< need to work
-		If @error Then SetError(0, 0, 0)
 		Local $CountGetInfo = 0
-		While Not IsArray($sInfo)
-			$sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY)
+		Do
+			$sInfo = BuildingInfo(242, 550)
 			If @error Then SetError(0, 0, 0)
-			Sleep(100)
+			If _Sleep(100) Then Return
 			$CountGetInfo += 1
-			If $CountGetInfo = 50 Then Return
-		WEnd
+			If $CountGetInfo = 25 Then Return
+		Until IsArray($sInfo)
+
 		If $g_bDebugSetlog Then SetDebugLog($sInfo[1] & $sInfo[2])
 		If @error Then Return SetError(0, 0, 0)
 
@@ -418,14 +566,13 @@ Func _LocateWardenAltar($bCollect = True)
 EndFunc   ;==>_LocateWardenAltar
 
 Func LocateChampionAltar($bCollect = True)
-	; Avoid Locate - Team AIO Mod++ 
-	If ($g_bAvoidLocate Or $g_bChkOnlyFarm) and $g_bIsReallyOn Then
+	Local $wasRunState = $g_bRunState
+	$g_bRunState = True
+	; Only farm - Team AIO Mod++ 
+	If $g_bChkOnlyFarm and $g_bIsReallyOn Then
 		SetLog("Avoid Locate Champion Altar.", $COLOR_INFO)
 		Return
 	EndIf
-
-	Local $wasRunState = $g_bRunState
-	$g_bRunState = True
 	AndroidShield("LocateChampionAltar 1") ; Update shield status due to manual $g_bRunState
 	Local $Result = _LocateChampionAltar($bCollect)
 	$g_bRunState = $wasRunState
@@ -446,6 +593,55 @@ Func _LocateChampionAltar($bCollect = True)
 	If $bCollect Then Collect(False)
 
 	SetLog("Locating Royal Champion Altar", $COLOR_INFO)
+	#Region - Auto locate hero - Team AIO Mod++
+	ZoomOut()
+	Local $aAltarPos[2]
+	Local $aLocateHero = DMClasicArray(DFind($g_sBundleHeroesUbiChampion, 0, 0, 0, 0, 0, 0, 0, True), 18)
+	If IsArray($aLocateHero) Then
+		For $i = 0 To UBound($aLocateHero) -1
+			$aAltarPos[0] = $aLocateHero[$i][1]
+			$aAltarPos[1] = $aLocateHero[$i][2]
+			
+			If IsInsideDiamond($aAltarPos) = False Then ContinueLoop
+			
+			ClickP($aAltarPos)
+			
+			Local $CountGetInfo = 0
+			Do
+				$sInfo = BuildingInfo(242, 550)
+				If @error Then SetError(0, 0, 0)
+				If _Sleep(100) Then Return
+				$CountGetInfo += 1
+				If $CountGetInfo = 10 Then Return
+			Until IsArray($sInfo)
+			
+			If $g_bDebugSetlog Then SetDebugLog($sInfo[1] & $sInfo[2])
+			If @error Then Return SetError(0, 0, 0)
+		
+			If $sInfo[0] > 1 Or $sInfo[0] = "" Then
+				If @error Then Return SetError(0, 0, 0)
+		
+				If StringInStr($sInfo[1], "Champion") > 0 Then
+					$g_aiChampionAltarPos = $aAltarPos
+					IniWrite($g_sProfileBuildingPath, "other", "xChampionAltarPos", $g_aiChampionAltarPos[0])
+					IniWrite($g_sProfileBuildingPath, "other", "yChampionAltarPos", $g_aiChampionAltarPos[1])
+					Setlog("Champion located", $COLOR_SUCCESS)
+					ClickAway(True)
+					Return True
+				EndIf
+				
+			EndIf
+			
+			ClickAway(True)
+			
+		Next
+	EndIf
+	
+	If ($g_bAvoidLocate And $g_aiChampionAltarPos[0] < 1) and $g_bIsReallyOn Then
+		SetLog("Avoid Locate Champion Altar.", $COLOR_INFO)
+		Return
+	EndIf
+	#EndRegion - Auto locate hero - Team AIO Mod++
 	While 1
 		ClickAway(True)
 		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 500)
@@ -493,16 +689,15 @@ Func _LocateChampionAltar($bCollect = True)
 		EndIf
 
 		;get RoyalChampion info
-		$sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY) ;<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< need to work
-		If @error Then SetError(0, 0, 0)
 		Local $CountGetInfo = 0
-		While Not IsArray($sInfo)
-			$sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY)
+		Do
+			$sInfo = BuildingInfo(242, 550)
 			If @error Then SetError(0, 0, 0)
-			Sleep(100)
+			If _Sleep(100) Then Return
 			$CountGetInfo += 1
-			If $CountGetInfo = 50 Then Return
-		WEnd
+			If $CountGetInfo = 25 Then Return
+		Until IsArray($sInfo)
+
 		If $g_bDebugSetlog Then SetDebugLog($sInfo[1] & $sInfo[2])
 		If @error Then Return SetError(0, 0, 0)
 

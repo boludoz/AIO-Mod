@@ -13,13 +13,12 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func UpgradeHeroes()
+	If $g_bRestart Then Return
 
 	If Not $g_bUpgradeKingEnable And Not $g_bUpgradeQueenEnable And Not $g_bUpgradeWardenEnable And Not $g_bUpgradeChampionEnable Then Return
 	If _Sleep(500) Then Return
 
 	checkMainScreen(False)
-
-	If $g_bRestart Then Return
 
 	If $g_bUpgradeKingEnable Then
 		If Not isInsideDiamond($g_aiKingAltarPos) Then LocateKingAltar()

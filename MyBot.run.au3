@@ -13,7 +13,7 @@
 ; AutoIt pragmas
 #NoTrayIcon
 #RequireAdmin
-#AutoIt3Wrapper_UseX64=7n
+#AutoIt3Wrapper_UseX64=n ; Old bug
 ;#AutoIt3Wrapper_Res_HiDpi=Y ; HiDpi will be set during run-time!
 ;#AutoIt3Wrapper_Run_AU3Check=n ; enable when running in folder with umlauts!
 #AutoIt3Wrapper_Run_Au3Stripper=y

@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 #include-once
-
+Global $g_sAndroidAdbPort = "" ; Custom fix - Team AIO Mod++
 Global Const $g_sAdbScriptsPath = $g_sLibPath & "\adb.scripts" ; ADD script and event files folder
 Global $g_sAndroidAdbPrompt = "mybot.run:" ; Unique ADB PS1 prompt
 Global $g_bAndroidAdbPort = 0 ; When $g_bAndroidAdbPortPerInstance = True save here the port
@@ -1549,7 +1549,7 @@ Func KillAdbDaemon($bMutexLock = True)
 	Local $process_killed
 	LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "kill-server", $process_killed)
 	Local $sPort = ""
-	If $g_bAndroidAdbPort Then $sPort = String($g_bAndroidAdbPort)
+	If $g_bAndroidAdbPort Then $sPort = String($g_sAndroidAdbPort) ; Custom fix - Team AIO Mod++
 	Local $pids = ProcessesExist($g_sAndroidAdbPath, $sPort, 1, 1)
 	For $i = 0 To UBound($pids) - 1
 		KillProcess($pids[$i], $g_sAndroidAdbPath)
@@ -1631,6 +1631,10 @@ Func _ConnectAndroidAdb($rebootAndroidIfNeccessary = $g_bRunState, $bStartOnlyAn
 			Else
 				; Custom Fix - Team AIO Mod++
 				SetDebugLog("ConnectAndroidAdb: Reboot Android not ADB Daemon not allowed. Try x" & $iRecursive + 1, $COLOR_ERROR)
+				Local $pids = ProcessesExist($g_sAndroidAdbPath, "", 1, 1)
+				For $i = 0 To UBound($pids) - 1
+					KillProcess($pids[$i], $g_sAndroidAdbPath)
+				Next
 				If $iRecursive < 3 Then Return 0
 			EndIf
 
@@ -1642,7 +1646,7 @@ Func _ConnectAndroidAdb($rebootAndroidIfNeccessary = $g_bRunState, $bStartOnlyAn
 				SetDebugLog("Stop ADB daemon!", $COLOR_ERROR)
 				LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "kill-server", $process_killed)
 				Local $sPort = ""
-				If $g_bAndroidAdbPort Then $sPort = String($g_bAndroidAdbPort)
+				If $g_bAndroidAdbPort Then $sPort = String($g_sAndroidAdbPort) ; Custom fix - Team AIO Mod++
 				Local $pids = ProcessesExist($g_sAndroidAdbPath, $sPort, 1, 1)
 				For $i = 0 To UBound($pids) - 1
 					KillProcess($pids[$i], $g_sAndroidAdbPath)
