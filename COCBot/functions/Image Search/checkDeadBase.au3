@@ -113,9 +113,13 @@ Func checkDeadBase($bForceCapture = False, $sFillDirectory = @ScriptDir & "\imgx
 		Return True
 	EndIf
 
-	If $g_bCollectorFilterDisable Then Return True
-	$g_bCollectorFilterDisable = $bStatusFilter
+	If $g_bCollectorFilterDisable Then 
+		$g_bCollectorFilterDisable = $bStatusFilter
+		Return True
+	EndIf
 	
+	$g_bCollectorFilterDisable = $bStatusFilter
+
 	Local $minCollectorLevel = 0
 	Local $maxCollectorLevel = 0
 	Local $anyFillLevel[2] = [False, False] ; 50% and 100%
