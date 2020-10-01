@@ -178,7 +178,7 @@ Func DMClasicArray($sMatches, $iDis = 18, $bDebugLog = $g_bDebugImageSave)
 	If UBound($aMatches) < 1 Then Return -1
 	If $bDebugLog Then DebugImgArrayClassic($aMatches, "DMClasicArray")
 	Return $aMatches
-EndFunc
+EndFunc 
 
 Func DebugImgArrayClassic($aAR = 0, $sFrom = "")
 	If $g_hHBitmap2 = 0 Then

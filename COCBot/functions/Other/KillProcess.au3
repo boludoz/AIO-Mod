@@ -42,7 +42,7 @@ Func KillProcess($pid, $process_info = "", $attempts = 3)
 			EndIf
 		EndIf
 		If ProcessExists($pid) Then ; If it is still running, then force kill it (and entire tree!)
-			ShellExecute(@WindowsDir & "\System32\taskkill.exe", "-f -t -pid " & $pid, "", Default, @SW_HIDE)
+			ShellExecute(@WindowsDir & "\System32\taskkill.exe", " -f -t -pid " & $pid, "", Default, @SW_HIDE)
 			If _Sleep(1000) Then Return False; Give OS time to work
 			If ProcessExists($pid) = 0 Then
 				SetDebugLog("KillProcess(" & $iCount & "): PID = " & $pid & " killed (using taskkill -f -t)" & $process_info)

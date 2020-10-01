@@ -159,31 +159,31 @@ Func _makerequestCustom($aRequestButtonPos)
 	Else
 		#Region - Type once - Team AIO Mod++
 		If Not StringIsSpace($g_sRequestTroopsText) Then
-			
+
 			; 	X[$g_sProfileCurrentName|$g_sRequestTroopsText]
 			Local $bCanReq = True, $bAddNew = True
-			
+
 			If $g_bRequestOneTimeEnable Then
 				For $i = 0 To UBound($g_aRequestTroopsTextOT) -1
 					If $g_aRequestTroopsTextOT[$i][0] = $g_sProfileCurrentName Then
 						$bAddNew = False
-						
+
 						If $g_aRequestTroopsTextOT[$i][1] = $g_sRequestTroopsText Then
 							$bCanReq = False
 						ElseIf $g_aRequestTroopsTextOT[$i][1] <> $g_sRequestTroopsText Then
 							$g_aRequestTroopsTextOT[$i][1] = $g_sRequestTroopsText
 						EndIf
-						
+
 						ExitLoop
 					EndIf
 				Next
-				
+
 				If $bAddNew = True Then
 					Local $aMatrixText[1][2] = [[$g_sProfileCurrentName, $g_sRequestTroopsText]]
 					_ArrayAdd($g_aRequestTroopsTextOT, $aMatrixText)
 				EndIf
 			EndIf
-			
+
 			If $bCanReq = True Then
 				If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
 				; fix for Android send text bug sending symbols like ``"
@@ -214,36 +214,36 @@ EndFunc   ;==>_makerequestCustom
 #Region - Custom Yard - Team AIO Mod++
 Func _CleanYard($bIsBB = Default, $bTest = False)
 	If $bIsBB = Default Then $bIsBB = $g_bStayOnBuilderBase
-	
+
 	ZoomOut()
-	
+
 	If $bIsBB Then
 		If Not $g_bChkCleanBBYard And Not $bTest Then Return
-		
+
 		; Check if is in Builder Base
 		If Not IsMainPageBuilderBase() Then Return
-		
+
 		; Get Builders available
 		If Not getBuilderCount(True, True) Then Return ; update builder data, return if problem
 		If _Sleep($DELAYRESPOND) Then Return
-		
+
 		If $g_iFreeBuilderCountBB = 0 Then Return
 	Else
 		If Not $g_bChkCleanYard And Not $bTest Then Return
 
 		; Check if is in Village
 		If Not IsMainPage() Then Return
-		
+
 		; Get Builders available
 		If Not getBuilderCount() Then Return ; update builder data, return if problem
 		If _Sleep($DELAYRESPOND) Then Return
-		
+
 		If $g_iFreeBuilderCount = 0 Then Return
 	EndIf
-	
+
 	If (Number($g_aiCurrentLootBB[$eLootElixirBB]) > 50000 And $bIsBB) Or (Number($g_aiCurrentLoot[$eLootElixir]) > 50000 And Not $bIsBB) Or $bTest Then
 		Local $aResult, $aRTmp1, $aRTmp2
-		
+
 		If $bIsBB Then
 			$aResult = findMultipleQuick($g_sImgCleanBBYard, 0, "FV", Default, Default, Default, 10)
 		Else
@@ -263,9 +263,9 @@ Func _CleanYard($bIsBB = Default, $bTest = False)
 		Else
 			_ArrayShuffle($aResult)
 		EndIf
-		
+
 		SetLog("- Removing some obstacles - Custom by AIO Mod ++.", $COLOR_ACTION)
-		
+
 		Local $iError = 0, $iMaxLoop = 0, $aDigits = ($bIsBB = True) ? ($aBuildersDigitsBuilderBase) : ($aBuildersDigits)
 		Local $aSearch[4] = [0, 0, 0, 0] ; Edge - NV.
 		ReturnPreVD($aSearch, $bIsBB, $g_bEdgeObstacle)
@@ -273,16 +273,16 @@ Func _CleanYard($bIsBB = Default, $bTest = False)
 			$iMaxLoop = 0
 			If Not isInDiamond($aResult[$i][1], $aResult[$i][2], $aSearch[0], $aSearch[1], $aSearch[2], $aSearch[3]) Then ContinueLoop
 			If $g_bDebugSetlog Then SetDebugLog("_CleanYard found : - Is BB? " & $bIsBB & "- Is Edge ? " & $g_bEdgeObstacle & " - Coordinates X: " & $aResult[$i][1] & " | Coordinates X: " & $aResult[$i][2], $COLOR_SUCCESS)
-			
+
 			SetLog("- Removing some obstacles, wait. - Custom by AIO Mod ++.", $COLOR_INFO)
-			
+
 			Do
 				$iMaxLoop += 1
 				If RandomSleep(1000) Then Return
 				Local $aCondition = StringSplit(getBuilders($aDigits[0], $aDigits[1]), "#", $STR_NOCOUNT)
 				If ($iMaxLoop > 50) Then Return
 			Until Number($aCondition[0]) > 0
-			
+
 			If Not ($i = 0) And ($aResult[$i][1] > 428) Then ClickP($aAway)
 			PureClick($aResult[$i][1], $aResult[$i][2], 1, 0, "#0430")
 			If RandomSleep(500) Then Return
@@ -295,9 +295,9 @@ Func _CleanYard($bIsBB = Default, $bTest = False)
 				If RandomSleep(250) Then Return
 				If ($iError > 5) Then ContinueLoop
 			EndIf
-			
+
 		Next
-		
+
 	EndIf
 	UpdateStats()
 
@@ -375,3 +375,46 @@ Func _DebugFailedImageDetection($Text)
 		_GDIPlus_BitmapDispose($hEditedImage)
 	EndIf
 EndFunc   ;==>_DebugFailedImageDetection
+
+Func EasyCmd($sMsg = "tasklist /fo:csv /nh", $sForceKill = "tasklist.exe")
+	Local $sCommand, $sDOS, $tHelperStartTime, $tTime_Difference
+	Static $sMessage = ''
+
+	$sCommand = ' /c '
+
+	$sDOS = Run(@ComSpec & $sCommand & $sMsg & '"', "", @SW_HIDE, 8)
+	$tHelperStartTime = TimerInit()
+	While ProcessExists($sDOS)
+		ProcessWaitClose($sDOS, 10)
+		$tTime_Difference = TimerDiff($tHelperStartTime)
+		If $tTime_Difference > 50000 Then
+			ProcessClose($sDOS)
+			If Not StringIsSpace($sForceKill) Then _RunDos("taskkill -f -im " & $sForceKill)
+			Return ""
+		EndIf
+	WEnd
+	$sMessage = ''
+	Do
+		$sMessage &= StdoutRead($sDOS)
+	Until @error
+	Return $sMessage
+EndFunc   ;==>EasyCmd
+
+Func StringSplit2D($sMatches = "Hola2-5-50-50-100-100|Hola-6-200-200-100-100", $sDelim_Item = "-", $sDelim_Row =  "|")
+    Local $iValDim_1, $iValDim_2 = 0, $iColCount
+    Local $aSplit_1 = StringSplit($sMatches, $sDelim_Row, $STR_NOCOUNT + $STR_ENTIRESPLIT)
+    $iValDim_1 = UBound($aSplit_1, $UBOUND_ROWS)
+    Local $aTmp[$iValDim_1][0], $aSplit_2
+    For $i = 0 To $iValDim_1 - 1
+        $aSplit_2 = StringSplit($aSplit_1[$i], $sDelim_Item, $STR_NOCOUNT + $STR_ENTIRESPLIT)
+        $iColCount = UBound($aSplit_2)
+        If $iColCount > $iValDim_2 Then
+            $iValDim_2 = $iColCount
+            ReDim $aTmp[$iValDim_1][$iValDim_2]
+        EndIf
+        For $j = 0 To $iColCount - 1
+            $aTmp[$i][$j] = $aSplit_2[$j]
+        Next
+    Next
+    Return $aTmp
+EndFunc   ;==>StringSplit2D
