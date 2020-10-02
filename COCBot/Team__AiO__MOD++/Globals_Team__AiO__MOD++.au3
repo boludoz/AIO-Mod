@@ -27,8 +27,6 @@ Global Enum $eIcnBB = 1 , $eIcnLabBB, $eIcnBBElixir, $eIcnBBGold, $eIcnBBTrophie
 		$eIcnBBWallL6, $eIcnBBWallL7, $eIcnBBWallL8, $eIcnBBWallL9
 #EndRegion - Icn - Team AIO Mod++
 
-Global $g_sAndroidAdbPort = "" ; Custom fix - Team AIO Mod++
-
 #Region - Legend trophy protection - Team AIO Mod++
 Global $g_hChkProtectInLL, $g_hChkForceProtectLL, $g_bProtectInLL = True, $g_bForceProtectLL = False
 #EndRegion - Legend trophy protection - Team AIO Mod++

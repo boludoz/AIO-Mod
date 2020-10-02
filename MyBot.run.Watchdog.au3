@@ -61,7 +61,6 @@ Global $iTimeoutAutoClose = 60000 ; Milliseconds watchdog automatically closed w
 Global $hTimeoutAutoClose = 0 ; Timer Handle for $iTimeoutAutoClose
 Global $g_bBotLaunchOption_NoBotSlot = True
 Global $g_iDebugWindowMessages = 0
-Global $g_sAndroidAdbPort = 0 ; Team AIO Mod++
 
 Global $hStruct_SleepMicro = DllStructCreate("int64 time;")
 Global $pStruct_SleepMicro = DllStructGetPtr($hStruct_SleepMicro)

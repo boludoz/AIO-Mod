@@ -791,7 +791,11 @@ Func FindPreferredAdbPath()
 		Case Else
 			$sADBPath = @ScriptDir & "\lib\TempAdb\" & $g_sAndroidInstance & "\"
 			If DirGetSize(@ScriptDir & "\lib\adb\") <> DirGetSize(@ScriptDir & "\lib\TempAdb\" & $g_sAndroidInstance & "\") Then
-				; KillAdbDaemon(False) - This can kill your pc in true.
+				; Custom fix AIO Mod++
+				Local $pids = ProcessFindBy($g_sAndroidAdbPath)
+				For $i = 0 To UBound($pids) - 1
+					KillProcess($pids[$i], $g_sAndroidAdbPath)
+				Next
 				_RunDos("RMDIR /Q/S " & $sADBPath)
 				If $g_bDebugAndroid Then 
 					Setlog("FindPreferredAdbPath | Let's Update the adb version!", $COLOR_GREEN)
@@ -1548,8 +1552,8 @@ Func KillAdbDaemon($bMutexLock = True)
 	Local $process_killed
 	LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "kill-server", $process_killed)
 	Local $sPort = ""
-	If $g_bAndroidAdbPort Then $sPort = String($g_sAndroidAdbPort) ; Custom fix - Team AIO Mod++
-	Local $pids = ProcessesExist($g_sAndroidAdbPath, $sPort, 1, 1)
+	If $g_bAndroidAdbPort Then $sPort = String($g_bAndroidAdbPort) ; Custom fix - Team AIO Mod++
+	Local $pids = ProcessFindBy($g_sAndroidAdbPath, $sPort)
 	For $i = 0 To UBound($pids) - 1
 		KillProcess($pids[$i], $g_sAndroidAdbPath)
 	Next
@@ -1561,7 +1565,7 @@ Func ConnectAndroidAdb($rebootAndroidIfNeccessary = $g_bRunState, $bStartOnlyAnd
 	Return FuncReturn(_ConnectAndroidAdb($rebootAndroidIfNeccessary, $bStartOnlyAndroid, $timeout))
 EndFunc   ;==>ConnectAndroidAdb
 
-Func _ConnectAndroidAdb($rebootAndroidIfNeccessary = $g_bRunState, $bStartOnlyAndroid = False, $timeout = 15000, $iRecursive = 0) ; Custom Fix - Team AIO Mod++
+Func _ConnectAndroidAdb($rebootAndroidIfNeccessary = $g_bRunState, $bStartOnlyAndroid = False, $timeout = 15000)
 	If $g_sAndroidAdbPath = "" Or FileExists($g_sAndroidAdbPath) = 0 Then
 		SetLog($g_sAndroidEmulator & " ADB Path not valid: " & $g_sAndroidAdbPath, $COLOR_ERROR)
 		Return 0
@@ -1581,7 +1585,7 @@ Func _ConnectAndroidAdb($rebootAndroidIfNeccessary = $g_bRunState, $bStartOnlyAn
 
 	Local $hMutex = AquireAdbDaemonMutex()
 
-	Local $process_killed
+	Local $process_killed, $cmdOutput
 	Local $connected_to = False
 	Local $timer = __TimerInit()
 	Local $timerReInit = $timer
@@ -1628,29 +1632,26 @@ Func _ConnectAndroidAdb($rebootAndroidIfNeccessary = $g_bRunState, $bStartOnlyAn
 				$bRebooted = RebootAndroid()
 				If Not $bRebooted Then Return 0
 			Else
-				; Custom Fix - Team AIO Mod++
-				SetDebugLog("ConnectAndroidAdb: Reboot Android not ADB Daemon not allowed. Try x" & $iRecursive + 1, $COLOR_ERROR)
-				Local $pids = ProcessesExist($g_sAndroidAdbPath, "", 1, 1)
-				For $i = 0 To UBound($pids) - 1
-					KillProcess($pids[$i], $g_sAndroidAdbPath)
-				Next
-				If $iRecursive < 3 Then Return 0
+				SetDebugLog("ConnectAndroidAdb: Reboot Android nor ADB Daemon not allowed", $COLOR_ERROR)
+				Return 0
 			EndIf
 
 			; ok, now try to connect again
 			$connected_to = IsAdbConnected()
 
-			If Not $connected_to Or $iRecursive > 3 Then
+			If Not $connected_to Then
 				; not connected... strange, kill any Adb now
 				SetDebugLog("Stop ADB daemon!", $COLOR_ERROR)
 				LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "kill-server", $process_killed)
 				Local $sPort = ""
-				If $g_bAndroidAdbPort Then $sPort = String($g_sAndroidAdbPort) ; Custom fix - Team AIO Mod++
-				Local $pids = ProcessesExist($g_sAndroidAdbPath, $sPort, 1, 1)
+				If $g_bAndroidAdbPort Then $sPort = String($g_bAndroidAdbPort)
+				
+				; Custom fix AIO Mod++
+				Local $pids = ProcessFindBy($g_sAndroidAdbPath)
 				For $i = 0 To UBound($pids) - 1
 					KillProcess($pids[$i], $g_sAndroidAdbPath)
 				Next
-
+				
 				; ok, last try
 				$connected_to = ConnectAndroidAdb(False, $bStartOnlyAndroid)
 				If Not $connected_to Then
@@ -1661,7 +1662,7 @@ Func _ConnectAndroidAdb($rebootAndroidIfNeccessary = $g_bRunState, $bStartOnlyAn
 				EndIf
 			EndIf
 	EndSwitch
-	If $iRecursive > 3 Then Return _ConnectAndroidAdb($rebootAndroidIfNeccessary, $bStartOnlyAndroid, $timeout, $iRecursive + 1)
+
 	Return (($connected_to) ? (($bRebooted) ? (2) : (1)) : (0)) ; ADB is connected or not
 EndFunc   ;==>_ConnectAndroidAdb
 

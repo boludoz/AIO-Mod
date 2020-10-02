@@ -75,10 +75,12 @@ Func cmbEmulators()
 	Local $emulator = GUICtrlRead($g_hCmbEmulators)
 	If MsgBox($MB_YESNO, "Emulator Selection", $emulator & ", Is correct?" & @CRLF & "Any mistake and your profile will be not useful!", 10) = $IDYES Then
 		SetLog("Emulator " & $emulator & " Selected at first instance. Please reboot or select instance and reboot.", $COLOR_INFO)
-		Local $pids = ProcessesExist($g_sAndroidAdbPath, "", 1, 1)
-		For $i = 0 To UBound($pids) - 1
-			KillProcess($pids[$i], $g_sAndroidAdbPath)
-		Next
+		; Custom fix AIO Mod++
+		; Local $pids = ProcessesExist($g_sAndroidAdbPath, $sPort, 1, 1)
+		; For $i = 0 To UBound($pids) - 1
+			; KillProcess($pids[$i], $g_sAndroidAdbPath)
+		; Next
+		KillAdbDaemon(False)
 		InitAndroidConfig(True)
 		$g_sAndroidAdbPath = "" ; Path to executable HD-Adb.exe or adb.exe
 		$g_sAndroidEmulator = $emulator
@@ -94,10 +96,12 @@ Func cmbInstances()
 	Local $instance = GUICtrlRead($g_hCmbInstances)
 	If MsgBox($MB_YESNO, "Instance Selection", $instance & ", Is correct?" & @CRLF & "If 'yes' is necessary reboot the 'bot'.", 10) = $IDYES Then
 		SetLog("Instance " & $instance & " Selected. Please reset.", $COLOR_INFO)
-		Local $pids = ProcessesExist($g_sAndroidAdbPath, "", 1, 1)
-		For $i = 0 To UBound($pids) - 1
-			KillProcess($pids[$i], $g_sAndroidAdbPath)
-		Next
+		; Custom fix AIO Mod++
+		; Local $pids = ProcessesExist($g_sAndroidAdbPath, $sPort, 1, 1)
+		; For $i = 0 To UBound($pids) - 1
+			; KillProcess($pids[$i], $g_sAndroidAdbPath)
+		; Next
+		KillAdbDaemon(False)
 		InitAndroidConfig(True)
 		$g_sAndroidAdbPath = "" ; Path to executable HD-Adb.exe or adb.exe
 		$g_sAndroidInstance = $instance
