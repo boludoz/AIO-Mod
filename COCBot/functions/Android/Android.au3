@@ -13,7 +13,6 @@
 ; Example .......: No
 ; ===============================================================================================================================
 #include-once
-Global $g_sAndroidAdbPort = "" ; Custom fix - Team AIO Mod++
 Global Const $g_sAdbScriptsPath = $g_sLibPath & "\adb.scripts" ; ADD script and event files folder
 Global $g_sAndroidAdbPrompt = "mybot.run:" ; Unique ADB PS1 prompt
 Global $g_bAndroidAdbPort = 0 ; When $g_bAndroidAdbPortPerInstance = True save here the port

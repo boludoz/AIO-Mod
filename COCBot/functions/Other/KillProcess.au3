@@ -16,43 +16,39 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func KillProcess($pid, $process_info = "", $attempts = 3)
-	Local $iCount = 0
-	If $process_info <> "" Then $process_info = ", " & $process_info
-	While ProcessExists($pid) And $iCount < $attempts
-		If ProcessClose($pid) = 1 Then
-			SetDebugLog("KillProcess(" & $iCount & "): PID = " & $pid & " closed" & $process_info)
+Func KillProcess($iPID, $process_info = "", $attempts = 3)
+	If StringIsSpace($process_info) Then $process_info = "adb"
+	Local $strComputer = "."
+	Local $objWMI, $colResults, $objItem, $intCount, $answer, $a, $b = ""
+	If Not StringIsSpace($process_info) Then
+		$b = StringSplit($process_info, '\', $STR_NOCOUNT)
+		If @error then 
+			$b = $process_info
 		Else
-			Switch @error
-				Case 1 ; OpenProcess failed
-					SetDebugLog("Process close error: OpenProcess failed")
-				Case 2 ; AdjustTokenPrivileges Failed
-					SetDebugLog("Process close error: AdjustTokenPrivileges Failed")
-				Case 3 ; TerminateProcess Failed
-					SetDebugLog("Process close error: TerminateProcess Failed")
-				Case 4 ; Cannot verify if process exists
-					SetDebugLog("Process close error: Cannot verify if process exists")
-			EndSwitch
+			$b = $a[UBound($a)-1]
 		EndIf
-		If ProcessExists($pid) Then ; If it is still running, then try again
-			ShellExecute(@WindowsDir & "\System32\taskkill.exe", " -pid " & $pid, "", Default, @SW_HIDE)
-			If _Sleep(1000) Then Return False; Give OS time to work
-			If ProcessExists($pid) = 0 Then
-				SetDebugLog("KillProcess(" & $iCount & "): PID = " & $pid & " killed (using taskkill)" & $process_info)
-			EndIf
+		If StringIsSpace($b) Then Return False
+		If StringInStr(_ProcessGetName($iPID), $a) > 0 Then
+			For $i = 1 To $attempts
+				$objWMI = ObjGet("winmgmts:\\" & $strComputer & "\root\cimv2")
+				$colResults = $objWMI.ExecQuery("Select * from Win32_Process WHERE ProcessID = '" & $iPID & "'")
+				For $objItem in $colResults
+					$objItem.Terminate()
+				Next
+				If Not ProcessExists($iPID) Then Return True
+			Next
 		EndIf
-		If ProcessExists($pid) Then ; If it is still running, then force kill it (and entire tree!)
-			ShellExecute(@WindowsDir & "\System32\taskkill.exe", " -f -t -pid " & $pid, "", Default, @SW_HIDE)
-			If _Sleep(1000) Then Return False; Give OS time to work
-			If ProcessExists($pid) = 0 Then
-				SetDebugLog("KillProcess(" & $iCount & "): PID = " & $pid & " killed (using taskkill -f -t)" & $process_info)
-			EndIf
-		EndIf
-		$iCount += 1
-	WEnd
-	If ProcessExists($pid) Then
-		SetDebugLog("KillProcess(" & $iCount & "): PID = " & $pid & " failed to kill" & $process_info, $COLOR_ERROR)
-		Return False
+	Else
+		For $i = 1 To $attempts
+			$objWMI = ObjGet("winmgmts:\\" & $strComputer & "\root\cimv2")
+			$colResults = $objWMI.ExecQuery("Select * from Win32_Process WHERE ProcessID = '" & $iPID & "'")
+			For $objItem in $colResults
+				$objItem.Terminate()
+			Next
+			If Not ProcessExists($iPID) Then Return True
+		Next
 	EndIf
-	Return True ; process ssuccessfuly killed
+	
+	SetDebugLog("KillProcess(" & $attempts & "): PID = " & $iPID & " failed to kill" & $process_info, $COLOR_ERROR)
+	Return False
 EndFunc   ;==>KillProcess

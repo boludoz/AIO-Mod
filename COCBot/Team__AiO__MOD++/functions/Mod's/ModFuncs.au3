@@ -1,16 +1,4 @@
 ; #FUNCTION# ====================================================================================================================
-; Name ..........: ModFuncs.au3
-; Description ...: Avoid loss of functions during updates.
-; Author ........: Boludoz (2020)
-; Modified ......:
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2020
-;                  MyBot is distributed under the terms of the GNU GPL
-; Related .......:
-; Link ..........: https://github.com/MyBotRun/MyBot/wiki
-; Example .......: No
-; ===============================================================================================================================
-
-; #FUNCTION# ====================================================================================================================
 ; Author ........: Michael Michta <MetalGX91 at GMail dot com>
 ; Modified.......: gcriaco <gcriaco at gmail dot com>; Ultima - 2D arrays supported, directional search, code cleanup, optimization; Melba23 - added support for empty arrays and row search; BrunoJ - Added compare option 3 to use a regex pattern
 ; Modified.......: Boldina !
@@ -26,6 +14,42 @@ Func __ArraySearch(Const ByRef $aArray, $vValue, $iStart = 0, $iEnd = 0, $iCase 
 			Return _ArraySearch($aArray, $vValue, $iStart, $iEnd, $iCase, $iCompare, $iForward, $iSubItem, $bRow)
 	EndSelect
 EndFunc   ;==>__ArraySearch
+
+; #FUNCTION# ====================================================================================================================
+; Author ........: randallc, Ultima
+; Modified.......: Gary Frost (gafrost), Ultima, Zedna, jpm, Melba23, AZJIO, UEZ
+; ===============================================================================================================================
+Func ArrayDisplay(Const ByRef $aArray, $sTitle = Default, $sArrayRange = Default, $iFlags = Default, $vUser_Separator = Default, $sHeader = Default, $iMax_ColWidth = Default)
+	#forceref $vUser_Separator
+	; AIO Mod++
+	Local $iRet
+	If IsObj($aArray) And StringInStr(ObjName($aArray, 3), 'scripting.dictionary') Then
+			Local $aTmp[$aArray.Count][2], $aK = $aArray.Keys, $aI = $aArray.Items
+			For $i = 0 To $aArray.Count - 1
+					$aTmp[$i][0] = $aK[$i]
+					$aTmp[$i][1] = $aI[$i]
+			Next
+			If $sHeader = Default Then $sHeader = 'Keys|Items'
+			If $sTitle = Default Then $sTitle = 'DictionaryDisplay'
+			$iRet = __ArrayDisplay_Share($aTmp, $sTitle, $sArrayRange, $iFlags, Default, $sHeader, $iMax_ColWidth, 0, False)
+	Else
+			$iRet = __ArrayDisplay_Share($aArray, $sTitle, $sArrayRange, $iFlags, Default, $sHeader, $iMax_ColWidth, 0, False)
+	EndIf
+	Return SetError(@error, @extended, $iRet)
+EndFunc   ;==>_ArrayDisplay
+
+; #FUNCTION# ====================================================================================================================
+; Name ..........: ModFuncs.au3
+; Description ...: Avoid loss of functions during updates.
+; Author ........: Boludoz (2020)
+; Modified ......:
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2020
+;                  MyBot is distributed under the terms of the GNU GPL
+; Related .......:
+; Link ..........: https://github.com/MyBotRun/MyBot/wiki
+; Example .......: No
+; ===============================================================================================================================
+
 
 ; Check if the filepath is a directory/folder. Does not validate if the directory/folder exists.
 Func IsDir($sFilePath)

@@ -22,7 +22,8 @@ Func _Sleep($iDelayOri, $iSleep = True, $CheckRunState = True, $SleepWhenPaused 
 	Static $hTimer_EmptyWorkingSetAndroid = 0
 	Static $hTimer_EmptyWorkingSetBot = 0
 	Static $b_Sleep_Active = False
-
+	Static $iDelay ; AIO ++ - Random / Custom delay
+	
 	Local $iBegin = __TimerInit()
 
 	$b_Sleep_Active = True
@@ -36,7 +37,7 @@ Func _Sleep($iDelayOri, $iSleep = True, $CheckRunState = True, $SleepWhenPaused 
 			MoveDivider()
 			$g_bMoveDivider = False
 		EndIf
-		Local $iDelay = $iDelayOri
+		$iDelay = $iDelayOri
         If $iDelay > 0 And __TimerDiff($g_hTxtLogTimer) >= $g_iTxtLogTimerTimeout Then
 			
 			#Region - AIO ++ - Random / Custom delay
