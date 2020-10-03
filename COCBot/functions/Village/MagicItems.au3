@@ -80,7 +80,7 @@ Func CollectMagicItems($bTest = False)
 				EndIf
 				If _Sleep(200) Then Return
 				If Not $bTest And $g_bChkCollectMagicItems Then
-					If ButtonClickDM("D:\Github\AIO Mod\COCBot\Team__AiO__MOD++\Bundles\Button\GemItems", 225, 71, 490, 509) Then
+					If ButtonClickDM(@ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\Button\GemItems", 225, 71, 490, 509) Then
 						SetLog("Successfully purchased " & $aResultsProx[$i], $COLOR_SUCCESS)
 					EndIf
 				EndIf

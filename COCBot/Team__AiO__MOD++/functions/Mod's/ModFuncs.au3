@@ -34,12 +34,13 @@ Func IsDir($sFilePath)
 EndFunc   ;==>IsDir
 
 Func ClickFindMatch()
-	If _WaitForCheckImg(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch\Button\", "559, 315, 816, 541", "FindMatch") Then ; findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch\Button\", 50, "559, 315, 816, 541", True, "FindMatch")
-		If $g_bDebugSetlog Then SetDebugLog("ClickFindMatch | Clicking in find match.")
-		PureClick(Random($g_aImageSearchXML[0][1] + 28, $g_aImageSearchXML[0][1] + 180, 1), Random($g_aImageSearchXML[0][2] + 10, $g_aImageSearchXML[0][2] + 94, 1), 1, 0, "#0150") ; Click Find a Match Button
-		Return True
-	EndIf
-	Return False
+	Local $i = 0, $bClicked = False
+	Do
+		$i += 1
+		$bClicked = ButtonClickDM(@ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\Button\FindMatch\", 544, 342, 273, 210)
+		If _Sleep(250) Then Return
+	Until $bClicked Or ($i > 3)
+	Return $bClicked
 EndFunc   ;==>ClickFindMatch
 
 Func SearchNoLeague($bForceCapture = False)

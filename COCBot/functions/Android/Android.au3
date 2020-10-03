@@ -890,7 +890,7 @@ Func InitAndroidAdbPorts($bForce = False)
 		SetDebugLog("Using ADB Daemon port " & $g_bAndroidAdbPort)
 		$g_sAndroidAdbGlobalOptions = "-P " & $g_bAndroidAdbPort
 	Else
-		If $g_bAndroidAdbPort Then
+		If $g_bAndroidAdbPort > 0 Then
 			SetDebugLog("Using default ADB Daemon port, minitouch port is " & ($g_bAndroidAdbPort + 1000), $COLOR_ERROR)
 		Else
 			SetDebugLog("Cannot aquire ADB Daemon port, using default", $COLOR_ERROR)
@@ -1552,7 +1552,7 @@ Func KillAdbDaemon($bMutexLock = True)
 	Local $process_killed
 	LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "kill-server", $process_killed)
 	Local $sPort = ""
-	If $g_bAndroidAdbPort Then $sPort = String($g_bAndroidAdbPort) ; Custom fix - Team AIO Mod++
+	If $g_bAndroidAdbPort > 0 Then $sPort = String($g_bAndroidAdbPort) ; Custom fix - Team AIO Mod++
 	Local $pids = ProcessFindBy($g_sAndroidAdbPath, $sPort)
 	For $i = 0 To UBound($pids) - 1
 		KillProcess($pids[$i], $g_sAndroidAdbPath)
@@ -1644,7 +1644,7 @@ Func _ConnectAndroidAdb($rebootAndroidIfNeccessary = $g_bRunState, $bStartOnlyAn
 				SetDebugLog("Stop ADB daemon!", $COLOR_ERROR)
 				LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "kill-server", $process_killed)
 				Local $sPort = ""
-				If $g_bAndroidAdbPort Then $sPort = String($g_bAndroidAdbPort)
+				If $g_bAndroidAdbPort > 0 Then $sPort = String($g_bAndroidAdbPort)
 				
 				; Custom fix AIO Mod++
 				Local $pids = ProcessFindBy($g_sAndroidAdbPath)

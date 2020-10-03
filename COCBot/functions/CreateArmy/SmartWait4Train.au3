@@ -98,7 +98,7 @@ Func SmartWait4Train($iTestSeconds = Default)
 	#Region - Custom smart wait - Team AIO Mod++
 	If ProfileSwitchAccountEnabled() Then
 		CheckTroopTimeAllAccount()
-		Local $LessTime = 999, $account = -1
+		Local $LessTime = 999, $account = Number($g_iCurAccount) ; Custom smart wait - Team AIO Mod++
 		Local $abAccountNo = AccountNoActive()
 		For $i = 0 To $g_iTotalAcc
 			If $abAccountNo[$i] And Not $g_abDonateOnly[$i] Then

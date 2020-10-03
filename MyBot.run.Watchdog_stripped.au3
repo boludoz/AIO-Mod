@@ -15,7 +15,6 @@ Opt("MustDeclareVars", 1)
 Global Const $WAIT_TIMEOUT = 258
 Global Const $STR_STRIPLEADING = 1
 Global Const $STR_STRIPTRAILING = 2
-Global Const $STR_NOCOUNT = 2
 Func _WinAPI_GetLastError(Const $_iCallerError = @error, Const $_iCallerExtended = @extended)
 Local $aCall = DllCall("kernel32.dll", "dword", "GetLastError")
 Return SetError($_iCallerError, $_iCallerExtended, $aCall[0])
@@ -110,7 +109,6 @@ If @error Then Return SetError(@error, @extended, 0)
 Return $aCall[0]
 EndFunc
 Global Const $COLOR_BLACK = 0x000000
-Global Const $COLOR_GREEN = 0x008000
 Global Const $COLOR_PURPLE = 0x800080
 Global Const $COLOR_RED = 0xFF0000
 Global Const $DMW_SHORTNAME = 1
@@ -551,7 +549,6 @@ Global $iTimeoutRestartBot = 180000
 Global $iTimeoutAutoClose = 60000
 Global $hTimeoutAutoClose = 0
 Global $g_iDebugWindowMessages = 0
-Global $g_sAndroidAdbPort = 0
 Global $hStruct_SleepMicro = DllStructCreate("int64 time;")
 Global $pStruct_SleepMicro = DllStructGetPtr($hStruct_SleepMicro)
 Global $DELAYSLEEP = 500
@@ -1011,17 +1008,6 @@ ClosePipe($pid, $hStdIn, $hStdOut, $hProcess, $hThread)
 EndIf
 CleanLaunchOutput($data)
 If Not $bNoLog Then SetDebugLog("Func LaunchConsole Output: " & $data, $COLOR_DEBUG)
-Local $aFixedPort, $iEvaluate = 0
-If StringInStr($data, "already connected") Then
-$aFixedPort = StringSplit($data, ':', $STR_NOCOUNT)
-If Not @error Then
-$iEvaluate = Number($aFixedPort[UBound($aFixedPort)-1])
-If $iEvaluate > 0 Then
-$g_sAndroidAdbPort = $iEvaluate
-SetLog("Port intercepted : " & $g_sAndroidAdbPort, $COLOR_GREEN)
-EndIf
-EndIf
-EndIf
 If $bUseSemaphore Then UnlockSemaphore($hSemaphore)
 Return SetError(0, 0, $data)
 EndFunc

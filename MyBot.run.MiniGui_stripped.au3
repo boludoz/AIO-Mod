@@ -815,7 +815,6 @@ Return $aCall[0]
 EndFunc
 Global Const $FW_BOLD = 700
 Global Const $COLOR_BLACK = 0x000000
-Global Const $COLOR_GREEN = 0x008000
 Global Const $COLOR_MAROON = 0x8B1C62
 Global Const $COLOR_PURPLE = 0x800080
 Global Const $COLOR_RED = 0xFF0000
@@ -3351,7 +3350,6 @@ Global $InternalArea[8][3]
 Global $ExternalArea[8][3]
 Global Const $g_sLibModIconPath = $g_sLibPath & "\ModLibs\AIOMod.dll"
 Global Enum $eIcnModKingGray = 1, $eIcnModKingBlue, $eIcnModKingGreen, $eIcnModKingRed, $eIcnModQueenGray, $eIcnModQueenBlue, $eIcnModQueenGreen, $eIcnModQueenRed, $eIcnModWardenGray, $eIcnModWardenBlue, $eIcnModWardenGreen, $eIcnModWardenRed, $eIcnModLabGray, $eIcnModLabGreen, $eIcnModLabRed, $eIcnModArrowLeft, $eIcnModArrowRight, $eIcnModTrainingP, $eIcnModResourceP, $eIcnModHeroP, $eIcnModClockTowerP, $eIcnModBuilderP, $eIcnModPowerP, $eIcnModChat, $eIcnModRepeat, $eIcnModClan, $eIcnModTarget, $eIcnModSettings, $eIcnModBKingSX, $eIcnModAQueenSX, $eIcnModGWardenSX, $eIcnModDebug, $eIcnModClanHop, $eIcnModPrecise, $eIcnModAccountsS, $eIcnModProfilesS, $eIcnModFarmingS, $eIcnMiscMod, $eIcnSuperXP, $eIcnChatActions, $eIcnHumanization, $eIcnAIOMod, $eIcnDebugMod, $eIcnLabP, $eIcnShop, $eIcnGoldP, $eIcnElixirP, $eIcnDarkP, $eIcnGFTO, $eIcnMisc, $eIcnPrewar
-Global $g_sAndroidAdbPort = ""
 Global $g_hChkProtectInLL, $g_hChkForceProtectLL, $g_bProtectInLL = True, $g_bForceProtectLL = False
 Global $g_hChkRandomDPSFAL, $g_bRandomDPSFAL = True
 Global $g_hChkReturnTimerEnable = 0, $g_hTxtReturnTimer = 0, $g_bReturnTimerEnable = False, $g_iTxtReturnTimer = 5
@@ -4066,17 +4064,6 @@ ClosePipe($pid, $hStdIn, $hStdOut, $hProcess, $hThread)
 EndIf
 CleanLaunchOutput($data)
 If Not $bNoLog Then SetDebugLog("Func LaunchConsole Output: " & $data, $COLOR_DEBUG)
-Local $aFixedPort, $iEvaluate = 0
-If StringInStr($data, "already connected") Then
-$aFixedPort = StringSplit($data, ':', $STR_NOCOUNT)
-If Not @error Then
-$iEvaluate = Number($aFixedPort[UBound($aFixedPort)-1])
-If $iEvaluate > 0 Then
-$g_sAndroidAdbPort = $iEvaluate
-SetLog("Port intercepted : " & $g_sAndroidAdbPort, $COLOR_GREEN)
-EndIf
-EndIf
-EndIf
 If $bUseSemaphore Then UnlockSemaphore($hSemaphore)
 Return SetError(0, 0, $data)
 EndFunc

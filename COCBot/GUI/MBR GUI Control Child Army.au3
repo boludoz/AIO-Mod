@@ -966,7 +966,7 @@ Func TrainTroopLevelClick()
 
 	If $iTroop = -1 Then Return
 
-	While _IsPressed(01)
+	While _IsPressed("01") ; Custom fix - Team AIO Mod++
 		LevUpDownTroop($iTroop)
 		Sleep($DELAYLVUP)
 		lblTotalCountTroop2()
@@ -986,7 +986,7 @@ Func TrainSiegeLevelClick()
 
 	If $iSiege = -1 Then Return
 
-	While _IsPressed(01)
+	While _IsPressed("01") ; Custom fix - Team AIO Mod++
 		LevUpDownSiege($iSiege)
 		Sleep($DELAYLVUP)
 		lblTotalCountSiege()
@@ -1006,7 +1006,7 @@ Func TrainSpellLevelClick()
 
 	If $iSpell = -1 Then Return
 
-	While _IsPressed(01)
+	While _IsPressed("01") ; Custom fix - Team AIO Mod++
 		LevUpDownSpell($iSpell)
 		Sleep($DELAYLVUP)
 		lblTotalCountSpell2()
@@ -1200,7 +1200,7 @@ Func SelectTroop_QTEdit()
 		EndIf
 	Next
 	If $iTroop = -1 Then Return
-	While _IsPressed(01)
+	While _IsPressed("01") ; Custom fix - Team AIO Mod++
 		If Not AddTroop_QTEdit($iTroop) Then ExitLoop
 		TotalTroopCount_QTEdit()
 		Sleep(100)
@@ -1268,7 +1268,7 @@ Func RemoveTroop_QTEdit()
 		EndIf
 	Next
 	If $iSlot = -1 Then Return
-	While _IsPressed(01)
+	While _IsPressed("01") ; Custom fix - Team AIO Mod++
 		_RemoveTroop_QTEdit($iSlot)
 		TotalTroopCount_QTEdit()
 	WEnd
@@ -1315,7 +1315,7 @@ Func SelectSpell_QTEdit()
 		EndIf
 	Next
 	If $iSpell = -1 Then Return
-	While _IsPressed(01)
+	While _IsPressed("01") ; Custom fix - Team AIO Mod++
 		If Not AddSpell_QTEdit($iSpell) Then ExitLoop
 		TotalSpellCount_QTEdit()
 		Sleep(100)
@@ -1383,7 +1383,7 @@ Func RemoveSpell_QTEdit()
 		EndIf
 	Next
 	If $iSlot = -1 Then Return
-	While _IsPressed(01)
+	While _IsPressed("01") ; Custom fix - Team AIO Mod++
 		_RemoveSpell_QTEdit($iSlot)
 		TotalSpellCount_QTEdit()
 	WEnd

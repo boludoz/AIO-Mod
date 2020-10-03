@@ -18,16 +18,11 @@
 
 Func KillProcess($iPID, $sProcess_info = "", $iAttempts = 3)
 	If Not IsInt($iPID) Then Return False
-	Local $strComputer = "."
-	Local $objWMI, $colResults, $objItem, $i
+	Local $i = 0
 
 	If Number($iPID) > 0 Then
 		For $i = 1 To $iAttempts
-			$objWMI = ObjGet("winmgmts:\\" & $strComputer & "\root\cimv2")
-			$colResults = $objWMI.ExecQuery("Select * from Win32_Process WHERE ProcessID = '" & $iPID & "'")
-			For $objItem in $colResults
-				$objItem.Terminate()
-			Next
+			ProcessClose($iPID)
 			If Not ProcessExists($iPID) Then 
 				SetDebugLog("KillProcess(" & $i & "): PID = " & $iPID & " killed" & $sProcess_info, $COLOR_ERROR)
 				Return True
@@ -51,11 +46,17 @@ Func ProcessFindBy($sPath = "", $sCommandline = "")
 		$bGetProcessCommandLine = StringInStr(_WinAPI_GetProcessCommandLine($aiProcessList[$i][1]), $sCommandline) > 0
 		Select 
 			Case $bGetProcessPath And $bGetProcessCommandLine
-				If Not StringIsSpace($sPath) And Not StringIsSpace($sCommandline) Then _ArrayAdd($aReturn, Int($aiProcessList[$i][1]), $ARRAYFILL_FORCE_INT)
+				If Not StringIsSpace($sPath) And Not StringIsSpace($sCommandline) Then 
+					_ArrayAdd($aReturn, Int($aiProcessList[$i][1]), $ARRAYFILL_FORCE_INT)
+				EndIf
 			Case $bGetProcessPath And Not $bGetProcessCommandLine
-				If StringIsSpace($sCommandline) Then _ArrayAdd($aReturn, Int($aiProcessList[$i][1]), $ARRAYFILL_FORCE_INT))
+				If StringIsSpace($sCommandline) Then
+					_ArrayAdd($aReturn, Int($aiProcessList[$i][1]), $ARRAYFILL_FORCE_INT)
+				EndIf
 			Case Not $bGetProcessPath And $bGetProcessCommandLine
-				If StringIsSpace($sPath) Then _ArrayAdd($aReturn, Int($aiProcessList[$i][1]), $ARRAYFILL_FORCE_INT))
+				If StringIsSpace($sPath) Then
+					_ArrayAdd($aReturn, Int($aiProcessList[$i][1]), $ARRAYFILL_FORCE_INT)
+				EndIf
 		EndSelect
 	Next
 	Return $aReturn
