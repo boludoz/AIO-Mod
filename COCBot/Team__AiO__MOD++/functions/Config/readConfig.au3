@@ -148,6 +148,9 @@ Func ReadConfig_MOD_MiscTab()
 	IniReadS($g_bForceProtectLL, $g_sProfileConfigPath, "attack", "ChkForceProtectLL", $g_bForceProtectLL, "Bool")
 	#EndRegion - Legend trophy protection - Team AIO Mod++
 
+	#Region - No Upgrade In War - Team AIO Mod++
+	IniReadS($g_bNoUpgradeInWar, $g_sProfileConfigPath, "attack", "ChkNoUpgradeInWar", $g_bNoUpgradeInWar, "Bool")
+	#EndRegion - No Upgrade In War - Team AIO Mod++
 EndFunc   ;==>ReadConfig_MOD_MiscTab
 
 Func ReadConfig_MOD_SuperXP()

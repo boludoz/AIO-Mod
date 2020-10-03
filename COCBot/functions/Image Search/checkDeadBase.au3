@@ -100,7 +100,7 @@ EndFunc   ;==>GetCollectorIndexByFillLevel
 Func checkDeadBase($bForceCapture = False, $sFillDirectory = @ScriptDir & "\imgxml\deadbase\elix\fill\", $sLvlDirectory = @ScriptDir & "\imgxml\deadbase\elix\lvl\")
 	
 	Local $bStatusFilter = $g_bCollectorFilterDisable 
-	Local $sDFindEagle = DFind($g_sBundleDefensesEagle, 91, 69, 723, 527, 0, 0, 0, False)
+	Local $sDFindEagle = DFind($g_sBundleDefensesEagle, 216, 174, 438, 325, 0, 0, 0, False) ; 91, 69, 723, 527
 	Local $bALiveSimbol = StringInStr($sDFindEagle, "ALive") > 0, $bDeadSimbol = StringInStr($sDFindEagle, "DEeagle") > 0
 	If $bALiveSimbol = True Then
 		SetLog("      " & ">> We have found active defenses, skipped.", $COLOR_ACTION)

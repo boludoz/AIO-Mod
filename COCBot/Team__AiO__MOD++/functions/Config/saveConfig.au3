@@ -157,6 +157,10 @@ Func SaveConfig_MOD_MiscTab()
 	_Ini_Add("attack", "ChkForceProtectLL", $g_bForceProtectLL ? 1 : 0)
 	#EndRegion - Legend trophy protection - Team AIO Mod++
 
+	#Region - No Upgrade In War - Team AIO Mod++
+	_Ini_Add("attack", "ChkNoUpgradeInWar", $g_bNoUpgradeInWar ? 1 : 0)
+	#EndRegion - No Upgrade In War - Team AIO Mod++
+
 EndFunc   ;==>SaveConfig_MOD_MiscTab
 
 Func SaveConfig_MOD_SuperXP()

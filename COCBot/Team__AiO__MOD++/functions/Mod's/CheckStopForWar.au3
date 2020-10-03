@@ -139,12 +139,7 @@ Func CheckStopForWar()
 EndFunc   ;==>CheckStopForWar
 
 Func IsWarMenu()
-	Local $sDirectory = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\WarPage\Window"
-	
-	If _WaitForCheckImg($sDirectory, "805, 75, 846, 119") Then
-		Click(Random(807, 842, 1), Random(79, 114, 1))
-	EndIf
-	
+
 	If RandomSleep(250) Then Return
 	
 	Local $Result = _ColorCheck(_GetPixelColor(826, 34, True), "FFFFFF", 20)
@@ -157,7 +152,9 @@ Func CheckWarTime(ByRef $sResult, ByRef $bResult) ; return [Success + $sResult =
 	Local $directoryDay = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\WarPage\Day"
 	Local $directoryTime = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\WarPage\Time"
 	Local $bBattleDay_InWar = False, $bClanWarLeague = False, $sWarDay, $sTime
-
+	
+	CheckMainScreen(False)
+	
 	If IsMainPage() Then
 		$bBattleDay_InWar = _ColorCheck(_GetPixelColor(45, 500, True), "ED151D", 20) ; Red color in war button
 		$bClanWarLeague = _ColorCheck(_GetPixelColor(10, 510, True), "FFED71", 20) ; Golden color at left side of clan war button
@@ -228,9 +225,17 @@ Func CheckWarTime(ByRef $sResult, ByRef $bResult) ; return [Success + $sResult =
 		EndIf
 
 	Else
-		SetLog("Error when trying to open War window.", $COLOR_WARNING)
-		Return SetError(1, 0, "Error open War window")
-		ClickP($aAway, 2, 0, "#0000") ;Click Away
+		Local $sDirectory = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\WarPage\Window"
+	
+		If _WaitForCheckImg($sDirectory, "805, 75, 846, 119") Then ;Check Clan War Leage Result [X] white pixel see if result page showing
+			Click(Random(807, 842, 1), Random(79, 114, 1))
+			SetLog("War is finished.", $COLOR_WARNING)
+			Click(70, 680, 1, 500, "#0000") ; return home
+		Else
+			SetLog("Error when trying to open War window.", $COLOR_WARNING)
+			Return SetError(1, 0, "Error open War window")
+			ClickP($aAway, 2, 0, "#0000") ;Click Away
+		EndIf
 	EndIf
 EndFunc   ;==>CheckWarTime
 
@@ -347,6 +352,6 @@ Func StopAndPrepareForWar($iSleepTime)
 		EndIf
 	EndIf
 
-	UniversalCloseWaitOpenCoC($iSleepTime * 60 * 60 * 1000, "StopAndPrepareForWar", False, True) ; wake up & full restart ; Fixed, math was off by one multiple of 60
+	UniversalCloseWaitOpenCoC($iSleepTime * 60 * 1000, "StopAndPrepareForWar", False, True) ; wake up & full restart ; Fixed, math was off by one multiple of 60
 
 EndFunc   ;==>StopAndPrepareForWar

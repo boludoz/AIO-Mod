@@ -199,11 +199,16 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			chkReturnTimer()
 			#EndRegion - Return Home by Time - Team AIO Mod++
 
+			#Region - No Upgrade In War - Team AIO Mod++
+			GUICtrlSetState($g_hChkNoUpgradeInWar, $g_bNoUpgradeInWar ? $GUI_CHECKED : $GUI_UNCHECKED)
+			#EndRegion - No Upgrade In War - Team AIO Mod++
+			
 			#Region - Legend trophy protection - Team AIO Mod++
 			GUICtrlSetState($g_hChkProtectInLL, $g_bProtectInLL ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkForceProtectLL, $g_bForceProtectLL ? $GUI_CHECKED : $GUI_UNCHECKED)
 			ChkProtectInLL()
 			#EndRegion - Legend trophy protection - Team AIO Mod++
+
 
 			chkMaxSidesSF()
 			ChkReqCCAlways()
@@ -318,6 +323,10 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			$g_bProtectInLL = (GUICtrlRead($g_hChkProtectInLL) = $GUI_CHECKED)
 			$g_bForceProtectLL = (GUICtrlRead($g_hChkForceProtectLL) = $GUI_CHECKED)
 			#EndRegion - Legend trophy protection - Team AIO Mod++
+			
+			#Region - No Upgrade In War - Team AIO Mod++
+			$g_bNoUpgradeInWar = (GUICtrlRead($g_hChkNoUpgradeInWar) = $GUI_CHECKED)
+			#EndRegion - No Upgrade In War - Team AIO Mod++
 	EndSwitch
 
 EndFunc   ;==>ApplyConfig_MOD_MiscTab

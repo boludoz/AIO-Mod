@@ -19,6 +19,18 @@ Func UpgradeHeroes()
 	If _Sleep(500) Then Return
 
 	checkMainScreen(False)
+	
+	#Region - No Upgrade In War - Team AIO Mod++
+	If $g_bNoUpgradeInWar Then
+		Local $sDummy, $bResult
+		CheckWarTime($sDummy, $bResult)
+		If $bResult Then
+			SetLog("You are in clan war, skipped hero upgrade.", $COLOR_INFO)
+			checkMainScreen(False)
+			Return 
+		EndIf
+	EndIf
+	#EndRegion - No Upgrade In War - Team AIO Mod++
 
 	If $g_bUpgradeKingEnable Then
 		If Not isInsideDiamond($g_aiKingAltarPos) Then LocateKingAltar()
