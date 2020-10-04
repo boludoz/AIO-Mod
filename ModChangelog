@@ -6,6 +6,7 @@
                     Based on MyBot.run v7.8.7
 	**v4.2.7** 
 		- Upgraded : Dissociable OCR/DMatch with last version (Compatible with iTools/WinAPI mode).
+		- Improved: Discord webhook integration help.
 		- Improved: Based and ready for the latest version of AutoIT.
 		- Improved: Smart farm improved.
 		- Improved: DeadBase detection.
