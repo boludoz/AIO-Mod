@@ -11,15 +11,17 @@
 		- Improved: DeadBase detection.
 		- Improved: Remaked Hero Upgrade.
 		- Improved: Click random.
+		- Improved: FindMatch button.
 		- New: Dead base 'smart', detects the state of the artillery eagle.
 		- New: Remaked Hero Upgrade.
 		- New: Don't upgrade hero if at war.
 		- New: League Legend protection.
-		- Fix: Docr WinApi support.
 		- Fix: Unbalanced '|' in Languages detection and fix.
 		- Fix: Improved android ports system and adb kill.
 		- Fix: GetLocationBuilding overflow.
-		
+		- Fix: Item buys shop confirm.
+		- Fix: Builder base troops change.
+
 	**v4.2.6** 
 		- New: Don't ask for the troop in Clan Castle again.
 		- New CIE2000 pixel comparation.
