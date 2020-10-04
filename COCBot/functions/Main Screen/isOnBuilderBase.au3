@@ -19,7 +19,7 @@ Func isOnBuilderBase($bNeedCaptureRegion = True, $bSoft = False)
 	If IsArray(FindmultipleQuick($g_sImgIsOnBB, 1, "260,0,406,54", False)) Then
 		SetDebugLog("Builder Base Builder detected. (Normal).", $COLOR_INFO)
 		Return True
-	ElseIf IsArray(FindmultipleQuick($g_sImgZoomOutDirBB, 1, "FV", False)) And $bSoft = False Then
+	ElseIf (UBound(FindmultipleQuick($g_sImgZoomOutDirBB, 0, "FV", False)) > 2 And Not @error) And $bSoft = False Then
 		SetDebugLog("Builder Base Builder detected.", $COLOR_INFO)
 		Return True
 	EndIf
