@@ -27,8 +27,13 @@ Global Enum $eIcnBB = 1 , $eIcnLabBB, $eIcnBBElixir, $eIcnBBGold, $eIcnBBTrophie
 		$eIcnBBWallL6, $eIcnBBWallL7, $eIcnBBWallL8, $eIcnBBWallL9
 #EndRegion - Icn - Team AIO Mod++
 
+#Region -  New DB sys - Team AIO Mod++
+Global $g_hChkDBCheckDefensesAlive, $g_hChkDBCheckDefensesMix
+Global $g_bDefensesAlive = False, $g_bDefensesMix = True
+#EndRegion - New DB sys - Team AIO Mod++
+
 #Region - No Upgrade In War - Team AIO Mod++
-Global $g_bChkNoUpgradeInWar = True, $g_hbNoUpgradeInWar 
+Global $g_hChkNoUpgradeInWar = True, $g_bNoUpgradeInWar 
 #EndRegion - No Upgrade In War - Team AIO Mod++
 
 #Region - Legend trophy protection - Team AIO Mod++
@@ -334,8 +339,8 @@ Global $g_bChkBBUpgradeWalls = False, $g_iCmbBBWallLevel, $g_iTxtBBWallNumber = 
 ; Troops
 Global Enum $eBBTroopBarbarian, $eBBTroopArcher, $eBBTroopGiant, $eBBTroopMinion, $eBBTroopBomber, $eBBTroopBabyDragon, $eBBTroopCannon, $eBBTroopNight, $eBBTroopDrop, $eBBTroopPekka, $eBBTroopHogG, $eBBTroopMachine, $eBBTroopCount
 Global $g_sIcnBBOrder[$eBBTroopCount]
-Global $g_asAttackBarBB2[$eBBTroopCount] = ["Barbarian", "Archer", "BoxerGiant", "Minion", "WallBreaker", "BabyDrag", "CannonCart", "Witch", "DropShip", "SuperPekka", "HogGlider", "Machine"]
-Global Const $g_asBBTroopShortNames[$eBBTroopCount] = ["Barbarian", "Archer", "BoxerGiant", "Minion", "WallBreaker", "BabyDrag", "CannonCart", "Witch", "DropShip", "SuperPekka", "HogGlider", "Machine"]
+Global Const $g_asAttackBarBB2[$eBBTroopCount] = ["Barbarian", "Archer", "BoxerGiant", "Minion", "WallBreaker", "BabyDrag", "CannonCart", "Witch", "DropShip", "SuperPekka", "HogGlider", "Machine"]
+Global Const $g_asBBTroopShortNames[$eBBTroopCount] = ["Barb", "Arch", "Giant", "Minion", "Breaker", "BabyD", "Cannon", "Witch", "Drop", "Pekka", "HogG", "Machine"]
 
 Global $g_bIsMachinePresent = False
 Global $g_iBBMachAbilityLastActivatedTime = -1 ; time between abilities

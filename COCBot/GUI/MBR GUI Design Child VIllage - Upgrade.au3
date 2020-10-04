@@ -291,8 +291,9 @@ Func CreateHeroesSubTab()
 		$g_hLblHeroReservedBuilderBottom = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Heroes", "LblHeroReservedBuilderBottom", "builder/s for hero upgrade"), $x, $y + 35, -1, -1)
 		
 		#Region - No Upgrade In War - Team AIO Mod++
-		Local $x = 25
-		$g_hChkNoUpgradeInWar = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Heroes", "ChkNoUpgradeInWar", "No upgrade in war"), $x , $y + 25, 17, 17)
+	$y += 50
+	$x = 25
+		$g_hChkNoUpgradeInWar = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Heroes", "ChkNoUpgradeInWar", "No upgrade in war"), $x, $y + 15, 200, 17)
 			GUICtrlSetOnEvent(-1, "ChkNoUpgradeInWar")
 		#EndRegion - No Upgrade In War - Team AIO Mod++
 	GUICtrlCreateGroup("", -99, -99, 1, 1)

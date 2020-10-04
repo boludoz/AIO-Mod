@@ -36,9 +36,21 @@ Func CreateAttackSearchDeadBaseCollectors()
 
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "Group_01", "Collectors"), $x - 5, $y - 20, $g_iSizeWGrpTab4, $g_iSizeHGrpTab4)
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "LblCollectorLevel", "Choose which collectors to search for while looking for a dead base. Also, choose how full they must be."), $x, $y, 250, 28)
-		$g_hChkDBDisableCollectorsFilter = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkDisableCollectorsFilter", "Disable Collector Filter"), $x + 240, $y + 40, 150, 18)
+	$y += 15
+		$g_hChkDBDisableCollectorsFilter = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkDisableCollectorsFilter", "Disable Collector Filter"), $x, $y + 17, 100, 18)
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkDisableCollectorsFilter_Info_01", "Disable Collector Filter CHANGES DeadBase into another ActiveBase search"))
+			GUICtrlSetOnEvent(-1, "chkNewDBSys")
+
+		#Region -  New DB sys - Team AIO Mod++
+		$g_hChkDBCheckDefensesAlive = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkCheckEagleAlive", "Check Defenses Status"), $x + 120, $y + 17, 120, 18)
+			GUICtrlSetState(-1, $GUI_UNCHECKED)
+			GUICtrlSetOnEvent(-1, "chkNewDBSys")
+
+		$g_hChkDBCheckDefensesMix = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkDisableCollectorsFilterAuto", "Filter Mix"), $x + 250, $y + 17, 100, 18)
+			GUICtrlSetState(-1, $GUI_UNCHECKED)
+			GUICtrlSetOnEvent(-1, "chkNewDBSys")
+		#EndRegion -  New DB sys - Team AIO Mod++
 
 	$y += 15
 	For $i = 6 To ubound($g_aiCollectorLevelFill) -1

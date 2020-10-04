@@ -98,7 +98,7 @@ EndFunc   ;==>DMduplicated2
 Func DMDecodeMatch($sMatch)
     Local $aSplittedMatch = StringSplit($sMatch, "-", $STR_NOCOUNT)
     If UBound($aSplittedMatch) <> 6 Then
-        SetLog("DMDecodeMatch: Invalid Match passed, Passed match: " & $sMatch, $COLOR_ERROR)
+        SetDebugLog("DMDecodeMatch | No matches : " & $sMatch, $COLOR_ERROR)
         Return "-1"
     EndIf
     Return $aSplittedMatch

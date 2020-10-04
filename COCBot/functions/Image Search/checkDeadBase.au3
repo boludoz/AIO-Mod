@@ -99,26 +99,27 @@ EndFunc   ;==>GetCollectorIndexByFillLevel
 #Region - Custom - Team AIO Mod++
 Func checkDeadBase($bForceCapture = False, $sFillDirectory = @ScriptDir & "\imgxml\deadbase\elix\fill\", $sLvlDirectory = @ScriptDir & "\imgxml\deadbase\elix\lvl\")
 	
-	Local $bStatusFilter = $g_bCollectorFilterDisable 
-	Local $sDFindEagle = DFind($g_sBundleDefensesEagle, 216, 174, 438, 325, 0, 0, 0, False) ; 91, 69, 723, 527
-	Local $bALiveSimbol = StringInStr($sDFindEagle, "ALive") > 0, $bDeadSimbol = StringInStr($sDFindEagle, "DEeagle") > 0
-	If $bALiveSimbol = True Then
-		SetLog("      " & ">> We have found active defenses, skipped.", $COLOR_ACTION)
-		Return False
-	ElseIf $bALiveSimbol = False And $bDeadSimbol = False And $g_bCollectorFilterDisable = True Then
-		SetLog("      " & ">> We did not find live or dead defenses, we will check in depth.", $COLOR_ACTION)
-		$g_bCollectorFilterDisable = False
-	ElseIf $bALiveSimbol = False And $bDeadSimbol = True And $g_bCollectorFilterDisable = True Then
-		SetLog("      " & ">> We find dead defenses and the filters are deactivated, we better attack.", $COLOR_ACTION)
-		Return True
-	EndIf
-
-	If $g_bCollectorFilterDisable Then 
-		$g_bCollectorFilterDisable = $bStatusFilter
-		Return True
+	#Region -  New DB sys - Team AIO Mod++
+	Local $bNoCheckDefenses = $g_bCollectorFilterDisable
+	
+	If $g_bDefensesMix = True Or $g_bDefensesAlive = True Then 
+		If $g_bDefensesMix Then $bNoCheckDefenses = True
+		Local $sDFindEagle = DFind($g_sBundleDefensesEagle, 216, 174, 438, 325, 0, 0, 0, False) ; 91, 69, 723, 527
+		Local $bALiveSimbol = StringInStr($sDFindEagle, "ALive") > 0, $bDeadSimbol = StringInStr($sDFindEagle, "DEeagle") > 0
+		If $bALiveSimbol = True Then
+			SetDebugLog("      " & ">> We have found active defenses, skipped.", $COLOR_ACTION)
+			Return False
+		ElseIf $bALiveSimbol = False And $bDeadSimbol = False And $bNoCheckDefenses = True Then
+			SetDebugLog("      " & ">> We did not find live or dead defenses, we will check in depth.", $COLOR_ACTION)
+			$bNoCheckDefenses = False
+		ElseIf $bALiveSimbol = False And $bDeadSimbol = True And $bNoCheckDefenses = True Then
+			SetDebugLog("      " & ">> We find dead defenses and the filters are deactivated, we better attack.", $COLOR_ACTION)
+			Return True
+		EndIf
 	EndIf
 	
-	$g_bCollectorFilterDisable = $bStatusFilter
+	If $bNoCheckDefenses Then Return True
+	#EndRegion -  New DB sys - Team AIO Mod++
 
 	Local $minCollectorLevel = 0
 	Local $maxCollectorLevel = 0

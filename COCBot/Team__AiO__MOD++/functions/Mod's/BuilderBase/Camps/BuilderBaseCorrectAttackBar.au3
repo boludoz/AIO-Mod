@@ -4,8 +4,8 @@
 ; Syntax ........: BuilderBaseAttack()
 ; Parameters ....:
 ; Return values .: None
-; Author ........: ProMac (03-2018), Fahid.Mahmood
-; Modified ......: Boludoz (12/2018-  31/12/2019, 25/08/2020), Dissociable (07-2020)
+; Author ........: ProMac (03-2018)
+; Modified ......: Boludoz (12/2018 - 31/12/2019, 25/08/2020), Dissociable (07-2020)
 ; Remarks .......: This file is part of MyBot, previously known as Multibot and ClashGameBot. Copyright 2015-2020
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -47,9 +47,9 @@ EndFunc   ;==>BuilderBaseSelectCorrectCampDebug
 
 Func FullNametroops($aResults)
 	For $i = 0 To UBound($g_asAttackBarBB2) - 1
-		If $aResults = $g_asAttackBarBB2[$i] Then
-			If UBound($g_avStarLabTroops) - 1 < $i + 1 Then ExitLoop
-			Return $g_avStarLabTroops[$i + 1][3]
+		If $aResults = $g_asAttackBarBB2[$i] Then 
+			If UBound($g_avStarLabTroops) -1 < $i+1 Then ExitLoop
+			Return $g_avStarLabTroops[$i+1][3]
 		EndIf
 	Next
 	Return $aResults
@@ -59,82 +59,120 @@ Func TestBuilderBaseSelectCorrectScript()
 	Local $aAvailableTroops = GetAttackBarBB()
 	BuilderBaseSelectCorrectScript($aAvailableTroops)
 	Return $aAvailableTroops
-EndFunc   ;==>TestBuilderBaseSelectCorrectScript
+EndFunc
 
-Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops, $bForceFix = False)
+Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 
 	If Not $g_bRunState Then Return
 	Local $bIsCampCSV = False
 	Local $aLines[0]
+	Local $iModeAttack = 0
 	
-	Select
-		Case ($g_iCmbBBAttack = $g_eBBAttackCSV And Not $g_bChkBBGetFromArmy = True) Or ($g_iCmbBBAttack = $g_eBBAttackSmart And $g_bChkBBGetFromCSV = True)
-			If $bForceFix Then ContinueCase
+	If ($g_iCmbBBAttack = $g_eBBAttackCSV) Then 
+		$iModeAttack = 0
+		If ($g_bChkBBGetFromArmy = True) Then
+			$iModeAttack = 1
+		EndIf
+	ElseIf ($g_iCmbBBAttack = $g_eBBAttackSmart) Then
+		$iModeAttack = 1
+		If ($g_bChkBBGetFromCSV = True) Then
+			$iModeAttack = 0
+		EndIf
+	EndIf
+	
+	Local $sLastObj = "Barbarian", $sTmp
+	Local $aFakeCsv[1]
+	Do
+		Switch $iModeAttack
 			
-			If Not $g_bChkBBCustomAttack Then
-				$g_iBuilderBaseScript = 0
-			Else
-				Local $aMode[2] = [0, 0]     ; Ground - Air
-				Local $aBuildings[4] = ["AirDefenses", "Crusher", "GuardPost", "Cannon"]
-				Local $a, $iTotal, $i3, $aModeTmp[2] = [0, 0]
-				_CaptureRegion2()
-				For $i = 0 To UBound($aBuildings) - 1
-					$a = BuilderBaseBuildingsDetection($i, False)
-					If $a = -1 Then ContinueLoop
-					$iTotal = UBound($a) - 1
-					$i3 = ($i <> 0) ? (0) : (1)
-					$aModeTmp[0] = 0
-					$aModeTmp[1] = 0
-					For $i2 = 0 To $iTotal
-						$aModeTmp[$i3] += $a[$i2][3]
+			; CSV
+			Case 0 
+				If Not $g_bChkBBCustomAttack Or ($g_iCmbBBAttack = $g_eBBAttackSmart) Then
+						$g_iBuilderBaseScript = 0
+				Else
+					Local $aMode[2] = [0, 0]	; Ground - Air
+					Local $aBuildings[4] = ["AirDefenses", "Crusher", "GuardPost", "Cannon"]
+					Local $a, $i3
+					_CaptureRegion2()
+					For $i = 0 To UBound($aBuildings) - 1
+						$a = BuilderBaseBuildingsDetection($i, False)
+						If Not IsArray($a) Then ContinueLoop
+						$i3 = ($i = 0) ? (1) : (0)
+						For $i2 = 0 To UBound($a) - 1
+							If $aMode[$i3] < $a[$i2][3] Then $aMode[$i3] = $a[$i2][3]
+						Next
 					Next
-					$aMode[$i3] += $aModeTmp[$i3]
-					$aMode[$i3] /= 2
+									
+					Switch True
+						; Air mode.
+						Case ($aMode[1] < $aMode[0]) 
+							$g_iBuilderBaseScript = 2
+						; Ground mode.
+						Case ($aMode[1] > $aMode[0]) 
+							$g_iBuilderBaseScript = 1
+						; Standard mode.
+						Case Else
+							$g_iBuilderBaseScript = 0
+					EndSwitch
+					
+					SetLog("Script mode : " & $g_iBuilderBaseScript & " / " & " Ground calc : " & $aMode[0] & " Air calc : " & $aMode[1], $COLOR_INFO)
+					Setlog("Attack using the " & $g_sAttackScrScriptNameBB[$g_iBuilderBaseScript] & " script.", $COLOR_INFO)
+				EndIf
+				
+				; Let load the Command [Troop] from CSV
+				Local $aLArray[0]
+				Local $FileNamePath = @ScriptDir & "\CSV\BuilderBase\" & $g_sAttackScrScriptNameBB[$g_iBuilderBaseScript] & ".csv"
+				If FileExists($FileNamePath) Then $aLArray = FileReadToArray($FileNamePath)
+				
+				; Special case if CSV dont have camps.
+				$iModeAttack = 1 ; CSV Mode
+				Local $iLast = 0, $aSplitLine, $sName
+				For $iLine = 0 To UBound($aLArray) - 1
+					If Not $g_bRunState Then Return
+					$aSplitLine = StringSplit(StringStripWS($aLArray[$iLine], $STR_STRIPALL), "|", $STR_NOCOUNT)
+					
+					If ($aSplitLine[0] = "CAMP") Then
+						$iModeAttack = 0 ; CSV Mode
+						$sName = "CAMP" & "|"
+						For $i = 1 To UBound($aSplitLine) - 1
+							$iLast = _ArraySearch($g_asBBTroopShortNames, $aSplitLine[$i])
+							If $iLast > -1 Then
+								$sTmp = $g_asAttackBarBB2[$iLast]
+								If Not StringIsSpace($sTmp) Then $sLastObj = $sTmp
+								$sName &= $sLastObj
+								If $i <> UBound($aSplitLine) - 1 Then $sName &= "|"
+							EndIf
+						Next
+						$aFakeCsv[0] = $sName
+						_ArrayAdd($aLines, $aFakeCsv)
+						
+						; ExitLoop 2
+					EndIf
 				Next
 				
-				$g_iBuilderBaseScript = 0
-				If ($aMode[0] <> $aMode[1]) Then
-					$g_iBuilderBaseScript = _ArrayMinIndex($aMode, 1) + 1
+				If $iModeAttack <> 0 Then 
+					SetLog("You are bad at CSV writing, but we can correct that.", $COLOR_ERROR)
+					ContinueLoop
 				EndIf
 				
-				SetLog("Script mode : " & $g_iBuilderBaseScript & " / " & " Ground calc : " & $aMode[0] & " Air calc : " & $aMode[1], $COLOR_INFO)
-			EndIf
-			
-			Setlog("Attack using the " & $g_sAttackScrScriptNameBB[$g_iBuilderBaseScript] & " script.", $COLOR_INFO)
-			; Let load the Command [Troop] from CSV
-			Local $FileNamePath = @ScriptDir & "\CSV\BuilderBase\" & $g_sAttackScrScriptNameBB[$g_iBuilderBaseScript] & ".csv"
-			If FileExists($FileNamePath) Then $aLines = FileReadToArray($FileNamePath)
-			
-			; Special case if CSV dont have camps.
-			For $iLine = 0 To UBound($aLines) - 1
-				If Not $g_bRunState Then Return
-				Local $aSplitLine = StringSplit($aLines[$iLine], "|", $STR_NOCOUNT)
-				Local $command = StringStripWS(StringUpper($aSplitLine[0]), $STR_STRIPALL)
+				ExitLoop
+			; Smart
+			Case Else 
+				Local $sName = "CAMP" & "|"
+				For $i = 0 To UBound($g_iCmbCampsBB) - 1
+					$sTmp = $g_asAttackBarBB2[$g_iCmbCampsBB[$i]]
+					If Not StringIsSpace($sTmp) Then $sLastObj = $sTmp
+					$sName &= $sLastObj
+					If $i <> UBound($g_iCmbCampsBB) - 1 Then $sName &= "|"
+					$aFakeCsv[0] = $sName
+					_ArrayAdd($aLines, $aFakeCsv)
+				Next
 				
-				If $command = "CAMP" Then
-					$bIsCampCSV = True
-					ExitLoop
-				EndIf
-			Next
-			
-			If $bIsCampCSV = False Then ContinueCase
-			
-		Case ($g_iCmbBBAttack = $g_eBBAttackSmart And Not $g_bChkBBGetFromCSV = True) Or ($g_iCmbBBAttack = $g_eBBAttackCSV And $g_bChkBBGetFromArmy = True)
-			Local $sName = "CAMP" & "|"
-			For $iName = 0 To UBound($g_iCmbCampsBB) - 1
-				$sName &= ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) <> "" ? ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) : ("Barb")
-				$sName &= "|"
-				If $iName = 0 Then ContinueLoop
-				Local $aFakeCsv[1] = [$sName]
-				_ArrayAdd($aLines, $aFakeCsv)
-			Next
-		Case Else
-			$g_bChkBBGetFromCSV = False
-			$g_bChkBBGetFromArmy = False
-			SetLog("BuilderBaseSelectCorrectScript 0x11 error.", $COLOR_ERROR)
-			Return
-	EndSelect
+				ExitLoop
+		EndSwitch
+	Until True
 
+	; _ArrayDisplay($aLines)
 	
 	If UBound($aLines) = 0 Then
 		SetLog("BuilderBaseSelectCorrectScript 0x12 error.", $COLOR_ERROR)
@@ -143,7 +181,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops, $bForceFix = False)
 	
 	; Move backwards through the array deleting the blanks
 	For $i = UBound($aAvailableTroops) - 1 To 0 Step -1
-		If $aAvailableTroops[$i][0] = "" Then
+		If StringIsSpace($aAvailableTroops[$i][0]) Then
 			_ArrayDelete($aAvailableTroops, $i)
 		EndIf
 	Next
@@ -157,36 +195,37 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops, $bForceFix = False)
 	Next
 	Setlog("Available " & $iCampsQuantities & " Camps.", $COLOR_INFO)
 
-	Local $aCamps[0], $bOkCamps = True
+	Local $aCamps[0], $iLast = -1, $bOkCamps
 	
+	; $iModeAttack
 	; Loop for every line on CSV
+	; Local $sLastObj = "Barbarian", $sTmp
 	For $iLine = 0 To UBound($aLines) - 1
 		If Not $g_bRunState Then Return
-		Local $aSplitLine = StringSplit($aLines[$iLine], "|", $STR_NOCOUNT)
-		Local $command = StringStripWS(StringUpper($aSplitLine[0]), $STR_STRIPALL)
-		If $command = "CAMP" Then
+		Local $aSplitLine = StringSplit(StringStripWS($aLines[$iLine], $STR_STRIPALL), "|", $STR_NOCOUNT)
+		If $aSplitLine[0] = "CAMP" Then
 			For $i = 1 To UBound($aSplitLine) - 1
-				If $aSplitLine[$i] = "" Or StringIsSpace($aSplitLine[$i]) Then ExitLoop
-				_ArrayAdd($aCamps, TranslateCsvTroopName(StringStripWS($aSplitLine[$i], $STR_STRIPALL)))
+				If StringIsSpace($aSplitLine[$i]) Then ContinueLoop
+				$aFakeCsv[0] = $aSplitLine[$i]
+				_ArrayAdd($aCamps, $aFakeCsv)
 			Next
 			; Select the correct CAMP [cmd line] to use according with the first attack bar detection = how many camps do you have
-			$bOkCamps = $iCampsQuantities = UBound($aCamps)
+			$bOkCamps = ($iCampsQuantities <= UBound($aCamps))
+			If $g_bDebugSetlog Then Setlog(_ArrayToString($aCamps, "-", -1, -1, "|", -1, -1))
 			If $bOkCamps Then
-				If $g_bDebugSetlog Then Setlog(_ArrayToString($aCamps, "-", -1, -1, "|", -1, -1))
 				ExitLoop
 			EndIf
 		EndIf
 	Next
-
-	; An exquisite piece of software.
-	If ($bOkCamps) Then
-		If ($bForceFix = False) And Not (($g_iCmbBBAttack = $g_eBBAttackSmart And Not $g_bChkBBGetFromCSV = True) Or ($g_iCmbBBAttack = $g_eBBAttackCSV And $g_bChkBBGetFromArmy = True)) Then
-			SetLog("The CSV is not compatible with the number of camps, it will be selected from the GUI Army.", $COLOR_ERROR)
-			Return BuilderBaseSelectCorrectScript($aAvailableTroops, True)
-		ElseIf ($bForceFix = True) Then
-			SetLog("Corrects CSV or GUI Camps.", $COLOR_ERROR)
-			Return
-		EndIf
+	
+	Local $sLastObj = "Barbarian", $sTmp
+	If $iCampsQuantities < UBound($aCamps) Then 
+		ReDim $aCamps[$iCampsQuantities]
+		For $i = 0 To UBound($aCamps) - 1
+			$sTmp = $aCamps[$i]
+			If Not StringIsSpace($sTmp) Then $sLastObj = $sTmp
+			$aCamps[$i] = $sLastObj
+		Next
 	EndIf
 	
 	If UBound($aCamps) = 0 Then
@@ -197,7 +236,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops, $bForceFix = False)
 	;First Find The Correct Index Of Camps In Attack Bar
 	For $i = 0 To UBound($aCamps) - 1
 		;Just In Case Someone Mentioned Wrong Troop Name Select Default Barbarian Troop
-		$aCamps[$i] = __ArraySearch($g_asBBTroopShortNames, $aCamps[$i]) < 0 ? ("Barb") : __ArraySearch($g_asBBTroopShortNames, $aCamps[$i])
+		$aCamps[$i] = __ArraySearch($g_asAttackBarBB2, $aCamps[$i]) < 0 ? ("Barb") : __ArraySearch($g_asAttackBarBB2, $aCamps[$i])
 	Next
 	;After populate with the new priority position let's sort ascending column 1
 	_ArraySort($aCamps, 0, 0, 0, 1)
@@ -213,8 +252,8 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops, $bForceFix = False)
 		$aNewAvailableTroops[$i][0] = $aAvailableTroops[$i][0]
 		$aNewAvailableTroops[$i][1] = 0
 		
-		For $i2 = 0 To UBound($g_asBBTroopShortNames) - 1
-			If (StringInStr($aAvailableTroops[$i][0], $g_asBBTroopShortNames[$i2]) > 0) Then
+		For $i2 = 0 To UBound($g_asAttackBarBB2) - 1
+			If (StringInStr($aAvailableTroops[$i][0], $g_asAttackBarBB2[$i2]) > 0) Then
 				$aNewAvailableTroops[$i][1] = $i2
 				ContinueLoop 2
 			EndIf
@@ -297,8 +336,8 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops, $bForceFix = False)
 				SetDebugLog("Selected " & FullNametroops($sMissingCamp) & " X:| " & $aAttackBar[$j][1] & " Y:| " & $aAttackBar[$j][2], $COLOR_SUCCESS)
 				$aNewAvailableTroops[$aWrongCamps[0]][0] = $sMissingCamp
 				; Set the Priority Again
-				For $i2 = 0 To UBound($g_asBBTroopShortNames) - 1
-					If (StringInStr($aNewAvailableTroops[$aWrongCamps[0]][0], $g_asBBTroopShortNames[$i2]) > 0) Then
+				For $i2 = 0 To UBound($g_asAttackBarBB2) - 1
+					If (StringInStr($aNewAvailableTroops[$aWrongCamps[0]][0], $g_asAttackBarBB2[$i2]) > 0) Then
 						$aNewAvailableTroops[$aWrongCamps[0]][1] = $i2
 					EndIf
 				Next
@@ -308,8 +347,11 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops, $bForceFix = False)
 		Next
 	WEnd
 	
-	If $bWaschanged And _WaitForCheckImg($g_sImgCustomArmyBB, "0,681,860,728", "ChangeTDis", 500, 100) Then Click(Random(8, 858, 1), Random(632, 720, 1))
-	
+	If $bWaschanged Then
+		While _WaitForCheckImg($g_sImgCustomArmyBB, "0,681,860,728", "ChangeTDis", 500, 100)
+			Click(Random(8, 858, 1), Random(632, 720, 1))
+		WEnd
+	EndIf
 	If Not $bWaschanged Then Return
 
 	If RandomSleep(500) Then Return
@@ -336,6 +378,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops, $bForceFix = False)
 		$aAvailableTroops[$i][4] = $iCount
 	Next
 
+
 	For $i = 0 To UBound($aAvailableTroops) - 1
 		If Not $g_bRunState Then Return
 		If $aAvailableTroops[$i][0] <> "" Then SetLog("[" & $i + 1 & "] - " & $aAvailableTroops[$i][4] & "x " & FullNametroops($aAvailableTroops[$i][0]), $COLOR_SUCCESS)
@@ -343,56 +386,56 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops, $bForceFix = False)
 EndFunc   ;==>BuilderBaseSelectCorrectScript
 
 Func GetAMissingCamp($aCurCamps, $aCorrectCamps)
-	; Loop Through Correct Camps
-	For $i = 0 To UBound($aCorrectCamps) - 1
-		Local $iCurrentlyAvailable = GetTroopCampCounts($aCorrectCamps[$i], $aCurCamps)
-		Local $iNeeded = GetTroopCampCounts($aCorrectCamps[$i], $aCorrectCamps)
-		If $iNeeded > $iCurrentlyAvailable Then Return $aCorrectCamps[$i]
-	Next
-	Return "-"
-EndFunc   ;==>GetAMissingCamp
+    ; Loop Through Correct Camps
+    For $i = 0 To UBound($aCorrectCamps) - 1
+        Local $iCurrentlyAvailable = GetTroopCampCounts($aCorrectCamps[$i], $aCurCamps)
+        Local $iNeeded = GetTroopCampCounts($aCorrectCamps[$i], $aCorrectCamps)
+        If $iNeeded > $iCurrentlyAvailable Then Return $aCorrectCamps[$i]
+    Next
+    Return "-"
+EndFunc
 
 Func GetWrongCamps($aCurCamps, $aCorrectCamps)
 	Local $aWrongCampsIndexes[0] = []
-	Local $oDicTroopCampsNeeded = ObjCreate("Scripting.Dictionary")
-	If @error Then
+    Local $oDicTroopCampsNeeded = ObjCreate("Scripting.Dictionary")
+    If @error Then
 		MsgBox(0, '', 'Error creating the dictionary object')
 		Return $aWrongCampsIndexes
-	EndIf
+    EndIf
 	Local $iCurTroopCamps = 0
 	; Loop Through Current Camps
-	For $i = 0 To UBound($aCurCamps) - 1
-		; Check if We're now on a Different Troop than the previous one
-		If $i > 0 And ($aCurCamps[$i - 1][0] <> $aCurCamps[$i][0]) Then
-			$iCurTroopCamps = 0
-		EndIf
-		; Check if Current Troop has been checked the go to the Next Camp if Exists
+    For $i = 0 To UBound($aCurCamps) - 1
+        ; Check if We're now on a Different Troop than the previous one
+        If $i > 0 And ($aCurCamps[$i - 1][0] <> $aCurCamps[$i][0]) Then
+            $iCurTroopCamps = 0
+        EndIf
+        ; Check if Current Troop has been checked the go to the Next Camp if Exists
 		If $oDicTroopCampsNeeded.Exists($aCurCamps[$i][0]) Then
-			; If Current Troop Camp is Already Enough or Higher than The Needed Camps of the Troop
-			If $iCurTroopCamps >= $oDicTroopCampsNeeded.Item($aCurCamps[$i][0]) Then
+            ; If Current Troop Camp is Already Enough or Higher than The Needed Camps of the Troop
+            If $iCurTroopCamps >= $oDicTroopCampsNeeded.Item($aCurCamps[$i][0]) Then
 				_ArrayAdd($aWrongCampsIndexes, $i)
 				; Continue The For Loop to Check the Next Camp if Exists
-				ContinueLoop
+				ContinueLoop	
 			EndIf
 		EndIf
 
 		; Check how many camps must be filled with this Current Camp Troop
-		Local $iNeededCamps = GetTroopCampCounts($aCurCamps[$i][0], $aCorrectCamps)
+        Local $iNeededCamps = GetTroopCampCounts($aCurCamps[$i][0], $aCorrectCamps)
 		; Check if Current Camp Troop is not totally used
 		If $iNeededCamps = 0 Then
-			_ArrayAdd($aWrongCampsIndexes, $i)
+            _ArrayAdd($aWrongCampsIndexes, $i)
 			; Continue The For Loop to Check the Next Camp if Exists
 			ContinueLoop
 		EndIf
 
-		; At least One camp must be filled with the Troop
-		If $oDicTroopCampsNeeded.Exists($aCurCamps[$i][0]) = False Then
-			$oDicTroopCampsNeeded.Add($aCurCamps[$i][0], $iNeededCamps)
-		EndIf
-		$iCurTroopCamps += 1
-	Next
-	Return $aWrongCampsIndexes
-EndFunc   ;==>GetWrongCamps
+        ; At least One camp must be filled with the Troop
+        If $oDicTroopCampsNeeded.Exists($aCurCamps[$i][0]) = False Then
+            $oDicTroopCampsNeeded.Add($aCurCamps[$i][0], $iNeededCamps)
+        EndIf
+        $iCurTroopCamps += 1
+    Next
+    Return $aWrongCampsIndexes
+EndFunc
 
 Func GetTroopCampCounts($sTroopName, $aCamp)
 	Local $iFoundInCamps = 0
@@ -400,36 +443,4 @@ Func GetTroopCampCounts($sTroopName, $aCamp)
 		If $sTroopName = $aCamp[$i] Then $iFoundInCamps += 1
 	Next
 	Return $iFoundInCamps
-EndFunc   ;==>GetTroopCampCounts
-
-Func TranslateCsvTroopName($sName)
-	SetDebugLog("Translating " & $sName & " From Csv", $COLOR_INFO)
-	Switch ($sName)
-		Case "Arch"
-			Return "Archer"
-		Case "Barb"
-			Return "Barbarian"
-		Case "BabyD"
-			Return "BabyDrag"
-		Case "Minion"
-			Return "Minion"
-		Case "Breaker"
-			Return "WallBreaker"
-		Case "Cannon"
-			Return "CannonCart"
-		Case "Drop"
-			Return "DropShip"
-		Case "Giant"
-			Return "BoxerGiant"
-		Case "Machine"
-			Return "Machine"
-		Case "Witch"
-			Return "Witch"
-		Case "Pekka"
-			Return "SuperPekka"
-		Case "HogG"
-			Return "HogGlider"
-		Case Else
-			Return $sName
-	EndSwitch
-EndFunc   ;==>TranslateCsvTroopName
+EndFunc

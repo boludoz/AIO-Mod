@@ -1305,6 +1305,11 @@ Func CloseAndroid($sSource)
 
 	ResetAndroidProcess()
 
+	Local $pids = ProcessFindBy($g_sAndroidAdbPath)
+	For $i = 0 To UBound($pids) - 1
+		KillProcess($pids[$i], $g_sAndroidAdbPath)
+	Next
+
 	SetLog("Stopping " & $g_sAndroidEmulator & "....", $COLOR_INFO)
 	SetDebugLog("CloseAndroid, caller: " & $sSource)
 

@@ -309,3 +309,46 @@ Func ChkProtectInLL()
 	$g_bForceProtectLL = (GUICtrlRead($g_hChkForceProtectLL) = $GUI_CHECKED)
 EndFunc   ;==>ChkProtectInLL
 #EndRegion - Legend trophy protection - Team AIO Mod++
+
+#Region - No Upgrade In War - Team AIO Mod++
+Func ChkNoUpgradeInWar()
+	$g_bNoUpgradeInWar = (GUICtrlRead($g_hChkNoUpgradeInWar) = $GUI_CHECKED)
+EndFunc   ;==>ChkNoUpgradeInWar
+#EndRegion - No Upgrade In War - Team AIO Mod++
+
+#Region - No Upgrade In War - Team AIO Mod++
+
+Func chkNewDBSys()
+	$g_bCollectorFilterDisable = (GUICtrlRead($g_hChkDBDisableCollectorsFilter) = $GUI_CHECKED)
+	$g_bDefensesAlive = (GUICtrlRead($g_hChkDBCheckDefensesAlive) = $GUI_CHECKED)
+	$g_bDefensesMix = (GUICtrlRead($g_hChkDBCheckDefensesMix) = $GUI_CHECKED)
+	
+	Local $bDisable = False, $bDisableOther = False
+	Select
+		Case $g_bCollectorFilterDisable And Not $g_bDefensesMix And Not $g_bDefensesAlive
+			$bDisable = True
+		; Case $g_bDefensesAlive And Not $g_bDefensesMix And Not $g_bCollectorFilterDisable
+		Case $g_bDefensesMix And Not $g_bDefensesAlive And Not $g_bCollectorFilterDisable
+			$bDisableOther = True
+		Case $g_bCollectorFilterDisable And $g_bDefensesAlive And Not $g_bDefensesMix
+			$bDisable = True
+		Case $g_bDefensesAlive And $g_bDefensesMix And Not $g_bCollectorFilterDisable
+			$bDisableOther = True
+		Case $g_bDefensesMix And $g_bCollectorFilterDisable And Not $g_bDefensesAlive
+			$bDisableOther = True
+		Case $g_bCollectorFilterDisable And $g_bDefensesAlive And $g_bDefensesMix
+			$bDisableOther = True
+			$bDisable = False
+	EndSelect
+	
+	GUICtrlSetState($g_hChkDBDisableCollectorsFilter, ($bDisableOther = True) ? ($GUI_DISABLE) : ($GUI_ENABLE))
+	GUICtrlSetState($g_hChkDBCheckDefensesAlive, ($bDisableOther = True) ? ($GUI_DISABLE) : ($GUI_ENABLE))
+
+	For $i = 7 To UBound($g_aiCollectorLevelFill) -1
+		GUICtrlSetState($g_ahCmbDBCollectorLevel[$i], ($bDisable = True) ? ($GUI_DISABLE) : ($GUI_ENABLE))
+		GUICtrlSetState($g_ahChkDBCollectorLevel[$i], ($bDisable = True) ? ($GUI_DISABLE) : ($GUI_ENABLE))
+	Next
+	GUICtrlSetState($g_hCmbMinCollectorMatches, ($bDisable = True) ? ($GUI_DISABLE) : ($GUI_ENABLE))
+
+EndFunc   ;==>chkNewDBSys
+#EndRegion - No Upgrade In War - Team AIO Mod++

@@ -14,7 +14,7 @@
 ; ===============================================================================================================================
 
 Func _SendExEx($sKeys, $iFlag = 0)
-	If @KBLayout = 0419 Then
+	If @KBLayout = "0419" Then
 		Local $sANSI_Chars = "ёйцукенгшщзхъфывапролджэячсмитьбю.?"
 		Local $sASCII_Chars = "`qwertyuiop[]asdfghjkl;'zxcvbnm,./&"
 

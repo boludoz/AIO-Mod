@@ -173,11 +173,16 @@ Func DonateCC($bCheckForNewMsg = False)
 	EndIf
 	
 	PrepareDonateCC()
-	Local $bDonateTroop = ($g_aiPrepDon[0] = 1), $bDonateAllTroop = ($g_aiPrepDon[1] = 1), _
-	$bDonateSpell = ($g_aiPrepDon[2] = 1), $bDonateAllSpell = ($g_aiPrepDon[3] = 1), _
-	$bDonateSiege = ($g_aiPrepDon[4] = 1), $bDonateAllSiege = ($g_aiPrepDon[5] = 1)
-	
-	Local $bDonate = BitOR($bDonateTroop, $bDonateAllTroop, $bDonateSpell, $bDonateAllSpell, $bDonateSiege, $bDonateAllSiege) > 0 ; Team AIO Mod++
+	Local $bDonateTroop = ($g_aiPrepDon[0] = 1)
+	Local $bDonateAllTroop = ($g_aiPrepDon[1] = 1)
+
+	Local $bDonateSpell = ($g_aiPrepDon[2] = 1)
+	Local $bDonateAllSpell = ($g_aiPrepDon[3] = 1)
+
+	Local $bDonateSiege = ($g_aiPrepDon[4] = 1)
+	Local $bDonateAllSiege = ($g_aiPrepDon[5] = 1)
+
+	Local $bDonate = ($g_iActiveDonate = 1)
 	#EndRegion
 
 	Local $bOpen = True, $bClose = False
@@ -195,7 +200,7 @@ Func DonateCC($bCheckForNewMsg = False)
 		If $g_bDebugSetlog Then SetDebugLog("Donate Clan Castle troops skip", $COLOR_DEBUG)
 		Return ; exit func if no donate checkmarks
 	EndIf
-
+	
 	Local $hour = StringSplit(_NowTime(4), ":", $STR_NOCOUNT)
 
 	If Not $g_abDonateHours[$hour[0]] And $g_bDonateHoursEnable Then
@@ -204,7 +209,7 @@ Func DonateCC($bCheckForNewMsg = False)
 	EndIf
 
 	;check for new chats first, Every fith time skip this to just check a little bit more frequent
-	If ($bCheckForNewMsg And Random(0, 3, 1) < 3) Then
+	If $bCheckForNewMsg Then
 		If Not _ColorCheck(_GetPixelColor(26, 312 + $g_iMidOffsetY, True), Hex(0xf00810, 6), 20) Then Return ;exit if no new chats
 	EndIf
 
@@ -225,8 +230,7 @@ Func DonateCC($bCheckForNewMsg = False)
 	If Not $bDonate Then Return
 
 	;Opens clan tab and verbose in log
-	ClickAway()
-
+	CheckMainScreen(False)
 	If _Sleep($DELAYDONATECC2) Then Return
 	
 	If Not OpenClanChat() Then ; GTFO - Team AIO Mod++
@@ -256,6 +260,8 @@ Func DonateCC($bCheckForNewMsg = False)
 	WEnd
 	#EndRegion
 
+	CloseXDonate() ; Custom fix - Team__AiO__MOD
+	
 	If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then SetLog("Checking for Donate Requests in Clan Chat", $COLOR_INFO)
 
 	Local $iTimer
@@ -658,6 +664,8 @@ Func DonateCC($bCheckForNewMsg = False)
 			If $g_bDebugSetlog Then SetDebugLog("No more Donate buttons found, closing chat", $COLOR_DEBUG)
 		EndIf
 		
+		CloseXDonate() ; Custom fix - Team__AiO__MOD
+		
 		#Region - GTFO - Team AIO Mod++
 		;;; Scroll Down
 		ForceCaptureRegion()
@@ -675,17 +683,27 @@ Func DonateCC($bCheckForNewMsg = False)
 		$bDonate = False
 	WEnd
 
-	ClickAway()
-	If _Sleep($DELAYDONATECC2) Then Return
-
 	If Not CloseClanChat() Then ; GTFO - Team AIO Mod++
 		SetLog("Error finding the Clan Tab Button", $COLOR_ERROR)
 		AndroidPageError("DonateCC")
 	EndIf
 
+	; ClickAway()
+	; If _Sleep($DELAYDONATECC2) Then Return
+	
 	UpdateStats()
 	If _Sleep($DELAYDONATECC2) Then Return
 EndFunc   ;==>DonateCC
+
+Func CloseXDonate() ; Custom fix - Team__AiO__MOD
+	Local $i = 0, $bClicked = False
+	Do
+		$i += 1
+		$bClicked = ButtonClickDM(@ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\Button\XClan\", 782, 1, 51, 731)
+		If _Sleep(250) Then Return
+	Until $bClicked Or ($i > 3)
+	Return $bClicked
+EndFunc   ;==>ClickFindMatch
 
 Func CheckDonateTroop(Const $iTroopIndex, Const $sDonateTroopString, Const $sBlacklistTroopString, Const $sClanString, $bNewSystemDonate = False)
 	Local $sName = ($iTroopIndex = 99 ? "Custom" : $g_asTroopNames[$iTroopIndex])
@@ -1057,7 +1075,7 @@ Func DonateWindow($aiDonateButton, $bOpen = True)
 	If $g_bDebugSetlog And Not $bOpen Then SetLog("DonateWindow Close Start", $COLOR_DEBUG)
 
 	If Not $bOpen Then ; close window and exit
-		ClickAway()
+		CloseXDonate() ; Custom fix - Team__AiO__MOD
 		If _Sleep($DELAYDONATEWINDOW1) Then Return
 		If $g_bDebugSetlog Then SetDebugLog("DonateWindow Close Exit", $COLOR_DEBUG)
 		Return

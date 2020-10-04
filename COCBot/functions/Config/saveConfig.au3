@@ -1024,7 +1024,11 @@ Func SaveConfig_600_31()
 		_Ini_Add("collectors", "lvl" & $i & "Enabled", $g_abCollectorLevelEnabled[$i] ? 1 : 0)
 		_Ini_Add("collectors", "lvl" & $i & "fill", $g_aiCollectorLevelFill[$i])
 	Next
+	#Region -  New DB sys - Team AIO Mod++
 	_Ini_Add("search", "chkDisableCollectorsFilter", $g_bCollectorFilterDisable ? 1 : 0)
+	_Ini_Add("search", "chkDBCheckDefensesAlive", $g_bDefensesAlive ? 1 : 0)
+	_Ini_Add("search", "chkDBCheckDefensesMix", $g_bDefensesMix ? 1 : 0)
+	#EndRegion -  New DB sys - Team AIO Mod++
 	_Ini_Add("collectors", "minmatches", $g_iCollectorMatchesMin)
 	_Ini_Add("collectors", "tolerance", $g_iCollectorToleranceOffset)
 EndFunc   ;==>SaveConfig_600_31

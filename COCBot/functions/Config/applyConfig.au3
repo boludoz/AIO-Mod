@@ -1826,16 +1826,25 @@ Func ApplyConfig_600_31($TypeReadSave)
                 GUICtrlSetState($g_ahCmbDBCollectorLevel[$i], $g_abCollectorLevelEnabled[$i] ? $GUI_ENABLE : $GUI_DISABLE)
 				_GUICtrlComboBox_SetCurSel($g_ahCmbDBCollectorLevel[$i], $g_aiCollectorLevelFill[$i])
 			Next
+			#Region -  New DB sys - Team AIO Mod++
 			GUICtrlSetState($g_hChkDBDisableCollectorsFilter, $g_bCollectorFilterDisable ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkDBCheckDefensesAlive, $g_bDefensesAlive ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkDBCheckDefensesMix, $g_bDefensesMix ? $GUI_CHECKED : $GUI_UNCHECKED)
+			#EndRegion -  New DB sys - Team AIO Mod++
 			_GUICtrlComboBox_SetCurSel($g_hCmbMinCollectorMatches, $g_iCollectorMatchesMin - 1)
 			GUICtrlSetData($g_hSldCollectorTolerance, $g_iCollectorToleranceOffset)
 			checkCollectors()
+			chkNewDBSys() ; New DB sys - Team AIO Mod++
 		Case "Save"
 			For $i = 6 To UBound($g_aiCollectorLevelFill) -1
 				$g_abCollectorLevelEnabled[$i] = (GUICtrlRead($g_ahChkDBCollectorLevel[$i]) = $GUI_CHECKED)
 				$g_aiCollectorLevelFill[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbDBCollectorLevel[$i])
 			Next
+			#Region -  New DB sys - Team AIO Mod++
 			$g_bCollectorFilterDisable = (GUICtrlRead($g_hChkDBDisableCollectorsFilter) = $GUI_CHECKED)
+			$g_bDefensesAlive = (GUICtrlRead($g_hChkDBCheckDefensesAlive) = $GUI_CHECKED)
+			$g_bDefensesMix = (GUICtrlRead($g_hChkDBCheckDefensesMix) = $GUI_CHECKED)
+			#EndRegion -  New DB sys - Team AIO Mod++
 			$g_iCollectorMatchesMin = _GUICtrlComboBox_GetCurSel($g_hCmbMinCollectorMatches) + 1
 			$g_iCollectorToleranceOffset = GUICtrlRead($g_hSldCollectorTolerance)
 	EndSwitch
