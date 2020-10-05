@@ -149,10 +149,10 @@ Func _GUICtrlCreateInput($sText, $iLeft, $iTop, $iWidth, $iHeight, $vStyle = -1,
 	Return $hReturn
 EndFunc   ;==>_GUICtrlCreateInput
 
-Func _makerequestCustom($aRequestButtonPos)
+Func _makerequestCustom($aRequestButtonPos = "")
 	Local $sSendButtonArea = GetDiamondFromRect("220,150,650,650")
 
-	ClickP($aRequestButtonPos, 1, 0, "0336") ;click button request troops
+	If UBound($aRequestButtonPos) = 2 And not @error Then ClickP($aRequestButtonPos, 1, 0, "0336") ;click button request troops
 
 	If Not IsWindowOpen($g_sImgSendRequestButton, 20, 100, $sSendButtonArea) Then
 		SetLog("Request has already been made, or request window not available", $COLOR_ERROR)

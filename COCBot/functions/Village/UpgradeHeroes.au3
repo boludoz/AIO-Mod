@@ -21,11 +21,13 @@ Func UpgradeHeroes()
 	checkMainScreen(False)
 	
 	#Region - No Upgrade In War - Team AIO Mod++
+	; _DateIsValid()
 	If $g_bNoUpgradeInWar Then
-		Local $sDummy, $bResult
-		CheckWarTime($sDummy, $bResult)
+		Local $sResult, $bResult, $iDateCalc
+		CheckWarTime($sResult, $bResult)
 		If $bResult Then
-			SetLog("You are in clan war, skipped hero upgrade.", $COLOR_INFO)
+			$iDateCalc = _DateDiff('n', _NowCalc(), $sResult)
+			SetLog("You are in clan war, skipped hero upgrade. " & $iDateCalc, $COLOR_INFO)
 			checkMainScreen(False)
 			Return 
 		EndIf

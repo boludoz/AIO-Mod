@@ -13,6 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 #include-once
+
 Global Const $g_sAdbScriptsPath = $g_sLibPath & "\adb.scripts" ; ADD script and event files folder
 Global $g_sAndroidAdbPrompt = "mybot.run:" ; Unique ADB PS1 prompt
 Global $g_bAndroidAdbPort = 0 ; When $g_bAndroidAdbPortPerInstance = True save here the port
@@ -755,68 +756,84 @@ EndFunc   ;==>DetectInstalledAndroid
 ; Find preferred Adb Path. Current Android ADB is used and saved in profile.ini and shared across instances.
 Func FindPreferredAdbPath()
 
-	Local $sADBPath = "", $iPID, $sOutput, $sStringOut
+	Local $adbPath, $iPID, $sOutput, $sStringOut
 	Local $sPathAdbv141 = @ScriptDir & "\lib\adb\adb.exe"
 	Local $sPathAdbvdll = @ScriptDir & "\lib\adb\AdbWinApi.dll"
 	Local $sPathAdbvdll1 = @ScriptDir & "\lib\adb\AdbWinUsbApi.dll"
 	Switch $g_iAndroidAdbReplace
 		Case 0
-			$sADBPath = Execute("Get" & $g_sAndroidEmulator & "AdbPath()")
-			If Not FileExists($sADBPath) Then
+			$adbPath = Execute("Get" & $g_sAndroidEmulator & "AdbPath()")
+			If Not FileExists($adbPath) Then
 				Local $sPath = Execute("Get" & $g_sAndroidEmulator & "Path()"), $aFiles
 				If not @error Then
 					$aFiles = _FileListToArrayRec($sPath, "*.exe", $FLTA_FILES, -1, $FLTAR_FASTSORT, $FLTAR_FULLPATH)
 					If not @error Then
 						For $s In $aFiles
 							If StringInStr($s, "adb") > 0 Then
-								If $g_bDebugAndroid Then Setlog("FindPreferredAdbPath | Find adb path : " & $s, $COLOR_GREEN)
+								Setlog("Find adb path : " & $s)
 								$iPID = Run($s, "", @SW_HIDE, $STDOUT_CHILD)
 								ProcessWaitClose($iPID, 10)
-								If StringInStr(StdoutRead($iPID), "Android Debug Bridge") > 0 Then
-									$sADBPath = $s
+								$sOutput = StdoutRead($iPID)
+								If StringInStr($sOutput, "Android Debug Bridge") > 0 Then 
+									$adbPath = $s
 									ExitLoop
 								EndIf
 							EndIf
 						Next
 					EndIf
 				EndIf
+				
+				; It can be problematic.
+				; If Not FileExists($adbPath) Then
+					; first first of support Android
+					; For $i = 0 To UBound($g_avAndroidAppConfig) - 1
+						; $adbPath = Execute("Get" & $g_avAndroidAppConfig[$i][0] & "AdbPath()")
+						; If Not StringIsSpace($adbPath) Then ExitLoop
+					; Next
+				; EndIf
+				
 			EndIf
-			If Not FileExists($sADBPath) Then ContinueCase
+			If Not FileExists($adbPath) Then ContinueCase
 		Case 1
 			If FileExists($sPathAdbv141) And FileExists($sPathAdbvdll) And FileExists($sPathAdbvdll1) Then
-				$sADBPath = $sPathAdbv141
+				$adbPath = $sPathAdbv141
 			Else
 				ContinueCase
 			EndIf
-		Case Else
-			$sADBPath = @ScriptDir & "\lib\TempAdb\" & $g_sAndroidInstance & "\"
-			If DirGetSize(@ScriptDir & "\lib\adb\") <> DirGetSize(@ScriptDir & "\lib\TempAdb\" & $g_sAndroidInstance & "\") Then
-				; Custom fix AIO Mod++
-				Local $pids = ProcessFindBy($g_sAndroidAdbPath)
-				For $i = 0 To UBound($pids) - 1
-					KillProcess($pids[$i], $g_sAndroidAdbPath)
-				Next
-				_RunDos("RMDIR /Q/S " & $sADBPath)
-				If $g_bDebugAndroid Then 
-					Setlog("FindPreferredAdbPath | Let's Update the adb version!", $COLOR_GREEN)
-					Setlog("FindPreferredAdbPath | ADB Destination Dir: " & $sADBPath, $COLOR_GREEN)
-					Setlog("FindPreferredAdbPath | ADB EXE : " & $sADBPath & "adb.exe", $COLOR_GREEN)
-				EndIf
-				If Not FileCopy(@ScriptDir & "\lib\adb\*.*", $sADBPath, $FC_OVERWRITE + $FC_CREATEPATH) = 1 Then
-					If $g_bDebugAndroid Then Setlog("FindPreferredAdbPath | Adb was not updated!", $COLOR_ERROR)
-				EndIf
+		Case 2
+			$adbPath = @ScriptDir & "\lib\TempAdb\" & $g_sAndroidInstance & "\"
+			Local $sAndroidADBversion
+			$g_sAndroidAdbPath = $adbPath
+			If DirCreate($adbPath) = 0 Then
+				SetLog("Adb Directory error!", $COLOR_ERROR)
+				$adbPath = ""
+			Else
+				$adbPath = $adbPath & "adb.exe"
 			EndIf
-			$sADBPath &= "adb.exe"
+			$iPID = Run($adbPath & " version", "", @SW_HIDE, $STDOUT_CHILD)
+			ProcessWaitClose($iPID, 10)
+			$sOutput = StdoutRead($iPID)
+			$sStringOut = StringSplit($sOutput, @CRLF, $STR_NOCOUNT)
+			If UBound($sStringOut) > 1 Then
+				$sAndroidADBversion = StringReplace($sStringOut[0], "Android Debug Bridge version ", "")
+				SetDebugLog("Adb Version: " & $sAndroidADBversion)
+			Else
+				SetDebugLog("Adb Get version Error!")
+			EndIf
+			Local $Version = GetVersionNormalized($sAndroidADBversion)
+			Local $NewVersion = GetVersionNormalized("1.0.40")
+			If $Version < $NewVersion Then
+				SetDebugLog("Let's Update the adb version!", $COLOR_ACTION)
+				Local $DirPath = @ScriptDir & "\lib\TempAdb\" & $g_sAndroidInstance & "\"
+				SetDebugLog("ADB Destination Dir: " & $DirPath)
+				SetDebugLog("ADB EXE : " & $DirPath & "adb.exe")
+				If FileCopy($sPathAdbv141, $DirPath & "adb.exe", $FC_OVERWRITE) = 0 Then SetDebugLog("Adb was not updated!", $COLOR_ERROR)
+				If FileCopy($sPathAdbvdll, $DirPath & "AdbWinApi.dll", $FC_OVERWRITE) = 0 Then SetDebugLog("AdbWinApi was not updated!", $COLOR_ERROR)
+				If FileCopy($sPathAdbvdll1, $DirPath & "AdbWinUsbApi.dll", $FC_OVERWRITE) = 0 Then SetDebugLog("AdbWinUsbApi was not updated!", $COLOR_ERROR)
+			EndIf
 	EndSwitch
-	$iPID = Run($sADBPath, "", @SW_HIDE, $STDOUT_CHILD)
-	ProcessWaitClose($iPID, 10)
-	If StringInStr(StdoutRead($iPID), "Android Debug Bridge") > 0 Then
-		SetDebugLog("FindPreferredAdbPath | ADB OK.", $COLOR_GREEN)
-		Else
-		Setlog("FindPreferredAdbPath | ADB BAD.", $COLOR_ERROR)
-	EndIf
-	$g_sAndroidAdbPath = $sADBPath
-	Return $g_sAndroidAdbPath
+	; $g_sAndroidAdbPath = $adbPath
+	Return $adbPath
 EndFunc   ;==>FindPreferredAdbPath
 
 Func CompareAndUpdate(ByRef $UpdateWhenDifferent, Const $New)
@@ -890,7 +907,7 @@ Func InitAndroidAdbPorts($bForce = False)
 		SetDebugLog("Using ADB Daemon port " & $g_bAndroidAdbPort)
 		$g_sAndroidAdbGlobalOptions = "-P " & $g_bAndroidAdbPort
 	Else
-		If $g_bAndroidAdbPort > 0 Then
+		If $g_bAndroidAdbPort Then
 			SetDebugLog("Using default ADB Daemon port, minitouch port is " & ($g_bAndroidAdbPort + 1000), $COLOR_ERROR)
 		Else
 			SetDebugLog("Cannot aquire ADB Daemon port, using default", $COLOR_ERROR)
@@ -1294,7 +1311,7 @@ EndFunc   ;==>_RestartAndroidCoC
 Func ResetAndroidProcess()
 	$g_iAndroidCoCPid = 0
 	$g_bMainWindowOk = False
-
+	
 	; Type once - Team AIO Mod++
 	$g_aRequestTroopsTextOT = $g_aRequestTroopsTextOTR
 EndFunc   ;==>ResetAndroidProcess
@@ -1304,11 +1321,6 @@ Func CloseAndroid($sSource)
 	ResumeAndroid()
 
 	ResetAndroidProcess()
-
-	Local $pids = ProcessFindBy($g_sAndroidAdbPath)
-	For $i = 0 To UBound($pids) - 1
-		KillProcess($pids[$i], $g_sAndroidAdbPath)
-	Next
 
 	SetLog("Stopping " & $g_sAndroidEmulator & "....", $COLOR_INFO)
 	SetDebugLog("CloseAndroid, caller: " & $sSource)
@@ -1557,8 +1569,8 @@ Func KillAdbDaemon($bMutexLock = True)
 	Local $process_killed
 	LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "kill-server", $process_killed)
 	Local $sPort = ""
-	If $g_bAndroidAdbPort > 0 Then $sPort = String($g_bAndroidAdbPort) ; Custom fix - Team AIO Mod++
-	Local $pids = ProcessFindBy($g_sAndroidAdbPath, $sPort)
+	If $g_bAndroidAdbPort Then $sPort = String($g_bAndroidAdbPort)
+	Local $pids = ProcessesExist($g_sAndroidAdbPath, $sPort, 1, 1)
 	For $i = 0 To UBound($pids) - 1
 		KillProcess($pids[$i], $g_sAndroidAdbPath)
 	Next
@@ -1570,7 +1582,7 @@ Func ConnectAndroidAdb($rebootAndroidIfNeccessary = $g_bRunState, $bStartOnlyAnd
 	Return FuncReturn(_ConnectAndroidAdb($rebootAndroidIfNeccessary, $bStartOnlyAndroid, $timeout))
 EndFunc   ;==>ConnectAndroidAdb
 
-Func _ConnectAndroidAdb($rebootAndroidIfNeccessary = $g_bRunState, $bStartOnlyAndroid = False, $timeout = 15000)
+Func _ConnectAndroidAdb($rebootAndroidIfNeccessary = $g_bRunState, $bStartOnlyAndroid = False, $timeout = 15000, $iRecursive = 0) ; Custom Fix - Team AIO Mod++
 	If $g_sAndroidAdbPath = "" Or FileExists($g_sAndroidAdbPath) = 0 Then
 		SetLog($g_sAndroidEmulator & " ADB Path not valid: " & $g_sAndroidAdbPath, $COLOR_ERROR)
 		Return 0
@@ -1590,7 +1602,7 @@ Func _ConnectAndroidAdb($rebootAndroidIfNeccessary = $g_bRunState, $bStartOnlyAn
 
 	Local $hMutex = AquireAdbDaemonMutex()
 
-	Local $process_killed, $cmdOutput
+	Local $process_killed
 	Local $connected_to = False
 	Local $timer = __TimerInit()
 	Local $timerReInit = $timer
@@ -1637,26 +1649,25 @@ Func _ConnectAndroidAdb($rebootAndroidIfNeccessary = $g_bRunState, $bStartOnlyAn
 				$bRebooted = RebootAndroid()
 				If Not $bRebooted Then Return 0
 			Else
-				SetDebugLog("ConnectAndroidAdb: Reboot Android nor ADB Daemon not allowed", $COLOR_ERROR)
-				Return 0
+				; Custom Fix - Team AIO Mod++
+				SetDebugLog("ConnectAndroidAdb: Reboot Android not ADB Daemon not allowed. Try x" & $iRecursive + 1, $COLOR_ERROR)
+				If $iRecursive < 3 Then Return 0
 			EndIf
 
 			; ok, now try to connect again
 			$connected_to = IsAdbConnected()
 
-			If Not $connected_to Then
+			If Not $connected_to Or $iRecursive > 3 Then
 				; not connected... strange, kill any Adb now
 				SetDebugLog("Stop ADB daemon!", $COLOR_ERROR)
 				LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "kill-server", $process_killed)
 				Local $sPort = ""
-				If $g_bAndroidAdbPort > 0 Then $sPort = String($g_bAndroidAdbPort)
-				
-				; Custom fix AIO Mod++
-				Local $pids = ProcessFindBy($g_sAndroidAdbPath)
+				If $g_bAndroidAdbPort Then $sPort = String($g_bAndroidAdbPort)
+				Local $pids = ProcessesExist($g_sAndroidAdbPath, $sPort, 1, 1)
 				For $i = 0 To UBound($pids) - 1
 					KillProcess($pids[$i], $g_sAndroidAdbPath)
 				Next
-				
+
 				; ok, last try
 				$connected_to = ConnectAndroidAdb(False, $bStartOnlyAndroid)
 				If Not $connected_to Then
@@ -1667,7 +1678,7 @@ Func _ConnectAndroidAdb($rebootAndroidIfNeccessary = $g_bRunState, $bStartOnlyAn
 				EndIf
 			EndIf
 	EndSwitch
-
+	If $iRecursive > 3 Then Return _ConnectAndroidAdb($rebootAndroidIfNeccessary, $bStartOnlyAndroid, $timeout, $iRecursive + 1)
 	Return (($connected_to) ? (($bRebooted) ? (2) : (1)) : (0)) ; ADB is connected or not
 EndFunc   ;==>_ConnectAndroidAdb
 
@@ -2591,7 +2602,7 @@ Func AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 	Local $wasAllowed = $g_bTogglePauseAllowed
 	Local $hostPath = $g_sAndroidPicturesHostPath & $g_sAndroidPicturesHostFolder
 	$g_bTogglePauseAllowed = False
-
+	
 	; Okay, we must do this, but in an optimized way.
 	Local $bOutDim = True, $iFailX = -1
 	Switch True
@@ -2603,7 +2614,7 @@ Func AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 			$iHeight = ($iHeight < 1) ? (1) : ($iHeight)
 			$iFailX += 64
 			ContinueCase
-
+			
 		; Second Check If higher than WIDTH or HEIGHT
 		Case ($iLeft > $g_iGAME_WIDTH - 1), ($iTop > $g_iGAME_HEIGHT - 1), ($iWidth > $g_iGAME_WIDTH), ($iHeight > $g_iGAME_HEIGHT)
 			$iLeft = ($iLeft > $g_iGAME_WIDTH - 1) ? ($g_iGAME_WIDTH - 1) : ($iLeft)
@@ -2619,7 +2630,7 @@ Func AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 			If ($iTop + $iHeight > $g_iGAME_HEIGHT) Then $iHeight = $g_iGAME_HEIGHT - $iTop
 			$iFailX += 256
 			ContinueCase
-
+			
 		Case Else
 			$bOutDim = False
 	EndSwitch
@@ -2630,16 +2641,16 @@ Func AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 	$sBotTitleEx = ($g_iAndroidSecureFlags <> 0) ? (GetSecureFilename(StringRegExpReplace($sBotTitleEx, '[/:*?"<>|]', '_'))) : (StringRegExpReplace($sBotTitleEx, '[/:*?"<>|]', '_'))
 	Local $Filename = $sBotTitleEx & ".rgba"
 	If $g_bAndroidAdbScreencapPngEnabled = True Then $Filename = $sBotTitleEx & ".png"
-
+	
 	; Wait for capture.
 	Local $hResult = _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount, GetSecureFilename($sBotTitleEx))
-	Local $error = @error
+	Local $error = @error 
 
 	; delete file
-	If $g_iAndroidSecureFlags <> 0 Then
+	If $g_iAndroidSecureFlags <> 0 Then 
 		FileDelete($hostPath & $Filename)
 	EndIf
-
+	
 	$g_bTogglePauseAllowed = $wasAllowed
 	Return SetError($error, @extended, $hResult)
 EndFunc   ;==>AndroidScreencap
@@ -2660,14 +2671,14 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0, $File
 	Local $wasRunState = $g_bRunState
 	AndroidAdbLaunchShellInstance($wasRunState)
 	If @error <> 0 Then Return SetError(2, 0)
-
+	
 	If $Filename = -1 Then
 		Local $sBotTitleEx = $g_sAndroidEmulator & $g_sAndroidInstance
 		$sBotTitleEx = ($g_iAndroidSecureFlags <> 0) ? (GetSecureFilename($sBotTitleEx)) : (StringRegExpReplace($sBotTitleEx, '[/:*?"<>|]', '_'))
 		$Filename = $sBotTitleEx & ".rgba"
 		If $g_bAndroidAdbScreencapPngEnabled = True Then $Filename = $sBotTitleEx & ".png"
 	EndIf
-
+	
 	; Create 32 bits-per-pixel device-independent bitmap (DIB)
 	Local $tBIV5HDR = 0
 	If $g_bAndroidAdbScreencapPngEnabled = False Then
@@ -2724,13 +2735,13 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0, $File
 		; wait for file.
 		$ExpectedFileSize = $g_iAndroidClientWidth * $g_iAndroidClientHeight * 4 + $iHeaderSize
 		While $iSize < $ExpectedFileSize And __TimerDiff($hTimer) < $g_iAndroidAdbScreencapWaitFileTimeout
-			If $hFile = 0 Then
+			If $hFile = 0 Then 
 				$hFile = _WinAPI_CreateFile($hostPath & $Filename, 2, 2, 7)
 			EndIf
-			If $hFile <> 0 Then
+			If $hFile <> 0 Then 
 				$iSize = _WinAPI_GetFileSizeEx($hFile)
 			EndIf
-			If $iSize >= $ExpectedFileSize Then
+			If $iSize >= $ExpectedFileSize Then 
 				ExitLoop
 			EndIf
 			Sleep(10)
@@ -2893,12 +2904,12 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0, $File
 			;$hHBitmap = _GDIPlus_BitmapCreateDIBFromBitmap($hBitmap)
 		EndIf
 	EndIf
-
+	
 	; delete file
 	If $Filename = -1 And $g_iAndroidSecureFlags <> 0 Then FileDelete($hostPath & $Filename)
-
+	
 	$g_iAndroidAdbScreencapTimer = __TimerInit() ; timeout starts now
-
+	
 	If $g_bDebugAndroid Or Mod($g_aiAndroidAdbStatsTotal[$AdbStatsType][0], 100) = 0 Then
 		Local $duration = Int(__TimerDiff($startTimer))
 		If $g_bDebugAndroid Then SetLog("AdbScreencap: " & $duration & " ms " & $shellLogInfo & "," & $iLoopCountFile & ",l=" & $iLeft & ",t=" & $iTop & ",w=" & $iWidth & ",h=" & $iHeight & ", " & $Filename & ": w=" & $g_iAndroidAdbScreencapWidth & ",h=" & $g_iAndroidAdbScreencapHeight)
@@ -3094,84 +3105,6 @@ Func AndroidSlowClick($x, $y, $times = 1, $speed = 0)
 		Return SetError($error, 0)
 	EndIf
 EndFunc   ;==>AndroidSlowClick
-
-Func AndroidMiniClick($x, $y, $iPressure = 255, $iTimes = 1, $iSpeed = 0)
-
-	Local $sCmd = "", $iTimer = 0, $iBytes = 0
-
-	$g_iAndroidAdbScreencapTimer = 0 ; invalidate ADB screencap timer/timeout
-
-	; Launch ADB.
-	AndroidAdbLaunchShellInstance($g_bRunState)
-
-	Local $error = @error
-	If $error = 0 Then
-		; Get configs.
-		Local $iMinSleep = GetClickDownDelay()
-		Local $iDelay = GetClickUpDelay()
-
-		; Add android settings delay.
-		$iDelay += $g_iAndroidAdbClickGroupDelay
-
-		; Replace sleep in case set sleep time is slower than minimum sleep time.
-		If $iMinSleep > $iSpeed Then $iSpeed = $iMinSleep
-
-		; Adjust click to BlueStacks
-		Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x,$y)")
-
-		; Randomize.
-		Local $aPrevCoor[2] = [$x, $y]
-		If $g_bUseRandomClick Then
-			$x += Random(-5, 5, 1)
-			$y += Random(-5, 5, 1)
-			If $x <= 0 Or $x >= $g_iGAME_WIDTH Then $x = $aPrevCoor[0]
-			If $y <= 0 Or $y >= $g_iGAME_HEIGHT Then $y = $aPrevCoor[1]
-		EndIf
-
-		$aPrevCoor[0] = $x
-		$aPrevCoor[1] = $y
-
-		; Matrix
-		For $i = 1 To $iTimes
-
-			; Randomize soft in loops.
-			If $g_bUseRandomClick Then
-				$x = $aPrevCoor[0] + Random(-1, 1, 1)
-				$y = $aPrevCoor[1] + Random(-1, 1, 1)
-				If $x <= 0 Or $x >= $g_iGAME_WIDTH Then $x = $aPrevCoor[0]
-				If $y <= 0 Or $y >= $g_iGAME_HEIGHT Then $y = $aPrevCoor[1]
-			EndIf
-
-			; Random sleep '80% / 120%' range.
-			$iTimer = Round($iSpeed * Random(0.80, 1.20))
-
-			; Matrix string.
-			$sCmd = "d 0 " & $x & " " & $y & " " & $iPressure & @LF & "c" & @LF & "w "& $iTimer & @LF & "u 0" & @LF & "c" & @LF & "w " & $iDelay & @LF
-
-			; Launch 'sCmd'
-			If $g_iAndroidAdbMinitouchMode = 0 Then
-				$iBytes += TCPSend($g_bAndroidAdbMinitouchSocket, $sCmd)
-			Else
-				AndroidAdbSendMinitouchShellCommand($sCmd)
-				If @error Then
-					Return SetError(@error, 0, 0)
-				Else
-					$iBytes += StringLen($sCmd)
-				EndIf
-			EndIf
-
-			; Precise sleep : $iSpeed + $iDelay.
-			_SleepMicro(($iSpeed + $iDelay) * 1000)
-
-		Next
-	Else
-		SetDebugLog("Disabled " & $g_sAndroidEmulator & " ADB mouse click, error " & $error, $COLOR_ERROR)
-		$g_bAndroidAdbClick = False
-		Return SetError($error, 0)
-	EndIf
-
-	Return $iBytes
-EndFunc   ;==>AndroidMiniClick
 
 Func AndroidMoveMouseAnywhere()
 	Local $_SilentSetLog = $g_bSilentSetLog

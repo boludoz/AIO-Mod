@@ -18,18 +18,23 @@
 
 Func KillProcess($iPID, $sProcess_info = "", $iAttempts = 3)
 	If Not IsInt($iPID) Then Return False
-	Local $i = 0
+	Local $i = 0, $iError = 0
 
 	If Number($iPID) > 0 Then
 		For $i = 1 To $iAttempts
 			ProcessClose($iPID)
+			$iError = @error
+			If @error Then 
+				SetDebugLog("KillProcess(" & $i & "): PID = " & $iPID & ", Error = " & $iError & ", Process = " & $sProcess_info, $COLOR_ERROR)
+				ContinueLoop
+			EndIf
 			If Not ProcessExists($iPID) Then 
-				SetDebugLog("KillProcess(" & $i & "): PID = " & $iPID & " killed" & $sProcess_info, $COLOR_ERROR)
+				SetDebugLog("KillProcess(" & $i & "): PID = " & $iPID & " killed " & $sProcess_info)
 				Return True
 			EndIf
 		Next
 	EndIf
-	SetDebugLog("KillProcess(" & $i & "): PID = " & $iPID & " failed to kill" & $sProcess_info, $COLOR_ERROR)
+	SetDebugLog("KillProcess(" & $i & "): PID = " & $iPID & " failed to kill " & $sProcess_info, $COLOR_ERROR)
 	Return False
 EndFunc   ;==>KillProcess
 
