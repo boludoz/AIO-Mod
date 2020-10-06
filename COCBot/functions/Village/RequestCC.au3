@@ -39,19 +39,16 @@ Func RequestCC($bClickPAtEnd = True, $sText = "", $bRequestFast = $g_bChkReqCCFr
 		
 		; Normal request x63 - y706
 		; Already request x104 - y706
-		Local $aFindRequest = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Request\Chat", 1, "2, 684, 116, 731")
 		
-		If Not IsArray($aFindRequest) Then
-			SetDebugLog("No request from chat.")
+		Local $aFindRequest = RequestFromChat()
+		
+		If Not $aFindRequest Then
+			SetDebugLog("Cannot request from chat.", $COLOR_ERROR)
 			CloseClanChat()
 			Return
 		EndIf
 		
-		If IsArray($aFindRequest) And $aFindRequest[0][1] < Int(70) Then
-			SetLog("Requesting from the chat.", $COLOR_ACTION)
-			Local $aDonationChat_button[2] = [$aFindRequest[0][1] - Random(10, 15, 1), $aFindRequest[0][2] - Random(10, 15, 1)]
-			_makerequest($aDonationChat_button)
-		EndIf
+		_makerequest()
 		
 		CloseClanChat()
 
@@ -129,8 +126,18 @@ Func RequestCC($bClickPAtEnd = True, $sText = "", $bRequestFast = $g_bChkReqCCFr
 EndFunc   ;==>RequestCC
 
 #Region - Custom request - Team AIO Mod++
-Func _makerequest($aButtonPosition)
-	Return FuncReturn(_makerequestCustom($aButtonPosition))
+Func RequestFromChat() ; Custom fix - Team__AiO__MOD
+	Local $i = 0, $bClicked = False
+	Do
+		$i += 1
+		$bClicked = ButtonClickDM(@ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\Button\RequestFromChat\", 4, 686, 66, 42)
+		If _Sleep(250) Then Return
+	Until $bClicked Or ($i > 3)
+	Return $bClicked
+EndFunc   ;==>ClickFindMatch
+
+Func _makerequest($aButtonPosition = "")
+	Return _makerequestCustom($aButtonPosition)
 EndFunc   ;==>_makerequest
 #EndRegion - Custom request - Team AIO Mod++
 

@@ -647,7 +647,7 @@ Func DonateCC($bCheckForNewMsg = False)
 			$aiSearchArray[1] = $aiDonateButton[1] + 20
 
 			If _Sleep($DELAYDONATEWINDOW1) Then ExitLoop
-			ClickAway()
+			CloseXDonate() ; Custom fix - Team__AiO__MOD
 
 			If _Sleep($DELAYDONATEWINDOW1) Then ExitLoop
 		EndIf

@@ -207,11 +207,21 @@ Func _makerequestCustom($aRequestButtonPos = "")
 		EndIf
 
 		If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "") ; make sure Android has window focus
-		ClickP($g_avWindowCoordinates, 1, 100, "#0256")
+		RequestSend()
 		$g_bCanRequestCC = False
 	EndIf
 
 EndFunc   ;==>_makerequestCustom
+
+Func RequestSend() ; Custom fix - Team__AiO__MOD
+	Local $i = 0, $bClicked = False
+	Do
+		$i += 1
+		$bClicked = ButtonClickDM(@ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\Button\RequestSend\", 425, 2, 212, 730)
+		If _Sleep(250) Then Return
+	Until $bClicked Or ($i > 3)
+	Return $bClicked
+EndFunc   ;==>RequestSend
 
 #Region - Custom Yard - Team AIO Mod++
 Func _CleanYard($bIsBB = Default, $bTest = False)
