@@ -235,7 +235,7 @@ Func OpenClanChat($iDelay = 200, $bIUnders = True)
 			ClickP($aAway2, 1, 0, "#0176")
 		EndIf
 
-		If _Sleep(Round( Int($iDelay * Random(90, 120)) / 100)) Then Return
+		If RandomSleep(100) Then Return
 	Next
 	Return False
 EndFunc   ;==>OpenClanChat
@@ -249,10 +249,10 @@ Func CloseClanChat($iDelay = 200) ; close chat area
 			If $aiButton[0] > 150 Then ClickP($aiButton, 1)
 			Return True
 		Else
-			ClickP($aAway2, 1, 0, "#0176")
+			CloseXDonate()
 		EndIf
 
-		If _Sleep(Round( Int($iDelay * Random(90, 120)) / 100)) Then Return
+		If RandomSleep(100) Then Return
 	Next
 	Return False
 EndFunc   ;==>CloseClanChat
