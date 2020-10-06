@@ -151,7 +151,16 @@ Func SaveBuildingConfig()
 		_Ini_Add("upgrade", "upgraderepeat" & $iz, $g_abUpgradeRepeatEnable[$iz] ? 1 : 0)
 		_Ini_Add("upgrade", "upgradestatusicon" & $iz, $g_aiPicUpgradeStatus[$iz])
 	Next
-
+	
+	#Region - Dates - Team AIO Mod++
+	_Ini_Add("Dates", "DateAndTimeMagicItems", $g_sDateAndTimeMagicItems)
+	_Ini_Add("Dates", "DateAndTimeHeroWUE", $g_sDateAndTimeHeroWUE)
+	_Ini_Add("Dates", "DateAndTimeKing", $g_sDateAndTimeKing)
+	_Ini_Add("Dates", "DateAndTimeQueen", $g_sDateAndTimeQueen)
+	_Ini_Add("Dates", "DateAndTimeWarden", $g_sDateAndTimeWarden)
+	_Ini_Add("Dates", "DateAndTimeChampion", $g_sDateAndTimeChampion)
+	#EndRegion - Dates - Team AIO Mod++
+	
 	_Ini_Save($g_sProfileBuildingPath)
 EndFunc   ;==>SaveBuildingConfig
 

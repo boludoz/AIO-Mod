@@ -3350,6 +3350,12 @@ Global $InternalArea[8][3]
 Global $ExternalArea[8][3]
 Global Const $g_sLibModIconPath = $g_sLibPath & "\ModLibs\AIOMod.dll"
 Global Enum $eIcnModKingGray = 1, $eIcnModKingBlue, $eIcnModKingGreen, $eIcnModKingRed, $eIcnModQueenGray, $eIcnModQueenBlue, $eIcnModQueenGreen, $eIcnModQueenRed, $eIcnModWardenGray, $eIcnModWardenBlue, $eIcnModWardenGreen, $eIcnModWardenRed, $eIcnModLabGray, $eIcnModLabGreen, $eIcnModLabRed, $eIcnModArrowLeft, $eIcnModArrowRight, $eIcnModTrainingP, $eIcnModResourceP, $eIcnModHeroP, $eIcnModClockTowerP, $eIcnModBuilderP, $eIcnModPowerP, $eIcnModChat, $eIcnModRepeat, $eIcnModClan, $eIcnModTarget, $eIcnModSettings, $eIcnModBKingSX, $eIcnModAQueenSX, $eIcnModGWardenSX, $eIcnModDebug, $eIcnModClanHop, $eIcnModPrecise, $eIcnModAccountsS, $eIcnModProfilesS, $eIcnModFarmingS, $eIcnMiscMod, $eIcnSuperXP, $eIcnChatActions, $eIcnHumanization, $eIcnAIOMod, $eIcnDebugMod, $eIcnLabP, $eIcnShop, $eIcnGoldP, $eIcnElixirP, $eIcnDarkP, $eIcnGFTO, $eIcnMisc, $eIcnPrewar
+Global $g_sDateAndTimeMagicItems = ""
+Global $g_sDateAndTimeHeroWUE = ""
+Global $g_sDateAndTimeKing = ""
+Global $g_sDateAndTimeQueen = ""
+Global $g_sDateAndTimeWarden = ""
+Global $g_sDateAndTimeChampion = ""
 Global $g_bDefensesAlive = False, $g_bDefensesMix = True
 Global $g_hChkNoUpgradeInWar = True, $g_bNoUpgradeInWar
 Global $g_hChkProtectInLL, $g_hChkForceProtectLL, $g_bProtectInLL = True, $g_bForceProtectLL = False
@@ -5129,6 +5135,12 @@ $g_abBuildingUpgradeEnable[$iz] = False
 $g_abUpgradeRepeatEnable[$iz] = False
 EndIf
 Next
+IniReadS($g_sDateAndTimeMagicItems, $g_sProfileBuildingPath, "Dates", "DateAndTimeMagicItems", "", Default)
+IniReadS($g_sDateAndTimeHeroWUE, $g_sProfileBuildingPath, "Dates", "DateAndTimeHeroWUE", "", Default)
+IniReadS($g_sDateAndTimeKing, $g_sProfileBuildingPath, "Dates", "DateAndTimeKing", "", Default)
+IniReadS($g_sDateAndTimeQueen, $g_sProfileBuildingPath, "Dates", "DateAndTimeQueen", "", Default)
+IniReadS($g_sDateAndTimeWarden, $g_sProfileBuildingPath, "Dates", "DateAndTimeWarden", "", Default)
+IniReadS($g_sDateAndTimeChampion, $g_sProfileBuildingPath, "Dates", "DateAndTimeChampion", "", Default)
 EndFunc
 Func ReadRegularConfig()
 SetDebugLog("Read Config " & $g_sProfileConfigPath)

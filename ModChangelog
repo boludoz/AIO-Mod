@@ -18,6 +18,7 @@
 		- New: Don't upgrade hero if at war.
 		- New: League Legend protection.
 		- Fix: Unbalanced '|' in Languages detection and fix.
+		- Fix: Army click.
 		- Fix: Improved android ports system and adb kill.
 		- Fix: GetLocationBuilding overflow.
 		- Fix: Item buys shop confirm.

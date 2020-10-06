@@ -27,6 +27,31 @@ Global Enum $eIcnBB = 1 , $eIcnLabBB, $eIcnBBElixir, $eIcnBBGold, $eIcnBBTrophie
 		$eIcnBBWallL6, $eIcnBBWallL7, $eIcnBBWallL8, $eIcnBBWallL9
 #EndRegion - Icn - Team AIO Mod++
 
+#Region - Dates - Team AIO Mod++
+
+; Magic items check.
+Global Const $g_sConstMaxMagicItemsSeconds = 172800 ; 172800 const = 2 days quality check.
+Global $g_sDateAndTimeMagicItems = "" 
+
+; Hero war upgrade exception.
+Global Const $g_sConstHeroWUESeconds = 172800 ; 172800 const = 2 days quality check.
+Global $g_sDateAndTimeHeroWUE = "" 
+
+; King upgrade time.
+Global Const $g_sConstMaxHeroTime = 864000 ; 864000 const = 10 days quality check.
+Global $g_sDateAndTimeKing = "" 
+
+; Queen upgrade time.
+Global $g_sDateAndTimeQueen = "" 
+
+; Warden upgrade time.
+Global $g_sDateAndTimeWarden = "" 
+
+; Champion upgrade time.
+Global $g_sDateAndTimeChampion = "" 
+
+#EndRegion - Dates - Team AIO Mod++
+
 #Region -  New DB sys - Team AIO Mod++
 Global $g_hChkDBCheckDefensesAlive, $g_hChkDBCheckDefensesMix
 Global $g_bDefensesAlive = False, $g_bDefensesMix = True

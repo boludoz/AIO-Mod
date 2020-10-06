@@ -12,6 +12,21 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+Func UpgradeHeroesTime()
+	Local $iSeconds = 0
+	Local $sString = ""
+	
+	Local $sResult, $bResult, $iDateCalc
+	CheckWarTime($sResult, $bResult)
+	
+	If $bResult Then
+		$iSeconds = _DateDiff('s', _NowCalc(), $sResult)
+	EndIf
+
+	If $iSeconds < 3600 Then $iSeconds += Round(3600 * Random(1.4, 2.8)) ; 3600 Constant = 1 hour
+	$g_sDateAndTimeHeroWUE = _DateAdd('s', $iSeconds, _NowCalcDate() & " " & _NowTime(5))
+EndFunc   ;==>MagicItemsTime
+
 Func UpgradeHeroes()
 	If $g_bRestart Then Return
 
@@ -21,16 +36,20 @@ Func UpgradeHeroes()
 	checkMainScreen(False)
 	
 	#Region - No Upgrade In War - Team AIO Mod++
-	; _DateIsValid()
 	If $g_bNoUpgradeInWar Then
-		Local $sResult, $bResult, $iDateCalc
-		CheckWarTime($sResult, $bResult)
-		If $bResult Then
-			$iDateCalc = _DateDiff('n', _NowCalc(), $sResult)
-			SetLog("You are in clan war, skipped hero upgrade. " & $iDateCalc, $COLOR_INFO)
-			checkMainScreen(False)
-			Return 
+		
+		#Region - Dates - Team AIO Mod++
+		If _DateIsValid($g_sDateAndTimeHeroWUE) Then
+			Local $iDateDiff = _DateDiff('s', _NowCalcDate() & " " & _NowTime(5), $g_sDateAndTimeHeroWUE)
+			If $iDateDiff > 0 And ($g_sConstHeroWUESeconds < $iDateDiff) = False Then 
+				SetLog("Upgrade Heroes | You are in clan war or this is checked recently, skipped hero upgrade.", $COLOR_INFO)
+				checkMainScreen(False)
+				Return 
+			EndIf
 		EndIf
+		
+		UpgradeHeroesTime()
+		#EndRegion - Dates - Team AIO Mod++
 	EndIf
 	#EndRegion - No Upgrade In War - Team AIO Mod++
 
@@ -120,9 +139,42 @@ Func UpgradeHeroes()
 EndFunc   ;==>UpgradeHeroes
 
 #Region - Custom hero - Team AIO Mod++
+Func HeroUpgradeTime(ByRef $sHero, $sString = "")
+	Local $iSeconds = 0
+	Local $aTmp; like xx#xx#xx
+	$sString = StringStripWS($sString, $STR_STRIPALL)
+	$sString = StringTrimRight($sString, 1)
+	$aTmp = StringSplit($sString, 'd')
+	If not @error Then
+		Switch $aTmp[0]
+			Case 1
+			$iSeconds += $aTmp[1]
+			Case 2
+			$iSeconds += ($aTmp[1] * 3600)
+			$iSeconds += ($aTmp[2] * 60)
+		EndSwitch
+	EndIf
+	If $iSeconds < 3600 Then $iSeconds += Round(3600 * Random(1.4, 2.8)) ; 3600 Constant = 1 hour
+	$sHero = _DateAdd('s', $iSeconds, _NowCalcDate() & " " & _NowTime(5))
+EndFunc   ;==>HeroUpgradeTime
+
 Func HeroUpgrade($sHero = "")
 	If Not Execute("$g_bUpgrade" & $sHero & "Enable") Then Return
 	If @error Then Return
+	
+	#Region - Dates - Team AIO Mod++
+	Local $sDateAndTime = Execute("$g_sDateAndTime" & $sHero) 
+	If Not @error Then
+		If _DateIsValid($sDateAndTime) Then
+			Local $iDateDiff = _DateDiff('s', _NowCalcDate() & " " & _NowTime(5), $sDateAndTime)
+			If $iDateDiff > 0 And ($g_sConstMaxHeroTime < $iDateDiff) = False Then 
+				SetLog("Hero Upgrade | We've been through here recently or " & $sHero & " is upgrading.", $COLOR_INFO)
+				checkMainScreen(False)
+				Return
+			EndIf
+		EndIf
+	EndIf
+	#EndRegion - Dates - Team AIO Mod++
 
 	Static $s_KingMin[8] = [False, False, False, False, False, False, False, False]
 	Static $s_QueenMin[8] = [False, False, False, False, False, False, False, False]
@@ -133,7 +185,7 @@ Func HeroUpgrade($sHero = "")
 	VillageReport(True, True)
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
 	
-	Local $vRequirement = Execute("$s_"& $sHero &"Min[$g_iCurAccount]")
+	Local $vRequirement = Execute("$s_" & $sHero & "Min[$g_iCurAccount]")
 	If @error Then Return
 	If StringInStr($vRequirement, "MAX|" & $g_iTownHallLevel) < 1 Or $g_iTownHallLevel < 1 Then
 		If Not $vRequirement = False And $g_aiCurrentLoot[($sHero = "Warden") ? ($eLootElixir) : ($eLootDarkElixir)] < $vRequirement Then
@@ -202,6 +254,7 @@ Func HeroUpgrade($sHero = "")
 			If $iCost > 100 Then
 				Local $aWhiteZeros = decodeSingleCoord(findImage("UpgradeWhiteZero" ,$g_sImgUpgradeWhiteZero, GetDiamondFromRect("408,519,747,606"), 1, True, Default))
 				If IsArray($aWhiteZeros) And UBound($aWhiteZeros, 1) = 2 Then
+					Local $sTime = getHeroUpgradeTime(578, 465 + $g_iMidOffsetY)
 					ClickP($aWhiteZeros, 1, 0) ; Click upgrade buttton
 					ClickAway()
 
@@ -216,11 +269,19 @@ Func HeroUpgrade($sHero = "")
 					SetLog($sHero & " Upgrade complete", $COLOR_SUCCESS)
 					$g_iNbrOfHeroesUpped += 1
 					Switch $sHero
+						Case "King"
+							$g_iCostDElixirHero += $iCost
+							HeroUpgradeTime($g_sDateAndTimeKing, $sTime)
+						Case "Queen"
+							$g_iCostDElixirHero += $iCost
+							HeroUpgradeTime($g_sDateAndTimeQueen, $sTime)
 						Case "Warden"
 							$g_iCostElixirBuilding += $iCost
 							$g_iWardenCost = -1 ; Reset for walls.
-						Case Else
+							HeroUpgradeTime($g_sDateAndTimeWarden, $sTime)
+						Case "Champion"
 							$g_iCostDElixirHero += $iCost
+							HeroUpgradeTime($g_sDateAndTimeChampion, $sTime)
 					EndSwitch
 					UpdateStats()
 				EndIf

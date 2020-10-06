@@ -146,6 +146,15 @@ Func ReadBuildingConfig()
 			$g_abUpgradeRepeatEnable[$iz] = False
 		EndIf
 	Next
+	
+	#Region - Dates - Team AIO Mod++
+	IniReadS($g_sDateAndTimeMagicItems, $g_sProfileBuildingPath, "Dates", "DateAndTimeMagicItems", "", Default)
+	IniReadS($g_sDateAndTimeHeroWUE, $g_sProfileBuildingPath, "Dates", "DateAndTimeHeroWUE", "", Default)
+	IniReadS($g_sDateAndTimeKing, $g_sProfileBuildingPath, "Dates", "DateAndTimeKing", "", Default)
+	IniReadS($g_sDateAndTimeQueen, $g_sProfileBuildingPath, "Dates", "DateAndTimeQueen", "", Default)
+	IniReadS($g_sDateAndTimeWarden, $g_sProfileBuildingPath, "Dates", "DateAndTimeWarden", "", Default)
+	IniReadS($g_sDateAndTimeChampion, $g_sProfileBuildingPath, "Dates", "DateAndTimeChampion", "", Default)
+	#EndRegion - Dates - Team AIO Mod++
 EndFunc   ;==>ReadBuildingConfig
 
 Func ReadRegularConfig()

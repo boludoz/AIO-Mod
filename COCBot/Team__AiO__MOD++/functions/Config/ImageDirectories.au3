@@ -169,3 +169,6 @@ Global $g_sASButtonsDOCRPath = $g_sBaseDOCRPathB & "\AttackScreen\Buttons"
 ; Upgrade resources.
 Global $g_sASUpgradeResourcesDOCRPath = $g_sBaseDOCRPathB & "\UpgradeResources\OK.docr"
 Global $g_sASUpgradeResourcesRedDOCRPath = $g_sBaseDOCRPathB & "\UpgradeResources\Red.docr"
+
+; Magic items.
+Global $g_sASMagicItemsDOCRPath = $g_sBaseDOCRPathB & "\MagicItems\"
