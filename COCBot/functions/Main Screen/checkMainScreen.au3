@@ -44,8 +44,8 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default) ;Checks if in
 
 	#Region - Custom fix - Team AIO Mod++
 	; This check if coc is active in first plane.
-	Local $sDumpsys = AndroidAdbSendShellCommand("dumpsys activity activities | grep mFocusedActivity", Default)
-	If StringInStr($sDumpsys, "mFocusedActivity") > 0 And StringInStr($sDumpsys, $g_sAndroidGamePackage) < 1 Then 
+	Local $sDumpsys = AndroidAdbSendShellCommand("dumpsys window windows | grep -E 'mCurrentFocus'", Default)
+	If StringInStr($sDumpsys, $g_sAndroidGamePackage) < 1 Then 
 		SetLog("Clash of Clans is not active, the bot solves it.", $COLOR_INFO)
 		OpenCoC()
 	EndIf

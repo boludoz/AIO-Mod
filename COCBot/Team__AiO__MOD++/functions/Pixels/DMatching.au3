@@ -238,8 +238,9 @@ Func ButtonClickDM($sBundle, $iRegionX = 0, $iRegionY = 0, $iRegionWidth = 0, $i
         If IsArray($aDecodedMatch) Then
 			Local $bRdn = $g_bUseRandomClick
 			$g_bUseRandomClick = False
-			Click(Random($aDecodedMatch[2], $aDecodedMatch[2] + $aDecodedMatch[4],1), Random($aDecodedMatch[3], $aDecodedMatch[3] + $aDecodedMatch[5],1))
+			Click(Random($aDecodedMatch[2] + ($aDecodedMatch[4] * 0.25), $aDecodedMatch[2] + ($aDecodedMatch[4] * 0.75), 1), Random($aDecodedMatch[3] + ($aDecodedMatch[5] * 0.25), $aDecodedMatch[3] + ($aDecodedMatch[5] * 0.75), 1))
 			If $bRdn = True Then $g_bUseRandomClick = True
+			If _Sleep(1000) Then Return
 			Return True
         EndIf
     Next

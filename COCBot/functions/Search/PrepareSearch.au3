@@ -88,9 +88,9 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 		Local $sSearchDiamond = GetDiamondFromRect("271,185,834,659")
 		Local $avAttackButton = findMultiple($g_sImgPrepareLegendLeagueSearch, $sSearchDiamond, $sSearchDiamond, 0, 1000, 1, "objectname,objectpoints", True)
 		If IsArray($avAttackButton) And UBound($avAttackButton, 1) > 0 Then
-			$g_bLeagueAttack = True
 			Local $avAttackButtonSubResult = $avAttackButton[0]
 			Local $sButtonState = $avAttackButtonSubResult[0]
+			If StringInStr($sButtonState, "Normal", 0) < 1 Then $g_bLeagueAttack = True ; Custom fix - AIO Mod++
 			If StringInStr($sButtonState, "Ended", 0) > 0 Then
 				SetLog("League Day ended already! Trying again later", $COLOR_INFO)
 				$g_bRestart = True

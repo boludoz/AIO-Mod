@@ -2735,17 +2735,14 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0, $File
 		; wait for file.
 		$ExpectedFileSize = $g_iAndroidClientWidth * $g_iAndroidClientHeight * 4 + $iHeaderSize
 		While $iSize < $ExpectedFileSize And __TimerDiff($hTimer) < $g_iAndroidAdbScreencapWaitFileTimeout
-			If $hFile = 0 Then 
-				$hFile = _WinAPI_CreateFile($hostPath & $Filename, 2, 2, 7)
-			EndIf
-			If $hFile <> 0 Then 
-				$iSize = _WinAPI_GetFileSizeEx($hFile)
-			EndIf
-			If $iSize >= $ExpectedFileSize Then 
-				ExitLoop
-			EndIf
+			If $hFile = 0 Then $hFile = _WinAPI_CreateFile($hostPath & $Filename, 2, 2, 7)
+			If $hFile <> 0 Then $iSize = _WinAPI_GetFileSizeEx($hFile)
+			If $iSize >= $ExpectedFileSize Then ExitLoop
 			Sleep(10)
-			If $wasRunState = True And $g_bRunState = False Then Return SetError(1, 0)
+			If $wasRunState = True And $g_bRunState = False Then
+				If $hFile <> 0 Then _WinAPI_CloseHandle($hFile)
+				Return SetError(1, 0)
+			EndIf
 			$iLoopCountFile += 1
 		WEnd
 
@@ -2798,9 +2795,9 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0, $File
 				SetDebugLog("Captured screen size " & $g_iAndroidAdbScreencapWidth & " x " & $g_iAndroidAdbScreencapHeight, $COLOR_ERROR)
 				SetDebugLog("Captured screen bytes read (header/datata): " & $iReadHeader & " / " & $iReadData, $COLOR_ERROR)
 			EndIf
-			If $iRetryCount < 20 Then
+			If $iRetryCount < 10 Then
 				SetDebugLog("ADB retry screencap in 1000 ms. (restarting ADB session)", $COLOR_ACTION)
-				_Sleep(1000)
+				If _Sleep(1000) Then Return
 				AndroidAdbTerminateShellInstance()
 				AndroidAdbLaunchShellInstance($wasRunState)
 				Return _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount + 1, $Filename)
@@ -2869,7 +2866,7 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0, $File
 		;_GDIPlus_BitmapCreateFromMemory
 		If $hBitmap = 0 Then
 			; problem creating Bitmap
-			If $iRetryCount < 20 Then
+			If $iRetryCount < 10 Then
 				SetDebugLog("ADB retry screencap in 1000 ms. (restarting ADB session)", $COLOR_ACTION)
 				_Sleep(1000)
 				AndroidAdbTerminateShellInstance()
@@ -4100,16 +4097,16 @@ Func GetAndroidProcessPID($sPackage = Default, $bForeground = True, $iRetryCount
 	;u0_a54    13303 84    1338548 188464 16    -4    0     0     sys_epoll_ b7725424 S com.supercell.clashofclans
 	#Region - Custom fix - Team AIO Mod++
 	If AndroidInvalidState() Then Return 0
-	Local $sDumpsys = AndroidAdbSendShellCommand("dumpsys activity activities | grep mFocusedActivity", Default)
+	Local $sDumpsys = AndroidAdbSendShellCommand("dumpsys window windows | grep -E 'mCurrentFocus'", Default)
 	If @error = 0 Then
 		; This check if coc is foreground.
-		If $bForeground = True And StringInStr($sDumpsys, "mFocusedActivity") > 0 And StringInStr($sDumpsys, $sPackage) > 0 Then
+		If $bForeground = True And StringInStr($sDumpsys, $sPackage) > 0 Then
 			$sDumpsys = StringSplit(StringStripWS(AndroidAdbSendShellCommand("set result=$(ps -p|grep """ & $sPackage & """ >&2)"), $STR_STRIPSPACES), " ", $STR_NOCOUNT)
 			If UBound($sDumpsys) > 2 Then
 				If $g_bDebugAndroid Or $g_bDebugSetlog Then SetLog("GetAndroidProcessPID | Foreground? " & $bForeground & " $g_sAndroidGamePackage : " & $sPackage &" | StdOut : " & $sDumpsys, $COLOR_INFO)
 				Return $sDumpsys[1]
 			EndIf
-		ElseIf $bForeground = False Or StringInStr($sDumpsys, "mFocusedActivity") < 1 Then
+		Else
 			$sDumpsys = StringSplit(StringStripWS(AndroidAdbSendShellCommand("set result=$(ps -p|grep """ & $sPackage & """ >&2)"), $STR_STRIPSPACES), " ", $STR_NOCOUNT)
 			If UBound($sDumpsys) > 2 Then
 				If $g_bDebugAndroid Or $g_bDebugSetlog Then SetLog("GetAndroidProcessPID | Foreground? " & $bForeground & " $g_sAndroidGamePackage : " & $sPackage &" | StdOut : " & $sDumpsys, $COLOR_INFO)

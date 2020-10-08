@@ -15,7 +15,7 @@
 #Region - Custom sleep Drop - Team AIO Mod++
 Func SetSleep($iType)
 	If IsKeepClicksActive() = True Then Return 0
-	Local $iOffset0 = 19.2, $iOffset1 = 166.4, $iMode = ($g_iMatchMode = $DB) ? (($g_aiAttackAlgorithm[$DB] = 0) ? (0) : (1)) : (2)
+	Local $iOffset0 = 6.6, $iOffset1 = 66.66, $iMode = ($g_iMatchMode = $DB) ? (($g_aiAttackAlgorithm[$DB] = 0) ? (0) : (1)) : (2)
 	Switch $iType
 		Case 0
 			If $g_bChkEnableRandom[$iMode] Then

@@ -4,6 +4,21 @@
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
                     Based on MyBot.run v7.8.7
+	**v4.2.9** 
+		- Fix: DMatch name.
+
+	**v4.2.8** 
+		- New: you can only drop trophy if no other modes are active.
+		- Improved: attack click.
+		- Improved: deadbase detection.
+		- Improved: custom buttons edge detection improved and fixed random click in.
+		- Fix: Changed the name of the libraries for those that do not replace the files correctly.
+		- Fix: Drop trophy.
+		- Fix: Click in attack battle.
+		- Fix: SuperXP Disabled.
+		- Fix: focused app window detection.
+		- Fix: Legend league in detection.
+
 	**v4.2.7** 
 		- Upgraded : Dissociable OCR/DMatch with last version (Compatible with iTools/WinAPI mode).
 		- Improved: Discord webhook integration help.

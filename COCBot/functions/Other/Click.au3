@@ -136,25 +136,25 @@ Func BuildingClickP($point, $debugtxt = "")
 EndFunc   ;==>BuildingClickP
 
 Func PureClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
-	Local $txt = "", $aPrevCoor[2] = [$x, $y]
+	Local $aPrevCoor[2] = [$x, $y]
+	
+	If $g_bDebugClick Then
+		Local $txt = _DecodeDebug($debugtxt)
+		SetLog("PureClick " & $x & "," & $y & "," & $times & "," & $speed & " " & $debugtxt & $txt, $COLOR_ACTION, "Verdana", "7.5", 0)
+	EndIf
+
     If $g_bUseRandomClick Then
-		$x += Random(-5, 5, 1)
-		$y += Random(-5, 5, 1)
+		$x += Random(-2, 2, 1)
+		$y += Random(-2, 2, 1)
 		If $x <= 0 Or $x >= $g_iGAME_WIDTH Then $x = $aPrevCoor[0]
 		If $y <= 0 Or $y >= $g_iGAME_HEIGHT Then $y = $aPrevCoor[1]
-	EndIf
-	
-	If $g_bDebugClick Or TestCapture() Then
-		$txt = _DecodeDebug($debugtxt)
-		SetLog("PureClick X" & $x & "," & $y & "," & $times & "," & $speed & " " & $debugtxt & $txt, $COLOR_ACTION)
 	EndIf
 
 	If TestCapture() Then Return
 
 	If $g_bAndroidAdbClick = True Then
-		For $i = 1 To $times 
-			AndroidClick($x, $y, 1, $speed)
-			If _Sleep($speed, False) Then ExitLoop
+		For $i = 1 to $times
+			AndroidClick($x, $y, 1, $speed, False)
 		Next
 		Return
 	EndIf
@@ -179,37 +179,18 @@ Func PureClickP($point, $howMuch = 1, $speed = 0, $debugtxt = "")
 EndFunc   ;==>PureClickP
 
 Func GemClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
-	Local $txt = "", $aPrevCoor[2] = [$x, $y]
-
-	#Region - Custom click - Team AIO Mod++
-	If ($x = $aAway[0] Or $x = $aAway2[0]) And $y = 10 Then
-		If $g_bDebugClick Then SetLog("Force random ClickAway.", $COLOR_ACTION)
-		Return ClickAway(True)
+	If $g_bDebugClick Then
+		Local $txt = _DecodeDebug($debugtxt)
+		SetLog("GemClick " & $x & "," & $y & "," & $times & "," & $speed & " " & $debugtxt & $txt, $COLOR_ACTION, "Verdana", "7.5", 0)
 	EndIf
-
-	Local $txt = "", $aPrevCoor[2] = [$x, $y]
-    If $g_bUseRandomClick Then
-		$x += Random(-5, 5, 1)
-		$y += Random(-5, 5, 1)
-		If $x <= 0 Or $x >= $g_iGAME_WIDTH Then $x = $aPrevCoor[0]
-		If $y <= 0 Or $y >= $g_iGAME_HEIGHT Then $y = $aPrevCoor[1]
-	EndIf
-	
-	If $g_bDebugClick Or TestCapture() Then
-		$txt = _DecodeDebug($debugtxt)
-		SetLog("GemClick " & $x & "," & $y & "," & $times & "," & $speed & " " & $debugtxt & $txt, $COLOR_ACTION)
-	EndIf
-	#EndRegion - Custom click - Team AIO Mod++
 
 	If TestCapture() Then Return
 
 	If $g_bAndroidAdbClick = True Then
-		For $i = 1 To $times 
-			If isGemOpen(True) Then Return False
-			AndroidClick($x, $y, 1, $speed)
-			If _Sleep($speed, False) Then ExitLoop
-		Next
-		Return
+		If isGemOpen(True) Then
+			Return False
+		EndIf
+		AndroidClick($x, $y, $times, $speed)
 	EndIf
 	If $g_bAndroidAdbClick = True Then
 		Return

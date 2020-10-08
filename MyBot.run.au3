@@ -1132,6 +1132,14 @@ Func AttackMain() ;Main control for attack functions
 			If Not $g_bRunState Then Return
 			If _Sleep($DELAYATTACKMAIN2) Then Return
 			Return True
+		#Region - Custom fix - Team AIO Mod++
+		ElseIf $g_bDropTrophyEnable And Number($g_aiCurrentLoot[$eLootTrophy]) > Number($g_iDropTrophyMax) Then ;If current trophy above max trophy, try drop first
+			DropTrophy()
+			If Not $g_bRunState Then Return
+			$g_bIsClientSyncError = False ; reset OOS flag to prevent looping.
+			If _Sleep($DELAYATTACKMAIN1) Then Return
+			Return ; return to runbot, refill armycamps
+		#EndRegion - Custom fix - Team AIO Mod++
 		Else
 			SetLog("None of search condition match:", $COLOR_WARNING)
 			SetLog("Search, Trophy or Army Camp % are out of range in search setting", $COLOR_WARNING)
