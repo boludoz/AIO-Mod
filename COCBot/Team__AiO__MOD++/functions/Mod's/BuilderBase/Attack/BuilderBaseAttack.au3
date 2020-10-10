@@ -314,10 +314,12 @@ Func WaitForVersusBattle()
 	; Clouds
 	Local $Time = 0
 	While $Time < 15 * 24 ; 15 minutes  | ( 24 * (2000 + 500ms)) = 60000ms / 1000 = 60seconds
-		If checkObstacles_Network(True, True) Then Return False
+		_CaptureRegions()
+		If checkObstacles_Network(False, True) Or isProblemAffect(False) Then Return False
 		If _MultiPixelSearch(375, 547, 450, 555, 1, 1, Hex(0xFE2D40, 6), $aCancelVersusBattleBtn, 15) <> 0 Then SetLog("Searching for opponents...")
 		For $i = 0 To 5
-			If checkObstacles_Network(True, True) Then Return False
+			_CaptureRegions()
+			If checkObstacles_Network(False, True) Or isProblemAffect(False) Then Return False
 			If _MultiPixelSearch(711, 2, 856, 55, 1, 1, Hex(0xFFFF99, 6), $aAttackerVersusBattle, 15) <> 0 And _MultiPixelSearch(375, 547, 450, 555, 1, 1, Hex(0xFE2D40, 6), $aCancelVersusBattleBtn, 5) = 0 Then
 				SetLog("The Versus Battle begins NOW!", $COLOR_SUCCESS)
 				If _Sleep(2000) Then ExitLoop
