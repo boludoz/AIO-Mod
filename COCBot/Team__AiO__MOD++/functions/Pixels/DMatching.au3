@@ -222,12 +222,10 @@ Func ButtonClickDM($sBundle, $iRegionX = 0, $iRegionY = 0, $iRegionWidth = 0, $i
     If $iLimit = Default Then
         $iLimit = 0
     EndIf
-    If $g_iThreads > 0 And $g_iDMatchingThreads <> $g_iThreads Then
-        $g_iDMatchingThreads = $g_iThreads
-    Else
-        $g_iDMatchingThreads = 32
-    EndIf
-    ; End Setting Parameters
+	
+    $g_iDMatchingThreads = 1
+	
+   ; End Setting Parameters
 
     If $bForceCapture Then _CaptureRegion2() ; To have FULL screen image to work with
 

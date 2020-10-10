@@ -732,7 +732,15 @@ Func runBot() ;Bot that runs everything in order
 		SwitchCoCAcc($g_iNextAccount)
 	EndIf
 
-	FirstCheck()
+		#Region - Custom BB - Team AIO Mod++
+		If $g_bChkPlayBBOnly Then
+			$g_bStayOnBuilderBase = True
+			SetLog("Let's Play Builder Base Only", $COLOR_ACTION)
+			runBuilderBase()
+		Else
+			FirstCheck()
+		EndIf
+		#EndRegion - Custom BB - Team AIO Mod++
 
 	While 1
 		;Restart bot after these seconds
@@ -746,12 +754,23 @@ Func runBot() ;Bot that runs everything in order
 		$g_bFullArmy = False
 		$g_bIsFullArmywithHeroesAndSpells = False
 		$g_iCommandStop = -1
-		If _Sleep($DELAYRUNBOT1) Then Return
-		checkMainScreen()
-		If $g_bRestart Then ContinueLoop
-		chkShieldStatus()
-		If Not $g_bRunState Then Return
-		If $g_bRestart Then ContinueLoop
+		; If _Sleep($DELAYRUNBOT1) Then Return
+		; checkMainScreen()
+		; If $g_bRestart Then ContinueLoop
+		; chkShieldStatus()
+		; If Not $g_bRunState Then Return
+		; If $g_bRestart Then ContinueLoop
+		
+		#Region - Custom BB - Team AIO Mod++
+		If $g_bChkPlayBBOnly Then
+			$g_bStayOnBuilderBase = True
+			runBuilderBase()
+			If $g_bRestart Then ContinueLoop
+
+			If ProfileSwitchAccountEnabled() Then checkSwitchAcc() ; Forced to switch
+			ContinueLoop
+		EndIf
+		#EndRegion - Custom BB - Team AIO Mod++
 
 		#Region - GTFO - Team AIO Mod++
 		If $g_bChkOnlyFarm = False Then
@@ -1079,7 +1098,7 @@ Func AttackMain() ;Main control for attack functions
 	If $g_bDebugFuncCall Then SetLog('@@ (1052) :(' & @MIN & ':' & @SEC & ') AttackMain()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
 	#Region - SuperXP / GoblinXP - Team AiO MOD++
-	If $g_bChkOnlyFarm = False And $g_bEnableSuperXP = True And $g_iActivateOptionSX = 2 Then
+	If $g_bEnableSuperXP = True And $g_iActivateOptionSX = 2 Then
 		MainSXHandler()
 		Return
 	EndIf
@@ -1177,6 +1196,15 @@ EndFunc   ;==>Attack
 Func _RunFunction($sAction)
 	If $g_bDebugFuncCall Then SetLog('@ _RunFunction @ (1143) :(' & @MIN & ':' & @SEC & ')' & $sAction & @CRLF, $COLOR_ACTION) ;### Function Trace
 	FuncEnter(_RunFunction)
+	
+    #Region - Custom BB - Team AIO Mod++
+	If $g_bChkPlayBBOnly Then 
+		$g_bStayOnBuilderBase = True
+		$g_bRestart = False	
+		Return 
+	EndIf
+    #EndRegion - Custom BB - Team AIO Mod++	
+	
 	Static $hTimeForCheck = __TimerInit()
 	; ensure that builder base flag is false
 	$g_bStayOnBuilderBase = False
@@ -1321,12 +1349,6 @@ Func FirstCheck()
 	$g_bFullArmy = False
 	$g_iCommandStop = -1
 	If Not $g_bChkOnlyFarm Then
-
-		If $g_bEnableSuperXP = True And $g_iActivateOptionSX = 2 Then ;When Super Xp Only Farm Option is on skip all and just do the Goblin Xp Farming
-			MainSXHandler()
-			Return
-		EndIf
-
 		MainGTFO()
 		MainKickout()
 		BotHumanization()

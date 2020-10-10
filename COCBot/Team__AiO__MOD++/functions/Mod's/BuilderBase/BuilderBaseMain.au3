@@ -82,10 +82,7 @@ Func runBuilderBase($bTestRun = False)
 	_ArrayShuffle($aRndFuncList)
 	For $iIndex In $aRndFuncList
 		; Check if is in Builder Base.
-		If Not SwitchBetweenBases(True, True) Then
-			$g_bStayOnBuilderBase = False
-			Return False
-		EndIf
+		If checkObstacles(True) Then SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
 		RunBBFuncs($iIndex)
 		If $g_bRestart Or (Not $g_bRunState) Then Return
 	Next
@@ -94,8 +91,10 @@ Func runBuilderBase($bTestRun = False)
 	SetLog("Builder Base Idle Ends", $COLOR_INFO)
 	
 	; switch back to normal village
-	If Not $g_bChkPlayBBOnly Then SwitchBetweenBases(True, False)
-
+	If Not $g_bChkPlayBBOnly Then 
+		SwitchBetweenBases(True, False)
+	EndIf
+	
 	If Not $g_bRunState Then Return
 
 	If _Sleep($DELAYRUNBOT1 * 15) Then Return ;Add 15 Sec Delay Before Starting Again In BB Only
@@ -130,7 +129,7 @@ Func RunBBFuncs($sBBFunc, $bTestRun = False)
 			If Not $g_bChkBuilderAttack Then Return
 
 			; New logic to add speed to the attack.
-			For $i = 0 To Random(3, 5, 1)
+			For $i = 1 To Random($g_iBBMinAttack, $g_iBBMaxAttack, 1)
 
 				; Builder base Report and get out of the useless loop.
 				If Not RestAttacksInBB() Then ExitLoop

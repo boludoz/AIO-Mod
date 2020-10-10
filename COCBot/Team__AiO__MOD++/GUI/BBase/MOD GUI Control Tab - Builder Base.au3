@@ -366,3 +366,29 @@ Func cmbBBWall()
 	$g_iCmbBBWallLevel = _GUICtrlComboBox_GetCurSel($g_hCmbBBWallLevel)
 	_GUICtrlSetImage($g_hPicBBWallUpgrade, $g_sLibBBIconPath, $g_iCmbBBWallLevel + 8)
 EndFunc   ;==>cmbBBWall
+
+; Global $g_hChkOnlyBuilderBase, $g_hTxtBBMinAttack, $g_hTxtBBMaxAttack ; AIO ++
+
+Func ChkOnlyBuilderBase()
+	$g_bChkPlayBBOnly = GUICtrlRead($g_hChkOnlyBuilderBase) = $GUI_CHECKED ? True : False
+	If $g_bChkPlayBBOnly Then
+		If not $g_bStayOnBuilderBase = True Then $g_bRestart = True ; Quick solution.
+	EndIf
+EndFunc   ;==>chkPlayBBOnly
+
+Func ChkBBAttackLoops()
+	$g_iBBMinAttack = Int(GUICtrlRead($g_hTxtBBMinAttack))
+    If $g_iBBMinAttack <= 0 Then GUICtrlSetData($g_hTxtBBMinAttack, 1)
+	$g_iBBMaxAttack = Int(GUICtrlRead($g_hTxtBBMaxAttack))
+    If $g_iBBMaxAttack <= 0 Then GUICtrlSetData($g_hTxtBBMaxAttack, 1)
+	
+    If $g_iBBMinAttack > $g_iBBMaxAttack Then 
+		If $g_iBBMaxAttack > 0 Then
+			GUICtrlSetData($g_hTxtBBMinAttack, $g_iBBMaxAttack)
+		Else
+			GUICtrlSetData($g_hTxtBBMinAttack, 1)
+			GUICtrlSetData($g_hTxtBBMaxAttack, 1)
+		EndIf
+	EndIf
+
+EndFunc   ;==>ChkBBAttackLoops

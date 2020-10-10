@@ -29,7 +29,7 @@ Func CreateBuilderBaseTab()
 	GUICtrlSetState(-1, $GUI_UNCHECKED)
 	GUICtrlSetOnEvent(-1, "chkBuilderAttack")
 	CreateAttackPlanBuilderBaseSubTab()
-	$g_hGUI_LOG_BB = _GUICreate("", 310, 225, 130, 170, BitOR($WS_CHILD, 0), -1, $g_hGUI_BUILDER_BASE)
+	$g_hGUI_LOG_BB = _GUICreate("", 310, 225 - 52, 130, 170 + 52, BitOR($WS_CHILD, 0), -1, $g_hGUI_BUILDER_BASE)
 	;creating subchilds first!
 	GUISwitch($g_hGUI_BUILDER_BASE)
 	$g_hGUI_BUILDER_BASE_TAB = GUICtrlCreateTab(0, 0, $g_iSizeWGrpTab1, $g_iSizeHGrpTab1, BitOR($TCS_MULTILINE, $TCS_RIGHTJUSTIFY))
@@ -56,7 +56,7 @@ EndFunc   ;==>CreateBuilderBaseTab
 Func CreateBBAttackLog()
 	Local $x = 0, $y = 0
 	Local $activeHWnD1 = WinGetHandle("") ; RichEdit Controls tamper with active window
-	$g_hTxtBBAtkLog = _GUICtrlRichEdit_Create($g_hGUI_LOG_BB, "", $x, $y, 310, 225, BitOR($ES_MULTILINE, $ES_READONLY, $WS_VSCROLL, $ES_UPPERCASE, $ES_AUTOHSCROLL, $ES_AUTOVSCROLL, $ES_NUMBER, 0x200), $WS_EX_STATICEDGE)
+	$g_hTxtBBAtkLog = _GUICtrlRichEdit_Create($g_hGUI_LOG_BB, "", $x, $y, 310, 225 - 52, BitOR($ES_MULTILINE, $ES_READONLY, $WS_VSCROLL, $ES_UPPERCASE, $ES_AUTOHSCROLL, $ES_AUTOVSCROLL, $ES_NUMBER, 0x200), $WS_EX_STATICEDGE)
 	WinActivate($activeHWnD1) ; restore current active window
 
 EndFunc   ;==>CreateBBAttackLog

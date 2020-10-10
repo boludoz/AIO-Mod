@@ -628,17 +628,19 @@ EndFunc   ;==>VerifySlotTroop
 
 Func DeployTroopBB($sTroopName, $aSlot_XY, $Point2Deploy, $iQtyToDrop)
 	SetDebugLog("[" & _ArrayToString($aSlot_XY) & "] - Deploying " & $iQtyToDrop & " " & FullNametroops($sTroopName) & " At " & $Point2Deploy[0] & " x " & $Point2Deploy[1], $COLOR_INFO)
-	ClickP($Point2Deploy, $iQtyToDrop, 0)
+	PureClickP($Point2Deploy, $iQtyToDrop, 0)
 	
-	If IsArray($g_aMachineBB) And ($sTroopName = "Machine") And ($g_aMachineBB[2] = False) Then
-		; Set the Boolean To True to Say Yeah! It's Deployed!
-		$g_aMachineBB[2] = True
-		
-		; It look for the white border in case it failed to launch.
-		If ($g_aMachineBB[0] <> -1) Then
-			If _Sleep(1000) Then Return
-			$g_aMachineBB[2] = Not _ColorCheckCie2000(_GetPixelColor($g_aMachineBB[0], 635, True), "FFFFFF", 5)
-			SetLog("- BB Machine is ok? " & $g_aMachineBB[2], $COLOR_INFO)
+	If ($sTroopName = "Machine") Then
+		If IsArray($g_aMachineBB) And ($g_aMachineBB[2] = False) Then
+			; Set the Boolean To True to Say Yeah! It's Deployed!
+			$g_aMachineBB[2] = True
+			
+			; It look for the white border in case it failed to launch.
+			If ($g_aMachineBB[0] <> -1) Then
+				If _Sleep(1000) Then Return
+				$g_aMachineBB[2] = Not _ColorCheckCie2000(_GetPixelColor($g_aMachineBB[0], 635, True), "FFFFFF", 5)
+				SetLog("- BB Machine is ok? " & $g_aMachineBB[2], $COLOR_INFO)
+			EndIf
 		EndIf
 	EndIf
 EndFunc   ;==>DeployTroopBB

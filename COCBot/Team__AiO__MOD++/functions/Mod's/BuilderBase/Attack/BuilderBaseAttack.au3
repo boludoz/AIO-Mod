@@ -536,7 +536,7 @@ Func BuilderBaseAttackReport()
 	Local $gain[3]
 	; To get trophies getOcrOverAllDamage(493, 480)
 	$gain[$eLootTrophyBB] = Int(getOcrOverAllDamage(493, 480))
-	$gain[$eLootGoldBB] = Int(getTrophyVillageSearch(150, 483))
+	; $gain[$eLootGoldBB] = Int(getTrophyVillageSearch(150, 483))  ; Fix
 	$gain[$eLootElixirBB] = Int(getTrophyVillageSearch(310, 483))
 	Local $iLastDamage = Int(_getTroopCountBig(222, 304))
 	If $iLastDamage > $g_iLastDamage Then $g_iLastDamage = $iLastDamage
@@ -554,7 +554,8 @@ Func BuilderBaseAttackReport()
 	Local $AtkLogTxt
 	$AtkLogTxt = "  " & String($g_iCurAccount + 1) & "|" & _NowTime(4) & "|"
 	$AtkLogTxt &= StringFormat("%5d", $g_aiCurrentLootBB[$eLootTrophyBB]) & "|"
-	$AtkLogTxt &= StringFormat("%7d", $gain[$eLootGoldBB]) & "|"
+	; $AtkLogTxt &= StringFormat("%7d", $gain[$eLootGoldBB]) & "|" ; Fix
+	$AtkLogTxt &= StringFormat("%7d", $gain[$eLootElixirBB]) & "|" ; Fix
 	$AtkLogTxt &= StringFormat("%7d", $gain[$eLootElixirBB]) & "|"
 	$AtkLogTxt &= StringFormat("%3d", $gain[$eLootTrophyBB]) & "|"
 	$AtkLogTxt &= StringFormat("%1d", $Stars) & "|"

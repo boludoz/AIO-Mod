@@ -222,6 +222,7 @@ Func InitializeControlVariables()
    #EndRegion
 
 	; always enabled / unchanged controls during enabling/disabling all GUI controls function
+	$oAlwaysEnabledControls($g_hChkOnlyBuilderBase) = 1 ; Custom BB - Team AIO Mod++
 	;$oAlwaysEnabledControls($g_hChkUpdatingWhenMinimized) = 1
 	$oAlwaysEnabledControls($g_hChkHideWhenMinimized) = 1
 	$oAlwaysEnabledControls($g_hChkDebugSetlog) = 1

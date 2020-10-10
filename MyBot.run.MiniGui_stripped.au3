@@ -10,7 +10,7 @@
 #Au3Stripper_Off
 #Au3Stripper_On
 Global $g_sBotVersion = "v7.8.7"
-Global $g_sModVersion = "v4.2.9"
+Global $g_sModVersion = "v4.3.0"
 Opt("MustDeclareVars", 1)
 Global $g_sBotTitle = ""
 Global $g_hFrmBot = 0
@@ -3416,6 +3416,7 @@ Global $g_hTxtClanID, $g_sTxtClanID, $g_iTxtCyclesGTFO
 Global $g_bChkGTFOClanHop = False, $g_bChkGTFOReturnClan = False
 Global $g_bExitAfterCyclesGTFO = False
 Global $g_bChkCollectMagicItems, $g_bChkBuilderPotion, $g_bChkClockTowerPotion, $g_bChkHeroPotion, $g_bChkLabPotion, $g_bChkPowerPotion, $g_bChkResourcePotion, $g_iComboClockTowerPotion, $g_iComboHeroPotion, $g_iComboPowerPotion, $g_iInputBuilderPotion, $g_iInputLabPotion, $g_iInputGoldItems = 250000, $g_iInputElixirItems = 300000, $g_iInputDarkElixirItems = 1000
+Global $g_iBBMinAttack = 1, $g_iBBMaxAttack = 4
 Global Enum $g_eBBAttackCSV = 0, $g_eBBAttackSmart = 1
 Global $g_iCmbBBAttack = $g_eBBAttackCSV
 Global $g_hTabBuilderBase = 0, $g_hTabAttack = 0
@@ -3432,6 +3433,7 @@ Global $g_sBBDropOrder = _ArrayToString($g_asAttackBarBB)
 Global $g_bChkBuilderAttack = False, $g_bChkBBStopAt3 = False, $g_bChkBBTrophiesRange = False, $g_iTxtBBDropTrophiesMin = 0, $g_iTxtBBDropTrophiesMax = 0
 Global $InternalArea[8][3]
 Global $ExternalArea[8][3]
+Global $g_bChkPlayBBOnly = False
 Global $g_bChkBBGetFromCSV = False, $g_bChkBBGetFromArmy
 Func GetTranslatedParsedText($sText, $var1 = Default, $var2 = Default, $var3 = Default)
 Local $s = StringReplace(StringReplace($sText, "\r\n", @CRLF), "\n", @CRLF)
@@ -6191,6 +6193,9 @@ IniReadS($g_iTxtBBDropTrophiesMax, $g_sProfileConfigPath, "BuilderBase", "BBDrop
 IniReadS($g_bChkBBGetFromCSV, $g_sProfileConfigPath, "BuilderBase", "ChkBBGetFromCSV", False, "Bool")
 IniReadS($g_bChkBBGetFromArmy, $g_sProfileConfigPath, "BuilderBase", "ChkBBGetFromArmy", False, "Bool")
 IniReadS($g_iCmbBBAttack, $g_sProfileConfigPath, "BuilderBase", "CmbBBAttack", $g_iCmbBBAttack, "Int")
+IniReadS($g_iBBMinAttack, $g_sProfileConfigPath, "BuilderBase", "IntBBMinAttack", $g_iBBMinAttack, "Int")
+IniReadS($g_iBBMaxAttack, $g_sProfileConfigPath, "BuilderBase", "IntBBMaxAttack", $g_iBBMaxAttack, "Int")
+IniReadS($g_bChkPlayBBOnly, $g_sProfileConfigPath, "general", "PlayBBOnly", False, "Bool")
 EndFunc
 Func ReadConfig_MOD_MiscTab()
 IniReadS($g_bUseSleep, $g_sProfileConfigPath, "MiscTab", "UseSleep", $g_bUseSleep, "Bool")

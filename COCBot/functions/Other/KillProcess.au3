@@ -2,10 +2,10 @@
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: KillProcess
 ; Description ...:
-; Syntax ........: KillProcess($pid, $process_info = "", $attempts = 3)
-; Parameters ....: $pid, Process Id
-;                : $process_info, additional process info like process filename or full command line for Debug Log
-;                : $attempts, number of attempts
+; Syntax ........: KillProcess($iPid, $sProcess_info = "", $iAttempts = 3)
+; Parameters ....: $iPid, Process Id
+;                : $sProcess_info, additional process info like process filename or full command line for Debug Log
+;                : $iAttempts, number of attempts
 ; Return values .: True if process was killed, false if not or _Sleep interrupted
 ; Author ........: Cosote (Dec-2015), Boldina ! (Sep-2020)
 ; Modified ......:
@@ -16,26 +16,29 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func KillProcess($iPID, $sProcess_info = "", $iAttempts = 3)
-	If Not IsInt($iPID) Then Return False
-	Local $i = 0, $iError = 0
-
-	If Number($iPID) > 0 Then
-		For $i = 1 To $iAttempts
-			ProcessClose($iPID)
-			$iError = @error
-			If @error Then 
-				SetDebugLog("KillProcess(" & $i & "): PID = " & $iPID & ", Error = " & $iError & ", Process = " & $sProcess_info, $COLOR_ERROR)
-				ContinueLoop
-			EndIf
-			If Not ProcessExists($iPID) Then 
-				SetDebugLog("KillProcess(" & $i & "): PID = " & $iPID & " killed " & $sProcess_info)
-				Return True
-			EndIf
-		Next
+Func KillProcess($iPid, $sProcess_info = "", $iAttempts = 3)
+	Local $iCount = 0
+	If $sProcess_info <> "" Then $sProcess_info = ", " & $sProcess_info
+	Do
+		If ProcessClose($iPid) = 1 Then
+			SetDebugLog("KillProcess(" & $iCount & "): PID = " & $iPid & " closed" & $sProcess_info)
+		Else
+			SetDebugLog("Process close error: " & @error)
+		EndIf
+		If ProcessExists($iPid) Then
+			ShellExecute(@WindowsDir & "\System32\taskkill.exe", "-f -t -pid " & $iPid, "", Default, @SW_HIDE)
+			If _Sleep(1000) Then Return False
+			If ProcessExists($iPid) = 0 Then
+				SetDebugLog("KillProcess(" & $iCount & "): PID = " & $iPid & " killed (using taskkill -f -t)" & $sProcess_info)
+			EndIf		
+		EndIf
+		$iCount += 1
+	Until ($iCount > $iAttempts) Or not ProcessExists($iPid)
+	If ProcessExists($iPid) Then
+		SetDebugLog("KillProcess(" & $iCount & "): PID = " & $iPid & " failed to kill" & $sProcess_info, $COLOR_ERROR)
+		Return False
 	EndIf
-	SetDebugLog("KillProcess(" & $i & "): PID = " & $iPID & " failed to kill " & $sProcess_info, $COLOR_ERROR)
-	Return False
+	Return True
 EndFunc   ;==>KillProcess
 
 ;  ProcessFindBy($g_sAndroidAdbPath), $sPort

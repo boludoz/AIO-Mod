@@ -328,6 +328,10 @@ $g_iComboClockTowerPotion, $g_iComboHeroPotion, $g_iComboPowerPotion, _
 $g_iInputBuilderPotion, $g_iInputLabPotion, $g_iInputGoldItems = 250000, $g_iInputElixirItems = 300000, $g_iInputDarkElixirItems = 1000
 
 #Region - Builder Base !!!
+
+; Extra options
+Global $g_iBBMinAttack = 1, $g_iBBMaxAttack = 4
+
 ; Globals for BB Machine
 ; X, Y, g_bIsBBMachineD, g_bBBIsFirst
 Global Const $g_aMachineBBReset[4] = [-1, -1, False, True]

@@ -4,6 +4,15 @@
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
                     Based on MyBot.run v7.8.7
+	**v4.3.0** 
+		- New: Play only in Builder base option.
+		- New: Min max loops attack (Builder base).
+		- Fix: Bad report in gold case fixed (Builder base).
+		- Fix: Legacy measurements for new village theme.
+		- Fix: Pure click in CSV Attack (Builder base).
+		- Fix: Kill process fix.
+		- Fix: Army button.
+
 	**v4.2.9** 
 		- Fix: DMatch name.
 

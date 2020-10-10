@@ -1323,7 +1323,7 @@ Func BotClose($SaveConfig = Default, $bExit = True)
 	LockBotSlot(False)
 
 	If $SaveConfig = True Then
-		setupProfile()
+		; setupProfile() zero fix?
 		SaveConfig()
 	EndIf
 
@@ -1353,14 +1353,16 @@ Func BotClose($SaveConfig = Default, $bExit = True)
 	_GUICtrlRichEdit_Destroy($g_hTxtLog)
 	_GUICtrlRichEdit_Destroy($g_hTxtAtkLog)
 	TCPShutdown() ; Close the TCP service.
-
+	
+	KillAdbDaemon(False) ; Close adb.
+	
 	_WinAPI_DeregisterShellHookWindow($g_hFrmBot)
 	If $g_hAndroidWindow <> 0 Then ControlFocus($g_hAndroidWindow, "", $g_hAndroidWindow) ; show Android in taskbar again
 	GUIDelete($g_hFrmBot)
 
 	; Global DllStuctCreate
 	$g_aiAndroidAdbScreencapBuffer = 0 ; Allocated in MBR Global Variables.au3
-	$g_hStruct_SleepMicro = 0 ; Allocated in MBR Global Variables.au3, used in _Sleep.au3
+	; $g_hStruct_SleepMicro = 0 ; Allocated in MBR Global Variables.au3, used in _Sleep.au3
 
 	; Unregister managing hosts
 	UnregisterManagedMyBotHost()
