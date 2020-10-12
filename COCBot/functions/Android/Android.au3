@@ -654,8 +654,8 @@ Func GetAndroidRunningInstance($bStrictCheck = True)
 	If $runningInstance = "" And @error <> 0 Then ; Not implemented
 		Local $a[2] = [0, ""]
 		SetDebugLog("GetAndroidRunningInstance: Try to find """ & $g_sAndroidProgramPath & """")
-		Local $pids = ProcessFindBy($g_sAndroidProgramPath, "") ; Custom fix - Team AIO Mod++
-		If UBound($pids) > 0 Then
+		Local $iPids = ProcessFindBy($g_sAndroidProgramPath, "") ; Custom fix - Team AIO Mod++
+		If UBound($iPids) > 0 Then ; Custom fix - Team AIO Mod++
 			Local $currentInstance = $g_sAndroidInstance
 			For $i In $iPids  ; Custom fix - Team AIO Mod++
 				Local $pid = $pids[$i]
@@ -1571,7 +1571,7 @@ Func KillAdbDaemon($bMutexLock = True)
 	Local $sPort = ""
 	If $g_bAndroidAdbPort Then $sPort = String($g_bAndroidAdbPort)
 	Local $iPids = ProcessFindBy($g_sAndroidAdbPath, $sPort) ; Custom fix - Team AIO Mod++
-	For $i In $iPids
+	For $i In $iPids ; Custom fix - Team AIO Mod++
 		KillProcess($i, $g_sAndroidAdbPath)
 	Next
 	Return ReleaseAdbDaemonMutex($hMutex, True)
@@ -1659,11 +1659,11 @@ Func _ConnectAndroidAdb($rebootAndroidIfNeccessary = $g_bRunState, $bStartOnlyAn
 			If Not $connected_to Then
 				; not connected... strange, kill any Adb now
 				SetDebugLog("Stop ADB daemon!", $COLOR_ERROR)
-				LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "kill-server", $process_killed)
+				; LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "kill-server", $process_killed) ; Custom fix - Team AIO Mod++
 				Local $sPort = ""
 				If $g_bAndroidAdbPort Then $sPort = String($g_bAndroidAdbPort)
 				Local $iPids = ProcessFindBy($g_sAndroidAdbPath, $sPort) ; Custom fix - Team AIO Mod++
-				For $i In $iPids
+				For $i In $iPids ; Custom fix - Team AIO Mod++
 					KillProcess($i, $g_sAndroidAdbPath)
 				Next
 
