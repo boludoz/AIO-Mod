@@ -1323,7 +1323,7 @@ Func BotClose($SaveConfig = Default, $bExit = True)
 	LockBotSlot(False)
 
 	If $SaveConfig = True Then
-		; setupProfile() zero fix?
+		setupProfile()
 		SaveConfig()
 	EndIf
 

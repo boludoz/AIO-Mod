@@ -3433,7 +3433,7 @@ Global $g_sBBDropOrder = _ArrayToString($g_asAttackBarBB)
 Global $g_bChkBuilderAttack = False, $g_bChkBBStopAt3 = False, $g_bChkBBTrophiesRange = False, $g_iTxtBBDropTrophiesMin = 0, $g_iTxtBBDropTrophiesMax = 0
 Global $InternalArea[8][3]
 Global $ExternalArea[8][3]
-Global $g_bChkPlayBBOnly = False
+Global $g_bOnlyBuilderBase = False
 Global $g_bChkBBGetFromCSV = False, $g_bChkBBGetFromArmy
 Func GetTranslatedParsedText($sText, $var1 = Default, $var2 = Default, $var3 = Default)
 Local $s = StringReplace(StringReplace($sText, "\r\n", @CRLF), "\n", @CRLF)
@@ -6195,7 +6195,7 @@ IniReadS($g_bChkBBGetFromArmy, $g_sProfileConfigPath, "BuilderBase", "ChkBBGetFr
 IniReadS($g_iCmbBBAttack, $g_sProfileConfigPath, "BuilderBase", "CmbBBAttack", $g_iCmbBBAttack, "Int")
 IniReadS($g_iBBMinAttack, $g_sProfileConfigPath, "BuilderBase", "IntBBMinAttack", $g_iBBMinAttack, "Int")
 IniReadS($g_iBBMaxAttack, $g_sProfileConfigPath, "BuilderBase", "IntBBMaxAttack", $g_iBBMaxAttack, "Int")
-IniReadS($g_bChkPlayBBOnly, $g_sProfileConfigPath, "general", "PlayBBOnly", False, "Bool")
+IniReadS($g_bOnlyBuilderBase, $g_sProfileConfigPath, "general", "PlayBBOnly", False, "Bool")
 EndFunc
 Func ReadConfig_MOD_MiscTab()
 IniReadS($g_bUseSleep, $g_sProfileConfigPath, "MiscTab", "UseSleep", $g_bUseSleep, "Bool")

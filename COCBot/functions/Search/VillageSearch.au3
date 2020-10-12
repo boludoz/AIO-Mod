@@ -245,7 +245,7 @@ Func _VillageSearch($bIncludePrepare = False) ;Control for searching a village t
 		If Not $g_bRunState Then Return
 		; check deadbase
 		Local $checkDeadBase = $match[$DB] Or $match[$LB]
-		If $checkDeadBase Then $dbBase = checkDeadBase()
+		If $checkDeadBase Then $dbBase = checkDeadBase() ; Custom - AIO Mod++
 
 		; ----------------- CHECK WEAK BASE -------------------------------------------------
 		#Region - Legend trophy protection - Team AIO Mod++

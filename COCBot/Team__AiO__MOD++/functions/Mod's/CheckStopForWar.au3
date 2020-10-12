@@ -158,7 +158,7 @@ Func CheckWarTime(ByRef $sResult, ByRef $bResult) ; return [Success + $sResult =
 	If IsMainPage() Then
 		$bBattleDay_InWar = _ColorCheck(_GetPixelColor(45, 500, True), "ED151D", 20) ; Red color in war button
 		$bClanWarLeague = _ColorCheck(_GetPixelColor(10, 510, True), "FFED71", 20) ; Golden color at left side of clan war button
-		If $bClanWarLeague Then SetLog("Your Clan Is Doing Clan War League.", $COLOR_INFO)
+		If $bClanWarLeague Then SetDebugLog("Your Clan Is Doing Clan War League.", $COLOR_INFO)
 		If $g_bDebugSetlog Then SetDebugLog("Checking battle notification, $bBattleDay_InWar = " & $bBattleDay_InWar)
 		Click(40, 530) ; open war menu
 		If _Sleep(2000) Then Return
@@ -230,11 +230,12 @@ Func CheckWarTime(ByRef $sResult, ByRef $bResult) ; return [Success + $sResult =
 		If _WaitForCheckImg($sDirectory, "805, 75, 846, 119") Then ;Check Clan War Leage Result [X] white pixel see if result page showing
 			Click(Random(807, 842, 1), Random(79, 114, 1))
 			SetLog("War is finished.", $COLOR_WARNING)
+			If RandomSleep(1000) Then Return False
 			Click(70, 680, 1, 500, "#0000") ; return home
 		Else
 			SetLog("Error when trying to open War window.", $COLOR_WARNING)
+			CheckMainScreen()
 			Return SetError(1, 0, "Error open War window")
-			ClickP($aAway, 2, 0, "#0000") ;Click Away
 		EndIf
 	EndIf
 EndFunc   ;==>CheckWarTime

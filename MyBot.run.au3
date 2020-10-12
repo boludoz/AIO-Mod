@@ -733,7 +733,7 @@ Func runBot() ;Bot that runs everything in order
 	EndIf
 
 		#Region - Custom BB - Team AIO Mod++
-		If $g_bChkPlayBBOnly Then
+		If $g_bOnlyBuilderBase Then
 			$g_bStayOnBuilderBase = True
 			SetLog("Let's Play Builder Base Only", $COLOR_ACTION)
 			runBuilderBase()
@@ -762,7 +762,7 @@ Func runBot() ;Bot that runs everything in order
 		; If $g_bRestart Then ContinueLoop
 		
 		#Region - Custom BB - Team AIO Mod++
-		If $g_bChkPlayBBOnly Then
+		If $g_bOnlyBuilderBase Then
 			$g_bStayOnBuilderBase = True
 			runBuilderBase()
 			If $g_bRestart Then ContinueLoop
@@ -1198,7 +1198,7 @@ Func _RunFunction($sAction)
 	FuncEnter(_RunFunction)
 	
     #Region - Custom BB - Team AIO Mod++
-	If $g_bChkPlayBBOnly Then 
+	If $g_bOnlyBuilderBase Then 
 		$g_bStayOnBuilderBase = True
 		$g_bRestart = False	
 		Return 

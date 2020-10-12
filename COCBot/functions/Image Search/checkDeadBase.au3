@@ -149,14 +149,14 @@ Func checkDeadBase($bForceCapture = False, $sFillDirectory = @ScriptDir & "\imgx
 	Local $sCocDiamond = "ECD" ;
 	Local $redLines = $g_sImglocRedline ; if TH was Search then redline is set!
 	Local $minLevel = 0
-	Local $maxLevel = 12 ; Level 12 imgloc - Team AIO Mod++
+	Local $maxLevel = 14 ; Level 12 imgloc - Team AIO Mod++
 	Local $maxReturnPoints = 0 ; all positions
 	Local $returnProps = "objectname,objectpoints,objectlevel,fillLevel"
 	Local $matchedValues
 	Local $iTotalMatched = 0, $iLocalMatch = 0
 	Local $x, $y, $lvl, $fill
 	
-	Local $iStartLevel = $maxLevel + 1
+	Local $iStartLevel = 13
 	Local $iEndLevelD = UBound($g_aiCollectorLevelFill) - 1
 	
 	If $bForceCapture Then _CaptureRegion2() ; Custom match - Team AIO Mod++
@@ -207,6 +207,7 @@ Func checkDeadBase($bForceCapture = False, $sFillDirectory = @ScriptDir & "\imgx
 	Local $result
 	; Check if Enough Level 13/14 Collectors hasn't been found by Dissociable.Matching.dll then check for other collectors
 	If $iTotalMatched < $g_iCollectorMatchesMin Then
+		$iTotalMatched = 0
 		; check for any collector filling
 		Local $result = findMultiple($sFillDirectory, $sCocDiamond, $redLines, $minLevel, $maxLevel, $maxReturnPoints, $returnProps, False) ; Custom match - Team AIO Mod++
 		$bFoundFilledCollectors = IsArray($result) = 1

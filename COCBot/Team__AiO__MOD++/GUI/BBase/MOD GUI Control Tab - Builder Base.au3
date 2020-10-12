@@ -370,8 +370,8 @@ EndFunc   ;==>cmbBBWall
 ; Global $g_hChkOnlyBuilderBase, $g_hTxtBBMinAttack, $g_hTxtBBMaxAttack ; AIO ++
 
 Func ChkOnlyBuilderBase()
-	$g_bChkPlayBBOnly = GUICtrlRead($g_hChkOnlyBuilderBase) = $GUI_CHECKED ? True : False
-	If $g_bChkPlayBBOnly Then
+	$g_bOnlyBuilderBase = GUICtrlRead($g_hChkOnlyBuilderBase) = $GUI_CHECKED ? True : False
+	If $g_bOnlyBuilderBase Then
 		If not $g_bStayOnBuilderBase = True Then $g_bRestart = True ; Quick solution.
 	EndIf
 EndFunc   ;==>chkPlayBBOnly

@@ -17,6 +17,7 @@
 ; ===============================================================================================================================
 
 Func KillProcess($iPid, $sProcess_info = "", $iAttempts = 3)
+	If $iPid < 1 Then Return False
 	Local $iCount = 0
 	If $sProcess_info <> "" Then $sProcess_info = ", " & $sProcess_info
 	Do

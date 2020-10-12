@@ -657,7 +657,7 @@ Func GetAndroidRunningInstance($bStrictCheck = True)
 		Local $pids = ProcessFindBy($g_sAndroidProgramPath, "") ; Custom fix - Team AIO Mod++
 		If UBound($pids) > 0 Then
 			Local $currentInstance = $g_sAndroidInstance
-			For $i = 0 To UBound($pids) - 1
+			For $i In $iPids  ; Custom fix - Team AIO Mod++
 				Local $pid = $pids[$i]
 				; assume last parameter is instance
 				Local $commandLine = ProcessGetCommandLine($pid)
@@ -1570,9 +1570,9 @@ Func KillAdbDaemon($bMutexLock = True)
 	LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "kill-server", $process_killed)
 	Local $sPort = ""
 	If $g_bAndroidAdbPort Then $sPort = String($g_bAndroidAdbPort)
-	Local $pids = ProcessFindBy($g_sAndroidAdbPath, $sPort) ; Custom fix - Team AIO Mod++
-	For $i = 0 To UBound($pids) - 1
-		KillProcess($pids[$i], $g_sAndroidAdbPath)
+	Local $iPids = ProcessFindBy($g_sAndroidAdbPath, $sPort) ; Custom fix - Team AIO Mod++
+	For $i In $iPids
+		KillProcess($i, $g_sAndroidAdbPath)
 	Next
 	Return ReleaseAdbDaemonMutex($hMutex, True)
 EndFunc   ;==>KillAdbDaemon
@@ -1662,9 +1662,9 @@ Func _ConnectAndroidAdb($rebootAndroidIfNeccessary = $g_bRunState, $bStartOnlyAn
 				LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "kill-server", $process_killed)
 				Local $sPort = ""
 				If $g_bAndroidAdbPort Then $sPort = String($g_bAndroidAdbPort)
-				Local $pids = ProcessFindBy($g_sAndroidAdbPath, $sPort) ; Custom fix - Team AIO Mod++
-				For $i = 0 To UBound($pids) - 1
-					KillProcess($pids[$i], $g_sAndroidAdbPath)
+				Local $iPids = ProcessFindBy($g_sAndroidAdbPath, $sPort) ; Custom fix - Team AIO Mod++
+				For $i In $iPids
+					KillProcess($i, $g_sAndroidAdbPath)
 				Next
 
 				; ok, last try
@@ -3076,8 +3076,11 @@ Func AndroidAdbClickSupported()
 EndFunc   ;==>AndroidAdbClickSupported
 
 Func AndroidClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect = True)
+	If Not ($x = Default) Then $x = Int($x) + $g_aiMouseOffset[0]
+	If Not ($x = Default) Then $y = Int($y) + $g_aiMouseOffset[1]
 	ForceCaptureRegion()
-	AndroidMinitouchClick($x, $y, $times, $speed, $checkProblemAffect)
+	;AndroidSlowClick($x, $y, $times, $speed)
+	Execute(($g_bAndroidAdbClickEnabled = True) ? ("AndroidMinitouchClick($x, $y, $times, $speed, $checkProblemAffect)") : ("AndroidFastClick($x, $y, $times, $speed, $checkProblemAffect)")) ; Custom fix - Team AIO Mod++
 EndFunc   ;==>AndroidClick
 
 Func AndroidSlowClick($x, $y, $times = 1, $speed = 0)

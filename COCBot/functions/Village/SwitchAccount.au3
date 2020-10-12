@@ -102,7 +102,7 @@ Func CheckSwitchAcc()
 	If $g_abPBActive[$g_iCurAccount] = True Then
 		SetSwitchAccLog(" - PBT Active")
 		$bForceSwitch = True
-	ElseIf $g_bChkPlayBBOnly Then
+	ElseIf $g_bOnlyBuilderBase Then
 		SetLog("This account is Play BB Only, switching to another account", $COLOR_ACTION)
 		SetSwitchAccLog(" - Play BB Only")
 		$bForceSwitch = True

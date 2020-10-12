@@ -56,7 +56,7 @@ Func ApplyConfig_MOD_CustomArmyBB($TypeReadSave)
 			GUICtrlSetData($g_hTxtBBDropTrophiesMax, $g_iTxtBBDropTrophiesMax)
 			chkBBtrophiesRange()
 			; -- AIO BB
-			GUICtrlSetState($g_hChkOnlyBuilderBase, $g_bChkPlayBBOnly ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkOnlyBuilderBase, $g_bOnlyBuilderBase ? $GUI_CHECKED : $GUI_UNCHECKED)
 			ChkOnlyBuilderBase()
 			GUICtrlSetState($g_hChkBBGetFromCSV, $g_bChkBBGetFromCSV ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkBBGetFromArmy, $g_bChkBBGetFromArmy ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -101,7 +101,7 @@ Func ApplyConfig_MOD_CustomArmyBB($TypeReadSave)
 			$g_iCmbBBAttack = _GUICtrlComboBox_GetCurSel($g_hCmbBBAttack)
 			$g_iBBMinAttack = Int(GUICtrlRead($g_hTxtBBMinAttack))
 			$g_iBBMaxAttack = Int(GUICtrlRead($g_hTxtBBMaxAttack))
-			$g_bChkPlayBBOnly = (GUICtrlRead($g_hChkOnlyBuilderBase) = $GUI_CHECKED)
+			$g_bOnlyBuilderBase = (GUICtrlRead($g_hChkOnlyBuilderBase) = $GUI_CHECKED)
 	EndSwitch
 EndFunc   ;==>ApplyConfig_MOD_CustomArmyBB
 

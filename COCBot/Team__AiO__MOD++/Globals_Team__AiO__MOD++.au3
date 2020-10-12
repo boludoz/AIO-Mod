@@ -405,7 +405,7 @@ Global $g_hBBAttackLogFile = 0
 
 ;~ Global $g_bChkCollectBuilderBase = False, $g_bChkStartClockTowerBoost = False, $g_bChkCTBoostBlderBz = False, $g_bChkCTBoostAtkAvailable = False, $g_bChkCleanYardBB = False, $g_bDebugBBattack = False
 
-Global $g_bChkPlayBBOnly = False
+Global $g_bOnlyBuilderBase = False
 
 Global $g_bChkBBGetFromCSV = False, $g_bChkBBGetFromArmy
 #EndRegion - Builder Base !!!

@@ -31,7 +31,7 @@ Func runBuilderBase($bTestRun = False)
 	ClickP($aAway, 3, 400, "#0000") ;Click Away
 
 	If Not $g_bChkBuilderAttack And Not $g_bChkCollectBuilderBase And Not $g_bChkStartClockTowerBoost And Not $g_iChkBBSuggestedUpgrades And Not $g_bChkCleanBBYard And Not $g_bChkUpgradeMachine Then
-		If $g_bChkPlayBBOnly Then
+		If $g_bOnlyBuilderBase Then
 			SetLog("Play Only Builder Base Check Is On But BB Option's(Collect,Attack etc) Unchecked", $COLOR_ERROR)
 			SetLog("Please Check BB Options From Builder Base Tab", $COLOR_INFO)
 			$g_bRunState = False     ;Stop The Bot
@@ -91,7 +91,7 @@ Func runBuilderBase($bTestRun = False)
 	SetLog("Builder Base Idle Ends", $COLOR_INFO)
 	
 	; switch back to normal village
-	If Not $g_bChkPlayBBOnly Then 
+	If Not $g_bOnlyBuilderBase Then 
 		SwitchBetweenBases(True, False)
 	EndIf
 	

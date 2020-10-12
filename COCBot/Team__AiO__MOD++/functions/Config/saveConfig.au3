@@ -49,7 +49,7 @@ Func SaveConfig_MOD_CustomArmyBB()
 	_Ini_Add("BuilderBase", "CmbBBAttack", $g_iCmbBBAttack)
 	_Ini_Add("BuilderBase", "IntBBMinAttack", $g_iBBMinAttack)
 	_Ini_Add("BuilderBase", "IntBBMaxAttack", $g_iBBMaxAttack)
-	_Ini_Add("general", "PlayBBOnly", $g_bChkPlayBBOnly ? 1 : 0)
+	_Ini_Add("general", "PlayBBOnly", $g_bOnlyBuilderBase ? 1 : 0)
 EndFunc   ;==>SaveConfig_MOD_CustomArmyBB
 
 Func SaveConfig_MOD_MiscTab()

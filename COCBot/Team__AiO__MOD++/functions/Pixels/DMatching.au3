@@ -236,9 +236,16 @@ Func ButtonClickDM($sBundle, $iRegionX = 0, $iRegionY = 0, $iRegionWidth = 0, $i
         If IsArray($aDecodedMatch) Then
 			Local $bRdn = $g_bUseRandomClick
 			$g_bUseRandomClick = False
-			Click(Random($aDecodedMatch[2] + ($aDecodedMatch[4] * 0.25), $aDecodedMatch[2] + ($aDecodedMatch[4] * 0.75), 1), Random($aDecodedMatch[3] + ($aDecodedMatch[5] * 0.25), $aDecodedMatch[3] + ($aDecodedMatch[5] * 0.75), 1))
-			If $bRdn = True Then $g_bUseRandomClick = True
+			Local $aPik[2] = [Random($aDecodedMatch[2] + ($aDecodedMatch[4] * 0.25), $aDecodedMatch[2] + ($aDecodedMatch[4] * 0.75), 1), Random($aDecodedMatch[3] + ($aDecodedMatch[5] * 0.25), $aDecodedMatch[3] + ($aDecodedMatch[5] * 0.75), 1)] 
+			Local $hPikeado = _GetPixelColor($aPik[0], $aPik[1], True)
+			PureClickP($aPik, 1)
 			If _Sleep(1000) Then Return
+			Local $hPikeado2 = _GetPixelColor($aPik[0], $aPik[1], True)
+			If _ColorCheckCie2000($hPikeado2, $hPikeado, 5) Then 
+				PureClickP($aPik, 1)
+				Return True
+			EndIf
+			If $bRdn = True Then $g_bUseRandomClick = True
 			Return True
         EndIf
     Next
