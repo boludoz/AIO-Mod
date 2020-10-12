@@ -657,8 +657,8 @@ Func GetAndroidRunningInstance($bStrictCheck = True)
 		Local $iPids = ProcessFindBy($g_sAndroidProgramPath, "") ; Custom fix - Team AIO Mod++
 		If UBound($iPids) > 0 Then ; Custom fix - Team AIO Mod++
 			Local $currentInstance = $g_sAndroidInstance
-			For $i In $iPids  ; Custom fix - Team AIO Mod++
-				Local $pid = $pids[$i]
+			For $pid In $iPids  ; Custom fix - Team AIO Mod++
+				;~ Local $pid = $pids[$i]
 				; assume last parameter is instance
 				Local $commandLine = ProcessGetCommandLine($pid)
 				SetDebugLog("GetAndroidRunningInstance: Found """ & $commandLine & """ by PID=" & $pid)
