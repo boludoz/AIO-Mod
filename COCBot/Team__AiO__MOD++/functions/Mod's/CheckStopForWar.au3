@@ -248,7 +248,7 @@ Func StopAndPrepareForWar($iSleepTime)
 		; Loading variables
 		$g_bDoubleTrain = True
 		If $g_iTotalSpellValue = 0 Then $g_iTotalSpellValue = 11
-		If $g_iTotalCampSpace = 0 Then $g_iTotalCampSpace = 280
+		If $g_iTotalCampSpace = 0 Then $g_iTotalCampSpace = 300
 		If $g_bUseQuickTrainWar Then
 			$g_bQuickTrainEnable = True
 			$g_bQuickTrainArmy = $g_aChkArmyWar

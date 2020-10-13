@@ -1503,10 +1503,10 @@ Func TxtQTEdit_Troop()
 	Next
 	TotalTroopCount_QTEdit()
 
-	If $g_iQTEdit_TotalTroop > 280 Then
-		Local $iSpaceLeft = 280 - ($g_iQTEdit_TotalTroop - $iSpace)
+	If $g_iQTEdit_TotalTroop > 300 Then
+		Local $iSpaceLeft = 300 - ($g_iQTEdit_TotalTroop - $iSpace)
 		Local $iMaxQtyLeft = Int($iSpaceLeft / $g_aiTroopSpace[$iTroop])
-		ToolTip("Your input of " & $iQty & "x " & $g_asTroopNames[$iTroop] & " makes total troops to exceed possible camp capacity (280)." & @CRLF & "Automatically changing to: " & $iMaxQtyLeft & "x " & $g_asTroopNames[$iTroop])
+		ToolTip("Your input of " & $iQty & "x " & $g_asTroopNames[$iTroop] & " makes total troops to exceed possible camp capacity (300)." & @CRLF & "Automatically changing to: " & $iMaxQtyLeft & "x " & $g_asTroopNames[$iTroop])
 		Sleep(2000)
 		ToolTip('')
 		GUICtrlSetData($g_ahTxtQTEdit_Troop[$iSlot], $iMaxQtyLeft)
