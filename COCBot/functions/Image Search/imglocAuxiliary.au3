@@ -190,42 +190,48 @@ Func findButton($sButtonName, $buttonTileArrayOrPatternOrFullPath = Default, $ma
 	If Not IsString($sButtonName) Or UBound($aButtons) < 1 Then
 		Return SetError(1, 3, "Bad Input Values : " & $sButtons) ; Set external error code = 1 for bad input values
 	EndIf
-
-	For $buttonTile In $aButtons
-
-		; Check function parameters
-		If FileExists($buttonTile) = 0 Then ContinueLoop ; Team AIO Mod++
-
-		If $bForceCapture Then _CaptureRegion2() ;to have FULL screen image to work with
-
-		If $g_bDebugSetlog Then SetDebugLog(" imgloc searching for: " & $sButtonName & " : " & $buttonTile)
-		$g_sTagCallMybotCall = $sButtonName ; Tag - DllCall - Team AIO Mod++
-		Local $result = DllCallMyBot("FindTile", "handle", $g_hHBitmap2, "str", $buttonTile, "str", $searchArea, "Int", $maxReturnPoints)
-		$error = @error ; Store error values as they reset at next function call
-		$extError = @extended
-		If $error Then
-			_logErrorDLLCall($g_sLibMyBotPath, $error)
-			SetDebugLog(" imgloc DLL Error imgloc " & $error & " --- " & $extError)
-			Return SetError(2, 1, $extError) ; Set external error code = 2 for DLL error
-		EndIf
-
-		If $result[0] <> "" And checkImglocError($result, "imglocFindButton", $buttonTile) = False Then
-			If $g_bDebugSetlog Then SetDebugLog($sButtonName & " Button Image Found in: " & $result[0])
-			$aCoords = StringSplit($result[0], "|", $STR_NOCOUNT)
-			;[0] - total points found
-			;[1] -  coordinates
-			If $maxReturnPoints = 1 Then
-				Return StringSplit($aCoords[1], ",", $STR_NOCOUNT) ; return just X,Y coord
-			ElseIf IsArray($aCoords) Then
-				Local $aReturnResult[0][2]
-				For $i = 1 To UBound($aCoords) - 1
-					_ArrayAdd($aReturnResult, $aCoords[$i], 0, ",", @CRLF, $ARRAYFILL_FORCE_NUMBER)
-				Next
-				Return $aReturnResult ; return 2D array
+	#Region - Custom fix - Team AIO Mod++
+	Local $i = 0
+	Do
+		For $buttonTile In $aButtons
+	
+			; Check function parameters
+			If FileExists($buttonTile) = 0 Then ContinueLoop ; Team AIO Mod++
+	
+			If $bForceCapture Then _CaptureRegion2() ;to have FULL screen image to work with
+	
+			If $g_bDebugSetlog Then SetDebugLog(" imgloc searching for: " & $sButtonName & " : " & $buttonTile)
+			$g_sTagCallMybotCall = $sButtonName ; Tag - DllCall - Team AIO Mod++
+			Local $result = DllCallMyBot("FindTile", "handle", $g_hHBitmap2, "str", $buttonTile, "str", $searchArea, "Int", $maxReturnPoints)
+			$error = @error ; Store error values as they reset at next function call
+			$extError = @extended
+			If $error Then
+				_logErrorDLLCall($g_sLibMyBotPath, $error)
+				SetDebugLog(" imgloc DLL Error imgloc " & $error & " --- " & $extError)
+				Return SetError(2, 1, $extError) ; Set external error code = 2 for DLL error
 			EndIf
-		EndIf
-
-	Next
+	
+			If $result[0] <> "" And checkImglocError($result, "imglocFindButton", $buttonTile) = False Then
+				If $g_bDebugSetlog Then SetDebugLog($sButtonName & " Button Image Found in: " & $result[0])
+				$aCoords = StringSplit($result[0], "|", $STR_NOCOUNT)
+				;[0] - total points found
+				;[1] -  coordinates
+				If $maxReturnPoints = 1 Then
+					Return StringSplit($aCoords[1], ",", $STR_NOCOUNT) ; return just X,Y coord
+				ElseIf IsArray($aCoords) Then
+					Local $aReturnResult[0][2]
+					For $i = 1 To UBound($aCoords) - 1
+						_ArrayAdd($aReturnResult, $aCoords[$i], 0, ",", @CRLF, $ARRAYFILL_FORCE_NUMBER)
+					Next
+					Return $aReturnResult ; return 2D array
+				EndIf
+			EndIf
+	
+		Next
+		If _Sleep(750) Then Return $aCoords
+		$i += 1
+	Until ($i > 2)
+	#EndRegion - Custom fix - Team AIO Mod++
 
 	SetDebugLog($sButtonName & " Button Image(s) NOT FOUND : " & $sButtons, $COLOR_ERROR)
 	Return $aCoords

@@ -23,46 +23,52 @@
 
 Func LaunchConsole($cmd, $param, ByRef $process_killed, $timeout = 10000, $bUseSemaphore = False, $bNoLog = False)
 
+	If $cmd = Default Then Return SetError(1)
+	If $param = Default Then $param = ""
+	If $timeout = Default Then $timeout = 10000
+
+	Local $sCommand, $sDOS, $tHelperStartTime, $tTime_Difference, $sMessage = ''
+	
+	$process_killed = False
+
 	If $bUseSemaphore Then
 		Local $hSemaphore = LockSemaphore(StringReplace($cmd, "\", "/"), "Waiting to launch: " & $cmd)
 	EndIf
 
-	Local $data, $pid, $hStdIn[2], $hStdOut[2], $hTimer, $hProcess, $hThread
-
-	If StringLen($param) > 0 Then $cmd &= " " & $param
-
-	$hTimer = __TimerInit()
-	$process_killed = False
-
-	If Not $bNoLog Then SetDebugLog("Func LaunchConsole: " & $cmd, $COLOR_DEBUG) ; Debug Run
-	$pid = RunPipe($cmd, "", @SW_HIDE, $STDERR_MERGED, $hStdIn, $hStdOut, $hProcess, $hThread)
-	If $pid = 0 Then
+	$sCommand &= String(' /c ')
+	$sCommand &= Chr(34) & $cmd & Chr(34)
+	$sCommand &= " "
+	$sCommand &= String($param)
+	
+	SetDebugLog("runCommand | " & $sCommand)
+	$sDOS = Run(@ComSpec & $sCommand, "", @SW_HIDE, 8)
+	If $sDOS = 0 Then
 		SetLog("Launch failed: " & $cmd, $COLOR_ERROR)
 		If $bUseSemaphore = True Then UnlockSemaphore($hSemaphore)
 		Return SetError(1, 0, "")
 	EndIf
-
-	Local $timeout_sec = Round($timeout / 1000)
-	Local $iWaitResult
-
-	Do
-		$iWaitResult = _WinAPI_WaitForSingleObject($hProcess, $DELAYSLEEP)
-		$data &= ReadPipe($hStdOut[0])
-	Until ($timeout > 0 And __TimerDiff($hTimer) > $timeout) Or $iWaitResult <> $WAIT_TIMEOUT
-
-	If ProcessExists($pid) Then
-		If ClosePipe($pid, $hStdIn, $hStdOut, $hProcess, $hThread) = 1 Then
-			If Not $bNoLog Then SetDebugLog("Process killed: " & $cmd, $COLOR_ERROR)
-			$process_killed = True
+	$tHelperStartTime = TimerInit()
+	SetDebugLog("runCommand | Waiting for runCommand helper...")
+	While ProcessExists($sDOS)
+		ProcessWaitClose($sDOS, 10)
+		SetDebugLog("runCommand | Still waiting for runCommand helper...")
+		$tTime_Difference = TimerDiff($tHelperStartTime)
+		If $tTime_Difference > $timeout Then
+			SetDebugLog("runCommand | is taking too long!", $COLOR_RED)
+			If KillProcess($sDOS, "LaunchConsole") Then
+				$process_killed = True
+			EndIf
+			Return ''
 		EndIf
-	Else
-		ClosePipe($pid, $hStdIn, $hStdOut, $hProcess, $hThread)
-	EndIf
-	CleanLaunchOutput($data)
-
-	If Not $bNoLog Then SetDebugLog("Func LaunchConsole Output: " & $data, $COLOR_DEBUG) ; Debug Run Output
+	WEnd
+	Do
+		$sMessage &= StdoutRead($sDOS)
+	Until @error
+	
+	If Not $bNoLog Then SetDebugLog("Func LaunchConsole Output: " & $sMessage, $COLOR_DEBUG) ; Debug Run Output
 	If $bUseSemaphore Then UnlockSemaphore($hSemaphore)
-	Return SetError(0, 0, $data)
+	Return SetError(0, 0, $sMessage)
+
 EndFunc   ;==>LaunchConsole
 
 ; Special version of ProcessExists that checks process based on full process image path AND parameters

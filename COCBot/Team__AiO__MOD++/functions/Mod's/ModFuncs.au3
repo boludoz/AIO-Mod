@@ -388,30 +388,6 @@ Func _DebugFailedImageDetection($Text)
 	EndIf
 EndFunc   ;==>_DebugFailedImageDetection
 
-Func EasyCmd($sMsg = "tasklist /fo:csv /nh", $sForceKill = "tasklist.exe")
-	Local $sCommand, $sDOS, $tHelperStartTime, $tTime_Difference
-	Static $sMessage = ''
-
-	$sCommand = ' /c '
-
-	$sDOS = Run(@ComSpec & $sCommand & $sMsg & '"', "", @SW_HIDE, 8)
-	$tHelperStartTime = TimerInit()
-	While ProcessExists($sDOS)
-		ProcessWaitClose($sDOS, 10)
-		$tTime_Difference = TimerDiff($tHelperStartTime)
-		If $tTime_Difference > 50000 Then
-			ProcessClose($sDOS)
-			If Not StringIsSpace($sForceKill) Then _RunDos("taskkill -f -im " & $sForceKill)
-			Return ""
-		EndIf
-	WEnd
-	$sMessage = ''
-	Do
-		$sMessage &= StdoutRead($sDOS)
-	Until @error
-	Return $sMessage
-EndFunc   ;==>EasyCmd
-
 Func StringSplit2D($sMatches = "Hola2-5-50-50-100-100|Hola-6-200-200-100-100", $sDelim_Item = "-", $sDelim_Row =  "|")
     Local $iValDim_1, $iValDim_2 = 0, $iColCount
     Local $aSplit_1 = StringSplit($sMatches, $sDelim_Row, $STR_NOCOUNT + $STR_ENTIRESPLIT)
@@ -429,4 +405,3 @@ Func StringSplit2D($sMatches = "Hola2-5-50-50-100-100|Hola-6-200-200-100-100", $
         Next
     Next
     Return $aTmp
-EndFunc   ;==>StringSplit2D

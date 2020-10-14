@@ -68,6 +68,7 @@ Func _LocateQueenAltar($bCollect = True)
 		
 				If StringInStr($sInfo[1], "Quee") > 0 Then
 					$g_aiQueenAltarPos = $aAltarPos
+					ConvertFromVillagePos($g_aiQueenAltarPos[0], $g_aiQueenAltarPos[1])
 					IniWrite($g_sProfileBuildingPath, "other", "xQueenAltarPos", $g_aiQueenAltarPos[0])
 					IniWrite($g_sProfileBuildingPath, "other", "yQueenAltarPos", $g_aiQueenAltarPos[1])
 					Setlog("Queen located", $COLOR_SUCCESS)
@@ -251,6 +252,7 @@ Func _LocateKingAltar($bCollect = True)
 		
 				If (StringInStr($sInfo[1], "Barb") > 0) Or (StringInStr($sInfo[1], "King") > 0) Then
 					$g_aiKingAltarPos = $aAltarPos
+					ConvertFromVillagePos($g_aiKingAltarPos[0], $g_aiKingAltarPos[1])
 					IniWrite($g_sProfileBuildingPath, "other", "xKingAltarPos", $g_aiKingAltarPos[0])
 					IniWrite($g_sProfileBuildingPath, "other", "yKingAltarPos", $g_aiKingAltarPos[1])
 					Setlog("King located", $COLOR_SUCCESS)
@@ -437,6 +439,7 @@ Func _LocateWardenAltar($bCollect = True)
 		
 				If StringInStr($sInfo[1], "Warden") > 0 Then
 					$g_aiWardenAltarPos = $aAltarPos
+					ConvertFromVillagePos($g_aiWardenAltarPos[0], $g_aiWardenAltarPos[1])
 					IniWrite($g_sProfileBuildingPath, "other", "xWardenAltarPos", $g_aiWardenAltarPos[0])
 					IniWrite($g_sProfileBuildingPath, "other", "yWardenAltarPos", $g_aiWardenAltarPos[1])
 					Setlog("Warden located", $COLOR_SUCCESS)
@@ -623,6 +626,7 @@ Func _LocateChampionAltar($bCollect = True)
 		
 				If StringInStr($sInfo[1], "Champion") > 0 Then
 					$g_aiChampionAltarPos = $aAltarPos
+					ConvertFromVillagePos($g_aiChampionAltarPos[0], $g_aiChampionAltarPos[1])
 					IniWrite($g_sProfileBuildingPath, "other", "xChampionAltarPos", $g_aiChampionAltarPos[0])
 					IniWrite($g_sProfileBuildingPath, "other", "yChampionAltarPos", $g_aiChampionAltarPos[1])
 					Setlog("Champion located", $COLOR_SUCCESS)

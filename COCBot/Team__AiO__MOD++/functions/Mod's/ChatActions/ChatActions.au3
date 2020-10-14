@@ -442,9 +442,28 @@ Func runHelper($sMsg) ; run a script to get a response from cleverbot.com or sim
 	Local $sCommand, $sDOS, $tHelperStartTime, $tTime_Difference
 	Static $sMessage = ''
 
-	$sCommand = '"ModLibs\phantomjs.exe" "ModLibs\phantom-cleverbot-helper.js "' & $sMsg
+	$sCommand = ' /c "ModLibs\phantomjs.exe "ModLibs\phantom-cleverbot-helper.js" '
 
-	Return StringStripWS(EasyCmd($sCommand, "phantomjs.exe"), 7)
+	$sDOS = Run(@ComSpec & $sCommand & $sMsg & '"', "", @SW_HIDE, 8)
+	$tHelperStartTime = TimerInit()
+	SetLog("Waiting for chatbot helper...")
+	While ProcessExists($sDOS)
+		ProcessWaitClose($sDOS, 10)
+		SetLog("Still waiting for chatbot helper...")
+		$tTime_Difference = TimerDiff($tHelperStartTime)
+		If $tTime_Difference > 50000 Then
+			SetLog("Chatbot helper is taking too long!", $COLOR_RED)
+			ProcessClose($sDOS)
+			_RunDos("taskkill -f -im phantomjs.exe") ; force kill
+			Return ""
+		EndIf
+	WEnd
+	$sMessage = ''
+	While 1
+		$sMessage &= StdoutRead($sDOS)
+		If @error Then ExitLoop
+	WEnd
+	Return StringStripWS($sMessage, 7)
 EndFunc   ;==>runHelper
 
 Func _Encoding_JavaUnicodeDecode($sString)

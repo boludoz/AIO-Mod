@@ -1434,8 +1434,9 @@ Func WaitForRunningVMS($WaitInSec = 120, $hTimer = 0)
 	Return False
 EndFunc   ;==>WaitForRunningVMS
 
+#Region - Custom fix - Team AIO Mod++
 Func FindAvaiableInstances($sVboxManage = $__VBoxManage_Path)
-	Local $a = []
+	Local $a[0] 
 	If FileExists($sVboxManage) = 0 Then
 		If $g_bDebugAndroid Then SetDebugLog("Cannot check for available " & $g_sAndroidEmulator & " instances: VBoxManager.exe not available", $COLOR_ERROR)
 		Return $a
@@ -1445,7 +1446,10 @@ Func FindAvaiableInstances($sVboxManage = $__VBoxManage_Path)
 	$cmdOutput = LaunchConsole($sVboxManage, "list vms", $process_killed)
 	If $g_bDebugAndroid Then SetDebugLog("Available " & $g_sAndroidEmulator & " instances: " & $cmdOutput, $COLOR_ERROR)
 	$a = StringRegExp($cmdOutput, """(.*?)""", $STR_REGEXPARRAYGLOBALMATCH)
-	If @error Then Local $a = []
+	If @error Then 
+		Local $aFake[0] 
+		Return $aFake
+	EndIf
 	Return $a
 EndFunc   ;==>FindAvaiableInstances
 
@@ -1481,6 +1485,7 @@ Func GetAndroidVMinfo(ByRef $sVMinfo, $sVboxManage = $__VBoxManage_Path)
 	EndIf
 	Return True
 EndFunc   ;==>GetAndroidVMinfo
+#EndRegion - Custom fix - Team AIO Mod++
 
 Func WaitForAndroidBootCompleted($WaitInSec = 120, $hTimer = 0)
 	ResumeAndroid()
@@ -1659,7 +1664,7 @@ Func _ConnectAndroidAdb($rebootAndroidIfNeccessary = $g_bRunState, $bStartOnlyAn
 			If Not $connected_to Then
 				; not connected... strange, kill any Adb now
 				SetDebugLog("Stop ADB daemon!", $COLOR_ERROR)
-				; LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "kill-server", $process_killed) ; Custom fix - Team AIO Mod++
+				LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "kill-server", $process_killed) ; Custom fix - Team AIO Mod++
 				Local $sPort = ""
 				If $g_bAndroidAdbPort Then $sPort = String($g_bAndroidAdbPort)
 				Local $iPids = ProcessFindBy($g_sAndroidAdbPath, $sPort) ; Custom fix - Team AIO Mod++

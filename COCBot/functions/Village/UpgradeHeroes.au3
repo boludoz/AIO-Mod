@@ -12,6 +12,7 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+#Region - Custom hero - Team AIO Mod++
 Func UpgradeHeroesTime()
 	Local $iSeconds = 0
 	Local $sString = ""
@@ -138,7 +139,6 @@ Func UpgradeHeroes()
 	EndIf
 EndFunc   ;==>UpgradeHeroes
 
-#Region - Custom hero - Team AIO Mod++
 Func HeroUpgradeTime(ByRef $sHero, $sString = "")
 	Local $iSeconds = 0
 	Local $aTmp; like xx#xx#xx
