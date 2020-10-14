@@ -405,3 +405,4 @@ Func StringSplit2D($sMatches = "Hola2-5-50-50-100-100|Hola-6-200-200-100-100", $
         Next
     Next
     Return $aTmp
+EndFunc   ;==>StringSplit2D
