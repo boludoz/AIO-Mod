@@ -281,6 +281,7 @@ Func CheckQueueTroopAndTrainRemain($ArmyCamp, $bDebug)
 	For $i = 0 To UBound($aiQueueTroops) - 1
 		If $aiQueueTroops[$i] - $g_aiArmyCompTroops[$i] > 0 Then
 			SetLog("Some wrong troops in queue")
+			
 			Return False
 		EndIf
 	Next
@@ -294,7 +295,7 @@ Func CheckQueueTroopAndTrainRemain($ArmyCamp, $bDebug)
 			If $g_aiArmyCompTroops[$iIndex] - $aiQueueTroops[$iIndex] > 0 Then
 				$rWTT[UBound($rWTT) - 1][0] = $g_asTroopShortNames[$iIndex]
 				$rWTT[UBound($rWTT) - 1][1] = Abs($g_aiArmyCompTroops[$iIndex] - $aiQueueTroops[$iIndex])
-				SetLog("    missing: " & $g_asTroopNames[$iIndex] & " x" & $rWTT[UBound($rWTT) - 1][1])
+				SetLog("   - Missing: " & $g_asTroopNames[$iIndex] & " x" & $rWTT[UBound($rWTT) - 1][1])
 				ReDim $rWTT[UBound($rWTT) + 1][2]
 			EndIf
 		Next

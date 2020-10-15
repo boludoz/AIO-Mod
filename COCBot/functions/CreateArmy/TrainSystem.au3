@@ -23,31 +23,33 @@ Func TrainSystem()
 		Return
 	EndIf
 
-	waitMainScreen() ; Custom - Team AIO Mod++ (@vDragon)
-
-	$g_sTimeBeforeTrain = _NowCalc()
-	StartGainCost()
-
-	If $g_bQuickTrainEnable Then CheckQuickTrainTroop() ; update values of $g_aiArmyComTroops, $g_aiArmyComSpells
-
-	CheckIfArmyIsReady()
-
-	If $g_bQuickTrainEnable Then
-		QuickTrain()
-	Else
-		TrainCustomArmy()
+	CheckMainScreen(False) ; Custom - Team AIO Mod++ (@vDragon)
+	
+	If IsMainPage() Then
+		$g_sTimeBeforeTrain = _NowCalc()
+		StartGainCost()
+	
+		If $g_bQuickTrainEnable Then CheckQuickTrainTroop() ; update values of $g_aiArmyComTroops, $g_aiArmyComSpells
+	
+		CheckIfArmyIsReady()
+	
+		If $g_bQuickTrainEnable Then
+			QuickTrain()
+		Else
+			TrainCustomArmy()
+		EndIf
+	
+		TrainSiege()
+	
+		If $g_bDonationEnabled And $g_bChkDonate Then ResetVariables("donated")
+	
+		ClickP($aAway, 2, 0, "#0346") ;Click Away
+		If _Sleep(500) Then Return ; Delay AFTER the click Away Prevents lots of coc restarts
+	
+		EndGainCost("Train")
+	
+		checkAttackDisable($g_iTaBChkIdle) ; Check for Take-A-Break after opening train page
 	EndIf
-
-    TrainSiege()
-
-	If $g_bDonationEnabled And $g_bChkDonate Then ResetVariables("donated")
-
-	ClickP($aAway, 2, 0, "#0346") ;Click Away
-	If _Sleep(500) Then Return ; Delay AFTER the click Away Prevents lots of coc restarts
-
-	EndGainCost("Train")
-
-	checkAttackDisable($g_iTaBChkIdle) ; Check for Take-A-Break after opening train page
 EndFunc   ;==>TrainSystem
 
 Func TrainCustomArmy()
@@ -1131,15 +1133,18 @@ Func DeleteQueued($sArmyTypeQueued, $iOffsetQueued = 802)
 		Return
 	EndIf
 	If _Sleep(500) Then Return
-	Local $x = 0
-
-	While Not _ColorCheck(_GetPixelColor(820, 208, True), Hex(0xD0D0C8, 6), 20) ; check gray background at 1st training slot
+	Local $x = 0, $bCondition
+	Do 
 		If $x = 0 Then SetLog(" - Delete " & $sArmyTypeQueued & " Queued!", $COLOR_INFO)
 		If Not $g_bRunState Then Return
-		Click($iOffsetQueued + 24, 202, 10, 50)
+		PureClick($iOffsetQueued + 24, 202, 10, 50)
 		$x += 1
-		If $x = 270 Then ExitLoop
-	WEnd
+		If $x > 50 Then
+			$bCondition = (Not IsQueueEmpty($sArmyTypeQueued, True, False))
+		Else
+			$bCondition = _ColorCheck(_GetPixelColor(820, 208, True), Hex(0xD0D0C8, 6), 20)
+		EndIf
+	Until $bCondition Or ($x > 300)
 EndFunc   ;==>DeleteQueued
 
 Func MakingDonatedTroops($sType = "All")

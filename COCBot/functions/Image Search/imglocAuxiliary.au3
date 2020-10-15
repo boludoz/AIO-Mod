@@ -120,10 +120,8 @@ Func checkImglocError(ByRef $imglocvalue, $funcName, $sTileSource = "", $sImageA
 		ElseIf StringLeft($imglocvalue[0], 2) = "-2" Then ;critical error
 			SetLog($funcName & " - Imgloc DLL Critical Error", $COLOR_RED)
 			SetLog(StringMid($imglocvalue[0], 4), $COLOR_RED)
-			;BotStop() ; stop bot on critical errors
-			; Restart Bot on critical errors
-			SetLog("Restart bot in 3 Minutes...", $COLOR_GREEN)
-			If _SleepStatus(180000) = False Then
+			SetLog("Restart bot in 30 seconds.", $COLOR_GREEN)
+			If _SleepStatus(30000) = False Then
 				RestartBot(False, True)
 			EndIf
 			Return True
