@@ -39,8 +39,8 @@ Func ArmyButton() ; Custom fix - Team__AiO__MOD
 	Local $i = 0, $bClicked = False
 	Do
 		$i += 1
-		$bClicked = ButtonClickDM(@ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\Button\ArmyButton\", 13, 558, 56, 59)
-		If _Sleep(250) Then Return
+		$bClicked = ButtonClickArray("0xEDAE44,0,0,-1|0xA55123,38,40,-1", 15, 555, 77, 615) ;ButtonClickDM(@ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\Button\ArmyButton\", 13, 558, 56, 59)
+		If _Sleep(800) Then Return
 	Until $bClicked Or ($i > 3)
 	Return $bClicked
 EndFunc   ;==>ClickFindMatch

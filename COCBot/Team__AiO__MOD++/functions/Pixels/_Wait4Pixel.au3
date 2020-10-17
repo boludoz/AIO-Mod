@@ -67,7 +67,7 @@ Func _Wait4PixelArray($aSettings) ; Return true if pixel is true
 	Local $iWait = (UBound($aSettings) > 4) ? ($aSettings[4]) : (1000)
 	Local $iDelay = (UBound($aSettings) > 5) ? ($aSettings[5]) : (100)
 	Local $sMsglog = (UBound($aSettings) > 6) ? ($aSettings[6]) : (Default)
-	
+
 	Local $hTimer = __TimerInit()
 	While (BitOR($iWait > __TimerDiff($hTimer), ($iWait <= 0)) > 0) ; '-1' support
 		ForceCaptureRegion()
@@ -126,30 +126,33 @@ EndFunc   ;==>_WaitForCheckImgGone
 ; ===============================================================================================================================
 ; _ColorCheckCie2000(0x00FF00, 0x00F768, 5) ; 4.74575054233923 ; Old | 6.66013616882879 | 3.25675649923578
 Func _ColorCheckCie2000($nColor1 = 0x00FF00, $nColor2 = 0x00FF6C, $sVari = 5, $sIgnore = Default)
-	Local $iPixelDiff = ciede2000(xyz2lab(StandardRGBXTOXZY($nColor1)), xyz2lab(StandardRGBXTOXZY($nColor2)))
-		If $g_bDebugSetlog Then SetLog("_ColorCheckCie2000 | $iPixelDiff " & $iPixelDiff, $COLOR_INFO)
+
+	Local $iPixelDiff = ciede2000(xyz2lab(StandardRGBXTOXZY($nColor1, $sIgnore)), xyz2lab(StandardRGBXTOXZY($nColor2, $sIgnore)))
+	If $g_bDebugSetlog Then SetLog("_ColorCheckCie2000 | $iPixelDiff " & $iPixelDiff, $COLOR_INFO)
 	If $iPixelDiff > $sVari Then
 		Return False
 	EndIf
-	
+
 	Return True
 EndFunc   ;==>_ColorCheckCie2000
 
 ; XYZ - D65 / 10° - 1964
 Func StandardRGBXTOXZY($nColor, $sIgnore = Default)
 	Local $aRGB[3] = [Dec(StringMid(String($nColor), 1, 2)), Dec(StringMid(String($nColor), 3, 2)), Dec(StringMid(String($nColor), 5, 2))]
-	
-	Switch $sIgnore
-		Case "Red" ; mask RGB - Red
-			$aRGB[1] = 0
-			$aRGB[2] = 0
-		Case "Heroes" ; mask RGB - Green
-			$aRGB[0] = 0
-			$aRGB[1] = 0
-		Case "Red+Blue" ; mask RGB - Red
-			$aRGB[2] = 0
-	EndSwitch
-	
+
+	If $sIgnore <> Default Then
+		Switch $sIgnore
+			Case "Red" ; mask RGB - Red
+				$aRGB[1] = 0
+				$aRGB[2] = 0
+			Case "Heroes" ; mask RGB - Green
+				$aRGB[0] = 0
+				$aRGB[1] = 0
+			Case "Red+Blue" ; mask RGB - Red
+				$aRGB[2] = 0
+		EndSwitch
+	EndIf
+
 	For $i = 0 To 2
 		$aRGB[$i] /= 255
 		If ($aRGB[$i] > 0.04045) Then
@@ -193,7 +196,7 @@ Func ciede2000($laB1, $laB2)
 	Static $kL = 1, $kC = 1, $kH = 1, $aC1C2 = 0, _
 			$G = 0, $A1P = 0, $A2P = 0, $c1P = 0, $c2P = 0, $h1p = 0, $h2p = 0, $dLP = 0, $dCP = 0, $dhP = 0, $aL = 0, _
 			$aCP = 0, $aHP = 0, $T = 0, $dRO = 0, $rC = 0, $sL = 0, $sC = 0, $sH = 0, $rT = 0, $c1 = 0, $c2 = 0
-	
+
 	$c1 = Sqrt(($laB1[1] ^ 2.0) + ($laB1[2] ^ 2.0))
 	$c2 = Sqrt(($laB2[1] ^ 2.0) + ($laB2[2] ^ 2.0))
 	$aC1C2 = ($c1 + $c2) / 2.0
@@ -228,7 +231,7 @@ Func hpf($x, $y)
 	Else
 		$tmphp = _Degree((2 * ATan($y / ($x + Sqrt($x * $x + $y * $y)))))
 	EndIf
-	
+
 	If $tmphp >= 0 Then
 		Return $tmphp
 	Else
@@ -262,3 +265,79 @@ Func ahpf($c1, $c2, $h1p, $h2p)
 	EndIf
 	Return Null
 EndFunc   ;==>ahpf
+
+; _MultiPixelArrayCIE2000("0xEDAE44,0,0,-1|0xA55123,38,40,-1", 15, 555, 15+63, 555+60)
+Func _MultiPixelArrayCIE2000($vVar, $iLeft, $iTop, $iRight, $iBottom, $iColorVariation = 15, $bForceCapture = True)
+	Local $offColor = IsArray($vVar) ? ($vVar) : (StringSplit2D($vVar, ",", "|"))
+	Local $aReturn[4] = [0, 0, 0, 0]
+	If $bForceCapture = True Then _CaptureRegion($iLeft, $iTop, $iRight, $iBottom)
+	Local $offColorVariation = UBound($offColor, 2) > 3
+	Local $xRange = $iRight - $iLeft
+	Local $yRange = $iBottom - $iTop
+
+	Local $iCV = $iColorVariation
+	Local $firstColor = $offColor[0][0]
+	If $offColorVariation = True Then
+		If Number($offColor[0][3]) > 0 Then
+			$iCV = $offColor[0][3]
+		EndIf
+	EndIf
+
+	For $x = 0 To $xRange
+		For $y = 0 To $yRange
+			If _ColorCheckCie2000(_GetPixelColor($x, $y), Hex($firstColor, 6), $iCV) Then
+				Local $allchecked = True
+				$aReturn[0] = $iLeft + $x
+				$aReturn[1] = $iTop + $y
+				$aReturn[2] = $iLeft + $x
+				$aReturn[3] = $iTop + $y
+				For $i = 1 To UBound($offColor) - 1
+					If $offColorVariation = True Then
+						$iCV = $iColorVariation
+						If Number($offColor[$i][3]) > -1 Then
+							$iCV = $offColor[$i][3]
+						EndIf
+					EndIf
+					If _ColorCheckCie2000(_GetPixelColor($x + $offColor[$i][1], $y + $offColor[$i][2]), Hex($offColor[$i][0], 6), $iCV) = False Then
+						$allchecked = False
+						ExitLoop
+					EndIf
+
+					If $aReturn[0] > ($iLeft + $x + $offColor[$i][1]) Then
+						$aReturn[0] = $iLeft + $offColor[$i][1] + $x
+					EndIf
+
+					If $aReturn[1] > ($iTop + $y + $offColor[$i][2]) Then
+						$aReturn[1] = $iTop + $offColor[$i][2] + $y
+					EndIf
+
+					If $aReturn[2] < ($iLeft + $x + $offColor[$i][1]) Then
+						$aReturn[2] = $iLeft + $offColor[$i][1] + $x
+					EndIf
+
+					If $aReturn[3] < ($iTop + $y + $offColor[$i][2]) Then
+						$aReturn[3] = $iTop + $offColor[$i][2] + $y
+					EndIf
+
+				Next
+				If $allchecked Then
+                    Return $aReturn
+				EndIf
+			EndIf
+		Next
+	Next
+	Return 0
+EndFunc   ;==>_MultiPixelSearch
+
+; Check if an image in the Bundle can be found
+Func ButtonClickArray($vVar, $iLeft, $iTop, $iRight, $iBottom, $iColorVariation = 15, $bForceCapture = True)
+	Local $aDecodedMatch = _MultiPixelArrayCIE2000($vVar, $iLeft, $iTop, $iRight, $iBottom, $iColorVariation, $bForceCapture)
+    If IsArray($aDecodedMatch) Then
+		Local $bRdn = $g_bUseRandomClick
+		$g_bUseRandomClick = False
+		PureClick(Random($aDecodedMatch[0], $aDecodedMatch[2],1),Random($aDecodedMatch[1], $aDecodedMatch[3],1))
+		If $bRdn = True Then $g_bUseRandomClick = True
+		Return True
+    EndIf
+	Return False
+EndFunc

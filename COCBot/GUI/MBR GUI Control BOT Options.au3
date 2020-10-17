@@ -1003,7 +1003,9 @@ Func btnRunFunction($bExecuteCapture = False)
 	If $iError <> 0 Then
 		Setlog($sSCap & "| Result : Error N° = " & $iError, $COLOR_ERROR)
 	ElseIf IsArray($saExecResult) Then
-		Setlog($sSCap & "| Result (IsArray) : " & _ArrayToString($saExecResult, "|" -1, -1, "#"), $COLOR_INFO)
+		Local $sConv = _ArrayToString($saExecResult)
+		$sConv = StringReplace($sConv, @CRLF, "#")
+		Setlog($sSCap & "| Result (IsArray) : " & $sConv, $COLOR_INFO)
 		_ArrayDisplay($saExecResult, "Debug Func. Result")
 	Else
 		Setlog($sSCap & "| Result : " & $saExecResult, $COLOR_INFO)
