@@ -150,6 +150,7 @@
 #include "functions\Android\CheckAndroidRebootCondition.au3"
 #include "functions\Android\AndroidBlueStacks.au3"
 #include "functions\Android\AndroidDroid4X.au3"
+#include "functions\Android\AndroidExternal.au3"
 #include "functions\Android\AndroidMEmu.au3"
 #include "functions\Android\AndroidLeapDroid.au3"
 #include "functions\Android\AndroidNox.au3"

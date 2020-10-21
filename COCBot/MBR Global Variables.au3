@@ -250,6 +250,7 @@ Global $__MEmu_Window[4][5] = _ ; Alternative window sizes (array must be ordere
         ["2.5.0", $g_iDEFAULT_WIDTH + 51, $g_iDEFAULT_HEIGHT - 12, 45, "0"], _
         ["2.2.1", $g_iDEFAULT_WIDTH + 51, $g_iDEFAULT_HEIGHT - 12, 45, "0"] _
         ]
+Global $__External_Window[1][1]
 Global $__Droid4X_Window[3][3] = _ ; Alternative window sizes (array must be ordered by version descending!)
 		[ _ ; Version|$g_iAndroidWindowWidth|$g_iAndroidWindowHeight
 		["0.10.0", $g_iDEFAULT_WIDTH + 6, $g_iDEFAULT_HEIGHT + 53], _
@@ -273,7 +274,7 @@ Global $__Nox_Config[1][3] = _ ; Alternative Nox Control ID (array must be order
 ;                 |          |                        |                                  |                |                      |                       |                      |                       |              |                    |64 = Make DPI Aware (if avaliable)                  |                                    |                                     |
 ;                 |          |                        |                                  |                |                      |                       |                      |                       |              |                    |128 = ADB use input swipe and not script            |                                    |                                     |
 ;                 |          |                        |                                  |                |                      |                       |                      |                       |              |                    |256 = Update $g_sAppClassInstance with Window Handle|                                    |                                     |
-Global $g_avAndroidAppConfig[8][16] = [ _ ;           |                                  |                |                      |                       |                      |                       |              |                    |512 = Supports adding shared folder with vboxmanage.exe                                  |                                     |
+Global $g_avAndroidAppConfig[9][16] = [ _ ;           |                                  |                |                      |                       |                      |                       |              |                    |512 = Supports adding shared folder with vboxmanage.exe                                  |                                     |
 	["Nox",        "nox",     "No",                   "[CLASS:subWin; INSTANCE:1]",       "",              $g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 4, $g_iDEFAULT_HEIGHT - 10,0,             "127.0.0.1:62001",   1+2+4+8+16+32       +256+512, '# ',                  '(nox Virtual Input|Android Input|Android_Input)', 0,                      2], _ ; Nox
 	["MEmu",       "MEmu",    "MEmu ",                "[CLASS:subWin; INSTANCE:1]",       "",              $g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 51,$g_iDEFAULT_HEIGHT - 12,0,             "127.0.0.1:21503",     2+4+8+16+32           +512, '# ',                  '(Microvirt Virtual Input|User Input)', 0,                                 2], _ ; MEmu
 	["BlueStacks2","Android", "BlueStacks ",          "[CLASS:BlueStacksApp; INSTANCE:1]","_ctl.Window",   $g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,0,             "127.0.0.1:5555",    1+2+4+8+16+32   +128,         '$ ',                  'BlueStacks Virtual Touch',          0,                                    1], _ ; BlueStacks2
@@ -281,7 +282,8 @@ Global $g_avAndroidAppConfig[8][16] = [ _ ;           |                         
 	["LeapDroid",  "vm1",     "Leapd",                "[CLASS:subWin; INSTANCE:1]",       "",              $g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,0,             "emulator-5554",     1    +8+16+32           +512, '# ',                  'qwerty2',                           1,                                    1], _ ; LeapDroid
 	["iTools",     "iToolsVM","iTools ",              "[CLASS:subWin; INSTANCE:1]",       "",              $g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 2, $g_iDEFAULT_HEIGHT - 13,0,             "127.0.0.1:54001",   1+2+4+8+16+32+64        +512, '# ',                  'iTools Virtual PassThrough Input',  0,                                    1], _ ; iTools
 	["KOPLAYER",   "KOPLAYER","KOPLAYER",             "[CLASS:subWin; INSTANCE:1]",       "",              $g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 64,$g_iDEFAULT_HEIGHT - 8, 0,             "127.0.0.1:6555",    1+2+4+8+16+32           +512, '# ',                  '(ttVM Virtual Input|androidVM Virtual Input)', 0,                         2], _ ; KOPLAYER
-	["Droid4X",    "droid4x", "Droid4X ",             "[CLASS:subWin; INSTANCE:1]",       "",              $g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 10,$g_iDEFAULT_HEIGHT + 50,0,             "127.0.0.1:26944",     2+4+8+16+32           +512, '# ',                  'droid4x Virtual Input',             0,                                    2]  _; Droid4X
+	["Droid4X",    "droid4x", "Droid4X ",             "[CLASS:subWin; INSTANCE:1]",       "",              $g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 10,$g_iDEFAULT_HEIGHT + 50,0,             "127.0.0.1:26944",     2+4+8+16+32           +512, '# ',                  'droid4x Virtual Input',             0,                                    2], _; Droid4X
+	["External",    "External", "External ",          "",       						  "",              $g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT	 ,$g_iDEFAULT_WIDTH		,$g_iDEFAULT_HEIGHT	    ,0,             "",     			   2+4+8+16+32				 +1024, '# ',                  '',     							   -1,                               2] _ ; External android
 ]
 
 ; Android Configutions, see COCBot\functions\Android\Android Status & Information.txt for more details
@@ -292,7 +294,7 @@ Global $__BS_Idx = _ArraySearch($g_avAndroidAppConfig, "BlueStacks", 0, 0, 0, 0,
 Global $__LeapDroid_Idx = _ArraySearch($g_avAndroidAppConfig, "LeapDroid", 0, 0, 0, 0, 1, 0) ; https://mybot.run/forums/index.php?/topic/22912-new-leapdroid-support
 Global $__iTools_Idx = _ArraySearch($g_avAndroidAppConfig, "iTools", 0, 0, 0, 0, 1, 0) ; https://pro.itools.cn/simulate/
 Global $__KOPLAYER_Idx = _ArraySearch($g_avAndroidAppConfig, "KOPLAYER", 0, 0, 0, 0, 1, 0) ; http://www.koplayer.com/
-Global $__Droid4X_Idx = _ArraySearch($g_avAndroidAppConfig, "Droid4X", 0, 0, 0, 0, 1, 0) ; http://droid4x.haimawan.com/
+Global $__External_Idx = _ArraySearch($g_avAndroidAppConfig, "External", 0, 0, 0, 0, 1, 0) ; http://External.haimawan.com/
 
 ; Startup detection
 Global $g_bOnlyInstance = True
@@ -420,6 +422,8 @@ Global $__BlueStacks_Version
 Global $__BlueStacks_Path
 Global $__Droid4X_Version
 Global $__Droid4X_Path
+Global $__External_Version
+Global $__External_Path
 Global $__MEmu_Path
 Global $__LeapDroid_Path
 Global $__Nox_Path

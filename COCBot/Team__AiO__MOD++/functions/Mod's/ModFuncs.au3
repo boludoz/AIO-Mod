@@ -406,3 +406,32 @@ Func StringSplit2D($sMatches = "Hola2-5-50-50-100-100|Hola-6-200-200-100-100", $
     Next
     Return $aTmp
 EndFunc   ;==>StringSplit2D
+
+;  ProcessFindBy($g_sAndroidAdbPath), $sPort
+Func ProcessFindBy($sPath = "", $sCommandline = "")
+	$sPath = StringReplace($sPath, "\\", "\")
+	If StringIsSpace($sPath) And StringIsSpace($sCommandline) Then Return -1
+	
+	Local $bGetProcessPath, $bGetProcessCommandLine, $bFail, $aReturn[1] = [0]
+	Local $aiProcessList = ProcessList()
+	If @error Then Return -2
+	For $i = 2 To UBound($aiProcessList)-1
+		$bGetProcessPath = StringInStr(_WinAPI_GetProcessFileName($aiProcessList[$i][1]), $sPath) > 0
+		$bGetProcessCommandLine = StringInStr(_WinAPI_GetProcessCommandLine($aiProcessList[$i][1]), $sCommandline) > 0
+		Select 
+			Case $bGetProcessPath And $bGetProcessCommandLine
+				If Not StringIsSpace($sPath) And Not StringIsSpace($sCommandline) Then 
+					_ArrayAdd($aReturn, Int($aiProcessList[$i][1]), $ARRAYFILL_FORCE_INT)
+				EndIf
+			Case $bGetProcessPath And Not $bGetProcessCommandLine
+				If StringIsSpace($sCommandline) Then
+					_ArrayAdd($aReturn, Int($aiProcessList[$i][1]), $ARRAYFILL_FORCE_INT)
+				EndIf
+			Case Not $bGetProcessPath And $bGetProcessCommandLine
+				If StringIsSpace($sPath) Then
+					_ArrayAdd($aReturn, Int($aiProcessList[$i][1]), $ARRAYFILL_FORCE_INT)
+				EndIf
+		EndSelect
+	Next
+	Return $aReturn
+EndFunc
