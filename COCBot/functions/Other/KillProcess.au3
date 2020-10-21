@@ -7,7 +7,7 @@
 ;                : $sProcess_info, additional process info like process filename or full command line for Debug Log
 ;                : $iAttempts, number of attempts
 ; Return values .: True if process was killed, false if not or _Sleep interrupted
-; Author ........: Cosote (Dec-2015), Boldina ! (Sep-2020)
+; Author ........: Cosote (Dec-2015), Team AIO Mod++ (Sep-2020)
 ; Modified ......:
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
@@ -15,9 +15,9 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-
+#Region - Custom fix - Team AIO Mod++
 Func KillProcess($iPid, $sProcess_info = "", $iAttempts = 3)
-	If $iPid < 1 Then Return False
+	If Number($iPid) < 1 Or @error Then Return False ; Prevent bluescreen - Team AIO Mod++
 	Local $iCount = 0
 	If $sProcess_info <> "" Then $sProcess_info = ", " & $sProcess_info
 	Do
@@ -41,3 +41,4 @@ Func KillProcess($iPid, $sProcess_info = "", $iAttempts = 3)
 	EndIf
 	Return True
 EndFunc   ;==>KillProcess
+#EndRegion - Custom fix - Team AIO Mod++

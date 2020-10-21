@@ -90,11 +90,11 @@ Func InitExternal($bCheckOnly = False)
 	If Not $bCheckOnly Then
 		InitAndroidConfig(True) ; Restore default config
 
-		$g_sAndroidAdbDeviceHost = "";"1f95991e0804"
-		$g_sAndroidAdbDevicePort = "";5555
+		$g_sAndroidAdbDeviceHost = ""
+		$g_sAndroidAdbDevicePort = ""
 
 		If $oops = 0 Then
-			$g_sAndroidAdbDevice = ;$g_sAndroidAdbDeviceHost & ":" & $g_sAndroidAdbDevicePort
+			$g_sAndroidAdbDevice = ""
 		Else ; use defaults
 			SetLog("Using ADB default device " & $g_sAndroidAdbDevice & " for " & $g_sAndroidEmulator, $COLOR_ERROR)
 		EndIf
@@ -186,7 +186,7 @@ Func CheckScreenExternal($bSetLog = True)
 
 	If Not InitAndroid() Then Return False
 
-	Local $cmdOutput, $process_killed
+	Local $cmdOutput, $process_killed, $iErrCnt
 	; shell wm density 160
 	; shell wm size 860x672
 	; shell reboot
