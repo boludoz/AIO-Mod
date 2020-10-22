@@ -107,6 +107,7 @@ Global $g_hFrmBotEmbeddedMouse = 0
 
 ; Team AiO MOD++ (2019)
 #include "COCBot\Team__AiO__MOD++\functions\Config\readConfig.au3"
+#include "COCBot\functions\Other\KillProcess.au3"
 #include "COCBot\functions\Other\UpdateStats.Mini.au3"
 #include "COCBot\functions\Other\_NumberFormat.au3"
 

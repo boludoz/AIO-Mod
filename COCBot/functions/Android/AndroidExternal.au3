@@ -12,7 +12,6 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Global $sPrefixS = " -s "
 Func OpenExternal($bRestart = False)
 
 	Local $PID, $hTimer, $iCount = 0, $process_killed, $cmdOutput, $connected_to, $launchAndroid, $cmdPar
@@ -25,7 +24,7 @@ Func OpenExternal($bRestart = False)
 
 	$hTimer = __TimerInit()
 	; Wait for device
-	;$cmdOutput = LaunchConsole($g_sAndroidAdbPath, $sPrefixS & $g_sAndroidAdbDevice & " wait-for-device", $process_killed, 60 * 1000)
+	;$cmdOutput = LaunchConsole($g_sAndroidAdbPath, " -s " & $g_sAndroidAdbDevice & " wait-for-device", $process_killed, 60 * 1000)
 	;If Not $g_bRunState Then Return
 
 	; Wair for Activity Manager
@@ -50,11 +49,13 @@ Func OpenExternal($bRestart = False)
 EndFunc   ;==>OpenExternal
 
 Func GetExternalProgramParameter($bAlternative = False)
+#cs
 	If Not $bAlternative Or $g_sAndroidInstance <> $g_avAndroidAppConfig[$g_iAndroidConfig][1] Then
 		; should be launched with these parameter
 		Return "-o " & ($g_sAndroidInstance = "" ? $g_avAndroidAppConfig[$g_iAndroidConfig][1] : $g_sAndroidInstance)
 	EndIf
 	; default instance gets launched when no parameter was specified (this is the alternative way)
+#ce
 	Return ""
 EndFunc   ;==>GetExternalProgramParameter
 
@@ -76,7 +77,7 @@ Func GetExternalBackgroundMode()
 EndFunc   ;==>GetExternalBackgroundMode
 
 Func InitExternal($bCheckOnly = False)
-	Local $process_killed, $aRegExResult, $VirtualBox_Path, $g_sAndroidAdbDeviceHost, $g_sAndroidAdbDevicePort, $oops = 0
+	Local $process_killed, $aRegExResult, $VirtualBox_Path, $oops = 0
 
 	$__External_Version = "1.0.0"
 	$__External_Path = GetExternalPath()
@@ -90,14 +91,8 @@ Func InitExternal($bCheckOnly = False)
 	If Not $bCheckOnly Then
 		InitAndroidConfig(True) ; Restore default config
 
-		$g_sAndroidAdbDeviceHost = ""
-		$g_sAndroidAdbDevicePort = ""
-
-		If $oops = 0 Then
-			$g_sAndroidAdbDevice = ""
-		Else ; use defaults
-			SetLog("Using ADB default device " & $g_sAndroidAdbDevice & " for " & $g_sAndroidEmulator, $COLOR_ERROR)
-		EndIf
+		$g_sAndroidAdbDevice = ""
+		
 		; update global variables
 		$g_sAndroidProgramPath = $__External_Path & "Pure.exe"
 		$g_sAndroidPath = $__External_Path
@@ -114,6 +109,22 @@ Func InitExternal($bCheckOnly = False)
 			EndIf
 		EndIf
 
+		Local $process_killed, $cmdOutput, $aArrays, $sLine, $aTmp[0]
+		$cmdOutput = LaunchConsole($g_sAndroidAdbPath, "devices", $process_killed, 60 * 1000)
+		$cmdOutput=StringReplace($cmdOutput, ChrW(09), ChrW(35) & ChrW(35) & ChrW(35) & ChrW(35) & ChrW(35) & ChrW(35)& ChrW(35))
+		$aArrays = StringSplit($cmdOutput, @CR, $STR_NOCOUNT)
+		For $il = 0 To UBound($aArrays) -1
+			If Not StringIsSpace($aArrays[$il]) Then
+				Local $aArray = StringSplit($aArrays[$il], ChrW(35), $STR_NOCOUNT)
+				If not @error Then
+					If UBound($aArray) > 6 Then
+						_ArrayAdd($aTmp, StringReplace($aArray[0], @LF, ""), $ARRAYFILL_FORCE_STRING)
+					EndIf
+				EndIf
+			EndIf
+		Next
+		$g_sAndroidAdbDevice = $aTmp[0]
+				
 		; get screencap paths: Name: 'picture', Host path: 'C:\Users\Administrator\Pictures\MEmu Photo' (machine mapping), writable
 		; see also: VBoxManage setextradata External VBoxInternal2/SharedFoldersEnableSymlinksCreate/picture 1
 		$g_sAndroidPicturesPath = "/mnt/shared/picture/"
@@ -138,7 +149,7 @@ Func SetScreenExternal()
 	; shell wm size 860x672
 	; shell reboot
 		
-	$cmdOutput = LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & $sPrefixS & $g_sAndroidAdbDevice & " shell dumpsys display | findstr mOverrideDisplayInfo", $process_killed)
+	$cmdOutput = LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & " -s " & $g_sAndroidAdbDevice & " shell dumpsys display | findstr mOverrideDisplayInfo", $process_killed)
 	
 	If StringInStr($cmdOutput, "860 x 672") < 1 And StringInStr($cmdOutput, "density 160") < 1 Then
 	
@@ -191,7 +202,7 @@ Func CheckScreenExternal($bSetLog = True)
 	; shell wm size 860x672
 	; shell reboot
 		
-	$cmdOutput = LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & $sPrefixS & $g_sAndroidAdbDevice & " shell dumpsys display | findstr mOverrideDisplayInfo", $process_killed)
+	$cmdOutput = LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & " -s " & $g_sAndroidAdbDevice & " shell dumpsys display | findstr mOverrideDisplayInfo", $process_killed)
 	
 	If StringInStr($cmdOutput, "860 x 672") < 1 And StringInStr($cmdOutput, "density 160") < 1 Then
 		Return False
