@@ -86,6 +86,10 @@ Func InitExternal($bCheckOnly = False)
 	$__VBoxManage_Path = ""
 
 	Local $sPreferredADB = GetExternalPath() & "adb.exe"
+	
+	; Shared folder.
+	$g_sAndroidPicturesHostPath = "\lib\Pure\Shared\" ; Windows host path to mounted pictures in android
+	$g_bAndroidSharedFolderAvailable = False
 
 	; Read ADB host and Port
 	If Not $bCheckOnly Then
