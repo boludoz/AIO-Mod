@@ -224,6 +224,8 @@ Func HeroUpgrade($sHero = "")
 		$i += 1
 	Until IsArray($sInfo) Or $i > 50
 	
+	If Not (StringInStr($sInfo[1], $sHero) > 0) Then Return SetError(0, 0, 0)
+	
 	If $g_bDebugSetlog Then SetDebugLog(_ArrayToString($sInfo, " "))
 	If @error Then Return SetError(0, 0, 0)
 	
@@ -233,9 +235,9 @@ Func HeroUpgrade($sHero = "")
 		SetLog("Your Hero Level read as: " & $iHeroLevel, $COLOR_SUCCESS)
 	Else
 		SetLog("Your Hero Level was not found!", $COLOR_INFO)
-		; ClickAway() ;Click Away to close windows
-		; CheckMainScreen(False)
-		; Return
+		ClickAway() ;Click Away to close windows
+		CheckMainScreen(False)
+		Return
 	EndIf
 
 	If _Sleep($DELAYUPGRADEHERO1) Then Return
