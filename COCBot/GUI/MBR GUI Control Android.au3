@@ -120,9 +120,6 @@ Func getAllEmulators()
 	If Not @error Then
 		$cmbString &= "iTools|"
 	EndIf
-	
-	$cmbString &= "External|"
-	
 	Local $result = StringRight($cmbString, 1)
 	If $result == "|" Then $cmbString = StringTrimRight($cmbString, 1)
 	If $g_bDebugAndroid Then SetLog("All Emulator found in your machine: " & $cmbString, $COLOR_INFO)
@@ -150,8 +147,6 @@ Func getAllEmulatorsInstances()
 			$path = GetMEmuPath() & "\MemuHyperv VMs"
 		Case "iTools"
 			$path = GetiToolsPath() & "\Repos\VMs"
-		Case "External"
-			$path = GetExternalPath() & "\Repo"
 		Case Else
 			GUICtrlSetData($g_hCmbInstances, "Android", "Android")
 			Return

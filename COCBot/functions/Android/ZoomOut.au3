@@ -81,11 +81,6 @@ Func ZoomOutDroid4X()
    Return ZoomOutCtrlWheelScroll(True, True, True, ($g_iAndroidZoomoutMode <> 3), Default, -5, 250)
 EndFunc   ;==>ZoomOutDroid4X
 
-Func ZoomOutExternal()
-   SetDebugLog("ZoomOutExternal()")
-   ; Return ZoomOutCtrlWheelScroll(True, True, True, ($g_iAndroidZoomoutMode <> 3), Default, -5, 250)
-EndFunc   ;==>ZoomOutExternal
-
 Func ZoomOutNox()
 	SetDebugLog("ZoomOutNox()")
 	Return ZoomOutCtrlWheelScroll(True, True, True, ($g_iAndroidZoomoutMode <> 3), Default, -5, 250)
