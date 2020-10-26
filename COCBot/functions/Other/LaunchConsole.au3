@@ -35,13 +35,13 @@ Func LaunchConsole($cmd, $param, ByRef $process_killed, $timeout = 10000, $bUseS
 		Local $hSemaphore = LockSemaphore(StringReplace($cmd, "\", "/"), "Waiting to launch: " & $cmd)
 	EndIf
 
-	$sCommand &= String(' /c ')
+	$sCommand &= @ComSpec & String(' /c ') ; You can use all cmd commands.
 	$sCommand &= Chr(34) & $cmd & Chr(34)
 	$sCommand &= " "
 	$sCommand &= String($param)
 	
 	SetDebugLog("runCommand | " & $sCommand)
-	$sDOS = Run(@ComSpec & $sCommand, "", @SW_HIDE, 8)
+	$sDOS = Run($sCommand, "", @SW_HIDE, 8)
 	If $sDOS = 0 Then
 		SetLog("Launch failed: " & $cmd, $COLOR_ERROR)
 		If $bUseSemaphore = True Then UnlockSemaphore($hSemaphore)

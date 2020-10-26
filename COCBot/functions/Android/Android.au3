@@ -2318,9 +2318,7 @@ Func AndroidAdbSendMinitouchShellCommand($cmd = Default, $iDelay = 0, $wasRunSta
 		Return SetError(1, 0, "")
 	EndIf
 	ReadPipe($aReadPipe[0]) ; clear anything in read pipe first
-	If $cmd = Default Then
-		; nothing to launch
-	Else
+	If $cmd <> Default Then
 		If $g_bDebugAndroid Then
 			;$g_bSilentSetLog = True
 			SetDebugLog("Send ADB minitouch shell command: " & StringReplace($cmd, @LF, ";"))
