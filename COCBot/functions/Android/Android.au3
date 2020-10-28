@@ -1577,10 +1577,16 @@ Func ConnectAndroidAdb($rebootAndroidIfNeccessary = $g_bRunState, $bStartOnlyAnd
 EndFunc   ;==>ConnectAndroidAdb
 
 Func _ConnectAndroidAdb($rebootAndroidIfNeccessary = $g_bRunState, $bStartOnlyAndroid = False, $timeout = 15000)
-	If $g_sAndroidAdbPath = "" Or FileExists($g_sAndroidAdbPath) = 0 Then
-		SetLog($g_sAndroidEmulator & " ADB Path not valid: " & $g_sAndroidAdbPath, $COLOR_ERROR)
-		Return 0
-	EndIf
+	
+	; Extreme case in which the 'ADB' is deleted during the pause.
+	For $i = 0 To 1
+		If Not StringIsSpace($g_sAndroidAdbPath) And FileExists($g_sAndroidAdbPath) <> 0 Then ExitLoop
+		Local $sSetLog = "[" & $i & "] " & $g_sAndroidEmulator & " ADB Path not valid: " & $g_sAndroidAdbPath
+		Execute(($i = 0) ? ("SetDebugLog($sSetLog, $COLOR_ERROR)") : ("SetLog($sSetLog, $COLOR_ERROR)"))
+		$g_sAndroidAdbPath = FindPreferredAdbPath()
+		If $i <> 0 Then Return 0
+	Next
+	
 	ResumeAndroid()
 	Local $bRebooted = False
 
@@ -2938,8 +2944,13 @@ Func AndroidClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default)
 	Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x1,$y1)")
 	Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x2,$y2)")
 	Local $swipe_coord[4][2] = [["{$x1}", $x1], ["{$y1}", $y1], ["{$x2}", $x2], ["{$y2}", $y2]]
-	;Return AndroidAdbScript("clickdrag", $swipe_coord, Default, Default, $wasRunState)
-	Return AndroidMinitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState)
+	
+	; Custom fix - Team AIO Mod++
+	If ($g_bAndroidAdbClickDragScript = True) Then 
+		Return AndroidMinitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState)
+	Else
+		Return AndroidAdbScript("clickdrag", $swipe_coord, Default, Default, $wasRunState)
+	EndIf
 EndFunc   ;==>AndroidClickDrag
 
 Func AndroidMinitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default)
@@ -3070,7 +3081,14 @@ Func AndroidClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect = True)
 	If Not ($x = Default) Then $y = Int($y) + $g_aiMouseOffset[1]
 	ForceCaptureRegion()
 	;AndroidSlowClick($x, $y, $times, $speed)
-	Execute(($g_bAndroidAdbClickEnabled = True) ? ("AndroidMinitouchClick($x, $y, $times, $speed, $checkProblemAffect)") : ("AndroidFastClick($x, $y, $times, $speed, $checkProblemAffect)")) ; Custom fix - Team AIO Mod++
+	
+	; Custom fix - Team AIO Mod++
+	If ($g_bAndroidAdbClickEnabled = True) Then 
+		AndroidMinitouchClick($x, $y, $times, $speed, $checkProblemAffect)
+	Else
+		AndroidFastClick($x, $y, $times, $speed, $checkProblemAffect)
+	EndIf
+	
 EndFunc   ;==>AndroidClick
 
 Func AndroidSlowClick($x, $y, $times = 1, $speed = 0)
