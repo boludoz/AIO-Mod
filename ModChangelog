@@ -3,7 +3,13 @@
             | | | _| / ▓ \| |\/| |    / ▓ \| | (_) |  |_   _||_   _|
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
-                    Based on MyBot.run v7.8.7
+                    Based on MyBot.run v7.8.8
+	**v4.3.1** 
+		- Updated: to v7.8.8.
+		- Fix: Compilation execute click bug.
+		- Fix: iTools execute bug.
+		- Improved: iTools Compatibility and version tag.
+		
 	**v4.3.0** 
 		- New: Play only in Builder base option.
 		- New: Min max loops attack (Builder base).
@@ -13,7 +19,8 @@
 		- Fix: Pure click in CSV Attack (Builder base).
 		- Fix: Kill process fix.
 		- Fix: Army button.
-
+		- Improved: Adb path.
+		
 	**v4.2.9** 
 		- Fix: DMatch name.
 
