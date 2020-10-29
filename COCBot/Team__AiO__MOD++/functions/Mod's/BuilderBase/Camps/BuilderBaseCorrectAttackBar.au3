@@ -189,13 +189,16 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	_ArraySort($aAvailableTroops, 0, 0, 0, 1)
 
 	; Let's get the correct number of Army camps
-	Local $iCampsQuantities = 0
-	For $i = 0 To UBound($aAvailableTroops) - 1
-		If $aAvailableTroops[$i][0] <> "Machine" Then $iCampsQuantities += 1
-	Next
+	Local $aSwicthBtn = findMultipleQuick($g_sImgCustomArmyBB, 20, "0,695,858,722", Default, "ChangeTroops", Default, 30, False)
+	If Not IsArray($aSwicthBtn) Then
+		Return
+	EndIf
+	_ArraySort($aSwicthBtn, 0, 0, 0, 1)
+	
+	Local $iCampsQuantities = UBound($aSwicthBtn)
 	Setlog("Available " & $iCampsQuantities & " Camps.", $COLOR_INFO)
 
-	Local $aCamps[0], $iLast = -1, $bOkCamps
+	Local $aCamps[0], $aCampsFake[0], $iLast = -1, $bOkCamps = False
 	
 	; $iModeAttack
 	; Loop for every line on CSV
@@ -206,11 +209,12 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 		If $aSplitLine[0] = "CAMP" Then
 			For $i = 1 To UBound($aSplitLine) - 1
 				If StringIsSpace($aSplitLine[$i]) Then ContinueLoop
-				$aFakeCsv[0] = $aSplitLine[$i]
-				_ArrayAdd($aCamps, $aFakeCsv)
+				_ArrayAdd($aCamps, String($aSplitLine[$i]),  $ARRAYFILL_FORCE_STRING)
 			Next
+			; _ArrayDisplay($aCamps)
 			; Select the correct CAMP [cmd line] to use according with the first attack bar detection = how many camps do you have
-			$bOkCamps = ($iCampsQuantities <= UBound($aCamps))
+			$bOkCamps = ($iCampsQuantities = UBound($aCamps))
+			If $iLine <> UBound($aLines) - 1 Then $aCamps = $aCampsFake
 			If $g_bDebugSetlog Then Setlog(_ArrayToString($aCamps, "-", -1, -1, "|", -1, -1))
 			If $bOkCamps Then
 				ExitLoop
@@ -219,12 +223,19 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	Next
 	
 	Local $sLastObj = "Barbarian", $sTmp
-	If $iCampsQuantities < UBound($aCamps) Then 
+	If $bOkCamps = False Then
+		For $i = 0 To UBound($aCamps) - 1
+			If Not StringIsSpace($aCamps[$i]) And StringInStr($aCamps[$i], "WallBreaker") = 0 Then
+				$sLastObj = $aCamps[$i]
+			EndIf
+		Next
+
 		ReDim $aCamps[$iCampsQuantities]
 		For $i = 0 To UBound($aCamps) - 1
 			$sTmp = $aCamps[$i]
-			If Not StringIsSpace($sTmp) Then $sLastObj = $sTmp
-			$aCamps[$i] = $sLastObj
+			If StringIsSpace($sTmp) Then
+				$aCamps[$i] = $sLastObj
+			EndIf
 		Next
 	EndIf
 	
@@ -264,15 +275,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 
 	Local $bWaschanged = False
 	Local $iAvoidInfLoop = 0
-	
-	Local $aSwicthBtn = findMultipleQuick($g_sImgCustomArmyBB, 20, "0,695,858,722", Default, "ChangeTroops", Default, 30, False)
-	
-	If Not IsArray($aSwicthBtn) Or Not (UBound($aSwicthBtn) >= 6) Then ; Instrumental click.
-		Local $aSwicthBtn[6][3] = [[-1, 112, 708], [-1, 180, 708], [-1, 253, 708], [-1, 327, 708], [-1, 398, 708], [-1, 471, 708]]
-	EndIf
-	
-	_ArraySort($aSwicthBtn, 0, 0, 0, 1)
-	
+		
 	Local $aAttackBar = -1
 	Local $bDone = False
 	While ($bDone = False And $iAvoidInfLoop < 4)
