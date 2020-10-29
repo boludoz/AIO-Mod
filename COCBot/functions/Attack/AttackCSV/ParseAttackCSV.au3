@@ -44,37 +44,37 @@ Func ParseAttackCSV($debug = False)
 		Local $iFirstDrop = -1, $iCastlePosOld = -1, $iDbgSector = 0, $ichkDropCCFirst = 1, $aTmpCommand
 		Local $aShortAndCC = $g_asSiegeMachineShortNames
 		_ArrayAdd($aShortAndCC, "Castle")
-		
+
 		If $iDbgSector = 1 Then _ArrayDisplay($aShortAndCC)
 		If $iDbgSector = 1 Then _ArrayDisplay($aLines)
-		
+
 		For $ii = 0 To UBound($aShortAndCC) -1 ; CC, Sieges ($eWallW, $eBattleB, $eStoneS, $eCastle)
 			$iFirstDrop = -1
 			$iCastlePosOld = -1
 			$iDbgSector = 0
 			$ichkDropCCFirst = 1
 			$aTmpCommand = -1
-		
+
 			For $i = 0 To UBound($aLines) - 1
 				$aTmpCommand = StringSplit($aLines[$i], "|", 2)
-		
+
 				; Search first 'DROP'
 				If UBound($aTmpCommand) > 4 And StringInStr($aTmpCommand[0], "DROP") > 0 Then ; Pos. 1 for prevent commints and Notes.
 					$iFirstDrop = $i
 					ExitLoop
 				EndIf
 				Next
-		
+
 			For $i = 0 To UBound($aLines) - 1
 				$aTmpCommand = StringSplit($aLines[$i], "|", 2)
-		
+
 				; Search first 'Castle', if is in first position does not apply.
 				If UBound($aTmpCommand) > 4 And $iFirstDrop < $i And StringInStr($aTmpCommand[4], $aShortAndCC[$ii]) > 0 Then
 					$iCastlePosOld = $i
 					ExitLoop
 				EndIf
 				Next
-		
+
 			If $iCastlePosOld > -1 Then
 				_ArrayInsert($aLines, $iFirstDrop, $aLines[$iCastlePosOld], -1, -1, $ARRAYFILL_FORCE_STRING)
 				_ArrayDelete($aLines, $iCastlePosOld  + 1)
@@ -83,7 +83,7 @@ Func ParseAttackCSV($debug = False)
 		Next
 	EndIf
 	#EndRegion
-				
+
 		; Read in lines of text until the EOF is reached
 		For $iLine = 0 To UBound($aLines) - 1
 			$line = $aLines[$iLine]
@@ -157,7 +157,7 @@ Func ParseAttackCSV($debug = False)
 							EndSwitch
 							If CheckCsvValues("MAKE", 1, $value1) And CheckCsvValues("MAKE", 5, $value5) Then
 								$sTargetVectors = StringReplace($sTargetVectors, $value3, "", Default, $STR_NOCASESENSEBASIC) ; if re-making a vector, must remove from target vector string
-								If CheckCsvValues("MAKE", 8, $value8) Then ; Vector is targeted towards building 
+								If CheckCsvValues("MAKE", 8, $value8) Then ; Vector is targeted towards building
 									; new field definitions:
 									; $side = target side string
 									; value3 = Drop points can be 1,3,5,7... ODD number Only e.g if 5=[2, 1, 0, -1, -2] will Add tiles to left and right to make drop point 3 would be exact positon of building
@@ -297,15 +297,15 @@ Func ParseAttackCSV($debug = False)
 								EndIf
 							EndIf
 						EndIf
-						
+
 						; Custom delay between points - Team AIO Mod++
 						Local $aTmp = StringSplit($value5, "-")
 						Local $aDelaypoints[2] = [Round($aTmp[1]), Round($aTmp[$aTmp[0]])]
-					
+
 						; Custom delay between  drops in same point - Team AIO Mod++
 						Local $aTmp = StringSplit($value6, "-")
 						Local $aDelaydrop[2] = [Round($aTmp[1]), Round($aTmp[$aTmp[0]])]
-						
+
 						; Custom sleep time after drop - Team AIO Mod++
 						Local $aTmp = StringSplit($value7, "-")
 						Local $aSleepdrop[2] = [Round($aTmp[1]), Round($aTmp[$aTmp[0]])]
@@ -314,7 +314,7 @@ Func ParseAttackCSV($debug = False)
 						Local $aTmp = StringSplit($value8, "-")
 						Local $aSleepbeforedrop[2] = [Round($aTmp[1]), Round($aTmp[$aTmp[0]])]
 						#EndRegion - Custom DROP - Team AIO Mod++
-						
+
 						; check for targeted vectors and validate index numbers, need too many values for check logic to use CheckCSVValues()
 						Local $tmpVectorList = StringSplit($value1, "-", $STR_NOCOUNT) ; get array with all vector(s) used
 						For $v = 0 To UBound($tmpVectorList) - 1 ; loop thru each vector in target list
@@ -356,21 +356,25 @@ Func ParseAttackCSV($debug = False)
 								If PrepareAttack($g_iMatchMode, True) > 0 Then
 								_ArrayShuffle($g_avAttackTroops)
 									; a Loop from all troops
-									For $ii = $eBarb To $eSuperWall ; launch all remaining troops
-										If BitAND($ii >= $eSuperBarb, $ii <= $eSuperGiant) = True Or BitAND($ii >= $eBarb, $ii <= $eHunt) = True Then
-											; Loop on all detected troops
-											For $x = 0 To UBound($g_avAttackTroops) - 1
-												; If the Name exist and haves more than zero is deploy it
-												If ($g_avAttackTroops[$x][0] = $ii Or $g_avAttackTroops[$x][0] == ($ii + $eSuperBarb)) And $g_avAttackTroops[$x][1] > 0 Then
-													Local $name = GetTroopName($g_avAttackTroops[$x][0], $g_avAttackTroops[$x][1])
-													SetLog("Name: " & $name, $COLOR_DEBUG)
-													SetLog("Qty: " & $g_avAttackTroops[$x][1], $COLOR_DEBUG)
-													DropTroopFromINI($value1, $index1, $index2, $indexArray, $g_avAttackTroops[$x][1], $g_avAttackTroops[$x][1], $g_asTroopShortNames[$ii], $aDelaypoints[0], $aDelaypoints[1], $aDelaydrop[0], $aDelaydrop[1], $aSleepdrop[0], $aSleepdrop[1], $aSleepbeforedrop[0], $aSleepbeforedrop[1], $debug)
-													CheckHeroesHealth()
-													If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
+									For $ii = $eBarb To $eHunt ; launch all remaining troops
+										; Loop on all detected troops
+										For $x = 0 To UBound($g_avAttackTroops) - 1
+											; If the Name exist and haves more than zero is deploy it
+											If ($g_avAttackTroops[$x][0] = $ii Or $g_avAttackTroops[$x][0] == ($ii + $eSuperBarb)) And $g_avAttackTroops[$x][1] > 0 Then
+												Local $name = GetTroopName($g_avAttackTroops[$x][0], $g_avAttackTroops[$x][1])
+												Setlog("Name: " & $name, $COLOR_DEBUG)
+												Setlog("Qty: " & $g_avAttackTroops[$x][1], $COLOR_DEBUG)
+                                                DropTroopFromINI($value1, $index1, $index2, $indexArray, $g_avAttackTroops[$x][1], $g_avAttackTroops[$x][1], $g_asTroopShortNames[$ii], $aDelaypoints[0], $aDelaypoints[1], $aDelaydrop[0], $aDelaydrop[1], $aSleepdrop[0], $aSleepdrop[1], $aSleepbeforedrop[0], $aSleepbeforedrop[1], $debug)												
+												
+												; drop super troop
+												If $g_avAttackTroops[$x][0] == ($ii + $eSuperBarb) Then
+                                                    DropTroopFromINI($value1, $index1, $index2, $indexArray, $g_avAttackTroops[$x][1], $g_avAttackTroops[$x][1], $g_asTroopShortNames[$ii], $aDelaypoints[0], $aDelaypoints[1], $aDelaydrop[0], $aDelaydrop[1], $aSleepdrop[0], $aSleepdrop[1], $aSleepbeforedrop[0], $aSleepbeforedrop[1], $debug)												
 												EndIf
-											Next
-										EndIf
+												
+												CheckHeroesHealth()
+												If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
+											EndIf
+										Next
 									Next
 									; Loop on all detected troops And Check If Heroes Or Siege Was Not Dropped
 									For $i = 0 To UBound($g_avAttackTroops) - 1
@@ -384,9 +388,9 @@ Func ParseAttackCSV($debug = False)
 												$bFoundCC = True
 											EndIf
 										ElseIf ($iTroopKind = $eKing And Not $g_bDropKing) Or ($iTroopKind = $eQueen And Not $g_bDropQueen) Or ($iTroopKind = $eWarden And Not $g_bDropWarden) Or ($iTroopKind = $eChampion And Not $g_bDropChampion) Then
-											
+
 											Local $bFoundHero = False
-											
+
 											Select
 												Case BitAnd(($iTroopKind = $eKing), not $bRemainDropKing)
 													$bFoundHero = True
@@ -401,14 +405,14 @@ Func ParseAttackCSV($debug = False)
 													$bFoundHero = True
 													$bRemainDropChampion = True
 											EndSelect
-								
+
 											If $bFoundHero Then
 												Setlog("- Remain hero drop: " & GetTroopName($iTroopKind, 0), $COLOR_INFO)
 												DropTroopFromINI($value1, $index1, $index2, $indexArray, 1, 1, GetTroopName($iTroopKind, 1, True), $aDelaypoints[0], $aDelaypoints[1], $aDelaydrop[0], $aDelaydrop[1], $aSleepdrop[0], $aSleepdrop[1], $aSleepbeforedrop[0], $aSleepbeforedrop[1], $debug)
 												CheckHeroesHealth()
 												If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
 											EndIf
-											
+
 										EndIf
 									Next
 									#EndRegion - Custom remain - Team AIO Mod++

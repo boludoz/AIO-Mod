@@ -688,16 +688,18 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 				[MatchTroopDropName(23), $nbSides, MatchTroopWaveNb(23), 1, MatchSlotsPerEdge(23)], _
 				[MatchTroopDropName(24), $nbSides, MatchTroopWaveNb(24), 1, MatchSlotsPerEdge(24)]]
 	Else
-		Local $listInfoDeploy[32][5] = [[$eGole, $nbSides, 1, 1, 2] _
+		Local $listInfoDeploy[35][5] = [[$eGole, $nbSides, 1, 1, 2] _
 				, [$eLava, $nbSides, 1, 1, 2] _
 				, [$eGiant, $nbSides, 1, 1, $g_iSlotsGiants] _
 				, [$eSuperGiant, $nbSides, 1, 1, $g_iSlotsGiants] _
 				, [$eDrag, $nbSides, 1, 1, 0] _
 				, [$eBall, $nbSides, 1, 1, 0] _
+				, [$eSuperBall, $nbSides, 1, 1, 0] _
 				, [$eBabyD, $nbSides, 1, 1, 0] _
 				, [$eInfernoDrag, $nbSides, 1, 1, 0] _
 				, [$eHogs, $nbSides, 1, 1, 1] _
 				, [$eValk, $nbSides, 1, 1, 0] _
+				, [$eSuperValk, $nbSides, 1, 1, 0] _
 				, [$eBowl, $nbSides, 1, 1, 0] _
 				, [$eIceG, $nbSides, 1, 1, 0] _
 				, [$eMine, $nbSides, 1, 1, 0] _
@@ -710,6 +712,7 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 				, [$eSuperArch, $nbSides, 1, 1, 0] _
 				, [$eWiza, $nbSides, 1, 1, 0] _
 				, [$eMini, $nbSides, 1, 1, 0] _
+				, [$eSuperMini, $nbSides, 1, 1, 0] _
 				, [$eWitc, $nbSides, 1, 1, 1] _
 				, [$eSuperWitc, $nbSides, 1, 1, 1] _
 				, [$eGobl, $nbSides, 1, 1, 0] _
@@ -740,32 +743,37 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 	#EndRegion - Drop CC first - Team AIO Mod++ (By Boludoz)
 
 	LaunchTroopSmartFarm($listInfoDeploy, $g_iClanCastleSlot, $g_iKingSlot, $g_iQueenSlot, $g_iWardenSlot, $g_iChampionSlot, $SIDESNAMES)
+
 	If Not $g_bRunState Then Return
+
 	CheckHeroesHealth()
+	
 	If _Sleep($DELAYALGORITHM_ALLTROOPS4) Then Return
-	If PrepareAttack($g_iMatchMode, True) <> 0 Then
-		SetLog("Dropping left over Troops", $COLOR_INFO)
-		For $i = $eBarb To $eArmyCount - 1 ; launch all remaining troops
-			If ($i >= $eSuperBarb And $i <= $eArmyCount - 1) Or ($i >= $eBarb And $i <= $eTroopCount - 1) Then
-				If LaunchTroop($i, $nbSides, 1, 1, 1) Then
-					CheckHeroesHealth()
-					If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
-				EndIf
+	SetLog("Dropping left over troops", $COLOR_INFO)
+	For $x = 0 To 1
+		If PrepareAttack($g_iMatchMode, True) = 0 Then
+			If $g_bDebugSetlog Then SetDebugLog("No Wast time... exit, no troops usable left", $COLOR_DEBUG)
+			ExitLoop ;Check remaining quantities
+		EndIf
+		For $i = $eBarb To $eHunt
+		   ; launch remaining troops
+			If LaunchTroop($i, $nbSides, 1, 1, 1) Then
+				CheckHeroesHealth()
+				If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
+			EndIf
+
+			; launch remaining super troops
+			If LaunchTroop($i + $eSuperBarb, $nbSides, 1, 1, 1) Then
+				CheckHeroesHealth()
+				If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
 			EndIf
 		Next
-		Local $iKingSlot = Not $g_bDropKing ? $g_iKingSlot : -1
-		Local $iQueenSlot = Not $g_bDropQueen ? $g_iQueenSlot : -1
-		Local $iWardenSlot = Not $g_bDropWarden ? $g_iWardenSlot : -1
-		Local $iChampionSlot = Not $g_bDropChampion ? $g_iChampionSlot : -1
-		If $iKingSlot <> -1 Or $iQueenSlot <> -1 Or $iWardenSlot <> -1 Or $iChampionSlot <> -1 Then
-			SetLog("Dropping left over heroes", $COLOR_INFO)
-			Local $HeroesInfoDeploy[1][5] = [["HEROES", 1, 2, 1, 1]]
-			LaunchTroopSmartFarm($HeroesInfoDeploy, $g_iClanCastleSlot, $iKingSlot, $iQueenSlot, $iWardenSlot, $iChampionSlot, $SIDESNAMES)
-			CheckHeroesHealth()
-		EndIf
-	EndIf
+	Next
+
 	CheckHeroesHealth()
+
 	SetLog("Finished Attacking, waiting for the battle to end")
+
 EndFunc   ;==>AttackSmartFarm
 
 Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iChampion, $SIDESNAMES = "TR|TL|BR|BL")
