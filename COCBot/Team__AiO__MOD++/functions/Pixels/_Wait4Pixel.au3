@@ -8,12 +8,12 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-
 Func _Wait4Pixel($x, $y, $sColor, $iColorVariation, $iWait = 1000, $iDelay = 100, $sMsglog = Default) ; Return true if pixel is true
 	Local $hTimer = __TimerInit()
+	Local $aTemp[4] = [$x, $y, $sColor, $iColorVariation]
 	While (BitOR($iWait > __TimerDiff($hTimer), ($iWait <= 0)) > 0) ; '-1' support
 		ForceCaptureRegion()
-		If _CheckColorPixel($x, $y, $sColor, $iColorVariation, True, $sMsglog) Then Return True
+		If _CheckPixel($aTemp, $g_bCapturePixel, Default, $sMsglog) Then Return True
 		If _Sleep($iDelay) Then Return False
 		If ($iWait <= 0) Then ExitLoop ; Loop prevention.
 	WEnd
@@ -21,33 +21,16 @@ Func _Wait4Pixel($x, $y, $sColor, $iColorVariation, $iWait = 1000, $iDelay = 100
 EndFunc   ;==>_Wait4Pixel
 
 Func _Wait4PixelGone($x, $y, $sColor, $iColorVariation, $iWait = 1000, $iDelay = 100, $sMsglog = Default) ; Return true if pixel is false
-	; We can only affirm what is not true.
-	Return _Wait4Pixel($x, $y, $sColor, $iColorVariation, $iWait, $iDelay, $sMsglog) = False
+	Local $hTimer = __TimerInit()
+	Local $aTemp[4] = [$x, $y, $sColor, $iColorVariation]
+	While (BitOR($iWait > __TimerDiff($hTimer), ($iWait <= 0)) > 0) ; '-1' support
+		ForceCaptureRegion()
+		If _CheckPixel($aTemp, $g_bCapturePixel, Default, $sMsglog) = False Then Return True
+		If _Sleep($iDelay) Then Return False
+		If ($iWait <= 0) Then ExitLoop ; Loop prevention.
+	WEnd
+	Return False
 EndFunc   ;==>_Wait4PixelGone
-
-Func _CheckColorPixel($x, $y, $sColor, $iColorVariation, $bFCapture = True, $sMsglog = Default)
-	Local $hPixelColor = _GetPixelColor2($x, $y, $bFCapture)
-	Local $bFound = _ColorCheck($hPixelColor, Hex($sColor, 6), Int($iColorVariation))
-	#cs - Fast
-	Local $COLORMSG = ($bFound = True ? $COLOR_BLUE : $COLOR_RED)
-	If $sMsglog <> Default And IsString($sMsglog) Then
-		Local $String = $sMsglog & " - Ori Color: " & Hex($sColor,6) & " at X,Y: " & $x & "," & $y & " Found: " & $hPixelColor
-		If $g_bDebugSetlog Then SetDebugLog($String, $COLORMSG)
-	EndIf
-	#ce - Fast
-	Return $bFound
-EndFunc   ;==>_CheckColorPixel
-
-Func _GetPixelColor2($iX, $iY, $bNeedCapture = False)
-	Local $aPixelColor = 0
-	If $bNeedCapture = False Or $g_bRunState = False Then
-		$aPixelColor = _GDIPlus_BitmapGetPixel($g_hBitmap, $iX, $iY)
-	Else
-		_CaptureRegion($iX - 1, $iY - 1, $iX + 1, $iY + 1)
-		$aPixelColor = _GDIPlus_BitmapGetPixel($g_hBitmap, 1, 1)
-	EndIf
-	Return Hex($aPixelColor, 6)
-EndFunc   ;==>_GetPixelColor2
 
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: _Wait4PixelArray & _Wait4PixelGoneArray
@@ -68,10 +51,11 @@ Func _Wait4PixelArray($aSettings) ; Return true if pixel is true
 	Local $iDelay = (UBound($aSettings) > 5) ? ($aSettings[5]) : (100)
 	Local $sMsglog = (UBound($aSettings) > 6) ? ($aSettings[6]) : (Default)
 
+	Local $aTemp[4] = [$x, $y, $sColor, $iColorVariation]
 	Local $hTimer = __TimerInit()
 	While (BitOR($iWait > __TimerDiff($hTimer), ($iWait <= 0)) > 0) ; '-1' support
 		ForceCaptureRegion()
-		If _CheckColorPixel($x, $y, $sColor, $iColorVariation, True, $sMsglog) Then Return True
+		If _CheckPixel($aTemp, $g_bCapturePixel, Default, $sMsglog) Then Return True
 		If _Sleep($iDelay) Then Return False
 		If ($iWait <= 0) Then ExitLoop ; Loop prevention.
 	WEnd
@@ -79,8 +63,23 @@ Func _Wait4PixelArray($aSettings) ; Return true if pixel is true
 EndFunc   ;==>_Wait4PixelArray
 
 Func _Wait4PixelGoneArray($aSettings) ; Return true if pixel is false
-	; We can only affirm what is not true. What part are you missing ?.
-	Return _Wait4PixelArray($aSettings) = False
+	Local $x = $aSettings[0]
+	Local $y = $aSettings[1]
+	Local $sColor = $aSettings[2]
+	Local $iColorVariation = (UBound($aSettings) > 3) ? ($aSettings[3]) : (15)
+	Local $iWait = (UBound($aSettings) > 4) ? ($aSettings[4]) : (1000)
+	Local $iDelay = (UBound($aSettings) > 5) ? ($aSettings[5]) : (100)
+	Local $sMsglog = (UBound($aSettings) > 6) ? ($aSettings[6]) : (Default)
+
+	Local $aTemp[4] = [$x, $y, $sColor, $iColorVariation]
+	Local $hTimer = __TimerInit()
+	While (BitOR($iWait > __TimerDiff($hTimer), ($iWait <= 0)) > 0) ; '-1' support
+		ForceCaptureRegion()
+		If _CheckPixel($aTemp, $g_bCapturePixel, Default, $sMsglog) =  False Then Return True
+		If _Sleep($iDelay) Then Return False
+		If ($iWait <= 0) Then ExitLoop ; Loop prevention.
+	WEnd
+	Return False
 EndFunc   ;==>_Wait4PixelGoneArray
 
 ; #FUNCTION# ====================================================================================================================
@@ -100,15 +99,23 @@ Func _WaitForCheckImg($sPathImage, $sSearchZone = Default, $aText = Default, $iW
 	Local $hTimer = TimerInit()
 	Do
 		Local $aRetutn = findMultipleQuick($sPathImage, Default, $sSearchZone, True, $aText)
-		If $aRetutn <> -1 Then Return True
+		If IsArray($aRetutn) Then Return True
 		If _Sleep($iDelay) Then Return
 	Until ($iWait < TimerDiff($hTimer))
 	Return False
 EndFunc   ;==>_WaitForCheckImg
 
 Func _WaitForCheckImgGone($sPathImage, $sSearchZone = Default, $aText = Default, $iWait = 2000, $iDelay = 250)
-	; We can only affirm what is not true. Denial must be comprehensive.
-	Return _WaitForCheckImg($sPathImage, $sSearchZone, $aText, $iWait, $iDelay) = False
+	If $iWait = Default Then $iWait = 2000
+	If $iDelay = Default Then $iDelay = 250
+
+	Local $hTimer = TimerInit()
+	Do
+		Local $aRetutn = findMultipleQuick($sPathImage, Default, $sSearchZone, True, $aText)
+		If Not IsArray($aRetutn) Then Return True
+		If _Sleep($iDelay) Then Return
+	Until ($iWait < TimerDiff($hTimer))
+	Return False
 EndFunc   ;==>_WaitForCheckImgGone
 
 ; #FUNCTION# ====================================================================================================================

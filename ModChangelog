@@ -6,11 +6,13 @@
                     Based on MyBot.run v7.8.8
 	**v4.3.1** 
 		- Updated: to v7.8.8.
+		- Improved: iTools Compatibility and version tag.
 		- Fix: BuilderBaseCorrectAttackBar fixed camp size detection and improvements, simplified issues.
 		- Fix: Compilation execute click bug.
 		- Fix: iTools execute bug.
-		- Improved: iTools Compatibility and version tag.
-		
+		- Fix: Fixed Pixel funcs.
+		- Fix: KickOut finished.
+
 	**v4.3.0** 
 		- New: Play only in Builder base option.
 		- New: Min max loops attack (Builder base).

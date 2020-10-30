@@ -22,9 +22,12 @@ Func MainKickout()
 	Local $Number2Kick = 0
 
 	For $T = 0 To $g_iTxtKickLimit - 1
-
+		
+		; Needs refresh.
+		CheckMainScreen()
+		
 		If OpenClanPage() Then
-			If RandomSleep(1500) Then Return
+			; If RandomSleep(1500) Then Return
 			;If Go2Bottom() Then
 			; Bottom to Top [0 is Bottom , 9 Top ]
 			; TODO : check how many slots exist 9/8/7/6
@@ -38,7 +41,8 @@ Func MainKickout()
 				Local $aXPStar = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\KickOut", 0, "140, 167, 190, 667", Default, "Star", True, 44)
 
 				If Not IsArray($aXPStar) Then
-					Setlog("- KickOut fail : $aXPStar", $COLOR_ERROR)
+					CheckMainScreen()
+					; Setlog("- KickOut fail : $aXPStar", $COLOR_ERROR)
 					Return False
 				EndIf
 
@@ -67,9 +71,9 @@ Func MainKickout()
 
 					; Confirming the array and the Dimension
 					If IsArray($iNewWord) Then
-						$iDonated = Int(Number(getOcrAndCapture("coc-army", 515, $aXPStar[$i][2] + 12, 580, $aXPStar[$i][2] + 27, True)))
-						$iReceived = Int(Number(getOcrAndCapture("coc-army", 631, $aXPStar[$i][2] + 12, 698, $aXPStar[$i][2] + 27, True)))
-						; If $g_iDebugSetlog = 1 Then
+						$iDonated = Number(getOcrAndCapture("coc-army", 509, $aXPStar[$i][2] + 12, 75, 27, True))
+						$iReceived = Number(getOcrAndCapture("coc-army", 626, $aXPStar[$i][2] + 12, 75, 27, True))
+						SetDebugLog("$iDonated : " & $iDonated & "/ $iReceived : " & $iReceived)
 						SetLog("[NEW CLAN MEMBER] Donated: " & $iDonated & " / Received: " & $iReceived, $COLOR_BLACK)
 					Else
 						ContinueLoop
@@ -121,7 +125,7 @@ Func MainKickout()
 							Return False
 						EndIf
 
-						Click(Random(445, 585, 1), Random($aSendOut[0][1], $aSendOut[0][1] + 30))
+						Click(Random($aSendOut[0][1], $aSendOut[0][1] + 30), Random($aSendOut[0][2], $aSendOut[0][2] + 30))
 						If RandomSleep(500) Then Return
 
 						$Number2Kick += 1
@@ -166,7 +170,7 @@ Func Go2Bottom()
 	EndIf
 	If _Sleep(150) Then Return ; 500ms
 
-	SetLog(" ## Go2Bottom | ClickDrag ## Failed!", $COLOR_DEBUG)
+	; SetLog(" ## Go2Bottom | ClickDrag ## Failed!", $COLOR_DEBUG)
 	Return True
 EndFunc   ;==>Go2Bottom
 
@@ -198,7 +202,7 @@ Func OpenClanPage()
 
 	; Click on Clan Tab
 	Click(Random(278, 419, 1), Random(62, 103, 1), 1)
-	If RandomSleep(500) Then Return
+	_Wait4Pixel(159,255,0x797E61,25,4000)
 
 	; Click on Home Village
 	If Not IsArray(findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\KickOut", 1, "147, 121, 410, 149", Default, "NotHome", True, 0)) Then Click(Random(148, 410, 1), Random(122, 149, 1), 1)
@@ -206,7 +210,7 @@ Func OpenClanPage()
 
 	; Clan Edit Button
 	Local $aCheckEditButton[4] = [419, 332, 0xD7F37F, 10]
-	If RandomSleep(1500) Then Return
+	If RandomSleep(500) Then Return
 
 	If Not _ColorCheck(_GetPixelColor($aCheckEditButton[0], $aCheckEditButton[1], True), Hex($aCheckEditButton[2], 6), $aCheckEditButton[3]) = True Then
 		SetLog("You are not a Co-Leader/Leader of your clan! ", $COLOR_DEBUG)
