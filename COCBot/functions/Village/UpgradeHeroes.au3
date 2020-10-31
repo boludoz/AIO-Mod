@@ -17,7 +17,7 @@ Func UpgradeHeroesTime()
 	Local $iSeconds = 0
 	Local $sString = ""
 	
-	Local $sResult, $bResult, $iDateCalc
+	Local $sResult, $bResult, $iDateCalc*
 	CheckWarTime($sResult, $bResult)
 	
 	If $bResult Then
@@ -325,8 +325,7 @@ Func HeroUpgrade($sHero = "")
 	EndIf
 
 	ClickAway() ;Click Away to close windows
-	CheckMainScreen(False)
-
+	; CheckMainScreen(False)
 EndFunc   ;==>HeroUpgrade
 #EndRegion - Custom hero - Team AIO Mod++
 

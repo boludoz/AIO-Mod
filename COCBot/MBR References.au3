@@ -546,5 +546,29 @@ Func ReferenceGlobals()
 
 	$a1 = $TELEGRAM_URL
 	$a1 = $HTTP_STATUS_OK
-
+	
+	; Team AIO Mod++
+	; Queen
+	$a1 = $g_bUpgradeQueenEnable
+	$a1 = $g_sDateAndTimeQueen
+	$a1 = $s_QueenMin[$g_iCurAccount]
+	$a1 = $g_aiQueenAltarPos
+	
+	; Warden
+	$a1 = $g_bUpgradeWardenEnable
+	$a1 = $g_sDateAndTimeWarden
+	$a1 = $s_WardenMin[$g_iCurAccount]
+	$a1 = $g_aiWardenAltarPos
+	
+	; King
+	$a1 = $g_bUpgradeKingEnable
+	$a1 = $g_sDateAndTimeKing
+	$a1 = $s_KingMin[$g_iCurAccount]
+	$a1 = $g_aiKingAltarPos
+	
+	; Champion
+	$a1 = $g_bUpgradeChampionEnable
+	$a1 = $g_sDateAndTimeChampion
+	$a1 = $s_ChampionMin[$g_iCurAccount]
+	$a1 = $g_aisHeroAltarPos
 EndFunc   ;==>ReferenceGlobals

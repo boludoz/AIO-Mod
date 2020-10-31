@@ -257,10 +257,14 @@ EndFunc   ;==>AttackClick
 
 Func ClickAway($bForce = False)
 	#Region - ClickAway - Team AIO Mod++
-	_CaptureRegions()
-	Local $bSkip = (_CheckPixel($aIsMain, False, Default, "IsMain") Or _CheckPixel($aIsOnBuilderBase, False, Default, "IsOnBuilderBase") Or _PixelSearch(381, 563, 437, 567, Hex(0xFFFFB7, 6), 25, False)) And not (QuickMIS("N1", @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Obstacles", 0, 0, $g_iGAME_WIDTH, $g_iGAME_HEIGHT, False) <> "none")
+	Local $bSkip = False
+	If not $bForce Then
+		; 3EBFED - Profile, FFFFB7 - Building
+		_CaptureRegion()
+		$bSkip = _PixelSearch(23, 11, 27, 14, Hex(0x3EBFED, 6), 25, False) <> 0 And not _PixelSearch(276, 563, 305, 564, Hex(0xFFFFB7, 6), 25, False) = 0
+	EndIf
 	If $g_bDebugClick Then SetLog("ClickAway ? " & $bSkip, $COLOR_ACTION)
-	If (Not $bSkip) Or $bForce Then
+	If Not $bSkip Then
 		Local $aiRegionToUse = (Random(0, 1, 1) > 0) ? ($aiClickAwayRegionLeft) : ($aiClickAwayRegionRight)
 		Local $aiSpot[2] = [Random($aiRegionToUse[0], $aiRegionToUse[2], 1), Random($aiRegionToUse[1], $aiRegionToUse[3], 1)]
 		If $g_bDebugClick Then SetLog("ClickAway(): on X:" & $aiSpot[0] & ", Y:" & $aiSpot[1], $COLOR_ACTION)
