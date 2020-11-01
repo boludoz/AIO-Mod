@@ -120,7 +120,7 @@ Func IsImageFound($sBundle, $iRegionX = 0, $iRegionY = 0, $iRegionWidth = 0, $iR
     If $g_iThreads > 0 And $g_iDMatchingThreads <> $g_iThreads Then
         $g_iDMatchingThreads = $g_iThreads
     Else
-        $g_iDMatchingThreads = 32
+        $g_iDMatchingThreads = $g_iDMatchingDefa
     EndIf
     ; End Setting Parameters
     
@@ -149,7 +149,7 @@ Func DFind($sBundle, $iRegionX = 0, $iRegionY = 0, $iRegionWidth = 0, $iRegionHe
     If $g_iThreads > 0 And $g_iDMatchingThreads <> $g_iThreads Then
         $g_iDMatchingThreads = $g_iThreads
     Else
-        $g_iDMatchingThreads = 32
+        $g_iDMatchingThreads = $g_iDMatchingDefa
     EndIf
     ; End Setting Parameters
 

@@ -124,35 +124,28 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default) ;Checks if in
 EndFunc   ;==>_checkMainScreen
 
 #Region - Custom - Team AIO Mod++
- Func _checkMainScreenImage(ByRef $bLocated, $aPixelToCheck, $bNeedCaptureRegion = $g_bNoCapturePixel)
-    $bLocated = _CheckPixel($aPixelToCheck, $bNeedCaptureRegion) And Not checkObstacles_Network(False, False) And checkChatTabPixel()
-     Return $bLocated
- EndFunc
+Func _checkMainScreenImage(ByRef $bLocated, $aPixelToCheck, $bNeedCaptureRegion = $g_bNoCapturePixel)
+	$bLocated = _CheckPixel($aPixelToCheck, $bNeedCaptureRegion) And Not checkObstacles_Network(False, False) And checkChatTabPixel()
+	Return $bLocated
+EndFunc
 
 Func checkChatTabPixel()
-    SetDebugLog("Checking chat tab pixel exists to ensure images have loaded correctly")
-	
-	Local $b = False
-	Local $iLoopStartTime = __TimerInit()
-	ForceCaptureRegion()
-	Do
-		$b = _ColorCheckCie2000("FDA923", _GetPixelColor(20, 355, True), 15)
-		If $b = True Then 
-			SetDebugLog("ChatTabPixel found", $COLOR_SUCCESS)
-			Return True
-		EndIf
-		CloseClanChat()
-		If _Sleep(100) Then Return
-	Until __TimerDiff($iLoopStartTime) > 600
-	SetLog("ChatTabPixel not found", $COLOR_ERROR)
-
+	SetDebugLog("Checking chat tab pixel exists to ensure images have loaded correctly")
+	ZoomOut()
+	If _Sleep(500) Then Return
+	Local $aChatTabPixel = decodeSingleCoord(findImage("ChatTabPixel", $g_sImgChatTabPixel, GetDiamondFromRect("0,450,50,300"), 1, True))
+	If UBound($aChatTabPixel) > 0 Then 
+		SetDebugLog("ChatTabPixel found", $COLOR_SUCCESS)
+		Return True
+	Else
+		SetLog("ChatTabPixel not found", $COLOR_ERROR)
+	EndIf
 	Return False
 EndFunc   ;==>checkChatTabPixel
 
-Func isOnMainVillage($bNeedCaptureRegion = (Not $g_bNoCapturePixel))
+Func isOnMainVillage($bNeedCaptureRegion = $g_bNoCapturePixel)
 	Local $aPixelToCheck = $aIsMain
 	Local $bLocated = False
-	_checkMainScreenImage($bLocated, $aIsMain, $bNeedCaptureRegion)
-	Return $bLocated
+	Return _checkMainScreenImage($bLocated, $aPixelToCheck)
 EndFunc
 #EndRegion - Custom - Team AIO Mod++
