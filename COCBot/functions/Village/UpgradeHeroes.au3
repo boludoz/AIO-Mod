@@ -17,7 +17,7 @@ Func UpgradeHeroesTime()
 	Local $iSeconds = 0
 	Local $sString = ""
 	
-	Local $sResult, $bResult, $iDateCalc*
+	Local $sResult, $bResult, $iDateCalc
 	CheckWarTime($sResult, $bResult)
 	
 	If $bResult Then
