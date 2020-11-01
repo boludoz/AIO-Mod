@@ -39,9 +39,8 @@ Func _LocateQueenAltar($bCollect = True)
 	SetLog("Locating Queen Altar", $COLOR_INFO)
 	
 	#Region - Auto locate hero - Team AIO Mod++
-	ZoomOut()
 	Local $aAltarPos[2]
-	Local $aLocateHero = DMClasicArray(DFind($g_sBundleHeroesUbiQueen, 0, 0, 0, 0, 0, 0, 0, True), 18)
+	Local $aLocateHero = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\HeroLocate", 1, "FV", True, "Queen")
 	If IsArray($aLocateHero) Then
 		For $i = 0 To UBound($aLocateHero) -1
 			$aAltarPos[0] = $aLocateHero[$i][1]
@@ -223,9 +222,8 @@ Func _LocateKingAltar($bCollect = True)
 	SetLog("Locating King Altar", $COLOR_INFO)
 	
 	#Region - Auto locate hero - Team AIO Mod++
-	ZoomOut()
 	Local $aAltarPos[2]
-	Local $aLocateHero = DMClasicArray(DFind($g_sBundleHeroesUbiKing, 0, 0, 0, 0, 0, 0, 0, True), 18)
+	Local $aLocateHero = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\HeroLocate", 1, "FV", True, "King")
 	If IsArray($aLocateHero) Then
 		For $i = 0 To UBound($aLocateHero) -1
 			$aAltarPos[0] = $aLocateHero[$i][1]
@@ -410,9 +408,8 @@ Func _LocateWardenAltar($bCollect = True)
 	SetLog("Locating Grand Warden Altar", $COLOR_INFO)
 	
 	#Region - Auto locate hero - Team AIO Mod++
-	ZoomOut()
 	Local $aAltarPos[2]
-	Local $aLocateHero = DMClasicArray(DFind($g_sBundleHeroesUbiWarden, 0, 0, 0, 0, 0, 0, 0, True), 18)
+	Local $aLocateHero = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\HeroLocate", 1, "FV", True, "Warden")
 	If IsArray($aLocateHero) Then
 		For $i = 0 To UBound($aLocateHero) -1
 			$aAltarPos[0] = $aLocateHero[$i][1]
@@ -597,9 +594,8 @@ Func _LocateChampionAltar($bCollect = True)
 
 	SetLog("Locating Royal Champion Altar", $COLOR_INFO)
 	#Region - Auto locate hero - Team AIO Mod++
-	ZoomOut()
 	Local $aAltarPos[2]
-	Local $aLocateHero = DMClasicArray(DFind($g_sBundleHeroesUbiChampion, 0, 0, 0, 0, 0, 0, 0, True), 18)
+	Local $aLocateHero = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\HeroLocate", 1, "FV", True, "Champion")
 	If IsArray($aLocateHero) Then
 		For $i = 0 To UBound($aLocateHero) -1
 			$aAltarPos[0] = $aLocateHero[$i][1]
