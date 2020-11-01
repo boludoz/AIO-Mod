@@ -97,8 +97,8 @@ Func _WaitForCheckImgGone($sPathImage, $sSearchZone = Default, $aText = Default,
 EndFunc   ;==>_WaitForCheckImgGone
 
 ; #FUNCTION# ====================================================================================================================
-; Name ..........: CompareCie2000
-; Description ...: Cie2000 human color difference for pixels.
+; Name ..........: _ColorCheckSubjetive
+; Description ...: Cie1976 human color difference for pixels.
 ; Author ........: Boldina !, Inspired in Dissociable, translated from python (JAMES MASON).
 ; 				   https://en.wikipedia.org/wiki/Color_difference
 ; 				   https://raw.githubusercontent.com/sumtype/CIEDE2000/master/ciede2000.py
@@ -109,74 +109,108 @@ EndFunc   ;==>_WaitForCheckImgGone
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-; _ColorCheckCie2000(0x00FF00, 0x00F768, 5) ; 4.74575054233923 ; Old | 6.66013616882879 | 3.25675649923578
-Func _ColorCheckCie2000($nColor1 = 0x00FF00, $nColor2 = 0x00FF6C, $sVari = 5, $sIgnore = Default)
+; _ColorCheckSubjetive(0x00FF00, 0x00F768, 5) ; 4.74575054233923 ; Old | 6.66013616882879 | 3.25675649923578
+Func _ColorCheckSubjetive($nColor1 = 0x00FF00, $nColor2 = 0x00FF6C, $sVari = Default, $sIgnore = Default)
 
-	Local $iPixelDiff = ciede2000(xyz2lab(StandardRGBXTOXZY($nColor1, $sIgnore)), xyz2lab(StandardRGBXTOXZY($nColor2, $sIgnore)))
-	If $g_bDebugSetlog Then SetLog("_ColorCheckCie2000 | $iPixelDiff " & $iPixelDiff, $COLOR_INFO)
+	If $sVari = Default Then
+		$sVari = 10
+	ElseIf StringIsDigit($sVari) = 0 Then
+		Switch $sVari
+			Case "Imperceptible"
+				$sVari = 1
+			Case "Perceptible"
+				$sVari = 2
+			Case "Similar"
+				$sVari = 10
+			Case "Remarkable"
+				$sVari = 25
+			Case "Different"
+				$sVari = 50
+			Case Else
+				$sVari = 10
+		EndSwitch
+	EndIf
+
+	Local $iPixelDiff = Ciede1976(rgb2lab($nColor1, $sIgnore), rgb2lab($nColor2, $sIgnore))
+	If $g_bDebugSetlog Then SetLog("_ColorCheckSubjetive | $iPixelDiff " & $iPixelDiff, $COLOR_INFO)
 	If $iPixelDiff > $sVari Then
 		Return False
 	EndIf
 
 	Return True
-EndFunc   ;==>_ColorCheckCie2000
+EndFunc   ;==>_ColorCheckSubjetive
 
-; XYZ - D65 / 10° - 1964
-Func StandardRGBXTOXZY($nColor, $sIgnore = Default)
-	Local $aRGB[3] = [Dec(StringMid(String($nColor), 1, 2)), Dec(StringMid(String($nColor), 3, 2)), Dec(StringMid(String($nColor), 5, 2))]
+; Based on University of Zurich model, written by Daniel Strebel.
+; https://stackoverflow.com/questions/9018016/how-to-compare-two-colors-for-similarity-difference
+; Fixed by John Smith
+Func rgb2lab($nColor, $sIgnore = Default)
+    Local $r, $g, $b, $X, $Y, $Z, $fx, $fy, $fz, $xr, $yr, $zr;
+
+	$R = Dec(StringMid(String($nColor), 1, 2))
+	$G = Dec(StringMid(String($nColor), 3, 2))
+	$B = Dec(StringMid(String($nColor), 5, 2))
 
 	If $sIgnore <> Default Then
 		Switch $sIgnore
 			Case "Red" ; mask RGB - Red
-				$aRGB[1] = 0
-				$aRGB[2] = 0
+				$G = 0
+				$B = 0
 			Case "Heroes" ; mask RGB - Green
-				$aRGB[0] = 0
-				$aRGB[1] = 0
+				$R = 0
+				$G = 0
 			Case "Red+Blue" ; mask RGB - Red
-				$aRGB[2] = 0
+				$B = 0
 		EndSwitch
 	EndIf
 
-	For $i = 0 To 2
-		$aRGB[$i] /= 255
-		If ($aRGB[$i] > 0.04045) Then
-			$aRGB[$i] = ((($aRGB[$i] + 0.055) / 1.055) ^ 2.4)
-		Else
-			$aRGB[$i] = ($aRGB[$i] / 12.92)
-		EndIf
-		$aRGB[$i] *= 100
-	Next
-	Local $aXYZ[3] = [Null, Null, Null]
-	$aXYZ[0] = $aRGB[0] * 0.412453 + $aRGB[1] * 0.357580 + $aRGB[2] * 0.180423
-	$aXYZ[1] = $aRGB[0] * 0.212671 + $aRGB[1] * 0.715160 + $aRGB[2] * 0.072169
-	$aXYZ[2] = $aRGB[0] * 0.019334 + $aRGB[1] * 0.119193 + $aRGB[2] * 0.950227
-	; _ArrayDisplay($aXYZ)
-	Return $aXYZ
-EndFunc   ;==>StandardRGBXTOXZY
+    ;http:;www.brucelindbloom.com
 
-; xyz2lab(StandardRGBXTOXZY(0xFFFFFF))
-; Converts XYZ pixel array to LAB format.
-; Implementation derived from http://www.easyrgb.com/en/math.php
-Func xyz2lab($aXYZ)
-	$aXYZ[0] /= 95.047
-	$aXYZ[1] /= 100
-	$aXYZ[2] /= 108.883
-	For $i = 0 To 2
-		If $aXYZ[$i] > 0.008856 Then
-			$aXYZ[$i] = $aXYZ[$i] ^ (1 / 3)
-		Else
-			$aXYZ[$i] = (7.787 * $aXYZ[$i]) + (16 / 116)
-		EndIf
-	Next
-	Local $aLab[3] = [Null, Null, Null]
-	$aLab[0] = (116 * $aXYZ[1]) - 16.0
-	$aLab[1] = 500 * ($aXYZ[0] - $aXYZ[1])
-	$aLab[2] = 200 * ($aXYZ[1] - $aXYZ[2])
-	; _ArrayDisplay($aLab)
-	Return $aLab
-EndFunc   ;==>xyz2lab
+    Local $Ls, $as, $bs
+    Local $eps = 216 / 24389;
+    Local $k = 24389 / 27;
 
+    Local $Xr = 0.96422  ; reference white D50
+    Local $Yr = 1
+    Local $Zr = 0.82521
+
+    ; RGB to XYZ
+    $r = $R / 255 ;R 0..1
+    $g = $G / 255 ;G 0..1
+    $b = $B / 255 ;B 0..1
+
+    ; assuming sRGB (D65)
+	$r = ($r <= 0.04045) ? ($r / 12.92) : (($r + 0.055) / 1.055 ^ 2.4)
+    $g = ($g <= 0.04045) ? (($g + 0.055) / 1.055 ^ 2.4) : ($g / 12.92)
+    $b = ($b <= 0.04045) ? ($b / 12.92) : (($b + 0.055) / 1.055 ^ 2.4)
+
+    $X = 0.436052025 * $r + 0.385081593 * $g + 0.143087414 * $b
+    $Y = 0.222491598 * $r + 0.71688606 * $g + 0.060621486 * $b
+    $Z = 0.013929122 * $r + 0.097097002 * $g + 0.71418547 * $b
+
+	; XYZ to Lab
+    $xr = $X / $Xr
+    $yr = $Y / $Yr
+    $zr = $Z / $Zr
+
+    $fx = ($xr > $eps) ? ($xr ^ 1 / 3.0) : (($k * $xr + 16.0) / 116)
+    $fy = ($yr > $eps) ? ($yr ^ 1 / 3.0) : (($k * $yr + 16.0) / 116)
+    $fz = ($zr > $eps) ? ($zr ^ 1 / 3.0) : (($k * $zr + 16.0) / 116)
+    $Ls = (116 * $fy) - 16
+    $as = 500 * ($fx - $fy)
+    $bs = 200 * ($fy - $fz)
+    Local $lab[3] = [(2.55 * $Ls + 0.5),($as + 0.5),($bs + 0.5)]
+    return $lab
+EndFunc
+
+Func Ciede1976($laB1, $laB2)
+    Local $differences = Distance($laB1[0], $laB2[0]) + Distance($laB1[1], $laB2[1]) + Distance($laB1[2], $laB2[2])
+    return Sqrt($differences)
+EndFunc
+
+Func Distance($a, $b)
+    return ($a - $b) * ($a - $b);
+EndFunc
+#cs
 Func ciede2000($laB1, $laB2)
 	Static $kL = 1, $kC = 1, $kH = 1, $aC1C2 = 0, _
 			$G = 0, $A1P = 0, $A2P = 0, $c1P = 0, $c2P = 0, $h1p = 0, $h2p = 0, $dLP = 0, $dCP = 0, $dhP = 0, $aL = 0, _
@@ -250,9 +284,9 @@ Func ahpf($c1, $c2, $h1p, $h2p)
 	EndIf
 	Return Null
 EndFunc   ;==>ahpf
-
-; _MultiPixelArrayCIE2000("0xEDAE44,0,0,-1|0xA55123,38,40,-1", 15, 555, 15+63, 555+60)
-Func _MultiPixelArrayCIE2000($vVar, $iLeft, $iTop, $iRight, $iBottom, $iColorVariation = 15, $bForceCapture = True)
+#ce
+; _MultiPixelArray("0xEDAE44,0,0,-1|0xA55123,38,40,-1", 15, 555, 15+63, 555+60)
+Func _MultiPixelArray($vVar, $iLeft, $iTop, $iRight, $iBottom, $sVari = 15, $bForceCapture = True)
 	Local $offColor = IsArray($vVar) ? ($vVar) : (StringSplit2D($vVar, ",", "|"))
 	Local $aReturn[4] = [0, 0, 0, 0]
 	If $bForceCapture = True Then _CaptureRegion($iLeft, $iTop, $iRight, $iBottom)
@@ -260,7 +294,26 @@ Func _MultiPixelArrayCIE2000($vVar, $iLeft, $iTop, $iRight, $iBottom, $iColorVar
 	Local $xRange = $iRight - $iLeft
 	Local $yRange = $iBottom - $iTop
 
-	Local $iCV = $iColorVariation
+	If $sVari = Default Then
+		$sVari = 10
+	ElseIf StringIsDigit($sVari) = 0 Then
+		Switch $sVari
+			Case "Imperceptible"
+				$sVari = 1
+			Case "Perceptible"
+				$sVari = 2
+			Case "Similar"
+				$sVari = 10
+			Case "Remarkable"
+				$sVari = 25
+			Case "Different"
+				$sVari = 50
+			Case Else
+				$sVari = 10
+		EndSwitch
+	EndIf	
+	
+	Local $iCV = $sVari
 	Local $firstColor = $offColor[0][0]
 	If $offColorVariation = True Then
 		If Number($offColor[0][3]) > 0 Then
@@ -268,9 +321,11 @@ Func _MultiPixelArrayCIE2000($vVar, $iLeft, $iTop, $iRight, $iBottom, $iColorVar
 		EndIf
 	EndIf
 
+	Local $iPixelDiff
 	For $x = 0 To $xRange
 		For $y = 0 To $yRange
-			If _ColorCheckCie2000(_GetPixelColor($x, $y), Hex($firstColor, 6), $iCV) Then
+			$iPixelDiff = Ciede1976(rgb2lab(_GetPixelColor($x, $y), Default), rgb2lab($firstColor, Default))
+			If $iPixelDiff > $sVari Then
 				Local $allchecked = True
 				$aReturn[0] = $iLeft + $x
 				$aReturn[1] = $iTop + $y
@@ -278,12 +333,13 @@ Func _MultiPixelArrayCIE2000($vVar, $iLeft, $iTop, $iRight, $iBottom, $iColorVar
 				$aReturn[3] = $iTop + $y
 				For $i = 1 To UBound($offColor) - 1
 					If $offColorVariation = True Then
-						$iCV = $iColorVariation
+						$iCV = $sVari
 						If Number($offColor[$i][3]) > -1 Then
 							$iCV = $offColor[$i][3]
 						EndIf
 					EndIf
-					If _ColorCheckCie2000(_GetPixelColor($x + $offColor[$i][1], $y + $offColor[$i][2]), Hex($offColor[$i][0], 6), $iCV) = False Then
+					$iPixelDiff = Ciede1976(rgb2lab(_GetPixelColor($x, $y), Default), rgb2lab($firstColor, Default))
+					If $iPixelDiff < $sVari Then
 						$allchecked = False
 						ExitLoop
 					EndIf
@@ -316,7 +372,7 @@ EndFunc   ;==>_MultiPixelSearch
 
 ; Check if an image in the Bundle can be found
 Func ButtonClickArray($vVar, $iLeft, $iTop, $iRight, $iBottom, $iColorVariation = 15, $bForceCapture = True)
-	Local $aDecodedMatch = _MultiPixelArrayCIE2000($vVar, $iLeft, $iTop, $iRight, $iBottom, $iColorVariation, $bForceCapture)
+	Local $aDecodedMatch = _MultiPixelArray($vVar, $iLeft, $iTop, $iRight, $iBottom, $iColorVariation, $bForceCapture)
     If IsArray($aDecodedMatch) Then
 		Local $bRdn = $g_bUseRandomClick
 		$g_bUseRandomClick = False

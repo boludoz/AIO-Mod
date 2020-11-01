@@ -241,7 +241,7 @@ Func ButtonClickDM($sBundle, $iRegionX = 0, $iRegionY = 0, $iRegionWidth = 0, $i
 			PureClickP($aPik, 1)
 			If _Sleep(1000) Then Return
 			Local $hPikeado2 = _GetPixelColor($aPik[0], $aPik[1], True)
-			If _ColorCheckCie2000($hPikeado2, $hPikeado, 5) Then 
+			If _ColorCheckSubjetive($hPikeado2, $hPikeado, 5) Then 
 				PureClickP($aPik, 1)
 				Return True
 			EndIf

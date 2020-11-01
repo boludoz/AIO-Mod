@@ -158,6 +158,11 @@ Func HeroUpgradeTime(ByRef $sHero, $sString = "")
 	$sHero = _DateAdd('s', $iSeconds, _NowCalcDate() & " " & _NowTime(5))
 EndFunc   ;==>HeroUpgradeTime
 
+Global $s_KingMin[8] = [False, False, False, False, False, False, False, False]
+Global $s_QueenMin[8] = [False, False, False, False, False, False, False, False]
+Global $s_WardenMin[8] = [False, False, False, False, False, False, False, False]
+Global $s_ChampionMin[8] = [False, False, False, False, False, False, False, False]
+
 Func HeroUpgrade($sHero = "")
 	If Not Execute("$g_bUpgrade" & $sHero & "Enable") Then Return
 	If @error Then Return
@@ -176,10 +181,6 @@ Func HeroUpgrade($sHero = "")
 	EndIf
 	#EndRegion - Dates - Team AIO Mod++
 
-	Static $s_KingMin[8] = [False, False, False, False, False, False, False, False]
-	Static $s_QueenMin[8] = [False, False, False, False, False, False, False, False]
-	Static $s_WardenMin[8] = [False, False, False, False, False, False, False, False]
-	Static $s_ChampionMin[8] = [False, False, False, False, False, False, False, False]
 
 	;##### Get updated village elixir values
 	VillageReport(True, True)
