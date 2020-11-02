@@ -1205,12 +1205,12 @@ Func _RunFunction($sAction)
 	EndIf
     #EndRegion - Custom BB - Team AIO Mod++	
 	
-	Static $hTimeForCheck = __TimerInit()
+	Static $hTimeForCheck = TimerInit()
 	; ensure that builder base flag is false
 	$g_bStayOnBuilderBase = False
-	If __TimerDiff($hTimeForCheck) > 3000 Then 
-		checkMainScreen(False)
-		$hTimeForCheck = __TimerInit()
+	If TimerDiff($hTimeForCheck) > 3000 Then 
+		If IsMainPage(1) = False Then checkMainScreen(False, Default)
+		$hTimeForCheck = TimerInit()
 	EndIf
 	Local $bResult = __RunFunction($sAction)
 	; ensure that builder base flag is false
