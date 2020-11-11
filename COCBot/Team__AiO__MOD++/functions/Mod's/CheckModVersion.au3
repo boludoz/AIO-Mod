@@ -26,10 +26,11 @@ Func CheckModVersion($bSilent = True)
 
 	If $Temp <> "" And Not @error Then
 		Local $g_aBotVersionN = StringSplit($g_sModVersion, " ", 2)
+		Local $g_iBotVersionN
 		If @error Then
-			Local $g_iBotVersionN = StringReplace($g_sModVersion, "v", "")
+			$g_iBotVersionN = StringReplace($g_sModVersion, "v", "")
 		Else
-			Local $g_iBotVersionN = StringReplace($g_aBotVersionN[0], "v", "")
+			$g_iBotVersionN = StringReplace($g_aBotVersionN[0], "v", "")
 		EndIf
 		Local $version = GetLastVersion($Temp)
 		$g_sBotGitVersion = StringReplace($version[0], "v", "")
@@ -57,15 +58,15 @@ Func CheckModVersion($bSilent = True)
 		SetDebugLog($Temp)
 	EndIf
 	
-	If $bUpdate Then
-		Local $iNewVersion  = MsgBox (4, "New version " & $g_sBotGitVersion ,"Do you want to download the latest update?", 10)
+	; If $bUpdate Then
+		; Local $iNewVersion  = MsgBox (4, "New version " & $g_sBotGitVersion ,"Do you want to download the latest update?", 10)
 			
-		If $iNewVersion = 6 Then
-			Local $sUrl='https://github.com/boludoz/AIO-Mod/releases/download/v' & $g_sBotGitVersion & '/MyBot.run.zip'
-			ShellExecute($sUrl)
-			Exit
-		EndIf
-	EndIf
+		; If $iNewVersion = 6 Then
+			; Local $sUrl='https://github.com/boludoz/AIO-Mod/releases/download/v' & $g_sBotGitVersion & '/MyBot.run.zip'
+			; ShellExecute($sUrl)
+			; Exit
+		; EndIf
+	; EndIf
 	
 	Local $aReturn[2] = ["v" & $g_sBotGitVersion, $bUpdate]
 	Return $aReturn

@@ -1563,8 +1563,7 @@ Func KillAdbDaemon($bMutexLock = True)
 	Local $process_killed
 	LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "kill-server", $process_killed)
 	Local $sPort = ""
-	If $g_bAndroidAdbPort Then $sPort = String($g_bAndroidAdbPort)
-	Local $iPids = ProcessFindBy($g_sAndroidAdbPath, $sPort) ; Custom fix - Team AIO Mod++
+	Local $iPids = ProcessFindBy($g_sAndroidAdbPath, ($g_bAndroidAdbPort <> 0) ? (String($g_bAndroidAdbPort)) : ("")) ; Custom fix - Team AIO Mod++
 	For $i = 0 To UBound($iPids) -1 ; Custom fix - Team AIO Mod++
 		KillProcess($iPids[$i], $g_sAndroidAdbPath)
 	Next
@@ -1661,8 +1660,7 @@ Func _ConnectAndroidAdb($rebootAndroidIfNeccessary = $g_bRunState, $bStartOnlyAn
 				SetDebugLog("Stop ADB daemon!", $COLOR_ERROR)
 				LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "kill-server", $process_killed) ; Custom fix - Team AIO Mod++
 				Local $sPort = ""
-				If $g_bAndroidAdbPort Then $sPort = String($g_bAndroidAdbPort)
-				Local $iPids = ProcessFindBy($g_sAndroidAdbPath, $sPort) ; Custom fix - Team AIO Mod++
+				Local $iPids = ProcessFindBy($g_sAndroidAdbPath, ($g_bAndroidAdbPort <> 0) ? (String($g_bAndroidAdbPort)) : ("")) ; Custom fix - Team AIO Mod++
 				For $i = 0 To UBound($iPids) -1 ; Custom fix - Team AIO Mod++
 					KillProcess($iPids[$i], $g_sAndroidAdbPath)
 				Next

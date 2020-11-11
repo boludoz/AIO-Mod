@@ -1,3 +1,16 @@
+
+; #FUNCTION# ====================================================================================================================
+; Name ..........: ModFuncs.au3
+; Description ...: Avoid loss of functions during updates.
+; Author ........: Boludoz (2020)
+; Modified ......:
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2020
+;                  MyBot is distributed under the terms of the GNU GPL
+; Related .......:
+; Link ..........: https://github.com/MyBotRun/MyBot/wiki
+; Example .......: No
+; ===============================================================================================================================
+
 ; #FUNCTION# ====================================================================================================================
 ; Author ........: Michael Michta <MetalGX91 at GMail dot com>
 ; Modified.......: gcriaco <gcriaco at gmail dot com>; Ultima - 2D arrays supported, directional search, code cleanup, optimization; Melba23 - added support for empty arrays and row search; BrunoJ - Added compare option 3 to use a regex pattern
@@ -14,24 +27,6 @@ Func __ArraySearch(Const ByRef $aArray, $vValue, $iStart = 0, $iEnd = 0, $iCase 
 			Return _ArraySearch($aArray, $vValue, $iStart, $iEnd, $iCase, $iCompare, $iForward, $iSubItem, $bRow)
 	EndSelect
 EndFunc   ;==>__ArraySearch
-
-; #FUNCTION# ====================================================================================================================
-; Name ..........: ModFuncs.au3
-; Description ...: Avoid loss of functions during updates.
-; Author ........: Boludoz (2020)
-; Modified ......:
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2020
-;                  MyBot is distributed under the terms of the GNU GPL
-; Related .......:
-; Link ..........: https://github.com/MyBotRun/MyBot/wiki
-; Example .......: No
-; ===============================================================================================================================
-
-
-; Check if the filepath is a directory/folder. Does not validate if the directory/folder exists.
-Func IsDir($sFilePath)
-    Return StringInStr(FileGetAttrib($sFilePath), "D") > 0
-EndFunc   ;==>IsDir
 
 Func ClickFindMatch()
 	Local $i = 0, $bClicked = False
@@ -152,7 +147,7 @@ EndFunc   ;==>_GUICtrlCreateInput
 Func _makerequestCustom($aRequestButtonPos = "")
 	Local $sSendButtonArea = GetDiamondFromRect("220,150,650,650")
 
-	If UBound($aRequestButtonPos) = 2 And not @error Then ClickP($aRequestButtonPos, 1, 0, "0336") ;click button request troops
+	If UBound($aRequestButtonPos) = 2 And Not @error Then ClickP($aRequestButtonPos, 1, 0, "0336") ;click button request troops
 
 	If Not IsWindowOpen($g_sImgSendRequestButton, 20, 100, $sSendButtonArea) Then
 		SetLog("Request has already been made, or request window not available", $COLOR_ERROR)
@@ -166,7 +161,7 @@ Func _makerequestCustom($aRequestButtonPos = "")
 			Local $bCanReq = True, $bAddNew = True
 
 			If $g_bRequestOneTimeEnable Then
-				For $i = 0 To UBound($g_aRequestTroopsTextOT) -1
+				For $i = 0 To UBound($g_aRequestTroopsTextOT) - 1
 					If $g_aRequestTroopsTextOT[$i][0] = $g_sProfileCurrentName Then
 						$bAddNew = False
 
@@ -388,50 +383,105 @@ Func _DebugFailedImageDetection($Text)
 	EndIf
 EndFunc   ;==>_DebugFailedImageDetection
 
-Func StringSplit2D($sMatches = "Hola2-5-50-50-100-100|Hola-6-200-200-100-100", $sDelim_Item = "-", $sDelim_Row =  "|")
-    Local $iValDim_1, $iValDim_2 = 0, $iColCount
-    Local $aSplit_1 = StringSplit($sMatches, $sDelim_Row, $STR_NOCOUNT + $STR_ENTIRESPLIT)
-    $iValDim_1 = UBound($aSplit_1, $UBOUND_ROWS)
-    Local $aTmp[$iValDim_1][0], $aSplit_2
-    For $i = 0 To $iValDim_1 - 1
-        $aSplit_2 = StringSplit($aSplit_1[$i], $sDelim_Item, $STR_NOCOUNT + $STR_ENTIRESPLIT)
-        $iColCount = UBound($aSplit_2)
-        If $iColCount > $iValDim_2 Then
-            $iValDim_2 = $iColCount
-            ReDim $aTmp[$iValDim_1][$iValDim_2]
-        EndIf
-        For $j = 0 To $iColCount - 1
-            $aTmp[$i][$j] = $aSplit_2[$j]
-        Next
-    Next
-    Return $aTmp
+Func StringSplit2D($sMatches = "Hola2-5-50-50-100-100|Hola-6-200-200-100-100", $sDelim_Item = "-", $sDelim_Row = "|")
+	Local $iValDim_1, $iValDim_2 = 0, $iColCount
+	Local $aSplit_1 = StringSplit($sMatches, $sDelim_Row, $STR_NOCOUNT + $STR_ENTIRESPLIT)
+	$iValDim_1 = UBound($aSplit_1, $UBOUND_ROWS)
+	Local $aTmp[$iValDim_1][0], $aSplit_2
+	For $i = 0 To $iValDim_1 - 1
+		$aSplit_2 = StringSplit($aSplit_1[$i], $sDelim_Item, $STR_NOCOUNT + $STR_ENTIRESPLIT)
+		$iColCount = UBound($aSplit_2)
+		If $iColCount > $iValDim_2 Then
+			$iValDim_2 = $iColCount
+			ReDim $aTmp[$iValDim_1][$iValDim_2]
+		EndIf
+		For $j = 0 To $iColCount - 1
+			$aTmp[$i][$j] = $aSplit_2[$j]
+		Next
+	Next
+	Return $aTmp
 EndFunc   ;==>StringSplit2D
 
-;  ProcessFindBy($g_sAndroidAdbPath), $sPort
-Func ProcessFindBy($sPath = "", $sCommandline = "")
-	$sPath = StringReplace($sPath, "\\", "\")
-	If StringIsSpace($sPath) And StringIsSpace($sCommandline) Then Return -1
+Func IsDir($sFolderPath)
+	Return (DirGetSize($sFolderPath) > 0 and not @error)
+EndFunc   ;==>IsDir
+
+Func IsFile($sFilePath)
+	Return (FileGetSize($sFilePath) > 0 and not @error)
+EndFunc   ;==>IsDir
+
+;  	ProcessFindBy($g_sAndroidAdbPath), $sPort
+;	ProcessFindBy("C:\...\lib\TempAdb\MEmu\", "", true, false)
+Func ProcessFindBy($sPath = "", $sCommandline = "", $bAutoItMode = False, $bDontShootYourself = True)
 	
-	Local $bGetProcessPath, $bGetProcessCommandLine, $bFail, $aReturn[1] = [0]
+	; In exe case, like emulator.
+	If IsFile($sPath) = True Then
+		Local $sFile = StringRegExpReplace($sPath, "^.*\\", "")
+		$sFile = StringTrimRight($sFile, StringLen($sFile))
+		_ConsoleWrite($sFile)
+	EndIf
+
+	$sPath = StringReplace($sPath, "\\", "\")
+	If StringIsSpace($sPath) And StringIsSpace($sCommandline) Then Return $aReturn
+	Local $bGetProcessPath, $bGetProcessCommandLine, $bFail, $aReturn[0]
+	Local $sCommandlineParam
 	Local $aiProcessList = ProcessList()
-	If @error Then Return -2
-	For $i = 2 To UBound($aiProcessList)-1
+	If @error Then Return $aReturn
+	For $i = 2 To UBound($aiProcessList) - 1
 		$bGetProcessPath = StringInStr(_WinAPI_GetProcessFileName($aiProcessList[$i][1]), $sPath) > 0
-		$bGetProcessCommandLine = StringInStr(_WinAPI_GetProcessCommandLine($aiProcessList[$i][1]), $sCommandline) > 0
-		Select 
-			Case $bGetProcessPath And $bGetProcessCommandLine
-				If Not StringIsSpace($sPath) And Not StringIsSpace($sCommandline) Then 
-					_ArrayAdd($aReturn, Int($aiProcessList[$i][1]), $ARRAYFILL_FORCE_INT)
-				EndIf
-			Case $bGetProcessPath And Not $bGetProcessCommandLine
-				If StringIsSpace($sCommandline) Then
-					_ArrayAdd($aReturn, Int($aiProcessList[$i][1]), $ARRAYFILL_FORCE_INT)
-				EndIf
-			Case Not $bGetProcessPath And $bGetProcessCommandLine
-				If StringIsSpace($sPath) Then
-					_ArrayAdd($aReturn, Int($aiProcessList[$i][1]), $ARRAYFILL_FORCE_INT)
-				EndIf
-		EndSelect
+		$sCommandlineParam = _WinAPI_GetProcessCommandLine($aiProcessList[$i][1])
+		If $bGetProcessPath = False And $bAutoItMode Then $bGetProcessPath = StringInStr($sCommandlineParam, $sPath) > 0
+		$bGetProcessCommandLine = StringInStr($sCommandlineParam, $sCommandline) > 0
+		Local $iAdd = Int($aiProcessList[$i][1])
+		If $iAdd > 0 Then
+			Select
+				Case $bGetProcessPath And $bGetProcessCommandLine
+					If Not StringIsSpace($sPath) And Not StringIsSpace($sCommandline) Then
+						_ArrayAdd($aReturn, $iAdd, $ARRAYFILL_FORCE_INT)
+					EndIf
+				Case $bGetProcessPath And Not $bGetProcessCommandLine
+					If StringIsSpace($sCommandline) Then
+						_ArrayAdd($aReturn, $iAdd, $ARRAYFILL_FORCE_INT)
+					EndIf
+				Case Not $bGetProcessPath And $bGetProcessCommandLine
+					If StringIsSpace($sPath) Then
+						_ArrayAdd($aReturn, $iAdd, $ARRAYFILL_FORCE_INT)
+					EndIf
+			EndSelect
+		EndIf
 	Next
+
+	For $i = UBound($aReturn) - 1 To 0 Step -1
+		If $aReturn[$i] = @AutoItPID Then
+			If $bDontShootYourself = True Then
+				_ArrayDelete($aReturn, $i)
+			Else
+				Local $iNT = $i
+				_ArrayAdd($aReturn, $aReturn[$i], $ARRAYFILL_FORCE_INT)
+				_ArrayDelete($aReturn, $iNT)
+			EndIf
+			ExitLoop
+		EndIf
+	Next
+
 	Return $aReturn
-EndFunc
+EndFunc   ;==>ProcessFindBy
+
+Func CloseEmulatorForce()
+	Local $iPids[0], $a[0], $s
+	$s = Execute("Get" & $g_sAndroidEmulator & "Path()")
+	If not @error Then 
+		$a = ProcessFindBy($s, "")
+		_ArrayAdd($iPids, $a)
+	EndIf
+	$a = ProcessFindBy($__VBoxManage_Path, "")
+	_ArrayAdd($iPids, $a)
+	$a = ProcessFindBy($g_sAndroidAdbPath, ($g_bAndroidAdbPort <> 0) ? (String($g_bAndroidAdbPort)) : (""))
+	_ArrayAdd($iPids, $a)
+	If UBound($iPids) > 0 and not @error Then
+		For $i = 0 To UBound($iPids) -1 ; Custom fix - Team AIO Mod++
+			KillProcess($iPids[$i], $g_sAndroidAdbPath)
+		Next
+	EndIf
+EndFunc   ;==>ProcessFindBy
+

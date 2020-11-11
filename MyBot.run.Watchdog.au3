@@ -87,6 +87,211 @@ Func GetTranslatedFileIni($a, $b, $c)
 EndFunc   ;==>GetTranslatedFileIni
 
 #Region - Custom - Team AIO Mod++
+#include <Array.au3>
+#include <File.au3>
+#include <MsgBoxConstants.au3>
+Global $g_bFuseMsg = False
+Func GetLastVersion($txt)
+	Return _StringBetween($txt, '"tag_name":"', '","')
+EndFunc   ;==>GetLastVersion
+
+Func _StringBetween($sString, $sStart, $sEnd, $iMode = $STR_ENDISSTART, $bCase = False)
+$sStart = $sStart ? "\Q" & $sStart & "\E" : "\A"
+If $iMode <> $STR_ENDNOTSTART Then $iMode = $STR_ENDISSTART
+If $iMode = $STR_ENDISSTART Then
+$sEnd = $sEnd ? "(?=\Q" & $sEnd & "\E)" : "\z"
+Else
+$sEnd = $sEnd ? "\Q" & $sEnd & "\E" : "\z"
+EndIf
+If $bCase = Default Then
+$bCase = False
+EndIf
+Local $aRet = StringRegExp($sString, "(?s" &(Not $bCase ? "i" : "") & ")" & $sStart & "(.*?)" & $sEnd, $STR_REGEXPARRAYGLOBALMATCH)
+If @error Then Return SetError(1, 0, 0)
+Return $aRet
+EndFunc
+
+Func GetLastChangeLog($txt)
+	Return _StringBetween($txt, '"body":"', '"}')
+EndFunc   ;==>GetLastChangeLog
+
+Func GetVersionNormalized($VersionString, $Chars = 5)
+	If StringLeft($VersionString, 1) = "v" Then $VersionString = StringMid($VersionString, 2)
+	Local $a = StringSplit($VersionString, ".", 2)
+	Local $i
+	For $i = 0 To UBound($a) - 1
+		If StringLen($a[$i]) < $Chars Then $a[$i] = _StringRepeat("0", $Chars - StringLen($a[$i])) & $a[$i]
+	Next
+	Return _ArrayToString($a, ".")
+EndFunc   ;==>GetVersionNormalized
+
+Func UpdateMod()
+	If $g_bFuseMsg = True Then Return
+	Local $bUpdate = False
+	; If not $g_bCheckVersion Then Return
+
+	; Get the last Version from API
+	Local $g_sBotGitVersion = ""
+	Local $sCorrectStdOut = InetRead("https://api.github.com/repos/boludoz/AIO-Mod/releases/latest")
+	If @error Or $sCorrectStdOut = "" Then Return
+	Local $Temp = BinaryToString($sCorrectStdOut)
+
+	If $Temp <> "" And Not @error Then
+		Local $g_aBotVersionN = StringSplit($g_sModVersion, " ", 2)
+		Local $g_iBotVersionN
+		If @error Then
+			$g_iBotVersionN = StringReplace($g_sModVersion, "v", "")
+		Else
+			$g_iBotVersionN = StringReplace($g_aBotVersionN[0], "v", "")
+		EndIf
+		Local $version = GetLastVersion($Temp)
+		$g_sBotGitVersion = StringReplace($version[0], "v", "")
+		SetDebugLog("Last GitHub version is " & $g_sBotGitVersion )
+		SetDebugLog("Your version is " & $g_iBotVersionN )
+
+		If _VersionCompare($g_iBotVersionN, $g_sBotGitVersion) = -1 Then
+;~ 			If not $bSilent Then SetLog("WARNING, YOUR AIO VERSION (" & $g_iBotVersionN & ") IS OUT OF DATE.", $COLOR_INFO)
+;~ 			$g_bNewModAvailable = True
+			Local $ChangelogTXT = GetLastChangeLog($Temp)
+			Local $Changelog = StringSplit($ChangelogTXT[0], '\r\n', $STR_ENTIRESPLIT + $STR_NOCOUNT)
+			For $i = 0 To UBound($Changelog) - 1
+;~ 				If not $bSilent Then SetLog($Changelog[$i] )
+			Next
+			; PushMsg("Update")
+			$bUpdate = True
+		ElseIf _VersionCompare($g_iBotVersionN, $g_sBotGitVersion) = 0 Then
+;~ 			If not $bSilent Then SetLog("WELCOME CHIEF, YOU HAVE THE LATEST AIO MOD VERSION", $COLOR_SUCCESS)
+		Else
+;~ 			If not $bSilent Then SetLog("YOU ARE USING A FUTURE VERSION CHIEF!", $COLOR_ACTION)
+		EndIf
+	Else
+		SetDebugLog($Temp)
+	EndIf
+
+	If $bUpdate Then
+		Local $iNewVersion  = MsgBox (4, "New version " & $g_sBotGitVersion ,"Do you want to download the latest update?", 360)
+
+		If $iNewVersion = 6 Then
+			Local $sUrl ='https://github.com/boludoz/AIO-Mod/releases/download/v' & $g_sBotGitVersion & '/MyBot.run.zip'
+
+			Local $iBytesReceived,  $iFileSizeOnline, $hInet, $iPct
+
+			; SetDebugLog("Upgrading clash of clans. " & $s)
+			Local $sLocate = @ScriptDir & "\MyBot.run.zip"
+			ProgressOn("Download", "Upgrading AIO MOD.", "0%")
+			$hInet = InetGet($sUrl, $sLocate, 1, 1) ;Forces a reload from the remote site and return immediately and download in the background
+			$iFileSizeOnline = InetGetSize($sUrl) ;Get file size
+			While Not InetGetInfo($hInet, 2) ;Loop until download is finished+
+				If _Sleep(500) Then Return SetError(0) ;Sleep for half a second to avoid flicker in the progress bar
+				$iBytesReceived = InetGetInfo($hInet, 0) ;Get bytes received
+				$iPct = Int($iBytesReceived / $iFileSizeOnline * 100) ;Calculate percentage
+				ProgressSet($iPct, $iPct & "%") ;Set progress bar
+			WEnd
+
+			ProgressOff()
+
+			; SetDebugLog($sLocate)
+			Local $iFileSize = FileGetSize($sLocate)
+			If $iFileSizeOnline <> $iFileSize Then
+				; SetDebugLog("DownloadFromURLAD | FAIL. " & $iFileSize, $COLOR_ERROR)
+				; Return SetError(-1, 0, -1)
+				$g_bFuseMsg = True
+				Return
+			Else
+				SetDebugLog("DownloadFromURLAD | OK. " & $iFileSize, $COLOR_SUCCESS)
+				$g_bFuseMsg = True
+				; SetError(0)
+				; Return $iFileSize
+			EndIf
+
+			Local $aFiles[0]
+			_FileReadToArray(@ScriptDir & "\lib\ModLibs\Updater\Uninstaller.dat", $aFiles)
+			
+			Local $aKillAllInFolder = ProcessFindBy(@ScriptDir, "", True, True)
+		
+			For $i = 0 To UBound($aKillAllInFolder)-1
+				KillProcess($aKillAllInFolder[$i])
+			Next
+			
+			For $sQ In $aFiles
+				FileDelete(@ScriptDir & $sQ)
+			Next
+		
+			Run(chr(34) & @ScriptDir & "\lib\ModLibs\Updater\7za.exe" & chr(34) & " e " & chr(34) & @ScriptDir & "\MyBot.run.zip"  & chr(34) & " -o" & chr(34) & @ScriptDir & chr(34) & " -y -spf")
+			
+			; FileDelete(@ScriptDir & "\MyBot.run.zip")
+			
+			Exit
+		EndIf
+		Else
+		$g_bFuseMsg = True
+	EndIf
+
+	Local $aReturn[2] = ["v" & $g_sBotGitVersion, $bUpdate]
+	Return $aReturn
+EndFunc   ;==>UpdateMod
+
+Func IsFile($sFilePath)
+	Return (FileGetSize($sFilePath) > 0 and not @error)
+EndFunc   ;==>IsDir
+
+;  	ProcessFindBy($g_sAndroidAdbPath), $sPort
+;	ProcessFindBy(@ScriptDir, "", True, False)
+Func ProcessFindBy($sPath = "", $sCommandline = "", $bAutoItMode = False, $bDontShootYourself = True)
+
+	; In exe case, like emulator.
+	If IsFile($sPath) = True Then
+		Local $sFile = StringRegExpReplace($sPath, "^.*\\", "")
+		$sFile = StringTrimRight($sFile, StringLen($sFile))
+		_ConsoleWrite($sFile)
+	EndIf
+
+	$sPath = StringReplace($sPath, "\\", "\")
+	If StringIsSpace($sPath) And StringIsSpace($sCommandline) Then Return $aReturn
+	Local $bGetProcessPath, $bGetProcessCommandLine, $bFail, $aReturn[0]
+	Local $sCommandlineParam
+	Local $aiProcessList = ProcessList()
+	If @error Then Return $aReturn
+	For $i = 2 To UBound($aiProcessList) - 1
+		$bGetProcessPath = StringInStr(_WinAPI_GetProcessFileName($aiProcessList[$i][1]), $sPath) > 0
+		$sCommandlineParam = _WinAPI_GetProcessCommandLine($aiProcessList[$i][1])
+		If $bGetProcessPath = False And $bAutoItMode Then $bGetProcessPath = StringInStr($sCommandlineParam, $sPath) > 0
+		$bGetProcessCommandLine = StringInStr($sCommandlineParam, $sCommandline) > 0
+		Local $iAdd = Int($aiProcessList[$i][1])
+		If $iAdd > 0 Then
+			Select
+				Case $bGetProcessPath And $bGetProcessCommandLine
+					If Not StringIsSpace($sPath) And Not StringIsSpace($sCommandline) Then
+						_ArrayAdd($aReturn, $iAdd, $ARRAYFILL_FORCE_INT)
+					EndIf
+				Case $bGetProcessPath And Not $bGetProcessCommandLine
+					If StringIsSpace($sCommandline) Then
+						_ArrayAdd($aReturn, $iAdd, $ARRAYFILL_FORCE_INT)
+					EndIf
+				Case Not $bGetProcessPath And $bGetProcessCommandLine
+					If StringIsSpace($sPath) Then
+						_ArrayAdd($aReturn, $iAdd, $ARRAYFILL_FORCE_INT)
+					EndIf
+			EndSelect
+		EndIf
+	Next
+
+	For $i = UBound($aReturn) - 1 To 0 Step -1
+		If $aReturn[$i] = @AutoItPID Then
+			If $bDontShootYourself = True Then
+				_ArrayDelete($aReturn, $i)
+			Else
+				Local $iNT = $i
+				_ArrayAdd($aReturn, $aReturn[$i], $ARRAYFILL_FORCE_INT)
+				_ArrayDelete($aReturn, $iNT)
+			EndIf
+			ExitLoop
+		EndIf
+	Next
+
+	Return $aReturn
+EndFunc   ;==>ProcessFindBy
+
 Func KillProcess($iPid, $sProcess_info = "", $iAttempts = 3)
 	If Number($iPid) < 1 Or @error Then Return False ; Prevent bluescreen - Team AIO Mod++
 	Local $iCount = 0
@@ -97,7 +302,7 @@ Func KillProcess($iPid, $sProcess_info = "", $iAttempts = 3)
 			If _Sleep(1000) Then Return False
 			If ProcessExists($iPid) = 0 Then
 				SetDebugLog("KillProcess(" & $iCount & "): PID = " & $iPid & " killed (using taskkill -f -t)" & $sProcess_info)
-			EndIf		
+			EndIf
 		EndIf
 		$iCount += 1
 	Until ($iCount > $iAttempts) Or not ProcessExists($iPid)
@@ -107,6 +312,7 @@ Func KillProcess($iPid, $sProcess_info = "", $iAttempts = 3)
 	EndIf
 	Return True
 EndFunc   ;==>KillProcess
+
 #EndRegion - Custom - Team AIO Mod++
 
 Func SetLog($String, $Color = $COLOR_BLACK, $LogPrefix = "L ")
@@ -179,7 +385,9 @@ $hTimeoutAutoClose = $hStarted
 
 Local $iExitCode = 0
 Local $iActiveBots = 0
+If $g_bFuseMsg = False Then UpdateMod()
 While 1
+
 	$iActiveBots = UBound(GetManagedMyBotDetails())
 	SetDebugLog("Broadcast query bot state, registered bots: " & $iActiveBots)
 	_WinAPI_BroadcastSystemMessage($WM_MYBOTRUN_API, 0x0100 + $iActiveBots, $g_hFrmBot, $BSF_POSTMESSAGE + $BSF_IGNORECURRENTTASK, $BSM_APPLICATIONS)

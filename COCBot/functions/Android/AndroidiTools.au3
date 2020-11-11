@@ -284,6 +284,7 @@ EndFunc   ;==>RebootiToolsSetScreen
 
 Func CloseiTools()
 
+	CloseEmulatorForce() ; Custom fix - Team AIO Mod++
 	Return CloseVboxAndroidSvc()
 
 EndFunc   ;==>CloseiTools

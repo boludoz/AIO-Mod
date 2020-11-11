@@ -259,9 +259,8 @@ Func RebootMEmuSetScreen()
 EndFunc   ;==>RebootMEmuSetScreen
 
 Func CloseMEmu()
-
+	; CloseEmulatorForce()
 	Return CloseVboxAndroidSvc()
-
 EndFunc   ;==>CloseMEmu
 
 Func CheckScreenMEmu($bSetLog = True)
