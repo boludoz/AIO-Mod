@@ -411,7 +411,7 @@ Func _WinAPI_SetConsoleIcon($g_sLibIconPath, $nIconID, $hWnD = Default)
 EndFunc   ;==>_WinAPI_SetConsoleIcon
 
 Func _ConsoleWrite($Text)
-	If Not StringInStr($Text, @CRLF) > 0 Then $Text &= @LF ; Custom fix - Team AIO Mod++
+	If StringTrimRight($Text, 1) <> @CRLF Then $Text &= @CRLF ; Custom fix - Team AIO Mod++
 	Local $hFile, $pBuffer, $iToWrite, $iWritten, $tBuffer = DllStructCreate("char[" & StringLen($Text) & "]")
 	DllStructSetData($tBuffer, 1, $Text)
 	$hFile = _WinAPI_GetStdHandle(1)

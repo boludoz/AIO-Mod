@@ -5,6 +5,10 @@
 
                     Based on MyBot.run v7.8.8
 	**v4.3.1** 
+		- New: Autoupdater ! (Thx 7Zip team).
+		- Fix: Switch Accounts fix (@Chilly-Chill).
+
+	**v4.3.1** 
 		- Updated: to v7.8.8.
 		- Improved: iTools Compatibility and version tag.
 		- Fix: BuilderBaseCorrectAttackBar fixed camp size detection and improvements, simplified issues.

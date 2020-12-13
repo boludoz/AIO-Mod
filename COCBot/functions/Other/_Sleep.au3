@@ -25,7 +25,6 @@ Func _Sleep($iDelayOri, $iSleep = True, $CheckRunState = True, $SleepWhenPaused 
 	Static $iDelay ; AIO ++ - Random / Custom delay
 	
 	Local $iBegin = __TimerInit()
-
 	$b_Sleep_Active = True
 
 	debugGdiHandle("_Sleep")
@@ -79,8 +78,22 @@ Func _Sleep($iDelayOri, $iSleep = True, $CheckRunState = True, $SleepWhenPaused 
 		ResumeAndroid()
 		$b_Sleep_Active = False
 		Return True
+	#Region - AIO ++ - Random / Custom delay
+	ElseIf $g_bRunState Then
+		; check free space of profile folder
+		Local $fFree = DriveSpaceFree($g_sProfilePath & "\" & $g_sProfileCurrentName)
+		If @error = 0 Then 
+			If $fFree < $g_iLogCheckFreeSpaceMB Then
+				SetDebugLog("Free disk space is " & $fFree & " MB")
+				SetLog("Less than " & $g_iLogCheckFreeSpaceMB & " MB free disk space, bot is stopping!", $COLOR_ERROR)
+				btnStop()
+			EndIf
+		EndIf
+	#EndRegion - AIO ++ - Random / Custom delay
 	EndIf
+	
 	Local $iRemaining = $iDelay - __TimerDiff($iBegin)
+
 	While $iRemaining > 0
 		DllCall($g_hLibNTDLL, "dword", "ZwYieldExecution")
 		If $CheckRunState = True And $g_bRunState = False Then

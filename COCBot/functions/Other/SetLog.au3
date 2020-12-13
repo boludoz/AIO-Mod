@@ -36,11 +36,11 @@ Func _SetLog($sLogMessage, $Color = Default, $Font = Default, $FontSize = Defaul
 		$LogPrefix = Default, $bPostponed = Default, $bSilentSetLog = Default, $bWriteToLogFile = Default)
 
 	Local Static $bActive = False
-	Local Static $hLogCheckFreeSpaceTimer = 0
-
-	If $Color = Default Then $Color = $COLOR_BLACK
-	If $Font = Default Then $Font = "Candara" ; Team AIO Mod++
-	If $FontSize = Default Then $FontSize = 9 ; Team AIO Mod++
+	
+	If $Color = Default Then $Color = $COLOR_INFO
+	$Font = "Verdana" ; Team AIO Mod++
+	$FontSize = 8 ; Team AIO Mod++
+	
 	If $statusbar = Default Then $statusbar = 1
     If $time = Default Then $time = Time()
 	Local $debugTime = TimeDebug()
@@ -92,21 +92,10 @@ Func _SetLog($sLogMessage, $Color = Default, $Font = Default, $FontSize = Defaul
 	If (($g_hTxtLog <> 0 Or $g_iGuiMode <> 1) And $g_bRunState = False) Or ($bPostponed = False And __TimerDiff($g_hTxtLogTimer) >= $g_iTxtLogTimerTimeout) Then
 		; log now to GUI
 		CheckPostponedLog()
-
-		If $g_iLogCheckFreeSpaceMB And $g_bRunState Then
-			If $hLogCheckFreeSpaceTimer = 0 Or __TimerDiff($hLogCheckFreeSpaceTimer) > 600000 Then
-				; check free space of profile folder
-				Local $fFree = DriveSpaceFree($g_sProfilePath & "\" & $g_sProfileCurrentName)
-				If $hLogCheckFreeSpaceTimer = 0 Then SetDebugLog("Free disk space is " & $fFree & " MB")
-				$hLogCheckFreeSpaceTimer = __TimerInit()
-				If @error = 0 And $fFree < $g_iLogCheckFreeSpaceMB Then
-					$hLogCheckFreeSpaceTimer = 0 ; force check on next start
-					SetLog("Less than " & $g_iLogCheckFreeSpaceMB & " MB free disk space, bot is stopping!", $COLOR_ERROR)
-					If $g_bRunState Then btnStop()
-				EndIf
-			EndIf
-		EndIf
-
+		
+		#Region - AIO ++ - Random / Custom delay
+		; ...
+		#EndRegion - AIO ++ - Random / Custom delay
 	EndIf
 	$bActive = False
 EndFunc   ;==>_SetLog

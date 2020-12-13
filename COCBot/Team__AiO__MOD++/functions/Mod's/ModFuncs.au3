@@ -413,7 +413,8 @@ EndFunc   ;==>IsDir
 ;  	ProcessFindBy($g_sAndroidAdbPath), $sPort
 ;	ProcessFindBy("C:\...\lib\TempAdb\MEmu\", "", true, false)
 Func ProcessFindBy($sPath = "", $sCommandline = "", $bAutoItMode = False, $bDontShootYourself = True)
-	
+	Local $bGetProcessPath, $bGetProcessCommandLine, $bFail, $aReturn[0]
+
 	; In exe case, like emulator.
 	If IsFile($sPath) = True Then
 		Local $sFile = StringRegExpReplace($sPath, "^.*\\", "")
@@ -423,7 +424,6 @@ Func ProcessFindBy($sPath = "", $sCommandline = "", $bAutoItMode = False, $bDont
 
 	$sPath = StringReplace($sPath, "\\", "\")
 	If StringIsSpace($sPath) And StringIsSpace($sCommandline) Then Return $aReturn
-	Local $bGetProcessPath, $bGetProcessCommandLine, $bFail, $aReturn[0]
 	Local $sCommandlineParam
 	Local $aiProcessList = ProcessList()
 	If @error Then Return $aReturn
@@ -470,7 +470,7 @@ EndFunc   ;==>ProcessFindBy
 Func CloseEmulatorForce()
 	Local $iPids[0], $a[0], $s
 	$s = Execute("Get" & $g_sAndroidEmulator & "Path()")
-	If not @error Then 
+	If not @error Then
 		$a = ProcessFindBy($s, "")
 		_ArrayAdd($iPids, $a)
 	EndIf
@@ -484,4 +484,20 @@ Func CloseEmulatorForce()
 		Next
 	EndIf
 EndFunc   ;==>ProcessFindBy
+#CS
+FUNC Picante()
+	Local $sCommandMaster, $aKillAllInFolder = ProcessFindBy(@ScriptDir, "", true, false)
+	$sCommandMaster &= "CD " & chr(34) & @ScriptDir & chr(34) & " | "
+	$sCommandMaster &= chr(34) & @ScriptDir & "\lib\ModLibs\Updater\7za.exe" & chr(34) & " e " & chr(34) & @ScriptDir & "\MyBot.run.zip"  & chr(34) & " -o" & chr(34) & @ScriptDir & chr(34) & " -y -spf"
+	$sCommandMaster &= " | DEL " & chr(34) & @ScriptDir & "\MyBot.run.zip"  & chr(34) & " /Q" ; We are not engineers.
 
+	For $i = 0 To UBound($aKillAllInFolder)-1
+		Local $sPFN = _WinAPI_GetProcessFileName($aKillAllInFolder[$i])
+		Local $sPCL = _WinAPI_GetProcessCommandLine($aKillAllInFolder[$i])
+		; If Not (StringInStr($s, "MyBot.run") > 0) Then ContinueLoop
+		$sCommandMaster &=  ' | ' & chr(34) & $sPFN & chr(34) & " " &  $sPCL
+	Next
+
+	_ConsoleWrite(@ComSpec & " /c " & $sCommandMaster)
+EndFunc
+#CE
