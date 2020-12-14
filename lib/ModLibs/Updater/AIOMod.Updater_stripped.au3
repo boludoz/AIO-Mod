@@ -15,6 +15,7 @@ Global Const $UBOUND_DIMENSIONS = 0
 Global Const $UBOUND_ROWS = 1
 Global Const $UBOUND_COLUMNS = 2
 Global Const $NUMBER_DOUBLE = 3
+Global Const $FO_READ = 0
 Global Const $FLTAR_FILESFOLDERS = 0
 Global Const $FLTAR_FILES = 1
 Global Const $FLTAR_NOHIDDEN = 4
@@ -915,7 +916,7 @@ Global $hNtDll = DllOpen("ntdll.dll")
 Global Const $COLOR_ERROR = $COLOR_RED
 Global Const $COLOR_SUCCESS = 0x006600
 Global Const $COLOR_DEBUG = $COLOR_PURPLE
-Global $g_sModVersion = "v4.3.2"
+Global $g_sModVersion = "v0.0.0"
 Func _FileListToArrayRec($sFilePath, $sMask = "*", $iReturn = $FLTAR_FILESFOLDERS, $iRecur = $FLTAR_NORECUR, $iSort = $FLTAR_NOSORT, $iReturnPath = $FLTAR_RELPATH)
 If Not FileExists($sFilePath) Then Return SetError(1, 1, "")
 If $sMask = Default Then $sMask = "*"
@@ -1253,6 +1254,16 @@ Local $g_sMBRDir = @ScriptDir
 $g_sMBRDir = StringReplace($g_sMBRDir, "\lib\ModLibs\Updater", "")
 If $g_bFuseMsg = True Then Return
 Local $bUpdate = False
+If FileExists(@ScriptDir & "\BigDog.inf") Then
+Local $hFileOpen = FileOpen(@ScriptDir & "\BigDog.inf", $FO_READ)
+If $hFileOpen = -1 Then
+SetLog("An error occurred when reading the file.")
+Return False
+EndIf
+Local $sFileRead = FileReadLine($hFileOpen, 1)
+FileClose($hFileOpen)
+If StringInStr($sFileRead, "v") Then $g_sModVersion = $sFileRead
+EndIf
 Local $g_sBotGitVersion = ""
 Local $sCorrectStdOut = InetRead("https://api.github.com/repos/boludoz/AIO-Mod/releases/latest")
 If @error Or $sCorrectStdOut = "" Then Return

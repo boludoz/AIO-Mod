@@ -5,7 +5,7 @@
 ; Modified ......:
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
-; Related .......:
+; Related .......: Update without shuttle! (Inspired by Elon Musk!). This restores your session.
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
@@ -30,7 +30,6 @@ Opt("MustDeclareVars", 1)
 #include <ColorConstants.au3>
 #include <Date.au3>
 #include <Array.au3>
-
 Global $hNtDll = DllOpen("ntdll.dll")
 
 Global Const $COLOR_ERROR = $COLOR_RED ; Error messages
@@ -38,7 +37,7 @@ Global Const $COLOR_WARNING = $COLOR_MAROON ; Warning messages
 Global Const $COLOR_INFO = $COLOR_BLUE ; Information or Status updates for user
 Global Const $COLOR_SUCCESS = 0x006600 ; Dark Green, Action, method, or process completed successfully
 Global Const $COLOR_DEBUG = $COLOR_PURPLE ; Purple, basic debug color
-Global $g_sModVersion = "v4.3.2" ;<== Just Change This to Version Number
+Global $g_sModVersion = "v0.0.0"
 
 #Region - Custom - Team AIO Mod++
 #include <WinAPISysWin.au3>
@@ -102,6 +101,24 @@ Func UpdateMod()
 	Local $bUpdate = False
 	; If not $g_bCheckVersion Then Return
 
+	If FileExists(@ScriptDir & "\BigDog.inf") Then 
+		
+		; Open the file for reading and store the handle to a variable.
+		Local $hFileOpen = FileOpen(@ScriptDir & "\BigDog.inf", $FO_READ)
+		If $hFileOpen = -1 Then
+			SetLog("An error occurred when reading the file.")
+			Return False
+		EndIf
+		
+		; Read the fist line of the file using the handle returned by FileOpen.
+		Local $sFileRead = FileReadLine($hFileOpen, 1)
+		
+		; Close the handle returned by FileOpen.
+		FileClose($hFileOpen)
+		
+		If StringInStr($sFileRead, "v") Then $g_sModVersion = $sFileRead
+	EndIf
+
 	; Get the last Version from API
 	Local $g_sBotGitVersion = ""
 	Local $sCorrectStdOut = InetRead("https://api.github.com/repos/boludoz/AIO-Mod/releases/latest")
@@ -109,7 +126,8 @@ Func UpdateMod()
 	Local $Temp = BinaryToString($sCorrectStdOut)
 
 	If $Temp <> "" And Not @error Then
-		Local $g_aBotVersionN = StringSplit($g_sModVersion, " ", 2)
+		
+ 		Local $g_aBotVersionN = StringSplit($g_sModVersion, " ", 2)
 		Local $g_iBotVersionN
 		If @error Then
 			$g_iBotVersionN = StringReplace($g_sModVersion, "v", "")

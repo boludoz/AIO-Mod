@@ -97,7 +97,7 @@ Func KillProcess($iPid, $sProcess_info = "", $iAttempts = 3)
 			If _Sleep(1000) Then Return False
 			If ProcessExists($iPid) = 0 Then
 				SetDebugLog("KillProcess(" & $iCount & "): PID = " & $iPid & " killed (using taskkill -f -t)" & $sProcess_info)
-			EndIf		
+			EndIf
 		EndIf
 		$iCount += 1
 	Until ($iCount > $iAttempts) Or not ProcessExists($iPid)
@@ -219,8 +219,14 @@ Exit ($iExitCode)
 ; Reference function so stripper is not removing it
 UpdateManagedMyBot(True)
 
-;	BLD
+;	Generate 'Big Dog' and launch.
 Func LaunchUpdater()
+	If FileExists(@ScriptDir & "\lib\ModLibs\Updater\BigDog.inf") Then FileDelete(@ScriptDir & "\lib\ModLibs\Updater\BigDog.inf")
+    If Not FileWrite(@ScriptDir & "\lib\ModLibs\Updater\BigDog.inf", $g_sModVersion) Then
+		SetLog("BigDog.inf Fail", $COLOR_RED)
+        Return False
+    EndIf
+
 	Local $cmd = """" & @ScriptDir & "\lib\ModLibs\Updater\AIOMod.Updater.exe"""
 	If @Compiled = 0 Then $cmd = """" & @AutoItExe & """ /AutoIt3ExecuteScript """ & @ScriptDir & "\lib\ModLibs\Updater\AIOMod.Updater.au3" & """"
 	Local $pid = Run($cmd, @ScriptDir)
