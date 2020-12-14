@@ -64,7 +64,7 @@ Global $g_iDebugWindowMessages = 0
 
 Global $hStruct_SleepMicro = DllStructCreate("int64 time;")
 Global $pStruct_SleepMicro = DllStructGetPtr($hStruct_SleepMicro)
-Global $DELAYSLEEP = 500
+Global $DELAYSLEEP = 1000
 Global $g_bDebugSetlog = False
 Global $g_bDebugAndroid = False
 Global $g_asCmdLine = [0]
@@ -180,6 +180,7 @@ $hTimeoutAutoClose = $hStarted
 Local $iExitCode = 0
 Local $iActiveBots = 0
 LaunchUpdater()	;	BLD
+Local $i = 0
 While 1
 	$iActiveBots = UBound(GetManagedMyBotDetails())
 	SetDebugLog("Broadcast query bot state, registered bots: " & $iActiveBots)
@@ -189,6 +190,11 @@ While 1
 	Local $hCheckTimer = __TimerInit()
 	While __TimerDiff($hLoopTimer) < $iTimeoutBroadcast
 		_Sleep($DELAYSLEEP)
+		$i += 1
+		If $i > 3600 Then 
+			LaunchUpdater()
+			$i = 0
+		EndIf
 		If __TimerDiff($hCheckTimer) >= $iTimeoutCheckBot Then
 			; check if bot not responding anymore and restart if so
 			CheckManagedMyBot($iTimeoutRestartBot)
