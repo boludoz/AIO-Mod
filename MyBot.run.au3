@@ -783,8 +783,9 @@ Func runBot() ;Bot that runs everything in order
 		If $g_bRestart Then ContinueLoop
 
 		If CheckAndroidReboot() Then ContinueLoop
-		If Not $g_bIsClientSyncError And Not $g_bIsSearchLimit Then
 
+        If Not $g_bIsClientSyncError Then ;ARCH:  was " And Not $g_bIsSearchLimit"
+            SetDebugLog("ARCH: Top of loop", $COLOR_DEBUG)
 			checkMainScreen(False)
 			If $g_bRestart Then ContinueLoop
 			If RandomSleep($DELAYRUNBOT3) Then Return
@@ -815,13 +816,19 @@ Func runBot() ;Bot that runs everything in order
 				If _Sleep($DELAYRUNBOT1) = False Then checkMainScreen(False)
 			EndIf
 			#EndRegion - Request form chat / on a loop - Team AIO Mod++
-			#Region - Only farm - Team AIO Mod++
-			If Not $g_bChkOnlyFarm Then
-				Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge', 'BoostSuperTroop'] ; AIO Mod
+			
+			If $g_bIsSearchLimit Then
+				Local $aRndFuncList = ['LabCheck', 'Collect']
 			Else
-				Local $aRndFuncList = ['Collect', 'CollectFreeMagicItems', 'DailyChallenge', 'BoostSuperTroop'] ; AIO Mod
+				#Region - Only farm - Team AIO Mod++
+				If Not $g_bChkOnlyFarm Then
+					Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge', 'BoostSuperTroop'] ; AIO Mod
+				Else
+					Local $aRndFuncList = ['Collect', 'CollectFreeMagicItems', 'DailyChallenge', 'BoostSuperTroop'] ; AIO Mod
+				EndIf
+				#EndRegion - Only farm - Team AIO Mod++
 			EndIf
-			#EndRegion - Only farm - Team AIO Mod++
+			
 			_ArrayShuffle($aRndFuncList)
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
@@ -833,13 +840,17 @@ Func runBot() ;Bot that runs everything in order
 			If Not $g_bRunState Then Return
 			If $g_bRestart Then ContinueLoop
 			If IsSearchAttackEnabled() Then ; if attack is disabled skip reporting, requesting, donating, training, and boosting
-				#Region - Only farm - Team AIO Mod++
-				If Not $g_bChkOnlyFarm Then
-					Local $aRndFuncList = ['ReplayShare', 'NotifyReport', 'DonateCC,Train', 'RequestCC']
+				If $g_bIsSearchLimit Then
+					Local $aRndFuncList = ['DonateCC,Train']
 				Else
-					Local $aRndFuncList = ['NotifyReport', 'DonateCC,Train', 'RequestCC']
+					#Region - Only farm - Team AIO Mod++
+					If Not $g_bChkOnlyFarm Then
+						Local $aRndFuncList = ['ReplayShare', 'NotifyReport', 'DonateCC,Train', 'RequestCC']
+					Else
+						Local $aRndFuncList = ['NotifyReport', 'DonateCC,Train', 'RequestCC']
+					EndIf
+					#EndRegion - Only farm - Team AIO Mod++
 				EndIf
-				#EndRegion - Only farm - Team AIO Mod++
 				_ArrayShuffle($aRndFuncList)
 				For $Index In $aRndFuncList
 					If Not $g_bRunState Then Return
@@ -946,11 +957,18 @@ Func runBot() ;Bot that runs everything in order
 		Else ;When error occours directly goes to attack
 			Local $sRestartText = $g_bIsSearchLimit ? " due search limit" : " after Out of Sync Error: Attack Now"
 			SetLog("Restarted" & $sRestartText, $COLOR_INFO)
+            ;Use "CheckDonateOften" setting to run loop on hitting SearchLimit
+            If $g_bIsSearchLimit and $g_bCheckDonateOften Then
+                SetDebugLog("ARCH: Clearing booleans", $COLOR_DEBUG)
+                $g_bIsClientSyncError = False
+                $g_bRestart = False
+            EndIf
 			If RandomSleep($DELAYRUNBOT3) Then Return
 			;  OCR read current Village Trophies when OOS restart maybe due PB or else DropTrophy skips one attack cycle after OOS
 			$g_aiCurrentLoot[$eLootTrophy] = Number(getTrophyMainScreen($aTrophies[0], $aTrophies[1]))
 			If $g_bDebugSetlog Then SetDebugLog("Runbot Trophy Count: " & $g_aiCurrentLoot[$eLootTrophy], $COLOR_DEBUG)
-			AttackMain()
+            If Not $g_bIsSearchLimit or Not $g_bCheckDonateOften Then AttackMain() ;If Search Limit hit, do main loop.
+            SetDebugLog("ARCH: Not case on SearchLimit or CheckDonateOften",$COLOR_DEBUG)
 			If Not $g_bRunState Then Return
 			$g_bSkipFirstZoomout = False
 			If $g_bOutOfGold Then

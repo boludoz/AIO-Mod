@@ -100,7 +100,7 @@ Func KillProcess($iPid, $sProcess_info = "", $iAttempts = 3)
 			EndIf
 		EndIf
 		$iCount += 1
-	Until ($iCount > $iAttempts) Or not ProcessExists($iPid)
+	Until ($iCount > $iAttempts) Or Not ProcessExists($iPid)
 	If ProcessExists($iPid) Then
 		SetDebugLog("KillProcess(" & $iCount & "): PID = " & $iPid & " failed to kill" & $sProcess_info, $COLOR_ERROR)
 		Return False
@@ -179,7 +179,7 @@ $hTimeoutAutoClose = $hStarted
 
 Local $iExitCode = 0
 Local $iActiveBots = 0
-LaunchUpdater()	;	BLD
+LaunchUpdater()    ;	BLD
 Local $i = 0
 While 1
 	$iActiveBots = UBound(GetManagedMyBotDetails())
@@ -191,7 +191,7 @@ While 1
 	While __TimerDiff($hLoopTimer) < $iTimeoutBroadcast
 		_Sleep($DELAYSLEEP)
 		$i += 1
-		If $i > 3600 Then 
+		If $i > 3600 Then
 			LaunchUpdater()
 			$i = 0
 		EndIf
@@ -228,10 +228,10 @@ UpdateManagedMyBot(True)
 ;	Generate 'Big Dog' and launch.
 Func LaunchUpdater()
 	If FileExists(@ScriptDir & "\lib\ModLibs\Updater\BigDog.inf") Then FileDelete(@ScriptDir & "\lib\ModLibs\Updater\BigDog.inf")
-    If Not FileWrite(@ScriptDir & "\lib\ModLibs\Updater\BigDog.inf", $g_sModVersion) Then
+	If Not FileWrite(@ScriptDir & "\lib\ModLibs\Updater\BigDog.inf", $g_sModVersion) Then
 		SetLog("BigDog.inf Fail", $COLOR_RED)
-        Return False
-    EndIf
+		Return False
+	EndIf
 
 	Local $cmd = """" & @ScriptDir & "\lib\ModLibs\Updater\AIOMod.Updater.exe"""
 	If @Compiled = 0 Then $cmd = """" & @AutoItExe & """ /AutoIt3ExecuteScript """ & @ScriptDir & "\lib\ModLibs\Updater\AIOMod.Updater.au3" & """"

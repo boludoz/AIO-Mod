@@ -101,7 +101,7 @@ Func UpdateMod()
 	Local $bUpdate = False
 	; If not $g_bCheckVersion Then Return
 
-	If FileExists(@ScriptDir & "\BigDog.inf") Then 
+	If FileExists(@ScriptDir & "\BigDog.inf") Then
 		
 		; Open the file for reading and store the handle to a variable.
 		Local $hFileOpen = FileOpen(@ScriptDir & "\BigDog.inf", $FO_READ)
@@ -127,7 +127,7 @@ Func UpdateMod()
 
 	If $Temp <> "" And Not @error Then
 		
- 		Local $g_aBotVersionN = StringSplit($g_sModVersion, " ", 2)
+		Local $g_aBotVersionN = StringSplit($g_sModVersion, " ", 2)
 		Local $g_iBotVersionN
 		If @error Then
 			$g_iBotVersionN = StringReplace($g_sModVersion, "v", "")
@@ -167,8 +167,8 @@ Func UpdateMod()
 			Local $aFiles[1] ; Set in '1', array more stable.
 
 			$aFiles = _FileListToArrayRec($g_sMBRDir, "*||build*", $FLTAR_FILES + $FLTAR_NOHIDDEN + $FLTAR_NOSYSTEM + $FLTAR_NOLINK, $FLTAR_RECUR, $FLTAR_SORT)
-			For $i = UBound($aFiles)-1 To 0 Step -1
-				If (StringInStr($aFiles[$i], "\") > 0 Or StringInStr($aFiles[$i], "MyBot.run") > 0) And not (StringInStr($aFiles[$i], "\Updater") > 0 Or StringInStr($aFiles[$i], "CSV\") > 0 Or StringInStr($aFiles[$i], "Strategies\") > 0 Or StringInStr($aFiles[$i], "Profiles\") > 0) Then
+			For $i = UBound($aFiles) - 1 To 0 Step -1
+				If (StringInStr($aFiles[$i], "\") > 0 Or StringInStr($aFiles[$i], "MyBot.run") > 0) And Not (StringInStr($aFiles[$i], "\Updater") > 0 Or StringInStr($aFiles[$i], "CSV\") > 0 Or StringInStr($aFiles[$i], "Strategies\") > 0 Or StringInStr($aFiles[$i], "Profiles\") > 0) Then
 					ContinueLoop
 				EndIf
 				_ArrayDelete($aFiles, $i)
@@ -224,11 +224,11 @@ Func UpdateMod()
 				FileDelete($g_sMBRDir & "\" & $sQ)
 			Next
 
-			RunWait(chr(34) & $g_sMBRDir & "\lib\ModLibs\Updater\7za.exe" & chr(34) & " e " & chr(34) & $g_sMBRDir & "\MyBot.run.zip"  & chr(34) & " -o" & chr(34) & $g_sMBRDir & chr(34) & " -y -spf")
+			RunWait(Chr(34) & $g_sMBRDir & "\lib\ModLibs\Updater\7za.exe" & Chr(34) & " e " & Chr(34) & $g_sMBRDir & "\MyBot.run.zip" & Chr(34) & " -o" & Chr(34) & $g_sMBRDir & Chr(34) & " -y -spf")
 			FileDelete($g_sMBRDir & "\MyBot.run.zip")
 
-			If UBound($aRestaurate) > 0 And not @error Then
-				For $i = 0 To UBound($aRestaurate) -1
+			If UBound($aRestaurate) > 0 And Not @error Then
+				For $i = 0 To UBound($aRestaurate) - 1
 					ShellExecute($aRestaurate[$i][0], $aRestaurate[$i][1])
 				Next
 			EndIf
