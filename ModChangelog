@@ -3,11 +3,14 @@
             | | | _| / ▓ \| |\/| |    / ▓ \| | (_) |  |_   _||_   _|
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
-                    Based on MyBot.run v7.8.8
-	**v4.3.1** 
+                    Based on MyBot.run v7.8.9
+	**v4.3.2** 
 		- New: Autoupdater ! (Thx 7Zip team).
 		- Fix: Switch Accounts fix (@Chilly-Chill).
-
+		- Fix: SuperXP losed func fixed.
+		- Fix: _Wait4Pixel fixed.
+		- Fix: IsWarMenu.
+		
 	**v4.3.1** 
 		- Updated: to v7.8.8.
 		- Improved: iTools Compatibility and version tag.

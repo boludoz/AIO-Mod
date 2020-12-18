@@ -17,28 +17,31 @@
 ; ===============================================================================================================================
 #Region - Custom fix - Team AIO Mod++
 Func KillProcess($iPid, $sProcess_info = "", $iAttempts = 3)
-	If Number($iPid) < 1 Or @error Then Return False ; Prevent bluescreen - Team AIO Mod++
-	Local $iCount = 0
-	If $sProcess_info <> "" Then $sProcess_info = ", " & $sProcess_info
-	Do
-		If ProcessClose($iPid) = 1 Then
-			SetDebugLog("KillProcess(" & $iCount & "): PID = " & $iPid & " closed" & $sProcess_info)
-		Else
-			SetDebugLog("Process close error: " & @error)
+	If StringIsDigit($iPid) Then
+		If Number($iPid) > 0 Then
+			Local $iCount = 0
+			If $sProcess_info <> "" Then $sProcess_info = ", " & $sProcess_info
+			Do
+				If ProcessClose($iPid) = 1 Then
+					SetDebugLog("KillProcess(" & $iCount & "): PID = " & $iPid & " closed" & $sProcess_info)
+				Else
+					SetDebugLog("Process close error: " & @error)
+				EndIf
+				If ProcessExists($iPid) Then
+					ShellExecute(@WindowsDir & "\System32\taskkill.exe", "-f -t -pid " & $iPid, "", Default, @SW_HIDE)
+					If _Sleep(1000) Then Return False
+					If ProcessExists($iPid) = 0 Then
+						SetDebugLog("KillProcess(" & $iCount & "): PID = " & $iPid & " killed (using taskkill -f -t)" & $sProcess_info)
+					EndIf		
+				EndIf
+				$iCount += 1
+			Until ($iCount > $iAttempts) Or not ProcessExists($iPid)
+			If ProcessExists($iPid) Then
+				SetDebugLog("KillProcess(" & $iCount & "): PID = " & $iPid & " failed to kill" & $sProcess_info, $COLOR_ERROR)
+				Return False
+			EndIf
+			Return True
 		EndIf
-		If ProcessExists($iPid) Then
-			ShellExecute(@WindowsDir & "\System32\taskkill.exe", "-f -t -pid " & $iPid, "", Default, @SW_HIDE)
-			If _Sleep(1000) Then Return False
-			If ProcessExists($iPid) = 0 Then
-				SetDebugLog("KillProcess(" & $iCount & "): PID = " & $iPid & " killed (using taskkill -f -t)" & $sProcess_info)
-			EndIf		
-		EndIf
-		$iCount += 1
-	Until ($iCount > $iAttempts) Or not ProcessExists($iPid)
-	If ProcessExists($iPid) Then
-		SetDebugLog("KillProcess(" & $iCount & "): PID = " & $iPid & " failed to kill" & $sProcess_info, $COLOR_ERROR)
-		Return False
 	EndIf
-	Return True
 EndFunc   ;==>KillProcess
 #EndRegion - Custom fix - Team AIO Mod++

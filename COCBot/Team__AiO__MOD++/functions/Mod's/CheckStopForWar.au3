@@ -142,7 +142,7 @@ Func IsWarMenu()
 
 	If RandomSleep(250) Then Return
 	
-	Local $Result = _ColorCheck(_GetPixelColor(826, 34, True), "FFFFFF", 20)
+	Local $Result = _Wait4Pixel(826, 34, 0xFFFFFF, 25, 3000, 100, "IsWarMenu")
 	Return $Result
 EndFunc   ;==>IsWarMenu
 

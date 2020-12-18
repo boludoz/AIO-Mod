@@ -205,7 +205,7 @@ Func MainSXHandler()
 			$CurrentXPgain += 11
 		EndIf
 
-		If ((BalanceDonRec(False)) And (Not SkipDonateNearFullTroops(False, $aHeroResult)) And (not $g_bFastSuperXP) And ((_ColorCheck(_GetPixelColor(26, 342, True), Hex(0xEA0810, 6), 20)))) Then 
+		If ((BalanceDonRec(False)) And (Not SkipDonateNearFullTroops(False, $aHeroResult)) And (not $g_bFastSuperXP) And ((_ColorCheck(_GetPixelColor(26, 342, True), Hex(0xEA0810, 6), 20)))) Then
 			DonateCC(True)
 		EndIf
 
@@ -771,7 +771,7 @@ Func OpenGoblinMapSX()
 		SafeReturnSX()
 		Return False
 	EndIf
-	
+
 	If IsGoblinMapSXLocked($rDragToGoblinMapSX) = True Then
 		If $g_iGoblinMapOptSX = 2 Then
 			SetLog("Are you kidding me? " & $g_sGoblinMapOptSX & " is Locked, Goblin Picnic selected.", $COLOR_ERROR)
@@ -787,7 +787,7 @@ Func OpenGoblinMapSX()
 			Return False
 		EndIf
 	EndIf
-		
+
 	If $g_bDebugSX Then SetDebugLog("SX|OpenGoblinMapSX|Clicking On GP Text: " & $rDragToGoblinMapSX[0] & ", " & $rDragToGoblinMapSX[1])
 	Click($rDragToGoblinMapSX[0], $rDragToGoblinMapSX[1]) ; Click On Goblin Picnic Text To Show Attack Button
 	SetLog("Waiting for Attack Button color", $COLOR_INFO)
@@ -800,7 +800,7 @@ Func OpenGoblinMapSX()
 		If _Sleep(50) Or $Counter > 15 Then ExitLoop
 		$Counter += 1
 	WEnd
-	
+
 	; "Fuse" anti prohibition/bug
 	If $Counter > 15 Then
 		SetLog("Attack Button Cannot be Verified", $COLOR_ERROR)
@@ -847,11 +847,11 @@ Func IsGoblinMapSXLocked($FoundCoord)
 	$y = Int($FoundCoord[1]) - 100, _
 	$x1 = Int($FoundCoord[0]) + 110, _
 	$y1 = Int($FoundCoord[1]) + 110
-	
+
 	Local $bResult = (IsArray(findMultipleQuick($g_sImgLockedSX, 1, $x & "," & $y & "," & $x1 & "," & $y1  )) = True)
-	
+
 	SetLog("Is Map Locked ?" & " " & $bResult & " / " & $x & "," & $y & "," & $x1 & "," & $y1, $COLOR_INFO)
-	
+
 	Return $bResult
 EndFunc   ;==>IsGoblinMapSXLocked
 
@@ -910,7 +910,7 @@ Func DragToGoblinMapSX()
 		If $g_bDebugSX Then SetDebugLog("SX|DragToGoblinMapSX|Failed to Drag To End, Still Middle")
 		Return False ; If Failed to Drag To End Then Return False
 	EndIf
-	
+
 	For $iCounter = 0 To 15
 		If (IsArray($rIsGoblinMapSXFound)) Then ExitLoop
 		If Not $g_bRunState Then ExitLoop
@@ -933,7 +933,7 @@ Func IsGoblinMapSXFound()
 	Local $x1 = 0, $x2 = 0
 
 	If _Sleep(50) Then Return False
-	
+
 	$x1 = 418
 	$x2 = 453
 	$result = multiMatchesPixelOnly(($g_sImgFindSX & "Picnic"), 0, "FV", "FV", 0, 1000, $x1, 132, $x2, 668)
@@ -1041,9 +1041,9 @@ Func OpenSinglePlayerPage()
             ; ClickP($aAttackButton, 1, 0, "#0149") ; Click Attack Button
         ; Else
             ; ClickR($aAttackButtonRND, $aAttackButton[0], $aAttackButton[1], 1, 0)
-        ; EndIf		
+        ; EndIf
 		ClickP($aAttackButton, 1, 0, "#0149") ; Click Attack Button
-		Else 
+		Else
 		CheckMainScreen()
 		If _Sleep(100) Then Return
 		ClickP($aAttackButton, 1, 0, "#0149") ; Click Attack Button
@@ -1390,3 +1390,11 @@ Func _ArrayClear(ByRef $aArray)
         $aArray = $aArray2D
     EndIf
 EndFunc   ;==>_ArrayClear
+
+Func IIf($Condition, $IfTrue, $IfFalse)
+	If $Condition = True Then
+		Return $IfTrue
+	Else
+		Return $IfFalse
+	EndIf
+EndFunc

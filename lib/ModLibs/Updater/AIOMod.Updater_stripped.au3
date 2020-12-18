@@ -1299,8 +1299,8 @@ Local $iNewVersion = MsgBox(4, "New version " & $g_sBotGitVersion, "Do you want 
 If $iNewVersion = 6 Then
 Local $aFiles[1]
 $aFiles = _FileListToArrayRec($g_sMBRDir, "*||build*", $FLTAR_FILES + $FLTAR_NOHIDDEN + $FLTAR_NOSYSTEM + $FLTAR_NOLINK, $FLTAR_RECUR, $FLTAR_SORT)
-For $i = UBound($aFiles)-1 To 0 Step -1
-If(StringInStr($aFiles[$i], "\") > 0 Or StringInStr($aFiles[$i], "MyBot.run") > 0) And not(StringInStr($aFiles[$i], "\Updater") > 0 Or StringInStr($aFiles[$i], "CSV\") > 0 Or StringInStr($aFiles[$i], "Strategies\") > 0 Or StringInStr($aFiles[$i], "Profiles\") > 0) Then
+For $i = UBound($aFiles) - 1 To 0 Step -1
+If(StringInStr($aFiles[$i], "\") > 0 Or StringInStr($aFiles[$i], "MyBot.run") > 0) And Not(StringInStr($aFiles[$i], "\Updater") > 0 Or StringInStr($aFiles[$i], "CSV\") > 0 Or StringInStr($aFiles[$i], "Strategies\") > 0 Or StringInStr($aFiles[$i], "Profiles\") > 0) Then
 ContinueLoop
 EndIf
 _ArrayDelete($aFiles, $i)
@@ -1340,10 +1340,10 @@ Next
 For $sQ In $aFiles
 FileDelete($g_sMBRDir & "\" & $sQ)
 Next
-RunWait(chr(34) & $g_sMBRDir & "\lib\ModLibs\Updater\7za.exe" & chr(34) & " e " & chr(34) & $g_sMBRDir & "\MyBot.run.zip" & chr(34) & " -o" & chr(34) & $g_sMBRDir & chr(34) & " -y -spf")
+RunWait(Chr(34) & $g_sMBRDir & "\lib\ModLibs\Updater\7za.exe" & Chr(34) & " e " & Chr(34) & $g_sMBRDir & "\MyBot.run.zip" & Chr(34) & " -o" & Chr(34) & $g_sMBRDir & Chr(34) & " -y -spf")
 FileDelete($g_sMBRDir & "\MyBot.run.zip")
-If UBound($aRestaurate) > 0 And not @error Then
-For $i = 0 To UBound($aRestaurate) -1
+If UBound($aRestaurate) > 0 And Not @error Then
+For $i = 0 To UBound($aRestaurate) - 1
 ShellExecute($aRestaurate[$i][0], $aRestaurate[$i][1])
 Next
 EndIf
@@ -1417,10 +1417,16 @@ Next
 Return $aReturn
 EndFunc
 Func KillProcess($iPid, $sProcess_info = "", $iAttempts = 3)
-If Number($iPid) < 1 Or @error Then Return False
+If StringIsDigit($iPid) Then
+If Number($iPid) > 0 Then
 Local $iCount = 0
 If $sProcess_info <> "" Then $sProcess_info = ", " & $sProcess_info
 Do
+If ProcessClose($iPid) = 1 Then
+SetDebugLog("KillProcess(" & $iCount & "): PID = " & $iPid & " closed" & $sProcess_info)
+Else
+SetDebugLog("Process close error: " & @error)
+EndIf
 If ProcessExists($iPid) Then
 ShellExecute(@WindowsDir & "\System32\taskkill.exe", "-f -t -pid " & $iPid, "", Default, @SW_HIDE)
 If _Sleep(1000) Then Return False
@@ -1429,12 +1435,14 @@ SetDebugLog("KillProcess(" & $iCount & "): PID = " & $iPid & " killed (using tas
 EndIf
 EndIf
 $iCount += 1
-Until($iCount > $iAttempts) Or Not ProcessExists($iPid)
+Until($iCount > $iAttempts) Or not ProcessExists($iPid)
 If ProcessExists($iPid) Then
 SetDebugLog("KillProcess(" & $iCount & "): PID = " & $iPid & " failed to kill" & $sProcess_info, $COLOR_ERROR)
 Return False
 EndIf
 Return True
+EndIf
+EndIf
 EndFunc
 Func SetLog($String, $Color = $COLOR_BLACK, $LogPrefix = "L ")
 Local $log = $LogPrefix & TimeDebug() & $String

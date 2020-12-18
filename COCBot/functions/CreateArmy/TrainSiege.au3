@@ -14,11 +14,12 @@
 ; ===============================================================================================================================
 #include-once
 
-Func TrainSiege()
+Func TrainSiege($bTrainFullSiege = False)
 
 	; Check if is necessary run the routine
-	; This avoids the bug
-	If $g_iTotalTrainSpaceSiege < 1 Then Return 
+	
+	If $g_iTotalTrainSpaceSiege < 1 Then Return ; Team AIO Mod++
+	
 	If Not $g_bRunState Then Return
 
 	If $g_bDebugSetlogTrain Then SetLog("-- TrainSiege --", $COLOR_DEBUG)
@@ -52,7 +53,7 @@ Func TrainSiege()
 	If $g_bDebugSetlogTrain Or $g_bDebugSetLog Then
 		For $iSiegeIndex = $eSiegeWallWrecker To $eSiegeMachineCount - 1
 			SetLog("-- " & $g_asSiegeMachineNames[$iSiegeIndex] & " --", $COLOR_DEBUG)
-			SetLog(@TAB & "To Build: " & $g_aiArmyCompSiegeMachine[$iSiegeIndex], $COLOR_DEBUG)
+			SetLog(@TAB & "To Build: " & $g_aiArmyCompSiegeMachines[$iSiegeIndex], $COLOR_DEBUG)
 			SetLog(@TAB & "Current Army: " & $g_aiCurrentSiegeMachines[$iSiegeIndex], $COLOR_DEBUG)
 			SetLog(@TAB & "In queue: " & $aiQueueSiegeMachine[$iSiegeIndex], $COLOR_DEBUG)
 		Next
@@ -60,7 +61,7 @@ Func TrainSiege()
 
 	; Refill
 	For $iSiegeIndex = $eSiegeWallWrecker To $eSiegeMachineCount - 1
-		Local $HowMany = $g_aiArmyCompSiegeMachine[$iSiegeIndex] - $g_aiCurrentSiegeMachines[$iSiegeIndex] - $aiQueueSiegeMachine[$iSiegeIndex]
+		Local $HowMany = $g_aiArmyCompSiegeMachines[$iSiegeIndex] - $g_aiCurrentSiegeMachines[$iSiegeIndex] - $aiQueueSiegeMachine[$iSiegeIndex]
 		Local $checkPixel
 		If $iSiegeIndex = $eSiegeWallWrecker Then $checkPixel = $aCheckIsAvailableSiege
 		If $iSiegeIndex = $eSiegeBattleBlimp Then $checkPixel = $aCheckIsAvailableSiege1
@@ -77,9 +78,9 @@ Func TrainSiege()
 	Next
 
 	; build 2nd army
-	If $g_bDoubleTrain And $g_iTotalTrainSpaceSiege <= 3 Then
+	If ($g_bDoubleTrain Or $bTrainFullSiege) And $g_iTotalTrainSpaceSiege <= 3 Then
 		For $iSiegeIndex = $eSiegeWallWrecker To $eSiegeMachineCount - 1
-			Local $HowMany = $g_aiArmyCompSiegeMachine[$iSiegeIndex] * 2 - $aiTotalSiegeMachine[$iSiegeIndex]
+			Local $HowMany = $g_aiArmyCompSiegeMachines[$iSiegeIndex] * 2 - $aiTotalSiegeMachine[$iSiegeIndex]
 			Local $checkPixel
 			If $iSiegeIndex = $eSiegeWallWrecker Then $checkPixel = $aCheckIsAvailableSiege
 			If $iSiegeIndex = $eSiegeBattleBlimp Then $checkPixel = $aCheckIsAvailableSiege1

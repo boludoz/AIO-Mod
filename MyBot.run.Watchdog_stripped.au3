@@ -5,11 +5,11 @@
 #pragma compile(Icon, "Images\MyBot.ico")
 #pragma compile(FileDescription, Clash of Clans Bot - A Free Clash of Clans bot - https://mybot.run)
 #pragma compile(ProductVersion, 7.8)
-#pragma compile(FileVersion, 7.8.8)
+#pragma compile(FileVersion, 7.8.9)
 #pragma compile(LegalCopyright, © https://mybot.run)
 #Au3Stripper_Off
 #Au3Stripper_On
-Global $g_sBotVersion = "v7.8.8"
+Global $g_sBotVersion = "v7.8.9"
 Global $g_sModVersion = "v4.3.2"
 Opt("MustDeclareVars", 1)
 Global Const $WAIT_TIMEOUT = 258
@@ -551,7 +551,7 @@ Global $hTimeoutAutoClose = 0
 Global $g_iDebugWindowMessages = 0
 Global $hStruct_SleepMicro = DllStructCreate("int64 time;")
 Global $pStruct_SleepMicro = DllStructGetPtr($hStruct_SleepMicro)
-Global $DELAYSLEEP = 500
+Global $DELAYSLEEP = 1000
 Global $g_bDebugSetlog = False
 Global $g_asCmdLine = [0]
 Global Enum $eLootGold, $eLootElixir, $eLootDarkElixir, $eLootTrophy, $eLootCount
@@ -1198,6 +1198,7 @@ $hTimeoutAutoClose = $hStarted
 Local $iExitCode = 0
 Local $iActiveBots = 0
 LaunchUpdater()
+Local $i = 0
 While 1
 $iActiveBots = UBound(GetManagedMyBotDetails())
 SetDebugLog("Broadcast query bot state, registered bots: " & $iActiveBots)
@@ -1206,6 +1207,11 @@ Local $hLoopTimer = __TimerInit()
 Local $hCheckTimer = __TimerInit()
 While __TimerDiff($hLoopTimer) < $iTimeoutBroadcast
 _Sleep($DELAYSLEEP)
+$i += 1
+If $i > 3600 Then
+LaunchUpdater()
+$i = 0
+EndIf
 If __TimerDiff($hCheckTimer) >= $iTimeoutCheckBot Then
 CheckManagedMyBot($iTimeoutRestartBot)
 $hCheckTimer = __TimerInit()

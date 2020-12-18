@@ -63,7 +63,6 @@ Func CheckOverviewFullArmy($bOpenArmyWindow = False, $bCloseArmyWindow = False)
 	If $g_bDebugSetlog Then SetDebugLog("Can Request CC: " & $g_bCanRequestCC, $COLOR_DEBUG)
 
 	If $bCloseArmyWindow Then
-		;ClickP($aAway, 1, 0, "#0348") ;Click Away
 		ClickAway()
 		If _Sleep($DELAYCHECKFULLARMY3) Then Return
 	EndIf

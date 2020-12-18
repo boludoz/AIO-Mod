@@ -82,7 +82,6 @@ Func getPBTInfo()
 			If $sTimeResult = "" Then ; error if no read value
 				SetLog("strange error, no PBT value found?", $COLOR_ERROR)
 				SetError(2, "Bad time value OCR read")
-				;ClickP($aAway, 1, 0, "#9999") ; close window
 				ClickAway()
 				If _Sleep($DELAYPERSONALSHIELD2) Then Return ; wait for close
 				Return $aPBTReturnResult ; return zero value
@@ -110,7 +109,6 @@ Func getPBTInfo()
 					Case Else
 						SetLog("strange error, unexpected PBT value?", $COLOR_ERROR)
 						SetError(3, "Error processing time string")
-						;ClickP($aAway, 1, 0, "#9999") ; close window
 						ClickAway()
 						If _Sleep($DELAYPERSONALSHIELD2) Then Return ; wait for close
 						Return $aPBTReturnResult ; return zero value
@@ -118,7 +116,6 @@ Func getPBTInfo()
 			Case Else
 				SetLog("Error processing PBT time string: " & $sTimeResult, $COLOR_ERROR)
 				SetError(4, "Error processing time string")
-				;ClickP($aAway, 1, 0, "#9999") ; close window
 				ClickAway()
 				If _Sleep($DELAYPERSONALSHIELD2) Then Return ; wait for close
 				Return $aPBTReturnResult ; return zero value
@@ -139,7 +136,6 @@ Func getPBTInfo()
 		If $g_bDebugSetlog Then SetDebugLog("PBT starts: " & $aPBTReturnResult[2], $COLOR_INFO)
 		If _Sleep($DELAYPERSONALSHIELD1) Then Return
 
-		;ClickP($aAway, 1, 0, "#9999") ; close window
 		ClickAway()
 		If _Sleep($DELAYPERSONALSHIELD2) Then Return ; wait for close
 

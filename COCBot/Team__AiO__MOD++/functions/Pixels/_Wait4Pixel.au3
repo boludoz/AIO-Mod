@@ -14,7 +14,7 @@ Func _Wait4Pixel($x, $y, $sColor, $iColorVariation = 25, $iWait = 1000, $iDelay 
 	Do
 		If _CheckPixel($aTemp, $g_bCapturePixel, Default, $sMsglog) Then Return True
 		If _Sleep($iDelay) Then Return False
-	Until $iWait > __TimerDiff($hTimer)
+	Until $iWait < __TimerDiff($hTimer)
 	Return False
 EndFunc   ;==>_Wait4Pixel
 
@@ -24,7 +24,7 @@ Func _Wait4PixelGone($x, $y, $sColor, $iColorVariation = 25, $iWait = 1000, $iDe
 	Do
 		If _CheckPixel($aTemp, $g_bCapturePixel, Default, $sMsglog) = False Then Return True
 		If _Sleep($iDelay) Then Return False
-	Until $iWait > __TimerDiff($hTimer)
+	Until $iWait < __TimerDiff($hTimer)
 	Return False
 EndFunc   ;==>_Wait4PixelGone
 
