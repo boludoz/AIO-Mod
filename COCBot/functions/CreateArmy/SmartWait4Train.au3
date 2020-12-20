@@ -75,7 +75,7 @@ Func SmartWait4Train($iTestSeconds = Default)
 	If _Sleep($DELAYRESPOND) Then Return
 
 	; verify shield info & update if not already exist
-	If Not IsArray($g_asShieldStatus) And ($g_asShieldStatus[0] = "" Or $g_asShieldStatus[0] = "none") Then
+	If IsArray($g_asShieldStatus) = 0 Or $g_asShieldStatus[0] = "" Or $g_asShieldStatus[0] = "none" Then
 		$aResult = getShieldInfo()
 		If @error Then
 			SetLog("SmartWait4Train Shield OCR error = " & @error & "Extended = " & @extended, $COLOR_ERROR)
@@ -83,7 +83,7 @@ Func SmartWait4Train($iTestSeconds = Default)
 		Else
 			$g_asShieldStatus = $aResult ; Update new values
 		EndIf
-		If IsArray($g_asShieldStatus) And UBound($g_asShieldStatus) = 3 And (StringInStr($g_asShieldStatus[0], "shield", $STR_NOCASESENSEBASIC) Or StringInStr($g_asShieldStatus[0], "guard", $STR_NOCASESENSEBASIC)) Then ; check shield after update ; Custom Fix - Team AIO Mod++
+		If IsArray($g_asShieldStatus) And (StringInStr($g_asShieldStatus[0], "shield", $STR_NOCASESENSEBASIC) Or StringInStr($g_asShieldStatus[0], "guard", $STR_NOCASESENSEBASIC)) Then ; check shield after update
 			If $g_bDebugSetlogTrain Or $g_bDebugSetlog Then SetLog("Have shield till " & $g_asShieldStatus[2] & ", close game while wait for train)", $COLOR_DEBUG)
 			$iTrainWaitCloseFlag = BitOR($iTrainWaitCloseFlag, $TRAINWAIT_SHIELD)
 		EndIf
@@ -95,7 +95,7 @@ Func SmartWait4Train($iTestSeconds = Default)
 		If $g_bDebugImageSave Or $g_bDebugSetlogTrain Then SaveDebugImage("SmartWait4Troop2_")
 	EndIf
 	If _Sleep($DELAYRESPOND) Then Return
-	#Region - Custom smart wait - Team AIO Mod++
+	; Custom smart wait - Team AIO Mod++
 	If ProfileSwitchAccountEnabled() Then
 		CheckTroopTimeAllAccount()
 		Local $LessTime = 999, $account = Number($g_iCurAccount) ; Custom smart wait - Team AIO Mod++
@@ -132,7 +132,7 @@ Func SmartWait4Train($iTestSeconds = Default)
 			$g_aiTimeTrain[3] = 0
 		EndIf
 	EndIf
-	
+
 	#Region - Custom smart wait - Team AIO Mod++
 	If $g_bDebugSetlogTrain Or $g_bDebugSetlog Then
 		SetLog("SmartWait4Train|$g_aiTimeTrain: " & _ArrayToString($g_aiTimeTrain))
@@ -155,7 +155,7 @@ Func SmartWait4Train($iTestSeconds = Default)
 		EndIf
 		If $g_bDebugSetlogTrain Or $g_bDebugSetlog Then SetLog("$iTrainWaitCloseFlag:" & $iTrainWaitCloseFlag & ", troop time = " & StringFormat("%.2f", $g_aiTimeTrain[0]), $COLOR_DEBUG)
 	EndIf
-	
+
 	#Region - Custom smart wait - Team AIO Mod++
 	If $g_bDebugSetlogTrain Or $g_bDebugSetlog Then
 		SetLog("SmartWait4Train|$g_aiTimeTrain: " & _ArrayToString($g_aiTimeTrain))
@@ -181,7 +181,7 @@ Func SmartWait4Train($iTestSeconds = Default)
 	Else
 		$ichkCloseWaitSpell = 0
 	EndIf
-	
+
 	SetDebugLog("SmartWait4Train|$g_aiTimeTrain: " & _ArrayToString($g_aiTimeTrain))
 	SetDebugLog("SmartWait4Train|$g_iCCRemainTime: " & $g_iCCRemainTime)
 	SetDebugLog("SmartWait4Train|$iTrainWaitCloseFlag: " & $iTrainWaitCloseFlag)
@@ -252,7 +252,7 @@ Func SmartWait4Train($iTestSeconds = Default)
 	If $g_iCCRemainTime = 0 And IsToRequestCC(False) Then ; Team AIO Mod++
 		getArmyCCStatus()
 	EndIf
-	
+
 	#Region - Custom smart wait - Team AIO Mod++
 	If $g_bDebugSetlogTrain Or $g_bDebugSetlog Then
 		SetLog("SmartWait4Train|$g_aiTimeTrain: " & _ArrayToString($g_aiTimeTrain))
@@ -318,8 +318,10 @@ Func SmartWait4Train($iTestSeconds = Default)
 
 	$iTrainWaitTime = $iTrainWaitTime * 60 ; convert $iTrainWaitTime to seconds instead of minutes returned from OCR
 
+
 	$sNowTime = _NowCalc() ; find/store time right now
 	If $g_bDebugSetlogTrain Or $g_bDebugSetlog Then SetLog("Train end time: " & _DateAdd("s", Int($iTrainWaitTime), $sNowTime), $COLOR_DEBUG)
+
 
 	If IsArray($g_asShieldStatus) And _DateIsValid($g_asShieldStatus[2]) Then ;check for valid shield time
 		$iShieldTime = _DateDiff("s", $sNowTime, $g_asShieldStatus[2]) ; find seconds until shield expires
@@ -333,6 +335,16 @@ Func SmartWait4Train($iTestSeconds = Default)
 			$iShieldTime -= 45
 		EndIf
 	EndIf
+
+	#Region - PlayBB in Smart Wait - Team AIO Mod++
+	If ($iTrainWaitTime >= $MinimumTimeClose) Or $bTest Then ; are close times above minumum close time in GUI?
+		Local $hTimeForCheck = TimerInit()
+		$g_bStayOnBuilderBase = True
+		__RunFunction("BuilderBase")
+		$g_bStayOnBuilderBase = False
+		$iTrainWaitTime -= TimerDiff($hTimeForCheck)
+	EndIf
+	#EndRegion - PlayBB in Smart Wait - Team AIO Mod++
 
 	$iDiffTime = $iShieldTime - ($iTrainWaitTime) ; Find difference between train and shield time.
 	If $g_bDebugSetlogTrain Or $g_bDebugSetlog Then SetLog("Time Train:Shield:Diff " & ($iTrainWaitTime) & ":" & $iShieldTime & ":" & $iDiffTime, $COLOR_DEBUG)
@@ -371,9 +383,11 @@ Func SmartWait4Train($iTestSeconds = Default)
 			$g_bRestart = True ; Set flag to exit idle loop to deal with potential user changes to GUI
 			ResetTrainTimeArray()
 		Else
-			If $g_bDebugSetlogTrain Or $g_bDebugSetlog Then SetLog("$ichkCloseWaitSpell=" & $ichkCloseWaitSpell & ", $g_aiTimeTrain[1]=" & $g_aiTimeTrain[1], $COLOR_DEBUG)
-			If $g_bDebugSetlogTrain Or $g_bDebugSetlog Then SetLog("$ichkCloseWaitHero=" & $ichkCloseWaitHero & ", $g_aiTimeTrain[2]=" & $g_aiTimeTrain[2], $COLOR_DEBUG)
-			If $g_bDebugSetlogTrain Or $g_bDebugSetlog Then SetLog("Troop training with time remaining not enabled, skip SmartWait game exit", $COLOR_DEBUG)
+			If $g_bDebugSetlogTrain Or $g_bDebugSetlog Then ; Custom smart wait - Team AIO Mod++
+				SetLog("$ichkCloseWaitSpell=" & $ichkCloseWaitSpell & ", $g_aiTimeTrain[1]=" & $g_aiTimeTrain[1], $COLOR_DEBUG)
+				SetLog("$ichkCloseWaitHero=" & $ichkCloseWaitHero & ", $g_aiTimeTrain[2]=" & $g_aiTimeTrain[2], $COLOR_DEBUG)
+				SetLog("Troop training with time remaining not enabled, skip SmartWait game exit", $COLOR_DEBUG)
+			EndIf
 		EndIf
 		CheckTroopTimeAllAccount(True) ; Custom smart wait - Team AIO Mod++
 	Else

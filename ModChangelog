@@ -4,6 +4,12 @@
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
                     Based on MyBot.run v7.8.9
+	**v4.3.3** 
+		- New: Attack in builder base before close in smart wait.
+		- Fix: Check war stop fix.
+		- Fix: Correct Attack Bar in builder base.
+		- Fix: Smart Wait.
+		
 	**v4.3.2** 
 		- New: Autoupdater ! (Thx 7Zip team).
 		- Fix: Switch Accounts fix (@Chilly-Chill).

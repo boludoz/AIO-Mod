@@ -146,7 +146,14 @@ Func IsWarMenu()
 	Return $Result
 EndFunc   ;==>IsWarMenu
 
-Func CheckWarTime(ByRef $sResult, ByRef $bResult) ; return [Success + $sResult = $sBattleEndTime, $bResult = $bInWar] OR Failure
+Func CheckWarTime(ByRef $sResult, ByRef $bResult)
+	Local $bResChk = CheckWarTimeNucleo($sResult, $bResult)
+	If RandomSleep(500) Then Return False
+	Click(70, 680, 1, 500, "#9025") ; return home
+	Return $bResChk
+EndFunc   ;==>CheckWarTime
+
+Func CheckWarTimeNucleo(ByRef $sResult, ByRef $bResult) ; return [Success + $sResult = $sBattleEndTime, $bResult = $bInWar] OR Failure
 
 	$sResult = ""
 	Local $directoryDay = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\WarPage\Day"
@@ -164,6 +171,14 @@ Func CheckWarTime(ByRef $sResult, ByRef $bResult) ; return [Success + $sResult =
 		If _Sleep(2000) Then Return
 	EndIf
 
+	Local $sDirectory = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\WarPage\Window"
+	If _WaitForCheckImg($sDirectory, "805, 75, 846, 119") Then ;Check Clan War Leage Result [X] white pixel see if result page showing
+		Click(Random(807, 842, 1), Random(79, 114, 1))
+		SetLog("War is finished.", $COLOR_WARNING)
+		If RandomSleep(1000) Then Return False
+		Return False
+	EndIf
+	
 	If IsWarMenu() Then
 		If $bBattleDay_InWar Then
 			$sWarDay = "Battle"
@@ -196,9 +211,7 @@ Func CheckWarTime(ByRef $sResult, ByRef $bResult) ; return [Success + $sResult =
 
 		If Not StringInStr($sWarDay, "Battle") And Not StringInStr($sWarDay, "Preparation") Then
 			SetLog("Your Clan is not in active war yet.", $COLOR_INFO)
-			Click(70, 680, 1, 500, "#0000") ; return home
 			Return False
-
 		Else
 			$sTime = QuickMIS("OCR", $directoryTime, 396, 65, 396 + 70, 70 + 30, True)
 			If $g_bDebugSetlog Then SetDebugLog("$sResult QuickMIS OCR: " & ($bBattleDay_InWar ? $sWarDay & ", " : "") & $sTime)
@@ -220,25 +233,15 @@ Func CheckWarTime(ByRef $sResult, ByRef $bResult) ; return [Success + $sResult =
 
 			SetLog("You are " & ($bResult ? "" : "not ") & "in war", $COLOR_INFO)
 
-			Click(70, 680, 1, 500, "#0000") ; return home
 			Return True
 		EndIf
-
 	Else
-		Local $sDirectory = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\WarPage\Window"
-	
-		If _WaitForCheckImg($sDirectory, "805, 75, 846, 119") Then ;Check Clan War Leage Result [X] white pixel see if result page showing
-			Click(Random(807, 842, 1), Random(79, 114, 1))
-			SetLog("War is finished.", $COLOR_WARNING)
-			If RandomSleep(1000) Then Return False
-			Click(70, 680, 1, 500, "#0000") ; return home
-		Else
-			SetLog("Error when trying to open War window.", $COLOR_WARNING)
-			CheckMainScreen()
-			Return SetError(1, 0, "Error open War window")
-		EndIf
+		SetLog("Error when trying to open War window.", $COLOR_WARNING)
+		CheckMainScreen()
+		Return SetError(1, 0, "Error open War window")
 	EndIf
-EndFunc   ;==>CheckWarTime
+	
+EndFunc   ;==>CheckWarTimeNucleo
 
 Func StopAndPrepareForWar($iSleepTime)
 
