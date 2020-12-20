@@ -47,7 +47,7 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 	; Troop
 	If Not OpenTroopsTab(False, "DoubleTrain()") Then Return
 	If _Sleep(250) Then Return
-	
+
 	Local $Step = 1
 	While 1
 		Local $TroopCamp = GetCurrentArmy(48, 160, "DoubleTrain Troops")
@@ -163,16 +163,24 @@ EndFunc   ;==>DoubleTrain
 
 Func TrainFullTroop($bQueue = False)
 	SetLog("Training " & ($bQueue ? "2nd Army..." : "1st Army..."))
-
 	Local $ToReturn[1][2] = [["Arch", 0]]
-	For $i = 0 To $eTroopCount - 1
-		Local $troopIndex = $g_aiTrainOrder[$i]
-		If $g_aiArmyCompTroops[$troopIndex] > 0 Then
-			$ToReturn[UBound($ToReturn) - 1][0] = $g_asTroopShortNames[$troopIndex]
-			$ToReturn[UBound($ToReturn) - 1][1] = $g_aiArmyCompTroops[$troopIndex]
-			ReDim $ToReturn[UBound($ToReturn) + 1][2]
-		EndIf
-	Next
+   For $i = 0 To $eTroopCount - 1
+	 Local $troopIndex = $g_aiTrainOrder[$i]
+	 If ($g_aiArmyCompTroops[$troopIndex] > 0)Then
+		 $ToReturn[UBound($ToReturn) - 1][0] = $g_asTroopShortNames[$troopIndex]
+		 $ToReturn[UBound($ToReturn) - 1][1] = $g_aiArmyCompTroops[$troopIndex]
+		 ReDim $ToReturn[UBound($ToReturn) + 1][2]
+	  EndIf
+   Next
+
+   For $i = 0 To $eSuperTroopCount - 1
+	   Local $troopIndex = $i
+	   If $g_aiArmyCompSuperTroops[$troopIndex] > 0 Then
+		   $ToReturn[UBound($ToReturn) - 1][0] = $g_asSuperTroopShortNames[$troopIndex]
+		   $ToReturn[UBound($ToReturn) - 1][1] = $g_aiArmyCompSuperTroops[$troopIndex]
+		   ReDim $ToReturn[UBound($ToReturn) + 1][2]
+	   EndIf
+   Next
 
 	If $ToReturn[0][0] = "Arch" And $ToReturn[0][1] = 0 Then Return
 
@@ -236,7 +244,7 @@ Func GetCurrentArmy($x_start, $y_start, $sCalledFrom = "")
 
 	Local $aResult[3] = [0, 0, 0]
 	If Not $g_bRunState Then Return $aResult
-
+	  For $i=0 To 3
 	; [0] = Current Army  | [1] = Total Army Capacity  | [2] = Remain Space for the current Army
 	Local $iOCRResult = getArmyCapacityOnTrainTroops($x_start, $y_start)
 
@@ -245,9 +253,12 @@ Func GetCurrentArmy($x_start, $y_start, $sCalledFrom = "")
 		$aResult[0] = Number($aTempResult[0])
 		$aResult[1] = Number($aTempResult[1]) / 2
 		$aResult[2] = $aResult[1] - $aResult[0]
+		ExitLoop
 	Else
 		SetLog("DEBUG | ERROR on GetCurrentArmy " & $sCalledFrom, $COLOR_ERROR)
-	EndIf
+		If _Sleep(750) Then Return
+	 EndIf
+	 Next
 
 	Return $aResult
 
@@ -281,7 +292,7 @@ Func CheckQueueTroopAndTrainRemain($ArmyCamp, $bDebug)
 	For $i = 0 To UBound($aiQueueTroops) - 1
 		If $aiQueueTroops[$i] - $g_aiArmyCompTroops[$i] > 0 Then
 			SetLog("Some wrong troops in queue")
-			
+
 			Return False
 		EndIf
 	Next
