@@ -23,51 +23,47 @@ Func TrainSystem()
 		Return
 	EndIf
 
-	CheckMainScreen(False) ; Custom - Team AIO Mod++ (@vDragon)
-	
-	If IsMainPage() Then
-	 ; check for Super Troops 
-	 ; ArmyComp is set using readConfig, if using QT then it is set by CheckQuickTrainTroop
-	 ; CheckQuickTrainTroop will check for Super Troops on first run
-	 If  _ArrayMax($g_aiArmyCompSuperTroops) > 0 Then
-	 	SetLog("You have Super Troop in your Army.")
-	 
-	 	; BoostSuperTroop expects a Troop index between $ebarb and eHunt, as SuperTroop array uses the same index we will send it 
-	 	If Not BoostSuperTroop(_ArrayMaxIndex($g_aiArmyCompSuperTroops)) Then
-	 		SetLog("Cannot Boost Super Troop!")
-	 		
-	 		If $g_iLocateBarrelFail > 30 Then
-	 			BotStop()
-	 		EndIf
-	 		
-	 		Return
-	 	EndIf
-	 EndIf
+	; check for Super Troops 
+	; ArmyComp is set using readConfig, if using QT then it is set by CheckQuickTrainTroop
+	; CheckQuickTrainTroop will check for Super Troops on first run
+	If  _ArrayMax($g_aiArmyCompSuperTroops) > 0 Then
+		SetLog("You have Super Troop in your Army.")
 
-     $g_sTimeBeforeTrain = _NowCalc()
-	 StartGainCost()
-	
-		If $g_bQuickTrainEnable Then CheckQuickTrainTroop() ; update values of $g_aiArmyComTroops, $g_aiArmyComSpells
-	
-		CheckIfArmyIsReady()
-	
-		If $g_bQuickTrainEnable Then
-			QuickTrain()
-		Else
-			TrainCustomArmy()
+		; BoostSuperTroop expects a Troop index between $ebarb and eHunt, as SuperTroop array uses the same index we will send it 
+		If Not BoostSuperTroop(_ArrayMaxIndex($g_aiArmyCompSuperTroops)) Then
+			SetLog("Cannot Boost Super Troop!")
+			
+			If $g_iLocateBarrelFail > 30 Then
+				BotStop()
+			EndIf
+			
+			Return
 		EndIf
-	
-		TrainSiege()
-	
-		If $g_bDonationEnabled And $g_bChkDonate Then ResetVariables("donated")
-	
-		ClickP($aAway, 2, 0, "#0346") ;Click Away
-		If _Sleep(500) Then Return ; Delay AFTER the click Away Prevents lots of coc restarts
-	
-		EndGainCost("Train")
-	
-		checkAttackDisable($g_iTaBChkIdle) ; Check for Take-A-Break after opening train page
 	EndIf
+
+	$g_sTimeBeforeTrain = _NowCalc()
+	StartGainCost()
+
+	If $g_bQuickTrainEnable Then CheckQuickTrainTroop() ; update values of $g_aiArmyComTroops, $g_aiArmyComSpells
+
+	CheckIfArmyIsReady()
+
+	If $g_bQuickTrainEnable Then
+		QuickTrain()
+	Else
+		TrainCustomArmy()
+	EndIf
+
+    TrainSiege()
+
+	If $g_bDonationEnabled And $g_bChkDonate Then ResetVariables("donated")
+
+	ClickP($aAway, 2, 0, "#0346") ;Click Away
+	If _Sleep(500) Then Return ; Delay AFTER the click Away Prevents lots of coc restarts
+
+	EndGainCost("Train")
+
+	checkAttackDisable($g_iTaBChkIdle) ; Check for Take-A-Break after opening train page
 EndFunc   ;==>TrainSystem
 
 Func TrainCustomArmy()
@@ -221,9 +217,7 @@ Func CheckIfArmyIsReady()
 	If StringRight($sLogText, 1) = "," Then $sLogText = StringTrimRight($sLogText, 1) ; Remove last "," as it is not needed
 
 	If $g_bIsFullArmywithHeroesAndSpells Then
-		#Region - Discord - Team AIO Mod++
-		If ($g_bNotifyTGEnable Or $g_bNotifyDSEnable) And $g_bNotifyAlertCampFull Then PushMsg("CampFull")
-		#EndRegion - Discord - Team AIO Mod++
+		If $g_bNotifyTGEnable And $g_bNotifyAlertCampFull Then PushMsg("CampFull")
 		SetLog("Chief, is your Army ready? Yes, it is!", $COLOR_SUCCESS)
 	Else
 		SetLog("Chief, is your Army ready? No, not yet!", $COLOR_ACTION)
@@ -386,10 +380,10 @@ Func DragIfNeeded($Troop)
 	If Not $g_bRunState Then Return
 	Local $bCheckPixel = False
 
-    If IsDarkTroop($Troop) Or IsDarkSuperTroop($Troop) Then
+	If IsDarkTroop($Troop) Or IsDarkSuperTroop($Troop) Then
 		If _ColorCheck(_GetPixelColor(834, 403, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
 		If $g_bDebugSetlogTrain Then SetLog("DragIfNeeded Dark Troops: " & $bCheckPixel)
-		For $i = 1 To 4
+		For $i = 1 To 3
 			If Not $bCheckPixel Then
 				ClickDrag(715, 445 + $g_iMidOffsetY, 220, 445 + $g_iMidOffsetY, 2000)
 				If _Sleep(1500) Then Return
@@ -401,7 +395,7 @@ Func DragIfNeeded($Troop)
 	Else
 		If _ColorCheck(_GetPixelColor(22, 403, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
 		If $g_bDebugSetlogTrain Then SetLog("DragIfNeeded Normal Troops: " & $bCheckPixel)
-		For $i = 1 To 4
+		For $i = 1 To 3
 			If Not $bCheckPixel Then
 				ClickDrag(220, 445 + $g_iMidOffsetY, 725, 445 + $g_iMidOffsetY, 2000)
 				If _Sleep(1500) Then Return
@@ -631,29 +625,25 @@ EndFunc   ;==>DeleteInvalidTroopInArray
 Func RemoveExtraTroopsQueue() ; Will remove All Extra troops in queue If there's a Low Opacity red color on them
 	;Local Const $DecreaseBy = 70
 	;Local $x = 834
-	Local $bOriginalUse = $g_bUseRandomClick
-	$g_bUseRandomClick =  False
-	Local Const $y = 186, $yRemoveBtn = 200
+
+	Local Const $y = 186, $yRemoveBtn = 200, $xDecreaseRemoveBtn = 10
 	Local $bColorCheck = False, $bGotRemoved = False
-
-	For $x = 58 To 834 Step 70 ;left to right
+	For $x = 834 To 58 Step -70
 		If Not $g_bRunState Then Return
-
 		$bColorCheck = _ColorCheck(_GetPixelColor($x, $y, True), Hex(0xD7AFA9, 6), 20)
-
 		If $bColorCheck Then
 			$bGotRemoved = True
 			Do
-				Click($x + Random(-6, 3, 1), $yRemoveBtn + Random(-1 , 1, 1), Random(5,15,1), 50)
-				If RandomSleep($g_iTrainClickDelay) Then ExitLoop
+				Click($x - $xDecreaseRemoveBtn, $yRemoveBtn, 2, $g_iTrainClickDelay)
+				If _Sleep(20) Then Return
 				$bColorCheck = _ColorCheck(_GetPixelColor($x, $y, True), Hex(0xD7AFA9, 6), 20)
 			Until $bColorCheck = False
 
 		ElseIf Not $bColorCheck And $bGotRemoved Then
 			ExitLoop
 		EndIf
-	 Next
-	$g_bUseRandomClick = $bOriginalUse
+	Next
+
 	Return True
 EndFunc   ;==>RemoveExtraTroopsQueue
 
@@ -1032,63 +1022,70 @@ Func SearchArmy($sImageDir = "", $x = 0, $y = 0, $x1 = 0, $y1 = 0, $sArmyType = 
 	; Setup arrays, including default return values for $return
 	Local $aResult[1][4], $aCoordArray[1][2], $aCoords, $aCoordsSplit, $aValue
 
-	If Not $g_bRunState Then Return $aResult
+	For $iCount = 0 To 10  ;Why is this loop here?
+		If Not $g_bRunState Then Return $aResult
+		If Not getReceivedTroops(162, 200, $bSkipReceivedTroopsCheck) Then
+			; Perform the search
+			_CaptureRegion2($x, $y, $x1, $y1)
+			Local $res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sImageDir, "str", "FV", "Int", 0, "str", "FV", "Int", 0, "Int", 1000)
 
-	#Region - Custom - The loop was very hard - Team AIO Mod++
-	If Not getReceivedTroops(162, 200, $bSkipReceivedTroopsCheck) Then
-		; Perform the search
-		_CaptureRegion2($x, $y, $x1, $y1)
-		Local $vRes = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sImageDir, "str", "FV", "Int", 0, "str", "FV", "Int", 0, "Int", 1000)
+;_ArrayDisplay($res, "Res")
 
-		If $vRes[0] <> "" Then
-			; Get the keys for the dictionary item.
-			Local $aKeys = StringSplit($vRes[0], "|", $STR_NOCOUNT)
+			If $res[0] <> "" Then
+				; Get the keys for the dictionary item.
+				Local $aKeys = StringSplit($res[0], "|", $STR_NOCOUNT)
 
-			; Redimension the result array to allow for the new entries
-			ReDim $aResult[UBound($aKeys)][4]
-			Local $iResultAddDup = 0
+				; Redimension the result array to allow for the new entries
+				ReDim $aResult[UBound($aKeys)][4]
+				Local $iResultAddDup = 0
 
-			; Loop through the array
-			For $i = 0 To UBound($aKeys) - 1
-				; Get the property values
-				$aResult[$i + $iResultAddDup][0] = RetrieveImglocProperty($aKeys[$i], "objectname")
-				; Get the coords property
-				$aValue = RetrieveImglocProperty($aKeys[$i], "objectpoints")
-				$aCoords = decodeMultipleCoords($aValue, 50) ; dedup coords by x on 50 pixel
-				$aCoordsSplit = $aCoords[0]
-				If UBound($aCoordsSplit) = 2 Then
-					; Store the coords into a two dimensional array
-					$aCoordArray[0][0] = $aCoordsSplit[0] + $x ; X coord.
-					$aCoordArray[0][1] = $aCoordsSplit[1] + $y ; Y coord.
-				Else
-					$aCoordArray[0][0] = -1
-					$aCoordArray[0][1] = -1
-				EndIf
-				; Store the coords array as a sub-array
-				$aResult[$i + $iResultAddDup][1] = Number($aCoordArray[0][0])
-				$aResult[$i + $iResultAddDup][2] = Number($aCoordArray[0][1])
-				SetDebugLog($aResult[$i + $iResultAddDup][0] & " | $aCoordArray: " & $aCoordArray[0][0] & "-" & $aCoordArray[0][1])
-				; If 1 troop type appears at more than 1 slot
-				Local $iMultipleCoords = UBound($aCoords)
-				If $iMultipleCoords > 1 Then
-					SetDebugLog($aResult[$i + $iResultAddDup][0] & " detected " & $iMultipleCoords & " times!")
-					For $j = 1 To $iMultipleCoords - 1
-						Local $aCoordsSplit2 = $aCoords[$j]
-						If UBound($aCoordsSplit2) = 2 Then
-							; add slot
-							$iResultAddDup += 1
-							ReDim $aResult[UBound($aKeys) + $iResultAddDup][4]
-							$aResult[$i + $iResultAddDup][0] = $aResult[$i + $iResultAddDup - 1][0] ; same objectname
-							$aResult[$i + $iResultAddDup][1] = $aCoordsSplit2[0] + $x
-							$aResult[$i + $iResultAddDup][2] = $aCoordsSplit2[1]
-							SetDebugLog($aResult[$i + $iResultAddDup][0] & " | $aCoordArray: " & $aResult[$i + $iResultAddDup][1] & "-" & $aResult[$i + $iResultAddDup][2])
-						EndIf
-					Next
-				EndIf
-			Next
+				; Loop through the array
+				For $i = 0 To UBound($aKeys) - 1
+					; Get the property values
+					$aResult[$i + $iResultAddDup][0] = RetrieveImglocProperty($aKeys[$i], "objectname")
+					; Get the coords property
+					$aValue = RetrieveImglocProperty($aKeys[$i], "objectpoints")
+					$aCoords = decodeMultipleCoords($aValue, 50) ; dedup coords by x on 50 pixel
+					$aCoordsSplit = $aCoords[0]
+					If UBound($aCoordsSplit) = 2 Then
+						; Store the coords into a two dimensional array
+						$aCoordArray[0][0] = $aCoordsSplit[0] + $x ; X coord.
+						$aCoordArray[0][1] = $aCoordsSplit[1] + $y ; Y coord.
+					Else
+						$aCoordArray[0][0] = -1
+						$aCoordArray[0][1] = -1
+					EndIf
+					; Store the coords array as a sub-array
+					$aResult[$i + $iResultAddDup][1] = Number($aCoordArray[0][0])
+					$aResult[$i + $iResultAddDup][2] = Number($aCoordArray[0][1])
+					SetDebugLog($aResult[$i + $iResultAddDup][0] & " | $aCoordArray: " & $aCoordArray[0][0] & "-" & $aCoordArray[0][1])
+					; If 1 troop type appears at more than 1 slot
+					Local $iMultipleCoords = UBound($aCoords)
+					If $iMultipleCoords > 1 Then
+						SetDebugLog($aResult[$i + $iResultAddDup][0] & " detected " & $iMultipleCoords & " times!")
+						For $j = 1 To $iMultipleCoords - 1
+							Local $aCoordsSplit2 = $aCoords[$j]
+							If UBound($aCoordsSplit2) = 2 Then
+								; add slot
+								$iResultAddDup += 1
+								ReDim $aResult[UBound($aKeys) + $iResultAddDup][4]
+								$aResult[$i + $iResultAddDup][0] = $aResult[$i + $iResultAddDup - 1][0] ; same objectname
+								$aResult[$i + $iResultAddDup][1] = $aCoordsSplit2[0] + $x
+								$aResult[$i + $iResultAddDup][2] = $aCoordsSplit2[1]
+								SetDebugLog($aResult[$i + $iResultAddDup][0] & " | $aCoordArray: " & $aResult[$i + $iResultAddDup][1] & "-" & $aResult[$i + $iResultAddDup][2])
+							EndIf
+						Next
+					EndIf
+				Next
+				ExitLoop
+			EndIf
+			ExitLoop
+		Else
+			If $iCount = 1 Then SetLog("You have received castle troops! Wait 5's...")
+			If _Sleep($DELAYTRAIN8) Then Return $aResult
 		EndIf
-	EndIf
-	#EndRegion - Custom - The loop was very hard - Team AIO Mod++
+	Next
+
 	_ArraySort($aResult, 0, 0, 0, 1) ; Sort By X position , will be the Slot 0 to $i
 
 	While 1
@@ -1234,18 +1231,15 @@ Func DeleteQueued($sArmyTypeQueued, $iOffsetQueued = 802)
 		Return
 	EndIf
 	If _Sleep(500) Then Return
-	Local $x = 0, $bCondition
-	Do 
+	Local $x = 0
+
+	While Not _ColorCheck(_GetPixelColor(820, 208, True), Hex(0xD0D0C8, 6), 20) ; check gray background at 1st training slot
 		If $x = 0 Then SetLog(" - Delete " & $sArmyTypeQueued & " Queued!", $COLOR_INFO)
 		If Not $g_bRunState Then Return
-		PureClick($iOffsetQueued + 24, 202, 10, 50)
+		Click($iOffsetQueued + 24, 202, 10, 50)
 		$x += 1
-		If $x > 50 Then
-			$bCondition = (Not IsQueueEmpty($sArmyTypeQueued, True, False))
-		Else
-			$bCondition = _ColorCheck(_GetPixelColor(820, 208, True), Hex(0xD0D0C8, 6), 20)
-		EndIf
-	Until $bCondition Or ($x > 300)
+		If $x = 270 Then ExitLoop
+	WEnd
 EndFunc   ;==>DeleteQueued
 
 Func MakingDonatedTroops($sType = "All")

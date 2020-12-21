@@ -24,7 +24,7 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 
 	Local $bNeedReCheckTroopTab = False, $bNeedReCheckSpellTab = False
 
-	#Region - Team AIO Mod++
+	#Region - Missing PreciseArmy - Team AIO Mod++
 	Local $bHasIncorrectTroop = False, $bHasIncorrectSpell = False
 	If $g_bPreciseArmy Then
 		Local $aWrongArmy = WhatToTrain(True)
@@ -42,7 +42,7 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 			EndIf
 		EndIf
 	EndIf
-	#EndRegion
+	#EndRegion - Missing PreciseArmy - Team AIO Mod++
 
 	; Troop
 	If Not OpenTroopsTab(False, "DoubleTrain()") Then Return
@@ -244,7 +244,7 @@ Func GetCurrentArmy($x_start, $y_start, $sCalledFrom = "")
 
 	Local $aResult[3] = [0, 0, 0]
 	If Not $g_bRunState Then Return $aResult
-	  For $i=0 To 3
+
 	; [0] = Current Army  | [1] = Total Army Capacity  | [2] = Remain Space for the current Army
 	Local $iOCRResult = getArmyCapacityOnTrainTroops($x_start, $y_start)
 
@@ -253,12 +253,9 @@ Func GetCurrentArmy($x_start, $y_start, $sCalledFrom = "")
 		$aResult[0] = Number($aTempResult[0])
 		$aResult[1] = Number($aTempResult[1]) / 2
 		$aResult[2] = $aResult[1] - $aResult[0]
-		ExitLoop
 	Else
 		SetLog("DEBUG | ERROR on GetCurrentArmy " & $sCalledFrom, $COLOR_ERROR)
-		If _Sleep(750) Then Return
-	 EndIf
-	 Next
+	EndIf
 
 	Return $aResult
 
@@ -292,7 +289,7 @@ Func CheckQueueTroopAndTrainRemain($ArmyCamp, $bDebug)
 	For $i = 0 To UBound($aiQueueTroops) - 1
 		If $aiQueueTroops[$i] - $g_aiArmyCompTroops[$i] > 0 Then
 			SetLog("Some wrong troops in queue")
-
+			
 			Return False
 		EndIf
 	Next

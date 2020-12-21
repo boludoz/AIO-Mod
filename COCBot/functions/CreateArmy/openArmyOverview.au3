@@ -13,10 +13,8 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func OpenArmyOverview($bCheckMain = True, $sWhereFrom = "Undefined")
-	
+
 	If $bCheckMain Then
-		CheckMainScreen(False) ; Custom fix - Team__AiO__MOD
-		
 		If Not IsMainPage() Then ; check for main page, avoid random troop drop
 			SetLog("Cannot open Army Overview window", $COLOR_ERROR)
 			SetError(1)
@@ -24,8 +22,11 @@ Func OpenArmyOverview($bCheckMain = True, $sWhereFrom = "Undefined")
 		EndIf
 	EndIf
 
-	ArmyButton() ; Custom fix - Team__AiO__MOD
-	
+	If WaitforPixel(23, 505 + $g_iBottomOffsetY, 53, 507 + $g_iBottomOffsetY, Hex(0xEEB344, 6), 5, 10) Then
+		If $g_bDebugSetlogTrain Then SetLog("Click $aArmyTrainButton" & " (Called from " & $sWhereFrom & ")", $COLOR_SUCCESS)
+		ClickP($aArmyTrainButton, 1, 0, "#0293") ; Button Army Overview
+	EndIf
+
 	If _Sleep($DELAYRUNBOT6) Then Return ; wait for window to open
 	If Not IsTrainPage() Then
 		SetError(1)
@@ -34,16 +35,6 @@ Func OpenArmyOverview($bCheckMain = True, $sWhereFrom = "Undefined")
 	Return True
 
 EndFunc   ;==>OpenArmyOverview
-
-Func ArmyButton() ; Custom fix - Team__AiO__MOD
-	Local $i = 0, $bClicked = False
-	Do
-		$i += 1
-		$bClicked = ButtonClickArray("0xEDAE44,0,0,-1|0xA55123,38,40,-1", 15, 555, 77, 615) ;ButtonClickDM(@ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\Button\ArmyButton\", 13, 558, 56, 59)
-		If _Sleep(800) Then Return
-	Until $bClicked Or ($i > 3)
-	Return $bClicked
-EndFunc   ;==>ClickFindMatch
 
 Func OpenArmyTab($bSetLog = True, $sWhereFrom = "Undefined")
 	Return OpenTrainTab("Army Tab", $bSetLog, $sWhereFrom)
