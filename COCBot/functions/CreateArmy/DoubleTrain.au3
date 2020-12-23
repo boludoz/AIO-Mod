@@ -165,7 +165,7 @@ Func TrainFullTroop($bQueue = False)
 	Local $ToReturn[1][2] = [["Arch", 0]]
    For $i = 0 To $eTroopCount - 1
 	 Local $troopIndex = $g_aiTrainOrder[$i]
-	 If ($g_aiArmyCompTroops[$troopIndex] > 0)Then
+	 If $g_aiArmyCompTroops[$troopIndex] > 0 Then
 		 $ToReturn[UBound($ToReturn) - 1][0] = $g_asTroopShortNames[$troopIndex]
 		 $ToReturn[UBound($ToReturn) - 1][1] = $g_aiArmyCompTroops[$troopIndex]
 		 ReDim $ToReturn[UBound($ToReturn) + 1][2]
@@ -288,7 +288,7 @@ Func CheckQueueTroopAndTrainRemain($ArmyCamp, $bDebug)
 	For $i = 0 To UBound($aiQueueTroops) - 1
 		If $aiQueueTroops[$i] - $g_aiArmyCompTroops[$i] > 0 Then
 			SetLog("Some wrong troops in queue")
-			
+
 			Return False
 		EndIf
 	Next
