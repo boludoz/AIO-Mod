@@ -41,7 +41,7 @@ Func _LocateKingAltar($bCollect = True)
 	#Region - Auto locate hero - Team AIO Mod++
 	Local $aAltarPos[2]
 	Local $aLocateHero = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\HeroLocate", 1, "FV", True, "King")
-	If IsArray($aLocateHero) Then
+	If UBound($aLocateHero) > 0 And not @error Then
 		For $i = 0 To UBound($aLocateHero) -1
 			$aAltarPos[0] = $aLocateHero[$i][1]
 			$aAltarPos[1] = $aLocateHero[$i][2]
@@ -150,7 +150,7 @@ Func _LocateKingAltar($bCollect = True)
 		If $sInfo[0] > 1 Or $sInfo[0] = "" Then
 			If @error Then Return SetError(0, 0, 0)
 
-			If StringInStr($sInfo[1], "Quee") = 0 Then
+			If StringInStr($sInfo[1], "King") = 0 Then
 				Local $sLocMsg = ($sInfo[0] = "" ? "Nothing" : $sInfo[1])
 
 				$iSilly += 1
@@ -225,7 +225,7 @@ Func _LocateQueenAltar($bCollect = True)
 	#Region - Auto locate hero - Team AIO Mod++
 	Local $aAltarPos[2]
 	Local $aLocateHero = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\HeroLocate", 1, "FV", True, "Queen")
-	If IsArray($aLocateHero) Then
+	If UBound($aLocateHero) > 0 And not @error Then
 		For $i = 0 To UBound($aLocateHero) -1
 			$aAltarPos[0] = $aLocateHero[$i][1]
 			$aAltarPos[1] = $aLocateHero[$i][2]
@@ -412,7 +412,7 @@ Func _LocateWardenAltar($bCollect = True)
 	#Region - Auto locate hero - Team AIO Mod++
 	Local $aAltarPos[2]
 	Local $aLocateHero = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\HeroLocate", 1, "FV", True, "Warden")
-	If IsArray($aLocateHero) Then
+	If UBound($aLocateHero) > 0 And not @error Then
 		For $i = 0 To UBound($aLocateHero) -1
 			$aAltarPos[0] = $aLocateHero[$i][1]
 			$aAltarPos[1] = $aLocateHero[$i][2]
@@ -598,7 +598,7 @@ Func _LocateChampionAltar($bCollect = True)
 	#Region - Auto locate hero - Team AIO Mod++
 	Local $aAltarPos[2]
 	Local $aLocateHero = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\HeroLocate", 1, "FV", True, "Champion")
-	If IsArray($aLocateHero) Then
+	If UBound($aLocateHero) > 0 And not @error Then
 		For $i = 0 To UBound($aLocateHero) -1
 			$aAltarPos[0] = $aLocateHero[$i][1]
 			$aAltarPos[1] = $aLocateHero[$i][2]

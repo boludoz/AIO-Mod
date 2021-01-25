@@ -1,6 +1,6 @@
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: CheckStopForWar
-; Description ...: T
+; Description ...: 
 ; Syntax ........:
 ; Parameters ....: None
 ; Return values .: None
