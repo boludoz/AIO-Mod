@@ -88,8 +88,8 @@ Func DetectCamps()
 	;_ArrayDisplay($aTroops)
 
 	; Train matrix
-	Local $aTrainLikeBoss[$eBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-	Local $aTrainedLikeBoss[$eBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+	Local $aTrainLikeBoss[$eBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+	Local $aTrainedLikeBoss[$eBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 	; Translate $aCmbCampsInBBGUILimited to $aTrainLikeBoss.
     For $i = 0 To UBound($aCmbCampsInBBGUILimited) -1

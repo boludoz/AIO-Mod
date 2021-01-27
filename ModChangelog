@@ -4,6 +4,10 @@
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
                     Based on MyBot.run v7.8.9
+	**v4.3.5** 
+		- New: Invisibility spell full support.
+		- Fix: King update.
+
 	**v4.3.3** 
 		- New: Attack in builder base before close in smart wait.
 		- Fix: Check war stop fix.

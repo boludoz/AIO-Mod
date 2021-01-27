@@ -252,6 +252,7 @@ Func ReferenceGlobals()
 	$a1 = $eIcnElixir
 	$a1 = $eIcnCollector
 	$a1 = $eIcnFreezeSpell
+	$a1 = $eIcnInvisibilitySpell
 	$a1 = $eIcnGem
 	$a1 = $eIcnGiant
 	$a1 = $eIcnDonGiant
@@ -529,6 +530,7 @@ Func ReferenceGlobals()
 	$a1 = $eJSpell
 	$a1 = $eFSpell
 	$a1 = $eCSpell
+	$a1 = $eISpell
 	$a1 = $ePSpell
 	$a1 = $eESpell
 	$a1 = $eHaSpell

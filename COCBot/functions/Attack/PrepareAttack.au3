@@ -332,14 +332,16 @@ Func IsUnitUsed($iMatchMode, $iTroopIndex)
 					If $g_abAttackUseJumpSpell[$iMatchMode] Then Return True
 				Case $eFSpell
 					If $g_abAttackUseFreezeSpell[$iMatchMode] Then Return True
+				Case $eCSpell
+					If $g_abAttackUseCloneSpell[$iMatchMode] Then Return True
+				Case $eISpell
+					If $g_abAttackUseInvisibilitySpell[$iMatchMode] Then Return True
 				Case $ePSpell
 					If $g_abAttackUsePoisonSpell[$iMatchMode] Then Return True
 				Case $eESpell
 					If $g_abAttackUseEarthquakeSpell[$iMatchMode] = 1 Or $g_bSmartZapEnable Then Return True
 				Case $eHaSpell
 					If $g_abAttackUseHasteSpell[$iMatchMode] Then Return True
-				Case $eCSpell
-					If $g_abAttackUseCloneSpell[$iMatchMode] Then Return True
 				Case $eSkSpell
 					If $g_abAttackUseSkeletonSpell[$iMatchMode] Then Return True
 				Case $eBtSpell
