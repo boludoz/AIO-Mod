@@ -4,6 +4,12 @@
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
                     Based on MyBot.run v7.8.9
+	**v4.3.6** 
+		- Fix: Hero update more smart and detect if is bad located hero.
+		- Fix: Time hero update.
+		- Fix: Hero build click.
+		- Fix: Spell ubication in GUI Attack.
+
 	**v4.3.5** 
 		- New: Invisibility spell full support.
 		- Fix: King update.
