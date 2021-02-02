@@ -488,6 +488,7 @@ Func ReferenceGlobals()
 	$a1 = $eSpellJump
 	$a1 = $eSpellFreeze
 	$a1 = $eSpellClone
+	$a1 = $eSpellInvisibility
 
 	$a1 = $eSpellPoison
 	$a1 = $eSpellEarthquake

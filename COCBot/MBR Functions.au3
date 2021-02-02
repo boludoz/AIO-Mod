@@ -275,7 +275,7 @@
 #include "functions\Village\Clan Games\ClanGames.au3"
 ; #include "functions\Village\FreeMagicItems.au3" ; Team AIO Mod++
 #include "functions\Village\Personal Challenges\DailyChallenges.au3"
-#include "functions\Village\BoostSuperTroop.au3"
+; #include "functions\Village\BoostSuperTroop.au3"
 #include "functions\Village\MagicItems.au3" ; Team AIO Mod++
 
 #include "functions\Village\BuilderBase\Collect.au3"

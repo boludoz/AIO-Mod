@@ -732,15 +732,15 @@ Func runBot() ;Bot that runs everything in order
 		SwitchCoCAcc($g_iNextAccount)
 	EndIf
 
-		#Region - Custom BB - Team AIO Mod++
-		If $g_bOnlyBuilderBase Then
-			$g_bStayOnBuilderBase = True
-			SetLog("Let's Play Builder Base Only", $COLOR_ACTION)
-			runBuilderBase()
-		Else
-			FirstCheck()
-		EndIf
-		#EndRegion - Custom BB - Team AIO Mod++
+	#Region - Custom BB - Team AIO Mod++
+	If $g_bOnlyBuilderBase Then
+		$g_bStayOnBuilderBase = True
+		SetLog("Let's Play Builder Base Only", $COLOR_ACTION)
+		runBuilderBase()
+	Else
+		FirstCheck()
+	EndIf
+	#EndRegion - Custom BB - Team AIO Mod++
 
 	While 1
 		;Restart bot after these seconds
@@ -754,12 +754,14 @@ Func runBot() ;Bot that runs everything in order
 		$g_bFullArmy = False
 		$g_bIsFullArmywithHeroesAndSpells = False
 		$g_iCommandStop = -1
-		; If _Sleep($DELAYRUNBOT1) Then Return
-		; checkMainScreen()
-		; If $g_bRestart Then ContinueLoop
-		; chkShieldStatus()
-		; If Not $g_bRunState Then Return
-		; If $g_bRestart Then ContinueLoop
+		If _Sleep($DELAYRUNBOT1) Then Return
+		checkMainScreen()
+		If $g_bRestart Then ContinueLoop
+		chkShieldStatus()
+		If Not $g_bRunState Then Return
+		If $g_bRestart Then ContinueLoop
+		checkObstacles() ; trap common error messages also check for reconnecting animation
+		If $g_bRestart Then ContinueLoop
 		
 		#Region - Custom BB - Team AIO Mod++
 		If $g_bOnlyBuilderBase Then
@@ -786,6 +788,7 @@ Func runBot() ;Bot that runs everything in order
 
         If Not $g_bIsClientSyncError Then ;ARCH:  was " And Not $g_bIsSearchLimit"
             SetDebugLog("ARCH: Top of loop", $COLOR_DEBUG)
+            If $g_bIsSearchLimit Then SetLog("Search limit hit", $COLOR_INFO)
 			checkMainScreen(False)
 			If $g_bRestart Then ContinueLoop
 			If RandomSleep($DELAYRUNBOT3) Then Return
@@ -822,9 +825,12 @@ Func runBot() ;Bot that runs everything in order
 			Else
 				#Region - Only farm - Team AIO Mod++
 				If Not $g_bChkOnlyFarm Then
-					Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge', 'BoostSuperTroop'] ; AIO Mod
+					; Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge', 'BoostSuperTroop'] ; AIO Mod
+				; Else
+					; Local $aRndFuncList = ['Collect', 'CollectFreeMagicItems', 'DailyChallenge', 'BoostSuperTroop'] ; AIO Mod
+					Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge' ; AIO Mod
 				Else
-					Local $aRndFuncList = ['Collect', 'CollectFreeMagicItems', 'DailyChallenge', 'BoostSuperTroop'] ; AIO Mod
+					Local $aRndFuncList = ['Collect', 'CollectFreeMagicItems', 'DailyChallenge'] ; AIO Mod
 				EndIf
 				#EndRegion - Only farm - Team AIO Mod++
 			EndIf
@@ -891,35 +897,45 @@ Func runBot() ;Bot that runs everything in order
 				If $g_bUpgradeKingEnable Or $g_bUpgradeQueenEnable Or $g_bUpgradeWardenEnable Or $g_bUpgradeChampionEnable Then _ArrayAdd($aRndFuncList, 'UpgradeHeroes')
 
 				;	667, 27, F5DD71 ; Full gold.	668, 77, E292E2 ; Full elixir.
-				If _ColorCheck(_GetPixelColor(667, 27, True), Hex(0xF5DD71, 6), 25) Or _ColorCheck(_GetPixelColor(668, 77, True), Hex(0xE292E2, 6), 25) Then _ArrayAdd($aRndFuncList, 'UpgradeBuilding')
-
-				;	668, 77, E292E2 ; Full elixir.
-				If $g_bAutoLabUpgradeEnable And _ColorCheck(_GetPixelColor(668, 77, True), Hex(0xE292E2, 6), 25) Then _ArrayAdd($aRndFuncList, 'Laboratory')
+				If _ColorCheck(_GetPixelColor(667, 27, True), Hex(0xF5DD71, 6), 25) Or _ColorCheck(_GetPixelColor(668, 77, True), Hex(0xE292E2, 6), 25) Or Not $g_bChkOnlyFarm Then 
+					_ArrayAdd($aRndFuncList, 'UpgradeBuilding')
+					_ArrayAdd($aRndFuncList, 'Laboratory')
+				EndIf
+			EndIf
+			If UBound($aRndFuncList) > 0 Then
+				_ArrayShuffle($aRndFuncList)
+				For $Index In $aRndFuncList
+					If Not $g_bRunState Then Return
+					_RunFunction($Index)
+					If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
+					If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
+				Next
 			EndIf
 			#EndRegion - Only farm - Team AIO Mod++
-			_ArrayShuffle($aRndFuncList)
-			For $Index In $aRndFuncList
-				If Not $g_bRunState Then Return
-				_RunFunction($Index)
-				If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
-				If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
-			Next
-			; Ensure, that wall upgrade is last of the upgrades
+            
+            ;ARCH Trying it out here.
+            If Not $g_bIsSearchLimit Then _ClanGames() ; move to here to pick event before going to BB.
+
 			#Region - Only farm - Team AIO Mod++
+			; Ensure, that wall upgrade is last of the upgrades
 			Local $aRndFuncList[0]
 			If Not $g_bChkOnlyFarm Then _ArrayAdd($aRndFuncList, 'BuilderBase')
 			If $g_bAutoUpgradeWallsEnable = True Then
 				;	667, 27, F5DD71 ; Full gold. Or 668, 77, E292E2 ; Full elixir.
-				If Not $g_bChkOnlyFarm Or (_ColorCheck(_GetPixelColor(667, 27, True), Hex(0xF5DD71, 6), 25) Or _ColorCheck(_GetPixelColor(668, 77, True), Hex(0xE292E2, 6), 25)) Then _ArrayAdd($aRndFuncList, 'UpgradeWall')
+				If (_ColorCheck(_GetPixelColor(667, 27, True), Hex(0xF5DD71, 6), 25) Or _ColorCheck(_GetPixelColor(668, 77, True), Hex(0xE292E2, 6), 25)) Or Not $g_bChkOnlyFarm Then 
+					_ArrayAdd($aRndFuncList, 'UpgradeWall')
+				EndIf
+			EndIf
+			If UBound($aRndFuncList) > 0 Then
+				_ArrayShuffle($aRndFuncList)
+				For $Index In $aRndFuncList
+					If Not $g_bRunState Then Return
+					_RunFunction($Index)
+					If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
+					If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
+				Next
 			EndIf
 			#EndRegion - Only farm - Team AIO Mod++
-			_ArrayShuffle($aRndFuncList)
-			For $Index In $aRndFuncList
-				If Not $g_bRunState Then Return
-				_RunFunction($Index)
-				If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
-				If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
-			Next
 			If Not $g_bRunState Then Return
 
 			If $g_bFirstStart Then SetDebugLog("First loop completed!")
@@ -1147,8 +1163,8 @@ Func AttackMain() ;Main control for attack functions
 
 			If Not $g_bChkOnlyFarm Then ChatActions() ; ChatActions - Team AiO MOD++
 
-			_ClanGames()
-			ClickAway()
+            ;_ClanGames() ;Trying to do this above in the main loop
+            ;ClickAway()
 			If $g_bUpdateSharedPrefs Then PullSharedPrefs()
 			If VillageSearch(True) = False Then
 				SetLog("AttackMain | Return from.", $COLOR_ERROR)
@@ -1325,8 +1341,6 @@ Func __RunFunction($sAction)
 			CollectAchievements()
  		Case "CollectFreeMagicItems"
  			CollectMagicItems()
-		Case "BoostSuperTroop"
-			If $g_iBoostSuperTroopIndex <> -1 Then BoostSuperTroop($g_iBoostSuperTroopIndex)
 		Case ""
 			SetDebugLog("Function call doesn't support empty string, please review array size", $COLOR_ERROR)
 		Case Else
@@ -1418,3 +1432,79 @@ Func FirstCheck()
 		EndIf
 	EndIf
 EndFunc   ;==>FirstCheck
+
+#cs - BBase - Disabled for review and adaptation - AIO Mod
+Func BuilderBase()
+
+	; switch to builderbase and check it is builderbase
+	If SwitchBetweenBases() And isOnBuilderBase()  Then
+
+		$g_bStayOnBuilderBase = True
+		If _Sleep($DELAYRUNBOT3) Then Return
+		If checkObstacles() Then Return
+
+		BuilderBaseReport()
+		If _Sleep($DELAYRUNBOT3) Then Return
+		If checkObstacles() Then Return
+
+		CollectBuilderBase()
+		If _Sleep($DELAYRUNBOT3) Then Return
+		If checkObstacles() Then Return
+
+		AttackBB()
+		If $g_bRestart = True Then Return
+		If _Sleep($DELAYRUNBOT3) Then Return
+		If checkObstacles() Then Return
+
+		StartClockTowerBoost()
+		If _Sleep($DELAYRUNBOT3) Then Return
+		If checkObstacles() Then Return
+
+		StarLaboratory()
+		If _Sleep($DELAYRUNBOT3) Then Return
+		If checkObstacles() Then Return
+
+		CleanBBYard()
+		If _Sleep($DELAYRUNBOT3) Then Return
+		If checkObstacles() Then Return
+
+		MainSuggestedUpgradeCode()
+		If _Sleep($DELAYRUNBOT3) Then Return
+		If checkObstacles() Then Return
+
+		BuilderBaseReport()
+		If _Sleep($DELAYRUNBOT3) Then Return
+		If checkObstacles() Then Return
+
+		; switch back to normal village
+		SwitchBetweenBases()
+		$g_bStayOnBuilderBase = False
+
+	EndIf
+
+EndFunc
+
+Func TestBuilderBase()
+	Local $bChkCollectBuilderBase = $g_bChkCollectBuilderBase
+	Local $bChkStartClockTowerBoost = $g_bChkStartClockTowerBoost
+	Local $bChkCTBoostBlderBz = $g_bChkCTBoostBlderBz
+	Local $bChkCleanBBYard = $g_bChkCleanBBYard
+	Local $bChkEnableBBAttack = $g_bChkEnableBBAttack
+
+	$g_bChkCollectBuilderBase = True
+	$g_bChkStartClockTowerBoost = True
+	$g_bChkCTBoostBlderBz = True
+	$g_bChkCleanBBYard = True
+	$g_bChkEnableBBAttack = True
+
+	BuilderBase()
+	
+	If _Sleep($DELAYRUNBOT3) Then Return
+	
+	$g_bChkCollectBuilderBase = $bChkCollectBuilderBase
+	$g_bChkStartClockTowerBoost = $bChkStartClockTowerBoost
+	$g_bChkCTBoostBlderBz = $bChkCTBoostBlderBz
+	$g_bChkCleanBBYard = $bChkCleanBBYard
+	$g_bChkEnableBBAttack = $bChkEnableBBAttack
+EndFunc
+#ce - BBase - Disabled for review and adaptation - AIO Mod
