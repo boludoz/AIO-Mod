@@ -48,7 +48,7 @@ Func getArmyCCSpells($bOpenArmyWindow = False, $bCloseArmyWindow = False, $bChec
 
 			$iSpellIndex = TroopIndexLookup($aTempSpellArray[0], "getArmyCCSpells()") - $eLSpell ; Get the Index of the Spell from the ShortName
 			If $iSpellIndex < 0 Then ContinueLoop
-			
+
 			If StringInStr($aTempSpellArray[1], "|") Then
 				$aSpells = StringSplit($aTempSpellArray[1], "|")
 				Local $X_Coord

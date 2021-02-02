@@ -302,7 +302,7 @@ Func CreateAttackSearchDeadBaseSearch()
 		$g_hChkDBMeetDeadEagle = GUICtrlCreateCheckbox("Dead Eagle Search", $x, $y, -1, -1)
 			GUICtrlSetOnEvent(-1, "chkDBMeetDeadEagle")
 			
-		$g_hTxtDeadEagleSearch = GUICtrlCreateInput("50", $x + 115, $y, 20, 18)
+		$g_hTxtDeadEagleSearch = _GUICtrlCreateInput("50", $x + 115, $y, 20, 18)
 			;$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkMeetTrophy_Info_03", "Set the Max. amount of Trophies to search for on a village to attack.")
 			;_GUICtrlSetTip(-1, $sTxtTip)
 			;_GUICtrlEdit_SetReadOnly(-1, True)

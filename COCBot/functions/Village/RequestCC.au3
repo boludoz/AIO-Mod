@@ -214,10 +214,10 @@ EndFunc   ;==>IsFullClanCastle
 
 Func CheckCCArmy()
 	If Not $g_bRunState Then Return
-	
-	Local $bSkipTroop = Not $g_abRequestType[0] Or _ArrayMin($g_aiClanCastleTroopWaitType) = $eTroopCount ; All 3 troop comboboxes are set = "any"
-	Local $bSkipSpell = Not $g_abRequestType[1] Or _ArrayMin($g_aiClanCastleSpellWaitType) = $eSpellCount ; All 3 spell comboboxes are set = "any"
-	Local $bSkipSiege = Not $g_abRequestType[2] Or _ArrayMin($g_aiClanCastleSiegeWaitType) = $eSiegeMachineCount ; All 2 siege comboboxes are set = "any"
+
+	Local $bSkipTroop = Not $g_abRequestType[0] Or _ArrayMin($g_aiClanCastleTroopWaitType) = 0 ; All 3 troop comboboxes are set = "any"
+	Local $bSkipSpell = Not $g_abRequestType[1] Or _ArrayMin($g_aiClanCastleSpellWaitType) = 0 ; All 3 spell comboboxes are set = "any"
+	Local $bSkipSiege = Not $g_abRequestType[2] Or _ArrayMin($g_aiClanCastleSiegeWaitType) = 0 ; All 2 siege comboboxes are set = "any"
 
 	If $bSkipTroop And $bSkipSpell And $bSkipSiege Then Return
 
@@ -225,7 +225,7 @@ Func CheckCCArmy()
 	Local $aTroopWSlot, $aSpellWSlot
 
 	For $i = 0 To 2
-		If $g_aiClanCastleTroopWaitQty[$i] = 0 And $g_aiClanCastleTroopWaitType[$i] < $eTroopCount Then $g_aiCCTroopsExpected[$g_aiClanCastleTroopWaitType[$i]] = 45 ; expect troop type only. Do not care about qty
+		If $g_aiClanCastleTroopWaitQty[$i] = 0 And $g_aiClanCastleTroopWaitType[$i] > 0 Then $g_aiCCTroopsExpected[$g_aiClanCastleTroopWaitType[$i] - 1] = 40 ; expect troop type only. Do not care about qty
 	Next
 
 	SetLog("Getting current army in Clan Castle...")

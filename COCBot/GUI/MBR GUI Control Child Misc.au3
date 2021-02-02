@@ -620,7 +620,6 @@ Func chkActivateClangames()
 		;V3
 		GUICtrlSetState($g_hChkClanGamesLoot, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkClanGamesBattle, $GUI_ENABLE)
-		 GUICtrlSetState($g_hChkClanGamesSuperTroop, $GUI_ENABLE)
 
 		 GUICtrlSetState($g_hChkClanGamesSpell, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkClanGamesDestruction, $GUI_ENABLE)
@@ -643,7 +642,6 @@ Func chkActivateClangames()
 		GUICtrlSetState($g_hChkClanGamesLoot, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkClanGamesBattle, $GUI_DISABLE)
 
-		GUICtrlSetState($g_hChkClanGamesSuperTroop, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkClanGamesSpell, $GUI_DISABLE)
 
 		GUICtrlSetState($g_hChkClanGamesDestruction, $GUI_DISABLE)
@@ -658,14 +656,27 @@ Func chkActivateClangames()
 	EndIf
 EndFunc   ;==>chkActivateClangames
 
+; Purging doesnt exist if we want BB challneges, because they are all attack basically... This avoids potential conflicts in code and logic if both are selected
+Func chkClanGamesBB()
+    If GUICtrlRead($g_hChkClanGamesBBBattle) = $GUI_CHECKED or GUICtrlRead($g_hChkClanGamesBBDestruction) = $GUI_CHECKED Then
+        GUICtrlSetState($g_hChkClanGamesPurge, $GUI_DISABLE)
+    else
+        GUICtrlSetState($g_hChkClanGamesPurge, $GUI_ENABLE)
+    EndIf
+EndFunc
+
 Func chkPurgeLimits()
 	If GUICtrlRead($g_hChkClanGamesPurge) = $GUI_CHECKED AND _
-	   GUICtrlRead($g_hChkClanGamesEnabled) = $GUI_CHECKED Then
+		GUICtrlRead($g_hChkClanGamesEnabled) = $GUI_CHECKED Then
 		GUICtrlSetState($g_hcmbPurgeLimit, $GUI_ENABLE)
+        GUICtrlSetState($g_hChkClanGamesBBBattle, $GUI_DISABLE) ; same as above, by purging, it is the same as doing BB challenges really. (unless gemming to completion) So this avoids potential code and logic conflicts again
+        GUICtrlSetState($g_hChkClanGamesBBDestruction, $GUI_DISABLE)
 	Else
 		GUICtrlSetState($g_hcmbPurgeLimit, $GUI_DISABLE)
+        GUICtrlSetState($g_hChkClanGamesBBBattle, $GUI_ENABLE) ; same as above, by purging, it is the same as doing BB challenges really. (unless gemming to completion) So this avoids potential code and logic conflicts again
+        GUICtrlSetState($g_hChkClanGamesBBDestruction, $GUI_ENABLE)
 	EndIf
-EndFunc   ;==>chkPurgeLimits
+EndFunc
 
 Func chkEnableBBAttack()
 	;If GUICtrlRead($g_hChkEnableBBAttack) = $GUI_CHECKED Then
