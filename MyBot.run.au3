@@ -762,7 +762,7 @@ Func runBot() ;Bot that runs everything in order
 		If $g_bRestart Then ContinueLoop
 		checkObstacles() ; trap common error messages also check for reconnecting animation
 		If $g_bRestart Then ContinueLoop
-		
+
 		#Region - Custom BB - Team AIO Mod++
 		If $g_bOnlyBuilderBase Then
 			$g_bStayOnBuilderBase = True
@@ -819,7 +819,7 @@ Func runBot() ;Bot that runs everything in order
 				If _Sleep($DELAYRUNBOT1) = False Then checkMainScreen(False)
 			EndIf
 			#EndRegion - Request form chat / on a loop - Team AIO Mod++
-			
+
 			If $g_bIsSearchLimit Then
 				Local $aRndFuncList = ['LabCheck', 'Collect']
 			Else
@@ -828,13 +828,13 @@ Func runBot() ;Bot that runs everything in order
 					; Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge', 'BoostSuperTroop'] ; AIO Mod
 				; Else
 					; Local $aRndFuncList = ['Collect', 'CollectFreeMagicItems', 'DailyChallenge', 'BoostSuperTroop'] ; AIO Mod
-					Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge' ; AIO Mod
+					Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge'] ; AIO Mod
 				Else
 					Local $aRndFuncList = ['Collect', 'CollectFreeMagicItems', 'DailyChallenge'] ; AIO Mod
 				EndIf
 				#EndRegion - Only farm - Team AIO Mod++
 			EndIf
-			
+
 			_ArrayShuffle($aRndFuncList)
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
@@ -897,7 +897,7 @@ Func runBot() ;Bot that runs everything in order
 				If $g_bUpgradeKingEnable Or $g_bUpgradeQueenEnable Or $g_bUpgradeWardenEnable Or $g_bUpgradeChampionEnable Then _ArrayAdd($aRndFuncList, 'UpgradeHeroes')
 
 				;	667, 27, F5DD71 ; Full gold.	668, 77, E292E2 ; Full elixir.
-				If _ColorCheck(_GetPixelColor(667, 27, True), Hex(0xF5DD71, 6), 25) Or _ColorCheck(_GetPixelColor(668, 77, True), Hex(0xE292E2, 6), 25) Or Not $g_bChkOnlyFarm Then 
+				If _ColorCheck(_GetPixelColor(667, 27, True), Hex(0xF5DD71, 6), 25) Or _ColorCheck(_GetPixelColor(668, 77, True), Hex(0xE292E2, 6), 25) Or Not $g_bChkOnlyFarm Then
 					_ArrayAdd($aRndFuncList, 'UpgradeBuilding')
 					_ArrayAdd($aRndFuncList, 'Laboratory')
 				EndIf
@@ -912,7 +912,7 @@ Func runBot() ;Bot that runs everything in order
 				Next
 			EndIf
 			#EndRegion - Only farm - Team AIO Mod++
-            
+
             ;ARCH Trying it out here.
             If Not $g_bIsSearchLimit Then _ClanGames() ; move to here to pick event before going to BB.
 
@@ -922,7 +922,7 @@ Func runBot() ;Bot that runs everything in order
 			If Not $g_bChkOnlyFarm Then _ArrayAdd($aRndFuncList, 'BuilderBase')
 			If $g_bAutoUpgradeWallsEnable = True Then
 				;	667, 27, F5DD71 ; Full gold. Or 668, 77, E292E2 ; Full elixir.
-				If (_ColorCheck(_GetPixelColor(667, 27, True), Hex(0xF5DD71, 6), 25) Or _ColorCheck(_GetPixelColor(668, 77, True), Hex(0xE292E2, 6), 25)) Or Not $g_bChkOnlyFarm Then 
+				If (_ColorCheck(_GetPixelColor(667, 27, True), Hex(0xF5DD71, 6), 25) Or _ColorCheck(_GetPixelColor(668, 77, True), Hex(0xE292E2, 6), 25)) Or Not $g_bChkOnlyFarm Then
 					_ArrayAdd($aRndFuncList, 'UpgradeWall')
 				EndIf
 			EndIf
@@ -1230,19 +1230,19 @@ EndFunc   ;==>Attack
 Func _RunFunction($sAction)
 	If $g_bDebugFuncCall Then SetLog('@ _RunFunction @ (1143) :(' & @MIN & ':' & @SEC & ')' & $sAction & @CRLF, $COLOR_ACTION) ;### Function Trace
 	FuncEnter(_RunFunction)
-	
+
     #Region - Custom BB - Team AIO Mod++
-	If $g_bOnlyBuilderBase Then 
+	If $g_bOnlyBuilderBase Then
 		$g_bStayOnBuilderBase = True
-		$g_bRestart = False	
-		Return 
+		$g_bRestart = False
+		Return
 	EndIf
-    #EndRegion - Custom BB - Team AIO Mod++	
-	
+    #EndRegion - Custom BB - Team AIO Mod++
+
 	Static $hTimeForCheck = TimerInit()
 	; ensure that builder base flag is false
 	$g_bStayOnBuilderBase = False
-	If TimerDiff($hTimeForCheck) > 3000 Then 
+	If TimerDiff($hTimeForCheck) > 3000 Then
 		If IsMainPage(1) = False Then checkMainScreen(False, Default)
 		$hTimeForCheck = TimerInit()
 	EndIf
@@ -1355,7 +1355,7 @@ Func FirstCheck()
 
 	If $g_bDebugSetlog Then SetDebugLog("-- FirstCheck Loop --")
 	If Not $g_bRunState Then Return
-	
+
 	;;;;;Check Town Hall level
 	Local $iTownHallLevel = $g_iTownHallLevel
 	SetDebugLog("Detecting Town Hall level", $COLOR_INFO)
@@ -1498,9 +1498,9 @@ Func TestBuilderBase()
 	$g_bChkEnableBBAttack = True
 
 	BuilderBase()
-	
+
 	If _Sleep($DELAYRUNBOT3) Then Return
-	
+
 	$g_bChkCollectBuilderBase = $bChkCollectBuilderBase
 	$g_bChkStartClockTowerBoost = $bChkStartClockTowerBoost
 	$g_bChkCTBoostBlderBz = $bChkCTBoostBlderBz

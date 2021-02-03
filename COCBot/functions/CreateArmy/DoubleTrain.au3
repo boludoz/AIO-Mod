@@ -172,15 +172,6 @@ Func TrainFullTroop($bQueue = False)
 	  EndIf
    Next
 
-   For $i = 0 To $eSuperTroopCount - 1
-	   Local $troopIndex = $i
-	   If $g_aiArmyCompSuperTroops[$troopIndex] > 0 Then
-		   $ToReturn[UBound($ToReturn) - 1][0] = $g_asSuperTroopShortNames[$troopIndex]
-		   $ToReturn[UBound($ToReturn) - 1][1] = $g_aiArmyCompSuperTroops[$troopIndex]
-		   ReDim $ToReturn[UBound($ToReturn) + 1][2]
-	   EndIf
-   Next
-
 	If $ToReturn[0][0] = "Arch" And $ToReturn[0][1] = 0 Then Return
 
 	TrainUsingWhatToTrain($ToReturn, $bQueue)

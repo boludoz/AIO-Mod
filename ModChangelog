@@ -3,12 +3,13 @@
             | | | _| / ▓ \| |\/| |    / ▓ \| | (_) |  |_   _||_   _|
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
-                    Based on MyBot.run v7.8.9
+                    Based on MyBot.run v7.9
 	**v4.3.7**
-		- Fixed wall upgrade.
-		- Fixed check shield and obstacles.
-		- Fixed arrays in loops.
-		
+		- Update: Core updated to MyBot.run v7.9 version.
+		- Fix: Wall upgrade.
+		- Fix: Check shield and obstacles enabled now.
+		- Fix: Arrays in functions.
+
 	**v4.3.6** 
 		- Fix: Hero update more smart and detect if is bad located hero.
 		- Fix: Time hero update.

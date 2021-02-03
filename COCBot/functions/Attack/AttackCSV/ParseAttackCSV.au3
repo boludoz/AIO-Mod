@@ -356,21 +356,15 @@ Func ParseAttackCSV($debug = False)
 								If PrepareAttack($g_iMatchMode, True) > 0 Then
 								_ArrayShuffle($g_avAttackTroops)
 									; a Loop from all troops
-									For $ii = $eBarb To $eHunt ; launch all remaining troops
+									For $ii = $eBarb To $eTroopCount -1 ; launch all remaining troops
 										; Loop on all detected troops
 										For $x = 0 To UBound($g_avAttackTroops) - 1
 											; If the Name exist and haves more than zero is deploy it
-											If ($g_avAttackTroops[$x][0] = $ii Or $g_avAttackTroops[$x][0] == ($ii + $eSuperBarb)) And $g_avAttackTroops[$x][1] > 0 Then
+											If $g_avAttackTroops[$x][0] = $ii And $g_avAttackTroops[$x][1] > 0 Then
 												Local $name = GetTroopName($g_avAttackTroops[$x][0], $g_avAttackTroops[$x][1])
 												Setlog("Name: " & $name, $COLOR_DEBUG)
 												Setlog("Qty: " & $g_avAttackTroops[$x][1], $COLOR_DEBUG)
-                                                DropTroopFromINI($value1, $index1, $index2, $indexArray, $g_avAttackTroops[$x][1], $g_avAttackTroops[$x][1], $g_asTroopShortNames[$ii], $aDelaypoints[0], $aDelaypoints[1], $aDelaydrop[0], $aDelaydrop[1], $aSleepdrop[0], $aSleepdrop[1], $aSleepbeforedrop[0], $aSleepbeforedrop[1], $debug)												
-												
-												; drop super troop
-												If $g_avAttackTroops[$x][0] == ($ii + $eSuperBarb) Then
-                                                    DropTroopFromINI($value1, $index1, $index2, $indexArray, $g_avAttackTroops[$x][1], $g_avAttackTroops[$x][1], $g_asTroopShortNames[$ii], $aDelaypoints[0], $aDelaypoints[1], $aDelaydrop[0], $aDelaydrop[1], $aSleepdrop[0], $aSleepdrop[1], $aSleepbeforedrop[0], $aSleepbeforedrop[1], $debug)												
-												EndIf
-												
+                                                DropTroopFromINI($value1, $index1, $index2, $indexArray, $g_avAttackTroops[$x][1], $g_avAttackTroops[$x][1], $g_asTroopShortNames[$ii], $aDelaypoints[0], $aDelaypoints[1], $aDelaydrop[0], $aDelaydrop[1], $aSleepdrop[0], $aSleepdrop[1], $aSleepbeforedrop[0], $aSleepbeforedrop[1], $debug)
 												CheckHeroesHealth()
 												If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
 											EndIf
@@ -379,7 +373,7 @@ Func ParseAttackCSV($debug = False)
 									; Loop on all detected troops And Check If Heroes Or Siege Was Not Dropped
 									For $i = 0 To UBound($g_avAttackTroops) - 1
 										Local $iTroopKind = $g_avAttackTroops[$i][0]
-										If $iTroopKind = $eCastle Or $iTroopKind = $eWallW Or $iTroopKind = $eBattleB Or $iTroopKind = $eStoneS Or $iTroopKind = $eSiegeB Then
+										If $iTroopKind = $eCastle Or $iTroopKind = $eWallW Or $iTroopKind = $eBattleB Or $iTroopKind = $eStoneS Or $iTroopKind = $eSiegeB Or $iTroopKind = $eLogL Then
 											If $bFoundCC = False Then
 												Setlog("- Remain CC drop: " & GetTroopName($iTroopKind, 0), $COLOR_INFO)
 												DropTroopFromINI($value1, $index1, $index2, $indexArray, 1, 1, GetTroopName($iTroopKind, 1, True), $aDelaypoints[0], $aDelaypoints[1], $aDelaydrop[0], $aDelaydrop[1], $aSleepdrop[0], $aSleepdrop[1], $aSleepbeforedrop[0], $aSleepbeforedrop[1], $debug)
