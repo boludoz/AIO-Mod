@@ -21,6 +21,12 @@ Func SwitchBetweenBases($bCheckMainScreen = Default, $bGoToBB = Default, $bSilen
 	
 	For $iLoop = 0 To 4
 
+		; Deconstructed boat.
+		If (QuickMIS("N1", @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Noboat\", 66, 432, 388, 627) <> "none") Then
+			$g_bStayOnBuilderBase = False
+			Return False
+		EndIf
+		
 		;	Builder base.
 		Local $aBBoat = decodeSingleCoord(findImageInPlace("BoatBuilderBase", $g_sImgBoatBB, "487,44,708,242"))
 		Local $bBB = isOnBuilderBase(True)
@@ -28,12 +34,6 @@ Func SwitchBetweenBases($bCheckMainScreen = Default, $bGoToBB = Default, $bSilen
 		;	Normal base.
 		Local $aNVoat = decodeSingleCoord(findImageInPlace("BoatNormalVillage", $g_sImgBoat, "66,432,388,627"))
 		Local $bNV = (Not $bBB) ; more stable than isOnMainVillage.
-
-		; Deconstructed boat.
-		If (QuickMIS("N1", @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Noboat\", 66, 432, 388, 627) <> "none") Then
-			$g_bStayOnBuilderBase = False
-			Return False
-		EndIf
 		
 		Select
 			Case (UBound($aNVoat) > 1)

@@ -4,6 +4,10 @@
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
                     Based on MyBot.run v7.9
+	**v4.3.8**
+		- Fix: Specific case builder base infinite loop (because ship is missing on the screen.). (Thx @KiRZeN & @vDragon).
+		- Fix: ZoomOut, out of array case.
+
 	**v4.3.7**
 		- Update: Core updated to MyBot.run v7.9 version.
 		- Fix: Wall upgrade.
