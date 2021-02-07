@@ -10,7 +10,7 @@
 #Au3Stripper_Off
 #Au3Stripper_On
 Global $g_sBotVersion = "v7.9.0"
-Global $g_sModVersion = "v4.3.8"
+Global $g_sModVersion = "v4.3.9"
 Opt("MustDeclareVars", 1)
 Global $g_sBotTitle = ""
 Global $g_hFrmBot = 0
@@ -2904,7 +2904,7 @@ Global $__VBoxManage_Path
 Global $__VBoxGuestProperties
 Global $__VBoxExtraData
 Global $g_iGlobalActiveBotsAllowed = EnvGet("NUMBER_OF_PROCESSORS")
-If IsNumber($g_iGlobalActiveBotsAllowed) = 0 Or $g_iGlobalActiveBotsAllowed < 1 Then $g_iGlobalActiveBotsAllowed = 2
+If StringIsDigit($g_iGlobalActiveBotsAllowed) = 0 Or $g_iGlobalActiveBotsAllowed < 1 Then $g_iGlobalActiveBotsAllowed = 2
 Global $g_hMutextOrSemaphoreGlobalActiveBots = 0
 Global $g_iGlobalThreads = 0
 Global $g_iThreads = 0

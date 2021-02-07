@@ -4063,7 +4063,7 @@ Func AndroidInvalidState()
 		SetDebugLog("AndroidInvalidState: Window Handle " & $g_hAndroidWindow & " doesn't exist", $COLOR_ERROR)
 		Return True
 	EndIf
-	If IsHWnd($g_hAndroidWindow) = False And IsNumber($g_hAndroidWindow) And $g_bAndroidBackgroundLaunched = False Then
+	If IsHWnd($g_hAndroidWindow) = False And StringStringIsDigit($g_hAndroidWindow) And $g_bAndroidBackgroundLaunched = False Then
 		SetDebugLog("AndroidInvalidState: PID " & $g_hAndroidWindow & " not supported for Headless Mode", $COLOR_ERROR)
 		Return True
 	EndIf

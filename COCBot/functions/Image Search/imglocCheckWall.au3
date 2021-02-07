@@ -117,8 +117,8 @@ Func imglocFindWalls($walllevel, $searcharea = "DCD", $redline = "", $maxreturn 
 	Local $FoundWalls[1] = [""] ;
 
 	Local $redLines = $redline
-	Local $minLevel = (IsNumber($walllevel) ? $walllevel : 1)
-	Local $maxLevel = (IsNumber($walllevel) ? $walllevel : 14)
+	Local $minLevel = (StringIsDigit($walllevel) ? $walllevel : 1)
+	Local $maxLevel = (StringIsDigit($walllevel) ? $walllevel : 14)
 	Local $maxReturnPoints = $maxreturn
 
 	; Perform the search

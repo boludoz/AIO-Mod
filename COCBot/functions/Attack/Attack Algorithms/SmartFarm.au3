@@ -809,7 +809,7 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 		If $g_bDebugSetlog Then SetDebugLog("**ListInfoDeploy row " & $i & ": USE " & GetTroopName($troopKind, 0) & " SIDES " & $nbSides & " WAVE " & $waveNb & " XWAVE " & $maxWaveNb & " SLOTXEDGE " & $slotsPerEdge, $COLOR_DEBUG)
 
 		; Regular Troops , not Heroes or Castle
-		If (IsNumber($troopKind)) Then
+		If (StringIsDigit($troopKind)) Then
 			For $j = 0 To UBound($g_avAttackTroops) - 1 ; identify the position of this kind of troop
 				If $g_avAttackTroops[$j][0] = $troopKind Then
 					$troop = $j

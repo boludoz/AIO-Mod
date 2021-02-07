@@ -4,6 +4,9 @@
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
                     Based on MyBot.run v7.9
+	**v4.3.9**
+		- Fix: Badly formated error in hero improvement. (Thx @KiRZeN).
+
 	**v4.3.8**
 		- Fix: Specific case builder base infinite loop (because ship is missing on the screen.). (Thx @KiRZeN & @vDragon).
 		- Fix: ZoomOut, out of array case.

@@ -237,9 +237,11 @@ Func HeroUpgrade($sHero = "")
 	
 	If @error Then Return
 	If StringInStr($vRequirement, "MAX|" & $g_iTownHallLevel) < 1 Or $g_iTownHallLevel < 1 Then
-		If Not $vRequirement = False And $g_aiCurrentLoot[($sHero = "Warden") ? ($eLootElixir) : ($eLootDarkElixir)] < $vRequirement Then
-			SetLog("You don't have enough resources to improve : " & $sHero & " skip.", $COLOR_INFO)
-			Return
+		If Not $vRequirement = False Then
+			If StringIsDigit($vRequirement) = True And $g_aiCurrentLoot[($sHero = "Warden") ? ($eLootElixir) : ($eLootDarkElixir)] < Number($vRequirement) Then
+				SetLog("You don't have enough resources to improve : " & $sHero & " skip.", $COLOR_INFO)
+				Return
+			EndIf
 		EndIf
 	Else
 		SetLog($sHero & " max level for this TH Level.", $COLOR_INFO)
