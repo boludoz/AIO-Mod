@@ -168,50 +168,30 @@ Func HeroUpgradeTime(ByRef $sHero, $sString = "")
 	$sHero = _DateAdd('s', $iSeconds, _NowCalcDate() & " " & _NowTime(5))
 EndFunc   ;==>HeroUpgradeTime
 
-Global $s_KingMin[8] = [False, False, False, False, False, False, False, False]
-Global $s_QueenMin[8] = [False, False, False, False, False, False, False, False]
-Global $s_WardenMin[8] = [False, False, False, False, False, False, False, False]
-Global $s_ChampionMin[8] = [False, False, False, False, False, False, False, False]
+Global $s_KingMin[8] = [0, 0, 0, 0, 0, 0, 0, 0]
+Global $s_QueenMin[8] = [0, 0, 0, 0, 0, 0, 0, 0]
+Global $s_WardenMin[8] = [0, 0, 0, 0, 0, 0, 0, 0]
+Global $s_ChampionMin[8] = [0, 0, 0, 0, 0, 0, 0, 0]
 
 Func HeroUpgrade($sHero = "")
-	; NOTE FOR REPLACE BAD EXECUTE
-	#Comments-Start
-	 	Switch $sHero
-			Case "King"
-				...
-			Case "Queen"
-				...
-			Case "Warden"
-				...
-			Case "Champion"
-				...
-		EndSwitch
-	#Comments-End
-	
-	Local $bIsValidAccount = (StringIsDigit($g_iCurAccount) And Number($g_iCurAccount) > -1)
-	
-	Local $sDateAndTime = "", $vRequirement = 0, $aAltarPos = 0
+	Local $sDateAndTime = "", $iCostHero = 0, $aAltarPos = 0
 	
 	Switch $sHero
 		Case "King"
 			If Not $g_bUpgradeKingEnable Then Return
 			$sDateAndTime = $g_sDateAndTimeKing
-			If $bIsValidAccount = True Then $vRequirement = $s_KingMin[$g_iCurAccount]
 			$aAltarPos = $g_aiKingAltarPos
 		Case "Queen"
 			If Not $g_bUpgradeQueenEnable Then Return
 			$sDateAndTime = $g_sDateAndTimeQueen
-			If $bIsValidAccount = True Then $vRequirement = $s_QueenMin[$g_iCurAccount]
 			$aAltarPos = $g_aiQueenAltarPos
 		Case "Warden"
 			If Not $g_bUpgradeWardenEnable Then Return
 			$sDateAndTime = $g_sDateAndTimeWarden
-			If $bIsValidAccount = True Then $vRequirement = $s_WardenMin[$g_iCurAccount]
 			$aAltarPos = $g_aiWardenAltarPos
 		Case "Champion"
 			If Not $g_bUpgradeChampionEnable Then Return
 			$sDateAndTime = $g_sDateAndTimeChampion
-			If $bIsValidAccount = True Then $vRequirement = $s_ChampionMin[$g_iCurAccount]
 			$aAltarPos = $g_aiChampionAltarPos
 		Case Else
 			SetLog("Invalid Hero 0x1", $COLOR_ERROR)
@@ -236,27 +216,56 @@ Func HeroUpgrade($sHero = "")
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
 	
 	If @error Then Return
-	If StringInStr($vRequirement, "MAX|" & $g_iTownHallLevel) < 1 Or $g_iTownHallLevel < 1 Then
-		If Not $vRequirement = False Then
-			If StringIsDigit($vRequirement) = True And $g_aiCurrentLoot[($sHero = "Warden") ? ($eLootElixir) : ($eLootDarkElixir)] < Number($vRequirement) Then
-				SetLog("You don't have enough resources to improve : " & $sHero & " skip.", $COLOR_INFO)
-				Return
+
+	For $i = 0 To $g_iTotalAcc
+		If $i <> $g_iCurAccount Then ContinueLoop ; bypass Current account Or Feature disable
+		
+		Local $iLoot = $g_aiCurrentLoot[$eLootDarkElixir]
+		Switch $sHero
+			Case "King"
+				$iCostHero = $s_KingMin[$i]
+			Case "Queen"
+				$iCostHero = $s_QueenMin[$i]
+			Case "Champion"
+				$iCostHero = $s_ChampionMin[$i]
+			Case "Warden"
+				$iCostHero = $s_WardenMin[$i]
+				$iLoot = $g_aiCurrentLoot[$eLootElixir]
+			Case Else
+				SetLog("Invalid Hero 0x1", $COLOR_ERROR)
+				Return False
+		EndSwitch
+		
+		
+		If $iCostHero = String("MAX|" & $g_iTownHallLevel) And $g_iTownHallLevel > 0 Then
+			Local $a1 = StringSplit($iCostHero, "|", $STR_NOCOUNT)
+			If Not @error Then
+				If Number($g_iTownHallLevel) = Number($a1[1]) Then
+					SetLog("Max level for this TH " & $sHero, $COLOR_SUCCESS)
+					Return
+				EndIf
 			EndIf
 		EndIf
-	Else
-		SetLog($sHero & " max level for this TH Level.", $COLOR_INFO)
-		Return
-	EndIf
-
-	If Not @error Then
-		If $aAltarPos < 1 Then
-			SetDebugLog("Set " & $sHero & " Pos", $COLOR_ERROR)
-			Return False
+		
+		If Number($iCostHero) <= Number($iLoot) Then
+			Switch $sHero
+				Case "King"
+					$s_KingMin[$i] = 0
+				Case "Queen"
+					$s_QueenMin[$i] = 0
+				Case "Champion"
+					$s_ChampionMin[$i] = 0
+				Case "Warden"
+					$s_WardenMin[$i] = 0
+			EndSwitch
+			
+			ContinueLoop
+		Else
+			SetLog("You don't have enough resources to improve : " & $sHero & " skip.", $COLOR_INFO)
+			Return
 		EndIf
-	Else
-		SetDebugLog("Set " & $sHero & " Pos execute fail.", $COLOR_ERROR)
-		Return False
-	EndIf
+	Next
+
 	
 	CheckMainScreen(False)
 	SetLog("Upgrading " & $sHero, $COLOR_ACTION)
@@ -391,14 +400,14 @@ Func HeroUpgrade($sHero = "")
 					Setlog("You can't seem to improve " & $sHero & ", the goblins write down the cost for later.", $COLOR_INFO)
 					Switch $sHero
 						Case "King"
-							If $bIsValidAccount = True Then $s_KingMin[$g_iCurAccount] = $iCost
+							$s_KingMin[$g_iCurAccount] = $iCost
 						Case "Queen"
-							If $bIsValidAccount = True Then $s_QueenMin[$g_iCurAccount] = $iCost
+							$s_QueenMin[$g_iCurAccount] = $iCost
 						Case "Warden"
-							If $bIsValidAccount = True Then $s_WardenMin[$g_iCurAccount] = $iCost
+							$s_WardenMin[$g_iCurAccount] = $iCost
 							$g_iWardenCost = $iCost
 						Case "Champion"
-							If $bIsValidAccount = True Then $s_ChampionMin[$g_iCurAccount] = $iCost
+							$s_ChampionMin[$g_iCurAccount] = $iCost
 					EndSwitch
 				EndIf
 			EndIf
@@ -406,13 +415,13 @@ Func HeroUpgrade($sHero = "")
 			SetLog("Maximum " & $sHero & " level reached for this TH level.", $COLOR_ERROR)
 			Switch $sHero
 				Case "King"
-					If $bIsValidAccount = True Then $s_KingMin[$g_iCurAccount] = "MAX|" & $g_iTownHallLevel
+					$s_KingMin[$g_iCurAccount] = "MAX|" & $g_iTownHallLevel
 				Case "Queen"
-					If $bIsValidAccount = True Then $s_QueenMin[$g_iCurAccount] = "MAX|" & $g_iTownHallLevel
+					$s_QueenMin[$g_iCurAccount] = "MAX|" & $g_iTownHallLevel
 				Case "Warden"
-					If $bIsValidAccount = True Then $s_WardenMin[$g_iCurAccount] = "MAX|" & $g_iTownHallLevel
+					$s_WardenMin[$g_iCurAccount] = "MAX|" & $g_iTownHallLevel
 				Case "Champion"
-					If $bIsValidAccount = True Then $s_ChampionMin[$g_iCurAccount] = "MAX|" & $g_iTownHallLevel
+					$s_ChampionMin[$g_iCurAccount] = "MAX|" & $g_iTownHallLevel
 			EndSwitch
 		Else
 			SetLog("Upgrade " & $sHero & " window open fail", $COLOR_ERROR)

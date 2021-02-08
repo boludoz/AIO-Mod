@@ -342,7 +342,7 @@ Func SmartWait4Train($iTestSeconds = Default)
 		$g_bStayOnBuilderBase = True
 		__RunFunction("BuilderBase")
 		$g_bStayOnBuilderBase = False
-		$iTrainWaitTime -= TimerDiff($hTimeForCheck)
+		$iTrainWaitTime -= TimerDiff($hTimeForCheck) / 1000 ; xniightx123
 	EndIf
 	#EndRegion - PlayBB in Smart Wait - Team AIO Mod++
 

@@ -52,7 +52,7 @@ Func BuilderBaseZoomOut($DebugImage = False, $ForceZoom = False)
 				; Get the Distances between images
 				Local $Size = GetBuilderBaseSize(True, $DebugImage)
 				SetDebugLog("[" & $i & "]BuilderBaseZoomOut $Size: " & $Size)
-				If StringIsDigit($Size) And $Size > 0 Then ExitLoop
+				If IsNumber($Size) And $Size > 0 Then ExitLoop
 			; Can't be precise each time we enter at Builder base was deteced a new Zoom Factor!! from 563-616
 			If $Size > 520 And $Size < 590 Then
 				Return True

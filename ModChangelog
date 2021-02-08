@@ -5,6 +5,10 @@
 
                     Based on MyBot.run v7.9
 	**v4.3.9**
+		- Fix: SmartWait time milliseconds to seconds fix. (Thx @xniightx123)
+		- Fix: Hero sys. improvements. (Thx @KiRZeN).
+
+	**v4.3.9**
 		- Fix: Badly formated error in hero improvement. (Thx @KiRZeN).
 
 	**v4.3.8**
