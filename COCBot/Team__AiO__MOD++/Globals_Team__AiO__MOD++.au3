@@ -312,8 +312,8 @@ Global $g_bExitAfterCyclesGTFO = False
 Global $g_iCycle = 0
 
 Global $g_aClanBadgeNoClan[4] = [151, 307, 0xF05538, 20] ; OK - Orange Tile of Clan Logo on Chat Tab if you are not in a Clan
-Global $g_aCopy[4] = [512, 182, 0xDDF685, 20] ; OK - Copy button
 Global $g_aShare[4] = [438, 190, 0xFFFFFF, 20] ; OK - Share clan
+Global $g_aCopy[4] = [512, 182, 0xDDF685, 20] ; OK - Copy button
 Global $g_aClanPage[4] = [821, 400, 0xFB5D63, 20] ; OK - Red Leave Clan Button on Clan Page
 Global $g_aClanLabel[4] = [522, 70, 0xEDEDE8, 20] ; OK - Select white label
 ;Global $g_aJoinClanBtn[4] = [821, 400, 0xDBF583, 25] ; OK - Join Button on Tab

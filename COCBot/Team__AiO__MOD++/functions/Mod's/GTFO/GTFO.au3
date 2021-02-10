@@ -261,7 +261,8 @@ Func DonateGTFO()
 		$firstrun = False
 
 		Setlog("Donate CC now.", $COLOR_INFO)
-;~ 		OpenClanChat()
+		
+		CloseClanChat()
 		If RandomSleep($DELAYRUNBOT3) Then Return
 
 		PrepareDonateCC()
@@ -280,8 +281,6 @@ Func DonateGTFO()
 			; LeaveClanHop()
 			Return False
 		EndIf
-
-		OpenClanChat()
 
 		DonateCC()
 
@@ -302,8 +301,6 @@ EndFunc   ;==>DonateGTFO
 
 Func ClanHop()
 	If $g_bLeader Or Not $g_bChkGTFOClanHop Then Return
-
-	OpenClanChat()
 
 	SetLog("Start Clan Hopping", $COLOR_INFO)
 ;~ 	Local $sTimeStartedHopping = _NowCalc()
@@ -350,12 +347,12 @@ Func ClanHop()
 					ClickP($g_aShare)
 				Else
 					SetLog("No Share Button", $COLOR_ERROR)
-					Return False
+					; Return False
 				EndIf
 
 				Local $sData = ""
 				If _Wait4PixelArray($g_aCopy) Then
-					ClickP($g_aCopy)
+					Click($g_aCopy[0], $g_aCopy[1] + 25)
 					$sData = ClipGet()
 					If RandomSleep(250) Then Return
 					GUICtrlSetData($g_hTxtClanID, $sData)
@@ -363,7 +360,7 @@ Func ClanHop()
 					$g_bFirstHop = False
 				Else
 					SetLog("No Copy Button", $COLOR_ERROR)
-					Return False
+					; Return False
 				EndIf
 			EndIf
 			#EndRegion - ClanHop return to clan alternative
@@ -388,15 +385,7 @@ Func ClanHop()
 
 		; Open clans page
 		Local $aIsOnClanLabel = [640, 205, 0xDDF685, 20]
-		Local $aClansBtns = [359, 302, 0xBABB9C, 20]
 		If _Wait4PixelArray($g_aClanLabel) Then
-			; Announcement blue on clans page click
-			Local $aBlueAnnouncementClick = [658, 283, 0xB9E484, 20]
-			If _Wait4PixelArray($aIsOnClanLabel) Then
-				ClickP($aBlueAnnouncementClick)
-				If RandomSleep(100) Then Return
-			EndIf
-
 
 			If RandomSleep(500) Then Return
 
@@ -404,26 +393,28 @@ Func ClanHop()
 			Local $sJoinDir = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\GTFO"
 			Local $sArea = "676, 177, 836, 596"
 
-			; Click on random clan
-			If _Wait4PixelArray($aClansBtns) Then
-				Click(Random(153, 200, 1), 360 + (68 * Random(0, 6, 1)))
-			Else
-				SetLog("Fail GTFO | Random clan.", $COLOR_ERROR)
-				$iErrors += 1
-				ContinueLoop
+			; Join clan button
+			Local $sTrophyDir = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\GTFO\trophy"
+			Local $sAreaT = "439, 278, 554, 664"
+
+		
+			If _WaitForCheckImg($sTrophyDir, $sAreaT) Then
+			
+				Local $aTroArray = _ImageSearchXML($sTrophyDir, 10, "439, 278, 554, 664", True, False, True, 25)
+				
+				Click($aTroArray[Random(0, UBound($aTroArray) -1, 1)][1], $aTroArray[Random(0, UBound($aTroArray) -1, 1)][2])
+				If _WaitForCheckImg($sJoinDir, $sArea) Then
+					Click(Random(698, 826, 1), Random(397, 426, 1))
+				Else
+					SetLog("Fail GTFO | Join.", $COLOR_ERROR)
+					$iErrors += 1
+					ContinueLoop
+				EndIf
+	
+				ClickOkay("ClanHop")
 			EndIf
 
-			If _WaitForCheckImg($sJoinDir, $sArea) Then
-				Click(Random(698, 826, 1), Random(397, 426, 1))
-			Else
-				SetLog("Fail GTFO | Join.", $COLOR_ERROR)
-				$iErrors += 1
-				ContinueLoop
-			EndIf
-
-			ClickOkay("ClanHop")
-
-			If $bIsInClan Then SetLog("GTFO|Leaved the clan for another.", $COLOR_INFO)
+			If $bIsInClan Then SetLog("GTFO | Leaved the clan for another.", $COLOR_INFO)
 
 			If Not OpenClanChat() Then
 				$iErrors += 1
@@ -431,6 +422,8 @@ Func ClanHop()
 			EndIf
 
 			SetLog("GTFO | Clan hop finished.", $COLOR_INFO)
+			
+			CloseClanChat()
 			Return True
 
 		Else

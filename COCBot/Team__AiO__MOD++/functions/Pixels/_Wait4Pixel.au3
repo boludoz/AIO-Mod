@@ -8,21 +8,20 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func _Wait4Pixel($x, $y, $sColor, $iColorVariation = 25, $iWait = 1000, $iDelay = 100, $sMsglog = Default) ; Return true if pixel is true
-	Local $aTemp[4] = [$x, $y, $sColor, $iColorVariation]
+Func _Wait4Pixel($x, $y, $sColor, $iColorVariation = 25, $iWait = 3000, $iDelay = 100, $sMsglog = Default) ; Return true if pixel is true
 	Local $hTimer = __TimerInit()
 	Do
-		If _CheckPixel($aTemp, $g_bCapturePixel, Default, $sMsglog) Then Return True
+		If _ColorCheck(Hex($sColor, 6), _GetPixelColor($x, $y, $g_bCapturePixel), $iColorVariation) Then Return True
 		If _Sleep($iDelay) Then Return False
 	Until $iWait < __TimerDiff($hTimer)
 	Return False
 EndFunc   ;==>_Wait4Pixel
 
-Func _Wait4PixelGone($x, $y, $sColor, $iColorVariation = 25, $iWait = 1000, $iDelay = 100, $sMsglog = Default) ; Return true if pixel is false
+Func _Wait4PixelGone($x, $y, $sColor, $iColorVariation = 25, $iWait = 3000, $iDelay = 100, $sMsglog = Default) ; Return true if pixel is false
 	Local $aTemp[4] = [$x, $y, $sColor, $iColorVariation]
 	Local $hTimer = __TimerInit()
 	Do
-		If _CheckPixel($aTemp, $g_bCapturePixel, Default, $sMsglog) = False Then Return True
+		If _ColorCheck(Hex($sColor, 6), _GetPixelColor($x, $y, $g_bCapturePixel), $iColorVariation) = False Then Return True
 		If _Sleep($iDelay) Then Return False
 	Until $iWait < __TimerDiff($hTimer)
 	Return False
@@ -43,7 +42,7 @@ Func _Wait4PixelArray($aSettings) ; Return true if pixel is true
 	Local $y = $aSettings[1]
 	Local $sColor = $aSettings[2]
 	Local $iColorVariation = (UBound($aSettings) > 3) ? ($aSettings[3]) : (15)
-	Local $iWait = (UBound($aSettings) > 4) ? ($aSettings[4]) : (1000)
+	Local $iWait = (UBound($aSettings) > 4) ? ($aSettings[4]) : (3000)
 	Local $iDelay = (UBound($aSettings) > 5) ? ($aSettings[5]) : (100)
 	Local $sMsglog = (UBound($aSettings) > 6) ? ($aSettings[6]) : (Default)
 	Return _Wait4Pixel($x, $y, $sColor, $iColorVariation, $iWait, $iDelay, $sMsglog)
@@ -54,7 +53,7 @@ Func _Wait4PixelGoneArray($aSettings) ; Return true if pixel is false
 	Local $y = $aSettings[1]
 	Local $sColor = $aSettings[2]
 	Local $iColorVariation = (UBound($aSettings) > 3) ? ($aSettings[3]) : (15)
-	Local $iWait = (UBound($aSettings) > 4) ? ($aSettings[4]) : (1000)
+	Local $iWait = (UBound($aSettings) > 4) ? ($aSettings[4]) : (3000)
 	Local $iDelay = (UBound($aSettings) > 5) ? ($aSettings[5]) : (100)
 	Local $sMsglog = (UBound($aSettings) > 6) ? ($aSettings[6]) : (Default)
 	Return _Wait4PixelGone($x, $y, $sColor, $iColorVariation, $iWait, $iDelay, $sMsglog)
