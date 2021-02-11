@@ -157,7 +157,7 @@ Func getArmyRequest($aiDonateCoords, $bNeedCapture = True)
 	Return StringTrimLeft($sClanText, 2)
 EndFunc   ;==>getArmyRequest
 
-Func DonateCC($bCheckForNewMsg = False)
+Func DonateCC($bCheckForNewMsg = False, $bActiveClanHop = False)
 	#Region - Donation records - Team AIO Mod++
 	TimerRecordDonation()
 	Local $bModCondition = (($g_iTotalDonateStatsTroops >= $g_iDayLimitTroops) and ($g_iDayLimitTroops > 0))
@@ -227,7 +227,7 @@ Func DonateCC($bCheckForNewMsg = False)
 	If Not $bDonate Then Return
 
 	;Opens clan tab and verbose in log
-	CheckMainScreen(False)
+	If $bActiveClanHop = False Then CheckMainScreen(False) ; Team AIO Mod++
 	If _Sleep($DELAYDONATECC2) Then Return
 	
 	If Not OpenClanChat() Then ; GTFO - Team AIO Mod++
@@ -679,28 +679,20 @@ Func DonateCC($bCheckForNewMsg = False)
 		#EndRegion
 		$bDonate = False
 	WEnd
-
-	If Not CloseClanChat() Then ; GTFO - Team AIO Mod++
-		SetLog("Error finding the Clan Tab Button", $COLOR_ERROR)
-		AndroidPageError("DonateCC")
+	
+	; GTFO - Team AIO Mod++
+	If $bActiveClanHop = False Then
+		If Not CloseClanChat() And $bActiveClanHop = False Then
+			SetLog("Error finding the Clan Tab Button", $COLOR_ERROR)
+			AndroidPageError("DonateCC")
+		EndIf
 	EndIf
-
 	; ClickAway()
 	; If _Sleep($DELAYDONATECC2) Then Return
 	
 	UpdateStats()
 	If _Sleep($DELAYDONATECC2) Then Return
 EndFunc   ;==>DonateCC
-
-Func CloseXDonate() ; Custom fix - Team__AiO__MOD
-	Local $i = 0, $bClicked = False
-	Do
-		$i += 1
-		$bClicked = ButtonClickDM(@ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\Button\XClan\", 782, 1, 51, 731)
-		If _Sleep(250) Then Return
-	Until $bClicked Or ($i > 3)
-	Return $bClicked
-EndFunc   ;==>ClickFindMatch
 
 Func CheckDonateTroop(Const $iTroopIndex, Const $sDonateTroopString, Const $sBlacklistTroopString, Const $sClanString, $bNewSystemDonate = False)
 	Local $sName = ($iTroopIndex = 99 ? "Custom" : $g_asTroopNames[$iTroopIndex])
