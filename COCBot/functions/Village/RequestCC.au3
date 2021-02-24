@@ -15,7 +15,9 @@
 
 Func RequestCC($bClickPAtEnd = True, $sText = "", $bRequestFast = $g_bChkReqCCFromChat) ; Request form chat / on a loop - Team AIO Mod++
 
-	If Not $g_bRequestTroopsEnable Or Not $g_bDonationEnabled Then Return
+	If Not $g_bRequestTroopsEnable Or Not $g_bDonationEnabled Then
+		Return
+	EndIf
 
 	If Not $g_bRunState Then Return
 

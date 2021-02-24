@@ -126,7 +126,7 @@ Global $g_bAvoidLocate  = False, $g_hAvoidLocate = 0, $g_bIsReallyOn = False
 Global $g_iDayLimitTroops = 0, $g_iDayLimitSpells = 0, $g_iDayLimitSieges = 0
 Global $g_iCmbRestartEvery, $g_hCmbRestartEvery
 Global $g_iDiffRestartEvery = 0
-Global $g_sRestartTimer = '1000/01/01 00:00:00'
+Global $g_sRestartTimer = '1970/01/01 00:00:00'
 
 ; Request form chat / on a loop.
 Global $g_hChkReqCCAlways = 0, $g_hChkReqCCFromChat = 0

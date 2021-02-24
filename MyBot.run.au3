@@ -740,6 +740,8 @@ Func runBot() ;Bot that runs everything in order
 	Else
 		FirstCheck()
 	EndIf
+	
+    If Not $g_bRunState Then Return
 	#EndRegion - Custom BB - Team AIO Mod++
 
 	While 1
@@ -1167,7 +1169,9 @@ Func AttackMain() ;Main control for attack functions
             ;ClickAway()
 			If $g_bUpdateSharedPrefs Then PullSharedPrefs()
 			If VillageSearch(True) = False Then
-				SetLog("AttackMain | Return from.", $COLOR_ERROR)
+				SetLog("Error: AttackMain, return from village search bad.", $COLOR_ERROR)
+				If Not $g_bRunState Then Return
+				If $g_bRestart Then Return
 				checkMainScreen()
 				$g_bIsClientSyncError = False
 				Return False
@@ -1388,6 +1392,7 @@ Func FirstCheck()
 	#EndRegion - Team AIO MOD++
 
 	If Not $g_bRunState Then Return
+    If $g_bRestart Then Return
 
 	If $g_bOutOfGold And (Number($g_aiCurrentLoot[$eLootGold]) >= Number($g_iTxtRestartGold)) Then ; check if enough gold to begin searching again
 		$g_bOutOfGold = False ; reset out of gold flag
@@ -1403,7 +1408,8 @@ Func FirstCheck()
 
 	If _Sleep($DELAYRUNBOT5) Then Return
 	checkMainScreen(False)
-	If $g_bRestart Then Return
+	If Not $g_bRunState Then Return
+    If $g_bRestart Then Return
 
 	If BotCommand() Then btnStop()
 
@@ -1421,6 +1427,10 @@ Func FirstCheck()
 				Setlog("Before any other routine let's attack!", $COLOR_INFO)
 				If Not $g_bRunState Then Return
 				AttackMain()
+				; Custom fix - Team AIO Mod++
+				If Not $g_bRunState Then Return
+                If $g_bRestart Then Return
+				
 				$g_bSkipFirstZoomout = False
 				If $g_bOutOfGold Then
 					SetLog("Switching to Halt Attack, Stay Online/Collect mode", $COLOR_ERROR)
