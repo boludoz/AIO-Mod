@@ -23,11 +23,11 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+Global $g_sZoomOutModes = "Normal-0"
 
 Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix = Default, $sFixedPrefix = Default, $bOnBuilderBase = Default)
 	FuncEnter(GetVillageSize)
-	
-	
+		
 	#Region - Builder Base - Team AIO Mod++
 	Global $g_aPosSizeVillage = 0
 	Global $g_iXVOffset = 0
@@ -60,18 +60,35 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		$sDirectory = $g_sImgZoomOutDir
 	EndIf
 	
+	; GetVillageSize(Default, Default, Default, Default, False)
 	If $bOnBuilderBase = False Then
+		; StringSplit2D("Normal-0", "-", "|")
+		Local $aModes = StringSplit2D($g_sZoomOutModes, "-", "|")
+		
+		; Reset to Default if it fail.
+		If Not (UBound($aModes, 1) > 0 And UBound($aModes, 2) = 2) Then
+			$aModes = StringSplit2D("Normal-0", "-", "|")
+		EndIf
+		
+		; List all files to check.
 		Local $aFileList = _FileListToArray($g_sImgZoomOutDir, "*", $FLTA_FOLDERS)
 		If Not @error Then
-		
+			For $i = 1 To $aFileList[0]
+				If _ArraySearch($aModes, $aFileList[$i]) = -1 Then
+					$g_sZoomOutModes &= "|" & $aFileList[$i] & "-0"
+				EndIf
+			Next
 		EndIf
+		
+		Setlog($g_sZoomOutModes)
 	EndIf
-	
+
 	Local $aStoneFiles = _FileListToArray($sDirectory, $sStonePrefix & "*.*", $FLTA_FILES)
 	If @error Then
 		SetLog("Error: Missing stone files (" & @error & ")", $COLOR_ERROR)
 		Return FuncReturn($aResult)
 	EndIf
+	
 	; use stoneBlueStacks2A stones first
 	Local $iNewIdx = 1
 	For $i = 1 To $aStoneFiles[0]
@@ -320,6 +337,7 @@ Func UpdateGlobalVillageOffset($x, $y)
 
 EndFunc   ;==>UpdateGlobalVillageOffset
 
+#Region - COC Themes Fake AI - Team AIO Mod++
 Func Brujula2D($iX, $iY)
 Local $iMitadWidth = $g_iGAME_WIDTH / 2
 Local $iMitadHeight = $g_iGAME_HEIGHT / 2
@@ -341,3 +359,4 @@ Local $iMitadHeight = $g_iGAME_HEIGHT / 2
 			EndSwitch
 	EndSwitch
 EndFunc
+#EndRegion - COC Themes Fake AI - Team AIO Mod++

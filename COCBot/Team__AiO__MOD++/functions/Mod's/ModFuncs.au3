@@ -383,7 +383,7 @@ Func _DebugFailedImageDetection($Text)
 	EndIf
 EndFunc   ;==>_DebugFailedImageDetection
 
-Func StringSplit2D($sMatches = "Hola2-5-50-50-100-100|Hola-6-200-200-100-100", $sDelim_Item = "-", $sDelim_Row = "|")
+Func StringSplit2D($sMatches = "Hola-2-5-50-50-100-100|Hola-6-200-200-100-100", $sDelim_Item = "-", $sDelim_Row = "|")
 	Local $iValDim_1, $iValDim_2 = 0, $iColCount
 	Local $aSplit_1 = StringSplit($sMatches, $sDelim_Row, $STR_NOCOUNT + $STR_ENTIRESPLIT)
 	$iValDim_1 = UBound($aSplit_1, $UBOUND_ROWS)
