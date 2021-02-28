@@ -9,7 +9,7 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-
+; _ImageSearchXML("C:\Github\AIOPLUS\imgxml\village\NormalVillage", 0, "FV", True, True, False, 25, 0, 1000)
 Func _ImageSearchXML($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = "FV", $bForceCapture = True, $bDebugLog = False, $bCheckDuplicatedpoints = False, $iDistance2check = 25, $minLevel = 0, $maxLevel = 1000)
 	FuncEnter(_ImageSearchXML)
 	$g_aImageSearchXML = -1

@@ -27,6 +27,7 @@
 Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix = Default, $sFixedPrefix = Default, $bOnBuilderBase = Default)
 	FuncEnter(GetVillageSize)
 	
+	
 	#Region - Builder Base - Team AIO Mod++
 	Global $g_aPosSizeVillage = 0
 	Global $g_iXVOffset = 0
@@ -39,7 +40,8 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		$sFixedPrefix = ""
 		If $g_bUpdateSharedPrefs Then $sFixedPrefix = "fixed"
 	EndIf
-
+	
+	
 	Local $aResult = 0
 	Local $sDirectory
 	Local $stone = [0, 0, 0, 0, 0, ""], $tree = [0, 0, 0, 0, 0, ""], $fixed = [0, 0, 0, 0, 0, ""]
@@ -57,6 +59,14 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	Else
 		$sDirectory = $g_sImgZoomOutDir
 	EndIf
+	
+	If $bOnBuilderBase = False Then
+		Local $aFileList = _FileListToArray($g_sImgZoomOutDir, "*", $FLTA_FOLDERS)
+		If Not @error Then
+		
+		EndIf
+	EndIf
+	
 	Local $aStoneFiles = _FileListToArray($sDirectory, $sStonePrefix & "*.*", $FLTA_FILES)
 	If @error Then
 		SetLog("Error: Missing stone files (" & @error & ")", $COLOR_ERROR)
@@ -309,3 +319,25 @@ Func UpdateGlobalVillageOffset($x, $y)
 	Return $updated
 
 EndFunc   ;==>UpdateGlobalVillageOffset
+
+Func Brujula2D($iX, $iY)
+Local $iMitadWidth = $g_iGAME_WIDTH / 2
+Local $iMitadHeight = $g_iGAME_HEIGHT / 2
+
+	Switch True
+		Case $iX <= $iMitadWidth
+			Switch True
+				Case $iMitadWidth >= $iY
+					Return "LT"
+				Case Else   
+					Return "LB"
+			EndSwitch
+		Case Else
+			Switch True
+				Case $iMitadWidth >= $iY
+					Return "RT"
+				Case Else   
+					Return "RB"
+			EndSwitch
+	EndSwitch
+EndFunc
