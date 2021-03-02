@@ -678,7 +678,8 @@ Func MainLoop($bCheckPrerequisitesOK = True)
 		If $g_bBotLaunchOption_MinimizeBot Then BotMinimizeRequest()
 	EndIf
 
-	Local $hStarttime = _Timer_Init()
+	Global $g_hStarttime = _Timer_Init()
+	Local $hStarttime = $g_hStarttime
 
 	; Check the Supported Emulator versions
 	CheckEmuNewVersions()
@@ -690,9 +691,9 @@ Func MainLoop($bCheckPrerequisitesOK = True)
 	While 1
 		_Sleep($DELAYSLEEP, True, False)
 
-		Local $diffhStarttime = _Timer_Diff($hStarttime)
+		Local $diffhStarttime = _Timer_Diff($g_hStarttime)
 		If Not $g_bRunState And $g_bNotifyTGEnable And $g_bNotifyRemoteEnable And $diffhStarttime > 1000 * 15 Then ; 15seconds
-			$hStarttime = _Timer_Init()
+			$g_hStarttime = _Timer_Init()
 			NotifyRemoteControlProcBtnStart()
 		EndIf
 
@@ -740,7 +741,7 @@ Func runBot() ;Bot that runs everything in order
 	Else
 		FirstCheck()
 	EndIf
-	
+
     If Not $g_bRunState Then Return
 	#EndRegion - Custom BB - Team AIO Mod++
 
@@ -1430,7 +1431,7 @@ Func FirstCheck()
 				; Custom fix - Team AIO Mod++
 				If Not $g_bRunState Then Return
                 If $g_bRestart Then Return
-				
+
 				$g_bSkipFirstZoomout = False
 				If $g_bOutOfGold Then
 					SetLog("Switching to Halt Attack, Stay Online/Collect mode", $COLOR_ERROR)
