@@ -23,7 +23,7 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Global $g_sZoomOutModes = "NormalA-1"
+Global $g_sZoomOutModes = "Normal"
 
 Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix = Default, $sFixedPrefix = Default, $bOnBuilderBase = Default)
 	FuncEnter(GetVillageSize)
@@ -62,7 +62,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	; EndIf
 	
 	; GetVillageSize(Default, Default, Default, Default, False)
-	Local $aZoomOutModes[1][2] = [["",""]]
+	Local $aZoomOutModes[1] = [""]
 	
 	$sDirectory = $g_sImgZoomOutDir
 	$sDirectoryOri = $sDirectory
@@ -71,37 +71,30 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		$sDirectory = $g_sImgZoomOutDirBB
 		$sDirectoryOri = $sDirectory
 	Else
-		; StringSplit2D("Normal-0", "-", "|")
-		Local $aModes = StringSplit2D($g_sZoomOutModes, "-", "|")
+		Local $aModes = StringSplit($g_sZoomOutModes, "|")
 		
 		; Reset to Default if it fail.
-		If Not (UBound($aModes, 1) > 0 And UBound($aModes, 2) = 2) Then
-			$aModes = StringSplit2D("Normal-1", "-", "|")
+		If Not (UBound($aModes) > 0) Then
+			$aModes = StringSplit("Normal", "|")
 		EndIf
 		
 		; List all files to check.
-		Local $aFileList = _FileListToArray($g_sImgZoomOutDir, "*", $FLTA_FOLDERS)
+		Local $aZoomOutModes = _FileListToArray($g_sImgZoomOutDir, "*", $FLTA_FOLDERS)
 		If Not @error Then
-			For $i = 1 To $aFileList[0]
-				If _ArraySearch($aModes, $aFileList[$i]) = -1 Then
-					$g_sZoomOutModes &= "|" & $aFileList[$i] & "-0"
-				EndIf
-			Next
+			_ArrayDelete($aZoomOutModes, 0)
 		EndIf
-		$aZoomOutModes = StringSplit2D($g_sZoomOutModes, "-", "|")
-		_ArraySort($aZoomOutModes, 1, 0, 0, 1)
 	EndIf
 	
 	Local $eError = ""
 	Local $sImOk = False
 	For $iB = 0 To UBound($aZoomOutModes) -1
-		$sDirectory = $sDirectoryOri & $aZoomOutModes[$iB][0] & "\"
+		$sDirectory = $sDirectoryOri & $aZoomOutModes[$iB] & "\"
 		$eError = ""
 		
 		Local $aStoneFiles = _FileListToArray($sDirectory, $sStonePrefix & "*.*", $FLTA_FILES)
 		$eError = @error
 		If $eError Then
-			SetLog("Error: Missing stone files (" & $eError & ")", $COLOR_ERROR)
+			SetDebugLog("Error: Missing stone files (" & $eError & ") " & $aZoomOutModes[$iB], $COLOR_ERROR)
 			ContinueLoop
 			; Return FuncReturn($aResult)
 		EndIf
@@ -117,7 +110,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		Local $aTreeFiles = _FileListToArray($sDirectory, $sTreePrefix & "*.*", $FLTA_FILES)
 		$eError = @error
 		If $eError Then
-			SetLog("Error: Missing tree (" & $eError & ")", $COLOR_ERROR)
+			SetDebugLog("Error: Missing tree (" & $eError & ") " & $aZoomOutModes[$iB], $COLOR_ERROR)
 			ContinueLoop
 			; Return FuncReturn($aResult)
 		EndIf
@@ -196,7 +189,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		Next
 	
 		If $stone[0] = 0 And $fixed[0] = 0 Then
-			SetDebugLog("GetVillageSize cannot find stone", $COLOR_WARNING)
+			SetDebugLog("GetVillageSize cannot find stone " & $aZoomOutModes[$iB], $COLOR_WARNING)
 			ContinueLoop
 			; Return FuncReturn($aResult)
 		EndIf
@@ -243,7 +236,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 			EndIf
 	
 			If $tree[0] = 0 And $fixed[0] = 0 And Not $g_bRestart Then
-				SetDebugLog("GetVillageSize cannot find tree", $COLOR_WARNING)
+				SetDebugLog("GetVillageSize cannot find tree " & $aZoomOutModes[$iB], $COLOR_WARNING)
 				ContinueLoop
 				; Return FuncReturn($aResult)
 			EndIf
@@ -251,8 +244,11 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		
 		$sImOk = True
 		
-		If StringIsSpace($aZoomOutModes[$iB][0]) = False Then 
-			$g_sZoomOutModes = StringReplace($g_sZoomOutModes, $aZoomOutModes[$iB][0] & "-" & $aZoomOutModes[$iB][1], $aZoomOutModes[$iB][0] & "-" & Number($aZoomOutModes[$iB][1]) + 1)
+		If StringIsSpace($aZoomOutModes[$iB]) = False Then 
+			Local $iSave = $aZoomOutModes[$iB]
+			_ArrayDelete($aZoomOutModes, $iB)
+			_ArrayInsert($aZoomOutModes, 0, $iSave)
+			$g_sZoomOutModes = _ArrayToString($aZoomOutModes, "|")
 		EndIf
 		
 		ExitLoop
@@ -261,6 +257,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	Setlog($g_sZoomOutModes)
 	
 	If $sImOk = False Then
+		SetDebugLog("GetVillageSize NT.", $COLOR_WARNING)
 		Return FuncReturn($aResult)
 	EndIf
 	
