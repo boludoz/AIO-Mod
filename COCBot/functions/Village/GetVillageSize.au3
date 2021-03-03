@@ -242,6 +242,8 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 			EndIf
 		EndIf
 		
+		If $tree[0] = 0 Or $stone[0] = 0 Then ContinueLoop
+		
 		$sImOk = True
 		
 		If StringIsSpace($aZoomOutModes[$iB]) = False Then 
