@@ -10,7 +10,7 @@
 #Au3Stripper_Off
 #Au3Stripper_On
 Global $g_sBotVersion = "v7.9.0"
-Global $g_sModVersion = "v4.4.3"
+Global $g_sModVersion = "v4.4.4"
 Opt("MustDeclareVars", 1)
 Global Const $WAIT_TIMEOUT = 258
 Global Const $STR_STRIPLEADING = 1
