@@ -256,7 +256,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		ExitLoop
 	Next
 	
-	Setlog($g_sZoomOutModes)
+	SetDebugLog($g_sZoomOutModes)
 	
 	If $sImOk = False Then
 		SetDebugLog("GetVillageSize NT.", $COLOR_WARNING)
