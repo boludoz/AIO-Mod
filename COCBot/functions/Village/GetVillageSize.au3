@@ -27,7 +27,7 @@ Global $g_sZoomOutModes = "Normal"
 
 Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix = Default, $sFixedPrefix = Default, $bOnBuilderBase = Default)
 	FuncEnter(GetVillageSize)
-		
+	
 	#Region - Builder Base - Team AIO Mod++
 	Global $g_aPosSizeVillage = 0
 	Global $g_iXVOffset = 0
@@ -56,9 +56,9 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	
 	; Team AIO Mod++
 	; If $bOnBuilderBase Then
-		; $sDirectory = $g_sImgZoomOutDirBB 
+	; $sDirectory = $g_sImgZoomOutDirBB
 	; Else
-		; $sDirectoryOri = $g_sImgZoomOutDir
+	; $sDirectoryOri = $g_sImgZoomOutDir
 	; EndIf
 	
 	; GetVillageSize(Default, Default, Default, Default, False)
@@ -87,7 +87,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	
 	Local $eError = ""
 	Local $sImOk = False
-	For $iB = 0 To UBound($aZoomOutModes) -1
+	For $iB = 0 To UBound($aZoomOutModes) - 1
 		$sDirectory = $sDirectoryOri & $aZoomOutModes[$iB] & "\"
 		$eError = ""
 		
@@ -101,10 +101,10 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		
 		; use stoneBlueStacks2A stones first
 		; For $i = 1 To $aStoneFiles[0]
-			; If StringInStr($aStoneFiles[$i], "stoneBlueStacks2A") = 1 Then
-				; _ArraySwap($aStoneFiles, $i, 0)
-				; ExitLoop
-			; EndIf
+		; If StringInStr($aStoneFiles[$i], "stoneBlueStacks2A") = 1 Then
+		; _ArraySwap($aStoneFiles, $i, 0)
+		; ExitLoop
+		; EndIf
 		; Next
 		
 		Local $aTreeFiles = _FileListToArray($sDirectory, $sTreePrefix & "*.*", $FLTA_FILES)
@@ -115,19 +115,19 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 			; Return FuncReturn($aResult)
 		EndIf
 		Local $i, $findImage, $sArea, $a
-	
+		
 		Local $aFixedFiles = ($sFixedPrefix ? _FileListToArray($sDirectory, $sFixedPrefix & "*.*", $FLTA_FILES) : 0)
-	
+		
 		If UBound($aFixedFiles) > 0 Then
 			For $i = 1 To $aFixedFiles[0]
 				$findImage = $aFixedFiles[$i]
 				$a = StringRegExp($findImage, ".*-(\d+)-(\d+)-(\d*,*\d+)_.*[.](xml|png|bmp)$", $STR_REGEXPARRAYMATCH)
 				If UBound($a) = 4 Then
-	
+					
 					$x0 = $a[0]
 					$y0 = $a[1]
 					$d0 = StringReplace($a[2], ",", ".")
-	
+					
 					$x1 = $x0 - $iAdditionalX
 					$y1 = $y0 - $iAdditionalY
 					$right = $x0 + $iAdditionalX
@@ -147,22 +147,22 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 						$fixed[5] = $findImage
 						ExitLoop
 					EndIf
-	
+					
 				Else
 					;SetDebugLog("GetVillageSize ignore image " & $findImage & ", reason: " & UBound($a), $COLOR_WARNING)
 				EndIf
 			Next
 		EndIf
-	
+		
 		For $i = 1 To $aStoneFiles[0]
 			$findImage = $aStoneFiles[$i]
 			$a = StringRegExp($findImage, ".*-(\d+)-(\d+)-(\d*,*\d+)_.*[.](xml|png|bmp)$", $STR_REGEXPARRAYMATCH)
 			If UBound($a) = 4 Then
-	
+				
 				$x0 = $a[0]
 				$y0 = $a[1]
 				$d0 = StringReplace($a[2], ",", ".")
-	
+				
 				$x1 = $x0 - $iAdditionalX
 				$y1 = $y0 - $iAdditionalY
 				$right = $x0 + $iAdditionalX
@@ -182,28 +182,28 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 					$stone[5] = $findImage
 					ExitLoop
 				EndIf
-	
+				
 			Else
 				;SetDebugLog("GetVillageSize ignore image " & $findImage & ", reason: " & UBound($a), $COLOR_WARNING)
 			EndIf
 		Next
-	
+		
 		If $stone[0] = 0 And $fixed[0] = 0 Then
 			SetDebugLog("GetVillageSize cannot find stone " & $aZoomOutModes[$iB], $COLOR_WARNING)
 			ContinueLoop
 			; Return FuncReturn($aResult)
 		EndIf
-	
+		
 		If $stone[0] Then
 			For $i = 1 To $aTreeFiles[0]
 				$findImage = $aTreeFiles[$i]
 				$a = StringRegExp($findImage, ".*-(\d+)-(\d+)-(\d*,*\d+)_.*[.](xml|png|bmp)$", $STR_REGEXPARRAYMATCH)
 				If UBound($a) = 4 Then
-	
+					
 					$x0 = $a[0]
 					$y0 = $a[1]
 					$d0 = StringReplace($a[2], ",", ".")
-	
+					
 					$x1 = $x0 - $iAdditionalX
 					$y1 = $y0 - $iAdditionalY
 					$right = $x0 + $iAdditionalX
@@ -224,17 +224,17 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 						$tree[5] = $findImage
 						ExitLoop
 					EndIf
-	
+					
 				Else
 					;SetDebugLog("GetVillageSize ignore image " & $findImage & ", reason: " & UBound($a), $COLOR_WARNING)
 				EndIf
 			Next
-	
+			
 			If $g_bUpdateSharedPrefs And Not $bOnBuilderBase And $tree[0] = 0 And $fixed[0] = 0 Then
 				; On main village use stone as fixed point
 				$fixed = $stone
 			EndIf
-	
+			
 			If $tree[0] = 0 And $fixed[0] = 0 And Not $g_bRestart Then
 				SetDebugLog("GetVillageSize cannot find tree " & $aZoomOutModes[$iB], $COLOR_WARNING)
 				ContinueLoop
@@ -246,7 +246,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		
 		$sImOk = True
 		
-		If StringIsSpace($aZoomOutModes[$iB]) = False Then 
+		If StringIsSpace($aZoomOutModes[$iB]) = False Then
 			Local $iSave = $aZoomOutModes[$iB]
 			_ArrayDelete($aZoomOutModes, $iB)
 			_ArrayInsert($aZoomOutModes, 0, $iSave)
@@ -275,7 +275,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 
 	; initial reference village had a width of 473.60282919315 (and not 440) and stone located at 226, 567, so center on that reference and used zoom factor on that size
 	;Local $z = $c / 473.60282919315 ; don't use size of 440, as beta already using reference village
-	Local $iRefSize = 445;458 ; 2019-01-02 Update village measuring as outer edges didn't align anymore
+	Local $iRefSize = 445 ;458 ; 2019-01-02 Update village measuring as outer edges didn't align anymore
 	Local $iDefSize = 444 ; 2019-04-01 New default size using shared_prefs zoom level
 	Local $z = $c / $iRefSize
 
@@ -372,24 +372,24 @@ EndFunc   ;==>UpdateGlobalVillageOffset
 
 #Region - COC Themes Fake AI - Team AIO Mod++
 Func Brujula2D($iX, $iY)
-Local $iMitadWidth = $g_iGAME_WIDTH / 2
-Local $iMitadHeight = $g_iGAME_HEIGHT / 2
+	Local $iMitadWidth = $g_iGAME_WIDTH / 2
+	Local $iMitadHeight = $g_iGAME_HEIGHT / 2
 
 	Switch True
 		Case $iX <= $iMitadWidth
 			Switch True
 				Case $iMitadWidth >= $iY
 					Return "LT"
-				Case Else   
+				Case Else
 					Return "LB"
 			EndSwitch
 		Case Else
 			Switch True
 				Case $iMitadWidth >= $iY
 					Return "RT"
-				Case Else   
+				Case Else
 					Return "RB"
 			EndSwitch
 	EndSwitch
-EndFunc
+EndFunc   ;==>Brujula2D
 #EndRegion - COC Themes Fake AI - Team AIO Mod++
