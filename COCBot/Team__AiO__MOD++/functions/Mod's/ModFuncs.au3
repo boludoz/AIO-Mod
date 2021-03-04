@@ -484,20 +484,3 @@ Func CloseEmulatorForce()
 		Next
 	EndIf
 EndFunc   ;==>ProcessFindBy
-#CS
-FUNC Picante()
-	Local $sCommandMaster, $aKillAllInFolder = ProcessFindBy(@ScriptDir, "", true, false)
-	$sCommandMaster &= "CD " & chr(34) & @ScriptDir & chr(34) & " | "
-	$sCommandMaster &= chr(34) & @ScriptDir & "\lib\ModLibs\Updater\7za.exe" & chr(34) & " e " & chr(34) & @ScriptDir & "\MyBot.run.zip"  & chr(34) & " -o" & chr(34) & @ScriptDir & chr(34) & " -y -spf"
-	$sCommandMaster &= " | DEL " & chr(34) & @ScriptDir & "\MyBot.run.zip"  & chr(34) & " /Q" ; We are not engineers.
-
-	For $i = 0 To UBound($aKillAllInFolder)-1
-		Local $sPFN = _WinAPI_GetProcessFileName($aKillAllInFolder[$i])
-		Local $sPCL = _WinAPI_GetProcessCommandLine($aKillAllInFolder[$i])
-		; If Not (StringInStr($s, "MyBot.run") > 0) Then ContinueLoop
-		$sCommandMaster &=  ' | ' & chr(34) & $sPFN & chr(34) & " " &  $sPCL
-	Next
-
-	_ConsoleWrite(@ComSpec & " /c " & $sCommandMaster)
-EndFunc
-#CE
