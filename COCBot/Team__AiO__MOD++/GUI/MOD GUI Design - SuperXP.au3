@@ -16,7 +16,7 @@
 
 Global $g_hChkEnableSuperXP = 0, $g_hChkFastSuperXP = 0, $g_hChkSkipDragToEndSX = 0, _
 	   $g_hRdoTrainingSX = 0, $g_hRdoAttackingSX = 0, $g_hRdoGoblinPicnic = 0, $g_hRdoTheArena = 0, _
-	   $g_hTxtMaxXPToGain = 0, $g_hLblLockedSX = 0;, $g_hChkSkipZoomOutSX = 0
+	   $g_hTxtMaxXPToGain = 0, $g_hLblLockedSX = 0, $g_hChkSkipZoomOutSX = 0
 Global $g_hChkBKingSX = 0, $g_hChkAQueenSX = 0, $g_hChkGWardenSX = 0
 Global $g_hLblStartXP = 0, $g_hLblCurrentXP = 0, $g_hLblWonXP = 0, $g_hLblWonHourXP = 0, $g_hLblRunTimeXP = 0, _
 	   $g_hLblGoblinPicnic1 = 0, $g_hLblGoblinPicnic2 = 0, $g_hLblTheArena1 = 0, $g_hLblTheArena2 = 0
@@ -34,9 +34,9 @@ Func TabSuperXPGUI()
 		$g_hChkEnableSuperXP = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design - SuperXP", "ChkEnableSuperXP", "Enable SuperXP"), $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design - SuperXP", "ChkEnableSuperXP_Info_01", "SuperXP Attacks Continuously the 'Goblin Picnic/The Arena' To Earn XP."))
 			GUICtrlSetOnEvent(-1, "chkEnableSuperXP")
-		; $g_hChkSkipZoomOutSX = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design - SuperXP", "ChkSkipZoomOutSX", "Skip ZoomOut"), $x + 120, $y, -1, -1)
-			; _GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design - SuperXP", "ChkSkipZoomOutSX_Info_01", "Skip ZoomOut after Attack Finsihed."))
-			; GUICtrlSetState(-1, $GUI_UNCHECKED)
+		$g_hChkSkipZoomOutSX = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design - SuperXP", "ChkSkipZoomOutSX", "Skip ZoomOut"), $x + 120, $y, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design - SuperXP", "ChkSkipZoomOutSX_Info_01", "Skip ZoomOut after Attack Finsihed."))
+			GUICtrlSetState(-1, $GUI_UNCHECKED)
 		$g_hChkFastSuperXP = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design - SuperXP", "ChkFastSuperXP", "Fast SuperXP"), $x + 215, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design - SuperXP", "ChkFastSuperXP_Info_01", "Skip Current Xp Check from main screen and make SuperXP Fast."))
 			GUICtrlSetState(-1, $GUI_UNCHECKED)

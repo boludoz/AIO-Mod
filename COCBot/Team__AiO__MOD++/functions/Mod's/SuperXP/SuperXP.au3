@@ -209,10 +209,10 @@ Func MainSXHandler()
 			DonateCC(True)
 		EndIf
 
-		; If Not $g_bSkipZoomOutSX Then
+		If Not $g_bSkipZoomOutSX Then
 			checkMainScreen(False)
 			If IsMainPage() Then Zoomout()
-		; EndIf
+		EndIf
 
 		If $g_iActivateOptionSX = 1 Then CheckForFullArmy()
 		$bCanGainXP = ($g_iHeroAvailable <> $eHeroNone And (IIf($g_bBKingSX = $eHeroNone, False, BitAND($g_iHeroAvailable, $eHeroKing) = $eHeroKing) Or _

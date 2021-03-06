@@ -346,7 +346,7 @@ Func ApplyConfig_MOD_SuperXP($TypeReadSave)
 		Case "Read"
 			GUICtrlSetState($g_hChkEnableSuperXP, $g_bEnableSuperXP ? $GUI_CHECKED : $GUI_UNCHECKED)
 			chkEnableSuperXP()
-			; GUICtrlSetState($g_hChkSkipZoomOutSX, $g_bSkipZoomOutSX ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkSkipZoomOutSX, $g_bSkipZoomOutSX ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkFastSuperXP, $g_bFastSuperXP ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkSkipDragToEndSX, $g_bSkipDragToEndSX ? $GUI_CHECKED : $GUI_UNCHECKED)
 			radActivateOptionSX()
@@ -359,7 +359,7 @@ Func ApplyConfig_MOD_SuperXP($TypeReadSave)
 			GUICtrlSetState($g_hChkGWardenSX, $g_bGWardenSX = $eHeroWarden ? $GUI_CHECKED : $GUI_UNCHECKED)
 		Case "Save"
 			$g_bEnableSuperXP = (GUICtrlRead($g_hChkEnableSuperXP) = $GUI_CHECKED)
-			; $g_bSkipZoomOutSX = (GUICtrlRead($g_hChkSkipZoomOutSX) = $GUI_CHECKED)
+			$g_bSkipZoomOutSX = (GUICtrlRead($g_hChkSkipZoomOutSX) = $GUI_CHECKED)
 			$g_bFastSuperXP = (GUICtrlRead($g_hChkFastSuperXP) = $GUI_CHECKED)
 			$g_bSkipDragToEndSX = (GUICtrlRead($g_hChkSkipDragToEndSX) = $GUI_CHECKED)
 			If GUICtrlRead($g_hRdoTrainingSX) = $GUI_CHECKED Then

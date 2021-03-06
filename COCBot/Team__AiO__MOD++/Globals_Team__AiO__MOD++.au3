@@ -178,7 +178,7 @@ Global $g_hChkEnableRandom[3]
 ; SuperXP / GoblinXP - Team AiO MOD++
 Global $g_bEnableSuperXP = False, $g_bFastSuperXP = False, $g_bSkipDragToEndSX = False, _
 	$g_iActivateOptionSX = 1, $g_iGoblinMapOptSX = 2, $g_sGoblinMapOptSX = "The Arena", $g_iMaxXPtoGain = 500, _
-	$g_bBKingSX = False, $g_bAQueenSX = False, $g_bGWardenSX = False;, $g_bSkipZoomOutSX = False
+	$g_bBKingSX = False, $g_bAQueenSX = False, $g_bGWardenSX = False, $g_bSkipZoomOutSX = False
 Global $g_iStartXP = 0, $g_iCurrentXP = 0, $g_iGainedXP = 0, $g_iGainedHourXP = 0, $g_sRunTimeXP = 0
 Global $g_bDebugSX = True
 ; [0] = Queen, [1] = Warden, [2] = Barbarian King
