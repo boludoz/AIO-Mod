@@ -105,12 +105,15 @@ Func SetSuperXP($toSet = "")
 	EndIf
 EndFunc   ;==>SetSuperXP
 
-Func MainSXHandler()
+Func MainSXHandler()	
 	If Not $g_bEnableSuperXP Then Return
 	If $g_bDebugSetlog Then $g_bDebugSX = True
 	If Not $g_bDebugSetlog Then $g_bDebugSX = False
 	If $g_bDebugSetlog Or $g_bDebugSX Then SetDebugLog("Begin MainSXHandler, $g_iActivateOptionSX = " & $g_iActivateOptionSX & ", $g_bIsFullArmywithHeroesAndSpells = " & $g_bIsFullArmywithHeroesAndSpells, $COLOR_DEBUG)
 	If $g_iActivateOptionSX = 1 And $g_bIsFullArmywithHeroesAndSpells = True Then Return ; If Gain while Training Enabled but Army is Full Then Return
+
+	checkMainScreen(False, False)
+	ZoomOut()
 
 	$g_sRunTimeXP = _NowCalc()
 	If $g_iGainedXP >= $g_iMaxXPtoGain Then
@@ -209,9 +212,9 @@ Func MainSXHandler()
 			DonateCC(True)
 		EndIf
 
-		If Not $g_bSkipZoomOutSX Then
-			checkMainScreen(False)
-			If IsMainPage() Then Zoomout()
+		If Not $g_bSkipZoomOutSX Or Not IsMainPage() Then
+			checkMainScreen(False, False)
+			ZoomOut()
 		EndIf
 
 		If $g_iActivateOptionSX = 1 Then CheckForFullArmy()
@@ -239,7 +242,7 @@ Func MainSXHandler()
 EndFunc   ;==>MainSXHandler
 
 Func CheckForFullArmy()
-	If $g_bDebugSX Then SetDebugLog("SX|Begin CheckForFullArmy", $COLOR_DEBUG)
+	If $g_bDebugSX Then SetDebugLog("Super XP : Begin CheckForFullArmy", $COLOR_DEBUG)
 
 	; ********** This will check ALL , Troops , Spells, Heroes, CC etc etc  **************
 	CheckIfArmyIsReady()
@@ -275,18 +278,18 @@ Func CheckForFullArmy()
 		((Not $g_bFullArmy And _ColorCheck(_GetPixelColor($aGreenArrowTrainTroops[0], $aGreenArrowTrainTroops[1], True, "CheckForFullArmy-Army"), Hex(0x605C4C, 6), 15)) Or _
 		(Not $g_bFullArmySpells And _ColorCheck(_GetPixelColor($aGreenArrowBrewSpells[0], $aGreenArrowBrewSpells[1], True, "CheckForFullArmy-Spell"), Hex(0x605C4C, 6), 15))) Then ; if Full army was false and nothing was in 'Train' and 'Brew' Queue then check for train
 
-		If $g_bDebugSX Then SetDebugLog("SX|CheckForFullArmy| TrainSystem. #1", $COLOR_DEBUG)
+		If $g_bDebugSX Then SetDebugLog("Super XP : CheckForFullArmy| TrainSystem. #1", $COLOR_DEBUG)
 		TrainSystem()
 	ElseIf $g_bIsFullArmywithHeroesAndSpells And $g_bEnableSuperXP And $g_iActivateOptionSX = 1 Then ; Train Troops Before Attack
-		If $g_bDebugSX Then SetDebugLog("SX|CheckForFullArmy| TrainSystem. #2", $COLOR_DEBUG)
+		If $g_bDebugSX Then SetDebugLog("Super XP : CheckForFullArmy| TrainSystem. #2", $COLOR_DEBUG)
 		TrainSystem()
 	EndIf
 
-	If $g_bDebugSX Then SetDebugLog("SX|CheckForFullArmy Finished", $COLOR_DEBUG)
+	If $g_bDebugSX Then SetDebugLog("Super XP : CheckForFullArmy Finished", $COLOR_DEBUG)
 EndFunc   ;==>CheckForFullArmy
 
 Func SafeReturnSX()
-	If $g_bDebugSX Then SetDebugLog("SX|Begin SafeReturnSX", $COLOR_DEBUG)
+	If $g_bDebugSX Then SetDebugLog("Super XP : Begin SafeReturnSX", $COLOR_DEBUG)
 
 	Local $bObstacleResult = checkObstacles(False)
 	If $g_bDebugSetLog Then SetDebugLog("CheckObstacles Result = " & $bObstacleResult, $COLOR_DEBUG)
@@ -312,31 +315,31 @@ Func SafeReturnSX()
 	ElseIf IsInSPPage() Then
 		$rExit = ExitSPPage()
 	EndIf
-	If $g_bDebugSX Then SetDebugLog("SX|SafeReturnSX = " & $rExit)
+	If $g_bDebugSX Then SetDebugLog("Super XP : SafeReturnSX = " & $rExit)
 	Return $rExit
 EndFunc   ;==>SafeReturnSX
 
 Func ExitSPPage()
-	If $g_bDebugSX Then SetDebugLog("SX|Begin ExitSPPage", $COLOR_DEBUG)
+	If $g_bDebugSX Then SetDebugLog("Super XP : Begin ExitSPPage", $COLOR_DEBUG)
 
 	ClickP($aAway, 1, 0, "#0167") ; Click Away for Close Page
-	Local $Counter = 0
+	Local $iCounter = 0
 	While Not (IsMainPage())
 		If _Sleep(50) Then Return False
-		$Counter += 1
-		If $Counter > 100 Then ExitLoop
+		$iCounter += 1
+		If $iCounter > 100 Then ExitLoop
 	WEnd
-	If $Counter > 100 Then
+	If $iCounter > 100 Then
 		SetLog("Cannot Exit Single Player Page", $COLOR_RED)
 		Return False
 	Else
-		If $g_bDebugSX Then SetDebugLog("SX|ExitSPPage Finished", $COLOR_DEBUG)
+		If $g_bDebugSX Then SetDebugLog("Super XP : ExitSPPage Finished", $COLOR_DEBUG)
 		Return True
 	EndIf
 EndFunc   ;==>ExitSPPage
 
 Func AttackFinishedSX()
-	If $g_bDebugSX Then SetDebugLog("SX|Begin AttackFinishedSX", $COLOR_DEBUG)
+	If $g_bDebugSX Then SetDebugLog("Super XP : Begin AttackFinishedSX", $COLOR_DEBUG)
 
 	$g_iCurrentXP = GetCurXP("Current")
 	If $g_iGoblinMapOptSX = 1 Then
@@ -349,19 +352,19 @@ Func AttackFinishedSX()
 	$g_bActivatedHeroes[1] = False
 	$g_bActivatedHeroes[2] = False
 
-	If $g_bDebugSX Then SetDebugLog("SX|AttackFinishedSX Finished", $COLOR_DEBUG)
+	If $g_bDebugSX Then SetDebugLog("Super XP : AttackFinishedSX Finished", $COLOR_DEBUG)
 EndFunc   ;==>AttackFinishedSX
 
 Func GetCurXP($returnVal = "Current")
 	If $g_bFastSuperXP Then Return
-	If $g_bDebugSX Then SetDebugLog("SX|Begin GetCurXP", $COLOR_DEBUG)
+	If $g_bDebugSX Then SetDebugLog("Super XP : Begin GetCurXP", $COLOR_DEBUG)
 
 	Local $ToReturn = "0#0"
 	Click(135, 30, 1)
 	If _Sleep(2000) Then Return
 
 	Local $OCRResultXP = getCurrentXP(80, 60)
-	If $g_bDebugSX Then SetDebugLog("SX|GetCurXP $OCRResultXP: " & $OCRResultXP, $COLOR_DEBUG)
+	If $g_bDebugSX Then SetDebugLog("Super XP : GetCurXP $OCRResultXP: " & $OCRResultXP, $COLOR_DEBUG)
 	Click(855, 10, 1) ; Click To Close XP Stats
 
 	If $returnVal = "" Then
@@ -374,12 +377,12 @@ Func GetCurXP($returnVal = "Current")
 		$ToReturn = $OCRResultXP
 	EndIf
 
-	If $g_bDebugSX Then SetDebugLog("SX|GetCurXP Finished", $COLOR_DEBUG)
+	If $g_bDebugSX Then SetDebugLog("Super XP : GetCurXP Finished", $COLOR_DEBUG)
 	Return $ToReturn
 EndFunc   ;==>GetCurXP
 
 Func WaitToFinishSX()
-	If $g_bDebugSX Then SetDebugLog("SX|Begin WaitToFinishSX", $COLOR_DEBUG)
+	If $g_bDebugSX Then SetDebugLog("Super XP : Begin WaitToFinishSX", $COLOR_DEBUG)
 
 	Local $BdTimer = TimerInit()
 	While 1
@@ -389,12 +392,12 @@ Func WaitToFinishSX()
 		If IsInAttackSX() = False Then ExitLoop
 		ActivateHeroesByDelay($BdTimer)
 		If TimerDiff($BdTimer) >= 120000 Then ; If Battle Started 2 Minutes ago, Then Return
-			If $g_bDebugSX Then SetDebugLog("SX|WaitToFinishSX| TimeOut", $COLOR_ERROR)
+			If $g_bDebugSX Then SetDebugLog("Super XP : WaitToFinishSuper XP :  TimeOut", $COLOR_ERROR)
 			SafeReturnSX()
 			ExitLoop
 		EndIf
 	WEnd
-	If $g_bDebugSX Then SetDebugLog("SX|WaitToFinishSX Finished", $COLOR_DEBUG)
+	If $g_bDebugSX Then SetDebugLog("Super XP : WaitToFinishSX Finished", $COLOR_DEBUG)
 	Return True
 EndFunc   ;==>WaitToFinishSX
 
@@ -411,41 +414,41 @@ Func ActivateHeroesByDelay($hBdTimer)
 
 	Local $tDiff = TimerDiff($hBdTimer)
 	If $tDiff >= $QueenDelay And $QueenDelay <> 0 And Not $g_bActivatedHeroes[0] And $g_iQueenSlot <> -1 And $g_bAQueenSX <> $eHeroNone Then
-		If $g_bDebugSX Then SetDebugLog("SX|Activating Queen Ability After " & Round($tDiff, 3) & "/" & $QueenDelay & " ms(s)")
+		If $g_bDebugSX Then SetDebugLog("Super XP : Activating Queen Ability After " & Round($tDiff, 3) & "/" & $QueenDelay & " ms(s)")
 		SelectDropTroop($g_iQueenSlot)
 		$g_bActivatedHeroes[0] = True
 	EndIf
 	If $tDiff >= $WardenDelay And $WardenDelay <> 0 And Not $g_bActivatedHeroes[1] And $g_iWardenSlot <> -1 And $g_bGWardenSX <> $eHeroNone Then
-		If $g_bDebugSX Then SetDebugLog("SX|Activating Warden Ability After " & Round($tDiff, 3) & "/" & $WardenDelay & " ms(s)")
+		If $g_bDebugSX Then SetDebugLog("Super XP : Activating Warden Ability After " & Round($tDiff, 3) & "/" & $WardenDelay & " ms(s)")
 		SelectDropTroop($g_iWardenSlot)
 		$g_bActivatedHeroes[1] = True
 	EndIf
 	If $tDiff >= $KingDelay And $KingDelay <> 0 And Not $g_bActivatedHeroes[2] And $g_iKingSlot <> -1 And $g_bBKingSX <> $eHeroNone Then
-		If $g_bDebugSX Then SetDebugLog("SX|Activating King Ability After " & Round($tDiff, 3) & "/" & $KingDelay & " ms(s)")
+		If $g_bDebugSX Then SetDebugLog("Super XP : Activating King Ability After " & Round($tDiff, 3) & "/" & $KingDelay & " ms(s)")
 		SelectDropTroop($g_iKingSlot)
 		$g_bActivatedHeroes[2] = True
 	EndIf
 EndFunc   ;==>ActivateHeroesByDelay
 
 Func IsInAttackSX()
-	If $g_bDebugSX Then SetDebugLog("SX|Begin IsInAttackSX", $COLOR_DEBUG)
+	If $g_bDebugSX Then SetDebugLog("Super XP : Begin IsInAttackSX", $COLOR_DEBUG)
 	If _ColorCheck(_GetPixelColor($aIsInAttack[0], $aIsInAttack[1], True, "IsInAttackSX"), Hex($aIsInAttack[2], 6), $aIsInAttack[3]) Then Return True
-	If $g_bDebugSX Then SetDebugLog("SX|IsInAttackSX = FALSE", $COLOR_DEBUG)
+	If $g_bDebugSX Then SetDebugLog("Super XP : IsInAttackSX = FALSE", $COLOR_DEBUG)
 	Return False
 EndFunc   ;==>IsInAttackSX
 
 Func IsInSPPage()
-	If $g_bDebugSX Then SetDebugLog("SX|Begin IsInSPPage", $COLOR_DEBUG)
+	If $g_bDebugSX Then SetDebugLog("Super XP : Begin IsInSPPage", $COLOR_DEBUG)
 	Local $rColCheck = _ColorCheck(_GetPixelColor($aIsLaunchSinglePage[0], $aIsLaunchSinglePage[1], True, "IsInSPPage"), Hex($aIsLaunchSinglePage[2], 6), $aIsLaunchSinglePage[3])
-	If $g_bDebugSX Then SetDebugLog("SX|IsInSPPage = " & $rColCheck, $COLOR_DEBUG)
+	If $g_bDebugSX Then SetDebugLog("Super XP : IsInSPPage = " & $rColCheck, $COLOR_DEBUG)
 	Return $rColCheck
 EndFunc   ;==>IsInSPPage
 
 Func AttackSX()
-	If $g_bDebugSX Then SetDebugLog("SX|Begin AttackSX", $COLOR_DEBUG)
+	If $g_bDebugSX Then SetDebugLog("Super XP : Begin AttackSX", $COLOR_DEBUG)
 
 	If WaitForNoClouds() = False Then
-		If $g_bDebugSX Then SetDebugLog("SX|AttackSX|Wait For Clouds = False", $COLOR_DEBUG)
+		If $g_bDebugSX Then SetDebugLog("Super XP : AttackSuper XP : Wait For Clouds = False", $COLOR_DEBUG)
 		$g_bIsClientSyncError = False
 		Return False
 	EndIf
@@ -462,7 +465,7 @@ Func AttackSX()
 	If CheckEarnedStars($g_iMinStarsToEnd) = True Then Return True
 	DropBKingSX($g_aiBdGoblinPicnic[2] = 0)
 
-	If $g_bDebugSX Then SetDebugLog("SX|AttackSX Finished", $COLOR_DEBUG)
+	If $g_bDebugSX Then SetDebugLog("Super XP : AttackSX Finished", $COLOR_DEBUG)
 	Return True
 EndFunc   ;==>AttackSX
 
@@ -471,7 +474,7 @@ Func CheckAvailableHeroes()
 					IIf($g_bAQueenSX = $eHeroNone, False, $g_iQueenSlot <> -1) Or _
 					IIf($g_bGWardenSX = $eHeroNone, False, $g_iWardenSlot <> -1)) And _
 					IIf($g_iActivateOptionSX = 1, $g_bIsFullArmywithHeroesAndSpells = False, True))
-	If $g_bDebugSX Then SetDebugLog("SX|CheckAvailableHeroes = " & $bCanGainXP)
+	If $g_bDebugSX Then SetDebugLog("Super XP : CheckAvailableHeroes = " & $bCanGainXP)
 	Return $bCanGainXP
 EndFunc   ;==>CheckAvailableHeroes
 
@@ -558,7 +561,7 @@ Func GetDropPointSX($iHero)
 EndFunc   ;==>GetDropPointSX
 
 Func PrepareAttackSX($pMatchMode = $DT, $bRemaining = False)
-	If $g_bDebugSX Then SetDebugLog("SX|Begin PrepareAttackSX", $COLOR_DEBUG)
+	If $g_bDebugSX Then SetDebugLog("Super XP : Begin PrepareAttackSX", $COLOR_DEBUG)
 
 	$g_iTotalAttackSlot = 10 ; reset flag - Slot11+
 	$g_bDraggedAttackBar = False
@@ -602,12 +605,12 @@ Func PrepareAttackSX($pMatchMode = $DT, $bRemaining = False)
 		EndIf
 	Next
 	SetSlotSpecialTroops()
-	If $g_bDebugSX Then SetDebugLog("SX|PrepareAttackSX Finished", $COLOR_DEBUG)
+	If $g_bDebugSX Then SetDebugLog("Super XP : PrepareAttackSX Finished", $COLOR_DEBUG)
 	Return $iTroopNumber
 EndFunc   ;==>PrepareAttackSX
 
 Func CheckEarnedStars($ExitWhileHave = 0) ; If the parameter is 0, will not exit from attack lol
-	If $g_bDebugSX Then SetDebugLog("SX|Begin CheckEarnedStars", $COLOR_DEBUG)
+	If $g_bDebugSX Then SetDebugLog("Super XP : Begin CheckEarnedStars", $COLOR_DEBUG)
 
 	Local $StarsEarned = 0
 	If $ExitWhileHave = 1 Then
@@ -648,14 +651,14 @@ Func CheckEarnedStars($ExitWhileHave = 0) ; If the parameter is 0, will not exit
 		EndIf
 	EndIf
 
-	If $g_bDebugSX Then SetDebugLog("SX|CheckEarnedStars Finished", $COLOR_DEBUG)
+	If $g_bDebugSX Then SetDebugLog("Super XP : CheckEarnedStars Finished", $COLOR_DEBUG)
 	Return False
 EndFunc   ;==>CheckEarnedStars
 
 Func ReturnHomeSX()
 	Local Const $DELAYEachCheck = 70, $iRetryLimits = 429 ; Wait for each Color About 30 Seconds If didn't found!
 
-	Local $Counter = 0
+	Local $iCounter = 0
 	$g_iKingSlot = -1
 	$g_iQueenSlot = -1
 	$g_iWardenSlot = -1
@@ -663,11 +666,11 @@ Func ReturnHomeSX()
 
 	; 1st Step
 	While Not _ColorCheck(_GetPixelColor($EndBattleText1[0], $EndBattleText1[1], True, "ReturnHomeSX-Text1"), Hex($EndBattleText1[2], 6), $EndBattleText1[3]) ; First EndBattle Button
-		If $g_bDebugSX Then SetDebugLog("SX|ReturnHomeSX|1-Loop #" & $Counter, $COLOR_DEBUG)
+		If $g_bDebugSX Then SetDebugLog("Super XP : ReturnHomeSuper XP : 1-Loop #" & $iCounter, $COLOR_DEBUG)
 		If _Sleep($DELAYEachCheck) Then Return False
-		$Counter += 1
-		If $Counter >= $iRetryLimits Then
-			If $g_bDebugSX Then SetDebugLog("SX|ReturnHomeSX|1-EndBattle Button not found", $COLOR_DEBUG)
+		$iCounter += 1
+		If $iCounter >= $iRetryLimits Then
+			If $g_bDebugSX Then SetDebugLog("Super XP : ReturnHomeSuper XP : 1-EndBattle Button not found", $COLOR_DEBUG)
 			Return False
 		EndIf
 	WEnd
@@ -675,13 +678,13 @@ Func ReturnHomeSX()
 	If _Sleep($DELAYEachCheck) Then Return False
 
 	; 2nd Step
-	$Counter = 0 ; Reset Counter
+	$iCounter = 0 ; Reset Counter
 	While Not _ColorCheck(_GetPixelColor($EndBattleText2[0], $EndBattleText2[1], True, "ReturnHomeSX-Text2"), Hex($EndBattleText2[2], 6), $EndBattleText2[3]) ; Second EndBattle Button
-		If $g_bDebugSX Then SetDebugLog("SX|ReturnHomeSX|2-Loop #" & $Counter, $COLOR_DEBUG)
+		If $g_bDebugSX Then SetDebugLog("Super XP : ReturnHomeSuper XP : 2-Loop #" & $iCounter, $COLOR_DEBUG)
 		If _Sleep($DELAYEachCheck) Then Return False
-		$Counter += 1
-		If $Counter >= $iRetryLimits Then
-			If $g_bDebugSX Then SetDebugLog("SX|ReturnHomeSX|2-EndBattle Button not found", $COLOR_DEBUG)
+		$iCounter += 1
+		If $iCounter >= $iRetryLimits Then
+			If $g_bDebugSX Then SetDebugLog("Super XP : ReturnHomeSuper XP : 2-EndBattle Button not found", $COLOR_DEBUG)
 			Return False
 		EndIf
 	WEnd
@@ -690,13 +693,13 @@ Func ReturnHomeSX()
 	If _Sleep($DELAYEachCheck) Then Return False
 
 	; 3rd Step
-	$Counter = 0 ; Reset Counter
+	$iCounter = 0 ; Reset Counter
 	While Not _ColorCheck(_GetPixelColor($ReturnHomeText[0], $ReturnHomeText[1], True, "ReturnHomeSX-Text3"), Hex($ReturnHomeText[2], 6), $ReturnHomeText[3]) ; Last - Return Home Button
-		If $g_bDebugSX Then SetDebugLog("SX|ReturnHomeSX|3-Loop #" & $Counter, $COLOR_DEBUG)
+		If $g_bDebugSX Then SetDebugLog("Super XP : ReturnHomeSuper XP : 3-Loop #" & $iCounter, $COLOR_DEBUG)
 		If _Sleep($DELAYEachCheck) Then Return False
-		$Counter += 1
-		If $Counter >= $iRetryLimits Then
-			If $g_bDebugSX Then SetDebugLog("SX|ReturnHomeSX|3-Return Home Button not found", $COLOR_DEBUG)
+		$iCounter += 1
+		If $iCounter >= $iRetryLimits Then
+			If $g_bDebugSX Then SetDebugLog("Super XP : ReturnHomeSuper XP : 3-Return Home Button not found", $COLOR_DEBUG)
 			Return False
 		EndIf
 	WEnd
@@ -705,9 +708,9 @@ Func ReturnHomeSX()
 	If _Sleep($DELAYReturnHome2) Then Return ; short wait for screen to Exit
 
 	; Last Step, Check for Main Screen
-	$Counter = 0 ; Reset Counter
+	$iCounter = 0 ; Reset Counter
 	While 1
-		If $g_bDebugSX Then SetDebugLog("SX|ReturnHomeSX|4-Loop #" & $Counter, $COLOR_DEBUG)
+		If $g_bDebugSX Then SetDebugLog("Super XP : ReturnHomeSuper XP : 4-Loop #" & $iCounter, $COLOR_DEBUG)
 		If _Sleep($DELAYReturnHome4) Then Return
 		If IsMainPage(1) Then
 			_GUICtrlEdit_SetText($g_hTxtLog, _PadStringCenter(" BOT LOG ", 71, "="))
@@ -715,8 +718,8 @@ Func ReturnHomeSX()
 			_GUICtrlRichEdit_AppendTextColor($g_hTxtLog, "" & @CRLF, _ColorConvert($COLOR_BLACK))
 			Return True
 		EndIf
-		$Counter += 1
-		If $Counter >= 50 Or isProblemAffect(True) Then
+		$iCounter += 1
+		If $iCounter >= 50 Or isProblemAffect(True) Then
 			SetLog("Cannot return home.", $COLOR_ERROR)
 			checkMainScreen(True)
 			Return True
@@ -725,7 +728,7 @@ Func ReturnHomeSX()
 EndFunc   ;==>ReturnHomeSX
 
 Func WaitForNoClouds()
-	If $g_bDebugSX Then SetDebugLog("SX|Begin WaitForNoClouds", $COLOR_DEBUG)
+	If $g_bDebugSX Then SetDebugLog("Super XP : Begin WaitForNoClouds", $COLOR_DEBUG)
 
 	Local $i = 0
 	ForceCaptureRegion()
@@ -747,15 +750,19 @@ Func WaitForNoClouds()
 			EndIf
 			Return False
 		EndIf
-		If $g_bDebugSX Then SetDebugLog("SX|WaitForNoClouds|Loop #" & $i)
+		If $g_bDebugSX Then SetDebugLog("Super XP : WaitForNoClouds|Loop #" & $i)
 		ForceCaptureRegion() ; ensure screenshots are not cached
 	WEnd
-	If $g_bDebugSX Then SetDebugLog("SX|WaitFornoClouds Finished", $COLOR_DEBUG)
+	If $g_bDebugSX Then SetDebugLog("Super XP : WaitFornoClouds Finished", $COLOR_DEBUG)
 	Return True
 EndFunc   ;==>WaitForNoClouds
 
+Func SuperXPDragSmart()
+
+EndFunc   ;==>SuperXPDragSmart
+
 Func OpenGoblinMapSX()
-	If $g_bDebugSX Then SetDebugLog("SX|Begin OpenGoblinMapSX", $COLOR_DEBUG)
+	If $g_bDebugSX Then SetDebugLog("Super XP : Begin OpenGoblinMapSX", $COLOR_DEBUG)
 
 	Local $rOpenSinglePlayerPage = OpenSinglePlayerPage()
 	If $rOpenSinglePlayerPage = False Then
@@ -763,90 +770,160 @@ Func OpenGoblinMapSX()
 		SafeReturnSX()
 		Return False
 	EndIf
+	
+	If RandomSleep(500) Then Return
+	
+	Click(Random(278, 592, 1), Random(58, 120, 1), 1, 0) ; Clicks Away Random
+	
+	Local $aDragToGoblinMapSX = SuperXPDragSmart()
+	
+	If $g_bDebugSX Then SetDebugLog("Super XP : Smart Drag.", $COLOR_DEBUG)
+	Local $iCounter = 0
+	Local $aMapPick = -1
+	Do
+		$iCounter += 1
+		If Not $g_bRunState Then ExitLoop
+		If $g_bDebugSX Then SetDebugLog("Super XP : OpenGoblinMapSuper XP : Loop #" & $iCounter)
+		ClickDrag(Random(305, 310, 1), 138, Random(305, 310, 1), 665, 100)
+		If $g_bDebugSetlog Then SetDebugLog("Button OpenGoblinMapSX= " & _GetPixelColor($aFirstMapPosition[0], $aFirstMapPosition[1], True), $COLOR_DEBUG) ;Debug
+		
+		For $i = 0 To 1
+			If RandomSleep(250) Then Return
+			$aMapPick = FixPosMapSX()
+			If IsArray($aMapPick) Then ExitLoop 2
+		Next
+		
+	Until $iCounter > 25 Or _ColorCheck(_GetPixelColor($aFirstMapPosition[0], $aFirstMapPosition[1], True, "OpenGoblinMapSX-Check"), Hex($aFirstMapPosition[2], 6), $aFirstMapPosition[3])
 
-	Local $rDragToGoblinMapSX = DragToGoblinMapSX()
-	If not (IsArray($rDragToGoblinMapSX) And UBound($rDragToGoblinMapSX) = 2) Or $rDragToGoblinMapSX = False Then
-		SetLog("Failed to find " & $g_sGoblinMapOptSX, $COLOR_ERROR)
-		SaveDebugImage("SuperXP_", True, True, String(Random(5, 100, 1)) & ", " & String(Random(5, 100, 1)) & ", " & String(Random(5, 100, 1)))
-		SafeReturnSX()
+	If RandomSleep(500) Then Return
+	
+	If Not IsArray($aMapPick) Then
+		PureClickP($aCloseSingleTab, 1, 0, "#CloseSingleTab") ;Clicks X
+		If $g_bDebugSX Then SetDebugLog("Super XP : OpenGoblinMapSuper XP : Return False", $COLOR_DEBUG)
 		Return False
-	EndIf
-
-	If IsGoblinMapSXLocked($rDragToGoblinMapSX) = True Then
-		If $g_iGoblinMapOptSX = 2 Then
-			SetLog("Are you kidding me? " & $g_sGoblinMapOptSX & " is Locked, Goblin Picnic selected.", $COLOR_ERROR)
-			$g_iGoblinMapOptSX = 1
-			$g_sGoblinMapOptSX = "Goblin Picnic"
+	Else
+		If $aMapPick[UBound($aMapPick) -1][2] > 482 Then
+			ClickDrag(Random(305, 310, 1), 300, Random(305, 310, 1), 138, 100)
+			For $i = 0 To 1
+				If RandomSleep(500) Then Return
+				$aMapPick = FixPosMapSX()
+				If IsArray($aMapPick) Then ExitLoop
+			Next
+		EndIf
+		
+		If Not IsArray($aMapPick) Then
+			PureClickP($aCloseSingleTab, 1, 0, "#CloseSingleTab") ;Clicks X
+			If $g_bDebugSX Then SetDebugLog("Super XP : OpenGoblinMapSuper XP : Return False", $COLOR_DEBUG)
+			Return False
+		EndIf
+		
+		; If Not (StringInStr($aMapPick[0][0], "Big") > 0) Then 
+			PureClick($aMapPick[0][1], $aMapPick[0][2], 1, 0)
+			If RandomSleep(250) Then Return
+		; EndIf
+		
+		Local $aPort[2] = [$aMapPick[UBound($aMapPick) -1][1], $aMapPick[UBound($aMapPick) -1][2]]
+		If IsGoblinMapSXLocked($aPort) = True Then
+			If $g_iGoblinMapOptSX = 2 Then
+				SetLog("Are you kidding me? " & $g_sGoblinMapOptSX & " is Locked, Goblin Picnic selected.", $COLOR_ERROR)
+				$g_iGoblinMapOptSX = 1
+				$g_sGoblinMapOptSX = "Goblin Picnic"
+				radGoblinMapOptSX()
+				PureClickP($aCloseSingleTab, 1, 0, "#CloseSingleTab") ;Clicks X
+				Return False
+			Else
+				SetLog("Are you kidding me? " & $g_sGoblinMapOptSX & " is Locked", $COLOR_ERROR)
+				DisableSX()
+				SafeReturnSX()
+				Return False
+			EndIf
+		ElseIf $g_iGoblinMapOptSX = 1 And (StringInStr($aMapPick[0][0], "Arena") > 0) Then
+			SetLog("Switch to The Arena, for more XP.", $COLOR_INFO)
+			$g_iGoblinMapOptSX = 2
+			$g_sGoblinMapOptSX = "The Arena"
 			radGoblinMapOptSX()
-			PureClickP($aCloseSingleTab, 1, 0, "#CloseSingleTab") ;Clicks X
-			Return False
-		Else
-			SetLog("Are you kidding me? " & $g_sGoblinMapOptSX & " is Locked", $COLOR_ERROR)
-			DisableSX()
+		EndIf
+
+		If $g_bDebugSX Then SetDebugLog("Super XP : OpenGoblinMapSuper XP : Clicking On Attack Btn: " & $aMapPick[0][1] & ", " & $aMapPick[0][2])
+		Click($aMapPick[UBound($aMapPick) -1][1] + Random(20,30,1), $aMapPick[UBound($aMapPick) -1][2] + Random(125,135,1)) ; Click On Attack Button
+
+		$iCounter = 0
+		While IsInSPPage()
+			If _Sleep(50) Then Return
+			$iCounter += 1
+			If $iCounter > 150 Then
+				SetLog("Still in SinglePlayer Page!! Something Strange Happened", $COLOR_ERROR)
+				$bCanGainXP = False
+				Return False
+			EndIf
+		WEnd
+		
+		Local $rIsGoblinMapSX = IsInGoblinMapSX() ; Wait/Check if is In The 'Goblin Picnic/The Arena' Base
+		If $rIsGoblinMapSX = False Then
+			SetLog("Looks like we're not in " & $g_sGoblinMapOptSX, $COLOR_ERROR)
+			If _CheckPixel($aCloseSingleTab, $g_bNoCapturePixel) Then
+				If $g_bDebugSetlog Then SetDebugLog("#cOb# Clicks X, $aCloseSingleTab", $COLOR_INFO)
+				PureClickP($aCloseSingleTab, 1, 0, "#CloseSingleTab") ;Clicks X
+				If _Sleep($DELAYcheckObstacles1) Then Return False
+				SafeReturnSX()
+				Return False
+			EndIf
 			SafeReturnSX()
 			Return False
 		EndIf
+		SetLog("Now we're in " & $g_sGoblinMapOptSX & " Base", $COLOR_SUCCESS)
+
+		If $g_bDebugSX Then SetDebugLog("Super XP : OpenGoblinMapSuper XP : Return True", $COLOR_DEBUG)
+		Return True
 	EndIf
-
-	If $g_bDebugSX Then SetDebugLog("SX|OpenGoblinMapSX|Clicking On GP Text: " & $rDragToGoblinMapSX[0] & ", " & $rDragToGoblinMapSX[1])
-	Click($rDragToGoblinMapSX[0], $rDragToGoblinMapSX[1]) ; Click On Goblin Picnic Text To Show Attack Button
-	SetLog("Waiting for Attack Button color", $COLOR_INFO)
-	If _Sleep(50) Then Return False
-
-	Local $Counter = 0
-	While not (IsArray($rDragToGoblinMapSX) And UBound($rDragToGoblinMapSX) = 2)
-		$rDragToGoblinMapSX = DragToGoblinMapSX()
-		Click($rDragToGoblinMapSX[0] + Random(40,60,1), $rDragToGoblinMapSX[1] + Random(70,90,1)) ; Click On Goblin Picnic Text To Show Attack Button
-		If _Sleep(50) Or $Counter > 15 Then ExitLoop
-		$Counter += 1
-	WEnd
-
-	; "Fuse" anti prohibition/bug
-	If $Counter > 15 Then
-		SetLog("Attack Button Cannot be Verified", $COLOR_ERROR)
-		SaveDebugImage("SuperXP_", True, True, String(Number($rDragToGoblinMapSX[0], 2) & ", " & Number($rDragToGoblinMapSX[1], 2) & @CRLF & Number($rDragToGoblinMapSX[0], 2) & ", " & Number($rDragToGoblinMapSX[1] + 132, 2)))
-		SafeReturnSX()
-		Return False
-	EndIf
-
-	If $g_bDebugSX Then SetDebugLog("SX|OpenGoblinMapSX|Clicking On Attack Btn: " & $rDragToGoblinMapSX[0] & ", " & $rDragToGoblinMapSX[1])
-	Click($rDragToGoblinMapSX[0] + Random(20,30,1), $rDragToGoblinMapSX[1] + Random(125,135,1)) ; Click On Attack Button
-
-	$Counter = 0
-	While IsInSPPage()
-		If _Sleep(50) Then Return
-		$Counter += 1
-		If $Counter > 150 Then
-			SetLog("Still in SinglePlayer Page!! Something Strange Happened", $COLOR_ERROR)
-			$bCanGainXP = False
-			Return False
-		EndIf
-	WEnd
-
-	Local $rIsGoblinMapSX = IsInGoblinMapSX() ; Wait/Check if is In The 'Goblin Picnic/The Arena' Base
-	If $rIsGoblinMapSX = False Then
-		SetLog("Looks like we're not in " & $g_sGoblinMapOptSX, $COLOR_ERROR)
-		If _CheckPixel($aCloseSingleTab, $g_bNoCapturePixel) Then
-			If $g_bDebugSetlog Then SetDebugLog("#cOb# Clicks X, $aCloseSingleTab", $COLOR_INFO)
-			PureClickP($aCloseSingleTab, 1, 0, "#CloseSingleTab") ;Clicks X
-			If _Sleep($DELAYcheckObstacles1) Then Return False
-			SafeReturnSX()
-			Return False
-		EndIf
-		SafeReturnSX()
-		Return False
-	EndIf
-	SetLog("Now we're in " & $g_sGoblinMapOptSX & " Base", $COLOR_SUCCESS)
-	Return True
+	
+	Return False
 EndFunc   ;==>OpenGoblinMapSX
 
-Func IsGoblinMapSXLocked($FoundCoord)
-	If not IsArray($FoundCoord) Then Return True
+Func FixPosMapSX()
+	Local $aMapPickR[1][4]
+	Local $aMapPick = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\SuperXP\Find", 0, "282, 138, 833, 671", True)
+	
+	If UBound($aMapPick) < 1 and not @Error Then Return -1
+	
+	For $i = UBound($aMapPick) -1 To 0 Step -1
+		
+		Switch (StringInStr($aMapPick[$i][0], "Picnic") > 0)
+			Case True
+				; 436 Picnic
+				If Abs(Pixel_Distance(436, 0, $aMapPick[$i][1], 0)) < 10 Then
+					
+					$aMapPickR[0][0] = $aMapPick[$i][0]
+					$aMapPickR[0][1] = $aMapPick[$i][1]
+					$aMapPickR[0][2] = $aMapPick[$i][2]
+					$aMapPickR[0][3] = $aMapPick[$i][3]
+					
+					Return $aMapPickR
+				EndIf
+			Case Else
+				; 619 Arena
+				If Abs(Pixel_Distance(614, 0, $aMapPick[$i][1], 0)) < 10 Then
+					
+					$aMapPickR[0][0] = $aMapPick[$i][0]
+					$aMapPickR[0][1] = $aMapPick[$i][1]
+					$aMapPickR[0][2] = $aMapPick[$i][2]
+					$aMapPickR[0][3] = $aMapPick[$i][3]
+					
+					Return $aMapPickR
+				EndIf
+		EndSwitch
+	Next
 
-	Local $x = Int($FoundCoord[0]) - 100, _
-	$y = Int($FoundCoord[1]) - 100, _
-	$x1 = Int($FoundCoord[0]) + 110, _
-	$y1 = Int($FoundCoord[1]) + 110
+	Return -1
+EndFunc   ;==>FixPosMapSX
+
+Func IsGoblinMapSXLocked($aFoundCoord)
+	If not IsArray($aFoundCoord) Then Return True
+
+	Local $x = Int($aFoundCoord[0]) - 100, _
+	$y = Int($aFoundCoord[1]) - 100, _
+	$x1 = Int($aFoundCoord[0]) + 110, _
+	$y1 = Int($aFoundCoord[1]) + 110
 
 	Local $bResult = (IsArray(findMultipleQuick($g_sImgLockedSX, 1, $x & "," & $y & "," & $x1 & "," & $y1  )) = True)
 
@@ -856,182 +933,39 @@ Func IsGoblinMapSXLocked($FoundCoord)
 EndFunc   ;==>IsGoblinMapSXLocked
 
 Func IsInGoblinMapSX($Retry = True, $maxRetry = 30, $timeBetweenEachRet = 300)
-	If $g_bDebugSX Then SetDebugLog("SX|Begin IsInGoblinMapSX", $COLOR_DEBUG)
+	If $g_bDebugSX Then SetDebugLog("Super XP : Begin IsInGoblinMapSX", $COLOR_DEBUG)
 
-	Local $Found = False
-	Local $Counter = 0
-	Local $directory = ($g_iGoblinMapOptSX = 1) ? ($g_sImgVerifySX & "Picnic") : ($g_sImgVerifySX & "Arena" )
-	Local $result = ""
-	While Not $Found
+	Local $bFound = False
+	Local $iCounter = 0
+	Local $sPathImage = ($g_iGoblinMapOptSX = 1) ? ($g_sImgVerifySX & "Picnic") : ($g_sImgVerifySX & "Arena" )
+	While Not $bFound
 		If _Sleep($timeBetweenEachRet) Then Return False
         If Not IsInAttackSX() Then
-            $Counter += 1
-            If $Counter = $maxRetry Then
-                $Found = False
+            $iCounter += 1
+            If $iCounter = $maxRetry Then
+                $bFound = False
                 ExitLoop
             EndIf
             ContinueLoop
         EndIf
 
-		$result = multiMatchesPixelOnly($directory, 0, "FV", "FV", 0, 1000, 0, 0, 150, 31)
-		If $g_bDebugSX Then SetDebugLog("SX|IsInGoblinMapSX|$result = " & $result)
-		$Found = (StringLen($result) > 2 And StringInStr($result, ","))
+		$bFound = _WaitForCheckImg($sPathImage, "0, 0, 150, 31")
 
-		$Counter += 1
-		If $Counter = $maxRetry Then
-			$Found = False
+		$iCounter += 1
+		If $iCounter = $maxRetry Then
+			$bFound = False
 			ExitLoop
 		EndIf
 	WEnd
-	If $g_bDebugSX Then SetDebugLog("SX|IsInGoblinMapSX = " & $Found, $COLOR_DEBUG)
-	Return $Found
+	If $g_bDebugSX Then SetDebugLog("Super XP : IsInGoblinMapSX = " & $bFound, $COLOR_DEBUG)
+	Return $bFound
 EndFunc   ;==>IsInGoblinMapSX
 
-Func DragToGoblinMapSX()
-	If $g_bDebugSX Then SetDebugLog("SX|Begin DragToGoblinMapSX", $COLOR_DEBUG)
-
-	Local $rIsGoblinMapSXFound = False
-	Local $Counter = 0
-	Local $posInSinglePlayer2 = "MIDDLE"
-	Local $posInSinglePlayer = GetPositionInSinglePlayer()
-	If $g_bDebugSX Then SetDebugLog("SX|DragToGoblinMapSX|$posInSinglePlayer = " & $posInSinglePlayer)
-	If $posInSinglePlayer = "MIDDLE" Then
-		If $g_bDebugSX Then SetDebugLog("SX|DragToGoblinMapSX|Pos Middle, checking for " & $g_sGoblinMapOptSX)
-		$rIsGoblinMapSXFound = IsGoblinMapSXFound()
-		If IsArray($rIsGoblinMapSXFound) Then Return $rIsGoblinMapSXFound
-		If $g_bDebugSX Then SetDebugLog("SX|DragToGoblinMapSX|Pos Middle, Dragging To End")
-		If $g_bSkipDragToEndSX Then ;Skip Dragging to End
-			$posInSinglePlayer = "END"
-		Else
-			If DragToEndSinglePlayer() = True Then $posInSinglePlayer = "END" ; If position was Middle, then try to Drag to end
-		EndIf
-	EndIf
-	If $posInSinglePlayer = "MIDDLE" Then
-		If $g_bDebugSX Then SetDebugLog("SX|DragToGoblinMapSX|Failed to Drag To End, Still Middle")
-		Return False ; If Failed to Drag To End Then Return False
-	EndIf
-
-	For $iCounter = 0 To 15
-		If (IsArray($rIsGoblinMapSXFound)) Then ExitLoop
-		If Not $g_bRunState Then ExitLoop
-		If $g_bDebugSX Then SetDebugLog( ($posInSinglePlayer = "END") ? ("SX|DragToGoblinMapSX|Drag from End Loop #") : ("SX|DragToGoblinMapSX|Drag from First Loop #") & $iCounter)
-		Execute(($posInSinglePlayer = "END") ? ("ClickDrag(Random(305, 310, 1), 145, Random(305, 310, 1), 645, 100)") : ("ClickDrag(Random(305, 310, 1), 645, Random(305, 310, 1), 145, 100)"))
-		If _Sleep(Random(500,1000,1)) Then Return False
-		$rIsGoblinMapSXFound = IsGoblinMapSXFound()
-		If IsArray($rIsGoblinMapSXFound) Then ExitLoop
-		$posInSinglePlayer2 = GetPositionInSinglePlayer()
-		If $posInSinglePlayer2 = "FIRST" Then ExitLoop
-	Next
-	If $iCounter > 15 Or $posInSinglePlayer2 And IsArray($rIsGoblinMapSXFound) = False Then Return False
-	Return $rIsGoblinMapSXFound
-EndFunc   ;==>DragToGoblinMapSX
-
-Func IsGoblinMapSXFound()
-	If $g_bDebugSX Then SetDebugLog("SX|Begin IsGoblinMapSXFound", $COLOR_DEBUG)
-	;Local $directory = ($g_iGoblinMapOptSX = 1) ? ($g_sImgFindSX & "Picnic") : ($g_sImgFindSX & "Arena" )
-	Local $result = ""
-	Local $x1 = 0, $x2 = 0
-
-	If _Sleep(50) Then Return False
-
-	$x1 = 418
-	$x2 = 453
-	$result = multiMatchesPixelOnly(($g_sImgFindSX & "Picnic"), 0, "FV", "FV", 0, 1000, $x1, 132, $x2, 668)
-
-	; If StringInStr($result, "|") > 0 and $g_iGoblinMapOptSX = 2 Then
-	; 	$g_iGoblinMapOptSX = 1
-	; 	Setlog("The arena locked.", $COLOR_ERROR)
-	; EndIf
-
-	If $g_iGoblinMapOptSX = 2 Then
-		$x1 = 557
-		$x2 = 661
-		$result = multiMatchesPixelOnly(($g_sImgFindSX & "Arena" ), 0, "FV", "FV", 0, 1000, $x1, 132, $x2, 668)
-	EndIf
-
-	If $g_bDebugSX Then SetDebugLog("SX|IGMSX|$result = " & $result)
-	If StringLen($result) < 3 And StringInStr($result, "|") = 0 Then
-		If $g_bDebugSX Then SetDebugLog("SX|IGMSX|Return False", $COLOR_ERROR)
-		Return False
-	EndIf
-
-	Local $ToReturn = ""
-	If StringInStr($result, "|") > 0 Then
-		$ToReturn = StringSplit(StringSplit($result, "|", 2)[0], ",", 2)
-	Else
-		$ToReturn = StringSplit($result, ",", 2)
-	EndIf
-	$ToReturn[0] += $x1
-	$ToReturn[1] += 132 + 7
-	If $g_bDebugSX Then SetDebugLog("SX|IGMSX|Found Before Return $ToReturn[2]: [0]=" & $ToReturn[0] & ", [1]=" & $ToReturn[1])
-
-	If ($ToReturn[1] > 440) Then
-		If $g_bDebugSX Then SetDebugLog("SX|IGMSX|" & $g_sGoblinMapOptSX & " Is At Bottom Non Clickable Place Drag above")
-		ClickDrag(Random(305, 310, 1), Random(515, 520, 1), Random(305, 310, 1), Random(285, 290, 1), 100)
-		If _Sleep(100) Then Return False
-		Return IsGoblinMapSXFound()
-	EndIf
-
-	If $g_bDebugSX Then SetDebugLog("SX|IGMSX|Return $ToReturn[2]: [0]=" & $ToReturn[0] & ", [1]=" & $ToReturn[1])
-	Return $ToReturn
-EndFunc   ;==>IsGoblinMapSXFound
-
-Func DragToEndSinglePlayer()
-	If $g_bDebugSX Then SetDebugLog("SX|Begin DragToEndSinglePlayer", $COLOR_DEBUG)
-	Local $Counter = 0
-	While Not _ColorCheck(_GetPixelColor($aEndMapPosition[0], $aEndMapPosition[1], True, "DragToEndSinglePlayer-CheckEnd"), Hex($aEndMapPosition[2], 6), $aEndMapPosition[3])
-		If Not $g_bRunState Then ExitLoop
-		If $g_bDebugSX Then SetDebugLog("SX|DragToEndSinglePlayer|Loop #" & $Counter)
-		ClickDrag(Random(305, 310, 1), 665, Random(305, 310, 1), 138, 100)
-		$Counter += 1
-		If $g_bDebugSetlog Then SetDebugLog("Button $aEndMapPosition= " & _GetPixelColor($aEndMapPosition[0], $aEndMapPosition[1], True), $COLOR_DEBUG) ;Debug
-		If $Counter > 15 Then ExitLoop
-	WEnd
-	If $Counter > 15 Then
-		If $g_bDebugSX Then SetDebugLog("SX|DragToEndSinglePlayer|Return False", $COLOR_DEBUG)
-		Return False
-	Else
-		If $g_bDebugSX Then SetDebugLog("SX|DragToEndSinglePlayer|Return True", $COLOR_DEBUG)
-		Return True
-	EndIf
-EndFunc   ;==>DragToEndSinglePlayer
-
-Func GetPositionInSinglePlayer()
-	If $g_bDebugSX Then SetDebugLog("SX|Begin GetPositionInSinglePlayer", $COLOR_DEBUG)
-
-	Click(Random(280, 440, 1), Random(170, 210, 1)) ;Click 'Single Player' above To Hide Available Loot Info
-	Local $Counter = 0
-	While _ColorCheck(_GetPixelColor($aLootInfo[0], $aLootInfo[1], True, "GetPositionInSinglePlayer#1"), Hex($aLootInfo[2], 6), $aLootInfo[4]) And _
-		_ColorCheck(_GetPixelColor($aLootInfo[0] + 510, $aLootInfo[1], True, "GetPositionInSinglePlayer#2"), Hex($aLootInfo[3], 6), $aLootInfo[4])
-		If _Sleep(50) Then ExitLoop
-		Click(Random(280, 440, 1), Random(170, 210, 1)) ;Click 'Single Player' above To Hide Available Loot Info
-		$Counter += 1
-		If $Counter > 15 Then
-			If $g_bDebugSX Then SetDebugLog("SX|GPISP|Available Loot Not Hidden, Returning")
-			ExitLoop
-		EndIf
-	WEnd
-
-    If _Sleep(50) Then Return
-	If _ColorCheck(_GetPixelColor($aEndMapPosition[0], $aEndMapPosition[1], True, "GetPositionInSinglePlayer-END"), Hex($aEndMapPosition[2], 6), $aEndMapPosition[3]) Then
-		If $g_bDebugSX Then SetDebugLog("SX|GPISP|Return END")
-		Return "END"
-	Else
-		If _ColorCheck(_GetPixelColor($aFirstMapPosition[0], $aFirstMapPosition[1], True, "GetPositionInSinglePlayer-FIRST/MIDDLE"), Hex($aFirstMapPosition[2], 6), $aFirstMapPosition[3]) Then
-			If $g_bDebugSX Then SetDebugLog("SX|GPISP|Return FIRST")
-			Return "FIRST"
-		Else
-			If $g_bDebugSX Then SetDebugLog("SX|GPISP|Return MIDDLE")
-			Return "MIDDLE"
-		EndIf
-	EndIf
-EndFunc   ;==>GetPositionInSinglePlayer
-
 Func OpenSinglePlayerPage()
-	If $g_bDebugSX Then SetDebugLog("SX|OpenSinglePlayerPage", $COLOR_DEBUG)
+	If $g_bDebugSX Then SetDebugLog("Super XP : OpenSinglePlayerPage", $COLOR_DEBUG)
 
 	If Not WaitForMain(True, 50, 300) Then
-		If $g_bDebugSX Then SetDebugLog("SX|MainPage Not Displayed to Open SingleP", $COLOR_DEBUG)
+		If $g_bDebugSX Then SetDebugLog("Super XP : MainPage Not Displayed to Open SingleP", $COLOR_DEBUG)
 		Return False
 	EndIf
 
@@ -1072,12 +1006,12 @@ EndFunc   ;==>OpenSinglePlayerPage
 Func WaitForMain($clickAway = True, $DELAYEachCheck = 50, $maxRetry = 100)
 	If $clickAway Then ClickP($aAway, 2, 0, "#0346") ;Click Away
 
-	Local $Counter = 0
+	Local $iCounter = 0
 	While Not (IsMainPage())
 		If _Sleep($DELAYEachCheck) Then Return True
 		If $clickAway Then ClickP($aAway, 2, 0, "#0346") ;Click Away
-		$Counter += 1
-		If $Counter > $maxRetry Then
+		$iCounter += 1
+		If $iCounter > $maxRetry Then
 			Return False
 		EndIf
 	WEnd
@@ -1104,7 +1038,7 @@ Func IsLaunchSinglePage()
 EndFunc   ;==>IsLaunchSinglePage
 
 ; #FUNCTION# ====================================================================================================================
-; Name ..........: MultiSearch
+; Name ..........: -
 ; Description ...: This file is all related to necessary Imgloc searchrs Or OCR
 ; Syntax ........:
 ; Parameters ....: None
@@ -1121,275 +1055,6 @@ EndFunc   ;==>IsLaunchSinglePage
 Func getCurrentXP($x_start, $y_start) ; -> Get Current/Total XP, Used in SuperXP.au3
 	Return getOcrAndCapture("coc-ms", $x_start, $y_start, 100, 15, True)
 EndFunc   ;==>getCurrentXP
-
-Func multiMatchesPixelOnly($directory, $maxReturnPoints = 0, $fullCocAreas = "ECD", $redLines = "", $minLevel = 0, $maxLevel = 1000, $x1 = 0, $y1 = 0, $x2 = $g_iGAME_WIDTH, $y2 = $g_iGAME_HEIGHT, $bCaptureNew = True, $xDiff = Default, $yDiff = Default, $saveSourceImg = False)
-	; Setup arrays, including default return values for $return
-	Local $sResult = ""
-	Local $res
-
-	; Capture the screen for comparison
-	If $bCaptureNew Then
-		_CaptureRegion2($x1, $y1, $x2, $y2)
-		; Perform the search
-		$res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $directory, "str", $fullCocAreas, "Int", $maxReturnPoints, "str", $redLines, "Int", $minLevel, "Int", $maxLevel)
-		If @error Then _logErrorDLLCall($g_sLibMyBotPath, @error)
-		If $saveSourceImg = True Then _GDIPlus_ImageSaveToFile(_GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2), @ScriptDir & "\multiMatchesPixelOnly.png")
-		Local $aValue = DllCallMyBot("GetProperty", "str", "redline", "str", "")
-		$redLines = $aValue[0]
-	Else
-		Local $hClone = CloneAreaToSearch($x1, $y1, $x2, $y2)
-		$res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $hClone, "str", $directory, "str", $fullCocAreas, "Int", $maxReturnPoints, "str", $redLines, "Int", $minLevel, "Int", $maxLevel)
-		If @error Then _logErrorDLLCall($g_sLibMyBotPath, @error)
-		If $saveSourceImg = True Then _GDIPlus_ImageSaveToFile(_GDIPlus_BitmapCreateFromHBITMAP($hClone), @ScriptDir & "\multiMatchesPixelOnly.png")
-		Local $aValue = DllCallMyBot("GetProperty", "str", "redline", "str", "")
-		$redLines = $aValue[0]
-		_WinAPI_DeleteObject($hClone)
-	EndIf
-
-	If $res[0] <> "" Then
-		; Get the keys for the dictionary item.
-		Local $aKeys = StringSplit($res[0], "|", $STR_NOCOUNT)
-
-		; Loop through the array
-		For $i = 0 To UBound($aKeys) - 1
-			$sResult &= RetrieveImglocProperty($aKeys[$i], "objectpoints") & "|"
-		Next
-	EndIf
-
-	If StringLen($sResult) > 0 Then
-		If StringRight($sResult, 1) = "|" Then $sResult = StringLeft($sResult, (StringLen($sResult) - 1))
-		If ($xDiff <> Default) Or ($yDiff <> Default) Then
-			If $xDiff = Default Then $xDiff = 0
-			If $yDiff = Default Then $yDiff = 0
-
-			DelPosWithDiff($sResult, $xDiff, $yDiff, True)
-
-			Return $sResult
-		EndIf
-	EndIf
-	Return $sResult
-EndFunc   ;==>multiMatchesPixelOnly
-
-Func CloneAreaToSearch($x, $y, $x1, $y1)
-	Local $hClone, $hImage, $iX, $iY, $hBMP
-	$iX = $x1 - $x
-	$iY = $y1 - $y
-	If StringInStr($iX, "-") > 0 Or StringInStr($iY, "-") > 0 Or $iX = 0 Or $iY = 0 Then Return $g_hHBitmap2
-	$hImage = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
-	$hClone = _GDIPlus_BitmapCloneArea($hImage, $x, $y, $iX, $iY)
-	$hBMP = _GDIPlus_BitmapCreateHBITMAPFromBitmap($hClone)
-
-	 _GDIPlus_BitmapDispose($hImage)
-	 _GDIPlus_BitmapDispose($hClone)
-	 _WinAPI_DeleteObject($g_hHBitmap2)
-
-	Return $hBMP
-EndFunc   ;==>CloneAreaToSearch
-
-; DelPosWithDiff Can be used to delete positions found by multiple images for ONE Object, $Arr Parameter should be 2D Array, [1][2]
-Func DelPosWithDiff(ByRef $Input, $xDiff, $yDiff, $ReturnAsString = True, $And = True)
-	If IsArray($Input) Then
-		_DelPosWithDiff1($Input, $xDiff, $yDiff, $ReturnAsString, $And)
-	Else
-		_DelPosWithDiff2($Input, $xDiff, $yDiff, $ReturnAsString, $And)
-	EndIf
-EndFunc
-
-Func _DelPosWithDiff1(ByRef $Arr, $xDiff, $yDiff, $ReturnAsString = True, $And = True)
-	Local $iStart = 0
-	Local $iXDiff = 0, $iYDiff = 0
-	Local $IndexesToDelete = ""
-	For $i = $iStart To (UBound($Arr) - 1)
-		For $j = $i + 1 To (UBound($Arr) - 1)
-			$iXDiff = Number(Abs(Number(Number($Arr[$i][0]) - Number($Arr[$j][0]))))
-			$iYDiff = Number(Abs(Number(Number($Arr[$i][1]) - Number($Arr[$j][1]))))
-			If $And = True Then
-				If ($iXDiff <= $xDiff) And ($iYDiff <= $yDiff) Then
-					$IndexesToDelete &= $j & ","
-					$i += 1
-					ExitLoop
-				EndIf
-			Else
-				If ($iXDiff <= $xDiff) Or ($iYDiff <= $yDiff) Then
-					$IndexesToDelete &= $j & ","
-					$i += 1
-					ExitLoop
-				EndIf
-			EndIf
-			$iXDiff = 0
-			$iYDiff = 0
-		Next
-	Next
-	If StringRight($IndexesToDelete, 1) = "," Then $IndexesToDelete = StringLeft($IndexesToDelete, (StringLen($IndexesToDelete) - 1))
-	If StringLen($IndexesToDelete) > 0 Then
-		Local $tmpArr[UBound($Arr)][2]
-		Local $splitedToDelete
-		If StringInStr($IndexesToDelete, ",") > 0 Then
-			$splitedToDelete = StringSplit($IndexesToDelete, ",", 2)
-		Else
-			$splitedToDelete = _StringEqualSplit($IndexesToDelete, StringLen($IndexesToDelete))
-		EndIf
-
-		Local $searchResult = -1
-
-		For $i = 0 To (UBound($Arr) - 1)
-			$searchResult = _ArraySearch($splitedToDelete, $i)
-			If $searchResult > -1 And StringLen($splitedToDelete[$searchResult]) > 0 Then ContinueLoop ; If The Array Index Should be Deleted
-			$tmpArr[$i][0] = $Arr[$i][0]
-			$tmpArr[$i][1] = $Arr[$i][1]
-		Next
-		_ArryRemoveBlanksMod($tmpArr)
-		$Arr = $tmpArr
-	EndIf
-
-	If $ReturnAsString = True Then
-		Local $ToReturn = ""
-		For $k = 0 To (UBound($Arr) - 1)
-			$ToReturn &= $Arr[$k][0] & "," & $Arr[$k][1] & "|"
-		Next
-		If StringRight($ToReturn, 1) = "|" Then $ToReturn = StringLeft($ToReturn, (StringLen($ToReturn) - 1))
-		$Arr = $ToReturn
-		Return $ToReturn
-	EndIf
-EndFunc   ;==>_DelPosWithDiff1
-
-Func _DelPosWithDiff2(ByRef $sResult, $xDiff, $yDiff, $ReturnAsString = True, $And = True)
-	Local $tmpSplitedPositions
-	If StringInStr($sResult, "|") > 0 Then
-		$tmpSplitedPositions = StringSplit($sResult, "|", 2)
-	Else
-		$tmpSplitedPositions = _StringEqualSplit($sResult, StringLen($sResult))
-	EndIf
-	Local $splitedPositions[UBound($tmpSplitedPositions)][2]
-	For $j = 0 To (UBound($tmpSplitedPositions) - 1)
-		If StringInStr($tmpSplitedPositions[$j], ",") Then
-			$splitedPositions[$j][0] = StringSplit($tmpSplitedPositions[$j], ",", 2)[0]
-			$splitedPositions[$j][1] = StringSplit($tmpSplitedPositions[$j], ",", 2)[1]
-		EndIf
-	Next
-
-	Local $Arr = $splitedPositions
-
-	Local $iStart = 0
-	Local $iXDiff = 0, $iYDiff = 0
-	Local $IndexesToDelete = ""
-	For $i = $iStart To (UBound($Arr) - 1)
-		For $j = $i + 1 To (UBound($Arr) - 1)
-			$iXDiff = Number(Abs(Number(Number($Arr[$i][0]) - Number($Arr[$j][0]))))
-			$iYDiff = Number(Abs(Number(Number($Arr[$i][1]) - Number($Arr[$j][1]))))
-			If $And = True Then
-				If ($iXDiff <= $xDiff) And ($iYDiff <= $yDiff) Then
-					$IndexesToDelete &= $j & ","
-					$i += 1
-					ExitLoop
-				EndIf
-			Else
-				If ($iXDiff <= $xDiff) Or ($iYDiff <= $yDiff) Then
-					$IndexesToDelete &= $j & ","
-					$i += 1
-					ExitLoop
-				EndIf
-			EndIf
-			$iXDiff = 0
-			$iYDiff = 0
-		Next
-	Next
-	If StringRight($IndexesToDelete, 1) = "," Then $IndexesToDelete = StringLeft($IndexesToDelete, (StringLen($IndexesToDelete) - 1))
-	If StringLen($IndexesToDelete) > 0 Then
-		Local $tmpArr[UBound($Arr)][2]
-		Local $splitedToDelete
-		If StringInStr($IndexesToDelete, ",") > 0 Then
-			$splitedToDelete = StringSplit($IndexesToDelete, ",", 2)
-		Else
-			$splitedToDelete = _StringEqualSplit($IndexesToDelete, StringLen($IndexesToDelete))
-		EndIf
-
-		Local $searchResult = -1
-
-		For $i = 0 To (UBound($Arr) - 1)
-			$searchResult = _ArraySearch($splitedToDelete, $i)
-			If $searchResult > -1 And StringLen($splitedToDelete[$searchResult]) > 0 Then ContinueLoop ; If The Array Index Should be Deleted
-			$tmpArr[$i][0] = $Arr[$i][0]
-			$tmpArr[$i][1] = $Arr[$i][1]
-		Next
-		_ArryRemoveBlanksMod($tmpArr)
-		$Arr = $tmpArr
-	EndIf
-
-	If $ReturnAsString = True Then
-		Local $ToReturn = ""
-		For $k = 0 To (UBound($Arr) - 1)
-			$ToReturn &= $Arr[$k][0] & "," & $Arr[$k][1] & "|"
-		Next
-		If StringRight($ToReturn, 1) = "|" Then $ToReturn = StringLeft($ToReturn, (StringLen($ToReturn) - 1))
-		$sResult = $ToReturn
-		Return $ToReturn
-	EndIf
-
-	Return $Arr
-EndFunc   ;==>_DelPosWithDiff2
-
-Func _ArryRemoveBlanksMod(ByRef $Array)
-	Switch (UBound($Array, 2) > 0) ; If Array Is 2D Array
-		Case True
-			Local $canKeep = True
-			Local $2DBound = UBound($Array, 2)
-			Local $Counter = 0
-			For $i = 0 To (UBound($Array) - 1)
-				For $j = 0 To (UBound($Array, 2) - 1)
-					If $Array[$i][$j] = "" Then
-						$canKeep = False
-					Else
-						$canKeep = True
-						ExitLoop
-					EndIf
-				Next
-				If $canKeep = True Then
-					For $j = 0 To (UBound($Array, 2) - 1)
-						$Array[$Counter][$j] = $Array[$i][$j]
-					Next
-					$Counter += 1
-				EndIf
-			Next
-			ReDim $Array[$Counter][$2DBound]
-		Case Else
-			Local $Counter = 0
-			For $i = 0 To (UBound($Array) - 1)
-				If $Array[$i] <> "" Then
-					$Array[$Counter] = $Array[$i]
-					$Counter += 1
-				EndIf
-			Next
-			ReDim $Array[$Counter]
-	EndSwitch
-EndFunc   ;==>_ArryRemoveBlanks
-
-Func _StringEqualSplit($sString, $iNumChars = Default)
-	If $iNumChars = Default Then $iNumChars = StringLen($sString)
-	If Not IsString($sString) Or $sString = "" Then Return SetError(1, 0, 0)
-	If Not IsInt($iNumChars) Or $iNumChars < 1 Then Return SetError(2, 0, 0)
-	Return StringRegExp($sString, "(?s).{1," & $iNumChars & "}", 3)
-EndFunc   ;==>_StringEqualSplit
-
-Func _ArrayMerge(ByRef $a_base, ByRef $a_add, $i_start = 0)
-	Local $X
-	For $X = $i_start To UBound($a_add) - 1
-		_ArrayAdd($a_base, $a_add[$X], 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
-	Next
-EndFunc   ;==>_ArrayMerge
-
-Func _ArrayClear(ByRef $aArray)
-    Local $iCols = UBound($aArray, 2)
-    Local $iDim = UBound($aArray, 0)
-    Local $iRows = UBound($aArray, 1)
-    If $iDim = 1 Then
-        Local $aArray1D[$iRows]
-        $aArray = $aArray1D
-    Else
-        Local $aArray2D[$iRows][$iCols]
-        $aArray = $aArray2D
-    EndIf
-EndFunc   ;==>_ArrayClear
 
 Func IIf($Condition, $IfTrue, $IfFalse)
 	If $Condition = True Then

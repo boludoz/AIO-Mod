@@ -49,7 +49,8 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 
 	Local $iAdditionalY = 75
 	Local $iAdditionalX = 100
-
+	
+	#Region - Custom themes - Team AIO Mod++
 	If $bOnBuilderBase = Default Then
 		$bOnBuilderBase = isOnBuilderBase(True)
 	EndIf
@@ -86,7 +87,14 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	EndIf
 	
 	Local $eError = ""
-	Local $sImOk = False
+	; Local $sImOk = False
+	
+	; initial reference village had a width of 473.60282919315 (and not 440) and stone located at 226, 567, so center on that reference and used zoom factor on that size
+	;Local $z = $c / 473.60282919315 ; don't use size of 440, as beta already using reference village
+	Local Const $iRefSize = 445 ;458 ; 2019-01-02 Update village measuring as outer edges didn't align anymore
+	Local Const $iDefSize = 444 ; 2019-04-01 New default size using shared_prefs zoom level
+	
+	_CaptureRegion2()
 	For $iB = 0 To UBound($aZoomOutModes) - 1
 		$sDirectory = $sDirectoryOri & $aZoomOutModes[$iB] & "\"
 		$eError = ""
@@ -134,7 +142,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 					$bottom = $y0 + $iAdditionalY
 					$sArea = Int($x1) & "," & Int($y1) & "|" & Int($right) & "," & Int($y1) & "|" & Int($right) & "," & Int($bottom) & "|" & Int($x1) & "," & Int($bottom)
 					;SetDebugLog("GetVillageSize check for image " & $findImage)
-					$a = decodeSingleCoord(findImage($findImage, $sDirectory & $findImage, $sArea, 1, True))
+					$a = decodeSingleCoord(findImage($findImage, $sDirectory & $findImage, $sArea, 1, False))
 					If UBound($a) = 2 Then
 						$x = Int($a[0])
 						$y = Int($a[1])
@@ -169,7 +177,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 				$bottom = $y0 + $iAdditionalY
 				$sArea = Int($x1) & "," & Int($y1) & "|" & Int($right) & "," & Int($y1) & "|" & Int($right) & "," & Int($bottom) & "|" & Int($x1) & "," & Int($bottom)
 				;SetDebugLog("GetVillageSize check for image " & $findImage)
-				$a = decodeSingleCoord(findImage($findImage, $sDirectory & $findImage, $sArea, 1, True))
+				$a = decodeSingleCoord(findImage($findImage, $sDirectory & $findImage, $sArea, 1, False))
 				If UBound($a) >= 2 Then
 					$x = Int($a[0])
 					$y = Int($a[1])
@@ -210,7 +218,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 					$bottom = $y0 + $iAdditionalY
 					$sArea = Int($x1) & "," & Int($y1) & "|" & Int($right) & "," & Int($y1) & "|" & Int($right) & "," & Int($bottom) & "|" & Int($x1) & "," & Int($bottom)
 					;SetDebugLog("GetVillageSize check for image " & $findImage)
-					$a = decodeMultipleCoords(findImage($findImage, $sDirectory & $findImage, $sArea, 2, True), Default, Default, 0) ; sort by x because there can be a 2nd at the right that should not be used
+					$a = decodeMultipleCoords(findImage($findImage, $sDirectory & $findImage, $sArea, 2, False), Default, Default, 0) ; sort by x because there can be a 2nd at the right that should not be used
 					If UBound($a) <> 0 Then
 						$a = $a[0]
 						$x = Int($a[0])
@@ -244,7 +252,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		
 		If $tree[0] = 0 Or $stone[0] = 0 Then ContinueLoop
 		
-		$sImOk = True
+		; $sImOk = True
 		
 		If StringIsSpace($aZoomOutModes[$iB]) = False Then
 			Local $iSave = $aZoomOutModes[$iB]
@@ -253,75 +261,71 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 			$g_sZoomOutModes = _ArrayToString($aZoomOutModes, "|")
 		EndIf
 		
-		ExitLoop
+		SetDebugLog("GetVillageSize: " & $g_sZoomOutModes)
+		
+		; If $sImOk = False Then
+			; SetDebugLog("GetVillageSize: fail.", $COLOR_WARNING)
+			; Return FuncReturn($aResult)
+		; EndIf
+		
+		; calculate village size, see https://en.wikipedia.org/wiki/Pythagorean_theorem
+		Local $a = $tree[0] - $stone[0]
+		Local $b = $stone[1] - $tree[1]
+		Local $c = Sqrt($a * $a + $b * $b) - $stone[4] - $tree[4]
+		
+		If $g_bUpdateSharedPrefs And Not $bOnBuilderBase And $fixed[0] = 0 And $c >= 500 Then
+			; On main village use stone as fixed point when village size is too large, as that might cause an infinite loop when obstacle blocked (and another tree found)
+			$fixed = $stone
+		EndIf
+		
+		Local $z = $c / $iRefSize
+		
+		Local $stone_x_exp = $stone[2]
+		Local $stone_y_exp = $stone[3]
+		ConvertVillagePos($stone_x_exp, $stone_y_exp, $z) ; expected x, y position of stone
+		$x = $stone[0] - $stone_x_exp
+		$y = $stone[1] - $stone_y_exp
+		
+		If $fixed[0] = 0 And Not $g_bRestart Then
+			
+			If $DebugLog Then SetDebugLog("GetVillageSize measured: " & $c & ", Zoom factor: " & $z & ", Offset: " & $x & ", " & $y, $COLOR_INFO)
+			
+			#Region - Builder Base - Team AIO Mod++
+			Local $aTempResult[10] = [$c, $z, $x, $y, $stone[0], $stone[1], $stone[5], $tree[0], $tree[1], $tree[5]]
+			$aResult = $aTempResult
+			$g_aPosSizeVillage = $aResult
+			$g_iXVOffset = $aResult[2]
+			#EndRegion - Builder Base - Team AIO Mod++
+			Return FuncReturn($aResult)
+			
+		Else
+			
+			; used fixed tile position for village offset
+			Local $bReset = $g_bUpdateSharedPrefs And $c >= 500
+			If $tree[0] = 0 Or $stone[0] = 0 Or $bReset Then
+				; missing a tile or reset required
+				If $bReset Then SetDebugLog("GetVillageSize resets village size from " & $c & " to " & $iDefSize, $COLOR_WARNING)
+				$c = $iDefSize
+				$z = $iDefSize / $iRefSize
+			EndIf
+			
+			$x = $fixed[0] - $fixed[2]
+			$y = $fixed[1] - $fixed[3]
+			
+			If $DebugLog Then SetDebugLog("GetVillageSize measured (fixed): " & $c & ", Zoom factor: " & $z & ", Offset: " & $x & ", " & $y, $COLOR_INFO)
+			
+			#Region - Builder Base - Team AIO Mod++
+			Local $aTempResultn[10] = [$c, $z, $x, $y, $stone[0], $stone[1], $stone[5], $tree[0], $tree[1], $tree[5]]
+			$aResult = $aTempResultn
+			$g_aPosSizeVillage = $aResult
+			$g_iXVOffset = $aResult[2]
+			#EndRegion - Builder Base - Team AIO Mod++
+			Return FuncReturn($aResult)
+			
+		EndIf
 	Next
 	
-	SetDebugLog($g_sZoomOutModes)
-	
-	If $sImOk = False Then
-		SetDebugLog("GetVillageSize NT.", $COLOR_WARNING)
-		Return FuncReturn($aResult)
-	EndIf
-	
-	; calculate village size, see https://en.wikipedia.org/wiki/Pythagorean_theorem
-	Local $a = $tree[0] - $stone[0]
-	Local $b = $stone[1] - $tree[1]
-	Local $c = Sqrt($a * $a + $b * $b) - $stone[4] - $tree[4]
-
-	If $g_bUpdateSharedPrefs And Not $bOnBuilderBase And $fixed[0] = 0 And $c >= 500 Then
-		; On main village use stone as fixed point when village size is too large, as that might cause an infinite loop when obstacle blocked (and another tree found)
-		$fixed = $stone
-	EndIf
-
-	; initial reference village had a width of 473.60282919315 (and not 440) and stone located at 226, 567, so center on that reference and used zoom factor on that size
-	;Local $z = $c / 473.60282919315 ; don't use size of 440, as beta already using reference village
-	Local $iRefSize = 445 ;458 ; 2019-01-02 Update village measuring as outer edges didn't align anymore
-	Local $iDefSize = 444 ; 2019-04-01 New default size using shared_prefs zoom level
-	Local $z = $c / $iRefSize
-
-	Local $stone_x_exp = $stone[2]
-	Local $stone_y_exp = $stone[3]
-	ConvertVillagePos($stone_x_exp, $stone_y_exp, $z) ; expected x, y position of stone
-	$x = $stone[0] - $stone_x_exp
-	$y = $stone[1] - $stone_y_exp
-
-	If $fixed[0] = 0 And Not $g_bRestart Then
-
-		If $DebugLog Then SetDebugLog("GetVillageSize measured: " & $c & ", Zoom factor: " & $z & ", Offset: " & $x & ", " & $y, $COLOR_INFO)
-
-		#Region - Builder Base - Team AIO Mod++
-		Local $aTempResult[10] = [$c, $z, $x, $y, $stone[0], $stone[1], $stone[5], $tree[0], $tree[1], $tree[5]]
-		$aResult = $aTempResult
-		$g_aPosSizeVillage = $aResult
-		$g_iXVOffset = $aResult[2]
-		#EndRegion - Builder Base - Team AIO Mod++
-		Return FuncReturn($aResult)
-
-	Else
-
-		; used fixed tile position for village offset
-		Local $bReset = $g_bUpdateSharedPrefs And $c >= 500
-		If $tree[0] = 0 Or $stone[0] = 0 Or $bReset Then
-			; missing a tile or reset required
-			If $bReset Then SetDebugLog("GetVillageSize resets village size from " & $c & " to " & $iDefSize, $COLOR_WARNING)
-			$c = $iDefSize
-			$z = $iDefSize / $iRefSize
-		EndIf
-
-		$x = $fixed[0] - $fixed[2]
-		$y = $fixed[1] - $fixed[3]
-
-		If $DebugLog Then SetDebugLog("GetVillageSize measured (fixed): " & $c & ", Zoom factor: " & $z & ", Offset: " & $x & ", " & $y, $COLOR_INFO)
-
-		#Region - Builder Base - Team AIO Mod++
-		Local $aTempResultn[10] = [$c, $z, $x, $y, $stone[0], $stone[1], $stone[5], $tree[0], $tree[1], $tree[5]]
-		$aResult = $aTempResultn
-		$g_aPosSizeVillage = $aResult
-		$g_iXVOffset = $aResult[2]
-		#EndRegion - Builder Base - Team AIO Mod++
-		Return FuncReturn($aResult)
-
-	EndIf
+	#EndRegion - Custom themes - Team AIO Mod++
 
 	FuncReturn()
 

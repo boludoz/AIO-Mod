@@ -41,7 +41,7 @@ Global $aButtonFCStart[4] = [638, 285, 0xDDF685, 20]
 ; Super XP
 Global $aLootInfo[5] = [300, 590, 0xFFFFFF, 0xFFFFFF, 10] ; Color in the frame of Loot Available info
 Global $aEndMapPosition[4] = [337, 664, 0x403828, 10] ; Safe Coordinates To Avoid Conflict With Stars Color - June Update 2019
-Global $aFirstMapPosition[4] = [337, 135, 0x403828, 10] ; Safe Coordinates To Avoid Conflict With Stars Color - June Update 2019
+Global $aFirstMapPosition[4] = [752, 139, 0x403828, 15] ; Safe Coordinates To Avoid Conflict With Stars Color - June Update 2019
 Global $aCloseSingleTab[4] = [808, 70, 0xFF8D95, 20] ; X color red on the 'Close' button
 Global $aIsInAttack[4] = [60, 576, 0x0A0A0A, 10] ; color black on the 'End Battle' button
 Global Const $EndBattleText1[4] = [30, 565 + $g_iMidOffsetY, 0xFFFFFF, 10] ; color white 'E' on the 'End Battle' button

@@ -10,7 +10,7 @@
 #Au3Stripper_Off
 #Au3Stripper_On
 Global $g_sBotVersion = "v7.9.0"
-Global $g_sModVersion = "v4.4.4"
+Global $g_sModVersion = "v4.4.5"
 Opt("MustDeclareVars", 1)
 Global $g_sBotTitle = ""
 Global $g_hFrmBot = 0
@@ -3372,7 +3372,7 @@ Global $g_bMaxSidesSF = True, $g_iCmbMaxSidesSF = 1
 Global $g_bDeployCastleFirst[2] = [False, False]
 Global $g_iDeployWave[3] = [5, 5, 5], $g_iDeployDelay[3] = [5, 5, 5]
 Global $g_bChkEnableRandom[3] = [True, True, True]
-Global $g_bEnableSuperXP = False, $g_bFastSuperXP = False, $g_bSkipDragToEndSX = False, $g_iActivateOptionSX = 1, $g_iGoblinMapOptSX = 2, $g_sGoblinMapOptSX = "The Arena", $g_iMaxXPtoGain = 500, $g_bBKingSX = False, $g_bAQueenSX = False, $g_bGWardenSX = False
+Global $g_bEnableSuperXP = False, $g_bFastSuperXP = False, $g_bSkipDragToEndSX = False, $g_iActivateOptionSX = 1, $g_iGoblinMapOptSX = 2, $g_sGoblinMapOptSX = "The Arena", $g_iMaxXPtoGain = 500, $g_bBKingSX = False, $g_bAQueenSX = False, $g_bGWardenSX = False, $g_bSkipZoomOutSX = False
 Global $g_iacmbPriority[13] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_iacmbMaxSpeed[2] = [1, 1]
 Global $g_iacmbPause[2] = [0, 0]
@@ -6295,6 +6295,7 @@ IniReadS($g_bNoUpgradeInWar, $g_sProfileConfigPath, "attack", "ChkNoUpgradeInWar
 EndFunc
 Func ReadConfig_MOD_SuperXP()
 IniReadS($g_bEnableSuperXP, $g_sProfileConfigPath, "SuperXP", "EnableSuperXP", $g_bEnableSuperXP, "Bool")
+IniReadS($g_bSkipZoomOutSX, $g_sProfileConfigPath, "SuperXP", "SkipZoomOutSX", $g_bSkipZoomOutSX, "Bool")
 IniReadS($g_bFastSuperXP, $g_sProfileConfigPath, "SuperXP", "FastSuperXP", $g_bFastSuperXP, "Bool")
 IniReadS($g_bSkipDragToEndSX, $g_sProfileConfigPath, "SuperXP", "SkipDragToEndSX", $g_bSkipDragToEndSX, "Bool")
 IniReadS($g_iActivateOptionSX, $g_sProfileConfigPath, "SuperXP", "ActivateOptionSX", $g_iActivateOptionSX, "int")

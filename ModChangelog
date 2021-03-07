@@ -4,6 +4,11 @@
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
                     Based on MyBot.run v7.9
+	**v4.4.5**
+		- Improved: Super XP improved.
+		- Restored: Super XP skip zoomout.
+		- Restored/Fix: Old village sprites for measurement.
+
 	**v4.4.4**
 		- Improved: new scenarios support + priority system.
 		- Fix: Fake builder base detection in new scenarios case fix.
