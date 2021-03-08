@@ -337,12 +337,14 @@ Func SmartWait4Train($iTestSeconds = Default)
 	EndIf
 
 	#Region - PlayBB in Smart Wait - Team AIO Mod++
-	If ($iTrainWaitTime >= $MinimumTimeClose) Or $bTest Then ; are close times above minumum close time in GUI?
-		Local $hTimeForCheck = TimerInit()
-		$g_bStayOnBuilderBase = True
-		__RunFunction("BuilderBase")
-		$g_bStayOnBuilderBase = False
-		$iTrainWaitTime -= TimerDiff($hTimeForCheck) / 1000 ; xniightx123
+	If $g_bChkOnlyFarm = False Then
+		If ($iTrainWaitTime >= $MinimumTimeClose) Or $bTest  Then ; are close times above minumum close time in GUI?
+			Local $hTimeForCheck = TimerInit()
+			$g_bStayOnBuilderBase = True
+			__RunFunction("BuilderBase")
+			$g_bStayOnBuilderBase = False
+			$iTrainWaitTime -= TimerDiff($hTimeForCheck) / 1000 ; xniightx123
+		EndIf
 	EndIf
 	#EndRegion - PlayBB in Smart Wait - Team AIO Mod++
 

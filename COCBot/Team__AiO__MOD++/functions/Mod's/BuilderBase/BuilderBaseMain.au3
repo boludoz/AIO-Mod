@@ -109,13 +109,13 @@ Func RunBBFuncs($sBBFunc, $bTestRun = False)
 	BuilderBaseReport(False, False)
 
 	; Zoomout
-	If $g_iFreeBuilderCountBB <> 0 Then BuilderBaseZoomOut()
+	If $g_iFreeBuilderCountBB <> 0 Then Zoomout()
 
 	Switch $sBBFunc
 		Case "ClockTower"
 
 			; Zoomout
-			BuilderBaseZoomOut()
+			Zoomout()
 
 			; Clock Tower Boost
 			StartClockTowerBoost()
@@ -155,7 +155,7 @@ Func RunBBFuncs($sBBFunc, $bTestRun = False)
 			If $g_iFreeBuilderCountBB = 0 Then Return
 
 			; Zoomout
-			BuilderBaseZoomOut()
+			Zoomout()
 
 			; Upgrade Machine
 			BattleMachineUpgrade()

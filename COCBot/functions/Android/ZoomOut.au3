@@ -541,7 +541,8 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag,
 						$aResult[0] = ""
 					EndIf
 				EndIf
-			ElseIf Not ($aVillageSize > 520 And $aVillageSize < 590) Then
+			; ElseIf Not (UBound(decodeSingleCoord(findImageInPlace("BoatBuilderBase", $g_sImgBoatBB, "487,44,708,242", True))) > 1) And Not $bUpdateSharedPrefs Then
+			ElseIf Not (UBound(decodeSingleCoord(findImageInPlace("BoatBuilderBase", $g_sImgBoatBB, "487,44,708,242", True))) > 1) Then
 				; force additional zoom-out
 				$aResult[0] = ""
 			EndIf
