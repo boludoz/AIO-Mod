@@ -4,6 +4,9 @@
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
                     Based on MyBot.run v7.9
+	**v4.4.7**
+		- Fix: Super XP now check first now instead of drag first.
+
 	**v4.4.6**
 		- New: Memu v7.2.9.0 normalized version.
 		- Improved: GetVillageSize.

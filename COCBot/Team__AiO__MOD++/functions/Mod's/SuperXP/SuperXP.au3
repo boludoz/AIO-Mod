@@ -781,17 +781,18 @@ Func OpenGoblinMapSX()
 	Local $iCounter = 0
 	Local $aMapPick = -1
 	Do
-		$iCounter += 1
-		If Not $g_bRunState Then ExitLoop
-		If $g_bDebugSX Then SetDebugLog("Super XP : OpenGoblinMapSuper XP : Loop #" & $iCounter)
-		ClickDrag(Random(305, 310, 1), 138, Random(305, 310, 1), 665, 100)
-		If $g_bDebugSetlog Then SetDebugLog("Button OpenGoblinMapSX= " & _GetPixelColor($aFirstMapPosition[0], $aFirstMapPosition[1], True), $COLOR_DEBUG) ;Debug
-		
+	
 		For $i = 0 To 1
 			If RandomSleep(250) Then Return
 			$aMapPick = FixPosMapSX()
 			If IsArray($aMapPick) Then ExitLoop 2
 		Next
+		
+		$iCounter += 1
+		If Not $g_bRunState Then ExitLoop
+		If $g_bDebugSX Then SetDebugLog("Super XP : OpenGoblinMapSuper XP : Loop #" & $iCounter)
+		ClickDrag(Random(305, 310, 1), 138, Random(305, 310, 1), 665, 100)
+		If $g_bDebugSetlog Then SetDebugLog("Button OpenGoblinMapSX= " & _GetPixelColor($aFirstMapPosition[0], $aFirstMapPosition[1], True), $COLOR_DEBUG) ;Debug
 		
 	Until $iCounter > 25 Or _ColorCheck(_GetPixelColor($aFirstMapPosition[0], $aFirstMapPosition[1], True, "OpenGoblinMapSX-Check"), Hex($aFirstMapPosition[2], 6), $aFirstMapPosition[3])
 
