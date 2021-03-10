@@ -202,7 +202,7 @@ Func CreateAttackSearchOptionsAttack()
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			GUICtrlSetLimit(-1, 3)
 			GUICtrlSetOnEvent(-1, "cmbAttackPlannerDayMax")
-	
+
 		#Region - Legend trophy protection - Team AIO Mod++
 		$g_hChkProtectInLL = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-Attack", "ChkProtectInLL", "Legend league protection"), $x + 233, $y + 72, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-Attack", "ChkProtectInLL_Info_01", "This option adds protections in case of legend league, such as not returning if the attack is not completed."))
@@ -213,7 +213,7 @@ Func CreateAttackSearchOptionsAttack()
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			GUICtrlSetOnEvent(-1, "ChkProtectInLL")
 		#EndRegion - Legend trophy protection - Team AIO Mod++
-		
+
 	$x += 198
 	$y -= 5
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "Day", -1) & ":", $x, $y, -1, 15)

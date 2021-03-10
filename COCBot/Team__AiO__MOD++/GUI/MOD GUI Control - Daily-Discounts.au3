@@ -69,7 +69,7 @@ Func btnDDClear()
 		GUICtrlSetState($g_ahChkDD_Deals[$i], $GUI_UNCHECKED)
 	Next
 EndFunc   ;==>btnDDClear
- 
+
 Func ChkFreeMagicItems()
 	If $g_iTownHallLevel >= 8 Or $g_iTownHallLevel = 0 Then ; Must be Th8 or more to use the Trader
 		GUICtrlSetState($g_hChkFreeMagicItems, $GUI_ENABLE)

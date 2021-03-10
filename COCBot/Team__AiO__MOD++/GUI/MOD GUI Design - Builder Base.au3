@@ -33,20 +33,20 @@ Func CreateBuilderBaseTab()
 	;creating subchilds first!
 	GUISwitch($g_hGUI_BUILDER_BASE)
 	$g_hGUI_BUILDER_BASE_TAB = GUICtrlCreateTab(0, 0, $g_iSizeWGrpTab1, $g_iSizeHGrpTab1, BitOR($TCS_MULTILINE, $TCS_RIGHTJUSTIFY))
-	
+
 	$g_hGUI_BUILDER_BASE_TAB_ITEM1 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_006_STab_01", "Misc && Stats"))
 	CreateMiscBuilderBaseSubTab()
-	
+
 	$g_hGUI_BUILDER_BASE_TAB_ITEM2 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_006_STab_02", "Upgrade"))
 	CreateUpgradeBuilderBaseSubTab()
-	
+
 	$g_hGUI_BUILDER_BASE_TAB_ITEM3 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_006_STab_03", "Versus Battles")& "     ")
   	; this tab will be empty because it is only used to display a child GUI
-	  ; below controls are only shown when the strategy is disabled and the child gui will be hidden.
-	
+	; below controls are only shown when the strategy is disabled and the child gui will be hidden.
+
   	$g_hLblBuilderAttackDisabled = GUICtrlCreateLabel(GetTranslatedFileIni("MBR Main GUI", "disabled_VersusBuilderBase", "Note: Builder Base Versus Battle is disabled, tick the check mark on the ") & GetTranslatedFileIni("MBR Main GUI", "Tab_006_STab_03", "Versus Battles") & ".", 10, 30, $_GUI_MAIN_WIDTH - 40, 50)
 	GUICtrlSetState(-1, $GUI_HIDE)
-	
+
 	CreateBBAttackLog()
 
 	GUICtrlCreateTabItem("")

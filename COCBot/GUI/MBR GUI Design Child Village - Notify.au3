@@ -49,7 +49,7 @@ Func CreateDiscordTelegramSubTab()
 	Local $x = 25, $y = 45
 	$g_hGrpNotify = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Notify", "Group_01", "Telegram Notify") & " " & $g_sNotifyVersion, $x - 20, $y - 20, $g_iSizeWGrpTab3, $g_iSizeHGrpTab3)
 	#Region - Discord - Team AIO Mod++
-	
+
 	#CS - Discord - Team AIO Mod++
 		_GUICtrlCreateIcon ($g_sLibIconPath, $eIcnTelegram, $x + 3, $y, 32, 32)
 		$g_hChkNotifyTGEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Notify", "ChkNotifyTGEnable", "Enable Telegram"), $x + 40, $y + 5)
@@ -57,7 +57,7 @@ Func CreateDiscordTelegramSubTab()
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Notify", "ChkNotifyTGEnable_Info_01", "Enable Telegram notifications"))
 	#CE - Discord - Team AIO Mod++
 		$x += 3
-		
+
 	$g_ahIcnNotifyMode[0] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnTelegram, $x, $y, 32, 32)
 			GUICtrlSetState(-1, $GUI_SHOW)
 	$g_ahIcnNotifyMode[1] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnDiscord, $x, $y, 32, 32)
@@ -89,7 +89,7 @@ Func CreateDiscordTelegramSubTab()
 		$g_hTxtNotifyTGToken = _GUICtrlCreateInput("", $x + 120, $y - 3, 280, 19)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Notify", "LblNotifyTGToken_Info_01", "You need a Token to use Telegram notifications. Get a token from Telegram.com"))
 			GUICtrlSetState(-1, $GUI_SHOW)
-	
+
 		$g_hLblNotifyDSToken = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Notify", "LblNotifyDSToken", "Webhook URL") & ":", $x, $y, -1, -1, $SS_RIGHT)
 			GUICtrlSetState(-1, $GUI_HIDE)
 		$g_hTxtNotifyDSToken = _GUICtrlCreateInput("", $x + 140, $y - 3, 240, 19)
@@ -97,7 +97,7 @@ Func CreateDiscordTelegramSubTab()
 			GUICtrlSetState(-1, $GUI_HIDE)
 
 	#EndRegion - Discord - Team AIO Mod++
-	
+
 	#CS - Discord - Team AIO Mod++
 	$y += 40
 	$x -= 10

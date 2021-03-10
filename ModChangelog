@@ -5,10 +5,12 @@
 
                     Based on MyBot.run v7.9
 	**v4.4.6**
+		- New: Memu v7.2.9.0 normalized version.
 		- Improved: GetVillageSize.
 		- Improved: Updater.
 		- Fix: Restart case zoomout.
 		- Fix: Only Farm smart wait.
+		- Fix: Eloy GUI.
 
 	**v4.4.5**
 		- Improved: Super XP improved.

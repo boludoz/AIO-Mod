@@ -130,13 +130,13 @@ Func CreateMiscMagicSubTab()
 	Local $x = 15, $y = 45
 
 	GUICtrlCreateGroup("Collect Items", 16, 24, 408, 78)
-	$g_hChkCollectMagicItems = GUICtrlCreateCheckbox("Collect magic items", 56, 48, 200, 17)
+	$g_hChkCollectMagicItems = GUICtrlCreateCheckbox("Collect magic items", 56, 48, 105, 17)
 	GUICtrlSetOnEvent(-1, "btnDDApply")
 	$g_hChkFreeMagicItems = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkFreeMagicItems", "Collect Free Magic Items"), 56, 73, 200, 17)
 	GUICtrlSetOnEvent(-1, "ChkFreeMagicItems")
 	$g_hBtnMagicItemsConfig = GUICtrlCreateButton("Settings", 176, 48, 97, 25)
 	GUICtrlSetOnEvent(-1, "btnDailyDiscounts")
-	
+
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	GUICtrlCreateGroup("Magic Items", 16, 104, 408, 257)
 	$g_hChkBuilderPotion = GUICtrlCreateCheckbox("Use builder potion when busy builders is > = : ", 56, 128, 225, 17)
@@ -190,7 +190,7 @@ Func CreateDonationsControlSubTab()
 			$eIcnHogRider, $eIcnValkyrie, $eIcnGolem, $eIcnWitch, $eIcnLavaHound, $eIcnBowler, $eIcnIceGolem, $eIcnHeadhunter]
 	Local $aSpellsIcons[$eSpellCount] = [$eIcnLightSpell, $eIcnHealSpell, $eIcnRageSpell, $eIcnJumpSpell, $eIcnFreezeSpell, _
 			$eIcnCloneSpell, $eIcnInvisibilitySpell, $eIcnPoisonSpell, $eIcnEarthQuakeSpell, $eIcnHasteSpell, $eIcnSkeletonSpell, $eIcnBatSpell]
-	Local $eSiegeMachineIcons[$eSiegeMachineCount] = [$eIcnWallW, $eIcnBattleB, $eIcnStoneS, $eIcnSiegeB]
+	Local $eSiegeMachineIcons[$eSiegeMachineCount] = [$eIcnWallW, $eIcnBattleB, $eIcnStoneS, $eIcnSiegeB, $eIcnLogL]
 	Local $g_ahTxtTrainWarTroopCount[$eTroopCount], $g_ahTxtTrainWarSpellCount[$eSpellCount], $g_ahTxtSiegeMachineCount[$eSiegeMachineCount]
 	Local $aTroopList[$eTroopCount] = [$eTroopBarbarian, $eTroopArcher, $eTroopGiant, $eTroopGoblin, $eTroopWallBreaker, $eTroopBalloon, _
 			$eTroopWizard, $eTroopHealer, $eTroopDragon, $eTroopPekka, $eTroopBabyDragon, $eTroopMiner, $eTroopElectroDragon, $eTroopYeti, $eTroopMinion, _
@@ -212,7 +212,7 @@ Func CreateDonationsControlSubTab()
 
 	$y += 35
 
-		For $i = 0 To $eTroopCount - 1 ; Troops
+		For $i = 0 To UBound($aTroopList) - 1 ; Troops
 			If $i >= 14 Then $x = 25
 			_GUICtrlCreateIcon($g_sLibIconPath, $aTroopsIcons[$i], $x + Int($i / 2) * 33, $y + Mod($i, 2) * 60, 32, 32)
 			$g_hLblDayTroop[$aTroopList[$i]] = GUICtrlCreateLabel("0", $x + Int($i / 2) * 33 + 1, $y + Mod($i, 2) * 60 + 34, 30, 20, BitOR($ES_CENTER, $ES_NUMBER))

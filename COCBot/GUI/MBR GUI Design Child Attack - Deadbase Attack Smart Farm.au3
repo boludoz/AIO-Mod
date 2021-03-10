@@ -55,7 +55,7 @@ Func CreateAttackSearchDeadBaseSmartFarm()
 		$g_hChkRandomDPSFAL = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "RandomDP_02", "Random drop points along line."), $x, $y, -1, -1)
 				_GUICtrlSetTip(-1, $sTxtTip)
 				; GUICtrlSetOnEvent(-1, "RandomDPSFAL")
-				
+
 		$y += 20
 		$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "HumaneSides", "Set a limit for places, the minimum limit is random.")
 		$g_hMaxSidesSF = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "MaxSidesSM", "Max sides to attack") & ":", $x, $y, -1, -1)

@@ -26,7 +26,7 @@ Func PopulateComboScriptsFilesDB()
 
 	; Reset combo box
 	_GUICtrlComboBox_ResetContent($g_hCmbScriptNameDB)
-	
+
 	; Set combo box
 	GUICtrlSetData($g_hCmbScriptNameDB, StringTrimRight($sOut, 1))
 	_GUICtrlComboBox_SetCurSel($g_hCmbScriptNameDB, _GUICtrlComboBox_FindStringExact($g_hCmbScriptNameDB, ""))
@@ -45,7 +45,7 @@ Func PopulateComboScriptsFilesAB()
 	
 	; Reset combo box
 	_GUICtrlComboBox_ResetContent($g_hCmbScriptNameAB)
-	
+
 	; Set combo box
 	GUICtrlSetData($g_hCmbScriptNameAB, StringTrimRight($sOut, 1))
 	_GUICtrlComboBox_SetCurSel($g_hCmbScriptNameAB, _GUICtrlComboBox_FindStringExact($g_hCmbScriptNameAB, ""))

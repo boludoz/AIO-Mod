@@ -78,7 +78,7 @@ EndFunc   ;==>chkNoDropIfShield
 Func chkEdgeObstacle()
 	$g_bChkCleanYard = (GUICtrlRead($g_hChkCleanYard) = $GUI_CHECKED)
 	$g_bEdgeObstacle = (GUICtrlRead($g_hEdgeObstacle) = $GUI_CHECKED)
-	
+
 	If $g_bChkCleanYard Then
 		GUICtrlSetState($g_hEdgeObstacle, $GUI_ENABLE)
 	Else

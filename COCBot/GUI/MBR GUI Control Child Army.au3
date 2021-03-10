@@ -196,12 +196,22 @@ Func lblTotalCountSpell2()
 		$g_iTotalTrainSpaceSpell += $g_aiArmyCustomSpells[$i] * $g_aiSpellSpace[$i]
 		$iTotalTotalTimeSpell += $g_aiArmyCustomSpells[$i] * $g_aiSpellTrainTime[$i]
 	Next
-
+#cs
 	For $i = 0 To $eSpellCount - 1
 		GUICtrlSetBkColor($g_ahTxtTrainArmySpellCount[$i], $g_iTotalTrainSpaceSpell <= GUICtrlRead($g_hTxtTotalCountSpell) ? $COLOR_WHITE : $COLOR_RED)
 	Next
-
+#ce
 	GUICtrlSetData($g_hLblTotalTimeSpell, CalculTimeTo($iTotalTotalTimeSpell))
+
+	; Fix - Team AIO Mod++
+	GUICtrlSetData($g_hLblCountTotalSpell, $g_iTotalTrainSpaceSpell)
+	If $g_iTotalTrainSpaceSpell < GUICtrlRead($g_hTxtTotalCountSpell) Then
+		GUICtrlSetBkColor($g_hLblCountTotalSpell, $COLOR_ORANGE)
+	ElseIf $g_iTotalTrainSpaceSpell > GUICtrlRead($g_hTxtTotalCountSpell) Then
+		GUICtrlSetBkColor($g_hLblCountTotalSpell, $COLOR_RED)
+	ElseIf $g_iTotalTrainSpaceSpell = GUICtrlRead($g_hTxtTotalCountSpell) Then
+		GUICtrlSetBkColor($g_hLblCountTotalSpell, 0xD1DFE7)
+	EndIf
 
 	CalCostSpell()
 EndFunc   ;==>lblTotalCountSpell2
@@ -1208,7 +1218,7 @@ EndFunc   ;==>SelectTroop_QTEdit
 Func AddTroop_QTEdit($iTroop)
 	Local $bOverSpace = False, $bOverSlot = False, $iTotalCampSpace=0
 
-   $iTotalCampSpace=Number(GUICtrlRead($g_hTxtTotalCampForced))
+	$iTotalCampSpace=Number(GUICtrlRead($g_hTxtTotalCampForced))
 
 	If $g_iQTEdit_TotalTroop + $g_aiTroopSpace[$iTroop] > $iTotalCampSpace Then $bOverSpace = True
 
@@ -1495,9 +1505,9 @@ EndFunc   ;==>ApplyQuickTrainArmy
 Func TxtQTEdit_Troop()
 	Local $iTroop, $iQty, $iSpace, $iSlot, $iTotalCampSpace=0
 
-   $iTotalCampSpace=Number(GUICtrlRead($g_hTxtTotalCampForced))
+	$iTotalCampSpace=Number(GUICtrlRead($g_hTxtTotalCampForced))
 
-   For $j = 0 To 6
+	For $j = 0 To 6
 		If @GUI_CtrlId = $g_ahTxtQTEdit_Troop[$j] Then
 			$iTroop = $g_aiQTEdit_TroopType[$j]
 			$iQty = GUICtrlRead($g_ahTxtQTEdit_Troop[$j])
@@ -1508,15 +1518,15 @@ Func TxtQTEdit_Troop()
 		EndIf
 		If $j = 6 Then Return
 	Next
- 	TotalTroopCount_QTEdit()
- 
+	TotalTroopCount_QTEdit()
+
 	If $g_iQTEdit_TotalTroop > $iTotalCampSpace Then
 		Local $iSpaceLeft = $iTotalCampSpace - ($g_iQTEdit_TotalTroop - $iSpace)
 		Local $iMaxQtyLeft = Int($iSpaceLeft / $g_aiTroopSpace[$iTroop])
 		ToolTip("Your input of " & $iQty & "x " & $g_asTroopNames[$iTroop] & " makes total troops to exceed possible camp capacity (" & $iTotalCampSpace & ")." & @CRLF & "Automatically changing to: " & $iMaxQtyLeft & "x " & $g_asTroopNames[$iTroop])
- 		Sleep(2000)
- 		ToolTip('')
- 		GUICtrlSetData($g_ahTxtQTEdit_Troop[$iSlot], $iMaxQtyLeft)
+		Sleep(2000)
+		ToolTip('')
+		GUICtrlSetData($g_ahTxtQTEdit_Troop[$iSlot], $iMaxQtyLeft)
 		TotalTroopCount_QTEdit()
 	EndIf
 EndFunc   ;==>TxtQTEdit_Troop

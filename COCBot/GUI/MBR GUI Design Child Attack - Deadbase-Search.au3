@@ -1,4 +1,4 @@
-; #FUNCTION# ====================================================================================================================
+;FUNCTION# ====================================================================================================================
 ; Name ..........: MBR GUI Design
 ; Description ...: This file creates the "Search" tab under the "DeadBase" tab under the "Search & Attack" tab under the "Attack Plan" tab
 ; Syntax ........:
@@ -301,13 +301,13 @@ Func CreateAttackSearchDeadBaseSearch()
 			; create checkbox with handle $g_hChkDBMeetDeadEagle
 		$g_hChkDBMeetDeadEagle = GUICtrlCreateCheckbox("Dead Eagle Search", $x, $y, -1, -1)
 			GUICtrlSetOnEvent(-1, "chkDBMeetDeadEagle")
-			
+
 		$g_hTxtDeadEagleSearch = _GUICtrlCreateInput("50", $x + 115, $y, 20, 18)
 			;$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkMeetTrophy_Info_03", "Set the Max. amount of Trophies to search for on a village to attack.")
 			;_GUICtrlSetTip(-1, $sTxtTip)
 			;_GUICtrlEdit_SetReadOnly(-1, True)
 			;GUICtrlSetLimit(-1, 2)	
-			
+
 		;$g_hChkDBMeetTHO = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkMeetTHO", "Townhall Outside"), $x, $y, -1, -1)
 		;	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkMeetTHO_Info_01", "Search for a base that has an exposed Townhall. (Outside of Walls)"))
 	$y += 24

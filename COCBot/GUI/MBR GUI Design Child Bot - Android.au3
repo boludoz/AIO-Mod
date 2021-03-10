@@ -29,7 +29,7 @@ Func CreateBotAndroid()
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Distributors", "CmbCOCDistributors_Info_01", "Allow bot to launch COC based on the distribution chosen"))
 	GUICtrlSetOnEvent(-1, "cmbCOCDistributors")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
-	
+
 	Local $x = 25 + $W + 5, $y = 45, $W = 155
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR Emulators", "Group_02", "Emulator"), $x - 20, $y - 20, $W + 15, $h)
 	$y -= 2

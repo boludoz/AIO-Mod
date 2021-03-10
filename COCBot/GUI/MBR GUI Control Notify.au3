@@ -51,7 +51,7 @@ Func chkPBTGenabled()
 		$g_bNotifyTGEnable = False
 		GUICtrlSetState($g_hTxtNotifyTGToken, $GUI_DISABLE)
 	EndIf
-	
+
 	If GUICtrlRead($g_hChkNotifyDSEnable) = $GUI_CHECKED Then
 		$g_bNotifyDSEnable = True
 		GUICtrlSetState($g_hTxtNotifyDSToken, $GUI_ENABLE)

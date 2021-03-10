@@ -91,7 +91,7 @@ Func TabWarPreparationGUI()
 
 		GUICtrlCreateLabel("Total troops", $x + 290, $y, -1, -1)
 		$g_hLblCountWarTroopsTotal = GUICtrlCreateLabel("" & 0, $x + 350, $y, 30, 15, $SS_CENTER)
-			GUICtrlSetBkColor(-1, $COLOR_MONEYGREEN) ;lime, moneygreen
+			GUICtrlSetBkColor(-1, 0xD1DFE7) ;lime, moneygreen
 
 	$y += 25
 		For $i = 0 To $eSpellCount - 1 ; Spells
@@ -111,7 +111,7 @@ Func TabWarPreparationGUI()
 
 		GUICtrlCreateLabel("Total spells", $x + 290, $y, -1, -1)
 		$g_hLblCountWarSpellsTotal = GUICtrlCreateLabel("" & 0, $x + 350, $y, 30, 15, $SS_CENTER)
-			GUICtrlSetBkColor(-1, $COLOR_MONEYGREEN) ;lime, moneygreen
+			GUICtrlSetBkColor(-1, 0xD1DFE7) ;lime, moneygreen
 
 	$x = 13
 	$y += 25
@@ -136,8 +136,8 @@ Func ChkStopForWar()
 		For $i = $g_hCmbStopTime To $g_hTxtRequestCCForWar
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
-		GUICtrlSetBkColor($g_hLblCountWarTroopsTotal, $COLOR_MONEYGREEN)
-		GUICtrlSetBkColor($g_hLblCountWarSpellsTotal, $COLOR_MONEYGREEN)
+		GUICtrlSetBkColor($g_hLblCountWarTroopsTotal, 0xD1DFE7)
+		GUICtrlSetBkColor($g_hLblCountWarSpellsTotal, 0xD1DFE7)
 	EndIf
 EndFunc
 
@@ -179,8 +179,8 @@ Func ChkTrainWarTroop()
 		For $i = $g_hChkUseQuickTrainWar To $g_hLblCountWarSpellsTotal
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
-		GUICtrlSetBkColor($g_hLblCountWarTroopsTotal, $COLOR_MONEYGREEN)
-		GUICtrlSetBkColor($g_hLblCountWarSpellsTotal, $COLOR_MONEYGREEN)
+		GUICtrlSetBkColor($g_hLblCountWarTroopsTotal, 0xD1DFE7)
+		GUICtrlSetBkColor($g_hLblCountWarSpellsTotal, 0xD1DFE7)
 	EndIf
 EndFunc
 
@@ -191,8 +191,8 @@ Func chkUseQTrainWar()
 		For $i = $g_hLblRemoveArmy To $g_hLblCountWarSpellsTotal
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
-		GUICtrlSetBkColor($g_hLblCountWarTroopsTotal, $COLOR_MONEYGREEN)
-		GUICtrlSetBkColor($g_hLblCountWarSpellsTotal, $COLOR_MONEYGREEN)
+		GUICtrlSetBkColor($g_hLblCountWarTroopsTotal, 0xD1DFE7)
+		GUICtrlSetBkColor($g_hLblCountWarSpellsTotal, 0xD1DFE7)
 	Else
 		_GUI_Value_STATE("DISABLE", $g_ahChkArmyWar[0] & "#" & $g_ahChkArmyWar[1] & "#" & $g_ahChkArmyWar[2])
 		For $i = $g_hLblRemoveArmy To $g_hLblCountWarSpellsTotal
@@ -241,7 +241,7 @@ Func lblTotalWarTroopCount($TotalArmyCamp = 0)
 	GUICtrlSetData($g_hLblCountWarTroopsTotal, String($TotalTroopsToTrain))
 
 	If $TotalTroopsToTrain = $TotalArmyCamp Then
-		GUICtrlSetBkColor($g_hLblCountWarTroopsTotal, $COLOR_MONEYGREEN)
+		GUICtrlSetBkColor($g_hLblCountWarTroopsTotal, 0xD1DFE7)
 	ElseIf $TotalTroopsToTrain > $TotalArmyCamp / 2 And $TotalTroopsToTrain < $TotalArmyCamp Then
 		GUICtrlSetBkColor($g_hLblCountWarTroopsTotal, $COLOR_ORANGE)
 	Else
@@ -277,7 +277,7 @@ Func lblTotalWarSpellCount($TotalArmyCamp = 0 )
 	GUICtrlSetData($g_hLblCountWarSpellsTotal, String($TotalSpellsToBrew))
 
 	If $TotalSpellsToBrew = $TotalArmyCamp Then
-		GUICtrlSetBkColor($g_hLblCountWarSpellsTotal, $COLOR_MONEYGREEN)
+		GUICtrlSetBkColor($g_hLblCountWarSpellsTotal, 0xD1DFE7)
 	ElseIf $TotalSpellsToBrew > $TotalArmyCamp / 2 And $TotalSpellsToBrew < $TotalArmyCamp Then
 		GUICtrlSetBkColor($g_hLblCountWarSpellsTotal, $COLOR_ORANGE)
 	Else

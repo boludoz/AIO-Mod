@@ -31,11 +31,19 @@ Func TabHumanizationGUI()
 
 	$x -= 15
 	$y += 20
-	$g_hChkUseBotHumanization = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design - BotHumanization", "chkUseBotHumanization", "Enable Bot Humanization"), 50, $y - 19, 177, 17)
+	$g_hChkUseBotHumanization = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design - BotHumanization", "chkUseBotHumanization", "Enable Bot Humanization"), 50, $y, 136, 17)
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design - BotHumanization", "Label_02", "Bot performs more Human-Like behaviors."))
 	GUICtrlSetOnEvent(-1, "chkUseBotHumanization")
 	GUICtrlSetState(-1, $GUI_UNCHECKED)
 
-	$g_hChkLookAtRedNotifications = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design - BotHumanization", "chkLookAtRedNotifications", "Look at Red/Purple Flag on Buttons"), 50, $y + 11, 187, 17)
+	GUICtrlCreateLabel(" " & "HUMANiZATiON PATTERN", $x + 195, $y - 15, 209, 23)
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design - BotHumanization", "Label_19", "Humanization functions takes extra time,so use it wisely."))
+	GUICtrlSetFont(-1, 14, 800, 0, "Candara", 5) ;=> (-1, 16, $FW_BOLD, $GUI_FONTNORMAL, "Candara", $CLEARTYPE_QUALITY)
+	GUICtrlSetColor(-1, 0xBAC9D1)
+	GUICtrlSetBkColor (-1, 0x283740)
+
+	$y -= 2
+	$g_hChkLookAtRedNotifications = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design - BotHumanization", "chkLookAtRedNotifications", "Look Red/Purple Flag on Button"), 50, $y + 31, 182, 17)
 	GUICtrlSetOnEvent(-1, "chkLookAtRedNotifications")
 	GUICtrlSetState(-1, $GUI_UNCHECKED)
 

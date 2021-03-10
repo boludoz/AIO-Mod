@@ -645,7 +645,6 @@ Func btnTestImage()
 
 EndFunc   ;==>btnTestImage
 
-#Region - Custom - Team AIO Mod++
 Func btnTestVillageSize()
 
 	BeginImageTest()
@@ -653,29 +652,15 @@ Func btnTestVillageSize()
 	$g_bRunState = True
 	$g_bRestart = False
 
-	Local $Date = @YEAR & "-" & @MON & "-" & @MDAY
-	Local $Time = @HOUR & "." & @MIN & "." & @SEC
-	Local $sFilename = String($Date & "_" & $Time & "_.png")
-	
-	Local $iAngle = 0
-	
+	_CaptureRegion()
+	_CaptureRegion2Sync()
+
 	Local $a[2][2] = [["stone", "tree"], ["2stone", "2tree"]]
 	For $i = 0 To 1
-		_CaptureRegion()
-		_CaptureRegion2Sync()
-		
 		SetLog("Testing GetVillageSize(True, """ & $a[$i][0] & """, """ & $a[$i][1] & """)", $COLOR_INFO)
 		Local $hTimer = __TimerInit()
-		Local $village = GetVillageSize(True, $a[$i][0], $a[$i][1], Default, Default, False)
+		Local $village = GetVillageSize(True, $a[$i][0], $a[$i][1])
 		Local $ms = __TimerDiff($hTimer)
-		Local $subDirectory = $g_sProfileTempDebugPath & "TestVillageSize"
-		DirCreate($subDirectory)
-		Local $aCocDiamondECDTemp = StringSplit($CocDiamondECD, "|", $STR_NOCOUNT)
-		Local $aCocDiamondDCDTemp = StringSplit($CocDiamondDCD, "|", $STR_NOCOUNT)
-		Local $aCocDiamondECDTemp2 = $aCocDiamondECDTemp
-		Local $aCocDiamondDCDTemp2 = $aCocDiamondDCDTemp
-		Local $tempCocDiamondECD[4][2], $tempCocDiamondECD2[4][2]
-
 		If $village = 0 Then
 			SetLog("Village not found (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
 		Else
@@ -686,141 +671,12 @@ Func btnTestVillageSize()
 			SetLog("Village offset y: " & $village[3])
 			SetLog("Village stone " & $village[6] & ": " & $village[4] & ", " & $village[5])
 			SetLog("Village tree " & $village[9] & ": " & $village[7] & ", " & $village[8])
-			
-			Local $bOnBuilderBase = isOnBuilderBase(False, True)
-			If Not $bOnBuilderBase And IsArray($village) Then
-				$g_bDebugDisableZoomout = True
-				
-				; If $i = 0 Then
-					; $g_aiSearchZoomOutCounter[0] = 0
-				; Else
-					; $g_aiSearchZoomOutCounter[0] = 15
-				; EndIf
-				
-				Local $aCenterVillage = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", False, $g_bDebugSetlog)
-				$g_bDebugDisableZoomout = False
-				
-				If $i = 0 Then
-					For $i2 = 0 To UBound($aCocDiamondECDTemp) - 1
-						Local $temp = StringSplit($aCocDiamondECDTemp[$i2], ",", $STR_NOCOUNT)
-						If Not @error Then
-							$tempCocDiamondECD[$i2][0] = $temp[0]
-							$tempCocDiamondECD[$i2][1] = $temp[1]
-						EndIf
-					Next
-					
-					Local $tempCocDiamondDCD[4][2]
-					For $i3 = 0 To UBound($aCocDiamondDCDTemp) - 1
-						Local $temp = StringSplit($aCocDiamondDCDTemp[$i3], ",", $STR_NOCOUNT)
-						If Not @error Then
-							$tempCocDiamondDCD[$i3][0] = $temp[0]
-							$tempCocDiamondDCD[$i3][1] = $temp[1]
-						EndIf
-					Next
-					
-					Local $hEditedImage = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
-					Local $hGraphic = _GDIPlus_ImageGetGraphicsContext($hEditedImage)
-					Local $hPenSkyBlue = _GDIPlus_PenCreate(0xFF07E6FF, 3)
-					Local $hPenWhite = _GDIPlus_PenCreate(0xFFFFFFFF, 3)
-
-					_GDIPlus_GraphicsDrawLine($hGraphic, $tempCocDiamondECD[0][0], $tempCocDiamondECD[0][1], $tempCocDiamondECD[1][0], $tempCocDiamondECD[1][1], $hPenSkyBlue)
-					_GDIPlus_GraphicsDrawLine($hGraphic, $tempCocDiamondECD[1][0], $tempCocDiamondECD[1][1], $tempCocDiamondECD[2][0], $tempCocDiamondECD[2][1], $hPenSkyBlue)
-					_GDIPlus_GraphicsDrawLine($hGraphic, $tempCocDiamondECD[2][0], $tempCocDiamondECD[2][1], $tempCocDiamondECD[3][0], $tempCocDiamondECD[3][1], $hPenSkyBlue)
-					_GDIPlus_GraphicsDrawLine($hGraphic, $tempCocDiamondECD[3][0], $tempCocDiamondECD[3][1], $tempCocDiamondECD[0][0], $tempCocDiamondECD[0][1], $hPenSkyBlue)
-					_GDIPlus_GraphicsDrawLine($hGraphic, $tempCocDiamondDCD[0][0], $tempCocDiamondDCD[0][1], $tempCocDiamondDCD[1][0], $tempCocDiamondDCD[1][1], $hPenSkyBlue)
-					_GDIPlus_GraphicsDrawLine($hGraphic, $tempCocDiamondDCD[1][0], $tempCocDiamondDCD[1][1], $tempCocDiamondDCD[2][0], $tempCocDiamondDCD[2][1], $hPenSkyBlue)
-					_GDIPlus_GraphicsDrawLine($hGraphic, $tempCocDiamondDCD[2][0], $tempCocDiamondDCD[2][1], $tempCocDiamondDCD[3][0], $tempCocDiamondDCD[3][1], $hPenSkyBlue)
-					_GDIPlus_GraphicsDrawLine($hGraphic, $tempCocDiamondDCD[3][0], $tempCocDiamondDCD[3][1], $tempCocDiamondDCD[0][0], $tempCocDiamondDCD[0][1], $hPenSkyBlue)
-					
-					$iAngle = Round(angle(Number($village[4]), Number($village[5]), Number($village[7]), Number($village[8])))
-					addInfoToDebugImage($hGraphic, $hPenWhite, "X: " & Number($village[4]) & ", Y: " & Number($village[5]) & ", Ang.: " & $iAngle & ", " & String($village[6]), Number($village[4]), Number($village[5]))
-					addInfoToDebugImage($hGraphic, $hPenWhite, "X: " & Number($village[7]) & ", Y: " & Number($village[8]) & ", Ang.: " & $iAngle & ", " & String($village[9]), Number($village[7]), Number($village[8]))
-					
-					_GDIPlus_ImageSaveToFile($hEditedImage, $subDirectory & "\TestVillageSize" & $i+1 & "_" & $sFilename)
-					_GDIPlus_PenDispose($hPenSkyBlue)
-					_GDIPlus_PenDispose($hPenWhite)
-					_GDIPlus_GraphicsDispose($hGraphic)
-					_GDIPlus_BitmapDispose($hEditedImage)
-					
-				Else
-								
-					For $i2 = 0 To UBound($aCocDiamondECDTemp2) - 1
-						Local $temp = StringSplit($aCocDiamondECDTemp2[$i2], ",", $STR_NOCOUNT)
-						If Not @error Then
-							$tempCocDiamondECD2[$i2][0] = $temp[0]
-							$tempCocDiamondECD2[$i2][1] = $temp[1]
-						EndIf
-					Next
-					
-					Local $tempCocDiamondDCD2[4][2]
-					For $i3 = 0 To UBound($aCocDiamondDCDTemp2) - 1
-						Local $temp = StringSplit($aCocDiamondDCDTemp2[$i3], ",", $STR_NOCOUNT)
-						If Not @error Then
-							$tempCocDiamondDCD2[$i3][0] = $temp[0]
-							$tempCocDiamondDCD2[$i3][1] = $temp[1]
-						EndIf
-					Next
-					
-					Local $hEditedImage2 = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
-					Local $hGraphic2 = _GDIPlus_ImageGetGraphicsContext($hEditedImage2)
-					Local $hPenBlue = _GDIPlus_PenCreate(0xFF6052F9, 3)
-					Local $hPenWhite = _GDIPlus_PenCreate(0xFFFFFFFF, 3)
-
-					_GDIPlus_GraphicsDrawLine($hGraphic2, $tempCocDiamondECD2[0][0], $tempCocDiamondECD2[0][1], $tempCocDiamondECD2[1][0], $tempCocDiamondECD2[1][1], $hPenBlue)
-					_GDIPlus_GraphicsDrawLine($hGraphic2, $tempCocDiamondECD2[1][0], $tempCocDiamondECD2[1][1], $tempCocDiamondECD2[2][0], $tempCocDiamondECD2[2][1], $hPenBlue)
-					_GDIPlus_GraphicsDrawLine($hGraphic2, $tempCocDiamondECD2[2][0], $tempCocDiamondECD2[2][1], $tempCocDiamondECD2[3][0], $tempCocDiamondECD2[3][1], $hPenBlue)
-					_GDIPlus_GraphicsDrawLine($hGraphic2, $tempCocDiamondECD2[3][0], $tempCocDiamondECD2[3][1], $tempCocDiamondECD2[0][0], $tempCocDiamondECD2[0][1], $hPenBlue)
-					_GDIPlus_GraphicsDrawLine($hGraphic2, $tempCocDiamondDCD2[0][0], $tempCocDiamondDCD2[0][1], $tempCocDiamondDCD2[1][0], $tempCocDiamondDCD2[1][1], $hPenBlue)
-					_GDIPlus_GraphicsDrawLine($hGraphic2, $tempCocDiamondDCD2[1][0], $tempCocDiamondDCD2[1][1], $tempCocDiamondDCD2[2][0], $tempCocDiamondDCD2[2][1], $hPenBlue)
-					_GDIPlus_GraphicsDrawLine($hGraphic2, $tempCocDiamondDCD2[2][0], $tempCocDiamondDCD2[2][1], $tempCocDiamondDCD2[3][0], $tempCocDiamondDCD2[3][1], $hPenBlue)
-					_GDIPlus_GraphicsDrawLine($hGraphic2, $tempCocDiamondDCD2[3][0], $tempCocDiamondDCD2[3][1], $tempCocDiamondDCD2[0][0], $tempCocDiamondDCD2[0][1], $hPenBlue)
-					
-					$iAngle = Round(angle(Number($village[4]), Number($village[5]), Number($village[7]), Number($village[8])))
-					addInfoToDebugImage($hGraphic2, $hPenWhite, "X: " & Number($village[4]) & ", Y: " & Number($village[5]) & ", Ang.: " & $iAngle & ", " & String($village[6]) , Number($village[4]), Number($village[5]))
-					addInfoToDebugImage($hGraphic2, $hPenWhite, "X: " & Number($village[7]) & ", Y: " & Number($village[8]) & ", Ang.: " & $iAngle & ", " & String($village[9]) , Number($village[7]), Number($village[8]))
-
-					_GDIPlus_ImageSaveToFile($hEditedImage2, $subDirectory & "\TestVillageSize" & $i+1 & "_" & $sFilename)
-					_GDIPlus_PenDispose($hPenWhite)
-					_GDIPlus_PenDispose($hPenBlue)
-					_GDIPlus_GraphicsDispose($hGraphic2)
-					_GDIPlus_BitmapDispose($hEditedImage2)
-				EndIf
-			EndIf
 		EndIf
 	Next
-	
-
 	EndImageTest()
 
 	$g_bRunState = $currentRunState
 EndFunc   ;==>btnTestVillageSize
-
-Global Const $PI = 4 * ATan(1)
-
-Func angle($cx, $cy, $ex, $ey)
-  Local $dy = $ey - $cy
-  Local $dx = $ex - $cx
-  Local $theta = atan2($dy, $dx); // range (-PI, PI]
-  $theta *= 180 / $PI; // rads to degs, range (-180, 180]
-  return $theta
-EndFunc
-
-Func atan2($y, $x)
-    Return (2 * ATan($y / ($x + Sqrt($x * $x + $y * $y))))
-EndFunc;==>atan2
-
-#cs
-
-Local $cx = 434, $cy = 582, $ex = 768, $ey =331
-Local $angle = angle($cx, $cy, $ex, $ey)
-
-Local $endX = $cx + cos(_Radian($angle)) * 40;
-Local $endY = $cy + sin(_Radian($angle)) * 40;
-
-ConsoleWrite($endX & " " & $endY & " " & $angle)
-#ce
-
-#EndRegion - Custom - Team AIO Mod++
 
 Func btnTestDeadBase()
 	Local $hBMP = 0, $hHBMP = 0
@@ -1131,12 +987,12 @@ Func btnRunFunction($bExecuteCapture = False)
 	; Prevent bugs.
 	Local $sFunc = GUICtrlRead($g_hTxtRunFunction)
 	$iError = @error
-	
+
 	If ($iError <> 0) Or StringIsSpace($sFunc) Or StringInStr($sFunc, "btnRunFunction()") > 0 Then 
 		Setlog($sSCap & "| Bad call.", $COLOR_ERROR)
 		Return
 	EndIf
-	
+
 	Setlog($sSCap & "| Run Function : " & $sFunc, $COLOR_ACTION)
 
 	Local $iTimer = __TimerInit()

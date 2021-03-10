@@ -101,7 +101,7 @@ Func CreateBottomPanel()
 		; Only farm - Team AiO MOD++
 		$g_hChkOnlyFarm = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Bottom", "ChkOnlyFarm", "Only Farm"), $x + 115, $y + 72, -1, 20)
 			GUICtrlSetFont(-1, 7)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "ChkOnlyFarm_01", "Only attack."))
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "ChkOnlyFarm_01", "Only Attack."))
 			GUICtrlSetOnEvent(-1, "chkOnlyFarm")
 
 		$g_hBtnAttackNowDB = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnAttackNowDB", "DB Attack"), $x + 200, $y + 42, 60, 19)
