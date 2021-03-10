@@ -32,7 +32,7 @@ Func CreateSplashScreen($iSteps = Default)
 	Local $bCustomWindow = IsString($iSteps)
 
 	If $iSteps = Default Then
-		$g_iSplashTotalSteps = 10
+		$g_iSplashTotalSteps = 13 ; Team AIO MOD++
 	Else
 		$iGuiState = @SW_SHOW
 		$bDisableSplash = False

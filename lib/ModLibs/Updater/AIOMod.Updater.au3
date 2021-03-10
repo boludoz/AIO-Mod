@@ -99,23 +99,24 @@ Func UpdateMod()
 	$g_sMBRDir = StringReplace($g_sMBRDir, "\lib\ModLibs\Updater", "")
 	If $g_bFuseMsg = True Then Return
 	Local $bUpdate = False
+	Local $iNewVersion
 	; If not $g_bCheckVersion Then Return
 
 	If FileExists(@ScriptDir & "\BigDog.inf") Then
-		
+
 		; Open the file for reading and store the handle to a variable.
 		Local $hFileOpen = FileOpen(@ScriptDir & "\BigDog.inf", $FO_READ)
 		If $hFileOpen = -1 Then
 			SetLog("An error occurred when reading the file.")
 			Return False
 		EndIf
-		
+
 		; Read the fist line of the file using the handle returned by FileOpen.
 		Local $sFileRead = FileReadLine($hFileOpen, 1)
-		
+
 		; Close the handle returned by FileOpen.
 		FileClose($hFileOpen)
-		
+
 		If StringInStr($sFileRead, "v") Then $g_sModVersion = $sFileRead
 	EndIf
 
@@ -126,7 +127,7 @@ Func UpdateMod()
 	Local $Temp = BinaryToString($sCorrectStdOut)
 
 	If $Temp <> "" And Not @error Then
-		
+
 		Local $g_aBotVersionN = StringSplit($g_sModVersion, " ", 2)
 		Local $g_iBotVersionN
 		If @error Then
@@ -158,12 +159,12 @@ Func UpdateMod()
 		SetDebugLog($Temp)
 	EndIf
 
-	If $bUpdate Then
+	If $bUpdate And not FileExists(@ScriptDir & "\NoNotify.txt") Then
 		_Sleep(1500)
 		WinActivate(@AutoItPID)
-		Local $iNewVersion = MsgBox(4, "New version " & $g_sBotGitVersion, "Do you want to download the latest update?", 360)
+		$iNewVersion = MsgBox($IDABORT + $MB_ICONINFORMATION, "New version " & $g_sBotGitVersion, "Do you want to download the latest update?", 360)
 
-		If $iNewVersion = 6 Then
+		If $iNewVersion = $IDYES Then
 			Local $aFiles[1] ; Set in '1', array more stable.
 
 			$aFiles = _FileListToArrayRec($g_sMBRDir, "*||build*", $FLTAR_FILES + $FLTAR_NOHIDDEN + $FLTAR_NOSYSTEM + $FLTAR_NOLINK, $FLTAR_RECUR, $FLTAR_SORT)
@@ -176,35 +177,39 @@ Func UpdateMod()
 
 			Local $sUrl = 'https://github.com/boludoz/AIO-Mod/releases/download/v' & $g_sBotGitVersion & '/MyBot.run.zip'
 
-			Local $iBytesReceived, $iFileSizeOnline, $hInet, $iPct
+			Local $iBytesReceived, $iFileSizeOnline, $hInet, $iPct, $sLocate, $iFileSize
 
-			; SetDebugLog("Upgrading clash of clans. " & $s)
-			Local $sLocate = $g_sMBRDir & "\MyBot.run.zip"
-			ProgressOn("Download", "Upgrading AIO MOD.", "0%")
-			$hInet = InetGet($sUrl, $sLocate, 1, 1) ;Forces a reload from the remote site and return immediately and download in the background
-			$iFileSizeOnline = InetGetSize($sUrl) ;Get file size
-			While Not InetGetInfo($hInet, 2) ;Loop until download is finished+
-				If _Sleep(500) Then Return SetError(0) ;Sleep for half a second to avoid flicker in the progress bar
-				$iBytesReceived = InetGetInfo($hInet, 0) ;Get bytes received
-				$iPct = Int($iBytesReceived / $iFileSizeOnline * 100) ;Calculate percentage
-				ProgressSet($iPct, $iPct & "%") ;Set progress bar
-			WEnd
+			Do
+			   ; SetDebugLog("Upgrading clash of clans. " & $s)
+			   $sLocate = $g_sMBRDir & "\MyBot.run.zip"
+			   ; SplashTextOn("Download", 'Upgrading AIO MOD.', 400, 50, Default, Default, BitOR($DLG_NOTITLE, $DLG_NOTONTOP, $DLG_MOVEABLE, $DLG_TEXTVCENTER), 'Tahoma', 10)
+			   ProgressOn("Download", "Upgrading AIO MOD.", "0%", -1, -1, BitOr($DLG_NOTONTOP, $DLG_MOVEABLE))
+			   $hInet = InetGet($sUrl, $sLocate, 1, 1) ;Forces a reload from the remote site and return immediately and download in the background
+			   $iFileSizeOnline = InetGetSize($sUrl) ;Get file size
+			   While Not InetGetInfo($hInet, 2) ;Loop until download is finished+
+				  If _Sleep(500) Then Return SetError(0) ;Sleep for half a second to avoid flicker in the progress bar
+				  $iBytesReceived = InetGetInfo($hInet, 0) ;Get bytes received
+				  $iPct = Int($iBytesReceived / $iFileSizeOnline * 100) ;Calculate percentage
+				  ProgressSet($iPct, $iPct & "%") ;Set progress bar
+			   WEnd
 
-			ProgressOff()
+			   ProgressOff()
 
-			; SetDebugLog($sLocate)
-			Local $iFileSize = FileGetSize($sLocate)
-			If $iFileSizeOnline <> $iFileSize Then
-				; SetDebugLog("DownloadFromURLAD | FAIL. " & $iFileSize, $COLOR_ERROR)
-				; Return SetError(-1, 0, -1)
-				$g_bFuseMsg = True
-				Return
-			Else
-				SetDebugLog("DownloadFromURLAD | OK. " & $iFileSize, $COLOR_SUCCESS)
-				$g_bFuseMsg = True
-				; SetError(0)
-				; Return $iFileSize
-			EndIf
+			   $iFileSize = FileGetSize($sLocate)
+			   If $iFileSizeOnline <> $iFileSize Then
+				  $iNewVersion = MsgBox($MB_RETRYCANCEL + $MB_ICONERROR, "New version " & $g_sBotGitVersion, "Download fail. Please Check Your Internet Connection and try again.", 360)
+				  If $iNewVersion = $IDRETRY Then ContinueLoop
+				  $g_bFuseMsg = True
+				  Return
+			   Else
+				  SetDebugLog("DownloadFromURLAD | OK. " & $iFileSize, $COLOR_SUCCESS)
+				  $g_bFuseMsg = True
+				  ; SetError(0)
+				  ; Return $iFileSize
+			   EndIf
+			   ExitLoop
+			Until $g_bFuseMsg = True
+
 
 			Local $aKillAllInFolder = ProcessFindBy($g_sMBRDir, "", True, True)
 
@@ -234,6 +239,12 @@ Func UpdateMod()
 			EndIf
 
 			Exit
+		ElseIf $iNewVersion = $IDNO Then
+			$iNewVersion = MsgBox($MB_YESNO + $MB_ICONINFORMATION, "New version " & $g_sBotGitVersion, "Do you want to be notified of new versions in the future?", 360)
+			If $iNewVersion = $IDNO Then
+				Local $hHandle = FileOpen(@ScriptDir & "\NoNotify.txt", $FO_APPEND)
+				FileClose($hHandle)
+			EndIf
 		EndIf
 	Else
 		$g_bFuseMsg = True
@@ -346,7 +357,7 @@ Func KillProcess($iPid, $sProcess_info = "", $iAttempts = 3)
 					If _Sleep(1000) Then Return False
 					If ProcessExists($iPid) = 0 Then
 						SetDebugLog("KillProcess(" & $iCount & "): PID = " & $iPid & " killed (using taskkill -f -t)" & $sProcess_info)
-					EndIf		
+					EndIf
 				EndIf
 				$iCount += 1
 			Until ($iCount > $iAttempts) Or not ProcessExists($iPid)

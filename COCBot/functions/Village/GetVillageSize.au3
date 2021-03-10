@@ -25,7 +25,7 @@
 ; ===============================================================================================================================
 Global $g_sZoomOutModes = "Normal"
 
-Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix = Default, $sFixedPrefix = Default, $bOnBuilderBase = Default)
+Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix = Default, $sFixedPrefix = Default, $bOnBuilderBase = Default, $bCaptureRegion = Default)
 	FuncEnter(GetVillageSize)
 	
 	#Region - Builder Base - Team AIO Mod++
@@ -40,6 +40,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		$sFixedPrefix = ""
 		If $g_bUpdateSharedPrefs Then $sFixedPrefix = "fixed"
 	EndIf
+	If $bCaptureRegion = Default Then $bCaptureRegion = True
 	
 	
 	Local $aResult = 0
@@ -50,9 +51,11 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	Local $iAdditionalY = 75
 	Local $iAdditionalX = 100
 	
+	If $bCaptureRegion Then _CaptureRegion2()
+
 	#Region - Custom themes - Team AIO Mod++
 	If $bOnBuilderBase = Default Then
-		$bOnBuilderBase = isOnBuilderBase(True)
+		$bOnBuilderBase = isOnBuilderBase($bCaptureRegion, False)
 	EndIf
 	
 	; Team AIO Mod++
@@ -99,9 +102,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	;Local $z = $c / 473.60282919315 ; don't use size of 440, as beta already using reference village
 	Local Const $iRefSize = 445 ;458 ; 2019-01-02 Update village measuring as outer edges didn't align anymore
 	Local Const $iDefSize = 444 ; 2019-04-01 New default size using shared_prefs zoom level
-	
-	_CaptureRegion2()
-	
+		
 	If UBound($aZoomOutModes) > 0 Then
 		For $iB = 0 To UBound($aZoomOutModes) - 1
 			$sDirectory = $sDirectoryOri & $aZoomOutModes[$iB] & "\"
