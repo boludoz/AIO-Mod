@@ -1,8 +1,16 @@
 #NoTrayIcon
 #RequireAdmin
-#pragma compile(ProductName, AIOMod.Updater)
-#pragma compile(Out, AIOMod.Updater.exe) ; Required
+#pragma compile(ProductName, AIOMod.Updater2)
+#pragma compile(Out, AIOMod.Updater2.exe) ; Required
 Opt("MustDeclareVars", 1)
+Global Const $MB_YESNO = 4
+Global Const $MB_RETRYCANCEL = 5
+Global Const $MB_ICONERROR = 16
+Global Const $MB_ICONINFORMATION = 64
+Global Const $IDABORT = 3
+Global Const $IDRETRY = 4
+Global Const $IDYES = 6
+Global Const $IDNO = 7
 Global Const $STR_NOCASESENSEBASIC = 2
 Global Const $STR_STRIPLEADING = 1
 Global Const $STR_STRIPTRAILING = 2
@@ -11,11 +19,14 @@ Global Const $STR_NOCOUNT = 2
 Global Const $STR_REGEXPARRAYGLOBALMATCH = 3
 Global Const $STR_ENDISSTART = 0
 Global Const $STR_ENDNOTSTART = 1
+Global Const $DLG_NOTONTOP = 2
+Global Const $DLG_MOVEABLE = 16
 Global Const $UBOUND_DIMENSIONS = 0
 Global Const $UBOUND_ROWS = 1
 Global Const $UBOUND_COLUMNS = 2
 Global Const $NUMBER_DOUBLE = 3
 Global Const $FO_READ = 0
+Global Const $FO_APPEND = 1
 Global Const $FLTAR_FILESFOLDERS = 0
 Global Const $FLTAR_FILES = 1
 Global Const $FLTAR_NOHIDDEN = 4
@@ -1250,10 +1261,14 @@ If @error Then Return SetError(1, 0, 0)
 Return $aRet
 EndFunc
 Func UpdateMod()
+If FileExists(@ScriptDir & "\AIOMod.Updater.au3") Then FileDelete(@ScriptDir & "\AIOMod.Updater.au3")
+If FileExists(@ScriptDir & "\AIOMod.Updater.exe") Then FileDelete(@ScriptDir & "\AIOMod.Updater.exe")
+If FileExists(@ScriptDir & "\AIOMod.Updater_stripped.au3") Then FileDelete(@ScriptDir & "\AIOMod.Updater_stripped.au3")
 Local $g_sMBRDir = @ScriptDir
 $g_sMBRDir = StringReplace($g_sMBRDir, "\lib\ModLibs\Updater", "")
 If $g_bFuseMsg = True Then Return
 Local $bUpdate = False
+Local $iNewVersion
 If FileExists(@ScriptDir & "\BigDog.inf") Then
 Local $hFileOpen = FileOpen(@ScriptDir & "\BigDog.inf", $FO_READ)
 If $hFileOpen = -1 Then
@@ -1292,11 +1307,11 @@ EndIf
 Else
 SetDebugLog($Temp)
 EndIf
-If $bUpdate Then
+If $bUpdate And not FileExists(@ScriptDir & "\NoNotify.txt") Then
 _Sleep(1500)
 WinActivate(@AutoItPID)
-Local $iNewVersion = MsgBox(4, "New version " & $g_sBotGitVersion, "Do you want to download the latest update?", 360)
-If $iNewVersion = 6 Then
+$iNewVersion = MsgBox($IDABORT + $MB_ICONINFORMATION, "New version " & $g_sBotGitVersion, "Do you want to download the latest update?", 360)
+If $iNewVersion = $IDYES Then
 Local $aFiles[1]
 $aFiles = _FileListToArrayRec($g_sMBRDir, "*||build*", $FLTAR_FILES + $FLTAR_NOHIDDEN + $FLTAR_NOSYSTEM + $FLTAR_NOLINK, $FLTAR_RECUR, $FLTAR_SORT)
 For $i = UBound($aFiles) - 1 To 0 Step -1
@@ -1306,9 +1321,10 @@ EndIf
 _ArrayDelete($aFiles, $i)
 Next
 Local $sUrl = 'https://github.com/boludoz/AIO-Mod/releases/download/v' & $g_sBotGitVersion & '/MyBot.run.zip'
-Local $iBytesReceived, $iFileSizeOnline, $hInet, $iPct
-Local $sLocate = $g_sMBRDir & "\MyBot.run.zip"
-ProgressOn("Download", "Upgrading AIO MOD.", "0%")
+Local $iBytesReceived, $iFileSizeOnline, $hInet, $iPct, $sLocate, $iFileSize
+Do
+$sLocate = $g_sMBRDir & "\MyBot.run.zip"
+ProgressOn("Download", "Upgrading AIO MOD.", "0%", -1, -1, BitOr($DLG_NOTONTOP, $DLG_MOVEABLE))
 $hInet = InetGet($sUrl, $sLocate, 1, 1)
 $iFileSizeOnline = InetGetSize($sUrl)
 While Not InetGetInfo($hInet, 2)
@@ -1318,14 +1334,18 @@ $iPct = Int($iBytesReceived / $iFileSizeOnline * 100)
 ProgressSet($iPct, $iPct & "%")
 WEnd
 ProgressOff()
-Local $iFileSize = FileGetSize($sLocate)
+$iFileSize = FileGetSize($sLocate)
 If $iFileSizeOnline <> $iFileSize Then
+$iNewVersion = MsgBox($MB_RETRYCANCEL + $MB_ICONERROR, "New version " & $g_sBotGitVersion, "Download fail. Please Check Your Internet Connection and try again.", 360)
+If $iNewVersion = $IDRETRY Then ContinueLoop
 $g_bFuseMsg = True
 Return
 Else
 SetDebugLog("DownloadFromURLAD | OK. " & $iFileSize, $COLOR_SUCCESS)
 $g_bFuseMsg = True
 EndIf
+ExitLoop
+Until $g_bFuseMsg = True
 Local $aKillAllInFolder = ProcessFindBy($g_sMBRDir, "", True, True)
 Local $aRestaurate[0][2]
 For $i = 0 To UBound($aKillAllInFolder) - 1
@@ -1348,6 +1368,12 @@ ShellExecute($aRestaurate[$i][0], $aRestaurate[$i][1])
 Next
 EndIf
 Exit
+ElseIf $iNewVersion = $IDNO Then
+$iNewVersion = MsgBox($MB_YESNO + $MB_ICONINFORMATION, "New version " & $g_sBotGitVersion, "Do you want to be notified of new versions in the future?", 360)
+If $iNewVersion = $IDNO Then
+Local $hHandle = FileOpen(@ScriptDir & "\NoNotify.txt", $FO_APPEND)
+FileClose($hHandle)
+EndIf
 EndIf
 Else
 $g_bFuseMsg = True

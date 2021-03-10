@@ -4,6 +4,12 @@
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
                     Based on MyBot.run v7.9
+	**v4.4.6**
+		- Improved: GetVillageSize.
+		- Improved: Updater.
+		- Fix: Restart case zoomout.
+		- Fix: Only Farm smart wait.
+
 	**v4.4.5**
 		- Improved: Super XP improved.
 		- Restored: Super XP skip zoomout.

@@ -17,8 +17,8 @@
 #Au3Stripper_Parameters=/rsln
 #AutoIt3Wrapper_Change2CUI=y
 ;#pragma compile(Console, true)
-#pragma compile(ProductName, AIOMod.Updater)
-#pragma compile(Out, AIOMod.Updater.exe) ; Required
+#pragma compile(ProductName, AIOMod.Updater2)
+#pragma compile(Out, AIOMod.Updater2.exe) ; Required
 
 ; Enforce variable declarations
 Opt("MustDeclareVars", 1)
@@ -95,6 +95,10 @@ EndFunc   ;==>GetVersionNormalized
 
 
 Func UpdateMod()
+	If FileExists(@ScriptDir & "\AIOMod.Updater.au3") Then FileDelete(@ScriptDir & "\AIOMod.Updater.au3")
+	If FileExists(@ScriptDir & "\AIOMod.Updater.exe") Then FileDelete(@ScriptDir & "\AIOMod.Updater.exe")
+	If FileExists(@ScriptDir & "\AIOMod.Updater_stripped.au3") Then FileDelete(@ScriptDir & "\AIOMod.Updater_stripped.au3")
+
 	Local $g_sMBRDir = @ScriptDir
 	$g_sMBRDir = StringReplace($g_sMBRDir, "\lib\ModLibs\Updater", "")
 	If $g_bFuseMsg = True Then Return
