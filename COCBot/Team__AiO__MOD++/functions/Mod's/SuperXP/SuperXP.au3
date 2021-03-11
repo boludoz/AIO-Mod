@@ -140,10 +140,12 @@ Func MainSXHandler()
 		SetLog("Cannot get in Main Screen!! Exiting SuperXP", $COLOR_ERROR)
 		Return False
 	EndIf
+	
+	Local $bKing = IIf($g_bBKingSX = $eHeroNone, False, BitAND($g_iHeroAvailable, $eHeroKing) = $eHeroKing)
+	Local $bQueen = IIf($g_bAQueenSX = $eHeroNone, False, BitAND($g_iHeroAvailable, $eHeroQueen) = $eHeroQueen)
+	Local $bWarden = IIf($g_bGWardenSX = $eHeroNone, False, BitAND($g_iHeroAvailable, $eHeroWarden) = $eHeroWarden)
 
-	$bCanGainXP = ($g_iHeroAvailable <> $eHeroNone And (IIf($g_bBKingSX = $eHeroNone, False, BitAND($g_iHeroAvailable, $eHeroKing) = $eHeroKing) Or _
-														IIf($g_bAQueenSX = $eHeroNone, False, BitAND($g_iHeroAvailable, $eHeroQueen) = $eHeroQueen) Or _
-														IIf($g_bGWardenSX = $eHeroNone, False, BitAND($g_iHeroAvailable, $eHeroWarden) = $eHeroWarden) And _
+	$bCanGainXP = ($g_iHeroAvailable <> $eHeroNone And ($bKing Or $bQueen Or $bWarden And _
 														IIf($g_iActivateOptionSX = 1, $g_bIsFullArmywithHeroesAndSpells = False, True) And Number($g_iGainedXP) < Number($g_iMaxXPtoGain)))
 
 	If $g_bDebugSX Then SetDebugLog("$g_iHeroAvailable = " & $g_iHeroAvailable)
@@ -757,10 +759,6 @@ Func WaitForNoClouds()
 	Return True
 EndFunc   ;==>WaitForNoClouds
 
-Func SuperXPDragSmart()
-
-EndFunc   ;==>SuperXPDragSmart
-
 Func OpenGoblinMapSX()
 	If $g_bDebugSX Then SetDebugLog("Super XP : Begin OpenGoblinMapSX", $COLOR_DEBUG)
 
@@ -774,9 +772,7 @@ Func OpenGoblinMapSX()
 	If RandomSleep(500) Then Return
 	
 	Click(Random(278, 592, 1), Random(58, 120, 1), 1, 0) ; Clicks Away Random
-	
-	Local $aDragToGoblinMapSX = SuperXPDragSmart()
-	
+		
 	If $g_bDebugSX Then SetDebugLog("Super XP : Smart Drag.", $COLOR_DEBUG)
 	Local $iCounter = 0
 	Local $aMapPick = -1
@@ -791,7 +787,7 @@ Func OpenGoblinMapSX()
 		$iCounter += 1
 		If Not $g_bRunState Then ExitLoop
 		If $g_bDebugSX Then SetDebugLog("Super XP : OpenGoblinMapSuper XP : Loop #" & $iCounter)
-		ClickDrag(Random(305, 310, 1), 138, Random(305, 310, 1), 665, 100)
+		ClickDrag(Random(305, 310, 1), 138, Random(305, 310, 1), 565, 100)
 		If $g_bDebugSetlog Then SetDebugLog("Button OpenGoblinMapSX= " & _GetPixelColor($aFirstMapPosition[0], $aFirstMapPosition[1], True), $COLOR_DEBUG) ;Debug
 		
 	Until $iCounter > 25 Or _ColorCheck(_GetPixelColor($aFirstMapPosition[0], $aFirstMapPosition[1], True, "OpenGoblinMapSX-Check"), Hex($aFirstMapPosition[2], 6), $aFirstMapPosition[3])
@@ -803,8 +799,8 @@ Func OpenGoblinMapSX()
 		If $g_bDebugSX Then SetDebugLog("Super XP : OpenGoblinMapSuper XP : Return False", $COLOR_DEBUG)
 		Return False
 	Else
-		If $aMapPick[UBound($aMapPick) -1][2] > 482 Then
-			ClickDrag(Random(305, 310, 1), 300, Random(305, 310, 1), 138, 100)
+		If $aMapPick[UBound($aMapPick) -1][2] > 420 Then
+			ClickDrag(Random(305, 310, 1), 304, Random(305, 310, 1), 138, 100)
 			For $i = 0 To 1
 				If RandomSleep(500) Then Return
 				$aMapPick = FixPosMapSX()
@@ -818,31 +814,22 @@ Func OpenGoblinMapSX()
 			Return False
 		EndIf
 		
-		; If Not (StringInStr($aMapPick[0][0], "Big") > 0) Then 
-			PureClick($aMapPick[0][1], $aMapPick[0][2], 1, 0)
-			If RandomSleep(250) Then Return
-		; EndIf
+		PureClick($aMapPick[0][1], $aMapPick[0][2], 1, 0)
+		If RandomSleep(250) Then Return
 		
 		Local $aPort[2] = [$aMapPick[UBound($aMapPick) -1][1], $aMapPick[UBound($aMapPick) -1][2]]
-		If IsGoblinMapSXLocked($aPort) = True Then
-			If $g_iGoblinMapOptSX = 2 Then
-				SetLog("Are you kidding me? " & $g_sGoblinMapOptSX & " is Locked, Goblin Picnic selected.", $COLOR_ERROR)
-				$g_iGoblinMapOptSX = 1
-				$g_sGoblinMapOptSX = "Goblin Picnic"
+		If $g_iGoblinMapOptSX = 1 Then
+			If (StringInStr($aMapPick[0][0], "Arena") > 0) Then ; FixPosMapSX check IsGoblinMapSXLocked, and here not is necessary.
+				SetLog("Switching to The Arena, for win more XP now.", $COLOR_INFO)
+				$g_iGoblinMapOptSX = 2
+				$g_sGoblinMapOptSX = "The Arena"
 				radGoblinMapOptSX()
-				PureClickP($aCloseSingleTab, 1, 0, "#CloseSingleTab") ;Clicks X
-				Return False
-			Else
+			ElseIf IsGoblinMapSXLocked($aPort) = True Then
 				SetLog("Are you kidding me? " & $g_sGoblinMapOptSX & " is Locked", $COLOR_ERROR)
 				DisableSX()
 				SafeReturnSX()
 				Return False
 			EndIf
-		ElseIf $g_iGoblinMapOptSX = 1 And (StringInStr($aMapPick[0][0], "Arena") > 0) Then
-			SetLog("Switch to The Arena, for more XP.", $COLOR_INFO)
-			$g_iGoblinMapOptSX = 2
-			$g_sGoblinMapOptSX = "The Arena"
-			radGoblinMapOptSX()
 		EndIf
 
 		If $g_bDebugSX Then SetDebugLog("Super XP : OpenGoblinMapSuper XP : Clicking On Attack Btn: " & $aMapPick[0][1] & ", " & $aMapPick[0][2])
@@ -885,6 +872,10 @@ Func FixPosMapSX()
 	Local $aMapPickR[1][4]
 	Local $aMapPick = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\SuperXP\Find", 0, "282, 138, 833, 671", True)
 	
+	Local $bKing = IIf($g_bBKingSX = $eHeroNone, False, BitAND($g_iHeroAvailable, $eHeroKing) = $eHeroKing)
+	Local $bQueen = IIf($g_bAQueenSX = $eHeroNone, False, BitAND($g_iHeroAvailable, $eHeroQueen) = $eHeroQueen)
+	Local $bWarden = IIf($g_bGWardenSX = $eHeroNone, False, BitAND($g_iHeroAvailable, $eHeroWarden) = $eHeroWarden)
+
 	If UBound($aMapPick) < 1 and not @Error Then Return -1
 	
 	For $i = UBound($aMapPick) -1 To 0 Step -1
@@ -898,18 +889,35 @@ Func FixPosMapSX()
 					$aMapPickR[0][1] = $aMapPick[$i][1]
 					$aMapPickR[0][2] = $aMapPick[$i][2]
 					$aMapPickR[0][3] = $aMapPick[$i][3]
-					
+					$g_iGoblinMapOptSX = 1
+					$g_sGoblinMapOptSX = "Goblin Picnic"
 					Return $aMapPickR
 				EndIf
 			Case Else
+				
 				; 619 Arena
 				If Abs(Pixel_Distance(614, 0, $aMapPick[$i][1], 0)) < 10 Then
 					
+					If $bKing And Not ($bQueen Or $bWarden) Then 
+						SetLog("Are you kidding me? " & $g_sGoblinMapOptSX & " is OK, but you can't attack it with king on this map, jumping to Goblin Picnic.", $COLOR_ERROR)
+						Return -1 ; Quick fix in no king active case.
+					EndIf
+					
+					Local $aPort[2] = [$aMapPick[$i][1], $aMapPick[$i][2]]
+					If IsGoblinMapSXLocked($aPort) = True Then
+						SetLog("Are you kidding me? " & $g_sGoblinMapOptSX & " is Locked, jumping to Goblin Picnic.", $COLOR_ERROR)
+						$g_iGoblinMapOptSX = 1
+						$g_sGoblinMapOptSX = "Goblin Picnic"
+						radGoblinMapOptSX()
+						Return -1
+					EndIf
+
 					$aMapPickR[0][0] = $aMapPick[$i][0]
 					$aMapPickR[0][1] = $aMapPick[$i][1]
 					$aMapPickR[0][2] = $aMapPick[$i][2]
 					$aMapPickR[0][3] = $aMapPick[$i][3]
-					
+					$g_iGoblinMapOptSX = 2
+					$g_sGoblinMapOptSX = "The Arena"
 					Return $aMapPickR
 				EndIf
 		EndSwitch
@@ -938,26 +946,16 @@ Func IsInGoblinMapSX($Retry = True, $maxRetry = 30, $timeBetweenEachRet = 300)
 
 	Local $bFound = False
 	Local $iCounter = 0
-	Local $sPathImage = ($g_iGoblinMapOptSX = 1) ? ($g_sImgVerifySX & "Picnic") : ($g_sImgVerifySX & "Arena" )
-	While Not $bFound
+	Do 
 		If _Sleep($timeBetweenEachRet) Then Return False
-        If Not IsInAttackSX() Then
-            $iCounter += 1
-            If $iCounter = $maxRetry Then
-                $bFound = False
-                ExitLoop
-            EndIf
-            ContinueLoop
-        EndIf
-
-		$bFound = _WaitForCheckImg($sPathImage, "0, 0, 150, 31")
+		$bFound = IsInAttackSX()
 
 		$iCounter += 1
 		If $iCounter = $maxRetry Then
 			$bFound = False
 			ExitLoop
 		EndIf
-	WEnd
+	Until $bFound
 	If $g_bDebugSX Then SetDebugLog("Super XP : IsInGoblinMapSX = " & $bFound, $COLOR_DEBUG)
 	Return $bFound
 EndFunc   ;==>IsInGoblinMapSX

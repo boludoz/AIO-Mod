@@ -24,7 +24,6 @@ Global Const $g_sImgPathCamps = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Bu
 
 #Region SuperXP
 Global $g_sImgFindSX = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\SuperXP\Find\"
-Global $g_sImgVerifySX = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\SuperXP\Verify\"
 Global $g_sImgLockedSX = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\SuperXP\Locked\"
 #EndRegion SuperXP
 
