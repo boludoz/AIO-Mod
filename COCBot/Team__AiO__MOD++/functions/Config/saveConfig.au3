@@ -351,9 +351,9 @@ Func SaveConfig_MOD_Humanization()
 	For $i = 0 To 1
 		_Ini_Add("Bot Humanization", "cmbPause[" & $i & "]", _GUICtrlComboBox_GetCurSel($g_acmbPause[$i]))
 	Next
-	For $i = 0 To 1
-		_Ini_Add("Bot Humanization", "humanMessage[" & $i & "]", GUICtrlRead($g_ahumanMessage[$i]))
-	Next
+	; For $i = 0 To 1
+		; _Ini_Add("Bot Humanization", "humanMessage[" & $i & "]", GUICtrlRead($g_ahumanMessage[$i]))
+	; Next
 	_Ini_Add("Bot Humanization", "cmbMaxActionsNumber", _GUICtrlComboBox_GetCurSel($g_hCmbMaxActionsNumber))
 	_Ini_Add("Bot Humanization", "challengeMessage", GUICtrlRead($g_hChallengeMessage))
 EndFunc   ;==>SaveConfig_MOD_Humanization

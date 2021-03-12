@@ -688,9 +688,9 @@ Func ApplyConfig_MOD_Humanization($TypeReadSave)
 			For $i = 0 To 1
 				_GUICtrlComboBox_SetCurSel($g_acmbPause[$i], $g_iacmbPause[$i])
 			Next
-			For $i = 0 To 1
-				GUICtrlSetData($g_ahumanMessage[$i], $g_iahumanMessage[$i])
-			Next
+			; For $i = 0 To 1
+				; GUICtrlSetData($g_ahumanMessage[$i], $g_iahumanMessage[$i])
+			; Next
 			_GUICtrlComboBox_SetCurSel($g_hCmbMaxActionsNumber, $g_iCmbMaxActionsNumber)
 			GUICtrlSetData($g_hChallengeMessage, $g_iTxtChallengeMessage)
 			cmbStandardReplay()
@@ -708,9 +708,9 @@ Func ApplyConfig_MOD_Humanization($TypeReadSave)
 			For $i = 0 To 1
 				$g_iacmbPause[$i] = _GUICtrlComboBox_GetCurSel($g_acmbPause[$i])
 			Next
-			For $i = 0 To 1
-				$g_iahumanMessage[$i] = GUICtrlRead($g_ahumanMessage[$i])
-			Next
+			; For $i = 0 To 1
+				; $g_iahumanMessage[$i] = GUICtrlRead($g_ahumanMessage[$i])
+			; Next
 			$g_iCmbMaxActionsNumber = _GUICtrlComboBox_GetCurSel($g_iCmbMaxActionsNumber)
 			$g_iTxtChallengeMessage = GUICtrlRead($g_hChallengeMessage)
 	EndSwitch

@@ -1,17 +1,17 @@
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: Bot Humanization / ClanActions.au3
-; Description ...: This file contains all functions of Bot Humanization feature - Clan Part
-; Syntax ........: ---
-; Parameters ....: ---
-; Return values .: ---
-; Author ........: RoroTiti
-; Modified ......: 11.11.2016
-; Remarks .......: This file is part of MyBotRun. Copyright 2018
-;                  MyBotRun is distributed under the terms of the GNU GPL
-; Related .......: ---
-; Link ..........: https://www.mybot.run
-; Example .......: ---
-;================================================================================================================================
+; Description ...: This file controls the "Humanization" tab
+; Syntax ........:
+; Parameters ....: None
+; Return values .: None
+; Author ........: RoroTiti, NguyenAnhHD
+; Modified ......: RoroTiti (11.11.2016), Team AiO MOD++ (2019)
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2021
+;                  MyBot is distributed under the terms of the GNU GPL
+; Related .......:
+; Link ..........: https://github.com/MyBotRun/MyBot/wiki
+; Example .......: No
+; ===============================================================================================================================
 
 Func LookAtWarLog()
 	Click(20, 380 + $g_iMidOffsetY) ; open chat
@@ -468,11 +468,39 @@ Func BotHumanization()
 EndFunc   ;==>BotHumanization
 
 Func RandomHumanAction()
-	For $i = 0 To 12 ; ($i = 0 To 11) Global Chat should Fix on SC update
+	For $i = 0 To 8 ; ($i = 0 To 12) Global Chat should Fix on SC update
 		SetActionPriority($i)
 	Next
 	$g_iActionToDo = _ArrayMaxIndex($g_aSetActionPriority)
 	Switch $g_iActionToDo
+		Case 0
+			SetLog("AiO++ Humanization Watch a Defense Now. Let's Go!", $COLOR_INFO)
+			WatchDefense()
+		Case 1
+			SetLog("AiO++ Humanization Watch an Attack Now. Let's Go!", $COLOR_INFO)
+			WatchAttack()
+		Case 2
+			SetLog("AiO++ Humanization Look at War Log Now. Let's Go!", $COLOR_INFO)
+			LookAtWarLog()
+		Case 3
+			SetLog("AiO++ Humanization Visit Clanmates Now. Let's Go!", $COLOR_INFO)
+			VisitClanmates()
+		Case 4
+			SetLog("AiO++ Humanization Visit Best Players Now. Let's Go!", $COLOR_INFO)
+			VisitBestPlayers()
+		Case 5
+			SetLog("AiO++ Humanization Look at Best Clans Now. Let's Go!", $COLOR_INFO)
+			LookAtBestClans()
+		Case 6
+			SetLog("AiO++ Humanization Look at Current War Now. Let's Go!", $COLOR_INFO)
+			LookAtCurrentWar()
+		Case 7
+			SetLog("AiO++ Humanization Watch War Replay Now. Let's Go!", $COLOR_INFO)
+			WatchWarReplays()
+		Case 8
+			SetLog("AiO++ Humanization Do Nothing For Now.", $COLOR_INFO)
+			DoNothing()
+		#cs
 		Case 0
 			SetLog("AiO++ Humanization Read Clan Chat Now. Let's Go!", $COLOR_INFO)
 			ReadClanChat()
@@ -512,6 +540,7 @@ Func RandomHumanAction()
 		Case 12
 			SetLog("AiO++ Humanization Launch Challenges Now. Let's Go!", $COLOR_INFO)
 			LaunchChallenges()
+		#ce
 	EndSwitch
 EndFunc   ;==>RandomHumanAction
 

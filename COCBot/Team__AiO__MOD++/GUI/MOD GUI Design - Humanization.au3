@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 #include-once
-Global $g_hChkUseBotHumanization = 0, $g_hChkUseAltRClick = 0, $g_acmbPriority = 0, $g_hChallengeMessage = 0, $g_ahumanMessage
+Global $g_hChkUseBotHumanization = 0, $g_hChkUseAltRClick = 0, $g_acmbPriority = 0, $g_hChallengeMessage = 0;, $g_ahumanMessage
 Global $g_hLabel1 = 0, $g_hLabel2 = 0, $g_hLabel3 = 0, $g_hLabel4 = 0
 Global $g_hLabel5 = 0, $g_hLabel6 = 0, $g_hLabel7 = 0, $g_hLabel8 = 0
 Global $g_hLabel9 = 0, $g_hLabel10 = 0, $g_hLabel11 = 0, $g_hLabel12 = 0
@@ -53,6 +53,7 @@ Func TabHumanizationGUI()
 	$g_hLabel1 = GUICtrlCreateLabel(GetTranslatedFileIni("MOD GUI Design - BotHumanization", "Label_01", "Read The Clan Chat"), $x + 232, $y + 3, 110, 17)
 	$g_acmbPriority[0] = GUICtrlCreateCombo("", $x + 342, $y, 75, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 	GUICtrlSetData(-1, GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptions", $g_sFrequenceChain), GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptionNever", "Never"))
+	#cs
 	GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModChat, $x, $y + 32, 32, 32)
 	$g_hLabel4 = GUICtrlCreateLabel(GetTranslatedFileIni("MOD GUI Design - BotHumanization", "Label_04", "Say"), $x + 40, $y + 30, 31, 17)
 	$g_ahumanMessage[0] = _GUICtrlCreateInput(GetTranslatedFileIni("MOD GUI Design - BotHumanization", "HumanMessage_01", "Hello !"), $x + 65, $y + 25, 121, 21)
@@ -66,7 +67,8 @@ Func TabHumanizationGUI()
 	GUICtrlSetData(-1, GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptions", -1), GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptionNever", -1))
 
 	$y += 87
-
+	#ce
+	$y += 30 ; Team AIO Mod++
 	GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModRepeat, $x, $y + 5, 32, 32)
 	$g_hLabel5 = GUICtrlCreateLabel(GetTranslatedFileIni("MOD GUI Design - BotHumanization", "Label_05", "Watch Defenses"), $x + 40, $y + 5, 110, 17)
 	$g_acmbPriority[3] = GUICtrlCreateCombo("", $x + 140, $y, 75, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))

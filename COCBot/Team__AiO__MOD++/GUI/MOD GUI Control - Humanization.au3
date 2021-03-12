@@ -4,9 +4,9 @@
 ; Syntax ........:
 ; Parameters ....: None
 ; Return values .: None
-; Author ........: NguyenAnhHD
-; Modified ......: Team AiO MOD++ (2019)
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
+; Author ........: RoroTiti, NguyenAnhHD
+; Modified ......: RoroTiti (11.11.2016), Team AiO MOD++ (2019)
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2021
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
