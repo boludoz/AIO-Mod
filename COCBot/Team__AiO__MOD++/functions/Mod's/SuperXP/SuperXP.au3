@@ -839,10 +839,51 @@ Func OpenGoblinMapSX()
 		While IsInSPPage()
 			If _Sleep(50) Then Return
 			$iCounter += 1
+			; RETRY
+			If $iCounter > 100 Then
+				Click(Random(278, 592, 1), Random(58, 120, 1), 1, 0) ; Clicks Away Random
+				
+				For $i = 0 To 1
+					If RandomSleep(500) Then Return
+					$aMapPick = FixPosMapSX()
+					If IsArray($aMapPick) Then ExitLoop
+				Next
+
+				If Not IsArray($aMapPick) Then
+					PureClickP($aCloseSingleTab, 1, 0, "#CloseSingleTab") ;Clicks X
+					If $g_bDebugSX Then SetDebugLog("Super XP : OpenGoblinMapSuper XP : Return False", $COLOR_DEBUG)
+					Return False
+				EndIf
+				
+				PureClick($aMapPick[0][1], $aMapPick[0][2], 1, 0)
+				If RandomSleep(250) Then Return
+				
+				Local $aPort[2] = [$aMapPick[UBound($aMapPick) -1][1], $aMapPick[UBound($aMapPick) -1][2]]
+				If $g_iGoblinMapOptSX = 1 Then
+					If (StringInStr($aMapPick[0][0], "Arena") > 0) Then ; FixPosMapSX check IsGoblinMapSXLocked, and here not is necessary.
+						SetLog("Switching to The Arena, for win more XP now.", $COLOR_INFO)
+						$g_iGoblinMapOptSX = 2
+						$g_sGoblinMapOptSX = "The Arena"
+						radGoblinMapOptSX()
+					ElseIf IsGoblinMapSXLocked($aPort) = True Then
+						SetLog("Are you kidding me? " & $g_sGoblinMapOptSX & " is Locked", $COLOR_ERROR)
+						DisableSX()
+						SafeReturnSX()
+						Return False
+					EndIf
+				EndIf
+
+				If $g_bDebugSX Then SetDebugLog("Super XP : OpenGoblinMapSuper XP : Clicking On Attack Btn: " & $aMapPick[0][1] & ", " & $aMapPick[0][2])
+				Click($aMapPick[UBound($aMapPick) -1][1] + Random(20,30,1), $aMapPick[UBound($aMapPick) -1][2] + Random(125,135,1)) ; Click On Attack Button
+				
+				ExitLoop
+			EndIf
 			If $iCounter > 150 Then
 				SetLog("Still in SinglePlayer Page!! Something Strange Happened", $COLOR_ERROR)
-				$bCanGainXP = False
-				Return False
+				; $bCanGainXP = False
+				; Return False
+				PureClickP($aCloseSingleTab, 1, 0, "#CloseSingleTab") ;Clicks X
+				Return True
 			EndIf
 		WEnd
 		
