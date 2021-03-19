@@ -541,6 +541,7 @@ Global Const $g_sIcnBldGold = @ScriptDir & "\Images\gold.png"
 Global Const $g_sIcnBldElixir = @ScriptDir & "\Images\elixir.png"
 Global Const $g_sIcnBldTrophy = @ScriptDir & "\Images\trophy.png"
 Global Const $g_sIcnSuperXP = @ScriptDir & "\Images\Stats\SuperXP.png"
+Global Const $g_sIcnHumanization = @ScriptDir & "\Images\Stats\Humanization.png"
 Global Const $g_sIcnChatAction = @ScriptDir & "\Images\Stats\ChatAction.png"
 
 ; Improve GUI interactions by disabling bot window redraw
