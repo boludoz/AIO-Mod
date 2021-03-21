@@ -23,7 +23,7 @@ Global $g_hChkLookAtRedNotifications = 0, $g_hCmbMaxActionsNumber = 0
 Global $g_acmbPriority[13] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_acmbMaxSpeed[2] = [0, 0]
 Global $g_acmbPause[2] = [0, 0]
-Global $g_ahumanMessage[2] = ["", ""]
+; Global $g_ahumanMessage[2] = ["", ""]
 
 Func TabHumanizationGUI()
 	Local $x = 25, $y = 45

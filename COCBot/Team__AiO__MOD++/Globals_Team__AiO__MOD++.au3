@@ -195,8 +195,8 @@ Global $bCanGainXP = False
 Global $g_iacmbPriority[13] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_iacmbMaxSpeed[2] = [1, 1]
 Global $g_iacmbPause[2] = [0, 0]
-Global $g_iahumanMessage[2] = ["Hello !", "Hello !"]
-Global $g_iTxtChallengeMessage = "Ready to Challenge?"
+; Global $g_iahumanMessage[2] = ["Hello !", "Hello !"]
+; Global $g_iTxtChallengeMessage = "Ready to Challenge?"
 
 Global $g_iMinimumPriority, $g_iMaxActionsNumber, $g_iActionToDo
 Global $g_aSetActionPriority[13] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -211,9 +211,9 @@ Global $g_bOnReplayWindow, $g_iReplayToPause
 Global $g_iLastLayout = 0
 
 ; ChatActions - Team AiO MOD++
-Global $g_bChatClan = False, $g_sDelayTimeClan = 2, $g_bClanUseResponses = False, $g_bClanUseGeneric = False, $g_bCleverbot = False
+Global $g_bChatClan = True, $g_sDelayTimeClan = 2, $g_bClanUseResponses = False, $g_bClanUseGeneric = False, $g_bCleverbot = False
 Global $g_bUseNotify = False, $g_bPbSendNew = False
-Global $g_bEnableFriendlyChallenge = False, $g_sDelayTimeFC = 5, $g_bOnlyOnRequest = False
+Global $g_bEnableFriendlyChallenge = True, $g_sDelayTimeFC = 5, $g_bOnlyOnRequest = False
 Global $g_bFriendlyChallengeBase[6] = [False, False, False, False, False, False]
 Global $g_abFriendlyChallengeHours[24] = [True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True]
 Global $ChatbotStartTime, $ChatbotQueuedChats[0], $ChatbotReadQueued = False, $ChatbotReadInterval = 0, $ChatbotIsOnInterval = False, _
