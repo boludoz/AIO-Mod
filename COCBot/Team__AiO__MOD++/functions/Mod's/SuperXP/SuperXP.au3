@@ -776,20 +776,41 @@ Func OpenGoblinMapSX()
 	If $g_bDebugSX Then SetDebugLog("Super XP : Smart Drag.", $COLOR_DEBUG)
 	Local $iCounter = 0
 	Local $aMapPick = -1
+	Static $iTimes = 0
 	Do
-	
-		For $i = 0 To 1
-			If RandomSleep(250) Then Return
-			$aMapPick = FixPosMapSX()
-			If IsArray($aMapPick) Then ExitLoop 2
-		Next
+		If $iCounter = 0 Then
+			For $i = 0 To 1
+				If RandomSleep(250) Then Return
+				$aMapPick = FixPosMapSX()
+				If IsArray($aMapPick) Then ExitLoop 2
+			Next
+		EndIf
 		
 		$iCounter += 1
 		If Not $g_bRunState Then ExitLoop
 		If $g_bDebugSX Then SetDebugLog("Super XP : OpenGoblinMapSuper XP : Loop #" & $iCounter)
-		ClickDrag(Random(305, 310, 1), 138, Random(305, 310, 1), 565, 100)
+		
+		; y = 260
+		; y ai = 658
+		If ($iTimes <> 0) And ($iTimes <= $iCounter * 2) Then
+			ClickDrag(Random(305, 310, 1), 138, Random(305, 310, 1), 658, 100)
+		Else
+			ClickDrag(Random(305, 310, 1), 138, Random(305, 310, 1), 398, 100)
+		EndIf
+		
+		If _Sleep(100) Then Return
+		
 		If $g_bDebugSetlog Then SetDebugLog("Button OpenGoblinMapSX= " & _GetPixelColor($aFirstMapPosition[0], $aFirstMapPosition[1], True), $COLOR_DEBUG) ;Debug
 		
+		For $i = 0 To 1
+			If RandomSleep(250) Then Return
+			$aMapPick = FixPosMapSX()
+			If IsArray($aMapPick) Then 
+				If $iTimes = 0 Then $iTimes = $iCounter
+				ExitLoop 2
+			EndIf
+		Next
+
 	Until $iCounter > 25 Or _ColorCheck(_GetPixelColor($aFirstMapPosition[0], $aFirstMapPosition[1], True, "OpenGoblinMapSX-Check"), Hex($aFirstMapPosition[2], 6), $aFirstMapPosition[3])
 
 	If RandomSleep(500) Then Return
@@ -1044,18 +1065,21 @@ Func OpenSinglePlayerPage()
 EndFunc   ;==>OpenSinglePlayerPage
 
 Func WaitForMain($clickAway = True, $DELAYEachCheck = 50, $maxRetry = 100)
-	If $clickAway Then ClickP($aAway, 2, 0, "#0346") ;Click Away
-
-	Local $iCounter = 0
-	While Not (IsMainPage())
-		If _Sleep($DELAYEachCheck) Then Return True
-		If $clickAway Then ClickP($aAway, 2, 0, "#0346") ;Click Away
-		$iCounter += 1
-		If $iCounter > $maxRetry Then
-			Return False
-		EndIf
-	WEnd
-
+	If Not IsMainPage(1) Then ClickP($aAway, 2, 0, "#0346") ;Click Away
+	If _Sleep($DELAYEachCheck) Then Return True
+	
+	; If Not IsMainPage() Then
+		; Local $iCounter = 0
+		; While Not (IsMainPage())
+			; If _Sleep($DELAYEachCheck) Then Return True
+			; If $clickAway Then ClickP($aAway, 2, 0, "#0346") ;Click Away
+			; $iCounter += 1
+			; If $iCounter > $maxRetry Then
+				; Return False
+			; EndIf
+		; WEnd
+	; EndIf
+	
 	Return True
 EndFunc   ;==>WaitForMain
 
