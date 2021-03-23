@@ -34,12 +34,13 @@ Func TabChatActionsGUI()
 	GUICtrlCreateGroup(GetTranslatedFileIni("MOD GUI Design - ChatActions", "Group_02", "Clan Chat"), $x - 20, $y - 20, $g_iSizeWGrpTab2 - 1, 118)
 	$x -= 10
 	$y -= 5
-		; $g_hChkClanChat = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design - ChatActions", "ChkClanChat", "Enable Clan Chat"), $x, $y, -1, -1)
-			; _GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design - ChatActions", "ChkClanChat_Info_01", "Use clan chat to send messages"))
-			; GUICtrlSetState(-1, $GUI_UNCHECKED)
-			; GUICtrlSetOnEvent(-1, "chkClanChat")
-
-		$g_hTxtDelayTimeClan = _GUICtrlCreateInput("2", $x + 138, $y - 2, 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+	
+		GUICtrlCreateLabel("Frequency :", $x + 26, $y + 4, 60, 17)
+		$g_acmbPriority[0] = GUICtrlCreateCombo("", $x + 128, $y, 89, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
+		GUICtrlSetData(-1, GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptions", -1),  GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptionNever", -1))
+		GUICtrlSetOnEvent(-1, "cmbChatActionsChat")
+        GUICtrlCreateLabel("Use each ... minutes :", $x + 272, $y + 4, 107, 17)
+		$g_hTxtDelayTimeClan = GUICtrlCreateInput("2", $x + 400, $y, 25, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design - ChatActions", "TxtDelayTime_Info_01", -1))
 			GUICtrlSetLimit(-1, 2)
 
@@ -77,12 +78,15 @@ Func TabChatActionsGUI()
 	GUICtrlCreateGroup(GetTranslatedFileIni("MOD GUI Design - ChatActions", "Group_03", "Friend Challenge"), $x - 20, $y - 20, $g_iSizeWGrpTab2 - 1, 117)
 	$x -= 10
 	$y -= 5
-		; $g_hChkEnableFriendlyChallenge = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design - ChatActions", "ChkEnableFriendlyChallenge", "Enable Friend Challenge"), $x, $y, -1, -1)
-			; GUICtrlSetOnEvent(-1, "chkEnableFriendlyChallenge")
-
-		$g_hTxtDelayTimeFC = _GUICtrlCreateInput("5", $x + 138, $y - 2, 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		GUICtrlCreateLabel("Frequency :", $x + 26, $y + 4, 60, 17)
+		$g_acmbPriority[2] = GUICtrlCreateCombo("", $x + 128, $y, 89, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
+		GUICtrlSetData(-1, GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptions", -1),  GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptionNever", -1))
+		GUICtrlSetOnEvent(-1, "cmbChatActionsFC")
+        GUICtrlCreateLabel("Use each ... minutes :", $x + 272, $y + 4, 107, 17)
+		$g_hTxtDelayTimeFC = GUICtrlCreateInput("5", $x + 400, $y, 25, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design - ChatActions", "TxtDelayTime_Info_01", -1))
 			GUICtrlSetLimit(-1, 2)
+
 
 	$y += 20
 		$g_hChkOnlyOnRequest = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design - ChatActions", "ChkOnlyOnRequest", "Cond. in chat"), $x, $y, -1, -1)

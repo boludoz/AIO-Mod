@@ -434,16 +434,19 @@ Func ApplyConfig_MOD_ChatActions($TypeReadSave)
 	; <><><> ChatActions <><><>
 	Switch $TypeReadSave
 		Case "Read"
-			GUICtrlSetState($g_hChkClanChat, $g_bChatClan = True ? $GUI_CHECKED : $GUI_UNCHECKED)
+			_GUICtrlComboBox_SetCurSel($g_acmbPriority[0], $g_iacmbPriority[0])
+			_GUICtrlComboBox_SetCurSel($g_acmbPriority[2], $g_iacmbPriority[2])
+
+			; GUICtrlSetState($g_hChkClanChat, $g_bChatClan = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hTxtDelayTimeClan, $g_sDelayTimeClan)
 			GUICtrlSetState($g_hChkUseResponses, $g_bClanUseResponses = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkUseGeneric, $g_bClanUseGeneric = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkCleverbot, $g_bCleverbot = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkChatNotify, $g_bUseNotify = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkPbSendNewChats, $g_bPbSendNew = True ? $GUI_CHECKED : $GUI_UNCHECKED)
-			chkClanChat()
+			cmbChatActionsChat()
 
-			GUICtrlSetState($g_hChkEnableFriendlyChallenge, $g_bEnableFriendlyChallenge = True ? $GUI_CHECKED : $GUI_UNCHECKED)
+			; GUICtrlSetState($g_hChkEnableFriendlyChallenge, $g_bEnableFriendlyChallenge = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hTxtDelayTimeFC, $g_sDelayTimeFC)
 			GUICtrlSetState($g_hChkOnlyOnRequest, $g_bOnlyOnRequest = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			For $i = 0 To 5
@@ -452,10 +455,13 @@ Func ApplyConfig_MOD_ChatActions($TypeReadSave)
 			For $i = 0 To 23
 				GUICtrlSetState($g_ahChkFriendlyChallengeHours[$i], $g_abFriendlyChallengeHours[$i] = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			Next
-			chkEnableFriendlyChallenge()
+			cmbChatActionsFC()
 			ChatGuiEditUpdate()
 		Case "Save"
-			$g_bChatClan = (GUICtrlRead($g_hChkClanChat) = $GUI_CHECKED)
+			$g_iacmbPriority[0] = _GUICtrlComboBox_GetCurSel($g_acmbPriority[0])
+			$g_iacmbPriority[2] = _GUICtrlComboBox_GetCurSel($g_acmbPriority[2])
+
+			; $g_bChatClan = (GUICtrlRead($g_hChkClanChat) = $GUI_CHECKED)
 			$g_sDelayTimeClan = GUICtrlRead($g_hTxtDelayTimeClan)
 			$g_bClanUseResponses = (GUICtrlRead($g_hChkUseResponses) = $GUI_CHECKED)
 			$g_bClanUseGeneric = (GUICtrlRead($g_hChkUseGeneric) = $GUI_CHECKED)
@@ -463,7 +469,7 @@ Func ApplyConfig_MOD_ChatActions($TypeReadSave)
 			$g_bUseNotify = (GUICtrlRead($g_hChkChatNotify) = $GUI_CHECKED)
 			$g_bPbSendNew = (GUICtrlRead($g_hChkPbSendNewChats) = $GUI_CHECKED)
 
-			$g_bEnableFriendlyChallenge = (GUICtrlRead($g_hChkEnableFriendlyChallenge) = $GUI_CHECKED)
+			; $g_bEnableFriendlyChallenge = (GUICtrlRead($g_hChkEnableFriendlyChallenge) = $GUI_CHECKED)
 			$g_sDelayTimeFC = GUICtrlRead($g_hTxtDelayTimeFC)
 			$g_bOnlyOnRequest = (GUICtrlRead($g_hChkOnlyOnRequest) = $GUI_CHECKED)
 			For $i = 0 To 5
@@ -679,7 +685,8 @@ Func ApplyConfig_MOD_Humanization($TypeReadSave)
 			GUICtrlSetState($g_hChkUseAltRClick, $g_bUseAltRClick ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkLookAtRedNotifications, $g_bLookAtRedNotifications ? $GUI_CHECKED : $GUI_UNCHECKED)
 			chkUseBotHumanization()
-			For $i = 0 To UBound($g_acmbPriority) -1
+			For $i = 0 To UBound($g_iacmbPriority) -1
+				If $i = 0 Or $i = 2 Then ContinueLoop
 				_GUICtrlComboBox_SetCurSel($g_acmbPriority[$i], $g_iacmbPriority[$i])
 			Next
 			For $i = 0 To 1
@@ -700,6 +707,7 @@ Func ApplyConfig_MOD_Humanization($TypeReadSave)
 			$g_bUseAltRClick = (GUICtrlRead($g_hChkUseAltRClick) = $GUI_CHECKED)
 			$g_bLookAtRedNotifications = (GUICtrlRead($g_hChkLookAtRedNotifications) = $GUI_CHECKED)
 			For $i = 0 To UBound($g_iacmbPriority) -1
+				If $i = 0 Or $i = 2 Then ContinueLoop
 				$g_iacmbPriority[$i] = _GUICtrlComboBox_GetCurSel($g_acmbPriority[$i])
 			Next
 			For $i = 0 To 1

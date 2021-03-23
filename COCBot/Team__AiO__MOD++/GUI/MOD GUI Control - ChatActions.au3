@@ -64,8 +64,8 @@ Func ChatGuiEditUpdate()
 EndFunc   ;==>ChatGuiEditUpdate
 
 ; Clan Chat
-Func chkClanChat()
-	If GUICtrlRead($g_hChkClanChat) = $GUI_CHECKED Then
+Func cmbChatActionsChat()
+	If (_GUICtrlComboBox_GetCurSel($g_acmbPriority[0]) > 0) Or (_GUICtrlComboBox_GetCurSel($g_acmbPriority[0]) > 0) Then
 		$g_bChatClan = True
 		For $i = $g_hTxtDelayTimeClan To $g_hChkCleverbot
 			GUICtrlSetState($i, $GUI_ENABLE)
@@ -84,10 +84,32 @@ Func chkClanChat()
 		GUICtrlSetState($g_hChkPbSendNewChats, $GUI_DISABLE)
 		If GUICtrlRead($g_hChkEnableFriendlyChallenge) = $GUI_UNCHECKED Then GUIToggle_OnlyDuringHours(False)
 	EndIf
-EndFunc   ;==>chkClanChat
+EndFunc   ;==>cmbChatActionsChat
+
+; Func chkClanChat()
+	; If GUICtrlRead($g_hChkClanChat) = $GUI_CHECKED Then
+		; $g_bChatClan = True
+		; For $i = $g_hTxtDelayTimeClan To $g_hChkCleverbot
+			; GUICtrlSetState($i, $GUI_ENABLE)
+		; Next
+		; GUICtrlSetState($g_hChkChatNotify, $GUI_ENABLE)
+		; GUICtrlSetState($g_hChkPbSendNewChats, $GUI_ENABLE)
+		; GUIToggle_OnlyDuringHours(True)
+		; chkUseResponses()
+		; chkUseGeneric()
+	; Else
+		; $g_bChatClan = False
+		; For $i = $g_hTxtDelayTimeClan To $g_hTxtEditGeneric
+			; GUICtrlSetState($i, $GUI_DISABLE)
+		; Next
+		; GUICtrlSetState($g_hChkChatNotify, $GUI_DISABLE)
+		; GUICtrlSetState($g_hChkPbSendNewChats, $GUI_DISABLE)
+		; If GUICtrlRead($g_hChkEnableFriendlyChallenge) = $GUI_UNCHECKED Then GUIToggle_OnlyDuringHours(False)
+	; EndIf
+; EndFunc   ;==>chkClanChat
 
 Func chkUseResponses()
-	If GUICtrlRead($g_hChkClanChat) = $GUI_CHECKED Then
+	If (_GUICtrlComboBox_GetCurSel($g_acmbPriority[0]) > 0) Or (_GUICtrlComboBox_GetCurSel($g_acmbPriority[0]) > 0) Then
 		If GUICtrlRead($g_hChkUseResponses) = $GUI_CHECKED Then
 			$g_bClanUseResponses = True
 			GUICtrlSetState($g_hLblEditResponses, $GUI_ENABLE)
@@ -101,7 +123,7 @@ Func chkUseResponses()
 EndFunc   ;==>chkUseResponses
 
 Func chkUseGeneric()
-	If GUICtrlRead($g_hChkClanChat) = $GUI_CHECKED Then
+	If (_GUICtrlComboBox_GetCurSel($g_acmbPriority[0]) > 0) Or (_GUICtrlComboBox_GetCurSel($g_acmbPriority[0]) > 0) Then
 		If GUICtrlRead($g_hChkUseGeneric) = $GUI_CHECKED Then
 			$g_bClanUseGeneric = True
 			GUICtrlSetState($g_hLblEditGeneric, $GUI_ENABLE)
@@ -115,8 +137,25 @@ Func chkUseGeneric()
 EndFunc   ;==>chkUseGeneric
 
 ; Friendly Challenge
-Func chkEnableFriendlyChallenge()
-	If GUICtrlRead($g_hChkEnableFriendlyChallenge) = $GUI_CHECKED Then
+; Func chkEnableFriendlyChallenge()
+	; If GUICtrlRead($g_hChkEnableFriendlyChallenge) = $GUI_CHECKED Then
+		; $g_bEnableFriendlyChallenge = True
+		; For $i = $g_hTxtDelayTimeFC To $g_hTxtChallengeText
+			; GUICtrlSetState($i, $GUI_ENABLE)
+		; Next
+		; GUIToggle_OnlyDuringHours(True)
+		; chkOnlyOnRequest()
+	; Else
+		; $g_bEnableFriendlyChallenge = False
+		; For $i = $g_hTxtDelayTimeFC To $g_hTxtKeywordForRequest
+			; GUICtrlSetState($i, $GUI_DISABLE)
+		; Next
+		; If GUICtrlRead($g_hChkClanChat) = $GUI_UNCHECKED Then GUIToggle_OnlyDuringHours(False)
+	; EndIf
+; EndFunc   ;==>chkEnableFriendlyChallenge
+
+Func cmbChatActionsFC()
+	If (_GUICtrlComboBox_GetCurSel($g_acmbPriority[2]) > 0) Or (_GUICtrlComboBox_GetCurSel($g_acmbPriority[2]) > 0) Then
 		$g_bEnableFriendlyChallenge = True
 		For $i = $g_hTxtDelayTimeFC To $g_hTxtChallengeText
 			GUICtrlSetState($i, $GUI_ENABLE)
@@ -130,10 +169,10 @@ Func chkEnableFriendlyChallenge()
 		Next
 		If GUICtrlRead($g_hChkClanChat) = $GUI_UNCHECKED Then GUIToggle_OnlyDuringHours(False)
 	EndIf
-EndFunc   ;==>chkEnableFriendlyChallenge
+EndFunc   ;==>cmbChatActionsFC
 
 Func chkOnlyOnRequest()
-	If GUICtrlRead($g_hChkEnableFriendlyChallenge) = $GUI_CHECKED Then
+	If (_GUICtrlComboBox_GetCurSel($g_acmbPriority[2]) > 0) Or (_GUICtrlComboBox_GetCurSel($g_acmbPriority[2]) > 0) Then
 		If GUICtrlRead($g_hChkOnlyOnRequest) = $GUI_CHECKED Then
 			$g_bOnlyOnRequest = True
 			GUICtrlSetState($g_hLblKeywordForRequest, $GUI_ENABLE)
@@ -174,8 +213,8 @@ Func chkFriendlyChallengeHoursE2()
 	GUICtrlSetState($g_hChkFriendlyChallengeHoursE2, $GUI_UNCHECKED)
 EndFunc   ;==>chkFriendlyChallengehoursE2
 
-Func GUIToggle_OnlyDuringHours($Enable = True)
-	If $Enable Then
+Func GUIToggle_OnlyDuringHours($bEnable = True)
+	If $bEnable Then
 		For $i = $g_hLblChatActionsOnlyDuringHours To $g_hLblFriendlyChallengeHoursPM
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next

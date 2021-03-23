@@ -438,7 +438,7 @@ EndFunc   ;==>GemClick
 ; ================================================== HUMAN FUNCTIONS PART ================================================== ;
 
 Func BotHumanization()
-	If $g_bUseBotHumanization = True Then
+	If $g_bUseBotHumanization = True Or $g_bChatClan = True Or $g_bEnableFriendlyChallenge = True Then
 		If Not $g_bRunState Then Return
 		Local $NoActionsToDo = 0
 		SetLog("OK, Let AiO++ Makes The Bot More Human Like!", $COLOR_SUCCESS1)
@@ -468,48 +468,20 @@ Func BotHumanization()
 EndFunc   ;==>BotHumanization
 
 Func RandomHumanAction()
-	For $i = 0 To 8 ; ($i = 0 To 12) Global Chat should Fix on SC update
+	For $i = 0 To 12 ; ($i = 0 To 12) Global Chat should Fix on SC update
 		SetActionPriority($i)
 	Next
 	$g_iActionToDo = _ArrayMaxIndex($g_aSetActionPriority)
 	Switch $g_iActionToDo
 		Case 0
-			SetLog("AiO++ Humanization Watch a Defense Now. Let's Go!", $COLOR_INFO)
-			WatchDefense()
-		Case 1
-			SetLog("AiO++ Humanization Watch an Attack Now. Let's Go!", $COLOR_INFO)
-			WatchAttack()
-		Case 2
-			SetLog("AiO++ Humanization Look at War Log Now. Let's Go!", $COLOR_INFO)
-			LookAtWarLog()
-		Case 3
-			SetLog("AiO++ Humanization Visit Clanmates Now. Let's Go!", $COLOR_INFO)
-			VisitClanmates()
-		Case 4
-			SetLog("AiO++ Humanization Visit Best Players Now. Let's Go!", $COLOR_INFO)
-			VisitBestPlayers()
-		Case 5
-			SetLog("AiO++ Humanization Look at Best Clans Now. Let's Go!", $COLOR_INFO)
-			LookAtBestClans()
-		Case 6
-			SetLog("AiO++ Humanization Look at Current War Now. Let's Go!", $COLOR_INFO)
-			LookAtCurrentWar()
-		Case 7
-			SetLog("AiO++ Humanization Watch War Replay Now. Let's Go!", $COLOR_INFO)
-			WatchWarReplays()
-		Case 8
-			SetLog("AiO++ Humanization Do Nothing For Now.", $COLOR_INFO)
-			DoNothing()
-		#cs
-		Case 0
-			SetLog("AiO++ Humanization Read Clan Chat Now. Let's Go!", $COLOR_INFO)
-			ReadClanChat()
+			SetLog("AiO++ Humanization ChatActions. Let's Go!", $COLOR_INFO)
+			ChatActions()
 		Case 1
 			SetLog("AiO++ Humanization Read Global Chat Now. Let's Go!", $COLOR_INFO)
 			ReadGlobalChat()
 		Case 2
-			SetLog("AiO++ Humanization Talk With Your Clan Now. Let's Go!", $COLOR_INFO)
-			SaySomeChat()
+			SetLog("AiO++ Humanization ChatActions. Let's Go!", $COLOR_INFO)
+			ChatActions()
 		Case 3
 			SetLog("AiO++ Humanization Watch a Defense Now. Let's Go!", $COLOR_INFO)
 			WatchDefense()
@@ -540,7 +512,6 @@ Func RandomHumanAction()
 		Case 12
 			SetLog("AiO++ Humanization Launch Challenges Now. Let's Go!", $COLOR_INFO)
 			LaunchChallenges()
-		#ce
 	EndSwitch
 EndFunc   ;==>RandomHumanAction
 
