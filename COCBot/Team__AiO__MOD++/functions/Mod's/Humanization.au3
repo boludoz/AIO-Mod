@@ -468,20 +468,33 @@ Func BotHumanization()
 EndFunc   ;==>BotHumanization
 
 Func RandomHumanAction()
+	Local $bV1, $bV2
 	For $i = 0 To 12 ; ($i = 0 To 12) Global Chat should Fix on SC update
 		SetActionPriority($i)
 	Next
 	$g_iActionToDo = _ArrayMaxIndex($g_aSetActionPriority)
 	Switch $g_iActionToDo
 		Case 0
-			SetLog("AiO++ Humanization ChatActions. Let's Go!", $COLOR_INFO)
+			SetLog("AiO++ Humanization ChatActions, clan chat. Let's Go!", $COLOR_INFO)
+			$bV1 = $g_bChatClan
+			$bV2 = $g_bEnableFriendlyChallenge
+			$g_bChatClan = True
+			$g_bEnableFriendlyChallenge = False
 			ChatActions()
+			$g_bChatClan = $bV1
+			$g_bEnableFriendlyChallenge = $bV2
 		Case 1
 			SetLog("AiO++ Humanization Read Global Chat Now. Let's Go!", $COLOR_INFO)
 			ReadGlobalChat()
 		Case 2
-			SetLog("AiO++ Humanization ChatActions. Let's Go!", $COLOR_INFO)
+			SetLog("AiO++ Humanization ChatActions, clan friendly challenge. Let's Go!", $COLOR_INFO)
+			$bV1 = $g_bChatClan
+			$bV2 = $g_bEnableFriendlyChallenge
+			$g_bChatClan = False
+			$g_bEnableFriendlyChallenge = True
 			ChatActions()
+			$g_bChatClan = $bV1
+			$g_bEnableFriendlyChallenge = $bV2
 		Case 3
 			SetLog("AiO++ Humanization Watch a Defense Now. Let's Go!", $COLOR_INFO)
 			WatchDefense()

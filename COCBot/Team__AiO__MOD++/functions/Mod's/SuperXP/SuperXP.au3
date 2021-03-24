@@ -14,6 +14,7 @@
 ; ===============================================================================================================================
 
 ;SuperXP / GoblinXP
+Global $g_iStatsSuperXP = 0
 Global Const $DELAYDROPSuperXP1= 500
 Global Const $DELAYDROPSuperXP2 = 1000
 Global Const $DELAYDROPSuperXP3 = 250
@@ -111,7 +112,8 @@ Func MainSXHandler()
 	If Not $g_bDebugSetlog Then $g_bDebugSX = False
 	If $g_bDebugSetlog Or $g_bDebugSX Then SetDebugLog("Begin MainSXHandler, $g_iActivateOptionSX = " & $g_iActivateOptionSX & ", $g_bIsFullArmywithHeroesAndSpells = " & $g_bIsFullArmywithHeroesAndSpells, $COLOR_DEBUG)
 	If $g_iActivateOptionSX = 1 And $g_bIsFullArmywithHeroesAndSpells = True Then Return ; If Gain while Training Enabled but Army is Full Then Return
-
+	$g_iStatsSuperXP = 0
+	
 	checkMainScreen(False, False)
 	ZoomOut()
 
@@ -776,7 +778,9 @@ Func OpenGoblinMapSX()
 	If $g_bDebugSX Then SetDebugLog("Super XP : Smart Drag.", $COLOR_DEBUG)
 	Local $iCounter = 0
 	Local $aMapPick = -1
-	Static $iTimes = 0
+	
+	Local $bFastScroll = False
+	Local $iTimesD = $g_iStatsSuperXP
 	Do
 		If $iCounter = 0 Then
 			For $i = 0 To 1
@@ -790,25 +794,31 @@ Func OpenGoblinMapSX()
 		If Not $g_bRunState Then ExitLoop
 		If $g_bDebugSX Then SetDebugLog("Super XP : OpenGoblinMapSuper XP : Loop #" & $iCounter)
 		
-		; y = 260
-		; y ai = 658
-		If ($iTimes <> 0) And ($iTimes <= $iCounter * 2) Then
-			ClickDrag(Random(305, 310, 1), 138, Random(305, 310, 1), 658, 100)
+		$iTimesD -= 1
+		If ($iTimesD > 0) Then
+			$iTimesD -= 1
+			$bFastScroll = True
 		Else
-			ClickDrag(Random(305, 310, 1), 138, Random(305, 310, 1), 398, 100)
+			$bFastScroll = False
 		EndIf
 		
-		If _Sleep(100) Then Return
+		Local $iRandom = Random(0, 3, 1)
+		If $bFastScroll = True Then
+			ClickDrag(Random(305, 310, 1), 138 - $iRandom, Random(305, 310, 1), 658 + $iRandom, 25, False, True)
+		Else
+			ClickDrag(Random(305, 310, 1), 138 - $iRandom, Random(305, 310, 1), 398 + $iRandom, 50, False, True)
+		EndIf
 		
-		If $g_bDebugSetlog Then SetDebugLog("Button OpenGoblinMapSX= " & _GetPixelColor($aFirstMapPosition[0], $aFirstMapPosition[1], True), $COLOR_DEBUG) ;Debug
+		If $g_bDebugSetlog Then SetDebugLog("FastScroll= " & $bFastScroll & " / Button OpenGoblinMapSX= " & _GetPixelColor($aFirstMapPosition[0], $aFirstMapPosition[1], True), $COLOR_DEBUG) ;Debug
 		
 		For $i = 0 To 1
 			If RandomSleep(250) Then Return
 			$aMapPick = FixPosMapSX()
 			If IsArray($aMapPick) Then 
-				If $iTimes = 0 Then $iTimes = $iCounter
+				If $g_iStatsSuperXP = 0 Then $g_iStatsSuperXP = $iCounter
 				ExitLoop 2
 			EndIf
+			If $bFastScroll Then ExitLoop
 		Next
 
 	Until $iCounter > 25 Or _ColorCheck(_GetPixelColor($aFirstMapPosition[0], $aFirstMapPosition[1], True, "OpenGoblinMapSX-Check"), Hex($aFirstMapPosition[2], 6), $aFirstMapPosition[3])
@@ -821,7 +831,7 @@ Func OpenGoblinMapSX()
 		Return False
 	Else
 		If $aMapPick[UBound($aMapPick) -1][2] > 420 Then
-			ClickDrag(Random(305, 310, 1), 304, Random(305, 310, 1), 138, 100)
+			ClickDrag(Random(305, 310, 1), 304, Random(305, 310, 1), 138, 100, False, True)
 			For $i = 0 To 1
 				If RandomSleep(500) Then Return
 				$aMapPick = FixPosMapSX()
@@ -1032,36 +1042,18 @@ Func OpenSinglePlayerPage()
 
 	SetLog("Going to Gain XP...", $COLOR_INFO)
 	If IsMainPage() Then
-        ; If $g_bUseRandomClick = 0 Then
-            ; ClickP($aAttackButton, 1, 0, "#0149") ; Click Attack Button
-        ; Else
-            ; ClickR($aAttackButtonRND, $aAttackButton[0], $aAttackButton[1], 1, 0)
-        ; EndIf
 		ClickP($aAttackButton, 1, 0, "#0149") ; Click Attack Button
+		If _Sleep(100) Then Return
 		Else
 		CheckMainScreen()
 		If _Sleep(100) Then Return
 		ClickP($aAttackButton, 1, 0, "#0149") ; Click Attack Button
 		If _Sleep(100) Then Return
 	EndIf
-	If _Sleep(70) Then Return
-
+	If Not _Wait4PixelArray($aIsLaunchSinglePage) Then Return False
 	Click(Random(50, 220, 1), Random(290, 440, 1))
 	If _Sleep(50) Then Return
-	Local $j = 0
-	While Not (IsLaunchSinglePage())
-		Click(Random(50, 220, 1), Random(290, 440, 1))
-		If _Sleep(50) Then ExitLoop
-		$j += 1
-		If $j > 5 Then ExitLoop
-	WEnd
-	If $j > 5 Then
-		SetLog("Launch Single Player Page Fail", $COLOR_ERROR)
-		checkMainScreen()
-		Return False
-	Else
-		Return True
-	EndIf
+	Return True
 EndFunc   ;==>OpenSinglePlayerPage
 
 Func WaitForMain($clickAway = True, $DELAYEachCheck = 50, $maxRetry = 100)

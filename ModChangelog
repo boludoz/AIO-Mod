@@ -4,6 +4,10 @@
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
                     Based on MyBot.run v7.9
+	**v4.4.9**
+		- Imrpoved: Humanization + ChatActions (incomplete).
+		- Fix: Super XP fast scroll.
+
 	**v4.4.7**
 		- Fix: Super XP now check first now instead of drag first and others fixes.
 

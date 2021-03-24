@@ -51,4 +51,4 @@ Global $aEarnedStar[4] = [455, 405, 0xD0D8D0, 20] ; color gray in the star in th
 Global $aOneStar[4] = [714, 594, 0xD2D4CE, 20] ; color gray in the 'one star' in the bottom right of the screen
 Global $aTwoStar[4] = [739, 594, 0xD2D4CE, 20] ; color gray in the 'tow star' in the bottom right of the screen
 Global $aThreeStar[4] = [764, 594, 0xD2D4CE, 20] ; color gray in the 'three star' in the bottom right of the screen
-Global $aIsLaunchSinglePage[4] = [275, 86, 0xB07454, 10] ; color brown in the 'Single Player' popup
+Global $aIsLaunchSinglePage[4] = [830, 48, 0x98918F, 15] ; color brown in the 'Single Player' popup

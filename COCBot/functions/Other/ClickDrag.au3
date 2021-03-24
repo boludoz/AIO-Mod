@@ -103,26 +103,27 @@ Func _MakeLong($LowWORD, $HiWORD)
 	Return BitOR($HiWORD * 0x10000, BitAND($LowWORD, 0xFFFF))
 EndFunc   ;==>_MakeLong
 
-Func ClickDrag($x1, $y1, $x2, $y2, $delay = 50, $bFromZoomOut = False, $bSwipe = False)
+#Region - Custom - Team AIO Mod++
+Func ClickDrag($X1, $Y1, $X2, $Y2, $Delay = 50, $bFromZoomOut = False, $bSwipe = False)
 	If TestCapture() Then Return
+	;Return _PostMessage_ClickDrag($X1, $Y1, $X2, $Y2, "left", $Delay)
 	Local $error = 0
 	If $g_bDebugClick Then
-		SetLog("ClickDrag " & $x1 & "," & $y1 & " to " & $x2 & "," & $y2 & " delay=" & $delay, $COLOR_ACTION, "Verdana", "7.5", 0)
+		SetLog("ClickDrag " & $X1 & "," & $Y1 & " to " & $X2 & "," & $Y2 & " delay=" & $Delay, $COLOR_ACTION, "Verdana", "7.5", 0)
 	EndIf
-	If $g_bAndroidAdbClickDrag = True Or $bFromZoomOut Then
-		If $g_bAndroidAdbClickDragScript = True And $bSwipe = False Then
-			AndroidClickDrag($x1, $y1, $x2, $y2, $g_bRunState)
+	If $g_bAndroidAdbClickDrag Then
+		If $g_bAndroidAdbClickDragScript Or $bFromZoomOut And not $bSwipe Then
+			AndroidClickDrag($X1, $Y1, $X2, $Y2, $g_bRunState)
 			$error = @error
 		Else
-			AndroidInputSwipe($x1, $y1, $x2, $y2, $g_bRunState)
+			AndroidInputSwipe($X1, $Y1, $X2, $Y2, $g_bRunState)
 			$error = @error
 		EndIf
-		If _Sleep($delay / 5) Then Return SetError(-1, "", False)
+		If _Sleep($Delay / 5) Then Return SetError(-1, "", False)
 	EndIf
-	If $g_bAndroidAdbClickDrag = False Or $error <> 0 Then
-		Return _PostMessage_ClickDrag($x1, $y1, $x2, $y2, "left", $delay)
+	If Not $g_bAndroidAdbClickDrag Or $error <> 0 Then
+		Return _PostMessage_ClickDrag($X1, $Y1, $X2, $Y2, "left", $Delay)
 	EndIf
 	Return SetError(0, 0, ($error = 0 ? True : False))
 EndFunc   ;==>ClickDrag
-
-
+#EndRegion - Custom - Team AIO Mod++
