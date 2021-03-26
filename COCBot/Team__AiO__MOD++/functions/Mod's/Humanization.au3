@@ -475,6 +475,9 @@ Func RandomHumanAction()
 	$g_iActionToDo = _ArrayMaxIndex($g_aSetActionPriority)
 	Switch $g_iActionToDo
 		Case 0
+			SetLog("AiO++ Humanization Read Clan Chat Now. Let's Go!", $COLOR_INFO)
+			ReadClanChat()
+		Case 1
 			SetLog("AiO++ Humanization ChatActions, clan chat. Let's Go!", $COLOR_INFO)
 			$bV1 = $g_bChatClan
 			$bV2 = $g_bEnableFriendlyChallenge
@@ -483,9 +486,6 @@ Func RandomHumanAction()
 			ChatActions()
 			$g_bChatClan = $bV1
 			$g_bEnableFriendlyChallenge = $bV2
-		Case 1
-			SetLog("AiO++ Humanization Read Global Chat Now. Let's Go!", $COLOR_INFO)
-			ReadGlobalChat()
 		Case 2
 			SetLog("AiO++ Humanization ChatActions, clan friendly challenge. Let's Go!", $COLOR_INFO)
 			$bV1 = $g_bChatClan

@@ -434,7 +434,7 @@ Func ApplyConfig_MOD_ChatActions($TypeReadSave)
 	; <><><> ChatActions <><><>
 	Switch $TypeReadSave
 		Case "Read"
-			_GUICtrlComboBox_SetCurSel($g_acmbPriority[0], $g_iacmbPriority[0])
+			_GUICtrlComboBox_SetCurSel($g_acmbPriority[1], $g_iacmbPriority[1])
 			_GUICtrlComboBox_SetCurSel($g_acmbPriority[2], $g_iacmbPriority[2])
 
 			; GUICtrlSetState($g_hChkClanChat, $g_bChatClan = True ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -458,7 +458,7 @@ Func ApplyConfig_MOD_ChatActions($TypeReadSave)
 			cmbChatActionsFC()
 			ChatGuiEditUpdate()
 		Case "Save"
-			$g_iacmbPriority[0] = _GUICtrlComboBox_GetCurSel($g_acmbPriority[0])
+			$g_iacmbPriority[1] = _GUICtrlComboBox_GetCurSel($g_acmbPriority[1])
 			$g_iacmbPriority[2] = _GUICtrlComboBox_GetCurSel($g_acmbPriority[2])
 
 			; $g_bChatClan = (GUICtrlRead($g_hChkClanChat) = $GUI_CHECKED)
@@ -686,7 +686,7 @@ Func ApplyConfig_MOD_Humanization($TypeReadSave)
 			GUICtrlSetState($g_hChkLookAtRedNotifications, $g_bLookAtRedNotifications ? $GUI_CHECKED : $GUI_UNCHECKED)
 			chkUseBotHumanization()
 			For $i = 0 To UBound($g_iacmbPriority) -1
-				If $i = 0 Or $i = 2 Then ContinueLoop
+				If $i = 1 Or $i = 2 Then ContinueLoop
 				_GUICtrlComboBox_SetCurSel($g_acmbPriority[$i], $g_iacmbPriority[$i])
 			Next
 			For $i = 0 To 1
@@ -707,7 +707,7 @@ Func ApplyConfig_MOD_Humanization($TypeReadSave)
 			$g_bUseAltRClick = (GUICtrlRead($g_hChkUseAltRClick) = $GUI_CHECKED)
 			$g_bLookAtRedNotifications = (GUICtrlRead($g_hChkLookAtRedNotifications) = $GUI_CHECKED)
 			For $i = 0 To UBound($g_iacmbPriority) -1
-				If $i = 0 Or $i = 2 Then ContinueLoop
+				If $i = 1 Or $i = 2 Then ContinueLoop
 				$g_iacmbPriority[$i] = _GUICtrlComboBox_GetCurSel($g_acmbPriority[$i])
 			Next
 			For $i = 0 To 1

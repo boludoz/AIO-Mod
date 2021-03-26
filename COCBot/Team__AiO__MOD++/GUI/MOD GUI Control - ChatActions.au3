@@ -65,7 +65,7 @@ EndFunc   ;==>ChatGuiEditUpdate
 
 ; Clan Chat
 Func cmbChatActionsChat()
-	If (_GUICtrlComboBox_GetCurSel($g_acmbPriority[0]) > 0) Or (_GUICtrlComboBox_GetCurSel($g_acmbPriority[0]) > 0) Then
+	If (_GUICtrlComboBox_GetCurSel($g_acmbPriority[1]) > 0) Or (_GUICtrlComboBox_GetCurSel($g_acmbPriority[1]) > 0) Then
 		$g_bChatClan = True
 		For $i = $g_hTxtDelayTimeClan To $g_hChkCleverbot
 			GUICtrlSetState($i, $GUI_ENABLE)
@@ -109,7 +109,7 @@ EndFunc   ;==>cmbChatActionsChat
 ; EndFunc   ;==>chkClanChat
 
 Func chkUseResponses()
-	If (_GUICtrlComboBox_GetCurSel($g_acmbPriority[0]) > 0) Or (_GUICtrlComboBox_GetCurSel($g_acmbPriority[0]) > 0) Then
+	If (_GUICtrlComboBox_GetCurSel($g_acmbPriority[1]) > 0) Or (_GUICtrlComboBox_GetCurSel($g_acmbPriority[1]) > 0) Then
 		If GUICtrlRead($g_hChkUseResponses) = $GUI_CHECKED Then
 			$g_bClanUseResponses = True
 			GUICtrlSetState($g_hLblEditResponses, $GUI_ENABLE)
@@ -123,7 +123,7 @@ Func chkUseResponses()
 EndFunc   ;==>chkUseResponses
 
 Func chkUseGeneric()
-	If (_GUICtrlComboBox_GetCurSel($g_acmbPriority[0]) > 0) Or (_GUICtrlComboBox_GetCurSel($g_acmbPriority[0]) > 0) Then
+	If (_GUICtrlComboBox_GetCurSel($g_acmbPriority[1]) > 0) Or (_GUICtrlComboBox_GetCurSel($g_acmbPriority[1]) > 0) Then
 		If GUICtrlRead($g_hChkUseGeneric) = $GUI_CHECKED Then
 			$g_bClanUseGeneric = True
 			GUICtrlSetState($g_hLblEditGeneric, $GUI_ENABLE)

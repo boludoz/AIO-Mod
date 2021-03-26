@@ -208,8 +208,8 @@ EndFunc   ;==>SaveConfig_MOD_MagicItems
 Func SaveConfig_MOD_ChatActions()
 	; <><><> ChatActions <><><>
 	ApplyConfig_MOD_ChatActions(GetApplyConfigSaveAction())
-	_Ini_Add("Bot Humanization", "cmbPriority[" & 0 & "]", _GUICtrlComboBox_GetCurSel($g_acmbPriority[0]))
-	_Ini_Add("Bot Humanization", "cmbPriority[" & 2 & "]", _GUICtrlComboBox_GetCurSel($g_acmbPriority[2]))
+	_Ini_Add("ChatActions", "cmbPriority[" & 1 & "]", _GUICtrlComboBox_GetCurSel($g_acmbPriority[1]))
+	_Ini_Add("ChatActions", "cmbPriority[" & 2 & "]", _GUICtrlComboBox_GetCurSel($g_acmbPriority[2]))
 
 	; _Ini_Add("ChatActions", "EnableChatClan", $g_bChatClan ? 1 : 0)
 	_Ini_Add("ChatActions", "DelayTimeClan", $g_sDelayTimeClan)
@@ -346,7 +346,7 @@ Func SaveConfig_MOD_Humanization()
 	_Ini_Add("Bot Humanization", "chkUseAltRClick", $g_bUseAltRClick ? True : False)
 	_Ini_Add("Bot Humanization", "chkLookAtRedNotifications", $g_bLookAtRedNotifications ? True : False)
 	For $i = 0 To 12
-		If $i = 0 Or $i = 2 Then ContinueLoop
+		If $i = 1 Or $i = 2 Then ContinueLoop
 		_Ini_Add("Bot Humanization", "cmbPriority[" & $i & "]", _GUICtrlComboBox_GetCurSel($g_acmbPriority[$i]))
 	Next
 	For $i = 0 To 1
