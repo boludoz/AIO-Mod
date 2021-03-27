@@ -105,7 +105,7 @@ Func ChatActions() ; run the chatbot
 			AndroidPageError("ChatActions")
 			Return False
 		Else
-			SetLog("Chatbot: Clan Chatting Done", $COLOR_SUCCESS)
+			SetLog("ChatActions: Clan Chatting Done", $COLOR_SUCCESS)
 		EndIf
 	EndIf
 
@@ -139,8 +139,8 @@ Func ChatClan() ; Handle Clan Chat Logic
 				If Not ChatbotSendChat("Clan") Then Return False
 			Next
 
-			Dim $Tmp[0] ; clear queue
-			$ChatbotQueuedChats = $Tmp
+			Local $aTmp[0] ; clear queue
+			$ChatbotQueuedChats = $aTmp
 			If _Sleep(2000) Then Return
 			ChatbotNotifySendChat()
 

@@ -23,26 +23,19 @@ Global $g_hChkLookAtRedNotifications = 0, $g_hCmbMaxActionsNumber = 0
 Global $g_acmbPriority[13] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_acmbMaxSpeed[2] = [0, 0]
 Global $g_acmbPause[2] = [0, 0]
-Global $g_ahumanMessage[2] = ["", ""]
+; Global $g_ahumanMessage[2] = ["", ""]
 
 Func TabHumanizationGUI()
 	Local $x = 25, $y = 45
 	GUICtrlCreateGroup(GetTranslatedFileIni("MOD GUI Design - BotHumanization", "Group_01", "Settings"), $x - 20, $y - 20, 440, 400)
 
 	$x -= 15
-	$y += 20
+	$y += 5
 	$g_hChkUseBotHumanization = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design - BotHumanization", "chkUseBotHumanization", "Enable Bot Humanization"), 50, $y, 136, 17)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design - BotHumanization", "Label_02", "Bot performs more Human-Like behaviors."))
 	GUICtrlSetOnEvent(-1, "chkUseBotHumanization")
 	GUICtrlSetState(-1, $GUI_UNCHECKED)
 
-	GUICtrlCreateLabel(" " & "HUMANiZATiON PATTERN", $x + 195, $y - 15, 209, 23)
-	_GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design - BotHumanization", "Label_19", "Humanization functions takes extra time,so use it wisely."))
-	GUICtrlSetFont(-1, 14, 800, 0, "Candara", 5) ;=> (-1, 16, $FW_BOLD, $GUI_FONTNORMAL, "Candara", $CLEARTYPE_QUALITY)
-	GUICtrlSetColor(-1, 0xBAC9D1)
-	GUICtrlSetBkColor (-1, 0x283740)
-
-	$y -= 2
 	$g_hChkLookAtRedNotifications = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design - BotHumanization", "chkLookAtRedNotifications", "Look Red/Purple Flag on Button"), 50, $y + 31, 182, 17)
 	GUICtrlSetOnEvent(-1, "chkLookAtRedNotifications")
 	GUICtrlSetState(-1, $GUI_UNCHECKED)
@@ -130,6 +123,10 @@ Func TabHumanizationGUI()
 	$g_hLabel18 = GUICtrlCreateLabel(GetTranslatedFileIni("MOD GUI Design - BotHumanization", "Label_18", "Max Actions by Loop"), $x + 232, $y + 5, 103, 17)
 	$g_hCmbMaxActionsNumber = GUICtrlCreateCombo("", $x + 342, $y, 75, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 	GUICtrlSetData(-1, "1|2|3|4|5", "2")
+
+	$y += 40
+
+	_GUICtrlCreatePic($g_sIcnHumanization, $x - 4, $y, 426, 80)
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 

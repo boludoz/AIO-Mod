@@ -257,14 +257,14 @@ EndFunc   ;==>AttackClick
 
 Func ClickAway($bForce = False)
 	#Region - ClickAway - Team AIO Mod++
-	Local $bSkip = False
-	If not $bForce Then
+	Local $bAway = False
+	If $bForce = False Then
 		; 3EBFED - Profile, FFFFB7 - Building
 		_CaptureRegion()
-		$bSkip = _PixelSearch(23, 11, 27, 14, Hex(0x3EBFED, 6), 25, False) <> 0 And not _PixelSearch(276, 563, 305, 564, Hex(0xFFFFB7, 6), 25, False) = 0
+		$bAway = _PixelSearch(23, 11, 27, 14, Hex(0x3EBFED, 6), 25, False) = 0 Or _PixelSearch(370, 563, 462, 565, Hex(0xFFFFB7, 6), 25, False) <> 0
 	EndIf
-	If $g_bDebugClick Then SetLog("ClickAway ? " & $bSkip, $COLOR_ACTION)
-	If Not $bSkip Then
+	If $g_bDebugClick Then SetLog("ClickAway ? " & $bAway, $COLOR_ACTION)
+	If $bAway Then
 		Local $aiRegionToUse = (Random(0, 1, 1) > 0) ? ($aiClickAwayRegionLeft) : ($aiClickAwayRegionRight)
 		Local $aiSpot[2] = [Random($aiRegionToUse[0], $aiRegionToUse[2], 1), Random($aiRegionToUse[1], $aiRegionToUse[3], 1)]
 		If $g_bDebugClick Then SetLog("ClickAway(): on X:" & $aiSpot[0] & ", Y:" & $aiSpot[1], $COLOR_ACTION)

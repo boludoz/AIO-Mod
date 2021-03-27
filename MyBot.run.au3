@@ -944,7 +944,7 @@ Func runBot() ;Bot that runs everything in order
 			If $g_bFirstStart Then SetDebugLog("First loop completed!")
 			$g_bFirstStart = False ; already finished first loop since bot started.
 
-			If Not $g_bChkOnlyFarm Then ChatActions() ; ChatActions - Team AiO MOD++
+			; If Not $g_bChkOnlyFarm Then ChatActions() ; ChatActions - Team AiO MOD++
 
 			If ProfileSwitchAccountEnabled() And ($g_iCommandStop = 0 Or $g_iCommandStop = 3 Or $g_abDonateOnly[$g_iCurAccount] Or $g_bForceSwitch) Then checkSwitchAcc()
 			If IsSearchAttackEnabled() Then ; If attack scheduled has attack disabled now, stop wall upgrades, and attack.
@@ -1024,7 +1024,7 @@ Func _Idle() ;Sequence that runs until Full Army
 		If _Sleep($DELAYIDLE1) Then Return
 		If $g_iCommandStop = -1 Then SetLog("====== Waiting for full army ======", $COLOR_SUCCESS)
 
-		If Not $g_bChkOnlyFarm Then ChatActions() ; ChatActions - Team AiO MOD++
+		; If Not $g_bChkOnlyFarm Then ChatActions() ; ChatActions - Team AiO MOD++
 
 		Local $hTimer = __TimerInit()
 		If Not $g_bChkOnlyFarm Then BotHumanization() ; Humanization - Team AiO MOD++
@@ -1165,7 +1165,7 @@ Func AttackMain() ;Main control for attack functions
 				;SetLog("BullyMode: " & $g_abAttackTypeEnable[$TB] & ", Bully Hero: " & BitAND($g_aiAttackUseHeroes[$g_iAtkTBMode], $g_aiSearchHeroWaitEnable[$g_iAtkTBMode], $g_iHeroAvailable) & "|" & $g_aiSearchHeroWaitEnable[$g_iAtkTBMode] & "|" & $g_iHeroAvailable, $COLOR_DEBUG)
 			EndIf
 
-			If Not $g_bChkOnlyFarm Then ChatActions() ; ChatActions - Team AiO MOD++
+			; If Not $g_bChkOnlyFarm Then ChatActions() ; ChatActions - Team AiO MOD++
 
             ;_ClanGames() ;Trying to do this above in the main loop
             ;ClickAway()
