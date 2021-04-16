@@ -98,6 +98,7 @@ Global $g_bDebugSmartZap = False ; verbose logs for SmartZap users
 Global $g_bDebugAttackCSV = False ; Verbose log output of actual attack script plus bot actions
 Global $g_bDebugMakeIMGCSV = False ; Saves "clean" iamge and image with all drop points and detected buildings marked
 Global $g_bDebugBetaVersion = StringInStr($g_sBotVersion, " b") > 0 ; not saved and only used for special beta releases
+Global $g_bTestSceneryAttack = False
 
 ; <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 ; <><><><> ONLY Enable items below this line when debugging special errors listed!! <><><><>
@@ -653,7 +654,7 @@ Global Const $g_asTroopNames[$eTroopCount] = [ _
 		"Lava Hound", "Ice Hound", "Bowler", "Ice Golem", "Headhunter"]
 Global Const $g_asTroopNamesPlural[$eTroopCount] = [ _
 		"Barbarians", "Super Barbarians", "Archers", "Super Archers", "Giants", "Super Giants", "Goblins", "Sneaky Goblins", "Wall Breakers", "Super Wall Breakers", "Balloons", "Wizards", "Super Wizards", "Healers", _
-		"Dragons", "Pekkas", "Baby Dragons", "Inferno Dragons", "Miners", "Electro Dragons", "Yeti", "Minions", "Super Minions", "Hog Riders", "Valkyries", "Super Valkyries", "Golems", "Witches", "Super Witchs", _
+		"Dragons", "Pekkas", "Baby Dragons", "Inferno Dragons", "Miners", "Electro Dragons", "Yetis", "Minions", "Super Minions", "Hog Riders", "Valkyries", "Super Valkyries", "Golems", "Witches", "Super Witchs", _
 		"Lava Hounds", "Ice Hounds", "Bowlers", "Ice Golems", "Headhunters"]
 Global Const $g_asTroopShortNames[$eTroopCount] = [ _
 		"Barb", "SBarb", "Arch", "SArch", "Giant", "SGiant", "Gobl", "SGobl", "Wall", "SWall", "Ball", "Wiza", "SWiza", "Heal", "Drag", "Pekk", "BabyD", "InfernoD", "Mine", "EDrag", "Yeti", _
@@ -1516,9 +1517,9 @@ Global $g_bCloudsActive = False ;True when waiting for clouds
 Global $g_bAttackActive = False ;True when attacking Village
 
 ; Search
-Global Const $g_iMaxTHLevel = 13
-Global Const $g_asTHText[8] = ["4-6", "7", "8", "9", "10", "11", "12", "13"]
-Global Const $g_aiSearchCost[$g_iMaxTHLevel] = [10, 50, 75, 110, 170, 250, 380, 580, 750, 900, 1000, 1100, 1200]
+Global Const $g_iMaxTHLevel = 14
+Global Const $g_asTHText[9] = ["4-6", "7", "8", "9", "10", "11", "12", "13", "14"]
+Global Const $g_aiSearchCost[$g_iMaxTHLevel] = [10, 50, 75, 110, 170, 250, 380, 580, 750, 900, 1000, 1100, 1200, 1300]
 Global $g_bSearchMode = False
 Global $g_bIsSearchLimit = False
 Global $g_bIsClientSyncError = False ;If true means while searching Client Out Of Sync error occurred.
@@ -1715,8 +1716,8 @@ Global $g_aWeakDefenseNames = ["None", "Eagle Artillery", "Inferno Tower", "XBow
 ; Building variables used by CSV attacks
 Global Enum $eBldgRedLine, $eBldgTownHall, $eBldgGoldM, $eBldgElixirC, $eBldgDrill, $eBldgGoldS, $eBldgElixirS, $eBldgDarkS, $eBldgEagle, $eBldgInferno, $eBldgXBow, $eBldgWizTower, $eBldgMortar, $eBldgAirDefense, $eBldgScatter, $eExternalWall, $eInternalWall
 Global $g_sBldgNames = ["Red Line", "Town Hall", "Gold Mine", "Elixir Collector", "Dark Elixir Drill", "Gold Storage", "Elixir Storage", "Dark Elixir Storage", "Eagle Artillery", "Inferno Tower", "XBow", "Wizard Tower", "Mortar", "Air Defense", "Scatter Shot", "External Wall", "Internal Wall"]
-Global Const $g_iMaxCapTroopTH[14] = [0, 20, 30, 70, 80, 135, 150, 200, 200, 220, 240, 260, 280, 300] ; element 0 is a dummy
-Global Const $g_iMaxCapSpellTH[14] = [0, 0, 0, 0, 0, 2, 4, 6, 7, 9, 11, 11, 11, 11] ; element 0 is a dummy
+Global Const $g_iMaxCapTroopTH[15] = [0, 20, 30, 70, 80, 135, 150, 200, 200, 220, 240, 260, 280, 300, 300] ; element 0 is a dummy
+Global Const $g_iMaxCapSpellTH[15] = [0, 0, 0, 0, 0, 2, 4, 6, 7, 9, 11, 11, 11, 11, 13] ; element 0 is a dummy
 Global $g_oBldgAttackInfo = ObjCreate("Scripting.Dictionary") ; stores building information of base being attacked
 $g_oBldgAttackInfo.CompareMode = 1 ; use case in-sensitve compare for key values
 
@@ -1748,29 +1749,29 @@ Global $g_oBldgLevels = ObjCreate("Scripting.Dictionary")
 ; to find max level for any defense = $g_oBldgLevels.item(Building enum)[TownHall level -1]
 
 Func _FilloBldgLevels()
-	Local Const $aBldgCollector[13] = [2, 4, 6, 8, 10, 10, 11, 12, 12, 12, 12, 12, 12]
+	Local Const $aBldgCollector[$g_iMaxTHLevel] = [2, 4, 6, 8, 10, 10, 11, 12, 12, 12, 12, 12, 12, 12]
 	$g_oBldgLevels.add($eBldgGoldM, $aBldgCollector)
 	$g_oBldgLevels.add($eBldgElixirC, $aBldgCollector)
-	Local Const $aBldgDrill[13] = [0, 0, 0, 0, 0, 0, 3, 3, 6, 6, 6, 6, 6]
+	Local Const $aBldgDrill[$g_iMaxTHLevel] = [0, 0, 0, 0, 0, 0, 3, 3, 6, 6, 6, 6, 6, 6]
 	$g_oBldgLevels.add($eBldgDrill, $aBldgDrill)
-	Local Const $aBldgStorage[13] = [1, 3, 6, 8, 9, 10, 11, 11, 11, 11, 12, 13, 14]
+	Local Const $aBldgStorage[$g_iMaxTHLevel] = [1, 3, 6, 8, 9, 10, 11, 11, 11, 11, 12, 13, 14, 15]
 	$g_oBldgLevels.add($eBldgGoldS, $aBldgStorage)
 	$g_oBldgLevels.add($eBldgElixirS, $aBldgStorage)
-	Local Const $aBldgDarkStorage[13] = [0, 0, 0, 0, 0, 0, 2, 4, 6, 6, 6, 7, 8]
+	Local Const $aBldgDarkStorage[$g_iMaxTHLevel] = [0, 0, 0, 0, 0, 0, 2, 4, 6, 6, 6, 7, 8, 9]
 	$g_oBldgLevels.add($eBldgDarkS, $aBldgDarkStorage)
-	Local Const $aBldgEagle[13] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 4]
+	Local Const $aBldgEagle[$g_iMaxTHLevel] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 4, 5]
 	$g_oBldgLevels.add($eBldgEagle, $aBldgEagle)
-	Local Const $aBldgInferno[13] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 5, 6, 7]
+	Local Const $aBldgInferno[$g_iMaxTHLevel] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 5, 6, 7, 8]
 	$g_oBldgLevels.add($eBldgInferno, $aBldgInferno)
-	Local Const $aBldgMortar[13] = [0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 11]
+	Local Const $aBldgMortar[$g_iMaxTHLevel] = [0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 11, 12]
 	$g_oBldgLevels.add($eBldgMortar, $aBldgMortar)
-	Local Const $aBldgWizTower[13] = [0, 0, 0, 0, 2, 3, 4, 6, 7, 9, 10, 11, 12]
+	Local Const $aBldgWizTower[$g_iMaxTHLevel] = [0, 0, 0, 0, 2, 3, 4, 6, 7, 9, 10, 11, 12, 13]
 	$g_oBldgLevels.add($eBldgWizTower, $aBldgWizTower)
-	Local Const $aBldgXBow[13] = [0, 0, 0, 0, 0, 0, 0, 0, 3, 4, 5, 6, 7]
+	Local Const $aBldgXBow[$g_iMaxTHLevel] = [0, 0, 0, 0, 0, 0, 0, 0, 3, 4, 5, 6, 7, 8]
 	$g_oBldgLevels.add($eBldgXBow, $aBldgXBow)
-	Local Const $aBldgAirDefense[13] = [0, 0, 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+	Local Const $aBldgAirDefense[$g_iMaxTHLevel] = [0, 0, 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 	$g_oBldgLevels.add($eBldgAirDefense, $aBldgAirDefense)
-	Local const $aBldgScatterShot[13] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2]
+	Local const $aBldgScatterShot[$g_iMaxTHLevel] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3]
 	$g_oBldgLevels.add($eBldgScatter, $aBldgScatterShot)
 EndFunc   ;==>_FilloBldgLevels
 _FilloBldgLevels()
@@ -1780,37 +1781,37 @@ Global $g_oBldgMaxQty = ObjCreate("Scripting.Dictionary")
 ; to find max number of bldgs for any defense = $g_oBldgMaxQty.item(Building enum)[TownHall level -1]
 
 Func _FilloBldgMaxQty()
-	Local Const $aBldgCollector[13] = [1, 2, 3, 4, 5, 6, 6, 6, 6, 7, 7, 7, 7]
+	Local Const $aBldgCollector[$g_iMaxTHLevel] = [1, 2, 3, 4, 5, 6, 6, 6, 6, 7, 7, 7, 7, 7]
 	$g_oBldgMaxQty.add($eBldgGoldM, $aBldgCollector)
 	$g_oBldgMaxQty.add($eBldgElixirC, $aBldgCollector)
-	Local Const $aBldgDrill[13] = [0, 0, 0, 0, 0, 0, 1, 2, 2, 3, 3, 3, 3]
+	Local Const $aBldgDrill[$g_iMaxTHLevel] = [0, 0, 0, 0, 0, 0, 1, 2, 2, 3, 3, 3, 3, 3]
 	$g_oBldgMaxQty.add($eBldgDrill, $aBldgDrill)
-	Local Const $aBldgStorage[13] = [1, 1, 2, 2, 2, 2, 2, 3, 4, 4, 4, 4, 4]
+	Local Const $aBldgStorage[$g_iMaxTHLevel] = [1, 1, 2, 2, 2, 2, 2, 3, 4, 4, 4, 4, 4, 4]
 	$g_oBldgMaxQty.add($eBldgGoldS, $aBldgStorage)
 	$g_oBldgMaxQty.add($eBldgElixirS, $aBldgStorage)
-	Local Const $aBldgDarkStorage[13] = [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1]
+	Local Const $aBldgDarkStorage[$g_iMaxTHLevel] = [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1]
 	$g_oBldgMaxQty.add($eBldgDarkS, $aBldgDarkStorage)
-	Local Const $aBldgEagle[13] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1]
+	Local Const $aBldgEagle[$g_iMaxTHLevel] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1]
 	$g_oBldgMaxQty.add($eBldgEagle, $aBldgEagle)
-	Local Const $aBldgInferno[13] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 3, 3]
+	Local Const $aBldgInferno[$g_iMaxTHLevel] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 3, 3, 3]
 	$g_oBldgMaxQty.add($eBldgInferno, $aBldgInferno)
-	Local Const $aBldgMortar[13] = [0, 0, 1, 1, 1, 2, 3, 4, 4, 4, 4, 4, 4]
+	Local Const $aBldgMortar[$g_iMaxTHLevel] = [0, 0, 1, 1, 1, 2, 3, 4, 4, 4, 4, 4, 4, 4]
 	$g_oBldgMaxQty.add($eBldgMortar, $aBldgMortar)
-	Local Const $aBldgWizTower[13] = [0, 0, 0, 0, 1, 2, 2, 3, 4, 4, 5, 5, 5]
+	Local Const $aBldgWizTower[$g_iMaxTHLevel] = [0, 0, 0, 0, 1, 2, 2, 3, 4, 4, 5, 5, 5, 5]
 	$g_oBldgMaxQty.add($eBldgWizTower, $aBldgWizTower)
-	Local Const $aBldgXBow[13] = [0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 4, 4, 4]
+	Local Const $aBldgXBow[$g_iMaxTHLevel] = [0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 4, 4, 4, 4]
 	$g_oBldgMaxQty.add($eBldgXBow, $aBldgXBow)
-	Local Const $aBldgAirDefense[13] = [0, 0, 0, 1, 1, 2, 3, 3, 4, 4, 4, 4, 4]
+	Local Const $aBldgAirDefense[$g_iMaxTHLevel] = [0, 0, 0, 1, 1, 2, 3, 3, 4, 4, 4, 4, 4, 4]
 	$g_oBldgMaxQty.add($eBldgAirDefense, $aBldgAirDefense)
-	Local const $aBldgScatterShot[13] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2]
+	Local const $aBldgScatterShot[$g_iMaxTHLevel] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2]
 	$g_oBldgMaxQty.add($eBldgScatter, $aBldgScatterShot)
 EndFunc   ;==>_FilloBldgMaxQty
 _FilloBldgMaxQty()
 
 Global $g_oBldgImages = ObjCreate("Scripting.Dictionary") ; stores strings with location of images used to find buildings during attacks
 ; Building image key string value = bldg type enum & "_" & $g_iDetectedImageType (no snow, with snow)
-$g_oBldgImages.add($eBldgTownHall & "_" & "0", "imglocth-bundle")
-$g_oBldgImages.add($eBldgTownHall & "_" & "1", "snow-imglocth-bundle")
+$g_oBldgImages.add($eBldgTownHall & "_" & "0", @ScriptDir & "\imgxml\Buildings\Townhall")
+$g_oBldgImages.add($eBldgTownHall & "_" & "1", @ScriptDir & "\imgxml\Buildings\snow-Townhall")
 $g_oBldgImages.add($eBldgGoldM & "_" & "0", @ScriptDir & "\imgxml\Storages\Mines")
 $g_oBldgImages.add($eBldgGoldM & "_" & "1", @ScriptDir & "\imgxml\Storages\Mines_Snow")
 $g_oBldgImages.add($eBldgElixirC & "_" & "0", @ScriptDir & "\imgxml\Storages\Collectors")

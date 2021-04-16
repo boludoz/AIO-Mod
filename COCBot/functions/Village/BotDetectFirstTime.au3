@@ -20,6 +20,7 @@ Func BotDetectFirstTime()
 
 	SetLog("Detecting your Buildings", $COLOR_INFO)
 
+   #cs
 	If Not isInsideDiamond($g_aiTownHallPos) Then
 		checkMainScreen()
 		Collect(False)
