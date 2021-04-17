@@ -231,6 +231,33 @@ Func _VillageSearch($bIncludePrepare = False) ;Control for searching a village t
 		EndIf
 		#EndRegion - Legend trophy protection - Team AIO Mod++
 
+		; ----------------- MOD -----------------------------------
+		
+		If $g_bTestSceneryAttack Then
+			Local $sScenery = DetectScenery($g_aVillageSize[6])
+			
+			If $sScenery = "Clashy Construction" Then
+			    SetLog("Attacking Clashy Construction")
+			    ExitLoop
+			EndIf
+			
+			If $sScenery = "Pirate Scenery" Then
+			    SetLog("Attacking Pirate Scenery")
+			    ExitLoop
+			EndIf
+			
+			If $sScenery = "Winter Scenery" Then
+			    SetLog("Attacking Winter Scenery")
+			    ExitLoop
+			EndIf
+			
+			If $sScenery = "Hog Mountain" Then
+			    SetLog("Attacking Hog Mountain")
+			    ExitLoop
+			EndIf
+			
+		EndIf
+
 		; ----------------- WRITE LOG OF ENEMY RESOURCES -----------------------------------
 		Local $GetResourcesTXT = StringFormat("%3s", $g_iSearchCount) & "> [G]:" & StringFormat("%7s", $g_iSearchGold) & " [E]:" & StringFormat("%7s", $g_iSearchElixir) & " [D]:" & StringFormat("%5s", $g_iSearchDark) & " [T]:" & StringFormat("%2s", $g_iSearchTrophy) & $THString
 

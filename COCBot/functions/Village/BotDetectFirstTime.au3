@@ -42,7 +42,16 @@ Func BotDetectFirstTime()
 
 		SetLog("Townhall: (" & $g_aiTownHallPos[0] & "," & $g_aiTownHallPos[1] & ")", $COLOR_DEBUG)
 	EndIf
-	#Region - Custom fix - Team AIO MOD++
+   #ce
+
+	If Not isInsideDiamond($g_aiTownHallPos) Then
+		checkMainScreen()
+		Collect(False)
+		imglocTHSearch(True, True, True) ; search th on myvillage
+		SetLog("Townhall: (" & $g_aiTownHallPos[0] & "," & $g_aiTownHallPos[1] & ")", $COLOR_DEBUG)
+	EndIf
+	
+	#EndRegion - Custom fix - Team AIO MOD++
 
 	If Number($g_iTownHallLevel) < 2 Then
 		Local $aTownHallLevel = GetTownHallLevel(True) ; Get the Users TH level

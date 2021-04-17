@@ -17,8 +17,8 @@
 Func SwitchBetweenBases($bCheckMainScreen = Default, $bGoToBB = Default, $bSilent = Default)
 	If $bCheckMainScreen = Default Then $bCheckMainScreen = True
 	Local $bSwitched = False, $iLoop = 0
-	$g_iXVOffset = 0
-	
+	$g_aVillageSize = $g_aVillageSizeReset ; Deprecated dim - Team AIO Mod++
+
 	For $iLoop = 0 To 4
 
 		; Deconstructed boat.

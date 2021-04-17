@@ -422,13 +422,13 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag,
 	Local $bUpdateSharedPrefs = $g_bUpdateSharedPrefs And $g_iAndroidZoomoutMode = 4
 
 	Local $vVillage
-	Local $bOnBuilderBase = isOnBuilderBase($bCaptureRegion, False)
+	Local $bOnBuilderBase = isOnBuilderBase(False, False) ; Capture region spam disabled - Team AIO Mod++
 	If $g_aiSearchZoomOutCounter[0] = 10 Then SetLog("Try secondary village measuring...", $COLOR_INFO)
 	If $g_aiSearchZoomOutCounter[0] < 10 Then
-		$vVillage = GetVillageSize($bDebugLog, "stone", "tree", Default, $bOnBuilderBase, $bCaptureRegion)
+		$vVillage = GetVillageSize($bDebugLog, "stone", "tree", Default, $bOnBuilderBase, False) ; Capture region spam disabled - Team AIO Mod++
 	Else
 		; try secondary images
-		$vVillage = GetVillageSize($bDebugLog, "2stone", "2tree", Default, $bOnBuilderBase, $bCaptureRegion)
+		$vVillage = GetVillageSize($bDebugLog, "2stone", "2tree", Default, $bOnBuilderBase, False) ; Capture region spam disabled - Team AIO Mod++
 	EndIf
 
 	Static $iCallCount = 0

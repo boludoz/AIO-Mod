@@ -149,10 +149,10 @@ Func isInDiamond($iX, $iY, $iLeft = 15, $iTop = 31, $iRight = 859, $iBottom = 64
 	Local $bReturn = False
 
 	If Not (($iX < 68 And $iY > 316) Or ($iY < 63) Or ($iX > 692 And $iY > 156 And $iY < 210) Or ($iX > 669 And $iY > 489) Or (56 > $iY)) Then
-		Local $aMiddle[2] = [(($iLeft + $iRight) + $g_iXVOffset) / 2, ($iTop + $iBottom) / 2]
+		Local $aMiddle[2] = [(($iLeft + $iRight) + Number($g_aVillageSize[2])) / 2, ($iTop + $iBottom) / 2]
 		Local $aSize[2] = [$aMiddle[0] - $iLeft, $aMiddle[1] - $iTop]
 		$bReturn = ((Abs($iX - $aMiddle[0]) / $aSize[0] + Abs($iY - $aMiddle[1]) / $aSize[1]) <= 1) ? (True) : (False)
 	EndIf
-	SetDebugLog("isInDiamond | Is in diamond? " & $bReturn & " / Correction: " & $g_iXVOffset)
+	SetDebugLog("isInDiamond | Is in diamond? " & $bReturn & " / Correction: " & Number($g_aVillageSize[2]))
 	Return $bReturn
 EndFunc

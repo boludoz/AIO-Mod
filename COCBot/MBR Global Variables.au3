@@ -1501,7 +1501,7 @@ Func TranslateTroopNames()
 EndFunc   ;==>TranslateTroopNames
 
 ; Upgrading - Wall
-Global Const $g_aiWallCost[10] = [20000, 40000, 80000, 150000, 250000, 500000, 1000000, 3000000, 5000000, 6000000]
+Global Const $g_aiWallCost[11] = [20000, 40000, 80000, 150000, 250000, 500000, 1000000, 3000000, 5000000, 6000000, 7000000]
 Global $g_iWallCost = 0
 
 #Region - Custom hero - Team AIO Mod++
@@ -1904,5 +1904,8 @@ Global $CocDiamondDCD = "DCD"
 Global $InternalArea[8][3]
 Global $ExternalArea[8][3]
 
+Global $g_aVillageSize[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
 ; Team AiO MOD++ (2019)
+Global Const $g_aVillageSizeReset[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 #include "Team__AiO__MOD++\Globals_Team__AiO__MOD++.au3"

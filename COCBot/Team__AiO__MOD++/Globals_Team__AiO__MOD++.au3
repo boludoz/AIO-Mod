@@ -103,17 +103,11 @@ Global $g_sTagCallMybotCall = ""
 ; Advanced debugging.
 Global $g_bExecuteCapture = False
 
-; Offset village.
-Global $g_aPosSizeVillage = 0
-
 Global $g_bNewModAvailable = False
 
 ; ZoomMod
 Global $g_bZoomFixBB = False
 Global $Stonecoord
-
-; Offset
-Global $g_iXVOffset = 0
 
 ; Custom remain - Team AIO Mod++
 Global $g_bRemainTweak = True

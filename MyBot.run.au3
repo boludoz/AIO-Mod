@@ -1520,3 +1520,13 @@ Func TestBuilderBase()
 	$g_bChkEnableBBAttack = $bChkEnableBBAttack
 EndFunc
 #ce - BBase - Disabled for review and adaptation - AIO Mod
+
+Func SetSAtk($attack = False)
+
+   If $attack = True Then
+       $g_bTestSceneryAttack = True
+   Else
+       $g_bTestSceneryAttack = False
+   EndIf
+
+EndFunc

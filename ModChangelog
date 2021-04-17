@@ -3,7 +3,10 @@
             | | | _| / ▓ \| |\/| |    / ▓ \| | (_) |  |_   _||_   _|
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
-                    Based on MyBot.run v7.9
+                    Based on MyBot.run v7.9.2
+	**v4.5.0**
+		- Updated: to v7.9.2.
+
 	**v4.4.9**
 		- Imrpoved: Humanization + ChatActions (incomplete).
 		- Fix: Super XP fast scroll.

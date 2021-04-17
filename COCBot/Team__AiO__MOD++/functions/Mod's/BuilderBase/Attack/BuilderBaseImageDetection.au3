@@ -19,7 +19,7 @@ Func TestBuilderBaseBuildingsDetection()
 	Local $Status = $g_bRunState
 	$g_bRunState = True
 	; Reset the Boat Position , only in tests
-	Global $g_aPosSizeVillage = 0
+	$g_aVillageSize = $g_aVillageSizeReset ; Deprecated dim - Team AIO Mod++
 	Local $SelectedItem = _GUICtrlComboBox_GetCurSel($g_cmbBuildings)
 	Local $temp = BuilderBaseBuildingsDetection($SelectedItem)
 	For $i = 0 To UBound($temp) - 1
@@ -35,7 +35,7 @@ Func TestBuilderBaseGetDeployPoints()
 	Local $Status = $g_bRunState
 	$g_bRunState = True
 	; Reset the Boat Position , only in tests
-	Global $g_aPosSizeVillage = 0
+	$g_aVillageSize = $g_aVillageSizeReset ; Deprecated dim - Team AIO Mod++
 	Local $FurtherFrom = 5 ; 5 pixels before the deploy point
 	BuilderBaseGetDeployPoints($FurtherFrom, True)
 	$g_bRunState = $Status
@@ -505,7 +505,7 @@ Func BuilderBaseAttackDiamond()
 		$iSize = GetBuilderBaseSize(False) ; Wihtout Clicks
 	EndIf
 
-	If ($iSize = 0) Or not IsArray($g_aPosSizeVillage) Then Return -1
+	If ($iSize = 0) Or not IsArray($g_aVillageSize) Then Return -1
 
 	; ZoomFactor
 	Local $CorrectSizeLR = Floor(($iSize - 590) / 2)
@@ -515,19 +515,19 @@ Func BuilderBaseAttackDiamond()
 	; Polygon Points
 	Local $Top[2], $Right[2], $BottomR[2], $BottomL[2], $Left[2]
 
-	$Top[0] = $g_aPosSizeVillage[7] - (180 + $CorrectSizeT)
-	$Top[1] = $g_aPosSizeVillage[8] + 6
+	$Top[0] = $g_aVillageSize[7] - (180 + $CorrectSizeT)
+	$Top[1] = $g_aVillageSize[8] + 6
 
-	$Right[0] = $g_aPosSizeVillage[7] + (160 + $CorrectSizeLR)
-	$Right[1] = $g_aPosSizeVillage[8] + (260 + $CorrectSizeLR)
+	$Right[0] = $g_aVillageSize[7] + (160 + $CorrectSizeLR)
+	$Right[1] = $g_aVillageSize[8] + (260 + $CorrectSizeLR)
 
-	$Left[0] = $g_aPosSizeVillage[7] - (515 + $CorrectSizeB)
-	$Left[1] = $g_aPosSizeVillage[8] + (260 + $CorrectSizeLR)
+	$Left[0] = $g_aVillageSize[7] - (515 + $CorrectSizeB)
+	$Left[1] = $g_aVillageSize[8] + (260 + $CorrectSizeLR)
 
-	$BottomR[0] = $g_aPosSizeVillage[7] - (110 - $CorrectSizeB)
+	$BottomR[0] = $g_aVillageSize[7] - (110 - $CorrectSizeB)
 	$BottomR[1] = 628
 
-	$BottomL[0] = $g_aPosSizeVillage[7] - (225 + $CorrectSizeB)
+	$BottomL[0] = $g_aVillageSize[7] - (225 + $CorrectSizeB)
 	$BottomL[1] = 628
 
 	Local $BuilderBaseDiamond[6] = [$iSize, $Top, $Right, $BottomR, $BottomL, $Left]
@@ -545,7 +545,7 @@ Func BuilderBaseAttackOuterDiamond()
 		$iSize = GetBuilderBaseSize(False) ; WihtoutClicks
 	EndIf
 
-	If ($iSize = 0) Or not IsArray($g_aPosSizeVillage) Then Return -1
+	If ($iSize = 0) Or not IsArray($g_aVillageSize) Then Return -1
 
 	; ZoomFactor
 	Local $CorrectSizeLR = Floor(($iSize - 590) / 2)
@@ -555,19 +555,19 @@ Func BuilderBaseAttackOuterDiamond()
 	; Polygon Points
 	Local $Top[2], $Right[2], $BottomR[2], $BottomL[2], $Left[2]
 
-	$Top[0] = $g_aPosSizeVillage[7] - (180 + $CorrectSizeT)
-	$Top[1] = $g_aPosSizeVillage[8] - 25
+	$Top[0] = $g_aVillageSize[7] - (180 + $CorrectSizeT)
+	$Top[1] = $g_aVillageSize[8] - 25
 
-	$Right[0] = $g_aPosSizeVillage[7] + (205 + $CorrectSizeLR)
-	$Right[1] = $g_aPosSizeVillage[8] + (260 + $CorrectSizeLR)
+	$Right[0] = $g_aVillageSize[7] + (205 + $CorrectSizeLR)
+	$Right[1] = $g_aVillageSize[8] + (260 + $CorrectSizeLR)
 
-	$Left[0] = $g_aPosSizeVillage[7] - (560 + $CorrectSizeB)
-	$Left[1] = $g_aPosSizeVillage[8] + (260 + $CorrectSizeLR)
+	$Left[0] = $g_aVillageSize[7] - (560 + $CorrectSizeB)
+	$Left[1] = $g_aVillageSize[8] + (260 + $CorrectSizeLR)
 
-	$BottomR[0] = $g_aPosSizeVillage[7] - (70 - $CorrectSizeB)
+	$BottomR[0] = $g_aVillageSize[7] - (70 - $CorrectSizeB)
 	$BottomR[1] = 628
 
-	$BottomL[0] = $g_aPosSizeVillage[7] - (275 + $CorrectSizeB)
+	$BottomL[0] = $g_aVillageSize[7] - (275 + $CorrectSizeB)
 	$BottomL[1] = 628
 
 	Local $BuilderBaseDiamond[6] = [$iSize, $Top, $Right, $BottomR, $BottomL, $Left]
