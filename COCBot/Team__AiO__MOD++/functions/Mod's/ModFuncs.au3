@@ -389,7 +389,7 @@ Func StringSplit2D($sMatches = "Hola-2-5-50-50-100-100|Hola-6-200-200-100-100", 
     ; Fix last item or row.
 	If $bFixLast <> False Then
 		Local $sTrim = StringRight($sMatches, 1)
-		If $sTrim = $g_sDelimRow Or $sTrim = $sDelim_Item Then $sMatches = StringTrimRight($sMatches, 1)
+		If $sTrim = $sDelim_Row Or $sTrim = $sDelim_Item Then $sMatches = StringTrimRight($sMatches, 1)
 	EndIf
 
     Local $aSplit_1 = StringSplit($sMatches, $sDelim_Row, $STR_NOCOUNT + $STR_ENTIRESPLIT)
