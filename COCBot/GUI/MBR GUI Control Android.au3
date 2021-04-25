@@ -103,11 +103,31 @@ EndFunc   ;==>cmbInstances
 Func getAllEmulators()
 	Local $cmbString = ""
 	GUICtrlSetData($g_hCmbEmulators, '')
+
+	$__BlueStacks_isHyperV = False
 	$__BlueStacks_Version = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks\", "Version")
-	If Not @error Then
-		If GetVersionNormalized($__BlueStacks_Version) < GetVersionNormalized("0.10") Then $cmbString &= "BlueStacks|"
-		If GetVersionNormalized($__BlueStacks_Version) > GetVersionNormalized("1.0") Then $cmbString &= "BlueStacks2|"
+	$__BlueStacks_Path = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks\", "InstallDir")
+	If @error <> 0 Then
+		$__BlueStacks_isHyperV = True
+		$__BlueStacks_Version = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_bgp64_hyperv\", "Version")
+		$__BlueStacks_Path = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_bgp64_hyperv\", "InstallDir")
+		If @error <> 0 Then
+			$__BlueStacks_isHyperV = False
+			$__BlueStacks_Path = @ProgramFilesDir & "\BlueStacks\"
+			SetError(0, 0, 0)
+		EndIf
 	EndIf
+	
+	Local $sBluestacks = ""
+	If StringIsSpace($__BlueStacks_Version) = 0 And $__BlueStacks_isHyperV = False Then
+		$sBluestacks = "BlueStacks|"
+		If GetVersionNormalized($__BlueStacks_Version) < GetVersionNormalized("0.10") Then $sBluestacks = "BlueStacks|"
+		If GetVersionNormalized($__BlueStacks_Version) > GetVersionNormalized("1.0") Then $sBluestacks = "BlueStacks2|"
+	ElseIf $__BlueStacks_isHyperV = True Then
+		$sBluestacks = "BlueStacks2|"
+	EndIf
+	$cmbString &= $sBluestacks
+	
 	Local $Version = RegRead($g_sHKLM & "\SOFTWARE" & $g_sWow6432Node & "\Microsoft\Windows\CurrentVersion\Uninstall\Nox\", "DisplayVersion")
 	If Not @error Then
 		$cmbString &= "Nox|"
@@ -133,14 +153,12 @@ Func getAllEmulatorsInstances()
 	Local $emulator = GUICtrlRead($g_hCmbEmulators)
 	Local $path = ""
 	Switch $emulator
-		#CS
 		Case "BlueStacks"
 			GUICtrlSetData($g_hCmbInstances, "Android", "Android")
 			Return
 		Case "BlueStacks2"
 			GUICtrlSetData($g_hCmbInstances, "Android", "Android")
 			Return
-		#CE
 		Case "Nox"
 			$path = GetNoxPath() & "\BignoxVMS"
 		Case "MEmu"

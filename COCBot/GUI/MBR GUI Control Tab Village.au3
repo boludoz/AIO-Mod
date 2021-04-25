@@ -78,10 +78,9 @@ Func CmbClanCastleTroop()
 EndFunc   ;==>CmbClanCastleTroop
 
 Func CmbClanCastleSpell()
-    ; For $i = 0 To UBound($g_ahCmbClanCastleSpell) - 1
-        ; If _GUICtrlComboBox_GetCurSel($g_ahCmbClanCastleSpell[$i]) = $eCSpell - $eLSpell Then _GUICtrlComboBox_SetCurSel($g_ahCmbClanCastleSpell[$i], $eSpellCount)
-    ; Next
-
+	For $i = 0 To UBound($g_ahCmbClanCastleSpell) - 1
+		If _GUICtrlComboBox_GetCurSel($g_ahCmbClanCastleSpell[$i]) = $eISpell - $eLSpell Then _GUICtrlComboBox_SetCurSel($g_ahCmbClanCastleSpell[$i], $eSpellCount)
+	Next
 EndFunc   ;==>CmbClanCastleSpell
 
 Func chkRequestCCHoursE1()
