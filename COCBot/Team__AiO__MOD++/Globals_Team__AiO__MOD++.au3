@@ -131,6 +131,7 @@ Global $g_bStopForWar
 Global $g_iStopTime, $g_iReturnTime
 Global $g_bTrainWarTroop, $g_bUseQuickTrainWar, $g_aChkArmyWar[3], $g_aiWarCompTroops[$eTroopCount], $g_aiWarCompSpells[$eSpellCount]
 Global $g_bRequestCCForWar,	$g_sTxtRequestCCForWar
+Global $g_bClanWarLeague = True, $g_bClanWar = True
 
 ; Custom BB Army
 Global $g_bDebugBBattack = False

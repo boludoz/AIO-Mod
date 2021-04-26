@@ -1171,7 +1171,7 @@ Func AttackMain() ;Main control for attack functions
             ;ClickAway()
 			If $g_bUpdateSharedPrefs Then PullSharedPrefs()
 			If VillageSearch(True) = False Then
-				SetLog("Error: AttackMain, return from village search bad.", $COLOR_ERROR)
+				SetDebugLog("Error: Village search interrupted.", $COLOR_ERROR)
 				If Not $g_bRunState Then Return
 				If $g_bRestart Then Return
 				checkMainScreen()

@@ -149,23 +149,34 @@ EndFunc   ;==>IsWarMenu
 Func CheckWarTime(ByRef $sResult, ByRef $bResult)
 	Local $bResChk = CheckWarTimeNucleo($sResult, $bResult)
 	If RandomSleep(500) Then Return False
-	Click(70, 680, 1, 500, "#9025") ; return home
+	
+	Local $i = 0
+	Do
+		$i += 1
+		If $g_bRestart Or Not $g_bRunState Then Return
+		Click(70, 620 + $g_iBottomOffsetY) ; return home
+		If randomSleep(1500) Then Return
+	Until IsMainScreen() Or $i > 3
+	If $i > 3 Then CheckMainScreen()
+	
 	Return $bResChk
 EndFunc   ;==>CheckWarTime
 
 Func CheckWarTimeNucleo(ByRef $sResult, ByRef $bResult) ; return [Success + $sResult = $sBattleEndTime, $bResult = $bInWar] OR Failure
-
-	$sResult = ""
 	Local $directoryDay = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\WarPage\Day"
 	Local $directoryTime = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\WarPage\Time"
-	Local $bBattleDay_InWar = False, $bClanWarLeague = False, $sWarDay, $sTime
+	Local $bBattleDay_InWar, $sWarDay, $sTime
+	$g_bClanWarLeague = False
+	$g_bClanWar = False
+	$sResult = ""
 	
 	CheckMainScreen(False)
 	
 	If IsMainPage() Then
 		$bBattleDay_InWar = _ColorCheck(_GetPixelColor(45, 500, True), "ED151D", 20) ; Red color in war button
-		$bClanWarLeague = _ColorCheck(_GetPixelColor(10, 510, True), "FFED71", 20) ; Golden color at left side of clan war button
-		If $bClanWarLeague Then SetDebugLog("Your Clan Is Doing Clan War League.", $COLOR_INFO)
+		$g_bClanWarLeague = _ColorCheck(_GetPixelColor(10, 510, True), "FFED71", 20) ; Golden color at left side of clan war button
+		$g_bClanWar = _ColorCheck(_GetPixelColor(36, 502, True), "F0B345", 20) ; Ordinary war color at left side of clan war button
+		If $g_bClanWarLeague Then SetDebugLog("Your Clan Is Doing Clan War League.", $COLOR_INFO)
 		If $g_bDebugSetlog Then SetDebugLog("Checking battle notification, $bBattleDay_InWar = " & $bBattleDay_InWar)
 		Click(40, 530) ; open war menu
 		If _Sleep(2000) Then Return
@@ -184,7 +195,7 @@ Func CheckWarTimeNucleo(ByRef $sResult, ByRef $bResult) ; return [Success + $sRe
 			$sWarDay = "Battle"
 			$bResult = True
 		Else
-			If $bClanWarLeague Then
+			If $g_bClanWarLeague Then
 				If QuickMIS("BC1", $directoryDay & "\CWL_Preparation", 175, 645, 175 + 515, 645 + 30, True) Then ; By Default Battle Days Opens So Find Prepration Button
 					If $g_bDebugSetlog Then SetDebugLog("CWL Enter In Preparation page")
 					Click($g_iQuickMISX + 175, $g_iQuickMISY + 645, 1)

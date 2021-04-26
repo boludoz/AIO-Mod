@@ -6,12 +6,14 @@
                     Based on MyBot.run v7.9.2
 	**v4.5.1**
 		- New: BlueStacks HyperV support. (by @Teknolojikpanda).
-    
+		- Improved: Humanization and ChatActions improved and fixed.
+		- Fix: Array problem.
+
 	**v4.5.0**
 		- Updated: to v7.9.2.
 
 	**v4.4.9**
-		- Imrpoved: Humanization + ChatActions (incomplete).
+		- Improved: Humanization + ChatActions (incomplete).
 		- Fix: Super XP fast scroll.
 		- Fix: ClickAway caravan fix.
 

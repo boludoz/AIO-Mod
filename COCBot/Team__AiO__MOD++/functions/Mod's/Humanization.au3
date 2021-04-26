@@ -95,17 +95,32 @@ EndFunc   ;==>VisitClanmates
 ;================================================================================================================================
 
 Func LookAtCurrentWar()
-	Click(40, 470 + $g_iBottomOffsetY) ; open war menu
-	If randomSleep(5000) Then Return
+	Local $sResult, $bResult
 
-	If IsWarMenu() Then
-		Local $bWarType = QuickMIS("N1", $g_sImgHumanizationCurrentWar, 740, 290 + $g_iMidOffsetY, 850, 600 + $g_iMidOffsetY) ;October Update
-		If $bWarType = "CurrentWar" Or $bWarType = "CurrentWarCwl" Then ;Check if it is Simple War Or Cwl War
-			SetLog("Let's Examine The " & $bWarType & " Map ...", $COLOR_OLIVE)
+	CheckWarTimeNucleo($sResult, $bResult)
+	If @error Then
+		Local $i = 0
+		While not IsMainScreen() Or $i > 3
+			If $g_bRestart Or Not $g_bRunState Then Return
+			$i += 1
+			If randomSleep(1500) Then Return
+		WEnd
+
+		If $i > 3 Then CheckMainScreen()
+
+		Return False
+	EndIf
+
+	If randomSleep(250) Then Return
+	If $g_bClanWar = True Or $g_bClanWarLeague = True Then
+
+		If IsWarMenu() Then
+			Local $sWarMode = ($g_bClanWarLeague = True) ? ("Current CWL war") : ("Current War") 
+			SetLog("Let's Examine The " & $sWarMode & " Map ...", $COLOR_OLIVE)
 			Scroll(Random(2, 5, 1)) ; scroll enemy
 			If randomSleep(3000) Then Return
 
-			If $bWarType = "CurrentWar" Then
+			If $g_bClanWar = True Then
 				Local $LookAtHome = Random(0, 1, 1)
 				If $LookAtHome = 1 Then
 					SetLog("Looking At Home Territory ...", $COLOR_OLIVE)
@@ -116,8 +131,8 @@ Func LookAtCurrentWar()
 			EndIf
 
 			SetLog("Open War Details Menu ...", $COLOR_OLIVE)
-			If $bWarType = "CurrentWar" Then Click(800, 610 + $g_iBottomOffsetY) ; go to war details
-			If $bWarType = "CurrentWarCwl" Then Click(810, 540 + $g_iMidOffsetY) ; go to Cwl war details
+			If $g_bClanWar = True Then Click(800, 610 + $g_iBottomOffsetY) ; go to war details
+			If $g_bClanWarLeague = True Then Click(810, 540 + $g_iMidOffsetY) ; go to Cwl war details
 			If randomSleep(1500) Then Return
 
 			If IsClanOverview() Then
@@ -148,29 +163,53 @@ Func LookAtCurrentWar()
 				Scroll(Random(2, 4, 1)) ; scroll the tab
 
 				Click(830, 50 + $g_iMidOffsetY) ; close window
-				If randomSleep(1500) Then Return
-				Click(70, 620 + $g_iBottomOffsetY) ; return home
+				; If randomSleep(1500) Then Return
+				; Click(70, 620 + $g_iBottomOffsetY) ; return home
 			Else
 				SetLog("Error When Trying To Open War Details Window ... Skipping ...", $COLOR_WARNING)
 			EndIf
 		Else
 			SetLog("Your Clan Is Not In Active War yet ... Skipping ...", $COLOR_WARNING)
 			If randomSleep(1500) Then Return
-			Click(70, 620 + $g_iBottomOffsetY) ; return home
+			; Click(70, 620 + $g_iBottomOffsetY) ; return home
 		EndIf
 	Else
 		SetLog("Error When Trying To Open War Window ... Skipping ...", $COLOR_WARNING)
 	EndIf
+
+	Local $i = 0
+	Do
+		$i += 1
+		If IsMainScreen() Then ExitLoop
+		If $g_bRestart Or Not $g_bRunState Then Return
+		Click(70, 620 + $g_iBottomOffsetY) ; return home
+		If randomSleep(1500) Then Return
+	Until IsMainScreen() Or $i > 3
+	If $i > 3 Then CheckMainScreen()
 EndFunc   ;==>LookAtCurrentWar
 
 Func WatchWarReplays()
-	Click(40, 470 + $g_iBottomOffsetY) ; open war menu
-	If randomSleep(5000) Then Return
-	Local $bWarType = QuickMIS("N1", $g_sImgHumanizationCurrentWar, 740, 290 + $g_iMidOffsetY, 850, 600 + $g_iMidOffsetY) ;October Update
-	If (QuickMIS("BC1", $g_sImgHumanizationWarDetails, 740, 560 + $g_iBottomOffsetY, 850, 660 + $g_iBottomOffsetY) And $bWarType = "CurrentWar") Or $bWarType = "CurrentWarCwl" Then
+	Local $sResult, $bResult
+
+	CheckWarTimeNucleo($sResult, $bResult)
+	If @error Then
+		Local $i = 0
+		While not IsMainScreen() Or $i > 3
+			If $g_bRestart Or Not $g_bRunState Then Return
+			$i += 1
+			If randomSleep(1500) Then Return
+		WEnd
+
+		If $i > 3 Then CheckMainScreen()
+
+		Return False
+	EndIf
+
+	If randomSleep(250) Then Return
+	If $g_bClanWar = True Or $g_bClanWarLeague = True Then
 		SetLog("Open War Details Menu ...", $COLOR_OLIVE)
-		If $bWarType = "CurrentWar" Then Click(800, 610 + $g_iBottomOffsetY) ; go to war details
-		If $bWarType = "CurrentWarCwl" Then Click(810, 540 + $g_iMidOffsetY) ; go to Cwl war details
+		If $g_bClanWar = True Then Click(800, 610 + $g_iBottomOffsetY) ; go to war details
+		If $g_bClanWarLeague = True Then Click(810, 540 + $g_iMidOffsetY) ; go to Cwl war details
 		If randomSleep(1500) Then Return
 
 		If IsClanOverview() Then
@@ -230,12 +269,23 @@ Func WatchWarReplays()
 
 		Click(830, 50 + $g_iMidOffsetY) ; close window
 		If randomSleep(3500) Then Return
-		Click(70, 620 + $g_iBottomOffsetY) ; return home
+		; Click(70, 620 + $g_iBottomOffsetY) ; return home
 	Else
 		SetLog("Your Clan Is Not In Active War Yet ... Skipping ...", $COLOR_WARNING)
-		If randomSleep(1500) Then Return
-		Click(70, 620 + $g_iBottomOffsetY) ; return home
+		; If randomSleep(1500) Then Return
+		; Click(70, 620 + $g_iBottomOffsetY) ; return home
 	EndIf
+
+	Local $i = 0
+	Do
+		$i += 1
+		If IsMainScreen() Then ExitLoop
+		If $g_bRestart Or Not $g_bRunState Then Return
+		Click(70, 620 + $g_iBottomOffsetY) ; return home
+		If randomSleep(1500) Then Return
+	Until IsMainScreen() Or $i > 3
+	If $i > 3 Then CheckMainScreen()
+
 EndFunc   ;==>WatchWarReplays
 
 ; #FUNCTION# ====================================================================================================================
@@ -438,39 +488,53 @@ EndFunc   ;==>GemClick
 ; ================================================== HUMAN FUNCTIONS PART ================================================== ;
 
 Func BotHumanization()
-	If $g_bUseBotHumanization = True Then
-		If Not $g_bRunState Then Return
-		Local $NoActionsToDo = 0
-		SetLog("OK, Let AiO++ Makes The Bot More Human Like!", $COLOR_SUCCESS1)
+	Local $iRandom = Random(0, 1, 1)
+	For $i = 0 To 1
+		Switch $iRandom
+			Case 0
+				$iRandom = 1
+				If $g_bChatClan = True Or $g_bEnableFriendlyChallenge = True Then ChatActions()
+			Case 1
+				$iRandom = 0
+				If $g_bUseBotHumanization = True Then
+					If Not $g_bRunState Then Return
+					Local $NoActionsToDo = 0
+					SetLog("OK, Let AiO++ Makes The Bot More Human Like!", $COLOR_SUCCESS1)
 
-		If $g_bLookAtRedNotifications = True Then LookAtRedNotifications()
-		ReturnAtHome()
+					If $g_bLookAtRedNotifications = True Then LookAtRedNotifications()
+					ReturnAtHome()
 
-		For $i = 0 To 12
-			Local $ActionEnabled = _GUICtrlComboBox_GetCurSel($g_acmbPriority[$i])
-			If $ActionEnabled = 0 Then $NoActionsToDo += 1
-		Next
+					For $i = 0 To 12
+						Local $ActionEnabled = _GUICtrlComboBox_GetCurSel($g_acmbPriority[$i])
+						If $ActionEnabled = 0 Then $NoActionsToDo += 1
+					Next
 
-		If $NoActionsToDo <> 13 Then
-			$g_iMaxActionsNumber = Random(1, _GUICtrlComboBox_GetCurSel($g_hCmbMaxActionsNumber) + 1, 1)
-			SetLog("AiO++ Will Do " & $g_iMaxActionsNumber & " Human Actions During This Loop ...", $COLOR_INFO)
-			For $i = 1 To $g_iMaxActionsNumber
-				If randomSleep(4000) Then Return
-				ReturnAtHome()
-				RandomHumanAction()
-			Next
-		Else
-			SetLog("All Actions Disabled, Skipping ...", $COLOR_WARNING)
-		EndIf
-		SetLog("Bot Humanization Finished !", $COLOR_SUCCESS1)
-		If randomSleep(3000) Then Return
-	EndIf
+					If $NoActionsToDo <> 13 Then
+						$g_iMaxActionsNumber = Random(1, _GUICtrlComboBox_GetCurSel($g_hCmbMaxActionsNumber) + 1, 1)
+						SetLog("AiO++ Will Do " & $g_iMaxActionsNumber & " Human Actions During This Loop ...", $COLOR_INFO)
+						For $i = 1 To $g_iMaxActionsNumber
+							If randomSleep(4000) Then Return
+							ReturnAtHome()
+							RandomHumanAction()
+						Next
+					Else
+						SetLog("All Actions Disabled, Skipping ...", $COLOR_WARNING)
+					EndIf
+					SetLog("Bot Humanization Finished !", $COLOR_SUCCESS1)
+					If randomSleep(3000) Then Return
+				EndIf
+		EndSwitch
+	Next
 EndFunc   ;==>BotHumanization
 
 Func RandomHumanAction()
 	For $i = 0 To 9
 		SetActionPriority($i)
 	Next
+
+	$g_aSetActionPriority[10] = 0
+	$g_aSetActionPriority[11] = 0
+
 	$g_iActionToDo = _ArrayMaxIndex($g_aSetActionPriority)
 	Switch $g_iActionToDo
 		Case 0
@@ -793,7 +857,7 @@ EndFunc   ;==>CollectAchievements
 Func Scroll($MaxScroll)
 	For $i = 0 To $MaxScroll
 		Local $x = Random(430 - 20, 430 + 20, 1)
-		Local $yStart = Random(600 - 20 + $g_iMidOffsetY, 600 + 20 + $g_iMidOffsetY, 1)
+		Local $yStart = Random(475 - 20 + $g_iMidOffsetY, 475 + 20 + $g_iMidOffsetY, 1)
 		Local $yEnd = Random(200 - 20 + $g_iMidOffsetY, 200 + 20 + $g_iMidOffsetY, 1)
 		ClickDrag($x, $yStart, $x, $yEnd) ; generic random scroll
 		If randomSleep(4000) Then Return
@@ -823,13 +887,13 @@ EndFunc   ;==>ReturnAtHome
 Func IsMainScreen()
 	;Wait for Main Screen To Be Appear
 	Local $bResult = False
-	
+
 	If IsMainPage(2) Then
 		$bResult = True
 	ElseIf IsMainPageBuilderBase(2) Then
 		$bResult = True
 	EndIf
-	
+
 	Return $bResult
 EndFunc   ;==>IsMainScreen
 

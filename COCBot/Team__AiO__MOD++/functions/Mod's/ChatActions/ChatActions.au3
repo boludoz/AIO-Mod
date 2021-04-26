@@ -70,35 +70,66 @@ Func DelayTime($chatType)
 EndFunc   ;==>DelayTime
 
 Func ChatActions() ; run the chatbot
-
+	
 	If $g_bChatClan Or (($g_bEnableFriendlyChallenge) And (Not $g_bStayOnBuilderBase)) Then
+		
+		Local $bChat = False, $bFriendly = False
+		
+		For $i = 0 To 11
+			If $i > 9 Then
+				SetActionPriority($i)
+			Else
+				$g_aSetActionPriority[$i] = 0
+			EndIf
+		Next	
+		
+		$bChat = ($g_aSetActionPriority[10] > 75)
+		$bFriendly = ($g_aSetActionPriority[11] > 75)
+		
+		If $bChat = False And $bFriendly = False Then Return
+		
 		If Not OpenClanChat() Then
 			Setlog("ChatActions : OpenClanChat Error.", $COLOR_ERROR)
 			AndroidPageError("ChatActions")
 			Return False
 		EndIf
-
-			If $g_bChatClan Then
-				If $g_sDelayTimeClan > 0 Then
-					If DelayTime("CLAN") Then
-						ChatClan()
-						$g_sClanChatLastMsgSentTime = _NowCalc() ;Store msg sent time
+			
+		Local $iRandom = Random(0, 1, 1)
+		For $i = 0 To 1
+			Switch $iRandom
+				Case 0
+					$iRandom = 1
+					
+					If $bChat = False Then ContinueLoop
+					
+					If $g_bChatClan Then
+						If $g_sDelayTimeClan > 0 Then
+							If DelayTime("CLAN") Then
+								ChatClan()
+								$g_sClanChatLastMsgSentTime = _NowCalc() ;Store msg sent time
+							EndIf
+						Else
+							ChatClan()
+						EndIf
 					EndIf
-				Else
-					ChatClan()
-				EndIf
-			EndIf
+		
+				Case 1
+					$iRandom = 0
+	
+					If $bFriendly = False Then ContinueLoop
 
-			If $g_bEnableFriendlyChallenge And Not $g_bStayOnBuilderBase Then
-				If $g_sDelayTimeFC > 0 Then
-					If DelayTime("FC") Then
-						FriendlyChallenge()
-						$g_sFCLastMsgSentTime = _NowCalc() ;Store msg sent time
+					If $g_bEnableFriendlyChallenge And Not $g_bStayOnBuilderBase Then
+						If $g_sDelayTimeFC > 0 Then
+							If DelayTime("FC") Then
+								FriendlyChallenge()
+								$g_sFCLastMsgSentTime = _NowCalc() ;Store msg sent time
+							EndIf
+						Else
+							FriendlyChallenge()
+						EndIf
 					EndIf
-				Else
-					FriendlyChallenge()
-				EndIf
-			EndIf
+			EndSwitch
+		Next
 
 		If Not CloseClanChat() Then
 			Setlog("ChatActions : CloseClanChat Error.", $COLOR_ERROR)
