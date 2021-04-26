@@ -1,17 +1,17 @@
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: Bot Humanization / ClanActions.au3
-; Description ...: This file controls the "Humanization" tab
-; Syntax ........:
-; Parameters ....: None
-; Return values .: None
-; Author ........: RoroTiti, NguyenAnhHD
-; Modified ......: RoroTiti (11.11.2016), Team AiO MOD++ (2019)
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2021
-;                  MyBot is distributed under the terms of the GNU GPL
-; Related .......:
-; Link ..........: https://github.com/MyBotRun/MyBot/wiki
-; Example .......: No
-; ===============================================================================================================================
+; Description ...: This file contains all functions of Bot Humanization feature - Clan Part
+; Syntax ........: ---
+; Parameters ....: ---
+; Return values .: ---
+; Author ........: RoroTiti
+; Modified ......: 11.11.2016
+; Remarks .......: This file is part of MyBotRun. Copyright 2018
+;                  MyBotRun is distributed under the terms of the GNU GPL
+; Related .......: ---
+; Link ..........: https://www.mybot.run
+; Example .......: ---
+;================================================================================================================================
 
 Func LookAtWarLog()
 	Click(20, 380 + $g_iMidOffsetY) ; open chat
@@ -438,101 +438,27 @@ EndFunc   ;==>GemClick
 ; ================================================== HUMAN FUNCTIONS PART ================================================== ;
 
 Func BotHumanization()
-	If $g_bUseBotHumanization = True Or $g_bChatClan = True Or $g_bEnableFriendlyChallenge = True Then
+	If $g_bUseBotHumanization = True Then
 		If Not $g_bRunState Then Return
-		Local $iNoActionsToDo = 0
-		Local $iNoAction = 0
+		Local $NoActionsToDo = 0
 		SetLog("OK, Let AiO++ Makes The Bot More Human Like!", $COLOR_SUCCESS1)
 
 		If $g_bLookAtRedNotifications = True Then LookAtRedNotifications()
 		ReturnAtHome()
 
-		For $i = 0 To 11
-			Local $iActionEnabled = _GUICtrlComboBox_GetCurSel($g_acmbPriority[$i])
-			If $iActionEnabled = 0 Then $iNoActionsToDo += 1
+		For $i = 0 To 12
+			Local $ActionEnabled = _GUICtrlComboBox_GetCurSel($g_acmbPriority[$i])
+			If $ActionEnabled = 0 Then $NoActionsToDo += 1
 		Next
 
-		If $iNoActionsToDo <> 12 Then
-
-			$iNoAction = _GUICtrlComboBox_GetCurSel($g_hCmbMaxActionsNumber) + 1
-			$g_iMaxActionsNumber = Random(1, $iNoAction, 1)
+		If $NoActionsToDo <> 13 Then
+			$g_iMaxActionsNumber = Random(1, _GUICtrlComboBox_GetCurSel($g_hCmbMaxActionsNumber) + 1, 1)
 			SetLog("AiO++ Will Do " & $g_iMaxActionsNumber & " Human Actions During This Loop ...", $COLOR_INFO)
-
-			For $i = 0 To 11
-				SetActionPriority($i)
+			For $i = 1 To $g_iMaxActionsNumber
+				If randomSleep(4000) Then Return
+				ReturnAtHome()
+				RandomHumanAction()
 			Next
-
-			Local $aiBiga[0][2], $aTmp[1][2]
-			For $i2 = 0 To UBound($g_aSetActionPriority) -1
-				$aTmp[0][0] = $i2
-				$aTmp[0][1] = $g_aSetActionPriority[$i2]
-				If $g_aSetActionPriority[$i2] <> 0 Then _ArrayAdd($aiBiga, $aTmp)
-			Next
-
-			_ArraySort($aiBiga, 1, 0, 0, 1)
-			; _ArrayDisplay($aiBiga)
-			Local $i = 0
-			Local $iSafeLimit = 0
-			Do
-				$iSafeLimit += 1
-
-				If _Sleep(10) Then Return ; CPU break
-				If Not $g_bRunState Or $g_bRestart Then Return
-				If UBound($aiBiga) < 1 Then ExitLoop
-
-				If $aiBiga[$i][1] = 0 Or $i = UBound($aiBiga) Then ExitLoop
-				$g_iActionToDo = $aiBiga[$i][0]
-
-				Switch $g_iActionToDo
-					Case 0 To 2 ; This works in a more complex and difficult way to apply on a large scale, we will soon try to do it separately.
-						SetLog("AiO++ Humanization ChatActions.", $COLOR_INFO)
-						Chorder()
-					Case 3
-						SetLog("AiO++ Humanization Watch a Defense Now. Let's Go!", $COLOR_INFO)
-						WatchDefense()
-					Case 4
-						SetLog("AiO++ Humanization Watch an Attack Now. Let's Go!", $COLOR_INFO)
-						WatchAttack()
-					Case 5
-						SetLog("AiO++ Humanization Look at War Log Now. Let's Go!", $COLOR_INFO)
-						LookAtWarLog()
-					Case 6
-						SetLog("AiO++ Humanization Visit Clanmates Now. Let's Go!", $COLOR_INFO)
-						VisitClanmates()
-					Case 7
-						SetLog("AiO++ Humanization Visit Best Players Now. Let's Go!", $COLOR_INFO)
-						VisitBestPlayers()
-					Case 8
-						SetLog("AiO++ Humanization Look at Best Clans Now. Let's Go!", $COLOR_INFO)
-						LookAtBestClans()
-					Case 9
-						SetLog("AiO++ Humanization Look at Current War Now. Let's Go!", $COLOR_INFO)
-						LookAtCurrentWar()
-					Case 10
-						SetLog("AiO++ Humanization Watch War Replay Now. Let's Go!", $COLOR_INFO)
-						WatchWarReplays()
-					Case 11
-						SetLog("AiO++ Humanization Do Nothing For Now.", $COLOR_INFO)
-						DoNothing()
-				EndSwitch
-
-				If $g_iActionToDo <> 0 And $g_iActionToDo <> 1 And $g_iActionToDo <> 2 Then
-					$i += 1
-					For $i3 = UBound($aiBiga) -1 To 0 Step -1
-						If $aiBiga[$i3][0] <> $g_iActionToDo Then ContinueLoop
-						_ArrayDelete($aiBiga, $i3)
-						ExitLoop
-					Next
-					If randomSleep(4000) Then Return
-					ReturnAtHome()
-				Else
-					For $i3 = UBound($aiBiga) -1 To 0 Step -1
-						If $aiBiga[$i3][0] <> 0 And $aiBiga[$i3][0] <> 1 And $aiBiga[$i3][0] <> 2 Then ContinueLoop
-						_ArrayDelete($aiBiga, $i3)
-					Next
-				EndIf
-
-			Until $i >= $g_iMaxActionsNumber Or $iSafeLimit > 50
 		Else
 			SetLog("All Actions Disabled, Skipping ...", $COLOR_WARNING)
 		EndIf
@@ -541,101 +467,56 @@ Func BotHumanization()
 	EndIf
 EndFunc   ;==>BotHumanization
 
-Func Chorder()
-	Local $a[3] = [-1, -1, -1]
-
-	$a[0] = 0
-
-	If $g_sDelayTimeClan > 0 Then
-		If DelayTime("CLAN") Then
-			$a[1] = 1
-			$g_sClanChatLastMsgSentTime = _NowCalc() ;Store msg sent time
-		EndIf
-	Else
-		$a[1] = 1
-	EndIf
-
-	If $g_sDelayTimeFC > 0 Then
-		If DelayTime("FC") Then
-			$a[2] = 2
-			$g_sFCLastMsgSentTime = _NowCalc() ;Store msg sent time
-		EndIf
-	Else
-		$a[2] = 2
-	EndIf
-
-	For $i = 0 To 2
-		MatchPriorityNValue($i)
-		If $a[$i] <> -1 And $g_iMinimumPriority <= Random(0, 100, 1) Then $a[$i] = -1
+Func RandomHumanAction()
+	For $i = 0 To 9
+		SetActionPriority($i)
 	Next
+	$g_iActionToDo = _ArrayMaxIndex($g_aSetActionPriority)
+	Switch $g_iActionToDo
+		Case 0
+			SetLog("AiO++ Humanization Read Clan Chat Now. Let's Go!", $COLOR_INFO)
+			ReadClanChat()
+		Case 1
+			SetLog("AiO++ Humanization Watch a Defense Now. Let's Go!", $COLOR_INFO)
+			WatchDefense()
+		Case 2
+			SetLog("AiO++ Humanization Watch an Attack Now. Let's Go!", $COLOR_INFO)
+			WatchAttack()
+		Case 3
+			SetLog("AiO++ Humanization Look at War Log Now. Let's Go!", $COLOR_INFO)
+			LookAtWarLog()
+		Case 4
+			SetLog("AiO++ Humanization Visit Clanmates Now. Let's Go!", $COLOR_INFO)
+			VisitClanmates()
+		Case 5
+			SetLog("AiO++ Humanization Visit Best Players Now. Let's Go!", $COLOR_INFO)
+			VisitBestPlayers()
+		Case 6
+			SetLog("AiO++ Humanization Look at Best Clans Now. Let's Go!", $COLOR_INFO)
+			LookAtBestClans()
+		Case 7
+			SetLog("AiO++ Humanization Look at Current War Now. Let's Go!", $COLOR_INFO)
+			LookAtCurrentWar()
+		Case 8
+			SetLog("AiO++ Humanization Watch War Replay Now. Let's Go!", $COLOR_INFO)
+			WatchWarReplays()
+		Case 9
+			SetLog("AiO++ Humanization Do Nothing For Now.", $COLOR_INFO)
+			DoNothing()
+	EndSwitch
+EndFunc   ;==>RandomHumanAction
 
-	If $a[0] <> -1 Or $a[1] <> -1 Or $a[2] <> -1 Then
-		If Not OpenClanChat() Then
-			Setlog("ChatActions : OpenClanChat Error.", $COLOR_ERROR)
-			AndroidPageError("ChatActions")
-			Return False
-		EndIf
-
-		_ArrayShuffle($a)
-
-		For $i = 0 To UBound($a) -1
-			Switch $a[$i]
-				Case 0
-					ReadClanChat()
-				Case 1
-					ChatClan()
-				Case 2
-					FriendlyChallenge()
-			EndSwitch
-			If randomSleep(1500) Then Return
-		Next
-
-		If Not CloseClanChat() Then
-			Setlog("ChatActions : CloseClanChat Error.", $COLOR_ERROR)
-			AndroidPageError("ChatActions")
-			Return False
-		Else
-			SetLog("ChatActions: Clan Chatting Done", $COLOR_SUCCESS)
-		EndIf
-	EndIf
-
-EndFunc   ;==>Chorder
-
-Func ReadClanChat()
-	; Click(20, 380 + $g_iMidOffsetY) ; open chat
-	; If randomSleep(3000) Then Return
-
-	; If ChatOpen() Then
-		; Click(230, 20) ; go to clan chat
-		; If randomSleep(1500) Then Return
-		; If Not IsClanChat() Then SetLog("Warning, We Will Scroll Global Chat ...", $COLOR_WARNING) ;=> Note: Global Chat has been Removed
-		; ClickIUnderstandIfExist()
-		Local $MaxScroll = Random(0, 3, 1)
-		SetLog("Let's Scrolling The Chat ...", $COLOR_OLIVE)
-		For $i = 0 To $MaxScroll
-			Local $x = Random(180 - 10, 180 + 10, 1)
-			Local $yStart = Random(110 - 10, 110 + 10, 1)
-			Local $yEnd = Random(570 - 10, 570 + 10, 1)
-			ClickDrag($x, $yStart, $x, $yEnd) ; scroll the chat
-			If randomSleep(10000, 3000) Then Return
-		Next
-		; Click(330, 380 + $g_iMidOffsetY) ; close chat
-	; Else
-		; SetLog("Error When Trying To Open Chat ... Skipping ...", $COLOR_WARNING)
-	; EndIf
-EndFunc   ;==>ReadClanChat
-
-Func SetActionPriority($iActionNumber)
-	If _GUICtrlComboBox_GetCurSel($g_acmbPriority[$iActionNumber]) <> 0 Then
-		MatchPriorityNValue($iActionNumber)
-		$g_aSetActionPriority[$iActionNumber] = Random($g_iMinimumPriority, 100, 1)
+Func SetActionPriority($ActionNumber)
+	If _GUICtrlComboBox_GetCurSel($g_acmbPriority[$ActionNumber]) <> 0 Then
+		MatchPriorityNValue($ActionNumber)
+		$g_aSetActionPriority[$ActionNumber] = Random($g_iMinimumPriority, 100, 1)
 	Else
-		$g_aSetActionPriority[$iActionNumber] = 0
+		$g_aSetActionPriority[$ActionNumber] = 0
 	EndIf
 EndFunc   ;==>SetActionPriority
 
-Func MatchPriorityNValue($iActionNumber)
-	Switch _GUICtrlComboBox_GetCurSel($g_acmbPriority[$iActionNumber])
+Func MatchPriorityNValue($ActionNumber)
+	Switch _GUICtrlComboBox_GetCurSel($g_acmbPriority[$ActionNumber])
 		Case 1
 			$g_iMinimumPriority = 0
 		Case 2
@@ -942,13 +823,13 @@ EndFunc   ;==>ReturnAtHome
 Func IsMainScreen()
 	;Wait for Main Screen To Be Appear
 	Local $bResult = False
-
+	
 	If IsMainPage(2) Then
 		$bResult = True
 	ElseIf IsMainPageBuilderBase(2) Then
 		$bResult = True
 	EndIf
-
+	
 	Return $bResult
 EndFunc   ;==>IsMainScreen
 
@@ -1130,110 +1011,158 @@ EndFunc   ;==>LookAtBestClans
 ; Example .......: ---
 ;================================================================================================================================
 
-; Func SaySomeChat()
-	; Click(20, 380 + $g_iMidOffsetY) ; open chat
-	; If randomSleep(3000) Then Return
+Func ReadClanChat()
+	Click(20, 380 + $g_iMidOffsetY) ; open chat
+	If randomSleep(3000) Then Return
 
-	; If ChatOpen() Then
-		; Click(230, 20) ; go to clan chat
-		; If randomSleep(1500) Then Return
-		; If Not IsClanChat() Then SetLog("Warning, We Will Chat On Global Chat ... ", $COLOR_WARNING) ;=> Note: Global Chat has been Removed
-		; ClickIUnderstandIfExist()
-		; Click(280, 650 + $g_iBottomOffsetY) ; click message button
-		; If randomSleep(2000) Then Return
-		; If IsTextBox() Then
-			; Local $ChatToSay = Random(0, 1, 1)
-			; Local $CleanMessage = SecureMessage(GUICtrlRead($g_ahumanMessage[$ChatToSay]))
-			; SetLog("Writing """ & $CleanMessage & """ To The Chat Box ...", $COLOR_OLIVE)
-			; SendText($CleanMessage)
+	If ChatOpen() Then
+		Click(230, 20) ; go to clan chat
+		If randomSleep(1500) Then Return
+		If Not IsClanChat() Then SetLog("Warning, We Will Scroll Global Chat ...", $COLOR_WARNING) ;=> Note: Global Chat has been Removed
+		ClickIUnderstandIfExist()
+		Local $MaxScroll = Random(0, 3, 1)
+		SetLog("Let's Scrolling The Chat ...", $COLOR_OLIVE)
+		For $i = 0 To $MaxScroll
+			Local $x = Random(180 - 10, 180 + 10, 1)
+			Local $yStart = Random(110 - 10, 110 + 10, 1)
+			Local $yEnd = Random(570 - 10, 570 + 10, 1)
+			ClickDrag($x, $yStart, $x, $yEnd) ; scroll the chat
+			If randomSleep(10000, 3000) Then Return
+		Next
+		Click(330, 380 + $g_iMidOffsetY) ; close chat
+	Else
+		SetLog("Error When Trying To Open Chat ... Skipping ...", $COLOR_WARNING)
+	EndIf
+EndFunc   ;==>ReadClanChat
 
-			; If randomSleep(500) Then Return
-			; Click(840, 650 + $g_iBottomOffsetY) ; click send message
+Func ReadGlobalChat()
+	Click(20, 380 + $g_iMidOffsetY) ; open chat
+	If randomSleep(3000) Then Return
 
-			; If randomSleep(1500) Then Return
-			; Click(330, 380 + $g_iMidOffsetY) ; close chat
-		; Else
-			; SetLog("Error When Trying To Open Text Box For Chatting ... Skipping...", $COLOR_WARNING)
-		; EndIf
-	; Else
-		; SetLog("Error When Trying To Open Chat ... Skipping...", $COLOR_WARNING)
-	; EndIf
-; EndFunc   ;==>SaySomeChat
+	If ChatOpen() Then
+		Click(80, 20) ; go to global chat
+		If randomSleep(1500) Then Return
+		If Not IsGlobalChat() Then SetLog("Warning, We Will Scroll Clan Chat ...", $COLOR_WARNING)
+		ClickIUnderstandIfExist()
+		Local $MaxScroll = Random(0, 3, 1)
+		SetLog("Let's Scrolling The Chat ...", $COLOR_OLIVE)
+		For $i = 0 To $MaxScroll
+			Local $x = Random(180 - 10, 180 + 10, 1)
+			Local $yStart = Random(110 - 10, 110 + 10, 1)
+			Local $yEnd = Random(570 - 10, 570 + 10, 1)
+			ClickDrag($x, $yStart, $x, $yEnd) ; scroll the chat
+			If randomSleep(10000, 3000) Then Return
+		Next
+		Click(330, 380 + $g_iMidOffsetY) ; close chat
+	Else
+		SetLog("Error When Trying To Open Chat ... Skipping ...", $COLOR_WARNING)
+	EndIf
+EndFunc   ;==>ReadGlobalChat
 
-; Func LaunchChallenges()
-	; Click(20, 380 + $g_iMidOffsetY) ; open chat
-	; If randomSleep(3000) Then Return
+Func SaySomeChat()
+	Click(20, 380 + $g_iMidOffsetY) ; open chat
+	If randomSleep(3000) Then Return
 
-	; If ChatOpen() Then
-		; Click(230, 20) ; go to clan chat
-		; If randomSleep(1500) Then Return
-		; If IsClanChat() Then
-			; ClickIUnderstandIfExist()
-			; Click(200, 650 + $g_iBottomOffsetY) ; click challenge button
-			; If randomSleep(1500) Then Return
-			; If IsChallengeWindow() Then
-				; Click(530, 175 + $g_iMidOffsetY) ; click text box
-				; SendText(SecureMessage(GUICtrlRead($g_hChallengeMessage)))
-				; If randomSleep(1500) Then Return
-				; Local $Layout = Random(1, 2, 1) ; choose a layout between normal or war base
-				; If $Layout <> $g_iLastLayout Then
-					; Click(240, 300) ; click choose layout button
-					; If randomSleep(1000) Then Return
-					; If IsChangeLayoutMenu() Then
-						; Switch $Layout
-							; Case 1
-								; $g_iLastLayout = 1
-								; Local $y = Random(190 - 10, 190 + 10, 1)
-								; Local $xStart = Random(170 - 10, 170 + 10, 1)
-								; Local $xEnd = Random(830 - 10, 830 + 10, 1)
-								; ClickDrag($xStart, $y, $xEnd, $y) ; scroll the layout bar to see normal bases
-							; Case 2
-								; $g_iLastLayout = 2
-								; Local $y = Random(190 - 10, 190 + 10, 1)
-								; Local $xStart = Random(690 - 10, 690 + 10, 1)
-								; Local $xEnd = Random(20 - 10, 20 + 10, 1)
-								; ClickDrag($xStart, $y, $xEnd, $y) ; scroll the layout bar to see war bases
-						; EndSwitch
-						; If randomSleep(2000) Then Return
-						; Click(240, 180) ; click first layout
-						; If randomSleep(1500) Then Return
-						; Click(180, 110) ; click top left return button
-					; Else
-						; SetLog("Error When Trying To Open Change Layout Menu ... Skipping...", $COLOR_WARNING)
-					; EndIf
-				; EndIf
+	If ChatOpen() Then
+		Click(230, 20) ; go to clan chat
+		If randomSleep(1500) Then Return
+		If Not IsClanChat() Then SetLog("Warning, We Will Chat On Global Chat ... ", $COLOR_WARNING) ;=> Note: Global Chat has been Removed
+		ClickIUnderstandIfExist()
+		Click(280, 650 + $g_iBottomOffsetY) ; click message button
+		If randomSleep(2000) Then Return
+		If IsTextBox() Then
+			Local $ChatToSay = Random(0, 1, 1)
+			Local $CleanMessage = SecureMessage(GUICtrlRead($g_ahumanMessage[$ChatToSay]))
+			SetLog("Writing """ & $CleanMessage & """ To The Chat Box ...", $COLOR_OLIVE)
+			SendText($CleanMessage)
 
-				; If IsChallengeWindow() Then
-					; If randomSleep(1500) Then Return
-					; Click(530, 300) ; click start button
-					; If randomSleep(1500) Then Return
-					; Click(330, 380 + $g_iMidOffsetY) ; close chat
-				; Else
-					; SetLog("We Are Not Anymore On Start Challenge Window ... Skipping ...", $COLOR_WARNING)
-				; EndIf
-			; Else
-				; SetLog("Error When Trying To Open Start Challenge Window ... Skipping ...", $COLOR_WARNING)
-			; EndIf
-		; Else
-			; SetLog("Error When Trying To Open Clan Chat ... Skipping ...", $COLOR_WARNING)
-		; EndIf
-	; Else
-		; SetLog("Error When Trying To Open Chat ... Skipping ...", $COLOR_WARNING)
-	; EndIf
-; EndFunc   ;==>LaunchChallenges
+			If randomSleep(500) Then Return
+			Click(840, 650 + $g_iBottomOffsetY) ; click send message
 
-; Func ClickIUnderstandIfExist() ; December Update(2018) Check for "I Understand" Warning
-	; Local $aButtonCoords = findMultiple($g_sImgChatIUnterstandMultiLang, GetDiamondFromRect("50,475,260,520"), GetDiamondFromRect("50,475,260,520"), 0, 1000, 0, "objectpoints") ; not working so maybe I will loop through all language options
+			If randomSleep(1500) Then Return
+			Click(330, 380 + $g_iMidOffsetY) ; close chat
+		Else
+			SetLog("Error When Trying To Open Text Box For Chatting ... Skipping...", $COLOR_WARNING)
+		EndIf
+	Else
+		SetLog("Error When Trying To Open Chat ... Skipping...", $COLOR_WARNING)
+	EndIf
+EndFunc   ;==>SaySomeChat
 
-	; If UBound($aButtonCoords) = 0 Then ; button not found
-		; Return
-	; EndIf
+Func LaunchChallenges()
+	Click(20, 380 + $g_iMidOffsetY) ; open chat
+	If randomSleep(3000) Then Return
 
-	; local $button = $aButtonCoords[0] ; always one button
-	; local $aTempMultiCoords = decodeMultipleCoords($button[0]) ; object points
-	; local $aButtonCoords = $aTempMultiCoords[0] ; one location of button again... must do for some reason or arrays glitch
+	If ChatOpen() Then
+		Click(230, 20) ; go to clan chat
+		If randomSleep(1500) Then Return
+		If IsClanChat() Then
+			ClickIUnderstandIfExist()
+			Click(200, 650 + $g_iBottomOffsetY) ; click challenge button
+			If randomSleep(1500) Then Return
+			If IsChallengeWindow() Then
+				Click(530, 175 + $g_iMidOffsetY) ; click text box
+				SendText(SecureMessage(GUICtrlRead($g_hChallengeMessage)))
+				If randomSleep(1500) Then Return
+				Local $Layout = Random(1, 2, 1) ; choose a layout between normal or war base
+				If $Layout <> $g_iLastLayout Then
+					Click(240, 300) ; click choose layout button
+					If randomSleep(1000) Then Return
+					If IsChangeLayoutMenu() Then
+						Switch $Layout
+							Case 1
+								$g_iLastLayout = 1
+								Local $y = Random(190 - 10, 190 + 10, 1)
+								Local $xStart = Random(170 - 10, 170 + 10, 1)
+								Local $xEnd = Random(830 - 10, 830 + 10, 1)
+								ClickDrag($xStart, $y, $xEnd, $y) ; scroll the layout bar to see normal bases
+							Case 2
+								$g_iLastLayout = 2
+								Local $y = Random(190 - 10, 190 + 10, 1)
+								Local $xStart = Random(690 - 10, 690 + 10, 1)
+								Local $xEnd = Random(20 - 10, 20 + 10, 1)
+								ClickDrag($xStart, $y, $xEnd, $y) ; scroll the layout bar to see war bases
+						EndSwitch
+						If randomSleep(2000) Then Return
+						Click(240, 180) ; click first layout
+						If randomSleep(1500) Then Return
+						Click(180, 110) ; click top left return button
+					Else
+						SetLog("Error When Trying To Open Change Layout Menu ... Skipping...", $COLOR_WARNING)
+					EndIf
+				EndIf
 
-	; SetLog("Chat Rules: Clicking 'I Understand' Button", $COLOR_ACTION)
-	; Click($aButtonCoords[0], $aButtonCoords[1])
-	; If _Sleep($DELAYDONATECC2) Then Return
-; EndFunc   ;==>ClickIUnderstandIfExist
+				If IsChallengeWindow() Then
+					If randomSleep(1500) Then Return
+					Click(530, 300) ; click start button
+					If randomSleep(1500) Then Return
+					Click(330, 380 + $g_iMidOffsetY) ; close chat
+				Else
+					SetLog("We Are Not Anymore On Start Challenge Window ... Skipping ...", $COLOR_WARNING)
+				EndIf
+			Else
+				SetLog("Error When Trying To Open Start Challenge Window ... Skipping ...", $COLOR_WARNING)
+			EndIf
+		Else
+			SetLog("Error When Trying To Open Clan Chat ... Skipping ...", $COLOR_WARNING)
+		EndIf
+	Else
+		SetLog("Error When Trying To Open Chat ... Skipping ...", $COLOR_WARNING)
+	EndIf
+EndFunc   ;==>LaunchChallenges
+
+Func ClickIUnderstandIfExist() ; December Update(2018) Check for "I Understand" Warning
+	Local $aButtonCoords = findMultiple($g_sImgChatIUnterstandMultiLang, GetDiamondFromRect("50,475,260,520"), GetDiamondFromRect("50,475,260,520"), 0, 1000, 0, "objectpoints") ; not working so maybe I will loop through all language options
+
+	If UBound($aButtonCoords) = 0 Then ; button not found
+		Return
+	EndIf
+
+	local $button = $aButtonCoords[0] ; always one button
+	local $aTempMultiCoords = decodeMultipleCoords($button[0]) ; object points
+	local $aButtonCoords = $aTempMultiCoords[0] ; one location of button again... must do for some reason or arrays glitch
+
+	SetLog("Chat Rules: Clicking 'I Understand' Button", $COLOR_ACTION)
+	Click($aButtonCoords[0], $aButtonCoords[1])
+	If _Sleep($DELAYDONATECC2) Then Return
+EndFunc   ;==>ClickIUnderstandIfExist

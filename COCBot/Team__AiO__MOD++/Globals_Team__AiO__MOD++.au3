@@ -193,7 +193,7 @@ Global $g_iacmbPause[2] = [0, 0]
 ; Global $g_iTxtChallengeMessage = "Ready to Challenge?"
 
 Global $g_iMinimumPriority, $g_iMaxActionsNumber, $g_iActionToDo
-Global $g_aSetActionPriority[12] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_aSetActionPriority[13] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 Global $g_sFrequenceChain = "Never|Sometimes|Frequently|Often|Very Often"
 Global $g_sReplayChain = "1|2|4"

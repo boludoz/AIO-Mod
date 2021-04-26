@@ -36,7 +36,7 @@ Func TabChatActionsGUI()
 	$y -= 5
 	
 		GUICtrlCreateLabel("Frequency :", $x + 26, $y + 4, 60, 17)
-		$g_acmbPriority[1] = GUICtrlCreateCombo("", $x + 128, $y, 89, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
+		$g_acmbPriority[10] = GUICtrlCreateCombo("", $x + 128, $y, 89, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
 		GUICtrlSetData(-1, GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptions", -1),  GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptionNever", -1))
 		GUICtrlSetOnEvent(-1, "cmbChatActionsChat")
         GUICtrlCreateLabel("Use each ... minutes :", $x + 272, $y + 4, 107, 17)
@@ -79,7 +79,7 @@ Func TabChatActionsGUI()
 	$x -= 10
 	$y -= 5
 		GUICtrlCreateLabel("Frequency :", $x + 26, $y + 4, 60, 17)
-		$g_acmbPriority[2] = GUICtrlCreateCombo("", $x + 128, $y, 89, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
+		$g_acmbPriority[11] = GUICtrlCreateCombo("", $x + 128, $y, 89, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
 		GUICtrlSetData(-1, GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptions", -1),  GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptionNever", -1))
 		GUICtrlSetOnEvent(-1, "cmbChatActionsFC")
         GUICtrlCreateLabel("Use each ... minutes :", $x + 272, $y + 4, 107, 17)
