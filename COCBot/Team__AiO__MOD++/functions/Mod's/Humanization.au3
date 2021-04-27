@@ -1123,6 +1123,7 @@ Func ReadGlobalChat()
 	EndIf
 EndFunc   ;==>ReadGlobalChat
 
+#CS
 Func SaySomeChat()
 	Click(20, 380 + $g_iMidOffsetY) ; open chat
 	If randomSleep(3000) Then Return
@@ -1152,6 +1153,7 @@ Func SaySomeChat()
 		SetLog("Error When Trying To Open Chat ... Skipping...", $COLOR_WARNING)
 	EndIf
 EndFunc   ;==>SaySomeChat
+#CE
 
 Func LaunchChallenges()
 	Click(20, 380 + $g_iMidOffsetY) ; open chat
