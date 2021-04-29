@@ -14,12 +14,12 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func VillageSearch($bIncludePrepare = False)
-	
+Func VillageSearch()
+
 	$g_bVillageSearchActive = True
 	$g_bCloudsActive = True
 
-	Local $Result = _VillageSearch($bIncludePrepare)
+	Local $Result = _VillageSearch()
 	If $g_bSearchAttackNowEnable Then
 		GUICtrlSetState($g_hBtnAttackNowDB, $GUI_HIDE)
 		GUICtrlSetState($g_hBtnAttackNowLB, $GUI_HIDE)
@@ -37,7 +37,7 @@ Func VillageSearch($bIncludePrepare = False)
 
 EndFunc   ;==>VillageSearch
 
-Func _VillageSearch($bIncludePrepare = False) ;Control for searching a village that meets conditions
+Func _VillageSearch() ;Control for searching a village that meets conditions
 	Local $Result
 	Local $weakBaseValues
 	Local $logwrited = False
@@ -66,14 +66,10 @@ Func _VillageSearch($bIncludePrepare = False) ;Control for searching a village t
 		Next
 	EndIf
 
-	; Internal PrepareSearch - Custom - Team AIO Mod++.
-	If $bIncludePrepare = False Then
-		If _Sleep($DELAYVILLAGESEARCH1) Then Return
-		$Result = getAttackDisable(346, 182) ; Grab Ocr for TakeABreak check
-		checkAttackDisable($g_iTaBChkAttack, $Result) ;last check to see If TakeABreak msg on screen for fast PC from PrepareSearch click
-		If $g_bRestart = True Then Return ; exit func
-	EndIf
-	
+	If _Sleep($DELAYVILLAGESEARCH1) Then Return
+	$Result = getAttackDisable(346, 182) ; Grab Ocr for TakeABreak check
+	checkAttackDisable($g_iTaBChkAttack, $Result) ;last check to see If TakeABreak msg on screen for fast PC from PrepareSearch click
+	If $g_bRestart = True Then Return ; exit func
 	If Not ($g_bIsSearchLimit) Then
 		SetLogCentered("=", "=", $COLOR_INFO)
 	EndIf
@@ -104,15 +100,6 @@ Func _VillageSearch($bIncludePrepare = False) ;Control for searching a village t
 
 	; Reset page errors.
 	InitAndroidPageError()
-	
-	; Internal PrepareSearch - Custom - Team AIO Mod++.
-	If $bIncludePrepare = True Then
-		If PrepareSearch() = False Then Return False
-		If Not $g_bRunState Then Return
-		If $g_bRestart Then Return
-		If $g_bOutOfGold Then Return ; Check flag for enough gold to search
-	EndIf
-	
 	Local $hBigMinuteTimer = __TimerInit() ; Return Home by Time - Team AIO Mod++
 	While 1 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;### Main Search Loop ###;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -133,6 +120,13 @@ Func _VillageSearch($bIncludePrepare = False) ;Control for searching a village t
 
 		; ----------------- READ ENEMY VILLAGE RESOURCES  -----------------------------------
 		WaitForClouds($hBigMinuteTimer) ; Return Home by Time - Team AIO Mod++
+		
+		#Region - Custom PrepareSearch - Team AIO Mod++
+		If $g_bBadPrepareSearch = True Then
+			Return
+		EndIf
+		#EndRegion - Custom PrepareSearch - Team AIO Mod++
+		
 		AttackRemainingTime(True) ; Timer for knowing when attack starts, in 30 Sec. attack automatically starts and lasts for 3 Minutes
 		If $g_bRestart Then Return ; exit func
 
@@ -606,7 +600,6 @@ Func _VillageSearch($bIncludePrepare = False) ;Control for searching a village t
 
 	$g_bIsClientSyncError = False
 
-	Return True ; Team AIO Mod++
 EndFunc   ;==>_VillageSearch
 
 Func SearchLimit($iSkipped, $bReturnToPickupHero = False)

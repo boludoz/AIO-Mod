@@ -25,6 +25,7 @@
 
 ; Enforce variable declarations
 Opt("MustDeclareVars", 1)
+
 Global $g_sBotTitle = "" ;~ Don't assign any title here, use Func UpdateBotTitle()
 Global $g_hFrmBot = 0 ; The main GUI window
 
@@ -543,10 +544,11 @@ Func SetupFilesAndFolders()
 		DeleteFiles($g_sProfileTempDebugPath, "*.*", $g_iDeleteTempDays, 0, $FLTAR_RECUR)
 	EndIf
 
-	If $g_bDebugSetlog Then SetDebugLog("$g_sProfilePath = " & $g_sProfilePath)
-	If $g_bDebugSetlog Then SetDebugLog("$g_sProfileCurrentName = " & $g_sProfileCurrentName)
-	If $g_bDebugSetlog Then SetDebugLog("$g_sProfileLogsPath = " & $g_sProfileLogsPath)
-
+	If $g_bDebugSetlog Then 
+		SetDebugLog("$g_sProfilePath = " & $g_sProfilePath)
+		SetDebugLog("$g_sProfileCurrentName = " & $g_sProfileCurrentName)
+		SetDebugLog("$g_sProfileLogsPath = " & $g_sProfileLogsPath)
+	EndIf
 EndFunc   ;==>SetupFilesAndFolders
 
 ; #FUNCTION# ====================================================================================================================
@@ -636,9 +638,11 @@ Func FinalInitialization(Const $sAI)
 	; InitializeVariables();initialize variables used in extrawindows
 	CheckVersion() ; check latest version on mybot.run site
 	UpdateMultiStats()
-	If $g_bDebugSetlog Then SetDebugLog("Maximum of " & $g_iGlobalActiveBotsAllowed & " bots running at same time configured")
-	If $g_bDebugSetlog Then SetDebugLog("MyBot.run launch time " & Round($g_iBotLaunchTime) & " ms.")
-
+	If $g_bDebugSetlog Then 
+		SetDebugLog("Maximum of " & $g_iGlobalActiveBotsAllowed & " bots running at same time configured")
+		SetDebugLog("MyBot.run launch time " & Round($g_iBotLaunchTime) & " ms.")
+	EndIf
+	
 	If $g_bAndroidShieldEnabled = False Then
 		SetLog(GetTranslatedFileIni("MBR GUI Design - Loading", "Msg_Android_instance_05", "Android Shield not available for %s", @OSVersion), $COLOR_ACTION)
 	EndIf
@@ -973,7 +977,7 @@ Func runBot() ;Bot that runs everything in order
 				SetLog("Attacking Not Planned and Skipped, Waiting random " & StringFormat("%0.1f", $iWaitTime / 1000) & " Seconds", $COLOR_WARNING)
 				If _SleepStatus($iWaitTime) Then Return False
 			EndIf
-		Else ;When error occours directly goes to attack
+		Else ;When error occurs directly goes to attack
 			Local $sRestartText = $g_bIsSearchLimit ? " due search limit" : " after Out of Sync Error: Attack Now"
 			SetLog("Restarted" & $sRestartText, $COLOR_INFO)
             ;Use "CheckDonateOften" setting to run loop on hitting SearchLimit
@@ -1023,9 +1027,6 @@ Func _Idle() ;Sequence that runs until Full Army
 		NotifyPendingActions()
 		If _Sleep($DELAYIDLE1) Then Return
 		If $g_iCommandStop = -1 Then SetLog("====== Waiting for full army ======", $COLOR_SUCCESS)
-
-		; If Not $g_bChkOnlyFarm Then ChatActions() ; ChatActions - Team AiO MOD++
-
 		Local $hTimer = __TimerInit()
 		If Not $g_bChkOnlyFarm Then BotHumanization() ; Humanization - Team AiO MOD++
 
@@ -1160,42 +1161,69 @@ Func AttackMain() ;Main control for attack functions
 				Return ; return to runbot, refill armycamps
 			EndIf
 			If $g_bDebugSetlog Then
-				If $g_bDebugSetlog Then SetDebugLog(_PadStringCenter(" Hero status check" & BitAND($g_aiAttackUseHeroes[$DB], $g_aiSearchHeroWaitEnable[$DB], $g_iHeroAvailable) & "|" & $g_aiSearchHeroWaitEnable[$DB] & "|" & $g_iHeroAvailable, 54, "="), $COLOR_DEBUG)
-				If $g_bDebugSetlog Then SetDebugLog(_PadStringCenter(" Hero status check" & BitAND($g_aiAttackUseHeroes[$LB], $g_aiSearchHeroWaitEnable[$LB], $g_iHeroAvailable) & "|" & $g_aiSearchHeroWaitEnable[$LB] & "|" & $g_iHeroAvailable, 54, "="), $COLOR_DEBUG)
+				SetDebugLog(_PadStringCenter(" Hero status check" & BitAND($g_aiAttackUseHeroes[$DB], $g_aiSearchHeroWaitEnable[$DB], $g_iHeroAvailable) & "|" & $g_aiSearchHeroWaitEnable[$DB] & "|" & $g_iHeroAvailable, 54, "="), $COLOR_DEBUG)
+				SetDebugLog(_PadStringCenter(" Hero status check" & BitAND($g_aiAttackUseHeroes[$LB], $g_aiSearchHeroWaitEnable[$LB], $g_iHeroAvailable) & "|" & $g_aiSearchHeroWaitEnable[$LB] & "|" & $g_iHeroAvailable, 54, "="), $COLOR_DEBUG)
 				;SetLog("BullyMode: " & $g_abAttackTypeEnable[$TB] & ", Bully Hero: " & BitAND($g_aiAttackUseHeroes[$g_iAtkTBMode], $g_aiSearchHeroWaitEnable[$g_iAtkTBMode], $g_iHeroAvailable) & "|" & $g_aiSearchHeroWaitEnable[$g_iAtkTBMode] & "|" & $g_iHeroAvailable, $COLOR_DEBUG)
 			EndIf
 
-			; If Not $g_bChkOnlyFarm Then ChatActions() ; ChatActions - Team AiO MOD++
-
-            ;_ClanGames() ;Trying to do this above in the main loop
-            ;ClickAway()
+			;_ClanGames() ;Trying to do this above in the main loop
+			;ClickAway()
 			If $g_bUpdateSharedPrefs Then PullSharedPrefs()
-			If VillageSearch(True) = False Then
-				SetDebugLog("Error: Village search interrupted.", $COLOR_ERROR)
+			
+			#Region - Custom PrepareSearch - Team AIO Mod++
+			Local $iErrorCount = 0
+			Do
+				$iErrorCount += 1
+				
+				If _Sleep($DELAYATTACKMAIN1) Then Return
+				checkMainScreen(False)
+				If Not $g_bRunState Or $g_bOutOfGold Or $g_bRestart Then Return
+				
+				If $iErrorCount > 3 Then 
+					SetLog("Error: AttackMain (1).", $COLOR_ERROR)
+				ElseIf $g_bBadPrepareSearch = True Then 
+					SetLog("Error: AttackMain (2).", $COLOR_ERROR)
+					Return
+				EndIf
+
+				; Prevents bot stucks in bad AttackMain case.
+				$g_bBadPrepareSearch = False
+
+				PrepareSearch()
+				If Not $g_bRunState Or $g_bOutOfGold Or $g_bRestart Then Return
+				
+				If $g_bBadPrepareSearch = True Then
+					$g_bBadPrepareSearch = False
+					ContinueLoop
+				EndIf
+				
+				VillageSearch()
+				If Not $g_bRunState Or $g_bOutOfGold Or $g_bRestart Then Return
+				
+				If $g_bBadPrepareSearch = True Then
+					$g_bBadPrepareSearch = False
+					ContinueLoop
+				EndIf
+
+				PrepareAttack($g_iMatchMode)
+				If Not $g_bRunState Or $g_bRestart Then Return
+				
+				Attack()
+				If Not $g_bRunState Or $g_bRestart Then Return
+				
+				ReturnHome($g_bTakeLootSnapShot)
 				If Not $g_bRunState Then Return
-				If $g_bRestart Then Return
-				checkMainScreen()
-				$g_bIsClientSyncError = False
-				Return False
-			EndIf
-			If $g_bOutOfGold Then Return ; Check flag for enough gold to search
-			If Not $g_bRunState Then Return
-			If $g_bRestart Then Return
-			PrepareAttack($g_iMatchMode)
-			If Not $g_bRunState Then Return
-			If $g_bRestart Then Return
-			Attack()
-			If Not $g_bRunState Then Return
-			If $g_bRestart Then Return
-			ReturnHome($g_bTakeLootSnapShot)
-			If Not $g_bRunState Then Return
-			If _Sleep($DELAYATTACKMAIN2) Then Return
+				If _Sleep($DELAYATTACKMAIN2) Then Return
+				
+			Until $g_bBadPrepareSearch = False
 			Return True
+			#EndRegion - Custom PrepareSearch - Team AIO Mod++ 
+			
 		#Region - Custom fix - Team AIO Mod++
 		ElseIf $g_bDropTrophyEnable And Number($g_aiCurrentLoot[$eLootTrophy]) > Number($g_iDropTrophyMax) Then ;If current trophy above max trophy, try drop first
 			DropTrophy()
 			If Not $g_bRunState Then Return
-			$g_bIsClientSyncError = False ; reset OOS flag to prevent looping.
+			If $g_bRestart Then Return
 			If _Sleep($DELAYATTACKMAIN1) Then Return
 			Return ; return to runbot, refill armycamps
 		#EndRegion - Custom fix - Team AIO Mod++
@@ -1362,6 +1390,15 @@ Func FirstCheck()
 	If $g_bDebugSetlog Then SetDebugLog("-- FirstCheck Loop --")
 	If Not $g_bRunState Then Return
 
+	SetDebugLog("-- FirstCheck Loop --")
+	If Not $g_bRunState Then Return
+
+	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
+
+	$g_bRestart = False
+	$g_bFullArmy = False
+	$g_iCommandStop = -1
+	
 	;;;;;Check Town Hall level
 	Local $iTownHallLevel = $g_iTownHallLevel
 	SetDebugLog("Detecting Town Hall level", $COLOR_INFO)
@@ -1381,11 +1418,6 @@ Func FirstCheck()
 	VillageReport()
 	ProfileSwitch()
 	CheckFarmSchedule()
-	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
-
-	$g_bRestart = False
-	$g_bFullArmy = False
-	$g_iCommandStop = -1
 	If Not $g_bChkOnlyFarm Then
 		MainGTFO()
 		MainKickout()
@@ -1410,7 +1442,7 @@ Func FirstCheck()
 
 	If _Sleep($DELAYRUNBOT5) Then Return
 	checkMainScreen(False)
-	If Not $g_bRunState Then Return
+	; If Not $g_bRunState Then Return
     If $g_bRestart Then Return
 
 	If BotCommand() Then btnStop()
@@ -1430,7 +1462,7 @@ Func FirstCheck()
 				If Not $g_bRunState Then Return
 				AttackMain()
 				; Custom fix - Team AIO Mod++
-				If Not $g_bRunState Then Return
+				; If Not $g_bRunState Then Return
                 If $g_bRestart Then Return
 
 				$g_bSkipFirstZoomout = False

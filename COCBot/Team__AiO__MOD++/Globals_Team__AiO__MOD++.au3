@@ -28,6 +28,8 @@ Global Enum $eIcnBB = 1 , $eIcnLabBB, $eIcnBBElixir, $eIcnBBGold, $eIcnBBTrophie
 #EndRegion - Icn - Team AIO Mod++
 
 #Region - Dates - Team AIO Mod++
+; Custom PrepareSearch - Team AIO Mod++
+Global $g_bBadPrepareSearch = False
 
 ; Magic items check.
 Global Const $g_sConstMaxMagicItemsSeconds = 172800 ; 172800 const = 2 days quality check.

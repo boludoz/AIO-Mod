@@ -111,13 +111,15 @@ Func WaitForClouds($hBigMinuteTimer = 0) ; Return Home by Time - Team AIO Mod++
 				EndIf
 			EndIf
 			#EndRegion - Return Home by Time - Team AIO Mod++
+			
 			; once a minute safety checks for search fail/retry msg and Personal Break events and early detection if CoC app has crashed inside emulator (Bluestacks issue mainly)
 			If chkAttackSearchFail() = 2 Or chkAttackSearchPersonalBreak() = True Or GetAndroidProcessPID() = 0 Then
 				resetAttackSearch()
 				ExitLoop
 			EndIf
+			
+			#Region - Custom PrepareSearch - Team AIO Mod++ 
 			; Check if CoC app restarted without notice (where android restarted app automatically with same PID), and returned to main base
-			#Region - Custom findMatch - Team AIO Mod++ 
 			Local $iCount
 			_CaptureRegion()
 			While _CheckPixel($aIsMainGrayed, False, Default, "IsMainGrayed") Or _CheckPixel($aIsMain, False, Default, "IsMain")
@@ -125,16 +127,17 @@ Func WaitForClouds($hBigMinuteTimer = 0) ; Return Home by Time - Team AIO Mod++
 				$iCount += 1
 				If _Sleep($DELAYATTACKREPORT1) Then Return
 				If $g_bDebugSetlog Then SetDebugLog("Waiting WaitForClouds, " & ($iCount / 2) & " Seconds.", $COLOR_DEBUG)
-				If $iCount > 15 Then ExitLoop ; wait 15*500ms = 7,5 seconds max for the window to render
+				If $iCount > 15 Then
+					SetLog("Strange error detected! 'WaitforClouds' returned to main base unexpectedly, OOS restart initiated", $COLOR_ERROR)
+					$g_bBadPrepareSearch = True 
+					; $g_bRestart = True ; Set flag for OOS restart condition
+					; resetAttackSearch()
+					ExitLoop
+				EndIf	
 			WEnd
 			
-			If $iCount > 15 Then
-				SetLog("Strange error detected! 'WaitforClouds' returned to main base unexpectedly, OOS restart initiated", $COLOR_ERROR)
-				$g_bRestart = True ; Set flag for OOS restart condition
-				resetAttackSearch()
-				ExitLoop
-			EndIf	
-			#EndRegion - Custom findMatch - Team AIO Mod++ 
+			#EndRegion - Custom PrepareSearch - Team AIO Mod++ 
+			
 			; attempt to enable GUI during long wait?
 			If $iSearchTime > 2 And Not $bEnabledGUI Then
 				AndroidShieldForceDown(True)
