@@ -19,7 +19,7 @@ Func VillageSearch()
 	$g_bVillageSearchActive = True
 	$g_bCloudsActive = True
 
-	Local $Result = _VillageSearch()
+	Local $bResult = _VillageSearch()
 	If $g_bSearchAttackNowEnable Then
 		GUICtrlSetState($g_hBtnAttackNowDB, $GUI_HIDE)
 		GUICtrlSetState($g_hBtnAttackNowLB, $GUI_HIDE)
@@ -33,7 +33,7 @@ Func VillageSearch()
 	$g_bVillageSearchActive = False
 	$g_bCloudsActive = False
 
-	Return $Result
+	Return $bResult
 
 EndFunc   ;==>VillageSearch
 
@@ -123,6 +123,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		
 		#Region - Custom PrepareSearch - Team AIO Mod++
 		If $g_bBadPrepareSearch = True Then
+			SetLog("Error: _VillageSearch, bad WaitForClouds.", $COLOR_ERROR)
 			Return
 		EndIf
 		#EndRegion - Custom PrepareSearch - Team AIO Mod++

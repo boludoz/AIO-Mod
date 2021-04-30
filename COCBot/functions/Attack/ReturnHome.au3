@@ -84,10 +84,28 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 	If $g_bRunState = False Then Return
 
 	; ---- CLICK SURRENDER BUTTON ----
+	Local $bNetworkBadly = False ; Custom fix - Team AIO Mod++
 	If Not (IsReturnHomeBattlePage(True, False)) Then ; check if battle is already over
-		For $i = 0 To 5 ; dynamic wait loop for surrender button to appear (if end battle or surrender button are not found in 5*(200)ms + 10*(200)ms or 3 seconds, then give up.)
+		For $i = 0 To 5 ; dynamic wait loop for surrender button to appear (if end battle or surrender button are not found in 5*(200)ms + 5*(200)ms or 3 seconds, then give up.)
 			If $g_bDebugSetlog Then SetDebugLog("Wait for surrender button to appear #" & $i)
-			$aiSurrenderButton = findButton("EndBattle", Default, 1, True)
+			
+			; Custom fix - Team AIO Mod++
+			_CaptureRegion2() ;to have FULL screen image to work with
+			$bNetworkBadly = checkObstacles_Network(False, False)
+			If $i <= 3 And $bNetworkBadly = True Then
+				; network error -> restart CoC
+				SetLog("Error: ReturnHome, sync error.", $COLOR_ERROR)
+				$g_bIsClientSyncError = True
+				$g_bRestart = True
+				CloseCoC(True)
+				Return
+			ElseIf $i > 3 And $bNetworkBadly = True Then
+				; Avoid unutil check.
+				TrayTip($g_sBotTitle, "", BitOR($TIP_ICONASTERISK, $TIP_NOSOUND)) ; clear village search match found message
+				ContinueLoop
+			EndIf
+			
+			$aiSurrenderButton = findButton("EndBattle", Default, 1, False) ; Custom fix - Team AIO Mod++
 			If IsArray($aiSurrenderButton) And UBound($aiSurrenderButton, 1) = 2 Then
 				If IsAttackPage() Then ; verify still on attack page, and battle has not ended magically before clicking
 					ClickP($aiSurrenderButton, 1, 0, "#0099") ;Click Surrender
@@ -101,7 +119,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 							$j += 1
 						EndIf
 						If ReturnHomeMainPage() Then Return
-						If $j > 10 Then ExitLoop ; if Okay button not found in 10*(200)ms or 2 seconds, then give up.
+						If $j > 5 Then ExitLoop ; if Okay button not found in 5*(200)ms or 2 seconds, then give up.
 						If _Sleep($DELAYRETURNHOME5) Then Return
 					WEnd
 				EndIf

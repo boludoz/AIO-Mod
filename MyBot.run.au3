@@ -544,7 +544,7 @@ Func SetupFilesAndFolders()
 		DeleteFiles($g_sProfileTempDebugPath, "*.*", $g_iDeleteTempDays, 0, $FLTAR_RECUR)
 	EndIf
 
-	If $g_bDebugSetlog Then 
+	If $g_bDebugSetlog Then
 		SetDebugLog("$g_sProfilePath = " & $g_sProfilePath)
 		SetDebugLog("$g_sProfileCurrentName = " & $g_sProfileCurrentName)
 		SetDebugLog("$g_sProfileLogsPath = " & $g_sProfileLogsPath)
@@ -638,11 +638,11 @@ Func FinalInitialization(Const $sAI)
 	; InitializeVariables();initialize variables used in extrawindows
 	CheckVersion() ; check latest version on mybot.run site
 	UpdateMultiStats()
-	If $g_bDebugSetlog Then 
+	If $g_bDebugSetlog Then
 		SetDebugLog("Maximum of " & $g_iGlobalActiveBotsAllowed & " bots running at same time configured")
 		SetDebugLog("MyBot.run launch time " & Round($g_iBotLaunchTime) & " ms.")
 	EndIf
-	
+
 	If $g_bAndroidShieldEnabled = False Then
 		SetLog(GetTranslatedFileIni("MBR GUI Design - Loading", "Msg_Android_instance_05", "Android Shield not available for %s", @OSVersion), $COLOR_ACTION)
 	EndIf
@@ -979,6 +979,7 @@ Func runBot() ;Bot that runs everything in order
 			EndIf
 		Else ;When error occurs directly goes to attack
 			Local $sRestartText = $g_bIsSearchLimit ? " due search limit" : " after Out of Sync Error: Attack Now"
+			$g_bIsClientSyncError = False ; Reset flag (avoid infinite loop) - Team AIO Mod++
 			SetLog("Restarted" & $sRestartText, $COLOR_INFO)
             ;Use "CheckDonateOften" setting to run loop on hitting SearchLimit
             If $g_bIsSearchLimit and $g_bCheckDonateOften Then
@@ -1169,55 +1170,67 @@ Func AttackMain() ;Main control for attack functions
 			;_ClanGames() ;Trying to do this above in the main loop
 			;ClickAway()
 			If $g_bUpdateSharedPrefs Then PullSharedPrefs()
-			
+
 			#Region - Custom PrepareSearch - Team AIO Mod++
 			Local $iErrorCount = 0
 			Do
+				; Add error to count.
 				$iErrorCount += 1
 				
-				If _Sleep($DELAYATTACKMAIN1) Then Return
+				; Check main.
 				checkMainScreen(False)
-				If Not $g_bRunState Or $g_bOutOfGold Or $g_bRestart Then Return
+				If Not $g_bRunState Or $g_bRestart Then Return
 				
-				If $iErrorCount > 3 Then 
-					SetLog("Error: AttackMain (1).", $COLOR_ERROR)
-				ElseIf $g_bBadPrepareSearch = True Then 
-					SetLog("Error: AttackMain (2).", $COLOR_ERROR)
-					Return
+				; Litle sleep.
+				If RandomSleep($DELAYATTACKMAIN1) Then Return
+				
+				; Check error count.
+				If $iErrorCount > 3 Then
+					SetLog("Error: AttackMain bad.", $COLOR_ERROR)
+					ExitLoop
 				EndIf
 
 				; Prevents bot stucks in bad AttackMain case.
 				$g_bBadPrepareSearch = False
-
+				
+				; Prepare search and check if it isn't in main (bad PrepareSearch case).
 				PrepareSearch()
-				If Not $g_bRunState Or $g_bOutOfGold Or $g_bRestart Then Return
-				
 				If $g_bBadPrepareSearch = True Then
-					$g_bBadPrepareSearch = False
+					SetLog("Error: AttackMain (1)", $COLOR_ERROR)
 					ContinueLoop
 				EndIf
 				
-				VillageSearch()
+				; Restart or stop in case.
 				If Not $g_bRunState Or $g_bOutOfGold Or $g_bRestart Then Return
-				
+
+				; Search village and check if it isn't in main (bad PrepareSearch case).
+				VillageSearch()
 				If $g_bBadPrepareSearch = True Then
-					$g_bBadPrepareSearch = False
+					SetLog("Error: AttackMain (2)", $COLOR_ERROR)
 					ContinueLoop
 				EndIf
 
+				; Restart or stop in case.
+				If Not $g_bRunState Or $g_bOutOfGold Or $g_bRestart Then Return
+				
+				; Simple PrepareAttack.
 				PrepareAttack($g_iMatchMode)
 				If Not $g_bRunState Or $g_bRestart Then Return
-				
+
+				; Simple Attack.
 				Attack()
 				If Not $g_bRunState Or $g_bRestart Then Return
-				
+
+				; Simple ReturnHome.
 				ReturnHome($g_bTakeLootSnapShot)
-				If Not $g_bRunState Then Return
-				If _Sleep($DELAYATTACKMAIN2) Then Return
+				If Not $g_bRunState Or $g_bRestart Then Return
 				
+				If RandomSleep($DELAYATTACKMAIN2) Then Return
+			
+			; If all is ok get out.
 			Until $g_bBadPrepareSearch = False
 			Return True
-			#EndRegion - Custom PrepareSearch - Team AIO Mod++ 
+			#EndRegion - Custom PrepareSearch - Team AIO Mod++
 			
 		#Region - Custom fix - Team AIO Mod++
 		ElseIf $g_bDropTrophyEnable And Number($g_aiCurrentLoot[$eLootTrophy]) > Number($g_iDropTrophyMax) Then ;If current trophy above max trophy, try drop first
@@ -1398,7 +1411,7 @@ Func FirstCheck()
 	$g_bRestart = False
 	$g_bFullArmy = False
 	$g_iCommandStop = -1
-	
+
 	;;;;;Check Town Hall level
 	Local $iTownHallLevel = $g_iTownHallLevel
 	SetDebugLog("Detecting Town Hall level", $COLOR_INFO)

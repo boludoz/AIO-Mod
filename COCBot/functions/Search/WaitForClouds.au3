@@ -97,6 +97,24 @@ Func WaitForClouds($hBigMinuteTimer = 0) ; Return Home by Time - Team AIO Mod++
 		EndIf
 		If $g_bDebugSetlog Then _GUICtrlStatusBar_SetTextEx($g_hStatusBar, " Status: Loop to clean screen without Clouds, # " & $iCount)
 		$iSearchTime = __TimerDiff($hMinuteTimer) / 60000 ;get time since minute timer start in minutes
+		
+		#Region - Custom PrepareSearch - Team AIO Mod++ 
+		; Check if CoC app restarted without notice (where android restarted app automatically with same PID), and returned to main base
+		Local $iSubCount = 0
+		_CaptureRegion()
+		While _CheckPixel($aIsMainGrayed, False, Default, "IsMainGrayed") Or _CheckPixel($aIsMain, False, Default, "IsMain")
+			_CaptureRegion()
+			$iSubCount += 1
+			If _Sleep($DELAYATTACKREPORT1) Then Return
+			If $g_bDebugSetlog Then SetDebugLog("Waiting WaitForClouds, " & ($iCount / 2) & " Seconds.", $COLOR_DEBUG)
+			If $iSubCount > 3 Then
+				SetLog("Error: Main screen detected! 'WaitforClouds'.", $COLOR_ERROR)
+				$g_bBadPrepareSearch = True 
+				ExitLoop 2
+			EndIf	
+		WEnd
+		#EndRegion - Custom PrepareSearch - Team AIO Mod++ 
+		
 		If $iSearchTime >= $iLastTime + 1 Then
 			SetLog("Cloud wait time " & StringFormat("%.1f", $iSearchTime) & " minute(s)", $COLOR_INFO)
 			$iLastTime += 1
@@ -107,7 +125,7 @@ Func WaitForClouds($hBigMinuteTimer = 0) ; Return Home by Time - Team AIO Mod++
 					Click(70, 680) ; Return Home
 					$g_bIsClientSyncError = True ; disable fast OOS restart if not simple error and restarting CoC
 					$g_bRestart = True
-					Return
+					ExitLoop
 				EndIf
 			EndIf
 			#EndRegion - Return Home by Time - Team AIO Mod++
@@ -118,25 +136,6 @@ Func WaitForClouds($hBigMinuteTimer = 0) ; Return Home by Time - Team AIO Mod++
 				ExitLoop
 			EndIf
 			
-			#Region - Custom PrepareSearch - Team AIO Mod++ 
-			; Check if CoC app restarted without notice (where android restarted app automatically with same PID), and returned to main base
-			Local $iCount
-			_CaptureRegion()
-			While _CheckPixel($aIsMainGrayed, False, Default, "IsMainGrayed") Or _CheckPixel($aIsMain, False, Default, "IsMain")
-				_CaptureRegion()
-				$iCount += 1
-				If _Sleep($DELAYATTACKREPORT1) Then Return
-				If $g_bDebugSetlog Then SetDebugLog("Waiting WaitForClouds, " & ($iCount / 2) & " Seconds.", $COLOR_DEBUG)
-				If $iCount > 15 Then
-					SetLog("Strange error detected! 'WaitforClouds' returned to main base unexpectedly, OOS restart initiated", $COLOR_ERROR)
-					$g_bBadPrepareSearch = True 
-					; $g_bRestart = True ; Set flag for OOS restart condition
-					; resetAttackSearch()
-					ExitLoop
-				EndIf	
-			WEnd
-			
-			#EndRegion - Custom PrepareSearch - Team AIO Mod++ 
 			
 			; attempt to enable GUI during long wait?
 			If $iSearchTime > 2 And Not $bEnabledGUI Then
@@ -180,6 +179,22 @@ Func EnableLongSearch()
 
 	$iCount = 0 ; initialize safety loop counter #1
 	While 1
+		#Region - Custom PrepareSearch - Team AIO Mod++ 
+		; Check if CoC app restarted without notice (where android restarted app automatically with same PID), and returned to main base
+		Local $iSubCount = 0
+		_CaptureRegion()
+		While _CheckPixel($aIsMainGrayed, False, Default, "IsMainGrayed") Or _CheckPixel($aIsMain, False, Default, "IsMain")
+			_CaptureRegion2Sync()
+			$iSubCount += 1
+			If _Sleep($DELAYATTACKREPORT1) Then Return
+			If $iSubCount > 3 Then
+				SetLog("Error: Main screen detected! 'EnableLongSearch'.", $COLOR_ERROR)
+				$g_bBadPrepareSearch = True 
+				Return True
+			EndIf	
+		WEnd
+		#EndRegion - Custom PrepareSearch - Team AIO Mod++ 
+
 		If chkSurrenderBtn() = True Then Return True ; check if clouds are gone.
 		If chkAttackSearchPersonalBreak() = True Then Return False ; OCR check for Personal Break while in clouds, return after PB prep
 		If chkAttackSearchFail() = 1 Then Return True ; OCR text for search fail message, and press retry if available, success continue searching
