@@ -74,16 +74,31 @@ Func BuilderBaseSendZoomOut($Main = False, $i = 0)
 	Return True
 EndFunc   ;==>BuilderBaseSendZoomOut
 
-Func GetBuilderBaseSize($WithClick = False, $DebugImage = False)
-
-	  If Not $g_bRunState Then Return
-	  Local $aVillage = GetVillageSize(True, "stone", "tree", Default, True)
-
-	  If $aVillage <> 0 Then
-		 Local $iResul = Floor(Pixel_Distance($aVillage[4], $aVillage[5], $aVillage[7], $aVillage[8]))
-		 Return $iResul
-	  EndIf
-
-	 SetDebugLog("[BBzoomout] GetDistance Boat to Stone Error", $COLOR_ERROR)
-	 Return 0
+Func GetBuilderBaseSize($WithClick = False, $bDebugLog = False)
+	Local $iResult = 0, $aVillage = 0
+	
+	If Not $g_bRunState Then Return
+	
+	Local $sFiles = ["", "2"]
+	
+	_CaptureRegion2()
+	
+	For $sMode In $sFiles
+		
+		If Not $g_bRunState Then Return
+		
+		$aVillage = GetVillageSize($bDebugLog, $sMode & "stone", $sMode & "tree", Default, True, False)
+	
+		If UBound($aVillage) > 8 And not @error Then
+			If $aVillage[4] <> 0 And $aVillage[5] <> 0 And $aVillage[7] <> 0 And $aVillage[8] <> 0 Then
+				$iResult = Floor(Pixel_Distance($aVillage[4], $aVillage[5], $aVillage[7], $aVillage[8]))
+				Return $iResult
+			EndIf
+		EndIf
+		
+		If _Sleep($DELAYSLEEP) Then Return
+	Next
+	
+	SetDebugLog("[BBzoomout] GetDistance Boat to Stone Error", $COLOR_ERROR)
+	Return 0
 EndFunc   ;==>GetBuilderBaseSize

@@ -488,6 +488,7 @@ Func BuilderBaseAttackReport()
 	Local $Stars = 0
 	Local $StarsPositions[3][2] = [[326, 394], [452, 388], [546, 413]]
 	Local $Color[3] = [0xD0D4D0, 0xDBDEDB, 0xDBDDD8]
+	Local $hResultColor = 0x000000
 
 	If _Sleep(1500) Then Return
 	If Not $g_bRunState Then Return
@@ -521,18 +522,24 @@ Func BuilderBaseAttackReport()
 			ContinueLoop
 		EndIf
 		If _WaitForCheckImg($g_sImgReportFinishedBB, "465, 493, 490, 505", Default, 5000, 250) Then
-			If _ColorCheck(_GetPixelColor(150, 192, True), Hex(0x8DBE51, 6), 40) Then
+
+			If RandomSleep(500) Then Return
+
+			$hResultColor = _GetPixelColor(150, 192, True)
+
+			If _ColorCheck($hResultColor, Hex(0x8DBE51, 6), 20) Then
 				$sResultName = "Victory"
-			ElseIf _ColorCheck(_GetPixelColor(150, 192, True), Hex(0xD0262C, 6), 40) Then
+			ElseIf _ColorCheck($hResultColor, Hex(0xD0262C, 6), 20) Then
 				$sResultName = "Defeat"
 			EndIf
+
 			Setlog("Attack Result: " & $sResultName, ($sResultName = "Victory") ? ($COLOR_SUCCESS) : ($COLOR_ERROR))
 			ExitLoop
 		EndIf
 	Next
 
 	; Small delay just to getout the slide resources to top left
-	;If RandomSleep(3000) Then Return
+	If RandomSleep(500) Then Return
 
 	; Get the LOOT :
 	Local $gain[3]

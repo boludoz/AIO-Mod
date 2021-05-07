@@ -35,7 +35,13 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		If $g_bUpdateSharedPrefs Then $sFixedPrefix = "fixed"
 	EndIf
     
-    If $bCaptureRegion = Default Then $bCaptureRegion = True ; Capture region spam disabled - Team AIO Mod++
+    ; Capture region spam disabled - Team AIO Mod++
+	If $bCaptureRegion = Default Then $bCaptureRegion = True 
+	
+	; Capture region spam disabled - Team AIO Mod++	
+	If $bCaptureRegion = True Then
+		_CaptureRegion2()
+	EndIf
 	
 	Local $aResult = 0
 	Local $sDirectory
@@ -46,7 +52,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	Local $iAdditionalX = 100
 
 	If $bOnBuilderBase = Default Then
-		$bOnBuilderBase = isOnBuilderBase(True)
+		$bOnBuilderBase = isOnBuilderBase($bCaptureRegion)
 	EndIf
 	If $bOnBuilderBase Then
 		$sDirectory = $g_sImgZoomOutDirBB

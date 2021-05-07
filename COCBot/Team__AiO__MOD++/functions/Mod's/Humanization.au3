@@ -218,13 +218,13 @@ Func WatchWarReplays()
 			If randomSleep(1500) Then Return
 
 			If IsBestClans() Then
-				Local $ReplayNumber = QuickMIS("Q1", $g_sImgHumanizationReplay, 780, 210 + $g_iMidOffsetY, 840, 610 + $g_iBottomOffsetY)
+				Local $aSarea[4] = [780, 210 + $g_iMidOffsetY, 840, 610 + $g_iBottomOffsetY]
+				Local $vReplayNumber = findMultipleQuick($g_sImgHumanizationReplay, 6, $aSarea, True, "", False, 36)
+				If UBound($vReplayNumber) > 0 And not @error Then
+					SetLog("There Are " & UBound($vReplayNumber) & " Replays To Watch ... We Will Choose One Of Them ...", $COLOR_INFO)
+					Local $iReplayToLaunch = Random(0, UBound($vReplayNumber) -1, 1)
 
-				If $ReplayNumber > 0 Then
-					SetLog("There Are " & $ReplayNumber & " Replays To Watch ... We Will Choose One Of Them ...", $COLOR_INFO)
-					Local $ReplayToLaunch = Random(1, $ReplayNumber, 1)
-
-					Click(810, 239 + 74 * ($ReplayToLaunch - 1) + $g_iMidOffsetY) ; click on the choosen replay
+					Click($vReplayNumber[$iReplayToLaunch][1], $vReplayNumber[$iReplayToLaunch][2]) ; click on the choosen replay
 
 					WaitForReplayWindow()
 

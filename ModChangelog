@@ -4,6 +4,14 @@
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
                     Based on MyBot.run v7.9.2
+	**v4.5.2**
+		- Improved / Fixed: Humanization fix (by @moebius14).
+		- Improved / Fixed: Hard problem in Builder base in zoomout attack case.
+		- Improved / Fixed: Result attack BBase.
+		- Improved / Fixed: Tested and finished works on village search.
+		- Fix: Array problem in Upgrade Builds case. (thx @PriapusCranium)
+		- Fix: Litle tweaks, bot closes faster, CPU Usage.
+
 	**v4.5.1**
 		- New: BlueStacks HyperV support. (by @Teknolojikpanda).
 		- Improved: Humanization and ChatActions improved and fixed.
