@@ -985,7 +985,7 @@ Func VisitBestPlayers()
 	If randomSleep(1500) Then Return
 
 	If IsClanOverview() Then
-		Click(540, 80 + $g_iMidOffsetY) ; open best players menu
+		Click(540, 50 + $g_iMidOffsetY) ; open best players menu
 		If randomSleep(3000) Then Return
 
 		If IsBestPlayers() Then

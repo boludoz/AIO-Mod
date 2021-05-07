@@ -692,10 +692,12 @@ Func MainLoop($bCheckPrerequisitesOK = True)
 	NotifyGetLastMessageFromTelegram()
 	$g_iTGLastRemote = $g_sTGLast_UID
 
+	Local $diffhStarttime = 0 
 	While 1
 		_Sleep($DELAYSLEEP, True, False)
-
-		Local $diffhStarttime = _Timer_Diff($g_hStarttime)
+		
+		$diffhStarttime = _Timer_Diff($g_hStarttime)
+		
 		If Not $g_bRunState And $g_bNotifyTGEnable And $g_bNotifyRemoteEnable And $diffhStarttime > 1000 * 15 Then ; 15seconds
 			$g_hStarttime = _Timer_Init()
 			NotifyRemoteControlProcBtnStart()

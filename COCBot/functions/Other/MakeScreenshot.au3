@@ -14,8 +14,16 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func MakeScreenshot($TargetDir, $type = "jpg")
-
+Func MakeScreenshot($TargetDir, $type = Default)
+	
+	If $type = Default Then
+		If $g_bScreenshotPNGFormat Then
+			$type = "png"
+		Else
+			$type = "jpg"
+		EndIf
+	EndIf
+	
 	If WinGetAndroidHandle() <> 0 Then
 
 		Local $SuspendMode

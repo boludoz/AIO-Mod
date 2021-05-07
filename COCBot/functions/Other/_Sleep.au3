@@ -66,11 +66,11 @@ Func _Sleep($iDelayOri, $iSleep = True, $CheckRunState = True, $SleepWhenPaused 
 
 			CheckPostponedLog()
 
-			If BotCloseRequestProcessed() Then
-				BotClose() ; improve responsive bot close
-				$b_Sleep_Active = False
-				Return True
-			EndIf
+			; If BotCloseRequestProcessed() Then
+				; BotClose() ; improve responsive bot close
+				; $b_Sleep_Active = False
+				; Return True
+			; EndIf
 		EndIf
 	EndIf
 
@@ -78,7 +78,7 @@ Func _Sleep($iDelayOri, $iSleep = True, $CheckRunState = True, $SleepWhenPaused 
 		ResumeAndroid()
 		$b_Sleep_Active = False
 		Return True
-	#Region - AIO ++ - Random / Custom delay
+	#CS - Region - AIO ++ - Random / Custom delay
 	ElseIf $g_bRunState Then
 		; check free space of profile folder
 		Local $fFree = DriveSpaceFree($g_sProfilePath & "\" & $g_sProfileCurrentName)
@@ -89,7 +89,7 @@ Func _Sleep($iDelayOri, $iSleep = True, $CheckRunState = True, $SleepWhenPaused 
 				btnStop()
 			EndIf
 		EndIf
-	#EndRegion - AIO ++ - Random / Custom delay
+	#CE - EndRegion - AIO ++ - Random / Custom delay
 	EndIf
 	
 	Local $iRemaining = $iDelay - __TimerDiff($iBegin)
@@ -104,13 +104,7 @@ Func _Sleep($iDelayOri, $iSleep = True, $CheckRunState = True, $SleepWhenPaused 
 		If SetCriticalMessageProcessing() = False Then
 			If $g_bBotPaused And $SleepWhenPaused And $g_bTogglePauseAllowed Then TogglePauseSleep() ; Bot is paused
 			If $g_bTogglePauseUpdateState Then TogglePauseUpdateState("_Sleep") ; Update Pause GUI states
-			If $g_bMakeScreenshotNow = True Then
-				If $g_bScreenshotPNGFormat = False Then
-					MakeScreenshot($g_sProfileTempPath, "jpg")
-				Else
-					MakeScreenshot($g_sProfileTempPath, "png")
-				EndIf
-			EndIf
+			If $g_bMakeScreenshotNow = True Then MakeScreenshot($g_sProfileTempPath)
 			If __TimerDiff($g_hTxtLogTimer) >= $g_iTxtLogTimerTimeout Then
 				If $g_bRunState And Not $g_bSearchMode And Not $g_bBotPaused And ($hTimer_SetTime = 0 Or __TimerDiff($hTimer_SetTime) >= 750) Then
 					SetTime()
@@ -121,13 +115,22 @@ Func _Sleep($iDelayOri, $iSleep = True, $CheckRunState = True, $SleepWhenPaused 
 				CheckPostponedLog()
 			EndIf
 		EndIf
-		$iRemaining = $iDelay - __TimerDiff($iBegin)
-		If $iRemaining >= $DELAYSLEEP Then
-			_SleepMilli($DELAYSLEEP)
+		
+		
+		If $g_bRunState = False Then 
+			_SleepMilli(100)
+			ExitLoop
 		Else
-			_SleepMilli($iRemaining)
+			$iRemaining = $iDelay - __TimerDiff($iBegin)
+			If $iRemaining > $DELAYSLEEP Then
+				_SleepMilli($iRemaining)
+			Else
+				_SleepMilli(100)
+				ExitLoop
+			EndIf
+			
+			CheckBotRequests() ; check if bot window should be moved, minized etc.
 		EndIf
-		CheckBotRequests() ; check if bot window should be moved
 	WEnd
 	$b_Sleep_Active = False
 	Return False

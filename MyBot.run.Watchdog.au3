@@ -12,7 +12,7 @@
 
 #NoTrayIcon
 #RequireAdmin
-#AutoIt3Wrapper_UseX64=7n
+#AutoIt3Wrapper_UseX64=n
 #AutoIt3Wrapper_Run_Au3Stripper=y
 #Au3Stripper_Parameters=/rsln
 #AutoIt3Wrapper_Change2CUI=y
@@ -64,7 +64,7 @@ Global $g_iDebugWindowMessages = 0
 
 Global $hStruct_SleepMicro = DllStructCreate("int64 time;")
 Global $pStruct_SleepMicro = DllStructGetPtr($hStruct_SleepMicro)
-Global $DELAYSLEEP = 1000
+Global $DELAYSLEEP = 500
 Global $g_bDebugSetlog = False
 Global $g_bDebugAndroid = False
 Global $g_asCmdLine = [0]

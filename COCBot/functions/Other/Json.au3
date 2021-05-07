@@ -57,6 +57,7 @@ Global Const $JSON_UNQUOTED_STRING = 512 ; Output unquoted string if possible (c
 Global Const $JSMN_ERROR_NOMEM = -1 ; Not enough tokens were provided
 Global Const $JSMN_ERROR_INVAL = -2 ; Invalid character inside JSON string
 Global Const $JSMN_ERROR_PART = -3 ; The string is not a full JSON packet, more bytes expected
+Global $Total_JSON_DUMP_Output = ""
 
 Func __Jsmn_RuntimeLoader($ProcName = "")
 	Static $SymbolList
@@ -472,6 +473,7 @@ Func Json_Dump($Json, $InitTokenCount = 1000)
 	Static $Jsmn_Init = __Jsmn_RuntimeLoader("jsmn_init"), $Jsmn_Parse = __Jsmn_RuntimeLoader("jsmn_parse")
 	If $Json = "" Then $Json = '""'
 	Local $TokenList, $Ret
+	$Total_JSON_DUMP_Output = ""  ; reset totaldump variable at the start of the dump process (Use for testing)
 	Local $Parser = DllStructCreate("uint pos;int toknext;int toksuper")
 	Do
 		DllCallAddress("none:cdecl", $Jsmn_Init, "ptr", DllStructGetPtr($Parser))
@@ -529,6 +531,7 @@ Func _Json_TokenDump(ByRef $Json, $Ptr, ByRef $Next, $ObjPath = "")
 					EndIf
 					; show the key and its value
 					ConsoleWrite("+-> " & $cObjPath & '  =' & $Value & @CRLF)
+					$Total_JSON_DUMP_Output &= "+-> " & $cObjPath & '  =' & $Value & @CRLF
 				EndIf
 			Next
 			Return False
@@ -540,6 +543,7 @@ Func _Json_TokenDump(ByRef $Json, $Ptr, ByRef $Next, $ObjPath = "")
 				If Not (IsBool($Value) And $Value = False) Then ;XC - Changed line
 					; show the key and its value
 					ConsoleWrite("+=> " & $sObjPath & "=>" & $Value & @CRLF)
+					$Total_JSON_DUMP_Output &= "+=> " & $sObjPath & "=>" & $Value & @CRLF
 				EndIf
 			Next
 			$ObjPath = $sObjPath

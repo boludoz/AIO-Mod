@@ -1298,6 +1298,8 @@ Func CheckBotRequests()
 	EndIf
 EndFunc   ;==>CheckBotRequests
 
+#Region - Optimization - Team AIO Mod++
+#CS - Optimization - Team AIO Mod++
 Func BotCloseRequest()
 	If $g_iBotAction = $eBotClose Then
 		; already requested to close, but user is impatient, so close now
@@ -1309,11 +1311,18 @@ Func BotCloseRequest()
 	$g_bBotPaused = False
 	$g_iBotAction = $eBotClose
 EndFunc   ;==>BotCloseRequest
+#CE - Optimization - Team AIO Mod++
+
+Func BotCloseRequest()
+	; The impatient user.
+	BotClose(Default, True)
+EndFunc   ;==>BotCloseRequest
 
 Func BotCloseRequestProcessed()
-	;Return False ; no stable yet, so disabled for now
-	Return $g_iBotAction = $eBotClose And $g_bAndroidEmbedded = False
+	Return False ; no stable yet, so disabled for now
+	; Return $g_iBotAction = $eBotClose And $g_bAndroidEmbedded = False
 EndFunc   ;==>BotCloseRequestProcessed
+#EndRegion - Optimization - Team AIO Mod++
 
 Func BotClose($SaveConfig = Default, $bExit = True)
 	If $SaveConfig = Default Then $SaveConfig = IsBotLaunched()
