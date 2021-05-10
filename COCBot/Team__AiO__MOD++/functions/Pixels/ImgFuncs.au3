@@ -119,13 +119,15 @@ Func CompKick(ByRef $vFiles, $aof, $bType = False)
 	Return (UBound($vFiles) = 0)
 EndFunc   ;==>CompKick
 ;
-Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri = Default, $bForceCapture = True, $sOnlyFind = "", $bExactFind = False, $iDistance2check = 25, $bDebugLog = False, $minLevel = 0, $maxLevel = 1000)
+Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri = Default, $bForceCapture = True, $sOnlyFind = "", $bExactFind = False, $iDistance2check = 25, $bDebugLog = $g_bDebugImageSave, $minLevel = 0, $maxLevel = 1000, $vArea2SearchOri2 = Default)
 	FuncEnter(findMultipleQuick)
 	$g_aImageSearchXML = -1
 	Local $iCount = 0, $returnProps = "objectname,objectlevel,objectpoints"
 	
 	If $bForceCapture = Default Then $bForceCapture = True
+	
 	If $vArea2SearchOri = Default Then $vArea2SearchOri = "FV"
+
 	If $iQuantityMatch = Default Then $iQuantityMatch = 0
 	If $sOnlyFind = Default Then $sOnlyFind = ""
 	Local $bOnlyFindIsSpace = StringIsSpace($sOnlyFind)
@@ -151,6 +153,17 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 		EndIf
 	EndIf
 
+	If $vArea2SearchOri2 = Default Then 
+		$vArea2SearchOri2 = $vArea2SearchOri
+	Else
+		If (IsArray($vArea2SearchOri)) Then
+			$vArea2SearchOri = GetDiamondFromArray($vArea2SearchOri)
+		EndIf
+		If 3 = ((StringReplace($vArea2SearchOri, ",", ",") <> "") ? (@extended) : (0)) Then
+			$vArea2SearchOri = GetDiamondFromRect($vArea2SearchOri)
+		EndIf		
+	EndIf
+	
 	Local $aCoords = "" ; use AutoIt mixed variable type and initialize array of coordinates to null
 	Local $returnData = StringSplit($returnProps, ",", $STR_NOCOUNT)
 	Local $returnLine[UBound($returnData)]
@@ -159,7 +172,7 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 	If $bForceCapture Then _CaptureRegion2() ;to have FULL screen image to work with
 
 	Local $error, $extError
-	Local $result = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sDirectory, "str", $vArea2SearchOri, "Int", $iQuantToMach, "str", $vArea2SearchOri, "Int", $minLevel, "Int", $maxLevel)
+	Local $result = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sDirectory, "str", $vArea2SearchOri, "Int", $iQuantToMach, "str", $vArea2SearchOri2, "Int", $minLevel, "Int", $maxLevel)
 	$error = @error ; Store error values as they reset at next function call
 	$extError = @extended
 	If $error Then

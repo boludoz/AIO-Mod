@@ -101,7 +101,7 @@ EndFunc   ;==>GetCollectorIndexByFillLevel
 diff a/COCBot/functions/Image Search/checkDeadBase.au3 b/COCBot/functions/Image Search/checkDeadBase.au3	(rejected hunks)
 @@ -156,7 +156,11 @@ Func checkDeadBaseNew()
  EndFunc   ;==>checkDeadBaseNew
- 
+
  Func checkDeadBase()
 -	Return checkDeadBaseSuperNew(False)
 +   If $g_bChkDeadEagle Then
@@ -110,11 +110,11 @@ diff a/COCBot/functions/Image Search/checkDeadBase.au3 b/COCBot/functions/Image 
 +		Return checkDeadBaseSuperNew(False)
 +	EndIf
  EndFunc   ;==>checkDeadBase
- 
+
  Func GetCollectorIndexByFillLevel($level)
 @@ -491,3 +495,31 @@ Func checkDeadBaseFolder($directory, $executeOldCode = "checkDeadBaseNew()", $ex
  	Return True
- 
+
  EndFunc   ;==>checkDeadBaseFolder
 +
 +; search image for Dead Eagle
@@ -147,11 +147,11 @@ diff a/COCBot/functions/Image Search/checkDeadBase.au3 b/COCBot/functions/Image 
 
 #ce
 Func checkDeadBase($bForceCapture = False, $sFillDirectory = @ScriptDir & "\imgxml\deadbase\elix\fill\", $sLvlDirectory = @ScriptDir & "\imgxml\deadbase\elix\lvl\")
-	
+
 	#Region -  New DB sys - Team AIO Mod++
 	Local $bNoCheckDefenses = $g_bCollectorFilterDisable
-	
-	If $g_bDefensesMix = True Or $g_bDefensesAlive = True Then 
+
+	If $g_bDefensesMix = True Or $g_bDefensesAlive = True Then
 		If $g_bDefensesMix Then $bNoCheckDefenses = True
 		Local $sDFindEagle = DFind($g_sBundleDefensesEagle, 216, 174, 438, 325, 0, 0, 0, False) ; 91, 69, 723, 527
 		Local $bALiveSimbol = StringInStr($sDFindEagle, "ALive") > 0, $bDeadSimbol = StringInStr($sDFindEagle, "DEeagle") > 0
@@ -166,7 +166,7 @@ Func checkDeadBase($bForceCapture = False, $sFillDirectory = @ScriptDir & "\imgx
 			Return True
 		EndIf
 	EndIf
-	
+
 	If $bNoCheckDefenses Then Return True
 	#EndRegion -  New DB sys - Team AIO Mod++
 
@@ -204,12 +204,12 @@ Func checkDeadBase($bForceCapture = False, $sFillDirectory = @ScriptDir & "\imgx
 	Local $matchedValues
 	Local $iTotalMatched = 0, $iLocalMatch = 0
 	Local $x, $y, $lvl, $fill
-	
+
 	Local $iStartLevel = 13
 	Local $iEndLevelD = UBound($g_aiCollectorLevelFill) - 1
-	
+
 	If $bForceCapture Then _CaptureRegion2() ; Custom match - Team AIO Mod++
-	
+
 	; 0.19s method DMatch.
 	Local $iDminLevel = 0
 	Local $iDmaxLevel = 0
@@ -223,7 +223,7 @@ Func checkDeadBase($bForceCapture = False, $sFillDirectory = @ScriptDir & "\imgx
 	Next
 
 	If $g_bDebugSetlog Then SetDebugLog("checkDeadBase DMatch | $iDminLevel : " & $iDminLevel & " $iDmaxLevel : " & $iDmaxLevel & " $aDFillLevel[0] : " & $aDFillLevel[0] & " $aDFillLevel[1] : " & $aDFillLevel[1])
-	
+
 	If $aDFillLevel[0] Then ; Scan optimized.
 		Local $sDFindResult50 = DFind($g_sECollectorDMatB & "50\", 19, 74, 805, 518, $iDminLevel, $iDmaxLevel, $g_iCollectorMatchesMin, False)
 		For $i = $iDminLevel To $iDmaxLevel
@@ -235,7 +235,7 @@ Func checkDeadBase($bForceCapture = False, $sFillDirectory = @ScriptDir & "\imgx
 			$iTotalMatched += $iLocalMatch
 		Next
 	EndIf
-	
+
 	If $aDFillLevel[1] Or $aDFillLevel[0] Then ; Scan optimized.
 		$iLocalMatch = 0
 		If $iTotalMatched < $g_iCollectorMatchesMin Then
@@ -301,52 +301,51 @@ Func checkDeadBase($bForceCapture = False, $sFillDirectory = @ScriptDir & "\imgx
 				Next
 			EndIf
 		Next
-
-		; check each collector location for collector level
-		For $aP In $aPos
-			$x = $aP[0]
-			$y = $aP[1]
-			$fill = $aP[2]
-			$lvl = $aP[3]
-			; search area for collector level, add 20 left and right, 25 top and 15 bottom
-			$sCocDiamond = ($x - 20) & "," & ($y - 25) & "|" & ($x + 20) & "," & ($y - 25) & "|" & ($x + 20) & "," & ($y + 15) & "|" & ($x - 20) & "," & ($y + 15)
-			$redLines = $sCocDiamond ; override red line with CoC Diamond so not calculated again
-			$result = findMultiple($sLvlDirectory, $sCocDiamond, $redLines, $minLevel, $maxLevel, $maxReturnPoints, $returnProps, $bForceCapture)
-			$bForceCapture = False ; force capture only first time
-			If IsArray($result) Then
-				For $matchedValues In $result
-					Local $aPoints = StringSplit($matchedValues[1], "|", $STR_NOCOUNT) ; multiple points splited by | char
-					If UBound($aPoints) > 0 Then
-						; collector level found
-						$lvl = Number($matchedValues[2])
-						If $lvl > $aP[3] Then $aP[3] = $lvl ; update collector level
-					EndIf
-				Next
-			EndIf
-			$lvl = $aP[3] ; update level variable as modified above
-			If $lvl = 0 Then
-				; collector level not identified
-				If $g_bDebugSetlog Then SetDebugLog("IMGLOC : Searching Deadbase no collector identified with fill level " & $fill & " at " & $x & ", " & $y, $COLOR_INFO)
-				ContinueLoop ; jump to next collector
-			EndIf
-
-			; check if this collector level with fill level is enabled
-			If $g_abCollectorLevelEnabled[$lvl] Then
-				Local $fillIndex = GetCollectorIndexByFillLevel($fill)
-				If $fillIndex < $g_aiCollectorLevelFill[$lvl] Then
-					; collector fill level not reached
-					If $g_bDebugSetlog Then SetDebugLog("IMGLOC : Searching Deadbase collector level " & $lvl & " found but not enough elixir, fill level " & $fill & " at " & $x & ", " & $y, $COLOR_INFO)
+		
+		Local $iMinDist = 15, $iTmpDis = 0
+		$result = findMultipleQuick(@ScriptDir & "\imgxml\deadbase\elix\lvl\", Default, Default, False, "", False, 15, True, $minLevel, $maxLevel, $redLines)
+		If UBound($result) > 0 And not @error Then
+			For $aP In $aPos
+				$x = $aP[0]
+				$y = $aP[1]
+				$fill = $aP[2]
+				$lvl = $aP[3]
+				For $i = 0 To UBound($result) -1
+					If $result[$i][1] = -1 Then ContinueLoop
+					$iTmpDis = Pixel_Distance($x, $y, $result[$i][1], $result[$i][2])
+					If $iTmpDis < $iMinDist Then ContinueLoop
+					$lvl = $result[$i][3]
+					$result[$i][1] = -1
+					$result[$i][2] = -1
+					; collector level found
+					If $lvl > $aP[3] Then $aP[3] = $lvl ; update collector level
+					ExitLoop
+				Next			
+				$lvl = $aP[3] ; update level variable as modified above
+				If $lvl = 0 Then
+					; collector level not identified
+					If $g_bDebugSetlog Then SetDebugLog("IMGLOC : Searching Deadbase no collector identified with fill level " & $fill & " at " & $x & ", " & $y, $COLOR_INFO)
 					ContinueLoop ; jump to next collector
 				EndIf
-			Else
-				; collector is not enabled
-				If $g_bDebugSetlog Then SetDebugLog("IMGLOC : Searching Deadbase collector level " & $lvl & " found but not enabled, fill level " & $fill & " at " & $x & ", " & $y, $COLOR_INFO)
-				ContinueLoop ; jump to next collector
-			EndIf
 
-			; found collector
-			$iTotalMatched += 1
-		Next
+				; check if this collector level with fill level is enabled
+				If $g_abCollectorLevelEnabled[$lvl] Then
+					Local $fillIndex = GetCollectorIndexByFillLevel($fill)
+					If $fillIndex < $g_aiCollectorLevelFill[$lvl] Then
+						; collector fill level not reached
+						If $g_bDebugSetlog Then SetDebugLog("IMGLOC : Searching Deadbase collector level " & $lvl & " found but not enough elixir, fill level " & $fill & " at " & $x & ", " & $y, $COLOR_INFO)
+						ContinueLoop ; jump to next collector
+					EndIf
+				Else
+					; collector is not enabled
+					If $g_bDebugSetlog Then SetDebugLog("IMGLOC : Searching Deadbase collector level " & $lvl & " found but not enabled, fill level " & $fill & " at " & $x & ", " & $y, $COLOR_INFO)
+					ContinueLoop ; jump to next collector
+				EndIf
+
+				; found collector
+				$iTotalMatched += 1
+			Next
+		EndIf
 	EndIf
 
 	Local $dbFound = $iTotalMatched >= $g_iCollectorMatchesMin
