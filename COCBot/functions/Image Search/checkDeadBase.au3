@@ -252,101 +252,33 @@ Func checkDeadBase($bForceCapture = False, $sFillDirectory = @ScriptDir & "\imgx
 	EndIf
 
 	; Imgloc will get in place if it goes true
-	Local $bFoundFilledCollectors = False
-	Local $result
 	; Check if Enough Level 13/14 Collectors hasn't been found by Dissociable.Matching.dll then check for other collectors
 	If $iTotalMatched < $g_iCollectorMatchesMin Then
-		$iTotalMatched = 0
-		; check for any collector filling
-		Local $result = findMultiple($sFillDirectory, $sCocDiamond, $redLines, $minLevel, $maxLevel, $maxReturnPoints, $returnProps, False) ; Custom match - Team AIO Mod++
-		$bFoundFilledCollectors = IsArray($result) = 1
-	EndIf
-	#EndRegion - Custom match - Team AIO Mod++
-
-	If $bFoundFilledCollectors Then
-		For $matchedValues In $result
-			Local $aPoints = StringSplit($matchedValues[1], "|", $STR_NOCOUNT) ; multiple points splited by | char
-			Local $found = UBound($aPoints)
-			If $found > 0 Then
-				$lvl = Number($matchedValues[3])
-				For $sPoint In $aPoints
-					Local $aP = StringSplit($sPoint, ",", $STR_NOCOUNT)
-					ReDim $aP[4] ; 2=fill, 3=lvl
-					$aP[3] = 0 ; initial lvl is 0 (for not found/identified yet)
-					$aP[2] = $lvl
-					Local $bSkipPoint = False
-					For $i = 0 To UBound($aPos) - 1
-						Local $bP = $aPos[$i]
-						Local $a = $aP[1] - $bP[1]
-						Local $b = $aP[0] - $bP[0]
-						Local $c = Sqrt($a * $a + $b * $b)
-						If $c < 25 Then
-							; duplicate point: skipped
-							If $aP[2] > $bP[2] Then
-								; keep this one with higher level
-								$aPos[$i] = $aP
-								$aP = $bP ; just for logging
-							EndIf
-							If $g_bDebugSetlog Then SetDebugLog("IMGLOC : Searching Deadbase ignore duplicate collector with fill level " & $aP[2] & " at " & $aP[0] & ", " & $aP[1], $COLOR_INFO)
-							$bSkipPoint = True
-							$found -= 1
-							ExitLoop
-						EndIf
-					Next
-					If Not $bSkipPoint Then
-						Local $i = UBound($aPos)
-						ReDim $aPos[$i + 1]
-						$aPos[$i] = $aP
-					EndIf
-				Next
-			EndIf
-		Next
-		
+		Local $aLvlResult, $aFillResult
 		Local $iMinDist = 15, $iTmpDis = 0
-		$result = findMultipleQuick(@ScriptDir & "\imgxml\deadbase\elix\lvl\", Default, Default, False, "", False, 15, True, $minLevel, $maxLevel, $redLines)
-		If UBound($result) > 0 And not @error Then
-			For $aP In $aPos
-				$x = $aP[0]
-				$y = $aP[1]
-				$fill = $aP[2]
-				$lvl = $aP[3]
-				For $i = 0 To UBound($result) -1
-					If $result[$i][1] = -1 Then ContinueLoop
-					$iTmpDis = Pixel_Distance($x, $y, $result[$i][1], $result[$i][2])
-					If $iTmpDis < $iMinDist Then ContinueLoop
-					$lvl = $result[$i][3]
-					$result[$i][1] = -1
-					$result[$i][2] = -1
-					; collector level found
-					If $lvl > $aP[3] Then $aP[3] = $lvl ; update collector level
-					ExitLoop
-				Next			
-				$lvl = $aP[3] ; update level variable as modified above
-				If $lvl = 0 Then
-					; collector level not identified
-					If $g_bDebugSetlog Then SetDebugLog("IMGLOC : Searching Deadbase no collector identified with fill level " & $fill & " at " & $x & ", " & $y, $COLOR_INFO)
-					ContinueLoop ; jump to next collector
-				EndIf
 
-				; check if this collector level with fill level is enabled
-				If $g_abCollectorLevelEnabled[$lvl] Then
-					Local $fillIndex = GetCollectorIndexByFillLevel($fill)
-					If $fillIndex < $g_aiCollectorLevelFill[$lvl] Then
-						; collector fill level not reached
-						If $g_bDebugSetlog Then SetDebugLog("IMGLOC : Searching Deadbase collector level " & $lvl & " found but not enough elixir, fill level " & $fill & " at " & $x & ", " & $y, $COLOR_INFO)
-						ContinueLoop ; jump to next collector
-					EndIf
-				Else
-					; collector is not enabled
-					If $g_bDebugSetlog Then SetDebugLog("IMGLOC : Searching Deadbase collector level " & $lvl & " found but not enabled, fill level " & $fill & " at " & $x & ", " & $y, $COLOR_INFO)
-					ContinueLoop ; jump to next collector
-				EndIf
+		$iTotalMatched = 0
 
-				; found collector
-				$iTotalMatched += 1
+
+		$aLvlResult = findMultipleQuick($sLvlDirectory, Default, Default, False, "", False, $iMinDist, True, $minLevel, $maxLevel, $redLines)
+		If $aLvlResult <> -1 Then
+
+			$aFillResult = findMultipleQuick($sFillDirectory, Default, Default, False, "", False, $iMinDist, True, $minLevel, $maxLevel, $redLines)
+
+			For $iL = 0 To UBound($aLvlResult) -1
+				For $iF = 0 To UBound($aFillResult) -1
+
+;~ 					$aLvlResult[$iL][]
+;~ 					$$aFillResult[$iF][]
+
+					; found collector
+					$iTotalMatched += 1
+				Next
 			Next
+
 		EndIf
 	EndIf
+	#EndRegion - Custom match - Team AIO Mod++
 
 	Local $dbFound = $iTotalMatched >= $g_iCollectorMatchesMin
 
@@ -376,3 +308,71 @@ Func checkDeadBase($bForceCapture = False, $sFillDirectory = @ScriptDir & "\imgx
 	Return $dbFound
 
 EndFunc   ;==>checkDeadBaseSuperNew
+
+Func _ImageSearchSpecial($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = "FV", $vArea2SearchOri2 = Default, $bForceCapture = True, $bDebugLog = False, $bCheckDuplicatedpoints = False, $iDistance2check = 25, $minLevel = 0, $maxLevel = 1000)
+	FuncEnter(_ImageSearchXML)
+	Local $iCount = 0, $returnProps = "objectname,objectpoints,objectlevel,fillLevel" ;"objectname,objectlevel,objectpoints"
+	Local $error, $extError
+	
+	If $bForceCapture = Default Then $bForceCapture = True
+	If $vArea2SearchOri = Default Then $vArea2SearchOri = "FV"
+	If $vArea2SearchOri2 = Default Then $vArea2SearchOri2 = $vArea2SearchOri
+	
+	Local $aCoords = "" ; use AutoIt mixed variable type and initialize array of coordinates to null
+	Local $returnData = StringSplit($returnProps, ",", $STR_NOCOUNT)
+	Local $returnLine[UBound($returnData)]
+
+	; Capture the screen for comparison
+	If $bForceCapture Then _CaptureRegion2() ;to have FULL screen image to work with
+
+	Local $result = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sDirectory, "str", $vArea2SearchOri, "Int", $iQuantityMatch, "str", $vArea2SearchOri2, "Int", $minLevel, "Int", $maxLevel)
+	$error = @error ; Store error values as they reset at next function call
+	$extError = @extended
+	If $error Then
+		_logErrorDLLCall($g_sLibMyBotPath, $error)
+		If $g_bDebugSetlog Then SetDebugLog(" imgloc DLL Error : " & $error & " --- " & $extError)
+		SetError(2, $extError, $aCoords) ; Set external error code = 2 for DLL error
+		Return -1
+	EndIf
+
+	If checkImglocError($result, "_ImageSearchXML", $sDirectory) = True Then
+		If $g_bDebugSetlog Then SetDebugLog("_ImageSearchXML Returned Error or No values : ", $COLOR_DEBUG)
+		Return -1
+	EndIf
+
+	Local $resultArr = StringSplit($result[0], "|", $STR_NOCOUNT)
+	If $g_bDebugSetlog Then SetDebugLog(" ***  _ImageSearchXML multiples **** ", $COLOR_ORANGE)
+
+	; Distance in pixels to check if is a duplicated detection , for deploy point will be 5
+	Local $iD2C = $iDistance2check
+	Local $aAR[0][5], $aXY
+	For $rs = 0 To UBound($resultArr) - 1
+		For $rD = 0 To UBound($returnData) - 1 ; cycle props
+			$returnLine[$rD] = RetrieveImglocProperty($resultArr[$rs], $returnData[$rD])
+			If $returnData[$rD] = "objectpoints" Then
+				; Inspired in Chilly-chill
+				Local $aC = StringSplit($returnLine[1], "|", $STR_NOCOUNT)
+				For $i = 0 To UBound($aC) - 1
+					$aXY = StringSplit($aC[$i], ",", $STR_NOCOUNT)
+					If UBound($aXY) <> 2 Then ContinueLoop 3
+					If $iD2C > 0 And $bCheckDuplicatedpoints Then
+						If DMduplicated($aAR, Int($aXY[0]), Int($aXY[1]), UBound($aAR)-1, $iD2C) Then
+							ContinueLoop
+						EndIf
+					EndIf
+					ReDim $aAR[$iCount + 1][5]
+					$aAR[$iCount][0] = $returnLine[0]
+					$aAR[$iCount][1] = Int($aXY[0])
+					$aAR[$iCount][2] = Int($aXY[1])
+					$aAR[$iCount][3] = Int($returnLine[2])
+					$aAR[$iCount][4] = Int($returnLine[3])
+					$iCount += 1
+					If $iCount >= $iQuantityMatch And $iQuantityMatch > 0 Then ExitLoop 3
+				Next
+			EndIf
+		Next
+	Next
+	
+	If UBound($aAR) < 1 Then Return -1
+	Return $aAR
+EndFunc   ;==>_ImageSearchXML

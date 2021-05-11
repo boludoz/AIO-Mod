@@ -156,11 +156,11 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 	If $vArea2SearchOri2 = Default Then 
 		$vArea2SearchOri2 = $vArea2SearchOri
 	Else
-		If (IsArray($vArea2SearchOri)) Then
-			$vArea2SearchOri = GetDiamondFromArray($vArea2SearchOri)
+		If (IsArray($vArea2SearchOri2)) Then
+			$vArea2SearchOri2 = GetDiamondFromArray($vArea2SearchOri2)
 		EndIf
-		If 3 = ((StringReplace($vArea2SearchOri, ",", ",") <> "") ? (@extended) : (0)) Then
-			$vArea2SearchOri = GetDiamondFromRect($vArea2SearchOri)
+		If 3 = ((StringReplace($vArea2SearchOri2, ",", ",") <> "") ? (@extended) : (0)) Then
+			$vArea2SearchOri2 = GetDiamondFromRect($vArea2SearchOri2)
 		EndIf		
 	EndIf
 	
