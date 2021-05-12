@@ -169,28 +169,28 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		_CaptureRegion2()
 
 		; measure enemy village (only if resources match)
-		Local $bAlwaysMeasure = $g_bVillageSearchAlwaysMeasure
-		For $i = 0 To $g_iModeCount - 1
-			If $match[$i] Or $bAlwaysMeasure Then
-				If Not CheckZoomOut("VillageSearch", True, False) Then
-					SaveDebugImage("VillageSearchMeasureFailed", False) ; make clean snapshot as well
-					ExitLoop ; disable exiting search for December 2018 update due to zoomout issues
+		; Local $bAlwaysMeasure = $g_bVillageSearchAlwaysMeasure
+		; For $i = 0 To $g_iModeCount - 1
+			; If $match[$i] Or $bAlwaysMeasure Then
+				; If Not CheckZoomOut("VillageSearch", True, False) Then
+					; SaveDebugImage("VillageSearchMeasureFailed", False) ; make clean snapshot as well
+					; ExitLoop ; disable exiting search for December 2018 update due to zoomout issues
 					; check two more times, only required for snow theme (snow fall can make it easily fail), but don't hurt to keep it
-					$i = 0
-					Local $bMeasured
-					Do
-						$i += 1
-						If _Sleep($DELAYPREPARESEARCH2) Then Return ; wait 500 ms
-						ForceCaptureRegion()
-						_CaptureRegion2()
-						$bMeasured = CheckZoomOut("VillageSearch", $i < 2, False)
-					Until $bMeasured = True Or $i >= 2
-					If Not $bMeasured Then Return ; exit func
-				EndIf
-				ExitLoop
-			EndIf
-		Next
-		If $g_bRestart Then Return
+					; $i = 0
+					; Local $bMeasured
+					; Do
+						; $i += 1
+						; If _Sleep($DELAYPREPARESEARCH2) Then Return ; wait 500 ms
+						; ForceCaptureRegion()
+						; _CaptureRegion2()
+						; $bMeasured = CheckZoomOut("VillageSearch", $i < 2, False)
+					; Until $bMeasured = True Or $i >= 2
+					; If Not $bMeasured Then Return ; exit func
+				; EndIf
+				; ExitLoop
+			; EndIf
+		; Next
+		; If $g_bRestart Then Return
 
 		; ----------------- FIND TARGET TOWNHALL -------------------------------------------
 		; $g_iSearchTH name of level of townhall (return "-" if no th found)

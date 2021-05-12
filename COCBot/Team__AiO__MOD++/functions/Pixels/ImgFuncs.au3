@@ -52,7 +52,7 @@ Func _ImageSearchXML($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = "FV", 
 	If $g_bDebugSetlog Then SetDebugLog(" ***  _ImageSearchXML multiples **** ", $COLOR_ORANGE)
 
 	; Distance in pixels to check if is a duplicated detection , for deploy point will be 5
-	Local $iD2C = $iDistance2check
+	Local $iD2C = ($bCheckDuplicatedpoints = True) ? ($iDistance2check) : (0)
 	Local $aAR[0][4], $aXY
 	For $rs = 0 To UBound($resultArr) - 1
 		For $rD = 0 To UBound($returnData) - 1 ; cycle props
@@ -63,7 +63,7 @@ Func _ImageSearchXML($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = "FV", 
 				For $i = 0 To UBound($aC) - 1
 					$aXY = StringSplit($aC[$i], ",", $STR_NOCOUNT)
 					If UBound($aXY) <> 2 Then ContinueLoop 3
-					If $iD2C > 0 And $bCheckDuplicatedpoints Then
+					If $iD2C > 0 Then
 						If DMduplicated($aAR, Int($aXY[0]), Int($aXY[1]), UBound($aAR)-1, $iD2C) Then
 							ContinueLoop
 						EndIf

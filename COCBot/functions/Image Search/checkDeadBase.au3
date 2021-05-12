@@ -210,47 +210,6 @@ Func checkDeadBase($bForceCapture = False, $sFillDirectory = @ScriptDir & "\imgx
 
 	If $bForceCapture Then _CaptureRegion2() ; Custom match - Team AIO Mod++
 
-	; 0.19s method DMatch.
-	Local $iDminLevel = 0
-	Local $iDmaxLevel = 0
-	Local $aDFillLevel[2] = [False, False] ; 50% and 100%
-	For $i = $iStartLevel To $iEndLevelD
-		If $g_abCollectorLevelEnabled[$i] Then
-			If $iDminLevel = 0 Then $iDminLevel = $i
-			If $i > $iDmaxLevel Then $iDmaxLevel = $i
-			$aDFillLevel[$g_aiCollectorLevelFill[$i]] = True
-		EndIf
-	Next
-
-	If $g_bDebugSetlog Then SetDebugLog("checkDeadBase DMatch | $iDminLevel : " & $iDminLevel & " $iDmaxLevel : " & $iDmaxLevel & " $aDFillLevel[0] : " & $aDFillLevel[0] & " $aDFillLevel[1] : " & $aDFillLevel[1])
-
-	If $aDFillLevel[0] Then ; Scan optimized.
-		Local $sDFindResult50 = DFind($g_sECollectorDMatB & "50\", 19, 74, 805, 518, $iDminLevel, $iDmaxLevel, $g_iCollectorMatchesMin, False)
-		For $i = $iDminLevel To $iDmaxLevel
-			; Check for the Level Collectors at first, as it's Image matching and the Dll differs.
-			If Not $g_abCollectorLevelEnabled[$i] Then ContinueLoop
-			If $g_aiCollectorLevelFill[$i] <> 0 Then ContinueLoop
-			$iLocalMatch = CountDMatchingMatches($sDFindResult50, "Elix-" & $i)
-			SetDebugLog("Found a Total of " & $iLocalMatch & " level " & $i & " collectors with second phase, 50% Fill", $COLOR_DEBUG)
-			$iTotalMatched += $iLocalMatch
-		Next
-	EndIf
-
-	If $aDFillLevel[1] Or $aDFillLevel[0] Then ; Scan optimized.
-		$iLocalMatch = 0
-		If $iTotalMatched < $g_iCollectorMatchesMin Then
-			Local $sDFindResult100 = DFind($g_sECollectorDMatB & "100\", 19, 74, 805, 518, $iDminLevel, $iDmaxLevel, $g_iCollectorMatchesMin, False)
-			For $i = $iDminLevel To $iDmaxLevel
-				; Check for the Level Collectors at first, as it's Image matching and the Dll differs.
-				If Not $g_abCollectorLevelEnabled[$i] Then ContinueLoop
-				; If $g_aiCollectorLevelFill[$i] < 0 Then ContinueLoop
-				$iLocalMatch = CountDMatchingMatches($sDFindResult100, "Elix-" & $i)
-				SetDebugLog("Found a Total of " & $iLocalMatch & " level " & $i & " collectors with second phase, 10% Fill", $COLOR_DEBUG)
-				$iTotalMatched += $iLocalMatch
-			Next
-		EndIf
-	EndIf
-
 	; Imgloc will get in place if it goes true
 	; Check if Enough Level 13/14 Collectors hasn't been found by Dissociable.Matching.dll then check for other collectors
 	If $iTotalMatched < $g_iCollectorMatchesMin Then
@@ -259,45 +218,110 @@ Func checkDeadBase($bForceCapture = False, $sFillDirectory = @ScriptDir & "\imgx
 
 		$iTotalMatched = 0
 
-
-		$aLvlResult = findMultipleQuick($sLvlDirectory, Default, Default, False, "", False, $iMinDist, True, $minLevel, $maxLevel, $redLines)
+		$aLvlResult = _ImageSearchSpecial($sLvlDirectory, 0, $sCocDiamond, $redLines, False, False, True, 25, $minLevel, $maxLevel)
 		If $aLvlResult <> -1 Then
 
-			$aFillResult = findMultipleQuick($sFillDirectory, Default, Default, False, "", False, $iMinDist, True, $minLevel, $maxLevel, $redLines)
+			$aFillResult = _ImageSearchSpecial($sFillDirectory, 0, $sCocDiamond, $redLines, False, False, False, 0)
 
-			For $iL = 0 To UBound($aLvlResult) -1
-				For $iF = 0 To UBound($aFillResult) -1
+			If $aLvlResult <> -1 Then
 
-;~ 					$aLvlResult[$iL][]
-;~ 					$$aFillResult[$iF][]
+				For $iL = 0 To UBound($aLvlResult) -1
 
-					; found collector
-					$iTotalMatched += 1
+					For $iF = 0 To UBound($aFillResult) -1
+						Sleep(10)
+
+						If $aFillResult[$iF][1] = -1 Then 
+							ContinueLoop
+						EndIf
+						
+						If Pixel_Distance($aLvlResult[$iL][1], $aLvlResult[$iL][2], $aFillResult[$iF][1], $aFillResult[$iF][2]) > 25 Then
+							ContinueLoop
+						EndIf
+
+						; SetLog($aLvlResult[$iL][1] & " " & $aLvlResult[$iL][2] & " " & $aFillResult[$iF][1] & " " & $aFillResult[$iF][2])
+
+						$lvl = $aLvlResult[$iL][3]
+						$fill = $aFillResult[$iF][4]
+
+						; check if this collector level with fill level is enabled
+						If $g_abCollectorLevelEnabled[$lvl] Then
+							Local $fillIndex = GetCollectorIndexByFillLevel($fill)
+							If $fillIndex < $g_aiCollectorLevelFill[$lvl] Then
+								; collector fill level not reached
+								If $g_bDebugSetlog Then SetDebugLog("IMGLOC : Searching Deadbase collector level " & $lvl & " found but not enough elixir, fill level " & $fill & " at " & $aLvlResult[$iL][1] & ", " & $aLvlResult[$iL][2], $COLOR_INFO)
+								ContinueLoop ; jump to next collector
+							EndIf
+						Else
+							; collector is not enabled
+							If $g_bDebugSetlog Then SetDebugLog("IMGLOC : Searching Deadbase collector level " & $lvl & " found but not enabled, fill level " & $fill & " at " & $aLvlResult[$iL][1] & ", " & $aLvlResult[$iL][2], $COLOR_INFO)
+							ContinueLoop ; jump to next collector
+						EndIf
+
+						$aFillResult[$iF][1] = -1
+
+						; found collector
+						$iTotalMatched += 1
+						
+						ExitLoop
+					Next
+					
 				Next
-			Next
+
+			EndIf
 
 		EndIf
 	EndIf
 	#EndRegion - Custom match - Team AIO Mod++
 
 	Local $dbFound = $iTotalMatched >= $g_iCollectorMatchesMin
-
+	If $dbFound = False Then
+		; 0.19s method DMatch.
+		Local $iDminLevel = 0
+		Local $iDmaxLevel = 0
+		Local $aDFillLevel[2] = [False, False] ; 50% and 100%
+		For $i = $iStartLevel To $iEndLevelD
+			If $g_abCollectorLevelEnabled[$i] Then
+				If $iDminLevel = 0 Then $iDminLevel = $i
+				If $i > $iDmaxLevel Then $iDmaxLevel = $i
+				$aDFillLevel[$g_aiCollectorLevelFill[$i]] = True
+			EndIf
+		Next
+	
+		If $g_bDebugSetlog Then SetDebugLog("checkDeadBase DMatch | $iDminLevel : " & $iDminLevel & " $iDmaxLevel : " & $iDmaxLevel & " $aDFillLevel[0] : " & $aDFillLevel[0] & " $aDFillLevel[1] : " & $aDFillLevel[1])
+	
+		If $aDFillLevel[0] Then ; Scan optimized.
+			Local $sDFindResult50 = DFind($g_sECollectorDMatB & "50\", 19, 74, 805, 518, $iDminLevel, $iDmaxLevel, $g_iCollectorMatchesMin, False)
+			For $i = $iDminLevel To $iDmaxLevel
+				; Check for the Level Collectors at first, as it's Image matching and the Dll differs.
+				If Not $g_abCollectorLevelEnabled[$i] Then ContinueLoop
+				If $g_aiCollectorLevelFill[$i] <> 0 Then ContinueLoop
+				$iLocalMatch = CountDMatchingMatches($sDFindResult50, "Elix-" & $i)
+				SetDebugLog("Found a Total of " & $iLocalMatch & " level " & $i & " collectors with second phase, 50% Fill", $COLOR_DEBUG)
+				$iTotalMatched += $iLocalMatch
+			Next
+		EndIf
+	
+		If $aDFillLevel[1] Or $aDFillLevel[0] Then ; Scan optimized.
+			$iLocalMatch = 0
+			If $iTotalMatched < $g_iCollectorMatchesMin Then
+				Local $sDFindResult100 = DFind($g_sECollectorDMatB & "100\", 19, 74, 805, 518, $iDminLevel, $iDmaxLevel, $g_iCollectorMatchesMin, False)
+				For $i = $iDminLevel To $iDmaxLevel
+					; Check for the Level Collectors at first, as it's Image matching and the Dll differs.
+					If Not $g_abCollectorLevelEnabled[$i] Then ContinueLoop
+					; If $g_aiCollectorLevelFill[$i] < 0 Then ContinueLoop
+					$iLocalMatch = CountDMatchingMatches($sDFindResult100, "Elix-" & $i)
+					SetDebugLog("Found a Total of " & $iLocalMatch & " level " & $i & " collectors with second phase, 10% Fill", $COLOR_DEBUG)
+					$iTotalMatched += $iLocalMatch
+				Next
+			EndIf
+		EndIf
+	EndIf
+	
 	If $g_bDebugSetlog Then
-		; If has called ImgLoc, Show It's Specific Debug Logs
-		If IsArray($result) Then
-			If Not $bFoundFilledCollectors Then
-				SetDebugLog("IMGLOC : NOT A DEADBASE", $COLOR_INFO)
-			ElseIf Not $dbFound Then
-				SetDebugLog("IMGLOC : DEADBASE NOT MATCHED: " & $iTotalMatched & "/" & $g_iCollectorMatchesMin, $COLOR_WARNING)
-			Else
-				SetDebugLog("IMGLOC : FOUND DEADBASE Matched: " & $iTotalMatched & "/" & $g_iCollectorMatchesMin & ": " & UBound($aPoints), $COLOR_GREEN)
-			EndIf
+		If $dbFound Then
+			SetDebugLog("Matching: DeadBase Matched! Found " & $iTotalMatched & " Collectors", $COLOR_GREEN)
 		Else
-			If $dbFound Then
-				SetDebugLog("Dissociable.Matching: DeadBase Matched! Found " & $iTotalMatched & " Collectors", $COLOR_GREEN)
-			Else
-				SetDebugLog("Dissociable.Matching: DeadBase not Matched! Found just " & $iTotalMatched & " Collectors", $COLOR_WARNING)
-			EndIf
+			SetDebugLog("Matching: DeadBase not Matched! Found just " & $iTotalMatched & " Collectors", $COLOR_WARNING)
 		EndIf
 	EndIf
 
@@ -309,15 +333,15 @@ Func checkDeadBase($bForceCapture = False, $sFillDirectory = @ScriptDir & "\imgx
 
 EndFunc   ;==>checkDeadBaseSuperNew
 
-Func _ImageSearchSpecial($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = "FV", $vArea2SearchOri2 = Default, $bForceCapture = True, $bDebugLog = False, $bCheckDuplicatedpoints = False, $iDistance2check = 25, $minLevel = 0, $maxLevel = 1000)
-	FuncEnter(_ImageSearchXML)
-	Local $iCount = 0, $returnProps = "objectname,objectpoints,objectlevel,fillLevel" ;"objectname,objectlevel,objectpoints"
+Func _ImageSearchSpecial($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri = Default, $vArea2SearchOri2 = Default, $bForceCapture = Default, $bDebugLog = False, $bCheckDuplicatedpoints = True, $iDistance2check = 25, $minLevel = 0, $maxLevel = 1000)
+	Local $iCount = 0, $returnProps = "objectname,objectlevel,fillLevel,objectpoints"
 	Local $error, $extError
-	
-	If $bForceCapture = Default Then $bForceCapture = True
+
+	If $iQuantityMatch = Default Then $iQuantityMatch = 0
+	If $bForceCapture = Default Then $bForceCapture = False
 	If $vArea2SearchOri = Default Then $vArea2SearchOri = "FV"
 	If $vArea2SearchOri2 = Default Then $vArea2SearchOri2 = $vArea2SearchOri
-	
+
 	Local $aCoords = "" ; use AutoIt mixed variable type and initialize array of coordinates to null
 	Local $returnData = StringSplit($returnProps, ",", $STR_NOCOUNT)
 	Local $returnLine[UBound($returnData)]
@@ -344,18 +368,18 @@ Func _ImageSearchSpecial($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = "F
 	If $g_bDebugSetlog Then SetDebugLog(" ***  _ImageSearchXML multiples **** ", $COLOR_ORANGE)
 
 	; Distance in pixels to check if is a duplicated detection , for deploy point will be 5
-	Local $iD2C = $iDistance2check
+	Local $iD2C = ($bCheckDuplicatedpoints = True) ? ($iDistance2check) : (0)
 	Local $aAR[0][5], $aXY
 	For $rs = 0 To UBound($resultArr) - 1
 		For $rD = 0 To UBound($returnData) - 1 ; cycle props
 			$returnLine[$rD] = RetrieveImglocProperty($resultArr[$rs], $returnData[$rD])
 			If $returnData[$rD] = "objectpoints" Then
 				; Inspired in Chilly-chill
-				Local $aC = StringSplit($returnLine[1], "|", $STR_NOCOUNT)
+				Local $aC = StringSplit($returnLine[$rD], "|", $STR_NOCOUNT)
 				For $i = 0 To UBound($aC) - 1
 					$aXY = StringSplit($aC[$i], ",", $STR_NOCOUNT)
 					If UBound($aXY) <> 2 Then ContinueLoop 3
-					If $iD2C > 0 And $bCheckDuplicatedpoints Then
+					If $iD2C > 0 Then
 						If DMduplicated($aAR, Int($aXY[0]), Int($aXY[1]), UBound($aAR)-1, $iD2C) Then
 							ContinueLoop
 						EndIf
@@ -364,15 +388,15 @@ Func _ImageSearchSpecial($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = "F
 					$aAR[$iCount][0] = $returnLine[0]
 					$aAR[$iCount][1] = Int($aXY[0])
 					$aAR[$iCount][2] = Int($aXY[1])
-					$aAR[$iCount][3] = Int($returnLine[2])
-					$aAR[$iCount][4] = Int($returnLine[3])
+					$aAR[$iCount][3] = Int($returnLine[1])
+					$aAR[$iCount][4] = Int($returnLine[2])
 					$iCount += 1
 					If $iCount >= $iQuantityMatch And $iQuantityMatch > 0 Then ExitLoop 3
 				Next
 			EndIf
 		Next
 	Next
-	
+
 	If UBound($aAR) < 1 Then Return -1
 	Return $aAR
-EndFunc   ;==>_ImageSearchXML
+EndFunc   ;==>_ImageSearchSpecial
