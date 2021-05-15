@@ -321,6 +321,11 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		ReturnHome(False, False) ;If End battle is available
 		Return True
 	EndIf
+	If _CheckPixel($aSurrenderButtonFixed, $g_bNoCapturePixel) Then
+		SetDebugLog("checkObstacles: Found End Battle to close")
+		ReturnHome(False, False) ;If End battle is available
+		Return True
+	EndIf
 	If _CheckPixel($aNoCloudsAttack, $g_bNoCapturePixel) Then ; Prevent drop of troops while searching
 		$aMessage = _PixelSearch(23, 566 + $g_iBottomOffsetY, 36, 580 + $g_iBottomOffsetY, Hex(0xF4F7E3, 6), 10, False)
 		If IsArray($aMessage) Then

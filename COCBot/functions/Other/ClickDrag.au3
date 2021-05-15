@@ -104,26 +104,42 @@ Func _MakeLong($LowWORD, $HiWORD)
 EndFunc   ;==>_MakeLong
 
 #Region - Custom - Team AIO Mod++
-Func ClickDrag($X1, $Y1, $X2, $Y2, $Delay = 50, $bFromZoomOut = False, $bSwipe = False)
+Func ClickDrag($X1, $Y1, $X2, $Y2, $iDelay = 50, $bLegacy = False)
 	If TestCapture() Then Return
-	;Return _PostMessage_ClickDrag($X1, $Y1, $X2, $Y2, "left", $Delay)
+
 	Local $error = 0
 	If $g_bDebugClick Then
-		SetLog("ClickDrag " & $X1 & "," & $Y1 & " to " & $X2 & "," & $Y2 & " delay=" & $Delay, $COLOR_ACTION, "Verdana", "7.5", 0)
+		SetLog("ClickDrag " & $X1 & "," & $Y1 & " to " & $X2 & "," & $Y2 & " delay=" & $iDelay, $COLOR_ACTION, "Verdana", "7.5", 0)
 	EndIf
+
+	Local $aPrevCoor[4] = [$X1, $Y1, $X2, $Y2]
+
+	If $g_bUseRandomClick Then
+		$X1 += Random(-2, 2, 1)
+		$Y1 += Random(-2, 2, 1)
+		$X2 += Random(-2, 2, 1)
+		$Y2 += Random(-2, 2, 1)
+		If $X1 <= 0 Or $X1 >= $g_iGAME_WIDTH Then $X1 = $aPrevCoor[0]
+		If $Y1 <= 0 Or $Y1 >= $g_iGAME_HEIGHT Then $Y1 = $aPrevCoor[1]
+		If $X2 <= 0 Or $X2 >= $g_iGAME_WIDTH Then $X2 = $aPrevCoor[2]
+		If $Y2 <= 0 Or $Y2 >= $g_iGAME_HEIGHT Then $Y2 = $aPrevCoor[3]
+	EndIf
+
 	If $g_bAndroidAdbClickDrag Then
-		If $g_bAndroidAdbClickDragScript Or $bFromZoomOut And not $bSwipe Then
+		If $g_bAndroidAdbClickDragScript And not $bLegacy Then
 			AndroidClickDrag($X1, $Y1, $X2, $Y2, $g_bRunState)
 			$error = @error
 		Else
 			AndroidInputSwipe($X1, $Y1, $X2, $Y2, $g_bRunState)
 			$error = @error
 		EndIf
-		If _Sleep($Delay / 5) Then Return SetError(-1, "", False)
+		If _Sleep($iDelay / 5) Then Return SetError(-1, "", False)
 	EndIf
+
 	If Not $g_bAndroidAdbClickDrag Or $error <> 0 Then
-		Return _PostMessage_ClickDrag($X1, $Y1, $X2, $Y2, "left", $Delay)
+		Return _PostMessage_ClickDrag($X1, $Y1, $X2, $Y2, "left", $iDelay)
 	EndIf
+
 	Return SetError(0, 0, ($error = 0 ? True : False))
 EndFunc   ;==>ClickDrag
 #EndRegion - Custom - Team AIO Mod++

@@ -38,6 +38,7 @@ Global $aHavePerGuard[4] = [455, 19, 0x10100D, 15] ; Main Screen, black pixel in
 Global $aShieldInfoButton[4] = [431, 10, 0x75BDE4, 15] ; Main Screen, Blue pixel upper part of "i"
 Global $aIsShieldInfo[4] = [645, 195, 0xED1115, 20] ; Main Screen, Shield Info window, red pixel right of X
 Global $aSurrenderButton[4] = [70, 545 + $g_iBottomOffsetY, 0xC00000, 40] ; Surrender Button, Attack Screen
+Global $aSurrenderButtonFixed[4] = [70, 446 + $g_iBottomOffsetY, 0xC00000, 40] ; AIO Mod++
 Global $aConfirmSurrender[4] = [515, 415 + $g_iMidOffsetY, 0x6DBC1F, 30] ; Confirm Surrender Button, Attack Screen, green color on button?
 Global $aCancelFight[4] = [822, 48, 0xD80408, 20] ; Cancel Fight Scene
 Global $aCancelFight2[4] = [830, 59, 0xD80408, 20] ; Cancel Fight Scene 2nd pixel
@@ -113,7 +114,8 @@ Global $aWonTwoStarAtkRprt[4] = [398, 180 + $g_iMidOffsetY, 0xD0D6D0, 30] ; Cent
 Global $aWonThreeStarAtkRprt[4] = [534, 180 + $g_iMidOffsetY, 0xC8CAC7, 30] ; Center of 3rd Star reached attacked village
 ; pixel color: location information								BS 850MB (Reg GFX), BS 500MB (Med GFX) : location
 
-Global $NextBtn[4] = [780, 606, 0xD34300, 30] ;  Next Button
+Global $NextBtn[4] = [780, 606, 0xE54E0D, 30] ;  Next Button
+Global $NextBtnFixed[4] = [780, 507, 0xE54E0D, 30] ; AIO Mod++
 Global $a12OrMoreSlots[4] = [16, 648, 0x4583B9, 25] ; Attackbar Check if 12+ Slots exist
 Global $a12OrMoreSlots2[4] = [16, 648, 0x7E2327, 25] ; Attackbar Check if 12+ Slots exist SuperTroops
 Global $aDoubRowAttackBar[4] = [68, 486, 0xFC5D64, 20]

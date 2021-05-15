@@ -491,3 +491,12 @@ Func CloseEmulatorForce()
 		Next
 	EndIf
 EndFunc   ;==>ProcessFindBy
+
+Func SetVarFlag()
+	If $g_iDualBarFix = 0 Then 
+		$g_iDualBarFix = -99
+	Else
+		$g_iDualBarFix = 0
+	EndIf
+	SetDebugLog("Attack Bar : " & $g_iDualBarFix & " flag.")
+EndFunc

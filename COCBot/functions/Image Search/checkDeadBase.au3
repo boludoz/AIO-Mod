@@ -223,7 +223,7 @@ Func checkDeadBase($bForceCapture = False, $sFillDirectory = @ScriptDir & "\imgx
 
 			$aFillResult = _ImageSearchSpecial($sFillDirectory, 0, $sCocDiamond, $redLines, False, False, False, 0)
 
-			If $aLvlResult <> -1 Then
+			If $aFillResult <> -1 Then
 
 				For $iL = 0 To UBound($aLvlResult) -1
 

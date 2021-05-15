@@ -1048,7 +1048,7 @@ Func SCIDragIfNeeded($iSCIDAccount)
 	If Not $g_bRunState Then Return
 	If $iSCIDAccount < 4 Then Return
 
-	ClickDrag(748, 720, 748, 720-(90*($iSCIDAccount-3)), 2000) ; drag a multiple of 90 pixels up for how many accounts down it is
+	ClickDrag(444, 720, 444, 720 - (64 * ($iSCIDAccount-3)), 2000, True) ; Custom fix - Team AIO Mod++
 	If _Sleep(1500) Then Return
 EndFunc   ;==>SCIDragIfNeeded
 

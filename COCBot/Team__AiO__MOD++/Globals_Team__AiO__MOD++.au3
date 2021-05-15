@@ -409,3 +409,5 @@ Global $g_bChkBBGetFromCSV = False, $g_bChkBBGetFromArmy
 
 Global $g_iAttackTotalBLButtons = -1
 Global $g_aBLButtonsRegion[4] = [10, 570, 450, 55]
+
+Global $g_iDualBarFix = 0

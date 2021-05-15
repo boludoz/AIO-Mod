@@ -53,6 +53,12 @@ Func checkAttackDisable($iSource, $Result = "")
 						Else
 							ReturnHome(False, False) ;If End battle is available
 						EndIf
+					ElseIf _CheckPixel($aSurrenderButtonFixed, $g_bCapturePixel) Then ; village search requires end battle 1s, so check for surrender/endbattle button
+						If TestCapture() Then
+							SetLog("checkAttackDisable: ReturnHome")
+						Else
+							ReturnHome(False, False) ;If End battle is available
+						EndIf
 					Else
 						If TestCapture() Then
 							SetLog("checkAttackDisable: CloseCoC")

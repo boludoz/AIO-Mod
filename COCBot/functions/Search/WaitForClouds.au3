@@ -97,8 +97,8 @@ Func WaitForClouds($hBigMinuteTimer = 0) ; Return Home by Time - Team AIO Mod++
 		EndIf
 		If $g_bDebugSetlog Then _GUICtrlStatusBar_SetTextEx($g_hStatusBar, " Status: Loop to clean screen without Clouds, # " & $iCount)
 		$iSearchTime = __TimerDiff($hMinuteTimer) / 60000 ;get time since minute timer start in minutes
-		
-		#Region - Custom PrepareSearch - Team AIO Mod++ 
+
+		#CS - Region - Custom PrepareSearch - Team AIO Mod++ 
 		; Check if CoC app restarted without notice (where android restarted app automatically with same PID), and returned to main base
 		Local $iSubCount = 0
 		_CaptureRegion()
@@ -113,7 +113,7 @@ Func WaitForClouds($hBigMinuteTimer = 0) ; Return Home by Time - Team AIO Mod++
 				ExitLoop 2
 			EndIf	
 		WEnd
-		#EndRegion - Custom PrepareSearch - Team AIO Mod++ 
+		#CE - EndRegion - Custom PrepareSearch - Team AIO Mod++ 
 		
 		If $iSearchTime >= $iLastTime + 1 Then
 			SetLog("Cloud wait time " & StringFormat("%.1f", $iSearchTime) & " minute(s)", $COLOR_INFO)
@@ -129,14 +129,13 @@ Func WaitForClouds($hBigMinuteTimer = 0) ; Return Home by Time - Team AIO Mod++
 				EndIf
 			EndIf
 			#EndRegion - Return Home by Time - Team AIO Mod++
-			
+		
 			; once a minute safety checks for search fail/retry msg and Personal Break events and early detection if CoC app has crashed inside emulator (Bluestacks issue mainly)
 			If chkAttackSearchFail() = 2 Or chkAttackSearchPersonalBreak() = True Or GetAndroidProcessPID() = 0 Then
 				resetAttackSearch()
 				ExitLoop
 			EndIf
-			
-			
+		
 			; attempt to enable GUI during long wait?
 			If $iSearchTime > 2 And Not $bEnabledGUI Then
 				AndroidShieldForceDown(True)
@@ -167,7 +166,6 @@ Func EnableLongSearch()
 	; verifies that chat tab is active on cloud window due long search time, and open/closes chat window to avoid app closing while waiting for base to attack
 	; Also checks for common error events, search fail/retry, and Personal Break that happen during long searches
 	Local $result = ""
-	Local $iCount
 	Static $aKeepAlive[2] = [271, 351 + $g_iMidOffsetY]
 
 	If $g_bDebugSetlog Then SetDebugLog("Begin EnableLongSearch:", $COLOR_DEBUG1)
@@ -177,14 +175,13 @@ Func EnableLongSearch()
 		Return False
 	EndIf
 
-	$iCount = 0 ; initialize safety loop counter #1
-	While 1
+	For $iCount = 0 To 30
 		#Region - Custom PrepareSearch - Team AIO Mod++ 
 		; Check if CoC app restarted without notice (where android restarted app automatically with same PID), and returned to main base
 		Local $iSubCount = 0
 		_CaptureRegion()
 		While _CheckPixel($aIsMainGrayed, False, Default, "IsMainGrayed") Or _CheckPixel($aIsMain, False, Default, "IsMain")
-			_CaptureRegion2Sync()
+			_CaptureRegion()
 			$iSubCount += 1
 			If _Sleep($DELAYATTACKREPORT1) Then Return
 			If $iSubCount > 3 Then
@@ -208,11 +205,10 @@ Func EnableLongSearch()
 
 		; Small delay
 		If _Sleep(1000) Then Return
-		$iCount += 1
-		; Just in Case
-		If $iCount > 6*5 Then Return True ; 4500 + 5000 * 6 = 1 min
-	WEnd
 
+	Next
+	
+	Return True
 EndFunc   ;==>EnableLongSearch
 
 Func chkSearchText()
@@ -271,18 +267,24 @@ Func btnSearchFailRetry()
 	Return False
 EndFunc   ;==>btnSearchFailRetry
 
-Func chkSurrenderBtn()
+Func chkSurrenderBtn($bCapture = True)
 	; loop for a few seconds checking if surrender button exists and search is over
-	Local $wCount = 0
-	While 1
-		If _CheckPixel($aSurrenderButton, $g_bCapturePixel, Default, "Surrender btn wait #" & $wCount, $COLOR_DEBUG) = True Then
+	For $iCount = 0 To 60
+		If $bCapture = True Then _CaptureRegion()
+		If _CheckPixel( (Mod($iCount, 2) = 0) ? ($aSurrenderButton) : ($aSurrenderButtonFixed), False, Default, "Surrender btn wait #" & $iCount, $COLOR_DEBUG) = True Then
 			If $g_bDebugSetlog Then SetDebugLog("Surrender button found, clouds gone, continue...", $COLOR_DEBUG)
 			Return True
 		EndIf
-		If _Sleep($DELAYSLEEP) Then Return
-		$wCount += 1
-		If $wCount >= 30 Or isProblemAffect(True) Then ; exit loop in 30 * ~150ms = 4.5 seconds if surrender button not found or reload msg appears
-			Return False
+		
+		If $iCount = 0 Then
+			ContinueLoop
 		EndIf
-	WEnd
+		
+		If _Sleep($DELAYSLEEP) Then Return
+	Next
+	
+	If $iCount >= 60 Or isProblemAffect(False) Then ; Return in 30 * ~150ms = 4.5 seconds if surrender button not found or reload msg appears
+		Return False
+	EndIf
+	
 EndFunc   ;==>chkSurrenderBtn

@@ -336,7 +336,7 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 	$g_bIsHeroesDropped = False
 	$g_aiDeployHeroesPosition[0] = -1
 	$g_aiDeployHeroesPosition[1] = -1
-	
+
 	#Region - Drop CC first - Team AIO Mod++ (By Boludoz)
 	If (Ubound($g_bDeployCastleFirst) > $g_iMatchMode) And $g_bDeployCastleFirst[$g_iMatchMode] Then
 			Local $aCC = _ArraySearch($listInfoDeploy, "CC", 0, 0, 0, 0, 0, 0)
@@ -430,6 +430,10 @@ Func SmartAttackStrategy($imode)
 			SetLog("Calculated  (in " & Round(__TimerDiff($hTimer) / 1000, 2) & " seconds) :")
 
 			If ($g_abAttackStdSmartNearCollectors[$imode][0] Or $g_abAttackStdSmartNearCollectors[$imode][1] Or $g_abAttackStdSmartNearCollectors[$imode][2]) Then
+
+				; Team AIO Mod++
+				Local $bCapturedMine = False
+
 				SetLog("Locating Mines, Collectors & Drills", $COLOR_INFO)
 				$hTimer = __TimerInit()
 				Global $g_aiPixelMine[0]
@@ -438,21 +442,42 @@ Func SmartAttackStrategy($imode)
 				Global $g_aiPixelNearCollector[0]
 				; If drop troop near gold mine
 				If $g_abAttackStdSmartNearCollectors[$imode][0] Then
-					$g_aiPixelMine = GetLocationMine()
+
+					; Team AIO Mod++
+					If $bCapturedMine = False Then
+						_CaptureRegion2()
+						$bCapturedMine = True
+					EndIf
+
+					$g_aiPixelMine = _GetLocationMine(False)
 					If (IsArray($g_aiPixelMine)) Then
 						_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelMine, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
 					EndIf
 				EndIf
 				; If drop troop near elixir collector
 				If $g_abAttackStdSmartNearCollectors[$imode][1] Then
-					$g_aiPixelElixir = GetLocationElixir()
+
+					; Team AIO Mod++
+					If $bCapturedMine = False Then
+						_CaptureRegion2()
+						$bCapturedMine = True
+					EndIf
+
+					$g_aiPixelElixir = _GetLocationElixir(False)
 					If (IsArray($g_aiPixelElixir)) Then
 						_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
 					EndIf
 				EndIf
 				; If drop troop near dark elixir drill
 				If $g_abAttackStdSmartNearCollectors[$imode][2] Then
-					$g_aiPixelDarkElixir = GetLocationDarkElixir()
+
+					; Team AIO Mod++
+					If $bCapturedMine = False Then
+						_CaptureRegion2()
+						$bCapturedMine = True
+					EndIf
+
+					$g_aiPixelDarkElixir = _GetLocationDarkElixir(False)
 					If (IsArray($g_aiPixelDarkElixir)) Then
 						_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelDarkElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
 					EndIf

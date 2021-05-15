@@ -164,8 +164,20 @@ Func getOcrSpaceCastleDonate($x_start, $y_start) ;  -> Get the number of troops 
 	Return getOcrAndCapture("coc-totalreq", $x_start, $y_start, 45, 12, True)
 EndFunc   ;==>getOcrSpaceCastleDonate
 
+
+; Custom - Team AIO Mod++
 Func getOcrOverAllDamage($x_start, $y_start) ;  -> Get the Overall Damage %
-	Return getOcrAndCapture("coc-overalldamage", $x_start, $y_start, 50, 20, True)
+	Local $sResult = getOcrAndCapture("coc-overalldamage", $x_start, $y_start + $g_iDualBarFix, 50, 20, True)
+	
+	If StringIsSpace($sResult) Then
+		SetVarFlag()
+		$sResult = getOcrAndCapture("coc-overalldamage", $x_start, $y_start + $g_iDualBarFix, 50, 20, True)
+		If StringIsSpace($sResult) Then
+			SetVarFlag()
+		EndIf
+	EndIf
+	
+	Return $sResult
 EndFunc   ;==>getOcrOverAllDamage
 
 Func getOcrGuardShield($x_start, $y_start) ;  -> Get the guard/shield time left, middle top of the screen

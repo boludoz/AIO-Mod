@@ -1,32 +1,3 @@
-#Region - Custom - Team AIO Mod++
-; #FUNCTION# ====================================================================================================================
-; Name ..........: GetLocationMine
-; Description ...: (Deprecated - Team AIO Mod++)
-; Syntax ........: GetLocationMine()
-; Parameters ....:
-; Return values .: String with locations
-; Author ........:
-; Modified ......: ProMac (04-2016)
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
-;                  MyBot is distributed under the terms of the GNU GPL
-; Related .......:
-; Link ..........: https://github.com/MyBotRun/MyBot/wiki
-; Example .......: No
-; ===============================================================================================================================
-
-Func GetLocationMine()
-	Return _GetLocationMine()
-EndFunc   ;==>GetLocationMine
-
-Func GetLocationElixir()
-	Return _GetLocationElixir()
-EndFunc   ;==>GetLocationElixir
-
-Func GetLocationDarkElixir()
-	Return _GetLocationDarkElixir()
-EndFunc   ;==>GetLocationDarkElixir
-#EndRegion - Custom - Team AIO Mod++
-
 ; ###############################################################################################################
 
 ; USES OLD OPENCV DETECTION

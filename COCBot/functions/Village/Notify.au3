@@ -430,10 +430,12 @@ Func NotifyRemoteControlProc()
 						EndIf
 					Case GetTranslatedFileIni("MBR Func_Notify", "PAUSE", "PAUSE"), '\UD83D\UDD00 ' & GetTranslatedFileIni("MBR Func_Notify", "PAUSE", "PAUSE")
 						If $g_bBotPaused = False And $g_bRunState = True Then
-							If ( _ColorCheck(_GetPixelColor($NextBtn[0], $NextBtn[1], True), Hex($NextBtn[2], 6), $NextBtn[3])) = False And IsAttackPage() Then
+							If ( _ColorCheck(_GetPixelColor($NextBtn[0], $NextBtn[1], True), Hex($NextBtn[2], 6), $NextBtn[3])) = False And _ 
+								( _ColorCheck(_GetPixelColor($NextBtnFixed[0], $NextBtnFixed[1], True), Hex($NextBtnFixed[2], 6), $NextBtnFixed[3])) = False And IsAttackPage() Then
 								SetLog("Notify Telegram: Unable to pause during attack", $COLOR_ERROR)
 								NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_17", "Request to Pause") & "%0A" & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_08", "Unable to pause during attack, try again later."))
-							ElseIf ( _ColorCheck(_GetPixelColor($NextBtn[0], $NextBtn[1], True), Hex($NextBtn[2], 6), $NextBtn[3])) = True And IsAttackPage() Then
+							ElseIf ( _ColorCheck(_GetPixelColor($NextBtn[0], $NextBtn[1], True), Hex($NextBtn[2], 6), $NextBtn[3])) = True Or _ 
+							( _ColorCheck(_GetPixelColor($NextBtnFixed[0], $NextBtnFixed[1], True), Hex($NextBtnFixed[2], 6), $NextBtnFixed[3])) = True And IsAttackPage() Then
 								ReturnHome(False, False)
 								$g_bIsSearchLimit = True
 								$g_bIsClientSyncError = True

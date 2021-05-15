@@ -120,14 +120,14 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 
 		; ----------------- READ ENEMY VILLAGE RESOURCES  -----------------------------------
 		WaitForClouds($hBigMinuteTimer) ; Return Home by Time - Team AIO Mod++
-		
+
 		#Region - Custom PrepareSearch - Team AIO Mod++
 		If $g_bBadPrepareSearch = True Then
 			SetLog("Error: _VillageSearch, bad WaitForClouds.", $COLOR_ERROR)
 			Return
 		EndIf
 		#EndRegion - Custom PrepareSearch - Team AIO Mod++
-		
+
 		AttackRemainingTime(True) ; Timer for knowing when attack starts, in 30 Sec. attack automatically starts and lasts for 3 Minutes
 		If $g_bRestart Then Return ; exit func
 
@@ -168,29 +168,35 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		ForceCaptureRegion()
 		_CaptureRegion2()
 
+		#Region - Custom fix - Team AIO Mod++
 		; measure enemy village (only if resources match)
-		; Local $bAlwaysMeasure = $g_bVillageSearchAlwaysMeasure
-		; For $i = 0 To $g_iModeCount - 1
-			; If $match[$i] Or $bAlwaysMeasure Then
-				; If Not CheckZoomOut("VillageSearch", True, False) Then
-					; SaveDebugImage("VillageSearchMeasureFailed", False) ; make clean snapshot as well
-					; ExitLoop ; disable exiting search for December 2018 update due to zoomout issues
-					; check two more times, only required for snow theme (snow fall can make it easily fail), but don't hurt to keep it
-					; $i = 0
-					; Local $bMeasured
-					; Do
-						; $i += 1
-						; If _Sleep($DELAYPREPARESEARCH2) Then Return ; wait 500 ms
-						; ForceCaptureRegion()
-						; _CaptureRegion2()
-						; $bMeasured = CheckZoomOut("VillageSearch", $i < 2, False)
-					; Until $bMeasured = True Or $i >= 2
-					; If Not $bMeasured Then Return ; exit func
-				; EndIf
-				; ExitLoop
-			; EndIf
-		; Next
-		; If $g_bRestart Then Return
+		Local $bAlwaysMeasure = $g_bVillageSearchAlwaysMeasure
+		; Custom fix - Team AIO Mod++
+		If $bAlwaysMeasure Then
+			For $i = 0 To $g_iModeCount - 1
+				If $match[$i] Or $bAlwaysMeasure Then
+					If Not CheckZoomOut("VillageSearch", True, False) Then
+						SaveDebugImage("VillageSearchMeasureFailed", False) ; make clean snapshot as well
+						ExitLoop ; disable exiting search for December 2018 update due to zoomout issues
+						; check two more times, only required for snow theme (snow fall can make it easily fail), but don't hurt to keep it
+						$i = 0
+						Local $bMeasured
+						Do
+							$i += 1
+							If _Sleep($DELAYPREPARESEARCH2) Then Return ; wait 500 ms
+							ForceCaptureRegion()
+							_CaptureRegion2()
+							$bMeasured = CheckZoomOut("VillageSearch", $i < 2, False)
+						Until $bMeasured = True Or $i >= 2
+						If Not $bMeasured Then Return ; exit func
+					EndIf
+					ExitLoop
+				EndIf
+			Next
+		EndIf
+		#EndRegion - Custom fix - Team AIO Mod++
+
+		If $g_bRestart Then Return
 
 		; ----------------- FIND TARGET TOWNHALL -------------------------------------------
 		; $g_iSearchTH name of level of townhall (return "-" if no th found)
@@ -220,37 +226,40 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 					EndIf
 				EndIf
 			Next
-		
+
 			; Check the TH Level for BullyMode conditional
 			If $g_iSearchTHLResult = -1 Then CompareTH(0) ; inside have a conditional to update $g_iSearchTHLResult
 		EndIf
 		#EndRegion - Legend trophy protection - Team AIO Mod++
 
 		; ----------------- MOD -----------------------------------
-		
-		If $g_bTestSceneryAttack Then
-			Local $sScenery = DetectScenery($g_aVillageSize[6])
-			
-			If $sScenery = "Clashy Construction" Then
-			    SetLog("Attacking Clashy Construction")
-			    ExitLoop
+
+		; Custom optimization - Team AIO Mod++
+		If $bAlwaysMeasure Then
+			If $g_bTestSceneryAttack Then
+				Local $sScenery = DetectScenery($g_aVillageSize[6])
+
+				If $sScenery = "Clashy Construction" Then
+					SetLog("Attacking Clashy Construction")
+					ExitLoop
+				EndIf
+
+				If $sScenery = "Pirate Scenery" Then
+					SetLog("Attacking Pirate Scenery")
+					ExitLoop
+				EndIf
+
+				If $sScenery = "Winter Scenery" Then
+					SetLog("Attacking Winter Scenery")
+					ExitLoop
+				EndIf
+
+				If $sScenery = "Hog Mountain" Then
+					SetLog("Attacking Hog Mountain")
+					ExitLoop
+				EndIf
+
 			EndIf
-			
-			If $sScenery = "Pirate Scenery" Then
-			    SetLog("Attacking Pirate Scenery")
-			    ExitLoop
-			EndIf
-			
-			If $sScenery = "Winter Scenery" Then
-			    SetLog("Attacking Winter Scenery")
-			    ExitLoop
-			EndIf
-			
-			If $sScenery = "Hog Mountain" Then
-			    SetLog("Attacking Hog Mountain")
-			    ExitLoop
-			EndIf
-			
 		EndIf
 
 		; ----------------- WRITE LOG OF ENEMY RESOURCES -----------------------------------
@@ -265,52 +274,40 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 
 		; ----------------- CHECK DEAD BASE -------------------------------------------------
 		If Not $g_bRunState Then Return
+
 		; check deadbase
 		Local $checkDeadBase = $match[$DB] Or $match[$LB]
-		If $checkDeadBase Then $dbBase = checkDeadBase() ; Custom - AIO Mod++
+
+		; Custom - AIO Mod++
+		If $checkDeadBase Then
+			$dbBase = checkDeadBase(False)
+			SetDebugLog("Is dead base ? " & $dbBase)
+		EndIf
 
 		; ----------------- CHECK WEAK BASE -------------------------------------------------
 		#Region - Legend trophy protection - Team AIO Mod++
+		Static $sModeBase[3] = ["DB", "LB", "DT"]
 		If Not $g_bLeagueAttack Then
 			If (IsWeakBaseActive($DB) And $dbBase And ($match[$DB] Or $g_abFilterMeetOneConditionEnable[$DB])) Or _
-					(IsWeakBaseActive($LB) And ($match[$LB] Or $g_abFilterMeetOneConditionEnable[$LB])) Then
-				; check twice if Eagle is active
-				Local $maxTry = 1
-				For $i = 0 To $g_iModeCount - 2
-					If $g_abFilterMaxEagleEnable[$i] Then $maxTry = 2
-				Next
-				For $try = 1 To $maxTry ; check twice to be sure due to walking heroes
-					;let try to reduce weekbase time
-					If ($g_iSearchTH <> "-") Then
-						$weakBaseValues = IsWeakBase($g_iImglocTHLevel, $g_sImglocRedline, False)
-					Else
-						$weakBaseValues = IsWeakBase($g_iMaxTHLevel, "", False)
-					EndIf
-					Local $bIsWeak = False
-					For $i = 0 To $g_iModeCount - 2
-						If IsWeakBaseActive($i) And (($i = $DB And $dbBase) Or $i <> $DB) And ($match[$i] Or $g_abFilterMeetOneConditionEnable[$i]) Then
-							If getIsWeak($weakBaseValues, $i) Then
-								$match[$i] = True
-								$bIsWeak = True
-							Else
-								$match[$i] = False
-								$noMatchTxt &= ", Not a Weak Base for " & $g_asModeText[$i]
-								; don't check again
-								$try = 2
-							EndIf
+				(IsWeakBaseActive($LB) And ($match[$LB] Or $g_abFilterMeetOneConditionEnable[$LB])) Then
+				If ($g_iSearchTH <> "-") Then
+					$weakBaseValues = IsWeakBase($g_iImglocTHLevel, $g_sImglocRedline, False)
+				Else
+					$weakBaseValues = IsWeakBase($g_iMaxTHLevel, "", False)
+				EndIf
+				For $i = 0 To $g_iModeCount - 1
+					If IsWeakBaseActive($i) And (($i = $DB And $dbBase) Or $i <> $DB) And ($match[$i] Or $g_abFilterMeetOneConditionEnable[$i]) Then
+						SetDebugLog("'Wakebase' for " & $sModeBase[$i])
+						If getIsWeak($weakBaseValues, $i) Then
+							$match[$i] = True
+						Else
+							$match[$i] = False
+							$noMatchTxt &= ", Not a Weak Base for " & $g_asModeText[$i]
 						EndIf
-					Next
-	
-					If $bIsWeak And $try = 1 Then
-						ResumeAndroid()
-						If RandomSleep(3000) Then Return ; wait 5 Seconds to give heroes time to "walk away"
-						ForceCaptureRegion()
-						_CaptureRegion2()
-						SuspendAndroid()
+						SetDebugLog("'match' for " & $sModeBase[$i] & " is now " & $match[$i])
 					EndIf
 				Next
 			EndIf
-
 			ResumeAndroid()
 		Else
 			SetLog($GetResourcesTXT, $COLOR_SUCCESS, "Lucida Console", 7.5)
@@ -333,7 +330,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 			SetLog($GetResourcesTXT, $COLOR_SUCCESS, "Lucida Console", 7.5)
 			SetLog("      " & "Dead Base Found!", $COLOR_SUCCESS, "Lucida Console", 7.5)
 			$logwrited = True
-			
+
             #Region - Custom - Team AIO Mod++
             Local $bFlagSearchAnotherBase = False
             If $g_bChkNoLeague[$DB] Then
@@ -341,13 +338,13 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 					SetLog(" - Dead Base is in No League, match found.", $COLOR_SUCCESS)
                     $bFlagSearchAnotherBase = False
                 Else
-				
+
 					; If you play against, this is disabled.
 					If ($g_iSearchCount > 25) Then
 						SetLog(" - Disabling no league, it seems that there are no true dead bases in your league !", $COLOR_ACTION)
 						$g_bChkNoLeague[$DB] = False
 					EndIf
-					
+
 					SetLog("- Dead Base is in a League, skipping search.", $COLOR_INFO)
 
                     $match[$DB] = False ; got league skip attack, search another base
@@ -434,7 +431,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
                 EndIf
             EndIf
             #EndRegion - Custom - Team AIO Mod++
-			
+
 		ElseIf $match[$LB] And Not $dbBase Then
 			SetLog($GetResourcesTXT, $COLOR_SUCCESS, "Lucida Console", 7.5)
 			SetLog("      " & "Live Base Found!", $COLOR_SUCCESS, "Lucida Console", 7.5)
@@ -526,13 +523,25 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 			If _Sleep($DELAYVILLAGESEARCH2) Then Return
 			$i += 1
 			_CaptureRegions()
-			If ( _ColorCheck(_GetPixelColor($NextBtn[0], $NextBtn[1]), Hex($NextBtn[2], 6), $NextBtn[3])) Then
-				If IsAttackPage(False) Then
-					$g_bCloudsActive = True
-					ClickP($NextBtn, 1, 0, "#0155") ;Click Next
-					ExitLoop
-				Else
-					If $g_bDebugSetlog Then SetDebugLog("Wait to see Next Button... " & $i, $COLOR_DEBUG)
+			If Mod($i, 2) = 0 Then
+				If ( _ColorCheck(_GetPixelColor($NextBtn[0], $NextBtn[1]), Hex($NextBtn[2], 6), $NextBtn[3])) Then
+					If IsAttackPage(False) Then
+						$g_bCloudsActive = True
+						ClickP($NextBtn, 1, 0, "#0155") ;Click Next
+						ExitLoop
+					Else
+						If $g_bDebugSetlog Then SetDebugLog("Wait to see Next Button... " & $i, $COLOR_DEBUG)
+					EndIf
+				EndIf
+			Else
+				If ( _ColorCheck(_GetPixelColor($NextBtnFixed[0], $NextBtnFixed[1]), Hex($NextBtnFixed[2], 6), $NextBtnFixed[3])) Then
+					If IsAttackPage(False) Then
+						$g_bCloudsActive = True
+						ClickP($NextBtnFixed, 1, 0, "#0155") ;Click Next
+						ExitLoop
+					Else
+						If $g_bDebugSetlog Then SetDebugLog("Wait to see Next Button... " & $i, $COLOR_DEBUG)
+					EndIf
 				EndIf
 			EndIf
 			If $i >= 99 Or isProblemAffect() Or (Mod($i, 10) = 0 And checkObstacles_Network(False, False)) Then ; if we can't find the next button or there is an error, then restart
@@ -606,7 +615,17 @@ EndFunc   ;==>_VillageSearch
 Func SearchLimit($iSkipped, $bReturnToPickupHero = False)
 	If $bReturnToPickupHero Or ($g_bSearchRestartEnable And $iSkipped >= Number($g_iSearchRestartLimit)) Then
 		Local $Wcount = 0
-		While _CheckPixel($aSurrenderButton, $g_bCapturePixel) = False
+		While 1
+			If Mod($Wcount, 2) = 0 Then
+				If _CheckPixel($aSurrenderButton, $g_bCapturePixel) = True Then
+					ExitLoop
+				EndIf
+			Else
+				If _CheckPixel($aSurrenderButtonFixed, $g_bCapturePixel) = True Then
+					ExitLoop
+				EndIf
+			EndIf
+
 			If _Sleep($DELAYSEARCHLIMIT) Then Return
 			$Wcount += 1
 			If $g_bDebugSetlog Then SetDebugLog("wait surrender button " & $Wcount, $COLOR_DEBUG)
@@ -644,7 +663,7 @@ Func WriteLogVillageSearch($x)
 		SetLog("In Legend League Bot will attack any " & $g_asModeText[$x] & " it get's.", $COLOR_INFO)
 		Return
 	EndIf
-	
+
 	Local $MeetGxEtext = "", $MeetGorEtext = "", $MeetGplusEtext = "", $MeetDEtext = "", $MeetTrophytext = "", $MeetTHtext = "", $MeetTHOtext = "", $MeetWeakBasetext = "", $EnabledAftertext = ""
 	If $g_aiFilterMeetGE[$x] = 0 Then $MeetGxEtext = "- Meet: Gold and Elixir"
 	If $g_aiFilterMeetGE[$x] = 1 Then $MeetGorEtext = "- Meet: Gold or Elixir"
