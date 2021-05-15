@@ -213,7 +213,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 
 		#Region - Legend trophy protection - Team AIO Mod++
 		If Not $g_bLeagueAttack Then
-			For $i = 0 To $g_iModeCount - 2
+			For $i = 0 To $g_iModeCount - 1
 				If $isModeActive[$i] Then
 					If $g_abFilterMeetOneConditionEnable[$i] Then
 						If $g_abFilterMeetTH[$i] = False And $g_abFilterMeetTHOutsideEnable[$i] = False Then
@@ -286,7 +286,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 
 		; ----------------- CHECK WEAK BASE -------------------------------------------------
 		#Region - Legend trophy protection - Team AIO Mod++
-		Static $sModeBase[3] = ["DB", "LB", "DT"]
+		Local $sModeBase[3] = ["DB", "LB", "DT"]
 		If Not $g_bLeagueAttack Then
 			If (IsWeakBaseActive($DB) And $dbBase And ($match[$DB] Or $g_abFilterMeetOneConditionEnable[$DB])) Or _
 				(IsWeakBaseActive($LB) And ($match[$LB] Or $g_abFilterMeetOneConditionEnable[$LB])) Then
@@ -295,7 +295,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 				Else
 					$weakBaseValues = IsWeakBase($g_iMaxTHLevel, "", False)
 				EndIf
-				For $i = 0 To $g_iModeCount - 1
+				For $i = 0 To $g_iModeCount - 2
 					If IsWeakBaseActive($i) And (($i = $DB And $dbBase) Or $i <> $DB) And ($match[$i] Or $g_abFilterMeetOneConditionEnable[$i]) Then
 						SetDebugLog("'Wakebase' for " & $sModeBase[$i])
 						If getIsWeak($weakBaseValues, $i) Then
@@ -308,7 +308,6 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 					EndIf
 				Next
 			EndIf
-			ResumeAndroid()
 		Else
 			SetLog($GetResourcesTXT, $COLOR_SUCCESS, "Lucida Console", 7.5)
 			If $match[$DB] And $dbBase Then
@@ -323,6 +322,8 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 			EndIf
 			ExitLoop
 		EndIf
+		
+		ResumeAndroid()
 		#EndRegion - Legend trophy protection - Team AIO Mod++
 
 		; ----------------- WRITE LOG VILLAGE FOUND AND ASSIGN VALUE AT $g_iMatchMode and exitloop  IF CONTITIONS MEET ---------------------------

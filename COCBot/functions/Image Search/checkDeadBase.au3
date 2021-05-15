@@ -205,9 +205,6 @@ Func checkDeadBase($bForceCapture = False, $sFillDirectory = @ScriptDir & "\imgx
 	Local $iTotalMatched = 0, $iLocalMatch = 0
 	Local $x, $y, $lvl, $fill
 
-	Local $iStartLevel = 13
-	Local $iEndLevelD = UBound($g_aiCollectorLevelFill) - 1
-
 	If $bForceCapture Then _CaptureRegion2() ; Custom match - Team AIO Mod++
 
 	; Imgloc will get in place if it goes true
@@ -218,7 +215,7 @@ Func checkDeadBase($bForceCapture = False, $sFillDirectory = @ScriptDir & "\imgx
 
 		$iTotalMatched = 0
 
-		$aLvlResult = _ImageSearchSpecial($sLvlDirectory, 0, $sCocDiamond, $redLines, False, False, True, 25, $minLevel, $maxLevel)
+		$aLvlResult = _ImageSearchSpecial($sLvlDirectory, 0, $sCocDiamond, $redLines, False, False, True, $iMinDist, $minLevel, $maxLevel)
 		If $aLvlResult <> -1 Then
 
 			$aFillResult = _ImageSearchSpecial($sFillDirectory, 0, $sCocDiamond, $redLines, False, False, False, 0)
@@ -234,7 +231,7 @@ Func checkDeadBase($bForceCapture = False, $sFillDirectory = @ScriptDir & "\imgx
 							ContinueLoop
 						EndIf
 						
-						If Pixel_Distance($aLvlResult[$iL][1], $aLvlResult[$iL][2], $aFillResult[$iF][1], $aFillResult[$iF][2]) > 25 Then
+						If Pixel_Distance($aLvlResult[$iL][1], $aLvlResult[$iL][2], $aFillResult[$iF][1], $aFillResult[$iF][2]) > $iMinDist Then
 							ContinueLoop
 						EndIf
 
@@ -274,8 +271,11 @@ Func checkDeadBase($bForceCapture = False, $sFillDirectory = @ScriptDir & "\imgx
 	#EndRegion - Custom match - Team AIO Mod++
 
 	Local $dbFound = $iTotalMatched >= $g_iCollectorMatchesMin
+	#CS - The combination of both methods causes the CPU to roast, I will migrate soon. There is a small bug that makes that even if you set a core, the CPU usage is complete.
 	If $dbFound = False Then
 		; 0.19s method DMatch.
+		Local $iStartLevel = 13
+		Local $iEndLevelD = UBound($g_aiCollectorLevelFill) - 1
 		Local $iDminLevel = 0
 		Local $iDmaxLevel = 0
 		Local $aDFillLevel[2] = [False, False] ; 50% and 100%
@@ -316,7 +316,7 @@ Func checkDeadBase($bForceCapture = False, $sFillDirectory = @ScriptDir & "\imgx
 			EndIf
 		EndIf
 	EndIf
-	
+	#CE - The combination of both methods causes the CPU to roast, I will migrate soon. There is a small bug that makes that even if you set a core, the CPU usage is complete.
 	If $g_bDebugSetlog Then
 		If $dbFound Then
 			SetDebugLog("Matching: DeadBase Matched! Found " & $iTotalMatched & " Collectors", $COLOR_GREEN)
