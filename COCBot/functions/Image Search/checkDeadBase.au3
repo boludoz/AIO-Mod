@@ -97,62 +97,32 @@ Func GetCollectorIndexByFillLevel($level)
 EndFunc   ;==>GetCollectorIndexByFillLevel
 
 #Region - Custom - Team AIO Mod++
-#cs
-diff a/COCBot/functions/Image Search/checkDeadBase.au3 b/COCBot/functions/Image Search/checkDeadBase.au3	(rejected hunks)
-@@ -156,7 +156,11 @@ Func checkDeadBaseNew()
- EndFunc   ;==>checkDeadBaseNew
+Func checkDeadBase($bForceCapture = False)
+	
+	If $bForceCapture = True Then
+		_CaptureRegion2()
+	EndIf
+	
+	If $g_bChkDeadEagle And $g_iSearchCount < $g_iDeadEagleSearch Then
+		If $g_bDebugSetlog Then SetDebugLog("Checking base for DeadEagle : " & $g_iSearchCount)
+		Return CheckForDeadEagle(False)
+	Else
+		If $g_bDebugSetlog Then SetDebugLog("Checking base for Collector Level : " & $g_iSearchCount)
+		Return checkDeadBaseSuperNew(False)
+	EndIf
+EndFunc   ;==>checkDeadBase
 
- Func checkDeadBase()
--	Return checkDeadBaseSuperNew(False)
-+   If $g_bChkDeadEagle Then
-+		Return CheckForDeadEagle()
-+	Else
-+		Return checkDeadBaseSuperNew(False)
-+	EndIf
- EndFunc   ;==>checkDeadBase
-
- Func GetCollectorIndexByFillLevel($level)
-@@ -491,3 +495,31 @@ Func checkDeadBaseFolder($directory, $executeOldCode = "checkDeadBaseNew()", $ex
- 	Return True
-
- EndFunc   ;==>checkDeadBaseFolder
-+
-+; search image for Dead Eagle
-+; return True if found
-+Func CheckForDeadEagle()
-+	Local $sImgDeadEagleImages = @ScriptDir & "\imgxml\Buildings\DeadEagle"
-+	Local $sBoostDiamond = "ECD"
-+	Local $redlines = "ECD"
-+
-+	; search for a clock face in the Boost window
-+	Local $avDeadEagle = findMultiple($sImgDeadEagleImages, $sBoostDiamond, $redlines, 0, 1000, 0, "objectname,objectpoints")
-+
-+	; no clockface lets scroll up and look again
-+	If Not IsArray($avDeadEagle) Or UBound($avDeadEagle, $UBOUND_ROWS) <= 0 Then
-+		SetLog("No Dead Eagle!")
-+		Return False
-+	EndIf
-+
-+	Local $avTempArray
-+
-+	For $i = 0 To UBound($avDeadEagle, $UBOUND_ROWS) - 1
-+		$avTempArray = $avDeadEagle[$i]
-+
-+		SetLog("Search find : " & $avTempArray[0])
-+		SetLog("Location    : " & $avTempArray[1])
-+	Next
-+
-+	Return True
-+EndFunc
-
-#ce
-Func checkDeadBase($bForceCapture = False, $sFillDirectory = @ScriptDir & "\imgxml\deadbase\elix\fill\", $sLvlDirectory = @ScriptDir & "\imgxml\deadbase\elix\lvl\")
+Func checkDeadBaseSuperNew($bForceCapture = False, $sFillDirectory = @ScriptDir & "\imgxml\deadbase\elix\fill\", $sLvlDirectory = @ScriptDir & "\imgxml\deadbase\elix\lvl\")
 
 	#Region -  New DB sys - Team AIO Mod++
 	Local $bNoCheckDefenses = $g_bCollectorFilterDisable
 
 	If $g_bDefensesMix = True Or $g_bDefensesAlive = True Then
-		If $g_bDefensesMix Then $bNoCheckDefenses = True
+
+		If $g_bDefensesMix Then
+			$bNoCheckDefenses = True
+		EndIf
+
 		Local $sDFindEagle = DFind($g_sBundleDefensesEagle, 216, 174, 438, 325, 0, 0, 0, False) ; 91, 69, 723, 527
 		Local $bALiveSimbol = StringInStr($sDFindEagle, "ALive") > 0, $bDeadSimbol = StringInStr($sDFindEagle, "DEeagle") > 0
 		If $bALiveSimbol = True Then
@@ -208,18 +178,46 @@ Func checkDeadBase($bForceCapture = False, $sFillDirectory = @ScriptDir & "\imgx
 	If $bForceCapture Then _CaptureRegion2() ; Custom match - Team AIO Mod++
 
 	; Imgloc will get in place if it goes true
-	; Check if Enough Level 13/14 Collectors hasn't been found by Dissociable.Matching.dll then check for other collectors
-	If $iTotalMatched < $g_iCollectorMatchesMin Then
+	; If $iTotalMatched < $g_iCollectorMatchesMin Then
+		Local $iaCaptureZone[4] = [0, 0, 0, 0]
+
 		Local $aLvlResult, $aFillResult
-		Local $iMinDist = 15, $iTmpDis = 0
+		Local $iMinDist = 25, $iTmpDis = 0
 
 		$iTotalMatched = 0
 
 		$aLvlResult = _ImageSearchSpecial($sLvlDirectory, 0, $sCocDiamond, $redLines, False, False, True, $iMinDist, $minLevel, $maxLevel)
 		If $aLvlResult <> -1 Then
+			
+			For $i = 0 To UBound($aLvlResult) -1
+				If $iaCaptureZone[0] > $aLvlResult[$i][1] Or $iaCaptureZone[0] < 1 Then 
+					$iaCaptureZone[0] = $aLvlResult[$i][1]
+				EndIf
+				
+				If $iaCaptureZone[1] > $aLvlResult[$i][2] Or $iaCaptureZone[1] < 1 Then 
+					$iaCaptureZone[1] = $aLvlResult[$i][2]
+				EndIf
+				
+				If $iaCaptureZone[2] < $aLvlResult[$i][1] Then 
+					$iaCaptureZone[2] = $aLvlResult[$i][1]
+				EndIf
+				
+				If $iaCaptureZone[3] < $aLvlResult[$i][2] Then 
+					$iaCaptureZone[3] = $aLvlResult[$i][2]
+				EndIf
+			Next
+			
+			If $iaCaptureZone[0] < 25 Then $iaCaptureZone[0] -= 25
+			If $iaCaptureZone[1] < 25 Then $iaCaptureZone[1] -= 25
+			$iaCaptureZone[2] += 25
+			$iaCaptureZone[3] += 25
 
-			$aFillResult = _ImageSearchSpecial($sFillDirectory, 0, $sCocDiamond, $redLines, False, False, False, 0)
+			If $g_bDebugSetlog Then
+				SetDebugLog("Collectors in zone: " & _ArrayToString($iaCaptureZone), $COLOR_INFO)
+			EndIf
 
+			$aFillResult = _ImageSearchSpecial($sFillDirectory, 0, GetDiamondFromArray($iaCaptureZone), GetDiamondFromArray($iaCaptureZone), False, False, True, $iMinDist)
+			
 			If $aFillResult <> -1 Then
 
 				For $iL = 0 To UBound($aLvlResult) -1
@@ -227,10 +225,10 @@ Func checkDeadBase($bForceCapture = False, $sFillDirectory = @ScriptDir & "\imgx
 					For $iF = 0 To UBound($aFillResult) -1
 						Sleep(10)
 
-						If $aFillResult[$iF][1] = -1 Then 
+						If $aFillResult[$iF][1] = -1 Then
 							ContinueLoop
 						EndIf
-						
+
 						If Pixel_Distance($aLvlResult[$iL][1], $aLvlResult[$iL][2], $aFillResult[$iF][1], $aFillResult[$iF][2]) > $iMinDist Then
 							ContinueLoop
 						EndIf
@@ -245,29 +243,33 @@ Func checkDeadBase($bForceCapture = False, $sFillDirectory = @ScriptDir & "\imgx
 							Local $fillIndex = GetCollectorIndexByFillLevel($fill)
 							If $fillIndex < $g_aiCollectorLevelFill[$lvl] Then
 								; collector fill level not reached
-								If $g_bDebugSetlog Then SetDebugLog("IMGLOC : Searching Deadbase collector level " & $lvl & " found but not enough elixir, fill level " & $fill & " at " & $aLvlResult[$iL][1] & ", " & $aLvlResult[$iL][2], $COLOR_INFO)
-								ContinueLoop ; jump to next collector
+								If $g_bDebugSetlog Then
+									SetDebugLog("IMGLOC : Searching Deadbase collector level " & $lvl & " found but not enough elixir, fill level " & $fill & " at " & $aLvlResult[$iL][1] & ", " & $aLvlResult[$iL][2], $COLOR_INFO)
+									ContinueLoop ; jump to next collector
+								EndIf
 							EndIf
 						Else
 							; collector is not enabled
-							If $g_bDebugSetlog Then SetDebugLog("IMGLOC : Searching Deadbase collector level " & $lvl & " found but not enabled, fill level " & $fill & " at " & $aLvlResult[$iL][1] & ", " & $aLvlResult[$iL][2], $COLOR_INFO)
-							ContinueLoop ; jump to next collector
+							If $g_bDebugSetlog Then
+								SetDebugLog("IMGLOC : Searching Deadbase collector level " & $lvl & " found but not enabled, fill level " & $fill & " at " & $aLvlResult[$iL][1] & ", " & $aLvlResult[$iL][2], $COLOR_INFO)
+								ContinueLoop ; jump to next collector
+							EndIf
 						EndIf
 
 						$aFillResult[$iF][1] = -1
 
 						; found collector
 						$iTotalMatched += 1
-						
+
 						ExitLoop
 					Next
-					
+
 				Next
 
 			EndIf
 
 		EndIf
-	EndIf
+	; EndIf
 	#EndRegion - Custom match - Team AIO Mod++
 
 	Local $dbFound = $iTotalMatched >= $g_iCollectorMatchesMin
@@ -286,9 +288,9 @@ Func checkDeadBase($bForceCapture = False, $sFillDirectory = @ScriptDir & "\imgx
 				$aDFillLevel[$g_aiCollectorLevelFill[$i]] = True
 			EndIf
 		Next
-	
+
 		If $g_bDebugSetlog Then SetDebugLog("checkDeadBase DMatch | $iDminLevel : " & $iDminLevel & " $iDmaxLevel : " & $iDmaxLevel & " $aDFillLevel[0] : " & $aDFillLevel[0] & " $aDFillLevel[1] : " & $aDFillLevel[1])
-	
+
 		If $aDFillLevel[0] Then ; Scan optimized.
 			Local $sDFindResult50 = DFind($g_sECollectorDMatB & "50\", 19, 74, 805, 518, $iDminLevel, $iDmaxLevel, $g_iCollectorMatchesMin, False)
 			For $i = $iDminLevel To $iDmaxLevel
@@ -300,7 +302,7 @@ Func checkDeadBase($bForceCapture = False, $sFillDirectory = @ScriptDir & "\imgx
 				$iTotalMatched += $iLocalMatch
 			Next
 		EndIf
-	
+
 		If $aDFillLevel[1] Or $aDFillLevel[0] Then ; Scan optimized.
 			$iLocalMatch = 0
 			If $iTotalMatched < $g_iCollectorMatchesMin Then
@@ -339,7 +341,7 @@ Func _ImageSearchSpecial($sDirectory, $iQuantityMatch = Default, $vArea2SearchOr
 
 	If $iQuantityMatch = Default Then $iQuantityMatch = 0
 	If $bForceCapture = Default Then $bForceCapture = False
-	If $vArea2SearchOri = Default Then $vArea2SearchOri = "FV"
+	If $vArea2SearchOri = Default Then $vArea2SearchOri = "ECD"
 	If $vArea2SearchOri2 = Default Then $vArea2SearchOri2 = $vArea2SearchOri
 
 	Local $aCoords = "" ; use AutoIt mixed variable type and initialize array of coordinates to null
@@ -359,8 +361,8 @@ Func _ImageSearchSpecial($sDirectory, $iQuantityMatch = Default, $vArea2SearchOr
 		Return -1
 	EndIf
 
-	If checkImglocError($result, "_ImageSearchXML", $sDirectory) = True Then
-		If $g_bDebugSetlog Then SetDebugLog("_ImageSearchXML Returned Error or No values : ", $COLOR_DEBUG)
+	If checkImglocError($result, "_ImageSearchSpecial", $sDirectory) = True Then
+		If $g_bDebugSetlog Then SetDebugLog("_ImageSearchSpecial Returned Error or No values : ", $COLOR_DEBUG)
 		Return -1
 	EndIf
 
@@ -378,12 +380,16 @@ Func _ImageSearchSpecial($sDirectory, $iQuantityMatch = Default, $vArea2SearchOr
 				Local $aC = StringSplit($returnLine[$rD], "|", $STR_NOCOUNT)
 				For $i = 0 To UBound($aC) - 1
 					$aXY = StringSplit($aC[$i], ",", $STR_NOCOUNT)
-					If UBound($aXY) <> 2 Then ContinueLoop 3
+					If UBound($aXY) <> 2 Then
+						ContinueLoop 3
+					EndIf
+
 					If $iD2C > 0 Then
 						If DMduplicated($aAR, Int($aXY[0]), Int($aXY[1]), UBound($aAR)-1, $iD2C) Then
 							ContinueLoop
 						EndIf
 					EndIf
+
 					ReDim $aAR[$iCount + 1][5]
 					$aAR[$iCount][0] = $returnLine[0]
 					$aAR[$iCount][1] = Int($aXY[0])
@@ -391,7 +397,10 @@ Func _ImageSearchSpecial($sDirectory, $iQuantityMatch = Default, $vArea2SearchOr
 					$aAR[$iCount][3] = Int($returnLine[1])
 					$aAR[$iCount][4] = Int($returnLine[2])
 					$iCount += 1
-					If $iCount >= $iQuantityMatch And $iQuantityMatch > 0 Then ExitLoop 3
+
+					If $iCount >= $iQuantityMatch And $iQuantityMatch > 0 Then
+						ExitLoop 3
+					EndIf
 				Next
 			EndIf
 		Next
@@ -400,3 +409,30 @@ Func _ImageSearchSpecial($sDirectory, $iQuantityMatch = Default, $vArea2SearchOr
 	If UBound($aAR) < 1 Then Return -1
 	Return $aAR
 EndFunc   ;==>_ImageSearchSpecial
+
+; search image for Dead Eagle
+; return True if found
+Func CheckForDeadEagle($bForceCapture = False)
+	Local $sImgDeadEagleImages = @ScriptDir & "\imgxml\Buildings\DeadEagle"
+	Local $sBoostDiamond = "ECD"
+	Local $redlines = "ECD"
+
+	Local $avDeadEagle = findMultiple($sImgDeadEagleImages, $sBoostDiamond, $redlines, 0, 1000, 0, "objectname,objectpoints", $bForceCapture)
+
+	If Not IsArray($avDeadEagle) Or UBound($avDeadEagle, $UBOUND_ROWS) <= 0 Then
+		SetDebugLog("No Dead Eagle!")
+		If $g_bDebugImageSave Then SaveDebugImage("DeadEagle", False)
+		Return False
+	EndIf
+
+	Local $avTempArray
+
+	For $i = 0 To UBound($avDeadEagle, $UBOUND_ROWS) - 1
+		$avTempArray = $avDeadEagle[$i]
+
+		SetLog("Search find : " & $avTempArray[0])
+		SetLog("Location    : " & $avTempArray[1])
+	Next
+
+	Return True
+EndFunc

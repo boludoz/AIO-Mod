@@ -4,6 +4,11 @@
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
                     Based on MyBot.run v7.9.2
+					
+	**v4.5.3** (Don't be surprised if it's the last one.)
+		- Improved: Optimized dead base, lower CPU usage.
+		- Improved: LVL 14 Collectors. (Tested).
+		
 	**v4.5.2**
 		- Improved / Fixed: Humanization fix (by @moebius14).
 		- Improved / Fixed: Hard problem in Builder base in zoomout attack case.
