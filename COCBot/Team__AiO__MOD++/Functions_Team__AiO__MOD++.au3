@@ -14,15 +14,15 @@
 ; ===============================================================================================================================
 
 ; <><><><><><><><><><><><><><><> Team AiO MOD++ (2020) <><><><><><><><><><><><><><><>
-; Other
+; Other - Team AiO MOD++
 #include "functions\Mod's\ModFuncs.au3"
 #include "functions\Pixels\_Wait4Pixel.au3"
 #include "functions\Pixels\ImgFuncs.au3"
 
-; DOCR
+; DOCR - Team AiO MOD++
 #include "functions\Read Text\getOcrDissociable.au3"
 
-; DMatching
+; DMatching - Team AiO MOD++
 #include "functions\Pixels\DMatching.au3"
 
 ; CheckModVersion - Team AiO MOD++
@@ -54,11 +54,14 @@
 ; Farm Schedule - Team AiO MOD++
 #include "functions\Mod's\ProfilesOptions.au3"
 
-; GTFO
+; BuyShield - Team AiO MOD++
+#include "functions\Mod's\BuyShield.au3"
+
+; GTFO - Team AiO MOD++
 #include "functions\Mod's\GTFO\GTFO.au3"
 #include "functions\Mod's\GTFO\KickOut.au3"
 
-; Custom Builder Base
+; Custom Builder Base - Team AiO MOD++
 #include "functions\Mod's\BuilderBase\BuilderBaseMain.au3"
 #include "functions\Mod's\BuilderBase\BuilderBaseDebugUI.au3"
 #include "functions\Mod's\BuilderBase\Attack\BuilderBaseImageDetection.au3"

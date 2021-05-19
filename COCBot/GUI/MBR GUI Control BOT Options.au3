@@ -1144,21 +1144,31 @@ Func btnRunFunction($bExecuteCapture = False)
 	
 	Setlog($sSCap & "| Run Function : " & $sFunc, $COLOR_ACTION)
 
+	Local $bDebugLogs = $g_bDebugSetlog
+	$g_bDebugSetlog = True
+	
 	Local $iTimer = __TimerInit()
 	Local $saExecResult = Execute($sFunc)
 	$iError = @error
 	Local $iCalc = Round(__TimerDiff($iTimer)/1000, 2)
 	Setlog($sSCap & "| Time Execution : " & $iCalc & " sec", $COLOR_INFO)
+	
+	$g_bDebugSetlog = $bDebugLogs
 
-	If $iError <> 0 Then
-		Setlog($sSCap & "| Result : Error N° = " & $iError, $COLOR_ERROR)
-	ElseIf IsArray($saExecResult) Then
-		Local $sConv = _ArrayToString($saExecResult)
-		$sConv = StringReplace($sConv, @CRLF, "#")
-		Setlog($sSCap & "| Result (IsArray) : " & $sConv, $COLOR_INFO)
-		_ArrayDisplay($saExecResult, "Debug Func. Result")
+	If $iError = 0 Then
+		_GUICtrlTab_ClickTab($g_hTabMain, 0)
+		
+		If IsArray($saExecResult) Then
+			Local $sConv = _ArrayToString($saExecResult)
+			$sConv = StringReplace($sConv, @CRLF, "#")
+			Setlog($sSCap & "| Result (IsArray) : " & $sConv, $COLOR_INFO)
+			_ArrayDisplay($saExecResult, "Debug Func. Result")
+		Else
+			Setlog($sSCap & "| Result : " & $saExecResult, $COLOR_INFO)
+		EndIf
+		
 	Else
-		Setlog($sSCap & "| Result : " & $saExecResult, $COLOR_INFO)
+		Setlog($sSCap & "| Result : Error N° = " & $iError, $COLOR_ERROR)
 	EndIf
 	$g_bExecuteCapture = $bCurrentExecuteCapture
 	$g_bRunState = $bCurrentRunState
