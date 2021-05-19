@@ -759,7 +759,7 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 	If Not $g_bRunState Then Return
 
 	CheckHeroesHealth()
-	
+
 	If _Sleep($DELAYALGORITHM_ALLTROOPS4) Then Return
 	SetLog("Dropping left over troops", $COLOR_INFO)
 	For $x = 0 To 1
@@ -796,6 +796,7 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 	Else
 		$iHowManySides = UBound($aWhatSides)
 	EndIf
+	DeploySpell("", "", True) ; Lirel
 	For $i = 0 To UBound($listInfoDeploy) - 1
 		; Reset the variables
 		Local $troop = -1
@@ -894,6 +895,25 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 								dropHeroes($pixelRandomDrop[0], $pixelRandomDrop[1], $iKing, $iQueen, $iWarden, $iChampion)
 								$g_bIsHeroesDropped = True
 							EndIf
+							;; Lirel
+							If ($g_bIsHeroesDropped) Then
+								If _Sleep(500) Then Return
+								CheckHeroesHealth()
+							EndIf
+							If ($g_iKingSlot <> -1 Or $g_iQueenSlot <> -1 Or $g_iWardenSlot <> -1 Or $g_iChampionSlot <> -1) And $g_bIsHeroesDropped Then
+								If ($iHowManySides <= $g_iSmartFarmSpellsHowManySides) And ($g_bSmartFarmSpellsEnable) And ($i = $numberSidesDropTroop - 1) Then
+									If _Sleep(2000) Then Return
+									Local $aByGroups = LaunchSpellsSmartFarm($SIDESNAMES)
+									If UBound($aByGroups) < 2 Then $aByGroups = LaunchSpellsSmartFarm($sSide)
+									DeploySpell($aByGroups, $sSide)
+									SetLog("You have " & UBound($aByGroups) & " Points to Deploy Speels/Side " & $sSide & " after Heroes")
+								EndIf
+							EndIf
+							If ($g_bIsHeroesDropped) Then
+								If _Sleep(500) Then Return
+								CheckHeroesHealth()
+							EndIf
+							;;
 						Else
 							$infoListArrPixel = $infoTroopListArrPixel[1]
 							Local $listPixel = $infoListArrPixel[$i]
@@ -959,6 +979,173 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 	Next
 EndFunc   ;==>LaunchTroopSmartFarm
 
+Func GroupArrays($firstArray, $secondArray)
+	Local $FinalArray[0][2]
+	For $i = 0 To UBound($firstArray) - 1
+		For $j = 0 To UBound($secondArray) - 1
+			If Int($firstArray[$i][0]) = Int($secondArray[$j][0]) And Int($firstArray[$i][1]) = Int($secondArray[$j][1]) Then
+				ReDim $FinalArray[UBound($FinalArray) + 1][2]
+				$FinalArray[UBound($FinalArray) - 1][0] = $firstArray[$i][0]
+				$FinalArray[UBound($FinalArray) - 1][1] = $firstArray[$i][1]
+			EndIf
+		Next
+	Next
+	Return $FinalArray
+EndFunc   ;==>GroupArrays
+
+Func DeploySpell($aByGroups, $sidename, $Reset = False)
+	Static $aSpells[0][5]
+	If $Reset Then
+		Local $aTempSpells[0][5]
+		$aSpells = $aTempSpells
+		For $i = 0 To UBound($g_avAttackTroops) - 1
+			If $g_avAttackTroops[$i][0] = $eRSpell Or $g_avAttackTroops[$i][0] = $eHSpell Then
+				ReDim $aSpells[UBound($aSpells) + 1][5]
+				SetDebugLog(GetTroopName($g_avAttackTroops[$i][0], 0) & ": " & $g_avAttackTroops[$i][1], $COLOR_DEBUG)
+				$aSpells[UBound($aSpells) - 1][1] = $g_avAttackTroops[$i][0] = $eRSpell ? $eRSpell : $eHSpell
+				$aSpells[UBound($aSpells) - 1][2] = $i
+				$aSpells[UBound($aSpells) - 1][3] = $g_avAttackTroops[$i][0] = $eRSpell ? Number($g_iRSpellLevel) : Number($g_iHSpellLevel)
+				$aSpells[UBound($aSpells) - 1][4] = $g_avAttackTroops[$i][1]
+			EndIf
+		Next
+		If UBound($aSpells) < 1 Then SetLog("No Rage & Heal Spell Detected!", $COLOR_INFO)
+		Return
+	EndIf
+	If Not IsArray($aByGroups) Or UBound($aByGroups) < 1 Then
+		SetLog("DeploySpell, Motion detection Failed.", $COLOR_INFO)
+		Return
+	EndIf
+	If UBound($aSpells) < 1 Then
+		SetLog("No Rage & Heal Spell Detected!", $COLOR_INFO)
+		Return
+	EndIf
+	Local $howmany = Floor(UBound($aSpells, $UBOUND_ROWS) / $g_iSmartFarmSpellsHowManySides) = 0 ? 1 : Floor(UBound($aSpells, $UBOUND_ROWS) / $g_iSmartFarmSpellsHowManySides)
+	SetLog("Deploy " & $howmany & " Spell(s) side " & $sidename)
+	For $i = 0 To UBound($aSpells, $UBOUND_ROWS) - 1
+		If $aSpells[$i][4] > 0 And $howmany > 0 Then
+			SelectDropTroop($aSpells[$i][2])
+			If _Sleep(1000) Then Return
+			Local $center = MostCenter($aByGroups, $aSpells[$i][1], $sidename)
+			SetDebugLog("Dropping '" & $aSpells[$i][1] & "' " & String(GetTroopName($aSpells[$i][1], 0)) & " at " & _ArrayToString($center) & " Quant available=" & $aSpells[$i][4])
+			If IsAttackPage() And $center[0] <> -1 Then
+				Click($center[0], $center[1], 1, 0, "#0029")
+				SetLog("Dropping " & String(GetTroopName($aSpells[$i][1], 0)), $COLOR_ACTION)
+				$aSpells[$i][4] -= 1
+				If _Sleep(2000) Then Return
+				$howmany -= 1
+			EndIf
+		EndIf
+	Next
+EndFunc   ;==>DeploySpell
+
+Func MostCenter(ByRef $aByGroups, $aSpells, $sidename)
+	Local $iVillageCenter[2] = [$DiamondMiddleX, $DiamondMiddleY]
+	Local $iBestDeploy[2] = [-1, -1]
+	Local $GetIndex = -1
+	SetDebugLog("MostEdge|Each Group is a possible group deploy Points.")
+	SetDebugLog("MostEdge|Groups: " & UBound($aByGroups))
+	Local $BestPointEachGroup[0][4]
+	For $i = 0 To UBound($aByGroups) - 1
+		Local $OneArray = $aByGroups[$i]
+		_ArraySort($OneArray, 0, 0, 0, 0)
+		SetDebugLog("MostEdge Array: " & _ArrayToString($OneArray, ",", -1, -1, "|"))
+		Local $MiddleIndexArray = Floor(UBound($OneArray) / 2)
+		SetDebugLog("MostEdge UBound($OneArray): " & UBound($OneArray))
+		SetDebugLog("MostEdge $MiddleIndexArray: " & $MiddleIndexArray)
+		Local $pixel = [$OneArray[$MiddleIndexArray][0], $OneArray[$MiddleIndexArray][1]]
+		Local $iSide = Side($pixel)
+		If $iSide = $sidename Then
+			Local $StoredDistance = Int(Pixel_Distance($iVillageCenter[0], $iVillageCenter[1], $pixel[0], $pixel[1]))
+			ReDim $BestPointEachGroup[UBound($BestPointEachGroup) + 1][4]
+			$BestPointEachGroup[UBound($BestPointEachGroup) - 1][0] = $pixel[0]
+			$BestPointEachGroup[UBound($BestPointEachGroup) - 1][1] = $pixel[1]
+			$BestPointEachGroup[UBound($BestPointEachGroup) - 1][2] = $StoredDistance
+			$BestPointEachGroup[UBound($BestPointEachGroup) - 1][3] = $i
+		Else
+			For $j = 0 To UBound($OneArray) - 1
+				Local $pixel = [$OneArray[$j][0], $OneArray[$j][1]]
+				Local $iSide = Side($pixel)
+				If $iSide = $sidename Then
+					Local $StoredDistance = Int(Pixel_Distance($iVillageCenter[0], $iVillageCenter[1], $pixel[0], $pixel[1]))
+					ReDim $BestPointEachGroup[UBound($BestPointEachGroup) + 1][4]
+					$BestPointEachGroup[UBound($BestPointEachGroup) - 1][0] = $pixel[0]
+					$BestPointEachGroup[UBound($BestPointEachGroup) - 1][1] = $pixel[1]
+					$BestPointEachGroup[UBound($BestPointEachGroup) - 1][2] = $StoredDistance
+					$BestPointEachGroup[UBound($BestPointEachGroup) - 1][3] = $i
+					ExitLoop
+				EndIf
+			Next
+		EndIf
+	Next
+	Local $distance[3] = [-1, -1, 890]
+	SetDebugLog("MostEdge UBound($BestPointEachGroup): " & UBound($BestPointEachGroup))
+	If UBound($BestPointEachGroup) > 0 Then
+		For $i = 0 To UBound($BestPointEachGroup) - 1
+			Local $End = [$BestPointEachGroup[$i][0], $BestPointEachGroup[$i][1], $BestPointEachGroup[$i][2], $BestPointEachGroup[$i][3]]
+			SetDebugLog("MostEdge $BestPointEachGroup[" & $i & "]: " & _ArrayToString($End, ",", -1, -1, "|"))
+			If $BestPointEachGroup[$i][2] < $distance[2] Then
+				$distance[0] = $End[0]
+				$distance[1] = $End[1]
+				$distance[2] = $End[2]
+				$GetIndex = $End[3]
+			EndIf
+		Next
+	EndIf
+	$iBestDeploy[0] = $distance[0]
+	$iBestDeploy[1] = $distance[1]
+	If $GetIndex = -1 Then Return $iBestDeploy
+	_ArrayDelete($aByGroups, $GetIndex)
+	Local $iSide = Side($iBestDeploy)
+	SetDebugLog("MostEdge $side = " & $iSide)
+	Local $iFrontDistanceX = 30
+	Local $iFrontDistanceY = 30
+	If $aSpells = $eHSpell Then
+		$iFrontDistanceX = 10
+		$iFrontDistanceY = 10
+	EndIf
+	Local $degree = Int(degree($iVillageCenter[0], $iVillageCenter[1], $iBestDeploy[0], $iBestDeploy[1]))
+	SetDebugLog("MostEdge Angle = " & $degree & "�")
+	Switch $degree
+		Case 0 To 10
+			$iFrontDistanceX = 10
+			$iFrontDistanceY = 0
+		Case 11 To 30
+			$iFrontDistanceX = 10
+			$iFrontDistanceY = Floor($iFrontDistanceY / 2)
+		Case 31 To 60
+			$iFrontDistanceX = 10
+			$iFrontDistanceY = 10
+		Case 61 To 80
+			$iFrontDistanceX = Floor($iFrontDistanceX / 2)
+			$iFrontDistanceY = 10
+		Case 81 To 90
+			$iFrontDistanceX = 0
+			$iFrontDistanceY = 10
+	EndSwitch
+	Switch $sidename
+		Case "TL"
+			$iBestDeploy[0] += $iFrontDistanceX
+			$iBestDeploy[1] += $iFrontDistanceY
+		Case "TR"
+			$iBestDeploy[0] -= $iFrontDistanceX
+			$iBestDeploy[1] += $iFrontDistanceY
+		Case "BL"
+			$iBestDeploy[0] += $iFrontDistanceX
+			$iBestDeploy[1] -= $iFrontDistanceY
+		Case "BR"
+			$iBestDeploy[0] -= $iFrontDistanceX
+			$iBestDeploy[1] -= $iFrontDistanceY
+	EndSwitch
+	Return $iBestDeploy
+EndFunc   ;==>MostCenter
+
+Func degree($x1, $y1, $x2, $y2)
+	Local $a = $y2 - $y1
+	Local $c = $x2 - $x1
+	Local $alpha = Round(ATan($a / $c) * 180 / 3.1415926535897932384626, 2)
+	Return Abs($alpha)
+EndFunc   ;==>degree
+
 Func DropTroopSmartFarm($troop, $nbSides, $number, $slotsPerEdge = 0, $name = "", $SIDESNAMES = "TR|TL|BR|BL")
 	Local $listInfoPixelDropTroop[0]
 	If $slotsPerEdge = 0 Or $number < $slotsPerEdge Then $slotsPerEdge = Ceiling($number / $nbSides)
@@ -1001,6 +1188,188 @@ Func DropTroopSmartFarm($troop, $nbSides, $number, $slotsPerEdge = 0, $name = ""
 	Local $infoDropTroop[6] = [$troop, $listInfoPixelDropTroop, $nbTroopsPerEdge, $slotsPerEdge, $number, $name]
 	Return $infoDropTroop
 EndFunc   ;==>DropTroopSmartFarm
+
+Global $g_FirstBitMap
+Global $g_SecondBitMap
+
+Func LaunchSpellsSmartFarm($SIDESNAMES = "TR|TL|BR|BL")
+	; $g_bDebugSmartFarm = True
+	_CaptureRegion2()
+	$g_FirstBitMap = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
+	Local $iTolerance = 30
+	Local $bIsPolygon = True
+	Local $DebugLog = False
+	Local $subDirectory = @ScriptDir & "\SmartFarm\"
+	DirCreate($subDirectory)
+	If _Sleep(750) Then Return
+	Local $FirstDetection
+	Local $SecondDetection
+	Local $FinalArray
+	For $i = 0 To 1
+		Local $ReturnArray[0][2]
+		Local $hTimer = TimerInit()
+		_CaptureRegion2()
+		$g_SecondBitMap = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
+		Local $return = _ImageCompareImagesMyBot(30)
+		Local $txtDebug = "Calculated_" & Round(TimerDiff($hTimer) / 1000, 2) & "_seconds"
+		SetDebugLog("_ImageCompareImagesMyBot Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
+		SetDebugLog("_ImageCompareImagesMyBot : " & UBound($return), $COLOR_INFO)
+		Local $date = @YEAR & "-" & @MON & "-" & @MDAY
+		Local $Time = @HOUR & "." & @MIN & "." & @SEC
+		Local $Filename = "SmartFarm" & "_" & $date & "_" & $Time & "___" & $txtDebug & ".png"
+		If $return <> -1 And IsArray($return) Then
+			For $j = 0 To UBound($return) - 1
+				Local $DetectedPoint[2] = [$return[$j][0], $return[$j][1]]
+				If Not isInsideDiamond($DetectedPoint) Then ContinueLoop
+				If StringInStr($SIDESNAMES, Side($DetectedPoint)) = 0 Then ContinueLoop
+				ReDim $ReturnArray[UBound($ReturnArray) + 1][2]
+				$ReturnArray[UBound($ReturnArray) - 1][0] = $return[$j][0]
+				$ReturnArray[UBound($ReturnArray) - 1][1] = $return[$j][1]
+			Next
+		EndIf
+		SetDebugLog("LaunchSpellsSmartFarm - $i:" & $i & " $ReturnArray:" & _ArrayToString($ReturnArray, ",", -1, -1, "|"))
+		If $i = 0 Then $FirstDetection = $ReturnArray
+		If $i = 1 Then
+			If $g_bDebugSmartFarm Then
+				_CaptureRegion()
+				Local $EditedImage = $g_hBitmap
+				Local $hGraphic = _GDIPlus_ImageGetGraphicsContext($EditedImage)
+				Local $hPen = _GDIPlus_PenCreate(0xFFFF0000, 2)
+				Local $hPen1 = _GDIPlus_PenCreate(0xFFFFFF00, 2)
+				Local $hPen2 = _GDIPlus_PenCreate(0xFFFFFFFF, 2)
+				Local $hPen3 = _GDIPlus_PenCreate(0xFF95f609, 2)
+				_GDIPlus_GraphicsDrawRect($hGraphic, $DiamondMiddleX - 5, $DiamondMiddleY - 5, 10, 10, $hPen2)
+				$hPen2 = _GDIPlus_PenCreate(0xFFFFFFFF, 1)
+				_GDIPlus_GraphicsDrawLine($hGraphic, 0, $DiamondMiddleY, $g_iGAME_WIDTH, $DiamondMiddleY, $hPen2)
+				_GDIPlus_GraphicsDrawLine($hGraphic, $DiamondMiddleX, 0, $DiamondMiddleX, $g_iGAME_HEIGHT, $hPen2)
+				$hPen2 = _GDIPlus_PenCreate(0xFFFFFFFF, 2)
+			EndIf
+			$SecondDetection = $ReturnArray
+			$FinalArray = GroupArrays($FirstDetection, $SecondDetection)
+			SetDebugLog("LaunchSpellsSmartFarm - $i:" & $i & " $FirstDetection:" & _ArrayToString($FirstDetection, ",", -1, -1, "|"))
+			SetDebugLog("LaunchSpellsSmartFarm - $i:" & $i & " $SecondDetection:" & _ArrayToString($SecondDetection, ",", -1, -1, "|"))
+			SetDebugLog("LaunchSpellsSmartFarm - $i:" & $i & " GroupArrays() $FinalArray:" & _ArrayToString($FinalArray, ",", -1, -1, "|"))
+			If $FinalArray = -1 Or Not IsArray($FinalArray) Or UBound($FinalArray) < 1 Then
+				$FinalArray = UBound($SecondDetection) > 5 ? $SecondDetection : $FirstDetection
+			EndIf
+			Local $aByGroups = GroupsOfPoints($FinalArray)
+			SetDebugLog("LaunchSpellsSmartFarm $aByGroups: " & UBound($aByGroups))
+			If $FinalArray <> -1 And IsArray($FinalArray) And UBound($FinalArray) > 0 And $g_bDebugSmartFarm Then
+				_ArraySort($FinalArray, 0, 0, 0, 0)
+				Local $left = $FinalArray[0][0]
+				Local $right = $FinalArray[UBound($FinalArray) - 1][0]
+				_ArraySort($FinalArray, 0, 0, 0, 1)
+				Local $top = $FinalArray[0][1]
+				Local $bottom = $FinalArray[UBound($FinalArray) - 1][1]
+				_GDIPlus_GraphicsDrawRect($hGraphic, $left, $top, $right - $left, $bottom - $top, $hPen1)
+				For $j = 0 To UBound($FinalArray) - 1
+					_GDIPlus_GraphicsDrawRect($hGraphic, $FinalArray[$j][0] - 5, $FinalArray[$j][1] - 5, 10, 10, $hPen)
+				Next
+			EndIf
+			For $j = 0 To UBound($aByGroups) - 1
+				Local $OneGroup = $aByGroups[$j]
+				_ArraySort($OneGroup, 0, 0, 0, 0)
+				Local $left = $OneGroup[0][0]
+				Local $right = $OneGroup[UBound($OneGroup) - 1][0]
+				_ArraySort($OneGroup, 0, 0, 0, 1)
+				Local $top = $OneGroup[0][1]
+				Local $bottom = $OneGroup[UBound($OneGroup) - 1][1]
+				If $g_bDebugSmartFarm Then _GDIPlus_GraphicsDrawRect($hGraphic, $left, $top, $right - $left, $bottom - $top, $hPen2)
+			Next
+			If $g_bDebugSmartFarm Then
+				Local $dummy1 = [50, 300], $dummy2 = [60, 340]
+				_GDIPlus_GraphicsDrawRect($hGraphic, $dummy1[0] - 5, $dummy1[1] - 5, 10, 10, $hPen3)
+				_GDIPlus_GraphicsDrawRect($hGraphic, $dummy2[0] - 5, $dummy2[1] - 5, 10, 10, $hPen3)
+				_GDIPlus_GraphicsDrawLine($hGraphic, $dummy1[0], $dummy1[1], $dummy2[0], $dummy2[1], $hPen3)
+				Local $dist = Pixel_Distance($dummy1[0], $dummy1[1], $dummy2[0], $dummy2[1])
+				_GDIPlus_GraphicsDrawString($hGraphic, " Distance : " & Int($dist), $dummy2[0], $dummy1[1] - 20, "ARIAL", 12)
+				_GDIPlus_ImageSaveToFile($EditedImage, $subDirectory & $Filename)
+				_GDIPlus_PenDispose($hPen)
+				_GDIPlus_PenDispose($hPen1)
+				_GDIPlus_PenDispose($hPen2)
+				_GDIPlus_GraphicsDispose($hGraphic)
+			EndIf
+		EndIf
+		$g_FirstBitMap = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
+		If _Sleep(750) Then Return
+	Next
+
+	Return $aByGroups
+EndFunc   ;==>LaunchSpellsSmartFarm
+
+Func _ImageCompareImagesMyBot($iTol = 30) ; Inspired in ProMac but in AutoIT
+	Local $AllResults[0][2], $AllResultsTmp[1][2]
+    Local Const $iW = _GDIPlus_ImageGetWidth($g_FirstBitMap), $iH = _GDIPlus_ImageGetHeight($g_FirstBitMap)
+	Local $hPixel, $iXS = 99, $iYS = 87, $iXE = $iW - 107, $iYE = $iH - 225
+	Local $iBits1, $iBits2
+
+	For $iX = $iXS To $iXE Step 25
+		For $iY = $iYS To $iYE Step 15
+			$iBits1 = _GDIPlus_BitmapGetPixel($g_FirstBitMap, $iX, $iY)
+			$iBits2 = _GDIPlus_BitmapGetPixel($g_SecondBitMap, $iX, $iY)
+			If Abs($iBits1 - $iBits2) > $iTol Then
+				$AllResultsTmp[0][0] = $iX
+				$AllResultsTmp[0][1] = $iY
+				_ArrayAdd($AllResults, $AllResultsTmp)
+			EndIf
+		Next
+	Next
+
+	If (UBound($AllResults) > 0) Then
+		Return $AllResults
+	Else
+		Return -1
+	EndIf
+EndFunc
+
+Func GroupsOfPoints($aFinalArrayArg)
+	Local $CloneFinalArrayArg = $aFinalArrayArg
+	Local $a_GroupsToReturn[0]
+	Local $iDistance = 30
+	Local $a_AllNearPoints[0][2]
+	For $a = 0 To UBound($aFinalArrayArg) - 1
+		Local $aFirstOriginalPoint = [$aFinalArrayArg[$a][0], $aFinalArrayArg[$a][1]]
+		For $b = UBound($CloneFinalArrayArg) - 1 To 0 Step -1
+			Local $aSecondOriginalPoint = [$CloneFinalArrayArg[$b][0], $CloneFinalArrayArg[$b][1]]
+			Local $distance = Pixel_Distance($aFirstOriginalPoint[0], $aFirstOriginalPoint[1], $aSecondOriginalPoint[0], $aSecondOriginalPoint[1])
+			If $distance = 0 Then
+				SetDebugLog(_ArrayToString($aSecondOriginalPoint, ",", -1, -1, "|") & " is same pixel!")
+				Local $iIndexX = _ArraySearch($a_AllNearPoints, $aSecondOriginalPoint[0], 0, 0, 0, 1, 1, 0)
+				Local $iIndexY = _ArraySearch($a_AllNearPoints, $aSecondOriginalPoint[1], 0, 0, 0, 1, 1, 1)
+				If @error Or $iIndexX <> $iIndexY Then
+					ReDim $a_AllNearPoints[UBound($a_AllNearPoints) + 1][2]
+					$a_AllNearPoints[UBound($a_AllNearPoints) - 1][0] = $aSecondOriginalPoint[0]
+					$a_AllNearPoints[UBound($a_AllNearPoints) - 1][1] = $aSecondOriginalPoint[1]
+					SetDebugLog(_ArrayToString($aSecondOriginalPoint, ",", -1, -1, "|") & " added because doesn't exist on this group!")
+				EndIf
+				_ArrayDelete($CloneFinalArrayArg, $b)
+				ContinueLoop
+			EndIf
+			If $distance < $iDistance Then
+				SetDebugLog("GroupsOfPoints|Found a near Poin -> : " & _ArrayToString($aSecondOriginalPoint, ",", -1, -1, "|"))
+				Local $iIndexX = _ArraySearch($a_AllNearPoints, $aSecondOriginalPoint[0], 0, 0, 0, 1, 1, 0)
+				Local $iIndexY = _ArraySearch($a_AllNearPoints, $aSecondOriginalPoint[1], 0, 0, 0, 1, 1, 1)
+				If @error Or $iIndexX <> $iIndexY Then
+					ReDim $a_AllNearPoints[UBound($a_AllNearPoints) + 1][2]
+					$a_AllNearPoints[UBound($a_AllNearPoints) - 1][0] = $aSecondOriginalPoint[0]
+					$a_AllNearPoints[UBound($a_AllNearPoints) - 1][1] = $aSecondOriginalPoint[1]
+					_ArrayDelete($CloneFinalArrayArg, $b)
+				EndIf
+			EndIf
+		Next
+		If UBound($a_AllNearPoints, $UBOUND_ROWS) > 2 Then
+			ReDim $a_GroupsToReturn[UBound($a_GroupsToReturn) + 1]
+			$a_GroupsToReturn[UBound($a_GroupsToReturn) - 1] = $a_AllNearPoints
+		EndIf
+		Local $a_AllNearPoints[0][2]
+	Next
+	For $a = 0 To UBound($a_GroupsToReturn) - 1
+		Local $group = $a_GroupsToReturn[$a]
+		_ArraySort($group, 0, 0, 0, 0)
+		SetDebugLog("GroupsOfPoints|Group " & $a + 1 & " -> : " & _ArrayToString($group, ",", -1, -1, "|"))
+	Next
+	Return $a_GroupsToReturn
+EndFunc   ;==>GroupsOfPoints
 
 Func GetDiamondGreenTiles($HnowManyPoints = 10)
 	$g_aGreenTiles = -1

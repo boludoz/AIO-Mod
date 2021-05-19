@@ -53,30 +53,8 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 	Local $iSide = Random(0, 1, 1) ; randomly choose top left or top right
 	Local $aBMPos = 0
 
-	Local $Size = GetBuilderBaseSize()
-
-	If Not $g_bRunState Then Return
-
-	Setlog("Builder Base Diamond: " & $Size)
-	Local $i = 0
-	Do
-		Setlog("Builder Base Attack Zoomout.")
-		$Size = GetBuilderBaseSize(False) ; WihtoutClicks
-
-		If ($Size < 575 And $Size > 620) Or ($Size = 0) Then
-			BuilderBaseZoomOut()
-			If _Sleep(1000) Then Return
-		EndIf
-
-		If $i > 5 Then ExitLoop
-		$i += 1
-	Until ($Size >= 575 And $Size <= 620) Or ($Size <> 0)
-
-	If $Size = 0 Then
-		SetLog("Fail AttackBB 0x1")
-		Return False
-	EndIf
-
+	If ZoomBuilderBaseMecanics(True) < 1 Then Return False
+	
 	$g_aBuilderBaseDiamond = BuilderBaseAttackDiamond()
 	If IsArray($g_aBuilderBaseDiamond) <> True Or Not (UBound($g_aBuilderBaseDiamond) > 0) Then Return False
 

@@ -460,7 +460,7 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag,
 					$aScrollPos[1] = $aCenterHomeVillageClickDrag[1]
 				EndIf
 				ClickAway()
-				ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $iX, $aScrollPos[1] - $iY, True)
+				ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $iX, $aScrollPos[1] - $iY)
 				If _Sleep(250) Then
 					$iCallCount = 0
 					Return FuncReturn($aResult)

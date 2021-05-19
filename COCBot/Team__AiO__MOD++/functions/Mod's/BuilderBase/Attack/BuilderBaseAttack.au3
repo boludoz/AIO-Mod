@@ -364,17 +364,7 @@ Func BuilderBaseAttackToDrop($aAvailableTroops)
 
 	If _Sleep(1000) Then Return
 
-	Local $Size = GetBuilderBaseSize()
-
-	If Not $g_bRunState Then Return
-
-	Setlog("Builder Base Diamond: " & $Size)
-	If ($Size < 575 And $Size > 620) Or $Size = 0 Then
-		Setlog("Builder Base Attack Zoomout.")
-		BuilderBaseZoomOut()
-		If _Sleep(1000) Then Return
-		$Size = GetBuilderBaseSize(False) ; WihtoutClicks
-	EndIf
+	If ZoomBuilderBaseMecanics(True) < 1 Then Return False
 
 	; [0] - TopLeft ,[1] - TopRight , [2] - BottomRight , [3] - BottomLeft
 	Local $DeployPoints = BuilderBaseGetDeployPoints(5)

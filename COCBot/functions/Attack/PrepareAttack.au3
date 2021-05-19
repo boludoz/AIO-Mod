@@ -326,9 +326,9 @@ Func IsUnitUsed($iMatchMode, $iTroopIndex)
 				Case $eLSpell
 					If $g_abAttackUseLightSpell[$iMatchMode] Or $g_bSmartZapEnable Then Return True
 				Case $eHSpell
-					If $g_abAttackUseHealSpell[$iMatchMode] Then Return True
+					If $g_abAttackUseHealSpell[$iMatchMode] Or $g_bSmartFarmSpellsEnable Then Return True
 				Case $eRSpell
-					If $g_abAttackUseRageSpell[$iMatchMode] Then Return True
+					If $g_abAttackUseRageSpell[$iMatchMode] Or $g_bSmartFarmSpellsEnable Then Return True
 				Case $eJSpell
 					If $g_abAttackUseJumpSpell[$iMatchMode] Then Return True
 				Case $eFSpell

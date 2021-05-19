@@ -12,6 +12,10 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+; Lirel Bit
+ Global $g_iSmartFarmSpellsHowManySides = 2, $g_bSmartFarmSpellsEnable = True
+;
+
 #Region - Icn - Team AiO MOD++
 Global Const $g_sLibModIconPath = $g_sLibPath & "\ModLibs\AIOMod.dll" ; Mod icon library - Team AiO MOD++
 ; enumerated Icons 1-based index to IconLibMod
@@ -33,24 +37,24 @@ Global $g_bBadPrepareSearch = False
 
 ; Magic items check.
 Global Const $g_sConstMaxMagicItemsSeconds = 172800 ; 172800 const = 2 days quality check.
-Global $g_sDateAndTimeMagicItems = "" 
+Global $g_sDateAndTimeMagicItems = ""
 
 ; Hero war upgrade exception.
 Global Const $g_sConstHeroWUESeconds = 172800 ; 172800 const = 2 days quality check.
-Global $g_sDateAndTimeHeroWUE = "" 
+Global $g_sDateAndTimeHeroWUE = ""
 
 ; King upgrade time.
 Global Const $g_sConstMaxHeroTime = 864000 ; 864000 const = 10 days quality check.
-Global $g_sDateAndTimeKing = "" 
+Global $g_sDateAndTimeKing = ""
 
 ; Queen upgrade time.
-Global $g_sDateAndTimeQueen = "" 
+Global $g_sDateAndTimeQueen = ""
 
 ; Warden upgrade time.
-Global $g_sDateAndTimeWarden = "" 
+Global $g_sDateAndTimeWarden = ""
 
 ; Champion upgrade time.
-Global $g_sDateAndTimeChampion = "" 
+Global $g_sDateAndTimeChampion = ""
 
 #EndRegion - Dates - Team AIO Mod++
 
@@ -60,7 +64,7 @@ Global $g_bDefensesAlive = False, $g_bDefensesMix = True
 #EndRegion - New DB sys - Team AIO Mod++
 
 #Region - No Upgrade In War - Team AIO Mod++
-Global $g_hChkNoUpgradeInWar = True, $g_bNoUpgradeInWar 
+Global $g_hChkNoUpgradeInWar = True, $g_bNoUpgradeInWar
 #EndRegion - No Upgrade In War - Team AIO Mod++
 
 #Region - Legend trophy protection - Team AIO Mod++
@@ -76,7 +80,7 @@ Global $g_hChkReturnTimerEnable = 0, $g_hTxtReturnTimer = 0, $g_bReturnTimerEnab
 #EndRegion - Return Home by Time - Team AIO Mod++
 
 #Region - Lab Priority System
-Global $g_hChkPriorityLab, $g_hCmbPriorityLab, $g_hLblOnlyUpgrade, $g_hChkPriorityLabTroops, $g_hChkPriorityLabSpells, $g_hChkPriorityLabSieges, _ 
+Global $g_hChkPriorityLab, $g_hCmbPriorityLab, $g_hLblOnlyUpgrade, $g_hChkPriorityLabTroops, $g_hChkPriorityLabSpells, $g_hChkPriorityLabSieges, _
 $g_bPriorityLab, $g_iCmbPriorityLab, $g_bPriorityLabSpells = True, $g_bPriorityLabTroops = True, $g_bPriorityLabSieges = True
 #EndRegion - Lab Priority System
 
@@ -339,9 +343,9 @@ Global $g_iFurtherFromBBDefault = 3
 Global $g_iAvailableAttacksBB = 0, $g_iLastDamage = 0
 Global $g_sTxtRegistrationToken = ""
 
-Global Enum $g_iAirDefense = 0, $g_iCrusher, $g_iGuardPost, $g_iCannon, $g_iBuilderHall, $g_iDeployPoints
-Global $g_aBuilderHallPos = -1, $g_aAirdefensesPos = -1, $g_aCrusherPos = -1, $g_aCannonPos = -1, $g_aGuardPostPos = -1, $g_aDeployPoints, $g_aDeployBestPoints
-Global $g_aOpponentBuildings[6] = [$g_aAirdefensesPos, $g_aCrusherPos, $g_aGuardPostPos, $g_aCannonPos, $g_aBuilderHallPos, $g_aDeployPoints]
+Global $g_aBuilderHallPos = -1, $g_aAirdefensesPos = -1, $g_aCrusherPos = -1, $g_aCannonPos = -1, $g_aGuardPostPos = -1, _
+$g_aAirBombs = -1, $g_aLavaLauncherPos = -1, $g_aRoasterPos = -1, $g_aDeployPoints, $g_aDeployBestPoints
+
 Global $g_aExternalEdges, $g_aBuilderBaseDiamond, $g_aOuterEdges, $g_aBuilderBaseOuterDiamond, $g_aBuilderBaseOuterPolygon, $g_aFinalOuter[4]
 
 ; GUI

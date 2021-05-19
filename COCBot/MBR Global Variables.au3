@@ -1699,6 +1699,8 @@ Global $__TEST_ERROR_SLOW_ADB_CLICK_DELAY = 0
 ; SmartZap
 Global $g_iLSpellLevel = 1
 Global $g_iESpellLevel = 1
+Global $g_iRSpellLevel = 1
+Global $g_iHSpellLevel = 1
 Global Const $g_fDarkStealFactor = 0.75
 Global Const $g_fDarkFillLevel = 0.70
 ; Array to hold Total HP of DE Drills at each level (1-8)

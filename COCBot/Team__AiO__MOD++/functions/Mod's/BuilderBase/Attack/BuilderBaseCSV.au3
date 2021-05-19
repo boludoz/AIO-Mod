@@ -33,10 +33,10 @@ Func TestBuilderBaseParseAttackCSV()
 
 		; Zoomout the Opponent Village.
 		BuilderBaseZoomOut()
-		
+
 		; Correct script.
 		BuilderBaseSelectCorrectScript($aAvailableTroops)
-		
+
 		Local $FurtherFrom = 5 ; 5 pixels before the deploy point.
 		BuilderBaseGetDeployPoints($FurtherFrom, True)
 
@@ -96,62 +96,100 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 			If $command = "NOTE" Or $command = "GUIDE" Then ContinueLoop
 			SetDebugLog("[CMD]: " & $command)
 			Switch $command
-				Case "IMGL"
-					; Global Enum $g_iAirDefense = 0 , $g_iCrusher , $g_iGuardPost, $g_iCannon, $g_iBuilderHall, $g_iDeployPoints
-					; Global $g_aBuilderHallPos[1][2] = [[Null, Null]], $g_aAirdefensesPos[0][2], $g_aCrusherPos[0][2], $g_aCannonPos[0][2] , $g_aGuardPostPos[0][2]
-					For $i = 4 To 0 Step -1
-						$command = Int(StringStripWS($aSplitLine[$i + 1], $STR_STRIPALL))
-						If $command = 1 Then
-							; Remember the Buildings Arrays is :  [0] = name , [1] = Xaxis , [1] = Yaxis
-							Switch $i
-								Case 0
-									$g_aAirdefensesPos = BuilderBaseBuildingsDetection(0)
-									Setlog("Detected Air defenses: " & UBound($g_aAirdefensesPos), $COLOR_INFO)
-									ExitLoop
-								Case 1
-									$g_aCrusherPos = BuilderBaseBuildingsDetection(1)
-									Setlog("Detected Crusher: " & UBound($g_aCrusherPos), $COLOR_INFO)
-									ExitLoop
-								Case 2
-									$g_aGuardPostPos = BuilderBaseBuildingsDetection(2)
-									Setlog("Detected GuardPost: " & UBound($g_aGuardPostPos), $COLOR_INFO)
-									ExitLoop
-								Case 3
-									$g_aCannonPos = BuilderBaseBuildingsDetection(3)
-									Setlog("Detected Cannon: " & UBound($g_aCannonPos), $COLOR_INFO)
-									ExitLoop
-								Case 4
-									; Is not necessary to get again if was detected when deploy point detection ran
-									If $g_aBuilderHallPos[0][0] = Null Then $g_aBuilderHallPos = BuilderBaseBuildingsDetection($i - 1)
-							EndSwitch
+				Case "IMGL", "FORC"
+					Local $aIMGLtxt[8] = ["AirDefenses", "Crusher", "GuardPost", "Cannon", "AirBombs", "LavaLauncher", "Roaster", "BuilderHall"]
+					Local $aDefensesPos[8] = [$g_aAirdefensesPos, $g_aCrusherPos, $g_aGuardPostPos, $g_aCannonPos, $g_aAirBombs, $g_aLavaLauncherPos, $g_aRoasterPos, $g_aBuilderHallPos]
+
+					Local $iTotalDefenses = -1, $bNewDefenses = False
+					For $sSum In $aSplitLine
+						If StringIsDigit(StringStripWS($sSum, $STR_STRIPALL)) Then
+							$iTotalDefenses += 1
 						EndIf
 					Next
 
-					; Main Side to attack
-					If $sFrontSide = "" Then
-						$sFrontSide = BuilderBaseAttackMainSide()
-						Setlog("Detected Front Side: " & $sFrontSide, $COLOR_INFO)
+					If $iTotalDefenses > 4 Then
+						SetLog("CSV v2 BB detected.", $COLOR_INFO)
+						$bNewDefenses = True
+					Else
+						SetLog("CSV v1 BB detected.", $COLOR_INFO)
 					EndIf
-				Case "FORC"
-					; Main Side to attack If necessary
-					If UBound($aIMGL) = UBound($aSplitLine) - 1 Then
-						; Just 4 : Global Enum $g_iAirDefense = 0 , $g_iCrusher, $g_iGuardPost, $g_iCannon
-						For $i = 0 To 3
-							$command = Int(StringStripWS($aSplitLine[$i + 1], $STR_STRIPALL))
-							If $command = 1 Then
-								; Get the Array inside the array $bDefenses
-								Local $BuildPositionArray = $bDefenses[$i - 1]
-								; Let get the First building detected
-								; Remember the Buildings Arrays is :  [0] = name , [1] = Xaxis , [1] = Yaxis
-								Local $BuildPosition = [$BuildPositionArray[0][1], $BuildPositionArray[0][2]]
-								; Get in string the FORCED Side name
-								If $sFrontSide = "" Then
-									$sFrontSide = DeployPointsPosition($BuildPosition)
-									Setlog("Forced Front Side: " & $sFrontSide, $COLOR_INFO)
+
+					Switch $command
+						Case "IMGL"
+							For $i = 0 To UBound($aIMGLtxt) -1
+
+								If $bNewDefenses = False And $i = 4 Then
+									ExitLoop
 								EndIf
+
+								$command = Int(StringStripWS($aSplitLine[$i + 1], $STR_STRIPALL))
+								If $command = 1 Then
+									; Remember the Buildings Arrays is :  [0] = name , [1] = Xaxis , [1] = Yaxis
+									Switch $i
+										Case 0
+											$g_aAirdefensesPos = BuilderBaseBuildingsDetection(0)
+											Setlog("Detected Air defenses: " & UBound($g_aAirdefensesPos), $COLOR_INFO)
+										Case 1
+											$g_aCrusherPos = BuilderBaseBuildingsDetection(1)
+											Setlog("Detected Crusher: " & UBound($g_aCrusherPos), $COLOR_INFO)
+										Case 2
+											$g_aGuardPostPos = BuilderBaseBuildingsDetection(2)
+											Setlog("Detected Guard Post: " & UBound($g_aGuardPostPos), $COLOR_INFO)
+										Case 3
+											$g_aCannonPos = BuilderBaseBuildingsDetection(3)
+											Setlog("Detected Cannon: " & UBound($g_aCannonPos), $COLOR_INFO)
+										Case 4
+											$g_aAirBombs = BuilderBaseBuildingsDetection(4)
+											Setlog("Detected Air Bombs: " & UBound($g_aAirBombs), $COLOR_INFO)
+										Case 5
+											$g_aLavaLauncherPos = BuilderBaseBuildingsDetection(5)
+											Setlog("Detected Lava Launcher: " & UBound($g_aLavaLauncherPos), $COLOR_INFO)
+										Case 6
+											$g_aRoasterPos = BuilderBaseBuildingsDetection(6)
+											Setlog("Detected Roaster: " & UBound($g_aRoasterPos), $COLOR_INFO)
+										; Case 7
+											; Is not necessary to get again if was detected when deploy point detection ran
+											; If $g_aBuilderHallPos = -1 Then $g_aBuilderHallPos = BuilderBaseBuildingsDetection(7)
+									EndSwitch
+								EndIf
+							Next
+
+							; Main Side to attack
+							If $sFrontSide = "" Then
+								$sFrontSide = BuilderBaseAttackMainSide()
+								Setlog("Detected Front Side: " & $sFrontSide, $COLOR_INFO)
 							EndIf
-						Next
-					EndIf
+						Case "FORC"
+							; Main Side to attack If necessary
+							Local $bAlreadyForcedSide = False
+							For $i = 0 To UBound($aIMGLtxt) -1
+
+								If $bNewDefenses = False And $i = 4 Then
+									ExitLoop
+								EndIf
+
+								$command = Int(StringStripWS($aSplitLine[$i + 1 ], $STR_STRIPALL))
+								If $command = 1 Then
+									Setlog("Check Force Detection For: " & $aIMGLtxt[$i])
+									; Get the Array inside the array $aDefensesPos
+									Local $aBuildPositionArray = $aDefensesPos[$i]
+									If UBound($aBuildPositionArray) > 0 And not @error Then
+										; Let get the First building detected
+										; Remember the Buildings Arrays is :  [0] = name , [1] = Xaxis , [1] = Yaxis
+										Local $aBuildPosition = [$aBuildPositionArray[0][1], $aBuildPositionArray[0][2]]
+										Setlog("Detected Pos: " & _ArrayToString($aBuildPosition, ","))
+										; Get in string the FORCED Side name
+										If Not $bAlreadyForcedSide Then
+											$sFrontSide = DeployPointsPosition($aBuildPosition)
+											Setlog("Forced Front Side To " & $aIMGLtxt[$i] & " : " & $sFrontSide, $COLOR_INFO)
+											$bAlreadyForcedSide = True
+										Else
+											Setlog("Forced Side Can Be Applied To Only 1 Building Ignore " & $aIMGLtxt[$i], $COLOR_INFO)
+										EndIf
+									EndIf
+								EndIf
+							Next
+					EndSwitch
 				Case "DROP"
 					; passing all values to $aDrop from $aSplitLine
 					For $i = 1 To 6
@@ -371,7 +409,7 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 			; Machine Ability
 			TriggerMachineAbility()
 			If _Sleep(50) Then Return
-			
+
 			If _CheckPixel($aBlackArts, True) Then
 				If _WaitForCheckImg($g_sImgOkButton, "345, 540, 524, 615") Then
 					SetDebugLog("BattleIsOver | $bIsEnded.")
@@ -389,7 +427,7 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 			SetLog("CSV Does not deploy some of the troops. So Now just dropping troops in a waves", $COLOR_INFO)
 			AttackBB($aAvailableTroops_NXQ)
 		EndIf
-		
+
 	Else
 		SetLog($FileNamePath & " Doesn't exist!", $COLOR_WARNING)
 	EndIf
@@ -422,43 +460,34 @@ Func CorrectDropPoints($FrontSide, $sDropSide, $aDeployBestPoints, ByRef $sSelec
 		If $FrontSide = $sSideNames[$i] Then $Front = $i
 	Next
 
-	Local $DimToReturn = 0
-
+	Local $iDimToReturn = 0
 	Switch $sDropSide
-		Case "FRONT"
-			$DimToReturn = $Front
-		Case "FRONTE"
-			$DimToReturn = $Front
-		Case "BACK"
-			$DimToReturn = ($Front + 2 > 3) ? Abs(($Front + 2) - 4) : $Front + 2
-		Case "BACKE"
-			$DimToReturn = ($Front + 2 > 3) ? Abs(($Front + 2) - 4) : $Front + 2
-		Case "LEFT"
-			$DimToReturn = ($Front + 1 > 3) ? Abs(($Front + 1) - 4) : $Front + 1
-		Case "LEFTE"
-			$DimToReturn = ($Front + 1 > 3) ? Abs(($Front + 1) - 4) : $Front + 1
-		Case "RIGHT"
-			$DimToReturn = ($Front - 1 < 0) ? 4 - Abs($Front - 1) : $Front - 1
-		Case "RIGHTE"
-			$DimToReturn = ($Front - 1 < 0) ? 4 - Abs($Front - 1) : $Front - 1
+		Case "FRONT", "FRONTE"
+			$iDimToReturn = $Front
+		Case "BACK", "BACKE"
+			$iDimToReturn = ($Front + 2 > 3) ? Abs(($Front + 2) - 4) : $Front + 2
+		Case "LEFT", "LEFTE"
+			$iDimToReturn = ($Front + 1 > 3) ? Abs(($Front + 1) - 4) : $Front + 1
+		Case "RIGHT", "RIGHTE"
+			$iDimToReturn = ($Front - 1 < 0) ? 4 - Abs($Front - 1) : $Front - 1
 		Case Else ;Incase of Wrong CSV Side Just Return To avoid crash
 			SetLog("CSV DropSide Command '" & $sDropSide & "' Not Supported.", $COLOR_ERROR)
 			Return
 	EndSwitch
 
-	$sSelectedDropSideName = $sSideNames[$DimToReturn] ;Save Choosed Site
+	$sSelectedDropSideName = $sSideNames[$iDimToReturn] ;Save Choosed Site
 
-	If ($sDropSide = "FRONTE" Or $sDropSide = "BACKE" Or $sDropSide = "LEFTE" Or $sDropSide = "RIGHTE") And IsArray($g_aFinalOuter) And $DimToReturn < UBound($g_aFinalOuter) Then
-		$ToReturn = FindBestDropPoints($g_aFinalOuter[$DimToReturn], 10)
+	If ($sDropSide = "FRONTE" Or $sDropSide = "BACKE" Or $sDropSide = "LEFTE" Or $sDropSide = "RIGHTE") And IsArray($g_aFinalOuter) And $iDimToReturn < UBound($g_aFinalOuter) Then
+		$ToReturn = FindBestDropPoints($g_aFinalOuter[$iDimToReturn], 10)
 	Else
-		If IsArray($aDeployBestPoints) And $DimToReturn < UBound($aDeployBestPoints) Then
-			$ToReturn = $aDeployBestPoints[$DimToReturn]
-		ElseIf IsArray($g_aFinalOuter) And $DimToReturn < UBound($g_aFinalOuter) Then ; In Worst Case Senerio If Depoly Points Was Not detected then use outer points.
-			$ToReturn = FindBestDropPoints($g_aFinalOuter[$DimToReturn], 10)
+		If IsArray($aDeployBestPoints) And $iDimToReturn < UBound($aDeployBestPoints) Then
+			$ToReturn = $aDeployBestPoints[$iDimToReturn]
+		ElseIf IsArray($g_aFinalOuter) And $iDimToReturn < UBound($g_aFinalOuter) Then ; In Worst Case Senerio If Depoly Points Was Not detected then use outer points.
+			$ToReturn = FindBestDropPoints($g_aFinalOuter[$iDimToReturn], 10)
 		EndIf
 	EndIf
 
-	SetDebugLog("Main Side is " & $FrontSide & " - Drop on " & $sDropSide & " correct side will be " & $sSideNames[$DimToReturn])
+	SetDebugLog("Main Side is " & $FrontSide & " - Drop on " & $sDropSide & " correct side will be " & $sSideNames[$iDimToReturn])
 	Return $ToReturn
 EndFunc   ;==>CorrectDropPoints
 
@@ -620,7 +649,7 @@ Func VerifySlotTroop($sTroopName, ByRef $aSlot_XY, ByRef $iQtyOfSelectedSlot, By
 		$g_aMachineBB[0] = $iSlotX
 		$g_aMachineBB[1] = $iSlotY
 	EndIf
-	
+
 	Click($iSlotX - Random(0, 5, 1), $iSlotY - Random(0, 5, 1), 1, 0)
 	If _Sleep(250) Then Return
 	Return True
@@ -629,12 +658,12 @@ EndFunc   ;==>VerifySlotTroop
 Func DeployTroopBB($sTroopName, $aSlot_XY, $Point2Deploy, $iQtyToDrop)
 	SetDebugLog("[" & _ArrayToString($aSlot_XY) & "] - Deploying " & $iQtyToDrop & " " & FullNametroops($sTroopName) & " At " & $Point2Deploy[0] & " x " & $Point2Deploy[1], $COLOR_INFO)
 	PureClickP($Point2Deploy, $iQtyToDrop, 0)
-	
+
 	If ($sTroopName = "Machine") Then
 		If IsArray($g_aMachineBB) And ($g_aMachineBB[2] = False) Then
 			; Set the Boolean To True to Say Yeah! It's Deployed!
 			$g_aMachineBB[2] = True
-			
+
 			; It look for the white border in case it failed to launch.
 			If ($g_aMachineBB[0] <> -1) Then
 				If _Sleep(1000) Then Return
@@ -667,14 +696,14 @@ EndFunc   ;==>GetThePointNearBH
 
 Func TriggerMachineAbility($bBBIsFirst = -1, $ix = -1, $iy = -1, $bTest = False)
 	Local $sFuncName = "TriggerMachineAbility: "
-	
+
 	If UBound($g_aMachineBB) < 4 Then
 		Setlog("TriggerMachineAbility | This will not work 0x1.", $COLOR_ERROR)
 		Return False
 	EndIf
-	
+
 	If ($bBBIsFirst = -1) Then $bBBIsFirst = $g_aMachineBB[3]
-	
+
 	; If it's not just a test, Exit the Function if Machine is not yet deployed
 	If $bTest = False And $g_aMachineBB[2] = False Then Return False
 
@@ -689,13 +718,13 @@ Func TriggerMachineAbility($bBBIsFirst = -1, $ix = -1, $iy = -1, $bTest = False)
 			Return False
 		EndIf
 	EndIf
-	
+
 	; If it's too early for a check, exit the Function! NOTE: If $g_iBBMachAbilityLastActivatedTime here is -1, it means Machine is Deployed but the Ability is not yet Activated!
 	; We use random to not always get activated in an specific Time Delay
 	If $g_iBBMachAbilityLastActivatedTime > -1 And __TimerDiff($g_iBBMachAbilityLastActivatedTime) < Random($g_iBBMachAbilityTime - 2000, $g_iBBMachAbilityTime + 2000, 1) Then Return False
 
 	SetDebugLog($sFuncName & "Checking ability.")
-	
+
 	Local $hPixel
 	$hPixel = _GetPixelColor(Int($g_aMachineBB[0]), 721, True)
 	If $bTest Or $g_bDebugSetlog Then Setlog($hPixel & " ability", $COLOR_INFO)
@@ -728,19 +757,19 @@ EndFunc   ;==>TriggerMachineAbility
 Func BattleIsOver()
 	Local $bIsEnded = False
 	Local $aBlackArts[4] = [520, 600, 0x000000, 5]
-	
+
 	For $iBattleOverLoopCounter = 0 To 190
 		If _Sleep(1000) Then Return
 		If Not $g_bRunState Then Return
-		
+
 		TriggerMachineAbility()
-		
+
 		Local $iDamage = Number(getOcrOverAllDamage(780, 587))
 		If Int($iDamage) > Int($g_iLastDamage) Then
 			$g_iLastDamage = Int($iDamage)
 			Setlog("- Total Damage: " & $g_iLastDamage & "%", $COLOR_INFO)
 		EndIf
-		
+
 		If _CheckPixel($aBlackArts, True) Then
 			If _WaitForCheckImg($g_sImgOkButton, "345, 540, 524, 615") Then $bIsEnded = True
 			SetDebugLog("BattleIsOver | $bIsEnded : " & $bIsEnded)

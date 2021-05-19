@@ -90,15 +90,53 @@ Func GetBuilderBaseSize($WithClick = False, $bDebugLog = False)
 		$aVillage = GetVillageSize($bDebugLog, $sMode & "stone", $sMode & "tree", Default, True, False)
 	
 		If UBound($aVillage) > 8 And not @error Then
-			If $aVillage[4] <> 0 And $aVillage[5] <> 0 And $aVillage[7] <> 0 And $aVillage[8] <> 0 Then
+			If StringLen($aVillage[9]) > 5 And StringIsSpace($aVillage[9]) = 0 Then
 				$iResult = Floor(Pixel_Distance($aVillage[4], $aVillage[5], $aVillage[7], $aVillage[8]))
 				Return $iResult
+			ElseIf StringIsSpace($aVillage[9]) = 1 Then
+				Return 0
 			EndIf
 		EndIf
 		
-		If _Sleep($DELAYSLEEP) Then Return
+		If _Sleep($DELAYSLEEP * 10) Then Return
+		
 	Next
 	
-	SetDebugLog("[BBzoomout] GetDistance Boat to Stone Error", $COLOR_ERROR)
 	Return 0
+EndFunc   ;==>GetBuilderBaseSize
+
+Func ZoomBuilderBaseMecanics($bAttack = True)
+	Local $iSize = ($bAttack = True) ? (GetBuilderBaseSize()) : (0)
+	
+	If $iSize = 0 Then
+		BuilderBaseZoomOut()
+		If _Sleep($DELAYSLEEP * 10) Then Return
+	EndIf
+	
+	If Not $g_bRunState Then Return
+
+	Setlog("Builder Base Diamond: " & $iSize)
+	Local $i = 0
+	Do
+		Setlog("Builder Base Attack Zoomout.")
+		$iSize = GetBuilderBaseSize(False) ; WihtoutClicks
+		
+		If Not $g_bRunState Then Return
+
+		If ($iSize < 575 And $iSize > 620) Or ($iSize = 0) Then
+			BuilderBaseZoomOut()
+			If _Sleep(1000) Then Return
+		EndIf
+
+		If $i > 5 Then ExitLoop
+		$i += 1
+	Until ($iSize >= 575 And $iSize <= 620) Or ($iSize <> 0)
+
+	If $iSize = 0 Then
+		SetDebugLog("[BBzoomout] ZoomOut Builder Base - FAIL", $COLOR_ERROR)
+	Else
+		SetDebugLog("[BBzoomout] ZoomOut Builder Base - OK", $COLOR_SUCCESS)
+	EndIf
+	
+	Return $iSize
 EndFunc   ;==>GetBuilderBaseSize

@@ -58,14 +58,14 @@ EndFunc   ;==>TestBuilderBaseGetHall
 
 Func BuilderBaseGetDeployPoints($FurtherFrom = $g_iFurtherFromBBDefault, $DebugImage = False)
 	Local $bBadPoints = False, $Sides = -1
-	
+
 	If Not $g_bRunState Then Return
 
 	Local $DebugLog
-	If $g_bDebugBBattack Or $DebugImage Then 
+	If $g_bDebugBBattack Or $DebugImage Then
 		$DebugLog = True
 	EndIf
-	
+
 	; [0] - TopLeft ,[1] - TopRight , [2] - BottomRight , [3] - BottomLeft
 	; Each with an Array [$i][2] =[x,y]  for Xaxis and Yaxis
 	Local $DeployPoints[4]
@@ -78,7 +78,7 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = $g_iFurtherFromBBDefault, $DebugI
 		If IsArray($aBuilderHallPos) Then ExitLoop
 		If _Sleep(250) Then Return
 	Next
-	
+
 	If IsArray($aBuilderHallPos) And UBound($aBuilderHallPos) > 0 Then
 		$g_aBuilderHallPos = $aBuilderHallPos
 	Else
@@ -96,7 +96,7 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = $g_iFurtherFromBBDefault, $DebugI
 	; Dissociable drop points.
 	Local $DeployPointsResult = DMClasicArray(DFind($g_sBundleDeployPointsBBD, 0, 0, 0, 0, 0, 0, 1000, True), 18, ($g_bDebugImageSave Or $DebugImage))
 	If Not $g_bRunState Then Return
-	
+
 	If IsArray($DeployPointsResult) And UBound($DeployPointsResult) > 0 Then
 		Local $Point[2], $Local = ""
 		Local $TopLeft[0][2], $TopRight[0][2], $BottomRight[0][2], $BottomLeft[0][2]
@@ -147,16 +147,16 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = $g_iFurtherFromBBDefault, $DebugI
 		Else
 		$bBadPoints = True
 	EndIf
-	
+
 	If Not $g_bRunState Then Return
-	
+
 	If $bBadPoints = False Then
 		For $i = 0 To 3
 			Setlog($Name[$i] & " points: " & UBound($Sides[$i]))
 			$DeployPoints[$i] = $Sides[$i]
 		Next
 	EndIf
-	
+
 	If Not $g_bRunState Then Return
 
 	Setlog("Builder Base Internal Deploy Points: " & Round(__timerdiff($hStarttime) / 1000, 2) & " seconds", $COLOR_DEBUG)
@@ -228,11 +228,11 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = $g_iFurtherFromBBDefault, $DebugI
 	; In no 'DP' case.
 	If $bBadPoints = True Then
 		Setlog("BuilderBaseGetDeployPoints | No DP,	GET FROM EDGE.", $Color_Error)
-		
+
 		If Not $g_bRunState Then Return
-	
+
 		$Sides = $g_aOuterEdges
-		
+
 		For $i = 0 To 3
 			Setlog($Name[$i] & " points: " & UBound($Sides[$i]))
 			$DeployPoints[$i] = $Sides[$i]
@@ -240,7 +240,7 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = $g_iFurtherFromBBDefault, $DebugI
 
 	EndIf
 	#EndRegion - Bad Points
-	
+
 	; Verify how many point and if needs OuterEdges points [5 points]
 	For $i = 0 To 3
 		If Not $g_bRunState Then Return
@@ -324,7 +324,7 @@ EndFunc   ;==>FindBestDropPoints
 Func DeployPointsPosition($aPixel, $bIsBH = False)
 	If Not $g_bRunState Then Return
 	Local $sReturn = "", $aXY[2]
-	
+
 	If $bIsBH = True And IsArray($g_aBuilderHallPos) Then
 		$aXY[0] = $g_aBuilderHallPos[0][1]
 		$aXY[1] = $g_aBuilderHallPos[0][2]
@@ -332,7 +332,7 @@ Func DeployPointsPosition($aPixel, $bIsBH = False)
 		$aXY[0] = 441
 		$aXY[1] = 422
 	EndIf
-	
+
 	; Using to determinate the Side position on Screen |Bottom Right|Bottom Left|Top Left|Top Right|
 	If IsArray($aPixel) Then
 		If $aPixel[0] < $aXY[0] And $aPixel[1] <= $aXY[1] Then $sReturn = "TopLeft"
@@ -351,15 +351,15 @@ EndFunc   ;==>DeployPointsPosition
 
 Func BuilderBaseBuildingsDetection($iBuilding = 4, $bScreenCap = True)
 
-	Local $aBuildings[5] = ["AirDefenses", "Crusher", "GuardPost", "Cannon", "BuilderHall"]
+	Local $aBuildings = ["AirDefenses", "Crusher", "GuardPost", "Cannon", "Air Bombs", "Lava Launcher", "Roaster", "BuilderHall"]
 	If UBound($aBuildings) -1 < $iBuilding Then Return -1
-	
+
 	Local $sDirectory = $g_sImgOpponentBuildingsBB & "\" & $aBuildings[$iBuilding]
-	
+
 	Setlog("Initial detection for " & $aBuildings[$iBuilding], $COLOR_ACTION)
-	
+
 	If $bScreenCap = True Then _CaptureRegion2()
-	
+
 	Local $aScreen[4] = [83, 136, 844, 694]
 	If Not $g_bRunState Then Return
 	Return findMultipleQuick($sDirectory, 10, $aScreen, False, Default, Default, 10)
@@ -417,9 +417,9 @@ Func DebugBuilderBaseBuildingsDetection($DeployPoints, $BestDeployPoints, $Debug
 	Local $hFormat = _GDIPlus_StringFormatCreate()
 	Local $hFamily = _GDIPlus_FontFamilyCreate("Arial")
 	Local $hFont = _GDIPlus_FontCreate($hFamily, 20)
-	
+
 	If IsArray($g_aBuilderBaseDiamond) <> True Or Not (UBound($g_aBuilderBaseDiamond) > 0) Then Return False
-	
+
 	Local $iSize = $g_aBuilderBaseDiamond[0]
 
 	For $i = 1 To UBound($g_aBuilderBaseDiamond) - 1
@@ -494,18 +494,8 @@ Func DebugBuilderBaseBuildingsDetection($DeployPoints, $BestDeployPoints, $Debug
 EndFunc   ;==>DebugBuilderBaseBuildingsDetection
 
 Func BuilderBaseAttackDiamond()
-
-	Local $iSize = GetBuilderBaseSize(False) ; Wihtout Clicks
-	If Not $g_bRunState Then Return
-	Setlog("Builder Base Diamond: " & $iSize)
-	If ($iSize < 575 And $iSize > 620) Or $iSize = 0 Then
-		Setlog("Builder Base Attack Zoomout.")
-		BuilderBaseZoomOut()
-		If _Sleep(1000) Then Return
-		$iSize = GetBuilderBaseSize(False) ; Wihtout Clicks
-	EndIf
-
-	If ($iSize = 0) Or not IsArray($g_aVillageSize) Then Return -1
+	Local $iSize = ZoomBuilderBaseMecanics(True)
+	If $iSize < 1 Then Return -1
 
 	; ZoomFactor
 	Local $CorrectSizeLR = Floor(($iSize - 590) / 2)
@@ -535,17 +525,9 @@ Func BuilderBaseAttackDiamond()
 EndFunc   ;==>BuilderBaseAttackDiamond
 
 Func BuilderBaseAttackOuterDiamond()
-	Local $iSize = GetBuilderBaseSize(False) ; WihtoutClicks
-	If Not $g_bRunState Then Return
-	Setlog("Builder Base Diamond: " & $iSize)
-	If ($iSize < 575 And $iSize > 620) Or $iSize = 0 Then
-		Setlog("Builder Base Attack Zoomout.")
-		BuilderBaseZoomOut()
-		If _Sleep(1000) Then Return
-		$iSize = GetBuilderBaseSize(False) ; WihtoutClicks
-	EndIf
 
-	If ($iSize = 0) Or not IsArray($g_aVillageSize) Then Return -1
+	Local $iSize = ZoomBuilderBaseMecanics(True)
+	If $iSize < 1 Then Return -1
 
 	; ZoomFactor
 	Local $CorrectSizeLR = Floor(($iSize - 590) / 2)
@@ -671,8 +653,18 @@ Func BuilderBaseGetFakeEdges()
 EndFunc   ;==>BuilderBaseGetFakeEdges
 
 Func BuilderBaseResetAttackVariables()
-	Global $g_aBuilderHallPos = -1, $g_aAirdefensesPos = -1, $g_aCrusherPos = -1, $g_aCannonPos = -1, $g_aGuardPostPos = -1, $g_aDeployPoints, $g_aDeployBestPoints
-	Global $g_aOpponentBuildings[6] = [$g_aAirdefensesPos, $g_aCrusherPos, $g_aGuardPostPos, $g_aCannonPos, $g_aBuilderHallPos, $g_aDeployPoints]
+	$g_aAirdefensesPos = -1
+	$g_aGuardPostPos = -1
+	$g_aCrusherPos = -1
+	$g_aCannonPos = -1
+	$g_aAirBombs = -1
+	$g_aLavaLauncherPos = -1
+	$g_aRoasterPos = -1
+	$g_aBuilderHallPos = -1
+
+	$g_aDeployPoints = -1
+	$g_aDeployBestPoints = -1
+
 	Global $g_aExternalEdges, $g_aBuilderBaseDiamond, $g_aOuterEdges, $g_aBuilderBaseOuterDiamond, $g_aBuilderBaseOuterPolygon, $g_aFinalOuter[4]
 EndFunc   ;==>BuilderBaseResetAttackVariables
 
