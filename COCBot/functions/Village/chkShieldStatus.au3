@@ -15,15 +15,17 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func chkShieldStatus($bChkShield = True, $bForceChkPBT = False)
-	#Region - Legend trophy protection - Team AIO Mod++
+	; Legend trophy protection - Team AIO Mod++
 	If $g_bLeagueAttack Then Return
-	#EndRegion - Legend trophy protection - Team AIO Mod++
 
 	; skip shield data collection if force single PB, wait for shield, or close while training not enabled, or window is not on main base
 	Local $bHaltModeWithShield = $g_bChkBotStop And $g_iCmbBotCond >= 19 And $g_iCmbBotCond <= 21
 	If (Not $g_bForceSinglePBLogoff And Not $bHaltModeWithShield) And Not $g_bCloseWhileTrainingEnable Or Not (IsMainPage()) Then Return
 	If Number($g_aiCurrentLoot[$eLootTrophy] + 150) >= Number($g_asLeagueDetails[21][4]) Then Return
 
+	; Buy shield - Team AiO MOD++
+	If $g_bChkBuyTwoHourGuard Then BuyGuard()
+	
 	Local $Result, $iTimeTillPBTstartSec, $ichkTime = 0, $ichkSTime = 0, $ichkPBTime = 0
 
 	If $bChkShield Or $g_asShieldStatus[0] = "" Or $g_asShieldStatus[1] = "" Or $g_asShieldStatus[2] = "" Or $g_sPBStartTime = "" Or $g_bGForcePBTUpdate = True Then ; almost always get shield information

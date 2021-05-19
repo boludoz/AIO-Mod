@@ -116,23 +116,24 @@ EndFunc   ;==>CollectFreeMagicItems
 Func MagicItemsTime($x_start = 307, $y_start = 484, $iWidth = 240, $iHeight = 42)
 	Local $iSeconds = 0
 	Local $sString = "", $aTmp; like xx#xx#xx
-	$sString = getOcrAndCaptureDOCR($g_sASMagicItemsDOCRPath, $x_start, $y_start, $iWidth, $iHeight, True, True) 
-	$aTmp = StringSplit(getOcrAndCaptureDOCR($g_sASMagicItemsDOCRPath, $x_start, $y_start, $iWidth, $iHeight, True, True), '#')
+	$sString = getOcrAndCaptureDOCR($g_sASMagicItemsDOCRPath, $x_start, $y_start, $iWidth, $iHeight, True, True)
+	SetDebugLog("MagicItemsTime : " & $sString)
+	$aTmp = StringSplit($sString, '#')
 	
 	If not @error Then
 		Switch $aTmp[0]
 			Case 1
-			$iSeconds += $aTmp[1]
+				$iSeconds += $aTmp[1]
 			Case 2
-			$iSeconds += ($aTmp[1] * 60)
-			$iSeconds += $aTmp[2]
+				$iSeconds += ($aTmp[1] * 60)
+				$iSeconds += $aTmp[2]
 			Case 3
-			$iSeconds += ($aTmp[1] * 3600)
-			$iSeconds += ($aTmp[2] * 60)
-			$iSeconds += $aTmp[3]
+				$iSeconds += ($aTmp[1] * 3600)
+				$iSeconds += ($aTmp[2] * 60)
+				$iSeconds += $aTmp[3]
 		EndSwitch
 	EndIf
-	If $iSeconds < 3600 Then $iSeconds += Round(3600 * Random(1.4, 2.8)) ; 3600 Constant = 1 hour
+	If $iSeconds < 3600 Then $iSeconds = Round(3600 * Random(1.4, 2.8)) ; 3600 Constant = 1 hour
 	$g_sDateAndTimeMagicItems = _DateAdd('s', $iSeconds, _NowCalcDate() & " " & _NowTime(5))
 EndFunc   ;==>MagicItemsTime
 

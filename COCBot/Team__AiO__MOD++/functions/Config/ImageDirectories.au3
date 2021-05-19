@@ -171,3 +171,6 @@ Global $g_sASUpgradeResourcesRedDOCRPath = $g_sBaseDOCRPathB & "\UpgradeResource
 
 ; Magic items.
 Global $g_sASMagicItemsDOCRPath = $g_sBaseDOCRPathB & "\MagicItems\"
+
+; Gems
+Global $g_sASGemsSDOCRPath = $g_sBaseDOCRPathB & "\GemsS\"
