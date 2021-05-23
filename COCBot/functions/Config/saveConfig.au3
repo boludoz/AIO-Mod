@@ -285,6 +285,8 @@ Func SaveRegularConfig()
 	SaveConfig_MOD_600_35_2()
 	; <><><> Humanization <><><>
 	SaveConfig_MOD_Humanization()
+	; <><><> SmartMilk <><><>
+	SaveConfig_MOD_SmartMilk()
 
 	; <><><><> Attack Plan / Strategies <><><><>
 	; <<< nothing here >>>
@@ -414,9 +416,9 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "ChkBBSuggestedUpgrades", $g_iChkBBSuggestedUpgrades)
 	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreGold", $g_iChkBBSuggestedUpgradesIgnoreGold)
 	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreElixir", $g_iChkBBSuggestedUpgradesIgnoreElixir)
-	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreHall", $g_iChkBBSuggestedUpgradesIgnoreHall)
-	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreWall", $g_iChkBBSuggestedUpgradesIgnoreWall)
-
+;~ 	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreHall", $g_iChkBBSuggestedUpgradesIgnoreHall)
+;~ 	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreWall", $g_iChkBBSuggestedUpgradesIgnoreWall)
+	
 	_Ini_Add("other", "ChkPlacingNewBuildings", $g_iChkPlacingNewBuildings)
 
 	_Ini_Add("other", "ChkClanGamesAir", $g_bChkClanGamesAir ? 1 : 0)
@@ -606,7 +608,7 @@ Func SaveConfig_auto()
 	ApplyConfig_auto(GetApplyConfigSaveAction())
 	; Auto Upgrade
 	_Ini_Add("Auto Upgrade", "AutoUpgradeEnabled", $g_bAutoUpgradeEnabled)
-	For $i = 0 To 13
+	For $i = 0 To UBound($g_iChkUpgradesToIgnore) - 1 ; Custom Improve - Team AIO Mod++
 		_Ini_Add("Auto Upgrade", "ChkUpgradesToIgnore[" & $i & "]", $g_iChkUpgradesToIgnore[$i])
 	Next
 	For $i = 0 To 2

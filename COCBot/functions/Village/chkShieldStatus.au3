@@ -24,7 +24,9 @@ Func chkShieldStatus($bChkShield = True, $bForceChkPBT = False)
 	If Number($g_aiCurrentLoot[$eLootTrophy] + 150) >= Number($g_asLeagueDetails[21][4]) Then Return
 
 	; Buy shield - Team AiO MOD++
-	If $g_bChkBuyTwoHourGuard Then BuyGuard()
+	If $g_bChkBuyGuard Then 
+		BuyGuard()
+	EndIf
 	
 	Local $Result, $iTimeTillPBTstartSec, $ichkTime = 0, $ichkSTime = 0, $ichkPBTime = 0
 

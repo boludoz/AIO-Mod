@@ -13,8 +13,21 @@
 ; Example .......: No
 ; ===============================================================================================================================
 ; Lirel Bit
- Global $g_iSmartFarmSpellsHowManySides = 2, $g_bSmartFarmSpellsEnable = True
+Global $g_iSmartFarmSpellsHowManySides = 2, $g_bSmartFarmSpellsEnable = True
+Global $g_bChkBuyGuard = False
+Global $g_aBBUpgradeResourceCostDuration[3] = ["", "", ""]
+Global $g_iChkBBUpgradesToIgnore[28] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_hChkBBUpgradesToIgnore[28] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_sBBUpgradesToIgnore[28] = ["Builder Hall", "Gold Mine", "Elixir Collector", "Gold Storage", _
+									 "Elixir Storage", "Gem Mine", "Clock Tower", "Star Laboratory", "Builder Barracks", _
+									 "Battle Machine", "Cannon", "Double Cannon", "Archer Tower", "Hidden Tesla", "Firecrackers", _
+									 "Crusher", "Guard Post", "Air Bombs", "Multi Mortar", "Roaster", "Giant Cannon", "Mega Tesla", _
+									 "Lava Launcher", "Push Trap", "Spring Trap", "Mega Mine", "Mine", "Wall"]
+Global $g_aBBUpgradeNameLevel
 ;
+#Region - SmartMilk
+Global $g_bUseSmartFarmRedLine = True, $g_bDebugSmartMilk = False, $g_bChkMilkForceDeployHeroes = False, $g_bChkMilkForceAllTroops = False, $g_iMilkStrategyArmy = 0
+#EndRegion - SmartMilk
 
 #Region - Icn - Team AiO MOD++
 Global Const $g_sLibModIconPath = $g_sLibPath & "\ModLibs\AIOMod.dll" ; Mod icon library - Team AiO MOD++
@@ -361,7 +374,7 @@ Global $g_sAttackScrScriptNameBB[3] = ["", "", ""]
 Global $g_iBuilderBaseScript = 0
 
 ; Upgrade Troops
-Global $g_bChkUpgradeTroops = False, $g_iCmbBBLaboratory, $g_bChkUpgradeMachine = False
+Global $g_bChkUpgradeTroops = False, $g_bChkUpgradeMachine = False
 
 ; Upgrade Walls
 Global $g_bChkBBUpgradeWalls = False, $g_iCmbBBWallLevel, $g_iTxtBBWallNumber = 0

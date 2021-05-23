@@ -162,7 +162,12 @@ Func SaveConfig_MOD_MiscTab()
 	#Region - No Upgrade In War - Team AIO Mod++
 	_Ini_Add("attack", "ChkNoUpgradeInWar", $g_bNoUpgradeInWar ? 1 : 0)
 	#EndRegion - No Upgrade In War - Team AIO Mod++
-
+	
+	#Region - Custom Improve - Team AIO Mod++
+	For $i = 0 To UBound($g_iChkBBUpgradesToIgnore) - 1
+		_Ini_Add("other", "chkBBUpgradesToIgnore" & $i, $g_iChkBBUpgradesToIgnore[$i])
+	Next
+	#EndRegion - Custom Improve - Team AIO Mod++
 EndFunc   ;==>SaveConfig_MOD_MiscTab
 
 Func SaveConfig_MOD_SuperXP()
@@ -361,3 +366,10 @@ Func SaveConfig_MOD_Humanization()
 	_Ini_Add("Bot Humanization", "cmbMaxActionsNumber", _GUICtrlComboBox_GetCurSel($g_hCmbMaxActionsNumber))
 	_Ini_Add("Bot Humanization", "challengeMessage", GUICtrlRead($g_hChallengeMessage))
 EndFunc   ;==>SaveConfig_MOD_Humanization
+
+Func SaveConfig_MOD_SmartMilk()
+	_Ini_Add("SmartMilk", "MilkStrategyArmy", $g_iMilkStrategyArmy)
+	_Ini_Add("SmartMilk", "MilkForceDeployHeroes", $g_bChkMilkForceDeployHeroes)
+	_Ini_Add("SmartMilk", "ChkMilkForceAllTroops", $g_bChkMilkForceAllTroops)
+	_Ini_Add("SmartMilk", "DebugSmartMilk", $g_bDebugSmartMilk)
+EndFunc   ;==>SaveConfig_MOD_SmartMilk

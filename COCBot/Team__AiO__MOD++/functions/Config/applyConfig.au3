@@ -218,6 +218,12 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			ChkProtectInLL()
 			#EndRegion - Legend trophy protection - Team AIO Mod++
 
+			#Region - Custom Improve - Team AIO Mod++
+			For $i = 0 To UBound($g_iChkBBUpgradesToIgnore) - 1
+				GUICtrlSetState($g_hChkBBUpgradesToIgnore[$i], $g_iChkBBUpgradesToIgnore[$i] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			Next
+			chkBBUpgradesToIgnore()
+			#EndRegion - Custom Improve - Team AIO Mod++
 
 			chkMaxSidesSF()
 			ChkReqCCAlways()
@@ -336,6 +342,12 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			#Region - No Upgrade In War - Team AIO Mod++
 			$g_bNoUpgradeInWar = (GUICtrlRead($g_hChkNoUpgradeInWar) = $GUI_CHECKED)
 			#EndRegion - No Upgrade In War - Team AIO Mod++
+			
+			#Region - Custom Improve - Team AIO Mod++
+			For $i = 0 To UBound($g_iChkBBUpgradesToIgnore) - 1
+				$g_iChkBBUpgradesToIgnore[$i] = GUICtrlRead($g_hChkBBUpgradesToIgnore[$i]) = $GUI_CHECKED ? 1 : 0
+			Next
+			#EndRegion - Custom Improve - Team AIO Mod++
 	EndSwitch
 
 EndFunc   ;==>ApplyConfig_MOD_MiscTab
@@ -723,3 +735,19 @@ Func ApplyConfig_MOD_Humanization($TypeReadSave)
 			; $g_iTxtChallengeMessage = GUICtrlRead($g_hChallengeMessage)
 	EndSwitch
 EndFunc   ;==>ApplyConfig_MOD_Humanization
+
+Func ApplyConfig_MOD_SmartMilk($TypeReadSave)
+	Switch $TypeReadSave
+		Case "Read"
+			_GUICtrlComboBox_SetCurSel($g_hCmbMilkStrategyArmy, $g_iMilkStrategyArmy)
+			GUICtrlSetState($g_hChkMilkForceDeployHeroes, $g_bChkMilkForceDeployHeroes ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkMilkForceAllTroops, $g_bChkMilkForceAllTroops ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkDebugSmartMilk, $g_bDebugSmartMilk ? $GUI_CHECKED : $GUI_UNCHECKED)
+			_GUICtrlSetImage($g_ahPicMilk, $g_sLibIconPath, $g_hIcnMilk[$g_iMilkStrategyArmy])
+		Case "Save"
+			$g_iMilkStrategyArmy = _GUICtrlComboBox_GetCurSel($g_hCmbMilkStrategyArmy)
+			$g_bChkMilkForceDeployHeroes = (GUICtrlRead($g_hChkMilkForceDeployHeroes) = $GUI_CHECKED)
+			$g_bChkMilkForceAllTroops = (GUICtrlRead($g_hChkMilkForceAllTroops) = $GUI_CHECKED)
+			$g_bDebugSmartMilk = (GUICtrlRead($g_hChkDebugSmartMilk) = $GUI_CHECKED)
+	EndSwitch
+EndFunc   ;==>ApplyConfig_MOD_SmartMilk

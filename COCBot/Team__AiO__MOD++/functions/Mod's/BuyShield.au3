@@ -14,10 +14,9 @@
 ; ===============================================================================================================================
 Global $g_aShopOpen[4] = [808, 50, 0xE41115, 15]
 Global $g_aGuardAvailable[4] = [398, 218, 0x327AB2, 20]
-Global $g_bChkBuyGuards = False
 
 Func BuyGuard($bDebug = False)
-	If Not $g_bChkBuyGuards Or $g_iUnbrkMode = 1 Then Return
+	If Not $g_bChkBuyGuard Or $g_iUnbrkMode = 1 Then Return
 	
 	SetLog("Start Buy Two Hour Guard Check", $COLOR_INFO)
 	

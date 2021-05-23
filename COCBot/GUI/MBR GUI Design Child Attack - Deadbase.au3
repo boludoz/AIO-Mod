@@ -35,6 +35,9 @@ Func CreateAttackSearchDeadBase()
 	CreateAttackSearchDeadBaseStandard()
 	CreateAttackSearchDeadBaseScripted()
 	CreateAttackSearchDeadBaseSmartFarm()
+	#Region - SmartMilk
+	CreateAttackSearchDeadBaseSmartMilk()
+	#EndRegion - SmartMilk
 
 	GUISwitch($g_hGUI_DEADBASE)
 	$g_hGUI_DEADBASE_TAB = GUICtrlCreateTab(0, 0, $g_iSizeWGrpTab3, $g_iSizeHGrpTab3, BitOR($TCS_MULTILINE, $TCS_RIGHTJUSTIFY))

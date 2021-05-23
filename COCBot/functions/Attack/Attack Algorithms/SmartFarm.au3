@@ -49,10 +49,13 @@ Func TestSmartFarm($bFast = True)
 	PrepareAttack($g_iMatchMode)
 
 	$g_bAttackActive = True
+	
 	; Variable to return : $Return[3]  [0] = To attack InSide  [1] = Quant. Sides  [2] = Name Sides
-	Local $Nside = ChkSmartFarm()
-	AttackSmartFarm($Nside[1], $Nside[2])
-	$g_bAttackActive = False
+	If Not SmartFarmMilk() Then
+		Local $Nside = ChkSmartFarm()
+		AttackSmartFarm($Nside[1], $Nside[2])
+		$g_bAttackActive = False
+	EndIf
 
 	ReturnHome($g_bTakeLootSnapShot)
 
@@ -279,6 +282,7 @@ Func SmartFarmDetection($txtBuildings = "Mines", $bForceCapture = True)
 			EndIf
 		Next
 	EndIf
+
 	SetDebugLog("Detection Resources with Min Level of " & $iMinLevel & " and Max of " & $iMaxLevel)
 	Local $hTimer = TimerInit()
 
@@ -309,6 +313,14 @@ Func SmartFarmDetection($txtBuildings = "Mines", $bForceCapture = True)
 				$sdirectory = @ScriptDir & "\imgxml\Storages\All"
 			EndIf
 			$iMaxReturnPoints = 21
+		Case "Milk"
+			If $g_iDetectedImageType = 1 Then
+				$sdirectory = @ScriptDir & "\imgxml\Storages\Milk_Snow"
+			Else
+				$sdirectory = @ScriptDir & "\imgxml\Storages\Milk"
+			EndIf
+			$iMaxReturnPoints = 0
+			$iMinLevel = 1
 	EndSwitch
 
 	Local $sCocDiamond = "ECD"
@@ -1196,7 +1208,7 @@ Func LaunchSpellsSmartFarm($SIDESNAMES = "TR|TL|BR|BL")
 	; $g_bDebugSmartFarm = True
 	_CaptureRegion2()
 	$g_FirstBitMap = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
-	Local $iTolerance = 30
+	Local $iTolerance = 25
 	Local $bIsPolygon = True
 	Local $DebugLog = False
 	Local $subDirectory = @ScriptDir & "\SmartFarm\"
@@ -1210,7 +1222,7 @@ Func LaunchSpellsSmartFarm($SIDESNAMES = "TR|TL|BR|BL")
 		Local $hTimer = TimerInit()
 		_CaptureRegion2()
 		$g_SecondBitMap = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
-		Local $return = _ImageCompareImagesMyBot(30)
+		Local $return = _ImageCompareImagesMyBot($iTolerance)
 		Local $txtDebug = "Calculated_" & Round(TimerDiff($hTimer) / 1000, 2) & "_seconds"
 		SetDebugLog("_ImageCompareImagesMyBot Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
 		SetDebugLog("_ImageCompareImagesMyBot : " & UBound($return), $COLOR_INFO)
@@ -1297,26 +1309,26 @@ Func LaunchSpellsSmartFarm($SIDESNAMES = "TR|TL|BR|BL")
 	Return $aByGroups
 EndFunc   ;==>LaunchSpellsSmartFarm
 
-Func _ImageCompareImagesMyBot($iTol = 30) ; Inspired in ProMac but in AutoIT
-	Local $AllResults[0][2], $AllResultsTmp[1][2]
-    Local Const $iW = _GDIPlus_ImageGetWidth($g_FirstBitMap), $iH = _GDIPlus_ImageGetHeight($g_FirstBitMap)
-	Local $hPixel, $iXS = 99, $iYS = 87, $iXE = $iW - 107, $iYE = $iH - 225
+Func _ImageCompareImagesMyBot($iTol = 30)
+	Local $aAllResults[0][2]
+	Local $iXS = 99, $iYS = 87, $iXE = $g_iGAME_WIDTH - 107, $iYE = $g_iGAME_HEIGHT - 225
 	Local $iBits1, $iBits2
-
-	For $iX = $iXS To $iXE Step 25
-		For $iY = $iYS To $iYE Step 15
+	Local $iC = -1
+	For $iX = $iXS To $iXE Step 16
+		For $iY = $iYS To $iYE Step 16
 			$iBits1 = _GDIPlus_BitmapGetPixel($g_FirstBitMap, $iX, $iY)
 			$iBits2 = _GDIPlus_BitmapGetPixel($g_SecondBitMap, $iX, $iY)
-			If Abs($iBits1 - $iBits2) > $iTol Then
-				$AllResultsTmp[0][0] = $iX
-				$AllResultsTmp[0][1] = $iY
-				_ArrayAdd($AllResults, $AllResultsTmp)
+            If Ciede1976(rgb2lab(Hex($iBits1, 6), "Heroes"), rgb2lab(Hex($iBits2, 6), "Heroes")) > $iTol Then
+				$iC += 1
+				ReDim $aAllResults[$iC + 1][2]
+				$aAllResults[$iC][0] = $iX
+				$aAllResults[$iC][1] = $iY
 			EndIf
 		Next
 	Next
 
-	If (UBound($AllResults) > 0) Then
-		Return $AllResults
+	If (UBound($aAllResults) > 0) Then
+		Return $aAllResults
 	Else
 		Return -1
 	EndIf

@@ -250,8 +250,14 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 
 					; SLEEPAFTER_: Sleep after in ms
 					; $aDROP[6]
-					Local $SleepAfter = Int($aDROP[6])
-
+					Local $SleepAfter = 250
+					If StringInStr($aDROP[6], "-") > 0 Then
+						Local $aRand = StringSplit($aDROP[6], "-", $STR_NOCOUNT)
+						$SleepAfter = Random(Int($aRand[0]), Int($aRand[1]), 1)
+						Else
+						$SleepAfter = Int($aDROP[6])
+					EndIf
+					
 					SetDebugLog("$iQtyToDrop : " & $iQtyToDrop & ", $sQty : " & $sQty & ", $sTroopName : " & $sTroopName & ", $aSelectedDropSidePoints_XY : " & $sDropPoints & ", $iAddTiles : " & $iAddTiles & ", $sDropSide : " & $sDropSide & ", $SleepAfter : " & $SleepAfter)
 
 					Local $iQtyOfSelectedSlot = 0 ; Quantities on current slot

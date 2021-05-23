@@ -79,6 +79,14 @@ Func getResourcesBonusPerc($x_start, $y_start) ; -> Gets complete value of Bonus
 	Return getOcrAndCapture("coc-bonus", $x_start, $y_start, 48, 16, True)
 EndFunc   ;==>getResourcesBonusPerc
 
+Func getResourcesUpgrade($x_start, $y_start, $bNeedNewCapture = Default)
+	Return getOcrAndCapture("coc-bonus", $x_start, $y_start, 100, 16, True, Default, $bNeedNewCapture)
+EndFunc   ;==>getResourcesUpgrade
+
+; Func getResourcesBonusDE($x_start, $y_start, $bNeedNewCapture = Default)
+	; Return getOcrAndCapture("coc-bonus", $x_start, $y_start, 52, 16, True, Default, $bNeedNewCapture)
+; EndFunc   ;==>getResourcesBonusDE
+
 Func getLabUpgrdResourceWht($x_start, $y_start) ; -> Gets complete value of Elixir/DE on the troop buttons, xxx,xxx for "laboratory.au3" and "starlaboratory.au3" when white text
 	Return getOcrAndCapture("coc-lab-w", $x_start, $y_start, 70, 14, True)
 EndFunc   ;==>getLabUpgrdResourceWht

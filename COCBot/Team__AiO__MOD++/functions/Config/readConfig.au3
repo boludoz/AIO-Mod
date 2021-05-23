@@ -154,6 +154,12 @@ Func ReadConfig_MOD_MiscTab()
 	#Region - No Upgrade In War - Team AIO Mod++
 	IniReadS($g_bNoUpgradeInWar, $g_sProfileConfigPath, "attack", "ChkNoUpgradeInWar", $g_bNoUpgradeInWar, "Bool")
 	#EndRegion - No Upgrade In War - Team AIO Mod++
+	
+	#Region - Custom Improve - Team AIO Mod++
+	For $i = 0 To UBound($g_iChkBBUpgradesToIgnore) - 1
+		IniReadS($g_iChkBBUpgradesToIgnore[$i], $g_sProfileConfigPath, "other", "chkBBUpgradesToIgnore" & $i, 0, "int")
+	Next
+	#EndRegion - Custom Improve - Team AIO Mod++
 EndFunc   ;==>ReadConfig_MOD_MiscTab
 
 Func ReadConfig_MOD_SuperXP()
@@ -350,3 +356,10 @@ Func ReadConfig_MOD_Humanization()
 	IniReadS($g_iCmbMaxActionsNumber, $g_sProfileConfigPath, "Bot Humanization", "cmbMaxActionsNumber", $g_iCmbMaxActionsNumber, "int")
 	; IniReadS($g_iTxtChallengeMessage, $g_sProfileConfigPath, "Bot Humanization", "challengeMessage", $g_iTxtChallengeMessage)
 EndFunc   ;==>ReadConfig_MOD_Humanization
+
+Func ReadConfig_MOD_SmartMilk()
+	IniReadS($g_iMilkStrategyArmy, $g_sProfileConfigPath, "SmartMilk", "MilkStrategyArmy", 0, "int")
+	IniReadS($g_bChkMilkForceDeployHeroes, $g_sProfileConfigPath, "SmartMilk", "MilkForceDeployHeroes", False, "Bool")
+	IniReadS($g_bChkMilkForceAllTroops, $g_sProfileConfigPath, "SmartMilk", "ChkMilkForceAllTroops", False, "Bool")
+	IniReadS($g_bDebugSmartMilk, $g_sProfileConfigPath, "SmartMilk", "DebugSmartMilk", False, "Bool")
+EndFunc   ;==>ReadConfig_MOD_SmartMilk

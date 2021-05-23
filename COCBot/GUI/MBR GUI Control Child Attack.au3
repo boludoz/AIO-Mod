@@ -15,29 +15,63 @@
 #include-once
 
 Func cmbDBAlgorithm()
+	If $g_iGuiMode <> 1 Then Return
 	Local $iCmbValue = _GUICtrlComboBox_GetCurSel($g_hCmbDBAlgorithm)
-	; Algorithm Alltroops
+	SetDebugLog("cmbDBAlgorithm -> Control GetCurrent Selection " & $iCmbValue & " and $g_aiAttackAlgorithm[$DB] is " & $g_aiAttackAlgorithm[$DB])
+	$g_aiAttackAlgorithm[$DB] = $iCmbValue
 	_GUI_Value_STATE($iCmbValue = 1 ? "SHOW" : "HIDE", $g_aGroupAttackDBSpell & "#" & $groupIMGAttackDBSpell)
-
-	If BitAND(GUICtrlGetState($g_hGUI_DEADBASE), $GUI_SHOW) And GUICtrlRead($g_hGUI_DEADBASE_TAB) = 1 Then ; fix ghosting during control applyConfig
+	#Region - SmartMilk
+	; If $iCmbValue = 2 Then
+		; GUICtrlSetState($g_hChkDBMeetCollOutside, $GUI_DISABLE + $GUI_UNCHECKED)
+		; CheckCollectorsOutside()
+	; Else
+		; GUICtrlSetState($g_hChkDBMeetCollOutside, $GUI_ENABLE)
+	; EndIf
+	If BitAND(GUICtrlGetState($g_hGUI_DEADBASE), $GUI_SHOW) And GUICtrlRead($g_hGUI_DEADBASE_TAB) = 1 Then
 		Select
-			Case $iCmbValue = 0 ; Standard Attack
+			Case $iCmbValue = 0
 				GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_DEADBASE_ATTACK_STANDARD)
 				GUISetState(@SW_HIDE, $g_hGUI_DEADBASE_ATTACK_SCRIPTED)
-				GUISetState(@SW_HIDE,$g_hGUI_DEADBASE_ATTACK_SMARTFARM)
-			Case $iCmbValue = 1 ; Scripted Attack
+				GUISetState(@SW_HIDE, $g_hGUI_DEADBASE_ATTACK_SMARTFARM)
+				GUISetState(@SW_HIDE, $g_hGUI_DEADBASE_ATTACK_SMARTMILK)
+				; GUICtrlSetState($g_hChkSmartFarmAndRandomTroops, $GUI_UNCHECKED)
+				; GUICtrlSetState($g_hChkSmartFarmAndRandomDeploy, $GUI_UNCHECKED)
+				; $g_bUseSmartFarmAndRandomDeploy = False
+				; $g_bUseSmartFarmAndRandomTroops = False
+			Case $iCmbValue = 1
 				GUISetState(@SW_HIDE, $g_hGUI_DEADBASE_ATTACK_STANDARD)
 				GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_DEADBASE_ATTACK_SCRIPTED)
-				GUISetState(@SW_HIDE,$g_hGUI_DEADBASE_ATTACK_SMARTFARM)
-			Case $iCmbValue = 2 ; Smart Farm Attack
+				GUISetState(@SW_HIDE, $g_hGUI_DEADBASE_ATTACK_SMARTFARM)
+				GUISetState(@SW_HIDE, $g_hGUI_DEADBASE_ATTACK_SMARTMILK)
+				; GUICtrlSetState($g_hChkSmartFarmAndRandomTroops, $GUI_UNCHECKED)
+				; GUICtrlSetState($g_hChkSmartFarmAndRandomDeploy, $GUI_UNCHECKED)
+				; $g_bUseSmartFarmAndRandomDeploy = False
+				; $g_bUseSmartFarmAndRandomTroops = False
+			Case $iCmbValue = 2
 				GUISetState(@SW_HIDE, $g_hGUI_DEADBASE_ATTACK_STANDARD)
 				GUISetState(@SW_HIDE, $g_hGUI_DEADBASE_ATTACK_SCRIPTED)
-				GUISetState(@SW_SHOWNOACTIVATE,$g_hGUI_DEADBASE_ATTACK_SMARTFARM)
+				GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_DEADBASE_ATTACK_SMARTFARM)
+				GUISetState(@SW_HIDE, $g_hGUI_DEADBASE_ATTACK_SMARTMILK)
+			Case $iCmbValue = 3
+				GUISetState(@SW_HIDE, $g_hGUI_DEADBASE_ATTACK_STANDARD)
+				GUISetState(@SW_HIDE, $g_hGUI_DEADBASE_ATTACK_SCRIPTED)
+				GUISetState(@SW_HIDE, $g_hGUI_DEADBASE_ATTACK_SMARTFARM)
+				GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_DEADBASE_ATTACK_SMARTMILK)
+				; GUICtrlSetState($g_hChkSmartFarmAndRandomTroops, $GUI_UNCHECKED)
+				; GUICtrlSetState($g_hChkSmartFarmAndRandomDeploy, $GUI_UNCHECKED)
+				; $g_bUseSmartFarmAndRandomDeploy = False
+				; $g_bUseSmartFarmAndRandomTroops = False
 			Case Else
 				GUISetState(@SW_HIDE, $g_hGUI_DEADBASE_ATTACK_STANDARD)
 				GUISetState(@SW_HIDE, $g_hGUI_DEADBASE_ATTACK_SCRIPTED)
-				GUISetState(@SW_HIDE,$g_hGUI_DEADBASE_ATTACK_SMARTFARM)
+				GUISetState(@SW_HIDE, $g_hGUI_DEADBASE_ATTACK_SMARTFARM)
+				GUISetState(@SW_HIDE, $g_hGUI_DEADBASE_ATTACK_SMARTMILK)
+				; GUICtrlSetState($g_hChkSmartFarmAndRandomTroops, $GUI_UNCHECKED)
+				; GUICtrlSetState($g_hChkSmartFarmAndRandomDeploy, $GUI_UNCHECKED)
+				; $g_bUseSmartFarmAndRandomDeploy = False
+				; $g_bUseSmartFarmAndRandomTroops = False
 		EndSelect
+	#EndRegion - SmartMilk
 	EndIf
 EndFunc   ;==>cmbDBAlgorithm
 

@@ -159,6 +159,8 @@ Func applyConfig($bRedrawAtExit = True, $TypeReadSave = "Read") ;Applies the dat
 	ApplyConfig_MOD_600_35_2($TypeReadSave)
 	; <><><> Humanization <><><>
 	ApplyConfig_MOD_Humanization($TypeReadSave)
+	; <><><> SmartMilk <><><>
+	ApplyConfig_MOD_SmartMilk($TypeReadSave)
 
 	; <><><><> Attack Plan / Strategies <><><><>
 	; <<< nothing here >>>
@@ -354,8 +356,8 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetState($g_hChkBBSuggestedUpgrades, $g_iChkBBSuggestedUpgrades = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreGold, $g_iChkBBSuggestedUpgradesIgnoreGold = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreElixir, $g_iChkBBSuggestedUpgradesIgnoreElixir = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreHall, $g_iChkBBSuggestedUpgradesIgnoreHall = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreWall, $g_iChkBBSuggestedUpgradesIgnoreWall = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+;~ 			GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreHall, $g_iChkBBSuggestedUpgradesIgnoreHall = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+;~ 			GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreWall, $g_iChkBBSuggestedUpgradesIgnoreWall = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 
 			GUICtrlSetState($g_hChkPlacingNewBuildings, $g_iChkPlacingNewBuildings = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 
@@ -401,7 +403,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			chkEnableBBAttack()
 
 			GUICtrlSetState($g_hBtnBBDropOrderSet, $GUI_ENABLE)
-		
+
 			; Builder Base Drop Order
 			If $g_bBBDropOrderSet Then
 				GUICtrlSetState($g_hChkBBCustomDropOrderEnable, $GUI_CHECKED)
@@ -419,7 +421,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 		Case "Save"
 			$g_bChkBotStop = (GUICtrlRead($g_hChkBotStop) = $GUI_CHECKED)
 			$g_iCmbBotCommand = _GUICtrlComboBox_GetCurSel($g_hCmbBotCommand)
-			
+
 			$g_iCmbBotCond = _GUICtrlComboBox_GetCurSel($g_hCmbBotCond)
 			$g_iCmbHoursStop = _GUICtrlComboBox_GetCurSel($g_hCmbHoursStop)
 			For $i = 0 To $eLootCount - 1
@@ -455,9 +457,9 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bChkCTBoostBlderBz = (GUICtrlRead($g_hChkCTBoostBlderBz) = $GUI_CHECKED)
 			$g_iChkBBSuggestedUpgrades = (GUICtrlRead($g_hChkBBSuggestedUpgrades) = $GUI_CHECKED) ? 1 : 0
 			$g_iChkBBSuggestedUpgradesIgnoreGold = (GUICtrlRead($g_hChkBBSuggestedUpgradesIgnoreGold) = $GUI_CHECKED) ? 1 : 0
-			$g_iChkBBSuggestedUpgradesIgnoreElixir = (GUICtrlRead($g_hChkBBSuggestedUpgradesIgnoreElixir) = $GUI_CHECKED) ? 1 : 0
-			$g_iChkBBSuggestedUpgradesIgnoreHall = (GUICtrlRead($g_hChkBBSuggestedUpgradesIgnoreHall) = $GUI_CHECKED) ? 1 : 0
-			$g_iChkBBSuggestedUpgradesIgnoreWall = (GUICtrlRead($g_hChkBBSuggestedUpgradesIgnoreWall) = $GUI_CHECKED) ? 1 : 0
+			$g_iChkBBSuggestedUpgradesIgnoreElixir = (GUICtrlRead($g_hChkBBSuggestedUpgradesIgnoreElixir) = $GUI_CHECKED) ? 1 : 0	
+;~ 			$g_iChkBBSuggestedUpgradesIgnoreHall = (GUICtrlRead($g_hChkBBSuggestedUpgradesIgnoreHall) = $GUI_CHECKED) ? 1 : 0
+;~ 			$g_iChkBBSuggestedUpgradesIgnoreWall = (GUICtrlRead($g_hChkBBSuggestedUpgradesIgnoreWall) = $GUI_CHECKED) ? 1 : 0
 
 			$g_iChkPlacingNewBuildings = (GUICtrlRead($g_hChkPlacingNewBuildings) = $GUI_CHECKED) ? 1 : 0
 
@@ -489,7 +491,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_iTxtBBTrophyUpperLimit = GUICtrlRead($g_hTxtBBTrophyUpperLimit)
 			$g_bChkBBAttIfLootAvail = (GUICtrlRead($g_hChkBBAttIfLootAvail) = $GUI_CHECKED)
 			; $g_bChkBBWaitForMachine = (GUICtrlRead($g_hChkBBWaitForMachine) = $GUI_CHECKED)
-			
+
 			#Region - Custom BB Army - Team AIO Mod++
 			For $i=0 To $eBBTroopCount - 1
 				$g_aiCmbBBDropOrder[$i] = Number(_GUICtrlComboBox_GetCurSel($g_ahCmbBBDropOrder[$i]))
@@ -882,7 +884,7 @@ Func ApplyConfig_auto($TypeReadSave)
 	Switch $TypeReadSave
 		Case "Read"
 			GUICtrlSetState($g_hChkAutoUpgrade, $g_bAutoUpgradeEnabled ? $GUI_CHECKED : $GUI_UNCHECKED)
-			For $i = 0 To 13
+			For $i = 0 To UBound($g_iChkUpgradesToIgnore) - 1 ; Custom Improve - Team AIO Mod++
 				GUICtrlSetState($g_hChkUpgradesToIgnore[$i], $g_iChkUpgradesToIgnore[$i] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			Next
 			For $i = 0 To 2
@@ -894,7 +896,7 @@ Func ApplyConfig_auto($TypeReadSave)
 			chkAutoUpgrade()
 		Case "Save"
 			$g_bAutoUpgradeEnabled = (GUICtrlRead($g_hChkAutoUpgrade) = $GUI_CHECKED)
-			For $i = 0 To 13
+			For $i = 0 To UBound($g_iChkUpgradesToIgnore) - 1 ; Custom Improve - Team AIO Mod++
 				$g_iChkUpgradesToIgnore[$i] = GUICtrlRead($g_hChkUpgradesToIgnore[$i]) = $GUI_CHECKED ? 1 : 0
 			Next
 			For $i = 0 To 2
@@ -957,7 +959,7 @@ Func ApplyConfig_600_18($TypeReadSave)
 			GUICtrlSetState($g_hChkNotifyDSEnable, $g_bNotifyDSEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
 			chkPBTGenabled()
 			_GUICtrlComboBox_SetCurSel($g_hCmbNotifyMode, $g_iNotifyMode)
-			cmbNotifyMode() 
+			cmbNotifyMode()
 			GUICtrlSetData($g_hTxtNotifyDSToken, $g_sNotifyDSToken)
 			#EndRegion - Discord - Team AIO Mod++
 			GUICtrlSetData($g_hTxtNotifyTGToken, $g_sNotifyTGToken)
@@ -1884,7 +1886,7 @@ Func ApplyConfig_600_32($TypeReadSave)
 			_GUICtrlComboBox_SetCurSel($g_hCmbTrophyHeroesPriority, $g_iDropTrophyHeroesPriority)
 			GUICtrlSetState($g_hChkTrophyAtkDead, $g_bDropTrophyAtkDead ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hTxtDropTrophyArmyMin, $g_iDropTrophyArmyMinPct)
-			; Drop Throphy - Team AIO Mod++ 
+			; Drop Throphy - Team AIO Mod++
 			GUICtrlSetState($g_hChkNoDropIfShield, $g_bChkNoDropIfShield ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkTrophyTroops, $g_bChkTrophyTroops ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkTrophyHeroesAndTroops, $g_bChkTrophyHeroesAndTroops ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -1901,7 +1903,7 @@ Func ApplyConfig_600_32($TypeReadSave)
 			$g_iDropTrophyHeroesPriority = _GUICtrlComboBox_GetCurSel($g_hCmbTrophyHeroesPriority)
 			$g_bDropTrophyAtkDead = (GUICtrlRead($g_hChkTrophyAtkDead) = $GUI_CHECKED)
 			$g_iDropTrophyArmyMinPct = GUICtrlRead($g_hTxtDropTrophyArmyMin)
-			; Drop Throphy - Team AIO Mod++ 
+			; Drop Throphy - Team AIO Mod++
 			$g_bChkNoDropIfShield = (GUICtrlRead($g_hChkNoDropIfShield) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkTrophyTroops = (GUICtrlRead($g_hChkTrophyTroops) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkTrophyHeroesAndTroops = (GUICtrlRead($g_hChkTrophyHeroesAndTroops) = $GUI_CHECKED) ? 1 : 0

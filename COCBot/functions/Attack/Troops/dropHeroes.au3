@@ -16,13 +16,32 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func dropHeroes($iX, $iY, $iKingSlotNumber = -1, $iQueenSlotNumber = -1, $iWardenSlotNumber = -1, $iChampionSlotNumber = -1) ;Drops for All Heroes
+Func dropHeroes($iX, $iY, $iKingSlotNumber = -1, $iQueenSlotNumber = -1, $iWardenSlotNumber = -1, $iChampionSlotNumber = -1, $bSmartFarm = False) ;Drops for All Heroes
 	If $g_bDebugSetlog Then SetDebugLog("dropHeroes $iKingSlotNumber " & $iKingSlotNumber & " $iQueenSlotNumber " & $iQueenSlotNumber & " $iWardenSlotNumber " & $iWardenSlotNumber & " $iChampionSlotNumber " & $iChampionSlotNumber & " matchmode " & $g_iMatchMode, $COLOR_DEBUG)
 	If _Sleep($DELAYDROPHEROES1) Then Return
 	Local $bDropKing = False
 	Local $bDropQueen = False
 	Local $bDropWarden = False
 	Local $bDropChampion = False
+	
+	#cs
+	Local $deplay = 100
+	If $SmartFarm Then $deplay = Random(1, 2, 1) * 1000
+	Switch $M20640[$g_iCurAccount]
+		Case 0
+			DropKing($bDropKing, $KingSlot, $x, $y)
+			If _Sleep($deplay) Then Return
+			DropQueen($bDropQueen, $QueenSlot, $x, $y)
+			If _Sleep($deplay) Then Return
+			SetDebugLog("Deploy King -> Queen -> Warden -> Champion")
+		Case 1
+			DropQueen($bDropQueen, $QueenSlot, $x, $y)
+			If _Sleep($deplay) Then Return
+			DropKing($bDropKing, $KingSlot, $x, $y)
+			If _Sleep($deplay) Then Return
+			SetDebugLog("Deploy Queen -> King -> Warden -> Champion")
+	EndSwitch
+	#ce
 	
 	#Region - Custom remain - Team AIO Mod++
 	If not $g_bRemainTweak Then

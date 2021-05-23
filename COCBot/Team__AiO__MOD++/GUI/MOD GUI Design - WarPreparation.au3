@@ -22,16 +22,10 @@ Global $g_hChkRequestCCForWar = 0, $g_hTxtRequestCCForWar = 0
 
 Func TabWarPreparationGUI()
 
-	Local $aTroopsIcons[$eTroopCount] = [$eIcnBarbarian, $eIcnArcher, $eIcnGiant, $eIcnGoblin, $eIcnWallBreaker, $eIcnBalloon, _
-			$eIcnWizard, $eIcnHealer, $eIcnDragon, $eIcnPekka, $eIcnBabyDragon, $eIcnMiner, $eIcnElectroDragon, $eIcnYeti, $eIcnMinion, _
-			$eIcnHogRider, $eIcnValkyrie, $eIcnGolem, $eIcnWitch, $eIcnLavaHound, $eIcnBowler, $eIcnIceGolem, $eIcnHeadhunter]
-	Local $aSpellsIcons[$eSpellCount] =[$eIcnLightSpell, $eIcnHealSpell, $eIcnRageSpell, $eIcnJumpSpell, $eIcnFreezeSpell, _
-			$eIcnCloneSpell, $eIcnInvisibilitySpell, $eIcnPoisonSpell, $eIcnEarthQuakeSpell, $eIcnHasteSpell, $eIcnSkeletonSpell, $eIcnBatSpell]
-
 	Local $x = 15, $y = 60
 	GUICtrlCreateGroup("War preparation", $x - 10, $y - 15, $g_iSizeWGrpTab2, $g_iSizeHGrpTab3)
 
-		$x+=5
+		$x += 5
 		$g_hChkStopForWar = GUICtrlCreateCheckbox("Pause farming for war", $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, "Pause or set current account 'idle' to prepare for war")
 			GUICtrlSetOnEvent(-1, "ChkStopForWar")
@@ -71,19 +65,17 @@ Func TabWarPreparationGUI()
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnResetButton, $x + 375, $y - 4, 24, 24)
 			GUICtrlSetOnEvent(-1, "RemovecampWar")
 
-	$x = 13
+	$x = 15
 	$y += 25
-		For $i = 0 To $eTroopCount - 1 ; Troops
-			If $i >= 14 Then $x = 25
-			_GUICtrlCreateIcon($g_sLibIconPath, $aTroopsIcons[$i], $x + Int($i / 2) * 35, $y + Mod($i, 2) * 60, 32, 32)
-
-			$g_ahTxtTrainWarTroopCount[$i] = _GUICtrlCreateInput("0", $x + Int($i / 2) * 35 + 1, $y + Mod($i, 2) * 60 + 34, 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
-				GUICtrlSetLimit(-1, 3)
-				GUICtrlSetOnEvent(-1, "TrainWarTroopCountEdit")
-		Next
-
-	$x = 13
-	$y += 120
+	For $i = 0 To UBound($g_aQuickTroopIcon) - 1
+		_GUICtrlCreateIcon($g_sLibIconPath, $g_aQuickTroopIcon[$i], $x + Int($i / 2) * 25, $y + Mod($i, 2) * 50, 22, 22)
+		$g_ahTxtTrainWarTroopCount[$i] = _GUICtrlCreateInput("0", $x + Int($i / 2) * 25, $y + Mod($i, 2) * 50 + 25, 22, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		GUICtrlSetOnEvent(-1, "TrainWarTroopCountEdit")
+		_GUICtrlSetTip(-1, $g_asTroopNames[$i])
+		GUICtrlSetLimit(-1, 3)
+	Next
+	$x = 15
+	$y += 100
 		$g_hCalTotalWarTroops = GUICtrlCreateProgress($x, $y + 3, 285, 10)
 		$g_hLblTotalWarTroopsProgress = GUICtrlCreateLabel("", $x, $y + 3, 285, 10)
 			GUICtrlSetBkColor(-1, $COLOR_RED)
@@ -96,7 +88,7 @@ Func TabWarPreparationGUI()
 	$y += 25
 		For $i = 0 To $eSpellCount - 1 ; Spells
 			If $i >= 7 Then $x = 25
-			_GUICtrlCreateIcon($g_sLibIconPath, $aSpellsIcons[$i], $x + $i * 34, $y, 32, 32)
+			_GUICtrlCreateIcon($g_sLibIconPath, $g_aQuickSpellIcon[$i], $x + $i * 34, $y, 32, 32)
 			$g_ahTxtTrainWarSpellCount[$i] = _GUICtrlCreateInput("0", $x +  $i * 34, $y + 34, 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 				GUICtrlSetLimit(-1, 3)
 				GUICtrlSetOnEvent(-1, "TrainWarSpellCountEdit")

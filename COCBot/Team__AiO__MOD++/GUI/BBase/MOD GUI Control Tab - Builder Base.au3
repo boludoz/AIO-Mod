@@ -392,3 +392,17 @@ Func ChkBBAttackLoops()
 	EndIf
 
 EndFunc   ;==>ChkBBAttackLoops
+
+Func chkIgnoreUpdatesBB()
+	For $i = 0 To UBound($g_hChkBBUpgradesToIgnore) -1
+		If @GUI_CtrlId = $g_hChkBBUpgradesToIgnore[$i] Then
+			$g_iChkBBUpgradesToIgnore[$i] = (GUICtrlRead($g_hChkBBUpgradesToIgnore[$i]) = $GUI_CHECKED) ? (1) : (0)
+		EndIf
+	Next
+EndFunc   ;==>chkIgnoreUpdatesBB
+
+Func chkBBUpgradesToIgnore()
+	For $i = 0 To UBound($g_iChkBBUpgradesToIgnore) - 1
+		$g_iChkBBUpgradesToIgnore[$i] = GUICtrlRead($g_hChkBBUpgradesToIgnore[$i]) = $GUI_CHECKED ? 1 : 0
+	Next
+EndFunc   ;==>chkBBUpgradesToIgnore

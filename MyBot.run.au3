@@ -1268,6 +1268,11 @@ Func Attack() ;Selects which algorithm
 		Local $Nside = ChkSmartFarm()
 		If Not $g_bRunState Then Return
 		AttackSmartFarm($Nside[1], $Nside[2])
+	#Region - SmartMilk
+	ElseIf $g_iMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 3 Then
+		If $g_bDebugSetlog Then SetDebugLog("Starting Smart Milk attack", $COLOR_ERROR)
+		SmartFarmMilk()
+	#EndRegion - SmartMilk
 	Else
 		If $g_bDebugSetlog Then SetDebugLog("start standard attack", $COLOR_ERROR)
 		algorithm_AllTroops()

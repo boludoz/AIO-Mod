@@ -352,3 +352,20 @@ Func chkNewDBSys()
 
 EndFunc   ;==>chkNewDBSys
 #EndRegion - No Upgrade In War - Team AIO Mod++
+
+#Region - SmartMilk
+Func CmbMilkStrategyArmy()
+	$g_iMilkStrategyArmy = _GUICtrlComboBox_GetCurSel($g_hCmbMilkStrategyArmy)
+	_GUICtrlSetImage($g_ahPicMilk, $g_sLibIconPath, $g_hIcnMilk[$g_iMilkStrategyArmy])
+EndFunc   ;==>CmbMilkStrategyArmy
+
+Func MilkForceDeployHeroes()
+	$g_bChkMilkForceDeployHeroes = (GUICtrlRead($g_hChkMilkForceDeployHeroes) = $GUI_CHECKED)
+	$g_bChkMilkForceAllTroops = (GUICtrlRead($g_hChkMilkForceAllTroops) = $GUI_CHECKED)
+EndFunc   ;==>MilkForceDeployHeroes
+
+Func DebugSmartAttacks()
+	$g_bDebugSmartMilk = (GUICtrlRead($g_hChkDebugSmartMilk) = $GUI_CHECKED)
+	$g_bDebugSmartFarm = (GUICtrlRead($g_hChkDebugSmartFarm) = $GUI_CHECKED)
+EndFunc   ;==>DebugSmartAttacks
+#EndRegion - SmartMilk

@@ -152,12 +152,11 @@ Func rgb2lab($nColor, $sIgnore = Default)
 	If $sIgnore <> Default Then
 		Switch $sIgnore
 			Case "Red" ; mask RGB - Red
-				$G = 0
-				$B = 0
-			Case "Heroes" ; mask RGB - Green
 				$R = 0
+			Case "Heroes" ; mask RGB - Green
 				$G = 0
-			Case "Red+Blue" ; mask RGB - Red
+			Case "Red+Blue" ; mask RGB - Red+Blue
+				$R = 0
 				$B = 0
 		EndSwitch
 	EndIf
@@ -202,8 +201,12 @@ Func rgb2lab($nColor, $sIgnore = Default)
 EndFunc
 
 Func Ciede1976($laB1, $laB2)
-    Local $differences = Distance($laB1[0], $laB2[0]) + Distance($laB1[1], $laB2[1]) + Distance($laB1[2], $laB2[2])
-    return Sqrt($differences)
+	If $laB1 <> $laB2 Then
+		Local $differences = Distance($laB1[0], $laB2[0]) + Distance($laB1[1], $laB2[1]) + Distance($laB1[2], $laB2[2])
+		return Sqrt($differences)
+	Else
+		Return 0
+	EndIf
 EndFunc
 
 Func Distance($a, $b)
