@@ -200,11 +200,26 @@ Func AttackReport()
 	Local $AtkLogTxtExtend
 	$AtkLogTxtExtend = "|"
 	$AtkLogTxtExtend &= $g_CurrentCampUtilization & "/" & $g_iTotalCampSpace & "|"
+	
+	#Region - Colorful attack log - Team AIO Mod++
 	If Int($g_iStatsLastAttack[$eLootTrophy]) >= 0 Then
-		SetAtkLog($AtkLogTxt, $AtkLogTxtExtend, $COLOR_BLACK)
+		If $g_bChkColorfulAttackLog Then
+			If ($iStarsEarned = 0) Then
+				SetAtkLog($AtkLogTxt, $AtkLogTxtExtend, $V12978)
+			ElseIf ($iStarsEarned = 1) Then
+				SetAtkLog($AtkLogTxt, $AtkLogTxtExtend, $E12969)
+			ElseIf ($iStarsEarned = 2) Then
+				SetAtkLog($AtkLogTxt, $AtkLogTxtExtend, $Z12972)
+			ElseIf ($iStarsEarned = 3) Then
+				SetAtkLog($AtkLogTxt, $AtkLogTxtExtend, $I12975)
+			EndIf
+		Else
+			SetAtkLog($AtkLogTxt, $AtkLogTxtExtend, $COLOR_BLACK)
+		EndIf
 	Else
 		SetAtkLog($AtkLogTxt, $AtkLogTxtExtend, $COLOR_ERROR)
 	EndIf
+	#EndRegion - Colorful attack log - Team AIO Mod++
 
 	; rename or delete zombie
 	If $g_bDebugDeadBaseImage Then

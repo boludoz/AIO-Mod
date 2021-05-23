@@ -98,9 +98,10 @@ Func GemOcr()
 EndFunc   ;==>GemOcr
 
 Func CheckShield()
-	If _CheckPixel($aNoShield, True) Or _CheckPixel($aHavePerGuard, True) Then
+	_CaptureRegion()
+	If _CheckPixel($aNoShield, False) Or _CheckPixel($aHavePerGuard, False) Then
 		Return True
-	ElseIf _CheckPixel($aHaveShield, True) Then
+	ElseIf _CheckPixel($aHaveShield, False) Then
 		SetLog("Shield Active, Skip Buy Guard Check.", $COLOR_INFO)
 	EndIf
 	Return False

@@ -14,7 +14,6 @@
 ; ===============================================================================================================================
 ; Lirel Bit
 Global $g_iSmartFarmSpellsHowManySides = 2, $g_bSmartFarmSpellsEnable = True
-Global $g_bChkBuyGuard = False
 Global $g_aBBUpgradeResourceCostDuration[3] = ["", "", ""]
 Global $g_iChkBBUpgradesToIgnore[28] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_hChkBBUpgradesToIgnore[28] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -24,7 +23,11 @@ Global $g_sBBUpgradesToIgnore[28] = ["Builder Hall", "Gold Mine", "Elixir Collec
 									 "Crusher", "Guard Post", "Air Bombs", "Multi Mortar", "Roaster", "Giant Cannon", "Mega Tesla", _
 									 "Lava Launcher", "Push Trap", "Spring Trap", "Mega Mine", "Mine", "Wall"]
 Global $g_aBBUpgradeNameLevel
+
+Global $g_bChkColorfulAttackLog = 0, $g_bChkBuyGuard = False
+Global $g_hChkColorfulAttackLog = 0, $g_hChkBuyGuard = 0
 ;
+
 #Region - SmartMilk
 Global $g_bUseSmartFarmRedLine = True, $g_bDebugSmartMilk = False, $g_bChkMilkForceDeployHeroes = False, $g_bChkMilkForceAllTroops = False, $g_iMilkStrategyArmy = 0
 #EndRegion - SmartMilk

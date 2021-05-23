@@ -168,6 +168,15 @@ Func SaveConfig_MOD_MiscTab()
 		_Ini_Add("other", "chkBBUpgradesToIgnore" & $i, $g_iChkBBUpgradesToIgnore[$i])
 	Next
 	#EndRegion - Custom Improve - Team AIO Mod++
+
+	#Region - Buy Guard - Team AIO Mod++
+	_Ini_Add("attack", "ChkBuyGuard", $g_bChkBuyGuard ? 1 : 0)
+	#EndRegion - Buy Guard - Team AIO Mod++
+
+	#Region - Colorful attack log - Team AIO Mod++
+	_Ini_Add("attack", "ChkColorfulAttackLog", $g_bChkColorfulAttackLog ? 1 : 0)
+	#EndRegion - Colorful attack log - Team AIO Mod++
+
 EndFunc   ;==>SaveConfig_MOD_MiscTab
 
 Func SaveConfig_MOD_SuperXP()
