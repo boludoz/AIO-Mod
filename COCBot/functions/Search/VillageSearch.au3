@@ -281,7 +281,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		; Custom - AIO Mod++
 		If $checkDeadBase Then
 			$dbBase = checkDeadBase(False)
-			SetDebugLog("Is dead base ? " & $dbBase)
+			; SetDebugLog("Is dead base ? " & $dbBase)
 		EndIf
 
 		; ----------------- CHECK WEAK BASE -------------------------------------------------

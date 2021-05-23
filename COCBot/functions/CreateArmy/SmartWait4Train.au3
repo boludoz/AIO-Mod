@@ -110,9 +110,9 @@ Func SmartWait4Train($iTestSeconds = Default)
 		Next
 		#Region - Custom smart wait - Team AIO Mod++
 		If $g_bDebugSetlogTrain Or $g_bDebugSetlog Then
-			SetLog("SmartWait4Train|$LessTime: " & $LessTime)
-			SetLog("SmartWait4Train|$g_iCloseMinimumTime: " & $g_iCloseMinimumTime)
-			SetLog("SmartWait4Train|$iTrainWaitCloseFlag: " & $iTrainWaitCloseFlag)
+			SetLog("[SmartWait4Train] $LessTime: " & $LessTime)
+			SetLog("[SmartWait4Train] $g_iCloseMinimumTime: " & $g_iCloseMinimumTime)
+			SetLog("[SmartWait4Train] $iTrainWaitCloseFlag: " & $iTrainWaitCloseFlag)
 		EndIf
 		#EndRegion - Custom smart wait - Team AIO Mod++
 		If $LessTime < $g_iCloseMinimumTime Then
@@ -135,9 +135,9 @@ Func SmartWait4Train($iTestSeconds = Default)
 
 	#Region - Custom smart wait - Team AIO Mod++
 	If $g_bDebugSetlogTrain Or $g_bDebugSetlog Then
-		SetLog("SmartWait4Train|$g_aiTimeTrain: " & _ArrayToString($g_aiTimeTrain))
-		SetLog("SmartWait4Train|$g_iCCRemainTime: " & $g_iCCRemainTime)
-		SetLog("SmartWait4Train|$iTrainWaitCloseFlag: " & $iTrainWaitCloseFlag)
+		SetLog("[SmartWait4Train] $g_aiTimeTrain: " & _ArrayToString($g_aiTimeTrain))
+		SetLog("[SmartWait4Train] $g_iCCRemainTime: " & $g_iCCRemainTime)
+		SetLog("[SmartWait4Train] $iTrainWaitCloseFlag: " & $iTrainWaitCloseFlag)
 	EndIf
 	#EndRegion - Custom smart wait - Team AIO Mod++
 
@@ -158,9 +158,9 @@ Func SmartWait4Train($iTestSeconds = Default)
 
 	#Region - Custom smart wait - Team AIO Mod++
 	If $g_bDebugSetlogTrain Or $g_bDebugSetlog Then
-		SetLog("SmartWait4Train|$g_aiTimeTrain: " & _ArrayToString($g_aiTimeTrain))
-		SetLog("SmartWait4Train|$g_iCCRemainTime: " & $g_iCCRemainTime)
-		SetLog("SmartWait4Train|$iTrainWaitCloseFlag: " & $iTrainWaitCloseFlag)
+		SetLog("[SmartWait4Train] $g_aiTimeTrain: " & _ArrayToString($g_aiTimeTrain))
+		SetLog("[SmartWait4Train] $g_iCCRemainTime: " & $g_iCCRemainTime)
+		SetLog("[SmartWait4Train] $iTrainWaitCloseFlag: " & $iTrainWaitCloseFlag)
 	EndIf
 	#EndRegion - Custom smart wait - Team AIO Mod++
 
@@ -182,9 +182,9 @@ Func SmartWait4Train($iTestSeconds = Default)
 		$ichkCloseWaitSpell = 0
 	EndIf
 
-	SetDebugLog("SmartWait4Train|$g_aiTimeTrain: " & _ArrayToString($g_aiTimeTrain))
-	SetDebugLog("SmartWait4Train|$g_iCCRemainTime: " & $g_iCCRemainTime)
-	SetDebugLog("SmartWait4Train|$iTrainWaitCloseFlag: " & $iTrainWaitCloseFlag)
+	SetDebugLog("[SmartWait4Train] $g_aiTimeTrain: " & _ArrayToString($g_aiTimeTrain))
+	SetDebugLog("[SmartWait4Train] $g_iCCRemainTime: " & $g_iCCRemainTime)
+	SetDebugLog("[SmartWait4Train] $iTrainWaitCloseFlag: " & $iTrainWaitCloseFlag)
 
 	; get hero regen time remaining if enabled
 	If ($g_bCloseWithoutShield Or BitAND($iTrainWaitCloseFlag, $TRAINWAIT_SHIELD) = $TRAINWAIT_SHIELD) And IsWaitforHeroesActive() Then
@@ -255,9 +255,9 @@ Func SmartWait4Train($iTestSeconds = Default)
 
 	#Region - Custom smart wait - Team AIO Mod++
 	If $g_bDebugSetlogTrain Or $g_bDebugSetlog Then
-		SetLog("SmartWait4Train|$g_aiTimeTrain: " & _ArrayToString($g_aiTimeTrain))
-		SetLog("SmartWait4Train|$g_iCCRemainTime: " & $g_iCCRemainTime)
-		SetLog("SmartWait4Train|$iTrainWaitCloseFlag: " & $iTrainWaitCloseFlag)
+		SetLog("[SmartWait4Train] $g_aiTimeTrain: " & _ArrayToString($g_aiTimeTrain))
+		SetLog("[SmartWait4Train] $g_iCCRemainTime: " & $g_iCCRemainTime)
+		SetLog("[SmartWait4Train] $iTrainWaitCloseFlag: " & $iTrainWaitCloseFlag)
 	EndIf
 	#EndRegion - Custom smart wait - Team AIO Mod++
 

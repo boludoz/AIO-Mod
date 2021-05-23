@@ -167,7 +167,7 @@ Func smartZap($minDE = -1)
 		; Check match mode
 		If $g_bDebugSmartZap Then SetLog("$g_bSmartZapDB = " & $g_bSmartZapDB, $COLOR_DEBUG)
 		If $g_bSmartZapDB And $g_iMatchMode <> $DB Then
-			SetLog("Not a dead base!", $COLOR_INFO)
+			SetLog("Not a dead base.", $COLOR_INFO)
 			$bZapDrills = False
 		EndIf
 	EndIf
