@@ -435,6 +435,8 @@ Global $g_hChkUseSmartFarmRedLine, $g_bUseSmartFarmRedLine = False
 #EndRegion - Custom SmartFarm - Team AIO Mod++
 
 #Region - Misc - Team AIO Mod++
-Global $g_bChkColorfulAttackLog = 0, $g_bChkBuyGuard = False
-Global $g_hChkColorfulAttackLog = 0, $g_hChkBuyGuard = 0
+Global $g_bChkColorfulAttackLog = False, _
+       $g_bChkBuyGuard = False
+Global $g_hChkColorfulAttackLog = 0, _
+	   $g_hChkBuyGuard = 0
 #EndRegion - Misc - Team AIO Mod++

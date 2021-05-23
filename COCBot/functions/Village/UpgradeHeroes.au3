@@ -19,11 +19,12 @@ Func UpgradeHeroesTime()
 	
 	Local $sResult, $bResult, $iDateCalc
 	CheckWarTime($sResult, $bResult)
-	
-	If $bResult Then
-		$iSeconds = _DateDiff('s', _NowCalc(), $sResult)
+	If Not @Error Then
+		If $bResult Then
+			$iSeconds = _DateDiff('s', _NowCalc(), $sResult)
+		EndIf
 	EndIf
-
+	
 	If $iSeconds < 3600 Then $iSeconds += Round(3600 * Random(1.4, 2.8)) ; 3600 Constant = 1 hour
 	$g_sDateAndTimeHeroWUE = _DateAdd('s', $iSeconds, _NowCalcDate() & " " & _NowTime(5))
 EndFunc   ;==>UpgradeHeroesTime

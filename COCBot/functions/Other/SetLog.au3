@@ -146,7 +146,7 @@ Func SetLogText(ByRef $hTxtLog, ByRef $sLogMessage, ByRef $Color, ByRef $Font, B
 EndFunc   ;==>SetLogText
 
 Func SetDebugLog($sLogMessage, $sColor = $COLOR_DEBUG, $bSilentSetLog = Default, $Font = Default, $FontSize = Default, $statusbar = 0)
-	; If not $g_bDebugSetlog Then Return ; Custom - Team AIO Mod++
+	If $g_bDebugSetlog = False Then Return ; Custom - Team AIO Mod++
 	Local $sLogPrefix = "D "
 	Local $sLog = $sLogPrefix & TimeDebug() & $sLogMessage
 	If $bSilentSetLog = Default Then $bSilentSetLog = $g_bSilentSetDebugLog

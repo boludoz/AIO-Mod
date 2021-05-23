@@ -49,7 +49,7 @@ Func TestSmartFarm($bFast = True)
 	PrepareAttack($g_iMatchMode)
 
 	$g_bAttackActive = True
-	
+
 	; Variable to return : $Return[3]  [0] = To attack InSide  [1] = Quant. Sides  [2] = Name Sides
 	If Not SmartFarmMilk() Then
 		Local $Nside = ChkSmartFarm()
@@ -941,11 +941,12 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 							SetLog("Dropping " & $infoTroopListArrPixel[2] & " " & $infoTroopListArrPixel[5] & ", Points Per Side: " & $infoTroopListArrPixel[3] & " - ('" & $i + 1 & "' Name: " & $sSide & ")", $COLOR_SUCCESS)
 							Local $LastSide = ($i = $numberSidesDropTroop - 1) ? True : False
 							#Region - Custom SmartFarm - Team AIO Mod++
+							Local $bTanksTroops = False
 							If $infoTroopListArrPixel[5] = "Giant" Or $infoTroopListArrPixel[5] = "Pekka" Or $infoTroopListArrPixel[5] = "Dragon" Or _
 							$infoTroopListArrPixel[5] = "Super Giant" Or $infoTroopListArrPixel[5] = "Golem" Or $infoTroopListArrPixel[5] = "Ice Golem" Then
-								$TanksTroops = True
+								$bTanksTroops = True
 							EndIf
-							Local $Clicked = DropOnPixel($infoTroopListArrPixel[0], $pixelDropTroop, $infoTroopListArrPixel[2], $infoTroopListArrPixel[3], True, $LastSide, $TanksTroops)
+							Local $Clicked = DropOnPixel($infoTroopListArrPixel[0], $pixelDropTroop, $infoTroopListArrPixel[2], $infoTroopListArrPixel[3], True, $LastSide, $bTanksTroops)
 							#EndRegion - Custom SmartFarm - Team AIO Mod++
 							$g_avAttackTroops[$infoTroopListArrPixel[0]][1] -= $Clicked
 							If ($numberSidesDropTroop = 1) Or ($i = $numberSidesDropTroop - 2) Then

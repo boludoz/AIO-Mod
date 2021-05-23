@@ -89,7 +89,7 @@ Func CheckStopForWar()
 	Local $bCurrentWar = False, $sBattleEndTime = "", $bInWar, $iSleepTime = -1
 	$bCurrentWar = CheckWarTime($sBattleEndTime, $bInWar)
 	If @error Or Not _DateIsValid($sBattleEndTime) Then ; Incase error was returned go to home
-		Click(70, 680, 1, 500, "#0000") ; return home
+		ReturnToHomeFromWar()
 		Return
 	EndIf
 	If Not $bCurrentWar Then
@@ -142,52 +142,46 @@ Func IsWarMenu()
 
 	If RandomSleep(250) Then Return
 	
-	Local $Result = _Wait4Pixel(826, 34, 0xFFFFFF, 25, 3000, 100, "IsWarMenu")
-	Return $Result
+	Local $bResult = _Wait4Pixel(826, 34, 0xFFFFFF, 25, 3000, 100, "IsWarMenu")
+	Return $bResult
 EndFunc   ;==>IsWarMenu
 
-Func CheckWarTime(ByRef $sResult, ByRef $bResult)
-	Local $bResChk = CheckWarTimeNucleo($sResult, $bResult)
-	If RandomSleep(500) Then Return False
-	
-	Local $i = 0
-	Do
-		$i += 1
-		If $g_bRestart Or Not $g_bRunState Then Return
-		Click(70, 620 + $g_iBottomOffsetY) ; return home
-		If randomSleep(1500) Then Return
-	Until IsMainScreen() Or $i > 3
-	If $i > 3 Then CheckMainScreen()
-	
-	Return $bResChk
-EndFunc   ;==>CheckWarTime
-
-Func CheckWarTimeNucleo(ByRef $sResult, ByRef $bResult) ; return [Success + $sResult = $sBattleEndTime, $bResult = $bInWar] OR Failure
+Func CheckWarTime(ByRef $sResult, ByRef $bResult, $bReturnFrom = True) ; return [Success + $sResult = $sBattleEndTime, $bResult = $bInWar] OR Failure
 	Local $directoryDay = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\WarPage\Day"
 	Local $directoryTime = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\WarPage\Time"
 	Local $bBattleDay_InWar, $sWarDay, $sTime
+	Local $bLocalReturn = False
+	
 	$g_bClanWarLeague = False
 	$g_bClanWar = False
 	$sResult = ""
 	
-	CheckMainScreen(False)
+	If IsMainPage(1) = False Then
+		CheckMainScreen(False)
+	EndIf
 	
-	If IsMainPage() Then
-		$bBattleDay_InWar = _ColorCheck(_GetPixelColor(45, 500, True), "ED151D", 20) ; Red color in war button
-		$g_bClanWarLeague = _ColorCheck(_GetPixelColor(10, 510, True), "FFED71", 20) ; Golden color at left side of clan war button
-		$g_bClanWar = _ColorCheck(_GetPixelColor(36, 502, True), "F0B345", 20) ; Ordinary war color at left side of clan war button
-		If $g_bClanWarLeague Then SetDebugLog("Your Clan Is Doing Clan War League.", $COLOR_INFO)
-		If $g_bDebugSetlog Then SetDebugLog("Checking battle notification, $bBattleDay_InWar = " & $bBattleDay_InWar)
-		Click(40, 530) ; open war menu
-		If _Sleep(2000) Then Return
+	_CaptureRegion()
+	$bBattleDay_InWar = _ColorCheck(_GetPixelColor(45, 500, False), "ED151D", 20) ; Red color in war button
+	$g_bClanWarLeague = _ColorCheck(_GetPixelColor(10, 510, False), "FFED71", 20) ; Golden color at left side of clan war button
+	$g_bClanWar = _ColorCheck(_GetPixelColor(36, 502, False), "F0B345", 20) ; Ordinary war color at left side of clan war button
+	If $g_bClanWarLeague Then SetDebugLog("Your Clan Is Doing Clan War League.", $COLOR_INFO)
+	If $g_bDebugSetlog Then SetDebugLog("Checking battle notification, $bBattleDay_InWar = " & $bBattleDay_InWar)
+	
+	Click(40, 530) ; open war menu
+	
+	If RandomSleep(300) Then Return
+	
+	If _Wait4PixelGoneArray($aIsMain) = False Then
+		SetLog("War check fail.", $COLOR_ERROR)
+		$bLocalReturn = False
 	EndIf
 
 	Local $sDirectory = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\WarPage\Window"
-	If _WaitForCheckImg($sDirectory, "805, 75, 846, 119") Then ;Check Clan War Leage Result [X] white pixel see if result page showing
-		Click(Random(807, 842, 1), Random(79, 114, 1))
+	If _WaitForCheckImg($sDirectory, "339, 13, 847, 673") Then ; Check Clan War Leage Result [X] or View Map.
+		Click($g_aImageSearchXML[0][1], $g_aImageSearchXML[0][2])
 		SetLog("War is finished.", $COLOR_WARNING)
 		If RandomSleep(1000) Then Return False
-		Return False
+		$bLocalReturn = False
 	EndIf
 	
 	If IsWarMenu() Then
@@ -202,7 +196,7 @@ Func CheckWarTimeNucleo(ByRef $sResult, ByRef $bResult) ; return [Success + $sRe
 					If _Sleep(500) Then Return
 					If Not IsWarMenu() Then
 						SetLog("Error when trying to open CWL Preparation page.", $COLOR_ERROR)
-						Return SetError(1, 0, "Error Open CWL Preparation page")
+						$bLocalReturn = SetError(1, 0, "Error Open CWL Preparation page")
 					EndIf
 				ElseIf QuickMIS("BC1", $directoryDay & "\CWL_Battle", 175, 645, 175 + 515, 645 + 30, True) Then ; When Battle Day Is Unselected
 					If $g_bDebugSetlog Then SetDebugLog("CWL Enter In Battle page")
@@ -210,19 +204,21 @@ Func CheckWarTimeNucleo(ByRef $sResult, ByRef $bResult) ; return [Success + $sRe
 					If _Sleep(500) Then Return
 					If Not IsWarMenu() Then
 						SetLog("Error when trying to open CWL Battle page.", $COLOR_ERROR)
-						Return SetError(1, 0, "Error Open CWL Battle page")
+						$bLocalReturn = SetError(1, 0, "Error Open CWL Battle page")
 					EndIf
 				EndIf
 			EndIf
 			$sWarDay = QuickMIS("N1", $directoryDay, 360, 85, 360 + 145, 85 + 28, True) ; Prepare or Battle
 			$bResult = Not (QuickMIS("BC1", $directoryDay, 359, 127, 510, 154, True)) ; $bInWar.... Fixed (08/2019)
 			If $g_bDebugSetlog Then SetDebugLog("$sResult QuickMIS N1/BC1: " & $sWarDay & "/ " & $bResult)
-			If $sWarDay = "none" Then Return SetError(1, 0, "Error reading war day")
+			If $sWarDay = "none" Then 
+				$bLocalReturn =  SetError(1, 0, "Error reading war day")
+			EndIf
 		EndIf
 
 		If Not StringInStr($sWarDay, "Battle") And Not StringInStr($sWarDay, "Preparation") Then
 			SetLog("Your Clan is not in active war yet.", $COLOR_INFO)
-			Return False
+			$bLocalReturn = False
 		Else
 			$sTime = QuickMIS("OCR", $directoryTime, 396, 65, 396 + 70, 70 + 30, True)
 			If $g_bDebugSetlog Then SetDebugLog("$sResult QuickMIS OCR: " & ($bBattleDay_InWar ? $sWarDay & ", " : "") & $sTime)
@@ -244,14 +240,25 @@ Func CheckWarTimeNucleo(ByRef $sResult, ByRef $bResult) ; return [Success + $sRe
 
 			SetLog("You are " & ($bResult ? "" : "not ") & "in war", $COLOR_INFO)
 
-			Return True
+			$bLocalReturn = True
 		EndIf
 	Else
-		SetLog("Error when trying to open War window.", $COLOR_WARNING)
-		CheckMainScreen()
-		Return SetError(1, 0, "Error open War window")
+		If (_ColorCheck(_GetPixelColor(825, 33, True), Hex(0xFFFFFF, 6), 5)) Then
+			SetLog("War is finished.", $COLOR_WARNING)
+			$bLocalReturn = True
+		Else
+			SetLog("Error when trying to open War window.", $COLOR_WARNING)
+			ClickAway()
+			CheckMainScreen()
+			$bLocalReturn = SetError(1, 0, "Error open War window")
+		EndIf
 	EndIf
 	
+	If $bReturnFrom = True Then
+		ReturnToHomeFromWar()
+	EndIf
+	
+	Return $bLocalReturn
 EndFunc   ;==>CheckWarTimeNucleo
 
 Func StopAndPrepareForWar($iSleepTime)

@@ -162,12 +162,14 @@ Func AttackReport()
 		$g_asLeagueDetailsShort = "--"
 	EndIf
 
+	#Region - Colorful attack log - Team AIO Mod++
 	; check stars earned
-	Local $starsearned = 0
-	If _ColorCheck(_GetPixelColor($aWonOneStarAtkRprt[0], $aWonOneStarAtkRprt[1], True), Hex($aWonOneStarAtkRprt[2], 6), $aWonOneStarAtkRprt[3]) Then $starsearned += 1
-	If _ColorCheck(_GetPixelColor($aWonTwoStarAtkRprt[0], $aWonTwoStarAtkRprt[1], True), Hex($aWonTwoStarAtkRprt[2], 6), $aWonTwoStarAtkRprt[3]) Then $starsearned += 1
-	If _ColorCheck(_GetPixelColor($aWonThreeStarAtkRprt[0], $aWonThreeStarAtkRprt[1], True), Hex($aWonThreeStarAtkRprt[2], 6), $aWonThreeStarAtkRprt[3]) Then $starsearned += 1
-	SetLog("Stars earned: " & $starsearned)
+	Local $iStarsEarned = 0
+	_CaptureRegion()
+	If _ColorCheck(_GetPixelColor($aWonOneStarAtkRprt[0], $aWonOneStarAtkRprt[1], False), Hex($aWonOneStarAtkRprt[2], 6), $aWonOneStarAtkRprt[3]) Then $iStarsEarned += 1
+	If _ColorCheck(_GetPixelColor($aWonTwoStarAtkRprt[0], $aWonTwoStarAtkRprt[1], False), Hex($aWonTwoStarAtkRprt[2], 6), $aWonTwoStarAtkRprt[3]) Then $iStarsEarned += 1
+	If _ColorCheck(_GetPixelColor($aWonThreeStarAtkRprt[0], $aWonThreeStarAtkRprt[1], False), Hex($aWonThreeStarAtkRprt[2], 6), $aWonThreeStarAtkRprt[3]) Then $iStarsEarned += 1
+	SetLog("Stars earned: " & $iStarsEarned)
 
 	Local $AtkLogTxt
 	$AtkLogTxt = "  " & String($g_iCurAccount + 1) & "|" & _NowTime(4) & "|"
@@ -178,7 +180,7 @@ Func AttackReport()
 	$AtkLogTxt &= StringFormat("%7d", $g_iStatsLastAttack[$eLootElixir]) & "|"
 	$AtkLogTxt &= StringFormat("%4d", $g_iStatsLastAttack[$eLootDarkElixir]) & "|"
 	$AtkLogTxt &= StringFormat("%3d", $g_iStatsLastAttack[$eLootTrophy]) & "|"
-	$AtkLogTxt &= StringFormat("%1d", $starsearned) & "|"
+	$AtkLogTxt &= StringFormat("%1d", $iStarsEarned) & "|"
 	$AtkLogTxt &= StringFormat("%3d", $g_iPercentageDamage) & "|"
 	$AtkLogTxt &= StringFormat("%6d", $g_iStatsBonusLast[$eLootGold]) & "|"
 	$AtkLogTxt &= StringFormat("%6d", $g_iStatsBonusLast[$eLootElixir]) & "|"
@@ -195,24 +197,25 @@ Func AttackReport()
 	$g_sBonusGold = $g_iStatsBonusLast[$eLootGold]
 	$g_sBonusElixir = $g_iStatsBonusLast[$eLootElixir]
 	$g_sBonusDE = $g_iStatsBonusLast[$eLootDarkElixir]
-	$g_sStarsEarned = $starsearned
+	$g_sStarsEarned = $iStarsEarned
 
 	Local $AtkLogTxtExtend
 	$AtkLogTxtExtend = "|"
 	$AtkLogTxtExtend &= $g_CurrentCampUtilization & "/" & $g_iTotalCampSpace & "|"
 	
-	#Region - Colorful attack log - Team AIO Mod++
 	If Int($g_iStatsLastAttack[$eLootTrophy]) >= 0 Then
 		If $g_bChkColorfulAttackLog Then
-			If ($iStarsEarned = 0) Then
-				SetAtkLog($AtkLogTxt, $AtkLogTxtExtend, $V12978)
-			ElseIf ($iStarsEarned = 1) Then
-				SetAtkLog($AtkLogTxt, $AtkLogTxtExtend, $E12969)
-			ElseIf ($iStarsEarned = 2) Then
-				SetAtkLog($AtkLogTxt, $AtkLogTxtExtend, $Z12972)
-			ElseIf ($iStarsEarned = 3) Then
-				SetAtkLog($AtkLogTxt, $AtkLogTxtExtend, $I12975)
-			EndIf
+			Local $aColorful[4] = [0xFF0000, 0x8F8F8F, 0x0047D6, 0x3FA800]
+			Switch $iStarsEarned
+				Case 1
+					SetAtkLog($AtkLogTxt, $AtkLogTxtExtend, $aColorful[$iStarsEarned])
+				Case 2
+					SetAtkLog($AtkLogTxt, $AtkLogTxtExtend, $aColorful[$iStarsEarned])
+				Case 3
+					SetAtkLog($AtkLogTxt, $AtkLogTxtExtend, $aColorful[$iStarsEarned])
+				Case Else
+					SetAtkLog($AtkLogTxt, $AtkLogTxtExtend, $aColorful[0])
+			EndSwitch
 		Else
 			SetAtkLog($AtkLogTxt, $AtkLogTxtExtend, $COLOR_BLACK)
 		EndIf

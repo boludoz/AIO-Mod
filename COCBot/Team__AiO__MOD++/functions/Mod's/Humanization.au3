@@ -97,195 +97,154 @@ EndFunc   ;==>VisitClanmates
 Func LookAtCurrentWar()
 	Local $sResult, $bResult
 
-	CheckWarTimeNucleo($sResult, $bResult)
-	If @error Then
-		Local $i = 0
-		While not IsMainScreen() Or $i > 3
-			If $g_bRestart Or Not $g_bRunState Then Return
-			$i += 1
-			If randomSleep(1500) Then Return
-		WEnd
+	CheckWarTime($sResult, $bResult, False)
+	If Not @error Then
+		If randomSleep(250) Then Return
+		If $g_bClanWar = True Or $g_bClanWarLeague = True Then
 
-		If $i > 3 Then CheckMainScreen()
+			If IsWarMenu() Then
+				Local $sWarMode = ($g_bClanWarLeague = True) ? ("Current CWL war") : ("Current War")
+				SetLog("Let's Examine The " & $sWarMode & " Map ...", $COLOR_OLIVE)
+				Scroll(Random(2, 5, 1)) ; scroll enemy
+				If randomSleep(3000) Then Return
 
-		Return False
-	EndIf
-
-	If randomSleep(250) Then Return
-	If $g_bClanWar = True Or $g_bClanWarLeague = True Then
-
-		If IsWarMenu() Then
-			Local $sWarMode = ($g_bClanWarLeague = True) ? ("Current CWL war") : ("Current War") 
-			SetLog("Let's Examine The " & $sWarMode & " Map ...", $COLOR_OLIVE)
-			Scroll(Random(2, 5, 1)) ; scroll enemy
-			If randomSleep(3000) Then Return
-
-			If $g_bClanWar = True Then
-				Local $LookAtHome = Random(0, 1, 1)
-				If $LookAtHome = 1 Then
-					SetLog("Looking At Home Territory ...", $COLOR_OLIVE)
-					Click(790, 340 + $g_iMidOffsetY) ; go to home territory
-					Scroll(Random(2, 5, 1)) ; scroll home
-					If randomSleep(3000) Then Return
+				If $g_bClanWar = True Then
+					Local $LookAtHome = Random(0, 1, 1)
+					If $LookAtHome = 1 Then
+						SetLog("Looking At Home Territory ...", $COLOR_OLIVE)
+						Click(790, 340 + $g_iMidOffsetY) ; go to home territory
+						Scroll(Random(2, 5, 1)) ; scroll home
+						If randomSleep(3000) Then Return
+					EndIf
 				EndIf
-			EndIf
 
+				SetLog("Open War Details Menu ...", $COLOR_OLIVE)
+				If $g_bClanWar = True Then Click(800, 610 + $g_iBottomOffsetY) ; go to war details
+				If $g_bClanWarLeague = True Then Click(810, 540 + $g_iMidOffsetY) ; go to Cwl war details
+				If randomSleep(1500) Then Return
+
+				If IsClanOverview() Then
+					Local $FirstMenu = Random(1, 2, 1)
+					Switch $FirstMenu
+						Case 1
+							SetLog("Looking At First Tab ...", $COLOR_OLIVE)
+							Click(180, 50 + $g_iMidOffsetY) ; click first tab
+						Case 2
+							SetLog("Looking At Second Tab ...", $COLOR_OLIVE)
+							Click(360, 50 + $g_iMidOffsetY) ; click second tab
+					EndSwitch
+					If randomSleep(1500) Then Return
+
+					Scroll(Random(1, 3, 1)) ; scroll the tab
+
+					Local $SecondMenu = Random(1, 2, 1)
+					Switch $SecondMenu
+						Case 1
+							SetLog("Looking At Third Tab ...", $COLOR_OLIVE)
+							Click(530, 50 + $g_iMidOffsetY) ; click the third tab
+						Case 2
+							SetLog("Looking At Fourth Tab ...", $COLOR_OLIVE)
+							Click(700, 50 + $g_iMidOffsetY) ; click the fourth tab
+					EndSwitch
+					If randomSleep(1500) Then Return
+
+					Scroll(Random(2, 4, 1)) ; scroll the tab
+
+					Click(830, 50 + $g_iMidOffsetY) ; close window
+					If randomSleep(1500) Then Return
+					; Return ReturnToHomeFromWar()
+				Else
+					SetLog("Error When Trying To Open War Details Window ... Skipping ...", $COLOR_WARNING)
+				EndIf
+			Else
+				SetLog("Your Clan Is Not In Active War yet ... Skipping ...", $COLOR_WARNING)
+				If randomSleep(1500) Then Return
+				; Return ReturnToHomeFromWar()
+			EndIf
+		Else
+			SetLog("Error When Trying To Open War Window ... Skipping ...", $COLOR_WARNING)
+		EndIf
+	EndIf
+	Return ReturnToHomeFromWar()
+EndFunc   ;==>LookAtCurrentWar
+
+Func WatchWarReplays()
+	Local $sResult, $bResult
+	CheckWarTime($sResult, $bResult, False)
+	If Not @error Then
+		If randomSleep(250) Then Return
+		If $g_bClanWar = True Or $g_bClanWarLeague = True Then
 			SetLog("Open War Details Menu ...", $COLOR_OLIVE)
 			If $g_bClanWar = True Then Click(800, 610 + $g_iBottomOffsetY) ; go to war details
 			If $g_bClanWarLeague = True Then Click(810, 540 + $g_iMidOffsetY) ; go to Cwl war details
 			If randomSleep(1500) Then Return
 
 			If IsClanOverview() Then
-				Local $FirstMenu = Random(1, 2, 1)
-				Switch $FirstMenu
-					Case 1
-						SetLog("Looking At First Tab ...", $COLOR_OLIVE)
-						Click(180, 50 + $g_iMidOffsetY) ; click first tab
-					Case 2
-						SetLog("Looking At Second Tab ...", $COLOR_OLIVE)
-						Click(360, 50 + $g_iMidOffsetY) ; click second tab
-				EndSwitch
+				SetLog("Looking At Second Tab ...", $COLOR_OLIVE)
+				Click(360, 50 + $g_iMidOffsetY) ; go to replays tab
 				If randomSleep(1500) Then Return
 
-				Scroll(Random(1, 3, 1)) ; scroll the tab
+				If IsBestClans() Then
+					Local $aSarea[4] = [780, 210 + $g_iMidOffsetY, 840, 610 + $g_iBottomOffsetY]
+					Local $vReplayNumber = findMultipleQuick($g_sImgHumanizationReplay, 6, $aSarea, True, "", False, 36)
+					If UBound($vReplayNumber) > 0 And not @error Then
+						SetLog("There Are " & UBound($vReplayNumber) & " Replays To Watch ... We Will Choose One Of Them ...", $COLOR_INFO)
+						Local $iReplayToLaunch = Random(0, UBound($vReplayNumber) -1, 1)
 
-				Local $SecondMenu = Random(1, 2, 1)
-				Switch $SecondMenu
-					Case 1
-						SetLog("Looking At Third Tab ...", $COLOR_OLIVE)
-						Click(530, 50 + $g_iMidOffsetY) ; click the third tab
-					Case 2
-						SetLog("Looking At Fourth Tab ...", $COLOR_OLIVE)
-						Click(700, 50 + $g_iMidOffsetY) ; click the fourth tab
-				EndSwitch
-				If randomSleep(1500) Then Return
+						Click($vReplayNumber[$iReplayToLaunch][1], $vReplayNumber[$iReplayToLaunch][2]) ; click on the choosen replay
 
-				Scroll(Random(2, 4, 1)) ; scroll the tab
-
-				Click(830, 50 + $g_iMidOffsetY) ; close window
-				; If randomSleep(1500) Then Return
-				; Click(70, 620 + $g_iBottomOffsetY) ; return home
-			Else
-				SetLog("Error When Trying To Open War Details Window ... Skipping ...", $COLOR_WARNING)
-			EndIf
-		Else
-			SetLog("Your Clan Is Not In Active War yet ... Skipping ...", $COLOR_WARNING)
-			If randomSleep(1500) Then Return
-			; Click(70, 620 + $g_iBottomOffsetY) ; return home
-		EndIf
-	Else
-		SetLog("Error When Trying To Open War Window ... Skipping ...", $COLOR_WARNING)
-	EndIf
-
-	Local $i = 0
-	Do
-		$i += 1
-		If IsMainScreen() Then ExitLoop
-		If $g_bRestart Or Not $g_bRunState Then Return
-		Click(70, 620 + $g_iBottomOffsetY) ; return home
-		If randomSleep(1500) Then Return
-	Until IsMainScreen() Or $i > 3
-	If $i > 3 Then CheckMainScreen()
-EndFunc   ;==>LookAtCurrentWar
-
-Func WatchWarReplays()
-	Local $sResult, $bResult
-
-	CheckWarTimeNucleo($sResult, $bResult)
-	If @error Then
-		Local $i = 0
-		While not IsMainScreen() Or $i > 3
-			If $g_bRestart Or Not $g_bRunState Then Return
-			$i += 1
-			If randomSleep(1500) Then Return
-		WEnd
-
-		If $i > 3 Then CheckMainScreen()
-
-		Return False
-	EndIf
-
-	If randomSleep(250) Then Return
-	If $g_bClanWar = True Or $g_bClanWarLeague = True Then
-		SetLog("Open War Details Menu ...", $COLOR_OLIVE)
-		If $g_bClanWar = True Then Click(800, 610 + $g_iBottomOffsetY) ; go to war details
-		If $g_bClanWarLeague = True Then Click(810, 540 + $g_iMidOffsetY) ; go to Cwl war details
-		If randomSleep(1500) Then Return
-
-		If IsClanOverview() Then
-			SetLog("Looking At Second Tab ...", $COLOR_OLIVE)
-			Click(360, 50 + $g_iMidOffsetY) ; go to replays tab
-			If randomSleep(1500) Then Return
-
-			If IsBestClans() Then
-				Local $aSarea[4] = [780, 210 + $g_iMidOffsetY, 840, 610 + $g_iBottomOffsetY]
-				Local $vReplayNumber = findMultipleQuick($g_sImgHumanizationReplay, 6, $aSarea, True, "", False, 36)
-				If UBound($vReplayNumber) > 0 And not @error Then
-					SetLog("There Are " & UBound($vReplayNumber) & " Replays To Watch ... We Will Choose One Of Them ...", $COLOR_INFO)
-					Local $iReplayToLaunch = Random(0, UBound($vReplayNumber) -1, 1)
-
-					Click($vReplayNumber[$iReplayToLaunch][1], $vReplayNumber[$iReplayToLaunch][2]) ; click on the choosen replay
-
-					WaitForReplayWindow()
-
-					If IsReplayWindow() Then
-						GetReplayDuration(1)
-						If randomSleep(1000) Then Return
+						WaitForReplayWindow()
 
 						If IsReplayWindow() Then
-							AccelerateReplay(1)
-						EndIf
-
-						If randomSleep($g_aReplayDuration[1] / 3) Then Return
-
-						If IsReplayWindow() Then
-							DoAPauseDuringReplay(1)
-						EndIf
-
-						If randomSleep($g_aReplayDuration[1] / 3) Then Return
-
-						If IsReplayWindow() And $g_aReplayDuration[0] <> 0 Then
-							DoAPauseDuringReplay(1)
-						EndIf
-
-						SetLog("Waiting For Replay End ...", $COLOR_ACTION)
-
-						While IsReplayWindow()
+							GetReplayDuration(1)
 							If randomSleep(1000) Then Return
-						WEnd
 
-						If randomSleep(1000) Then Return
-						Click(70, 620 + $g_iBottomOffsetY) ; return home
+							If IsReplayWindow() Then
+								AccelerateReplay(1)
+							EndIf
+
+							If randomSleep($g_aReplayDuration[1] / 3) Then Return
+
+							If IsReplayWindow() Then
+								DoAPauseDuringReplay(1)
+							EndIf
+
+							If randomSleep($g_aReplayDuration[1] / 3) Then Return
+
+							If IsReplayWindow() And $g_aReplayDuration[0] <> 0 Then
+								DoAPauseDuringReplay(1)
+							EndIf
+
+							SetLog("Waiting For Replay End ...", $COLOR_ACTION)
+
+							While IsReplayWindow()
+								If randomSleep(1000) Then Return
+							WEnd
+
+							If randomSleep(1000) Then Return
+							Click(70, 620 + $g_iBottomOffsetY) ; return home
+						EndIf
+					Else
+						SetLog("No Replay To Watch Yet ... Skipping ...", $COLOR_WARNING)
 					EndIf
 				Else
-					SetLog("No Replay To Watch Yet ... Skipping ...", $COLOR_WARNING)
+					SetLog("Error When Trying To Open Replays Menu ... Skipping ...", $COLOR_WARNING)
 				EndIf
 			Else
-				SetLog("Error When Trying To Open Replays Menu ... Skipping ...", $COLOR_WARNING)
+				SetLog("Error When Trying to Open War Details Window ... Skipping ...", $COLOR_WARNING)
 			EndIf
+
+			Click(830, 50 + $g_iMidOffsetY) ; close window
+			If randomSleep(3500) Then Return
+			; Return ReturnToHomeFromWar()
 		Else
-			SetLog("Error When Trying to Open War Details Window ... Skipping ...", $COLOR_WARNING)
+			SetLog("Your Clan Is Not In Active War Yet ... Skipping ...", $COLOR_WARNING)
+			If randomSleep(1500) Then Return
+			; Return ReturnToHomeFromWar()
 		EndIf
-
-		Click(830, 50 + $g_iMidOffsetY) ; close window
-		If randomSleep(3500) Then Return
-		; Click(70, 620 + $g_iBottomOffsetY) ; return home
-	Else
-		SetLog("Your Clan Is Not In Active War Yet ... Skipping ...", $COLOR_WARNING)
-		; If randomSleep(1500) Then Return
-		; Click(70, 620 + $g_iBottomOffsetY) ; return home
 	EndIf
-
-	Local $i = 0
-	Do
-		$i += 1
-		If IsMainScreen() Then ExitLoop
-		If $g_bRestart Or Not $g_bRunState Then Return
-		Click(70, 620 + $g_iBottomOffsetY) ; return home
-		If randomSleep(1500) Then Return
-	Until IsMainScreen() Or $i > 3
-	If $i > 3 Then CheckMainScreen()
-
+	
+	Return ReturnToHomeFromWar()
 EndFunc   ;==>WatchWarReplays
 
 ; #FUNCTION# ====================================================================================================================
@@ -896,6 +855,19 @@ Func IsMainScreen()
 
 	Return $bResult
 EndFunc   ;==>IsMainScreen
+
+Func ReturnToHomeFromWar()
+	If _Wait4PixelGoneArray($aIsMain) = True Then
+		Click(70, 620 + $g_iBottomOffsetY) ; return home
+
+		If _Wait4PixelArray($aIsMain) = False Then
+			Click(70, 620 + $g_iBottomOffsetY) ; return home
+			CheckMainScreen()
+		EndIf
+	EndIf
+
+	Return True
+EndFunc   ;==>IsMessagesReplayWindow
 
 Func IsMessagesReplayWindow()
 	Local $bResult = _Wait4Pixel(750, 93 + $g_iMidOffsetY, 0xED1115, 20, 3000, "IsMessagesReplayWindow") ;Wait for Replay Message Window To Be Appear
