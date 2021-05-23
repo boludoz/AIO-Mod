@@ -21,76 +21,76 @@
 ;	If number of troop > number of pixel => Search the number of troop to deploy by pixel
 ;	Else Search the offset to browse the tab of pixel
 ;	Browse the tab of pixel and send troop
-Func DropOnPixel($sName, $listArrPixel, $Number, $slotsPerEdge = 0, $Random = False, $LastSide = False)
+Func DropOnPixel($iTroop, $aListArrPixel, $iNumber, $iSlotsPerEdge = 0, $bRandom = False, $bLastSide = False, $bTankTroop = False)
 	If isProblemAffect(True) Then Return
 	If Not IsAttackPage() Then Return
 	Local $nameFunc = "[DropOnPixel]"
 	debugRedArea($nameFunc & " IN ")
-	If ($Number = 0 Or UBound($listArrPixel) = 0) Then Return
+	If ($iNumber = 0 Or UBound($aListArrPixel) = 0) Then Return
 	KeepClicks()
-	For $i = 0 To UBound($listArrPixel) - 1
-		debugRedArea("$listArrPixel $i : [" & $i & "] ")
-		Local $Offset = 1
+	For $i = 0 To UBound($aListArrPixel) - 1
+		debugRedArea("$aListArrPixel $i : [" & $i & "] ")
+		Local $iOffset = 1
 		Local $nbTroopByPixel = 1
 		Local $Clicked = 0
-		Local $arrPixel = $listArrPixel[$i]
-		Local $nbTroopsLeft = UBound($arrPixel) > $Number ? $Number : UBound($arrPixel)
-		debugRedArea("UBound($arrPixel) " & UBound($arrPixel) & "$number :" & $Number)
+		Local $arrPixel = $aListArrPixel[$i]
+		Local $nbTroopsLeft = UBound($arrPixel) > $iNumber ? $iNumber : UBound($arrPixel)
+		If $g_bUseSmartFarmAndRandomQuant And Not $bLastSide Then $nbTroopsLeft = UBound($arrPixel)
+		debugRedArea("UBound($arrPixel) " & UBound($arrPixel) & "$iNumber :" & $iNumber)
 		While ($nbTroopsLeft > 0)
+			If Not $g_bRunState Then ExitLoop
 			If (UBound($arrPixel) = 0) Then
 				ExitLoop
 			EndIf
 			If (UBound($arrPixel) > $nbTroopsLeft) Then
-				$Offset = UBound($arrPixel) / $nbTroopsLeft
+				$iOffset = UBound($arrPixel) / $nbTroopsLeft
 			Else
-				$nbTroopByPixel = Floor($Number / UBound($arrPixel))
+				$nbTroopByPixel = Floor($iNumber / UBound($arrPixel))
 			EndIf
-			If ($Offset < 1) Then
-				$Offset = 1
+			If ($iOffset < 1) Then
+				$iOffset = 1
 			EndIf
 			If ($nbTroopByPixel < 1) Then
 				$nbTroopByPixel = 1
 			EndIf
-			For $j = 0 To UBound($arrPixel) - 1 Step $Offset
-				Local $index = Round($j)
-				If ($index > UBound($arrPixel) - 1) Then
-					$index = UBound($arrPixel) - 1
+			For $j = 0 To UBound($arrPixel) - 1 Step $iOffset
+				Local $iIndex = Round($j)
+				If ($iIndex > UBound($arrPixel) - 1) Then
+					$iIndex = UBound($arrPixel) - 1
 				EndIf
-				Local $currentPixel = $arrPixel[Floor($index)]
-
-				If Not IsArray($currentPixel) Or UBound($currentPixel) <> 2 Then
-					$Clicked += ($nbTroopByPixel < 1) ? (1) : ($nbTroopByPixel)
-					$nbTroopsLeft -= ($nbTroopByPixel < 1) ? (1) : ($nbTroopByPixel)
+				Local $currentPixel = $arrPixel[Floor($iIndex)]
+				If $bRandom Then $currentPixel = DeployPointRandom($arrPixel[Floor($iIndex)])
+				If Not IsArray($currentPixel) And UBound($currentPixel) = 2 Then
+					SetDebugLog("Error DropOnPixel with slot " & $iTroop + 1 & " array: " & _ArrayToString($arrPixel[Floor($iIndex)]))
 					ContinueLoop
 				EndIf
-				
-				If $Random Then $currentPixel = DeployPointRandom($arrPixel[Floor($index)])
-				
-				If Not IsArray($currentPixel) Or UBound($currentPixel) <> 2 Then
-					SetDebugLog("Error DropOnPixel with slot " & $sName + 1 & " array: " & _ArrayToString($arrPixel[Floor($index)]))
-					$Clicked += ($nbTroopByPixel < 1) ? (1) : ($nbTroopByPixel)
-					$nbTroopsLeft -= ($nbTroopByPixel < 1) ? (1) : ($nbTroopByPixel)
-					ContinueLoop
-				EndIf
-				If $j >= Round(UBound($arrPixel) / 2) And $j <= Round((UBound($arrPixel) / 2) + $Offset) And $g_bIsHeroesDropped = False Then
+				If $j >= Round(UBound($arrPixel) / 2) And $j <= Round((UBound($arrPixel) / 2) + $iOffset) And $g_bIsHeroesDropped = False Then
 					$g_aiDeployHeroesPosition[0] = $currentPixel[0]
 					$g_aiDeployHeroesPosition[1] = $currentPixel[1]
-					debugRedArea("Heroes : $slotsPerEdge = else ")
-					debugRedArea("$offset: " & $Offset)
+					debugRedArea("Heroes : $iSlotsPerEdge = else ")
+					debugRedArea("$iOffset: " & $iOffset)
 				EndIf
-				If $j >= Round(UBound($arrPixel) / 2) And $j <= Round((UBound($arrPixel) / 2) + $Offset) And $g_bIsCCDropped = False Then
+				If $j >= Round(UBound($arrPixel) / 2) And $j <= Round((UBound($arrPixel) / 2) + $iOffset) And $g_bIsCCDropped = False Then
 					$g_aiDeployCCPosition[0] = $currentPixel[0]
 					$g_aiDeployCCPosition[1] = $currentPixel[1]
-					debugRedArea("CC : $slotsPerEdge = else ")
-					debugRedArea("$offset: " & $Offset)
+					debugRedArea("CC : $iSlotsPerEdge = else ")
+					debugRedArea("$iOffset: " & $iOffset)
 				EndIf
 				If Number($currentPixel[1]) > 555 + $g_iBottomOffsetY Then $currentPixel[1] = 555 + $g_iBottomOffsetY
-				AttackClick($currentPixel[0], $currentPixel[1], $nbTroopByPixel, SetSleep(0), 0, "#0098")
+				If $bTankTroop Then
+					Local $Delay = 1000 + SetSleep(0)
+					SetDebugLog("Tank Troop $nbTroopByPixel: " & $nbTroopByPixel & " with delay of " & $Delay + 50 & "ms")
+					AttackClick($currentPixel[0], $currentPixel[1], $nbTroopByPixel, $Delay, 0, "#0098")
+					If _Sleep(50) Then ExitLoop
+				Else
+					AttackClick($currentPixel[0], $currentPixel[1], $nbTroopByPixel, SetSleep(0), 0, "#0098")
+					If _Sleep(50) Then ExitLoop
+				EndIf
 				$Clicked += $nbTroopByPixel
 				$nbTroopsLeft -= $nbTroopByPixel
 			Next
 		WEnd
-		SetLog("Clicked " & $Clicked & "x at slot: " & $sName + 1, $COLOR_SUCCESS)
+		If $g_bUseSmartFarmAndRandomQuant And $g_aiAttackAlgorithm[$DB] = 2 Then SetLog("Clicked " & $Clicked & "x at slot: " & $iTroop + 1, $COLOR_SUCCESS)
 	Next
 	ReleaseClicks()
 	debugRedArea($nameFunc & " OUT ")

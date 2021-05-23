@@ -1600,10 +1600,26 @@ Func ApplyConfig_600_29_DB_SmartFarm($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Deadbase / Attack / SmartFarm <><><><>
 	Switch $TypeReadSave
 		Case "Read"
+			#Region - Custom SmartFarm - Team AIO Mod++
+			GUICtrlSetState($g_hChkSmartFarmAndRandomDeploy, $g_bUseSmartFarmAndRandomDeploy ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkSmartFarmAndRandomQuant, $g_bUseSmartFarmAndRandomQuant ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hSmartFarmSpellsEnable, $g_bSmartFarmSpellsEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkUseSmartFarmRedLine, $g_bUseSmartFarmRedLine ? $GUI_CHECKED : $GUI_UNCHECKED)
+			_GUICtrlComboBox_SetCurSel($g_hCmbSmartFarmSpellsHowManySides, $g_iSmartFarmSpellsHowManySides - 1)
+			#EndRegion - Custom SmartFarm - Team AIO Mod++
+			
 			GUICtrlSetData($g_hTxtInsidePercentage, $g_iTxtInsidePercentage)
 			GUICtrlSetData($g_hTxtOutsidePercentage, $g_iTxtOutsidePercentage)
 			GUICtrlSetState($g_hChkDebugSmartFarm, $g_bDebugSmartFarm ? $GUI_CHECKED : $GUI_UNCHECKED)
 		Case "Save"
+			#Region - Custom SmartFarm - Team AIO Mod++
+			$g_bUseSmartFarmAndRandomDeploy = (GUICtrlRead($g_hChkSmartFarmAndRandomDeploy) = $GUI_CHECKED)
+			$g_bUseSmartFarmAndRandomQuant = (GUICtrlRead($g_hChkSmartFarmAndRandomQuant) = $GUI_CHECKED)
+			$g_bSmartFarmSpellsEnable = (GUICtrlRead($g_hSmartFarmSpellsEnable) = $GUI_CHECKED)
+			$g_bUseSmartFarmRedLine = (GUICtrlRead($g_hChkUseSmartFarmRedLine) = $GUI_CHECKED)
+			$g_iSmartFarmSpellsHowManySides = _GUICtrlComboBox_GetCurSel($g_hCmbSmartFarmSpellsHowManySides) + 1
+			#EndRegion - Custom SmartFarm - Team AIO Mod++
+			
 			$g_iTxtInsidePercentage = GUICtrlRead($g_hTxtInsidePercentage)
 			$g_iTxtOutsidePercentage = GUICtrlRead($g_hTxtOutsidePercentage)
 			$g_bDebugSmartFarm = (GUICtrlRead($g_hChkDebugSmartFarm) = $GUI_CHECKED)

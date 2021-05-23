@@ -147,8 +147,8 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			GUICtrlSetState($g_hMaxSidesSF, $g_bMaxSidesSF = (1) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
 			GUICtrlSetData($g_hCmbMaxSidesSF, $g_iCmbMaxSidesSF)
 
-			; Randomize points along the line
-			GUICtrlSetState($g_hChkRandomDPSFAL, $g_bRandomDPSFAL = (1) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
+			; Custom SmartFarm
+			GUICtrlSetState($g_hChkSmartFarmAndRandomDeploy, $g_bUseSmartFarmAndRandomDeploy = (1) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
 
 			; War Preparation
 			GUICtrlSetState($g_hChkStopForWar, $g_bStopForWar ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -274,8 +274,8 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			$g_bMaxSidesSF = (GUICtrlRead($g_hMaxSidesSF) = $GUI_CHECKED) ? 1 : 0
 			$g_iCmbMaxSidesSF = Int(GUICtrlRead($g_hCmbMaxSidesSF))
 
-			; Randomize points along the line
-			$g_bRandomDPSFAL = (GUICtrlRead($g_hChkRandomDPSFAL) = $GUI_CHECKED) ? 1 : 0
+			; Custom SmartFarm
+			$g_bUseSmartFarmAndRandomDeploy = (GUICtrlRead($g_hChkSmartFarmAndRandomDeploy) = $GUI_CHECKED) ? 1 : 0
 
 			; War Preparation
 			$g_bStopForWar = GUICtrlRead($g_hChkStopForWar) = $GUI_CHECKED

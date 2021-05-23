@@ -95,8 +95,8 @@ Func SaveConfig_MOD_MiscTab()
 	_Ini_Add("MaxSidesSF", "Enable", $g_bMaxSidesSF ? 1 : 0)
 	_Ini_Add("MaxSidesSF", "CmbMaxSidesSF", $g_iCmbMaxSidesSF)
 
-	; Randomize points along the line
-	_Ini_Add("RandomDPSFAL", "Enable", $g_bRandomDPSFAL ? 1 : 0)
+	; Custom SmartFarm
+	_Ini_Add("UseSmartFarmAndRandomDeploy", "Enable", $g_bUseSmartFarmAndRandomDeploy ? 1 : 0)
 
 	; Village / Misc - War Preparation (Demen)
 	_Ini_Add("war preparation", "Enable", $g_bStopForWar ? 1 : 0)

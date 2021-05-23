@@ -48,10 +48,10 @@ Func GetPixelDropTroop($Troop, $Number, $slotsPerEdge)
 		$newPixelTopRight = $g_aiPixelTopRight
 		$newPixelBottomRight = $g_aiPixelBottomRight
 	EndIf
-	$newPixelTopLeft = GetVectorPixelOnEachSide2($newPixelTopLeft, 0, $slotsPerEdge, $g_bRandomDPSFAL)
-	$newPixelBottomLeft = GetVectorPixelOnEachSide2($newPixelBottomLeft, 1, $slotsPerEdge, $g_bRandomDPSFAL)
-	$newPixelTopRight = GetVectorPixelOnEachSide2($newPixelTopRight, 1, $slotsPerEdge, $g_bRandomDPSFAL)
-	$newPixelBottomRight = GetVectorPixelOnEachSide2($newPixelBottomRight, 0, $slotsPerEdge, $g_bRandomDPSFAL)
+	$newPixelTopLeft = GetVectorPixelOnEachSide2($newPixelTopLeft, 0, $slotsPerEdge)
+	$newPixelBottomLeft = GetVectorPixelOnEachSide2($newPixelBottomLeft, 1, $slotsPerEdge)
+	$newPixelTopRight = GetVectorPixelOnEachSide2($newPixelTopRight, 1, $slotsPerEdge)
+	$newPixelBottomRight = GetVectorPixelOnEachSide2($newPixelBottomRight, 0, $slotsPerEdge)
 	Local $NumberArray[4] = [$newPixelBottomRight, $newPixelTopLeft, $newPixelBottomLeft, $newPixelTopRight]
 	Local $g_aaiEdgeDropPointsPixelToDrop[4]
 	For $x = 0 To UBound($g_aaiEdgeDropPointsPixelToDrop) - 1

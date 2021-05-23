@@ -84,7 +84,6 @@ Func ChkSmartFarm($sTypeResources = "All", $bTH = False)
 	Local $hTimer = TimerInit()
 
 	; [0] = x , [1] = y , [2] = Side , [3] = In/out , [4] = Side,  [5]= Is string with 5 coordinates to deploy
-	Local $g_bUseSmartFarmRedLine = True
 	Local $aResourcesOUT[0][6]
 	Local $aResourcesIN[0][6]
 
@@ -493,8 +492,8 @@ Func DebugImageSmartFarm($THdetails, $aIn, $aOut, $sTime, $BestSideToAttack, $re
 	$hPen2 = _GDIPlus_PenCreate(0xFFFFFFFF, 2)
 	_GDIPlus_GraphicsDrawRect($hGraphic, $DiamondMiddleX - 5, $DiamondMiddleY - 5, 10, 10, $hPen2)
 	$hPen2 = _GDIPlus_PenCreate(0xFFFFFFFF, 1)
-	_GDIPlus_GraphicsDrawLine($hGraphic, 0, $DiamondMiddleY, 860, $DiamondMiddleY, $hPen2)
-	_GDIPlus_GraphicsDrawLine($hGraphic, $DiamondMiddleX, 0, $DiamondMiddleX, 644, $hPen2)
+	_GDIPlus_GraphicsDrawLine($hGraphic, 0, $DiamondMiddleY, $g_iGAME_WIDTH, $DiamondMiddleY, $hPen2)
+	_GDIPlus_GraphicsDrawLine($hGraphic, $DiamondMiddleX, 0, $DiamondMiddleX, $g_iGAME_HEIGHT, $hPen2)
 	$hPen2 = _GDIPlus_PenCreate(0xFF000000, 2)
 	Local $tempObbj, $tempObbjs
 	For $i = 0 To UBound($aIn) - 1
@@ -941,7 +940,13 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 							If _Sleep($DELAYLAUNCHTROOP23) Then Return
 							SetLog("Dropping " & $infoTroopListArrPixel[2] & " " & $infoTroopListArrPixel[5] & ", Points Per Side: " & $infoTroopListArrPixel[3] & " - ('" & $i + 1 & "' Name: " & $sSide & ")", $COLOR_SUCCESS)
 							Local $LastSide = ($i = $numberSidesDropTroop - 1) ? True : False
-							Local $Clicked = DropOnPixel($infoTroopListArrPixel[0], $pixelDropTroop, $infoTroopListArrPixel[2], $infoTroopListArrPixel[3], True, $LastSide)
+							#Region - Custom SmartFarm - Team AIO Mod++
+							If $infoTroopListArrPixel[5] = "Giant" Or $infoTroopListArrPixel[5] = "Pekka" Or $infoTroopListArrPixel[5] = "Dragon" Or _
+							$infoTroopListArrPixel[5] = "Super Giant" Or $infoTroopListArrPixel[5] = "Golem" Or $infoTroopListArrPixel[5] = "Ice Golem" Then
+								$TanksTroops = True
+							EndIf
+							Local $Clicked = DropOnPixel($infoTroopListArrPixel[0], $pixelDropTroop, $infoTroopListArrPixel[2], $infoTroopListArrPixel[3], True, $LastSide, $TanksTroops)
+							#EndRegion - Custom SmartFarm - Team AIO Mod++
 							$g_avAttackTroops[$infoTroopListArrPixel[0]][1] -= $Clicked
 							If ($numberSidesDropTroop = 1) Or ($i = $numberSidesDropTroop - 2) Then
 								SetLog($infoTroopListArrPixel[5] & " Next side with " & $g_avAttackTroops[$infoTroopListArrPixel[0]][1] & "x", $COLOR_SUCCESS)
@@ -1211,7 +1216,7 @@ Func LaunchSpellsSmartFarm($SIDESNAMES = "TR|TL|BR|BL")
 	Local $iTolerance = 25
 	Local $bIsPolygon = True
 	Local $DebugLog = False
-	Local $subDirectory = @ScriptDir & "\SmartFarm\"
+	Local $subDirectory = $g_sProfileTempDebugPath & "\SmartFarm\"
 	DirCreate($subDirectory)
 	If _Sleep(750) Then Return
 	Local $FirstDetection

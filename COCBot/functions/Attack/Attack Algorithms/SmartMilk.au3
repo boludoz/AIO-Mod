@@ -391,7 +391,7 @@ EndFunc   ;==>SmartFarmMilk
 Func DebugImageSmartMilk($aCollectorsAll, $sTime, $HeroesDeployJustInCase)
 	_CaptureRegion()
 	Local $EditedImage = $g_hBitmap
-	Local $subDirectory = @ScriptDir & "\SmartMilk\"
+	Local $subDirectory = $g_sProfileTempDebugPath & "\SmartFarm\"
 	DirCreate($subDirectory)
 	Local $date = @YEAR & "-" & @MON & "-" & @MDAY
 	Local $Time = @HOUR & "." & @MIN & "." & @SEC

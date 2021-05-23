@@ -1165,6 +1165,14 @@ Func ReadConfig_600_29_DB()
 	IniReadS($g_aiAttackUseSiege[$DB], $g_sProfileConfigPath, "attack", "DBAtkUseSiege", 5, "int")
 
 	; <><><><> Attack Plan / Search & Attack / Deadbase / Attack / SmartFarm <><><><>
+	#Region - Custom SmartFarm - Team AIO Mod++
+	IniReadS($g_bUseSmartFarmAndRandomDeploy, $g_sProfileConfigPath, "SmartFarm", "UseSmartFarmAndRandomDeploy", True, "Bool")
+	IniReadS($g_bUseSmartFarmAndRandomQuant, $g_sProfileConfigPath, "SmartFarm", "UseSmartFarmAndRandomQuant", False, "Bool")
+	IniReadS($g_bSmartFarmSpellsEnable, $g_sProfileConfigPath, "SmartFarm", "SmartFarmSpellsEnable", False, "Bool")
+	IniReadS($g_bUseSmartFarmRedLine, $g_sProfileConfigPath, "SmartFarm", "UseSmartFarmRedLine", False, "Bool")
+	IniReadS($g_iSmartFarmSpellsHowManySides, $g_sProfileConfigPath, "SmartFarm", "SmartFarmSpellsHowManySides", 1, "int")
+	#EndRegion - Custom SmartFarm - Team AIO Mod++
+
 	IniReadS($g_iTxtInsidePercentage, $g_sProfileConfigPath, "SmartFarm", "InsidePercentage", 65, "int")
 	IniReadS($g_iTxtOutsidePercentage, $g_sProfileConfigPath, "SmartFarm", "OutsidePercentage", 80, "int")
 	IniReadS($g_bDebugSmartFarm, $g_sProfileConfigPath, "SmartFarm", "DebugSmartFarm", False, "Bool")

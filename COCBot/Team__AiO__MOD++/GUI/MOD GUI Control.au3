@@ -88,6 +88,7 @@ Func chkEdgeObstacle()
 EndFunc
 
 ; Misc tab - Team AiO MOD++
+
 Func chkDelayMod()
 	; Skip first loop
 	$g_bAvoidLocate = (GUICtrlRead($g_hAvoidLocate) = $GUI_CHECKED)
@@ -140,6 +141,7 @@ Func chkDelayMod()
 
 EndFunc   ;==>chkDelayMod
 
+#Region - Custom SmartFarm - Team AIO Mod++
 Func chkMaxSidesSF()
 	; Max Sides
 	$g_iCmbMaxSidesSF = Int(GUICtrlRead($g_hCmbMaxSidesSF))
@@ -151,6 +153,48 @@ Func chkMaxSidesSF()
 		GUICtrlSetState($g_hCmbMaxSidesSF, $GUI_DISABLE)
 	EndIf
 EndFunc   ;==>chkMaxSidesSF
+
+Func chkUseSmartFarmAndRandomDeploy()
+	If $g_iGuiMode <> 1 Then Return
+	If GUICtrlRead($g_hChkSmartFarmAndRandomDeploy) = $GUI_CHECKED And $g_abAttackTypeEnable[$DB] And $g_aiAttackAlgorithm[$DB] = 2 And Not $g_abAttackTypeEnable[$LB] Then
+		$g_bUseSmartFarmAndRandomDeploy = True
+	Else
+		GUICtrlSetState($g_hChkSmartFarmAndRandomDeploy, $GUI_UNCHECKED)
+		$g_bUseSmartFarmAndRandomDeploy = False
+	EndIf
+EndFunc   ;==>chkUseSmartFarmAndRandomDeploy
+
+Func chkUseSmartFarmAndRandomQuant()
+	If $g_iGuiMode <> 1 Then Return
+	If GUICtrlRead($g_hChkSmartFarmAndRandomQuant) = $GUI_CHECKED And $g_abAttackTypeEnable[$DB] And $g_aiAttackAlgorithm[$DB] = 2 And Not $g_abAttackTypeEnable[$LB] Then
+		$g_bUseSmartFarmAndRandomQuant = True
+	Else
+		GUICtrlSetState($g_hChkSmartFarmAndRandomQuant, $GUI_UNCHECKED)
+		$g_bUseSmartFarmAndRandomQuant = False
+	EndIf
+EndFunc   ;==>chkUseSmartFarmAndRandomQuant
+
+Func ChkSmartFarmSpellsEnable()
+	If $g_iGuiMode <> 1 Then Return
+	If GUICtrlRead($g_hSmartFarmSpellsEnable) = $GUI_CHECKED And $g_abAttackTypeEnable[$DB] And $g_aiAttackAlgorithm[$DB] = 2 And Not $g_abAttackTypeEnable[$LB] Then
+		$g_bSmartFarmSpellsEnable = True
+		GUICtrlSetState($g_hCmbSmartFarmSpellsHowManySides, $GUI_ENABLE)
+	Else
+		$g_bSmartFarmSpellsEnable = False
+		GUICtrlSetState($g_hCmbSmartFarmSpellsHowManySides, $GUI_DISABLE)
+	EndIf
+EndFunc   ;==>ChkSmartFarmSpellsEnable
+
+Func cmbHowManySidesSpells()
+	If $g_iGuiMode <> 1 Then Return
+	$g_iSmartFarmSpellsHowManySides = _GUICtrlComboBox_GetCurSel($g_hCmbSmartFarmSpellsHowManySides) + 1
+EndFunc   ;==>cmbHowManySidesSpells
+
+Func CheckUseSmartFarmRedLine()
+	If $g_iGuiMode <> 1 Then Return
+	$g_bUseSmartFarmRedLine = (GUICtrlRead($g_hChkUseSmartFarmRedLine) = $GUI_CHECKED)
+EndFunc   ;==>CheckUseSmartFarmRedLine
+#EndRegion - Custom SmartFarm - Team AIO Mod++
 
 ; Classic Four Finger - Team AiO MOD++
 Func cmbStandardDropSidesAB() ; avoid conflict between FourFinger and SmartAttack

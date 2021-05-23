@@ -926,6 +926,14 @@ Func SaveConfig_600_29_DB_Scripted()
 EndFunc   ;==>SaveConfig_600_29_DB_Scripted
 
 Func SaveConfig_600_29_DB_SmartFarm()
+	#Region - Custom SmartFarm - Team AIO Mod++
+	_Ini_Add("SmartFarm", "UseSmartFarmAndRandomDeploy", $g_bUseSmartFarmAndRandomDeploy)
+	_Ini_Add("SmartFarm", "UseSmartFarmAndRandomQuant", $g_bUseSmartFarmAndRandomQuant)
+	_Ini_Add("SmartFarm", "SmartFarmSpellsEnable", $g_bSmartFarmSpellsEnable)
+	_Ini_Add("SmartFarm", "UseSmartFarmRedLine", $g_bUseSmartFarmRedLine)
+	_Ini_Add("SmartFarm", "SmartFarmSpellsHowManySides", $g_iSmartFarmSpellsHowManySides)
+	#EndRegion - Custom SmartFarm - Team AIO Mod++
+
 	_Ini_Add("SmartFarm", "InsidePercentage", $g_iTxtInsidePercentage)
 	_Ini_Add("SmartFarm", "OutsidePercentage", $g_iTxtOutsidePercentage)
 	_Ini_Add("SmartFarm", "DebugSmartFarm", $g_bDebugSmartFarm)

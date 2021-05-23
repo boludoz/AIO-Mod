@@ -82,8 +82,8 @@ Func ReadConfig_MOD_MiscTab()
 	IniReadS($g_bMaxSidesSF, $g_sProfileConfigPath, "MaxSidesSF", "Enable", $g_bMaxSidesSF, "Bool")
 	IniReadS($g_iCmbMaxSidesSF, $g_sProfileConfigPath, "MaxSidesSF", "CmbMaxSidesSF", $g_iCmbMaxSidesSF, "Int")
 
-	; Randomize points along the line
-	IniReadS($g_bRandomDPSFAL, $g_sProfileConfigPath, "RandomDPSFAL", "Enable", $g_bRandomDPSFAL, "Bool")
+	; Custom SmartFarm
+	IniReadS($g_bUseSmartFarmAndRandomDeploy, $g_sProfileConfigPath, "UseSmartFarmAndRandomDeploy", "Enable", $g_bUseSmartFarmAndRandomDeploy, "Bool")
 
 	; ChkEnableRandom
 	IniReadS($g_bChkEnableRandom[0], $g_sProfileConfigPath, "MiscTab", "ChkEnableRandom0", $g_bChkEnableRandom[0], "Bool")

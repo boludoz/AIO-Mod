@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 ; Lirel Bit
-Global $g_iSmartFarmSpellsHowManySides = 2, $g_bSmartFarmSpellsEnable = True
+
 Global $g_bChkBuyGuard = False
 Global $g_aBBUpgradeResourceCostDuration[3] = ["", "", ""]
 Global $g_iChkBBUpgradesToIgnore[28] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -83,10 +83,6 @@ Global $g_hChkNoUpgradeInWar = True, $g_bNoUpgradeInWar
 #Region - Legend trophy protection - Team AIO Mod++
 Global $g_hChkProtectInLL, $g_hChkForceProtectLL, $g_bProtectInLL = True, $g_bForceProtectLL = False
 #EndRegion - Legend trophy protection - Team AIO Mod++
-
-#Region - Randomize points along the line - Team AIO Mod++
-Global $g_hChkRandomDPSFAL, $g_bRandomDPSFAL = True
-#EndRegion - Randomize points along the line - Team AIO Mod++
 
 #Region - Return Home by Time - Team AIO Mod++
 Global $g_hChkReturnTimerEnable = 0, $g_hTxtReturnTimer = 0, $g_bReturnTimerEnable = False, $g_iTxtReturnTimer = 5
@@ -428,3 +424,10 @@ Global $g_iAttackTotalBLButtons = -1
 Global $g_aBLButtonsRegion[4] = [10, 570, 450, 55]
 
 Global $g_iDualBarFix = 0
+
+#Region - Custom SmartFarm - Team AIO Mod++
+Global $g_hChkSmartFarmAndRandomDeploy, $g_bUseSmartFarmAndRandomDeploy = True
+Global $g_hChkSmartFarmAndRandomQuant, $g_bUseSmartFarmAndRandomQuant = False
+Global $g_hCmbSmartFarmSpellsHowManySides, $g_hSmartFarmSpellsEnable, $g_iSmartFarmSpellsHowManySides = 2, $g_bSmartFarmSpellsEnable = True
+Global $g_hChkUseSmartFarmRedLine, $g_bUseSmartFarmRedLine = False
+#EndRegion - Custom SmartFarm - Team AIO Mod++
