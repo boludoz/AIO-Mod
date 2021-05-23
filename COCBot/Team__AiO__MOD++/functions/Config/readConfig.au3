@@ -160,6 +160,14 @@ Func ReadConfig_MOD_MiscTab()
 		IniReadS($g_iChkBBUpgradesToIgnore[$i], $g_sProfileConfigPath, "other", "chkBBUpgradesToIgnore" & $i, 0, "int")
 	Next
 	#EndRegion - Custom Improve - Team AIO Mod++
+	
+	#Region - Buy Guard - Team AIO Mod++
+	IniReadS($g_bChkBuyGuard, $g_sProfileConfigPath, "attack", "ChkBuyGuard", $g_bChkBuyGuard, "Bool")
+	#EndRegion - Buy Guard - Team AIO Mod++
+
+	#Region - Colorful attack log - Team AIO Mod++
+	IniReadS($g_bChkColorfulAttackLog, $g_sProfileConfigPath, "attack", "ChkColorfulAttackLog", $g_bChkColorfulAttackLog, "Bool")
+	#EndRegion - Colorful attack log - Team AIO Mod++
 EndFunc   ;==>ReadConfig_MOD_MiscTab
 
 Func ReadConfig_MOD_SuperXP()

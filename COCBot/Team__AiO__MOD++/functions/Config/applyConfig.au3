@@ -225,6 +225,14 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			chkBBUpgradesToIgnore()
 			#EndRegion - Custom Improve - Team AIO Mod++
 
+			#Region - Buy Guard - Team AIO Mod++
+			GUICtrlSetState($g_hChkBuyGuard, $g_bChkBuyGuard ? $GUI_CHECKED : $GUI_UNCHECKED)
+			#EndRegion - Buy Guard - Team AIO Mod++
+
+			#Region - Colorful attack log - Team AIO Mod++
+			GUICtrlSetState($g_hChkColorfulAttackLog, $g_bChkColorfulAttackLog ? $GUI_CHECKED : $GUI_UNCHECKED)
+			#EndRegion - Colorful attack log - Team AIO Mod++
+
 			chkMaxSidesSF()
 			ChkReqCCAlways()
 			ChkReqCCFromChat()
@@ -348,6 +356,14 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 				$g_iChkBBUpgradesToIgnore[$i] = GUICtrlRead($g_hChkBBUpgradesToIgnore[$i]) = $GUI_CHECKED ? 1 : 0
 			Next
 			#EndRegion - Custom Improve - Team AIO Mod++
+			
+			#Region - Buy Guard - Team AIO Mod++
+			$g_bChkBuyGuard = (GUICtrlRead($g_hChkBuyGuard) = $GUI_CHECKED)
+			#EndRegion - Buy Guard - Team AIO Mod++
+
+			#Region - Colorful attack log - Team AIO Mod++
+			$g_bChkColorfulAttackLog = (GUICtrlRead($g_hChkColorfulAttackLog) = $GUI_CHECKED)
+			#EndRegion - Colorful attack log - Team AIO Mod++
 	EndSwitch
 
 EndFunc   ;==>ApplyConfig_MOD_MiscTab
