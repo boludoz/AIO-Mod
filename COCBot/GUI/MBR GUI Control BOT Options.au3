@@ -663,8 +663,7 @@ Func btnTestVillageSize()
 	
 	Local $a[2][2] = [["stone", "tree"], ["2stone", "2tree"]]
 	For $i = 0 To 1
-		_CaptureRegion()
-		_CaptureRegion2Sync()
+		_CaptureRegions()
 		
 		SetLog("Testing GetVillageSize(True, """ & $a[$i][0] & """, """ & $a[$i][1] & """)", $COLOR_INFO)
 		Local $hTimer = __TimerInit()
@@ -799,32 +798,6 @@ Func btnTestVillageSize()
 
 	$g_bRunState = $currentRunState
 EndFunc   ;==>btnTestVillageSize
-
-Global Const $PI = 4 * ATan(1)
-
-Func angle($cx, $cy, $ex, $ey)
-  Local $dy = $ey - $cy
-  Local $dx = $ex - $cx
-  Local $theta = atan2($dy, $dx); // range (-PI, PI]
-  $theta *= 180 / $PI; // rads to degs, range (-180, 180]
-  return $theta
-EndFunc
-
-Func atan2($y, $x)
-    Return (2 * ATan($y / ($x + Sqrt($x * $x + $y * $y))))
-EndFunc;==>atan2
-
-#cs
-
-Local $cx = 434, $cy = 582, $ex = 768, $ey =331
-Local $angle = angle($cx, $cy, $ex, $ey)
-
-Local $endX = $cx + cos(_Radian($angle)) * 40;
-Local $endY = $cy + sin(_Radian($angle)) * 40;
-
-ConsoleWrite($endX & " " & $endY & " " & $angle)
-#ce
-
 #EndRegion - Custom - Team AIO Mod++
 
 Func btnTestDeadBase()

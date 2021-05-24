@@ -115,7 +115,7 @@ Func ZoomBuilderBaseMecanics($bAttack = True)
 	
 	If Not $g_bRunState Then Return
 
-	Setlog("Builder Base Diamond: " & $iSize)
+	Setlog("Builder Base Diamond: " & $iSize, $COLOR_INFO)
 	Local $i = 0
 	Do
 		Setlog("Builder Base Attack Zoomout.")

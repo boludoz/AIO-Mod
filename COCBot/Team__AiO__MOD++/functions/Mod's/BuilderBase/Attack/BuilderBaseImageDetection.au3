@@ -99,7 +99,7 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = $g_iFurtherFromBBDefault, $DebugI
 
 	If IsArray($DeployPointsResult) And UBound($DeployPointsResult) > 0 Then
 		Local $Point[2], $Local = ""
-		Local $TopLeft[0][2], $TopRight[0][2], $BottomRight[0][2], $BottomLeft[0][2]
+		Local $iTopLeft[0][2], $iTopRight[0][2], $iBottomRight[0][2], $iBottomLeft[0][2]
 		For $i = 0 To UBound($DeployPointsResult) - 1
 			$Point[0] = Int($DeployPointsResult[$i][1])
 			$Point[1] = Int($DeployPointsResult[$i][2])
@@ -111,38 +111,38 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = $g_iFurtherFromBBDefault, $DebugI
 					$Point[0] -= $FurtherFrom
 					$Point[1] -= $FurtherFrom
 					If InDiamondBB($Point[0], $Point[1], $g_aBuilderBaseOuterPolygon) Then
-						ReDim $TopLeft[UBound($TopLeft) + 1][2]
-						$TopLeft[UBound($TopLeft) - 1][0] = $Point[0]
-						$TopLeft[UBound($TopLeft) - 1][1] = $Point[1]
+						ReDim $iTopLeft[UBound($iTopLeft) + 1][2]
+						$iTopLeft[UBound($iTopLeft) - 1][0] = $Point[0]
+						$iTopLeft[UBound($iTopLeft) - 1][1] = $Point[1]
 					EndIf
 				Case "TopRight"
 					$Point[0] += $FurtherFrom
 					$Point[1] -= $FurtherFrom
 					If InDiamondBB($Point[0], $Point[1], $g_aBuilderBaseOuterPolygon) Then
-						ReDim $TopRight[UBound($TopRight) + 1][2]
-						$TopRight[UBound($TopRight) - 1][0] = $Point[0]
-						$TopRight[UBound($TopRight) - 1][1] = $Point[1]
+						ReDim $iTopRight[UBound($iTopRight) + 1][2]
+						$iTopRight[UBound($iTopRight) - 1][0] = $Point[0]
+						$iTopRight[UBound($iTopRight) - 1][1] = $Point[1]
 					EndIf
 				Case "BottomRight"
 					$Point[0] += $FurtherFrom
 					$Point[1] += $FurtherFrom
 					If InDiamondBB($Point[0], $Point[1], $g_aBuilderBaseOuterPolygon) Then
-						ReDim $BottomRight[UBound($BottomRight) + 1][2]
-						$BottomRight[UBound($BottomRight) - 1][0] = $Point[0]
-						$BottomRight[UBound($BottomRight) - 1][1] = $Point[1]
+						ReDim $iBottomRight[UBound($iBottomRight) + 1][2]
+						$iBottomRight[UBound($iBottomRight) - 1][0] = $Point[0]
+						$iBottomRight[UBound($iBottomRight) - 1][1] = $Point[1]
 					EndIf
 				Case "BottomLeft"
 					$Point[0] -= $FurtherFrom
 					$Point[1] += $FurtherFrom
 					If InDiamondBB($Point[0], $Point[1], $g_aBuilderBaseOuterPolygon) Then
-						ReDim $BottomLeft[UBound($BottomLeft) + 1][2]
-						$BottomLeft[UBound($BottomLeft) - 1][0] = $Point[0]
-						$BottomLeft[UBound($BottomLeft) - 1][1] = $Point[1]
+						ReDim $iBottomLeft[UBound($iBottomLeft) + 1][2]
+						$iBottomLeft[UBound($iBottomLeft) - 1][0] = $Point[0]
+						$iBottomLeft[UBound($iBottomLeft) - 1][1] = $Point[1]
 					EndIf
 			EndSwitch
 		Next
 
-		Local $aTmpSides[4] = [$TopLeft, $TopRight, $BottomRight, $BottomLeft]
+		Local $aTmpSides[4] = [$iTopLeft, $iTopRight, $iBottomRight, $iBottomLeft]
 		$Sides = $aTmpSides
 		Else
 		$bBadPoints = True
@@ -187,42 +187,42 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = $g_iFurtherFromBBDefault, $DebugI
 	EndIf
 
 	; Let's get the correct side by BH position  for Outer Points
-	Local $TopLeft[0][2], $TopRight[0][2], $BottomRight[0][2], $BottomLeft[0][2]
+	Local $iTopLeft[0][2], $iTopRight[0][2], $iBottomRight[0][2], $iBottomLeft[0][2]
 
 	For $i = 0 To 3
 		If Not $g_bRunState Then Return
-		Local $CorrectSide = $g_aOuterEdges[$i]
-		For $j = 0 To UBound($CorrectSide) - 1
-			Local $Point[2] = [$CorrectSide[$j][0], $CorrectSide[$j][1]]
+		Local $iCorrectSide = $g_aOuterEdges[$i]
+		For $j = 0 To UBound($iCorrectSide) - 1
+			Local $Point[2] = [$iCorrectSide[$j][0], $iCorrectSide[$j][1]]
 			Local $Local = DeployPointsPosition($Point)
 			Select
 				Case $Local = "TopLeft"
-					ReDim $TopLeft[UBound($TopLeft) + 1][2]
-					$TopLeft[UBound($TopLeft) - 1][0] = $Point[0]
-					$TopLeft[UBound($TopLeft) - 1][1] = $Point[1]
+					ReDim $iTopLeft[UBound($iTopLeft) + 1][2]
+					$iTopLeft[UBound($iTopLeft) - 1][0] = $Point[0]
+					$iTopLeft[UBound($iTopLeft) - 1][1] = $Point[1]
 
 				Case $Local = "TopRight"
-					ReDim $TopRight[UBound($TopRight) + 1][2]
-					$TopRight[UBound($TopRight) - 1][0] = $Point[0]
-					$TopRight[UBound($TopRight) - 1][1] = $Point[1]
+					ReDim $iTopRight[UBound($iTopRight) + 1][2]
+					$iTopRight[UBound($iTopRight) - 1][0] = $Point[0]
+					$iTopRight[UBound($iTopRight) - 1][1] = $Point[1]
 
 				Case $Local = "BottomRight"
-					ReDim $BottomRight[UBound($BottomRight) + 1][2]
-					$BottomRight[UBound($BottomRight) - 1][0] = $Point[0]
-					$BottomRight[UBound($BottomRight) - 1][1] = $Point[1]
+					ReDim $iBottomRight[UBound($iBottomRight) + 1][2]
+					$iBottomRight[UBound($iBottomRight) - 1][0] = $Point[0]
+					$iBottomRight[UBound($iBottomRight) - 1][1] = $Point[1]
 
 				Case $Local = "BottomLeft"
-					ReDim $BottomLeft[UBound($BottomLeft) + 1][2]
-					$BottomLeft[UBound($BottomLeft) - 1][0] = $Point[0]
-					$BottomLeft[UBound($BottomLeft) - 1][1] = $Point[1]
+					ReDim $iBottomLeft[UBound($iBottomLeft) + 1][2]
+					$iBottomLeft[UBound($iBottomLeft) - 1][0] = $Point[0]
+					$iBottomLeft[UBound($iBottomLeft) - 1][1] = $Point[1]
 			EndSelect
 		Next
 	Next
 	; Final array
-	$g_aFinalOuter[0] = $TopLeft
-	$g_aFinalOuter[1] = $TopRight
-	$g_aFinalOuter[2] = $BottomRight
-	$g_aFinalOuter[3] = $BottomLeft
+	$g_aFinalOuter[0] = $iTopLeft
+	$g_aFinalOuter[1] = $iTopRight
+	$g_aFinalOuter[2] = $iBottomRight
+	$g_aFinalOuter[3] = $iBottomLeft
 
 	#Region - Bad Points
 	; In no 'DP' case.
@@ -496,134 +496,158 @@ EndFunc   ;==>DebugBuilderBaseBuildingsDetection
 Func BuilderBaseAttackDiamond()
 	Local $iSize = ZoomBuilderBaseMecanics(True)
 	If $iSize < 1 Then Return -1
+	
+	; Fix ship coord
+	Local $x = $g_aVillageSize[7] + 14
+	Local $y = $g_aVillageSize[8]
 
 	; ZoomFactor
-	Local $CorrectSizeLR = Floor(($iSize - 590) / 2)
-	Local $CorrectSizeT = Floor(($iSize - 590) / 4)
-	Local $CorrectSizeB = ($iSize - 590)
+	Local $iCorrectSizeLR = Floor(($iSize - 590) / 2)
+	Local $iCorrectSizeT = Floor(($iSize - 590) / 4)
+	Local $iCorrectSizeB = ($iSize - 590)
 
 	; Polygon Points
-	Local $Top[2], $Right[2], $BottomR[2], $BottomL[2], $Left[2]
+	Local $iTop[2], $iRight[2], $iBottomR[2], $iBottomL[2], $iLeft[2]
 
-	$Top[0] = $g_aVillageSize[7] - (180 + $CorrectSizeT)
-	$Top[1] = $g_aVillageSize[8] + 6
+	$iTop[0] = $x - (180 + $iCorrectSizeT)
+	$iTop[1] = $y + 6
 
-	$Right[0] = $g_aVillageSize[7] + (160 + $CorrectSizeLR)
-	$Right[1] = $g_aVillageSize[8] + (260 + $CorrectSizeLR)
+	$iRight[0] = $x + (160 + $iCorrectSizeLR)
+	$iRight[1] = $y + (260 + $iCorrectSizeLR)
 
-	$Left[0] = $g_aVillageSize[7] - (515 + $CorrectSizeB)
-	$Left[1] = $g_aVillageSize[8] + (260 + $CorrectSizeLR)
+	$iLeft[0] = $x - (515 + $iCorrectSizeB)
+	$iLeft[1] = $y + (260 + $iCorrectSizeLR)
 
-	$BottomR[0] = $g_aVillageSize[7] - (110 - $CorrectSizeB)
-	$BottomR[1] = 628
+	$iBottomR[0] = $x - (110 - $iCorrectSizeB)
+	$iBottomR[1] = 628
 
-	$BottomL[0] = $g_aVillageSize[7] - (225 + $CorrectSizeB)
-	$BottomL[1] = 628
+	$iBottomL[0] = $x - (225 + $iCorrectSizeB)
+	$iBottomL[1] = 628
 
-	Local $BuilderBaseDiamond[6] = [$iSize, $Top, $Right, $BottomR, $BottomL, $Left]
-	Return $BuilderBaseDiamond
+	Local $iBuilderBaseDiamond[6] = [$iSize, $iTop, $iRight, $iBottomR, $iBottomL, $iLeft]
+	Return $iBuilderBaseDiamond
 EndFunc   ;==>BuilderBaseAttackDiamond
 
 Func BuilderBaseAttackOuterDiamond()
 
 	Local $iSize = ZoomBuilderBaseMecanics(True)
 	If $iSize < 1 Then Return -1
-
+	
+	; Fix ship coord
+	Local $x = $g_aVillageSize[7] + 14
+	Local $y = $g_aVillageSize[8]
+	
 	; ZoomFactor
-	Local $CorrectSizeLR = Floor(($iSize - 590) / 2)
-	Local $CorrectSizeT = Floor(($iSize - 590) / 4)
-	Local $CorrectSizeB = ($iSize - 590)
+	Local $iCorrectSizeLR = Floor(($iSize - 590) / 2)
+	Local $iCorrectSizeT = Floor(($iSize - 590) / 4)
+	Local $iCorrectSizeB = ($iSize - 590)
 
 	; Polygon Points
-	Local $Top[2], $Right[2], $BottomR[2], $BottomL[2], $Left[2]
+	Local $iTop[2], $iRight[2], $iBottomR[2], $iBottomL[2], $iLeft[2]
 
-	$Top[0] = $g_aVillageSize[7] - (180 + $CorrectSizeT)
-	$Top[1] = $g_aVillageSize[8] - 25
+	$iTop[0] = $x - (180 + $iCorrectSizeT)
+	$iTop[1] = $y - 25
 
-	$Right[0] = $g_aVillageSize[7] + (205 + $CorrectSizeLR)
-	$Right[1] = $g_aVillageSize[8] + (260 + $CorrectSizeLR)
+	$iRight[0] = $x + (205 + $iCorrectSizeLR)
+	$iRight[1] = $y + (260 + $iCorrectSizeLR)
 
-	$Left[0] = $g_aVillageSize[7] - (560 + $CorrectSizeB)
-	$Left[1] = $g_aVillageSize[8] + (260 + $CorrectSizeLR)
+	$iLeft[0] = $x - (560 + $iCorrectSizeB)
+	$iLeft[1] = $y + (260 + $iCorrectSizeLR)
 
-	$BottomR[0] = $g_aVillageSize[7] - (70 - $CorrectSizeB)
-	$BottomR[1] = 628
+	$iBottomR[0] = $x - (70 - $iCorrectSizeB)
+	$iBottomR[1] = 628
 
-	$BottomL[0] = $g_aVillageSize[7] - (275 + $CorrectSizeB)
-	$BottomL[1] = 628
+	$iBottomL[0] = $x - (275 + $iCorrectSizeB)
+	$iBottomL[1] = 628
 
-	Local $BuilderBaseDiamond[6] = [$iSize, $Top, $Right, $BottomR, $BottomL, $Left]
+	Local $iBuilderBaseDiamond[6] = [$iSize, $iTop, $iRight, $iBottomR, $iBottomL, $iLeft]
 	;This Format is for _IsPointInPoly function
-	Local $aTmpBuilderBaseOuterPolygon[7][2] = [[5, -1], [$Top[0], $Top[1]], [$Right[0], $Right[1]], [$BottomR[0], $BottomR[1]], [$BottomL[0], $BottomL[1]], [$Left[0], $Left[1]], [$Top[0], $Top[1]]] ; Make Polygon From Points
+	Local $aTmpBuilderBaseOuterPolygon[7][2] = [[5, -1], [$iTop[0], $iTop[1]], [$iRight[0], $iRight[1]], [$iBottomR[0], $iBottomR[1]], [$iBottomL[0], $iBottomL[1]], [$iLeft[0], $iLeft[1]], [$iTop[0], $iTop[1]]] ; Make Polygon From Points
 	$g_aBuilderBaseOuterPolygon = $aTmpBuilderBaseOuterPolygon
 	SetDebugLog("Builder Base Outer Polygon : " & _ArrayToString($g_aBuilderBaseOuterPolygon))
-	Return $BuilderBaseDiamond
+	Return $iBuilderBaseDiamond
 EndFunc   ;==>BuilderBaseAttackOuterDiamond
 
-Func BuilderBaseGetEdges($BuilderBaseDiamond, $Text)
+Func BuilderBaseGetEdges($iBuilderBaseDiamond, $Text)
 
-	Local $TopLeft[0][2], $TopRight[0][2], $BottomRight[0][2], $BottomLeft[0][2]
+	Local $iTopLeft[0][2], $iTopRight[0][2], $iBottomRight[0][2], $iBottomLeft[0][2]
 	If Not $g_bRunState Then Return
 
-	; $BuilderBaseDiamond[6] = [$iSize, $Top, $Right, $BottomR, $BottomL, $Left]
-	Local $Top = $BuilderBaseDiamond[1], $Right = $BuilderBaseDiamond[2], $BottomR = $BuilderBaseDiamond[3], $BottomL = $BuilderBaseDiamond[4], $Left = $BuilderBaseDiamond[5]
+	Local $iCount = 0
 
-	Local $X = [$Top[0], $Right[0]]
-	Local $Y = [$Top[1], $Right[1]]
+	Local $iTop = $iBuilderBaseDiamond[1], $iRight = $iBuilderBaseDiamond[2], $iBottomR = $iBuilderBaseDiamond[3], $iBottomL = $iBuilderBaseDiamond[4], $iLeft = $iBuilderBaseDiamond[5]
 
+	Local $X = [$iTop[0], $iRight[0]]
+	Local $Y = [$iTop[1], $iRight[1]]
+	
+	; Old imprecise system removed, now points are generated by angles perfectly from line to line and randomly every 20 + (+/- random) py distance, which is crazy.
+	Local $aLinecutter
+	
 	; TOP RIGHT
-	For $i = $X[0] To $X[1] Step 20
-		ReDim $TopRight[UBound($TopRight) + 1][2]
-		$TopRight[UBound($TopRight) - 1][0] = $i
-		$TopRight[UBound($TopRight) - 1][1] = Floor($Y[0])
-		$Y[0] += 15
-		If $Y[0] > $Y[1] Then ExitLoop
+	$iCount = 0
+	Local $iMult = Abs(Pixel_Distance($X[0], $Y[0], $X[1], $Y[1]) / 20)
+	For $i = 0 To 20
+		$aLinecutter = Linecutter($X[0], $Y[0], $X[1], $Y[1], $i * $iMult)
+
+		ReDim $iTopRight[$iCount + 1][2]
+		$iTopRight[$iCount][0] = Floor($aLinecutter[0])
+		$iTopRight[$iCount][1] = Floor($aLinecutter[1])
+		$iCount += 1
 	Next
 
-	Local $X = [$Right[0], $BottomR[0]]
-	Local $Y = [$Right[1], $BottomR[1]]
+	Local $X = [$iRight[0], $iBottomR[0]]
+	Local $Y = [$iRight[1], $iBottomR[1]]
 
 	; BOTTOM RIGHT
-	For $i = $X[0] To $X[1] Step -20
-		ReDim $BottomRight[UBound($BottomRight) + 1][2]
-		$BottomRight[UBound($BottomRight) - 1][0] = $i
-		$BottomRight[UBound($BottomRight) - 1][1] = Floor($Y[0])
-		$Y[0] += 15
-		If $Y[0] > $Y[1] Then ExitLoop
+	$iCount = 0
+	Local $iMult = Abs(Pixel_Distance($X[0], $Y[0], $X[1], $Y[1]) / 20)
+	For $i = 0 To 20
+		$aLinecutter = Linecutter($X[0], $Y[0], $X[1], $Y[1], $i * $iMult)
+		
+		ReDim $iBottomRight[$iCount + 1][2]
+		$iBottomRight[$iCount][0] = Floor($aLinecutter[0])
+		$iBottomRight[$iCount][1] = Floor($aLinecutter[1])
+		$iCount += 1
 	Next
 
-	Local $X = [$BottomL[0], $Left[0]]
-	Local $Y = [$BottomL[1], $Left[1]]
+	Local $X = [$iBottomL[0], $iLeft[0]]
+	Local $Y = [$iBottomL[1], $iLeft[1]]
 
 	; BOTTOM LEFT
-	For $i = $X[0] To $X[1] Step -20
-		ReDim $BottomLeft[UBound($BottomLeft) + 1][2]
-		$BottomLeft[UBound($BottomLeft) - 1][0] = $i
-		$BottomLeft[UBound($BottomLeft) - 1][1] = Ceiling($Y[0])
-		$Y[0] -= 15
-		If $Y[0] < $Y[1] Then ExitLoop
+	$iCount = 0
+	Local $iMult = Abs(Pixel_Distance($X[0], $Y[0], $X[1], $Y[1]) / 20)
+	For $i = 0 To 20
+		$aLinecutter = Linecutter($X[0], $Y[0], $X[1], $Y[1], $i * $iMult)
+		
+		ReDim $iBottomLeft[$iCount + 1][2]
+		$iBottomLeft[$iCount][0] = Floor($aLinecutter[0])
+		$iBottomLeft[$iCount][1] = Floor($aLinecutter[1])
+		$iCount += 1
 	Next
 
-	Local $X = [$Left[0], $Top[0]]
-	Local $Y = [$Left[1], $Top[1]]
+	Local $X = [$iLeft[0], $iTop[0]]
+	Local $Y = [$iLeft[1], $iTop[1]]
 
 	; TOP LEFT
-	For $i = $X[0] To $X[1] Step 20
-		ReDim $TopLeft[UBound($TopLeft) + 1][2]
-		$TopLeft[UBound($TopLeft) - 1][0] = $i
-		$TopLeft[UBound($TopLeft) - 1][1] = Floor($Y[0])
-		$Y[0] -= 15
-		If $Y[0] < $Y[1] Then ExitLoop
+	$iCount = 0
+	Local $iMult = Abs(Pixel_Distance($X[0], $Y[0], $X[1], $Y[1]) / 20)
+	For $i = 0 To 20
+		$aLinecutter = Linecutter($X[0], $Y[0], $X[1], $Y[1], $i * $iMult)
+		
+		ReDim $iTopLeft[$iCount + 1][2]
+		$iTopLeft[$iCount][0] = Floor($aLinecutter[0])
+		$iTopLeft[$iCount][1] = Floor($aLinecutter[1])
+		$iCount += 1
 	Next
 
-	Local $ExternalEdges[4] = [$TopLeft, $TopRight, $BottomRight, $BottomLeft]
-	Local $Names = ["Top Left", "Top Right", "Bottom Right", "Bottom Left"]
+	Local $aExternalEdges[4] = [$iTopLeft, $iTopRight, $iBottomRight, $iBottomLeft]
+	Local $asNames = ["Top Left", "Top Right", "Bottom Right", "Bottom Left"]
 
 	For $i = 0 To 3
-		SetDebugLog($Text & " Points to " & $Names[$i] & " (" & UBound($ExternalEdges[$i]) & ")")
+		SetDebugLog($Text & " Points to " & $asNames[$i] & " (" & UBound($aExternalEdges[$i]) & ")")
 	Next
 
-	Return $ExternalEdges
+	Return $aExternalEdges
 
 EndFunc   ;==>BuilderBaseGetEdges
 
@@ -752,25 +776,25 @@ Func BuilderBaseBuildingsOnEdge($g_aDeployPoints)
 	Local $TempOuterBL = $g_aOuterEdges[3]
 
 	;Index 3 Contains Side Name Needed For Adding Tiles Pixel
-	Local $ToReturn[0][3], $Left = False, $Top = False, $Right = False, $Bottom = False
+	Local $ToReturn[0][3], $iLeft = False, $iTop = False, $iRight = False, $iBottom = False
 
 	For $Index = 0 To UBound($TempTopLeft) - 1
 		If Int($TempTopLeft[$Index][0]) < 195 Then
-			If Not $Left Then
+			If Not $iLeft Then
 				ReDim $ToReturn[UBound($ToReturn) + 1][3]
 				$ToReturn[UBound($ToReturn) - 1][0] = $TempOuterTL[0][0]
 				$ToReturn[UBound($ToReturn) - 1][1] = $TempOuterTL[0][1]
 				$ToReturn[UBound($ToReturn) - 1][2] = $sSideNames[0]
-				$Left = True
+				$iLeft = True
 				Setlog("Possible Building at edge at LEFT corner " & $TempTopLeft[$Index][0] & "x" & $TempTopLeft[$Index][1], $COLOR_DEBUG)
 			EndIf
 		ElseIf Int($TempTopLeft[$Index][1]) < 265 Then
-			If Not $Top Then
+			If Not $iTop Then
 				ReDim $ToReturn[UBound($ToReturn) + 1][3]
 				$ToReturn[UBound($ToReturn) - 1][0] = $TempOuterTL[UBound($TempOuterTL) - 1][0]
 				$ToReturn[UBound($ToReturn) - 1][1] = $TempOuterTL[UBound($TempOuterTL) - 1][1]
 				$ToReturn[UBound($ToReturn) - 1][2] = $sSideNames[0]
-				$Top = True
+				$iTop = True
 				Setlog("Possible Building at edge at TOP corner " & $TempTopLeft[$Index][0] & "x" & $TempTopLeft[$Index][1], $COLOR_DEBUG)
 			EndIf
 		EndIf
@@ -780,21 +804,21 @@ Func BuilderBaseBuildingsOnEdge($g_aDeployPoints)
 
 	For $Index = 0 To UBound($TempTopRight) - 1
 		If Int($TempTopRight[$Index][0]) > 700 Then
-			If Not $Right Then
+			If Not $iRight Then
 				ReDim $ToReturn[UBound($ToReturn) + 1][3]
 				$ToReturn[UBound($ToReturn) - 1][0] = $TempOuterTR[UBound($TempOuterTR) - 1][0]
 				$ToReturn[UBound($ToReturn) - 1][1] = $TempOuterTR[UBound($TempOuterTR) - 1][1]
 				$ToReturn[UBound($ToReturn) - 1][2] = $sSideNames[1]
-				$Right = True
+				$iRight = True
 				Setlog("Possible Building at edge at RIGHT corner " & $TempTopRight[$Index][0] & "x" & $TempTopRight[$Index][1], $COLOR_DEBUG)
 			EndIf
 		ElseIf Int($TempTopRight[$Index][1]) < 265 Then
-			If Not $Top Then
+			If Not $iTop Then
 				ReDim $ToReturn[UBound($ToReturn) + 1][3]
 				$ToReturn[UBound($ToReturn) - 1][0] = $TempOuterTR[0][0]
 				$ToReturn[UBound($ToReturn) - 1][1] = $TempOuterTR[0][1]
 				$ToReturn[UBound($ToReturn) - 1][2] = $sSideNames[1]
-				$Top = True
+				$iTop = True
 				Setlog("Possible Building at edge at TOP corner " & $TempTopRight[$Index][0] & "x" & $TempTopRight[$Index][1], $COLOR_DEBUG)
 			EndIf
 		EndIf
@@ -804,21 +828,21 @@ Func BuilderBaseBuildingsOnEdge($g_aDeployPoints)
 
 	For $Index = 0 To UBound($TempBottomRight) - 1
 		If Int($TempBottomRight[$Index][0]) > 700 Then
-			If Not $Right Then
+			If Not $iRight Then
 				ReDim $ToReturn[UBound($ToReturn) + 1][3]
 				$ToReturn[UBound($ToReturn) - 1][0] = $TempOuterBR[0][0]
 				$ToReturn[UBound($ToReturn) - 1][1] = $TempOuterBR[0][1]
 				$ToReturn[UBound($ToReturn) - 1][2] = $sSideNames[2]
-				$Right = True
+				$iRight = True
 				Setlog("Possible Building at edge at RIGHT corner " & $TempBottomRight[$Index][0] & "x" & $TempBottomRight[$Index][1], $COLOR_DEBUG)
 			EndIf
 		ElseIf Int($TempBottomRight[$Index][1]) > 570 Then
-			If Not $Bottom Then
+			If Not $iBottom Then
 				ReDim $ToReturn[UBound($ToReturn) + 1][3]
 				$ToReturn[UBound($ToReturn) - 1][0] = $TempOuterBR[UBound($TempOuterBR) - 1][0]
 				$ToReturn[UBound($ToReturn) - 1][1] = $TempOuterBR[UBound($TempOuterBR) - 1][1]
 				$ToReturn[UBound($ToReturn) - 1][2] = $sSideNames[2]
-				$Bottom = True
+				$iBottom = True
 				Setlog("Possible Building at edge at BOTTOM corner " & $TempBottomRight[$Index][0] & "x" & $TempBottomRight[$Index][1], $COLOR_DEBUG)
 			EndIf
 		EndIf
@@ -828,21 +852,21 @@ Func BuilderBaseBuildingsOnEdge($g_aDeployPoints)
 
 	For $Index = 0 To UBound($TempBottomLeft) - 1
 		If Int($TempBottomLeft[$Index][0]) < 195 Then
-			If Not $Left Then
+			If Not $iLeft Then
 				ReDim $ToReturn[UBound($ToReturn) + 1][3]
 				$ToReturn[UBound($ToReturn) - 1][0] = $TempOuterBL[UBound($TempOuterBL) - 1][0]
 				$ToReturn[UBound($ToReturn) - 1][1] = $TempOuterBL[UBound($TempOuterBL) - 1][1]
 				$ToReturn[UBound($ToReturn) - 1][2] = $sSideNames[3]
-				$Left = True
+				$iLeft = True
 				Setlog("Possible Building at edge at LEFT corner " & $TempBottomLeft[$Index][0] & "x" & $TempBottomLeft[$Index][1], $COLOR_DEBUG)
 			EndIf
 		ElseIf Int($TempBottomLeft[$Index][1]) > 570 Then
-			If Not $Bottom Then
+			If Not $iBottom Then
 				ReDim $ToReturn[UBound($ToReturn) + 1][3]
 				$ToReturn[UBound($ToReturn) - 1][0] = $TempOuterBL[0][0]
 				$ToReturn[UBound($ToReturn) - 1][1] = $TempOuterBL[0][1]
 				$ToReturn[UBound($ToReturn) - 1][2] = $sSideNames[3]
-				$Bottom = True
+				$iBottom = True
 				Setlog("Possible Building at edge at BOTTOM corner " & $TempBottomLeft[$Index][0] & "x" & $TempBottomLeft[$Index][1], $COLOR_DEBUG)
 			EndIf
 		EndIf

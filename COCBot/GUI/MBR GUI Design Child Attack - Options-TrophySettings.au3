@@ -148,9 +148,9 @@ Func CreateAttackSearchOptionsTrophySettings()
 		$g_hLblDropTrophyArmyPercent = GUICtrlCreateLabel("%", $x + 245, $y + 6, -1, -1)
 	#Region - Drop trophy - Team AiO MOD++
 	$y += 25
-		$g_hChkNoDropIfShield = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-TrophySettings", "ChkTrophyHeroes", "Drop trophies only if the shield is not available."), $x, $y, -1, -1)
+		$g_hChkNoDropIfShield = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-TrophySettings", "ChkNoDropIfShield", "Drop trophies only if the shield is not available."), $x, $y, -1, -1)
 			GUICtrlSetOnEvent(-1, "chkNoDropIfShield")
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-TrophySettings", "ChkTrophyHeroes_Info_02", "Drop trophies only if the shield is not available."))
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-TrophySettings", "ChkNoDropIfShield_Info_02", "Drop trophies only if the shield is not available."))
 	#EndRegion - Drop trophy - Team AiO MOD++
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
