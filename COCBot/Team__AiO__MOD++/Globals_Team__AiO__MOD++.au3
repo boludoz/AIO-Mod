@@ -27,10 +27,6 @@ Global $g_bChkColorfulAttackLog = 0, $g_bChkBuyGuard = False
 Global $g_hChkColorfulAttackLog = 0, $g_hChkBuyGuard = 0
 ;
 
-#Region - SmartMilk
-Global $g_bUseSmartFarmRedLine = True, $g_bDebugSmartMilk = False, $g_bChkMilkForceDeployHeroes = False, $g_bChkMilkForceAllTroops = False, $g_iMilkStrategyArmy = 0
-#EndRegion - SmartMilk
-
 #Region - Icn - Team AiO MOD++
 Global Const $g_sLibModIconPath = $g_sLibPath & "\ModLibs\AIOMod.dll" ; Mod icon library - Team AiO MOD++
 ; enumerated Icons 1-based index to IconLibMod
@@ -437,6 +433,11 @@ Global $g_hChkUseSmartFarmRedLine, $g_bUseSmartFarmRedLine = False
 #Region - Misc - Team AIO Mod++
 Global $g_bChkColorfulAttackLog = False, _
        $g_bChkBuyGuard = False
+	   
 Global $g_hChkColorfulAttackLog = 0, _
 	   $g_hChkBuyGuard = 0
 #EndRegion - Misc - Team AIO Mod++
+
+#Region - SmartMilk
+Global $g_bDebugSmartMilk = False, $g_bChkMilkForceDeployHeroes = False, $g_bChkMilkForceAllTroops = False, $g_iMilkStrategyArmy = 0
+#EndRegion - SmartMilk

@@ -51,11 +51,9 @@ Func TestSmartFarm($bFast = True)
 	$g_bAttackActive = True
 
 	; Variable to return : $Return[3]  [0] = To attack InSide  [1] = Quant. Sides  [2] = Name Sides
-	If Not SmartFarmMilk() Then
-		Local $Nside = ChkSmartFarm()
-		AttackSmartFarm($Nside[1], $Nside[2])
-		$g_bAttackActive = False
-	EndIf
+	Local $Nside = ChkSmartFarm()
+	AttackSmartFarm($Nside[1], $Nside[2])
+	$g_bAttackActive = False
 
 	ReturnHome($g_bTakeLootSnapShot)
 

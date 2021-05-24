@@ -5,6 +5,16 @@
 
                     Based on MyBot.run v7.9.2
 					
+	**v4.5.4**
+		- New: Buy guard.
+		- New: Deadbase attack mode.
+		- Fixed: Attack Bar.
+		- Improved / Fixed: Atack log.
+		- Improved: DeadBase search.
+		- Improved: War actions.
+		- Improved: Auto upgrade.
+		- Improved: Smart farm.
+
 	**v4.5.3** (Don't be surprised if it's the last one.)
 		- Improved: Optimized dead base, lower CPU usage.
 		- Improved: LVL 14 Collectors. (Tested).

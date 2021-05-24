@@ -87,7 +87,7 @@ Global Const $g_sImgOpponentBuildingsBB = $g_sModImageLocation & "\BuildersBase\
 
 Global Const $g_sImgAttackBtnBB = $g_sModImageLocation & "\BuildersBase\Attack\AttackBtn\"
 Global Const $g_sImgVersusWindow = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\Window\"
-Global Const $g_sImgCloudSearch = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\Clouds\"
+; Global Const $g_sImgCloudSearch = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\Clouds\"
 
 ; Report Window : Victory | Draw | Defeat
 Global Const $g_sImgReportWaitBB = $g_sModImageLocation & "\BuildersBase\Attack\VersusBattle\Report\Waiting\"

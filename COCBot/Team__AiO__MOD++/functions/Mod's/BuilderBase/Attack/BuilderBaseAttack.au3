@@ -305,36 +305,62 @@ Func FindVersusBattlebtn()
 EndFunc   ;==>FindVersusBattlebtn
 
 Func WaitForVersusBattle()
-	If Not $g_bRunState Then Return
 	Local $aCancelVersusBattleBtn[4][3] = [[0xFE2D40, 1, 0], [0xFE2D40, 2, 0], [0xFE2D40, 3, 0], [0xFE2D40, 4, 0]]
 	Local $aAttackerVersusBattle[2][3] = [[0xFFFF99, 0, 1], [0xFFFF99, 0, 2]]
-	Local $bRed = False
-	If _Sleep(5000) Then Return
 
+	If Not $g_bRunState Then Return
+	
 	; Clouds
-	Local $Time = 0
-	While $Time < 15 * 24 ; 15 minutes  | ( 24 * (2000 + 500ms)) = 60000ms / 1000 = 60seconds
-		_CaptureRegions()
-		If checkObstacles_Network(False, True) Or isProblemAffect(False) Then Return False
-		If _MultiPixelSearch(375, 547, 450, 555, 1, 1, Hex(0xFE2D40, 6), $aCancelVersusBattleBtn, 15) <> 0 Then SetLog("Searching for opponents...")
-		For $i = 0 To 5
-			_CaptureRegions()
-			If checkObstacles_Network(False, True) Or isProblemAffect(False) Then Return False
-			If _MultiPixelSearch(711, 2, 856, 55, 1, 1, Hex(0xFFFF99, 6), $aAttackerVersusBattle, 15) <> 0 And _MultiPixelSearch(375, 547, 450, 555, 1, 1, Hex(0xFE2D40, 6), $aCancelVersusBattleBtn, 5) = 0 Then
-				SetLog("The Versus Battle begins NOW!", $COLOR_SUCCESS)
-				If _Sleep(2000) Then ExitLoop
-				Return True
-			EndIf
-			If _Sleep(2000) Then ExitLoop
-		Next
-		$Time += 1
+	Local $iTime = 0
+	Local $iSwitch = 0
+	While $iTime < 257 ; 15 minutes
+		If Not $g_bRunState Then Return False
+		
+		If (Mod($iTime, 3) = 0) Then $iSwitch += 1
+		Switch $iSwitch
+			Case 0
+				SetLog("Searching for opponents.")
+			Case 1
+				If isProblemAffect(True) Then 
+					Return False
+				EndIf
+			Case 2
+				If checkObstacles_Network(True, True) Then 
+					Return False
+				EndIf
+				
+				$iSwitch = 0
+		EndSwitch
+		
+		If _MultiPixelSearch(711, 2, 856, 55, 1, 1, Hex(0xFFFF99, 6), $aAttackerVersusBattle, 15) <> 0 Then
+			ExitLoop
+		EndIf
+		
+		If _Sleep(3000) Then Return
+		$iTime += 1
 	WEnd
+	
+	If $iTime >= 257 Then
+		If _MultiPixelSearch(375, 547, 450, 555, 1, 1, Hex(0xFE2D40, 6), $aCancelVersusBattleBtn, 5) <> 0 Then
+			SetLog("Exit from battle search.", $COLOR_WARNING)
+			ClickP($g_iMultiPixelOffSet, 2, 0)
+			If _Sleep(3000) Then Return
+			Return False
+		EndIf
+	EndIf
+	
+	For $i = 0 To 60
+		If Not $g_bRunState Then Return False
+		Local $sBattle = _getBattleEnds()
+		SetDebugLog("WaitForVersusBattle: _getBattleEnds : " & $sBattle)
+		If StringInStr($sBattle, "s") Then ExitLoop
+		If _Sleep(2000) Then Return
+		If $i = 60 Then Return False
+	Next
 
-	SetLog("Exit from battle search.", $COLOR_SUCCESS)
-	ClickP($g_iMultiPixelOffSet, 2, 0)
-	If _Sleep(3000) Then Return
-
-	Return False
+	SetLog("The Versus Battle begins NOW!", $COLOR_SUCCESS)
+	
+	Return True
 
 EndFunc   ;==>WaitForVersusBattle
 

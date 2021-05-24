@@ -12,56 +12,69 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+Global $g_iRemainTimeToZap = 90
 
-Func _getBattleEnds()
-	Local $sReturn = getOcrAndCaptureDOCR($g_sASBattleEndsDOCRPath, 380, 26, 106, 39, True, True)
-	$sReturn = StringReplace($sReturn, " ", "")
-	If $g_bDebugOcr Then
-		Local $hEditedImage = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
-		Local $libpath = @ScriptDir & "\lib\debug\ocr"
-		DirCreate($libpath)
-		Local $Time = @YEAR & @MON & @MDAY & @HOUR & @MIN & @SEC & @MSEC
-		Local $Filename = "ocr_" & $Time & " _latinExtra"
-		_GDIPlus_ImageSaveToFile($hEditedImage, $libpath & "\" & $Filename & ".png")
-		FileWrite($libpath & "\" & $Filename & ".txt", $sReturn)
-		_GDIPlus_BitmapDispose($hEditedImage)
-	EndIf
-	Return $sReturn
-EndFunc   ;==>_getBattleEnds
+Func TestSmartMilk($bFast = True)
 
-Func ConvertTime($string)
-	Local $Time = StringSplit($string, "m", $STR_NOCOUNT)
-	If Not @error Then
-		Local $minutes = Int($Time[0])
-		Local $seconds = Int(StringReplace($Time[1], "s", ""))
-		Return ($minutes * 60) + $seconds
-	Else
-		Local $seconds = Int(StringReplace($string, "s", ""))
-		Return $seconds
-	EndIf
-EndFunc   ;==>ConvertTime
+	$g_iDetectedImageType = 0
 
-Global $g_iRemainTimeToZap
-Func SmartFarmMilkTest()
+	; Getting the Run state
 	Local $RuntimeA = $g_bRunState
 	$g_bRunState = True
-	TestSmartFarm()
-	$g_bRunState = $RuntimeA
-EndFunc   ;==>SmartFarmMilkTest
 
-Func SmartFarmMilk()
-	If $g_iMatchMode <> $DB And $g_aiAttackAlgorithm[$DB] <> 3 Then Return
+	Local $bDebugSmartFarmTemp = $g_bDebugSmartFarm
+	Local $bDebugSmartMilkTemp = $g_bDebugSmartMilk
+	$g_bDebugSmartMilk = True
+	$g_bDebugSmartFarm = True
+
+	Setlog("Starting the SmartMilk Attack Test()", $COLOR_INFO)
+	If $bFast = False Then
+		checkMainScreen(False)
+		CheckIfArmyIsReady()
+		ClickP($aAway, 2, 0, "") ;Click Away
+		If _Sleep(100) Then Return FuncReturn()
+		If (IsSearchModeActive($DB) And checkCollectors(True, False)) Or IsSearchModeActive($LB) Then
+			If _Sleep(100) Then Return FuncReturn()
+			PrepareSearch()
+			If _Sleep(1000) Then Return FuncReturn()
+			VillageSearch()
+			If $g_bOutOfGold Then Return ; Check flag for enough gold to search
+			If _Sleep(100) Then Return FuncReturn()
+		Else
+			SetLog("Your Army is not prepared, check the Attack/train options")
+		EndIf
+	EndIf
+	PrepareAttack($g_iMatchMode)
+
+	$g_bAttackActive = True
+
+	; Variable to return : $Return[3]  [0] = To attack InSide  [1] = Quant. Sides  [2] = Name Sides
+	SmartFarmMilk(True)
+
+	ReturnHome($g_bTakeLootSnapShot)
+
+	Setlog("Finish the SmartMilk Attack()", $COLOR_INFO)
+
+	$g_bRunState = $RuntimeA
+	$g_bDebugSmartFarm = $bDebugSmartFarmTemp
+	$g_bDebugSmartMilk = $bDebugSmartMilkTemp
+
+EndFunc   ;==>TestSmartFarm
+
+Func SmartFarmMilk($bDebug = False)
+	If $bDebug = False Then
+		If $g_iMatchMode <> $DB And $g_aiAttackAlgorithm[$DB] <> 3 Then 
+			Return
+		EndIf
+	EndIf
+	
 	$g_bIsCCDropped = False
 	$g_aiDeployCCPosition[0] = -1
 	$g_aiDeployCCPosition[1] = -1
 	$g_bIsHeroesDropped = False
 	$g_aiDeployHeroesPosition[0] = -1
 	$g_aiDeployHeroesPosition[1] = -1
-	; Local $bFullBabyDragon = True, $bFullGoblins = True
-	; For $i = 0 To UBound($g_aTrainedTroops) - 1
-		; If $g_aTrainedTroops[$i][0] <> "BabyD" And $g_aTrainedTroops[$i][3] > 0 Then $bFullBabyDragon = False
-	; Next
-	; If $g_bDebugSmartMilk Then SetLog("$bFullBabyDragon: " & $bFullBabyDragon)
+
 	Local $hTimer = TimerInit()
 	_CaptureRegion2()
 	ConvertInternalExternArea("ChkSmartMilk")
@@ -76,90 +89,79 @@ Func SmartFarmMilk()
 	ResumeAndroid()
 	SetLog(" ====== Start Smart Milking ====== ", $COLOR_INFO)
 	Local Enum $eGiantSlot, $eBarbSlot, $eArchSlot, $eGoblSlot, $eBabyDSlot, $eMiniSlot
-	Local $iGiantSlot = -1, $iBarbSlot = -1, $iArchSlot = -1, $iGoblSlot = -1, $iBabyDSlot = -1, $iMini = -1
-	Local $aSlots[6] = [$iGiantSlot, $iBarbSlot, $iArchSlot, $iGoblSlot, $iBabyDSlot, $iMini]
-	Local $aSlots2deploy[6][4]
+	Local $aSlots2deploy[6][4] = [[-1,-1,-1,-1], [-1,-1,-1,-1], [-1,-1,-1,-1], [-1,-1,-1,-1], [-1,-1,-1,-1], [-1,-1,-1,-1]]
 	Local $UsedZap = False
 	For $i = 0 To UBound($g_avAttackTroops) - 1
-		If $g_avAttackTroops[$i][0] = $eBabyD Then
-			$iBabyDSlot = $i
-			$aSlots2deploy[$eBabyDSlot][0] = $i
-			$aSlots2deploy[$eBabyDSlot][1] = $g_avAttackTroops[$i][1]
-			$aSlots2deploy[$eBabyDSlot][2] = 1
-			$aSlots2deploy[$eBabyDSlot][3] = $g_avAttackTroops[$i][0]
-		EndIf
-		If $g_avAttackTroops[$i][0] = $eBarb Then
-			$iBarbSlot = $i
-			$aSlots2deploy[$eBarbSlot][0] = $i
-			$aSlots2deploy[$eBarbSlot][1] = $g_avAttackTroops[$i][1]
-			$aSlots2deploy[$eBarbSlot][2] = Random(3, 6, 1)
-			$aSlots2deploy[$eBarbSlot][3] = $g_avAttackTroops[$i][0]
-		EndIf
-		If $g_avAttackTroops[$i][0] = $eArch Then
-			$iArchSlot = $i
-			$aSlots2deploy[$eArchSlot][0] = $i
-			$aSlots2deploy[$eArchSlot][1] = $g_avAttackTroops[$i][1]
-			$aSlots2deploy[$eArchSlot][2] = Random(3, 6, 1)
-			$aSlots2deploy[$eArchSlot][3] = $g_avAttackTroops[$i][0]
-		EndIf
-		If $g_avAttackTroops[$i][0] = $eGiant Then
-			$iGiantSlot = $i
-			$aSlots2deploy[$eGiantSlot][0] = $i
-			$aSlots2deploy[$eGiantSlot][1] = $g_avAttackTroops[$i][1]
-			$aSlots2deploy[$eGiantSlot][2] = Random(1, 2, 1)
-			$aSlots2deploy[$eGiantSlot][3] = $g_avAttackTroops[$i][0]
-		EndIf
-		If $g_avAttackTroops[$i][0] = $eGobl Then
-			$iGoblSlot = $i
-			$aSlots2deploy[$eGoblSlot][0] = $i
-			$aSlots2deploy[$eGoblSlot][1] = $g_avAttackTroops[$i][1]
-			$aSlots2deploy[$eGoblSlot][2] = Random(5, 6, 1)
-			$aSlots2deploy[$eGoblSlot][3] = $g_avAttackTroops[$i][0]
-		EndIf
-		If $g_avAttackTroops[$i][0] = $eMini Then
-			$iMini = $i
-			$aSlots2deploy[$eMiniSlot][0] = $i
-			$aSlots2deploy[$eMiniSlot][1] = $g_avAttackTroops[$i][1]
-			$aSlots2deploy[$eMiniSlot][2] = Random(4, 6, 1)
-			$aSlots2deploy[$eMiniSlot][3] = $g_avAttackTroops[$i][0]
-		EndIf
+		Switch $g_avAttackTroops[$i][0]
+			Case $eGiant, $eSGiant
+				$aSlots2deploy[$eGiantSlot][0] = $i
+				$aSlots2deploy[$eGiantSlot][1] = $g_avAttackTroops[$i][1]
+				$aSlots2deploy[$eGiantSlot][2] = TranslateTroopsCount($eGiant, $eSGiant, $g_avAttackTroops[$i][0], Random(1, 2, 1))
+				$aSlots2deploy[$eGiantSlot][3] = $g_avAttackTroops[$i][0]
+			Case $eBarb, $eSBarb
+				$aSlots2deploy[$eBarbSlot][0] = $i
+				$aSlots2deploy[$eBarbSlot][1] = $g_avAttackTroops[$i][1]
+				$aSlots2deploy[$eBarbSlot][2] = TranslateTroopsCount($eBarb, $eSBarb, $g_avAttackTroops[$i][0], Random(3, 6, 1))
+				$aSlots2deploy[$eBarbSlot][3] = $g_avAttackTroops[$i][0]
+			Case $eArch, $eSArch
+				$aSlots2deploy[$eArchSlot][0] = $i
+				$aSlots2deploy[$eArchSlot][1] = $g_avAttackTroops[$i][1]
+				$aSlots2deploy[$eArchSlot][2] = TranslateTroopsCount($eArch, $eSArch, $g_avAttackTroops[$i][0], Random(3, 6, 1))
+				$aSlots2deploy[$eArchSlot][3] = $g_avAttackTroops[$i][0]
+			Case $eGobl, $eSGobl
+				$aSlots2deploy[$eGoblSlot][0] = $i
+				$aSlots2deploy[$eGoblSlot][1] = $g_avAttackTroops[$i][1]
+				$aSlots2deploy[$eGoblSlot][2] = TranslateTroopsCount($eGobl, $eSGobl, $g_avAttackTroops[$i][0], Random(5, 6, 1))
+				$aSlots2deploy[$eGoblSlot][3] = $g_avAttackTroops[$i][0]
+			Case $eBabyD, $eInfernoD
+				$aSlots2deploy[$eBabyDSlot][0] = $i
+				$aSlots2deploy[$eBabyDSlot][1] = $g_avAttackTroops[$i][1]
+				$aSlots2deploy[$eBabyDSlot][2] = TranslateTroopsCount($eBabyD, $eInfernoD, $g_avAttackTroops[$i][0], 1)
+				$aSlots2deploy[$eBabyDSlot][3] = $g_avAttackTroops[$i][0]
+			Case $eMini, $eSMini
+				$aSlots2deploy[$eMiniSlot][0] = $i
+				$aSlots2deploy[$eMiniSlot][1] = $g_avAttackTroops[$i][1]
+				$aSlots2deploy[$eMiniSlot][2] = TranslateTroopsCount($eMini, $eSMini, $g_avAttackTroops[$i][0], Random(4, 6, 1))
+				$aSlots2deploy[$eMiniSlot][3] = $g_avAttackTroops[$i][0]
+		EndSwitch
 	Next
+	; _ArrayDisplay($aSlots2deploy)
 	Switch $g_iMilkStrategyArmy
 		Case 0
-			If $aSlots[$eBabyDSlot] <> -1 Then
-				If IsAttackPage() Then SelectDropTroop($iBabyDSlot)
+			If $aSlots2deploy[$eBabyDSlot][0] <> -1 Then
+				If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$eBabyDSlot][0])
 				If _Sleep($DELAYLAUNCHTROOP23) Then Return
-				If IsAttackPage() Then SelectDropTroop($iBabyDSlot)
+				If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$eBabyDSlot][0])
 			EndIf
 		Case 1
-			If $aSlots[$eBarbSlot] <> -1 Then
-				If IsAttackPage() Then SelectDropTroop($iBarbSlot)
+			If $aSlots2deploy[$eBarbSlot][0] <> -1 Then
+				If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$eBarbSlot][0])
 				If _Sleep($DELAYLAUNCHTROOP23) Then Return
-				If IsAttackPage() Then SelectDropTroop($iBarbSlot)
+				If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$eBarbSlot][0])
 			EndIf
 		Case 2
-			If $aSlots[$eArchSlot] <> -1 Then
-				If IsAttackPage() Then SelectDropTroop($iArchSlot)
+			If $aSlots2deploy[$eArchSlot][0] <> -1 Then
+				If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$eArchSlot][0])
 				If _Sleep($DELAYLAUNCHTROOP23) Then Return
-				If IsAttackPage() Then SelectDropTroop($iArchSlot)
+				If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$eArchSlot][0])
 			EndIf
 		Case 3
-			If $aSlots[$eGiantSlot] <> -1 Then
-				If IsAttackPage() Then SelectDropTroop($iGiantSlot)
+			If $aSlots2deploy[$eGiantSlot][0] <> -1 Then
+				If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$eGiantSlot][0])
 				If _Sleep($DELAYLAUNCHTROOP23) Then Return
-				If IsAttackPage() Then SelectDropTroop($iGiantSlot)
+				If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$eGiantSlot][0])
 			EndIf
 		Case 4
-			If $aSlots[$eGoblSlot] <> -1 Then
-				If IsAttackPage() Then SelectDropTroop($iGoblSlot)
+			If $aSlots2deploy[$eGoblSlot][0] <> -1 Then
+				If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$eGoblSlot][0])
 				If _Sleep($DELAYLAUNCHTROOP23) Then Return
-				If IsAttackPage() Then SelectDropTroop($iGoblSlot)
+				If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$eGoblSlot][0])
 			EndIf
 		Case 5
-			If $aSlots[$eMiniSlot] <> -1 Then
-				If IsAttackPage() Then SelectDropTroop($iMini)
+			If $aSlots2deploy[$eMiniSlot][0] <> -1 Then
+				If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$eMiniSlot][0])
 				If _Sleep($DELAYLAUNCHTROOP23) Then Return
-				If IsAttackPage() Then SelectDropTroop($iMini)
+				If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$eMiniSlot][0])
 			EndIf
 		Case Else
 			If IsAttackPage() Then SelectDropTroop(0)
@@ -169,10 +171,10 @@ Func SmartFarmMilk()
 	If $g_bDebugSmartMilk Then SetLog("$aSlots2deploy: " & _ArrayToString($aSlots2deploy, "-", -1, -1, "|"))
 	If $g_bDebugSmartMilk Then SetLog("$g_iMilkStrategyArmy: " & $g_iMilkStrategyArmy)
 	Local $allPossibleDeployPoints[0][2], $HeroesDeployJustInCase[2], $sSide = ""
-	For $loops = 0 To 2
+	For $iLoops = 0 To 2
 		$hTimer = TimerInit()
 		Local $aCollectorsTL[0][6], $aCollectorsTR[0][6], $aCollectorsBL[0][6], $aCollectorsBR[0][6]
-		If $g_bDebugSmartMilk Then SetLog("Attack loop: " & $loops)
+		If $g_bDebugSmartMilk Then SetLog("Attack loop: " & $iLoops)
 		SuspendAndroid()
 		Local $aCollectorsAll = SmartFarmDetection("Milk")
 		SetDebugLog(" TOTAL detection Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
@@ -185,7 +187,7 @@ Func SmartFarmMilk()
 						For $t = 0 To 5
 							$aCollectorsTL[UBound($aCollectorsTL) - 1][$t] = $aCollectorsAll[$collector][$t]
 						Next
-						If $loops = 0 Then
+						If $iLoops = 0 Then
 							$HeroesDeployJustInCase[0] = $g_aaiTopLeftDropPoints[3][0]
 							$HeroesDeployJustInCase[1] = $g_aaiTopLeftDropPoints[3][1]
 							$sSide = $aCollectorsAll[$collector][4]
@@ -195,7 +197,7 @@ Func SmartFarmMilk()
 						For $t = 0 To 5
 							$aCollectorsTR[UBound($aCollectorsTR) - 1][$t] = $aCollectorsAll[$collector][$t]
 						Next
-						If $loops = 0 Then
+						If $iLoops = 0 Then
 							$HeroesDeployJustInCase[0] = $g_aaiTopRightDropPoints[3][0]
 							$HeroesDeployJustInCase[1] = $g_aaiTopRightDropPoints[3][1]
 							$sSide = $aCollectorsAll[$collector][4]
@@ -205,7 +207,7 @@ Func SmartFarmMilk()
 						For $t = 0 To 5
 							$aCollectorsBL[UBound($aCollectorsBL) - 1][$t] = $aCollectorsAll[$collector][$t]
 						Next
-						If $loops = 0 Then
+						If $iLoops = 0 Then
 							$HeroesDeployJustInCase[0] = $g_aaiBottomLeftDropPoints[3][0]
 							$HeroesDeployJustInCase[1] = $g_aaiBottomLeftDropPoints[3][1]
 							$sSide = $aCollectorsAll[$collector][4]
@@ -215,34 +217,49 @@ Func SmartFarmMilk()
 						For $t = 0 To 5
 							$aCollectorsBR[UBound($aCollectorsBR) - 1][$t] = $aCollectorsAll[$collector][$t]
 						Next
-						If $loops = 0 Then
+						If $iLoops = 0 Then
 							$HeroesDeployJustInCase[0] = $g_aaiBottomRightDropPoints[3][0]
 							$HeroesDeployJustInCase[1] = $g_aaiBottomRightDropPoints[3][1]
 							$sSide = $aCollectorsAll[$collector][4]
 						EndIf
 				EndSwitch
 			Next
-			If $g_bDebugSmartMilk And $loops = 0 Then
+			If $g_bDebugSmartMilk And $iLoops = 0 Then
 				SetLog("$aCollectorsAll: " & _ArrayToString($aCollectorsAll, "-", -1, -1, "|"))
 				DebugImageSmartMilk($aCollectorsAll, Round(TimerDiff($hTimer) / 1000, 2) & "'s", $HeroesDeployJustInCase)
 			EndIf
-			Local $random = Random(0, 3, 1)
-			Switch $random
+			Local $iRandom = Random(0, 3, 1)
+			Local $aAllBySide[4]
+			Switch $iRandom
 				Case 0
-					Local $aAllBySide[4] = [$aCollectorsBL, $aCollectorsBR, $aCollectorsTR, $aCollectorsTL]
+					$aAllBySide[0] = $aCollectorsBL
+					$aAllBySide[1] = $aCollectorsBR
+					$aAllBySide[2] = $aCollectorsTR
+					$aAllBySide[3] = $aCollectorsTL
 				Case 1
-					Local $aAllBySide[4] = [$aCollectorsBR, $aCollectorsTR, $aCollectorsTL, $aCollectorsBL]
+					$aAllBySide[0] = $aCollectorsBR
+					$aAllBySide[1] = $aCollectorsTR
+					$aAllBySide[2] = $aCollectorsTL
+					$aAllBySide[3] = $aCollectorsBL
 				Case 2
-					Local $aAllBySide[4] = [$aCollectorsTR, $aCollectorsTL, $aCollectorsBL, $aCollectorsBR]
+					$aAllBySide[0] = $aCollectorsTR
+					$aAllBySide[1] = $aCollectorsTL
+					$aAllBySide[2] = $aCollectorsBL
+					$aAllBySide[3] = $aCollectorsBR
 				Case 3
-					Local $aAllBySide[4] = [$aCollectorsTL, $aCollectorsBL, $aCollectorsBR, $aCollectorsTR]
+					$aAllBySide[0] = $aCollectorsTL
+					$aAllBySide[1] = $aCollectorsBL
+					$aAllBySide[2] = $aCollectorsBR
+					$aAllBySide[3] = $aCollectorsTR
 			EndSwitch
 			Local $iTroopsDistance = 70
-			If $iBabyDSlot = -1 Then $iTroopsDistance = 30
+			If $aSlots2deploy[$eBabyDSlot][0] = -1 Then
+				$iTroopsDistance = 30
+			EndIf
 			Local $aLastPosition[2]
-			For $H7644 = 0 To 3
-				If $g_bDebugSmartMilk Then SetLog("Attack Side :" & $H7644)
-				Local $aSideCollectors = $aAllBySide[$H7644]
+			For $sSide = 0 To 3
+				If $g_bDebugSmartMilk Then SetLog("Attack Side :" & $sSide)
+				Local $aSideCollectors = $aAllBySide[$sSide]
 				If $g_bDebugSmartMilk Then SetLog("$aSideCollectors: " & _ArrayToString($aSideCollectors, "-", -1, -1, "|"))
 				_ArraySort($aSideCollectors, 0, 0, 0, 0)
 				If $g_bDebugSmartMilk Then SetLog("$aSideCollectors after sort: " & _ArrayToString($aSideCollectors, "-", -1, -1, "|"))
@@ -254,41 +271,35 @@ Func SmartFarmMilk()
 						$aLastPosition[1] = $aSideCollectors[$collector][1]
 						Local $aNear = $aSideCollectors[$collector][5]
 						If $g_bDebugSmartMilk Then SetLog("$aNear: " & $aNear)
-						Local $nearPoints[0][2]
-						If StringInStr($aNear, "|") Then
-							Local $tempObbj = StringSplit($aNear, "|", $STR_NOCOUNT)
-							For $t = 0 To UBound($tempObbj) - 1
-								ReDim $nearPoints[UBound($nearPoints) + 1][2]
-								Local $nearPoint = StringSplit($tempObbj[$t], ",", $STR_NOCOUNT)
-								$nearPoints[UBound($nearPoints) - 1][0] = $nearPoint[0]
-								$nearPoints[UBound($nearPoints) - 1][1] = $nearPoint[1]
-							Next
-						Else
-							Local $tempObbj = StringSplit($aNear, ",", $STR_NOCOUNT)
-							ReDim $nearPoints[UBound($nearPoints) + 1][2]
-							$nearPoints[UBound($nearPoints) - 1][0] = $tempObbj[0]
-							$nearPoints[UBound($nearPoints) - 1][1] = $tempObbj[1]
-						EndIf
-						If UBound($nearPoints) > 2 Then
-							Local $deployPoint = [$nearPoints[2][0], $nearPoints[2][1]]
-						Else
-							Local $deployPoint = [$nearPoints[0][0], $nearPoints[0][1]]
-						EndIf
-						If $loops = 0 Then
+						Local $aNearPoints[0][2]
+						Local $aTempObbj = StringSplit($aNear, "|")
+						Local $aNearPoint, $iDPCount = 0
+						For $t = 1 To $aTempObbj[0]
+							ReDim $aNearPoints[$iDPCount + 1][2]
+							$aNearPoint = StringSplit($aTempObbj[$t], ",")
+							If $aNearPoint[0] <> 2 Then ContinueLoop
+							$aNearPoints[$iDPCount][0] = $aNearPoint[1]
+							$aNearPoints[$iDPCount][1] = $aNearPoint[2]
+							$iDPCount += 1
+						Next
+						
+						Local $iDPNP = (UBound($aNearPoints) > 2) ? (2) : (0)
+						Local $aDeployPoint = [$aNearPoints[$iDPNP][0], $aNearPoints[$iDPNP][1]]
+						
+						If $iLoops = 0 Then
 							ReDim $allPossibleDeployPoints[UBound($allPossibleDeployPoints) + 1][2]
-							$allPossibleDeployPoints[UBound($allPossibleDeployPoints) - 1][0] = $deployPoint[0]
-							$allPossibleDeployPoints[UBound($allPossibleDeployPoints) - 1][0] = $deployPoint[1]
+							$allPossibleDeployPoints[UBound($allPossibleDeployPoints) - 1][0] = $aDeployPoint[0]
+							$allPossibleDeployPoints[UBound($allPossibleDeployPoints) - 1][0] = $aDeployPoint[1]
 						EndIf
-						For $P25686 = 0 To UBound($aSlots2deploy) - 1
-							If $aSlots2deploy[$P25686][1] > 0 Then
-								If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$P25686][0])
-								If _Sleep($DELAYLAUNCHTROOP23) Then Return
-								If _Sleep($DELAYLAUNCHTROOP23) Then Return
-								If $g_bDebugSmartMilk Then SetLog("AttackClick: " & $deployPoint[0] & "," & $deployPoint[1])
-								AttackClick($deployPoint[0], $deployPoint[1], $aSlots2deploy[$P25686][2], 100, 0, "#0098")
-								$aSlots2deploy[$P25686][1] -= $aSlots2deploy[$P25686][2]
-								SetLog("Deployed " & GetTroopName($aSlots2deploy[$P25686][3], Number($aSlots2deploy[$P25686][2])) & " " & $aSlots2deploy[$P25686][2] & "x")
-								If $g_bDebugSmartMilk Then SetLog("Remains - " & GetTroopName($aSlots2deploy[$P25686][3]) & " " & $aSlots2deploy[$P25686][1] & "x")
+						For $aTroopSlot = 0 To UBound($aSlots2deploy) - 1
+							If $aSlots2deploy[$aTroopSlot][1] > 0 Then
+								If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$aTroopSlot][0])
+								If _Sleep($DELAYLAUNCHTROOP23 * 2) Then Return
+								If $g_bDebugSmartMilk Then SetLog("AttackClick: " & $aDeployPoint[0] & "," & $aDeployPoint[1])
+								AttackClick($aDeployPoint[0], $aDeployPoint[1], $aSlots2deploy[$aTroopSlot][2], 100, 0, "#0098")
+								$aSlots2deploy[$aTroopSlot][1] -= $aSlots2deploy[$aTroopSlot][2]
+								SetLog("Deployed " & GetTroopName($aSlots2deploy[$aTroopSlot][3], Number($aSlots2deploy[$aTroopSlot][2])) & " " & $aSlots2deploy[$aTroopSlot][2] & "x")
+								If $g_bDebugSmartMilk Then SetLog("Remains - " & GetTroopName($aSlots2deploy[$aTroopSlot][3]) & " " & $aSlots2deploy[$aTroopSlot][1] & "x")
 								If _Sleep($DELAYLAUNCHTROOP23) Then Return
 							EndIf
 						Next
@@ -317,7 +328,7 @@ Func SmartFarmMilk()
 		EndIf
 		$g_iPercentageDamage = Number(getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY))
 		If $g_iPercentageDamage > 50 Then
-			If $loops = 0 Then
+			If $iLoops = 0 Then
 				SetLog("Reached " & $g_iPercentageDamage & "% lets Check if exist any resource!", $COLOR_SUCCESS)
 				ContinueLoop
 			Else
@@ -325,7 +336,7 @@ Func SmartFarmMilk()
 				ExitLoop
 			EndIf
 		EndIf
-		If ($g_iPercentageDamage > 30 And $loops <> 0) Or ($g_bChkMilkForceDeployHeroes And $loops <> 0) Then
+		If ($g_iPercentageDamage > 30 And $iLoops <> 0) Or ($g_bChkMilkForceDeployHeroes And $iLoops <> 0) Then
 			Local $iKingSlot = Not $g_bDropKing ? $g_iKingSlot : -1
 			Local $iQueenSlot = Not $g_bDropQueen ? $g_iQueenSlot : -1
 			Local $iWardenSlot = Not $g_bDropWarden ? $g_iWardenSlot : -1
@@ -345,21 +356,20 @@ Func SmartFarmMilk()
 				$UsedZap = True
 			EndIf
 		EndIf
-		If $loops = 2 And $g_bChkMilkForceAllTroops Then
+		If $iLoops = 2 And $g_bChkMilkForceAllTroops Then
 			SetLog("Let's deploy all remain troops!", $COLOR_INFO)
 			SetDebugLog("How many last deploy points: " & UBound($allPossibleDeployPoints))
 			For $point = 0 To UBound($allPossibleDeployPoints) - 1
 				CheckHeroesHealth()
-				For $P25686 = 0 To UBound($aSlots2deploy) - 1
-					If $aSlots2deploy[$P25686][1] > 0 Then
-						If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$P25686][0])
-						If _Sleep($DELAYLAUNCHTROOP23) Then Return
-						If _Sleep($DELAYLAUNCHTROOP23) Then Return
+				For $aTroopSlot = 0 To UBound($aSlots2deploy) - 1
+					If $aSlots2deploy[$aTroopSlot][1] > 0 Then
+						If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$aTroopSlot][0])
+						If _Sleep($DELAYLAUNCHTROOP23 * 2) Then Return
 						If $g_bDebugSmartMilk Then SetLog("AttackClick: " & $allPossibleDeployPoints[$point][0] & "," & $allPossibleDeployPoints[$point][1])
-						AttackClick($allPossibleDeployPoints[$point][0], $allPossibleDeployPoints[$point][1], $aSlots2deploy[$P25686][2], 100, 0, "#0098")
-						$aSlots2deploy[$P25686][1] -= $aSlots2deploy[$P25686][2]
-						SetLog("Deployed " & GetTroopName($aSlots2deploy[$P25686][3], Number($aSlots2deploy[$P25686][2])) & " " & $aSlots2deploy[$P25686][2] & "x")
-						If $g_bDebugSmartMilk Then SetLog("Remains - " & GetTroopName($aSlots2deploy[$P25686][3]) & " " & $aSlots2deploy[$P25686][1] & "x")
+						AttackClick($allPossibleDeployPoints[$point][0], $allPossibleDeployPoints[$point][1], $aSlots2deploy[$aTroopSlot][2], 100, 0, "#0098")
+						$aSlots2deploy[$aTroopSlot][1] -= $aSlots2deploy[$aTroopSlot][2]
+						SetLog("Deployed " & GetTroopName($aSlots2deploy[$aTroopSlot][3], Number($aSlots2deploy[$aTroopSlot][2])) & " " & $aSlots2deploy[$aTroopSlot][2] & "x")
+						If $g_bDebugSmartMilk Then SetLog("Remains - " & GetTroopName($aSlots2deploy[$aTroopSlot][3]) & " " & $aSlots2deploy[$aTroopSlot][1] & "x")
 						If _Sleep($DELAYLAUNCHTROOP23) Then Return
 					EndIf
 				Next
@@ -388,10 +398,24 @@ Func SmartFarmMilk()
 	SetLog("Finished Attacking, waiting for the battle to end")
 	Return True
 EndFunc   ;==>SmartFarmMilk
+
+Func TranslateTroopsCount($iLow, $iHigh, $iTroopID, $iLowCount)
+	Local $iResult = 1
+	If $iLow <> $iTroopID Then 
+		$iResult = Abs(Round(($g_aiTroopSpace[$iLow] * $iLowCount) / $g_aiTroopSpace[$iHigh]))
+	Else
+		$iResult = $iLow
+	EndIf
+	If $iResult < 1 Then 
+		$iResult = 1
+	EndIf
+	Return $iResult
+EndFunc   ;==>TranslateTroopsCount
+
 Func DebugImageSmartMilk($aCollectorsAll, $sTime, $HeroesDeployJustInCase)
 	_CaptureRegion()
 	Local $EditedImage = $g_hBitmap
-	Local $subDirectory = $g_sProfileTempDebugPath & "\SmartFarm\"
+	Local $subDirectory = $g_sProfileTempDebugPath & "\SmartMilk\"
 	DirCreate($subDirectory)
 	Local $date = @YEAR & "-" & @MON & "-" & @MDAY
 	Local $Time = @HOUR & "." & @MIN & "." & @SEC
@@ -471,3 +495,31 @@ Func DebugImageSmartMilk($aCollectorsAll, $sTime, $HeroesDeployJustInCase)
 	_GDIPlus_GraphicsDispose($hGraphic)
 	SetLog(" » Debug Image saved!")
 EndFunc   ;==>DebugImageSmartMilk
+
+Func _getBattleEnds()
+	Local $sReturn = getOcrAndCaptureDOCR($g_sASBattleEndsDOCRPath, 380, 26, 106, 39, True, True)
+	$sReturn = StringReplace($sReturn, " ", "")
+	If $g_bDebugOcr Then
+		Local $hEditedImage = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
+		Local $sLibpath = @ScriptDir & "\lib\debug\ocr"
+		DirCreate($sLibpath)
+		Local $asTime = @YEAR & @MON & @MDAY & @HOUR & @MIN & @SEC & @MSEC
+		Local $sFilename = "ocr_" & $asTime & " _latinExtra"
+		_GDIPlus_ImageSaveToFile($hEditedImage, $sLibpath & "\" & $sFilename & ".png")
+		FileWrite($sLibpath & "\" & $sFilename & ".txt", $sReturn)
+		_GDIPlus_BitmapDispose($hEditedImage)
+	EndIf
+	Return $sReturn
+EndFunc   ;==>_getBattleEnds
+
+Func ConvertTime($sString)
+	Local $asTime = StringSplit($sString, "m", $STR_NOCOUNT)
+	If Not @error Then
+		Local $iMinutes = Int($asTime[0])
+		Local $iSeconds = Int(StringReplace($asTime[1], "s", ""))
+		Return ($iMinutes * 60) + $iSeconds
+	Else
+		Local $iSeconds = Int(StringReplace($sString, "s", ""))
+		Return $iSeconds
+	EndIf
+EndFunc   ;==>ConvertTime
