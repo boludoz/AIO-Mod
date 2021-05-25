@@ -22,19 +22,25 @@ Func SaveConfig_MOD_CustomArmyBB()
 		_Ini_Add("BBCustomArmy", "ComboTroopBB" & $i, $g_iCmbCampsBB[$i])
 	Next
 
-	; Builder base - Team AiO MOD++
-	_Ini_Add("other", "ChkUpgradeMachine", $g_bChkUpgradeMachine ? 1 : 0)
-	_Ini_Add("other", "ChkPlacingNewBuildings", $g_iChkPlacingNewBuildings)
+	; BB Upgrade Walls - Team AiO MOD++
 	_Ini_Add("other", "ChkBBUpgradeWalls", $g_bChkBBUpgradeWalls ? 1 : 0)
 	_Ini_Add("other", "CmbBBWallLevel", $g_iCmbBBWallLevel)
-	_Ini_Add("other", "BBWallNumber", $g_iTxtBBWallNumber)
+	_Ini_Add("other", "BBWallNumber", $g_iBBWallNumber)
+	_Ini_Add("other", "ChkBBWallRing", $g_bChkBBWallRing ? 1 : 0)
+	_Ini_Add("other", "ChkBBUpgWallsGold", $g_bChkBBUpgWallsGold ? 1 : 0)
+	_Ini_Add("other", "ChkBBUpgWallsElixir", $g_bChkBBUpgWallsElixir ? 1 : 0)
+
+	For $i = 0 To 2
+		_Ini_Add("BuilderBase", "ScriptBB" & $i, $g_sAttackScrScriptNameBB[$i])
+	Next
+	
+	_Ini_Add("other", "ChkUpgradeMachine", $g_bChkUpgradeMachine ? 1 : 0)
+	_Ini_Add("other", "ChkPlacingNewBuildings", $g_iChkPlacingNewBuildings)
 	_Ini_Add("BuilderBase", "BuilderAttack", $g_bChkBuilderAttack ? 1 : 0)
 	_Ini_Add("BuilderBase", "BBStopAt3", $g_bChkBBStopAt3 ? 1 : 0)
 	_Ini_Add("BuilderBase", "BBTrophiesRange", $g_bChkBBTrophiesRange ? 1 : 0)
 	_Ini_Add("BuilderBase", "BBRandomAttack", $g_bChkBBCustomAttack ? 1 : 0)
-	For $i = 0 To 2
-		_Ini_Add("BuilderBase", "ScriptBB" & $i, $g_sAttackScrScriptNameBB[$i])
-	Next
+	
 	_Ini_Add("BuilderBase", "BBDropTrophiesMin", $g_iTxtBBDropTrophiesMin)
 	_Ini_Add("BuilderBase", "BBDropTrophiesMax", $g_iTxtBBDropTrophiesMax)
 	_Ini_Add("BuilderBase", "BBArmy1", $g_iCmbBBArmy1)

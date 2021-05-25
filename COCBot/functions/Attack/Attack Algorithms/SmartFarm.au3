@@ -110,7 +110,7 @@ Func ChkSmartFarm($sTypeResources = "All", $bTH = False)
 	; [0] = x , [1] = y , [2] = Distance to Redline ,[3] = In/Out, [4] = Side,  [5]= Is array Dim[2] with 5 coordinates to deploy
 	#Region - AreCollectorsOutside - Team AIO Mod++
 	Local $aAll
-	If $g_vSmartFarmScanOut <> 0 And $sTypeResources = "All" Then
+	If $g_vSmartFarmScanOut <> 0 And $sTypeResources = "Milk" Then
 		$aAll = $g_vSmartFarmScanOut
 		$g_vSmartFarmScanOut = 0
 	Else

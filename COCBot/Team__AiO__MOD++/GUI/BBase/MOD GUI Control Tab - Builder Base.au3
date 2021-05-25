@@ -349,22 +349,33 @@ Func ChkBBWalls()
 		$g_bChkBBUpgradeWalls = True
 		GUICtrlSetState($g_hLblBBWallLevelInfo, $GUI_ENABLE)
 		GUICtrlSetState($g_hCmbBBWallLevel, $GUI_ENABLE)
+		GUICtrlSetState($g_hLblBBWallCostInfo, $GUI_ENABLE)
+		GUICtrlSetState($g_hLblBBWallCost, $GUI_ENABLE)
 		GUICtrlSetState($g_hPicBBWallUpgrade, $GUI_SHOW)
-		GUICtrlSetState($g_hTxtBBWallNumber, $GUI_SHOW)
+		GUICtrlSetState($g_hBBWallNumber, $GUI_SHOW)
 		GUICtrlSetState($g_hLblBBWallNumberInfo, $GUI_SHOW)
+		GUICtrlSetState($g_hChkBBWallRing, $GUI_SHOW)
+		GUICtrlSetState($g_hChkBBUpgWallsGold, $GUI_SHOW)
+		GUICtrlSetState($g_hChkBBUpgWallsElixir, $GUI_SHOW)
 	Else
 		$g_bChkBBUpgradeWalls = False
 		GUICtrlSetState($g_hLblBBWallLevelInfo, $GUI_DISABLE)
 		GUICtrlSetState($g_hCmbBBWallLevel, $GUI_DISABLE)
+		GUICtrlSetState($g_hLblBBWallCostInfo, $GUI_DISABLE)
+		GUICtrlSetState($g_hLblBBWallCost, $GUI_DISABLE)
 		GUICtrlSetState($g_hPicBBWallUpgrade, $GUI_HIDE)
-		GUICtrlSetState($g_hTxtBBWallNumber, $GUI_HIDE)
+		GUICtrlSetState($g_hBBWallNumber, $GUI_HIDE)
 		GUICtrlSetState($g_hLblBBWallNumberInfo, $GUI_HIDE)
+		GUICtrlSetState($g_hChkBBWallRing, $GUI_HIDE)
+		GUICtrlSetState($g_hChkBBUpgWallsGold, $GUI_HIDE)
+		GUICtrlSetState($g_hChkBBUpgWallsElixir, $GUI_HIDE)
 	EndIf
-EndFunc ;==>ChkBBWalls
+EndFunc   ;==>ChkBBWalls
 
 Func cmbBBWall()
 	$g_iCmbBBWallLevel = _GUICtrlComboBox_GetCurSel($g_hCmbBBWallLevel)
-	_GUICtrlSetImage($g_hPicBBWallUpgrade, $g_sLibBBIconPath, $g_iCmbBBWallLevel + 8)
+	GUICtrlSetData($g_hLblBBWallCost, _NumberFormat($g_aWallBBInfoPerLevel[$g_iCmbBBWallLevel + 2][1]))
+	_GUICtrlSetImage($g_hPicBBWallUpgrade, $g_sLibBBIconPath, $g_iCmbBBWallLevel + 20)
 EndFunc   ;==>cmbBBWall
 
 ; Global $g_hChkOnlyBuilderBase, $g_hTxtBBMinAttack, $g_hTxtBBMaxAttack ; AIO ++

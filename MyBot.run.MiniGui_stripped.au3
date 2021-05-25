@@ -3413,7 +3413,7 @@ Global $g_hTabBuilderBase = 0, $g_hTabAttack = 0
 Global $g_bChkBBCustomAttack = False
 Global $g_sAttackScrScriptNameBB[3] = ["", "", ""]
 Global $g_bChkUpgradeTroops = False, $g_bChkUpgradeMachine = False
-Global $g_bChkBBUpgradeWalls = False, $g_iCmbBBWallLevel, $g_iTxtBBWallNumber = 0
+Global $g_bChkBBUpgradeWalls = False, $g_iCmbBBWallLevel, $g_iBBWallNumber = 0
 Global Enum $eBBTroopBarbarian, $eBBTroopArcher, $eBBTroopGiant, $eBBTroopMinion, $eBBTroopBomber, $eBBTroopBabyDragon, $eBBTroopCannon, $eBBTroopNight, $eBBTroopDrop, $eBBTroopPekka, $eBBTroopHogG, $eBBTroopMachine, $eBBTroopCount
 Global $g_bBBDropOrderSet = False
 Global $g_aiCmbBBDropOrder[$eBBTroopCount] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
@@ -6220,7 +6220,7 @@ Next
 IniReadS($g_bChkUpgradeMachine, $g_sProfileConfigPath, "other", "ChkUpgradeMachine", False, "Bool")
 IniReadS($g_bChkBBUpgradeWalls, $g_sProfileConfigPath, "other", "ChkBBUpgradeWalls", False, "Bool")
 IniReadS($g_iCmbBBWallLevel, $g_sProfileConfigPath, "other", "CmbBBWallLevel", 10, "int")
-IniReadS($g_iTxtBBWallNumber, $g_sProfileConfigPath, "other", "BBWallNumber", 0, "Int")
+IniReadS($g_iBBWallNumber, $g_sProfileConfigPath, "other", "BBWallNumber", 0, "Int")
 IniReadS($g_bChkBuilderAttack, $g_sProfileConfigPath, "BuilderBase", "BuilderAttack", False, "Bool")
 IniReadS($g_bChkBBStopAt3, $g_sProfileConfigPath, "BuilderBase", "BBStopAt3", False, "Bool")
 IniReadS($g_bChkBBTrophiesRange, $g_sProfileConfigPath, "BuilderBase", "BBTrophiesRange", False, "Bool")

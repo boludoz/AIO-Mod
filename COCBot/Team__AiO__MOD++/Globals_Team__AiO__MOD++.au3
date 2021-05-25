@@ -370,8 +370,10 @@ Global $g_iBuilderBaseScript = 0
 ; Upgrade Troops
 Global $g_bChkUpgradeTroops = False, $g_bChkUpgradeMachine = False
 
-; Upgrade Walls
-Global $g_bChkBBUpgradeWalls = False, $g_iCmbBBWallLevel, $g_iTxtBBWallNumber = 0
+; BB Upgrade Walls - Team AiO MOD++
+Global Const $g_aWallBBInfoPerLevel[10][4] = [[0, 0, 0, 0], [1, 4000, 20, 2], [2, 10000, 50, 3], [3, 100000, 50, 3], [4, 300000, 75, 4], [5, 800000, 100, 5], [6, 1200000, 120, 6], [7, 2000000, 140, 7], [8, 3000000, 160, 8], [9, 4000000, 180, 9]]
+Global $g_bChkBBUpgradeWalls = False, $g_iCmbBBWallLevel, $g_iBBWallNumber = 0, _ 
+	   $g_bChkBBUpgWallsGold = True, $g_bChkBBUpgWallsElixir = False, $g_bChkBBWallRing = False
 
 ; Troops
 Global Enum $eBBTroopBarbarian, $eBBTroopArcher, $eBBTroopGiant, $eBBTroopMinion, $eBBTroopBomber, $eBBTroopBabyDragon, $eBBTroopCannon, $eBBTroopNight, $eBBTroopDrop, $eBBTroopPekka, $eBBTroopHogG, $eBBTroopMachine, $eBBTroopCount

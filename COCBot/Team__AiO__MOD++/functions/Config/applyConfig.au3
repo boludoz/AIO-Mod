@@ -17,20 +17,21 @@ Func ApplyConfig_MOD_CustomArmyBB($TypeReadSave)
 	; <><><> CustomArmyBB <><><>
 	Switch $TypeReadSave
 		Case "Read"
-			;GUICtrlSetState($g_hChkBBCustomArmyEnable, $g_bChkBBCustomArmyEnable = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
-
+			; BB Upgrade Walls - Team AiO MOD++
+			GUICtrlSetState($g_hChkBBUpgradeWalls, $g_bChkBBUpgradeWalls ? $GUI_CHECKED : $GUI_UNCHECKED)
+			_GUICtrlComboBox_SetCurSel($g_hCmbBBWallLevel, $g_iCmbBBWallLevel)
+			GUICtrlSetData($g_hBBWallNumber, $g_iBBWallNumber)
+			GUICtrlSetState($g_hChkBBWallRing, $g_bChkBBWallRing = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkBBUpgWallsGold, $g_bChkBBUpgWallsGold = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkBBUpgWallsElixir, $g_bChkBBUpgWallsElixir = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			ChkBBWalls()
+			cmbBBWall()
+			
 			For $i = 0 To UBound($g_hComboTroopBB) - 1
 				_GUICtrlComboBox_SetCurSel($g_hComboTroopBB[$i], $g_iCmbCampsBB[$i])
 				_GUICtrlSetImage($g_hIcnTroopBB[$i], $g_sLibIconPath, $g_avStarLabTroops[$g_iCmbCampsBB[$i] + 1][4])
 			Next
 
-			; Builder base - Team AiO MOD++
-			GUICtrlSetState($g_hChkUpgradeMachine, $g_bChkUpgradeMachine ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkBBUpgradeWalls, $g_bChkBBUpgradeWalls ? $GUI_CHECKED : $GUI_UNCHECKED)
-			ChkBBWalls()
-			_GUICtrlComboBox_SetCurSel($g_hCmbBBWallLevel, $g_iCmbBBWallLevel)
-			cmbBBWall()
-			GUICtrlSetData($g_hTxtBBWallNumber, $g_iTxtBBWallNumber)
 			GUICtrlSetState($g_hChkPlacingNewBuildings, $g_iChkPlacingNewBuildings = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			chkActivateBBSuggestedUpgrades()
 			chkActivateBBSuggestedUpgradesGold()
@@ -70,17 +71,18 @@ Func ApplyConfig_MOD_CustomArmyBB($TypeReadSave)
 			ChkBBAttackLoops()
 			
 		Case "Save"
-			;$g_bChkBBCustomArmyEnable = (GUICtrlRead($g_hChkBBCustomArmyEnable) = $GUI_CHECKED) ? 1 : 0
-
+			; BB Upgrade Walls - Team AiO MOD++
+			$g_bChkBBUpgradeWalls = (GUICtrlRead($g_hChkBBUpgradeWalls) = $GUI_CHECKED)
+			$g_iCmbBBWallLevel = _GUICtrlComboBox_GetCurSel($g_hCmbBBWallLevel)
+			$g_iBBWallNumber = Int(GUICtrlRead($g_hBBWallNumber))
+			$g_bChkBBWallRing = (GUICtrlRead($g_hChkBBWallRing) = $GUI_CHECKED)
+			$g_bChkBBUpgWallsGold = (GUICtrlRead($g_hChkBBUpgWallsGold) = $GUI_CHECKED)
+			$g_bChkBBUpgWallsElixir = (GUICtrlRead($g_hChkBBUpgWallsElixir) = $GUI_CHECKED)
+			
 			For $i = 0 To UBound($g_hComboTroopBB) - 1
 				$g_iCmbCampsBB[$i] = _GUICtrlComboBox_GetCurSel($g_hComboTroopBB[$i])
 			Next
 
-			; Builder base - Team AiO MOD++
-			$g_bChkUpgradeMachine = (GUICtrlRead($g_hChkUpgradeMachine) = $GUI_CHECKED)
-			$g_bChkBBUpgradeWalls = (GUICtrlRead($g_hChkBBUpgradeWalls) = $GUI_CHECKED)
-			$g_iCmbBBWallLevel = _GUICtrlComboBox_GetCurSel($g_hCmbBBWallLevel)
-			$g_iTxtBBWallNumber = Int(GUICtrlRead($g_hTxtBBWallNumber))
 			$g_iChkPlacingNewBuildings = (GUICtrlRead($g_hChkPlacingNewBuildings) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkBuilderAttack = (GUICtrlRead($g_hChkBuilderAttack) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkBBStopAt3 = (GUICtrlRead($g_hChkBBStopAt3) = $GUI_CHECKED) ? 1 : 0

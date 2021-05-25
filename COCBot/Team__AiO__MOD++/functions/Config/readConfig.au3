@@ -21,18 +21,24 @@ Func ReadConfig_MOD_CustomArmyBB()
 		IniReadS($g_iCmbCampsBB[$i], $g_sProfileConfigPath, "BBCustomArmy", "ComboTroopBB" & $i, $g_iCmbCampsBB[$i], "Int")
 	Next
 
-	; Builder base - Team AiO MOD++
-	IniReadS($g_bChkUpgradeMachine, $g_sProfileConfigPath, "other", "ChkUpgradeMachine", False, "Bool") ; samm0d
+	; BB Upgrade Walls - Team AiO MOD++
 	IniReadS($g_bChkBBUpgradeWalls, $g_sProfileConfigPath, "other", "ChkBBUpgradeWalls", False, "Bool")
 	IniReadS($g_iCmbBBWallLevel, $g_sProfileConfigPath, "other", "CmbBBWallLevel", 10, "int")
-	IniReadS($g_iTxtBBWallNumber, $g_sProfileConfigPath, "other", "BBWallNumber", 0, "Int")
-	IniReadS($g_bChkBuilderAttack, $g_sProfileConfigPath, "BuilderBase", "BuilderAttack", False, "Bool")
-	IniReadS($g_bChkBBStopAt3, $g_sProfileConfigPath, "BuilderBase", "BBStopAt3", False, "Bool")
-	IniReadS($g_bChkBBTrophiesRange, $g_sProfileConfigPath, "BuilderBase", "BBTrophiesRange", False, "Bool")
-	IniReadS($g_bChkBBCustomAttack, $g_sProfileConfigPath, "BuilderBase", "BBRandomAttack", False, "Bool")
+	IniReadS($g_iBBWallNumber, $g_sProfileConfigPath, "other", "BBWallNumber", 0, "Int")
+	IniReadS($g_bChkBBWallRing, $g_sProfileBuildingPath, "other", "ChkBBWallRing", False, "Bool")
+	IniReadS($g_bChkBBUpgWallsGold, $g_sProfileBuildingPath, "other", "ChkBBUpgWallsGold", $g_bChkBBUpgWallsGold, "Bool")
+	IniReadS($g_bChkBBUpgWallsElixir, $g_sProfileBuildingPath, "other", "ChkBBUpgWallsElixir", False, "Bool")
+	
 	For $i = 0 To 2
 		IniReadS($g_sAttackScrScriptNameBB[$i], $g_sProfileConfigPath, "BuilderBase", "ScriptBB" & $i, "Barch four fingers")
 	Next
+	
+	IniReadS($g_bChkUpgradeMachine, $g_sProfileConfigPath, "other", "ChkUpgradeMachine", False, "Bool") ; samm0d
+	IniReadS($g_bChkBBStopAt3, $g_sProfileConfigPath, "BuilderBase", "BBStopAt3", False, "Bool")
+	IniReadS($g_bChkBuilderAttack, $g_sProfileConfigPath, "BuilderBase", "BuilderAttack", False, "Bool")
+	IniReadS($g_bChkBBCustomAttack, $g_sProfileConfigPath, "BuilderBase", "BBRandomAttack", False, "Bool")
+	IniReadS($g_bChkBBTrophiesRange, $g_sProfileConfigPath, "BuilderBase", "BBTrophiesRange", False, "Bool")
+	
 	IniReadS($g_iTxtBBDropTrophiesMin, $g_sProfileConfigPath, "BuilderBase", "BBDropTrophiesMin", 1250, "Int")
 	IniReadS($g_iTxtBBDropTrophiesMax, $g_sProfileConfigPath, "BuilderBase", "BBDropTrophiesMax", 2000, "Int")
 	; -- AIO BB

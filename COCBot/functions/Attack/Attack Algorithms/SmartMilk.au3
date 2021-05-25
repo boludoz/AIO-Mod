@@ -51,7 +51,7 @@ Func TestSmartMilk($bFast = True)
 	; Variable to return : $Return[3]  [0] = To attack InSide  [1] = Quant. Sides  [2] = Name Sides
 	SmartFarmMilk(True)
 
-	ReturnHome($g_bTakeLootSnapShot)
+	ReturnHome($g_bTakeLootSnapShot, False)
 
 	Setlog("Finish the SmartMilk Attack()", $COLOR_INFO)
 

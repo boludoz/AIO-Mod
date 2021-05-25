@@ -24,9 +24,58 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
+Func _MasivePixelCompare($hHMapsOne, $hHMapsTwo, $iXS, $iYS, $iXE, $iYE, $iTol = 15, $iResol = 5)
+	Local $aAllResults[0][2]
+	Local $hMapsOne = _GDIPlus_BitmapCreateFromHBITMAP($hHMapsOne)
+	Local $hMapsTwo = _GDIPlus_BitmapCreateFromHBITMAP($hHMapsTwo)
+	
+	Local $iBits1, $iBits2
+	Local $iC = -1
+	For $iX = $iXS To $iXE Step $iResol
+		For $iY = $iYS To $iYE Step $iResol
+			$iBits1 = _GDIPlus_BitmapGetPixel($hMapsOne, $iX, $iY)
+			$iBits2 = _GDIPlus_BitmapGetPixel($hMapsTwo, $iX, $iY)
+            If Ciede1976(rgb2lab(Hex($iBits1, 6)), rgb2lab(Hex($iBits2, 6))) > $iTol Then
+				$iC += 1
+				ReDim $aAllResults[$iC + 1][2]
+				$aAllResults[$iC][0] = $iX
+				$aAllResults[$iC][1] = $iY
+			EndIf
+		Next
+	Next
+
+	If UBound($aAllResults) > 0 and not @error Then
+		Return $aAllResults
+	Else
+		Return -1
+	EndIf
+EndFunc
+
+Global $_sGroup = 0
+Global $_hBitMap = 0
+
 Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix = Default, $sFixedPrefix = Default, $bOnBuilderBase = Default, $bCaptureRegion = Default) ; Capture region spam disabled - Team AIO Mod++
 	FuncEnter(GetVillageSize)
-    
+	
+    ; Capture region spam disabled - Team AIO Mod++
+	If $bCaptureRegion = Default Then $bCaptureRegion = True 
+	
+	; Capture region spam disabled - Team AIO Mod++	
+	If $bCaptureRegion = True Then
+		_CaptureRegion2()
+	EndIf
+	
+	If $_hBitMap = 0 Then $_hBitMap = GetHHBitmapArea($g_hHBitmap2)
+	
+	$_sGroup = _MasivePixelCompare($g_hHBitmap2, $_hBitMap, 608, 67, 641, 106, 15, 5)
+	If $_sGroup = -1 Then
+		If Number($g_aVillageSize[0]) <> 0 Then
+			Return $g_aVillageSize
+		EndIf
+	EndIf
+	
+	$_hBitMap = GetHHBitmapArea($g_hHBitmap2)
+	
 	If $DebugLog = Default Then $DebugLog = False
 	If $sStonePrefix = Default Then $sStonePrefix = "stone"
 	If $sTreePrefix = Default Then $sTreePrefix = "tree"
@@ -35,13 +84,6 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		If $g_bUpdateSharedPrefs Then $sFixedPrefix = "fixed"
 	EndIf
     
-    ; Capture region spam disabled - Team AIO Mod++
-	If $bCaptureRegion = Default Then $bCaptureRegion = True 
-	
-	; Capture region spam disabled - Team AIO Mod++	
-	If $bCaptureRegion = True Then
-		_CaptureRegion2()
-	EndIf
 	
 	Local $aResult = 0
 	Local $sDirectory

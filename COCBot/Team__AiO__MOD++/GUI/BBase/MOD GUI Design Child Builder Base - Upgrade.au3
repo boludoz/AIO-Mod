@@ -16,7 +16,7 @@
 Global $g_hChkBBSuggestedUpgrades = 0, $g_hChkBBSuggestedUpgradesIgnoreGold = 0, $g_hChkBBSuggestedUpgradesIgnoreElixir
 Global $g_hLblBBUpgradesToIgnore = 0
 Global $g_hChkPlacingNewBuildings = 0, $g_hChkUpgradeTroops = 0, $g_hChkUpgradeMachine = 0, $g_hChkBBNextUpgradeRepeat = 0
-Global $g_hChkBBUpgradeWalls = 0, $g_hLblBBWallLevelInfo = 0, $g_hLblBBWallNumberInfo = 0, $g_hCmbBBWallLevel = 0, $g_hPicBBWallUpgrade = "", $g_hTxtBBWallNumber = 0, $g_hLblBBWallCostInfo = 0, $g_hLblBBWallCost = 0
+Global $g_hChkBBUpgradeWalls = 0, $g_hLblBBWallLevelInfo = 0, $g_hLblBBWallNumberInfo = 0, $g_hCmbBBWallLevel = 0, $g_hPicBBWallUpgrade = "", $g_hBBWallNumber = 0, $g_hLblBBWallCostInfo = 0, $g_hLblBBWallCost = 0
 Global $g_hChkBBWallRing = 0, $g_hChkBBUpgWallsGold = 0, $g_hChkBBUpgWallsElixir = 0
 Global $g_hbtnBBAttack = 0
 Global $g_hDebugBBattack = 0;, $g_hLblBBNextUpgrade = 0, $g_hCmbBBLaboratory = 0, $g_hPicBBLabUpgrade = ""
@@ -122,7 +122,7 @@ Func CreateUpgradeBuilderBaseSubTab()
 	$g_hLblBBWallCost = GUICtrlCreateLabel("10 000", $x + 175, $y + 46, 50, -1, $SS_RIGHT)
 	$g_hLblBBWallNumberInfo = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Upgrade", "LblBBWallNumberInfo", "Wall Counter") & ":", $x + 315, $y + 34, 80, -1)
 	GUICtrlSetState(-1, $GUI_HIDE)
-	$g_hTxtBBWallNumber = GUICtrlCreateInput("0", $x + 385, $y + 30, 40, -1, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+	$g_hBBWallNumber = GUICtrlCreateInput("0", $x + 385, $y + 30, 40, -1, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 	GUICtrlSetState(-1, $GUI_HIDE)
 	$g_hPicBBWallUpgrade = _GUICtrlCreateIcon($g_sLibBBIconPath, 11, $x + 260, $y + 20, 48, 48)
 	GUICtrlSetState(-1, $GUI_HIDE)
