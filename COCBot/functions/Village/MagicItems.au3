@@ -55,10 +55,7 @@ Func CollectMagicItems($bDebug = False)
 		If Not $g_bRunState Or $g_bRestart Then Return
 		
 		; Check Daily Discounts Window
-		If _WaitForCheckImg(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Obstacles", "FV", "X") = False Then ; White in 'X'.
-			SetLog("CollectMagicItems : badly.", $COLOR_ERROR)
-			If _Sleep(300) Then Return
-		Else
+		If _WaitForCheckImg(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Obstacles", "FV", "X") Then ; White in 'X'.
 
 			; Dates - Team AIO Mod++
 			If Not $bDebug Then MagicItemsTime()
@@ -117,6 +114,9 @@ Func CollectMagicItems($bDebug = False)
 			Next
 			
 			SetLog("Daily Discounts: " & $aResultsProx[0] & " " & $aResults[0] & " | " & $aResultsProx[1] & " " & $aResults[1] & " | " & $aResultsProx[2] & " " & $aResults[2], $COLOR_INFO)
+		Else
+			SetLog("CollectMagicItems : badly.", $COLOR_ERROR)
+			If _Sleep(300) Then Return
 		EndIf
 	EndIf
 	ClickAway()     ;Click Away

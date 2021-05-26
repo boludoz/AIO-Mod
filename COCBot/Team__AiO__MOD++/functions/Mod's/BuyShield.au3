@@ -17,6 +17,7 @@ Global $g_aGuardAvailable[4] = [398, 218, 0x327AB2, 20]
 
 Func BuyGuard($bDebug = False)
 	If Not $g_bChkBuyGuard Or $g_iUnbrkMode = 1 Then Return
+	Local $bReturn = False
 	
 	SetLog("Start Buy Two Hour Guard Check", $COLOR_INFO)
 	
@@ -39,6 +40,8 @@ Func BuyGuard($bDebug = False)
 						Else
 							SetLog("Two hours Guard Successfully Activated.", $COLOR_SUCCESS)
 							If _Sleep($DELAYRUNBOT1) Then Return
+							
+							$bReturn = True
 						EndIf
 					Else
 						ClickAway()
@@ -50,7 +53,9 @@ Func BuyGuard($bDebug = False)
 	Else
 		SetLog("Unable To Find Main Page, Skip Buy Guard Check.", $COLOR_ERROR)
 	EndIf
-	CloseShop()
+	
+	If $bReturn = False Then CloseShop()
+	
 	CheckMainScreen()
 EndFunc   ;==>BuyGuard
 
