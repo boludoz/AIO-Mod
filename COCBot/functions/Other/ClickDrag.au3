@@ -130,7 +130,7 @@ Func ClickDrag($X1, $Y1, $X2, $Y2, $iDelay = 50, $bLegacy = False)
 			AndroidClickDrag($X1, $Y1, $X2, $Y2, $g_bRunState)
 			$error = @error
 		Else
-			AndroidInputSwipe($X1, $Y1, $X2, $Y2, $g_bRunState)
+			AndroidAdbSendShellCommand("input swipe " & $x1 & " " & $y1 & " " & $X2 & " " & $Y2, Default, $g_bRunState)
 			$error = @error
 		EndIf
 		If _Sleep($iDelay / 5) Then Return SetError(-1, "", False)

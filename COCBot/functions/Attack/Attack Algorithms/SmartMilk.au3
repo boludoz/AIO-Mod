@@ -125,6 +125,7 @@ Func SmartFarmMilk($bDebug = False)
 				$aSlots2deploy[$eMiniSlot][3] = $g_avAttackTroops[$i][0]
 		EndSwitch
 	Next
+
 	; _ArrayDisplay($aSlots2deploy)
 	Switch $g_iMilkStrategyArmy
 		Case 0
@@ -224,6 +225,7 @@ Func SmartFarmMilk($bDebug = False)
 						EndIf
 				EndSwitch
 			Next
+			
 			If $g_bDebugSmartMilk And $iLoops = 0 Then
 				SetLog("$aCollectorsAll: " & _ArrayToString($aCollectorsAll, "-", -1, -1, "|"))
 				DebugImageSmartMilk($aCollectorsAll, Round(TimerDiff($hTimer) / 1000, 2) & "'s", $HeroesDeployJustInCase)
@@ -402,9 +404,9 @@ EndFunc   ;==>SmartFarmMilk
 Func TranslateTroopsCount($iLow, $iHigh, $iTroopID, $iLowCount)
 	Local $iResult = 1
 	If $iLow <> $iTroopID Then 
-		$iResult = Abs(Round(($g_aiTroopSpace[$iLow] * $iLowCount) / $g_aiTroopSpace[$iHigh]))
+		$iResult = Round(Abs(($g_aiTroopSpace[$iLow] * $iLowCount) / $g_aiTroopSpace[$iHigh]) * 1.3)
 	Else
-		$iResult = $iLow
+		$iResult = $iLowCount
 	EndIf
 	If $iResult < 1 Then 
 		$iResult = 1
