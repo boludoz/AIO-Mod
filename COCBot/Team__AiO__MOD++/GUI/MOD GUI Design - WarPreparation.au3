@@ -219,7 +219,7 @@ EndFunc
 
 Func lblTotalWarTroopCount($TotalArmyCamp = 0)
 	Local $TotalTroopsToTrain
-	If $TotalArmyCamp = 0 Then $TotalArmyCamp = $g_bTotalCampForced ? $g_iTotalCampForcedValue : 280
+    If $TotalArmyCamp = 0 Then $TotalArmyCamp = $g_bTotalCampForced ? $g_iTotalCampForcedValue : 300
 
 	For $i = 0 To $eTroopCount - 1
 		Local $iCount = GUICtrlRead($g_ahTxtTrainWarTroopCount[$i])

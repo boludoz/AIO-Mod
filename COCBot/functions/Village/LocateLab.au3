@@ -19,7 +19,7 @@ Func LocateLab($bCollect = True)
 		SetLog("Townhall Lvl " & $g_iTownHallLevel & " has no Lab, so skip locating.", $COLOR_ACTION)
 		Return
 	EndIf
-
+	
 	; Avoid Locate - Team AIO Mod++ 
 	If ($g_bAvoidLocate Or $g_bChkOnlyFarm) and $g_bIsReallyOn Then
 		$g_aiLaboratoryPos[0] = -1
@@ -27,8 +27,62 @@ Func LocateLab($bCollect = True)
 		SetLog("Avoid Locate Laboratory...", $COLOR_INFO)
 		Return False
 	EndIf
-	
+
 	SetLog("Locating Laboratory", $COLOR_INFO)
+
+	#Region - Auto locate builds - Team AIO Mod++
+	CheckMainScreen(Default, False)
+	ClickAway()
+	
+	Local $aLabPos[2], $sInfo = ""
+	Local $aLocateBuilds = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\AutoLocate\Lab\", 0, "FV")
+	If UBound($aLocateBuilds) > 0 And not @error Then
+		For $i = 0 To UBound($aLocateBuilds) -1
+			$aLabPos[0] = $aLocateBuilds[$i][1]
+			$aLabPos[1] = $aLocateBuilds[$i][2]
+			
+			If IsInsideDiamond($aLabPos) = False Then ContinueLoop
+			
+			ClickP($aLabPos)
+			
+			Local $iCountGetInfo = 0
+			Do
+				$sInfo = BuildingInfo(242, 550)
+				If @error Then SetError(0, 0, 0)
+				If _Sleep(100) Then Return
+				$iCountGetInfo += 1
+				If $iCountGetInfo = 10 Then Return
+			Until IsArray($sInfo)
+			
+			If $g_bDebugSetlog Then SetDebugLog($sInfo[1] & $sInfo[2])
+			If @error Then Return SetError(0, 0, 0)
+		
+			If $sInfo[0] > 1 Or $sInfo[0] = "" Then
+				If @error Then Return SetError(0, 0, 0)
+		
+				If StringInStr($sInfo[1], "Lab") > 0 Then
+					$g_aiLaboratoryPos = $aLabPos
+					ConvertFromVillagePos($g_aiLaboratoryPos[0], $g_aiLaboratoryPos[1])
+					IniWrite($g_sProfileBuildingPath, "upgrade", "LabPosX", $g_aiLaboratoryPos[0])
+					IniWrite($g_sProfileBuildingPath, "upgrade", "LabPosY", $g_aiLaboratoryPos[1])
+					Setlog("Queen located", $COLOR_SUCCESS)
+					ClickAway(True)
+					Return True
+				EndIf
+				
+			EndIf
+			
+			ClickAway(True)
+			If _Sleep(500) Then Return
+			
+		Next
+	EndIf
+	
+	If ($g_bAvoidLocate And $g_aiLaboratoryPos[0] < 1) and $g_bIsReallyOn Then
+		SetLog("Avoid Locate Lab.", $COLOR_INFO)
+		Return
+	EndIf
+	#EndRegion - Auto locate builds - Team AIO Mod++
 
 	WinGetAndroidHandle()
 	checkMainScreen()

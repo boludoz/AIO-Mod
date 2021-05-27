@@ -45,7 +45,7 @@ Func WallsUpgradeBB()
 			For $i = 0 To 10
 				If $g_bDebugSetlog Then SetDebugLog("Using Walls Rings loop " & $i)
 				If DetectedWalls($iBBWallLevel) Then
-					If $g_bDebugSetlog Then SetDebugLog("Array Wall Rings button --> " & _ArrayToString($aWallRing, " ", -1, -1, "|"))
+;~ 					If $g_bDebugSetlog Then SetDebugLog("Array Wall Rings button --> " & _ArrayToString($aWallRing, " ", -1, -1, "|"))
 					If UpgradeCurrentWall("WallR") Then
 						SetLog("Walls Ring found, let's Click it!", $COLOR_INFO)
 						If _Sleep($DELAYAUTOUPGRADEBUILDING1) Then Return
@@ -159,11 +159,11 @@ Func HammerSearch($sResource = "Gold")
 	Local $iDist = 0
 	Local $aButtonPixel
 	Local $bReturn = False
-	
+
 	Local $aButtons = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Upgrade\Hammer", Default, "179, 579, 675, 694", True, "", False, 0)
 	If $aButtons <> -1 Then
 		For $i = 0 To UBound($aButtons) -1
-			
+
 			Switch $aButtons[$i][0]
 				Case "BuildH", "WallR"
 					$sMode = "Hammer"
@@ -172,7 +172,7 @@ Func HammerSearch($sResource = "Gold")
 					Switch $sResource
 						Case "Gold"
 							$aButtonPixel = _MultiPixelSearch($aButtons[$i][1], 579, $aButtons[$i][1] + 67, 613, 2, 2, Hex(0xFFFFFF, 6), StringSplit2D("0xFFFFFF-0-1|0xFFF955-8-0"), 35)
-						Case "Elixir" 
+						Case "Elixir"
 							$aButtonPixel = _MultiPixelSearch($aButtons[$i][1], 579, $aButtons[$i][1] + 67, 613, 2, 2, Hex(0xFFFFFF, 6), StringSplit2D("0xFFFFFF-0-1|0xFF60FF-8-0"), 35)
 						Case "Dark"
 							$aButtonPixel = _MultiPixelSearch($aButtons[$i][1], 579, $aButtons[$i][1] + 67, 613, 2, 2, Hex(0xFFFFFF, 6), StringSplit2D("0xFFFFFF-0-1|0x3A2C3E-8-0"), 35)
@@ -180,30 +180,30 @@ Func HammerSearch($sResource = "Gold")
 							$sMode = ""
 					EndSwitch
 			EndSwitch
-			
-			If $sMode <> "" Then 
+
+			If $sMode <> "" Then
 				$aHammer[0] = $aButtons[$i][1]
 				$aHammer[1] = $aButtons[$i][2]
 				ExitLoop
 			EndIf
-			
+
 		Next
-		
+
 		If $sMode <> "" Then
 			ClickP($aHammer)
 			If _Sleep(2000) Then Return
-			
+
 			Switch $sMode
 				Case "Resource"
 					$aButtonPixel = _MultiPixelSearch(45, 356, 802, 621, 15, 15, Hex(0xDFF885, 6), StringSplit2D("0x77C422-0-30|0xE0F884-15-0"), 35)
 				Case "Hammer"
 					$aButtonPixel = _MultiPixelSearch(45, 356, 802, 621, 15, 15, Hex(0xDADEFF, 6), StringSplit2D("0x7C8AFF-0-30|0xDADEFF-15-0"), 35)
 			EndSwitch
-			
+
 			If $aButtonPixel <> 0 Then
 				ClickP($aButtonPixel)
 				If _Sleep(2000) Then Return
-				
+
 				If _Wait4Pixel($aIsGemWindow1[0], $aIsGemWindow1[1], $aIsGemWindow1[2], $aIsGemWindow1[3], 2000, "IsGemWindow1") Then
 					If isGemOpen(True) = False Then
 						$bReturn = True
@@ -216,7 +216,7 @@ Func HammerSearch($sResource = "Gold")
 			EndIf
 		EndIf
 	EndIf
-	
+
 	ClickAway()
 	Return $bReturn
 EndFunc

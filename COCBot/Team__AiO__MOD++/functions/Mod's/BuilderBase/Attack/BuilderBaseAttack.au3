@@ -309,37 +309,37 @@ Func WaitForVersusBattle()
 	Local $aAttackerVersusBattle[2][3] = [[0xFFFF99, 0, 1], [0xFFFF99, 0, 2]]
 
 	If Not $g_bRunState Then Return
-	
+
 	; Clouds
 	Local $iTime = 0
 	Local $iSwitch = 0
 	While $iTime < 257 ; 15 minutes
 		If Not $g_bRunState Then Return False
-		
+
 		If (Mod($iTime, 3) = 0) Then $iSwitch += 1
 		Switch $iSwitch
 			Case 0
 				SetLog("Searching for opponents.")
 			Case 1
-				If isProblemAffect(True) Then 
+				If isProblemAffect(True) Then
 					Return False
 				EndIf
 			Case 2
-				If checkObstacles_Network(True, True) Then 
+				If checkObstacles_Network(True, True) Then
 					Return False
 				EndIf
-				
+
 				$iSwitch = 0
 		EndSwitch
-		
+
 		If _MultiPixelSearch(711, 2, 856, 55, 1, 1, Hex(0xFFFF99, 6), $aAttackerVersusBattle, 15) <> 0 Then
 			ExitLoop
 		EndIf
-		
+
 		If _Sleep(3000) Then Return
 		$iTime += 1
 	WEnd
-	
+
 	If $iTime >= 257 Then
 		If _MultiPixelSearch(375, 547, 450, 555, 1, 1, Hex(0xFE2D40, 6), $aCancelVersusBattleBtn, 5) <> 0 Then
 			SetLog("Exit from battle search.", $COLOR_WARNING)
@@ -348,7 +348,7 @@ Func WaitForVersusBattle()
 			Return False
 		EndIf
 	EndIf
-	
+
 	For $i = 0 To 60
 		If Not $g_bRunState Then Return False
 		Local $sBattle = _getBattleEnds()
@@ -359,7 +359,7 @@ Func WaitForVersusBattle()
 	Next
 
 	SetLog("The Versus Battle begins NOW!", $COLOR_SUCCESS)
-	
+
 	Return True
 
 EndFunc   ;==>WaitForVersusBattle
@@ -487,6 +487,7 @@ EndFunc   ;==>BuilderBaseCSVAttack
 Func BuilderBaseAttackReport()
 	; Verify the Window Report , Point[0] Archer Shadow Black Zone [155,460,000000], Point[1] Ok Green Button [430,590, 6DBC1F]
 	Local $aSurrenderBtn = [65, 607]
+	Local $sReturn ;, $bTrueCap = False
 
 	; Check if BattleIsOver.
 	BattleIsOver()
@@ -532,11 +533,50 @@ Func BuilderBaseAttackReport()
 			Return
 		EndIf
 		; Wait
-		If _Sleep(2500) Then Return ; 2,5 seconds
-		If QuickMIS("BC1", $g_sImgReportWaitBB, 529, 324, 652, 372, True, False) Then
-			If (Mod($i+1, 4) = 0) Then Setlog("...Opponent is Attacking!", $COLOR_INFO)
-			ContinueLoop
-		EndIf
+        If _Sleep(2500) Then Return ; 2,5 seconds
+        If QuickMIS("BC1", $g_sImgReportWaitBB, 529, 324, 652, 372, True, False) Then
+		#cs - Diabolico
+		If $bTrueCap = False Then
+			; Wait
+			If _Sleep(2500) Then Return ; 2,5 seconds
+			If QuickMIS("BC1", $g_sImgReportWaitBB, 529, 324, 652, 372, True, False) Then
+				PureClick($g_iQuickMISWOffSetX, $g_iQuickMISWOffSetY)
+				If _Sleep(2500) Then Return ; 2,5 seconds
+
+				For $iWatchs = 0 To 10
+					$sReturn = getOcrAndCaptureDOCR($g_sASBattleEndsDOCRPath, 382, 598, 106, 36, True, True)
+					If _Sleep(500) Then Return ; 2,5 seconds
+					If StringInStr($sReturn, "s") > 0 Then
+						If $bTrueCap = False Then
+							_CaptureRegion()
+							If _Sleep(750) Then Return
+
+							_CaptureRegion2()
+							If _Sleep(100) Then Return
+
+							Local $aGroup = _MasivePixelCompare($g_hHBitmap, $g_hHBitmap2, 199, 94, 685, 573, 35, 5)
+							If UBound($aGroup) > 0 And not @error Then
+								Local $iRandomCrazy = Random(0, Ubound($aGroup) -1, 1)
+								ClickDrag($aGroup[$iRandomCrazy][0], $aGroup[$iRandomCrazy][1], 430, 354, True)
+								SetDebugLog("dagging")
+								If _Sleep(2500) Then Return ; 2,5 seconds
+							EndIf
+
+							$bTrueCap = True
+						EndIf
+					ElseIf $bTrueCap = True Then
+						ExitLoop
+					EndIf
+
+					If _Sleep(2000) Then Return ; 2 seconds
+				Next
+
+				PureClick(70, 680) ; Return Home
+		#ce - Diabolico
+				If (Mod($i+1, 4) = 0) Then Setlog("...Opponent is Attacking!", $COLOR_INFO)
+				ContinueLoop
+			EndIf
+;		EndIf
 		If _WaitForCheckImg($g_sImgReportFinishedBB, "465, 493, 490, 505", Default, 5000, 250) Then
 
 			If RandomSleep(500) Then Return

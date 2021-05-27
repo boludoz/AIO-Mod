@@ -17,16 +17,16 @@ Func isOnBuilderBase($bNeedCaptureRegion = True, $bSoft = False)
 	If _Sleep($DELAYISBUILDERBASE) Then Return
 	If $bNeedCaptureRegion = True Or $bNeedCaptureRegion = Default Then _CaptureRegion2()
 	If IsArray(FindmultipleQuick($g_sImgIsOnBB, 1, "260,0,406,54", False)) Then
-		SetDebugLog("Builder Base Builder detected. (Normal).", $COLOR_INFO)
+		SetDebugLog("Builder Base detected. (Normal).", $COLOR_INFO)
 		Return True
 	ElseIf $bSoft = False Then
 		If (UBound(decodeSingleCoord(findImageInPlace("BoatBuilderBase", $g_sImgBoatBB, "487,44,708,242", False))) > 1) Then
-			SetDebugLog("Builder Base Builder detected.", $COLOR_INFO)
+			SetDebugLog("Builder Base detected.", $COLOR_INFO)
 			Return True
 		EndIf
 	EndIf
 	
-	SetDebugLog("Base Builder not detected.")
+	SetDebugLog("Builder Base not detected.")
 	Return False
 EndFunc   ;==>isOnBuilderBase
 #EndRegion - Custom - Team AIO Mod++

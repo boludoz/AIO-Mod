@@ -474,22 +474,31 @@ Func ProcessFindBy($sPath = "", $sCommandline = "", $bAutoItMode = False, $bDont
 	Return $aReturn
 EndFunc   ;==>ProcessFindBy
 
-Func CloseEmulatorForce()
+Func CloseEmulatorForce($bOnlyAdb = False)
 	Local $iPids[0], $a[0], $s
-	$s = Execute("Get" & $g_sAndroidEmulator & "Path()")
-	If not @error Then
-		$a = ProcessFindBy($s, "")
+	
+	If $bOnlyAdb = False Then
+		$s = Execute("Get" & $g_sAndroidEmulator & "Path()")
+		If not @error Then
+			$a = ProcessFindBy($s, "")
+			_ArrayAdd($iPids, $a)
+		EndIf
+		$a = ProcessFindBy($__VBoxManage_Path, "")
 		_ArrayAdd($iPids, $a)
 	EndIf
-	$a = ProcessFindBy($__VBoxManage_Path, "")
+	
+	$a = ProcessFindBy($g_sAndroidAdbPath)
 	_ArrayAdd($iPids, $a)
-	$a = ProcessFindBy($g_sAndroidAdbPath, ($g_bAndroidAdbPort <> 0) ? (String($g_bAndroidAdbPort)) : (""))
-	_ArrayAdd($iPids, $a)
+	
 	If UBound($iPids) > 0 and not @error Then
 		For $i = 0 To UBound($iPids) -1 ; Custom fix - Team AIO Mod++
 			KillProcess($iPids[$i], $g_sAndroidAdbPath)
 		Next
+		
+		Return True
 	EndIf
+	
+	Return False
 EndFunc   ;==>ProcessFindBy
 
 Func SetVarFlag()

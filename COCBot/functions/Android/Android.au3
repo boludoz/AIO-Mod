@@ -1104,6 +1104,8 @@ EndFunc   ;==>OpenAndroid
 
 Func _OpenAndroid($bRestart = False, $bStartOnlyAndroid = False)
 
+	CloseEmulatorForce(True) ; Custom fix - Team AIO Mod++
+
 	If Not InitAndroid() Then
 		SetLog("Unable to open " & $g_sAndroidEmulator & ($g_sAndroidInstance = "" ? "" : " instance '" & $g_sAndroidInstance & "'"), $COLOR_ERROR)
 		SetLog("Please check emulator/installation", $COLOR_ERROR)
@@ -1120,7 +1122,7 @@ Func _OpenAndroid($bRestart = False, $bStartOnlyAndroid = False)
 	Local $hMutex = AquireAdbDaemonMutex(), $process_killed
 	LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "devices", $process_killed)
 	ReleaseAdbDaemonMutex($hMutex)
-
+	
 	AndroidAdbTerminateShellInstance()
 	If Not $g_bRunState Then Return False
 
@@ -1683,7 +1685,10 @@ Func RebootAndroid($bRestart = True, $bStartOnlyAndroid = False)
 	FuncEnter(RebootAndroid)
 	ResumeAndroid()
 	If Not $g_bRunState Then Return FuncReturn(False)
-
+	
+	; Close all adb ports
+	CloseEmulatorForce(True) ; Custom fix - Team AIO Mod++
+	
 	; Close Android
 	If CloseUnsupportedAndroid() Then
 		; Unsupport Emulator now closed, screen config is now adjusted
@@ -1691,8 +1696,9 @@ Func RebootAndroid($bRestart = True, $bStartOnlyAndroid = False)
 		; Close Emulator
 		CloseAndroid("RebootAndroid")
 	EndIf
+	
 	If _Sleep(1000) Then Return FuncReturn(False)
-
+	
 	; Start Android
 	Return FuncReturn(OpenAndroid($bRestart, $bStartOnlyAndroid))
 EndFunc   ;==>RebootAndroid

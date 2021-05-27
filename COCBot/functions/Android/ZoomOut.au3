@@ -29,62 +29,82 @@ EndFunc   ;==>ZoomOut
 Func _ZoomOut() ;Zooms out
 	$g_aiSearchZoomOutCounter[0] = 0
 	$g_aiSearchZoomOutCounter[1] = 1
-	ResumeAndroid()
-	WinGetAndroidHandle()
+    ResumeAndroid()
+    WinGetAndroidHandle()
 	getBSPos() ; Update $g_hAndroidWindow and Android Window Positions
 	If Not $g_bRunState Then
 		SetDebugLog("Exit ZoomOut, bot not running")
 		Return
 	EndIf
-	Local $bResult
+	Local $sResult
 	If ($g_iAndroidZoomoutMode = 0 Or $g_iAndroidZoomoutMode = 3) And ($g_bAndroidEmbedded = False Or $g_iAndroidEmbedMode = 1) Then
 		; default zoomout
-		$bResult = Execute("ZoomOut" & $g_sAndroidEmulator & "()")
-		If $bResult = "" And @error <> 0 Then
-			; Not implemented or other error
-			$bResult = AndroidOnlyZoomOut()
-		EndIf
+		$sResult = ZoomOutAndroid($g_sAndroidEmulator)
 		$g_bSkipFirstZoomout = True
-		Return $bResult
+		Return $sResult
 	EndIf
 
 	; Android embedded, only use Android zoomout
-	$bResult = AndroidOnlyZoomOut()
+	$sResult = AndroidOnlyZoomOut()
 	$g_bSkipFirstZoomout = True
-	Return $bResult
+	Return $sResult
 EndFunc   ;==>_ZoomOut
 
-Func ZoomOutBlueStacks() ;Zooms out
-	SetDebugLog("ZoomOutBlueStacks()")
-	; ctrl click is best and most stable for BlueStacks
-	Return ZoomOutCtrlClick(False, False, False, 250)
-EndFunc   ;==>ZoomOutBlueStacks
-
-Func ZoomOutBlueStacks2()
-	SetDebugLog("ZoomOutBlueStacks2()")
-	If $__BlueStacks2Version_2_5_or_later = False Then
-		; ctrl click is best and most stable for BlueStacks, but not working after 2.5.55.6279 version
-		Return ZoomOutCtrlClick(False, False, False, 250)
-	Else
-		; newer BlueStacks versions don't work with Ctrl-Click, so fall back to original arrow key
-		Return DefaultZoomOut("{DOWN}", 0, ($g_iAndroidZoomoutMode <> 3))
+Func ZoomOutAndroid($sEmulator = $g_sAndroidEmulator)
+	Local $sReturn = "", $sError = 1, $sExtended = 0
+	
+	SetDebugLog("[ZoomOutAndroid] " & $sEmulator)
+	
+	Switch $sEmulator
+		Case "BlueStacks"
+			; ctrl click is best and most stable for BlueStacks
+			$sReturn = ZoomOutCtrlClick(False, False, False, 250)
+			$sError = @error
+			$sExtended = @extended
+		Case "BlueStacks2"
+			If $__BlueStacks2Version_2_5_or_later = False Then
+				; ctrl click is best and most stable for BlueStacks, but not working after 2.5.55.6279 version
+				$sReturn = ZoomOutCtrlClick(False, False, False, 250)
+				$sError = @error
+				$sExtended = @extended
+			Else
+				; newer BlueStacks versions don't work with Ctrl-Click, so fall back to original arrow key
+				$sReturn = DefaultZoomOut("{DOWN}", 0, ($g_iAndroidZoomoutMode <> 3))
+				$sError = @error
+				$sExtended = @extended
+			EndIf
+		Case "MEmu"
+			$sReturn = DefaultZoomOut("{F3}", 0, ($g_iAndroidZoomoutMode <> 3))
+			$sError = @error
+			$sExtended = @extended
+		#cs
+		Case "LeapDroid"
+			$sReturn = ZoomOutCtrlWheelScroll(True, True, True, False)
+			$sError = @error
+			$sExtended = @extended
+		Case "KOPLAYER"
+			$sReturn = ZoomOutCtrlWheelScroll(False, False, False, True, -70, 15)
+			$sError = @error
+			$sExtended = @extended
+		#ce
+		Case "Droid4X"
+			$sReturn = ZoomOutCtrlWheelScroll(True, True, True, ($g_iAndroidZoomoutMode <> 3), Default, -5, 250)
+			$sError = @error
+			$sExtended = @extended
+		Case "Nox"
+			$sReturn = ZoomOutCtrlWheelScroll(True, True, True, ($g_iAndroidZoomoutMode <> 3), Default, -5, 250)
+			$sError = @error
+			$sExtended = @extended
+	EndSwitch
+	
+	If $sError And $sReturn = "" Then
+		$sReturn = AndroidOnlyZoomOut()
+		$sError = @error
+		$sExtended = @extended
 	EndIf
-EndFunc   ;==>ZoomOutBlueStacks2
-
-Func ZoomOutMEmu()
-	SetDebugLog("ZoomOutMEmu()")
-	Return DefaultZoomOut("{F3}", 0, ($g_iAndroidZoomoutMode <> 3))
-EndFunc   ;==>ZoomOutMEmu
-
-Func ZoomOutDroid4X()
-	SetDebugLog("ZoomOutDroid4X()")
-	Return ZoomOutCtrlWheelScroll(True, True, True, ($g_iAndroidZoomoutMode <> 3), Default, -5, 250)
-EndFunc   ;==>ZoomOutDroid4X
-
-Func ZoomOutNox()
-	SetDebugLog("ZoomOutNox()")
-	Return ZoomOutCtrlWheelScroll(True, True, True, ($g_iAndroidZoomoutMode <> 3), Default, -5, 250)
-EndFunc   ;==>ZoomOutNox
+	
+	Return SetError($sError, $sExtended, $sReturn)
+EndFunc   ;==>ZoomOutAndroid
 
 Func DefaultZoomOut($iZoomOutKey = "{DOWN}", $aTryCtrlWheelScrollAfterCycles = 40, $bAndroidZoomOut = True) ;Zooms out
 	SetDebugLog("DefaultZoomOut()")
@@ -423,7 +443,16 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag,
 
 	Local $vVillage
 	Local $bOnBuilderBase = isOnBuilderBase(False, False) ; Capture region spam disabled - Team AIO Mod++
-	If $g_aiSearchZoomOutCounter[0] = 10 Then SetLog("Try secondary village measuring...", $COLOR_INFO)
+	If $g_aiSearchZoomOutCounter[0] = 10 Then 
+		SetLog("Try secondary village measuring.", $COLOR_INFO)
+	EndIf
+	
+	; Custom fix - Team AIO Mod++
+	If $g_aiSearchZoomOutCounter[0] = 5 Then
+		ClickDrag($aCenterHomeVillageClickDrag[0], $aCenterHomeVillageClickDrag[1], $aCenterHomeVillageClickDrag[0] + Random(100, 150, 1), $aCenterHomeVillageClickDrag[1], True)
+		SetLog("Litle drag village correction.", $COLOR_INFO)
+	EndIf
+	
 	If $g_aiSearchZoomOutCounter[0] < 10 Then
 		$vVillage = GetVillageSize($bDebugLog, "stone", "tree", Default, $bOnBuilderBase, False) ; Capture region spam disabled - Team AIO Mod++
 	Else
@@ -431,6 +460,7 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag,
 		$vVillage = GetVillageSize($bDebugLog, "2stone", "2tree", Default, $bOnBuilderBase, False) ; Capture region spam disabled - Team AIO Mod++
 	EndIf
 
+	
 	Static $iCallCount = 0
 	If $g_aiSearchZoomOutCounter[0] > 0 Then
 		If _Sleep(1000) Then
@@ -460,7 +490,7 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag,
 					$aScrollPos[1] = $aCenterHomeVillageClickDrag[1]
 				EndIf
 				ClickAway()
-				ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $iX, $aScrollPos[1] - $iY, True) ; Custom - Team AIO Mod++
+				ClickDrag($aScrollPos[0], $aScrollPos[1], Abs($aScrollPos[0] - $iX), Abs($aScrollPos[1] - $iY), True) ; Custom - Team AIO Mod++
 				If _Sleep(250) Then
 					$iCallCount = 0
 					Return FuncReturn($aResult)
@@ -550,6 +580,11 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag,
 		EndIf
 		$g_bSkipFirstZoomout = True
 	EndIf
-
+	
+	Local $aTmpResult = ["", 0, 0, 0, 0] ; expected dummy value
+	If UBound($aResult) <> 5 Or @error Then
+		$aResult = $aTmpResult
+	EndIf
+	
 	Return FuncReturn($aResult)
 EndFunc   ;==>SearchZoomOut

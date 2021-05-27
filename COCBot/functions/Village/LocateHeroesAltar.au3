@@ -38,13 +38,16 @@ Func _LocateKingAltar($bCollect = True)
 	
 	SetLog("Locating King Altar", $COLOR_INFO)
 	
-	#Region - Auto locate hero - Team AIO Mod++
+	#Region - Auto locate builds - Team AIO Mod++
+	CheckMainScreen(Default, False)
+	ClickAway()
+
 	Local $aAltarPos[2]
-	Local $aLocateHero = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\HeroLocate", 1, "FV", True, "King")
-	If UBound($aLocateHero) > 0 And not @error Then
-		For $i = 0 To UBound($aLocateHero) -1
-			$aAltarPos[0] = $aLocateHero[$i][1]
-			$aAltarPos[1] = $aLocateHero[$i][2]
+	Local $aLocateBuilds = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\AutoLocate\King\", 0, "FV")
+	If UBound($aLocateBuilds) > 0 And not @error Then
+		For $i = 0 To UBound($aLocateBuilds) -1
+			$aAltarPos[0] = $aLocateBuilds[$i][1]
+			$aAltarPos[1] = $aLocateBuilds[$i][2]
 			
 			If IsInsideDiamond($aAltarPos) = False Then ContinueLoop
 			
@@ -78,6 +81,7 @@ Func _LocateKingAltar($bCollect = True)
 			EndIf
 			
 			ClickAway(True)
+			If _Sleep(500) Then Return
 			
 		Next
 	EndIf
@@ -86,7 +90,7 @@ Func _LocateKingAltar($bCollect = True)
 		SetLog("Avoid Locate King Altar.", $COLOR_INFO)
 		Return
 	EndIf
-	#EndRegion - Auto locate hero - Team AIO Mod++
+	#EndRegion - Auto locate builds - Team AIO Mod++
 	
 	While 1
 		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 500)
@@ -222,13 +226,16 @@ Func _LocateQueenAltar($bCollect = True)
 	
 	SetLog("Locating Queen Altar", $COLOR_INFO)
 	
-	#Region - Auto locate hero - Team AIO Mod++
+	#Region - Auto locate builds - Team AIO Mod++
+	CheckMainScreen(Default, False)
+	ClickAway()
+
 	Local $aAltarPos[2]
-	Local $aLocateHero = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\HeroLocate", 1, "FV", True, "Queen")
-	If UBound($aLocateHero) > 0 And not @error Then
-		For $i = 0 To UBound($aLocateHero) -1
-			$aAltarPos[0] = $aLocateHero[$i][1]
-			$aAltarPos[1] = $aLocateHero[$i][2]
+	Local $aLocateBuilds = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\AutoLocate\Queen\", 0, "FV")
+	If UBound($aLocateBuilds) > 0 And not @error Then
+		For $i = 0 To UBound($aLocateBuilds) -1
+			$aAltarPos[0] = $aLocateBuilds[$i][1]
+			$aAltarPos[1] = $aLocateBuilds[$i][2]
 			
 			If IsInsideDiamond($aAltarPos) = False Then ContinueLoop
 			
@@ -262,6 +269,7 @@ Func _LocateQueenAltar($bCollect = True)
 			EndIf
 			
 			ClickAway(True)
+			If _Sleep(500) Then Return
 			
 		Next
 	EndIf
@@ -270,7 +278,7 @@ Func _LocateQueenAltar($bCollect = True)
 		SetLog("Avoid Locate Queen Altar.", $COLOR_INFO)
 		Return
 	EndIf
-	#EndRegion - Auto locate hero - Team AIO Mod++
+	#EndRegion - Auto locate builds - Team AIO Mod++
 	
 	While 1
 		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 500)
@@ -409,13 +417,16 @@ Func _LocateWardenAltar($bCollect = True)
 
 	SetLog("Locating Grand Warden Altar", $COLOR_INFO)
 	
-	#Region - Auto locate hero - Team AIO Mod++
+	#Region - Auto locate builds - Team AIO Mod++
+	CheckMainScreen(Default, False)
+	ClickAway()
+
 	Local $aAltarPos[2]
-	Local $aLocateHero = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\HeroLocate", 1, "FV", True, "Warden")
-	If UBound($aLocateHero) > 0 And not @error Then
-		For $i = 0 To UBound($aLocateHero) -1
-			$aAltarPos[0] = $aLocateHero[$i][1]
-			$aAltarPos[1] = $aLocateHero[$i][2]
+	Local $aLocateBuilds = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\AutoLocate\Warden\", 0, "FV")
+	If UBound($aLocateBuilds) > 0 And not @error Then
+		For $i = 0 To UBound($aLocateBuilds) -1
+			$aAltarPos[0] = $aLocateBuilds[$i][1]
+			$aAltarPos[1] = $aLocateBuilds[$i][2]
 			
 			If IsInsideDiamond($aAltarPos) = False Then ContinueLoop
 			
@@ -449,6 +460,7 @@ Func _LocateWardenAltar($bCollect = True)
 			EndIf
 			
 			ClickAway(True)
+			If _Sleep(500) Then Return
 			
 		Next
 	EndIf
@@ -457,7 +469,7 @@ Func _LocateWardenAltar($bCollect = True)
 		SetLog("Avoid Locate Warden Altar.", $COLOR_INFO)
 		Return
 	EndIf
-	#EndRegion - Auto locate hero - Team AIO Mod++
+	#EndRegion - Auto locate builds - Team AIO Mod++
 
 	While 1
 		ClickAway(True)
@@ -595,13 +607,16 @@ Func _LocateChampionAltar($bCollect = True)
 	If $bCollect Then Collect(False)
 
 	SetLog("Locating Royal Champion Altar", $COLOR_INFO)
-	#Region - Auto locate hero - Team AIO Mod++
+	#Region - Auto locate builds - Team AIO Mod++
+	CheckMainScreen(Default, False)
+	ClickAway()
+
 	Local $aAltarPos[2]
-	Local $aLocateHero = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\HeroLocate", 1, "FV", True, "Champion")
-	If UBound($aLocateHero) > 0 And not @error Then
-		For $i = 0 To UBound($aLocateHero) -1
-			$aAltarPos[0] = $aLocateHero[$i][1]
-			$aAltarPos[1] = $aLocateHero[$i][2]
+	Local $aLocateBuilds = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\AutoLocate\Champion\", 0, "FV")
+	If UBound($aLocateBuilds) > 0 And not @error Then
+		For $i = 0 To UBound($aLocateBuilds) -1
+			$aAltarPos[0] = $aLocateBuilds[$i][1]
+			$aAltarPos[1] = $aLocateBuilds[$i][2]
 			
 			If IsInsideDiamond($aAltarPos) = False Then ContinueLoop
 			
@@ -635,6 +650,7 @@ Func _LocateChampionAltar($bCollect = True)
 			EndIf
 			
 			ClickAway(True)
+			If _Sleep(500) Then Return
 			
 		Next
 	EndIf
@@ -643,7 +659,7 @@ Func _LocateChampionAltar($bCollect = True)
 		SetLog("Avoid Locate Champion Altar.", $COLOR_INFO)
 		Return
 	EndIf
-	#EndRegion - Auto locate hero - Team AIO Mod++
+	#EndRegion - Auto locate builds - Team AIO Mod++
 	While 1
 		ClickAway(True)
 		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 500)
