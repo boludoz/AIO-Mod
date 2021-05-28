@@ -44,7 +44,7 @@ Func BuildingInfo($iXstart, $iYstart)
 	
 	If $aResult[1] <> "" Then $aResult[0] = 1
 	If $aResult[2] <> "" Then $aResult[0] += 1
-	
+	$aResult[1] = String(StringStripWS($aResult[1], $STR_STRIPSPACES + $STR_STRIPTRAILING + $STR_STRIPLEADING))
 	Return $aResult
 EndFunc   ;==>BuildingInfo
 

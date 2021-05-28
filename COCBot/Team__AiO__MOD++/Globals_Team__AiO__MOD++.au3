@@ -12,20 +12,6 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-; Lirel Bit
-Global $g_aBBUpgradeResourceCostDuration[3] = ["", "", ""]
-Global $g_iChkBBUpgradesToIgnore[28] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_hChkBBUpgradesToIgnore[28] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_sBBUpgradesToIgnore[28] = ["Builder Hall", "Gold Mine", "Elixir Collector", "Gold Storage", _
-									 "Elixir Storage", "Gem Mine", "Clock Tower", "Star Laboratory", "Builder Barracks", _
-									 "Battle Machine", "Cannon", "Double Cannon", "Archer Tower", "Hidden Tesla", "Firecrackers", _
-									 "Crusher", "Guard Post", "Air Bombs", "Multi Mortar", "Roaster", "Giant Cannon", "Mega Tesla", _
-									 "Lava Launcher", "Push Trap", "Spring Trap", "Mega Mine", "Mine", "Wall"]
-Global $g_aBBUpgradeNameLevel
-
-Global $g_bChkColorfulAttackLog = 0, $g_bChkBuyGuard = False
-Global $g_hChkColorfulAttackLog = 0, $g_hChkBuyGuard = 0
-;
 
 #Region - Icn - Team AiO MOD++
 Global Const $g_sLibModIconPath = $g_sLibPath & "\ModLibs\AIOMod.dll" ; Mod icon library - Team AiO MOD++
@@ -41,6 +27,11 @@ Global Const $g_sLibBBIconPath = $g_sLibPath & "\ModLibs\BuilderBase.dll" ; icon
 Global Enum $eIcnBB = 1 , $eIcnLabBB, $eIcnBBElixir, $eIcnBBGold, $eIcnBBTrophies, $eIcnMachine, $eIcnBBWallInfo, $eIcnBBWallL1, $eIcnBBWallL2, $eIcnBBWallL3, $eIcnBBWallL4, $eIcnBBWallL5, _
 		$eIcnBBWallL6, $eIcnBBWallL7, $eIcnBBWallL8, $eIcnBBWallL9
 #EndRegion - Icn - Team AIO Mod++
+
+#Region - BuyGuard - Team AIO Mod++
+Global $g_bChkColorfulAttackLog = 0, $g_bChkBuyGuard = False
+Global $g_hChkColorfulAttackLog = 0, $g_hChkBuyGuard = 0
+#EndRegion - BuyGuard - Team AIO Mod++
 
 #Region - Dates - Team AIO Mod++
 ; Custom PrepareSearch - Team AIO Mod++
@@ -329,7 +320,6 @@ Global $g_aIsClanChat[4] = [86, 12, 0xC1BB91, 20] ; OK - Verify is in clan.
 Global $g_aNoClanBtn[4] = [163, 515, 0x6DBB1F, 20] ; OK - Green Join Button on Chat Tab when you are not in a Clan
 
 ; Magic Items
-
 Global $g_bChkCollectMagicItems, _ ;$g_bChkCollectFree, _
 $g_bChkBuilderPotion, $g_bChkClockTowerPotion, $g_bChkHeroPotion, $g_bChkLabPotion, $g_bChkPowerPotion, $g_bChkResourcePotion, _
 $g_iComboClockTowerPotion, $g_iComboHeroPotion, $g_iComboPowerPotion, _
@@ -337,6 +327,17 @@ $g_iInputBuilderPotion, $g_iInputLabPotion, $g_iInputGoldItems = 250000, $g_iInp
 
 #Region - Builder Base !!!
 
+; Bulder base upgrades
+Global $g_aBBUpgradeNameLevel
+Global $g_aBBUpgradeResourceCostDuration[3] = ["", "", ""]
+Global $g_iChkBBUpgradesToIgnore[28] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_hChkBBUpgradesToIgnore[28] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_sBBUpgradesToIgnore[28] = ["Builder Hall", "Gold Mine", "Elixir Collector", "Gold Storage", _
+									 "Elixir Storage", "Gem Mine", "Clock Tower", "Star Laboratory", "Builder Barracks", _
+									 "Battle Machine", "Cannon", "Double Cannon", "Archer Tower", "Hidden Tesla", "Firecrackers", _
+									 "Crusher", "Guard Post", "Air Bombs", "Multi Mortar", "Roaster", "Giant Cannon", "Mega Tesla", _
+									 "Lava Launcher", "Push Trap", "Spring Trap", "Mega Mine", "Mine", "Wall"]
+									 
 ; Extra options
 Global $g_iBBMinAttack = 1, $g_iBBMaxAttack = 4
 
