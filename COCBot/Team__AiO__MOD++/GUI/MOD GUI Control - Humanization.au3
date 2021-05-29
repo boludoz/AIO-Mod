@@ -17,14 +17,14 @@
 Func chkUseBotHumanization()
 	If GUICtrlRead($g_hChkUseBotHumanization) = $GUI_CHECKED Then
 		$g_bUseBotHumanization = True
-		For $i = $g_hLabel1 To $g_hChkLookAtRedNotifications
+		For $i = $g_hChkLookAtRedNotifications To $g_hCmbMaxActionsNumber
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
 		cmbStandardReplay()
 		cmbWarReplay()
 	Else
 		$g_bUseBotHumanization = False
-		For $i = $g_hLabel1 To $g_hChkLookAtRedNotifications
+		For $i = $g_hChkLookAtRedNotifications To $g_hCmbMaxActionsNumber
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
 	EndIf
@@ -40,7 +40,7 @@ EndFunc   ;==>chkLookAtRedNotifications
 
 Func cmbStandardReplay()
 	If GUICtrlRead($g_hChkUseBotHumanization) = $GUI_CHECKED Then
-		If (_GUICtrlComboBox_GetCurSel($g_acmbPriority[3]) > 0) Or (_GUICtrlComboBox_GetCurSel($g_acmbPriority[4]) > 0) Then
+		If (_GUICtrlComboBox_GetCurSel($g_acmbPriority[1]) > 0) Or (_GUICtrlComboBox_GetCurSel($g_acmbPriority[2]) > 0) Then
 			For $i = $g_hLabel7 To $g_acmbPause[0]
 				GUICtrlSetState($i, $GUI_ENABLE)
 			Next
@@ -54,7 +54,7 @@ EndFunc   ;==>cmbStandardReplay
 
 Func cmbWarReplay()
 	If GUICtrlRead($g_hChkUseBotHumanization) = $GUI_CHECKED Then
-		If _GUICtrlComboBox_GetCurSel($g_acmbPriority[10]) > 0 Then
+		If _GUICtrlComboBox_GetCurSel($g_acmbPriority[8]) > 0 Then
 			For $i = $g_hLabel13 To $g_acmbPause[1]
 				GUICtrlSetState($i, $GUI_ENABLE)
 			Next

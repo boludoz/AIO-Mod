@@ -399,6 +399,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "minCollectdark", $g_iTxtCollectDark)
 	_Ini_Add("other", "chkTombstones", $g_bChkTombstones ? 1 : 0)
     _Ini_Add("other", "chkCleanYard", $g_bChkCleanYard ? 1 : 0)
+	
     _Ini_Add("other", "ChkCollectAchievements", $g_bChkCollectAchievements ? 1 : 0)
 	_Ini_Add("other", "ChkCollectFreeMagicItems", $g_bChkCollectFreeMagicItems ? 1 : 0) ; AIO MOD++
 	_Ini_Add("other", "ChkCollectRewards", $g_bChkCollectRewards ? 1 : 0)
@@ -411,13 +412,15 @@ Func SaveConfig_600_6()
 
 	_Ini_Add("other", "ChkCollectBuildersBase", $g_bChkCollectBuilderBase ? 1 : 0)
 	_Ini_Add("other", "ChkCleanBBYard", $g_bChkCleanBBYard ? 1 : 0)
+    _Ini_Add("other", "chkCleanYardBBall", $g_bChkCleanYardBBall ? 1 : 0) ; AIO MOD++
 	_Ini_Add("other", "ChkStartClockTowerBoost", $g_bChkStartClockTowerBoost ? 1 : 0)
 	_Ini_Add("other", "ChkCTBoostBlderBz", $g_bChkCTBoostBlderBz ? 1 : 0)
+	_Ini_Add("other", "ChkCTBoostLabBBActive", $g_bChkCTBoostLabBBActive ? 1 : 0) ; AIO MOD++
 	_Ini_Add("other", "ChkBBSuggestedUpgrades", $g_iChkBBSuggestedUpgrades)
 	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreGold", $g_iChkBBSuggestedUpgradesIgnoreGold)
 	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreElixir", $g_iChkBBSuggestedUpgradesIgnoreElixir)
-;~ 	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreHall", $g_iChkBBSuggestedUpgradesIgnoreHall)
-;~ 	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreWall", $g_iChkBBSuggestedUpgradesIgnoreWall)
+;~ 	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreHall", $g_iChkBBSuggestedUpgradesIgnoreHall) ; AIO MOD++
+;~ 	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreWall", $g_iChkBBSuggestedUpgradesIgnoreWall) ; AIO MOD++
 	
 	_Ini_Add("other", "ChkPlacingNewBuildings", $g_iChkPlacingNewBuildings)
 
@@ -445,12 +448,12 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "PurgeMax", $g_iPurgeMax)
 
 	; Builder Base Attack
-	;_Ini_Add("other", "ChkEnableBBAttack", $g_bChkEnableBBAttack)
+	;_Ini_Add("other", "ChkEnableBBAttack", $g_bChkEnableBBAttack) ; AIO MOD++
 	_Ini_Add("other", "ChkBBTrophyRange", $g_bChkBBTrophyRange)
 	_Ini_Add("other", "TxtBBTrophyLowerLimit", $g_iTxtBBTrophyLowerLimit)
 	_Ini_Add("other", "TxtBBTrophyUpperLimit", $g_iTxtBBTrophyUpperLimit)
 	_Ini_Add("other", "ChkBBAttIfLootAvail", $g_bChkBBAttIfLootAvail)
-	; _Ini_Add("other", "ChkBBWaitForMachine", $g_bChkBBWaitForMachine)
+	; _Ini_Add("other", "ChkBBWaitForMachine", $g_bChkBBWaitForMachine) ; AIO MOD++
 	_Ini_Add("other", "iBBNextTroopDelay", $g_iBBNextTroopDelay)
 	_Ini_Add("other", "iBBSameTroopDelay", $g_iBBSameTroopDelay)
 

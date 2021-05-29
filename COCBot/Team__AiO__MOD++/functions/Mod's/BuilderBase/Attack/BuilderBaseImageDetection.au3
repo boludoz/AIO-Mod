@@ -162,7 +162,7 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = $g_iFurtherFromBBDefault, $DebugI
 	Setlog("Builder Base Internal Deploy Points: " & Round(__timerdiff($hStarttime) / 1000, 2) & " seconds", $COLOR_DEBUG)
 	$hStarttime = __TimerInit()
 
-	$g_aBuilderBaseDiamond = BuilderBaseAttackDiamond()
+	$g_aBuilderBaseDiamond = BuilderBaseDiamond("Attack")
 
 	If $g_aBuilderBaseDiamond = -1 Then
 		_DebugFailedImageDetection("DeployPoints")
@@ -176,7 +176,7 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = $g_iFurtherFromBBDefault, $DebugI
 
 	$hStarttime = __TimerInit()
 
-	$g_aBuilderBaseOuterDiamond = BuilderBaseAttackOuterDiamond()
+	$g_aBuilderBaseOuterDiamond = BuilderBaseDiamond("Outer")
 
 	If $g_aBuilderBaseOuterDiamond = -1 Then
 		_DebugFailedImageDetection("DeployPoints")
@@ -493,6 +493,54 @@ Func DebugBuilderBaseBuildingsDetection($DeployPoints, $BestDeployPoints, $Debug
 
 EndFunc   ;==>DebugBuilderBaseBuildingsDetection
 
+Func BuilderBaseDiamond($sMode = "Attack")
+	Local $iSize = ZoomBuilderBaseMecanics(True)
+	
+	If $iSize > 0 Then 
+		; Polygon Points
+		Local $iTop[2], $iRight[2], $iBottomR[2], $iBottomL[2], $iLeft[2]
+		
+		Local $aBuilderBaseDiamond = ($sMode = "Attack") ? ($g_aBuilderBaseAttackPolygon) : ($g_aBuilderBaseOuterPolygon)
+		
+		If UBound($aBuilderBaseDiamond) = 7 Then
+			$iTop[0] = $aBuilderBaseDiamond[1][0]
+			$iTop[1] = $aBuilderBaseDiamond[1][1]
+		
+			$iRight[0] = $aBuilderBaseDiamond[2][0]
+			$iRight[1] = $aBuilderBaseDiamond[2][1]
+		
+			$iBottomR[0] = $aBuilderBaseDiamond[3][0]
+			$iBottomR[1] = $aBuilderBaseDiamond[3][1]
+		
+			$iBottomL[0] = $aBuilderBaseDiamond[4][0]
+			$iBottomL[1] = $aBuilderBaseDiamond[4][1]
+		
+			$iLeft[0] = $aBuilderBaseDiamond[5][0]
+			$iLeft[1] = $aBuilderBaseDiamond[5][1]
+			
+			Local $iBuilderBaseDiamond[6] = [$iSize, $iTop, $iRight, $iBottomR, $iBottomL, $iLeft]
+	
+			SetDebugLog("Builder Base Polygon : " & _ArrayToString($iBuilderBaseDiamond))
+			Return $iBuilderBaseDiamond
+		EndIf
+	EndIf
+	
+	Return -1
+EndFunc   ;==>_BuilderBaseDiamond
+
+Func InDiamondBB($iX, $iY, $aBuilderBaseOuterPolygon, $bDebug = False)
+	Local $bReturn = False
+	If Not IsArray($aBuilderBaseOuterPolygon) Then Return True
+	If (Int($iY) < 573) Then
+		Local $aMiddle[2] = [(($aBuilderBaseOuterPolygon[5][0] + $aBuilderBaseOuterPolygon[2][0])) / 2, ($aBuilderBaseOuterPolygon[1][1] + $aBuilderBaseOuterPolygon[3][1] + 55) / 2]
+		Local $aSize[2] = [$aMiddle[0] - $aBuilderBaseOuterPolygon[5][0], $aMiddle[1] - $aBuilderBaseOuterPolygon[1][1]]
+		$bReturn = ((Abs(Int($iX) - $aMiddle[0]) / $aSize[0] + Abs(Int($iY) - $aMiddle[1]) / $aSize[1]) <= 1) ? (True) : (False)
+	EndIf
+	If $bDebug Or $g_bDebugAndroid Then SetLog("InDiamondBB | Is in diamond? " & $bReturn & "X = " & Int($iX) & "Y = " & Int($iY), $COLOR_DEBUG)
+	Return $bReturn
+EndFunc
+
+#cs
 Func BuilderBaseAttackDiamond()
 	Local $iSize = ZoomBuilderBaseMecanics(True)
 	If $iSize < 1 Then Return -1
@@ -525,11 +573,14 @@ Func BuilderBaseAttackDiamond()
 	$iBottomL[1] = 628
 
 	Local $iBuilderBaseDiamond[6] = [$iSize, $iTop, $iRight, $iBottomR, $iBottomL, $iLeft]
+	;This Format is for _IsPointInPoly function
+	Local $aTmpBuilderBaseAttackPolygon[7][2] = [[5, -1], [$iTop[0], $iTop[1]], [$iRight[0], $iRight[1]], [$iBottomR[0], $iBottomR[1]], [$iBottomL[0], $iBottomL[1]], [$iLeft[0], $iLeft[1]], [$iTop[0], $iTop[1]]] ; Make Polygon From Points
+	$g_aBuilderBaseAttackPolygon = $aTmpBuilderBaseAttackPolygon
+	SetDebugLog("Builder Base Attack Polygon : " & _ArrayToString($g_aBuilderBaseAttackPolygon))
 	Return $iBuilderBaseDiamond
 EndFunc   ;==>BuilderBaseAttackDiamond
 
-Func BuilderBaseAttackOuterDiamond()
-
+Func BuilderBaseDiamond("Outer")
 	Local $iSize = ZoomBuilderBaseMecanics(True)
 	If $iSize < 1 Then Return -1
 	
@@ -541,10 +592,8 @@ Func BuilderBaseAttackOuterDiamond()
 	Local $iCorrectSizeLR = Floor(($iSize - 590) / 2)
 	Local $iCorrectSizeT = Floor(($iSize - 590) / 4)
 	Local $iCorrectSizeB = ($iSize - 590)
-
-	; Polygon Points
-	Local $iTop[2], $iRight[2], $iBottomR[2], $iBottomL[2], $iLeft[2]
-
+	
+	; BuilderBaseAttackOuterDiamond
 	$iTop[0] = $x - (180 + $iCorrectSizeT)
 	$iTop[1] = $y - 25
 
@@ -566,7 +615,9 @@ Func BuilderBaseAttackOuterDiamond()
 	$g_aBuilderBaseOuterPolygon = $aTmpBuilderBaseOuterPolygon
 	SetDebugLog("Builder Base Outer Polygon : " & _ArrayToString($g_aBuilderBaseOuterPolygon))
 	Return $iBuilderBaseDiamond
+
 EndFunc   ;==>BuilderBaseAttackOuterDiamond
+#Ce
 
 Func BuilderBaseGetEdges($iBuilderBaseDiamond, $Text)
 
@@ -689,7 +740,7 @@ Func BuilderBaseResetAttackVariables()
 	$g_aDeployPoints = -1
 	$g_aDeployBestPoints = -1
 
-	Global $g_aExternalEdges, $g_aBuilderBaseDiamond, $g_aOuterEdges, $g_aBuilderBaseOuterDiamond, $g_aBuilderBaseOuterPolygon, $g_aFinalOuter[4]
+	Global $g_aExternalEdges, $g_aBuilderBaseDiamond, $g_aOuterEdges, $g_aBuilderBaseOuterDiamond, $g_aBuilderBaseOuterPolygon, $g_aBuilderBaseAttackPolygon, $g_aFinalOuter[4]
 EndFunc   ;==>BuilderBaseResetAttackVariables
 
 Func BuilderBaseAttackMainSide()
@@ -877,15 +928,3 @@ Func BuilderBaseBuildingsOnEdge($g_aDeployPoints)
 	Return UBound($ToReturn) > 0 ? $ToReturn : "-1"
 
 EndFunc   ;==>BuilderBaseBuildingsOnEdge
-
-Func InDiamondBB($iX, $iY, $aBuilderBaseOuterPolygon, $bDebug = False)
-	Local $bReturn = False
-	If Not IsArray($aBuilderBaseOuterPolygon) Then Return True
-	If (Int($iY) < 573) Then
-		Local $aMiddle[2] = [(($aBuilderBaseOuterPolygon[5][0] + $aBuilderBaseOuterPolygon[2][0])) / 2, ($aBuilderBaseOuterPolygon[1][1] + $aBuilderBaseOuterPolygon[3][1] + 55) / 2]
-		Local $aSize[2] = [$aMiddle[0] - $aBuilderBaseOuterPolygon[5][0], $aMiddle[1] - $aBuilderBaseOuterPolygon[1][1]]
-		$bReturn = ((Abs(Int($iX) - $aMiddle[0]) / $aSize[0] + Abs(Int($iY) - $aMiddle[1]) / $aSize[1]) <= 1) ? (True) : (False)
-	EndIf
-	If $bDebug Or $g_bDebugAndroid Then SetLog("InDiamondBB | Is in diamond? " & $bReturn & "X = " & Int($iX) & "Y = " & Int($iY), $COLOR_DEBUG)
-	Return $bReturn
-EndFunc

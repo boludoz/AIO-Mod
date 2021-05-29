@@ -14,7 +14,7 @@
 #include-once
 
 Global $g_alblBldBaseStats[4] = ["", "", "", ""]
-Global $g_hChkCollectBuilderBase = 0, $g_hChkStartClockTowerBoost = 0, $g_hChkCTBoostBlderBz = 0, $g_hChkCTBoostAtkAvailable = 0
+Global $g_hChkCollectBuilderBase = 0, $g_hChkStartClockTowerBoost = 0, $g_hChkCTBoostBlderBz = 0;, $g_hChkCTBoostAtkAvailable = 0
 Global $g_hChkCollectBldGE = 0, $g_hChkCollectBldGems = 0, $g_hChkActivateClockTower = 0, $g_hChkCleanBBYard = 0
 Global $g_hBtnBBAtkLogClear = 0,$g_hBtnBBAtkLogCopyClipboard=0
 
@@ -40,12 +40,20 @@ Func CreateMiscBuilderBaseSubTab()
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "ChkCTBoostBlderBz_Info_01", "Boost only when the builder is busy"))
 			GUICtrlSetOnEvent(-1, "chkCTBoostBlderBz")
 			GUICtrlSetState (-1, $GUI_DISABLE)
+		$g_hChkCTBoostLabBBActive = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "ChkCTBoostLabBBActive", "Only when Lab is in progress"), $x + 260, $y + 4, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "ChkCTBoostLabBBActive_Info_01", "Boost only when Lab is in progress"))
+			GUICtrlSetOnEvent(-1, "ChkCTBoostLabBBActive")
+			GUICtrlSetState(-1, $GUI_DISABLE)
 	$y += 28
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnTree, $x + 20, $y, 24, 24)
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnBark, $x + 45, $y, 24, 24)
 		$g_hChkCleanBBYard = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "ChkCleanBBYard", "Remove Obstacles"), $x + 100, $y + 4, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "ChkCleanYardBB_Info_01", "Check this to automatically clear Yard from Trees, Trunks etc. from Builder base."))
-			;GUICtrlSetOnEvent(-1, "ChkCleanBBYard")
+			GUICtrlSetOnEvent(-1, "chkCleanBBYard")
+			GUICtrlSetState(-1, $GUI_UNCHECKED)
+		$g_hChkCleanYardBBall = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "ChkCleanBBYardAll", "Remove all"), $x + 100 + 115, $y + 4, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "ChkCleanBBYardAll_Info_01", "Will try to remove all obstacles at same loop."))
+			GUICtrlSetOnEvent(-1, "chkCleanBBYardAll")
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)

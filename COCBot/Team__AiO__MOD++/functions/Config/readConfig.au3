@@ -217,8 +217,8 @@ EndFunc   ;==>ReadConfig_MOD_MagicItems
 
 Func ReadConfig_MOD_ChatActions()
 	; <><><> ChatActions <><><>
-	IniReadS($g_iacmbPriority[10], $g_sProfileConfigPath, "ChatActions", "cmbPriority[" & 1 & "]", $g_iacmbPriority[0], "int")
-	IniReadS($g_iacmbPriority[11], $g_sProfileConfigPath, "ChatActions", "cmbPriority[" & 2 & "]", $g_iacmbPriority[11], "int")
+	IniReadS($g_iacmbPriorityCHAT, $g_sProfileConfigPath, "ChatActions", "cmbPriorityCHAT", $g_iacmbPriorityCHAT, "int")
+	IniReadS($g_iacmbPriorityFC, $g_sProfileConfigPath, "ChatActions", "cmbPriorityFC", $g_iacmbPriorityFC, "int")
 	
 	; IniReadS($g_bChatClan, $g_sProfileConfigPath, "ChatActions", "EnableChatClan", $g_bChatClan, "Bool")
 	IniReadS($g_sDelayTimeClan, $g_sProfileConfigPath, "ChatActions", "DelayTimeClan", $g_sDelayTimeClan, "Int")
@@ -354,8 +354,7 @@ Func ReadConfig_MOD_Humanization()
 	IniReadS($g_bUseBotHumanization, $g_sProfileConfigPath, "Bot Humanization", "chkUseBotHumanization", $g_bUseBotHumanization, "Bool")
 	IniReadS($g_bUseAltRClick, $g_sProfileConfigPath, "Bot Humanization", "chkUseAltRClick", $g_bUseAltRClick, "Bool")
 	IniReadS($g_bLookAtRedNotifications, $g_sProfileConfigPath, "Bot Humanization", "chkLookAtRedNotifications", $g_bLookAtRedNotifications, "Bool")
-	For $i = 0 To UBound($g_iacmbPriority) -1
-		If $i > 9 Then ExitLoop
+	For $i = 0 To UBound($g_acmbPriority) -1
 		IniReadS($g_iacmbPriority[$i], $g_sProfileConfigPath, "Bot Humanization", "cmbPriority[" & $i & "]", $g_iacmbPriority[$i], "int")
 	Next
 	For $i = 0 To 1

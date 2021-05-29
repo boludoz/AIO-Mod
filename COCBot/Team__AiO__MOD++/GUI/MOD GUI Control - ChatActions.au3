@@ -65,7 +65,7 @@ EndFunc   ;==>ChatGuiEditUpdate
 
 ; Clan Chat
 Func cmbChatActionsChat()
-	If (_GUICtrlComboBox_GetCurSel($g_acmbPriority[10]) > 0) Or (_GUICtrlComboBox_GetCurSel($g_acmbPriority[10]) > 0) Then
+	If (_GUICtrlComboBox_GetCurSel($g_hacmbPriorityCHAT) > 0) Then
 		$g_bChatClan = True
 		For $i = $g_hTxtDelayTimeClan To $g_hChkCleverbot
 			GUICtrlSetState($i, $GUI_ENABLE)
@@ -109,7 +109,7 @@ EndFunc   ;==>cmbChatActionsChat
 ; EndFunc   ;==>chkClanChat
 
 Func chkUseResponses()
-	If (_GUICtrlComboBox_GetCurSel($g_acmbPriority[10]) > 0) Or (_GUICtrlComboBox_GetCurSel($g_acmbPriority[10]) > 0) Then
+	If (_GUICtrlComboBox_GetCurSel($g_hacmbPriorityCHAT) > 0) Then
 		If GUICtrlRead($g_hChkUseResponses) = $GUI_CHECKED Then
 			$g_bClanUseResponses = True
 			GUICtrlSetState($g_hLblEditResponses, $GUI_ENABLE)
@@ -123,7 +123,7 @@ Func chkUseResponses()
 EndFunc   ;==>chkUseResponses
 
 Func chkUseGeneric()
-	If (_GUICtrlComboBox_GetCurSel($g_acmbPriority[10]) > 0) Or (_GUICtrlComboBox_GetCurSel($g_acmbPriority[10]) > 0) Then
+	If (_GUICtrlComboBox_GetCurSel($g_hacmbPriorityCHAT) > 0) Then
 		If GUICtrlRead($g_hChkUseGeneric) = $GUI_CHECKED Then
 			$g_bClanUseGeneric = True
 			GUICtrlSetState($g_hLblEditGeneric, $GUI_ENABLE)
@@ -155,7 +155,7 @@ EndFunc   ;==>chkUseGeneric
 ; EndFunc   ;==>chkEnableFriendlyChallenge
 
 Func cmbChatActionsFC()
-	If (_GUICtrlComboBox_GetCurSel($g_acmbPriority[11]) > 0) Or (_GUICtrlComboBox_GetCurSel($g_acmbPriority[11]) > 0) Then
+	If (_GUICtrlComboBox_GetCurSel($g_hacmbPriorityFC) > 0) Then
 		$g_bEnableFriendlyChallenge = True
 		For $i = $g_hTxtDelayTimeFC To $g_hTxtChallengeText
 			GUICtrlSetState($i, $GUI_ENABLE)
@@ -172,7 +172,7 @@ Func cmbChatActionsFC()
 EndFunc   ;==>cmbChatActionsFC
 
 Func chkOnlyOnRequest()
-	If (_GUICtrlComboBox_GetCurSel($g_acmbPriority[11]) > 0) Or (_GUICtrlComboBox_GetCurSel($g_acmbPriority[11]) > 0) Then
+	If (_GUICtrlComboBox_GetCurSel($g_hacmbPriorityFC) > 0) Then
 		If GUICtrlRead($g_hChkOnlyOnRequest) = $GUI_CHECKED Then
 			$g_bOnlyOnRequest = True
 			GUICtrlSetState($g_hLblKeywordForRequest, $GUI_ENABLE)

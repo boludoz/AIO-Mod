@@ -89,7 +89,7 @@ Func BoostTrainBuilding($sName, $iCmbBoost, $iCmbBoostCtrl)
 		EndIf
 	EndIf
 
-	ClickP($aAway, 1, 0, "#0161")
+	ClickAway() ; ClickP($aAway, 1, 0, "#0161")
 	_Sleep($DELAYBOOSTBARRACKS2)
 	Return $bBoosted
 EndFunc   ;==>BoostTrainBuilding

@@ -31,24 +31,24 @@ EndFunc   ;==>btnBBAtkLogCopyClipboard
 Func chkStartClockTowerBoost()
 	If GUICtrlRead($g_hChkStartClockTowerBoost) = $GUI_CHECKED Then
 		GUICtrlSetState($g_hChkCTBoostBlderBz, $GUI_ENABLE)
-		;GUICtrlSetState($g_hChkCTBoostAtkAvailable, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkCTBoostLabBBActive, $GUI_ENABLE)
 	Else
 		GUICtrlSetState($g_hChkCTBoostBlderBz, $GUI_DISABLE)
-		;GUICtrlSetState($g_hChkCTBoostAtkAvailable, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkCTBoostLabBBActive, $GUI_DISABLE)
 	EndIf
 EndFunc   ;==>chkStartClockTowerBoost
 
 Func chkCTBoostBlderBz()
 	If GUICtrlRead($g_hChkCTBoostBlderBz) = $GUI_CHECKED Then
-		_GUI_Value_STATE("UNCHECKED", $g_hChkCTBoostAtkAvailable)
+		_GUI_Value_STATE("UNCHECKED", $g_hChkCTBoostLabBBActive)
 	EndIf
 EndFunc   ;==>chkCTBoostBlderBz
 
-Func chkCTBoostAtkAvailable()
-	If GUICtrlRead($g_hChkCTBoostAtkAvailable) = $GUI_CHECKED Then
+Func ChkCTBoostLabBBActive()
+	If GUICtrlRead($g_hChkCTBoostLabBBActive) = $GUI_CHECKED Then
 		_GUI_Value_STATE("UNCHECKED", $g_hChkCTBoostBlderBz)
 	EndIf
-EndFunc   ;==>chkCTBoostAtkAvailable
+EndFunc   ;==>ChkCTBoostLabBBActive
 
 Func chkDebugBBattack()
 	If GUICtrlRead($g_hDebugBBattack) = $GUI_CHECKED Then
@@ -417,3 +417,21 @@ Func chkBBUpgradesToIgnore()
 		$g_iChkBBUpgradesToIgnore[$i] = GUICtrlRead($g_hChkBBUpgradesToIgnore[$i]) = $GUI_CHECKED ? 1 : 0
 	Next
 EndFunc   ;==>chkBBUpgradesToIgnore
+
+#Region - Custom Yard - Team AIO Mod++
+Func chkCleanBBYard()
+	If GUICtrlRead($g_hChkCleanBBYard) = $GUI_CHECKED Then
+		$g_bChkCleanBBYard = True
+		GUICtrlSetState($g_hChkCleanYardBBAll, $GUI_ENABLE)
+	Else
+		$g_bChkCleanBBYard = False
+		GUICtrlSetState($g_hChkCleanYardBBAll, $GUI_UNCHECKED)
+		GUICtrlSetState($g_hChkCleanYardBBAll, $GUI_DISABLE)
+	EndIf
+	chkCleanBBYardAll()
+EndFunc   ;==>chkCleanYardBB
+
+Func chkCleanBBYardAll()
+	$g_bChkCleanYardBBAll = (GUICtrlRead($g_hChkCleanYardBBAll) = $GUI_CHECKED) ? (True) : (False)
+EndFunc   ;==>chkCleanYardBBall
+#EndRegion - Custom Yard - Team AIO Mod++

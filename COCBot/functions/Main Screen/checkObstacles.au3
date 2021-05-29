@@ -287,7 +287,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 	EndIf
 	If Not $bHasTopBlackBar And _CheckPixel($aIsMainGrayed, $g_bNoCapturePixel) Then
 		SetDebugLog("checkObstacles: Found gray Window to close")
-		PureClickP($aAway, 1, 0, "#0133") ;Click away If things are open
+		PureClickAway() ; ClickP($aAway, 1, 0, "#0133") ;Click away If things are open
 		$g_bMinorObstacle = True
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		Return False

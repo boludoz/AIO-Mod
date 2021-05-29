@@ -14,7 +14,7 @@
 ;Global $aiClickAwayRegionLeft = [225, 10, 255, 30]
 ;Global $aiClickAwayRegionRight = [605, 10, 645, 30]
 ;Let's tighten these up to avoid clicking on shields.
-Global $aiClickAwayRegionLeft = [115, 10, 156, 65] ; Custom fix - Team AIO Mod++
+Global $aiClickAwayRegionLeft = [115, 1, 156, 16] ; Custom fix - Team AIO Mod++
 Global $aiClickAwayRegionRight = [625, 10, 635, 30]
 Global $aCenterEnemyVillageClickDrag = [430, 545] ; Scroll village using this location in the water ; Custom fix - Team AIO Mod++
 Global $aCenterHomeVillageClickDrag = [430, 650] ; Scroll village using this location in the water

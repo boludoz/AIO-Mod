@@ -449,7 +449,7 @@ Func SmartAttackStrategy($imode)
 						$bCapturedMine = True
 					EndIf
 
-					$g_aiPixelMine = _GetLocationMine(False)
+					$g_aiPixelMine = GetLocationMine(False)
 					If (IsArray($g_aiPixelMine)) Then
 						_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelMine, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
 					EndIf
@@ -463,7 +463,7 @@ Func SmartAttackStrategy($imode)
 						$bCapturedMine = True
 					EndIf
 
-					$g_aiPixelElixir = _GetLocationElixir(False)
+					$g_aiPixelElixir = GetLocationElixir(False)
 					If (IsArray($g_aiPixelElixir)) Then
 						_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
 					EndIf
@@ -477,7 +477,7 @@ Func SmartAttackStrategy($imode)
 						$bCapturedMine = True
 					EndIf
 
-					$g_aiPixelDarkElixir = _GetLocationDarkElixir(False)
+					$g_aiPixelDarkElixir = GetLocationDarkElixir(False)
 					If (IsArray($g_aiPixelDarkElixir)) Then
 						_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelDarkElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
 					EndIf

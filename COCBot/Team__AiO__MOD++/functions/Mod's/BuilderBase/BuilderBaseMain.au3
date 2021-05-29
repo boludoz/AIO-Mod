@@ -28,7 +28,7 @@ Func runBuilderBase($bTestRun = False)
 
 	If Not $g_bRunState Then Return
 
-	ClickP($aAway, 3, 400, "#0000") ;Click Away
+	ClickAway() ; ClickP($aAway, 3, 400, "#0000") ;Click Away
 
 	If Not $g_bChkBuilderAttack And Not $g_bChkCollectBuilderBase And Not $g_bChkStartClockTowerBoost And Not $g_iChkBBSuggestedUpgrades And Not $g_bChkCleanBBYard And Not $g_bChkUpgradeMachine Then
 		If $g_bOnlyBuilderBase Then

@@ -218,99 +218,6 @@ Func RequestSend() ; Custom fix - Team__AiO__MOD
 	Return $bClicked
 EndFunc   ;==>RequestSend
 
-#Region - Custom Yard - Team AIO Mod++
-Func _CleanYard($bIsBB = Default, $bTest = False)
-	If $bIsBB = Default Then $bIsBB = $g_bStayOnBuilderBase
-
-	ZoomOut()
-
-	If $bIsBB Then
-		If Not $g_bChkCleanBBYard And Not $bTest Then Return
-
-		; Check if is in Builder Base
-		If Not IsMainPageBuilderBase() Then Return
-
-		; Get Builders available
-		If Not getBuilderCount(True, True) Then Return ; update builder data, return if problem
-		If _Sleep($DELAYRESPOND) Then Return
-
-		If $g_iFreeBuilderCountBB = 0 Then Return
-	Else
-		If Not $g_bChkCleanYard And Not $bTest Then Return
-
-		; Check if is in Village
-		If Not IsMainPage() Then Return
-
-		; Get Builders available
-		If Not getBuilderCount() Then Return ; update builder data, return if problem
-		If _Sleep($DELAYRESPOND) Then Return
-
-		If $g_iFreeBuilderCount = 0 Then Return
-	EndIf
-
-	If (Number($g_aiCurrentLootBB[$eLootElixirBB]) > 50000 And $bIsBB) Or (Number($g_aiCurrentLoot[$eLootElixir]) > 50000 And Not $bIsBB) Or $bTest Then
-		Local $aResult, $aRTmp1, $aRTmp2
-
-		If $bIsBB Then
-			$aResult = findMultipleQuick($g_sImgCleanBBYard, 0, "FV", Default, Default, Default, 10)
-		Else
-			$aRTmp1 = findMultipleQuick($g_sImgCleanYardSnow, 0, "FV", Default, Default, Default, 10)
-			$aRTmp2 = findMultipleQuick($g_sImgCleanYard, 0, "FV", Default, Default, Default, 10)
-
-			If IsArray($aRTmp1) Then
-				$aResult = $aRTmp1
-				If IsArray($aRTmp2) Then _ArrayAdd($aResult, $aRTmp2)
-			ElseIf IsArray($aRTmp2) Then
-				$aResult = $aRTmp2
-			EndIf
-		EndIf
-
-		If Not IsArray($aResult) Then
-			Return False
-		Else
-			_ArrayShuffle($aResult)
-		EndIf
-
-		SetLog("- Removing some obstacles - Custom by AIO Mod ++.", $COLOR_ACTION)
-
-		Local $iError = 0, $iMaxLoop = 0, $aDigits = ($bIsBB = True) ? ($aBuildersDigitsBuilderBase) : ($aBuildersDigits)
-		Local $aSearch[4] = [0, 0, 0, 0] ; Edge - NV.
-		ReturnPreVD($aSearch, $bIsBB, $g_bEdgeObstacle)
-		For $i = 0 To UBound($aResult) - 1
-			$iMaxLoop = 0
-			If Not isInDiamond($aResult[$i][1], $aResult[$i][2], $aSearch[0], $aSearch[1], $aSearch[2], $aSearch[3]) Then ContinueLoop
-			If $g_bDebugSetlog Then SetDebugLog("_CleanYard found : - Is BB? " & $bIsBB & "- Is Edge ? " & $g_bEdgeObstacle & " - Coordinates X: " & $aResult[$i][1] & " | Coordinates X: " & $aResult[$i][2], $COLOR_SUCCESS)
-
-			SetLog("- Removing some obstacles, wait. - Custom by AIO Mod ++.", $COLOR_INFO)
-
-			Do
-				$iMaxLoop += 1
-				If RandomSleep(1000) Then Return
-				Local $aCondition = StringSplit(getBuilders($aDigits[0], $aDigits[1]), "#", $STR_NOCOUNT)
-				If ($iMaxLoop > 50) Then Return
-			Until Number($aCondition[0]) > 0
-
-			If Not ($i = 0) And ($aResult[$i][1] > 428) Then ClickP($aAway)
-			PureClick($aResult[$i][1], $aResult[$i][2], 1, 0, "#0430")
-			If RandomSleep(500) Then Return
-			If Not ClickRemoveObstacle() Then
-				If isGemOpen(True) = True Then Return False
-				Local $aiOkayButton = findButton("Okay", Default, 1, True)
-				If IsArray($aiOkayButton) And UBound($aiOkayButton, 1) = 2 Then ClickP($aAway)
-				If $g_bDebugSetlog Then SetDebugLog(" - CleanYardAIO | 0x1 error | Try x : " & $iError)
-				$iError += 1
-				If RandomSleep(250) Then Return
-				If ($iError > 5) Then ContinueLoop
-			EndIf
-
-		Next
-
-	EndIf
-	UpdateStats()
-
-EndFunc   ;==>_CleanYard
-#EndRegion - Custom Yard - Team AIO Mod++
-
 Global $g_oTxtBBAtkLogInitText = ObjCreate("Scripting.Dictionary")
 
 Func BBAtkLogHead()
@@ -509,3 +416,20 @@ Func SetVarFlag()
 	EndIf
 	SetDebugLog("Attack Bar : " & $g_iDualBarFix & " flag.")
 EndFunc
+
+Func SecureClick($x, $y)
+	If $x < 68 And $y > 316 Then ; coordinates where the game will click on the CHAT tab (safe margin)
+		If $g_bDebugSetlog Then SetDebugLog("Coordinate Inside Village, but Exclude CHAT")
+		Return False
+	ElseIf $y < 63 Then ; coordinates where the game will click on the BUILDER button or SHIELD button (safe margin)
+		If $g_bDebugSetlog Then SetDebugLog("Coordinate Inside Village, but Exclude BUILDER")
+		Return False
+	ElseIf $x > 692 And $y > 156 And $y < 210 Then ; coordinates where the game will click on the GEMS button (safe margin)
+		If $g_bDebugSetlog Then SetDebugLog("Coordinate Inside Village, but Exclude GEMS")
+		Return False
+	ElseIf $x > 669 And $y > 489 Then ; coordinates where the game will click on the SHOP button (safe margin)
+		If $g_bDebugSetlog Then SetDebugLog("Coordinate Inside Village, but Exclude SHOP")
+		Return False
+	EndIf
+	Return True
+EndFunc   ;==>SecureClick

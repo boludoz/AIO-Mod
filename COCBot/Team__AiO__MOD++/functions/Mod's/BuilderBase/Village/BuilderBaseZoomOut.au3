@@ -137,6 +137,60 @@ Func ZoomBuilderBaseMecanics($bAttack = True)
 	Else
 		SetDebugLog("[BBzoomout] ZoomOut Builder Base - OK", $COLOR_SUCCESS)
 	EndIf
+
+	; Fix ship coord
+	Local $x = $g_aVillageSize[7] + 14
+	Local $y = $g_aVillageSize[8]
+
+	; ZoomFactor
+	Local $iCorrectSizeLR = Floor(($iSize - 590) / 2)
+	Local $iCorrectSizeT = Floor(($iSize - 590) / 4)
+	Local $iCorrectSizeB = ($iSize - 590)
+
+	; Polygon Points
+	Local $iTop[2], $iRight[2], $iBottomR[2], $iBottomL[2], $iLeft[2]
+	
+	; BuilderBaseAttackDiamond
+	$iTop[0] = $x - (180 + $iCorrectSizeT)
+	$iTop[1] = $y + 6
+
+	$iRight[0] = $x + (160 + $iCorrectSizeLR)
+	$iRight[1] = $y + (260 + $iCorrectSizeLR)
+
+	$iLeft[0] = $x - (515 + $iCorrectSizeB)
+	$iLeft[1] = $y + (260 + $iCorrectSizeLR)
+
+	$iBottomR[0] = $x - (110 - $iCorrectSizeB)
+	$iBottomR[1] = 628
+
+	$iBottomL[0] = $x - (225 + $iCorrectSizeB)
+	$iBottomL[1] = 628
+
+	;This Format is for _IsPointInPoly function
+	Local $aTmpBuilderBaseAttackPolygon[7][2] = [[5, -1], [$iTop[0], $iTop[1]], [$iRight[0], $iRight[1]], [$iBottomR[0], $iBottomR[1]], [$iBottomL[0], $iBottomL[1]], [$iLeft[0], $iLeft[1]], [$iTop[0], $iTop[1]]] ; Make Polygon From Points
+	$g_aBuilderBaseAttackPolygon = $aTmpBuilderBaseAttackPolygon
+	SetDebugLog("Builder Base Attack Polygon : " & _ArrayToString($g_aBuilderBaseAttackPolygon))
+	
+	; BuilderBaseAttackOuterDiamond
+	$iTop[0] = $x - (180 + $iCorrectSizeT)
+	$iTop[1] = $y - 25
+
+	$iRight[0] = $x + (205 + $iCorrectSizeLR)
+	$iRight[1] = $y + (260 + $iCorrectSizeLR)
+
+	$iLeft[0] = $x - (560 + $iCorrectSizeB)
+	$iLeft[1] = $y + (260 + $iCorrectSizeLR)
+
+	$iBottomR[0] = $x - (70 - $iCorrectSizeB)
+	$iBottomR[1] = 628
+
+	$iBottomL[0] = $x - (275 + $iCorrectSizeB)
+	$iBottomL[1] = 628
+
+	;This Format is for _IsPointInPoly function
+	Local $aTmpBuilderBaseOuterPolygon[7][2] = [[5, -1], [$iTop[0], $iTop[1]], [$iRight[0], $iRight[1]], [$iBottomR[0], $iBottomR[1]], [$iBottomL[0], $iBottomL[1]], [$iLeft[0], $iLeft[1]], [$iTop[0], $iTop[1]]] ; Make Polygon From Points
+	$g_aBuilderBaseOuterPolygon = $aTmpBuilderBaseOuterPolygon
+	SetDebugLog("Builder Base Outer Polygon : " & _ArrayToString($g_aBuilderBaseOuterPolygon))
 	
 	Return $iSize
 EndFunc   ;==>GetBuilderBaseSize

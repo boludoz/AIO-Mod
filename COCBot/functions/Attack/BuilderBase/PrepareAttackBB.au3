@@ -37,14 +37,14 @@ Func PrepareAttackBB($bTest = False)
 
 	If Not CheckArmyReady() Then
 		If _Sleep(1500) Then Return ; Team AIO Mod++
-		ClickP($aAway)
+		ClickAway() ; ClickP($aAway)
 		Return False
 	EndIf
 
 	If $g_bChkBBAttIfLootAvail Then
 		If Not CheckLootAvail() Then
 			If _Sleep(1500) Then Return ; Team AIO Mod++
-			ClickP($aAway)
+			ClickAway() ; ClickP($aAway)
 			Return False
 		EndIf
 	EndIf
@@ -53,7 +53,7 @@ Func PrepareAttackBB($bTest = False)
 	If Not $g_bBBMachineReady Then
 		SetLog("Battle Machine is not ready.")
 		If _Sleep(1500) Then Return ; Team AIO Mod++
-		ClickP($aAway)
+		ClickAway() ; ClickP($aAway)
 		Return False
 	EndIf
 
@@ -132,7 +132,7 @@ Func CheckArmyReady()
 
 		#Region - Custom army BB - Team AIO Mod++
 			If $bNeedTrain Then
-				ClickP($aAway, 1, 0, "#0000") ; ensure field is clean
+				ClickAway() ; ClickP($aAway, 1, 0, "#0000") ; ensure field is clean
 				If _Sleep(1500) Then Return ; Team AIO Mod++ Then Return
 				SetLog("Troops need to be trained in the training tab.")
 				CheckArmyBuilderBase()

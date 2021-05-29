@@ -326,7 +326,7 @@ EndFunc   ;==>SafeReturnSX
 Func ExitSPPage()
 	If $g_bDebugSX Then SetDebugLog("Super XP : Begin ExitSPPage", $COLOR_DEBUG)
 
-	ClickP($aAway, 1, 0, "#0167") ; Click Away for Close Page
+	ClickAway() ; ClickP($aAway, 1, 0, "#0167") ; Click Away for Close Page
 	Local $iCounter = 0
 	While Not (IsMainPage())
 		If _Sleep(50) Then Return False
@@ -1057,14 +1057,14 @@ Func OpenSinglePlayerPage()
 EndFunc   ;==>OpenSinglePlayerPage
 
 Func WaitForMain($clickAway = True, $DELAYEachCheck = 50, $maxRetry = 100)
-	If Not IsMainPage(1) Then ClickP($aAway, 2, 0, "#0346") ;Click Away
+	If Not IsMainPage(1) Then ClickAway() ; ClickP($aAway, 2, 0, "#0346") ;Click Away
 	If _Sleep($DELAYEachCheck) Then Return True
 
 	; If Not IsMainPage() Then
 		; Local $iCounter = 0
 		; While Not (IsMainPage())
 			; If _Sleep($DELAYEachCheck) Then Return True
-			; If $clickAway Then ClickP($aAway, 2, 0, "#0346") ;Click Away
+			; If $clickAway Then ClickAway() ; ClickP($aAway, 2, 0, "#0346") ;Click Away
 			; $iCounter += 1
 			; If $iCounter > $maxRetry Then
 				; Return False

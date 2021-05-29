@@ -154,7 +154,7 @@ Func BuilderBaseAttack($bTestRun = False)
 
 	; Exit
 	Setlog("Exit from Builder Base Attack!", $COLOR_INFO)
-	ClickP($aAway, 2, 0, "#0332") ;Click Away
+	ClickAway() ; ClickP($aAway, 2, 0, "#0332") ;Click Away
 	If _Sleep(2000) Then Return
 EndFunc   ;==>BuilderBaseAttack
 
@@ -217,7 +217,7 @@ Func ArmyStatus(ByRef $bIsReady)
 	If IsArray($aNeedTrainCoords) And UBound($aNeedTrainCoords) = 2 Then
 		Local $bNeedTrain = True
 
-		ClickP($aAway, 1, 0, "#0000") ; ensure field is clean
+		ClickAway() ; ClickP($aAway, 1, 0, "#0000") ; ensure field is clean
 		If _Sleep(1500) Then Return ; Team AIO Mod++ Then Return
 		SetLog("Troops need to be trained in the training tab.", $COLOR_INFO)
 		CheckArmyBuilderBase()
@@ -407,7 +407,7 @@ Func BuilderBaseAttackToDrop($aAvailableTroops)
 	EndIf
 
 	If $UniqueDeployPoint[0] = 0 Then
-		$g_aBuilderBaseDiamond = BuilderBaseAttackDiamond()
+		$g_aBuilderBaseDiamond = BuilderBaseDiamond("Attack")
 		If IsArray($g_aBuilderBaseDiamond) <> True Or Not (UBound($g_aBuilderBaseDiamond) > 0) Then Return False
 
 		$g_aExternalEdges = BuilderBaseGetEdges($g_aBuilderBaseDiamond, "External Edges")
@@ -638,7 +638,7 @@ Func BuilderBaseAttackReport()
 
 
 	; Return to Main Page
-	ClickP($aAway, 2, 0, "#0332") ;Click Away
+	ClickAway() ; ClickP($aAway, 2, 0, "#0332") ;Click Away
 
 	; Reset Variables
 	$g_aMachineBB = $g_aMachineBBReset

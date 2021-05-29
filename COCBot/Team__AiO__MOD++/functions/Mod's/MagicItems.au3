@@ -48,7 +48,7 @@ Func BoostResourcePotion($aiTmp0 = 0, $aiTmp1 = 0)
 ;~ 		If $ok = True Then
 ;~ 			Local $aCheckBoosted = findButton("Boostleft")
 ;~ 			If Not IsArray($aCheckBoosted) Then
-;~ 				ClickP($aAway, 2, 0, "#0161")
+;~ 				ClickAway() ; ClickP($aAway, 2, 0, "#0161")
 ;~ 				If _Sleep($DELAYBOOSTBARRACKS1) Then Return
 
 ;~ 				Local $bChecked = BoostPotionMod("Resource Potion", "Town Hall", $g_aiTownHallPos, $g_iCmbBoostResourcePotion, $g_hCmbBoostResourcePotion) = _NowCalc()
@@ -58,7 +58,7 @@ Func BoostResourcePotion($aiTmp0 = 0, $aiTmp1 = 0)
 ;~ 			Else
 ;~ 				SetLog("Resource Potion is already Boosted", $COLOR_INFO)
 ;~ 			EndIf
-;~ 			ClickP($aAway, 2, 0, "#0161")
+;~ 			ClickAway() ; ClickP($aAway, 2, 0, "#0161")
 ;~ 		EndIf
 ;~ 	EndIf
 

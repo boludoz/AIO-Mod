@@ -38,15 +38,27 @@ Func StartClockTowerBoost($bSwitchToBB = False, $bSwitchToNV = False)
 		ClickAway()
 		If Not SwitchBetweenBases() Then Return ; Switching to Builders Base
 	EndIf
-
+	
+	#Region - Custom BB - Team AIO Mod++
 	Local $bCTBoost = True
 	If $g_bChkCTBoostBlderBz Then
 		getBuilderCount(True, True) ; Update Builder Variables for Builders Base
 		If $g_iFreeBuilderCountBB = $g_iTotalBuilderCountBB Then $bCTBoost = False ; Builder is not busy, skip Boost
+	ElseIf $g_bChkCTBoostLabBBActive Then
+		If $g_sStarLabUpgradeTime <> "" Then $TimeDiff = _DateDiff("n", _NowCalc(), $g_sStarLabUpgradeTime) ; what is difference between end time and now in minutes?
+		If @error Then _logErrorDateDiff(@error)
+		If Not $g_bRunState Then Return
+		If $TimeDiff <= 0 Then 
+			SetLog("Skip Clock Tower Boost as no Lab troop is currently under Upgrade.", $COLOR_INFO)
+			$bCTBoost = False
+		EndIf
 	EndIf
-
-	If Not $bCTBoost Then
+	
+	If Not $bCTBoost And $g_bChkCTBoostBlderBz Then
 		SetLog("Skip Clock Tower Boost as no Building is currently under Upgrade!", $COLOR_INFO)
+	ElseIf Not $bCTBoost And $g_bChkCTBoostLabBBActive Then 
+		SetLog("Skip Clock Tower Boost as Lab isn't in progress", $COLOR_INFO)
+	#EndRegion - Custom BB - Team AIO Mod++
 	Else ; Start Boosting
 		SetLog("Boosting Clock Tower", $COLOR_INFO)
 		If _Sleep($DELAYCOLLECT2) Then Return

@@ -13,16 +13,17 @@
 ; Example .......: No
 ; ===============================================================================================================================
 #include-once
-Global $g_hChkUseBotHumanization = 0, $g_hChkUseAltRClick = 0, $g_acmbPriority = 0, $g_hChallengeMessage = 0
+Global $g_hChkLookAtRedNotifications = 0
+Global $g_hChkUseBotHumanization = 0, $g_hChkUseAltRClick = 0, $g_hChallengeMessage = 0
 Global $g_hLabel1 = 0, $g_hLabel2 = 0, $g_hLabel3 = 0, $g_hLabel4 = 0
 Global $g_hLabel5 = 0, $g_hLabel6 = 0, $g_hLabel7 = 0, $g_hLabel8 = 0
 Global $g_hLabel9 = 0, $g_hLabel10 = 0, $g_hLabel11 = 0, $g_hLabel12 = 0
 Global $g_hLabel14 = 0, $g_hLabel15 = 0, $g_hLabel16 = 0, $g_hLabel13 = 0
 Global $g_hLabel17 = 0, $g_hLabel18 = 0, $g_hLabel20 = 0
-Global $g_hChkLookAtRedNotifications = 0, $g_hCmbMaxActionsNumber = 0
-Global $g_acmbPriority[13] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_acmbPriority[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_acmbMaxSpeed[2] = [0, 0]
 Global $g_acmbPause[2] = [0, 0]
+Global $g_hCmbMaxActionsNumber = 0
 ; Global $g_ahumanMessage[2] = ["", ""]
 
 Func TabHumanizationGUI()
@@ -46,21 +47,7 @@ Func TabHumanizationGUI()
 	$g_hLabel1 = GUICtrlCreateLabel(GetTranslatedFileIni("MOD GUI Design - BotHumanization", "Label_01", "Read The Clan Chat"), $x + 232, $y + 3, 110, 17)
 	$g_acmbPriority[0] = GUICtrlCreateCombo("", $x + 342, $y, 75, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 	GUICtrlSetData(-1, GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptions", $g_sFrequenceChain), GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptionNever", "Never"))
-	#cs
-	GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModChat, $x, $y + 32, 32, 32)
-	$g_hLabel4 = GUICtrlCreateLabel(GetTranslatedFileIni("MOD GUI Design - BotHumanization", "Label_04", "Say"), $x + 40, $y + 30, 31, 17)
-	$g_ahumanMessage[0] = _GUICtrlCreateInput(GetTranslatedFileIni("MOD GUI Design - BotHumanization", "HumanMessage_01", "Hello !"), $x + 65, $y + 25, 121, 21)
-	$g_hLabel3 = GUICtrlCreateLabel(GetTranslatedFileIni("MOD GUI Design - BotHumanization", "Label_03", "Or"), $x + 195, $y + 30, 15, 17)
-	$g_ahumanMessage[1] = _GUICtrlCreateInput(GetTranslatedFileIni("MOD GUI Design - BotHumanization", "HumanMessage_02", "Re !"), $x + 215, $y + 25, 116, 21)
-	$g_acmbPriority[11] = GUICtrlCreateCombo("", $x + 342, $y + 25, 75, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
-	GUICtrlSetData(-1, GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptions", -1), GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptionNever", -1))
-	$g_hLabel20 = GUICtrlCreateLabel(GetTranslatedFileIni("MOD GUI Design - BotHumanization", "Label_20", "Launch Challenges With Message"), $x + 40, $y + 55, 170, 17)
-	$g_hChallengeMessage = _GUICtrlCreateInput(GetTranslatedFileIni("MOD GUI Design - BotHumanization", "ChallengeMessage", "Ready to Challenge?"), $x + 215, $y + 50, 116, 21)
-	$g_acmbPriority[12] = GUICtrlCreateCombo("", $x + 342, $y + 50, 75, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
-	GUICtrlSetData(-1, GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptions", -1), GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptionNever", -1))
 
-	$y += 87
-	#ce
 	$y += 30 ; Team AIO Mod++
 	GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModRepeat, $x, $y + 5, 32, 32)
 	$g_hLabel5 = GUICtrlCreateLabel(GetTranslatedFileIni("MOD GUI Design - BotHumanization", "Label_05", "Watch Defenses"), $x + 40, $y + 5, 110, 17)
@@ -130,7 +117,7 @@ Func TabHumanizationGUI()
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
-	For $i = $g_hLabel1 To $g_hChkLookAtRedNotifications
+	For $i = $g_hChkLookAtRedNotifications To $g_hCmbMaxActionsNumber
 		GUICtrlSetState($i, $GUI_DISABLE)
 	Next
 

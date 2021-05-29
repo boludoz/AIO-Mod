@@ -36,7 +36,7 @@ Func BattleMachineUpgrade($bTestRun = False)
 	;Just to debug
 	FuncEnter(BattleMachineUpgrade)
 
-	ClickP($aAway, 1, 0, "#0900") ;Click Away
+	ClickAway() ; ClickP($aAway, 1, 0, "#0900") ;Click Away
 
 	; [0] = Remain Upgrade time for next level  [1] = Machine next Level , [2] = Machine Next level cost
 	Local $aMachineStatus[3] = [0,0,0]
@@ -52,7 +52,7 @@ Func BattleMachineUpgrade($bTestRun = False)
 	If _Sleep(500) Then Return
 	
 	If Not (($iDateS <= 0) Or ($iDateH > 72) Or $bTestRun) Then ; > 72 prevent infinite
-		ClickP($aAway, 2, 100, "#0900") ;Click Away
+		ClickAway() ; ClickP($aAway, 2, 100, "#0900") ;Click Away
 		Setlog("Battle machine skipped : upgrade in progress.", $COLOR_INFO)
 		Return
 	EndIf

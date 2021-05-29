@@ -31,7 +31,7 @@ Func TestSmartMilk($bFast = True)
 	If $bFast = False Then
 		checkMainScreen(False)
 		CheckIfArmyIsReady()
-		ClickP($aAway, 2, 0, "") ;Click Away
+		ClickAway() ; ClickP($aAway, 2, 0, "") ;Click Away
 		If _Sleep(100) Then Return FuncReturn()
 		If (IsSearchModeActive($DB) And checkCollectors(True, False)) Or IsSearchModeActive($LB) Then
 			If _Sleep(100) Then Return FuncReturn()

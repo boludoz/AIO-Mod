@@ -191,14 +191,14 @@ Global Const $g_iMinStarsToEnd = 1
 Global $bCanGainXP = False
 
 ; Humanization - Team AiO MOD++
-Global $g_iacmbPriority[13] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_iacmbPriority[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_iacmbMaxSpeed[2] = [1, 1]
 Global $g_iacmbPause[2] = [0, 0]
 ; Global $g_iahumanMessage[2] = ["Hello !", "Hello !"]
 ; Global $g_iTxtChallengeMessage = "Ready to Challenge?"
 
 Global $g_iMinimumPriority, $g_iMaxActionsNumber, $g_iActionToDo
-Global $g_aSetActionPriority[13] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_aSetActionPriority[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 Global $g_sFrequenceChain = "Never|Sometimes|Frequently|Often|Very Often"
 Global $g_sReplayChain = "1|2|4"
@@ -217,6 +217,8 @@ Global $g_bFriendlyChallengeBase[6] = [False, False, False, False, False, False]
 Global $g_abFriendlyChallengeHours[24] = [True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True]
 Global $ChatbotStartTime, $ChatbotQueuedChats[0], $ChatbotReadQueued = False, $ChatbotReadInterval = 0, $ChatbotIsOnInterval = False, _
 	$g_sGlobalChatLastMsgSentTime = "", $g_sClanChatLastMsgSentTime = "", $g_sFCLastMsgSentTime = ""
+
+Global $g_iacmbPriorityCHAT = 0, $g_iacmbPriorityFC = 0
 
 Global $g_aIAVar[5][2] = [[0,0],[1,0],[2,0],[3,0],[4,0]] , $g_sIAVar = '0,0#1,0#2,0#3,0#4,0'
 
@@ -354,7 +356,7 @@ Global $g_sTxtRegistrationToken = ""
 Global $g_aBuilderHallPos = -1, $g_aAirdefensesPos = -1, $g_aCrusherPos = -1, $g_aCannonPos = -1, $g_aGuardPostPos = -1, _
 $g_aAirBombs = -1, $g_aLavaLauncherPos = -1, $g_aRoasterPos = -1, $g_aDeployPoints, $g_aDeployBestPoints
 
-Global $g_aExternalEdges, $g_aBuilderBaseDiamond, $g_aOuterEdges, $g_aBuilderBaseOuterDiamond, $g_aBuilderBaseOuterPolygon, $g_aFinalOuter[4]
+Global $g_aExternalEdges, $g_aBuilderBaseDiamond, $g_aOuterEdges, $g_aBuilderBaseOuterDiamond, $g_aBuilderBaseOuterPolygon, $g_aBuilderBaseAttackPolygon, $g_aFinalOuter[4]
 
 ; GUI
 Global Enum $g_eBBAttackCSV = 0, $g_eBBAttackSmart = 1
@@ -419,6 +421,12 @@ Global $g_hBBAttackLogFile = 0
 Global $g_bOnlyBuilderBase = False
 
 Global $g_bChkBBGetFromCSV = False, $g_bChkBBGetFromArmy
+
+; CleanYardBBAll
+Global $g_bChkCleanYardBBAll = False, $g_hChkCleanYardBBall = 0
+
+; Currently under Upgrade
+Global $g_bChkCTBoostLabBBActive = False, $g_hChkCTBoostLabBBActive = 0
 #EndRegion - Builder Base !!!
 
 Global $g_iAttackTotalBLButtons = -1

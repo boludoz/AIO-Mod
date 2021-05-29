@@ -111,6 +111,7 @@ Global Const $DELAYUNBREAKABLE8 = 50 ;click
 ;CheckTombs
 Global Const $DELAYCHECKTOMBS1 = 500
 Global Const $DELAYCHECKTOMBS2 = 2000
+Global Const $DELAYCHECKTOMBS3 = 5000
 
 ;checkMainScreen
 Global Const $DELAYCHECKMAINSCREEN1 = 1000

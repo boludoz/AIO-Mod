@@ -74,17 +74,32 @@ Func ChatActions() ; run the chatbot
 	If $g_bChatClan Or (($g_bEnableFriendlyChallenge) And (Not $g_bStayOnBuilderBase)) Then
 		
 		Local $bChat = False, $bFriendly = False
+				
+		Switch $g_iacmbPriorityFC
+			Case 1
+				$g_iMinimumPriority = 0
+			Case 2
+				$g_iMinimumPriority = 25
+			Case 3
+				$g_iMinimumPriority = 50
+			Case 4
+				$g_iMinimumPriority = 75
+		EndSwitch
+
+		$bFriendly = (Random($g_iMinimumPriority, 100, 1) > 75)
+			
+		Switch $g_iacmbPriorityCHAT
+			Case 1
+				$g_iMinimumPriority = 0
+			Case 2
+				$g_iMinimumPriority = 25
+			Case 3
+				$g_iMinimumPriority = 50
+			Case 4
+				$g_iMinimumPriority = 75
+		EndSwitch
 		
-		For $i = 0 To 11
-			If $i > 9 Then
-				SetActionPriority($i)
-			Else
-				$g_aSetActionPriority[$i] = 0
-			EndIf
-		Next	
-		
-		$bChat = ($g_aSetActionPriority[10] > 75)
-		$bFriendly = ($g_aSetActionPriority[11] > 75)
+		$bChat = (Random($g_iMinimumPriority, 100, 1) > 75)
 		
 		If $bChat = False And $bFriendly = False Then Return
 		
@@ -263,7 +278,7 @@ Func OpenClanChat($iDelay = 200, $bIUnders = True)
 			If $bIUnders and UnderstandChatRules() = True Then SetDebugLog("ChatBot|UnderstandChatRules", $COLOR_DEBUG) ; December Update(2018)
 			Return True
 		Else
-			ClickP($aAway2, 1, 0, "#0176")
+			ClickAway() ; ClickP($aAway2, 1, 0, "#0176")
 		EndIf
 
 		If RandomSleep(100) Then Return
@@ -439,7 +454,7 @@ EndFunc   ;==>ChatbotNotifyIntervalChatRead
 Func ChatbotSettingOpen() ; Open the Settings
 	SetDebugLog("ChatBot|Begin ChatbotSettingOpen", $COLOR_DEBUG)
 
-	ClickP($aAway2, 1, 0, "#0176") ;Click Away to prevent any pages on top
+	ClickAway() ; ClickP($aAway2, 1, 0, "#0176") ;Click Away to prevent any pages on top
 	ForceCaptureRegion()
 	If _Sleep($DELAYCHATACTIONS2) Then Return
 	If Not _CheckPixel($aIsSettingPage, $g_bCapturePixel) Then
@@ -567,7 +582,7 @@ Func FriendlyChallenge()
 		_ArrayShuffle($aBaseForShare)
 	EndIf
 
-	ClickP($aAway2, 1, 0, "#0176") ;Click Away
+	ClickAway() ; ClickP($aAway2, 1, 0, "#0176") ;Click Away
 	Setlog("Checking Friendly Challenge at Clan Chat", $COLOR_INFO)
 
 	If Not OpenClanChat() Then ; GTFO - Team AIO Mod++

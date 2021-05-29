@@ -33,7 +33,7 @@ Func CheckArmyBuilderBase($bDebug = False)
 
 	SetDebugLog("** Click Away **", $COLOR_DEBUG)
 
-	ClickP($aAway, 1, 0, "#0332") ;Click Away
+	ClickAway() ; ClickP($aAway, 1, 0, "#0332") ;Click Away
 
 	Setlog("Entering troops", $COLOR_PURPLE)
 
@@ -49,7 +49,7 @@ Func CheckArmyBuilderBase($bDebug = False)
 	; Wait for Window
 	If Not _WaitForCheckImg($g_sImgPathFillArmyCampsWindow, "278, 409, 411, 464") Then
 		Setlog("Can't Open The Fill Army Camps Window!", $COLOR_DEBUG)
-		ClickP($aAway, 1, 0, "#0332") ;Click Away
+		ClickAway() ; ClickP($aAway, 1, 0, "#0332") ;Click Away
 		Return
 	EndIf
 
@@ -58,7 +58,7 @@ Func CheckArmyBuilderBase($bDebug = False)
 	DetectCamps()
 
 	Setlog("Exit from Camps!", $COLOR_PURPLE)
-	ClickP($aAway, 1, 0, "#0332") ;Click Away
+	ClickAway() ; ClickP($aAway, 1, 0, "#0332") ;Click Away
 	FuncReturn()
 
 EndFunc   ;==>CheckArmyBuilderBase

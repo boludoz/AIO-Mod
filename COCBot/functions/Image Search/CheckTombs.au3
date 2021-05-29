@@ -6,7 +6,7 @@
 ; Return values .: False if regular farming is needed to refill storage
 ; Author ........: barracoda/KnowJack (2015)
 ; Modified ......: sardo (05-2015/06-2015) , ProMac (04-2016), MonkeyHuner (06-2015)
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2021
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
@@ -73,7 +73,7 @@ Func CheckTombs()
 	checkMainScreen(False) ; check for screen errors while function was running
 EndFunc   ;==>CheckTombs
 
-Func CleanYard($bTest = False)
+Func CleanYard()
 
 	; Early exist if noting to do
 	If Not $g_bChkCleanYard And Not $g_bChkGemsBox And Not TestCapture() Then Return
@@ -85,22 +85,52 @@ Func CleanYard($bTest = False)
 	If Not getBuilderCount() Then Return ; update builder data, return if problem
 	If _Sleep($DELAYRESPOND) Then Return
 
+	; Obstacles function to Parallel Search , will run all pictures inside the directory
+
 	; Setup arrays, including default return values for $return
-	Local $sCocDiamond = $CocDiamondECD
-	
-	If ($g_iFreeBuilderCount < 1) Then
-		SetLog("No Builders available to remove Obstacles!")
-		Return
+	Local $Filename = ""
+	Local $Locate = 0
+	Local $CleanYardXY
+	Local $sCocDiamond = ($g_bEdgeObstacle = False) ? ("DCD") : ("ECD") ;$CocDiamondECD ; Custom Yard - Team AIO Mod++
+	Local $redLines = $sCocDiamond
+	Local $bNoBuilders = $g_iFreeBuilderCount < 1
+
+	If $g_iFreeBuilderCount > 0 And $g_bChkCleanYard And Number($g_aiCurrentLoot[$eLootElixir]) > 50000 Then
+		Local $aResult = findMultiple($g_iDetectedImageType = 1 ? $g_sImgCleanYardSnow  : $g_sImgCleanYard, $sCocDiamond, $redLines, 0, 1000, 10, "objectname,objectlevel,objectpoints", True)
+		If IsArray($aResult) Then
+			For $matchedValues In $aResult
+				Local $aPoints = decodeMultipleCoords($matchedValues[2])
+				$Filename = $matchedValues[0] ; Filename
+				For $i = 0 To UBound($aPoints) - 1
+					$CleanYardXY = $aPoints[$i] ; Coords
+					If UBound($CleanYardXY) > 1 And isInsideDiamondXY($CleanYardXY[0], $CleanYardXY[1]) Then ; secure x because of clan chat tab
+						If $g_bDebugSetlog Then SetDebugLog($Filename & " found (" & $CleanYardXY[0] & "," & $CleanYardXY[1] & ")", $COLOR_SUCCESS)
+						If IsMainPage() Then Click($CleanYardXY[0], $CleanYardXY[1], 1, 0, "#0430")
+						$Locate = 1
+						If _Sleep($DELAYCOLLECT3) Then Return
+						If Not ClickRemoveObstacle() Then ContinueLoop
+						If _Sleep($DELAYCHECKTOMBS2) Then Return
+						ClickAway() ; ClickP($aAway, 2, 300, "#0329") ;Click Away
+						If _Sleep($DELAYCHECKTOMBS1) Then Return
+						If Not getBuilderCount() Then Return ; update builder data, return if problem
+						If _Sleep($DELAYRESPOND) Then Return
+						If $g_iFreeBuilderCount = 0 Then
+							SetLog("No More Builders available")
+							If _Sleep(2000) Then Return
+							ExitLoop (2)
+						EndIf
+					EndIf
+				Next
+			Next
+		EndIf
 	EndIf
-	
-	_CleanYard(False, $bTest)
 
 	; Setup arrays, including default return values for $return
 	Local $return[7] = ["None", "None", 0, 0, 0, "", ""]
 	Local $GemBoxXY[2] = [0, 0]
 
 	; Perform a parallel search with all images inside the directory
-	If ($g_iFreeBuilderCount > 0 And $g_bChkGemsBox And Number($g_aiCurrentLoot[$eLootElixir]) > 50000) Or TestCapture() Or $bTest Then
+	If ($g_iFreeBuilderCount > 0 And $g_bChkGemsBox And Number($g_aiCurrentLoot[$eLootElixir]) > 50000) Or TestCapture() Then
 		Local $aResult = multiMatches($g_sImgGemBox, 1, $sCocDiamond, $sCocDiamond)
 		If UBound($aResult) > 1 Then
 			; Now loop through the array to modify values, select the highest entry to return
@@ -127,10 +157,11 @@ Func CleanYard($bTest = False)
 					If isInsideDiamondXY($GemBoxXY[$j][0], $GemBoxXY[$j][1]) Then
 						If IsMainPage() Then Click($GemBoxXY[$j][0], $GemBoxXY[$j][1], 1, 0, "#0430")
 						If _Sleep($DELAYCHECKTOMBS2) Then Return
+						$Locate = 1
 						If _Sleep($DELAYCOLLECT3) Then Return
 						If Not ClickRemoveObstacle() Then ContinueLoop
 						If _Sleep($DELAYCHECKTOMBS2) Then Return
-						ClickP($aAway, 2, 300, "#0329") ;Click Away
+						ClickAway() ; ClickP($aAway, 2, 300, "#0329") ;Click Away
 						If _Sleep($DELAYCHECKTOMBS1) Then Return
 						If Not getBuilderCount() Then Return ; update builder data, return if problem
 						If _Sleep($DELAYRESPOND) Then Return
@@ -148,8 +179,12 @@ Func CleanYard($bTest = False)
 		EndIf
 	EndIf
 
-	If $g_bDebugSetlog Then SetDebugLog("Time: " & Round(__TimerDiff($hObstaclesTimer) / 1000, 2) & "'s", $COLOR_SUCCESS)
-
+	If $bNoBuilders Then
+		SetLog("No Builders available to remove Obstacles!")
+	Else
+		If $Locate = 0 And $g_bChkCleanYard And Number($g_aiCurrentLoot[$eLootElixir]) > 50000 Then SetLog("No Obstacles found, Yard is clean!", $COLOR_SUCCESS)
+		If $g_bDebugSetlog Then SetDebugLog("Time: " & Round(__TimerDiff($hObstaclesTimer) / 1000, 2) & "'s", $COLOR_SUCCESS)
+	EndIf
 	UpdateStats()
 	ClickAway()
 

@@ -17,13 +17,13 @@ Func isGemOpen($bNeedCaptureRegion = False, $bClick = False) ; Team AIO Mod++
 	If _Sleep($DELAYISGEMOPEN1) Then Return
 	If _CheckPixel($aIsGemWindow1, $bNeedCaptureRegion) Then ; Safety Check if the normal use Gem window opens
 		If $g_bDebugSetlog Then SetDebugLog("Gemclick Red X detect", $COLOR_DEBUG)
-		If ($bClick = False) Then PureClickP($aAway, 1, 0, "#0140") ; click away to close gem window
+		If ($bClick = False) Then PureClickAway() ; ClickP($aAway, 1, 0, "#0140") ; click away to close gem window
 		Return True
 	ElseIf _CheckPixel($aIsGemWindow2, $bNeedCaptureRegion) And _ ; check for the red line under the redX square of gem window
 			_CheckPixel($aIsGemWindow3, $bNeedCaptureRegion) And _
 			_CheckPixel($aIsGemWindow4, $bNeedCaptureRegion) Then
 		If $g_bDebugSetlog Then SetDebugLog("Gemclick Red Line detect", $COLOR_DEBUG)
-		If ($bClick = False) Then PureClickP($aAway, 1, 0, "#0141")
+		If ($bClick = False) Then PureClickAway() ; ClickP($aAway, 1, 0, "#0141")
 		Return True
 	EndIf
 	Return False

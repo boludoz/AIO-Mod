@@ -175,7 +175,7 @@ Func TrainGTFO()
 
 	If $g_bDonationEnabled And $g_bChkDonate Then ResetVariables("donated")
 
-	ClickP($aAway, 2, 0, "#0346") ;Click Away
+	ClickAway() ; ClickP($aAway, 2, 0, "#0346") ;Click Away
 	If RandomSleep(500) Then Return ; Delay AFTER the click Away Prevents lots of coc restarts
 
 	EndGainCost("Train")

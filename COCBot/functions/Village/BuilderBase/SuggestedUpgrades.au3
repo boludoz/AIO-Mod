@@ -289,7 +289,7 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False)
 		Local $aBuildingName = BuildingInfo(245, 490 + $g_iBottomOffsetY)
 		If $aBuildingName[0] = 2 Then
 			SetLog("Building: " & $aBuildingName[1], $COLOR_INFO)
-			
+
 			; Verify if is to Upgrade
 			Local $sMsg = "", $bBuildString = False
 			For $i = 0 To UBound($g_sBBUpgradesToIgnore) -1
@@ -301,21 +301,21 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False)
 				ElseIf $bBuildString And $g_iChkBBUpgradesToIgnore[$i] = 0 Then
 					ExitLoop
 				EndIf
-			Next			
-			
+			Next
+
 			If _MultiPixelSearch($g_iQuickMISX + 300, 579, $g_iQuickMISX + 300 + 67, 613, 2, 2, Hex(0xFF887F, 6), StringSplit2D("0xFF887F-0-1|0xFF887F-4-0"), 35) = 0 Then
 				SetLog("Upgrade stopped due to insufficient loot", $COLOR_ERROR)
 				ClickAway()
 				Return False
 			EndIf
-			
+
 			Click($g_iQuickMISX + 300, $g_iQuickMISY + 650, 1)
 			If _Sleep(1500) Then Return
 			For $i = 0 To UBound($g_aBBUpgradeResourceCostDuration) - 1
 				$g_aBBUpgradeResourceCostDuration[$i] = ""
 			Next
 			If StringInStr($g_aBBUpgradeNameLevel[2], "Broken") = 0 Then
-				$g_aBBUpgradeResourceCostDuration[0] = $sResource
+				$g_aBBUpgradeResourceCostDuration[0] = $sUpgButtom
 				If StringInStr($g_aBBUpgradeNameLevel[1], "Machine") > 0 Then
 					$g_aBBUpgradeResourceCostDuration[1] = getResourcesUpgrade(598, 509 + 44)
 					$g_aBBUpgradeResourceCostDuration[2] = getHeroUpgradeTime(578, 450 + 44)
@@ -345,7 +345,7 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False)
 				Else
 					SetLog("Not enough Resources to Upgrade " & $aBuildingName[1] & " !", $COLOR_ERROR)
 				EndIf
-				
+
 				ClickAway()
 				If _Sleep(250) Then Return
 			EndIf
