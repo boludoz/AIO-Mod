@@ -171,12 +171,15 @@ EndFunc   ;==>ResumeAndroid
 
 Func ProcessCommandLine()
 
+	; An alternative to the limitation of $CmdLine[] only being able to return a maximum of 63 parameters.
+	Local $aCmdLine = _WinAPI_CommandLineToArgv($CmdLineRaw)
+
 	; Handle Command Line Launch Options and fill $g_asCmdLine
-	If $CmdLine[0] > 0 Then
-		SetDebugLog("Full Command Line: " & _ArrayToString($CmdLine, " "))
-		For $i = 1 To $CmdLine[0]
+	If $aCmdLine[0] > 0 Then
+		SetDebugLog("Full Command Line: " & _ArrayToString($aCmdLine, " "))
+		For $i = 1 To $aCmdLine[0]
 			Local $bOptionDetected = True
-			Switch $CmdLine[$i]
+			Switch $aCmdLine[$i]
 				; terminate bot if it exists (by window title!)
 				Case "/restart", "/r", "-restart", "-r"
 					$g_bBotLaunchOption_Restart = True
@@ -203,8 +206,8 @@ Func ProcessCommandLine()
 					_WinAPI_AllocConsole()
 					_WinAPI_SetConsoleIcon($g_sLibIconPath, $eIcnGUI)
 				Case Else
-					If StringInStr($CmdLine[$i], "/guipid=") Then
-						Local $guidpid = Int(StringMid($CmdLine[$i], 9))
+					If StringInStr($aCmdLine[$i], "/guipid=") Then
+						Local $guidpid = Int(StringMid($aCmdLine[$i], 9))
 						If ProcessExists($guidpid) Then
 							$g_iGuiPID = $guidpid
 						Else
@@ -214,10 +217,10 @@ Func ProcessCommandLine()
 						$bOptionDetected = False
 						$g_asCmdLine[0] += 1
 						ReDim $g_asCmdLine[$g_asCmdLine[0] + 1]
-						$g_asCmdLine[$g_asCmdLine[0]] = $CmdLine[$i]
+						$g_asCmdLine[$g_asCmdLine[0]] = $aCmdLine[$i]
 					EndIf
 			EndSwitch
-			If $bOptionDetected Then SetDebugLog("Command Line Option detected: " & $CmdLine[$i])
+			If $bOptionDetected Then SetDebugLog("Command Line Option detected: " & $aCmdLine[$i])
 		Next
 	EndIf
 
@@ -1221,17 +1224,21 @@ EndFunc   ;==>UpdateManagedMyBot
 Func LaunchBotBackend($bNoGUI = True)
 
 	Local $sParam = ""
-	For $i = 1 To $CmdLine[0]
-		Switch $CmdLine[$i]
+	
+	; An alternative to the limitation of $CmdLine[] only being able to return a maximum of 63 parameters.
+	Local $aCmdLine = _WinAPI_CommandLineToArgv($CmdLineRaw)
+
+	For $i = 1 To $aCmdLine[0]
+		Switch $aCmdLine[$i]
 			Case "/ng", "/mg"
 				; skip GUI options
 			Case "/restart"
 				; skip restart
 			Case Else
 				If $sParam = "" Then
-					$sParam = $CmdLine[$i]
+					$sParam = $aCmdLine[$i]
 				Else
-					$sParam &= " " & $CmdLine[$i]
+					$sParam &= " " & $aCmdLine[$i]
 				EndIf
 		EndSwitch
 	Next

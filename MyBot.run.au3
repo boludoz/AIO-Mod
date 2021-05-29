@@ -188,12 +188,14 @@ EndFunc   ;==>InitializeBot
 ; ===============================================================================================================================
 Func ProcessCommandLine()
 	If $g_bDebugFuncCall Then SetLog('@@ (195) :(' & @MIN & ':' & @SEC & ') ProcessCommandLine()' & @CRLF, $COLOR_ACTION) ;### Function Trace
+	; An alternative to the limitation of $CmdLine[] only being able to return a maximum of 63 parameters.
+	Local $aCmdLine = _WinAPI_CommandLineToArgv($CmdLineRaw)
 
 	; Handle Command Line Launch Options and fill $g_asCmdLine
-	If $CmdLine[0] > 0 Then
-		For $i = 1 To $CmdLine[0]
+	If $aCmdLine[0] > 0 Then
+		For $i = 1 To $aCmdLine[0]
 			Local $bOptionDetected = True
-			Switch $CmdLine[$i]
+			Switch $aCmdLine[$i]
 				; terminate bot if it exists (by window title!)
 				Case "/restart", "/r", "-restart", "-r"
 					$g_bBotLaunchOption_Restart = True
@@ -227,15 +229,15 @@ Func ProcessCommandLine()
 					; show command line help and exit
 					$g_iBotLaunchOption_Help = True
 				Case Else
-					If StringInStr($CmdLine[$i], "/guipid=") Then
-						Local $guidpid = Int(StringMid($CmdLine[$i], 9))
+					If StringInStr($aCmdLine[$i], "/guipid=") Then
+						Local $guidpid = Int(StringMid($aCmdLine[$i], 9))
 						If ProcessExists($guidpid) Then
 							$g_iGuiPID = $guidpid
 						Else
 							If $g_bDebugSetlog Then SetDebugLog("GUI Process doesn't exist: " & $guidpid)
 						EndIf
-					ElseIf StringInStr($CmdLine[$i], "/profiles=") = 1 Then
-						Local $sProfilePath = StringMid($CmdLine[$i], 11)
+					ElseIf StringInStr($aCmdLine[$i], "/profiles=") = 1 Then
+						Local $sProfilePath = StringMid($aCmdLine[$i], 11)
 						If StringInStr(FileGetAttrib($sProfilePath), "D") Then
 							$g_sProfilePath = $sProfilePath
 						Else
@@ -245,10 +247,10 @@ Func ProcessCommandLine()
 						$bOptionDetected = False
 						$g_asCmdLine[0] += 1
 						ReDim $g_asCmdLine[$g_asCmdLine[0] + 1]
-						$g_asCmdLine[$g_asCmdLine[0]] = $CmdLine[$i]
+						$g_asCmdLine[$g_asCmdLine[0]] = $aCmdLine[$i]
 					EndIf
 			EndSwitch
-			If $bOptionDetected Then SetDebugLog("Command Line Option detected: " & $CmdLine[$i])
+			If $bOptionDetected Then SetDebugLog("Command Line Option detected: " & $aCmdLine[$i])
 		Next
 	EndIf
 
@@ -438,7 +440,7 @@ Func InitializeMBR(ByRef $sAI, $bConfigRead)
 			"Supported Emulators are MEmu, Droid4X, Nox, BlueStacks2, BlueStacks, KOPlayer and LeapDroid.\r\n\r\n" & _
 			"Examples:\r\n" & _
 			"     MyBot.run.exe MyVillage BlueStacks2\r\n" & _
-			"     MyBot.run.exe ""My Second Village"" MEmu MEmu_1")
+			"     MyBot.run.exe " & Chr(34) & "My Second Village" & Chr(34) & " MEmu MEmu_1")
 
 	$g_hMutex_BotTitle = CreateMutex($g_sBotTitle)
 	$sAI = GetTranslatedFileIni("MBR GUI Design - Loading", "Android_instance_01", "%s", $g_sAndroidEmulator)

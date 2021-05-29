@@ -61,7 +61,7 @@ Func CreateLogFile()
 	EndIf
 
 	; Debug Output of launch parameter
-	SetDebugLog("Full Command Line: " & _ArrayToString($CmdLine, " "))
+	SetDebugLog("Full Command Line: " & $CmdLineRaw)
 	SetDebugLog("@AutoItExe: " & @AutoItExe)
 	SetDebugLog("@ScriptFullPath: " & @ScriptFullPath)
 	SetDebugLog("@WorkingDir: " & @WorkingDir)
