@@ -217,8 +217,8 @@ EndFunc   ;==>ReadConfig_MOD_MagicItems
 
 Func ReadConfig_MOD_ChatActions()
 	; <><><> ChatActions <><><>
-	IniReadS($g_iacmbPriorityCHAT, $g_sProfileConfigPath, "ChatActions", "cmbPriorityCHAT", $g_iacmbPriorityCHAT, "int")
-	IniReadS($g_iacmbPriorityFC, $g_sProfileConfigPath, "ChatActions", "cmbPriorityFC", $g_iacmbPriorityFC, "int")
+	IniReadS($g_iCmbPriorityCHAT, $g_sProfileConfigPath, "ChatActions", "cmbPriorityCHAT", $g_iCmbPriorityCHAT, "int")
+	IniReadS($g_iCmbPriorityFC, $g_sProfileConfigPath, "ChatActions", "cmbPriorityFC", $g_iCmbPriorityFC, "int")
 	
 	; IniReadS($g_bChatClan, $g_sProfileConfigPath, "ChatActions", "EnableChatClan", $g_bChatClan, "Bool")
 	IniReadS($g_sDelayTimeClan, $g_sProfileConfigPath, "ChatActions", "DelayTimeClan", $g_sDelayTimeClan, "Int")

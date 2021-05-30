@@ -218,7 +218,7 @@ Global $g_abFriendlyChallengeHours[24] = [True, True, True, True, True, True, Tr
 Global $ChatbotStartTime, $ChatbotQueuedChats[0], $ChatbotReadQueued = False, $ChatbotReadInterval = 0, $ChatbotIsOnInterval = False, _
 	$g_sGlobalChatLastMsgSentTime = "", $g_sClanChatLastMsgSentTime = "", $g_sFCLastMsgSentTime = ""
 
-Global $g_iacmbPriorityCHAT = 0, $g_iacmbPriorityFC = 0
+Global $g_iCmbPriorityCHAT = 0, $g_iCmbPriorityFC = 0
 
 Global $g_aIAVar[5][2] = [[0,0],[1,0],[2,0],[3,0],[4,0]] , $g_sIAVar = '0,0#1,0#2,0#3,0#4,0'
 
@@ -317,7 +317,7 @@ Global $g_aShare[4] = [438, 190, 0xFFFFFF, 20] ; OK - Share clan
 Global $g_aCopy[4] = [512, 182, 0xDDF685, 20] ; OK - Copy button
 Global $g_aClanPage[4] = [821, 400, 0xFB5D63, 20] ; OK - Red Leave Clan Button on Clan Page
 Global $g_aClanLabel[4] = [522, 70, 0xEDEDE8, 20] ; OK - Select white label
-;Global $g_aJoinClanBtn[4] = [821, 400, 0xDBF583, 25] ; OK - Join Button on Tab
+Global $g_aJoinClanBtn[4] = [821, 400, 0xDBF583, 25] ; OK - Join Button on Tab
 Global $g_aIsClanChat[4] = [86, 12, 0xC1BB91, 20] ; OK - Verify is in clan.
 Global $g_aNoClanBtn[4] = [163, 515, 0x6DBB1F, 20] ; OK - Green Join Button on Chat Tab when you are not in a Clan
 

@@ -273,7 +273,7 @@ Func DonateCC($bCheckForNewMsg = False, $bActiveClanHop = False)
 
 		$iTimer = TimerInit()
 		$sSearchArea = GetDiamondFromArray($aiSearchArray)
-		$aiDonateButton = decodeSingleCoord(findImage("Donate Button", $g_sImgDonateCC & "DonateButton*", $sSearchArea, 1, True, Default))
+		$aiDonateButton = decodeSingleCoord(findImage("Donate Button", $g_sImgDonateCC & "DonateButton\DonateButton*", $sSearchArea, 1, True, Default))
 
 		If $g_bDebugSetlog Then SetDebugLog("Get all Buttons in " & StringFormat("%.2f", TimerDiff($iTimer)) & "'ms", $COLOR_DEBUG)
 		$iTimer = TimerInit()
@@ -650,7 +650,7 @@ Func DonateCC($bCheckForNewMsg = False, $bActiveClanHop = False)
 		EndIf
 
 		$sSearchArea = GetDiamondFromArray($aiSearchArray)
-		$aiDonateButton = decodeSingleCoord(findImage("Donate Button", $g_sImgDonateCC & "DonateButton*", $sSearchArea, 1, True, Default))
+		$aiDonateButton = decodeSingleCoord(findImage("Donate Button", $g_sImgDonateCC & "DonateButton\DonateButton*", $sSearchArea, 1, True, Default))
 
 		If $g_bDebugSetlog Then SetDebugLog("Get more donate buttons in " & StringFormat("%.2f", TimerDiff($iTimer)) & "'ms", $COLOR_DEBUG)
 
@@ -1071,7 +1071,7 @@ Func DonateWindow($aiDonateButton, $bOpen = True)
 	EndIf
 
 	Local $aiSearchArray[4] = [$aiDonateButton[0] - 20, $aiDonateButton[1] - 20, $aiDonateButton[0] + 20, $aiDonateButton[1] + 20]
-	Local $aiDonateButtonCheck = decodeSingleCoord(findImage("Donate Button", $g_sImgDonateCC & "DonateButton*", GetDiamondFromArray($aiSearchArray), 1, True, Default))
+	Local $aiDonateButtonCheck = decodeSingleCoord(findImage("Donate Button", $g_sImgDonateCC & "DonateButton\DonateButton*", GetDiamondFromArray($aiSearchArray), 1, True, Default))
 
 	If IsArray($aiDonateButtonCheck) And UBound($aiDonateButtonCheck, 1) > 1 Then
 		ClickP($aiDonateButton)

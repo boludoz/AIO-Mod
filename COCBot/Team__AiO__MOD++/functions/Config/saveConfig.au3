@@ -228,8 +228,8 @@ EndFunc   ;==>SaveConfig_MOD_MagicItems
 Func SaveConfig_MOD_ChatActions()
 	; <><><> ChatActions <><><>
 	ApplyConfig_MOD_ChatActions(GetApplyConfigSaveAction())
-	_Ini_Add("ChatActions", "cmbPriorityCHAT", _GUICtrlComboBox_GetCurSel($g_iacmbPriorityCHAT))
-	_Ini_Add("ChatActions", "cmbPriorityFC", _GUICtrlComboBox_GetCurSel($g_iacmbPriorityFC))
+	_Ini_Add("ChatActions", "cmbPriorityCHAT", _GUICtrlComboBox_GetCurSel($g_hCmbPriorityCHAT))
+	_Ini_Add("ChatActions", "cmbPriorityFC", _GUICtrlComboBox_GetCurSel($g_hCmbPriorityFC))
 
 	; _Ini_Add("ChatActions", "EnableChatClan", $g_bChatClan ? 1 : 0)
 	_Ini_Add("ChatActions", "DelayTimeClan", $g_sDelayTimeClan)

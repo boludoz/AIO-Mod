@@ -188,14 +188,12 @@ EndFunc   ;==>InitializeBot
 ; ===============================================================================================================================
 Func ProcessCommandLine()
 	If $g_bDebugFuncCall Then SetLog('@@ (195) :(' & @MIN & ':' & @SEC & ') ProcessCommandLine()' & @CRLF, $COLOR_ACTION) ;### Function Trace
-	; An alternative to the limitation of $CmdLine[] only being able to return a maximum of 63 parameters.
-	Local $aCmdLine = _WinAPI_CommandLineToArgv($CmdLineRaw)
 
 	; Handle Command Line Launch Options and fill $g_asCmdLine
-	If $aCmdLine[0] > 0 Then
-		For $i = 1 To $aCmdLine[0]
+	If $CmdLine[0] > 0 Then
+		For $i = 1 To $CmdLine[0]
 			Local $bOptionDetected = True
-			Switch $aCmdLine[$i]
+			Switch $CmdLine[$i]
 				; terminate bot if it exists (by window title!)
 				Case "/restart", "/r", "-restart", "-r"
 					$g_bBotLaunchOption_Restart = True
@@ -229,15 +227,15 @@ Func ProcessCommandLine()
 					; show command line help and exit
 					$g_iBotLaunchOption_Help = True
 				Case Else
-					If StringInStr($aCmdLine[$i], "/guipid=") Then
-						Local $guidpid = Int(StringMid($aCmdLine[$i], 9))
+					If StringInStr($CmdLine[$i], "/guipid=") Then
+						Local $guidpid = Int(StringMid($CmdLine[$i], 9))
 						If ProcessExists($guidpid) Then
 							$g_iGuiPID = $guidpid
 						Else
 							If $g_bDebugSetlog Then SetDebugLog("GUI Process doesn't exist: " & $guidpid)
 						EndIf
-					ElseIf StringInStr($aCmdLine[$i], "/profiles=") = 1 Then
-						Local $sProfilePath = StringMid($aCmdLine[$i], 11)
+					ElseIf StringInStr($CmdLine[$i], "/profiles=") = 1 Then
+						Local $sProfilePath = StringMid($CmdLine[$i], 11)
 						If StringInStr(FileGetAttrib($sProfilePath), "D") Then
 							$g_sProfilePath = $sProfilePath
 						Else
@@ -247,10 +245,10 @@ Func ProcessCommandLine()
 						$bOptionDetected = False
 						$g_asCmdLine[0] += 1
 						ReDim $g_asCmdLine[$g_asCmdLine[0] + 1]
-						$g_asCmdLine[$g_asCmdLine[0]] = $aCmdLine[$i]
+						$g_asCmdLine[$g_asCmdLine[0]] = $CmdLine[$i]
 					EndIf
 			EndSwitch
-			If $bOptionDetected Then SetDebugLog("Command Line Option detected: " & $aCmdLine[$i])
+			If $bOptionDetected Then SetDebugLog("Command Line Option detected: " & $CmdLine[$i])
 		Next
 	EndIf
 
@@ -440,7 +438,7 @@ Func InitializeMBR(ByRef $sAI, $bConfigRead)
 			"Supported Emulators are MEmu, Droid4X, Nox, BlueStacks2, BlueStacks, KOPlayer and LeapDroid.\r\n\r\n" & _
 			"Examples:\r\n" & _
 			"     MyBot.run.exe MyVillage BlueStacks2\r\n" & _
-			"     MyBot.run.exe " & Chr(34) & "My Second Village" & Chr(34) & " MEmu MEmu_1")
+			"     MyBot.run.exe ""My Second Village"" MEmu MEmu_1")
 
 	$g_hMutex_BotTitle = CreateMutex($g_sBotTitle)
 	$sAI = GetTranslatedFileIni("MBR GUI Design - Loading", "Android_instance_01", "%s", $g_sAndroidEmulator)
@@ -694,12 +692,12 @@ Func MainLoop($bCheckPrerequisitesOK = True)
 	NotifyGetLastMessageFromTelegram()
 	$g_iTGLastRemote = $g_sTGLast_UID
 
-	Local $diffhStarttime = 0 
+	Local $diffhStarttime = 0
 	While 1
 		_Sleep($DELAYSLEEP, True, False)
-		
+
 		$diffhStarttime = _Timer_Diff($g_hStarttime)
-		
+
 		If Not $g_bRunState And $g_bNotifyTGEnable And $g_bNotifyRemoteEnable And $diffhStarttime > 1000 * 15 Then ; 15seconds
 			$g_hStarttime = _Timer_Init()
 			NotifyRemoteControlProcBtnStart()
@@ -831,19 +829,11 @@ Func runBot() ;Bot that runs everything in order
 			EndIf
 			#EndRegion - Request form chat / on a loop - Team AIO Mod++
 
+
 			If $g_bIsSearchLimit Then
 				Local $aRndFuncList = ['LabCheck', 'Collect']
 			Else
-				#Region - Only farm - Team AIO Mod++
-				If Not $g_bChkOnlyFarm Then
-					; Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge', 'BoostSuperTroop'] ; AIO Mod
-				; Else
-					; Local $aRndFuncList = ['Collect', 'CollectFreeMagicItems', 'DailyChallenge', 'BoostSuperTroop'] ; AIO Mod
-					Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge'] ; AIO Mod
-				Else
-					Local $aRndFuncList = ['Collect', 'CollectFreeMagicItems', 'DailyChallenge'] ; AIO Mod
-				EndIf
-				#EndRegion - Only farm - Team AIO Mod++
+				Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge', "ChatActions", "BotHumanization"] ; AIO Mod
 			EndIf
 
 			_ArrayShuffle($aRndFuncList)
@@ -860,13 +850,7 @@ Func runBot() ;Bot that runs everything in order
 				If $g_bIsSearchLimit Then
 					Local $aRndFuncList = ['DonateCC,Train']
 				Else
-					#Region - Only farm - Team AIO Mod++
-					If Not $g_bChkOnlyFarm Then
-						Local $aRndFuncList = ['ReplayShare', 'NotifyReport', 'DonateCC,Train', 'RequestCC']
-					Else
-						Local $aRndFuncList = ['NotifyReport', 'DonateCC,Train', 'RequestCC']
-					EndIf
-					#EndRegion - Only farm - Team AIO Mod++
+					Local $aRndFuncList = ['ReplayShare', 'NotifyReport', 'DonateCC,Train', 'RequestCC']
 				EndIf
 				_ArrayShuffle($aRndFuncList)
 				For $Index In $aRndFuncList
@@ -877,9 +861,7 @@ Func runBot() ;Bot that runs everything in order
 				Next
 				BoostEverything() ; 1st Check if is to use Training Potion
 				If $g_bRestart Then ContinueLoop
-				#Region - Only farm - Team AIO Mod++
 				Local $aRndFuncList = ['BoostBarracks', 'BoostSpellFactory', 'BoostWorkshop', 'BoostKing', 'BoostQueen', 'BoostWarden', 'BoostChampion']
-				#EndRegion - Only farm - Team AIO Mod++
 				_ArrayShuffle($aRndFuncList)
 				For $Index In $aRndFuncList
 					If Not $g_bRunState Then Return
@@ -899,54 +881,28 @@ Func runBot() ;Bot that runs everything in order
 			If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) Then _RunFunction('DonateCC,Train')
 			If $g_bRestart Then ContinueLoop
 			If $g_bChkOnlyFarm = False Then MainSXHandler() ; Super XP - Team AIO Mod++
-			#Region - Only farm - Team AIO Mod++
-			If Not $g_bChkOnlyFarm Then
-				Local $aRndFuncList = ['Laboratory', 'UpgradeHeroes', 'UpgradeBuilding']
-			Else
-				Local $aRndFuncList[0]
-				; 	Don't eat glass.
-				If $g_bUpgradeKingEnable Or $g_bUpgradeQueenEnable Or $g_bUpgradeWardenEnable Or $g_bUpgradeChampionEnable Then _ArrayAdd($aRndFuncList, 'UpgradeHeroes')
-
-				;	667, 27, F5DD71 ; Full gold.	668, 77, E292E2 ; Full elixir.
-				If _ColorCheck(_GetPixelColor(667, 27, True), Hex(0xF5DD71, 6), 25) Or _ColorCheck(_GetPixelColor(668, 77, True), Hex(0xE292E2, 6), 25) Or Not $g_bChkOnlyFarm Then
-					_ArrayAdd($aRndFuncList, 'UpgradeBuilding')
-					_ArrayAdd($aRndFuncList, 'Laboratory')
-				EndIf
-			EndIf
-			If UBound($aRndFuncList) > 0 Then
-				_ArrayShuffle($aRndFuncList)
-				For $Index In $aRndFuncList
-					If Not $g_bRunState Then Return
-					_RunFunction($Index)
-					If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
-					If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
-				Next
-			EndIf
-			#EndRegion - Only farm - Team AIO Mod++
+			Local $aRndFuncList = ['Laboratory', 'UpgradeHeroes', 'UpgradeBuilding']
+			_ArrayShuffle($aRndFuncList)
+			For $Index In $aRndFuncList
+				If Not $g_bRunState Then Return
+				_RunFunction($Index)
+				If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
+				If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
+			Next
 
             ;ARCH Trying it out here.
             If Not $g_bIsSearchLimit Then _ClanGames() ; move to here to pick event before going to BB.
 
-			#Region - Only farm - Team AIO Mod++
 			; Ensure, that wall upgrade is last of the upgrades
-			Local $aRndFuncList[0]
-			If Not $g_bChkOnlyFarm Then _ArrayAdd($aRndFuncList, 'BuilderBase')
-			If $g_bAutoUpgradeWallsEnable = True Then
-				;	667, 27, F5DD71 ; Full gold. Or 668, 77, E292E2 ; Full elixir.
-				If (_ColorCheck(_GetPixelColor(667, 27, True), Hex(0xF5DD71, 6), 25) Or _ColorCheck(_GetPixelColor(668, 77, True), Hex(0xE292E2, 6), 25)) Or Not $g_bChkOnlyFarm Then
-					_ArrayAdd($aRndFuncList, 'UpgradeWall')
-				EndIf
-			EndIf
-			If UBound($aRndFuncList) > 0 Then
-				_ArrayShuffle($aRndFuncList)
-				For $Index In $aRndFuncList
-					If Not $g_bRunState Then Return
-					_RunFunction($Index)
-					If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
-					If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
-				Next
-			EndIf
-			#EndRegion - Only farm - Team AIO Mod++
+			Local $aRndFuncList = ['BuilderBase', 'UpgradeWall']
+			_ArrayShuffle($aRndFuncList)
+			For $Index In $aRndFuncList
+				If Not $g_bRunState Then Return
+				_RunFunction($Index)
+				If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
+				If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
+			Next
+
 			If Not $g_bRunState Then Return
 
 			If $g_bFirstStart Then SetDebugLog("First loop completed!")
@@ -1033,7 +989,7 @@ Func _Idle() ;Sequence that runs until Full Army
 		If _Sleep($DELAYIDLE1) Then Return
 		If $g_iCommandStop = -1 Then SetLog("====== Waiting for full army ======", $COLOR_SUCCESS)
 		Local $hTimer = __TimerInit()
-		If Not $g_bChkOnlyFarm Then BotHumanization() ; Humanization - Team AiO MOD++
+		; If Not $g_bChkOnlyFarm Then BotHumanization() ; Humanization - Team AiO MOD++
 
 		If _Sleep($DELAYIDLE1) Then ExitLoop
 		checkObstacles() ; trap common error messages also check for reconnecting animation
@@ -1180,14 +1136,14 @@ Func AttackMain() ;Main control for attack functions
 			Do
 				; Add error to count.
 				$iErrorCount += 1
-				
+
 				; Check main.
 				checkMainScreen(False)
 				If Not $g_bRunState Or $g_bRestart Then Return
-				
+
 				; Litle sleep.
 				If RandomSleep($DELAYATTACKMAIN1) Then Return
-				
+
 				; Check error count.
 				If $iErrorCount > 3 Then
 					SetLog("Error: AttackMain bad.", $COLOR_ERROR)
@@ -1196,14 +1152,14 @@ Func AttackMain() ;Main control for attack functions
 
 				; Prevents bot stucks in bad AttackMain case.
 				$g_bBadPrepareSearch = False
-				
+
 				; Prepare search and check if it isn't in main (bad PrepareSearch case).
 				PrepareSearch()
 				If $g_bBadPrepareSearch = True Then
 					SetLog("Error: AttackMain (1)", $COLOR_ERROR)
 					ContinueLoop
 				EndIf
-				
+
 				; Restart or stop in case.
 				If Not $g_bRunState Or $g_bOutOfGold Or $g_bRestart Then Return
 
@@ -1216,7 +1172,7 @@ Func AttackMain() ;Main control for attack functions
 
 				; Restart or stop in case.
 				If Not $g_bRunState Or $g_bOutOfGold Or $g_bRestart Then Return
-				
+
 				; Simple PrepareAttack.
 				PrepareAttack($g_iMatchMode)
 				If Not $g_bRunState Or $g_bRestart Then Return
@@ -1228,14 +1184,14 @@ Func AttackMain() ;Main control for attack functions
 				; Simple ReturnHome.
 				ReturnHome($g_bTakeLootSnapShot)
 				If Not $g_bRunState Or $g_bRestart Then Return
-				
+
 				If RandomSleep($DELAYATTACKMAIN2) Then Return
-			
+
 			; If all is ok get out.
 			Until $g_bBadPrepareSearch = False
 			Return True
 			#EndRegion - Custom PrepareSearch - Team AIO Mod++
-			
+
 		#Region - Custom fix - Team AIO Mod++
 		ElseIf $g_bDropTrophyEnable And Number($g_aiCurrentLoot[$eLootTrophy]) > Number($g_iDropTrophyMax) Then ;If current trophy above max trophy, try drop first
 			DropTrophy()
@@ -1295,11 +1251,19 @@ Func _RunFunction($sAction)
 	EndIf
     #EndRegion - Custom BB - Team AIO Mod++
 
+    If $g_bChkOnlyFarm Then
+		Switch $sAction
+			Case 'UpgradeHeroes', 'Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'BuilderBase', 'UpgradeWall', 'LabCheck', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'ReplayShare', "BotHumanization", "ChatActions"
+				SetLog("- Skipped by only farm mode : " & $sAction, $COLOR_INFO)
+				Return
+		EndSwitch
+	EndIf
+
 	Static $hTimeForCheck = TimerInit()
 	; ensure that builder base flag is false
 	$g_bStayOnBuilderBase = False
-	If TimerDiff($hTimeForCheck) > 3000 Then
-		If IsMainPage(1) = False Then checkMainScreen(False, Default)
+	If IsMainPage(1) = False Or TimerDiff($hTimeForCheck) > 3000 Then
+		checkMainScreen(False, False)
 		$hTimeForCheck = TimerInit()
 	EndIf
 	Local $bResult = __RunFunction($sAction)
@@ -1397,6 +1361,12 @@ Func __RunFunction($sAction)
 			CollectAchievements()
  		Case "CollectFreeMagicItems"
  			CollectMagicItems()
+		; BotHumanization - Team AIO Mod++
+		Case "BotHumanization"
+			BotHumanization()
+		; ChatActions - Team AIO Mod++
+		Case "ChatActions"
+			ChatActions()
 		Case ""
 			SetDebugLog("Function call doesn't support empty string, please review array size", $COLOR_ERROR)
 		Case Else
@@ -1443,7 +1413,7 @@ Func FirstCheck()
 	If Not $g_bChkOnlyFarm Then
 		MainGTFO()
 		MainKickout()
-		BotHumanization()
+		; BotHumanization()
 	EndIf
 	#EndRegion - Team AIO MOD++
 

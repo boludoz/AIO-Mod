@@ -65,7 +65,7 @@ Func LocateLab($bCollect = True)
 					ConvertFromVillagePos($g_aiLaboratoryPos[0], $g_aiLaboratoryPos[1])
 					IniWrite($g_sProfileBuildingPath, "upgrade", "LabPosX", $g_aiLaboratoryPos[0])
 					IniWrite($g_sProfileBuildingPath, "upgrade", "LabPosY", $g_aiLaboratoryPos[1])
-					Setlog("Queen located", $COLOR_SUCCESS)
+					Setlog("Laboratory located", $COLOR_SUCCESS)
 					ClickAway(True)
 					Return True
 				EndIf

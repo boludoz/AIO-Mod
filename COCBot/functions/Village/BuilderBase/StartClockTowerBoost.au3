@@ -45,6 +45,7 @@ Func StartClockTowerBoost($bSwitchToBB = False, $bSwitchToNV = False)
 		getBuilderCount(True, True) ; Update Builder Variables for Builders Base
 		If $g_iFreeBuilderCountBB = $g_iTotalBuilderCountBB Then $bCTBoost = False ; Builder is not busy, skip Boost
 	ElseIf $g_bChkCTBoostLabBBActive Then
+		Local $TimeDiff
 		If $g_sStarLabUpgradeTime <> "" Then $TimeDiff = _DateDiff("n", _NowCalc(), $g_sStarLabUpgradeTime) ; what is difference between end time and now in minutes?
 		If @error Then _logErrorDateDiff(@error)
 		If Not $g_bRunState Then Return

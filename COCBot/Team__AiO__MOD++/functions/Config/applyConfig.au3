@@ -464,8 +464,8 @@ Func ApplyConfig_MOD_ChatActions($TypeReadSave)
 	; <><><> ChatActions <><><>
 	Switch $TypeReadSave
 		Case "Read"
-			_GUICtrlComboBox_SetCurSel($g_hacmbPriorityCHAT, $g_iacmbPriorityCHAT)
-			_GUICtrlComboBox_SetCurSel($g_hacmbPriorityFC, $g_iacmbPriorityFC)
+			_GUICtrlComboBox_SetCurSel($g_hCmbPriorityCHAT, $g_iCmbPriorityCHAT)
+			_GUICtrlComboBox_SetCurSel($g_hCmbPriorityFC, $g_iCmbPriorityFC)
 
 			; GUICtrlSetState($g_hChkClanChat, $g_bChatClan = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hTxtDelayTimeClan, $g_sDelayTimeClan)
@@ -488,8 +488,8 @@ Func ApplyConfig_MOD_ChatActions($TypeReadSave)
 			cmbChatActionsFC()
 			ChatGuiEditUpdate()
 		Case "Save"
-			$g_iacmbPriorityCHAT = _GUICtrlComboBox_GetCurSel($g_hacmbPriorityCHAT)
-			$g_iacmbPriorityFC = _GUICtrlComboBox_GetCurSel($g_hacmbPriorityFC)
+			$g_iCmbPriorityCHAT = _GUICtrlComboBox_GetCurSel($g_hCmbPriorityCHAT)
+			$g_iCmbPriorityFC = _GUICtrlComboBox_GetCurSel($g_hCmbPriorityFC)
 
 			; $g_bChatClan = (GUICtrlRead($g_hChkClanChat) = $GUI_CHECKED)
 			$g_sDelayTimeClan = GUICtrlRead($g_hTxtDelayTimeClan)

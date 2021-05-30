@@ -243,7 +243,7 @@ Func WatchWarReplays()
 			; Return ReturnToHomeFromWar()
 		EndIf
 	EndIf
-	
+
 	Return ReturnToHomeFromWar()
 EndFunc   ;==>WatchWarReplays
 
@@ -447,47 +447,38 @@ EndFunc   ;==>GemClick
 ; ================================================== HUMAN FUNCTIONS PART ================================================== ;
 
 Func BotHumanization()
-	Local $iRandom = Random(0, 1, 1)
-	For $i = 0 To 1
-		Switch $iRandom
-			Case 0
-				$iRandom = 1
-				If $g_bChatClan = True Or $g_bEnableFriendlyChallenge = True Then ChatActions()
-			Case 1
-				$iRandom = 0
-				If $g_bUseBotHumanization = True Then
-					If Not $g_bRunState Then Return
-					Local $NoActionsToDo = 0
-					SetLog("OK, Let AiO++ Makes The Bot More Human Like!", $COLOR_SUCCESS1)
+   If Not $g_bRunState Then Return
 
-					If $g_bLookAtRedNotifications = True Then LookAtRedNotifications()
-					ReturnAtHome()
+   If $g_bUseBotHumanization = True Then
+	  Local $iNoActionsToDo = 0, $iActions = UBound($g_acmbPriority)
+	  SetLog("OK, Let AiO++ Makes The Bot More Human Like!", $COLOR_SUCCESS1)
 
-					For $i = 0 To 12
-						Local $ActionEnabled = _GUICtrlComboBox_GetCurSel($g_acmbPriority[$i])
-						If $ActionEnabled = 0 Then $NoActionsToDo += 1
-					Next
+	  If $g_bLookAtRedNotifications = True Then LookAtRedNotifications()
+	  ReturnAtHome()
+		
+	  For $i = 0 To $iActions -1
+		 Local $ActionEnabled = _GUICtrlComboBox_GetCurSel($g_acmbPriority[$i])
+		 If $ActionEnabled = 0 Then $iNoActionsToDo += 1
+	  Next
 
-					If $NoActionsToDo <> 13 Then
-						$g_iMaxActionsNumber = Random(1, _GUICtrlComboBox_GetCurSel($g_hCmbMaxActionsNumber) + 1, 1)
-						SetLog("AiO++ Will Do " & $g_iMaxActionsNumber & " Human Actions During This Loop ...", $COLOR_INFO)
-						For $i = 1 To $g_iMaxActionsNumber
-							If randomSleep(4000) Then Return
-							ReturnAtHome()
-							RandomHumanAction()
-						Next
-					Else
-						SetLog("All Actions Disabled, Skipping ...", $COLOR_WARNING)
-					EndIf
-					SetLog("Bot Humanization Finished !", $COLOR_SUCCESS1)
-					If randomSleep(3000) Then Return
-				EndIf
-		EndSwitch
-	Next
+	  If $iNoActionsToDo <> $iActions Then
+		 $g_iMaxActionsNumber = Random(1, _GUICtrlComboBox_GetCurSel($g_hCmbMaxActionsNumber) + 1, 1)
+		 SetLog("AiO++ Will Do " & $g_iMaxActionsNumber & " Human Actions During This Loop ...", $COLOR_INFO)
+		 For $i = 1 To $g_iMaxActionsNumber
+			If randomSleep(2000) Then Return
+			ReturnAtHome()
+			RandomHumanAction()
+		 Next
+	  Else
+		 SetLog("All Actions Disabled, Skipping ...", $COLOR_WARNING)
+	  EndIf
+	  SetLog("Bot Humanization Finished !", $COLOR_SUCCESS1)
+	  If randomSleep(3000) Then Return
+   EndIf
 EndFunc   ;==>BotHumanization
 
 Func RandomHumanAction()
-	For $i = 0 To 9
+	For $i = 0 To UBound($g_acmbPriority) -1
 		SetActionPriority($i)
 	Next
 

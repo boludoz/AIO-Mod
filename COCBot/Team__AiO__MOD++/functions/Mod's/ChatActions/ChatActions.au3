@@ -75,7 +75,7 @@ Func ChatActions() ; run the chatbot
 		
 		Local $bChat = False, $bFriendly = False
 				
-		Switch $g_iacmbPriorityFC
+		Switch $g_iCmbPriorityFC
 			Case 1
 				$g_iMinimumPriority = 0
 			Case 2
@@ -88,7 +88,7 @@ Func ChatActions() ; run the chatbot
 
 		$bFriendly = (Random($g_iMinimumPriority, 100, 1) > 75)
 			
-		Switch $g_iacmbPriorityCHAT
+		Switch $g_iCmbPriorityCHAT
 			Case 1
 				$g_iMinimumPriority = 0
 			Case 2
@@ -103,6 +103,18 @@ Func ChatActions() ; run the chatbot
 		
 		If $bChat = False And $bFriendly = False Then Return
 		
+		If $bChat And $g_sDelayTimeClan > 0 Then
+			If DelayTime("CLAN") = False Then
+				Return
+			EndIf
+		EndIf
+
+		If $bFriendly And $g_sDelayTimeFC > 0 Then
+			If DelayTime("FC") = False Then
+				Return
+			EndIf
+		EndIf
+
 		If Not OpenClanChat() Then
 			Setlog("ChatActions : OpenClanChat Error.", $COLOR_ERROR)
 			AndroidPageError("ChatActions")
