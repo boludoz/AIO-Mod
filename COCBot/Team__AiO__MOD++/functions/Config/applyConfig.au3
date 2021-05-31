@@ -715,7 +715,7 @@ Func ApplyConfig_MOD_Humanization($TypeReadSave)
 			GUICtrlSetState($g_hChkUseAltRClick, $g_bUseAltRClick ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkLookAtRedNotifications, $g_bLookAtRedNotifications ? $GUI_CHECKED : $GUI_UNCHECKED)
 			chkUseBotHumanization()
-			For $i = 0 To UBound($g_acmbPriority) -1
+			For $i = 0 To UBound($g_iaCmbPriority) -1
 				_GUICtrlComboBox_SetCurSel($g_acmbPriority[$i], $g_iacmbPriority[$i])
 			Next
 			For $i = 0 To 1
@@ -735,7 +735,7 @@ Func ApplyConfig_MOD_Humanization($TypeReadSave)
 			$g_bUseBotHumanization = (GUICtrlRead($g_hChkUseBotHumanization) = $GUI_CHECKED)
 			$g_bUseAltRClick = (GUICtrlRead($g_hChkUseAltRClick) = $GUI_CHECKED)
 			$g_bLookAtRedNotifications = (GUICtrlRead($g_hChkLookAtRedNotifications) = $GUI_CHECKED)
-			For $i = 0 To UBound($g_acmbPriority) -1
+			For $i = 0 To UBound($g_iaCmbPriority) -1
 				$g_iacmbPriority[$i] = _GUICtrlComboBox_GetCurSel($g_acmbPriority[$i])
 			Next
 			For $i = 0 To 1

@@ -8,11 +8,12 @@
 	**v4.5.5**
 		- Improved / Fixed: GTFO Faster.
 		- Improved / Fixed: Generate attack lines by angle in builder base attack.
-		- Improved / Fixed: upgrade walls.
+		- Improved / Fixed: upgrade walls builder base.
 		- Improved / Fixed: Humanization / Chat actions finished.
 		- Improved / Fixed: Clan Hop faster and train now.
 		- Improved / Fixed: Builder base drop points.
 		- Improved / Fixed: News miscs.
+		- Fixed: ADB Android (@Dissociable).
 		- Fixed: magic items.
 		- Fixed: buy shield.
 		- Fixed: SM.

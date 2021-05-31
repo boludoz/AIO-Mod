@@ -570,7 +570,6 @@ Func IfIsToStayInGTFO()
 		SetLog("Reach the Elixir Limit , Let's Farm!!", $COLOR_INFO)
 		; Force double army on GTFO
  		If $g_bTotalCampForced = True And $g_bDoubleTrain Then
-		If $g_bTotalCampForced = True Then
 			$g_iTotalCampSpace = Number($g_iTotalCampForcedValue) / 2
 			For $T = 0 To $eTroopCount - 1
 				If $g_aiArmyCompTroops[$T] <> 0 Then
@@ -584,7 +583,6 @@ Func IfIsToStayInGTFO()
 	ElseIf $g_aiCurrentLoot[$eLootDarkElixir] <> 0 And $g_aiCurrentLoot[$eLootDarkElixir] < $g_itxtMinSaveGTFO_DE Then
 		SetLog("Reach the Dark Elixir Limit , Let's Farm!!", $COLOR_INFO)
 		; Force double army on GTFO
-		If $g_bTotalCampForced Then
  		If $g_bTotalCampForced And $g_bDoubleTrain Then
 			$g_iTotalCampSpace = Number($g_iTotalCampForcedValue) / 2
 			For $T = 0 To $eTroopCount - 1
