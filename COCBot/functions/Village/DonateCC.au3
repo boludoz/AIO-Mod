@@ -1072,7 +1072,9 @@ Func DonateWindow($aiDonateButton, $bOpen = True)
 
 	Local $aiSearchArray[4] = [$aiDonateButton[0] - 20, $aiDonateButton[1] - 20, $aiDonateButton[0] + 20, $aiDonateButton[1] + 20]
 	Local $aiDonateButtonCheck = decodeSingleCoord(findImage("Donate Button", $g_sImgDonateCC & "DonateButton\DonateButton*", GetDiamondFromArray($aiSearchArray), 1, True, Default))
-
+	
+	Local $hPixel = Dec(_GetPixelColor(225, 10, True, "DonateWindow"))
+	
 	If IsArray($aiDonateButtonCheck) And UBound($aiDonateButtonCheck, 1) > 1 Then
 		ClickP($aiDonateButton)
 	Else
@@ -1082,14 +1084,8 @@ Func DonateWindow($aiDonateButton, $bOpen = True)
 
 	If _Sleep($DELAYDONATEWINDOW1) Then Return
 
-	Local $icount = 0
-	While Not (_ColorCheck(_GetPixelColor(331, $aiDonateButton[1], True, "DonateWindow"), Hex(0xffffff, 6), 0))
-		If _Sleep($DELAYDONATEWINDOW2) Then Return
-		ForceCaptureRegion()
-		$icount += 1
-		If $icount = 20 Then ExitLoop
-	WEnd
-
+	_Wait4PixelGone(225, 10, $hPixel, 5, 3000, 100, "DonateWindowComp")
+	
 	; Determinate the right position of the new Donation Window
 	; Will search in $Y column = 410 for the first pure white color and determinate that position the $DonationWindowTemp
 	$g_iDonationWindowY = 0

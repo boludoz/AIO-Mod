@@ -62,12 +62,16 @@ Func TestSmartMilk($bFast = True)
 EndFunc   ;==>TestSmartFarm
 
 Func SmartFarmMilk($bDebug = False)
-	If $bDebug = False Then
-		If $g_iMatchMode <> $DB And $g_aiAttackAlgorithm[$DB] <> 3 Then 
-			Return
-		EndIf
+	If $g_iMatchMode <> $DB And $g_aiAttackAlgorithm[$DB] <> 3 And $bDebug = False Then 
+		Return
 	EndIf
 	
+	$g_bCloudsActive = True	
+	_SmartFarmMilk($bDebug)
+	$g_bCloudsActive = False	
+EndFunc   ;==>SmartFarmMilk
+
+Func _SmartFarmMilk($bDebug = False)
 	$g_bIsCCDropped = False
 	$g_aiDeployCCPosition[0] = -1
 	$g_aiDeployCCPosition[1] = -1

@@ -44,6 +44,7 @@ Func MainGTFO()
 			Return
 		EndIf
 	EndIf
+	$g_bCloudsActive = True
 	ClanHop()
 	Local $_timer = TimerInit()
 	Local $_diffTimer = 0
@@ -52,7 +53,7 @@ Func MainGTFO()
 	$g_iSpellsNumber = 0
 	While 1
 		SetLogCentered(" GTFO v2.4 ", Default, Default, True)
-		SetDebugLog("Cycles UI:" & $g_iTxtCyclesGTFO & " Loop(s)", $COLOR_DEBUG)
+		SetDebugLog("Cycles :" & $g_iTxtCyclesGTFO & " Loop(s)", $COLOR_DEBUG)
 		If Not IsNumber($g_iTxtCyclesGTFO) Or $g_iTxtCyclesGTFO < 0 Then SetLog("Please config your cycles correctly! (UI:" & $g_iTxtCyclesGTFO & " Loop(s))", $COLOR_ERROR)
 		If $g_iTxtCyclesGTFO = 0 Then
 			SetLog("Cycles selected as '0', This feature will run indefinitely.", $COLOR_INFO)
@@ -95,18 +96,79 @@ Func MainGTFO()
 		Local $bDonate = DonateGTFO()
 		If Not $bDonate Then
 			SetLog("Finished GTFO", $COLOR_INFO)
-			ClanHop()
+			LeaveClanHop()
 			Return
 		EndIf
 		If Not IfIsToStayInGTFO() Then
 			Return
 		EndIf
 	WEnd
+	$g_bCloudsActive = False
 EndFunc   ;==>MainGTFO
 
 Func TrainTroopsGTFO()
 	TrainSystem()
 EndFunc   ;==>TrainTroopsGTFO
+
+Func LeaveClanHop()
+	If Not $g_bChkGTFOReturnClan Or $g_bLeader = True Then Return
+
+	;	1. The green join appear.
+	;		A. Joins clan with invitation.
+	;		B. You want to join a private clan.
+	;		C. Joins a free clan and has no clan, therefore the OK does not appear.
+	;	2. The green join does not appear.
+
+	Local $aButton = ""
+	CloseClanChat()
+
+	Setlog("GTFO|Joining to native clan.", $COLOR_INFO)
+	Local $g_sTxtClanID = GUICtrlRead($g_hTxtClanID)
+	Local $sClaID = StringReplace($g_sTxtClanID, "#", "")
+	Setlog("Send : " & $sClaID, $COLOR_INFO)
+	AndroidAdbSendShellCommand("am start -n " & $g_sAndroidGamePackage & "/" & $g_sAndroidGameClass & " -a android.intent.action.VIEW -d 'https://link.clashofclans.com/?action=OpenClanProfile&tag=" & $sClaID & "'", Default)
+	Setlog("Wait", $COLOR_INFO)
+	If RandomSleep(2000) Then Return
+	If _Wait4PixelArray($g_aJoinClanBtn) Then
+		Click($g_aJoinClanBtn[0] - Random(0, 25, 1), $g_aJoinClanBtn[1] + Random(0, 25, 1))
+		If RandomSleep(250) Then Return
+
+		Local $iLoops = 15
+		Do
+			If _Wait4PixelArray($g_aJoinInvBtn) Then
+				Click($g_aJoinInvBtn[0] - Random(0, 25, 1), $g_aJoinInvBtn[1] + Random(0, 25, 1))
+				If RandomSleep(1000) Then Return
+				_Wait4PixelGoneArray($g_aJoinInvBtn)
+			EndIf
+
+			If _Wait4PixelArray($g_aOKBtn) Then
+				Click($g_aOKBtn[0] - Random(0, 25, 1), $g_aOKBtn[1] + Random(0, 25, 1))
+				If RandomSleep(1000) Then Return
+				_Wait4PixelGoneArray($g_aOKBtn)
+			EndIf
+
+			_CaptureRegion()
+			If _CheckPixel($aChatTab, False) Or _CheckPixel($aChatTab2, False) Or _CheckPixel($aChatTab3, False) Then
+				ExitLoop
+			EndIf
+		Until ($iLoops > 15)
+
+		waitMainScreenMini()
+
+		If $iLoops < 15 Then
+			If RandomSleep(1000) Then Return False
+
+			If ProfileSwitchAccountEnabled() Then checkSwitchAcc() ; Forced to switch
+
+			Return True
+		EndIf
+	Else
+		waitMainScreenMini()
+	EndIf
+
+
+	Return False
+EndFunc   ;==>LeaveClanHop
 
 Func DonateGTFO()
 	AutoItSetOption("MouseClickDelay", 1)
@@ -116,6 +178,9 @@ Func DonateGTFO()
 	Local $_bReturnT = False
 	Local $_bReturnS = False
 	Local $y = 90, $firstrun = True
+	Local $aiDonateButton[2], $aiDonateButtons
+	Local $iToShearch = 10
+	Local $bDonate = True
 	$g_OutOfTroops = False
 	OpenClanChat()
 	If _Sleep($DELAYRUNBOT3) Then Return
@@ -124,21 +189,19 @@ Func DonateGTFO()
 		SetDebugLog("While Main started DonateGTFO")
 		If Not $g_bRunState Then Return
 		If _Sleep($DELAYRUNBOT3) Then Return
-		If $y < 620 And Not $firstrun Then
-			$y += 50
-		Else
-			ScrollUp()
-			$y = 80
-		EndIf
-		SetDebugLog("While Main y=" & $y)
 		$_diffTimer = (TimerDiff($_timer) / 1000) / 60
-		If $g_aiTimeTrain[0] <> 0 Then $iTime2Exit = $g_aiTimeTrain[0]
-		If $g_aiTimeTrain[1] <> 0 And $g_aiTimeTrain[1] < $g_aiTimeTrain[0] Then $iTime2Exit = $g_aiTimeTrain[1]
+
 		If $_diffTimer > $iTime2Exit Then ExitLoop
 		SetDebugLog("While Main - Cycles Used:" & $g_iLoop2 & " Loop(s)", $COLOR_ERROR)
 		If $g_iTxtCyclesGTFO > 0 And $g_iLoop2 > $g_iTxtCyclesGTFO Then ExitLoop
 		Local $Buttons = 0
-		While 1
+		
+		; add scroll here
+		ScrollDown()
+		
+		$iToShearch = 10
+		$bDonate = True
+		While $bDonate
 			If Not $g_bRunState Then Return
 			SetDebugLog("While Main $iDonateLoop: " & $iDonateLoop)
 			Local $iTime = TimerInit()
@@ -150,48 +213,46 @@ Func DonateGTFO()
 			$_bReturnT = False
 			$_bReturnS = False
 			$firstrun = False
-			SetDebugLog("[1] While Donation SearchButtons y=" & $y)
-			SearchButtons($y)
 			$iBenchmark = TimerDiff($iTime)
 			SetDebugLog("While Donation Get all Buttons in " & StringFormat("%.2f", $iBenchmark) & "'ms", $COLOR_DEBUG)
-			If $g_aiDonatePixel[0] <> Null And $g_aiDonatePixel[0] > 50 Then
-				$Buttons += 1
-				SetDebugLog("While Donation Request button number: " & $Buttons, $COLOR_ACTION)
-				$y = $g_aiDonatePixel[1] + 50
-				SetDebugLog("[2] While Donation SearchButtons y=" & $y)
-				If Not _DonateWindow() Then ContinueLoop
-				If DonateIT(0) Then $_bReturnT = True
-				If $g_OutOfTroops Then
-					ClickAwayChat()
-					CloseClanChat()
-					Return
-				EndIf
-				If DonateIT(14) Then $_bReturnS = True
-				$g_aiDonatePixel[0] = Null
-				$g_aiDonatePixel[1] = Null
-				ClickAwayChat()
-			Else
-				If ScrollDown() Then
-					$y = 200
-				Else
-					$firstrun = True
-				EndIf
-				ExitLoop
-				SetDebugLog("While Donation EXIT")
+			
+			$aiDonateButtons = _ImageSearchXML($g_sImgDonateCC & "DonateButton\", $iToShearch, "200, 90, 300, 700", True, False, False, 0, 0, 1000)
+			
+			If UBound($aiDonateButtons) > 0 And Not @error Then     ; if Donate Button found
+				For $iBig = 0 To UBound($aiDonateButtons) - 1
+					$aiDonateButton[0] = $aiDonateButtons[$iBig][1]     ; + Random(20, 25, 1)
+					$aiDonateButton[1] = $aiDonateButtons[$iBig][2]     ; - Random(5, 10, 1)
+					
+					;;reset every run
+					$bDonate = False
+					
+					;;; Open Donate Window
+					If _Sleep($DELAYDONATECC3) Then Return
+					If Not DonateWindow($aiDonateButton) Then
+						$bDonate = True
+						SetLog("Donate Window did not open - Exiting Donate", $COLOR_ERROR)
+						CloseXDonate()     ; Custom fix - Team__AiO__MOD
+						ContinueLoop     ; Leave donate to prevent a bot hang condition
+					EndIf
+					
+					If DonateIT(0) Then $_bReturnT = True
+					If $g_OutOfTroops Then
+						CloseXDonate()     ; Custom fix - Team__AiO__MOD
+						CloseClanChat()
+						ExitLoop
+					EndIf
+					If DonateIT(14) Then $_bReturnS = True
+					
+					$bDonate = True
+					
+					If _Sleep($DELAYDONATEWINDOW1) Then ExitLoop
+					CloseXDonate()     ; Custom fix - Team__AiO__MOD
+				Next
 			EndIf
-			SetDebugLog("$_bReturnT= " & $_bReturnT & "$_bReturnS= " & $_bReturnS)
-			If ($_bReturnT = False And $_bReturnS = False) Then $y += 80
-			ForceCaptureRegion()
-			SetDebugLog("[3] While Donation SearchButtons y=" & $y)
-			SearchButtons($y)
-			If $g_aiDonatePixel[0] <> Null And $g_aiDonatePixel[0] > 100 Then
-				$y = $g_aiDonatePixel[1] - 100
-				$g_aiDonatePixel[0] = Null
-				$g_aiDonatePixel[1] = Null
-				SetDebugLog("[4] While Donation SearchButtons y=" & $y)
-			Else
-				If ScrollDown() Then $y = 200
-				SetDebugLog("While Donation ContinueLoop While Main")
+			
+			$bDonate = ScrollUp()
+			If $bDonate Then
+				$iToShearch = 1
 			EndIf
 		WEnd
 		SetDebugLog("While Main DonateGTFO EXIT")
@@ -212,6 +273,7 @@ Func DonateGTFO()
 	CloseClanChat()
 	If $g_iTxtCyclesGTFO > 0 And $g_iLoop2 > $g_iTxtCyclesGTFO Then Return False
 EndFunc   ;==>DonateGTFO
+
 
 Func ClanHop()
 	If $g_bLeader Or Not $g_bChkGTFOClanHop Then Return
@@ -316,16 +378,35 @@ Func ClanHop()
 				If _Wait4PixelArray($g_aJoinClanBtn) Then
 					Click($g_aJoinClanBtn[0] - Random(0, 25, 1), $g_aJoinClanBtn[1] + Random(0, 25, 1))
 					If RandomSleep(250) Then Return
-					
+
 					; Strategy for no clan case.
-					If ClickOkay("ClanHop", True) = False Then
-						SetLog("GTFO | Clan not detected previously, joined in one.", $COLOR_INFO)
-					Else
-						SetLog("GTFO | Leaved from old clan by another.", $COLOR_INFO)
+					Local $iLoops = 0
+					Do
+						If _Wait4PixelArray($g_aJoinInvBtn) Then
+							Click($g_aJoinInvBtn[0] - Random(0, 25, 1), $g_aJoinInvBtn[1] + Random(0, 25, 1))
+							If RandomSleep(1000) Then Return
+							_Wait4PixelGoneArray($g_aJoinInvBtn)
+						EndIf
+
+						If _Wait4PixelArray($g_aOKBtn) Then
+							Click($g_aOKBtn[0] - Random(0, 25, 1), $g_aOKBtn[1] + Random(0, 25, 1))
+							If RandomSleep(1000) Then Return
+							_Wait4PixelGoneArray($g_aOKBtn)
+						EndIf
+						_CaptureRegion()
+						If _CheckPixel($aChatTab, False) Or _CheckPixel($aChatTab2, False) Or _CheckPixel($aChatTab3, False) Then
+							ExitLoop
+						EndIf
+					Until ($iLoops > 6)
+
+					If ($iLoops > 6) Then
+						waitMainScreenMini()
+						$iErrors += 1
+						ContinueLoop
 					EndIf
-					
+
 					If RandomSleep(250) Then Return
-					
+
 					If UnderstandChatRules() = False Then
 						SetLog("Fail GTFO | UnderstandChatRules. (1).", $COLOR_ERROR)
 						$iErrors += 1
@@ -377,72 +458,43 @@ Func ClickAwayChat($iSleep = 10)
 	Click($iX, $iY, 1, 0)
 EndFunc   ;==>ClickAwayChat
 
-;~ Func OpenClanChat()
-;~ 	If _Sleep($DELAYDONATECC4) Then Return
-;~ 	ClickP($aAway, 1, 0, "#0167")
-;~ 	If _Sleep($DELAYDONATECC4) Then Return
-;~ 	SetLog("Checking for Donate Requests in Clan Chat", $COLOR_INFO)
-;~ 	If Not _CheckPixel($aChatTab, $g_bCapturePixel) Or Not _CheckPixel($aChatTab2, $g_bCapturePixel) Or Not _CheckPixel($aChatTab3, $g_bCapturePixel) Then ClickP($aOpenChat, 1, 0, "#0168")
-;~ 	If _Sleep($DELAYDONATECC4) Then Return
-;~ 	If Not _WaitForCheckPixel($C12918, $g_bCapturePixel, Default, "Wait For Chat To Open:") Then
-;~ 		SetLog("Clan Chat Did Not Open - Abandon Donate")
-;~ 		AndroidPageError("DonateCC")
-;~ 		CloseCoC(True)
-;~ 		waitMainScreenMini()
-;~ 		If _Sleep(100) Then Return
-;~ 		ClickP($aClanTab, 1, 0, "#0169")
-;~ 		If _Sleep(100) Then Return
-;~ 	EndIf
-;~ 	UnderstandChatRules()
-;~ EndFunc   ;==>OpenClanChat
-
-;~ Func CloseClanChat()
-;~ 	Local $i = 0
-;~ 	While 1
-;~ 		If _Sleep(100) Then Return
-;~ 		If _ColorCheck(_GetPixelColor($aCloseChat[0], $aCloseChat[1], True), Hex($aCloseChat[2], 6), $aCloseChat[3]) Then
-;~ 			Click($aCloseChat[0], $aCloseChat[1], 1, 0, "#0173")
-;~ 			ExitLoop
-;~ 		ElseIf QuickMIS("BC1", $g_sImgDonateCloseWindow, 730, 0, 825, 220, True, False) Then
-;~ 			SetLog("Closing the Donate troops window!...", $COLOR_SUCCESS)
-;~ 			Click($g_iQuickMISWOffSetX, $g_iQuickMISWOffSetY)
-;~ 			If _Sleep($DELAYDONATEWINDOW1) Then ExitLoop
-;~ 		Else
-;~ 			If _Sleep(100) Then Return
-;~ 			$i += 1
-;~ 			If $i > 30 Then
-;~ 				SetLog("Error finding Clan Tab to close...", $COLOR_ERROR)
-;~ 				AndroidPageError("DonateCC")
-;~ 				ExitLoop
-;~ 			EndIf
-;~ 		EndIf
-;~ 	WEnd
-;~ EndFunc   ;==>CloseClanChat
-
 Func ScrollUp()
-	Local $aScroll, $i_attempts = 0
-	While 1
-		ForceCaptureRegion()
-		Local $y = 81
-		$aScroll = _PixelSearch(293, $y, 295, 8 + $y, Hex(0xFFFFFF, 6), 10)
-		If IsArray($aScroll) And _ColorCheck(_GetPixelColor(300, 95, True), Hex(0x5da515, 6), 15) Then
-			Click($aScroll[0], $aScroll[1], 1, 0, "#0172")
-			If _Sleep($DELAYDONATECC2 + 100) Then Return
-			ContinueLoop
-			$i_attempts += 1
-			If $i_attempts > 20 Then ExitLoop
-		EndIf
-		ExitLoop
-	WEnd
+	Local $aScroll
+	ForceCaptureRegion()
+	Local $y = 81
+	$aScroll = _PixelSearch(293, $y, 295, 8 + $y, Hex(0xFFFFFF, 6), 10)
+	If IsArray($aScroll) And _ColorCheck(_GetPixelColor(300, 95, True), Hex(0x5da515, 6), 15) Then
+		Click($aScroll[0], $aScroll[1], 1, 0, "#0172")
+		If _Sleep($DELAYDONATECC2 + 100) Then Return
+		
+		Local $aOk
+		Do
+			_CaptureRegion()
+			If _Sleep(200) Then Return
+			_CaptureRegion2()
+			$aOk = _MasivePixelCompare($g_hHBitmap2, $g_hHBitmap, 13, 49, 20, 678, 15, 5)
+		Until $aOk = -1
+		If _Sleep(200) Then Return
+		Return True
+	EndIf
+	Return False
 EndFunc   ;==>ScrollUp
 
 Func ScrollDown()
 	Local $aScroll
 	ForceCaptureRegion()
-	$aScroll = _PixelSearch(293, 563 + 44, 295, 571 + 44, Hex(0xFFFFFF, 6), 10)
+	$aScroll = _PixelSearch(24, 629, 31, 679, Hex(0x6EBD39, 6), 10)
 	If IsArray($aScroll) Then
 		Click($aScroll[0], $aScroll[1], 1, 0, "#0172")
 		If _Sleep($DELAYDONATECC2) Then Return
+		Local $aOk
+		Do
+			_CaptureRegion()
+			If _Sleep(200) Then Return
+			_CaptureRegion2()
+			$aOk = _MasivePixelCompare($g_hHBitmap2, $g_hHBitmap, 13, 49, 20, 678, 15, 5)
+		Until $aOk = -1
+		If _Sleep(200) Then Return
 		Return True
 	Else
 		Return False
@@ -450,20 +502,30 @@ Func ScrollDown()
 EndFunc   ;==>ScrollDown
 
 Func DonateIT($Slot)
-	Local $iTroopIndex = $Slot, $yComp = 0, $NumberClick = 5
-	If $g_iClanlevel >= 4 Then $NumberClick = 6
-	If $g_iClanlevel >= 8 Then $NumberClick = 8
+	Local $iTroopIndex = $Slot, $yComp = 0, $iNumberClick = 5
+	If $g_iClanlevel >= 4 Then $iNumberClick = 6
+	If $g_iClanlevel >= 8 Then $iNumberClick = 8
 	If $Slot < 14 Then
 		If Not _ColorCheck(_GetPixelColor(350, $g_iDonationWindowY + 105 + $yComp, True), Hex(0x3d79b5, 6), 15) Then
 			SetLog("You can't donate more Troops for this request!", $COLOR_INFO)
 			Return False
 		EndIf
-		Click(395 + ($Slot * 68), $g_iDonationWindowY + 57 + $yComp, $NumberClick, $DELAYDONATECC3, "#0175")
+		For $i = 1 To $iNumberClick
+			PureClick(395 + ($Slot * 68), $g_iDonationWindowY + 57 + $yComp, 1, $DELAYDONATECC3, "#0175")
+			If Not _ColorCheck(_GetPixelColor(350, $g_iDonationWindowY + 105 + $yComp, True), Hex(0x3d79b5, 6), 15) Then
+				ExitLoop
+			EndIf
+		Next
 		SetLog(" - Donated Troops on Slot " & $Slot + 1, $COLOR_INFO)
 		$Slot = 0
 		$iTroopIndex = $Slot
 		$g_bDisableTrain = False
-		Click(395 + ($Slot * 68), $g_iDonationWindowY + 147 + $yComp, $NumberClick, $DELAYDONATECC3, "#0175")
+		For $i = 1 To $iNumberClick
+			PureClick(395 + ($Slot * 68), $g_iDonationWindowY + 147 + $yComp, 1, $DELAYDONATECC3, "#0175")
+			If _ColorCheck(_GetPixelColor(350, $g_iDonationWindowY + 105 + $yComp, True), Hex(0xDADAD5, 6), 5) Then
+				ExitLoop
+			EndIf
+		Next
 		SetLog(" - Donated Troops on Slot " & $Slot + 1, $COLOR_INFO)
 		If _ColorCheck(_GetPixelColor(350, $g_iDonationWindowY + 105 + $yComp, True), Hex(0xDADAD5, 6), 5) Then
 			SetLog("No More troops let's train!", $COLOR_INFO)
@@ -543,55 +605,3 @@ Func IfIsToStayInGTFO()
 
 	Return True
 EndFunc   ;==>IfIsToStayInGTFO
-
-Func _DonateWindow()
-	If $g_bDebugSetlog Then SetLog("_DonateWindow Open Start", $COLOR_DEBUG)
-	Local $sSearchZone = "195," & $g_aiDonatePixel[1] - 50 & ",305," & $g_aiDonatePixel[1] + 109
-	Local $aDonatePixel = _ImageSearchXML($g_sImgDonateCC & "DonateButton\", 1, $sSearchZone)
-	SetDebugLog("DonateWindow $g_aiDonatePixel array: " & _ArrayToString($aDonatePixel, ",", -1, -1, "|"))
-	If IsArray($aDonatePixel) Then
-		Click($aDonatePixel[0][1], $aDonatePixel[0][2], 1, 0, "#0174")
-	Else
-		If $g_bDebugSetlog Then SetDebugLog("Could not find the Donate Button!", $COLOR_DEBUG)
-		Return False
-	EndIf
-	If _Sleep($DELAYDONATEWINDOW1) Then Return
-	Local $iCount = 0
-	While Not (_ColorCheck(_GetPixelColor(331, $g_aiDonatePixel[1], True, "DonateWindow"), Hex(0xffffff, 6), 0))
-		If _Sleep($DELAYDONATEWINDOW2) Then Return
-		ForceCaptureRegion()
-		$iCount += 1
-		If $iCount = 20 Then ExitLoop
-	WEnd
-
-	; Determinate the right position of the new Donation Window
-	; Will search in $Y column = 410 for the first pure white color and determinate that position the $DonationWindowTemp
-
-	$g_iDonationWindowY = 0
-	ForceCaptureRegion()
-	Local $aDonWinOffColors[1][3] = [[0xFFFFFF, 0, 2]]
-	Local $aDonationWindow = _MultiPixelSearch(628, 0, 630, $g_iGAME_HEIGHT, 1, 1, Hex(0xFFFFFF, 6), $aDonWinOffColors, 10)
-	If IsArray($aDonationWindow) Then
-		$g_iDonationWindowY = $aDonationWindow[1]
-		If $g_bDebugSetlog Then SetDebugLog("$g_iDonationWindowY: " & $g_iDonationWindowY, $COLOR_DEBUG)
-	Else
-		SetLog("Could not find the Donate Window!", $COLOR_ERROR)
-		Return False
-	EndIf
-	If $g_bDebugSetlog Then SetDebugLog("_DonateWindow Open Exit", $COLOR_DEBUG)
-	Return True
-EndFunc   ;==>_DonateWindow
-
-Func SearchButtons($y = 50)
-	$g_aiDonatePixel[0] = Null
-	$g_aiDonatePixel[1] = Null
-	Local $sSearchZone = "195," & $y & ",305," & 672 - $y
-	Local $aDonatePixel = _ImageSearchXML($g_sImgDonateCC & "DonateButton\", 10, $sSearchZone)
-	SetDebugLog("$g_aiDonatePixel array: " & _ArrayToString($aDonatePixel, ",", -1, -1, "|"))
-	_ArraySort($aDonatePixel, 0, 0, 0, 2)
-	SetDebugLog("$g_aiDonatePixel array: " & _ArrayToString($aDonatePixel, ",", -1, -1, "|"))
-	If $aDonatePixel <> -1 And IsArray($aDonatePixel) And UBound($aDonatePixel) > 0 And $aDonatePixel[0][0] <> "" Then
-		$g_aiDonatePixel[0] = $aDonatePixel[0][1]
-		$g_aiDonatePixel[1] = $aDonatePixel[0][2]
-	EndIf
-EndFunc   ;==>SearchButtons

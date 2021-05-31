@@ -320,17 +320,7 @@ Func CloseClanChat($iDelay = 200) ; close chat area
 EndFunc   ;==>CloseClanChat
 
 Func CloseXDonate() ; Custom fix - Team__AiO__MOD
-	Local $i = 0, $bClicked = False
-	
-	Do
-		$i += 1
-		$bClicked = ButtonClickDM(@ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\Button\XClan\", 521, 1, 338, 730)
-		If _Sleep(250) Then Return
-	Until $bClicked Or ($i > 3)
-	
-	If Not $bClicked Then ClickAway(True)
-	
-	Return $bClicked
+	Return ButtonClickDM(@ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\Button\XClan\", 521, 1, 338, 730)
 EndFunc   ;==>ClickFindMatch
 
 Func ChatbotCheckIfUserIsInClan() ; check if user is in a clan before doing chat
