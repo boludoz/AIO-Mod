@@ -12,10 +12,6 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: ---
 ; ===============================================================================================================================
-Global $g_bDisableTrain
-Global $g_bDisableBrewSpell
-Global $g_bDisableSiegeTrain
-Global $g_aiDonatePixel[2] = [Null, Null]
 
 Global $g_iTroosNumber = 0
 Global $g_iSpellsNumber = 0
@@ -64,8 +60,7 @@ Func MainGTFO()
 			SetLog(" - Running GTFO for " & StringFormat("%.2f", $_diffTimer) & " min", $COLOR_DEBUG)
 		EndIf
 		$_bFirstLoop = False
-		$g_bDisableBrewSpell = False
-		$g_bDisableTrain = False
+
 		If Not $g_bRunState Then Return
 		If _Sleep($DELAYRUNBOT3) Then Return
 		If CheckAndroidReboot() Then ContinueLoop
@@ -519,7 +514,7 @@ Func DonateIT($Slot)
 		SetLog(" - Donated Troops on Slot " & $Slot + 1, $COLOR_INFO)
 		$Slot = 0
 		$iTroopIndex = $Slot
-		$g_bDisableTrain = False
+
 		For $i = 1 To $iNumberClick
 			PureClick(395 + ($Slot * 68), $g_iDonationWindowY + 147 + $yComp, 1, $DELAYDONATECC3, "#0175")
 			If _ColorCheck(_GetPixelColor(350, $g_iDonationWindowY + 105 + $yComp, True), Hex(0xDADAD5, 6), 5) Then
@@ -551,7 +546,7 @@ Func DonateIT($Slot)
 		SetLog(" - Donated 1 Spell on Slot " & $Slot + 1, $COLOR_INFO)
 		$g_aiDonateStatsSpells[$iTroopIndex][0] += 1
 		$g_iSpellsNumber += 1
-		$g_bDisableBrewSpell = False
+
 		Return True
 	Else
 		SetLog(" - Spells Empty or Filled!", $COLOR_ERROR)
@@ -574,7 +569,7 @@ Func IfIsToStayInGTFO()
 	If $g_aiCurrentLoot[$eLootElixir] <> 0 And $g_aiCurrentLoot[$eLootElixir] < $g_iTxtMinSaveGTFO_Elixir Then
 		SetLog("Reach the Elixir Limit , Let's Farm!!", $COLOR_INFO)
 		; Force double army on GTFO
-;~ 		If $g_bTotalCampForced = True And $g_bSetDoubleArmy Then
+ 		If $g_bTotalCampForced = True And $g_bDoubleTrain Then
 		If $g_bTotalCampForced = True Then
 			$g_iTotalCampSpace = Number($g_iTotalCampForcedValue) / 2
 			For $T = 0 To $eTroopCount - 1
@@ -590,7 +585,7 @@ Func IfIsToStayInGTFO()
 		SetLog("Reach the Dark Elixir Limit , Let's Farm!!", $COLOR_INFO)
 		; Force double army on GTFO
 		If $g_bTotalCampForced Then
-;~ 		If $g_bTotalCampForced And $g_bSetDoubleArmy Then
+ 		If $g_bTotalCampForced And $g_bDoubleTrain Then
 			$g_iTotalCampSpace = Number($g_iTotalCampForcedValue) / 2
 			For $T = 0 To $eTroopCount - 1
 				If $g_aiArmyCompTroops[$T] <> 0 Then
