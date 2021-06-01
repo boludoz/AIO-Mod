@@ -251,7 +251,7 @@ Func DonateGTFO()
 			EndIf
 		WEnd
 		SetDebugLog("While Main DonateGTFO EXIT")
-		If $iDonateLoop >= 5 Then
+		If $iDonateLoop >= 1 Then
 			If $g_bChkGTFOClanHop = True Then
 				ClanHop()
 				$firstrun = True
@@ -460,16 +460,14 @@ Func ScrollUp()
 	$aScroll = _PixelSearch(293, $y, 295, 8 + $y, Hex(0xFFFFFF, 6), 10)
 	If IsArray($aScroll) And _ColorCheck(_GetPixelColor(300, 95, True), Hex(0x5da515, 6), 15) Then
 		Click($aScroll[0], $aScroll[1], 1, 0, "#0172")
-		If _Sleep($DELAYDONATECC2 + 100) Then Return
-		
-		Local $aOk
+		Local $aOk, $iLoop = 0
 		Do
+			$iLoop += 1
 			_CaptureRegion()
-			If _Sleep(200) Then Return
+			If _Sleep($DELAYDONATECC2) Then Return
 			_CaptureRegion2()
 			$aOk = _MasivePixelCompare($g_hHBitmap2, $g_hHBitmap, 13, 49, 20, 678, 15, 5)
-		Until $aOk = -1
-		If _Sleep(200) Then Return
+		Until $aOk = -1 Or $iLoop > 15
 		Return True
 	EndIf
 	Return False
@@ -481,15 +479,14 @@ Func ScrollDown()
 	$aScroll = _PixelSearch(24, 629, 31, 679, Hex(0x6EBD39, 6), 10)
 	If IsArray($aScroll) Then
 		Click($aScroll[0], $aScroll[1], 1, 0, "#0172")
-		If _Sleep($DELAYDONATECC2) Then Return
-		Local $aOk
+		Local $aOk, $iLoop = 0
 		Do
+			$iLoop += 1
 			_CaptureRegion()
-			If _Sleep(200) Then Return
+			If _Sleep($DELAYDONATECC2) Then Return
 			_CaptureRegion2()
 			$aOk = _MasivePixelCompare($g_hHBitmap2, $g_hHBitmap, 13, 49, 20, 678, 15, 5)
-		Until $aOk = -1
-		If _Sleep(200) Then Return
+		Until $aOk = -1 Or $iLoop > 15
 		Return True
 	Else
 		Return False
