@@ -332,7 +332,7 @@ $g_iInputBuilderPotion, $g_iInputLabPotion, $g_iInputGoldItems = 250000, $g_iInp
 #Region - Builder Base !!!
 
 ; Bulder base upgrades
-Global $g_aBBUpgradeNameLevel
+Global $g_aBBUpgradeNameLevel[3] = ["", "", ""]
 Global $g_aBBUpgradeResourceCostDuration[3] = ["", "", ""]
 Global $g_iChkBBUpgradesToIgnore[28] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_hChkBBUpgradesToIgnore[28] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]

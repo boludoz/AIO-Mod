@@ -224,7 +224,7 @@ Global $g_bAndroidAdbZoomoutEnabled = True ; Use Android ADB zoom-out script
 Global $g_bAndroidAdbClickDragEnabled = True ; Use Android ADB click drag script or input swipe
 Global $g_bAndroidAdbInputEnabled = True ; Enable Android ADB send text (CC requests), swipe not used as click drag anymore
 Global $g_iAndroidAdbInputWordsCharLimit = 10 ; Android ADB send text words (split by space) with this limit of specified characters per command (0 = disabled and entire text is sent at once)
-Global $g_bAndroidAdbClickEnabled = True ; Enable Android ADB mouse click
+Global $g_bAndroidAdbClickEnabled = False ; Enable Android ADB mouse click ; Custom Fix - Team AIO Mod++
 Global $g_bAndroidAdbClicksEnabled = False ; (Experimental & Dangerous!) Enable Android KeepClicks() and ReleaseClicks() to fire collected clicks all at once, only available when also $g_bAndroidAdbClick = True
 Global $g_iAndroidAdbClicksTroopDeploySize = 0 ; (Experimental & Dangerous!) Deploy more troops at once, 0 = deploy group, only available when also $g_bAndroidAdbClicksEnabled = True (currently only just in CSV Deploy)
 Global $g_bAndroidAdbInstanceEnabled = True ; Enable Android steady ADB shell instance when available
@@ -332,7 +332,7 @@ Global $g_bAndroidAdbClick ; Enable Android ADB mouse click
 Global $g_bAndroidAdbInput ; Enable Android ADB send text (CC requests)
 Global $g_bAndroidAdbInstance ; Enable Android steady ADB shell instance when available
 Global $g_bAndroidAdbClickDrag ; Enable Android minitouch for Click Drag or input swipe
-Global $g_bAndroidAdbClickDragScript = True ; If $g_bAndroidAdbClickDrag = True it uses either minitouch (True) or input swipe (False) for click & drag
+Global $g_bAndroidAdbClickDragScript = False ; If $g_bAndroidAdbClickDrag = True it uses either minitouch (True) or input swipe (False) for click & drag ; Custom Fix - Team AIO Mod++
 Global $g_bAndroidEmbed ; Enable Android Docking
 Global $g_iAndroidEmbedMode ; Android Dock Mode: -1 = Not available, 0 = Normal docking, 1 = Simulated docking
 Global $g_bAndroidBackgroundLaunch ; Enabled Android Background launch using Windows Scheduled Task

@@ -482,9 +482,6 @@ Func RandomHumanAction()
 		SetActionPriority($i)
 	Next
 
-	$g_aSetActionPriority[10] = 0
-	$g_aSetActionPriority[11] = 0
-
 	$g_iActionToDo = _ArrayMaxIndex($g_aSetActionPriority)
 	Switch $g_iActionToDo
 		Case 0

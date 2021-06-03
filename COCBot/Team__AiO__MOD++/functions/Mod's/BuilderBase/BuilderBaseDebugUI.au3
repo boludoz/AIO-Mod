@@ -35,7 +35,7 @@ Func DebugUI()
 	GUICtrlCreateGroup("Debug tests at Emulator", 3, 0, 430, 135)
 
 	$btnAllLoop = GUICtrlCreateButton("Idle loop", $x, $y, 75, 25, $WS_GROUP)
-	GUICtrlSetOnEvent($btnAllLoop, "TestrunBuilderBase")
+	GUICtrlSetOnEvent($btnAllLoop, "TestBuilderBase")
 
 	$g_cmbBuildings = GUICtrlCreateCombo("", $x + 15 + 75 + 75 + 75, $y, 125, 20)
 	GUICtrlSetData($g_cmbBuildings, "AirDefense|Crusher|GuardPost|Cannon|BuilderHall", "Crusher")

@@ -98,12 +98,12 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default) ;Checks if in
 			If _Sleep($DELAYCHECKMAINSCREEN1) Then Return
 		EndIf
 	WEnd
-	If $bLocated Then 
+	
+	If $bLocated Then
 		; check that shared_prefs are pulled
 		If $g_bUpdateSharedPrefs And Not HaveSharedPrefs() Then PullSharedPrefs()
 		ZoomOut()
 	EndIf
-	
 	If Not $g_bRunState Then Return False
 
 	If $bSetLog Then
@@ -123,7 +123,6 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default) ;Checks if in
 	Return $bLocated
 EndFunc   ;==>_checkMainScreen
 
-#Region - Custom - Team AIO Mod++
 Func _checkMainScreenImage(ByRef $bLocated, $aPixelToCheck, $bNeedCaptureRegion = $g_bNoCapturePixel)
 	$bLocated = _CheckPixel($aPixelToCheck, $bNeedCaptureRegion) And Not checkObstacles_Network(False, False) And checkChatTabPixel()
 	Return $bLocated
@@ -148,4 +147,3 @@ Func isOnMainVillage($bNeedCaptureRegion = $g_bNoCapturePixel)
 	Local $bLocated = False
 	Return _checkMainScreenImage($bLocated, $aPixelToCheck)
 EndFunc
-#EndRegion - Custom - Team AIO Mod++

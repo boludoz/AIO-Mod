@@ -743,7 +743,7 @@ Func runBot() ;Bot that runs everything in order
 	If $g_bOnlyBuilderBase Then
 		$g_bStayOnBuilderBase = True
 		SetLog("Let's Play Builder Base Only", $COLOR_ACTION)
-		runBuilderBase()
+		BuilderBase()
 	Else
 		FirstCheck()
 	EndIf
@@ -756,9 +756,11 @@ Func runBot() ;Bot that runs everything in order
 		If $b_iAutoRestartDelay > 0 And __TimerDiff($g_hBotLaunchTime) > $b_iAutoRestartDelay * 1000 Then
 			If RestartBot(False) Then Return
 		EndIf
+		
+		If Not $g_bRunState Then Return
 
 		PrepareDonateCC()
-		If Not $g_bRunState Then Return
+		
 		$g_bRestart = False
 		$g_bFullArmy = False
 		$g_bIsFullArmywithHeroesAndSpells = False
@@ -769,15 +771,12 @@ Func runBot() ;Bot that runs everything in order
 		chkShieldStatus()
 		If Not $g_bRunState Then Return
 		If $g_bRestart Then ContinueLoop
-		checkObstacles() ; trap common error messages also check for reconnecting animation
-		If $g_bRestart Then ContinueLoop
 
 		#Region - Custom BB - Team AIO Mod++
 		If $g_bOnlyBuilderBase Then
 			$g_bStayOnBuilderBase = True
-			runBuilderBase()
+			BuilderBase()
 			If $g_bRestart Then ContinueLoop
-
 			If ProfileSwitchAccountEnabled() Then checkSwitchAcc() ; Forced to switch
 			ContinueLoop
 		EndIf
@@ -1356,7 +1355,7 @@ Func __RunFunction($sAction)
 			; BBase - Team AIO Mod++
 		Case "BuilderBase"
 			If Not ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Then Return True
-			runBuilderBase()
+			BuilderBase()
 		Case "CollectAchievements"
 			CollectAchievements()
  		Case "CollectFreeMagicItems"
@@ -1469,81 +1468,9 @@ Func FirstCheck()
 	EndIf
 EndFunc   ;==>FirstCheck
 
-#cs - BBase - Disabled for review and adaptation - AIO Mod
-Func BuilderBase()
-
-	; switch to builderbase and check it is builderbase
-	If SwitchBetweenBases() And isOnBuilderBase()  Then
-
-		$g_bStayOnBuilderBase = True
-		If _Sleep($DELAYRUNBOT3) Then Return
-		If checkObstacles() Then Return
-
-		BuilderBaseReport()
-		If _Sleep($DELAYRUNBOT3) Then Return
-		If checkObstacles() Then Return
-
-		CollectBuilderBase()
-		If _Sleep($DELAYRUNBOT3) Then Return
-		If checkObstacles() Then Return
-
-		AttackBB()
-		If $g_bRestart = True Then Return
-		If _Sleep($DELAYRUNBOT3) Then Return
-		If checkObstacles() Then Return
-
-		StartClockTowerBoost()
-		If _Sleep($DELAYRUNBOT3) Then Return
-		If checkObstacles() Then Return
-
-		StarLaboratory()
-		If _Sleep($DELAYRUNBOT3) Then Return
-		If checkObstacles() Then Return
-
-		CleanBBYard()
-		If _Sleep($DELAYRUNBOT3) Then Return
-		If checkObstacles() Then Return
-
-		MainSuggestedUpgradeCode()
-		If _Sleep($DELAYRUNBOT3) Then Return
-		If checkObstacles() Then Return
-
-		BuilderBaseReport()
-		If _Sleep($DELAYRUNBOT3) Then Return
-		If checkObstacles() Then Return
-
-		; switch back to normal village
-		SwitchBetweenBases()
-		$g_bStayOnBuilderBase = False
-
-	EndIf
-
-EndFunc
-
-Func TestBuilderBase()
-	Local $bChkCollectBuilderBase = $g_bChkCollectBuilderBase
-	Local $bChkStartClockTowerBoost = $g_bChkStartClockTowerBoost
-	Local $bChkCTBoostBlderBz = $g_bChkCTBoostBlderBz
-	Local $bChkCleanBBYard = $g_bChkCleanBBYard
-	Local $bChkEnableBBAttack = $g_bChkEnableBBAttack
-
-	$g_bChkCollectBuilderBase = True
-	$g_bChkStartClockTowerBoost = True
-	$g_bChkCTBoostBlderBz = True
-	$g_bChkCleanBBYard = True
-	$g_bChkEnableBBAttack = True
-
-	BuilderBase()
-
-	If _Sleep($DELAYRUNBOT3) Then Return
-
-	$g_bChkCollectBuilderBase = $bChkCollectBuilderBase
-	$g_bChkStartClockTowerBoost = $bChkStartClockTowerBoost
-	$g_bChkCTBoostBlderBz = $bChkCTBoostBlderBz
-	$g_bChkCleanBBYard = $bChkCleanBBYard
-	$g_bChkEnableBBAttack = $bChkEnableBBAttack
-EndFunc
-#ce - BBase - Disabled for review and adaptation - AIO Mod
+#cs - BBase - AIO Mod
+	View in "\COCBot\Team__AiO__MOD++\functions\Mod's\BuilderBase\BuilderBaseMain.au3"
+#ce - BBase - AIO Mod
 
 Func SetSAtk($attack = False)
 

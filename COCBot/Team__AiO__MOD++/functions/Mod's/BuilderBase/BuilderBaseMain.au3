@@ -1,10 +1,10 @@
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: BuilderBaseMain.au3
 ; Description ...: Builder Base Main Loop
-; Syntax ........: runBuilderBase()
+; Syntax ........: BuilderBase()
 ; Parameters ....:
 ; Return values .: None
-; Author ........: ProMac (03-2018), Fahid.Mahmood (03-2018)
+; Author ........: Chilly-Chil (Maybe?) - Extract of MyBot, Team AIO Mod++
 ; Modified ......:
 ; Remarks .......: This file is part of MyBot, previously known as Mybot and ClashGameBot. Copyright 2015-2018
 ;                  MyBot is distributed under the terms of the GNU GPL
@@ -13,23 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func TestrunBuilderBase()
-	If $g_bDebugSetlog Then SetDebugLog("** TestrunBuilderBase START**", $COLOR_DEBUG)
-	Local $Status = $g_bRunState
-	$g_bRunState = True
-	$g_bStayOnBuilderBase = True
-	runBuilderBase(False)
-	$g_bStayOnBuilderBase = False
-	$g_bRunState = $Status
-	If $g_bDebugSetlog Then SetDebugLog("** TestrunBuilderBase END**", $COLOR_DEBUG)
-EndFunc   ;==>TestrunBuilderBase
-
-Func runBuilderBase($bTestRun = False)
-
-	If Not $g_bRunState Then Return
-
-	ClickAway() ; ClickP($aAway, 3, 400, "#0000") ;Click Away
-
+Func BuilderBase($bTestRun = False)
 	If Not $g_bChkBuilderAttack And Not $g_bChkCollectBuilderBase And Not $g_bChkStartClockTowerBoost And Not $g_iChkBBSuggestedUpgrades And Not $g_bChkCleanBBYard And Not $g_bChkUpgradeMachine Then
 		If $g_bOnlyBuilderBase Then
 			SetLog("Play Only Builder Base Check Is On But BB Option's(Collect,Attack etc) Unchecked", $COLOR_ERROR)
@@ -41,141 +25,103 @@ Func runBuilderBase($bTestRun = False)
 		Return False
 	EndIf
 
-	; Check if is in Builder Base.
-	If Not SwitchBetweenBases(True, True) Then
-		$g_bStayOnBuilderBase = False
-		Return False
-	EndIf
+	; switch to builderbase and check it is builderbase
+	If SwitchBetweenBases(True, True) And isOnBuilderBase(True, True) Then
 
-	SetLog("Builder loop starts.", $COLOR_INFO)
-	If randomSleep(1000) Then Return
-	If $g_bRestart Or (Not $g_bRunState) Then Return
+		$g_bStayOnBuilderBase = True
 
-	; Collect resources
-	CollectBuilderBase()
-	If $g_bRestart Or (Not $g_bRunState) Then Return
+		If _Sleep($DELAYRUNBOT3) Then Return
+		If checkObstacles(True) Then Return
 
-	; Builder base Report - Get The number of available attacks
-	If $g_bRestart Or (Not $g_bRunState) Then Return
-	BuilderBaseReport()
-	RestAttacksInBB(False)
+		BuilderBaseReport()
+		RestAttacksInBB(False)
+		If _Sleep($DELAYRUNBOT3) Then Return
+		If checkObstacles(True) Then Return
 
-	; Logic here
-	Local $aRndFuncList = ['ClockTower', 'AttackBB']
-	_ArrayShuffle($aRndFuncList)
-	For $iIndex In $aRndFuncList
-		; Check if is in Builder Base.
-		If Not SwitchBetweenBases(True, True) Then
-			$g_bStayOnBuilderBase = False
-			Return False
-		EndIf
-		RunBBFuncs($iIndex)
-		If $g_bRestart Or (Not $g_bRunState) Then Return
-	Next
-	; ----------
+		CollectBuilderBase()
+		If _Sleep($DELAYRUNBOT3) Then Return
+		If checkObstacles(True) Then Return
 
-	; Check obstacles
-	If checkObstacles(True) Then SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
-
-	; Logic here
-	Local $aRndFuncList = ['ElixirUpdate', 'GoldUpdate']
-	_ArrayShuffle($aRndFuncList)
-	For $iIndex In $aRndFuncList
-		; Check if is in Builder Base.
-		If checkObstacles(True) Then SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
-		RunBBFuncs($iIndex)
-		If $g_bRestart Or (Not $g_bRunState) Then Return
-	Next
-	; ----------
-
-	SetLog("Builder Base Idle Ends", $COLOR_INFO)
-	
-	; switch back to normal village
-	If Not $g_bOnlyBuilderBase Then 
-		SwitchBetweenBases(True, False)
-	EndIf
-	
-	If Not $g_bRunState Then Return
-
-	If _Sleep($DELAYRUNBOT1 * 15) Then Return ;Add 15 Sec Delay Before Starting Again In BB Only
-
-	If ProfileSwitchAccountEnabled() Then Return
-
-EndFunc   ;==>runBuilderBase
-
-Func RunBBFuncs($sBBFunc, $bTestRun = False)
-
-	; Silent report.
-	BuilderBaseReport(False, False)
-
-	; Zoomout
-	If $g_iFreeBuilderCountBB <> 0 Then Zoomout()
-
-	Switch $sBBFunc
-		Case "ClockTower"
-
-			; Zoomout
-			Zoomout()
-
-			; Clock Tower Boost
-			StartClockTowerBoost()
-
-			; Get Benfit of Boost and clean all yard
-			CleanBBYard()
-
-		Case "AttackBB"
-
-			; Check if Builder Base is to run
-			If Not $g_bChkBuilderAttack Then Return
+		; Check if Builder Base is to run
+		If $g_bChkBuilderAttack Then
 
 			; New logic to add speed to the attack.
 			For $i = 1 To Random($g_iBBMinAttack, $g_iBBMaxAttack, 1)
-
+				
+				; Get Trophies
+				$g_aiCurrentLootBB[$eLootTrophyBB] = getTrophyMainScreen(67, 84)
+				Setlog("Builder base trophies report: " & $g_aiCurrentLootBB[$eLootTrophyBB], $COLOR_INFO)
+				
 				; Builder base Report and get out of the useless loop.
 				If Not RestAttacksInBB() Then ExitLoop
 				
 				;  $g_bCloudsActive fast network fix.
 				$g_bCloudsActive = True
-
+	
 				; Attack
 				BuilderBaseAttack($bTestRun)
 				
 				;  $g_bCloudsActive fast network fix.
 				$g_bCloudsActive = False
-
+	
+				If $g_bRestart = True Then Return
+				If _Sleep($DELAYRUNBOT3) Then Return
+				If checkObstacles(True) Then Return
+				
 			Next
+			
+		EndIf 
+		ZoomOut()
+		BuilderBaseReport(False, False)
+		If $g_bRestart = True Then Return
+		If _Sleep($DELAYRUNBOT3) Then Return
+		If checkObstacles(True) Then Return
 
-		Case "ElixirUpdate"
+		StarLaboratory()
+		If _Sleep($DELAYRUNBOT3) Then Return
+		If checkObstacles(True) Then Return
+		BuilderBaseReport(False, False)
+		MainSuggestedUpgradeCode()
+		If _Sleep($DELAYRUNBOT3) Then Return
+		If checkObstacles(True) Then Return
 
-			; ELIXIR -----------
-			; It tends to be a little better, upgrade the troops first.
-			StarLaboratory()
+		BuilderBaseReport(False, False)
+		StartClockTowerBoost()
+		If _Sleep($DELAYRUNBOT3) Then Return
+		If checkObstacles(True) Then Return
 
-			; It will not be necessary if there are no constructors.
-			If $g_iFreeBuilderCountBB = 0 Then Return
+		BuilderBaseReport(False, False)
+		CleanBBYard()
+		If _Sleep($DELAYRUNBOT3) Then Return
+		If checkObstacles(True) Then Return
 
-			; Zoomout
-			Zoomout()
+		BuilderBaseReport(False, False)
+		BattleMachineUpgrade()
+		If _Sleep($DELAYRUNBOT3) Then Return
+		If checkObstacles(True) Then Return
+		
+		BuilderBaseReport(False, False)
+		WallsUpgradeBB()
+		If _Sleep($DELAYRUNBOT3) Then Return
+		If checkObstacles(True) Then Return
+		
+		BuilderBaseReport(False, False)
+		RestAttacksInBB(False)
+		If _Sleep($DELAYRUNBOT3) Then Return
+		If checkObstacles(True) Then Return
 
-			; Upgrade Machine
-			BattleMachineUpgrade()
-			; ------------------
+		If Not $g_bRunState Then Return
+	
+		If $g_bOnlyBuilderBase Then 
+			If _Sleep($DELAYRUNBOT1 * 15) Then Return ;Add 15 Sec Delay Before Starting Again In BB Only
+		Else
+			If isOnBuilderBase(True, True) Then SwitchBetweenBases(True, False)
+		EndIf
 
-		Case "GoldUpdate"
+		If ProfileSwitchAccountEnabled() Then Return
+	EndIf
 
-			;It will not be necessary if there are no constructors.
-			If $g_iFreeBuilderCountBB = 0 Then Return
-
-			; GOLD -----------
-			; Upgrade builds.
-			MainSuggestedUpgradeCode()
-
-			; The level of the walls does not matter so much.
-			WallsUpgradeBB()
-			; ------------------
-
-	EndSwitch
-EndFunc   ;==>RunBBFuncs
+EndFunc
 
 Func RestAttacksInBB($bSetLog = True)
 	If $g_bChkBuilderAttack = False Then
@@ -192,3 +138,35 @@ Func RestAttacksInBB($bSetLog = True)
 	EndIf
 	Return False
 EndFunc   ;==>RestAttacksInBB
+
+Func TestBuilderBase()
+	Setlog("** TestBuilderBaseAttackBB START**", $COLOR_DEBUG)
+	Local $bStatus = $g_bRunState
+	$g_bRunState = True
+	
+	Local $bChkCollectBuilderBase = $g_bChkCollectBuilderBase
+	Local $bChkStartClockTowerBoost = $g_bChkStartClockTowerBoost
+	Local $bChkCTBoostBlderBz = $g_bChkCTBoostBlderBz
+	Local $bChkCleanBBYard = $g_bChkCleanBBYard
+	Local $bChkEnableBBAttack = $g_bChkEnableBBAttack
+
+	$g_bChkCollectBuilderBase = True
+	$g_bChkStartClockTowerBoost = True
+	$g_bChkCTBoostBlderBz = True
+	$g_bChkCleanBBYard = True
+	$g_bChkEnableBBAttack = True
+
+	BuilderBase()
+
+	If _Sleep($DELAYRUNBOT3) Then Return
+
+	$g_bChkCollectBuilderBase = $bChkCollectBuilderBase
+	$g_bChkStartClockTowerBoost = $bChkStartClockTowerBoost
+	$g_bChkCTBoostBlderBz = $bChkCTBoostBlderBz
+	$g_bChkCleanBBYard = $bChkCleanBBYard
+	$g_bChkEnableBBAttack = $bChkEnableBBAttack
+	
+	$g_bRunState = $bStatus
+
+	Setlog("** TestBuilderBaseAttackBB END**", $COLOR_DEBUG)
+EndFunc

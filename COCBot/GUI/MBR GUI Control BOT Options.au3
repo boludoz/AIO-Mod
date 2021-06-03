@@ -688,8 +688,9 @@ Func btnTestVillageSize()
 			SetLog("Village stone " & $village[6] & ": " & $village[4] & ", " & $village[5])
 			SetLog("Village tree " & $village[9] & ": " & $village[7] & ", " & $village[8])
 			
-			Local $bOnBuilderBase = isOnBuilderBase(False, True)
-			If Not $bOnBuilderBase And IsArray($village) Then
+			; Local $bOnBuilderBase = isOnBuilderBase(False, True)
+			; If Not $bOnBuilderBase And IsArray($village) Then
+			If IsArray($village) Then
 				$g_bDebugDisableZoomout = True
 				
 				

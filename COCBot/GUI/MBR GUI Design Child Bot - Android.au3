@@ -90,10 +90,15 @@ Func CreateBotAndroid()
 		$g_hChkAndroidAdbClick = GUICtrlCreateCheckbox(GetTranslatedFileIni("Android", "ChkAdbClick", "Use minitouch for Click"), $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("Android", "ChkAdbClick_Info", "Use minitouch for Android clicks.\r\nIf unchecked use WinAPI control messages."))
 			GUICtrlSetState(-1, (($g_bAndroidAdbClickEnabled) ? ($GUI_CHECKED) : ($GUI_UNCHECKED)))
+			GUICtrlSetState(-1, $GUI_DISABLE) ; Custom Fix - Team AIO Mod++
+			GUICtrlSetState(-1, $GUI_HIDE) ; Custom Fix - Team AIO Mod++
+			
 	$y += 25
 		$g_hChkAndroidAdbClickDragScript = GUICtrlCreateCheckbox(GetTranslatedFileIni("Android", "ChkAdbClickDragScript", "Use minitouch for accurate Click && Drag"), $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("Android", "ChkAdbClickDragScript_Info", "Use minitouch for accurate Click & Drag.\r\nIf unchecked use more compatible 'input swipe' or WinAPI."))
 			GUICtrlSetState(-1, (($g_bAndroidAdbClickDragScript) ? ($GUI_CHECKED) : ($GUI_UNCHECKED)))
+			GUICtrlSetState(-1, $GUI_DISABLE) ; Custom Fix - Team AIO Mod++
+			GUICtrlSetState(-1, $GUI_HIDE) ; Custom Fix - Team AIO Mod++
 
 	$y += 25
 		$g_hChkAndroidCloseWithBot = GUICtrlCreateCheckbox(GetTranslatedFileIni("Android", "ChkAndroidCloseWithBot", "Close Android with bot"), $x, $y, -1, -1)

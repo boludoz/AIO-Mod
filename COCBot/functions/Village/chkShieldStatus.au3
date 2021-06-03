@@ -15,8 +15,12 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func chkShieldStatus($bChkShield = True, $bForceChkPBT = False)
+	
+	; Custom BB - Team AIO Mod++
+	If $g_bStayOnBuilderBase = True Then Return
+	
 	; Legend trophy protection - Team AIO Mod++
-	If $g_bLeagueAttack Then Return
+	If $g_bLeagueAttack = True Then Return
 
 	; skip shield data collection if force single PB, wait for shield, or close while training not enabled, or window is not on main base
 	Local $bHaltModeWithShield = $g_bChkBotStop And $g_iCmbBotCond >= 19 And $g_iCmbBotCond <= 21

@@ -188,22 +188,24 @@ EndFunc   ;==>CheckAttackBtn
 
 Func isOnVersusBattleWindow()
 	If Not $g_bRunState Then Return
-	Local $iSpecialColor[4][3] = [[0x87A9CF, 1, 0], [0x87A9CF, 2, 0], [0x87A9CF, 3, 0], [0x87A9CF, 4, 0]]
-
-	For $i = 0 To 15
-		If Not $g_bRunState Then Return
-		_MultiPixelSearch(591, 119, 668, 216, 1, 1, Hex(0x87A9CF, 6), $iSpecialColor, 30)
-		SetDebugLog("******* isOnVersusBattleWindow Try X:" & $g_iMultiPixelOffSet[0])
-		If Number($g_iMultiPixelOffSet[0]) > 0 Then ExitLoop
-		If _Sleep(1000) Then Return
-	Next
-
-	If $i < 15 Then
-		SetDebugLog("Versus Battle window detected: " & $g_iQuickMISWOffSetX & "," & $g_iQuickMISWOffSetY)
-		Return True
-	Else
-		SetLog("Versus Battle window not available...", $COLOR_WARNING)
-		Return False
+	
+	Local $aOnVersusBattleWindow = [375, 245, 0xE8E8E0, 20]
+	If _Wait4PixelArray($aOnVersusBattleWindow) Then
+		
+		Local $aOkayBTN = [664, 465, 0xD9F481, 30]
+		If _CheckPixel($aOkayBTN, True) Then
+			Click($aOkayBTN[0] + Random(5, 10, 1), $aOkayBTN[1] + Random(5, 10, 1))
+		EndIf
+	
+		Local $aFindBattle = [592, 301, 0xFFC949, 30]
+		If _Wait4PixelArray($aFindBattle) Then
+			SetDebugLog("Versus Battle window detected.")
+			Return True
+		Else
+			SetLog("Versus Battle window not available.", $COLOR_WARNING)
+			Return False
+		EndIf
+		
 	EndIf
 EndFunc   ;==>isOnVersusBattleWindow
 
@@ -394,32 +396,32 @@ Func BuilderBaseAttackToDrop($aAvailableTroops)
 
 	; [0] - TopLeft ,[1] - TopRight , [2] - BottomRight , [3] - BottomLeft
 	Local $DeployPoints = BuilderBaseGetDeployPoints(5)
-	Local $UniqueDeployPoint[2] = [0, 0]
+	Local $aUniqueDeployPoint[2] = [0, 0]
 
 	If IsArray($DeployPoints) Then
 		; Just get a valid point to deploy
 		For $i = 0 To 3
-			Local $UniqueDeploySide = $DeployPoints[$i]
-			If UBound($UniqueDeploySide) < 1 Then ContinueLoop
-			$UniqueDeployPoint[0] = $UniqueDeploySide[0][0]
-			$UniqueDeployPoint[1] = $UniqueDeploySide[0][1]
+			Local $aUniqueDeploySide = $DeployPoints[$i]
+			If UBound($aUniqueDeploySide) < 1 Then ContinueLoop
+			$aUniqueDeployPoint[0] = $aUniqueDeploySide[0][0]
+			$aUniqueDeployPoint[1] = $aUniqueDeploySide[0][1]
 		Next
 	EndIf
 
-	If $UniqueDeployPoint[0] = 0 Then
+	If $aUniqueDeployPoint[0] = 0 Then
 		$g_aBuilderBaseDiamond = BuilderBaseDiamond("Attack")
 		If IsArray($g_aBuilderBaseDiamond) <> True Or Not (UBound($g_aBuilderBaseDiamond) > 0) Then Return False
 
 		$g_aExternalEdges = BuilderBaseGetEdges($g_aBuilderBaseDiamond, "External Edges")
 	EndIf
 
-	Local $UniqueDeploySide = $g_aExternalEdges[0]
-	$UniqueDeployPoint[0] = $UniqueDeploySide[0][0]
-	$UniqueDeployPoint[1] = $UniqueDeploySide[0][1]
+	Local $aUniqueDeploySide = $g_aExternalEdges[0]
+	$aUniqueDeployPoint[0] = $aUniqueDeploySide[0][0]
+	$aUniqueDeployPoint[1] = $aUniqueDeploySide[0][1]
 
-	If $UniqueDeployPoint[0] <> 0 Then
+	If $aUniqueDeployPoint[0] <> 0 Then
 		; Deploy One Troop
-		ClickP($UniqueDeployPoint, 1, 0)
+		ClickP($aUniqueDeployPoint, 1, 0)
 	EndIf
 
 	For $i = 0 To 15
@@ -427,15 +429,19 @@ Func BuilderBaseAttackToDrop($aAvailableTroops)
 		If chkSurrenderBtn() = True Then
 			SetLog("Let's Surrender!")
 			ClickP($aSurrenderButton, 1, 0, "#0099") ;Click Surrender
-			ExitLoop
+			
+			; Get the Surrender Window [Cancel] [Ok]
+			If ClickOkay("BuilderBaseAttackToDrop") Then
+				ExitLoop
+			EndIf
 		Else
-			If ($UniqueDeploySide) > $i Then
-				$UniqueDeployPoint[0] = $UniqueDeploySide[$i][0]
-				$UniqueDeployPoint[1] = $UniqueDeploySide[$i][1]
+			If ($aUniqueDeploySide) > $i Then
+				$aUniqueDeployPoint[0] = $aUniqueDeploySide[$i][0]
+				$aUniqueDeployPoint[1] = $aUniqueDeploySide[$i][1]
 
-				If $UniqueDeployPoint[0] <> 0 Then
+				If $aUniqueDeployPoint[0] <> 0 Then
 					; Deploy One Troop
-					ClickP($UniqueDeployPoint, 1, 0)
+					ClickP($aUniqueDeployPoint, 1, 0)
 				EndIf
 			EndIf
 		EndIf
@@ -444,22 +450,6 @@ Func BuilderBaseAttackToDrop($aAvailableTroops)
 
 	If $i >= 15 Then Setlog("Surrender button Problem!", $COLOR_WARNING)
 
-	; Get the Surrender Window [Cancel] [Ok]
-	Local $CancelBtn = [350, 445] ; DESRC Done
-	Local $OKbtn = [520, 445] ; DESRC Done
-	For $i = 0 To 10
-		If Not $g_bRunState Then Return
-		; [Cancel] = 350 , 445 : DB4E1D
-		; [OK] =  520, 445 : 6DBC1F
-		If _ColorCheck(_GetPixelColor($CancelBtn[0], $CancelBtn[1], True), Hex(0xDB4E1D, 6), 10) And _
-				_ColorCheck(_GetPixelColor($OKbtn[0], $OKbtn[1], True), Hex(0x6DBC1F, 6), 10) Then
-			ClickP($OKbtn, 1, 0)
-			ExitLoop
-		EndIf
-		If _Sleep(500) Then ExitLoop
-	Next
-
-	If $i >= 10 Then Setlog("Surrender button OK Problem!", $COLOR_WARNING)
 
 EndFunc   ;==>BuilderBaseAttackToDrop
 

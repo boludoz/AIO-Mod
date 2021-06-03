@@ -140,9 +140,10 @@ Func MainSuggestedUpgradeCode()
 		; Will Open the Suggested Window and check if is OK
 		If ClickOnBuilder() Then
 			SetLog(" - Upg Window Opened successfully", $COLOR_INFO)
-			Local $y = 102, $y1 = 132, $step = 28, $x = 400, $x1 = 540
+			Local $step = 30, $y = $g_iQuickMISWOffSetY - 12, $y1 = $y + $step, $x = 400, $x1 = 555
+
 			; Check for 6  Icons on Window
-			For $i = 0 To 5
+			For $i = 0 To 10
 				Local $bSkipGoldCheck = False
 				If $g_iChkBBSuggestedUpgradesIgnoreElixir = 0 And $g_aiCurrentLootBB[$eLootElixirBB] > 250 Then
 					; Proceeds with Elixir icon detection
@@ -151,7 +152,7 @@ Func MainSuggestedUpgradeCode()
 						Case "Elixir"
 							Click($aResult[0], $aResult[1], 1)
 							If _Sleep(2000) Then Return
-							If GetUpgradeButton($aResult[2], $bDebug) Then
+							If GetUpgradeButton("Elixir", $bDebug) Then
 								ExitLoop
 							EndIf
 							$bSkipGoldCheck = True
@@ -181,7 +182,7 @@ Func MainSuggestedUpgradeCode()
 						Case "Gold"
 							Click($aResult[0], $aResult[1], 1)
 							If _Sleep(2000) Then Return
-							If GetUpgradeButton($aResult[2], $bDebug) Then
+							If GetUpgradeButton("Gold", $bDebug) Then
 								ExitLoop
 							EndIf
 						Case "New"
@@ -286,16 +287,16 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False)
 	If $sUpgButtom = "Gold" Then $sUpgButtom = $g_sImgAutoUpgradeBtnGold
 
 	If QuickMIS("BC1", $g_sImgAutoUpgradeBtnDir, 300, 650, 600, 720, True, $Debug) Then
-		Local $aBuildingName = BuildingInfo(245, 490 + $g_iBottomOffsetY)
-		If $aBuildingName[0] = 2 Then
-			SetLog("Building: " & $aBuildingName[1], $COLOR_INFO)
+		$g_aBBUpgradeNameLevel = BuildingInfo(245, 490 + $g_iBottomOffsetY)
+		If $g_aBBUpgradeNameLevel[0] = 2 Then
+			SetLog("Building: " & $g_aBBUpgradeNameLevel[1], $COLOR_INFO)
 
 			; Verify if is to Upgrade
 			Local $sMsg = "", $bBuildString = False
 			For $i = 0 To UBound($g_sBBUpgradesToIgnore) -1
-				$bBuildString = StringCompare(StringStripWS($aBuildingName[1], $STR_STRIPALL), StringStripWS($g_sBBUpgradesToIgnore[$i], $STR_STRIPALL)) = 0
+				$bBuildString = StringCompare(StringStripWS($g_aBBUpgradeNameLevel[1], $STR_STRIPALL), StringStripWS($g_sBBUpgradesToIgnore[$i], $STR_STRIPALL)) = 0
 				If $bBuildString And $g_iChkBBUpgradesToIgnore[$i] = 1 Then
-					$sMsg = "Ops! " &  $aBuildingName[1] & " is not to Upgrade!"
+					$sMsg = "Ops! " &  $g_aBBUpgradeNameLevel[1] & " is not to Upgrade!"
 					SetLog($sMsg, $COLOR_ERROR)
 					Return False
 				ElseIf $bBuildString And $g_iChkBBUpgradesToIgnore[$i] = 0 Then
@@ -303,7 +304,7 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False)
 				EndIf
 			Next
 
-			If _MultiPixelSearch($g_iQuickMISX + 300, 579, $g_iQuickMISX + 300 + 67, 613, 2, 2, Hex(0xFF887F, 6), StringSplit2D("0xFF887F-0-1|0xFF887F-4-0"), 35) = 0 Then
+			If _MultiPixelSearch($g_iQuickMISX + 300, 579, $g_iQuickMISX + 300 + 67, 613, 2, 2, Hex(0xFF887F, 6), StringSplit2D("0xFF887F-0-1|0xFF887F-4-0"), 35) <> 0 Then
 				SetLog("Upgrade stopped due to insufficient loot", $COLOR_ERROR)
 				ClickAway()
 				Return False
@@ -311,9 +312,11 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False)
 
 			Click($g_iQuickMISX + 300, $g_iQuickMISY + 650, 1)
 			If _Sleep(1500) Then Return
+			
 			For $i = 0 To UBound($g_aBBUpgradeResourceCostDuration) - 1
 				$g_aBBUpgradeResourceCostDuration[$i] = ""
 			Next
+			
 			If StringInStr($g_aBBUpgradeNameLevel[2], "Broken") = 0 Then
 				$g_aBBUpgradeResourceCostDuration[0] = $sUpgButtom
 				If StringInStr($g_aBBUpgradeNameLevel[1], "Machine") > 0 Then
@@ -334,7 +337,7 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False)
 					ClickAway()
 					Return False
 				Else
-					SetLog($aBuildingName[1] & " Upgrading!", $COLOR_INFO)
+					SetLog($g_aBBUpgradeNameLevel[1] & " Upgrading!", $COLOR_INFO)
 					ClickAway()
 					Return True
 				EndIf
@@ -343,7 +346,7 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False)
 				If $bHammerBuilding = True Then
 					SetLog("Hammer Building Detected!", $COLOR_ERROR)
 				Else
-					SetLog("Not enough Resources to Upgrade " & $aBuildingName[1] & " !", $COLOR_ERROR)
+					SetLog("Not enough Resources to Upgrade " & $g_aBBUpgradeNameLevel[1] & " !", $COLOR_ERROR)
 				EndIf
 
 				ClickAway()

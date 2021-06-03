@@ -52,6 +52,8 @@ Func TrainCustomArmy()
 
 	If $g_bDebugSetlogTrain Then SetLog(" == Initial Custom Train == ", $COLOR_ACTION)
 
+	; BoostSuperTroops()
+	
 	;If $bDonateTrain = -1 Then SetbDonateTrain()
 	If $g_iActiveDonate = -1 Then PrepareDonateCC()
 

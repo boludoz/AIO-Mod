@@ -168,9 +168,9 @@ Func DMClasicArray($sMatches, $iDis = 18, $bDebugLog = $g_bDebugImageSave)
         Local $aDecodedMatch = DMDecodeMatch($aSplittedMatches[$i])
         If IsArray($aDecodedMatch) And Not DMduplicated($aMatches, $aDecodedMatch[2], $aDecodedMatch[3], UBound($aMatches)-1, $iDis) Then
             $aMatches[$iRedim][0] = $aDecodedMatch[0]
-            $aMatches[$iRedim][1] = $aDecodedMatch[2]
-            $aMatches[$iRedim][2] = $aDecodedMatch[3]
-            $aMatches[$iRedim][3] = $aDecodedMatch[1]
+            $aMatches[$iRedim][1] = $aDecodedMatch[2] + Round($aDecodedMatch[4] / 2)
+            $aMatches[$iRedim][2] = $aDecodedMatch[3] + Round($aDecodedMatch[5] / 2)
+            $aMatches[$iRedim][3] = $aDecodedMatch[1]			
 			$iRedim += 1
         EndIf
     Next

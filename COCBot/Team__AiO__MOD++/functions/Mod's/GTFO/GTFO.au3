@@ -17,7 +17,7 @@ Global $g_iTroosNumber = 0
 Global $g_iSpellsNumber = 0
 Global $g_iClanlevel = 8
 Global $g_OutOfTroops = False
-Global $g_iLoop2 = 0
+Global $g_iLoop = 0
 Global $g_sClanJoin = True
 Global $g_bFirstHop = True
 Global $g_bLeader = False
@@ -33,9 +33,9 @@ Func MainGTFO()
 		Return
 	EndIf
 	If $g_iTxtCyclesGTFO = 0 Then
-		$g_iLoop2 = 0
+		$g_iLoop = 0
 	Else
-		If $g_iLoop2 > $g_iTxtCyclesGTFO Then
+		If $g_iLoop > $g_iTxtCyclesGTFO And $g_bExitAfterCyclesGTFO Then
 			SetDebugLog("GTFO Cycles Done!", $COLOR_DEBUG)
 			Return
 		EndIf
@@ -187,8 +187,8 @@ Func DonateGTFO()
 		$_diffTimer = (TimerDiff($_timer) / 1000) / 60
 
 		If $_diffTimer > $iTime2Exit Then ExitLoop
-		SetDebugLog("While Main - Cycles Used:" & $g_iLoop2 & " Loop(s)", $COLOR_ERROR)
-		If $g_iTxtCyclesGTFO > 0 And $g_iLoop2 > $g_iTxtCyclesGTFO Then ExitLoop
+		SetDebugLog("While Main - Cycles Used:" & $g_iLoop & " Loop(s)", $COLOR_ERROR)
+		If $g_iTxtCyclesGTFO > 0 And $g_iLoop > $g_iTxtCyclesGTFO And $g_bExitAfterCyclesGTFO Then ExitLoop
 		Local $Buttons = 0
 		
 		; add scroll here
@@ -202,8 +202,8 @@ Func DonateGTFO()
 			Local $iTime = TimerInit()
 			Local $iBenchmark
 			$iDonateLoop += 1
-			$g_iLoop2 += 1
-			If $g_iTxtCyclesGTFO > 0 And $g_iLoop2 > $g_iTxtCyclesGTFO Then ExitLoop
+			$g_iLoop += 1
+			If $g_iTxtCyclesGTFO > 0 And $g_iLoop > $g_iTxtCyclesGTFO And $g_bExitAfterCyclesGTFO Then ExitLoop
 			If $iDonateLoop >= 10 Then ExitLoop
 			$_bReturnT = False
 			$_bReturnS = False
@@ -266,7 +266,7 @@ Func DonateGTFO()
 	AutoItSetOption("MouseClickDelay", 10)
 	AutoItSetOption("MouseClickDownDelay", 10)
 	CloseClanChat()
-	If $g_iTxtCyclesGTFO > 0 And $g_iLoop2 > $g_iTxtCyclesGTFO Then Return False
+	If $g_iTxtCyclesGTFO > 0 And $g_iLoop > $g_iTxtCyclesGTFO And $g_bExitAfterCyclesGTFO Then Return False
 EndFunc   ;==>DonateGTFO
 
 

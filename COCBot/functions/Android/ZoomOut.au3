@@ -41,12 +41,16 @@ Func _ZoomOut() ;Zooms out
 		; default zoomout
 		$sResult = ZoomOutAndroid($g_sAndroidEmulator)
 		$g_bSkipFirstZoomout = True
+	
+		If $g_bStayOnBuilderBase = True Then _ZoomBuilderBaseMecanics()
 		Return $sResult
 	EndIf
 
 	; Android embedded, only use Android zoomout
 	$sResult = AndroidOnlyZoomOut()
 	$g_bSkipFirstZoomout = True
+	
+	If $g_bStayOnBuilderBase = True Then _ZoomBuilderBaseMecanics()
 	Return $sResult
 EndFunc   ;==>_ZoomOut
 
@@ -459,7 +463,6 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag,
 		; try secondary images
 		$vVillage = GetVillageSize($bDebugLog, "2stone", "2tree", Default, $bOnBuilderBase, False) ; Capture region spam disabled - Team AIO Mod++
 	EndIf
-
 	
 	Static $iCallCount = 0
 	If $g_aiSearchZoomOutCounter[0] > 0 Then

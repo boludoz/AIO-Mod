@@ -78,7 +78,7 @@ Func SwitchBetweenBases($bCheckMainScreen = Default, $bGoToBB = Default, $bSilen
 		Local $bIsOnBuilderBase = $bBB
 		Local $hTimerHandle = __TimerInit()
 		Do 
-			$bSwitched = (isOnBuilderBase(True) <> $bIsOnBuilderBase)
+			$bSwitched = (isOnBuilderBase(True, True) <> $bIsOnBuilderBase)
 			If $bSwitched Then ExitLoop
 			If (Not $g_bRunState) Or _Sleep(250) Then Return
 		Until (__TimerDiff($hTimerHandle) > 3000 And Not $bSwitched)
