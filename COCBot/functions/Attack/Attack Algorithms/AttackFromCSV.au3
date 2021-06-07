@@ -44,8 +44,8 @@ Local $DiamandAdjY = -22
 ;Local $OuterDiamondLeft = 10 - $DiamandAdjX, $OuterDiamondRight = 855 + $DiamandAdjX, $OuterDiamondTop = 10 - $DiamandAdjY, $OuterDiamondBottom = 655 + $DiamandAdjY
  Local $OuterDiamondLeft = 10 - $DiamandAdjX, $OuterDiamondRight = 850 + $DiamandAdjX, $OuterDiamondTop = 15 - $DiamandAdjY, $OuterDiamondBottom = 650 + $DiamandAdjY
 
-Local $DiamondMiddleX = ($OuterDiamondLeft + $OuterDiamondRight) / 2
-Local $DiamondMiddleY = ($OuterDiamondTop + $OuterDiamondBottom) / 2
+$DiamondMiddleX = ($OuterDiamondLeft + $OuterDiamondRight) / 2
+$DiamondMiddleY = ($OuterDiamondTop + $OuterDiamondBottom) / 2
 Local $InnerDiamandDiffX = 60 + $DiamandAdjX ; set the diamond shape based on reference village
 Local $InnerDiamandDiffY = 45 + $DiamandAdjY ; set the diamond shape based on reference village
 Local $InnerDiamondLeft = $OuterDiamondLeft + $InnerDiamandDiffX, $InnerDiamondRight = $OuterDiamondRight - $InnerDiamandDiffX, $InnerDiamondTop = $OuterDiamondTop + $InnerDiamandDiffY, $InnerDiamondBottom = $OuterDiamondBottom - $InnerDiamandDiffY
@@ -558,10 +558,10 @@ Func Algorithm_AttackCSV($testattack = False, $captureredarea = True)
 
 	If $g_bCSVLocateStorageDarkElixir = True Then
 		$hTimer = __timerinit()
-		SuspendAndroid()
+		; SuspendAndroid()
 		; USES OLD OPENCV DETECTION
 		Local $g_aiPixelDarkElixirStorage = GetLocationDarkElixirStorageWithLevel()
-		ResumeAndroid()
+		; ResumeAndroid()
 		If _Sleep($DELAYRESPOND) Then Return
 		CleanRedArea($g_aiPixelDarkElixirStorage)
 		Local $pixel = StringSplit($g_aiPixelDarkElixirStorage, "#", 2)

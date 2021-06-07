@@ -1387,40 +1387,151 @@ Func GroupsOfPoints($aFinalArrayArg)
 	Return $a_GroupsToReturn
 EndFunc   ;==>GroupsOfPoints
 
-Func GetDiamondGreenTiles($HnowManyPoints = 10)
+Func _GreenTiles($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = "FV", $bForceCapture = True, $bDebugLog = False, $iDistance2check = 15, $minLevel = 0, $maxLevel = 1000)
+
+	Local $iCount = 0, $returnProps = "objectname,objectlevel,objectpoints"
+	Local $error, $extError
+
+	If $bForceCapture = Default Then $bForceCapture = True
+	If $vArea2SearchOri = Default Then $vArea2SearchOri = "FV"
+
+	If (IsArray($vArea2SearchOri)) Then
+		$vArea2SearchOri = GetDiamondFromArray($vArea2SearchOri)
+	EndIf
+	If 3 = ((StringReplace($vArea2SearchOri, ",", ",") <> "") ? (@extended) : (0)) Then
+		$vArea2SearchOri = GetDiamondFromRect($vArea2SearchOri)
+	EndIf
+
+	Local $aCoords = "" ; use AutoIt mixed variable type and initialize array of coordinates to null
+	Local $returnData = StringSplit($returnProps, ",", $STR_NOCOUNT)
+	Local $returnLine[UBound($returnData)]
+
+	; Capture the screen for comparison
+	If $bForceCapture Then _CaptureRegion2() ;to have FULL screen image to work with
+
+	Local $result = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sDirectory, "str", $vArea2SearchOri, "Int", $iQuantityMatch, "str", $vArea2SearchOri, "Int", $minLevel, "Int", $maxLevel)
+	$error = @error ; Store error values as they reset at next function call
+	$extError = @extended
+	If $error Then
+		_logErrorDLLCall($g_sLibMyBotPath, $error)
+		If $g_bDebugSetlog Then SetDebugLog(" imgloc DLL Error : " & $error & " --- " & $extError)
+		SetError(2, $extError, $aCoords) ; Set external error code = 2 for DLL error
+		Return -1
+	EndIf
+
+	If checkImglocError($result, "_GreenTiles", $sDirectory) = True Then
+		If $g_bDebugSetlog Then SetDebugLog("_GreenTiles Returned Error or No values : ", $COLOR_DEBUG)
+		Return -1
+	EndIf
+
+	Local $resultArr = StringSplit($result[0], "|", $STR_NOCOUNT)
+	If $g_bDebugSetlog Then SetDebugLog(" ***  _GreenTiles multiples **** ", $COLOR_ORANGE)
+
+	; Distance in pixels to check if is a duplicated detection , for deploy point will be 5
+	Local $iD2C = $iDistance2check
+	Local $aAR[0][4], $aXY
+	For $rs = 0 To UBound($resultArr) - 1
+		For $rD = 0 To UBound($returnData) - 1 ; cycle props
+			$returnLine[$rD] = RetrieveImglocProperty($resultArr[$rs], $returnData[$rD])
+			If $returnData[$rD] = "objectpoints" Then
+				; Inspired in Chilly-chill
+				Local $aC = StringSplit($returnLine[2], "|", $STR_NOCOUNT)
+				For $i = 0 To UBound($aC) - 1
+					$aXY = StringSplit($aC[$i], ",", $STR_NOCOUNT)
+					If UBound($aXY) <> 2 Then ContinueLoop 3
+						If $returnLine[0] = "External" Then
+							If isInsideDiamondInt(Int($aXY[0]), Int($aXY[1])) Then
+								ContinueLoop
+							EndIf
+						EndIf
+						If $iD2C > 0 Then
+							If DuplicatedGreen($aAR, Int($aXY[0]), Int($aXY[1]), UBound($aAR)-1, $iD2C) Then
+								ContinueLoop
+							EndIf
+						EndIf
+					ReDim $aAR[$iCount + 1][4]
+					$aAR[$iCount][0] = Int($aXY[0])
+					$aAR[$iCount][1] = Int($aXY[1])
+					$iCount += 1
+					If $iCount >= $iQuantityMatch And $iQuantityMatch > 0 Then ExitLoop 3
+				Next
+			EndIf
+		Next
+	Next
+
+	If UBound($aAR) < 1 Then Return -1
+
+	Return $aAR
+EndFunc   ;==>_GreenTiles
+
+Func isInsideDiamondInt($iX, $iY)
+
+	Local $Left = $InternalArea[0][0], $Right = $InternalArea[1][0], $Top = $InternalArea[2][1], $Bottom = $InternalArea[3][1]
+	Local $aDiamond[2][2] = [[$Left, $Top], [$Right, $Bottom]]
+	Local $aMiddle = [($aDiamond[0][0] + $aDiamond[1][0]) / 2, ($aDiamond[0][1] + $aDiamond[1][1]) / 2]
+	Local $aSize = [$aMiddle[0] - $aDiamond[0][0], $aMiddle[1] - $aDiamond[0][1]]
+
+	Local $DX = Abs($iX - $aMiddle[0])
+	Local $DY = Abs($iY - $aMiddle[1])
+
+	; allow additional 5 pixels
+	If $DX >= 5 Then $DX -= 5
+	If $DY >= 5 Then $DY -= 5
+
+	If ($DX / $aSize[0] + $DY / $aSize[1] <= 1) And $iX > $DeployableLRTB[0] And $iX <= $DeployableLRTB[1] And $iY >= $DeployableLRTB[2] And $iY <= $DeployableLRTB[3] Then
+		Return True ; Inside Village
+	Else
+		;debugAttackCSV("isInsideDiamondInt outside: " & $iX & "," & $iY)
+		Return False ; Outside Village
+	EndIf
+EndFunc   ;==>isInsideDiamondInt
+
+Func DuplicatedGreen($aXYs, $x1, $y1, $i3, $iD = 15)
+	If $i3 > 0 Then
+		For $i = 0 To $i3
+			If Not $g_bRunState Then Return
+			If Pixel_Distance($aXYs[$i][0], $aXYs[$i][1], $x1, $y1) < $iD Then Return True
+		Next
+	EndIf
+	Return False
+EndFunc   ;==>DuplicatedGreen
+
+Func GetDiamondGreenTiles($iHnowManyPoints = 10)
 	$g_aGreenTiles = -1
-	Local $aTmp = DMDecodeCoords(DFind(@ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\Image Matching\DPSM\", 19, 74, 805, 518, 0, 1000, 9999, True), 15)
+	; Local $aTmp = DMDecodeCoords(DFind(@ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\Image Matching\DPSM\", 19, 74, 805, 518, 0, 1000, 9999, True), 15)
+	Local $aTmp = _GreenTiles(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\DPSM\", 0, $CocDiamondECD, True, False, 15, 0, 1000); DMDecodeCoords(DFind(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\DPSM\", 19, 74, 805, 518, 0, 1000, 9999, True), 15)
 	$g_aGreenTiles = IsArray($aTmp) ? ($aTmp) : (-1)
 	If Not IsArray($g_aGreenTiles) Or UBound($g_aGreenTiles) < 0 Then Return -1
 	Local $TL[0][3], $BL[0][3], $TR[0][3], $BR[0][3]
 	Local $aCentre = [$DiamondMiddleX, $DiamondMiddleY]
 	_ArraySort($g_aGreenTiles, 0, 0, 0, 1)
-	For $each = 0 To UBound($g_aGreenTiles) - 1
-		Local $Coordinate = [$g_aGreenTiles[$each][0], $g_aGreenTiles[$each][1]]
-		If not IsInsideDiamond($Coordinate) Then ContinueLoop
-		If Side($Coordinate) = "TL" Then
+	For $i = 0 To UBound($g_aGreenTiles) - 1
+		; Local $iCoordinate = [$g_aGreenTiles[$i][0], $g_aGreenTiles[$i][1]]
+		Local $iCoordinate = [$g_aGreenTiles[$i][0], $g_aGreenTiles[$i][1]]
+		If not IsInsideDiamond($iCoordinate) Then ContinueLoop
+		If Side($iCoordinate) = "TL" Then
 			ReDim $TL[UBound($TL) + 1][3]
-			$TL[UBound($TL) - 1][0] = $Coordinate[0]
-			$TL[UBound($TL) - 1][1] = $Coordinate[1]
-			$TL[UBound($TL) - 1][2] = Int(Pixel_Distance($aCentre[0], $aCentre[1], $Coordinate[0], $Coordinate[1]))
+			$TL[UBound($TL) - 1][0] = $iCoordinate[0]
+			$TL[UBound($TL) - 1][1] = $iCoordinate[1]
+			$TL[UBound($TL) - 1][2] = Int(Pixel_Distance($aCentre[0], $aCentre[1], $iCoordinate[0], $iCoordinate[1]))
 		EndIf
-		If Side($Coordinate) = "BL" Then
+		If Side($iCoordinate) = "BL" Then
 			ReDim $BL[UBound($BL) + 1][3]
-			$BL[UBound($BL) - 1][0] = $Coordinate[0]
-			$BL[UBound($BL) - 1][1] = $Coordinate[1]
-			$BL[UBound($BL) - 1][2] = Int(Pixel_Distance($aCentre[0], $aCentre[1], $Coordinate[0], $Coordinate[1]))
+			$BL[UBound($BL) - 1][0] = $iCoordinate[0]
+			$BL[UBound($BL) - 1][1] = $iCoordinate[1]
+			$BL[UBound($BL) - 1][2] = Int(Pixel_Distance($aCentre[0], $aCentre[1], $iCoordinate[0], $iCoordinate[1]))
 		EndIf
-		If Side($Coordinate) = "TR" Then
+		If Side($iCoordinate) = "TR" Then
 			ReDim $TR[UBound($TR) + 1][3]
-			$TR[UBound($TR) - 1][0] = $Coordinate[0]
-			$TR[UBound($TR) - 1][1] = $Coordinate[1]
-			$TR[UBound($TR) - 1][2] = Int(Pixel_Distance($aCentre[0], $aCentre[1], $Coordinate[0], $Coordinate[1]))
+			$TR[UBound($TR) - 1][0] = $iCoordinate[0]
+			$TR[UBound($TR) - 1][1] = $iCoordinate[1]
+			$TR[UBound($TR) - 1][2] = Int(Pixel_Distance($aCentre[0], $aCentre[1], $iCoordinate[0], $iCoordinate[1]))
 		EndIf
-		If Side($Coordinate) = "BR" Then
+		If Side($iCoordinate) = "BR" Then
 			ReDim $BR[UBound($BR) + 1][3]
-			$BR[UBound($BR) - 1][0] = $Coordinate[0]
-			$BR[UBound($BR) - 1][1] = $Coordinate[1]
-			$BR[UBound($BR) - 1][2] = Int(Pixel_Distance($aCentre[0], $aCentre[1], $Coordinate[0], $Coordinate[1]))
+			$BR[UBound($BR) - 1][0] = $iCoordinate[0]
+			$BR[UBound($BR) - 1][1] = $iCoordinate[1]
+			$BR[UBound($BR) - 1][2] = Int(Pixel_Distance($aCentre[0], $aCentre[1], $iCoordinate[0], $iCoordinate[1]))
 		EndIf
 	Next
 	SetDebugLog("GreenTiles at TL are " & UBound($TL))
@@ -1430,7 +1541,7 @@ Func GetDiamondGreenTiles($HnowManyPoints = 10)
 	Local $AllSides[4] = [$TL, $BL, $TR, $BR]
 	Local $aiGreenTilesBySide[4]
 	Local $SIDESNAMES[4] = ["TL", "BL", "TR", "BR"]
-	Local $oNumberOfDeployPoints = $HnowManyPoints
+	Local $oNumberOfDeployPoints = $iHnowManyPoints
 	For $iAllSides = 0 To 3
 		Local $OneSide = $AllSides[$iAllSides]
 		_ArraySort($OneSide, 0, 0, 0, 2)
@@ -1450,46 +1561,39 @@ Func GetDiamondGreenTiles($HnowManyPoints = 10)
 	Return $aiGreenTilesBySide
 EndFunc   ;==>GetDiamondGreenTiles
 
-Func NewRedLines()
-	; Reset
-	Local $aLocalReset[0]
-	$g_aiPixelTopLeftFurther = $aLocalReset
-	$g_aiPixelTopLeft = $aLocalReset
-	$g_aiPixelBottomLeftFurther = $aLocalReset
-	$g_aiPixelBottomLeft = $aLocalReset
-	$g_aiPixelTopRightFurther = $aLocalReset
-	$g_aiPixelTopRight = $aLocalReset
-	$g_aiPixelBottomRightFurther = $aLocalReset
-	$g_aiPixelBottomRight = $aLocalReset
-
-	Local $aiGreenTilesBySide = GetDiamondGreenTiles(20)
+Func NewRedLines($bModeSM = False)
+	Local $aiGreenTilesBySide = ($bModeSM = False) ? (GetDiamondGreenTiles(20)) : (GetDiamondGreenTiles(12))
 	Local $offsetArcher = 15
-	Local $OldCode = False
-	Local $More
+	Local $bOldCode = False
+	Global $g_aiPixelTopLeftFurther[0], $g_aiPixelTopLeft[0]
+	Global $g_aiPixelBottomLeftFurther[0], $g_aiPixelBottomLeft[0]
+	Global $g_aiPixelTopRightFurther[0], $g_aiPixelTopRight[0]
+	Global $g_aiPixelBottomRightFurther[0], $g_aiPixelBottomRight[0]
 	SetDebugLog("TL using Green Tiles")
-	If IsArray($aiGreenTilesBySide) Then
-	  $More = $aiGreenTilesBySide[0]
-    EndIf
+	Local $More = IsArray($aiGreenTilesBySide) ? $aiGreenTilesBySide[0] : -1
 	If IsArray($aiGreenTilesBySide) And IsArray($More) And UBound($More) > 10 Then
 		For $x = 0 To UBound($More) - 1
-			Local $Coordinate[2] = [$More[$x][0], $More[$x][1]]
+			Local $coordinate[2] = [$More[$x][0], $More[$x][1]]
 			ReDim $g_aiPixelTopLeft[UBound($g_aiPixelTopLeft) + 1]
-			$g_aiPixelTopLeft[UBound($g_aiPixelTopLeft) - 1] = $Coordinate
+			$g_aiPixelTopLeft[UBound($g_aiPixelTopLeft) - 1] = $coordinate
 		Next
-		$g_aiPixelTopLeftFurther = $g_aiPixelTopLeft
+		ReDim $g_aiPixelTopLeftFurther[UBound($g_aiPixelTopLeft)]
+		For $i = 0 To UBound($g_aiPixelTopLeft) - 1
+			$g_aiPixelTopLeftFurther[$i] = _GetOffsetTroopFurther($g_aiPixelTopLeft[$i], $eVectorLeftTop, $offsetArcher)
+		Next
 	Else
-		If Not $OldCode Then SearchRedLinesMultipleTimes()
-		If $g_bDebugAndroid Then
-			SetDebugLog("Using External Vector, doesn't have Green Tiles for TL")
-			SetDebugLog("IsArray($aiGreenTilesBySide): " & IsArray($aiGreenTilesBySide))
-			SetDebugLog("IsArray($More): " & IsArray($More))
-			SetDebugLog("UBound($More): " & UBound($More))
-		EndIf
+		If Not $bOldCode Then SearchRedLinesMultipleTimes()
+		SetDebugLog("Using RedLines, doesn't have Green Tiles for TL")
+		SetDebugLog("IsArray($aiGreenTilesBySide): " & IsArray($aiGreenTilesBySide))
+		SetDebugLog("IsArray($More): " & IsArray($More))
+		SetDebugLog("UBound($More): " & UBound($More))
 		SetLog("TL using Red Lines to deploy")
-		Local $TL = GetOffsetRedline("TL", 5)
+		Local $TL = GetOffsetRedline("TL")
 		$g_aiPixelTopLeft = GetListPixel($TL, ",")
+		SetDebugLog("Total RedLines($TL) points: " & UBound($g_aiPixelTopLeft))
 		CleanRedArea($g_aiPixelTopLeft)
-		$OldCode = True
+		SetDebugLog("Cleaned RedLines($TL) points: " & UBound($g_aiPixelTopLeft))
+		$bOldCode = True
 		ReDim $g_aiPixelTopLeftFurther[UBound($g_aiPixelTopLeft)]
 		For $i = 0 To UBound($g_aiPixelTopLeft) - 1
 			$g_aiPixelTopLeftFurther[$i] = _GetOffsetTroopFurther($g_aiPixelTopLeft[$i], $eVectorLeftTop, $offsetArcher)
@@ -1501,30 +1605,30 @@ Func NewRedLines()
 		$g_aiPixelTopLeftFurther = $g_aiPixelTopLeft
 	EndIf
 	SetDebugLog("BL using Green Tiles")
-	If IsArray($aiGreenTilesBySide) Then
-	  $More = $aiGreenTilesBySide[1]
-    EndIf
-
+	Local $More = IsArray($aiGreenTilesBySide) ? $aiGreenTilesBySide[1] : -1
 	If IsArray($aiGreenTilesBySide) And IsArray($More) And UBound($More) > 10 Then
 		For $x = 0 To UBound($More) - 1
-			Local $Coordinate[2] = [$More[$x][0], $More[$x][1]]
+			Local $coordinate[2] = [$More[$x][0], $More[$x][1]]
 			ReDim $g_aiPixelBottomLeft[UBound($g_aiPixelBottomLeft) + 1]
-			$g_aiPixelBottomLeft[UBound($g_aiPixelBottomLeft) - 1] = $Coordinate
+			$g_aiPixelBottomLeft[UBound($g_aiPixelBottomLeft) - 1] = $coordinate
 		Next
-		$g_aiPixelBottomLeftFurther = $g_aiPixelBottomLeft
+		ReDim $g_aiPixelBottomLeftFurther[UBound($g_aiPixelBottomLeft)]
+		For $i = 0 To UBound($g_aiPixelBottomLeft) - 1
+			$g_aiPixelBottomLeftFurther[$i] = _GetOffsetTroopFurther($g_aiPixelBottomLeft[$i], $eVectorLeftBottom, $offsetArcher)
+		Next
 	Else
-		If Not $OldCode Then SearchRedLinesMultipleTimes()
-		If $g_bDebugAndroid Then
-			SetDebugLog("Using External Vector, doesn't have Green Tiles for BL")
-			SetDebugLog("IsArray($aiGreenTilesBySide): " & IsArray($aiGreenTilesBySide))
-			SetDebugLog("IsArray($More): " & IsArray($More))
-			SetDebugLog("UBound($More): " & UBound($More))
-		EndIf
+		If Not $bOldCode Then SearchRedLinesMultipleTimes()
+		SetDebugLog("Using RedLines, doesn't have Green Tiles for BL")
+		SetDebugLog("IsArray($aiGreenTilesBySide): " & IsArray($aiGreenTilesBySide))
+		SetDebugLog("IsArray($More): " & IsArray($More))
+		SetDebugLog("UBound($More): " & UBound($More))
 		SetLog("BL using Red Lines to deploy")
-		Local $BL = GetOffsetRedline("BL", 5)
+		Local $BL = GetOffsetRedline("BL")
 		$g_aiPixelBottomLeft = GetListPixel($BL, ",")
+		SetDebugLog("Total RedLines($BL) points: " & UBound($g_aiPixelBottomLeft))
 		CleanRedArea($g_aiPixelBottomLeft)
-		$OldCode = True
+		SetDebugLog("Cleaned RedLines($BL) points: " & UBound($g_aiPixelBottomLeft))
+		$bOldCode = True
 		ReDim $g_aiPixelBottomLeftFurther[UBound($g_aiPixelBottomLeft)]
 		For $i = 0 To UBound($g_aiPixelBottomLeft) - 1
 			$g_aiPixelBottomLeftFurther[$i] = _GetOffsetTroopFurther($g_aiPixelBottomLeft[$i], $eVectorLeftBottom, $offsetArcher)
@@ -1536,30 +1640,30 @@ Func NewRedLines()
 		$g_aiPixelBottomLeftFurther = $g_aiPixelBottomLeft
 	EndIf
 	SetDebugLog("TR using Green Tiles")
-	If IsArray($aiGreenTilesBySide) Then
-	  $More = $aiGreenTilesBySide[2]
-    EndIf
-
+	Local $More = IsArray($aiGreenTilesBySide) ? $aiGreenTilesBySide[2] : -1
 	If IsArray($aiGreenTilesBySide) And IsArray($More) And UBound($More) > 10 Then
 		For $x = 0 To UBound($More) - 1
-			Local $Coordinate[2] = [$More[$x][0], $More[$x][1]]
+			Local $coordinate[2] = [$More[$x][0], $More[$x][1]]
 			ReDim $g_aiPixelTopRight[UBound($g_aiPixelTopRight) + 1]
-			$g_aiPixelTopRight[UBound($g_aiPixelTopRight) - 1] = $Coordinate
+			$g_aiPixelTopRight[UBound($g_aiPixelTopRight) - 1] = $coordinate
 		Next
-		$g_aiPixelTopRightFurther = $g_aiPixelTopRight
+		ReDim $g_aiPixelTopRightFurther[UBound($g_aiPixelTopRight)]
+		For $i = 0 To UBound($g_aiPixelTopRight) - 1
+			$g_aiPixelTopRightFurther[$i] = _GetOffsetTroopFurther($g_aiPixelTopRight[$i], $eVectorRightTop, $offsetArcher)
+		Next
 	Else
-		If Not $OldCode Then SearchRedLinesMultipleTimes()
-		If $g_bDebugAndroid Then
-			SetDebugLog("Using External Vector, doesn't have Green Tiles for TR")
-			SetDebugLog("IsArray($aiGreenTilesBySide): " & IsArray($aiGreenTilesBySide))
-			SetDebugLog("IsArray($More): " & IsArray($More))
-			SetDebugLog("UBound($More): " & UBound($More))
-		EndIf
+		If Not $bOldCode Then SearchRedLinesMultipleTimes()
+		SetDebugLog("Using RedLines, doesn't have Green Tiles for TR")
+		SetDebugLog("IsArray($aiGreenTilesBySide): " & IsArray($aiGreenTilesBySide))
+		SetDebugLog("IsArray($More): " & IsArray($More))
+		SetDebugLog("UBound($More): " & UBound($More))
 		SetLog("TR using Red Lines to deploy")
-		Local $TR = GetOffsetRedline("TR", 5)
+		Local $TR = GetOffsetRedline("TR")
 		$g_aiPixelTopRight = GetListPixel($TR, ",")
+		SetDebugLog("Total RedLines($TR) points: " & UBound($g_aiPixelTopRight))
 		CleanRedArea($g_aiPixelTopRight)
-		$OldCode = True
+		SetDebugLog("Cleaned RedLines($TR) points: " & UBound($g_aiPixelTopRight))
+		$bOldCode = True
 		ReDim $g_aiPixelTopRightFurther[UBound($g_aiPixelTopRight)]
 		For $i = 0 To UBound($g_aiPixelTopRight) - 1
 			$g_aiPixelTopRightFurther[$i] = _GetOffsetTroopFurther($g_aiPixelTopRight[$i], $eVectorRightTop, $offsetArcher)
@@ -1571,30 +1675,30 @@ Func NewRedLines()
 		$g_aiPixelTopRightFurther = $g_aiPixelTopRight
 	EndIf
 	SetDebugLog("BR using Green Tiles")
-	If IsArray($aiGreenTilesBySide) Then
-	  $More = $aiGreenTilesBySide[3]
-    EndIf
-
+	Local $More = IsArray($aiGreenTilesBySide) ? $aiGreenTilesBySide[3] : -1
 	If IsArray($aiGreenTilesBySide) And IsArray($More) And UBound($More) > 10 Then
 		For $x = 0 To UBound($More) - 1
-			Local $Coordinate[2] = [$More[$x][0], $More[$x][1]]
+			Local $coordinate[2] = [$More[$x][0], $More[$x][1]]
 			ReDim $g_aiPixelBottomRight[UBound($g_aiPixelBottomRight) + 1]
-			$g_aiPixelBottomRight[UBound($g_aiPixelBottomRight) - 1] = $Coordinate
+			$g_aiPixelBottomRight[UBound($g_aiPixelBottomRight) - 1] = $coordinate
 		Next
-		$g_aiPixelBottomRightFurther = $g_aiPixelBottomRight
+		ReDim $g_aiPixelBottomRightFurther[UBound($g_aiPixelBottomRight)]
+		For $i = 0 To UBound($g_aiPixelBottomRight) - 1
+			$g_aiPixelBottomRightFurther[$i] = _GetOffsetTroopFurther($g_aiPixelBottomRight[$i], $eVectorRightBottom, $offsetArcher)
+		Next
 	Else
-		If Not $OldCode Then SearchRedLinesMultipleTimes()
-		If $g_bDebugAndroid Then
-			SetDebugLog("Using External Vector, doesn't have Green Tiles for BR")
-			SetDebugLog("IsArray($aiGreenTilesBySide): " & IsArray($aiGreenTilesBySide))
-			SetDebugLog("IsArray($More): " & IsArray($More))
-			SetDebugLog("UBound($More): " & UBound($More))
-		EndIf
+		If Not $bOldCode Then SearchRedLinesMultipleTimes()
+		SetDebugLog("Using RedLines, doesn't have Green Tiles for BR")
+		SetDebugLog("IsArray($aiGreenTilesBySide): " & IsArray($aiGreenTilesBySide))
+		SetDebugLog("IsArray($More): " & IsArray($More))
+		SetDebugLog("UBound($More): " & UBound($More))
 		SetLog("BR using Red Lines to deploy")
-		Local $BR = GetOffsetRedline("BR", 5)
+		Local $BR = GetOffsetRedline("BR")
 		$g_aiPixelBottomRight = GetListPixel($BR, ",")
+		SetDebugLog("Total RedLines($BR) points: " & UBound($g_aiPixelBottomRight))
 		CleanRedArea($g_aiPixelBottomRight)
-		$OldCode = True
+		SetDebugLog("Cleaned RedLines($BR) points: " & UBound($g_aiPixelBottomRight))
+		$bOldCode = True
 		ReDim $g_aiPixelBottomRightFurther[UBound($g_aiPixelBottomRight)]
 		For $i = 0 To UBound($g_aiPixelBottomRight) - 1
 			$g_aiPixelBottomRightFurther[$i] = _GetOffsetTroopFurther($g_aiPixelBottomRight[$i], $eVectorRightBottom, $offsetArcher)

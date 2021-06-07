@@ -12,16 +12,9 @@
 
 Func ApplyGTFO()
 	$g_bChkUseGTFO = (GUICtrlRead($g_hChkUseGTFO) = $GUI_CHECKED)
-	If $g_bChkUseGTFO = True Then
-		GUICtrlSetState($g_hTxtMinSaveGTFO_Elixir, $GUI_ENABLE)
-		GUICtrlSetState($g_hTxtMinSaveGTFO_DE, $GUI_ENABLE)
-		GUICtrlSetState($g_hChkGTFOClanHop, $GUI_ENABLE)
-
-	Else
-		GUICtrlSetState($g_hTxtMinSaveGTFO_Elixir, $GUI_DISABLE)
-		GUICtrlSetState($g_hTxtMinSaveGTFO_DE, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkGTFOClanHop, $GUI_DISABLE)
-	EndIf
+	For $h = $g_hTxtMinSaveGTFO_Elixir To $g_hChkGTFOClanHop
+		GUICtrlSetState($h, ($g_bChkUseGTFO = True) ? ($GUI_ENABLE) : ($GUI_DISABLE + $GUI_UNCHECKED))
+	Next
 	chkGTFOClanHop()
 	ApplyCyclesGTFO()
 	chkGTFOReturnClan()
@@ -121,13 +114,9 @@ EndFunc   ;==>ApplyKickLimits
 
 Func chkGTFOClanHop()
 	$g_bChkGTFOClanHop = (GUICtrlRead($g_hChkGTFOClanHop) = $GUI_CHECKED)
-	If $g_bChkGTFOClanHop = True Then
-		GUICtrlSetState($g_hTxtClanID, $GUI_ENABLE)
-		GUICtrlSetState($g_hChkGTFOReturnClan, $GUI_ENABLE)
-	Else
-		GUICtrlSetState($g_hTxtClanID, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkGTFOReturnClan, $GUI_DISABLE)
-	EndIf
+	For $h = $g_hChkGTFOReturnClan To $g_hExitAfterCyclesGTFO
+		GUICtrlSetState($h, ($g_bChkGTFOClanHop = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+	Next
 EndFunc   ;==>chkGTFOClanHop
 
 Func chkGTFOReturnClan()

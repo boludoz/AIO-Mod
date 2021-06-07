@@ -205,9 +205,9 @@ Func BotStop()
 	GUICtrlSetState($g_hBtnAttackNowDB, $GUI_HIDE)
 	GUICtrlSetState($g_hBtnAttackNowLB, $GUI_HIDE)
 	GUICtrlSetState($g_hBtnAttackNowTS, $GUI_HIDE)
-	GUICtrlSetState($g_hPicTwoArrowShield, $GUI_SHOW)
-	GUICtrlSetState($g_hLblVersion, $GUI_SHOW)
-	GUICtrlSetState($g_hLblMod, $GUI_SHOW)
+	; GUICtrlSetState($g_hPicTwoArrowShield, $GUI_SHOW)
+	HideShields(False)
+	;GUICtrlSetState($g_hLblVersion, $GUI_SHOW)
 	$g_bBtnAttackNowPressed = False
 
 	; update try items

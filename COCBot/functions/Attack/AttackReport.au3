@@ -6,7 +6,7 @@
 ; Parameters ....: None
 ; Return values .: None
 ; Author ........: Hervidero (02-2015), Sardo (05-2015), Hervidero (12-2015)
-; Modified ......: Sardo (05-2015), Hervidero (05-2015), Knowjack (07-2015)
+; Modified ......: Sardo (05-2015), Hervidero (05-2015), Knowjack (07-2015), MikeD (04-2021)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -171,23 +171,27 @@ Func AttackReport()
 	If _ColorCheck(_GetPixelColor($aWonThreeStarAtkRprt[0], $aWonThreeStarAtkRprt[1], False), Hex($aWonThreeStarAtkRprt[2], 6), $aWonThreeStarAtkRprt[3]) Then $iStarsEarned += 1
 	SetLog("Stars earned: " & $iStarsEarned)
 
-	Local $AtkLogTxt
-	$AtkLogTxt = "  " & String($g_iCurAccount + 1) & "|" & _NowTime(4) & "|"
-	$AtkLogTxt &= StringFormat("%5d", $g_aiCurrentLoot[$eLootTrophy]) & "|"
-	$AtkLogTxt &= StringFormat("%3d", $g_iSearchCount) & "|"
-	$AtkLogTxt &= StringFormat("%2d", $g_iSidesAttack) & "|"
-	$AtkLogTxt &= StringFormat("%7d", $g_iStatsLastAttack[$eLootGold]) & "|"
-	$AtkLogTxt &= StringFormat("%7d", $g_iStatsLastAttack[$eLootElixir]) & "|"
-	$AtkLogTxt &= StringFormat("%4d", $g_iStatsLastAttack[$eLootDarkElixir]) & "|"
-	$AtkLogTxt &= StringFormat("%3d", $g_iStatsLastAttack[$eLootTrophy]) & "|"
-	$AtkLogTxt &= StringFormat("%1d", $iStarsEarned) & "|"
-	$AtkLogTxt &= StringFormat("%3d", $g_iPercentageDamage) & "|"
-	$AtkLogTxt &= StringFormat("%6d", $g_iStatsBonusLast[$eLootGold]) & "|"
-	$AtkLogTxt &= StringFormat("%6d", $g_iStatsBonusLast[$eLootElixir]) & "|"
-	$AtkLogTxt &= StringFormat("%4d", $g_iStatsBonusLast[$eLootDarkElixir]) & "|"
-	$AtkLogTxt &= $g_asLeagueDetailsShort & "|"
+    Local $AtkLogTxt
+    $g_iStatsBonusLast[$eLootGold]=$g_iStatsBonusLast[$eLootGold]/1000
 
-	; Stats Attack
+    $AtkLogTxt = "| " & String($g_iCurAccount + 1) & "|" & _NowTime(4) & "|"
+    $AtkLogTxt &= StringFormat("%6d", $g_aiCurrentLoot[$eLootTrophy]) & "|"
+    $AtkLogTxt &= StringFormat("%3d", $g_iSearchCount) & "|"
+    $AtkLogTxt &= StringFormat("%2d", $g_iSidesAttack) & "|"
+    $AtkLogTxt &= StringFormat("%7d", $g_iStatsLastAttack[$eLootGold]) & "|"
+    $AtkLogTxt &= StringFormat("%7d", $g_iStatsLastAttack[$eLootElixir]) & "|"
+    $AtkLogTxt &= StringFormat("%5d", $g_iStatsLastAttack[$eLootDarkElixir]) & "|"
+    $AtkLogTxt &= StringFormat("%3d", $g_iStatsLastAttack[$eLootTrophy]) & "|"
+    $AtkLogTxt &= StringFormat("%2d", $iStarsEarned) & "|"
+    $AtkLogTxt &= StringFormat("%3d", $g_iPercentageDamage) & "|"
+    $AtkLogTxt &= StringFormat("%5d", $g_iStatsBonusLast[$eLootGold]) & "k|"
+    ;$AtkLogTxt &= StringFormat("%4d", $g_iStatsBonusLast[$eLootElixir]) & "k|"
+    $AtkLogTxt &= StringFormat("%4d", $g_iStatsBonusLast[$eLootDarkElixir]) & "|"
+    $AtkLogTxt &= $g_asLeagueDetailsShort & "|"
+
+    $g_iStatsBonusLast[$eLootGold]=$g_iStatsBonusLast[$eLootGold]*1000
+
+    ; Stats Attack
 	$g_sTotalDamage = $g_iPercentageDamage
 	$g_sAttacksides = $g_iSidesAttack
 	$g_sLootGold = $g_iStatsLastAttack[$eLootGold]
@@ -202,7 +206,7 @@ Func AttackReport()
 	Local $AtkLogTxtExtend
 	$AtkLogTxtExtend = "|"
 	$AtkLogTxtExtend &= $g_CurrentCampUtilization & "/" & $g_iTotalCampSpace & "|"
-	
+
 	If Int($g_iStatsLastAttack[$eLootTrophy]) >= 0 Then
 		If $g_bChkColorfulAttackLog Then
 			Local $aColorful[4] = [0xFF0000, 0x8F8F8F, 0x0047D6, 0x3FA800]

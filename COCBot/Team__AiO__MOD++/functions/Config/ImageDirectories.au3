@@ -75,7 +75,7 @@ Global Const $g_sXMLTroopsUpgradeMachine = $g_sModImageLocation & "\BuildersBase
 
 ; Builder Base
 Global Const $g_sImgPathIsCTBoosted = $g_sModImageLocation & "\BuildersBase\ClockTowerBoosted"
-Global Const $g_sImgAvailableAttacks = $g_sModImageLocation & "\BuildersBase\AvailableAttacks"
+Global Const $g_sImgBBLootAvail = @ScriptDir & "\imgxml\Attack\BuilderBase\LootAvail\"
 
 ; Builder Base Attack
 Global $g_aOpponentVillageVisible[1][3] = [[0xFED5D4, 0, 1]] ; more ez ; samm0d

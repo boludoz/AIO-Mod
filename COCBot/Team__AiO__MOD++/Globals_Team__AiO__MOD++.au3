@@ -4,7 +4,7 @@
 ; Syntax ........: #include , Global
 ; Parameters ....: None
 ; Return values .: None
-; Author ........: Team AiO MOD++ (2018)
+; Author ........: Team AiO MOD++ (2021)
 ; Modified ......:
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
@@ -12,6 +12,9 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+
+Global $DiamondMiddleX 
+Global $DiamondMiddleY 
 
 #Region - Icn - Team AiO MOD++
 Global Const $g_sLibModIconPath = $g_sLibPath & "\ModLibs\AIOMod.dll" ; Mod icon library - Team AiO MOD++

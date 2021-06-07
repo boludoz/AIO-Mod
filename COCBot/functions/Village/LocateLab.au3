@@ -30,6 +30,10 @@ Func LocateLab($bCollect = True)
 
 	SetLog("Locating Laboratory", $COLOR_INFO)
 
+    ; auto locate 
+    ; ImgLocateLab()
+	
+	; GG MYBOT ! 
 	#Region - Auto locate builds - Team AIO Mod++
 	CheckMainScreen(Default, False)
 	ClickAway()
@@ -164,3 +168,37 @@ Func LocateLab($bCollect = True)
 	ClickAway(True)
 
 EndFunc   ;==>LocateLab
+
+#CS
+; Image Search for Pet House
+Func ImgLocateLab()
+    Local $sImgDir = @ScriptDir & "\imgxml\Buildings\Laboratory\"
+
+    Local $sSearchArea = "FV"
+    Local $avLab = findMultiple($sImgDir, $sSearchArea, $sSearchArea, 0, 1000, 1, "objectname,objectpoints", True)
+
+    If Not IsArray($avLab) Or UBound($avLab, $UBOUND_ROWS) <= 0 Then
+        SetLog("Couldn't find Laboratory on main village", $COLOR_ERROR)
+        If $g_bDebugImageSave Then SaveDebugImage("Laboratory", False)
+        Return False
+    EndIf
+
+    Local $avLabRes, $aiLabCoords
+    
+    ; active/inactive Laboratory have different images
+    ; loop thro the detected images
+    For $i = 0 To UBound($avLab, $UBOUND_ROWS) - 1
+        $avLabRes = $avLab[$i]
+        SetLog("Laboratory Search find : " & $avLabRes[0])
+        $aiLabCoords = decodeSingleCoord($avLabRes[1])
+    Next
+
+    If IsArray($aiLabCoords) And UBound($aiLabCoords, $UBOUND_ROWS) > 1 Then
+        $g_aiLaboratoryPos[0] = $aiLabCoords[0]
+        $g_aiLaboratoryPos[1] = $aiLabCoords[1]
+        Return True
+    EndIf
+    
+    Return False
+EndFunc
+#CE

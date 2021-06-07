@@ -68,11 +68,16 @@ EndFunc   ;==>GetLocationDarkElixir
 
 ; USES OLD OPENCV DETECTION
 Func GetLocationTownHall()
-	Local $aEndResult = DllCallMyBot("getLocationTownHall", "ptr", $g_hHBitmap2)
-	If $g_bDebugBuildingPos Then SetLog("#*# GetLocationTownHall: " & $aEndResult[0], $COLOR_DEBUG)
-	If $g_bDebugGetLocation Then DebugImageGetLocation($aEndResult[0], "TownHall")
+	; FindTownHall(True, True)
+	Local $aReturn[0]
 
-	Return GetListPixel($aEndResult[0])
+	If $g_iTHx > 0 Then
+		Local $aReturnTrue[2] = [$g_iTHx, $g_iTHy]
+		ReDim $aReturn[1]
+		$aReturn[0] = $aReturnTrue
+	EndIf
+
+	Return $aReturn
 EndFunc   ;==>GetLocationTownHall
 
 ; USES OLD OPENCV DETECTION
@@ -136,7 +141,7 @@ Func GetLocationMineWithLevel()
 	; Lvl 8 gold mine level 12
 	; Lvl 9 gold mine level 13
 	; Lvl 10 gold mine level 14
-	
+
 	If $g_iDetectedImageType = 0 Then
 		Local $aEndResult = DllCallMyBot("getLocationMineExtractorWithLevel", "ptr", $g_hHBitmap2)
 		If $g_bDebugBuildingPos Then SetLog("#*# getLocationMineExtractorWithLevel: " & $aEndResult[0], $COLOR_DEBUG)

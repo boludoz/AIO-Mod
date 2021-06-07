@@ -437,7 +437,7 @@ Func HideShields($bHide = False)
 		$counter = 0
 		For $i = $g_hPicKingGray To $g_hLbLLabTime
 			If $ShieldState[$counter] = 80 Then
-				GUICtrlSetState($i, $GUI_SHOW )
+				GUICtrlSetState($i, $GUI_SHOW)
 			EndIf
 			$counter += 1
 		Next

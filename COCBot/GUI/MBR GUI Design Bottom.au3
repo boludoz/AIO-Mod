@@ -34,12 +34,15 @@ Global $g_hlblLab = 0, $g_hPicLabGray = 0, $g_hPicLabRed = 0, $g_hPicLabGreen = 
 
 #Region AIO MOD++
 ;Mod Logo
-Global $g_hLblMod = 0
+; Global $g_hLblMod = 0
 ; Enable/Disable GUI while botting - Team AiO MOD++
 Global $g_hBtnEnableGUI = 0, $g_hBtnDisableGUI = 0
 ; Only farm - Team AiO MOD++
 Global $g_hChkOnlyFarm = 0
 #EndRegion
+
+; Pet House
+Global $g_hlblPet = 0, $g_hPicPetGray = 0, $g_hPicPetRed = 0, $g_hPicPetGreen = 0, $g_hLbLPetTime = 0
 
 Func CreateBottomPanel()
 	Local $sTxtTip = ""
@@ -51,7 +54,7 @@ Func CreateBottomPanel()
 	Local $y_bottom = 0 ; 515
 	Local $x = 10, $y = $y_bottom + 10
 	GUICtrlCreateGroup("https://mybot.run " & GetTranslatedFileIni("MBR GUI Design Bottom", "Group_01", "- freeware bot -"), $x - 5, $y - 10, 190, 108)
-#Region GUI - Team Aio Mod++
+	#Region GUI - Team Aio Mod++
 	$y +=15
 		$g_hBtnStart = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnStart", "Start Bot"), $x, $y, 90, 28)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "BtnStart_Info_01", "Use this to START the bot."))
@@ -88,7 +91,7 @@ Func CreateBottomPanel()
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			GUICtrlSetOnEvent(-1, "btnEmbed")
 	$y -=15
-#EndRegion - Team Aio Mod++
+	#EndRegion - Team Aio Mod++
 		$g_hChkBackgroundMode = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Bottom", "ChkBackgroundMode", "Background Mode"), $x + 1, $y + 72, 110, 20) ; Team AiO MOD++
 			GUICtrlSetFont(-1, 7)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "ChkBackgroundMode_Info_01", "Check this to ENABLE the Background Mode of the Bot.") & @CRLF & _
@@ -104,19 +107,19 @@ Func CreateBottomPanel()
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "ChkOnlyFarm_01", "Only Attack."))
 			GUICtrlSetOnEvent(-1, "chkOnlyFarm")
 
-		$g_hBtnAttackNowDB = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnAttackNowDB", "DB Attack"), $x + 200, $y + 42, 60, 19)
+		$g_hBtnAttackNowDB = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnAttackNowDB", "DB Attack"), $x + 200, $y - 1, 60, 19)
 			GUICtrlSetState(-1, $GUI_HIDE)
-		$g_hBtnAttackNowLB = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnAttackNowLB", "LB Attack"), $x + 200, $y + 61, 60, 19)
+		$g_hBtnAttackNowLB = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnAttackNowLB", "LB Attack"), $x + 200, $y + 18, 60, 19)
 			GUICtrlSetState(-1, $GUI_HIDE)
 
 		; Enable/Disable GUI while botting - Team AiO MOD++
-		$g_hBtnEnableGUI = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnEnableGUI", "GUI On"), $x + 200, $y + 80, 60, 19)
+		$g_hBtnEnableGUI = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnEnableGUI", "GUI On"), $x + 200, $y + 37, 60, 19)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "BtnEnableGUI_Info_01", "Enable GUI control while Botting.") & @CRLF & _
 					GetTranslatedFileIni("MBR GUI Design Bottom", "BtnEnableGUI_Info_02", "This function may cause errors that require bot restart.") & @CRLF & _
 					GetTranslatedFileIni("MBR GUI Design Bottom", "BtnEnableGUI_Info_03", "Better to stop the Bot completely to change the setting."))
 			GUICtrlSetOnEvent(-1, "btnEnableGUI")
 			GUICtrlSetState(-1, $GUI_HIDE)
-		$g_hBtnDisableGUI = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnDisableGUI", "GUI Off"), $x + 200, $y + 80, 60, 19)
+		$g_hBtnDisableGUI = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnDisableGUI", "GUI Off"), $x + 200, $y + 37, 60, 19)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "BtnDisableGUI_Info_01", "Disable GUI control to continue botting"))
 			GUICtrlSetOnEvent(-1, "btnDisableGUI")
 			GUICtrlSetState(-1, $GUI_HIDE)
@@ -130,7 +133,7 @@ Func CreateBottomPanel()
 
 		If $g_bAndroidAdbScreencap Then chkBackground() ; update background mode GUI
 
-		$g_hLblMod = _GUICtrlCreateIcon($g_sLibModIconPath, $eIcnAIOMod, $x + 205, $y + 55, 48, 48) ; AIO MOD++
+		; $g_hLblMod = _GUICtrlCreateIcon($g_sLibModIconPath, $eIcnAIOMod, $x + 225, $y + 30, 32, 32) ; AIO MOD++
 
 		$g_hPicArrowLeft = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnArrowLeft, $x + 269, $y + 40, 16, 16)
 		$sTxtTip = GetTranslatedFileIni("MBR GUI Design Bottom", "GrpVillage_Info_01", "Switch between village info and stats")
@@ -215,6 +218,21 @@ Func CreateBottomPanel()
 		$g_hlblLab = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Bottom", "Lab_L", "L"), $x + 4, $y + 18, 10, 16, $SS_LEFT)
 	  		_GUICtrlSetTip(-1, $sTxtTip)
 		$g_hLbLLabTime = GUICtrlCreateLabel("", $x - 54, $y + 35, 50, 16, $SS_LEFT)
+
+	; Pet House display
+	Local $x = 199, $y = $y_bottom + 72
+		$sTxtTip = GetTranslatedFileIni("MBR GUI Design Bottom","GrpStatus_Info_02", "Gray - N/A" & @CRLF & "Green - Pet House is Running" & @CRLF & "Red - Pet House Has Stopped")
+		$g_hPicPetGray = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnGrayShield, $x , $y, 16, 16 )
+	  		_GUICtrlSetTip(-1, $sTxtTip)
+		$g_hPicPetGreen = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnGreenShield, $x, $y, 16, 16 )
+	  		_GUICtrlSetTip(-1, $sTxtTip)
+			GUICtrlSetState(-1, $GUI_HIDE)
+		$g_hPicPetRed = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnRedShield, $x, $y, 16, 16 )
+	  		_GUICtrlSetTip(-1, $sTxtTip)
+			GUICtrlSetState(-1, $GUI_HIDE)
+		$g_hlblPet = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Bottom", "Pet_P", "P"), $x + 4, $y + 21, 10, 16, $SS_LEFT)
+	  		_GUICtrlSetTip(-1, $sTxtTip)
+		$g_hLbLPetTime = GUICtrlCreateLabel("", $x + 20, $y + 2, 50, 16, $SS_LEFT)
 
 	;~ Village
 		Local $x = 295, $y = $y_bottom + 20

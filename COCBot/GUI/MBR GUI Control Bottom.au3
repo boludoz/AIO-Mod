@@ -198,7 +198,7 @@ Func btnPause($bRunNow = True)
 	GUICtrlSetState($g_hBtnEnableGUI, $GUI_SHOW)
 
 	GUICtrlSetState($g_hLblVersion, $GUI_HIDE)
-	GUICtrlSetState($g_hLblMod, $GUI_HIDE)
+	; GUICtrlSetState($g_hLblMod, $GUI_HIDE)
 
 EndFunc   ;==>btnPause
 
@@ -210,10 +210,10 @@ Func btnResume()
 
 	If $g_bVillageSearchActive And $g_bSearchAttackNowEnable Then
 		GUICtrlSetState($g_hLblVersion, $GUI_HIDE)
-		GUICtrlSetState($g_hLblMod, $GUI_HIDE)
+		; GUICtrlSetState($g_hLblMod, $GUI_HIDE)
 	Else
 		GUICtrlSetState($g_hLblVersion, $GUI_SHOW)
-		GUICtrlSetState($g_hLblMod, $GUI_SHOW)
+		; GUICtrlSetState($g_hLblMod, $GUI_SHOW)
 	EndIf
 
 EndFunc   ;==>btnResume

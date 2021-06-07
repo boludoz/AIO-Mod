@@ -24,9 +24,10 @@ Func VillageSearch()
 		GUICtrlSetState($g_hBtnAttackNowDB, $GUI_HIDE)
 		GUICtrlSetState($g_hBtnAttackNowLB, $GUI_HIDE)
 		GUICtrlSetState($g_hBtnAttackNowTS, $GUI_HIDE)
-		GUICtrlSetState($g_hPicTwoArrowShield, $GUI_SHOW)
+		; GUICtrlSetState($g_hPicTwoArrowShield, $GUI_SHOW)
 		GUICtrlSetState($g_hLblVersion, $GUI_SHOW)
-		GUICtrlSetState($g_hLblMod, $GUI_SHOW)
+		HideShields(False)
+		; GUICtrlSetState($g_hLblMod, $GUI_SHOW)
 		$g_bBtnAttackNowPressed = False
 	EndIf
 
@@ -84,12 +85,13 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 	EndIf
 
 	If $g_bSearchAttackNowEnable Then
+		HideShields(True)
 		GUICtrlSetState($g_hBtnAttackNowDB, $GUI_SHOW)
 		GUICtrlSetState($g_hBtnAttackNowLB, $GUI_SHOW)
 		GUICtrlSetState($g_hBtnAttackNowTS, $GUI_SHOW)
-		GUICtrlSetState($g_hPicTwoArrowShield, $GUI_HIDE)
+		; GUICtrlSetState($g_hPicTwoArrowShield, $GUI_HIDE)
 		GUICtrlSetState($g_hLblVersion, $GUI_HIDE)
-		GUICtrlSetState($g_hLblMod, $GUI_HIDE)
+		; GUICtrlSetState($g_hLblMod, $GUI_HIDE)
 	EndIf
 
 	If $g_bIsClientSyncError = False And $g_bIsSearchLimit = False Then

@@ -91,113 +91,114 @@ Func btnResetUpgrade()
 	For $i = 0 To UBound($g_avBuildingUpgrades, 1) - 1
 		If GUICtrlRead($g_hChkUpgradeRepeat[$i]) = $GUI_CHECKED Then
 		;SetDebugLog("Row to keep " & $i)
-		If $iEmptyRow<>-1 Then  ;Is there an empty row to fill?
-		;SetDebugLog("Moving from " & $i)
-		;SetDebugLog("Moving to " & $iEmptyRow)
-		;Move this row up...
-		$g_aiPicUpgradeStatus[$iEmptyRow] = $g_aiPicUpgradeStatus[$i] ; Upgrade status
-		$g_avBuildingUpgrades[$iEmptyRow][0] = $g_avBuildingUpgrades[$i][0] ;Upgrade Location X
-		$g_avBuildingUpgrades[$iEmptyRow][1] = $g_avBuildingUpgrades[$i][1] ;Upgrade Location Y
-		$g_avBuildingUpgrades[$iEmptyRow][2] = $g_avBuildingUpgrades[$i][2] ;Upgrade Value
-		;SetDebugLog("Type setting to " & $g_avBuildingUpgrades[$i][3])
-		$g_avBuildingUpgrades[$iEmptyRow][3] = $g_avBuildingUpgrades[$i][3] ;Upgrade Type
-		;SetDebugLog("Name in global setting to " & $g_avBuildingUpgrades[$i][4])
-		$g_avBuildingUpgrades[$iEmptyRow][4] = $g_avBuildingUpgrades[$i][4] ;Upgrade Unit Name
-		;SetDebugLog("Level in global setting to " & $g_avBuildingUpgrades[$i][5])
-		$g_avBuildingUpgrades[$iEmptyRow][5] = $g_avBuildingUpgrades[$i][5] ;Upgrade Level
-		$g_avBuildingUpgrades[$iEmptyRow][6] = $g_avBuildingUpgrades[$i][6] ;Upgrade Duration
-		$g_avBuildingUpgrades[$iEmptyRow][7] = $g_avBuildingUpgrades[$i][7] ;Upgrade Finish Time
+		  If $iEmptyRow<>-1 Then  ;Is there an empty row to fill?
+		    ;SetDebugLog("Moving from " & $i)
+			;SetDebugLog("Moving to " & $iEmptyRow)
+		    ;Move this row up...
+			$g_aiPicUpgradeStatus[$iEmptyRow] = $g_aiPicUpgradeStatus[$i] ; Upgrade status
+		    $g_avBuildingUpgrades[$iEmptyRow][0] = $g_avBuildingUpgrades[$i][0] ;Upgrade Location X
+		    $g_avBuildingUpgrades[$iEmptyRow][1] = $g_avBuildingUpgrades[$i][1] ;Upgrade Location Y
+		    $g_avBuildingUpgrades[$iEmptyRow][2] = $g_avBuildingUpgrades[$i][2] ;Upgrade Value
+			;SetDebugLog("Type setting to " & $g_avBuildingUpgrades[$i][3])
+		    $g_avBuildingUpgrades[$iEmptyRow][3] = $g_avBuildingUpgrades[$i][3] ;Upgrade Type
+			;SetDebugLog("Name in global setting to " & $g_avBuildingUpgrades[$i][4])
+		    $g_avBuildingUpgrades[$iEmptyRow][4] = $g_avBuildingUpgrades[$i][4] ;Upgrade Unit Name
+			;SetDebugLog("Level in global setting to " & $g_avBuildingUpgrades[$i][5])
+		    $g_avBuildingUpgrades[$iEmptyRow][5] = $g_avBuildingUpgrades[$i][5] ;Upgrade Level
+		    $g_avBuildingUpgrades[$iEmptyRow][6] = $g_avBuildingUpgrades[$i][6] ;Upgrade Duration
+		    $g_avBuildingUpgrades[$iEmptyRow][7] = $g_avBuildingUpgrades[$i][7] ;Upgrade Finish Time
 
-		;Set the GUI data for new row and clear the GUI data for the cleared row.
-		;GUI Unit Name
-		;SetDebugLog("Setting name " & $g_avBuildingUpgrades[$iEmptyRow][4])
-		GUICtrlSetData($g_hTxtUpgradeName[$iEmptyRow], $g_avBuildingUpgrades[$iEmptyRow][4])
-		GUICtrlSetData($g_hTxtUpgradeName[$i], "") 
-		;GUI Unit Level
-		;SetDebugLog("Setting level " & $g_avBuildingUpgrades[$iEmptyRow][5])
-		GUICtrlSetData($g_hTxtUpgradeLevel[$iEmptyRow], $g_avBuildingUpgrades[$iEmptyRow][5])
-		GUICtrlSetData($g_hTxtUpgradeLevel[$i], "") 
-		;Upgrade value in GUI
-		GUICtrlSetData($g_hTxtUpgradeValue[$iEmptyRow], $g_avBuildingUpgrades[$iEmptyRow][2])
-		GUICtrlSetData($g_hTxtUpgradeValue[$i], "") 
-		;Upgrade duration in GUI
-		GUICtrlSetData($g_hTxtUpgradeTime[$iEmptyRow], $g_avBuildingUpgrades[$iEmptyRow][6])
-		GUICtrlSetData($g_hTxtUpgradeTime[$i], "") 
+			;Set the GUI data for new row and clear the GUI data for the cleared row.
+			;GUI Unit Name
+			;SetDebugLog("Setting name " & $g_avBuildingUpgrades[$iEmptyRow][4])
+			GUICtrlSetData($g_hTxtUpgradeName[$iEmptyRow], $g_avBuildingUpgrades[$iEmptyRow][4])
+			GUICtrlSetData($g_hTxtUpgradeName[$i], "")
+			;GUI Unit Level
+			;SetDebugLog("Setting level " & $g_avBuildingUpgrades[$iEmptyRow][5])
+			GUICtrlSetData($g_hTxtUpgradeLevel[$iEmptyRow], $g_avBuildingUpgrades[$iEmptyRow][5])
+		    GUICtrlSetData($g_hTxtUpgradeLevel[$i], "")
+			;Upgrade value in GUI
+			GUICtrlSetData($g_hTxtUpgradeValue[$iEmptyRow], $g_avBuildingUpgrades[$iEmptyRow][2])
+		    GUICtrlSetData($g_hTxtUpgradeValue[$i], "")
+		    ;Upgrade duration in GUI
+			GUICtrlSetData($g_hTxtUpgradeTime[$iEmptyRow], $g_avBuildingUpgrades[$iEmptyRow][6])
+			GUICtrlSetData($g_hTxtUpgradeTime[$i], "")
 
-		;GUI upgrade type image
-		$j = $eIcnElixir
-		If $g_avBuildingUpgrades[$iEmptyRow][3] = "GOLD" Then $j = $eIcnGold
-		;SetDebugLog("Setting GUI type to " & $j)
-		_GUICtrlSetImage($g_hPicUpgradeType[$iEmptyRow], $g_sLibIconPath, $j)
-		_GUICtrlSetImage($g_hPicUpgradeType[$i], $g_sLibIconPath, $eIcnBlank) 
+			;GUI upgrade type image
+			$j = $eIcnElixir
+			If $g_avBuildingUpgrades[$iEmptyRow][3] = "GOLD" Then $j = $eIcnGold
+			;SetDebugLog("Setting GUI type to " & $j)
+			_GUICtrlSetImage($g_hPicUpgradeType[$iEmptyRow], $g_sLibIconPath, $j)
+		    _GUICtrlSetImage($g_hPicUpgradeType[$i], $g_sLibIconPath, $eIcnBlank)
 
-		;GUI Status icon : Still not working right!  
-		;$eIcnTroops=43, $eIcnGreenLight=69, $eIcnRedLight=71 or $eIcnYellowLight=73
-		;SetDebugLog("Setting status to " & $g_aiPicUpgradeStatus[$i])
-		;$j=$g_aiPicUpgradeStatus[$i]
-		;No idea why this crap is needed, but I can't pass a variable to _GUICtrlSetImage
-		$j=$eIcnGreenLight
-		If $g_aiPicUpgradeStatus[$i] = $eIcnYellowLight Then $j=$eIcnYellowLight
-		$g_aiPicUpgradeStatus[$iEmptyRow] = $j
-		_GUICtrlSetImage($g_hPicUpgradeStatus[$iEmptyRow], $g_sLibIconPath, $j)
-		;SetDebugLog("Clearing old status to red light " & $eIcnRedLight)
-		$g_aiPicUpgradeStatus[$i] = $eIcnRedLight ;blank row goes red
-		_GUICtrlSetImage($g_hPicUpgradeStatus[$i], $g_sLibIconPath, $eIcnRedLight) 
+			;GUI Status icon : Still not working right!
+			;$eIcnTroops=43, $eIcnGreenLight=69, $eIcnRedLight=71 or $eIcnYellowLight=73
+			;SetDebugLog("Setting status to " & $g_aiPicUpgradeStatus[$i])
+			;$j=$g_aiPicUpgradeStatus[$i]
+			;No idea why this crap is needed, but I can't pass a variable to _GUICtrlSetImage
+			$j=$eIcnGreenLight
+			If $g_aiPicUpgradeStatus[$i] = $eIcnYellowLight Then $j=$eIcnYellowLight
+			$g_aiPicUpgradeStatus[$iEmptyRow] = $j
+			_GUICtrlSetImage($g_hPicUpgradeStatus[$iEmptyRow], $g_sLibIconPath, $j)
+		    ;SetDebugLog("Clearing old status to red light " & $eIcnRedLight)
+			$g_aiPicUpgradeStatus[$i] = $eIcnRedLight ;blank row goes red
+			_GUICtrlSetImage($g_hPicUpgradeStatus[$i], $g_sLibIconPath, $eIcnRedLight)
 
-		;Upgrade selection box
-		GUICtrlSetState($g_hChkUpgrade[$iEmptyRow], $GUI_CHECKED)
-		GUICtrlSetState($g_hChkUpgrade[$i], $GUI_UNCHECKED) 
-		;Upgrade finish time in GUI
-		GUICtrlSetData($g_hTxtUpgradeEndTime[$iEmptyRow], $g_avBuildingUpgrades[$iEmptyRow][7])
-		GUICtrlSetData($g_hTxtUpgradeEndTime[$i], "") 
-		;Repeat box
-		GUICtrlSetState($g_hChkUpgradeRepeat[$iEmptyRow], $GUI_CHECKED)
-		GUICtrlSetState($g_hChkUpgradeRepeat[$i], $GUI_UNCHECKED) 
+			;Upgrade selection box
+			GUICtrlSetState($g_hChkUpgrade[$iEmptyRow], $GUI_CHECKED)
+			GUICtrlSetState($g_hChkUpgrade[$i], $GUI_UNCHECKED)
+			;Upgrade finish time in GUI
+			GUICtrlSetData($g_hTxtUpgradeEndTime[$iEmptyRow], $g_avBuildingUpgrades[$iEmptyRow][7])
+		    GUICtrlSetData($g_hTxtUpgradeEndTime[$i], "")
+			;Repeat box
+			GUICtrlSetState($g_hChkUpgradeRepeat[$iEmptyRow], $GUI_CHECKED)
+		    GUICtrlSetState($g_hChkUpgradeRepeat[$i], $GUI_UNCHECKED)
 
-		;Now clear the row we just moved from.
-		$g_avBuildingUpgrades[$i][0] = -1 ;Upgrade Location X
-		$g_avBuildingUpgrades[$i][1] = -1 ;Upgrade Location Y
-		$g_avBuildingUpgrades[$i][2] = -1 ;Upgrade Value
-		$g_avBuildingUpgrades[$i][3] = "" ;Upgrade Type
-		$g_avBuildingUpgrades[$i][4] = "" ;Upgrade Unit Name
-		$g_avBuildingUpgrades[$i][5] = "" ;Upgrade Level
-		$g_avBuildingUpgrades[$i][6] = "" ;Upgrade Duration
-		$g_avBuildingUpgrades[$i][7] = "" ;Upgrade Finish Time
+			;Now clear the row we just moved from.
+			$g_avBuildingUpgrades[$i][0] = -1 ;Upgrade Location X
+		    $g_avBuildingUpgrades[$i][1] = -1 ;Upgrade Location Y
+		    $g_avBuildingUpgrades[$i][2] = -1 ;Upgrade Value
+		    $g_avBuildingUpgrades[$i][3] = "" ;Upgrade Type
+		    $g_avBuildingUpgrades[$i][4] = "" ;Upgrade Unit Name
+		    $g_avBuildingUpgrades[$i][5] = "" ;Upgrade Level
+		    $g_avBuildingUpgrades[$i][6] = "" ;Upgrade Duration
+		    $g_avBuildingUpgrades[$i][7] = "" ;Upgrade Finish Time
+
 
 			$i = $iEmptyRow ;Reset counter to this row so we continue forward from here.
 			$iEmptyRow = -1 ;This should be the first empty row now.
 
-		Else
+		  Else
 			;set these to clear up old status icon issues on rows not moved
-			;SetDebugLog("Not moving row " & $i)
+		    ;SetDebugLog("Not moving row " & $i)
 			$j=$g_aiPicUpgradeStatus[$i]
 			;SetDebugLog("Setting GUI status to " & $j) ;
 			;Following works if a constant is used, but not an variable?
-			if $j=69 then _GUICtrlSetImage($g_hPicUpgradeStatus[$i], $g_sLibIconPath, 69) 
-			if $j=73 then _GUICtrlSetImage($g_hPicUpgradeStatus[$i], $g_sLibIconPath, 73) 
+			if $j=69 then _GUICtrlSetImage($g_hPicUpgradeStatus[$i], $g_sLibIconPath, 69)
+			if $j=73 then _GUICtrlSetImage($g_hPicUpgradeStatus[$i], $g_sLibIconPath, 73)
 			ContinueLoop
-		Endif
+		  Endif
 		Else ;Row not checked.  Clear it.
-			;SetDebugLog("Row not checked, clearing row " & $i)
-			$g_avBuildingUpgrades[$i][0] = -1 ;Upgrade position x
-			$g_avBuildingUpgrades[$i][1] = -1 ;Upgrade position y
-			$g_avBuildingUpgrades[$i][2] = -1 ;Upgrade value
-			$g_avBuildingUpgrades[$i][3] = "" ;Upgrade Type
-			$g_avBuildingUpgrades[$i][4] = "" ;Upgrade Unit Name
-			$g_avBuildingUpgrades[$i][5] = "" ;Upgrade Level
-			$g_avBuildingUpgrades[$i][6] = "" ;Upgrade Duration
-			$g_avBuildingUpgrades[$i][7] = "" ;Upgrade Finish Time
-			GUICtrlSetData($g_hTxtUpgradeName[$i], "")  ;GUI Unit Name
-			GUICtrlSetData($g_hTxtUpgradeLevel[$i], "") ;GUI Unit Level
-			GUICtrlSetData($g_hTxtUpgradeValue[$i], "") ;Upgrade value in GUI
-			GUICtrlSetData($g_hTxtUpgradeTime[$i], "")  ;Upgrade duration in GUI
-			_GUICtrlSetImage($g_hPicUpgradeType[$i], $g_sLibIconPath, $eIcnBlank) ;Upgrade type blank
-			$g_aiPicUpgradeStatus[$i] = $eIcnRedLight
-			_GUICtrlSetImage($g_hPicUpgradeStatus[$i], $g_sLibIconPath, $eIcnRedLight) ;Upgrade status to not ready
-			GUICtrlSetState($g_hChkUpgrade[$i], $GUI_UNCHECKED) ;Change upgrade selection box to unchecked
-			GUICtrlSetData($g_hTxtUpgradeEndTime[$i], "") ;Clear Upgrade time in GUI
-			GUICtrlSetState($g_hChkUpgradeRepeat[$i], $GUI_UNCHECKED) ;Change repeat box to unchecked
-			If $iEmptyRow = -1 Then $iEmptyRow=$i ;This row is now empty.  
+		  ;SetDebugLog("Row not checked, clearing row " & $i)
+		  $g_avBuildingUpgrades[$i][0] = -1 ;Upgrade position x
+		  $g_avBuildingUpgrades[$i][1] = -1 ;Upgrade position y
+		  $g_avBuildingUpgrades[$i][2] = -1 ;Upgrade value
+		  $g_avBuildingUpgrades[$i][3] = "" ;Upgrade Type
+		  $g_avBuildingUpgrades[$i][4] = "" ;Upgrade Unit Name
+		  $g_avBuildingUpgrades[$i][5] = "" ;Upgrade Level
+		  $g_avBuildingUpgrades[$i][6] = "" ;Upgrade Duration
+		  $g_avBuildingUpgrades[$i][7] = "" ;Upgrade Finish Time
+		  GUICtrlSetData($g_hTxtUpgradeName[$i], "")  ;GUI Unit Name
+		  GUICtrlSetData($g_hTxtUpgradeLevel[$i], "") ;GUI Unit Level
+		  GUICtrlSetData($g_hTxtUpgradeValue[$i], "") ;Upgrade value in GUI
+		  GUICtrlSetData($g_hTxtUpgradeTime[$i], "")  ;Upgrade duration in GUI
+		  _GUICtrlSetImage($g_hPicUpgradeType[$i], $g_sLibIconPath, $eIcnBlank) ;Upgrade type blank
+		  $g_aiPicUpgradeStatus[$i] = $eIcnRedLight
+		  _GUICtrlSetImage($g_hPicUpgradeStatus[$i], $g_sLibIconPath, $eIcnRedLight) ;Upgrade status to not ready
+		  GUICtrlSetState($g_hChkUpgrade[$i], $GUI_UNCHECKED) ;Change upgrade selection box to unchecked
+		  GUICtrlSetData($g_hTxtUpgradeEndTime[$i], "") ;Clear Upgrade time in GUI
+		  GUICtrlSetState($g_hChkUpgradeRepeat[$i], $GUI_UNCHECKED) ;Change repeat box to unchecked
+		  If $iEmptyRow = -1 Then $iEmptyRow=$i ;This row is now empty.
 		Endif
 	Next
 EndFunc   ;==>btnResetUpgrade
@@ -239,11 +240,11 @@ EndFunc   ;==>chkStarLab
 
 Func LabStatusGUIUpdate()
 	If _DateIsValid($g_sLabUpgradeTime) Then
-		_GUICtrlSetTip($g_hBtnResetLabUpgradeTime, GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_01", -1) & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_02", -1) & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_03", -1) & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_04", -1) & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_05", -1) & @CRLF & @CRLF & _
+		_GUICtrlSetTip($g_hBtnResetLabUpgradeTime, GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_01", "Visible Red button means that laboratory upgrade in process") & @CRLF & _
+				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_02", "This will automatically disappear when near time for upgrade to be completed.") & @CRLF & _
+				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_03", "If upgrade has been manually finished with gems before normal end time,") & @CRLF & _
+				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_04", "Click red button to reset internal upgrade timer BEFORE STARTING NEW UPGRADE") & @CRLF & _
+				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_05", "Caution - Unnecessary timer reset will force constant checks for lab status") & @CRLF & @CRLF & _
 				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_06", "Troop Upgrade started") & ", " & _
 				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_07", "Will begin to check completion at:") & " " & $g_sLabUpgradeTime & @CRLF & " ")
 		GUICtrlSetState($g_hBtnResetLabUpgradeTime, $GUI_SHOW)
@@ -256,13 +257,13 @@ EndFunc   ;==>LabStatusGUIUpdate
 
 Func StarLabStatusGUIUpdate()
 	If _DateIsValid($g_sStarLabUpgradeTime) Then
-		_GUICtrlSetTip($g_hBtnResetStarLabUpgradeTime, GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_01", -1) & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_02", -1) & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_03", -1) & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_04", -1) & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_05", -1) & @CRLF & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_06", -1) & ", " & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_07", -1) & " " & $g_sStarLabUpgradeTime & @CRLF & " ")
+		_GUICtrlSetTip($g_hBtnResetStarLabUpgradeTime, GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_01", "Visible Red button means that laboratory upgrade in process") & @CRLF & _
+				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_02", "This will automatically disappear when near time for upgrade to be completed.") & @CRLF & _
+				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_03", "If upgrade has been manually finished with gems before normal end time,") & @CRLF & _
+				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_04", "Click red button to reset internal upgrade timer BEFORE STARTING NEW UPGRADE") & @CRLF & _
+				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_05", "Caution - Unnecessary timer reset will force constant checks for lab status") & @CRLF & @CRLF & _
+				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_06", "Troop Upgrade started") & ", " & _
+				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_07", "Will begin to check completion at:") & " " & $g_sStarLabUpgradeTime & @CRLF & " ")
 		GUICtrlSetState($g_hBtnResetStarLabUpgradeTime, $GUI_SHOW)
 		GUICtrlSetState($g_hBtnResetStarLabUpgradeTime, $GUI_ENABLE)
 	Else
@@ -285,10 +286,10 @@ EndFunc   ;==>cmbStarLab
 Func ResetLabUpgradeTime()
 	; Display are you sure message
 	_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 600)
-	Local $stext = @CRLF & GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_01", "Are you 100% sure you want to reset lab upgrade timer?") & @CRLF & _
-			GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_02", "Click OK to reset") & @CRLF & GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_03", "Or Click Cancel to exit") & @CRLF
-	Local $MsgBox = _ExtMsgBox(0, GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_04", "Reset timer") & "|" & GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_05", "Cancel and Return"), _
-							   GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_06", "Reset laboratory upgrade timer?"), $stext, 120, $g_hFrmBot)
+	Local $stext = @CRLF & GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_07", "Are you 100% sure you want to reset lab upgrade timer?") & @CRLF & _
+			GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_08", "Click OK to reset") & @CRLF & GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_09", "Or Click Cancel to exit") & @CRLF
+	Local $MsgBox = _ExtMsgBox(0, GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_10", "Reset timer") & "|" & GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_11", "Cancel and Return"), _
+							   GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_12", "Reset laboratory upgrade timer?"), $stext, 120, $g_hFrmBot)
 	If $g_bDebugSetlog Then SetDebugLog("$MsgBox= " & $MsgBox, $COLOR_DEBUG)
 	If $MsgBox = 1 Then
 		$g_sLabUpgradeTime = ""
@@ -310,18 +311,18 @@ EndFunc   ;==>ResetLabUpgradeTime
 Func ResetStarLabUpgradeTime()
 	; Display are you sure message
 	_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 600)
-	Local $stext = @CRLF & GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_01", -1) & @CRLF & _
-			GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_02", -1) & @CRLF & GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_03", -1) & @CRLF
-	Local $MsgBox = _ExtMsgBox(0, GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_04", -1) & "|" & GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_05", -1), _
-							   GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_06", -1), $stext, 120, $g_hFrmBot)
+	Local $stext = @CRLF & GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_07", "Are you 100% sure you want to reset lab upgrade timer?") & @CRLF & _
+			GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_08", "Click OK to reset") & @CRLF & GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_09", "Or Click Cancel to exit") & @CRLF
+	Local $MsgBox = _ExtMsgBox(0, GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_10", "Reset timer") & "|" & GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_11", "Cancel and Return"), _
+							   GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_12", "Reset laboratory upgrade timer?"), $stext, 120, $g_hFrmBot)
 	If $g_bDebugSetlog Then SetDebugLog("$MsgBox= " & $MsgBox, $COLOR_DEBUG)
 	If $MsgBox = 1 Then
 		$g_sStarLabUpgradeTime = ""
-		_GUICtrlSetTip($g_hBtnResetStarLabUpgradeTime, GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_01", -1) & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_02", -1) & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_03", -1) & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_04", -1) & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_05", -1))
+		_GUICtrlSetTip($g_hBtnResetStarLabUpgradeTime, GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_01", "Visible Red button means that laboratory upgrade in process") & @CRLF & _
+				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_02", "This will automatically disappear when near time for upgrade to be completed.") & @CRLF & _
+				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_03", "If upgrade has been manually finished with gems before normal end time,") & @CRLF & _
+				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_04", "Click red button to reset internal upgrade timer BEFORE STARTING NEW UPGRADE") & @CRLF & _
+				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_05", "Caution - Unnecessary timer reset will force constant checks for lab status"))
 	EndIf
 	If _DateIsValid($g_sStarLabUpgradeTime) Then
 		GUICtrlSetState($g_hBtnResetStarLabUpgradeTime, $GUI_SHOW)
@@ -333,7 +334,7 @@ Func ResetStarLabUpgradeTime()
 EndFunc   ;==>ResetLabUpgradeTime
 
 Func chkUpgradeKing()
-	If $g_iTownHallLevel > 6 Or $g_iTownHallLevel = 0 Then ; Must be TH7 or above to have King
+	If $g_iTownHallLevel > 6 Or $g_iTownHallLevel < 1 Then ; Must be TH7 or above to have King
 		If GUICtrlRead($g_hCmbBoostBarbarianKing) > 0 Then
 			GUICtrlSetState($g_hChkUpgradeKing, $GUI_DISABLE)
 			GUICtrlSetState($g_hChkUpgradeKing, $GUI_UNCHECKED)
@@ -366,7 +367,7 @@ Func chkUpgradeKing()
 EndFunc   ;==>chkUpgradeKing
 
 Func chkUpgradeQueen()
-	If $g_iTownHallLevel > 8 Or $g_iTownHallLevel = 0 Then ; Must be TH9 or above to have Queen
+	If $g_iTownHallLevel > 8 Or $g_iTownHallLevel < 1 Then ; Must be TH9 or above to have Queen
 		If GUICtrlRead($g_hCmbBoostArcherQueen) > 0 Then
 			GUICtrlSetState($g_hChkUpgradeQueen, $GUI_DISABLE)
 			GUICtrlSetState($g_hChkUpgradeQueen, $GUI_UNCHECKED)
@@ -398,7 +399,7 @@ Func chkUpgradeQueen()
 EndFunc   ;==>chkUpgradeQueen
 
 Func chkUpgradeWarden()
-	If $g_iTownHallLevel > 10 Or $g_iTownHallLevel = 0 Then ; Must be TH11 to have warden
+	If $g_iTownHallLevel > 10 Or $g_iTownHallLevel < 1 Then ; Must be TH11 to have warden
 		If GUICtrlRead($g_hCmbBoostWarden) > 0 Then
 			GUICtrlSetState($g_hChkUpgradeWarden, $GUI_DISABLE)
 			GUICtrlSetState($g_hChkUpgradeWarden, $GUI_UNCHECKED)
@@ -521,14 +522,14 @@ Func cmbWalls()
 	$g_iWallCost = $g_aiWallCost[$g_iCmbUpgradeWallsLevel]
 	GUICtrlSetData($g_hLblWallCost, _NumberFormat($g_iWallCost))
 
-   For $i = 4 To $g_iCmbUpgradeWallsLevel+5
+   For $i = 4 To 14; $g_iCmbUpgradeWallsLevel+  ;Will now always show all.
 	  GUICtrlSetState($g_ahWallsCurrentCount[$i], $GUI_SHOW)
 	  GUICtrlSetState($g_ahPicWallsLevel[$i], $GUI_SHOW)
    Next
-   For $i = $g_iCmbUpgradeWallsLevel+6 To 14
-	  GUICtrlSetState($g_ahWallsCurrentCount[$i], $GUI_HIDE)
-	  GUICtrlSetState($g_ahPicWallsLevel[$i], $GUI_HIDE)
-   Next
+   ;For $i = $g_iCmbUpgradeWallsLevel+6 To 14
+   ;  GUICtrlSetState($g_ahWallsCurrentCount[$i], $GUI_HIDE)
+   ;  GUICtrlSetState($g_ahPicWallsLevel[$i], $GUI_HIDE)
+   ;Next
 
    If $g_iCmbUpgradeWallsLevel <= 3 Then GUICtrlSetState($g_hRdoUseGold, $GUI_CHECKED)
 
@@ -585,3 +586,15 @@ Func chkUpgradesToIgnore()
 		$g_iChkUpgradesToIgnore[$i] = GUICtrlRead($g_hChkUpgradesToIgnore[$i]) = $GUI_CHECKED ? 1 : 0
 	Next
 EndFunc   ;==>chkUpgradesToIgnore
+
+Func chkUpgradePets()
+	For $i = 0 to $ePetCount - 1
+		If GUICtrlRead($g_hChkUpgradePets[$i]) = $GUI_CHECKED Then
+			$g_bUpgradePetsEnable[$i] = True
+			SetDebugLog("Upgrade: " & $g_asPetNames[$i] & " enabled")
+		Else
+			$g_bUpgradePetsEnable[$i] = False
+			SetDebugLog("Upgrade: " & $g_asPetNames[$i] & " disabled")
+		EndIf
+	Next
+EndFunc

@@ -828,11 +828,10 @@ Func runBot() ;Bot that runs everything in order
 			EndIf
 			#EndRegion - Request form chat / on a loop - Team AIO Mod++
 
-
 			If $g_bIsSearchLimit Then
-				Local $aRndFuncList = ['LabCheck', 'Collect']
+				Local $aRndFuncList = ['LabCheck', 'Collect', 'PetCheck']
 			Else
-				Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge', "ChatActions", "BotHumanization"] ; AIO Mod
+				Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge', 'PetCheck', "ChatActions", "BotHumanization"] ; AIO Mod
 			EndIf
 
 			_ArrayShuffle($aRndFuncList)
@@ -1339,6 +1338,8 @@ Func __RunFunction($sAction)
 			DailyChallenges()
 		Case "LabCheck"
 			LabGuiDisplay()
+		Case "PetCheck"
+			PetGuiDisplay()
 		Case "RequestCC"
 			RequestCC()
 		Case "Laboratory"
@@ -1366,6 +1367,8 @@ Func __RunFunction($sAction)
 		; ChatActions - Team AIO Mod++
 		Case "ChatActions"
 			ChatActions()
+        Case "PetHouse"
+			PetHouse()
 		Case ""
 			SetDebugLog("Function call doesn't support empty string, please review array size", $COLOR_ERROR)
 		Case Else

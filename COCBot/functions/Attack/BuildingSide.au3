@@ -54,43 +54,43 @@ Func GetBuildingEdge($TypeBuilding = $eSideBuildingDES) ;Using $g_iBuildingLoc x
 	EndIf
 EndFunc   ;==>GetBuildingEdge
 
+; BuildingXY(1)
 Func BuildingXY($TypeBuilding = $eSideBuildingDES)
-	Local $TypeBuildingName
-
-	; USES OLD OPENCV DETECTION
-	_CaptureRegion2(230, 170, 630, 440)
+	Local $sTypeBuildingName, $vPixel = -1, $aPixelCloser, $aCenterPixel[2]
+	
 	Switch $TypeBuilding
 		Case $eSideBuildingDES
-			$TypeBuildingName = "DE Storage"
+			; USES OLD OPENCV DETECTION
+			_CaptureRegion2()
+			$sTypeBuildingName = "DE Storage"
 			$g_iBuildingToLoc = GetLocationDarkElixirStorage()
 		Case $eSideBuildingTH
-			$TypeBuildingName = "TownHall"
+			$sTypeBuildingName = "TownHall"
 			$g_iBuildingToLoc = GetLocationTownHall()
 	EndSwitch
-
-	Local $pixel
-	If (UBound($g_iBuildingToLoc) > 1) Then
-		Local $centerPixel[2] = [430, 313]
-		Local $arrPixelCloser = _FindPixelCloser($g_iBuildingToLoc, $centerPixel, 1)
-		$pixel = $arrPixelCloser[0]
-	ElseIf (UBound($g_iBuildingToLoc) > 0) Then
-		$pixel = $g_iBuildingToLoc[0]
-	Else
-		$pixel = -1
+	
+	Local $iNumber = UBound($g_iBuildingToLoc)
+	If Not @error Then 
+		If ($iNumber > 1) Then
+			$aCenterPixel[0] = $DiamondMiddleX
+			$aCenterPixel[1] = $DiamondMiddleY
+			$aPixelCloser = _FindPixelCloser($g_iBuildingToLoc, $aCenterPixel, 1)
+			$vPixel = $aPixelCloser[0]
+		ElseIf ($iNumber > 0) Then
+			$vPixel = $g_iBuildingToLoc[0]
+		EndIf
 	EndIf
-
-	If $pixel = -1 Then
-		$g_iBuildingLoc = 0
-		SetLog(" == " & $TypeBuildingName & " Not Found ==")
-	Else
-		$pixel[0] += 230 ; compensate CaptureRegion reduction
-		$pixel[1] += 170 ; compensate CaptureRegion reduction
-		SetLog("== " & $TypeBuildingName & " : [" & $pixel[0] & "," & $pixel[1] & "] ==", $COLOR_INFO)
-		If _Sleep(1000) Then Return False
-		$g_iBuildingLocX = $pixel[0] ; compensation for $x center
-		$g_iBuildingLocY = $pixel[1] ; compensation for $y center
+	
+	If UBound($vPixel) > 1 Then
+		SetLog("== " & $sTypeBuildingName & " : [" & $vPixel[0] & "," & $vPixel[1] & "] ==", $COLOR_INFO)
+		$g_iBuildingLocX = $vPixel[0] ; compensation for $x center
+		$g_iBuildingLocY = $vPixel[1] ; compensation for $y center
 		$g_iBuildingLoc = 1
+		Return
 	EndIf
+	
+	SetLog(" == " & $sTypeBuildingName & " Not Found ==")
+	$g_iBuildingLoc = 0
 EndFunc   ;==>BuildingXY
 
 Func DELow()

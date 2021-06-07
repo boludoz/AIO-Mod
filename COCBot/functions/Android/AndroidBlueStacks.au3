@@ -789,7 +789,7 @@ Func BlueStacks2BotStopEvent()
 	If $g_bAndroidHasSystemBar Then Return AndroidOpenSystemBar()
 	Return False
 EndFunc   ;==>BlueStacks2BotStopEvent
-
+#cs - Custom - Team AIO Mod++
 Func BlueStacksAdjustClickCoordinates(ByRef $x, ByRef $y)
 	$x = Round(32767.0 / $g_iAndroidClientWidth * $x)
 	$y = Round(32767.0 / $g_iAndroidClientHeight * $y)
@@ -802,6 +802,17 @@ Func BlueStacks2AdjustClickCoordinates(ByRef $x, ByRef $y)
 	;$x = Int(($Num * $x) / $g_iAndroidClientWidth)
 	;$y = Int(($Num * $y) / $g_iAndroidClientHeight)
 EndFunc   ;==>BlueStacks2AdjustClickCoordinates
+#ce - Custom - Team AIO Mod++
+
+#Region - Custom - Team AIO Mod++
+Func AdjustClickCoordinates($sEmulator, ByRef $x, ByRef $y)
+	Switch $sEmulator
+		Case "BlueStacks", "BlueStacks2"
+			$x = Round(32767.0 / $g_iAndroidClientWidth * $x)
+			$y = Round(32767.0 / $g_iAndroidClientHeight * $y)
+	EndSwitch
+EndFunc   ;==>AdjustClickCoordinates
+#EndRegion - Custom - Team AIO Mod++
 
 Func DisableBS($HWnD, $iButton)
 	Local $hSysMenu = _GUICtrlMenu_GetSystemMenu($HWnD, 0)

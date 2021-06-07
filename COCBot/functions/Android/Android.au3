@@ -2945,8 +2945,8 @@ Func AndroidClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default)
 	$y1 = Int($y1) + $g_aiMouseOffset[1]
 	$x2 = Int($x2) + $g_aiMouseOffset[0]
 	$y2 = Int($y2) + $g_aiMouseOffset[1]
-	Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x1,$y1)")
-	Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x2,$y2)")
+	AdjustClickCoordinates($g_sAndroidEmulator, $x1, $y1) ; Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x1,$y1)")
+	AdjustClickCoordinates($g_sAndroidEmulator, $x2, $y2) ; Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x2,$y2)")
 	Local $swipe_coord[4][2] = [["{$x1}", $x1], ["{$y1}", $y1], ["{$x2}", $x2], ["{$y2}", $y2]]
 	
 	; Custom fix - Team AIO Mod++
@@ -2982,26 +2982,21 @@ Func AndroidMinitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default)
 
 	Local $sleepStart = 250
 	Local $sleepMove = 10
-	Local $sleepEnd = 1000
+	Local $sleepEnd = 250
 	Local $sleep = $sleepStart
 	Local $botSleep = 0
 	Local $send = ""
 	Local $screen_w = $g_iGAME_WIDTH
 	Local $screen_h = $g_iGAME_HEIGHT
-	If $screen_h Then Execute($g_sAndroidEmulator & "AdjustClickCoordinates($screen_w,$screen_h)") ; use $screen_h so it doesn't get sripped away
+	If $screen_h Then AdjustClickCoordinates($g_sAndroidEmulator, $screen_w, $screen_h) ; Execute($g_sAndroidEmulator & "AdjustClickCoordinates($screen_w,$screen_h)") ; use $screen_h so it doesn't get sripped away
 	Local $steps = Int(($screen_w * 10) / $g_iGAME_WIDTH)
 	Local $loops = Int(_Max(Abs($x2 - $x1), Abs($y2 - $y1)) / $steps) + 1
 	Local $x_steps = ($x2 - $x1) / $loops
 	Local $y_steps = ($y2 - $y1) / $loops
 	Local $x = $x1, $y = $y1
-	$send = "d 0 " & $x & " " & $y & " 50" & @LF & "c" & @LF & "w " & $sleep & @LF
+	$send &= "d 0 " & $x & " " & $y & " 50" & @LF & "c" & @LF & "w " & $sleep & @LF
 	$botSleep += $sleep
 	If $g_bDebugAndroid Then SetDebugLog("minitouch: " & StringReplace($send, @LF, ";"))
-	If $g_iAndroidAdbMinitouchMode = 0 Then
-		TCPSend($g_bAndroidAdbMinitouchSocket, $send)
-	Else
-		AndroidAdbSendMinitouchShellCommand($send)
-	EndIf
 	$sleep = $sleepMove
 	For $i = 1 To $loops
 		$x += $x_steps
@@ -3018,17 +3013,13 @@ Func AndroidMinitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default)
 			; keep touch down longer to avoid further moves
 			$sleep = $sleepEnd
 		EndIf
-		$send = "m 0 " & Int($x) & " " & Int($y) & " 50" & @LF & "c" & @LF & "w " & $sleep & @LF
+		$send &= "m 0 " & Int($x) & " " & Int($y) & " 50" & @LF & "c" & @LF & "w " & $sleep & @LF
 		$botSleep += $sleep
-		If $g_bDebugAndroid Then SetDebugLog("minitouch: " & StringReplace($send, @LF, ";"))
-		If $g_iAndroidAdbMinitouchMode = 0 Then
-			TCPSend($g_bAndroidAdbMinitouchSocket, $send)
-		Else
-			AndroidAdbSendMinitouchShellCommand($send)
-		EndIf
 	Next
 	$sleep = $sleepMove
-	$send = "u 0" & @LF & "c" & @LF & "w " & $sleep & @LF
+	$send &= "m 0 " & Int($x - 1) & " " & Int($y - 1) & " 50" & @LF & "c" & @LF & "w " & 50 & @LF
+	$botSleep += $sleep
+	$send &= "u 0" & @LF & "c" & @LF & "w " & $sleep & @LF
 	$botSleep += $sleep
 	If $g_bDebugAndroid Then SetDebugLog("minitouch: " & StringReplace($send, @LF, ";"))
 	If $g_iAndroidAdbMinitouchMode = 0 Then
@@ -3131,7 +3122,7 @@ Func AndroidMoveMouseAnywhere()
 		Local $times = 1
 		Local $x = 1 ; $aAway[0]
 		Local $y = 40 ; $aAway[1]
-		Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x,$y)")
+		AdjustClickCoordinates($g_sAndroidEmulator, $x,$y) ; Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x,$y)")
 		Local $i = 0
 		Local $record = "byte[16];"
 		For $i = 1 To $recordsNum * $times
@@ -3254,7 +3245,7 @@ Func _AndroidFastClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect = Tru
 		If $g_bDebugAndroid Or $g_bDebugClick Then SetDebugLog("Release clicks: queue size = " & $g_aiAndroidAdbClicks[0])
 		Local $aiAndroidAdbClicks = $g_aiAndroidAdbClicks ; create copy of $g_aiAndroidAdbClicks as it could be modified during execution
 	Else
-		Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x,$y)")
+		AdjustClickCoordinates($g_sAndroidEmulator, $x,$y) ; Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x,$y)")
 	EndIf
 
 	;SetDebugLog("AndroidFastClick(" & $x & "," & $y & "):" & $s)
@@ -3330,7 +3321,7 @@ Func _AndroidFastClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect = Tru
 					$Click = $aiAndroidAdbClicks[($i - 1) * $recordsNum + $j + 1] ; fixed Array variable has incorrect number of subscripts
 					$x = $Click[0]
 					$y = $Click[1]
-					Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x,$y)")
+					AdjustClickCoordinates($g_sAndroidEmulator, $x,$y) ; Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x,$y)")
 					Local $up_down = $Click[2]
 					$BTN_TOUCH_DOWN = StringInStr($up_down, "down") > 0
 					$BTN_TOUCH_UP = StringInStr($up_down, "up") > 0
@@ -3473,7 +3464,7 @@ Func Minitouch($x, $y, $iAction = 0, $iDelay = 1)
 	Static $x_dn, $y_dn
 	$x = Int($x)
 	$y = Int($y)
-	Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x,$y)")
+	AdjustClickCoordinates($g_sAndroidEmulator, $x,$y) ; Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x,$y)")
 
 	Local $iBytes = 0
 	Local $s
@@ -3633,7 +3624,7 @@ Func AndroidMinitouchClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect =
 		If $g_bDebugAndroid Or $g_bDebugClick Then SetDebugLog("Release clicks: queue size = " & $g_aiAndroidAdbClicks[0])
 		Local $aiAndroidAdbClicks = $g_aiAndroidAdbClicks ; create copy of $g_aiAndroidAdbClicks as it could be modified during execution
 	Else
-		Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x,$y)")
+		AdjustClickCoordinates($g_sAndroidEmulator, $x,$y) ; Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x,$y)")
 	EndIf
 
 	;SetDebugLog("AndroidFastClick: $times=" & $times & ", $loops=" & $loops & ", $remaining=" & $remaining)
@@ -3663,7 +3654,7 @@ Func AndroidMinitouchClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect =
 					$Click = $aiAndroidAdbClicks[($i - 1) * $recordsClicks + $j + 1] ; seen here incorrect number of subscripts error
 					$x = $Click[0]
 					$y = $Click[1]
-					Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x,$y)")
+					AdjustClickCoordinates($g_sAndroidEmulator, $x,$y) ; Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x,$y)")
 					Local $up_down = $Click[2]
 					$BTN_TOUCH_DOWN = StringInStr($up_down, "down") > 0
 					$BTN_TOUCH_UP = StringInStr($up_down, "up") > 0

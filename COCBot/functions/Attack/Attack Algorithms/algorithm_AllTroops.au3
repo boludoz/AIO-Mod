@@ -419,13 +419,12 @@ Func CloseBattle()
 
 EndFunc   ;==>CloseBattle
 
-
 Func SmartAttackStrategy($imode)
 		If ($g_abAttackStdSmartAttack[$imode]) Then
 			SetLog("Calculating Smart Attack Strategy", $COLOR_INFO)
 			Local $hTimer = __TimerInit()
 			_CaptureRegion2()
-			_GetRedArea()
+			NewRedLines(True)
 
 			SetLog("Calculated  (in " & Round(__TimerDiff($hTimer) / 1000, 2) & " seconds) :")
 

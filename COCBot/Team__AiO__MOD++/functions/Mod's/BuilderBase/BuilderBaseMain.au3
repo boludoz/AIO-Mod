@@ -128,7 +128,7 @@ Func RestAttacksInBB($bSetLog = True)
 		$g_iAvailableAttacksBB = 0
 		Return False
 	EndIf
-	$g_iAvailableAttacksBB = UBound(findMultipleQuick($g_sImgAvailableAttacks, 0, "25, 626, 97, 640", Default, Default, False, 0))
+	$g_iAvailableAttacksBB = UBound(findMultipleQuick($g_sImgBBLootAvail, 0, "25, 626, 97, 640", Default, Default, False, 0))
 	If $g_iAvailableAttacksBB > 0 And $g_bChkBBStopAt3 Then
 		If ($bSetLog = True) Then Setlog("You have " & $g_iAvailableAttacksBB & " available attack(s). I will stop attacking when there isn't.", $COLOR_SUCCESS)
 		Return True

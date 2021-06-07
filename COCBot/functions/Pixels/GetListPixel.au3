@@ -3,13 +3,12 @@
 ; Description ...: Pixel and Locate Image functions
 ; Author ........: HungLe (april-2015)
 ; Modified ......:
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2021
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-
 Func GetListPixel($listPixel, $sDelim = "-", $sName = "")
 	If $sName <> "" Then debugAttackCSV("GetListPixel for " & $sName & ": " & $listPixel)
 	Local $listPixelSideStr = StringSplit($listPixel, "|")
