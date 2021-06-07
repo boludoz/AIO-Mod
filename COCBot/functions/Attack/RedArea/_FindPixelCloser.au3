@@ -20,7 +20,7 @@ Func _FindPixelCloser($aPixel, $aVillageCenter, $eNb = 1)
 	Local $aPixelCloser[0]
 
 	If UBound($aPixel) > 0 And not @error Then 
-		Local $bAlreadyExist = False, $bFound = False, $aTemp
+		Local $bAlreadyExist = False, $bFound = False, $aTemp, $aPixelToCompare
 
 		For $j = 0 To $eNb
 			$aPixelToCompare = $aPixel[0]
