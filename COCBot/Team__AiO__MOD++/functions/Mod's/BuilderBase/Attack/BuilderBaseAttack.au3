@@ -424,16 +424,24 @@ Func BuilderBaseAttackToDrop($aAvailableTroops)
 		ClickP($aUniqueDeployPoint, 1, 0)
 	EndIf
 
+	Local $aBlackArts[4] = [520, 600, 0x000000, 5]
 	For $i = 0 To 15
 		; Surrender button [FC5D64]
 		If chkSurrenderBtn() = True Then
 			SetLog("Let's Surrender!")
 			ClickP($aSurrenderButton, 1, 0, "#0099") ;Click Surrender
 			
-			; Get the Surrender Window [Cancel] [Ok]
-			If ClickOkay("BuilderBaseAttackToDrop") Then
+			If _Wait4PixelArray($g_aOKBtn) Then
+				Click($g_aOKBtn[0] - Random(0, 25, 1), $g_aOKBtn[1] + Random(0, 25, 1))
+				_Wait4PixelGoneArray($g_aOKBtn)
+			EndIf
+			
+			If RandomSleep(250) Then Return
+			
+			If _Wait4PixelArray($aBlackArts) Then
 				ExitLoop
 			EndIf
+
 		Else
 			If ($aUniqueDeploySide) > $i Then
 				$aUniqueDeployPoint[0] = $aUniqueDeploySide[$i][0]
@@ -445,7 +453,7 @@ Func BuilderBaseAttackToDrop($aAvailableTroops)
 				EndIf
 			EndIf
 		EndIf
-		If _Sleep(500) Then ExitLoop
+		If _Sleep(500) Then Return
 	Next
 
 	If $i >= 15 Then Setlog("Surrender button Problem!", $COLOR_WARNING)
