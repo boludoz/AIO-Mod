@@ -1920,19 +1920,18 @@ Global $g_bUpgradePetsEnable[4] = [False, False, False, False]
 
 Global $g_iMinDark4PetUpgrade = 0
 
-Local $g_aiPetLevel[4] = [0, 0, 0, 0]
-
+Global $g_aiPetLevel[4] = [0, 0, 0, 0]
 
 Global Enum $ePetLassi, $ePetEletroOwl, $ePetMightyYak, $ePetUnicorn, $ePetCount
 Global Const $g_asPetNames[$ePetCount] = ["Lassi", "Eletro Owl", "Mighty Yak", "Unicorn"]
 Global Const $g_asPetShortNames[$ePetCount] = ["Lassi", "Owl", "Yak", "Unicorn"]
 
-Global Const $g_aiPetUpgradeCostPerLevel[$ePetCount][10] = [ _
+Global $g_aiPetUpgradeCostPerLevel[$ePetCount][10] = [ _
 		[0, 115, 130, 145, 160, 175, 190, 205, 220, 235], _  ; LASSI
 		[0, 135, 150, 165, 180, 195, 210, 225, 240, 255], _  ; Electro Owl
 		[0, 165, 185, 205, 225, 245, 255, 265, 275, 285], _  ; Mighty Yak
 		[0, 210, 220, 230, 240, 250, 260, 270, 280, 290]]    ; Unicorn
-
+		
 ; Team AiO MOD++ (2019)
 Global Const $g_aVillageSizeReset[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 #include "Team__AiO__MOD++\Globals_Team__AiO__MOD++.au3"

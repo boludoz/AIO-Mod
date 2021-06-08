@@ -478,7 +478,7 @@ Func BotHumanization()
 EndFunc   ;==>BotHumanization
 
 Func RandomHumanAction()
-	For $i = 0 To UBound($g_acmbPriority) -1
+	For $i = 0 To UBound($g_iacmbPriority) -1
 		SetActionPriority($i)
 	Next
 

@@ -230,8 +230,7 @@ Global $g_aClanResponses, $g_sClanResponses
 Global $g_aClanGeneric, $g_sClanGeneric
 Global $g_aChallengeText, $g_aKeywordFcRequest, $g_sChallengeText, $g_sKeywordFcRequest
 
-; Daily Discounts - Team AiO MOD++
-#Region
+#Region - Daily Discounts - Team AiO MOD++
 Global $g_iDDCount = 19
 Global $g_abChkDD_Deals[$g_iDDCount] = [False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False]
 Global $g_aiDD_DealsCosts[$g_iDDCount] = [25, 75, 70, 115, 285, 300, 300, 500, 1000, 500, 500, 925, 925, 925, 1500, 1500, 3000, 1500, 1500]
@@ -239,7 +238,7 @@ Global $g_eDDPotionTrain = 0, $g_eDDPotionClock = 1, $g_eDDPotionResearch = 2, $
 		$g_eDDPotionPower = 5, $g_eDDPotionHero = 6, $g_eDDWallRing5 = 7, $g_eDDWallRing10 = 8, $g_eDDShovel = 9, $g_eDDBookHeros = 10, _
 		$g_eDDBookFighting = 11, $g_eDDBookSpells = 12, $g_eDDBookBuilding = 13, $g_eDDRuneGold = 14, $g_eDDRuneElixir = 15, $g_eDDRuneDarkElixir = 16, _
 		$g_eDDRuneBBGold = 17, $g_eDDRuneBBElixir = 18
-#EndRegion
+#EndRegion - Daily Discounts - Team AiO MOD++
 
 ; CSV Deploy Speed - Team AiO MOD++
 Global $cmbCSVSpeed[2] = [$LB, $DB]

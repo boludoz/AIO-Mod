@@ -365,7 +365,7 @@ Func SaveConfig_MOD_Humanization()
 	_Ini_Add("Bot Humanization", "chkUseBotHumanization", $g_bUseBotHumanization ? True : False)
 	_Ini_Add("Bot Humanization", "chkUseAltRClick", $g_bUseAltRClick ? True : False)
 	_Ini_Add("Bot Humanization", "chkLookAtRedNotifications", $g_bLookAtRedNotifications ? True : False)
-	For $i = 0 To UBound($g_acmbPriority) -1
+	For $i = 0 To UBound($g_iacmbPriority) -1
 		_Ini_Add("Bot Humanization", "cmbPriority[" & $i & "]", _GUICtrlComboBox_GetCurSel($g_acmbPriority[$i]))
 	Next
 	For $i = 0 To 1
