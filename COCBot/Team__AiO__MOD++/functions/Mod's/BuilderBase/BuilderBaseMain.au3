@@ -30,30 +30,15 @@ Func BuilderBase($bTestRun = False)
 
 		$g_bStayOnBuilderBase = True
 
-		If _Sleep($DELAYRUNBOT3) Then Return
-		If checkObstacles(True) Then Return
-
-		BuilderBaseReport()
-		RestAttacksInBB(False)
-		If _Sleep($DELAYRUNBOT3) Then Return
-		If checkObstacles(True) Then Return
-
 		CollectBuilderBase()
 		If _Sleep($DELAYRUNBOT3) Then Return
 		If checkObstacles(True) Then Return
 
 		; Check if Builder Base is to run
-		If $g_bChkBuilderAttack Then
+		If BuilderBaseReportAttack(False) = True Then
 
 			; New logic to add speed to the attack.
 			For $i = 1 To Random($g_iBBMinAttack, $g_iBBMaxAttack, 1)
-				
-				; Get Trophies
-				$g_aiCurrentLootBB[$eLootTrophyBB] = getTrophyMainScreen(67, 84)
-				Setlog("Builder base trophies report: " & $g_aiCurrentLootBB[$eLootTrophyBB], $COLOR_INFO)
-				
-				; Builder base Report and get out of the useless loop.
-				If Not RestAttacksInBB() Then ExitLoop
 				
 				;  $g_bCloudsActive fast network fix.
 				$g_bCloudsActive = True
@@ -68,10 +53,17 @@ Func BuilderBase($bTestRun = False)
 				If _Sleep($DELAYRUNBOT3) Then Return
 				If checkObstacles(True) Then Return
 				
+				; Builder base Report and get out of the useless loop.
+				If BuilderBaseReportAttack() = False Then 
+					ExitLoop
+				EndIf
+				
 			Next
 			
 		EndIf 
+		
 		ZoomOut()
+		
 		BuilderBaseReport(False, False)
 		If $g_bRestart = True Then Return
 		If _Sleep($DELAYRUNBOT3) Then Return
@@ -113,7 +105,7 @@ Func BuilderBase($bTestRun = False)
 		If Not $g_bRunState Then Return
 	
 		If $g_bOnlyBuilderBase Then 
-			If _Sleep($DELAYRUNBOT1 * 15) Then Return ;Add 15 Sec Delay Before Starting Again In BB Only
+			If _Sleep($DELAYRUNBOT1) Then Return
 		Else
 			If isOnBuilderBase(True, True) Then SwitchBetweenBases(True, False)
 		EndIf
@@ -123,20 +115,30 @@ Func BuilderBase($bTestRun = False)
 
 EndFunc
 
-Func RestAttacksInBB($bSetLog = True)
-	If $g_bChkBuilderAttack = False Then
-		$g_iAvailableAttacksBB = 0
+Func BuilderBaseReportAttack($bSetLog = True)
+	If $g_bRestart = True Then Return False
+
+	If $g_bChkBuilderAttack = True Then
+	
+		; Get Trophies for drop.
+		$g_aiCurrentLootBB[$eLootTrophyBB] = getTrophyMainScreen(67, 84)
+		If $bSetLog = True Then Setlog("Builder base trophies report: " & $g_aiCurrentLootBB[$eLootTrophyBB], $COLOR_INFO)
+		
+		; $g_bChkBBStopAt3
+		If $g_bChkBBStopAt3 = True Then
+			$g_iAvailableAttacksBB = UBound(findMultipleQuick($g_sImgBBLootAvail, 3, "25, 626, 97, 640"))
+			If Not ($g_iAvailableAttacksBB > 0 And not @error) Then
+				If $bSetLog = True Then Setlog("- Builder base: You have " & $g_iAvailableAttacksBB & " available attack(s). I will stop attacking.", $COLOR_SUCCESS)
+				Return False
+			EndIf
+		EndIf
+
+	Else
+		If $bSetLog = True Then SetLog("- Builder base: Attack disabled", $COLOR_INFO)
 		Return False
 	EndIf
-	$g_iAvailableAttacksBB = UBound(findMultipleQuick($g_sImgBBLootAvail, 0, "25, 626, 97, 640", Default, Default, False, 0))
-	If $g_iAvailableAttacksBB > 0 And $g_bChkBBStopAt3 Then
-		If ($bSetLog = True) Then Setlog("You have " & $g_iAvailableAttacksBB & " available attack(s). I will stop attacking when there isn't.", $COLOR_SUCCESS)
-		Return True
-	ElseIf $g_bChkBBStopAt3 <> True Then
-		If ($bSetLog = True) Then Setlog("You have " & $g_iAvailableAttacksBB & " available attack(s).", $COLOR_INFO)
-		Return True
-	EndIf
-	Return False
+	
+	Return True
 EndFunc   ;==>RestAttacksInBB
 
 Func TestBuilderBase()
