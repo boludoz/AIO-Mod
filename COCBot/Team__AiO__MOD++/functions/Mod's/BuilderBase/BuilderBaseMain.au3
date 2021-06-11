@@ -96,11 +96,6 @@ Func BuilderBase($bTestRun = False)
 		WallsUpgradeBB()
 		If _Sleep($DELAYRUNBOT3) Then Return
 		If checkObstacles(True) Then Return
-		
-		BuilderBaseReport(False, False)
-		RestAttacksInBB(False)
-		If _Sleep($DELAYRUNBOT3) Then Return
-		If checkObstacles(True) Then Return
 
 		If Not $g_bRunState Then Return
 	
@@ -126,9 +121,11 @@ Func BuilderBaseReportAttack($bSetLog = True)
 		
 		; $g_bChkBBStopAt3
 		If $g_bChkBBStopAt3 = True Then
-			$g_iAvailableAttacksBB = UBound(findMultipleQuick($g_sImgBBLootAvail, 3, "25, 626, 97, 640"))
-			If Not ($g_iAvailableAttacksBB > 0 And not @error) Then
-				If $bSetLog = True Then Setlog("- Builder base: You have " & $g_iAvailableAttacksBB & " available attack(s). I will stop attacking.", $COLOR_SUCCESS)
+			Local $sResult = QuickMIS("CX", $g_sImgBBLootAvail, 20, 625, 110, 650, True)
+			$g_iAvailableAttacksBB = UBound($sResult)
+			
+			If Not ($g_iAvailableAttacksBB > 0) Then
+				If $bSetLog = True Then Setlog("- Builder base: You have " & $g_iAvailableAttacksBB & " available attack(s).", $COLOR_SUCCESS)
 				Return False
 			EndIf
 		EndIf
@@ -139,7 +136,7 @@ Func BuilderBaseReportAttack($bSetLog = True)
 	EndIf
 	
 	Return True
-EndFunc   ;==>RestAttacksInBB
+EndFunc   ;==>BuilderBaseReportAttack
 
 Func TestBuilderBase()
 	Setlog("** TestBuilderBaseAttackBB START**", $COLOR_DEBUG)

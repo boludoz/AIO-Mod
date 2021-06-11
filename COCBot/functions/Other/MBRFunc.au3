@@ -53,7 +53,8 @@ Func DllCallMyBotIsActive()
 EndFunc   ;==>DllCallMyBotIsActive
 
 ; Public DllCall MyBot.run.dll function call
-Func DllCallMyBot($sFunc, $sType1 = Default, $vParam1 = Default, $sType2 = Default, $vParam2 = Default, $sType3 = Default, $vParam3 = Default, $sType4 = Default, $vParam4 = Default, $sType5 = Default, $vParam5 = Default, $sType6 = Default, $vParam6 = Default, $sType7 = Default, $vParam7 = Default, $sType8 = Default, $vParam8 = Default, $sType9 = Default, $vParam9 = Default, $sType10 = Default, $vParam10 = Default)
+Func DllCallMyBot($sFunc, $sType1 = Default, $vParam1 = Default, $sType2 = Default, $vParam2 = Default, $sType3 = Default, $vParam3 = Default, $sType4 = Default, $vParam4 = Default, $sType5 = Default, $vParam5 = Default _
+		, $sType6 = Default, $vParam6 = Default, $sType7 = Default, $vParam7 = Default, $sType8 = Default, $vParam8 = Default, $sType9 = Default, $vParam9 = Default, $sType10 = Default, $vParam10 = Default)
 	$g_bLibMyBotActive = True
 	Local $aResult
 	Local $sFileOrFolder = Default
@@ -69,40 +70,26 @@ Func DllCallMyBot($sFunc, $sType1 = Default, $vParam1 = Default, $sType2 = Defau
 	Local $bWasSuspended = SuspendAndroid()
 	$aResult = _DllCallMyBot($sFunc, $sType1, $vParam1, $sType2, $vParam2, $sType3, $vParam3, $sType4, $vParam4, $sType5, $vParam5, $sType6, $vParam6, $sType7, $vParam7, $sType8, $vParam8, $sType9, $vParam9, $sType10, $vParam10)
 	Local $error = @error
-	Local $i = 1
-	Local $i2 = 0, $aResultTmp[5] ; Custom fix - Team AIO Mod++
+	Local $i = 0
 	While Not $error And $aResult[0] = "<GetAsyncResult>"
 		; when receiving "<GetAsyncResult>", dll waited already 100ms, and android should be resumed after 500ms for 100ms
-		If Mod($i + 5, 10) = 0 Then
-			$i2 += 1
-			#Region - Custom fix - Team AIO Mod++
-			If $g_bDebugSetlog Then
-				If ($g_sTagCallMybotCall <> "") Then 
-					SetDebugLog("Waiting for DLL async function | Func : " & $sFunc & " Params : " & " " & $vParam1 & " " & $vParam2 & " " & $vParam3 & " " & $vParam4 & " " & $vParam5 & " " & $vParam6 & " " & $vParam7 & " " & $vParam8 & " " & $vParam9 & " " & $vParam10)
-					Else
-					SetDebugLog("Waiting for DLL async function | Tag : " & $g_sTagCallMybotCall & " Func : " & $sFunc & " Params : " & " " & $vParam1 & " " & $vParam2 & " " & $vParam3 & " " & $vParam4 & " " & $vParam5 & " " & $vParam6 & " " & $vParam7 & " " & $vParam8 & " " & $vParam9 & " " & $vParam10)
-				EndIf
-			EndIf
-			#EndRegion - Custom fix - Team AIO Mod++
-			ResumeAndroid()
-		EndIf
-		$i += 1
-		If _Sleep(100) Or 20 < $i2 Then ; Custom fix - Team AIO Mod++
-			ResumeAndroid()
-			$aResult = $aResultTmp ; Custom fix - Team AIO Mod++
-			$g_sTagCallMybotCall = "" ; Custom fix - Team AIO Mod++
+
+		If _Sleep(10 * $i) Then
+			$aResult[0] = ""
 			$g_bLibMyBotActive = False
 			Return SetError(0, 0, $aResult)
 		EndIf
-		SuspendAndroid()
+		
+		$i += 5
+		
 		$aResult = _DllCallMyBot("GetAsyncResult")
 		$error = @error
+				
 	WEnd
 
 	; resume Android again (if it was not already suspended)
 	SuspendAndroid($bWasSuspended)
 	$g_bLibMyBotActive = False
-	$g_sTagCallMybotCall = ""
 	Return SetError($error, @extended, $aResult)
 EndFunc   ;==>DllCallMyBot
 

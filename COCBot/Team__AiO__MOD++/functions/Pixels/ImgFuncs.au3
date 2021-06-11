@@ -11,7 +11,7 @@
 ; ===============================================================================================================================
 ; _ImageSearchXML("C:\Github\AIOPLUS\imgxml\village\NormalVillage", 0, "FV", True, True, False, 25, 0, 1000)
 Func _ImageSearchXML($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = "FV", $bForceCapture = True, $bDebugLog = False, $bCheckDuplicatedpoints = False, $iDistance2check = 25, $minLevel = 0, $maxLevel = 1000)
-	FuncEnter(_ImageSearchXML)
+	; FuncEnter(_ImageSearchXML)
 	$g_aImageSearchXML = -1
 	Local $iCount = 0, $returnProps = "objectname,objectlevel,objectpoints"
 	Local $error, $extError
@@ -120,7 +120,7 @@ Func CompKick(ByRef $vFiles, $aof, $bType = False)
 EndFunc   ;==>CompKick
 ;
 Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri = Default, $bForceCapture = True, $sOnlyFind = "", $bExactFind = False, $iDistance2check = 25, $bDebugLog = $g_bDebugImageSave, $minLevel = 0, $maxLevel = 1000, $vArea2SearchOri2 = Default)
-	FuncEnter(findMultipleQuick)
+	; FuncEnter(findMultipleQuick)
 	$g_aImageSearchXML = -1
 	Local $iCount = 0, $returnProps = "objectname,objectlevel,objectpoints"
 	

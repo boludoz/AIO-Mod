@@ -98,10 +98,9 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 					Local $DLLRes = DllCallMyBot("GetProperty", "str", $KeyValue[$i], "str", "objectpoints")
 					If UBound(decodeSingleCoord($DLLRes[0])) > 1 Then $Result &= $DLLRes[0] & "|"
 				Next
-				If StringRight($Result, 1) = "|" Then $Result = StringLeft($Result, (StringLen($Result) - 1))
 				If $g_bDebugSetlog Then SetDebugLog($ValueReturned & " Found: " & $Result, $COLOR_PURPLE)
-				Local $CoordsInArray = StringSplit($Result, "|", $STR_NOCOUNT)
-				Return $CoordsInArray
+				Local $aCoordsInArray = StringSplit2D($Result)
+				Return $aCoordsInArray
 
 			Case "N1" ; name of first file found
 

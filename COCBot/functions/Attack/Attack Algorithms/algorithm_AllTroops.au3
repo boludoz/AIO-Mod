@@ -424,7 +424,7 @@ Func SmartAttackStrategy($imode)
 			SetLog("Calculating Smart Attack Strategy", $COLOR_INFO)
 			Local $hTimer = __TimerInit()
 			_CaptureRegion2()
-			NewRedLines(True)
+			_GetRedArea()
 
 			SetLog("Calculated  (in " & Round(__TimerDiff($hTimer) / 1000, 2) & " seconds) :")
 
