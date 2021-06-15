@@ -28,6 +28,7 @@ Func DropOnPixel($iTroop, $aListArrPixel, $iNumber, $iSlotsPerEdge = 0, $bRandom
 	debugRedArea($nameFunc & " IN ")
 	If ($iNumber = 0 Or UBound($aListArrPixel) = 0) Then Return
 	KeepClicks()
+	Local $iDelay = 0
 	For $i = 0 To UBound($aListArrPixel) - 1
 		debugRedArea("$aListArrPixel $i : [" & $i & "] ")
 		Local $iOffset = 1
@@ -77,13 +78,14 @@ Func DropOnPixel($iTroop, $aListArrPixel, $iNumber, $iSlotsPerEdge = 0, $bRandom
 					debugRedArea("$iOffset: " & $iOffset)
 				EndIf
 				If Number($currentPixel[1]) > 555 + $g_iBottomOffsetY Then $currentPixel[1] = 555 + $g_iBottomOffsetY
+				$iDelay = SetSleep(0)
 				If $bTankTroop Then
-					Local $Delay = 1000 + SetSleep(0)
-					SetDebugLog("Tank Troop $nbTroopByPixel: " & $nbTroopByPixel & " with delay of " & $Delay + 50 & "ms")
-					AttackClick($currentPixel[0], $currentPixel[1], $nbTroopByPixel, $Delay, 0, "#0098")
+					$iDelay = Round($iDelay * Random(1.15, 1.75))
+					SetDebugLog("Tank Troop $nbTroopByPixel: " & $nbTroopByPixel & " with delay of " & $iDelay + 50 & "ms")
+					AttackClick($currentPixel[0], $currentPixel[1], $nbTroopByPixel, $iDelay, 0, "#0098")
 					If _Sleep(50) Then ExitLoop
 				Else
-					AttackClick($currentPixel[0], $currentPixel[1], $nbTroopByPixel, SetSleep(0), 0, "#0098")
+					AttackClick($currentPixel[0], $currentPixel[1], $nbTroopByPixel, $iDelay, 0, "#0098")
 					If _Sleep(50) Then ExitLoop
 				EndIf
 				$Clicked += $nbTroopByPixel
@@ -99,8 +101,8 @@ EndFunc   ;==>DropOnPixel
 
 Func DeployPointRandom($currentPixel)
 	Local $sSide = Side($currentPixel)
-	Local $x = Random(10, 20, 1)
-	Local $y = Random(10, 20, 1)
+	Local $x = Random(5, 16, 1)
+	Local $y = Random(5, 16, 1)
 	Switch $sSide
 		Case "TL"
 			$currentPixel[0] -= $x

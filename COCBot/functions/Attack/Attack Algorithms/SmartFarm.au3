@@ -805,7 +805,7 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 	Else
 		$iHowManySides = UBound($aWhatSides)
 	EndIf
-	DeploySpell("", "", True) ; Lirel
+	If $g_bSmartFarmSpellsEnable Then DeploySpell("", "", True) ; Custom SmartFarm - Team AIO Mod++
 	For $i = 0 To UBound($listInfoDeploy) - 1
 		; Reset the variables
 		Local $troop = -1
@@ -904,25 +904,28 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 								dropHeroes($pixelRandomDrop[0], $pixelRandomDrop[1], $iKing, $iQueen, $iWarden, $iChampion)
 								$g_bIsHeroesDropped = True
 							EndIf
-							;; Lirel
+							#Region - Custom SmartFarm - Team AIO Mod++
 							If ($g_bIsHeroesDropped) Then
-								If _Sleep(500) Then Return
+								If _Sleep(100) Then Return
 								CheckHeroesHealth()
 							EndIf
-							If ($g_iKingSlot <> -1 Or $g_iQueenSlot <> -1 Or $g_iWardenSlot <> -1 Or $g_iChampionSlot <> -1) And $g_bIsHeroesDropped Then
-								If ($iHowManySides <= $g_iSmartFarmSpellsHowManySides) And ($g_bSmartFarmSpellsEnable) And ($i = $numberSidesDropTroop - 1) Then
-									If _Sleep(2000) Then Return
-									Local $aByGroups = LaunchSpellsSmartFarm($SIDESNAMES)
-									If UBound($aByGroups) < 2 Then $aByGroups = LaunchSpellsSmartFarm($sSide)
-									DeploySpell($aByGroups, $sSide)
-									SetLog("You have " & UBound($aByGroups) & " Points to Deploy Speels/Side " & $sSide & " after Heroes")
+							
+							If $g_bSmartFarmSpellsEnable Then
+								If ($g_iKingSlot <> -1 Or $g_iQueenSlot <> -1 Or $g_iWardenSlot <> -1 Or $g_iChampionSlot <> -1) And $g_bIsHeroesDropped Then
+									If ($iHowManySides <= $g_iSmartFarmSpellsHowManySides) And ($i = $numberSidesDropTroop - 1) Then
+										If _Sleep(500) Then Return
+										Local $aByGroups = LaunchSpellsSmartFarm($SIDESNAMES)
+										If UBound($aByGroups) < 2 Then $aByGroups = LaunchSpellsSmartFarm($sSide)
+										DeploySpell($aByGroups, $sSide)
+										SetLog("You have " & UBound($aByGroups) & " Points to Deploy Speels/Side " & $sSide & " after Heroes")
+									EndIf
+								EndIf
+								If ($g_bIsHeroesDropped) Then
+									If _Sleep(100) Then Return
+									CheckHeroesHealth()
 								EndIf
 							EndIf
-							If ($g_bIsHeroesDropped) Then
-								If _Sleep(500) Then Return
-								CheckHeroesHealth()
-							EndIf
-							;;
+							#EndRegion - Custom SmartFarm - Team AIO Mod++
 						Else
 							$infoListArrPixel = $infoTroopListArrPixel[1]
 							Local $listPixel = $infoListArrPixel[$i]
@@ -957,7 +960,7 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 							EndIf
 						EndIf
 						If ($g_bIsHeroesDropped) Then
-							If _sleep(1000) Then Return ; delay Queen Image  has to be at maximum size : CheckHeroesHealth checks the y = 573
+							If _sleep(500) Then Return ; delay Queen Image  has to be at maximum size : CheckHeroesHealth checks the y = 573
 							CheckHeroesHealth()
 						EndIf
 					Next

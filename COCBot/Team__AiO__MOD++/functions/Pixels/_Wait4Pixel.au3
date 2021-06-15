@@ -386,3 +386,30 @@ Func ButtonClickArray($vVar, $iLeft, $iTop, $iRight, $iBottom, $iColorVariation 
     EndIf
 	Return False
 EndFunc
+
+Func _MasivePixelCompare($hHMapsOne, $hHMapsTwo, $iXS, $iYS, $iXE, $iYE, $iTol = 15, $iResol = 5)
+	Local $aAllResults[0][2]
+	Local $hMapsOne = _GDIPlus_BitmapCreateFromHBITMAP($hHMapsOne)
+	Local $hMapsTwo = _GDIPlus_BitmapCreateFromHBITMAP($hHMapsTwo)
+	
+	Local $iBits1, $iBits2
+	Local $iC = -1
+	For $iX = $iXS To $iXE Step $iResol
+		For $iY = $iYS To $iYE Step $iResol
+			$iBits1 = _GDIPlus_BitmapGetPixel($hMapsOne, $iX, $iY)
+			$iBits2 = _GDIPlus_BitmapGetPixel($hMapsTwo, $iX, $iY)
+            If Ciede1976(rgb2lab(Hex($iBits1, 6)), rgb2lab(Hex($iBits2, 6))) > $iTol Then
+				$iC += 1
+				ReDim $aAllResults[$iC + 1][2]
+				$aAllResults[$iC][0] = $iX
+				$aAllResults[$iC][1] = $iY
+			EndIf
+		Next
+	Next
+
+	If UBound($aAllResults) > 0 and not @error Then
+		Return $aAllResults
+	Else
+		Return -1
+	EndIf
+EndFunc
