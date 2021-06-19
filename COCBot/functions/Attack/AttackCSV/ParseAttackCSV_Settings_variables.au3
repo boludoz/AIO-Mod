@@ -38,7 +38,7 @@ Func ParseAttackCSV_Settings_variables(ByRef $aiCSVTroops, ByRef $aiCSVSpells, B
 				If Not StringRegExp($asCommand[$iCommandCol], "(TRAIN)|(REDLN)|(DRPLN)|(CCREQ)|(BOOST)", $STR_REGEXPMATCH) Then ContinueLoop
 
 				If $iTHCol = 0 Then ; select a command column TH based on camp space or skip all commands
-					If $g_iTownHallLevel > 5 And Then
+					If $g_iTownHallLevel > 5 Then
 						$iTHCol = ($g_iTownHallLevel - 2)
 						$iTH = $g_iTownHallLevel
 					Else

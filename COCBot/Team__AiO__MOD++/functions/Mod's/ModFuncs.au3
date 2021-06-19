@@ -144,80 +144,6 @@ Func _GUICtrlCreateInput($sText, $iLeft, $iTop, $iWidth, $iHeight, $vStyle = -1,
 	Return $hReturn
 EndFunc   ;==>_GUICtrlCreateInput
 
-Func _makerequestCustom($aRequestButtonPos = "")
-	Local $sSendButtonArea = GetDiamondFromRect("220,150,650,650")
-
-	If UBound($aRequestButtonPos) = 2 And Not @error Then ClickP($aRequestButtonPos, 1, 0, "0336") ;click button request troops
-
-	If Not IsWindowOpen($g_sImgSendRequestButton, 20, 100, $sSendButtonArea) Then
-		SetLog("Request has already been made, or request window not available", $COLOR_ERROR)
-		ClickAway()
-		If _Sleep($DELAYMAKEREQUEST2) Then Return
-	Else
-		#Region - Type once - Team AIO Mod++
-		If Not StringIsSpace($g_sRequestTroopsText) Then
-
-			; 	X[$g_sProfileCurrentName|$g_sRequestTroopsText]
-			Local $bCanReq = True, $bAddNew = True
-
-			If $g_bRequestOneTimeEnable Then
-				For $i = 0 To UBound($g_aRequestTroopsTextOT) - 1
-					If $g_aRequestTroopsTextOT[$i][0] = $g_sProfileCurrentName Then
-						$bAddNew = False
-
-						If $g_aRequestTroopsTextOT[$i][1] = $g_sRequestTroopsText Then
-							$bCanReq = False
-						ElseIf $g_aRequestTroopsTextOT[$i][1] <> $g_sRequestTroopsText Then
-							$g_aRequestTroopsTextOT[$i][1] = $g_sRequestTroopsText
-						EndIf
-
-						ExitLoop
-					EndIf
-				Next
-
-				If $bAddNew = True Then
-					Local $aMatrixText[1][2] = [[$g_sProfileCurrentName, $g_sRequestTroopsText]]
-					_ArrayAdd($g_aRequestTroopsTextOT, $aMatrixText)
-				EndIf
-			EndIf
-
-			If $bCanReq = True Then
-				If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
-				; fix for Android send text bug sending symbols like ``"
-				AndroidSendText($g_sRequestTroopsText, True)
-				Click(Int($g_avWindowCoordinates[0]), Int($g_avWindowCoordinates[1] - 75), 1, 0, "#0254")
-				If _Sleep($DELAYMAKEREQUEST2) Then Return
-				If SendText($g_sRequestTroopsText) = 0 Then
-					SetLog(" Request text entry failed, try again", $COLOR_ERROR)
-					Return
-				EndIf
-			EndIf
-		EndIf
-		#EndRegion - Type once - Team AIO Mod++
-		If _Sleep($DELAYMAKEREQUEST2) Then Return ; wait time for text request to complete
-
-		If Not IsWindowOpen($g_sImgSendRequestButton, 20, 100, $sSendButtonArea) Then
-			If $g_bDebugSetlog Then SetDebugLog("Send request button not found", $COLOR_DEBUG)
-			CheckMainScreen(False) ;emergency exit
-		EndIf
-
-		If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "") ; make sure Android has window focus
-		RequestSend()
-		$g_bCanRequestCC = False
-	EndIf
-
-EndFunc   ;==>_makerequestCustom
-
-Func RequestSend() ; Custom fix - Team__AiO__MOD
-	Local $i = 0, $bClicked = False
-	Do
-		$i += 1
-		$bClicked = ButtonClickDM(@ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\Button\RequestSend\", 425, 2, 212, 730)
-		If _Sleep(250) Then Return
-	Until $bClicked Or ($i > 3)
-	Return $bClicked
-EndFunc   ;==>RequestSend
-
 Global $g_oTxtBBAtkLogInitText = ObjCreate("Scripting.Dictionary")
 
 Func BBAtkLogHead()
@@ -433,3 +359,10 @@ Func SecureClick($x, $y)
 	EndIf
 	Return True
 EndFunc   ;==>SecureClick
+
+;	https://link.clashofclans.com/en?action=CopyArmy&army=u20x3-3x23
+; Func ()
+	; 0xFF1919
+	; AndroidAdbSendShellCommand("am start -n " & $g_sAndroidGamePackage & "/" & $g_sAndroidGameClass & " -a android.intent.action.VIEW -d ' "& $s & "'", Default)
+
+; EndFunc   ;==>SecureClick
