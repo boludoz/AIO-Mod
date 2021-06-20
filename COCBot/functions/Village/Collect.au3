@@ -57,14 +57,14 @@ Func Collect($bCheckTreasury = True)
 			EndSwitch
 			Local $bArrayExist = False
 			If IsArray($aCollectXY) Then ; found array of locations
-					$t = Random(0, UBound($aCollectXY) - 1, 1) ; SC May 2017 update only need to pick one of each to collect all
-					If $g_bDebugSetlog Then SetDebugLog($sFileName & " found, random pick(" & $aCollectXY[$t][0] & "," & $aCollectXY[$t][1] & ")", $COLOR_GREEN)
-					If IsMainPage() Then Click($aCollectXY[$t][0], $aCollectXY[$t][1], 1, 0, "#0430")
-					
-					$aiLootPoint[0] = Number($aCollectXY[$t][0]) ; Magic items - AIO Team Mod++
-					$aiLootPoint[1] = Number($aCollectXY[$t][1]) ; Magic items - AIO Team Mod++
-					
-					If _Sleep($DELAYCOLLECT3) Then Return
+				$t = Random(0, UBound($aCollectXY) - 1, 1) ; SC May 2017 update only need to pick one of each to collect all
+				If $g_bDebugSetlog Then SetDebugLog($sFileName & " found, random pick(" & $aCollectXY[$t][0] & "," & $aCollectXY[$t][1] & ")", $COLOR_GREEN)
+				If IsMainPage() Then Click($aCollectXY[$t][0], $aCollectXY[$t][1], 1, 0, "#0430")
+				
+				$aiLootPoint[0] = Number($aCollectXY[$t][0]) ; Magic items - AIO Team Mod++
+				$aiLootPoint[1] = Number($aCollectXY[$t][1]) ; Magic items - AIO Team Mod++
+				
+				If _Sleep($DELAYCOLLECT3) Then Return
 			EndIf
 		Next
 		
