@@ -5,7 +5,7 @@
 ; Parameters ....: None
 ; Return values .: None
 ; Author ........: Demen
-; Modified ......:
+; Modified ......: Boldina (Warning this is custom)!  (21/06/2021)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -288,17 +288,16 @@ Func CheckQuickTrainTroop()
 		Return False
 	EndIf
 
+	; search for EditQuickTrainIcon
+	Local $a_EditArmy[4] = [780, 293, 0xBDE98D, 10] ; * 108
+	Local $hPixelC = 0x000000
+		
 	For $i = 0 To UBound($g_bQuickTrainArmy) - 1 ; check all 3 army combo
 		If Not $g_bQuickTrainArmy[$i] Then ContinueLoop ; skip unchecked quick train army
 
-		; calculate search area for EditQuickTrainIcon
-		Local $sSearchArea = $aArmy1Location[0] & "," & ($aArmy1Location[1] + $iDistanceBetweenArmies*$i) & ",775," &  ($aArmy1Location[1] + $iDistanceBetweenArmies*($i+1))
-
-		; search for EditQuickTrainIcon
-		Local $aiEditButton = decodeSingleCoord(findImage("EditQuickTrain", $avEditQuickTrainIcon[1], GetDiamondFromRect($sSearchArea), 1, True, Default))
-
-		If IsArray($aiEditButton) And UBound($aiEditButton, 1) >= 2 Then
-			ClickP($aiEditButton)
+		$hPixelC = _GetPixelColor($a_EditArmy[0], $a_EditArmy[1] + (108 * $i), True)
+		If _ColorCheck($hPixelC, Hex($a_EditArmy[2], 6), $a_EditArmy[3]) Then
+			Click($a_EditArmy[0], $a_EditArmy[1] + (108 * $i), 1)
 			If _Sleep(1000) Then Return
 
 			Local $TempTroopTotal = 0, $TempSpellTotal = 0, $TempSiegeTotal = 0
@@ -491,9 +490,7 @@ Func CreateQuickTrainPreset($i)
 					If _Sleep(1500) Then Return
 					$iArmyPage = 1
 				EndIf
-				Local $sFilter = String($g_asTroopShortNames[$iIndex]) & "*"
-				Local $asImageToUse = _FileListToArray($g_sImgTrainTroops, $sFilter, $FLTA_FILES, True)
-				Local $aTrainPos = GetVariable($asImageToUse[1], $iIndex)
+				Local $aTrainPos = GetTrainPos($iIndex)
 				If IsArray($aTrainPos) And $aTrainPos[0] <> -1 Then
 					SetLog("Adding " & $g_aiQuickTroopQty[$i][$j] & "x " & $g_asTroopNames[$iIndex], $COLOR_SUCCESS)
 					ClickP($aTrainPos, $g_aiQuickTroopQty[$i][$j], $g_iTrainClickDelay, "QTrain")
@@ -515,9 +512,7 @@ Func CreateQuickTrainPreset($i)
 					;If _Sleep(1500) Then Return
 					$iArmyPage = 2
 				EndIf
-				Local $sFilter = String($g_asSpellShortNames[$iIndex]) & "*"
-				Local $asImageToUse = _FileListToArray($g_sImgTrainSpells, $sFilter, $FLTA_FILES, True)
-				Local $aTrainPos = GetVariable($asImageToUse[1], $iIndex + $eLSpell)
+				Local $aTrainPos = GetTrainPos($iIndex)
 				If IsArray($aTrainPos) And $aTrainPos[0] <> -1 Then
 					SetLog("Adding " & $g_aiQuickSpellQty[$i][$j] & "x " & $g_asSpellNames[$iIndex], $COLOR_SUCCESS)
 					ClickP($aTrainPos, $g_aiQuickSpellQty[$i][$j], $g_iTrainClickDelay, "QTrain")
