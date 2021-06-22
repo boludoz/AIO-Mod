@@ -18,7 +18,7 @@
 Func BuildingInfo($iXstart, $iYstart)
 
 	Local $aResult[3] = ["", "", ""]
-	Local $sBldgText, $sStr
+	Local $sBldgText
 
 	$sBldgText = getNameBuilding($iXstart, $iYstart) ; Get Unit name and level with OCR
 	If $sBldgText = "" Then ; try a 2nd time after a short delay if slow PC
@@ -31,20 +31,31 @@ Func BuildingInfo($iXstart, $iYstart)
 	If StringIsSpace($sBldgText) Then 
 		Return $aResult
 	EndIf
-
-	$sBldgText = StringStripWS($sBldgText, 7) 
 	
+	$sBldgText = StringStripWS($sBldgText, 7) 
 	$aResult[2] = OnlyNumbersInString($sBldgText)
-	$sStr = StringSplit($sBldgText, "(", $STR_NOCOUNT)
-	If @error Then 
-		$aResult[1] = $sBldgText
+	
+	Local $sStr = StringSplit($sBldgText, "(")
+	If Not @error Then
+		$aResult[1] = String($sStr[1])
+		$aResult[2] = ($aResult[2] = 0) ? ("Broken") : ($aResult[2])
 	Else
-		$aResult[1] = ($aResult[2] = 0) ? ("Broken") : ($sStr[0])
+		$aResult[1] = $sBldgText
+		$aResult[2] = 0
+		If StringInStr($sBldgText, "Cart") Then $aResult[2] = 100
+		If StringInStr($sBldgText, "Tree") Then $aResult[2] = 99
+		If StringInStr($sBldgText, "Mush") Then $aResult[2] = 98
+		If StringInStr($sBldgText, "Trunk") Then $aResult[2] = 97
+		If StringInStr($sBldgText, "Bush") Then $aResult[2] = 96
+		If StringInStr($sBldgText, "Bark") Then $aResult[2] = 95
+		If StringInStr($sBldgText, "Gem") Then $aResult[2] = 94
 	EndIf
+	
+	$aResult[1] = String(StringStripWS($aResult[1], $STR_STRIPSPACES + $STR_STRIPTRAILING + $STR_STRIPLEADING))
 	
 	If $aResult[1] <> "" Then $aResult[0] = 1
 	If $aResult[2] <> "" Then $aResult[0] += 1
-	$aResult[1] = String(StringStripWS($aResult[1], $STR_STRIPSPACES + $STR_STRIPTRAILING + $STR_STRIPLEADING))
+	
 	Return $aResult
 EndFunc   ;==>BuildingInfo
 

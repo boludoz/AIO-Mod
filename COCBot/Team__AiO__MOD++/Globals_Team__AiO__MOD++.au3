@@ -12,7 +12,7 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-
+ 
 Global $DiamondMiddleX 
 Global $DiamondMiddleY 
 

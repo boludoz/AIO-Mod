@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 #Region - Custom Yard - Team AIO Mod++
-Func CleanBBYard()
+Func CleanBBYard() 
 	If Not $g_bRunState Then Return
 
 	; Early exist if noting to do

@@ -81,12 +81,12 @@ Func BuilderBaseUpgradeMachine($bTestRun = False)
 					Click($aMachinePosition[$i][1], $aMachinePosition[$i][2], 1, 0, "#9010")
 					$aResult = BuildingInfo(242, 490 + $g_iBottomOffsetY)
 					$sEvaluateUpgrade = String($aResult[1])
-					If $sEvaluateUpgrade = "Battle Machine" Then ExitLoop
+					If StringIsSpace($sEvaluateUpgrade) = 0 Then ExitLoop
 					If RandomSleep(1000) Then Return
 					ClickAway()
 				Next
 				
-				If $sEvaluateUpgrade = "Battle Machine" Then
+				If StringIsSpace($sEvaluateUpgrade) = 0 Then
 				
 					SetDebugLog("Machine Found: " & _ArrayToString($aMachinePosition))
 				

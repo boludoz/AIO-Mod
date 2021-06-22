@@ -286,7 +286,7 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False)
 	If $sUpgButtom = "Elixir" Then $sUpgButtom = $g_sImgAutoUpgradeBtnElixir
 	If $sUpgButtom = "Gold" Then $sUpgButtom = $g_sImgAutoUpgradeBtnGold
 
-	If QuickMIS("BC1", $g_sImgAutoUpgradeBtnDir, 300, 650, 600, 720, True, $Debug) Then
+	If QuickMIS("BC1", $g_sImgAutoUpgradeBtnDir, 182, 565, 685, 723, True, $Debug) Then
 		$g_aBBUpgradeNameLevel = BuildingInfo(245, 490 + $g_iBottomOffsetY)
 		If $g_aBBUpgradeNameLevel[0] = 2 Then
 			SetLog("Building: " & $g_aBBUpgradeNameLevel[1], $COLOR_INFO)
