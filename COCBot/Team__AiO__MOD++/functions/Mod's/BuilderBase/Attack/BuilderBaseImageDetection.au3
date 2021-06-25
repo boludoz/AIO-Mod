@@ -878,14 +878,17 @@ Func BuilderBaseBuildingsOnEdge($g_aDeployPoints)
 
 EndFunc   ;==>BuilderBaseBuildingsOnEdge
 
-Func InDiamondBB($iX, $iY, $aBuilderBaseOuterPolygon, $bDebug = False)
-	Local $bReturn = False
-	If Not IsArray($aBuilderBaseOuterPolygon) Then Return True
-	If (Int($iY) < 573) Then
-		Local $aMiddle[2] = [(($aBuilderBaseOuterPolygon[5][0] + $aBuilderBaseOuterPolygon[2][0])) / 2, ($aBuilderBaseOuterPolygon[1][1] + $aBuilderBaseOuterPolygon[3][1] + 55) / 2]
-		Local $aSize[2] = [$aMiddle[0] - $aBuilderBaseOuterPolygon[5][0], $aMiddle[1] - $aBuilderBaseOuterPolygon[1][1]]
-		$bReturn = ((Abs(Int($iX) - $aMiddle[0]) / $aSize[0] + Abs(Int($iY) - $aMiddle[1]) / $aSize[1]) <= 1) ? (True) : (False)
-	EndIf
-	If $bDebug Or $g_bDebugAndroid Then SetLog("InDiamondBB | Is in diamond? " & $bReturn & "X = " & Int($iX) & "Y = " & Int($iY), $COLOR_DEBUG)
-	Return $bReturn
-EndFunc
+Func InDiamondBB($iX, $iY, $aBigArray, $bAttack = True)
+    If IsUnsafeDP($iX, $iY, ($bAttack = True)) = False And IsArray($aBigArray) Then 
+        Return _IsPointInPoly($iX, $iY, $aBigArray)
+    EndIf
+    
+    Return False
+EndFunc   ;==>InDiamondBB
+
+Func IsUnsafeDP($iX, $iY, $bAttack = True)
+    If $bAttack = True And $iY > 630 Or ($iX < 453 And $iY > 572) Then 
+        Return True
+    EndIf
+    Return False
+EndFunc   ;==>SafeDP

@@ -43,11 +43,13 @@ Func CheckVersion()
 				SetLog("Chief! There's also a newer Official version", $COLOR_INFO)
 			EndIf
 			Local $ChangelogTXT = GetLastChangeLog($Temp)
-			Local $Changelog = StringSplit($ChangelogTXT[0], '\r\n', $STR_ENTIRESPLIT + $STR_NOCOUNT)
-			For $i = 0 To UBound($Changelog) - 1
-				SetLog($Changelog[$i] )
-			Next
-			PushMsg("Update")
+			If UBound($ChangelogTXT) > 0 And not @error Then
+				Local $Changelog = StringSplit($ChangelogTXT[0], '\r\n', $STR_ENTIRESPLIT + $STR_NOCOUNT)
+				For $i = 0 To UBound($Changelog) - 1
+					SetLog($Changelog[$i] )
+				Next
+				PushMsg("Update")
+			EndIf
 		ElseIf _VersionCompare($g_iBotVersionN, $g_sBotGitVersion) = 0 Then
 			SetLog("WELCOME CHIEF, YOU HAVE THE LATEST MYBOT VERSION", $COLOR_SUCCESS)
 		Else

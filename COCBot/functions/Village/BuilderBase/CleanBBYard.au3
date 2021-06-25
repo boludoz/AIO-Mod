@@ -28,7 +28,10 @@ Func CleanBBYard()
 		Local $hObstaclesTimer = __TimerInit()
 
 		ZoomBuilderBaseMecanics(False)
-
+		
+		Local $aInternal, $aExternal
+		PrintBBPoly($aInternal, $aExternal)
+		
 		; Get Builders available
 		If Not getBuilderCount(False, $bBuilderBase) Then Return
 		If $g_aiCurrentLootBB[$eLootElixirBB] = 0 Then BuilderBaseReport()
@@ -49,7 +52,7 @@ Func CleanBBYard()
 					If $g_bDebugSetlog Then SetDebugLog($aCleanYardBBNXY[$i][0] & " found at (" & $aCleanYardBBNXY[$i][1] & "," & $aCleanYardBBNXY[$i][2] & ")", $COLOR_SUCCESS)
 					If SecureClick($aCleanYardBBNXY[$i][1], $aCleanYardBBNXY[$i][2]) = False Then ContinueLoop
 					; $g_bEdgeObstacle
-					$aPoly = ($g_bEdgeObstacle = False) ? ($g_aBuilderBaseAttackPolygon) : ($g_aBuilderBaseOuterPolygon)
+					$aPoly = ($g_bEdgeObstacle = False) ? ($aInternal) : ($aExternal)
 					If InDiamondBB($aCleanYardBBNXY[$i][1], $aCleanYardBBNXY[$i][2], $aPoly) = False Then ContinueLoop
 					If IsMainPageBuilderBase() Then Click($aCleanYardBBNXY[$i][1], $aCleanYardBBNXY[$i][2], 1, 0, "#0430")
 					If _Sleep($DELAYCOLLECT3) Then Return
@@ -107,4 +110,63 @@ Func CleanBBYard()
 
 	FuncReturn()
 EndFunc   ;==>CleanBBYard
+
+Func PrintBBPoly(ByRef $aInternal, ByRef $aExternal)
+
+	Local $iSize = Floor(Pixel_Distance($g_aVillageSize[4], $g_aVillageSize[5], $g_aVillageSize[7], $g_aVillageSize[8]))
+	
+	; Fix ship coord
+	Local $x = $g_aVillageSize[7] + Floor((590 * 14) / $iSize)
+	Local $y = $g_aVillageSize[8]
+
+	; ZoomFactor
+	Local $iCorrectSizeLR = Floor(($iSize - 590) / 2)
+	Local $iCorrectSizeT = Floor(($iSize - 590) / 4)
+	Local $iCorrectSizeB = ($iSize - 590)
+	
+	Local $iFixA = Floor((590 * 6) / $iSize)
+	Local $iFixE = Floor((590 * 25) / $iSize)
+	
+	; Polygon Points
+	Local $iTop[2], $iRight[2], $iBottom[2], $iLeft[2]
+	
+	; BuilderBaseAttackDiamond
+	$iTop[0] = $x - (180 + $iCorrectSizeT)
+	$iTop[1] = $y + $iFixA
+
+	$iRight[0] = $x + (160 + $iCorrectSizeLR)
+	$iRight[1] = $y + (260 + $iCorrectSizeLR)
+
+	$iLeft[0] = $x - (515 + $iCorrectSizeB)
+	$iLeft[1] = $y + (260 + $iCorrectSizeLR)
+
+	$iBottom[0] = $x - (180 + $iCorrectSizeT)
+	$iBottom[1] = $y + (515 + $iCorrectSizeB) - $iFixA
+
+	;This Format is for _IsPointInPoly function
+	Local $aTmpBuilderBaseAttackPolygon[7][2] = [[5, -1], [$iTop[0], $iTop[1]], [$iRight[0], $iRight[1]], [$iBottom[0], $iBottom[1]], [$iBottom[0], $iBottom[1]], [$iLeft[0], $iLeft[1]], [$iTop[0], $iTop[1]]] ; Make Polygon From Points
+	$aInternal = $aTmpBuilderBaseAttackPolygon
+	SetDebugLog("Builder Base Attack Polygon : " & _ArrayToString($aTmpBuilderBaseAttackPolygon))
+	
+	; BuilderBaseAttackOuterDiamond
+	$iTop[0] = $x - (180 + $iCorrectSizeT)
+	$iTop[1] = $y - $iFixE
+
+	$iRight[0] = $x + (205 + $iCorrectSizeLR)
+	$iRight[1] = $y + (260 + $iCorrectSizeLR)
+
+	$iLeft[0] = $x - (560 + $iCorrectSizeB)
+	$iLeft[1] = $y + (260 + $iCorrectSizeLR)
+
+	$iBottom[0] = $x - (180 + $iCorrectSizeT)
+	$iBottom[1] = $y + (515 + $iCorrectSizeB) + $iFixE
+	
+	;This Format is for _IsPointInPoly function
+	Local $aTmpBuilderBaseOuterPolygon[7][2] = [[5, -1], [$iTop[0], $iTop[1]], [$iRight[0], $iRight[1]], [$iBottom[0], $iBottom[1]], [$iBottom[0], $iBottom[1]], [$iLeft[0], $iLeft[1]], [$iTop[0], $iTop[1]]] ; Make Polygon From Points
+	$aExternal = $aTmpBuilderBaseOuterPolygon
+	SetDebugLog("Builder Base Outer Polygon : " & _ArrayToString($aTmpBuilderBaseOuterPolygon))
+	
+	Return $iSize
+EndFunc   ;==>PrintBBPoly
+
 #EndRegion - Custom Yard - Team AIO Mod++
