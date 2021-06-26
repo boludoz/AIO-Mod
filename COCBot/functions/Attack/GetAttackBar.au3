@@ -149,11 +149,16 @@ Func GetAttackBar($bRemaining = False, $pMatchMode = $DB, $bDebug = False)
 					$aAttackBar[$i][4] = Number(getTroopCountSmall(Number($aAttackBar[$i][5]), Number($aAttackBar[$i][6])))
 					If $aAttackBar[$i][4] = 0 Then $aAttackBar[$i][4] = Number(getTroopCountBig(Number($aAttackBar[$i][5]), Number($aAttackBar[$i][6] - 2)))
 				EndIf
-				If StringRegExp($aAttackBar[$i][0], "(LSpell)|(ESpell)", 0) And $g_bSmartZapEnable Then
-					Local $iSpellLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 20, 704))
-					If StringInStr($aAttackBar[$i][0], "LSpell") <> 0 And $iSpellLevel > 0 Then $g_iLSpellLevel = $iSpellLevel
-					If StringInStr($aAttackBar[$i][0], "ESpell") <> 0 And $iSpellLevel > 0 Then $g_iESpellLevel = $iSpellLevel
-				EndIf
+				If StringRegExp($aAttackBar[$i][0], "(LSpell)", 0) And $g_bSmartZapEnable Then
+					Local $iLSpellLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 20, 704))
+					SetDebugLog("$iLSpellLevel:" & $iLSpellLevel)
+					If $iLSpellLevel > 0 And $iLSpellLevel <= 9 Then $g_iLSpellLevel = $iLSpellLevel
+				ElseIf StringRegExp($aAttackBar[$i][0], "(ESpell)", 0) And $g_bEarthQuakeZap Then
+					Local $iESpellLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 20, 704))
+					SetDebugLog("$iESpellLevel:" & $iESpellLevel)
+					If $iESpellLevel > 0 And $iESpellLevel <= 5 Then $g_iESpellLevel = $iESpellLevel
+ 				EndIf
+				; Custom Smart Farm - Team AIO Mod++
 				If StringRegExp($aAttackBar[$i][0], "(RSpell)|(HSpell)", 0) > 0 And $g_bSmartFarmSpellsEnable Then
 					Local $iSpellLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 20, 704))
 					If StringInStr($aAttackBar[$i][0], "RSpell") <> 0 And $iSpellLevel > 0 Then $g_iRSpellLevel = $iSpellLevel
@@ -299,11 +304,16 @@ Func ExtendedAttackBarCheck($aAttackBarFirstSearch, $bRemaining, $sSearchDiamond
 					$aAttackBar[$i][4] = Number(getTroopCountSmall(Number($aAttackBar[$i][5]), Number($aAttackBar[$i][6])))
 					If $aAttackBar[$i][4] = 0 Then $aAttackBar[$i][4] = Number(getTroopCountBig(Number($aAttackBar[$i][5]), Number($aAttackBar[$i][6] - 2)))
 				EndIf
-				If StringRegExp($aAttackBar[$i][0], "(LSpell)|(ESpell)", 0) And $g_bSmartZapEnable Then
-					Local $iSpellLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 20, 704))
-					If StringInStr($aAttackBar[$i][0], "LSpell") <> 0 And $iSpellLevel > 0 Then $g_iLSpellLevel = $iSpellLevel
-					If StringInStr($aAttackBar[$i][0], "ESpell") <> 0 And $iSpellLevel > 0 Then $g_iESpellLevel = $iSpellLevel
-				EndIf
+				If StringRegExp($aAttackBar[$i][0], "(LSpell)", 0) And $g_bSmartZapEnable Then
+					Local $iLSpellLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 20, 704))
+					SetDebugLog("$iLSpellLevel:" & $iLSpellLevel)
+					If $iLSpellLevel > 0 And $iLSpellLevel <= 9 Then $g_iLSpellLevel = $iLSpellLevel
+				ElseIf StringRegExp($aAttackBar[$i][0], "(ESpell)", 0) And $g_bEarthQuakeZap Then
+					Local $iESpellLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 20, 704))
+					SetDebugLog("$iESpellLevel:" & $iESpellLevel)
+					If $iESpellLevel > 0 And $iESpellLevel <= 5 Then $g_iESpellLevel = $iESpellLevel
+ 				EndIf
+				; Custom Smart Farm - Team AIO Mod++
 				If StringRegExp($aAttackBar[$i][0], "(RSpell)|(HSpell)", 0) > 0 And $g_bSmartFarmSpellsEnable Then
 					Local $iSpellLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 20, 704))
 					If StringInStr($aAttackBar[$i][0], "RSpell") <> 0 And $iSpellLevel > 0 Then $g_iRSpellLevel = $iSpellLevel

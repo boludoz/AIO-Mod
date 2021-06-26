@@ -6,17 +6,17 @@
 #pragma compile(Icon, "Images\MyBot.ico")
 #pragma compile(FileDescription, Clash of Clans Bot - A Free Clash of Clans bot - https://mybot.run)
 #pragma compile(ProductVersion, 7.9)
-#pragma compile(FileVersion, 7.9.3)
+#pragma compile(FileVersion, 7.9.4)
 #pragma compile(LegalCopyright, © https://mybot.run)
 #Au3Stripper_Off
 #Au3Stripper_On
 Opt("MustDeclareVars", 1)
-Global Const $tagPOINT = "struct;long X;long Y;endstruct"
-Global Const $tagGUID = "struct;ulong Data1;ushort Data2;ushort Data3;byte Data4[8];endstruct"
-Global Const $tagTEXTMETRIC = "long tmHeight;long tmAscent;long tmDescent;long tmInternalLeading;long tmExternalLeading;" & "long tmAveCharWidth;long tmMaxCharWidth;long tmWeight;long tmOverhang;long tmDigitizedAspectX;long tmDigitizedAspectY;" & "wchar tmFirstChar;wchar tmLastChar;wchar tmDefaultChar;wchar tmBreakChar;byte tmItalic;byte tmUnderlined;byte tmStruckOut;" & "byte tmPitchAndFamily;byte tmCharSet"
 Global Const $UBOUND_DIMENSIONS = 0
 Global Const $UBOUND_ROWS = 1
 Global Const $UBOUND_COLUMNS = 2
+Global Const $tagPOINT = "struct;long X;long Y;endstruct"
+Global Const $tagGUID = "struct;ulong Data1;ushort Data2;ushort Data3;byte Data4[8];endstruct"
+Global Const $tagTEXTMETRIC = "long tmHeight;long tmAscent;long tmDescent;long tmInternalLeading;long tmExternalLeading;" & "long tmAveCharWidth;long tmMaxCharWidth;long tmWeight;long tmOverhang;long tmDigitizedAspectX;long tmDigitizedAspectY;" & "wchar tmFirstChar;wchar tmLastChar;wchar tmDefaultChar;wchar tmBreakChar;byte tmItalic;byte tmUnderlined;byte tmStruckOut;" & "byte tmPitchAndFamily;byte tmCharSet"
 Global Const $HGDI_ERROR = Ptr(-1)
 Global Const $INVALID_HANDLE_VALUE = Ptr(-1)
 Global Const $KF_EXTENDED = 0x0100
@@ -28,55 +28,6 @@ Global Const $LLKHF_UP = BitShift($KF_UP, 8)
 Global Const $__DLG_WM_USER = 0x400
 Global Const $tagNOTIFYICONDATA = 'struct;dword Size;hwnd hWnd;uint ID;uint Flags;uint CallbackMessage;ptr hIcon;wchar Tip[128];dword State;dword StateMask;wchar Info[256];uint Version;wchar InfoTitle[64];dword InfoFlags;endstruct'
 Global $g_sWmiTestApi = ""
-Global Const $_ARRAYCONSTANT_SORTINFOSIZE = 11
-Global $__g_aArrayDisplay_SortInfo[$_ARRAYCONSTANT_SORTINFOSIZE]
-Global Const $_ARRAYCONSTANT_tagLVITEM = "struct;uint Mask;int Item;int SubItem;uint State;uint StateMask;ptr Text;int TextMax;int Image;lparam Param;" & "int Indent;int GroupID;uint Columns;ptr pColumns;ptr piColFmt;int iGroup;endstruct"
-#Au3Stripper_Ignore_Funcs=__ArrayDisplay_SortCallBack
-Func __ArrayDisplay_SortCallBack($nItem1, $nItem2, $hWnd)
-If $__g_aArrayDisplay_SortInfo[3] = $__g_aArrayDisplay_SortInfo[4] Then
-If Not $__g_aArrayDisplay_SortInfo[7] Then
-$__g_aArrayDisplay_SortInfo[5] *= -1
-$__g_aArrayDisplay_SortInfo[7] = 1
-EndIf
-Else
-$__g_aArrayDisplay_SortInfo[7] = 1
-EndIf
-$__g_aArrayDisplay_SortInfo[6] = $__g_aArrayDisplay_SortInfo[3]
-Local $sVal1 = __ArrayDisplay_GetItemText($hWnd, $nItem1, $__g_aArrayDisplay_SortInfo[3])
-Local $sVal2 = __ArrayDisplay_GetItemText($hWnd, $nItem2, $__g_aArrayDisplay_SortInfo[3])
-If $__g_aArrayDisplay_SortInfo[8] = 1 Then
-If(StringIsFloat($sVal1) Or StringIsInt($sVal1)) Then $sVal1 = Number($sVal1)
-If(StringIsFloat($sVal2) Or StringIsInt($sVal2)) Then $sVal2 = Number($sVal2)
-EndIf
-Local $nResult
-If $__g_aArrayDisplay_SortInfo[8] < 2 Then
-$nResult = 0
-If $sVal1 < $sVal2 Then
-$nResult = -1
-ElseIf $sVal1 > $sVal2 Then
-$nResult = 1
-EndIf
-Else
-$nResult = DllCall('shlwapi.dll', 'int', 'StrCmpLogicalW', 'wstr', $sVal1, 'wstr', $sVal2)[0]
-EndIf
-$nResult = $nResult * $__g_aArrayDisplay_SortInfo[5]
-Return $nResult
-EndFunc
-Func __ArrayDisplay_GetItemText($hWnd, $iIndex, $iSubItem = 0)
-Local $tBuffer = DllStructCreate("wchar Text[4096]")
-Local $pBuffer = DllStructGetPtr($tBuffer)
-Local $tItem = DllStructCreate($_ARRAYCONSTANT_tagLVITEM)
-DllStructSetData($tItem, "SubItem", $iSubItem)
-DllStructSetData($tItem, "TextMax", 4096)
-DllStructSetData($tItem, "Text", $pBuffer)
-If IsHWnd($hWnd) Then
-DllCall("user32.dll", "lresult", "SendMessageW", "hwnd", $hWnd, "uint", 0x1073, "wparam", $iIndex, "struct*", $tItem)
-Else
-Local $pItem = DllStructGetPtr($tItem)
-GUICtrlSendMsg($hWnd, 0x1073, $iIndex, $pItem)
-EndIf
-Return DllStructGetData($tBuffer, "Text")
-EndFunc
 Func _ArrayToString(Const ByRef $aArray, $sDelim_Col = "|", $iStart_Row = -1, $iEnd_Row = -1, $sDelim_Row = @CRLF, $iStart_Col = -1, $iEnd_Col = -1)
 If $sDelim_Col = Default Then $sDelim_Col = "|"
 If $sDelim_Row = Default Then $sDelim_Row = @CRLF
@@ -86,6 +37,7 @@ If $iStart_Col = Default Then $iStart_Col = -1
 If $iEnd_Col = Default Then $iEnd_Col = -1
 If Not IsArray($aArray) Then Return SetError(1, 0, -1)
 Local $iDim_1 = UBound($aArray, $UBOUND_ROWS) - 1
+If $iDim_1 = -1 Then Return ""
 If $iStart_Row = -1 Then $iStart_Row = 0
 If $iEnd_Row = -1 Then $iEnd_Row = $iDim_1
 If $iStart_Row < -1 Or $iEnd_Row < -1 Then Return SetError(3, 0, -1)
@@ -100,6 +52,7 @@ Next
 Return StringTrimRight($sRet, StringLen($sDelim_Col))
 Case 2
 Local $iDim_2 = UBound($aArray, $UBOUND_COLUMNS) - 1
+If $iDim_2 = -1 Then Return ""
 If $iStart_Col = -1 Then $iStart_Col = 0
 If $iEnd_Col = -1 Then $iEnd_Col = $iDim_2
 If $iStart_Col < -1 Or $iEnd_Col < -1 Then Return SetError(5, 0, -1)

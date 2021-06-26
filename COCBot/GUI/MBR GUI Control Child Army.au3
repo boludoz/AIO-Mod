@@ -139,9 +139,9 @@ Func lblTotalCountTroop1()
 	GUICtrlSetData($g_hLblCountTotal, String($TotalTroopsToTrain))
 
 	If GUICtrlRead($g_hChkTotalCampForced) = $GUI_CHECKED And GUICtrlRead($g_hLblCountTotal) = GUICtrlRead($g_hTxtTotalCampForced) Then
-		GUICtrlSetBkColor($g_hLblCountTotal, 0xD1DFE7)
+		GUICtrlSetBkColor($g_hLblCountTotal, $COLOR_MONEYGREEN)
 	ElseIf GUICtrlRead($g_hLblCountTotal) = $ArmyCampTemp Then
-		GUICtrlSetBkColor($g_hLblCountTotal, 0xD1DFE7)
+		GUICtrlSetBkColor($g_hLblCountTotal, $COLOR_MONEYGREEN)
 	ElseIf GUICtrlRead($g_hLblCountTotal) > $ArmyCampTemp / 2 And GUICtrlRead($g_hLblCountTotal) < $ArmyCampTemp Then
 		GUICtrlSetBkColor($g_hLblCountTotal, $COLOR_ORANGE)
 	Else
@@ -174,7 +174,7 @@ Func lblTotalCountTroop2()
     Local $NbrOfBarrack = 4 ; Elixir Barrack
 
 	For $i = $eTroopBarbarian To $eTroopHeadhunter
-		If $i > $eTroopYeti Then $NbrOfBarrack = 2 ; Dark Elixir Barrack
+		If $i > $eTroopDragonRider Then $NbrOfBarrack = 2 ; Dark Elixir Barrack
 		Local $NbrOfTroop = GUICtrlRead($g_ahTxtTrainArmyTroopCount[$i])
 		If $NbrOfTroop > 0 Then
 			$TotalTotalTimeTroop += $NbrOfTroop * ($g_aiTroopTrainTime[$i] / $NbrOfBarrack)
@@ -196,22 +196,13 @@ Func lblTotalCountSpell2()
 		$g_iTotalTrainSpaceSpell += $g_aiArmyCustomSpells[$i] * $g_aiSpellSpace[$i]
 		$iTotalTotalTimeSpell += $g_aiArmyCustomSpells[$i] * $g_aiSpellTrainTime[$i]
 	Next
-#cs
+
 	For $i = 0 To $eSpellCount - 1
 		GUICtrlSetBkColor($g_ahTxtTrainArmySpellCount[$i], $g_iTotalTrainSpaceSpell <= GUICtrlRead($g_hTxtTotalCountSpell) ? $COLOR_WHITE : $COLOR_RED)
 	Next
-#ce
+
 	GUICtrlSetData($g_hLblTotalTimeSpell, CalculTimeTo($iTotalTotalTimeSpell))
 
-	; Fix - Team AIO Mod++
-	GUICtrlSetData($g_hLblCountTotalSpell, $g_iTotalTrainSpaceSpell)
-	If $g_iTotalTrainSpaceSpell < GUICtrlRead($g_hTxtTotalCountSpell) Then
-		GUICtrlSetBkColor($g_hLblCountTotalSpell, $COLOR_ORANGE)
-	ElseIf $g_iTotalTrainSpaceSpell > GUICtrlRead($g_hTxtTotalCountSpell) Then
-		GUICtrlSetBkColor($g_hLblCountTotalSpell, $COLOR_RED)
-	ElseIf $g_iTotalTrainSpaceSpell = GUICtrlRead($g_hTxtTotalCountSpell) Then
-		GUICtrlSetBkColor($g_hLblCountTotalSpell, 0xD1DFE7)
-	EndIf
 
 	CalCostSpell()
 EndFunc   ;==>lblTotalCountSpell2
@@ -229,7 +220,7 @@ Func lblTotalCountSiege()
 
 	GUICtrlSetData($g_hLblTotalTimeSiege, CalculTimeTo($iTotalTotalTimeSiege))
 	GUICtrlSetData($g_hLblCountTotalSiege, $g_iTotalTrainSpaceSiege)
-	GUICtrlSetBkColor($g_hLblCountTotalSiege, $g_iTotalTrainSpaceSiege <= 3 ? 0xD1DFE7 : $COLOR_RED)
+	GUICtrlSetBkColor($g_hLblCountTotalSiege, $g_iTotalTrainSpaceSiege <= 3 ? $COLOR_MONEYGREEN : $COLOR_RED)
 
 	CalCostSiege()
 	; prepared for some new TH level !!
@@ -555,10 +546,10 @@ EndFunc   ;==>GUITrainOrder
 Func BtnRemoveTroops()
 	Local $bWasRedraw = SetRedrawBotWindow(False, Default, Default, Default, "BtnRemoveTroops")
 	Local $sComboData = ""
-		For $j = 0 To UBound($g_asTroopOrderList) - 1
-			$sComboData &= $g_asTroopOrderList[$j] & "|"
-		Next
-	For $i = $eTroopBarbarian To $eTroopCount -1
+	For $j = 0 To UBound($g_asTroopOrderList) - 1
+		$sComboData &= $g_asTroopOrderList[$j] & "|"
+	Next
+	For $i = $eTroopBarbarian To $eTroopCount - 1
 		$g_aiCmbCustomTrainOrder[$i] = -1
 		_GUICtrlComboBox_ResetContent($g_ahCmbTroopOrder[$i])
 		GUICtrlSetData($g_ahCmbTroopOrder[$i], $sComboData, "")
@@ -664,8 +655,8 @@ Func BtnTroopOrderSet()
 	Local $bMissingTroop = False ; flag for when troops are not assigned by user
 	Local $aiUsedTroop[$eTroopCount] = [ _
 			$eTroopBarbarian, $eTroopSuperBarbarian, $eTroopArcher, $eTroopSuperArcher, $eTroopGiant, $eTroopSuperGiant, $eTroopGoblin, $eTroopSneakyGoblin, $eTroopWallBreaker, _
-			$eTroopSuperWallBreaker, $eTroopBalloon, $eTroopWizard, $eTroopSuperWizard, $eTroopHealer, $eTroopDragon, $eTroopPekka, $eTroopBabyDragon, $eTroopInfernoDragon, $eTroopMiner, _
-			$eTroopElectroDragon, $eTroopYeti, $eTroopMinion, $eTroopSuperMinion, $eTroopHogRider, $eTroopValkyrie, $eTroopSuperValkyrie, $eTroopGolem, $eTroopWitch, $eTroopSuperWitch, _
+			$eTroopSuperWallBreaker, $eTroopBalloon, $eTroopRocketBalloon, $eTroopWizard, $eTroopSuperWizard, $eTroopHealer, $eTroopDragon, $eTroopPekka, $eTroopBabyDragon, $eTroopInfernoDragon, $eTroopMiner, _
+			$eTroopElectroDragon, $eTroopYeti, $eTroopDragonRider, $eTroopMinion, $eTroopSuperMinion, $eTroopHogRider, $eTroopValkyrie, $eTroopSuperValkyrie, $eTroopGolem, $eTroopWitch, $eTroopSuperWitch, _
 			$eTroopLavaHound, $eTroopIceHound, $eTroopBowler, $eTroopIceGolem, $eTroopHeadhunter]
 
 	; check for duplicate combobox index and take action
@@ -961,7 +952,7 @@ Func TrainTroopLevelClick()
 
 	If $iTroop = -1 Then Return
 
-	While _IsPressed("01") ; Custom fix - Team AIO Mod++
+	While _IsPressed(01)
 		LevUpDownTroop($iTroop)
 		Sleep($DELAYLVUP)
 		lblTotalCountTroop2()
@@ -981,7 +972,7 @@ Func TrainSiegeLevelClick()
 
 	If $iSiege = -1 Then Return
 
-	While _IsPressed("01") ; Custom fix - Team AIO Mod++
+	While _IsPressed(01)
 		LevUpDownSiege($iSiege)
 		Sleep($DELAYLVUP)
 		lblTotalCountSiege()
@@ -1001,7 +992,7 @@ Func TrainSpellLevelClick()
 
 	If $iSpell = -1 Then Return
 
-	While _IsPressed("01") ; Custom fix - Team AIO Mod++
+	While _IsPressed(01)
 		LevUpDownSpell($iSpell)
 		Sleep($DELAYLVUP)
 		lblTotalCountSpell2()
@@ -1011,7 +1002,7 @@ EndFunc   ;==>TrainSpellLevelClick
 Func CalCostCamp()
 	Local $iElixirCostCamp = 0, $iDarkCostCamp = 0, $indexLevel = 0
 
-	For $i = $eTroopBarbarian To $eTroopYeti
+	For $i = $eTroopBarbarian To $eTroopDragonRider
 		$indexLevel = $g_aiTrainArmyTroopLevel[$i] > 0 ? $g_aiTrainArmyTroopLevel[$i] : $g_aiTroopCostPerLevel[$i][0]
 		$iElixirCostCamp += $g_aiArmyCustomTroops[$i] * $g_aiTroopCostPerLevel[$i][$indexLevel]
 	Next
@@ -1208,7 +1199,7 @@ Func SelectTroop_QTEdit()
 		EndIf
 	Next
 	If $iTroop = -1 Then Return
-	While _IsPressed("01") ; Custom fix - Team AIO Mod++
+	While _IsPressed(01)
 		If Not AddTroop_QTEdit($iTroop) Then ExitLoop
 		TotalTroopCount_QTEdit()
 		Sleep(100)
@@ -1218,7 +1209,7 @@ EndFunc   ;==>SelectTroop_QTEdit
 Func AddTroop_QTEdit($iTroop)
 	Local $bOverSpace = False, $bOverSlot = False, $iTotalCampSpace=0
 
-	$iTotalCampSpace=Number(GUICtrlRead($g_hTxtTotalCampForced))
+   $iTotalCampSpace=Number(GUICtrlRead($g_hTxtTotalCampForced))
 
 	If $g_iQTEdit_TotalTroop + $g_aiTroopSpace[$iTroop] > $iTotalCampSpace Then $bOverSpace = True
 
@@ -1279,7 +1270,7 @@ Func RemoveTroop_QTEdit()
 		EndIf
 	Next
 	If $iSlot = -1 Then Return
-	While _IsPressed("01") ; Custom fix - Team AIO Mod++
+	While _IsPressed(01)
 		_RemoveTroop_QTEdit($iSlot)
 		TotalTroopCount_QTEdit()
 	WEnd
@@ -1326,7 +1317,7 @@ Func SelectSpell_QTEdit()
 		EndIf
 	Next
 	If $iSpell = -1 Then Return
-	While _IsPressed("01") ; Custom fix - Team AIO Mod++
+	While _IsPressed(01)
 		If Not AddSpell_QTEdit($iSpell) Then ExitLoop
 		TotalSpellCount_QTEdit()
 		Sleep(100)
@@ -1397,7 +1388,7 @@ Func RemoveSpell_QTEdit()
 		EndIf
 	Next
 	If $iSlot = -1 Then Return
-	While _IsPressed("01") ; Custom fix - Team AIO Mod++
+	While _IsPressed(01)
 		_RemoveSpell_QTEdit($iSlot)
 		TotalSpellCount_QTEdit()
 	WEnd
@@ -1505,9 +1496,9 @@ EndFunc   ;==>ApplyQuickTrainArmy
 Func TxtQTEdit_Troop()
 	Local $iTroop, $iQty, $iSpace, $iSlot, $iTotalCampSpace=0
 
-	$iTotalCampSpace=Number(GUICtrlRead($g_hTxtTotalCampForced))
+   $iTotalCampSpace=Number(GUICtrlRead($g_hTxtTotalCampForced))
 
-	For $j = 0 To 6
+   For $j = 0 To 6
 		If @GUI_CtrlId = $g_ahTxtQTEdit_Troop[$j] Then
 			$iTroop = $g_aiQTEdit_TroopType[$j]
 			$iQty = GUICtrlRead($g_ahTxtQTEdit_Troop[$j])
@@ -1523,7 +1514,7 @@ Func TxtQTEdit_Troop()
 	If $g_iQTEdit_TotalTroop > $iTotalCampSpace Then
 		Local $iSpaceLeft = $iTotalCampSpace - ($g_iQTEdit_TotalTroop - $iSpace)
 		Local $iMaxQtyLeft = Int($iSpaceLeft / $g_aiTroopSpace[$iTroop])
-		ToolTip("Your input of " & $iQty & "x " & $g_asTroopNames[$iTroop] & " makes total troops to exceed possible camp capacity (" & $iTotalCampSpace & ")." & @CRLF & "Automatically changing to: " & $iMaxQtyLeft & "x " & $g_asTroopNames[$iTroop])
+	    ToolTip("Your input of " & $iQty & "x " & $g_asTroopNames[$iTroop] & " makes total troops to exceed possible camp capacity (" & $iTotalCampSpace & ")." & @CRLF & "Automatically changing to: " & $iMaxQtyLeft & "x " & $g_asTroopNames[$iTroop])
 		Sleep(2000)
 		ToolTip('')
 		GUICtrlSetData($g_ahTxtQTEdit_Troop[$iSlot], $iMaxQtyLeft)

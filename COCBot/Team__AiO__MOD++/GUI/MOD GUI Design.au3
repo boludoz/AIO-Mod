@@ -185,16 +185,10 @@ Global $g_hDayTotalTroops = 0, $g_hDayTotalSpells = 0, $g_hDayTotalSieges = 0
 Global $g_hDayLimitTroops = 0, $g_hDayLimitSpells = 0, $g_hDayLimitSieges = 0
 
 Func CreateDonationsControlSubTab()
-	Local $aTroopsIcons[$eTroopCount] = [$eIcnBarbarian, $eIcnArcher, $eIcnGiant, $eIcnGoblin, $eIcnWallBreaker, $eIcnBalloon, _
-			$eIcnWizard, $eIcnHealer, $eIcnDragon, $eIcnPekka, $eIcnBabyDragon, $eIcnMiner, $eIcnElectroDragon, $eIcnYeti, $eIcnMinion, _
-			$eIcnHogRider, $eIcnValkyrie, $eIcnGolem, $eIcnWitch, $eIcnLavaHound, $eIcnBowler, $eIcnIceGolem, $eIcnHeadhunter]
 	Local $aSpellsIcons[$eSpellCount] = [$eIcnLightSpell, $eIcnHealSpell, $eIcnRageSpell, $eIcnJumpSpell, $eIcnFreezeSpell, _
 			$eIcnCloneSpell, $eIcnInvisibilitySpell, $eIcnPoisonSpell, $eIcnEarthQuakeSpell, $eIcnHasteSpell, $eIcnSkeletonSpell, $eIcnBatSpell]
 	Local $eSiegeMachineIcons[$eSiegeMachineCount] = [$eIcnWallW, $eIcnBattleB, $eIcnStoneS, $eIcnSiegeB, $eIcnLogL]
 	Local $g_ahTxtTrainWarTroopCount[$eTroopCount], $g_ahTxtTrainWarSpellCount[$eSpellCount], $g_ahTxtSiegeMachineCount[$eSiegeMachineCount]
-	Local $aTroopList[$eTroopCount] = [$eTroopBarbarian, $eTroopArcher, $eTroopGiant, $eTroopGoblin, $eTroopWallBreaker, $eTroopBalloon, _
-			$eTroopWizard, $eTroopHealer, $eTroopDragon, $eTroopPekka, $eTroopBabyDragon, $eTroopMiner, $eTroopElectroDragon, $eTroopYeti, $eTroopMinion, _
-			$eTroopHogRider, $eTroopValkyrie, $eTroopGolem, $eTroopWitch, $eTroopLavaHound, $eTroopBowler, $eTroopIceGolem, $eTroopHeadhunter]
 	Local $aSpellList[$eSpellCount] = [$eSpellLightning, $eSpellHeal, $eSpellRage, $eSpellJump, $eSpellFreeze, _
 			$eSpellClone, $eSpellInvisibility, $eSpellPoison, $eSpellEarthQuake, $eSpellHaste, $eSpellSkeleton, $eSpellBat]
 	Local $aSiegeList[$eSiegeMachineCount] = [$eSiegeBarracks, $eSiegeWallWrecker, $eSiegeBattleBlimp, $eSiegeStoneSlammer]
@@ -202,6 +196,8 @@ Func CreateDonationsControlSubTab()
 	Local $sTxtTip = ""
 	Local $xStart = 30, $yStart = 45
 	$g_hGUI_DonateLimiter = _GUICreate("", $g_iSizeWGrpTab3, $g_iSizeHGrpTab3, $xStart - 32, $yStart - 20, BitOR($WS_CHILD, $WS_TABSTOP), -1, $g_hGUI_DONATE)
+	GUISetBkColor($COLOR_WHITE, $g_hGUI_DonateLimiter)
+	
 	Local $xStart = 5, $yStart = 20
 	Local $x = $xStart, $y = $yStart
 
@@ -212,14 +208,15 @@ Func CreateDonationsControlSubTab()
 
 	$y += 35
 
-		For $i = 0 To UBound($aTroopList) - 1 ; Troops
-			If $i >= 14 Then $x = 25
-			_GUICtrlCreateIcon($g_sLibIconPath, $aTroopsIcons[$i], $x + Int($i / 2) * 33, $y + Mod($i, 2) * 60, 32, 32)
-			$g_hLblDayTroop[$aTroopList[$i]] = GUICtrlCreateLabel("0", $x + Int($i / 2) * 33 + 1, $y + Mod($i, 2) * 60 + 34, 30, 20, BitOR($ES_CENTER, $ES_NUMBER))
-				GUICtrlSetLimit(-1, 3)
+		For $i = 0 To UBound($g_aQuickTroopIcon) - 1
+			_GUICtrlCreateIcon($g_sLibIconPath, $g_aQuickTroopIcon[$i], ($x + Int($i / 3) * 25) + 50, $y + Mod($i, 3) * 50, 22, 22)
+			$g_hLblDayTroop[$i] = GUICtrlCreateLabel("0", ($x + Int($i / 3) * 25) + 50, $y + Mod($i, 3) * 50 + 25, 22, 20, BitOR($ES_CENTER, $ES_NUMBER))
+			_GUICtrlSetTip(-1, $g_asTroopNames[$i])
+			GUICtrlSetLimit(-1, 3)
 		Next
+		
 		$x = $xStart
-		$y += 115
+		$y += 145
 
 		GUICtrlCreateLabel("Limit ", $x, $y)
 		$g_hDayLimitTroops = _GUICtrlCreateInput("0", $x + 25, -1 , 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
@@ -227,16 +224,17 @@ Func CreateDonationsControlSubTab()
 
 		GUICtrlCreateLabel("per hours.   Total : ", $x + 60, -1)
 		$g_hDayTotalTroops = GUICtrlCreateLabel("0", $x + 150, -1)
-		$y += 35
-
+		$y += 30
+		
 		For $i = 0 To $eSpellCount - 1 ; Spells
-			If $i >= 6 Then $x = 25
-			_GUICtrlCreateIcon($g_sLibIconPath, $aSpellsIcons[$i], $x + $i * 37, $y, 32, 32)
-			$g_hLblDaySpell[$aSpellList[$i]] = GUICtrlCreateLabel("0", $x +  $i * 37, $y + 34, 30, 20, BitOR($ES_CENTER, $ES_NUMBER))
+			If $i >= 7 Then $x = 25
+			_GUICtrlCreateIcon($g_sLibIconPath, $g_aQuickSpellIcon[$i], $x + $i * 34, $y, 23, 23)
+			$g_hLblDaySpell[$i] = GUICtrlCreateLabel("0", $x +  $i * 34, $y + 25, 25, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 				GUICtrlSetLimit(-1, 3)
 		Next
+
 		$x = $xStart
-		$y += 50
+		$y += 45
 
 		GUICtrlCreateLabel("Limit ", $x, $y)
 		$g_hDayLimitSpells = _GUICtrlCreateInput("0", $x + 25, -1 , 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
@@ -244,15 +242,15 @@ Func CreateDonationsControlSubTab()
 
 		GUICtrlCreateLabel("per hours.   Total : ", $x + 60, -1)
 		$g_hDayTotalSpells = GUICtrlCreateLabel("0", $x + 150, -1)
-		$y += 35
+		$y += 30
 
 		For $i = 0 To $eSiegeMachineCount - 1 ; Siege Machine
-			_GUICtrlCreateIcon($g_sLibIconPath, $eSiegeMachineIcons[$i], $x + $i * 37, $y, 32, 32)
-			$g_hLblDaySiege[$aSiegeList[$i]] = GUICtrlCreateLabel("0", $x +  $i * 37, $y + 34, 30, 20, BitOR($ES_CENTER, $ES_NUMBER))
+			_GUICtrlCreateIcon($g_sLibIconPath, $eSiegeMachineIcons[$i], $x + $i * 34, $y, 23, 23)
+			$g_hLblDaySiege[$aSiegeList[$i]] = GUICtrlCreateLabel("0", $x +  $i * 34, $y + 25, 25, 20, BitOR($ES_CENTER, $ES_NUMBER))
 				GUICtrlSetLimit(-1, 3)
 		Next
 		$x = $xStart
-		$y += 50
+		$y += 45
 
 		GUICtrlCreateLabel("Limit ", $x, $y)
 		$g_hDayLimitSieges = _GUICtrlCreateInput("0", $x + 25, -1 , 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))

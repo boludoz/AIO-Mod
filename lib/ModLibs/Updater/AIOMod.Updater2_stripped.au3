@@ -201,12 +201,8 @@ Global Const $LOCALE_INVARIANT = 0x007F
 Global Const $LOCALE_USER_DEFAULT = 0x0400
 Func _WinAPI_GetDateFormat($iLCID = 0, $tSYSTEMTIME = 0, $iFlags = 0, $sFormat = '')
 If Not $iLCID Then $iLCID = 0x0400
-Local $sTypeOfFormat = 'wstr'
-If Not StringStripWS($sFormat, $STR_STRIPLEADING + $STR_STRIPTRAILING) Then
-$sTypeOfFormat = 'ptr'
-$sFormat = 0
-EndIf
-Local $aCall = DllCall('kernel32.dll', 'int', 'GetDateFormatW', 'dword', $iLCID, 'dword', $iFlags, 'struct*', $tSYSTEMTIME, $sTypeOfFormat, $sFormat, 'wstr', '', 'int', 2048)
+If Not StringStripWS($sFormat, $STR_STRIPLEADING + $STR_STRIPTRAILING) Then $sFormat = Null
+Local $aCall = DllCall('kernel32.dll', 'int', 'GetDateFormatW', 'dword', $iLCID, 'dword', $iFlags, 'struct*', $tSYSTEMTIME, 'wstr', $sFormat, 'wstr', '', 'int', 2048)
 If @error Or Not $aCall[0] Then Return SetError(@error, @extended, '')
 Return $aCall[5]
 EndFunc
@@ -246,6 +242,7 @@ EndFunc
 Func _DateIsValid($sDate)
 Local $asDatePart[4], $asTimePart[4]
 _DateTimeSplit($sDate, $asDatePart, $asTimePart)
+If @error Then Return 0
 If Not StringIsInt($asDatePart[1]) Then Return 0
 If Not StringIsInt($asDatePart[2]) Then Return 0
 If Not StringIsInt($asDatePart[3]) Then Return 0
@@ -388,27 +385,25 @@ $sTempDate = StringStripWS($sTempDate & " " & $sTempTime, $STR_STRIPLEADING + $S
 EndIf
 Return $sTempDate
 EndFunc
-Func _DateTimeSplit($sDate, ByRef $aDatePart, ByRef $iTimePart)
+Func _DateTimeSplit($sDate, ByRef $aDatePart, ByRef $aTimePart)
 Local $sDateTime = StringSplit($sDate, " T")
 If $sDateTime[0] > 0 Then $aDatePart = StringSplit($sDateTime[1], "/-.")
+Local $nFields = UBound($aDatePart)
+If $nFields <> 4 Then Return SetError(1, 0, 0)
 If $sDateTime[0] > 1 Then
-$iTimePart = StringSplit($sDateTime[2], ":")
-If UBound($iTimePart) < 4 Then ReDim $iTimePart[4]
-Else
-Dim $iTimePart[4]
+$aTimePart = StringSplit($sDateTime[2], ":")
+$nFields = UBound($aTimePart)
+If($nFields < 3) Or($nFields > 4) Then Return SetError(2, 0, 0)
+If $nFields < 4 Then
+ReDim $aTimePart[4]
+$aTimePart[3] = 0
 EndIf
-If UBound($aDatePart) < 4 Then ReDim $aDatePart[4]
+Else
+Dim $aTimePart[4]
+EndIf
 For $x = 1 To 3
-If StringIsInt($aDatePart[$x]) Then
 $aDatePart[$x] = Int($aDatePart[$x])
-Else
-$aDatePart[$x] = -1
-EndIf
-If StringIsInt($iTimePart[$x]) Then
-$iTimePart[$x] = Int($iTimePart[$x])
-Else
-$iTimePart[$x] = 0
-EndIf
+$aTimePart[$x] = Int($aTimePart[$x])
 Next
 Return 1
 EndFunc
@@ -434,60 +429,19 @@ Return _WinAPI_GetDateFormat(BitAND($iFormat, $DMW_LOCALE_LONGNAME) ? $LOCALE_US
 EndFunc
 Func _NowTime($sType = 3)
 If $sType < 3 Or $sType > 5 Then $sType = 3
-Return _DateTimeFormat(@YEAR & "/" & @MON & "/" & @MDAY & " " & @HOUR & ":" & @MIN & ":" & @SEC, $sType)
+Local $tLocalTime = _Date_Time_GetLocalTime()
+If @error Then Return SetError(@error, @extended, "")
+Return _DateTimeFormat($tLocalTime.Year & "/" & $tLocalTime.Month & "/" & $tLocalTime.Day & " " & $tLocalTime.Hour & ":" & $tLocalTime.Minute & ":" & $tLocalTime.Second, $sType)
 EndFunc
 Func _DaysInMonth($iYear)
 Local $aDays = [12, 31,(_DateIsLeapYear($iYear) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 Return $aDays
 EndFunc
-Global Const $_ARRAYCONSTANT_SORTINFOSIZE = 11
-Global $__g_aArrayDisplay_SortInfo[$_ARRAYCONSTANT_SORTINFOSIZE]
-Global Const $_ARRAYCONSTANT_tagLVITEM = "struct;uint Mask;int Item;int SubItem;uint State;uint StateMask;ptr Text;int TextMax;int Image;lparam Param;" & "int Indent;int GroupID;uint Columns;ptr pColumns;ptr piColFmt;int iGroup;endstruct"
-#Au3Stripper_Ignore_Funcs=__ArrayDisplay_SortCallBack
-Func __ArrayDisplay_SortCallBack($nItem1, $nItem2, $hWnd)
-If $__g_aArrayDisplay_SortInfo[3] = $__g_aArrayDisplay_SortInfo[4] Then
-If Not $__g_aArrayDisplay_SortInfo[7] Then
-$__g_aArrayDisplay_SortInfo[5] *= -1
-$__g_aArrayDisplay_SortInfo[7] = 1
-EndIf
-Else
-$__g_aArrayDisplay_SortInfo[7] = 1
-EndIf
-$__g_aArrayDisplay_SortInfo[6] = $__g_aArrayDisplay_SortInfo[3]
-Local $sVal1 = __ArrayDisplay_GetItemText($hWnd, $nItem1, $__g_aArrayDisplay_SortInfo[3])
-Local $sVal2 = __ArrayDisplay_GetItemText($hWnd, $nItem2, $__g_aArrayDisplay_SortInfo[3])
-If $__g_aArrayDisplay_SortInfo[8] = 1 Then
-If(StringIsFloat($sVal1) Or StringIsInt($sVal1)) Then $sVal1 = Number($sVal1)
-If(StringIsFloat($sVal2) Or StringIsInt($sVal2)) Then $sVal2 = Number($sVal2)
-EndIf
-Local $nResult
-If $__g_aArrayDisplay_SortInfo[8] < 2 Then
-$nResult = 0
-If $sVal1 < $sVal2 Then
-$nResult = -1
-ElseIf $sVal1 > $sVal2 Then
-$nResult = 1
-EndIf
-Else
-$nResult = DllCall('shlwapi.dll', 'int', 'StrCmpLogicalW', 'wstr', $sVal1, 'wstr', $sVal2)[0]
-EndIf
-$nResult = $nResult * $__g_aArrayDisplay_SortInfo[5]
-Return $nResult
-EndFunc
-Func __ArrayDisplay_GetItemText($hWnd, $iIndex, $iSubItem = 0)
-Local $tBuffer = DllStructCreate("wchar Text[4096]")
-Local $pBuffer = DllStructGetPtr($tBuffer)
-Local $tItem = DllStructCreate($_ARRAYCONSTANT_tagLVITEM)
-DllStructSetData($tItem, "SubItem", $iSubItem)
-DllStructSetData($tItem, "TextMax", 4096)
-DllStructSetData($tItem, "Text", $pBuffer)
-If IsHWnd($hWnd) Then
-DllCall("user32.dll", "lresult", "SendMessageW", "hwnd", $hWnd, "uint", 0x1073, "wparam", $iIndex, "struct*", $tItem)
-Else
-Local $pItem = DllStructGetPtr($tItem)
-GUICtrlSendMsg($hWnd, 0x1073, $iIndex, $pItem)
-EndIf
-Return DllStructGetData($tBuffer, "Text")
+Func _Date_Time_GetLocalTime()
+Local $tLocalTime = DllStructCreate($tagSYSTEMTIME)
+DllCall("kernel32.dll", "none", "GetLocalTime", "struct*", $tLocalTime)
+If @error Then Return SetError(@error, @extended, 0)
+Return $tLocalTime
 EndFunc
 Global Enum $ARRAYFILL_FORCE_DEFAULT, $ARRAYFILL_FORCE_SINGLEITEM, $ARRAYFILL_FORCE_INT, $ARRAYFILL_FORCE_NUMBER, $ARRAYFILL_FORCE_PTR, $ARRAYFILL_FORCE_HWND, $ARRAYFILL_FORCE_STRING, $ARRAYFILL_FORCE_BOOLEAN
 Func _ArrayAdd(ByRef $aArray, $vValue, $iStart = 0, $sDelim_Item = "|", $sDelim_Row = @CRLF, $iForce = $ARRAYFILL_FORCE_DEFAULT)

@@ -2183,7 +2183,7 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 		#Region BBase - Team AIO Mod++
 		Case $g_hTabMain
 			; the icons for main tab
-			Local $aIconIndex = [$eIcnHourGlass, $eIcnTH13, $eIcnAttack, $eIcnBuilderHall, $eIcnAIOMod, $eIcnGUI, $eIcnInfo]
+			Local $aIconIndex = [$eIcnHourGlass, $eIcnTH14, $eIcnAttack, $eIcnBuilderHall, $eIcnAIOMod, $eIcnGUI, $eIcnInfo]
 			#EndRegion BBase - Team AIO Mod++
 
 		Case $g_hGUI_VILLAGE_TAB

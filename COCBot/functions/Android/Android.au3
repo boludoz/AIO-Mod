@@ -4846,7 +4846,7 @@ Func CheckEmuNewVersions()
 		Case "MEmu"
 			$NewVersion = GetVersionNormalized("7.5.0.0")
          Case "Nox"
-			$NewVersion = GetVersionNormalized("6.6.1.1")
+			$NewVersion = GetVersionNormalized("7.0.1.2")
 		Case Else
 			; diabled of the others
 			$NewVersion = GetVersionNormalized("99.0.0.0")

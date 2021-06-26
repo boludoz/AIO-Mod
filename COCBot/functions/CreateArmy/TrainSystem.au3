@@ -52,8 +52,6 @@ Func TrainCustomArmy()
 
 	If $g_bDebugSetlogTrain Then SetLog(" == Initial Custom Train == ", $COLOR_ACTION)
 
-	; BoostSuperTroops()
-	
 	;If $bDonateTrain = -1 Then SetbDonateTrain()
 	If $g_iActiveDonate = -1 Then PrepareDonateCC()
 
@@ -390,7 +388,7 @@ EndFunc   ;==>DoWhatToTrainContainSpell
 
 Func IsElixirTroop($Troop)
 	Local $iIndex = TroopIndexLookup($Troop, "IsElixirTroop")
-	If $iIndex >= $eBarb And $iIndex <= $eYeti Then Return True
+	If $iIndex >= $eBarb And $iIndex <= $eDragR Then Return True
 	Return False
 EndFunc   ;==>IsElixirTroop
 
@@ -501,7 +499,7 @@ Func RemoveExtraTroops($toRemove)
 		If _Sleep(500) Then Return
 		If Not _CheckPixel($aButtonRemoveTroopsOK1, True) Then; If no 'Okay' button found in army tab to save changes
 			SetLog("Cannot find/verify 'Okay' Button in Army tab", $COLOR_WARNING)
-			ClickAway() ; ClickP($aAway, 2, 0, "#0346") ; Click Away, Necessary! due to possible errors/changes
+			ClickP($aAway, 2, 0, "#0346") ; Click Away, Necessary! due to possible errors/changes
 			If _Sleep(400) Then OpenArmyOverview(True, "RemoveExtraTroops()") ; Open Army Window AGAIN
 			Return False ; Exit Function
 		EndIf
@@ -665,7 +663,7 @@ EndFunc   ;==>GetSlotRemoveBtnPosition
 Func GetSlotNumber($bSpells = False)
 	Select
 		Case $bSpells = False
-		Local Const $Orders = [$eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl, $eWall, $eSWall, $eBall, $eWiza, $eSWiza, $eHeal, $eDrag, $eYeti, $ePekk, $eBabyD, $eInfernoD, $eMine, $eEDrag, _
+		Local Const $Orders = [$eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl, $eWall, $eSWall, $eBall, $eRBall, $eWiza, $eSWiza, $eHeal, $eDrag, $eYeti, $eDragR, $ePekk, $eBabyD, $eInfernoD, $eMine, $eEDrag, _
 					$eMini, $eSMini, $eHogs, $eValk, $eSValk, $eGole, $eWitc, $eSWitc, $eLava, $eIceH, $eBowl, $eIceG, $eHunt] ; Set Order of troop display in Army Tab
 
 			Local $allCurTroops[UBound($Orders)]
