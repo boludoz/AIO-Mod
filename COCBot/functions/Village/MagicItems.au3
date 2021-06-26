@@ -4,7 +4,7 @@
 ; Syntax ........: CollectMagicItems()
 ; Parameters ....:
 ; Return values .: None
-; Author ........: Chilly-Chill, Boldina (boludoz) (7/5/2019), NguyenAnhHD, Dissociable (3/5/2020), Team AIO Mod++ (2020)
+; Author ........: Chilly-Chill, Boldina (boludoz) (7/5/2019 | 26/06/2021), NguyenAnhHD, Dissociable (3/5/2020), Team AIO Mod++ (2020)
 ; Modified ......:
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2020
 ;                  MyBot is distributed under the terms of the GNU GPL
@@ -31,7 +31,11 @@ Func CollectMagicItems($bDebug = False)
 		EndIf
 	EndIf
 	#EndRegion - Dates - Team AIO Mod++
-
+	
+	Local $aInfoSlotsMult = 196
+	Local $aInfoSlots[4] = [302, 303, 0x5AB1EA, 25]
+	Local $aWaitGem[4] = [421, 407, 0xB9E484, 25]
+	
 	If Not $g_bRunState Or $g_bRestart Then Return
 	
 	If IsMainScreen() Then
@@ -41,12 +45,9 @@ Func CollectMagicItems($bDebug = False)
 		If _Sleep($DELAYCOLLECT2) Then Return
 
 		; Check Trader Icon on Main Village
-		If QuickMIS("BC1", $g_sImgTrader, 120, 155, 230, 250, True, False) Then
+		If _WaitForCheckImg($g_sImgTrader, "120,160,210,215", "DailyD", 5000, 150) Then
 			SetLog("Trader available, Entering Daily Discounts", $COLOR_SUCCESS)
-			Click($g_iQuickMISX + Random(115, 125, 1), $g_iQuickMISY + Random(150, 170, 1))
-		ElseIf QuickMIS("BC1", $g_sImgTraderMod, 72, 113, 280, 220, True, False) Then
-			SetLog("Trader available, Entering Daily Discounts", $COLOR_SUCCESS)
-			Click($g_iQuickMISX - Random(70, 82, 1) + 72, $g_iQuickMISY + Random(0, 37, 1) + 113)
+			Click($g_aImageSearchXML[0][1], $g_aImageSearchXML[0][2])
 		Else
 			SetLog("Trader unavailable", $COLOR_INFO)
 			Return
@@ -55,7 +56,7 @@ Func CollectMagicItems($bDebug = False)
 		If Not $g_bRunState Or $g_bRestart Then Return
 		
 		; Check Daily Discounts Window
-		If _WaitForCheckImg(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Obstacles", "FV", "X") Then ; White in 'X'.
+		If _WaitForCheckImg(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Obstacles", "FV", "X", 3000) Then ; White in 'X'.
 
 			; Dates - Team AIO Mod++
 			If Not $bDebug Then MagicItemsTime()
@@ -66,54 +67,84 @@ Func CollectMagicItems($bDebug = False)
 			Local $aResultsProx[3] = ["", "", ""]
 			
 			_ImageSearchXML($g_sImgDirDailyDiscounts, 0, "140,230,720,485", True, False, True, 25)
-			If $bDebug Then _ArrayDisplay($g_aImageSearchXML)
-			
-			If Not $g_bRunState Or $g_bRestart Then Return
-			
-			For $i = 0 To 2
-				If Not $g_bRunState Or $g_bRestart Then Return
-				; Positioned precisely the item, and determines if this is enabled your purchase, if it is not enabled, add N / A, Exits the loop avoiding adding more than one item.
-				For $iResult = 0 To UBound($g_aImageSearchXML) - 1
-					If ($g_aImageSearchXML[$iResult][1]) > ($aOcrPositions[$i][0] - 41) And ($g_aImageSearchXML[$iResult][1]) < ($aOcrPositions[$i][0] + 135) Then
-						$aResultsProx[$i] = ($g_abChkDD_Deals[GetDealIndex($g_aImageSearchXML[$iResult][0])] = True) ? ($g_aImageSearchXML[$iResult][0]) : ("#" & $i + 1 & ": " & $g_aImageSearchXML[$iResult][0])
-						_ArrayDelete($g_aImageSearchXML, $iResult)     ; Optimization
-						ExitLoop
+			If UBound($g_aImageSearchXML) > 0 And not @error Then
+				
+				; If $bDebug Then 
+					; _ArrayDisplay($g_aImageSearchXML)
+				; EndIf
+						
+				For $i = 0 To 2
+					If Not $g_bRunState Or $g_bRestart Then Return
+					
+					; Positioned precisely the item, and determines if this is enabled your purchase, if it is not enabled, add N / A, Exits the loop avoiding adding more than one item.
+					For $iResult = 0 To UBound($g_aImageSearchXML) - 1
+						If ($g_aImageSearchXML[$iResult][1]) > ($aOcrPositions[$i][0] - 41) And ($g_aImageSearchXML[$iResult][1]) < ($aOcrPositions[$i][0] + 135) Then
+							$aResultsProx[$i] = ($g_abChkDD_Deals[GetDealIndex($g_aImageSearchXML[$iResult][0])] = False) ? ($g_aImageSearchXML[$iResult][0]) : ("#" & $i + 1 & ": " & $g_aImageSearchXML[$iResult][0])
+							_ArrayDelete($g_aImageSearchXML, $iResult)     ; Optimization
+							ExitLoop
+						EndIf
+					Next
+					
+					If $bDebug Then _ArrayDisplay($aResultsProx)
+					$aResults[$i] = getOcrAndCapture("coc-freemagicitems", $aOcrPositions[$i][0], $aOcrPositions[$i][1], 80, 25, True)
+					
+					If $aResults[$i] <> "" Then
+						
+						If ( $g_bChkCollectMagicItems And StringInStr($aResultsProx[$i], "#" & $i + 1) > 0 ) Or ($aResults[$i] = "FREE" And $g_bChkCollectFreeMagicItems = True) Then
+								
+								If _ColorCheck(_GetPixelColor($aInfoSlots[0] + ($aInfoSlotsMult * $i), $aInfoSlots[1], True), Hex($aInfoSlots[2], 6), $aInfoSlots[3]) = False Then ContinueLoop
+								
+								SetLog("Magic Item detected : " & $aResultsProx[$i], $COLOR_INFO)
+								
+								Click($aInfoSlots[0] + ($aInfoSlotsMult * $i) - 57, $aInfoSlots[1], 1)
+								If $bDebug Then SetLog("Daily Discounts: " & "X: " & $aOcrPositions[$i][0] & " | " & "Y: " & $aOcrPositions[$i][1], $COLOR_DEBUG)
+								If _Sleep(500) Then Return
+								
+								If $g_bChkCollectMagicItems Then
+	
+									If _Wait4Pixel($aWaitGem[0], $aWaitGem[1], $aWaitGem[2], $aWaitGem[3], 3000, 100, "IsGemOpen") Then
+										
+										If Not $g_bRunState Or $g_bRestart Then Return
+
+										If Not $bDebug Then
+											Click(421, 407)
+										Else
+											ClickAway()
+										EndIf
+										
+										If _Wait4PixelGone($aWaitGem[0], $aWaitGem[1], $aWaitGem[2], $aWaitGem[3], 3000, 100, "IsGemOpenGone") Then
+											SetLog("Successfully purchased " & $aResultsProx[$i], $COLOR_SUCCESS)
+										Else
+											SetLog("CollectMagicItems : badly in gem.", $COLOR_ERROR)
+											
+											ClickAway()
+											If _Sleep(300) Then Return
+										EndIf
+										
+									EndIf
+									
+								EndIf
+							
+						Else
+							
+							If _ColorCheck(_GetPixelColor($aInfoSlots[0] + ($aInfoSlotsMult * $i), $aInfoSlots[1], True), Hex($aInfoSlots[2], 6), $aInfoSlots[3]) Then
+								$aResults[$i] = "(" & String($aResults[$i]) & " Gems)"
+							Else
+								$aResults[$i] = Int($aResults[$i]) > 0 ? "(No Space In Castle)" : "(Collected)"
+							EndIf
+							
+						EndIf
+						
+					ElseIf $aResults[$i] = "" Then
+						$aResults[$i] = "(No Gems)"
 					EndIf
+					
+					If Not $g_bRunState Then Return
 				Next
 				
-				If $bDebug Then _ArrayDisplay($aResultsProx)
-				$aResults[$i] = getOcrAndCapture("coc-freemagicitems", $aOcrPositions[$i][0], $aOcrPositions[$i][1], 80, 25, True)
-				
-				If $aResults[$i] <> "" Then
-					If (BitAND($g_bChkCollectMagicItems, $g_aImageSearchXML <> -1, 1 > StringInStr($aResultsProx[$i], "#" & $i + 1), $aResultsProx[$i] <> "")) Or (BitAND($aResults[$i] = "FREE", $g_bChkCollectFreeMagicItems)) Then
-						SetLog("Magic Item detected : " & $aResultsProx[$i], $COLOR_INFO)
-						If Not $bDebug Then
-							Click($aOcrPositions[$i][0], $aOcrPositions[$i][1], 1, 0)
-						Else
-							SetLog("Daily Discounts: " & "X: " & $aOcrPositions[$i][0] & " | " & "Y: " & $aOcrPositions[$i][1], $COLOR_DEBUG)
-						EndIf
-						If _Sleep(200) Then Return
-						If Not $bDebug And $g_bChkCollectMagicItems Then
-							If ButtonClickDM(@ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\Button\GemItems", 225, 71, 490, 509) Then
-								SetLog("Successfully purchased " & $aResultsProx[$i], $COLOR_SUCCESS)
-							EndIf
-						EndIf
-						If _Sleep(500) Then Return
-					Else
-						If _ColorCheck(_GetPixelColor(200, 439 + 5, True), Hex(0x5D79C5, 6), 5) Or _ColorCheck(_GetPixelColor(200, 439 + 5, True), Hex(0x0D9A7C, 6), 5) Then
-							$aResults[$i] = "(" & $aResults[$i] & " Gems)"
-						Else
-							$aResults[$i] = Int($aResults[$i]) > 0 ? "(No Space In Castle)" : "(Collected)"
-						EndIf
-					EndIf
-				ElseIf $aResults[$i] = "" Then
-					$aResults[$i] = "(No Gems)"
-				EndIf
-				
-				If Not $g_bRunState Then Return
-			Next
+				SetLog("Daily Discounts: " & $aResultsProx[0] & " " & $aResults[0] & " | " & $aResultsProx[1] & " " & $aResults[1] & " | " & $aResultsProx[2] & " " & $aResults[2], $COLOR_INFO)
 			
-			SetLog("Daily Discounts: " & $aResultsProx[0] & " " & $aResults[0] & " | " & $aResultsProx[1] & " " & $aResults[1] & " | " & $aResultsProx[2] & " " & $aResults[2], $COLOR_INFO)
+			EndIf
 		Else
 			SetLog("CollectMagicItems : badly.", $COLOR_ERROR)
 			If _Sleep(300) Then Return

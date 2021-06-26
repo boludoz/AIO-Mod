@@ -88,9 +88,9 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 		Local $sSearchDiamond = GetDiamondFromRect("271,185,834,659")
 		Local $avAttackButton = findMultiple($g_sImgPrepareLegendLeagueSearch, $sSearchDiamond, $sSearchDiamond, 0, 1000, 1, "objectname,objectpoints", True)
 		If IsArray($avAttackButton) And UBound($avAttackButton, 1) > 0 Then
+			$g_bLeagueAttack = True
 			Local $avAttackButtonSubResult = $avAttackButton[0]
 			Local $sButtonState = $avAttackButtonSubResult[0]
-			If StringInStr($sButtonState, "Normal", 0) < 1 Then $g_bLeagueAttack = True ; Custom fix - AIO Mod++
 			If StringInStr($sButtonState, "Ended", 0) > 0 Then
 				SetLog("League Day ended already! Trying again later", $COLOR_INFO)
 				$g_bRestart = True
@@ -118,7 +118,19 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 				If Not IsArray($aConfirmAttackButton) And UBound($aConfirmAttackButton, 1) < 2 Then
 					SetLog("Couldn't find the confirm attack button!", $COLOR_ERROR)
 					$g_bBadPrepareSearch = True ; Custom PrepareSearch - Team AIO Mod++
-					Return False
+					Return
+				EndIf
+			ElseIf StringInStr($sButtonState, "FindMatchNormal") > 0 Then
+				Local $aCoordinates = StringSplit($avAttackButtonSubResult[1], ",", $STR_NOCOUNT)
+				If IsArray($aCoordinates) And UBound($aCoordinates, 1) = 2 Then
+					$g_bLeagueAttack = False
+					ClickP($aCoordinates, 1, 0, "#0150")
+					ExitLoop
+				Else
+					$g_bBadPrepareSearch = True ; Custom PrepareSearch - Team AIO Mod++
+					SetLog("Couldn't find the Find a Match Button!", $COLOR_ERROR)
+					If $g_bDebugImageSave Then SaveDebugImage("FindAMatchBUttonNotFound")
+					Return
 				EndIf
 			ElseIf StringInStr($sButtonState, "Sign", 0) > 0 Then
 				SetLog("Sign-up to Legend League", $COLOR_INFO)
@@ -138,28 +150,22 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 				SetLog("Finding opponents! Waiting 5 minutes and then try again to find a match", $COLOR_INFO)
 				If _Sleep(300000) Then Return     ; Wait 5mins before searching again
 				$bSignedUpLegendLeague = True
-			ElseIf ClickFindMatch() = True Then
-				If $g_bRestart = True Then Return
-				Return False ; exit func
-				SetLog("Looking for village!", $COLOR_SUCCESS)
-				$bSignedUpLegendLeague = False
-				$g_bLeagueAttack = False
-				ExitLoop
 			Else
 				$g_bLeagueAttack = False
-				If $g_bDebugImageSave Then SaveDebugImage("PrepareSearchFail") ; Custom PrepareSearch - Team AIO Mod++
 				SetLog("Unknown Find a Match Button State: " & $sButtonState, $COLOR_WARNING)
 				$g_bBadPrepareSearch = True ; Custom PrepareSearch - Team AIO Mod++
-				Return False
+				Return
 			EndIf
 		ElseIf Number($g_aiCurrentLoot[$eLootTrophy]) >= Number($g_asLeagueDetails[21][4]) Then
 			SetLog("Couldn't find the Attack Button!", $COLOR_ERROR)
 			$g_bBadPrepareSearch = True ; Custom PrepareSearch - Team AIO Mod++
-			Return False
+			Return
 		EndIf
 	Until Not $bSignedUpLegendLeague
+	
+	$g_bBadPrepareSearch = False ; Custom PrepareSearch - Team AIO Mod++
 	#EndRegion - Custom PrepareSearch - Team AIO Mod++ 
-
+	
 	If $g_iTownHallLevel <> "" And $g_iTownHallLevel > 0 Then
 		$g_iSearchCost += $g_aiSearchCost[$g_iTownHallLevel - 1]
 		$g_iStatsTotalGain[$eLootGold] -= $g_aiSearchCost[$g_iTownHallLevel - 1]

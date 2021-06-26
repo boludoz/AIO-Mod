@@ -28,16 +28,6 @@ Func __ArraySearch(Const ByRef $aArray, $vValue, $iStart = 0, $iEnd = 0, $iCase 
 	EndSelect
 EndFunc   ;==>__ArraySearch
 
-Func ClickFindMatch()
-	Local $i = 0, $bClicked = False
-	Do
-		$i += 1
-		$bClicked = ButtonClickDM(@ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\Button\FindMatch\", 544, 342, 273, 210)
-		If _Sleep(250) Then Return
-	Until $bClicked Or ($i > 3)
-	Return $bClicked
-EndFunc   ;==>ClickFindMatch
-
 Func SearchNoLeague($bForceCapture = False)
 	Local $sImg = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch\NoLeague\"
 	Return IsArray(findMultipleQuick($sImg, Default, "6, 14, 45, 28", $bForceCapture))

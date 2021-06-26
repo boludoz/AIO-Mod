@@ -321,7 +321,7 @@ EndFunc   ;==>CloseClanChat
 
 Func CloseXDonate() ; Custom fix - Team__AiO__MOD
 	Return ButtonClickDM(@ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\Button\XClan\", 521, 1, 338, 730)
-EndFunc   ;==>ClickFindMatch
+EndFunc   ;==>CloseXDonate
 
 Func ChatbotCheckIfUserIsInClan() ; check if user is in a clan before doing chat
 	If Not _CheckPixel($aClanBadgeNoClan, $g_bCapturePixel, Default, "Clan Badge No Clan:") Then

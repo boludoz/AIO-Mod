@@ -280,14 +280,6 @@ Func CheckQuickTrainTroop()
 	local $iDistanceBetweenArmies = 108 ; pixels
 	local $aArmy1Location = [758, 272] ; first area of quick train army buttons
 
-	; findImage needs filename and path
-	Local $avEditQuickTrainIcon = _FileListToArrayRec($g_sImgEditQuickTrain, "*", $FLTAR_FILES, $FLTAR_NORECUR, $FLTAR_NOSORT, $FLTAR_FULLPATH)
-
-	If Not IsArray($avEditQuickTrainIcon) Or UBound($avEditQuickTrainIcon, $UBOUND_ROWS) <= 0 Then
-		SetLog("Can't find EditQuickTrainIcon");
-		Return False
-	EndIf
-
 	; search for EditQuickTrainIcon
 	Local $a_EditArmy[4] = [780, 293, 0xBDE98D, 10] ; * 108
 	Local $hPixelC = 0x000000

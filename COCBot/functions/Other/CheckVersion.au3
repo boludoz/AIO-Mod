@@ -42,7 +42,7 @@ Func CheckVersion()
 			Else
 				SetLog("Chief! There's also a newer Official version", $COLOR_INFO)
 			EndIf
-			Local $ChangelogTXT = GetLastChangeLog($Temp)
+			Local $ChangelogTXT = GetLastChangeLog($Temp) 
 			If UBound($ChangelogTXT) > 0 And not @error Then
 				Local $Changelog = StringSplit($ChangelogTXT[0], '\r\n', $STR_ENTIRESPLIT + $STR_NOCOUNT)
 				For $i = 0 To UBound($Changelog) - 1

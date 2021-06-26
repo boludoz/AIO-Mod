@@ -136,7 +136,7 @@ Func RequestFromChat() ; Custom fix - Team__AiO__MOD
 		If _Sleep(250) Then Return
 	Until $bClicked Or ($i > 3)
 	Return $bClicked
-EndFunc   ;==>ClickFindMatch
+EndFunc   ;==>RequestFromChat
 #EndRegion - Custom request - Team AIO Mod++
 
 #Region - Type once - Team AIO Mod++
