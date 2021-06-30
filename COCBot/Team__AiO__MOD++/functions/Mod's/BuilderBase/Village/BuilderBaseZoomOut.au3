@@ -32,8 +32,8 @@ Func TestBuilderBaseZoomOut()
 EndFunc   ;==>TestBuilderBaseZoomOut
 
 Func BuilderBaseZoomOut($DebugImage = False, $ForceZoom = False)
-	Local $Size = GetBuilderBaseSize(False, $DebugImage) ; WihtoutClicks
-	If $Size > 520 And $Size < 590 and Not $ForceZoom Then
+	Local $iSize = GetBuilderBaseSize(False, $DebugImage) ; WihtoutClicks
+	If $iSize > 520 And $iSize < 590 and Not $ForceZoom Then
 		SetDebugLog("BuilderBaseZoomOut check!")
 		Return True
 	EndIf
@@ -50,11 +50,11 @@ Func BuilderBaseZoomOut($DebugImage = False, $ForceZoom = False)
 				If _Sleep(500) Then ExitLoop
 				If Not $g_bRunState Then Return
 				; Get the Distances between images
-				Local $Size = GetBuilderBaseSize(True, $DebugImage)
-				SetDebugLog("[" & $i & "]BuilderBaseZoomOut $Size: " & $Size)
-				If IsNumber($Size) And $Size > 0 Then ExitLoop
+				Local $iSize = GetBuilderBaseSize(True, $DebugImage)
+				SetDebugLog("[" & $i & "]BuilderBaseZoomOut $iSize: " & $iSize)
+				If IsNumber($iSize) And $iSize > 0 Then ExitLoop
 			; Can't be precise each time we enter at Builder base was deteced a new Zoom Factor!! from 563-616
-			If $Size > 520 And $Size < 590 Then
+			If $iSize > 520 And $iSize < 590 Then
 				Return True
 			EndIf
 		Else
@@ -123,14 +123,14 @@ Func ZoomBuilderBaseMecanics($bAttack = True)
 		
 		If Not $g_bRunState Then Return
 
-		If ($iSize < 575 And $iSize > 620) Or ($iSize = 0) Then
+		If ($iSize < 520 And $iSize > 590) Or ($iSize = 0) Then
 			BuilderBaseZoomOut()
 			If _Sleep(1000) Then Return
 		EndIf
 
 		If $i > 5 Then ExitLoop
 		$i += 1
-	Until ($iSize >= 575 And $iSize <= 620) Or ($iSize <> 0)
+	Until ($iSize >= 520 And $iSize <= 590) Or ($iSize <> 0)
 
 	If $iSize = 0 Then
 		SetDebugLog("[BBzoomout] ZoomOut Builder Base - FAIL", $COLOR_ERROR)
