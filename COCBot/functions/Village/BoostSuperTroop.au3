@@ -16,24 +16,28 @@
 Func BoostSuperTroop()
 	
 	; Start - 162, 313
-	; 142 * (Slot) - X
+	; 143 * (Slot) - X
 	; 182 * (Slot) - Y
 	; By line - 4
 	
 	; SecondPage - 77 
 	
 	;	Labels
-	Local $bSecondPage
-	Local $aTroopUbi[12] = ["SBarb", "SArch", "SGiant", "SGoblin", _
-							"SWallBreaker", "RBalloon", "SWizard", "IDragon", _
-							"SMinion", "SValk", "SWitch", "IHound"]
-	Local $hHexActive = 0xDF4A4D
-	Local $hHexDisabled = 0x767676
-
+	Local $iSlot = 0
+	Local $iSlotX = 143, $iSlotY = 182
+	
+	
+	; GRAY
+	; _MultiPixelSearch(148 + ($iSlotX * $iSlot), 242, 290 + ($iSlotX * $iSlot), 430, 2, 2, Hex(0xA9A9A9, 6), StringSplit2d("0x7E7E7E-106-0|0x7F7F7F-106-26"), 15)
+	
 	Do
-		If $bSecondPage Then
-			
+		; RED
+		Local $vPoint = _MultiPixelSearch(148 + ($iSlotX * $iSlot), 242, 290 + ($iSlotX * $iSlot), 430, 2, 2, Hex(0xF58E8E, 6), StringSplit2d("0xE55151-106-0|0xE55351-106-26"), 15)
+		If UBound($vPoint) = 2 And not @error Then
+		
 		EndIf
+		
+		
 	Until True
 	
 	
