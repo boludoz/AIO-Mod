@@ -23,22 +23,31 @@ Func BoostSuperTroop()
 	; SecondPage - 77 
 	
 	;	Labels
-	Local $iSlot = 0
+	Local $iSlot = 0, $vPoint = 0
 	Local $iSlotX = 143, $iSlotY = 182
 	
 	
 	; GRAY
 	; _MultiPixelSearch(148 + ($iSlotX * $iSlot), 242, 290 + ($iSlotX * $iSlot), 430, 2, 2, Hex(0xA9A9A9, 6), StringSplit2d("0x7E7E7E-106-0|0x7F7F7F-106-26"), 15)
 	
-	Do
-		; RED
-		Local $vPoint = _MultiPixelSearch(148 + ($iSlotX * $iSlot), 242, 290 + ($iSlotX * $iSlot), 430, 2, 2, Hex(0xF58E8E, 6), StringSplit2d("0xE55151-106-0|0xE55351-106-26"), 15)
-		If UBound($vPoint) = 2 And not @error Then
+	Local $aiCombo = $g_ahCmbSuperTroops
 		
-		EndIf
+	$aiCombo[0] = _GUICtrlComboBox_GetCurSel($g_ahCmbSuperTroops[0])
+	$aiCombo[1] = _GUICtrlComboBox_GetCurSel($g_ahCmbSuperTroops[1])
+
+	For $i = 0 To $iSuperTroopsCount - 1
 		
 		
-	Until True
+			; RED Label
+			$vPoint = _MultiPixelSearch(148 + ($iSlotX * $iSlot), 242, 290 + ($iSlotX * $iSlot), 430, 2, 2, Hex(0xF58E8E, 6), StringSplit2d("0xE55151-106-0|0xE55351-106-26"), 15)
+			
+			If UBound($vPoint) = 2 And not @error Then
+				
+				
+			EndIf
+		
+		
+	Next
 	
 	
  EndFunc   ;==>BoostSuperTroop
