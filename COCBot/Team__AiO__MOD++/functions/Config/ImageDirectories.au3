@@ -178,5 +178,8 @@ Global $g_sASMagicItemsDOCRPath = $g_sBaseDOCRPathB & "\MagicItems\"
 ; EndTime.
 Global $g_sASBattleEndsDOCRPath = $g_sBaseDOCRPathB & "\BattleEnds\"
 
+; BoostST.
+Global $g_sASBoostSTDOCRPath = $g_sBaseDOCRPathB & "\BoostST\"
+
 ; Gems
 Global $g_sASGemsSDOCRPath = $g_sBaseDOCRPathB & "\GemsS\"

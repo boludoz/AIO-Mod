@@ -278,7 +278,7 @@
 ; #include "functions\Village\FreeMagicItems.au3" ; Team AIO Mod++
 #include "functions\Village\MagicItems.au3" ; Team AIO Mod++
 #include "functions\Village\Personal Challenges\DailyChallenges.au3"
-; #include "functions\Village\BoostSuperTroop.au3"
+#include "functions\Village\BoostSuperTroop.au3"
 #include "functions\Village\LocatePetHouse.au3"
 #include "functions\Village\PetHouse.au3"
 
