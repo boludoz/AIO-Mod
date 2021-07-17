@@ -129,13 +129,6 @@ Func SaveConfig_MOD_MiscTab()
 	_Ini_Add("ReqCCOptions", "ReqCCFromChat", $g_bChkReqCCFromChat)
 	_Ini_Add("ReqCCOptions", "RequestOneTime", $g_bRequestOneTimeEnable)
 
-	; Donation records.
-	_Ini_Add("DonRecords", "DayLimitTroops", $g_iDayLimitTroops)
-	_Ini_Add("DonRecords", "DayLimitSpells", $g_iDayLimitSpells)
-	_Ini_Add("DonRecords", "DayLimitSieges", $g_iDayLimitSieges)
-	_Ini_Add("DonRecords", "CmbRestartEvery", $g_iCmbRestartEvery)
-	_Ini_Add("DonRecords", "RestartTimer", $g_sRestartTimer)
-
 	; Tooops;
 	For $i = 0 To $eTroopCount - 1
 		_Ini_Add("DonRecords", "DonateStatsTroops" & $i, $g_aiDonateStatsTroops[$i][0])

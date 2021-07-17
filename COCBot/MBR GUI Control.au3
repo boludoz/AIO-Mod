@@ -1151,13 +1151,13 @@ Func BotGuiModeToggle()
 			GUICtrlDelete($g_hTabAttack)
 			GUICtrlDelete($g_hTabBot)
 			GUICtrlDelete($g_hTabAbout)
-			
+
 			GUICtrlDelete($g_hGUI_VILLAGE_TAB)
 			GUICtrlDelete($g_hGUI_MISC_TAB)
 			GUICtrlDelete($g_hGUI_DONATE_TAB)
 			GUICtrlDelete($g_hGUI_UPGRADE_TAB)
 			GUICtrlDelete($g_hGUI_NOTIFY_TAB)
-			
+
 			GUICtrlDelete($g_hGUI_ATTACK_TAB)
 			GUICtrlDelete($g_hGUI_TRAINARMY_TAB)
 			GUICtrlDelete($g_hGUI_TRAINARMY_ARMY_TAB)
@@ -1171,7 +1171,7 @@ Func BotGuiModeToggle()
 			GUICtrlDelete($g_hGUI_LOG_SA)
 			GUICtrlDelete($g_hGUI_SWITCH_OPTIONS_TAB)
 			GUICtrlDelete($g_hGUI_STATS_TAB)
-			
+
 			#Region - Team__AiO__MOD
 			GUICtrlDelete($g_hTabBuilderBase)
 			GUICtrlDelete($g_hTabMOD)
@@ -1365,9 +1365,9 @@ Func BotClose($SaveConfig = Default, $bExit = True)
 	_GUICtrlRichEdit_Destroy($g_hTxtLog)
 	_GUICtrlRichEdit_Destroy($g_hTxtAtkLog)
 	TCPShutdown() ; Close the TCP service.
-	
+
 	KillAdbDaemon(False) ; Close adb.
-	
+
 	_WinAPI_DeregisterShellHookWindow($g_hFrmBot)
 	If $g_hAndroidWindow <> 0 Then ControlFocus($g_hAndroidWindow, "", $g_hAndroidWindow) ; show Android in taskbar again
 	GUIDelete($g_hFrmBot)
@@ -1688,7 +1688,7 @@ Func SetTime($bForceUpdate = False)
 			$g_sLabUpgradeTime = ""
 		EndIf
 	EndIf
-    
+
     If _DateIsValid($g_sPetUpgradeTime) Then
         Local $iPetTime = _DateDiff("s", _NowCalc(), $g_sPetUpgradeTime) * 1000
         If $iPetTime > 0 Then
@@ -1700,7 +1700,7 @@ Func SetTime($bForceUpdate = False)
             $g_sPetUpgradeTime = ""
         EndIf
     EndIf
-	
+
  	; Update multi-stats: multi clocks, army time, builder time, lab time
 	If ProfileSwitchAccountEnabled() Then
 		If GUICtrlRead($g_hGUI_STATS_TAB, 1) = $g_hGUI_STATS_TAB_ITEM5 And GUICtrlRead($g_hGUI_BOT_TAB, 1) = $g_hGUI_BOT_TAB_ITEM5 And GUICtrlRead($g_hTabMain, 1) = $g_hTabBot Then SwitchAccountVariablesReload("SetTime")
@@ -2018,13 +2018,11 @@ Func tabDONATE()
 	Select
 		Case $tabidx = 0 ; RequestCC
 			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_RequestCC)
-			GUISetState(@SW_HIDE, $g_hGUI_DonateLimiter)
 			GUISetState(@SW_HIDE, $g_hGUI_DONATECC)
 			GUISetState(@SW_HIDE, $g_hGUI_ScheduleCC)
 			GUICtrlSetPos($g_hChkDonate, $tabdonx[2] - 15, $tabdonx[3] - 15)
 
 		Case $tabidx = 1 ; Donate CC
-			GUISetState(@SW_HIDE, $g_hGUI_DonateLimiter)
 			GUISetState(@SW_HIDE, $g_hGUI_RequestCC)
 			GUISetState(@SW_HIDE, $g_hGUI_ScheduleCC)
 			If GUICtrlRead($g_hChkDonate) = $GUI_CHECKED Then
@@ -2037,7 +2035,6 @@ Func tabDONATE()
 			GUICtrlSetPos($g_hChkDonate, $tabdonx[2] - 15, $tabdonx[3] - 15)
 
 		Case $tabidx = 2 ; Schedule
-			GUISetState(@SW_HIDE, $g_hGUI_DonateLimiter)
 			GUISetState(@SW_HIDE, $g_hGUI_RequestCC)
 			GUISetState(@SW_HIDE, $g_hGUI_DONATECC)
 			If GUICtrlRead($g_hChkDonate) = $GUI_CHECKED Then
@@ -2054,10 +2051,8 @@ Func tabDONATE()
 			GUISetState(@SW_HIDE, $g_hGUI_ScheduleCC)
 
 			If GUICtrlRead($g_hChkDonate) = $GUI_CHECKED Then
-				GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_DonateLimiter)
 				GUICtrlSetState($g_hLblScheduleDisabled, $GUI_HIDE)
 			Else
-				GUISetState(@SW_HIDE, $g_hGUI_DonateLimiter)
 				GUICtrlSetState($g_hLblScheduleDisabled, $GUI_SHOW)
 			EndIf
 

@@ -26,7 +26,7 @@ Func ApplyConfig_MOD_CustomArmyBB($TypeReadSave)
 			GUICtrlSetState($g_hChkBBUpgWallsElixir, $g_bChkBBUpgWallsElixir = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			ChkBBWalls()
 			cmbBBWall()
-			
+
 			For $i = 0 To UBound($g_hComboTroopBB) - 1
 				_GUICtrlComboBox_SetCurSel($g_hComboTroopBB[$i], $g_iCmbCampsBB[$i])
 				_GUICtrlSetImage($g_hIcnTroopBB[$i], $g_sLibIconPath, $g_avStarLabTroops[$g_iCmbCampsBB[$i] + 1][4])
@@ -69,7 +69,7 @@ Func ApplyConfig_MOD_CustomArmyBB($TypeReadSave)
 			ChkBBGetFromCSV()
 			ChkBBCustomAttack()
 			ChkBBAttackLoops()
-			
+
 		Case "Save"
 			; BB Upgrade Walls - Team AiO MOD++
 			$g_bChkBBUpgradeWalls = (GUICtrlRead($g_hChkBBUpgradeWalls) = $GUI_CHECKED)
@@ -78,7 +78,7 @@ Func ApplyConfig_MOD_CustomArmyBB($TypeReadSave)
 			$g_bChkBBWallRing = (GUICtrlRead($g_hChkBBWallRing) = $GUI_CHECKED)
 			$g_bChkBBUpgWallsGold = (GUICtrlRead($g_hChkBBUpgWallsGold) = $GUI_CHECKED)
 			$g_bChkBBUpgWallsElixir = (GUICtrlRead($g_hChkBBUpgWallsElixir) = $GUI_CHECKED)
-			
+
 			For $i = 0 To UBound($g_hComboTroopBB) - 1
 				$g_iCmbCampsBB[$i] = _GUICtrlComboBox_GetCurSel($g_hComboTroopBB[$i])
 			Next
@@ -111,10 +111,6 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 	; <><><> MiscTab <><><>
 	Switch $TypeReadSave
 		Case "Read"
-			GUICtrlSetState($g_hUseSleep, $g_bUseSleep = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetData($g_hIntSleep, $g_iIntSleep)
-			GUICtrlSetState($g_hUseRandomSleep, $g_bUseRandomSleep = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hNoAttackSleep, $g_bNoAttackSleep = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hDisableColorLog, $g_bDisableColorLog = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hAvoidLocation, $g_bAvoidLocation = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hEdgeObstacle, $g_bEdgeObstacle = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -122,14 +118,14 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			For $i = $DB To $LB
 				GUICtrlSetState($g_hDeployCastleFirst[$i], $g_bDeployCastleFirst[$i] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			Next
-			
+
 			; Setlog limit
 			GUICtrlSetState($g_hTxtLogLineLimit, ($g_bChkBotLogLineLimit) ? ($GUI_ENABLE) : ($GUI_DISABLE))
 			GUICtrlSetData($g_hTxtLogLineLimit, $g_iTxtLogLineLimit)
 
 			; Skip first check
 			GUICtrlSetState($g_hAvoidLocate, $g_bAvoidLocate ? $GUI_CHECKED : $GUI_UNCHECKED)
-			
+
 			; DeployDelay
 			GUICtrlSetData($g_hDeployDelay[0], $g_iDeployDelay[0])
 			GUICtrlSetData($g_hDeployDelay[1], $g_iDeployDelay[1])
@@ -167,7 +163,7 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			For $i = 0 To $eTroopCount - 1
 				GUICtrlSetData($g_ahTxtTrainWarTroopCount[$i], $g_aiWarCompTroops[$i])
 			Next
-			
+
 			For $j = 0 To $eSpellCount - 1
 				GUICtrlSetData($g_ahTxtTrainWarSpellCount[$j], $g_aiWarCompSpells[$j])
 			Next
@@ -179,31 +175,6 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			GUICtrlSetState($g_hChkReqCCFromChat, $g_bChkReqCCFromChat ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkRequestOneTimeEnable, $g_bRequestOneTimeEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
 
-			; Donation records.
-			GUICtrlSetData($g_hDayLimitTroops, _NumberFormat($g_iDayLimitTroops, True))
-			GUICtrlSetData($g_hDayLimitSpells, _NumberFormat($g_iDayLimitSpells, True))
-			GUICtrlSetData($g_hDayLimitSieges, _NumberFormat($g_iDayLimitSieges, True))
-			GUICtrlSetData($g_hCmbRestartEvery, _NumberFormat($g_iCmbRestartEvery, True))
-			
-			
-			For $i = 0 To $eTroopCount - 1
-				GUICtrlSetData($g_hLblDayTroop[$i], _NumberFormat($g_aiDonateStatsTroops[$i][0], True)) ; Donation records - Team AIO Mod++
-			Next
-
-			GUICtrlSetData($g_hDayTotalTroops, _NumberFormat($g_iTotalDonateStatsTroops, True)) ; Donation records - Team AIO Mod++
-
-			For $i = 0 To $eSpellCount - 1
-				GUICtrlSetData($g_hLblDaySpell[$i], _NumberFormat($g_aiDonateStatsSpells[$i][0], True)) ; Donation records - Team AIO Mod++
-			Next
-			
-			GUICtrlSetData($g_hDayTotalSpells, _NumberFormat($g_iTotalDonateStatsSpells, True)) ; Donation records - Team AIO Mod++
-
-			For $i = 0 To $eSiegeMachineCount - 1
-				GUICtrlSetData($g_hLblDaySiege[$i], _NumberFormat($g_aiDonateStatsSieges[$i][0], True)) ; Donation records - Team AIO Mod++
-			Next
-
-			GUICtrlSetData($g_hDayTotalSieges, _NumberFormat($g_iTotalDonateStatsSiegeMachines, True)) ; Donation records - Team AIO Mod++
-
 			#Region - Return Home by Time - Team AIO Mod++
 			GUICtrlSetState($g_hChkReturnTimerEnable, $g_bReturnTimerEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hTxtReturnTimer, $g_iTxtReturnTimer)
@@ -213,7 +184,7 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			#Region - No Upgrade In War - Team AIO Mod++
 			GUICtrlSetState($g_hChkNoUpgradeInWar, $g_bNoUpgradeInWar ? $GUI_CHECKED : $GUI_UNCHECKED)
 			#EndRegion - No Upgrade In War - Team AIO Mod++
-			
+
 			#Region - Legend trophy protection - Team AIO Mod++
 			GUICtrlSetState($g_hChkProtectInLL, $g_bProtectInLL ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkForceProtectLL, $g_bForceProtectLL ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -242,34 +213,29 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			ChkStopForWar()
 			chkDelayMod()
 			chkEdgeObstacle()
-			InputRecords()
 		Case "Save"
-			$g_bUseSleep = (GUICtrlRead($g_hUseSleep) = $GUI_CHECKED) ? 1 : 0
-			$g_iIntSleep = Int(GUICtrlRead($g_hIntSleep))
-			$g_bUseRandomSleep = (GUICtrlRead($g_hUseRandomSleep) = $GUI_CHECKED) ? 1 : 0
-			$g_bNoAttackSleep = (GUICtrlRead($g_hNoAttackSleep) = $GUI_CHECKED) ? 1 : 0
 			$g_bDisableColorLog = (GUICtrlRead($g_hDisableColorLog) = $GUI_CHECKED) ? 1 : 0
 			$g_bAvoidLocation = (GUICtrlRead($g_hAvoidLocation) = $GUI_CHECKED) ? 1 : 0
-			
+
 			For $i = $DB To $LB
 				$g_bDeployCastleFirst[$i] = (GUICtrlRead($g_hDeployCastleFirst[$i]) = $GUI_CHECKED) ? 1 : 0
 			Next
-			
+
 			; Setlog limit
 			$g_bChkBotLogLineLimit = (GUICtrlRead($g_hChkBotLogLineLimit) = $GUI_CHECKED) ? (True) : (False)
 			$g_iTxtLogLineLimit = Int(GUICtrlRead($g_hTxtLogLineLimit))
 
 			; Skip first check
 			$g_bAvoidLocate = GUICtrlRead($g_hAvoidLocate) = $GUI_CHECKED
-			
+
 			; Remove edge obstacles
 			$g_bEdgeObstacle = GUICtrlRead($g_hEdgeObstacle) = $GUI_CHECKED
-			
+
 			; DeployDelay
 			$g_iDeployDelay[0] = Int(GUICtrlRead($g_hDeployDelay[0]))
 			$g_iDeployDelay[1] = Int(GUICtrlRead($g_hDeployDelay[1]))
 			$g_iDeployDelay[2] = Int(GUICtrlRead($g_hDeployDelay[2]))
-			
+
 			; DeployWave
 			$g_iDeployWave[0] = Int(GUICtrlRead($g_hDeployWave[0]))
 			$g_iDeployWave[1] = Int(GUICtrlRead($g_hDeployWave[1]))
@@ -314,51 +280,26 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			$g_bChkReqCCFromChat = GUICtrlRead($g_hChkReqCCFromChat) = $GUI_CHECKED
 			$g_bRequestOneTimeEnable = GUICtrlRead($g_hChkRequestOneTimeEnable) = $GUI_CHECKED
 
-			; Donation records.
-			$g_iDayLimitTroops = GUICtrlRead($g_hDayLimitTroops)
-			$g_iDayLimitSpells = GUICtrlRead($g_hDayLimitSpells)
-			$g_iDayLimitSieges = GUICtrlRead($g_hDayLimitSieges)
-			$g_iCmbRestartEvery = GUICtrlRead($g_hCmbRestartEvery)
-			
-			; Tooops;
-			For $i = 0 To $eTroopCount - 1
-				$g_aiDonateStatsTroops[$i][0] = GUICtrlRead($g_hLblDayTroop[$i])
-			Next
-			$g_iTotalDonateStatsTroops = GUICtrlRead($g_hDayTotalTroops)
-			
-			; Spell;
-			For $i = 0 To $eSpellCount - 1
-				$g_aiDonateStatsSpells[$i][0] = GUICtrlRead($g_hLblDaySpell[$i])
-			Next
-			$g_iTotalDonateStatsSpells = GUICtrlRead($g_hDayTotalSpells)
-			
-			; Siege;
-			For $i = 0 To $eSiegeMachineCount - 1
-				$g_aiDonateStatsSieges[$i][0] = GUICtrlRead($g_hLblDaySiege[$i])
-			Next
-			$g_iTotalDonateStatsSiegeMachines = GUICtrlRead($g_hDayTotalSieges)
-			; ------------;
-			
 			#Region - Return Home by Time - Team AIO Mod++
 			$g_bReturnTimerEnable = (GUICtrlRead($g_hChkReturnTimerEnable) = $GUI_CHECKED)
 			$g_iTxtReturnTimer = GUICtrlRead($g_hTxtReturnTimer)
 			#EndRegion - Return Home by Time - Team AIO Mod++
-		
+
 			#Region - Legend trophy protection - Team AIO Mod++
 			$g_bProtectInLL = (GUICtrlRead($g_hChkProtectInLL) = $GUI_CHECKED)
 			$g_bForceProtectLL = (GUICtrlRead($g_hChkForceProtectLL) = $GUI_CHECKED)
 			#EndRegion - Legend trophy protection - Team AIO Mod++
-			
+
 			#Region - No Upgrade In War - Team AIO Mod++
 			$g_bNoUpgradeInWar = (GUICtrlRead($g_hChkNoUpgradeInWar) = $GUI_CHECKED)
 			#EndRegion - No Upgrade In War - Team AIO Mod++
-			
+
 			#Region - Custom Improve - Team AIO Mod++
 			For $i = 0 To UBound($g_iChkBBUpgradesToIgnore) - 1
 				$g_iChkBBUpgradesToIgnore[$i] = GUICtrlRead($g_hChkBBUpgradesToIgnore[$i]) = $GUI_CHECKED ? 1 : 0
 			Next
 			#EndRegion - Custom Improve - Team AIO Mod++
-			
+
 			#Region - Buy Guard - Team AIO Mod++
 			$g_bChkBuyGuard = (GUICtrlRead($g_hChkBuyGuard) = $GUI_CHECKED)
 			#EndRegion - Buy Guard - Team AIO Mod++

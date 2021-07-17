@@ -106,28 +106,6 @@ Func IsToRequestCC($ClickPAtEnd = True, $bSetLog = False, $bNeedCapture = True)
 
 EndFunc   ;==>IsToRequestCC
 
-; Donation Record TimerDiff
-Func TimerRecordDonation($bUpdate = False)
-	Local $iDateS = _DateDiff('s', $g_sRestartTimer, _NowCalc())
-	Local $iDateH = _DateDiff('h', $g_sRestartTimer, _NowCalc())
-
-	If $g_iCmbRestartEvery <= 0 Then $g_iCmbRestartEvery = 1
-
-	If $iDateS <= 0 Or $iDateH > $g_iCmbRestartEvery Or $bUpdate Then
-		$g_sRestartTimer = '1000/01/01 00:00:00'
-
-		$g_sRestartTimer = _DateAdd('h', Ceiling($g_iCmbRestartEvery), _NowCalc())
-		$g_iTotalDonateStatsTroops = 0
-		$g_iTotalDonateStatsSpells = 0
-		$g_iTotalDonateStatsSiegeMachines = 0
-
-		GUICtrlSetData($g_hDayTotalTroops, _NumberFormat($g_iTotalDonateStatsTroops, True))
-		GUICtrlSetData($g_hDayTotalSpells, _NumberFormat($g_iTotalDonateStatsSpells, True))
-		GUICtrlSetData($g_hDayTotalSieges, _NumberFormat($g_iTotalDonateStatsSiegeMachines, True))
-
-	EndIf
-EndFunc   ;==>TimerRecordDonation
-
 Func _GUICtrlCreateInput($sText, $iLeft, $iTop, $iWidth, $iHeight, $vStyle = -1, $vExStyle = -1)
 	Local $hReturn = GUICtrlCreateInput($sText, $iLeft, $iTop, $iWidth, $iHeight, $vStyle, $vExStyle)
 	GUICtrlSetBkColor($hReturn, 0xD1DFE7)
@@ -299,7 +277,7 @@ EndFunc   ;==>ProcessFindBy
 
 Func CloseEmulatorForce($bOnlyAdb = False)
 	Local $iPids[0], $a[0], $s
-	
+
 	If $bOnlyAdb = False Then
 		$s = Execute("Get" & $g_sAndroidEmulator & "Path()")
 		If not @error Then
@@ -309,29 +287,20 @@ Func CloseEmulatorForce($bOnlyAdb = False)
 		$a = ProcessFindBy($__VBoxManage_Path, "")
 		_ArrayAdd($iPids, $a)
 	EndIf
-	
+
 	$a = ProcessFindBy($g_sAndroidAdbPath)
 	_ArrayAdd($iPids, $a)
-	
+
 	If UBound($iPids) > 0 and not @error Then
 		For $i = 0 To UBound($iPids) -1 ; Custom fix - Team AIO Mod++
 			KillProcess($iPids[$i], $g_sAndroidAdbPath)
 		Next
-		
+
 		Return True
 	EndIf
-	
+
 	Return False
 EndFunc   ;==>ProcessFindBy
-
-Func SetVarFlag()
-	If $g_iDualBarFix = 0 Then 
-		$g_iDualBarFix = -99
-	Else
-		$g_iDualBarFix = 0
-	EndIf
-	SetDebugLog("Attack Bar : " & $g_iDualBarFix & " flag.")
-EndFunc
 
 Func SecureClick($x, $y)
 	If $x < 68 And $y > 316 Then ; coordinates where the game will click on the CHAT tab (safe margin)

@@ -346,6 +346,7 @@ Global $g_iAndroidControlClickWindow = 0 ; 0 = Click the Android Control, 1 = Cl
 Global $g_iAndroidControlClickMode = 0 ; 0 = Use AutoIt ControlClick, 1 = Use _SendMessage
 Global $g_bAndroidCloseWithBot = False ; Close Android when bot closes
 Global $g_bAndroidInitialized = False
+Global $g_iCmbAndroidSleep = 0
 Global $g_bUpdateSharedPrefs = True ; Update shared_prefs/storage_new.xml before pushing
 
 Global $g_iAndroidProcessAffinityMask = 0

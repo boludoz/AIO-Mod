@@ -121,13 +121,6 @@ Func ReadConfig_MOD_MiscTab()
 	IniReadS($g_bChkReqCCFromChat, $g_sProfileConfigPath, "ReqCCOptions", "ReqCCFromChat", $g_bChkReqCCFromChat, "Bool")
 	IniReadS($g_bRequestOneTimeEnable, $g_sProfileConfigPath, "ReqCCOptions", "RequestOneTime", $g_bRequestOneTimeEnable, "Bool")
 
-	; Donation records.
-	IniReadS($g_iDayLimitTroops, $g_sProfileConfigPath, "DonRecords", "DayLimitTroops", $g_iDayLimitTroops, "Int")
-	IniReadS($g_iDayLimitSpells, $g_sProfileConfigPath, "DonRecords", "DayLimitSpells", $g_iDayLimitSpells, "Int")
-	IniReadS($g_iDayLimitSieges, $g_sProfileConfigPath, "DonRecords", "DayLimitSieges", $g_iDayLimitSieges, "Int")
-	IniReadS($g_iCmbRestartEvery, $g_sProfileConfigPath, "DonRecords", "CmbRestartEvery", $g_iCmbRestartEvery, "Int")
-	IniReadS($g_sRestartTimer, $g_sProfileConfigPath, "DonRecords", "RestartTimer", $g_sRestartTimer)
-	
 	; Tooops;
 	For $i = 0 To $eTroopCount - 1
 		IniReadS($g_aiDonateStatsTroops[$i][0], $g_sProfileConfigPath, "DonRecords", "DonateStatsTroops" & $i, $g_aiDonateStatsTroops[$i][0], "Int")

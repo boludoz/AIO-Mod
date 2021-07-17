@@ -5,12 +5,12 @@
 #pragma compile(Icon, "Images\MyBot.ico")
 #pragma compile(FileDescription, Clash of Clans Bot - A Free Clash of Clans bot - https://mybot.run)
 #pragma compile(ProductVersion, 7.9)
-#pragma compile(FileVersion, 7.9.4)
+#pragma compile(FileVersion, 7.9.6)
 #pragma compile(LegalCopyright, © https://mybot.run)
 #Au3Stripper_Off
 #Au3Stripper_On
-Global $g_sBotVersion = "v7.9.4"
-Global $g_sModVersion = "v4.5.7"
+Global $g_sBotVersion = "v7.9.6"
+Global $g_sModVersion = "v4.5.8"
 Opt("MustDeclareVars", 1)
 Global $g_sBotTitle = ""
 Global $g_hFrmBot = 0
@@ -2904,13 +2904,13 @@ Global $g_bBotPaused = False
 Global $g_bTogglePauseAllowed = True
 Global Const $REDLINE_IMGLOC_RAW = 0
 Global Const $DROPLINE_EDGE_FIRST = 1
-Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl, $eWall, $eSWall, $eBall, $eRBall, $eWiza, $eSWiza, $eHeal, $eDrag, $ePekk, $eBabyD, $eInfernoD, $eMine, $eEDrag, $eYeti, $eDragR, $eMini, $eSMini, $eHogs, $eValk, $eSValk, $eGole, $eWitc, $eSWitc, $eLava, $eIceH, $eBowl, $eIceG, $eHunt, $eKing, $eQueen, $eWarden, $eChampion, $eCastle, $eLSpell, $eHSpell, $eRSpell, $eJSpell, $eFSpell, $eCSpell, $eISpell, $ePSpell, $eESpell, $eHaSpell, $eSkSpell, $eBtSpell, $eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eArmyCount
+Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl, $eWall, $eSWall, $eBall, $eRBall, $eWiza, $eSWiza, $eHeal, $eDrag, $ePekk, $eBabyD, $eInfernoD, $eMine, $eEDrag, $eYeti, $eRDrag, $eMini, $eSMini, $eHogs, $eValk, $eSValk, $eGole, $eWitc, $eSWitc, $eLava, $eIceH, $eBowl, $eIceG, $eHunt, $eKing, $eQueen, $eWarden, $eChampion, $eCastle, $eLSpell, $eHSpell, $eRSpell, $eJSpell, $eFSpell, $eCSpell, $eISpell, $ePSpell, $eESpell, $eHaSpell, $eSkSpell, $eBtSpell, $eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eArmyCount
 Global Enum $DB, $LB, $TB, $DT
 Global Const $g_iModeCount = 3
 Global Enum $eTroopBarbarian, $eTroopSuperBarbarian, $eTroopArcher, $eTroopSuperArcher, $eTroopGiant, $eTroopSuperGiant, $eTroopGoblin, $eTroopSneakyGoblin, $eTroopWallBreaker, $eTroopSuperWallBreaker, $eTroopBalloon, $eTroopRocketBalloon, $eTroopWizard, $eTroopSuperWizard, $eTroopHealer, $eTroopDragon, $eTroopPekka, $eTroopBabyDragon, $eTroopInfernoDragon, $eTroopMiner, $eTroopElectroDragon, $eTroopYeti, $eTroopDragonRider, $eTroopMinion, $eTroopSuperMinion, $eTroopHogRider, $eTroopValkyrie, $eTroopSuperValkyrie, $eTroopGolem, $eTroopWitch, $eTroopSuperWitch, $eTroopLavaHound, $eTroopIceHound, $eTroopBowler, $eTroopIceGolem, $eTroopHeadhunter, $eTroopCount
 Global Const $g_asTroopNames[$eTroopCount] = [ "Barbarian", "Super Barbarian", "Archer", "Super Archer", "Giant", "Super Giant", "Goblin", "Sneaky Goblin", "Wall Breaker", "Super WallBreaker", "Balloon", "Rocket Balloon", "Wizard", "Super Wizard", "Healer", "Dragon", "Pekka", "Baby Dragon", "Inferno Dragon", "Miner", "Electro Dragon", "Yeti", "Dragon Rider", "Minion", "Super Minion", "Hog Rider", "Valkyrie", "Super Valkyrie", "Golem", "Witch", "Super Witch", "Lava Hound", "Ice Hound", "Bowler", "Ice Golem", "Headhunter"]
 Global Const $g_asTroopNamesPlural[$eTroopCount] = [ "Barbarians", "Super Barbarians", "Archers", "Super Archers", "Giants", "Super Giants", "Goblins", "Sneaky Goblins", "Wall Breakers", "Super Wall Breakers", "Balloons", "Rocket Balloons", "Wizards", "Super Wizards", "Healers", "Dragons", "Pekkas", "Baby Dragons", "Inferno Dragons", "Miners", "Electro Dragons", "Yetis", "Dragon Riders", "Minions", "Super Minions", "Hog Riders", "Valkyries", "Super Valkyries", "Golems", "Witches", "Super Witchs", "Lava Hounds", "Ice Hounds", "Bowlers", "Ice Golems", "Headhunters"]
-Global Const $g_asTroopShortNames[$eTroopCount] = [ "Barb", "SBarb", "Arch", "SArch", "Giant", "SGiant", "Gobl", "SGobl", "Wall", "SWall", "Ball", "RBall", "Wiza", "SWiza", "Heal", "Drag", "Pekk", "BabyD", "InfernoD", "Mine", "EDrag", "Yeti", "DragR", "Mini", "SMini", "Hogs", "Valk", "SValk", "Gole", "Witc", "SWitc", "Lava", "IceH", "Bowl", "IceG", "Hunt"]
+Global Const $g_asTroopShortNames[$eTroopCount] = [ "Barb", "SBarb", "Arch", "SArch", "Giant", "SGiant", "Gobl", "SGobl", "Wall", "SWall", "Ball", "RBall", "Wiza", "SWiza", "Heal", "Drag", "Pekk", "BabyD", "InfernoD", "Mine", "EDrag", "Yeti", "RDrag", "Mini", "SMini", "Hogs", "Valk", "SValk", "Gole", "Witc", "SWitc", "Lava", "IceH", "Bowl", "IceG", "Hunt"]
 Global Const $iSuperTroopsCount = 12, $iMaxSupersTroop = 2
 Global $g_bSuperTroopsEnable = False
 Global $g_iCmbSuperTroops[$iMaxSupersTroop] = [0, 0]
@@ -3322,7 +3322,7 @@ Global $g_bRequestCCForWar, $g_sTxtRequestCCForWar
 Global $g_iCmbCampsBB[6] = [0, 0, 0, 0, 0, 0]
 Global $g_hComboTroopBB[6]
 Global $g_bChkNoDropIfShield = True, $g_bChkTrophyTroops = False, $g_bChkTrophyHeroesAndTroops = True
-Global $g_bUseSleep = False, $g_iIntSleep = 20, $g_bUseRandomSleep = False, $g_bNoAttackSleep = False, $g_bDisableColorLog = False, $g_bDelayLabel = False, $g_bAvoidLocation = False, $g_bEdgeObstacle = False
+Global $g_bUseSleep = False, $g_iIntSleep = 20, $g_bUseRandomSleep = False, $g_bNoAttackSleep = False, $g_bDisableColorLog = False, $g_bAvoidLocation = False, $g_bEdgeObstacle = False
 Global $g_bMaxSidesSF = True, $g_iCmbMaxSidesSF = 1
 Global $g_bDeployCastleFirst[2] = [False, False]
 Global $g_iDeployWave[3] = [5, 5, 5], $g_iDeployDelay[3] = [5, 5, 5]

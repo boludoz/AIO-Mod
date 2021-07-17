@@ -50,15 +50,6 @@ Func txtLogLineLimit()
 EndFunc   ;==>txtLogLineLimit
 #EndRegion - Setlog limit - Team AIO Mod++
 
-; Donation records.
-Func InputRecords()
-		$g_iDiffRestartEvery = $g_iCmbRestartEvery
-		$g_iDayLimitTroops = (GUICtrlRead($g_hDayLimitTroops))
-		$g_iDayLimitSpells = (GUICtrlRead($g_hDayLimitSpells))
-		$g_iDayLimitSieges = (GUICtrlRead($g_hDayLimitSieges))
-		$g_iCmbRestartEvery = (GUICtrlRead($g_hCmbRestartEvery))
-		If $g_iDiffRestartEvery <> $g_iCmbRestartEvery Then TimerRecordDonation(True)
-EndFunc   ;==>ChkReqCCAlways
 
 ; Request form chat / on a loop - Team AiO MOD++
 Func ChkReqCCAlways()
@@ -109,35 +100,11 @@ Func chkDelayMod()
 	Next
 
 	GUICtrlSetState($g_hDisableColorLog, $GUI_DISABLE)
-	$g_bUseSleep = (GUICtrlRead($g_hUseSleep) = $GUI_CHECKED)
-	$g_bUseRandomSleep = (GUICtrlRead($g_hUseRandomSleep) = $GUI_CHECKED)
-	$g_bNoAttackSleep = (GUICtrlRead($g_hNoAttackSleep) = $GUI_CHECKED)
 	$g_bDisableColorLog = (GUICtrlRead($g_hDisableColorLog) = $GUI_CHECKED)
 	$g_bAvoidLocation = (GUICtrlRead($g_hAvoidLocation) = $GUI_CHECKED)
 
 	$g_bDeployCastleFirst[$DB] = (GUICtrlRead($g_hDeployCastleFirst[$DB]) = $GUI_CHECKED)
 	$g_bDeployCastleFirst[$LB] = (GUICtrlRead($g_hDeployCastleFirst[$LB]) = $GUI_CHECKED)
-
-	$g_iIntSleep = Int(GUICtrlRead($g_hIntSleep))
-	GUICtrlSetData($g_hDelayLabel, $g_iIntSleep)
-
-	If $g_iIntSleep < -25 Then
-		GUICtrlSetColor($g_hDelayLabel, $COLOR_RED)
-	ElseIf $g_iIntSleep > 0 Then
-		GUICtrlSetColor($g_hDelayLabel, $COLOR_GREEN)
-	Else
-		GUICtrlSetColor($g_hDelayLabel, -1)
-	EndIf
-
-	If $g_bUseSleep Then
-		GUICtrlSetState($g_hIntSleep, $GUI_ENABLE)
-		GUICtrlSetState($g_hUseRandomSleep, $GUI_ENABLE)
-		GUICtrlSetState($g_hNoAttackSleep, $GUI_ENABLE)
-	Else
-		GUICtrlSetState($g_hIntSleep, $GUI_DISABLE)
-		GUICtrlSetState($g_hUseRandomSleep, $GUI_DISABLE)
-		GUICtrlSetState($g_hNoAttackSleep, $GUI_DISABLE)
-	EndIf
 
 EndFunc   ;==>chkDelayMod
 
@@ -334,7 +301,7 @@ Func chkLabPriority()
 	chkPriorityResourceLab()
 EndFunc   ;==>chkLabPriority
 
-; Lab Priority System 
+; Lab Priority System
 func chkPriorityResourceLab()
 	$g_bPriorityLab = (GUICtrlRead($g_hChkPriorityLab) = $GUI_CHECKED)
 	GUICtrlSetState($g_hCmbPriorityLab, ($g_bPriorityLab = True And $g_bAutoLabUpgradeEnable = True And $g_iCmbLaboratory = 0) ? ($GUI_ENABLE) : ($GUI_DISABLE))
@@ -366,7 +333,7 @@ Func chkNewDBSys()
 	$g_bCollectorFilterDisable = (GUICtrlRead($g_hChkDBDisableCollectorsFilter) = $GUI_CHECKED)
 	$g_bDefensesAlive = (GUICtrlRead($g_hChkDBCheckDefensesAlive) = $GUI_CHECKED)
 	$g_bDefensesMix = (GUICtrlRead($g_hChkDBCheckDefensesMix) = $GUI_CHECKED)
-	
+
 	Local $bDisable = False, $bDisableOther = False
 	Select
 		Case $g_bCollectorFilterDisable And Not $g_bDefensesMix And Not $g_bDefensesAlive
@@ -384,7 +351,7 @@ Func chkNewDBSys()
 			$bDisableOther = True
 			$bDisable = False
 	EndSelect
-	
+
 	GUICtrlSetState($g_hChkDBDisableCollectorsFilter, ($bDisableOther = True) ? ($GUI_DISABLE) : ($GUI_ENABLE))
 	GUICtrlSetState($g_hChkDBCheckDefensesAlive, ($bDisableOther = True) ? ($GUI_DISABLE) : ($GUI_ENABLE))
 

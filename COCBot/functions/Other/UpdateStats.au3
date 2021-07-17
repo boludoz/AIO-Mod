@@ -425,7 +425,6 @@ Func UpdateStats($bForceUpdate = False)
 	For $i = 0 To $eTroopCount - 1
 		If $g_aiDonateStatsTroops[$i][0] <> $g_aiDonateStatsTroops[$i][1] Then
 			$bStatsUpdated = True
-			GUICtrlSetData($g_hLblDayTroop[$i], _NumberFormat($g_aiDonateStatsTroops[$i][0], True)) ; Donation records - Team AIO Mod++
 			GUICtrlSetData($g_hLblDonTroop[$i], _NumberFormat($g_aiDonateStatsTroops[$i][0], True))
 			If $g_aiDonateStatsTroops[$i][0] > $g_aiDonateStatsTroops[$i][1] Then
 				$g_iTotalDonateStatsTroops += ($g_aiDonateStatsTroops[$i][0] - $g_aiDonateStatsTroops[$i][1])
@@ -437,7 +436,6 @@ Func UpdateStats($bForceUpdate = False)
 	Next
 	If $bDonateTroopsStatsChanged Then
 		$bStatsUpdated = True
-		GUICtrlSetData($g_hDayTotalTroops, _NumberFormat($g_iTotalDonateStatsTroops, True)) ; Donation records - Team AIO Mod++
 		GUICtrlSetData($g_hLblTotalTroopsQ, _NumberFormat($g_iTotalDonateStatsTroops, True))
 		GUICtrlSetData($g_hLblTotalTroopsXP, _NumberFormat($g_iTotalDonateStatsTroopsXP, True))
 		$bDonateTroopsStatsChanged = False
@@ -446,7 +444,6 @@ Func UpdateStats($bForceUpdate = False)
 	For $i = 0 To $eSpellCount - 1
 		If $g_aiDonateStatsSpells[$i][0] <> $g_aiDonateStatsSpells[$i][1] And $i <> $eSpellClone Then
 			$bStatsUpdated = True
-			GUICtrlSetData($g_hLblDaySpell[$i], _NumberFormat($g_aiDonateStatsSpells[$i][0], True)) ; Donation records - Team AIO Mod++
 			GUICtrlSetData($g_hLblDonSpell[$i], _NumberFormat($g_aiDonateStatsSpells[$i][0], True))
 			If $g_aiDonateStatsSpells[$i][0] > $g_aiDonateStatsSpells[$i][1] Then
 				$g_iTotalDonateStatsSpells += ($g_aiDonateStatsSpells[$i][0] - $g_aiDonateStatsSpells[$i][1])
@@ -459,7 +456,6 @@ Func UpdateStats($bForceUpdate = False)
 
 	If $bDonateSpellsStatsChanged Then
 		$bStatsUpdated = True
-		GUICtrlSetData($g_hDayTotalSpells, _NumberFormat($g_iTotalDonateStatsSpells, True)) ; Donation records - Team AIO Mod++
 		GUICtrlSetData($g_hLblTotalSpellsQ, _NumberFormat($g_iTotalDonateStatsSpells, True))
 		GUICtrlSetData($g_hLblTotalSpellsXP, _NumberFormat($g_iTotalDonateStatsSpellsXP, True))
 		$bDonateSpellsStatsChanged = False
@@ -468,7 +464,6 @@ Func UpdateStats($bForceUpdate = False)
 	For $i = 0 To $eSiegeMachineCount - 1
 		If $g_aiDonateStatsSieges[$i][0] <> $g_aiDonateStatsSieges[$i][1] Then
 			$bStatsUpdated = True
-			GUICtrlSetData($g_hLblDaySiege[$i], _NumberFormat($g_aiDonateStatsSieges[$i][0], True)) ; Donation records - Team AIO Mod++
 			GUICtrlSetData($g_hLblDonSiegel[$i], _NumberFormat($g_aiDonateStatsSieges[$i][0], True))
 			If $g_aiDonateStatsSieges[$i][0] > $g_aiDonateStatsSieges[$i][1] Then
 				$g_iTotalDonateStatsSiegeMachines += ($g_aiDonateStatsSieges[$i][0] - $g_aiDonateStatsSieges[$i][1])
@@ -483,7 +478,6 @@ Func UpdateStats($bForceUpdate = False)
 
 	If $bDonateSiegeStatsChanged Then
 		$bStatsUpdated = True
-		GUICtrlSetData($g_hDayTotalSieges, _NumberFormat($g_iTotalDonateStatsSiegeMachines, True)) ; Donation records - Team AIO Mod++
 		; TODO
 		;GUICtrlSetData($g_hLblTotalTroopsQ, _NumberFormat($g_iTotalDonateStatsTroops, True))
 		GUICtrlSetData($g_hLblTotalTroopsQ, _NumberFormat($g_iTotalDonateStatsTroops, True))

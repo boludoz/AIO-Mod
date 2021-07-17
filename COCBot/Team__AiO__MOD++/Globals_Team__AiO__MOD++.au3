@@ -123,12 +123,6 @@ Global $g_bRemainTweak = True
 ; Skip first check
 Global $g_bAvoidLocate  = False, $g_hAvoidLocate = 0, $g_bIsReallyOn = False
 
-; Donation records.
-Global $g_iDayLimitTroops = 0, $g_iDayLimitSpells = 0, $g_iDayLimitSieges = 0
-Global $g_iCmbRestartEvery, $g_hCmbRestartEvery
-Global $g_iDiffRestartEvery = 0
-Global $g_sRestartTimer = '1970/01/01 00:00:00'
-
 ; Request form chat / on a loop.
 Global $g_hChkReqCCAlways = 0, $g_hChkReqCCFromChat = 0
 Global $g_bChkReqCCAlways = 0, $g_bChkReqCCFromChat = 0
@@ -158,7 +152,7 @@ Global $g_hChkNoDropIfShield, $g_hChkTrophyTroops, $g_hChkTrophyHeroesAndTroops
 ; Misc tab - Team AiO MOD++
 Global $g_bUseSleep = False, $g_iIntSleep = 20, $g_bUseRandomSleep = False, $g_bNoAttackSleep = False, $g_bDisableColorLog = False, $g_bDelayLabel = False, $g_bAvoidLocation = False, $g_bEdgeObstacle = False
 ; GUI
-Global $g_hUseSleep, $g_hIntSleep, $g_hUseRandomSleep, $g_hNoAttackSleep, $g_hDisableColorLog, $g_hDelayLabel, $g_hAvoidLocation, $g_hEdgeObstacle
+Global $g_hDisableColorLog, $g_hDelayLabel, $g_hAvoidLocation, $g_hEdgeObstacle
 ;-------------------
 
 ; Max sides SF
@@ -435,8 +429,6 @@ Global $g_bChkCTBoostLabBBActive = False, $g_hChkCTBoostLabBBActive = 0
 
 Global $g_iAttackTotalBLButtons = -1
 Global $g_aBLButtonsRegion[4] = [10, 570, 450, 55]
-
-Global $g_iDualBarFix = 0
 
 #Region - Custom SmartFarm - Team AIO Mod++
 Global $g_hChkSmartFarmAndRandomDeploy, $g_bUseSmartFarmAndRandomDeploy = True

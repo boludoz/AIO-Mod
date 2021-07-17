@@ -224,6 +224,11 @@ Func cmbAndroidBackgroundMode()
 	UpdateAndroidBackgroundMode()
 EndFunc   ;==>cmbAndroidBackgroundMode
 
+Func cmbAndroidSleep()
+	$g_iCmbAndroidSleep = _GUICtrlComboBox_GetCurSel($g_hCmbAndroidSleep)
+	If $g_iCmbAndroidSleep <> 0 Then SetLog("Increase 'Delays' with " & $g_iCmbAndroidSleep * 500 & "'ms")
+EndFunc   ;==>cmbAndroidSleep
+
 Func EnableShowTouchs()
 	AndroidAdbSendShellCommand("content insert --uri content://settings/system --bind name:s:show_touches --bind value:i:1")
 	SetDebugLog("EnableShowTouchs ON")

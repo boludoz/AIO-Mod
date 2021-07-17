@@ -19,6 +19,7 @@ Global $g_hCmbCOCDistributors = 0, $g_hCmbAndroidBackgroundMode = 0, $g_hCmbAndr
 	$g_hChkAndroidCloseWithBot = 0, $g_hChkUpdateSharedPrefs = 0, $g_hBtnAndroidEnableTouch = 0, $g_hBtnAndroidDisableTouch = 0, $g_lblHelpBot = 0, _
 	$g_hLblAdditionalClickDelay = 0, $g_hSldAdditionalClickDelay = 0, $g_hChkUseDedicatedAdbPort = 0, $g_hCmbAndroidReplaceAdb = 0
 Global $g_hCmbEmulators = 0, $g_hCmbInstances = 0
+Global $g_hCmbAndroidSleep = 0
 
 Func CreateBotAndroid()
 
@@ -121,6 +122,17 @@ Func CreateBotAndroid()
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 4)
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "hrs", -1), $x + 362, $y + 2, -1, -1)
+		;
+		$y -= 52
+		GUICtrlCreateLabel(GetTranslatedFileIni("Android", "LblAndroidSleep", "Extra delay") & ":", $x + 35 + 110 + 55, $y + 2, -1, -1)
+		$g_hCmbAndroidSleep = GUICtrlCreateCombo("", $x + 35 + 110 + 150, $y - 2, 50, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+		GUICtrlSetData(-1, "0|500|1000|1500|2000", "0")
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("Android", "CmbAndroidSleep_Info", 'Specify if you want to increase SLEEP with this value, option for slower computers or using many instances.'))
+		_GUICtrlComboBox_SetCurSel(-1, $g_iCmbAndroidSleep)
+		GUICtrlSetOnEvent(-1, "cmbAndroidSleep")
+		GUICtrlCreateLabel(GetTranslatedFileIni("Android", "LblAndroidSleep_01", "ms"), $x + 35 + 110 + 205, $y + 2, -1, -1)
+		$y += 52
+		;
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	$y = $y2 + $h + 5

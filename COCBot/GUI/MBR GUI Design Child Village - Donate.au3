@@ -68,7 +68,6 @@ Global $g_hLblSkipDonateNearFullTroopsText = 0, $g_hTxtSkipDonateNearFullTroopsP
 Global $g_hGrpDonateCC = 0, $g_ahChkDonateHoursE1 = 0, $g_ahChkDonateHoursE2 = 0
 
 Global $g_hGUI_RequestCC = 0, $g_hGUI_DONATECC = 0, $g_hGUI_ScheduleCC = 0
-Global $g_hGUI_DonateLimiter ; Donation records - Team AIO Mod++
 Global $g_hGrpDonate = 0, $g_hChkDonate = 1, $g_hLblDonateDisabled = 0, $g_hLblScheduleDisabled = 0
 
 ; Clan castle
@@ -86,7 +85,6 @@ Func CreateVillageDonate()
 		CreateRequestSubTab()
 		CreateDonateSubTab()
 		CreateScheduleSubTab()
-		CreateDonationsControlSubTab() ; Donation records - Team AIO Mod++
 	GUISwitch($g_hGUI_DONATE)
 
 	$g_hGUI_DONATE_TAB = GUICtrlCreateTab(0, 0, $g_iSizeWGrpTab2, $g_iSizeHGrpTab2, BitOR($TCS_MULTILINE, $TCS_RIGHTJUSTIFY))
@@ -97,7 +95,6 @@ Func CreateVillageDonate()
 	$g_hGUI_DONATE_TAB_ITEM3 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_02_STab_02_STab_03", "Schedule Donations"))
 	$g_hLblScheduleDisabled = GUICtrlCreateLabel(GetTranslatedFileIni("MBR Main GUI", "disabled_Tab_02_STab_02_STab_Info_01", -1) & " " & GetTranslatedFileIni("MBR Main GUI", "Tab_02_STab_02_STab_02", -1) & " " & GetTranslatedFileIni("MBR Main GUI", "disabled_Tab_03_STab_02_STab_Info_02", -1), 5, 30, $g_iSizeWGrpTab3, 374)
 		GUICtrlSetState(-1, $GUI_HIDE)
-	$g_hGUI_DONATE_TAB_ITEM4 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_04_STab_05_STab_04", "Donations")) ; Donation records - Team AIO Mod++
 	
 	GUICtrlCreateTabItem("")
 
