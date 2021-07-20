@@ -62,7 +62,9 @@ Func waitMainScreen() ;Waits for main screen to popup
 
 	; If mainscreen is not found, then fix it
 	$iCount = 0
-	While 1
+    While 1
+        SetLog("Main Screen While loop", $COLOR_INFO)
+		
 		If Not $g_bRunState Then Return
 		SetLog("Unable to load CoC, attempt to fix it", $COLOR_ERROR)
 		If $g_bDebugSetlog Then SetDebugLog("Restart Loop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop data
@@ -95,7 +97,8 @@ Func waitMainScreenMini()
 	SetLog("Waiting for Main Screen after " & $g_sAndroidEmulator & " restart", $COLOR_INFO)
 	autoHideAndDockAndMinimize(False) ; Auto Dock, Hide Emulator & Bot - Team AiO MOD++
 	Local $aPixelToCheck = $g_bStayOnBuilderBase ? $aIsOnBuilderBase : $aIsMain
-	For $i = 0 To 60 ;30*2000 = 1 Minutes
+    For $i = 0 To 10
+		SetLog("Looping in waitMainScreenMini: Loop Index: " & $i)
 		If Not $g_bRunState Then Return
 		If Not TestCapture() And WinGetAndroidHandle() = 0 Then ExitLoop ; sets @error to 1
 		If $g_bDebugSetlog Then SetDebugLog("waitMainScreenMini ChkObstl Loop = " & $i & " ExitLoop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop
@@ -103,16 +106,17 @@ Func waitMainScreenMini()
 		_CaptureRegion()
 		If Not _CheckPixel($aPixelToCheck, $g_bNoCapturePixel) Then ;Checks for Main Screen
 			If Not TestCapture() And _Sleep(1000) Then Return
-			If CheckObstacles() Then $i = 0 ;See if there is anything in the way of mainscreen
+            If CheckObstacles() Then Return ;See if there is anything in the way of mainscreen
 		Else
 			SetLog("CoC main window took " & Round(__TimerDiff($hTimer) / 1000, 2) & " seconds", $COLOR_SUCCESS)
 			Return
 		EndIf
 		_StatusUpdateTime($hTimer, "Main Screen")
-		If ($i > 60) Or ($iCount > 80) Then ExitLoop ; If CheckObstacles forces reset, limit total time to 6 minute before Force restart BS
+        If ($i > 10) Or ($iCount > 80) Then ExitLoop ; If CheckObstacles forces reset, limit total time to 6 minute before Force restart BS
 		If TestCapture() Then
 			Return "Main screen not available"
 		EndIf
 	Next
-	Return SetError(1, 0, -1)
+    Return RebootAndroid(True)
+    ; Return SetError(1, 0, -1)
 EndFunc   ;==>waitMainScreenMini
