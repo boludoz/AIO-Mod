@@ -319,6 +319,46 @@ Func SecureClick($x, $y)
 	Return True
 EndFunc   ;==>SecureClick
 
+Func _LevDis($s, $t)
+	Local $m, $n, $iMaxM, $iMaxN
+
+	$n = StringLen($s)
+	$m = StringLen($t)
+	$iMaxN = $n + 1
+	$iMaxM = $m + 1
+	Local $d[$iMaxN + 1][$iMaxM + 1]
+	$d[0][0] = 0
+
+	If $n = 0 Then
+		Return $m
+	ElseIf $m = 0 Then
+		Return $n
+	EndIf
+
+	For $i = 1 To $n
+		$d[$i][0] = $d[$i - 1][0] + 1
+	Next
+	For $j = 1 To $m
+		$d[0][$j] = $d[0][$j - 1] + 1
+	Next
+	
+	Local $jj, $ii, $iCost
+	
+	For $i = 1 To $n
+		For $j = 1 To $m
+			$jj = $j - 1
+			$ii = $i - 1
+			If (StringMid($s, $i, 1) = StringMid($t, $j, 1)) Then
+				$iCost = 0
+			Else
+				$iCost = 1
+			EndIf
+			$d[$i][$j] = _Min(_Min($d[$ii][$j] + 1, $d[$i][$jj] + 1), $d[$ii][$jj] + $iCost)
+		Next
+	Next
+	Return $d[$n][$m]
+EndFunc   ;==>_LevDis
+
 ;	https://link.clashofclans.com/en?action=CopyArmy&army=u20x3-3x23
 ; Func ()
 	; 0xFF1919

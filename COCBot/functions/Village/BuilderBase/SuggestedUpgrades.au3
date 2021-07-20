@@ -294,7 +294,7 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False)
 			; Verify if is to Upgrade
 			Local $sMsg = "", $bBuildString = False
 			For $i = 0 To UBound($g_sBBUpgradesToIgnore) -1
-				$bBuildString = StringCompare(StringStripWS($g_aBBUpgradeNameLevel[1], $STR_STRIPALL), StringStripWS($g_sBBUpgradesToIgnore[$i], $STR_STRIPALL)) = 0
+				$bBuildString = (_LevDis(StringStripWS($g_aBBUpgradeNameLevel[1], $STR_STRIPALL), StringStripWS($g_sBBUpgradesToIgnore[$i], $STR_STRIPALL)) < 2)
 				If $bBuildString And $g_iChkBBUpgradesToIgnore[$i] = 1 Then
 					$sMsg = "Ops! " &  $g_aBBUpgradeNameLevel[1] & " is not to Upgrade!"
 					SetLog($sMsg, $COLOR_ERROR)
