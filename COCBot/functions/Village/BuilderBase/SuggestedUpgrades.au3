@@ -287,83 +287,85 @@ Func GetUpgradeButton($sUpgButtom = "", $bDebug = False)
 	If $sUpgButtom = "Gold" Then $sUpgButtom = $g_sImgAutoUpgradeBtnGold
 
 	; If QuickMIS("BC1", $g_sImgAutoUpgradeBtnDir, 182, 565, 685, 723, True, $bDebug) Then
-	_WaitForCheckImg($g_sImgAutoUpgradeBtnDir, "182, 565, 685, 723")
+	If _WaitForCheckImg($g_sImgAutoUpgradeBtnDir, "182, 565, 685, 723") Then
+		If UBound($g_aImageSearchXML) > 0 and not @error Then
+			$g_aBBUpgradeNameLevel = BuildingInfo(245, 490 + $g_iBottomOffsetY)
+			If $g_aBBUpgradeNameLevel[0] = 2 Then
+				SetLog("Building: " & $g_aBBUpgradeNameLevel[1], $COLOR_INFO)
 	
-	 If UBound($g_aImageSearchXML) > 0 and not @error Then
-		$g_aBBUpgradeNameLevel = BuildingInfo(245, 490 + $g_iBottomOffsetY)
-		If $g_aBBUpgradeNameLevel[0] = 2 Then
-			SetLog("Building: " & $g_aBBUpgradeNameLevel[1], $COLOR_INFO)
-
-			; Verify if is to Upgrade
-			Local $sMsg = "", $bBuildString = False
-			For $i = 0 To UBound($g_sBBUpgradesToIgnore) -1
-				$bBuildString = (_LevDis(StringStripWS($g_aBBUpgradeNameLevel[1], $STR_STRIPALL), StringStripWS($g_sBBUpgradesToIgnore[$i], $STR_STRIPALL)) < 2)
-				If $bBuildString And $g_iChkBBUpgradesToIgnore[$i] = 1 Then
-					$sMsg = "Ops! " &  $g_aBBUpgradeNameLevel[1] & " is not to Upgrade!"
-					SetLog($sMsg, $COLOR_ERROR)
-					Return False
-				ElseIf $bBuildString And $g_iChkBBUpgradesToIgnore[$i] = 0 Then
-					ExitLoop
-				EndIf
-			Next
-
-			If _MultiPixelSearch($g_aImageSearchXML[0][1], 579, $g_aImageSearchXML[0][2] + 67, 613, 2, 2, Hex(0xFF887F, 6), StringSplit2D("0xFF887F-0-1|0xFF887F-4-0"), 35) <> 0 Then
-				SetLog("Upgrade stopped due to insufficient loot", $COLOR_ERROR)
-				ClickAway()
-				Return False
-			EndIf
-
-			Click($g_aImageSearchXML[0][1], $g_aImageSearchXML[0][2], 1)
-			If _Sleep(500) Then Return
-
-			For $i = 0 To UBound($g_aBBUpgradeResourceCostDuration) - 1
-				$g_aBBUpgradeResourceCostDuration[$i] = ""
-			Next
-
-			If StringInStr($g_aBBUpgradeNameLevel[2], "Broken") = 0 Then
-				$g_aBBUpgradeResourceCostDuration[0] = $sUpgButtom
-				If StringInStr($g_aBBUpgradeNameLevel[1], "Machine") > 0 Then
-					$g_aBBUpgradeResourceCostDuration[1] = getResourcesUpgrade(598, 509 + 44)
-					$g_aBBUpgradeResourceCostDuration[2] = getHeroUpgradeTime(578, 450 + 44)
-				Else
-					$g_aBBUpgradeResourceCostDuration[1] = getResourcesUpgrade(366, 473 + 44)
-					$g_aBBUpgradeResourceCostDuration[2] = getBldgUpgradeTime(190, 292 + 44)
-				EndIf
-			EndIf
-
-			If _WaitForCheckImg($sUpgButtom, $aBtnPos) Then
-				If UBound($g_aImageSearchXML) > 0 and not @error Then
-					Click($g_aImageSearchXML[0][1], $g_aImageSearchXML[0][2], 1)
-					If _Sleep(500) Then Return
-				EndIf
-
-				If isGemOpen(True) Then
+				; Verify if is to Upgrade
+				Local $sMsg = "", $bBuildString = False
+				For $i = 0 To UBound($g_sBBUpgradesToIgnore) -1
+					$bBuildString = (_LevDis(StringStripWS($g_aBBUpgradeNameLevel[1], $STR_STRIPALL), StringStripWS($g_sBBUpgradesToIgnore[$i], $STR_STRIPALL)) < 2)
+					If $bBuildString And $g_iChkBBUpgradesToIgnore[$i] = 1 Then
+						$sMsg = "Ops! " &  $g_aBBUpgradeNameLevel[1] & " is not to Upgrade!"
+						SetLog($sMsg, $COLOR_ERROR)
+						Return False
+					ElseIf $bBuildString And $g_iChkBBUpgradesToIgnore[$i] = 0 Then
+						ExitLoop
+					EndIf
+				Next
+	
+				If _MultiPixelSearch($g_aImageSearchXML[0][1], 579, $g_aImageSearchXML[0][2] + 67, 613, 2, 2, Hex(0xFF887F, 6), StringSplit2D("0xFF887F-0-1|0xFF887F-4-0"), 35) <> 0 Then
 					SetLog("Upgrade stopped due to insufficient loot", $COLOR_ERROR)
 					ClickAway()
-					If _Sleep(500) Then Return
-					ClickAway()
 					Return False
+				EndIf
+	
+				Click($g_aImageSearchXML[0][1], $g_aImageSearchXML[0][2], 1)
+				If _Sleep(500) Then Return
+	
+				For $i = 0 To UBound($g_aBBUpgradeResourceCostDuration) - 1
+					$g_aBBUpgradeResourceCostDuration[$i] = ""
+				Next
+	
+				If StringInStr($g_aBBUpgradeNameLevel[2], "Broken") = 0 Then
+					$g_aBBUpgradeResourceCostDuration[0] = $sUpgButtom
+					If StringInStr($g_aBBUpgradeNameLevel[1], "Machine") > 0 Then
+						$g_aBBUpgradeResourceCostDuration[1] = getResourcesUpgrade(598, 509 + 44)
+						$g_aBBUpgradeResourceCostDuration[2] = getHeroUpgradeTime(578, 450 + 44)
+					Else
+						$g_aBBUpgradeResourceCostDuration[1] = getResourcesUpgrade(366, 473 + 44)
+						$g_aBBUpgradeResourceCostDuration[2] = getBldgUpgradeTime(190, 292 + 44)
+					EndIf
+				EndIf
+	
+				If _WaitForCheckImg($sUpgButtom, $aBtnPos) Then
+					If UBound($g_aImageSearchXML) > 0 and not @error Then
+						Click($g_aImageSearchXML[0][1], $g_aImageSearchXML[0][2], 1)
+						If _Sleep(500) Then Return
+					EndIf
+	
+					If isGemOpen(True) Then
+						SetLog("Upgrade stopped due to insufficient loot", $COLOR_ERROR)
+						ClickAway()
+						If _Sleep(500) Then Return
+						ClickAway()
+						Return False
+					Else
+						SetLog($g_aBBUpgradeNameLevel[1] & " Upgrading!", $COLOR_INFO)
+						ClickAway()
+						Return True
+					EndIf
 				Else
-					SetLog($g_aBBUpgradeNameLevel[1] & " Upgrading!", $COLOR_INFO)
+					Local $bHammerBuilding = WaitforPixel(352, 490, 511, 566, Hex(0x7C8AFF, 6), 30, 10)
+					If $bHammerBuilding = True Then
+						SetLog("Hammer Building Detected!", $COLOR_ERROR)
+					Else
+						; SetLog("Not enough Resources to Upgrade " & $g_aBBUpgradeNameLevel[1] & " !", $COLOR_ERROR)
+						SetLog("Fail upgrade " & $g_aBBUpgradeNameLevel[1] & " !", $COLOR_ERROR)
+					EndIf
+	
 					ClickAway()
-					Return True
+					If _Sleep(250) Then Return
 				EndIf
-			Else
-				Local $bHammerBuilding = WaitforPixel(352, 490, 511, 566, Hex(0x7C8AFF, 6), 30, 10)
-				If $bHammerBuilding = True Then
-					SetLog("Hammer Building Detected!", $COLOR_ERROR)
-				Else
-					; SetLog("Not enough Resources to Upgrade " & $g_aBBUpgradeNameLevel[1] & " !", $COLOR_ERROR)
-					SetLog("Fail upgrade " & $g_aBBUpgradeNameLevel[1] & " !", $COLOR_ERROR)
-				EndIf
-
-				ClickAway()
-				If _Sleep(250) Then Return
+	
 			EndIf
-
 		EndIf
+	Else
+		Setlog("g_sImgAutoUpgradeBtnDir fail.", $COLOR_ERROR)
 	EndIf
-
+	
 	Return False
 EndFunc   ;==>GetUpgradeButton
 #EndRegion - Bulder base upgrades - Team AIO Mod++
