@@ -276,17 +276,20 @@ Func GetIconPosition($x, $y, $x1, $y1, $directory, $Name = "Elixir", $Screencap 
 EndFunc   ;==>GetIconPosition
 
 #Region - Bulder base upgrades - Team AIO Mod++
-Func GetUpgradeButton($sUpgButtom = "", $Debug = False)
+Func GetUpgradeButton($sUpgButtom = "", $bDebug = False)
 
 	;Local $aBtnPos = [360, 500, 180, 50] ; x, y, w, h
-	Local $aBtnPos = [360, 460, 380, 120] ; x, y, w, h ; support Battke Machine, broken and upgrade
+	Local $aBtnPos = [143, 389, 721, 600] ; x, y, w, h ; support Battke Machine, broken and upgrade
 
 	If $sUpgButtom = "" Then Return
 
 	If $sUpgButtom = "Elixir" Then $sUpgButtom = $g_sImgAutoUpgradeBtnElixir
 	If $sUpgButtom = "Gold" Then $sUpgButtom = $g_sImgAutoUpgradeBtnGold
 
-	If QuickMIS("BC1", $g_sImgAutoUpgradeBtnDir, 182, 565, 685, 723, True, $Debug) Then
+	; If QuickMIS("BC1", $g_sImgAutoUpgradeBtnDir, 182, 565, 685, 723, True, $bDebug) Then
+	_WaitForCheckImg($g_sImgAutoUpgradeBtnDir, "182, 565, 685, 723")
+	
+	 If UBound($g_aImageSearchXML) > 0 and not @error Then
 		$g_aBBUpgradeNameLevel = BuildingInfo(245, 490 + $g_iBottomOffsetY)
 		If $g_aBBUpgradeNameLevel[0] = 2 Then
 			SetLog("Building: " & $g_aBBUpgradeNameLevel[1], $COLOR_INFO)
@@ -304,19 +307,19 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False)
 				EndIf
 			Next
 
-			If _MultiPixelSearch($g_iQuickMISX + 300, 579, $g_iQuickMISX + 300 + 67, 613, 2, 2, Hex(0xFF887F, 6), StringSplit2D("0xFF887F-0-1|0xFF887F-4-0"), 35) <> 0 Then
+			If _MultiPixelSearch($g_aImageSearchXML[0][1], 579, $g_aImageSearchXML[0][2] + 67, 613, 2, 2, Hex(0xFF887F, 6), StringSplit2D("0xFF887F-0-1|0xFF887F-4-0"), 35) <> 0 Then
 				SetLog("Upgrade stopped due to insufficient loot", $COLOR_ERROR)
 				ClickAway()
 				Return False
 			EndIf
 
-			Click($g_iQuickMISX + 300, $g_iQuickMISY + 650, 1)
-			If _Sleep(1500) Then Return
-			
+			Click($g_aImageSearchXML[0][1], $g_aImageSearchXML[0][2], 1)
+			If _Sleep(500) Then Return
+
 			For $i = 0 To UBound($g_aBBUpgradeResourceCostDuration) - 1
 				$g_aBBUpgradeResourceCostDuration[$i] = ""
 			Next
-			
+
 			If StringInStr($g_aBBUpgradeNameLevel[2], "Broken") = 0 Then
 				$g_aBBUpgradeResourceCostDuration[0] = $sUpgButtom
 				If StringInStr($g_aBBUpgradeNameLevel[1], "Machine") > 0 Then
@@ -328,8 +331,12 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False)
 				EndIf
 			EndIf
 
-			If QuickMIS("BC1", $sUpgButtom, $aBtnPos[0], $aBtnPos[1], $aBtnPos[0] + $aBtnPos[2], $aBtnPos[1] + $aBtnPos[3], True, $Debug) Then
-				Click($g_iQuickMISX + $aBtnPos[0], $g_iQuickMISY + $aBtnPos[1], 1)
+			If _WaitForCheckImg($sUpgButtom, $aBtnPos) Then
+				If UBound($g_aImageSearchXML) > 0 and not @error Then
+					Click($g_aImageSearchXML[0][1], $g_aImageSearchXML[0][2], 1)
+					If _Sleep(500) Then Return
+				EndIf
+
 				If isGemOpen(True) Then
 					SetLog("Upgrade stopped due to insufficient loot", $COLOR_ERROR)
 					ClickAway()
@@ -346,7 +353,8 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False)
 				If $bHammerBuilding = True Then
 					SetLog("Hammer Building Detected!", $COLOR_ERROR)
 				Else
-					SetLog("Not enough Resources to Upgrade " & $g_aBBUpgradeNameLevel[1] & " !", $COLOR_ERROR)
+					; SetLog("Not enough Resources to Upgrade " & $g_aBBUpgradeNameLevel[1] & " !", $COLOR_ERROR)
+					SetLog("Fail upgrade " & $g_aBBUpgradeNameLevel[1] & " !", $COLOR_ERROR)
 				EndIf
 
 				ClickAway()
