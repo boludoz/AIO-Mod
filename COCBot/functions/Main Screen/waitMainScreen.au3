@@ -19,7 +19,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 	Local $iCount
 	SetLog("Waiting for Main Screen")
 	$iCount = 0
-	Local $aPixelToCheck = $g_bStayOnBuilderBase ? $aIsOnBuilderBase : $aIsMain
+	Local $aPixelToCheck = ($g_bStayOnBuilderBase = True) ? ($aIsOnBuilderBase) : ($aIsMain)
 	For $i = 0 To 105 ;105*2000 = 3.5 Minutes
 		If Not $g_bRunState Then Return
 		If $g_bDebugSetlog Then SetDebugLog("waitMainScreen ChkObstl Loop = " & $i & ", ExitLoop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop
@@ -96,9 +96,9 @@ Func waitMainScreenMini()
 	If TestCapture() = False Then getBSPos() ; Update Android Window Positions
 	SetLog("Waiting for Main Screen after " & $g_sAndroidEmulator & " restart", $COLOR_INFO)
 	autoHideAndDockAndMinimize(False) ; Auto Dock, Hide Emulator & Bot - Team AiO MOD++
-	Local $aPixelToCheck = $g_bStayOnBuilderBase ? $aIsOnBuilderBase : $aIsMain
+	Local $aPixelToCheck = ($g_bStayOnBuilderBase = True) ? ($aIsOnBuilderBase) : ($aIsMain)
     For $i = 0 To 10
-		SetLog("Looping in waitMainScreenMini: Loop Index: " & $i)
+		SetLog("[" & $i & "] Waiting main screen", $COLOR_INFO)
 		If Not $g_bRunState Then Return
 		If Not TestCapture() And WinGetAndroidHandle() = 0 Then ExitLoop ; sets @error to 1
 		If $g_bDebugSetlog Then SetDebugLog("waitMainScreenMini ChkObstl Loop = " & $i & " ExitLoop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop

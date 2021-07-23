@@ -435,7 +435,7 @@ Func InitializeMBR(ByRef $sAI, $bConfigRead)
 			"With the first command line parameter, specify the Profilename (you can create profiles on the Bot/Profiles tab, if a " & _
 			"profilename contains a {space}, then enclose the profilename in double quotes). " & _
 			"With the second, specify the name of the Emulator and with the third, an Android Instance (not for BlueStacks). \r\n" & _
-			"Supported Emulators are MEmu, Droid4X, Nox, BlueStacks2, BlueStacks, KOPlayer and LeapDroid.\r\n\r\n" & _
+			"Supported Emulators are MEmu, Nox, BlueStacks2, BlueStacks and iTools.\r\n\r\n" & _
 			"Examples:\r\n" & _
 			"     MyBot.run.exe MyVillage BlueStacks2\r\n" & _
 			"     MyBot.run.exe ""My Second Village"" MEmu MEmu_1")
@@ -1397,24 +1397,44 @@ Func FirstCheck()
 	Local $iTownHallLevel = $g_iTownHallLevel
 	SetDebugLog("Detecting Town Hall level", $COLOR_INFO)
 	SetDebugLog("Town Hall level is currently saved as " &  $g_iTownHallLevel, $COLOR_INFO)
-	imglocTHSearch(False, True, True)
+	imglocTHSearch(False, True, True) ;Sets $g_iTownHallLevel
 	SetDebugLog("Detected Town Hall level is " &  $g_iTownHallLevel, $COLOR_INFO)
 	If $g_iTownHallLevel = $iTownHallLevel Then
 		SetDebugLog("Town Hall level has not changed", $COLOR_INFO)
 	Else
-		SetDebugLog("Town Hall level has changed!", $COLOR_INFO)
-		SetDebugLog("New Town hall level detected as " &  $g_iTownHallLevel, $COLOR_INFO)
-		saveConfig()
-		applyConfig()
+		If $g_iTownHallLevel < $iTownHallLevel Then
+			SetDebugLog("Bad town hall level read...saving bigger old value", $COLOR_ERROR)
+			$g_iTownHallLevel = $iTownHallLevel
+			saveConfig()
+			applyConfig()
+		Else
+			SetDebugLog("Town Hall level has changed!", $COLOR_INFO)
+			SetDebugLog("New Town hall level detected as " &  $g_iTownHallLevel, $COLOR_INFO)
+			saveConfig()
+			applyConfig()
+		EndIf
 	EndIf
+	;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+	VillageReport()
 
 	#Region - Team AIO MOD++
 	VillageReport()
+	If Not $g_bRunState Then Return
+	
 	ProfileSwitch()
+	If Not $g_bRunState Then Return
+
 	CheckFarmSchedule()
+	If Not $g_bRunState Then Return
+
 	If Not $g_bChkOnlyFarm Then
 		MainGTFO()
+		If Not $g_bRunState Then Return
+		
 		MainKickout()
+		If Not $g_bRunState Then Return
+
 		; BotHumanization()
 	EndIf
 	#EndRegion - Team AIO MOD++

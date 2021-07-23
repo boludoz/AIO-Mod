@@ -90,12 +90,12 @@ Func PetHouse($test = False)
 			; get the Pet Level
 			Local $iPetLevel = getTroopsSpellsLevel($iPetLevelxCoord[$i], 533)
 			SetLog($g_asPetNames[$i] & " is at level " & $iPetLevel)
+			If $iPetLevel = $g_ePetLevels Then ContinueLoop
 
 			If _Sleep($DELAYLABORATORY2) Then Return
 
 			; get DE requirement to upgrade Pet
 			Local $iDarkElixirReq = 1000 * number($g_aiPetUpgradeCostPerLevel[$i][$iPetLevel])
-
 			SetLog("DE Requirement: " & $iDarkElixirReq)
 
 			If $iDarkElixirReq < $g_aiCurrentLoot[$eLootDarkElixir] Then
@@ -379,6 +379,7 @@ Func GetMinDark4PetUpgrade()
 			; get the Pet Level
 			Local $iPetLevel = getTroopsSpellsLevel($iPetLevelxCoord[$i], 533)
 			SetLog($g_asPetNames[$i] & " is at level " & $iPetLevel)
+			If $iPetLevel = $g_ePetLevels Then ContinueLoop
 
 			If _Sleep($DELAYLABORATORY2) Then Return
 

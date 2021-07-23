@@ -149,38 +149,65 @@ Func getAllEmulators()
 EndFunc   ;==>getAllEmulators
 
 Func getAllEmulatorsInstances()
+
+	; Reset content, Instance ComboBox var
 	GUICtrlSetData($g_hCmbInstances, '')
+	
+	; Get all Instances from SELECTED EMULATOR - $g_hCmbAndroidEmulator is the Emulator ComboBox
 	Local $emulator = GUICtrlRead($g_hCmbEmulators)
-	Local $path = ""
+	Local $sEmulatorPath = ""
+	
 	Switch $emulator
 		Case "BlueStacks"
 			GUICtrlSetData($g_hCmbInstances, "Android", "Android")
 			Return
 		Case "BlueStacks2"
 			GUICtrlSetData($g_hCmbInstances, "Android", "Android")
-			Return
+			Local $VMsBlueStacks = ""
+			If $__BlueStacks_isHyperV = True Then
+				$VMsBlueStacks = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_bgp64_hyperv\", "DataDir")
+			Else
+				$VMsBlueStacks = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks\", "DataDir")
+			EndIf
+			$sEmulatorPath = $VMsBlueStacks ; C:\ProgramData\BlueStacks\Engine
 		Case "Nox"
-			$path = GetNoxPath() & "\BignoxVMS"
+			$sEmulatorPath = GetNoxPath() & "\BignoxVMS"
 		Case "MEmu"
-			$path = GetMEmuPath() & "\MemuHyperv VMs"
+			$sEmulatorPath = GetMEmuPath() & "\MemuHyperv VMs"
 		Case "iTools"
-			$path = GetiToolsPath() & "\Repos\VMs"
+			$sEmulatorPath = GetiToolsPath() & "\Repos\VMs"
 		Case Else
 			GUICtrlSetData($g_hCmbInstances, "Android", "Android")
 			Return
 	EndSwitch
-	$path = StringReplace($path, "\\", "\")
-	Local $folders = _FileListToArray($path, "*", $FLTA_FOLDERS)
-	If @error = 1 Then
-		SetLog($emulator & " -- Path was invalid. " & $path)
+
+	; Just in case
+	$sEmulatorPath = StringReplace($sEmulatorPath, "\\", "\")
+
+	; BS Multi Instance
+	Local $sBlueStacksFolder = ""
+	If $Emulator = "BlueStacks2" Then $sBlueStacksFolder = "Android"
+
+	; Getting all VM Folders
+	Local $eError = 0
+	Local $aEmulatorFolders = _FileListToArray($sEmulatorPath, $sBlueStacksFolder & "*", $FLTA_FOLDERS)
+	
+	$eError = @error
+	If $eError = 1 Then
+		SetLog($emulator & " -- Path was invalid. " & $sEmulatorPath)
 		Return
 	EndIf
-	If @error = 4 Then
-		SetLog($emulator & " -- No file(s) were found. " & $path)
+	If $eError = 4 Then
+		SetLog($emulator & " -- No file(s) were found. " & $sEmulatorPath)
 		Return
 	EndIf
-	_ArrayDelete($folders, 0)
-	GUICtrlSetData($g_hCmbInstances, _ArrayToString($folders))
+
+	; Removing the [0] -> $aArray[0] = Number of Files\Folders returned
+	_ArrayDelete($aEmulatorFolders, 0)
+
+	; Populating the Instance ComboBox var
+	GUICtrlSetData($g_hCmbInstances, _ArrayToString($aEmulatorFolders))
+	
 	If $emulator == $g_sAndroidEmulator Then
 		_GUICtrlComboBox_SelectString($g_hCmbInstances, $g_sAndroidInstance)
 	Else

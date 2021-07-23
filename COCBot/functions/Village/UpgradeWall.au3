@@ -237,7 +237,7 @@ Func SkipWallUpgrade($iWallCost = $g_iWallCost) ; Dynamic Upgrades
 	Local $iAvailBuilderCount = 0
 
 	SetDebugLog("In SkipWallUpgrade")
-	SetDebugLog("$g_iTownHallLevel" & $g_iTownHallLevel)
+	SetDebugLog("$g_iTownHallLevel = " & $g_iTownHallLevel)
 
 	Switch $g_iTownHallLevel
 		Case 5 To 8 ;Start at Townhall 5 because any Wall Level below 4 is not supported anyways
