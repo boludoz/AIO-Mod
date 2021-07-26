@@ -23,7 +23,7 @@ Func _Sleep($iDelay, $iSleep = True, $CheckRunState = True, $SleepWhenPaused = T
 	Static $hTimer_EmptyWorkingSetBot = 0
 	Static $b_Sleep_Active = False
 	Local $iBegin = __TimerInit()
-	Local $iNewDelay = $iDelay + ($g_iCmbAndroidSleep)
+	Local $iNewDelay = $iDelay + ($g_iCmbAndroidSleep * 100)
 
 ;~ 	If $b_Sleep_Active = True Then
 ;~ 	EndIf
