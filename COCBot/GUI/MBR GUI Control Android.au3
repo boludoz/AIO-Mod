@@ -70,27 +70,27 @@ Func DistributorsUpdateGUI()
 	SetCurSelCmbCOCDistributors()
 EndFunc   ;==>DistributorsUpdateGUI
 
-Func cmbEmulators()
+Func CmbAndroidEmulator()
 	getAllEmulatorsInstances()
-	Local $emulator = GUICtrlRead($g_hCmbEmulators)
+	Local $emulator = GUICtrlRead($g_hCmbAndroidEmulator)
 	If MsgBox($MB_YESNO, "Emulator Selection", $emulator & ", Is correct?" & @CRLF & "Any mistake and your profile will be not useful!", 10) = $IDYES Then
 		SetLog("Emulator " & $emulator & " Selected at first instance. Please reboot or select instance and reboot.", $COLOR_INFO)
 		$g_sAndroidEmulator = $emulator
-		$g_sAndroidInstance = GUICtrlRead($g_hCmbInstances)
+		$g_sAndroidInstance = GUICtrlRead($g_hCmbAndroidInstance)
 		UpdateAndroidConfig($g_sAndroidInstance, $g_sAndroidEmulator)
 		InitAndroidConfig(True)
 		BtnSaveprofile()
 	Else
-		_GUICtrlComboBox_SelectString($g_hCmbEmulators, $g_sAndroidEmulator)
+		_GUICtrlComboBox_SelectString($g_hCmbAndroidEmulator, $g_sAndroidEmulator)
 		getAllEmulatorsInstances()
 	EndIf
-EndFunc   ;==>cmbEmulators
+EndFunc   ;==>CmbAndroidEmulator
 
-Func cmbInstances()
-	Local $instance = GUICtrlRead($g_hCmbInstances)
+Func CmbAndroidInstance()
+	Local $instance = GUICtrlRead($g_hCmbAndroidInstance)
 	If MsgBox($MB_YESNO, "Instance Selection", $instance & ", Is correct?" & @CRLF & "If 'yes' is necessary reboot the 'bot'.", 10) = $IDYES Then
 		SetLog("Instance " & $instance & " Selected. Please reset.", $COLOR_INFO)
-		$g_sAndroidEmulator = GUICtrlRead($g_hCmbEmulators)
+		$g_sAndroidEmulator = GUICtrlRead($g_hCmbAndroidEmulator)
 		$g_sAndroidInstance = $instance
 		UpdateAndroidConfig($g_sAndroidInstance, $g_sAndroidEmulator)
 		InitAndroidConfig(True)
@@ -98,11 +98,11 @@ Func cmbInstances()
 	Else
 		getAllEmulatorsInstances()
 	EndIf
-EndFunc   ;==>cmbInstances
+EndFunc   ;==>CmbAndroidInstance
 
 Func getAllEmulators()
 	Local $cmbString = ""
-	GUICtrlSetData($g_hCmbEmulators, '')
+	GUICtrlSetData($g_hCmbAndroidEmulator, '')
 
 	$__BlueStacks_isHyperV = False
 	$__BlueStacks_Version = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks\", "Version")
@@ -143,26 +143,26 @@ Func getAllEmulators()
 	Local $result = StringRight($cmbString, 1)
 	If $result == "|" Then $cmbString = StringTrimRight($cmbString, 1)
 	If $g_bDebugAndroid Then SetLog("All Emulator found in your machine: " & $cmbString, $COLOR_INFO)
-	GUICtrlSetData($g_hCmbEmulators, $cmbString)
-	_GUICtrlComboBox_SelectString($g_hCmbEmulators, $g_sAndroidEmulator)
+	GUICtrlSetData($g_hCmbAndroidEmulator, $cmbString)
+	_GUICtrlComboBox_SelectString($g_hCmbAndroidEmulator, $g_sAndroidEmulator)
 	getAllEmulatorsInstances()
 EndFunc   ;==>getAllEmulators
 
 Func getAllEmulatorsInstances()
 
 	; Reset content, Instance ComboBox var
-	GUICtrlSetData($g_hCmbInstances, '')
+	GUICtrlSetData($g_hCmbAndroidInstance, '')
 	
 	; Get all Instances from SELECTED EMULATOR - $g_hCmbAndroidEmulator is the Emulator ComboBox
-	Local $emulator = GUICtrlRead($g_hCmbEmulators)
+	Local $emulator = GUICtrlRead($g_hCmbAndroidEmulator)
 	Local $sEmulatorPath = ""
 	
 	Switch $emulator
 		Case "BlueStacks"
-			GUICtrlSetData($g_hCmbInstances, "Android", "Android")
+			GUICtrlSetData($g_hCmbAndroidInstance, "Android", "Android")
 			Return
 		Case "BlueStacks2"
-			GUICtrlSetData($g_hCmbInstances, "Android", "Android")
+			GUICtrlSetData($g_hCmbAndroidInstance, "Android", "Android")
 			Local $VMsBlueStacks = ""
 			If $__BlueStacks_isHyperV = True Then
 				$VMsBlueStacks = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_bgp64_hyperv\", "DataDir")
@@ -177,7 +177,7 @@ Func getAllEmulatorsInstances()
 		Case "iTools"
 			$sEmulatorPath = GetiToolsPath() & "\Repos\VMs"
 		Case Else
-			GUICtrlSetData($g_hCmbInstances, "Android", "Android")
+			GUICtrlSetData($g_hCmbAndroidInstance, "Android", "Android")
 			Return
 	EndSwitch
 
@@ -206,12 +206,12 @@ Func getAllEmulatorsInstances()
 	_ArrayDelete($aEmulatorFolders, 0)
 
 	; Populating the Instance ComboBox var
-	GUICtrlSetData($g_hCmbInstances, _ArrayToString($aEmulatorFolders))
+	GUICtrlSetData($g_hCmbAndroidInstance, _ArrayToString($aEmulatorFolders))
 	
 	If $emulator == $g_sAndroidEmulator Then
-		_GUICtrlComboBox_SelectString($g_hCmbInstances, $g_sAndroidInstance)
+		_GUICtrlComboBox_SelectString($g_hCmbAndroidInstance, $g_sAndroidInstance)
 	Else
-		_GUICtrlComboBox_SetCurSel($g_hCmbInstances, 0)
+		_GUICtrlComboBox_SetCurSel($g_hCmbAndroidInstance, 0)
 	EndIf
 EndFunc   ;==>getAllEmulatorsInstances
 #EndRegion - Custom Instances - Team AIO Mod++
