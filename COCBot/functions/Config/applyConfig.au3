@@ -212,7 +212,6 @@ Func ApplyConfig_Android($TypeReadSave)
 			sldAdditionalClickDelay(True)
 			UpdateBotTitle()
 			_GUICtrlComboBox_SetCurSel($g_hCmbAndroidBackgroundMode, $g_iAndroidBackgroundMode)
-			_GUICtrlComboBox_SetCurSel($g_hCmbAndroidSleep, $g_iCmbAndroidSleep)
 			_GUICtrlComboBox_SetCurSel($g_hCmbAndroidZoomoutMode, $g_iAndroidZoomoutMode)
 			_GUICtrlComboBox_SetCurSel($g_hCmbAndroidReplaceAdb, $g_iAndroidAdbReplace)
 			GUICtrlSetState($g_hChkAndroidAdbClickDragScript, $g_bAndroidAdbClickDragScript ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -221,11 +220,13 @@ Func ApplyConfig_Android($TypeReadSave)
 			GUICtrlSetState($g_hChkUpdateSharedPrefs, $g_bUpdateSharedPrefs ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hTxtAndroidRebootHours, $g_iAndroidRebootHours)
 			_GUICtrlComboBox_SetCurSel($g_hCmbSuspendAndroid, AndroidSuspendFlagsToIndex($g_iAndroidSuspendModeFlags))
+			
+			; Custom sleep - Team AIO Mod++ (inspired in Samkie)
+			_GUICtrlComboBox_SetCurSel($g_hInputAndroidSleep, $g_iInputAndroidSleep)
 		Case "Save"
 			cmbCOCDistributors()
 			sldAdditionalClickDelay()
 			cmbAndroidBackgroundMode()
-			$g_iCmbAndroidSleep = _GUICtrlComboBox_GetCurSel($g_hCmbAndroidSleep)
 			$g_iAndroidZoomoutMode = _GUICtrlComboBox_GetCurSel($g_hCmbAndroidZoomoutMode)
 			$g_iAndroidAdbReplace = _GUICtrlComboBox_GetCurSel($g_hCmbAndroidReplaceAdb)
 			$g_bAndroidAdbClickEnabled = (GUICtrlRead($g_hChkAndroidAdbClick) = $GUI_CHECKED ? True : False)
@@ -236,6 +237,9 @@ Func ApplyConfig_Android($TypeReadSave)
 			$g_bUpdateSharedPrefs = (GUICtrlRead($g_hChkUpdateSharedPrefs) = $GUI_CHECKED ? True : False)
 			$g_iAndroidRebootHours = Int(GUICtrlRead($g_hTxtAndroidRebootHours)) ; Hours are entered
 			cmbSuspendAndroid()
+			
+			; Custom sleep - Team AIO Mod++ (inspired in Samkie)
+			$g_iInputAndroidSleep = GUICtrlRead($g_hInputAndroidSleep)
 	EndSwitch
 EndFunc   ;==>ApplyConfig_Android
 

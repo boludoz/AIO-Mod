@@ -314,7 +314,6 @@ Func SaveConfig_Android()
 	_Ini_Add("android", "user.package", $g_sUserGamePackage)
 	_Ini_Add("android", "UserAppActitivityName", $g_sUserGameClass)
 	_Ini_Add("android", "backgroundmode", $g_iAndroidBackgroundMode)
-	_Ini_Add("android", "AndroidSleep", $g_iCmbAndroidSleep)
 	_Ini_Add("android", "zoomoutmode", $g_iAndroidZoomoutMode)
 	_Ini_Add("android", "adb.replace", $g_iAndroidAdbReplace)
 	_Ini_Add("android", "check.time.lag.enabled", ($g_bAndroidCheckTimeLagEnabled ? "1" : "0"))
@@ -345,6 +344,9 @@ Func SaveConfig_Android()
 	_Ini_Add("android", "shared_prefs.update", ($g_bUpdateSharedPrefs ? "1" : "0"))
 	_Ini_Add("android", "process.affinity.mask", $g_iAndroidProcessAffinityMask)
 	_Ini_Add("android", "click.additional.delay", $g_iAndroidControlClickAdditionalDelay)
+	
+	; Custom sleep - Team AIO Mod++ (inspired in Samkie)
+	_Ini_Add("android", "AndroidSleep", $g_iInputAndroidSleep)
 
 EndFunc   ;==>SaveConfig_Android
 

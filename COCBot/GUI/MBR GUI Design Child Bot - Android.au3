@@ -20,7 +20,8 @@ Global $g_hCmbCOCDistributors = 0, $g_hCmbAndroidBackgroundMode = 0, $g_hCmbAndr
 	$g_hLblAdditionalClickDelay = 0, $g_hSldAdditionalClickDelay = 0, $g_hChkUseDedicatedAdbPort = 0, $g_hCmbAndroidReplaceAdb = 0, _
 	$g_hCmbAndroidEmulator = 0, $g_hCmbAndroidInstance = 0
 
-Global $g_hCmbAndroidSleep = 0; Custom - Team AIO Mod++ (ProMac maybe, but is inspired in AIO or Sam0d)
+; Custom sleep - Team AIO Mod++ (inspired in Samkie)
+Global $g_hInputAndroidSleep = 0
 
 Func CreateBotAndroid()
 
@@ -50,8 +51,8 @@ Func CreateBotAndroid()
 
 	$y += 52
 	$x -= 60
-	GUICtrlCreateGroup(GetTranslatedFileIni("Android Control", "Group_03", "Help"), $x + 55, $y - 20, 180, 45)
-		$g_lblHelpBot = GUICtrlCreateLabel("Command line Help ?", $x + 70, $y, 150, 24, $SS_RIGHT)
+	GUICtrlCreateGroup(GetTranslatedFileIni("Android Control", "Group_03", "Help"), $x + 92, $y - 20, 170 - 37, 45)
+		$g_lblHelpBot = GUICtrlCreateLabel("Command line Help ?", $x + 70 - 2, $y, 150, 24, $SS_RIGHT)
 			GUICtrlSetOnEvent($g_lblHelpBot, "ShowControlHelp")
 			GUICtrlSetCursor(-1, 0)
 			GUICtrlSetFont(-1, 8.5, $FW_BOLD)
@@ -59,12 +60,21 @@ Func CreateBotAndroid()
 			GUICtrlSetColor(-1, $COLOR_NAVY)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
-	Local $x = 25
-	GUICtrlCreateGroup(GetTranslatedFileIni("Android Control", "Group_04", "Emulator/Instance"), $x - 20, $y - 20, 255, 45)
-		$g_hCmbAndroidEmulator = GUICtrlCreateCombo("", $x - 10, $y - 5, 115, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+	; Custom sleep - Team AIO Mod++ (inspired in Samkie)
+	$x -= 126
+	GUICtrlCreateGroup(GetTranslatedFileIni("Android Control", "Group_05", "Extra delay percentage"), $x + 81, $y - 20, 132, 45)
+		$g_hInputAndroidSleep = GUICtrlCreateInput("0", $x + 111, $y - 5, 40, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_NUMBER))
+		GUICtrlSetOnEvent($g_hInputAndroidSleep, "InputAndroidSleep")
+		GUICtrlSetLimit($g_hInputAndroidSleep, 3) 
+		GUICtrlCreateLabel(" %", $x + 131, $y + 1, 37, 30, $SS_RIGHT)
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+
+	$x = 25
+	GUICtrlCreateGroup(GetTranslatedFileIni("Android Control", "Group_04", "Emulator/Instance"), $x - 20, $y - 20, 165, 45)
+		$g_hCmbAndroidEmulator = GUICtrlCreateCombo("", $x - 10, $y - 5, 70, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("Android Control", "CmbAndroidEmulator_Info", "Change the emulator. MyBot will automaticly detect the installed version."))
 			GUICtrlSetOnEvent(-1, "cmbAndroidEmulator")
-		$g_hCmbAndroidInstance = GUICtrlCreateCombo("", $x + 110, $y - 5, 115, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+		$g_hCmbAndroidInstance = GUICtrlCreateCombo("", $x + 65, $y - 5, 70, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("Android Control", "CmbAndroidInstance_Info", "Change the instance. MyBot will automaticly detect the available instance."))
 			GUICtrlSetOnEvent(-1, "cmbAndroidInstance")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)

@@ -122,91 +122,95 @@ EndFunc   ;==>chkPlacingNewBuildings
 
 ; MAIN CODE
 #Region - Bulder base upgrades - Team AIO Mod++
+GLobal $g_bBuildingUpgraded = False
+
 Func MainSuggestedUpgradeCode()
 
 	; If is not selected return
-    If Not $g_iChkBBSuggestedUpgrades Then Return
-    SetLog("Entering Builder Base Auto Upgrade...", $COLOR_INFO)
-    If $g_iChkBBSuggestedUpgradesIgnoreGold And $g_iChkBBSuggestedUpgradesIgnoreElixir Then
-        SetLog("Both elixir and gold upgrades are set to ignore.", $COLOR_ERROR)
-        Return
-    EndIf
-
+	If $g_iChkBBSuggestedUpgrades = 0 Then Return
 	Local $bDebug = $g_bDebugSetlog
 	Local $bScreencap = True
-
+	
+	BuilderBaseReport()
 	; Check if you are on Builder island
 	If isOnBuilderBase(True) Then
 		; Will Open the Suggested Window and check if is OK
 		If ClickOnBuilder() Then
 			SetLog(" - Upg Window Opened successfully", $COLOR_INFO)
-			Local $step = 30, $y = $g_iQuickMISWOffSetY - 12, $y1 = $y + $step, $x = 400, $x1 = 555
-
-			; Check for 6  Icons on Window
-			For $i = 0 To 10
-				Local $bSkipGoldCheck = False
-				If $g_iChkBBSuggestedUpgradesIgnoreElixir = 0 And $g_aiCurrentLootBB[$eLootElixirBB] > 250 Then
-					; Proceeds with Elixir icon detection
-					Local $aResult = GetIconPosition($x, $y, $x1, $y1, $g_sImgAutoUpgradeElixir, "Elixir", $bScreencap, $bDebug)
-					Switch $aResult[2]
-						Case "Elixir"
-							Click($aResult[0], $aResult[1], 1)
-							If _Sleep(2000) Then Return
-							If GetUpgradeButton("Elixir", $bDebug) Then
-								ExitLoop
-							EndIf
-							$bSkipGoldCheck = True
-						Case "New"
-							If $g_iChkPlacingNewBuildings = 1 Then
-								SetLog("[" & $i + 1 & "]" & " New Building detected, Placing it...", $COLOR_INFO)
-								If NewBuildings($aResult) Then
+			For $z = 0 To 2 ;for do scroll 3 times
+			Local $y = 102, $y1 = 132, $step = 28, $x = 400, $x1 = 540
+				; Check for 8  Icons on Window
+				For $i = 0 To 7
+					Local $bSkipGoldCheck = False					
+					If $g_iChkBBSuggestedUpgradesIgnoreElixir = 0 And $g_aiCurrentLootBB[$eLootElixirBB] > 250 Then
+						; Proceeds with Elixir icon detection
+						Local $aResult = GetIconPosition($x, $y, $x1, $y1, $g_sImgAutoUpgradeElixir, "Elixir", $bScreencap, $bDebug)
+						Switch $aResult[2]
+							Case "Elixir"
+								Click($aResult[0], $aResult[1], 1)
+								If _Sleep(2000) Then Return
+								If GetUpgradeButton($aResult[2], $bDebug) Then
 									ExitLoop
 								EndIf
 								$bSkipGoldCheck = True
-							Else
-								SetLog("[" & $i + 1 & "]" & " New Building detected, but not enabled...", $COLOR_INFO)
-							EndIf
-						Case "NoResources"
-							SetLog("[" & $i + 1 & "]" & " Not enough Elixir, continuing...", $COLOR_INFO)
-							;ExitLoop ; continue as suggested upgrades are not ordered by amount
-							$bSkipGoldCheck = True
-						Case Else
-							SetDebugLog("[" & $i + 1 & "]" & " Unsupport Elixir icon '" & $aResult[2] & "', continuing...", $COLOR_INFO)
-					EndSwitch
-				EndIf
-
-				If $g_iChkBBSuggestedUpgradesIgnoreGold = 0 And $g_aiCurrentLootBB[$eLootGoldBB] > 250 And Not $bSkipGoldCheck Then
-					; Proceeds with Gold coin detection
-					Local $aResult = GetIconPosition($x, $y, $x1, $y1, $g_sImgAutoUpgradeGold, "Gold", $bScreencap, $bDebug)
-					Switch $aResult[2]
-						Case "Gold"
-							Click($aResult[0], $aResult[1], 1)
-							If _Sleep(2000) Then Return
-							If GetUpgradeButton("Gold", $bDebug) Then
-								ExitLoop
-							EndIf
-						Case "New"
-							If $g_iChkPlacingNewBuildings = 1 Then
-								SetLog("[" & $i + 1 & "]" & " New Building detected, Placing it...", $COLOR_INFO)
-								If NewBuildings($aResult) Then
+							Case "New"
+								If $g_iChkPlacingNewBuildings = 1 Then
+									SetLog("[" & $i + 1 & "]" & " New Building detected, Placing it...", $COLOR_INFO)
+									If NewBuildings($aResult) Then
+										ExitLoop
+									EndIf
+									$bSkipGoldCheck = True
+								Else
+									SetLog("[" & $i + 1 & "]" & " New Building detected, but not enabled...", $COLOR_INFO)
+								EndIf
+							Case "NoResources"
+								SetLog("[" & $i + 1 & "]" & " Not enough Elixir, continuing...", $COLOR_INFO)
+								;ExitLoop ; continue as suggested upgrades are not ordered by amount
+								$bSkipGoldCheck = True
+							Case Else
+								SetDebugLog("[" & $i + 1 & "]" & " Unsupport Elixir icon '" & $aResult[2] & "', continuing...", $COLOR_INFO)
+						EndSwitch
+					EndIf
+					If $g_iChkBBSuggestedUpgradesIgnoreGold = 0 And $g_aiCurrentLootBB[$eLootGoldBB] > 250 And Not $bSkipGoldCheck Then
+						; Proceeds with Gold coin detection
+						Local $aResult = GetIconPosition($x, $y, $x1, $y1, $g_sImgAutoUpgradeGold, "Gold", $bScreencap, $bDebug)
+						Switch $aResult[2]
+							Case "Gold"
+								Click($aResult[0], $aResult[1], 1)
+								If _Sleep(2000) Then Return
+								If GetUpgradeButton($aResult[2], $bDebug) Then
 									ExitLoop
 								EndIf
-							Else
-								SetLog("[" & $i + 1 & "]" & " New Building detected, but not enabled...", $COLOR_INFO)
-							EndIf
-						Case "NoResources"
-							SetLog("[" & $i + 1 & "]" & " Not enough Gold, continuing...", $COLOR_INFO)
-							;ExitLoop ; continue as suggested upgrades are not ordered by amount
-						Case Else
-							SetDebugLog("[" & $i + 1 & "]" & " Unsupport Gold icon '" & $aResult[2] & "', continuing...", $COLOR_INFO)
-					EndSwitch
+							Case "New"
+								If $g_iChkPlacingNewBuildings = 1 Then
+									SetLog("[" & $i + 1 & "]" & " New Building detected, Placing it...", $COLOR_INFO)
+									If NewBuildings($aResult) Then
+										ExitLoop
+									EndIf
+								Else
+									SetLog("[" & $i + 1 & "]" & " New Building detected, but not enabled...", $COLOR_INFO)
+								EndIf
+							Case "NoResources"
+								SetLog("[" & $i + 1 & "]" & " Not enough Gold, continuing...", $COLOR_INFO)
+								;ExitLoop ; continue as suggested upgrades are not ordered by amount
+							Case Else
+								SetDebugLog("[" & $i + 1 & "]" & " Unsupport Gold icon '" & $aResult[2] & "', continuing...", $COLOR_INFO)
+						EndSwitch
+					EndIf
+					$y += $step
+					$y1 += $step
+				Next
+				If $g_bBuildingUpgraded Then 
+					Setlog("Found Building Upgraded, exiting...", $COLOR_DEBUG)
+					Exitloop
+				Else
+					ClickDrag(333, $y, 333, 80, 1000);do scroll down
+					If _Sleep(2000) Then Return
 				EndIf
-
-				$y += $step
-				$y1 += $step
-			Next
+			Next			 
 		EndIf
 	EndIf
+	$g_bBuildingUpgraded = False
 	ClickAway()
 EndFunc   ;==>MainSuggestedUpgradeCode
 #EndRegion - Bulder base upgrades - Team AIO Mod++
@@ -220,7 +224,7 @@ Func ClickOnBuilder()
 	Local $sDebugText = ""
 	Local Const $Debug = False
 	Local Const $Screencap = True
-
+	getBuilderCount(True,True)
 	; Master Builder is not available return
 	If $g_iFreeBuilderCountBB = 0 Then SetLog("No Master Builder available! [" & $g_iFreeBuilderCountBB & "/" & $g_iTotalBuilderCountBB & "]", $COLOR_INFO)
 
@@ -278,14 +282,18 @@ EndFunc   ;==>GetIconPosition
 #Region - Bulder base upgrades - Team AIO Mod++
 Func GetUpgradeButton($sUpgButtom = "", $bDebug = False)
 
-	;Local $aBtnPos = [360, 500, 180, 50] ; x, y, w, h
+	Local $aResetBB[3] = ["", "", ""]
 	Local $aBtnPos = [143, 389, 721, 600] ; x, y, w, h ; support Battke Machine, broken and upgrade
-
+	
 	If $sUpgButtom = "" Then Return
 
 	If $sUpgButtom = "Elixir" Then $sUpgButtom = $g_sImgAutoUpgradeBtnElixir
 	If $sUpgButtom = "Gold" Then $sUpgButtom = $g_sImgAutoUpgradeBtnGold
-
+	
+	; Clean.
+	$g_aBBUpgradeResourceCostDuration = $aResetBB
+	$g_aBBUpgradeNameLevel = $aResetBB
+	
 	; If QuickMIS("BC1", $g_sImgAutoUpgradeBtnDir, 182, 565, 685, 723, True, $bDebug) Then
 	If _WaitForCheckImg($g_sImgAutoUpgradeBtnDir, "182, 565, 685, 723") Then
 		If UBound($g_aImageSearchXML) > 0 and not @error Then
@@ -300,6 +308,10 @@ Func GetUpgradeButton($sUpgButtom = "", $bDebug = False)
 					If $bBuildString And $g_iChkBBUpgradesToIgnore[$i] = 1 Then
 						$sMsg = "Ops! " &  $g_aBBUpgradeNameLevel[1] & " is not to Upgrade!"
 						SetLog($sMsg, $COLOR_ERROR)
+						
+						$g_aBBUpgradeResourceCostDuration = $aResetBB
+						$g_aBBUpgradeNameLevel = $aResetBB
+
 						Return False
 					ElseIf $bBuildString And $g_iChkBBUpgradesToIgnore[$i] = 0 Then
 						ExitLoop
@@ -309,16 +321,16 @@ Func GetUpgradeButton($sUpgButtom = "", $bDebug = False)
 				If _MultiPixelSearch($g_aImageSearchXML[0][1], 579, $g_aImageSearchXML[0][2] + 67, 613, 2, 2, Hex(0xFF887F, 6), StringSplit2D("0xFF887F-0-1|0xFF887F-4-0"), 35) <> 0 Then
 					SetLog("Upgrade stopped due to insufficient loot", $COLOR_ERROR)
 					ClickAway()
+				
+					$g_aBBUpgradeResourceCostDuration = $aResetBB
+					$g_aBBUpgradeNameLevel = $aResetBB
+
 					Return False
 				EndIf
 	
 				Click($g_aImageSearchXML[0][1], $g_aImageSearchXML[0][2], 1)
 				If _Sleep(500) Then Return
-	
-				For $i = 0 To UBound($g_aBBUpgradeResourceCostDuration) - 1
-					$g_aBBUpgradeResourceCostDuration[$i] = ""
-				Next
-	
+					
 				If StringInStr($g_aBBUpgradeNameLevel[2], "Broken") = 0 Then
 					$g_aBBUpgradeResourceCostDuration[0] = $sUpgButtom
 					If StringInStr($g_aBBUpgradeNameLevel[1], "Machine") > 0 Then
@@ -341,10 +353,15 @@ Func GetUpgradeButton($sUpgButtom = "", $bDebug = False)
 						ClickAway()
 						If _Sleep(500) Then Return
 						ClickAway()
+						
+						$g_aBBUpgradeResourceCostDuration = $aResetBB
+						$g_aBBUpgradeNameLevel = $aResetBB
+
 						Return False
 					Else
 						SetLog($g_aBBUpgradeNameLevel[1] & " Upgrading!", $COLOR_INFO)
 						ClickAway()
+						$g_bBuildingUpgraded = True
 						Return True
 					EndIf
 				Else
@@ -365,7 +382,10 @@ Func GetUpgradeButton($sUpgButtom = "", $bDebug = False)
 	Else
 		Setlog("g_sImgAutoUpgradeBtnDir fail.", $COLOR_ERROR)
 	EndIf
-	
+
+	$g_aBBUpgradeResourceCostDuration = $aResetBB
+	$g_aBBUpgradeNameLevel = $aResetBB
+
 	Return False
 EndFunc   ;==>GetUpgradeButton
 #EndRegion - Bulder base upgrades - Team AIO Mod++

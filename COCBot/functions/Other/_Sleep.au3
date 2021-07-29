@@ -23,7 +23,9 @@ Func _Sleep($iDelay, $iSleep = True, $CheckRunState = True, $SleepWhenPaused = T
 	Static $hTimer_EmptyWorkingSetBot = 0
 	Static $b_Sleep_Active = False
 	Local $iBegin = __TimerInit()
-	Local $iNewDelay = $iDelay + ($g_iCmbAndroidSleep * 100)
+	
+	; Custom sleep - Team AIO Mod++ (inspired in Samkie)
+	Local $iNewDelay = Round($iDelay * ($g_iInputAndroidSleep / 100)) + $iDelay
 
 ;~ 	If $b_Sleep_Active = True Then
 ;~ 	EndIf

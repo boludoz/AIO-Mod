@@ -347,7 +347,6 @@ Func ReadConfig_Android()
 	$g_sUserGamePackage = IniRead($g_sProfileConfigPath, "android", "user.package", $g_sUserGamePackage)
 	$g_sUserGameClass = IniRead($g_sProfileConfigPath, "android", "UserAppActitivityName", $g_sUserGameClass)
 	$g_iAndroidBackgroundMode = Int(IniRead($g_sProfileConfigPath, "android", "backgroundmode", $g_iAndroidBackgroundMode))
-	$g_iCmbAndroidSleep = Int(IniRead($g_sProfileConfigPath, "android", "AndroidSleep", $g_iCmbAndroidSleep))
 	$g_iAndroidZoomoutMode = Int(IniRead($g_sProfileConfigPath, "android", "zoomoutmode", $g_iAndroidZoomoutMode))
 	$g_iAndroidAdbReplace = Int(IniRead($g_sProfileConfigPath, "android", "adb.replace", $g_iAndroidAdbReplace))
 	$g_bAndroidCheckTimeLagEnabled = Int(IniRead($g_sProfileConfigPath, "android", "check.time.lag.enabled", ($g_bAndroidCheckTimeLagEnabled ? 1 : 0))) = 1
@@ -376,6 +375,9 @@ Func ReadConfig_Android()
 	$g_bUpdateSharedPrefs = Int(IniRead($g_sProfileConfigPath, "android", "shared_prefs.update", $g_bUpdateSharedPrefs ? 1 : 0)) = 1
 	$g_iAndroidProcessAffinityMask = Int(IniRead($g_sProfileConfigPath, "android", "process.affinity.mask", $g_iAndroidProcessAffinityMask))
 	$g_iAndroidControlClickAdditionalDelay = Int(IniRead($g_sProfileConfigPath, "android", "click.additional.delay", $g_iAndroidControlClickAdditionalDelay))
+
+	; Custom sleep - Team AIO Mod++ (inspired in Samkie)
+	$g_iInputAndroidSleep = Int(IniRead($g_sProfileConfigPath, "android", "AndroidSleep", $g_iInputAndroidSleep))
 
 	If $g_bBotLaunchOption_Restart = True Or $g_asCmdLine[0] < 2 Then
 		; for now only read when bot crashed and restarted through watchdog or nofify event

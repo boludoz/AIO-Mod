@@ -125,8 +125,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 				PushMsg("AnotherDevice")
 			EndIf
 			If _SleepStatus($g_iAnotherDeviceWaitTime * 1000) Then Return ; Wait as long as user setting in GUI, default 120 seconds
-			; Custom fix - Team AIO Mod++
-            LoopAndCheckObstacles_ReloadCoC($aReloadButton, "#0127", $bRecursive)
+            checkObstacles_ReloadCoC($aReloadButton, "#0127", $bRecursive)
 			If $g_bForceSinglePBLogoff Then $g_bGForcePBTUpdate = True
 			checkObstacles_ResetSearch()
 			Return True
@@ -138,8 +137,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 			If TestCapture() Then Return "Village must take a break"
 			PushMsg("TakeBreak")
 			If _SleepStatus($DELAYCHECKOBSTACLES4) Then Return ; 2 Minutes
-			; Custom fix - Team AIO Mod++
-            LoopAndCheckObstacles_ReloadCoC($aReloadButton, "#0128", $bRecursive) ;Click on reload button
+            checkObstacles_ReloadCoC($aReloadButton, "#0128", $bRecursive) ;Click on reload button
 			If $g_bForceSinglePBLogoff Then $g_bGForcePBTUpdate = True
 			checkObstacles_ResetSearch()
 			Return True
@@ -229,8 +227,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 				SetLog("Warning: Cannot find type of Reload error message", $COLOR_ERROR)
 		EndSelect
 		If TestCapture() Then Return "Village is out of sync or inactivity or connection lost or maintenance"
-		; Custom fix - Team AIO Mod++
-        Return LoopAndCheckObstacles_ReloadCoC($aReloadButton, "#0131", $bRecursive) ; Click for out of sync or inactivity or connection lost or maintenance
+        Return checkObstacles_ReloadCoC($aReloadButton, "#0131", $bRecursive) ; Click for out of sync or inactivity or connection lost or maintenance
 	EndIf
 
 	If UBound(decodeSingleCoord(FindImageInPlace("Maintenance", $g_sImgMaintenance, "270,70,640, 160", False))) > 1 Then ; Maintenance Break
@@ -382,19 +379,6 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 
 	Return False
 EndFunc   ;==>_checkObstacles
-
-#Region - Custom fix - Team AIO Mod++
-Func LoopAndCheckObstacles_ReloadCoC($points = Default, $debugtxt = "", $bRecursive = False)
-    For $iLoopReloadButton = 0 To UBound($points) - 1 Step +1
-        Local $aAsArr[4] = [$points[$iLoopReloadButton][0], $points[$iLoopReloadButton][1], $points[$iLoopReloadButton][2], $points[$iLoopReloadButton][3]]
-        If (_CheckPixel($aAsArr, False)) Then
-            checkObstacles_ReloadCoC($aAsArr, "#0127", $bRecursive)
-            Return True
-        EndIf
-    Next
-    Return False
-EndFunc   ;==>LoopAndCheckObstacles_ReloadCoC
-#EndRegion - Custom fix - Team AIO Mod++
 
 ; It's more stable to restart CoC app than click the message restarting the game
 Func checkObstacles_ReloadCoC($point = Default, $debugtxt = "", $bRecursive = False)
