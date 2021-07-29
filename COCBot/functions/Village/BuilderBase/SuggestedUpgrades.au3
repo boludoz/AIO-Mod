@@ -124,8 +124,10 @@ EndFunc   ;==>chkPlacingNewBuildings
 #Region - Bulder base upgrades - Team AIO Mod++
 Global $g_bBuildingUpgraded = False
 
-Func MainSuggestedUpgradeCodeNew()
-	Local $aResourcesPicks[0][3], $aResourcesReset[0][4], $aMatrix[1][3]
+Func MainSuggestedUpgradeCode($bDebug = $g_bDebugSetlog)
+	Local $aResourcesPicks[0][3], $aResourcesReset[0][3], $aMatrix[1][3], $aResult[3] = [-1, -1, ""]
+	
+	$g_bBuildingUpgraded = False
 	
 	; If is not selected return
 	If $g_iChkBBSuggestedUpgrades = 0 Then Return
@@ -135,8 +137,10 @@ Func MainSuggestedUpgradeCodeNew()
 	If isOnBuilderBase(True) Then
 	
 		If ClickOnBuilder() Then
+			
+			SetLog(" - Upg Window Opened successfully", $COLOR_INFO)
 
-			For $z = 0 To 2 ;for do scroll 3 times
+			For $z = 0 To 2 ; For do scroll 3 times.
 			
 				_CaptureRegion2()
 				
@@ -166,8 +170,40 @@ Func MainSuggestedUpgradeCodeNew()
 					EndIf
 				EndIf
 				
-				_ArrayDisplay($aResourcesPicks)
-				Exit
+				If UBound($aResourcesPicks) > 0 Then
+					
+					For $i = 0 To UBound($aResourcesPicks) -1
+						$aResult[0] = $aResourcesPicks[$i][1]
+						$aResult[1] = $aResourcesPicks[$i][2]
+						$aResult[2] = $aResourcesPicks[$i][0]
+						
+						If $g_iChkPlacingNewBuildings = 1 And $aResult[2] = "New" Then
+							
+							$g_bBuildingUpgraded = NewBuildings($aResult)
+							If $g_bBuildingUpgraded Then
+								SetLog("[" & $i + 1 & "]" & " New Building detected, placing it.", $COLOR_INFO)
+								ExitLoop
+							EndIf
+							
+						Else
+							Click($aResult[0], $aResult[1], 1)
+							If _Sleep(1000) Then Return
+
+							$g_bBuildingUpgraded = GetUpgradeButton($aResult, $bDebug)
+							If $g_bBuildingUpgraded Then
+								SetLog("[" & $i + 1 & "]" & " Building detected, try upgrading it.", $COLOR_INFO)
+								ExitLoop
+							EndIf
+						EndIf
+						
+						If _Sleep(Random(750, 1500, 1)) Then Return
+
+					Next
+					
+				Else
+					SetLog("Bad MainSuggestedUpgradeCode array.", $COLOR_ERROR)
+					ExitLoop
+				EndIf
 				
 				If $g_bBuildingUpgraded Then 
 					Setlog("Exiting of improvements.", $COLOR_INFO)
@@ -175,7 +211,7 @@ Func MainSuggestedUpgradeCodeNew()
 				Else
 					$aResourcesPicks = $aResourcesReset
 					ClickDrag(333, 102, 333, 80, 1000) ; Do scroll down.
-					If _Sleep(2000) Then Return
+					If _Sleep(3000) Then Return
 				EndIf
 				
 			Next
@@ -184,97 +220,9 @@ Func MainSuggestedUpgradeCodeNew()
 		
 	EndIf
 	
-EndFunc
-
-Func MainSuggestedUpgradeCode()
-
-	; If is not selected return
-	If $g_iChkBBSuggestedUpgrades = 0 Then Return
-	Local $bDebug = $g_bDebugSetlog
-	Local $bScreencap = True
-	
-	BuilderBaseReport()
-	; Check if you are on Builder island
-	If isOnBuilderBase(True) Then
-		; Will Open the Suggested Window and check if is OK
-		If ClickOnBuilder() Then
-			SetLog(" - Upg Window Opened successfully", $COLOR_INFO)
-			For $z = 0 To 2 ;for do scroll 3 times
-			Local $y = 102, $y1 = 132, $step = 28, $x = 400, $x1 = 540
-				; Check for 8  Icons on Window
-				For $i = 0 To 7
-					Local $bSkipGoldCheck = False					
-					If $g_iChkBBSuggestedUpgradesIgnoreElixir = 0 And $g_aiCurrentLootBB[$eLootElixirBB] > 250 Then
-						; Proceeds with Elixir icon detection
-						Local $aResult = GetIconPosition($x, $y, $x1, $y1, $g_sImgAutoUpgradeElixir, "Elixir", $bScreencap, $bDebug)
-						Switch $aResult[2]
-							Case "Elixir"
-								Click($aResult[0], $aResult[1], 1)
-								If _Sleep(2000) Then Return
-								If GetUpgradeButton($aResult[2], $bDebug) Then
-									ExitLoop
-								EndIf
-								$bSkipGoldCheck = True
-							Case "New"
-								If $g_iChkPlacingNewBuildings = 1 Then
-									SetLog("[" & $i + 1 & "]" & " New Building detected, Placing it...", $COLOR_INFO)
-									If NewBuildings($aResult) Then
-										ExitLoop
-									EndIf
-									$bSkipGoldCheck = True
-								Else
-									SetLog("[" & $i + 1 & "]" & " New Building detected, but not enabled...", $COLOR_INFO)
-								EndIf
-							Case "NoResources"
-								SetLog("[" & $i + 1 & "]" & " Not enough Elixir, continuing...", $COLOR_INFO)
-								;ExitLoop ; continue as suggested upgrades are not ordered by amount
-								$bSkipGoldCheck = True
-							Case Else
-								SetDebugLog("[" & $i + 1 & "]" & " Unsupport Elixir icon '" & $aResult[2] & "', continuing...", $COLOR_INFO)
-						EndSwitch
-					EndIf
-					If $g_iChkBBSuggestedUpgradesIgnoreGold = 0 And $g_aiCurrentLootBB[$eLootGoldBB] > 250 And Not $bSkipGoldCheck Then
-						; Proceeds with Gold coin detection
-						Local $aResult = GetIconPosition($x, $y, $x1, $y1, $g_sImgAutoUpgradeGold, "Gold", $bScreencap, $bDebug)
-						Switch $aResult[2]
-							Case "Gold"
-								Click($aResult[0], $aResult[1], 1)
-								If _Sleep(2000) Then Return
-								If GetUpgradeButton($aResult[2], $bDebug) Then
-									ExitLoop
-								EndIf
-							Case "New"
-								If $g_iChkPlacingNewBuildings = 1 Then
-									SetLog("[" & $i + 1 & "]" & " New Building detected, Placing it...", $COLOR_INFO)
-									If NewBuildings($aResult) Then
-										ExitLoop
-									EndIf
-								Else
-									SetLog("[" & $i + 1 & "]" & " New Building detected, but not enabled...", $COLOR_INFO)
-								EndIf
-							Case "NoResources"
-								SetLog("[" & $i + 1 & "]" & " Not enough Gold, continuing...", $COLOR_INFO)
-								;ExitLoop ; continue as suggested upgrades are not ordered by amount
-							Case Else
-								SetDebugLog("[" & $i + 1 & "]" & " Unsupport Gold icon '" & $aResult[2] & "', continuing...", $COLOR_INFO)
-						EndSwitch
-					EndIf
-					$y += $step
-					$y1 += $step
-				Next
-				If $g_bBuildingUpgraded Then 
-					Setlog("Found Building Upgraded, exiting...", $COLOR_DEBUG)
-					Exitloop
-				Else
-					ClickDrag(333, $y, 333, 80, 1000);do scroll down
-					If _Sleep(2000) Then Return
-				EndIf
-			Next			 
-		EndIf
-	EndIf
-	$g_bBuildingUpgraded = False
 	ClickAway()
-EndFunc   ;==>MainSuggestedUpgradeCode
+
+EndFunc
 #EndRegion - Bulder base upgrades - Team AIO Mod++
 
 ; This fucntion will Open the Suggested Window and check if is OK
@@ -282,11 +230,14 @@ Func ClickOnBuilder()
 
 	; Master Builder Check pixel [i] icon
 	Local Const $aMasterBuilder[4] = [360, 11, 0x7cbdde, 10]
+	
 	; Debug Stuff
 	Local $sDebugText = ""
 	Local Const $Debug = False
 	Local Const $Screencap = True
-	getBuilderCount(True,True)
+	
+	getBuilderCount(True, True)
+	
 	; Master Builder is not available return
 	If $g_iFreeBuilderCountBB = 0 Then SetLog("No Master Builder available! [" & $g_iFreeBuilderCountBB & "/" & $g_iTotalBuilderCountBB & "]", $COLOR_INFO)
 
@@ -310,36 +261,6 @@ Func ClickOnBuilder()
 	If $sDebugText <> "" Then SetLog("Problem on Suggested Upg Window: [" & $sDebugText & "]", $COLOR_ERROR)
 	Return False
 EndFunc   ;==>ClickOnBuilder
-
-Func GetIconPosition($x, $y, $x1, $y1, $directory, $Name = "Elixir", $Screencap = True, $Debug = False)
-	; [0] = x position , [1] y postion , [2] Gold, Elixir or New
-	Local $aResult[3] = [-1, -1, ""]
-
-	If QuickMIS("BC1", $directory, $x, $y, $x1, $y1, $Screencap, $Debug) Then
-		; Correct positions to Check Green 'New' Building word
-		Local $iYoffset = $y + $g_iQuickMISY - 15, $iY1offset = $y + $g_iQuickMISY + 7
-		Local $iX = 300, $iX1 = $g_iQuickMISX + $x
-		; Store the values
-		$aResult[0] = $g_iQuickMISX + $x
-		$aResult[1] = $g_iQuickMISY + $y
-		$aResult[2] = $Name
-		; The pink/salmon color on zeros
-		If QuickMIS("BC1", $g_sImgAutoUpgradeNoRes, $aResult[0], $iYoffset, $aResult[0] + 100, $iY1offset, True, $Debug) Then
-			; Store new values
-			$aResult[2] = "NoResources"
-			Return $aResult
-		EndIf
-		; Proceeds with 'New' detection
-		If QuickMIS("BC1", $g_sImgAutoUpgradeNew, $iX, $iYoffset, $iX1, $iY1offset, True, $Debug) Then
-			; Store new values
-			$aResult[0] = $g_iQuickMISX + $iX + 35
-			$aResult[1] = $g_iQuickMISY + $iYoffset
-			$aResult[2] = "New"
-		EndIf
-	EndIf
-
-	Return $aResult
-EndFunc   ;==>GetIconPosition
 
 #Region - Bulder base upgrades - Team AIO Mod++
 Func GetUpgradeButton($sUpgButtom = "", $bDebug = False)
@@ -423,7 +344,7 @@ Func GetUpgradeButton($sUpgButtom = "", $bDebug = False)
 					Else
 						SetLog($g_aBBUpgradeNameLevel[1] & " Upgrading!", $COLOR_INFO)
 						ClickAway()
-						$g_bBuildingUpgraded = True
+						; $g_bBuildingUpgraded = True
 						Return True
 					EndIf
 				Else
