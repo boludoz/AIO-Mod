@@ -122,7 +122,69 @@ EndFunc   ;==>chkPlacingNewBuildings
 
 ; MAIN CODE
 #Region - Bulder base upgrades - Team AIO Mod++
-GLobal $g_bBuildingUpgraded = False
+Global $g_bBuildingUpgraded = False
+
+Func MainSuggestedUpgradeCodeNew()
+	Local $aResourcesPicks[0][3], $aResourcesReset[0][4], $aMatrix[1][3]
+	
+	; If is not selected return
+	If $g_iChkBBSuggestedUpgrades = 0 Then Return
+
+	BuilderBaseReport()
+	
+	If isOnBuilderBase(True) Then
+	
+		If ClickOnBuilder() Then
+
+			For $z = 0 To 2 ;for do scroll 3 times
+			
+				_CaptureRegion2()
+				
+				If $g_iChkBBSuggestedUpgradesIgnoreElixir = 0 And $g_aiCurrentLootBB[$eLootElixirBB] > 250 Then
+					If UBound(_ImageSearchXML($g_sImgAutoUpgradeElixir, 0, "374,72,503,368", False, True, True, 8, 0, 1000)) > 0 And not @error Then
+						For $iItem = 0 To UBound($g_aImageSearchXML) -1
+							If UBound(_PixelSearch(512, $g_aImageSearchXML[$iItem][2] - 14, 529, $g_aImageSearchXML[$iItem][2] + 14, Hex(0xFFFFFF, 6), 15)) > 0 And not @error Then
+								$aMatrix[0][0] = (UBound(_PixelSearch(311, $g_aImageSearchXML[$iItem][2] - 14, 333, $g_aImageSearchXML[$iItem][2] + 14, Hex(0x0DE50D, 6), 15)) > 0 And not @error) ? ("New") : ("Elixir")
+								$aMatrix[0][1] = $g_aImageSearchXML[$iItem][1]
+								$aMatrix[0][2] = $g_aImageSearchXML[$iItem][2]
+								_ArrayAdd($aResourcesPicks, $aMatrix)
+							EndIf
+						Next
+					EndIf
+				EndIf
+				
+				If $g_iChkBBSuggestedUpgradesIgnoreGold = 0 And $g_aiCurrentLootBB[$eLootGoldBB] > 250 Then
+					If UBound(_ImageSearchXML($g_sImgAutoUpgradeGold, 0, "374,72,503,368", False, True, True, 8, 0, 1000)) > 0 And not @error Then
+						For $iItem = 0 To UBound($g_aImageSearchXML) -1
+							If UBound(_PixelSearch(512, $g_aImageSearchXML[$iItem][2] - 14, 529, $g_aImageSearchXML[$iItem][2] + 14, Hex(0xFFFFFF, 6), 15)) > 0 And not @error Then
+								$aMatrix[0][0] = (UBound(_PixelSearch(311, $g_aImageSearchXML[$iItem][2] - 14, 333, $g_aImageSearchXML[$iItem][2] + 14, Hex(0x0DE50D, 6), 15)) > 0 And not @error) ? ("New") : ("Gold")
+								$aMatrix[0][1] = $g_aImageSearchXML[$iItem][1]
+								$aMatrix[0][2] = $g_aImageSearchXML[$iItem][2]
+								_ArrayAdd($aResourcesPicks, $aMatrix)
+							EndIf
+						Next
+					EndIf
+				EndIf
+				
+				_ArrayDisplay($aResourcesPicks)
+				Exit
+				
+				If $g_bBuildingUpgraded Then 
+					Setlog("Exiting of improvements.", $COLOR_INFO)
+					Exitloop
+				Else
+					$aResourcesPicks = $aResourcesReset
+					ClickDrag(333, 102, 333, 80, 1000) ; Do scroll down.
+					If _Sleep(2000) Then Return
+				EndIf
+				
+			Next
+			
+		EndIf
+		
+	EndIf
+	
+EndFunc
 
 Func MainSuggestedUpgradeCode()
 
