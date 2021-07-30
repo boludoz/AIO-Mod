@@ -278,11 +278,11 @@ Func _SmartFarmMilk($bDebug = False)
 						Local $aNear = $aSideCollectors[$collector][5]
 						If $g_bDebugSmartMilk Then SetLog("$aNear: " & $aNear)
 						Local $aNearPoints[0][2]
-						Local $aTempObbj = StringSplit($aNear, "|")
+						Local $aTempObbj = StringSplit($aNear, "|", $STR_ENTIRESPLIT)
 						Local $aNearPoint, $iDPCount = 0
 						For $t = 1 To $aTempObbj[0]
 							ReDim $aNearPoints[$iDPCount + 1][2]
-							$aNearPoint = StringSplit($aTempObbj[$t], ",")
+							$aNearPoint = StringSplit($aTempObbj[$t], ",", $STR_ENTIRESPLIT)
 							If $aNearPoint[0] <> 2 Then ContinueLoop
 							$aNearPoints[$iDPCount][0] = $aNearPoint[1]
 							$aNearPoints[$iDPCount][1] = $aNearPoint[2]
@@ -443,15 +443,15 @@ Func DebugImageSmartMilk($aCollectorsAll, $sTime, $HeroesDeployJustInCase)
 	For $i = 0 To UBound($aCollectorsAll) - 1
 		_GDIPlus_GraphicsDrawEllipse($hGraphic, $aCollectorsAll[$i][0] - 7, $aCollectorsAll[$i][1] - 7, 14, 14, $hPen)
 		If StringInStr($aCollectorsAll[$i][5], "|") Then
-			$tempObbj = StringSplit($aCollectorsAll[$i][5], "|", $STR_NOCOUNT)
+			$tempObbj = StringSplit($aCollectorsAll[$i][5], "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 			For $t = 0 To UBound($tempObbj) - 1
-				$tempObbjs = StringSplit($tempObbj[$t], ",", $STR_NOCOUNT)
+				$tempObbjs = StringSplit($tempObbj[$t], ",", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 				Local $penn = $hPen2
 				If $t = 2 Then $penn = $hPen
 				If UBound($tempObbjs) > 1 Then _GDIPlus_GraphicsDrawRect($hGraphic, $tempObbjs[0] - 2, $tempObbjs[1] - 2, 4, 4, $penn)
 			Next
 		Else
-			$tempObbj = StringSplit($aCollectorsAll[$i][5], ",", $STR_NOCOUNT)
+			$tempObbj = StringSplit($aCollectorsAll[$i][5], ",", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 			If UBound($tempObbj) > 1 Then _GDIPlus_GraphicsDrawRect($hGraphic, $tempObbj[0] - 2, $tempObbj[1] - 2, 4, 4, $hPen2)
 		EndIf
 		$tempObbj = Null
@@ -519,7 +519,7 @@ Func _getBattleEnds()
 EndFunc   ;==>_getBattleEnds
 
 Func ConvertTime($sString)
-	Local $asTime = StringSplit($sString, "m", $STR_NOCOUNT)
+	Local $asTime = StringSplit($sString, "m", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 	If Not @error Then
 		Local $iMinutes = Int($asTime[0])
 		Local $iSeconds = Int(StringReplace($asTime[1], "s", ""))

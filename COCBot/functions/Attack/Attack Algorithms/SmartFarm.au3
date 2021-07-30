@@ -357,12 +357,12 @@ Func SmartFarmDetection($txtBuildings = "Mines", $bForceCapture = True)
 				$aObjectpoints = StringReplace($aObjectpoints, "||", "|")
 				$sString = StringRight($aObjectpoints, 1)
 				If $sString = "|" Then $aObjectpoints = StringTrimRight($aObjectpoints, 1)
-				$tempObbj = StringSplit($aObjectpoints, "|", $STR_NOCOUNT) ; several detected points
-				$sNearTemp = StringSplit($sNear, "#", $STR_NOCOUNT) ; several detected 5 near points
-				$Distance = StringSplit($sRedLineDistance, "#", $STR_NOCOUNT) ; several detected distances points
+				$tempObbj = StringSplit($aObjectpoints, "|", $STR_NOCOUNT + $STR_ENTIRESPLIT) ; several detected points
+				$sNearTemp = StringSplit($sNear, "#", $STR_NOCOUNT + $STR_ENTIRESPLIT) ; several detected 5 near points
+				$Distance = StringSplit($sRedLineDistance, "#", $STR_NOCOUNT + $STR_ENTIRESPLIT) ; several detected distances points
 				For $i = 0 To UBound($tempObbj) - 1
 					; Test the coordinates
-					$tempObbjs = StringSplit($tempObbj[$i], ",", $STR_NOCOUNT) ;  will be a string : 708,360
+					$tempObbjs = StringSplit($tempObbj[$i], ",", $STR_NOCOUNT + $STR_ENTIRESPLIT) ;  will be a string : 708,360
 					If UBound($tempObbjs) <> 2 Then ContinueLoop
 					; Check double detections
 					Local $DetectedPoint[2] = [Number($tempObbjs[0] + $offsetx), Number($tempObbjs[1] + $offsety)]
@@ -389,7 +389,7 @@ Func SmartFarmDetection($txtBuildings = "Mines", $bForceCapture = True)
 				Next
 			Else
 				; Test the coordinate
-				$tempObbj = StringSplit($aObjectpoints, ",", $STR_NOCOUNT) ;  will be a string : 708,360
+				$tempObbj = StringSplit($aObjectpoints, ",", $STR_NOCOUNT + $STR_ENTIRESPLIT) ;  will be a string : 708,360
 				If UBound($tempObbj) <> 2 Then ContinueLoop
 				; Check double detections
 				Local $DetectedPoint[2] = [Number($tempObbj[0] + $offsetx), Number($tempObbj[1] + $offsety)]
@@ -501,13 +501,13 @@ Func DebugImageSmartFarm($THdetails, $aIn, $aOut, $sTime, $BestSideToAttack, $re
 		; Deploy points near Red Line
 		If StringInStr($aIn[$i][5], "|") Then
 
-			$tempObbj = StringSplit($aIn[$i][5], "|", $STR_NOCOUNT) ; several detected points
+			$tempObbj = StringSplit($aIn[$i][5], "|", $STR_NOCOUNT + $STR_ENTIRESPLIT) ; several detected points
 			For $t = 0 To UBound($tempObbj) - 1
-				$tempObbjs = StringSplit($tempObbj[$t], ",", $STR_NOCOUNT)
+				$tempObbjs = StringSplit($tempObbj[$t], ",", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 				If UBound($tempObbjs) > 1 Then _GDIPlus_GraphicsDrawRect($hGraphic, $tempObbjs[0], $tempObbjs[1], 5, 5, $hPen2)
 			Next
 		Else
-			$tempObbj = StringSplit($aOut[$i][5], ",", $STR_NOCOUNT)
+			$tempObbj = StringSplit($aOut[$i][5], ",", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 			If UBound($tempObbj) > 1 Then _GDIPlus_GraphicsDrawRect($hGraphic, $tempObbj[0], $tempObbj[1], 5, 5, $hPen2)
 		EndIf
 		$tempObbj = Null
@@ -520,13 +520,13 @@ Func DebugImageSmartFarm($THdetails, $aIn, $aOut, $sTime, $BestSideToAttack, $re
 
 		; Deploy points near Red Line
 		If StringInStr($aOut[$i][5], "|") Then
-			$tempObbj = StringSplit($aOut[$i][5], "|", $STR_NOCOUNT) ; several detected points
+			$tempObbj = StringSplit($aOut[$i][5], "|", $STR_NOCOUNT + $STR_ENTIRESPLIT) ; several detected points
 			For $t = 0 To UBound($tempObbj) - 1
-				$tempObbjs = StringSplit($tempObbj[$t], ",", $STR_NOCOUNT)
+				$tempObbjs = StringSplit($tempObbj[$t], ",", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 				If UBound($tempObbjs) > 1 Then _GDIPlus_GraphicsDrawRect($hGraphic, $tempObbjs[0], $tempObbjs[1], 5, 5, $hPen2)
 			Next
 		Else
-			$tempObbj = StringSplit($aOut[$i][5], ",", $STR_NOCOUNT)
+			$tempObbj = StringSplit($aOut[$i][5], ",", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 			If UBound($tempObbj) > 1 Then _GDIPlus_GraphicsDrawRect($hGraphic, $tempObbj[0], $tempObbj[1], 5, 5, $hPen2)
 		EndIf
 		$tempObbj = Null
@@ -556,9 +556,9 @@ Func DebugImageSmartFarm($THdetails, $aIn, $aOut, $sTime, $BestSideToAttack, $re
 	Local $aTemp, $DecodeEachPoint
 	SetDebugLog("$redline: " & _ArrayToString($redline))
 	For $l = 0 To UBound($redline) - 1
-		$aTemp = StringSplit($redline[$l], "|", 2)
+		$aTemp = StringSplit($redline[$l], "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 		For $i = 0 To UBound($aTemp) - 1
-			$DecodeEachPoint = StringSplit($aTemp[$i], ",", 2)
+			$DecodeEachPoint = StringSplit($aTemp[$i], ",", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 			If UBound($DecodeEachPoint) > 1 Then _GDIPlus_GraphicsDrawRect($hGraphic, $DecodeEachPoint[0], $DecodeEachPoint[1], 5, 5, $hPen2)
 		Next
 	Next
@@ -803,7 +803,7 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 	Local $troop, $troopNb, $name
 
 	Local $iHowManySides = 0
-	Local $aWhatSides = StringSplit($SIDESNAMES, "|", $STR_NOCOUNT)
+	Local $aWhatSides = StringSplit($SIDESNAMES, "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 	If @error Then
 		$iHowManySides = 1
 	Else
@@ -1183,7 +1183,7 @@ Func DropTroopSmartFarm($troop, $nbSides, $number, $slotsPerEdge = 0, $name = ""
 	Else
 		Local $TEMPlistInfoPixelDropTroop = GetPixelDropTroop($troop, $nbTroopsPerEdge, $slotsPerEdge)
 		If StringInStr($SIDESNAMES, "|") <> 0 Then
-			Local $iTempSides = StringSplit($SIDESNAMES, "|", $STR_NOCOUNT)
+			Local $iTempSides = StringSplit($SIDESNAMES, "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 			SetDebugLog("Original $g_sRandomSidesNames: " & _ArrayToString($g_sRandomSidesNames))
 			SetDebugLog("Original $iTempSides: " & _ArrayToString($iTempSides))
 			For $x = 0 To UBound($g_sRandomSidesNames) - 1
@@ -1410,7 +1410,7 @@ Func _GreenTiles($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = "FV", $bFo
 	EndIf
 
 	Local $aCoords = "" ; use AutoIt mixed variable type and initialize array of coordinates to null
-	Local $returnData = StringSplit($returnProps, ",", $STR_NOCOUNT)
+	Local $returnData = StringSplit($returnProps, ",", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 	Local $returnLine[UBound($returnData)]
 
 	; Capture the screen for comparison
@@ -1431,7 +1431,7 @@ Func _GreenTiles($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = "FV", $bFo
 		Return -1
 	EndIf
 
-	Local $resultArr = StringSplit($result[0], "|", $STR_NOCOUNT)
+	Local $resultArr = StringSplit($result[0], "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 	If $g_bDebugSetlog Then SetDebugLog(" ***  _GreenTiles multiples **** ", $COLOR_ORANGE)
 
 	; Distance in pixels to check if is a duplicated detection , for deploy point will be 5
@@ -1442,9 +1442,9 @@ Func _GreenTiles($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = "FV", $bFo
 			$returnLine[$rD] = RetrieveImglocProperty($resultArr[$rs], $returnData[$rD])
 			If $returnData[$rD] = "objectpoints" Then
 				; Inspired in Chilly-chill
-				Local $aC = StringSplit($returnLine[2], "|", $STR_NOCOUNT)
+				Local $aC = StringSplit($returnLine[2], "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 				For $i = 0 To UBound($aC) - 1
-					$aXY = StringSplit($aC[$i], ",", $STR_NOCOUNT)
+					$aXY = StringSplit($aC[$i], ",", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 					If UBound($aXY) <> 2 Then ContinueLoop 3
 						If $returnLine[0] = "External" Then
 							If isInsideDiamondInt(Int($aXY[0]), Int($aXY[1])) Then

@@ -9,7 +9,7 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-; _ImageSearchXML("C:\Github\AIOPLUS\imgxml\village\NormalVillage", 0, "FV", True, True, False, 25, 0, 1000)
+
 Func _ImageSearchXML($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = "FV", $bForceCapture = True, $bDebugLog = False, $bCheckDuplicatedpoints = False, $iDistance2check = 25, $minLevel = 0, $maxLevel = 1000)
 	; FuncEnter(_ImageSearchXML)
 	$g_aImageSearchXML = -1
@@ -27,7 +27,7 @@ Func _ImageSearchXML($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = "FV", 
 	EndIf
 	
 	Local $aCoords = "" ; use AutoIt mixed variable type and initialize array of coordinates to null
-	Local $returnData = StringSplit($returnProps, ",", $STR_NOCOUNT)
+	Local $returnData = StringSplit($returnProps, ",", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 	Local $returnLine[UBound($returnData)]
 
 	; Capture the screen for comparison
@@ -48,7 +48,7 @@ Func _ImageSearchXML($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = "FV", 
 		Return -1
 	EndIf
 
-	Local $resultArr = StringSplit($result[0], "|", $STR_NOCOUNT)
+	Local $resultArr = StringSplit($result[0], "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 	If $g_bDebugSetlog Then SetDebugLog(" ***  _ImageSearchXML multiples **** ", $COLOR_ORANGE)
 
 	; Distance in pixels to check if is a duplicated detection , for deploy point will be 5
@@ -59,9 +59,9 @@ Func _ImageSearchXML($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = "FV", 
 			$returnLine[$rD] = RetrieveImglocProperty($resultArr[$rs], $returnData[$rD])
 			If $returnData[$rD] = "objectpoints" Then
 				; Inspired in Chilly-chill
-				Local $aC = StringSplit($returnLine[2], "|", $STR_NOCOUNT)
+				Local $aC = StringSplit($returnLine[2], "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 				For $i = 0 To UBound($aC) - 1
-					$aXY = StringSplit($aC[$i], ",", $STR_NOCOUNT)
+					$aXY = StringSplit($aC[$i], ",", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 					If UBound($aXY) <> 2 Then ContinueLoop 3
 					If $iD2C > 0 Then
 						If DMduplicated($aAR, Int($aXY[0]), Int($aXY[1]), UBound($aAR)-1, $iD2C) Then
@@ -80,9 +80,13 @@ Func _ImageSearchXML($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = "FV", 
 		Next
 	Next
 	
-	If UBound($aAR) < 1 Then Return -1
-	If $bDebugLog Then DebugImgArrayClassic($aAR, "_ImageSearchXML")
 	$g_aImageSearchXML = $aAR
+	If UBound($aAR) < 1 Then 
+		$g_aImageSearchXML = -1
+		Return -1
+	EndIf
+
+	If $bDebugLog Then DebugImgArrayClassic($aAR, "_ImageSearchXML")
 	Return $aAR
 EndFunc   ;==>_ImageSearchXML
 
@@ -140,17 +144,18 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 	EndIf
 
 	Local $iQuantToMach = ($bOnlyFindIsSpace = True) ? ($iQuantityMatch) : (0)
-	Local $bIsDir = True
-	Local $sDrive = "", $sDir = "", $sFileName = "", $sExtension = ""
-	If Not IsDir($sDirectory) Then
-		$bIsDir = False
-		Local $aPathSplit = _PathSplit($sDirectory, $sDrive, $sDir, $sFileName, $sExtension)
-		If Not StringIsSpace($sFileName) Then
-			$bExactFind = False
-			$sOnlyFind = ""
-			$sDirectory = $sDrive & $sDir
-			$iQuantToMach = 0
+	If IsDir($sDirectory) = False Then
+		$sOnlyFind = StringRegExpReplace($sDirectory, "^.*\\|\..*$", "")
+		If StringRight($sOnlyFind, 1) = "*" Then 
+			$sOnlyFind = StringTrimRight($sOnlyFind, 1)
 		EndIf
+		Local $aTring = StringSplit($sOnlyFind, "_", $STR_NOCOUNT + $STR_ENTIRESPLIT)
+		If Not @error Then 
+			$sOnlyFind = $aTring[0]
+		EndIf
+		$bExactFind = False
+		$sDirectory = StringRegExpReplace($sDirectory, "(^.*\\)(.*)", "\1")
+		$iQuantToMach = 0
 	EndIf
 
 	If $vArea2SearchOri2 = Default Then 
@@ -165,7 +170,7 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 	EndIf
 	
 	Local $aCoords = "" ; use AutoIt mixed variable type and initialize array of coordinates to null
-	Local $returnData = StringSplit($returnProps, ",", $STR_NOCOUNT)
+	Local $returnData = StringSplit($returnProps, ",", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 	Local $returnLine[UBound($returnData)]
 
 	; Capture the screen for comparison
@@ -187,23 +192,12 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 		Return -1
 	EndIf
 
-	Local $resultArr = StringSplit($result[0], "|", $STR_NOCOUNT), $sSlipt = StringSplit($sOnlyFind, "|", $STR_NOCOUNT)
-	If Not $bOnlyFindIsSpace And $bIsDir Then
-		If $g_bDebugSetlog Then SetDebugLog(" ***  findMultipleQuick multiples **** ", $COLOR_ORANGE)
-		If CompKick($resultArr, $sSlipt, $bExactFind) Then
-			If $g_bDebugSetlog Then SetDebugLog(" ***  findMultipleQuick has no result **** ", $COLOR_ORANGE)
-			Return -1
-		EndIf
-	ElseIf Not $bIsDir Then
-		If $g_bDebugSetlog Then SetDebugLog(" ***  findMultipleQuick one **** ", $COLOR_ORANGE)
-		Local $iIsA = __ArraySearch($resultArr, $sFileName & $sExtension)
-		If $iIsA <> -1 Then
-			Local $resultArr[1] = [String($sFileName & $sExtension)]
-			If $g_bDebugSetlog Then SetDebugLog(" ***  findMultipleQuick " & $resultArr[0] & " **** ", $COLOR_ORANGE)
-		Else
-			If $g_bDebugSetlog Then SetDebugLog(" ***  findMultipleQuick only one has no result **** ", $COLOR_ORANGE)
-			Return -1
-		EndIf
+	Local $resultArr = StringSplit($result[0], "|", $STR_NOCOUNT + $STR_ENTIRESPLIT), $sSlipt = StringSplit($sOnlyFind, "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
+	_ArrayDisplay($resultArr)
+	If $g_bDebugSetlog Then SetDebugLog(" ***  findMultipleQuick multiples **** ", $COLOR_ORANGE)
+	If CompKick($resultArr, $sSlipt, $bExactFind) Then
+		If $g_bDebugSetlog Then SetDebugLog(" ***  findMultipleQuick has no result **** ", $COLOR_ORANGE)
+		Return -1
 	EndIf
 
 	Local $iD2C = $iDistance2check
@@ -212,9 +206,9 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 		For $rD = 0 To UBound($returnData) - 1 ; cycle props
 			$returnLine[$rD] = RetrieveImglocProperty($resultArr[$rs], $returnData[$rD])
 			If $returnData[$rD] = "objectpoints" Then
-				Local $aC = StringSplit($returnLine[2], "|", $STR_NOCOUNT)
+				Local $aC = StringSplit($returnLine[2], "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 				For $i = 0 To UBound($aC) - 1
-					$aXY = StringSplit($aC[$i], ",", $STR_NOCOUNT)
+					$aXY = StringSplit($aC[$i], ",", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 					If UBound($aXY) <> 2 Then ContinueLoop 3
 					If $iD2C > 0 Then
 						If DMduplicated($aAR, Int($aXY[0]), Int($aXY[1]), UBound($aAR)-1, $iD2C) Then
@@ -233,8 +227,13 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 		Next
 	Next
 	
-	If UBound($aAR) < 1 Then Return -1
-	If $bDebugLog Then DebugImgArrayClassic($aAR, "findMultipleQuick")
 	$g_aImageSearchXML = $aAR
+	If UBound($aAR) < 1 Then 
+		$g_aImageSearchXML = -1
+		Return -1
+	EndIf
+	
+	If $bDebugLog Then DebugImgArrayClassic($aAR, "findMultipleQuick")
+	
 	Return $aAR
 EndFunc   ;==>findMultipleQuick

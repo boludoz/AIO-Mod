@@ -10,7 +10,7 @@
 #Au3Stripper_Off
 #Au3Stripper_On
 Global $g_sBotVersion = "v7.9.6"
-Global $g_sModVersion = "v4.5.8"
+Global $g_sModVersion = "v4.5.9"
 Opt("MustDeclareVars", 1)
 Global $g_sBotTitle = ""
 Global $g_hFrmBot = 0
@@ -2794,15 +2794,12 @@ Global $g_bAndroidAdbInstanceEnabled = True
 Global $g_iAndroidSuspendModeFlags = 1
 Global $g_bNoFocusTampering = False
 Global $g_bAndroidAdbPortPerInstance = False
-Global $g_avAndroidAppConfig[8][16] = [ ["Nox", "nox", "No", "[CLASS:subWin; INSTANCE:1]", "", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 4, $g_iDEFAULT_HEIGHT - 10,0, "127.0.0.1:62001", 1+2+4+8+16+32 +256+512, '# ', '(nox Virtual Input|Android Input|Android_Input)', 0, 2], ["MEmu", "MEmu", "MEmu ", "[CLASS:subWin; INSTANCE:1]", "", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 51,$g_iDEFAULT_HEIGHT - 12,0, "127.0.0.1:21503", 2+4+8+16+32 +512, '# ', '(Microvirt Virtual Input|User Input)', 0, 2], ["BlueStacks2","Android", "BlueStacks ", "[CLASS:BlueStacksApp; INSTANCE:1]","_ctl.Window", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,0, "127.0.0.1:5555", 1+2+4+8+16+32 +128, '$ ', 'BlueStacks Virtual Touch', 0, 1], ["BlueStacks", "Android", "BlueStacks App Player","[CLASS:BlueStacksApp; INSTANCE:1]","_ctl.Window", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,0, "127.0.0.1:5555", 1 +8+16+32 +128, '$ ', 'BlueStacks Virtual Touch', 0, 1], ["LeapDroid", "vm1", "Leapd", "[CLASS:subWin; INSTANCE:1]", "", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,0, "emulator-5554", 1 +8+16+32 +512, '# ', 'qwerty2', 1, 1], ["iTools", "iToolsVM","iTools ", "[CLASS:subWin; INSTANCE:1]", "", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 2, $g_iDEFAULT_HEIGHT - 13,0, "127.0.0.1:54001", 1+2+4+8+16+32+64 +512, '# ', 'iTools Virtual PassThrough Input', 0, 1], ["KOPLAYER", "KOPLAYER","KOPLAYER", "[CLASS:subWin; INSTANCE:1]", "", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 64,$g_iDEFAULT_HEIGHT - 8, 0, "127.0.0.1:6555", 1+2+4+8+16+32 +512, '# ', '(ttVM Virtual Input|androidVM Virtual Input)', 0, 2], ["Droid4X", "droid4x", "Droid4X ", "[CLASS:subWin; INSTANCE:1]", "", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 10,$g_iDEFAULT_HEIGHT + 50,0, "127.0.0.1:26944", 2+4+8+16+32 +512, '# ', 'droid4x Virtual Input', 0, 2] ]
+Global $g_avAndroidAppConfig[5][16] = [ ["Nox", "nox", "No", "[CLASS:subWin; INSTANCE:1]", "", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 4, $g_iDEFAULT_HEIGHT - 10,0, "127.0.0.1:62001", 1+2+4+8+16+32 +256+512, '# ', '(nox Virtual Input|Android Input|Android_Input)', 0, 2], ["MEmu", "MEmu", "MEmu ", "[CLASS:subWin; INSTANCE:1]", "", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 51,$g_iDEFAULT_HEIGHT - 12,0, "127.0.0.1:21503", 2+4+8+16+32 +512, '# ', '(Microvirt Virtual Input|User Input)', 0, 2], ["BlueStacks2","Android", "BlueStacks ", "[CLASS:BlueStacksApp; INSTANCE:1]","_ctl.Window", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,0, "127.0.0.1:5555", 1+2+4+8+16+32 +128, '$ ', 'BlueStacks Virtual Touch', 0, 1], ["BlueStacks", "Android", "BlueStacks App Player","[CLASS:BlueStacksApp; INSTANCE:1]","_ctl.Window", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,0, "127.0.0.1:5555", 1 +8+16+32 +128, '$ ', 'BlueStacks Virtual Touch', 0, 1], ["iTools", "iToolsVM","iTools ", "[CLASS:subWin; INSTANCE:1]", "", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 2, $g_iDEFAULT_HEIGHT - 13,0, "127.0.0.1:54001", 1+2+4+8+16+32+64 +512, '# ', 'iTools Virtual PassThrough Input', 0, 1] ]
 Global $__Nox_Idx = _ArraySearch($g_avAndroidAppConfig, "Nox", 0, 0, 0, 0, 1, 0)
 Global $__MEmu_Idx = _ArraySearch($g_avAndroidAppConfig, "MEmu", 0, 0, 0, 0, 1, 0)
 Global $__BS2_Idx = _ArraySearch($g_avAndroidAppConfig, "BlueStacks2", 0, 0, 0, 0, 1, 0)
 Global $__BS_Idx = _ArraySearch($g_avAndroidAppConfig, "BlueStacks", 0, 0, 0, 0, 1, 0)
-Global $__LeapDroid_Idx = _ArraySearch($g_avAndroidAppConfig, "LeapDroid", 0, 0, 0, 0, 1, 0)
 Global $__iTools_Idx = _ArraySearch($g_avAndroidAppConfig, "iTools", 0, 0, 0, 0, 1, 0)
-Global $__KOPLAYER_Idx = _ArraySearch($g_avAndroidAppConfig, "KOPLAYER", 0, 0, 0, 0, 1, 0)
-Global $__Droid4X_Idx = _ArraySearch($g_avAndroidAppConfig, "Droid4X", 0, 0, 0, 0, 1, 0)
 Global $g_iAndroidBackgroundMode = 0
 Global $g_iAndroidBackgroundModeDefault = 1
 Global $g_iAndroidConfig = 0
@@ -2838,6 +2835,7 @@ Global $g_bAndroidBackgroundLaunched
 Global $g_iAndroidControlClickAdditionalDelay = 10
 Global $g_iAndroidAdbClickGroup = 50
 Global $g_bAndroidCloseWithBot = False
+Global $g_iInputAndroidSleep = 0
 Global $g_bUpdateSharedPrefs = True
 Global $g_iAndroidProcessAffinityMask = 0
 Global $g_bInitAndroidActive = False
@@ -3311,9 +3309,6 @@ Global $g_sTxtNotifyDSToken, $g_bNotifyDSEnable, $g_hChkNotifyDSEnable, $g_hLblN
 Global $g_hChkBotLogLineLimit, $g_bChkBotLogLineLimit, $g_hTxtLogLineLimit, $g_iTxtLogLineLimit
 Global $g_bRequestOneTimeEnable = False
 Global $g_bAvoidLocate = False, $g_hAvoidLocate = 0, $g_bIsReallyOn = False
-Global $g_iDayLimitTroops = 0, $g_iDayLimitSpells = 0, $g_iDayLimitSieges = 0
-Global $g_iCmbRestartEvery, $g_hCmbRestartEvery
-Global $g_sRestartTimer = '1970/01/01 00:00:00'
 Global $g_bChkReqCCAlways = 0, $g_bChkReqCCFromChat = 0
 Global $g_bStopForWar
 Global $g_iStopTime, $g_iReturnTime
@@ -3322,7 +3317,7 @@ Global $g_bRequestCCForWar, $g_sTxtRequestCCForWar
 Global $g_iCmbCampsBB[6] = [0, 0, 0, 0, 0, 0]
 Global $g_hComboTroopBB[6]
 Global $g_bChkNoDropIfShield = True, $g_bChkTrophyTroops = False, $g_bChkTrophyHeroesAndTroops = True
-Global $g_bUseSleep = False, $g_iIntSleep = 20, $g_bUseRandomSleep = False, $g_bNoAttackSleep = False, $g_bDisableColorLog = False, $g_bAvoidLocation = False, $g_bEdgeObstacle = False
+Global $g_bUseSleep = False, $g_iIntSleep = 20, $g_bUseRandomSleep = False, $g_bNoAttackSleep = False, $g_bDisableColorLog = False, $g_bDelayLabel = False, $g_bAvoidLocation = False, $g_bEdgeObstacle = False
 Global $g_bMaxSidesSF = True, $g_iCmbMaxSidesSF = 1
 Global $g_bDeployCastleFirst[2] = [False, False]
 Global $g_iDeployWave[3] = [5, 5, 5], $g_iDeployDelay[3] = [5, 5, 5]
@@ -5240,6 +5235,7 @@ $g_bAndroidCloseWithBot = Int(IniRead($g_sProfileConfigPath, "android", "close",
 $g_bUpdateSharedPrefs = Int(IniRead($g_sProfileConfigPath, "android", "shared_prefs.update", $g_bUpdateSharedPrefs ? 1 : 0)) = 1
 $g_iAndroidProcessAffinityMask = Int(IniRead($g_sProfileConfigPath, "android", "process.affinity.mask", $g_iAndroidProcessAffinityMask))
 $g_iAndroidControlClickAdditionalDelay = Int(IniRead($g_sProfileConfigPath, "android", "click.additional.delay", $g_iAndroidControlClickAdditionalDelay))
+$g_iInputAndroidSleep = Int(IniRead($g_sProfileConfigPath, "android", "AndroidSleep", $g_iInputAndroidSleep))
 If $g_bBotLaunchOption_Restart = True Or $g_asCmdLine[0] < 2 Then
 Local $sAndroidEmulator = IniRead($g_sProfileConfigPath, "android", "emulator", "")
 Local $sAndroidInstance = IniRead($g_sProfileConfigPath, "android", "instance", "")
@@ -6262,11 +6258,6 @@ $g_sTxtRequestCCForWar = IniRead($g_sProfileConfigPath, "war preparation", "Requ
 IniReadS($g_bChkReqCCAlways, $g_sProfileConfigPath, "ReqCCOptions", "ReqCCAlways", $g_bChkReqCCAlways, "Bool")
 IniReadS($g_bChkReqCCFromChat, $g_sProfileConfigPath, "ReqCCOptions", "ReqCCFromChat", $g_bChkReqCCFromChat, "Bool")
 IniReadS($g_bRequestOneTimeEnable, $g_sProfileConfigPath, "ReqCCOptions", "RequestOneTime", $g_bRequestOneTimeEnable, "Bool")
-IniReadS($g_iDayLimitTroops, $g_sProfileConfigPath, "DonRecords", "DayLimitTroops", $g_iDayLimitTroops, "Int")
-IniReadS($g_iDayLimitSpells, $g_sProfileConfigPath, "DonRecords", "DayLimitSpells", $g_iDayLimitSpells, "Int")
-IniReadS($g_iDayLimitSieges, $g_sProfileConfigPath, "DonRecords", "DayLimitSieges", $g_iDayLimitSieges, "Int")
-IniReadS($g_iCmbRestartEvery, $g_sProfileConfigPath, "DonRecords", "CmbRestartEvery", $g_iCmbRestartEvery, "Int")
-IniReadS($g_sRestartTimer, $g_sProfileConfigPath, "DonRecords", "RestartTimer", $g_sRestartTimer)
 For $i = 0 To $eTroopCount - 1
 IniReadS($g_aiDonateStatsTroops[$i][0], $g_sProfileConfigPath, "DonRecords", "DonateStatsTroops" & $i, $g_aiDonateStatsTroops[$i][0], "Int")
 Next

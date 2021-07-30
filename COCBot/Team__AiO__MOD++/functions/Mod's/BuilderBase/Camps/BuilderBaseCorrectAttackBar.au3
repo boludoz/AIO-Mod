@@ -354,13 +354,17 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	WEnd
 	
 	If $bWaschanged Then
-		While _WaitForCheckImg($g_sImgCustomArmyBB, "0,681,860,728", "ChangeTDis", 500, 100)
-			Click(Random(8, 858, 1), Random(632, 720, 1))
-		WEnd
+		For $w = 0 To 5
+			If QuickMIS("N1", $g_sImgCustomArmyBB, 2, 681, 860, 728) = "ChangeTDis" Then
+				Click(8, 720, 1)
+				ExitLoop
+			EndIf
+			If RandomSleep(500) Then Return
+		Next
+	Else
+		If RandomSleep(500) Then Return
+		Return
 	EndIf
-	If Not $bWaschanged Then Return
-
-	If RandomSleep(500) Then Return
 
 	; populate the correct array with correct Troops
 	For $i = 0 To UBound($aNewAvailableTroops) - 1
