@@ -4,7 +4,7 @@
 ; Syntax ........:
 ; Parameters ....: None
 ; Return values .: None
-; Author ........: ProMac (03-2018), CodeSlinger69 (2017), Chilly-Chill (2019)
+; Author ........: ProMac (03-2018), CodeSlinger69 (2017), Chilly-Chill (2019), Team AIO Mod++/xbebenk (2021)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2021
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -21,6 +21,8 @@ Global $g_hChkBBWallRing = 0, $g_hChkBBUpgWallsGold = 0, $g_hChkBBUpgWallsElixir
 Global $g_hbtnBBAttack = 0
 Global $g_hDebugBBattack = 0;, $g_hLblBBNextUpgrade = 0, $g_hCmbBBLaboratory = 0, $g_hPicBBLabUpgrade = ""
 Global $g_hChkAutoStarLabUpgrades = 0, $g_hCmbStarLaboratory = 0, $g_hLblNextSLUpgrade = 0, $g_hBtnResetStarLabUpgradeTime = 0, $g_hPicStarLabUpgrade = 0
+Global $g_hBtnBBUpgradeOrderGUI ; xbebenk mod.
+Global $g_hGUI_BBUpgradeOrder, $g_hGUI_BBUpgradeOrderClose
 
 Func CreateUpgradeBuilderBaseSubTab()
 	Local $x = 15, $y = 45
@@ -77,12 +79,18 @@ Func CreateUpgradeBuilderBaseSubTab()
 	GUICtrlSetOnEvent(-1, "chkStarLab")
 	; $g_hLblNextSLUpgrade = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "LblNextUpgrade", "Next one") & ":", $x + 80, $y + 38, 50, -1)
 	; GUICtrlSetState(-1, $GUI_DISABLE)
-	$g_hCmbStarLaboratory = GUICtrlCreateCombo("", $x + 200, $y + 37, 140, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL, $WS_VSCROLL))
+	$g_hCmbStarLaboratory = GUICtrlCreateCombo("", $x + 190, $y + 37, 75, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL, $WS_VSCROLL))
 	GUICtrlSetData(-1, $sTxtSLNames, GetTranslatedFileIni("MBR Global GUI Design", "Any", "Any"))
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "CmbLaboratory_Info_01", "Select the troop type to upgrade with this pull down menu") & @CRLF & _
 					   GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "CmbLaboratory_Info_02", "The troop icon will appear on the right."))
 	GUICtrlSetState(-1, $GUI_DISABLE)
 	GUICtrlSetOnEvent(-1, "cmbStarLab")
+
+	$x += 271
+	$g_hBtnBBUpgradeOrderGUI = GUICtrlCreateButton ("Ord.", $x, $y + 36, 40, 25)
+	GUICtrlSetOnEvent(-1, "BBUpgradeOrder")
+	$x -= 271
+	
 	; Red button, will show on upgrade in progress. Temp unhide here and in Func ChkLab() if GUI needs editing.
 	$g_hBtnResetStarLabUpgradeTime = GUICtrlCreateButton("", $x + 120 + 172, $y + 36, 18, 18, BitOR($BS_PUSHLIKE,$BS_DEFPUSHBUTTON))
 	GUICtrlSetBkColor(-1, $COLOR_ERROR)
@@ -137,3 +145,78 @@ Func CreateUpgradeBuilderBaseSubTab()
 	GUICtrlSetState(-1, $GUI_HIDE)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 EndFunc   ;==>CreateUpgradeBuilderBaseSubTab 
+
+Func CreateBBUpgradeOrderGUI()
+	$g_hGUI_BBUpgradeOrder = GUICreate("Custom Order", 444, 222, 240, 124)
+
+	Local $sTxtSLNames = GetTranslatedFileIni("MBR Global GUI Design", "Any", "Any") & "|" & _
+					   GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtRagedBarbarian", "Raged Barbarian") & "|" & _
+					   GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtSneakyArcher", "Sneaky Archer") & "|" & _
+					   GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtBoxerGiant", "Boxer Giant") & "|" & _
+					   GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtBetaMinion", "Beta Minion") & "|" & _
+					   GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtBomber", "Bomber") & "|" & _
+					   GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtBabyDragon", "Baby Dragon") & "|" & _
+					   GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtCannonCart", "Cannon Cart") & "|" & _
+					   GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtNightWitch", "Night Witch") & "|" & _
+					   GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtDropShip", "Drop Ship") & "|" & _
+					   GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtSuperPekka", "Super Pekka") & "|" & _
+					   GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtHogGlider", "Hog Glider")
+
+	Local $x = 0, $y = 8
+		
+	GUICtrlCreateGroup("BB Custom upgrade order.", 8, $y, 425, 164)
+	$y += 16
+	
+	;Enable StarLab Upgrade Order
+	$g_hChkSLabUpgradeOrder = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkSLabUpgradeOrder", "Enable StarLab Upgrades Order"), 16, $y, -1, -1)
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkAutoLabUpgrades_Info_04", "Check box to enable Upgrades Order in Star laboratory"))
+		GUICtrlSetOnEvent(-1, "chkSLabUpgradeOrder")
+
+	; Create translated list of Troops for combo box
+	Local $sSComboData = ""
+	$sSComboData = StringTrimLeft($sTxtSLNames, 4); trim "Any," from list
+
+	; Create ComboBox(es) for selection of troop training order
+	$x += 36
+	$y += 44
+	For $z = 0 To UBound($g_ahCmbSLabUpgradeOrder) - 1
+		If $z < 3 Then
+			GUICtrlCreateLabel($z + 1 & ":", $x - 16, $y + 2, -1, 18)
+			$g_ahCmbSLabUpgradeOrder[$z] = GUICtrlCreateCombo("", $x, $y, 110, 18, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
+			GUICtrlSetOnEvent(-1, "cmbSLabUpgradeOrder")
+			GUICtrlSetData(-1, $sSComboData, "")
+			GUICtrlSetState(-1, $GUI_DISABLE)
+			$y += 22 ; move down to next combobox location
+		ElseIf $z > 2 And $z < 7 Then
+			If $z = 3 Then
+				$x += 141
+				$y -= 66
+			EndIf
+			GUICtrlCreateLabel($z + 1 & ":", $x - 13, $y + 2, -1, 18)
+			$g_ahCmbSLabUpgradeOrder[$z] = GUICtrlCreateCombo("", $x + 4, $y, 110, 18, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
+			GUICtrlSetOnEvent(-1, "cmbSLabUpgradeOrder")
+			GUICtrlSetData(-1, $sSComboData, "")
+			GUICtrlSetState(-1, $GUI_DISABLE)
+			$y += 22 ; move down to next combobox location
+		EndIf
+	Next
+	
+	$x += 140
+	$y -= 24
+	$g_hBtnRemoveSLabUpgradeOrder = GUICtrlCreateButton("Clear List", $x - 6, $y, 96, 20)
+	GUICtrlSetState(-1, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
+	GUICtrlSetOnEvent(-1, "btnRemoveSLabUpgradeOrder")
+
+	$y += 25
+	$g_hBtnSetSLabUpgradeOrder = GUICtrlCreateButton("Apply Order", $x - 6, $y, 96, 20)
+	GUICtrlSetState(-1, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
+	GUICtrlSetOnEvent(-1, "btnSetSLabUpgradeOrder")
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+
+	$y += 50
+
+	$g_hGUI_BBUpgradeOrderClose = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrderClose", "Close"), 344, $y, 65, 25)
+	GUICtrlSetOnEvent(-1, "BBUpgradeOrderClose")
+
+EndFunc
+

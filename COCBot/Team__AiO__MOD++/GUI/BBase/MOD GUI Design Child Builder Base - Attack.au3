@@ -194,7 +194,7 @@ Func CreateAttackPlanBuilderBaseSubTab()
 		If $tempindex = -1 Then $tempindex = 0
 		_GUICtrlComboBox_SetCurSel($g_hCmbBBAttackStyle[$i], $tempindex)
 	Next
-	CreateBBDropOrderGUI()
+	; CreateBBDropOrderGUI()
 EndFunc   ;==>CreateAttackPlanBuilderBaseSubTab
 
 ; Builder base drop order gui

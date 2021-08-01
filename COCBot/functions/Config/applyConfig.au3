@@ -768,37 +768,48 @@ EndFunc   ;==>ApplyConfig_600_13
 Func ApplyConfig_600_14($TypeReadSave)
 	; <><><><> Village / Upgrade - Lab <><><><>
 	Switch $TypeReadSave
-		Case "Read"
+        Case "Read"
+            GUICtrlSetState($g_hChkAutoLabUpgrades, $g_bAutoLabUpgradeEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
+            _GUICtrlComboBox_SetCurSel($g_hCmbLaboratory, $g_iCmbLaboratory)
 			#Region - Custom lab - Team AIO Mod++
-			GUICtrlSetState($g_hChkPriorityLab, $g_bPriorityLab ? $GUI_CHECKED : $GUI_UNCHECKED)
-			_GUICtrlComboBox_SetCurSel($g_hCmbPriorityLab, $g_iCmbPriorityLab)
-
-			GUICtrlSetState($g_hChkPriorityLabTroops, $g_bPriorityLabTroops ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkPriorityLabSpells, $g_bPriorityLabSpells ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkPriorityLabSieges, $g_bPriorityLabSieges ? $GUI_CHECKED : $GUI_UNCHECKED)
+            _GUICtrlSetImage($g_hPicLabUpgrade, $g_sLibIconPath, $g_avLabTroops[$g_iCmbLaboratory][1])        
 			#EndRegion - Custom lab - Team AIO Mod++
-			GUICtrlSetState($g_hChkAutoLabUpgrades, $g_bAutoLabUpgradeEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
-			_GUICtrlComboBox_SetCurSel($g_hCmbLaboratory, $g_iCmbLaboratory)
-			_GUICtrlSetImage($g_hPicLabUpgrade, $g_sLibIconPath, $g_avLabTroops[$g_iCmbLaboratory][1])
-			chkLab()
+            chkLab()
+			#Region - Custom lab - Team AIO Mod++
+            
+            GUICtrlSetState($g_hChkLabUpgradeOrder, $g_bLabUpgradeOrderEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
+            For $i = 0 To UBound($g_aCmbLabUpgradeOrder) - 1
+                _GUICtrlComboBox_SetCurSel($g_ahCmbLabUpgradeOrder[$i], $g_aCmbLabUpgradeOrder[$i])
+            Next
+            chkLabUpgradeOrder()
+ 			#EndRegion - Custom lab - Team AIO Mod++
 			GUICtrlSetState($g_hChkAutoStarLabUpgrades, $g_bAutoStarLabUpgradeEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
-			_GUICtrlComboBox_SetCurSel($g_hCmbStarLaboratory, $g_iCmbStarLaboratory)
-			_GUICtrlSetImage($g_hPicStarLabUpgrade, $g_sLibIconPath, $g_avStarLabTroops[$g_iCmbStarLaboratory][4])
-			chkStarLab()
-		Case "Save"
-			$g_bAutoLabUpgradeEnable = (GUICtrlRead($g_hChkAutoLabUpgrades) = $GUI_CHECKED)
-			$g_iCmbLaboratory = _GUICtrlComboBox_GetCurSel($g_hCmbLaboratory)
+            _GUICtrlComboBox_SetCurSel($g_hCmbStarLaboratory, $g_iCmbStarLaboratory)
+            _GUICtrlSetImage($g_hPicStarLabUpgrade, $g_sLibIconPath, $g_avStarLabTroops[$g_iCmbStarLaboratory][4])
+            chkStarLab()
+ 			#Region - Custom lab - Team AIO Mod++            
+            GUICtrlSetState($g_hChkSLabUpgradeOrder, $g_bSLabUpgradeOrderEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
+            For $i = 0 To UBound($g_aCmbSLabUpgradeOrder) - 1
+                _GUICtrlComboBox_SetCurSel($g_ahCmbSLabUpgradeOrder[$i], $g_aCmbSLabUpgradeOrder[$i])
+            Next
+            chkSLabUpgradeOrder()
+ 			#EndRegion - Custom lab - Team AIO Mod++
+        Case "Save"
+            $g_bAutoLabUpgradeEnable = (GUICtrlRead($g_hChkAutoLabUpgrades) = $GUI_CHECKED)
+            $g_iCmbLaboratory = _GUICtrlComboBox_GetCurSel($g_hCmbLaboratory)
+            $g_bAutoStarLabUpgradeEnable = (GUICtrlRead($g_hChkAutoStarLabUpgrades) = $GUI_CHECKED)
+            $g_iCmbStarLaboratory = _GUICtrlComboBox_GetCurSel($g_hCmbStarLaboratory)
 			#Region - Custom lab - Team AIO Mod++
-			$g_bPriorityLab = (GUICtrlRead($g_hChkPriorityLab) = $GUI_CHECKED)
-			$g_iCmbPriorityLab = _GUICtrlComboBox_GetCurSel($g_hCmbPriorityLab)
-
-			$g_bPriorityLabTroops = (GUICtrlRead($g_hChkPriorityLabTroops) = $GUI_CHECKED)
-			$g_bPriorityLabSpells = (GUICtrlRead($g_hChkPriorityLabSpells) = $GUI_CHECKED)
-			$g_bPriorityLabSieges = (GUICtrlRead($g_hChkPriorityLabSieges) = $GUI_CHECKED)
+            $g_bLabUpgradeOrderEnable = (GUICtrlRead($g_hChkLabUpgradeOrder) = $GUI_CHECKED)
+            For $i = 0 To UBound($g_ahCmbLabUpgradeOrder) - 1
+                $g_aCmbLabUpgradeOrder[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbLabUpgradeOrder[$i])
+            Next
+            $g_bSLabUpgradeOrderEnable = (GUICtrlRead($g_hChkSLabUpgradeOrder) = $GUI_CHECKED)
+            For $i = 0 To UBound($g_ahCmbSLabUpgradeOrder) - 1
+                $g_aCmbSLabUpgradeOrder[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbSLabUpgradeOrder[$i])
+            Next
 			#EndRegion - Custom lab - Team AIO Mod++
-			$g_bAutoStarLabUpgradeEnable = (GUICtrlRead($g_hChkAutoStarLabUpgrades) = $GUI_CHECKED)
-			$g_iCmbStarLaboratory = _GUICtrlComboBox_GetCurSel($g_hCmbStarLaboratory)
-	EndSwitch
+    EndSwitch
 EndFunc   ;==>ApplyConfig_600_14
 
 Func ApplyConfig_600_15($TypeReadSave)

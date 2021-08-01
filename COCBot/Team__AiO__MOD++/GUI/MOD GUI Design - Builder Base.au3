@@ -49,6 +49,8 @@ Func CreateBuilderBaseTab()
 
 	CreateBBAttackLog()
 
+	CreateBBDropOrderGUI()
+	CreateBBUpgradeOrderGUI()
 	GUICtrlCreateTabItem("")
 
 EndFunc   ;==>CreateBuilderBaseTab

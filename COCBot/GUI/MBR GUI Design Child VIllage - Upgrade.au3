@@ -136,15 +136,16 @@ Func CreateLaboratorySubTab()
 					   GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtHogGlider", "Hog Glider")
 	#ce - Custom - Team AIO Mod++
 
+	#Region - Custom lab - Team AIO Mod++
 	Local $x = 25, $y = 45
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "Group_01", "Laboratory"), $x - 20, $y - 20, $g_iSizeWGrpTab3, 250) ; Custom - Team AIO Mod++
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "Group_01", "Laboratory"), $x - 20, $y - 20, $g_iSizeWGrpTab3, 205)
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnLaboratory, $x, $y, 64, 64)
-		$g_hChkAutoLabUpgrades = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkAutoLabUpgrades", "Auto Laboratory Upgrades"), $x + 80, $y + 5, -1, -1)
+		$g_hChkAutoLabUpgrades = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkAutoLabUpgrades", "Auto Laboratory Upgrades"), $x + 80, $y , -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkAutoLabUpgrades_Info_01", "Check box to enable automatically starting Upgrades in laboratory"))
 			GUICtrlSetOnEvent(-1, "chkLab")
-		$g_hLblNextUpgrade = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "LblNextUpgrade", "Next one") & ":", $x + 80, $y + 38, 50, -1)
+		$g_hLblNextUpgrade = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "LblNextUpgrade", "Next one") & ":", $x + 80, $y + 25, 50, -1)
 			GUICtrlSetState(-1, $GUI_DISABLE)
-		$g_hCmbLaboratory = GUICtrlCreateCombo("", $x + 135, $y + 35, 140, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL, $WS_VSCROLL))
+		$g_hCmbLaboratory = GUICtrlCreateCombo("", $x + 135, $y + 23, 140, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL, $WS_VSCROLL))
 			GUICtrlSetData(-1, $sTxtNames, GetTranslatedFileIni("MBR Global GUI Design", "Any", "Any"))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "CmbLaboratory_Info_01", "Select the troop type to upgrade with this pull down menu") & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "CmbLaboratory_Info_02", "The troop icon will appear on the right.") & @CRLF & _
@@ -165,27 +166,54 @@ Func CreateLaboratorySubTab()
 			GUICtrlSetOnEvent(-1, "ResetLabUpgradeTime")
 		$g_hPicLabUpgrade = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnBlank, $x + 330, $y, 64, 64)
 			GUICtrlSetState(-1, $GUI_HIDE)
-	#Region - Custom lab - Team AIO Mod++
-		$g_hChkPriorityLab = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Upgrade_Laboratory", "PriorityResourceLab_001", "Priority resource (Only when choosing between another)") & ": ", $x + 80, $y + 75, -1, -1)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Upgrade_Laboratory", "PriorityResourceLab_02", "Enable this function to select resource priorities"))
-			GUICtrlSetOnEvent(-1, "chkPriorityResourceLab")
-			GUICtrlSetState(-1, $GUI_DISABLE)
-		$g_hCmbPriorityLab = GUICtrlCreateCombo("", $x + 135, $y + 105, 70, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
-			GUICtrlSetData(-1, "Elixir|Dark|Gold", "Elixir")
-			GUICtrlSetOnEvent(-1, "cmbPriorityResourceLab")
-			GUICtrlSetState(-1, $GUI_DISABLE)
-		; Only upgrade.
-		$g_hLblOnlyUpgrade = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "PriorityResourceLab_06", "Only upgrade") & ":", $x + 80, $y + 145, 100, -1)
-			GUICtrlSetState(-1, $GUI_DISABLE)
-		$g_hChkPriorityLabTroops = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Upgrade_Laboratory", "PriorityResourceLab_03", "Troops"), $x + 80, $y + 165, -1, -1)
-			;GUICtrlSetOnEvent(-1, "cmbPriorityResourceLab")
-			GUICtrlSetState(-1, $GUI_DISABLE)
-		$g_hChkPriorityLabSpells = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Upgrade_Laboratory", "PriorityResourceLab_04", "Spells"), $x + 140, $y + 165, -1, -1)
-			;GUICtrlSetOnEvent(-1, "cmbPriorityResourceLab")
-			GUICtrlSetState(-1, $GUI_DISABLE)
-		$g_hChkPriorityLabSieges = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Upgrade_Laboratory", "PriorityResourceLab_05", "Sieges"), $x + 200, $y + 165, -1, -1)
-			;GUICtrlSetOnEvent(-1, "cmbPriorityResourceLab")
-			GUICtrlSetState(-1, $GUI_DISABLE)
+									   
+
+		;Enable Lab Upgrade Order
+		$g_hChkLabUpgradeOrder = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkLabUpgradeOrder", "Enable Upgrades Order"), $x + 80, $y + 45, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkAutoLabUpgrades_Info_04", "Check box to enable Upgrades Order in laboratory"))
+			GUICtrlSetOnEvent(-1, "chkLabUpgradeOrder")
+
+		; Create translated list of Troops for combo box
+		Local $sComboData = ""
+		$sComboData = StringTrimLeft($sTxtNames, 4); trim "Any," from list
+
+		; Create ComboBox(es) for selection of troop training order
+		$y += 70
+		$x += 20
+		For $z = 0 To UBound($g_ahCmbLabUpgradeOrder) - 1
+			If $z < 5 Then
+				GUICtrlCreateLabel($z + 1 & ":", $x - 16, $y + 2, -1, 18)
+				$g_ahCmbLabUpgradeOrder[$z] = GUICtrlCreateCombo("", $x, $y, 110, 18, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
+				GUICtrlSetOnEvent(-1, "cmbLabUpgradeOrder")
+				GUICtrlSetData(-1, $sComboData, "")
+				GUICtrlSetState(-1, $GUI_DISABLE)
+				$y += 22 ; move down to next combobox location
+			ElseIf $z > 4 And $z < 10 Then
+				If $z = 5 Then
+					$x += 141
+					$y -= 110
+				EndIf
+				GUICtrlCreateLabel($z + 1 & ":", $x - 13, $y + 2, -1, 18)
+				$g_ahCmbLabUpgradeOrder[$z] = GUICtrlCreateCombo("", $x + 4, $y, 110, 18, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
+				GUICtrlSetOnEvent(-1, "cmbLabUpgradeOrder")
+				GUICtrlSetData(-1, $sComboData, "")
+				GUICtrlSetState(-1, $GUI_DISABLE)
+				$y += 22 ; move down to next combobox location
+			EndIf
+		Next
+
+		$x += 140
+		$y -= 90
+		$g_hBtnRemoveLabUpgradeOrder = GUICtrlCreateButton("Clear List", $x - 6, $y, 96, 20)
+		GUICtrlSetState(-1, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
+		GUICtrlSetOnEvent(-1, "btnRemoveLabUpgradeOrder")
+
+		$y += 25
+		$g_hBtnSetLabUpgradeOrder = GUICtrlCreateButton("Apply Order", $x - 6, $y, 96, 20)
+		GUICtrlSetState(-1, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
+		GUICtrlSetOnEvent(-1, "btnSetLabUpgradeOrder")
+
+
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	#EndRegion - Custom lab - Team AIO Mod++
 	#cs - Custom - Team AIO Mod++

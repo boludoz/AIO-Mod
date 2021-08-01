@@ -131,13 +131,22 @@ Func SaveBuildingConfig()
 	_Ini_Add("upgrade", "upgradestartroopname", $g_iCmbStarLaboratory)
 
 	#Region - Custom lab - Team AIO Mod++
-	_Ini_Add("upgrade", "ChkPriorityLab", $g_bPriorityLab ? 1 : 0)
-	_Ini_Add("upgrade", "CmbPriorityLab", $g_iCmbPriorityLab)
-	
-	_Ini_Add("upgrade", "ChkPriorityLabTroops", $g_bPriorityLabTroops ? 1 : 0)
-	_Ini_Add("upgrade", "ChkPriorityLabSpells", $g_bPriorityLabSpells ? 1 : 0)
-	_Ini_Add("upgrade", "ChkPriorityLabSieges", $g_bPriorityLabSieges ? 1 : 0)
-	#EndRegion - Custom lab - Team AIO Mod++
+    ;xbenk
+    _Ini_Add("upgrade", "upgradeorder", $g_bLabUpgradeOrderEnable ? 1 : 0)
+    Local $string = ""
+    For $i = 0 To UBound($g_aCmbLabUpgradeOrder) - 1
+        $string &= $g_aCmbLabUpgradeOrder[$i] & "|"
+    Next
+    _Ini_Add("upgrade", "upgradeorderlist", $string)
+
+    _Ini_Add("upgrade", "Supgradeorder", $g_bSLabUpgradeOrderEnable ? 1 : 0)
+    Local $string = ""
+    For $i = 0 To UBound($g_aCmbSLabUpgradeOrder) - 1
+        $string &= $g_aCmbSLabUpgradeOrder[$i] & "|"
+    Next
+    _Ini_Add("upgrade", "Supgradeorderlist", $string)
+    
+    #EndRegion - Custom lab - Team AIO Mod++
 	
 	; <><><><> Village / Upgrade - Buildings <><><><>
 	ApplyConfig_600_16(GetApplyConfigSaveAction())

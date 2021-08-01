@@ -128,8 +128,10 @@ Func MainSuggestedUpgradeCode($bDebug = $g_bDebugSetlog)
 	Local $aResourcesPicks[0][3], $aResourcesReset[0][3], $aMatrix[1][3], $aResult[3] = [-1, -1, ""]
 
 	Local $aArrayMultipixel[2][3] = [[0xDDDBDB, 54, 0], [0xDDE0DB, 74, 0]]
-	Local $vMultipix = 0 ; _MultiPixelSearch(309, 102, 439, 379, 2, 2, Hex(0xE4E8E6, 6), $aArrayMultipixel, 25)
-	Local $iyMax = 0
+	Local $vMultipix = 0
+	Local $iyMax = 368
+	Local $aAreaToSearch[4] = [374, 72, 503, $iyMax]
+
 	$g_bBuildingUpgraded = False
 
 	; If is not selected return
@@ -139,111 +141,116 @@ Func MainSuggestedUpgradeCode($bDebug = $g_bDebugSetlog)
 
 	If isOnBuilderBase(True) Then
 
-			SetLog(" - Upg Window Opened successfully", $COLOR_INFO)
+		SetLog(" - Upg Window Opened successfully", $COLOR_INFO)
 
-			For $z = 0 To 2 ; For do scroll 3 times.
-
+		For $z = 0 To 2     ; For do scroll 3 times.
+			
+			For $iClick = 0 To 1
 				$vMultipix = _MultiPixelSearch(309, 102, 439, 379, 2, 2, Hex(0xE4E8E6, 6), $aArrayMultipixel, 25)
-
-				$iyMax = ($vMultipix <> 0) ? ($vMultipix[1]) : (0)
-
-				If $iyMax = 0 Then
+				If $vMultipix = 0 Then
 					ClickOnBuilder()
 					If _Sleep(500) Then Return
-					$vMultipix = _MultiPixelSearch(309, 102, 439, 379, 2, 2, Hex(0xE4E8E6, 6), $aArrayMultipixel, 25)
-					$iyMax = ($vMultipix <> 0) ? ($vMultipix[1]) : (368)
+				Else
+					$iyMax = $vMultipix[1]
+					ExitLoop
 				EndIf
-
-				If $iyMax <> 0 Then
-					Local $aAreaToSearch[4] = [374, 72, 503, $iyMax]
-					_CaptureRegion2()
-
-					If $g_iChkBBSuggestedUpgradesIgnoreElixir = 0 And $g_aiCurrentLootBB[$eLootElixirBB] > 250 Then
-						If UBound(_ImageSearchXML($g_sImgAutoUpgradeElixir, 10, $aAreaToSearch, False, True, True, 8, 0, 1000)) > 0 And not @error Then
-							For $iItem = 0 To UBound($g_aImageSearchXML) -1
-								If UBound(_PixelSearch(512, $g_aImageSearchXML[$iItem][2] - 14, 529, $g_aImageSearchXML[$iItem][2] + 14, Hex(0xFFFFFF, 6), 15)) > 0 And not @error Then
-									$aMatrix[0][0] = (UBound(_PixelSearch(310, $g_aImageSearchXML[$iItem][2] - 14, 340, $g_aImageSearchXML[$iItem][2] + 14, Hex(0x0DFF0D, 6), 15)) > 0 And not @error) ? ("New") : ("Elixir")
-									If ($g_iChkPlacingNewBuildings = 1 And $aMatrix[0][0] = "New") Or $aMatrix[0][0] <> "New" Then
-										$aMatrix[0][1] = $g_aImageSearchXML[$iItem][1]
-										$aMatrix[0][2] = $g_aImageSearchXML[$iItem][2]
-										_ArrayAdd($aResourcesPicks, $aMatrix)
-									EndIf
-								EndIf
-							Next
-						EndIf
-					EndIf
-
-					If $g_iChkBBSuggestedUpgradesIgnoreGold = 0 And $g_aiCurrentLootBB[$eLootGoldBB] > 250 Then
-						If UBound(_ImageSearchXML($g_sImgAutoUpgradeGold, 10, $aAreaToSearch, False, True, True, 8, 0, 1000)) > 0 And not @error Then
-							For $iItem = 0 To UBound($g_aImageSearchXML) -1
-								If UBound(_PixelSearch(512, $g_aImageSearchXML[$iItem][2] - 14, 529, $g_aImageSearchXML[$iItem][2] + 14, Hex(0xFFFFFF, 6), 15)) > 0 And not @error Then
-									$aMatrix[0][0] = (UBound(_PixelSearch(310, $g_aImageSearchXML[$iItem][2] - 14, 340, $g_aImageSearchXML[$iItem][2] + 14, Hex(0x0DFF0D, 6), 15)) > 0 And not @error) ? ("New") : ("Gold")
-									If ($g_iChkPlacingNewBuildings = 1 And $aMatrix[0][0] = "New") Or $aMatrix[0][0] <> "New" Then
-										$aMatrix[0][1] = $g_aImageSearchXML[$iItem][1]
-										$aMatrix[0][2] = $g_aImageSearchXML[$iItem][2]
-										_ArrayAdd($aResourcesPicks, $aMatrix)
-									EndIf
-								EndIf
-							Next
-						EndIf
-					EndIf
-
-					; _ArrayDisplay($aResourcesPicks)
-
-					If UBound($aResourcesPicks) > 0 Then
-
-						For $i = 0 To UBound($aResourcesPicks) -1
-							$aResult[0] = $aResourcesPicks[$i][1]
-							$aResult[1] = $aResourcesPicks[$i][2]
-							$aResult[2] = $aResourcesPicks[$i][0]
-
-							If $aResult[2] = "New" Then
-								$g_bBuildingUpgraded = NewBuildings($aResult)
-								If $g_bBuildingUpgraded Then
-									SetLog("[" & $i + 1 & "]" & " New Building detected, placing it.", $COLOR_INFO)
-									ExitLoop
-								EndIf
-							Else
-								Click($aResult[0], $aResult[1], 1)
-								If _Sleep(1000) Then Return
-
-								$g_bBuildingUpgraded = GetUpgradeButton($aResult, $bDebug)
-								If $g_bBuildingUpgraded Then
-									SetLog("[" & $i + 1 & "]" & " Building detected, try upgrading it.", $COLOR_INFO)
-									ExitLoop
-								EndIf
-							EndIf
-
-							If _MultiPixelSearch(309, 102, 439, 379, 2, 2, Hex(0xE4E8E6, 6), $aArrayMultipixel, 25) = 0 Then
-								ClickOnBuilder()
-							EndIf
-
-							If _Sleep(Random(750, 1500, 1)) Then Return
-
-						Next
-
-					Else
-						SetLog("Bad MainSuggestedUpgradeCode array.", $COLOR_ERROR)
-						ExitLoop
-					EndIf
-
-					If $g_bBuildingUpgraded Then
-						Setlog("Exiting of improvements.", $COLOR_INFO)
-						Exitloop
-					Else
-						$aResourcesPicks = $aResourcesReset
-						ClickDrag(333, 102, 333, 80, 1000) ; Do scroll down.
-						If _Sleep(3000) Then Return
-					EndIf
-				EndIf
-
 			Next
+			
+			$aAreaToSearch[3] = $iyMax
+			
+			_CaptureRegion2()
+
+			If $g_iChkBBSuggestedUpgradesIgnoreElixir = 0 And $g_aiCurrentLootBB[$eLootElixirBB] > 250 Then
+				If UBound(_ImageSearchXML($g_sImgAutoUpgradeElixir, 10, $aAreaToSearch, False, True, True, 8, 0, 1000)) > 0 And Not @error Then
+					For $iItem = 0 To UBound($g_aImageSearchXML) - 1
+						If UBound(_PixelSearch(512, $g_aImageSearchXML[$iItem][2] - 14, 529, $g_aImageSearchXML[$iItem][2] + 14, Hex(0xFFFFFF, 6), 15)) > 0 And Not @error Then
+							$aMatrix[0][0] = (UBound(_PixelSearch(310, $g_aImageSearchXML[$iItem][2] - 14, 340, $g_aImageSearchXML[$iItem][2] + 14, Hex(0x0DFF0D, 6), 15)) > 0 And Not @error) ? ("New") : ("Elixir")
+							If ($g_iChkPlacingNewBuildings = 1 And $aMatrix[0][0] = "New") Or $aMatrix[0][0] <> "New" Then
+								$aMatrix[0][1] = $g_aImageSearchXML[$iItem][1]
+								$aMatrix[0][2] = $g_aImageSearchXML[$iItem][2]
+								_ArrayAdd($aResourcesPicks, $aMatrix)
+							EndIf
+						EndIf
+					Next
+				EndIf
+			EndIf
+
+			If $g_iChkBBSuggestedUpgradesIgnoreGold = 0 And $g_aiCurrentLootBB[$eLootGoldBB] > 250 Then
+				If UBound(_ImageSearchXML($g_sImgAutoUpgradeGold, 10, $aAreaToSearch, False, True, True, 8, 0, 1000)) > 0 And Not @error Then
+					For $iItem = 0 To UBound($g_aImageSearchXML) - 1
+						If UBound(_PixelSearch(512, $g_aImageSearchXML[$iItem][2] - 14, 529, $g_aImageSearchXML[$iItem][2] + 14, Hex(0xFFFFFF, 6), 15)) > 0 And Not @error Then
+							$aMatrix[0][0] = (UBound(_PixelSearch(310, $g_aImageSearchXML[$iItem][2] - 14, 340, $g_aImageSearchXML[$iItem][2] + 14, Hex(0x0DFF0D, 6), 15)) > 0 And Not @error) ? ("New") : ("Gold")
+							If ($g_iChkPlacingNewBuildings = 1 And $aMatrix[0][0] = "New") Or $aMatrix[0][0] <> "New" Then
+								$aMatrix[0][1] = $g_aImageSearchXML[$iItem][1]
+								$aMatrix[0][2] = $g_aImageSearchXML[$iItem][2]
+								_ArrayAdd($aResourcesPicks, $aMatrix)
+							EndIf
+						EndIf
+					Next
+				EndIf
+			EndIf
+
+			; _ArrayDisplay($aResourcesPicks)
+
+			If UBound($aResourcesPicks) > 0 Then
+
+				For $i = 0 To UBound($aResourcesPicks) - 1
+					$aResult[0] = $aResourcesPicks[$i][1]
+					$aResult[1] = $aResourcesPicks[$i][2]
+					$aResult[2] = $aResourcesPicks[$i][0]
+
+					If $aResult[2] = "New" Then
+						$g_bBuildingUpgraded = NewBuildings($aResult)
+						If $g_bBuildingUpgraded Then
+							SetLog("[" & $i + 1 & "]" & " New Building detected, placing it.", $COLOR_INFO)
+							ExitLoop
+						EndIf
+					Else
+						Click($aResult[0], $aResult[1], 1)
+						If _Sleep(1000) Then Return
+
+						$g_bBuildingUpgraded = GetUpgradeButton($aResult, $bDebug)
+						If $g_bBuildingUpgraded Then
+							SetLog("[" & $i + 1 & "]" & " Building detected, try upgrading it.", $COLOR_INFO)
+							ExitLoop
+						EndIf
+					EndIf
+
+					For $iClick = 0 To 1
+						$vMultipix = _MultiPixelSearch(309, 102, 439, 379, 2, 2, Hex(0xE4E8E6, 6), $aArrayMultipixel, 25)
+						If $vMultipix = 0 Then
+							ClickOnBuilder()
+							If _Sleep(500) Then Return
+							ContinueLoop
+						EndIf
+						ExitLoop
+					Next
+
+					If _Sleep(Random(750, 1500, 1)) Then Return
+
+				Next
+
+			Else
+				SetLog("Bad MainSuggestedUpgradeCode array.", $COLOR_ERROR)
+				ExitLoop
+			EndIf
+
+			If $g_bBuildingUpgraded Then
+				Setlog("Exiting of improvements.", $COLOR_INFO)
+				ExitLoop
+			Else
+				$aResourcesPicks = $aResourcesReset
+				ClickDrag(333, 102, 333, 80, 1000)     ; Do scroll down.
+				If _Sleep(3000) Then Return
+			EndIf
+
+		Next
 
 	EndIf
 
 	ClickAway()
 
-EndFunc
+EndFunc   ;==>MainSuggestedUpgradeCode
 #EndRegion - Bulder base upgrades - Team AIO Mod++
 
 ; This fucntion will Open the Suggested Window and check if is OK
@@ -300,19 +307,18 @@ Func GetUpgradeButton($sUpgButtom = "", $bDebug = False)
 	$g_aBBUpgradeResourceCostDuration = $aResetBB
 	$g_aBBUpgradeNameLevel = $aResetBB
 
-	; If QuickMIS("BC1", $g_sImgAutoUpgradeBtnDir, 182, 565, 685, 723, True, $bDebug) Then
 	If _WaitForCheckImg($g_sImgAutoUpgradeBtnDir, "182, 565, 685, 723") Then
-		If UBound($g_aImageSearchXML) > 0 and not @error Then
+		If UBound($g_aImageSearchXML) > 0 And Not @error Then
 			$g_aBBUpgradeNameLevel = BuildingInfo(245, 490 + $g_iBottomOffsetY)
 			If $g_aBBUpgradeNameLevel[0] = 2 Then
 				SetLog("Building: " & $g_aBBUpgradeNameLevel[1], $COLOR_INFO)
 
 				; Verify if is to Upgrade
 				Local $sMsg = "", $bBuildString = False
-				For $i = 0 To UBound($g_sBBUpgradesToIgnore) -1
+				For $i = 0 To UBound($g_sBBUpgradesToIgnore) - 1
 					$bBuildString = (_LevDis(StringStripWS($g_aBBUpgradeNameLevel[1], $STR_STRIPALL), StringStripWS($g_sBBUpgradesToIgnore[$i], $STR_STRIPALL)) < 2)
 					If $bBuildString And $g_iChkBBUpgradesToIgnore[$i] = 1 Then
-						$sMsg = "Ops! " &  $g_aBBUpgradeNameLevel[1] & " is not to Upgrade!"
+						$sMsg = "Ops! " & $g_aBBUpgradeNameLevel[1] & " is not to Upgrade!"
 						SetLog($sMsg, $COLOR_ERROR)
 
 						$g_aBBUpgradeResourceCostDuration = $aResetBB

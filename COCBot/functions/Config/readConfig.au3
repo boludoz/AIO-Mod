@@ -845,12 +845,17 @@ Func ReadConfig_600_14()
 	IniReadS($g_iLaboratoryElixirCost, $g_sProfileBuildingPath, "upgrade", "upgradelabelexircost", 0, "int")
 	IniReadS($g_iLaboratoryDElixirCost, $g_sProfileBuildingPath, "upgrade", "upgradelabdelexircost", 0, "int")
 	#Region - Custom lab - Team AIO Mod++
-	IniReadS($g_bPriorityLab, $g_sProfileBuildingPath, "upgrade", "ChkPriorityLab", False, "Bool")
-	IniReadS($g_iCmbPriorityLab, $g_sProfileBuildingPath, "upgrade", "CmbPriorityLab", $g_iCmbPriorityLab, "int")
-
-	IniReadS($g_bPriorityLabTroops, $g_sProfileBuildingPath, "upgrade", "ChkPriorityLabTroops", $g_bPriorityLabTroops, "Bool")
-	IniReadS($g_bPriorityLabSpells, $g_sProfileBuildingPath, "upgrade", "ChkPriorityLabSpells", $g_bPriorityLabSpells, "Bool")
-	IniReadS($g_bPriorityLabSieges, $g_sProfileBuildingPath, "upgrade", "ChkPriorityLabSieges", $g_bPriorityLabSieges, "Bool")
+    ;xbenk
+    IniReadS($g_bLabUpgradeOrderEnable, $g_sProfileBuildingPath, "upgrade", "upgradeorder", False, "Bool")
+    Local $str = StringSplit(IniRead($g_sProfileBuildingPath, "upgrade", "upgradeorderlist", "-1| -1| -1| -1| -1| -1| -1| -1| -1| -1"), "|", $STR_NOCOUNT)
+    For $i = 0 To UBound($g_aCmbLabUpgradeOrder) - 1
+        $g_aCmbLabUpgradeOrder[$i] = $str[$i]
+    Next
+    ; IniReadS($g_bSLabUpgradeOrderEnable, $g_sProfileBuildingPath, "upgrade", "Supgradeorder", False, "Bool")
+    ; Local $str = StringSplit(IniRead($g_sProfileBuildingPath, "upgrade", "Supgradeorderlist", "-1| -1| -1| -1| -1| -1"), "|", $STR_NOCOUNT)
+    ; For $i = 0 To UBound($g_aCmbSLabUpgradeOrder) - 1
+        ; $g_aCmbSLabUpgradeOrder[$i] = $str[$i]
+    ; Next
 	#EndRegion - Custom lab - Team AIO Mod++
 	IniReadS($g_bAutoStarLabUpgradeEnable, $g_sProfileBuildingPath, "upgrade", "upgradestartroops", False, "Bool")
 	IniReadS($g_iCmbStarLaboratory, $g_sProfileBuildingPath, "upgrade", "upgradestartroopname", 0, "int")

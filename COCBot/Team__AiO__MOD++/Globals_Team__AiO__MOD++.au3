@@ -81,8 +81,14 @@ Global $g_hChkReturnTimerEnable = 0, $g_hTxtReturnTimer = 0, $g_bReturnTimerEnab
 #EndRegion - Return Home by Time - Team AIO Mod++
 
 #Region - Lab Priority System
-Global $g_hChkPriorityLab, $g_hCmbPriorityLab, $g_hLblOnlyUpgrade, $g_hChkPriorityLabTroops, $g_hChkPriorityLabSpells, $g_hChkPriorityLabSieges, _
-$g_bPriorityLab, $g_iCmbPriorityLab, $g_bPriorityLabSpells = True, $g_bPriorityLabTroops = True, $g_bPriorityLabSieges = True
+Global $g_hChkLabUpgradeOrder = 0, $g_hBtnRemoveLabUpgradeOrder = 0, $g_hBtnSetLabUpgradeOrder = 0
+Global $g_hChkSLabUpgradeOrder = 0, $g_hBtnRemoveSLabUpgradeOrder = 0, $g_hBtnSetSLabUpgradeOrder = 0
+Global $g_bLabUpgradeOrderEnable = False
+Global $g_bSLabUpgradeOrderEnable = False
+Global $g_aCmbLabUpgradeOrder[10] = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
+Global $g_ahCmbLabUpgradeOrder[10] = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
+Global $g_aCmbSLabUpgradeOrder[6] = [-1, -1, -1, -1, -1, -1]
+Global $g_ahCmbSLabUpgradeOrder[6] = [-1, -1, -1, -1, -1, -1]
 #EndRegion - Lab Priority System
 
 #Region - Discord - Team AIO Mod++
