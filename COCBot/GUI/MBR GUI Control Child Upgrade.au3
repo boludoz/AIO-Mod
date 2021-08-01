@@ -302,7 +302,7 @@ EndFunc
 
 Func btnSetLabUpgradeOrder()
 	Local $d
-	SetLog("Set Laboratory ugrade Order",$COLOR_SUCCESS)
+	SetLog("Set Laboratory upgrade Order",$COLOR_SUCCESS)
 	For $i = 0 To UBound($g_ahCmbLabUpgradeOrder) - 1
 		$g_aCmbLabUpgradeOrder[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbLabUpgradeOrder[$i])
 		$d = $g_aCmbLabUpgradeOrder[$i]

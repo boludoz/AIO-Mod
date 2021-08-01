@@ -288,25 +288,6 @@ Func chkDBNoLeague()
 	$g_bChkNoLeague[$DB] = GUICtrlRead($g_hChkDBNoLeague) = $GUI_CHECKED
 EndFunc   ;==>chkDBNoLeague
 
-func cmbPriorityResourceLab()
-	; Hahaha I wonder how "_ GUICtrlComboBox_GetCurSel ($ g_hCm Priority System) ... Case "Elixir" " worked this if it returns the index.
-	$g_iCmbPriorityLab = _GUICtrlComboBox_GetCurSel($g_hCmbPriorityLab)
-EndFunc   ;==>cmbPriorityResourceLab
-
-Func chkLabPriority()
-	Local $hMode = ($g_iCmbLaboratory = 0 And $g_bAutoLabUpgradeEnable = True) ? ($GUI_ENABLE) : ($GUI_DISABLE)
-	For $h = $g_hChkPriorityLab To $g_hChkPriorityLabSieges
-		GUICtrlSetState($h, $hMode)
-	Next
-	chkPriorityResourceLab()
-EndFunc   ;==>chkLabPriority
-
-; Lab Priority System
-func chkPriorityResourceLab()
-	$g_bPriorityLab = (GUICtrlRead($g_hChkPriorityLab) = $GUI_CHECKED)
-	GUICtrlSetState($g_hCmbPriorityLab, ($g_bPriorityLab = True And $g_bAutoLabUpgradeEnable = True And $g_iCmbLaboratory = 0) ? ($GUI_ENABLE) : ($GUI_DISABLE))
-EndFunc   ;==>chkPriorityResourceLab
-
 #Region - Return Home by Time - Team AIO Mod++
 Func chkReturnTimer()
 	GUICtrlSetState($g_hTxtReturnTimer, GUICtrlRead($g_hChkReturnTimerEnable) = $GUI_CHECKED ? $GUI_ENABLE : $GUI_DISABLE)
