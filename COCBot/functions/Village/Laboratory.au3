@@ -34,7 +34,7 @@ EndFunc
 Func Laboratory($bDebug = False)
 	If Not $g_bAutoLabUpgradeEnable Then Return ; Lab upgrade not enabled.
 
-	If $g_iTownHallLevel < 3 Then
+	If $g_iTownHallLevel < 3 And Not ($g_iTownHallLevel < 1 And ($g_aiLaboratoryPos[0] <> 0 And $g_aiLaboratoryPos[1] <> 0)) Then ;
 		SetLog("Townhall Lvl " & $g_iTownHallLevel & " has no Lab.", $COLOR_ERROR)
 		Return
 	EndIf

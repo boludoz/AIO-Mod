@@ -4,11 +4,11 @@
 ; Syntax ........: _Sleep($iDelay[, $iSleep = True])
 ; Parameters ....: $iDelay              - an integer value.
 ;                  $iSleep              - [optional] an integer value. Default is True. unused and deprecated
-;                  $CheckRunState      - Exit and returns True if $g_bRunState is False
+;                  $$CheckRunState      - Exit and returns True if $g_bRunState is False
 ; Return values .: True when $g_bRunState is False otherwise True (also True if $CheckRunState=False)
 ; Author ........:
-; Modified ......: CodeSlinger69 (2017)
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
+; Modified ......: CodeSlinger69 (2017), Team AIO Mod++ (2021)
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2018
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
@@ -16,65 +16,65 @@
 ; ===============================================================================================================================
 #include-once
 
+Global $g_hTimer_SetTime = 0, $g_hTimer_PBRemoteControlInterval = 0, $g_hTimer_EmptyWorkingSetAndroid = 0, $g_hTimer_EmptyWorkingSetBot = 0
+
 Func _Sleep($iDelay, $iSleep = True, $CheckRunState = True, $SleepWhenPaused = True)
-	Static $hTimer_SetTime = 0
-	Static $hTimer_PBRemoteControlInterval = 0
-	Static $hTimer_EmptyWorkingSetAndroid = 0
-	Static $hTimer_EmptyWorkingSetBot = 0
-	Static $b_Sleep_Active = False
+
 	Local $iBegin = __TimerInit()
-	
-	; Custom sleep - Team AIO Mod++ (inspired in Samkie)
-	Local $iNewDelay = Round($iDelay * ($g_iInputAndroidSleep / 100)) + $iDelay
 
-;~ 	If $b_Sleep_Active = True Then
-;~ 	EndIf
-
-	$b_Sleep_Active = True
 	debugGdiHandle("_Sleep")
-	CheckBotRequests()
+	CheckBotRequests() ; check if bot window should be moved, minized etc.
+
+	$iDelay += Round($iDelay * ($g_iInputAndroidSleep / 100))
+
 	If SetCriticalMessageProcessing() = False Then
+
 		If $g_bMoveDivider Then
 			MoveDivider()
 			$g_bMoveDivider = False
 		EndIf
-		If $iNewDelay > 0 And __TimerDiff($g_hTxtLogTimer) >= $g_iTxtLogTimerTimeout Then
-			If __TimerDiff($hTimer_PBRemoteControlInterval) >= $g_iPBRemoteControlInterval Or ($hTimer_PBRemoteControlInterval = 0 And $g_bNotifyRemoteEnable) Then
+
+		If __TimerDiff($g_hTxtLogTimer) >= $g_iTxtLogTimerTimeout Then
+
+			; Notify stuff
+			If __TimerDiff($g_hTimer_PBRemoteControlInterval) >= $g_iPBRemoteControlInterval Or ($g_hTimer_PBRemoteControlInterval = 0 And $g_bNotifyRemoteEnable) Then
 				NotifyRemoteControl()
-				$hTimer_PBRemoteControlInterval = __TimerInit()
+				$g_hTimer_PBRemoteControlInterval = __TimerInit()
 			EndIf
-			If (($g_iEmptyWorkingSetAndroid > 0 And __TimerDiff($hTimer_EmptyWorkingSetAndroid) >= $g_iEmptyWorkingSetAndroid * 1000) Or $hTimer_EmptyWorkingSetAndroid = 0) And $g_bRunState And TestCapture() = False Then
-				If IsArray(getAndroidPos(True)) = 1 Then _WinAPI_EmptyWorkingSet(GetAndroidPid())
-				$hTimer_EmptyWorkingSetAndroid = __TimerInit()
+
+			; Android & Bot Stuff
+			If (($g_iEmptyWorkingSetAndroid > 0 And __TimerDiff($g_hTimer_EmptyWorkingSetAndroid) >= $g_iEmptyWorkingSetAndroid * 1000) Or $g_hTimer_EmptyWorkingSetAndroid = 0) And $g_bRunState And TestCapture() = False Then
+				If IsArray(getAndroidPos(True)) = 1 Then _WinAPI_EmptyWorkingSet(GetAndroidPid()) ; Reduce Working Set of Android Process
+				$g_hTimer_EmptyWorkingSetAndroid = __TimerInit()
 			EndIf
-			If ($g_iEmptyWorkingSetBot > 0 And __TimerDiff($hTimer_EmptyWorkingSetBot) >= $g_iEmptyWorkingSetBot * 1000) Or $hTimer_EmptyWorkingSetBot = 0 Then
+			If ($g_iEmptyWorkingSetBot > 0 And __TimerDiff($g_hTimer_EmptyWorkingSetBot) >= $g_iEmptyWorkingSetBot * 1000) Or $g_hTimer_EmptyWorkingSetBot = 0 Then
 				ReduceBotMemory(False)
-				$hTimer_EmptyWorkingSetBot = __TimerInit()
+				$g_hTimer_EmptyWorkingSetBot = __TimerInit()
 			EndIf
+
 			CheckPostponedLog()
+
 			If BotCloseRequestProcessed() Then
-				BotClose()
-				$b_Sleep_Active = False
+				BotClose() ; improve responsive bot close
 				Return True
 			EndIf
 		EndIf
 	EndIf
+
 	If $CheckRunState And Not $g_bRunState Then
 		ResumeAndroid()
-		$b_Sleep_Active = False
 		Return True
 	EndIf
-	Local $iRemaining = $iNewDelay - __TimerDiff($iBegin)
+	Local $iRemaining = $iDelay - __TimerDiff($iBegin)
 	While $iRemaining > 0
 		DllCall($g_hLibNTDLL, "dword", "ZwYieldExecution")
 		If $CheckRunState = True And $g_bRunState = False Then
 			ResumeAndroid()
-			$b_Sleep_Active = False
 			Return True
 		EndIf
 		If SetCriticalMessageProcessing() = False Then
-			If $g_bBotPaused And $SleepWhenPaused And $g_bTogglePauseAllowed Then TogglePauseSleep()
-			If $g_bTogglePauseUpdateState Then TogglePauseUpdateState("_Sleep")
+			If $g_bBotPaused And $SleepWhenPaused And $g_bTogglePauseAllowed Then TogglePauseSleep() ; Bot is paused
+			If $g_bTogglePauseUpdateState Then TogglePauseUpdateState("_Sleep") ; Update Pause GUI states
 			If $g_bMakeScreenshotNow = True Then
 				If $g_bScreenshotPNGFormat = False Then
 					MakeScreenshot($g_sProfileTempPath, "jpg")
@@ -83,24 +83,23 @@ Func _Sleep($iDelay, $iSleep = True, $CheckRunState = True, $SleepWhenPaused = T
 				EndIf
 			EndIf
 			If __TimerDiff($g_hTxtLogTimer) >= $g_iTxtLogTimerTimeout Then
-				If $g_bRunState And Not $g_bSearchMode And Not $g_bBotPaused And ($hTimer_SetTime = 0 Or __TimerDiff($hTimer_SetTime) >= 750) Then
+				If $g_bRunState And Not $g_bSearchMode And Not $g_bBotPaused And ($g_hTimer_SetTime = 0 Or __TimerDiff($g_hTimer_SetTime) >= 750) Then
 					SetTime()
-					$hTimer_SetTime = __TimerInit()
+					$g_hTimer_SetTime = __TimerInit()
 				EndIf
 				AndroidEmbedCheck()
 				AndroidShieldCheck()
 				CheckPostponedLog()
 			EndIf
 		EndIf
-		$iRemaining = $iNewDelay - __TimerDiff($iBegin)
+		$iRemaining = $iDelay - __TimerDiff($iBegin)
 		If $iRemaining >= $DELAYSLEEP Then
 			_SleepMilli($DELAYSLEEP)
 		Else
 			_SleepMilli($iRemaining)
 		EndIf
-		CheckBotRequests()
+		CheckBotRequests() ; check if bot window should be moved
 	WEnd
-	$b_Sleep_Active = False
 	Return False
 EndFunc   ;==>_Sleep
 
