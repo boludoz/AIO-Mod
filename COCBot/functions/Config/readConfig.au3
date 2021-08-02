@@ -851,11 +851,11 @@ Func ReadConfig_600_14()
     For $i = 0 To UBound($g_aCmbLabUpgradeOrder) - 1
         $g_aCmbLabUpgradeOrder[$i] = $str[$i]
     Next
-    ; IniReadS($g_bSLabUpgradeOrderEnable, $g_sProfileBuildingPath, "upgrade", "Supgradeorder", False, "Bool")
-    ; Local $str = StringSplit(IniRead($g_sProfileBuildingPath, "upgrade", "Supgradeorderlist", "-1| -1| -1| -1| -1| -1"), "|", $STR_NOCOUNT)
-    ; For $i = 0 To UBound($g_aCmbSLabUpgradeOrder) - 1
-        ; $g_aCmbSLabUpgradeOrder[$i] = $str[$i]
-    ; Next
+    IniReadS($g_bSLabUpgradeOrderEnable, $g_sProfileBuildingPath, "upgrade", "Supgradeorder", False, "Bool")
+    Local $str = StringSplit(IniRead($g_sProfileBuildingPath, "upgrade", "Supgradeorderlist", "-1| -1| -1| -1| -1| -1"), "|", $STR_NOCOUNT)
+    For $i = 0 To UBound($g_aCmbSLabUpgradeOrder) - 1
+        $g_aCmbSLabUpgradeOrder[$i] = $str[$i]
+    Next
 	#EndRegion - Custom lab - Team AIO Mod++
 	IniReadS($g_bAutoStarLabUpgradeEnable, $g_sProfileBuildingPath, "upgrade", "upgradestartroops", False, "Bool")
 	IniReadS($g_iCmbStarLaboratory, $g_sProfileBuildingPath, "upgrade", "upgradestartroopname", 0, "int")

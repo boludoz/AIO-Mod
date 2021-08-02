@@ -9,8 +9,8 @@
 #pragma compile(LegalCopyright, © https://mybot.run)
 #Au3Stripper_Off
 #Au3Stripper_On
-Global $g_sBotVersion = "v7.9.6"
-Global $g_sModVersion = "v4.5.9"
+Global $g_sBotVersion = "v7.9.5"
+Global $g_sModVersion = "v4.6.0"
 Opt("MustDeclareVars", 1)
 Global $g_sBotTitle = ""
 Global $g_hFrmBot = 0
@@ -2794,12 +2794,15 @@ Global $g_bAndroidAdbInstanceEnabled = True
 Global $g_iAndroidSuspendModeFlags = 1
 Global $g_bNoFocusTampering = False
 Global $g_bAndroidAdbPortPerInstance = False
-Global $g_avAndroidAppConfig[5][16] = [ ["Nox", "nox", "No", "[CLASS:subWin; INSTANCE:1]", "", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 4, $g_iDEFAULT_HEIGHT - 10,0, "127.0.0.1:62001", 1+2+4+8+16+32 +256+512, '# ', '(nox Virtual Input|Android Input|Android_Input)', 0, 2], ["MEmu", "MEmu", "MEmu ", "[CLASS:subWin; INSTANCE:1]", "", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 51,$g_iDEFAULT_HEIGHT - 12,0, "127.0.0.1:21503", 2+4+8+16+32 +512, '# ', '(Microvirt Virtual Input|User Input)', 0, 2], ["BlueStacks2","Android", "BlueStacks ", "[CLASS:BlueStacksApp; INSTANCE:1]","_ctl.Window", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,0, "127.0.0.1:5555", 1+2+4+8+16+32 +128, '$ ', 'BlueStacks Virtual Touch', 0, 1], ["BlueStacks", "Android", "BlueStacks App Player","[CLASS:BlueStacksApp; INSTANCE:1]","_ctl.Window", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,0, "127.0.0.1:5555", 1 +8+16+32 +128, '$ ', 'BlueStacks Virtual Touch', 0, 1], ["iTools", "iToolsVM","iTools ", "[CLASS:subWin; INSTANCE:1]", "", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 2, $g_iDEFAULT_HEIGHT - 13,0, "127.0.0.1:54001", 1+2+4+8+16+32+64 +512, '# ', 'iTools Virtual PassThrough Input', 0, 1] ]
+Global $g_avAndroidAppConfig[8][16] = [ ["Nox", "nox", "No", "[CLASS:subWin; INSTANCE:1]", "", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 4, $g_iDEFAULT_HEIGHT - 10,0, "127.0.0.1:62001", 1+2+4+8+16+32 +256+512, '# ', '(nox Virtual Input|Android Input|Android_Input)', 0, 2], ["MEmu", "MEmu", "MEmu ", "[CLASS:subWin; INSTANCE:1]", "", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 51,$g_iDEFAULT_HEIGHT - 12,0, "127.0.0.1:21503", 2+4+8+16+32 +512, '# ', '(Microvirt Virtual Input|User Input)', 0, 2], ["BlueStacks2","Android", "BlueStacks ", "[CLASS:BlueStacksApp; INSTANCE:1]","_ctl.Window", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,0, "127.0.0.1:5555", 1+2+4+8+16+32 +128, '$ ', 'BlueStacks Virtual Touch', 0, 1], ["BlueStacks", "Android", "BlueStacks App Player","[CLASS:BlueStacksApp; INSTANCE:1]","_ctl.Window", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,0, "127.0.0.1:5555", 1 +8+16+32 +128, '$ ', 'BlueStacks Virtual Touch', 0, 1], ["LeapDroid", "vm1", "Leapd", "[CLASS:subWin; INSTANCE:1]", "", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,0, "emulator-5554", 1 +8+16+32 +512, '# ', 'qwerty2', 1, 1], ["iTools", "iToolsVM","iTools ", "[CLASS:subWin; INSTANCE:1]", "", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 2, $g_iDEFAULT_HEIGHT - 13,0, "127.0.0.1:54001", 1+2+4+8+16+32+64 +512, '# ', 'iTools Virtual PassThrough Input', 0, 1], ["KOPLAYER", "KOPLAYER","KOPLAYER", "[CLASS:subWin; INSTANCE:1]", "", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 64,$g_iDEFAULT_HEIGHT - 8, 0, "127.0.0.1:6555", 1+2+4+8+16+32 +512, '# ', '(ttVM Virtual Input|androidVM Virtual Input)', 0, 2], ["Droid4X", "droid4x", "Droid4X ", "[CLASS:subWin; INSTANCE:1]", "", $g_iDEFAULT_WIDTH, $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 10,$g_iDEFAULT_HEIGHT + 50,0, "127.0.0.1:26944", 2+4+8+16+32 +512, '# ', 'droid4x Virtual Input', 0, 2] ]
 Global $__Nox_Idx = _ArraySearch($g_avAndroidAppConfig, "Nox", 0, 0, 0, 0, 1, 0)
 Global $__MEmu_Idx = _ArraySearch($g_avAndroidAppConfig, "MEmu", 0, 0, 0, 0, 1, 0)
 Global $__BS2_Idx = _ArraySearch($g_avAndroidAppConfig, "BlueStacks2", 0, 0, 0, 0, 1, 0)
 Global $__BS_Idx = _ArraySearch($g_avAndroidAppConfig, "BlueStacks", 0, 0, 0, 0, 1, 0)
+Global $__LeapDroid_Idx = _ArraySearch($g_avAndroidAppConfig, "LeapDroid", 0, 0, 0, 0, 1, 0)
 Global $__iTools_Idx = _ArraySearch($g_avAndroidAppConfig, "iTools", 0, 0, 0, 0, 1, 0)
+Global $__KOPLAYER_Idx = _ArraySearch($g_avAndroidAppConfig, "KOPLAYER", 0, 0, 0, 0, 1, 0)
+Global $__Droid4X_Idx = _ArraySearch($g_avAndroidAppConfig, "Droid4X", 0, 0, 0, 0, 1, 0)
 Global $g_iAndroidBackgroundMode = 0
 Global $g_iAndroidBackgroundModeDefault = 1
 Global $g_iAndroidConfig = 0
@@ -3304,7 +3307,10 @@ Global $g_bDefensesAlive = False, $g_bDefensesMix = True
 Global $g_hChkNoUpgradeInWar = True, $g_bNoUpgradeInWar
 Global $g_hChkProtectInLL, $g_hChkForceProtectLL, $g_bProtectInLL = True, $g_bForceProtectLL = False
 Global $g_hChkReturnTimerEnable = 0, $g_hTxtReturnTimer = 0, $g_bReturnTimerEnable = False, $g_iTxtReturnTimer = 5
-Global $g_hChkPriorityLab, $g_hCmbPriorityLab, $g_hLblOnlyUpgrade, $g_hChkPriorityLabTroops, $g_hChkPriorityLabSpells, $g_hChkPriorityLabSieges, $g_bPriorityLab, $g_iCmbPriorityLab, $g_bPriorityLabSpells = True, $g_bPriorityLabTroops = True, $g_bPriorityLabSieges = True
+Global $g_bLabUpgradeOrderEnable = False
+Global $g_bSLabUpgradeOrderEnable = False
+Global $g_aCmbLabUpgradeOrder[10] = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
+Global $g_aCmbSLabUpgradeOrder[6] = [-1, -1, -1, -1, -1, -1]
 Global $g_sTxtNotifyDSToken, $g_bNotifyDSEnable, $g_hChkNotifyDSEnable, $g_hLblNotifyTGToken, $g_hLblNotifyDSToken, $g_hTxtNotifyDSToken, $g_sNotifyDSToken, $g_hCmbNotifyMode, $g_iNotifyMode, $g_ahIcnNotifyMode[2]
 Global $g_hChkBotLogLineLimit, $g_bChkBotLogLineLimit, $g_hTxtLogLineLimit, $g_iTxtLogLineLimit
 Global $g_bRequestOneTimeEnable = False
@@ -5568,11 +5574,16 @@ IniReadS($g_bAutoLabUpgradeEnable, $g_sProfileBuildingPath, "upgrade", "upgradet
 IniReadS($g_iCmbLaboratory, $g_sProfileBuildingPath, "upgrade", "upgradetroopname", 0, "int")
 IniReadS($g_iLaboratoryElixirCost, $g_sProfileBuildingPath, "upgrade", "upgradelabelexircost", 0, "int")
 IniReadS($g_iLaboratoryDElixirCost, $g_sProfileBuildingPath, "upgrade", "upgradelabdelexircost", 0, "int")
-IniReadS($g_bPriorityLab, $g_sProfileBuildingPath, "upgrade", "ChkPriorityLab", False, "Bool")
-IniReadS($g_iCmbPriorityLab, $g_sProfileBuildingPath, "upgrade", "CmbPriorityLab", $g_iCmbPriorityLab, "int")
-IniReadS($g_bPriorityLabTroops, $g_sProfileBuildingPath, "upgrade", "ChkPriorityLabTroops", $g_bPriorityLabTroops, "Bool")
-IniReadS($g_bPriorityLabSpells, $g_sProfileBuildingPath, "upgrade", "ChkPriorityLabSpells", $g_bPriorityLabSpells, "Bool")
-IniReadS($g_bPriorityLabSieges, $g_sProfileBuildingPath, "upgrade", "ChkPriorityLabSieges", $g_bPriorityLabSieges, "Bool")
+IniReadS($g_bLabUpgradeOrderEnable, $g_sProfileBuildingPath, "upgrade", "upgradeorder", False, "Bool")
+Local $str = StringSplit(IniRead($g_sProfileBuildingPath, "upgrade", "upgradeorderlist", "-1| -1| -1| -1| -1| -1| -1| -1| -1| -1"), "|", $STR_NOCOUNT)
+For $i = 0 To UBound($g_aCmbLabUpgradeOrder) - 1
+$g_aCmbLabUpgradeOrder[$i] = $str[$i]
+Next
+IniReadS($g_bSLabUpgradeOrderEnable, $g_sProfileBuildingPath, "upgrade", "Supgradeorder", False, "Bool")
+Local $str = StringSplit(IniRead($g_sProfileBuildingPath, "upgrade", "Supgradeorderlist", "-1| -1| -1| -1| -1| -1"), "|", $STR_NOCOUNT)
+For $i = 0 To UBound($g_aCmbSLabUpgradeOrder) - 1
+$g_aCmbSLabUpgradeOrder[$i] = $str[$i]
+Next
 IniReadS($g_bAutoStarLabUpgradeEnable, $g_sProfileBuildingPath, "upgrade", "upgradestartroops", False, "Bool")
 IniReadS($g_iCmbStarLaboratory, $g_sProfileBuildingPath, "upgrade", "upgradestartroopname", 0, "int")
 EndFunc

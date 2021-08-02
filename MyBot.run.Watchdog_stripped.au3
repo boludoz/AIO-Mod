@@ -9,8 +9,8 @@
 #pragma compile(LegalCopyright, © https://mybot.run)
 #Au3Stripper_Off
 #Au3Stripper_On
-Global $g_sBotVersion = "v7.9.6"
-Global $g_sModVersion = "v4.5.9"
+Global $g_sBotVersion = "v7.9.5"
+Global $g_sModVersion = "v4.6.0"
 Opt("MustDeclareVars", 1)
 Global Const $WAIT_TIMEOUT = 258
 Global Const $STR_STRIPLEADING = 1

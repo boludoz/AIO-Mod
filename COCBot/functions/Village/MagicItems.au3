@@ -15,7 +15,7 @@
 Func CollectMagicItems($bDebug = False)
 	If Not $g_bRunState Or $g_bRestart Then Return
 	
-	If Not ($g_iTownHallLevel >= 8 Or $g_iTownHallLevel = 0) Then Return ; Must be Th8 or more to use the Trader
+	If Not ($g_iTownHallLevel >= 8 And not $g_iTownHallLevel = 0) Then Return ; Must be Th8 or more to use the Trader
 	
 	If Not ($g_bChkCollectFreeMagicItems Or $g_bChkCollectMagicItems) Then Return
 	
@@ -32,8 +32,8 @@ Func CollectMagicItems($bDebug = False)
 	EndIf
 	#EndRegion - Dates - Team AIO Mod++
 	
-	Local $aGemSlotsMult = 190
-	Local $aGemSlots[4] = [303, 447, 0xE2F985, 25]
+	Local $aGemSlotsMult = 195
+	Local $aGemSlots[4] = [302, 457, 0xE2F985, 25]
 	Local $aWaitGem[4] = [421, 407, 0xB9E484, 25]
 	
 	Local $aOcrPositions[3][2] = [[200, 439], [390, 439], [580, 439]]
@@ -51,7 +51,7 @@ Func CollectMagicItems($bDebug = False)
 		If _Sleep($DELAYCOLLECT2) Then Return
 
 		; Check Trader Icon on Main Village
-		If _WaitForCheckImg($g_sImgTrader, "120,160,210,215", Default, 5000, 150) Then
+		If _WaitForCheckImg($g_sImgTrader, "120,160,210,215", Default, 5000, 500) Then
 			SetLog("Trader available, Entering Daily Discounts", $COLOR_SUCCESS)
 			Click($g_aImageSearchXML[0][1], $g_aImageSearchXML[0][2])
 		Else
@@ -62,10 +62,13 @@ Func CollectMagicItems($bDebug = False)
 		If Not $g_bRunState Or $g_bRestart Then Return
 		
 		; Check Daily Discounts Window
-		If _WaitForCheckImg(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Obstacles", "FV", "X", 3000) Then ; White in 'X'.
+		Local $aWaitX[4] = [707, 199, 0xFFFFFF, 15]
+		If _Wait4Pixel($aWaitX[0], $aWaitX[1], $aWaitX[2], $aWaitX[3], 3000, 100, "IsGemOpen") Then ; White in 'X'.
 
 			; Dates - Team AIO Mod++
-			If Not $bDebug Then MagicItemsTime()
+			If Not $bDebug Then 
+				MagicItemsTime()
+			EndIf
 			
 			If Not $g_bRunState Then Return
 			
@@ -92,12 +95,15 @@ Func CollectMagicItems($bDebug = False)
 					
 					If Not $g_bRunState Or $g_bRestart Then Return
 
-					$aResults[$i] = getOcrAndCapture("coc-freemagicitems", $aOcrPositions[$i][0], $aOcrPositions[$i][1], 80, 25, True)
+					$aResults[$i] = getOcrAndCapture("coc-freemagicitems", $aOcrPositions[$i][0], $aOcrPositions[$i][1], 100, 100, True)
 					$bNoGems = (StringIsSpace($aResults[$i]) = 1)
 					
 					If ($g_bChkCollectMagicItems = True And StringLeft($aResultsProx[$i], 2) = "OK" And $bNoGems = False) Or ($aResults[$i] = "FREE" And $g_bChkCollectFreeMagicItems = True) Then
 						
-						If _ColorCheck(_GetPixelColor($aGemSlots[0] + ($aGemSlotsMult * $i), $aGemSlots[1], True), Hex($aGemSlots[2], 6), $aGemSlots[3]) = False Then ContinueLoop
+						If _ColorCheck(_GetPixelColor($aGemSlots[0] + ($aGemSlotsMult * $i), $aGemSlots[1], True), Hex($aGemSlots[2], 6), $aGemSlots[3]) = False Then 
+							SetLog("Gem in gray, it is not possible to buy.", $COLOR_INFO)
+							ContinueLoop
+						EndIf
 						
 						SetLog("Magic Item detected : " & $aResultsProx[$i], $COLOR_INFO)
 						
@@ -105,7 +111,7 @@ Func CollectMagicItems($bDebug = False)
 						If $bDebug Then SetLog("Daily Discounts: " & "X: " & $aOcrPositions[$i][0] & " | " & "Y: " & $aOcrPositions[$i][1], $COLOR_DEBUG)
 						If _Sleep(500) Then Return
 						
-						If $g_bChkCollectMagicItems Then
+						If $g_bChkCollectMagicItems = True Then
 							
 							If _Wait4Pixel($aWaitGem[0], $aWaitGem[1], $aWaitGem[2], $aWaitGem[3], 3000, 100, "IsGemOpen") Then
 								

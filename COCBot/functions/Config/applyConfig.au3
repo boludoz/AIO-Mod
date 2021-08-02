@@ -222,7 +222,7 @@ Func ApplyConfig_Android($TypeReadSave)
 			_GUICtrlComboBox_SetCurSel($g_hCmbSuspendAndroid, AndroidSuspendFlagsToIndex($g_iAndroidSuspendModeFlags))
 			
 			; Custom sleep - Team AIO Mod++ (inspired in Samkie)
-			_GUICtrlComboBox_SetCurSel($g_hInputAndroidSleep, $g_iInputAndroidSleep)
+			GUICtrlSetData($g_hInputAndroidSleep, $g_iInputAndroidSleep)
 		Case "Save"
 			cmbCOCDistributors()
 			sldAdditionalClickDelay()

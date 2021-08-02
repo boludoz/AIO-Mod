@@ -1118,8 +1118,8 @@ Func btnRunFunction($bExecuteCapture = False)
 	
 	Setlog($sSCap & "| Run Function : " & $sFunc, $COLOR_ACTION)
 
-	Local $bDebugLogs = $g_bDebugSetlog
-	$g_bDebugSetlog = True
+	; Local $bDebugLogs = $g_bDebugSetlog
+	; $g_bDebugSetlog = True
 	
 	Local $iTimer = __TimerInit()
 	Local $saExecResult = Execute($sFunc)
@@ -1127,7 +1127,7 @@ Func btnRunFunction($bExecuteCapture = False)
 	Local $iCalc = Round(__TimerDiff($iTimer)/1000, 2)
 	Setlog($sSCap & "| Time Execution : " & $iCalc & " sec", $COLOR_INFO)
 	
-	$g_bDebugSetlog = $bDebugLogs
+	; $g_bDebugSetlog = $bDebugLogs
 
 	If $iError = 0 Then
 		_GUICtrlTab_ClickTab($g_hTabMain, 0)
