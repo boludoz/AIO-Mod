@@ -90,7 +90,7 @@ Func PetHouse($test = False)
 			; get the Pet Level
 			Local $iPetLevel = getTroopsSpellsLevel($iPetLevelxCoord[$i], 533)
 			SetLog($g_asPetNames[$i] & " is at level " & $iPetLevel)
-			If $iPetLevel = $g_ePetLevels Then ContinueLoop
+			If $iPetLevel = 10 Then ContinueLoop ; Temp fix - AIO.
 
 			If _Sleep($DELAYLABORATORY2) Then Return
 
@@ -379,7 +379,7 @@ Func GetMinDark4PetUpgrade()
 			; get the Pet Level
 			Local $iPetLevel = getTroopsSpellsLevel($iPetLevelxCoord[$i], 533)
 			SetLog($g_asPetNames[$i] & " is at level " & $iPetLevel)
-			If $iPetLevel = $g_ePetLevels Then ContinueLoop
+			If $iPetLevel = 10 Then ContinueLoop ; Temp fix - AIO.
 
 			If _Sleep($DELAYLABORATORY2) Then Return
 

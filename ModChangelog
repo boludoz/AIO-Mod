@@ -3,8 +3,24 @@
             | | | _| / ▓ \| |\/| |    / ▓ \| | (_) |  |_   _||_   _|
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
-                    Based on MyBot.run v7.9.6 pre release
+                    Based on MyBot.run v7.9.5
 					
+**v4.6.0**
+	- Improved / Fixed: Various.
+	- Improved / New : @xbebenk troop upgrade system.
+	- Fixed : Useless features removed, legacy donation.
+	- Improved / Fixed : Fix LONG TIME loop in waitMainScreenMini + Reboot Android on waitMainScreenMini failure (@Dissociable). (OpenVPN).
+	- Improved / Fixed : Magic Items fixed.
+	- Rewrited : Automatic improvement of buildings in builder base inspired in @xbebenk.
+	- Improved : Implementation of the Levenshtein algorithm for some things, soon for donations.
+	- Improved : Extra delay for some olds PC's, see in android options.
+
+	*** REMEMBER: Reset profiles or enable minitouch in bot, android. ***
+
+	- Bugs: 
+		-	Smart farm ...
+		-	ZoomOut in builder base problems maybe.
+
 	**v4.5.8**
 		- Improved / Fixed: Various.
 		- Update Official v7.9.6 pre release
