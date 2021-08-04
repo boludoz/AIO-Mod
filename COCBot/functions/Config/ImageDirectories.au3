@@ -56,12 +56,12 @@ Global Const $g_sImgDonateCC = @ScriptDir & "\imgxml\DonateCC\"
 Global Const $g_sImgLabResearch = @ScriptDir & "\imgxml\Research\Laboratory\"
 #EndRegion
 
-#Region Boost Super Troops
-Global $g_sImgBoostTroopsBarrel = @ScriptDir & "\imgxml\SuperTroops\Barrel\"
-Global $g_sImgBoostTroopsIcons = @ScriptDir & "\imgxml\SuperTroops\Troops\"
-Global $g_sImgBoostTroopsWindow = @ScriptDir & "\imgxml\SuperTroops\Window\"
+; #Region Boost Super Troops
+; Global $g_sImgBoostTroopsBarrel = @ScriptDir & "\imgxml\SuperTroops\Barrel\"
+; Global $g_sImgBoostTroopsIcons = @ScriptDir & "\imgxml\SuperTroops\Troops\"
+; Global $g_sImgBoostTroopsWindow = @ScriptDir & "\imgxml\SuperTroops\Window\"
 ; Global $g_sImgBoostTroopsButtons = @ScriptDir & "\imgxml\Main Village\BoostSuperTroop\Buttons\"
-#EndRegion
+; #EndRegion
 
 #Region Builder Base
 Global $g_sImgCollectRessourcesBB = @ScriptDir & "\imgxml\Resources\BuildersBase\Collect"

@@ -218,17 +218,21 @@ Func chkLab()
 		GUICtrlSetState($g_hCmbLaboratory, $GUI_DISABLE)
 		_GUICtrlSetImage($g_hPicLabUpgrade, $g_sLibIconPath, $g_avLabTroops[0][1])
 	EndIf
-	If $g_iCmbLaboratory = 0 Then 
-		GUICtrlSetState($g_hChkLabUpgradeOrder, $GUI_ENABLE)
-	Else
-		GUICtrlSetState($g_hChkLabUpgradeOrder, $GUI_DISABLE)
-	EndIf
+	; Custom - Team AIO Mod++
+	; If $g_iCmbLaboratory = 0 Then 
+		; GUICtrlSetState($g_hChkLabUpgradeOrder, $GUI_ENABLE)
+	; Else
+		; GUICtrlSetState($g_hChkLabUpgradeOrder, $GUI_DISABLE)
+	; EndIf
 	LabStatusGUIUpdate()
 EndFunc   ;==>chkLab
 	
 Func chkLabUpgradeOrder()
 	If GUICtrlRead($g_hChkLabUpgradeOrder) = $GUI_CHECKED Then
 		$g_bLabUpgradeOrderEnable = True
+        $g_iCmbLaboratory = 0 ; Custom - Team AIO Mod++
+        _GUICtrlComboBox_SetCurSel($g_hCmbLaboratory, 0) ; Custom - Team AIO Mod++	
+		_GUICtrlSetImage($g_hPicLabUpgrade, $g_sLibIconPath, $g_avLabTroops[$g_iCmbLaboratory][1]) ; Custom - Team AIO Mod++	
 		GUICtrlSetState($g_hCmbLaboratory, $GUI_DISABLE)
 		GUICtrlSetState($g_hBtnRemoveLabUpgradeOrder, $GUI_ENABLE)
 		GUICtrlSetState($g_hBtnSetLabUpgradeOrder, $GUI_ENABLE)
@@ -249,6 +253,9 @@ EndFunc ;==>chkLabUpgradeOrder
 Func chkSLabUpgradeOrder()
 	If GUICtrlRead($g_hChkSLabUpgradeOrder) = $GUI_CHECKED Then
 		$g_bSLabUpgradeOrderEnable = True
+		$g_iCmbStarLaboratory = 0 ; Custom - Team AIO Mod++
+        _GUICtrlComboBox_SetCurSel($g_hCmbStarLaboratory, 0) ; Custom - Team AIO Mod++
+		_GUICtrlSetImage($g_hPicStarLabUpgrade, $g_sLibIconPath, $g_avStarLabTroops[$g_iCmbStarLaboratory][4]) ; Custom - Team AIO Mod++	
 		GUICtrlSetState($g_hCmbStarLaboratory, $GUI_DISABLE)
 		GUICtrlSetState($g_hBtnRemoveSLabUpgradeOrder, $GUI_ENABLE)
 		GUICtrlSetState($g_hBtnSetSLabUpgradeOrder, $GUI_ENABLE)
@@ -306,7 +313,7 @@ Func btnSetLabUpgradeOrder()
 	For $i = 0 To UBound($g_ahCmbLabUpgradeOrder) - 1
 		$g_aCmbLabUpgradeOrder[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbLabUpgradeOrder[$i])
 		$d = $g_aCmbLabUpgradeOrder[$i]
-		SetLog($i+1 & " : " & $g_avLabTroops[$d+1][0], $COLOR_SUCCESS)
+		SetLog($i + 1 & " : " & $g_avLabTroops[$d+1][0], $COLOR_SUCCESS)
 	Next
 EndFunc
 
@@ -332,22 +339,26 @@ EndFunc   ;==>BBUpgradeOrderClose
 Func chkStarLab()
 	If GUICtrlRead($g_hChkAutoStarLabUpgrades) = $GUI_CHECKED Then
 		$g_bAutoStarLabUpgradeEnable = True
+		GUICtrlSetState($g_hBtnBBUpgradeOrderGUI, $GUI_ENABLE) ; Custom - Team AIO Mod++
 		GUICtrlSetState($g_hPicStarLabUpgrade, $GUI_SHOW)
 		GUICtrlSetState($g_hLblNextSLUpgrade, $GUI_ENABLE)
 		GUICtrlSetState($g_hCmbStarLaboratory, $GUI_ENABLE)
 		_GUICtrlSetImage($g_hPicStarLabUpgrade, $g_sLibIconPath, $g_avStarLabTroops[$g_iCmbStarLaboratory][4])
 	Else
 		$g_bAutoStarLabUpgradeEnable = False
+		GUICtrlSetState($g_hBtnBBUpgradeOrderGUI, $GUI_DISABLE) ; Custom - Team AIO Mod++
 		GUICtrlSetState($g_hPicStarLabUpgrade, $GUI_HIDE)
 		GUICtrlSetState($g_hLblNextSLUpgrade, $GUI_DISABLE)
 		GUICtrlSetState($g_hCmbStarLaboratory, $GUI_DISABLE)
 		_GUICtrlSetImage($g_hPicStarLabUpgrade, $g_sLibIconPath, $g_avStarLabTroops[0][4])
+		BBUpgradeOrderClose() ; Custom - Team AIO Mod++
 	EndIf
-	If $g_iCmbStarLaboratory = 0 Then 
-		GUICtrlSetState($g_hChkSLabUpgradeOrder, $GUI_ENABLE)
-	Else
-		GUICtrlSetState($g_hChkSLabUpgradeOrder, $GUI_DISABLE)
-	EndIf
+	 ; Custom - Team AIO Mod++
+	; If $g_iCmbStarLaboratory = 0 Then 
+		; GUICtrlSetState($g_hChkSLabUpgradeOrder, $GUI_ENABLE)
+	; Else
+		; GUICtrlSetState($g_hChkSLabUpgradeOrder, $GUI_DISABLE)
+	; EndIf
 	StarLabStatusGUIUpdate()
 EndFunc   ;==>chkStarLab
 
@@ -388,24 +399,26 @@ EndFunc   ;==>StarLabStatusGUIUpdate
 Func cmbLab()
 	$g_iCmbLaboratory = _GUICtrlComboBox_GetCurSel($g_hCmbLaboratory)
 	_GUICtrlSetImage($g_hPicLabUpgrade, $g_sLibIconPath, $g_avLabTroops[$g_iCmbLaboratory][1])
-	If $g_iCmbLaboratory = 0 Then
-		GUICtrlSetState($g_hChkLabUpgradeOrder, $GUI_ENABLE)
-		SetLog($g_iCmbLaboratory)
-	Else
-		GUICtrlSetState($g_hChkLabUpgradeOrder, $GUI_DISABLE)
-		SetLog($g_iCmbLaboratory)
-	EndIf
+	; Custom - Team AIO Mod++
+	; If $g_iCmbLaboratory = 0 Then
+		; GUICtrlSetState($g_hChkLabUpgradeOrder, $GUI_ENABLE)
+		; SetLog($g_iCmbLaboratory)
+	; Else
+		; GUICtrlSetState($g_hChkLabUpgradeOrder, $GUI_DISABLE)
+		; SetLog($g_iCmbLaboratory)
+	; EndIf
 	chkLabUpgradeOrder()
 EndFunc   ;==>cmbLab
 
 Func cmbStarLab()
 	$g_iCmbStarLaboratory = _GUICtrlComboBox_GetCurSel($g_hCmbStarLaboratory)
 	_GUICtrlSetImage($g_hPicStarLabUpgrade, $g_sLibIconPath, $g_avStarLabTroops[$g_iCmbStarLaboratory][4])
-	If $g_iCmbStarLaboratory = 0 Then
-		GUICtrlSetState($g_hChkSLabUpgradeOrder, $GUI_ENABLE)
-	Else
-		GUICtrlSetState($g_hChkSLabUpgradeOrder, $GUI_DISABLE)
-	Endif
+	; Custom - Team AIO Mod++
+	; If $g_iCmbStarLaboratory = 0 Then
+		; GUICtrlSetState($g_hChkSLabUpgradeOrder, $GUI_ENABLE)
+	; Else
+		; GUICtrlSetState($g_hChkSLabUpgradeOrder, $GUI_DISABLE)
+	; Endif
 	chkSLabUpgradeOrder()
 EndFunc   ;==>cmbStarLab
 

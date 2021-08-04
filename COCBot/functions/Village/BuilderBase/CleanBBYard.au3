@@ -29,144 +29,83 @@ Func CleanBBYard()
 
 		ZoomBuilderBaseMecanics(False)
 		
-		Local $aInternal, $aExternal
-		PrintBBPoly($aInternal, $aExternal)
-		
-		; Get Builders available
-		If Not getBuilderCount(False, $bBuilderBase) Then Return
-		If $g_aiCurrentLootBB[$eLootElixirBB] = 0 Then BuilderBaseReport()
-		If _Sleep($DELAYRESPOND) Then Return
-		Local $hStarttime = _Timer_Init()
-		Local $aPoly
-		Local $iObstacleRemoved = 0
-		Local $bNoBuilders = $g_iFreeBuilderCountBB < 1
-		If $g_iFreeBuilderCountBB > 0 And $g_bChkCleanBBYard = True And Number($g_aiCurrentLootBB[$eLootElixirBB]) > 50000 Then
-			Local $aCleanYardBBNXY = findMultipleQuick($g_sImgCleanBBYard, 0, "FV", Default, Default, Default, 5)
-			If $g_bDebugSetlog Then SetDebugLog("Benchmark Image Detection Of Builder Base Clean Yard: " & Round(_Timer_Diff($hStarttime), 2) & "'ms")
-			If UBound($aCleanYardBBNXY) > 0 And not @error Then
-			    _ArrayShuffle($aCleanYardBBNXY)
-				SetDebugLog("Total Obstacles Found: " & UBound($aCleanYardBBNXY))
-				For $i = 0 To UBound($aCleanYardBBNXY) - 1
-					$iObstacleRemoved += 1
-					SetLog("Going to remove Builder Base Obstacle: " & $iObstacleRemoved, $COLOR_SUCCESS)
-					If $g_bDebugSetlog Then SetDebugLog($aCleanYardBBNXY[$i][0] & " found at (" & $aCleanYardBBNXY[$i][1] & "," & $aCleanYardBBNXY[$i][2] & ")", $COLOR_SUCCESS)
-					If SecureClick($aCleanYardBBNXY[$i][1], $aCleanYardBBNXY[$i][2]) = False Then ContinueLoop
-					; $g_bEdgeObstacle
-					$aPoly = ($g_bEdgeObstacle = False) ? ($aInternal) : ($aExternal)
-					If InDiamondBB($aCleanYardBBNXY[$i][1], $aCleanYardBBNXY[$i][2], $aPoly) = False Then ContinueLoop
-					If IsMainPageBuilderBase() Then Click($aCleanYardBBNXY[$i][1], $aCleanYardBBNXY[$i][2], 1, 0, "#0430")
-					If _Sleep($DELAYCOLLECT3) Then Return
-					If Not ClickRemoveObstacle() Then 
+		PrintBBPoly()
+		If Not @error Then
+			; Get Builders available
+			If Not getBuilderCount(False, $bBuilderBase) Then Return
+			If $g_aiCurrentLootBB[$eLootElixirBB] = 0 Then BuilderBaseReport()
+			If _Sleep($DELAYRESPOND) Then Return
+			Local $hStarttime = _Timer_Init()
+			Local $aPoly
+			Local $iObstacleRemoved = 0
+			Local $bNoBuilders = $g_iFreeBuilderCountBB < 1
+			If $g_iFreeBuilderCountBB > 0 And $g_bChkCleanBBYard = True And Number($g_aiCurrentLootBB[$eLootElixirBB]) > 50000 Then
+				Local $aCleanYardBBNXY = findMultipleQuick($g_sImgCleanBBYard, 0, "FV", Default, Default, Default, 5)
+				If $g_bDebugSetlog Then SetDebugLog("Benchmark Image Detection Of Builder Base Clean Yard: " & Round(_Timer_Diff($hStarttime), 2) & "'ms")
+				If UBound($aCleanYardBBNXY) > 0 And not @error Then
+					_ArrayShuffle($aCleanYardBBNXY)
+					SetDebugLog("Total Obstacles Found: " & UBound($aCleanYardBBNXY))
+					For $i = 0 To UBound($aCleanYardBBNXY) - 1
+						$iObstacleRemoved += 1
+						SetLog("Going to remove Builder Base Obstacle: " & $iObstacleRemoved, $COLOR_SUCCESS)
+						If $g_bDebugSetlog Then SetDebugLog($aCleanYardBBNXY[$i][0] & " found at (" & $aCleanYardBBNXY[$i][1] & "," & $aCleanYardBBNXY[$i][2] & ")", $COLOR_SUCCESS)
+						If SecureClick($aCleanYardBBNXY[$i][1], $aCleanYardBBNXY[$i][2]) = False Then ContinueLoop
+						$aPoly = ($g_bEdgeObstacle = False) ? ($g_aBuilderBaseAttackPolygon) : ($g_aBuilderBaseOuterPolygon)
+						If InDiamondBB($aCleanYardBBNXY[$i][1], $aCleanYardBBNXY[$i][2], $aPoly) = False Then ContinueLoop
+						If IsMainPageBuilderBase() Then Click($aCleanYardBBNXY[$i][1], $aCleanYardBBNXY[$i][2], 1, 0, "#0430")
+						If _Sleep($DELAYCOLLECT3) Then Return
+						If Not ClickRemoveObstacle() Then 
+							ClickAway()
+							ContinueLoop
+						EndIf
+						If _Sleep($DELAYCHECKTOMBS2) Then Return
 						ClickAway()
-						ContinueLoop
-					EndIf
-					If _Sleep($DELAYCHECKTOMBS2) Then Return
-					ClickAway()
-					If _Sleep($DELAYCHECKTOMBS1) Then Return
-
-					; Aca
-					If $g_bChkCleanYardBBall Then
-						Local $iloops = 0
-						Do 
-							If Not $g_bRunState Then ExitLoop
+						If _Sleep($DELAYCHECKTOMBS1) Then Return
+	
+						; Aca
+						If $g_bChkCleanYardBBall Then
+							Local $iloops = 0
+							Do 
+								If Not $g_bRunState Then ExitLoop
+								If getBuilderCount(False, $bBuilderBase) = False Then Return
+								If _Sleep($DELAYCHECKTOMBS3) Then Return
+								$iloops += 1
+								If $iloops = 30 Then ExitLoop
+							Until Not ($g_iFreeBuilderCountBB = 0 And Number($g_aiCurrentLootBB[$eLootElixirBB]) > 50000)
+						Else
 							If getBuilderCount(False, $bBuilderBase) = False Then Return
-							If _Sleep($DELAYCHECKTOMBS3) Then Return
-							$iloops += 1
-							If $iloops = 30 Then ExitLoop
-						Until Not ($g_iFreeBuilderCountBB = 0 And Number($g_aiCurrentLootBB[$eLootElixirBB]) > 50000)
-					Else
-						If getBuilderCount(False, $bBuilderBase) = False Then Return
-					EndIf
-
-					If _Sleep($DELAYRESPOND) Then Return
-					If $g_iFreeBuilderCountBB = 0 Then
-						SetLog("No More Builders available in Builder Base to remove Obstacles!")
-						ExitLoop
-					EndIf
-
-					BuilderBaseReport()
-
-					If _Sleep($DELAYRESPOND) Then Return
-					If Number($g_aiCurrentLootBB[$eLootElixirBB]) < 50000 Then
-						SetLog("Remove Obstacles stopped due to insufficient Elixir.", $COLOR_INFO)
-						ExitLoop
-					EndIf
-				Next
+						EndIf
+	
+						If _Sleep($DELAYRESPOND) Then Return
+						If $g_iFreeBuilderCountBB = 0 Then
+							SetLog("No More Builders available in Builder Base to remove Obstacles!")
+							ExitLoop
+						EndIf
+	
+						BuilderBaseReport()
+	
+						If _Sleep($DELAYRESPOND) Then Return
+						If Number($g_aiCurrentLootBB[$eLootElixirBB]) < 50000 Then
+							SetLog("Remove Obstacles stopped due to insufficient Elixir.", $COLOR_INFO)
+							ExitLoop
+						EndIf
+					Next
+				EndIf
+			ElseIf $g_iFreeBuilderCountBB > 0 And $g_bChkCleanBBYard = True And Number($g_aiCurrentLootBB[$eLootElixirBB]) < 50000 Then
+				SetLog("Sorry, Low Builder Base Elixer(" & $g_aiCurrentLootBB[$eLootElixirBB] & ") Skip remove Obstacles check!", $COLOR_INFO)
 			EndIf
-		ElseIf $g_iFreeBuilderCountBB > 0 And $g_bChkCleanBBYard = True And Number($g_aiCurrentLootBB[$eLootElixirBB]) < 50000 Then
-			SetLog("Sorry, Low Builder Base Elixer(" & $g_aiCurrentLootBB[$eLootElixirBB] & ") Skip remove Obstacles check!", $COLOR_INFO)
+	
+			If $bNoBuilders Then
+				SetLog("Builder not available to remove Builder Base Obstacles!")
+			Else
+				If $iObstacleRemoved = 0 And $g_bChkCleanBBYard And Number($g_aiCurrentLootBB[$eLootElixirBB]) > 50000 Then SetLog("No Obstacles found, Builder Base Yard is clean!", $COLOR_SUCCESS)
+				If $g_bDebugSetlog Then SetDebugLog("Took Time: " & Round(__TimerDiff($hObstaclesTimer) / 1000, 2) & "'s", $COLOR_SUCCESS)
+			EndIf
 		EndIf
-
-		If $bNoBuilders Then
-			SetLog("Builder not available to remove Builder Base Obstacles!")
-		Else
-			If $iObstacleRemoved = 0 And $g_bChkCleanBBYard And Number($g_aiCurrentLootBB[$eLootElixirBB]) > 50000 Then SetLog("No Obstacles found, Builder Base Yard is clean!", $COLOR_SUCCESS)
-			If $g_bDebugSetlog Then SetDebugLog("Took Time: " & Round(__TimerDiff($hObstaclesTimer) / 1000, 2) & "'s", $COLOR_SUCCESS)
-		EndIf
-
 		ClickAway()
 
 	EndIf
 
 	FuncReturn()
 EndFunc   ;==>CleanBBYard
-
-Func PrintBBPoly(ByRef $aInternal, ByRef $aExternal)
-
-	Local $iSize = Floor(Pixel_Distance($g_aVillageSize[4], $g_aVillageSize[5], $g_aVillageSize[7], $g_aVillageSize[8]))
-	
-	; Fix ship coord
-	Local $x = $g_aVillageSize[7] + Floor((590 * 14) / $iSize)
-	Local $y = $g_aVillageSize[8]
-
-	; ZoomFactor
-	Local $iCorrectSizeLR = Floor(($iSize - 590) / 2)
-	Local $iCorrectSizeT = Floor(($iSize - 590) / 4)
-	Local $iCorrectSizeB = ($iSize - 590)
-	
-	Local $iFixA = Floor((590 * 6) / $iSize)
-	Local $iFixE = Floor((590 * 25) / $iSize)
-	
-	; Polygon Points
-	Local $iTop[2], $iRight[2], $iBottom[2], $iLeft[2]
-	
-	; BuilderBaseAttackDiamond
-	$iTop[0] = $x - (180 + $iCorrectSizeT)
-	$iTop[1] = $y + $iFixA
-
-	$iRight[0] = $x + (160 + $iCorrectSizeLR)
-	$iRight[1] = $y + (260 + $iCorrectSizeLR)
-
-	$iLeft[0] = $x - (515 + $iCorrectSizeB)
-	$iLeft[1] = $y + (260 + $iCorrectSizeLR)
-
-	$iBottom[0] = $x - (180 + $iCorrectSizeT)
-	$iBottom[1] = $y + (515 + $iCorrectSizeB) - $iFixA
-
-	;This Format is for _IsPointInPoly function
-	Local $aTmpBuilderBaseAttackPolygon[7][2] = [[5, -1], [$iTop[0], $iTop[1]], [$iRight[0], $iRight[1]], [$iBottom[0], $iBottom[1]], [$iBottom[0], $iBottom[1]], [$iLeft[0], $iLeft[1]], [$iTop[0], $iTop[1]]] ; Make Polygon From Points
-	$aInternal = $aTmpBuilderBaseAttackPolygon
-	SetDebugLog("Builder Base Attack Polygon : " & _ArrayToString($aTmpBuilderBaseAttackPolygon))
-	
-	; BuilderBaseAttackOuterDiamond
-	$iTop[0] = $x - (180 + $iCorrectSizeT)
-	$iTop[1] = $y - $iFixE
-
-	$iRight[0] = $x + (205 + $iCorrectSizeLR)
-	$iRight[1] = $y + (260 + $iCorrectSizeLR)
-
-	$iLeft[0] = $x - (560 + $iCorrectSizeB)
-	$iLeft[1] = $y + (260 + $iCorrectSizeLR)
-
-	$iBottom[0] = $x - (180 + $iCorrectSizeT)
-	$iBottom[1] = $y + (515 + $iCorrectSizeB) + $iFixE
-	
-	;This Format is for _IsPointInPoly function
-	Local $aTmpBuilderBaseOuterPolygon[7][2] = [[5, -1], [$iTop[0], $iTop[1]], [$iRight[0], $iRight[1]], [$iBottom[0], $iBottom[1]], [$iBottom[0], $iBottom[1]], [$iLeft[0], $iLeft[1]], [$iTop[0], $iTop[1]]] ; Make Polygon From Points
-	$aExternal = $aTmpBuilderBaseOuterPolygon
-	SetDebugLog("Builder Base Outer Polygon : " & _ArrayToString($aTmpBuilderBaseOuterPolygon))
-	
-	Return $iSize
-EndFunc   ;==>PrintBBPoly
-
 #EndRegion - Custom Yard - Team AIO Mod++

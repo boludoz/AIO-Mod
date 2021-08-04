@@ -12,7 +12,7 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-
+#cs
 Func BoostSuperTroop($bForce = False, $bDebug = False)
 	
 	; Start - 162, 313
@@ -189,3 +189,4 @@ Func _getTimerST($iX, $iY, $iX2, $iY2)
 	EndIf
 	Return $sReturn
 EndFunc   ;==>_getBattleEnds
+#Ce

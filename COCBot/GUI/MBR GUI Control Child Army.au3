@@ -198,7 +198,7 @@ Func lblTotalCountSpell2()
 	Next
 
 	For $i = 0 To $eSpellCount - 1
-		GUICtrlSetBkColor($g_ahTxtTrainArmySpellCount[$i], $g_iTotalTrainSpaceSpell <= GUICtrlRead($g_hTxtTotalCountSpell) ? $COLOR_WHITE : $COLOR_RED)
+		GUICtrlSetBkColor($g_ahTxtTrainArmySpellCount[$i], $g_iTotalTrainSpaceSpell <= GUICtrlRead($g_hTxtTotalCountSpell) ? 0xD1DFE7 : $COLOR_RED) ; Custom - Team AIO Mod++
 	Next
 
 	GUICtrlSetData($g_hLblTotalTimeSpell, CalculTimeTo($iTotalTotalTimeSpell))
@@ -1098,7 +1098,7 @@ Func Removecamp()
 	GUICtrlSetData($g_hLblTotalTimeSiege, " 0s")
 	GUICtrlSetBkColor($g_hLblCountTotal, $COLOR_MONEYGREEN)
 	For $i = 0 To $eSpellCount - 1
-		GUICtrlSetBkColor($g_ahTxtTrainArmySpellCount[$i], $COLOR_WHITE)
+		GUICtrlSetBkColor($g_ahTxtTrainArmySpellCount[$i], 0xD1DFE7) ; Custom - Team AIO Mod++
 	Next
 	GUICtrlSetBkColor($g_hLblCountTotalSiege, $COLOR_MONEYGREEN)
 EndFunc   ;==>Removecamp

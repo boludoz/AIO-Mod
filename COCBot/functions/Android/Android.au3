@@ -2947,6 +2947,8 @@ Func AndroidClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default)
 	$y2 = Int($y2) + $g_aiMouseOffset[1]
 	AdjustClickCoordinates($g_sAndroidEmulator, $x1, $y1) ; Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x1,$y1)")
 	AdjustClickCoordinates($g_sAndroidEmulator, $x2, $y2) ; Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x2,$y2)")
+	Return AndroidMinitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState)
+	#cs
 	Local $swipe_coord[4][2] = [["{$x1}", $x1], ["{$y1}", $y1], ["{$x2}", $x2], ["{$y2}", $y2]]
 	
 	; Custom fix - Team AIO Mod++
@@ -2955,6 +2957,7 @@ Func AndroidClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default)
 	Else
 		Return AndroidAdbScript("clickdrag", $swipe_coord, Default, Default, $wasRunState)
 	EndIf
+	#ce
 EndFunc   ;==>AndroidClickDrag
 
 Func AndroidMinitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default)

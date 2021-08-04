@@ -53,9 +53,13 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 	Local $iSide = Random(0, 1, 1) ; randomly choose top left or top right
 	Local $aBMPos = 0
 
-	If ZoomBuilderBaseMecanics(True) < 1 Then Return False
+	; If ZoomBuilderBaseMecanics(True) < 1 Then Return False
 	
-	$g_aBuilderBaseDiamond = BuilderBaseAttackDiamond()
+	$g_aBuilderBaseDiamond = PrintBBPoly(False) ;BuilderBaseAttackDiamond()
+	If @error Then 
+		Return -1
+	EndIf
+	
 	If IsArray($g_aBuilderBaseDiamond) <> True Or Not (UBound($g_aBuilderBaseDiamond) > 0) Then Return False
 
 	$g_aExternalEdges = BuilderBaseGetEdges($g_aBuilderBaseDiamond, "External Edges")

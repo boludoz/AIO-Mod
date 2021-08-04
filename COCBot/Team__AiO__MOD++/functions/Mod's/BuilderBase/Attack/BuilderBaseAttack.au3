@@ -409,8 +409,10 @@ Func BuilderBaseAttackToDrop($aAvailableTroops)
 	EndIf
 
 	If $aUniqueDeployPoint[0] = 0 Then
-        $g_aBuilderBaseDiamond = BuilderBaseAttackDiamond()
-		If IsArray($g_aBuilderBaseDiamond) <> True Or Not (UBound($g_aBuilderBaseDiamond) > 0) Then Return False
+        $g_aBuilderBaseDiamond = PrintBBPoly(False) ;BuilderBaseAttackDiamond()
+		If @error Then 
+			Return False
+		EndIf
 
 		$g_aExternalEdges = BuilderBaseGetEdges($g_aBuilderBaseDiamond, "External Edges")
 	EndIf

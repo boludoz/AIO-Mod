@@ -190,7 +190,7 @@ Func CreateAttackSearchDeadBaseSearch()
 		$g_hTxtDBMinGold = _GUICtrlCreateInput("80000", $x + 85, $y, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "TxtMinGold_Info_01", "Set the Min. amount of Gold to search for on a village to attack.")
 			_GUICtrlSetTip(-1, $sTxtTip)
-			GUICtrlSetLimit(-1, 6)
+			GUICtrlSetLimit(-1, 7) ; Custom fix - Team AIO Mod++
 ;~ 		; Gold DB - Team AiO MOD++
 ;~ 		$g_hMinArmyUmbralGoldDB = _GUICtrlCreateInput("0", $x + 85 + 75, $y, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
 ;~ 			_GUICtrlSetTip(-1, $sMinUmbralTip)
@@ -203,7 +203,7 @@ Func CreateAttackSearchDeadBaseSearch()
 		$g_hTxtDBMinElixir = _GUICtrlCreateInput("80000", $x + 85, $y, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "TxtMinElixir_Info_01", "Set the Min. amount of Elixir to search for on a village to attack.")
 			_GUICtrlSetTip(-1, $sTxtTip)
-			GUICtrlSetLimit(-1, 6)
+			GUICtrlSetLimit(-1, 7) ; Custom fix - Team AIO Mod++
 		; Elixir DB - Team AiO MOD++
 ;~ 		$g_hMinArmyUmbralElixirDB = _GUICtrlCreateInput("0", $x + 85 + 75, $y + 1, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
 ;~ 			_GUICtrlSetTip(-1, $sMinUmbralTip)
@@ -216,7 +216,7 @@ Func CreateAttackSearchDeadBaseSearch()
 		$g_hTxtDBMinGoldPlusElixir = _GUICtrlCreateInput("160000", $x + 85, $y, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "TxtMinGoldPlusElixir_Info_01", "Set the Min. amount of Gold + Elixir to search for on a village to attack.")
 			_GUICtrlSetTip(-1, $sTxtTip)
-			GUICtrlSetLimit(-1, 6)
+			GUICtrlSetLimit(-1, 7) ; Custom fix - Team AIO Mod++
 			GUICtrlSetState (-1, $GUI_HIDE)
 		; Plus DB - Team AiO MOD++
 ;~ 		$g_hMinArmyUmbralPlusDB = _GUICtrlCreateInput("0", $x + 85 + 75, $y + 35, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))

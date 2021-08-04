@@ -199,7 +199,7 @@ EndFunc   ;==>CreateAttackPlanBuilderBaseSubTab
 
 ; Builder base drop order gui
 Func CreateBBDropOrderGUI()
-	$g_hGUI_BBDropOrder = GUICreate("Custom Order", 428, 350, 240, 124)
+	$g_hGUI_BBDropOrder = _GUICreate(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "GUI_BBDropOrder", "Custom Order"), 428, 400, -1, -1, $WS_BORDER, $WS_EX_CONTROLPARENT)
 
 	Local $x = 0, $y = 8
 	GUICtrlCreateGroup("BB Custom dropping order.", 8, $y, 409, 278)

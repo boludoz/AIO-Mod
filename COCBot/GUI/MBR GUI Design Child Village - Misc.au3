@@ -236,7 +236,7 @@ Func CreateMiscNormalVillageSubTab()
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtCollectElixir_Info_02", -1) & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtCollectElixir_Info_03", -1) & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtCollectGold_Info_04", -1))
-			GUICtrlSetLimit(-1, 6)
+			GUICtrlSetLimit(-1, 7) ; Custom fix - Team AIO Mod++
 
 	$x = 15
 	$y += 22
@@ -280,7 +280,7 @@ Func CreateMiscNormalVillageSubTab()
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtTreasuryElixir_Info_02", -1) & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtTreasuryElixir_Info_03", -1) & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTreasuryCollect_Info_01", -1))
-			GUICtrlSetLimit(-1, 6)
+			GUICtrlSetLimit(-1, 7) ; Custom fix - Team AIO Mod++
 
 	$x = 15
 	$y += 21

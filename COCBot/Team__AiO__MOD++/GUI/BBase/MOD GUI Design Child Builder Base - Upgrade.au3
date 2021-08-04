@@ -147,7 +147,7 @@ Func CreateUpgradeBuilderBaseSubTab()
 EndFunc   ;==>CreateUpgradeBuilderBaseSubTab 
 
 Func CreateBBUpgradeOrderGUI()
-	$g_hGUI_BBUpgradeOrder = GUICreate("Custom Order", 444, 222, 240, 124)
+	$g_hGUI_BBUpgradeOrder = _GUICreate(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "GUISLabUpgradeOrder", "Enable upgrade order."), 444, 240, -1, -1, $WS_BORDER, $WS_EX_CONTROLPARENT)
 
 	Local $sTxtSLNames = GetTranslatedFileIni("MBR Global GUI Design", "Any", "Any") & "|" & _
 					   GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtRagedBarbarian", "Raged Barbarian") & "|" & _
@@ -203,6 +203,7 @@ Func CreateBBUpgradeOrderGUI()
 	
 	$x += 140
 	$y -= 24
+	$y -= 34
 	$g_hBtnRemoveSLabUpgradeOrder = GUICtrlCreateButton("Clear List", $x - 6, $y, 96, 20)
 	GUICtrlSetState(-1, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
 	GUICtrlSetOnEvent(-1, "btnRemoveSLabUpgradeOrder")
@@ -213,6 +214,7 @@ Func CreateBBUpgradeOrderGUI()
 	GUICtrlSetOnEvent(-1, "btnSetSLabUpgradeOrder")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
+	$y += 34
 	$y += 50
 
 	$g_hGUI_BBUpgradeOrderClose = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrderClose", "Close"), 344, $y, 65, 25)

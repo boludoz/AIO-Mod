@@ -64,13 +64,13 @@ Func CreateAttackSearchDeadBaseEndBattle()
 	$y += 21
 		$g_hTxtDBMinGoldStopAtk2 = _GUICtrlCreateInput("2000", $x + 65, $y, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip & " gold.")
-			GUICtrlSetLimit(-1, 6)
+			GUICtrlSetLimit(-1, 7) ; Custom fix - Team AIO Mod++
 			GUICtrlSetState(-1, $GUI_DISABLE)
 		$g_hPicDBMinGoldStopAtk2 = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 117, $y, 16, 16)
 	$y += 21
 		$g_hTxtDBMinElixirStopAtk2 = _GUICtrlCreateInput("2000", $x + 65, $y, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip & " elixir.")
-			GUICtrlSetLimit(-1, 6)
+			GUICtrlSetLimit(-1, 7) ; Custom fix - Team AIO Mod++
 			GUICtrlSetState(-1, $GUI_DISABLE)
 		$g_hPicDBMinElixirStopAtk2 = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnElixir, $x + 117, $y, 16, 16)
 	$y += 21

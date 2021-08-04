@@ -96,7 +96,8 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = $g_iFurtherFromBBDefault, $DebugI
 	; Dissociable drop points.
 	Local $DeployPointsResult = DMClasicArray(DFind($g_sBundleDeployPointsBBD, 0, 0, 0, 0, 0, 0, 1000, True), 18, ($g_bDebugImageSave Or $DebugImage))
 	If Not $g_bRunState Then Return
-
+	SetDebugLog(_ArrayToString($DeployPointsResult))
+	
 	If IsArray($DeployPointsResult) And UBound($DeployPointsResult) > 0 Then
 		Local $Point[2], $Local = ""
 		Local $iTopLeft[0][2], $iTopRight[0][2], $iBottomRight[0][2], $iBottomLeft[0][2]
@@ -162,9 +163,8 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = $g_iFurtherFromBBDefault, $DebugI
 	Setlog("Builder Base Internal Deploy Points: " & Round(__timerdiff($hStarttime) / 1000, 2) & " seconds", $COLOR_DEBUG)
 	$hStarttime = __TimerInit()
 
-	$g_aBuilderBaseDiamond = BuilderBaseAttackDiamond()
-
-	If $g_aBuilderBaseDiamond = -1 Then
+	$g_aBuilderBaseDiamond = PrintBBPoly(False) ;BuilderBaseAttackDiamond()
+	If @error Then 
 		_DebugFailedImageDetection("DeployPoints")
 		Setlog("Deploy $g_aBuilderBaseDiamond - Points detection Error!", $Color_Error)
 		$g_aExternalEdges = BuilderBaseGetFakeEdges()
@@ -493,81 +493,6 @@ Func DebugBuilderBaseBuildingsDetection($DeployPoints, $BestDeployPoints, $Debug
 
 EndFunc   ;==>DebugBuilderBaseBuildingsDetection
 
-Func BuilderBaseAttackDiamond()
-	Local $iSize = ZoomBuilderBaseMecanics(True)
-	If $iSize < 1 Then Return -1
-	
-	; Fix ship coord
-	Local $x = $g_aVillageSize[7] + 14
-	Local $y = $g_aVillageSize[8]
-
-	; ZoomFactor
-	Local $iCorrectSizeLR = Floor(($iSize - 590) / 2)
-	Local $iCorrectSizeT = Floor(($iSize - 590) / 4)
-	Local $iCorrectSizeB = ($iSize - 590)
-
-	; Polygon Points
-	Local $iTop[2], $iRight[2], $iBottomR[2], $iBottomL[2], $iLeft[2]
-
-	$iTop[0] = $x - (180 + $iCorrectSizeT)
-	$iTop[1] = $y + 6
-
-	$iRight[0] = $x + (160 + $iCorrectSizeLR)
-	$iRight[1] = $y + (260 + $iCorrectSizeLR)
-
-	$iLeft[0] = $x - (515 + $iCorrectSizeB)
-	$iLeft[1] = $y + (260 + $iCorrectSizeLR)
-
-	$iBottomR[0] = $x - (110 - $iCorrectSizeB)
-	$iBottomR[1] = 628
-
-	$iBottomL[0] = $x - (225 + $iCorrectSizeB)
-	$iBottomL[1] = 628
-
-	Local $iBuilderBaseDiamond[6] = [$iSize, $iTop, $iRight, $iBottomR, $iBottomL, $iLeft]
-	Return $iBuilderBaseDiamond
-EndFunc   ;==>BuilderBaseAttackDiamond
-
-Func BuilderBaseAttackOuterDiamond()
-
-	Local $iSize = ZoomBuilderBaseMecanics(True)
-	If $iSize < 1 Then Return -1
-	
-	; Fix ship coord
-	Local $x = $g_aVillageSize[7] + 14
-	Local $y = $g_aVillageSize[8]
-	
-	; ZoomFactor
-	Local $iCorrectSizeLR = Floor(($iSize - 590) / 2)
-	Local $iCorrectSizeT = Floor(($iSize - 590) / 4)
-	Local $iCorrectSizeB = ($iSize - 590)
-
-	; Polygon Points
-	Local $iTop[2], $iRight[2], $iBottomR[2], $iBottomL[2], $iLeft[2]
-
-	$iTop[0] = $x - (180 + $iCorrectSizeT)
-	$iTop[1] = $y - 25
-
-	$iRight[0] = $x + (205 + $iCorrectSizeLR)
-	$iRight[1] = $y + (260 + $iCorrectSizeLR)
-
-	$iLeft[0] = $x - (560 + $iCorrectSizeB)
-	$iLeft[1] = $y + (260 + $iCorrectSizeLR)
-
-	$iBottomR[0] = $x - (70 - $iCorrectSizeB)
-	$iBottomR[1] = 628
-
-	$iBottomL[0] = $x - (275 + $iCorrectSizeB)
-	$iBottomL[1] = 628
-
-	Local $iBuilderBaseDiamond[6] = [$iSize, $iTop, $iRight, $iBottomR, $iBottomL, $iLeft]
-	;This Format is for _IsPointInPoly function
-	Local $aTmpBuilderBaseOuterPolygon[7][2] = [[5, -1], [$iTop[0], $iTop[1]], [$iRight[0], $iRight[1]], [$iBottomR[0], $iBottomR[1]], [$iBottomL[0], $iBottomL[1]], [$iLeft[0], $iLeft[1]], [$iTop[0], $iTop[1]]] ; Make Polygon From Points
-	$g_aBuilderBaseOuterPolygon = $aTmpBuilderBaseOuterPolygon
-	SetDebugLog("Builder Base Outer Polygon : " & _ArrayToString($g_aBuilderBaseOuterPolygon))
-	Return $iBuilderBaseDiamond
-EndFunc   ;==>BuilderBaseAttackOuterDiamond
-
 Func BuilderBaseGetEdges($iBuilderBaseDiamond, $Text)
 
 	Local $iTopLeft[0][2], $iTopRight[0][2], $iBottomRight[0][2], $iBottomLeft[0][2]
@@ -877,18 +802,3 @@ Func BuilderBaseBuildingsOnEdge($g_aDeployPoints)
 	Return UBound($ToReturn) > 0 ? $ToReturn : "-1"
 
 EndFunc   ;==>BuilderBaseBuildingsOnEdge
-
-Func InDiamondBB($iX, $iY, $aBigArray, $bAttack = True)
-    If IsUnsafeDP($iX, $iY, ($bAttack = True)) = False And IsArray($aBigArray) Then 
-        Return _IsPointInPoly($iX, $iY, $aBigArray)
-    EndIf
-    
-    Return False
-EndFunc   ;==>InDiamondBB
-
-Func IsUnsafeDP($iX, $iY, $bAttack = True)
-    If $bAttack = True And $iY > 630 Or ($iX < 453 And $iY > 572) Then 
-        Return True
-    EndIf
-    Return False
-EndFunc   ;==>SafeDP
