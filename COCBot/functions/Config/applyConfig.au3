@@ -2226,8 +2226,24 @@ Func ApplyConfig_600_52_2($TypeReadSave)
 			$g_bPreciseArmy = (GUICtrlRead($g_hChkPreciseArmy) = $GUI_CHECKED)
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_52_2
-
 Func ApplyConfig_600_54($TypeReadSave)
+	; <><><> Attack Plan / Train Army / Train Order <><><>
+	Switch $TypeReadSave
+		Case "Read"
+			GUICtrlSetState($g_hChkCustomTrainOrderEnable, $g_bCustomTrainOrderEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
+
+			For $z = 0 To UBound($g_ahCmbTroopOrder) - 1
+				_GUICtrlComboBox_SetCurSel($g_ahCmbTroopOrder[$z], $g_aiCmbCustomTrainOrder[$z])
+			Next
+		Case "Save"
+			; Troops Order
+			$g_bCustomTrainOrderEnable = (GUICtrlRead($g_hChkCustomTrainOrderEnable) = $GUI_CHECKED)
+			For $z = 0 To UBound($g_ahCmbTroopOrder) - 1
+				$g_aiCmbCustomTrainOrder[$z] = _GUICtrlComboBox_GetCurSel($g_ahCmbTroopOrder[$z])
+			Next
+	EndSwitch
+
+#cs
 	; <><><> Attack Plan / Train Army / Train Order <><><>
 	Switch $TypeReadSave
 		Case "Read"
@@ -2285,8 +2301,8 @@ Func ApplyConfig_600_54($TypeReadSave)
 				$g_aiCmbCustomBrewOrder[$z] = _GUICtrlComboBox_GetCurSel($g_ahCmbSpellsOrder[$z])
 			Next
 	EndSwitch
+#ce
 EndFunc   ;==>ApplyConfig_600_54
-
 Func ApplyConfig_600_56($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Options / SmartZap <><><><>
 	Switch $TypeReadSave

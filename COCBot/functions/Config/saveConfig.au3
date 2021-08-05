@@ -1259,6 +1259,7 @@ Func SaveConfig_600_52_2()
 EndFunc   ;==>SaveConfig_600_52_2
 
 Func SaveConfig_600_54()
+#cs
 	; <><><> Attack Plan / Train Army / Train Order <><><>
 	ApplyConfig_600_54(GetApplyConfigSaveAction())
 
@@ -1273,6 +1274,7 @@ Func SaveConfig_600_54()
 	For $z = 0 To UBound($g_aiCmbCustomBrewOrder) - 1
 		_Ini_Add("Spells", "cmbSpellOrder" & $z, $g_aiCmbCustomBrewOrder[$z])
 	Next
+#ce
 EndFunc   ;==>SaveConfig_600_54
 
 Func SaveConfig_600_56()

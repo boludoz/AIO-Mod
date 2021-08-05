@@ -1870,6 +1870,48 @@ Func tabAttack()
 EndFunc   ;==>tabAttack
 
 Func tabARMY()
+	; Custom - Team AIO Mod++
+	If $g_iGuiMode <> 1 Then Return
+	Local $tabidx = GUICtrlRead($g_hGUI_TRAINARMY_TAB)
+
+	Select
+		Case $tabidx = 0 ; Army tab
+			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_TRAINARMY_ARMY)
+			GUISetState(@SW_HIDE, $g_hGUI_SPELLARMY_ARMY)
+			GUISetState(@SW_HIDE, $g_hGUI_SIEGEARMY_ARMY)
+			GUISetState(@SW_HIDE, $g_hGUI_TRAINARMY_BOOST)
+			GUISetState(@SW_HIDE, $g_hGUI_TRAINARMY_OPTIONS)
+
+		Case $tabidx = 1 ; Spells tab
+			GUISetState(@SW_HIDE, $g_hGUI_TRAINARMY_ARMY)
+			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_SPELLARMY_ARMY)
+			GUISetState(@SW_HIDE, $g_hGUI_SIEGEARMY_ARMY)
+			GUISetState(@SW_HIDE, $g_hGUI_TRAINARMY_BOOST)
+			GUISetState(@SW_HIDE, $g_hGUI_TRAINARMY_OPTIONS)
+
+		Case $tabidx = 2 ; Sieges tab
+			GUISetState(@SW_HIDE, $g_hGUI_TRAINARMY_ARMY)
+			GUISetState(@SW_HIDE, $g_hGUI_SPELLARMY_ARMY)
+			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_SIEGEARMY_ARMY)
+			GUISetState(@SW_HIDE, $g_hGUI_TRAINARMY_BOOST)
+			GUISetState(@SW_HIDE, $g_hGUI_TRAINARMY_OPTIONS)
+
+		Case $tabidx = 3 ; Boost tab
+			GUISetState(@SW_HIDE, $g_hGUI_TRAINARMY_ARMY)
+			GUISetState(@SW_HIDE, $g_hGUI_SPELLARMY_ARMY)
+			GUISetState(@SW_HIDE, $g_hGUI_SIEGEARMY_ARMY)
+			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_TRAINARMY_BOOST)
+			GUISetState(@SW_HIDE, $g_hGUI_TRAINARMY_OPTIONS)
+
+		Case $tabidx = 4 ; Options tab
+			GUISetState(@SW_HIDE, $g_hGUI_TRAINARMY_ARMY)
+			GUISetState(@SW_HIDE, $g_hGUI_SPELLARMY_ARMY)
+			GUISetState(@SW_HIDE, $g_hGUI_SIEGEARMY_ARMY)
+			GUISetState(@SW_HIDE, $g_hGUI_TRAINARMY_BOOST)
+			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_TRAINARMY_OPTIONS)
+
+	EndSelect
+#cs
 	If $g_iGuiMode <> 1 Then Return
 	Local $tabidx = GUICtrlRead($g_hGUI_TRAINARMY_TAB)
 
@@ -1899,7 +1941,7 @@ Func tabARMY()
 			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_TRAINARMY_OPTIONS)
 
 	EndSelect
-
+#ce
 EndFunc   ;==>tabARMY
 
 Func tabSEARCH()
