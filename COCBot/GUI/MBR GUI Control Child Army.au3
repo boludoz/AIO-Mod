@@ -419,7 +419,6 @@ Func sldTrainITDelay()
 	GUICtrlSetData($g_hLblTrainITDelayTime, $g_iTrainClickDelay & " ms")
 EndFunc   ;==>sldTrainITDelay
 
-#cs
 Func chkTroopOrder2()
 	;GUI OnEvent functions cannot have parameters, so below call is used for the default parameter
 	chkTroopOrder()
@@ -452,7 +451,7 @@ Func chkTroopOrder($bSetLog = True)
 		EndIf
 	EndIf
 EndFunc   ;==>chkTroopOrder
-#ce
+
 Func chkSpellsOrder()
 	If GUICtrlRead($g_hChkCustomBrewOrderEnable) = $GUI_CHECKED Then
 		$g_bCustomBrewOrderEnable = True
@@ -517,7 +516,7 @@ Func BtnRemoveSpells()
 	SetDefaultSpellsGroup(False)
 	SetRedrawBotWindow($bWasRedraw, Default, Default, Default, "BtnRemoveSpells")
 EndFunc   ;==>BtnRemoveSpells
-#cs
+
 Func GUITrainOrder()
 	Local $bDuplicate = False
 	Local $iGUI_CtrlId = @GUI_CtrlId
@@ -543,33 +542,6 @@ Func GUITrainOrder()
 		_GUICtrlSetImage($g_ahImgTroopOrderSet, $g_sLibIconPath, $eIcnRedLight) ; set status indicator to show need to apply new order
 	EndIf
 EndFunc   ;==>GUITrainOrder
-#ce
-Func _GUITrainOrder()
-	; For $i = 0 To UBound($g_ahCmbTroopOrder) - 1 ; check for duplicate combobox index and flag problem
-		; $g_ahCmbTroopOrder
-		; $g_aiTrainOrder
-	; Next
-	
-	Local $iGUI_CtrlId = @GUI_CtrlId
-	Local $iOrderIndex = _GUICtrlComboBox_GetCurSel($iGUI_CtrlId)
-
-	; Create translated list of Troops for combo box
-	; Local $sComboData = "1"
-	; For $j = 1 To UBound($g_aQuickTroopIcon) - 1
-		; $sComboData &= "|" & String($j + 1)
-	; Next
-
-	; For $i = 0 To UBound($g_ahCmbTroopOrder) - 1 ; check for duplicate combobox index and flag problem
-		; $g_aiTrainOrder[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbTroopOrder[$i])
-	; Next
-
-	; For $i = 0 To UBound($g_ahCmbTroopOrder) - 1 ; check for duplicate combobox index and flag problem
-		; If $iGUI_CtrlId = $g_ahCmbTroopOrder[$i] Then ContinueLoop
-		; If $iOrderIndex = _GUICtrlComboBox_GetCurSel($g_ahCmbTroopOrder[$i]) Then
-			; _GUICtrlComboBox_SetCurSel($g_ahCmbTroopOrder[$i], $iOrderIndex)
-		; EndIf
-	; Next
-EndFunc   ;==>_GUITrainOrder
 
 Func BtnRemoveTroops()
 	Local $bWasRedraw = SetRedrawBotWindow(False, Default, Default, Default, "BtnRemoveTroops")
@@ -674,7 +646,7 @@ Func BtnSpellsOrderSet()
 	SetRedrawBotWindow($bWasRedraw, Default, Default, Default, "BtnSpellsOrderSet")
 
 EndFunc   ;==>BtnSpellsOrderSet
-#cs
+
 Func BtnTroopOrderSet()
 	Local $bWasRedraw = SetRedrawBotWindow(False, Default, Default, Default, "BtnTroopOrderSet")
 	Local $bReady = True ; Initialize ready to record troop order flag
@@ -761,7 +733,7 @@ Func BtnTroopOrderSet()
 	;	GUICtrlSetState($g_hBtnTroopOrderSet, $GUI_DISABLE)
 	SetRedrawBotWindow($bWasRedraw, Default, Default, Default, "BtnTroopOrderSet")
 EndFunc   ;==>BtnTroopOrderSet
-#ce
+
 Func ChangeSpellsBrewOrder()
 	If $g_bDebugSetlog Or $g_bDebugSetlogTrain Then SetLog("Begin Func ChangeSpellsBrewOrder()", $COLOR_DEBUG) ;Debug
 
@@ -799,7 +771,7 @@ Func ChangeSpellsBrewOrder()
 	Return True
 
 EndFunc   ;==>ChangeSpellsBrewOrder
-#cs
+
 Func ChangeTroopTrainOrder()
 
 	If $g_bDebugSetlog Or $g_bDebugSetlogTrain Then SetLog("Begin Func ChangeTroopTrainOrder()", $COLOR_DEBUG) ;Debug
@@ -837,7 +809,7 @@ Func ChangeTroopTrainOrder()
 
 	Return True
 EndFunc   ;==>ChangeTroopTrainOrder
-#ce
+
 Func SetDefaultTroopGroup($bSetLog = True)
 	For $i = 0 To $eTroopCount - 1
 		$g_aiTrainOrder[$i] = $i
