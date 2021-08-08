@@ -15,7 +15,7 @@
 #include-once
 
 Global $g_hGUI_DailyDiscounts = 0
-Global $g_ahChkDD_Deals[$g_iDDCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_ahChkDD_Deals[$g_iDDCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_hBtnDDApply = 0, $g_hBtnDDClear = 0, $g_hBtnDDClose = 0
 
 Func CreateDailyDiscountGUI()
@@ -30,20 +30,21 @@ Func CreateDailyDiscountGUI()
 		$g_ahChkDD_Deals[$g_eDDPotionBuilder] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDPotionBuilder", "Builder Potion") & " (" & String($g_aiDD_DealsCosts[$g_eDDPotionBuilder]) & " gems)", $x, $y + 80, -1, -1)
 		$g_ahChkDD_Deals[$g_eDDPotionPower] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDPotionPower", "Power Potion") & " (" & String($g_aiDD_DealsCosts[$g_eDDPotionPower]) & " gems)", $x, $y + 100, -1, -1)
 		$g_ahChkDD_Deals[$g_eDDPotionHero] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDPotionHero", "Hero Potion") & " (" & String($g_aiDD_DealsCosts[$g_eDDPotionHero]) & " gems)", $x, $y + 120, -1, -1)
-		$g_ahChkDD_Deals[$g_eDDWallRing5] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDWallRing5", "Wall Ring x5") & " (" & String($g_aiDD_DealsCosts[$g_eDDWallRing5]) & " gems)", $x, $y + 140, -1, -1)
-		$g_ahChkDD_Deals[$g_eDDWallRing10] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDWallRing10", "Wall Ring x10") & " (" & String($g_aiDD_DealsCosts[$g_eDDWallRing10]) & " gems)", $x, $y + 160, -1, -1)
-		$g_ahChkDD_Deals[$g_eDDShovel] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDShovel", "Shovel x1") & " (" & String($g_aiDD_DealsCosts[$g_eDDShovel]) & " gems)", $x, $y + 180, -1, -1)
+		$g_ahChkDD_Deals[$g_eDDSuperPotion] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDPotionSuper", "Super Potion") & " (" & String($g_aiDD_DealsCosts[$g_eDDPotionHero]) & " gems)", $x, $y + 140, -1, -1)
+		$g_ahChkDD_Deals[$g_eDDWallRing5] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDWallRing5", "Wall Ring x5") & " (" & String($g_aiDD_DealsCosts[$g_eDDWallRing5]) & " gems)", $x, $y + 160, -1, -1)
+		$g_ahChkDD_Deals[$g_eDDWallRing10] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDWallRing10", "Wall Ring x10") & " (" & String($g_aiDD_DealsCosts[$g_eDDWallRing10]) & " gems)", $x, $y + 180, -1, -1)
 
 	$x += 195
-		$g_ahChkDD_Deals[$g_eDDBookHeros] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDBookHeros", "Book of Heros") & " (" & String($g_aiDD_DealsCosts[$g_eDDBookHeros]) & " gems)", $x, $y, -1, -1)
-		$g_ahChkDD_Deals[$g_eDDBookFighting] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDBookFighting", "Book of Fighting") & " (" & String($g_aiDD_DealsCosts[$g_eDDBookFighting]) & " gems)", $x, $y + 20, -1, -1)
-		$g_ahChkDD_Deals[$g_eDDBookSpells] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDBookSpells", "Book of Spells") & " (" & String($g_aiDD_DealsCosts[$g_eDDBookSpells]) & " gems)", $x, $y + 40, -1, -1)
-		$g_ahChkDD_Deals[$g_eDDBookBuilding] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDBookBuilding", "Book of Building") & " (" & String($g_aiDD_DealsCosts[$g_eDDBookBuilding]) & " gems)", $x, $y + 60, -1, -1)
-		$g_ahChkDD_Deals[$g_eDDRuneGold] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDRuneGold", "Rune of Gold") & " (" & String($g_aiDD_DealsCosts[$g_eDDRuneGold]) & " gems)", $x, $y + 80, -1, -1)
-		$g_ahChkDD_Deals[$g_eDDRuneElixir] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDRuneElixir", "Rune of Elixir") & " (" & String($g_aiDD_DealsCosts[$g_eDDRuneElixir]) & " gems)", $x, $y + 100, -1, -1)
-		$g_ahChkDD_Deals[$g_eDDRuneDarkElixir] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDRuneDarkElixir", "Rune of Dark Elixir") & " (" & String($g_aiDD_DealsCosts[$g_eDDRuneDarkElixir]) & " gems)", $x, $y + 120, -1, -1)
-		$g_ahChkDD_Deals[$g_eDDRuneBBGold] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDRuneBBGold", "Rune of BB Gold") & " (" & String($g_aiDD_DealsCosts[$g_eDDRuneBBGold]) & " gems)", $x, $y + 140, -1, -1)
-		$g_ahChkDD_Deals[$g_eDDRuneBBElixir] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDRuneBBElixir", "Rune of BB Elixir") & " (" & String($g_aiDD_DealsCosts[$g_eDDRuneBBElixir]) & " gems)", $x, $y + 160, -1, -1)
+		$g_ahChkDD_Deals[$g_eDDShovel] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDShovel", "Shovel x1") & " (" & String($g_aiDD_DealsCosts[$g_eDDShovel]) & " gems)", $x, $y, -1, -1)
+		$g_ahChkDD_Deals[$g_eDDBookHeros] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDBookHeros", "Book of Heros") & " (" & String($g_aiDD_DealsCosts[$g_eDDBookHeros]) & " gems)", $x, $y + 20, -1, -1)
+		$g_ahChkDD_Deals[$g_eDDBookFighting] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDBookFighting", "Book of Fighting") & " (" & String($g_aiDD_DealsCosts[$g_eDDBookFighting]) & " gems)", $x, $y + 40, -1, -1)
+		$g_ahChkDD_Deals[$g_eDDBookSpells] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDBookSpells", "Book of Spells") & " (" & String($g_aiDD_DealsCosts[$g_eDDBookSpells]) & " gems)", $x, $y + 60, -1, -1)
+		$g_ahChkDD_Deals[$g_eDDBookBuilding] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDBookBuilding", "Book of Building") & " (" & String($g_aiDD_DealsCosts[$g_eDDBookBuilding]) & " gems)", $x, $y + 80, -1, -1)
+		$g_ahChkDD_Deals[$g_eDDRuneGold] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDRuneGold", "Rune of Gold") & " (" & String($g_aiDD_DealsCosts[$g_eDDRuneGold]) & " gems)", $x, $y + 100, -1, -1)
+		$g_ahChkDD_Deals[$g_eDDRuneElixir] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDRuneElixir", "Rune of Elixir") & " (" & String($g_aiDD_DealsCosts[$g_eDDRuneElixir]) & " gems)", $x, $y + 120, -1, -1)
+		$g_ahChkDD_Deals[$g_eDDRuneDarkElixir] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDRuneDarkElixir", "Rune of Dark Elixir") & " (" & String($g_aiDD_DealsCosts[$g_eDDRuneDarkElixir]) & " gems)", $x, $y + 140, -1, -1)
+		$g_ahChkDD_Deals[$g_eDDRuneBBGold] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDRuneBBGold", "Rune of BB Gold") & " (" & String($g_aiDD_DealsCosts[$g_eDDRuneBBGold]) & " gems)", $x, $y + 160, -1, -1)
+		$g_ahChkDD_Deals[$g_eDDRuneBBElixir] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDRuneBBElixir", "Rune of BB Elixir") & " (" & String($g_aiDD_DealsCosts[$g_eDDRuneBBElixir]) & " gems)", $x, $y + 180, -1, -1)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	$x = 30

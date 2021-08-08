@@ -1372,7 +1372,7 @@ Func CreateTrainBoost()
 	GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "PM", "PM"), $x + 5, $y)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	
-	#cs
+	; #cs
 	$y += 55
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "Group_05", "Boost Super Troops"), $x - 20, $y - 20, $g_iSizeWGrpTab3 - 12, 75)
 
@@ -1395,7 +1395,7 @@ Func CreateTrainBoost()
 		$x += 200
 	Next
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
-	#ce
+	; #ce
 EndFunc   ;==>CreateTrainBoost
 
 Func CreateTrainOrder()
