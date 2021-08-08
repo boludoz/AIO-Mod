@@ -57,12 +57,13 @@ Func QuickMIS($ValueReturned, $directory, $left = 0, $top = 0, $right = $g_iGAME
 		ElseIf StringInStr($res[0], "-1") <> 0 Then
 			SetLog("DLL Error", $COLOR_RED)
 		Else
+			Local $DLLRes = 0
 			Switch $ValueReturned
-				Case "BC1"
+				Case "BC1" ; coordinates of first/one image found + boolean value
 					Local $result = "", $Name = ""
 					Local $KeyValue = StringSplit($res[0], "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 					For $i = 0 To UBound($KeyValue) - 1
-						Local $DLLRes = DllCallMyBot("GetProperty", "str", $KeyValue[$i], "str", "objectpoints")
+						$DLLRes = DllCallMyBot("GetProperty", "str", $KeyValue[$i], "str", "objectpoints")
 						If UBound(decodeSingleCoord($DLLRes[0])) > 1 Then $result &= $DLLRes[0] & "|"
 					Next
 					If StringRight($result, 1) = "|" Then $result = StringLeft($result, (StringLen($result) - 1))
@@ -80,22 +81,22 @@ Func QuickMIS($ValueReturned, $directory, $left = 0, $top = 0, $right = $g_iGAME
 						If $g_bDebugImageSave Then DebugQuickMIS($left, $top, "BC1_detected[" & $Name & "_" & $g_iQuickMISWOffSetX & "x" & $g_iQuickMISWOffSetY & "]")
 					EndIf
 					Return True
-				Case "CX"
+				Case "CX" ; coordinates of each image found - eg: $Array[0] = [X1, Y1] ; $Array[1] = [X2, Y2]
 					Local $result = ""
 					Local $KeyValue = StringSplit($res[0], "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 					For $i = 0 To UBound($KeyValue) - 1
-						Local $DLLRes = DllCallMyBot("GetProperty", "str", $KeyValue[$i], "str", "objectpoints")
+						$DLLRes = DllCallMyBot("GetProperty", "str", $KeyValue[$i], "str", "objectpoints")
 						If UBound(decodeSingleCoord($DLLRes[0])) > 1 Then $result &= $DLLRes[0] & "|"
 					Next
 					If StringRight($result, 1) = "|" Then $result = StringLeft($result, (StringLen($result) - 1))
 					If $g_bDebugSetlog Then SetDebugLog($ValueReturned & " Found: " & $result, $COLOR_PURPLE)
 					Local $CoordsInArray = StringSplit($result, "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 					Return $CoordsInArray
-				Case "N1"
+				Case "N1" ; name of first file found
 					Local $MultiImageSearchResult = StringSplit($res[0], "|")
 					Local $FilenameFound = StringSplit($MultiImageSearchResult[1], "_")
 					Return $FilenameFound[1]
-				Case "NX"
+				Case "NX" ; names of all files found
 					Local $AllFilenamesFound = ""
 					Local $MultiImageSearchResult = StringSplit($res[0], "|")
 					For $i = 1 To $MultiImageSearchResult[0]
@@ -104,18 +105,18 @@ Func QuickMIS($ValueReturned, $directory, $left = 0, $top = 0, $right = $g_iGAME
 					Next
 					If StringRight($AllFilenamesFound, 1) = "|" Then $AllFilenamesFound = StringLeft($AllFilenamesFound, (StringLen($AllFilenamesFound) - 1))
 					Return $AllFilenamesFound
-				Case "Q1"
+				Case "Q1" ; quantity of first/one tiles found
 					Local $result = ""
 					Local $KeyValue = StringSplit($res[0], "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 					For $i = 0 To UBound($KeyValue) - 1
-						Local $DLLRes = DllCallMyBot("GetProperty", "str", $KeyValue[$i], "str", "totalobjects")
+						$DLLRes = DllCallMyBot("GetProperty", "str", $KeyValue[$i], "str", "totalobjects")
 						$result &= $DLLRes[0] & "|"
 					Next
 					If StringRight($result, 1) = "|" Then $result = StringLeft($result, (StringLen($result) - 1))
 					If $g_bDebugSetlog Then SetDebugLog($ValueReturned & " Found: " & $result, $COLOR_PURPLE)
 					Local $QuantityInArray = StringSplit($result, "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 					Return $QuantityInArray[0]
-				Case "QX"
+				Case "QX" ; quantity of files found
 					Local $MultiImageSearchResult = StringSplit($res[0], "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 					Return UBound($MultiImageSearchResult)
 				Case "N1Cx1"
@@ -123,7 +124,7 @@ Func QuickMIS($ValueReturned, $directory, $left = 0, $top = 0, $right = $g_iGAME
 					Local $result = "", $Name = ""
 					Local $KeyValue = StringSplit($res[0], "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 					For $i = 0 To UBound($KeyValue) - 1
-						Local $DLLRes = DllCallMyBot("GetProperty", "str", $KeyValue[$i], "str", "objectpoints")
+						$DLLRes = DllCallMyBot("GetProperty", "str", $KeyValue[$i], "str", "objectpoints")
 						If UBound(decodeSingleCoord($DLLRes[0])) > 1 Then $result &= $DLLRes[0] & "|"
 					Next
 					If StringRight($result, 1) = "|" Then $result = StringLeft($result, (StringLen($result) - 1))
@@ -163,7 +164,7 @@ Func QuickMIS($ValueReturned, $directory, $left = 0, $top = 0, $right = $g_iGAME
 					Local $aResults[1][2] = [[-1, ""]]
 					Local $KeyValue = StringSplit($res[0], "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 					For $i = 0 To UBound($KeyValue) - 1
-						Local $DLLRes = DllCallMyBot("GetProperty", "str", $KeyValue[$i], "str", "objectpoints")
+						$DLLRes = DllCallMyBot("GetProperty", "str", $KeyValue[$i], "str", "objectpoints")
 						Local $Name = RetrieveImglocProperty($KeyValue[$i], "objectname")
 						Local $aCoords = StringSplit($DLLRes[0], "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 						For $j = 0 To UBound($aCoords) - 1

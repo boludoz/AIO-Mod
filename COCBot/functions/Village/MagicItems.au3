@@ -33,10 +33,6 @@ Func CollectMagicItems($bDebug = False)
 	#EndRegion - Dates - Team AIO Mod++
 	
 	Local $aGemSlotsMult = 195
-	Local $aGemSlots[4] = [302, 457, 0xE2F985, 25]
-	Local $aWaitGem[4] = [421, 407, 0xB9E484, 25]
-	
-	Local $aOcrPositions[3][2] = [[200, 439], [390, 439], [580, 439]]
 	Local $aResults[3] = ["", "", ""]
 	Local $aResultsProx[3] = ["", "", ""]
 	
@@ -62,12 +58,23 @@ Func CollectMagicItems($bDebug = False)
 		If Not $g_bRunState Or $g_bRestart Then Return
 		
 		; Check Daily Discounts Window
-		Local $aWaitX[4] = [707, 199, 0xFFFFFF, 15]
-		If _Wait4Pixel($aWaitX[0], $aWaitX[1], $aWaitX[2], $aWaitX[3], 3000, 100, "IsGemOpen") Then ; White in 'X'.
+		Local $aWaitX[4] = [703, 191, 0xFFFFFF, 25]
+		Local $bCanFix = _Wait4Pixel($aWaitX[0], $aWaitX[1], $aWaitX[2], $aWaitX[3], 3000, 100, "IsGemOpen")		
+		Local $eFixNoEvent = 0
+		Local $aBlueItem[4] = [714, 180, 0xFFFFFF, 25]
+		If _ColorCheck(_GetPixelColor($aBlueItem[0], $aBlueItem[1], True), Hex($aBlueItem[2], 6), $aBlueItem[3]) Then
+			$eFixNoEvent = -9
+		EndIf
+		
+		If $bCanFix = True Then ; White in 'X'.
+		
+			Local $aGemSlots[4] = [302, 457 + $eFixNoEvent, 0xE6FC8F, 35] ; 497
+			Local $aWaitGem[4] = [421, 407, 0xB9E484, 25]
+			Local $aOcrPositions[3][2] = [[200, 439], [390, 439], [580, 439]]
 
 			; Dates - Team AIO Mod++
 			If Not $bDebug Then 
-				MagicItemsTime()
+				MagicItemsTime(307, 475 + $eFixNoEvent, 240, 42)
 			EndIf
 			
 			If Not $g_bRunState Then Return
@@ -100,8 +107,10 @@ Func CollectMagicItems($bDebug = False)
 					
 					If ($g_bChkCollectMagicItems = True And StringLeft($aResultsProx[$i], 2) = "OK" And $bNoGems = False) Or ($aResults[$i] = "FREE" And $g_bChkCollectFreeMagicItems = True) Then
 						
-						If _ColorCheck(_GetPixelColor($aGemSlots[0] + ($aGemSlotsMult * $i), $aGemSlots[1], True), Hex($aGemSlots[2], 6), $aGemSlots[3]) = False Then 
+						Local $hPixelGem = _GetPixelColor($aGemSlots[0] + ($aGemSlotsMult * $i), $aGemSlots[1], True)
+						If _ColorCheck($hPixelGem, Hex($aGemSlots[2], 6), $aGemSlots[3]) = False Then 
 							SetLog("Gem in gray, it is not possible to buy.", $COLOR_INFO)
+							If $bDebug Then SetLog("Daily Discounts gem: " & $i & " | X: " & $aGemSlots[0] + ($aGemSlotsMult * $i) & " Y: " & $aGemSlots[1] & " H: 0x" & $hPixelGem, $COLOR_DEBUG)
 							ContinueLoop
 						EndIf
 						
@@ -131,7 +140,6 @@ Func CollectMagicItems($bDebug = False)
 									ClickAway()
 									If _Sleep(300) Then Return
 								EndIf
-								
 							EndIf
 							
 						EndIf
@@ -152,6 +160,9 @@ Func CollectMagicItems($bDebug = False)
 				
 				SetLog("Daily Discounts: " & $aResultsProx[0] & " " & $aResults[0] & " | " & $aResultsProx[1] & " " & $aResults[1] & " | " & $aResultsProx[2] & " " & $aResults[2], $COLOR_INFO)
 				
+			Else
+				SetLog("No acquirable items were found.", $COLOR_ERROR)
+				ClickAway(True)     ;Click Away
 			EndIf
 		Else
 			SetLog("CollectMagicItems : badly.", $COLOR_ERROR)
@@ -184,6 +195,7 @@ Func MagicItemsTime($x_start = 307, $y_start = 484, $iWidth = 240, $iHeight = 42
 	EndIf
 	If $iSeconds < 3600 Then $iSeconds = Round(3600 * Random(1.4, 2.8)) ; 3600 Constant = 1 hour
 	$g_sDateAndTimeMagicItems = _DateAdd('s', $iSeconds, _NowCalcDate() & " " & _NowTime(5))
+	SetDebugLog("$g_sDateAndTimeMagicItems: " & $g_sDateAndTimeMagicItems)
 EndFunc   ;==>MagicItemsTime
 
 Func GetDealIndex($sName)
@@ -202,6 +214,8 @@ Func GetDealIndex($sName)
 			Return $g_eDDPotionPower
 		Case "HeroPotion"
 			Return $g_eDDPotionHero
+		Case "SuperPotion"
+			Return $g_eDDSuperPotion
 		Case "WallRing"
 			Local $sSearchDiamond = GetDiamondFromRect("140,240,720,485")
 			If UBound(decodeSingleCoord(findImage("WallRingAmountx5", $g_sImgDDWallRingx5, $sSearchDiamond, 1, True))) > 1 Then
