@@ -35,21 +35,23 @@ Func BoostSuperTroop()
 
 	Local $bCheckBottom = False, $aBarD = 0
 	Local $iIndex = -1, $aSuperT = -1, $aClock = -1, $aTmp = -1
+
 	ClickAway()
 	If QuickMIS("BC1", $g_sImgBoostTroopsBarrel, 0, 0, 220, 225, True, False) Then
 		SetLog("Found Barrel at " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_DEBUG)
 		Click($g_iQuickMISX, $g_iQuickMISY, 1)
-
+		
+		Local $aColors[3][3] = [[0x685C50, 20, 0], [0x685C50, 100, 0], [0x685C50, 190, 15]]
 		If IsSTPage() = True Then
 			For $iBoosted = 1 To $iMaxSupersTroop
 				$iIndex = -1
-				_CaptureRegions()
+				_CaptureRegion2()
 				Local $aSuperT = FindMultipleQuick($g_sImgBoostTroopsIcons, 0, "140, 235, 720, 565", False)
 				Local $aClock = FindMultipleQuick($g_sImgBoostTroopsClock, 0, "140, 235, 720, 565", False)
 
 				; Barra divisoria.
 				$bCheckBottom = False
-				$aBarD = _MultiPixelSearch(140, 320, 715, 560, 10, 1, Hex(0x685C50, 6), StringSplit2d("0x685C50-20-0|0x685C50-100-0|0x685C50-190-15"), 20)
+				$aBarD = _MultiPixelSearch(140, 320, 715, 560, 10, 1, Hex(0x685C50, 6), $aColors, 20)
 				If $aBarD <> 0 Then
 					If $aBarD[1] < 350 And $aBarD[1] > 385 Then
 						$bCheckBottom = True
@@ -86,19 +88,23 @@ Func BoostSuperTroop()
 						For $i = 0 To 1
 							If $aCmbTmp[$i] > 0 Then
 								$iIndex = _ArraySearch($g_asTroopShortNames, $aSuperT[$iImgs][0])
-								If Not @error And $iIndex <> -1 Then
-									; Boost Here
-									Click($aSuperT[$iImgs][1], $aSuperT[$iImgs][2], 1)
-									If _Sleep(1500) Then Return False
+								If Not @error And $iIndex > -1 Then
+									For $sTring In $g_asSuperTroopNames
+										If _CompareTexts($g_asTroopNamesPlural[$iIndex], $sTring) Then
+											; Boost Here
+											Click($aSuperT[$iImgs][1], $aSuperT[$iImgs][2], 1)
+											If _Sleep(1500) Then Return False
 
-									ClickAway()
-									; If BoostSystem() = True Then
-									;;;
-									ReDim $aAlreadyChecked[UBound($aAlreadyChecked) + 1]
-									$aAlreadyChecked[UBound($aAlreadyChecked) - 1] = $aSuperT[$iImgs][0]
-									;;;
-									; EndIf
-									; __________
+											ClickAway()
+											;;;
+											ReDim $aAlreadyChecked[UBound($aAlreadyChecked) + 1]
+											$aAlreadyChecked[UBound($aAlreadyChecked) - 1] = $aSuperT[$iImgs][0]
+											;;;
+											
+											; __________
+										
+										EndIf
+									Next
 								EndIf
 							EndIf
 							If $iActive = UBound($aAlreadyChecked) Then

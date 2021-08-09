@@ -359,9 +359,27 @@ Func _LevDis($s, $t)
 	Return $d[$n][$m]
 EndFunc   ;==>_LevDis
 
+Func _CompareTexts($sText = "", $sText2 = "", $iPerc = 65)
+	Local $iC = 0, $iC2 = 0
+	Local $iText = StringLen($sText)
+	Local $iText2 = StringLen($sText2)	
+	Local $iLev = _LevDis($sText, $sText2)
+
+	$iC = ((_Max($iText, $iText2) - $iLev) * 100)
+	$iC2 = ((_Max($iText, $iText2)) * 100)
+	$iC = (_Min($iC, $iC2) / _Max($iC, $iC2)) * 100
+	
+	If $iLev = 0 Or ($iC >= $iPerc) Then
+		Return True
+	EndIf
+	
+	Return False
+EndFunc   ;==>_CompareTexts
+
 ;	https://link.clashofclans.com/en?action=CopyArmy&army=u20x3-3x23
 ; Func ()
 	; 0xFF1919
 	; AndroidAdbSendShellCommand("am start -n " & $g_sAndroidGamePackage & "/" & $g_sAndroidGameClass & " -a android.intent.action.VIEW -d ' "& $s & "'", Default)
 
-; EndFunc   ;==>SecureClick
+; EndFunc   ;==>
+
