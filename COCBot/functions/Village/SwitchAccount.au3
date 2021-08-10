@@ -1048,7 +1048,7 @@ Func SCIDragIfNeeded($iSCIDAccount)
 	If $iSCIDAccount < 4 Then Return
 	
 	If $g_bAndroidAdbClickDragScript Then
-		ClickDrag(450, 600, 450, 600 - (95 * ($iSCIDAccount - 3)), 2000) ; drag a multiple of 95 pixels up for how many accounts down it is
+		ClickDrag(748, 720, 748, 720-(90*($iSCIDAccount-3)), 2000) ; drag a multiple of 90 pixels up for how many accounts down it is
 	Else
 		ClickDrag(444, 720, 444, 720 - (62 * ($iSCIDAccount-3)), 2000, True) ; Custom fix - Team AIO Mod++
 	EndIf
