@@ -748,7 +748,7 @@ Func runBot() ;Bot that runs everything in order
 		FirstCheck()
 	EndIf
 
-    If Not $g_bRunState Then Return
+	If Not $g_bRunState Then Return
 	#EndRegion - Custom BB - Team AIO Mod++
 
 	While 1
@@ -794,9 +794,9 @@ Func runBot() ;Bot that runs everything in order
 
 		If CheckAndroidReboot() Then ContinueLoop
 
-        If Not $g_bIsClientSyncError Then ;ARCH:  was " And Not $g_bIsSearchLimit"
-            SetDebugLog("ARCH: Top of loop", $COLOR_DEBUG)
-            If $g_bIsSearchLimit Then SetLog("Search limit hit", $COLOR_INFO)
+		If Not $g_bIsClientSyncError Then ;ARCH:  was " And Not $g_bIsSearchLimit"
+			SetDebugLog("ARCH: Top of loop", $COLOR_DEBUG)
+			If $g_bIsSearchLimit Then SetLog("Search limit hit", $COLOR_INFO)
 			checkMainScreen(False)
 			If $g_bRestart Then ContinueLoop
 			If RandomSleep($DELAYRUNBOT3) Then Return
@@ -888,8 +888,8 @@ Func runBot() ;Bot that runs everything in order
 				If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 			Next
 
-            ;ARCH Trying it out here.
-            If Not $g_bIsSearchLimit Then _ClanGames() ; move to here to pick event before going to BB.
+			;ARCH Trying it out here.
+			If Not $g_bIsSearchLimit Then _ClanGames() ; move to here to pick event before going to BB.
 
 			; Ensure, that wall upgrade is last of the upgrades
 			Local $aRndFuncList = ['BuilderBase', 'UpgradeWall']
@@ -939,18 +939,18 @@ Func runBot() ;Bot that runs everything in order
 			Local $sRestartText = $g_bIsSearchLimit ? " due search limit" : " after Out of Sync Error: Attack Now"
 			$g_bIsClientSyncError = False ; Reset flag (avoid infinite loop) - Team AIO Mod++
 			SetLog("Restarted" & $sRestartText, $COLOR_INFO)
-            ;Use "CheckDonateOften" setting to run loop on hitting SearchLimit
-            If $g_bIsSearchLimit and $g_bCheckDonateOften Then
-                SetDebugLog("ARCH: Clearing booleans", $COLOR_DEBUG)
-                $g_bIsClientSyncError = False
-                $g_bRestart = False
-            EndIf
+			;Use "CheckDonateOften" setting to run loop on hitting SearchLimit
+			If $g_bIsSearchLimit And $g_bCheckDonateOften Then
+				SetDebugLog("ARCH: Clearing booleans", $COLOR_DEBUG)
+				$g_bIsClientSyncError = False
+				$g_bRestart = False
+			EndIf
 			If RandomSleep($DELAYRUNBOT3) Then Return
 			;  OCR read current Village Trophies when OOS restart maybe due PB or else DropTrophy skips one attack cycle after OOS
 			$g_aiCurrentLoot[$eLootTrophy] = Number(getTrophyMainScreen($aTrophies[0], $aTrophies[1]))
 			If $g_bDebugSetlog Then SetDebugLog("Runbot Trophy Count: " & $g_aiCurrentLoot[$eLootTrophy], $COLOR_DEBUG)
-            If Not $g_bIsSearchLimit or Not $g_bCheckDonateOften Then AttackMain() ;If Search Limit hit, do main loop.
-            SetDebugLog("ARCH: Not case on SearchLimit or CheckDonateOften",$COLOR_DEBUG)
+			If Not $g_bIsSearchLimit Or Not $g_bCheckDonateOften Then AttackMain() ;If Search Limit hit, do main loop.
+			SetDebugLog("ARCH: Not case on SearchLimit or CheckDonateOften", $COLOR_DEBUG)
 			If Not $g_bRunState Then Return
 			$g_bSkipFirstZoomout = False
 			If $g_bOutOfGold Then
@@ -1185,19 +1185,19 @@ Func AttackMain() ;Main control for attack functions
 
 				If RandomSleep($DELAYATTACKMAIN2) Then Return
 
-			; If all is ok get out.
+				; If all is ok get out.
 			Until $g_bBadPrepareSearch = False
 			Return True
 			#EndRegion - Custom PrepareSearch - Team AIO Mod++
 
-		#Region - Custom fix - Team AIO Mod++
+			#Region - Custom fix - Team AIO Mod++
 		ElseIf $g_bDropTrophyEnable And Number($g_aiCurrentLoot[$eLootTrophy]) > Number($g_iDropTrophyMax) Then ;If current trophy above max trophy, try drop first
 			DropTrophy()
 			If Not $g_bRunState Then Return
 			If $g_bRestart Then Return
 			If _Sleep($DELAYATTACKMAIN1) Then Return
 			Return ; return to runbot, refill armycamps
-		#EndRegion - Custom fix - Team AIO Mod++
+			#EndRegion - Custom fix - Team AIO Mod++
 		Else
 			SetLog("None of search condition match:", $COLOR_WARNING)
 			SetLog("Search, Trophy or Army Camp % are out of range in search setting", $COLOR_WARNING)
@@ -1224,11 +1224,11 @@ Func Attack() ;Selects which algorithm
 		Local $Nside = ChkSmartFarm()
 		If Not $g_bRunState Then Return
 		AttackSmartFarm($Nside[1], $Nside[2])
-	#Region - SmartMilk
+		#Region - SmartMilk
 	ElseIf $g_iMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 3 Then
 		If $g_bDebugSetlog Then SetDebugLog("Starting Smart Milk attack", $COLOR_ERROR)
 		SmartFarmMilk()
-	#EndRegion - SmartMilk
+		#EndRegion - SmartMilk
 	Else
 		If $g_bDebugSetlog Then SetDebugLog("start standard attack", $COLOR_ERROR)
 		algorithm_AllTroops()
@@ -1241,15 +1241,15 @@ Func _RunFunction($sAction)
 	If $g_bDebugFuncCall Then SetLog('@ _RunFunction @ (1143) :(' & @MIN & ':' & @SEC & ')' & $sAction & @CRLF, $COLOR_ACTION) ;### Function Trace
 	FuncEnter(_RunFunction)
 
-    #Region - Custom BB - Team AIO Mod++
+	#Region - Custom BB - Team AIO Mod++
 	If $g_bOnlyBuilderBase Then
 		$g_bStayOnBuilderBase = True
 		$g_bRestart = False
 		Return
 	EndIf
-    #EndRegion - Custom BB - Team AIO Mod++
+	#EndRegion - Custom BB - Team AIO Mod++
 
-    If $g_bChkOnlyFarm Then
+	If $g_bChkOnlyFarm Then
 		Switch $sAction
 			Case 'UpgradeHeroes', 'Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'BuilderBase', 'UpgradeWall', 'LabCheck', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'ReplayShare', "BotHumanization", "ChatActions"
 				SetLog("- Skipped by only farm mode : " & $sAction, $COLOR_INFO)
@@ -1359,16 +1359,20 @@ Func __RunFunction($sAction)
 			BuilderBase()
 		Case "CollectAchievements"
 			CollectAchievements()
- 		Case "CollectFreeMagicItems"
- 			CollectMagicItems()
-		; BotHumanization - Team AIO Mod++
+		Case "CollectFreeMagicItems"
+			CollectMagicItems()
+			; BotHumanization - Team AIO Mod++
 		Case "BotHumanization"
 			BotHumanization()
-		; ChatActions - Team AIO Mod++
+			; ChatActions - Team AIO Mod++
 		Case "ChatActions"
 			ChatActions()
-        Case "PetHouse"
+		Case "PetHouse"
 			PetHouse()
+		; BoostSuperTroop - xbebenk - Team AIO Mod++
+        Case "BoostSuperTroop"
+            BoostSuperTroop()
+            _Sleep($DELAYRUNBOT3)
 		Case ""
 			SetDebugLog("Function call doesn't support empty string, please review array size", $COLOR_ERROR)
 		Case Else
@@ -1396,14 +1400,14 @@ Func FirstCheck()
 	;;;;;Check Town Hall level
 	Local $iTownHallLevel = $g_iTownHallLevel
 	SetDebugLog("Detecting Town Hall level", $COLOR_INFO)
-	SetDebugLog("Town Hall level is currently saved as " &  $g_iTownHallLevel, $COLOR_INFO)
+	SetDebugLog("Town Hall level is currently saved as " & $g_iTownHallLevel, $COLOR_INFO)
 	imglocTHSearch(False, True, True)
-	SetDebugLog("Detected Town Hall level is " &  $g_iTownHallLevel, $COLOR_INFO)
+	SetDebugLog("Detected Town Hall level is " & $g_iTownHallLevel, $COLOR_INFO)
 	If $g_iTownHallLevel = $iTownHallLevel Then
 		SetDebugLog("Town Hall level has not changed", $COLOR_INFO)
 	Else
 		SetDebugLog("Town Hall level has changed!", $COLOR_INFO)
-		SetDebugLog("New Town hall level detected as " &  $g_iTownHallLevel, $COLOR_INFO)
+		SetDebugLog("New Town hall level detected as " & $g_iTownHallLevel, $COLOR_INFO)
 		saveConfig()
 		applyConfig()
 	EndIf
@@ -1420,7 +1424,7 @@ Func FirstCheck()
 	#EndRegion - Team AIO MOD++
 
 	If Not $g_bRunState Then Return
-    If $g_bRestart Then Return
+	If $g_bRestart Then Return
 
 	If $g_bOutOfGold And (Number($g_aiCurrentLoot[$eLootGold]) >= Number($g_iTxtRestartGold)) Then ; check if enough gold to begin searching again
 		$g_bOutOfGold = False ; reset out of gold flag
@@ -1437,13 +1441,33 @@ Func FirstCheck()
 	If _Sleep($DELAYRUNBOT5) Then Return
 	checkMainScreen(False)
 	; If Not $g_bRunState Then Return
-    If $g_bRestart Then Return
+	If $g_bRestart Then Return
 
 	If BotCommand() Then btnStop()
+	
+	#Region - Custom - xbebenk - Team AIO Mod++
+    _RunFunction('BoostSuperTroop')
+    ; PrepareDonateCC()
+    ; Local $aRndFuncList = ['CleanYard', 'CleanYard','RequestCC', 'DonateCC,Train', 'UpgradeBuilding', 'Laboratory', 'UpgradeWall']
+    ; _ArrayShuffle($aRndFuncList)
+    ; For $Index In $aRndFuncList
+        ; If Not $g_bRunState Then Return
+        ; _RunFunction($Index)
+        ; If $g_bRestart Then ContinueLoop
+        ; If CheckAndroidReboot() Then ContinueLoop
+        ; If checkObstacles() Then ContinueLoop
+    ; Next
+	
+    
+    If Not $g_bChkOnlyFarm And ProfileSwitchAccountEnabled() And $g_iCommandStop = 0 Then 
+        _RunFunction('BuilderBase')
+        checkSwitchAcc()
+    Endif    
+	#EndRegion - Custom - xbebenk - Team AIO Mod++
 
 	If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
 		; VERIFY THE TROOPS AND ATTACK IF IS FULL
-		If $g_bDebugSetlog Then SetDebugLog("-- FirstCheck on Train --")
+		SetLog("-- FirstCheck on Train --", $COLOR_INFO)
 		TrainSystem()
 		If Not $g_bRunState Then Return
 		If $g_bDebugSetlog Then SetDebugLog("Are you ready? " & String($g_bIsFullArmywithHeroesAndSpells))
@@ -1457,7 +1481,7 @@ Func FirstCheck()
 				AttackMain()
 				; Custom fix - Team AIO Mod++
 				; If Not $g_bRunState Then Return
-                If $g_bRestart Then Return
+				If $g_bRestart Then Return
 
 				$g_bSkipFirstZoomout = False
 				If $g_bOutOfGold Then
@@ -1477,10 +1501,10 @@ EndFunc   ;==>FirstCheck
 
 Func SetSAtk($attack = False)
 
-   If $attack = True Then
-       $g_bTestSceneryAttack = True
-   Else
-       $g_bTestSceneryAttack = False
-   EndIf
+	If $attack = True Then
+		$g_bTestSceneryAttack = True
+	Else
+		$g_bTestSceneryAttack = False
+	EndIf
 
-EndFunc
+EndFunc   ;==>SetSAtk
