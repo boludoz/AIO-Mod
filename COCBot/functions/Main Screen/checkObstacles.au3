@@ -237,7 +237,15 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 			$posReloadBtnMaintenance[0] += Random(1, 66, 1)
 			$posReloadBtnMaintenance[1] += Random(1, 25, 1)
 			#Region - Discord - Team AIO Mod++
-			If ($g_bNotifyTGEnable Or $g_bNotifyDSEnable) And $g_bNotifyAlertMaintenance = True Then NotifyPushToTelegram("Maintenance Break Ended up.")
+			If $g_bNotifyAlertMaintenance = True Or $g_bNotifyAlertMaintenanceDS = True Then 
+				Local $sTring = "Maintenance Break Ended up."
+				If $g_bNotifyAlertMaintenance Then 
+					NotifyPushToTelegram($sTring)
+				EndIf
+				If $g_bNotifyAlertMaintenanceDS Then 
+					NotifyPushToDiscord($sTring)
+				EndIf
+			EndIf
 			#EndRegion - Discord - Team AIO Mod++
 			Return checkObstacles_ReloadCoC($posReloadBtnMaintenance, "MaintenanceSoonEndedUp", True)
 		EndIf
@@ -257,7 +265,15 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		EndIf
 		SetLog("Maintenance Break, waiting: " & $iMaintenanceWaitTime / 60000 & " minutes", $COLOR_ERROR)
 		#Region - Discord - Team AIO Mod++
-		If ($g_bNotifyTGEnable Or $g_bNotifyDSEnable) And $g_bNotifyAlertMaintenance = True Then NotifyPushToTelegram("Maintenance Break, waiting: " & $iMaintenanceWaitTime / 60000 & " minutes....")
+		If $g_bNotifyAlertMaintenance = True Or $g_bNotifyAlertMaintenanceDS = True Then 
+			Local $sTring = "Maintenance Break, waiting: " & $iMaintenanceWaitTime / 60000 & " minutes...."
+			If $g_bNotifyAlertMaintenance Then 
+				NotifyPushToTelegram($sTring)
+			EndIf
+			If $g_bNotifyAlertMaintenanceDS Then 
+				NotifyPushToDiscord($sTring)
+			EndIf
+		EndIf
 		#EndRegion - Discord - Team AIO Mod++
 		If $g_bForceSinglePBLogoff Then $g_bGForcePBTUpdate = True
 		If _SleepStatus($iMaintenanceWaitTime) Then Return
@@ -411,7 +427,8 @@ Func checkObstacles_StopBot($msg)
 	SetLog($msg, $COLOR_ERROR)
 	If TestCapture() Then Return $msg
 	#Region - Discord - Team AIO Mod++
-	If ($g_bNotifyTGEnable Or $g_bNotifyDSEnable) And $g_bNotifyAlertMaintenance Then NotifyPushToTelegram($msg)
+	If $g_bNotifyTGEnable And $g_bNotifyAlertMaintenance Then NotifyPushToTelegram($msg)
+	If $g_bNotifyDSEnable And $g_bNotifyAlertMaintenanceDS Then NotifyPushToDiscord($msg)
 	#EndRegion - Discord - Team AIO Mod++
 	OcrForceCaptureRegion(True)
 	Btnstop() ; stop bot

@@ -1057,6 +1057,7 @@ Global $g_sAttackFile = ""
 
 ;Telegram
 Global $g_bNotifyTGEnable = False, $g_sNotifyTGToken = ""
+Global $g_bNotifyBotOnline = False ; Team__AiO__MOD
 ;Remote Control
 Global $g_bNotifyRemoteEnable = False, $g_sNotifyOrigin = "", $g_bNotifyDeleteAllPushesOnStart = False, $g_bNotifyDeletePushesOlderThan = False, $g_iNotifyDeletePushesOlderThanHours = 4
 ;Alerts

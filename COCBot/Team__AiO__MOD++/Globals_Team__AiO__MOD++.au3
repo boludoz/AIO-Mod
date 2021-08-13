@@ -93,8 +93,19 @@ Global $g_ahCmbSLabUpgradeOrder[6] = [-1, -1, -1, -1, -1, -1]
 
 #Region - Discord - Team AIO Mod++
 Global $g_sTxtNotifyDSToken, $g_bNotifyDSEnable, $g_hChkNotifyDSEnable, _
-$g_hLblNotifyTGToken, $g_hLblNotifyDSToken, $g_hTxtNotifyDSToken, $g_sNotifyDSToken, $g_hCmbNotifyMode, $g_iNotifyMode, _
-$g_ahIcnNotifyMode[2]
+$g_hLblNotifyTGToken, $g_hLblNotifyDSToken, $g_sNotifyDSToken;, $g_iNotifyMode, $g_hCmbNotifyMode
+
+;Remote Control
+Global $g_bNotifyRemoteEnableDS = False, $g_sNotifyOriginDS = ""
+;Alerts
+Global $g_bNotifyAlertMatchFoundDS = False, $g_bNotifyAlerLastRaidIMGDS = False, $g_bNotifyAlerLastRaidTXTDS = False, $g_bNotifyAlertCampFullDS = False, _
+		$g_bNotifyAlertUpgradeWallsDS = False, $g_bNotifyAlertOutOfSyncDS = False, $g_bNotifyAlertTakeBreakDS = False, $g_bNotifyAlertBulderIdleDS = False, _
+		$g_bNotifyAlertVillageReportDS = False, $g_bNotifyAlertLastAttackDS = False, $g_bNotifyAlertAnotherDeviceDS = False, $g_bNotifyAlertMaintenanceDS = False, _
+		$g_bNotifyAlertBANDS = False, $g_bNotifyAlertBOTUpdateDS = False, $g_bNotifyAlertSmartWaitTimeDS = False, $g_bNotifyAlertLaboratoryIdleDS = False
+;Schedule
+Global $g_bNotifyScheduleHoursEnableDS = False, $g_bNotifyScheduleWeekDaysEnableDS = False
+Global $g_abNotifyScheduleHoursDS[24] = [False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False]
+Global $g_abNotifyScheduleWeekDaysDS[7] = [False, False, False, False, False, False, False]
 #EndRegion - Discord - Team AIO Mod++
 
 #Region - Setlog limit - Team AIO Mod++

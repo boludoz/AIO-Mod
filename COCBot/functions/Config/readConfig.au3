@@ -913,11 +913,6 @@ EndFunc   ;==>ReadConfig_600_17
 
 Func ReadConfig_600_18()
 	; <><><><> Village / Notify <><><><>
-	#Region - Discord - Team AIO Mod++
-	IniReadS($g_bNotifyDSEnable, $g_sProfileConfigPath, "notify", "DSEnabled", False, "Bool")
-	IniReadS($g_sNotifyDSToken, $g_sProfileConfigPath, "notify", "DSToken", "")
-	IniReadS($g_iNotifyMode, $g_sProfileConfigPath, "notify", "CmbNotify", 0, "Int")
-	#EndRegion - Discord - Team AIO Mod++
 	;Telegram
 	IniReadS($g_bNotifyTGEnable, $g_sProfileConfigPath, "notify", "TGEnabled", False, "Bool")
 	IniReadS($g_sNotifyTGToken, $g_sProfileConfigPath, "notify", "TGToken", "")
@@ -944,6 +939,35 @@ Func ReadConfig_600_18()
 	IniReadS($g_bNotifyAlertBOTUpdate, $g_sProfileConfigPath, "notify", "AlertPBUpdate", False, "Bool")
 	IniReadS($g_bNotifyAlertSmartWaitTime, $g_sProfileConfigPath, "notify", "AlertSmartWaitTime", False, "Bool")
 	IniReadS($g_bNotifyAlertLaboratoryIdle, $g_sProfileConfigPath, "notify", "AlertLaboratoryIdle", False, "Bool")
+	
+	#Region - Discord - Team AIO Mod++
+	IniReadS($g_bNotifyDSEnable, $g_sProfileConfigPath, "notifyDS", "DSEnabled", False, "Bool")
+	IniReadS($g_sNotifyDSToken, $g_sProfileConfigPath, "notifyDS", "DSToken", "https://discord.com/api/webhooks/XXX/XXX")
+	; IniReadS($g_iNotifyModeDS, $g_sProfileConfigPath, "notifyDS", "CmbNotify", 0, "Int")
+	
+	; Remote Control
+	; IniReadS($g_bNotifyRemoteEnableDS, $g_sProfileConfigPath, "notifyDS", "PBRemote", False, "Bool")
+	IniReadS($g_sNotifyOriginDS, $g_sProfileConfigPath, "notifyDS", "Origin", $g_sProfileCurrentName)
+	; IniReadS($g_iNotifyDeletePushesOlderThanHoursDS, $g_sProfileConfigPath, "notifyDS", "HoursPushBullet", 4, "int")
+	
+	; Alerts
+	IniReadS($g_bNotifyAlertMatchFoundDS, $g_sProfileConfigPath, "notifyDS", "AlertPBVMFound", False, "Bool")
+	IniReadS($g_bNotifyAlerLastRaidIMGDS, $g_sProfileConfigPath, "notifyDS", "AlertPBLastRaid", False, "Bool")
+	IniReadS($g_bNotifyAlerLastRaidTXTDS, $g_sProfileConfigPath, "notifyDS", "AlertPBLastRaidTxt", False, "Bool")
+	IniReadS($g_bNotifyAlertCampFullDS, $g_sProfileConfigPath, "notifyDS", "AlertPBCampFull", False, "Bool")
+	IniReadS($g_bNotifyAlertUpgradeWallsDS, $g_sProfileConfigPath, "notifyDS", "AlertPBWallUpgrade", False, "Bool")
+	IniReadS($g_bNotifyAlertOutOfSyncDS, $g_sProfileConfigPath, "notifyDS", "AlertPBOOS", False, "Bool")
+	IniReadS($g_bNotifyAlertTakeBreakDS, $g_sProfileConfigPath, "notifyDS", "AlertPBVBreak", False, "Bool")
+	IniReadS($g_bNotifyAlertBulderIdleDS, $g_sProfileConfigPath, "notifyDS", "AlertBuilderIdle", False, "Bool")
+	IniReadS($g_bNotifyAlertVillageReportDS, $g_sProfileConfigPath, "notifyDS", "AlertPBVillage", False, "Bool")
+	IniReadS($g_bNotifyAlertLastAttackDS, $g_sProfileConfigPath, "notifyDS", "AlertPBLastAttack", False, "Bool")
+	IniReadS($g_bNotifyAlertAnotherDeviceDS, $g_sProfileConfigPath, "notifyDS", "AlertPBOtherDevice", False, "Bool")
+	IniReadS($g_bNotifyAlertMaintenanceDS, $g_sProfileConfigPath, "notifyDS", "AlertPBMaintenance", False, "Bool")
+	IniReadS($g_bNotifyAlertBANDS, $g_sProfileConfigPath, "notifyDS", "AlertPBBAN", False, "Bool")
+	IniReadS($g_bNotifyAlertBOTUpdateDS, $g_sProfileConfigPath, "notifyDS", "AlertPBUpdate", False, "Bool")
+	IniReadS($g_bNotifyAlertSmartWaitTimeDS, $g_sProfileConfigPath, "notifyDS", "AlertSmartWaitTime", False, "Bool")
+	IniReadS($g_bNotifyAlertLaboratoryIdleDS, $g_sProfileConfigPath, "notifyDS", "AlertLaboratoryIdle", False, "Bool")
+	#EndRegion - Discord - Team AIO Mod++
 EndFunc   ;==>ReadConfig_600_18
 
 Func ReadConfig_600_19()

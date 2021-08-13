@@ -691,6 +691,9 @@ Func MainLoop($bCheckPrerequisitesOK = True)
 	;Reset Telegram message
 	NotifyGetLastMessageFromTelegram()
 	$g_iTGLastRemote = $g_sTGLast_UID
+	
+	;the message maybe failed, not try again because efficiency 
+	NotifyRemoteBotisOnline()
 
 	Local $diffhStarttime = 0
 	While 1

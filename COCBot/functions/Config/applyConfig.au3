@@ -979,13 +979,7 @@ Func ApplyConfig_600_18($TypeReadSave)
 		Case "Read"
 
 			GUICtrlSetState($g_hChkNotifyTGEnable, $g_bNotifyTGEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
-			#Region - Discord - Team AIO Mod++
-			GUICtrlSetState($g_hChkNotifyDSEnable, $g_bNotifyDSEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
 			chkPBTGenabled()
-			_GUICtrlComboBox_SetCurSel($g_hCmbNotifyMode, $g_iNotifyMode)
-			cmbNotifyMode()
-			GUICtrlSetData($g_hTxtNotifyDSToken, $g_sNotifyDSToken)
-			#EndRegion - Discord - Team AIO Mod++
 			GUICtrlSetData($g_hTxtNotifyTGToken, $g_sNotifyTGToken)
 			;Remote Control
 			GUICtrlSetState($g_hChkNotifyRemote, $g_bNotifyRemoteEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -1007,18 +1001,44 @@ Func ApplyConfig_600_18($TypeReadSave)
 			GUICtrlSetState($g_hChkNotifyBOTUpdate, $g_bNotifyAlertBOTUpdate ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkNotifyAlertSmartWaitTime, $g_bNotifyAlertSmartWaitTime ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkNotifyAlertLaboratoryIdle, $g_bNotifyAlertLaboratoryIdle ? $GUI_CHECKED : $GUI_UNCHECKED)
-		Case "Save"
+
 			#Region - Discord - Team AIO Mod++
-			$g_iNotifyMode = _GUICtrlComboBox_GetCurSel($g_hCmbNotifyMode)
-			$g_bNotifyDSEnable = (GUICtrlRead($g_hChkNotifyDSEnable) = $GUI_CHECKED)
-			$g_sNotifyDSToken = GUICtrlRead($g_hTxtNotifyDSToken)
+			GUICtrlSetState($g_hChkNotifyDSEnable, $g_bNotifyDSEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
+			chkPBDSenabled()
+			; _GUICtrlComboBox_SetCurSel($g_hCmbNotifyModeDS, $g_iNotifyMode)
+			GUICtrlSetData($g_hTxtNotifyDSToken, $g_sNotifyDSToken)
+
+			;Remote Control
+			; GUICtrlSetState($g_hChkNotifyRemote, $g_bNotifyRemoteEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetData($g_hTxtNotifyOriginDS, $g_sNotifyOriginDS)
+
+			;Alerts
+			GUICtrlSetState($g_hChkNotifyAlertMatchFoundDS, $g_bNotifyAlertMatchFoundDS ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkNotifyAlertLastRaidIMGDS, $g_bNotifyAlerLastRaidIMGDS ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkNotifyAlertUpgradeWallsDS, $g_bNotifyAlertUpgradeWallsDS ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkNotifyAlertOutOfSyncDS, $g_bNotifyAlertOutOfSyncDS ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkNotifyAlertTakeBreakDS, $g_bNotifyAlertTakeBreakDS ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkNotifyAlertAnotherDeviceDS, $g_bNotifyAlertAnotherDeviceDS ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkNotifyAlertLastRaidTXTDS, $g_bNotifyAlerLastRaidTXTDS ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkNotifyAlertCampFullDS, $g_bNotifyAlertCampFullDS ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkNotifyAlertVillageStatsDS, $g_bNotifyAlertVillageReportDS ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkNotifyAlertLastAttackDS, $g_bNotifyAlertLastAttackDS ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkNotifyAlertBuilderIdleDS, $g_bNotifyAlertBulderIdleDS ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkNotifyAlertMaintenanceDS, $g_bNotifyAlertMaintenanceDS ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkNotifyAlertBANDS, $g_bNotifyAlertBANDS ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkNotifyBOTUpdateDS, $g_bNotifyAlertBOTUpdateDS ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkNotifyAlertSmartWaitTimeDS, $g_bNotifyAlertSmartWaitTimeDS ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkNotifyAlertLaboratoryIdleDS, $g_bNotifyAlertLaboratoryIdleDS ? $GUI_CHECKED : $GUI_UNCHECKED)
 			#EndRegion - Discord - Team AIO Mod++
+		Case "Save"
 			; Telegram
 			$g_bNotifyTGEnable = (GUICtrlRead($g_hChkNotifyTGEnable) = $GUI_CHECKED)
 			$g_sNotifyTGToken = GUICtrlRead($g_hTxtNotifyTGToken)
+			
 			;Remote Control
 			$g_bNotifyRemoteEnable = (GUICtrlRead($g_hChkNotifyRemote) = $GUI_CHECKED)
 			$g_sNotifyOrigin = GUICtrlRead($g_hTxtNotifyOrigin)
+			
 			;Alerts
 			$g_bNotifyAlertMatchFound = (GUICtrlRead($g_hChkNotifyAlertMatchFound) = $GUI_CHECKED)
 			$g_bNotifyAlerLastRaidIMG = (GUICtrlRead($g_hChkNotifyAlertLastRaidIMG) = $GUI_CHECKED)
@@ -1036,6 +1056,34 @@ Func ApplyConfig_600_18($TypeReadSave)
 			$g_bNotifyAlertBOTUpdate = (GUICtrlRead($g_hChkNotifyBOTUpdate) = $GUI_CHECKED)
 			$g_bNotifyAlertSmartWaitTime = (GUICtrlRead($g_hChkNotifyAlertSmartWaitTime) = $GUI_CHECKED)
 			$g_bNotifyAlertLaboratoryIdle = (GUICtrlRead($g_hChkNotifyAlertLaboratoryIdle) = $GUI_CHECKED)
+			
+			#Region - Discord - Team AIO Mod++
+			; $g_iNotifyModeDS = _GUICtrlComboBox_GetCurSel($g_hCmbNotifyModeDS)
+			$g_bNotifyDSEnable = (GUICtrlRead($g_hChkNotifyDSEnable) = $GUI_CHECKED)
+			$g_sNotifyDSToken = GUICtrlRead($g_hTxtNotifyDSToken)
+
+			;Remote Control
+			; $g_bNotifyRemoteEnableDS = (GUICtrlRead($g_hChkNotifyRemoteDS) = $GUI_CHECKED)
+			$g_sNotifyOriginDS = GUICtrlRead($g_hTxtNotifyOriginDS)
+			
+			;Alerts
+			$g_bNotifyAlertMatchFoundDS = (GUICtrlRead($g_hChkNotifyAlertMatchFoundDS) = $GUI_CHECKED)
+			$g_bNotifyAlerLastRaidIMGDS = (GUICtrlRead($g_hChkNotifyAlertLastRaidIMGDS) = $GUI_CHECKED)
+			$g_bNotifyAlertUpgradeWallsDS = (GUICtrlRead($g_hChkNotifyAlertUpgradeWallsDS) = $GUI_CHECKED)
+			$g_bNotifyAlertOutOfSyncDS = (GUICtrlRead($g_hChkNotifyAlertOutOfSyncDS) = $GUI_CHECKED)
+			$g_bNotifyAlertTakeBreakDS = (GUICtrlRead($g_hChkNotifyAlertTakeBreakDS) = $GUI_CHECKED)
+			$g_bNotifyAlertAnotherDeviceDS = (GUICtrlRead($g_hChkNotifyAlertAnotherDeviceDS) = $GUI_CHECKED)
+			$g_bNotifyAlerLastRaidTXTDS = (GUICtrlRead($g_hChkNotifyAlertLastRaidTXTDS) = $GUI_CHECKED)
+			$g_bNotifyAlertCampFullDS = (GUICtrlRead($g_hChkNotifyAlertCampFullDS) = $GUI_CHECKED)
+			$g_bNotifyAlertVillageReportDS = (GUICtrlRead($g_hChkNotifyAlertVillageStatsDS) = $GUI_CHECKED)
+			$g_bNotifyAlertLastAttackDS = (GUICtrlRead($g_hChkNotifyAlertLastAttackDS) = $GUI_CHECKED)
+			$g_bNotifyAlertBulderIdleDS = (GUICtrlRead($g_hChkNotifyAlertBuilderIdleDS) = $GUI_CHECKED)
+			$g_bNotifyAlertMaintenanceDS = (GUICtrlRead($g_hChkNotifyAlertMaintenanceDS) = $GUI_CHECKED)
+			$g_bNotifyAlertBANDS = (GUICtrlRead($g_hChkNotifyAlertBANDS) = $GUI_CHECKED)
+			$g_bNotifyAlertBOTUpdateDS = (GUICtrlRead($g_hChkNotifyBOTUpdateDS) = $GUI_CHECKED)
+			$g_bNotifyAlertSmartWaitTimeDS = (GUICtrlRead($g_hChkNotifyAlertSmartWaitTimeDS) = $GUI_CHECKED)
+			$g_bNotifyAlertLaboratoryIdleDS = (GUICtrlRead($g_hChkNotifyAlertLaboratoryIdleDS) = $GUI_CHECKED)
+			#EndRegion - Discord - Team AIO Mod++
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_18
 

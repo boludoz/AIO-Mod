@@ -658,11 +658,6 @@ EndFunc   ;==>SaveConfig_600_17
 Func SaveConfig_600_18()
 	; <><><><> Village / Notify <><><><>
 	ApplyConfig_600_18(GetApplyConfigSaveAction())
-	#Region - Discord - Team AIO Mod++
-	_Ini_Add("notify", "DSEnabled", $g_bNotifyDSEnable ? 1 : 0)
-	_Ini_Add("notify", "DSToken", $g_sNotifyDSToken)
-	_Ini_Add("notify", "CmbNotify", $g_iNotifyMode)
-	#EndRegion - Discord - Team AIO Mod++
 	_Ini_Add("notify", "TGEnabled", $g_bNotifyTGEnable ? 1 : 0)
 	_Ini_Add("notify", "TGToken", $g_sNotifyTGToken)
 	_Ini_Add("notify", "TGUserID", $g_sTGChatID)
@@ -687,6 +682,36 @@ Func SaveConfig_600_18()
 	_Ini_Add("notify", "AlertPBUpdate", $g_bNotifyAlertBOTUpdate ? 1 : 0)
 	_Ini_Add("notify", "AlertSmartWaitTime", $g_bNotifyAlertSmartWaitTime ? 1 : 0)
 	_Ini_Add("notify", "AlertLaboratoryIdle", $g_bNotifyAlertLaboratoryIdle ? 1 : 0)
+	
+	#Region - Discord - Team AIO Mod++
+	_Ini_Add("notifyDS", "DSEnabled", $g_bNotifyDSEnable ? 1 : 0)
+	_Ini_Add("notifyDS", "DSToken", $g_sNotifyDSToken)
+	; _Ini_Add("notifyDS", "CmbNotify", $g_iNotifyModeDS)
+
+	;Remote Control
+	; _Ini_Add("notifyDS", "PBRemote", $g_bNotifyRemoteEnableDS ? 1 : 0)
+	; _Ini_Add("notifyDS", "HoursPushBullet", $g_iNotifyDeletePushesOlderThanHoursDS)
+	_Ini_Add("notifyDS", "Origin", $g_sNotifyOriginDS)
+	
+	;Alerts
+	_Ini_Add("notifyDS", "AlertPBVMFound", $g_bNotifyAlertMatchFoundDS ? 1 : 0)
+	_Ini_Add("notifyDS", "AlertPBLastRaid", $g_bNotifyAlerLastRaidIMGDS ? 1 : 0)
+	_Ini_Add("notifyDS", "AlertPBWallUpgrade", $g_bNotifyAlertUpgradeWallsDS ? 1 : 0)
+	_Ini_Add("notifyDS", "AlertPBOOS", $g_bNotifyAlertOutOfSyncDS ? 1 : 0)
+	_Ini_Add("notifyDS", "AlertPBVBreak", $g_bNotifyAlertTakeBreakDS ? 1 : 0)
+	_Ini_Add("notifyDS", "AlertPBOtherDevice", $g_bNotifyAlertAnotherDeviceDS ? 1 : 0)
+	_Ini_Add("notifyDS", "AlertPBLastRaidTxt", $g_bNotifyAlerLastRaidTXTDS ? 1 : 0)
+	_Ini_Add("notifyDS", "AlertPBCampFull", $g_bNotifyAlertCampFullDS ? 1 : 0)
+	_Ini_Add("notifyDS", "AlertPBVillage", $g_bNotifyAlertVillageReportDS ? 1 : 0)
+	_Ini_Add("notifyDS", "AlertPBLastAttack", $g_bNotifyAlertLastAttackDS ? 1 : 0)
+	_Ini_Add("notifyDS", "AlertBuilderIdle", $g_bNotifyAlertBulderIdleDS ? 1 : 0)
+	_Ini_Add("notifyDS", "AlertPBMaintenance", $g_bNotifyAlertMaintenanceDS ? 1 : 0)
+	_Ini_Add("notifyDS", "AlertPBBAN", $g_bNotifyAlertBANDS ? 1 : 0)
+	_Ini_Add("notifyDS", "AlertPBUpdate", $g_bNotifyAlertBOTUpdateDS ? 1 : 0)
+	_Ini_Add("notifyDS", "AlertSmartWaitTime", $g_bNotifyAlertSmartWaitTimeDS ? 1 : 0)
+	_Ini_Add("notifyDS", "AlertLaboratoryIdle", $g_bNotifyAlertLaboratoryIdleDS ? 1 : 0)
+	#EndRegion - Discord - Team AIO Mod++
+
 EndFunc   ;==>SaveConfig_600_18
 
 Func SaveConfig_600_19()

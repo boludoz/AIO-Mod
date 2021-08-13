@@ -13,45 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 #include-once
-#Region - Discord - Team AIO Mod++
-Func cmbNotifyMode()
-	$g_iNotifyMode = _GUICtrlComboBox_GetCurSel($g_hCmbNotifyMode)
-	Switch $g_iNotifyMode
-		Case 0 ; Telegram.
-			; $g_hLblNotifyTGToken, $g_hTxtNotifyTGToken
-			GUICtrlSetState($g_hLblNotifyTGToken, $GUI_SHOW)
-			GUICtrlSetState($g_hTxtNotifyTGToken, $GUI_SHOW)
-			GUICtrlSetState($g_hLblNotifyDSToken, $GUI_HIDE)
-			GUICtrlSetState($g_hTxtNotifyDSToken, $GUI_HIDE)
-			GUICtrlSetState($g_hChkNotifyRemote, $GUI_SHOW)
-			GUICtrlSetState($g_ahIcnNotifyMode[1], $GUI_HIDE)
-			GUICtrlSetState($g_ahIcnNotifyMode[0], $GUI_SHOW)
-			GUICtrlSetState($g_hChkNotifyTGEnable, $GUI_SHOW)
-			GUICtrlSetState($g_hChkNotifyDSEnable, $GUI_HIDE)
-		Case 1 ; Discord.
-			; $g_hLblNotifyDSToken, $g_hTxtNotifyDSToken
-			GUICtrlSetState($g_hLblNotifyDSToken, $GUI_SHOW)
-			GUICtrlSetState($g_hTxtNotifyDSToken, $GUI_SHOW)
-			GUICtrlSetState($g_hLblNotifyTGToken, $GUI_HIDE)
-			GUICtrlSetState($g_hTxtNotifyTGToken, $GUI_HIDE)
-			GUICtrlSetState($g_hChkNotifyRemote, $GUI_HIDE)
-			GUICtrlSetState($g_ahIcnNotifyMode[0], $GUI_HIDE)
-			GUICtrlSetState($g_ahIcnNotifyMode[1], $GUI_SHOW)
-			GUICtrlSetState($g_hChkNotifyDSEnable, $GUI_SHOW)
-			GUICtrlSetState($g_hChkNotifyTGEnable, $GUI_HIDE)
-
-	EndSwitch
-EndFunc   ;==>cmbNotifyMode
-
-Func chkPBTGenabled()
-	If GUICtrlRead($g_hChkNotifyTGEnable) = $GUI_CHECKED Then
-		$g_bNotifyTGEnable = True
-		GUICtrlSetState($g_hTxtNotifyTGToken, $GUI_ENABLE)
-	Else
-		$g_bNotifyTGEnable = False
-		GUICtrlSetState($g_hTxtNotifyTGToken, $GUI_DISABLE)
-	EndIf
-
+Func chkPBDSenabled()
 	If GUICtrlRead($g_hChkNotifyDSEnable) = $GUI_CHECKED Then
 		$g_bNotifyDSEnable = True
 		GUICtrlSetState($g_hTxtNotifyDSToken, $GUI_ENABLE)
@@ -60,13 +22,108 @@ Func chkPBTGenabled()
 		GUICtrlSetState($g_hTxtNotifyDSToken, $GUI_DISABLE)
 	EndIf
 
+	If $g_bNotifyDSEnable = True Then
+		; GUICtrlSetState($g_hChkNotifyRemoteDS, $GUI_ENABLE)
+		GUICtrlSetState($g_hTxtNotifyOriginDS, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkNotifyAlertMatchFoundDS, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkNotifyAlertLastRaidIMGDS, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkNotifyAlertUpgradeWallsDS, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkNotifyAlertLastRaidTXTDS, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkNotifyAlertOutOfSyncDS, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkNotifyAlertTakeBreakDS, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkNotifyAlertVillageStatsDS, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkNotifyAlertLastAttackDS, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkNotifyAlertAnotherDeviceDS, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkNotifyAlertCampFullDS, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkNotifyAlertBuilderIdleDS, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkNotifyAlertMaintenanceDS, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkNotifyAlertBANDS, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkNotifyBOTUpdateDS, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkNotifyAlertSmartWaitTimeDS, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkNotifyAlertLaboratoryIdleDS, $GUI_ENABLE)
+	Else
+		; GUICtrlSetState($g_hChkNotifyRemoteDS, $GUI_DISABLE)
+		GUICtrlSetState($g_hTxtNotifyOriginDS, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkNotifyAlertMatchFoundDS, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkNotifyAlertLastRaidIMGDS, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkNotifyAlertUpgradeWallsDS, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkNotifyAlertLastRaidTXTDS, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkNotifyAlertOutOfSyncDS, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkNotifyAlertTakeBreakDS, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkNotifyAlertVillageStatsDS, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkNotifyAlertLastAttackDS, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkNotifyAlertAnotherDeviceDS, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkNotifyAlertCampFullDS, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkNotifyAlertBuilderIdleDS, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkNotifyAlertMaintenanceDS, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkNotifyAlertBANDS, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkNotifyBOTUpdateDS, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkNotifyAlertSmartWaitTimeDS, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkNotifyAlertLaboratoryIdleDS, $GUI_DISABLE)
+	EndIf
+
+EndFunc   ;==>chkPBDSenabled
+
+Func chkNotifyHoursDS()
+	Local $b = GUICtrlRead($g_hChkNotifyOnlyHoursDS) = $GUI_CHECKED
+	For $i = 0 To 23
+		GUICtrlSetState($g_hChkNotifyhoursDS[$i], $b ? $GUI_ENABLE : $GUI_DISABLE)
+	Next
+	_GUI_Value_STATE($b ? "ENABLE" : "DISABLE", $g_hChkNotifyOnlyWeekDaysDS&"#"&$g_hChkNotifyhoursE1DS&"#"&$g_hChkNotifyhoursE2DS)
+
+	If $b = False Then
+		GUICtrlSetState($g_hChkNotifyOnlyWeekDaysDS, $GUI_UNCHECKED)
+		chkNotifyWeekDaysDS()
+	EndIf
+EndFunc   ;==>chkNotifyHoursDS
+
+Func chkNotifyhoursE1DS()
+    Local $b = GUICtrlRead($g_hChkNotifyhoursE1DS) = $GUI_CHECKED And GUICtrlRead($g_hChkNotifyhoursDS[0]) = $GUI_CHECKED
+    For $i = 0 To 11
+	   GUICtrlSetState($g_hChkNotifyhoursDS[$i], $b ? $GUI_UNCHECKED : $GUI_CHECKED)
+    Next
+	Sleep(300)
+	GUICtrlSetState($g_hChkNotifyhoursE1DS, $GUI_UNCHECKED)
+EndFunc   ;==>chkNotifyhoursE1DS
+
+Func chkNotifyhoursE2DS()
+    Local $b = GUICtrlRead($g_hChkNotifyhoursE2DS) = $GUI_CHECKED And GUICtrlRead($g_hChkNotifyhoursDS[12]) = $GUI_CHECKED
+	For $i = 12 To 23
+	   GUICtrlSetState($g_hChkNotifyhoursDS[$i], $b ? $GUI_UNCHECKED : $GUI_CHECKED)
+    Next
+	Sleep(300)
+	GUICtrlSetState($g_hChkNotifyhoursE2DS, $GUI_UNCHECKED)
+EndFunc		;==>chkNotifyhoursE2DS
+
+Func chkNotifyWeekDaysDS()
+	Local $b = GUICtrlRead($g_hChkNotifyOnlyWeekDaysDS) = $GUI_CHECKED
+	For $i = 0 To 6
+		GUICtrlSetState($g_hChkNotifyWeekdaysDS[$i], $b ? $GUI_ENABLE : $GUI_DISABLE)
+	Next
+	GUICtrlSetState($g_ahChkNotifyWeekdaysEDS, $b ? $GUI_ENABLE : $GUI_DISABLE)
+EndFunc	;==>chkNotifyWeekDaysDS
+
+Func ChkNotifyWeekdaysEDS()
+	Local $b = BitOR(GUICtrlRead($g_hChkNotifyWeekdaysDS[0]), GUICtrlRead($g_hChkNotifyWeekdaysDS[1]), GUICtrlRead($g_hChkNotifyWeekdaysDS[2]), GUICtrlRead($g_hChkNotifyWeekdaysDS[3]), GUICtrlRead($g_hChkNotifyWeekdaysDS[4]), GUICtrlRead($g_hChkNotifyWeekdaysDS[5]), GUICtrlRead($g_hChkNotifyWeekdaysDS[6])) = $GUI_CHECKED
+	For $i = 0 To 6
+		GUICtrlSetState($g_hChkNotifyWeekdaysDS[$i], $b ? $GUI_UNCHECKED : $GUI_CHECKED)
+	Next
+	Sleep(300)
+	GUICtrlSetState($g_ahChkNotifyWeekdaysEDS, $GUI_UNCHECKED)
+EndFunc   ;==>ChkNotifyWeekdaysEDS
+
+Func chkPBTGenabled()
+
+	If GUICtrlRead($g_hChkNotifyTGEnable) = $GUI_CHECKED Then
+		$g_bNotifyTGEnable = True
+		GUICtrlSetState($g_hTxtNotifyTGToken, $GUI_ENABLE)
+	Else
+		$g_bNotifyTGEnable = False
+		GUICtrlSetState($g_hTxtNotifyTGToken, $GUI_DISABLE)
+	EndIf
+
 	If $g_bNotifyTGEnable = True Then
 		GUICtrlSetState($g_hChkNotifyRemote, $GUI_ENABLE)
-	Else
-		GUICtrlSetState($g_hChkNotifyRemote, $GUI_DISABLE)
-	EndIf
-	
-	If $g_bNotifyTGEnable = True Or $g_bNotifyDSEnable = True Then
 		GUICtrlSetState($g_hTxtNotifyOrigin, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkNotifyAlertMatchFound, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkNotifyAlertLastRaidIMG, $GUI_ENABLE)
@@ -85,6 +142,7 @@ Func chkPBTGenabled()
 		GUICtrlSetState($g_hChkNotifyAlertSmartWaitTime, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkNotifyAlertLaboratoryIdle, $GUI_ENABLE)
 	Else
+		GUICtrlSetState($g_hChkNotifyRemote, $GUI_DISABLE)
 		GUICtrlSetState($g_hTxtNotifyOrigin, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkNotifyAlertMatchFound, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkNotifyAlertLastRaidIMG, $GUI_DISABLE)
@@ -104,7 +162,6 @@ Func chkPBTGenabled()
 		GUICtrlSetState($g_hChkNotifyAlertLaboratoryIdle, $GUI_DISABLE)
 	EndIf
 EndFunc   ;==>chkPBTGenabled
-#EndRegion - Discord - Team AIO Mod++
 
 Func chkNotifyHours()
 	Local $b = GUICtrlRead($g_hChkNotifyOnlyHours) = $GUI_CHECKED
