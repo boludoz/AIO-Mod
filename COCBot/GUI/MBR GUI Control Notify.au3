@@ -13,6 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 #include-once
+#Region - Discord - Team AIO Mod++
 Func chkPBDSenabled()
 	If GUICtrlRead($g_hChkNotifyDSEnable) = $GUI_CHECKED Then
 		$g_bNotifyDSEnable = True
@@ -111,6 +112,7 @@ Func ChkNotifyWeekdaysEDS()
 	Sleep(300)
 	GUICtrlSetState($g_ahChkNotifyWeekdaysEDS, $GUI_UNCHECKED)
 EndFunc   ;==>ChkNotifyWeekdaysEDS
+#EndRegion - Discord - Team AIO Mod++
 
 Func chkPBTGenabled()
 

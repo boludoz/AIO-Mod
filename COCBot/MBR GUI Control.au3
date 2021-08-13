@@ -2202,7 +2202,7 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 
 		Case $g_hGUI_NOTIFY_TAB
 			; the icons for NOTIFY tab
-			Local $aIconIndex = [$eIcnTelegram]
+			Local $aIconIndex = [$eIcnTelegram, $eIcnDiscord] ; Discord - Team AIO Mod++
 
 		Case $g_hGUI_ATTACK_TAB
 			; the icons for attack tab

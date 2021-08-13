@@ -5,13 +5,14 @@
 ; Parameters ....: None
 ; Return values .: None
 ; Author ........:
-; Modified ......: CodeSlinger69 (2017)
+; Modified ......: CodeSlinger69 (2017), Bolina (13/08/2021)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+#Region - Discord - Team AIO Mod++
 #include-once
 Global $g_hGUI_NOTIFY = 0, $g_hGUI_NOTIFY_TAB = 0, $g_hGUI_NOTIFY_TAB_ITEM2 = 0, $g_hGUI_NOTIFY_TAB_ITEM3 = 0
 
@@ -53,7 +54,6 @@ Func CreateDiscordSubTab()
 	Local $x = 25, $y = 45
 	$g_hGrpNotifyDS = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Notify - Discord", "Group_01", "Discord Notify") & " " & $g_sNotifyVersion, $x - 20, $y - 20, $g_iSizeWGrpTab3, $g_iSizeHGrpTab3)
    
-   #Region - Discord - Team AIO Mod++
 		_GUICtrlCreateIcon ($g_sLibIconPath, $eIcnDiscord, $x + 3, $y, 32, 32)
 		$g_hChkNotifyDSEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Notify - Discord", "ChkNotifyDSEnable", "Enable Discord"), $x + 40, $y + 5)
 			GUICtrlSetOnEvent(-1, "chkPBDSenabled")
@@ -66,7 +66,6 @@ Func CreateDiscordSubTab()
             _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Notify", "LblNotifyDSToken_Info_01", "You need a Discord Webhook URL."))
             GUICtrlSetState(-1, $GUI_DISABLE)
 
-    #EndRegion - Discord - Team AIO Mod++
     
 	$y += 25
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Notify - Discord", "LblNotifyOrigin", "Origin") & ":", $x + 120, $y + 3, -1, -1, $SS_RIGHT)
@@ -216,6 +215,7 @@ Func CreateDiscordSubTab()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 EndFunc   ;==>CreateDiscordSubTab
+#EndRegion - Discord - Team AIO Mod++
 
 Global $g_hGrpNotify = 0
 
