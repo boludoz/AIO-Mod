@@ -22,6 +22,13 @@ Func BuyGuard($bDebug = False)
 	SetLog("Start Buy Two Hour Guard Check", $COLOR_INFO)
 	
 	If IsMainPage(5) Then
+		$g_iStatsLastAttack[$eLootTrophy] = getResourcesLootT(403, 402 + $g_iMidOffsetY)
+	
+		If $g_iStatsLastAttack[$eLootTrophy] >= 5000 Then
+			SetLog("Buy guard skipped in legend league, can't be possible.", $COLOR_INFO)
+			Return True
+		EndIf
+		
 		If CheckShield() Then
 			If IsShopOpen() Then
 				SetLog("Shop Window Opened.", $COLOR_SUCCESS)

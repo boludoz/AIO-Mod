@@ -1373,9 +1373,9 @@ Func __RunFunction($sAction)
 		Case "PetHouse"
 			PetHouse()
 		; BoostSuperTroop - xbebenk - Team AIO Mod++
-        Case "BoostSuperTroop"
-            BoostSuperTroop()
-            _Sleep($DELAYRUNBOT3)
+        ; Case "BoostSuperTroop"
+            ; BoostSuperTroop()
+            ; _Sleep($DELAYRUNBOT3)
 		Case ""
 			SetDebugLog("Function call doesn't support empty string, please review array size", $COLOR_ERROR)
 		Case Else
@@ -1449,7 +1449,7 @@ Func FirstCheck()
 	If BotCommand() Then btnStop()
 	
 	#Region - Custom - xbebenk - Team AIO Mod++
-    _RunFunction('BoostSuperTroop')
+    ; _RunFunction('BoostSuperTroop')
     ; PrepareDonateCC()
     ; Local $aRndFuncList = ['CleanYard', 'CleanYard','RequestCC', 'DonateCC,Train', 'UpgradeBuilding', 'Laboratory', 'UpgradeWall']
     ; _ArrayShuffle($aRndFuncList)
