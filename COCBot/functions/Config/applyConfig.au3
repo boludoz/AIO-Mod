@@ -1136,6 +1136,9 @@ Func ApplyConfig_600_22($TypeReadSave)
 				_GUICtrlComboBox_SetCurSel($g_ahCmbSuperTroops[$i], $g_iCmbSuperTroops[$i])
 				_GUICtrlSetImage($g_ahPicSuperTroops[$i], $g_sLibIconPath, $g_aSuperTroopsIcons[$g_iCmbSuperTroops[$i]])
 			Next
+			; Custom Super Troops - Team AIO Mod++
+			_GUICtrlComboBox_SetCurSel($g_hCmbSuperTroopsResources, $g_iCmbSuperTroopsResources)
+			cmbSuperTroopsResources()
 		Case "Save"
 			$g_iCmbBoostBarracks = _GUICtrlComboBox_GetCurSel($g_hCmbBoostBarracks)
 			$g_iCmbBoostSpellFactory = _GUICtrlComboBox_GetCurSel($g_hCmbBoostSpellFactory)
@@ -1152,6 +1155,8 @@ Func ApplyConfig_600_22($TypeReadSave)
 			For $i = 0 To $iMaxSupersTroop - 1
 				$g_iCmbSuperTroops[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbSuperTroops[$i])
 			Next
+			; Custom Super Troops - Team AIO Mod++
+			$g_iCmbSuperTroopsResources = _GUICtrlComboBox_GetCurSel($g_hCmbSuperTroopsResources)
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_22
 

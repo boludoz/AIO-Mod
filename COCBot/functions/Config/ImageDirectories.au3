@@ -61,6 +61,7 @@ Global $g_sImgBoostTroopsBarrel = @ScriptDir & "\imgxml\SuperTroops\Barrel\"
 Global $g_sImgBoostTroopsIcons = @ScriptDir & "\imgxml\SuperTroops\Troops\"
 Global $g_sImgBoostTroopsButtons = @ScriptDir & "\imgxml\SuperTroops\Buttons\"
 Global $g_sImgBoostTroopsClock = @ScriptDir & "\imgxml\SuperTroops\Clock\"
+Global $g_sImgBoostTroopsPotion = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\MagicItems\SuperTroops\"
 #EndRegion
 
 #Region Builder Base

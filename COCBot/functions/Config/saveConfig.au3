@@ -744,6 +744,8 @@ Func SaveConfig_600_22()
 	For $i = 0 To $iMaxSupersTroop - 1
 		_Ini_Add("SuperTroopsBoost", "SuperTroopsIndex" & $i, $g_iCmbSuperTroops[$i])
 	Next
+	; Custom Super Troops - Team AIO Mod++
+	_Ini_Add("SuperTroopsBoost", "CmbSuperTroopsResources", $g_iCmbSuperTroopsResources)
 EndFunc   ;==>SaveConfig_600_22
 
 Func SaveConfig_600_26()

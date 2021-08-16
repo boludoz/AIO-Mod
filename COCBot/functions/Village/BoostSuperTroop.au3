@@ -18,13 +18,13 @@ Func BoostSuperTroop($bTest = False)
 		Return False
 	EndIf
 
-    If $g_iCommandStop = 0 Or $g_iCommandStop = 3 Then ;halt attack.. do not boost now
-        If $g_bSkipBoostSuperTroopOnHalt Then 
-            SetLog("BoostSuperTroop() skipped, account on halt attack mode", $COLOR_DEBUG)
-            Return False
-        EndIf
-    EndIf
-    
+	; If $g_iCommandStop = 0 Or $g_iCommandStop = 3 Then ;halt attack.. do not boost now
+	; If $g_bSkipBoostSuperTroopOnHalt Then
+	; SetLog("BoostSuperTroop() skipped, account on halt attack mode", $COLOR_DEBUG)
+	; Return False
+	; EndIf
+	; EndIf
+
 	SetLog("Checking super troops.", $COLOR_INFO)
 
 	Local $aAlreadyChecked[0]
@@ -44,10 +44,11 @@ Func BoostSuperTroop($bTest = False)
 		Return False
 	EndIf
 
-	Local $bCheckBottom = False
-	Local $aImgBoostBtn1[4] = [463, 489, 744, 605]
-	Local $aImgBoostBtn2[4] = [160, 182, 727, 506]
+	Local $aImgBoostBtn1[4] = [400, 525, 750, 600]
+	Local $aImgBoostBtn2[4] = [100, 375, 750, 520]
 	Local $aBrownDown[4] = [150, 552, 0x685C50, 20]
+	
+	Local $bCheckBottom = False, $bBadTryPotion = False
 	Local $iIndex = -1, $aSuperT = -1, $aClock = -1, $aTmp = -1, $aBarD = 0, $iDist = 0, $sFilenameClock = "", $sFilenameST = ""
 	Local $aClockCoords[0], $aTroopsCoords[0], $aPoints[0], $sDiamond = GetDiamondFromRect("140, 235, 720, 565"), $sDiamondTroops = GetDiamondFromRect("140, 235, 720, 565")
 
@@ -59,11 +60,13 @@ Func BoostSuperTroop($bTest = False)
 			
 			; Check the brown pixel below, just below the black one to avoid confusion.
 			If IsSTPage() = True Then
-			
+				
 				If _Sleep(500) Then Return
 				
 				; Nada al azar.
-				For $iDrags = 1 To Round($iSuperTroopsCount / 4) + 1
+				Local $eBeDrag = Round($iSuperTroopsCount / 4)
+				If Mod($iSuperTroopsCount, 4) > 0 Then $eBeDrag += 1
+				For $iDrags = 1 To $eBeDrag
 
 					If IsSTPage(1) = True Then
 						
@@ -74,13 +77,17 @@ Func BoostSuperTroop($bTest = False)
 						Local $aSuperT = findMultiple($g_sImgBoostTroopsIcons, GetDiamondFromRect("140, 235, 720, 565"), GetDiamondFromRect("140, 235, 720, 565"), 0, 1000, 0, "objectname,objectlevel,objectpoints", False)
 						If UBound($aSuperT) > 0 And Not @error Then
 							For $aMatchedTroops In $aSuperT
+								If $iActive = UBound($aAlreadyChecked) Then
+									ExitLoop
+								EndIf
+								
 								$aPoints = decodeMultipleCoords($aMatchedTroops[2])
 								
 								If UBound($aPoints) > 0 Then
-								
+									
 									$sFilenameST = $aMatchedTroops[0] ; Filename
 									
-									For $i3 = 0 To UBound($aPoints) -1
+									For $i3 = 0 To UBound($aPoints) - 1
 										$aTroopsCoords = $aPoints[$i3] ; Coords
 										If $aTroopsCoords[1] > 472 Then
 											ExitLoop
@@ -90,7 +97,7 @@ Func BoostSuperTroop($bTest = False)
 									If $g_bDebugSetlog Then
 										SetDebugLog($sFilenameST & " found (" & $aTroopsCoords[0] & "," & $aTroopsCoords[1] & ")", $COLOR_SUCCESS)
 									EndIf
-	
+									
 									If _ArraySearch($aAlreadyChecked, $sFilenameST) > -1 And Not @error Then
 										If $bTest Then Setlog("Skip checked " & $sFilenameST & ".", $COLOR_DEBUG)
 										ContinueLoop
@@ -98,7 +105,7 @@ Func BoostSuperTroop($bTest = False)
 										If $bTest Then Setlog("Skip bottom " & $sFilenameST & " X: " & $aTroopsCoords[0] & " Y: " & $aTroopsCoords[1] & ".", $COLOR_DEBUG)
 										ContinueLoop
 									EndIf
-	
+									
 									; Check If is boosted
 									If $bTest Then SetLog("Stage 1 - Check If is boosted.", $COLOR_INFO)
 									
@@ -109,23 +116,23 @@ Func BoostSuperTroop($bTest = False)
 											$sFilenameClock = $aMatchedClocks[0] ; Filename
 											For $i = 0 To UBound($aPoints) - 1
 												$aClockCoords = $aPoints[$i] ; Coords
-	
+												
 												If $g_bDebugSetlog Then
 													SetDebugLog($sFilenameClock & " found (" & $aClockCoords[0] & "," & $aClockCoords[1] & ")", $COLOR_SUCCESS)
 												EndIf
-	
+												
 												$iDist = Pixel_Distance($aClockCoords[0], $aClockCoords[1], $aTroopsCoords[0], $aTroopsCoords[1])
 												SetDebuglog("Clock check in : " & $aClockCoords[0] & " / " & $aClockCoords[1] & " | " & $sFilenameST & " | Dist : " & $iDist)
 												If $iDist < 175 And ($aClockCoords[1] - $aTroopsCoords[1]) > 0 Then
 													If $bTest Then SetLog($sFilenameST & " is boosted.", $COLOR_INFO)
-	
+													
 													ReDim $aAlreadyChecked[UBound($aAlreadyChecked) + 1]
 													$aAlreadyChecked[UBound($aAlreadyChecked) - 1] = $sFilenameST
-	
+													
 													If $iActive = UBound($aAlreadyChecked) Then
 														ExitLoop 4
 													EndIf
-	
+													
 													ContinueLoop 3
 												EndIf
 											Next
@@ -134,84 +141,113 @@ Func BoostSuperTroop($bTest = False)
 									
 									If $bTest Then SetLog("Stage 2 - Boost.", $COLOR_INFO)
 									For $i = 0 To 1
-									
+										
 										; Verifica que el slot $i este activo.
 										If $aCmbTmp[$i] > -1 Then
-	
+											
 											; Devuelve el index en short name.
 											$iIndex = _ArraySearch($g_asTroopShortNames, $sFilenameST)
 											If $bTest Then SetLog("_ArraySearch : " & $sFilenameST & " | Index : Test 1")
 											If $iIndex > -1 Then
-	
+												
 												If $bTest Then SetLog("_ArraySearch : " & $g_asTroopShortNames[$iIndex] & " | " & $sFilenameST & " | Index : " & $iIndex)
-	
+												
 												If $g_asTroopNames[$iIndex] = $g_asSuperTroopNames[$aCmbTmp[$i]] Then
-	
+													
 													If $bTest Then SetLog("Compare texts : " & $g_asTroopNames[$iIndex] & " | " & $g_asSuperTroopNames[$aCmbTmp[$i]])
-	
+													
 													; Boost Here
 													Click($aTroopsCoords[0], $aTroopsCoords[1], 1)
 													If _Sleep(1500) Then Return False
-	
+													
 													If IsSTPageBoost() Then
 														Local $sTroopName = $g_asSuperTroopNames[$aCmbTmp[$i]]
-	
+
 														Setlog("Checking " & $sTroopName, $COLOR_INFO)
-	
+
 														ReDim $aAlreadyChecked[UBound($aAlreadyChecked) + 1]
 														$aAlreadyChecked[UBound($aAlreadyChecked) - 1] = $sFilenameST
-																											
-														If QuickMIS("BC1", $g_sImgBoostTroopsButtons, $aImgBoostBtn1[0], $aImgBoostBtn1[1], $aImgBoostBtn1[2], $aImgBoostBtn1[3], True, False) Then     ; Find image of dark elixir button.
-															Click($g_iQuickMISX + $aImgBoostBtn1[0], $g_iQuickMISY + $aImgBoostBtn1[1], 1)
-															If _Sleep(1000) Then Return
+														
+														Local $bPotionAvariable = QuickMIS("BC1", $g_sImgBoostTroopsPotion, $aImgBoostBtn1[0], $aImgBoostBtn1[1], $aImgBoostBtn1[2], $aImgBoostBtn1[3], True, False)
+														Local $aClickPotion[2] = [$g_iQuickMISX + $aImgBoostBtn1[0], $g_iQuickMISY + $aImgBoostBtn1[1]]
+														
+														Local $bOk = False
+														If $g_iCmbSuperTroopsResources = 1 And $bPotionAvariable = True And $bBadTryPotion = False Then
+															ClickP($aClickPotion, 1)
+															If _Sleep(1500) Then Return
 															
-															If QuickMIS("BC1", $g_sImgBoostTroopsButtons, $aImgBoostBtn2[0], $aImgBoostBtn2[1], $aImgBoostBtn2[2], $aImgBoostBtn2[3], True, False) Then     ; Find image of dark elixir button again (confirm upgrade).
+															If QuickMIS("BC1", $g_sImgBoostTroopsPotion, $aImgBoostBtn2[0], $aImgBoostBtn2[1], $aImgBoostBtn2[2], $aImgBoostBtn2[3], True, False) Then     ; Find image of dark elixir button again (confirm upgrade).
+																($bTest = False) ? (Click($g_iQuickMISX + $aImgBoostBtn2[0], $g_iQuickMISY + $aImgBoostBtn2[1], 1)) : (ClickAway())
+																If _Sleep(1500) Then Return
 																
-																; Do click boost
-																If $bTest Then
-																	SetLog("Click(" & $g_iQuickMISX + $aImgBoostBtn1[0] & "," & $g_iQuickMISY + $aImgBoostBtn1[1] & ", 1)", $COLOR_DEBUG)
-																	ClickAway()
-																	If _Sleep(500) Then Return
-																	
-																	ClickAway()
-																	If _Sleep(500) Then Return
-																	ExitLoop
-																EndIf
-																
-																Click($g_iQuickMISX + $aImgBoostBtn2[0], $g_iQuickMISY + $aImgBoostBtn2[1], 1)
+																If $bTest = True Then ClickAway()
+
 																Setlog("Successfully Boost " & $sTroopName, $COLOR_INFO)
-																ExitLoop
-																
-															Else
-																Setlog("Could not find dark elixir button for final upgrade " & $sTroopName, $COLOR_ERROR)
+																$bOk = True
 															EndIf
 															
+														ElseIf $bPotionAvariable = False Then
+															$bBadTryPotion = True
 														Else
-															Setlog("Could not find dark elixir button for upgrade " & $sTroopName, $COLOR_ERROR)
+															$bBadTryPotion = True
 														EndIf
-													EndIf
-	
-													If isGemOpen(True) Then
-														Setlog("No loot for boost.", $COLOR_ERROR)
 														
-														ClickAway()
-														If _Sleep(500) Then Return
+														If $bOk = False Then
+															If QuickMIS("BC1", $g_sImgBoostTroopsButtons, $aImgBoostBtn1[0], $aImgBoostBtn1[1], $aImgBoostBtn1[2], $aImgBoostBtn1[3], True, False) Then     ; Find image of dark elixir button.
+																Click($g_iQuickMISX + $aImgBoostBtn1[0], $g_iQuickMISY + $aImgBoostBtn1[1], 1)
+																If _Sleep(1500) Then Return
+																
+																If QuickMIS("BC1", $g_sImgBoostTroopsButtons, $aImgBoostBtn2[0], $aImgBoostBtn2[1], $aImgBoostBtn2[2], $aImgBoostBtn2[3], True, False) Then     ; Find image of dark elixir button again (confirm upgrade).
+																	($bTest = False) ? (Click($g_iQuickMISX + $aImgBoostBtn2[0], $g_iQuickMISY + $aImgBoostBtn2[1], 1)) : (ClickAway())
+																	If $bTest = True Then ClickAway()
+																	If _Sleep(1500) Then Return
+																	
+																	Setlog("Successfully Boost " & $sTroopName, $COLOR_INFO)
+																	
+																	If isGemOpen(True) Then
+																		Setlog("No loot for boost, trying potions.", $COLOR_ORANGE)
+																		If _Sleep(1500) Then Return
+																		
+																		If $bPotionAvariable = True And $bBadTryPotion = False And $g_iCmbSuperTroopsResources = 0 Then
+																			
+																			ClickP($aClickPotion, 1)
+																			If _Sleep(1500) Then Return
+																			
+																			If QuickMIS("BC1", $g_sImgBoostTroopsPotion, $aImgBoostBtn2[0], $aImgBoostBtn2[1], $aImgBoostBtn2[2], $aImgBoostBtn2[3], True, False) Then     ; Find image of dark elixir button again (confirm upgrade).
+																				($bTest = False) ? (Click($g_iQuickMISX + $aImgBoostBtn2[0], $g_iQuickMISY + $aImgBoostBtn2[1], 1)) : (ClickAway())
+																				If _Sleep(1500) Then Return
+																				If $bTest = True Then ClickAway()
+																				
+																				Setlog("Successfully Boost " & $sTroopName, $COLOR_INFO)
+																			EndIf
+																			
+																		EndIf
+																		
+																	EndIf
+																	ExitLoop
+																	
+																Else
+																	Setlog("Could not find dark elixir button for final upgrade " & $sTroopName, $COLOR_ERROR)
+																EndIf
+																
+															Else
+																Setlog("Could not find dark elixir button for upgrade " & $sTroopName, $COLOR_ERROR)
+															EndIf
+														EndIf
 														
-														ClickAway()
-														If _Sleep(500) Then Return
-														ExitLoop 3
 													EndIf
-	
+													; #cs
+													
 													If IsSTPageBoost(1) = True Then
 														ClickAway()
 														If _Sleep(500) Then Return
 													EndIf
-	
+													
 													If IsSTPage(1) = False Then
 														ClickAway()
 														If _Sleep(500) Then Return
 													EndIf
-	
+													; #ce
 												EndIf
 											EndIf
 										EndIf
@@ -236,12 +272,12 @@ Func BoostSuperTroop($bTest = False)
 					EndIf
 				Next
 			EndIf
-		Else 
+		Else
 			SetLog("Couldn't find super troop barrel.", $COLOR_ERROR)
 		EndIf
 
 		If UBound($aAlreadyChecked) > 0 Then
-			SetLog("Super troops active:", $COLOR_INFO)
+			SetLog("Super troops checked:", $COLOR_INFO)
 
 			For $i = 0 To UBound($aAlreadyChecked) - 1
 				SetLog("- " & $aAlreadyChecked[$i], $COLOR_INFO)
@@ -263,4 +299,3 @@ EndFunc   ;==>IsSTPage
 Func IsSTPageBoost($iTry = 15)
 	Return WaitforPixel(545, 165, 610, 220, Hex(0xF0D028, 6), 15, $iTry)
 EndFunc   ;==>IsSTPageBoost
-

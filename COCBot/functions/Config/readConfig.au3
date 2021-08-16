@@ -997,6 +997,8 @@ Func ReadConfig_600_22()
 	Next
 	; Note: These global variables are not stored to the ini file, to prevent automatic boosting (and spending of gems) when the bot is started:
 	; $g_iCmbBoostBarracks, $g_iCmbBoostSpellFactory, $g_iCmbBoostWorkshop, $g_iCmbBoostBarbarianKing, $g_iCmbBoostArcherQueen, $g_iCmbBoostWarden, $g_iCmbBoostEverything
+	; Custom Super Troops - Team AIO Mod++
+	$g_iCmbSuperTroopsResources = Int(IniRead($g_sProfileConfigPath, "SuperTroopsBoost", "CmbSuperTroopsResources", 0))
 EndFunc   ;==>ReadConfig_600_22
 
 Func ReadConfig_600_26()

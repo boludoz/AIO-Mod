@@ -1575,6 +1575,7 @@ EndFunc   ;==>TotalSpellCount_QTEdit
 Func chkSuperTroops()
 	If GUICtrlRead($g_hChkSuperTroops) = $GUI_CHECKED Then
 		$g_bSuperTroopsEnable = True
+		GUICtrlSetState($g_hCmbSuperTroopsResources, $GUI_ENABLE)
 		For $i = 0 To $iMaxSupersTroop - 1
 			GUICtrlSetState($g_ahLblSuperTroops[$i], $GUI_ENABLE)
 			GUICtrlSetState($g_ahCmbSuperTroops[$i], $GUI_ENABLE)
@@ -1583,6 +1584,7 @@ Func chkSuperTroops()
 		Next
 	Else
 		$g_bSuperTroopsEnable = False
+		GUICtrlSetState($g_hCmbSuperTroopsResources, $GUI_DISABLE)
 		For $i = 0 To $iMaxSupersTroop - 1
 			GUICtrlSetState($g_ahLblSuperTroops[$i], $GUI_DISABLE)
 			GUICtrlSetState($g_ahCmbSuperTroops[$i], $GUI_DISABLE)
@@ -1590,7 +1592,7 @@ Func chkSuperTroops()
 			_GUICtrlSetImage($g_ahPicSuperTroops[$i], $g_sLibIconPath, $g_aSuperTroopsIcons[$g_iCmbSuperTroops[$i]])
 		Next
 	EndIf
-EndFunc
+EndFunc   ;==>chkSuperTroops
 
 Func cmbSuperTroops()
 	For $i = 0 To $iMaxSupersTroop - 1
@@ -1604,4 +1606,10 @@ Func cmbSuperTroops()
 			EndIf
 		Next
 	Next
- EndFunc
+EndFunc   ;==>cmbSuperTroops
+
+#Region - Custom Super Troops - Team AIO Mod++
+Func cmbSuperTroopsResources()
+	$g_iCmbSuperTroopsResources = _GUICtrlComboBox_GetCurSel($g_hCmbSuperTroopsResources)
+EndFunc   ;==>cmbSuperTroopsResources
+#EndRegion - Custom Super Troops - Team AIO Mod++
