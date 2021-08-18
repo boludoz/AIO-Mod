@@ -172,14 +172,13 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 
 		#Region - Custom fix - Team AIO Mod++
 		; measure enemy village (only if resources match)
-		Local $bAlwaysMeasure = $g_bVillageSearchAlwaysMeasure
 		; Custom fix - Team AIO Mod++
-		If $bAlwaysMeasure Then
+		If $g_bVillageSearchAlwaysMeasure = True Then
 			For $i = 0 To $g_iModeCount - 1
-				If $match[$i] Or $bAlwaysMeasure Then
+				If $match[$i] Then
 					If Not CheckZoomOut("VillageSearch", True, False) Then
 						SaveDebugImage("VillageSearchMeasureFailed", False) ; make clean snapshot as well
-						ExitLoop ; disable exiting search for December 2018 update due to zoomout issues
+						; ExitLoop ; disable exiting search for December 2018 update due to zoomout issues
 						; check two more times, only required for snow theme (snow fall can make it easily fail), but don't hurt to keep it
 						$i = 0
 						Local $bMeasured
@@ -214,7 +213,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		EndIf
 
 		#Region - Legend trophy protection - Team AIO Mod++
-		If Not $g_bLeagueAttack Then
+		If $g_bLeagueAttack = False Then
 			For $i = 0 To $g_iModeCount - 1
 				If $isModeActive[$i] Then
 					If $g_abFilterMeetOneConditionEnable[$i] Then
@@ -237,31 +236,29 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		; ----------------- MOD -----------------------------------
 
 		; Custom optimization - Team AIO Mod++
-		If $bAlwaysMeasure Then
-			If $g_bTestSceneryAttack Then
-				Local $sScenery = DetectScenery($g_aVillageSize[6])
+		If $g_bTestSceneryAttack = True And $g_bVillageSearchAlwaysMeasure = True Then
+			Local $sScenery = DetectScenery($g_aVillageSize[6])
 
-				If $sScenery = "Clashy Construction" Then
-					SetLog("Attacking Clashy Construction")
-					ExitLoop
-				EndIf
-
-				If $sScenery = "Pirate Scenery" Then
-					SetLog("Attacking Pirate Scenery")
-					ExitLoop
-				EndIf
-
-				If $sScenery = "Winter Scenery" Then
-					SetLog("Attacking Winter Scenery")
-					ExitLoop
-				EndIf
-
-				If $sScenery = "Hog Mountain" Then
-					SetLog("Attacking Hog Mountain")
-					ExitLoop
-				EndIf
-
+			If $sScenery = "Clashy Construction" Then
+				SetLog("Attacking Clashy Construction", $COLOR_ACTION)
+				ExitLoop
 			EndIf
+
+			If $sScenery = "Pirate Scenery" Then
+				SetLog("Attacking Pirate Scenery", $COLOR_ACTION)
+				ExitLoop
+			EndIf
+
+			If $sScenery = "Winter Scenery" Then
+				SetLog("Attacking Winter Scenery", $COLOR_ACTION)
+				ExitLoop
+			EndIf
+
+			If $sScenery = "Hog Mountain" Then
+				SetLog("Attacking Hog Mountain", $COLOR_ACTION)
+				ExitLoop
+			EndIf
+
 		EndIf
 
 		; ----------------- WRITE LOG OF ENEMY RESOURCES -----------------------------------
@@ -281,15 +278,14 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		Local $checkDeadBase = $match[$DB] Or $match[$LB]
 
 		; Custom - AIO Mod++
-		If $checkDeadBase Then
-			$dbBase = checkDeadBase(False)
-			; SetDebugLog("Is dead base ? " & $dbBase)
+		If $checkDeadBase = True Then
+			$dbBase = ($g_bLeagueAttack = True) ? (False) : (checkDeadBase(False)) ; Legend bases are always alive.
 		EndIf
 
 		; ----------------- CHECK WEAK BASE -------------------------------------------------
 		#Region - Legend trophy protection - Team AIO Mod++
 		Local $sModeBase[3] = ["DB", "LB", "DT"]
-		If Not $g_bLeagueAttack Then
+		If $g_bLeagueAttack = False Then
 			If (IsWeakBaseActive($DB) And $dbBase And ($match[$DB] Or $g_abFilterMeetOneConditionEnable[$DB])) Or _
 				(IsWeakBaseActive($LB) And ($match[$LB] Or $g_abFilterMeetOneConditionEnable[$LB])) Then
 				If ($g_iSearchTH <> "-") Then
@@ -310,22 +306,21 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 					EndIf
 				Next
 			EndIf
-		Else
-			SetLog($GetResourcesTXT, $COLOR_SUCCESS, "Lucida Console", 7.5)
-			If $match[$DB] And $dbBase Then
-				SetLog("      " & "Legend League: Dead Base Found!*", $COLOR_SUCCESS, "Lucida Console", 7.5)
-				$g_iMatchMode = $DB
-			ElseIf $match[$LB] Then
-				SetLog("      " & "Legend League: Live Base Found!", $COLOR_SUCCESS, "Lucida Console", 7.5)
+		EndIf
+		
+		ResumeAndroid()
+		
+		If $g_bLeagueAttack = True Then
+			SetLog($GetResourcesTXT, $COLOR_SUCCESS)
+			If $match[$LB] = True Then
+				SetLog("      " & "Legend League: Live Base Found!", $COLOR_SUCCESS)
 				$g_iMatchMode = $LB
-			ElseIf $match[$DB] Then
-				SetLog("      " & "Legend League: Live Base Found But Will Use Dead Base Attack Type!", $COLOR_SUCCESS, "Lucida Console", 7.5)
+			ElseIf $match[$DB] = True Then
+				SetLog("      " & "Legend League: Live Base Found But Will Use Dead Base Attack Type!", $COLOR_SUCCESS)
 				$g_iMatchMode = $DB
 			EndIf
 			ExitLoop
 		EndIf
-		
-		ResumeAndroid()
 		#EndRegion - Legend trophy protection - Team AIO Mod++
 
 		; ----------------- WRITE LOG VILLAGE FOUND AND ASSIGN VALUE AT $g_iMatchMode and exitloop  IF CONTITIONS MEET ---------------------------

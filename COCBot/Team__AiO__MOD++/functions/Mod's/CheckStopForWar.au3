@@ -169,7 +169,7 @@ Func CheckWarTime(ByRef $sResult, ByRef $bResult, $bReturnFrom = True) ; return 
 	
 	Click(40, 530) ; open war menu
 	
-	If RandomSleep(300) Then Return
+	If RandomSleep(5000) Then Return
 	
 	If _Wait4PixelGoneArray($aIsMain) = False Then
 		SetLog("War check fail.", $COLOR_ERROR)
@@ -182,9 +182,8 @@ Func CheckWarTime(ByRef $sResult, ByRef $bResult, $bReturnFrom = True) ; return 
 		SetLog("War is finished.", $COLOR_WARNING)
 		If RandomSleep(1000) Then Return False
 		$bLocalReturn = False
-	EndIf
-	
-	If IsWarMenu() Then
+		$bResult = False
+	ElseIf IsWarMenu() Then
 		If $bBattleDay_InWar Then
 			$sWarDay = "Battle"
 			$bResult = True
@@ -259,7 +258,7 @@ Func CheckWarTime(ByRef $sResult, ByRef $bResult, $bReturnFrom = True) ; return 
 	EndIf
 	
 	Return $bLocalReturn
-EndFunc   ;==>CheckWarTimeNucleo
+EndFunc   ;==>CheckWarTime
 
 Func StopAndPrepareForWar($iSleepTime)
 
