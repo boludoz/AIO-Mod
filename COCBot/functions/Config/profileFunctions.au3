@@ -187,6 +187,7 @@ Func setupProfile($sProfile = Default)
 	; Set the profile name on the village info group.
 	GUICtrlSetData($g_hGrpVillage, GetTranslatedFileIni("MBR Main GUI", "Tab_02", "Village") & ": " & $g_sProfileCurrentName)
 	GUICtrlSetData($g_hTxtNotifyOrigin, $g_sProfileCurrentName)
+	GUICtrlSetData($g_hTxtNotifyOriginDS, $g_sProfileCurrentName) ; Discord - Team AIO Mod++
 
 	Return FuncReturn(True)
 EndFunc   ;==>setupProfile
@@ -227,6 +228,7 @@ Func selectProfile($sProfile = Default)
 	; Set the profile name on the village info group.
 	GUICtrlSetData($g_hGrpVillage, GetTranslatedFileIni("MBR Main GUI", "Tab_02", "Village") & ": " & $g_sProfileCurrentName)
 	GUICtrlSetData($g_hTxtNotifyOrigin, $g_sProfileCurrentName)
+	GUICtrlSetData($g_hTxtNotifyOriginDS, $g_sProfileCurrentName) ; Discord - Team AIO Mod++
 	Return FuncReturn(True)
 EndFunc   ;==>selectProfile
 

@@ -65,7 +65,8 @@ EndFunc   ;==>ChatGuiEditUpdate
 
 ; Clan Chat
 Func cmbChatActionsChat()
-	If (_GUICtrlComboBox_GetCurSel($g_hCmbPriorityCHAT) > 0) Then
+	 $g_iCmbPriorityCHAT = _GUICtrlComboBox_GetCurSel($g_hCmbPriorityCHAT)
+	If $g_iCmbPriorityCHAT > 0 Then
 		$g_bChatClan = True
 		For $i = $g_hTxtDelayTimeClan To $g_hChkCleverbot
 			GUICtrlSetState($i, $GUI_ENABLE)
@@ -73,8 +74,6 @@ Func cmbChatActionsChat()
 		GUICtrlSetState($g_hChkChatNotify, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkPbSendNewChats, $GUI_ENABLE)
 		GUIToggle_OnlyDuringHours(True)
-		chkUseResponses()
-		chkUseGeneric()
 	Else
 		$g_bChatClan = False
 		For $i = $g_hTxtDelayTimeClan To $g_hTxtEditGeneric
@@ -84,6 +83,8 @@ Func cmbChatActionsChat()
 		GUICtrlSetState($g_hChkPbSendNewChats, $GUI_DISABLE)
 		If GUICtrlRead($g_hChkEnableFriendlyChallenge) = $GUI_UNCHECKED Then GUIToggle_OnlyDuringHours(False)
 	EndIf
+	chkUseResponses()
+	chkUseGeneric()
 EndFunc   ;==>cmbChatActionsChat
 
 ; Func chkClanChat()
@@ -155,7 +156,8 @@ EndFunc   ;==>chkUseGeneric
 ; EndFunc   ;==>chkEnableFriendlyChallenge
 
 Func cmbChatActionsFC()
-	If (_GUICtrlComboBox_GetCurSel($g_hCmbPriorityFC) > 0) Then
+	 $g_iCmbPriorityFC = _GUICtrlComboBox_GetCurSel($g_hCmbPriorityFC)
+	If $g_iCmbPriorityFC > 0 Then
 		$g_bEnableFriendlyChallenge = True
 		For $i = $g_hTxtDelayTimeFC To $g_hTxtChallengeText
 			GUICtrlSetState($i, $GUI_ENABLE)

@@ -92,11 +92,9 @@ Global $g_ahCmbSLabUpgradeOrder[6] = [-1, -1, -1, -1, -1, -1]
 #EndRegion - Lab Priority System
 
 #Region - Discord - Team AIO Mod++
-Global $g_sTxtNotifyDSToken, $g_bNotifyDSEnable, $g_hChkNotifyDSEnable, _
-$g_hLblNotifyTGToken, $g_hLblNotifyDSToken, $g_sNotifyDSToken;, $g_iNotifyMode, $g_hCmbNotifyMode
+Global $g_bNotifyDSEnable, $g_sNotifyDSToken = "https://discord.com/api/webhooks/XXX/XXX"
+Global $g_sNotifyOriginDS = ""
 
-;Remote Control
-Global $g_bNotifyRemoteEnableDS = False, $g_sNotifyOriginDS = ""
 ;Alerts
 Global $g_bNotifyAlertMatchFoundDS = False, $g_bNotifyAlerLastRaidIMGDS = False, $g_bNotifyAlerLastRaidTXTDS = False, $g_bNotifyAlertCampFullDS = False, _
 		$g_bNotifyAlertUpgradeWallsDS = False, $g_bNotifyAlertOutOfSyncDS = False, $g_bNotifyAlertTakeBreakDS = False, $g_bNotifyAlertBulderIdleDS = False, _

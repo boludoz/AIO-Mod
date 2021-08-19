@@ -24,7 +24,6 @@ Func chkPBDSenabled()
 	EndIf
 
 	If $g_bNotifyDSEnable = True Then
-		; GUICtrlSetState($g_hChkNotifyRemoteDS, $GUI_ENABLE)
 		GUICtrlSetState($g_hTxtNotifyOriginDS, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkNotifyAlertMatchFoundDS, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkNotifyAlertLastRaidIMGDS, $GUI_ENABLE)
@@ -43,7 +42,6 @@ Func chkPBDSenabled()
 		GUICtrlSetState($g_hChkNotifyAlertSmartWaitTimeDS, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkNotifyAlertLaboratoryIdleDS, $GUI_ENABLE)
 	Else
-		; GUICtrlSetState($g_hChkNotifyRemoteDS, $GUI_DISABLE)
 		GUICtrlSetState($g_hTxtNotifyOriginDS, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkNotifyAlertMatchFoundDS, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkNotifyAlertLastRaidIMGDS, $GUI_DISABLE)

@@ -661,10 +661,11 @@ Func SaveConfig_600_18()
 	_Ini_Add("notify", "TGEnabled", $g_bNotifyTGEnable ? 1 : 0)
 	_Ini_Add("notify", "TGToken", $g_sNotifyTGToken)
 	_Ini_Add("notify", "TGUserID", $g_sTGChatID)
+	
 	;Remote Control
 	_Ini_Add("notify", "PBRemote", $g_bNotifyRemoteEnable ? 1 : 0)
-	_Ini_Add("notify", "HoursPushBullet", $g_iNotifyDeletePushesOlderThanHours)
 	_Ini_Add("notify", "Origin", $g_sNotifyOrigin)
+	
 	;Alerts
 	_Ini_Add("notify", "AlertPBVMFound", $g_bNotifyAlertMatchFound ? 1 : 0)
 	_Ini_Add("notify", "AlertPBLastRaid", $g_bNotifyAlerLastRaidIMG ? 1 : 0)
@@ -686,13 +687,8 @@ Func SaveConfig_600_18()
 	#Region - Discord - Team AIO Mod++
 	_Ini_Add("notifyDS", "DSEnabled", $g_bNotifyDSEnable ? 1 : 0)
 	_Ini_Add("notifyDS", "DSToken", $g_sNotifyDSToken)
-	; _Ini_Add("notifyDS", "CmbNotify", $g_iNotifyModeDS)
-
-	;Remote Control
-	; _Ini_Add("notifyDS", "PBRemote", $g_bNotifyRemoteEnableDS ? 1 : 0)
-	; _Ini_Add("notifyDS", "HoursPushBullet", $g_iNotifyDeletePushesOlderThanHoursDS)
 	_Ini_Add("notifyDS", "Origin", $g_sNotifyOriginDS)
-	
+
 	;Alerts
 	_Ini_Add("notifyDS", "AlertPBVMFound", $g_bNotifyAlertMatchFoundDS ? 1 : 0)
 	_Ini_Add("notifyDS", "AlertPBLastRaid", $g_bNotifyAlerLastRaidIMGDS ? 1 : 0)
@@ -729,6 +725,21 @@ Func SaveConfig_600_19()
 		$string &= ($g_abNotifyScheduleWeekDays[$i] ? "1" : "0") & "|"
 	Next
 	_Ini_Add("notify", "NotifyWeekDays", $string)
+	
+	#Region - Discord - Team AIO Mod++
+	_Ini_Add("notifyDS", "NotifyHoursEnable", $g_bNotifyScheduleHoursEnableDS ? 1 : 0)
+	$string = ""
+	For $i = 0 To 23
+		$string &= ($g_abNotifyScheduleHours[$i] ? "1" : "0") & "|"
+	Next
+	_Ini_Add("notifyDS", "NotifyHours", $string)
+	_Ini_Add("notifyDS", "NotifyWeekDaysEnable", $g_bNotifyScheduleWeekDaysEnableDS ? 1 : 0)
+	Local $string = ""
+	For $i = 0 To 6
+		$string &= ($g_abNotifyScheduleWeekDaysDS[$i] ? "1" : "0") & "|"
+	Next
+	_Ini_Add("notifyDS", "NotifyWeekDays", $string)
+	#EndRegion - Discord - Team AIO Mod++
 EndFunc   ;==>SaveConfig_600_19
 
 Func SaveConfig_600_22()

@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will break shield
-	 	
+
 	SetLog("Going to Attack", $COLOR_INFO)
 
 	; RestartSearchPickupHero - Check Remaining Heal Time
@@ -31,7 +31,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 	EndIf
 
 	ChkAttackCSVConfig()
-	
+
 	If IsMainPage() Then
 		If _Sleep($DELAYTREASURY4) Then Return
 		If _CheckPixel($aAttackForTreasury, $g_bCapturePixel, Default, "Is attack for treasury:") Then
@@ -39,11 +39,11 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 			Return
 		EndIf
 		If _Sleep($DELAYTREASURY4) Then Return
-		
-		#Region - Custom PrepareSearch - Team AIO Mod++ 
+
+		#Region - Custom PrepareSearch - Team AIO Mod++
 		; ZoomOut for update measurements
 		ZoomOut()
-		
+
 		; Find attack button.
 		For $i = 0 To 4
 			Local $aAttack = findButton("AttackButton", Default, 1, True)
@@ -60,7 +60,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 				CheckMainScreen()
 			EndIf
 		Next
-		#EndRegion - Custom PrepareSearch - Team AIO Mod++ 
+		#EndRegion - Custom PrepareSearch - Team AIO Mod++
 	EndIf
 
 	If _Sleep($DELAYPREPARESEARCH1) Then Return
@@ -82,28 +82,28 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 		Return
 	EndIf
 
-	#Region - Custom PrepareSearch - Team AIO Mod++ 
+	#Region - Custom PrepareSearch - Team AIO Mod++
 	$g_bBadPrepareSearch = False
-	
+
 	Local $aiMatch, $aConfirmAttackButton, $bIsItJustified = False, $bIsOkLegendAttack = False
 	Local $aLegendSignUpBtn[4] = [556, 461, 0x3583F3, 30]
 	Local $aLegendWindow[4] = [340, 170, 0xD8A71C, 20]
 	Local $aAllAttacksDone[4] = [522, 508, 0x3582F1, 30]
-	
+
 	If _Sleep(2000) Then Return
-	
+
 	$g_bLeagueAttack = _CheckPixel($aLegendWindow, True, Default, "LegendWindow")
-		
+
 	SetLog("Are you a legend? " & $g_bLeagueAttack)
-	
+
 	$aiMatch = _PixelSearch(650, 355, 730, 545, Hex(0xC95918, 6), 30)
-	If $aiMatch <> 0 Then 
+	If $aiMatch <> 0 Then
 		ClickP($aiMatch)
 		If _Sleep(500) Then Return
-	EndIf	
-	
+	EndIf
+
 	If $g_bLeagueAttack = True Then
-		If $aiMatch <> 0 Then 
+		If $aiMatch <> 0 Then
 			For $i = 0 To 10
 				If _Sleep(200) Then Return
 				$aConfirmAttackButton = findButton("ConfirmAttack", Default, 1, True)
@@ -114,42 +114,42 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 				EndIf
 			Next
 		EndIf
-		
+
 		If $bIsOkLegendAttack = False Then
 			If _CheckPixel($aLegendSignUpBtn, True, Default, "SignUpLegendLeague") Then
 				SetLog("Sign-up to Legend League.", $COLOR_SUCCESS)
-				ClickP($IsLegendLeagueSignUpBtn, 1, 0, "#0149")
+				ClickP($aLegendSignUpBtn, 1, 0, "#0149")
 				If _Sleep($DELAYPREPARESEARCH2) Then Return
 				$bIsItJustified = True
 			EndIf
-					
+
 			$aiMatch = _PixelSearch(447, 431, 724, 472, Hex(0xAD751E, 6), 15)
 			If $aiMatch <> 0 Then
 				$bIsItJustified = True
 				SetLog("Finding opponents.", $COLOR_ACTION)
 			EndIf
-			
+
 			If _CheckPixel($aAllAttacksDone, True, Default, "AllAttacksDone") Then
 				$bIsItJustified = True
 				SetLog("All of today's attacks are complete.", $COLOR_SUCCESS)
 				If _Sleep($DELAYPREPARESEARCH2) Then Return
 			EndIf
-			
+
 			If $bIsItJustified = True Then
 				$g_bForceSwitch = True     ; set this switch accounts next check
 			Else
 				$g_bBadPrepareSearch = True ; Custom PrepareSearch - Team AIO Mod++
 			EndIf
-			
+
 			$g_bRestart = True
 			ClickAway(True)
 			Return
-			
+
 		EndIf
 	EndIf
-	
-	#EndRegion - Custom PrepareSearch - Team AIO Mod++ 
-	
+
+	#EndRegion - Custom PrepareSearch - Team AIO Mod++
+
 	If $g_iTownHallLevel <> "" And $g_iTownHallLevel > 0 Then
 		$g_iSearchCost += $g_aiSearchCost[$g_iTownHallLevel - 1]
 		$g_iStatsTotalGain[$eLootGold] -= $g_aiSearchCost[$g_iTownHallLevel - 1]
@@ -191,8 +191,8 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 			Click($ButtonPixel[0] + 75, $ButtonPixel[1] + 25, 1, 0, "#0153") ; Click Okay Button
 		EndIf
 	EndIf
-	
-	#Region - Custom PrepareSearch - Team AIO Mod++ 
+
+	#Region - Custom PrepareSearch - Team AIO Mod++
 	; Bad findmatch.
 	Local $iCount
 	_CaptureRegion()
@@ -203,12 +203,12 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 		If $g_bDebugSetlog Then SetDebugLog("Waiting PrepareSearch, " & ($iCount / 2) & " Seconds.", $COLOR_DEBUG)
 		If $iCount > 15 Then ExitLoop ; wait 15*500ms = 7,5 seconds max for the window to render
 	WEnd
-	
+
 	If $iCount > 15 Then
 		SetLog("Bad prepareSearch.", $COLOR_ERROR)
 		CheckMainScreen()
 		$g_bBadPrepareSearch = True ; Custom PrepareSearch - Team AIO Mod++
 		Return False
-	EndIf	
-	#EndRegion - Custom PrepareSearch - Team AIO Mod++ 
+	EndIf
+	#EndRegion - Custom PrepareSearch - Team AIO Mod++
 EndFunc   ;==>PrepareSearch

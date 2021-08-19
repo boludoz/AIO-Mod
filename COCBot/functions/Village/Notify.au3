@@ -4,8 +4,8 @@
 ; Syntax ........:
 ; Parameters ....: None
 ; Return values .: None
-; Author ........: Full revamp of Notify by IceCube (2016-09) 
-; Modified ......: IceCube (2016-12) v1.5.1, CodeSLinger69 (2017), ProMac 2018-08, Boldina ! (For AIO Mod++)
+; Author ........: Full revamp of Notify by IceCube (2016-09)
+; Modified ......: IceCube (2016-12) v1.5.1, CodeSLinger69 (2017), ProMac 2018-08, Boldina ! (19/08/2021) (For AIO Mod++)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2020
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -108,14 +108,14 @@ Func NotifyPushToTelegram($pMessage)
 		Local $Date = @YEAR & '-' & @MON & '-' & @MDAY
 		Local $Time = @HOUR & ':' & @MIN
 
-		Local $text = __WinHttpURLEncode($pMessage & chr(10) & $Date & ' ' & $Time) 
+		Local $text = __WinHttpURLEncode($pMessage & chr(10) & $Date & ' ' & $Time)
 		; Telegram Message
 		Local $SdtOut = InetRead($TELEGRAM_URL & $g_sNotifyTGToken & "/sendMessage?chat_id=" & $g_sTGChatID & "&text=" & $text, $INET_FORCERELOAD)
 
 		If $g_bDebugSetlog Then SetDebugLog("Telegram sent msg:" & $TELEGRAM_URL & $g_sNotifyTGToken & "/sendMessage?chat_id=" & $g_sTGChatID & "&text=" & $text)
 		If $g_bDebugSetlog Then SetDebugLog("NotifyPushToTelegram Send Return code:" & @error)
 		;If $g_bDebugSetlog Then SetDebugLog("NotifyPushToTelegram Send Return SdtOut:" & $SdtOut)
-		
+
 		If @error Or $SdtOut = "" Then Return False
 		; Convert Binary to String/Json Format
 		Local $sCorrectStdOut = BinaryToString($SdtOut, 4)
@@ -125,7 +125,7 @@ Func NotifyPushToTelegram($pMessage)
 		; {"ok":true,"result":{"message_id":XXX,"from":{"id":XXXXXXX,"is_bot":true,"first_name":"TH12","username":"TH12bot"},"chat":{"id":XXXXXXX,"first_name":"XXXXX","username":"XXXXXX","type":"private"},"date":XXXXXXXX,"text":"XXXXXXX"}}
 		; Parse message id from Json Format , just to confirm if all are ok
 		Local $mdg = _StringBetween($sCorrectStdOut, '"message_id":', ',"from":')
-		If @error Or Not IsArray($mdg) Then 
+		If @error Or Not IsArray($mdg) Then
 			SetDebugLog("NotifyPushToTelegram Send Error!: " & $sCorrectStdOut)
 			Return False
 		EndIf
@@ -281,7 +281,7 @@ Func NotifyRemoteControlProcBtnStart()
 		If $g_bDebugSetlog Then SetDebugLog("Telegram | NotifyRemoteControlProcBtnStart $g_sTGLast_UID : " & $g_sTGLast_UID)
 		If $g_iTGLastRemote <> $g_sTGLast_UID Then
 			$g_iTGLastRemote = $g_sTGLast_UID
-			
+
 			If $g_bDebugSetlog Then SetDebugLog("Telegram | NotifyRemoteControlProcBtnStart $TGActionMSG1:" & $TGActionMSG)
 
 			Switch $TGActionMSG
@@ -290,7 +290,7 @@ Func NotifyRemoteControlProcBtnStart()
 					NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Request-Start_Info_01", "Request to Start...") & chr(10) & GetTranslatedFileIni("MBR Func_Notify", "Request-Start_Info_02", "Your bot is now starting..."))
 				Case "/KEYBOARD", "/keyboard"
 					NotifyActivateKeyboardOnTelegram($g_sNotifyOrigin & " | " & $g_sBotTitle & " | Notify " & $g_sNotifyVersion)
-					
+
 				Case Else
 					NotifyPushToTelegram($g_sNotifyOrigin & ":" & chr(10) & "Get:" & $TGActionMSG & chr(10) & GetTranslatedFileIni("MBR Func_Notify", "Request-Start_Info_03", "Start MyBot first."))
 			EndSwitch
@@ -608,10 +608,10 @@ Func NotifyPushMessageToBoth($Message, $Source = "")
 			If $g_bNotifyRemoteEnable Then NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_10", "Bot restarted"))
 		Case "OutOfSync"
 			$sTring = " | " & GetTranslatedFileIni("MBR Func_Notify", "LOG_Info_05", "Restarted after Out of Sync Error") & chr(10) & GetTranslatedFileIni("MBR Func_Notify", "Stats_Info_06", "Attacking now") & "..."
-			If $g_bNotifyAlertOutOfSync Then 
+			If $g_bNotifyAlertOutOfSync Then
 				NotifyPushToTelegram($g_sNotifyOrigin & $sTring)
 			EndIf
-			If $g_bNotifyAlertOutOfSyncDS Then 
+			If $g_bNotifyAlertOutOfSyncDS Then
 				NotifyPushToDiscord($g_sNotifyOriginDS & $sTring)
 			EndIf
 		Case "LastRaid"
@@ -623,7 +623,7 @@ Func NotifyPushMessageToBoth($Message, $Source = "")
 				$g_iStatsLastAttack[$eLootGold] = Round($g_iStatsLastAttack[$eLootGold], -1)
 				$g_iStatsLastAttack[$eLootElixir] = Round($g_iStatsLastAttack[$eLootElixir], -1)
 				$g_iStatsLastAttack[$eLootDarkElixir] = Round($g_iStatsLastAttack[$eLootDarkElixir], 1)
-				
+
 				$sTring = " | " & GetTranslatedFileIni("MBR Func_Notify", "Last-Raid_Info_02", "Last Raid txt") & _
 						chr(10) & "[" & GetTranslatedFileIni("MBR Func_Notify", "Stats-G_Info_01", "G") & "]: " & _NumberFormat($g_iStatsLastAttack[$eLootGold]) & _
 						"k  [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-E_Info_01", "E") & "]: " & _NumberFormat($g_iStatsLastAttack[$eLootElixir]) & _
@@ -632,11 +632,11 @@ Func NotifyPushMessageToBoth($Message, $Source = "")
 						"  [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-T_Info_01", "%") & "]: " & $g_sTotalDamage & _
 						"  [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-T_Info_01", "*") & "]: " & $g_sStarsEarned & _
 						"  [Tr#]: " & $g_aiCurrentLoot[$eLootTrophy]
-						
-				If $g_bNotifyAlerLastRaidTXT Then 
+
+				If $g_bNotifyAlerLastRaidTXT Then
 					NotifyPushToTelegram($g_sNotifyOrigin & $sTring)
 				EndIf
-				If $g_bNotifyAlerLastRaidTXTDS Then 
+				If $g_bNotifyAlerLastRaidTXTDS Then
 					NotifyPushToDiscord($g_sNotifyOriginDS & $sTring)
 				EndIf
 
@@ -670,58 +670,58 @@ Func NotifyPushMessageToBoth($Message, $Source = "")
 			EndIf
 		Case "FoundWalls"
 			$sTring = " | " & GetTranslatedFileIni("MBR Func_Notify", "Wall-Up_Info_02", "Found Wall level") & " " & $g_iCmbUpgradeWallsLevel + 4 & chr(10) & " " & GetTranslatedFileIni("MBR Func_Notify", "Wall-Up_Info_04", "Wall segment has been located") & "..."& chr(10) & GetTranslatedFileIni("MBR Func_Notify", "Upgrading_Info_01", "Upgrading") & "..."
-			If $g_bNotifyAlertUpgradeWalls Then 
+			If $g_bNotifyAlertUpgradeWalls Then
 				NotifyPushToTelegram($g_sNotifyOrigin & $sTring)
 			EndIf
-			If $g_bNotifyAlertUpgradeWallsDS Then 
+			If $g_bNotifyAlertUpgradeWallsDS Then
 				NotifyPushToDiscord($g_sNotifyOriginDS & $sTring)
 			EndIf
 		Case "SkipWalls"
 			$sTring = " | " & GetTranslatedFileIni("MBR Func_Notify", "Wall-Up_Info_03", "Cannot find Wall level") & $g_iCmbUpgradeWallsLevel + 4 & chr(10) & GetTranslatedFileIni("MBR Func_Notify", "Upgrading_Info_02", "Skip upgrade") & "..."
-			If $g_bNotifyAlertUpgradeWalls Then 
+			If $g_bNotifyAlertUpgradeWalls Then
 				NotifyPushToTelegram($g_sNotifyOrigin & $sTring)
 			EndIf
-			If $g_bNotifyAlertUpgradeWallsDS Then 
+			If $g_bNotifyAlertUpgradeWallsDS Then
 				NotifyPushToDiscord($g_sNotifyOriginDS & $sTring)
 			EndIf
 		Case "AnotherDevice3600"
 			$sTring = " | 1. " & GetTranslatedFileIni("MBR Func_Notify", "Another-Device_Info_01", "Another Device has connected") & chr(10) & GetTranslatedFileIni("MBR Func_Notify", "Another-Device_Info_02", "Another Device has connected, waiting") & " " & Floor(Floor($g_iAnotherDeviceWaitTime / 60) / 60) & " " & GetTranslatedFileIni("MBR Global GUI Design", "Hours", -1) & " " & Floor(Mod(Floor($g_iAnotherDeviceWaitTime / 60), 60)) & " " & GetTranslatedFileIni("MBR Global GUI Design", "Min", -1) & " " & Floor(Mod($g_iAnotherDeviceWaitTime, 60)) & " " & GetTranslatedFileIni("MBR Global GUI Design", "seconds", -1)
-			If $g_bNotifyAlertAnotherDevice Then 
+			If $g_bNotifyAlertAnotherDevice Then
 				NotifyPushToTelegram($g_sNotifyOrigin & $sTring)
 			EndIf
-			If $g_bNotifyAlertAnotherDeviceDS Then 
+			If $g_bNotifyAlertAnotherDeviceDS Then
 				NotifyPushToDiscord($g_sNotifyOriginDS & $sTring)
 			EndIf
 		Case "AnotherDevice60"
 			$sTring = " | 2. " & GetTranslatedFileIni("MBR Func_Notify", "Another-Device_Info_01", "Another Device has connected") & chr(10) & GetTranslatedFileIni("MBR Func_Notify", "Another-Device_Info_02", "Another Device has connected, waiting") & " " & Floor(Mod(Floor($g_iAnotherDeviceWaitTime / 60), 60)) & " " & GetTranslatedFileIni("MBR Global GUI Design", "Min", -1) & " " & Floor(Mod($g_iAnotherDeviceWaitTime, 60)) & " " & GetTranslatedFileIni("MBR Global GUI Design", "seconds", -1)
-			If $g_bNotifyAlertAnotherDevice Then 
+			If $g_bNotifyAlertAnotherDevice Then
 				NotifyPushToTelegram($g_sNotifyOrigin & $sTring)
 			EndIf
-			If $g_bNotifyAlertAnotherDeviceDS Then 
+			If $g_bNotifyAlertAnotherDeviceDS Then
 				NotifyPushToDiscord($g_sNotifyOriginDS & $sTring)
 			EndIf
 		Case "AnotherDevice"
 			$sTring = " | 3. " & GetTranslatedFileIni("MBR Func_Notify", "Another-Device_Info_01", "Another Device has connected") & chr(10) & GetTranslatedFileIni("MBR Func_Notify", "Another-Device_Info_02", "Another Device has connected, waiting") & " " & Floor(Mod($g_iAnotherDeviceWaitTime, 60)) & " " & GetTranslatedFileIni("MBR Global GUI Design", "seconds", -1)
-			If $g_bNotifyAlertAnotherDevice Then 
+			If $g_bNotifyAlertAnotherDevice Then
 				NotifyPushToTelegram($g_sNotifyOrigin & $sTring)
 			EndIf
-			If $g_bNotifyAlertAnotherDeviceDS Then 
+			If $g_bNotifyAlertAnotherDeviceDS Then
 				NotifyPushToDiscord($g_sNotifyOriginDS & $sTring)
 			EndIf
 		Case "TakeBreak"
 			$sTring = " | " & GetTranslatedFileIni("MBR Func_Notify", "Need-Rest_Info_01", "Chief, we need some rest!") & chr(10) & GetTranslatedFileIni("MBR Func_Notify", "Take-Break_Info_01", "Village must take a break..")
-			If $g_bNotifyAlertTakeBreak Then 
+			If $g_bNotifyAlertTakeBreak Then
 				NotifyPushToTelegram($g_sNotifyOrigin & $sTring)
 			EndIf
-			If $g_bNotifyAlertTakeBreakDS Then 
+			If $g_bNotifyAlertTakeBreakDS Then
 				NotifyPushToDiscord($g_sNotifyOriginDS & $sTring)
 			EndIf
 		Case "Update"
 			$sTring = " | " & GetTranslatedFileIni("MBR Func_Notify", "New-Version_Info_01", "Chief, there is a new version of the bot available")
-			If $g_bNotifyAlertBOTUpdate Then 
+			If $g_bNotifyAlertBOTUpdate Then
 				NotifyPushToTelegram($g_sNotifyOrigin & $sTring)
 			EndIf
-			If $g_bNotifyAlertBOTUpdateDS Then 
+			If $g_bNotifyAlertBOTUpdateDS Then
 				NotifyPushToDiscord($g_sNotifyOriginDS & $sTring)
 			EndIf
 		Case "BuilderIdle"
@@ -740,10 +740,10 @@ Func NotifyPushMessageToBoth($Message, $Source = "")
 			EndIf
 		Case "CocError"
 			$sTring = " | " & GetTranslatedFileIni("MBR Func_Notify", "LOG_Info_04", "CoC Has Stopped Error") & "....."
-			If $g_bNotifyAlertOutOfSync Then 
+			If $g_bNotifyAlertOutOfSync Then
 				NotifyPushToTelegram($g_sNotifyOrigin & $sTring)
 			EndIf
-			If $g_bNotifyAlertOutOfSyncDS Then 
+			If $g_bNotifyAlertOutOfSyncDS Then
 				NotifyPushToDiscord($g_sNotifyOriginDS & $sTring)
 			EndIf
 		Case "Pause"
@@ -752,50 +752,50 @@ Func NotifyPushMessageToBoth($Message, $Source = "")
 			If $g_bNotifyRemoteEnable And $Source = "Push" Then NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_18", "Request to Resume") & "..." & chr(10) & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_14", "Your request has been received. Bot is now resumed"))
 		Case "OoSResources"
 			$sTring = " | " & GetTranslatedFileIni("MBR Func_Notify", "LOG_Info_06", "Disconnected after") & " " & StringFormat("%3s", $g_iSearchCount) & " " & GetTranslatedFileIni("MBR Func_Notify", "Skip_Info_01", "skip(s)") & chr(10) & GetTranslatedFileIni("MBR Func_Notify", "Attack_Info_02", "Cannot locate Next button, Restarting Bot") & "..."
-			If $g_bNotifyAlertOutOfSync Then 
+			If $g_bNotifyAlertOutOfSync Then
 				NotifyPushToTelegram($g_sNotifyOrigin & $sTring)
 			EndIf
-			If $g_bNotifyAlertOutOfSyncDS Then 
+			If $g_bNotifyAlertOutOfSyncDS Then
 				NotifyPushToDiscord($g_sNotifyOriginDS & $sTring)
 			EndIf
 		Case "MatchFound"
 			$sTring = " | " & $g_asModeText[$g_iMatchMode] & " " & GetTranslatedFileIni("MBR Func_Notify", "Match-Found_Info_01", "Match Found! after") & " " & StringFormat("%3s", $g_iSearchCount) & " " & GetTranslatedFileIni("MBR Func_Notify", "Skip_Info_01", "skip(s)") & chr(10) & "[" & GetTranslatedFileIni("MBR Func_Notify", "Stats-G_Info_01", "G") & "]: " & _NumberFormat($g_iSearchGold) & "; [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-E_Info_01", "E") & "]: " & _NumberFormat($g_iSearchElixir) & "; [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-DE_Info_01", "DE") & "]: " & _NumberFormat($g_iSearchDark) & "; [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-T_Info_01", "T") & "]: " & $g_iSearchTrophy
-			If $g_bNotifyAlertMatchFound Then 
+			If $g_bNotifyAlertMatchFound Then
 				NotifyPushToTelegram($g_sNotifyOrigin & $sTring)
 			EndIf
-			If $g_bNotifyAlertMatchFoundDS Then 
+			If $g_bNotifyAlertMatchFoundDS Then
 				NotifyPushToDiscord($g_sNotifyOriginDS & $sTring)
 			EndIf
 		Case "UpgradeWithGold"
 			$sTring = " | " & GetTranslatedFileIni("MBR Func_Notify", "Upgrading_Info_07", "Upgrade completed by using GOLD") & chr(10) & GetTranslatedFileIni("MBR Func_Notify", "Upgrading_Info_03", "Complete by using GOLD") & "..."
-			If $g_bNotifyAlertUpgradeWalls Then 
+			If $g_bNotifyAlertUpgradeWalls Then
 				NotifyPushToTelegram($g_sNotifyOrigin & $sTring)
 			EndIf
-			If $g_bNotifyAlertUpgradeWallsDS Then 
+			If $g_bNotifyAlertUpgradeWallsDS Then
 				NotifyPushToDiscord($g_sNotifyOriginDS & $sTring)
 			EndIf
 		Case "UpgradeWithElixir"
 			$sTring = " | " & GetTranslatedFileIni("MBR Func_Notify", "Upgrading_Info_08", "Upgrade completed by using ELIXIR") & chr(10) & GetTranslatedFileIni("MBR Func_Notify", "Upgrading_Info_04", "Complete by using ELIXIR") & "..."
-			If $g_bNotifyAlertUpgradeWalls Then 
+			If $g_bNotifyAlertUpgradeWalls Then
 				NotifyPushToTelegram($g_sNotifyOrigin & $sTring)
 			EndIf
-			If $g_bNotifyAlertUpgradeWallsDS Then 
+			If $g_bNotifyAlertUpgradeWallsDS Then
 				NotifyPushToDiscord($g_sNotifyOriginDS & $sTring)
 			EndIf
 		Case "NoUpgradeWallButton"
 			$sTring = " | " & GetTranslatedFileIni("MBR Func_Notify", "Upgrading_Info_05", "No Upgrade Gold Button") & chr(10) & GetTranslatedFileIni("MBR Func_Notify", "Upgrading_Info_10", "Cannot find gold upgrade button") & "..."
-			If $g_bNotifyAlertUpgradeWalls Then 
+			If $g_bNotifyAlertUpgradeWalls Then
 				NotifyPushToTelegram($g_sNotifyOrigin & $sTring)
 			EndIf
-			If $g_bNotifyAlertUpgradeWallsDS Then 
+			If $g_bNotifyAlertUpgradeWallsDS Then
 				NotifyPushToDiscord($g_sNotifyOriginDS & $sTring)
 			EndIf
 		Case "NoUpgradeElixirButton"
 			$sTring = " | " & GetTranslatedFileIni("MBR Func_Notify", "Upgrading_Info_09", "No Upgrade Elixir Button") & chr(10) & GetTranslatedFileIni("MBR Func_Notify", "Upgrading_Info_06", "Cannot find elixir upgrade button") & "..."
-			If $g_bNotifyAlertUpgradeWalls Then 
+			If $g_bNotifyAlertUpgradeWalls Then
 				NotifyPushToTelegram($g_sNotifyOrigin & $sTring)
 			EndIf
-			If $g_bNotifyAlertUpgradeWallsDS Then 
+			If $g_bNotifyAlertUpgradeWallsDS Then
 				NotifyPushToDiscord($g_sNotifyOriginDS & $sTring)
 			EndIf
 		Case "RequestScreenshot"
@@ -867,11 +867,11 @@ Func NotifyPushMessageToBoth($Message, $Source = "")
 			ClickAway()
 		Case "CampFull"
 			$sTring = " | " & GetTranslatedFileIni("MBR Func_Notify", "Camps-Full_Info_01", "Your Army Camps are now Full")
-			If $g_bNotifyAlertCampFull Then 
+			If $g_bNotifyAlertCampFull Then
 				NotifyPushToTelegram($g_sNotifyOrigin & $sTring)
 				SetLog("Notify Telegram: Your Army Camps are now Full", $COLOR_SUCCESS)
 			EndIf
-			If $g_bNotifyAlertCampFullDS Then 
+			If $g_bNotifyAlertCampFullDS Then
 				NotifyPushToDiscord($g_sNotifyOriginDS & $sTring)
 				SetLog("Notify Discord: Your Army Camps are now Full", $COLOR_SUCCESS)
 			EndIf
@@ -991,7 +991,7 @@ Func NotifyPushFileToDiscord($File, $Folder, $FileType, $body)
     If Not $g_bNotifyDSEnable Or $g_sNotifyDSToken = "" Then Return
 
     If Not IsPlanUseDiscord("Photo") Then Return
-    
+
     If $g_bNotifyDSEnable And $g_sNotifyDSToken <> "" Then
         If FileExists($g_sProfilePath & "\" & $g_sProfileCurrentName & '\' & $Folder & '\' & $File) Then
         _HTTP_Upload_Discord($g_sNotifyDSToken, ($g_sProfilePath & "\" & $g_sProfileCurrentName & '\' & $Folder & '\' & $File), '', '', Default)
@@ -1011,7 +1011,7 @@ Func NotifyPushToDiscord($pMessage)
 
     Local $Date = @YEAR & '-' & @MON & '-' & @MDAY
     Local $Time = @HOUR & '.' & @MIN
-    Local $text = __WinHttpURLEncode($pMessage & chr(10) & $Date & ' ' & $Time) 
+    Local $text = __WinHttpURLEncode($pMessage & chr(10) & $Date & ' ' & $Time)
 
     If $g_bNotifyDSEnable And $g_sNotifyDSToken <> "" Then
         $pMessage = StringReplace($pMessage, chr(10), "\n")
@@ -1044,7 +1044,7 @@ Func IsPlanUseDiscord($Message)
 		Else
 			If $g_bNotifyScheduleHoursEnableDS Then
 				Local $hour = StringSplit(_NowTime(4), ":", $STR_NOCOUNT)
-				If Not $g_abNotifyScheduleHoursFD[$hour[0]] Then
+				If Not $g_abNotifyScheduleHoursDS[$hour[0]] Then
 					SetLog("Notify not planned for this hour! Notification skipped (DS)", $COLOR_WARNING)
 					SetLog($Message, $COLOR_ORANGE)
 					Return False ; exit func if no planned
