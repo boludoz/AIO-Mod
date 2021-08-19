@@ -48,7 +48,7 @@ Func MainGTFO()
 	$g_iTroosNumber = 0
 	$g_iSpellsNumber = 0
 	While 1
-		SetLogCentered(" GTFO v2.4 ", Default, Default, True)
+		SetLogCentered(" GTFO v2.5 ", Default, Default, True)
 		SetDebugLog("Cycles :" & $g_iTxtCyclesGTFO & " Loop(s)", $COLOR_DEBUG)
 		If Not IsNumber($g_iTxtCyclesGTFO) Or $g_iTxtCyclesGTFO < 0 Then SetLog("Please config your cycles correctly! (UI:" & $g_iTxtCyclesGTFO & " Loop(s))", $COLOR_ERROR)
 		If $g_iTxtCyclesGTFO = 0 Then
@@ -211,7 +211,8 @@ Func DonateGTFO()
 			$iBenchmark = TimerDiff($iTime)
 			SetDebugLog("While Donation Get all Buttons in " & StringFormat("%.2f", $iBenchmark) & "'ms", $COLOR_DEBUG)
 			
-			$aiDonateButtons = _ImageSearchXML($g_sImgDonateCC & "DonateButton\", $iToShearch, "200, 90, 300, 700", True, False, False, 0, 0, 1000)
+			 ; Heavy artillery LoL.
+			 $aiDonateButtons = findMultipleQuick($g_sImgDonateCC, $iToShearch, "200, 90, 300, 700", True, "DonateButton", False)
 			
 			If UBound($aiDonateButtons) > 0 And Not @error Then     ; if Donate Button found
 				For $iBig = 0 To UBound($aiDonateButtons) - 1
@@ -448,8 +449,8 @@ EndFunc   ;==>ClanHop
 
 Func ClickAwayChat($iSleep = 10)
 	If RandomSleep($iSleep) Then Return
-	Local $iX = Random(115, 140, 1)
-	Local $iY = Random(595, 640, 1)
+	Local $iX = Random($aiClickAwayRegionRight[0], $aiClickAwayRegionRight[2], 1)
+	Local $iY = Random($aiClickAwayRegionRight[1], $aiClickAwayRegionRight[3], 1)
 	Click($iX, $iY, 1, 0)
 EndFunc   ;==>ClickAwayChat
 

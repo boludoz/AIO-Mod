@@ -94,78 +94,81 @@ Func _AutoUpgrade()
 		Local $sEvaluateUpgrade = String($g_aUpgradeNameLevel[1])
 		SetDebugLog("[_AutoUpgrade] " & $sEvaluateUpgrade)
 		
-		Switch $sEvaluateUpgrade
-			Case "Town Hall"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[0] = 1) ? True : False
-			Case "Gold Mine"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[1] = 1) ? True : False
-			Case "Elixir Collector"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[2] = 1) ? True : False
-			Case "Dark Elixir Drill"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[3] = 1) ? True : False
-			Case "Gold Storage"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[4] = 1) ? True : False
-			Case "Elixir Storage"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[5] = 1) ? True : False
-			Case "Dark Elixir Storage"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[6] = 1) ? True : False
-			Case "Clan Castle"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[7] = 1) ? True : False
-			Case "Army Camp"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[8] = 1) ? True : False
-			Case "Barracks"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[9] = 1) ? True : False
-			Case "Dark Barracks"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[10] = 1) ? True : False
-			Case "Dark Spell Factory"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[11] = 1) ? True : False
-			Case "Spell Factory"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[12] = 1) ? True : False
-			Case "Laboratory"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[13] = 1) ? True : False
-			Case "Workshop"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[14] = 1) ? True : False
-			Case "Pet House"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[15] = 1) ? True : False
-			Case "Barbarian King"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[16] = 1 Or $g_bUpgradeKingEnable = True) ? True : False
-			Case "Archer Queen"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[17] = 1 Or $g_bUpgradeQueenEnable = True) ? True : False
-			Case "Grand Warden"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[18] = 1 Or $g_bUpgradeWardenEnable = True) ? True : False
-			Case "Royal Champion"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[19] = 1 Or $g_bUpgradeChampionEnable = True) ? True : False
-			Case "Cannon"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[20] = 1) ? True : False
-			Case "Archer Tower"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[21] = 1) ? True : False
-			Case "Mortar"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[22] = 1) ? True : False
-			Case "Air Defense"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[23] = 1) ? True : False
-			Case "Wizard Tower"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[24] = 1) ? True : False
-			Case "Air Sweeper"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[25] = 1) ? True : False
-			Case "Hidden Tesla"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[26] = 1) ? True : False
-			Case "Bomb Tower"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[27] = 1) ? True : False
-			Case "X-Bow"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[28] = 1) ? True : False
-			Case "Inferno Tower"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[29] = 1) ? True : False
-			Case "Eagle Artillery"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[30] = 1) ? True : False
-			Case "Scattershot"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[31] = 1) ? True : False
-			Case "Builder's Hut"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[32] = 1) ? True : False
-			Case "Wall"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[33] = 1 Or $g_bAutoUpgradeWallsEnable = True) ? True : False
-			Case "Bomb", "Spring Trap", "Giant Bomb", "Air Bomb", "Seeking Air Mine", "Skeleton Trap", "Tornado Trap"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[34] = 1) ? True : False
-		EndSwitch
+		; It uses sensitive text with algorithm, like wikipedia bots for fix white spaces.
+		Select 
+			Case _CompareTexts($sEvaluateUpgrade, "Town Hall")
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[0] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Gold Mine")
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[1] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Elixir Collector")
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[2] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Dark Elixir Drill")
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[3] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Gold Storage") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[4] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Elixir Storage") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[5] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Dark Elixir Storage")
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[6] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Clan Castle") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[7] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Army Camp")  
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[8] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Barracks") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[9] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Dark Barracks") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[10] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Dark Spell Factory") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[11] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Spell Factory") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[12] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Laboratory") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[13] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Workshop") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[14] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Pet House") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[15] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Barbarian King") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[16] = 1 Or $g_bUpgradeKingEnable = True)
+			Case _CompareTexts($sEvaluateUpgrade, "Archer Queen") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[17] = 1 Or $g_bUpgradeQueenEnable = True) ? (True) : False)
+			Case _CompareTexts($sEvaluateUpgrade, "Grand Warden") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[18] = 1 Or $g_bUpgradeWardenEnable = True) ? (True) : False)
+			Case _CompareTexts($sEvaluateUpgrade, "Royal Champion") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[19] = 1 Or $g_bUpgradeChampionEnable = True) ? (True) : False)
+			Case _CompareTexts($sEvaluateUpgrade, "Cannon") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[20] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Archer Tower") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[21] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Mortar") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[22] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Air Defense") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[23] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Wizard Tower") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[24] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Air Sweeper") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[25] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Hidden Tesla") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[26] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Bomb Tower") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[27] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "X-Bow") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[28] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Inferno Tower") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[29] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Eagle Artillery") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[30] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Scattershot") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[31] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Builder's Hut") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[32] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Wall") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[33] = 1 Or $g_bAutoUpgradeWallsEnable = True)
+			Case _CompareTexts($sEvaluateUpgrade, "Bomb") Or _CompareTexts($sEvaluateUpgrade, "Spring Trap") Or _CompareTexts($sEvaluateUpgrade, "Giant Bomb") Or _CompareTexts($sEvaluateUpgrade, "Air Bomb") Or _CompareTexts($sEvaluateUpgrade, "Seeking Air Mine") Or _CompareTexts($sEvaluateUpgrade, "Skeleton Trap") Or _CompareTexts($sEvaluateUpgrade, "Tornado Trap")
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[34] = 1)
+			Case Else
+				$bMustIgnoreUpgrade = False
+		EndSelect
 
 		; check if the upgrade name is on the list of upgrades that must be ignored
 		If $bMustIgnoreUpgrade = True Then
@@ -202,11 +205,11 @@ Func _AutoUpgrade()
 		; matchmaking between resource name and the ignore list
 		Switch $g_aUpgradeResourceCostDuration[0]
 			Case "Gold"
-				$bMustIgnoreResource = ($g_iChkResourcesToIgnore[0] = 1) ? True : False
+				$bMustIgnoreResource = ($g_iChkResourcesToIgnore[0] = 1)
 			Case "Elixir"
-				$bMustIgnoreResource = ($g_iChkResourcesToIgnore[1] = 1) ? True : False
+				$bMustIgnoreResource = ($g_iChkResourcesToIgnore[1] = 1)
 			Case "Dark Elixir"
-				$bMustIgnoreResource = ($g_iChkResourcesToIgnore[2] = 1) ? True : False
+				$bMustIgnoreResource = ($g_iChkResourcesToIgnore[2] = 1)
 			Case Else
 				$bMustIgnoreResource = False
 		EndSwitch
@@ -296,83 +299,98 @@ Func _AutoUpgrade()
 
 EndFunc   ;==>AutoUpgrade
 
-Func AutoUpdtest()
+; #cs
+Func AutoUpdTest($sText = "")
 		Local $bMustIgnoreUpgrade = False
-		$g_aUpgradeNameLevel = BuildingInfo(242, 490 + $g_iBottomOffsetY)
+		
+		If $sText <> "" Then
+			Local $aTest[3] = [1, $sText, 3]
+			$g_aUpgradeNameLevel = $aTest
+		Else
+			$g_aUpgradeNameLevel = BuildingInfo(242, 490 + $g_iBottomOffsetY)
+		EndIf
+		
+		Local $sEvaluateUpgrade = String($g_aUpgradeNameLevel[1])
+		SetDebugLog("[AutoUpdtest] " & $sEvaluateUpgrade)
 
-		Switch $g_aUpgradeNameLevel[1]
-			Case "Town Hall"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[0] = 1) ? True : False
-			Case "Gold Mine"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[1] = 1) ? True : False
-			Case "Elixir Collector"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[2] = 1) ? True : False
-			Case "Dark Elixir Drill"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[3] = 1) ? True : False
-			Case "Gold Storage"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[4] = 1) ? True : False
-			Case "Elixir Storage"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[5] = 1) ? True : False
-			Case "Dark Elixir Storage"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[6] = 1) ? True : False
-			Case "Clan Castle"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[7] = 1) ? True : False
-			Case "Army Camp"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[8] = 1) ? True : False
-			Case "Barracks"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[9] = 1) ? True : False
-			Case "Dark Barracks"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[10] = 1) ? True : False
-			Case "Dark Spell Factory"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[11] = 1) ? True : False
-			Case "Spell Factory"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[12] = 1) ? True : False
-			Case "Laboratory"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[13] = 1) ? True : False
-			Case "Workshop"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[14] = 1) ? True : False
-			Case "Pet House"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[15] = 1) ? True : False
-			Case "Barbarian King"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[16] = 1 Or $g_bUpgradeKingEnable = True) ? True : False
-			Case "Archer Queen"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[17] = 1 Or $g_bUpgradeQueenEnable = True) ? True : False
-			Case "Grand Warden"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[18] = 1 Or $g_bUpgradeWardenEnable = True) ? True : False
-			Case "Royal Champion"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[19] = 1 Or $g_bUpgradeChampionEnable = True) ? True : False
-			Case "Cannon"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[20] = 1) ? True : False
-			Case "Archer Tower"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[21] = 1) ? True : False
-			Case "Mortar"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[22] = 1) ? True : False
-			Case "Air Defense"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[23] = 1) ? True : False
-			Case "Wizard Tower"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[24] = 1) ? True : False
-			Case "Air Sweeper"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[25] = 1) ? True : False
-			Case "Hidden Tesla "
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[26] = 1) ? True : False
-			Case "Bomb Tower"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[27] = 1) ? True : False
-			Case "X-Bow"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[28] = 1) ? True : False
-			Case "Inferno Tower"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[29] = 1) ? True : False
-			Case "Eagle Artillery"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[30] = 1) ? True : False
-			Case "Scattershot"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[31] = 1) ? True : False
-			Case "Builder's Hut"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[32] = 1) ? True : False
-			Case "Wall"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[33] = 1 Or $g_bAutoUpgradeWallsEnable = True) ? True : False
-			Case "Bomb", "Spring Trap", "Giant Bomb", "Air Bomb", "Seeking Air Mine", "Skeleton Trap", "Tornado Trap"
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[34] = 1) ? True : False
+		; It uses sensitive text with algorithm, like wikipedia bots for fix white spaces.
+		Select 
+			Case _CompareTexts($sEvaluateUpgrade, "Town Hall")
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[0] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Gold Mine")
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[1] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Elixir Collector")
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[2] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Dark Elixir Drill")
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[3] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Gold Storage") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[4] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Elixir Storage") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[5] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Dark Elixir Storage")
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[6] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Clan Castle") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[7] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Army Camp")  
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[8] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Barracks") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[9] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Dark Barracks") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[10] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Dark Spell Factory") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[11] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Spell Factory") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[12] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Laboratory") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[13] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Workshop") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[14] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Pet House") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[15] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Barbarian King") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[16] = 1 Or $g_bUpgradeKingEnable = True)
+			Case _CompareTexts($sEvaluateUpgrade, "Archer Queen") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[17] = 1 Or $g_bUpgradeQueenEnable = True) ? (True) : False)
+			Case _CompareTexts($sEvaluateUpgrade, "Grand Warden") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[18] = 1 Or $g_bUpgradeWardenEnable = True) ? (True) : False)
+			Case _CompareTexts($sEvaluateUpgrade, "Royal Champion") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[19] = 1 Or $g_bUpgradeChampionEnable = True) ? (True) : False)
+			Case _CompareTexts($sEvaluateUpgrade, "Cannon") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[20] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Archer Tower") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[21] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Mortar") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[22] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Air Defense") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[23] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Wizard Tower") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[24] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Air Sweeper") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[25] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Hidden Tesla") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[26] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Bomb Tower") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[27] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "X-Bow") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[28] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Inferno Tower") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[29] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Eagle Artillery") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[30] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Scattershot") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[31] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Builder's Hut") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[32] = 1)
+			Case _CompareTexts($sEvaluateUpgrade, "Wall") 
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[33] = 1 Or $g_bAutoUpgradeWallsEnable = True)
+			Case _CompareTexts($sEvaluateUpgrade, "Bomb") Or _CompareTexts($sEvaluateUpgrade, "Spring Trap") Or _CompareTexts($sEvaluateUpgrade, "Giant Bomb") Or _CompareTexts($sEvaluateUpgrade, "Air Bomb") Or _CompareTexts($sEvaluateUpgrade, "Seeking Air Mine") Or _CompareTexts($sEvaluateUpgrade, "Skeleton Trap") Or _CompareTexts($sEvaluateUpgrade, "Tornado Trap")
+				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[34] = 1)
 			Case Else
 				$bMustIgnoreUpgrade = False
-		EndSwitch
+		EndSelect
+
 		SetLog($bMustIgnoreUpgrade)
+		
+		Return $bMustIgnoreUpgrade
 EndFunc
+; #Ce
