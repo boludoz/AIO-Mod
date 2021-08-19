@@ -348,9 +348,17 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 			_ArrayDelete($listInfoDeploy, $aCC)
 			_ArrayInsert($listInfoDeploy, 0, $aRem)
 		EndIf
-    #EndRegion
+    #EndRegion - Drop CC first - Team AIO Mod++ (By Boludoz)
 
-	LaunchTroop2($listInfoDeploy, $g_iClanCastleSlot, $g_iKingSlot, $g_iQueenSlot, $g_iWardenSlot, $g_iChampionSlot)
+	
+	; samm0d
+	; If $g_aiAttackStdDropSides[$g_iMatchMode] = 4 And $g_iMatchMode = $DB Then
+		; SetLog(_PadStringCenter("Multi Finger Attack", 50, "="), $COLOR_INFO)
+		; launchMultiFinger($listInfoDeploy, $g_iClanCastleSlot, $g_iKingSlot, $g_iQueenSlot, $g_iWardenSlot, $g_iChampionSlot)
+	; Else
+		; SetLog(_PadStringCenter("Standard Attack", 50, "="), $COLOR_INFO)
+		LaunchTroop2($listInfoDeploy, $g_iClanCastleSlot, $g_iKingSlot, $g_iQueenSlot, $g_iWardenSlot, $g_iChampionSlot)
+	; EndIf
 
 	CheckHeroesHealth()
 

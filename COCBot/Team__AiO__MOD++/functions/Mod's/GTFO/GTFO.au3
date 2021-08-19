@@ -449,8 +449,8 @@ EndFunc   ;==>ClanHop
 
 Func ClickAwayChat($iSleep = 10)
 	If RandomSleep($iSleep) Then Return
-	Local $iX = Random(115, 140, 1)
-	Local $iY = Random(595, 640, 1)
+	Local $iX = Random($aiClickAwayRegionRight[0], $aiClickAwayRegionRight[2], 1)
+	Local $iY = Random($aiClickAwayRegionRight[1], $aiClickAwayRegionRight[3], 1)
 	Click($iX, $iY, 1, 0)
 EndFunc   ;==>ClickAwayChat
 
