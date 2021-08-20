@@ -34,7 +34,7 @@ EndFunc   ;==>CreateVillageNotify
 Global $g_hGrpNotifyDS = 0
 
 Global $g_hChkNotifyDSEnable = 0, $g_hTxtNotifyDSToken = 0
-Global $g_hTxtNotifyOriginDS = 0;, $g_hChkNotifyRemoteDS = 0
+Global $g_hTxtNotifyOriginDS = 0
 
 Global $g_hChkNotifyAlertMatchFoundDS = 0, $g_hChkNotifyAlertLastRaidIMGDS = 0, $g_hChkNotifyAlertLastRaidTXTDS = 0, $g_hChkNotifyAlertCampFullDS = 0, _
 	   $g_hChkNotifyAlertUpgradeWallsDS = 0, $g_hChkNotifyAlertOutOfSyncDS = 0, $g_hChkNotifyAlertTakeBreakDS = 0, $g_hChkNotifyAlertBuilderIdleDS = 0, _
@@ -53,7 +53,7 @@ Func CreateDiscordSubTab()
 	Local $sTxtTip = ""
 	Local $x = 25, $y = 45
 	$g_hGrpNotifyDS = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Notify - Discord", "Group_01", "Discord Notify") & " " & $g_sNotifyVersion, $x - 20, $y - 20, $g_iSizeWGrpTab3, $g_iSizeHGrpTab3)
-   
+
 		_GUICtrlCreateIcon ($g_sLibIconPath, $eIcnDiscord, $x + 3, $y, 32, 32)
 		$g_hChkNotifyDSEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Notify - Discord", "ChkNotifyDSEnable", "Enable Discord"), $x + 40, $y + 5)
 			GUICtrlSetOnEvent(-1, "chkPBDSenabled")
@@ -61,12 +61,12 @@ Func CreateDiscordSubTab()
 
 	$y += 40
 	$x -= 10
-        $g_hLblNotifyDSToken = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Notify", "LblNotifyDSToken", "Webhook URL") & ":", $x, $y, -1, -1, $SS_RIGHT)
-        $g_hTxtNotifyDSToken = _GUICtrlCreateInput("", $x + 120, $y - 3, 280, 19)
+        GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Notify", "LblNotifyDSToken", "Webhook URL") & ":", $x, $y, -1, -1, $SS_RIGHT)
+		$g_hTxtNotifyDSToken = _GUICtrlCreateInput($g_sNotifyDSToken, $x + 120, $y - 3, 280, 19)
             _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Notify", "LblNotifyDSToken_Info_01", "You need a Discord Webhook URL."))
             GUICtrlSetState(-1, $GUI_DISABLE)
 
-    
+
 	$y += 25
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Notify - Discord", "LblNotifyOrigin", "Origin") & ":", $x + 120, $y + 3, -1, -1, $SS_RIGHT)
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Village - Notify - Discord", "LblNotifyOrigin_Info_01", "Origin - Village name.")

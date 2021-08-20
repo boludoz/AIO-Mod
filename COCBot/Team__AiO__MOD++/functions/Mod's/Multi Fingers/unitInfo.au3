@@ -13,6 +13,18 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
+Func getTroopNumber($TroopEnumString)
+	Local $result
+	; Return must be a string because it doesn't work if the function returns numeric 0, because this is the same as Return False
+	If StringLeft($TroopEnumString, 1) = "$" Then
+		$result = Eval(StringRight($TroopEnumString, StringLen($TroopEnumString) - 1))
+	Else
+		$result = Eval($TroopEnumString)
+	EndIf
+
+	Return String($result)
+EndFunc   ;==>getTroopNumber
+
 Func unitLocation($kind) ; Gets the location of the unit type on the bar.
 	Local $return = -1
 	Local $i = 0
@@ -33,15 +45,7 @@ Func unitLocation($kind) ; Gets the location of the unit type on the bar.
 EndFunc   ;==>unitLocation
 
 Func getUnitLocationArray() ; Gets the location on the bar for every type of unit.
-	Local $result[63]
-	For $i = 0 To $eCCSpell + 1
-		$result[$i] = -1
-	Next
-
-	$result[51] = -1
-	$result[52] = -1
-	$result[61] = -1
-	$result[62] = -1
+	Local $result[$eCCSpell + 1] = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 
 	; Loop through all the bar and assign it position to the respective unit.
 	For $i = 0 To UBound($g_avAttackTroops) - 1
@@ -65,17 +69,7 @@ Func unitCount($kind) ; Gets a count of the number of units of the type specifie
 EndFunc   ;==>unitCount
 
 Func unitCountArray() ; Gets a count of the number of units for every type of unit.
-	;Local $result[$eCCSpell + 1] = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
-	Local $result[63]
-
-	For $i = 0 To $eCCSpell + 1
-		$result[$i] = -1
-	Next
-
-	$result[51] = -1
-	$result[52] = -1
-	$result[61] = -1
-	$result[62] = -1
+	Local $result[$eCCSpell + 1] = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 
 	; Loop through all the bar and assign its unit count to the respective unit.
 	For $i = 0 To UBound($g_avAttackTroops) - 1
@@ -90,13 +84,7 @@ EndFunc   ;==>unitCountArray
 
 ; Calculate how many troops to drop for the wave
 Func calculateDropAmount($unitCount, $remainingWaves, $position = 0, $minTroopsPerPosition = 1)
-;~ 	If $g_iSamM0dDebug = 1 Then Setlog("$unitCount: " & $unitCount)
-;~ 	If $g_iSamM0dDebug = 1 Then Setlog("$remainingWaves: " & $remainingWaves)
-;~ 	If $g_iSamM0dDebug = 1 Then Setlog("$position: " & $position)
-;~ 	If $g_iSamM0dDebug = 1 Then Setlog("$minTroopsPerPosition: " & $minTroopsPerPosition)
-
-	;Local $return = Ceiling(($unitCount+1) / $remainingWaves)
-	Local $return = Ceiling($unitCount / $remainingWaves)
+	Local $return = Ceiling(($unitCount+1) / $remainingWaves)
 	If $position <> 0 Then
 		If $unitCount < ($position * $minTroopsPerPosition) Then
 			$position = Floor($unitCount / $minTroopsPerPosition)
@@ -146,8 +134,9 @@ EndFunc   ;==>addVector
 Func standardSideDrop($dropVectors, $waveNumber, $sideIndex, $currentSlot, $troopsPerSlot, $useDelay = False)
 	Local $delay = ($useDelay = True) ? SetSleep(0): 0
 	Local $dropPoints
+
 	$dropPoints = $dropVectors[$waveNumber][$sideIndex]
-	If $currentSlot < UBound($dropPoints) Then AttackClick($dropPoints[$currentSlot][0], $dropPoints[$currentSlot][1], $troopsPerSlot, $delay, 0)
+	If $currentSlot < UBound($dropPoints) Then AttackClick($dropPoints[$currentSlot][0], $dropPoints[$currentSlot][1], $troopsPerSlot, 0, 0)
 EndFunc   ;==>standardSideDrop
 
 ; Drop the troops in a standard drop from two points along vectors at once
@@ -203,7 +192,7 @@ EndFunc   ;==>multiDouble
 ; Drop the troops from a single point on a single side
 Func sideSingle($dropSide, $dropAmount, $useDelay = False)
 	Local $delay = ($useDelay = True) ? SetSleep(0): 0
-	;Setlog("AttackClick: " & $dropSide[2][0] & "," &  $dropSide[2][1] & "," & $dropAmount & "," & $delay, $COLOR_ERROR, "Verdana", "7.5", 0)
+
 	AttackClick($dropSide[2][0], $dropSide[2][1], $dropAmount, $delay, 0)
 EndFunc   ;==>sideSingle
 
@@ -211,8 +200,7 @@ EndFunc   ;==>sideSingle
 Func sideDouble($dropSide, $dropAmount, $useDelay = False)
 	Local $delay = ($useDelay = True) ? SetSleep(0): 0
 	Local $half = Ceiling($dropAmount / 2)
-	;Setlog("AttackClick: " & $dropSide[1][0] & "," &  $dropSide[1][1] & "," & $half & ",0", $COLOR_ERROR, "Verdana", "7.5", 0)
+
 	AttackClick($dropSide[1][0], $dropSide[1][1], $half, 0, 0)
-	;Setlog("AttackClick: " & $dropSide[3][0] & "," &  $dropSide[3][1] & "," & $dropAmount - $half & "," & $delay, $COLOR_ERROR, "Verdana", "7.5", 0)
 	AttackClick($dropSide[3][0], $dropSide[3][1], $dropAmount - $half, $delay, 0)
 EndFunc   ;==>sideDouble

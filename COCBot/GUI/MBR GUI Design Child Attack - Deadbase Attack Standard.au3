@@ -6,7 +6,7 @@
 ; Return values .: None
 ; Author ........:
 ; Modified ......: CodeSlinger69 (2017)
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2018
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
@@ -15,12 +15,15 @@
 #include-once
 
 Global $g_hGUI_DEADBASE_ATTACK_STANDARD = 0
-Global $g_hCmbStandardDropOrderDB = 0, $g_hCmbStandardDropSidesDB = 0, $g_hCmbStandardUnitDelayDB = 0, $g_hCmbStandardWaveDelayDB = 0, $g_hChkRandomSpeedAtkDB = 0, _
+Global $g_hCmbStandardDropOrderDB = 0, $g_hCmbStandardDropSidesDB = 0, _
 	   $g_hChkSmartAttackRedAreaDB = 0, $g_hCmbSmartDeployDB = 0, $g_hChkAttackNearGoldMineDB = 0, $g_hChkAttackNearElixirCollectorDB = 0, $g_hChkAttackNearDarkElixirDrillDB = 0
 
 Global $g_hLblSmartDeployDB = 0, $g_hPicAttackNearDarkElixirDrillDB = 0
 Global $g_hBtnCustomDropOrderDB = 0
-
+#Region - Multi Finger - Team AIO Mod++
+Global $g_hLblDBMultiFinger = 0
+Global $g_hCmbDBMultiFinger = 0
+#EndRegion - Multi Finger - Team AIO Mod++
 Func CreateAttackSearchDeadBaseStandard()
 
 	$g_hGUI_DEADBASE_ATTACK_STANDARD = _GUICreate("", $_GUI_MAIN_WIDTH - 195, $g_iSizeHGrpTab4, 150, 25, BitOR($WS_CHILD, $WS_TABSTOP), -1, $g_hGUI_DEADBASE)
@@ -41,18 +44,23 @@ Func CreateAttackSearchDeadBaseStandard()
 								   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "CmbStandardDropOrder_Info_03", "Only the troops selected in the ""Only drop these troops"" option will be dropped"))
 
 		$y += 25
+			#Region - Multi Finger - Team AIO Mod++      
 			GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "Label_02", "Attack on") & ":", $x, $y + 5, -1, -1)
 			$g_hCmbStandardDropSidesDB = GUICtrlCreateCombo("", $x + 55, $y, 120, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 				_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "CmbStandardDropSides_Info_01", "Attack on a single side, penetrates through base") & @CRLF & _
-								   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "CmbStandardDropSides_Info_02", "Attack on Two Sides, Penetrates Through Base") & @CRLF & _
-								   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "CmbStandardDropSides_Info_03", "Attack on Three Sides, Gets Outer And some Inside of Base") & @CRLF & _
-								   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "CmbStandardDropSides_Info_04", "Select The No. of Sides to Attack On."))
-				GUICtrlSetData(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "CmbStandardDropSides_Item_01", "One Side") & "|" & _
-								   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "CmbStandardDropSides_Item_02", "Two Sides") & "|" & _
-								   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "CmbStandardDropSides_Item_03", "Three Sides") & "|" & _
-								   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "CmbStandardDropSides_Item_04", "All Sides Equally") & "|" & _
-								   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "CmbStandardDropSides_Item_07", "Classic Four Fingers"), GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "CmbStandardDropSides_Item_04", -1))
-				GUICtrlSetOnEvent(-1, "cmbStandardDropSidesDB") ; Uncheck SmartAttack Red Area when enable FourFinger to avoid conflict
+								   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "CmbStandardDropSides_Info_02", "Attack on two sides, penetrates through base") & @CRLF & _
+								   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "CmbStandardDropSides_Info_03", "Attack on three sides, gets outer and some inside of base") & @CRLF & _
+								   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "CmbStandardDropSides_Info_07", "Attack on Classic 4Fingers") & @CRLF & _
+								   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "CmbStandardDropSides_Info_08", "Attack on Multi Finger") & @CRLF & _
+								   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "CmbStandardDropSides_Info_04", "Select the No. of sides to attack on."))
+							       	   GUICtrlSetData(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "CmbStandardDropSides_Item_01", "one side") & "|" & _
+								   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "CmbStandardDropSides_Item_02", "two sides") & "|" & _
+								   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "CmbStandardDropSides_Item_03", "three sides") & "|" & _
+								   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "CmbStandardDropSides_Item_04", "all sides equally") & "|" & _
+								   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "CmbStandardDropSides_Item_08", "Multi Finger"), _
+								   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "CmbStandardDropSides_Item_04", -1))
+			    					   GUICtrlSetOnEvent(-1, "Bridge") ; Uncheck SmartAttack Red Area when enable FourFinger to avoid conflict by SM MOD
+			 #EndRegion - Multi Finger - Team AIO Mod++      
 		#Region - Custom sleep Drop - Team AIO Mod++
 		$y += 25
 			GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "Lbl-CmbStandardUnitDelay", "Delay Unit") & ":", $x, $y + 5, -1, -1)
@@ -116,11 +124,32 @@ Func CreateAttackSearchDeadBaseStandard()
 			$g_hPicAttackNearDarkElixirDrillDB = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnDrill, $x + 20 , $y - 3, 24, 24)
 				_GUICtrlSetTip(-1, $sTxtTip)
 
-		$y += 40
+		$y += 50 ; 40 to 50 AIO Mod++ 
 		$x = 98
 			$g_hBtnCustomDropOrderDB = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "BtnCustomDropOrder", "Drop Order"), $x, $y, 85, 25)
 				_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "BtnCustomDropOrder_Info_01", "Select Custom Troops Dropping Order"))
 				GUICtrlSetOnEvent(-1, "CustomDropOrder")
 		GUICtrlCreateGroup("", -99, -99, 1, 1)
-
+ #Region - Multi Finger - Team AIO Mod++      
+	$x  =  23
+	$y += - 100
+	$g_hLblDBMultiFinger = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - MULTI FINGERS", "LblDBMultiFinger_Info_01", "Style:"), $x, $y + 3, 33, -1, $SS_RIGHT)
+	$g_hCmbDBMultiFinger = GUICtrlCreateCombo("", $x + 56, $y, 122, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+		$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - MULTI FINGERS", "CmbDBMultiFinger_Info_01", "Select a Multi-Fingers Attack Style.") & @CRLF & @CRLF & _
+			GetTranslatedFileIni("MBR GUI Design Child Attack - MULTI FINGERS", "CmbDBMultiFinger_Info_02", "* Random Mode, Chooses One Of The Attack Styles By Random.") & @CRLF & _
+		    GetTranslatedFileIni("MBR GUI Design Child Attack - MULTI FINGERS", "CmbDBMultiFinger_Info_03", "* 4Fingers And 8Fingers Styles, Will Attack From All 4 Sides At Once.") & @CRLF & _
+			GetTranslatedFileIni("MBR GUI Design Child Attack - MULTI FINGERS", "CmbDBMultiFinger_Info_04", "* 4Fingers And 8Fingers Styles, Are Risky And Bot Like!")
+	_GUICtrlSetTip(-1, $sTxtTip)
+	GUICtrlSetData(-1,  GetTranslatedFileIni("MBR GUI Design Child Attack - MULTI FINGERS", "CmbDBMultiFinger_Info_05", "Random Mode") & "|" & _
+						GetTranslatedFileIni("MBR GUI Design Child Attack - MULTI FINGERS", "CmbDBMultiFinger_Info_06", "4Fingers Standard") & "|" & _
+						GetTranslatedFileIni("MBR GUI Design Child Attack - MULTI FINGERS", "CmbDBMultiFinger_Info_07", "4Fingers Spiral Left") & "|" & _
+						GetTranslatedFileIni("MBR GUI Design Child Attack - MULTI FINGERS", "CmbDBMultiFinger_Info_08", "4Fingers Spiral Right") & "|" & _
+						GetTranslatedFileIni("MBR GUI Design Child Attack - MULTI FINGERS", "CmbDBMultiFinger_Info_09", "8Fingers Blossom") & "|" & _
+						GetTranslatedFileIni("MBR GUI Design Child Attack - MULTI FINGERS", "CmbDBMultiFinger_Info_10", "8Fingers Implosion") & "|" & _
+						GetTranslatedFileIni("MBR GUI Design Child Attack - MULTI FINGERS", "CmbDBMultiFinger_Info_11", "8Fingers Spiral Left") & "|" & _
+						GetTranslatedFileIni("MBR GUI Design Child Attack - MULTI FINGERS", "CmbDBMultiFinger_Info_12", "8Fingers Spiral Right"), GetTranslatedFileIni("MBR GUI Design Child Attack - MULTI FINGERS", "CmbDBMultiFinger_Info_06", "4Fingers Standard"))
+	GUICtrlSetOnEvent(-1, "cmbDBMultiFinger")
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+ GUICtrlCreateGroup("", -99, -99, 1, 1)
+#EndRegion - Multi Finger - Team AIO Mod++
 EndFunc   ;==>CreateAttackSearchDeadBaseStandard

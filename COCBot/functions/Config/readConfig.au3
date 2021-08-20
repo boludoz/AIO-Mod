@@ -921,7 +921,7 @@ Func ReadConfig_600_18()
 	;Remote Control
 	IniReadS($g_bNotifyRemoteEnable, $g_sProfileConfigPath, "notify", "PBRemote", False, "Bool")
 	IniReadS($g_sNotifyOrigin, $g_sProfileConfigPath, "notify", "Origin", $g_sProfileCurrentName)
-	IniReadS($g_iNotifyDeletePushesOlderThanHours, $g_sProfileConfigPath, "notify", "HoursPushBullet", 4, "int")
+
 	;Alerts
 	IniReadS($g_bNotifyAlertMatchFound, $g_sProfileConfigPath, "notify", "AlertPBVMFound", False, "Bool")
 	IniReadS($g_bNotifyAlerLastRaidIMG, $g_sProfileConfigPath, "notify", "AlertPBLastRaid", False, "Bool")
@@ -942,14 +942,9 @@ Func ReadConfig_600_18()
 	
 	#Region - Discord - Team AIO Mod++
 	IniReadS($g_bNotifyDSEnable, $g_sProfileConfigPath, "notifyDS", "DSEnabled", False, "Bool")
-	IniReadS($g_sNotifyDSToken, $g_sProfileConfigPath, "notifyDS", "DSToken", "https://discord.com/api/webhooks/XXX/XXX")
-	; IniReadS($g_iNotifyModeDS, $g_sProfileConfigPath, "notifyDS", "CmbNotify", 0, "Int")
-	
-	; Remote Control
-	; IniReadS($g_bNotifyRemoteEnableDS, $g_sProfileConfigPath, "notifyDS", "PBRemote", False, "Bool")
+	IniReadS($g_sNotifyDSToken, $g_sProfileConfigPath, "notifyDS", "DSToken", "")
 	IniReadS($g_sNotifyOriginDS, $g_sProfileConfigPath, "notifyDS", "Origin", $g_sProfileCurrentName)
-	; IniReadS($g_iNotifyDeletePushesOlderThanHoursDS, $g_sProfileConfigPath, "notifyDS", "HoursPushBullet", 4, "int")
-	
+
 	; Alerts
 	IniReadS($g_bNotifyAlertMatchFoundDS, $g_sProfileConfigPath, "notifyDS", "AlertPBVMFound", False, "Bool")
 	IniReadS($g_bNotifyAlerLastRaidIMGDS, $g_sProfileConfigPath, "notifyDS", "AlertPBLastRaid", False, "Bool")
@@ -983,6 +978,20 @@ Func ReadConfig_600_19()
 	For $i = 0 To 6
 		$g_abNotifyScheduleWeekDays[$i] = ($g_abNotifyScheduleWeekDays[$i] = "1")
 	Next
+	
+	#Region - Discord - Team AIO Mod++
+	;Schedule DS
+	$g_bNotifyScheduleHoursEnableDS = (IniRead($g_sProfileConfigPath, "notifyDS", "NotifyHoursEnable", "0") = "1")
+	$g_abNotifyScheduleHoursDS = StringSplit(IniRead($g_sProfileConfigPath, "notifyDS", "NotifyHours", "1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1"), "|", $STR_NOCOUNT)
+	For $i = 0 To 23
+		$g_abNotifyScheduleHoursDS[$i] = ($g_abNotifyScheduleHoursDS[$i] = "1")
+	Next
+	$g_bNotifyScheduleWeekDaysEnableDS = (IniRead($g_sProfileConfigPath, "notifyDS", "NotifyWeekDaysEnable", "0") = "1")
+	$g_abNotifyScheduleWeekDaysDS = StringSplit(IniRead($g_sProfileConfigPath, "notifyDS", "NotifyWeekDays", "1|1|1|1|1|1|1"), "|", $STR_NOCOUNT)
+	For $i = 0 To 6
+		$g_abNotifyScheduleWeekDaysDS[$i] = ($g_abNotifyScheduleWeekDaysDS[$i] = "1")
+	Next
+	#EndRegion - Discord - Team AIO Mod++
 EndFunc   ;==>ReadConfig_600_19
 
 Func ReadConfig_600_22()

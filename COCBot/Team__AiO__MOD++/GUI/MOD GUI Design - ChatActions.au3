@@ -39,11 +39,12 @@ Func TabChatActionsGUI()
 	
 		GUICtrlCreateLabel("Frequency :", $x + 26, $y + 4, 60, 17)
 		$g_hCmbPriorityCHAT = GUICtrlCreateCombo("", $x + 128, $y, 89, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
-		GUICtrlSetData(-1, GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptions", -1),  GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptionNever", -1))
+		GUICtrlSetData(-1, GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptions", $g_sFrequenceChain))
+			_GUICtrlComboBox_SetCurSel($g_hCmbPriorityCHAT, $g_iCmbPriorityCHAT)
 		GUICtrlSetOnEvent(-1, "cmbChatActionsChat")
         GUICtrlCreateLabel("Use each ... minutes :", $x + 272, $y + 4, 107, 17)
 		$g_hTxtDelayTimeClan = GUICtrlCreateInput("2", $x + 400, $y, 25, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design - ChatActions", "TxtDelayTime_Info_01", -1))
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design - ChatActions", "TxtDelayTime_Info_01", "Time to wait after use."))
 			GUICtrlSetLimit(-1, 2)
 
 	$y += 23
@@ -82,11 +83,12 @@ Func TabChatActionsGUI()
 	$y -= 5
 		GUICtrlCreateLabel("Frequency :", $x + 26, $y + 4, 60, 17)
 		$g_hCmbPriorityFC = GUICtrlCreateCombo("", $x + 128, $y, 89, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
-		GUICtrlSetData(-1, GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptions", -1),  GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptionNever", -1))
+		GUICtrlSetData(-1, GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptions", -1))
+			_GUICtrlComboBox_SetCurSel($g_hCmbPriorityFC, $g_iCmbPriorityFC)
 		GUICtrlSetOnEvent(-1, "cmbChatActionsFC")
         GUICtrlCreateLabel("Use each ... minutes :", $x + 272, $y + 4, 107, 17)
 		$g_hTxtDelayTimeFC = GUICtrlCreateInput("5", $x + 400, $y, 25, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design - ChatActions", "TxtDelayTime_Info_01", -1))
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design - ChatActions", "TxtDelayTime_Info_01", "Time to wait after use."))
 			GUICtrlSetLimit(-1, 2)
 
 

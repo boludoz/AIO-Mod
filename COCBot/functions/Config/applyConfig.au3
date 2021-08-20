@@ -1005,11 +1005,7 @@ Func ApplyConfig_600_18($TypeReadSave)
 			#Region - Discord - Team AIO Mod++
 			GUICtrlSetState($g_hChkNotifyDSEnable, $g_bNotifyDSEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
 			chkPBDSenabled()
-			; _GUICtrlComboBox_SetCurSel($g_hCmbNotifyModeDS, $g_iNotifyMode)
 			GUICtrlSetData($g_hTxtNotifyDSToken, $g_sNotifyDSToken)
-
-			;Remote Control
-			; GUICtrlSetState($g_hChkNotifyRemote, $g_bNotifyRemoteEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hTxtNotifyOriginDS, $g_sNotifyOriginDS)
 
 			;Alerts
@@ -1058,14 +1054,10 @@ Func ApplyConfig_600_18($TypeReadSave)
 			$g_bNotifyAlertLaboratoryIdle = (GUICtrlRead($g_hChkNotifyAlertLaboratoryIdle) = $GUI_CHECKED)
 			
 			#Region - Discord - Team AIO Mod++
-			; $g_iNotifyModeDS = _GUICtrlComboBox_GetCurSel($g_hCmbNotifyModeDS)
 			$g_bNotifyDSEnable = (GUICtrlRead($g_hChkNotifyDSEnable) = $GUI_CHECKED)
 			$g_sNotifyDSToken = GUICtrlRead($g_hTxtNotifyDSToken)
-
-			;Remote Control
-			; $g_bNotifyRemoteEnableDS = (GUICtrlRead($g_hChkNotifyRemoteDS) = $GUI_CHECKED)
 			$g_sNotifyOriginDS = GUICtrlRead($g_hTxtNotifyOriginDS)
-			
+
 			;Alerts
 			$g_bNotifyAlertMatchFoundDS = (GUICtrlRead($g_hChkNotifyAlertMatchFoundDS) = $GUI_CHECKED)
 			$g_bNotifyAlerLastRaidIMGDS = (GUICtrlRead($g_hChkNotifyAlertLastRaidIMGDS) = $GUI_CHECKED)
@@ -1103,6 +1095,21 @@ Func ApplyConfig_600_19($TypeReadSave)
 			For $i = 0 To 6
 				GUICtrlSetState($g_hChkNotifyWeekdays[$i], $g_abNotifyScheduleWeekDays[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
 			Next
+			
+			#Region - Discord - Team AIO Mod++
+			;Schedule DS
+			GUICtrlSetState($g_hChkNotifyOnlyHoursDS, $g_bNotifyScheduleHoursEnableDS ? $GUI_CHECKED : $GUI_UNCHECKED)
+			chkNotifyHoursDS()
+			For $i = 0 To 23
+				GUICtrlSetState($g_hChkNotifyhoursDS[$i], $g_abNotifyScheduleHoursDS[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
+			Next
+
+			GUICtrlSetState($g_hChkNotifyOnlyWeekDaysDS, $g_bNotifyScheduleWeekDaysEnableDS ? $GUI_CHECKED : $GUI_UNCHECKED)
+			chkNotifyWeekDaysDS()
+			For $i = 0 To 6
+				GUICtrlSetState($g_hChkNotifyWeekdaysDS[$i], $g_abNotifyScheduleWeekDaysDS[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
+			Next
+			#EndRegion - Discord - Team AIO Mod++
 		Case "Save"
 			$g_bNotifyScheduleHoursEnable = (GUICtrlRead($g_hChkNotifyOnlyHours) = $GUI_CHECKED)
 			For $i = 0 To 23
@@ -1112,6 +1119,17 @@ Func ApplyConfig_600_19($TypeReadSave)
 			For $i = 0 To 6
 				$g_abNotifyScheduleWeekDays[$i] = (GUICtrlRead($g_hChkNotifyWeekdays[$i]) = $GUI_CHECKED)
 			Next
+			
+			#Region - Discord - Team AIO Mod++
+			$g_bNotifyScheduleHoursEnableDS = (GUICtrlRead($g_hChkNotifyOnlyHoursDS) = $GUI_CHECKED)
+			For $i = 0 To 23
+				$g_abNotifyScheduleHoursDS[$i] = (GUICtrlRead($g_hChkNotifyhoursDS[$i]) = $GUI_CHECKED)
+			Next
+			$g_bNotifyScheduleWeekDaysEnableDS = (GUICtrlRead($g_hChkNotifyOnlyWeekDaysDS) = $GUI_CHECKED)
+			For $i = 0 To 6
+				$g_abNotifyScheduleWeekDaysDS[$i] = (GUICtrlRead($g_hChkNotifyWeekdaysDS[$i]) = $GUI_CHECKED)
+			Next
+			#EndRegion - Discord - Team AIO Mod++
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_19
 

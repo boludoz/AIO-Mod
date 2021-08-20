@@ -14,6 +14,21 @@
 ; ===============================================================================================================================
 
 ; <><><><><><><><><><><><><><><> Team AiO MOD++ (2020) <><><><><><><><><><><><><><><>
+; Multi Fingers Profile - (LunaEclipse) - Team AiO MOD++
+#include "functions\Mod's\Multi Fingers\4Fingers.au3"
+#include "functions\Mod's\Multi Fingers\8Fingers.au3"
+#include "functions\Mod's\Multi Fingers\MultiFinger.au3"
+#include "functions\Mod's\Multi Fingers\UnitInfo.au3"
+
+; Vectors
+#include "functions\Mod's\Multi Fingers\Vectors\4FingerStandard.au3"
+#include "functions\Mod's\Multi Fingers\Vectors\4FingerSpiralLeft.au3"
+#include "functions\Mod's\Multi Fingers\Vectors\4FingerSpiralRight.au3"
+#include "functions\Mod's\Multi Fingers\Vectors\8FingerPinWheelLeft.au3"
+#include "functions\Mod's\Multi Fingers\Vectors\8FingerPinWheelRight.au3"
+#include "functions\Mod's\Multi Fingers\Vectors\8FingerBlossom.au3"
+#include "functions\Mod's\Multi Fingers\Vectors\8FingerImplosion.au3"
+
 ; Other - Team AiO MOD++
 #include "functions\Mod's\ModFuncs.au3"
 #include "functions\Pixels\_Wait4Pixel.au3"
