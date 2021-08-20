@@ -31,6 +31,15 @@ Global Enum $eIcnBB = 1 , $eIcnLabBB, $eIcnBBElixir, $eIcnBBGold, $eIcnBBTrophie
 		$eIcnBBWallL6, $eIcnBBWallL7, $eIcnBBWallL8, $eIcnBBWallL9
 #EndRegion - Icn - Team AIO Mod++
 
+#Region - Multi Finger - Team AIO Mod++
+Global Enum $directionLeft, $directionRight
+Global Enum $sideBottomRight, $sideTopLeft, $sideBottomLeft, $sideTopRight
+Global Enum $mfRandom, $mfFFStandard, $mfFFSpiralLeft, $mfFFSpiralRight, $mf8FBlossom, $mf8FImplosion, $mf8FPinWheelLeft, $mf8FPinWheelRight
+
+Global $g_iMultiFingerStyle = 1
+Global Enum $eCCSpell = $eHaSpell + 1
+#EndRegion - Multi Finger - Team AIO Mod++
+
 #Region - BuyGuard - Team AIO Mod++
 Global $g_bChkColorfulAttackLog = 0, $g_bChkBuyGuard = False
 Global $g_hChkColorfulAttackLog = 0, $g_hChkBuyGuard = 0

@@ -46,9 +46,9 @@ Func multiFingerDropOnEdge($multiStyle, $dropVectors, $waveNumber, $kind, $dropA
 	If $position = 0 Or $dropAmount < $position Then $position = $dropAmount
 
 	KeepClicks()
-	; If _SleepAttack($iDelayDropOnEdge1) Then Return
-	;SelectDropTroop($kind) ; Select Troop
-	; If _SleepAttack($iDelayDropOnEdge2) Then Return
+	 If _SleepAttack($DELAYDROPONEDGE1) Then Return
+	SelectDropTroop($kind) ; Select Troop
+	 If _SleepAttack($DELAYDROPONEDGE2) Then Return
 
 	Switch $multiStyle
 		Case $mfFFStandard, $mfFFSpiralLeft, $mfFFSpiralRight
@@ -59,15 +59,16 @@ Func multiFingerDropOnEdge($multiStyle, $dropVectors, $waveNumber, $kind, $dropA
 	ReleaseClicks()
 EndFunc   ;==>multiFingerDropOnEdge
 
-Func launchMultiFinger($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iChampion, $overrideSmartDeploy = -1)
+Func launchMultiFinger($listInfoDeploy, $g_iClanCastleSlot, $g_iKingSlot, $g_iQueenSlot, $g_iWardenSlot, $g_iChampionSlot, $overrideSmartDeploy = -1)
 	Local $kind, $nbSides, $waveNumber, $waveCount, $position, $remainingWaves, $dropAmount
 	Local $RandomEdge, $RandomXY
 	Local $dropVectors[0][0]
+	Local $barPosition
 
-	Local $multiStyle = ($iMultiFingerStyle = $mfRandom) ? Random($mfFFStandard, $mf8FPinWheelRight, 1) : (($iMultiFingerStyle = -1) ? Random($mfFFStandard, $mf8FPinWheelRight, 1) : $iMultiFingerStyle)
+	Local $multiStyle = ($g_iMultiFingerStyle = $mfRandom) ? Random($mfFFStandard, $mf8FPinWheelRight, 1) : $g_iMultiFingerStyle
 
 	SetLog("Attacking " & $aAttackTypeString[$multiStyle] & " fight style.", $COLOR_BLUE)
-	If $g_bDebugSetlog Then SetLog("Launch " & $aAttackTypeString[$multiStyle] & " with CC " & $CC & ", K " & $King & ", Q " & $Queen & ", W " & $Warden , $COLOR_PURPLE)
+	If $g_bDebugSetlog = 1 Then SetLog("Launch " & $aAttackTypeString[$multiStyle] & " with CC " & $g_iClanCastleSlot & ", K " & $g_iKingSlot & ", Q " & $g_iQueenSlot & ", W " & $g_iWardenSlot, $COLOR_PURPLE)
 
 	Local $aDeployButtonPositions = getUnitLocationArray()
 	Local $unitCount = unitCountArray()
@@ -83,66 +84,195 @@ Func launchMultiFinger($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iChamp
 		$waveCount = $listInfoDeploy[$i][3]
 		$position = $listInfoDeploy[$i][4]
 		$remainingWaves = ($waveCount - $waveNumber) + 1
-		Local $barPosition = $aDeployButtonPositions[$kind]
+		$barPosition = $aDeployButtonPositions[$kind]
 
 		If IsString($kind) And ($kind = "CC" Or $kind = "HEROES") Then
 			$RandomEdge = $g_aaiEdgeDropPoints[Round(Random(0, 3))]
 			$RandomXY = Round(Random(0, 4))
 
-			Switch $kind
-				Case "CC"
-					dropCC($RandomEdge[$RandomXY][0], $RandomEdge[$RandomXY][1], $iCC)
-					$g_bIsCCDropped = True
-				Case "HEROES"
-					dropHeroes($RandomEdge[$RandomXY][0], $RandomEdge[$RandomXY][1], $iKing, $iQueen, $iWarden, $iChampion)
-					$g_bIsHeroesDropped = True
-			EndSwitch
+			If $kind = "CC" Then
+				dropCC($RandomEdge[$RandomXY][0], $RandomEdge[$RandomXY][1], $g_iClanCastleSlot)
+			ElseIf $kind = "HEROES" Then
+				dropHeroes($RandomEdge[$RandomXY][0], $RandomEdge[$RandomXY][1], $g_iKingSlot, $g_iQueenSlot, $g_iWardenSlot, $g_iChampionSlot)
+			EndIf
 		ElseIf IsNumber($kind) And $barPosition <> -1 Then
 			$dropAmount = calculateDropAmount($unitCount[$kind], $remainingWaves, $position)
 			$unitCount[$kind] -= $dropAmount
 
 			If $dropAmount > 0 Then
+
 				multiFingerDropOnEdge($multiStyle, $dropVectors, $i, $barPosition, $dropAmount, $position)
 				If _SleepAttack(SetSleep(1)) Then Return
 			EndIf
 		EndIf
 	Next
-
+	If _Sleep($DELAYALGORITHM_ALLTROOPS4) Then Return
+	SetLog("Dropping left over troops", $COLOR_INFO)
+	For $x = 0 To 1
+		If PrepareAttack($g_iMatchMode, True) = 0 Then
+			If $g_bDebugSetlog = 1 Then Setlog("No Wast time... exit, no troops usable left", $COLOR_DEBUG)
+			ExitLoop ;Check remaining quantities
+		EndIf
+		For $i = $eBarb To $eTroopCount -1 ; Loop through all troop types
+			LaunchTroop($i, $nbSides, 0, 1, 0)
+			CheckHeroesHealth()
+			If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
+		Next
+	Next
+	CheckHeroesHealth()
 	SetLog("Finished Attacking, waiting for the battle to end")
+	Local $usingMultiFinger = False
 	Return True
 EndFunc   ;==>launchMultiFinger
 
-Func cmbDBMultiFinger()
-	If $g_aiAttackStdDropSides[$DB] = 4 Then
-		GUICtrlSetState($lblDBMultiFinger, $GUI_SHOW)
-		GUICtrlSetState($cmbDBMultiFinger, $GUI_SHOW)
-		$iMultiFingerStyle = _GUICtrlComboBox_GetCurSel($cmbDBMultiFinger)
+Func dropRemainingTroops($nbSides, $overrideSmartDeploy = -1) ; Uses any left over troops
+	SetLog("Dropping left over troops", $COLOR_BLUE)
+
+	For $x = 0 To 1
+		PrepareAttack($g_iMatchMode, True) ; Check remaining quantities
+		For $i = $eBarb To $eTroopCount -1 ; Loop through all troop types
+			LaunchTroops($i, $nbSides, 0, 1, 0, $overrideSmartDeploy)
+			CheckHeroesHealth()
+			If _SleepAttack($DELAYALGORITHM_ALLTROOPS5) Then Return
+		Next
+	Next
+EndFunc   ;==>dropRemainingTroops
+
+Func LaunchTroops($kind, $nbSides, $waveNb, $maxWaveNb, $slotsPerEdge = 0, $overrideSmartDeploy = -1, $overrideNumberTroops = -1)
+	Local $troopNb
+	Local $troop = unitLocation($kind)
+
+	If $overrideNumberTroops = -1 Then
+		$troopNb = Ceiling(unitCount($kind) / $maxWaveNb)
 	Else
-		GUICtrlSetState($lblDBMultiFinger, $GUI_HIDE)
-		GUICtrlSetState($cmbDBMultiFinger, $GUI_HIDE)
+		$troopNb = $overrideNumberTroops
+	EndIf
+
+	If ($troop = -1) Or ($troopNb = 0) Then ; Troop not trained or 0 units to deploy
+		Return False; nothing to do => skip this wave
+	EndIf
+
+	modDropTroop($troop, $nbSides, $troopNb, $slotsPerEdge, -1, $overrideSmartDeploy)
+
+	Return True
+EndFunc   ;==>LaunchTroops
+
+Func modDropTroop($troop, $nbSides, $number, $slotsPerEdge = 0, $indexToAttack = -1, $overrideSmartDeploy = -1)
+	If isProblemAffect(True) Then Return
+
+	Local $nameFunc = "[modDropTroop]"
+	debugRedArea($nameFunc & " IN ")
+	debugRedArea("troop : [" & $troop & "] / nbSides : [" & $nbSides & "] / number : [" & $number & "] / slotsPerEdge [" & $slotsPerEdge & "]")
+
+	If ($g_abAttackStdSmartAttack[$g_iMatchMode]) And $overrideSmartDeploy = -1 Then
+		If $slotsPerEdge = 0 Or $number < $slotsPerEdge Then $slotsPerEdge = $number
+		If _SleepAttack($DelayDropTroop1) Then Return
+		If _SleepAttack($DelayDropTroop2) Then Return
+
+		If $nbSides < 1 Then Return
+		Local $nbTroopsLeft = $number
+		If ($g_abAttackStdSmartNearCollectors[$g_iMatchMode][0] = 0 And $g_abAttackStdSmartNearCollectors[$g_iMatchMode][1] = 0 And $g_abAttackStdSmartNearCollectors[$g_iMatchMode][2] = 0) Then
+			If $nbSides = 4 Then
+				Local $g_aaiEdgeDropPointsPixelToDrop = GetPixelDropTroop($troop, $number, $slotsPerEdge)
+
+				For $i = 0 To $nbSides - 3
+					Local $nbTroopsPerEdge = Round($nbTroopsLeft / ($nbSides - $i * 2))
+					If ($number > 0 And $nbTroopsPerEdge = 0) Then $nbTroopsPerEdge = 1
+					Local $listEdgesPixelToDrop[2] = [$g_aaiEdgeDropPointsPixelToDrop[$i], $g_aaiEdgeDropPointsPixelToDrop[$i + 2]]
+					DropOnPixel($troop, $listEdgesPixelToDrop, $nbTroopsPerEdge, $slotsPerEdge)
+					$nbTroopsLeft -= $nbTroopsPerEdge * 2
+				Next
+				Return
+			EndIf
+
+			For $i = 0 To $nbSides - 1
+				If $nbSides = 1 Or ($nbSides = 3 And $i = 2) Then
+					Local $nbTroopsPerEdge = Round($nbTroopsLeft / ($nbSides - $i))
+					If ($number > 0 And $nbTroopsPerEdge = 0) Then $nbTroopsPerEdge = 1
+					Local $g_aaiEdgeDropPointsPixelToDrop = GetPixelDropTroop($troop, $nbTroopsPerEdge, $slotsPerEdge)
+					Local $listEdgesPixelToDrop[1] = [$g_aaiEdgeDropPointsPixelToDrop[$i]]
+					DropOnPixel($troop, $listEdgesPixelToDrop, $nbTroopsPerEdge, $slotsPerEdge)
+					$nbTroopsLeft -= $nbTroopsPerEdge
+				ElseIf ($nbSides = 2 And $i = 0) Or ($nbSides = 3 And $i <> 1) Then
+					Local $nbTroopsPerEdge = Round($nbTroopsLeft / ($nbSides - $i * 2))
+					If ($number > 0 And $nbTroopsPerEdge = 0) Then $nbTroopsPerEdge = 1
+					Local $g_aaiEdgeDropPointsPixelToDrop = GetPixelDropTroop($troop, $nbTroopsPerEdge, $slotsPerEdge)
+					Local $listEdgesPixelToDrop[2] = [$g_aaiEdgeDropPointsPixelToDrop[$i + 3], $g_aaiEdgeDropPointsPixelToDrop[$i + 1]]
+
+					DropOnPixel($troop, $listEdgesPixelToDrop, $nbTroopsPerEdge, $slotsPerEdge)
+					$nbTroopsLeft -= $nbTroopsPerEdge * 2
+				EndIf
+			Next
+		Else
+			Local $listEdgesPixelToDrop[0]
+			If ($indexToAttack <> -1) Then
+				Local $nbTroopsPerEdge = $number
+				Local $maxElementNearCollector = $indexToAttack
+				Local $startIndex = $indexToAttack
+			Else
+				Local $nbTroopsPerEdge = Round($number / UBound($g_aiPixelNearCollector))
+				Local $maxElementNearCollector = UBound($g_aiPixelNearCollector) - 1
+				Local $startIndex = 0
+			EndIf
+			If ($number > 0 And $nbTroopsPerEdge = 0) Then $nbTroopsPerEdge = 1
+			For $i = $startIndex To $maxElementNearCollector
+				Local $pixel = $g_aiPixelNearCollector[$i]
+				ReDim $listEdgesPixelToDrop[UBound($listEdgesPixelToDrop) + 1]
+				If ($troop = $eArch Or $troop = $eWiza Or $troop = $eMini or $troop = $eBarb) Then
+					$listEdgesPixelToDrop[UBound($listEdgesPixelToDrop) - 1] = _FindPixelCloser($g_aiPixelRedAreaFurther, $pixel, 5)
+				Else
+					$listEdgesPixelToDrop[UBound($listEdgesPixelToDrop) - 1] = _FindPixelCloser($g_aiPixelRedArea, $pixel, 5)
+				EndIf
+			Next
+			DropOnPixel($troop, $listEdgesPixelToDrop, $nbTroopsPerEdge, $slotsPerEdge)
+		EndIf
+	Else
+		DropOnEdges($troop, $nbSides, $number, $slotsPerEdge)
+	EndIf
+
+	debugRedArea($nameFunc & " OUT ")
+EndFunc   ;==>modDropTroop
+
+
+Func cmbDBMultiFinger()
+	If _GUICtrlComboBox_GetCurSel($g_hCmbStandardDropSidesDB) = 4 Then
+
+		 For $i = $g_hChkSmartAttackRedAreaDB To $g_hPicAttackNearDarkElixirDrillDB
+			GUICtrlSetState($g_hChkSmartAttackRedAreaDB, $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkSmartAttackRedAreaDB, $GUI_UNCHECKED)
+			GUICtrlSetState($i, $GUI_DISABLE + $GUI_HIDE)
+		 Next
+		
+		GUICtrlSetState($g_hLblDBMultiFinger, $GUI_SHOW)
+
+	Else
+
+		 For $i = $g_hChkSmartAttackRedAreaDB To $g_hChkSmartAttackRedAreaDB
+			GUICtrlSetState($i, $GUI_ENABLE + $GUI_SHOW)
+		 Next
+
+		GUICtrlSetState($g_hLblDBMultiFinger, $GUI_SHOW)
+
 	EndIf
 EndFunc   ;==>cmbDBMultiFinger
 
-Func cmbDeployAB()
-	$g_aiAttackStdDropSides[$LB] = _GUICtrlComboBox_GetCurSel($g_hCmbStandardDropOrderAB)
-	If $g_aiAttackStdDropSides[$LB] = 4 Then
-		GUICtrlSetState($g_hChkSmartAttackRedAreaAB, $GUI_UNCHECKED)
-		GUICtrlSetState($g_hChkSmartAttackRedAreaAB, $GUI_DISABLE)
-		chkSmartAttackRedAreaAB()
-	Else
-		GUICtrlSetState($g_hChkSmartAttackRedAreaAB, $GUI_ENABLE)
+Func Bridge()
+	If _GUICtrlComboBox_GetCurSel($g_hCmbStandardDropSidesDB) = 4 Then
+	        GUICtrlSetState($g_hChkSmartAttackRedAreaDB, $GUI_UNCHECKED)
+			chkDelayMod()
+        For $i = $g_hChkSmartAttackRedAreaDB To $g_hPicAttackNearDarkElixirDrillDB			
+			GUICtrlSetState($i, $GUI_DISABLE + $GUI_HIDE)
+		Next
+		
+		GUICtrlSetState($g_hLblDBMultiFinger, $GUI_SHOW)
+	Else	 
+		For $i = $g_hChkSmartAttackRedAreaDB To $g_hPicAttackNearDarkElixirDrillDB
+			GUICtrlSetState($i, $GUI_ENABLE + $GUI_SHOW)
+		Next
+		GUICtrlSetState($g_hChkSmartAttackRedAreaDB, $GUI_CHECKED)
+        
+		GUICtrlSetState($g_hLblDBMultiFinger, $GUI_SHOW)
+        chkSmartAttackRedAreaDB()
 	EndIf
-EndFunc
-
-Func cmbDeployDB()
-	$g_aiAttackStdDropSides[$DB] = _GUICtrlComboBox_GetCurSel($g_hCmbStandardDropSidesDB)
-	;SetLog("$g_aiAttackStdDropSides[$DB]: " & $g_aiAttackStdDropSides[$DB])
-	If $g_aiAttackStdDropSides[$DB] = 4 Then
-		GUICtrlSetState($g_hChkSmartAttackRedAreaDB, $GUI_UNCHECKED)
-		GUICtrlSetState($g_hChkSmartAttackRedAreaDB, $GUI_DISABLE)
-		chkSmartAttackRedAreaDB()
-	Else
-		GUICtrlSetState($g_hChkSmartAttackRedAreaDB, $GUI_ENABLE)
-	EndIf
-	cmbDBMultiFinger()
-EndFunc
+	
+EndFunc ;==>Bridge

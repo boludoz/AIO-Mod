@@ -1,6 +1,6 @@
 ; #FUNCTION# ====================================================================================================================
-; Name ..........: fourFingerSpiralRight
-; Description ...: Contains function to set up vectors for four finger spiral right deployment
+; Name ..........: fourFingerStandard
+; Description ...: Contains function to set up vectors for standard four finger deployment
 ; Syntax ........:
 ; Parameters ....:
 ; Return values .: None
@@ -14,11 +14,11 @@
 ; ===============================================================================================================================
 
 ; Set up the vectors to deploy troops
-Func fourFingerSpiralRightVectors(ByRef $dropVectors, $listInfoDeploy)
+Func fourFingerStandardVectors(ByRef $dropVectors, $listInfoDeploy)
 	If Not IsArray($dropVectors) Or Not IsArray($listInfoDeploy) Then Return
-
+	
 	ReDim $dropVectors[UBound($listInfoDeploy)][4]
-
+	
 	Local $kind, $waveNumber, $waveCount, $position, $remainingWaves, $waveDropAmount, $dropAmount, $barPosition
 	Local $startPoint[2] = [0, 0], $endPoint[2] = [0, 0]
 	Local $aDeployButtonPositions = getUnitLocationArray()
@@ -48,8 +48,8 @@ Func fourFingerSpiralRightVectors(ByRef $dropVectors, $listInfoDeploy)
 			; Top Right
 			$dropAmount = Ceiling($waveDropAmount / 3)
 			If $dropAmount > 0 Then
-				$startPoint = convertToPoint($g_aaiTopRightDropPoints[0][0], $g_aaiTopRightDropPoints[0][1])
-				$endPoint = convertToPoint($g_aaiTopRightDropPoints[4][0], $g_aaiTopRightDropPoints[4][1])
+				$startPoint = convertToPoint($g_aaiTopRightDropPoints[4][0], $g_aaiTopRightDropPoints[4][1])
+				$endPoint = convertToPoint($g_aaiTopRightDropPoints[0][0], $g_aaiTopRightDropPoints[0][1])
 				addVector($dropVectors, $i, 1, $startPoint, $endPoint, $dropAmount)
 				$waveDropAmount -= $dropAmount
 			EndIf
@@ -66,11 +66,11 @@ Func fourFingerSpiralRightVectors(ByRef $dropVectors, $listInfoDeploy)
 			; Bottom Left
 			$dropAmount = $waveDropAmount
 			If $dropAmount > 0 Then
-				$startPoint = convertToPoint($g_aaiBottomLeftDropPoints[4][0], $g_aaiBottomLeftDropPoints[4][1])
-				$endPoint = convertToPoint($g_aaiBottomLeftDropPoints[0][0], $g_aaiBottomLeftDropPoints[0][1])
+				$startPoint = convertToPoint($g_aaiBottomLeftDropPoints[0][0], $g_aaiBottomLeftDropPoints[0][1])
+				$endPoint = convertToPoint($g_aaiBottomLeftDropPoints[4][0], $g_aaiBottomLeftDropPoints[4][1])
 				addVector($dropVectors, $i, 3, $startPoint, $endPoint, $dropAmount)
 				$waveDropAmount -= $dropAmount
 			EndIf
 		EndIf
 	Next
-EndFunc   ;==>fourFingerSpiralRightVectors
+EndFunc   ;==>fourFingerStandardVectors

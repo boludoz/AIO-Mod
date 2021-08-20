@@ -1,6 +1,6 @@
 ; #FUNCTION# ====================================================================================================================
-; Name ..........: eightFingerBlossom
-; Description ...: Contains function to set up vectors for eight finger blossom deployment
+; Name ..........: eightFingerPinWheelLeft
+; Description ...: Contains function to set up vectors for eight finger pinwheel left deployment
 ; Syntax ........:
 ; Parameters ....:
 ; Return values .: None
@@ -14,11 +14,11 @@
 ; ===============================================================================================================================
 
 ; Set up the vectors to deploy troops
-Func eightFingerBlossomVectors(ByRef $dropVectors, $listInfoDeploy)
+Func eightFingerPinWheelLeftVectors(ByRef $dropVectors, $listInfoDeploy)
 	If Not IsArray($dropVectors) Or Not IsArray($listInfoDeploy) Then Return
-
+	
 	ReDim $dropVectors[UBound($listInfoDeploy)][8]
-
+	
 	Local $kind, $waveNumber, $waveCount, $position, $remainingWaves, $waveDropAmount, $dropAmount, $barPosition
 	Local $startPoint[2] = [0, 0], $endPoint[2] = [0, 0]
 	Local $aDeployButtonPositions = getUnitLocationArray()
@@ -48,8 +48,8 @@ Func eightFingerBlossomVectors(ByRef $dropVectors, $listInfoDeploy)
 			; Top Left - Right Half
 			$dropAmount = Ceiling($waveDropAmount / 7)
 			If $dropAmount > 0 Then
-				$startPoint = convertToPoint($g_aaiTopLeftDropPoints[2][0], $g_aaiTopLeftDropPoints[2][1])
-				$endPoint = convertToPoint($g_aaiTopLeftDropPoints[4][0], $g_aaiTopLeftDropPoints[4][1])
+				$startPoint = convertToPoint($g_aaiTopLeftDropPoints[4][0], $g_aaiTopLeftDropPoints[4][1])
+				$endPoint = convertToPoint($g_aaiTopLeftDropPoints[2][0], $g_aaiTopLeftDropPoints[2][1])
 				addVector($dropVectors, $i, 1, $startPoint, $endPoint, $dropAmount + 1)
 				$waveDropAmount -= $dropAmount
 			EndIf
@@ -66,8 +66,8 @@ Func eightFingerBlossomVectors(ByRef $dropVectors, $listInfoDeploy)
 			; Top Right - Right Half
 			$dropAmount = Ceiling($waveDropAmount / 5)
 			If $dropAmount > 0 Then
-				$startPoint = convertToPoint($g_aaiTopRightDropPoints[2][0], $g_aaiTopRightDropPoints[2][1])
-				$endPoint = convertToPoint($g_aaiTopRightDropPoints[4][0], $g_aaiTopRightDropPoints[4][1])
+				$startPoint = convertToPoint($g_aaiTopRightDropPoints[4][0], $g_aaiTopRightDropPoints[4][1])
+				$endPoint = convertToPoint($g_aaiTopRightDropPoints[2][0], $g_aaiTopRightDropPoints[2][1])
 				addVector($dropVectors, $i, 3, $startPoint, $endPoint, $dropAmount + 1)
 				$unitCount[$kind] -= $dropAmount
 			EndIf
@@ -75,8 +75,8 @@ Func eightFingerBlossomVectors(ByRef $dropVectors, $listInfoDeploy)
 			; Bottom Right - Left Half
 			$dropAmount = Ceiling($waveDropAmount / 4)
 			If $dropAmount > 0 Then
-				$startPoint = convertToPoint($g_aaiBottomRightDropPoints[2][0], $g_aaiBottomRightDropPoints[2][1])
-				$endPoint = convertToPoint($g_aaiBottomRightDropPoints[0][0], $g_aaiBottomRightDropPoints[0][1])
+				$startPoint = convertToPoint($g_aaiBottomRightDropPoints[0][0], $g_aaiBottomRightDropPoints[0][1])
+				$endPoint = convertToPoint($g_aaiBottomRightDropPoints[2][0], $g_aaiBottomRightDropPoints[2][1])
 				addVector($dropVectors, $i, 4, $startPoint, $endPoint, $dropAmount)
 				$waveDropAmount -= $dropAmount
 			EndIf
@@ -93,8 +93,8 @@ Func eightFingerBlossomVectors(ByRef $dropVectors, $listInfoDeploy)
 			; Bottom Left - Left Half
 			$dropAmount = Ceiling($waveDropAmount / 2)
 			If $dropAmount > 0 Then
-				$startPoint = convertToPoint($g_aaiBottomLeftDropPoints[2][0], $g_aaiBottomLeftDropPoints[2][1])
-				$endPoint = convertToPoint($g_aaiBottomLeftDropPoints[0][0], $g_aaiBottomLeftDropPoints[0][1])
+				$startPoint = convertToPoint($g_aaiBottomLeftDropPoints[0][0], $g_aaiBottomLeftDropPoints[0][1])
+				$endPoint = convertToPoint($g_aaiBottomLeftDropPoints[2][0], $g_aaiBottomLeftDropPoints[2][1])
 				addVector($dropVectors, $i, 6, $startPoint, $endPoint, $dropAmount)
 				$waveDropAmount -= $dropAmount
 			EndIf
@@ -104,9 +104,9 @@ Func eightFingerBlossomVectors(ByRef $dropVectors, $listInfoDeploy)
 			If $dropAmount > 0 Then
 				$startPoint = convertToPoint($g_aaiBottomLeftDropPoints[2][0], $g_aaiBottomLeftDropPoints[2][1])
 				$endPoint = convertToPoint($g_aaiBottomLeftDropPoints[4][0], $g_aaiBottomLeftDropPoints[4][1])
-				addVector($dropVectors, $i, 7, $startPoint, $endPoint, $dropAmount + 1)
+				addVector($dropVectors, $i, 7, $startPoint, $endPoint, $dropAmount + 1)				
 				$waveDropAmount -= $dropAmount
 			EndIf
 		EndIf
 	Next
-EndFunc   ;==>eightFingerBlossomVectors
+EndFunc   ;==>eightFingerPinWheelLeftVectors
