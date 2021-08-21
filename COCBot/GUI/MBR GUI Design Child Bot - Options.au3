@@ -53,6 +53,11 @@ Func CreateBotOptions()
 		$g_hChkForMBRUpdates = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "ChkForMBRUpdates", "Check for Updates"), $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "ChkForMBRUpdates_Info_01", "Check if you are running the latest version of the bot."))
 			GUICtrlSetState(-1, $GUI_CHECKED)
+	
+	$y += 20
+		$g_hChkForAIOUpdates = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "ChkForMBRUpdates", "Check for AIO Updates"), $x, $y, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "ChkForAIOUpdates_Info_01", "Check if you are running the latest version of the AIO Mod."))
+			GUICtrlSetState(-1, $GUI_CHECKED)
 
 	$y += 20
 		$g_hChkDeleteLogs = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "ChkDeleteLogs", "Delete Log Files")& ":", $x, $y, -1, -1)

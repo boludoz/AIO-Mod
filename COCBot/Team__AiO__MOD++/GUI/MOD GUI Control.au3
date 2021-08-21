@@ -99,8 +99,6 @@ Func chkDelayMod()
 		GUICtrlSetData($g_hDeployDelay[$i], $g_iDeployDelay[$i])
 	Next
 
-	GUICtrlSetState($g_hDisableColorLog, $GUI_DISABLE)
-	$g_bDisableColorLog = (GUICtrlRead($g_hDisableColorLog) = $GUI_CHECKED)
 	$g_bAvoidLocation = (GUICtrlRead($g_hAvoidLocation) = $GUI_CHECKED)
 
 	$g_bDeployCastleFirst[$DB] = (GUICtrlRead($g_hDeployCastleFirst[$DB]) = $GUI_CHECKED)

@@ -12,16 +12,6 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: ReadChat()
 ; ===============================================================================================================================
-Func ChatScroll()
-	Local $sDirectory = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ChatActions\Sprites"
-	Local $aButton = findMultipleQuick($sDirectory, 1, "5, 626, 24, 680", "Scroll", Default, False, 0)
-	If IsArray($aButton) and UBound($aButton) > 0 Then
-		Local $aClickP = [Random(12, 41, 1), Random($aButton[0][2], 673, 1)]
-		ClickP($aClickP)
-		Return True
-	EndIf
-EndFunc   ;==>ChatScroll
-
 Func ReadChatIATest($sCondition = "porque", $bFast = True)
 	Setlog(ReadChatIA($sCondition, $bFast))
 EndFunc
@@ -29,13 +19,12 @@ EndFunc
 Func ReadChatIA($sCondition = "hola", $bFast = True)
 	Local $vResult = -1
 	Local $asFCKeyword = ""
-	Local $sDirectory = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ChatActions\Chat"
 
-	ChatScroll()
+	ScrollDown()
 	
 	If RandomSleep(500) Then Return
 	
-	Local $aChatY = findMultipleQuick($sDirectory, 11, "259, 49, 269, 677", Default, Default, False, 0)
+	Local $aChatY = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ChatActions\Chat", 11, "259, 20, 269, 677", Default, Default, False, 0)
 	
 	If Not IsArray($aChatY) Then Return False
 	
@@ -52,19 +41,19 @@ Func ReadChatIA($sCondition = "hola", $bFast = True)
 			
 			Switch Int($g_aIAVar[$ii][0])
 				Case $ii 
-					$sOCRString = getChatStringMod(30, Int($aChatY[$i][2] - 3) + 43, "coc-latinA")
+					$sOCRString = getChatStringMod(30, $aChatY[$i][2] + 40, "coc-latinA")
 					If $g_bDebugSetlog Then SetDebugLog("getChatStringMod Latin : " & $sOCRString)
 				Case $ii = $g_aIAVar[$ii][0]
-					$sOCRString = getChatStringMod(30, Int($aChatY[$i][2] - 3) + 43, "coc-latin-cyr")
+					$sOCRString = getChatStringMod(30, $aChatY[$i][2] + 40, "coc-latin-cyr")
 					If $g_bDebugSetlog Then SetDebugLog("getChatStringMod Cyc : " & $sOCRString)
 				Case $ii = $g_aIAVar[$ii][0]
-					$sOCRString = getChatStringChineseMod(30, Int($aChatY[$i][2] - 3) + 43)
+					$sOCRString = getChatStringChineseMod(30, $aChatY[$i][2] + 36)
 					If $g_bDebugSetlog Then SetDebugLog("getChatStringChineseMod : " & $sOCRString)
 				Case $ii = $g_aIAVar[$ii][0]
-					$sOCRString = getChatStringKoreanMod(30, Int($aChatY[$i][2] - 3) + 43)
+					$sOCRString = getChatStringKoreanMod(30, $aChatY[$i][2] + 36)
 					If $g_bDebugSetlog Then SetDebugLog("getChatStringKoreanMod : " & $sOCRString)
 				Case $ii = $g_aIAVar[$ii][0]
-					$sOCRString = getChatStringPersianMod(30, Int($aChatY[$i][2] - 3) + 43)
+					$sOCRString = getChatStringPersianMod(30, $aChatY[$i][2] + 39)
 					If $g_bDebugSetlog Then SetDebugLog("getChatStringPersianMod : " & $sOCRString)
 			EndSwitch
 			
@@ -72,13 +61,13 @@ Func ReadChatIA($sCondition = "hola", $bFast = True)
             If StringLen(StringStripWS($sOCRString, $STR_STRIPALL)) < 2 Then ContinueLoop
 			
 			If QuickMIS("N1", @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ChatActions\Sprites\OwnChat", Int($aChatY[$i][1]), Int($aChatY[$i][2] + 3), Int($aChatY[$i][1] + 79), Int($aChatY[$i][2] + 3 + 29)) <> "none" Then ContinueLoop
-			
+					
 			Local $sString = StringStripWS($sOCRString, $STR_STRIPLEADING + $STR_STRIPTRAILING + $STR_STRIPSPACES)
+			Setlog("Chat AI : " & $sString, $COLOR_SUCCESS)
 			Local $aString = StringSplit($sString, " ", $STR_NOCOUNT)
 		
 			For $iii = 0 To UBound($aString) -1
-				If StringInStr($sCondition, $aString[$iii]) > 0 Then
-					Setlog("Chat AI : " & $sCondition, $COLOR_SUCCESS)
+				If CheckDonateString($sCondition, $aString[$iii]) Then
 					$g_aIAVar[$ii][1] += 1
 					$vResult = $sOCRString
 					If $bFast = True Then Return $vResult
