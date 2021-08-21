@@ -41,7 +41,6 @@ Global Enum $sideBottomRight, $sideTopLeft, $sideBottomLeft, $sideTopRight
 Global Enum $mfRandom, $mfFFStandard, $mfFFSpiralLeft, $mfFFSpiralRight, $mf8FBlossom, $mf8FImplosion, $mf8FPinWheelLeft, $mf8FPinWheelRight
 
 Global $g_iMultiFingerStyle = 1
-Global Enum $eCCSpell = $eHaSpell + 1
 #EndRegion - Multi Finger - Team AIO Mod++
 
 #Region - BuyGuard - Team AIO Mod++

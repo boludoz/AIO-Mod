@@ -534,8 +534,8 @@ Func ApplyConfig_MOD_600_29($TypeReadSave)
 	; <><><> Classic Four Finger + CSV Deploy Speed <><><>
 	Switch $TypeReadSave
 		Case "Read"
-			cmbStandardDropSidesAB()
-			cmbStandardDropSidesDB()
+			; cmbStandardDropSidesAB()
+			cmbDBMultiFinger()
 
 			_GUICtrlComboBox_SetCurSel($cmbCSVSpeed[$LB], $icmbCSVSpeed[$LB])
 			_GUICtrlComboBox_SetCurSel($cmbCSVSpeed[$DB], $icmbCSVSpeed[$DB])
