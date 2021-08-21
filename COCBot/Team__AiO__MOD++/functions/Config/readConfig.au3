@@ -322,6 +322,9 @@ Func ReadConfig_MOD_600_35_1()
 	; <><><> Only Farm <><><>
 	IniReadS($g_bChkOnlyFarm, $g_sProfileConfigPath, "general", "OnlyFarm", $g_bChkOnlyFarm, "Bool")
 
+	; <><><> AIO Updater <><><>
+	$g_bCheckVersionAIO = (FileExists($g_sLibPath & "\ModLibs\Updater\NoNotify.txt") = 0) ? (True) : (False)
+
 EndFunc   ;==>ReadConfig_MOD_600_35_1
 
 Func ReadConfig_MOD_600_35_2()

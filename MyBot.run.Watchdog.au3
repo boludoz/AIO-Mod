@@ -237,21 +237,21 @@ UpdateManagedMyBot(True)
 Func LaunchUpdater()
 	If FileExists(@ScriptDir & "\lib\ModLibs\Updater\BigDog.inf") Then FileDelete(@ScriptDir & "\lib\ModLibs\Updater\BigDog.inf")
 	If Not FileWrite(@ScriptDir & "\lib\ModLibs\Updater\BigDog.inf", $g_sModVersion) Then
-		SetLog("BigDog.inf Fail", $COLOR_RED)
+		SetLog("BigDog.inf Fail.", $COLOR_RED)
 		Return False
 	EndIf
 
 	Local $cmd = """" & @ScriptDir & "\lib\ModLibs\Updater\AIOMod.Updater2.exe"""
-	If @Compiled = 0 Then $cmd = """" & @AutoItExe & """ /AutoIt3ExecuteScript """ & @ScriptDir & "\lib\ModLibs\Updater\AIOMod.Updater2.au3" & """"
+	; If @Compiled = 0 Then $cmd = """" & @AutoItExe & """ /AutoIt3ExecuteScript """ & @ScriptDir & "\lib\ModLibs\Updater\AIOMod.Updater2.au3" & """"
 	Local $pid = Run($cmd, @ScriptDir)
 	If $pid = 0 Then
-		SetLog("Cannot launch updater", $COLOR_RED)
+		SetLog("Cannot launch updater.", $COLOR_RED)
 		Return 0
 	EndIf
 	If $g_bDebugSetlog Then
 		SetDebugLog("Updater launched, PID = " & $pid)
 	Else
-		SetLog("Updater launched")
+		SetLog("Updater launched.")
 	EndIf
 	Return $pid
 EndFunc   ;==>LaunchUpdater

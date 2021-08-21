@@ -68,8 +68,6 @@ EndFunc   ;==>CreateMODTab
   	GUICtrlSetOnEvent(-1, "chkDelayMod")
   	_GUICtrlSetTip(-1, GetTranslatedFileIni("MiscMODs", "AvoidLocateTip", "Skip first check without attack first."))
 
-	$g_hDisableColorLog = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "DisableColorLog",  "No color attack log"), 32, 249, 113, 17)
-
 	GUICtrlCreateLabel(GetTranslatedFileIni("MiscMODs", "OtherSettingsLabel", "Other"), 7, 280, 436, 22, BitOR($SS_CENTER, $SS_CENTERIMAGE))
 	GUICtrlSetTip(-1, GetTranslatedFileIni("MiscMODs", "OtherSettingsTip", "Other settings"))
 	GUICtrlSetBkColor(-1, 0x333300)

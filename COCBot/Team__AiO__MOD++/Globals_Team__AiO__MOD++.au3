@@ -16,6 +16,10 @@
 Global $DiamondMiddleX 
 Global $DiamondMiddleY 
 
+#Region - AIO Updater - Team AiO MOD++
+Global $g_bCheckVersionAIO = True, $g_hChkForAIOUpdates = 0
+#EndRegion - AIO Updater - Team AiO MOD++
+
 #Region - Icn - Team AiO MOD++
 Global Const $g_sLibModIconPath = $g_sLibPath & "\ModLibs\AIOMod.dll" ; Mod icon library - Team AiO MOD++
 ; enumerated Icons 1-based index to IconLibMod
@@ -176,7 +180,7 @@ Global $g_hChkNoDropIfShield, $g_hChkTrophyTroops, $g_hChkTrophyHeroesAndTroops
 ; Misc tab - Team AiO MOD++
 Global $g_bUseSleep = False, $g_iIntSleep = 20, $g_bUseRandomSleep = False, $g_bNoAttackSleep = False, $g_bDisableColorLog = False, $g_bDelayLabel = False, $g_bAvoidLocation = False, $g_bEdgeObstacle = False
 ; GUI
-Global $g_hDisableColorLog, $g_hDelayLabel, $g_hAvoidLocation, $g_hEdgeObstacle
+Global $g_hDelayLabel, $g_hAvoidLocation, $g_hEdgeObstacle
 ;-------------------
 
 ; Max sides SF

@@ -332,6 +332,20 @@ Func SaveConfig_MOD_600_35_1()
 	; <><><> Only Farm <><><>
 	_Ini_Add("general", "OnlyFarm", $g_bChkOnlyFarm ? 1 : 0)
 
+	; <><><> AIO Updater <><><>
+	If FileExists($g_sLibPath & "\ModLibs\Updater\NoNotify.txt") = 1 Then
+		If $g_bCheckVersionAIO = True Then
+			FileDelete($g_sLibPath & "\ModLibs\Updater\NoNotify.txt")
+		EndIf
+	Else
+		If $g_bCheckVersionAIO = False Then
+			Local $hHandle = FileOpen($g_sLibPath & "\ModLibs\Updater\NoNotify.txt", $FO_APPEND)
+			FileClose($hHandle)
+		Else
+			FileDelete($g_sLibPath & "\ModLibs\Updater\NoNotify.txt")
+		EndIf
+	EndIf
+
 EndFunc   ;==>SaveConfig_MOD_600_35_1
 
 Func SaveConfig_MOD_600_35_2()

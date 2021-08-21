@@ -111,7 +111,6 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 	; <><><> MiscTab <><><>
 	Switch $TypeReadSave
 		Case "Read"
-			GUICtrlSetState($g_hDisableColorLog, $g_bDisableColorLog = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hAvoidLocation, $g_bAvoidLocation = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hEdgeObstacle, $g_bEdgeObstacle = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 
@@ -214,7 +213,6 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			chkDelayMod()
 			chkEdgeObstacle()
 		Case "Save"
-			$g_bDisableColorLog = (GUICtrlRead($g_hDisableColorLog) = $GUI_CHECKED) ? 1 : 0
 			$g_bAvoidLocation = (GUICtrlRead($g_hAvoidLocation) = $GUI_CHECKED) ? 1 : 0
 
 			For $i = $DB To $LB
@@ -598,7 +596,9 @@ Func ApplyConfig_MOD_600_35_1($TypeReadSave)
 			; <><><> Only Farm <><><>
 			GUICtrlSetState($g_hChkOnlyFarm, $g_bChkOnlyFarm = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			UpdateChkOnlyFarm() ;Applies it to farm button
-
+			
+			; <><><> AIO Updater <><><>
+			GUICtrlSetState($g_hChkForAIOUpdates, $g_bCheckVersionAIO ? $GUI_CHECKED : $GUI_UNCHECKED)
 		Case "Save"
 			$g_bEnableAuto = (GUICtrlRead($g_hChkEnableAuto) = $GUI_CHECKED)
 			$g_bChkAutoDock = (GUICtrlRead($g_hChkAutoDock) = $GUI_CHECKED)
@@ -607,6 +607,9 @@ Func ApplyConfig_MOD_600_35_1($TypeReadSave)
 
 			; <><><> Only Farm <><><>
 			$g_bChkOnlyFarm = (GUICtrlRead($g_hChkOnlyFarm) = $GUI_CHECKED)
+			
+			; <><><> AIO Updater <><><>
+			$g_bCheckVersionAIO = (GUICtrlRead($g_hChkForAIOUpdates) = $GUI_CHECKED)
 	EndSwitch
 EndFunc   ;==>ApplyConfig_MOD_600_35_1
 
