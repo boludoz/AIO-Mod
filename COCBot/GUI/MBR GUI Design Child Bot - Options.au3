@@ -43,7 +43,7 @@ Func CreateBotOptions()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	$y += 54
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "Group_02", "When Bot Loads"), $x - 20, $y - 20, 210, 120)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "Group_02", "When Bot Loads"), $x - 20, $y - 20, 210, 141) ; AIO Updater - Team AIO Mod++
 	$y -= 4
 		$g_hChkDisableSplash = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "ChkDisableSplash", "Disable Splash Screen"), $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "ChkDisableSplash_Info_01", "Disables the splash screen on startup."))
@@ -54,10 +54,12 @@ Func CreateBotOptions()
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "ChkForMBRUpdates_Info_01", "Check if you are running the latest version of the bot."))
 			GUICtrlSetState(-1, $GUI_CHECKED)
 	
+	#Region - AIO Updater - Team AIO Mod++
 	$y += 20
-		$g_hChkForAIOUpdates = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "ChkForMBRUpdates", "Check for AIO Updates"), $x, $y, -1, -1)
+		$g_hChkForAIOUpdates = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "ChkForAIOUpdates", "Check for AIO Updates"), $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "ChkForAIOUpdates_Info_01", "Check if you are running the latest version of the AIO Mod."))
 			GUICtrlSetState(-1, $GUI_CHECKED)
+	#EndRegion - AIO Updater - Team AIO Mod++
 
 	$y += 20
 		$g_hChkDeleteLogs = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "ChkDeleteLogs", "Delete Log Files")& ":", $x, $y, -1, -1)

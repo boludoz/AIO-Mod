@@ -193,14 +193,12 @@ Func ReadConfig_MOD_MagicItems()
 	IniReadS($g_iInputBuilderPotion, $g_sProfileConfigPath, "MagicItems", "InputBuilderPotion", $g_iInputBuilderPotion, "int")
 	IniReadS($g_iInputLabPotion, $g_sProfileConfigPath, "MagicItems", "InputLabPotion", $g_iInputLabPotion, "int")
 
-	IniReadS($g_iComboClockTowerPotion, $g_sProfileConfigPath, "MagicItems", "ComboClockTowerPotion", $g_iComboClockTowerPotion, "int")
 	IniReadS($g_iComboHeroPotion, $g_sProfileConfigPath, "MagicItems", "ComboHeroPotion", $g_iComboHeroPotion, "int")
 	IniReadS($g_iComboPowerPotion, $g_sProfileConfigPath, "MagicItems", "ComboPowerPotion", $g_iComboPowerPotion, "int")
 
 	IniReadS($g_bChkCollectMagicItems, $g_sProfileConfigPath, "MagicItems", "CollectMagicItems", $g_bChkCollectMagicItems, "Bool")
 
 	IniReadS($g_bChkBuilderPotion, $g_sProfileConfigPath, "MagicItems", "ChkBuilderPotion", $g_bChkBuilderPotion, "Bool")
-	IniReadS($g_bChkClockTowerPotion, $g_sProfileConfigPath, "MagicItems", "ChkClockTowerPotion", $g_bChkClockTowerPotion, "Bool")
 	IniReadS($g_bChkHeroPotion, $g_sProfileConfigPath, "MagicItems", "ChkHeroPotion", $g_bChkHeroPotion, "Bool")
 	IniReadS($g_bChkLabPotion, $g_sProfileConfigPath, "MagicItems", "ChkLabPotion", $g_bChkLabPotion, "Bool")
 	IniReadS($g_bChkPowerPotion, $g_sProfileConfigPath, "MagicItems", "ChkPowerPotion", $g_bChkPowerPotion, "Bool")

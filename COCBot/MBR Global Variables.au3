@@ -912,7 +912,7 @@ Global $g_iTxtTreasuryGold = 0
 Global $g_iTxtTreasuryElixir = 0
 Global $g_iTxtTreasuryDark = 0
 
-Global $g_bChkCollectBuilderBase = False, $g_bChkStartClockTowerBoost = False, $g_bChkCTBoostBlderBz = False, $g_bChkCleanBBYard = False
+Global $g_bChkCollectBuilderBase = False, $g_bChkStartClockTowerBoost = False, $g_bChkCleanBBYard = False;, $g_bChkCTBoostBlderBz = False
 
 ; Builder Base Attack
 Global $g_hChkEnableBBAttack = 0, $g_hChkBBTrophyRange = 0, $g_hTxtBBTrophyLowerLimit = 0, $g_hTxtBBTrophyUpperLimit = 0, $g_hChkBBAttIfLootAvail = 0;, $g_hChkBBWaitForMachine = 0

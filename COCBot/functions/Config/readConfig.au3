@@ -463,9 +463,14 @@ Func ReadConfig_600_6()
 	IniReadS($g_bChkCollectBuilderBase, $g_sProfileConfigPath, "other", "ChkCollectBuildersBase", False, "Bool")
 	IniReadS($g_bChkCleanBBYard, $g_sProfileConfigPath, "other", "ChkCleanBBYard", False, "Bool")
 	IniReadS($g_bChkCleanYardBBall, $g_sProfileConfigPath, "other", "chkCleanYardBBall", False, "Bool") ; AIO MOD++
+	;
 	IniReadS($g_bChkStartClockTowerBoost, $g_sProfileConfigPath, "other", "ChkStartClockTowerBoost", False, "Bool")
-	IniReadS($g_bChkCTBoostBlderBz, $g_sProfileConfigPath, "other", "ChkCTBoostBlderBz", False, "Bool")
-	IniReadS($g_bChkCTBoostLabBBActive, $g_sProfileConfigPath, "other", "ChkCTBoostLabBBActive", False, "Bool") ; AIO MOD++
+	IniReadS($g_iCmbStartClockTowerBoost, $g_sProfileConfigPath, "other", "CmbStartClockTowerBoost", $g_iCmbStartClockTowerBoost, "int") ; AIO Mod++
+	IniReadS($g_iCmbClockTowerPotion, $g_sProfileConfigPath, "other", "CmbClockTowerPotion", $g_iCmbClockTowerPotion, "int") ; AIO Mod++
+	IniReadS($g_bChkClockTowerPotion, $g_sProfileConfigPath, "other", "ChkClockTowerPotion", $g_bChkClockTowerPotion, "Bool") ; AIO Mod++
+	;
+;~	IniReadS($g_bChkCTBoostBlderBz, $g_sProfileConfigPath, "other", "ChkCTBoostBlderBz", False, "Bool") ; AIO MOD++
+;~ 	IniReadS($g_bChkCTBoostLabBBActive, $g_sProfileConfigPath, "other", "ChkCTBoostLabBBActive", False, "Bool") ; AIO MOD++
 	IniReadS($g_iChkBBSuggestedUpgrades, $g_sProfileConfigPath, "other", "ChkBBSuggestedUpgrades", $g_iChkBBSuggestedUpgrades, "Int")
 	IniReadS($g_iChkBBSuggestedUpgradesIgnoreGold, $g_sProfileConfigPath, "other", "ChkBBSuggestedUpgradesIgnoreGold", $g_iChkBBSuggestedUpgradesIgnoreGold, "Int")
 	IniReadS($g_iChkBBSuggestedUpgradesIgnoreElixir, $g_sProfileConfigPath, "other", "ChkBBSuggestedUpgradesIgnoreElixir", $g_iChkBBSuggestedUpgradesIgnoreElixir, "Int")

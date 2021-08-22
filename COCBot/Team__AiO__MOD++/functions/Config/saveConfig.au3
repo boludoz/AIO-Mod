@@ -204,14 +204,12 @@ Func SaveConfig_MOD_MagicItems()
 	_Ini_Add("MagicItems", "InputBuilderPotion", $g_iInputBuilderPotion)
 	_Ini_Add("MagicItems", "InputLabPotion", $g_iInputLabPotion)
 
-	_Ini_Add("MagicItems", "ComboClockTowerPotion", $g_iComboClockTowerPotion)
 	_Ini_Add("MagicItems", "ComboHeroPotion", $g_iComboHeroPotion)
 	_Ini_Add("MagicItems", "ComboPowerPotion", $g_iComboPowerPotion)
 
 	_Ini_Add("MagicItems", "CollectMagicItems", $g_bChkCollectMagicItems ? 1 : 0)
 
 	_Ini_Add("MagicItems", "ChkBuilderPotion", $g_bChkBuilderPotion ? 1 : 0)
-	_Ini_Add("MagicItems", "ChkClockTowerPotion", $g_bChkClockTowerPotion ? 1 : 0)
 	_Ini_Add("MagicItems", "ChkHeroPotion", $g_bChkHeroPotion ? 1 : 0)
 	_Ini_Add("MagicItems", "ChkLabPotion", $g_bChkLabPotion ? 1 : 0)
 	_Ini_Add("MagicItems", "ChkPowerPotion", $g_bChkPowerPotion ? 1 : 0)

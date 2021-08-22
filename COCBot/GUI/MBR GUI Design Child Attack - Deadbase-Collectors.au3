@@ -117,7 +117,7 @@ Func CreateAttackSearchDeadBaseCollectors()
 	$y += 20
 		$g_hChkDBMeetCollectorOutside = GUICtrlCreateRadio(GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkDBMeetCollectorOutside", "Check Collectors Outside"), $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkDBMeetCollectorOutside_Info_01", "Search for bases that has their collectors outside."))
-			GUICtrlSetState(-1, $GUI_UNCHECKED)
+			GUICtrlSetState(-1, $GUI_CHECKED)
 			GUICtrlSetOnEvent(-1, "chkCollectorsAndRedLines")
 
 	$y += 28

@@ -362,14 +362,12 @@ Func ApplyConfig_MOD_MagicItems($TypeReadSave)
 			GUICtrlSetData($g_hInputBuilderPotion, $g_iInputBuilderPotion)
 			GUICtrlSetData($g_hInputLabPotion, $g_iInputLabPotion)
 
-			_GUICtrlComboBox_SetCurSel($g_hComboClockTowerPotion, $g_iComboClockTowerPotion)
 			_GUICtrlComboBox_SetCurSel($g_hComboHeroPotion, $g_iComboHeroPotion)
 			_GUICtrlComboBox_SetCurSel($g_hComboPowerPotion, $g_iComboPowerPotion)
 
 			GUICtrlSetState($g_hChkCollectMagicItems, $g_bChkCollectMagicItems = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 
 			GUICtrlSetState($g_hChkBuilderPotion, $g_bChkBuilderPotion = True ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkClockTowerPotion, $g_bChkClockTowerPotion = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkHeroPotion, $g_bChkHeroPotion = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkLabPotion, $g_bChkLabPotion = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkPowerPotion, $g_bChkPowerPotion = True ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -385,12 +383,10 @@ Func ApplyConfig_MOD_MagicItems($TypeReadSave)
 
 			$g_iComboPowerPotion = _GUICtrlComboBox_GetCurSel($g_hComboPowerPotion)
 			$g_iComboHeroPotion = _GUICtrlComboBox_GetCurSel($g_hComboHeroPotion)
-			$g_iComboClockTowerPotion = _GUICtrlComboBox_GetCurSel($g_hComboClockTowerPotion)
 
 			$g_bChkCollectMagicItems = (GUICtrlRead($g_hChkCollectMagicItems) = $GUI_CHECKED)
 
 			$g_bChkBuilderPotion = (GUICtrlRead($g_hChkBuilderPotion) = $GUI_CHECKED)
-			$g_bChkClockTowerPotion = (GUICtrlRead($g_hChkClockTowerPotion) = $GUI_CHECKED)
 			$g_bChkHeroPotion = (GUICtrlRead($g_hChkHeroPotion) = $GUI_CHECKED)
 			$g_bChkLabPotion = (GUICtrlRead($g_hChkLabPotion) = $GUI_CHECKED)
 			$g_bChkPowerPotion = (GUICtrlRead($g_hChkPowerPotion) = $GUI_CHECKED)
@@ -534,7 +530,6 @@ Func ApplyConfig_MOD_600_29($TypeReadSave)
 	; <><><> Classic Four Finger + CSV Deploy Speed <><><>
 	Switch $TypeReadSave
 		Case "Read"
-			; cmbStandardDropSidesAB()
 			cmbDBMultiFinger()
 
 			_GUICtrlComboBox_SetCurSel($cmbCSVSpeed[$LB], $icmbCSVSpeed[$LB])
