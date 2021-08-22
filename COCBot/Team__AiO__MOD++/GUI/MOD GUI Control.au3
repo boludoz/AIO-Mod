@@ -161,24 +161,30 @@ Func CheckUseSmartFarmRedLine()
 EndFunc   ;==>CheckUseSmartFarmRedLine
 #EndRegion - Custom SmartFarm - Team AIO Mod++
 
-; Classic Four Finger - Team AiO MOD++
-Func cmbStandardDropSidesAB() ; avoid conflict between FourFinger and SmartAttack
-	If _GUICtrlComboBox_GetCurSel($g_hCmbStandardDropSidesAB) = 4 Then
-		GUICtrlSetState($g_hChkSmartAttackRedAreaAB, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
-	Else
-		GUICtrlSetState($g_hChkSmartAttackRedAreaAB, $GUI_ENABLE)
+#Region - Multi Finger - Team AIO Mod++
+Func cmbDBMultiFinger()
+    If _GUICtrlComboBox_GetCurSel($g_hCmbStandardDropSidesDB) = 4 Then
+        For $i = $g_hChkSmartAttackRedAreaDB To $g_hPicAttackNearDarkElixirDrillDB			
+			; GUICtrlSetState($i, $GUI_DISABLE + $GUI_HIDE) ; Other settings should not be affected.
+			GUICtrlSetState($i, $GUI_HIDE)
+		Next
+		
+		; GUICtrlSetState($g_hChkSmartAttackRedAreaDB, $GUI_UNCHECKED)
+		GUICtrlSetState($g_hLblDBMultiFinger, $GUI_SHOW)
+		GUICtrlSetState($g_hCmbDBMultiFinger, $GUI_SHOW)
+	Else	 
+		For $i = $g_hChkSmartAttackRedAreaDB To $g_hPicAttackNearDarkElixirDrillDB
+			; GUICtrlSetState($i, $GUI_ENABLE + $GUI_SHOW)
+			GUICtrlSetState($i, $GUI_SHOW)
+		Next
+        
+		; GUICtrlSetState($g_hChkSmartAttackRedAreaDB, $GUI_CHECKED) 
+		GUICtrlSetState($g_hLblDBMultiFinger, $GUI_HIDE)
+		GUICtrlSetState($g_hCmbDBMultiFinger, $GUI_HIDE)
+        ; chkSmartAttackRedAreaDB()
 	EndIf
-	chkSmartAttackRedAreaAB()
-EndFunc   ;==>g_hCmbStandardDropSidesAB
-
-Func cmbStandardDropSidesDB() ; avoid conflict between FourFinger and SmartAttack
-	If _GUICtrlComboBox_GetCurSel($g_hCmbStandardDropSidesDB) = 4 Then
-		GUICtrlSetState($g_hChkSmartAttackRedAreaDB, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
-	Else
-		GUICtrlSetState($g_hChkSmartAttackRedAreaDB, $GUI_ENABLE)
-	EndIf
-	chkSmartAttackRedAreaDB()
-EndFunc   ;==>g_hCmbStandardDropSidesDB
+EndFunc ;==>cmbDBMultiFinger
+#EndRegion - Multi Finger - Team AIO Mod++
 
 ; Check Collectors Outside
 Func chkCollectorsAndRedLines()

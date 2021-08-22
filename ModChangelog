@@ -5,11 +5,16 @@
 
                     Based on MyBot.run v7.9.5
 					
-**v4.6.2**
-	- Improved / Fixed: Various.
-	- New: Boost super troops (@xbebenk).
-	- Fixed: restored essential archive of the hop clan.
-	
+**v4.6.3**
+	- New: Boost super troops inspired in @xbebenk.
+	- New: Clock tower potion support.
+	- New / Improved: Multifinger in standard attack (By @lunaeclipse).
+	- Improved: Discord webhook support.
+	- Improved / Fixed: Updater.
+	- Fixed: Restored essential archive of the hop clan.
+	- Fixed: Fixed TH10 tolerance (By @clementinise).
+	- Fixed: Clickaway issue in builder base (By @KiRZeN and @supermopf).
+
 **v4.6.1**
 	- Improved / Fixed: Various.
 	- Improved / Fixed: Support for numbers of more than 6 digits in the search of resources.

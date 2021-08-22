@@ -14,11 +14,13 @@
 #include-once
 
 Global $g_alblBldBaseStats[4] = ["", "", "", ""]
-Global $g_hChkCollectBuilderBase = 0, $g_hChkStartClockTowerBoost = 0, $g_hChkCTBoostBlderBz = 0;, $g_hChkCTBoostAtkAvailable = 0
+Global $g_hChkCollectBuilderBase = 0, $g_hChkStartClockTowerPotion = 0
 Global $g_hChkCollectBldGE = 0, $g_hChkCollectBldGems = 0, $g_hChkActivateClockTower = 0, $g_hChkCleanBBYard = 0
 Global $g_hBtnBBAtkLogClear = 0,$g_hBtnBBAtkLogCopyClipboard=0
 
 Global $g_hChkOnlyBuilderBase, $g_hTxtBBMinAttack, $g_hTxtBBMaxAttack, $g_hDebugBBattack, $g_hbtnBBAttack ; AIO ++
+
+Global $g_hChkStartClockTowerBoost = 0, $g_hCmbStartClockTowerBoost = 0, $g_hChkClockTowerPotion = 0, $g_hCmbClockTowerPotion = 0 ; AIO ++
 
 Func CreateMiscBuilderBaseSubTab()
 	Local $x = 15, $y = 45
@@ -32,18 +34,22 @@ Func CreateMiscBuilderBaseSubTab()
 
 	$y += 22
 		GUICtrlCreateIcon($g_sLibIconPath, $eIcnClockTower, $x + 32, $y, 24, 24)
-		$g_hChkStartClockTowerBoost = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "ChkActivateClockTowerBoost", "Activate Clock Tower Boost"), $x + 100, $y + 4, -1, -1)
+		$g_hChkStartClockTowerBoost = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "ChkActivateClockTowerBoostWhen", "Activate clock tower boost when: "), $x + 100, $y + 4, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "ChkActivateClockTowerBoost_Info_01", "Check this to activate the Clock Tower Boost when it is available.\r\nThis option doesn't use your Gems"))
 			GUICtrlSetOnEvent(-1, "chkStartClockTowerBoost")
-	$y += 22
-		$g_hChkCTBoostBlderBz = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "ChkCTBoostBlderBz", "Only when builder is busy"), $x + 100, $y + 4, -1, -1)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "ChkCTBoostBlderBz_Info_01", "Boost only when the builder is busy"))
-			GUICtrlSetOnEvent(-1, "chkCTBoostBlderBz")
-			GUICtrlSetState (-1, $GUI_DISABLE)
-		$g_hChkCTBoostLabBBActive = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "ChkCTBoostLabBBActive", "Only when Lab is in progress"), $x + 260, $y + 4, -1, -1)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "ChkCTBoostLabBBActive_Info_01", "Boost only when Lab is in progress"))
-			GUICtrlSetOnEvent(-1, "ChkCTBoostLabBBActive")
-			GUICtrlSetState(-1, $GUI_DISABLE)
+		$g_hCmbStartClockTowerBoost = GUICtrlCreateCombo("", 320, $y + 5, 89, 25, BitOR($CBS_DROPDOWNLIST + $CBS_AUTOHSCROLL, $WS_VSCROLL))
+			GUICtrlSetData(-1, GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "CmbStartClockTowerBoost", "Always|Lab. + Builder active.|Builder active|Lab. active"))
+			_GUICtrlComboBox_SetCurSel(-1, 1)
+			GUICtrlSetOnEvent(-1, "chkStartClockTowerBoost")
+	$y += 25
+		GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModClockTowerP, $x + 32, $y, 24, 24)
+		$g_hChkClockTowerPotion = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "ChkActivateClockTowerPotionWhen", "Activate clock tower with potion when: "), $x + 100, $y + 4, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "ChkActivateClockTowerBoost_Info_01", "Check this to activate the Clock Tower Boost when it is available.\r\nThis option doesn't use your Gems"))
+			GUICtrlSetOnEvent(-1, "chkStartClockTowerBoostPotion")
+		$g_hCmbClockTowerPotion = GUICtrlCreateCombo("", 320, $y + 5, 89, 25, BitOR($CBS_DROPDOWNLIST + $CBS_AUTOHSCROLL, $WS_VSCROLL))
+			GUICtrlSetData(-1, GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "CmbClockTowerPotion", "Lab. + Builder active.|Builder active|Lab. active"))
+			_GUICtrlComboBox_SetCurSel(-1, 0)
+			GUICtrlSetOnEvent(-1, "chkStartClockTowerBoostPotion")
 	$y += 28
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnTree, $x + 20, $y, 24, 24)
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnBark, $x + 45, $y, 24, 24)

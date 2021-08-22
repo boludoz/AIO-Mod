@@ -31,66 +31,101 @@ EndFunc   ;==>TestStartClockTowerBoost
 
 Func StartClockTowerBoost($bSwitchToBB = False, $bSwitchToNV = False)
 
-	If Not $g_bChkStartClockTowerBoost Then Return
+	If $g_bChkStartClockTowerBoost = False And $g_bChkClockTowerPotion = False Then Return ; Custom BB - Team AIO Mod++
 	If Not $g_bRunState Then Return
 
 	If $bSwitchToBB Then
 		ClickAway()
-		If Not SwitchBetweenBases() Then Return ; Switching to Builders Base
-	EndIf
-	
-	#Region - Custom BB - Team AIO Mod++
-	Local $bCTBoost = True
-	If $g_bChkCTBoostBlderBz Then
-		getBuilderCount(True, True) ; Update Builder Variables for Builders Base
-		If $g_iFreeBuilderCountBB = $g_iTotalBuilderCountBB Then $bCTBoost = False ; Builder is not busy, skip Boost
-	ElseIf $g_bChkCTBoostLabBBActive Then
-		Local $TimeDiff
-		If $g_sStarLabUpgradeTime <> "" Then $TimeDiff = _DateDiff("n", _NowCalc(), $g_sStarLabUpgradeTime) ; what is difference between end time and now in minutes?
-		If @error Then _logErrorDateDiff(@error)
-		If Not $g_bRunState Then Return
-		If $TimeDiff <= 0 Then 
-			SetLog("Skip Clock Tower Boost as no Lab troop is currently under Upgrade.", $COLOR_INFO)
-			$bCTBoost = False
+		If Not SwitchBetweenBases() Then 
+			Return ; Switching to Builders Base
 		EndIf
 	EndIf
 	
-	If Not $bCTBoost And $g_bChkCTBoostBlderBz Then
-		SetLog("Skip Clock Tower Boost as no Building is currently under Upgrade!", $COLOR_INFO)
-	ElseIf Not $bCTBoost And $g_bChkCTBoostLabBBActive Then 
-		SetLog("Skip Clock Tower Boost as Lab isn't in progress", $COLOR_INFO)
-	#EndRegion - Custom BB - Team AIO Mod++
-	Else ; Start Boosting
+	#Region - Custom BB - Team AIO Mod++
+	Local $bLabOn = False, $bCanBoost = False, $bCanUsePotion = False
+	If $g_sStarLabUpgradeTime <> "" Then 
+		$iTimeDiff = _DateDiff("n", _NowCalc(), $g_sStarLabUpgradeTime)
+		$bLabOn = $iTimeDiff <= 0
+	EndIf
+	
+	Local $bBuildersOn = False
+	getBuilderCount(True, True)
+	$bBuildersOn = ($g_iFreeBuilderCountBB <> $g_iTotalBuilderCountBB)
+	
+	If Not $g_bRunState Then Return
+
+	If $g_bChkStartClockTowerBoost = True Then
+		Switch $g_iCmbStartClockTowerBoost
+			Case 0 ; Always.
+				$bCanBoost = True
+			Case 1 ; Lab + builder active.
+				If $bLabOn = True And $bBuildersOn = True Then $bCanBoost = True
+			Case 2 ; Builder active.
+				If $bBuildersOn = True Then $bCanBoost = True
+			Case 3 ; Lab active.
+				If $bLabOn = True Then $bCanBoost = True
+		EndSwitch
+	EndIf
+
+	If Not $g_bRunState Then Return
+
+	If $g_bChkClockTowerPotion = True Then
+		Switch $g_iCmbClockTowerPotion
+			Case 0 ; Lab + builder active.
+				If $bLabOn = True And $bBuildersOn = True Then $bCanUsePotion = True
+			Case 1 ; Builder active.
+				If $bBuildersOn = True Then $bCanUsePotion = True
+			Case 2 ; Lab active.
+				If $bLabOn = True Then $bCanUsePotion = True
+		EndSwitch
+	EndIf
+	
+	If Not $g_bRunState Then Return
+
+	If $bCanBoost = True Or $bCanUsePotion = True Then
 		SetLog("Boosting Clock Tower", $COLOR_INFO)
 		If _Sleep($DELAYCOLLECT2) Then Return
-
+	
 		Local $sCTCoords, $aCTCoords, $aCTBoost
 		$sCTCoords = findImage("ClockTowerAvailable", $g_sImgStartCTBoost, "FV", 1, True) ; Search for Clock Tower
 		If $sCTCoords <> "" Then
 			$aCTCoords = StringSplit($sCTCoords, ",", $STR_NOCOUNT)
 			ClickP($aCTCoords)
 			If _Sleep($DELAYCLOCKTOWER1) Then Return
-
-			$aCTBoost = findButton("BoostCT") ; Search for Start Clock Tower Boost Button
-			If IsArray($aCTBoost) Then
-				ClickP($aCTBoost)
-				If _Sleep($DELAYCLOCKTOWER1) Then Return
-
-				$aCTBoost = findButton("BOOSTBtn") ; Search for Boost Button
+			
+			#Region - Custom BB - Team AIO Mod++
+			If $bCanBoost = True Then
+				$aCTBoost = findButton("BoostCT") ; Search for Start Clock Tower Boost Button
 				If IsArray($aCTBoost) Then
 					ClickP($aCTBoost)
-					If _Sleep($DELAYCLOCKTOWER2) Then Return
-					SetLog("Boosted Clock Tower successfully!", $COLOR_SUCCESS)
+					If _Sleep($DELAYCLOCKTOWER1) Then Return
+		
+					$aCTBoost = findButton("BOOSTBtn") ; Search for Boost Button
+					If IsArray($aCTBoost) Then
+						ClickP($aCTBoost)
+						If _Sleep($DELAYCLOCKTOWER2) Then Return
+						SetLog("Boosted Clock Tower successfully!", $COLOR_SUCCESS)
+					Else
+						SetLog("Failed to find the BOOST window button", $COLOR_ERROR)
+					EndIf
 				Else
-					SetLog("Failed to find the BOOST window button", $COLOR_ERROR)
+					SetLog("Cannot find the Boost Button of Clock Tower", $COLOR_ERROR)
 				EndIf
-			Else
-				SetLog("Cannot find the Boost Button of Clock Tower", $COLOR_ERROR)
 			EndIf
+		
+			If $bCanUsePotion = True Then
+				BoostPotionMod("ClockTowerPotion") ; Custom BB - Team AIO Mod++
+			EndIf
+			#EndRegion - Custom BB - Team AIO Mod++
+	
 		Else
-			SetLog("Clock Tower boost is not available!")
+			SetLog("Clock Tower boost is not available!", $COLOR_INFO)
 		EndIf
+	Else
+		SetLog("The conditions to accelerate the tower are not met.", $COLOR_INFO)
 	EndIf
+	#EndRegion - Custom BB - Team AIO Mod++
+
 	ClickAway()
 
 	If $bSwitchToNV Then SwitchBetweenBases() ; Switching back to the normal Village if true

@@ -13,27 +13,15 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func getTroopNumber($TroopEnumString)
-	Local $result
-	; Return must be a string because it doesn't work if the function returns numeric 0, because this is the same as Return False
-	If StringLeft($TroopEnumString, 1) = "$" Then
-		$result = Eval(StringRight($TroopEnumString, StringLen($TroopEnumString) - 1))
-	Else
-		$result = Eval($TroopEnumString)
-	EndIf
-
-	Return String($result)
-EndFunc   ;==>getTroopNumber
-
 Func unitLocation($kind) ; Gets the location of the unit type on the bar.
-	Local $return = -1
+	Local $aResult = -1
 	Local $i = 0
 
 	; This loops through the bar array but allows us to exit as soon as we find our match.
 	While $i < UBound($g_avAttackTroops)
 		; $g_avAttackTroops[$i][0] holds the unit ID for that position on the deployment bar.
 		If $g_avAttackTroops[$i][0] = $kind Then
-			$return = $i
+			$aResult = $i
 			ExitLoop
 		EndIf
 
@@ -41,20 +29,30 @@ Func unitLocation($kind) ; Gets the location of the unit type on the bar.
 	WEnd
 
 	; This returns -1 if not found on the bar, otherwise the bar position number.
-	Return $return
+	Return $aResult
 EndFunc   ;==>unitLocation
 
 Func getUnitLocationArray() ; Gets the location on the bar for every type of unit.
-	Local $result[$eCCSpell + 1] = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
+	Local $aResult[0]
 
 	; Loop through all the bar and assign it position to the respective unit.
 	For $i = 0 To UBound($g_avAttackTroops) - 1
 		If Number($g_avAttackTroops[$i][0]) <> -1 Then
-			$result[Number($g_avAttackTroops[$i][0])] = $i
+			If UBound($aResult) <= Number($g_avAttackTroops[$i][0]) Then 
+				ReDim $aResult[Number($g_avAttackTroops[$i][0]) + 1]
+			EndIf
+			$aResult[Number($g_avAttackTroops[$i][0])] = $i
 		EndIf
 	Next
+
+	For $i = 0 To UBound($aResult) -1
+		If StringIsSpace($aResult[$i]) Then
+			$aResult[$i] = -1
+		EndIf
+	Next
+
 	; Return the positions as an array.
-	Return $result
+	Return $aResult
 EndFunc   ;==>getUnitLocationArray
 
 Func unitCount($kind) ; Gets a count of the number of units of the type specified.
@@ -62,24 +60,33 @@ Func unitCount($kind) ; Gets a count of the number of units of the type specifie
 	Local $barLocation = unitLocation($kind)
 	; $barLocation is -1 if the unit/spell type is not found on the deployment bar.
 	If $barLocation <> -1 Then
-		$numUnits = $g_avAttackTroops[unitLocation($kind)][1]
+		$numUnits = $g_avAttackTroops[$barLocation][1]
 	EndIf
 
 	Return $numUnits
 EndFunc   ;==>unitCount
 
 Func unitCountArray() ; Gets a count of the number of units for every type of unit.
-	Local $result[$eCCSpell + 1] = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
-
+	Local $aResult[0]
+	
 	; Loop through all the bar and assign its unit count to the respective unit.
 	For $i = 0 To UBound($g_avAttackTroops) - 1
 		If Number($g_avAttackTroops[$i][1]) > 0 Then
-			$result[Number($g_avAttackTroops[$i][0])] = $g_avAttackTroops[$i][1]
+			If UBound($aResult) <= Number($g_avAttackTroops[$i][0]) Then 
+				ReDim $aResult[Number($g_avAttackTroops[$i][0]) + 1]
+			EndIf
+			$aResult[Number($g_avAttackTroops[$i][0])] = $g_avAttackTroops[$i][1]
+		EndIf
+	Next
+	
+	For $i = 0 To UBound($aResult) -1
+		If StringIsSpace($aResult[$i]) Then
+			$aResult[$i] = -1
 		EndIf
 	Next
 
 	; Return the positions as an array.
-	Return $result
+	Return $aResult
 EndFunc   ;==>unitCountArray
 
 ; Calculate how many troops to drop for the wave

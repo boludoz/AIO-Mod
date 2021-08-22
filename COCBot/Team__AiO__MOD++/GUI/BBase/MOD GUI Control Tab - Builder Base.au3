@@ -28,28 +28,6 @@ Func btnBBAtkLogCopyClipboard()
 	ClipPut($text)
 EndFunc   ;==>btnBBAtkLogCopyClipboard
 
-Func chkStartClockTowerBoost()
-	If GUICtrlRead($g_hChkStartClockTowerBoost) = $GUI_CHECKED Then
-		GUICtrlSetState($g_hChkCTBoostBlderBz, $GUI_ENABLE)
-		GUICtrlSetState($g_hChkCTBoostLabBBActive, $GUI_ENABLE)
-	Else
-		GUICtrlSetState($g_hChkCTBoostBlderBz, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkCTBoostLabBBActive, $GUI_DISABLE)
-	EndIf
-EndFunc   ;==>chkStartClockTowerBoost
-
-Func chkCTBoostBlderBz()
-	If GUICtrlRead($g_hChkCTBoostBlderBz) = $GUI_CHECKED Then
-		_GUI_Value_STATE("UNCHECKED", $g_hChkCTBoostLabBBActive)
-	EndIf
-EndFunc   ;==>chkCTBoostBlderBz
-
-Func ChkCTBoostLabBBActive()
-	If GUICtrlRead($g_hChkCTBoostLabBBActive) = $GUI_CHECKED Then
-		_GUI_Value_STATE("UNCHECKED", $g_hChkCTBoostBlderBz)
-	EndIf
-EndFunc   ;==>ChkCTBoostLabBBActive
-
 Func chkDebugBBattack()
 	If GUICtrlRead($g_hDebugBBattack) = $GUI_CHECKED Then
 		$g_bDebugBBattack = True
@@ -435,3 +413,23 @@ Func chkCleanBBYardAll()
 	$g_bChkCleanYardBBAll = (GUICtrlRead($g_hChkCleanYardBBAll) = $GUI_CHECKED) ? (True) : (False)
 EndFunc   ;==>chkCleanYardBBall
 #EndRegion - Custom Yard - Team AIO Mod++
+
+Func chkStartClockTowerBoost()
+	$g_bChkStartClockTowerBoost = (GUICtrlRead($g_hChkStartClockTowerBoost) = $GUI_CHECKED)
+	If $g_bChkStartClockTowerBoost = True Then
+		GUICtrlSetState($g_hCmbStartClockTowerBoost, $GUI_ENABLE)
+	Else
+		GUICtrlSetState($g_hCmbStartClockTowerBoost, $GUI_DISABLE)
+	EndIf
+
+EndFunc   ;==>chkStartClockTowerBoost
+
+Func chkStartClockTowerBoostPotion()
+	$g_bChkClockTowerPotion = (GUICtrlRead($g_hChkClockTowerPotion) = $GUI_CHECKED)
+	If $g_bChkClockTowerPotion = True Then
+		GUICtrlSetState($g_hCmbClockTowerPotion, $GUI_ENABLE)
+	Else
+		GUICtrlSetState($g_hCmbClockTowerPotion, $GUI_DISABLE)
+	EndIf
+
+EndFunc   ;==>chkStartClockTowerBoostPotion

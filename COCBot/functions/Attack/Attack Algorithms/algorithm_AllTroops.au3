@@ -19,7 +19,11 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 
 	If _Sleep($DELAYALGORITHM_ALLTROOPS1) Then Return
 
-	SmartAttackStrategy($g_iMatchMode) ; detect redarea first to drop any troops
+	#Region - Multi Finger - Team AIO Mod++
+	If ($g_aiAttackStdDropSides[$g_iMatchMode] = 4 And $g_iMatchMode = $DB) = False Then 
+		SmartAttackStrategy($g_iMatchMode) ; detect redarea first to drop any troops
+	EndIf
+	#EndRegion - Multi Finger - Team AIO Mod++
 
 	Local $nbSides = 0
 	Switch $g_aiAttackStdDropSides[$g_iMatchMode]
@@ -36,9 +40,13 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 			SetLog("Attacking on all sides", $COLOR_INFO)
 			$nbSides = 4
 		Case 4 ;DE Side - Live Base only ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-			SetLog("Attacking on Dark Elixir Side.", $COLOR_INFO)
 			$nbSides = 1
-			If Not ($g_abAttackStdSmartAttack[$g_iMatchMode]) Then GetBuildingEdge($eSideBuildingDES) ; Get DE Storage side when Redline is not used.
+            If $g_iMatchMode = $LB Then
+				SetLog("Attacking on Dark Elixir Side.", $COLOR_INFO)
+				If Not ($g_abAttackStdSmartAttack[$g_iMatchMode]) Then GetBuildingEdge($eSideBuildingDES) ; Get DE Storage side when Redline is not used.
+			Else
+				SetLog("Attacking Multifinger.", $COLOR_INFO)
+			EndIf
 		Case 5 ;TH Side - Live Base only ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			SetLog("Attacking on Town Hall Side.", $COLOR_INFO)
 			$nbSides = 1
@@ -353,10 +361,10 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 	
 	#Region - Multi finger - Team AIO Mod+++
 	If $g_aiAttackStdDropSides[$g_iMatchMode] = 4 And $g_iMatchMode = $DB Then
-		SetLog("Multi Finger Attack", $COLOR_INFO)
+		SetLog("Multi finger attack mode.", $COLOR_INFO)
 		launchMultiFinger($listInfoDeploy, $g_iClanCastleSlot, $g_iKingSlot, $g_iQueenSlot, $g_iWardenSlot, $g_iChampionSlot)
 	Else
-		; SetLog(_PadStringCenter("Standard Attack", 50, "="), $COLOR_INFO)
+		SetLog("Standard attack mode.", $COLOR_INFO)
 		LaunchTroop2($listInfoDeploy, $g_iClanCastleSlot, $g_iKingSlot, $g_iQueenSlot, $g_iWardenSlot, $g_iChampionSlot)
 	EndIf
 	#Region - Multi finger - Team AIO Mod+++

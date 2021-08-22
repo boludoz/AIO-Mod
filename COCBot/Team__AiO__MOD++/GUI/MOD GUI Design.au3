@@ -92,10 +92,8 @@ EndFunc   ;==>CreateMODTab
 EndFunc   ;==>TabMiscGUI
 
 Global $g_hChkCollectMagicItems, _ ;$g_hChkCollectFree, _
-$g_hBtnMagicItemsConfig, _
-$g_hChkBuilderPotion, $g_hChkClockTowerPotion, $g_hChkHeroPotion, $g_hChkLabPotion, $g_hChkPowerPotion, $g_hChkResourcePotion, _
-$g_hComboClockTowerPotion, $g_hComboHeroPotion, $g_hComboPowerPotion, _
-$g_hInputBuilderPotion, $g_hInputLabPotion, $g_hInputGoldItems, $g_hInputElixirItems, $g_hInputDarkElixirItems
+$g_hBtnMagicItemsConfig, $g_hChkBuilderPotion, $g_hChkHeroPotion, $g_hChkLabPotion, $g_hChkPowerPotion, $g_hChkResourcePotion, _
+$g_hComboHeroPotion, $g_hComboPowerPotion, $g_hInputBuilderPotion, $g_hInputLabPotion, $g_hInputGoldItems, $g_hInputElixirItems, $g_hInputDarkElixirItems;, $g_hCmbClockTowerPotion, $g_hChkClockTowerPotion
 
 Func CreateMiscMagicSubTab()
 
@@ -103,6 +101,7 @@ Func CreateMiscMagicSubTab()
 	Local $x = 15, $y = 45
 
 	GUICtrlCreateGroup("Collect Items", 16, 24, 408, 78)
+	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnShop, 24, 46, 25, 25)
 	$g_hChkCollectMagicItems = GUICtrlCreateCheckbox("Collect magic items", 56, 48, 105, 17)
 	GUICtrlSetOnEvent(-1, "btnDDApply")
 	$g_hChkFreeMagicItems = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkFreeMagicItems", "Collect Free Magic Items"), 56, 73, 200, 17)
@@ -111,43 +110,50 @@ Func CreateMiscMagicSubTab()
 	GUICtrlSetOnEvent(-1, "btnDailyDiscounts")
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
-	GUICtrlCreateGroup("Magic Items", 16, 104, 408, 257)
-	$g_hChkBuilderPotion = GUICtrlCreateCheckbox("Use builder potion when busy builders is > = : ", 56, 128, 225, 17)
+	GUICtrlCreateGroup("Magic Items", 16, 104, 408, 155)
+
+	$y = 128
+	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModBuilderP, 24, $y - 5, 25, 25)
+	$g_hChkBuilderPotion = GUICtrlCreateCheckbox("Use builder potion when busy builders is > = : ", 56, $y, 225, 17)
 	GUICtrlSetOnEvent(-1, "MagicItemsRefresh")
-	$g_hChkClockTowerPotion = GUICtrlCreateCheckbox("Use clock tower potion when :", 56, 160, 217, 17)
-	GUICtrlSetState (-1, $GUI_DISABLE)
-	$g_hChkHeroPotion = GUICtrlCreateCheckbox("Use hero potion whem are avariable : ", 56, 192, 217, 17)
-	GUICtrlSetState (-1, $GUI_DISABLE)
-	$g_hChkLabPotion = GUICtrlCreateCheckbox("Use research potion when laboratory hours is >= ", 56, 224, 233, 17)
-	$g_hChkPowerPotion = GUICtrlCreateCheckbox("Use power potion during : ", 56, 256, 225, 17)
-	GUICtrlSetState (-1, $GUI_DISABLE)
-	$g_hChkResourcePotion = GUICtrlCreateCheckbox("Use resource potion only if storage are :", 56, 288, 225, 17)
+	$g_hInputBuilderPotion = _GUICtrlCreateInput("Number", 320, $y, 41, 21)
 	GUICtrlSetOnEvent(-1, "MagicItemsRefresh")
-	$g_hInputBuilderPotion = _GUICtrlCreateInput("Number", 296, 128, 41, 21)
+
+	$y += 32
+	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnLabP, 24, $y - 5, 25, 25)
+	$g_hChkLabPotion = GUICtrlCreateCheckbox("Use research potion when laboratory hours is >= ", 56, $y, 233, 17)
 	GUICtrlSetOnEvent(-1, "MagicItemsRefresh")
-	$g_hComboClockTowerPotion = GUICtrlCreateCombo("Select", 296, 160, 89, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
-	GUICtrlSetState (-1, $GUI_DISABLE)
-	$g_hComboHeroPotion = GUICtrlCreateCombo("Select", 296, 192, 89, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
-	GUICtrlSetState (-1, $GUI_HIDE)
-	$g_hInputLabPotion = _GUICtrlCreateInput("Hours", 296, 224, 41, 21)
-	$g_hComboPowerPotion = GUICtrlCreateCombo("Select", 296, 256, 89, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
-	GUICtrlSetState (-1, $GUI_DISABLE)
-	$g_hInputGoldItems = _GUICtrlCreateInput("1000000", 88, 320, 73, 21)
+	$g_hInputLabPotion = _GUICtrlCreateInput("Hours", 320, $y, 41, 21)
 	GUICtrlSetOnEvent(-1, "MagicItemsRefresh")
-	$g_hInputElixirItems = _GUICtrlCreateInput("1000000", 192, 320, 73, 21)
+		
+	$y += 32
+	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModResourceP, 24, $y - 5, 25, 25)
+	$g_hChkResourcePotion = GUICtrlCreateCheckbox("Use resource potion only if storage are :", 56, $y, 225, 17)
+	GUICtrlSetOnEvent(-1, "MagicItemsRefresh")	
+	
+	$y += 36
+	$g_hInputGoldItems = _GUICtrlCreateInput("1000000", 88, $y, 73, 21)
 	GUICtrlSetOnEvent(-1, "MagicItemsRefresh")
-	$g_hInputDarkElixirItems = _GUICtrlCreateInput("1000", 296, 320, 49, 21)
+	$g_hInputElixirItems = _GUICtrlCreateInput("1000000", 192, $y, 73, 21)
 	GUICtrlSetOnEvent(-1, "MagicItemsRefresh")
-	GUICtrlCreateLabel("Lower : ", 40, 320, 42, 17)
-	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnShop, 24, 46, 25, 25)
-	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModBuilderP, 24, 126, 25, 25)
-	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModClockTowerP, 24, 158, 25, 25)
-	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModHeroP, 24, 190, 25, 25)
-	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnLabP, 24, 222, 25, 25)
-	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModPowerP, 24, 254, 25, 25)
-	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModResourceP, 24, 284, 25, 25)
-	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnGoldP, 163, 318, 25, 25)
-	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnElixirP, 265, 318, 25, 25)
-	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnDarkP, 345, 318, 25, 25)
+	$g_hInputDarkElixirItems = _GUICtrlCreateInput("1000", 296, $y, 49, 21)
+	GUICtrlSetOnEvent(-1, "MagicItemsRefresh")
+	GUICtrlCreateLabel("Lower : ", 40, $y, 42, 17)
+	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnGoldP, 163, $y - 2, 25, 25)
+	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnDarkP, 345, $y - 2, 25, 25)
+	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnElixirP, 265, $y - 2, 25, 25)
+
+	; $y += 32
+	; $g_hChkHeroPotion = GUICtrlCreateCheckbox("Use hero potion whem are avariable : ", 56, $y, 217, 17)
+	; GUICtrlSetState (-1, $GUI_DISABLE)
+	; $y += 32
+	; $g_hChkPowerPotion = GUICtrlCreateCheckbox("Use power potion during : ", 56, 256, 225, 17)
+	; GUICtrlSetState (-1, $GUI_DISABLE)
+	; $g_hComboPowerPotion = GUICtrlCreateCombo("Select", 296, 256, 89, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
+	; GUICtrlSetState (-1, $GUI_DISABLE)
+	; $g_hComboHeroPotion = GUICtrlCreateCombo("Select", 296, 192, 89, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
+	; GUICtrlSetState (-1, $GUI_HIDE)
+	; _GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModPowerP, 24, 254, 25, 25)
+	; _GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModHeroP, 24, 190, 25, 25)
 
 EndFunc   ;==>CreateMiscMagicSubTab

@@ -428,9 +428,14 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "ChkCollectBuildersBase", $g_bChkCollectBuilderBase ? 1 : 0)
 	_Ini_Add("other", "ChkCleanBBYard", $g_bChkCleanBBYard ? 1 : 0)
     _Ini_Add("other", "chkCleanYardBBall", $g_bChkCleanYardBBall ? 1 : 0) ; AIO MOD++
-	_Ini_Add("other", "ChkStartClockTowerBoost", $g_bChkStartClockTowerBoost ? 1 : 0)
-	_Ini_Add("other", "ChkCTBoostBlderBz", $g_bChkCTBoostBlderBz ? 1 : 0)
-	_Ini_Add("other", "ChkCTBoostLabBBActive", $g_bChkCTBoostLabBBActive ? 1 : 0) ; AIO MOD++
+	;
+ 	_Ini_Add("other", "ChkStartClockTowerBoost", $g_bChkStartClockTowerBoost ? 1 : 0)
+	_Ini_Add("other", "CmbStartClockTowerBoost", $g_iCmbStartClockTowerBoost) ; AIO Mod++
+	_Ini_Add("other", "CmbClockTowerPotion", $g_iCmbClockTowerPotion) ; AIO Mod++
+	_Ini_Add("other", "ChkClockTowerPotion", $g_bChkClockTowerPotion ? 1 : 0) ; AIO Mod++
+	;
+;~ 	_Ini_Add("other", "ChkCTBoostBlderBz", $g_bChkCTBoostBlderBz ? 1 : 0) ; AIO MOD++
+;~ 	_Ini_Add("other", "ChkCTBoostLabBBActive", $g_bChkCTBoostLabBBActive ? 1 : 0) ; AIO MOD++
 	_Ini_Add("other", "ChkBBSuggestedUpgrades", $g_iChkBBSuggestedUpgrades)
 	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreGold", $g_iChkBBSuggestedUpgradesIgnoreGold)
 	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreElixir", $g_iChkBBSuggestedUpgradesIgnoreElixir)

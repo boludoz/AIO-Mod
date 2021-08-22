@@ -59,7 +59,7 @@ Func CreateAttackSearchDeadBaseStandard()
 								   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "CmbStandardDropSides_Item_04", "all sides equally") & "|" & _
 								   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "CmbStandardDropSides_Item_08", "Multi Finger"), _
 								   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "CmbStandardDropSides_Item_04", -1))
-			    					   GUICtrlSetOnEvent(-1, "Bridge") ; Uncheck SmartAttack Red Area when enable FourFinger to avoid conflict by SM MOD
+			    					   GUICtrlSetOnEvent(-1, "cmbDBMultiFinger") ; Uncheck SmartAttack Red Area when enable FourFinger to avoid conflict
 			 #EndRegion - Multi Finger - Team AIO Mod++      
 		#Region - Custom sleep Drop - Team AIO Mod++
 		$y += 25

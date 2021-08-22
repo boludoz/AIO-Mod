@@ -1219,10 +1219,10 @@ Func Attack() ;Selects which algorithm
 	$g_bAttackActive = True
 	SetLog(" ====== Start Attack ====== ", $COLOR_SUCCESS)
 	If ($g_iMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 1) Or ($g_iMatchMode = $LB And $g_aiAttackAlgorithm[$LB] = 1) Then
-		If $g_bDebugSetlog Then SetDebugLog("start scripted attack", $COLOR_ERROR)
+		If $g_bDebugSetlog Then SetDebugLog("Starting scripted attack", $COLOR_ERROR)
 		Algorithm_AttackCSV()
 	ElseIf $g_iMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 2 Then
-		If $g_bDebugSetlog Then SetDebugLog("start smart farm attack", $COLOR_ERROR)
+		If $g_bDebugSetlog Then SetDebugLog("Starting smart farm attack", $COLOR_ERROR)
 		; Variable to return : $Return[3]  [0] = To attack InSide  [1] = Quant. Sides  [2] = Name Sides
 		Local $Nside = ChkSmartFarm()
 		If Not $g_bRunState Then Return
@@ -1233,7 +1233,7 @@ Func Attack() ;Selects which algorithm
 		SmartFarmMilk()
 		#EndRegion - SmartMilk
 	Else
-		If $g_bDebugSetlog Then SetDebugLog("start standard attack", $COLOR_ERROR)
+		If $g_bDebugSetlog Then SetDebugLog("Starting standard attack", $COLOR_ERROR)
 		algorithm_AllTroops()
 	EndIf
 	$g_bAttackActive = False

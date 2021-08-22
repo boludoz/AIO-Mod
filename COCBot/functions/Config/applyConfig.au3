@@ -358,9 +358,16 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetState($g_hChkCleanBBYard, $g_bChkCleanBBYard ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkCleanYardBBall, $g_bChkCleanYardBBall ? $GUI_CHECKED : $GUI_UNCHECKED) ; AIO MOD++
 			chkCleanBBYard() ; AIO MOD++
+			;
 			GUICtrlSetState($g_hChkStartClockTowerBoost, $g_bChkStartClockTowerBoost ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkCTBoostBlderBz, $g_bChkCTBoostBlderBz ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkCTBoostLabBBActive, $g_bChkCTBoostLabBBActive ? $GUI_CHECKED : $GUI_UNCHECKED) ; AIO MOD++
+			_GUICtrlComboBox_SetCurSel($g_hCmbStartClockTowerBoost, $g_iCmbStartClockTowerBoost) ; AIO Mod++
+			_GUICtrlComboBox_SetCurSel($g_hCmbClockTowerPotion, $g_iCmbClockTowerPotion) ; AIO Mod++
+			GUICtrlSetState($g_hChkClockTowerPotion, $g_bChkClockTowerPotion = True ? $GUI_CHECKED : $GUI_UNCHECKED) ; AIO Mod++
+			chkStartClockTowerBoost()
+			chkStartClockTowerBoostPotion()
+			;
+;~ 			GUICtrlSetState($g_hChkCTBoostBlderBz, $g_bChkCTBoostBlderBz ? $GUI_CHECKED : $GUI_UNCHECKED) ; AIO MOD++
+;~ 			GUICtrlSetState($g_hChkCTBoostLabBBActive, $g_bChkCTBoostLabBBActive ? $GUI_CHECKED : $GUI_UNCHECKED) ; AIO MOD++
 			chkStartClockTowerBoost()
 			GUICtrlSetState($g_hChkBBSuggestedUpgrades, $g_iChkBBSuggestedUpgrades = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreGold, $g_iChkBBSuggestedUpgradesIgnoreGold = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -463,9 +470,14 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bChkCollectBuilderBase = (GUICtrlRead($g_hChkCollectBuilderBase) = $GUI_CHECKED)
 			$g_bChkCleanBBYard = (GUICtrlRead($g_hChkCleanBBYard) = $GUI_CHECKED)
 			$g_bChkCleanYardBBall = (GUICtrlRead($g_hChkCleanYardBBall) = $GUI_CHECKED) ; AIO MOD++
+			;
 			$g_bChkStartClockTowerBoost = (GUICtrlRead($g_hChkStartClockTowerBoost) = $GUI_CHECKED)
-			$g_bChkCTBoostBlderBz = (GUICtrlRead($g_hChkCTBoostBlderBz) = $GUI_CHECKED)
-			$g_bChkCTBoostLabBBActive = (GUICtrlRead($g_hChkCTBoostLabBBActive) = $GUI_CHECKED) ; AIO MOD++
+			$g_iCmbStartClockTowerBoost = _GUICtrlComboBox_GetCurSel($g_hCmbStartClockTowerBoost) ; AIO Mod++
+			$g_iCmbClockTowerPotion = _GUICtrlComboBox_GetCurSel($g_hCmbClockTowerPotion) ; AIO Mod++
+			$g_bChkClockTowerPotion = (GUICtrlRead($g_hChkClockTowerPotion) = $GUI_CHECKED) ; AIO Mod++
+			;
+;~ 			$g_bChkCTBoostBlderBz = (GUICtrlRead($g_hChkCTBoostBlderBz) = $GUI_CHECKED) ; AIO MOD++
+;~ 			$g_bChkCTBoostLabBBActive = (GUICtrlRead($g_hChkCTBoostLabBBActive) = $GUI_CHECKED) ; AIO MOD++
 			 $g_iChkBBSuggestedUpgrades = (GUICtrlRead($g_hChkBBSuggestedUpgrades) = $GUI_CHECKED) ? 1 : 0
 			$g_iChkBBSuggestedUpgradesIgnoreGold = (GUICtrlRead($g_hChkBBSuggestedUpgradesIgnoreGold) = $GUI_CHECKED) ? 1 : 0
 			$g_iChkBBSuggestedUpgradesIgnoreElixir = (GUICtrlRead($g_hChkBBSuggestedUpgradesIgnoreElixir) = $GUI_CHECKED) ? 1 : 0	

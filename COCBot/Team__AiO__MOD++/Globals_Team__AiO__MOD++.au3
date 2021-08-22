@@ -41,7 +41,6 @@ Global Enum $sideBottomRight, $sideTopLeft, $sideBottomLeft, $sideTopRight
 Global Enum $mfRandom, $mfFFStandard, $mfFFSpiralLeft, $mfFFSpiralRight, $mf8FBlossom, $mf8FImplosion, $mf8FPinWheelLeft, $mf8FPinWheelRight
 
 Global $g_iMultiFingerStyle = 1
-Global Enum $eCCSpell = $eHaSpell + 1
 #EndRegion - Multi Finger - Team AIO Mod++
 
 #Region - BuyGuard - Team AIO Mod++
@@ -348,9 +347,7 @@ Global $g_aOKBtn[5] = [494, 409, 0xE0F989, 20, 500] ; OK - Fast OK button.
 Global $g_aJoinInvBtn[5] = [524, 215, 0xDFF886, 20, 500] ; OK - Join invitation button.
 
 ; Magic Items
-Global $g_bChkCollectMagicItems, _ ;$g_bChkCollectFree, _
-$g_bChkBuilderPotion, $g_bChkClockTowerPotion, $g_bChkHeroPotion, $g_bChkLabPotion, $g_bChkPowerPotion, $g_bChkResourcePotion, _
-$g_iComboClockTowerPotion, $g_iComboHeroPotion, $g_iComboPowerPotion, _
+Global $g_bChkCollectMagicItems, $g_bChkBuilderPotion, $g_bChkClockTowerPotion, $g_bChkHeroPotion, $g_bChkLabPotion, $g_bChkPowerPotion, $g_bChkResourcePotion, $g_iComboHeroPotion, $g_iComboPowerPotion, _
 $g_iInputBuilderPotion, $g_iInputLabPotion, $g_iInputGoldItems = 250000, $g_iInputElixirItems = 300000, $g_iInputDarkElixirItems = 1000
 
 #Region - Builder Base !!!
@@ -442,8 +439,6 @@ Global $ExternalArea[8][3]
 ; Log
 Global $g_hBBAttackLogFile = 0
 
-;~ Global $g_bChkCollectBuilderBase = False, $g_bChkStartClockTowerBoost = False, $g_bChkCTBoostBlderBz = False, $g_bChkCTBoostAtkAvailable = False, $g_bChkCleanYardBB = False, $g_bDebugBBattack = False
-
 Global $g_bOnlyBuilderBase = False
 
 Global $g_bChkBBGetFromCSV = False, $g_bChkBBGetFromArmy
@@ -451,8 +446,10 @@ Global $g_bChkBBGetFromCSV = False, $g_bChkBBGetFromArmy
 ; CleanYardBBAll
 Global $g_bChkCleanYardBBAll = False, $g_hChkCleanYardBBall = 0
 
-; Currently under Upgrade
-Global $g_bChkCTBoostLabBBActive = False, $g_hChkCTBoostLabBBActive = 0
+; Clock tower mecanics.
+Global $g_iCmbStartClockTowerBoost = 0, _
+$g_bChkClockTowerPotion = 0, $g_iCmbClockTowerPotion = 0 ; AIO ++
+
 #EndRegion - Builder Base !!!
 
 Global $g_iAttackTotalBLButtons = -1
