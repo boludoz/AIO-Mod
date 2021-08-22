@@ -135,42 +135,42 @@ Func _SmartFarmMilk($bDebug = False)
 		Case 0
 			If $aSlots2deploy[$eBabyDSlot][0] <> -1 Then
 				If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$eBabyDSlot][0])
-				If _Sleep($DELAYLAUNCHTROOP23) Then Return
+				If RandomSleep($DELAYLAUNCHTROOP23) Then Return
 				If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$eBabyDSlot][0])
 			EndIf
 		Case 1
 			If $aSlots2deploy[$eBarbSlot][0] <> -1 Then
 				If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$eBarbSlot][0])
-				If _Sleep($DELAYLAUNCHTROOP23) Then Return
+				If RandomSleep($DELAYLAUNCHTROOP23) Then Return
 				If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$eBarbSlot][0])
 			EndIf
 		Case 2
 			If $aSlots2deploy[$eArchSlot][0] <> -1 Then
 				If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$eArchSlot][0])
-				If _Sleep($DELAYLAUNCHTROOP23) Then Return
+				If RandomSleep($DELAYLAUNCHTROOP23) Then Return
 				If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$eArchSlot][0])
 			EndIf
 		Case 3
 			If $aSlots2deploy[$eGiantSlot][0] <> -1 Then
 				If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$eGiantSlot][0])
-				If _Sleep($DELAYLAUNCHTROOP23) Then Return
+				If RandomSleep($DELAYLAUNCHTROOP23) Then Return
 				If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$eGiantSlot][0])
 			EndIf
 		Case 4
 			If $aSlots2deploy[$eGoblSlot][0] <> -1 Then
 				If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$eGoblSlot][0])
-				If _Sleep($DELAYLAUNCHTROOP23) Then Return
+				If RandomSleep($DELAYLAUNCHTROOP23) Then Return
 				If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$eGoblSlot][0])
 			EndIf
 		Case 5
 			If $aSlots2deploy[$eMiniSlot][0] <> -1 Then
 				If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$eMiniSlot][0])
-				If _Sleep($DELAYLAUNCHTROOP23) Then Return
+				If RandomSleep($DELAYLAUNCHTROOP23) Then Return
 				If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$eMiniSlot][0])
 			EndIf
 		Case Else
 			If IsAttackPage() Then SelectDropTroop(0)
-			If _Sleep($DELAYLAUNCHTROOP23) Then Return
+			If RandomSleep($DELAYLAUNCHTROOP23) Then Return
 			If IsAttackPage() Then SelectDropTroop(0)
 	EndSwitch
 	If $g_bDebugSmartMilk Then SetLog("$aSlots2deploy: " & _ArrayToString($aSlots2deploy, "-", -1, -1, "|"))

@@ -87,8 +87,8 @@ Func launchMultiFinger($listInfoDeploy, $g_iClanCastleSlot, $g_iKingSlot, $g_iQu
 		$barPosition = $aDeployButtonPositions[$kind]
 
 		If IsString($kind) And ($kind = "CC" Or $kind = "HEROES") Then
-			$RandomEdge = $g_aaiEdgeDropPoints[Round(Random(0, 3))]
-			$RandomXY = Round(Random(0, 4))
+			$RandomEdge = $g_aaiEdgeDropPoints[Round(Random(0, 3, 1))]
+			$RandomXY = Round(Random(0, 4, 1))
 
 			If $kind = "CC" Then
 				dropCC($RandomEdge[$RandomXY][0], $RandomEdge[$RandomXY][1], $g_iClanCastleSlot)

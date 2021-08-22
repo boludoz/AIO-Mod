@@ -826,7 +826,7 @@ Func NotifyPushMessageToBoth($Message, $Source = "")
 			ClickAway()
 			; open the builders menu
 			Click(295, 30)
-			If _Sleep(750) Then Return
+			If _Sleep(1500) Then Return
 			Local $Date = @YEAR & "-" & @MON & "-" & @MDAY
 			Local $Time = @HOUR & "." & @MIN
 			_CaptureRegion(215, 77, 450, 360)
@@ -843,26 +843,28 @@ Func NotifyPushMessageToBoth($Message, $Source = "")
 			If Not $iDelete Then
 				SetLog("Notify Telegram: An error occurred deleting temporary screenshot file.", $COLOR_ERROR)
 			EndIf
-			ClickAway()
+			ClickAway(True)
 		Case "ShieldInfo"
 			ClickAway()
 			Click(435, 8)
-			If _Sleep(500) Then Return
-			Local $Date = @YEAR & "-" & @MON & "-" & @MDAY
-			Local $Time = @HOUR & "." & @MIN
-			_CaptureRegion(200, 165, 660, 568)
-			Local $Screnshotfilename = "Screenshot_" & $Date & "_" & $Time & ".jpg"
-			_GDIPlus_ImageSaveToFile($g_hBitmap, $g_sProfileTempPath & $Screnshotfilename)
-			If $g_bTGRequestShieldInfo Then
-				NotifyPushFileToTelegram($Screnshotfilename, "Temp", "image/jpeg", $g_sNotifyOrigin & " | " & "Shield Information" & chr(10) & $Screnshotfilename)
-				SetLog("Notify Telegram: Shield Information sent!", $COLOR_SUCCESS)
-			EndIf
-			$g_bTGRequestShieldInfo = False
-			;wait a second and then delete the file
-			If _Sleep($DELAYPUSHMSG2) Then Return
-			Local $iDelete = FileDelete($g_sProfileTempPath & $Screnshotfilename)
-			If Not $iDelete Then
-				SetLog("Notify Telegram: An error occurred deleting temporary screenshot file.", $COLOR_ERROR)
+			If _Sleep(1000) Then Return
+			If _Wait4PixelGoneArray($aIsMain) Then
+				Local $Date = @YEAR & "-" & @MON & "-" & @MDAY
+				Local $Time = @HOUR & "." & @MIN
+				_CaptureRegion(200, 165, 660, 568)
+				Local $Screnshotfilename = "Screenshot_" & $Date & "_" & $Time & ".jpg"
+				_GDIPlus_ImageSaveToFile($g_hBitmap, $g_sProfileTempPath & $Screnshotfilename)
+				If $g_bTGRequestShieldInfo Then
+					NotifyPushFileToTelegram($Screnshotfilename, "Temp", "image/jpeg", $g_sNotifyOrigin & " | " & "Shield Information" & chr(10) & $Screnshotfilename)
+					SetLog("Notify Telegram: Shield Information sent!", $COLOR_SUCCESS)
+				EndIf
+				$g_bTGRequestShieldInfo = False
+				;wait a second and then delete the file
+				If _Sleep($DELAYPUSHMSG2) Then Return
+				Local $iDelete = FileDelete($g_sProfileTempPath & $Screnshotfilename)
+				If Not $iDelete Then
+					SetLog("Notify Telegram: An error occurred deleting temporary screenshot file.", $COLOR_ERROR)
+				EndIf
 			EndIf
 			ClickAway()
 		Case "CampFull"

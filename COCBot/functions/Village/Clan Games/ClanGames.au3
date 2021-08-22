@@ -474,11 +474,15 @@ Func _ClanGames($test = False)
 
 EndFunc   ;==>_ClanGames
 
+Global $g_bIsCaravanOn = "Undefined"
 Func IsClanGamesWindow($getCapture = True)
 	Local $aGameTime[4] = [384, 388, 0xFFFFFF, 10]
 
 	If QuickMIS("BC1", $g_sImgCaravan, 179, 48, 378, 177, $getCapture, False) Then
 		SetLog("Caravan available! Entering Clan Games", $COLOR_SUCCESS)
+		
+		$g_bIsCaravanOn = "True" ; Custom BB - Team AIO Mod++
+		
 		Click($g_iQuickMISX + Random(170, 185, 1), $g_iQuickMISY + Random(35, 55, 1))
 		; Just wait for window open
 		If _Sleep(1500) Then Return
@@ -497,6 +501,7 @@ Func IsClanGamesWindow($getCapture = True)
 			Return False
 		EndIf
 	Else
+		$g_bIsCaravanOn = "False"
 		SetLog("Caravan not available", $COLOR_WARNING)
 		ClickAway()
 		Return False

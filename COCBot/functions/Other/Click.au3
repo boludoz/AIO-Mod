@@ -261,7 +261,7 @@ Func ClickAway($bForce = False, $bRight = $g_bStayOnBuilderBase)
 	If $bForce = False Then
 		; 3EBFED - Profile, FFFFB7 - Building
 		_CaptureRegion()
-		If (_PixelSearch(20, 12, 22, 14, Hex(0x3CBFEC, 6), 15, False) = 0 Or _PixelSearch(419, 564, 438, 566, Hex(0xFEFEB6, 6), 15, False) <> 0) = False Then
+		If (_PixelSearch(20, 12, 22, 14, Hex(0x3CBFEC, 6), 15, False) = 0 Or _PixelSearch(419, 564, 438, 566, Hex(0xFEFEB6, 6), 15, False) <> 0 Or _PixelSearch(443, 70, 444, 76, Hex(0xFFFFFF, 6), 15, False) <> 0) = False Then
 			If $g_bDebugClick = True Then 
 				SetLog("ClickAway ? " & False, $COLOR_ACTION)
 			EndIf

@@ -15,18 +15,18 @@
 #Region - Custom sleep Drop - Team AIO Mod++
 Func SetSleep($iType)
 	If IsKeepClicksActive() = True Then Return 0
-	Local $iOffset0 = 6.6, $iOffset1 = 66.66, $iMode = ($g_iMatchMode = $DB) ? (($g_aiAttackAlgorithm[$DB] = 0) ? (0) : (1)) : (2)
+	Local $iOffset0 = 10, $iOffset1 = 100, $iMode = ($g_iMatchMode = $DB) ? (($g_aiAttackAlgorithm[$DB] = 0) ? (0) : (1)) : (2)
 	Switch $iType
 		Case 0
 			If $g_bChkEnableRandom[$iMode] Then
-				Return Round(Random(1, 1.25) * (($g_iDeployDelay[$iMode] + 1) * $iOffset0))
-				Else
+				Return Round(Random(0.95, 1.15) * (($g_iDeployDelay[$iMode] + 1) * $iOffset0))
+			Else
 				Return Round(Random(4, 15) * $iOffset0)
 			EndIf
 		Case 1
 			If $g_bChkEnableRandom[$iMode] Then
-				Return Round(Random(1, 1.25) * (($g_iDeployWave[$iMode] + 1) * $iOffset1))
-				Else
+				Return Round(Random(0.95, 1.15) * (($g_iDeployWave[$iMode] + 1) * $iOffset1))
+			Else
 				Return Round(Random(4, 15) * $iOffset1)
 			EndIf
 	EndSwitch
@@ -52,6 +52,6 @@ Func _SleepAttack($iDelay, $iSleep = True)
 		Return True
 	EndIf
 	If IsKeepClicksActive() Then Return False
-	Return RandomSleep($iDelay) ; Team AIO Mod++
+	Return RandomSleep($iDelay, $iDelay * 0.10) ; Team AIO Mod++
 EndFunc   ;==>_SleepAttack
 #EndRegion - Custom sleep Drop - Team AIO Mod++

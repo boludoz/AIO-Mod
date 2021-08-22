@@ -138,22 +138,22 @@ Func addVector(ByRef $vectorArray, $waveNumber, $sideNumber, $startPoint, $endPo
 EndFunc   ;==>addVector
 
 ; Drop the troops in a standard drop along a vector
-Func standardSideDrop($dropVectors, $waveNumber, $sideIndex, $currentSlot, $troopsPerSlot, $useDelay = False)
-	Local $delay = ($useDelay = True) ? SetSleep(0): 0
+Func standardSideDrop($dropVectors, $waveNumber, $sideIndex, $currentSlot, $troopsPerSlot, $bUseDelay = True)
+	Local $iDelay = ($bUseDelay = True) ? SetSleep(0) : (0)
 	Local $dropPoints
 
 	$dropPoints = $dropVectors[$waveNumber][$sideIndex]
-	If $currentSlot < UBound($dropPoints) Then AttackClick($dropPoints[$currentSlot][0], $dropPoints[$currentSlot][1], $troopsPerSlot, 0, 0)
+	If $currentSlot < UBound($dropPoints) Then AttackClick($dropPoints[$currentSlot][0], $dropPoints[$currentSlot][1], $troopsPerSlot, $iDelay, 0)
 EndFunc   ;==>standardSideDrop
 
 ; Drop the troops in a standard drop from two points along vectors at once
-Func standardSideTwoFingerDrop($dropVectors, $waveNumber, $sideIndex, $currentSlot, $troopsPerSlot, $useDelay = False)
+Func standardSideTwoFingerDrop($dropVectors, $waveNumber, $sideIndex, $currentSlot, $troopsPerSlot, $bUseDelay = True)
 	standardSideDrop($dropVectors, $waveNumber, $sideIndex, $currentSlot, $troopsPerSlot)
-	standardSideDrop($dropVectors, $waveNumber, $sideIndex + 1, $currentSlot + 1, $troopsPerSlot, $useDelay)
+	standardSideDrop($dropVectors, $waveNumber, $sideIndex + 1, $currentSlot + 1, $troopsPerSlot, $bUseDelay)
 EndFunc   ;==>twoFingerStandardSideDrop
 
 ; Drop the troops from a single point on all sides at once
-Func multiSingle($totalDrop, $useDelay = False)
+Func multiSingle($totalDrop, $bUseDelay = True)
 	Local $dropAmount = Ceiling($totalDrop / 4)
 
 	; Progressively adjust the drop amount
@@ -175,7 +175,7 @@ Func multiSingle($totalDrop, $useDelay = False)
 EndFunc   ;==>multiSingle
 
 ; Drop the troops from two points on all sides at once
-Func multiDouble($totalDrop, $useDelay = False)
+Func multiDouble($totalDrop, $bUseDelay = True)
 	Local $dropAmount = Ceiling($totalDrop / 4)
 
 	; Progressively adjust the drop amount
@@ -197,17 +197,17 @@ Func multiDouble($totalDrop, $useDelay = False)
 EndFunc   ;==>multiDouble
 
 ; Drop the troops from a single point on a single side
-Func sideSingle($dropSide, $dropAmount, $useDelay = False)
-	Local $delay = ($useDelay = True) ? SetSleep(0): 0
+Func sideSingle($dropSide, $dropAmount, $bUseDelay = True)
+	Local $iDelay = ($bUseDelay = True) ? SetSleep(0) : (0)
 
-	AttackClick($dropSide[2][0], $dropSide[2][1], $dropAmount, $delay, 0)
+	AttackClick($dropSide[2][0], $dropSide[2][1], $dropAmount, $iDelay, 0)
 EndFunc   ;==>sideSingle
 
 ; Drop the troops from two points on a single side
-Func sideDouble($dropSide, $dropAmount, $useDelay = False)
-	Local $delay = ($useDelay = True) ? SetSleep(0): 0
+Func sideDouble($dropSide, $dropAmount, $bUseDelay = True)
+	Local $iDelay = ($bUseDelay = True) ? SetSleep(0) : (0)
 	Local $half = Ceiling($dropAmount / 2)
 
 	AttackClick($dropSide[1][0], $dropSide[1][1], $half, 0, 0)
-	AttackClick($dropSide[3][0], $dropSide[3][1], $dropAmount - $half, $delay, 0)
+	AttackClick($dropSide[3][0], $dropSide[3][1], $dropAmount - $half, $iDelay, 0)
 EndFunc   ;==>sideDouble
