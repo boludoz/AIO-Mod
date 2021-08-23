@@ -42,7 +42,7 @@ Func StartClockTowerBoost($bSwitchToBB = False, $bSwitchToNV = False)
 	EndIf
 	
 	#Region - Custom BB - Team AIO Mod++
-	Local $bLabOn = False, $bCanBoost = False, $bCanUsePotion = False
+	Local $bLabOn = False, $bCanBoost = False, $bCanUsePotion = False, $iTimeDiff = 0
 	If $g_sStarLabUpgradeTime <> "" Then 
 		$iTimeDiff = _DateDiff("n", _NowCalc(), $g_sStarLabUpgradeTime)
 		$bLabOn = $iTimeDiff <= 0
