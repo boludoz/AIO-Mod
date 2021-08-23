@@ -1280,16 +1280,24 @@ Func CreateTrainBoost()
 
 	$y += 48
 	#Region - One Gem Boost - Team AiO MOD++
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "ChkOneGemBoostWorkshop_Group_01", "Boost one gem"), $x + 15 + 170 + 50, $y - 20, 165, 48 + 48 + 27)
 	$g_hChkOneGemBoostBarracks = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "ChkOneGemBoostBarracks_Info_01", "Barracks 1'Gem Boost"), $x + 15 + 170 + 60, $y, -1, -1)
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "ChkOneGemBoostBarracks_Info_02", "Use this to boost your Barracks Automatically Only In 1-Gem Army Event."))
+	GUICtrlSetState(-1, $GUI_UNCHECKED)
 	$y += 25
 	$g_hChkOneGemBoostSpells = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "ChkOneGemBoostSpells_Info_01", "Spells 1'Gem Boost"), $x + 15 + 170 + 60, $y, -1, -1)
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "ChkOneGemBoostSpells_Info_02", "Use this to boost your Spell Factory Automatically Only In 1-Gem Army Event."))
+	GUICtrlSetState(-1, $GUI_UNCHECKED)
 	$y += 25
 	$g_hChkOneGemBoostWorkshop = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "ChkOneGemBoostWorkshop_Info_01", "Workshop 1'Gem Boost"), $x + 15 + 170 + 60, $y, -1, -1)
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "ChkOneGemBoostHeroes_Info_02", "Use this to boost your Heroes Automatically Only In 1-Gem Army Event."))
+	GUICtrlSetState(-1, $GUI_UNCHECKED)
 	$y += 25
 	$g_hChkOneGemBoostHeroes = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "ChkOneGemBoostHeroes_Info_01", "Heroes 1'Gem Boost"), $x + 15 + 170 + 60, $y, -1, -1)
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "ChkOneGemBoostWorkshop_Info_02", "Use this to boost your Workshop Automatically Only In 1-Gem Army Event."))
+	GUICtrlSetState(-1, $GUI_UNCHECKED)
 	
 	$y -= 75
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "ChkOneGemBoostWorkshop_Group_01", "Boost one gem"), $x + 15 + 170 + 50, $y - 20, 165, 48 + 48 + 27)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	#EndRegion - One Gem Boost - Team AiO MOD++
 

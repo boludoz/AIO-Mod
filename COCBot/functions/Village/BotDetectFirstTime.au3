@@ -38,8 +38,8 @@ Func BotDetectFirstTime()
 		SetLog("Proceed with caution as errors may occur.", $COLOR_ERROR)
 	EndIf
 
-	#Region - AvoidLocation - Team AIO MOD++
-	If $g_bAvoidLocation Or $g_bChkOnlyFarm Then 
+	#Region - ChkBuildingsLocate - Team AIO MOD++
+	If $g_bChkBuildingsLocate Or $g_bChkOnlyFarm Then 
 		SetLog("Detecting your buildings skipped", $COLOR_INFO)
 		;Display Level TH in Stats
 		GUICtrlSetData($g_hLblTHLevels, "")
@@ -50,9 +50,9 @@ Func BotDetectFirstTime()
 		GUICtrlSetData($g_hLblTHLevels, $g_iTownHallLevel)
 		Return
 	EndIf
-	#EndRegion - AvoidLocation - Team AIO MOD++
+	#EndRegion - ChkBuildingsLocate - Team AIO MOD++
 	
-	If $g_iTownHallLevel < 2 Or ($g_aiTownHallPos[1] = "" Or $g_aiTownHallPos[1] = -1) And Not $g_bAvoidLocation Then LocateTownHall(False, False) ; AvoidLocation - Team AIO MOD++
+	If $g_iTownHallLevel < 2 Or ($g_aiTownHallPos[1] = "" Or $g_aiTownHallPos[1] = -1) Then LocateTownHall(False, False)
 	If _Sleep($DELAYBOTDETECT1) Then Return
 	CheckImageType()
 	If _Sleep($DELAYBOTDETECT1) Then Return

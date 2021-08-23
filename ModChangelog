@@ -5,7 +5,7 @@
 
                     Based on MyBot.run v7.9.5
 					
-**v4.6.3**
+**v4.6.4**
 	- New: Boost super troops inspired in @xbebenk.
 	- New: Clock tower potion support.
 	- New / Improved: Multifinger in standard attack (By @lunaeclipse).
@@ -14,6 +14,7 @@
 	- Fixed: Restored essential archive of the hop clan.
 	- Fixed: Fixed TH10 tolerance (By @clementinise).
 	- Fixed: Clickaway issue in builder base (By @KiRZeN and @supermopf).
+	- Fixed: Misc tabs (Reported by @BadlyCodedAI).
 
 **v4.6.1**
 	- Improved / Fixed: Various.

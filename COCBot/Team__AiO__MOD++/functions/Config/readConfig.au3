@@ -58,7 +58,7 @@ Func ReadConfig_MOD_MiscTab()
 	IniReadS($g_bUseRandomSleep, $g_sProfileConfigPath, "MiscTab", "UseRandomSleep", $g_bUseRandomSleep, "Bool")
 	IniReadS($g_bNoAttackSleep, $g_sProfileConfigPath, "MiscTab", "NoAttackSleep", $g_bNoAttackSleep, "Bool")
 	IniReadS($g_bDisableColorLog, $g_sProfileConfigPath, "MiscTab", "DisableColorLog", $g_bDisableColorLog, "Bool")
-	IniReadS($g_bAvoidLocation, $g_sProfileConfigPath, "MiscTab", "AvoidLocation", $g_bAvoidLocation, "Bool")
+	IniReadS($g_bChkSkipFirstAttack, $g_sProfileConfigPath, "MiscTab", "ChkSkipFirstAttack", $g_bChkSkipFirstAttack, "Bool")
 	
 	For $i = $DB To $LB
 		IniReadS($g_bDeployCastleFirst[$i], $g_sProfileConfigPath, "MiscTab", "DeployCastleFirst" & $i, $g_bDeployCastleFirst[$i], "Bool")
@@ -69,7 +69,7 @@ Func ReadConfig_MOD_MiscTab()
 	IniReadS($g_iTxtLogLineLimit, $g_sProfileConfigPath, "BotLogLineLimit", "LimitValue", "500","Int")
 
 	; Skip first check
-	IniReadS($g_bAvoidLocate, $g_sProfileConfigPath, "MiscTab", "AvoidLocate", $g_bAvoidLocate, "Bool")
+	IniReadS($g_bChkBuildingsLocate, $g_sProfileConfigPath, "ChkBuildingsLocate", "Enable", $g_bChkBuildingsLocate, "Bool")
 
 	; Remove edge obstacles
 	IniReadS($g_bEdgeObstacle, $g_sProfileConfigPath, "MiscTab", "EdgeObstacle", $g_bEdgeObstacle, "Bool")

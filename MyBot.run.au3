@@ -1391,6 +1391,13 @@ EndFunc   ;==>__RunFunction
 Func FirstCheck()
 	If $g_bDebugFuncCall Then SetLog('@@ (1271) :(' & @MIN & ':' & @SEC & ') FirstCheck()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 
+	$g_bRestart = False
+	$g_bFullArmy = False
+	$g_iCommandStop = -1
+	
+	; Skip first attack - Custom Team AIO Mod++
+	If $g_bChkSkipFirstAttack = True Then Return
+	
 	If $g_bDebugSetlog Then SetDebugLog("-- FirstCheck Loop --")
 	If Not $g_bRunState Then Return
 
@@ -1399,10 +1406,7 @@ Func FirstCheck()
 
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
 
-	$g_bRestart = False
-	$g_bFullArmy = False
-	$g_iCommandStop = -1
-
+	
 	;;;;;Check Town Hall level
 	Local $iTownHallLevel = $g_iTownHallLevel
 	SetDebugLog("Detecting Town Hall level", $COLOR_INFO)

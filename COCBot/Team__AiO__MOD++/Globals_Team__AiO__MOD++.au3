@@ -151,9 +151,8 @@ Global $Stonecoord
 ; Custom remain - Team AIO Mod++
 Global $g_bRemainTweak = True
 
-
 ; Skip first check
-Global $g_bAvoidLocate  = False, $g_hAvoidLocate = 0, $g_bIsReallyOn = False
+Global $g_bChkBuildingsLocate  = False, $g_hChkBuildingsLocate = 0, $g_bIsReallyOn = False
 
 ; Request form chat / on a loop.
 Global $g_hChkReqCCAlways = 0, $g_hChkReqCCFromChat = 0
@@ -182,9 +181,9 @@ Global $g_bChkNoDropIfShield = True, $g_bChkTrophyTroops = False, $g_bChkTrophyH
 Global $g_hChkNoDropIfShield, $g_hChkTrophyTroops, $g_hChkTrophyHeroesAndTroops
 
 ; Misc tab - Team AiO MOD++
-Global $g_bUseSleep = False, $g_iIntSleep = 20, $g_bUseRandomSleep = False, $g_bNoAttackSleep = False, $g_bDisableColorLog = False, $g_bDelayLabel = False, $g_bAvoidLocation = False, $g_bEdgeObstacle = False
+Global $g_bUseSleep = False, $g_iIntSleep = 20, $g_bUseRandomSleep = False, $g_bNoAttackSleep = False, $g_bDisableColorLog = False, $g_bDelayLabel = False, $g_bChkSkipFirstAttack = False, $g_bEdgeObstacle = False
 ; GUI
-Global $g_hDelayLabel, $g_hAvoidLocation, $g_hEdgeObstacle
+Global $g_hDelayLabel, $g_hChkSkipFirstAttack, $g_hEdgeObstacle
 ;-------------------
 
 ; Max sides SF

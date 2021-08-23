@@ -14,14 +14,9 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func TestLanguage()
-	; Avoid Locate - Team AIO Mod++ 
-	If ($g_bAvoidLocate Or $g_bChkOnlyFarm) and $g_bIsReallyOn Then ; mod 
-		SetLog("Skip test Language.", $COLOR_INFO)
-		Return
-	EndIf
-	
+Func TestLanguage()	
 	If Not $g_bRunState Then Return
+	
 	; test the word "Attack!" on the Attack Button in the lower left corner
 	If getOcrLanguage($aDetectLang[0], $aDetectLang[1]) = "english" Then
 		SetLog("Language setting is English: Correct.", $COLOR_INFO)

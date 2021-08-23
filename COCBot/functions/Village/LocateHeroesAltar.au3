@@ -86,7 +86,7 @@ Func _LocateKingAltar($bCollect = True)
 		Next
 	EndIf
 	
-	If ($g_bAvoidLocate And $g_aiKingAltarPos[0] < 1) and $g_bIsReallyOn Then
+	If ($g_bChkBuildingsLocate And $g_aiKingAltarPos[0] < 1) and $g_bIsReallyOn Then
 		SetLog("Avoid Locate King Altar.", $COLOR_INFO)
 		Return
 	EndIf
@@ -274,7 +274,7 @@ Func _LocateQueenAltar($bCollect = True)
 		Next
 	EndIf
 	
-	If ($g_bAvoidLocate And $g_aiQueenAltarPos[0] < 1) and $g_bIsReallyOn Then
+	If ($g_bChkBuildingsLocate And $g_aiQueenAltarPos[0] < 1) and $g_bIsReallyOn Then
 		SetLog("Avoid Locate Queen Altar.", $COLOR_INFO)
 		Return
 	EndIf
@@ -465,7 +465,7 @@ Func _LocateWardenAltar($bCollect = True)
 		Next
 	EndIf
 	
-	If ($g_bAvoidLocate And $g_aiWardenAltarPos[0] < 1) and $g_bIsReallyOn Then
+	If ($g_bChkBuildingsLocate And $g_aiWardenAltarPos[0] < 1) and $g_bIsReallyOn Then
 		SetLog("Avoid Locate Warden Altar.", $COLOR_INFO)
 		Return
 	EndIf
@@ -655,7 +655,7 @@ Func _LocateChampionAltar($bCollect = True)
 		Next
 	EndIf
 	
-	If ($g_bAvoidLocate And $g_aiChampionAltarPos[0] < 1) and $g_bIsReallyOn Then
+	If ($g_bChkBuildingsLocate And $g_aiChampionAltarPos[0] < 1) and $g_bIsReallyOn Then
 		SetLog("Avoid Locate Champion Altar.", $COLOR_INFO)
 		Return
 	EndIf

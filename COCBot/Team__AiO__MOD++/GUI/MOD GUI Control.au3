@@ -80,9 +80,9 @@ EndFunc
 
 ; Misc tab - Team AiO MOD++
 
-Func chkDelayMod()
+Func chkMiscModOptions()
 	; Skip first loop
-	$g_bAvoidLocate = (GUICtrlRead($g_hAvoidLocate) = $GUI_CHECKED)
+	$g_bChkBuildingsLocate = (GUICtrlRead($g_hChkBuildingsLocate) = $GUI_CHECKED)
 
 	For $i = 0 To UBound($g_hDeployWave) -1
 		$g_bChkEnableRandom[$i] = (GUICtrlRead($g_hChkEnableRandom[$i]) = $GUI_CHECKED)
@@ -99,12 +99,12 @@ Func chkDelayMod()
 		GUICtrlSetData($g_hDeployDelay[$i], $g_iDeployDelay[$i])
 	Next
 
-	$g_bAvoidLocation = (GUICtrlRead($g_hAvoidLocation) = $GUI_CHECKED)
+	$g_bChkSkipFirstAttack = (GUICtrlRead($g_hChkSkipFirstAttack) = $GUI_CHECKED)
 
 	$g_bDeployCastleFirst[$DB] = (GUICtrlRead($g_hDeployCastleFirst[$DB]) = $GUI_CHECKED)
 	$g_bDeployCastleFirst[$LB] = (GUICtrlRead($g_hDeployCastleFirst[$LB]) = $GUI_CHECKED)
 
-EndFunc   ;==>chkDelayMod
+EndFunc   ;==>chkMiscModOptions
 
 #Region - Custom SmartFarm - Team AIO Mod++
 Func chkMaxSidesSF()

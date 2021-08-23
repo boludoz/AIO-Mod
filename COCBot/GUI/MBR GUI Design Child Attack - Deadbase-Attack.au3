@@ -130,7 +130,7 @@ Func CreateAttackSearchDeadBaseAttack()
 				$g_hDeployCastleFirst[$DB] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Chk-First", "SG/Castle first."), $x + 27, $y, 100, 17)
 				$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "DeployCastleSiegeFirstTip", "Deploy CC / Sieges troops first, support for all modes.")
 				_GUICtrlSetTip(-1, $sTxtTip)
-                GUICtrlSetOnEvent(-1, "chkDelayMod")
+                GUICtrlSetOnEvent(-1, "chkMiscModOptions")
 
 		$y += 27
 		#EndRegion

@@ -111,7 +111,7 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 	; <><><> MiscTab <><><>
 	Switch $TypeReadSave
 		Case "Read"
-			GUICtrlSetState($g_hAvoidLocation, $g_bAvoidLocation = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkSkipFirstAttack, $g_bChkSkipFirstAttack = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hEdgeObstacle, $g_bEdgeObstacle = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 
 			For $i = $DB To $LB
@@ -123,7 +123,7 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			GUICtrlSetData($g_hTxtLogLineLimit, $g_iTxtLogLineLimit)
 
 			; Skip first check
-			GUICtrlSetState($g_hAvoidLocate, $g_bAvoidLocate ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkBuildingsLocate, $g_bChkBuildingsLocate ? $GUI_CHECKED : $GUI_UNCHECKED)
 
 			; DeployDelay
 			GUICtrlSetData($g_hDeployDelay[0], $g_iDeployDelay[0])
@@ -210,10 +210,10 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			ChkReqCCFromChat()
 			ReadConfig_600_52_2()
 			ChkStopForWar()
-			chkDelayMod()
+			chkMiscModOptions()
 			chkEdgeObstacle()
 		Case "Save"
-			$g_bAvoidLocation = (GUICtrlRead($g_hAvoidLocation) = $GUI_CHECKED) ? 1 : 0
+			$g_bChkSkipFirstAttack = (GUICtrlRead($g_hChkSkipFirstAttack) = $GUI_CHECKED) ? 1 : 0
 
 			For $i = $DB To $LB
 				$g_bDeployCastleFirst[$i] = (GUICtrlRead($g_hDeployCastleFirst[$i]) = $GUI_CHECKED) ? 1 : 0
@@ -224,7 +224,7 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			$g_iTxtLogLineLimit = Int(GUICtrlRead($g_hTxtLogLineLimit))
 
 			; Skip first check
-			$g_bAvoidLocate = GUICtrlRead($g_hAvoidLocate) = $GUI_CHECKED
+			$g_bChkBuildingsLocate = GUICtrlRead($g_hChkBuildingsLocate) = $GUI_CHECKED
 
 			; Remove edge obstacles
 			$g_bEdgeObstacle = GUICtrlRead($g_hEdgeObstacle) = $GUI_CHECKED

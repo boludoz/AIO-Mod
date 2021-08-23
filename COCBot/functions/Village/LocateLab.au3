@@ -21,7 +21,7 @@ Func LocateLab($bCollect = True)
 	EndIf
 	
 	; Avoid Locate - Team AIO Mod++ 
-	If ($g_bAvoidLocate Or $g_bChkOnlyFarm) and $g_bIsReallyOn Then
+	If ($g_bChkBuildingsLocate Or $g_bChkOnlyFarm) and $g_bIsReallyOn Then
 		$g_aiLaboratoryPos[0] = -1
 		$g_aiLaboratoryPos[1] = -1
 		SetLog("Avoid Locate Laboratory...", $COLOR_INFO)
@@ -82,7 +82,7 @@ Func LocateLab($bCollect = True)
 		Next
 	EndIf
 	
-	If ($g_bAvoidLocate And $g_aiLaboratoryPos[0] < 1) and $g_bIsReallyOn Then
+	If ($g_bChkBuildingsLocate And $g_aiLaboratoryPos[0] < 1) and $g_bIsReallyOn Then
 		SetLog("Avoid Locate Lab.", $COLOR_INFO)
 		Return
 	EndIf

@@ -54,31 +54,39 @@ EndFunc   ;==>CreateMODTab
 
 ; Tab Misc GUI - Team AiO MOD++
  Func TabMiscGUI()
-	SplashStep("Loading M0d - Misc...")
+	SplashStep("Loading mod - misc options ...")
 
-	;Local $x = 10, $y = 45
+	Local $iX = 32, $iY = 45
 
-	GUICtrlCreateLabel(GetTranslatedFileIni("MiscMODs", "AttackLabel",  "Attack"), 7, 192, 436, 22, BitOR($SS_CENTER,$SS_CENTERIMAGE))
+	GUICtrlCreateGroup("Misc options", $iX - 28, $iY, 415 + 28, 164)
+
+	$iY += 25
+
+	GUICtrlCreateLabel(GetTranslatedFileIni("MiscMODs", "AttackLabel",  "Attack"), $iX, $iY, 408, 22, BitOR($SS_CENTER,$SS_CENTERIMAGE))
 	GUICtrlSetTip(-1, GetTranslatedFileIni("MiscMODs", "AttackTip",  "Attacks extra functions."))
 	GUICtrlSetBkColor(-1, 0x333300)
 	GUICtrlSetFont(-1, 12, 500, 0, "Candara", $CLEARTYPE_QUALITY)
 	GUICtrlSetColor(-1, 0xFFCC00)
 
-  	$g_hAvoidLocate = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "AvoidLocate.",  "Skip first check."), 32, 224, 161, 17)
-  	GUICtrlSetOnEvent(-1, "chkDelayMod")
-  	_GUICtrlSetTip(-1, GetTranslatedFileIni("MiscMODs", "AvoidLocateTip", "Skip first check without attack first."))
+	$iY += 30
+	
+	$g_hChkSkipFirstAttack = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "ChkSkipFirstAttack", "Skip attack first."), $iX, $iY, 244, 17)
+  	GUICtrlSetOnEvent(-1, "chkMiscModOptions")
+  	_GUICtrlSetTip(-1, GetTranslatedFileIni("MiscMODs", "ChkBuildingsLocateTip", "Skip first check without attack first."))
 
-	GUICtrlCreateLabel(GetTranslatedFileIni("MiscMODs", "OtherSettingsLabel", "Other"), 7, 280, 436, 22, BitOR($SS_CENTER, $SS_CENTERIMAGE))
+	$iY += 25
+
+	GUICtrlCreateLabel(GetTranslatedFileIni("MiscMODs", "OtherSettingsLabel", "Other"), $iX, $iY, 408, 22, BitOR($SS_CENTER, $SS_CENTERIMAGE))
 	GUICtrlSetTip(-1, GetTranslatedFileIni("MiscMODs", "OtherSettingsTip", "Other settings"))
 	GUICtrlSetBkColor(-1, 0x333300)
 	GUICtrlSetFont(-1, 12, 500, 0, "Candara", $CLEARTYPE_QUALITY)
 	GUICtrlSetColor(-1, 0xFFCC00)
+	$iY += 30
 
-	$g_hAvoidLocation = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "AvoidLocation", "Skip buildings location."), 32, 312, 145, 17)
-	GUICtrlSetOnEvent(-1, "chkDelayMod")
-
-	Local $iX = 32, $iY = 312
+  	$g_hChkBuildingsLocate = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "ChkBuildingsLocate",  "Skip buildings location."), 32, $iY, 244, 17)
+	GUICtrlSetOnEvent(-1, "chkMiscModOptions")
 	$iY += 25
+
 	$g_hChkBotLogLineLimit = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "BotLogLineLimit", "Disable clear bot log, and line limit to: "), $iX, $iY, -1, -1)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MiscMODs", "BotLogLineLimitTips", "Bot log will never clear after battle, and clear bot log will replace will line limit."))
 	GUICtrlSetOnEvent(-1, "chkBotLogLineLimit")
@@ -87,7 +95,9 @@ EndFunc   ;==>CreateMODTab
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MiscMODs", "BotLogLineLimitValue", "Please enter how many line to limit for the bot log."))
 	GUICtrlSetLimit(-1, 4)
 	GUICtrlSetOnEvent(-1, "txtLogLineLimit")
-
+	
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+	
 	GUICtrlCreateTabItem("")
 EndFunc   ;==>TabMiscGUI
 

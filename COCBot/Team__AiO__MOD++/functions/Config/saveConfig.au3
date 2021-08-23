@@ -66,7 +66,7 @@ Func SaveConfig_MOD_MiscTab()
 	_Ini_Add("MiscTab", "UseRandomSleep", $g_bUseRandomSleep)
 	_Ini_Add("MiscTab", "NoAttackSleep", $g_bNoAttackSleep)
 	_Ini_Add("MiscTab", "DisableColorLog", $g_bDisableColorLog)
-	_Ini_Add("MiscTab", "AvoidLocation", $g_bAvoidLocation)
+	_Ini_Add("MiscTab", "ChkSkipFirstAttack", $g_bChkSkipFirstAttack)
 
 	For $i = $DB To $LB
 		_Ini_Add("MiscTab", "DeployCastleFirst" & $i, $g_bDeployCastleFirst[$i])
@@ -77,7 +77,7 @@ Func SaveConfig_MOD_MiscTab()
 	_Ini_Add("BotLogLineLimit", "LimitValue", GUICtrlRead($g_hTxtLogLineLimit))
 
 	; Skip first check
-	_Ini_Add("AvoidLocate", "Enable", $g_bAvoidLocate ? 1 : 0)
+	_Ini_Add("ChkBuildingsLocate", "Enable", $g_bChkBuildingsLocate ? 1 : 0)
 
 	; Remove edge obstacles
 	_Ini_Add("MiscTab", "EdgeObstacle", $g_bEdgeObstacle ? 1 : 0)
