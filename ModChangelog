@@ -9,8 +9,12 @@
 	- New: Boost super troops inspired in @xbebenk.
 	- New: Clock tower potion support.
 	- New / Improved: Multifinger in standard attack (By @lunaeclipse).
-	- Improved: Discord webhook support.
+	- New: One Gem Boost (By @Ahsan Iqbal).
 	- Improved / Fixed: Updater.
+	- Improved / Fixed: GUI.
+	- Improved: Discord/Telegram support for non ASCII chars, separate setup for discord (Require configure again).
+	- Improved: Telegram, "/keyboard" command for more intuitive notifications (by @tick-guo).
+	- Improved: Telegram, Chinese firewall bypass proxy for telegram (by @tick-guo).
 	- Fixed: Restored essential archive of the hop clan.
 	- Fixed: Fixed TH10 tolerance (By @clementinise).
 	- Fixed: Clickaway issue in builder base (By @KiRZeN and @supermopf).

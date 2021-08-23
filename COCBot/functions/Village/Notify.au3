@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Global Const $TELEGRAM_URL = "https://api.telegram.org/bot"
+Global $TELEGRAM_URL = "https://api.telegram.org/bot"
 Global Const $HTTP_STATUS_OK = 200
 
 
@@ -109,14 +109,16 @@ Func NotifyPushToTelegram($pMessage)
 		Local $Time = @HOUR & ':' & @MIN
 
 		Local $text = __WinHttpURLEncode($pMessage & chr(10) & $Date & ' ' & $Time)
+		
 		; Telegram Message
 		Local $SdtOut = InetRead($TELEGRAM_URL & $g_sNotifyTGToken & "/sendMessage?chat_id=" & $g_sTGChatID & "&text=" & $text, $INET_FORCERELOAD)
-
+		Local $eError = @error ; Save error - Custom fix - Team AIO Mod++
+		
 		If $g_bDebugSetlog Then SetDebugLog("Telegram sent msg:" & $TELEGRAM_URL & $g_sNotifyTGToken & "/sendMessage?chat_id=" & $g_sTGChatID & "&text=" & $text)
 		If $g_bDebugSetlog Then SetDebugLog("NotifyPushToTelegram Send Return code:" & @error)
 		;If $g_bDebugSetlog Then SetDebugLog("NotifyPushToTelegram Send Return SdtOut:" & $SdtOut)
 
-		If @error Or $SdtOut = "" Then Return False
+		If $eError Or $SdtOut = "" Then Return False
 		; Convert Binary to String/Json Format
 		Local $sCorrectStdOut = BinaryToString($SdtOut, 4)
 		If @error Or $sCorrectStdOut = "" Then Return False
@@ -155,7 +157,6 @@ Func NotifyPushFileToTelegram($File, $Folder, $FileType, $body)
 
 			If $g_bDebugSetlog Then SetDebugLog("NotifyPushFileToTelegram(): " & $g_sCurlPath & " -i -X POST " & $FullTelegram_url & ' -F chat_id="' & $g_sTGChatID & '" -F ' & $sCmd1 & '=@"' & $g_sProfilePath & "\" & $g_sProfileCurrentName & '\' & $Folder & '\' & $File & '"')
 
-
 			Local $Result = RunWait($g_sCurlPath & " -i -X POST " & $FullTelegram_url & ' -F chat_id="' & $g_sTGChatID & '" -F ' & $sCmd1 & '=@"' & $g_sProfilePath & "\" & $g_sProfileCurrentName & '\' & $Folder & '\' & $File & '"', "", @SW_HIDE)
 
 			; Telegram Message attached to file
@@ -181,12 +182,25 @@ Func NotifyGetLastMessageFromTelegram()
 
 	Local $TGLastMessage = ""
 	If Not $g_bNotifyTGEnable Or $g_sNotifyTGToken = "" Then Return
+	
 	; Internet Check
 	If _IsInternet() < 1 Then
 		SetLog("Telegram: Check your internet connection! No Connection..", $COLOR_ERROR)
 		Return
 	EndIf
 
+	If $TELEGRAM_URL = "https://api.telegram.org/bot" Then
+		; AltProxy 
+		Ping("telegram.org", 250)
+		If @error = 4 Then
+			Ping("herokuapp.com", 250)
+			If @error = 2 Or not @error Then
+				$TELEGRAM_URL = "https://tgproxy-m.herokuapp.com/bot"
+				Setlog("Bypassing telegram firewall.", $COLOR_SUCCESS)
+			EndIf
+		EndIf
+	EndIf
+	
 	; GetUpdates
 	Local $SdtOut = InetRead($TELEGRAM_URL & $g_sNotifyTGToken & "/getUpdates", $INET_FORCERELOAD)
 	If @error Or $SdtOut = "" Then Return
@@ -290,7 +304,6 @@ Func NotifyRemoteControlProcBtnStart()
 					NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Request-Start_Info_01", "Request to Start...") & chr(10) & GetTranslatedFileIni("MBR Func_Notify", "Request-Start_Info_02", "Your bot is now starting..."))
 				Case "/KEYBOARD", "/keyboard"
 					NotifyActivateKeyboardOnTelegram($g_sNotifyOrigin & " | " & $g_sBotTitle & " | Notify " & $g_sNotifyVersion)
-
 				Case Else
 					NotifyPushToTelegram($g_sNotifyOrigin & ":" & chr(10) & "Get:" & $TGActionMSG & chr(10) & GetTranslatedFileIni("MBR Func_Notify", "Request-Start_Info_03", "Start MyBot first."))
 			EndSwitch
@@ -298,8 +311,6 @@ Func NotifyRemoteControlProcBtnStart()
 	EndIf
 	SetDebugLogSilent($bWasSilent)
 EndFunc   ;==>NotifyRemoteControlProcBtnStart
-
-
 
 ; CONTROL TELEGRAM ON MAINLOOP()
 Func NotifyRemoteBotisOnline()

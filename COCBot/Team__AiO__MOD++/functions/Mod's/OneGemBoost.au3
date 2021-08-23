@@ -1,8 +1,8 @@
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: OneGemBoost.au3
-; Description ...: Check one gem boost
-; Author ........: Ahsan Iqbal
-; Modified ......:
+; Description ...: Check one gem boost.
+; Author ........: Ahsan Iqbal (2018)
+; Modified ......: Boldina (08/2021)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2018
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
