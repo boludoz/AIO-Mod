@@ -161,7 +161,8 @@ Func applyConfig($bRedrawAtExit = True, $TypeReadSave = "Read") ;Applies the dat
 	ApplyConfig_MOD_Humanization($TypeReadSave)
 	; <><><> SmartMilk <><><>
 	ApplyConfig_MOD_SmartMilk($TypeReadSave)
-
+	; <><><> Attack Plan / Train Army / Boost <><><>
+	ApplyConfig_MOD_OneGem($TypeReadSave)
 	; <><><><> Attack Plan / Strategies <><><><>
 	; <<< nothing here >>>
 

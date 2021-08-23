@@ -16,6 +16,11 @@
 Global $DiamondMiddleX 
 Global $DiamondMiddleY 
 
+#Region - One Gem Boost - Team AiO MOD++
+Global $g_bChkOneGemBoostBarracks = False, $g_bChkOneGemBoostSpells = False, $g_bChkOneGemBoostHeroes = False, $g_bChkOneGemBoostWorkshop = False, $g_bOneGemEventEnded = False
+Global $g_hChkOneGemBoostBarracks = 0, $g_hChkOneGemBoostSpells = 0, $g_hChkOneGemBoostHeroes = 0, $g_hChkOneGemBoostWorkshop = 0
+#EndRegion - One Gem Boost - Team AiO MOD++
+
 #Region - AIO Updater - Team AiO MOD++
 Global $g_bCheckVersionAIO = True, $g_hChkForAIOUpdates = 0
 #EndRegion - AIO Updater - Team AiO MOD++

@@ -862,7 +862,7 @@ Func runBot() ;Bot that runs everything in order
 				Next
 				BoostEverything() ; 1st Check if is to use Training Potion
 				If $g_bRestart Then ContinueLoop
-				Local $aRndFuncList = ['BoostBarracks', 'BoostSpellFactory', 'BoostWorkshop', 'BoostKing', 'BoostQueen', 'BoostWarden', 'BoostChampion']
+				Local $aRndFuncList = ['BoostBarracks', 'BoostSpellFactory', 'BoostWorkshop', 'BoostKing', 'BoostQueen', 'BoostWarden', 'BoostChampion', 'OneGemBoost']
 				_ArrayShuffle($aRndFuncList)
 				For $Index In $aRndFuncList
 					If Not $g_bRunState Then Return
@@ -1376,6 +1376,9 @@ Func __RunFunction($sAction)
         ; Case "BoostSuperTroop"
             ; BoostSuperTroop()
             ; _Sleep($DELAYRUNBOT3)
+		; One Gem Boost - Team AiO MOD++
+		Case "OneGemBoost"
+			OneGemBoost()
 		Case ""
 			SetDebugLog("Function call doesn't support empty string, please review array size", $COLOR_ERROR)
 		Case Else

@@ -90,10 +90,13 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 	Local $aLegendWindow[4] = [340, 170, 0xD8A71C, 20]
 	Local $aAllAttacksDone[4] = [522, 508, 0x3582F1, 30]
 
-	If _Sleep(2000) Then Return
-
-	$g_bLeagueAttack = _CheckPixel($aLegendWindow, True, Default, "LegendWindow")
-
+	If Number($g_aiCurrentLoot[$eLootTrophy]) >= Number($g_asLeagueDetails[21][4]) Then
+		$g_bLeagueAttack = True
+		If _Sleep(1500) Then Return
+	Else
+		$g_bLeagueAttack = _Wait4Pixel($aLegendWindow[0], $aLegendWindow[1], $aLegendWindow[2], $aLegendWindow[3], 1600, 250, "LegendWindow")
+	EndIf
+	
 	SetLog("Are you a legend? " & $g_bLeagueAttack)
 
 	$aiMatch = _PixelSearch(650, 355, 730, 545, Hex(0xC95918, 6), 30)

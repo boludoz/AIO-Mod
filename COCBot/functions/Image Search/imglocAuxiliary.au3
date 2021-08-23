@@ -265,8 +265,6 @@ Func GetButtonDiamond($sButtonName)
 			$btnDiamond = "697,542|850,542|850,610|697,610"
 		Case "ObjectButtons", "BoostOne", "BoostCT", "Upgrade", "Research", "Treasury", "RemoveObstacle", "CollectLootCart", "Pets" ; Full size of object buttons at the bottom
 			$btnDiamond = GetDiamondFromRect("140,591,720,671")
-        Case "MagicItems", "Boostleft" ; Team AIO Mod++
-			$btnDiamond = GetDiamondFromRect("140,591,720,671")
 		Case "GEM", "BOOSTBtn" ; Boost window button (full button size)
 			$btnDiamond = GetDiamondFromRect("359,412(148,66)")
 		Case "EnterShop"
@@ -302,12 +300,8 @@ Func GetButtonDiamond($sButtonName)
 		Case "Okay"
 			$btnDiamond = GetDiamondFromRect("241,249,616,478")
 		#Region - BoostPotion - Team AIO Mod
-		Case "MagicItems" ; Full size of object buttons at the bottom
+        Case "MagicItems", "Boostleft" ; Team AIO Mod++
 			$btnDiamond = GetDiamondFromRect("140,591,720,671")
-		Case "BoostTrainingPotionBtn"
-			$btnDiamond = GetDiamondFromRect("420,395(85,60)")
-		Case "Btnconfirm"
-			$btnDiamond = GetDiamondFromRect("237,185(378,323)")
 		#EndRegion - BoostPotion - Team AIO Mod
 		Case Else
 			$btnDiamond = "FV" ; use full image to locate button

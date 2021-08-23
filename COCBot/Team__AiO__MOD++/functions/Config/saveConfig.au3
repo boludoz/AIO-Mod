@@ -17,7 +17,7 @@ Func SaveConfig_MOD_CustomArmyBB()
 	; <><><> CustomArmyBB <><><>
 	ApplyConfig_MOD_CustomArmyBB(GetApplyConfigSaveAction())
 	;_Ini_Add("BBCustomArmy", "ChkBBCustomArmyEnable", $g_bChkBBCustomArmyEnable)
-	
+
 	For $i = 0 To UBound($g_hComboTroopBB) - 1
 		_Ini_Add("BBCustomArmy", "ComboTroopBB" & $i, $g_iCmbCampsBB[$i])
 	Next
@@ -33,14 +33,14 @@ Func SaveConfig_MOD_CustomArmyBB()
 	For $i = 0 To 2
 		_Ini_Add("BuilderBase", "ScriptBB" & $i, $g_sAttackScrScriptNameBB[$i])
 	Next
-	
+
 	_Ini_Add("other", "ChkUpgradeMachine", $g_bChkUpgradeMachine ? 1 : 0)
 	_Ini_Add("other", "ChkPlacingNewBuildings", $g_iChkPlacingNewBuildings)
 	_Ini_Add("BuilderBase", "BuilderAttack", $g_bChkBuilderAttack ? 1 : 0)
 	_Ini_Add("BuilderBase", "BBStopAt3", $g_bChkBBStopAt3 ? 1 : 0)
 	_Ini_Add("BuilderBase", "BBTrophiesRange", $g_bChkBBTrophiesRange ? 1 : 0)
 	_Ini_Add("BuilderBase", "BBRandomAttack", $g_bChkBBCustomAttack ? 1 : 0)
-	
+
 	_Ini_Add("BuilderBase", "BBDropTrophiesMin", $g_iTxtBBDropTrophiesMin)
 	_Ini_Add("BuilderBase", "BBDropTrophiesMax", $g_iTxtBBDropTrophiesMax)
 	_Ini_Add("BuilderBase", "BBArmy1", $g_iCmbBBArmy1)
@@ -67,11 +67,11 @@ Func SaveConfig_MOD_MiscTab()
 	_Ini_Add("MiscTab", "NoAttackSleep", $g_bNoAttackSleep)
 	_Ini_Add("MiscTab", "DisableColorLog", $g_bDisableColorLog)
 	_Ini_Add("MiscTab", "AvoidLocation", $g_bAvoidLocation)
-	
+
 	For $i = $DB To $LB
 		_Ini_Add("MiscTab", "DeployCastleFirst" & $i, $g_bDeployCastleFirst[$i])
 	Next
-	
+
 	; Save - Setlog limit - Team AIO Mod++
 	_Ini_Add("BotLogLineLimit", "Enable", (GUICtrlRead($g_hChkBotLogLineLimit) = ($GUI_CHECKED) ? (True) : (False) ))
 	_Ini_Add("BotLogLineLimit", "LimitValue", GUICtrlRead($g_hTxtLogLineLimit))
@@ -86,7 +86,7 @@ Func SaveConfig_MOD_MiscTab()
 	_Ini_Add("MiscTab", "DeployDelay0", $g_iDeployDelay[0])
 	_Ini_Add("MiscTab", "DeployDelay1", $g_iDeployDelay[1])
 	_Ini_Add("MiscTab", "DeployDelay2", $g_iDeployDelay[2])
-	
+
 	; DeployWave
 	_Ini_Add("MiscTab", "DeployWave0", $g_iDeployWave[0])
 	_Ini_Add("MiscTab", "DeployWave1", $g_iDeployWave[1])
@@ -134,7 +134,7 @@ Func SaveConfig_MOD_MiscTab()
 		_Ini_Add("DonRecords", "DonateStatsTroops" & $i, $g_aiDonateStatsTroops[$i][0])
 	Next
 	_Ini_Add("DonRecords", "TotalDonateStatsTroops", $g_iTotalDonateStatsTroops)
-	
+
 	; Spell;
 	For $i = 0 To $eSpellCount - 1
 		_Ini_Add("DonRecords", "DonateStatsSpells" & $i, $g_aiDonateStatsSpells[$i][0])
@@ -161,7 +161,7 @@ Func SaveConfig_MOD_MiscTab()
 	#Region - No Upgrade In War - Team AIO Mod++
 	_Ini_Add("attack", "ChkNoUpgradeInWar", $g_bNoUpgradeInWar ? 1 : 0)
 	#EndRegion - No Upgrade In War - Team AIO Mod++
-	
+
 	#Region - Custom Improve - Team AIO Mod++
 	For $i = 0 To UBound($g_iChkBBUpgradesToIgnore) - 1
 		_Ini_Add("other", "chkBBUpgradesToIgnore" & $i, $g_iChkBBUpgradesToIgnore[$i])
@@ -392,3 +392,14 @@ Func SaveConfig_MOD_SmartMilk()
 	_Ini_Add("SmartMilk", "ChkMilkForceAllTroops", $g_bChkMilkForceAllTroops)
 	_Ini_Add("SmartMilk", "DebugSmartMilk", $g_bDebugSmartMilk)
 EndFunc   ;==>SaveConfig_MOD_SmartMilk
+
+#Region - One Gem Boost - Team AiO MOD++
+Func SaveConfig_MOD_OneGem()
+	; <><><> Attack Plan / Train Army / Boost <><><>
+	_Ini_Add("boost", "ChkOneGemBoostBarracks", $g_bChkOneGemBoostBarracks ? 1 : 0)
+	_Ini_Add("boost", "ChkOneGemBoostSpells", $g_bChkOneGemBoostSpells ? 1 : 0)
+	_Ini_Add("boost", "ChkOneGemBoostHeroes", $g_bChkOneGemBoostHeroes ? 1 : 0)
+	_Ini_Add("boost", "ChkOneGemBoostWorkshop", $g_bChkOneGemBoostWorkshop ? 1 : 0)
+
+EndFunc   ;==>SaveConfig_MOD_OneGem
+#EndRegion - One Gem Boost - Team AiO MOD++

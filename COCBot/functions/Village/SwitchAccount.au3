@@ -728,8 +728,8 @@ Func CheckWaitHero() ; get hero regen time remaining if enabled
 
 	If _Sleep($DELAYRESPOND) Then Return
 	If Not $g_bRunState Then Return
-	If $aHeroResult[0] > 0 Or $aHeroResult[1] > 0 Or $aHeroResult[2] > 0 Then ; check if hero is enabled to use/wait and set wait time
-		For $pTroopType = $eKing To $eChampion ; check all 3 hero
+	If $aHeroResult[0] > 0 Or $aHeroResult[1] > 0 Or $aHeroResult[2] > 0 Or $aHeroResult[3] > 0 Then ; check if hero is enabled to use/wait and set wait time
+		For $pTroopType = $eKing To $eChampion ; check all 4 hero
 			For $pMatchMode = $DB To $g_iModeCount - 1 ; check all attack modes
 				$iActiveHero = -1
 				If IsUnitUsed($pMatchMode, $pTroopType) And _

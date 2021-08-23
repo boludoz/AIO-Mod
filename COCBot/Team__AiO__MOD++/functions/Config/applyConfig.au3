@@ -706,3 +706,23 @@ Func ApplyConfig_MOD_SmartMilk($TypeReadSave)
 			$g_bDebugSmartMilk = (GUICtrlRead($g_hChkDebugSmartMilk) = $GUI_CHECKED)
 	EndSwitch
 EndFunc   ;==>ApplyConfig_MOD_SmartMilk
+
+#Region - One Gem Boost - Team AiO MOD++
+Func ApplyConfig_MOD_OneGem($TypeReadSave)
+	; <><><> Attack Plan / Train Army / Boost <><><>
+	Switch $TypeReadSave
+		Case "Read"
+			; One Gem Boost
+			GUICtrlSetState($g_hChkOneGemBoostBarracks, $g_bChkOneGemBoostBarracks ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkOneGemBoostSpells, $g_bChkOneGemBoostSpells ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkOneGemBoostHeroes, $g_bChkOneGemBoostHeroes ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkOneGemBoostWorkshop, $g_bChkOneGemBoostWorkshop ? $GUI_CHECKED : $GUI_UNCHECKED)
+		Case "Save"
+			; One Gem Boost
+			$g_bChkOneGemBoostBarracks = (GUICtrlRead($g_hChkOneGemBoostBarracks) = $GUI_CHECKED)
+			$g_bChkOneGemBoostSpells = (GUICtrlRead($g_hChkOneGemBoostSpells) = $GUI_CHECKED)
+			$g_bChkOneGemBoostHeroes = (GUICtrlRead($g_hChkOneGemBoostHeroes) = $GUI_CHECKED)
+			$g_bChkOneGemBoostWorkshop = (GUICtrlRead($g_hChkOneGemBoostWorkshop) = $GUI_CHECKED)
+	EndSwitch
+EndFunc   ;==>ApplyConfig_MOD_OneGem
+#EndRegion - One Gem Boost - Team AiO MOD++

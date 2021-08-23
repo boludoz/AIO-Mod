@@ -370,3 +370,13 @@ Func ReadConfig_MOD_SmartMilk()
 	IniReadS($g_bChkMilkForceAllTroops, $g_sProfileConfigPath, "SmartMilk", "ChkMilkForceAllTroops", False, "Bool")
 	IniReadS($g_bDebugSmartMilk, $g_sProfileConfigPath, "SmartMilk", "DebugSmartMilk", False, "Bool")
 EndFunc   ;==>ReadConfig_MOD_SmartMilk
+
+#Region - One Gem Boost - Team AiO MOD++
+Func ReadConfig_MOD_OneGem()
+	; <><><> Attack Plan / Train Army / Boost <><><>
+	IniReadS($g_bChkOneGemBoostBarracks, $g_sProfileConfigPath, "boost", "ChkOneGemBoostBarracks", $g_bChkOneGemBoostBarracks, "Bool")
+	IniReadS($g_bChkOneGemBoostSpells, $g_sProfileConfigPath, "boost", "ChkOneGemBoostSpells", $g_bChkOneGemBoostSpells, "Bool")
+	IniReadS($g_bChkOneGemBoostHeroes, $g_sProfileConfigPath, "boost", "ChkOneGemBoostHeroes", $g_bChkOneGemBoostHeroes, "Bool")
+	IniReadS($g_bChkOneGemBoostWorkshop, $g_sProfileConfigPath, "boost", "ChkOneGemBoostWorkshop", $g_bChkOneGemBoostWorkshop, "Bool")
+EndFunc   ;==>ReadConfig_MOD_OneGem
+#EndRegion - One Gem Boost - Team AiO MOD++

@@ -14,6 +14,9 @@
 ; ===============================================================================================================================
 
 ; <><><><><><><><><><><><><><><> Team AiO MOD++ (2020) <><><><><><><><><><><><><><><>
+; One Gem Boost - Team AiO MOD++
+#include "functions\Mod's\OneGemBoost.au3"
+
 ; Multi Fingers Profile - (LunaEclipse) - Team AiO MOD++
 #include "functions\Mod's\Multi Fingers\4Fingers.au3"
 #include "functions\Mod's\Multi Fingers\8Fingers.au3"

@@ -1277,8 +1277,23 @@ Func CreateTrainBoost()
 	GUICtrlSetOnEvent(-1, "chkUpgradeChampion")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
+
 	$y += 48
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "Group_03_", "Boost Everything"), $x - 20, $y - 20, $g_iSizeWGrpTab3 - 12, 48)
+	#Region - One Gem Boost - Team AiO MOD++
+	$g_hChkOneGemBoostBarracks = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "ChkOneGemBoostBarracks_Info_01", "Barracks 1'Gem Boost"), $x + 15 + 170 + 60, $y, -1, -1)
+	$y += 25
+	$g_hChkOneGemBoostSpells = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "ChkOneGemBoostSpells_Info_01", "Spells 1'Gem Boost"), $x + 15 + 170 + 60, $y, -1, -1)
+	$y += 25
+	$g_hChkOneGemBoostWorkshop = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "ChkOneGemBoostWorkshop_Info_01", "Workshop 1'Gem Boost"), $x + 15 + 170 + 60, $y, -1, -1)
+	$y += 25
+	$g_hChkOneGemBoostHeroes = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "ChkOneGemBoostHeroes_Info_01", "Heroes 1'Gem Boost"), $x + 15 + 170 + 60, $y, -1, -1)
+	
+	$y -= 75
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "ChkOneGemBoostWorkshop_Group_01", "Boost one gem"), $x + 15 + 170 + 50, $y - 20, 165, 48 + 48 + 27)
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+	#EndRegion - One Gem Boost - Team AiO MOD++
+
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "Group_03_", "Boost Everything"), $x - 20, $y - 20, $g_iSizeWGrpTab3 - 184, 48)
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnBoostPotion, $x - 10, $y - 2, 24, 24)
 	GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design Names Troops", "Potion", -1), $x + 20, $y + 4, -1, -1)
 	$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "LblEverythingBoost_Info_01", "Use this to boost everything with POTIONS! Use with caution!")
@@ -1289,7 +1304,7 @@ Func CreateTrainBoost()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	$y += 48
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "Group_04", "Boost Schedule"), $x - 20, $y - 20, $g_iSizeWGrpTab3 - 12, 75)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "Group_04", "Boost Schedule"), $x - 20, $y - 20, $g_iSizeWGrpTab3 - 184, 75)
 
 	$g_hLblBoosthour = GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "Hour", -1) & ":", $x, $y, -1, 15)
 	$sTxtTip = GetTranslatedFileIni("MBR Global GUI Design", "Only_during_hours", -1)

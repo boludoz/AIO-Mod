@@ -10,6 +10,11 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+
+#Region - One Gem Boost - Team AiO MOD++
+Global $g_sImgOneGemBoostOCR = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Boost\BoostOcr\"
+#EndRegion - One Gem Boost - Team AiO MOD++
+
 #Region Maintenance
 Global $g_sImgMaintenanceMod = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Maintenance\"
 #EndRegion Maintenance

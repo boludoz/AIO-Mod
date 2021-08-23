@@ -298,7 +298,9 @@ Func ReadRegularConfig()
 	ReadConfig_MOD_Humanization()
 	; <><><> SmartMilk <><><>
 	ReadConfig_MOD_SmartMilk()
-	
+	; <><><> Attack Plan / Train Army / Boost <><><>
+	ReadConfig_MOD_OneGem()
+
 	; <><><><> Attack Plan / Strategies <><><><>
 	; <<< nothing here >>>
 
