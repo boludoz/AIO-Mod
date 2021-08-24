@@ -28,9 +28,37 @@ Func __ArraySearch(Const ByRef $aArray, $vValue, $iStart = 0, $iEnd = 0, $iCase 
 	EndSelect
 EndFunc   ;==>__ArraySearch
 
-Func SearchNoLeague($bForceCapture = False)
-	Local $sImg = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch\NoLeague\"
-	Return IsArray(findMultipleQuick($sImg, Default, "6, 14, 45, 28", $bForceCapture))
+Func SearchNoLeague($bCheckOneTime = False)
+	If _Sleep($DELAYSPECIALCLICK1) Then Return False
+	
+	Local $bReturn = False
+	Local $offColors[2][3] = [[0x606060, 15, 0], [0x687070, 15, 15]]
+	Local $aNoLeaguePixel = _MultiPixelSearch(5, 10, 50, 50, 1, 1, Hex(0xFFFFFF, 6), $offColors, 25)
+	
+	For $i = 0 To 5
+		
+		If UBound($aNoLeaguePixel) > 0 And not @error Then
+			$bReturn = True
+			ExitLoop
+		EndIf
+		
+		If $bCheckOneTime = True Then
+			$bReturn = False
+			ExitLoop
+		EndIf
+		
+		If _Sleep($DELAYSPECIALCLICK2) Then Return False ; improve pause button response
+	Next
+	
+	If $g_bDebugSetlog Then
+		_CaptureRegion()
+		SetDebugLog("NoLeague pixel chk-#1: " & _GetPixelColor(13, 24, False) & _
+		", #2: " & _GetPixelColor(27, 24, False) & _
+		", #3: " & _GetPixelColor(27, 38, False) & _
+		", Is no league? " & $bReturn, $COLOR_DEBUG)
+	EndIf
+	
+	Return $bReturn
 EndFunc   ;==>SearchNoLeague
 
 Func SpecialAway()

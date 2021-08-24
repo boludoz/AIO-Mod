@@ -15,10 +15,12 @@
 	- Improved: Discord/Telegram support for non ASCII chars, separate setup for discord (Require configure again).
 	- Improved: Telegram, "/keyboard" command for more intuitive notifications (by @tick-guo).
 	- Improved: Telegram, Chinese firewall bypass proxy for telegram (by @tick-guo).
+	- Fixed: Machine builder base.
 	- Fixed: Restored essential archive of the hop clan.
 	- Fixed: Fixed TH10 tolerance (By @clementinise).
 	- Fixed: Clickaway issue in builder base (By @KiRZeN and @supermopf).
 	- Fixed: Misc tabs (Reported by @BadlyCodedAI).
+	- Fixed: get emulators in mini gui (Reported by @Ari).
 
 **v4.6.1**
 	- Improved / Fixed: Various.

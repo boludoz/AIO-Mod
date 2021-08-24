@@ -332,7 +332,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
             #Region - Custom - Team AIO Mod++
             Local $bFlagSearchAnotherBase = False
             If $g_bChkNoLeague[$DB] Then
-				If SearchNoLeague(False) Then
+				If SearchNoLeague() Then
 					SetLog(" - Dead Base is in No League, match found.", $COLOR_SUCCESS)
                     $bFlagSearchAnotherBase = False
                 Else

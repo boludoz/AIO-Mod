@@ -33,7 +33,6 @@ Func ReadConfig_MOD_CustomArmyBB()
 		IniReadS($g_sAttackScrScriptNameBB[$i], $g_sProfileConfigPath, "BuilderBase", "ScriptBB" & $i, "Barch four fingers")
 	Next
 	
-	IniReadS($g_bChkUpgradeMachine, $g_sProfileConfigPath, "other", "ChkUpgradeMachine", False, "Bool") ; samm0d
 	IniReadS($g_bChkBBStopAt3, $g_sProfileConfigPath, "BuilderBase", "BBStopAt3", False, "Bool")
 	IniReadS($g_bChkBuilderAttack, $g_sProfileConfigPath, "BuilderBase", "BuilderAttack", False, "Bool")
 	IniReadS($g_bChkBBCustomAttack, $g_sProfileConfigPath, "BuilderBase", "BBRandomAttack", False, "Bool")
@@ -42,6 +41,7 @@ Func ReadConfig_MOD_CustomArmyBB()
 	IniReadS($g_iTxtBBDropTrophiesMin, $g_sProfileConfigPath, "BuilderBase", "BBDropTrophiesMin", 1250, "Int")
 	IniReadS($g_iTxtBBDropTrophiesMax, $g_sProfileConfigPath, "BuilderBase", "BBDropTrophiesMax", 2000, "Int")
 	; -- AIO BB
+	IniReadS($g_bChkUpgradeMachine, $g_sProfileConfigPath, "BuilderBase", "ChkUpgradeMachine", False, "Bool")
 	IniReadS($g_bChkBBGetFromCSV, $g_sProfileConfigPath, "BuilderBase", "ChkBBGetFromCSV", False, "Bool")
 	IniReadS($g_bChkBBGetFromArmy, $g_sProfileConfigPath, "BuilderBase", "ChkBBGetFromArmy", False, "Bool")
 	IniReadS($g_iCmbBBAttack, $g_sProfileConfigPath, "BuilderBase", "CmbBBAttack", $g_iCmbBBAttack, "Int")

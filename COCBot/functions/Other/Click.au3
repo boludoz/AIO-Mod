@@ -269,8 +269,13 @@ Func ClickAway($bForce = False, $bRight = $g_bStayOnBuilderBase)
 		EndIf
 	EndIf
 	
-	Local $iRandom = ($bRight = True) ? (0) : (1)
-	Local $aiRegionToUse = (Random(0, $iRandom, 1) > 0) ? ($aiClickAwayRegionLeft) : ($aiClickAwayRegionRight)
+	Local $aiRegionToUse = 0
+	If $bRight = True Then
+		$aiRegionToUse = $aiClickAwayRegionRight
+	Else
+		$aiRegionToUse = (Random(0, 1, 1) > 0) ? ($aiClickAwayRegionLeft) : ($aiClickAwayRegionRight)
+	EndIf
+	
 	Local $aiSpot[2] = [Random($aiRegionToUse[0], $aiRegionToUse[2], 1), Random($aiRegionToUse[1], $aiRegionToUse[3], 1)]
 	
 	If $g_bDebugClick = True Then

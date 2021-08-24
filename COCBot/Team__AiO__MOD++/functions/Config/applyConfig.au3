@@ -69,6 +69,7 @@ Func ApplyConfig_MOD_CustomArmyBB($TypeReadSave)
 			ChkBBGetFromCSV()
 			ChkBBCustomAttack()
 			ChkBBAttackLoops()
+			GUICtrlSetState($g_hChkUpgradeMachine, $g_bChkUpgradeMachine ? $GUI_CHECKED : $GUI_UNCHECKED)
 
 		Case "Save"
 			; BB Upgrade Walls - Team AiO MOD++
@@ -104,6 +105,7 @@ Func ApplyConfig_MOD_CustomArmyBB($TypeReadSave)
 			$g_iBBMinAttack = Int(GUICtrlRead($g_hTxtBBMinAttack))
 			$g_iBBMaxAttack = Int(GUICtrlRead($g_hTxtBBMaxAttack))
 			$g_bOnlyBuilderBase = (GUICtrlRead($g_hChkOnlyBuilderBase) = $GUI_CHECKED)
+			$g_bChkUpgradeMachine = (GUICtrlRead($g_hChkUpgradeMachine) = $GUI_CHECKED)
 	EndSwitch
 EndFunc   ;==>ApplyConfig_MOD_CustomArmyBB
 

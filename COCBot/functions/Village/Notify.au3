@@ -84,6 +84,9 @@ Func NotifyPendingActions()
 		$g_bNotifyForced = True
 		PushMsg("RequestScreenshot")
 	EndIf
+	
+	If $g_bStayOnBuilderBase = True Then Return ; Custom BB - Team AIO Mod++
+
 	If $g_bTGRequestBuilderInfo = True Then
 		$g_bNotifyForced = True
 		PushMsg("BuilderInfo")

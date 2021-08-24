@@ -34,7 +34,6 @@ Func SaveConfig_MOD_CustomArmyBB()
 		_Ini_Add("BuilderBase", "ScriptBB" & $i, $g_sAttackScrScriptNameBB[$i])
 	Next
 
-	_Ini_Add("other", "ChkUpgradeMachine", $g_bChkUpgradeMachine ? 1 : 0)
 	_Ini_Add("other", "ChkPlacingNewBuildings", $g_iChkPlacingNewBuildings)
 	_Ini_Add("BuilderBase", "BuilderAttack", $g_bChkBuilderAttack ? 1 : 0)
 	_Ini_Add("BuilderBase", "BBStopAt3", $g_bChkBBStopAt3 ? 1 : 0)
@@ -50,6 +49,7 @@ Func SaveConfig_MOD_CustomArmyBB()
 	_Ini_Add("BuilderBase", "BBArmy5", $g_iCmbBBArmy5)
 	_Ini_Add("BuilderBase", "BBArmy6", $g_iCmbBBArmy6)
 	; -- AIO BB
+	_Ini_Add("BuilderBase", "ChkUpgradeMachine", $g_bChkUpgradeMachine ? 1 : 0)
 	_Ini_Add("BuilderBase", "ChkBBGetFromCSV", $g_bChkBBGetFromCSV)
 	_Ini_Add("BuilderBase", "ChkBBGetFromArmy", $g_bChkBBGetFromArmy)
 	_Ini_Add("BuilderBase", "CmbBBAttack", $g_iCmbBBAttack)
