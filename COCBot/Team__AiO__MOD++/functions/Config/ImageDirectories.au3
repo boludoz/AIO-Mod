@@ -130,7 +130,7 @@ Global $g_sECollectorDMatB = $g_sBaseDMatchingPathB & "\deadbase\Elixir\"
 Global Const $g_sBundleDeployPointsBBD = $g_sBaseDMatchingPathB & "\DPBB\"
 
 ; DPSM !
-Global Const $g_sBundleDeployPointsSMD = $g_sBaseDMatchingPathB & "\DPSM\"
+; Global Const $g_sBundleDeployPointsSMD = $g_sBaseDMatchingPathB & "\DPSM\"
 
 ; Heroes !
 ; Global Const $g_sBundleHeroesUbiKing = $g_sBaseDMatchingPathB & "\Heroes\King\"
@@ -184,7 +184,12 @@ Global $g_sASMagicItemsDOCRPath = $g_sBaseDOCRPathB & "\MagicItems\"
 Global $g_sASBattleEndsDOCRPath = $g_sBaseDOCRPathB & "\BattleEnds\"
 
 ; BoostST.
-Global $g_sASBoostSTDOCRPath = $g_sBaseDOCRPathB & "\BoostST\"
+; Global $g_sASBoostSTDOCRPath = $g_sBaseDOCRPathB & "\BoostST\"
 
 ; Gems
 Global $g_sASGemsSDOCRPath = $g_sBaseDOCRPathB & "\GemsS\"
+
+; OCR CG
+Global $g_sASOCRCGDOCRPath = $g_sBaseDOCRPathB & "\CG\"
+
+; getOcrAndCaptureDOCR($g_sASOCRCGDOCRPath, 585, 475, 855, 565, True, True)

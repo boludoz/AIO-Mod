@@ -35,7 +35,9 @@ Func BuilderBaseReport($bBypass = False, $bSetLog = True)
 	$g_aiCurrentLootBB[$eLootGoldBB] = getResourcesMainScreen(705, 23)
 	$g_aiCurrentLootBB[$eLootElixirBB] = getResourcesMainScreen(705, 72)
 	If $bSetLog Then SetLog(" [G]: " & _NumberFormat($g_aiCurrentLootBB[$eLootGoldBB]) & " [E]: " & _NumberFormat($g_aiCurrentLootBB[$eLootElixirBB]) & "[T]: " & _NumberFormat($g_aiCurrentLootBB[$eLootTrophyBB]), $COLOR_SUCCESS)
-
+	
+	BuilderBaseReportAttack(False) ; Custom BB
+	
 	If Not $bBypass Then ; update stats
 		UpdateStats()
 	EndIf

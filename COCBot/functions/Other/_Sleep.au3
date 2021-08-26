@@ -18,14 +18,14 @@
 
 Global $g_hTimer_SetTime = 0, $g_hTimer_PBRemoteControlInterval = 0, $g_hTimer_EmptyWorkingSetAndroid = 0, $g_hTimer_EmptyWorkingSetBot = 0
 
-Func _Sleep($iDelay, $iSleep = True, $CheckRunState = True, $SleepWhenPaused = True)
+Func _Sleep($iDelayOri, $iSleep = True, $CheckRunState = True, $SleepWhenPaused = True)
 
 	Local $iBegin = __TimerInit()
 
 	debugGdiHandle("_Sleep")
 	CheckBotRequests() ; check if bot window should be moved, minized etc.
 
-	$iDelay += Round($iDelay * ($g_iInputAndroidSleep / 100))
+	Local $iDelay = Round($iDelayOri * ($g_iInputAndroidSleep / 100))
 
 	If SetCriticalMessageProcessing() = False Then
 

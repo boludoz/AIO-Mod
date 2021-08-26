@@ -13,9 +13,11 @@
 
 Func BotDetectFirstTime()
 	If $g_bIsClientSyncError Then Return ; if restart after OOS, and User stop/start bot, skip this.
-
-	#Region - Custom fix - Team AIO MOD++
-	;ClickAway()
+	
+	; Custom fix - Team AIO MOD++
+	If $g_bOnlyBuilderBase = True Or $g_bStayOnBuilderBase = True Then Return
+	
+	ClickAway()
 	If _Sleep($DELAYBOTDETECT1) Then Return
 
 	SetLog("Detecting your Buildings", $COLOR_INFO)

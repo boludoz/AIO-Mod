@@ -14,82 +14,87 @@
 ; ===============================================================================================================================
 
 #Region - Custom - Team AIO Mod++
-Func SwitchBetweenBases($bCheckMainScreen = Default, $bGoToBB = Default, $bSilent = Default)
-	If $bCheckMainScreen = Default Then $bCheckMainScreen = True
-	Local $bSwitched = False, $iLoop = 0
-	$g_aVillageSize = $g_aVillageSizeReset ; Deprecated dim - Team AIO Mod++
+Func SwitchBetweenBases($bCheckMainScreen = True)
+	Local $sSwitchFrom, $sSwitchTo, $bIsOnBuilderBase = False, $aButtonCoords
+	Local $sTile, $sTileDir, $sRegionToSearch
+	Local $bSwitched = False
+	If Not $g_bRunState Then Return
+	Static $Failed = 0
+	For $i = 0 To 1
 
-	For $iLoop = 0 To 4
+		If isOnBuilderBase(True, True) Then
+			$sSwitchFrom = "Builder Base"
+			$sSwitchTo = "Normal Village"
+			$bIsOnBuilderBase = True
+			$sTile = "BoatBuilderBase"
+			$sTileDir = $g_sImgBoatBB
+			$sRegionToSearch = "487,44,708,242"
+			If $g_bStayOnBuilderBase = True Then Return True
 
-		; Deconstructed boat.
-		If (QuickMIS("N1", @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Noboat\", 66, 432, 388, 627) <> "none") Then
-			$g_bStayOnBuilderBase = False
-			Return False
+		Else
+			; Deconstructed boat.
+			Local $sNoBoat = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Noboat\"
+			If QuickMIS("BC1", $sNoBoat, 66, 432, 388, 627, True) Then
+				SetLog("Builder base locked.", $COLOR_INFO)
+				$g_bStayOnBuilderBase = False
+				Return False
+			EndIf
+			$sSwitchFrom = "Normal Village"
+			$sSwitchTo = "Builder Base"
+			$bIsOnBuilderBase = False
+			$sTile = "BoatNormalVillage"
+			$sTileDir = $g_sImgBoat
+			$sRegionToSearch = "66,432,388,627"
+			If $g_bStayOnBuilderBase = False Then Return True
 		EndIf
-		
-		;	Builder base.
-		Local $aBBoat = decodeSingleCoord(findImageInPlace("BoatBuilderBase", $g_sImgBoatBB, "487,44,708,242"))
-		Local $bBB = isOnBuilderBase(True)
-		
-		;	Normal base.
-		Local $aNVoat = decodeSingleCoord(findImageInPlace("BoatNormalVillage", $g_sImgBoat, "66,432,388,627"))
-		Local $bNV = (Not $bBB) ; more stable than isOnMainVillage.
-		
-		Select
-			Case (UBound($aNVoat) > 1)
-
-				; Travel to BB.
-				If ($bGoToBB = Default Or $bGoToBB = True) Then
-					Click($aNVoat[0] + Random(0, 10, 1), $aNVoat[1] + Random(0, 10, 1))
-					$g_bStayOnBuilderBase = True
-				EndIf
-				
-				; Stay in BB.
-				If ($bNV And $bGoToBB = False) Then
-					$g_bStayOnBuilderBase = True
-					Return True
-				EndIf
-				
-			Case (UBound($aBBoat) > 1)
-					
-				; Travel to NV.
-				If ($bGoToBB = Default Or $bGoToBB = False) Then
-					Click($aBBoat[0] + Random(0, 10, 1), $aBBoat[1] + Random(0, 10, 1))
-					$g_bStayOnBuilderBase = False
-				EndIf
-				
-				; Stay in NV.
-				If ($bBB And $bGoToBB = True) Then 
-					$g_bStayOnBuilderBase = False
-					Return True
-				EndIf
-				
-			Case Else
-
-				; Check checkMainScreen and ZoomOut.
-				SetDebugLog("SwitchBetweenBases | 0 : 3")
-				If $bCheckMainScreen Then checkMainScreen(True, $bBB)
-				ZoomOut()
-				ContinueLoop
-				
-		EndSelect
-
-		; switch can take up to 2 Seconds, check for 3 additional Seconds...
-		Local $bIsOnBuilderBase = $bBB
-		Local $hTimerHandle = __TimerInit()
-		Do 
-			$bSwitched = (isOnBuilderBase(True, True) <> $bIsOnBuilderBase)
-			If $bSwitched Then ExitLoop
-			If (Not $g_bRunState) Or _Sleep(250) Then Return
-		Until (__TimerDiff($hTimerHandle) > 3000 And Not $bSwitched)
-
-		If $bSwitched Then
-			If $bCheckMainScreen Then checkMainScreen(True, Not $bIsOnBuilderBase)
-			Return True
+		If $i = 1 Then
+			For $j = 0 To 6
+				AndroidShield("AndroidOnlyZoomOut")
+				ScriptSendZoomOut(Not $bIsOnBuilderBase, $j)
+				If Not $g_bRunState Then Return
+				If _Sleep(100) Then Return
+			Next
+		Else
+			ZoomOut()
 		EndIf
-
+		If _Sleep(1000) Then Return
+		If Not $g_bRunState Then Return
+		$aButtonCoords = decodeSingleCoord(FindImageInPlace($sTile, $sTileDir, $sRegionToSearch))
+		If UBound($aButtonCoords) > 1 Then
+			SetLog("[" & $i & "] Going to " & $sSwitchTo, $COLOR_INFO)
+			ClickP($aButtonCoords)
+			If _Sleep($DELAYSWITCHBASES1) Then Return
+			Local $hTimerHandle = __TimerInit()
+			$bSwitched = False
+			While __TimerDiff($hTimerHandle) < 3000 And Not $bSwitched
+				If _Sleep(250) Then Return
+				If Not $g_bRunState Then Return
+				ForceCaptureRegion()
+				$bSwitched = isOnBuilderBase(True, True) <> $bIsOnBuilderBase
+			WEnd
+			If $bSwitched Then
+				If $bCheckMainScreen Then checkMainScreen(True, Not $bIsOnBuilderBase)
+				$Failed = 0
+				Return True
+			Else
+				SetLog("Failed to go to the " & $sSwitchTo, $COLOR_ERROR)
+				$Failed += 1
+				If $Failed > 15 Then
+					SetLog("Rebooting " & $g_sAndroidEmulator & " due to problems Switch Bases!", $COLOR_ERROR)
+					; AndroidAdbResetErrors()
+					If Not RebootAndroid() Then Return False
+				EndIf
+			EndIf
+		Else
+			SetLog("[" & $i & "] SwitchBetweenBases Tile: " & $sTile, $COLOR_ERROR)
+			SetLog("[" & $i & "] SwitchBetweenBases isOnBuilderBase: " & isOnBuilderBase(True, True), $COLOR_ERROR)
+			If $bIsOnBuilderBase Then
+				SetLog("Cannot find the Boat on the Coast", $COLOR_ERROR)
+			Else
+				SetLog("Cannot find the Boat on the Coast. Maybe it is still broken or not visible", $COLOR_ERROR)
+			EndIf
+		EndIf
 	Next
-	
 	Return False
 EndFunc   ;==>SwitchBetweenBases
 #EndRegion - Custom - Team AIO Mod++

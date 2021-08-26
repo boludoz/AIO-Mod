@@ -111,35 +111,27 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = $g_iFurtherFromBBDefault, $DebugI
 				Case "TopLeft"
 					$Point[0] -= $FurtherFrom
 					$Point[1] -= $FurtherFrom
-					If InDiamondBB($Point[0], $Point[1], $g_aBuilderBaseOuterPolygon) Then
-						ReDim $iTopLeft[UBound($iTopLeft) + 1][2]
-						$iTopLeft[UBound($iTopLeft) - 1][0] = $Point[0]
-						$iTopLeft[UBound($iTopLeft) - 1][1] = $Point[1]
-					EndIf
+					ReDim $iTopLeft[UBound($iTopLeft) + 1][2]
+					$iTopLeft[UBound($iTopLeft) - 1][0] = $Point[0]
+					$iTopLeft[UBound($iTopLeft) - 1][1] = $Point[1]
 				Case "TopRight"
 					$Point[0] += $FurtherFrom
 					$Point[1] -= $FurtherFrom
-					If InDiamondBB($Point[0], $Point[1], $g_aBuilderBaseOuterPolygon) Then
-						ReDim $iTopRight[UBound($iTopRight) + 1][2]
-						$iTopRight[UBound($iTopRight) - 1][0] = $Point[0]
-						$iTopRight[UBound($iTopRight) - 1][1] = $Point[1]
-					EndIf
+					ReDim $iTopRight[UBound($iTopRight) + 1][2]
+					$iTopRight[UBound($iTopRight) - 1][0] = $Point[0]
+					$iTopRight[UBound($iTopRight) - 1][1] = $Point[1]
 				Case "BottomRight"
 					$Point[0] += $FurtherFrom
 					$Point[1] += $FurtherFrom
-					If InDiamondBB($Point[0], $Point[1], $g_aBuilderBaseOuterPolygon) Then
-						ReDim $iBottomRight[UBound($iBottomRight) + 1][2]
-						$iBottomRight[UBound($iBottomRight) - 1][0] = $Point[0]
-						$iBottomRight[UBound($iBottomRight) - 1][1] = $Point[1]
-					EndIf
+					ReDim $iBottomRight[UBound($iBottomRight) + 1][2]
+					$iBottomRight[UBound($iBottomRight) - 1][0] = $Point[0]
+					$iBottomRight[UBound($iBottomRight) - 1][1] = $Point[1]
 				Case "BottomLeft"
 					$Point[0] -= $FurtherFrom
 					$Point[1] += $FurtherFrom
-					If InDiamondBB($Point[0], $Point[1], $g_aBuilderBaseOuterPolygon) Then
-						ReDim $iBottomLeft[UBound($iBottomLeft) + 1][2]
-						$iBottomLeft[UBound($iBottomLeft) - 1][0] = $Point[0]
-						$iBottomLeft[UBound($iBottomLeft) - 1][1] = $Point[1]
-					EndIf
+					ReDim $iBottomLeft[UBound($iBottomLeft) + 1][2]
+					$iBottomLeft[UBound($iBottomLeft) - 1][0] = $Point[0]
+					$iBottomLeft[UBound($iBottomLeft) - 1][1] = $Point[1]
 			EndSwitch
 		Next
 

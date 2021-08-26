@@ -31,37 +31,11 @@ Func TestBuilderBaseZoomOut()
 	Setlog("** TestBuilderBaseZoomOutOnAttack END**", $COLOR_DEBUG)
 EndFunc   ;==>TestBuilderBaseZoomOut
 
-Func BuilderBaseZoomOut($DebugImage = False, $ForceZoom = False)
-	Local $iSize = GetBuilderBaseSize(False, $DebugImage) ; WihtoutClicks
-	If $iSize > 520 And $iSize < 590 and Not $ForceZoom Then
-		SetDebugLog("BuilderBaseZoomOut check!")
+Func BuilderBaseZoomOut($DebugImage = False, $bForceZoom = False)
+	If ZoomBuilderBaseMecanics($bForceZoom) > 0 Then
 		Return True
 	EndIf
-
-	; Small loop just in case
-	For $i = 0 To 5
-		; Necessary a small drag to Up and right to get the Stone and Boat Images, Just once , coz in attack will display a red text and hide the boat
-		If $i = 3 Then ClickDrag(100, 130, 230, 30)
-
-		; Update shield status
-		AndroidShield("AndroidOnlyZoomOut")
-		; Run the ZoomOut Script
-		If BuilderBaseSendZoomOut(False, $i) Then
-				If _Sleep(500) Then ExitLoop
-				If Not $g_bRunState Then Return
-				; Get the Distances between images
-				Local $iSize = GetBuilderBaseSize(True, $DebugImage)
-				SetDebugLog("[" & $i & "]BuilderBaseZoomOut $iSize: " & $iSize)
-				If IsNumber($iSize) And $iSize > 0 Then ExitLoop
-			; Can't be precise each time we enter at Builder base was deteced a new Zoom Factor!! from 563-616
-			If $iSize > 520 And $iSize < 590 Then
-				Return True
-			EndIf
-		Else
-			SetDebugLog("[BBzoomout] Send Script Error!", $COLOR_DEBUG)
-		EndIf
-	Next
-
+	
 	Return False
 EndFunc   ;==>BuilderBaseZoomOut
 
@@ -76,19 +50,19 @@ EndFunc   ;==>BuilderBaseSendZoomOut
 
 Func GetBuilderBaseSize($WithClick = False, $bDebugLog = False)
 	Local $iResult = 0, $aVillage = 0
-	
+
 	If Not $g_bRunState Then Return
-	
+
 	Local $sFiles = ["", "2"]
-	
+
 	_CaptureRegion2()
-	
+
 	For $sMode In $sFiles
-		
+
 		If Not $g_bRunState Then Return
-		
+
 		$aVillage = GetVillageSize($bDebugLog, $sMode & "stone", $sMode & "tree", Default, True, False)
-	
+
 		If UBound($aVillage) > 8 And not @error Then
 			If StringLen($aVillage[9]) > 5 And StringIsSpace($aVillage[9]) = 0 Then
 				$iResult = Floor(Pixel_Distance($aVillage[4], $aVillage[5], $aVillage[7], $aVillage[8]))
@@ -97,46 +71,58 @@ Func GetBuilderBaseSize($WithClick = False, $bDebugLog = False)
 				Return 0
 			EndIf
 		EndIf
-		
+
 		If _Sleep($DELAYSLEEP * 10) Then Return
-		
+
 	Next
-	
+
 	Return 0
 EndFunc   ;==>GetBuilderBaseSize
 
-Func ZoomBuilderBaseMecanics($bAttack = True)
-	Local $iSize = ($bAttack = True) ? (GetBuilderBaseSize()) : (0)
-	
+Func ZoomBuilderBaseMecanics($bForceZoom = True)
+	Local $iSize = ($bForceZoom = True) ? (0) : (GetBuilderBaseSize())
+
 	If $iSize = 0 Then
-		BuilderBaseZoomOut()
-		If _Sleep($DELAYSLEEP * 10) Then Return
+		BuilderBaseSendZoomOut(False, 0)
+		If _Sleep(1000) Then Return
+		
+		$iSize = GetBuilderBaseSize(False)
 	EndIf
-	
+
 	If Not $g_bRunState Then Return
 
-	Setlog("Builder Base Diamond: " & $iSize, $COLOR_INFO)
 	Local $i = 0
 	Do
-		Setlog("Builder Base Attack Zoomout.")
-		$iSize = GetBuilderBaseSize(False) ; WihtoutClicks
-		
+		Setlog("Builder base force Zoomout ? " & $bForceZoom)
+
 		If Not $g_bRunState Then Return
 
-		If ($iSize < 520 And $iSize > 590) Or ($iSize = 0) Then
-			BuilderBaseZoomOut()
-			If _Sleep(1000) Then Return
+		If Not ($iSize > 520 And $iSize < 620) Then
+			If $i = 3 Then ClickDrag(100, 130, 230, 30)
+
+			; Update shield status
+			AndroidShield("AndroidOnlyZoomOut")
+			
+			; Send zoom-out.
+			If BuilderBaseSendZoomOut(False, $i) Then
+				If _Sleep(1000) Then Return
+				
+				If Not $g_bRunState Then Return
+				$iSize = GetBuilderBaseSize(False) ; WihtoutClicks
+			EndIf
 		EndIf
 
 		If $i > 5 Then ExitLoop
 		$i += 1
-	Until ($iSize >= 520 And $iSize <= 590) Or ($iSize <> 0)
+	Until ($iSize > 520 And $iSize < 620)
 
+	Setlog("Builder Base Diamond: " & $iSize, $COLOR_INFO)
+	
 	If $iSize = 0 Then
 		SetDebugLog("[BBzoomout] ZoomOut Builder Base - FAIL", $COLOR_ERROR)
 	Else
 		SetDebugLog("[BBzoomout] ZoomOut Builder Base - OK", $COLOR_SUCCESS)
 	EndIf
-	
+
 	Return $iSize
 EndFunc   ;==>GetBuilderBaseSize

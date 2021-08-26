@@ -16,7 +16,7 @@
 Func PrintBBPoly($bOuterPolygon = True) ; Or Internal, but it always update globals.
 	Local $aReturn[6] = [-1, -1, -1, -1, -1, -1]
 
-	Local $iSize = ZoomBuilderBaseMecanics(True)
+	Local $iSize = ZoomBuilderBaseMecanics(False)
 	If $iSize < 1 Then
 		SetLog("Bad PrintBBPoly village size.", $COLOR_ERROR)
 		Return SetError(1, 0, $aReturn)
@@ -110,7 +110,7 @@ Func PrintBBPoly($bOuterPolygon = True) ; Or Internal, but it always update glob
 EndFunc   ;==>PrintBBPoly
 
 Func BuilderBaseAttackDiamond()
-	Local $iSize = ZoomBuilderBaseMecanics(True)
+	Local $iSize = ZoomBuilderBaseMecanics(False)
 	If $iSize < 1 Then Return -1
 	
 	; Fix ship coord
@@ -194,7 +194,7 @@ Func InDiamondBB($iX, $iY, $aBigArray, $bAttack = True)
 EndFunc   ;==>InDiamondBB
 
 Func IsUnsafeDP($iX, $iY, $bAttack = True)
-    If $bAttack = True And $iY > 630 Or ($iX < 453 And $iY > 572) Then 
+    If ($bAttack = True And $iY > 630) Or ($iX < 453 And $iY > 572) Then 
         Return True
     EndIf
     Return False

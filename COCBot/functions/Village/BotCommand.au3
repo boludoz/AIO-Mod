@@ -167,6 +167,14 @@ Func BotCommand()
 							Return True
 						EndIf
 					EndIf
+				; Custom BB - Team AIO Mod++
+				Case 8
+					SetLog("Play BB Only now.", $COLOR_INFO)
+					$g_iCommandStop = 8
+					If _Sleep($DELAYBOTCOMMAND1) Then Return
+				Case Else
+					SetLog("Something Wrong BotCommand...", $COLOR_WARNING)
+					Return False
 			EndSwitch
 		EndIf
 	EndIf

@@ -21,7 +21,7 @@ Func Click($x, $y, $times = 1, $speed = 0, $debugtxt = "", $bRandomInLoop = True
 	#Region - Custom click - Team AIO Mod++
 	If ($x = $aAway[0] Or $x = $aAway2[0]) And $y = 10 Then
 		If $g_bDebugClick Then SetLog("Force random ClickAway.", $COLOR_ACTION)
-		Return ClickAway(True)
+		Return ClickAway(Default, Default, $times)
 	EndIf
 
 	Local $txt = "", $aPrevCoor[2] = [$x, $y]
@@ -255,9 +255,12 @@ Func AttackClick($x, $y, $times = 1, $speed = 0, $afterDelay = 0, $debugtxt = ""
 	Return $result
 EndFunc   ;==>AttackClick
 
-Func ClickAway($bForce = False, $bRight = $g_bStayOnBuilderBase)
-	#Region - ClickAway - Team AIO Mod++
-	
+#Region - ClickAway - Team AIO Mod++
+Func ClickAway($bForce = Default, $bRight = Default, $eTimes = Default)
+	If $bForce = Default Then $bForce = False
+	If $bRight = Default Then $bRight = $g_bStayOnBuilderBase
+	If $eTimes = Default Then $eTimes = 1
+
 	If $bForce = False Then
 		; 3EBFED - Profile, FFFFB7 - Building
 		_CaptureRegion()
@@ -285,10 +288,10 @@ Func ClickAway($bForce = False, $bRight = $g_bStayOnBuilderBase)
 	; Fix XP Click.
 	Local $bUseRandom = $g_bUseRandomClick
 	$g_bUseRandomClick = False
-	ClickP($aiSpot, 1, 0, "#0000")
+	ClickP($aiSpot, $eTimes, 0, "#0000")
 	$g_bUseRandomClick = $bUseRandom
-	#EndRegion - ClickAway - Team AIO Mod++
 EndFunc
+#EndRegion - ClickAway - Team AIO Mod++
 
 Func _DecodeDebug($message)
 	Local $separator = " | "

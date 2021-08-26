@@ -1106,6 +1106,7 @@ Func btnRunFunction($bExecuteCapture = False)
 	Local $bCurrentRunState = $g_bRunState, $bCurrentExecuteCapture = $g_bExecuteCapture, $iError = 0, $sSCap = ($bExecuteCapture = False) ? ("Run function ") : ("Run function + Capture ")
 	$g_bExecuteCapture = $bExecuteCapture
 	$g_bRunState = True
+	$g_bRestart = False
 
 	; Prevent bugs.
 	Local $sFunc = GUICtrlRead($g_hTxtRunFunction)

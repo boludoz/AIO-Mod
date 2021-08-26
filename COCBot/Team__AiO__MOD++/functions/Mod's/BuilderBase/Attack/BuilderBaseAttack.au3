@@ -28,20 +28,20 @@ EndFunc   ;==>TestBuilderBaseAttack
 
 Func BuilderBaseAttack($bTestRun = False)
 
-	If Not $g_bRunState Then Return
+	If Not $g_bRunState Then Return 
 
 	; Check if Builder Base is to run
-	If Not $g_bChkBuilderAttack Then Return
+	If Not $g_bChkBuilderAttack Then Return False
 
 	; Stop when reach the value set it as minimum of trophies
-	If (Not $bTestRun) And Int($g_aiCurrentLootBB[$eLootTrophyBB]) < Int($g_iTxtBBDropTrophiesMin) And $g_iAvailableAttacksBB = 0 Then
+	If (Not $bTestRun) And Int($g_aiCurrentLootBB[$eLootTrophyBB]) < Int($g_iTxtBBDropTrophiesMin) And $g_iAvailableAttacksBB = 0 And $g_bChkBBTrophiesRange = True Then
 		Setlog("You reach the value set it as minimum of trophies!", $COLOR_INFO)
 		Setlog("And you don't have any attack available.", $COLOR_INFO)
-		Return
+		Return False
 	EndIf
 
 	; Variables
-	Local $IsReaddy = False, $IsToDropTrophies = False
+	Local $IsReaddy = False, $bIsToDropTrophies = False
 
 	; LOG
 	Setlog("Entering in Builder Base Attack!", $COLOR_INFO)
@@ -66,22 +66,22 @@ Func BuilderBaseAttack($bTestRun = False)
 	ArmyStatus($IsReaddy)
 
 	; Get Drop Trophies Status
-	IsToDropTrophies($IsToDropTrophies)
+	IsToDropTrophies($bIsToDropTrophies)
 
 	; Get Battle Machine status
 	Local $HeroStatus = HeroStatus()
 	$g_bIsMachinePresent = ($HeroStatus = "Battle Machine ready to use" ? True : False)
 
 
-	;If $bTestRun Then $IsToDropTrophies = True
+	;If $bTestRun Then $bIsToDropTrophies = True
 
 	; User LOG
 	SetLog(" - Are you ready to Battle? " & $IsReaddy, $COLOR_INFO)
-	SetLog(" - Is To Drop Trophies? " & $IsToDropTrophies, $COLOR_INFO)
+	SetLog(" - Is To Drop Trophies? " & $bIsToDropTrophies, $COLOR_INFO)
 	SetLog(" - " & $HeroStatus, $COLOR_INFO)
 
 	If $g_bRestart = True Then Return
-	If FindVersusBattlebtn() And $IsReaddy And (($IsToDropTrophies) Or ($g_iCmbBBAttack = $g_eBBAttackCSV) Or ($g_iCmbBBAttack = $g_eBBAttackSmart)) Then
+	If FindVersusBattlebtn() And $IsReaddy And (($bIsToDropTrophies) Or ($g_iCmbBBAttack = $g_eBBAttackCSV) Or ($g_iCmbBBAttack = $g_eBBAttackSmart)) Then
 		ClickP($g_iMultiPixelOffSet, 1)
 		If RandomSleep(3000) Then Return
 
@@ -106,7 +106,7 @@ Func BuilderBaseAttack($bTestRun = False)
 		EndIf
 
 		; Verify the scripts and attack bar
-		If Not $IsToDropTrophies Then BuilderBaseSelectCorrectScript($aAvailableTroops)
+		If Not $bIsToDropTrophies Then BuilderBaseSelectCorrectScript($aAvailableTroops)
 
 		; Avoid bugs in redlines (too fast MyBot).
 		If RandomSleep(1500) Then Return
@@ -118,7 +118,7 @@ Func BuilderBaseAttack($bTestRun = False)
 
 		; Select mode.
 		Select
-			Case $IsToDropTrophies = True
+			Case $bIsToDropTrophies = True
 				Setlog("Let's Drop some Trophies!", $COLOR_SUCCESS)
 
 				; Start the Attack realing one troop and surrender
@@ -156,6 +156,7 @@ Func BuilderBaseAttack($bTestRun = False)
 	Setlog("Exit from Builder Base Attack!", $COLOR_INFO)
 	ClickAway() ; ClickP($aAway, 2, 0, "#0332") ;Click Away
 	If _Sleep(2000) Then Return
+	Return True
 EndFunc   ;==>BuilderBaseAttack
 
 Func RemoveChangeTroopsDialog()
@@ -264,15 +265,15 @@ Func HeroStatus()
 	Return $Status
 EndFunc   ;==>HeroStatus
 
-Func IsToDropTrophies(ByRef $IsToDropTrophies)
+Func IsToDropTrophies(ByRef $bIsToDropTrophies)
 	If Not $g_bRunState Then Return
-	$IsToDropTrophies = False
+	$bIsToDropTrophies = False
 
 	If Not $g_bChkBBTrophiesRange Then Return
 
 	If Int($g_aiCurrentLootBB[$eLootTrophyBB]) > Int($g_iTxtBBDropTrophiesMax) Then
 		SetLog("Max Trophies reached!", $COLOR_WARNING)
-		$IsToDropTrophies = True
+		$bIsToDropTrophies = True
 	EndIf
 EndFunc   ;==>IsToDropTrophies
 
@@ -285,14 +286,14 @@ Func FindVersusBattlebtn()
 	SetLog("Finding Button Now!")
 
 	For $i = 0 To 5
-		If _Sleep(100) Then Return False
+		If _Sleep(1200) Then Return False
 		If _MultiPixelSearch(490, 284, 710, 375, 1, 1, Hex(0xFFCA4A, 6), $aFindVersusBattleBtn, 25) <> 0 Then
 			ExitLoop
 		Else
 			If _MultiPixelSearch(600, 452, 745, 510, 1, 1, Hex(0xDDF685, 6), $aOkayVersusBattleBtn, 25) <> 0 Then
 				SetDebugLog("OKAY! Button detected: " & $g_iMultiPixelOffSet[0] & "," & $g_iMultiPixelOffSet[1])
 				ClickP($g_iMultiPixelOffSet, 2, 0)
-				If _Sleep(100) Then Return False
+				If _Sleep(1200) Then Return False
 			EndIf
 		EndIf
 	Next
@@ -330,10 +331,13 @@ Func WaitForVersusBattle()
 				If checkObstacles_Network(True, True) Then
 					Return False
 				EndIf
-
+			Case 3
+				If IsBuilderBase(True, True) Then
+					Return False
+				EndIf
 				$iSwitch = 0
 		EndSwitch
-
+		
 		If _MultiPixelSearch(711, 2, 856, 55, 1, 1, Hex(0xFFFF99, 6), $aAttackerVersusBattle, 15) <> 0 Then
 			ExitLoop
 		EndIf

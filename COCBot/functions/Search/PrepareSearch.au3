@@ -104,7 +104,19 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 		ClickP($aiMatch)
 		If _Sleep(500) Then Return
 	EndIf
-
+	
+	If $g_bLeagueAttack = False Then
+		If isGemOpen(True) Then ; Check for gem window open)
+			SetLog(" Not enough gold to start searching!", $COLOR_ERROR)
+			Click(585, 252, 1, 0, "#0151") ; Click close gem window "X"
+			If _Sleep($DELAYPREPARESEARCH1) Then Return
+			Click(822, 32, 1, 0, "#0152") ; Click close attack window "X"
+			If _Sleep($DELAYPREPARESEARCH1) Then Return
+			$g_bOutOfGold = True ; Set flag for out of gold to search for attack
+			Return
+		EndIf
+	EndIf
+	
 	If $g_bLeagueAttack = True Then
 		If $aiMatch <> 0 Then
 			For $i = 0 To 10
@@ -162,15 +174,6 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 	If _Sleep($DELAYPREPARESEARCH2) Then Return
 
 	Local $Result = getAttackDisable(346, 182) ; Grab Ocr for TakeABreak check
-
-	If isGemOpen(True) Then ; Check for gem window open)
-		SetLog(" Not enough gold to start searching!", $COLOR_ERROR)
-		Click(585, 252, 1, 0, "#0151") ; Click close gem window "X"
-		If _Sleep($DELAYPREPARESEARCH1) Then Return
-		Click(822, 32, 1, 0, "#0152") ; Click close attack window "X"
-		If _Sleep($DELAYPREPARESEARCH1) Then Return
-		$g_bOutOfGold = True ; Set flag for out of gold to search for attack
-	EndIf
 
 	checkAttackDisable($g_iTaBChkAttack, $Result) ;See If TakeABreak msg on screen
 
