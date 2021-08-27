@@ -39,6 +39,8 @@ Func GetAttackBarBB($bRemaining = False)
 
 	local $sSearchDiamond = GetDiamondFromRect("0,630,860,732")
 	local $aBBAttackBarResult = findMultiple($g_sImgDirBBTroops, $sSearchDiamond, $sSearchDiamond, 0, 1000, 0, "objectname,objectpoints", True)
+	
+	If Not $g_bRunState Then Return ; Stop Button
 
 	If UBound($aBBAttackBarResult) = 0 Then
 		If Not $bRemaining Then
@@ -70,8 +72,12 @@ Func GetAttackBarBB($bRemaining = False)
 			Local $aTempElement[1][5] = [[$aTroop[0], $aTempCoords[0], $aTempCoords[1], $iSlot, $iCount]] ; element to add to attack bar list
 			
 			_ArrayAdd($aBBAttackBar, $aTempElement)
-
+			
+			If Not $g_bRunState Then Return ; Stop Button
+			
 		Next
+		
+		If Not $g_bRunState Then Return ; Stop Button
 
 	Next
 	_ArraySort($aBBAttackBar, 0, 0, 0, 3)

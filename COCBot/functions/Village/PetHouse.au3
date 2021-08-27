@@ -34,7 +34,7 @@ Func PetHouse($test = False)
 		Return
 	EndIf
 
-	; Check at least one pet upgrade is enable
+	; Check at least one pet upgrade is enabled
 	For $i = 0 to $ePetCount - 1
 		If $g_bUpgradePetsEnable[$i] Then
 			$bUpgradePets = True
@@ -60,8 +60,12 @@ Func PetHouse($test = False)
 
 	; not enought Dark Elixir to upgrade lowest Pet
 	If $g_aiCurrentLoot[$eLootDarkElixir] < $g_iMinDark4PetUpgrade Then
-		SetLog("Current DE Storage: " & $g_aiCurrentLoot[$eLootDarkElixir])
-		SetLog("Minumum DE for upgrade: " & $g_iMinDark4PetUpgrade)
+		If $g_iMinDark4PetUpgrade <> 999999 Then
+			SetLog("Current DE Storage: " & $g_aiCurrentLoot[$eLootDarkElixir])
+			SetLog("Minimum DE for Pet upgrade: " & $g_iMinDark4PetUpgrade)
+		Else
+			SetLog("No Pets available for upgrade.")
+		EndIf
 		Return
 	EndIf
 
@@ -90,7 +94,7 @@ Func PetHouse($test = False)
 			; get the Pet Level
 			Local $iPetLevel = getTroopsSpellsLevel($iPetLevelxCoord[$i], 533)
 			SetLog($g_asPetNames[$i] & " is at level " & $iPetLevel)
-			If $iPetLevel = 10 Then ContinueLoop ; Temp fix - AIO.
+			If $iPetLevel = $g_ePetLevels Then ContinueLoop
 
 			If _Sleep($DELAYLABORATORY2) Then Return
 
@@ -245,8 +249,12 @@ Func PetGuiDisplay()
 
 	; not enough Dark Elixir for upgrade -
 	If $g_aiCurrentLoot[$eLootDarkElixir] < $g_iMinDark4PetUpgrade Then
-		SetLog("Current DE Storage: " & $g_aiCurrentLoot[$eLootDarkElixir])
-		SetLog("Minumum DE for upgrade: " & $g_iMinDark4PetUpgrade)
+		If $g_iMinDark4PetUpgrade <> 999999 Then
+			SetLog("Current DE Storage: " & $g_aiCurrentLoot[$eLootDarkElixir])
+			SetLog("Minimum DE for Pet upgrade: " & $g_iMinDark4PetUpgrade)
+		Else
+			SetLog("No Pets available for upgrade.")
+		EndIf
 		Return
 	EndIf
 
@@ -338,7 +346,7 @@ Func PetGuiDisplay()
 			Return True
 	ElseIf _ColorCheck(_GetPixelColor(260, 260, True), Hex(0xCCB43B, 6), 20) Then ; Look for the paw in the Pet House window.
 			SetLog("Pet House has Stopped", $COLOR_INFO)
-		;If $g_bNotifyTGEnable And $g_bNotifyAlertLaboratoryIdle Then NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Laboratory-Idle_Info_01", "Laboratory Idle") & chr(10) & GetTranslatedFileIni("MBR Func_Notify", "Laboratory-Idle_Info_02", "Laboratory has Stopped"))
+		;If $g_bNotifyTGEnable And $g_bNotifyAlertLaboratoryIdle Then NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Laboratory-Idle_Info_01", "Laboratory Idle") & "%0A" & GetTranslatedFileIni("MBR Func_Notify", "Laboratory-Idle_Info_02", "Laboratory has Stopped"))
 		;CloseWindow("CloseLab")
 		ClickAway()
 		;========Show Red  Hide Green  Hide Gray=====
@@ -379,7 +387,7 @@ Func GetMinDark4PetUpgrade()
 			; get the Pet Level
 			Local $iPetLevel = getTroopsSpellsLevel($iPetLevelxCoord[$i], 533)
 			SetLog($g_asPetNames[$i] & " is at level " & $iPetLevel)
-			If $iPetLevel = 10 Then ContinueLoop ; Temp fix - AIO.
+			If $iPetLevel = $g_ePetLevels Then ContinueLoop
 
 			If _Sleep($DELAYLABORATORY2) Then Return
 

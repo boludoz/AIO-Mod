@@ -517,8 +517,8 @@ Func ReadConfig_600_6()
 	;IniReadS($g_bBBDropOrderSet, $g_sProfileConfigPath, "other", "bBBDropOrderSet", False, "Bool") ; AIO MOD++
 	#Region - Custom BB Army - Team AIO Mod++
 	$g_bBBDropOrderSet = True
-	Local $aDetectDuplicates[$eBBTroopCount]
-	For $i = 0 To $eBBTroopCount - 1
+	Local $aDetectDuplicates[$g_iBBTroopCount]
+	For $i = 0 To $g_iBBTroopCount - 1
 		IniReadS($g_aiCmbBBDropOrder[$i], $g_sProfileConfigPath, "other", "sBBDropOrderSet" & $i, $g_aiCmbBBDropOrder[$i], "int")
 		; Check if Drop Order is been set to a valid Troop ID
 		If $g_bBBDropOrderSet = True And $g_aiCmbBBDropOrder[$i] > -1 Then

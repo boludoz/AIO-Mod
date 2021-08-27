@@ -43,8 +43,10 @@ Func applyConfig($bRedrawAtExit = True, $TypeReadSave = "Read") ;Applies the dat
 			Switch $TypeReadSave
                 Case "Read"
                     GUICtrlSetState($g_hChkBackgroundMode, $g_bChkBackgroundMode = True ? $GUI_CHECKED : $GUI_UNCHECKED)
+					;
 				Case "Save"
 					$g_bChkBackgroundMode = (GUICtrlRead($g_hChkBackgroundMode) = $GUI_CHECKED)
+					;
 			EndSwitch
 		EndIf
 		UpdateBotTitle()
@@ -418,7 +420,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			_GUICtrlComboBox_SetCurSel($g_hCmbBBNextTroopDelay, (($g_iBBNextTroopDelay - $g_iBBNextTroopDelayDefault) / $g_iBBNextTroopDelayIncrement) + 4) ; set combos based on delays
 			_GUICtrlComboBox_SetCurSel($g_hCmbBBSameTroopDelay, (($g_iBBSameTroopDelay - $g_iBBSameTroopDelayDefault) / $g_iBBSameTroopDelayIncrement) + 4)
 			chkBBTrophyRange()
-			chkEnableBBAttack()
+			; chkEnableBBAttack() ; AIO MOD++
 
 			GUICtrlSetState($g_hBtnBBDropOrderSet, $GUI_ENABLE)
 
@@ -428,7 +430,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 				GUICtrlSetState($g_hBtnBBRemoveDropOrder, $GUI_ENABLE)
 				#Region - Custom BB Army - Team AIO Mod++
 				;Local $asBBDropOrder = StringSplit($g_sBBDropOrder, "|")
-				For $i=0 To $eBBTroopCount - 1
+				For $i=0 To $g_iBBTroopCount - 1
 					_GUICtrlComboBox_SetCurSel($g_ahCmbBBDropOrder[$i], $g_aiCmbBBDropOrder[$i])
 					_GUICtrlSetImage($g_sIcnBBOrder[$i], $g_sLibIconPath, $g_avStarLabTroops[$g_aiCmbBBDropOrder[$i]+1][4])
 				Next
@@ -518,7 +520,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			; $g_bChkBBWaitForMachine = (GUICtrlRead($g_hChkBBWaitForMachine) = $GUI_CHECKED) ; AIO MOD++
 
 			#Region - Custom BB Army - Team AIO Mod++
-			For $i=0 To $eBBTroopCount - 1
+			For $i=0 To $g_iBBTroopCount - 1
 				$g_aiCmbBBDropOrder[$i] = Number(_GUICtrlComboBox_GetCurSel($g_ahCmbBBDropOrder[$i]))
 			Next
 			#EndRegion - Custom BB Army - Team AIO Mod++

@@ -237,7 +237,7 @@ Func SkipWallUpgrade($iWallCost = $g_iWallCost) ; Dynamic Upgrades
 	Local $iAvailBuilderCount = 0
 
 	SetDebugLog("In SkipWallUpgrade")
-	SetDebugLog("$g_iTownHallLevel" & $g_iTownHallLevel)
+	SetDebugLog("$g_iTownHallLevel = " & $g_iTownHallLevel)
 
 	Switch $g_iTownHallLevel
 		Case 5 To 8 ;Start at Townhall 5 because any Wall Level below 4 is not supported anyways
@@ -321,24 +321,23 @@ Func SkipWallUpgrade($iWallCost = $g_iWallCost) ; Dynamic Upgrades
 	EndIf
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;End bldg upgrade value checking
 
-	#Region - Custom hero - Team AIO Mod++
+
 	;   Is Warden Level updated |          Is Warden not max yet           |  Is Upgrade enabled       |               Is Warden not already upgrading                |               Is a Builder available
-	If ($g_iWardenCost <> -1) And $g_bUpgradeWardenEnable And BitAND($g_iHeroUpgradingBit, $eHeroWarden) <> $eHeroWarden And ($g_iFreeBuilderCount > ($g_bUpgradeWallSaveBuilder ? 1 : 0)) Then
-		Local $bMinWardenElixir = Number($g_aiCurrentLoot[$eLootElixir]) > ($iWallCost + $g_iWardenCost + Number($g_iUpgradeWallMinElixir))
+	If ($g_iWardenLevel <> -1) And ($g_iWardenLevel < $g_iMaxWardenLevel) And $g_bUpgradeWardenEnable And BitAND($g_iHeroUpgradingBit, $eHeroWarden) <> $eHeroWarden And ($g_iFreeBuilderCount > ($g_bUpgradeWallSaveBuilder ? 1 : 0)) Then
+		Local $bMinWardenElixir = Number($g_aiCurrentLoot[$eLootElixir]) > ($iWallCost + $g_afWardenUpgCost[$g_iWardenLevel] * 1000000 + Number($g_iUpgradeWallMinElixir))
 		If Not $bMinWardenElixir Then
 			Switch $g_iUpgradeWallLootType
 				Case 1 ; Elixir
-					SetLog("Grand Warden needs " & $g_iWardenCost & " Elixir for next Level", $COLOR_WARNING)
+					SetLog("Grand Warden needs " & ($g_afWardenUpgCost[$g_iWardenLevel] * 1000000) & " Elixir for next Level", $COLOR_WARNING)
 					SetLog("Skipping Wall Upgrade", $COLOR_WARNING)
 					Return True
 				Case 2 ; Elixir & Gold
-					SetLog("Grand Warden needs " & $g_iWardenCost & " Elixir for next Level", $COLOR_SUCCESS1)
+					SetLog("Grand Warden needs " & ($g_afWardenUpgCost[$g_iWardenLevel] * 1000000) & " Elixir for next Level", $COLOR_SUCCESS1)
 					SetLog("Using Gold only for Wall Upgrade", $COLOR_SUCCESS1)
 					$g_iUpgradeWallLootType = 0
 			EndSwitch
 		EndIf
 	EndIf
-	#EndRegion - Custom hero - Team AIO Mod++
 
 
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;##### Verify the Upgrade troop kind in Laboratory , if is elixir Spell/Troop , the Lab have priority #####;;;;;;;;;;;;;;;;;;;;;;;;;;;;

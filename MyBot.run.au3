@@ -62,7 +62,8 @@ Opt("TrayOnEventMode", 1)
 
 ; All executable code is in a function block, to detect coding errors, such as variable declaration scope problems
 InitializeBot()
-getAllEmulators() ; Custom - Team AIO Mod++
+; Get All Emulators installed on machine.
+getAllEmulators()
 
 ; Hand over control to main loop
 MainLoop(CheckPrerequisites())
@@ -1411,17 +1412,20 @@ Func FirstCheck()
 	Local $iTownHallLevel = $g_iTownHallLevel
 	SetDebugLog("Detecting Town Hall level", $COLOR_INFO)
 	SetDebugLog("Town Hall level is currently saved as " & $g_iTownHallLevel, $COLOR_INFO)
-	imglocTHSearch(False, True, True)
+    imglocTHSearch(False, True, True) ;Sets $g_iTownHallLevel
 	SetDebugLog("Detected Town Hall level is " & $g_iTownHallLevel, $COLOR_INFO)
-	If $g_iTownHallLevel = $iTownHallLevel Then
-		SetDebugLog("Town Hall level has not changed", $COLOR_INFO)
+	If $g_iTownHallLevel < $iTownHallLevel Then
+		SetDebugLog("Bad town hall level read...saving bigger old value", $COLOR_ERROR)
+		$g_iTownHallLevel = $iTownHallLevel
+		saveConfig()
+		applyConfig()
 	Else
 		SetDebugLog("Town Hall level has changed!", $COLOR_INFO)
-		SetDebugLog("New Town hall level detected as " & $g_iTownHallLevel, $COLOR_INFO)
+		SetDebugLog("New Town hall level detected as " &  $g_iTownHallLevel, $COLOR_INFO)
 		saveConfig()
 		applyConfig()
 	EndIf
-
+		
 	#Region - Team AIO MOD++
 	VillageReport()
 	ProfileSwitch()

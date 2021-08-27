@@ -25,7 +25,7 @@ Func _Sleep($iDelayOri, $iSleep = True, $CheckRunState = True, $SleepWhenPaused 
 	debugGdiHandle("_Sleep")
 	CheckBotRequests() ; check if bot window should be moved, minized etc.
 
-	Local $iDelay = Round($iDelayOri * ($g_iInputAndroidSleep / 100))
+	Local $iDelay = $iDelayOri + Round($iDelayOri * ($g_iInputAndroidSleep / 100))
 
 	If SetCriticalMessageProcessing() = False Then
 

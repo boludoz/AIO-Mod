@@ -1229,7 +1229,7 @@ Func BotGuiModeToggle()
 
 			DistributorsUpdateGUI() ; Now loading Distributors (during GUI switch it must be called outside CreateMainGUIControls()!)
 			
-			getAllEmulators() ; Custom fix - Team AIO Mod++
+			getAllEmulators()
 			
 			DestroySplashScreen()
 

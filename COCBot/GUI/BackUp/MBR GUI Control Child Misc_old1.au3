@@ -176,11 +176,11 @@ EndFunc   ;==>btnRenameConfirm
 
 Func btnPullSharedPrefs()
 	PullSharedPrefs()
-EndFunc   ;==>btnPullSharedPrefs
+EndFunc
 
 Func btnPushSharedPrefs()
 	PushSharedPrefs()
-EndFunc   ;==>btnPushSharedPrefs
+EndFunc
 
 Func BtnSaveprofile()
 	Setlog("Saving your setting...", $COLOR_INFO)
@@ -188,7 +188,7 @@ Func BtnSaveprofile()
 	readConfig()
 	applyConfig()
 	Setlog("Done!", $COLOR_SUCCESS)
-EndFunc   ;==>BtnSaveprofile
+EndFunc
 
 Func OnlySCIDAccounts()
 	; $g_hChkOnlySCIDAccounts
@@ -200,12 +200,12 @@ Func OnlySCIDAccounts()
 		GUICtrlSetState($g_hCmbWhatSCIDAccount2Use, $GUI_DISABLE)
 		$g_bOnlySCIDAccounts = False
 	EndIf
-EndFunc   ;==>OnlySCIDAccounts
+EndFunc
 
 Func WhatSCIDAccount2Use()
 	; $g_hCmbWhatSCIDAccount2Use
 	$g_iWhatSCIDAccount2Use = _GUICtrlComboBox_GetCurSel($g_hCmbWhatSCIDAccount2Use)
-EndFunc   ;==>WhatSCIDAccount2Use
+EndFunc
 
 Func cmbBotCond()
 	Local $iCond = _GUICtrlComboBox_GetCurSel($g_hCmbBotCond)
@@ -280,7 +280,7 @@ EndFunc   ;==>btnLocateWardenAltar
 
 Func btnLocateChampionAltar()
 	LocateChampionAltar()
-EndFunc   ;==>btnLocateChampionAltar
+EndFunc   ;==>btnLocateWardenAltar
 
 Func btnLocateTownHall()
 	Local $wasRunState = $g_bRunState
@@ -382,11 +382,11 @@ Func chkTrophyRange()
 		GUICtrlSetState($g_hTxtMaxTrophy, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkTrophyHeroes, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkTrophyAtkDead, $GUI_ENABLE)
-		#Region - Drop Throphy - Team AIO Mod++
+        #Region - Drop Throphy - Team AIO Mod++
 		GUICtrlSetState($g_hChkTrophyTroops, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkTrophyHeroesAndTroops, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkNoDropIfShield, $GUI_ENABLE)
-		#EndRegion - Drop Throphy - Team AIO Mod++
+        #EndRegion - Drop Throphy - Team AIO Mod++
 		chkTrophyAtkDead()
 		chkTrophyHeroes()
 	Else
@@ -399,11 +399,11 @@ Func chkTrophyRange()
 		GUICtrlSetState($g_hLblDropTrophyArmyPercent, $GUI_DISABLE)
 		GUICtrlSetState($g_hLblTrophyHeroesPriority, $GUI_DISABLE)
 		GUICtrlSetState($g_hCmbTrophyHeroesPriority, $GUI_DISABLE)
-		#Region - Drop Throphy - Team AIO Mod++
+        #Region - Drop Throphy - Team AIO Mod++
 		GUICtrlSetState($g_hChkTrophyTroops, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkTrophyHeroesAndTroops, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkNoDropIfShield, $GUI_DISABLE)
-		#EndRegion - Drop Throphy - Team AIO Mod++
+        #EndRegion - Drop Throphy - Team AIO Mod++
 	EndIf
 EndFunc   ;==>chkTrophyRange
 
@@ -617,7 +617,7 @@ Func chkStartClockTowerBoost()
 		GUICtrlSetState($g_hChkCTBoostBlderBz, $GUI_DISABLE)
 	EndIf
 EndFunc   ;==>chkStartClockTowerBoost
-#CE - AIO MOD++
+#CE
 
 Func chkActivateClangames()
 	If GUICtrlRead($g_hChkClanGamesEnabled) = $GUI_CHECKED Then
@@ -630,7 +630,7 @@ Func chkActivateClangames()
 		GUICtrlSetState($g_hChkClanGamesLoot, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkClanGamesBattle, $GUI_ENABLE)
 
-		GUICtrlSetState($g_hChkClanGamesSpell, $GUI_ENABLE)
+		 GUICtrlSetState($g_hChkClanGamesSpell, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkClanGamesDestruction, $GUI_ENABLE)
 
 		GUICtrlSetState($g_hChkClanGamesAirTroop, $GUI_ENABLE)
@@ -638,13 +638,9 @@ Func chkActivateClangames()
 		GUICtrlSetState($g_hChkClanGamesMiscellaneous, $GUI_ENABLE)
 
 		GUICtrlSetState($g_hChkClanGamesPurge, $GUI_ENABLE)
-		If GUICtrlRead($g_hChkClanGamesPurge) = $GUI_CHECKED Then GUICtrlSetState($g_hcmbPurgeLimit, $GUI_ENABLE)
+		If GUICtrlRead($g_hChkClanGamesPurge) = $GUI_CHECKED then GUICtrlSetState($g_hcmbPurgeLimit, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkClanGamesStopBeforeReachAndPurge, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkClanGamesDebug, $GUI_ENABLE)
-		If GUICtrlRead($g_hChkClanGamesPurge) <> $GUI_CHECKED Then
-			GUICtrlSetState($g_hChkClanGamesBBBattle, $GUI_ENABLE)
-			GUICtrlSetState($g_hChkClanGamesBBDestruction, $GUI_ENABLE)
-		EndIf
 	Else
 		GUICtrlSetState($g_hChkClanGames60, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkClanGamesAir, $GUI_DISABLE)
@@ -666,44 +662,40 @@ Func chkActivateClangames()
 
 		GUICtrlSetState($g_hChkClanGamesPurge, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkClanGamesDebug, $GUI_DISABLE)
-
-		GUICtrlSetState($g_hChkClanGamesBBBattle, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkClanGamesBBDestruction, $GUI_DISABLE)
 	EndIf
 EndFunc   ;==>chkActivateClangames
 
 ; Purging doesnt exist if we want BB challneges, because they are all attack basically... This avoids potential conflicts in code and logic if both are selected
 Func chkClanGamesBB()
-	If GUICtrlRead($g_hChkClanGamesBBBattle) = $GUI_CHECKED Or GUICtrlRead($g_hChkClanGamesBBDestruction) = $GUI_CHECKED Then
-		GUICtrlSetState($g_hChkClanGamesPurge, $GUI_DISABLE)
-	Else
-		GUICtrlSetState($g_hChkClanGamesPurge, $GUI_ENABLE)
-	EndIf
-EndFunc   ;==>chkClanGamesBB
+    If GUICtrlRead($g_hChkClanGamesBBBattle) = $GUI_CHECKED or GUICtrlRead($g_hChkClanGamesBBDestruction) = $GUI_CHECKED Then
+        GUICtrlSetState($g_hChkClanGamesPurge, $GUI_DISABLE)
+    else
+        GUICtrlSetState($g_hChkClanGamesPurge, $GUI_ENABLE)
+    EndIf
+EndFunc
 
 Func chkPurgeLimits()
-	If GUICtrlRead($g_hChkClanGamesEnabled) = $GUI_CHECKED Then
-		If GUICtrlRead($g_hChkClanGamesPurge) = $GUI_CHECKED Then
-			GUICtrlSetState($g_hcmbPurgeLimit, $GUI_ENABLE)
-			GUICtrlSetState($g_hChkClanGamesBBBattle, $GUI_DISABLE) ; same as above, by purging, it is the same as doing BB challenges really. (unless gemming to completion) So this avoids potential code and logic conflicts again
-			GUICtrlSetState($g_hChkClanGamesBBDestruction, $GUI_DISABLE)
-		Else
-			GUICtrlSetState($g_hcmbPurgeLimit, $GUI_DISABLE)
-			GUICtrlSetState($g_hChkClanGamesBBBattle, $GUI_ENABLE) ; same as above, by purging, it is the same as doing BB challenges really. (unless gemming to completion) So this avoids potential code and logic conflicts again
-			GUICtrlSetState($g_hChkClanGamesBBDestruction, $GUI_ENABLE)
-		EndIf
+	If GUICtrlRead($g_hChkClanGamesPurge) = $GUI_CHECKED AND _
+		GUICtrlRead($g_hChkClanGamesEnabled) = $GUI_CHECKED Then
+		GUICtrlSetState($g_hcmbPurgeLimit, $GUI_ENABLE)
+        GUICtrlSetState($g_hChkClanGamesBBBattle, $GUI_DISABLE) ; same as above, by purging, it is the same as doing BB challenges really. (unless gemming to completion) So this avoids potential code and logic conflicts again
+        GUICtrlSetState($g_hChkClanGamesBBDestruction, $GUI_DISABLE)
+	Else
+		GUICtrlSetState($g_hcmbPurgeLimit, $GUI_DISABLE)
+        GUICtrlSetState($g_hChkClanGamesBBBattle, $GUI_ENABLE) ; same as above, by purging, it is the same as doing BB challenges really. (unless gemming to completion) So this avoids potential code and logic conflicts again
+        GUICtrlSetState($g_hChkClanGamesBBDestruction, $GUI_ENABLE)
 	EndIf
-EndFunc   ;==>chkPurgeLimits
+EndFunc
 
-; Func chkEnableBBAttack()
+Func chkEnableBBAttack()
 	;If GUICtrlRead($g_hChkEnableBBAttack) = $GUI_CHECKED Then
-	GUICtrlSetState($g_hChkBBTrophyRange, $GUI_ENABLE)
-	GUICtrlSetState($g_hChkBBAttIfLootAvail, $GUI_ENABLE)
-	; GUICtrlSetState($g_hChkBBWaitForMachine, $GUI_ENABLE)
-	GUICtrlSetState($g_hBtnBBDropOrder, $GUI_ENABLE)
-	GUICtrlSetState($g_hCmbBBSameTroopDelay, $GUI_ENABLE)
-	GUICtrlSetState($g_hCmbBBNextTroopDelay, $GUI_ENABLE)
-	chkBBTrophyRange()
+		GUICtrlSetState($g_hChkBBTrophyRange, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkBBAttIfLootAvail, $GUI_ENABLE)
+		; GUICtrlSetState($g_hChkBBWaitForMachine, $GUI_ENABLE)
+		GUICtrlSetState($g_hBtnBBDropOrder, $GUI_ENABLE)
+		GUICtrlSetState($g_hCmbBBSameTroopDelay, $GUI_ENABLE)
+		GUICtrlSetState($g_hCmbBBNextTroopDelay, $GUI_ENABLE)
+		chkBBTrophyRange()
 	;Else
 	;	GUICtrlSetState($g_hChkBBTrophyRange, $GUI_DISABLE)
 	;	GUICtrlSetState($g_hChkBBAttIfLootAvail, $GUI_DISABLE)
@@ -714,16 +706,16 @@ EndFunc   ;==>chkPurgeLimits
 	;	GUICtrlSetState($g_hCmbBBSameTroopDelay, $GUI_DISABLE)
 	;	GUICtrlSetState($g_hCmbBBNextTroopDelay, $GUI_DISABLE)
 	;EndIf
-; EndFunc   ;==>chkEnableBBAttack
+EndFunc   ;==>chkEnableBBAttack
 
 Func cmbBBNextTroopDelay()
-	$g_iBBNextTroopDelay = $g_iBBNextTroopDelayDefault + ((_GUICtrlComboBox_GetCurSel($g_hCmbBBNextTroopDelay) + 1) - 5) * $g_iBBNextTroopDelayIncrement ; +- n*increment
+	$g_iBBNextTroopDelay  = $g_iBBNextTroopDelayDefault + ((_GUICtrlComboBox_GetCurSel($g_hCmbBBNextTroopDelay) + 1) - 5)*$g_iBBNextTroopDelayIncrement ; +- n*increment
 	SetDebugLog("Next Troop Delay: " & $g_iBBNextTroopDelay)
 	SetDebugLog((_GUICtrlComboBox_GetCurSel($g_hCmbBBNextTroopDelay) + 1) - 5)
 EndFunc   ;==>cmbBBNextTroopDelay
 
 Func cmbBBSameTroopDelay()
-	$g_iBBSameTroopDelay = $g_iBBSameTroopDelayDefault + ((_GUICtrlComboBox_GetCurSel($g_hCmbBBSameTroopDelay) + 1) - 5) * $g_iBBSameTroopDelayIncrement ; +- n*increment
+	$g_iBBSameTroopDelay  = $g_iBBSameTroopDelayDefault + ((_GUICtrlComboBox_GetCurSel($g_hCmbBBSameTroopDelay) + 1) - 5)*$g_iBBSameTroopDelayIncrement ; +- n*increment
 	SetDebugLog("Same Troop Delay: " & $g_iBBSameTroopDelay)
 	SetDebugLog((_GUICtrlComboBox_GetCurSel($g_hCmbBBSameTroopDelay) + 1) - 5)
 EndFunc   ;==>cmbBBSameTroopDelay
@@ -739,8 +731,8 @@ Func chkBBTrophyRange()
 EndFunc   ;==>chkBBTrophyRange
 
 Func btnBBDropOrder()
-	GUICtrlSetState($g_hBtnBBDropOrder, $GUI_DISABLE)
-	GUICtrlSetState($g_hChkEnableBBAttack, $GUI_DISABLE)
+	GUICtrlSetState( $g_hBtnBBDropOrder, $GUI_DISABLE )
+	GUICtrlSetState( $g_hChkEnableBBAttack, $GUI_DISABLE )
 	GUISetState(@SW_SHOW, $g_hGUI_BBDropOrder)
 EndFunc   ;==>btnBBDropOrder
 
@@ -748,13 +740,13 @@ Func chkBBDropOrder()
 	If GUICtrlRead($g_hChkBBCustomDropOrderEnable) = $GUI_CHECKED Then
 		GUICtrlSetState($g_hBtnBBDropOrderSet, $GUI_ENABLE)
 		GUICtrlSetState($g_hBtnBBRemoveDropOrder, $GUI_ENABLE)
-		For $i = 0 To $g_iBBTroopCount - 1
+		For $i=0 To $g_iBBTroopCount-1
 			GUICtrlSetState($g_ahCmbBBDropOrder[$i], $GUI_ENABLE)
 		Next
 	Else
 		GUICtrlSetState($g_hBtnBBDropOrderSet, $GUI_DISABLE)
 		GUICtrlSetState($g_hBtnBBRemoveDropOrder, $GUI_DISABLE)
-		For $i = 0 To $g_iBBTroopCount - 1
+		For $i=0 To $g_iBBTroopCount-1
 			GUICtrlSetState($g_ahCmbBBDropOrder[$i], $GUI_DISABLE)
 		Next
 		GUICtrlSetBkColor($g_hBtnBBDropOrder, $COLOR_RED)
@@ -768,8 +760,8 @@ Func GUIBBDropOrder()
 	Local $iDropIndex = _GUICtrlComboBox_GetCurSel($iGUI_CtrlId)
 	Setlog($iDropIndex)
 	For $i = 0 To $g_iBBTroopCount - 1
-		If $iGUI_CtrlId = $g_ahCmbBBDropOrder[$i] Then
-			_GUICtrlSetImage($g_sIcnBBOrder[$i], $g_sLibIconPath, $g_avStarLabTroops[$iDropIndex + 1][4])
+		If $iGUI_CtrlId = $g_ahCmbBBDropOrder[$i] Then 
+			_GUICtrlSetImage($g_sIcnBBOrder[$i], $g_sLibIconPath, $g_avStarLabTroops[$iDropIndex+1][4])
 		ElseIf $iDropIndex = _GUICtrlComboBox_GetCurSel($g_ahCmbBBDropOrder[$i]) Then
 			_GUICtrlComboBox_SetCurSel($g_ahCmbBBDropOrder[$i], -1)
 			_GUICtrlSetImage($g_sIcnBBOrder[$i], $g_sLibIconPath, $g_avStarLabTroops[0][4])
@@ -781,47 +773,47 @@ EndFunc   ;==>GUIBBDropOrder
 Func GUIBBCustomArmy()
 	Local $iGUI_CtrlId = @GUI_CtrlId
 	Local $iDropIndex = _GUICtrlComboBox_GetCurSel($iGUI_CtrlId)
-
-	For $i = 0 To UBound($g_hComboTroopBB) - 1
-		If $iGUI_CtrlId = $g_hComboTroopBB[$i] Then
-			_GUICtrlSetImage($g_hIcnTroopBB[$i], $g_sLibIconPath, $g_avStarLabTroops[$iDropIndex + 1][4])
+	
+	For $i=0 To UBound($g_hComboTroopBB)-1
+		If $iGUI_CtrlId = $g_hComboTroopBB[$i] Then 
+			_GUICtrlSetImage($g_hIcnTroopBB[$i], $g_sLibIconPath, $g_avStarLabTroops[$iDropIndex+1][4])
 			$g_iCmbCampsBB[$i] = $iDropIndex
 		EndIf
 	Next
-EndFunc   ;==>GUIBBCustomArmy
+EndFunc   ;==>GUIBBDropOrder
 
 #EndRegion - Custom BB Army - Team AIO Mod++
 
 Func BtnBBDropOrderSet()
 	$g_sBBDropOrder = ""
 	; loop through reading and disabling all combo boxes
-	For $i = 0 To $g_iBBTroopCount - 1
+	For $i=0 To $g_iBBTroopCount - 1
 		GUICtrlSetState($g_ahCmbBBDropOrder[$i], $GUI_DISABLE)
 		If GUICtrlRead($g_ahCmbBBDropOrder[$i]) = "" Then ; if not picked assign from default list in order
-			Local $asDefaultOrderSplit = StringSplit($g_sBBDropOrderDefault, "|")
-			Local $bFound = False, $bSet = False
-			Local $j = 0
+			local $asDefaultOrderSplit = StringSplit($g_sBBDropOrderDefault, "|")
+			local $bFound = False, $bSet = False
+			local $j=0
 			While $j < $g_iBBTroopCount And Not $bSet ; loop through troops
-				Local $k = 0
+				local $k=0
 				While $k < $g_iBBTroopCount And Not $bFound ; loop through handles
 					If $g_ahCmbBBDropOrder[$i] <> $g_ahCmbBBDropOrder[$k] Then
-						SetDebugLog("Word: " & $asDefaultOrderSplit[$j + 1] & " " & " Word in slot: " & GUICtrlRead($g_ahCmbBBDropOrder[$k]))
-						If $asDefaultOrderSplit[$j + 1] = GUICtrlRead($g_ahCmbBBDropOrder[$k]) Then $bFound = True
+						SetDebugLog("Word: " & $asDefaultOrderSplit[$j+1] & " " & " Word in slot: " & GUICtrlRead($g_ahCmbBBDropOrder[$k]))
+						If $asDefaultOrderSplit[$j+1] = GUICtrlRead($g_ahCmbBBDropOrder[$k]) Then $bFound = True
 					EndIf
-					$k += 1
+					$k+=1
 				WEnd
 				If Not $bFound Then
 					_GUICtrlComboBox_SetCurSel($g_ahCmbBBDropOrder[$i], $j)
 					$bSet = True
 				Else
-					$j += 1
+					$j+=1
 					$bFound = False
 				EndIf
 			WEnd
 		EndIf
 		$g_sBBDropOrder &= (GUICtrlRead($g_ahCmbBBDropOrder[$i]) & "|")
 		SetDebugLog("DropOrder: " & $g_sBBDropOrder)
-		_GUICtrlSetImage($g_sIcnBBOrder[$i], $g_sLibIconPath, $g_avStarLabTroops[_GUICtrlComboBox_GetCurSel($g_ahCmbBBDropOrder[$i]) + 1][4])
+		_GUICtrlSetImage($g_sIcnBBOrder[$i], $g_sLibIconPath, $g_avStarLabTroops[_GUICtrlComboBox_GetCurSel($g_ahCmbBBDropOrder[$i])+1][4])
 	Next
 	$g_sBBDropOrder = StringTrimRight($g_sBBDropOrder, 1) ; Remove last '|'
 	GUICtrlSetBkColor($g_hBtnBBDropOrder, $COLOR_GREEN)
@@ -829,10 +821,10 @@ Func BtnBBDropOrderSet()
 EndFunc   ;==>BtnBBDropOrderSet
 
 Func BtnBBRemoveDropOrder()
-	For $i = 0 To $g_iBBTroopCount - 1
-		_GUICtrlSetImage($g_sIcnBBOrder[$i], $g_sLibIconPath, $g_avStarLabTroops[0][4])     ; Custom BB Army - Team AIO Mod++
-		_GUICtrlComboBox_SetCurSel($g_ahCmbBBDropOrder[$i], -1)
-		GUICtrlSetState($g_ahCmbBBDropOrder[$i], $GUI_ENABLE)
+	For $i=0 To $g_iBBTroopCount-1
+			_GUICtrlSetImage($g_sIcnBBOrder[$i], $g_sLibIconPath, $g_avStarLabTroops[0][4]) ; Custom BB Army - Team AIO Mod++
+			_GUICtrlComboBox_SetCurSel($g_ahCmbBBDropOrder[$i], -1)
+			GUICtrlSetState($g_ahCmbBBDropOrder[$i], $GUI_ENABLE)
 	Next
 	GUICtrlSetBkColor($g_hBtnBBDropOrder, $COLOR_RED)
 	$g_bBBDropOrderSet = False
@@ -841,5 +833,5 @@ EndFunc   ;==>BtnBBRemoveDropOrder
 Func CloseCustomBBDropOrder()
 	GUISetState(@SW_HIDE, $g_hGUI_BBDropOrder)
 	GUICtrlSetState($g_hBtnBBDropOrder, $GUI_ENABLE)
-	GUICtrlSetState($g_hChkEnableBBAttack, $GUI_ENABLE)
+	GUICtrlSetState( $g_hChkEnableBBAttack, $GUI_ENABLE )
 EndFunc   ;==>CloseCustomBBDropOrder

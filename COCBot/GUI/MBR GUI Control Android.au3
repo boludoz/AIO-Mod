@@ -64,12 +64,77 @@ Func cmbCOCDistributors()
 	EndIf
 EndFunc   ;==>cmbCOCDistributors
 
-#Region - Custom Instances - Team AIO Mod++
+Func AndroidSuspendFlagsToIndex($iFlags)
+	Local $idx = 0
+	If BitAND($iFlags, 2) > 0 Then
+		$idx = 2
+	ElseIf BitAND($iFlags, 1) > 0 Then
+		$idx = 1
+	EndIf
+	If $idx > 0 And BitAND($iFlags, 4) > 0 Then $idx += 2
+	Return $idx
+EndFunc   ;==>AndroidSuspendFlagsToIndex
+
+Func AndroidSuspendIndexToFlags($idx)
+	Local $iFlags = 0
+	Switch $idx
+		Case 1
+			$iFlags = 1
+		Case 2
+			$iFlags = 2
+		Case 3
+			$iFlags = 1 + 4
+		Case 4
+			$iFlags = 2 + 4
+	EndSwitch
+	Return $iFlags
+EndFunc   ;==>AndroidSuspendIndexToFlags
+
+Func cmbSuspendAndroid()
+	$g_iAndroidSuspendModeFlags = AndroidSuspendIndexToFlags(_GUICtrlComboBox_GetCurSel($g_hCmbSuspendAndroid))
+EndFunc   ;==>cmbSuspendAndroid
+
+Func cmbAndroidBackgroundMode()
+	$g_iAndroidBackgroundMode = _GUICtrlComboBox_GetCurSel($g_hCmbAndroidBackgroundMode)
+	UpdateAndroidBackgroundMode()
+EndFunc   ;==>cmbAndroidBackgroundMode
+
+; Custom sleep - Team AIO Mod++ (inspired in Samkie)
+Func InputAndroidSleep()
+	$g_iInputAndroidSleep = GUICtrlRead($g_hInputAndroidSleep)
+EndFunc   ;==>InputAndroidSleep
+
+Func EnableShowTouchs()
+	AndroidAdbSendShellCommand("content insert --uri content://settings/system --bind name:s:show_touches --bind value:i:1")
+	SetDebugLog("EnableShowTouchs ON")
+EndFunc   ;==>EnableShowTouchs
+
+Func DisableShowTouchs()
+	AndroidAdbSendShellCommand("content insert --uri content://settings/system --bind name:s:show_touches --bind value:i:0")
+	SetDebugLog("EnableShowTouchs OFF")
+EndFunc   ;==>DisableShowTouchs
+
+Func sldAdditionalClickDelay($bSetControls = False)
+	If $bSetControls Then
+		GUICtrlSetData($g_hSldAdditionalClickDelay, Int($g_iAndroidControlClickAdditionalDelay / 2))
+		GUICtrlSetData($g_hLblAdditionalClickDelay, $g_iAndroidControlClickAdditionalDelay & " ms")
+	Else
+		Local $iValue = GUICtrlRead($g_hSldAdditionalClickDelay) * 2
+		If $iValue <> $g_iAndroidControlClickAdditionalDelay Then
+			$g_iAndroidControlClickAdditionalDelay = $iValue
+			GUICtrlSetData($g_hLblAdditionalClickDelay, $g_iAndroidControlClickAdditionalDelay & " ms")
+		EndIf
+	EndIf
+	Opt("MouseClickDelay", GetClickUpDelay()) ;Default: 10 milliseconds
+	Opt("MouseClickDownDelay", GetClickDownDelay()) ;Default: 5 milliseconds
+EndFunc   ;==>sldAdditionalClickDelay
+
 Func DistributorsUpdateGUI()
 	LoadCOCDistributorsComboBox()
 	SetCurSelCmbCOCDistributors()
 EndFunc   ;==>DistributorsUpdateGUI
 
+#Region - Custom Instances - Team AIO Mod++
 Func CmbAndroidEmulator()
 	getAllEmulatorsInstances()
 	Local $emulator = GUICtrlRead($g_hCmbAndroidEmulator)
@@ -86,21 +151,22 @@ Func CmbAndroidEmulator()
 	EndIf
 EndFunc   ;==>CmbAndroidEmulator
 
-Func CmbAndroidInstance()
-	Local $instance = GUICtrlRead($g_hCmbAndroidInstance)
-	If MsgBox($MB_YESNO, "Instance Selection", $instance & ", Is correct?" & @CRLF & "If 'yes' is necessary reboot the 'bot'.", 10) = $IDYES Then
-		SetLog("Instance " & $instance & " Selected. Please reset.", $COLOR_INFO)
-		$g_sAndroidEmulator = GUICtrlRead($g_hCmbAndroidEmulator)
-		$g_sAndroidInstance = $instance
+Func cmbAndroidInstance()
+    Local $Instance = GUICtrlRead($g_hCmbAndroidInstance)
+    If MsgBox($MB_YESNO, "Instance Selection", $Instance & ", Is correct?" & @CRLF & "If 'yes' is necessary REBOOT the 'bot'.", 10) = $IDYES Then
+        SetLog("Instance " & $Instance & " Selected.")
+        $g_sAndroidInstance = $Instance
 		UpdateAndroidConfig($g_sAndroidInstance, $g_sAndroidEmulator)
 		InitAndroidConfig(True)
-		BtnSaveprofile()
-	Else
-		getAllEmulatorsInstances()
-	EndIf
-EndFunc   ;==>CmbAndroidInstance
+        BtnSaveprofile()
+    Else
+        getAllEmulatorsInstances()
+    EndIf
+EndFunc   ;==>cmbAndroidInstance
 
 Func getAllEmulators()
+	If $g_iGuiMode <> 1 Then Return False
+
 	Local $cmbString = ""
 	GUICtrlSetData($g_hCmbAndroidEmulator, '')
 
@@ -215,68 +281,3 @@ Func getAllEmulatorsInstances()
 	EndIf
 EndFunc   ;==>getAllEmulatorsInstances
 #EndRegion - Custom Instances - Team AIO Mod++
-
-Func AndroidSuspendFlagsToIndex($iFlags)
-	Local $idx = 0
-	If BitAND($iFlags, 2) > 0 Then
-		$idx = 2
-	ElseIf BitAND($iFlags, 1) > 0 Then
-		$idx = 1
-	EndIf
-	If $idx > 0 And BitAND($iFlags, 4) > 0 Then $idx += 2
-	Return $idx
-EndFunc   ;==>AndroidSuspendFlagsToIndex
-
-Func AndroidSuspendIndexToFlags($idx)
-	Local $iFlags = 0
-	Switch $idx
-		Case 1
-			$iFlags = 1
-		Case 2
-			$iFlags = 2
-		Case 3
-			$iFlags = 1 + 4
-		Case 4
-			$iFlags = 2 + 4
-	EndSwitch
-	Return $iFlags
-EndFunc   ;==>AndroidSuspendIndexToFlags
-
-Func cmbSuspendAndroid()
-	$g_iAndroidSuspendModeFlags = AndroidSuspendIndexToFlags(_GUICtrlComboBox_GetCurSel($g_hCmbSuspendAndroid))
-EndFunc   ;==>cmbSuspendAndroid
-
-Func cmbAndroidBackgroundMode()
-	$g_iAndroidBackgroundMode = _GUICtrlComboBox_GetCurSel($g_hCmbAndroidBackgroundMode)
-	UpdateAndroidBackgroundMode()
-EndFunc   ;==>cmbAndroidBackgroundMode
-
-; Custom sleep - Team AIO Mod++ (inspired in Samkie)
-Func InputAndroidSleep()
-	$g_iInputAndroidSleep = GUICtrlRead($g_hInputAndroidSleep)
-EndFunc   ;==>InputAndroidSleep
-
-Func EnableShowTouchs()
-	AndroidAdbSendShellCommand("content insert --uri content://settings/system --bind name:s:show_touches --bind value:i:1")
-	SetDebugLog("EnableShowTouchs ON")
-EndFunc   ;==>EnableShowTouchs
-
-Func DisableShowTouchs()
-	AndroidAdbSendShellCommand("content insert --uri content://settings/system --bind name:s:show_touches --bind value:i:0")
-	SetDebugLog("EnableShowTouchs OFF")
-EndFunc   ;==>DisableShowTouchs
-
-Func sldAdditionalClickDelay($bSetControls = False)
-	If $bSetControls Then
-		GUICtrlSetData($g_hSldAdditionalClickDelay, Int($g_iAndroidControlClickAdditionalDelay / 2))
-		GUICtrlSetData($g_hLblAdditionalClickDelay, $g_iAndroidControlClickAdditionalDelay & " ms")
-	Else
-		Local $iValue = GUICtrlRead($g_hSldAdditionalClickDelay) * 2
-		If $iValue <> $g_iAndroidControlClickAdditionalDelay Then
-			$g_iAndroidControlClickAdditionalDelay = $iValue
-			GUICtrlSetData($g_hLblAdditionalClickDelay, $g_iAndroidControlClickAdditionalDelay & " ms")
-		EndIf
-	EndIf
-	Opt("MouseClickDelay", GetClickUpDelay()) ;Default: 10 milliseconds
-	Opt("MouseClickDownDelay", GetClickDownDelay()) ;Default: 5 milliseconds
-EndFunc   ;==>sldAdditionalClickDelay
