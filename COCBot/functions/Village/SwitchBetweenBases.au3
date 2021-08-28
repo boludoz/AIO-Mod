@@ -47,16 +47,7 @@ Func SwitchBetweenBases($bCheckMainScreen = True)
 			$sRegionToSearch = "66,432,388,627"
 			If $g_bStayOnBuilderBase = False Then Return True
 		EndIf
-		If $i = 1 Then
-			For $j = 0 To 6
-				AndroidShield("AndroidOnlyZoomOut")
-				ScriptSendZoomOut(Not $bIsOnBuilderBase, $j)
-				If Not $g_bRunState Then Return
-				If _Sleep(100) Then Return
-			Next
-		Else
-			ZoomOut()
-		EndIf
+		ZoomOut()
 		If _Sleep(1000) Then Return
 		If Not $g_bRunState Then Return
 		$aButtonCoords = decodeSingleCoord(FindImageInPlace($sTile, $sTileDir, $sRegionToSearch))

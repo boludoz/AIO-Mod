@@ -17,6 +17,7 @@
 	- Improved: Discord/Telegram support for non ASCII chars, separate setup for discord (Require configure again).
 	- Improved: Telegram, "/keyboard" command for more intuitive notifications (by @tick-guo).
 	- Improved: Telegram, Chinese firewall bypass proxy for telegram (by @tick-guo).
+	- Fixed: Drop points in builder base.
 	- Fixed: Machine builder base.
 	- Fixed: Restored essential archive of the hop clan.
 	- Fixed: Fixed TH10 tolerance (By @clementinise).
