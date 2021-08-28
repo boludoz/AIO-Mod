@@ -113,7 +113,7 @@ Global $g_bNotifyDSEnable, $g_sNotifyDSToken = "https://discord.com/api/webhooks
 Global $g_sNotifyOriginDS = ""
 
 ;Alerts
-Global $g_bNotifyAlertMatchFoundDS = False, $g_bNotifyAlerLastRaidIMGDS = False, $g_bNotifyAlerLastRaidTXTDS = False, $g_bNotifyAlertCampFullDS = False, _
+Global $g_bNotifyRemoteEnableDS = False, $g_bNotifyAlertMatchFoundDS = False, $g_bNotifyAlerLastRaidIMGDS = False, $g_bNotifyAlerLastRaidTXTDS = False, $g_bNotifyAlertCampFullDS = False, _
 		$g_bNotifyAlertUpgradeWallsDS = False, $g_bNotifyAlertOutOfSyncDS = False, $g_bNotifyAlertTakeBreakDS = False, $g_bNotifyAlertBulderIdleDS = False, _
 		$g_bNotifyAlertVillageReportDS = False, $g_bNotifyAlertLastAttackDS = False, $g_bNotifyAlertAnotherDeviceDS = False, $g_bNotifyAlertMaintenanceDS = False, _
 		$g_bNotifyAlertBANDS = False, $g_bNotifyAlertBOTUpdateDS = False, $g_bNotifyAlertSmartWaitTimeDS = False, $g_bNotifyAlertLaboratoryIdleDS = False

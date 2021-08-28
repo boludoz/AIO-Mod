@@ -951,6 +951,7 @@ Func ReadConfig_600_18()
 	IniReadS($g_bNotifyDSEnable, $g_sProfileConfigPath, "notifyDS", "DSEnabled", False, "Bool")
 	IniReadS($g_sNotifyDSToken, $g_sProfileConfigPath, "notifyDS", "DSToken", "")
 	IniReadS($g_sNotifyOriginDS, $g_sProfileConfigPath, "notifyDS", "Origin", $g_sProfileCurrentName)
+	IniReadS($g_bNotifyRemoteEnableDS, $g_sProfileConfigPath, "notifyDS", "Remote", False, "Bool")
 
 	; Alerts
 	IniReadS($g_bNotifyAlertMatchFoundDS, $g_sProfileConfigPath, "notifyDS", "AlertPBVMFound", False, "Bool")

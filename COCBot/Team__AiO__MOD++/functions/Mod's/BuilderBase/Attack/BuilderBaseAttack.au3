@@ -28,7 +28,7 @@ EndFunc   ;==>TestBuilderBaseAttack
 
 Func BuilderBaseAttack($bTestRun = False)
 
-	If Not $g_bRunState Then Return 
+	If Not $g_bRunState Then Return
 
 	; Check if Builder Base is to run
 	If Not $g_bChkBuilderAttack Then Return False
@@ -332,12 +332,12 @@ Func WaitForVersusBattle()
 					Return False
 				EndIf
 			Case 3
-				If IsBuilderBase(True, True) Then
+				If IsOnBuilderBase(True, True) Then
 					Return False
 				EndIf
 				$iSwitch = 0
 		EndSwitch
-		
+
 		If _MultiPixelSearch(711, 2, 856, 55, 1, 1, Hex(0xFFFF99, 6), $aAttackerVersusBattle, 15) <> 0 Then
 			ExitLoop
 		EndIf
@@ -414,7 +414,7 @@ Func BuilderBaseAttackToDrop($aAvailableTroops)
 
 	If $aUniqueDeployPoint[0] = 0 Then
         $g_aBuilderBaseDiamond = PrintBBPoly(False) ;BuilderBaseAttackDiamond()
-		If @error Then 
+		If @error Then
 			Return False
 		EndIf
 

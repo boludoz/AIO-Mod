@@ -1020,9 +1020,10 @@ Func ApplyConfig_600_18($TypeReadSave)
 
 			#Region - Discord - Team AIO Mod++
 			GUICtrlSetState($g_hChkNotifyDSEnable, $g_bNotifyDSEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
-			chkPBDSenabled()
+			chkDSenabled()
 			GUICtrlSetData($g_hTxtNotifyDSToken, $g_sNotifyDSToken)
 			GUICtrlSetData($g_hTxtNotifyOriginDS, $g_sNotifyOriginDS)
+			GUICtrlSetState($g_hChkNotifyRemoteDS, $g_bNotifyRemoteEnableDS ? $GUI_CHECKED : $GUI_UNCHECKED)
 
 			;Alerts
 			GUICtrlSetState($g_hChkNotifyAlertMatchFoundDS, $g_bNotifyAlertMatchFoundDS ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -1073,6 +1074,7 @@ Func ApplyConfig_600_18($TypeReadSave)
 			$g_bNotifyDSEnable = (GUICtrlRead($g_hChkNotifyDSEnable) = $GUI_CHECKED)
 			$g_sNotifyDSToken = GUICtrlRead($g_hTxtNotifyDSToken)
 			$g_sNotifyOriginDS = GUICtrlRead($g_hTxtNotifyOriginDS)
+			$g_bNotifyRemoteEnableDS = (GUICtrlRead($g_hChkNotifyRemoteDS) = $GUI_CHECKED)
 
 			;Alerts
 			$g_bNotifyAlertMatchFoundDS = (GUICtrlRead($g_hChkNotifyAlertMatchFoundDS) = $GUI_CHECKED)

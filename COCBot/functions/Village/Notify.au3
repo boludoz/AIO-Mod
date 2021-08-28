@@ -568,33 +568,33 @@ Func NotifyRemoteControlProc()
 						$bHibernate = False
 						$bStandby = False
 					Case Else
-				; ChatActions - Team AiO MOD++ START
-				Local $bFoundChatMessage = False
-				If StringInStr($TGActionMSG, "SENDCHAT") Then
-					$bFoundChatMessage = True
-					Local $sChatMessage = StringRight($TGActionMSG, StringLen($TGActionMSG) - StringLen("SENDCHAT"))
-					$sChatMessage = StringLower($sChatMessage)
-					ChatbotNotifyQueueChat($sChatMessage)
-					NotifyPushToTelegram($g_sNotifyOrigin & " | " & "Chat queued, will send on next idle")
-				ElseIf StringInStr($TGActionMSG, "GETCHATS") Then
-					$bFoundChatMessage = True
-					Local $Interval = 1
-					$Interval = StringRight($TGActionMSG, StringLen($TGActionMSG) - StringLen("GETCHATS"))
-					If $Interval = "STOP" Then
-						ChatbotNotifyStopChatRead()
-						NotifyPushToTelegram($g_sNotifyOrigin & " | " & "Stopping interval sending")
-					Else
-						If $Interval = "NOW" Then
-							ChatbotNotifySendChat()
-							NotifyPushToTelegram($g_sNotifyOrigin & " | " & "Command queued, will send clan chat image on next idle")
+						; ChatActions - Team AiO MOD++ START
+						Local $bFoundChatMessage = False
+						If StringInStr($TGActionMSG, "SENDCHAT") Then
+							$bFoundChatMessage = True
+							Local $sChatMessage = StringRight($TGActionMSG, StringLen($TGActionMSG) - StringLen("SENDCHAT"))
+							$sChatMessage = StringLower($sChatMessage)
+							ChatbotNotifyQueueChat($sChatMessage)
+							NotifyPushToTelegram($g_sNotifyOrigin & " | " & "Chat queued, will send on next idle")
+						ElseIf StringInStr($TGActionMSG, "GETCHATS") Then
+							$bFoundChatMessage = True
+							Local $Interval = 1
+							$Interval = StringRight($TGActionMSG, StringLen($TGActionMSG) - StringLen("GETCHATS"))
+							If $Interval = "STOP" Then
+								ChatbotNotifyStopChatRead()
+								NotifyPushToTelegram($g_sNotifyOrigin & " | " & "Stopping interval sending")
+							Else
+								If $Interval = "NOW" Then
+									ChatbotNotifySendChat()
+									NotifyPushToTelegram($g_sNotifyOrigin & " | " & "Command queued, will send clan chat image on next idle")
+								EndIf
+							EndIf
 						EndIf
-					EndIf
-				EndIf
-				If Not $bFoundChatMessage Then
-					NotifyPushToTelegram(GetTranslatedFileIni("MBR Func_Notify", "ELSE_Info_01", "Sorry Chief!,") & " " & $TGActionMSG & " " & _
-						GetTranslatedFileIni("MBR Func_Notify", "ELSE_Info_02", "is not a valid command."))
-					EndIf
-				; ChatActions - Team AiO MOD++ END
+						If Not $bFoundChatMessage Then
+							NotifyPushToTelegram(GetTranslatedFileIni("MBR Func_Notify", "ELSE_Info_01", "Sorry Chief!,") & " " & $TGActionMSG & " " & _
+								GetTranslatedFileIni("MBR Func_Notify", "ELSE_Info_02", "is not a valid command."))
+							EndIf
+						; ChatActions - Team AiO MOD++ END
 				EndSwitch
 			EndIf
 		EndIf
@@ -620,6 +620,7 @@ Func NotifyPushMessageToBoth($Message, $Source = "")
 	Switch $Message
 		Case "Restarted"
 			If $g_bNotifyRemoteEnable Then NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_10", "Bot restarted"))
+			If $g_bNotifyRemoteEnableDS Then NotifyPushToDiscord($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_10", "Bot restarted"))
 		Case "OutOfSync"
 			$sTring = " | " & GetTranslatedFileIni("MBR Func_Notify", "LOG_Info_05", "Restarted after Out of Sync Error") & chr(10) & GetTranslatedFileIni("MBR Func_Notify", "Stats_Info_06", "Attacking now") & "..."
 			If $g_bNotifyAlertOutOfSync Then
@@ -761,9 +762,15 @@ Func NotifyPushMessageToBoth($Message, $Source = "")
 				NotifyPushToDiscord($g_sNotifyOriginDS & $sTring)
 			EndIf
 		Case "Pause"
-			If $g_bNotifyRemoteEnable And $Source = "Push" Then NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_17", "Request to Pause") & "..." & chr(10) & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_13", "Your request has been received. Bot is now paused"))
+			If $Source = "Push" Then
+				If $g_bNotifyRemoteEnable Then NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_17", "Request to Pause") & "..." & chr(10) & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_13", "Your request has been received. Bot is now paused"))
+				If $g_bNotifyRemoteEnableDS Then NotifyPushToDiscord($g_sNotifyOriginDS & " | " & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_17", "Request to Pause") & "..." & chr(10) & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_13", "Your request has been received. Bot is now paused"))
+			EndIf
 		Case "Resume"
-			If $g_bNotifyRemoteEnable And $Source = "Push" Then NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_18", "Request to Resume") & "..." & chr(10) & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_14", "Your request has been received. Bot is now resumed"))
+			If $Source = "Push" Then
+				If $g_bNotifyRemoteEnable Then NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_18", "Request to Resume") & "..." & chr(10) & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_14", "Your request has been received. Bot is now resumed"))
+				If $g_bNotifyRemoteEnableDS Then NotifyPushToDiscord($g_sNotifyOriginDS & " | " & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_18", "Request to Resume") & "..." & chr(10) & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_14", "Your request has been received. Bot is now resumed"))
+			EndIf
 		Case "OoSResources"
 			$sTring = " | " & GetTranslatedFileIni("MBR Func_Notify", "LOG_Info_06", "Disconnected after") & " " & StringFormat("%3s", $g_iSearchCount) & " " & GetTranslatedFileIni("MBR Func_Notify", "Skip_Info_01", "skip(s)") & chr(10) & GetTranslatedFileIni("MBR Func_Notify", "Attack_Info_02", "Cannot locate Next button, Restarting Bot") & "..."
 			If $g_bNotifyAlertOutOfSync Then
@@ -827,6 +834,10 @@ Func NotifyPushMessageToBoth($Message, $Source = "")
 			If $g_bTGRequestScreenshot Then
 				NotifyPushFileToTelegram($Screnshotfilename, "Temp", "image/jpeg", $g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "SCREENSHOT_Info_04", "Screenshot of your village") & " " & chr(10) & $Screnshotfilename)
 				SetLog("Notify Telegram: Screenshot sent!", $COLOR_SUCCESS)
+				If $g_bNotifyDSEnable Then
+					NotifyPushFileToDiscord($Screnshotfilename, "Temp", "image/jpeg", $g_sNotifyOriginDS & " | " & GetTranslatedFileIni("MBR Func_Notify", "SCREENSHOT_Info_04", "Screenshot of your village") & " " & chr(10) & $Screnshotfilename)
+					SetLog("Notify Discord: Screenshot sent!", $COLOR_SUCCESS)
+				EndIf
 			EndIf
 			$g_bTGRequestScreenshot = False
 			$g_bTGRequestScreenshotHD = False
@@ -838,6 +849,7 @@ Func NotifyPushMessageToBoth($Message, $Source = "")
 			EndIf
 		Case "BuilderInfo"
 			ClickAway()
+			If Not IsMainPage() Then Return
 			; open the builders menu
 			Click(295, 30)
 			If _Sleep(1500) Then Return
@@ -849,6 +861,10 @@ Func NotifyPushMessageToBoth($Message, $Source = "")
 			If $g_bTGRequestBuilderInfo Then
 				NotifyPushFileToTelegram($Screnshotfilename, "Temp", "image/jpeg", $g_sNotifyOrigin & " | " & "Builder Information" & chr(10) & $Screnshotfilename)
 				SetLog("Notify Telegram: Builder Information sent!", $COLOR_GREEN)
+				If $g_bNotifyDSEnable Then
+					NotifyPushFileToDiscord($Screnshotfilename, "Temp", "image/jpeg", $g_sNotifyOriginDS & " | " & "Builder Information" & chr(10) & $Screnshotfilename)
+					SetLog("Notify Discord: Builder Information sent!", $COLOR_GREEN)
+				EndIf
 			EndIf
 			$g_bTGRequestBuilderInfo = False
 			;wait a second and then delete the file
@@ -860,6 +876,7 @@ Func NotifyPushMessageToBoth($Message, $Source = "")
 			ClickAway(True)
 		Case "ShieldInfo"
 			ClickAway()
+			If Not IsMainPage() Then Return
 			Click(435, 8)
 			If _Sleep(1000) Then Return
 			If _Wait4PixelGoneArray($aIsMain) Then
@@ -870,7 +887,10 @@ Func NotifyPushMessageToBoth($Message, $Source = "")
 				_GDIPlus_ImageSaveToFile($g_hBitmap, $g_sProfileTempPath & $Screnshotfilename)
 				If $g_bTGRequestShieldInfo Then
 					NotifyPushFileToTelegram($Screnshotfilename, "Temp", "image/jpeg", $g_sNotifyOrigin & " | " & "Shield Information" & chr(10) & $Screnshotfilename)
-					SetLog("Notify Telegram: Shield Information sent!", $COLOR_SUCCESS)
+					If $g_bNotifyDSEnable Then
+						NotifyPushFileToDiscord($Screnshotfilename, "Temp", "image/jpeg", $g_sNotifyOriginDS & " | " & "Shield Information" & chr(10) & $Screnshotfilename)
+						SetLog("Notify Telegram: Shield Information sent!", $COLOR_SUCCESS)
+					EndIf
 				EndIf
 				$g_bTGRequestShieldInfo = False
 				;wait a second and then delete the file

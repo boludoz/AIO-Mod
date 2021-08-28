@@ -695,6 +695,7 @@ Func SaveConfig_600_18()
 	_Ini_Add("notifyDS", "DSEnabled", $g_bNotifyDSEnable ? 1 : 0)
 	_Ini_Add("notifyDS", "DSToken", $g_sNotifyDSToken)
 	_Ini_Add("notifyDS", "Origin", $g_sNotifyOriginDS)
+	_Ini_Add("notifyDS", "Remote", $g_bNotifyRemoteEnableDS)
 
 	;Alerts
 	_Ini_Add("notifyDS", "AlertPBVMFound", $g_bNotifyAlertMatchFoundDS ? 1 : 0)

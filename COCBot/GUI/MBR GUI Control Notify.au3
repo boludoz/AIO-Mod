@@ -14,7 +14,7 @@
 ; ===============================================================================================================================
 #include-once
 #Region - Discord - Team AIO Mod++
-Func chkPBDSenabled()
+Func chkDSenabled()
 	If GUICtrlRead($g_hChkNotifyDSEnable) = $GUI_CHECKED Then
 		$g_bNotifyDSEnable = True
 		GUICtrlSetState($g_hTxtNotifyDSToken, $GUI_ENABLE)
@@ -24,6 +24,7 @@ Func chkPBDSenabled()
 	EndIf
 
 	If $g_bNotifyDSEnable = True Then
+		GUICtrlSetState($g_hChkNotifyRemoteDS, $GUI_ENABLE)
 		GUICtrlSetState($g_hTxtNotifyOriginDS, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkNotifyAlertMatchFoundDS, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkNotifyAlertLastRaidIMGDS, $GUI_ENABLE)
@@ -42,6 +43,7 @@ Func chkPBDSenabled()
 		GUICtrlSetState($g_hChkNotifyAlertSmartWaitTimeDS, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkNotifyAlertLaboratoryIdleDS, $GUI_ENABLE)
 	Else
+		GUICtrlSetState($g_hChkNotifyRemoteDS, $GUI_DISABLE)
 		GUICtrlSetState($g_hTxtNotifyOriginDS, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkNotifyAlertMatchFoundDS, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkNotifyAlertLastRaidIMGDS, $GUI_DISABLE)
@@ -61,7 +63,7 @@ Func chkPBDSenabled()
 		GUICtrlSetState($g_hChkNotifyAlertLaboratoryIdleDS, $GUI_DISABLE)
 	EndIf
 
-EndFunc   ;==>chkPBDSenabled
+EndFunc   ;==>chkDSenabled
 
 Func chkNotifyHoursDS()
 	Local $b = GUICtrlRead($g_hChkNotifyOnlyHoursDS) = $GUI_CHECKED

@@ -33,8 +33,7 @@ EndFunc   ;==>CreateVillageNotify
 
 Global $g_hGrpNotifyDS = 0
 
-Global $g_hChkNotifyDSEnable = 0, $g_hTxtNotifyDSToken = 0
-Global $g_hTxtNotifyOriginDS = 0
+Global $g_hChkNotifyDSEnable = 0, $g_hTxtNotifyOriginDS = 0, $g_hTxtNotifyDSToken = 0, $g_hChkNotifyRemoteDS = 0
 
 Global $g_hChkNotifyAlertMatchFoundDS = 0, $g_hChkNotifyAlertLastRaidIMGDS = 0, $g_hChkNotifyAlertLastRaidTXTDS = 0, $g_hChkNotifyAlertCampFullDS = 0, _
 	   $g_hChkNotifyAlertUpgradeWallsDS = 0, $g_hChkNotifyAlertOutOfSyncDS = 0, $g_hChkNotifyAlertTakeBreakDS = 0, $g_hChkNotifyAlertBuilderIdleDS = 0, _
@@ -56,7 +55,7 @@ Func CreateDiscordSubTab()
 
 		_GUICtrlCreateIcon ($g_sLibIconPath, $eIcnDiscord, $x + 3, $y, 32, 32)
 		$g_hChkNotifyDSEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Notify - Discord", "ChkNotifyDSEnable", "Enable Discord"), $x + 40, $y + 5)
-			GUICtrlSetOnEvent(-1, "chkPBDSenabled")
+			GUICtrlSetOnEvent(-1, "chkDSenabled")
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Notify - Discord", "ChkNotifyDSEnable_Info_01", "Enable Discord notifications"))
 
 	$y += 40
@@ -73,6 +72,11 @@ Func CreateDiscordSubTab()
 			_GUICtrlSetTip(-1, $sTxtTip)
 		$g_hTxtNotifyOriginDS = _GUICtrlCreateInput("", $x + 170, $y, 230, 19)
 			_GUICtrlSetTip(-1, $sTxtTip)
+			
+	$y += 25
+		$g_hChkNotifyRemoteDS = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Notify - Discord", "ChkNotifyRemoteDS", "Receive miscellaneous notifications including those from telegram."), $x + 10, $y)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Notify", "ChkNotifyRemote_InfoDS", "Receive miscellaneous notifications including those from telegram"))
+			GUICtrlSetState(-1, $GUI_DISABLE)
 
 	$y += 25
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Notify - Discord", "LblNotifyOptions", "Send a Discord message for these options") & ":", $x, $y, -1, -1, $SS_RIGHT)

@@ -62,7 +62,9 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 
 	Local $FileNamePath = @ScriptDir & "\CSV\BuilderBase\" & $g_sAttackScrScriptNameBB[$g_iBuilderBaseScript] & ".csv"
 	; Columm Names
-	Local $aIMGLtxt = ["Air Defenses", "Crusher", "Guard Post", "Big Cannon", "Builder Hall"]
+	Local $aIMGLtxt[8] = ["AirDefenses", "Crusher", "GuardPost", "Cannon", "AirBombs", "LavaLauncher", "Roaster", "BuilderHall"]
+	Local $aDefensesPos[8] = [$g_aAirdefensesPos, $g_aCrusherPos, $g_aGuardPostPos, $g_aCannonPos, $g_aAirBombs, $g_aLavaLauncherPos, $g_aRoasterPos, $g_aBuilderHallPos]
+	
 	Local $bDefenses = [$g_aAirdefensesPos, $g_aCrusherPos, $g_aGuardPostPos, $g_aCannonPos, $g_aBuilderHallPos]
 	Local $aIMGL = [False, False, False, False, False]
 	Local $aDROP = ["CMD", "QTY", "TROOPNAME__", "DROP_POINTS_", "ADDTILES_", "DROP_SIDE", "SLEEPAFTER_", "OBS"]
@@ -97,8 +99,6 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 			SetDebugLog("[CMD]: " & $command)
 			Switch $command
 				Case "IMGL", "FORC"
-					Local $aIMGLtxt[8] = ["AirDefenses", "Crusher", "GuardPost", "Cannon", "AirBombs", "LavaLauncher", "Roaster", "BuilderHall"]
-					Local $aDefensesPos[8] = [$g_aAirdefensesPos, $g_aCrusherPos, $g_aGuardPostPos, $g_aCannonPos, $g_aAirBombs, $g_aLavaLauncherPos, $g_aRoasterPos, $g_aBuilderHallPos]
 
 					Local $iTotalDefenses = -1, $bNewDefenses = False
 					For $sSum In $aSplitLine
