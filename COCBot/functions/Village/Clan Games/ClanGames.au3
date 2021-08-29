@@ -12,11 +12,19 @@
 ; Link ..........: https://www.mybot.run
 ; Example .......: ---
 ;================================================================================================================================
+
+Global $g_bIsCaravanOn = "Undefined" ; Custom BB - Team AIO Mod++
+
 Func _ClanGames($test = False)
 
+	#Region - Custom BB - Team AIO Mod++
 	; Check If this Feature is Enable on GUI.
-	If Not $g_bChkClanGamesEnabled Then Return
-
+	If Not $g_bChkClanGamesEnabled Then
+		$g_bIsCaravanOn = "False"
+		Return
+	EndIf
+	#EndRegion - Custom BB - Team AIO Mod++
+	
 	Local $sINIPath = StringReplace($g_sProfileConfigPath, "config.ini", "ClanGames_config.ini")
 	If Not FileExists($sINIPath) Then ClanGamesChallenges("", True, $sINIPath, $g_bChkClanGamesDebug)
 
@@ -474,7 +482,6 @@ Func _ClanGames($test = False)
 
 EndFunc   ;==>_ClanGames
 
-Global $g_bIsCaravanOn = "Undefined"
 Func IsClanGamesWindow($getCapture = True)
 	Local $aGameTime[4] = [384, 388, 0xFFFFFF, 10]
 
@@ -501,7 +508,7 @@ Func IsClanGamesWindow($getCapture = True)
 			Return False
 		EndIf
 	Else
-		$g_bIsCaravanOn = "False"
+		$g_bIsCaravanOn = "False" ; Custom BB - Team AIO Mod++
 		SetLog("Caravan not available", $COLOR_WARNING)
 		ClickAway()
 		Return False

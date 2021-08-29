@@ -261,16 +261,26 @@ Func ClickAway($bForce = Default, $bRight = Default, $eTimes = Default)
 	If $bRight = Default Then $bRight = $g_bStayOnBuilderBase
 	If $eTimes = Default Then $eTimes = 1
 
+	Local $bDo = True
 	If $bForce = False Then
-		; 3EBFED - Profile, FFFFB7 - Building
 		_CaptureRegion()
-		If (_PixelSearch(20, 12, 22, 14, Hex(0x3CBFEC, 6), 15, False) = 0 Or _PixelSearch(419, 564, 438, 566, Hex(0xFEFEB6, 6), 15, False) <> 0 Or _PixelSearch(443, 70, 444, 76, Hex(0xFFFFFF, 6), 15, False) <> 0) = False Then
-			If $g_bDebugClick = True Then 
-				SetLog("ClickAway ? " & False, $COLOR_ACTION)
+		If UBound(_PixelSearch(20, 12, 22, 14, Hex(0x3CBFEC, 6), 15, False)) > 0 And not @error Then
+			$bDo = "0x3CBFEC"
+			If UBound(_PixelSearch(419, 564, 438, 566, Hex(0xFEFEB6, 6), 3, False)) > 0 And not @error Then
+				$bDo = "0xFEFEB6"
+			ElseIf UBound(_PixelSearch(443, 70, 444, 76, Hex(0xFFFFFF, 6), 15, False)) > 0 And not @error Then
+				$bDo = "0xFFFFFF"
+			Else
+				$bDo = False
 			EndIf
-			Return
 		EndIf
 	EndIf
+	
+	If $g_bDebugClick = True Then 
+		SetLog("ClickAway ? " & $bDo, $COLOR_ACTION)
+	EndIf
+	
+	If $bDo = False Then Return False
 	
 	Local $aiRegionToUse = 0
 	If $bRight = True Then
@@ -278,17 +288,17 @@ Func ClickAway($bForce = Default, $bRight = Default, $eTimes = Default)
 	Else
 		$aiRegionToUse = (Random(0, 1, 1) > 0) ? ($aiClickAwayRegionLeft) : ($aiClickAwayRegionRight)
 	EndIf
-	
 	Local $aiSpot[2] = [Random($aiRegionToUse[0], $aiRegionToUse[2], 1), Random($aiRegionToUse[1], $aiRegionToUse[3], 1)]
-	
 	If $g_bDebugClick = True Then
 		SetLog("ClickAway(): on X:" & $aiSpot[0] & ", Y:" & $aiSpot[1], $COLOR_ACTION)
 	EndIf
-	
-	; Fix XP Click.
 	Local $bUseRandom = $g_bUseRandomClick
 	$g_bUseRandomClick = False
-	ClickP($aiSpot, $eTimes, 0, "#0000")
+	For $e = 1 To $eTimes
+		PureClickP($aiSpot, 1, 0, "#0000")
+		If RandomSleep(150) Then Return
+	Next
+	
 	$g_bUseRandomClick = $bUseRandom
 EndFunc
 #EndRegion - ClickAway - Team AIO Mod++

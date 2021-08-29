@@ -757,12 +757,6 @@ Func runBot() ;Bot that runs everything in order
 		#Region - Custom BB - Team AIO Mod++
 		$g_bStayOnBuilderBase = False
 	
-		; Skip first attack - Custom Team AIO Mod++
-		If $bDoFirsCheck = True Then
-			FirstCheck()
-			$bDoFirsCheck = False
-		EndIf
-		
 		Local $bReturn = PlayBBOnly()
 		If $bReturn = True Then
 			SetLog("Let's Play Builder Base Only: " & $bReturn, $COLOR_ACTION)
@@ -771,6 +765,12 @@ Func runBot() ;Bot that runs everything in order
 				checkSwitchAcc() ; Forced to switch
 			EndIf
 			ContinueLoop
+		Else
+			; Skip first attack - Custom Team AIO Mod++
+			If $bDoFirsCheck = True Then
+				FirstCheck()
+				$bDoFirsCheck = False
+			EndIf		
 		EndIf
 		#EndRegion - Custom BB - Team AIO Mod++
 		

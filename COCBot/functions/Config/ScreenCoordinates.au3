@@ -16,6 +16,7 @@
 ;Let's tighten these up to avoid clicking on shields.
 Global $aiClickAwayRegionLeft = [235, 10, 245, 30]
 Global $aiClickAwayRegionRight = [625, 10, 635, 30]
+
 Global $aCenterEnemyVillageClickDrag = [430, 545] ; Scroll village using this location in the water ; Custom fix - Team AIO Mod++
 Global $aCenterHomeVillageClickDrag = [430, 650] ; Scroll village using this location in the water
 Global $aIsReloadError[4] = [457, 301 + $g_iMidOffsetY, 0x33B5E5, 10] ; Pixel Search Check point For All Reload Button errors, except break ending

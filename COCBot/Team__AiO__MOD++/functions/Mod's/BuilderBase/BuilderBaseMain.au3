@@ -45,26 +45,33 @@ Func BuilderBase($bTestRun = False)
 	
 	$g_bRestart = False
 	$g_bStayOnBuilderBase = True
+	
+	If $g_bIsCaravanOn = "True" Or $g_bIsCaravanOn = "Undefined" Then
+		GoToClanGames()
+	EndIf
+	
 	$bReturn = _BuilderBase($bTestRun)
 	$g_bStayOnBuilderBase = False
 	
-	If isOnBuilderBase(True, True) Then
-		SwitchBetweenBases()
+	If Not PlayBBOnly() Then
+		If isOnBuilderBase(True, True) Then
+			SwitchBetweenBases()
+		EndIf
 	EndIf
-
+	
 	Return $bReturn
 EndFunc
 
 Func _BuilderBase($bTestRun = False)
 	If Not $g_bRunState Then Return
-	
-	If $g_bIsCaravanOn = "True" Or $g_bIsCaravanOn = "Undefined" Then GoToClanGames()
-	
+		
 	; Check if is in Builder Base.
-	If Not SwitchBetweenBases() Then
-		Return False
+	If Not isOnBuilderBase(True, True) Then
+		If Not SwitchBetweenBases() Then
+			Return False
+		EndIf
 	EndIf
-
+	
 	SetLog("Builder Base Idle Starts", $COLOR_INFO)
 
 	If _Sleep(2000) Then Return
@@ -88,16 +95,23 @@ Func _BuilderBase($bTestRun = False)
 	CleanBBYard()
 	If Not $g_bRunState Then Return
 
-	If ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart Or PlayBBOnly()) And $g_bChkOnlyFarm = False Then StarLaboratory()
-	If Not $g_bRunState Then Return
+	If ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart Or PlayBBOnly()) And $g_bChkOnlyFarm = False Then
+		StarLaboratory()
+		If Not $g_bRunState Then Return
+		
+		ClickAway()
+		If _Sleep(1500) Then Return
+	EndIf
 
 	Local $bBoostedClock = False
 
 	; Loops to do logic.
 	Local $iAttackLoops = 1
 	Local $iLoopsToDo = Random($g_iBBMinAttack, $g_iBBMaxAttack, 1)
-	Local $bBonusObtained = BuilderBaseReportAttack(), $bBonusObtainedInternal = False
-
+	Local $bBonusObtained = 0, $bBonusObtainedInternal = False
+	
+	$bBonusObtained = BuilderBaseReportAttack()
+	
 	Do
 		; ClickAway()
 		NotifyPendingActions()
@@ -144,9 +158,7 @@ Func _BuilderBase($bTestRun = False)
 			;  $g_bCloudsActive fast network fix.
 			$g_bCloudsActive = False
 
-			; Improved logic, as long as the bot can be farmed it will continue doing the external while, otherwise it will continue attacking to fulfill the user's request more fast.
-			BuilderBaseReportAttack()
-			
+			; Improved logic, as long as the bot can be farmed it will continue doing the external while, otherwise it will continue attacking to fulfill the user's request more fast.	
 			checkObstacles(True)
 			
 			$bBonusObtained = BuilderBaseReportAttack()
@@ -262,8 +274,7 @@ Func BuilderBaseReportAttack($bSetLog = True)
         $g_aiCurrentLootBB[$eLootTrophyBB] = getTrophyMainScreen(67, 84)
         If $bSetLog = True Then Setlog("- Builder base trophies report: " & $g_aiCurrentLootBB[$eLootTrophyBB], $COLOR_INFO)
 
-        Local $sResult = QuickMIS("CX", $g_sImgBBLootAvail, 20, 625, 110, 650, True)
-        $g_iAvailableAttacksBB = UBound($sResult)
+        $g_iAvailableAttacksBB = UBound(QuickMIS("CX", $g_sImgBBLootAvail, 20, 625, 110, 650, True))
 
 		If $bSetLog = True Then Setlog("- Builder base: You have " & $g_iAvailableAttacksBB & " available attack(s).", $COLOR_SUCCESS)
 
