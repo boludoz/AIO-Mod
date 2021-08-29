@@ -121,25 +121,6 @@ Func ReadConfig_MOD_MiscTab()
 	IniReadS($g_bChkReqCCFromChat, $g_sProfileConfigPath, "ReqCCOptions", "ReqCCFromChat", $g_bChkReqCCFromChat, "Bool")
 	IniReadS($g_bRequestOneTimeEnable, $g_sProfileConfigPath, "ReqCCOptions", "RequestOneTime", $g_bRequestOneTimeEnable, "Bool")
 
-	; Tooops;
-	For $i = 0 To $eTroopCount - 1
-		IniReadS($g_aiDonateStatsTroops[$i][0], $g_sProfileConfigPath, "DonRecords", "DonateStatsTroops" & $i, $g_aiDonateStatsTroops[$i][0], "Int")
-	Next
-	IniReadS($g_iTotalDonateStatsTroops, $g_sProfileConfigPath, "DonRecords", "TotalDonateStatsTroops", $g_iTotalDonateStatsTroops, "Int")
-	
-	; Spell;
-	For $i = 0 To $eSpellCount - 1
-		IniReadS($g_aiDonateStatsSpells[$i][0], $g_sProfileConfigPath, "DonRecords", "DonateStatsSpells" & $i, $g_aiDonateStatsSpells[$i][0], "Int")
-	Next
-	IniReadS($g_iTotalDonateStatsSpells, $g_sProfileConfigPath, "DonRecords", "TotalDonateStatsSpells", $g_iTotalDonateStatsSpells, "Int")
-
-	; Siege;
-	For $i = 0 To $eSiegeMachineCount - 1
-		IniReadS($g_aiDonateStatsSieges[$i][0], $g_sProfileConfigPath, "DonRecords", "DonateStatsSieges" & $i, $g_aiDonateStatsSieges[$i][0], "Int")
-	Next
-	IniReadS($g_iTotalDonateStatsSiegeMachines, $g_sProfileConfigPath, "DonRecords", "TotalDonateStatsSieges", $g_iTotalDonateStatsSiegeMachines, "Int")
-	; ------------;
-
 	#Region - Return Home by Time - Team AIO Mod++
 	IniReadS($g_bReturnTimerEnable, $g_sProfileConfigPath, "search", "ChkReturnTimerEnable", False, "Bool")
 	IniReadS($g_iTxtReturnTimer, $g_sProfileConfigPath, "search", "ReturnTimer", 5, "int")

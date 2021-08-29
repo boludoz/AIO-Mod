@@ -129,25 +129,6 @@ Func SaveConfig_MOD_MiscTab()
 	_Ini_Add("ReqCCOptions", "ReqCCFromChat", $g_bChkReqCCFromChat)
 	_Ini_Add("ReqCCOptions", "RequestOneTime", $g_bRequestOneTimeEnable)
 
-	; Tooops;
-	For $i = 0 To $eTroopCount - 1
-		_Ini_Add("DonRecords", "DonateStatsTroops" & $i, $g_aiDonateStatsTroops[$i][0])
-	Next
-	_Ini_Add("DonRecords", "TotalDonateStatsTroops", $g_iTotalDonateStatsTroops)
-
-	; Spell;
-	For $i = 0 To $eSpellCount - 1
-		_Ini_Add("DonRecords", "DonateStatsSpells" & $i, $g_aiDonateStatsSpells[$i][0])
-	Next
-	_Ini_Add("DonRecords", "TotalDonateStatsSpells", $g_iTotalDonateStatsSpells)
-
-	; Siege;
-	For $i = 0 To $eSiegeMachineCount - 1
-		_Ini_Add("DonRecords", "DonateStatsSieges" & $i, $g_aiDonateStatsSieges[$i][0])
-	Next
-	_Ini_Add("DonRecords", "TotalDonateStatsSieges", $g_iTotalDonateStatsSiegeMachines)
-	; ------------;
-
 	#Region - Return Home by Time - Team AIO Mod++
 	_Ini_Add("search", "ChkReturnTimerEnable", $g_bReturnTimerEnable ? 1 : 0)
 	_Ini_Add("search", "ReturnTimer", $g_iTxtReturnTimer)
