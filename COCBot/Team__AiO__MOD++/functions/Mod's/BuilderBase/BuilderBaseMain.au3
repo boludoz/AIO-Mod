@@ -16,7 +16,6 @@ Func TestBuilderBase()
 	If $g_bDebugSetlog Then SetDebugLog("** TestrunBuilderBase START**", $COLOR_DEBUG)
 	Local $Status = $g_bRunState
 	$g_bRunState = True
-	$g_bRestart = False
 	$g_bStayOnBuilderBase = True
 	BuilderBase(False)
 	$g_bStayOnBuilderBase = False
@@ -25,26 +24,44 @@ Func TestBuilderBase()
 EndFunc   ;==>TestrunBuilderBase
 
 Func BuilderBase($bTestRun = False)
-	If Not $g_bRunState Then Return
+	Local $bReturn = 0
 	
-	ClickAway(False, True, 3) ;ClickP($aAway, 3, 400, "#0000")
+	ClickAway(False, True, 3)
 	If Not $g_bChkBuilderAttack And Not $g_bChkCollectBuilderBase And Not $g_bChkStartClockTowerBoost And Not $g_iChkBBSuggestedUpgrades And Not $g_bChkCleanBBYard And Not $g_bChkUpgradeMachine Then
 		If $g_bOnlyBuilderBase Then
 			SetLog("Play Only Builder Base Check Is On But BB Option's(Collect,Attack etc) Unchecked", $COLOR_ERROR)
 			SetLog("Please Check BB Options From Builder Base Tab", $COLOR_INFO)
+			If ProfileSwitchAccountEnabled() Then ; (:
+				Return
+			EndIf
+			
 			$g_bRunState = False
 			btnStop()
 		EndIf
 		Return
 	EndIf
+	
+	ZoomOut()
+	
+	$g_bRestart = False
+	$g_bStayOnBuilderBase = True
+	$bReturn = _BuilderBase($bTestRun)
+	$g_bStayOnBuilderBase = False
+	
+	If isOnBuilderBase(True, True) Then
+		SwitchBetweenBases()
+	EndIf
 
+	Return $bReturn
+EndFunc
+
+Func _BuilderBase($bTestRun = False)
+	If Not $g_bRunState Then Return
+	
 	If $g_bIsCaravanOn = "True" Or $g_bIsCaravanOn = "Undefined" Then GoToClanGames()
 	
-	$g_bStayOnBuilderBase = True
-
 	; Check if is in Builder Base.
 	If Not SwitchBetweenBases() Then
-		$g_bStayOnBuilderBase = False
 		Return False
 	EndIf
 
@@ -56,38 +73,23 @@ Func BuilderBase($bTestRun = False)
 		SetLog("Bad zoom builder base - BAD. (1)", $COLOR_ERROR)
 		$g_bStayOnBuilderBase = False
 		Return
-	Else
-		SetDebugLog("Bad zoom builder base - OK. (1)", $COLOR_SUCCESS)
 	EndIf
 	
-	If $g_bRestart = True Or Not $g_bRunState Then
-		SetDebugLog("Return BB from restart", $COLOR_ERROR)
-		Return
-	EndIf
+	SetDebugLog("Zoom builder base - OK. (1)", $COLOR_SUCCESS)
 	
-	If ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart Or $g_bOnlyBuilderBase Or PlayBBOnlyCmdMode()) And $g_bChkOnlyFarm = False Then CollectBuilderBase()
-	If $g_bRestart = True Or Not $g_bRunState Then
-		SetDebugLog("Return BB from restart", $COLOR_ERROR)
-		Return
-	EndIf
+	If Not $g_bRunState Then Return
+	
+	If ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart Or PlayBBOnly()) And $g_bChkOnlyFarm = False Then CollectBuilderBase()
+	If Not $g_bRunState Then Return
 
 	BuilderBaseReport()
-	If $g_bRestart = True Or Not $g_bRunState Then
-		SetDebugLog("Return BB from restart", $COLOR_ERROR)
-		Return
-	EndIf
+	If Not $g_bRunState Then Return
 
 	CleanBBYard()
-	If $g_bRestart = True Or Not $g_bRunState Then
-		SetDebugLog("Return BB from restart", $COLOR_ERROR)
-		Return
-	EndIf
+	If Not $g_bRunState Then Return
 
-	If ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart Or $g_bOnlyBuilderBase Or PlayBBOnlyCmdMode()) And $g_bChkOnlyFarm = False Then StarLaboratory()
-	If $g_bRestart = True Or Not $g_bRunState Then
-		SetDebugLog("Return BB from restart", $COLOR_ERROR)
-		Return
-	EndIf
+	If ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart Or PlayBBOnly()) And $g_bChkOnlyFarm = False Then StarLaboratory()
+	If Not $g_bRunState Then Return
 
 	Local $bBoostedClock = False
 
@@ -99,28 +101,21 @@ Func BuilderBase($bTestRun = False)
 	Do
 		; ClickAway()
 		NotifyPendingActions()
-		If $g_bRestart = True Or Not $g_bRunState Then
-			SetDebugLog("Return BB from restart", $COLOR_ERROR)
-			Return
-		EndIf
+		If Not $g_bRunState Then Return
+
 		If Not BuilderBaseZoomOut(False, False) Then
 			SetLog("Bad zoom builder base. (2)", $COLOR_ERROR)
 			$g_bStayOnBuilderBase = False
 			Return
 		EndIf
-		If $g_bRestart = True Or Not $g_bRunState Then
-			SetDebugLog("Return BB from restart", $COLOR_ERROR)
-			Return
-		EndIf
+		
+		If Not $g_bRunState Then Return
 
 		If checkObstacles(True) Then
 			SetLog("Window clean required, but no problem!", $COLOR_INFO)
-			If $g_bRestart = True Or Not $g_bRunState Then
-				SetDebugLog("Return BB from restart", $COLOR_ERROR)
-				Return
-			EndIf
-			; ExitLoop
 		EndIf
+		
+		If Not $g_bRunState Then Return
 
 		SetDebugLog("BuilderBaseAttack|$g_bChkBuilderAttack" & $g_bChkBuilderAttack)
 		SetDebugLog("BuilderBaseAttack|$g_iAvailableAttacksBB" & $g_iAvailableAttacksBB)
@@ -166,44 +161,48 @@ Func BuilderBase($bTestRun = False)
 		Until ($iAttackLoops >= $iLoopsToDo) Or ($g_bChkBBStopAt3 = True And $g_iAvailableAttacksBB = 0)
 
 		If Not $g_bRunState Then Return
-		If $g_bRestart = True Then Return
 
 		If Not BuilderBaseZoomOut() Then
 			SetLog("Bad zoom builder base. (2)", $COLOR_ERROR)
 			$g_bStayOnBuilderBase = False
 			Return
 		EndIf
+		
 		If Not $g_bRunState Then Return
-		If $g_bRestart = True Then Return
+
 		WallsUpgradeBB()
+		
 		If checkObstacles(True) Then
 			SetLog("Window clean required, but no problem!", $COLOR_INFO)
 			ExitLoop
 		EndIf
 
 		If Not $g_bRunState Then Return
-		If $g_bRestart = True Then Return
+
 		SetDebugLog("$g_iCmbBoostBarracks: " & $g_iCmbBoostBarracks)
 		SetDebugLog("$g_bFirstStart: " & $g_bFirstStart)
-		SetDebugLog("$g_bOnlyBuilderBase: " & $g_bOnlyBuilderBase)
-		SetDebugLog("PlayBBOnlyCmdMode: " & PlayBBOnlyCmdMode())
+		SetDebugLog("PlayBBOnly: " & PlayBBOnly())
 		SetDebugLog("$g_bChkOnlyFarm: " & $g_bChkOnlyFarm)
 		SetDebugLog("$g_iAvailableAttacksBB: " & $g_iAvailableAttacksBB)
-		If ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart Or $g_bOnlyBuilderBase Or PlayBBOnlyCmdMode()) And $g_bChkOnlyFarm = False And $g_iAvailableAttacksBB = 0 Then
-			MainSuggestedUpgradeCode()
+		
+		If ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart Or PlayBBOnly()) And $g_bChkOnlyFarm = False And $g_iAvailableAttacksBB = 0 Then
 			If Not BuilderBaseZoomOut() Then Return
+			MainSuggestedUpgradeCode()
 		EndIf
-		If Not $bBoostedClock Then $bBoostedClock = StartClockTowerBoost()
-		If $g_bRestart = True Then Return
-		CleanBBYard()
-		If $g_bRestart = True Then Return
+		
+		If Not $bBoostedClock Then 
+			$bBoostedClock = StartClockTowerBoost()
+		EndIf
+		
+		CleanBBYard()		
 		If Not $g_bRunState Then Return
+		
 		If Not $bBoostedClock Then ExitLoop
+		
 		If $bBoostedClock Then
-			If $g_bRestart = True Then Return
 			If $g_iAvailableAttacksBB = 0 And $g_bChkBBStopAt3 Then ExitLoop
 		EndIf
-		If $g_bRestart = True Then Return
+		
 		If Not $g_bRunState Then Return
 		BuilderBaseReport()
 		
@@ -211,16 +210,16 @@ Func BuilderBase($bTestRun = False)
 
 	Until ($iAttackLoops >= $iLoopsToDo)
 
-	If Not $g_bOnlyBuilderBase And Not PlayBBOnlyCmdMode() Then
-		If isOnBuilderBase(True, True) Then
-			$g_bStayOnBuilderBase = False
-			SwitchBetweenBases()
-		EndIf
-	EndIf
+	If Not PlayBBOnly() Then Return
+	
 	If _Sleep($DELAYRUNBOT3) Then Return
 	SetLog("Builder Base Idle Ends", $COLOR_INFO)
+	
 	If ProfileSwitchAccountEnabled() Then Return
-	If $g_bOnlyBuilderBase Or PlayBBOnlyCmdMode() Then _Sleep($DELAYRUNBOT1 * 15)
+	
+	If PlayBBOnly() Then 
+		If _Sleep($DELAYRUNBOT1 * 15) Then Return
+	EndIf
 EndFunc   ;==>runBuilderBase
 
 Func GoToClanGames()
@@ -244,9 +243,11 @@ Func GoToClanGames()
 	EndIf
 EndFunc   ;==>GoToClanGames
 
-Func PlayBBOnlyCmdMode()
-	Return $g_iCommandStop = 8 ? True : False
-EndFunc   ;==>PlayBBOnlyCmdMode
+Func PlayBBOnly()
+	Local $b = ($g_iCommandStop = 8) ? (True) : (False)
+	If $g_bOnlyBuilderBase = True Or $b = True Then Return True
+	Return False
+EndFunc   ;==>PlayBBOnly
 
 Func ClanGamesBB()
 	Return (($g_bChkClanGamesBBBattle Or $g_bChkClanGamesBBDestruction Or $g_bChkClanGamesSpell) And not $g_bChkClanGamesPurge)

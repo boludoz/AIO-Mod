@@ -133,7 +133,7 @@ Func _ColorCheckSubjetive($nColor1 = 0x00FF00, $nColor2 = 0x00FF6C, $sVari = Def
 	EndIf
 
 	Local $iPixelDiff = Ciede1976(rgb2lab($nColor1, $sIgnore), rgb2lab($nColor2, $sIgnore))
-	If $g_bDebugSetlog Then SetLog("_ColorCheckSubjetive | $iPixelDiff " & $iPixelDiff, $COLOR_INFO)
+	; If $g_bDebugSetlog Then SetLog("_ColorCheckSubjetive | $iPixelDiff " & $iPixelDiff, $COLOR_INFO)
 	If $iPixelDiff > $sVari Then
 		Return False
 	EndIf
@@ -151,17 +151,15 @@ Func rgb2lab($nColor, $sIgnore = Default)
 	$G = Dec(StringMid(String($nColor), 3, 2))
 	$B = Dec(StringMid(String($nColor), 5, 2))
 
-	If $sIgnore <> Default Then
-		Switch $sIgnore
-			Case "Red" ; mask RGB - Red
-				$R = 0
-			Case "Heroes" ; mask RGB - Green
-				$G = 0
-			Case "Red+Blue" ; mask RGB - Red+Blue
-				$R = 0
-				$B = 0
-		EndSwitch
-	EndIf
+	Switch $sIgnore
+		Case "Red" ; mask RGB - Red
+			$R = 0
+		Case "Heroes" ; mask RGB - Green
+			$G = 0
+		Case "Red+Blue" ; mask RGB - Red+Blue
+			$R = 0
+			$B = 0
+	EndSwitch
 
     ;http:;www.brucelindbloom.com
 

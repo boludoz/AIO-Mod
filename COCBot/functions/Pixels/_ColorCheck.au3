@@ -12,8 +12,19 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-
+Global $g_bActiveCIE76 = True
 Func _ColorCheck($nColor1, $nColor2, $sVari = 5, $Ignore = Default)
+	
+	If $g_bActiveCIE76 = True Then
+		Local $iPixelDiff = Ciede1976(rgb2lab($nColor1, $Ignore), rgb2lab($nColor2, $Ignore))
+
+		If $iPixelDiff > Round($sVari * 0.4045) Then
+			Return False
+		EndIf
+		
+		Return True
+	EndIf
+	
 	Local $Red1, $Red2, $Blue1, $Blue2, $Green1, $Green2
 
 	$Red1 = Dec(StringMid(String($nColor1), 1, 2))

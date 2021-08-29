@@ -742,19 +742,10 @@ Func runBot() ;Bot that runs everything in order
 		SetLog("Rematching Account [" & $g_iNextAccount + 1 & "] with Profile [" & GUICtrlRead($g_ahCmbProfile[$g_iNextAccount]) & "]")
 		SwitchCoCAcc($g_iNextAccount)
 	EndIf
-
-	#Region - Custom BB - Team AIO Mod++
-	If $g_bOnlyBuilderBase Then
-		$g_bStayOnBuilderBase = True
-		SetLog("Let's Play Builder Base Only", $COLOR_ACTION)
-		BuilderBase()
-	Else
-		FirstCheck()
-	EndIf
-
-	If Not $g_bRunState Then Return
-	#EndRegion - Custom BB - Team AIO Mod++
-
+	
+	; Skip first attack - Custom Team AIO Mod++
+	Local $bDoFirsCheck = ($g_bChkSkipFirstAttack <> True)
+	
 	While 1
 		;Restart bot after these seconds
 		If $b_iAutoRestartDelay > 0 And __TimerDiff($g_hBotLaunchTime) > $b_iAutoRestartDelay * 1000 Then
@@ -763,6 +754,26 @@ Func runBot() ;Bot that runs everything in order
 		
 		If Not $g_bRunState Then Return
 
+		#Region - Custom BB - Team AIO Mod++
+		$g_bStayOnBuilderBase = False
+	
+		; Skip first attack - Custom Team AIO Mod++
+		If $bDoFirsCheck = True Then
+			FirstCheck()
+			$bDoFirsCheck = False
+		EndIf
+		
+		Local $bReturn = PlayBBOnly()
+		If $bReturn = True Then
+			SetLog("Let's Play Builder Base Only: " & $bReturn, $COLOR_ACTION)
+			BuilderBase()
+			If ProfileSwitchAccountEnabled() Then
+				checkSwitchAcc() ; Forced to switch
+			EndIf
+			ContinueLoop
+		EndIf
+		#EndRegion - Custom BB - Team AIO Mod++
+		
 		PrepareDonateCC()
 		
 		$g_bRestart = False
@@ -775,16 +786,6 @@ Func runBot() ;Bot that runs everything in order
 		chkShieldStatus()
 		If Not $g_bRunState Then Return
 		If $g_bRestart Then ContinueLoop
-
-		#Region - Custom BB - Team AIO Mod++
-		If $g_bOnlyBuilderBase Then
-			$g_bStayOnBuilderBase = True
-			BuilderBase()
-			If $g_bRestart Then ContinueLoop
-			If ProfileSwitchAccountEnabled() Then checkSwitchAcc() ; Forced to switch
-			ContinueLoop
-		EndIf
-		#EndRegion - Custom BB - Team AIO Mod++
 
 		#Region - GTFO - Team AIO Mod++
 		If $g_bChkOnlyFarm = False Then
@@ -1246,9 +1247,9 @@ Func _RunFunction($sAction)
 	FuncEnter(_RunFunction)
 
 	#Region - Custom BB - Team AIO Mod++
-	If $g_bOnlyBuilderBase Then
-		$g_bStayOnBuilderBase = True
-		$g_bRestart = False
+	Local $bReturn = PlayBBOnly()
+	If $bReturn = True Then
+		$g_bRestart = True
 		Return
 	EndIf
 	#EndRegion - Custom BB - Team AIO Mod++
@@ -1357,9 +1358,16 @@ Func __RunFunction($sAction)
 		Case "UpgradeWall"
 			$g_iNbrOfWallsUpped = 0
 			UpgradeWall()
-			; BBase - Team AIO Mod++
+			; Custom BB - Team AIO Mod++
 		Case "BuilderBase"
-			If Not ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Then Return True
+			Local $bReturn = PlayBBOnly()
+			If Not ($g_iCmbBoostBarracks = 0) And $bReturn = False Then
+				SetLog("There are not the conditions for you to play in the constructor base.", $COLOR_INFO)
+				; SetLog("- Is first start? " & $g_bFirstStart, $COLOR_INFO)
+				Local $bBoost = ($g_iCmbBoostBarracks = 0) ? (True) : (False)
+				SetLog("- Is your army accelerated and would it be a waste? " & $bBoost, $COLOR_INFO)
+				Return True
+			EndIf
 			BuilderBase()
 		Case "CollectAchievements"
 			CollectAchievements()
@@ -1391,14 +1399,18 @@ EndFunc   ;==>__RunFunction
 
 Func FirstCheck()
 	If $g_bDebugFuncCall Then SetLog('@@ (1271) :(' & @MIN & ':' & @SEC & ') FirstCheck()' & @CRLF, $COLOR_ACTION) ;### Function Trace
+	
+	#Region - Custom BB - Team AIO Mod++
+	Local $bReturn = PlayBBOnly()
+	If $bReturn = True Then
+		Return
+	EndIf
+	#EndRegion - Custom BB - Team AIO Mod++
 
 	$g_bRestart = False
 	$g_bFullArmy = False
 	$g_iCommandStop = -1
-	
-	; Skip first attack - Custom Team AIO Mod++
-	If $g_bChkSkipFirstAttack = True Then Return
-	
+		
 	If $g_bDebugSetlog Then SetDebugLog("-- FirstCheck Loop --")
 	If Not $g_bRunState Then Return
 
