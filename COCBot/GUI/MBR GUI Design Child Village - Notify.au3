@@ -139,12 +139,12 @@ Func CreateDiscordSubTab()
 	$y += 20
 		; TODO
 
-	$y += 30
-		$g_hChkNotifyOnlyHoursDS = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design", "Only_during_hours", "Only during these hours of each day"), $x + 70, $y )
-			GUICtrlSetOnEvent(-1, "chkNotifyHoursDS")
-	$x += 59
 	$y += 25
-		$g_hLblNotifyhourDS = GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "Hour", "Hour") & ":", $x, $y, -1, 15)
+		$g_hChkNotifyOnlyHoursDS = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design", "Only_during_hours", "Only during these hours of each day"), $x - 5, $y )
+			GUICtrlSetOnEvent(-1, "chkNotifyHoursDS")
+
+	$y += 25
+		$g_hLblNotifyhourDS = GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "Hour", "Hour") & ":", $x - 5, $y, -1, 15)
 			$sTxtTip = GetTranslatedFileIni("MBR Global GUI Design", "Only_during_hours", -1)
 			_GUICtrlSetTip(-1, $sTxtTip)
 		For $i = 0 to 11
@@ -173,9 +173,9 @@ Func CreateDiscordSubTab()
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Clear_set_row_of_boxes", -1))
 			GUICtrlSetOnEvent(-1, "chkNotifyhoursE2DS")
 		$g_hLblNotifyhoursPMDS = GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "PM", -1), $x + 10, $y)
-
-	$y += 20
-		$g_hChkNotifyOnlyWeekDaysDS = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design", "Only_during_day", "Only during these day of week"), $x + 11, $y )
+	$y -= 55
+	$x += 235
+		$g_hChkNotifyOnlyWeekDaysDS = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design", "Only_during_day", "Only during these day of week"), $x - 40, $y )
 			GUICtrlSetOnEvent(-1, "chkNotifyWeekDaysDS")
 			GUICtrlSetState(-1, $GUI_DISABLE)
 	$y += 25
@@ -208,7 +208,7 @@ Func CreateDiscordSubTab()
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Clear_set_row_of_boxes", -1))
 			GUICtrlSetOnEvent(-1, "ChkNotifyWeekdaysEDS")
-	$y += 15
+	$y += 18 
 	$x = 15
 		$g_lblHepNotifyDS = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Notify - Discord", "LblNotifyHelp", "Help ?"), $x + 310, $y , 100, 24, $SS_RIGHT)
 			GUICtrlSetOnEvent($g_lblHepNotifyDS, "ShowControlHelp")
@@ -327,12 +327,12 @@ Func CreateTelegramSubTab()
 	$y += 20
 		; TODO
 
-	$y += 30
-		$g_hChkNotifyOnlyHours = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design", "Only_during_hours", "Only during these hours of each day"), $x + 70, $y )
+	$y += 25  ; Discord - Team AIO Mod++
+		$g_hChkNotifyOnlyHours = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design", "Only_during_hours", "Only during these hours of each day"), $x - 5, $y )
 			GUICtrlSetOnEvent(-1, "chkNotifyHours")
-	$x += 59
+	; $x += 59  ; Discord - Team AIO Mod++
 	$y += 25
-		$g_hLblNotifyhour = GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "Hour", "Hour") & ":", $x, $y, -1, 15)
+		$g_hLblNotifyhour = GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "Hour", "Hour") & ":", $x - 5, $y, -1, 15)   ; Discord - Team AIO Mod++
 			$sTxtTip = GetTranslatedFileIni("MBR Global GUI Design", "Only_during_hours", -1)
 			_GUICtrlSetTip(-1, $sTxtTip)
 		For $i = 0 to 11
@@ -361,9 +361,9 @@ Func CreateTelegramSubTab()
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Clear_set_row_of_boxes", -1))
 			GUICtrlSetOnEvent(-1, "chkNotifyhoursE2")
 		$g_hLblNotifyhoursPM = GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "PM", -1), $x + 10, $y)
-
-	$y += 20
-		$g_hChkNotifyOnlyWeekDays = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design", "Only_during_day", "Only during these day of week"), $x + 11, $y )
+	$y -= 55 ; Discord - Team AIO Mod++
+	$x += 235 ; Discord - Team AIO Mod++
+		$g_hChkNotifyOnlyWeekDays = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design", "Only_during_day", "Only during these day of week"), $x - 40, $y ) ; Discord - Team AIO Mod++
 			GUICtrlSetOnEvent(-1, "chkNotifyWeekDays")
 			GUICtrlSetState(-1, $GUI_DISABLE)
 	$y += 25
