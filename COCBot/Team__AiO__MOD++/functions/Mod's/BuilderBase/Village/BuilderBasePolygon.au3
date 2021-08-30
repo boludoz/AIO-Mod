@@ -109,81 +109,6 @@ Func PrintBBPoly($bOuterPolygon = True) ; Or Internal, but it always update glob
 	Return $aReturn
 EndFunc   ;==>PrintBBPoly
 
-Func BuilderBaseAttackDiamond()
-	Local $iSize = ZoomBuilderBaseMecanics(False)
-	If $iSize < 1 Then Return -1
-	
-	; Fix ship coord
-	Local $x = $g_aVillageSize[7] + 14
-	Local $y = $g_aVillageSize[8]
-
-	; ZoomFactor
-	Local $iCorrectSizeLR = Floor(($iSize - 590) / 2)
-	Local $iCorrectSizeT = Floor(($iSize - 590) / 4)
-	Local $iCorrectSizeB = ($iSize - 590)
-
-	; Polygon Points
-	Local $iTop[2], $iRight[2], $iBottomR[2], $iBottomL[2], $iLeft[2]
-
-	$iTop[0] = $x - (180 + $iCorrectSizeT)
-	$iTop[1] = $y + 6
-
-	$iRight[0] = $x + (160 + $iCorrectSizeLR)
-	$iRight[1] = $y + (260 + $iCorrectSizeLR)
-
-	$iLeft[0] = $x - (515 + $iCorrectSizeB)
-	$iLeft[1] = $y + (260 + $iCorrectSizeLR)
-
-	$iBottomR[0] = $x - (110 - $iCorrectSizeB)
-	$iBottomR[1] = 628
-
-	$iBottomL[0] = $x - (225 + $iCorrectSizeB)
-	$iBottomL[1] = 628
-
-	Local $iBuilderBaseDiamond[6] = [$iSize, $iTop, $iRight, $iBottomR, $iBottomL, $iLeft]
-	Return $iBuilderBaseDiamond
-EndFunc   ;==>BuilderBaseAttackDiamond
-
-Func BuilderBaseAttackOuterDiamond()
-
-	Local $iSize = ZoomBuilderBaseMecanics(True)
-	If $iSize < 1 Then Return -1
-	
-	; Fix ship coord
-	Local $x = $g_aVillageSize[7] + 14
-	Local $y = $g_aVillageSize[8]
-	
-	; ZoomFactor
-	Local $iCorrectSizeLR = Floor(($iSize - 590) / 2)
-	Local $iCorrectSizeT = Floor(($iSize - 590) / 4)
-	Local $iCorrectSizeB = ($iSize - 590)
-
-	; Polygon Points
-	Local $iTop[2], $iRight[2], $iBottomR[2], $iBottomL[2], $iLeft[2]
-
-	$iTop[0] = $x - (180 + $iCorrectSizeT)
-	$iTop[1] = $y - 25
-
-	$iRight[0] = $x + (205 + $iCorrectSizeLR)
-	$iRight[1] = $y + (260 + $iCorrectSizeLR)
-
-	$iLeft[0] = $x - (560 + $iCorrectSizeB)
-	$iLeft[1] = $y + (260 + $iCorrectSizeLR)
-
-	$iBottomR[0] = $x - (70 - $iCorrectSizeB)
-	$iBottomR[1] = 628
-
-	$iBottomL[0] = $x - (275 + $iCorrectSizeB)
-	$iBottomL[1] = 628
-
-	Local $iBuilderBaseDiamond[6] = [$iSize, $iTop, $iRight, $iBottomR, $iBottomL, $iLeft]
-	;This Format is for _IsPointInPoly function
-	Local $aTmpBuilderBaseOuterPolygon[7][2] = [[5, -1], [$iTop[0], $iTop[1]], [$iRight[0], $iRight[1]], [$iBottomR[0], $iBottomR[1]], [$iBottomL[0], $iBottomL[1]], [$iLeft[0], $iLeft[1]], [$iTop[0], $iTop[1]]] ; Make Polygon From Points
-	$g_aBuilderBaseOuterPolygon = $aTmpBuilderBaseOuterPolygon
-	SetDebugLog("Builder Base Outer Polygon : " & _ArrayToString($g_aBuilderBaseOuterPolygon))
-	Return $iBuilderBaseDiamond
-EndFunc   ;==>BuilderBaseAttackOuterDiamond
-
 Func InDiamondBB($iX, $iY, $aBigArray, $bAttack = True)
     If IsUnsafeDP($iX, $iY, $bAttack) = False And UBound($aBigArray) > 1 And not @error Then 
 		; _ArrayDisplay($aBigArray)
@@ -198,4 +123,127 @@ Func IsUnsafeDP($iX, $iY, $bAttack = True)
         Return True
     EndIf
     Return False
-EndFunc   ;==>SafeDP
+EndFunc   ;==>IsUnsafeDP
+
+Func TestGetBuilderBaseSize()
+	Setlog("** TestGetBuilderBaseSize START**", $COLOR_DEBUG)
+	Local $Status = $g_bRunState
+	$g_bRunState = True
+	GetBuilderBaseSize(True, True)
+	$g_bRunState = $Status
+	Setlog("** TestGetBuilderBaseSize END**", $COLOR_DEBUG)
+EndFunc   ;==>TestGetBuilderBaseSize
+
+Func TestBuilderBaseZoomOut()
+	Setlog("** TestBuilderBaseZoomOutOnAttack START**", $COLOR_DEBUG)
+	Local $Status = $g_bRunState
+	$g_bRunState = True
+	BuilderBaseZoomOut(True)
+	$g_bRunState = $Status
+	Setlog("** TestBuilderBaseZoomOutOnAttack END**", $COLOR_DEBUG)
+EndFunc   ;==>TestBuilderBaseZoomOut
+
+Func BuilderBaseZoomOut($DebugImage = False, $bForceZoom = False)
+	If ZoomBuilderBaseMecanics($bForceZoom) > 0 Then
+		Return True
+	EndIf
+	
+	Return False
+EndFunc   ;==>BuilderBaseZoomOut
+
+Func BuilderBaseSendZoomOut($i = 0)
+	SetDebugLog("[" & $i & "][BuilderBaseSendZoomOut IN]")
+	If Not $g_bRunState Then Return
+	AndroidZoomOut(0, Default, ($g_iAndroidZoomoutMode <> 2)) ; use new ADB zoom-out
+	If @error <> 0 Then Return False
+	SetDebugLog("[" & $i & "][BuilderBaseSendZoomOut OUT]")
+	Return True
+EndFunc   ;==>BuilderBaseSendZoomOut
+
+Func GetBuilderBaseSize($bWithClick = False, $bDebugLog = False)
+	
+	Local $iResult = 0, $aVillage = 0
+
+	If Not $g_bRunState Then Return
+
+	Local $sFiles = ["", "2"]
+
+	
+	If $bWithClick = True Then
+		ClickDrag(100, 130, 230, 30)
+		If _Sleep(500) Then Return 
+	EndIf
+	
+	_CaptureRegion2()
+	
+	For $sMode In $sFiles
+
+		If Not $g_bRunState Then Return
+
+		$aVillage = GetVillageSize($bDebugLog, $sMode & "stone", $sMode & "tree", Default, True, False)
+		
+		If UBound($aVillage) > 8 And not @error Then
+			If StringLen($aVillage[9]) > 5 And StringIsSpace($aVillage[9]) = 0 Then
+				$iResult = Floor(Pixel_Distance($aVillage[4], $aVillage[5], $aVillage[7], $aVillage[8]))
+				Return $iResult
+			ElseIf StringIsSpace($aVillage[9]) = 1 Then
+				Return 0
+			EndIf
+		EndIf
+
+		If _Sleep($DELAYSLEEP * 10) Then Return
+
+	Next
+
+	Return 0
+EndFunc   ;==>GetBuilderBaseSize
+
+Func ZoomBuilderBaseMecanics($bForceZoom = Default, $bVersusMode = Default, $bDebugLog = False)
+	If $bForceZoom = Default Then $bForceZoom = True
+	If $bVersusMode = Default Then $bVersusMode = False
+
+	Local $iSize = ($bForceZoom = True Or $bVersusMode = True) ? (0) : (GetBuilderBaseSize())
+
+	If $iSize = 0 Then
+		BuilderBaseSendZoomOut(0)
+		If _Sleep(1000) Then Return
+		
+		$iSize = GetBuilderBaseSize(False, $bDebugLog)
+	EndIf
+
+	If Not $g_bRunState Then Return
+
+	Local $i = 0
+	Do
+		Setlog("Builder base force Zoomout ? " & $bForceZoom)
+
+		If Not $g_bRunState Then Return
+
+		If Not ($iSize > 520 And $iSize < 620) Then
+
+			; Update shield status
+			AndroidShield("AndroidOnlyZoomOut")
+			
+			; Send zoom-out.
+			If BuilderBaseSendZoomOut($i) Then
+				If _Sleep(1000) Then Return
+				
+				If Not $g_bRunState Then Return
+				$iSize = GetBuilderBaseSize(($i = 3), $bDebugLog) ; WihtoutClicks
+			EndIf
+		EndIf
+
+		If $i > 5 Then ExitLoop
+		$i += 1
+	Until ($iSize > 520 And $iSize < 620)
+
+	SetDebugLog("Builder Base Diamond: " & $iSize, $COLOR_INFO)
+	
+	If $iSize = 0 Then
+		SetDebugLog("[BBzoomout] ZoomOut Builder Base - FAIL", $COLOR_ERROR)
+	Else
+		SetDebugLog("[BBzoomout] ZoomOut Builder Base - OK", $COLOR_SUCCESS)
+	EndIf
+
+	Return $iSize
+EndFunc   ;==>ZoomBuilderBaseMecanics

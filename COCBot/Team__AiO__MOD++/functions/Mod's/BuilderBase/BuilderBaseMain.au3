@@ -157,7 +157,18 @@ Func _BuilderBase($bTestRun = False)
 			
 			;  $g_bCloudsActive fast network fix.
 			$g_bCloudsActive = False
-
+			
+			If ClanGamesBB() Then 
+				; xbebenk
+				For $i = 0 To 4
+					_Sleep(1000)
+					If QuickMIS("BC1", $g_sImgGameComplete, 760, 510, 820, 550, True, $g_bDebugImageSave) Then
+						SetLog("Nice, Game Completed", $COLOR_INFO)
+						GoToClanGames()
+					Endif
+				Next
+			EndIf
+			
 			; Improved logic, as long as the bot can be farmed it will continue doing the external while, otherwise it will continue attacking to fulfill the user's request more fast.	
 			checkObstacles(True)
 			

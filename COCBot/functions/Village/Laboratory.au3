@@ -31,10 +31,29 @@ Func TestLaboratory()
 	Return $Result
 EndFunc
 
+#Region - Magic Items - Team AIO Mod++
 Func Laboratory($bDebug = False)
+	Local $bReturn = _Laboratory($bDebug)
+
+	If $g_bChkLabPotion Then
+		ClickAway(True)
+		If _Sleep($DELAYLABORATORY3) Then Return ; Wait for window to open
+
+		;Click Laboratory
+		BuildingClickP($g_aiLaboratoryPos, "#0197") ; Team AIO Mod++
+		If _Sleep($DELAYLABORATORY3) Then Return ; Wait for window to open
+
+		LabPotionBoost()
+	EndIf
+
+	Return $bReturn
+EndFunc
+#EndRegion - Magic Items - Team AIO Mod++
+
+Func _Laboratory($bDebug = False)
 	If Not $g_bAutoLabUpgradeEnable Then Return ; Lab upgrade not enabled.
 
-	If $g_iTownHallLevel < 3 And Not ($g_iTownHallLevel < 1 And ($g_aiLaboratoryPos[0] <> 0 And $g_aiLaboratoryPos[1] <> 0)) Then ;
+	If $g_iTownHallLevel < 3 Then
 		SetLog("Townhall Lvl " & $g_iTownHallLevel & " has no Lab.", $COLOR_ERROR)
 		Return
 	EndIf
@@ -50,22 +69,20 @@ Func Laboratory($bDebug = False)
 
  	If ChkUpgradeInProgress() Then Return False ; see if we know about an upgrade in progress without checking the lab
 
+
 	; Get updated village elixir and dark elixir values
 	VillageReport()
 
 	;Click Laboratory
-	If not LabPotionBoost() Then BuildingClickP($g_aiLaboratoryPos, "#0197") ; Team AIO Mod++
-	
+	BuildingClickP($g_aiLaboratoryPos, "#0197") ; Team AIO Mod++
 	If _Sleep($DELAYLABORATORY3) Then Return ; Wait for window to open
 
 	If Not FindResearchButton() Then Return False ; cant start becuase we cannot find the research button
 
-	if ChkLabUpgradeInProgress() Then Return False ; cant start if something upgrading
-
 	; Lab upgrade is not in progress and not upgreading, so we need to start an upgrade.
 	Local $iCurPage = 1
 	Local $sCostResult
-	
+
 		If $g_iCmbLaboratory <> 0 Then
 			Local $iPage = Ceiling($g_iCmbLaboratory / $iPicsPerPage) ; page # of user choice
 			While($iCurPage < $iPage) ; go directly to the needed page
@@ -111,19 +128,19 @@ Func Laboratory($bDebug = False)
 			Click(243, 33)
 
 		Else ; users choice is any upgrade
-			If $g_bLabUpgradeOrderEnable Then 
+			If $g_bLabUpgradeOrderEnable Then
 				Local $iPriority = 0
-				Local $iTmpTroop = 0 
+				Local $iTmpTroop = 0
 				For $z = 0 To UBound($g_aCmbLabUpgradeOrder) - 1 ; list of lab upgrade order
 					$iTmpTroop = $g_aCmbLabUpgradeOrder[$z] + 1
-					If $iTmpTroop <> 0 Then 
+					If $iTmpTroop <> 0 Then
 						$iPriority = $z + 1
 						SetLog("Priority order " & $iPriority & " : " & $g_avLabTroops[$iTmpTroop][0], $COLOR_SUCCESS)
 					Endif
 				Next
 				For $z = 0 To UBound($g_aCmbLabUpgradeOrder) - 1 ;try labupgrade based on order
 					$g_iCmbLaboratory = $g_aCmbLabUpgradeOrder[$z] + 1
-					If $g_iCmbLaboratory <> 0 Then 
+					If $g_iCmbLaboratory <> 0 Then
 						SetLog("Try Lab Upgrade :" & $g_avLabTroops[$g_iCmbLaboratory][0], $COLOR_DEBUG)
 						Local $iPage = Ceiling($g_iCmbLaboratory / $iPicsPerPage) ; page # of user choice
 						While($iCurPage < $iPage) ; go directly to the needed page
@@ -153,7 +170,7 @@ Func Laboratory($bDebug = False)
 							Research()
 							$iCurPage = 1 ;reset current page
 						EndIf
-			
+
 						If $bUpgradeFound Then
 							$sCostResult = GetLabCostResult($aCoords) ; get cost of the upgrade
 
@@ -169,10 +186,10 @@ Func Laboratory($bDebug = False)
 							Else
 								Return LaboratoryUpgrade($g_avLabTroops[$g_iCmbLaboratory][0], $aCoords, $sCostResult, $bDebug) ; return whether or not we successfully upgraded
 							EndIf
-						EndIf		
+						EndIf
 					EndIf
 				Next ;search next
-				
+
 			Else ; no LabUpgradeOrder
 				While($iCurPage <= $iPages)
 					local $aPageUpgrades = findMultiple($g_sImgLabResearch, $sLabTroopsSectionDiam, $sLabTroopsSectionDiam, 0, 1000, 0, "objectname,objectpoints", True) ; Returns $aCurrentTroops[index] = $aArray[2] = ["TroopShortName", CordX,CordY]
@@ -209,9 +226,9 @@ EndFunc
 
 Func Research()
 	Click(243, 33)
-	If _Sleep(2000) Then Return 
+	If _Sleep(2000) Then Return
 	FindResearchButton()
-	If _Sleep(2000) Then Return 
+	If _Sleep(2000) Then Return
 EndFunc
 
 ; start a given upgrade
@@ -290,9 +307,9 @@ EndFunc
 Func LabNextPage($iCurPage, $iPages, $iYMidPoint)
 	If $iCurPage >= $iPages Then Return ; nothing left to scroll
 	If $iCurPage = $iPages-1 Then ; last page
-		ClickDrag(720, $iYMidPoint, 480, $iYMidPoint) ;600
+		ClickDrag(720, $iYMidPoint, 480, $iYMidPoint, True) ;600
 	Else
-		ClickDrag(720, $iYMidPoint, 85, $iYMidPoint)
+		ClickDrag(720, $iYMidPoint, 85, $iYMidPoint, True)
 	EndIf
 EndFunc
 
@@ -340,6 +357,13 @@ EndFunc
 
 ; Find Research Button
 Func FindResearchButton()
+
+	If QuickMIS("BC1", $g_sImgLabResearch, 200, 550, 670, 670, True, True) Then
+		SetLog("Laboratory is Upgrading!, Cannot start any upgrade", $COLOR_ERROR)
+		Click(243, 33)
+		Return False
+	EndIf
+
 	Local $aResearchButton = findButton("Research", Default, 1, True)
 	If IsArray($aResearchButton) And UBound($aResearchButton, 1) = 2 Then
 		If $g_bDebugImageSave Then SaveDebugImage("LabUpgrade") ; Debug Only

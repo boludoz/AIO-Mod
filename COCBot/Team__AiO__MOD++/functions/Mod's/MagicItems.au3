@@ -107,17 +107,10 @@ Func LabPotionBoost()
 		If $iLastTimeChecked[$g_iCurAccount] = 0 Then
  			If _Sleep($DELAYBOOSTHEROES2) Then Return
 
-			;If $g_sLabUpgradeTime <> "" Then
-			;	If Not FindResearchButton() Then Return False ; cant start becuase we cannot find the research button
-			;	If ChkLabUpgradeInProgress() Then Return False ; cant start if something upgrading
-			;EndIf
-
 			If $g_sLabUpgradeTime <> "" And (Number(_DateDiff("h", _NowCalc(), $g_sLabUpgradeTime)) > Int($g_iInputLabPotion)) Then
 
 				BuildingClickP($g_aiLaboratoryPos, "#0197")
 				If _Sleep($DELAYBOOSTHEROES2) Then Return
-
-				ForceCaptureRegion()
 
 				Local $aResearchButton = findButton("Research", Default, 1, True)
 				If IsArray($aResearchButton) And UBound($aResearchButton, 1) = 2 Then

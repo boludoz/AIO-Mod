@@ -86,7 +86,6 @@
 #include "functions\Mod's\BuilderBase\Attack\BuilderBaseImageDetection.au3"
 #include "functions\Mod's\BuilderBase\Attack\BuilderBaseCSV.au3"
 #include "functions\Mod's\BuilderBase\Attack\BuilderBaseAttack.au3"
-#include "functions\Mod's\BuilderBase\Village\BuilderBaseZoomOut.au3"
 #include "functions\Mod's\BuilderBase\Village\BuilderBasePolygon.au3"
 
 #include "functions\Mod's\BuilderBase\Village\UpgradeWalls.au3"

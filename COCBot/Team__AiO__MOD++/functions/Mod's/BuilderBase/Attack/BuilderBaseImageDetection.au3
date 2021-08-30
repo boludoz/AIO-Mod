@@ -168,7 +168,7 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = $g_iFurtherFromBBDefault, $DebugI
 
 	$hStarttime = __TimerInit()
 
-	$g_aBuilderBaseOuterDiamond = BuilderBaseAttackOuterDiamond()
+	$g_aBuilderBaseOuterDiamond = PrintBBPoly(True)
 
 	If $g_aBuilderBaseOuterDiamond = -1 Then
 		_DebugFailedImageDetection("DeployPoints")

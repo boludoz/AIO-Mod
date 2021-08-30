@@ -396,7 +396,7 @@ Func BuilderBaseAttackToDrop($aAvailableTroops)
 
 	If _Sleep(1000) Then Return
 
-	If ZoomBuilderBaseMecanics(True) < 1 Then Return False
+	If ZoomBuilderBaseMecanics(False) < 1 Then Return False
 
 	; [0] - TopLeft ,[1] - TopRight , [2] - BottomRight , [3] - BottomLeft
 	Local $DeployPoints = BuilderBaseGetDeployPoints(5)

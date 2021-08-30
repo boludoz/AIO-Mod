@@ -186,4 +186,5 @@ Global Const $g_sImgOkayPurge = 	@ScriptDir & "\imgxml\Resources\ClanGamesImages
 Global Const $g_sImgReward = 		@ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Reward"
 Global Const $g_sImageBuilerGames = @ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\BuilderGames"
 
+Global Const $g_sImgGameComplete = 	@ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\GameComplete" ; Custom BB - Team AIO Mod++ (xbebenk)
 #EndRegion
