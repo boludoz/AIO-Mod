@@ -20,13 +20,13 @@ Global $g_eFailSTBoostIndex = -1
 Func TrainIt($iIndex, $iQuantity = 1, $iSleep = 400, $bRecheckTroops = False)
 	If $g_bDebugSetlogTrain Then SetLog("Func TrainIt $iIndex=" & $iIndex & " $howMuch=" & $iQuantity & " $iSleep=" & $iSleep, $COLOR_DEBUG)
 	Local $bDark = ($iIndex >= $eMini And $iIndex <= $eHunt)
-	
+
 	$g_eFailSTBoostIndex = -1
-	
+
 	For $i = 1 To 5 ; Do
 
 		Local $aTrainPos = GetTrainPos($iIndex)
-		If IsArray($aTrainPos) And $aTrainPos[0] <> -1 Then		
+		If IsArray($aTrainPos) And $aTrainPos[0] <> -1 Then
 			$g_bAllBarracksUpgd = False
 			If _ColorCheck(_GetPixelColor($aTrainPos[0], $aTrainPos[1], $g_bCapturePixel), Hex($aTrainPos[2], 6), $aTrainPos[3]) Then
 				Local $FullName = GetFullName($iIndex, $aTrainPos)
@@ -72,55 +72,54 @@ Func TrainIt($iIndex, $iQuantity = 1, $iSleep = 400, $bRecheckTroops = False)
 				Else
 					If $g_bDebugSetlogTrain Then SaveDebugImage("TroopIconNotFound_" & GetTroopName($iIndex))
 					SetLog("TrainIt troop position " & GetTroopName($iIndex) & " did not find icon", $COLOR_ERROR)
-#REGION
-			If $bRecheckTroops = False Then
-				;;;;;;;;;;;;;;
-				If $g_eFailSTBoostIndex <> -1 Then
-				
-					For $iB = 0 To 1
-						Local $iSTIndex = $g_iCmbSuperTroops[$iB] -1
-						If $iSTIndex > -1 And UBound($g_asSuperTroopNames) -1 >= $iSTIndex Then
-							; Translate GUI to TRUE index.
-							Local $iSt = _ArraySearch($g_asTroopNames, $g_asSuperTroopNames[$iSTIndex])
-							If Not @error Then
-								; Only boost troops if user require this in GUI, or this is ST. iF USER DONT REQUIRE BOOST, TRAIN NORMAL TROOP.
-								IF $g_eFailSTBoostIndex == $iSt Then
-									ClickAway()
-									If _Sleep(500) Then Return
-									
-									BoostSupertroop()
-									If _Sleep(500) Then Return
+					#Region
+					If $bRecheckTroops = False And $g_bSuperTroopsEnable = True Then
+						;;;;;;;;;;;;;;
+						If $g_eFailSTBoostIndex <> -1 Then
 
-									ClickAway()
-									If _Sleep(500) Then Return
-									
-									; Open train window at troops.
-									If OpenArmyOverview(True, "TrainIt") Then
-										If _Sleep(500) Then Return
-										
-										If OpenTroopsTab(True, "TrainIt") Then
+							For $iB = 0 To 1
+								Local $iSTIndex = $g_iCmbSuperTroops[$iB] - 1
+								If $iSTIndex > -1 And UBound($g_asSuperTroopNames) - 1 >= $iSTIndex Then
+									; Translate GUI to TRUE index.
+									Local $iSt = _ArraySearch($g_asTroopNames, $g_asSuperTroopNames[$iSTIndex])
+									If Not @error Then
+										; Only boost troops if user require this in GUI, or this is ST. iF USER DONT REQUIRE BOOST, TRAIN NORMAL TROOP.
+										If $g_eFailSTBoostIndex == $iSt Then
+											ClickAway()
 											If _Sleep(500) Then Return
-									
-											Return TrainIt($iIndex, $iQuantity, $iSleep, True)
-										Else
-											Return False
-										EndIf
-									Else
-										Return False
-									EndIf
-									; ExitLoop
-								EndIf
-							EndIf
-						EndIf
-					Next
-					;TrainSystem()?
-					$g_eFailSTBoostIndex = -1
-					; Return False
-				EndIf
-				;;;;;;;;;;;;;;;;;;;;;;;
-			EndIf
 
-#ENDREGION
+											BoostSupertroop()
+											If _Sleep(500) Then Return
+
+											ClickAway()
+											If _Sleep(500) Then Return
+
+											; Open train window at troops.
+											If OpenArmyOverview(True, "TrainIt") Then
+												If _Sleep(500) Then Return
+
+												If OpenTroopsTab(True, "TrainIt") Then
+													If _Sleep(500) Then Return
+
+													Return TrainIt($iIndex, $iQuantity, $iSleep, True)
+												Else
+													Return False
+												EndIf
+											Else
+												Return False
+											EndIf
+											; ExitLoop
+										EndIf
+									EndIf
+								EndIf
+							Next
+							;TrainSystem()?
+							$g_eFailSTBoostIndex = -1
+							; Return False
+						EndIf
+						;;;;;;;;;;;;;;;;;;;;;;;
+					EndIf
+					#EndRegion
 					If $i = 5 Then
 						SetLog("Seems all your barracks are upgrading!", $COLOR_ERROR)
 						$g_bAllBarracksUpgd = True
@@ -202,7 +201,7 @@ EndFunc   ;==>GetRNDName
 
 ;Func GetVariable(Const $ImageToUse, Const $iIndex)
 ;   Local $aTrainPos[4] = [-1, -1, -1, -1]
-   ; Capture the screen for comparison
+; Capture the screen for comparison
 ;   _CaptureRegion2(25, 375, 840, 548)
 
 ;   Local $asResult = DllCallMyBot("FindTile", "handle", $g_hHBitmap2, "str", $ImageToUse, "str", "FV", "int", 1)
@@ -280,7 +279,7 @@ Func GetVariable(Const $asImageToUse, Const $iIndex)
 						Return $aTrainPos
 					Else
 						SetLog("Don't know how to train the troop with index " & $iIndex & " yet.")
-						
+
 					EndIf
 				Else
 					SetLog("Don't know how to train the troop with index " & $iIndex & " yet")
@@ -292,11 +291,11 @@ Func GetVariable(Const $asImageToUse, Const $iIndex)
 	Next
 
 	If $iError = 0 Then
-		SetLog("No " & GetTroopName($iIndex) & " Icon found!", $COLOR_ERROR)
-	
+		SetDebugLog("No " & GetTroopName($iIndex) & " Icon found!", $COLOR_ERROR)
+
 		; Auto boost.
 		$g_eFailSTBoostIndex = $iIndex
-		
+
 	ElseIf $iError = -1 Then
 		SetLog("TrainIt.au3 GetVariable(): ImgLoc DLL Error Occured!", $COLOR_ERROR)
 	ElseIf $iError = -2 Then
