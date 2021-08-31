@@ -574,14 +574,14 @@ EndFunc   ;==>chkTrophyHeroes
 
 Func ChkCollect()
 	If GUICtrlRead($g_hChkCollect) = $GUI_CHECKED Then
-		GUICtrlSetState($g_hChkCollectCartFirst, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkCollectLootCar, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkTreasuryCollect, $GUI_ENABLE)
 		GUICtrlSetState($g_hTxtCollectGold, $GUI_ENABLE)
 		GUICtrlSetState($g_hTxtCollectElixir, $GUI_ENABLE)
 		GUICtrlSetState($g_hTxtCollectDark, $GUI_ENABLE)
 	Else
-		GUICtrlSetState($g_hChkCollectCartFirst, $GUI_UNCHECKED)
-		GUICtrlSetState($g_hChkCollectCartFirst, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkCollectLootCar, $GUI_UNCHECKED)
+		GUICtrlSetState($g_hChkCollectLootCar, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkTreasuryCollect, $GUI_UNCHECKED)
 		GUICtrlSetState($g_hChkTreasuryCollect, $GUI_DISABLE)
 		GUICtrlSetState($g_hTxtCollectGold, $GUI_DISABLE)
@@ -602,6 +602,7 @@ Func ChkTreasuryCollect()
 		GUICtrlSetState($g_hTxtTreasuryDark, $GUI_DISABLE)
 	EndIf
 EndFunc   ;==>ChkTreasuryCollect
+
 #CS - AIO MOD++
 Func ChkFreeMagicItems()
 	If $g_iTownHallLevel >= 8 Or $g_iTownHallLevel = 0 Then ; Must be Th8 or more to use the Trader
@@ -610,6 +611,7 @@ Func ChkFreeMagicItems()
 		GUICtrlSetState($g_hChkFreeMagicItems, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
 	EndIf
 EndFunc   ;==>ChkFreeMagicItems
+
 Func chkStartClockTowerBoost()
 	If GUICtrlRead($g_hChkStartClockTowerBoost) = $GUI_CHECKED Then
 		GUICtrlSetState($g_hChkCTBoostBlderBz, $GUI_ENABLE)

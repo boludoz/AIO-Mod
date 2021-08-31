@@ -382,20 +382,6 @@ Func ChkBBAttackLoops()
 
 EndFunc   ;==>ChkBBAttackLoops
 
-Func chkIgnoreUpdatesBB()
-	For $i = 0 To UBound($g_hChkBBUpgradesToIgnore) -1
-		If @GUI_CtrlId = $g_hChkBBUpgradesToIgnore[$i] Then
-			$g_iChkBBUpgradesToIgnore[$i] = (GUICtrlRead($g_hChkBBUpgradesToIgnore[$i]) = $GUI_CHECKED) ? (1) : (0)
-		EndIf
-	Next
-EndFunc   ;==>chkIgnoreUpdatesBB
-
-Func chkBBUpgradesToIgnore()
-	For $i = 0 To UBound($g_iChkBBUpgradesToIgnore) - 1
-		$g_iChkBBUpgradesToIgnore[$i] = GUICtrlRead($g_hChkBBUpgradesToIgnore[$i]) = $GUI_CHECKED ? 1 : 0
-	Next
-EndFunc   ;==>chkBBUpgradesToIgnore
-
 #Region - Custom Yard - Team AIO Mod++
 Func chkCleanBBYard()
 	If GUICtrlRead($g_hChkCleanBBYard) = $GUI_CHECKED Then
@@ -433,3 +419,27 @@ Func chkStartClockTowerBoostPotion()
 	EndIf
 
 EndFunc   ;==>chkStartClockTowerBoostPotion
+
+#Region - Custom Improve - Team AIO Mod++
+; W. W. You got me.
+Func chkIgnoreUpgradesBB()
+	For $i = 0 To UBound($g_hChkBBUpgradesToIgnore) -1
+		If @GUI_CtrlId = $g_hChkBBUpgradesToIgnore[$i] Then
+			$g_iChkBBUpgradesToIgnore[$i] = (GUICtrlRead($g_hChkBBUpgradesToIgnore[$i]) = $GUI_CHECKED) ? (1) : (0)
+		EndIf
+	Next
+EndFunc   ;==>chkIgnoreUpgradesBB
+
+Func chkBBUpgradesToIgnore()
+	For $i = 0 To UBound($g_iChkBBUpgradesToIgnore) - 1
+		$g_iChkBBUpgradesToIgnore[$i] = GUICtrlRead($g_hChkBBUpgradesToIgnore[$i]) = $GUI_CHECKED ? 1 : 0
+	Next
+EndFunc   ;==>chkBBUpgradesToIgnore
+
+Func RadioIgnoreUpgradesBBOrOtto()
+	Local $hMode = (GUICtrlRead($g_hRadioBBUpgradesToIgnore) = $GUI_CHECKED And GUICtrlRead($g_hChkBBSuggestedUpgrades) = $GUI_CHECKED) ? ($GUI_ENABLE) : ($GUI_DISABLE)
+	For $hCtrl = $g_hChkBBUpgradesToIgnore[0] To $g_hChkBBUpgradesToIgnore[UBound($g_hChkBBUpgradesToIgnore) -1]
+		GUICtrlSetState($hCtrl, $hMode)
+	Next
+EndFunc   ;==>RadioIgnoreUpgradesBBOrOtto
+#EndRegion - Custom Improve - Team AIO Mod++

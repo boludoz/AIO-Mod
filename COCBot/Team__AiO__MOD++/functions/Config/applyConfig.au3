@@ -197,6 +197,10 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 				GUICtrlSetState($g_hChkBBUpgradesToIgnore[$i], $g_iChkBBUpgradesToIgnore[$i] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			Next
 			chkBBUpgradesToIgnore()
+
+			GUICtrlSetState($g_hRadioBBUpgradesToIgnore, $g_bRadioBBUpgradesToIgnore ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hRadioBBCustomOTTO, $g_bRadioBBCustomOTTO ? $GUI_CHECKED : $GUI_UNCHECKED)
+			; RadioIgnoreUpgradesBBOrOtto()
 			#EndRegion - Custom Improve - Team AIO Mod++
 
 			#Region - Buy Guard - Team AIO Mod++
@@ -298,6 +302,9 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			For $i = 0 To UBound($g_iChkBBUpgradesToIgnore) - 1
 				$g_iChkBBUpgradesToIgnore[$i] = GUICtrlRead($g_hChkBBUpgradesToIgnore[$i]) = $GUI_CHECKED ? 1 : 0
 			Next
+			
+			$g_bRadioBBUpgradesToIgnore = (GUICtrlRead($g_hRadioBBUpgradesToIgnore) = $GUI_CHECKED)
+			$g_bRadioBBCustomOTTO = (GUICtrlRead($g_hRadioBBCustomOTTO) = $GUI_CHECKED)
 			#EndRegion - Custom Improve - Team AIO Mod++
 
 			#Region - Buy Guard - Team AIO Mod++

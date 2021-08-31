@@ -14,7 +14,7 @@
 #include-once
 
 Global $g_hChkBBSuggestedUpgrades = 0, $g_hChkBBSuggestedUpgradesIgnoreGold = 0, $g_hChkBBSuggestedUpgradesIgnoreElixir
-Global $g_hLblBBUpgradesToIgnore = 0
+Global $g_hRadioBBUpgradesToIgnore = 0, $g_hRadioBBCustomOTTO = 0 ; xbebenk
 Global $g_hChkPlacingNewBuildings = 0, $g_hChkUpgradeTroops = 0, $g_hChkUpgradeMachine = 0, $g_hChkBBNextUpgradeRepeat = 0
 Global $g_hChkBBUpgradeWalls = 0, $g_hLblBBWallLevelInfo = 0, $g_hLblBBWallNumberInfo = 0, $g_hCmbBBWallLevel = 0, $g_hPicBBWallUpgrade = "", $g_hBBWallNumber = 0, $g_hLblBBWallCostInfo = 0, $g_hLblBBWallCost = 0
 Global $g_hChkBBWallRing = 0, $g_hChkBBUpgWallsGold = 0, $g_hChkBBUpgWallsElixir = 0
@@ -36,7 +36,11 @@ Func CreateUpgradeBuilderBaseSubTab()
 	GUICtrlSetOnEvent(-1, "chkActivateBBSuggestedUpgradesGold")
 	$g_hChkBBSuggestedUpgradesIgnoreElixir = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBSuggestedUpgradesIgnore_02", "Ignore Elixir Upgrades"), $x + 195, $y + 20, -1, -1)
 	GUICtrlSetOnEvent(-1, "chkActivateBBSuggestedUpgradesElixir")
-	$g_hLblBBUpgradesToIgnore = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Group_02", "Upgrades to ignore"), $x + 160, $y + 45, -1, -1)
+	$g_hRadioBBUpgradesToIgnore = GUICtrlCreateRadio(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Radio_01", "Upgrades to ignore"), $x + 80, $y + 43, -1, -1)
+	GUICtrlSetOnEvent(-1, "RadioIgnoreUpgradesBBOrOtto")
+	$g_hRadioBBCustomOTTO = GUICtrlCreateRadio(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Radio_02", "Optimize O.T.T.O."), $x + 200, $y + 43, -1, -1) ; xbebenk
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBSuggestedUpgradesIgnore_05", "Optimize OTTO, will only upgrade suggested on OTTO Upgrade.\r\nSuch: Archer Tower, DoubleCannon, MultiMortar, Mega Tesla and Battle Machine"))
+	GUICtrlSetOnEvent(-1, "RadioIgnoreUpgradesBBOrOtto")
 	$x = 20
 	$y += 60
 
@@ -45,7 +49,7 @@ Func CreateUpgradeBuilderBaseSubTab()
 		$iCol += 1
 		
 		$g_hChkBBUpgradesToIgnore[$i] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", $g_sBBUpgradesToIgnore[$i], $g_sBBUpgradesToIgnore[$i]), $x, $y, -1, -1)
-		GUICtrlSetOnEvent(-1, "chkIgnoreUpdatesBB")
+		GUICtrlSetOnEvent(-1, "chkIgnoreUpgradesBB")
 		
 		If Mod($iCol, 4) = 0 Then
 			$x = 20

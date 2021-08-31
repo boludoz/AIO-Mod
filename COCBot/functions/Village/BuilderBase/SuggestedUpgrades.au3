@@ -60,10 +60,12 @@ Func chkActivateBBSuggestedUpgrades()
 ;~ 		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreHall, $GUI_ENABLE)
 ;~ 		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreWall, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkPlacingNewBuildings, $GUI_ENABLE)
-		For $i = 0 To UBound($g_iChkBBUpgradesToIgnore) - 1
-			GUICtrlSetState($g_hChkBBUpgradesToIgnore[$i], $GUI_ENABLE)
-		Next
+		; For $i = 0 To UBound($g_iChkBBUpgradesToIgnore) - 1
+			; GUICtrlSetState($g_hChkBBUpgradesToIgnore[$i], $GUI_ENABLE)
+		; Next
 		#EndRegion - Custom BB Army - Team AIO Mod++
+		GUICtrlSetState($g_hRadioBBUpgradesToIgnore, $GUI_ENABLE) ; Custom Improve - Team AIO Mod++
+		GUICtrlSetState($g_hRadioBBCustomOTTO, $GUI_ENABLE) ; Custom Improve - Team AIO Mod++
 	Else
 		$g_iChkBBSuggestedUpgrades = 0
 		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreGold, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
@@ -72,11 +74,14 @@ Func chkActivateBBSuggestedUpgrades()
 ;~ 		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreHall, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
 ;~ 		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreWall, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
 		GUICtrlSetState($g_hChkPlacingNewBuildings, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
-		For $i = 0 To UBound($g_iChkBBUpgradesToIgnore) - 1
-			GUICtrlSetState($g_hChkBBUpgradesToIgnore[$i], $GUI_DISABLE)
-		Next
+		; For $i = 0 To UBound($g_iChkBBUpgradesToIgnore) - 1
+			; GUICtrlSetState($g_hChkBBUpgradesToIgnore[$i], $GUI_DISABLE)
+		; Next
 		#EndRegion - Custom BB Army - Team AIO Mod++
+		GUICtrlSetState($g_hRadioBBUpgradesToIgnore, $GUI_DISABLE) ; Custom Improve - Team AIO Mod++
+		GUICtrlSetState($g_hRadioBBCustomOTTO, $GUI_DISABLE) ; Custom Improve - Team AIO Mod++
 	EndIf
+	RadioIgnoreUpgradesBBOrOtto() ; Custom Improve - Team AIO Mod++
 EndFunc   ;==>chkActivateBBSuggestedUpgrades
 
 Func chkActivateBBSuggestedUpgradesGold()
@@ -345,20 +350,39 @@ Func GetUpgradeButton($sUpgButtom = "", $bDebug = False)
 
 				; Verify if is to Upgrade
 				Local $sMsg = "", $bBuildString = False
-				For $i = 0 To UBound($g_sBBUpgradesToIgnore) - 1
-					$bBuildString = _CompareTexts($g_sBBUpgradesToIgnore[$i], $g_aBBUpgradeNameLevel[1])
-					If $bBuildString = True And $g_iChkBBUpgradesToIgnore[$i] = 1 Then
-						$sMsg = "Ops! " & $g_aBBUpgradeNameLevel[1] & " is not to Upgrade!"
-						SetLog($sMsg, $COLOR_ERROR)
+				If $g_bRadioBBCustomOTTO = True Then
+					For $i = 0 To UBound($g_sBBOptimizeOTTO) - 1
+						$bBuildString = _CompareTexts($g_sBBOptimizeOTTO[$i], $g_aBBUpgradeNameLevel[1])
+						If $bBuildString = False Then
+							$sMsg = "Ops! " & $g_aBBUpgradeNameLevel[1] & " is not to Upgrade! (Optimize O.T.T.O.)"
+							SetLog($sMsg, $COLOR_ERROR)
 
-						$g_aBBUpgradeResourceCostDuration = $aResetBB
-						$g_aBBUpgradeNameLevel = $aResetBB
+							$g_aBBUpgradeResourceCostDuration = $aResetBB
+							$g_aBBUpgradeNameLevel = $aResetBB
 
-						Return False
-					ElseIf $bBuildString = True And $g_iChkBBUpgradesToIgnore[$i] = 0 Then
-						ExitLoop
-					EndIf
-				Next
+							Return False
+						Else
+							$sMsg = "Optimize O.T.T.O. : " & $g_aBBUpgradeNameLevel[1] & " is for Upgrade."
+							SetLog($sMsg, $COLOR_SUCCESS)
+							ExitLoop
+						EndIf
+					Next
+				Else
+					For $i = 0 To UBound($g_sBBUpgradesToIgnore) - 1
+						$bBuildString = _CompareTexts($g_sBBUpgradesToIgnore[$i], $g_aBBUpgradeNameLevel[1])
+						If $bBuildString = True And $g_iChkBBUpgradesToIgnore[$i] = 1 Then
+							$sMsg = "Ops! " & $g_aBBUpgradeNameLevel[1] & " is not to Upgrade!"
+							SetLog($sMsg, $COLOR_ERROR)
+
+							$g_aBBUpgradeResourceCostDuration = $aResetBB
+							$g_aBBUpgradeNameLevel = $aResetBB
+
+							Return False
+						ElseIf $bBuildString = True And $g_iChkBBUpgradesToIgnore[$i] = 0 Then
+							ExitLoop
+						EndIf
+					Next
+				EndIf
 
 				If _MultiPixelSearch($g_aImageSearchXML[0][1], 579, $g_aImageSearchXML[0][2] + 67, 613, 2, 2, Hex(0xFF887F, 6), StringSplit2D("0xFF887F-0-1|0xFF887F-4-0"), 35) <> 0 Then
 					SetLog("Upgrade stopped due to insufficient loot", $COLOR_ERROR)

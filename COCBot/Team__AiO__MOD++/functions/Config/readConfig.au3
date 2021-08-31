@@ -139,6 +139,8 @@ Func ReadConfig_MOD_MiscTab()
 	For $i = 0 To UBound($g_iChkBBUpgradesToIgnore) - 1
 		IniReadS($g_iChkBBUpgradesToIgnore[$i], $g_sProfileConfigPath, "other", "chkBBUpgradesToIgnore" & $i, 0, "int")
 	Next
+	IniReadS($g_bRadioBBUpgradesToIgnore, $g_sProfileConfigPath, "other", "RadioBBUpgradesToIgnore", $g_bRadioBBUpgradesToIgnore, "Bool")
+	IniReadS($g_bRadioBBCustomOTTO, $g_sProfileConfigPath, "other", "RadioBBCustomOTTO", $g_bRadioBBCustomOTTO, "Bool")
 	#EndRegion - Custom Improve - Team AIO Mod++
 	
 	#Region - Buy Guard - Team AIO Mod++

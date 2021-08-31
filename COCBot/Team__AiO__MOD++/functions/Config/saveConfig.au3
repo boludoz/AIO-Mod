@@ -147,6 +147,8 @@ Func SaveConfig_MOD_MiscTab()
 	For $i = 0 To UBound($g_iChkBBUpgradesToIgnore) - 1
 		_Ini_Add("other", "chkBBUpgradesToIgnore" & $i, $g_iChkBBUpgradesToIgnore[$i])
 	Next
+	_Ini_Add("other", "RadioBBUpgradesToIgnore", $g_bRadioBBUpgradesToIgnore ? 1 : 0)
+	_Ini_Add("other", "RadioBBCustomOTTO", $g_bRadioBBCustomOTTO ? 1 : 0)
 	#EndRegion - Custom Improve - Team AIO Mod++
 
 	#Region - Buy Guard - Team AIO Mod++
