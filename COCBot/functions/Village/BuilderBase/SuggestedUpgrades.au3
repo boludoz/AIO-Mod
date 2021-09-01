@@ -353,20 +353,21 @@ Func GetUpgradeButton($sUpgButtom = "", $bDebug = False)
 				If $g_bRadioBBCustomOTTO = True Then
 					For $i = 0 To UBound($g_sBBOptimizeOTTO) - 1
 						$bBuildString = _CompareTexts($g_sBBOptimizeOTTO[$i], $g_aBBUpgradeNameLevel[1])
-						If $bBuildString = False Then
-							$sMsg = "Ops! " & $g_aBBUpgradeNameLevel[1] & " is not to Upgrade! (Optimize O.T.T.O.)"
-							SetLog($sMsg, $COLOR_ERROR)
-
-							$g_aBBUpgradeResourceCostDuration = $aResetBB
-							$g_aBBUpgradeNameLevel = $aResetBB
-
-							Return False
-						Else
-							$sMsg = "Optimize O.T.T.O. : " & $g_aBBUpgradeNameLevel[1] & " is for Upgrade."
-							SetLog($sMsg, $COLOR_SUCCESS)
-							ExitLoop
-						EndIf
+						If $bBuildString = True Then ExitLoop
 					Next
+					
+					If $bBuildString = False Then
+						$sMsg = "Ops! " & $g_aBBUpgradeNameLevel[1] & " is not to Upgrade! (Optimize O.T.T.O.)"
+						SetLog($sMsg, $COLOR_ERROR)
+
+						$g_aBBUpgradeResourceCostDuration = $aResetBB
+						$g_aBBUpgradeNameLevel = $aResetBB
+
+						Return False
+					Else
+						$sMsg = "Optimize O.T.T.O. : " & $g_aBBUpgradeNameLevel[1] & " is for Upgrade."
+						SetLog($sMsg, $COLOR_SUCCESS)
+					EndIf
 				Else
 					For $i = 0 To UBound($g_sBBUpgradesToIgnore) - 1
 						$bBuildString = _CompareTexts($g_sBBUpgradesToIgnore[$i], $g_aBBUpgradeNameLevel[1])
