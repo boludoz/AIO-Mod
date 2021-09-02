@@ -1414,9 +1414,6 @@ Func FirstCheck()
 	If $g_bDebugSetlog Then SetDebugLog("-- FirstCheck Loop --")
 	If Not $g_bRunState Then Return
 
-	SetDebugLog("-- FirstCheck Loop --")
-	If Not $g_bRunState Then Return
-
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
 
 	

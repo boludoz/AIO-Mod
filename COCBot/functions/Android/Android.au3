@@ -4829,7 +4829,7 @@ Func CheckEmuNewVersions()
 		Case "BlueStacks2"
 			$NewVersion = GetVersionNormalized("4.280.0.4206") ; BlueStacks HyperV by Teknolojikpanda - Team__AiO__MOD
 		Case "MEmu"
-			$NewVersion = GetVersionNormalized("7.5.0.0")
+			$NewVersion = GetVersionNormalized("7.5.6.0")
          Case "Nox"
 			$NewVersion = GetVersionNormalized("7.0.1.2")
 		Case Else
@@ -4838,7 +4838,7 @@ Func CheckEmuNewVersions()
 	EndSwitch
 
 	If $Version > $NewVersion Then
-		SetLog("Compatibility has not been certified for " & $g_sAndroidEmulator & " version (" & $g_sAndroidVersion & ")!", $COLOR_ERROR)
+		SetLog("Compatibility has not been certified for " & $g_sAndroidEmulator & " version (" & $g_sAndroidVersion & ")!", $COLOR_INFO)
 		SetLog($HelpLink, $COLOR_INFO)
 	EndIf
 EndFunc   ;==>CheckEmuNewVersions
