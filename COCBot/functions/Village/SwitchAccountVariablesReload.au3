@@ -228,7 +228,6 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			$aiNumLSpellsUsed[$iAccount] = $g_iNumLSpellsUsed
 
 			; Builder time and count
-			$asNextBuilderReadyTime[$iAccount] = $g_sNextBuilderReadyTime
 			$aiFreeBuilderCount[$iAccount] = $g_iFreeBuilderCount
 			$aiTotalBuilderCount[$iAccount] = $g_iTotalBuilderCount
 			; Lab time
@@ -324,7 +323,6 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			$g_iNumLSpellsUsed = $aiNumLSpellsUsed[$iAccount]
 
 			; Builder time and count
-			$g_sNextBuilderReadyTime = $asNextBuilderReadyTime[$iAccount]
 			$g_iFreeBuilderCount = $aiFreeBuilderCount[$iAccount]
 			$g_iTotalBuilderCount = $aiTotalBuilderCount[$iAccount]
 			; Lab time
@@ -364,7 +362,7 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			$g_iBuilderBoostDiscount = $aiBuilderBoostDiscount[$iAccount]
 			$g_abNotNeedAllTime[0] = $abNotNeedAllTime0[$iAccount]
 			$g_abNotNeedAllTime[1] = $abNotNeedAllTime1[$iAccount]
-			
+
 			ResetVariables("donated") ; reset for new account
 			$g_aiAttackedCountSwitch[$iAccount] = $aiAttackedCount[$iAccount]
 
