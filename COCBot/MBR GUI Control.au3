@@ -1677,59 +1677,39 @@ Func SetTime($bForceUpdate = False)
 		GUICtrlSetData($g_hLblResultRuntimeNow, StringFormat("%02i:%02i:%02i", $hour, $min, $sec))
 	EndIf
 
-	; Lab time in Bottom GUI
 	If _DateIsValid($g_sLabUpgradeTime) Then
 		Local $iLabTime = _DateDiff("s", _NowCalc(), $g_sLabUpgradeTime) * 1000
 		If $iLabTime > 0 Then
 			_TicksToDay($iLabTime, $day, $hour, $min, $sec)
-			GUICtrlSetData($g_hLbLLabTime, $day > 0 ? StringFormat("%2ud %02i:%02i", $day, $hour, $min, $sec) : ($hour > 0 ? StringFormat("%02i:%02i:%02i", $hour, $min, $sec) : StringFormat("%02i:%02i", $min, $sec)))
+			GUICtrlSetData($g_hLbLLabTime, $day > 0 ? StringFormat("%2ud %02i:%02i'", $day, $hour, $min) : StringFormat("%02i:%02i:%02i", $hour, $min, $sec))
 			GUICtrlSetColor($g_hLbLLabTime, $day > 0 ? $COLOR_GREEN : $COLOR_ORANGE)
 		Else
-			GUICtrlSetData($g_hLbLLabTime, "00:00:00")
-			GUICtrlSetColor($g_hLbLLabTime, $COLOR_BLACK)
+			GUICtrlSetData($g_hLbLLabTime, "")
 			$g_sLabUpgradeTime = ""
 		EndIf
 	EndIf
 
-    If _DateIsValid($g_sPetUpgradeTime) Then
-        Local $iPetTime = _DateDiff("s", _NowCalc(), $g_sPetUpgradeTime) * 1000
-        If $iPetTime > 0 Then
-            _TicksToDay($iPetTime, $day, $hour, $min, $sec)
-            GUICtrlSetData($g_hLbLPetTime, $day > 0 ? StringFormat("%2ud %02i:%02i", $day, $hour, $min) : StringFormat("%02i:%02i:%02i", $hour, $min, $sec))
-            GUICtrlSetColor($g_hLbLPetTime, $day > 0 ? $COLOR_GREEN : $COLOR_ORANGE)
-        Else
-            GUICtrlSetData($g_hLbLPetTime, "")
-            $g_sPetUpgradeTime = ""
-        EndIf
-    EndIf
-
- 	; Update multi-stats: multi clocks, army time, builder time, lab time
 	If ProfileSwitchAccountEnabled() Then
-		If GUICtrlRead($g_hGUI_STATS_TAB, 1) = $g_hGUI_STATS_TAB_ITEM5 And GUICtrlRead($g_hGUI_BOT_TAB, 1) = $g_hGUI_BOT_TAB_ITEM5 And GUICtrlRead($g_hTabMain, 1) = $g_hTabBot Then SwitchAccountVariablesReload("SetTime")
-	EndIf
-
-	; Builder time in Bottom GUI
-	Static $DisplayLoop = 0, $bCurrentDisplayStatus = True
-	If $DisplayLoop > 5 Then
-		$DisplayLoop = 0
-		If _DateIsValid($g_sNextBuilderReadyTime) Then
-			_TicksToDay(Int(_DateDiff("s", _NowCalc(), $g_sNextBuilderReadyTime) * 1000), $day, $hour, $min, $sec)
-			Local $sBuilderTime = $day > 0 ? StringFormat("%id %ih", $day, $hour) : ($hour > 0 ? StringFormat("%ih %i'", $hour, $min) : StringFormat("%im %i""", $min, $sec))
-
-			If $bCurrentDisplayStatus Then
-				GUICtrlSetData($g_hLblResultBuilderNow, $g_iFreeBuilderCount & "/" & $g_iTotalBuilderCount)
-				GUICtrlSetColor($g_hLblResultBuilderNow, $COLOR_BLACK)
-				$bCurrentDisplayStatus = False
-			Else
-				GUICtrlSetData($g_hLblResultBuilderNow, $sBuilderTime)
-				GUICtrlSetColor($g_hLblResultBuilderNow, $g_iFreeBuilderCount > 0 ? $COLOR_GREEN : $COLOR_BLACK)
-				$bCurrentDisplayStatus = True
-			EndIf
+		If GUICtrlRead($g_hGUI_STATS_TAB, 1) = $g_hGUI_STATS_TAB_ITEM5 And GUICtrlRead($g_hGUI_BOT_TAB, 1) = $g_hGUI_BOT_TAB_ITEM5 And GUICtrlRead($g_hTabMain, 1) = $g_hTabBot Then
+			_TicksToTime(Int(__TimerDiff($g_ahTimerSinceSwitched[$g_iCurAccount]) + $g_aiRunTime[$g_iCurAccount]), $hour, $min, $sec)
+			GUICtrlSetData($g_ahLblResultRuntimeNowAcc[$g_iCurAccount], StringFormat("%02i:%02i:%02i", $hour, $min, $sec))
+			For $i = 0 To $g_iTotalAcc
+				If _DateIsValid($g_asTrainTimeFinish[$i]) Then
+					Local $iTime = _DateDiff("s", _NowCalc(), $g_asTrainTimeFinish[$i]) * 1000
+					_TicksToTime(Abs($iTime), $hour, $min, $sec)
+					GUICtrlSetData($g_ahLblTroopTime[$i], ($iTime < 0 ? "-" : "") & StringFormat("%02i:%02i", $min, $sec))
+					If $i = $g_iCurAccount Then
+						GUICtrlSetColor($g_ahLblTroopTime[$i], $COLOR_GREEN)
+					ElseIf $iTime < 0 Then
+						GUICtrlSetColor($g_ahLblTroopTime[$i], $COLOR_RED)
+					Else
+						GUICtrlSetColor($g_ahLblTroopTime[$i], $COLOR_BLACK)
+					EndIf
+				EndIf
+			Next
+			SwitchAccountVariablesReload("SetTime")
 		EndIf
-
 	EndIf
-	$DisplayLoop += 1
-
 EndFunc   ;==>SetTime
 
 Func tabMain()
