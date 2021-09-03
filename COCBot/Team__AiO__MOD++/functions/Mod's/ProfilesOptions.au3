@@ -1,8 +1,8 @@
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: Farm Schedule
 ; Description ...: Farm Schedule for Switch Accounts
-; Author ........: Demen
-; Modified ......: Team AiO MOD++ (2019)
+; Author ........: Demen, NguyenAnhHD (03-2018)
+; Modified ......: Team AiO MOD++ (2019), Boldina (09-2021)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2020
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -16,80 +16,64 @@ Func CheckFarmSchedule()
 
 	Static $aiActionDone[8] = [0, 0, 0, 0, 0, 0, 0, 0]
 	Static $iStartHour = @HOUR
-	Static $iDay = @YDay
+	Static $iDay = @YDAY
 	Local $bNeedRunBot = False
 
 	If $g_bFirstStart And $iStartHour = -1 Then $iStartHour = @HOUR
 	Local $bActionDone = False
-	If $g_bDebugSetlog Then SetDebugLog("Checking Farm Schedule...", $COLOR_DEBUG)
+	SetLog("Checking farm schedule.", $COLOR_ACTION)
 
 	For $i = 0 To 7
 		If $i > $g_iTotalAcc Then ExitLoop
 
-		If $iDay < @YDay Then ; reset timers
+		If $iDay < @YDAY Then ; reset timers
 			$aiActionDone[$i] = 0
 			$iStartHour = -1
-			If $i >= _Min($g_iTotalAcc, 7) Then $iDay = @YDay
-			If $g_bDebugSetlog Then SetDebugLog("New day is coming $iDay/ @YDay : " & $iDay & "/ " & @YDay, $COLOR_DEBUG)
+			If $i >= _Min($g_iTotalAcc, 7) Then $iDay = @YDAY
+			If $g_bDebugSetlog Then SetDebugLog("New day is coming $iDay/ @YDay : " & $iDay & "/ " & @YDAY, $COLOR_DEBUG)
 		EndIf
 		If $g_abChkSetFarm[$i] Then
 			Local $iAction = -1
 
-			; Check timing schedule
-			Local $iTimer1 = 25, $iTimer2 = 25
-			If $g_aiCmbAction1[$i] >= 1 And $g_aiCmbCriteria1[$i] = 5 And $g_aiCmbTime1[$i] >= 0 Then $iTimer1 = Number($g_aiCmbTime1[$i])
-			If $g_aiCmbAction2[$i] >= 1 And $g_aiCmbCriteria2[$i] = 5 And $g_aiCmbTime2[$i] >= 0 Then $iTimer2 = Number($g_aiCmbTime2[$i])
-			If $g_bDebugSetlog Then SetDebugLog($i + 1 & ". $iTimer1: " & $iTimer1 & ", $iTimer2: " & $iTimer2 & ", Max: " & _Max($iTimer1, $iTimer2) & ", Min: " & _Min($iTimer1, $iTimer2) & ", ActionDone: " & $aiActionDone[$i], $COLOR_DEBUG)
-
-			If @HOUR < _Min($iTimer1, $iTimer2) Then ; both timers are ahead.
-				;Do nothing
-			ElseIf @HOUR < _Max($iTimer1, $iTimer2) Then ; 1 timer has passed, 1 timer ahead
-				If $iTimer1 < $iTimer2 Then ; reach timer1, let's do action1
-					If $aiActionDone[$i] <> 1 And $iStartHour < $iTimer1 Then
-						$iAction = $g_aiCmbAction1[$i] - 1
-						$aiActionDone[$i] = 1
-					EndIf
-				Else ; reach timer2, let's do action2
-					If $aiActionDone[$i] <> 2 And $iStartHour < $iTimer2 Then
-						$iAction = $g_aiCmbAction2[$i] - 1
-						$aiActionDone[$i] = 2
-					EndIf
-				EndIf
-				If $g_bDebugSetlog Then SetDebugLog($i + 1 & ". @HOUR (<): " & @HOUR & ", ActionDone: " & $aiActionDone[$i] & ", StartHour: " &$iStartHour & ", Action: " & $iAction, $COLOR_DEBUG)
-			Else ; passed both timers
-				If $iTimer1 < $iTimer2 Then
-					If $aiActionDone[$i] <> 2 And $iStartHour < $iTimer2 Then
-						$iAction = $g_aiCmbAction2[$i] - 1
-						$aiActionDone[$i] = 2
-					EndIf
-				Else
-					If $aiActionDone[$i] <> 1 And $iStartHour < $iTimer1 Then
-						$iAction = $g_aiCmbAction1[$i] - 1
-						$aiActionDone[$i] = 1
-					EndIf
-				EndIf
-				If $g_bDebugSetlog Then SetDebugLog($i + 1 & ". @HOUR (>): " & @HOUR & ", ActionDone: " & $aiActionDone[$i] & ", StartHour: " &$iStartHour & ", Action: " & $iAction, $COLOR_DEBUG)
-			EndIf
-
 			; Check resource criteria for current account
 			If $i = $g_iCurAccount Then
-				Local $asText[4] = ["Gold", "Elixir", "DarkE", "Trophy"]
+				Local $asText[5] = ["Gold", "Elixir", "DarkE", "Trophy", "Time"]
 				While 1
-					If $g_aiCmbAction1[$i] >= 1 And $g_aiCmbCriteria1[$i] >= 1 And $g_aiCmbCriteria1[$i] <= 4 Then
-						For $r = 1 To 4
-							If $g_aiCmbCriteria1[$i] = $r And Number($g_aiCurrentLoot[$r - 1]) >= Number($g_aiTxtResource1[$i]) Then
-								SetLog("Village " & $asText[$r - 1] & " detected above 1st criterium: " & $g_aiTxtResource1[$i])
-								$iAction = $g_aiCmbAction1[$i] - 1
-								ExitLoop 2
+					If $g_aiCmbAction1[$i] >= 1 And $g_aiCmbCriteria1[$i] >= 1 Then
+						For $r = 1 To 5
+							If $g_aiCmbCriteria1[$i] <> 5 Then
+								If $g_aiCmbCriteria1[$i] = $r And Number($g_aiCurrentLoot[$r - 1]) >= Number($g_aiTxtResource1[$i]) Then
+									SetLog("Village " & $asText[$r - 1] & " detected above 1st criterium: " & $g_aiTxtResource1[$i], $COLOR_SUCCESS)
+									$iAction = $g_aiCmbAction1[$i] - 1
+									ExitLoop 2
+								EndIf
+							Else
+								GetTimersFS($i, 0)
+								If $g_aiActiveFSTimersWeek[@WDAY - 1] == False And $g_aiActiveFSTimersDays[Int(@HOUR)] == False Then
+									; _ArrayDisplay($g_aiActiveFSTimersWeek)
+									SetLog("Village " & $asText[$r - 1] & " detected above 1st criterium.", $COLOR_SUCCESS)
+									$iAction = $g_aiCmbAction1[$i] - 1
+									ExitLoop 2
+								EndIf
 							EndIf
 						Next
 					EndIf
-					If $g_aiCmbAction2[$i] >= 1 And $g_aiCmbCriteria2[$i] >= 1 And $g_aiCmbCriteria2[$i] <= 4 Then
-						For $r = 1 To 4
-							If $g_aiCmbCriteria2[$i] = $r And Number($g_aiCurrentLoot[$r - 1]) < Number($g_aiTxtResource2[$i]) And Number($g_aiCurrentLoot[$r - 1]) > 1 Then
-								SetLog("Village " & $asText[$r - 1] & " detected below 2nd criterium: " & $g_aiTxtResource2[$i])
-								$iAction = $g_aiCmbAction2[$i] - 1
-								ExitLoop 2
+					If $g_aiCmbAction2[$i] >= 1 And $g_aiCmbCriteria2[$i] >= 1 Then
+						For $r = 1 To 5
+							If $g_aiCmbCriteria2[$i] <> 5 Then
+								If $g_aiCmbCriteria2[$i] = $r And Number($g_aiCurrentLoot[$r - 1]) < Number($g_aiTxtResource2[$i]) And Number($g_aiCurrentLoot[$r - 1]) > 1 Then
+									SetLog("Village " & $asText[$r - 1] & " detected below 2nd criterium: " & $g_aiTxtResource2[$i], $COLOR_SUCCESS)
+									$iAction = $g_aiCmbAction2[$i] - 1
+									ExitLoop 2
+								EndIf
+							Else
+								GetTimersFS($i, 1)
+								If $g_aiActiveFSTimersWeek[@WDAY - 1] == False And $g_aiActiveFSTimersDays[Int(@HOUR)] == False Then
+									; _ArrayDisplay($g_aiActiveFSTimersWeek)
+									SetLog("Village " & $asText[$r - 1] & " detected below 2nd criterium.", $COLOR_SUCCESS)
+									$iAction = $g_aiCmbAction2[$i] - 1
+									ExitLoop 2
+								EndIf
 							EndIf
 						Next
 					EndIf
@@ -179,31 +163,138 @@ Func CheckLastActiveAccount($i)
 	If $i = $g_iCurAccount And UBound($aActiveAccount) <= 1 Then
 		SetLog("  This is the last active/donate account to turn off.")
 
-		Local $iCurrentTime = @HOUR + @MIN / 60 + @SEC / 3600 ; decimal hour
 		Local $iSoonestTimer = -1
+		Local $iDateDiffUniversal = 0
 		For $i = 0 To 7
 			If $i > $g_iTotalAcc Then ExitLoop
 			If $g_abChkSetFarm[$i] Then
-				If $g_aiCmbAction1[$i] >= 1 And $g_aiCmbCriteria1[$i] = 5 And $g_aiCmbTime1[$i] >= 0 Then
-					Local $ConvertTime1 = $g_aiCmbTime1[$i] + $g_aiCmbTime1[$i] <= @HOUR ? 24 : 0
-					If $iSoonestTimer = -1 Or $iSoonestTimer > $ConvertTime1 Then $iSoonestTimer = $ConvertTime1
+				If $g_aiCmbAction1[$i] >= 1 And $g_aiCmbCriteria1[$i] = 5 Then
+					GetTimersFS($i, 0)
+					Local $sDateAndTime = _NowCalcDate() & " " & _NowTime(5)
+					Local $iTimerH = 0, $iTimerD = 0
+					;;;;;;;
+					Local $iDOW = @WDAY
+					Local $iD = -1
+					Local $iNum = -1
+					For $iWk = 1 To 7
+						If $iD > 7 Then
+							$iDOW = @WDAY - 7
+						EndIf
+						$iD = $iDOW + $iWk
+						$iNum = $iD - 2
+						If $g_aiActiveFSTimersWeek[$iNum] == False Then
+							$iTimerD += 1
+						Else
+							ExitLoop
+						EndIf
+					Next
+
+					Local $iDOW = Int(@HOUR + 1)
+					Local $iD = -1
+					Local $iNum = -1
+					For $iDy = 1 To 24
+						If $iD > 24 Then
+							$iDOW = Int(@HOUR + 1) - 24
+						EndIf
+						$iD = $iDOW + $iDy
+						$iNum = $iD - 2
+						If $g_aiActiveFSTimersDays[$iNum] == False Then
+							$iTimerH += 1
+						Else
+							ExitLoop
+						EndIf
+					Next
+					;;;;;;;;;
+					$sDateAndTime = _DateAdd("D", $iTimerD, $sDateAndTime)
+					$sDateAndTime = _DateAdd("h", $iTimerH, $sDateAndTime)
+					$iDateDiffUniversal = _DateDiff('s', _NowCalcDate() & " " & _NowTime(5), $sDateAndTime)
+					Setlog($iDateDiffUniversal)
+					If $iSoonestTimer = -1 Or $iSoonestTimer > $iDateDiffUniversal Then $iSoonestTimer = $iDateDiffUniversal
 				EndIf
-				If $g_aiCmbAction2[$i] >= 1 And $g_aiCmbCriteria2[$i] = 5 And $g_aiCmbTime2[$i] >= 0 Then
-					Local $ConvertTime2 = $g_aiCmbTime2[$i] + $g_aiCmbTime2[$i] <= @HOUR ? 24 : 0
-					If $iSoonestTimer = -1 Or $iSoonestTimer > $ConvertTime2 Then $iSoonestTimer = $ConvertTime2
+				If $g_aiCmbAction2[$i] >= 1 And $g_aiCmbCriteria2[$i] = 5 Then
+					GetTimersFS($i, 1)
+					Local $sDateAndTime = _NowCalcDate() & " " & _NowTime(5)
+					Local $iTimerH = 0, $iTimerD = 0
+					;;;;;;;
+					Local $iDOW = @WDAY
+					Local $iD = -1
+					Local $iNum = -1
+					For $i = 1 To 7
+						If $iD > 7 Then
+							$iDOW = @WDAY - 7
+						EndIf
+						$iD = $iDOW + $i
+						$iNum = $iD - 2
+						If $g_aiActiveFSTimersWeek[$iNum] == False Then
+							$iTimerD += 1
+						Else
+							ExitLoop
+						EndIf
+					Next
+
+					Local $iDOW = Int(@HOUR + 1)
+					Local $iD = -1
+					Local $iNum = -1
+					For $i = 1 To 24
+						If $iD > 24 Then
+							$iDOW = Int(@HOUR + 1) - 24
+						EndIf
+						$iD = $iDOW + $i
+						$iNum = $iD - 2
+						If $g_aiActiveFSTimersDays[$iNum] == False Then
+							$iTimerH += 1
+						Else
+							ExitLoop
+						EndIf
+					Next
+					;;;;;;;;;
+					$sDateAndTime = _DateAdd("D", $iTimerD, $sDateAndTime)
+					$sDateAndTime = _DateAdd("h", $iTimerH, $sDateAndTime)
+					$iDateDiffUniversal = _DateDiff('s', _NowCalcDate() & " " & _NowTime(5), $sDateAndTime)
+					Setlog($iDateDiffUniversal)
+					If $iSoonestTimer = -1 Or $iSoonestTimer > $iDateDiffUniversal Then $iSoonestTimer = $iDateDiffUniversal
 				EndIf
-				If $g_bDebugSetlog Then SetDebugLog("@Hour: " & @HOUR & "Timers " & $i + 1 & ": " & $g_aiCmbTime1[$i] & " / " & $g_aiCmbTime2[$i] & ". $iSoonestTimer = " & $iSoonestTimer)
+				; If $g_bDebugSetlog Then SetDebugLog("@Hour: " & @HOUR & "Timers " & $i + 1 & ": " & $g_aiBtnAction1[$i] & " / " & $g_aiBtnAction2[$i] & ". $iSoonestTimer = " & $iSoonestTimer)
 			EndIf
 		Next
 		If $g_bDebugSetlog Then SetDebugLog("$iSoonestTimer = " & $iSoonestTimer)
-		If $iSoonestTimer >= 0 Then $iSleeptime = ($iSoonestTimer - $iCurrentTime) * 60
+		If $iSoonestTimer >= 0 Then
+			$iSleeptime = $iSoonestTimer * 1000 ; ($iSoonestTimer - $sCurrentDate) * 60
+		EndIf
 	EndIf
 
-	If $g_bDebugSetlog Then SetDebugLog("$iSleeptime: " & Round($iSleeptime, 2) & " m")
+	If $g_bDebugSetlog Then SetDebugLog("$iSleeptime: " & $iSleeptime & " ms")
 
 	Return $iSleeptime
 
 EndFunc   ;==>CheckLastActiveAccount
+
+Func GetTimersFS($i = 0, $iFS = 0)
+	Local $a[0]
+	If $iFS = 0 Then
+		$a = StringSplit($g_sChkNotifyhoursFS1S[$i], "|", $STR_NOCOUNT)
+		If UBound($a) >= 23 And Not @error Then
+			$g_aiActiveFSTimersDays = $a
+			ReDim $g_aiActiveFSTimersDays[24]
+		EndIf
+		$a = StringSplit($g_sChkNotifyWeekdaysFS1S[$i], "|", $STR_NOCOUNT)
+		If UBound($a) >= 6 And Not @error Then
+			$g_aiActiveFSTimersWeek = $a
+			ReDim $g_aiActiveFSTimersWeek[7]
+		EndIf
+	Else
+		$a = StringSplit($g_sChkNotifyhoursFS2S[$i], "|", $STR_NOCOUNT)
+		If UBound($a) >= 23 And Not @error Then
+			$g_aiActiveFSTimersDays = $a
+			ReDim $g_aiActiveFSTimersDays[24]
+		EndIf
+		$a = StringSplit($g_sChkNotifyWeekdaysFS2S[$i], "|", $STR_NOCOUNT)
+		If UBound($a) >= 6 And Not @error Then
+			$g_aiActiveFSTimersWeek = $a
+			ReDim $g_aiActiveFSTimersWeek[7]
+		EndIf
+	EndIf
+EndFunc   ;==>GetTimersFS
 
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: Switch Profiles

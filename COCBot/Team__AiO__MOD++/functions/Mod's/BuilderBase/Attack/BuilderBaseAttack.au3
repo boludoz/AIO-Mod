@@ -316,6 +316,7 @@ Func WaitForVersusBattle()
 	; Clouds
 	Local $iTime = 0
 	Local $iSwitch = 0
+	
 	While $iTime < 257 ; 15 minutes
 		If Not $g_bRunState Then Return False
 
