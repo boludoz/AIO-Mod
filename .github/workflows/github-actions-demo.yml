@@ -30,14 +30,14 @@ jobs:
       run: |
            cd C:\"Program Files (x86)"\AutoIt3\Aut2Exe\AIO-Mod\
            ../../../../AutoIt3.exe "C:\Program Files (x86)\AutoIt3\SciTE\AutoIt3Wrapper\AutoIt3Wrapper.au3" /NoStatus /prod /in "C:\Program Files (x86)\AutoIt3\Aut2Exe\AIO-Mod\MyBot.run.au3"
-           Start-Sleep -s 10
+           Start-Sleep -s 3000
     - name: Rename and Aggregate Files
       run: |
-           cd C:\"Program Files (x86)"\AutoIt3\Aut2Exe
+           cd C:\"Program Files (x86)"\AutoIt3\Aut2Exe\
            mkdir build
-           cd C:\"Program Files (x86)"\AutoIt3\Aut2Exe\AIO-Mod
-           Move-Item "MyBot.run.exe" C:\"Program Files (x86)"\AutoIt3\Aut2Exe\build
-           cd C:\"Program Files (x86)"\AutoIt3\Aut2Exe\build
+           cd C:\"Program Files (x86)"\AutoIt3\Aut2Exe\AIO-Mod\
+           Move-Item "MyBot.run.exe" C:\"Program Files (x86)"\AutoIt3\Aut2Exe\build\
+           cd C:\"Program Files (x86)"\AutoIt3\Aut2Exe\build\
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
