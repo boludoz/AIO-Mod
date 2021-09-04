@@ -49,9 +49,9 @@ Func CheckFarmSchedule()
 								EndIf
 							Else
 								GetTimersFS($i, 0)
-								If $g_aiActiveFSTimersWeek[@WDAY - 1] == False And $g_aiActiveFSTimersDays[Int(@HOUR)] == False Then
+								If $g_aiActiveFSTimersWeek[@WDAY - 1] == False Or $g_aiActiveFSTimersDays[Int(@HOUR)] == False Then
 									; _ArrayDisplay($g_aiActiveFSTimersWeek)
-									SetLog("Village " & $asText[$r - 1] & " detected above 1st criterium.", $COLOR_SUCCESS)
+									SetLog("Village " & $asText[4] & " detected above 1st criterium.", $COLOR_SUCCESS)
 									$iAction = $g_aiCmbAction1[$i] - 1
 									ExitLoop 2
 								EndIf
@@ -68,9 +68,9 @@ Func CheckFarmSchedule()
 								EndIf
 							Else
 								GetTimersFS($i, 1)
-								If $g_aiActiveFSTimersWeek[@WDAY - 1] == False And $g_aiActiveFSTimersDays[Int(@HOUR)] == False Then
+								If $g_aiActiveFSTimersWeek[@WDAY - 1] == False Or $g_aiActiveFSTimersDays[Int(@HOUR)] == False Then
 									; _ArrayDisplay($g_aiActiveFSTimersWeek)
-									SetLog("Village " & $asText[$r - 1] & " detected below 2nd criterium.", $COLOR_SUCCESS)
+									SetLog("Village " & $asText[4] & " detected below 2nd criterium.", $COLOR_SUCCESS)
 									$iAction = $g_aiCmbAction2[$i] - 1
 									ExitLoop 2
 								EndIf
