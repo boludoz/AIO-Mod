@@ -28,5 +28,5 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
        name: MyBot.run
-       path: C:\build\AIO
+       path: C:\build\AIO-Mod\MyBot.run.zip
        if-no-files-found: error
