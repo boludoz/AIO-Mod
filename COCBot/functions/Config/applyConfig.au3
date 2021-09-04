@@ -2319,6 +2319,7 @@ Func ApplyConfig_600_52_2($TypeReadSave)
 EndFunc   ;==>ApplyConfig_600_52_2
 
 Func ApplyConfig_600_54($TypeReadSave)
+	#CS
 	; <><><> Attack Plan / Train Army / Train Order <><><>
 	Switch $TypeReadSave
 		Case "Read"
@@ -2376,6 +2377,7 @@ Func ApplyConfig_600_54($TypeReadSave)
 				$g_aiCmbCustomBrewOrder[$z] = _GUICtrlComboBox_GetCurSel($g_ahCmbSpellsOrder[$z])
 			Next
 	EndSwitch
+	#CE
 EndFunc   ;==>ApplyConfig_600_54
 
 Func ApplyConfig_600_56($TypeReadSave)

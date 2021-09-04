@@ -690,7 +690,6 @@ Func SaveConfig_600_18()
 	_Ini_Add("notify", "AlertPBUpdate", $g_bNotifyAlertBOTUpdate ? 1 : 0)
 	_Ini_Add("notify", "AlertSmartWaitTime", $g_bNotifyAlertSmartWaitTime ? 1 : 0)
 	_Ini_Add("notify", "AlertLaboratoryIdle", $g_bNotifyAlertLaboratoryIdle ? 1 : 0)
-	
 	#Region - Discord - Team AIO Mod++
 	_Ini_Add("notify", "AlertPetHouseIdle", $g_bNotifyAlertPetHouseIdle ? 1 : 0)
 
@@ -1311,6 +1310,7 @@ Func SaveConfig_600_52_2()
 EndFunc   ;==>SaveConfig_600_52_2
 
 Func SaveConfig_600_54()
+	#CS
 	; <><><> Attack Plan / Train Army / Train Order <><><>
 	ApplyConfig_600_54(GetApplyConfigSaveAction())
 
@@ -1325,6 +1325,7 @@ Func SaveConfig_600_54()
 	For $z = 0 To UBound($g_aiCmbCustomBrewOrder) - 1
 		_Ini_Add("Spells", "cmbSpellOrder" & $z, $g_aiCmbCustomBrewOrder[$z])
 	Next
+	#CE
 EndFunc   ;==>SaveConfig_600_54
 
 Func SaveConfig_600_56()
