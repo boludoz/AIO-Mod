@@ -37,9 +37,7 @@ jobs:
            mkdir build
            cd C:\"Program Files (x86)"\AutoIt3\Aut2Exe\AIO-Mod
            Move-Item "MyBot.run.exe" C:\"Program Files (x86)"\AutoIt3\Aut2Exe\build
-           cd C:\"Program Files (x86)"\AutoIt3\Aut2Exe
-           Move-Item MyBot.run.exe build
-           cd build
+           cd C:\"Program Files (x86)"\AutoIt3\Aut2Exe\build
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
