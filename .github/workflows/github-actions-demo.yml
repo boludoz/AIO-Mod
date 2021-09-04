@@ -1,4 +1,4 @@
-name: lili
+name: AIO-Mod
 
 on: 
  push:
@@ -17,16 +17,12 @@ jobs:
             cd C:\
             mkdir build
             cd C:\build
-            mkdir Builder
-            mkdir AIO
-            cd C:\build\AIO
             git clone https://github.com/boludoz/AIO-Mod.git
-            cd C:\build\Builder
             git clone https://github.com/boludoz/buildAIO.git
-            dir
-            Move-Item "build" C:\build\AIO
-            Move-Item "build.bat" C:\build\AIO
-            cd C:\build\AIO
+            cd C:\build\buildAIO
+            Move-Item "build" C:\build\AIO-Mod
+            Move-Item "build.bat" C:\build\AIO-Mod
+            cd C:\build\AIO-Mod
             ./build.bat
     - name: Upload
       uses: actions/upload-artifact@v2
