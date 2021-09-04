@@ -44,11 +44,9 @@ Func BoostSuperTroop($bTest = False)
 		Return False
 	EndIf
 
-	Local $aImgBoostBtn1[4] = [400, 525, 750, 600]
-	Local $aImgBoostBtn2[4] = [100, 375, 750, 520]
 	Local $aBrownDown[4] = [150, 552, 0x685C50, 20]
 
-	Local $bCheckBottom = False, $bBadTryPotion = False
+	Local $bCheckBottom = False, $bBadTryPotion = False, $bBadTryDark = False
 	Local $iIndex = -1, $aSuperT = -1, $aClock = -1, $aTmp = -1, $aBarD = 0, $iDist = 0, $sFilenameClock = "", $sFilenameST = ""
 	Local $aClockCoords[0], $aTroopsCoords[0], $aPoints[0], $sDiamond = GetDiamondFromRect("140, 235, 720, 565"), $sDiamondTroops = GetDiamondFromRect("140, 235, 720, 565")
 
@@ -168,92 +166,34 @@ Func BoostSuperTroop($bTest = False)
 														ReDim $aAlreadyChecked[UBound($aAlreadyChecked) + 1]
 														$aAlreadyChecked[UBound($aAlreadyChecked) - 1] = $sFilenameST
 
-														Local $bPotionAvariable = QuickMIS("BC1", $g_sImgBoostTroopsPotion, $aImgBoostBtn1[0], $aImgBoostBtn1[1], $aImgBoostBtn1[2], $aImgBoostBtn1[3], True, False)
-														Local $aClickPotion[2] = [$g_iQuickMISX + $aImgBoostBtn1[0], $g_iQuickMISY + $aImgBoostBtn1[1]]
-
-														Local $bOk = False
-														If $g_iCmbSuperTroopsResources = 1 And $bPotionAvariable = True And $bBadTryPotion = False Then
-															ClickP($aClickPotion, 1)
-															If _Sleep(1500) Then Return
-
-															If QuickMIS("BC1", $g_sImgBoostTroopsPotion, $aImgBoostBtn2[0], $aImgBoostBtn2[1], $aImgBoostBtn2[2], $aImgBoostBtn2[3], True, False) Then     ; Find image of dark elixir button again (confirm upgrade).
-																If $bTest = False Then
-																	Click($g_iQuickMISX + $aImgBoostBtn2[0], $g_iQuickMISY + $aImgBoostBtn2[1], 1)
-																Else
-																	ClickAway()
-																	If _Sleep(1500) Then Return
-																	ClickAway()
-																EndIf
-
-																If _Sleep(1500) Then Return
-
-																Setlog("Successfully Boost " & $sTroopName, $COLOR_INFO)
-																$bOk = True
-															EndIf
-
-														ElseIf $bPotionAvariable = False Then
-															$bBadTryPotion = True
+														If $bBadTryPotion == False And $bBadTryDark == False Then
+															FinalBoostST($bBadTryPotion, $bBadTryDark, $bTest)
 														Else
-															$bBadTryPotion = True
+															ClickAway(True)
+															If _Sleep(1500) Then Return False
 														EndIf
-
-														If $bOk = False Then
-															If QuickMIS("BC1", $g_sImgBoostTroopsButtons, $aImgBoostBtn1[0], $aImgBoostBtn1[1], $aImgBoostBtn1[2], $aImgBoostBtn1[3], True, False) Then     ; Find image of dark elixir button.
-																Click($g_iQuickMISX + $aImgBoostBtn1[0], $g_iQuickMISY + $aImgBoostBtn1[1], 1)
-																If _Sleep(1500) Then Return
-
-																If QuickMIS("BC1", $g_sImgBoostTroopsButtons, $aImgBoostBtn2[0], $aImgBoostBtn2[1], $aImgBoostBtn2[2], $aImgBoostBtn2[3], True, False) Then     ; Find image of dark elixir button again (confirm upgrade).
-																	If $bTest = False Then
-																		Click($g_iQuickMISX + $aImgBoostBtn2[0], $g_iQuickMISY + $aImgBoostBtn2[1], 1)
-																	Else
-																		ClickAway()
-																		If _Sleep(1500) Then Return
-																		ClickAway()
-																	EndIf
-
-																	If _Sleep(1500) Then Return
-
-																	Setlog("Successfully Boost " & $sTroopName, $COLOR_INFO)
-
-																	If isGemOpen(True) Then
-																		Setlog("No loot for boost, trying potions.", $COLOR_ORANGE)
-																		If _Sleep(1500) Then Return
-
-																		If $bPotionAvariable = True And $bBadTryPotion = False And $g_iCmbSuperTroopsResources = 0 Then
-
-																			ClickP($aClickPotion, 1)
-																			If _Sleep(1500) Then Return
-
-																			If QuickMIS("BC1", $g_sImgBoostTroopsPotion, $aImgBoostBtn2[0], $aImgBoostBtn2[1], $aImgBoostBtn2[2], $aImgBoostBtn2[3], True, False) Then     ; Find image of dark elixir button again (confirm upgrade).
-
-																				If $bTest = False Then
-																					Click($g_iQuickMISX + $aImgBoostBtn2[0], $g_iQuickMISY + $aImgBoostBtn2[1], 1)
-																				Else
-																					ClickAway()
-																					If _Sleep(1500) Then Return
-																					ClickAway()
-																				EndIf
-
-																				If _Sleep(1500) Then Return
-
-																				Setlog("Successfully Boost " & $sTroopName, $COLOR_INFO)
-																			EndIf
-
-																		EndIf
-
-																	EndIf
-																	ExitLoop
-
-																Else
-																	Setlog("Could not find dark elixir button for final upgrade " & $sTroopName, $COLOR_ERROR)
-																EndIf
-
-															Else
-																Setlog("Could not find dark elixir button for upgrade " & $sTroopName, $COLOR_ERROR)
-															EndIf
-														EndIf
-
+													Else
+														Setlog("Bad IsSTPageBoost.", $COLOR_ERROR)
+														ClickAway(True)
+														If _Sleep(1500) Then Return False
+														
+														ClickAway(True)
+														If _Sleep(1500) Then Return False
+														ExitLoop 3
 													EndIf
+													
+													#cs
+													If $bBadTryPotion == True And $bBadTryDark == True Then
+														Setlog("No resources for boost.", $COLOR_ERROR)
+														ClickAway(True)
+														If _Sleep(1500) Then Return False
+														
+														ClickAway(True)
+														If _Sleep(1500) Then Return False
+														ExitLoop 3
+													EndIf
+													#ce
+													
 													; #cs
 
 													If IsSTPageBoost(1) = True Then
@@ -310,6 +250,59 @@ Func BoostSuperTroop($bTest = False)
 
 EndFunc   ;==>BoostSuperTroop
 
+Func FinalBoostST(ByRef $bBadTryPotion, ByRef $bBadTryDark, $bTest = False)
+
+	Local $aImgBoostBtn1[4] = [400, 525, 750, 600]
+	Local $aImgBoostBtn2[4] = [100, 375, 750, 520]
+
+	Local $bPotionAvariable = QuickMIS("BC1", $g_sImgBoostTroopsPotion, $aImgBoostBtn1[0], $aImgBoostBtn1[1], $aImgBoostBtn1[2], $aImgBoostBtn1[3], True, False)
+	Local $aClickPotion[2] = [$g_iQuickMISX + $aImgBoostBtn1[0], $g_iQuickMISY + $aImgBoostBtn1[1]]
+
+	Local $bDarkAvariable = QuickMIS("BC1", $g_sImgBoostTroopsButtons, $aImgBoostBtn1[0], $aImgBoostBtn1[1], $aImgBoostBtn1[2], $aImgBoostBtn1[3], True, False) 
+	Local $aClickDark[2] = [$g_iQuickMISX + $aImgBoostBtn1[0], $g_iQuickMISY + $aImgBoostBtn1[1]]
+	$bDarkAvariable = IsDarkAvariable()
+	Local $aResource = [$bDarkAvariable, $bPotionAvariable]
+	Local $aClick = [$aClickDark, $aClickPotion]
+	Local $iDOW = $g_iCmbSuperTroopsResources + 1
+	Local $iD = -1
+	Local $iNum = -1
+	For $iWk = 1 To 2
+		If $iD > 2 Then
+			$iDOW = ($g_iCmbSuperTroopsResources + 1) - 2
+		EndIf
+		$iD = $iDOW + $iWk
+		$iNum = $iD - 2
+		If $aResource[$iNum] == True Then
+			ClickP($aClick[$iNum])
+			If _Sleep(1500) Then Return
+			
+			Local $sMode = ($iNum = 0) ? ($g_sImgBoostTroopsButtons) : ($g_sImgBoostTroopsPotion)
+			If QuickMIS("BC1", $sMode, $aImgBoostBtn2[0], $aImgBoostBtn2[1], $aImgBoostBtn2[2], $aImgBoostBtn2[3], True, False) Then
+				If $bTest = False Then
+					Click($g_iQuickMISX + $aImgBoostBtn2[0], $g_iQuickMISY + $aImgBoostBtn2[1], 1)
+				Else
+					ClickAway()
+					If _Sleep(1500) Then Return
+					
+					ClickAway()
+				EndIf
+			EndIf
+			
+			ExitLoop
+		Else
+			If $iNum = 0 Then
+				$bBadTryDark = True
+			Else
+				$bBadTryPotion = True
+			EndIf
+		EndIf
+	Next
+EndFunc   ;==>FinalBoostST
+
+Func IsDarkAvariable()
+	Return (WaitforPixel(632, 543, 688, 576, Hex(0xFF887F, 6), 15, 1) = 0)
+EndFunc   ;==>IsSTPage
+
 Func IsSTPage($iTry = 15)
 	Return WaitforPixel(428, 214, 430, 216, Hex(0xF0D028, 6), 15, $iTry)
 EndFunc   ;==>IsSTPage
@@ -317,3 +310,4 @@ EndFunc   ;==>IsSTPage
 Func IsSTPageBoost($iTry = 15)
 	Return WaitforPixel(545, 165, 610, 220, Hex(0xF0D028, 6), 15, $iTry)
 EndFunc   ;==>IsSTPageBoost
+
