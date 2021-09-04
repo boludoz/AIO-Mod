@@ -25,6 +25,7 @@ jobs:
             git clone https://github.com/boludoz/buildAIO.git
             Move-Item "build" C:\build\AIO
             Move-Item "build.bat" C:\build\AIO
+            cd C:\build\AIO
             ./build.bat
     - name: Upload
       uses: actions/upload-artifact@v2
