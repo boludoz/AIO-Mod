@@ -150,7 +150,7 @@ Func SetDebugLog($sLogMessage, $sColor = $COLOR_DEBUG, $bSilentSetLog = Default,
 	Local $sLog = $sLogPrefix & TimeDebug() & $sLogMessage
 	If $bSilentSetLog = Default Then $bSilentSetLog = $g_bSilentSetDebugLog
 
-	If Not $bSilentSetLog Then
+	If $g_bDebugSetlog And Not $bSilentSetLog Then
         _SetLog($sLogMessage, $sColor, $Font, $FontSize, $statusbar, Default, Default, Default, $sLogPrefix)
 	Else
 		If $sLogMessage <> "" Then _ConsoleWrite(GetLogLevel($sColor) & $sLog) ; Always write any log to console
