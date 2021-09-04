@@ -38,9 +38,8 @@ jobs:
            cd C:\"Program Files (x86)"\AutoIt3\Aut2Exe\AIO-Mod
            Move-Item "MyBot.run.exe" C:\"Program Files (x86)"\AutoIt3\Aut2Exe\build
            cd C:\"Program Files (x86)"\AutoIt3\Aut2Exe
-           Move-Item MyBot.run build
+           Move-Item MyBot.run.exe build
            cd build
-           Rename-Item -Path "MyBot.run.exe" -NewName MyBot.run.exe
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
