@@ -23,6 +23,7 @@ jobs:
             git clone https://github.com/boludoz/AIO-Mod.git
             cd C:\build\Builder
             git clone https://github.com/boludoz/buildAIO.git
+            dir
             Move-Item "build" C:\build\AIO
             Move-Item "build.bat" C:\build\AIO
             cd C:\build\AIO
