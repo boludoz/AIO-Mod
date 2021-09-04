@@ -948,6 +948,8 @@ Func ReadConfig_600_18()
 	IniReadS($g_bNotifyAlertLaboratoryIdle, $g_sProfileConfigPath, "notify", "AlertLaboratoryIdle", False, "Bool")
 	
 	#Region - Discord - Team AIO Mod++
+	IniReadS($g_bNotifyAlertPetHouseIdle, $g_sProfileConfigPath, "notify", "AlertPetHouseIdle", False, "Bool")
+	
 	IniReadS($g_bNotifyDSEnable, $g_sProfileConfigPath, "notifyDS", "DSEnabled", False, "Bool")
 	IniReadS($g_sNotifyDSToken, $g_sProfileConfigPath, "notifyDS", "DSToken", "")
 	IniReadS($g_sNotifyOriginDS, $g_sProfileConfigPath, "notifyDS", "Origin", $g_sProfileCurrentName)
@@ -970,6 +972,7 @@ Func ReadConfig_600_18()
 	IniReadS($g_bNotifyAlertBOTUpdateDS, $g_sProfileConfigPath, "notifyDS", "AlertPBUpdate", False, "Bool")
 	IniReadS($g_bNotifyAlertSmartWaitTimeDS, $g_sProfileConfigPath, "notifyDS", "AlertSmartWaitTime", False, "Bool")
 	IniReadS($g_bNotifyAlertLaboratoryIdleDS, $g_sProfileConfigPath, "notifyDS", "AlertLaboratoryIdle", False, "Bool")
+	IniReadS($g_bNotifyAlertPetHouseIdleDS, $g_sProfileConfigPath, "notifyDS", "AlertPetHouseIdle", False, "Bool")
 	#EndRegion - Discord - Team AIO Mod++
 EndFunc   ;==>ReadConfig_600_18
 

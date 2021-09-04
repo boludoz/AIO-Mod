@@ -42,6 +42,7 @@ Func chkDSenabled()
 		GUICtrlSetState($g_hChkNotifyBOTUpdateDS, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkNotifyAlertSmartWaitTimeDS, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkNotifyAlertLaboratoryIdleDS, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkNotifyAlertPetHouseIdleDS, $GUI_ENABLE) ; Discord - Team AIO Mod++
 	Else
 		GUICtrlSetState($g_hChkNotifyRemoteDS, $GUI_DISABLE)
 		GUICtrlSetState($g_hTxtNotifyOriginDS, $GUI_DISABLE)
@@ -61,6 +62,7 @@ Func chkDSenabled()
 		GUICtrlSetState($g_hChkNotifyBOTUpdateDS, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkNotifyAlertSmartWaitTimeDS, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkNotifyAlertLaboratoryIdleDS, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkNotifyAlertPetHouseIdleDS, $GUI_DISABLE) ; Discord - Team AIO Mod++
 	EndIf
 
 EndFunc   ;==>chkDSenabled
@@ -143,6 +145,7 @@ Func chkPBTGenabled()
 		GUICtrlSetState($g_hChkNotifyBOTUpdate, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkNotifyAlertSmartWaitTime, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkNotifyAlertLaboratoryIdle, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkNotifyAlertPetHouseIdle, $GUI_ENABLE) ; Discord - Team AIO Mod++
 	Else
 		GUICtrlSetState($g_hChkNotifyRemote, $GUI_DISABLE)
 		GUICtrlSetState($g_hTxtNotifyOrigin, $GUI_DISABLE)
@@ -162,6 +165,7 @@ Func chkPBTGenabled()
 		GUICtrlSetState($g_hChkNotifyBOTUpdate, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkNotifyAlertSmartWaitTime, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkNotifyAlertLaboratoryIdle, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkNotifyAlertPetHouseIdle, $GUI_DISABLE) ; Discord - Team AIO Mod++
 	EndIf
 EndFunc   ;==>chkPBTGenabled
 

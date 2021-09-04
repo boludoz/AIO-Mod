@@ -38,7 +38,7 @@ Global $g_hChkNotifyDSEnable = 0, $g_hTxtNotifyOriginDS = 0, $g_hTxtNotifyDSToke
 Global $g_hChkNotifyAlertMatchFoundDS = 0, $g_hChkNotifyAlertLastRaidIMGDS = 0, $g_hChkNotifyAlertLastRaidTXTDS = 0, $g_hChkNotifyAlertCampFullDS = 0, _
 	   $g_hChkNotifyAlertUpgradeWallsDS = 0, $g_hChkNotifyAlertOutOfSyncDS = 0, $g_hChkNotifyAlertTakeBreakDS = 0, $g_hChkNotifyAlertBuilderIdleDS = 0, _
 	   $g_hChkNotifyAlertVillageStatsDS = 0, $g_hChkNotifyAlertLastAttackDS = 0, $g_hChkNotifyAlertAnotherDeviceDS = 0, $g_hChkNotifyAlertMaintenanceDS = 0, _
-	   $g_hChkNotifyAlertBANDS = 0, $g_hChkNotifyBOTUpdateDS = 0, $g_hChkNotifyAlertSmartWaitTimeDS = 0, $g_hChkNotifyAlertLaboratoryIdleDS = 0
+	   $g_hChkNotifyAlertBANDS = 0, $g_hChkNotifyBOTUpdateDS = 0, $g_hChkNotifyAlertSmartWaitTimeDS = 0, $g_hChkNotifyAlertLaboratoryIdleDS = 0, $g_hChkNotifyAlertPetHouseIdleDS = 0 ; Discord - Team AIO Mod++
 
 Global $g_hChkNotifyOnlyHoursDS = 0, $g_hChkNotifyOnlyWeekDaysDS = 0, $g_hChkNotifyhoursDS[24] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], _
 	   $g_hChkNotifyWeekdaysDS[7] = [0, 0, 0, 0, 0, 0, 0]
@@ -137,6 +137,9 @@ Func CreateDiscordSubTab()
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Notify - Discord", "ChkNotifyAlertLaboratoryIdle_Info_01", "Send an Alert when the laboratory is idle."))
 			GUICtrlSetState(-1, $GUI_DISABLE)
 	$y += 20
+		$g_hChkNotifyAlertPetHouseIdleDS = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Notify", "ChkNotifyAlertPetHouseIdle", "Pet house Idle"), $x + 10, $y, -1, -1) ; Discord - Team AIO Mod++
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Notify", "ChkNotifyAlertPetHouseIdle_Info_01", "Send an Alert when the pet house is idle.")) ; Discord - Team AIO Mod++
+			GUICtrlSetState(-1, $GUI_DISABLE) ; Discord - Team AIO Mod++
 		; TODO
 
 	$y += 25
@@ -229,7 +232,7 @@ Global $g_hChkNotifyRemote = 0, $g_hTxtNotifyOrigin = 0
 Global $g_hChkNotifyAlertMatchFound = 0, $g_hChkNotifyAlertLastRaidIMG = 0, $g_hChkNotifyAlertLastRaidTXT = 0, $g_hChkNotifyAlertCampFull = 0, _
 	   $g_hChkNotifyAlertUpgradeWall = 0, $g_hChkNotifyAlertOutOfSync = 0, $g_hChkNotifyAlertTakeBreak = 0, $g_hChkNotifyAlertBuilderIdle = 0, _
 	   $g_hChkNotifyAlertVillageStats = 0, $g_hChkNotifyAlertLastAttack = 0, $g_hChkNotifyAlertAnotherDevice = 0, $g_hChkNotifyAlertMaintenance = 0, _
-	   $g_hChkNotifyAlertBAN = 0, $g_hChkNotifyBOTUpdate = 0, $g_hChkNotifyAlertSmartWaitTime = 0, $g_hChkNotifyAlertLaboratoryIdle = 0
+	   $g_hChkNotifyAlertBAN = 0, $g_hChkNotifyBOTUpdate = 0, $g_hChkNotifyAlertSmartWaitTime = 0, $g_hChkNotifyAlertLaboratoryIdle = 0, $g_hChkNotifyAlertPetHouseIdle = 0 ; Discord - Team AIO Mod++
 
 Global $g_hChkNotifyOnlyHours = 0, $g_hChkNotifyOnlyWeekDays = 0, $g_hChkNotifyhours[24] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], _
 	   $g_hChkNotifyWeekdays[7] = [0, 0, 0, 0, 0, 0, 0]
@@ -325,6 +328,9 @@ Func CreateTelegramSubTab()
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Notify", "ChkNotifyAlertLaboratoryIdle_Info_01", "Send an Alert when the laboratory is idle."))
 			GUICtrlSetState(-1, $GUI_DISABLE)
 	$y += 20
+		$g_hChkNotifyAlertPetHouseIdle = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Notify", "ChkNotifyAlertPetHouseIdle", "Pet house Idle"), $x + 10, $y, -1, -1) ; Discord - Team AIO Mod++
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Notify", "ChkNotifyAlertPetHouseIdle_Info_01", "Send an Alert when the pet house is idle.")) ; Discord - Team AIO Mod++
+			GUICtrlSetState(-1, $GUI_DISABLE) ; Discord - Team AIO Mod++
 		; TODO
 
 	$y += 25  ; Discord - Team AIO Mod++

@@ -692,6 +692,8 @@ Func SaveConfig_600_18()
 	_Ini_Add("notify", "AlertLaboratoryIdle", $g_bNotifyAlertLaboratoryIdle ? 1 : 0)
 	
 	#Region - Discord - Team AIO Mod++
+	_Ini_Add("notify", "AlertPetHouseIdle", $g_bNotifyAlertPetHouseIdle ? 1 : 0)
+
 	_Ini_Add("notifyDS", "DSEnabled", $g_bNotifyDSEnable ? 1 : 0)
 	_Ini_Add("notifyDS", "DSToken", $g_sNotifyDSToken)
 	_Ini_Add("notifyDS", "Origin", $g_sNotifyOriginDS)
@@ -714,6 +716,7 @@ Func SaveConfig_600_18()
 	_Ini_Add("notifyDS", "AlertPBUpdate", $g_bNotifyAlertBOTUpdateDS ? 1 : 0)
 	_Ini_Add("notifyDS", "AlertSmartWaitTime", $g_bNotifyAlertSmartWaitTimeDS ? 1 : 0)
 	_Ini_Add("notifyDS", "AlertLaboratoryIdle", $g_bNotifyAlertLaboratoryIdleDS ? 1 : 0)
+	_Ini_Add("notifyDS", "AlertPetHouseIdle", $g_bNotifyAlertPetHouseIdleDS ? 1 : 0)
 	#EndRegion - Discord - Team AIO Mod++
 
 EndFunc   ;==>SaveConfig_600_18

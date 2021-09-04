@@ -1019,6 +1019,8 @@ Func ApplyConfig_600_18($TypeReadSave)
 			GUICtrlSetState($g_hChkNotifyAlertLaboratoryIdle, $g_bNotifyAlertLaboratoryIdle ? $GUI_CHECKED : $GUI_UNCHECKED)
 
 			#Region - Discord - Team AIO Mod++
+			GUICtrlSetState($g_hChkNotifyAlertPetHouseIdle, $g_bNotifyAlertPetHouseIdle ? $GUI_CHECKED : $GUI_UNCHECKED)
+			
 			GUICtrlSetState($g_hChkNotifyDSEnable, $g_bNotifyDSEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
 			chkDSenabled()
 			GUICtrlSetData($g_hTxtNotifyDSToken, $g_sNotifyDSToken)
@@ -1042,6 +1044,7 @@ Func ApplyConfig_600_18($TypeReadSave)
 			GUICtrlSetState($g_hChkNotifyBOTUpdateDS, $g_bNotifyAlertBOTUpdateDS ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkNotifyAlertSmartWaitTimeDS, $g_bNotifyAlertSmartWaitTimeDS ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkNotifyAlertLaboratoryIdleDS, $g_bNotifyAlertLaboratoryIdleDS ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkNotifyAlertPetHouseIdleDS, $g_bNotifyAlertPetHouseIdleDS ? $GUI_CHECKED : $GUI_UNCHECKED)
 			#EndRegion - Discord - Team AIO Mod++
 		Case "Save"
 			; Telegram
@@ -1071,6 +1074,8 @@ Func ApplyConfig_600_18($TypeReadSave)
 			$g_bNotifyAlertLaboratoryIdle = (GUICtrlRead($g_hChkNotifyAlertLaboratoryIdle) = $GUI_CHECKED)
 			
 			#Region - Discord - Team AIO Mod++
+			$g_bNotifyAlertPetHouseIdle = (GUICtrlRead($g_hChkNotifyAlertPetHouseIdle) = $GUI_CHECKED)
+			
 			$g_bNotifyDSEnable = (GUICtrlRead($g_hChkNotifyDSEnable) = $GUI_CHECKED)
 			$g_sNotifyDSToken = GUICtrlRead($g_hTxtNotifyDSToken)
 			$g_sNotifyOriginDS = GUICtrlRead($g_hTxtNotifyOriginDS)
@@ -1093,6 +1098,7 @@ Func ApplyConfig_600_18($TypeReadSave)
 			$g_bNotifyAlertBOTUpdateDS = (GUICtrlRead($g_hChkNotifyBOTUpdateDS) = $GUI_CHECKED)
 			$g_bNotifyAlertSmartWaitTimeDS = (GUICtrlRead($g_hChkNotifyAlertSmartWaitTimeDS) = $GUI_CHECKED)
 			$g_bNotifyAlertLaboratoryIdleDS = (GUICtrlRead($g_hChkNotifyAlertLaboratoryIdleDS) = $GUI_CHECKED)
+			$g_bNotifyAlertPetHouseIdleDS = (GUICtrlRead($g_hChkNotifyAlertPetHouseIdleDS) = $GUI_CHECKED)
 			#EndRegion - Discord - Team AIO Mod++
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_18
