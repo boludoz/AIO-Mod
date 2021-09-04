@@ -33,7 +33,8 @@ EndFunc   ;==>CreateVillageNotify
 
 Global $g_hGrpNotifyDS = 0
 
-Global $g_hChkNotifyDSEnable = 0, $g_hTxtNotifyOriginDS = 0, $g_hTxtNotifyDSToken = 0, $g_hChkNotifyRemoteDS = 0
+Global $g_hChkNotifyDSEnable = 0, $g_hTxtNotifyDSToken = 0
+Global $g_hChkNotifyRemoteDS = 0, $g_hTxtNotifyOriginDS = 0
 
 Global $g_hChkNotifyAlertMatchFoundDS = 0, $g_hChkNotifyAlertLastRaidIMGDS = 0, $g_hChkNotifyAlertLastRaidTXTDS = 0, $g_hChkNotifyAlertCampFullDS = 0, _
 	   $g_hChkNotifyAlertUpgradeWallsDS = 0, $g_hChkNotifyAlertOutOfSyncDS = 0, $g_hChkNotifyAlertTakeBreakDS = 0, $g_hChkNotifyAlertBuilderIdleDS = 0, _

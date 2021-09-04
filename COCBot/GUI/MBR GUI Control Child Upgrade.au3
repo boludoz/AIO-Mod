@@ -207,23 +207,26 @@ EndFunc   ;==>btnResetUpgrade
 Func chkLab()
 	If GUICtrlRead($g_hChkAutoLabUpgrades) = $GUI_CHECKED Then
 		$g_bAutoLabUpgradeEnable = True
+	Else
+		$g_bAutoLabUpgradeEnable = False
+	EndIf
+	; Custom - Team AIO Mod++
+	If $g_bAutoLabUpgradeEnable = True Then
+		GUICtrlSetState($g_hChkLabUpgradeOrder, $GUI_ENABLE)
+		; SetLog($g_iCmbLaboratory)
 		GUICtrlSetState($g_hPicLabUpgrade, $GUI_SHOW)
 		GUICtrlSetState($g_hLblNextUpgrade, $GUI_ENABLE)
 		GUICtrlSetState($g_hCmbLaboratory, $GUI_ENABLE)
 		_GUICtrlSetImage($g_hPicLabUpgrade, $g_sLibIconPath, $g_avLabTroops[$g_iCmbLaboratory][1])
 	Else
-		$g_bAutoLabUpgradeEnable = False
+		GUICtrlSetState($g_hChkLabUpgradeOrder, $GUI_DISABLE + $GUI_UNCHECKED)
+		; SetLog($g_iCmbLaboratory)
 		GUICtrlSetState($g_hPicLabUpgrade, $GUI_HIDE)
 		GUICtrlSetState($g_hLblNextUpgrade, $GUI_DISABLE)
 		GUICtrlSetState($g_hCmbLaboratory, $GUI_DISABLE)
 		_GUICtrlSetImage($g_hPicLabUpgrade, $g_sLibIconPath, $g_avLabTroops[0][1])
 	EndIf
-	; Custom - Team AIO Mod++
-	; If $g_iCmbLaboratory = 0 Then 
-		; GUICtrlSetState($g_hChkLabUpgradeOrder, $GUI_ENABLE)
-	; Else
-		; GUICtrlSetState($g_hChkLabUpgradeOrder, $GUI_DISABLE)
-	; EndIf
+	chkLabUpgradeOrder()
 	LabStatusGUIUpdate()
 EndFunc   ;==>chkLab
 	
@@ -241,7 +244,7 @@ Func chkLabUpgradeOrder()
 		Next
 	Else
 		$g_bLabUpgradeOrderEnable = False
-		GUICtrlSetState($g_hCmbLaboratory, $GUI_ENABLE)
+		GUICtrlSetState($g_hCmbLaboratory, $g_bAutoLabUpgradeEnable = True ? $GUI_ENABLE : $GUI_DISABLE)
 		GUICtrlSetState($g_hBtnRemoveLabUpgradeOrder, $GUI_DISABLE)
 		GUICtrlSetState($g_hBtnSetLabUpgradeOrder, $GUI_DISABLE)
 		For $i = 0 To UBound($g_ahCmbLabUpgradeOrder) - 1
@@ -400,13 +403,13 @@ Func cmbLab()
 	$g_iCmbLaboratory = _GUICtrlComboBox_GetCurSel($g_hCmbLaboratory)
 	_GUICtrlSetImage($g_hPicLabUpgrade, $g_sLibIconPath, $g_avLabTroops[$g_iCmbLaboratory][1])
 	; Custom - Team AIO Mod++
-	; If $g_iCmbLaboratory = 0 Then
-		; GUICtrlSetState($g_hChkLabUpgradeOrder, $GUI_ENABLE)
+	If $g_iCmbLaboratory <> 0 Then
+		GUICtrlSetState($g_hChkLabUpgradeOrder, $GUI_ENABLE)
 		; SetLog($g_iCmbLaboratory)
-	; Else
-		; GUICtrlSetState($g_hChkLabUpgradeOrder, $GUI_DISABLE)
+	Else
+		GUICtrlSetState($g_hChkLabUpgradeOrder, $GUI_DISABLE + $GUI_UNCHECKED)
 		; SetLog($g_iCmbLaboratory)
-	; EndIf
+	EndIf
 	chkLabUpgradeOrder()
 EndFunc   ;==>cmbLab
 
