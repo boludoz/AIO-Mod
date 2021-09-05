@@ -328,9 +328,6 @@ Func InitializeControlVariables()
 	Next
 	
 	#Region AiO MOD++
-	$oAlwaysEnabledControls($g_hGUI_FarmScredule1Close) = 1 ; Farm Schedule - Team AiO MOD++
-	$oAlwaysEnabledControls($g_hGUI_FarmScredule2Close) = 1 ; Farm Schedule - Team AiO MOD++
-
 	For $i in $aTabControlsMOD
 		$oAlwaysEnabledControls($i) = 1
 	Next

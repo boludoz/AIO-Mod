@@ -223,7 +223,7 @@ Func chkSwitchAcc()
 		Next
 		GUICtrlSetState($g_hChkOnlySCIDAccounts, $GUI_ENABLE)
 		For $i = 0 To 7
-			For $j = $g_ahChkSetFarm[$i] To $g_ahBtnAction2[$i]
+			For $j = $g_ahChkSetFarm[$i] To $g_ahCmbTime2[$i]
 				GUICtrlSetState($j, $GUI_DISABLE)
 			Next
 		Next
@@ -301,7 +301,7 @@ Func _cmbSwitchAcc($bReadSaveConfig = True)
 			GUICtrlSetState($g_ahChkSetFarm[$i], $GUI_ENABLE)
 			_chkSetFarmSchedule($i)
 		Else
-			For $j = $g_ahChkSetFarm[$i] To $g_ahBtnAction2[$i]
+			For $j = $g_ahChkSetFarm[$i] To $g_ahCmbTime2[$i]
 				GUICtrlSetState($j, $GUI_DISABLE)
 			Next
 		EndIf
@@ -315,14 +315,14 @@ Func cmbTotalAcc()
 	For $i = 0 To 7
 		If $iCmbTotalAcc >= 0 And $i <= $iCmbTotalAcc Then
 			_GUI_Value_STATE("SHOW", $g_ahChkAccount[$i] & "#" & $g_ahCmbProfile[$i] & "#" & $g_ahChkDonate[$i])
-			For $j = $g_ahChkSetFarm[$i] To $g_ahBtnAction2[$i]
+			For $j = $g_ahChkSetFarm[$i] To $g_ahCmbTime2[$i]
 				GUICtrlSetState($j, $GUI_SHOW)
 			Next
 			_chkSetFarmSchedule($i)
 		ElseIf $i > $iCmbTotalAcc Then
 			GUICtrlSetState($g_ahChkAccount[$i], $GUI_UNCHECKED)
 			_GUI_Value_STATE("HIDE", $g_ahChkAccount[$i] & "#" & $g_ahCmbProfile[$i] & "#" & $g_ahChkDonate[$i])
-			For $j = $g_ahChkSetFarm[$i] To $g_ahBtnAction2[$i]
+			For $j = $g_ahChkSetFarm[$i] To $g_ahCmbTime2[$i]
 				GUICtrlSetState($j, $GUI_HIDE)
 			Next
 		EndIf

@@ -1482,15 +1482,12 @@ Func ReadConfig_SwitchAccounts()
 			$g_aiCmbAction1[$i - 1] = Int(IniRead($sSwitchAccFile, "FarmStrategy", "CmbAction1" & $i, 0))
 			$g_aiCmbCriteria1[$i - 1] = Int(IniRead($sSwitchAccFile, "FarmStrategy", "CmbCriteria1" & $i, 0))
 			$g_aiTxtResource1[$i - 1] = Int(IniRead($sSwitchAccFile, "FarmStrategy", "TxtResource1" & $i, 0))
-			
-			$g_sChkNotifyhoursFS1S[$i - 1] = String(IniRead($sSwitchAccFile, "FarmStrategy", "Acc1H" & $i, "True|True|True|True|True|True|True|True|True|True|True|True|True|True|True|True|True|True|True|True|True|True|True|True"))
-			$g_sChkNotifyhoursFS2S[$i - 1] = String(IniRead($sSwitchAccFile, "FarmStrategy", "Acc2H" & $i, "True|True|True|True|True|True|True|True|True|True|True|True|True|True|True|True|True|True|True|True|True|True|True|True"))
-			$g_sChkNotifyWeekdaysFS1S[$i - 1] = String(IniRead($sSwitchAccFile, "FarmStrategy", "Acc1W" & $i, "True|True|True|True|True|True|True"))
-			$g_sChkNotifyWeekdaysFS2S[$i - 1] = String(IniRead($sSwitchAccFile, "FarmStrategy", "Acc2W" & $i, "True|True|True|True|True|True|True"))
+			$g_aiCmbTime1[$i - 1] = Int(IniRead($sSwitchAccFile, "FarmStrategy", "CmbTime1" & $i, -1))
 
 			$g_aiCmbAction2[$i - 1] = Int(IniRead($sSwitchAccFile, "FarmStrategy", "CmbAction2" & $i, 0))
 			$g_aiCmbCriteria2[$i - 1] = Int(IniRead($sSwitchAccFile, "FarmStrategy", "CmbCriteria2" & $i, 0))
 			$g_aiTxtResource2[$i - 1] = Int(IniRead($sSwitchAccFile, "FarmStrategy", "TxtResource2" & $i, 0))
+			$g_aiCmbTime2[$i - 1] = Int(IniRead($sSwitchAccFile, "FarmStrategy", "CmbTime2" & $i, -1))
 
 		Next
 	EndIf

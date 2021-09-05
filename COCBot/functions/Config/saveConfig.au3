@@ -1247,15 +1247,12 @@ Func SaveConfig_600_35_2()
 			IniWrite($sSwitchAccFile, "FarmStrategy", "CmbAction1" & $i, $g_aiCmbAction1[$i - 1])
 			IniWrite($sSwitchAccFile, "FarmStrategy", "CmbCriteria1" & $i, $g_aiCmbCriteria1[$i - 1])
 			IniWrite($sSwitchAccFile, "FarmStrategy", "TxtResource1" & $i, $g_aiTxtResource1[$i - 1])
-			
-			IniWrite($sSwitchAccFile, "FarmStrategy", "Acc1H" & $i, $g_sChkNotifyhoursFS1S[$i - 1])
-			IniWrite($sSwitchAccFile, "FarmStrategy", "Acc2H" & $i, $g_sChkNotifyhoursFS2S[$i - 1])
-			IniWrite($sSwitchAccFile, "FarmStrategy", "Acc1W" & $i, $g_sChkNotifyWeekdaysFS1S[$i - 1])
-			IniWrite($sSwitchAccFile, "FarmStrategy", "Acc2W" & $i, $g_sChkNotifyWeekdaysFS2S[$i - 1])
+			IniWrite($sSwitchAccFile, "FarmStrategy", "CmbTime1" & $i, $g_aiCmbTime1[$i - 1])
 
 			IniWrite($sSwitchAccFile, "FarmStrategy", "CmbAction2" & $i, $g_aiCmbAction2[$i - 1])
 			IniWrite($sSwitchAccFile, "FarmStrategy", "CmbCriteria2" & $i, $g_aiCmbCriteria2[$i - 1])
 			IniWrite($sSwitchAccFile, "FarmStrategy", "TxtResource2" & $i, $g_aiTxtResource2[$i - 1])
+			IniWrite($sSwitchAccFile, "FarmStrategy", "CmbTime2" & $i, $g_aiCmbTime2[$i - 1])
 		Next
 
 	EndIf

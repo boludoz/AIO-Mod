@@ -4,8 +4,8 @@
 ; Syntax ........:
 ; Parameters ....: None
 ; Return values .: None
-; Author ........: Demen, NguyenAnhHD (03-2018)
-; Modified ......: Team AiO MOD++ (2019), Boldina (09-2021)
+; Author ........: NguyenAnhHD (03-2018)
+; Modified ......: Team AiO MOD++ (2019)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -28,8 +28,8 @@ Global $g_ahChk_SwitchMax[4], $g_ahCmb_SwitchMax[4], $g_ahChk_BotTypeMax[4], $g_
 	   $g_ahChk_SwitchMin[4], $g_ahCmb_SwitchMin[4], $g_ahChk_BotTypeMin[4], $g_ahCmb_BotTypeMin[4], $g_ahLbl_SwitchMin[4], $g_ahTxt_ConditionMin[4]
 
 Global $g_ahChkSetFarm[8], _
-	   $g_ahCmbAction1[8], $g_ahCmbCriteria1[8], $g_ahTxtResource1[8], $g_ahBtnAction1[8], _
-	   $g_ahCmbAction2[8], $g_ahCmbCriteria2[8], $g_ahTxtResource2[8], $g_ahBtnAction2[8]
+	   $g_ahCmbAction1[8], $g_ahCmbCriteria1[8], $g_ahTxtResource1[8], $g_ahCmbTime1[8], _
+	   $g_ahCmbAction2[8], $g_ahCmbCriteria2[8], $g_ahTxtResource2[8], $g_ahCmbTime2[8]
 
 Global $g_hTxtSALog = 0
 
@@ -52,8 +52,6 @@ Func CreateSwitchOptions()
 	CreateBotSwitchAccLog() ; Set SwitchAcc Log
 	GUICtrlCreateTabItem("")
 
-	btnFarmScredule1()
-	btnFarmScredule2()
 EndFunc   ;==>CreateBotProfileSchedule
 
 #Region Switch Accounts tab
@@ -190,7 +188,7 @@ EndFunc   ;==>CreateSwitchProfile
 
 #Region Farming Schedule tab
 Func CreateFarmSchedule()
-	
+
 	Local $x = 10, $y = 30
 	GUICtrlCreateLabel("Account", $x - 5, $y, 60, -1, $SS_CENTER)
 	GUICtrlCreateLabel("Farm Schedule 1", $x + 80, $y, 150, -1, $SS_CENTER)
@@ -212,10 +210,10 @@ Func CreateFarmSchedule()
 			GUICtrlSetBkColor(-1, $COLOR_WHITE)
 			GUICtrlSetOnEvent(-1, "cmbCriteria1")
 		$g_ahTxtResource1[$i] = _GUICtrlCreateInput("", $x + 187, $y + $i * 30, 50, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_ahCmbTime1[$i] = GUICtrlCreateCombo("", $x + 187, $y + $i * 30, 50, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+			GUICtrlSetData(-1, 	"0 am|1 am|2 am|3 am|4 am|5 am|6 am|7 am|8 am|9 am|10am|11am|" & _
+								"12pm|1 pm|2 pm|3 pm|4 pm|5 pm|6 pm|7 pm|8 pm|9 pm|10pm|11pm")
 			GUICtrlSetState(-1, $GUI_HIDE)
-		$g_ahBtnAction1[$i] = GUICtrlCreateButton("...", $x + 187, $y + $i * 30, 50, 21) ;GUICtrlCreateCombo("...", $x + 187, $y + $i * 30, 50, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
-			GUICtrlSetState(-1, $GUI_HIDE)
-			GUICtrlSetOnEvent(-1, "btnFarmScreduleOpen1")
 
 		$x = 248 + 10 - 60
 		$g_ahCmbAction2[$i] = GUICtrlCreateCombo("Turn...", $x + 60, $y + $i * 30, 58, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
@@ -226,10 +224,10 @@ Func CreateFarmSchedule()
 			GUICtrlSetBkColor(-1, $COLOR_WHITE)
 			GUICtrlSetOnEvent(-1, "cmbCriteria2")
 		$g_ahTxtResource2[$i] = _GUICtrlCreateInput("", $x + 187, $y + $i * 30, 50, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_ahCmbTime2[$i] = GUICtrlCreateCombo("", $x + 187, $y + $i * 30, 50, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+			GUICtrlSetData(-1, 	"0 am|1 am|2 am|3 am|4 am|5 am|6 am|7 am|8 am|9 am|10am|11am|" & _
+								"12pm|1 pm|2 pm|3 pm|4 pm|5 pm|6 pm|7 pm|8 pm|9 pm|10pm|11pm")
 			GUICtrlSetState(-1, $GUI_HIDE)
-		$g_ahBtnAction2[$i] = GUICtrlCreateButton("...", $x + 187, $y + $i * 30, 50, 21) ;GUICtrlCreateCombo("", $x + 187, $y + $i * 30, 50, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
-			GUICtrlSetState(-1, $GUI_HIDE)
-			GUICtrlSetOnEvent(-1, "btnFarmScreduleOpen2")
 	Next
 
 EndFunc   ;==>CreateFarmSchedule
@@ -245,128 +243,3 @@ Func CreateBotSwitchAccLog()
 
 EndFunc   ;==>CreateBotSwitchAccLog
 #EndRegion
-
-Func btnFarmScredule1()
-    Local $x = 0, $y = 8, $sTxtTip = ""
-    $g_hGUI_FarmScredule1 = _GUICreate("Farm scredule 1 : hours / days active.", 480, 99 + 50, -1, -1, $WS_BORDER, $WS_EX_CONTROLPARENT)
-
-    $g_hGroupTitle1 = GUICtrlCreateGroup("", 8, $y, 459, 99)
-
-    GUICtrlCreateGroup("", -99, -99, 1, 1)
-
-    $y += 25
-    $x += 25
-        GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "Hour", "Hour") & ":", $x - 5, $y, -1, 15)
-            $sTxtTip = GetTranslatedFileIni("MBR Global GUI Design", "Only_during_hours", -1)
-            _GUICtrlSetTip(-1, $sTxtTip)
-        For $i = 0 to 11
-            GUICtrlCreateLabel(StringFormat("%2s", String($i)), $x + 30 + ( 15 * $i), $y)
-        Next
-        ; GUICtrlCreateLabel("X", $x + 214, $y + 1, 11, 11)
-    $y += 15
-        For $i = 0 to 11
-            $g_hChkNotifyhoursFS1[$i] = GUICtrlCreateCheckbox("", $x + 30 + (15 * $i), $y, 15, 15)
-            GUICtrlSetState(-1, $GUI_CHECKED)
-        Next
-        GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "AM", -1), $x + 5, $y)
-    $y += 15
-        For $i = 12 to 23
-            $g_hChkNotifyhoursFS1[$i] = GUICtrlCreateCheckbox("", $x + 30 + (15 * ($i - 12)), $y, 15, 15)
-            GUICtrlSetState(-1, $GUI_CHECKED)
-        Next
-        GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "PM", -1), $x + 5, $y)
-    $y -= 55
-    $x += 235
-    $y += 25
-        GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "Day", "Day") & ":", $x, $y, -1, 15)
-            _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Only_during_day", -1))
-        GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "Su", "Su"), $x + 30, $y)
-            _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Sunday", "Sunday"))
-        GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "Mo", "Mo"), $x + 46, $y)
-            _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Monday", "Monday"))
-        GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "Tu", "Tu"), $x + 62, $y)
-            _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Tuesday", "Tuesday"))
-        GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "We", "We"), $x + 80, $y)
-            _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Wednesday", "Wednesday"))
-        GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "Th", "Th"), $x + 99, $y)
-            _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Thursday", "Thursday"))
-        GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "Fr", "Fr"), $x + 116, $y)
-            _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Friday", "Friday"))
-        GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "Sa", "Sa"), $x + 133, $y)
-            _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Saturday", "Saturday"))
-        ; GUICtrlCreateLabel("X", $x + 155, $y + 1, -1, 15)
-            _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Clear_set_row_of_boxes", -1))
-    $y += 13
-        For $i = 0 to 6
-            $g_hChkNotifyWeekdaysFS1[$i] = GUICtrlCreateCheckbox("", $x + 30 + (17 * $i), $y, 15, 15)
-            GUICtrlSetState(-1, $GUI_CHECKED)
-        Next
-    $y += 18
-    $x = 15
-
-    $g_hGUI_FarmScredule1Close = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrderClose", "Close"), 344, $y, 65, 25)
-    GUICtrlSetOnEvent(-1, "btnFarmScreduleClose1")
-
-EndFunc
-
-Func btnFarmScredule2()
-    Local $x = 0, $y = 8, $sTxtTip = ""
-    $g_hGUI_FarmScredule2 = _GUICreate("Farm scredule 2 : hours / days active.", 480, 99 + 50, -1, -1, $WS_BORDER, $WS_EX_CONTROLPARENT)
-
-    $g_hGroupTitle2 = GUICtrlCreateGroup("", 8, $y, 459, 99)
-    GUICtrlCreateGroup("", -99, -99, 1, 1)
-
-    $y += 25
-    $x += 25
-        GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "Hour", "Hour") & ":", $x - 5, $y, -1, 15)
-            $sTxtTip = GetTranslatedFileIni("MBR Global GUI Design", "Only_during_hours", -1)
-            _GUICtrlSetTip(-1, $sTxtTip)
-        For $i = 0 to 11
-            GUICtrlCreateLabel(StringFormat("%2s", String($i)), $x + 30 + ( 15 * $i), $y)
-        Next
-        ; GUICtrlCreateLabel("X", $x + 214, $y + 1, 11, 11)
-    $y += 15
-        For $i = 0 to 11
-            $g_hChkNotifyhoursFS2[$i] = GUICtrlCreateCheckbox("", $x + 30 + (15 * $i), $y, 15, 15)
-            GUICtrlSetState(-1, $GUI_CHECKED)
-        Next
-        GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "AM", -1), $x + 5, $y)
-    $y += 15
-        For $i = 12 to 23
-            $g_hChkNotifyhoursFS2[$i] = GUICtrlCreateCheckbox("", $x + 30 + (15 * ($i - 12)), $y, 15, 15)
-            GUICtrlSetState(-1, $GUI_CHECKED)
-        Next
-        GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "PM", -1), $x + 5, $y)
-    $y -= 55
-    $x += 235
-    $y += 25
-        GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "Day", "Day") & ":", $x, $y, -1, 15)
-            _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Only_during_day", -1))
-        GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "Su", "Su"), $x + 30, $y)
-            _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Sunday", "Sunday"))
-        GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "Mo", "Mo"), $x + 46, $y)
-            _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Monday", "Monday"))
-        GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "Tu", "Tu"), $x + 62, $y)
-            _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Tuesday", "Tuesday"))
-        GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "We", "We"), $x + 80, $y)
-            _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Wednesday", "Wednesday"))
-        GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "Th", "Th"), $x + 99, $y)
-            _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Thursday", "Thursday"))
-         GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "Fr", "Fr"), $x + 116, $y)
-            _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Friday", "Friday"))
-        GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "Sa", "Sa"), $x + 133, $y)
-            _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Saturday", "Saturday"))
-        ; GUICtrlCreateLabel("X", $x + 155, $y + 1, -1, 15)
-            _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Clear_set_row_of_boxes", -1))
-    $y += 13
-        For $i = 0 to 6
-            $g_hChkNotifyWeekdaysFS2[$i] = GUICtrlCreateCheckbox("", $x + 30 + (17 * $i), $y, 15, 15)
-            GUICtrlSetState(-1, $GUI_CHECKED)
-        Next
-    $y += 18
-    $x = 15
-
-    $g_hGUI_FarmScredule2Close = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrderClose", "Close"), 344, $y, 65, 25)
-    GUICtrlSetOnEvent(-1, "btnFarmScreduleClose2")
-
-EndFunc

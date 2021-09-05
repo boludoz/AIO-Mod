@@ -297,17 +297,12 @@ Global $g_abChkSwitchMax[4] = [False, False, False, False], $g_abChkSwitchMin[4]
 
 ; Farm Schedule - Team AiO MOD++
 Global $g_abChkSetFarm[8], _
-		$g_aiCmbAction1[8], $g_aiCmbCriteria1[8], $g_aiTxtResource1[8], $g_aiBtnAction1[8], _
-		$g_aiCmbAction2[8], $g_aiCmbCriteria2[8], $g_aiTxtResource2[8], $g_aiBtnAction2[8]
-Global $g_hChkNotifyhoursFS2[24], $g_hChkNotifyWeekdaysFS2[7]
-Global $g_sChkNotifyhoursFS2S[8], $g_sChkNotifyWeekdaysFS2S[8]
-Global $g_hGUI_FarmScredule1, $g_hGUI_FarmScredule2, $g_hGUI_FarmScredule1Close, $g_hGUI_FarmScredule2Close
-Global $g_hGroupTitle1 = "", $g_hGroupTitle2 = ""
-Global $iaFSActiveAcc = 0
-Global $g_aiActiveFSTimersDays[24]
-Global $g_aiActiveFSTimersWeek[7]
-Global $g_hChkNotifyhoursFS1[24], $g_hChkNotifyWeekdaysFS1[7]
-Global $g_sChkNotifyhoursFS1S[8], $g_sChkNotifyWeekdaysFS1S[8]
+		$g_aiCmbAction1[8], $g_aiCmbCriteria1[8], $g_aiTxtResource1[8], $g_aiCmbTime1[8], _
+		$g_aiCmbAction2[8], $g_aiCmbCriteria2[8], $g_aiTxtResource2[8], $g_aiCmbTime2[8]
+
+; Builder Status - Team AiO MOD++
+Global $g_sNextBuilderReadyTime = ""
+Global $g_asNextBuilderReadyTime[8] = ["", "", "", "", "", "", "", ""]
 
 ; Max logout time - Team AiO MOD++
 Global $g_bTrainLogoutMaxTime = False, $g_iTrainLogoutMaxTime = 4
