@@ -30,7 +30,7 @@ Func TestBuilderBaseAttackBB()
 	If IsArray($aAvailableTroops) Then
 
 		; Zoomout the Opponent Village.
-		BuilderBaseZoomOut(True)
+		BuilderBaseZoomOut(False, True)
 		
 		; Correct Script.
 		BuilderBaseSelectCorrectScript($aAvailableTroops)
@@ -233,7 +233,7 @@ EndFunc   ;==>AttackBB
 Func Okay()
 	local $timer = __TimerInit()
 
-	While Not isOnBuilderBase(True, True)
+	While Not isOnBuilderBase(True)
 		local $aCoords = decodeSingleCoord(findImage("OkayButton", $g_sImgOkButton, "FV", 1, True))
 		If IsArray($aCoords) And UBound($aCoords) = 2 Then
 			PureClickP($aCoords)

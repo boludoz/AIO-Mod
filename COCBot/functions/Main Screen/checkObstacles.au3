@@ -5,7 +5,7 @@
 ; Parameters ....:
 ; Return values .: Returns True when there is something blocking
 ; Author ........: Hungle (2014)
-; Modified ......: KnowJack (2015), Sardo (08-2015), TheMaster1st(10-2015), MonkeyHunter (08-2016), MMHK (12-2016), Team AIO Mod++(05-2021)
+; Modified ......: KnowJack (2015), Sardo (08-2015), TheMaster1st(10-2015), MonkeyHunter (08-2016), MMHK (12-2016)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -17,11 +17,11 @@ Func checkObstacles($bBuilderBase = Default) ;Checks if something is in the way 
 	FuncEnter(checkObstacles)
 	If $bBuilderBase = Default Then $bBuilderBase = $g_bStayOnBuilderBase
 	Static $iRecursive = 0
+
 	If Not TestCapture() And WinGetAndroidHandle() = 0 Then
 		; Android not available
 		Return FuncReturn(True)
 	EndIf
-	
 	If _ColorCheck(_GetPixelColor(383, 405), Hex(0xF0BE70, 6), 20) Then
 		SetLog("Found Switch Account dialog!", $COLOR_INFO)
 		PureClick(383, 375 + $g_iMidOffsetY, 1, 0, "Click Cancel")
@@ -41,40 +41,12 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 
 	_CaptureRegions()
 
-	#Region - Custom - Team AIO Mod++
-	If checkObstacles_Network() Then Return True
-	
 	If Not $bRecursive Then
+		If checkObstacles_Network() Then Return True
 		If checkObstacles_GfxError() Then Return True
-
-		Local $aImgX = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Obstacles", 1, "FV", False, "X|OK")
-		If IsArray($aImgX) Then
-			If (StringInStr($aImgX[0][0], "X") > 0) Then
-				; Shop X | Shield X.
-				If (793 < $aImgX[0][1] And 14 < $aImgX[0][2] And 850 > $aImgX[0][1] And 65 > $aImgX[0][2]) Then
-					SetDebugLog("Detected _checkObstacles Shop X | Shield X.")
-					Click($aImgX[0][1], $aImgX[0][2])
-					If RandomSleep(1500) Then Return
-				; Profile X | Trophy X.
-				ElseIf (801 < $aImgX[0][1] And 48 < $aImgX[0][2] And 855 > $aImgX[0][1] And 102 > $aImgX[0][2]) Then
-					SetDebugLog("Detected _checkObstacles Trophy X.")
-					Click($aImgX[0][1], $aImgX[0][2])
-					If RandomSleep(1500) Then Return
-				; Army X
-				ElseIf (801 < $aImgX[0][1] And 99 < $aImgX[0][2] And 855 > $aImgX[0][1] And 155 > $aImgX[0][2]) Then
-					SetDebugLog("Detected _checkObstacles Army X.")
-					Click($aImgX[0][1], $aImgX[0][2])
-					If RandomSleep(1500) Then Return
-				EndIf
-			ElseIf (StringInStr($aImgX[0][0], "OK") > 0) And _CheckPixel($aIsMainGrayed, False) Then
-				ClickAway(True)
-			EndIf
-		EndIF
 	EndIf
-	
-	_CaptureRegions()
-	Local $bIsOnBuilderIsland = isOnBuilderBase(False, True)
-	Local $bIsOnMainVillage = isOnMainVillage(False)
+	Local $bIsOnBuilderIsland = isOnBuilderBase()
+	Local $bIsOnMainVillage = isOnMainVillage()
 	If $bBuilderBase <> $bIsOnBuilderIsland And ($bIsOnBuilderIsland Or $bIsOnBuilderIsland <> $bIsOnMainVillage) Then
 		If $bIsOnBuilderIsland Then
 			SetLog("Detected Builder Base, trying to switch back to Main Village")
@@ -87,7 +59,6 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 			Return False
 		EndIf
 	EndIf
-	#EndRegion - Custom - Team AIO Mod++
 
 	If $g_sAndroidGameDistributor <> $g_sGoogle Then ; close an ads window for non google apks
 		Local $aXButton = FindAdsXButton()
@@ -99,14 +70,14 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 			Return False
 		EndIf
 	EndIf
-	
 
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-	; Detect All Reload Button errors => 1- Another device, 2- Take a break, 3- Connection lost or error, 4- Out of sync, 5- Inactive, 6- Maintenance, 7- SCID Login Screen	Local $aMessage = _PixelSearch($aIsReloadError[0], $aIsReloadError[1], $aIsReloadError[0] + 3, $aIsReloadError[1] + 11, Hex($aIsReloadError[2], 6), $aIsReloadError[3], $g_bNoCapturePixel)
+	; Detect All Reload Button errors => 1- Another device, 2- Take a break, 3- Connection lost or error, 4- Out of sync, 5- Inactive, 6- Maintenance, 7- SCID Login Screen
 	Local $aMessage = _PixelSearch($aIsReloadError[0], $aIsReloadError[1], $aIsReloadError[0] + 3, $aIsReloadError[1] + 11, Hex($aIsReloadError[2], 6), $aIsReloadError[3], $g_bNoCapturePixel)
 	If IsArray($aMessage) Or (UBound(decodeSingleCoord(FindImageInPlace("Error", $g_sImgError, "630,300(2,20)", False, $g_iAndroidLollipop))) > 1) Then
 		If $g_bDebugSetlog Then SetDebugLog("(DC=" & _GetPixelColor($aIsConnectLost[0], $aIsConnectLost[1]) & ")(OoS=" & _GetPixelColor($aIsCheckOOS[0], $aIsCheckOOS[1]) & ")", $COLOR_DEBUG)
 		If $g_bDebugSetlog Then SetDebugLog("33B5E5=>true, 282828=>false", $COLOR_DEBUG)
+
 		;;;;;;;##### 1- Another device #####;;;;;;;
 		$Result = getOcrReloadMessage(184, 325 + $g_iMidOffsetY, "Another Device OCR:") ; OCR text to find Another device message
 		If StringInStr($Result, "device", $STR_NOCASESENSEBASIC) Or _
@@ -123,7 +94,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 				PushMsg("AnotherDevice")
 			EndIf
 			If _SleepStatus($g_iAnotherDeviceWaitTime * 1000) Then Return ; Wait as long as user setting in GUI, default 120 seconds
-            checkObstacles_ReloadCoC($aReloadButton, "#0127", $bRecursive)
+			checkObstacles_ReloadCoC($aReloadButton, "#0127", $bRecursive)
 			If $g_bForceSinglePBLogoff Then $g_bGForcePBTUpdate = True
 			checkObstacles_ResetSearch()
 			Return True
@@ -135,7 +106,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 			If TestCapture() Then Return "Village must take a break"
 			PushMsg("TakeBreak")
 			If _SleepStatus($DELAYCHECKOBSTACLES4) Then Return ; 2 Minutes
-            checkObstacles_ReloadCoC($aReloadButton, "#0128", $bRecursive) ;Click on reload button
+			checkObstacles_ReloadCoC($aReloadButton, "#0128", $bRecursive) ;Click on reload button
 			If $g_bForceSinglePBLogoff Then $g_bGForcePBTUpdate = True
 			checkObstacles_ResetSearch()
 			Return True
@@ -299,7 +270,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 	EndIf
 	If Not $bHasTopBlackBar And _CheckPixel($aIsMainGrayed, $g_bNoCapturePixel) Then
 		SetDebugLog("checkObstacles: Found gray Window to close")
-		ClickAway() ; ClickP($aAway, 1, 0, "#0133") ;Click away If things are open
+		PureClickP($aAway, 1, 0, "#0133") ;Click away If things are open
 		$g_bMinorObstacle = True
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		Return False
@@ -332,11 +303,6 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		Return True
 	EndIf
 	If _CheckPixel($aSurrenderButton, $g_bNoCapturePixel) Then
-		SetDebugLog("checkObstacles: Found End Battle to close")
-		ReturnHome(False, False) ;If End battle is available
-		Return True
-	EndIf
-	If _CheckPixel($aSurrenderButtonFixed, $g_bNoCapturePixel) Then
 		SetDebugLog("checkObstacles: Found End Battle to close")
 		ReturnHome(False, False) ;If End battle is available
 		Return True
@@ -498,24 +464,24 @@ Func UpdateGame()
 	OpenPlayStoreGame()
 	#cs Finish that when time permits ;)
 		; wait 1 Minute to open
-	
+
 		; Check for Update button
 		SetLog("Play Store Game update available"
-	
+
 		; Check for Open button
 		SetLog("Play Store Game update not required"
 		Return Default
-	
+
 		; press update button
-	
+
 		; press accept button
-	
+
 		; track progress, area 17,317 - 805,335
-	
+
 		; Check for Open button
 		SetLog("Game updated"
 		Return True
-	
+
 		SetLog("Game updated failed"
 		Return False
 	#ce Finish that when time permits ;)

@@ -51,11 +51,10 @@ Func BuilderBaseAttack($bTestRun = False)
 	If _Sleep(1500) Then Return ; Add Delay Before Check Builder Face As When Army Camp Get's Close Due To It's Effect Builder Face Is Dull and not recognized on slow pc
 
 	; Check for builder base.
-	If Not isOnBuilderBase() Then Return
-
-	; Check Zoomout
-	BuilderBaseZoomOut()
-
+	If Not isOnBuilderBase() Then
+		Return
+	EndIf
+	
 	; Check Attack Button
 	If Not CheckAttackBtn() Then Return
 
@@ -71,7 +70,6 @@ Func BuilderBaseAttack($bTestRun = False)
 	; Get Battle Machine status
 	Local $HeroStatus = HeroStatus()
 	$g_bIsMachinePresent = ($HeroStatus = "Battle Machine ready to use" ? True : False)
-
 
 	;If $bTestRun Then $bIsToDropTrophies = True
 
@@ -90,7 +88,7 @@ Func BuilderBaseAttack($bTestRun = False)
 		If Not $g_bRunState Then Return
 
 		; Zoomout the Opponent Village
-		BuilderBaseZoomOut()
+		BuilderBaseZoomOut(False, True)
 		If $g_bRestart = True Then Return
 		If Not $g_bRunState Then Return
 
@@ -333,7 +331,7 @@ Func WaitForVersusBattle()
 					Return False
 				EndIf
 			Case 3
-				If IsOnBuilderBase(True, True) Then
+				If isOnBuilderBase(True) Then
 					Return False
 				EndIf
 				$iSwitch = 0
@@ -507,7 +505,7 @@ Func BuilderBaseAttackReport()
 		Return False
 	EndIf
 
-	Local $Stars = 0
+	Local $iStars = 0
 	Local $StarsPositions[3][2] = [[326, 394], [452, 388], [546, 413]]
 	Local $Color[3] = [0xD0D4D0, 0xDBDEDB, 0xDBDDD8]
 	Local $hResultColor = 0x000000
@@ -516,10 +514,10 @@ Func BuilderBaseAttackReport()
 	If Not $g_bRunState Then Return
 
 	For $i = 0 To UBound($StarsPositions) - 1
-		If _ColorCheck(_GetPixelColor($StarsPositions[$i][0], $StarsPositions[$i][1], True), Hex($Color[$i], 6), 30) Then $Stars += 1
+		If _ColorCheck(_GetPixelColor($StarsPositions[$i][0], $StarsPositions[$i][1], True), Hex($Color[$i], 6), 30) Then $iStars += 1
 	Next
 
-	Setlog("Your Attack: " & $Stars & " Star(s)!", $COLOR_INFO)
+	Setlog("Your Attack: " & $iStars & " Star(s)!", $COLOR_INFO)
 
 	If Okay() Then
 	   SetLog("Return To Home.", $Color_Info)
@@ -529,118 +527,80 @@ Func BuilderBaseAttackReport()
    EndIf
 
 	Local $sResultName = "Draw"
-
-	For $i = 0 To 24 ; 120 seconds
+	
+	Local $iWait = 180000 ; 3 min
+	Local $hTimer = TimerInit()
+	Do
 		If Not $g_bRunState Then Return
-		If isOnBuilderBase(True, True) Then
+		If isOnBuilderBase(True) Then
 			SetLog("BuilderBaseAttackReport | Something weird happened here. Leave the screen alone.", $COLOR_ERROR)
 			If checkObstacles(True) Then SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
 			Return
 		EndIf
+		
 		; Wait
-        If _Sleep(2500) Then Return ; 2,5 seconds
-        If QuickMIS("BC1", $g_sImgReportWaitBB, 529, 324, 652, 372, True, False) Then
-		#cs - Diabolico
-		If $bTrueCap = False Then
-			; Wait
-			If _Sleep(2500) Then Return ; 2,5 seconds
-			If QuickMIS("BC1", $g_sImgReportWaitBB, 529, 324, 652, 372, True, False) Then
-				PureClick($g_iQuickMISWOffSetX, $g_iQuickMISWOffSetY)
-				If _Sleep(2500) Then Return ; 2,5 seconds
-
-				For $iWatchs = 0 To 10
-					$sReturn = getOcrAndCaptureDOCR($g_sASBattleEndsDOCRPath, 382, 598, 106, 36, True, True)
-					If _Sleep(500) Then Return ; 2,5 seconds
-					If StringInStr($sReturn, "s") > 0 Then
-						If $bTrueCap = False Then
-							_CaptureRegion()
-							If _Sleep(750) Then Return
-
-							_CaptureRegion2()
-							If _Sleep(100) Then Return
-
-							Local $aGroup = _MasivePixelCompare($g_hHBitmap, $g_hHBitmap2, 199, 94, 685, 573, 35, 5)
-							If UBound($aGroup) > 0 And not @error Then
-								Local $iRandomCrazy = Random(0, Ubound($aGroup) -1, 1)
-								ClickDrag($aGroup[$iRandomCrazy][0], $aGroup[$iRandomCrazy][1], 430, 354, True)
-								SetDebugLog("dagging")
-								If _Sleep(2500) Then Return ; 2,5 seconds
-							EndIf
-
-							$bTrueCap = True
-						EndIf
-					ElseIf $bTrueCap = True Then
-						ExitLoop
-					EndIf
-
-					If _Sleep(2000) Then Return ; 2 seconds
-				Next
-
-				PureClick(70, 680) ; Return Home
-		#ce - Diabolico
-				If (Mod($i+1, 4) = 0) Then Setlog("...Opponent is Attacking!", $COLOR_INFO)
-				ContinueLoop
-			EndIf
-;		EndIf
-		If _WaitForCheckImg($g_sImgReportFinishedBB, "465, 493, 490, 505", Default, 5000, 250) Then
-
-			If RandomSleep(500) Then Return
-
+        If _ColorCheck(_GetPixelColor(550, 345, True), Hex(0xFEFFFF, 6), 20) Then
+			If (Mod($i  + 1, 4) = 0) Then Setlog("Opponent is attacking.", $COLOR_INFO)
+			If _Sleep(3000) Then Return ; 3 seconds
+		ElseIf _WaitForCheckImg($g_sImgReportFinishedBB, "465, 493, 490, 505", Default, 5000, 250) Then
 			$hResultColor = _GetPixelColor(150, 192, True)
 
-			If _ColorCheck($hResultColor, Hex(0x8DBE51, 6), 20) Then
-				$sResultName = "Victory"
-			ElseIf _ColorCheck($hResultColor, Hex(0xD0262C, 6), 20) Then
-				$sResultName = "Defeat"
-			EndIf
-
-			Setlog("Attack Result: " & $sResultName, ($sResultName = "Victory") ? ($COLOR_SUCCESS) : ($COLOR_ERROR))
 			ExitLoop
 		EndIf
-	Next
 
-	; Small delay just to getout the slide resources to top left
-	If RandomSleep(500) Then Return
+	Until ($iWait < TimerDiff($hTimer))
+
+	If _Sleep(5000) Then Return
+
+	If _ColorCheck($hResultColor, Hex(0x8DBE51, 6), 20) Then
+		$sResultName = "Victory"
+	ElseIf _ColorCheck($hResultColor, Hex(0xD0262C, 6), 20) Then
+		$sResultName = "Defeat"
+	EndIf
 
 	; Get the LOOT :
-	Local $gain[3]
+	Local $iGain[3]
+	
 	; To get trophies getOcrOverAllDamage(493, 480)
-	$gain[$eLootTrophyBB] = Int(getOcrOverAllDamage(493, 480))
-	; $gain[$eLootGoldBB] = Int(getTrophyVillageSearch(150, 483))  ; Fix
-	$gain[$eLootElixirBB] = Int(getTrophyVillageSearch(310, 483))
+	$iGain[$eLootTrophyBB] = Int(getOcrOverAllDamage(493, 480))
+	$iGain[$eLootGoldBB] = Int(getTrophyVillageSearch(150, 483))
+	$iGain[$eLootElixirBB] = Int(getTrophyVillageSearch(310, 483))
 	Local $iLastDamage = Int(_getTroopCountBig(222, 304))
 	If $iLastDamage > $g_iLastDamage Then $g_iLastDamage = $iLastDamage
 
-	If StringInStr($sResultName, "Victory") > 0 Then
-		$gain[$eLootTrophyBB] = Abs($gain[$eLootTrophyBB])
-	ElseIf StringInStr($sResultName, "Defeat") > 0 Then
-		$gain[$eLootTrophyBB] = $gain[$eLootTrophyBB] * -1
+	If $sResultName = "Victory" Then
+		$iGain[$eLootTrophyBB] = Abs($iGain[$eLootTrophyBB])
+	ElseIf $sResultName = "Defeat" Then
+		$iGain[$eLootTrophyBB] = -Abs($iGain[$eLootTrophyBB])
 	Else
-		$gain[$eLootTrophyBB] = 0
+		$iGain[$eLootTrophyBB] = 0
 	EndIf
 
 	; #######################################################################
 	; Just a temp log for BB attacks , this needs a new TAB like a stats tab
-	Local $AtkLogTxt
-	$AtkLogTxt = "  " & String($g_iCurAccount + 1) & "|" & _NowTime(4) & "|"
-	$AtkLogTxt &= StringFormat("%5d", $g_aiCurrentLootBB[$eLootTrophyBB]) & "|"
-	; $AtkLogTxt &= StringFormat("%7d", $gain[$eLootGoldBB]) & "|" ; Fix
-	$AtkLogTxt &= StringFormat("%7d", $gain[$eLootElixirBB]) & "|" ; Fix
-	$AtkLogTxt &= StringFormat("%7d", $gain[$eLootElixirBB]) & "|"
-	$AtkLogTxt &= StringFormat("%3d", $gain[$eLootTrophyBB]) & "|"
-	$AtkLogTxt &= StringFormat("%1d", $Stars) & "|"
-	$AtkLogTxt &= StringFormat("%3d", $g_iLastDamage) & "|"
-	$AtkLogTxt &= StringFormat("%1d", $g_iBuilderBaseScript + 1) & "|"
+	Local $sAtkLogTxt
+	$sAtkLogTxt = "  " & String($g_iCurAccount + 1) & "|" & _NowTime(4) & "|"
+	$sAtkLogTxt &= StringFormat("%5d", $g_aiCurrentLootBB[$eLootTrophyBB]) & "|"
+	$sAtkLogTxt &= StringFormat("%7d", $iGain[$eLootGoldBB]) & "|"
+	$sAtkLogTxt &= StringFormat("%7d", $iGain[$eLootElixirBB]) & "|"
+	$sAtkLogTxt &= StringFormat("%3d", $iGain[$eLootTrophyBB]) & "|"
+	$sAtkLogTxt &= StringFormat("%1d", $iStars) & "|"
+	$sAtkLogTxt &= StringFormat("%3d", $g_iLastDamage) & "|"
+	$sAtkLogTxt &= StringFormat("%1d", $g_iBuilderBaseScript + 1) & "|"
 
-	If StringInStr($sResultName, "Victory") > 0 Then
-		SetBBAtkLog($AtkLogTxt, "", $COLOR_GREEN)
-	ElseIf StringInStr($sResultName, "Defeat") > 0 Then
-		SetBBAtkLog($AtkLogTxt, "", $COLOR_ERROR)
+	If $sResultName = "Victory" Then
+		SetBBAtkLog($sAtkLogTxt, "", $COLOR_GREEN)
+		Setlog("Attack Result: " & $sResultName, $COLOR_GREEN) 
+	ElseIf $sResultName = "Defeat" Then
+		SetBBAtkLog($sAtkLogTxt, "", $COLOR_ERROR)
+		Setlog("Attack Result: " & $sResultName, $COLOR_ERROR) 
 	Else
-		SetBBAtkLog($AtkLogTxt, "", $COLOR_INFO)
+		SetBBAtkLog($sAtkLogTxt, "", $COLOR_INFO)
+		Setlog("Attack Result: " & $sResultName, $COLOR_INFO) 
 	EndIf
+	
+	
 	; #######################################################################
-
 
 	; Return to Main Page
 	ClickAway() ; ClickP($aAway, 2, 0, "#0332") ;Click Away

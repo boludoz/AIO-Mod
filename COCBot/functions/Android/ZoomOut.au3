@@ -417,7 +417,7 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag,
 	Local $bUpdateSharedPrefs = $g_bUpdateSharedPrefs And $g_iAndroidZoomoutMode = 4
 
 	Local $vVillage
-	Local $bOnBuilderBase = isOnBuilderBase(False, False) ; Capture region spam disabled - Team AIO Mod++
+	Local $bOnBuilderBase = isOnBuilderBase(False) ; Capture region spam disabled - Team AIO Mod++
 	If $g_aiSearchZoomOutCounter[0] = 10 Then SetLog("Try secondary village measuring...", $COLOR_INFO)
 	If $g_aiSearchZoomOutCounter[0] < 10 Then
 		$vVillage = GetVillageSize($bDebugLog, "stone", "tree", Default, $bOnBuilderBase, False) ; Capture region spam disabled - Team AIO Mod++

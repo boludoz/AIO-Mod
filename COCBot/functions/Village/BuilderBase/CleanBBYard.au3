@@ -23,7 +23,7 @@ Func CleanBBYard()
 
 	Local $bBuilderBase = True
 
-	If isOnBuilderBase(True, True) Then
+	If isOnBuilderBase(True) Then
 		SetLog("Going to check Builder Base Yard For Obstacles!", $COLOR_INFO)
 		Local $hObstaclesTimer = __TimerInit()
 

@@ -43,9 +43,6 @@ Func BattleMachineUpgrade($bTestRun = False)
 
 	Local $bDoNotProceedWithMachine = False
 
-	; ZoomOut Check
-	BuilderBaseZoomOut()
-	
 	Local $iDateS = Number(_DateDiff('s', $g_sMachineTime, _NowCalc()))
 	Local $iDateH = Number(_DateDiff('h', $g_sMachineTime, _NowCalc()))
 
@@ -145,7 +142,7 @@ Func BuilderBaseUpgradeMachine($bTestRun = False)
 		ClickAway()
 		If _Sleep(500) Then Return
 		
-		CheckMainScreen(Default, IsOnBuilderBase(True, True))
+		CheckMainScreen(Default, isOnBuilderBase(True))
 		Return False
 
 EndFunc   ;==>BuilderBaseUpgradeMachine

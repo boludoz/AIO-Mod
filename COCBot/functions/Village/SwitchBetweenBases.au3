@@ -22,7 +22,7 @@ Func SwitchBetweenBases($bCheckMainScreen = True)
 	Static $Failed = 0
 	For $i = 0 To 1
 
-		If isOnBuilderBase(True, True) Then
+		If isOnBuilderBase(True) Then
 			$sSwitchFrom = "Builder Base"
 			$sSwitchTo = "Normal Village"
 			$bIsOnBuilderBase = True
@@ -61,7 +61,7 @@ Func SwitchBetweenBases($bCheckMainScreen = True)
 				If _Sleep(250) Then Return
 				If Not $g_bRunState Then Return
 				ForceCaptureRegion()
-				$bSwitched = isOnBuilderBase(True, True) <> $bIsOnBuilderBase
+				$bSwitched = isOnBuilderBase(True) <> $bIsOnBuilderBase
 			WEnd
 			If $bSwitched Then
 				If $bCheckMainScreen Then checkMainScreen(True, Not $bIsOnBuilderBase)
@@ -78,7 +78,7 @@ Func SwitchBetweenBases($bCheckMainScreen = True)
 			EndIf
 		Else
 			SetLog("[" & $i & "] SwitchBetweenBases Tile: " & $sTile, $COLOR_ERROR)
-			SetLog("[" & $i & "] SwitchBetweenBases isOnBuilderBase: " & isOnBuilderBase(True, True), $COLOR_ERROR)
+			SetLog("[" & $i & "] SwitchBetweenBases isOnBuilderBase: " & isOnBuilderBase(True), $COLOR_ERROR)
 			If $bIsOnBuilderBase Then
 				SetLog("Cannot find the Boat on the Coast", $COLOR_ERROR)
 			Else

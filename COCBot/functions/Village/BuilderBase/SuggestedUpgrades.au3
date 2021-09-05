@@ -154,7 +154,7 @@ Func MainSuggestedUpgradeCode($bDebug = $g_bDebugSetlog)
 	
 	ClickOnBuilder()
 	
-	If isOnBuilderBase(True, True) Then
+	If isOnBuilderBase(True) Then
 
 		SetLog(" - Upg Window Opened successfully", $COLOR_INFO)
 

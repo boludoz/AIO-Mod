@@ -12,21 +12,15 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-#Region - Custom - Team AIO Mod++
-Func isOnBuilderBase($bNeedCaptureRegion = True, $bSoft = False)
+
+Func isOnBuilderBase($bNeedCaptureRegion = False)
 	If _Sleep($DELAYISBUILDERBASE) Then Return
-	If $bNeedCaptureRegion = True Or $bNeedCaptureRegion = Default Then _CaptureRegion2()
-	If IsArray(FindmultipleQuick($g_sImgIsOnBB, 1, "260,0,406,54", False)) Then
-		SetDebugLog("Builder Base detected. (Normal).", $COLOR_INFO)
+	Local $asSearchResult = findMultiple($g_sImgIsOnBB, GetDiamondFromRect("260,0,406,54"), GetDiamondFromRect("260,0,406,54"), 0, 1000, 1, "objectname", $bNeedCaptureRegion)
+
+	If IsArray($asSearchResult) And UBound($asSearchResult) > 0 Then
+		SetDebugLog("Builder Base Builder detected", $COLOR_DEBUG)
 		Return True
-	ElseIf $bSoft = False Then
-		If (UBound(decodeSingleCoord(findImageInPlace("BoatBuilderBase", $g_sImgBoatBB, "487,44,708,242", False))) > 1) Then
-			SetDebugLog("Builder Base detected.", $COLOR_INFO)
-			Return True
-		EndIf
+	Else
+		Return False
 	EndIf
-	
-	SetDebugLog("Builder Base not detected.")
-	Return False
-EndFunc   ;==>isOnBuilderBase
-#EndRegion - Custom - Team AIO Mod++
+EndFunc

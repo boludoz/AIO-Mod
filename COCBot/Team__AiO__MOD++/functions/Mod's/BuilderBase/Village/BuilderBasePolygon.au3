@@ -143,8 +143,8 @@ Func TestBuilderBaseZoomOut()
 	Setlog("** TestBuilderBaseZoomOutOnAttack END**", $COLOR_DEBUG)
 EndFunc   ;==>TestBuilderBaseZoomOut
 
-Func BuilderBaseZoomOut($DebugImage = False, $bForceZoom = False)
-	If ZoomBuilderBaseMecanics($bForceZoom) > 0 Then
+Func BuilderBaseZoomOut($bForceZoom = False, $bVersusMode = True)
+	If ZoomBuilderBaseMecanics($bForceZoom, $bVersusMode) > 0 Then
 		Return True
 	EndIf
 	
@@ -160,55 +160,17 @@ Func BuilderBaseSendZoomOut($i = 0)
 	Return True
 EndFunc   ;==>BuilderBaseSendZoomOut
 
-Func GetBuilderBaseSize($bWithClick = False, $bDebugLog = False)
-	
-	Local $iResult = 0, $aVillage = 0
-
-	If Not $g_bRunState Then Return
-
-	Local $sFiles = ["", "2"]
-
-	
-	If $bWithClick = True Then
-		ClickDrag(100, 130, 230, 30)
-		If _Sleep(500) Then Return 
-	EndIf
-	
-	_CaptureRegion2()
-	
-	For $sMode In $sFiles
-
-		If Not $g_bRunState Then Return
-
-		$aVillage = GetVillageSize($bDebugLog, $sMode & "stone", $sMode & "tree", Default, True, False)
-		
-		If UBound($aVillage) > 8 And not @error Then
-			If StringLen($aVillage[9]) > 5 And StringIsSpace($aVillage[9]) = 0 Then
-				$iResult = Floor(Pixel_Distance($aVillage[4], $aVillage[5], $aVillage[7], $aVillage[8]))
-				Return $iResult
-			ElseIf StringIsSpace($aVillage[9]) = 1 Then
-				Return 0
-			EndIf
-		EndIf
-
-		If _Sleep($DELAYSLEEP * 10) Then Return
-
-	Next
-
-	Return 0
-EndFunc   ;==>GetBuilderBaseSize
-
 Func ZoomBuilderBaseMecanics($bForceZoom = Default, $bVersusMode = Default, $bDebugLog = False)
 	If $bForceZoom = Default Then $bForceZoom = True
-	If $bVersusMode = Default Then $bVersusMode = False
+	If $bVersusMode = Default Then $bVersusMode = True
 
-	Local $iSize = ($bForceZoom = True Or $bVersusMode = True) ? (0) : (GetBuilderBaseSize())
+	Local $iSize = ($bForceZoom = True) ? (0) : (GetBuilderBaseSize())
 
 	If $iSize = 0 Then
 		BuilderBaseSendZoomOut(0)
 		If _Sleep(1000) Then Return
 		
-		$iSize = GetBuilderBaseSize(False, $bDebugLog)
+		$iSize = GetBuilderBaseSize(False, $bVersusMode, $bDebugLog)
 	EndIf
 
 	If Not $g_bRunState Then Return
@@ -229,7 +191,7 @@ Func ZoomBuilderBaseMecanics($bForceZoom = Default, $bVersusMode = Default, $bDe
 				If _Sleep(1000) Then Return
 				
 				If Not $g_bRunState Then Return
-				$iSize = GetBuilderBaseSize(($i = 3), $bDebugLog) ; WihtoutClicks
+				$iSize = GetBuilderBaseSize(($i = 3), $bVersusMode, $bDebugLog) ; WihtoutClicks
 			EndIf
 		EndIf
 
@@ -247,3 +209,47 @@ Func ZoomBuilderBaseMecanics($bForceZoom = Default, $bVersusMode = Default, $bDe
 
 	Return $iSize
 EndFunc   ;==>ZoomBuilderBaseMecanics
+
+Func GetBuilderBaseSize($bWithClick = False, $bVersusMode = Default, $bDebugLog = False)
+	If $bVersusMode = Default Then $bVersusMode = True
+	Local $iResult = 0, $aVillage = 0
+
+	If Not $g_bRunState Then Return
+
+	Local $sFiles = ["", "2"]
+
+	
+	If $bWithClick = True Then
+		ClickDrag(100, 130, 230, 30)
+		If _Sleep(500) Then Return 
+	EndIf
+	
+	_CaptureRegion2()
+	If $bVersusMode = False Then
+		If Not IsOnBuilderBase(False) Then
+			SetDebugLog("You not are in builder base!")
+			CheckObstacles(True)
+		EndIf
+	EndIf
+	
+	For $sMode In $sFiles
+	
+		If Not $g_bRunState Then Return
+	
+		$aVillage = GetVillageSize($bDebugLog, $sMode & "stone", $sMode & "tree", Default, True, False)
+		
+		If UBound($aVillage) > 8 And not @error Then
+			If StringLen($aVillage[9]) > 5 And StringIsSpace($aVillage[9]) = 0 Then
+				$iResult = Floor(Pixel_Distance($aVillage[4], $aVillage[5], $aVillage[7], $aVillage[8]))
+				Return $iResult
+			ElseIf StringIsSpace($aVillage[9]) = 1 Then
+				Return 0
+			EndIf
+		EndIf
+	
+		If _Sleep($DELAYSLEEP * 10) Then Return
+	
+	Next
+	
+	Return 0
+EndFunc   ;==>GetBuilderBaseSize

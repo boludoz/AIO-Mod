@@ -29,7 +29,7 @@ Func WallsUpgradeBB()
 	FuncEnter(WallsUpgradeBB)
 	Local $bBuilderBase = True
 	; ZoomOut()
-	If isOnBuilderBase(True, True) Then
+	If isOnBuilderBase(True) Then
 		SetLog("Start Upgrade BB Wall.", $COLOR_INFO)
 		Local $hWallBBTimer = __TimerInit()
 		If Not getBuilderCount(False, $bBuilderBase) Then Return

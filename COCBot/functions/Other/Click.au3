@@ -19,7 +19,7 @@
 Func Click($x, $y, $times = 1, $speed = 0, $debugtxt = "", $bRandomInLoop = True)
 
 	#Region - Custom click - Team AIO Mod++
-	If ($x = $aAway[0] Or $x = $aAway2[0]) And $y = 10 Then
+	If ($x = $aAway[0] Or $x = $aAway2[0]) And $y = 10 Or $y = 50 Then
 		If $g_bDebugClick Then SetLog("Force random ClickAway.", $COLOR_ACTION)
 		Return ClickAway(Default, Default, $times)
 	EndIf

@@ -53,11 +53,11 @@ Func BuilderBase($bTestRun = False)
 	$bReturn = _BuilderBase($bTestRun)
 	$g_bStayOnBuilderBase = False
 	
-	If Not PlayBBOnly() Then
-		If isOnBuilderBase(True, True) Then
-			SwitchBetweenBases()
-		EndIf
+	If isOnBuilderBase(True) Then
+		CheckMainScreen(False, False)
 	EndIf
+	
+	SetLog("Returned to the main village.", $COLOR_SUCCESS)
 	
 	Return $bReturn
 EndFunc
@@ -66,7 +66,7 @@ Func _BuilderBase($bTestRun = False)
 	If Not $g_bRunState Then Return
 		
 	; Check if is in Builder Base.
-	If Not isOnBuilderBase(True, True) Then
+	If Not isOnBuilderBase(True) Then
 		If Not SwitchBetweenBases() Then
 			Return False
 		EndIf
@@ -76,7 +76,7 @@ Func _BuilderBase($bTestRun = False)
 
 	If _Sleep(2000) Then Return
 	
-	If BuilderBaseZoomOut(False, True) = False Then
+	If BuilderBaseZoomOut(True, False) = False Then
 		SetLog("Bad zoom builder base - BAD. (1)", $COLOR_ERROR)
 		$g_bStayOnBuilderBase = False
 		Return
@@ -118,7 +118,7 @@ Func _BuilderBase($bTestRun = False)
 		If Not $g_bRunState Then Return
 
 		If Not BuilderBaseZoomOut(False, False) Then
-			SetLog("Bad zoom builder base. (2)", $COLOR_ERROR)
+			SetLog("Bad zoom builder base. (1)", $COLOR_ERROR)
 			$g_bStayOnBuilderBase = False
 			Return
 		EndIf
@@ -185,11 +185,11 @@ Func _BuilderBase($bTestRun = False)
 
 		If Not $g_bRunState Then Return
 
-		If Not BuilderBaseZoomOut() Then
-			SetLog("Bad zoom builder base. (2)", $COLOR_ERROR)
-			$g_bStayOnBuilderBase = False
-			Return
-		EndIf
+		; If Not BuilderBaseZoomOut() Then
+			; SetLog("Bad zoom builder base. (2)", $COLOR_ERROR)
+			; $g_bStayOnBuilderBase = False
+			; Return
+		; EndIf
 		
 		If Not $g_bRunState Then Return
 
@@ -209,7 +209,7 @@ Func _BuilderBase($bTestRun = False)
 		SetDebugLog("$g_iAvailableAttacksBB: " & $g_iAvailableAttacksBB)
 		
 		If ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart Or PlayBBOnly()) And $g_bChkOnlyFarm = False And $g_iAvailableAttacksBB = 0 Then
-			If Not BuilderBaseZoomOut() Then Return
+			; If Not BuilderBaseZoomOut() Then Return
 			MainSuggestedUpgradeCode()
 		EndIf
 		
@@ -232,11 +232,9 @@ Func _BuilderBase($bTestRun = False)
 		If Not $g_bChkBuilderAttack Then ExitLoop
 
 	Until ($iAttackLoops >= $iLoopsToDo)
-
-	If Not PlayBBOnly() Then Return
 	
 	If _Sleep($DELAYRUNBOT3) Then Return
-	SetLog("Builder Base Idle Ends", $COLOR_INFO)
+	SetLog("Builder base idle ends", $COLOR_INFO)
 	
 	If ProfileSwitchAccountEnabled() Then Return
 	
@@ -254,12 +252,12 @@ Func GoToClanGames()
 	If Not $g_bChkClanGamesEnabled Or Not ClanGamesBB() Then Return
 	If ($g_bIsSearchLimit Or $g_bRestart Or $g_bIsClientSyncError) Then Return
 	If $g_iAvailableAttacksBB > 0 Or Not $g_bChkBBStopAt3 Or $bIsToByPass Then
-		If isOnBuilderBase(True, True) Then
+		If isOnBuilderBase(True) Then
 			$g_bStayOnBuilderBase = False
 			SwitchBetweenBases()
 		EndIf
 		_ClanGames()
-		If Not isOnBuilderBase(True, True) Then
+		If Not isOnBuilderBase(True) Then
 			$g_bStayOnBuilderBase = True
 			SwitchBetweenBases()
 		EndIf
