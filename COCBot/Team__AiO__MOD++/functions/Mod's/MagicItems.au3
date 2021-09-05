@@ -149,7 +149,7 @@ Func BoostPotionMod($sName, $bDebug = False)
 			
 		EndIf
 	Else
-		SetLog("Badly BoostPotionMod (1), from: " & $sName & ".", $COLOR_ERROR) ; In short, mistakes are seen by people, not a group of VIPs.
+		SetLog("No potion detected : " & $sName & ".", $COLOR_INFO) ; In short, mistakes are seen by people, not a group of VIPs.
 	EndIf 
 	
 	ClickAway()
