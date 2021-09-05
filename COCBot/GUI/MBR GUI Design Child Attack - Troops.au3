@@ -171,7 +171,7 @@ Func CreateAttackTroops()
 	$g_hGUI_TRAINTYPE_TAB_ITEM4 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_03_STab_01_STab_02", "Boost"))
 	$g_hGUI_TRAINTYPE_TAB_ITEM5 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_03_STab_01_STab_04", "Options"))
 
-	; CreateQuickTrainEdit()
+	CreateQuickTrainEdit()
 
 	GUICtrlCreateTabItem("")
 
@@ -236,11 +236,25 @@ Func CreateTrainArmy()
 	CreateQuickTrainSubTab()
 
 EndFunc   ;==>CreateTrainArmy
+#ce
 
+Global $g_hGUI_CreateQuickTrainSubTab = 0
+CreateQuickTrainSubTab()
 Func CreateQuickTrainSubTab()
-	$g_hGUI_TRAINARMY_ARMY_TAB_ITEM2 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_03_STab_01_STab_01_STab_02", "Quick Train"))
+	; $g_hGUI_TRAINARMY_ARMY_TAB_ITEM2 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_03_STab_01_STab_01_STab_02", "Quick Train"))
+	$g_hGUI_CreateQuickTrainSubTab = _GUICreate(GetTranslatedFileIni("MBR Main GUI", "Tab_03_STab_01_STab_01_STab_02", "Quick Train"), 444, 500, -1, -1, $WS_BORDER, $WS_EX_CONTROLPARENT)
+	GUISetBkColor($COLOR_WHITE, $g_hGUI_CreateQuickTrainSubTab)
 
 	Local $x = 12, $y = 50, $del_y = 108
+
+	$g_hRadCustomTrain = GUICtrlCreateRadio("Custom train", 75, 15, 100, 25)
+	GUICtrlSetState(-1, $GUI_CHECKED)
+	; GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
+	GUICtrlSetOnEvent(-1, "radSelectTrainType")
+	$g_hRadQuickTrain = GUICtrlCreateRadio("Quick Train mode (not recommended).", 300, 15, 100, 25)
+	GUICtrlSetState(-1, $GUI_UNCHECKED)
+	; GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
+	GUICtrlSetOnEvent(-1, "radSelectTrainType")
 
 	For $i = 0 To 2
 		GUICtrlCreateGroup("", $x - 2, $y, 412, $del_y)
@@ -292,7 +306,20 @@ Func CreateQuickTrainSubTab()
 		$x = 12
 		$y += $del_y
 	Next
+	$y += 50
+
+	$g_hBtnBBClose = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnQuickTrainClose", "Close"), 344, $y, 65, 25)
+	GUICtrlSetOnEvent(-1, "HideQuickTrain")
 EndFunc   ;==>CreateQuickTrainSubTab
+
+Func ShowQuickTrain()
+	GUISetState(@SW_SHOW, $g_hGUI_CreateQuickTrainSubTab)
+EndFunc
+
+Func HideQuickTrain()
+	GUISetState(@SW_HIDE, $g_hGUI_CreateQuickTrainSubTab)
+	GUISetState(@SW_HIDE, $g_hGUI_QuickTrainEdit)
+EndFunc
 
 Func CreateQuickTrainEdit()
 
@@ -370,7 +397,7 @@ Func CreateQuickTrainEdit()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 EndFunc   ;==>CreateQuickTrainEdit
-
+#cs
 Func CreateCustomTrainSubTab()
 
 	$g_hGUI_TRAINARMY_ARMY_TAB_ITEM1 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_03_STab_01_STab_01_STab_01", "Custom Train"))
@@ -927,9 +954,12 @@ Func CreateTrainTroops()
 	Local $iStartX = 10
 	Local $iStartY = 38
 	
-	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnResetButton, 12 - 12, 5 - 2, 16, 16)
+	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnResetButton, 0, 3, 16, 16)
 	GUICtrlSetOnEvent(-1, "Removecamp")
 	
+	GUICtrlCreateButton(GetTranslatedFileIni("MBR Main GUI", "Tab_03_STab_01_STab_01_STab_02", "Quick Train"), 300, 3, 65, 20, $SS_LEFT)
+	GUICtrlSetOnEvent(-1, "ShowQuickTrain")
+
 	Local $x = $iStartX, $y = $iStartY
 	Local $iCol = 0
 	

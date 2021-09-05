@@ -545,31 +545,24 @@ Func GUITrainOrder()
 EndFunc   ;==>GUITrainOrder
 #ce
 Func _GUITrainOrder()
-	; For $i = 0 To UBound($g_ahCmbTroopOrder) - 1 ; check for duplicate combobox index and flag problem
-		; $g_ahCmbTroopOrder
-		; $g_aiTrainOrder
-	; Next
+	; Local $bDuplicate = False
+	; Local $iGUI_CtrlId = @GUI_CtrlId
+	; Local $iGUI_CtrlCur = _GUICtrlComboBox_GetCurSel($iGUI_CtrlId)
+
+	; Local $i = _ArraySearch($g_ahCmbTroopOrder, @GUI_CtrlId) 
 	
-	Local $iGUI_CtrlId = @GUI_CtrlId
-	Local $iOrderIndex = _GUICtrlComboBox_GetCurSel($iGUI_CtrlId)
-
-	; Create translated list of Troops for combo box
-	; Local $sComboData = "1"
-	; For $j = 1 To UBound($g_aQuickTroopIcon) - 1
-		; $sComboData &= "|" & String($j + 1)
-	; Next
-
-	; For $i = 0 To UBound($g_ahCmbTroopOrder) - 1 ; check for duplicate combobox index and flag problem
-		; $g_aiTrainOrder[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbTroopOrder[$i])
-	; Next
+	; Local $g_aiCmbCustomTrainOrder[$i]
 
 	; For $i = 0 To UBound($g_ahCmbTroopOrder) - 1 ; check for duplicate combobox index and flag problem
 		; If $iGUI_CtrlId = $g_ahCmbTroopOrder[$i] Then ContinueLoop
-		; If $iOrderIndex = _GUICtrlComboBox_GetCurSel($g_ahCmbTroopOrder[$i]) Then
-			; _GUICtrlComboBox_SetCurSel($g_ahCmbTroopOrder[$i], $iOrderIndex)
+		; If _GUICtrlComboBox_GetCurSel($iGUI_CtrlId) = _GUICtrlComboBox_GetCurSel($g_ahCmbTroopOrder[$i]) Then
+			; _GUICtrlComboBox_SetCurSel($g_ahCmbTroopOrder[$i], $g_aiCmbCustomTrainOrder[$i])
+			; GUISetState()
 		; EndIf
 	; Next
-EndFunc   ;==>_GUITrainOrder
+	
+EndFunc   ;==>GUITrainOrder
+
 
 Func BtnRemoveTroops()
 	Local $bWasRedraw = SetRedrawBotWindow(False, Default, Default, Default, "BtnRemoveTroops")
