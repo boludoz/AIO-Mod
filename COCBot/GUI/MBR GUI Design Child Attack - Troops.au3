@@ -1143,7 +1143,7 @@ Func CreateTrainSieges()
 	Local $x = $iStartX, $y = $iStartY
 	Local $iCol = 0
 
-	Local $ahPicTrainArmySiege[$eSiegeMachineCount] = [$eIcnBattleB, $eIcnWallW, $eIcnStoneS, $eIcnSiegeB, $eIcnLogL]
+	Local $ahPicTrainArmySiege[$eSiegeMachineCount] = [$eIcnWallW, $eIcnBattleB, $eIcnStoneS, $eIcnSiegeB, $eIcnLogL]
 	
 	; Create translated list of Troops for combo box
 	Local $sComboData = "1"
