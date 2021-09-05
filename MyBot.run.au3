@@ -1469,23 +1469,23 @@ Func FirstCheck()
 	If BotCommand() Then btnStop()
 	
 	#Region - Custom - xbebenk - Team AIO Mod++
-    ; _RunFunction('BoostSuperTroop')
-    ; PrepareDonateCC()
-    ; Local $aRndFuncList = ['CleanYard', 'CleanYard','RequestCC', 'DonateCC,Train', 'UpgradeBuilding', 'Laboratory', 'UpgradeWall']
-    ; _ArrayShuffle($aRndFuncList)
-    ; For $Index In $aRndFuncList
-        ; If Not $g_bRunState Then Return
-        ; _RunFunction($Index)
-        ; If $g_bRestart Then ContinueLoop
-        ; If CheckAndroidReboot() Then ContinueLoop
-        ; If checkObstacles() Then ContinueLoop
-    ; Next
+	; Only Farm - Team__AiO__MOD
+	If Not $g_bChkOnlyFarm Then
+		FirstCheckRoutine()
+		VillageReport()
+	EndIf
 	
-    
-    If Not $g_bChkOnlyFarm And ProfileSwitchAccountEnabled() And $g_iCommandStop = 0 Then 
-        _RunFunction('BuilderBase')
-        checkSwitchAcc()
-    Endif    
+	If BotCommand() Then btnStop()
+	
+	If ProfileSwitchAccountEnabled() And $g_iCommandStop = 0 Then
+		; Only Farm - Team__AiO__MOD
+		If Not $g_bChkOnlyFarm Then
+			_RunFunction('BuilderBase')
+		EndIf
+		
+		TrainSystem()
+		checkSwitchAcc()
+	Endif
 	#EndRegion - Custom - xbebenk - Team AIO Mod++
 
 	If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
@@ -1518,9 +1518,24 @@ Func FirstCheck()
 	EndIf
 EndFunc   ;==>FirstCheck
 
-#cs - BBase - AIO Mod
-	View in "\COCBot\Team__AiO__MOD++\functions\Mod's\BuilderBase\BuilderBaseMain.au3"
-#ce - BBase - AIO Mod
+#Region - Custom - xbebenk - Team AIO Mod++
+Func FirstCheckRoutine()
+	RequestCC(False)
+	checkArmyCamp(False)
+	PrepareDonateCC()
+	DonateCC()
+	
+	Local $aRndFuncList = ['CleanYard','UpgradeWall','LabCheck', 'Laboratory','UpgradeBuilding']
+	For $Index In $aRndFuncList
+		If Not $g_bRunState Then Return
+		_RunFunction($Index)
+		If _Sleep(50) Then Return
+		If $g_bRestart Then ExitLoop
+		If CheckAndroidReboot() Then ContinueLoop
+		If checkObstacles() Then ContinueLoop
+	Next
+EndFunc
+#EndRegion - Custom - xbebenk - Team AIO Mod++
 
 Func SetSAtk($attack = False)
 
