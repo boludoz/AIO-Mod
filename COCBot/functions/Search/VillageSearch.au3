@@ -102,7 +102,6 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 
 	; Reset page errors.
 	InitAndroidPageError()
-	Local $hBigMinuteTimer = __TimerInit() ; Return Home by Time - Team AIO Mod++
 	While 1 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;### Main Search Loop ###;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 		; cleanup some vars used by imgloc just in case. usend in TH and DeadBase ( imgloc functions)
@@ -121,7 +120,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		If $g_bRestart Then Return ; exit func
 
 		; ----------------- READ ENEMY VILLAGE RESOURCES  -----------------------------------
-		WaitForClouds($hBigMinuteTimer) ; Return Home by Time - Team AIO Mod++
+		WaitForClouds()
 
 		#Region - Custom PrepareSearch - Team AIO Mod++
 		If $g_bBadPrepareSearch = True Then

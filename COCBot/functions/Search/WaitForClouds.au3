@@ -13,11 +13,11 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func WaitForClouds($hBigMinuteTimer = 0) ; Return Home by Time - Team AIO Mod++
+Func WaitForClouds()
 
 	If $g_bDebugSetlog Then SetDebugLog("Begin WaitForClouds:", $COLOR_DEBUG1)
 	$g_bCloudsActive = True
-	
+
 	Local $iCount = 0
 	Local $bigCount = 0, $iLastTime = 0
 	Local $hMinuteTimer, $iSearchTime
@@ -25,18 +25,6 @@ Func WaitForClouds($hBigMinuteTimer = 0) ; Return Home by Time - Team AIO Mod++
 
 	Local $maxSearchCount = 720 ; $maxSearchCount * 250ms ($DELAYGETRESOURCES1) = seconds wait time before reset in lower leagues: 720*250ms = 3 minutes
 	Local $maxLongSearchCount = 7 ; $maxLongSearchCount * $maxSearchCount = seconds total wait time in higher leagues: ; 21 minutes, set a value here but is never used unless error
-
-	#Region - Return Home by Time - Team AIO Mod++
-	If $g_bReturnTimerEnable = True And $hBigMinuteTimer > 0 Then
-		If (__TimerDiff($hBigMinuteTimer) / 60000) > Random(0.80, 1.20) * $g_iTxtReturnTimer Then
-		    SetLog("Return home by time due to the long wait in the cloud.", $COLOR_INFO)
-			Click(70, 680) ; Return Home
-			$g_bIsClientSyncError = True ; disable fast OOS restart if not simple error and restarting CoC
-			$g_bRestart = True
-			Return
-		EndIf
-	EndIf
-	#EndRegion - Return Home by Time - Team AIO Mod++
 
 	Switch Int($g_aiCurrentLoot[$eLootTrophy]) ; add randomization to SearchCounters (long cloud keep alive time) for higher leagues
 		Case 3700 To 4099 ; champion 1 league
@@ -98,7 +86,7 @@ Func WaitForClouds($hBigMinuteTimer = 0) ; Return Home by Time - Team AIO Mod++
 		If $g_bDebugSetlog Then _GUICtrlStatusBar_SetTextEx($g_hStatusBar, " Status: Loop to clean screen without Clouds, # " & $iCount)
 		$iSearchTime = __TimerDiff($hMinuteTimer) / 60000 ;get time since minute timer start in minutes
 
-		#CS - Region - Custom PrepareSearch - Team AIO Mod++ 
+		#CS - Region - Custom PrepareSearch - Team AIO Mod++
 		; Check if CoC app restarted without notice (where android restarted app automatically with same PID), and returned to main base
 		Local $iSubCount = 0
 		_CaptureRegion()
@@ -109,33 +97,33 @@ Func WaitForClouds($hBigMinuteTimer = 0) ; Return Home by Time - Team AIO Mod++
 			If $g_bDebugSetlog Then SetDebugLog("Waiting WaitForClouds, " & ($iCount / 2) & " Seconds.", $COLOR_DEBUG)
 			If $iSubCount > 3 Then
 				SetLog("Error: Main screen detected! 'WaitforClouds'.", $COLOR_ERROR)
-				$g_bBadPrepareSearch = True 
+				$g_bBadPrepareSearch = True
 				ExitLoop 2
-			EndIf	
+			EndIf
 		WEnd
-		#CE - EndRegion - Custom PrepareSearch - Team AIO Mod++ 
-		
+		#CE - EndRegion - Custom PrepareSearch - Team AIO Mod++
+
 		If $iSearchTime >= $iLastTime + 1 Then
 			SetLog("Cloud wait time " & StringFormat("%.1f", $iSearchTime) & " minute(s)", $COLOR_INFO)
 			$iLastTime += 1
 			#Region - Return Home by Time - Team AIO Mod++
-			If $g_bReturnTimerEnable = True And $hBigMinuteTimer > 0 Then
-				If (__TimerDiff($hBigMinuteTimer) / 60000) > Random(0.80, 1.20) * $g_iTxtReturnTimer Then
+			If $g_bReturnTimerEnable = True Then
+				If $iSearchTime > (Random(0.80, 1.20) * $g_iTxtReturnTimer) Then
 				    SetLog("Return home by time due to the long wait in the cloud.", $COLOR_INFO)
-					Click(70, 680) ; Return Home
-					$g_bIsClientSyncError = True ; disable fast OOS restart if not simple error and restarting CoC
+					$g_bIsClientSyncError = True
 					$g_bRestart = True
+					CloseCoC(True)
 					ExitLoop
 				EndIf
 			EndIf
 			#EndRegion - Return Home by Time - Team AIO Mod++
-		
+
 			; once a minute safety checks for search fail/retry msg and Personal Break events and early detection if CoC app has crashed inside emulator (Bluestacks issue mainly)
 			If chkAttackSearchFail() = 2 Or chkAttackSearchPersonalBreak() = True Or GetAndroidProcessPID() = 0 Then
 				resetAttackSearch()
 				ExitLoop
 			EndIf
-		
+
 			; attempt to enable GUI during long wait?
 			If $iSearchTime > 2 And Not $bEnabledGUI Then
 				AndroidShieldForceDown(True)
@@ -176,7 +164,7 @@ Func EnableLongSearch()
 	EndIf
 
 	For $iCount = 0 To 30
-		#Region - Custom PrepareSearch - Team AIO Mod++ 
+		#Region - Custom PrepareSearch - Team AIO Mod++
 		; Check if CoC app restarted without notice (where android restarted app automatically with same PID), and returned to main base
 		Local $iSubCount = 0
 		_CaptureRegion()
@@ -186,11 +174,11 @@ Func EnableLongSearch()
 			If _Sleep($DELAYATTACKREPORT1) Then Return
 			If $iSubCount > 3 Then
 				SetLog("Error: Main screen detected! 'EnableLongSearch'.", $COLOR_ERROR)
-				$g_bBadPrepareSearch = True 
+				$g_bBadPrepareSearch = True
 				Return True
-			EndIf	
+			EndIf
 		WEnd
-		#EndRegion - Custom PrepareSearch - Team AIO Mod++ 
+		#EndRegion - Custom PrepareSearch - Team AIO Mod++
 
 		If chkSurrenderBtn() = True Then Return True ; check if clouds are gone.
 		If chkAttackSearchPersonalBreak() = True Then Return False ; OCR check for Personal Break while in clouds, return after PB prep
@@ -207,7 +195,7 @@ Func EnableLongSearch()
 		If _Sleep(1000) Then Return
 
 	Next
-	
+
 	Return True
 EndFunc   ;==>EnableLongSearch
 
@@ -275,16 +263,16 @@ Func chkSurrenderBtn($bCapture = True)
 			If $g_bDebugSetlog Then SetDebugLog("Surrender button found, clouds gone, continue...", $COLOR_DEBUG)
 			Return True
 		EndIf
-		
+
 		If $iCount = 0 Then
 			ContinueLoop
 		EndIf
-		
+
 		If _Sleep($DELAYSLEEP) Then Return
 	Next
-	
+
 	If $iCount >= 60 Or isProblemAffect(False) Then ; Return in 30 * ~150ms = 4.5 seconds if surrender button not found or reload msg appears
 		Return False
 	EndIf
-	
+
 EndFunc   ;==>chkSurrenderBtn
