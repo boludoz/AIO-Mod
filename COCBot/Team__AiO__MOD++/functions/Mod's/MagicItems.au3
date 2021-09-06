@@ -32,7 +32,7 @@ Func BuilderPotionBoost($bDebug = False)
 	If not $g_bChkBuilderPotion Then Return
 
 	Static $iLastTimeChecked[8] = [0, 0, 0, 0, 0, 0, 0, 0]
-	If $iLastTimeChecked[$g_iCurAccount] = 0 Then
+	If $iLastTimeChecked[Number($g_iCurAccount)] = 0 Then
 
 	If _Sleep($DELAYBOOSTHEROES2*3) Then Return False
 
@@ -46,11 +46,11 @@ Func BuilderPotionBoost($bDebug = False)
 				If $aResult <> "" Then
 					If _Sleep($DELAYBOOSTHEROES2) Then Return
 					If BoostPotionMod("BuilderPotion", $bDebug) Then
-						$iLastTimeChecked[$g_iCurAccount] = 1
+						$iLastTimeChecked[Number($g_iCurAccount)t] = 1
 						Return True
-						Else
+					Else
 						Setlog("Magic Items| Fail builder potion.", $COLOR_ERROR)
-					Return false
+						Return false
 					EndIf
 				Else
 					Setlog("Magic Items| OCR Fail.", $COLOR_ERROR)
@@ -71,7 +71,7 @@ Func ResourceBoost($aPos1 = 0, $aPos2 = 0)
 
 		Local Static $iLastTimeChecked[8] = [0, 0, 0, 0, 0, 0, 0, 0]
 
-		If $iLastTimeChecked[$g_iCurAccount] = 0 And not Int($aPos1 + $aPos2 <= 0) Then
+		If $iLastTimeChecked[Number($g_iCurAccount)] = 0 And not Int($aPos1 + $aPos2 <= 0) Then
  			If _Sleep($DELAYBOOSTHEROES2) Then Return
 
  			BuildingClick($aPos1, $aPos2 + 25)
@@ -85,7 +85,7 @@ Func ResourceBoost($aPos1 = 0, $aPos2 = 0)
  					; Structure located
  					SetLog("Find " & $sN & " (Level " & $sL & ") located at " & $aPos1 & ", " & $aPos2, $COLOR_SUCCESS)
  					If BoostPotionMod("ResourcePotion") Then
-						$iLastTimeChecked[$g_iCurAccount] = 1
+						$iLastTimeChecked[Number($g_iCurAccount)] = 1
 						Return True
 						Else
 						Return false
@@ -100,27 +100,38 @@ Func ResourceBoost($aPos1 = 0, $aPos2 = 0)
 EndFunc
 
 Func LabPotionBoost()
- 		If not $g_bChkLabPotion Then Return False
+ 	If not $g_bChkLabPotion Then Return False
 
-		Local Static $iLastTimeChecked[8] = [0, 0, 0, 0, 0, 0, 0, 0]
+	Static $iLastTimeChecked[8] = [0, 0, 0, 0, 0, 0, 0, 0]
 
-		If $iLastTimeChecked[$g_iCurAccount] = 0 Then
- 			If _Sleep($DELAYBOOSTHEROES2) Then Return
-
-			If $g_sLabUpgradeTime <> "" And (Number(_DateDiff("h", _NowCalc(), $g_sLabUpgradeTime)) > Int($g_iInputLabPotion)) Then
-
-				BuildingClickP($g_aiLaboratoryPos, "#0197")
-				If _Sleep($DELAYBOOSTHEROES2) Then Return
-
-				Local $aResearchButton = findButton("Research", Default, 1, True)
-				If IsArray($aResearchButton) And UBound($aResearchButton, 1) = 2 Then
-					If BoostPotionMod("LabPotion") Then
-						$iLastTimeChecked[$g_iCurAccount] = 1
+	If $iLastTimeChecked[Number($g_iCurAccount)] = 0 Then
+		If _Sleep($DELAYBOOSTHEROES2) Then Return
+	
+		If $g_sLabUpgradeTime <> "" And (Number(_DateDiff("h", _NowCalc(), $g_sLabUpgradeTime)) > Int($g_iInputLabPotion)) Then
+			If BoostPotionMod("LabPotion") Then
+				$iLastTimeChecked[Number($g_iCurAccount)] = 1
+			Else
+				If $g_aiLaboratoryPos[0] = 0 Or $g_aiLaboratoryPos[1] = 0 Then
+					SetLog("Laboratory Location unknown!", $COLOR_WARNING)
+					LocateLab() ; Lab location unknown, so find it.
+					If $g_aiLaboratoryPos[0] = 0 Or $g_aiLaboratoryPos[1] = 0 Then
+						SetLog("Problem locating Laboratory, re-locate laboratory position before proceeding", $COLOR_ERROR)
+						Return False
 					EndIf
-					Return True
 				EndIf
+				
+				;Click Laboratory
+				ClickP($g_aiLaboratoryPos, "#0197") ; Team AIO Mod++
+				If _Sleep($DELAYLABORATORY3) Then Return ; Wait for window to open
+				
+				If BoostPotionMod("LabPotion") Then
+					$iLastTimeChecked[Number($g_iCurAccount)] = 1
+				EndIf
+				
 			EndIf
 		EndIf
+	EndIf
+	
 	Return False
 EndFunc
 

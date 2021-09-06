@@ -140,64 +140,6 @@ Func _GUICtrlCreateInput($sText, $iLeft, $iTop, $iWidth, $iHeight, $vStyle = -1,
 	Return $hReturn
 EndFunc   ;==>_GUICtrlCreateInput
 
-Global $g_oTxtBBAtkLogInitText = ObjCreate("Scripting.Dictionary")
-
-Func BBAtkLogHead()
-	SetBBAtkLog(_PadStringCenter(" " & GetTranslatedFileIni("MBR Func_BBAtkLogHead", "BBAtkLogHead_Text_01", "ATTACK LOG") & " ", 43, "="), "", $COLOR_BLACK, "MS Shell Dlg", 8.5)
-	SetBBAtkLog(GetTranslatedFileIni("MBR Func_BBAtkLogHead", "BBAtkLogHead_Text_02", '|     --------- VICTORY BONUS ----------   |'), "")
-	SetBBAtkLog(GetTranslatedFileIni("MBR Func_BBAtkLogHead", "BBAtkLogHead_Text_03", '|AC|TIME.|TROP.|   GOLD| ELIXIR|GTR|S|  %|S|'), "")
-EndFunc   ;==>BBAtkLogHead
-
-Func SetBBAtkLog($String1, $String2 = "", $Color = $COLOR_BLACK, $Font = "Lucida Console", $FontSize = 7.5) ;Sets the text for the log
-	If $g_hBBAttackLogFile = 0 Then CreateBBAttackLogFile()
-	_FileWriteLog($g_hBBAttackLogFile, $String1 & $String2)
-	Local $a[6] = [$String1 & @CRLF, $Color, $Font, $FontSize, 0, 0]
-	$g_oTxtBBAtkLogInitText($g_oTxtBBAtkLogInitText.Count + 1) = $a
-EndFunc   ;==>SetBBAtkLog
-
-Func CreateBBAttackLogFile()
-	If $g_hBBAttackLogFile <> 0 Then
-		FileClose($g_hBBAttackLogFile)
-		$g_hBBAttackLogFile = 0
-	EndIf
-
-	Local $sBBAttackLogFName = "BBAttackLog" & "-" & @YEAR & "-" & @MON & ".log"
-	Local $sBBAttackLogPath = $g_sProfileLogsPath & $sBBAttackLogFName
-	$g_hBBAttackLogFile = FileOpen($sBBAttackLogPath, $FO_APPEND)
-	If $g_bDebugSetlog Then SetDebugLog("Created BB attack log file: " & $sBBAttackLogPath)
-EndFunc   ;==>CreateBBAttackLogFile
-
-Func CheckPostponedLog($bNow = False)
-	;If $g_bDebugSetlog Then SetDebugLog("CheckPostponedLog: Entered, $bNow=" & $bNow & ", count=" & $g_oTxtLogInitText.Count & ", $g_hTxtLog=" & $g_hTxtLog & ", $g_iGuiMode=" & $g_iGuiMode)
-	Local $iLogs = 0
-	If $g_bCriticalMessageProcessing Or ($bNow = False And __TimerDiff($g_hTxtLogTimer) < $g_iTxtLogTimerTimeout) Then Return 0
-
-	If $g_oTxtLogInitText.Count > 0 And ($g_iGuiMode <> 1 Or $g_hTxtLog) Then
-		If $g_hTxtLog And UBound($g_aLastStatusBar) > 0 And BitAND(WinGetState($g_hGUI_LOG), 2) = 0 Then
-			; Update StatusBar at least
-			UpdateStatusBar($g_aLastStatusBar[0])
-			$g_aLastStatusBar = 0
-		Else
-			$iLogs += FlushGuiLog($g_hTxtLog, $g_oTxtLogInitText, True, "txtLog")
-		EndIf
-	EndIf
-
-	If $g_oTxtAtkLogInitText.Count > 0 And ($g_iGuiMode <> 1 Or ($g_hTxtAtkLog And BitAND(WinGetState($g_hGUI_LOG), 2))) Then
-		$iLogs += FlushGuiLog($g_hTxtAtkLog, $g_oTxtAtkLogInitText, False, "txtAtkLog")
-	EndIf
-
-	If $g_oTxtBBAtkLogInitText.Count > 0 And ($g_iGuiMode <> 1 Or ($g_hTxtBBAtkLog And BitAND(WinGetState($g_hGUI_LOG_BB), 2))) Then
-		$iLogs += FlushGuiLog($g_hTxtBBAtkLog, $g_oTxtBBAtkLogInitText, False, "txtBBAtkLog")
-	EndIf
-
-	If $g_oTxtSALogInitText.Count > 0 And ($g_iGuiMode <> 1 Or ($g_hTxtSALog And BitAND(WinGetState($g_hGUI_LOG_SA), 2))) Then
-		$iLogs += FlushGuiLog($g_hTxtSALog, $g_oTxtSALogInitText, False, "txtSALog")
-	EndIf
-
-	$g_hTxtLogTimer = __TimerInit()
-	Return $iLogs
-EndFunc   ;==>CheckPostponedLog
-
 Func _DebugFailedImageDetection($Text)
 	If $g_bDebugImageSave Or $g_bDebugSetlog Then
 		_CaptureRegion2()

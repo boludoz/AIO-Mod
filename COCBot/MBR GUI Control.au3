@@ -83,7 +83,7 @@ Func InitializeMainGUI($bGuiModeUpdate = False)
 	EndIf
 
 	; Developer mode controls
-	If $g_bDevMode Then
+	; If $g_bDevMode Then ;Why? - Custom - Team__AiO__MOD
 		GUICtrlSetState($g_hChkDebugFunc, $GUI_SHOW + $GUI_ENABLE)
 		GUICtrlSetState($g_hChkDebugDisableZoomout, $GUI_SHOW + $GUI_ENABLE)
 		GUICtrlSetState($g_hChkDebugDisableVillageCentering, $GUI_SHOW + $GUI_ENABLE)
@@ -97,7 +97,7 @@ Func InitializeMainGUI($bGuiModeUpdate = False)
 		GUICtrlSetState($g_hChkdebugAttackCSV, $GUI_SHOW + $GUI_ENABLE)
 		GUICtrlSetState($g_hChkDebugSmartZap, $GUI_SHOW + $GUI_ENABLE)
 ;~ 		GUICtrlSetState($g_hbtnAttNow, $GUI_SHOW + $GUI_ENABLE)
-	EndIf
+	; EndIf
 
 	; GUI events and messages
 	GUISetOnEvent($GUI_EVENT_CLOSE, "GUIEvents", $g_hFrmBot)

@@ -35,14 +35,7 @@ EndFunc
 Func Laboratory($bDebug = False)
 	Local $bReturn = _Laboratory($bDebug)
 
-	If $g_bChkLabPotion Then
-		ClickAway(True)
-		If _Sleep($DELAYLABORATORY3) Then Return ; Wait for window to open
-
-		;Click Laboratory
-		BuildingClickP($g_aiLaboratoryPos, "#0197") ; Team AIO Mod++
-		If _Sleep($DELAYLABORATORY3) Then Return ; Wait for window to open
-
+	If $g_bChkLabPotion = True Then
 		LabPotionBoost()
 	EndIf
 
@@ -67,16 +60,17 @@ Func _Laboratory($bDebug = False)
 		EndIf
 	EndIf
 
- 	If ChkUpgradeInProgress() Then Return False ; see if we know about an upgrade in progress without checking the lab
-
-
 	; Get updated village elixir and dark elixir values
 	VillageReport()
 
+	If ChkUpgradeInProgress() Then Return False ; see if we know about an upgrade in progress without checking the lab
+	
 	;Click Laboratory
-	BuildingClickP($g_aiLaboratoryPos, "#0197") ; Team AIO Mod++
+	ClickP($g_aiLaboratoryPos, "#0197") ; Team AIO Mod++
 	If _Sleep($DELAYLABORATORY3) Then Return ; Wait for window to open
-
+ 	
+	If Not ChkLabUpgradeInProgress() Then Return False ; cant start becuase we cannot find the research button
+	
 	If Not FindResearchButton() Then Return False ; cant start becuase we cannot find the research button
 
 	; Lab upgrade is not in progress and not upgreading, so we need to start an upgrade.

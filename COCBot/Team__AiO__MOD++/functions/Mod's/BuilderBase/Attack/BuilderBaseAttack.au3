@@ -507,14 +507,14 @@ Func BuilderBaseAttackReport()
 
 	Local $iStars = 0
 	Local $StarsPositions[3][2] = [[326, 394], [452, 388], [546, 413]]
-	Local $Color[3] = [0xD0D4D0, 0xDBDEDB, 0xDBDDD8]
+	Local $iColor[3] = [0xD0D4D0, 0xDBDEDB, 0xDBDDD8]
 	Local $hResultColor = 0x000000
 
 	If _Sleep(1500) Then Return
 	If Not $g_bRunState Then Return
 
 	For $i = 0 To UBound($StarsPositions) - 1
-		If _ColorCheck(_GetPixelColor($StarsPositions[$i][0], $StarsPositions[$i][1], True), Hex($Color[$i], 6), 30) Then $iStars += 1
+		If _ColorCheck(_GetPixelColor($StarsPositions[$i][0], $StarsPositions[$i][1], True), Hex($iColor[$i], 6), 30) Then $iStars += 1
 	Next
 
 	Setlog("Your Attack: " & $iStars & " Star(s)!", $COLOR_INFO)
@@ -525,8 +525,6 @@ Func BuilderBaseAttackReport()
 	  Setlog("Return home button fail.", $COLOR_ERROR)
 	  CheckMainScreen()
    EndIf
-
-	Local $sResultName = "Draw"
 	
 	Local $iWait = 180000 ; 3 min
 	Local $hTimer = TimerInit()
@@ -542,9 +540,12 @@ Func BuilderBaseAttackReport()
         If _ColorCheck(_GetPixelColor(550, 345, True), Hex(0xFEFFFF, 6), 20) Then
 			If (Mod($i  + 1, 4) = 0) Then Setlog("Opponent is attacking.", $COLOR_INFO)
 			If _Sleep(3000) Then Return ; 3 seconds
-		ElseIf _WaitForCheckImg($g_sImgReportFinishedBB, "465, 493, 490, 505", Default, 5000, 250) Then
+			ContinueLoop
+		EndIf
+		
+		; Thropy
+		If _WaitForCheckImg($g_sImgReportFinishedBB, "465, 493, 490, 505", Default, 5000, 250) Then
 			$hResultColor = _GetPixelColor(150, 192, True)
-
 			ExitLoop
 		EndIf
 
@@ -552,10 +553,16 @@ Func BuilderBaseAttackReport()
 
 	If _Sleep(5000) Then Return
 
+	; 0, 1, 2
+	; Draw
+	Local $iModeSet = 2
+	
+	; Victory
 	If _ColorCheck($hResultColor, Hex(0x8DBE51, 6), 20) Then
-		$sResultName = "Victory"
+		$iModeSet = 0
+	; Defeat
 	ElseIf _ColorCheck($hResultColor, Hex(0xD0262C, 6), 20) Then
-		$sResultName = "Defeat"
+		$iModeSet = 1
 	EndIf
 
 	; Get the LOOT :
@@ -568,13 +575,12 @@ Func BuilderBaseAttackReport()
 	Local $iLastDamage = Int(_getTroopCountBig(222, 304))
 	If $iLastDamage > $g_iLastDamage Then $g_iLastDamage = $iLastDamage
 
-	If $sResultName = "Victory" Then
-		$iGain[$eLootTrophyBB] = Abs($iGain[$eLootTrophyBB])
-	ElseIf $sResultName = "Defeat" Then
-		$iGain[$eLootTrophyBB] = -Abs($iGain[$eLootTrophyBB])
-	Else
-		$iGain[$eLootTrophyBB] = 0
-	EndIf
+	; 0, 1, 2
+	Local $iTropy[3] = [$iGain[$eLootTrophyBB], $iGain[$eLootTrophyBB] * -1, 0]
+	Local $aLogColor[3] = [$COLOR_GREEN, $COLOR_ERROR, $COLOR_INFO]
+	Local $aLogMode[3] = ["Victory", "Defeat", "Draw"]
+
+	$iGain[$eLootTrophyBB] = $iTropy[$iModeSet]
 
 	; #######################################################################
 	; Just a temp log for BB attacks , this needs a new TAB like a stats tab
@@ -587,19 +593,10 @@ Func BuilderBaseAttackReport()
 	$sAtkLogTxt &= StringFormat("%1d", $iStars) & "|"
 	$sAtkLogTxt &= StringFormat("%3d", $g_iLastDamage) & "|"
 	$sAtkLogTxt &= StringFormat("%1d", $g_iBuilderBaseScript + 1) & "|"
+	
+	SetBBAtkLog($sAtkLogTxt, "", $aLogColor[$iModeSet])
+	Setlog("Attack Result: " & $aLogMode[$iModeSet], $aLogColor[$iModeSet]) 
 
-	If $sResultName = "Victory" Then
-		SetBBAtkLog($sAtkLogTxt, "", $COLOR_GREEN)
-		Setlog("Attack Result: " & $sResultName, $COLOR_GREEN) 
-	ElseIf $sResultName = "Defeat" Then
-		SetBBAtkLog($sAtkLogTxt, "", $COLOR_ERROR)
-		Setlog("Attack Result: " & $sResultName, $COLOR_ERROR) 
-	Else
-		SetBBAtkLog($sAtkLogTxt, "", $COLOR_INFO)
-		Setlog("Attack Result: " & $sResultName, $COLOR_INFO) 
-	EndIf
-	
-	
 	; #######################################################################
 
 	; Return to Main Page

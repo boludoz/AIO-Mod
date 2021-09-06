@@ -355,6 +355,7 @@ Global $g_bChkCollectMagicItems, $g_bChkBuilderPotion, $g_bChkClockTowerPotion, 
 $g_iInputBuilderPotion, $g_iInputLabPotion, $g_iInputGoldItems = 250000, $g_iInputElixirItems = 300000, $g_iInputDarkElixirItems = 1000
 
 #Region - Builder Base !!!
+Global $g_oTxtBBAtkLogInitText = ObjCreate("Scripting.Dictionary")
 
 ; Custom Improve - Team AIO Mod++
 Global $g_aBBUpgradeNameLevel[3] = ["", "", ""]
