@@ -111,17 +111,16 @@ Func LabPotionBoost()
 			If BoostPotionMod("LabPotion") Then
 				$iLastTimeChecked[Number($g_iCurAccount)] = 1
 			Else
-				If $g_aiLaboratoryPos[0] = 0 Or $g_aiLaboratoryPos[1] = 0 Then
-					SetLog("Laboratory Location unknown!", $COLOR_WARNING)
-					LocateLab() ; Lab location unknown, so find it.
-					If $g_aiLaboratoryPos[0] = 0 Or $g_aiLaboratoryPos[1] = 0 Then
-						SetLog("Problem locating Laboratory, re-locate laboratory position before proceeding", $COLOR_ERROR)
-						Return False
-					EndIf
+				LocateLab() ; Lab location unknown, so find it.
+				If _Sleep($DELAYLABORATORY3) Then Return ; Wait for window to open
+
+				If $g_aiLaboratoryPos[0] < 1 Or $g_aiLaboratoryPos[1] < 1 Then
+					SetLog("Problem locating Laboratory, re-locate laboratory position before proceeding", $COLOR_ERROR)
+					Return False
 				EndIf
-				
+
 				;Click Laboratory
-				ClickP($g_aiLaboratoryPos, "#0197") ; Team AIO Mod++
+				BuildingClickP($g_aiLaboratoryPos, "#0197") ; Team AIO Mod++
 				If _Sleep($DELAYLABORATORY3) Then Return ; Wait for window to open
 				
 				If BoostPotionMod("LabPotion") Then
@@ -142,7 +141,7 @@ Func BoostPotionMod($sName, $bDebug = False)
 		If UBound($g_aImageSearchXML) > 0 and not @error Then
 			Setlog("Magic Items : boosting " & $sName, $COLOR_INFO)
 			Click($g_aImageSearchXML[0][1], $g_aImageSearchXML[0][2], 1)
-			If _Sleep(500) Then Return False
+			If _Sleep(1500) Then Return False
 			
 			If WaitforPixel(391, 314, 455, 500, Hex(0xE1E3CB, 6), 15, 15) Then
 				If $bDebug = False Then

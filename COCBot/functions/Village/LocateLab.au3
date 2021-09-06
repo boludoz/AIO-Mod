@@ -33,7 +33,7 @@ Func LocateLab($bCollect = True)
     ; auto locate 
     ; ImgLocateLab()
 	
-	; GG MYBOT ! 
+	; GG MYBOT !
 	#Region - Auto locate builds - Team AIO Mod++
 	CheckMainScreen(Default, False)
 	ClickAway()

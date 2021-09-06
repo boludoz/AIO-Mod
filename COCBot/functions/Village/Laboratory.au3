@@ -51,14 +51,14 @@ Func _Laboratory($bDebug = False)
 		Return
 	EndIf
 
-	If $g_aiLaboratoryPos[0] = 0 Or $g_aiLaboratoryPos[1] = 0 Then
-		SetLog("Laboratory Location unknown!", $COLOR_WARNING)
-		LocateLab() ; Lab location unknown, so find it.
-		If $g_aiLaboratoryPos[0] = 0 Or $g_aiLaboratoryPos[1] = 0 Then
+	; If $g_aiLaboratoryPos[0] = 0 Or $g_aiLaboratoryPos[1] = 0 Then
+		; SetLog("Laboratory Location unknown!", $COLOR_WARNING)
+		LocateLab() ; Lab location unknown, so find it. ; Auto locate builds - Team AIO Mod++
+		If $g_aiLaboratoryPos[0] < 1 Or $g_aiLaboratoryPos[1] < 1 Then
 			SetLog("Problem locating Laboratory, re-locate laboratory position before proceeding", $COLOR_ERROR)
 			Return False
 		EndIf
-	EndIf
+	; EndIf
 
 	; Get updated village elixir and dark elixir values
 	VillageReport()
@@ -66,13 +66,13 @@ Func _Laboratory($bDebug = False)
 	If ChkUpgradeInProgress() Then Return False ; see if we know about an upgrade in progress without checking the lab
 	
 	;Click Laboratory
-	ClickP($g_aiLaboratoryPos, "#0197") ; Team AIO Mod++
+	BuildingClickP($g_aiLaboratoryPos, "#0197") ; Team AIO Mod++
 	If _Sleep($DELAYLABORATORY3) Then Return ; Wait for window to open
- 	
-	If Not ChkLabUpgradeInProgress() Then Return False ; cant start becuase we cannot find the research button
 	
 	If Not FindResearchButton() Then Return False ; cant start becuase we cannot find the research button
 
+	If ChkLabUpgradeInProgress() Then Return True ; cant start becuase we cannot find the research button
+	
 	; Lab upgrade is not in progress and not upgreading, so we need to start an upgrade.
 	Local $iCurPage = 1
 	Local $sCostResult
