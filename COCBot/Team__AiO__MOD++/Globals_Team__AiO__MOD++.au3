@@ -94,7 +94,7 @@ Global $g_hChkProtectInLL, $g_hChkForceProtectLL, $g_bProtectInLL = True, $g_bFo
 #EndRegion - Legend trophy protection - Team AIO Mod++
 
 #Region - Return Home by Time - Team AIO Mod++
-Global $g_hChkReturnTimerEnable = 0, $g_hTxtReturnTimer = 0, $g_bReturnTimerEnable = False, $g_iTxtReturnTimer = 5
+Global $g_hChkResetByCloudTimeEnable = 0, $g_hTxtReturnTimer = 0, $g_bResetByCloudTimeEnable = False, $g_iTxtReturnTimer = 5
 #EndRegion - Return Home by Time - Team AIO Mod++
 
 #Region - Lab Priority System

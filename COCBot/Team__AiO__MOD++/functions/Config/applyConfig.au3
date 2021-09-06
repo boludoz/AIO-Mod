@@ -177,7 +177,7 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			GUICtrlSetState($g_hChkRequestOneTimeEnable, $g_bRequestOneTimeEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
 
 			#Region - Return Home by Time - Team AIO Mod++
-			GUICtrlSetState($g_hChkReturnTimerEnable, $g_bReturnTimerEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkResetByCloudTimeEnable, $g_bResetByCloudTimeEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hTxtReturnTimer, $g_iTxtReturnTimer)
 			chkReturnTimer()
 			#EndRegion - Return Home by Time - Team AIO Mod++
@@ -285,7 +285,7 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			$g_bRequestOneTimeEnable = GUICtrlRead($g_hChkRequestOneTimeEnable) = $GUI_CHECKED
 
 			#Region - Return Home by Time - Team AIO Mod++
-			$g_bReturnTimerEnable = (GUICtrlRead($g_hChkReturnTimerEnable) = $GUI_CHECKED)
+			$g_bResetByCloudTimeEnable = (GUICtrlRead($g_hChkResetByCloudTimeEnable) = $GUI_CHECKED)
 			$g_iTxtReturnTimer = GUICtrlRead($g_hTxtReturnTimer)
 			#EndRegion - Return Home by Time - Team AIO Mod++
 

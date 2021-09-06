@@ -107,7 +107,7 @@ Func WaitForClouds()
 			SetLog("Cloud wait time " & StringFormat("%.1f", $iSearchTime) & " minute(s)", $COLOR_INFO)
 			$iLastTime += 1
 			#Region - Return Home by Time - Team AIO Mod++
-			If $g_bReturnTimerEnable = True Then
+			If $g_bResetByCloudTimeEnable = True Then
 				If $iSearchTime > (Random(0.80, 1.20) * $g_iTxtReturnTimer) Then
 				    SetLog("Return home by time due to the long wait in the cloud.", $COLOR_INFO)
 					$g_bIsClientSyncError = True

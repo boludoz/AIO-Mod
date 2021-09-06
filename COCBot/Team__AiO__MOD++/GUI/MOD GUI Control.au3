@@ -294,7 +294,7 @@ EndFunc   ;==>chkDBNoLeague
 
 #Region - Return Home by Time - Team AIO Mod++
 Func chkReturnTimer()
-	GUICtrlSetState($g_hTxtReturnTimer, GUICtrlRead($g_hChkReturnTimerEnable) = $GUI_CHECKED ? $GUI_ENABLE : $GUI_DISABLE)
+	GUICtrlSetState($g_hTxtReturnTimer, GUICtrlRead($g_hChkResetByCloudTimeEnable) = $GUI_CHECKED ? $GUI_ENABLE : $GUI_DISABLE)
 EndFunc   ;==>chkReturnTimer
 #EndRegion - Return Home by Time - Team AIO Mod++
 

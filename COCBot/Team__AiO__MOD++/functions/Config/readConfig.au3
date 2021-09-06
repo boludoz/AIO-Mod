@@ -122,7 +122,7 @@ Func ReadConfig_MOD_MiscTab()
 	IniReadS($g_bRequestOneTimeEnable, $g_sProfileConfigPath, "ReqCCOptions", "RequestOneTime", $g_bRequestOneTimeEnable, "Bool")
 
 	#Region - Return Home by Time - Team AIO Mod++
-	IniReadS($g_bReturnTimerEnable, $g_sProfileConfigPath, "search", "ChkReturnTimerEnable", False, "Bool")
+	IniReadS($g_bResetByCloudTimeEnable, $g_sProfileConfigPath, "search", "ChkResetByCloudTimeEnable", True, "Bool")
 	IniReadS($g_iTxtReturnTimer, $g_sProfileConfigPath, "search", "ReturnTimer", 5, "int")
 	#EndRegion - Return Home by Time - Team AIO Mod++
 

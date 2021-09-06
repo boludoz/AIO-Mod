@@ -46,11 +46,11 @@ Func BuilderPotionBoost($bDebug = False)
 				If $aResult <> "" Then
 					If _Sleep($DELAYBOOSTHEROES2) Then Return
 					If BoostPotionMod("BuilderPotion", $bDebug) Then
-						$iLastTimeChecked[Number($g_iCurAccount)t] = 1
+						$iLastTimeChecked[Number($g_iCurAccount)] = 1
 						Return True
 					Else
 						Setlog("Magic Items| Fail builder potion.", $COLOR_ERROR)
-						Return false
+						Return False
 					EndIf
 				Else
 					Setlog("Magic Items| OCR Fail.", $COLOR_ERROR)

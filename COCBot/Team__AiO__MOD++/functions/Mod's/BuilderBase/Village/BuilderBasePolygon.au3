@@ -253,3 +253,30 @@ Func GetBuilderBaseSize($bWithClick = False, $bVersusMode = Default, $bDebugLog 
 	
 	Return 0
 EndFunc   ;==>GetBuilderBaseSize
+
+; Cartesian axis, by percentage, instead convert village pos, ready to implement in the constructor base. (Boldina, "the true dev").
+; No reference village is based and no external DLL calls are made, just take the x and y endpoints, 
+; then subtract the endpoints and generate the percentages they represent on the axes.
+
+Func VillageToPercent($x, $y, $xv1, $xv2, $ya1, $ya2)
+    Local $aArray[2] = [-1, -1]
+    Local $ixAncho = $xv2 - $xv1
+    Local $iyAlto = $ya2 - $ya1
+    $aArray[0] = ($x / $ixAncho) * 100
+    $aArray[1] = ($y / $iyAlto) * 100
+    Return $aArray
+EndFunc   ;==>VillageToPercent
+
+; From the current village and the percentages represented by the axes, the Cartesian point is generated.
+; Then add the external to fit.
+; Taking as input the percentage in which the construction is located at the Cartesian point, the position is returned.
+; The code is simple to implement and has precision.
+
+Func PercentToVillage($xPer, $yPer, $xv1, $xv2, $ya1, $ya2)
+    Local $aArray[2] = [-1, -1]
+    Local $ixAncho = $xv2 - $xv1
+    Local $iyAlto = $ya2 - $ya1
+    $aArray[0] = $xv1 + (($ixAncho * $xPer) / 100)
+    $aArray[1] = $ya1 + (($iyAlto * $yPer) / 100)
+    Return $aArray
+EndFunc   ;==>PercentToVillage

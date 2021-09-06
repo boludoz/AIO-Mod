@@ -130,7 +130,7 @@ Func SaveConfig_MOD_MiscTab()
 	_Ini_Add("ReqCCOptions", "RequestOneTime", $g_bRequestOneTimeEnable)
 
 	#Region - Return Home by Time - Team AIO Mod++
-	_Ini_Add("search", "ChkReturnTimerEnable", $g_bReturnTimerEnable ? 1 : 0)
+	_Ini_Add("search", "ChkResetByCloudTimeEnable", $g_bResetByCloudTimeEnable ? 1 : 0)
 	_Ini_Add("search", "ReturnTimer", $g_iTxtReturnTimer)
 	#EndRegion - Return Home by Time - Team AIO Mod++
 

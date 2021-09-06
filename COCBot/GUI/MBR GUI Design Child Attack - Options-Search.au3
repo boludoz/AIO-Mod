@@ -181,8 +181,8 @@ Func CreateAttackSearchOptionsSearch()
 			
 	#Region - Return Home by Time - Team AIO Mod++
 	$y += 25
-		$g_hChkReturnTimerEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-Search", "ChkReturnTimerEnable_01", "Return Home by Time"), $x - 5, $y - 1, -1, -1)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-Search", "ChkReturnTimerEnable_02", "Return home by time due to the long wait in the cloud."))
+		$g_hChkResetByCloudTimeEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-Search", "ChkResetByCloudTimeEnable_01", "Reset game if is bugged in clouds."), $x - 5, $y - 1, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-Search", "ChkResetByCloudTimeEnable_02", "Return home by time due to the long wait in the cloud."))
 			GUICtrlSetOnEvent(-1, "chkReturnTimer")
 		$g_hTxtReturnTimer = _GUICtrlCreateInput("5", $x + 118, $y, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-Search", "TxtReturnTimer_01", "Set the desired time, if the wait in the cloud exceeds this time, the bot will return home."))
