@@ -14,7 +14,7 @@
 ; ===============================================================================================================================
 #include-once
 
-Func QuickTrain()
+Func QuickTrain($bPreTrainFlag = $g_bDoubleTrain)
 	Local $bDebug = $g_bDebugSetlogTrain Or $g_bDebugSetlog
 	Local $bNeedRecheckTroop = False, $bNeedRecheckSpell = False, $bNeedRecheckSiegeMachine = False
 	Local $iTroopStatus = -1, $iSpellStatus = -1, $iSiegeStatus = -1 ; 0 = empty, 1 = full camp, 2 = full queue
@@ -44,7 +44,7 @@ Func QuickTrain()
 
 		ElseIf $avTroopCamp[0] = $avTroopCamp[1] Then ; 280/280
 			$iTroopStatus = 1
-			If $bDebug Then SetLog($g_bDoubleTrain ? "ready to make double troop training" : "troops are training perfectly", $COLOR_DEBUG)
+			If $bDebug Then SetLog($bPreTrainFlag ? "ready to make double troop training" : "troops are training perfectly", $COLOR_DEBUG)
 
 		ElseIf $avTroopCamp[0] <= $avTroopCamp[1] * 1.5 Then ; 281-420/560
 			RemoveExtraTroopsQueue()
@@ -93,7 +93,7 @@ Func QuickTrain()
 				If $iTroopStatus >= 1 And $g_bQuickArmyMixed Then
 					BrewFullSpell()
 					$iSpellStatus = 1
-					If $iTroopStatus = 2 And $g_bDoubleTrain Then
+					If $iTroopStatus = 2 And $bPreTrainFlag Then
 						BrewFullSpell(True)
 						TopUpUnbalancedSpell($iUnbalancedSpell)
 						$iSpellStatus = 2
@@ -109,14 +109,14 @@ Func QuickTrain()
 				If $bDebug Then SetLog("$bNeedRecheckSpell at Army Tab: " & $bNeedRecheckSpell, $COLOR_DEBUG)
 
 			ElseIf $aiSpellCamp[0] = $aiSpellCamp[1] Or $aiSpellCamp[0] <= $aiSpellCamp[1] + $iUnbalancedSpell Then  ; 11/22
-				If $iTroopStatus = 2 And $g_bQuickArmyMixed And $g_bDoubleTrain Then
+				If $iTroopStatus = 2 And $g_bQuickArmyMixed And $bPreTrainFlag Then
 					BrewFullSpell(True)
 					TopUpUnbalancedSpell($iUnbalancedSpell)
 					If $bDebug Then SetLog("$iTroopStatus = " & $iTroopStatus & ". Brewed full queued spell", $COLOR_DEBUG)
 					$iSpellStatus = 2
 				Else
 					$iSpellStatus = 1
-					If $bDebug Then SetLog($g_bDoubleTrain ? "ready to make double spell brewing" : "spells are brewing perfectly", $COLOR_DEBUG)
+					If $bDebug Then SetLog($bPreTrainFlag ? "ready to make double spell brewing" : "spells are brewing perfectly", $COLOR_DEBUG)
 				EndIf
 
 			Else ; If $aiSpellCamp[0] <= $aiSpellCamp[1] * 2 Then ; 12-22/22
@@ -221,9 +221,9 @@ Func QuickTrain()
 			If Not OpenQuickTrainTab(False, "QuickTrain()") Then Return
 			If _Sleep(750) Then Return
 			TrainArmyNumber($g_bQuickTrainArmy)
-			If $g_bDoubleTrain Then TrainArmyNumber($g_bQuickTrainArmy)
+			If $bPreTrainFlag Then TrainArmyNumber($g_bQuickTrainArmy)
 		Case 1
-			If $g_bIsFullArmywithHeroesAndSpells Or $g_bDoubleTrain Then
+			If $g_bIsFullArmywithHeroesAndSpells Or $bPreTrainFlag Then
 				If $g_bIsFullArmywithHeroesAndSpells Then SetLog(" - Your Army is Full, let's make troops before Attack!", $COLOR_INFO)
 				If Not OpenQuickTrainTab(False, "QuickTrain()") Then Return
 				If _Sleep(750) Then Return

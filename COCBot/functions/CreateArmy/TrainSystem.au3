@@ -15,6 +15,7 @@
 #include-once
 #include <Array.au3>
 #include <MsgBoxConstants.au3>
+Global $g_bChkPreTrainTroopsPercent = True, $g_iInpPreTrainStrength = 38
 
 Func TrainSystem()
 	If Not $g_bTrainEnabled Then ; check for training disabled in halt mode
@@ -28,11 +29,18 @@ Func TrainSystem()
 	If $g_bQuickTrainEnable Then CheckQuickTrainTroop() ; update values of $g_aiArmyComTroops, $g_aiArmyComSpells
 
 	CheckIfArmyIsReady()
-
+	
+	Local $bPreTrainFlag = $g_bDoubleTrain
+	If $g_bChkPreTrainTroopsPercent Then
+		If $g_iArmyCapacity >= $g_iInpPreTrainStrength Then
+			$bPreTrainFlag = True
+		EndIf
+	EndIf
+						
 	If $g_bQuickTrainEnable Then
-		QuickTrain()
+		QuickTrain($bPreTrainFlag)
 	Else
-		TrainCustomArmy()
+		TrainCustomArmy($bPreTrainFlag)
 	EndIf
 
 	TrainSiege()
@@ -47,7 +55,7 @@ Func TrainSystem()
 	checkAttackDisable($g_iTaBChkIdle) ; Check for Take-A-Break after opening train page
 EndFunc   ;==>TrainSystem
 
-Func TrainCustomArmy()
+Func TrainCustomArmy($bPreTrainFlag = $g_bDoubleTrain)
 	If Not $g_bRunState Then Return
 
 	If $g_bDebugSetlogTrain Then SetLog(" == Initial Custom Train == ", $COLOR_ACTION)
@@ -55,7 +63,7 @@ Func TrainCustomArmy()
 	;If $bDonateTrain = -1 Then SetbDonateTrain()
 	If $g_iActiveDonate = -1 Then PrepareDonateCC()
 
-	If $g_bDoubleTrain Then
+	If $bPreTrainFlag = True Then
 		DoubleTrain()
 		Return
 	EndIf
