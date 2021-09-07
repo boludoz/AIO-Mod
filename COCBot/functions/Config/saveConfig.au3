@@ -1304,6 +1304,10 @@ Func SaveConfig_600_52_2()
 	; DoubleTrain - Demen
 	_Ini_Add("troop", "DoubleTrain", $g_bDoubleTrain ? 1 : 0)
 	_Ini_Add("troop", "PreciseArmy", $g_bPreciseArmy ? 1 : 0)
+	#Region - Custom train - Team AIO Mod++
+	_Ini_Add("troop", "ChkPreTrainTroopsPercent", $g_bChkPreTrainTroopsPercent ? 1 : 0)
+	_Ini_Add("troop", "InpPreTrainTroopsPercent", $g_iInpPreTrainTroopsPercent)
+	#EndRegion - Custom train - Team AIO Mod++
 EndFunc   ;==>SaveConfig_600_52_2
 
 Func SaveConfig_600_54()

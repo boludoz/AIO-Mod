@@ -116,6 +116,14 @@ Func chkTotalCampForced()
 	GUICtrlSetState($g_hTxtTotalCampForced, GUICtrlRead($g_hChkTotalCampForced) = $GUI_CHECKED ? $GUI_ENABLE : $GUI_DISABLE)
 EndFunc   ;==>chkTotalCampForced
 
+#Region - Custom train - Team AIO Mod++
+Func chkDoubleTrain()
+	$g_bDoubleTrain = (GUICtrlRead($g_hChkDoubleTrain) = $GUI_CHECKED)
+	GUICtrlSetState($g_hChkPreTrainTroopsPercent, ($g_bDoubleTrain = True) ? ($GUI_ENABLE) : ($GUI_DISABLE + $GUI_UNCHECKED))
+	GUICtrlSetState($g_hInpPreTrainTroopsPercent, ($g_bDoubleTrain = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+EndFunc   ;==>chkTotalCampForced
+#EndRegion - Custom train - Team AIO Mod++
+
 Func lblTotalCountTroop1()
 	; Calculate count of troops, set progress bars, colors
 	Local $TotalTroopsToTrain = 0
@@ -419,40 +427,6 @@ Func sldTrainITDelay()
 	GUICtrlSetData($g_hLblTrainITDelayTime, $g_iTrainClickDelay & " ms")
 EndFunc   ;==>sldTrainITDelay
 
-#cs
-Func chkTroopOrder2()
-	;GUI OnEvent functions cannot have parameters, so below call is used for the default parameter
-	chkTroopOrder()
-EndFunc   ;==>chkTroopOrder2
-
-Func chkTroopOrder($bSetLog = True)
-	If GUICtrlRead($g_hChkCustomTrainOrderEnable) = $GUI_CHECKED Then
-		$g_bCustomTrainOrderEnable = True
-		GUICtrlSetState($g_hBtnTroopOrderSet, $GUI_ENABLE)
-		GUICtrlSetState($g_hBtnRemoveTroops, $GUI_ENABLE)
-		For $i = 0 To UBound($g_ahCmbTroopOrder) - 1
-			GUICtrlSetState($g_ahCmbTroopOrder[$i], $GUI_ENABLE)
-		Next
-		If IsUseCustomTroopOrder() = True Then _GUICtrlSetImage($g_ahImgTroopOrderSet, $g_sLibIconPath, $eIcnRedLight)
-	Else
-		$g_bCustomTrainOrderEnable = False
-		GUICtrlSetState($g_hBtnTroopOrderSet, $GUI_DISABLE) ; disable button
-		GUICtrlSetState($g_hBtnRemoveTroops, $GUI_DISABLE)
-		For $i = 0 To UBound($g_ahCmbTroopOrder) - 1
-			GUICtrlSetState($g_ahCmbTroopOrder[$i], $GUI_DISABLE) ; disable combo boxes
-		Next
-		SetDefaultTroopGroup($bSetLog) ; Reset troopgroup values to default
-		If ($bSetLog Or $g_bDebugSetlogTrain) And $g_bCustomTrainOrderEnable Then
-			Local $sNewTrainList = ""
-			For $i = 0 To $eTroopCount - 1
-				$sNewTrainList &= $g_asTroopShortNames[$g_aiTrainOrder[$i]] & ", "
-			Next
-			$sNewTrainList = StringTrimRight($sNewTrainList, 2)
-			SetLog("Current train order= " & $sNewTrainList, $COLOR_INFO)
-		EndIf
-	EndIf
-EndFunc   ;==>chkTroopOrder
-#ce
 Func chkSpellsOrder()
 	If GUICtrlRead($g_hChkCustomBrewOrderEnable) = $GUI_CHECKED Then
 		$g_bCustomBrewOrderEnable = True
@@ -475,362 +449,67 @@ Func chkSpellsOrder()
 EndFunc   ;==>chkSpellsOrder
 
 Func GUISpellsOrder()
-	Local $bDuplicate = False
-	Local $iGUI_CtrlId = @GUI_CtrlId
-	Local $iCtrlIdImage = $iGUI_CtrlId + 1 ; record control ID for $g_ahImgTroopOrder[$z] based on control of combobox that called this function
-	Local $iSpellsIndex = _GUICtrlComboBox_GetCurSel($iGUI_CtrlId) + 1 ; find zero based index number of Spell selected in combo box, add one for enum of proper icon
+	For $i = 0 To UBound($g_ahCmbSpellsOrder[$i]) - 1 ; check for duplicate combobox index and flag problem
+		$g_aiCmbCustomBrewOrder[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbSpellsOrder[$i][$i])
+	Next
+EndFunc   ;==>_GUITrainOrder
 
-	_GUICtrlSetImage($iCtrlIdImage, $g_sLibIconPath, $g_aiSpellsOrderIcon[$iSpellsIndex]) ; set proper Spell icon
+Func _GUISpellsOrder()
+	Local $iGUI_CtrlId = @GUI_CtrlId
+	Local $i = _ArraySearch($g_ahCmbSpellsOrder, @GUI_CtrlId) 
+	Local $iOld = $g_aiCmbCustomBrewOrder[$i]
 
 	For $i = 0 To UBound($g_ahCmbSpellsOrder) - 1 ; check for duplicate combobox index and flag problem
 		If $iGUI_CtrlId = $g_ahCmbSpellsOrder[$i] Then ContinueLoop
 		If _GUICtrlComboBox_GetCurSel($iGUI_CtrlId) = _GUICtrlComboBox_GetCurSel($g_ahCmbSpellsOrder[$i]) Then
-			_GUICtrlSetImage($g_ahImgSpellsOrder[$i], $g_sLibIconPath, $eIcnOptions)
-			_GUICtrlComboBox_SetCurSel($g_ahCmbSpellsOrder[$i], -1)
+			_GUICtrlComboBox_SetCurSel($g_ahCmbSpellsOrder[$i], $iOld)
 			GUISetState()
-			$bDuplicate = True
 		EndIf
 	Next
 
-	If $bDuplicate Then
-		GUICtrlSetState($g_hBtnSpellsOrderSet, $GUI_DISABLE) ; enable button to apply new order
-		Return
-	Else
-		GUICtrlSetState($g_hBtnSpellsOrderSet, $GUI_ENABLE) ; enable button to apply new order
-		_GUICtrlSetImage($g_ahImgSpellsOrderSet, $g_sLibIconPath, $eIcnRedLight) ; set status indicator to show need to apply new order
-	EndIf
-EndFunc   ;==>GUISpellsOrder
+	For $i = 0 To UBound($g_ahCmbSpellsOrder) - 1 ; check for duplicate combobox index and flag problem
+		$g_aiCmbCustomBrewOrder[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbSpellsOrder[$i])
+	Next
+EndFunc   ;==>_GUISpellsOrder
 
 Func BtnRemoveSpells()
-	Local $bWasRedraw = SetRedrawBotWindow(False, Default, Default, Default, "BtnRemoveSpells")
-	Local $sComboData = ""
-	For $j = 0 To UBound($g_asSpellsOrderList) - 1
-		$sComboData &= $g_asSpellsOrderList[$j] & "|"
+	For $i = 0 To UBound($g_ahCmbSpellsOrder) - 1 ; check for duplicate combobox index and flag problem
+		_GUICtrlComboBox_SetCurSel($g_ahCmbSpellsOrder[$i], $i)
+		GUISetState()
 	Next
-	For $i = 0 To $eSpellCount - 1
-		$g_aiCmbCustomBrewOrder[$i] = -1
-		_GUICtrlComboBox_ResetContent($g_ahCmbSpellsOrder[$i])
-		GUICtrlSetData($g_ahCmbSpellsOrder[$i], $sComboData, "")
-		_GUICtrlSetImage($g_ahImgSpellsOrder[$i], $g_sLibIconPath, $eIcnOptions)
-	Next
-	_GUICtrlSetImage($g_ahImgSpellsOrderSet, $g_sLibIconPath, $eIcnSilverStar)
-	SetDefaultSpellsGroup(False)
-	SetRedrawBotWindow($bWasRedraw, Default, Default, Default, "BtnRemoveSpells")
 EndFunc   ;==>BtnRemoveSpells
-#cs
-Func GUITrainOrder()
-	Local $bDuplicate = False
-	Local $iGUI_CtrlId = @GUI_CtrlId
-	Local $iCtrlIdImage = $iGUI_CtrlId + 1 ; record control ID for $g_ahImgTroopOrder[$z] based on control of combobox that called this function
-	Local $iTroopIndex = _GUICtrlComboBox_GetCurSel($iGUI_CtrlId) + 1 ; find zero based index number of troop selected in combo box, add one for enum of proper icon
 
-	_GUICtrlSetImage($iCtrlIdImage, $g_sLibIconPath, $g_aiTroopOrderIcon[$iTroopIndex]) ; set proper troop icon
+Func GUITrainOrder()
+	For $i = 0 To UBound($g_ahCmbTroopOrder) - 1 ; check for duplicate combobox index and flag problem
+		$g_aiCmbCustomTrainOrder[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbTroopOrder[$i])
+	Next
+EndFunc   ;==>_GUITrainOrder
+
+Func _GUITrainOrder()
+	Local $iGUI_CtrlId = @GUI_CtrlId
+	Local $i = _ArraySearch($g_ahCmbTroopOrder, @GUI_CtrlId) 
+	Local $iOld = $g_aiCmbCustomTrainOrder[$i]
 
 	For $i = 0 To UBound($g_ahCmbTroopOrder) - 1 ; check for duplicate combobox index and flag problem
 		If $iGUI_CtrlId = $g_ahCmbTroopOrder[$i] Then ContinueLoop
 		If _GUICtrlComboBox_GetCurSel($iGUI_CtrlId) = _GUICtrlComboBox_GetCurSel($g_ahCmbTroopOrder[$i]) Then
-			_GUICtrlSetImage($g_ahImgTroopOrder[$i], $g_sLibIconPath, $eIcnOptions)
-			_GUICtrlComboBox_SetCurSel($g_ahCmbTroopOrder[$i], -1)
+			_GUICtrlComboBox_SetCurSel($g_ahCmbTroopOrder[$i], $iOld)
 			GUISetState()
-			$bDuplicate = True
 		EndIf
 	Next
-	If $bDuplicate Then
-		GUICtrlSetState($g_hBtnTroopOrderSet, $GUI_DISABLE) ; enable button to apply new order
-		Return
-	Else
-		GUICtrlSetState($g_hBtnTroopOrderSet, $GUI_ENABLE) ; enable button to apply new order
-		_GUICtrlSetImage($g_ahImgTroopOrderSet, $g_sLibIconPath, $eIcnRedLight) ; set status indicator to show need to apply new order
-	EndIf
-EndFunc   ;==>GUITrainOrder
-#ce
-Func _GUITrainOrder()
-	; Local $bDuplicate = False
-	; Local $iGUI_CtrlId = @GUI_CtrlId
-	; Local $iGUI_CtrlCur = _GUICtrlComboBox_GetCurSel($iGUI_CtrlId)
 
-	; Local $i = _ArraySearch($g_ahCmbTroopOrder, @GUI_CtrlId) 
-	
-	; Local $g_aiCmbCustomTrainOrder[$i]
-
-	; For $i = 0 To UBound($g_ahCmbTroopOrder) - 1 ; check for duplicate combobox index and flag problem
-		; If $iGUI_CtrlId = $g_ahCmbTroopOrder[$i] Then ContinueLoop
-		; If _GUICtrlComboBox_GetCurSel($iGUI_CtrlId) = _GUICtrlComboBox_GetCurSel($g_ahCmbTroopOrder[$i]) Then
-			; _GUICtrlComboBox_SetCurSel($g_ahCmbTroopOrder[$i], $g_aiCmbCustomTrainOrder[$i])
-			; GUISetState()
-		; EndIf
-	; Next
-	
-EndFunc   ;==>GUITrainOrder
-
+	For $i = 0 To UBound($g_ahCmbTroopOrder) - 1 ; check for duplicate combobox index and flag problem
+		$g_aiCmbCustomTrainOrder[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbTroopOrder[$i])
+	Next
+EndFunc   ;==>_GUITrainOrder
 
 Func BtnRemoveTroops()
-	Local $bWasRedraw = SetRedrawBotWindow(False, Default, Default, Default, "BtnRemoveTroops")
-	Local $sComboData = ""
-	For $j = 0 To UBound($g_asTroopOrderList) - 1
-		$sComboData &= $g_asTroopOrderList[$j] & "|"
+	For $i = 0 To UBound($g_ahCmbTroopOrder) - 1 ; check for duplicate combobox index and flag problem
+		_GUICtrlComboBox_SetCurSel($g_ahCmbTroopOrder[$i], $i)
+		GUISetState()
 	Next
-	For $i = $eTroopBarbarian To $eTroopCount - 1
-		$g_aiCmbCustomTrainOrder[$i] = -1
-		_GUICtrlComboBox_ResetContent($g_ahCmbTroopOrder[$i])
-		GUICtrlSetData($g_ahCmbTroopOrder[$i], $sComboData, "")
-		_GUICtrlSetImage($g_ahImgTroopOrder[$i], $g_sLibIconPath, $eIcnOptions)
-	Next
-	_GUICtrlSetImage($g_ahImgTroopOrderSet, $g_sLibIconPath, $eIcnSilverStar)
-	SetDefaultTroopGroup(False)
-	SetRedrawBotWindow($bWasRedraw, Default, Default, Default, "BtnRemoveTroops")
 EndFunc   ;==>BtnRemoveTroops
 
-Func BtnSpellsOrderSet()
-
-	Local $bWasRedraw = SetRedrawBotWindow(False, Default, Default, Default, "BtnSpellsOrderSet")
-	Local $bReady = True ; Initialize ready to record troop order flag
-	Local $sNewTrainList = ""
-
-	Local $bMissingTroop = False ; flag for when troops are not assigned by user
-	Local $aiBrewOrder[$eSpellCount] = [ _
-			$eSpellLightning, $eSpellHeal, $eSpellRage, $eSpellJump, $eSpellFreeze, $eSpellClone, _
-			$eSpellInvisibility, $eSpellPoison, $eSpellEarthquake, $eSpellHaste, $eSpellSkeleton, $eSpellBat]
-
-	; check for duplicate combobox index and take action
-	For $i = 0 To UBound($g_ahCmbSpellsOrder) - 1
-		For $j = 0 To UBound($g_ahCmbSpellsOrder) - 1
-			If $i = $j Then ContinueLoop ; skip if index are same
-			If _GUICtrlComboBox_GetCurSel($g_ahCmbSpellsOrder[$i]) <> -1 And _
-					_GUICtrlComboBox_GetCurSel($g_ahCmbSpellsOrder[$i]) = _GUICtrlComboBox_GetCurSel($g_ahCmbSpellsOrder[$j]) Then
-				_GUICtrlComboBox_SetCurSel($g_ahCmbSpellsOrder[$j], -1)
-				_GUICtrlSetImage($g_ahImgSpellsOrder[$j], $g_sLibIconPath, $eIcnOptions)
-				$bReady = False
-			Else
-				GUICtrlSetColor($g_ahCmbSpellsOrder[$j], $COLOR_BLACK)
-			EndIf
-		Next
-		; update combo array variable with new value
-		$g_aiCmbCustomBrewOrder[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbSpellsOrder[$i])
-		If $g_aiCmbCustomBrewOrder[$i] = -1 Then $bMissingTroop = True ; check if combo box slot that is not assigned a troop
-	Next
-
-	; Automatic random fill missing troops
-	If $bReady And $bMissingTroop Then
-		; 1st update $aiUsedTroop array with troops not used in $g_aiCmbCustomTrainOrder
-		For $i = 0 To UBound($g_aiCmbCustomBrewOrder) - 1
-			For $j = 0 To UBound($aiBrewOrder) - 1
-				If $g_aiCmbCustomBrewOrder[$i] = $j Then
-					$aiBrewOrder[$j] = -1 ; if troop is used, replace enum value with -1
-					ExitLoop
-				EndIf
-			Next
-		Next
-		_ArrayShuffle($aiBrewOrder) ; make missing training order assignment random
-		For $i = 0 To UBound($g_aiCmbCustomBrewOrder) - 1
-			If $g_aiCmbCustomBrewOrder[$i] = -1 Then ; check if custom order index is not set
-				For $j = 0 To UBound($aiBrewOrder) - 1
-					If $aiBrewOrder[$j] <> -1 Then ; loop till find a valid troop enum
-						$g_aiCmbCustomBrewOrder[$i] = $aiBrewOrder[$j] ; assign unused troop
-						_GUICtrlComboBox_SetCurSel($g_ahCmbSpellsOrder[$i], $aiBrewOrder[$j])
-						_GUICtrlSetImage($g_ahImgSpellsOrder[$i], $g_sLibIconPath, $g_aiSpellsOrderIcon[$g_aiCmbCustomBrewOrder[$i] + 1])
-						$aiBrewOrder[$j] = -1 ; remove unused troop from array
-						ExitLoop
-					EndIf
-				Next
-			EndIf
-		Next
-	EndIf
-
-	If $bReady Then
-		ChangeSpellsBrewOrder() ; code function to record new training order
-		If @error Then
-			Switch @error
-				Case 1
-					SetLog("Code problem, can not continue till fixed!", $COLOR_ERROR)
-				Case 2
-					SetLog("Bad Combobox selections, please fix!", $COLOR_ERROR)
-				Case 3
-					SetLog("Unable to Change Spells Brew Order due bad change count!", $COLOR_ERROR)
-				Case Else
-					SetLog("Monkey ate bad banana, something wrong with ChangeSpellsBrewOrder() code!", $COLOR_ERROR)
-			EndSwitch
-			_GUICtrlSetImage($g_ahImgSpellsOrderSet, $g_sLibIconPath, $eIcnRedLight)
-		Else
-			SetLog("Spells Brew order changed successfully!", $COLOR_SUCCESS)
-			For $i = 0 To $eSpellCount - 1
-				$sNewTrainList &= $g_asSpellShortNames[$g_aiBrewOrder[$i]] & ", "
-			Next
-			$sNewTrainList = StringTrimRight($sNewTrainList, 2)
-			SetLog("Spells Brew order= " & $sNewTrainList, $COLOR_INFO)
-		EndIf
-	Else
-		SetLog("Must use all Spells and No duplicate troop names!", $COLOR_ERROR)
-		_GUICtrlSetImage($g_ahImgSpellsOrderSet, $g_sLibIconPath, $eIcnRedLight)
-	EndIf
-	;	GUICtrlSetState($g_hBtnTroopOrderSet, $GUI_DISABLE)
-	SetRedrawBotWindow($bWasRedraw, Default, Default, Default, "BtnSpellsOrderSet")
-
-EndFunc   ;==>BtnSpellsOrderSet
-#cs
-Func BtnTroopOrderSet()
-	Local $bWasRedraw = SetRedrawBotWindow(False, Default, Default, Default, "BtnTroopOrderSet")
-	Local $bReady = True ; Initialize ready to record troop order flag
-	Local $sNewTrainList = ""
-
-	Local $bMissingTroop = False ; flag for when troops are not assigned by user
-	Local $aiUsedTroop[$eTroopCount] = [ _
-			$eTroopBarbarian, $eTroopSuperBarbarian, $eTroopArcher, $eTroopSuperArcher, $eTroopGiant, $eTroopSuperGiant, $eTroopGoblin, $eTroopSneakyGoblin, $eTroopWallBreaker, _
-			$eTroopSuperWallBreaker, $eTroopBalloon, $eTroopRocketBalloon, $eTroopWizard, $eTroopSuperWizard, $eTroopHealer, $eTroopDragon, $eTroopPekka, $eTroopBabyDragon, $eTroopInfernoDragon, $eTroopMiner, _
-			$eTroopElectroDragon, $eTroopYeti, $eTroopDragonRider, $eTroopMinion, $eTroopSuperMinion, $eTroopHogRider, $eTroopValkyrie, $eTroopSuperValkyrie, $eTroopGolem, $eTroopWitch, $eTroopSuperWitch, _
-			$eTroopLavaHound, $eTroopIceHound, $eTroopBowler, $eTroopIceGolem, $eTroopHeadhunter]
-
-	; check for duplicate combobox index and take action
-	For $i = 0 To UBound($g_ahCmbTroopOrder) - 1
-		For $j = 0 To UBound($g_ahCmbTroopOrder) - 1
-			If $i = $j Then ContinueLoop ; skip if index are same
-			If _GUICtrlComboBox_GetCurSel($g_ahCmbTroopOrder[$i]) <> -1 And _
-					_GUICtrlComboBox_GetCurSel($g_ahCmbTroopOrder[$i]) = _GUICtrlComboBox_GetCurSel($g_ahCmbTroopOrder[$j]) Then
-				_GUICtrlComboBox_SetCurSel($g_ahCmbTroopOrder[$j], -1)
-				_GUICtrlSetImage($g_ahImgTroopOrder[$j], $g_sLibIconPath, $eIcnOptions)
-				$bReady = False
-			Else
-				GUICtrlSetColor($g_ahCmbTroopOrder[$j], $COLOR_BLACK)
-			EndIf
-		Next
-		; update combo array variable with new value
-		$g_aiCmbCustomTrainOrder[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbTroopOrder[$i])
-		If $g_aiCmbCustomTrainOrder[$i] = -1 Then $bMissingTroop = True ; check if combo box slot that is not assigned a troop
-	Next
-
-	; Automatic random fill missing troops
-	If $bReady And $bMissingTroop Then
-		; 1st update $aiUsedTroop array with troops not used in $g_aiCmbCustomTrainOrder
-		For $i = 0 To UBound($g_aiCmbCustomTrainOrder) - 1
-			For $j = 0 To UBound($aiUsedTroop) - 1
-				If $g_aiCmbCustomTrainOrder[$i] = $j Then
-					$aiUsedTroop[$j] = -1 ; if troop is used, replace enum value with -1
-					ExitLoop
-				EndIf
-			Next
-		Next
-		_ArrayShuffle($aiUsedTroop) ; make missing training order assignment random
-		For $i = 0 To UBound($g_aiCmbCustomTrainOrder) - 1
-			If $g_aiCmbCustomTrainOrder[$i] = -1 Then ; check if custom order index is not set
-				For $j = 0 To UBound($aiUsedTroop) - 1
-					If $aiUsedTroop[$j] <> -1 Then ; loop till find a valid troop enum
-						$g_aiCmbCustomTrainOrder[$i] = $aiUsedTroop[$j] ; assign unused troop
-						_GUICtrlComboBox_SetCurSel($g_ahCmbTroopOrder[$i], $aiUsedTroop[$j])
-						_GUICtrlSetImage($g_ahImgTroopOrder[$i], $g_sLibIconPath, $g_aiTroopOrderIcon[$g_aiCmbCustomTrainOrder[$i] + 1])
-						$aiUsedTroop[$j] = -1 ; remove unused troop from array
-						ExitLoop
-					EndIf
-				Next
-			EndIf
-		Next
-	EndIf
-
-	If $bReady Then
-		ChangeTroopTrainOrder() ; code function to record new training order
-		If @error Then
-			Switch @error
-				Case 1
-					SetLog("Code problem, can not continue till fixed!", $COLOR_ERROR)
-				Case 2
-					SetLog("Bad Combobox selections, please fix!", $COLOR_ERROR)
-				Case 3
-					SetLog("Unable to Change Troop Train Order due bad change count!", $COLOR_ERROR)
-				Case Else
-					SetLog("Monkey ate bad banana, something wrong with ChangeTroopTrainOrder() code!", $COLOR_ERROR)
-			EndSwitch
-			_GUICtrlSetImage($g_ahImgTroopOrderSet, $g_sLibIconPath, $eIcnRedLight)
-		Else
-			SetLog("Troop training order changed successfully!", $COLOR_SUCCESS)
-			For $i = 0 To $eTroopCount - 1
-				$sNewTrainList &= $g_asTroopShortNames[$g_aiTrainOrder[$i]] & ", "
-			Next
-			$sNewTrainList = StringTrimRight($sNewTrainList, 2)
-			SetLog("Troop train order= " & $sNewTrainList, $COLOR_INFO)
-		EndIf
-	Else
-		SetLog("Must use all troops and No duplicate troop names!", $COLOR_ERROR)
-		_GUICtrlSetImage($g_ahImgTroopOrderSet, $g_sLibIconPath, $eIcnRedLight)
-	EndIf
-	;	GUICtrlSetState($g_hBtnTroopOrderSet, $GUI_DISABLE)
-	SetRedrawBotWindow($bWasRedraw, Default, Default, Default, "BtnTroopOrderSet")
-EndFunc   ;==>BtnTroopOrderSet
-#ce
-Func ChangeSpellsBrewOrder()
-	If $g_bDebugSetlog Or $g_bDebugSetlogTrain Then SetLog("Begin Func ChangeSpellsBrewOrder()", $COLOR_DEBUG) ;Debug
-
-	Local $NewTroopOrder[$eSpellCount]
-	Local $iUpdateCount = 0
-
-	If Not IsUseCustomSpellsOrder() Then ; check if no custom troop values saved yet.
-		SetError(2, 0, False)
-		Return
-	EndIf
-
-	; Look for match of combobox text to troopgroup and create new train order
-	For $i = 0 To UBound($g_ahCmbSpellsOrder) - 1
-		Local $sComboText = GUICtrlRead($g_ahCmbSpellsOrder[$i])
-		For $j = 0 To UBound($g_asSpellsOrderList) - 1
-			If $sComboText = $g_asSpellsOrderList[$j] Then
-				$NewTroopOrder[$i] = $j - 1
-				$iUpdateCount += 1
-				ExitLoop
-			EndIf
-		Next
-	Next
-
-	If $iUpdateCount = $eSpellCount Then ; safety check that all troops properly assigned to new array.
-		For $i = 0 To $eSpellCount - 1
-			$g_aiBrewOrder[$i] = $NewTroopOrder[$i]
-		Next
-		_GUICtrlSetImage($g_ahImgSpellsOrderSet, $g_sLibIconPath, $eIcnGreenLight)
-	Else
-		SetLog($iUpdateCount & "|" & $eSpellCount & " - Error - Bad Spells assignment in ChangeSpellsBrewOrder()", $COLOR_ERROR)
-		SetError(3, 0, False)
-		Return
-	EndIf
-
-	Return True
-
-EndFunc   ;==>ChangeSpellsBrewOrder
-#cs
-Func ChangeTroopTrainOrder()
-
-	If $g_bDebugSetlog Or $g_bDebugSetlogTrain Then SetLog("Begin Func ChangeTroopTrainOrder()", $COLOR_DEBUG) ;Debug
-
-	Local $NewTroopOrder[$eTroopCount]
-	Local $iUpdateCount = 0
-
-	If Not IsUseCustomTroopOrder() Then ; check if no custom troop values saved yet.
-		SetError(2, 0, False)
-		Return
-	EndIf
-
-	; Look for match of combobox text to troopgroup and create new train order
-	For $i = 0 To UBound($g_ahCmbTroopOrder) - 1
-		Local $sComboText = GUICtrlRead($g_ahCmbTroopOrder[$i])
-		For $j = 0 To UBound($g_asTroopOrderList) - 1
-			If $sComboText = $g_asTroopOrderList[$j] Then
-				$NewTroopOrder[$i] = $j - 1
-				$iUpdateCount += 1
-				ExitLoop
-			EndIf
-		Next
-	Next
-
-	If $iUpdateCount = $eTroopCount Then ; safety check that all troops properly assigned to new array.
-		For $i = 0 To $eTroopCount - 1
-			$g_aiTrainOrder[$i] = $NewTroopOrder[$i]
-		Next
-		_GUICtrlSetImage($g_ahImgTroopOrderSet, $g_sLibIconPath, $eIcnGreenLight)
-	Else
-		SetLog($iUpdateCount & "|" & $eTroopCount & " - Error - Bad troop assignment in ChangeTroopTrainOrder()", $COLOR_ERROR)
-		SetError(3, 0, False)
-		Return
-	EndIf
-
-	Return True
-EndFunc   ;==>ChangeTroopTrainOrder
-#ce
 Func SetDefaultTroopGroup($bSetLog = True)
 	For $i = 0 To $eTroopCount - 1
 		$g_aiTrainOrder[$i] = $i
@@ -846,28 +525,6 @@ Func SetDefaultSpellsGroup($bSetLog = True)
 
 	If ($bSetLog Or $g_bDebugSetlogTrain) And $g_bCustomTrainOrderEnable Then SetLog("Default Spells Brew order set", $COLOR_SUCCESS)
 EndFunc   ;==>SetDefaultSpellsGroup
-
-Func IsUseCustomSpellsOrder()
-	For $i = 0 To UBound($g_aiCmbCustomBrewOrder) - 1 ; Check if custom train order has been used, to select log message
-		If $g_aiCmbCustomBrewOrder[$i] = -1 Then
-			If $g_bDebugSetlogTrain And $g_bCustomBrewOrderEnable Then SetLog("Custom Spell order not used...", $COLOR_DEBUG) ;Debug
-			Return False
-		EndIf
-	Next
-	If $g_bDebugSetlogTrain And $g_bCustomBrewOrderEnable Then SetLog("Custom Spell order used...", $COLOR_DEBUG) ;Debug
-	Return True
-EndFunc   ;==>IsUseCustomSpellsOrder
-
-Func IsUseCustomTroopOrder()
-	For $i = 0 To UBound($g_aiCmbCustomTrainOrder) - 1 ; Check if custom train order has been used, to select log message
-		If $g_aiCmbCustomTrainOrder[$i] = -1 Then
-			If $g_bDebugSetlogTrain And $g_bCustomTrainOrderEnable Then SetLog("Custom train order not used...", $COLOR_DEBUG) ;Debug
-			Return False
-		EndIf
-	Next
-	If $g_bDebugSetlogTrain And $g_bCustomTrainOrderEnable Then SetLog("Custom train order used...", $COLOR_DEBUG) ;Debug
-	Return True
-EndFunc   ;==>IsUseCustomTroopOrder
 
 Func LevUpDownTroop($iTroopIndex, $NoChangeLev = True)
 	Local $MaxLev = $g_aiTroopCostPerLevel[$iTroopIndex][0]
@@ -1087,19 +744,43 @@ Func CalculTimeTo($TotalTotalTime)
 	Return $TotalTotalTimeTo
 EndFunc   ;==>CalculTimeTo
 
-Func Removecamp()
+Func Removecamptroops()
 	For $T = 0 To $eTroopCount - 1
 		$g_aiArmyCustomTroops[$T] = 0
 		$g_aiTrainArmyTroopLevel[$T] = 0
 		GUICtrlSetData($g_ahTxtTrainArmyTroopCount[$T], $g_aiArmyCustomTroops[$T])
 		GUICtrlSetData($g_ahLblTrainArmyTroopLevel[$T], $g_aiTrainArmyTroopLevel[$T])
 	Next
+
+	GUICtrlSetData($g_hCalTotalTroops, 0)
+	GUICtrlSetData($g_hLblTotalTimeCamp, " 0s")
+	GUICtrlSetData($g_hLblElixirCostCamp, "0")
+	GUICtrlSetData($g_hLblDarkCostCamp, "0")
+	GUICtrlSetData($g_hLblCountTotal, 0)
+	GUICtrlSetBkColor($g_hLblCountTotal, $COLOR_MONEYGREEN)
+	
+	BtnRemoveTroops()
+EndFunc   ;==>Removecamptroops
+
+Func Removecampspells()
 	For $S = 0 To $eSpellCount - 1
 		$g_aiArmyCustomSpells[$S] = 0
 		$g_aiTrainArmySpellLevel[$S] = 0
 		GUICtrlSetData($g_ahTxtTrainArmySpellCount[$S], $g_aiArmyCustomSpells[$S])
 		GUICtrlSetData($g_ahLblTrainArmySpellLevel[$S], $g_aiTrainArmySpellLevel[$S])
 	Next
+
+	GUICtrlSetData($g_hLblTotalTimeSpell, " 0s")
+	GUICtrlSetData($g_hLblElixirCostSpell, "0")
+	GUICtrlSetData($g_hLblDarkCostSpell, "0")
+	For $i = 0 To $eSpellCount - 1
+		GUICtrlSetBkColor($g_ahTxtTrainArmySpellCount[$i], 0xD1DFE7) ; Custom - Team AIO Mod++
+	Next
+	
+	BtnRemoveTroops()
+EndFunc   ;==>Removecampspells
+
+Func Removecampsieges()
 	For $S = 0 To $eSiegeMachineCount - 1
 		$g_aiArmyCompSiegeMachines[$S] = 0
 		$g_aiTrainArmySiegeMachineLevel[$S] = 0
@@ -1107,23 +788,12 @@ Func Removecamp()
 		GUICtrlSetData($g_ahLblTrainArmySiegeLevel[$S], $g_aiTrainArmySiegeMachineLevel[$S])
 	Next
 
-	GUICtrlSetData($g_hCalTotalTroops, 0)
-	GUICtrlSetData($g_hLblTotalTimeCamp, " 0s")
-	GUICtrlSetData($g_hLblTotalTimeSpell, " 0s")
-	GUICtrlSetData($g_hLblElixirCostCamp, "0")
-	GUICtrlSetData($g_hLblDarkCostCamp, "0")
-	GUICtrlSetData($g_hLblElixirCostSpell, "0")
-	GUICtrlSetData($g_hLblDarkCostSpell, "0")
-	GUICtrlSetData($g_hLblCountTotal, 0)
 	GUICtrlSetData($g_hLblGoldCostSiege, "0")
 	GUICtrlSetData($g_hLblCountTotalSiege, 0)
 	GUICtrlSetData($g_hLblTotalTimeSiege, " 0s")
-	GUICtrlSetBkColor($g_hLblCountTotal, $COLOR_MONEYGREEN)
-	For $i = 0 To $eSpellCount - 1
-		GUICtrlSetBkColor($g_ahTxtTrainArmySpellCount[$i], 0xD1DFE7) ; Custom - Team AIO Mod++
-	Next
 	GUICtrlSetBkColor($g_hLblCountTotalSiege, $COLOR_MONEYGREEN)
-EndFunc   ;==>Removecamp
+	
+EndFunc   ;==>Removecampsieges
 
 Func TrainTroopCountEdit()
 	For $i = 0 To $eTroopCount - 1

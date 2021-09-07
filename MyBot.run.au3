@@ -1047,7 +1047,12 @@ Func _Idle() ;Sequence that runs until Full Army
 		If $g_iCommandStop = 0 And $g_bTrainEnabled Then
 			If Not ($g_bIsFullArmywithHeroesAndSpells) Then
 				If $g_iActualTrainSkip < $g_iMaxTrainSkip Then
-					If CheckNeedOpenTrain($g_sTimeBeforeTrain) Or (ProfileSwitchAccountEnabled() And $g_iActiveDonate And $g_bChkDonate) Then TrainSystem() ; force check trainsystem after donate and before switch account
+                    #Region - Custom train - Team AIO Mod++
+                    If CheckNeedOpenTrain($g_sTimeBeforeTrain) Or (ProfileSwitchAccountEnabled() And $g_iActiveDonate And $g_bChkDonate) Then
+                        $g_bForceDoubleTrain = True ; Force double train before switch account.
+                        TrainSystem() ; force check trainsystem after donate and before switch account
+                    EndIf
+                    #EndRegion - Custom train - Team AIO Mod++
 					If $g_bRestart Then ExitLoop
 					If _Sleep($DELAYIDLE1) Then ExitLoop
 					checkMainScreen(False)
@@ -1560,19 +1565,11 @@ Func FirstCheck()
 	If $g_bRestart Then Return
 
 	If BotCommand() Then btnStop()
-
-	#Region - Custom - xbebenk - Team AIO Mod++
-	; Only Farm - Team__AiO__MOD
-	If Not $g_bChkOnlyFarm Then
-		FirstCheckRoutine()
-		VillageReport()
-	EndIf
-
-	If BotCommand() Then btnStop()
-
 	If ProfileSwitchAccountEnabled() And $g_iCommandStop = 0 Then
 		; Only Farm - Team__AiO__MOD
-		If Not $g_bChkOnlyFarm Then
+		If $g_bChkOnlyFarm = False Then
+			FirstCheckRoutine()
+			VillageReport()
 			_RunFunction('BuilderBase')
 		EndIf
 

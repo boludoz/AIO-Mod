@@ -2296,6 +2296,11 @@ Func ApplyConfig_600_52_2($TypeReadSave)
 			; DoubleTrain - Demen
 			GUICtrlSetState($g_hChkDoubleTrain, $g_bDoubleTrain ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkPreciseArmy, $g_bPreciseArmy ? $GUI_CHECKED : $GUI_UNCHECKED)
+			#Region - Custom train - Team AIO Mod++
+			GUICtrlSetState($g_hChkPreTrainTroopsPercent, $g_bChkPreTrainTroopsPercent ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetData($g_hInpPreTrainTroopsPercent, $g_iInpPreTrainTroopsPercent)
+			chkDoubleTrain()
+			#EndRegion - Custom train - Team AIO Mod++
 		Case "Save"
 			; troop/spell levels and counts
 			For $T = 0 To $eTroopCount - 1
@@ -2319,69 +2324,23 @@ Func ApplyConfig_600_52_2($TypeReadSave)
 			; DoubleTrain - Demen
 			$g_bDoubleTrain = (GUICtrlRead($g_hChkDoubleTrain) = $GUI_CHECKED)
 			$g_bPreciseArmy = (GUICtrlRead($g_hChkPreciseArmy) = $GUI_CHECKED)
+			#Region - Custom train - Team AIO Mod++
+			$g_bChkPreTrainTroopsPercent = (GUICtrlRead($g_hChkPreTrainTroopsPercent) = $GUI_CHECKED)
+			$g_iInpPreTrainTroopsPercent = Int(GUICtrlRead($g_hInpPreTrainTroopsPercent))
+			#EndRegion - Custom train - Team AIO Mod++
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_52_2
 
 Func ApplyConfig_600_54($TypeReadSave)
-	#CS
 	; <><><> Attack Plan / Train Army / Train Order <><><>
 	Switch $TypeReadSave
 		Case "Read"
-			; Troops Order
-			GUICtrlSetState($g_hChkCustomTrainOrderEnable, $g_bCustomTrainOrderEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
-			chkTroopOrder()
-			For $z = 0 To UBound($g_ahCmbTroopOrder) - 1
-				_GUICtrlComboBox_SetCurSel($g_ahCmbTroopOrder[$z], $g_aiCmbCustomTrainOrder[$z])
-				_GUICtrlSetImage($g_ahImgTroopOrder[$z], $g_sLibIconPath, $g_aiTroopOrderIcon[$g_aiCmbCustomTrainOrder[$z] + 1])
-			Next
-			If $g_bCustomTrainOrderEnable Then ; only update troop train order if enabled
-				If Not ChangeTroopTrainOrder() Then ; process error
-					SetDefaultTroopGroup()
-					GUICtrlSetState($g_hChkCustomTrainOrderEnable, $GUI_UNCHECKED)
-					$g_bCustomTrainOrderEnable = False
-					GUICtrlSetState($g_hBtnTroopOrderSet, $GUI_DISABLE) ; disable button
-					GUICtrlSetState($g_hBtnRemoveTroops, $GUI_DISABLE)
-					For $i = 0 To UBound($g_ahCmbTroopOrder) - 1
-						GUICtrlSetState($g_ahCmbTroopOrder[$i], $GUI_DISABLE) ; disable combo boxes
-					Next
-				EndIf
-			EndIf
-			; Spells Order
-			GUICtrlSetState($g_hChkCustomBrewOrderEnable, $g_bCustomBrewOrderEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
-			chkSpellsOrder()
-			For $z = 0 To UBound($g_ahCmbSpellsOrder) - 1
-				_GUICtrlComboBox_SetCurSel($g_ahCmbSpellsOrder[$z], $g_aiCmbCustomBrewOrder[$z])
-				_GUICtrlSetImage($g_ahImgSpellsOrder[$z], $g_sLibIconPath, $g_aiSpellsOrderIcon[$g_aiCmbCustomBrewOrder[$z] + 1])
-			Next
-			If $g_bCustomBrewOrderEnable Then ; only update troop train order if enabled
-				If Not ChangeSpellsBrewOrder() Then ; process error
-					SetDefaultSpellsGroup()
-					GUICtrlSetState($g_hChkCustomBrewOrderEnable, $GUI_UNCHECKED)
-					$g_bCustomBrewOrderEnable = False
-					GUICtrlSetState($g_hBtnRemoveSpells, $GUI_DISABLE) ; disable button
-					GUICtrlSetState($g_hBtnSpellsOrderSet, $GUI_DISABLE)
-					For $i = 0 To UBound($g_ahCmbSpellsOrder) - 1
-						GUICtrlSetState($g_ahCmbSpellsOrder[$i], $GUI_DISABLE) ; disable combo boxes
-					Next
-				EndIf
-			EndIf
-
 			chkTotalCampForced()
 			radSelectTrainType() ; this function also calls calls lblTotalCount and TotalSpellCountClick
 			SetComboTroopComp() ; this function also calls lblTotalCount
 		Case "Save"
-			; Troops Order
-			$g_bCustomTrainOrderEnable = (GUICtrlRead($g_hChkCustomTrainOrderEnable) = $GUI_CHECKED)
-			For $z = 0 To UBound($g_ahCmbTroopOrder) - 1
-				$g_aiCmbCustomTrainOrder[$z] = _GUICtrlComboBox_GetCurSel($g_ahCmbTroopOrder[$z])
-			Next
-			; Spells Order
-			$g_bCustomBrewOrderEnable = (GUICtrlRead($g_hChkCustomBrewOrderEnable) = $GUI_CHECKED)
-			For $z = 0 To UBound($g_ahCmbSpellsOrder) - 1
-				$g_aiCmbCustomBrewOrder[$z] = _GUICtrlComboBox_GetCurSel($g_ahCmbSpellsOrder[$z])
-			Next
 	EndSwitch
-	#CE
+
 EndFunc   ;==>ApplyConfig_600_54
 
 Func ApplyConfig_600_56($TypeReadSave)
