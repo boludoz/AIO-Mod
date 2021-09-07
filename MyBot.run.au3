@@ -1473,18 +1473,12 @@ Func FirstCheck()
 
 	If BotCommand() Then btnStop()
 	
-	#Region - Custom - xbebenk - Team AIO Mod++
-	; Only Farm - Team__AiO__MOD
-	If Not $g_bChkOnlyFarm Then
-		FirstCheckRoutine()
-		VillageReport()
-	EndIf
-	
-	If BotCommand() Then btnStop()
-	
+	#Region - Custom - xbebenk - Team AIO Mod++	
 	If ProfileSwitchAccountEnabled() And $g_iCommandStop = 0 Then
 		; Only Farm - Team__AiO__MOD
-		If Not $g_bChkOnlyFarm Then
+		If $g_bChkOnlyFarm = False Then
+			FirstCheckRoutine()
+			VillageReport()
 			_RunFunction('BuilderBase')
 		EndIf
 		
