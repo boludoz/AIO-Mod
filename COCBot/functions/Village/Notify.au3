@@ -64,7 +64,7 @@ Func NotifyReport()
 		EndIf
 	EndIf
 	If _Sleep($DELAYNOTIFY1) Then Return
-	checkMainScreen(False)
+	; checkMainScreen(False)
 EndFunc   ;==>NotifyReport
 
 ; GENERAL FUNCTION TO PUSH MSG
