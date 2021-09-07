@@ -135,6 +135,11 @@ Global $g_aRequestTroopsTextOT[0][2]
 Global $g_aRequestTroopsTextOTR[0][2]
 #EndRegion - Type once - Team AIO Mod++
 
+#Region - Custom train - Team AIO Mod++
+Global $g_bChkPreTrainTroopsPercent = True, $g_iInpPreTrainTroopsPercent = 95, $g_bForceDoubleTrain = False
+Global $g_hChkPreTrainTroopsPercent = 0, $g_hInpPreTrainTroopsPercent = 0
+#EndRegion - Custom train - Team AIO Mod++
+
 ; Debug tag for some capture modes.
 Global $g_sFMQTag = "" ; For debug folder.
 Global $g_sTagCallMybotCall = ""

@@ -17,7 +17,7 @@
 
 Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 
-	; If Not $g_bDoubleTrain Then Return
+	; If Not $g_bDoubleTrain Then Return ; Custom train - Team AIO Mod++
 	Local $bDebug = $g_bDebugSetlogTrain Or $g_bDebugSetlog
 
 	If $bDebug then SetLog(" == Double Train Army == ", $COLOR_ACTION)

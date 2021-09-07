@@ -116,6 +116,14 @@ Func chkTotalCampForced()
 	GUICtrlSetState($g_hTxtTotalCampForced, GUICtrlRead($g_hChkTotalCampForced) = $GUI_CHECKED ? $GUI_ENABLE : $GUI_DISABLE)
 EndFunc   ;==>chkTotalCampForced
 
+#Region - Custom train - Team AIO Mod++
+Func chkDoubleTrain()
+	$g_bDoubleTrain = (GUICtrlRead($g_hChkDoubleTrain) = $GUI_CHECKED)
+	GUICtrlSetState($g_hChkPreTrainTroopsPercent, ($g_bDoubleTrain = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+	GUICtrlSetState($g_hInpPreTrainTroopsPercent, ($g_bDoubleTrain = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+EndFunc   ;==>chkTotalCampForced
+#EndRegion - Custom train - Team AIO Mod++
+
 Func lblTotalCountTroop1()
 	; Calculate count of troops, set progress bars, colors
 	Local $TotalTroopsToTrain = 0

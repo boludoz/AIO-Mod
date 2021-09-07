@@ -1032,11 +1032,22 @@ Func CreateTrainTroops()
 	$g_hChkPreciseArmy = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "ChkPreciseArmy", "Precise Army"), $x + 10, $y, -1, -1)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Precise ArmyTip", "Always check and remove wrong troops or spells exist in army"))
 	
-	$g_hChkDoubleTrain = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "ChkDoubleTrain", "Double Train"), $x + 100 + 170, $y, -1, -1)
+	$g_hChkDoubleTrain = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "ChkDoubleTrain", "Double Train"), $x + 160, $y, -1, -1)
+	GUICtrlSetOnEvent(-1, "ChkDoubleTrain") ; Custom train - Team AIO Mod++
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "DoubleTrainTip", "Train 2nd set of Troops & Spells after training 1st combo") & @CRLF & _
 			GetTranslatedFileIni("MBR Global GUI Design", "DoubleTrainTip1", "Make sure to enter exactly the 'Total Camp',") & @CRLF & _
 			GetTranslatedFileIni("MBR Global GUI Design", "DoubleTrainTip2", "'Total Spell' and number of Troops/Spells in your Setting") & @CRLF & _
 			GetTranslatedFileIni("MBR Global GUI Design", "DoubleTrainTip3", "Note: Donations + Double Train can produce an unbalanced army!"))
+	
+	#Region - Custom train - Team AIO Mod++
+	$g_hChkPreTrainTroopsPercent = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "ChkDoubleTrainIf", "Double if") & " " & ChrW(8805), $x + 100 + 170 - 20, $y, -1, -1)
+
+	$g_hInpPreTrainTroopsPercent = _GUICtrlCreateInput("100", $x + 100 + 242 - 20, $y, 30, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "TxtDoubleTrainIf_Info_01", "Only double train when reaching this %."))
+			GUICtrlSetLimit(-1, 3)
+			GUICtrlCreateLabel("%", $x + 100 + 273 - 20, $y+2, -1, 17)
+	#EndRegion - Custom train - Team AIO Mod++
+
 
 	$y += 25
 	$g_hChkTotalCampForced = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "ChkTotalCampForced", "Force Army Camp") & ":", $x + 10, $y, -1, -1)

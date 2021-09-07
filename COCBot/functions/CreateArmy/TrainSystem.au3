@@ -15,11 +15,10 @@
 #include-once
 #include <Array.au3>
 #include <MsgBoxConstants.au3>
-Global $g_bChkPreTrainTroopsPercent = True, $g_iInpPreTrainStrength = 38
-
 Func TrainSystem()
 	If Not $g_bTrainEnabled Then ; check for training disabled in halt mode
 		If $g_bDebugSetlogTrain Then SetLog("Halt mode - training disabled", $COLOR_DEBUG)
+		$g_bForceDoubleTrain = False ; Custom train - Team AIO Mod++
 		Return
 	EndIf
 
@@ -30,11 +29,15 @@ Func TrainSystem()
 
 	CheckIfArmyIsReady()
 	
+	#Region - Custom train - Team AIO Mod++
 	Local $bPreTrainFlag = $g_bDoubleTrain
-	If $g_bChkPreTrainTroopsPercent Then
-		If $g_iArmyCapacity >= $g_iInpPreTrainStrength Then
-			$bPreTrainFlag = True
-		EndIf
+	If $g_bChkPreTrainTroopsPercent And $g_bForceDoubleTrain = False Then
+		SetLog("Success of the double train condition.", $COLOR_SUCCESS)
+		$bPreTrainFlag = ($g_iArmyCapacity >= $g_iInpPreTrainTroopsPercent)
+	ElseIf $g_bForceDoubleTrain = True Then
+		SetLog("Force double train before switch account.", $COLOR_SUCCESS)
+		$g_bForceDoubleTrain = False
+		$bPreTrainFlag = True
 	EndIf
 						
 	If $g_bQuickTrainEnable Then
@@ -42,6 +45,7 @@ Func TrainSystem()
 	Else
 		TrainCustomArmy($bPreTrainFlag)
 	EndIf
+	#EndRegion - Custom train - Team AIO Mod++
 
 	TrainSiege()
 
@@ -55,7 +59,7 @@ Func TrainSystem()
 	checkAttackDisable($g_iTaBChkIdle) ; Check for Take-A-Break after opening train page
 EndFunc   ;==>TrainSystem
 
-Func TrainCustomArmy($bPreTrainFlag = $g_bDoubleTrain)
+Func TrainCustomArmy($bPreTrainFlag = $g_bDoubleTrain) ; Custom train - Team AIO Mod++
 	If Not $g_bRunState Then Return
 
 	If $g_bDebugSetlogTrain Then SetLog(" == Initial Custom Train == ", $COLOR_ACTION)
@@ -63,7 +67,7 @@ Func TrainCustomArmy($bPreTrainFlag = $g_bDoubleTrain)
 	;If $bDonateTrain = -1 Then SetbDonateTrain()
 	If $g_iActiveDonate = -1 Then PrepareDonateCC()
 
-	If $bPreTrainFlag = True Then
+	If $bPreTrainFlag = True Then ; Custom train - Team AIO Mod++
 		DoubleTrain()
 		Return
 	EndIf
