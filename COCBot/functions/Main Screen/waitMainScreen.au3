@@ -1,4 +1,3 @@
-
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: waitMainScreen
 ; Description ...: Waits 5 minutes for the pixel of mainscreen to be located, checks for obstacles every 2 seconds.  After five minutes, will try to restart bluestacks.
@@ -19,7 +18,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 	Local $iCount
 	SetLog("Waiting for Main Screen")
 	$iCount = 0
-	Local $aPixelToCheck = ($g_bStayOnBuilderBase = True) ? ($aIsOnBuilderBase) : ($aIsMain)
+	Local $aPixelToCheck = $g_bStayOnBuilderBase ? $aIsOnBuilderBase : $aIsMain
 	For $i = 0 To 105 ;105*2000 = 3.5 Minutes
 		If Not $g_bRunState Then Return
 		If $g_bDebugSetlog Then SetDebugLog("waitMainScreen ChkObstl Loop = " & $i & ", ExitLoop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop
@@ -62,9 +61,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 
 	; If mainscreen is not found, then fix it
 	$iCount = 0
-    While 1
-        SetLog("Main Screen While loop", $COLOR_INFO)
-		
+	While 1
 		If Not $g_bRunState Then Return
 		SetLog("Unable to load CoC, attempt to fix it", $COLOR_ERROR)
 		If $g_bDebugSetlog Then SetDebugLog("Restart Loop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop data
@@ -77,6 +74,14 @@ Func waitMainScreen() ;Waits for main screen to popup
 		EndIf
 		If _CheckPixel($aPixelToCheck, $g_bCapturePixel) = True Then ExitLoop
 		CheckObstacles() ; Check for random error windows and close them
+		#Region - Custom fix - Team AIO Mod++
+		; This check if coc is active in first plane.
+		Local $sDumpsys = AndroidAdbSendShellCommand("dumpsys window windows | grep -E 'mCurrentFocus'", Default)
+		If StringInStr($sDumpsys, $g_sAndroidGamePackage) < 1 Then 
+			SetLog("Clash of Clans is not active, the bot solves it.", $COLOR_INFO)
+			OpenCoC()
+		EndIf
+		#EndRegion - Custom fix - Team AIO Mod++
 		$iCount += 1
 		If $iCount > 2 Then ; If we can't restart BS after 2 tries, exit the loop
 			SetLog("Stuck trying to Restart " & $g_sAndroidEmulator & "...", $COLOR_ERROR)
@@ -90,33 +95,40 @@ EndFunc   ;==>waitMainScreen
 
 Func waitMainScreenMini()
 	If Not $g_bRunState Then Return
-	Local $iCount = 0
 	Local $hTimer = __TimerInit()
 	SetDebugLog("waitMainScreenMini")
 	If TestCapture() = False Then getBSPos() ; Update Android Window Positions
 	SetLog("Waiting for Main Screen after " & $g_sAndroidEmulator & " restart", $COLOR_INFO)
-	autoHideAndDockAndMinimize(False) ; Auto Dock, Hide Emulator & Bot - Team AiO MOD++
-	Local $aPixelToCheck = ($g_bStayOnBuilderBase = True) ? ($aIsOnBuilderBase) : ($aIsMain)
-    For $i = 0 To 10
-		SetLog("[" & $i & "] Waiting main screen", $COLOR_INFO)
+	Local $aPixelToCheck = $g_bStayOnBuilderBase ? $aIsOnBuilderBase : $aIsMain
+	Local $iEndLoop = 80
+	For $i = 1 To 80
 		If Not $g_bRunState Then Return
 		If Not TestCapture() And WinGetAndroidHandle() = 0 Then ExitLoop ; sets @error to 1
-		If $g_bDebugSetlog Then SetDebugLog("waitMainScreenMini ChkObstl Loop = " & $i & " ExitLoop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop
-		$iCount += 1
+	    SetLog("[" & $i & "/" & $iEndLoop & "] Waiting main screen", $COLOR_INFO)	
+		
+		#Region - Custom fix - Team AIO Mod++
+		; This check if coc is active in first plane.
+		Local $sDumpsys = AndroidAdbSendShellCommand("dumpsys window windows | grep -E 'mCurrentFocus'", Default)
+		If StringInStr($sDumpsys, $g_sAndroidGamePackage) < 1 Then 
+			SetLog("Clash of Clans is not active, the bot solves it.", $COLOR_INFO)
+			OpenCoC()
+			ContinueLoop
+		EndIf
+		#EndRegion - Custom fix - Team AIO Mod++
+
 		_CaptureRegion()
 		If Not _CheckPixel($aPixelToCheck, $g_bNoCapturePixel) Then ;Checks for Main Screen
 			If Not TestCapture() And _Sleep(1000) Then Return
-            If CheckObstacles() Then Return ;See if there is anything in the way of mainscreen
+			If CheckObstacles() Then $i = 0 ;See if there is anything in the way of mainscreen
 		Else
 			SetLog("CoC main window took " & Round(__TimerDiff($hTimer) / 1000, 2) & " seconds", $COLOR_SUCCESS)
 			Return
 		EndIf
+		
 		_StatusUpdateTime($hTimer, "Main Screen")
-        If ($i > 10) Or ($iCount > 80) Then ExitLoop ; If CheckObstacles forces reset, limit total time to 6 minute before Force restart BS
 		If TestCapture() Then
 			Return "Main screen not available"
 		EndIf
 	Next
-    Return RebootAndroid(True)
-    ; Return SetError(1, 0, -1)
+	Return SetError(1, 0, -1)
 EndFunc   ;==>waitMainScreenMini
