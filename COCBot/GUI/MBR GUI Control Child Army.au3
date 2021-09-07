@@ -119,7 +119,7 @@ EndFunc   ;==>chkTotalCampForced
 #Region - Custom train - Team AIO Mod++
 Func chkDoubleTrain()
 	$g_bDoubleTrain = (GUICtrlRead($g_hChkDoubleTrain) = $GUI_CHECKED)
-	GUICtrlSetState($g_hChkPreTrainTroopsPercent, ($g_bDoubleTrain = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+	GUICtrlSetState($g_hChkPreTrainTroopsPercent, ($g_bDoubleTrain = True) ? ($GUI_ENABLE) : ($GUI_DISABLE + $GUI_UNCHECKED))
 	GUICtrlSetState($g_hInpPreTrainTroopsPercent, ($g_bDoubleTrain = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
 EndFunc   ;==>chkTotalCampForced
 #EndRegion - Custom train - Team AIO Mod++
