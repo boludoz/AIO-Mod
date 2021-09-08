@@ -44,7 +44,23 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 	If Not $bRecursive Then
 		If checkObstacles_Network() Then Return True
 		If checkObstacles_GfxError() Then Return True
+		
+		#Region - Custom fix - Team AIO Mod++
+		; This check if coc is active in first plane.
+		Local $sDumpsys = AndroidAdbSendShellCommand("dumpsys window windows | grep -E 'mCurrentFocus'", Default)
+		If StringInStr($sDumpsys, $g_sAndroidGamePackage) < 1 And StringInStr($sDumpsys, "mCurrentFocus") > 0 Then 
+			SetLog("Clash of Clans is not active, the bot solves it.", $COLOR_INFO)
+			
+			If Not StartAndroidCoC() Then Return False
+			If Not $g_bRunState Then Return
+			
+			$g_bMinorObstacle = True
+			If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+			Return False
+		EndIf
+		#EndRegion - Custom fix - Team AIO Mod++
 	EndIf
+	
 	Local $bIsOnBuilderIsland = isOnBuilderBase()
 	Local $bIsOnMainVillage = isOnMainVillage()
 	If $bBuilderBase <> $bIsOnBuilderIsland And ($bIsOnBuilderIsland Or $bIsOnBuilderIsland <> $bIsOnMainVillage) Then

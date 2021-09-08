@@ -74,14 +74,6 @@ Func waitMainScreen() ;Waits for main screen to popup
 		EndIf
 		If _CheckPixel($aPixelToCheck, $g_bCapturePixel) = True Then ExitLoop
 		CheckObstacles() ; Check for random error windows and close them
-		#Region - Custom fix - Team AIO Mod++
-		; This check if coc is active in first plane.
-		Local $sDumpsys = AndroidAdbSendShellCommand("dumpsys window windows | grep -E 'mCurrentFocus'", Default)
-		If StringInStr($sDumpsys, $g_sAndroidGamePackage) < 1 Then 
-			SetLog("Clash of Clans is not active, the bot solves it.", $COLOR_INFO)
-			OpenCoC()
-		EndIf
-		#EndRegion - Custom fix - Team AIO Mod++
 		$iCount += 1
 		If $iCount > 2 Then ; If we can't restart BS after 2 tries, exit the loop
 			SetLog("Stuck trying to Restart " & $g_sAndroidEmulator & "...", $COLOR_ERROR)
@@ -106,16 +98,6 @@ Func waitMainScreenMini()
 		If Not TestCapture() And WinGetAndroidHandle() = 0 Then ExitLoop ; sets @error to 1
 	    SetLog("[" & $i & "/" & $iEndLoop & "] Waiting main screen", $COLOR_INFO)	
 		
-		#Region - Custom fix - Team AIO Mod++
-		; This check if coc is active in first plane.
-		Local $sDumpsys = AndroidAdbSendShellCommand("dumpsys window windows | grep -E 'mCurrentFocus'", Default)
-		If StringInStr($sDumpsys, $g_sAndroidGamePackage) < 1 Then 
-			SetLog("Clash of Clans is not active, the bot solves it.", $COLOR_INFO)
-			OpenCoC()
-			ContinueLoop
-		EndIf
-		#EndRegion - Custom fix - Team AIO Mod++
-
 		_CaptureRegion()
 		If Not _CheckPixel($aPixelToCheck, $g_bNoCapturePixel) Then ;Checks for Main Screen
 			If Not TestCapture() And _Sleep(1000) Then Return
