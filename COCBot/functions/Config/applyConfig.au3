@@ -2332,15 +2332,65 @@ Func ApplyConfig_600_52_2($TypeReadSave)
 EndFunc   ;==>ApplyConfig_600_52_2
 
 Func ApplyConfig_600_54($TypeReadSave)
+	#Region - Custom Train - Team AIO Mod++
 	; <><><> Attack Plan / Train Army / Train Order <><><>
 	Switch $TypeReadSave
 		Case "Read"
+			; Troops Order
+			GUICtrlSetState($g_hChkCustomTrainOrderEnable, $g_bCustomTrainOrderEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
+			For $z = 0 To UBound($g_ahCmbTroopOrder) - 1
+				_GUICtrlComboBox_SetCurSel($g_ahCmbTroopOrder[$z], $g_aiCmbCustomTrainOrder[$z])
+			Next
+			; Spells Order
+			GUICtrlSetState($g_hChkCustomBrewOrderEnable, $g_bCustomBrewOrderEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
+			For $z = 0 To UBound($g_ahCmbSpellsOrder) - 1
+				_GUICtrlComboBox_SetCurSel($g_ahCmbSpellsOrder[$z], $g_aiCmbCustomBrewOrder[$z])
+			Next
+
 			chkTotalCampForced()
 			radSelectTrainType() ; this function also calls calls lblTotalCount and TotalSpellCountClick
 			SetComboTroopComp() ; this function also calls lblTotalCount
+			CustomTrainOrderEnable()
+			CustomBrewOrderEnable()
 		Case "Save"
-	EndSwitch
+			; Troops Order
+			$g_bCustomTrainOrderEnable = (GUICtrlRead($g_hChkCustomTrainOrderEnable) = $GUI_CHECKED)
+			For $z = 0 To UBound($g_ahCmbTroopOrder) - 1
+				$g_aiCmbCustomTrainOrder[$z] = _GUICtrlComboBox_GetCurSel($g_ahCmbTroopOrder[$z])
+			Next
+			; Spells Order
+			$g_bCustomBrewOrderEnable = (GUICtrlRead($g_hChkCustomBrewOrderEnable) = $GUI_CHECKED)
+			For $z = 0 To UBound($g_ahCmbSpellsOrder) - 1
+				$g_aiCmbCustomBrewOrder[$z] = _GUICtrlComboBox_GetCurSel($g_ahCmbSpellsOrder[$z])
+			Next
+			
+			Local $iTmp = 0, $iTmp2 = 0
+			$iTmp2 = UBound($g_ahCmbTroopOrder) - 1
+			If $g_bCustomTrainOrderEnable = False Then
+				For $z = 0 To $iTmp2
+					$g_aiTrainOrder[$z] = $z                                 
+				Next                                                         
+			Else
+				For $z = 0 To $iTmp2                 
+					$iTmp = Abs(Number($g_aiCmbCustomTrainOrder[$z]))
+					$g_aiTrainOrder[$iTmp] = $z
+				Next                                                         
+			EndIf
 
+			$iTmp2 = UBound($g_ahCmbSpellsOrder) - 1
+			If $g_bCustomBrewOrderEnable = False Then
+				For $z = 0 To $iTmp2
+					$g_aiBrewOrder[$z] = $z
+				Next
+			Else	
+				For $z = 0 To $iTmp2
+					$iTmp =	Abs(Number($g_aiCmbCustomBrewOrder[$z]))
+					$g_aiBrewOrder[$iTmp] = $z
+				Next
+			EndIf
+
+	EndSwitch
+	#EndRegion - Custom Train - Team AIO Mod++
 EndFunc   ;==>ApplyConfig_600_54
 
 Func ApplyConfig_600_56($TypeReadSave)

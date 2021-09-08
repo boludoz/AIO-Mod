@@ -427,27 +427,6 @@ Func sldTrainITDelay()
 	GUICtrlSetData($g_hLblTrainITDelayTime, $g_iTrainClickDelay & " ms")
 EndFunc   ;==>sldTrainITDelay
 
-Func chkSpellsOrder()
-	If GUICtrlRead($g_hChkCustomBrewOrderEnable) = $GUI_CHECKED Then
-		$g_bCustomBrewOrderEnable = True
-		For $i = 0 To UBound($g_ahCmbSpellsOrder) - 1
-			GUICtrlSetState($g_ahCmbSpellsOrder[$i], $GUI_ENABLE)
-		Next
-		GUICtrlSetState($g_hBtnRemoveSpells, $GUI_ENABLE)
-		GUICtrlSetState($g_hBtnSpellsOrderSet, $GUI_ENABLE)
-		If IsUseCustomSpellsOrder() = True Then _GUICtrlSetImage($g_ahImgSpellsOrderSet, $g_sLibIconPath, $eIcnRedLight)
-	Else
-		$g_bCustomBrewOrderEnable = False
-		For $i = 0 To UBound($g_ahCmbSpellsOrder) - 1
-			GUICtrlSetState($g_ahCmbSpellsOrder[$i], $GUI_DISABLE)
-		Next
-		GUICtrlSetState($g_hBtnRemoveSpells, $GUI_DISABLE)
-		GUICtrlSetState($g_hBtnSpellsOrderSet, $GUI_DISABLE)
-		SetDefaultSpellsGroup(False)
-	EndIf
-
-EndFunc   ;==>chkSpellsOrder
-
 Func GUISpellsOrder()
 	For $i = 0 To UBound($g_ahCmbSpellsOrder[$i]) - 1 ; check for duplicate combobox index and flag problem
 		$g_aiCmbCustomBrewOrder[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbSpellsOrder[$i][$i])
@@ -456,7 +435,7 @@ EndFunc   ;==>_GUITrainOrder
 
 Func _GUISpellsOrder()
 	Local $iGUI_CtrlId = @GUI_CtrlId
-	Local $i = _ArraySearch($g_ahCmbSpellsOrder, @GUI_CtrlId) 
+	Local $i = _ArraySearch($g_ahCmbSpellsOrder, @GUI_CtrlId)
 	Local $iOld = $g_aiCmbCustomBrewOrder[$i]
 
 	For $i = 0 To UBound($g_ahCmbSpellsOrder) - 1 ; check for duplicate combobox index and flag problem
@@ -487,7 +466,7 @@ EndFunc   ;==>_GUITrainOrder
 
 Func _GUITrainOrder()
 	Local $iGUI_CtrlId = @GUI_CtrlId
-	Local $i = _ArraySearch($g_ahCmbTroopOrder, @GUI_CtrlId) 
+	Local $i = _ArraySearch($g_ahCmbTroopOrder, @GUI_CtrlId)
 	Local $iOld = $g_aiCmbCustomTrainOrder[$i]
 
 	For $i = 0 To UBound($g_ahCmbTroopOrder) - 1 ; check for duplicate combobox index and flag problem
@@ -503,28 +482,28 @@ Func _GUITrainOrder()
 	Next
 EndFunc   ;==>_GUITrainOrder
 
+Func CustomTrainOrderEnable()
+	$g_bCustomTrainOrderEnable = (GUICtrlRead($g_hChkCustomTrainOrderEnable) = $GUI_CHECKED)
+
+	For $i = 0 To UBound($g_ahCmbTroopOrder) - 1
+		GUICtrlSetState($g_ahCmbTroopOrder[$i], $g_bCustomTrainOrderEnable ? $GUI_ENABLE : $GUI_DISABLE)
+	Next
+EndFunc   ;==>CustomTrainOrderEnable
+
+Func CustomBrewOrderEnable()
+	$g_bCustomBrewOrderEnable = (GUICtrlRead($g_hChkCustomBrewOrderEnable) = $GUI_CHECKED)
+
+	For $i = 0 To UBound($g_ahCmbSpellsOrder) - 1
+		GUICtrlSetState($g_ahCmbSpellsOrder[$i], $g_bCustomBrewOrderEnable ? $GUI_ENABLE : $GUI_DISABLE)
+	Next
+EndFunc   ;==>CustomBrewOrderEnable
+
 Func BtnRemoveTroops()
 	For $i = 0 To UBound($g_ahCmbTroopOrder) - 1 ; check for duplicate combobox index and flag problem
 		_GUICtrlComboBox_SetCurSel($g_ahCmbTroopOrder[$i], $i)
 		GUISetState()
 	Next
 EndFunc   ;==>BtnRemoveTroops
-
-Func SetDefaultTroopGroup($bSetLog = True)
-	For $i = 0 To $eTroopCount - 1
-		$g_aiTrainOrder[$i] = $i
-	Next
-
-	If ($bSetLog Or $g_bDebugSetlogTrain) And $g_bCustomTrainOrderEnable Then SetLog("Default troop training order set", $COLOR_SUCCESS)
-EndFunc   ;==>SetDefaultTroopGroup
-
-Func SetDefaultSpellsGroup($bSetLog = True)
-	For $i = 0 To $eSpellCount - 1
-		$g_aiBrewOrder[$i] = $i
-	Next
-
-	If ($bSetLog Or $g_bDebugSetlogTrain) And $g_bCustomTrainOrderEnable Then SetLog("Default Spells Brew order set", $COLOR_SUCCESS)
-EndFunc   ;==>SetDefaultSpellsGroup
 
 Func LevUpDownTroop($iTroopIndex, $NoChangeLev = True)
 	Local $MaxLev = $g_aiTroopCostPerLevel[$iTroopIndex][0]
@@ -758,7 +737,7 @@ Func Removecamptroops()
 	GUICtrlSetData($g_hLblDarkCostCamp, "0")
 	GUICtrlSetData($g_hLblCountTotal, 0)
 	GUICtrlSetBkColor($g_hLblCountTotal, $COLOR_MONEYGREEN)
-	
+
 	BtnRemoveTroops()
 EndFunc   ;==>Removecamptroops
 
@@ -776,8 +755,8 @@ Func Removecampspells()
 	For $i = 0 To $eSpellCount - 1
 		GUICtrlSetBkColor($g_ahTxtTrainArmySpellCount[$i], 0xD1DFE7) ; Custom - Team AIO Mod++
 	Next
-	
-	BtnRemoveTroops()
+
+	BtnRemoveSpells()
 EndFunc   ;==>Removecampspells
 
 Func Removecampsieges()
@@ -792,7 +771,7 @@ Func Removecampsieges()
 	GUICtrlSetData($g_hLblCountTotalSiege, 0)
 	GUICtrlSetData($g_hLblTotalTimeSiege, " 0s")
 	GUICtrlSetBkColor($g_hLblCountTotalSiege, $COLOR_MONEYGREEN)
-	
+
 EndFunc   ;==>Removecampsieges
 
 Func TrainTroopCountEdit()

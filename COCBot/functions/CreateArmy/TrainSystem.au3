@@ -32,8 +32,8 @@ Func TrainSystem()
 	#Region - Custom train - Team AIO Mod++
 	Local $bPreTrainFlag = $g_bDoubleTrain
 	If $g_bChkPreTrainTroopsPercent And $g_bForceDoubleTrain = False Then
-		SetLog("Success of the double train condition.", $COLOR_SUCCESS)
 		$bPreTrainFlag = ($g_iArmyCapacity >= $g_iInpPreTrainTroopsPercent)
+		SetLog("Double train condition ? " & $bPreTrainFlag, $COLOR_INFO)
 	ElseIf $g_bForceDoubleTrain = True Then
 		SetLog("Force double train before switch account.", $COLOR_SUCCESS)
 		$g_bForceDoubleTrain = False

@@ -340,6 +340,7 @@ Func GetUpgradeButton($sUpgButtom = "", $bDebug = False)
 
 				; Verify if is to Upgrade
 				Local $sMsg = "", $bBuildString = False
+				; Inspired in @xbebenk idea.
 				If $g_bRadioBBCustomOTTO = True Then
 					For $i = 0 To UBound($g_sBBOptimizeOTTO) - 1
 						$bBuildString = _CompareTexts($g_sBBOptimizeOTTO[$i], $g_aBBUpgradeNameLevel[1])
