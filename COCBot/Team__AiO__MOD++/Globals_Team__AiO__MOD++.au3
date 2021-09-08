@@ -374,7 +374,7 @@ Global Const $g_sBBUpgradesToIgnore[28] = ["Builder Hall", "Gold Mine", "Elixir 
 									 "Crusher", "Guard Post", "Air Bombs", "Multi Mortar", "Roaster", "Giant Cannon", "Mega Tesla", _
 									 "Lava Launcher", "Push Trap", "Spring Trap", "Mega Mine", "Mine", "Wall"]
 	
-Global Const $g_sBBOptimizeOTTO[13] = ["Tower", "Mortar", "Mega Tesla", "Battle Machine", "Storage", "Gold Mine", "Collector", "Laboratory", "Hall", "Double Cannon", "Post", "Barracks", "Wall"]
+Global Const $g_sBBOptimizeOTTO[8] = ["Mega Tesla", "Battle Machine", "Elixir Storage", "Gold Storage", "Laboratory", "Builder Hall", "Double Cannon", "Builder Barracks"]
 
 ; Extra options
 Global $g_iBBMinAttack = 1, $g_iBBMaxAttack = 4

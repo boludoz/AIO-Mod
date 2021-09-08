@@ -51,14 +51,14 @@ Func _Laboratory($bDebug = False)
 		Return
 	EndIf
 
-	; If $g_aiLaboratoryPos[0] = 0 Or $g_aiLaboratoryPos[1] = 0 Then
-		; SetLog("Laboratory Location unknown!", $COLOR_WARNING)
+	If $g_aiLaboratoryPos[0] = 0 Or $g_aiLaboratoryPos[1] = 0 Then
+		SetLog("Laboratory Location unknown!", $COLOR_WARNING)
 		LocateLab() ; Lab location unknown, so find it. ; Auto locate builds - Team AIO Mod++
 		If $g_aiLaboratoryPos[0] < 1 Or $g_aiLaboratoryPos[1] < 1 Then
 			SetLog("Problem locating Laboratory, re-locate laboratory position before proceeding", $COLOR_ERROR)
 			Return False
 		EndIf
-	; EndIf
+	EndIf
 
 	; Get updated village elixir and dark elixir values
 	VillageReport()

@@ -17,7 +17,7 @@ Func CollectMagicItems($bDebug = False)
 	
 	If Not ($g_iTownHallLevel >= 8 And not $g_iTownHallLevel = 0) Then Return ; Must be Th8 or more to use the Trader
 	
-	If Not ($g_bChkCollectFreeMagicItems Or $g_bChkCollectMagicItems) Then Return
+	If $g_bChkCollectFreeMagicItems = False And $g_bChkCollectMagicItems = False Then Return
 	
 	#Region - Dates - Team AIO Mod++
 	If Not $bDebug Then
