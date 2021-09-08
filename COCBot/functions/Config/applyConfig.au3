@@ -2335,10 +2335,33 @@ Func ApplyConfig_600_54($TypeReadSave)
 	; <><><> Attack Plan / Train Army / Train Order <><><>
 	Switch $TypeReadSave
 		Case "Read"
+			; Troops Order
+			GUICtrlSetState($g_hChkCustomTrainOrderEnable, $g_bCustomTrainOrderEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
+			For $z = 0 To UBound($g_ahCmbTroopOrder) - 1
+				_GUICtrlComboBox_SetCurSel($g_ahCmbTroopOrder[$z], $g_aiCmbCustomTrainOrder[$z])
+			Next
+			; Spells Order
+			GUICtrlSetState($g_hChkCustomBrewOrderEnable, $g_bCustomBrewOrderEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
+			For $z = 0 To UBound($g_ahCmbSpellsOrder) - 1
+				_GUICtrlComboBox_SetCurSel($g_ahCmbSpellsOrder[$z], $g_aiCmbCustomBrewOrder[$z])
+			Next
+
 			chkTotalCampForced()
 			radSelectTrainType() ; this function also calls calls lblTotalCount and TotalSpellCountClick
 			SetComboTroopComp() ; this function also calls lblTotalCount
+			CustomTrainOrderEnable()
+			CustomBrewOrderEnable()
 		Case "Save"
+			; Troops Order
+			$g_bCustomTrainOrderEnable = (GUICtrlRead($g_hChkCustomTrainOrderEnable) = $GUI_CHECKED)
+			For $z = 0 To UBound($g_ahCmbTroopOrder) - 1
+				$g_aiCmbCustomTrainOrder[$z] = _GUICtrlComboBox_GetCurSel($g_ahCmbTroopOrder[$z])
+			Next
+			; Spells Order
+			$g_bCustomBrewOrderEnable = (GUICtrlRead($g_hChkCustomBrewOrderEnable) = $GUI_CHECKED)
+			For $z = 0 To UBound($g_ahCmbSpellsOrder) - 1
+				$g_aiCmbCustomBrewOrder[$z] = _GUICtrlComboBox_GetCurSel($g_ahCmbSpellsOrder[$z])
+			Next
 	EndSwitch
 
 EndFunc   ;==>ApplyConfig_600_54

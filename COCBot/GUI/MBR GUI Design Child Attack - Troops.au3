@@ -843,6 +843,9 @@ Func CreateTrainTroops()
 	Next
 	
 	$y += 40 + 190
+	$x = $iStartX
+	$g_hChkCustomTrainOrderEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Priority", "Priority.") , $x, $y + 14, -1, -1)
+			GUICtrlSetOnEvent(-1, "CustomTrainOrderEnable")
 	$x = 170
 
 	; troop count
@@ -965,6 +968,8 @@ Func CreateTrainSpells()
 	
 	$y += 150
 	$x = $iStartX
+	$g_hChkCustomBrewOrderEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Priority", "Priority.") , $x, $y + 14, -1, -1)
+			GUICtrlSetOnEvent(-1, "CustomBrewOrderEnable")
 	$x += 70
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnSpellsCost, $x + 4, $y + 10, 24, 24)
 	$g_hLblTotalTimeSpell = GUICtrlCreateLabel(" 0s", $x + 33, $y + 15, 55, 15, $SS_RIGHT)

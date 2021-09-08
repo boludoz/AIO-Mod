@@ -503,6 +503,22 @@ Func _GUITrainOrder()
 	Next
 EndFunc   ;==>_GUITrainOrder
 
+Func CustomTrainOrderEnable()
+	$g_bCustomTrainOrderEnable = (GUICtrlRead($g_hChkCustomTrainOrderEnable) = $GUI_CHECKED)
+
+	For $i = 0 To UBound($g_ahCmbTroopOrder) - 1
+		GUICtrlSetState($g_ahCmbTroopOrder[$i], $g_bCustomTrainOrderEnable ? $GUI_ENABLE : $GUI_DISABLE)
+	Next
+EndFunc   ;==>CustomTrainOrderEnable
+
+Func CustomBrewOrderEnable()
+	$g_bCustomBrewOrderEnable = (GUICtrlRead($g_hChkCustomBrewOrderEnable) = $GUI_CHECKED)
+
+	For $i = 0 To UBound($g_ahCmbSpellsOrder) - 1
+		GUICtrlSetState($g_ahCmbSpellsOrder[$i], $g_bCustomBrewOrderEnable ? $GUI_ENABLE : $GUI_DISABLE)
+	Next
+EndFunc   ;==>CustomBrewOrderEnable
+
 Func BtnRemoveTroops()
 	For $i = 0 To UBound($g_ahCmbTroopOrder) - 1 ; check for duplicate combobox index and flag problem
 		_GUICtrlComboBox_SetCurSel($g_ahCmbTroopOrder[$i], $i)
@@ -777,7 +793,7 @@ Func Removecampspells()
 		GUICtrlSetBkColor($g_ahTxtTrainArmySpellCount[$i], 0xD1DFE7) ; Custom - Team AIO Mod++
 	Next
 	
-	BtnRemoveTroops()
+	BtnRemoveSpells()
 EndFunc   ;==>Removecampspells
 
 Func Removecampsieges()
