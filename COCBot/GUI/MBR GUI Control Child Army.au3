@@ -427,26 +427,6 @@ Func sldTrainITDelay()
 	GUICtrlSetData($g_hLblTrainITDelayTime, $g_iTrainClickDelay & " ms")
 EndFunc   ;==>sldTrainITDelay
 
-Func chkSpellsOrder()
-	If GUICtrlRead($g_hChkCustomBrewOrderEnable) = $GUI_CHECKED Then
-		$g_bCustomBrewOrderEnable = True
-		For $i = 0 To UBound($g_ahCmbSpellsOrder) - 1
-			GUICtrlSetState($g_ahCmbSpellsOrder[$i], $GUI_ENABLE)
-		Next
-		GUICtrlSetState($g_hBtnRemoveSpells, $GUI_ENABLE)
-		GUICtrlSetState($g_hBtnSpellsOrderSet, $GUI_ENABLE)
-	Else
-		$g_bCustomBrewOrderEnable = False
-		For $i = 0 To UBound($g_ahCmbSpellsOrder) - 1
-			GUICtrlSetState($g_ahCmbSpellsOrder[$i], $GUI_DISABLE)
-		Next
-		GUICtrlSetState($g_hBtnRemoveSpells, $GUI_DISABLE)
-		GUICtrlSetState($g_hBtnSpellsOrderSet, $GUI_DISABLE)
-		SetDefaultSpellsGroup(False)
-	EndIf
-
-EndFunc   ;==>chkSpellsOrder
-
 Func GUISpellsOrder()
 	For $i = 0 To UBound($g_ahCmbSpellsOrder[$i]) - 1 ; check for duplicate combobox index and flag problem
 		$g_aiCmbCustomBrewOrder[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbSpellsOrder[$i][$i])
@@ -524,22 +504,6 @@ Func BtnRemoveTroops()
 		GUISetState()
 	Next
 EndFunc   ;==>BtnRemoveTroops
-
-Func SetDefaultTroopGroup($bSetLog = True)
-	For $i = 0 To $eTroopCount - 1
-		$g_aiTrainOrder[$i] = $i
-	Next
-
-	If ($bSetLog Or $g_bDebugSetlogTrain) And $g_bCustomTrainOrderEnable Then SetLog("Default troop training order set", $COLOR_SUCCESS)
-EndFunc   ;==>SetDefaultTroopGroup
-
-Func SetDefaultSpellsGroup($bSetLog = True)
-	For $i = 0 To $eSpellCount - 1
-		$g_aiBrewOrder[$i] = $i
-	Next
-
-	If ($bSetLog Or $g_bDebugSetlogTrain) And $g_bCustomTrainOrderEnable Then SetLog("Default Spells Brew order set", $COLOR_SUCCESS)
-EndFunc   ;==>SetDefaultSpellsGroup
 
 Func LevUpDownTroop($iTroopIndex, $NoChangeLev = True)
 	Local $MaxLev = $g_aiTroopCostPerLevel[$iTroopIndex][0]
