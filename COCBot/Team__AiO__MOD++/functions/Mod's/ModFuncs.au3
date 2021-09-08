@@ -329,7 +329,7 @@ Func _LevDis($s, $t)
 	Return $d[$n][$m]
 EndFunc   ;==>_LevDis
 
-Func _CompareTexts($sText = "", $sText2 = "", $iPerc = 65)
+Func _CompareTexts($sText = "", $sText2 = "", $iPerc = 75)
 	Local $iC = 0, $iC2 = 0
 	Local $iText = StringLen($sText)
 	Local $iText2 = StringLen($sText2)	
