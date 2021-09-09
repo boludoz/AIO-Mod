@@ -225,8 +225,6 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 									$aAvailableTroops_NXQ[$i][4] = Number(_getTroopCountSmall(Number($aAvailableTroops_NXQ[$i][1]), 640))
 									If $aAvailableTroops_NXQ[$i][4] < 1 Then $aAvailableTroops_NXQ[$i][4] = Number(_getTroopCountBig(Number($aAvailableTroops_NXQ[$i][1]), 640 - 7)) ; For Big numbers when the troop is selected
 								EndIf
-							Else 
-								SetLog("Troop not detected: " & $sTroopName, $COLOR_ERROR)
 							EndIf
 						Next
 
@@ -738,11 +736,11 @@ Func TriggerMachineAbility($bBBIsFirst = -1, $ix = -1, $iy = -1, $bTest = False)
 	; We use random to not always get activated in an specific Time Delay
 	If $g_iBBMachAbilityLastActivatedTime > -1 And __TimerDiff($g_iBBMachAbilityLastActivatedTime) < Random($g_iBBMachAbilityTime - 2000, $g_iBBMachAbilityTime + 2000, 1) Then Return False
 
-	SetDebugLog($sFuncName & "Checking ability.")
+	SetLog("Checking ability of machine.", $COLOR_ACTION)
 
-	Local $hPixel
+	Local $hPixel = 0x000000
 	$hPixel = _GetPixelColor(Int($g_aMachineBB[0]), 721, True)
-	If $bTest Or $g_bDebugSetlog Then Setlog($hPixel & " ability", $COLOR_INFO)
+	If $bTest Or $g_bDebugSetlog Then SetDebugLog("Machine " & $hPixel & " ability color.", $COLOR_DEBUG)
 
 	If $bBBIsFirst And ($g_aMachineBB[0] <> -1) Then
 		If $bTest Or $g_bDebugSetlog Then Setlog(_ArrayToString($g_aMachineBB), $COLOR_INFO)
