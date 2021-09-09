@@ -204,7 +204,7 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 						SetLog("Badly Drop : " & $aDROP[2], $COLOR_ERROR)
 					EndIf
 					
-					Local $sTroopName = $g_asBBTroopShortNames[$iTroop]
+					Local $sTroopName = $g_asAttackBarBB2[$iTroop]
 
 					; DROP_SIDE: FRONT - BACK - LEFT - RIGHT (red lines)| FRONTE - BACKE - LEFTE - RIGHTE (external edges )
 					; DROP_SIDE: BH - Builder Hall side will attack Only if exposed
