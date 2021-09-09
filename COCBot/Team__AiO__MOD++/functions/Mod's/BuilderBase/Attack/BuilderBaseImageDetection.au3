@@ -56,13 +56,13 @@ Func TestBuilderBaseGetHall()
 	Setlog("** TestBuilderBaseGetHall END**", $COLOR_DEBUG)
 EndFunc   ;==>TestBuilderBaseGetHall
 
-Func BuilderBaseGetDeployPoints($FurtherFrom = $g_iFurtherFromBBDefault, $DebugImage = False)
+Func BuilderBaseGetDeployPoints($FurtherFrom = $g_iFurtherFromBBDefault, $bDebugImage = False)
 	Local $bBadPoints = False, $Sides = -1
 
 	If Not $g_bRunState Then Return
 
 	Local $DebugLog
-	If $g_bDebugBBattack Or $DebugImage Then
+	If $g_bDebugBBattack Or $bDebugImage Then
 		$DebugLog = True
 	EndIf
 
@@ -94,16 +94,16 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = $g_iFurtherFromBBDefault, $DebugI
 	$hStarttime = __TimerInit()
 
 	; Dissociable drop points.
-	Local $DeployPointsResult = DMClasicArray(DFind($g_sBundleDeployPointsBBD, 0, 0, 0, 0, 0, 0, 1000, True), 18, ($g_bDebugImageSave Or $DebugImage))
+	Local $aDeployPointsResult = DMClassicArray(DFind($g_sBundleDeployPointsBBD, 0, 0, 0, 0, 0, 0, 1000, True), 10, ($g_bDebugImageSave Or $bDebugImage))
 	If Not $g_bRunState Then Return
-	SetDebugLog(_ArrayToString($DeployPointsResult))
+	SetDebugLog(_ArrayToString($aDeployPointsResult))
 	
-	If IsArray($DeployPointsResult) And UBound($DeployPointsResult) > 0 Then
+	If IsArray($aDeployPointsResult) And UBound($aDeployPointsResult) > 0 Then
 		Local $Point[2], $Local = ""
 		Local $iTopLeft[0][2], $iTopRight[0][2], $iBottomRight[0][2], $iBottomLeft[0][2]
-		For $i = 0 To UBound($DeployPointsResult) - 1
-			$Point[0] = Int($DeployPointsResult[$i][1])
-			$Point[1] = Int($DeployPointsResult[$i][2])
+		For $i = 0 To UBound($aDeployPointsResult) - 1
+			$Point[0] = Int($aDeployPointsResult[$i][1])
+			$Point[1] = Int($aDeployPointsResult[$i][2])
 			SetDebugLog("[" & $i & "]Deploy Point: (" & $Point[0] & "," & $Point[1] & ")")
 			$Local = DeployPointsPosition($Point)
 			SetDebugLog("[" & $i & "]Deploy Local: (" & $Local & ")")
@@ -268,7 +268,7 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = $g_iFurtherFromBBDefault, $DebugI
 
 	Setlog("Builder Base Outer Edges Deploy Points: " & Round(__timerdiff($hStarttime) / 1000, 2) & " seconds", $COLOR_DEBUG)
 
-	If $DebugImage Or $g_bDebugBBattack Then DebugBuilderBaseBuildingsDetection($DeployPoints, $BestDeployPoints, "Deploy_Points")
+	If $bDebugImage Or $g_bDebugBBattack Then DebugBuilderBaseBuildingsDetection($DeployPoints, $BestDeployPoints, "Deploy_Points")
 	$g_aDeployPoints = $DeployPoints
 	$g_aDeployBestPoints = $BestDeployPoints
 

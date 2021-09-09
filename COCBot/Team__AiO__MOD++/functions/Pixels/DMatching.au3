@@ -161,7 +161,7 @@ Func DFind($sBundle, $iRegionX = 0, $iRegionY = 0, $iRegionWidth = 0, $iRegionHe
 EndFunc
 
 ; Decodes a Match to an Array, $sMatch must be like: Inferno-14-50-50-100-100 . Representing: ObjectName-PointX-PointY-ObjectLevel
-Func DMClasicArray($sMatches, $iDis = 18, $bDebugLog = $g_bDebugImageSave)
+Func DMClassicArray($sMatches, $iDis = 18, $bDebugLog = $g_bDebugImageSave)
     Local $aSplittedMatches = StringSplit($sMatches, "|", $STR_NOCOUNT)
     Local $aMatches[UBound($aSplittedMatches)][4], $iRedim = 0
     For $i = 0 To UBound($aSplittedMatches) - 1
@@ -176,7 +176,7 @@ Func DMClasicArray($sMatches, $iDis = 18, $bDebugLog = $g_bDebugImageSave)
     Next
 	Redim $aMatches[$iRedim][4]
 	If UBound($aMatches) < 1 Then Return -1
-	If $bDebugLog Then DebugImgArrayClassic($aMatches, "DMClasicArray")
+	If $bDebugLog Then DebugImgArrayClassic($aMatches, "DMClassicArray")
 	Return $aMatches
 EndFunc 
 

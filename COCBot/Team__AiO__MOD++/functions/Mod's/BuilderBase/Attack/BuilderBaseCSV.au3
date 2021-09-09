@@ -217,8 +217,9 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 					If $sQty = "ALL" Then ; All command will act like remain it will get attack bar troops.
 						; $aAvailableTroops_NXQ  [Name][Xaxis][Quantities]
 						For $i = 0 To UBound($aAvailableTroops_NXQ) - 1
-							If (StringInStr($aAvailableTroops_NXQ[$i][0], $sTroopName) > 0) Then ;We Just Need To redo the ocr for mentioned troop only
-								If (StringInStr($sTroopName, "Machine") > 0) Then
+							SetDebugLog($aAvailableTroops_NXQ[$i][0] & " " & $sTroopName)
+							If _CompareTexts($aAvailableTroops_NXQ[$i][0], $sTroopName, 80) Then ;We Just Need To redo the ocr for mentioned troop only
+								If _CompareTexts("Machine", $sTroopName, 80) Then
 									$aAvailableTroops_NXQ[$i][4] = 1
 								Else
 									$aAvailableTroops_NXQ[$i][4] = Number(_getTroopCountSmall(Number($aAvailableTroops_NXQ[$i][1]), 640))

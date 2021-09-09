@@ -84,6 +84,11 @@ Func getBuilders($x_start, $y_start) ;  -> Gets Builders number - main screen --
 	Return getOcrAndCaptureDOCR($g_sMainBuildersDOCRB, $x_start, $y_start, 45, 20, True)
 EndFunc   ;==>getBuilders
 
+Func SpecialOCRCut($sBundle, $iX_start, $iY_start, $iWidth, $iHeight, $bRemoveSpace = Default, $bForceCaptureRegion = Default)
+	Return StringReplace(getOcrAndCaptureDOCR($sBundle, $iX_start, $iY_start, $iWidth, $iHeight, $bRemoveSpace, $bForceCaptureRegion), "#", "")
+EndFunc   ;==>getBuilders
+
+#CS - OCR Betas.
 Func _getTroopCountSmall($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for non-selected troop kind
 	If $g_bForceDocr = False Then 
 		Return __getTroopCountSmall($x_start, $y_start, $bNeedNewCapture)
@@ -100,11 +105,6 @@ Func _getTroopCountBig($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Get
 	Return SpecialOCRCut($g_sAttackBarDOCRB, $x_start, $y_start-8, 55, 17+8, True, $bNeedNewCapture)
 EndFunc   ;==>_getTroopCountBig
 
-Func SpecialOCRCut($sBundle, $iX_start, $iY_start, $iWidth, $iHeight, $bRemoveSpace = Default, $bForceCaptureRegion = Default)
-	Return StringReplace(getOcrAndCaptureDOCR($sBundle, $iX_start, $iY_start, $iWidth, $iHeight, $bRemoveSpace, $bForceCaptureRegion), "#", "")
-EndFunc   ;==>getBuilders
-
-#CS - OCR Betas.
 Func getArmyCampCap($x_start, $y_start, $bNeedCapture = True) ;  -> Gets army camp capacity --> train.au3, and used to read CC request time remaining
 	Return getOcrAndCaptureDOCR($g_sAOverviewTotals, $x_start, $y_start, 82, 16, True, $bNeedCapture)
 EndFunc   ;==>getArmyCampCap
