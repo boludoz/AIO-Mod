@@ -135,7 +135,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 						$iModeAttack = 0 ; CSV Mode
 						$sName = "CAMP" & "|"
 						For $i = 1 To UBound($aSplitLine) - 1
-							$iLast = _ArraySearch($g_asBBTroopShortNames, $aSplitLine[$i])
+							$iLast = _ArraySearchCSV($g_sTroopsBBAtk, $aSplitLine[$i])
 							If $iLast > -1 Then
 								$sTmp = $g_asAttackBarBB2[$iLast]
 								If Not StringIsSpace($sTmp) Then $sLastObj = $sTmp

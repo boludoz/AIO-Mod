@@ -343,7 +343,7 @@ Func GetUpgradeButton($sUpgButtom = "", $bDebug = False)
 				; Inspired in @xbebenk idea.
 				If $g_bRadioBBCustomOTTO = True Then
 					For $i = 0 To UBound($g_sBBOptimizeOTTO) - 1
-						$bBuildString = _CompareTexts($g_sBBOptimizeOTTO[$i], $g_aBBUpgradeNameLevel[1])
+						$bBuildString = _CompareTexts($g_sBBOptimizeOTTO[$i], $g_aBBUpgradeNameLevel[1], 75)
 						If $bBuildString = True Then ExitLoop
 					Next
 					
@@ -361,7 +361,7 @@ Func GetUpgradeButton($sUpgButtom = "", $bDebug = False)
 					EndIf
 				Else
 					For $i = 0 To UBound($g_sBBUpgradesToIgnore) - 1
-						$bBuildString = _CompareTexts($g_sBBUpgradesToIgnore[$i], $g_aBBUpgradeNameLevel[1])
+						$bBuildString = _CompareTexts($g_sBBUpgradesToIgnore[$i], $g_aBBUpgradeNameLevel[1], 75)
 						If $bBuildString = True And $g_iChkBBUpgradesToIgnore[$i] = 1 Then
 							$sMsg = "Ops! " & $g_aBBUpgradeNameLevel[1] & " is not to Upgrade!"
 							SetLog($sMsg, $COLOR_ERROR)

@@ -198,7 +198,13 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 
 					; TROOPNAME__: [ "Barb", "Arch", "Giant", "Minion", "Breaker", "BabyD", "Cannon", "Witch", "Drop", "Pekka", "HogG", "Machine" ]
 					; $aDROP[2]
-					Local $sTroopName = $aDROP[2]
+					
+					Local $iTroop = _ArraySearchCSV($g_sTroopsBBAtk, $aDROP[2])
+					If $iTroop = -1 Then
+						SetLog("Badly Drop : " & $aDROP[2], $COLOR_ERROR)
+					EndIf
+					
+					Local $sTroopName = $g_asBBTroopShortNames[$iTroop]
 
 					; DROP_SIDE: FRONT - BACK - LEFT - RIGHT (red lines)| FRONTE - BACKE - LEFTE - RIGHTE (external edges )
 					; DROP_SIDE: BH - Builder Hall side will attack Only if exposed
@@ -218,6 +224,8 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 									$aAvailableTroops_NXQ[$i][4] = Number(_getTroopCountSmall(Number($aAvailableTroops_NXQ[$i][1]), 640))
 									If $aAvailableTroops_NXQ[$i][4] < 1 Then $aAvailableTroops_NXQ[$i][4] = Number(_getTroopCountBig(Number($aAvailableTroops_NXQ[$i][1]), 640 - 7)) ; For Big numbers when the troop is selected
 								EndIf
+							Else 
+								SetLog("Troop not detected: " & $sTroopName, $COLOR_ERROR)
 							EndIf
 						Next
 
@@ -785,4 +793,14 @@ Func BattleIsOver()
 
 	If ($iBattleOverLoopCounter > 180) Then Setlog("Window Report Problem!", $COLOR_WARNING)
 EndFunc   ;==>BattleIsOver
+
+; Custom BB - Team AIO Mod++
+Func _ArraySearchCSV($aArray, $sTroop)
+	For $i = 0 To UBound($aArray) - 1
+		If _CompareTexts($aArray[$i], $sTroop, 80) Then
+			Return $i
+		EndIf
+	Next
+	Return -1
+EndFunc   ;==>_ArraySearchCSV
 

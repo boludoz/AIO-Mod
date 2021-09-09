@@ -329,20 +329,50 @@ Func _LevDis($s, $t)
 	Return $d[$n][$m]
 EndFunc   ;==>_LevDis
 
-Func _CompareTexts($sText = "", $sText2 = "", $iPerc = 75)
-	Local $iC = 0, $iC2 = 0
-	Local $iText = StringLen($sText)
-	Local $iText2 = StringLen($sText2)	
-	Local $iLev = _LevDis($sText, $sText2)
+Func _CompareTexts($sTextIn = "", $sText2in = "", $iPerc = 80, $bStrip = False)
 
-	$iC = ((_Max($iText, $iText2) - $iLev) * 100)
-	$iC2 = ((_Max($iText, $iText2)) * 100)
-	$iC = (_Min($iC, $iC2) / _Max($iC, $iC2)) * 100
-	
-	If $iLev = 0 Or ($iC >= $iPerc) Then
-		Return True
+	Local $sText2 = "", $sTexta = ""
+	If StringLen($sText2in) > StringLen($sTextIn) Then
+		$sText2 = ($bSTRIP = False) ? ($sTextIn) : (StringStripWS($sTextIn, $STR_STRIPALL))
+		$sTexta = ($bSTRIP = False) ? ($sText2in) : (StringStripWS($sText2in, $STR_STRIPALL))
+	Else
+		$sTexta = ($bSTRIP = False) ? ($sTextIn) : (StringStripWS($sTextIn, $STR_STRIPALL))
+		$sText2 = ($bSTRIP = False) ? ($sText2in) : (StringStripWS($sText2in, $STR_STRIPALL))
 	EndIf
-	
+
+	Local $aSeparate = StringSplit($sTexta, "", $STR_ENTIRESPLIT + $STR_NOCOUNT)
+	If Not @error Then
+
+		Local $iOf2 = StringLen($sText2) - 1
+		If $iOf2 < 1 Then Return False
+
+		Local $iC = 0, $iC2 = 0, $iText = 0, $iText2 = 0, $iLev = 0
+		Local $sText = ""
+
+		Local $iMax = 0
+		For $i = 0 To UBound($aSeparate) - 1
+			$sText = ""
+			For $iTrin = 0 To $iOf2
+				$iMax = $i + $iTrin
+				If UBound($aSeparate) = $iMax Then ExitLoop
+				$sText &= $aSeparate[$iMax]
+			Next
+
+			$iC = 0
+			$iC2 = 0
+			$iText = StringLen($sText)
+			$iText2 = StringLen($sText2)
+			$iLev = _LevDis($sText, $sText2)
+
+			$iC = ((_Max($iText, $iText2) - $iLev) * 100)
+			$iC2 = ((_Max($iText, $iText2)) * 100)
+			$iC = (_Min($iC, $iC2) / _Max($iC, $iC2)) * 100
+
+			If $iLev = 0 Or ($iC >= $iPerc) Then
+				Return True
+			EndIf
+		Next
+	EndIf
 	Return False
 EndFunc   ;==>_CompareTexts
 
