@@ -16,7 +16,7 @@
 Func waitMainScreen() ;Waits for main screen to popup
 	If Not $g_bRunState Then Return
 	Local $iCount
-	SetLog("Waiting for Main Screen")
+	SetLog("Waiting for Main Screen", $COLOR_ACTION)
 	$iCount = 0
 	Local $aPixelToCheck = $g_bStayOnBuilderBase ? $aIsOnBuilderBase : $aIsMain
 	For $i = 0 To 105 ;105*2000 = 3.5 Minutes
@@ -90,27 +90,37 @@ Func waitMainScreenMini()
 	Local $hTimer = __TimerInit()
 	SetDebugLog("waitMainScreenMini")
 	If TestCapture() = False Then getBSPos() ; Update Android Window Positions
-	SetLog("Waiting for Main Screen after " & $g_sAndroidEmulator & " restart", $COLOR_INFO)
+	SetLog("Waiting for Main Screen after " & $g_sAndroidEmulator & " restart:", $COLOR_INFO)
 	Local $aPixelToCheck = $g_bStayOnBuilderBase ? $aIsOnBuilderBase : $aIsMain
-	Local $iEndLoop = 80
-	For $i = 1 To 80
+	Local $iTry = 0
+	Local $iCount = 0
+	For $i = 0 To 60 ;30*2000 = 1 Minutes
 		If Not $g_bRunState Then Return
 		If Not TestCapture() And WinGetAndroidHandle() = 0 Then ExitLoop ; sets @error to 1
-	    SetLog("[" & $i & "/" & $iEndLoop & "] Waiting main screen", $COLOR_INFO)	
+		
+		$iCount += 1
+		SetDebugLog("[" & $iCount & "] " & "Waiting for main screen.", $COLOR_ACTION) ; Debug stuck loop
 		
 		_CaptureRegion()
 		If Not _CheckPixel($aPixelToCheck, $g_bNoCapturePixel) Then ;Checks for Main Screen
 			If Not TestCapture() And _Sleep(1000) Then Return
-			If CheckObstacles() Then $i = 0 ;See if there is anything in the way of mainscreen
+			If CheckObstacles() Then 
+				$i = 0 ; See if there is anything in the way of mainscreen
+				$iTry += 1
+			EndIf
 		Else
 			SetLog("CoC main window took " & Round(__TimerDiff($hTimer) / 1000, 2) & " seconds", $COLOR_SUCCESS)
 			Return
 		EndIf
 		
 		_StatusUpdateTime($hTimer, "Main Screen")
-		If TestCapture() Then
-			Return "Main screen not available"
+
+		If ($iTry > 3) Or ($iCount > 60) Then
+			If TestCapture() Then
+				Return "Main screen not available"
+			EndIf
 		EndIf
+		
 	Next
 	Return SetError(1, 0, -1)
 EndFunc   ;==>waitMainScreenMini

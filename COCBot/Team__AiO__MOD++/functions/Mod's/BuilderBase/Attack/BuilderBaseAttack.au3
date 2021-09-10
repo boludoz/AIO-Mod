@@ -65,7 +65,7 @@ Func BuilderBaseAttack($bTestRun = False)
 
 	; Check if is present bonus OCR.
 	If IsBuilderBaseOCR($g_bChkBBStopAt3) Then
-		If $g_bChkBBStopAt3 = True Then
+		If $g_bChkBBStopAt3 = True And Not PlayBBOnly() Then
 			ClickAway(True)
 			If RandomSleep(1500) Then Return
 			Return False

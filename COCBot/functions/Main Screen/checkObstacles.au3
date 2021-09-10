@@ -35,6 +35,29 @@ Func checkObstacles($bBuilderBase = Default) ;Checks if something is in the way 
 	Return FuncReturn($Result)
 EndFunc   ;==>checkObstacles
 
+Func checkObstacles_Foreground($bOpenCoC = True)
+	; This check if coc is active in first plane.
+	Static $hCocForegroundTimer = 0 ; TimerHandle of first CoC reconnecting animation
+
+	Local $sDumpsys = AndroidAdbSendShellCommand("dumpsys window windows | grep -E 'mCurrentFocus'", Default)
+	If StringInStr($sDumpsys, $g_sAndroidGamePackage) < 1 And StringInStr($sDumpsys, "mCurrentFocus") > 0 Then 
+		If $hCocForegroundTimer = 0 Then
+			$hCocForegroundTimer = __TimerInit()
+		ElseIf __TimerDiff($hCocForegroundTimer) > Floor($g_iCoCReconnectingTimeout / 2) Then
+			$hCocForegroundTimer = 0
+			If $bOpenCoC Then 
+				StartAndroidCoC()
+				If Not $g_bRunState Then Return
+			EndIf
+			Return True
+		EndIf
+	Else
+		$hCocForegroundTimer = 0
+	EndIf
+
+	Return False
+EndFunc   ;==>checkObstacles_Foreground
+
 Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if something is in the way for mainscreen
 	Local $msg, $x, $y, $Result
 	$g_bMinorObstacle = False
@@ -44,21 +67,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 	If Not $bRecursive Then
 		If checkObstacles_Network() Then Return True
 		If checkObstacles_GfxError() Then Return True
-		
-		#Region - Custom fix - Team AIO Mod++
-		; This check if coc is active in first plane.
-		Local $sDumpsys = AndroidAdbSendShellCommand("dumpsys window windows | grep -E 'mCurrentFocus'", Default)
-		If StringInStr($sDumpsys, $g_sAndroidGamePackage) < 1 And StringInStr($sDumpsys, "mCurrentFocus") > 0 Then 
-			SetLog("Clash of Clans is not active, the bot solves it.", $COLOR_INFO)
-			
-			If Not StartAndroidCoC() Then Return False
-			If Not $g_bRunState Then Return
-			
-			$g_bMinorObstacle = True
-			If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-			Return False
-		EndIf
-		#EndRegion - Custom fix - Team AIO Mod++
+		If checkObstacles_Foreground() Then Return True
 	EndIf
 	
 	Local $bIsOnBuilderIsland = isOnBuilderBase()
