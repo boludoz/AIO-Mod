@@ -142,21 +142,20 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		; ---------------- CHECK THE ACTIVE MODE  --------------------------------------------
 		; $dbase = true if dead base found
 		; $match[$i] = result of check between gui settings and target village resources
-		; $isModeActive[$i] = the mode it is active or not (cups, research, army %)
+		; $g_bIsModeActive[$i] = the mode it is active or not (cups, research, army %)
 		Local $noMatchTxt = ""
 		Local $dbBase = False
 		Local $match[$g_iModeCount]
-		Global $isModeActive[$g_iModeCount]
 		For $i = 0 To $g_iModeCount - 1
 			$match[$i] = False
-			$isModeActive[$i] = False
+			$g_bIsModeActive[$i] = False
 		Next
 
 		If _Sleep($DELAYRESPOND) Then Return
 
 		For $i = 0 To $g_iModeCount - 1
-			$isModeActive[$i] = IsSearchModeActive($i)
-			If $isModeActive[$i] Then
+			$g_bIsModeActive[$i] = IsSearchModeActive($i)
+			If $g_bIsModeActive[$i] Then
 				$match[$i] = CompareResources($i)
 			EndIf
 		Next
@@ -214,7 +213,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		#Region - Legend trophy protection - Team AIO Mod++
 		If $g_bLeagueAttack = False Then
 			For $i = 0 To $g_iModeCount - 1
-				If $isModeActive[$i] Then
+				If $g_bIsModeActive[$i] Then
 					If $g_abFilterMeetOneConditionEnable[$i] Then
 						If $g_abFilterMeetTH[$i] = False And $g_abFilterMeetTHOutsideEnable[$i] = False Then
 							;ignore, conditions not checked

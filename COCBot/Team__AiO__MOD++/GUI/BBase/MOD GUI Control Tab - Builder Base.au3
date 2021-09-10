@@ -87,7 +87,7 @@ Func ChkBBGetFromCSV()
 	Else
 		$g_bChkBBGetFromCSV = False
 	EndIf
-	
+
 	$g_iCmbBBAttack = _GUICtrlComboBox_GetCurSel($g_hCmbBBAttack)
 	If $g_bChkBBGetFromCSV = True Or ($g_iCmbBBAttack = $g_eBBAttackCSV) Then
 		For $i=$g_hGrpAttackStyleBB To $g_hIcnBBCSV[3] ; enable all csv stuff
@@ -130,9 +130,9 @@ Func chkBBStyle()
 EndFunc   ;==>chkBBStyle
 
 Func PopulateComboScriptsFilesBB($spacficIndex = "-999") ;Define Impoisble Default Index
-	Dim $FileSearch, $NewFile
+	Local $FileSearch, $NewFile
 	$FileSearch = FileFindFirstFile($g_sCSVBBAttacksPath & "\*.csv")
-	Dim $output = ""
+	Local $output = ""
 	While True
 		$NewFile = FileFindNextFile($FileSearch)
 		If @error Then ExitLoop
@@ -261,7 +261,7 @@ Func ChkBBCustomAttack()
 
 		GUICtrlSetState($g_hGrpAttackStyleBB, $GUI_HIDE)
 		GUICtrlSetState($g_hGrpGuideScriptBB[0], $GUI_SHOW)
-		
+
 		GUICtrlSetPos($g_hGrpOptionsBB, -1, -1, $g_iSizeWGrpTab2 - 2, 65)
 		GUICtrlSetPos($g_hChkBBTrophiesRange, 100, 105)
 		GUICtrlSetPos($g_hTxtBBDropTrophiesMin, 203, 105)
@@ -288,18 +288,18 @@ Func ChkBBCustomAttack()
 			GUICtrlSetState($g_hChkBBGetFromCSV, $GUI_SHOW) ; AIO ++
 			GUICtrlSetState($g_hChkBBGetFromArmy, $GUI_HIDE) ; AIO ++
 		EndIf
-		
+
 		GUICtrlSetState($g_hCmbBBAttackStyle[1], $GUI_HIDE)
 		GUICtrlSetState($g_hCmbBBAttackStyle[2], $GUI_HIDE)
 		GUICtrlSetState($g_hLblNotesScriptBB[1], $GUI_HIDE)
 		GUICtrlSetState($g_hLblNotesScriptBB[2], $GUI_HIDE)
 		GUICtrlSetState($g_hGrpGuideScriptBB[1], $GUI_HIDE)
 		GUICtrlSetState($g_hGrpGuideScriptBB[2], $GUI_HIDE)
-		
-		
+
+
 		GUICtrlSetState($g_hGrpAttackStyleBB, $GUI_SHOW)
 		GUICtrlSetState($g_hGrpGuideScriptBB[0], $GUI_HIDE)
-		
+
 		GUICtrlSetPos($g_hGrpOptionsBB, -1, -1, 200, 135)
 		GUICtrlSetPos($g_hChkBBTrophiesRange, 5, 150)
 		GUICtrlSetPos($g_hTxtBBDropTrophiesMin, 108, 151)
@@ -317,7 +317,7 @@ Func ChkBBCustomAttack()
 		For $i = 0 To UBound($g_hIcnBBCSV) - 1
 			GUICtrlSetPos($g_hIcnBBCSV[$i], 215)
 		Next
-		$g_bChkBBCustomAttack = False	
+		$g_bChkBBCustomAttack = False
 	EndIf
 EndFunc   ;==>ChkBBCustomAttack
 
@@ -370,8 +370,8 @@ Func ChkBBAttackLoops()
     If $g_iBBMinAttack <= 0 Then GUICtrlSetData($g_hTxtBBMinAttack, 1)
 	$g_iBBMaxAttack = Int(GUICtrlRead($g_hTxtBBMaxAttack))
     If $g_iBBMaxAttack <= 0 Then GUICtrlSetData($g_hTxtBBMaxAttack, 1)
-	
-    If $g_iBBMinAttack > $g_iBBMaxAttack Then 
+
+    If $g_iBBMinAttack > $g_iBBMaxAttack Then
 		If $g_iBBMaxAttack > 0 Then
 			GUICtrlSetData($g_hTxtBBMinAttack, $g_iBBMaxAttack)
 		Else

@@ -54,7 +54,7 @@ Func BuilderBaseAttack($bTestRun = False)
 	If Not isOnBuilderBase() Then
 		Return
 	EndIf
-	
+
 	; Check Attack Button
 	If Not CheckAttackBtn() Then Return False
 	If RandomSleep(1500) Then Return
@@ -71,7 +71,7 @@ Func BuilderBaseAttack($bTestRun = False)
 			Return False
 		EndIf
 	EndIf
-	
+
 	; Get Army Status
 	ArmyStatus($IsReaddy)
 	If RandomSleep(800) Then Return
@@ -203,7 +203,7 @@ Func isOnVersusBattleWindow()
 	Local $aIsAttackBB = [550, 345, 0xFEFFFF, 20]
 	Local $aOnVersusBattleWindow = [375, 245, 0xE8E8E0, 20]
 	Local $aFindBattle = [592, 301, 0xFFC949, 30]
-	
+
 	If _Wait4PixelArray($aOnVersusBattleWindow) Then
 		If _Wait4PixelArray($aFindBattle) Then
 			SetDebugLog("Versus Battle window detected.")
@@ -215,7 +215,7 @@ Func isOnVersusBattleWindow()
 			Return False
 		EndIf
 	EndIf
-	
+
 	Return True
 EndFunc   ;==>isOnVersusBattleWindow
 
@@ -224,25 +224,25 @@ Func BuilderBaseAttackOppoWait()
 	Local $hTimer = TimerInit()
 	Local $iErrorLoop = 0
 	Local $aIsAttackBB = [550, 345, 0xFEFFFF, 20]
-	Local $i = 0
+	Local $i = 0, $hResultColor = 0x000000
 	If _CheckPixel($aIsAttackBB, True) Then
 		Do
 			$i += 1
 			If Not $g_bRunState Then Return
-			
+
 			If isOnBuilderBase(True) Or $iErrorLoop = 15 Then
 				SetLog("BuilderBaseAttackReport | Something weird happened here. Leave the screen alone.", $COLOR_ERROR)
 				If checkObstacles(True) Then SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
 				Return
 			EndIf
-			
+
 			; Wait
 			If _CheckPixel($aIsAttackBB, True) Then
 				If (Mod($i  + 1, 4) = 0) Then Setlog("Opponent is attacking.", $COLOR_INFO)
 				If _Sleep(3000) Then Return ; 3 seconds
 				ContinueLoop
 			EndIf
-			
+
 			; Thropy
 			If _WaitForCheckImg($g_sImgReportFinishedBB, "465, 493, 490, 505", Default, 5000, 250) Then
 				$hResultColor = _GetPixelColor(150, 192, True)
@@ -250,11 +250,11 @@ Func BuilderBaseAttackOppoWait()
 			Else
 				$iErrorLoop += 1
 			EndIf
-	
+
 		Until ($iWait < TimerDiff($hTimer))
-	
+
 		If _Sleep(5000) Then Return
-		
+
 		Local $aOkayBTN = [664, 465, 0xD9F481, 30]
 		If _CheckPixel($aOkayBTN, True) Then
 			Click($aOkayBTN[0] + Random(5, 10, 1), $aOkayBTN[1] + Random(5, 10, 1))
@@ -262,7 +262,7 @@ Func BuilderBaseAttackOppoWait()
 			Return True
 		EndIf
 	EndIf
-	
+
 	Return False
 EndFunc   ;==>BuilderBaseAttackReport
 
@@ -372,7 +372,7 @@ Func WaitForVersusBattle()
 	; Clouds
 	Local $iTime = 0
 	Local $iSwitch = 0
-	
+
 	While $iTime < 257 ; 15 minutes
 		If Not $g_bRunState Then Return False
 
@@ -583,7 +583,7 @@ Func BuilderBaseAttackReport($bNoExit = False)
 	  Setlog("Return home button fail.", $COLOR_ERROR)
 	  CheckMainScreen()
 	EndIf
-   
+
 	Local $iWait = 180000 ; 3 min
 	Local $hTimer = TimerInit()
 	Local $iErrorLoop = 0
@@ -592,20 +592,20 @@ Func BuilderBaseAttackReport($bNoExit = False)
 	Do
 		$i += 1
 		If Not $g_bRunState Then Return
-		
+
 		If isOnBuilderBase(True) Or $iErrorLoop = 15 Then
 			SetLog("BuilderBaseAttackReport | Something weird happened here. Leave the screen alone.", $COLOR_ERROR)
 			If checkObstacles(True) Then SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
 			Return
 		EndIf
-		
+
 		; Wait
         If _CheckPixel($aIsAttackBB, True) Then
 			If (Mod($i  + 1, 4) = 0) Then Setlog("Opponent is attacking.", $COLOR_INFO)
 			If _Sleep(3000) Then Return ; 3 seconds
 			ContinueLoop
 		EndIf
-		
+
 		; Thropy
 		If _WaitForCheckImg($g_sImgReportFinishedBB, "465, 493, 490, 505", Default, 5000, 250) Then
 			$hResultColor = _GetPixelColor(150, 192, True)
@@ -621,7 +621,7 @@ Func BuilderBaseAttackReport($bNoExit = False)
 	; 0, 1, 2
 	; Draw
 	Local $iModeSet = 2
-	
+
 	; Victory
 	If _ColorCheck($hResultColor, Hex(0x8DBE51, 6), 20) Then
 		$iModeSet = 0
@@ -632,7 +632,7 @@ Func BuilderBaseAttackReport($bNoExit = False)
 
 	; Get the LOOT :
 	Local $iGain[3]
-	
+
 	; To get trophies getOcrOverAllDamage(493, 480)
 	$iGain[$eLootTrophyBB] = Int(getOcrOverAllDamage(493, 480))
 	$iGain[$eLootGoldBB] = Int(getTrophyVillageSearch(150, 483))
@@ -658,22 +658,22 @@ Func BuilderBaseAttackReport($bNoExit = False)
 	$sAtkLogTxt &= StringFormat("%1d", $iStars) & "|"
 	$sAtkLogTxt &= StringFormat("%3d", $g_iLastDamage) & "|"
 	$sAtkLogTxt &= StringFormat("%1d", $g_iBuilderBaseScript + 1) & "|"
-	
+
 	SetBBAtkLog($sAtkLogTxt, "", $aLogColor[$iModeSet])
-	Setlog("Attack Result: " & $aLogMode[$iModeSet], $aLogColor[$iModeSet]) 
+	Setlog("Attack Result: " & $aLogMode[$iModeSet], $aLogColor[$iModeSet])
 
 	; #######################################################################
-	
+
 	If $bNoExit = False Then
 		; Return to Main Page
 		ClickAway() ; ClickP($aAway, 2, 0, "#0332") ;Click Away
-	
+
 		; Reset Variables
 		$g_aMachineBB = $g_aMachineBBReset
 		$g_iBBMachAbilityLastActivatedTime = -1
-	
+
 		If RandomSleep(2000) Then Return
-	
+
 		If checkObstacles(True) Then
 			SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
 			Return
@@ -685,7 +685,7 @@ Func BuilderBaseAttackReport($bNoExit = False)
 			If _Sleep(1500) Then Return
 			Return True
 		EndIf
-		
+
 		Return False
 	EndIf
 EndFunc   ;==>BuilderBaseAttackReport

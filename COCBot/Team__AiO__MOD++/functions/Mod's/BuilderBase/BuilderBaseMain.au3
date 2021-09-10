@@ -318,31 +318,31 @@ Func IsBuilderBaseOCR($bSetLog = True)
 	Local $sString = QuickMIS("OCR", @ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\OCR\AvariableBB\", 404, 674, 477, 695, True, False, 3, 12, True)
 	SetDebugLog("BuilderBaseTime : " & $sString)
 	
-	If $sString = "none" Then
-		Local $iAvailableAttacksBB = 0
-		
-		Local $iSlot = 76
-		Local $aBonus[3] = [361, 675, 8]
-		Local $hColorAlt[3] = [0x525454, 0x525454, 0x6E706E]
-		
-		Local $hPixelC = 0x000000
-		For $i = 0 To 2
-			$hPixelC = _GetPixelColor($aBonus[0] + ($iSlot * $i), $aBonus[1], True)
-			SetDebugLog("IsBuilderBaseOCR pixel: " & $aBonus[0] + ($iSlot * $i) & "|" & $aBonus[1]  & "|" & $hPixelC)
-			If _ColorCheckSubjetive($hPixelC, Hex($hColorAlt[$i], 6), $aBonus[2]) Then
-				$iAvailableAttacksBB += 1
-			EndIf
-		Next
-		
-		If $iAvailableAttacksBB > 0 Then
-			$g_iAvailableAttacksBB = $iAvailableAttacksBB
-			If $bSetLog = True Then Setlog("- Builder base: You have " & $g_iAvailableAttacksBB & " available attack(s).", $COLOR_INFO)	
-		Else
-			SetLog("- Bad IsBuilderBaseOCR.", $COLOR_ERROR)
+	Local $iAvailableAttacksBB = 0
+	
+	Local $iSlot = 76
+	Local $aBonus[3] = [361, 675, 8]
+	Local $hColorAlt[3] = [0x525454, 0x525454, 0x6E706E]
+	
+	Local $hPixelC = 0x000000
+	For $i = 0 To 2
+		$hPixelC = _GetPixelColor($aBonus[0] + ($iSlot * $i), $aBonus[1], True)
+		SetDebugLog("IsBuilderBaseOCR pixel: " & $aBonus[0] + ($iSlot * $i) & "|" & $aBonus[1]  & "|" & $hPixelC)
+		If _ColorCheckSubjetive($hPixelC, Hex($hColorAlt[$i], 6), $aBonus[2]) Then
+			$iAvailableAttacksBB += 1
 		EndIf
-		
+	Next
+	
+	If $iAvailableAttacksBB > 0 Then
+		$g_iAvailableAttacksBB = $iAvailableAttacksBB
+		If $bSetLog = True Then Setlog("- Builder base: You have " & $g_iAvailableAttacksBB & " available attack(s).", $COLOR_INFO)	
 		Return False
 	EndIf
+	
+	If $sString = "none" Then
+		Setlog("IsBuilderBaseOCR bad.", $COLOR_ERROR)
+		Return False
+	Endif
 	
 	If $bSetLog = True Then Setlog("- All builder base attacks done.", $COLOR_SUCCESS)	
 

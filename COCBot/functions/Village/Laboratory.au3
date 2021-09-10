@@ -12,10 +12,6 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Local $iSlotWidth = 94, $iDistBetweenSlots = 12, $iYMidPoint = 468 ; Custom fix - Team AIO Mod++ (Avoid click on troops.)
-Local $iPicsPerPage = 12, $iPages = 4 ; use to know exactly which page the users choice is on
-Local $sLabWindow = "99,122,760,616", $sLabTroopsSection = "115,363,750,577"
-Local $sLabWindowDiam = GetDiamondFromRect($sLabWindow), $sLabTroopsSectionDiam = GetDiamondFromRect($sLabTroopsSection) ; easy to change search areas
 
 Func TestLaboratory()
 	Local $bWasRunState = $g_bRunState
@@ -44,6 +40,11 @@ EndFunc
 #EndRegion - Magic Items - Team AIO Mod++
 
 Func _Laboratory($bDebug = False)
+	Local $iYMidPoint = 468 ; Custom fix - Team AIO Mod++ (Avoid click on troops.)
+	Local $iPicsPerPage = 12, $iPages = 4 ; use to know exactly which page the users choice is on
+	Local $sLabWindow = "99,122,760,616", $sLabTroopsSection = "115,363,750,577"
+	Local $sLabWindowDiam = GetDiamondFromRect($sLabWindow), $sLabTroopsSectionDiam = GetDiamondFromRect($sLabTroopsSection) ; easy to change search areas
+
 	If Not $g_bAutoLabUpgradeEnable Then Return ; Lab upgrade not enabled.
 
 	If $g_iTownHallLevel < 3 Then
@@ -64,15 +65,15 @@ Func _Laboratory($bDebug = False)
 	VillageReport()
 
 	If ChkUpgradeInProgress() Then Return False ; see if we know about an upgrade in progress without checking the lab
-	
+
 	;Click Laboratory
 	BuildingClickP($g_aiLaboratoryPos, "#0197") ; Team AIO Mod++
 	If _Sleep($DELAYLABORATORY3) Then Return ; Wait for window to open
-	
+
 	If Not FindResearchButton() Then Return False ; cant start becuase we cannot find the research button
 
 	If ChkLabUpgradeInProgress() Then Return True ; cant start becuase we cannot find the research button
-	
+
 	; Lab upgrade is not in progress and not upgreading, so we need to start an upgrade.
 	Local $iCurPage = 1
 	Local $sCostResult
@@ -285,7 +286,10 @@ EndFunc
 ; get the cost of an upgrade based on its coords
 ; find image slot that we found so that we can read the cost to see if we can upgrade it... slots read 1-12 top to bottom so barb = 1, arch = 2, giant = 3, etc...
 Func GetLabCostResult($aCoords)
+	Local $iSlotWidth = 94, $iDistBetweenSlots = 12, $iYMidPoint = 468 ; Custom fix - Team AIO Mod++ (Avoid click on troops.)
 	Local $iCurSlotOnPage, $iCurSlotsToTheRight, $sCostResult
+	Local $sLabTroopsSection = "115,363,750,577"
+	Local $sLabTroopsSectionDiam = GetDiamondFromRect($sLabTroopsSection) ; easy to change search areas
 	$iCurSlotsToTheRight = Ceiling( ( Int($aCoords[0]) - Int(StringSplit($sLabTroopsSection, ",")[1]) ) / ($iSlotWidth + $iDistBetweenSlots) )
 	If Int($aCoords[1]) < $iYMidPoint Then ; first row
 		$iCurSlotOnPage = 2*$iCurSlotsToTheRight - 1

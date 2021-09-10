@@ -35,29 +35,6 @@ Func checkObstacles($bBuilderBase = Default) ;Checks if something is in the way 
 	Return FuncReturn($Result)
 EndFunc   ;==>checkObstacles
 
-Func checkObstacles_Foreground($bOpenCoC = True)
-	; This check if coc is active in first plane.
-	Static $hCocForegroundTimer = 0 ; TimerHandle of first CoC reconnecting animation
-
-	Local $sDumpsys = AndroidAdbSendShellCommand("dumpsys window windows | grep -E 'mCurrentFocus'", Default)
-	If StringInStr($sDumpsys, $g_sAndroidGamePackage) < 1 And StringInStr($sDumpsys, "mCurrentFocus") > 0 Then 
-		If $hCocForegroundTimer = 0 Then
-			$hCocForegroundTimer = __TimerInit()
-		ElseIf __TimerDiff($hCocForegroundTimer) > Floor($g_iCoCReconnectingTimeout / 2) Then
-			$hCocForegroundTimer = 0
-			If $bOpenCoC Then 
-				StartAndroidCoC()
-				If Not $g_bRunState Then Return
-			EndIf
-			Return True
-		EndIf
-	Else
-		$hCocForegroundTimer = 0
-	EndIf
-
-	Return False
-EndFunc   ;==>checkObstacles_Foreground
-
 Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if something is in the way for mainscreen
 	Local $msg, $x, $y, $Result
 	$g_bMinorObstacle = False
@@ -67,7 +44,6 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 	If Not $bRecursive Then
 		If checkObstacles_Network() Then Return True
 		If checkObstacles_GfxError() Then Return True
-		If checkObstacles_Foreground() Then Return True
 	EndIf
 	
 	Local $bIsOnBuilderIsland = isOnBuilderBase()
@@ -458,7 +434,7 @@ Func checkObstacles_Network($bForceCapture = False, $bReloadCoC = True)
 		ElseIf __TimerDiff($hCocReconnectingTimer) > $g_iCoCReconnectingTimeout Then
 			SetLog("Network Connection really lost, Reloading CoC...", $COLOR_ERROR)
 			$hCocReconnectingTimer = 0
-			If $bReloadCoC Then CloseCoC(True) ; xbebenk - Custom fix - Team AIO Mod++
+			If $bReloadCoC Then checkObstacles_RebootAndroid() ; xbebenk - Custom fix - Team AIO Mod++
 			Return True
 		Else
 			SetLog("Network Connection lost, waiting...", $COLOR_ERROR)
@@ -467,8 +443,47 @@ Func checkObstacles_Network($bForceCapture = False, $bReloadCoC = True)
 		$hCocReconnectingTimer = 0
 	EndIf
 
-	Return False
+	Return checkObstacles_Foreground()
 EndFunc   ;==>checkObstacles_Network
+
+Func checkObstacles_Foreground()
+	; This check if coc is active in first plane or android is stuck.
+	Static $hCocForegroundTimer = 0
+	Static $hAndroidIsFrezee = 0
+
+	Local $sDumpsys = AndroidAdbSendShellCommand("dumpsys window windows | grep -E 'mCurrentFocus'", Default)
+	If Not @error Then
+		$hAndroidIsFrezee = 0
+		If StringInStr($sDumpsys, $g_sAndroidGamePackage) < 1 And StringInStr($sDumpsys, "mCurrentFocus") > 0 Then 
+			If $hCocForegroundTimer = 0 Then
+				$hCocForegroundTimer = __TimerInit()
+				SetLog("Maybe clash of clans is foreground? Let's pass this time.", $COLOR_ACTION)
+			ElseIf __TimerDiff($hCocForegroundTimer) > $g_iCoCReconnectingTimeout Then
+				SetLog("Maybe clash of clans is foreground? Opening the game.", $COLOR_ERROR)
+				$hCocForegroundTimer = 0
+				StartAndroidCoC()
+				If Not $g_bRunState Then Return
+				Return False ; Very Important
+			EndIf
+		Else
+			$hCocForegroundTimer = 0
+		EndIf
+	Else
+		; Hard timeout.
+		If $hAndroidIsFrezee = 0 Then
+			$hAndroidIsFrezee = __TimerInit()
+			SetLog("Android is stuck? Let's pass this time.", $COLOR_ACTION)
+		ElseIf __TimerDiff($hAndroidIsFrezee) > $g_iCoCReconnectingTimeout Then
+			SetLog("Android is stuck? Fixing it.", $COLOR_ERROR)
+			$hAndroidIsFrezee = 0
+			checkObstacles_RebootAndroid()
+			If Not $g_bRunState Then Return
+			Return False ; Very Important
+		EndIf
+	EndIf
+	
+	Return False
+EndFunc   ;==>checkObstacles_Foreground
 
 Func checkObstacles_GfxError($bForceCapture = False, $bRebootAndroid = True)
 	Local $aResult = decodeMultipleCoords(FindImage("GfxError", $g_sImgGfxError, "ECD", 100, $bForceCapture), 100, 100)

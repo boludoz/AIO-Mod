@@ -71,9 +71,10 @@ Global $g_hChkSuperTroops = 0, $g_ahLblSuperTroops[$iMaxSupersTroop] = [0, 0], $
 Global $g_hCmbSuperTroopsResources = 0	; Custom Super Troops - Team AIO Mod++
 
 ; Train Order sub-tab
+Global $g_asTroopOrderList, $g_asSpellsOrderList ; Custom fix - Team AIO Mod++
 Func LoadTranslatedTrainTroopsOrderList()
 
-	Global $g_asTroopOrderList = ["", _
+	Local $asTroopOrderList = ["", _
 			GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtBarbarians", "Barbarians"), _
 			GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSuperBarbarians", "Super Barbarians"), _
 			GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtArchers", "Archers"), _
@@ -110,6 +111,8 @@ Func LoadTranslatedTrainTroopsOrderList()
 			GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtBowlers", "Bowlers"), _
 			GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtIceGolems", "Ice Golems"), _
 			GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtHeadhunters", "Headhunters")]
+
+			$g_asTroopOrderList = $asTroopOrderList
 EndFunc   ;==>LoadTranslatedTrainTroopsOrderList
 
 Global $g_hChkCustomTrainOrderEnable = 0
@@ -121,7 +124,7 @@ Global $g_hBtnRemoveTroops
 ; Spells Brew Order
 Func LoadTranslatedBrewSpellsOrderList()
 
-	Global $g_asSpellsOrderList = ["", _
+	Local $asSpellsOrderList = ["", _
 			GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortLightningSpells", "Lightning"), _
 			GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortHealSpells", "Heal"), _
 			GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortRageSpells", "Rage"), _
@@ -134,7 +137,10 @@ Func LoadTranslatedBrewSpellsOrderList()
 			GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortHasteSpells", "Haste"), _
 			GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortSkeletonSpells", "Skeleton"), _
 			GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortBatSpells", "Bat")]
+
+			$g_asSpellsOrderList = $asSpellsOrderList
 EndFunc   ;==>LoadTranslatedBrewSpellsOrderList
+
 Global $g_hChkCustomBrewOrderEnable = 0
 Global $g_ahCmbSpellsOrder[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_ahImgSpellsOrder[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -497,7 +503,7 @@ Func CreateTrainBoost()
 	$g_hChkOneGemBoostHeroes = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "ChkOneGemBoostHeroes_Info_01", "Heroes 1'Gem Boost"), $x + 15 + 170 + 60, $y, -1, -1)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "ChkOneGemBoostWorkshop_Info_02", "Use this to boost your Workshop Automatically Only In 1-Gem Army Event."))
 	GUICtrlSetState(-1, $GUI_UNCHECKED)
-	
+
 	$y -= 75
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	#EndRegion - One Gem Boost - Team AiO MOD++
@@ -596,7 +602,7 @@ Func CreateTrainBoost()
 	GUICtrlSetOnEvent(-1, "chkBoostBarracksHoursE2")
 	GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "PM", "PM"), $x + 5, $y)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
-	
+
 	#Region - Custom Super Troops - Team AIO Mod++
 	$y += 48
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "Group_05", "Boost Super Troops"), $x - 20, $y - 22, $g_iSizeWGrpTab3 - 12, 91)
@@ -607,7 +613,7 @@ Func CreateTrainBoost()
 
 	$g_hChkSuperTroops = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "ChkSuperTroops", "Enable Super Troops"), $x - 14, $y - 8, -1, -1)
 		GUICtrlSetOnEvent(-1, "chkSuperTroops")
-	
+
 	; Custom Super Troops - Team AIO Mod++
 	$g_hCmbSuperTroopsResources = GUICtrlCreateCombo("", $x + 135, $y - 7, 115, 25, BitOR($CBS_DROPDOWNLIST + $CBS_AUTOHSCROLL, $WS_VSCROLL))
 		GUICtrlSetData(-1, "Prioritize dark elixir|Prioritize potion", "Prioritize dark elixir")
@@ -760,7 +766,7 @@ Func CreateTrainOptions()
 	$g_hChkTrainAddRandomDelayEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Options", "ChkTrainAddRandomDelayEnable", "Add Random Delay"), $x + 18, $y - 11, 130, -1)
 	$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Options", "ChkTrainAddRandomDelayEnable_Info_01", "Add random delay between two calls of train army.") & @CRLF & _
 			GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Options", "ChkTrainAddRandomDelayEnable_Info_02", "This option reduces the calls to the training window  humanizing the bot spacing calls each time with a causal interval chosen between the minimum and maximum values indicated below.")
-	GUICtrlSetState(-1, $GUI_CHECKED)
+	GUICtrlSetState(-1, $GUI_UNCHECKED) ; Custom - Team AIO Mod++
 	_GUICtrlSetTip(-1, $sTxtTip)
 	GUICtrlSetOnEvent(-1, "chkAddDelayIdlePhaseEnable")
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnDelay, $x - 13, $y - 13, 24, 24)
@@ -800,22 +806,22 @@ Func CreateTrainTroops()
 	GUISetBkColor($COLOR_WHITE, $g_hGUI_TRAINARMY_ARMY)
 	Local $iStartX = 10
 	Local $iStartY = 38
-	
+
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnResetButton, 0, 3, 16, 16)
 	GUICtrlSetOnEvent(-1, "Removecamptroops")
-	
+
 	GUICtrlCreateButton(GetTranslatedFileIni("MBR Main GUI", "Tab_03_STab_01_STab_01_STab_02", "Quick Train"), 300, 3, 65, 20, $SS_LEFT)
 	GUICtrlSetOnEvent(-1, "ShowQuickTrain")
 
 	Local $x = $iStartX, $y = $iStartY
 	Local $iCol = 0
-	
+
 	; Create translated list of Troops for combo box
 	Local $sComboData = "1"
 	For $j = 1 To UBound($g_aQuickTroopIcon) - 1
 		$sComboData &= "|" & String($j + 1)
 	Next
-	
+
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Train_Troops", "grpTroops", "Troops"), $x - 10, $y - 15, 430, 345)
 	Local $sTroopName = ""
 	For $i = 0 To UBound($g_aQuickTroopIcon) - 1
@@ -841,7 +847,7 @@ Func CreateTrainTroops()
 			$y = $iStartY
 		EndIf
 	Next
-	
+
 	$y += 40 + 190
 	$x = $iStartX
 	$g_hChkCustomTrainOrderEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Priority", "Priority.") , $x, $y + 14, -1, -1)
@@ -897,14 +903,14 @@ Func CreateTrainTroops()
 	$y += 25
 	$g_hChkPreciseArmy = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "ChkPreciseArmy", "Precise Army"), $x + 10, $y, -1, -1)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Precise ArmyTip", "Always check and remove wrong troops or spells exist in army"))
-	
+
 	$g_hChkDoubleTrain = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "ChkDoubleTrain", "Double Train"), $x + 110, $y, -1, -1)
 	GUICtrlSetOnEvent(-1, "ChkDoubleTrain") ; Custom train - Team AIO Mod++
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "DoubleTrainTip", "Train 2nd set of Troops & Spells after training 1st combo") & @CRLF & _
 			GetTranslatedFileIni("MBR Global GUI Design", "DoubleTrainTip1", "Make sure to enter exactly the 'Total Camp',") & @CRLF & _
 			GetTranslatedFileIni("MBR Global GUI Design", "DoubleTrainTip2", "'Total Spell' and number of Troops/Spells in your Setting") & @CRLF & _
 			GetTranslatedFileIni("MBR Global GUI Design", "DoubleTrainTip3", "Note: Donations + Double Train can produce an unbalanced army!"))
-	
+
 	#Region - Custom train - Team AIO Mod++
 	$g_hChkPreTrainTroopsPercent = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "ChkDoubleTrainIf", "Double if") & " " & ChrW(8805), $x + 200, $y, -1, -1)
 
@@ -924,25 +930,25 @@ Func CreateTrainSpells()
 	GUISetBkColor($COLOR_WHITE, $g_hGUI_SPELLARMY_ARMY)
 	Local $iStartX = 10
 	Local $iStartY = 38
-	
+
 	GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "SpellCapacity", "Spell Capacity") & ":", 10 + 288, 12 - 5, 90, 17, $SS_RIGHT)
 	$g_hTxtTotalCountSpell = GUICtrlCreateCombo("", 10 + 380, 12 + 1 - 10, 35, 16, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "TxtTotalCountSpell_Info_01", "Enter the No. of Spells Capacity."))
 	GUICtrlSetData(-1, "0|2|4|6|7|8|9|10|11", "0")
 	GUICtrlSetOnEvent(-1, "TotalSpellCountClick")
-	
+
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnResetButton, 0, 3, 16, 16)
 	GUICtrlSetOnEvent(-1, "Removecampspells")
-	
+
 	Local $x = $iStartX, $y = $iStartY
 	Local $iCol = 0
-	
+
 	; Create translated list of Troops for combo box
 	Local $sComboData = "1"
 	For $j = 1 To UBound($g_aQuickSpellIcon) - 1
 		$sComboData &= "|" & String($j + 1)
 	Next
-	
+
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Train_Spells", "grpSpells", "Spells"), $x - 10, $y - 15, 430, 345)
 	$x += 70
 	Local $sSpellName = ""
@@ -965,7 +971,7 @@ Func CreateTrainSpells()
 			$y = $iStartY
 		EndIf
 	Next
-	
+
 	$y += 150
 	$x = $iStartX
 	$g_hChkCustomBrewOrderEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Priority", "Priority.") , $x, $y + 14, -1, -1)
@@ -997,21 +1003,21 @@ Func CreateTrainSieges()
 	GUISetBkColor($COLOR_WHITE, $g_hGUI_SIEGEARMY_ARMY)
 	Local $iStartX = 10
 	Local $iStartY = 38
-	
+
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnResetButton, 0, 3, 16, 16)
 	GUICtrlSetOnEvent(-1, "Removecampsieges")
-	
+
 	Local $x = $iStartX, $y = $iStartY
 	Local $iCol = 0
 
 	Local $ahPicTrainArmySiege[$eSiegeMachineCount] = [$eIcnWallW, $eIcnBattleB, $eIcnStoneS, $eIcnSiegeB, $eIcnLogL]
-	
+
 	; Create translated list of Troops for combo box
 	Local $sComboData = "1"
 	For $j = 1 To UBound($ahPicTrainArmySiege) - 1
 		$sComboData &= "|" & String($j + 1)
 	Next
-	
+
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Train_Sieges", "grpSieges", "Sieges"), $x - 10, $y - 15, 430, 345)
 	$x += 70
 	Local $sSiegeName = ""
@@ -1030,7 +1036,7 @@ Func CreateTrainSieges()
 			$y = $iStartY
 		EndIf
 	Next
-	
+
 	$y += 100
 	$x = $iStartX
 	$x += 70

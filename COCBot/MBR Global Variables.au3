@@ -1926,3 +1926,5 @@ Global Const $g_aiPetUpgradeCostPerLevel[$ePetCount][$g_ePetLevels] = [ _
 ; Team AiO MOD++ (2019)
 Global Const $g_aVillageSizeReset[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 #include "Team__AiO__MOD++\Globals_Team__AiO__MOD++.au3"
+
+Global $g_bIsModeActive[$g_iModeCount]

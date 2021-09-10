@@ -18,6 +18,9 @@
 ;#AutoIt3Wrapper_Run_AU3Check=n ; enable when running in folder with umlauts!
 #AutoIt3Wrapper_Run_Au3Stripper=y
 #Au3Stripper_Parameters=/rsln /MI=3
+#AutoIt3Wrapper_Au3Check_Parameters=-w 1 -w 4 -w 6 -w 7
+#AutoIt3Wrapper_AU3Check_Stop_OnWarning=n
+
 
 #include "MyBot.run.version.au3"
 #pragma compile(ProductName, My Bot)
@@ -683,8 +686,7 @@ Func MainLoop($bCheckPrerequisitesOK = True)
 		If $g_bBotLaunchOption_MinimizeBot Then BotMinimizeRequest()
 	EndIf
 
-	Global $g_hStarttime = _Timer_Init()
-	Local $hStarttime = $g_hStarttime
+	Local $hStarttime = _Timer_Init()
 
 	; Check the Supported Emulator versions
 	CheckEmuNewVersions()
@@ -696,14 +698,13 @@ Func MainLoop($bCheckPrerequisitesOK = True)
 	;the message maybe failed, not try again because efficiency
 	NotifyRemoteBotisOnline()
 
-	Local $diffhStarttime = 0
 	While 1
 		_Sleep($DELAYSLEEP, True, False)
 
-		$diffhStarttime = _Timer_Diff($g_hStarttime)
+		Local $diffhStarttime = _Timer_Diff($hStarttime)
 
 		If Not $g_bRunState And $g_bNotifyTGEnable And $g_bNotifyRemoteEnable And $diffhStarttime > 1000 * 15 Then ; 15seconds
-			$g_hStarttime = _Timer_Init()
+			$hStarttime = _Timer_Init()
 			NotifyRemoteControlProcBtnStart()
 		EndIf
 

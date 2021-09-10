@@ -15,9 +15,9 @@
 #include-once
 
 Func PopulatePresetComboBox()
-	Dim $FileSearch, $NewFile
+	Local $FileSearch, $NewFile
 	$FileSearch = FileFindFirstFile($g_sProfilePresetPath & "\*.ini")
-	Dim $output = ""
+	Local $output = ""
 	While True
 		$NewFile = FileFindNextFile($FileSearch)
 		If @error Then ExitLoop

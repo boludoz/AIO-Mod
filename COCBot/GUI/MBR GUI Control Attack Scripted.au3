@@ -13,7 +13,15 @@
 ; Example .......: No
 ; ===============================================================================================================================
 #include-once
+
 #Region - Custom - Team AIO Mod++
+; Custom - Team AIO Mod++
+;Parse this first on load of bot, needed outside the function to update current language.ini file. Used on Func NewABScript() and NewDBScript()
+GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_Create", "Create New Script File")
+GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_New_0", "New Script Filename")
+GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_File-exists", "File exists, please input a new name")
+GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_Error", "An error occurred when creating the file.")
+
 Func PopulateComboScriptsFilesDB()
 	Local $sNewFile, $sOut = ""
 	Local $FileSearch = FileFindFirstFile($g_sCSVAttacksPath & "\*.csv")
@@ -42,7 +50,7 @@ Func PopulateComboScriptsFilesAB()
 		$sOut &= StringTrimRight($sNewFile, 4) & "|"
 	WEnd
 	FileClose($FileSearch)
-	
+
 	; Reset combo box
 	_GUICtrlComboBox_ResetContent($g_hCmbScriptNameAB)
 
@@ -145,9 +153,9 @@ EndFunc   ;==>EditScriptAB
 
 
 Func AttackCSVAssignDefaultScriptName()
-	Dim $FileSearch, $NewFile
+	Local $FileSearch, $NewFile
 	$FileSearch = FileFindFirstFile($g_sCSVAttacksPath & "\*.csv")
-	Dim $output = ""
+	Local $output = ""
 	$NewFile = FileFindNextFile($FileSearch)
 	If @error Then $output = ""
 	$output = StringLeft($NewFile, StringLen($NewFile) - 4)
@@ -159,11 +167,6 @@ Func AttackCSVAssignDefaultScriptName()
 	cmbScriptNameDB()
 	cmbScriptNameAB()
 EndFunc   ;==>AttackCSVAssignDefaultScriptName
-
-;Parse this first on load of bot, needed outside the function to update current language.ini file. Used on Func NewABScript() and NewDBScript()
-Local $temp1 = GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_Create", "Create New Script File"), $temp2 = GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_New_0", "New Script Filename")
-Local $temp3 = GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_File-exists", "File exists, please input a new name"), $temp4 = GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_Error", "An error occurred when creating the file.")
-Local $temp1 = 0, $temp2 = 0, $temp3 = 0, $temp4 = 0 ; empty temp vars
 
 Func NewScriptDB()
 	Local $filenameScript = InputBox(GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_Create", -1), GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_New_0", -1) & ":")
@@ -205,11 +208,6 @@ Func NewScriptAB()
 		EndIf
 	EndIf
 EndFunc   ;==>NewScriptAB
-
-
-;Parse this first on load of bot, needed outside the function to update current language.ini file. Used on Func DuplicateABScript() and DuplicateDBScript()
-Local $temp1 = GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_Copy_0", "Copy to New Script File"), $temp2 = GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_Copy_1", "Copy"), $temp3 = GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_New_1", "to New Script Filename")
-Local $temp1 = 0, $temp2 = 0, $temp3 = 0 ; empty temp vars
 
 Func DuplicateScriptDB()
 	Local $indexofscript = _GUICtrlComboBox_GetCurSel($g_hCmbScriptNameDB)

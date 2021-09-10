@@ -22,13 +22,16 @@ Global $g_hGUI_DropOrder = 0
 #include "MBR GUI Design Child Attack - Search.au3"
 #include "MBR GUI Design Child Attack - Strategies.au3"
 
+Global $g_asDropOrderList ; Custom fix - Team AIO Mod++
 Func LoadTranslatedDropOrderList()
-	Global $g_asDropOrderList = ["", _
+	Local $asDropOrderList = ["", _
 		"Barbarians", "Super Barbarians", "Archers", "Super Archers", "Giants", "Super Giants", "Goblins", "Sneaky Goblins", _
 		"Wall Breakers", "Super Wall Breakers", "Balloons", "Rocket Balloons", "Wizards", "Super Wizards", "Healers", _
 		"Dragons", "Pekkas", "Baby Dragons", "Inferno Dragons", "Miners", "Electro Dragons", "Yetis", "Dragon Riders", _
 		"Minions", "Super Minions", "Hog Riders", "Valkyries", "Super Valkyries", "Golems", _
 		"Witchs", "Super Witchs", "Lava Hounds", "Ice Hounds", "Bowlers", "Ice Golems", "Headhunters", "Clan Castle", "Heroes"]
+
+		$g_asDropOrderList = $asDropOrderList
 EndFunc   ;==>LoadTranslatedDropOrderList
 
 Global $g_hChkCustomDropOrderEnable = 0

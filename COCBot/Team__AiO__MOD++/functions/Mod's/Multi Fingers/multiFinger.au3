@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Local $aAttackTypeString[$mf8FPinWheelRight + 1] = ["Random", _
+Global $g_aAttackTypeString[$mf8FPinWheelRight + 1] = ["Random", _
 													"Four Finger Standard", _
 													"Four Finger Spiral Left", _
 													"Four Finger Spiral Right", _
@@ -67,8 +67,8 @@ Func launchMultiFinger($listInfoDeploy, $g_iClanCastleSlot, $g_iKingSlot, $g_iQu
 
 	Local $multiStyle = ($g_iMultiFingerStyle = $mfRandom) ? Random($mfFFStandard, $mf8FPinWheelRight, 1) : $g_iMultiFingerStyle
 
-	SetLog("Attacking " & $aAttackTypeString[$multiStyle] & " fight style.", $COLOR_BLUE)
-	If $g_bDebugSetlog = 1 Then SetLog("Launch " & $aAttackTypeString[$multiStyle] & " with CC " & $g_iClanCastleSlot & ", K " & $g_iKingSlot & ", Q " & $g_iQueenSlot & ", W " & $g_iWardenSlot, $COLOR_PURPLE)
+	SetLog("Attacking " & $g_aAttackTypeString[$multiStyle] & " fight style.", $COLOR_BLUE)
+	If $g_bDebugSetlog = 1 Then SetLog("Launch " & $g_aAttackTypeString[$multiStyle] & " with CC " & $g_iClanCastleSlot & ", K " & $g_iKingSlot & ", Q " & $g_iQueenSlot & ", W " & $g_iWardenSlot, $COLOR_PURPLE)
 
 	Local $aDeployButtonPositions = getUnitLocationArray()
 	Local $unitCount = unitCountArray()

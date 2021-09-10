@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 #include-once
- 
+
 Global $aLanguageFile[1][2] ; undimmed language file array [FileName][DisplayName]
 Global $hLangIcons = 0
 
@@ -646,6 +646,7 @@ Func btnTestImage()
 EndFunc   ;==>btnTestImage
 
 #Region - Custom - Team AIO Mod++
+Global $g_aiSearchZoomOutCounter[2]
 Func btnTestVillageSize()
 	ZoomOut()
 	BeginImageTest()
@@ -657,14 +658,14 @@ Func btnTestVillageSize()
 	Local $Date = @YEAR & "-" & @MON & "-" & @MDAY
 	Local $Time = @HOUR & "." & @MIN & "." & @SEC
 	Local $sFilename = String($Date & "_" & $Time & "_.png")
-	
+
 	Local $iAngle = 0
-	
-	
+
+
 	Local $a[2][2] = [["stone", "tree"], ["2stone", "2tree"]]
 	For $i = 0 To 1
 		_CaptureRegions()
-		
+
 		SetLog("Testing GetVillageSize(True, """ & $a[$i][0] & """, """ & $a[$i][1] & """)", $COLOR_INFO)
 		Local $hTimer = __TimerInit()
 		Local $village = GetVillageSize(True, $a[$i][0], $a[$i][1], Default, Default, False)
@@ -687,24 +688,26 @@ Func btnTestVillageSize()
 			SetLog("Village offset y: " & $village[3])
 			SetLog("Village stone " & $village[6] & ": " & $village[4] & ", " & $village[5])
 			SetLog("Village tree " & $village[9] & ": " & $village[7] & ", " & $village[8])
-			
+
 			; Local $bOnBuilderBase = isOnBuilderBase(True)
 			; If Not $bOnBuilderBase And IsArray($village) Then
 			If IsArray($village) Then
 				$g_bDebugDisableZoomout = True
-				
-				
-				Global $g_aiSearchZoomOutCounter[2] = [0, 1] ; 0: Counter of SearchZoomOut calls, 1: # of post zoomouts after image found
-				
+
+				; 0: Counter of SearchZoomOut calls, 1: # of post zoomouts after image found
+				$g_aiSearchZoomOutCounter[0] = 0
+				$g_aiSearchZoomOutCounter[1] = 1
+
+
 				If $i = 0 Then
 					$g_aiSearchZoomOutCounter[0] = 0
 				Else
 					$g_aiSearchZoomOutCounter[0] = 15
 				EndIf
-				
+
 				Local $aCenterVillage = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", False, $g_bDebugSetlog)
 				$g_bDebugDisableZoomout = False
-				
+
 				If $i = 0 Then
 					For $i2 = 0 To UBound($aCocDiamondECDTemp) - 1
 						Local $temp = StringSplit($aCocDiamondECDTemp[$i2], ",", $STR_NOCOUNT)
@@ -713,7 +716,7 @@ Func btnTestVillageSize()
 							$tempCocDiamondECD[$i2][1] = $temp[1]
 						EndIf
 					Next
-					
+
 					Local $tempCocDiamondDCD[4][2]
 					For $i3 = 0 To UBound($aCocDiamondDCDTemp) - 1
 						Local $temp = StringSplit($aCocDiamondDCDTemp[$i3], ",", $STR_NOCOUNT)
@@ -722,7 +725,7 @@ Func btnTestVillageSize()
 							$tempCocDiamondDCD[$i3][1] = $temp[1]
 						EndIf
 					Next
-					
+
 					Local $hEditedImage = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
 					Local $hGraphic = _GDIPlus_ImageGetGraphicsContext($hEditedImage)
 					Local $hPenSkyBlue = _GDIPlus_PenCreate(0xFF07E6FF, 3)
@@ -736,19 +739,19 @@ Func btnTestVillageSize()
 					_GDIPlus_GraphicsDrawLine($hGraphic, $tempCocDiamondDCD[1][0], $tempCocDiamondDCD[1][1], $tempCocDiamondDCD[2][0], $tempCocDiamondDCD[2][1], $hPenSkyBlue)
 					_GDIPlus_GraphicsDrawLine($hGraphic, $tempCocDiamondDCD[2][0], $tempCocDiamondDCD[2][1], $tempCocDiamondDCD[3][0], $tempCocDiamondDCD[3][1], $hPenSkyBlue)
 					_GDIPlus_GraphicsDrawLine($hGraphic, $tempCocDiamondDCD[3][0], $tempCocDiamondDCD[3][1], $tempCocDiamondDCD[0][0], $tempCocDiamondDCD[0][1], $hPenSkyBlue)
-					
+
 					$iAngle = Round(angle(Number($village[4]), Number($village[5]), Number($village[7]), Number($village[8])))
 					addInfoToDebugImage($hGraphic, $hPenWhite, "X: " & Number($village[4]) & ", Y: " & Number($village[5]) & ", Ang.: " & $iAngle & ", " & String($village[6]), Number($village[4]), Number($village[5]))
 					addInfoToDebugImage($hGraphic, $hPenWhite, "X: " & Number($village[7]) & ", Y: " & Number($village[8]) & ", Ang.: " & $iAngle & ", " & String($village[9]), Number($village[7]), Number($village[8]))
-					
+
 					_GDIPlus_ImageSaveToFile($hEditedImage, $subDirectory & "\TestVillageSize" & $i+1 & "_" & $sFilename)
 					_GDIPlus_PenDispose($hPenSkyBlue)
 					_GDIPlus_PenDispose($hPenWhite)
 					_GDIPlus_GraphicsDispose($hGraphic)
 					_GDIPlus_BitmapDispose($hEditedImage)
-					
+
 				Else
-								
+
 					For $i2 = 0 To UBound($aCocDiamondECDTemp2) - 1
 						Local $temp = StringSplit($aCocDiamondECDTemp2[$i2], ",", $STR_NOCOUNT)
 						If Not @error Then
@@ -756,7 +759,7 @@ Func btnTestVillageSize()
 							$tempCocDiamondECD2[$i2][1] = $temp[1]
 						EndIf
 					Next
-					
+
 					Local $tempCocDiamondDCD2[4][2]
 					For $i3 = 0 To UBound($aCocDiamondDCDTemp2) - 1
 						Local $temp = StringSplit($aCocDiamondDCDTemp2[$i3], ",", $STR_NOCOUNT)
@@ -765,7 +768,7 @@ Func btnTestVillageSize()
 							$tempCocDiamondDCD2[$i3][1] = $temp[1]
 						EndIf
 					Next
-					
+
 					Local $hEditedImage2 = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
 					Local $hGraphic2 = _GDIPlus_ImageGetGraphicsContext($hEditedImage2)
 					Local $hPenBlue = _GDIPlus_PenCreate(0xFF6052F9, 3)
@@ -779,7 +782,7 @@ Func btnTestVillageSize()
 					_GDIPlus_GraphicsDrawLine($hGraphic2, $tempCocDiamondDCD2[1][0], $tempCocDiamondDCD2[1][1], $tempCocDiamondDCD2[2][0], $tempCocDiamondDCD2[2][1], $hPenBlue)
 					_GDIPlus_GraphicsDrawLine($hGraphic2, $tempCocDiamondDCD2[2][0], $tempCocDiamondDCD2[2][1], $tempCocDiamondDCD2[3][0], $tempCocDiamondDCD2[3][1], $hPenBlue)
 					_GDIPlus_GraphicsDrawLine($hGraphic2, $tempCocDiamondDCD2[3][0], $tempCocDiamondDCD2[3][1], $tempCocDiamondDCD2[0][0], $tempCocDiamondDCD2[0][1], $hPenBlue)
-					
+
 					$iAngle = Round(angle(Number($village[4]), Number($village[5]), Number($village[7]), Number($village[8])))
 					addInfoToDebugImage($hGraphic2, $hPenWhite, "X: " & Number($village[4]) & ", Y: " & Number($village[5]) & ", Ang.: " & $iAngle & ", " & String($village[6]) , Number($village[4]), Number($village[5]))
 					addInfoToDebugImage($hGraphic2, $hPenWhite, "X: " & Number($village[7]) & ", Y: " & Number($village[8]) & ", Ang.: " & $iAngle & ", " & String($village[9]) , Number($village[7]), Number($village[8]))
@@ -793,7 +796,7 @@ Func btnTestVillageSize()
 			EndIf
 		EndIf
 	Next
-	
+
 
 	EndImageTest()
 
@@ -1111,28 +1114,28 @@ Func btnRunFunction($bExecuteCapture = False)
 	; Prevent bugs.
 	Local $sFunc = GUICtrlRead($g_hTxtRunFunction)
 	$iError = @error
-	
-	If ($iError <> 0) Or StringIsSpace($sFunc) Or StringInStr($sFunc, "btnRunFunction()") > 0 Then 
+
+	If ($iError <> 0) Or StringIsSpace($sFunc) Or StringInStr($sFunc, "btnRunFunction()") > 0 Then
 		Setlog($sSCap & "| Bad call.", $COLOR_ERROR)
 		Return
 	EndIf
-	
+
 	Setlog($sSCap & "| Run Function : " & $sFunc, $COLOR_ACTION)
 
 	; Local $bDebugLogs = $g_bDebugSetlog
 	; $g_bDebugSetlog = True
-	
+
 	Local $iTimer = __TimerInit()
 	Local $saExecResult = Execute($sFunc)
 	$iError = @error
 	Local $iCalc = Round(__TimerDiff($iTimer)/1000, 2)
 	Setlog($sSCap & "| Time Execution : " & $iCalc & " sec", $COLOR_INFO)
-	
+
 	; $g_bDebugSetlog = $bDebugLogs
 
 	If $iError = 0 Then
 		_GUICtrlTab_ClickTab($g_hTabMain, 0)
-		
+
 		If IsArray($saExecResult) Then
 			Local $sConv = _ArrayToString($saExecResult)
 			$sConv = StringReplace($sConv, @CRLF, "#")
@@ -1141,7 +1144,7 @@ Func btnRunFunction($bExecuteCapture = False)
 		Else
 			Setlog($sSCap & "| Result : " & $saExecResult, $COLOR_INFO)
 		EndIf
-		
+
 	Else
 		Setlog($sSCap & "| Result : Error N° = " & $iError, $COLOR_ERROR)
 	EndIf

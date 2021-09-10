@@ -77,8 +77,10 @@
 	#ce
 #EndRegion Global Variables and Constants
 
+Global $g_ITBL_oErrorHandler ; Custom fix - Team AIO Mod++
+
 Func _ITaskBar_Init($bRegisterWM_COMMAND = True)
-	Global $g_ITBL_oErrorHandler
+	$g_ITBL_oErrorHandler = ""
 	If $bRegisterWM_COMMAND Then GUIRegisterMsg($WM_COMMAND, '__TaskbarWM_Command')
 	GUIRegisterMsg($g_WM_TaskbarButtonCreated, "__TaskbarButtonCreated")
 	OnAutoItExitRegister('__TaskbarExit')
