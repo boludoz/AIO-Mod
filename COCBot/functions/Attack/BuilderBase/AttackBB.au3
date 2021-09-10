@@ -62,7 +62,7 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 	
 	If IsArray($g_aBuilderBaseDiamond) <> True Or Not (UBound($g_aBuilderBaseDiamond) > 0) Then Return False
 
-	; $g_aExternalEdges = BuilderBaseGetEdges($g_aBuilderBaseDiamond, "External Edges")
+	$g_aExternalEdges = BuilderBaseGetEdges($g_aBuilderBaseDiamond, "External Edges")
 
 	Local $sSideNames[4] = ["TopLeft", "TopRight", "BottomRight", "BottomLeft"]
 	
@@ -89,12 +89,14 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 		Return False
 	EndIf
 
-	; Local $aVar = $g_aExternalEdges[$iSide]
-
 	BuilderBaseGetDeployPoints(15)
-	;
+	
 	Local $aVar = $g_aDeployPoints[$iSide]
 
+	If UBound($aVar) < 1 Then 
+		$aVar = $g_aExternalEdges[$iSide]
+	EndIf
+	
     If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Disabled")
 
 	; Get troops on attack bar and their quantities

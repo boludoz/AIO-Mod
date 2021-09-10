@@ -75,7 +75,9 @@ EndFunc
 
 Func _BuilderBase($bTestRun = False)
 	If Not $g_bRunState Then Return
-
+	
+	Local $bFirstBBLoop = True
+	
 	; Check if is in Builder Base.
 	If Not isOnBuilderBase(True) Then
 		If Not SwitchBetweenBases() Then
@@ -150,13 +152,13 @@ Func _BuilderBase($bTestRun = False)
 		; Check if Builder Base is to run
 		; New logic to add speed to the attack.
 		Do
-			If $g_bChkBuilderAttack = False Or ($g_iAvailableAttacksBB = 0 And $g_bChkBBStopAt3 = True) Then
+			If $g_bChkBuilderAttack = False Or ($g_iAvailableAttacksBB = 0 And $g_bChkBBStopAt3 = True And $bFirstBBLoop = True) Then
 				Setlog("Dynamic attack loop skipped.", $COLOR_INFO)
 				SetDebugLog("ChkBuilderAttack|$g_bChkBuilderAttack: " & $g_bChkBuilderAttack)
 				SetDebugLog("$g_iAvailableAttacksBB = 0 And $g_bChkBBStopAt3 = True: " & ($g_iAvailableAttacksBB = 0 And $g_bChkBBStopAt3 = True))
 				ExitLoop
 			EndIf
-
+			
 			Setlog("Dynamic attack loop: " & $iAttackLoops & "/" & $iLoopsToDo, $COLOR_INFO)
 
 			;  $g_bCloudsActive fast network fix.
@@ -198,7 +200,9 @@ Func _BuilderBase($bTestRun = False)
 			EndIf
 
 		Until ($iAttackLoops >= $iLoopsToDo) Or ($g_bChkBBStopAt3 = True And $g_iAvailableAttacksBB = 0)
-
+		
+		$bFirstBBLoop = False
+		
 		If Not $g_bRunState Then Return
 
 		WallsUpgradeBB()
