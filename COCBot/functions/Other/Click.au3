@@ -35,7 +35,7 @@ Func Click($x, $y, $times = 1, $speed = 0, $debugtxt = "")
 		$LastCoordinate[1] = $yclick
 		$LastSpeed = $speed
 	Else
-		FClick($xclick, $yclick, $times, $speed, $debugtxt)
+		FClick($x, $y, $times, $speed, $debugtxt)
 	EndIf
 EndFunc   ;==>Click
 
