@@ -157,6 +157,7 @@ Func ReadBuildingConfig()
 	IniReadS($g_sDateAndTimeQueen, $g_sProfileBuildingPath, "Dates", "DateAndTimeQueen", "", Default)
 	IniReadS($g_sDateAndTimeWarden, $g_sProfileBuildingPath, "Dates", "DateAndTimeWarden", "", Default)
 	IniReadS($g_sDateAndTimeChampion, $g_sProfileBuildingPath, "Dates", "DateAndTimeChampion", "", Default)
+	IniReadS($g_sDateBuilderBase, $g_sProfileBuildingPath, "Dates", "BuilderBaseTimer", "", Default)
 	#EndRegion - Dates - Team AIO Mod++
 EndFunc   ;==>ReadBuildingConfig
 

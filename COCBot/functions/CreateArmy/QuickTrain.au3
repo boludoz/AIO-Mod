@@ -281,15 +281,15 @@ Func CheckQuickTrainTroop()
 	local $aArmy1Location = [758, 272] ; first area of quick train army buttons
 
 	; search for EditQuickTrainIcon
-	Local $a_EditArmy[4] = [780, 293, 0xBDE98D, 10] ; * 108
+	Local $aEditArmy[4] = [780, 293, 0xBDE98D, 10] ; * 108
 	Local $hPixelC = 0x000000
 		
 	For $i = 0 To UBound($g_bQuickTrainArmy) - 1 ; check all 3 army combo
 		If Not $g_bQuickTrainArmy[$i] Then ContinueLoop ; skip unchecked quick train army
 
-		$hPixelC = _GetPixelColor($a_EditArmy[0], $a_EditArmy[1] + (108 * $i), True)
-		If _ColorCheck($hPixelC, Hex($a_EditArmy[2], 6), $a_EditArmy[3]) Then
-			Click($a_EditArmy[0], $a_EditArmy[1] + (108 * $i), 1)
+		$hPixelC = _GetPixelColor($aEditArmy[0], $aEditArmy[1] + (108 * $i), True)
+		If _ColorCheck($hPixelC, Hex($aEditArmy[2], 6), $aEditArmy[3]) Then
+			Click($aEditArmy[0], $aEditArmy[1] + (108 * $i), 1)
 			If _Sleep(1000) Then Return
 
 			Local $TempTroopTotal = 0, $TempSpellTotal = 0, $TempSiegeTotal = 0

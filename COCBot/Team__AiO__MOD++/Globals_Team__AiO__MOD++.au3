@@ -63,7 +63,7 @@ Global $g_sDateAndTimeMagicItems = ""
 
 ; Hero war upgrade exception.
 Global Const $g_sConstHeroWUESeconds = 172800 ; 172800 const = 2 days quality check.
-Global $g_sDateAndTimeHeroWUE = ""
+Global $g_sDateAndTimeHeroWUE = "2021/09/02 00:00:00"
 
 ; King upgrade time.
 Global Const $g_sConstMaxHeroTime = 864000 ; 864000 const = 10 days quality check.
@@ -78,6 +78,9 @@ Global $g_sDateAndTimeWarden = "2021/09/02 00:00:00"
 ; Champion upgrade time.
 Global $g_sDateAndTimeChampion = "2021/09/02 00:00:00"
 
+; Builder base play.
+Global Const $g_sConstMaxBuilderBase = 86400 ; 86400 const = 1 day quality check.
+Global $g_sDateBuilderBase = "2021/09/02 00:00:00"
 #EndRegion - Dates - Team AIO Mod++
 
 #Region -  New DB sys - Team AIO Mod++

@@ -15,36 +15,43 @@
 
 #include-once
 #include <WinAPISys.au3>
-
-Func Click($x, $y, $times = 1, $speed = 0, $debugtxt = "", $bRandomInLoop = True)
-
-	#Region - Custom click - Team AIO Mod++
-	If ($x = $aAway[0] Or $x = $aAway2[0]) And $y = 10 Or $y = 50 Then
-		If $g_bDebugClick Then SetLog("Force random ClickAway.", $COLOR_ACTION)
-		Return ClickAway(Default, Default, $times)
-	EndIf
-
-	Local $txt = "", $aPrevCoor[2] = [$x, $y]
+Func Click($x, $y, $times = 1, $speed = 0, $debugtxt = "")
+	Static $LastCoordinate[2]
+	Static $LastSpeed
     If $g_bUseRandomClick Then
-		$x += Random(-5, 5, 1)
-		$y += Random(-5, 5, 1)
-		If $x <= 0 Or $x >= $g_iGAME_WIDTH Then $x = $aPrevCoor[0]
-		If $y <= 0 Or $y >= $g_iGAME_HEIGHT Then $y = $aPrevCoor[1]
+		Local $xclick = Random($x - 5, $x, 1)
+		Local $yclick = Random($y, $y + 5, 1)
+		If $xclick <= 0 Or $xclick >= 860 Then $xclick = $x
+		If $yclick <= 0 Or $yclick >= 635 Then $yclick = $y
+		If $xclick = $LastCoordinate[0] And $yclick = $LastCoordinate[1] Then
+			$xclick = Random($x - 5, $x, 1)
+			$yclick = Random($y, $y + 5, 1)
+		EndIf
+		If $LastSpeed = $speed Then
+			$speed = $speed + 100
+		EndIf
+		FClick($xclick, $yclick, $times, $speed, $debugtxt)
+		$LastCoordinate[0] = $xclick
+		$LastCoordinate[1] = $yclick
+		$LastSpeed = $speed
+	Else
+		FClick($xclick, $yclick, $times, $speed, $debugtxt)
 	EndIf
-	
+EndFunc   ;==>Click
+
+Func FClick($x, $y, $times = 1, $speed = 0, $debugtxt = "", $bRandomInLoop = True)
 	If $g_bDebugClick Or TestCapture() Then
-		$txt = _DecodeDebug($debugtxt)
-		SetLog("Click " & $x & "," & $y & "," & $times & "," & $speed & " " & $debugtxt & $txt, $COLOR_ACTION)
+		Local $txt = _DecodeDebug($debugtxt)
+		SetLog("Click " & $x & "," & $y & "," & $times & "," & $speed & " " & $debugtxt & $txt, $COLOR_ACTION, "Verdana", "7.5", 0)
 	EndIf
-	#EndRegion - Custom click - Team AIO Mod++
 
 	If TestCapture() Then Return
-	Local $aCoorR[2] = [$x, $y]
+	Local $aPrevCoor[2] = [$x, $y]
 	If $g_bAndroidAdbClick = True Then
 		If $g_bUseRandomClick And $bRandomInLoop And $speed > 0 Then
-			For $i = 1 To $times 
-				$x = $aCoorR[0] + Random(-1, 1, 1)
-				$y = $aCoorR[1] + Random(-1, 1, 1)
+			For $i = 1 To $times
+				$x = $aPrevCoor[0] + Random(-1, 1, 1)
+				$y = $aPrevCoor[1] + Random(-1, 1, 1)
 				If $x <= 0 Or $x >= $g_iGAME_WIDTH Then $x = $aPrevCoor[0]
 				If $y <= 0 Or $y >= $g_iGAME_HEIGHT Then $y = $aPrevCoor[1]
 				AndroidClick($x, $y, 1, $speed)
@@ -63,7 +70,7 @@ Func Click($x, $y, $times = 1, $speed = 0, $debugtxt = "", $bRandomInLoop = True
 				If $g_bDebugClick Then SetLog("VOIDED Click " & $x & "," & $y & "," & $times & "," & $speed & " " & $debugtxt & $txt, $COLOR_ERROR, "Verdana", "7.5", 0)
 				checkMainScreen(False)
 				SuspendAndroid($SuspendMode)
-				Return ; if need to clear screen do not click
+				Return
 			EndIf
 			MoveMouseOutBS()
 			_ControlClick($x, $y)
@@ -74,13 +81,13 @@ Func Click($x, $y, $times = 1, $speed = 0, $debugtxt = "", $bRandomInLoop = True
 			If $g_bDebugClick Then SetLog("VOIDED Click " & $x & "," & $y & "," & $times & "," & $speed & " " & $debugtxt & $txt, $COLOR_ERROR, "Verdana", "7.5", 0)
 			checkMainScreen(False)
 			SuspendAndroid($SuspendMode)
-			Return ; if need to clear screen do not click
+			Return
 		EndIf
 		MoveMouseOutBS()
 		_ControlClick($x, $y)
 	EndIf
 	SuspendAndroid($SuspendMode)
-EndFunc   ;==>Click
+EndFunc   ;==>FClick
 
 Func _ControlClick($x, $y)
 	;Local $hWin = ($g_bAndroidEmbedded = False ? $g_hAndroidWindow : $g_aiAndroidEmbeddedCtrlTarget[1])
@@ -137,7 +144,7 @@ EndFunc   ;==>BuildingClickP
 
 Func PureClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
 	Local $aPrevCoor[2] = [$x, $y]
-	
+
 	If $g_bDebugClick Then
 		Local $txt = _DecodeDebug($debugtxt)
 		SetLog("PureClick " & $x & "," & $y & "," & $times & "," & $speed & " " & $debugtxt & $txt, $COLOR_ACTION, "Verdana", "7.5", 0)
@@ -275,13 +282,13 @@ Func ClickAway($bForce = Default, $bRight = Default, $eTimes = Default)
 			EndIf
 		EndIf
 	EndIf
-	
-	If $g_bDebugClick = True Then 
+
+	If $g_bDebugClick = True Then
 		SetLog("ClickAway ? " & $bDo, $COLOR_ACTION)
 	EndIf
-	
+
 	If $bDo = False Then Return False
-	
+
 	Local $aiRegionToUse = 0
 	If $bRight = True Then
 		$aiRegionToUse = $aiClickAwayRegionRight
@@ -298,7 +305,7 @@ Func ClickAway($bForce = Default, $bRight = Default, $eTimes = Default)
 		PureClickP($aiSpot, 1, 0, "#0000")
 		If RandomSleep(150) Then Return
 	Next
-	
+
 	$g_bUseRandomClick = $bUseRandom
 EndFunc
 #EndRegion - ClickAway - Team AIO Mod++

@@ -171,8 +171,10 @@ Func SaveBuildingConfig()
 	_Ini_Add("Dates", "DateAndTimeQueen", $g_sDateAndTimeQueen)
 	_Ini_Add("Dates", "DateAndTimeWarden", $g_sDateAndTimeWarden)
 	_Ini_Add("Dates", "DateAndTimeChampion", $g_sDateAndTimeChampion)
+	_Ini_Add("Dates", "BuilderBaseTimer", $g_sDateBuilderBase)
 	#EndRegion - Dates - Team AIO Mod++
 	
+
 	_Ini_Save($g_sProfileBuildingPath)
 EndFunc   ;==>SaveBuildingConfig
 

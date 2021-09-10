@@ -25,7 +25,6 @@ Func CollectMagicItems($bDebug = False)
 			Local $iDateDiff = _DateDiff('s', _NowCalcDate() & " " & _NowTime(5), $g_sDateAndTimeMagicItems)
 			If $iDateDiff > 0 And ($g_sConstMaxMagicItemsSeconds < $iDateDiff) = False Then
 				SetLog("Collect Magic Items | We've been through here recently.", $COLOR_INFO)
-				checkMainScreen(False)
 				Return
 			EndIf
 		EndIf

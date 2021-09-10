@@ -12,7 +12,7 @@
 ; Link ..........: https://www.mybot.run
 ; Example .......: ---
 ;================================================================================================================================
-Func QuickMIS($ValueReturned, $directory, $left = 0, $top = 0, $right = $g_iGAME_WIDTH, $bottom = $g_iGAME_HEIGHT, $bNeedCapture = True, $debug = False, $OcrDecode = 3, $OcrSpace = 12)
+Func QuickMIS($ValueReturned, $directory, $left = 0, $top = 0, $right = $g_iGAME_WIDTH, $bottom = $g_iGAME_HEIGHT, $bNeedCapture = True, $debug = False, $OcrDecode = 3, $OcrSpace = 12, $bOcrStripSpaces = False)
 	If ($ValueReturned <> "BC1") And ($ValueReturned <> "CX") And ($ValueReturned <> "N1") And ($ValueReturned <> "NX") And ($ValueReturned <> "Q1") And ($ValueReturned <> "QX") And ($ValueReturned <> "NxCx") And ($ValueReturned <> "N1Cx1") And ($ValueReturned <> "OCR") Then
 		SetLog("Bad parameters during QuickMIS call for MultiSearch...", $COLOR_RED)
 		Return
@@ -185,6 +185,11 @@ Func QuickMIS($ValueReturned, $directory, $left = 0, $top = 0, $right = $g_iGAME
 						$sOCRString &= $aResults[$i][1]
 					Next
 					SetDebugLog("QuickMIS " & $ValueReturned & ", $sOCRString: " & $sOCRString)
+
+					If $bOcrStripSpaces = True Then
+						$sOCRString = StringStripWS($sOCRString, $STR_STRIPALL)
+					EndIf
+
 					Return $sOCRString
 			EndSwitch
 		EndIf
