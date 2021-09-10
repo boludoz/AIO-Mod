@@ -62,7 +62,7 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 	
 	If IsArray($g_aBuilderBaseDiamond) <> True Or Not (UBound($g_aBuilderBaseDiamond) > 0) Then Return False
 
-	$g_aExternalEdges = BuilderBaseGetEdges($g_aBuilderBaseDiamond, "External Edges")
+	; $g_aExternalEdges = BuilderBaseGetEdges($g_aBuilderBaseDiamond, "External Edges")
 
 	Local $sSideNames[4] = ["TopLeft", "TopRight", "BottomRight", "BottomLeft"]
 	
@@ -89,11 +89,11 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 		Return False
 	EndIf
 
-	Local $aVar = $g_aExternalEdges[$iSide]
+	; Local $aVar = $g_aExternalEdges[$iSide]
 
-	;BuilderBaseGetDeployPoints()
+	BuilderBaseGetDeployPoints(15)
 	;
-	;$aVar = $g_aDeployPoints[1]
+	Local $aVar = $g_aDeployPoints[$iSide]
 
     If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Disabled")
 
