@@ -151,12 +151,12 @@ Func _SmartFarmMilk($bDebug = False)
 			Case $eSWall
 				$aSlots2deploy[$eWallSlot][0] = $i
 				$aSlots2deploy[$eWallSlot][1] = $g_avAttackTroops[$i][1]
-				$aSlots2deploy[$eWallSlot][2] = "Random(1, 2, 1)"
+				$aSlots2deploy[$eWallSlot][2] = "Random(2, 3, 1)"
 				$aSlots2deploy[$eWallSlot][3] = $g_avAttackTroops[$i][0]
 			Case $eWall
 				$aSlots2deploy[$eWallSlot][0] = $i
 				$aSlots2deploy[$eWallSlot][1] = $g_avAttackTroops[$i][1]
-				$aSlots2deploy[$eWallSlot][2] = "Random(2, 4, 1)"
+				$aSlots2deploy[$eWallSlot][2] = "Random(3, 4, 1)"
 				$aSlots2deploy[$eWallSlot][3] = $g_avAttackTroops[$i][0]
 		EndSwitch
 	Next
