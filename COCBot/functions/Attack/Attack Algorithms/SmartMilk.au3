@@ -92,41 +92,72 @@ Func _SmartFarmMilk($bDebug = False)
 	EndIf
 	ResumeAndroid()
 	SetLog(" ====== Start Smart Milking ====== ", $COLOR_INFO)
-	Local Enum $eGiantSlot, $eBarbSlot, $eArchSlot, $eGoblSlot, $eBabyDSlot, $eMiniSlot
-	Local $aSlots2deploy[6][4] = [[-1,-1,-1,-1], [-1,-1,-1,-1], [-1,-1,-1,-1], [-1,-1,-1,-1], [-1,-1,-1,-1], [-1,-1,-1,-1]]
+	Local Enum $eGiantSlot, $eWallSlot, $eBarbSlot, $eArchSlot, $eGoblSlot, $eBabyDSlot, $eMiniSlot
+	Local $aSlots2deploy[7][4] = [[-1,-1,-1,-1], [-1,-1,-1,-1], [-1,-1,-1,-1], [-1,-1,-1,-1], [-1,-1,-1,-1], [-1,-1,-1,-1], [-1,-1,-1,-1]]
 	Local $UsedZap = False
+	
 	For $i = 0 To UBound($g_avAttackTroops) - 1
 		Switch $g_avAttackTroops[$i][0]
 			Case $eGiant, $eSGiant
 				$aSlots2deploy[$eGiantSlot][0] = $i
 				$aSlots2deploy[$eGiantSlot][1] = $g_avAttackTroops[$i][1]
-				$aSlots2deploy[$eGiantSlot][2] = TranslateTroopsCount($eGiant, $eSGiant, $g_avAttackTroops[$i][0], Random(1, 2, 1))
+				$aSlots2deploy[$eGiantSlot][2] = "Random(1, 2, 1)"
 				$aSlots2deploy[$eGiantSlot][3] = $g_avAttackTroops[$i][0]
-			Case $eBarb, $eSBarb
+			Case $eBarb
 				$aSlots2deploy[$eBarbSlot][0] = $i
 				$aSlots2deploy[$eBarbSlot][1] = $g_avAttackTroops[$i][1]
-				$aSlots2deploy[$eBarbSlot][2] = TranslateTroopsCount($eBarb, $eSBarb, $g_avAttackTroops[$i][0], Random(3, 6, 1))
+				$aSlots2deploy[$eBarbSlot][2] = "Random(3, 6, 1)"
 				$aSlots2deploy[$eBarbSlot][3] = $g_avAttackTroops[$i][0]
-			Case $eArch, $eSArch
+			Case $eSBarb
+				$aSlots2deploy[$eBarbSlot][0] = $i
+				$aSlots2deploy[$eBarbSlot][1] = $g_avAttackTroops[$i][1]
+				$aSlots2deploy[$eBarbSlot][2] = "Random(1, 2, 1)"
+				$aSlots2deploy[$eBarbSlot][3] = $g_avAttackTroops[$i][0]
+			Case $eArch
 				$aSlots2deploy[$eArchSlot][0] = $i
 				$aSlots2deploy[$eArchSlot][1] = $g_avAttackTroops[$i][1]
-				$aSlots2deploy[$eArchSlot][2] = TranslateTroopsCount($eArch, $eSArch, $g_avAttackTroops[$i][0], Random(3, 6, 1))
+				$aSlots2deploy[$eArchSlot][2] = "Random(3, 6, 1)"
 				$aSlots2deploy[$eArchSlot][3] = $g_avAttackTroops[$i][0]
-			Case $eGobl, $eSGobl
+			Case $eSArch
+				$aSlots2deploy[$eArchSlot][0] = $i
+				$aSlots2deploy[$eArchSlot][1] = $g_avAttackTroops[$i][1]
+				$aSlots2deploy[$eArchSlot][2] = "Random(1, 2, 1)"
+				$aSlots2deploy[$eArchSlot][3] = $g_avAttackTroops[$i][0]
+			Case $eGobl
 				$aSlots2deploy[$eGoblSlot][0] = $i
 				$aSlots2deploy[$eGoblSlot][1] = $g_avAttackTroops[$i][1]
-				$aSlots2deploy[$eGoblSlot][2] = TranslateTroopsCount($eGobl, $eSGobl, $g_avAttackTroops[$i][0], Random(5, 6, 1))
+				$aSlots2deploy[$eGoblSlot][2] = "Random(5, 6, 1)"
+				$aSlots2deploy[$eGoblSlot][3] = $g_avAttackTroops[$i][0]
+			Case $eSGobl
+				$aSlots2deploy[$eGoblSlot][0] = $i
+				$aSlots2deploy[$eGoblSlot][1] = $g_avAttackTroops[$i][1]
+				$aSlots2deploy[$eGoblSlot][2] = "Random(2, 3, 1)"
 				$aSlots2deploy[$eGoblSlot][3] = $g_avAttackTroops[$i][0]
 			Case $eBabyD, $eInfernoD
 				$aSlots2deploy[$eBabyDSlot][0] = $i
 				$aSlots2deploy[$eBabyDSlot][1] = $g_avAttackTroops[$i][1]
-				$aSlots2deploy[$eBabyDSlot][2] = TranslateTroopsCount($eBabyD, $eInfernoD, $g_avAttackTroops[$i][0], 1)
+				$aSlots2deploy[$eBabyDSlot][2] = 1
 				$aSlots2deploy[$eBabyDSlot][3] = $g_avAttackTroops[$i][0]
-			Case $eMini, $eSMini
+			Case $eMini
 				$aSlots2deploy[$eMiniSlot][0] = $i
 				$aSlots2deploy[$eMiniSlot][1] = $g_avAttackTroops[$i][1]
-				$aSlots2deploy[$eMiniSlot][2] = TranslateTroopsCount($eMini, $eSMini, $g_avAttackTroops[$i][0], Random(4, 6, 1))
+				$aSlots2deploy[$eMiniSlot][2] = "Random(4, 6, 1)"
 				$aSlots2deploy[$eMiniSlot][3] = $g_avAttackTroops[$i][0]
+			Case $eSMini
+				$aSlots2deploy[$eMiniSlot][0] = $i
+				$aSlots2deploy[$eMiniSlot][1] = $g_avAttackTroops[$i][1]
+				$aSlots2deploy[$eMiniSlot][2] = 1
+				$aSlots2deploy[$eMiniSlot][3] = $g_avAttackTroops[$i][0]
+			Case $eSWall
+				$aSlots2deploy[$eWallSlot][0] = $i
+				$aSlots2deploy[$eWallSlot][1] = $g_avAttackTroops[$i][1]
+				$aSlots2deploy[$eWallSlot][2] = "Random(1, 2, 1)"
+				$aSlots2deploy[$eWallSlot][3] = $g_avAttackTroops[$i][0]
+			Case $eWall
+				$aSlots2deploy[$eWallSlot][0] = $i
+				$aSlots2deploy[$eWallSlot][1] = $g_avAttackTroops[$i][1]
+				$aSlots2deploy[$eWallSlot][2] = "Random(2, 4, 1)"
+				$aSlots2deploy[$eWallSlot][3] = $g_avAttackTroops[$i][0]
 		EndSwitch
 	Next
 
@@ -168,6 +199,12 @@ Func _SmartFarmMilk($bDebug = False)
 				If RandomSleep($DELAYLAUNCHTROOP23) Then Return
 				If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$eMiniSlot][0])
 			EndIf
+		Case 6
+			If $aSlots2deploy[$eWallSlot][0] <> -1 Then
+				If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$eWallSlot][0])
+				If RandomSleep($DELAYLAUNCHTROOP23) Then Return
+				If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$eWallSlot][0])
+			EndIf
 		Case Else
 			If IsAttackPage() Then SelectDropTroop(0)
 			If RandomSleep($DELAYLAUNCHTROOP23) Then Return
@@ -175,7 +212,7 @@ Func _SmartFarmMilk($bDebug = False)
 	EndSwitch
 	If $g_bDebugSmartMilk Then SetLog("$aSlots2deploy: " & _ArrayToString($aSlots2deploy, "-", -1, -1, "|"))
 	If $g_bDebugSmartMilk Then SetLog("$g_iMilkStrategyArmy: " & $g_iMilkStrategyArmy)
-	Local $allPossibleDeployPoints[0][2], $HeroesDeployJustInCase[2], $sSide = ""
+	Local $allPossibleDeployPoints[0][2], $HeroesDeployJustInCase[2], $sSide = "", $iTroopsQty = 1
 	For $iLoops = 0 To 2
 		$hTimer = TimerInit()
 		Local $aCollectorsTL[0][6], $aCollectorsTR[0][6], $aCollectorsBL[0][6], $aCollectorsBR[0][6]
@@ -297,15 +334,20 @@ Func _SmartFarmMilk($bDebug = False)
 							$allPossibleDeployPoints[UBound($allPossibleDeployPoints) - 1][0] = $aDeployPoint[0]
 							$allPossibleDeployPoints[UBound($allPossibleDeployPoints) - 1][0] = $aDeployPoint[1]
 						EndIf
-						For $aTroopSlot = 0 To UBound($aSlots2deploy) - 1
-							If $aSlots2deploy[$aTroopSlot][1] > 0 Then
-								If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$aTroopSlot][0])
+						For $iTroopSlot = 0 To UBound($aSlots2deploy) - 1
+							If $aSlots2deploy[$iTroopSlot][1] > 0 Then
+								If $iTroopSlot = $eWallSlot And $aCollectorsAll[$collector][3] = "Out" Then
+									Setlog("Wall break skipped, collector out.")
+									ContinueLoop
+								EndIf
+								$iTroopsQty = _Min($aSlots2deploy[$iTroopSlot][1], Execute($aSlots2deploy[$iTroopSlot][2])) ; Custom - Team AIO Mod++
+								If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$iTroopSlot][0])
 								If _Sleep($DELAYLAUNCHTROOP23 * 2) Then Return
 								If $g_bDebugSmartMilk Then SetLog("AttackClick: " & $aDeployPoint[0] & "," & $aDeployPoint[1])
-								AttackClick($aDeployPoint[0], $aDeployPoint[1], $aSlots2deploy[$aTroopSlot][2], 100, 0, "#0098")
-								$aSlots2deploy[$aTroopSlot][1] -= $aSlots2deploy[$aTroopSlot][2]
-								SetLog("Deployed " & GetTroopName($aSlots2deploy[$aTroopSlot][3], Number($aSlots2deploy[$aTroopSlot][2])) & " " & $aSlots2deploy[$aTroopSlot][2] & "x")
-								If $g_bDebugSmartMilk Then SetLog("Remains - " & GetTroopName($aSlots2deploy[$aTroopSlot][3]) & " " & $aSlots2deploy[$aTroopSlot][1] & "x")
+								AttackClick($aDeployPoint[0], $aDeployPoint[1], $iTroopsQty, 100, 0, "#0098")
+								$aSlots2deploy[$iTroopSlot][1] -= $iTroopsQty
+								SetLog("Deployed " & GetTroopName($aSlots2deploy[$iTroopSlot][3], Number($iTroopsQty)) & " " & $aSlots2deploy[$iTroopSlot][2] & " " & "x" & $iTroopsQty)
+								If $g_bDebugSmartMilk Then SetLog("Remains - " & GetTroopName($aSlots2deploy[$iTroopSlot][3]) & " " & $aSlots2deploy[$iTroopSlot][1] & "x")
 								If _Sleep($DELAYLAUNCHTROOP23) Then Return
 							EndIf
 						Next
@@ -367,15 +409,20 @@ Func _SmartFarmMilk($bDebug = False)
 			SetDebugLog("How many last deploy points: " & UBound($allPossibleDeployPoints))
 			For $point = 0 To UBound($allPossibleDeployPoints) - 1
 				CheckHeroesHealth()
-				For $aTroopSlot = 0 To UBound($aSlots2deploy) - 1
-					If $aSlots2deploy[$aTroopSlot][1] > 0 Then
-						If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$aTroopSlot][0])
+				For $iTroopSlot = 0 To UBound($aSlots2deploy) - 1
+					If $aSlots2deploy[$iTroopSlot][1] > 0 Then
+						If $iTroopSlot = $eWallSlot And $aCollectorsAll[$collector][3] = "Out" Then
+							Setlog("Wall break skipped, collector out.")
+							ContinueLoop
+						EndIf
+						$iTroopsQty = _Min($aSlots2deploy[$iTroopSlot][1], Execute($aSlots2deploy[$iTroopSlot][2])) ; Custom - Team AIO Mod++
+						If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$iTroopSlot][0])
 						If _Sleep($DELAYLAUNCHTROOP23 * 2) Then Return
 						If $g_bDebugSmartMilk Then SetLog("AttackClick: " & $allPossibleDeployPoints[$point][0] & "," & $allPossibleDeployPoints[$point][1])
-						AttackClick($allPossibleDeployPoints[$point][0], $allPossibleDeployPoints[$point][1], $aSlots2deploy[$aTroopSlot][2], 100, 0, "#0098")
-						$aSlots2deploy[$aTroopSlot][1] -= $aSlots2deploy[$aTroopSlot][2]
-						SetLog("Deployed " & GetTroopName($aSlots2deploy[$aTroopSlot][3], Number($aSlots2deploy[$aTroopSlot][2])) & " " & $aSlots2deploy[$aTroopSlot][2] & "x")
-						If $g_bDebugSmartMilk Then SetLog("Remains - " & GetTroopName($aSlots2deploy[$aTroopSlot][3]) & " " & $aSlots2deploy[$aTroopSlot][1] & "x")
+						AttackClick($allPossibleDeployPoints[$point][0], $allPossibleDeployPoints[$point][1], $iTroopsQty, 100, 0, "#0098")
+						$aSlots2deploy[$iTroopSlot][1] -= $iTroopsQty
+						SetLog("Deployed " & GetTroopName($aSlots2deploy[$iTroopSlot][3], Number($iTroopsQty)) & " " & $aSlots2deploy[$iTroopSlot][2] & " " & "x" & $iTroopsQty)
+						If $g_bDebugSmartMilk Then SetLog("Remains - " & GetTroopName($aSlots2deploy[$iTroopSlot][3]) & " " & $aSlots2deploy[$iTroopSlot][1] & "x")
 						If _Sleep($DELAYLAUNCHTROOP23) Then Return
 					EndIf
 				Next
@@ -405,18 +452,18 @@ Func _SmartFarmMilk($bDebug = False)
 	Return True
 EndFunc   ;==>SmartFarmMilk
 
-Func TranslateTroopsCount($iLow, $iHigh, $iTroopID, $iLowCount)
-	Local $iResult = 1
-	If $iLow <> $iTroopID Then 
-		$iResult = Round(Abs(($g_aiTroopSpace[$iLow] * $iLowCount) / $g_aiTroopSpace[$iHigh]) * 1.3)
-	Else
-		$iResult = $iLowCount
-	EndIf
-	If $iResult < 1 Then 
-		$iResult = 1
-	EndIf
-	Return $iResult
-EndFunc   ;==>TranslateTroopsCount
+; Func TranslateTroopsCount($iLow, $iHigh, $iTroopID, $iLowCount)
+	; Local $iResult = 1
+	; If $iLow <> $iTroopID Then 
+		; $iResult = Ceiling($g_aiTroopSpace[$iLow] * $iLowCount) / $g_aiTroopSpace[$iHigh])
+	; Else
+		; $iResult = $iLowCount
+	; EndIf
+	; If $iResult < 1 Then 
+		; $iResult = 1
+	; EndIf
+	; Return $iResult
+; EndFunc   ;==>TranslateTroopsCount
 
 Func DebugImageSmartMilk($aCollectorsAll, $sTime, $HeroesDeployJustInCase)
 	_CaptureRegion()

@@ -123,7 +123,7 @@ Func _BuilderBase($bTestRun = False)
 	Local $iLoopsToDo = Random($g_iBBMinAttack, $g_iBBMaxAttack, 1)
 	Local $bBonusObtained = 0, $bBonusObtainedInternal = False
 
-	$bBonusObtained = BuilderBaseReportAttack()
+	$bBonusObtained = BuilderBaseReportAttack(False)
 
 	Do
 		; ClickAway()
@@ -361,11 +361,14 @@ Func IsBuilderBaseOCR($bSetLog = True)
 		
 		; Minutes
 		$aTmp = _StringBetween($sString, "H", "M")
-		If Not @error Then
-			$iTimer = Number($aTmp[0])
-			$iSeconds += ($iTimer * 60)
+		If @error Then
+			$aTmp = _StringBetween($sString, "H", "")
+			If Not @error Then
+				$iTimer = Number($aTmp[0])
+				$iSeconds += ($iTimer * 60)
+			EndIf
 		EndIf
-		
+
 	Else
 		; Hours
 		$aTmp = _StringBetween($sString, "", "M")

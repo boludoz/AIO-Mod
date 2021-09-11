@@ -438,7 +438,7 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 
 		If $aAvailableTroops_NXQ <> -1 And IsArray($aAvailableTroops_NXQ) Then
 			SetLog("CSV Does not deploy some of the troops. So Now just dropping troops in a waves", $COLOR_INFO)
-			AttackBB($aAvailableTroops_NXQ)
+			AttackBB($aAvailableTroops_NXQ, True)
 		EndIf
 
 	Else

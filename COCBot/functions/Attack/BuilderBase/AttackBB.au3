@@ -49,7 +49,7 @@ Func TestBuilderBaseAttackBB()
 	Setlog("** TestBuilderBaseAttackBB END**", $COLOR_DEBUG)
 EndFunc   ;==>TestBuilderBaseAttackBB
 
-Func AttackBB($aAvailableTroops = GetAttackBarBB())
+Func AttackBB($aAvailableTroops = GetAttackBarBB(), $bRemainCSV = False)
 	Local $iSide = Random(0, 1, 1) ; randomly choose top left or top right
 	Local $aBMPos = 0
 
@@ -88,11 +88,15 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 		SetLog("Fail AttackBB 0x2")
 		Return False
 	EndIf
-
-	BuilderBaseGetDeployPoints(15)
 	
-	Local $aVar = $g_aDeployPoints[$iSide]
-
+	If $bRemainCSV = False Then
+		BuilderBaseGetDeployPoints(15)
+	EndIf
+	
+	Local $aVar
+	If UBound($g_aDeployPoints) > 0 Then
+		$aVar = $g_aDeployPoints[$iSide]
+	EndIf
 	If UBound($aVar) < 1 Then 
 		$aVar = $g_aExternalEdges[$iSide]
 	EndIf
