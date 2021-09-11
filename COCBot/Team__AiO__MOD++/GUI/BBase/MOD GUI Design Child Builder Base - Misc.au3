@@ -26,10 +26,10 @@ Global $g_sTranslateBBTower = ""
 
 Func TowerBoostTranslate()
 	Local $sTranslateBBTower = ""
-	; GUICtrlSetData(-1, GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "CmbStartClockTowerBoost", "Always")) & "|" & _
-	$sTranslateBBTower = GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "CmbStartClockTowerBoostLabBuilder", "Lab. + Builder active.") & "|" & _
+	$sTranslateBBTower = GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "CmbStartClockTowerBoostLabORBuilder", "Lab OR builder bussy.") & "|" & _ ; Snorlax
+	GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "CmbStartClockTowerBoostLabANDBuilder", "Lab AND builder bussy.") & "|" & _
 	GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "CmbStartClockTowerBoostBuilder", "Builder active") & "|" & _
-	GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "CmbStartClockTowerBoostLab", "Lab. active")
+	GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "CmbStartClockTowerBoostLab", "Lab active")
 	
 	$g_sTranslateBBTower = $sTranslateBBTower
 EndFunc

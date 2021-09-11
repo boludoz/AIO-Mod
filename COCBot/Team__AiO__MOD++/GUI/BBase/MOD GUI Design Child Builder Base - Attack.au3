@@ -80,7 +80,7 @@ Func CreateAttackPlanBuilderBaseSubTab()
 	$y = 90
 	$g_hGrpOptionsBB = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "Group_02", "Options"), $x, $y, $g_iSizeWGrpTab2 - 2, $g_iSizeHGrpTab4 - 135)
 	$g_hCmbBBAttack = GUICtrlCreateCombo( GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "CmbAttackStyle", ""), $x + 5, $y + 15, 80, -1, $CBS_DROPDOWNLIST)
-	GUICtrlSetData(-1, GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "CmbAttackStyleSmart", "Smart attack") & "|" &  GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "CmbAttackStyleCSV", "CSV"))
+	GUICtrlSetData(-1, GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "CmbAttackStyleCSV", "CSV") & "|" &  GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "CmbAttackStyleSmart", "Smart attack"))
 	GUICtrlSetOnEvent(-1, "cmbBBAttack")
 	_GUICtrlComboBox_SetCurSel($g_hCmbBBAttack, $g_eBBAttackCSV)         ; set default to csv
 

@@ -152,7 +152,7 @@ Func _BuilderBase($bTestRun = False)
 		; Check if Builder Base is to run
 		; New logic to add speed to the attack.
 		Do
-			If $g_bChkBuilderAttack = False Or ($g_iAvailableAttacksBB = 0 And $g_bChkBBStopAt3 = True And $bFirstBBLoop = True) Then
+			If $g_bChkBuilderAttack = False Or ($g_iAvailableAttacksBB = 0 And $g_bChkBBStopAt3 = True And not $bFirstBBLoop) Then
 				Setlog("Dynamic attack loop skipped.", $COLOR_INFO)
 				SetDebugLog("ChkBuilderAttack|$g_bChkBuilderAttack: " & $g_bChkBuilderAttack)
 				SetDebugLog("$g_iAvailableAttacksBB = 0 And $g_bChkBBStopAt3 = True: " & ($g_iAvailableAttacksBB = 0 And $g_bChkBBStopAt3 = True))
