@@ -49,7 +49,7 @@ Func TestBuilderBaseAttackBB()
 	Setlog("** TestBuilderBaseAttackBB END**", $COLOR_DEBUG)
 EndFunc   ;==>TestBuilderBaseAttackBB
 
-Func AttackBB($aAvailableTroops = GetAttackBarBB())
+Func AttackBB($aAvailableTroops = GetAttackBarBB(), $bRemainCSV = False)
 	Local $iSide = Random(0, 1, 1) ; randomly choose top left or top right
 	Local $aBMPos = 0
 
@@ -62,7 +62,7 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 	
 	If IsArray($g_aBuilderBaseDiamond) <> True Or Not (UBound($g_aBuilderBaseDiamond) > 0) Then Return False
 
-	; $g_aExternalEdges = BuilderBaseGetEdges($g_aBuilderBaseDiamond, "External Edges")
+	$g_aExternalEdges = BuilderBaseGetEdges($g_aBuilderBaseDiamond, "External Edges")
 
 	Local $sSideNames[4] = ["TopLeft", "TopRight", "BottomRight", "BottomLeft"]
 	
@@ -88,13 +88,19 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB())
 		SetLog("Fail AttackBB 0x2")
 		Return False
 	EndIf
-
-	; Local $aVar = $g_aExternalEdges[$iSide]
-
-	BuilderBaseGetDeployPoints(15)
-	;
-	Local $aVar = $g_aDeployPoints[$iSide]
-
+	
+	If $bRemainCSV = False Then
+		BuilderBaseGetDeployPoints(15)
+	EndIf
+	
+	Local $aVar
+	If UBound($g_aDeployPoints) > 0 Then
+		$aVar = $g_aDeployPoints[$iSide]
+	EndIf
+	If UBound($aVar) < 1 Then 
+		$aVar = $g_aExternalEdges[$iSide]
+	EndIf
+	
     If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Disabled")
 
 	; Get troops on attack bar and their quantities

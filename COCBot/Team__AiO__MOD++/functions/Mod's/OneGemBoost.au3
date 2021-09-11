@@ -69,7 +69,7 @@ EndFunc   ;==>OneGemBoost
 
 Func CheckOneGem()
 	If Number(StringStripWS(QuickMIS("OCR", $g_sImgOneGemBoostOCR, 370, 420, 500, 470), $STR_STRIPALL)) = 1 Then Return True
-	SetLog("$bGemOcr Not Found", $COLOR_ERROR)
+	SetLog("The 1 gem event is not available.", $COLOR_ERROR)
 	Return False
 EndFunc   ;==>CheckOneGem
 

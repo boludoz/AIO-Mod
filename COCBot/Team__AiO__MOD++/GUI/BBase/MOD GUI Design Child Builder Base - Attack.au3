@@ -80,7 +80,7 @@ Func CreateAttackPlanBuilderBaseSubTab()
 	$y = 90
 	$g_hGrpOptionsBB = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "Group_02", "Options"), $x, $y, $g_iSizeWGrpTab2 - 2, $g_iSizeHGrpTab4 - 135)
 	$g_hCmbBBAttack = GUICtrlCreateCombo( GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "CmbAttackStyle", ""), $x + 5, $y + 15, 80, -1, $CBS_DROPDOWNLIST)
-	GUICtrlSetData(-1, GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "CmbAttackStyleSmart", "Smart attack") & "|" &  GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "CmbAttackStyleCSV", "CSV"))
+	GUICtrlSetData(-1, GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "CmbAttackStyleCSV", "CSV") & "|" &  GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "CmbAttackStyleSmart", "Smart attack"))
 	GUICtrlSetOnEvent(-1, "cmbBBAttack")
 	_GUICtrlComboBox_SetCurSel($g_hCmbBBAttack, $g_eBBAttackCSV)         ; set default to csv
 
@@ -112,14 +112,14 @@ Func CreateAttackPlanBuilderBaseSubTab()
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "CmbBBNextTroopDelay_Info_01", "Set the delay between different troops. 1 fastest to 9 slowest."))
 	GUICtrlSetOnEvent(-1, "cmbBBNextTroopDelay")
 	GUICtrlSetData(-1, "1|2|3|4|5|6|7|8|9")
-	GUICtrlSetState(-1, $GUI_DISABLE)
+	; GUICtrlSetState(-1, $GUI_DISABLE)
 	_GUICtrlComboBox_SetCurSel($g_hCmbBBNextTroopDelay, 4)     ; start in middle
 	$g_hLblBBSameTroopDelay = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "LblBBSameTroopDelay", "Same Troop Delay"), $x + 40, $y + 93 + 120)
 	$g_hCmbBBSameTroopDelay = GUICtrlCreateCombo("", $x + 70, $y + 110 + 120, 30, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "CmbBBSameTroopDelay_Info_01", "Set the delay between same troops. 1 fastest to 9 slowest."))
 	GUICtrlSetOnEvent(-1, "cmbBBSameTroopDelay")
 	GUICtrlSetData(-1, "1|2|3|4|5|6|7|8|9")
-	GUICtrlSetState(-1, $GUI_DISABLE)
+	; GUICtrlSetState(-1, $GUI_DISABLE)
 	_GUICtrlComboBox_SetCurSel($g_hCmbBBSameTroopDelay, 4)     ; start in middle
 
 	$g_hBtnBBDropOrder = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrder", "Drop Order"), $x + 60, $y + 265, -1, -1)

@@ -420,7 +420,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			_GUICtrlComboBox_SetCurSel($g_hCmbBBNextTroopDelay, (($g_iBBNextTroopDelay - $g_iBBNextTroopDelayDefault) / $g_iBBNextTroopDelayIncrement) + 4) ; set combos based on delays
 			_GUICtrlComboBox_SetCurSel($g_hCmbBBSameTroopDelay, (($g_iBBSameTroopDelay - $g_iBBSameTroopDelayDefault) / $g_iBBSameTroopDelayIncrement) + 4)
 			chkBBTrophyRange()
-			; chkEnableBBAttack() ; AIO MOD++
+			chkEnableBBAttack() ; AIO MOD++
 
 			GUICtrlSetState($g_hBtnBBDropOrderSet, $GUI_ENABLE)
 

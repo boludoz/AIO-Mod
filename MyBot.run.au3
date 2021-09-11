@@ -1575,8 +1575,9 @@ Func FirstCheck()
 		EndIf
 
 		TrainSystem()
-		checkSwitchAcc()
 	Endif
+	
+	checkSwitchAcc()
 	#EndRegion - Custom - xbebenk - Team AIO Mod++
 
 	If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then

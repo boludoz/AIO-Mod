@@ -697,7 +697,7 @@ Func chkPurgeLimits()
 	EndIf
 EndFunc   ;==>chkPurgeLimits
 
-; Func chkEnableBBAttack()
+Func chkEnableBBAttack()
 	;If GUICtrlRead($g_hChkEnableBBAttack) = $GUI_CHECKED Then
 	GUICtrlSetState($g_hChkBBTrophyRange, $GUI_ENABLE)
 	GUICtrlSetState($g_hChkBBAttIfLootAvail, $GUI_ENABLE)
@@ -716,7 +716,7 @@ EndFunc   ;==>chkPurgeLimits
 	;	GUICtrlSetState($g_hCmbBBSameTroopDelay, $GUI_DISABLE)
 	;	GUICtrlSetState($g_hCmbBBNextTroopDelay, $GUI_DISABLE)
 	;EndIf
-; EndFunc   ;==>chkEnableBBAttack
+EndFunc   ;==>chkEnableBBAttack
 
 Func cmbBBNextTroopDelay()
 	$g_iBBNextTroopDelay = $g_iBBNextTroopDelayDefault + ((_GUICtrlComboBox_GetCurSel($g_hCmbBBNextTroopDelay) + 1) - 5) * $g_iBBNextTroopDelayIncrement ; +- n*increment

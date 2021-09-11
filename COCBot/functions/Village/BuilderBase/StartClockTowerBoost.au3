@@ -58,11 +58,13 @@ Func StartClockTowerBoost($bSwitchToBB = False, $bSwitchToNV = False)
 		Switch $g_iCmbStartClockTowerBoost
 			Case 0 ; Always.
 				$bCanBoost = True
-			Case 1 ; Lab + builder active.
+			Case 1 ; Lab or builder active.
+				If $bLabOn = True Or $bBuildersOn = True Then $bCanBoost = True
+			Case 2 ; Lab and builder active.
 				If $bLabOn = True And $bBuildersOn = True Then $bCanBoost = True
-			Case 2 ; Builder active.
+			Case 3 ; Builder active.
 				If $bBuildersOn = True Then $bCanBoost = True
-			Case 3 ; Lab active.
+			Case 4 ; Lab active.
 				If $bLabOn = True Then $bCanBoost = True
 		EndSwitch
 	EndIf
@@ -71,11 +73,13 @@ Func StartClockTowerBoost($bSwitchToBB = False, $bSwitchToNV = False)
 
 	If $g_bChkClockTowerPotion = True Then
 		Switch $g_iCmbClockTowerPotion
-			Case 0 ; Lab + builder active.
+			Case 0 ; Lab or builder active.
+				If $bLabOn = True Or $bBuildersOn = True Then $bCanUsePotion = True
+			Case 1 ; Lab and builder active.
 				If $bLabOn = True And $bBuildersOn = True Then $bCanUsePotion = True
-			Case 1 ; Builder active.
+			Case 2 ; Builder active.
 				If $bBuildersOn = True Then $bCanUsePotion = True
-			Case 2 ; Lab active.
+			Case 3 ; Lab active.
 				If $bLabOn = True Then $bCanUsePotion = True
 		EndSwitch
 	EndIf
@@ -83,7 +87,7 @@ Func StartClockTowerBoost($bSwitchToBB = False, $bSwitchToNV = False)
 	If Not $g_bRunState Then Return
 
 	If $bCanBoost = True Or $bCanUsePotion = True Then
-		SetLog("Boosting Clock Tower", $COLOR_INFO)
+		SetLog("Boosting Clock Tower", $COLOR_ACTION)
 		If _Sleep($DELAYCOLLECT2) Then Return
 	
 		Local $sCTCoords, $aCTCoords, $aCTBoost

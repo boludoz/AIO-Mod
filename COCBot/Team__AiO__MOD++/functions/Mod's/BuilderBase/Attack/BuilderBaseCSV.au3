@@ -438,7 +438,7 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 
 		If $aAvailableTroops_NXQ <> -1 And IsArray($aAvailableTroops_NXQ) Then
 			SetLog("CSV Does not deploy some of the troops. So Now just dropping troops in a waves", $COLOR_INFO)
-			AttackBB($aAvailableTroops_NXQ)
+			AttackBB($aAvailableTroops_NXQ, True)
 		EndIf
 
 	Else
@@ -736,7 +736,7 @@ Func TriggerMachineAbility($bBBIsFirst = -1, $ix = -1, $iy = -1, $bTest = False)
 	; We use random to not always get activated in an specific Time Delay
 	If $g_iBBMachAbilityLastActivatedTime > -1 And __TimerDiff($g_iBBMachAbilityLastActivatedTime) < Random($g_iBBMachAbilityTime - 2000, $g_iBBMachAbilityTime + 2000, 1) Then Return False
 
-	SetLog("Checking ability of machine.", $COLOR_ACTION)
+	SetDebugLog("Checking ability of machine.", $COLOR_ACTION)
 
 	Local $hPixel = 0x000000
 	$hPixel = _GetPixelColor(Int($g_aMachineBB[0]), 721, True)
