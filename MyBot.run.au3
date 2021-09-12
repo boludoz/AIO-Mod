@@ -19,7 +19,7 @@
 #AutoIt3Wrapper_Run_Au3Stripper=y
 #Au3Stripper_Parameters=/rsln /MI=3
 #AutoIt3Wrapper_Au3Check_Parameters=-w 1 -w 4 -w 6 -w 7
-#AutoIt3Wrapper_AU3Check_Stop_OnWarning=n
+;~ #AutoIt3Wrapper_AU3Check_Stop_OnWarning=n
 
 
 #include "MyBot.run.version.au3"
@@ -1576,7 +1576,7 @@ Func FirstCheck()
 
 		TrainSystem()
 	Endif
-	
+
 	checkSwitchAcc()
 	#EndRegion - Custom - xbebenk - Team AIO Mod++
 

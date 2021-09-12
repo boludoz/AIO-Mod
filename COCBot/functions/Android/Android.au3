@@ -1075,11 +1075,11 @@ Func AndroidBotStopEvent()
 	Return $Result
 EndFunc   ;==>AndroidBotStopEvent
 
-Func OpenAndroid($bRestart = False, $bStartOnlyAndroid = False, $wasRunState = $g_bRunState, $bUnlimitedTries = False)
+Func OpenAndroid($bRestart = False, $bStartOnlyAndroid = False, $wasRunState = $g_bRunState)
 	FuncEnter(OpenAndroid)
 	Static $OpenAndroidActive = 0
 
-    If $OpenAndroidActive >= $g_iOpenAndroidActiveMaxTry And $bUnlimitedTries = True Then
+    If $OpenAndroidActive >= $g_iOpenAndroidActiveMaxTry Then
 		SetLog("Cannot open " & $g_sAndroidEmulator & ", tried " & $OpenAndroidActive & " times...", $COLOR_ERROR)
 		btnStop()
 		Return FuncReturn(False)
@@ -1675,7 +1675,7 @@ Func _ConnectAndroidAdb($rebootAndroidIfNeccessary = $g_bRunState, $bStartOnlyAn
 	Return (($connected_to) ? (($bRebooted) ? (2) : (1)) : (0)) ; ADB is connected or not
 EndFunc   ;==>_ConnectAndroidAdb
 
-Func RebootAndroid($bRestart = True, $bStartOnlyAndroid = False, $bUnlimitedTries = False)
+Func RebootAndroid($bRestart = True, $bStartOnlyAndroid = False)
 	FuncEnter(RebootAndroid)
 	ResumeAndroid()
 	If Not $g_bRunState Then Return FuncReturn(False)
@@ -1694,7 +1694,7 @@ Func RebootAndroid($bRestart = True, $bStartOnlyAndroid = False, $bUnlimitedTrie
 	If _Sleep(1000) Then Return FuncReturn(False)
 	
 	; Start Android
-    Return FuncReturn(OpenAndroid($bRestart, $bStartOnlyAndroid, $g_bRunState, $bUnlimitedTries))
+    Return FuncReturn(OpenAndroid($bRestart, $bStartOnlyAndroid, $g_bRunState))
 EndFunc   ;==>RebootAndroid
 
 Func RebootAndroidSetScreenDefault()

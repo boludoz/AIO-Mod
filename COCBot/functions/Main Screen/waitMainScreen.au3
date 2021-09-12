@@ -86,41 +86,63 @@ Func waitMainScreen() ;Waits for main screen to popup
 EndFunc   ;==>waitMainScreen
 
 Func waitMainScreenMini()
-	If Not $g_bRunState Then Return
+	Static $bActiveMain = False
+	
+	If $bActiveMain = True Then Return
+	
+	$bActiveMain = True
+	
+	If Not $g_bRunState Then
+		$bActiveMain = False
+		Return
+	EndIf
+
 	Local $hTimer = __TimerInit()
-	SetDebugLog("waitMainScreenMini")
+
 	If TestCapture() = False Then getBSPos() ; Update Android Window Positions
-	SetLog("Waiting for Main Screen after " & $g_sAndroidEmulator & " restart:", $COLOR_INFO)
-	Local $aPixelToCheck = $g_bStayOnBuilderBase ? $aIsOnBuilderBase : $aIsMain
+	SetLog("Waiting for Main Screen " & $g_sAndroidEmulator, $COLOR_INFO)
+	Local $aPixelToCheck = ($g_bStayOnBuilderBase = True) ? ($aIsOnBuilderBase) : ($aIsMain)
 	Local $iTry = 0
 	Local $iCount = 0
-	For $i = 0 To 60 ;30*2000 = 1 Minutes
-		If Not $g_bRunState Then Return
+	Local $iSeconds = 120
+	While __TimerDiff($hTimer) < ($iSeconds * 1000)
+		
 		If Not TestCapture() And WinGetAndroidHandle() = 0 Then ExitLoop ; sets @error to 1
 		
 		$iCount += 1
-		SetDebugLog("[" & $iCount & "] " & "Waiting for main screen.", $COLOR_ACTION) ; Debug stuck loop
+		SetLog("[" & $iCount & "] " & "Waiting for main screen.", $COLOR_ACTION) ; Debug stuck loop
 		
-		_CaptureRegion()
-		If Not _CheckPixel($aPixelToCheck, $g_bNoCapturePixel) Then ;Checks for Main Screen
-			If Not TestCapture() And _Sleep(1000) Then Return
-			If CheckObstacles() Then 
-				$i = 0 ; See if there is anything in the way of mainscreen
-				$iTry += 1
-			EndIf
-		Else
-			SetLog("CoC main window took " & Round(__TimerDiff($hTimer) / 1000, 2) & " seconds", $COLOR_SUCCESS)
+		If _Sleep(1500) Then
+			$bActiveMain = False
 			Return
 		EndIf
 		
+		If Not _CheckPixel($aPixelToCheck, $g_bNoCapturePixel) Then ;Checks for Main Screen
+			If Not TestCapture() Then
+				$bActiveMain = False
+				Return
+			EndIf
+			
+			If CheckObstacles() Then 
+				$iTry += 1
+			EndIf
+		Else
+			SetLog("Coc main window took " & Round(__TimerDiff($hTimer) / 1000, 2) & " seconds", $COLOR_SUCCESS)
+			$bActiveMain = False
+			Return
+		EndIf
+		
+		
 		_StatusUpdateTime($hTimer, "Main Screen")
 
-		If ($iTry > 3) Or ($iCount > 60) Then
+		If ($iTry > 10) Or ($iCount > 60) Then
 			If TestCapture() Then
+				$bActiveMain = False
 				Return "Main screen not available"
 			EndIf
 		EndIf
 		
-	Next
+	WEnd
+	$bActiveMain = False
 	Return SetError(1, 0, -1)
 EndFunc   ;==>waitMainScreenMini
