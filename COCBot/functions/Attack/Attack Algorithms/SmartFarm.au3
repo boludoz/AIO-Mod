@@ -951,9 +951,9 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 							$infoTroopListArrPixel[5] = "Super Giant" Or $infoTroopListArrPixel[5] = "Golem" Or $infoTroopListArrPixel[5] = "Ice Golem" Then
 								$bTanksTroops = True
 							EndIf
-							Local $Clicked = DropOnPixel($infoTroopListArrPixel[0], $pixelDropTroop, $infoTroopListArrPixel[2], $infoTroopListArrPixel[3], True, $LastSide, $bTanksTroops)
+							Local $iClicked = DropOnPixel($infoTroopListArrPixel[0], $pixelDropTroop, $infoTroopListArrPixel[2], $infoTroopListArrPixel[3], True, $LastSide, $bTanksTroops)
 							#EndRegion - Custom SmartFarm - Team AIO Mod++
-							$g_avAttackTroops[$infoTroopListArrPixel[0]][1] -= $Clicked
+							$g_avAttackTroops[$infoTroopListArrPixel[0]][1] -= $iClicked
 							If ($numberSidesDropTroop = 1) Or ($i = $numberSidesDropTroop - 2) Then
 								SetLog($infoTroopListArrPixel[5] & " Next side with " & $g_avAttackTroops[$infoTroopListArrPixel[0]][1] & "x", $COLOR_SUCCESS)
 								$infoTroopListArrPixel[2] = $g_avAttackTroops[$infoTroopListArrPixel[0]][1]

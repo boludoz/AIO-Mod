@@ -311,7 +311,8 @@ Func CheckOneStar($DelayInSec = 0, $Log = True, $CheckHeroes = True)
 			If $g_bRestart = True Then Return True
 
 			;Activate King and Queen powers to restore health before exit if they are deployed
-
+			
+			#CS
 			If $g_bCheckQueenPower = True Then
 				SetLog("Activating Queen's power to restore some health before EndBattle", $COLOR_INFO)
 				SelectDropTroop($g_iQueenSlot)
@@ -335,11 +336,11 @@ Func CheckOneStar($DelayInSec = 0, $Log = True, $CheckHeroes = True)
 				SelectDropTroop($g_iWardenSlot)
 				$g_bCheckWardenPower = False
 			EndIf
-
+			
 			If $Log = True Then
 				If _Sleep(1000) Then Return ;wait 1 seconds... antiban purpose...
 			EndIf
-
+			#CE
 			Return True ;exit if you get a star
 
 		Else

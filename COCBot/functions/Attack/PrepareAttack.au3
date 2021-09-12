@@ -386,7 +386,7 @@ Func AttackRemainingTime($bInitialze = Default)
 
 	; Return remaining attack time
 	Local $iAttackTime = 3 * 60 * 1000
-	Local $iRemaining = $iAttackTime - (__TimerDiff($g_hAttackTimer) - SuspendAndroidTime() - $g_iAttackTimerOffset)
+	Local $iRemaining = $iAttackTime - ConvertTime(_getBattleEnds())
 	If $iRemaining < 0 Then Return 0
 	Return $iRemaining
 

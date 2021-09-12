@@ -81,7 +81,7 @@ Func DropOnPixel($iTroop, $aListArrPixel, $iNumber, $iSlotsPerEdge = 0, $bRandom
 				$iDelay = SetSleep(0)
 				If $bTankTroop Then
 					$iDelay = Round($iDelay * Random(1.15, 1.75))
-					SetDebugLog("Tank Troop $nbTroopByPixel: " & $nbTroopByPixel & " with delay of " & $iDelay + 50 & "ms")
+					SetDebugLog("Tank Troop $nbTroopByPixel: " & $nbTroopByPixel & " with delay of " & $iDelay & "ms")
 					AttackClick($currentPixel[0], $currentPixel[1], $nbTroopByPixel, $iDelay, 0, "#0098")
 					If _Sleep(50) Then ExitLoop
 				Else

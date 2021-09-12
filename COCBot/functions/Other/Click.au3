@@ -159,9 +159,15 @@ Func PureClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
 
 	If TestCapture() Then Return
 
+	; Custom - Team AIO Mod++
+	Local $iSpeedRND = 0, $iLastSpeedRND = 0
 	If $g_bAndroidAdbClick = True Then
 		For $i = 1 to $times
-			AndroidClick($x, $y, 1, $speed, False)
+			; Custom - Team AIO Mod++
+			$iSpeedRND = ($g_bUseRandomClick = True) ? (Ceiling($speed * Random(0.80, 1.20))) : ($speed)
+			If $iSpeedRND = $iLastSpeedRND Then $iSpeedRND += 100
+			AndroidClick($x, $y, 1, $iSpeedRND, False)
+			$iLastSpeedRND = $iSpeedRND
 		Next
 		Return
 	EndIf
@@ -169,9 +175,13 @@ Func PureClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
 	Local $SuspendMode = ResumeAndroid()
 	If $times <> 1 Then
 		For $i = 0 To ($times - 1)
+			; Custom - Team AIO Mod++
+			$iSpeedRND = ($g_bUseRandomClick = True) ? (Ceiling($speed * Random(0.80, 1.20))) : ($speed)
+			If $iSpeedRND = $iLastSpeedRND Then $iSpeedRND += 100
 			MoveMouseOutBS()
 			_ControlClick($x, $y)
-			If _Sleep($speed, False) Then ExitLoop
+			If _Sleep($iSpeedRND, False) Then ExitLoop 
+			$iLastSpeedRND = $iSpeedRND
 		Next
 	Else
 		MoveMouseOutBS()
