@@ -339,7 +339,7 @@ Func IsBuilderBaseOCR($bSetLog = True)
 	
 	If $iAvailableAttacksBB > 0 Then
 		$g_iAvailableAttacksBB = $iAvailableAttacksBB
-		If $bSetLog = True Then Setlog("- Builder base: You have " & $g_iAvailableAttacksBB & " available attack(s).", $COLOR_INFO)	
+		If $bSetLog = True Then Setlog("Builder base: You have " & $g_iAvailableAttacksBB & " available attack(s).", $COLOR_INFO)	
 		Return False
 	EndIf
 	
@@ -348,7 +348,7 @@ Func IsBuilderBaseOCR($bSetLog = True)
 		Return False
 	Endif
 	
-	If $bSetLog = True Then Setlog("- All builder base attacks done.", $COLOR_SUCCESS)	
+	If $bSetLog = True Then Setlog("All builder base attacks done.", $COLOR_SUCCESS)	
 
 	; Hours
 	$aTmp = _StringBetween($sString, "", "H")
@@ -357,7 +357,7 @@ Func IsBuilderBaseOCR($bSetLog = True)
 		$iSeconds += ($iTimer * 3600)
 		
 		Local $sMsg = ($iTimer > 1) ? (" hours.") : (" hour.")
-		Setlog("- Bonus obtained, we will return here in approximately " & $iTimer & $sMsg, $COLOR_SUCCESS)
+		If $bSetLog = True And Not PlayBBOnly() And $g_bChkBBStopAt3 Then Setlog("Bonus obtained, we will return here in approximately " & $iTimer & $sMsg, $COLOR_SUCCESS)
 		
 		; Minutes
 		$aTmp = _StringBetween($sString, "H", "M")

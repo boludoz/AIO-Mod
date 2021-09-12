@@ -199,12 +199,13 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 					; TROOPNAME__: [ "Barb", "Arch", "Giant", "Minion", "Breaker", "BabyD", "Cannon", "Witch", "Drop", "Pekka", "HogG", "Machine" ]
 					; $aDROP[2]
 					
+					Local $sTroopName = "Barb"
 					Local $iTroop = _ArraySearchCSV($g_sTroopsBBAtk, $aDROP[2])
 					If $iTroop = -1 Then
-						SetLog("Badly Drop : " & $aDROP[2], $COLOR_ERROR)
+						SetLog("Badly troop: " & $aDROP[2], $COLOR_ERROR)
+					Else
+						$sTroopName = $g_asAttackBarBB2[$iTroop]
 					EndIf
-					
-					Local $sTroopName = $g_asAttackBarBB2[$iTroop]
 
 					; DROP_SIDE: FRONT - BACK - LEFT - RIGHT (red lines)| FRONTE - BACKE - LEFTE - RIGHTE (external edges )
 					; DROP_SIDE: BH - Builder Hall side will attack Only if exposed
@@ -796,7 +797,7 @@ EndFunc   ;==>BattleIsOver
 ; Custom BB - Team AIO Mod++
 Func _ArraySearchCSV($aArray, $sTroop)
 	For $i = 0 To UBound($aArray) - 1
-		If _CompareTexts($aArray[$i], $sTroop, 80) Then
+		If _CompareTexts($aArray[$i], $sTroop, 80, True) Then
 			Return $i
 		EndIf
 	Next
