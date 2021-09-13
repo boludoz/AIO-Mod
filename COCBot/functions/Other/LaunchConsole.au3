@@ -51,7 +51,7 @@ Func LaunchConsole($cmd, $param, ByRef $process_killed, $timeout = 10000, $bUseS
 	Until ($timeout > 0 And __TimerDiff($hTimer) > $timeout) Or $iWaitResult <> $WAIT_TIMEOUT
 
 	If ProcessExists($pid) Then
-		If ProcessClose($pid) = 1 Then
+		If ClosePipe($pid, $hStdIn, $hStdOut, $hProcess, $hThread) = 1 Then
 			If Not $bNoLog Then SetDebugLog("Process killed: " & $cmd, $COLOR_ERROR)
 			$process_killed = True
 		EndIf

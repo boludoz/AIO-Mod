@@ -90,14 +90,21 @@ Func _SmartFarmMilk($bDebug = False)
 		SetDebugLog("Classic Redlines, mix with edges.")
 		_GetRedArea()
 	EndIf
+	
 	Local $bTH = True
-	If $bTH Then
-		If $g_iSearchTH = "-" Then FindTownHall(True, True)
-		Local $THdetails[4] = [$g_iSearchTH, $g_iTHx, $g_iTHy, _ObjGetValue($g_oBldgAttackInfo, $eBldgTownHall & "_REDLINEDISTANCE")]
-		SetLog("TH Details: " & _ArrayToString($THdetails, "|"))
-	Else
-		Local $THdetails[4] = ["-", 0, 0, ""]
+	Local $THdetails[4] = ["-", $DiamondMiddleX, $DiamondMiddleY, ""]
+	If $bTH = True Then
+		If $g_iSearchTH = "-" Then
+			FindTownHall(True, True)
+			$THdetails[0] = $g_iSearchTH
+			$THdetails[1] = $g_iTHx
+			$THdetails[2] = $g_iTHy
+			$THdetails[3] = _ObjGetValue($g_oBldgAttackInfo, $eBldgTownHall & "_REDLINEDISTANCE")
+		EndIf
+		
+		SetLog("TH located.", $COLOR_SUCCESS)
 	EndIf
+	
 	ResumeAndroid()
 	SetLog(" ====== Start Smart Milking ====== ", $COLOR_INFO)
 	Local Enum $eSGiantSlot, $eGiantSlot, $eSWallSlot, $eWallSlot, $eSBarbSlot, $eBarbSlot, $eSArchSlot, $eArchSlot, $eSGoblSlot, $eGoblSlot, $eInfernoDSlot, $eBabyDSlot, $eSMiniSlot, $eMiniSlot, $eTotalSlots
@@ -181,7 +188,7 @@ Func _SmartFarmMilk($bDebug = False)
 
 	If $g_bDebugSmartMilk Then SetLog("$aSlots2deploy: " & _ArrayToString($aSlots2deploy, "-", -1, -1, "|"))
 	If $g_bDebugSmartMilk Then SetLog("$g_iMilkStrategyArmy: " & $g_iMilkStrategyArmy)
-	Local $allPossibleDeployPoints[0][2], $HeroesDeployJustInCase[2], $sSide = ""
+	Local $allPossibleDeployPoints[0][2], $aHeroesDeployCloserToTH[2] = [0, 0], $sSide = ""
 	Local $iTroopsQty = 1, $bOutCollector = False, $sAlreadyD = ""
 	For $iLoops = 0 To 2
 		$hTimer = TimerInit()
@@ -201,8 +208,12 @@ Func _SmartFarmMilk($bDebug = False)
 							$aCollectorsTL[UBound($aCollectorsTL) - 1][$t] = $aCollectorsAll[$collector][$t]
 						Next
 						If $iLoops = 0 Then
-							$HeroesDeployJustInCase[0] = $g_aaiTopLeftDropPoints[3][0]
-							$HeroesDeployJustInCase[1] = $g_aaiTopLeftDropPoints[3][1]
+							For $iPoints = 0 To UBound($g_aaiTopLeftDropPoints) -1
+								If Pixel_Distance($g_aaiTopLeftDropPoints[$iPoints][0], $g_aaiTopLeftDropPoints[$iPoints][1], $g_iTHx, $g_iTHy) < Pixel_Distance($aHeroesDeployCloserToTH[0], $aHeroesDeployCloserToTH[1], $g_iTHx, $g_iTHy) Or $iPoints = 0 Then
+									$aHeroesDeployCloserToTH[0] = $g_aaiTopLeftDropPoints[$iPoints][0]
+									$aHeroesDeployCloserToTH[1] = $g_aaiTopLeftDropPoints[$iPoints][1]
+								EndIf
+							Next
 							$sSide = $aCollectorsAll[$collector][4]
 						EndIf
 					Case "TR"
@@ -211,8 +222,12 @@ Func _SmartFarmMilk($bDebug = False)
 							$aCollectorsTR[UBound($aCollectorsTR) - 1][$t] = $aCollectorsAll[$collector][$t]
 						Next
 						If $iLoops = 0 Then
-							$HeroesDeployJustInCase[0] = $g_aaiTopRightDropPoints[3][0]
-							$HeroesDeployJustInCase[1] = $g_aaiTopRightDropPoints[3][1]
+							For $iPoints = 0 To UBound($g_aaiTopRightDropPoints) -1
+								If Pixel_Distance($g_aaiTopRightDropPoints[$iPoints][0], $g_aaiTopRightDropPoints[$iPoints][1], $g_iTHx, $g_iTHy) < Pixel_Distance($aHeroesDeployCloserToTH[0], $aHeroesDeployCloserToTH[1], $g_iTHx, $g_iTHy) Or $iPoints = 0 Then
+									$aHeroesDeployCloserToTH[0] = $g_aaiTopRightDropPoints[$iPoints][0]
+									$aHeroesDeployCloserToTH[1] = $g_aaiTopRightDropPoints[$iPoints][1]
+								EndIf
+							Next
 							$sSide = $aCollectorsAll[$collector][4]
 						EndIf
 					Case "BL"
@@ -221,8 +236,12 @@ Func _SmartFarmMilk($bDebug = False)
 							$aCollectorsBL[UBound($aCollectorsBL) - 1][$t] = $aCollectorsAll[$collector][$t]
 						Next
 						If $iLoops = 0 Then
-							$HeroesDeployJustInCase[0] = $g_aaiBottomLeftDropPoints[3][0]
-							$HeroesDeployJustInCase[1] = $g_aaiBottomLeftDropPoints[3][1]
+							For $iPoints = 0 To UBound($g_aaiBottomLeftDropPoints) -1
+								If Pixel_Distance($g_aaiBottomLeftDropPoints[$iPoints][0], $g_aaiBottomLeftDropPoints[$iPoints][1], $g_iTHx, $g_iTHy) < Pixel_Distance($aHeroesDeployCloserToTH[0], $aHeroesDeployCloserToTH[1], $g_iTHx, $g_iTHy) Or $iPoints = 0 Then
+									$aHeroesDeployCloserToTH[0] = $g_aaiBottomLeftDropPoints[$iPoints][0]
+									$aHeroesDeployCloserToTH[1] = $g_aaiBottomLeftDropPoints[$iPoints][1]
+								EndIf
+							Next
 							$sSide = $aCollectorsAll[$collector][4]
 						EndIf
 					Case "BR"
@@ -231,8 +250,12 @@ Func _SmartFarmMilk($bDebug = False)
 							$aCollectorsBR[UBound($aCollectorsBR) - 1][$t] = $aCollectorsAll[$collector][$t]
 						Next
 						If $iLoops = 0 Then
-							$HeroesDeployJustInCase[0] = $g_aaiBottomRightDropPoints[3][0]
-							$HeroesDeployJustInCase[1] = $g_aaiBottomRightDropPoints[3][1]
+							For $iPoints = 0 To UBound($g_aaiBottomRightDropPoints) -1
+								If Pixel_Distance($g_aaiBottomRightDropPoints[$iPoints][0], $g_aaiBottomRightDropPoints[$iPoints][1], $g_iTHx, $g_iTHy) < Pixel_Distance($aHeroesDeployCloserToTH[0], $aHeroesDeployCloserToTH[1], $g_iTHx, $g_iTHy) Or $iPoints = 0 Then
+									$aHeroesDeployCloserToTH[0] = $g_aaiBottomRightDropPoints[$iPoints][0]
+									$aHeroesDeployCloserToTH[1] = $g_aaiBottomRightDropPoints[$iPoints][1]
+								EndIf
+							Next
 							$sSide = $aCollectorsAll[$collector][4]
 						EndIf
 				EndSwitch
@@ -240,7 +263,7 @@ Func _SmartFarmMilk($bDebug = False)
 			
 			If $g_bDebugSmartMilk And $iLoops = 0 Then
 				SetLog("$aCollectorsAll: " & _ArrayToString($aCollectorsAll, "-", -1, -1, "|"))
-				DebugImageSmartMilk($aCollectorsAll, Round(TimerDiff($hTimer) / 1000, 2) & "'s", $HeroesDeployJustInCase)
+				DebugImageSmartMilk($aCollectorsAll, Round(TimerDiff($hTimer) / 1000, 2) & "'s", $aHeroesDeployCloserToTH)
 			EndIf
 			Local $iRandom = Random(0, 3, 1)
 			Local $aAllBySide[4]
@@ -312,21 +335,22 @@ Func _SmartFarmMilk($bDebug = False)
 						If $iLoops = 0 Then
 							ReDim $allPossibleDeployPoints[UBound($allPossibleDeployPoints) + 1][2]
 							$allPossibleDeployPoints[UBound($allPossibleDeployPoints) - 1][0] = $aDeployPoint[0]
-							$allPossibleDeployPoints[UBound($allPossibleDeployPoints) - 1][0] = $aDeployPoint[1]
+							$allPossibleDeployPoints[UBound($allPossibleDeployPoints) - 1][1] = $aDeployPoint[1]
 						EndIf
 						; _ArrayDisplay($allPossibleDeployPoints)
 						Local $bIsAlreadyDrop = False
 						For $iTroopSlot = 0 To UBound($aSlots2deploy) - 1
 							If $aSlots2deploy[$iTroopSlot][1] > 0 Then
 								Local $iActual = Pixel_Distance(0, 0, $aDeployPoint[0], $aDeployPoint[1])
-								If ($iTroopSlot = $eWallSlot Or $iTroopSlot = $eSWallSlot) Then
+								Local $bIsTankTroop = ($iTroopSlot = $eWallSlot Or $iTroopSlot = $eSWallSlot)
+								If $bIsTankTroop Then
 									$bIsAlreadyDrop = False
 									
 									Local $aSplits = StringSplit($sAlreadyD, '#', $STR_ENTIRESPLIT)
 									If Not @error Then
 										For $iPys In $aSplits
 											If $iPys <> "" And Abs($iPys - $iActual) < 40 Then
-												SetLog($iPys)
+												; SetLog($iPys)
 												$bIsAlreadyDrop = True
 												ExitLoop
 											EndIf
@@ -345,14 +369,12 @@ Func _SmartFarmMilk($bDebug = False)
 								EndIf
 								
 								$iTroopsQty = _Min($aSlots2deploy[$iTroopSlot][1], Execute($aSlots2deploy[$iTroopSlot][2])) ; Custom - Team AIO Mod++
+								
 								If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$iTroopSlot][0])
 								If _Sleep($DELAYLAUNCHTROOP23 * 2) Then Return
 								If $g_bDebugSmartMilk Then SetLog("AttackClick: " & $aDeployPoint[0] & "," & $aDeployPoint[1])
-								If ($iTroopSlot = $eSWallSlot) Then
-									AttackClick($aDeployPoint[0], $aDeployPoint[1], $iTroopsQty, 500, 0, "#0098")
-								Else
-									AttackClick($aDeployPoint[0], $aDeployPoint[1], $iTroopsQty, 100, 0, "#0098")
-								EndIf
+								Local $iDelayOfTroop = ($bIsTankTroop = True) ? (500) : (100)
+								AttackClick($aDeployPoint[0], $aDeployPoint[1], $iTroopsQty, $iDelayOfTroop, 0, "#0098")
 								$aSlots2deploy[$iTroopSlot][1] -= $iTroopsQty
 								SetLog("Deployed " & GetTroopName($aSlots2deploy[$iTroopSlot][3], Number($iTroopsQty)) & " " & $aSlots2deploy[$iTroopSlot][2] & " " & "x" & $iTroopsQty)
 								If $g_bDebugSmartMilk Then SetLog("Remains - " & GetTroopName($aSlots2deploy[$iTroopSlot][3]) & " " & $aSlots2deploy[$iTroopSlot][1] & "x")
@@ -399,11 +421,11 @@ Func _SmartFarmMilk($bDebug = False)
 			Local $iChampionSlot = Not $g_bDropChampion ? $g_iChampionSlot : -1
 			Local $iCC = Not $g_bIsCCDropped ? $g_iClanCastleSlot : -1
 			If $iKingSlot <> -1 Or $iQueenSlot <> -1 Or $iWardenSlot <> -1 Or $iChampionSlot <> -1 Or $iCC <> -1 Then
-				SetLog("Dropping Heros & CC at " & $sSide & " - " & _ArrayToString($HeroesDeployJustInCase, "|", -1, -1, " "), $COLOR_SUCCESS)
-				dropHeroes($HeroesDeployJustInCase[0], $HeroesDeployJustInCase[1], $iKingSlot, $iQueenSlot, $iWardenSlot, $iChampionSlot, True)
-				$g_bIsHeroesDropped = True
-				dropCC($HeroesDeployJustInCase[0], $HeroesDeployJustInCase[1], $iCC)
+				SetLog("Dropping Heros & CC at " & $sSide & " - " & _ArrayToString($aHeroesDeployCloserToTH, "|", -1, -1, " "), $COLOR_SUCCESS)
+				dropCC($aHeroesDeployCloserToTH[0], $aHeroesDeployCloserToTH[1], $iCC)
 				$g_bIsCCDropped = True
+				dropHeroes($aHeroesDeployCloserToTH[0], $aHeroesDeployCloserToTH[1], $iKingSlot, $iQueenSlot, $iWardenSlot, $iChampionSlot, True)
+				$g_bIsHeroesDropped = True
 				CheckHeroesHealth()
 			EndIf
 			If IsAttackPage() And (($g_iRemainTimeToZap > $iTime And $g_iRemainTimeToZap <> 0) Or $iTime < 45) And Not $UsedZap Then
@@ -419,7 +441,6 @@ Func _SmartFarmMilk($bDebug = False)
 				CheckHeroesHealth()
 				For $iTroopSlot = 0 To UBound($aSlots2deploy) - 1
 					If $aSlots2deploy[$iTroopSlot][1] > 0 Then
-						If StringIsSpace($allPossibleDeployPoints[$point][0]) Or StringIsSpace($allPossibleDeployPoints[$point][1]) Then ContinueLoop
 						$iTroopsQty = _Min($aSlots2deploy[$iTroopSlot][1], Execute($aSlots2deploy[$iTroopSlot][2])) ; Custom - Team AIO Mod++
 						If IsAttackPage() Then SelectDropTroop($aSlots2deploy[$iTroopSlot][0])
 						If _Sleep($DELAYLAUNCHTROOP23 * 2) Then Return
@@ -457,20 +478,7 @@ Func _SmartFarmMilk($bDebug = False)
 	Return True
 EndFunc   ;==>SmartFarmMilk
 
-; Func TranslateTroopsCount($iLow, $iHigh, $iTroopID, $iLowCount)
-	; Local $iResult = 1
-	; If $iLow <> $iTroopID Then 
-		; $iResult = Ceiling($g_aiTroopSpace[$iLow] * $iLowCount) / $g_aiTroopSpace[$iHigh])
-	; Else
-		; $iResult = $iLowCount
-	; EndIf
-	; If $iResult < 1 Then 
-		; $iResult = 1
-	; EndIf
-	; Return $iResult
-; EndFunc   ;==>TranslateTroopsCount
-
-Func DebugImageSmartMilk($aCollectorsAll, $sTime, $HeroesDeployJustInCase)
+Func DebugImageSmartMilk($aCollectorsAll, $sTime, $aHeroesDeployCloserToTH)
 	_CaptureRegion()
 	Local $EditedImage = $g_hBitmap
 	Local $subDirectory = $g_sProfileTempDebugPath & "\SmartMilk\"
@@ -489,8 +497,8 @@ Func DebugImageSmartMilk($aCollectorsAll, $sTime, $HeroesDeployJustInCase)
 	_GDIPlus_GraphicsDrawLine($hGraphic, $DiamondMiddleX, 0, $DiamondMiddleX, 644, $hPen2)
 	$hPen2 = _GDIPlus_PenCreate(0xFF000000, 2)
 	Local $tempObbj, $tempObbjs
-	If $HeroesDeployJustInCase[0] <> Null And $HeroesDeployJustInCase[1] > 0 Then
-		_GDIPlus_GraphicsDrawRect($hGraphic, $HeroesDeployJustInCase[0] - 10, $HeroesDeployJustInCase[1] - 10, 20, 20, $hPen2)
+	If $aHeroesDeployCloserToTH[0] <> Null And $aHeroesDeployCloserToTH[1] > 0 Then
+		_GDIPlus_GraphicsDrawRect($hGraphic, $aHeroesDeployCloserToTH[0] - 10, $aHeroesDeployCloserToTH[1] - 10, 20, 20, $hPen2)
 	EndIf
 	For $i = 0 To UBound($aCollectorsAll) - 1
 		_GDIPlus_GraphicsDrawEllipse($hGraphic, $aCollectorsAll[$i][0] - 7, $aCollectorsAll[$i][1] - 7, 14, 14, $hPen)

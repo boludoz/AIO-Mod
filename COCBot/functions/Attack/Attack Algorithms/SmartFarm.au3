@@ -99,12 +99,18 @@ Func ChkSmartFarm($sTypeResources = "All", $bTH = False)
 		_GetRedArea()
 	EndIf
 	$hTimer = TimerInit()
-	If $bTH Then
-		If $g_iSearchTH = "-" Then FindTownHall(True, True)
-		Local $THdetails[4] = [$g_iSearchTH, $g_iTHx, $g_iTHy, _ObjGetValue($g_oBldgAttackInfo, $eBldgTownHall & "_REDLINEDISTANCE")]
-		SetLog("TH Details: " & _ArrayToString($THdetails, "|"))
-	Else
-		Local $THdetails[4] = ["-", 0, 0, ""]
+	
+	Local $THdetails[4] = ["-", $DiamondMiddleX, $DiamondMiddleY, ""]
+	If $bTH = True Then
+		If $g_iSearchTH = "-" Then
+			FindTownHall(True, True)
+			$THdetails[0] = $g_iSearchTH
+			$THdetails[1] = $g_iTHx
+			$THdetails[2] = $g_iTHy
+			$THdetails[3] = _ObjGetValue($g_oBldgAttackInfo, $eBldgTownHall & "_REDLINEDISTANCE")
+		EndIf
+		
+		SetLog("TH located.", $COLOR_SUCCESS)
 	EndIf
 
 	; [0] = x , [1] = y , [2] = Distance to Redline ,[3] = In/Out, [4] = Side,  [5]= Is array Dim[2] with 5 coordinates to deploy
