@@ -1566,19 +1566,19 @@ Func FirstCheck()
 	If $g_bRestart Then Return
 
 	If BotCommand() Then btnStop()
+	
+	; If ProfileSwitchAccountEnabled() And $g_iCommandStop = 0 Then
+		; If $g_bChkOnlyFarm = False Then	; Only Farm - Team__AiO__MOD
+			; FirstCheckRoutine()
+			; _RunFunction('BuilderBase')
+		; EndIf
+	; EndIf
+
 	If ProfileSwitchAccountEnabled() And $g_iCommandStop = 0 Then
-		
-		; Only Farm - Team__AiO__MOD
-		If $g_bChkOnlyFarm = False Then
-			FirstCheckRoutine()
-			_RunFunction('BuilderBase')
-		EndIf
-
-		TrainSystem()
+		VillageReport()
+		checkSwitchAcc()
 	Endif
-
-	VillageReport()
-	checkSwitchAcc()
+	
 	#EndRegion - Custom - xbebenk - Team AIO Mod++
 
 	If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
@@ -1611,7 +1611,7 @@ Func FirstCheck()
 	EndIf
 EndFunc   ;==>FirstCheck
 
-#Region - Custom - xbebenk - Team AIO Mod++
+#CS - Region - Custom - xbebenk - Team AIO Mod++
 Func FirstCheckRoutine()
 	RequestCC(False)
 	checkArmyCamp(False)
@@ -1628,7 +1628,7 @@ Func FirstCheckRoutine()
 		If checkObstacles() Then ContinueLoop
 	Next
 EndFunc
-#EndRegion - Custom - xbebenk - Team AIO Mod++
+#CE - EndRegion - Custom - xbebenk - Team AIO Mod++
 
 Func SetSAtk($attack = False)
 
