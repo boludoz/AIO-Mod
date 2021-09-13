@@ -1564,21 +1564,17 @@ Func FirstCheck()
 	checkMainScreen(False)
 	; If Not $g_bRunState Then Return
 	If $g_bRestart Then Return
-
-	If BotCommand() Then btnStop()
 	
+	#Region - Custom - xbebenk - Team AIO Mod++
+	VillageReport()
+	If BotCommand() Then btnStop()
+	If ProfileSwitchAccountEnabled() And ($g_iCommandStop = 0 Or $g_bForceSwitch) Then checkSwitchAcc()
 	; If ProfileSwitchAccountEnabled() And $g_iCommandStop = 0 Then
 		; If $g_bChkOnlyFarm = False Then	; Only Farm - Team__AiO__MOD
 			; FirstCheckRoutine()
 			; _RunFunction('BuilderBase')
 		; EndIf
 	; EndIf
-
-	If ProfileSwitchAccountEnabled() And $g_iCommandStop = 0 Then
-		VillageReport()
-		checkSwitchAcc()
-	Endif
-	
 	#EndRegion - Custom - xbebenk - Team AIO Mod++
 
 	If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
