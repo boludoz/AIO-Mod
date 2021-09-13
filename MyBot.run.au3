@@ -1515,7 +1515,6 @@ Func FirstCheck()
 
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
 
-
 	;;;;;Check Town Hall level
 	Local $iTownHallLevel = $g_iTownHallLevel
 	SetDebugLog("Detecting Town Hall level", $COLOR_INFO)
@@ -1544,6 +1543,18 @@ Func FirstCheck()
 		; BotHumanization()
 	EndIf
 	#EndRegion - Team AIO MOD++
+	
+	#Region - Custom - xbebenk - Team AIO Mod++
+	checkMainScreen(False)
+	If BotCommand() Then btnStop()
+	If ProfileSwitchAccountEnabled() And ($g_iCommandStop = 0 Or $g_bForceSwitch) Then checkSwitchAcc()
+	; If ProfileSwitchAccountEnabled() And $g_iCommandStop = 0 Then
+		; If $g_bChkOnlyFarm = False Then	; Only Farm - Team__AiO__MOD
+			; FirstCheckRoutine()
+			; _RunFunction('BuilderBase')
+		; EndIf
+	; EndIf
+	#EndRegion - Custom - xbebenk - Team AIO Mod++
 
 	If Not $g_bRunState Then Return
 	If $g_bRestart Then Return
@@ -1565,18 +1576,6 @@ Func FirstCheck()
 	; If Not $g_bRunState Then Return
 	If $g_bRestart Then Return
 	
-	#Region - Custom - xbebenk - Team AIO Mod++
-	VillageReport()
-	If BotCommand() Then btnStop()
-	If ProfileSwitchAccountEnabled() And ($g_iCommandStop = 0 Or $g_bForceSwitch) Then checkSwitchAcc()
-	; If ProfileSwitchAccountEnabled() And $g_iCommandStop = 0 Then
-		; If $g_bChkOnlyFarm = False Then	; Only Farm - Team__AiO__MOD
-			; FirstCheckRoutine()
-			; _RunFunction('BuilderBase')
-		; EndIf
-	; EndIf
-	#EndRegion - Custom - xbebenk - Team AIO Mod++
-
 	If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
 		; VERIFY THE TROOPS AND ATTACK IF IS FULL
 		SetLog("-- FirstCheck on Train --", $COLOR_INFO)
