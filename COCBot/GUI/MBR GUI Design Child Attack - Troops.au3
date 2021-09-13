@@ -850,7 +850,9 @@ Func CreateTrainTroops()
 
 	$y += 40 + 190
 	$x = $iStartX
-	$g_hChkCustomTrainOrderEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Priority", "Priority.") , $x, $y + 14, -1, -1)
+	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnResetButton, $x, $y + 17, 16, 16)
+		GUICtrlSetOnEvent(-1, "BtnRemoveTroops")
+	$g_hChkCustomTrainOrderEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Order", "Order") , $x + 20, $y + 14, -1, -1)
 			GUICtrlSetOnEvent(-1, "CustomTrainOrderEnable")
 	$x = 170
 
@@ -949,7 +951,7 @@ Func CreateTrainSpells()
 		$sComboData &= "|" & String($j + 1)
 	Next
 
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Train_Spells", "grpSpells", "Spells"), $x - 10, $y - 15, 430, 345)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Train_Spells", "grpSpells", "Spells"), $x - 10, $y - 15, 430, 203)
 	$x += 70
 	Local $sSpellName = ""
 	For $i = 0 To UBound($g_aQuickSpellIcon) - 1
@@ -974,8 +976,12 @@ Func CreateTrainSpells()
 
 	$y += 150
 	$x = $iStartX
-	$g_hChkCustomBrewOrderEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Priority", "Priority.") , $x, $y + 14, -1, -1)
-			GUICtrlSetOnEvent(-1, "CustomBrewOrderEnable")
+	
+	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnResetButton, $x, $y + 17, 16, 16)
+		GUICtrlSetOnEvent(-1, "BtnRemoveSpells")
+	$g_hChkCustomBrewOrderEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Order", "Order") , $x + 20, $y + 14, -1, -1)
+		GUICtrlSetOnEvent(-1, "CustomBrewOrderEnable")
+		
 	$x += 70
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnSpellsCost, $x + 4, $y + 10, 24, 24)
 	$g_hLblTotalTimeSpell = GUICtrlCreateLabel(" 0s", $x + 33, $y + 15, 55, 15, $SS_RIGHT)
@@ -1018,7 +1024,7 @@ Func CreateTrainSieges()
 		$sComboData &= "|" & String($j + 1)
 	Next
 
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Train_Sieges", "grpSieges", "Sieges"), $x - 10, $y - 15, 430, 345)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Train_Sieges", "grpSieges", "Sieges"), $x - 10, $y - 15, 430, 203)
 	$x += 70
 	Local $sSiegeName = ""
 	For $i = 0 To UBound($ahPicTrainArmySiege) - 1

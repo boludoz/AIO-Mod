@@ -738,7 +738,7 @@ Func Removecamptroops()
 	GUICtrlSetData($g_hLblCountTotal, 0)
 	GUICtrlSetBkColor($g_hLblCountTotal, $COLOR_MONEYGREEN)
 
-	BtnRemoveTroops()
+	; BtnRemoveTroops()
 EndFunc   ;==>Removecamptroops
 
 Func Removecampspells()
@@ -756,7 +756,7 @@ Func Removecampspells()
 		GUICtrlSetBkColor($g_ahTxtTrainArmySpellCount[$i], 0xD1DFE7) ; Custom - Team AIO Mod++
 	Next
 
-	BtnRemoveSpells()
+	; BtnRemoveSpells()
 EndFunc   ;==>Removecampspells
 
 Func Removecampsieges()

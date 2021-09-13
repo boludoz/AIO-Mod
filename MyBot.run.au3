@@ -1567,16 +1567,17 @@ Func FirstCheck()
 
 	If BotCommand() Then btnStop()
 	If ProfileSwitchAccountEnabled() And $g_iCommandStop = 0 Then
+		
 		; Only Farm - Team__AiO__MOD
 		If $g_bChkOnlyFarm = False Then
 			FirstCheckRoutine()
-			VillageReport()
 			_RunFunction('BuilderBase')
 		EndIf
 
 		TrainSystem()
 	Endif
 
+	VillageReport()
 	checkSwitchAcc()
 	#EndRegion - Custom - xbebenk - Team AIO Mod++
 
