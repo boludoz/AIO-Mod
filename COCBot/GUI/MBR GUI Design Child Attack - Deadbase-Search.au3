@@ -244,7 +244,7 @@ Func CreateAttackSearchDeadBaseSearch()
 		$g_hPicDBMinDarkElixir = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 140, $y, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
 
-	$y += 24
+	$y += 21
 		$g_hChkDBMeetTrophy = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkActivateTropies", -1), $x, $y, -1, -1)
 			GUICtrlSetOnEvent(-1, "chkDBMeetTrophy")
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkMeetTrophy_Info_01", "Search for a base that meets the value set for Min. Trophies."))
@@ -262,7 +262,7 @@ Func CreateAttackSearchDeadBaseSearch()
 		$g_hPicDBMinTrophies = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnTrophy, $x + 140, $y, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
 
-	$y += 24
+	$y += 21
 		$g_hChkDBMeetTH = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design", "LblTownhall", -1), $x, $y, -1, -1)
 			GUICtrlSetOnEvent(-1, "chkDBMeetTH")
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkMeetTH_Info_01", "Search for a base that meets the value set for Max. Townhall Level."))
@@ -300,20 +300,21 @@ Func CreateAttackSearchDeadBaseSearch()
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetState (-1, $GUI_HIDE)
 
-	$y += 24
+	$y += 21
 			; create checkbox with handle $g_hChkDBMeetDeadEagle
 		$g_hChkDBMeetDeadEagle = GUICtrlCreateCheckbox("Dead Eagle Search", $x, $y, -1, -1)
 			GUICtrlSetOnEvent(-1, "chkDBMeetDeadEagle")
+	
+	$y += 21
+		$g_hTxtDeadEagleSearch = _GUICtrlCreateInput("50", $x + 115, $y - 18, 20, 18)
+			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkMeetTrophy_Info_03", "Set the Max. amount of Trophies to search for on a village to attack.")
+			_GUICtrlSetTip(-1, $sTxtTip)
+			_GUICtrlEdit_SetReadOnly(-1, True)
+			GUICtrlSetLimit(-1, 2)	
 
-		$g_hTxtDeadEagleSearch = _GUICtrlCreateInput("50", $x + 115, $y, 20, 18)
-			;$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkMeetTrophy_Info_03", "Set the Max. amount of Trophies to search for on a village to attack.")
-			;_GUICtrlSetTip(-1, $sTxtTip)
-			;_GUICtrlEdit_SetReadOnly(-1, True)
-			;GUICtrlSetLimit(-1, 2)	
-
-		;$g_hChkDBMeetTHO = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkMeetTHO", "Townhall Outside"), $x, $y, -1, -1)
-		;	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkMeetTHO_Info_01", "Search for a base that has an exposed Townhall. (Outside of Walls)"))
-	$y += 24
+		$g_hChkDBMeetTHO = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkMeetTHO", "Townhall Outside"), $x, $y, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkMeetTHO_Info_01", "Search for a base that has an exposed Townhall. (Outside of Walls)"))
+	$y += 21
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "Group_03", "Weak base | max defenses"), $x, $y, 215, 120)
 	$x += 5
 	$y += 20

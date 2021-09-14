@@ -18,6 +18,8 @@ Global $g_aiPixelBottomLeftFurther[0], $g_aiPixelBottomLeft[0]
 Global $g_aiPixelTopRightFurther[0], $g_aiPixelTopRight[0]
 Global $g_aiPixelBottomRightFurther[0], $g_aiPixelBottomRight[0]
 
+Global $g_bDoneZAPsm = False ; Custom SmartZap - Team AIO Mod++
+
 Func TestSmartFarm($bFast = True)
 
 	$g_iDetectedImageType = 0
@@ -266,7 +268,8 @@ Func ChkSmartFarm($sTypeResources = "All", $bTH = False)
 EndFunc   ;==>ChkSmartFarm
 
 Func SmartFarmDetection($txtBuildings = "Mines", $bForceCapture = True)
-
+	$g_bDoneZAPsm = False ; Custom SmartZap - Team AIO Mod++
+	
 	; This Function will fill an Array with several informations after Mines, Collectores or Drills detection with Imgloc
 	; [0] = x , [1] = y , [2] = Distance to Redline ,[3] = In/Out, [4] = Side,  [5]= Is array Dim[2] with 5 coordinates to deploy
 	Local $aReturn[0][6]
@@ -864,6 +867,19 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 	Next
 
 	Local $numberSidesDropTroop = 1
+    
+	#Region - Custom SmartZap - Team AIO Mod++
+	If $g_bDoneZAPsm = False Then
+		Local $sTime = _getBattleEnds()
+		Local $iTime = ConvertTime($sTime)
+		SetLog("Battle ends in: " & _getBattleEnds() & " | remain in seconds is " & $iTime & "s", $COLOR_INFO)
+		If IsAttackPage() And $g_iRemainTimeToZap > $iTime And $g_iRemainTimeToZap <> 0 Then
+			SetLog("let's ZAP, even with troops on the ground", $COLOR_INFO)
+			smartZap()
+			$g_bDoneZAPsm = True
+		EndIf
+	EndIf
+    #EndRegion - Custom SmartZap - Team AIO Mod++
 
 	; Drop a full wave of all troops (e.g. giants, barbs and archers) on each side then switch sides.
 	For $numWave = 0 To UBound($listListInfoDeployTroopPixel) - 1
@@ -980,6 +996,19 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 		EndIf
 		If _Sleep(SetSleep(1)) Then Return
 	Next
+
+    #Region - Custom SmartZap - Team AIO Mod++
+	If $g_bDoneZAPsm = False Then
+		Local $sTime = _getBattleEnds()
+		Local $iTime = ConvertTime($sTime)
+		SetLog("Battle ends in: " & _getBattleEnds() & " | remain in seconds is " & $iTime & "s", $COLOR_INFO)
+		If IsAttackPage() And $g_iRemainTimeToZap > $iTime And $g_iRemainTimeToZap <> 0 Then
+			SetLog("let's ZAP, even with troops on the ground", $COLOR_INFO)
+			smartZap()
+			$g_bDoneZAPsm = True
+		EndIf
+	EndIf
+	#EndRegion - Custom SmartZap - Team AIO Mod++
 
 	For $numWave = 0 To UBound($listListInfoDeployTroopPixel) - 1
 		Local $listInfoDeployTroopPixel = $listListInfoDeployTroopPixel[$numWave]

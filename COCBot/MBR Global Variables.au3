@@ -1259,8 +1259,12 @@ Global $g_bDESideEndEnable = False, $g_iDESideEndMin = 25, $g_bDESideDisableOthe
 Global $g_iAtkTBEnableCount = 150, $g_iAtkTBMaxTHLevel = 0, $g_iAtkTBMode = 0
 
 ; <><><><> Attack Plan / Search & Attack / Options / Search <><><><>
-Global $g_bSearchReductionEnable = False, $g_iSearchReductionCount = 20, $g_iSearchReductionGold = 2000, $g_iSearchReductionElixir = 2000, $g_iSearchReductionGoldPlusElixir = 4000, _
-		$g_iSearchReductionDark = 100, $g_iSearchReductionTrophy = 2
+#Region - Custom Search Reduction - Team AIO Mod++
+Global $g_bSearchReductionEnable = False, $g_iSearchReductionCount = 20, $g_iSearchReductionByMin = 40, $g_iSearchRedByMinHowManyTime = 0, $g_bSearchReductionByCount = True, _
+		$g_bSearchReductionByMin = False, $g_iSearchReductionGold = 2000, $g_iSearchReductionElixir = 2000, $g_iSearchReductionGoldPlusElixir = 4000, $g_iSearchReductionDark = 100, _
+		$g_iSearchReductionTrophy = 2
+Global $g_iSearchTotalSearchTime = 0
+#EndRegion - Custom Search Reduction - Team AIO Mod++
 Global $g_iSearchDelayMin = 0, $g_iSearchDelayMax = 0
 Global $g_bSearchAttackNowEnable = False, $g_iSearchAttackNowDelay = 0, $g_bSearchRestartEnable = False, $g_iSearchRestartLimit = 25, $g_bSearchAlertMe = True, $g_bSearchRestartPickupHero = False
 Global $g_asHeroHealTime[$eHeroCount] = ["", "", "", ""]
@@ -1277,8 +1281,11 @@ Global $g_bPlannedDropCCHoursEnable = False, $g_bUseCCBalanced = False, $g_iCCDo
 Global $g_abPlannedDropCCHours[24] = [True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True]
 
 ; <><><><> Attack Plan / Search & Attack / Options / SmartZap <><><><>
+#Region - Custom SmartZap - Team AIO Mod++
 Global $g_bSmartZapEnable = False, $g_bEarthQuakeZap = False, $g_bNoobZap = False, $g_bSmartZapDB = True, $g_bSmartZapSaveHeroes = True, _
-		$g_bSmartZapFTW = False, $g_iSmartZapMinDE = 350, $g_iSmartZapExpectedDE = 320, $g_bDebugSmartZap = False
+		$g_bSmartZapFTW = False, $g_iSmartZapMinDE = 350, $g_iSmartZapExpectedDE = 320, $g_iRemainTimeToZap = 0
+Global $g_bChkSmartZapDestroyCollectors = False, $g_bChkSmartZapDestroyMines = False, $g_bDebugSmartZap = False
+#EndRegion - Custom SmartZap - Team AIO Mod++
 
 ; <><><><> Attack Plan / Search & Attack / Options / End Battle <><><><>
 Global $g_bShareAttackEnable = 0, $g_iShareMinGold = 300000, $g_iShareMinElixir = 300000, $g_iShareMinDark = 0, $g_sShareMessage = "Nice|Good|Thanks|Wowwww", _

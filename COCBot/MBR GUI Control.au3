@@ -2234,7 +2234,7 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 
 		Case $g_hGUI_SEARCH_TAB
 			; the icons for SEARCH tab
-			Local $aIconIndex = [$eIcnCollector, $eIcnCC, $eIcnTH10, $eIcnTH1, $eIcnOptions]
+			Local $aIconIndex = [$eIcnCollector, $eIcnCC, $eIcnTH1, $eIcnOptions] ; Custom fix - Team AIO Mod+
 
 		Case $g_hGUI_DEADBASE_TAB
 			; the icons for deadbase tab

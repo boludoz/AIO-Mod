@@ -780,11 +780,15 @@ Func SaveConfig_600_26()
 	_Ini_Add("search", "THBullyAttackMode", $g_iAtkTBMode)
 EndFunc   ;==>SaveConfig_600_26
 
+#Region - Custom Search Reduction - Team AIO Mod++
 Func SaveConfig_600_28()
 	; <><><><> Attack Plan / Search & Attack / Options / Search <><><><>
 	ApplyConfig_600_28(GetApplyConfigSaveAction())
 	_Ini_Add("search", "reduction", $g_bSearchReductionEnable ? 1 : 0)
+	_Ini_Add("search", "reduceCountChk", $g_bSearchReductionByCount ? 1 : 0)
+	_Ini_Add("search", "reduceMinChk", $g_bSearchReductionByMin ? 1 : 0)
 	_Ini_Add("search", "reduceCount", $g_iSearchReductionCount)
+	_Ini_Add("search", "reduceMin", $g_iSearchReductionByMin)
 	_Ini_Add("search", "reduceGold", $g_iSearchReductionGold)
 	_Ini_Add("search", "reduceElixir", $g_iSearchReductionElixir)
 	_Ini_Add("search", "reduceGoldPlusElixir", $g_iSearchReductionGoldPlusElixir)
@@ -799,6 +803,7 @@ Func SaveConfig_600_28()
 	_Ini_Add("search", "RestartSearchPickupHero", $g_bSearchRestartPickupHero ? 1 : 0)
 	_Ini_Add("general", "AlertSearch", $g_bSearchAlertMe ? 1 : 0)
 EndFunc   ;==>SaveConfig_600_28
+#EndRegion - Custom Search Reduction - Team AIO Mod++
 
 Func SaveConfig_600_28_DB()
 	; <><><><> Attack Plan / Search & Attack / Deadbase / Search <><><><>
@@ -1329,6 +1334,7 @@ Func SaveConfig_600_54()
 	Next
 EndFunc   ;==>SaveConfig_600_54
 
+#Region - Custom SmartZap - Team AIO Mod++
 Func SaveConfig_600_56()
 	; <><><><> Attack Plan / Search & Attack / Options / SmartZap <><><><>
 	ApplyConfig_600_56(GetApplyConfigSaveAction())
@@ -1338,9 +1344,13 @@ Func SaveConfig_600_56()
 	_Ini_Add("SmartZap", "ZapDBOnly", $g_bSmartZapDB ? 1 : 0)
 	_Ini_Add("SmartZap", "THSnipeSaveHeroes", $g_bSmartZapSaveHeroes ? 1 : 0)
 	_Ini_Add("SmartZap", "FTW", $g_bSmartZapFTW ? 1 : 0)
+	_Ini_Add("SmartZap", "RemainTimeToZap", $g_iRemainTimeToZap)
+	_Ini_Add("SmartZap", "DestroyCollectors", $g_bChkSmartZapDestroyCollectors ? 1 : 0)
+	_Ini_Add("SmartZap", "DestroyMines", $g_bChkSmartZapDestroyMines ? 1 : 0)
 	_Ini_Add("SmartZap", "MinDE", $g_iSmartZapMinDE)
 	_Ini_Add("SmartZap", "ExpectedDE", $g_iSmartZapExpectedDE)
 EndFunc   ;==>SaveConfig_600_56
+#EndRegion - Custom SmartZap - Team AIO Mod++
 
 Func SaveConfig_641_1()
 	; <><><> Attack Plan / Train Army / Options <><><>

@@ -330,13 +330,6 @@ Global Const $g_iMilkFarmOffsetY = 41
 Global Const $g_iMilkFarmOffsetXStep = 35
 Global Const $g_iMilkFarmOffsetYStep = 26
 
-; Ai Army search - Team AiO MOD++
-Global $g_hMinArmyUmbralGoldDB, $g_hMinArmyUmbralElixirDB, $g_hMinArmyUmbralPlusDB, $g_hMinArmyUmbralDarkDB, _
-$g_hMinArmyUmbralGoldAB, $g_hMinArmyUmbralElixirAB, $g_hMinArmyUmbralPlusAB, $g_hMinArmyUmbralDarkAB
-
-Global $g_iMinArmyUmbralGoldDB = 0, $g_iMinArmyUmbralElixirDB = 0, $g_iMinArmyUmbralPlusDB = 0, $g_iMinArmyUmbralDarkDB = 0, _
-$g_iMinArmyUmbralGoldAB = 0, $g_iMinArmyUmbralElixirAB = 0, $g_iMinArmyUmbralPlusAB = 0, $g_iMinArmyUmbralDarkAB = 0
-
 ; GTFO
 Global $g_bChkUseGTFO = False, $g_bChkUseKickOut = False, $g_bChkKickOutSpammers = False
 Global $g_iTxtMinSaveGTFO_Elixir = 200000, $g_iTxtMinSaveGTFO_DE = 2000, _

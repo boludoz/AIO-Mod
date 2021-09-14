@@ -121,9 +121,8 @@ Func _BuilderBase($bTestRun = False)
 	; Loops to do logic.
 	Local $iAttackLoops = 1
 	Local $iLoopsToDo = Random($g_iBBMinAttack, $g_iBBMaxAttack, 1)
-	Local $bBonusObtained = 0, $bBonusObtainedInternal = False
-
-	$bBonusObtained = BuilderBaseReportAttack(False)
+	Local $bIsBonus = True, $bIsBonusInternal = False
+	$bIsBonus = BuilderBaseReportAttack(False)
 
 	Do
 		; ClickAway()
@@ -152,7 +151,7 @@ Func _BuilderBase($bTestRun = False)
 		; Check if Builder Base is to run
 		; New logic to add speed to the attack.
 		Do
-			If $g_bChkBuilderAttack = False Or ($g_iAvailableAttacksBB = 0 And $g_bChkBBStopAt3 = True And not $bFirstBBLoop) Then
+			If $g_bChkBuilderAttack = False Or ($bIsBonus = False And $g_bChkBBStopAt3 = True And $bFirstBBLoop = False) Then
 				Setlog("Dynamic attack loop skipped.", $COLOR_INFO)
 				SetDebugLog("ChkBuilderAttack|$g_bChkBuilderAttack: " & $g_bChkBuilderAttack)
 				SetDebugLog("$g_iAvailableAttacksBB = 0 And $g_bChkBBStopAt3 = True: " & ($g_iAvailableAttacksBB = 0 And $g_bChkBBStopAt3 = True))
@@ -165,7 +164,7 @@ Func _BuilderBase($bTestRun = False)
 			$g_bCloudsActive = True
 
 			; Attack
-			If BuilderBaseAttack($bTestRun) = True Then
+			If BuilderBaseAttack($bTestRun, $bIsBonus) = True Then
 				$iAttackLoops += 1
 	
 				;  $g_bCloudsActive fast network fix.
@@ -190,11 +189,11 @@ Func _BuilderBase($bTestRun = False)
 			; Improved logic, as long as the bot can be farmed it will continue doing the external while, otherwise it will continue attacking to fulfill the user's request more fast.
 			checkObstacles(True)
 
-			$bBonusObtained = BuilderBaseReportAttack()
-			If $bBonusObtainedInternal = False And $bBonusObtained = True Then
+			$bIsBonus = BuilderBaseReportAttack()
+			If $bIsBonusInternal = False And $bIsBonus = True Then
 				If $g_iAvailableAttacksBB = 0 Then
 					SetLog("Bonus obtained: we can continue attacking without improving things.", $COLOR_SUCCESS)
-					$bBonusObtainedInternal = True
+					$bIsBonusInternal = True
 					ExitLoop
 				EndIf
 			EndIf
@@ -316,7 +315,7 @@ Func BuilderBaseReportAttack($bSetLog = True)
 
 EndFunc   ;==>BuilderBaseReportAttack
 
-Func IsBuilderBaseOCR($bSetLog = True)
+Func IsBuilderBaseOCR($bSetLog = True, $bIsBonus = False)
 	Local $iSeconds = 0, $iTimer = 0
 	Local $aTmp
 	Local $sString = QuickMIS("OCR", @ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\OCR\AvariableBB\", 404, 674, 477, 695, True, False, 3, 12, True)
@@ -349,33 +348,41 @@ Func IsBuilderBaseOCR($bSetLog = True)
 	Endif
 	
 	If $bSetLog = True Then Setlog("All builder base attacks done.", $COLOR_SUCCESS)	
-
-	; Hours
-	$aTmp = _StringBetween($sString, "", "H")
-	If Not @error Then
-		$iTimer = Number($aTmp[0])
-		$iSeconds += ($iTimer * 3600)
-		
-		Local $sMsg = ($iTimer > 1) ? (" hours.") : (" hour.")
-		If $bSetLog = True And Not PlayBBOnly() And $g_bChkBBStopAt3 Then Setlog("Bonus obtained, we will return here in approximately " & $iTimer & $sMsg, $COLOR_SUCCESS)
-		
-		; Minutes
-		$aTmp = _StringBetween($sString, "H", "M")
-		If @error Then
-			$aTmp = _StringBetween($sString, "H", "")
+	
+	Local $sMsg = ($iTimer > 1) ? (" hours.") : (" hour.")
+	If $bIsBonus = False Then
+		; Hours
+		$aTmp = _StringBetween($sString, "", "H")
+		If Not @error Then
+			$iTimer = Number($aTmp[0])
+			$iSeconds += ($iTimer * 3600)
+			
+			$sMsg = ($iTimer > 1) ? (" hours.") : (" hour.")
+			If $bSetLog = True And Not PlayBBOnly() And $g_bChkBBStopAt3 Then Setlog("Bonus obtained, we will return here in approximately " & $iTimer & $sMsg, $COLOR_SUCCESS)
+			
+			; Minutes
+			$aTmp = _StringBetween($sString, "H", "M")
+			If @error Then
+				$aTmp = _StringBetween($sString, "H", "")
+				If Not @error Then
+					$iTimer = Number($aTmp[0])
+					$iSeconds += ($iTimer * 60)
+				EndIf
+			EndIf
+	
+		Else
+			; Hours
+			$aTmp = _StringBetween($sString, "", "M")
 			If Not @error Then
 				$iTimer = Number($aTmp[0])
 				$iSeconds += ($iTimer * 60)
 			EndIf
 		EndIf
-
-	Else
-		; Hours
-		$aTmp = _StringBetween($sString, "", "M")
-		If Not @error Then
-			$iTimer = Number($aTmp[0])
-			$iSeconds += ($iTimer * 60)
-		EndIf
+	Else ; More reliable than OCR.
+		$iTimer = 24
+		$sMsg = ($iTimer > 1) ? (" hours.") : (" hour.")
+		$iSeconds += ($iTimer * 3600)
+		If $bSetLog = True And Not PlayBBOnly() And $g_bChkBBStopAt3 Then Setlog("Bonus obtained, we will return here in approximately " & $iTimer & $sMsg, $COLOR_SUCCESS)
 	EndIf
 	
 	; To improve reliability, minutes and seconds are discarded

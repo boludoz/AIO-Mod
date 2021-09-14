@@ -433,7 +433,7 @@ Func chkShareAttack()
 		For $i = $g_hLblShareMinLoot To $g_hTxtShareMessage
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
-	Else ;If GUICtrlRead($chkUnbreakable) = $GUI_UNCHECKED Then
+	Else
 		For $i = $g_hLblShareMinLoot To $g_hTxtShareMessage
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
@@ -443,20 +443,60 @@ EndFunc   ;==>chkShareAttack
 Func chkSearchReduction()
 	If GUICtrlRead($g_hChkSearchReduction) = $GUI_CHECKED Then
 		_GUICtrlEdit_SetReadOnly($g_hTxtSearchReduceCount, False)
+		_GUICtrlEdit_SetReadOnly($g_hTxtSearchReduceByMin, False)
+		searchReduction(True)
+		_GUI_Value_STATE("ENABLE", $g_hChkSearchReduceCount & "#" & $g_hChkSearchReduceByMin)
+		chkSearchReduceCount()
+		chkSearchReduceByMin()
+	Else
+		_GUICtrlEdit_SetReadOnly($g_hTxtSearchReduceCount, True)
+		_GUICtrlEdit_SetReadOnly($g_hTxtSearchReduceByMin, True)
+		searchReduction(False)
+		_GUI_Value_STATE("DISABLE", $g_hChkSearchReduceCount & "#" & $g_hChkSearchReduceByMin)
+	EndIf
+EndFunc   ;==>chkSearchReduction
+
+Func chkSearchReduceCount()
+	If GUICtrlRead($g_hChkSearchReduceCount) = $GUI_CHECKED And GUICtrlRead($g_hChkSearchReduction) = $GUI_CHECKED Then
+		_GUICtrlEdit_SetReadOnly($g_hTxtSearchReduceCount, False)
+		searchReduction(True)
+	Else
+		_GUICtrlEdit_SetReadOnly($g_hTxtSearchReduceCount, True)
+		If GUICtrlRead($g_hChkSearchReduceByMin) = $GUI_UNCHECKED Then
+			searchReduction(False)
+		EndIf
+	EndIf
+EndFunc   ;==>chkSearchReduceCount
+
+Func chkSearchReduceByMin()
+	If GUICtrlRead($g_hChkSearchReduceByMin) = $GUI_CHECKED And GUICtrlRead($g_hChkSearchReduction) = $GUI_CHECKED Then
+		_GUICtrlEdit_SetReadOnly($g_hTxtSearchReduceByMin, False)
+		searchReduction(True)
+	Else
+		_GUICtrlEdit_SetReadOnly($g_hTxtSearchReduceByMin, True)
+		If GUICtrlRead($g_hChkSearchReduceCount) = $GUI_UNCHECKED Then
+			searchReduction(False)
+		EndIf
+	EndIf
+EndFunc   ;==>chkSearchReduceByMin
+
+Func searchReduction($bEnable = False)
+	If $bEnable Then
 		_GUICtrlEdit_SetReadOnly($g_hTxtSearchReduceGold, False)
 		_GUICtrlEdit_SetReadOnly($g_hTxtSearchReduceElixir, False)
 		_GUICtrlEdit_SetReadOnly($g_hTxtSearchReduceGoldPlusElixir, False)
 		_GUICtrlEdit_SetReadOnly($g_hTxtSearchReduceDark, False)
 		_GUICtrlEdit_SetReadOnly($g_hTxtSearchReduceTrophy, False)
+		; _GUICtrlEdit_SetReadOnly($g_hTxtSearchReduceShieldTrophy, False)
 	Else
-		_GUICtrlEdit_SetReadOnly($g_hTxtSearchReduceCount, True)
 		_GUICtrlEdit_SetReadOnly($g_hTxtSearchReduceGold, True)
 		_GUICtrlEdit_SetReadOnly($g_hTxtSearchReduceGoldPlusElixir, True)
 		_GUICtrlEdit_SetReadOnly($g_hTxtSearchReduceElixir, True)
 		_GUICtrlEdit_SetReadOnly($g_hTxtSearchReduceDark, True)
 		_GUICtrlEdit_SetReadOnly($g_hTxtSearchReduceTrophy, True)
+		; _GUICtrlEdit_SetReadOnly($g_hTxtSearchReduceShieldTrophy, True)
 	EndIf
-EndFunc   ;==>chkSearchReduction
+EndFunc   ;==>searchReduction
 
 Func sldMaxVSDelay()
 	$g_iSearchDelayMax = GUICtrlRead($g_hSldMaxVSDelay)
@@ -466,12 +506,12 @@ Func sldMaxVSDelay()
 		GUICtrlSetData($g_hSldVSDelay, $g_iSearchDelayMax)
 		$g_iSearchDelayMin = $g_iSearchDelayMax
 	EndIf
-	If $g_iSearchDelayMin = 1 Then
+	If $g_iSearchDelayMin <= 1 Then
 		GUICtrlSetData($g_hLblTextVSDelay, GetTranslatedFileIni("MBR Global GUI Design", "second", "second"))
 	Else
 		GUICtrlSetData($g_hLblTextVSDelay, GetTranslatedFileIni("MBR Global GUI Design", "seconds", "seconds"))
 	EndIf
-	If $g_iSearchDelayMax = 1 Then
+	If $g_iSearchDelayMax <= 1 Then
 		GUICtrlSetData($g_hLblTextMaxVSDelay, GetTranslatedFileIni("MBR Global GUI Design", "second", "second"))
 	Else
 		GUICtrlSetData($g_hLblTextMaxVSDelay, GetTranslatedFileIni("MBR Global GUI Design", "seconds", "seconds"))
@@ -486,12 +526,12 @@ Func sldVSDelay()
 		GUICtrlSetData($g_hSldMaxVSDelay, $g_iSearchDelayMin)
 		$g_iSearchDelayMax = $g_iSearchDelayMin
 	EndIf
-	If $g_iSearchDelayMin = 1 Then
+	If $g_iSearchDelayMin <= 1 Then
 		GUICtrlSetData($g_hLblTextVSDelay, GetTranslatedFileIni("MBR Global GUI Design", "second", "second"))
 	Else
 		GUICtrlSetData($g_hLblTextVSDelay, GetTranslatedFileIni("MBR Global GUI Design", "seconds", "seconds"))
 	EndIf
-	If $g_iSearchDelayMax = 1 Then
+	If $g_iSearchDelayMax <= 1 Then
 		GUICtrlSetData($g_hLblTextMaxVSDelay, GetTranslatedFileIni("MBR Global GUI Design", "second", "second"))
 	Else
 		GUICtrlSetData($g_hLblTextMaxVSDelay, GetTranslatedFileIni("MBR Global GUI Design", "seconds", "seconds"))

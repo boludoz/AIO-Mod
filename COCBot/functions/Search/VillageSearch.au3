@@ -98,6 +98,8 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		$g_iSearchCount = 0
 	EndIf
 
+	$g_iSearchTotalSearchTime = _NowCalc() ; Custom Search Reduction - Team AIO Mod++
+
 	If $g_bIsSearchLimit = True Then $g_bIsSearchLimit = False
 
 	; Reset page errors.
@@ -159,6 +161,14 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 				$match[$i] = CompareResources($i)
 			EndIf
 		Next
+
+		#Region - Custom Search Reduction - Team AIO Mod++
+		If $g_iSearchRedByMinHowManyTime > 0 Then
+			$g_iSearchTotalSearchTime = _DateAdd('n', $g_iSearchRedByMinHowManyTime * Number($g_iSearchReductionByMin), $g_iSearchTotalSearchTime)
+			SetDebugLog("Total Search Time Updated: " & $g_iSearchTotalSearchTime)
+			$g_iSearchRedByMinHowManyTime = 0
+		EndIf
+		#EndRegion - Custom Search Reduction - Team AIO Mod++
 
 		; reset village measures
 		setVillageOffset(0, 0, 1)

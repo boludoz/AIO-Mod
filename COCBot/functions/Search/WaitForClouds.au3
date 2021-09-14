@@ -112,7 +112,7 @@ Func WaitForClouds()
 				    SetLog("Return home by time due to the long wait in the cloud.", $COLOR_INFO)
 					$g_bIsClientSyncError = True
 					$g_bRestart = True
-					CloseCoC(True)
+					CloseCoC(True, True)
 					ExitLoop
 				EndIf
 			EndIf

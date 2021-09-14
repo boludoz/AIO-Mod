@@ -1220,13 +1220,19 @@ Func ApplyConfig_600_26($TypeReadSave)
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_26
 
+#Region - Custom Search Reduction - Team AIO Mod++
 Func ApplyConfig_600_28($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Options / Search <><><><>
 	Switch $TypeReadSave
 		Case "Read"
 			GUICtrlSetState($g_hChkSearchReduction, $g_bSearchReductionEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
 			chkSearchReduction()
+			GUICtrlSetState($g_hChkSearchReduceCount, $g_bSearchReductionByCount ? $GUI_CHECKED : $GUI_UNCHECKED)
+			chkSearchReduceCount()
+			GUICtrlSetState($g_hChkSearchReduceByMin, $g_bSearchReductionByMin ? $GUI_CHECKED : $GUI_UNCHECKED)
+			chkSearchReduceByMin()
 			GUICtrlSetData($g_hTxtSearchReduceCount, $g_iSearchReductionCount)
+			GUICtrlSetData($g_hTxtSearchReduceByMin, $g_iSearchReductionByMin)
 			GUICtrlSetData($g_hTxtSearchReduceGold, $g_iSearchReductionGold)
 			GUICtrlSetData($g_hTxtSearchReduceElixir, $g_iSearchReductionElixir)
 			GUICtrlSetData($g_hTxtSearchReduceGoldPlusElixir, $g_iSearchReductionGoldPlusElixir)
@@ -1242,12 +1248,15 @@ Func ApplyConfig_600_28($TypeReadSave)
 			_GUICtrlComboBox_SetCurSel($g_hCmbAttackNowDelay, $g_iSearchAttackNowDelay)
 			GUICtrlSetState($g_hChkRestartSearchLimit, $g_bSearchRestartEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hTxtRestartSearchlimit, $g_iSearchRestartLimit)
-			ChkRestartSearchLimit()
+			chkRestartSearchLimit()
 			GUICtrlSetState($g_hChkRestartSearchPickupHero, $g_bSearchRestartPickupHero ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkAlertSearch, $g_bSearchAlertMe ? $GUI_CHECKED : $GUI_UNCHECKED)
 		Case "Save"
 			$g_bSearchReductionEnable = (GUICtrlRead($g_hChkSearchReduction) = $GUI_CHECKED)
+			$g_bSearchReductionByCount = (GUICtrlRead($g_hChkSearchReduceCount) = $GUI_CHECKED)
+			$g_bSearchReductionByMin = (GUICtrlRead($g_hChkSearchReduceByMin) = $GUI_CHECKED)
 			$g_iSearchReductionCount = GUICtrlRead($g_hTxtSearchReduceCount)
+			$g_iSearchReductionByMin = GUICtrlRead($g_hTxtSearchReduceByMin)
 			$g_iSearchReductionGold = GUICtrlRead($g_hTxtSearchReduceGold)
 			$g_iSearchReductionElixir = GUICtrlRead($g_hTxtSearchReduceElixir)
 			$g_iSearchReductionGoldPlusElixir = GUICtrlRead($g_hTxtSearchReduceGoldPlusElixir)
@@ -1263,6 +1272,7 @@ Func ApplyConfig_600_28($TypeReadSave)
 			$g_bSearchAlertMe = (GUICtrlRead($g_hChkAlertSearch) = $GUI_CHECKED)
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_28
+#EndRegion - Custom Search Reduction - Team AIO Mod++
 
 Func ApplyConfig_600_28_DB($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Deadbase / Search <><><><>
@@ -2404,6 +2414,7 @@ Func ApplyConfig_600_54($TypeReadSave)
 	#EndRegion - Custom Train - Team AIO Mod++
 EndFunc   ;==>ApplyConfig_600_54
 
+#Region - Custom SmartZap - Team AIO Mod++
 Func ApplyConfig_600_56($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Options / SmartZap <><><><>
 	Switch $TypeReadSave
@@ -2414,16 +2425,12 @@ Func ApplyConfig_600_56($TypeReadSave)
 			GUICtrlSetState($g_hChkSmartZapDB, $g_bSmartZapDB = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkSmartZapSaveHeroes, $g_bSmartZapSaveHeroes = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkSmartZapFTW, $g_bSmartZapFTW = True ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetData($g_hRemainTimeToZap, $g_iRemainTimeToZap)
+			GUICtrlSetState($g_hChkSmartZapDestroyCollectors, $g_bChkSmartZapDestroyCollectors = True ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkSmartZapDestroyMines, $g_bChkSmartZapDestroyMines = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hTxtSmartZapMinDE, $g_iSmartZapMinDE)
 			GUICtrlSetData($g_hTxtSmartExpectedDE, $g_iSmartZapExpectedDE)
 			chkSmartLightSpell()
-			#CS
-				GUICtrlSetState($g_hChkSmartZapDB, $g_bSmartZapEnable = True ? $GUI_ENABLE : $GUI_DISABLE)
-				GUICtrlSetState($g_hTxtSmartZapMinDE, $g_bSmartZapEnable = True ? $GUI_ENABLE : $GUI_DISABLE)
-				GUICtrlSetState($g_hChkNoobZap, $g_bSmartZapEnable = True ? $GUI_ENABLE : $GUI_DISABLE)
-				GUICtrlSetState($g_hChkSmartZapSaveHeroes, $g_bSmartZapEnable = True ? $GUI_ENABLE : $GUI_DISABLE)
-				GUICtrlSetState($g_hTxtSmartExpectedDE, $g_bNoobZap = True ? $GUI_ENABLE : $GUI_DISABLE)
-			#CE
 		Case "Save"
 			$g_bSmartZapEnable = (GUICtrlRead($g_hChkSmartLightSpell) = $GUI_CHECKED)
 			$g_bEarthQuakeZap = (GUICtrlRead($g_hChkSmartEQSpell) = $GUI_CHECKED)
@@ -2431,10 +2438,14 @@ Func ApplyConfig_600_56($TypeReadSave)
 			$g_bSmartZapDB = (GUICtrlRead($g_hChkSmartZapDB) = $GUI_CHECKED)
 			$g_bSmartZapSaveHeroes = (GUICtrlRead($g_hChkSmartZapSaveHeroes) = $GUI_CHECKED)
 			$g_bSmartZapFTW = (GUICtrlRead($g_hChkSmartZapFTW) = $GUI_CHECKED)
+			$g_iRemainTimeToZap = Int(GUICtrlRead($g_hRemainTimeToZap))
+			$g_bChkSmartZapDestroyCollectors = (GUICtrlRead($g_hChkSmartZapDestroyCollectors) = $GUI_CHECKED)
+			$g_bChkSmartZapDestroyMines = (GUICtrlRead($g_hChkSmartZapDestroyMines) = $GUI_CHECKED)
 			$g_iSmartZapMinDE = Int(GUICtrlRead($g_hTxtSmartZapMinDE))
 			$g_iSmartZapExpectedDE = Int(GUICtrlRead($g_hTxtSmartExpectedDE))
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_56
+#EndRegion - Custom SmartZap - Team AIO Mod++
 
 Func ApplyConfig_641_1($TypeReadSave)
 	; <><><> Attack Plan / Train Army / Options <><><>

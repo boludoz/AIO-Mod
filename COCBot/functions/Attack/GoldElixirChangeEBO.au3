@@ -88,10 +88,24 @@ Func GoldElixirChangeEBO()
 
 	Local $iTime = 0
 	Local $bOneLoop = True
+	Local $bUsedZap = False ; Custom SmartZap - Team AIO Mod++
 	While $bOneLoop Or ($iTime < $z And $z > 0 And $iTime >= 0)
 		$bOneLoop = False
 		;HEALTH HEROES
 		CheckHeroesHealth()
+
+		#Region - Custom SmartZap - Team AIO Mod++
+		Local $sTime = _getBattleEnds()
+		Local $iTime = ConvertTime($sTime)
+		SetLog("Battle ends in: " & _getBattleEnds() & " | remain in seconds is " & $iTime & "s", $COLOR_INFO)
+		If IsAttackPage() And (($g_iRemainTimeToZap > $iTime And $g_iRemainTimeToZap <> 0) Or $iTime < 45) And Not $bUsedZap Then
+			SetLog("let's ZAP, even with troops on the ground", $COLOR_INFO)
+			smartZap()
+			$bUsedZap = True
+		EndIf
+		#EndRegion - Custom SmartZap - Team AIO Mod++
+
+		_CaptureRegion2()
 
 		;DE SPECIAL END EARLY
 		If $g_iMatchMode = $LB And $g_aiAttackStdDropSides[$LB] = 4 And $g_bDESideEndEnable Then

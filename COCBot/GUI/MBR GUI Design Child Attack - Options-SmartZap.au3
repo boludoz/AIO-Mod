@@ -13,12 +13,14 @@
 ; Example .......: No
 ; ===============================================================================================================================
 #include-once
-
-;Global $g_hGUI_NEWSMARTZAP = 0
+#Region - Custom SmartZap - Team AIO Mod++
 Global $g_hChkSmartLightSpell = 0, $g_hChkSmartEQSpell = 0, $g_hChkNoobZap = 0, $g_hChkSmartZapDB = 0, $g_hChkSmartZapSaveHeroes = 0, _
-	   $g_hTxtSmartZapMinDE = 0, $g_hTxtSmartExpectedDE = 0, $g_hChkDebugSmartZap = 0, $g_hChkSmartZapFTW = 0
-
-Global $g_hLblSmartUseLSpell = 0, $g_hLblSmartUseEQSpell = 0,  $g_hLblSmartZap = 0, $g_hLblNoobZap = 0, $g_hLblSmartLightningUsed = 0, $g_hLblSmartEarthQuakeUsed = 0
+		$g_hTxtSmartZapMinDE = 0, $g_hTxtSmartExpectedDE = 0, $g_hChkDebugSmartZap = 0, $g_hChkSmartZapFTW = 0
+		
+Global $g_hLblSmartUseLSpell = 0, $g_hLblSmartUseEQSpell = 0, $g_hLblSmartZap = 0, $g_hLblNoobZap = 0, $g_hLblSmartLightningUsed = 0, $g_hLblSmartEarthQuakeUsed = 0, _
+		$g_hRemainTimeToZap = 0, $g_hLblRemainTimeToZap = 0
+		
+Global $g_hChkSmartZapDestroyCollectors = 0, $g_hChkSmartZapDestroyMines = 0
 
 Func CreateAttackNewSmartZap()
 
@@ -61,30 +63,45 @@ Func CreateAttackNewSmartZap()
 			GUICtrlSetOnEvent(-1, "chkSmartZapSaveHeroes")
 			GUICtrlSetState(-1, $GUI_CHECKED)
 			GUICtrlSetState(-1, $GUI_DISABLE)
-		$g_hChkSmartZapFTW = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "ChkSmartZapFTW", "Strike For The Win"), $x + 20 + 2, $y + 95, -1, -1)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "ChkSmartZapFTW_Info_01", "SmartZap/NoobZap will try to reach 50% Destruction to get the win.") & @CRLF & _
-							   GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "ChkSmartZapFTW_Info_02", "It will not zap, if one Star is already reached, or if there is no chance to win."))
+	$g_hChkSmartZapFTW = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "ChkSmartZapFTW", "Strike For The Win"), $x + 20 + 2, $y + 95, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "ChkSmartZapFTW_Info_01", "SmartZap/NoobZap will try to reach 50% Destruction to get the win.") & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "ChkSmartZapFTW_Info_02", "It will not zap, if one Star is already reached, or if there is no chance to win."))
 			GUICtrlSetOnEvent(-1, "chkSmartZapFTW")
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
 			GUICtrlSetState(-1, $GUI_DISABLE)
-
+	$g_hLblRemainTimeToZap = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "LblRemainTimeToZap", "Remain Time to Zap"), $x + 20, $y + 120, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "RemainTimeToZap_Info_01", "[0] Disabled, [1-99] Will Proceed with Smart Zap before battle ends."))
+			$g_hRemainTimeToZap = GUICtrlCreateInput("90", $x + 120, $y + 116, 40, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "RemainTimeToZap_Info_01", "[0] Disabled, [1-99] Will Proceed with Smart Zap before battle ends."))
+			GUICtrlSetLimit(-1, 2)
+			GUICtrlSetOnEvent(-1, "ZapRemainTime")
+			GUICtrlSetState(-1, $GUI_DISABLE)
+	$g_hChkSmartZapDestroyCollectors = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "ChkSmartZapDestroyCollectors", "Destroy Collectors"), $x + 20 + 2, $y + 140, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "ChkSmartZapDestroyCollectors_Info_01", "Will try to destroy filled Collectors after Drills."))
+			GUICtrlSetOnEvent(-1, "ChkSmartZapDestroyCollectors")
+			GUICtrlSetState(-1, $GUI_UNCHECKED)
+			GUICtrlSetState(-1, $GUI_DISABLE)
+			$g_hChkSmartZapDestroyMines = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "ChkSmartZapDestroyMines", "Destroy Mines"), $x + 20 + 2, $y + 160, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "ChkSmartZapDestroyMines_Info_01", "Will try to destroy Mines after Drills."))
+			GUICtrlSetOnEvent(-1, "ChkSmartZapDestroyMines")
+			GUICtrlSetState(-1, $GUI_UNCHECKED)
+			GUICtrlSetState(-1, $GUI_DISABLE)
 	$y -= 55
-		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 200 + 9, $y + 11, 24, 24)
-		GUICtrlCreateGroup("", $x + 199, $y - 1, 192, 106)
-		$g_hLblSmartZap = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "LblSmartZap", "Min. amount of Dark Elixir") & ":", $x + 160 + 79, $y + 12, -1, -1)
-		$g_hTxtSmartZapMinDE = _GUICtrlCreateInput("350", $x + 289, $y + 32, 90, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+			_GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 200 + 9, $y + 11, 24, 24)
+			GUICtrlCreateGroup("", $x + 199, $y - 1, 192, 106)
+	$g_hLblSmartZap = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "LblSmartZap", "Min. amount of Dark Elixir") & ":", $x + 160 + 79, $y + 12, -1, -1)
+	$g_hTxtSmartZapMinDE = GUICtrlCreateInput("350", $x + 289, $y + 32, 90, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "LblSmartZap_Info_01", "Set the Value of the minimum amount of Dark Elixir in the Drills"))
 			GUICtrlSetLimit(-1, 3)
 			GUICtrlSetOnEvent(-1, "txtMinDark")
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			_GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 200 + 9, $y + 57, 24, 24)
-		$g_hLblNoobZap = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "LblNoobZap", "Expected gain of Dark Drills") & ":", $x + 160 + 79, $y + 58, -1, -1)
-		$g_hTxtSmartExpectedDE = _GUICtrlCreateInput("320", $x + 289, $y + 78, 90, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "LblNoobZap_Info_01", "Set value for expected gain every dark drill") & @CRLF & _
-							   GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "LblNoobZap_Info_02", "NoobZap will be stopped if the last zap gained less DE than expected"))
+	$g_hLblNoobZap = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "LblNoobZap", "Expected gain of Dark Drills") & ":", $x + 160 + 79, $y + 58, -1, -1)
+	$g_hTxtSmartExpectedDE = GUICtrlCreateInput("320", $x + 289, $y + 78, 90, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "LblNoobZap_Info_01", "Set value for expected gain every dark drill") & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "LblNoobZap_Info_02", "NoobZap will be stopped if the last zap gained less DE than expected"))
 			GUICtrlSetLimit(-1, 3)
 			GUICtrlSetOnEvent(-1, "txtExpectedDE")
 			GUICtrlSetState(-1, $GUI_DISABLE)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 EndFunc   ;==>CreateAttackNewSmartZap
+#EndRegion - Custom SmartZap - Team AIO Mod++

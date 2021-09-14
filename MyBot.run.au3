@@ -1543,18 +1543,6 @@ Func FirstCheck()
 		; BotHumanization()
 	EndIf
 	#EndRegion - Team AIO MOD++
-	
-	#Region - Custom - xbebenk - Team AIO Mod++
-	checkMainScreen(False)
-	If BotCommand() Then btnStop()
-	If ProfileSwitchAccountEnabled() And ($g_iCommandStop = 0 Or $g_bForceSwitch) Then checkSwitchAcc()
-	; If ProfileSwitchAccountEnabled() And $g_iCommandStop = 0 Then
-		; If $g_bChkOnlyFarm = False Then	; Only Farm - Team__AiO__MOD
-			; FirstCheckRoutine()
-			; _RunFunction('BuilderBase')
-		; EndIf
-	; EndIf
-	#EndRegion - Custom - xbebenk - Team AIO Mod++
 
 	If Not $g_bRunState Then Return
 	If $g_bRestart Then Return
@@ -1573,9 +1561,25 @@ Func FirstCheck()
 
 	If _Sleep($DELAYRUNBOT5) Then Return
 	checkMainScreen(False)
-	; If Not $g_bRunState Then Return
+	If Not $g_bRunState Then Return
 	If $g_bRestart Then Return
 	
+	#Region - Custom - xbebenk - Team AIO Mod++
+	VillageReport()
+	If BotCommand() Then btnStop()
+	If ProfileSwitchAccountEnabled() And ($g_iCommandStop = 0 Or $g_bForceSwitch) Then checkSwitchAcc()
+	If Not $g_bRunState Then Return
+	If $g_bRestart Then Return
+	#cs
+	If ProfileSwitchAccountEnabled() And $g_iCommandStop = 0 Then
+		If $g_bChkOnlyFarm = False Then	; Only Farm - Team__AiO__MOD
+			FirstCheckRoutine()
+			_RunFunction('BuilderBase')
+		EndIf
+	EndIf
+	#Ce
+	#EndRegion - Custom - xbebenk - Team AIO Mod++
+
 	If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
 		; VERIFY THE TROOPS AND ATTACK IF IS FULL
 		SetLog("-- FirstCheck on Train --", $COLOR_INFO)
@@ -1590,8 +1594,7 @@ Func FirstCheck()
 				Setlog("Before any other routine let's attack!", $COLOR_INFO)
 				If Not $g_bRunState Then Return
 				AttackMain()
-				; Custom fix - Team AIO Mod++
-				; If Not $g_bRunState Then Return
+				If Not $g_bRunState Then Return
 				If $g_bRestart Then Return
 
 				$g_bSkipFirstZoomout = False

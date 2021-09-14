@@ -1030,10 +1030,14 @@ Func ReadConfig_600_26()
 	IniReadS($g_iAtkTBMode, $g_sProfileConfigPath, "search", "THBullyAttackMode", 0, "int")
 EndFunc   ;==>ReadConfig_600_26
 
+#Region - Custom Search Reduction - Team AIO Mod++
 Func ReadConfig_600_28()
 	; <><><><> Attack Plan / Search & Attack / Options / Search <><><><>
 	IniReadS($g_bSearchReductionEnable, $g_sProfileConfigPath, "search", "reduction", False, "Bool")
+	IniReadS($g_bSearchReductionByCount, $g_sProfileConfigPath, "search", "reduceCountChk", False, "Bool")
+	IniReadS($g_bSearchReductionByMin, $g_sProfileConfigPath, "search", "reduceMinChk", False, "Bool")
 	IniReadS($g_iSearchReductionCount, $g_sProfileConfigPath, "search", "reduceCount", 20, "int")
+	IniReadS($g_iSearchReductionByMin, $g_sProfileConfigPath, "search", "reduceMin", 40, "int")
 	IniReadS($g_iSearchReductionGold, $g_sProfileConfigPath, "search", "reduceGold", 2000, "int")
 	IniReadS($g_iSearchReductionElixir, $g_sProfileConfigPath, "search", "reduceElixir", 2000, "int")
 	IniReadS($g_iSearchReductionGoldPlusElixir, $g_sProfileConfigPath, "search", "reduceGoldPlusElixir", 4000, "int")
@@ -1048,6 +1052,7 @@ Func ReadConfig_600_28()
 	IniReadS($g_bSearchRestartPickupHero, $g_sProfileConfigPath, "search", "RestartSearchPickupHero", False, "Bool")
 	IniReadS($g_bSearchAlertMe, $g_sProfileConfigPath, "general", "AlertSearch", False, "Bool")
 EndFunc   ;==>ReadConfig_600_28
+#EndRegion - Custom Search Reduction - Team AIO Mod++
 
 Func ReadConfig_600_28_DB()
 	; <><><><> Attack Plan / Search & Attack / Deadbase / Search <><><><>
@@ -1578,6 +1583,7 @@ Func ReadConfig_600_54()
 	Next
 EndFunc   ;==>ReadConfig_600_54
 
+#Region - Custom SmartZap - Team AIO Mod++
 Func ReadConfig_600_56()
 	; <><><><> Attack Plan / Search & Attack / Options / SmartZap <><><><>
 	$g_bSmartZapEnable = (IniRead($g_sProfileConfigPath, "SmartZap", "UseSmartZap", "0") = "1")
@@ -1586,9 +1592,13 @@ Func ReadConfig_600_56()
 	$g_bSmartZapDB = (IniRead($g_sProfileConfigPath, "SmartZap", "ZapDBOnly", "1") = "1")
 	$g_bSmartZapSaveHeroes = (IniRead($g_sProfileConfigPath, "SmartZap", "THSnipeSaveHeroes", "1") = "1")
 	$g_bSmartZapFTW = (IniRead($g_sProfileConfigPath, "SmartZap", "FTW", "0") = "1")
+	$g_iRemainTimeToZap = Int(IniRead($g_sProfileConfigPath, "SmartZap", "RemainTimeToZap", 0))
+	$g_bChkSmartZapDestroyCollectors = (IniRead($g_sProfileConfigPath, "SmartZap", "DestroyCollectors", "0") = "1")
+	$g_bChkSmartZapDestroyMines = (IniRead($g_sProfileConfigPath, "SmartZap", "DestroyMines", "0") = "1")
 	$g_iSmartZapMinDE = Int(IniRead($g_sProfileConfigPath, "SmartZap", "MinDE", 350))
 	$g_iSmartZapExpectedDE = Int(IniRead($g_sProfileConfigPath, "SmartZap", "ExpectedDE", 320))
 EndFunc   ;==>ReadConfig_600_56
+#EndRegion - Custom SmartZap - Team AIO Mod++
 
 Func ReadConfig_641_1()
 	; <><><><> Attack Plan / Train Army / Options <><><><>
