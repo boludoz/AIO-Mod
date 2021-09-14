@@ -1284,3 +1284,32 @@ Func cmbSuperTroopsResources()
 	$g_iCmbSuperTroopsResources = _GUICtrlComboBox_GetCurSel($g_hCmbSuperTroopsResources)
 EndFunc   ;==>cmbSuperTroopsResources
 #EndRegion - Custom Super Troops - Team AIO Mod++
+
+Func CmbTroopSetting()
+	Local $iOld = $g_iCmbTroopSetting
+	Local $iActual = _GUICtrlComboBox_GetCurSel($g_hCmbTroopSetting)
+	
+	For $T = 0 To $eTroopCount - 1
+		$g_iCustomArmysMainVillage[$T][$iOld] = GUICtrlRead($g_ahTxtTrainArmyTroopCount[$T])
+	Next
+	For $S = 0 To $eSpellCount - 1
+		$g_iCustomBrewMainVillage[$S][$iOld] = GUICtrlRead($g_ahTxtTrainArmySpellCount[$S])
+	Next
+	For $S = 0 To $eSiegeMachineCount - 1
+		$g_iCustomSiegesMainVillage[$S][$iOld] = GUICtrlRead($g_ahTxtTrainArmySiegeCount[$S])
+	Next
+	;;;;;;;;;;;;;;;;;;;;;;;;;
+	For $T = 0 To $eTroopCount - 1
+		GUICtrlSetData($g_ahTxtTrainArmyTroopCount[$T], Number($g_iCustomArmysMainVillage[$T][$iActual]))
+	Next
+	
+	For $S = 0 To $eSpellCount - 1
+		GUICtrlSetData($g_ahTxtTrainArmySpellCount[$S], Number($g_iCustomBrewMainVillage[$S][$iActual]))
+	Next
+	
+	For $S = 0 To $eSiegeMachineCount - 1
+		GUICtrlSetData($g_ahTxtTrainArmySiegeCount[$S], Number($g_iCustomSiegesMainVillage[$S][$iActual]))
+	Next
+
+	$g_iCmbTroopSetting = _GUICtrlComboBox_GetCurSel($g_hCmbTroopSetting)
+EndFunc   ;==>CmbTroopSetting

@@ -1298,10 +1298,12 @@ Func SaveConfig_600_52_2()
 		_Ini_Add("Spells", $g_asSpellShortNames[$s], $g_aiArmyCustomSpells[$s])
 		_Ini_Add("LevelSpell", $g_asSpellShortNames[$s], $g_aiTrainArmySpellLevel[$s])
 	Next
+	
 	For $s = 0 To $eSiegeMachineCount - 1
 		_Ini_Add("Siege", $g_asSiegeMachineShortNames[$s], $g_aiArmyCompSiegeMachines[$s])
 		_Ini_Add("LevelSiege", $g_asSiegeMachineShortNames[$s], $g_aiTrainArmySiegeMachineLevel[$s])
 	Next
+	
 	; full & forced Total Camp values
 	_Ini_Add("troop", "fulltroop", $g_iTrainArmyFullTroopPct)
 	_Ini_Add("other", "ChkTotalCampForced", $g_bTotalCampForced ? 1 : 0)
@@ -1314,6 +1316,24 @@ Func SaveConfig_600_52_2()
 	#Region - Custom train - Team AIO Mod++
 	_Ini_Add("troop", "ChkPreTrainTroopsPercent", $g_bChkPreTrainTroopsPercent ? 1 : 0)
 	_Ini_Add("troop", "InpPreTrainTroopsPercent", $g_iInpPreTrainTroopsPercent)
+	_Ini_Add("troop", "CmbTroopSetting", $g_iCmbTroopSetting)
+	
+	For $i = 0 To 2
+		For $t = 0 To $eTroopCount - 1
+			_Ini_Add("Cmbtroop" & $i, $g_asTroopShortNames[$t], $g_iCustomArmysMainVillage[$t][$i])
+			; _Ini_Add("LevelTroop", $g_asTroopShortNames[$t], $g_aiTrainArmyTroopLevel[$t])
+		Next
+		
+		For $s = 0 To $eSpellCount - 1
+			_Ini_Add("CmbSpells" & $i, $g_asSpellShortNames[$s], $g_iCustomBrewMainVillage[$s][$i])
+			; _Ini_Add("LevelSpell", $g_asSpellShortNames[$s], $g_aiTrainArmySpellLevel[$s])
+		Next
+		
+		For $s = 0 To $eSiegeMachineCount - 1
+			_Ini_Add("CmbSiege" & $i, $g_asSiegeMachineShortNames[$s], $g_iCustomSiegesMainVillage[$s][$i])
+			; _Ini_Add("LevelSiege", $g_asSiegeMachineShortNames[$s], $g_aiTrainArmySiegeMachineLevel[$s])
+		Next
+	Next
 	#EndRegion - Custom train - Team AIO Mod++
 EndFunc   ;==>SaveConfig_600_52_2
 

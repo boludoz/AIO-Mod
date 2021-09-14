@@ -183,67 +183,6 @@ Func CreateAttackTroops()
 
 EndFunc   ;==>CreateAttackTroops
 
-#CS
-Func CreateTrainArmy()
-
-	$g_hGUI_TRAINARMY_ARMY = _GUICreate("", $g_iSizeWGrpTab3, $g_iSizeHGrpTab3, 5, 25, BitOR($WS_CHILD, $WS_TABSTOP), -1, $g_hGUI_TRAINARMY)
-	GUISetBkColor($COLOR_WHITE, $g_hGUI_TRAINARMY_ARMY)
-
-	$g_hRadCustomTrain = GUICtrlCreateRadio("", 75, 35, 13, 13)
-	GUICtrlSetState(-1, $GUI_CHECKED)
-	GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
-	GUICtrlSetOnEvent(-1, "radSelectTrainType")
-	$g_hRadQuickTrain = GUICtrlCreateRadio("", 165, 35, 13, 13)
-	GUICtrlSetState(-1, $GUI_UNCHECKED)
-	GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
-	GUICtrlSetOnEvent(-1, "radSelectTrainType")
-
-	Local $x = 12
-	Local $y = 5
-
-	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnResetButton, $x - 12, $y - 2, 22, 22)
-	GUICtrlSetOnEvent(-1, "Removecamp")
-
-	$g_hChkTotalCampForced = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "ChkTotalCampForced", "Force Army Camp") & ":", $x + 25, $y, -1, -1)
-	GUICtrlSetState(-1, $GUI_CHECKED)
-	GUICtrlSetOnEvent(-1, "chkTotalCampForced")
-	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "ChkTotalCampForced_Info_01", "If not detected set army camp values (instead ask)"))
-	$g_hTxtTotalCampForced = _GUICtrlCreateInput("220", $x + 134, $y + 3, 30, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
-	GUICtrlSetOnEvent(-1, "SetComboTroopComp")
-	GUICtrlSetLimit(-1, 3)
-
-	GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "LblFullTroop", "'Full' Camp") & " " & ChrW(8805), $x + 170, $y + 5, 70, 17, $SS_RIGHT)
-	$g_hTxtFullTroop = _GUICtrlCreateInput("100", $x + 242, $y + 3, 30, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
-	GUICtrlSetOnEvent(-1, "SetComboTroopComp")
-	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "TxtFullTroop_Info_01", "Army camps are 'Full' when reaching this %, then start attack."))
-	GUICtrlSetLimit(-1, 3)
-	GUICtrlCreateLabel("%", $x + 273, $y + 5, -1, 17)
-
-	GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "SpellCapacity", "Spell Capacity") & ":", $x + 288, $y + 5, 90, 17, $SS_RIGHT)
-	$g_hTxtTotalCountSpell = GUICtrlCreateCombo("", $x + 380, $y + 1, 35, 16, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
-	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "TxtTotalCountSpell_Info_01", "Enter the No. of Spells Capacity."))
-	GUICtrlSetData(-1, "0|2|4|6|7|8|9|10|11", "0")
-	GUICtrlSetOnEvent(-1, "TotalSpellCountClick")
-
-	$g_hChkPreciseArmy = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "ChkPreciseArmy", "Precise Army"), $x + 242, $y + 26, -1, -1)
-	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Precise ArmyTip", "Always check and remove wrong troops or spells exist in army"))
-	GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
-
-	$g_hChkDoubleTrain = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "ChkDoubleTrain", "Double Train"), $x + 332, $y + 26, -1, -1)
-	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "DoubleTrainTip", "Train 2nd set of Troops & Spells after training 1st combo") & @CRLF & _
-			GetTranslatedFileIni("MBR Global GUI Design", "DoubleTrainTip1", "Make sure to enter exactly the 'Total Camp',") & @CRLF & _
-			GetTranslatedFileIni("MBR Global GUI Design", "DoubleTrainTip2", "'Total Spell' and number of Troops/Spells in your Setting") & @CRLF & _
-			GetTranslatedFileIni("MBR Global GUI Design", "DoubleTrainTip3", "Note: Donations + Double Train can produce an unbalanced army!"))
-	GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
-
-	$g_hGUI_TRAINARMY_ARMY_TAB = GUICtrlCreateTab(0, 30, $g_iSizeWGrpTab3, $g_iSizeHGrpTab3 - 30, BitOR($TCS_FORCELABELLEFT, $TCS_FIXEDWIDTH))
-	_GUICtrlTab_SetItemSize($g_hGUI_TRAINARMY_ARMY_TAB, 90, 20)
-	CreateCustomTrainSubTab()
-	CreateQuickTrainSubTab()
-
-EndFunc   ;==>CreateTrainArmy
-#ce
-
 Global $g_hGUI_CreateQuickTrainSubTab = 0
 CreateQuickTrainSubTab()
 Func CreateQuickTrainSubTab()
@@ -809,6 +748,10 @@ Func CreateTrainTroops()
 
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnResetButton, 0, 3, 16, 16)
 	GUICtrlSetOnEvent(-1, "Removecamptroops")
+	
+	$g_hCmbTroopSetting = GUICtrlCreateCombo("", 20, 2, 124, 20, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+		GUICtrlSetData(-1, GetTranslatedFileIni("sam m0d", 71, "Composition Army 1") & "|" & GetTranslatedFileIni("sam m0d", 72, "Composition Army 2") & "|" & GetTranslatedFileIni("sam m0d", 73, "Composition Army 3"), GetTranslatedFileIni("sam m0d", 71, "Composition Army 1"))
+		GUICtrlSetOnEvent(-1, "CmbTroopSetting")
 
 	GUICtrlCreateButton(GetTranslatedFileIni("MBR Main GUI", "Tab_03_STab_01_STab_01_STab_02", "Quick Train"), 300, 3, 65, 20, $SS_LEFT)
 	GUICtrlSetOnEvent(-1, "ShowQuickTrain")

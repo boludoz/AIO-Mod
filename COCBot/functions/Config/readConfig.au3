@@ -149,7 +149,7 @@ Func ReadBuildingConfig()
 			$g_abUpgradeRepeatEnable[$iz] = False
 		EndIf
 	Next
-	
+
 	#Region - Dates - Team AIO Mod++
 	IniReadS($g_sDateAndTimeMagicItems, $g_sProfileBuildingPath, "Dates", "DateAndTimeMagicItems", "", Default)
 	IniReadS($g_sDateAndTimeHeroWUE, $g_sProfileBuildingPath, "Dates", "DateAndTimeHeroWUE", "", Default)
@@ -947,10 +947,10 @@ Func ReadConfig_600_18()
 	IniReadS($g_bNotifyAlertBOTUpdate, $g_sProfileConfigPath, "notify", "AlertPBUpdate", False, "Bool")
 	IniReadS($g_bNotifyAlertSmartWaitTime, $g_sProfileConfigPath, "notify", "AlertSmartWaitTime", False, "Bool")
 	IniReadS($g_bNotifyAlertLaboratoryIdle, $g_sProfileConfigPath, "notify", "AlertLaboratoryIdle", False, "Bool")
-	
+
 	#Region - Discord - Team AIO Mod++
 	IniReadS($g_bNotifyAlertPetHouseIdle, $g_sProfileConfigPath, "notify", "AlertPetHouseIdle", False, "Bool")
-	
+
 	IniReadS($g_bNotifyDSEnable, $g_sProfileConfigPath, "notifyDS", "DSEnabled", False, "Bool")
 	IniReadS($g_sNotifyDSToken, $g_sProfileConfigPath, "notifyDS", "DSToken", "")
 	IniReadS($g_sNotifyOriginDS, $g_sProfileConfigPath, "notifyDS", "Origin", $g_sProfileCurrentName)
@@ -990,7 +990,7 @@ Func ReadConfig_600_19()
 	For $i = 0 To 6
 		$g_abNotifyScheduleWeekDays[$i] = ($g_abNotifyScheduleWeekDays[$i] = "1")
 	Next
-	
+
 	#Region - Discord - Team AIO Mod++
 	;Schedule DS
 	$g_bNotifyScheduleHoursEnableDS = (IniRead($g_sProfileConfigPath, "notifyDS", "NotifyHoursEnable", "0") = "1")
@@ -1565,6 +1565,26 @@ Func ReadConfig_600_52_2()
 	#Region - Custom train - Team AIO Mod++
 	IniReadS($g_bChkPreTrainTroopsPercent, $g_sProfileConfigPath, "troop", "ChkPreTrainTroopsPercent", True, "Bool")
 	IniReadS($g_iInpPreTrainTroopsPercent, $g_sProfileConfigPath, "troop", "InpPreTrainTroopsPercent", 95, "Int")
+	IniReadS($g_iCmbTroopSetting, $g_sProfileConfigPath, "troop", "CmbTroopSetting", $g_iCmbTroopSetting, "Int")
+
+	For $i = 0 To 2
+;~ 		_ArrayDisplay($g_iCustomArmysMainVillage)
+		For $t = 0 To $eTroopCount - 1
+			IniReadS($tempTroopCount, $g_sProfileConfigPath, "Cmbtroop" & $i, $g_asTroopShortNames[$t], 0, "Int")
+;~ 			_ArrayDisplay($g_iCustomArmysMainVillage)
+			$g_iCustomArmysMainVillage[$t][$i] = $tempTroopCount
+		Next
+
+		For $s = 0 To $eSpellCount - 1
+			IniReadS($tempTroopCount, $g_sProfileConfigPath, "CmbSpells" & $i, $g_asSpellShortNames[$s], 0, "Int")
+			$g_iCustomBrewMainVillage[$s][$i] = $tempTroopCount
+		Next
+
+		For $s = 0 To $eSiegeMachineCount - 1
+			IniReadS($tempTroopCount, $g_sProfileConfigPath, "CmbSiege" & $i, $g_asSiegeMachineShortNames[$s], 0, "Int")
+			$g_iCustomSiegesMainVillage[$s][$i] = $tempTroopCount
+		Next
+	Next
 	#EndRegion - Custom train - Team AIO Mod++
 EndFunc   ;==>ReadConfig_600_52_2
 

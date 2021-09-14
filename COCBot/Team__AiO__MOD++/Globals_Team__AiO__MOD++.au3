@@ -141,6 +141,11 @@ Global $g_aRequestTroopsTextOTR[0][2]
 #Region - Custom train - Team AIO Mod++
 Global $g_bChkPreTrainTroopsPercent = True, $g_iInpPreTrainTroopsPercent = 95, $g_bForceDoubleTrain = False
 Global $g_hChkPreTrainTroopsPercent = 0, $g_hInpPreTrainTroopsPercent = 0
+
+Global $g_iCustomArmysMainVillage[$eTroopCount][3]
+Global $g_iCustomBrewMainVillage[$eSpellCount][3]
+Global $g_iCustomSiegesMainVillage[$eSiegeMachineCount][3]
+Global $g_hCmbTroopSetting = 0, $g_iCmbTroopSetting = 0
 #EndRegion - Custom train - Team AIO Mod++
 
 ; Debug tag for some capture modes.
