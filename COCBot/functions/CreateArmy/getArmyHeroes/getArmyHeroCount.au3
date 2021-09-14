@@ -211,7 +211,7 @@ Func ArmyHeroStatus($i)
 		Next
 	EndIf
 	
-	If $sResult = "" Then Return $sResult
+	If $sResult <> "" Then Return $sResult
 
 	;return 'none' if there was a problem with the search ; or no Hero slot
 	Switch $i
