@@ -170,7 +170,7 @@ Func _BuilderBase($bTestRun = False)
 				;  $g_bCloudsActive fast network fix.
 				$g_bCloudsActive = False
 	
-				If ClanGamesBB() Then
+				If ClanGamesBB() And $g_bIsCaravanOn = "True" Then
 					; xbebenk
 					For $i = 0 To 4
 						If _Sleep(1000) Then Return
