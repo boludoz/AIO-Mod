@@ -374,7 +374,7 @@ Func WaitForVersusBattle()
 	Local $iSwitch = 0
 	Local $iErrorLoop = 0
 	
-	While $iTime < 100 Or $iErrorLoop > 15
+	While $iTime < 100 Or $iErrorLoop < 3
 		If Not $g_bRunState Then Return False
 
 		If (Mod($iTime, 3) = 0) Then $iSwitch += 1
@@ -408,7 +408,7 @@ Func WaitForVersusBattle()
 		
 	WEnd
 	
-	If $iErrorLoop <= 15 Then
+	If $iErrorLoop >= 15 Then
 		If $iTime >= 100 Then
 			If _MultiPixelSearch(375, 547, 450, 555, 1, 1, Hex(0xFE2D40, 6), $aCancelVersusBattleBtn, 5) <> 0 Then
 				SetLog("Exit from battle search.", $COLOR_WARNING)
