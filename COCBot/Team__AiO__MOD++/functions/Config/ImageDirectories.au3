@@ -181,7 +181,7 @@ Global $g_sASUpgradeResourcesRedDOCRPath = $g_sBaseDOCRPathB & "\UpgradeResource
 Global $g_sASMagicItemsDOCRPath = $g_sBaseDOCRPathB & "\MagicItems\"
 
 ; EndTime.
-Global $g_sASBattleEndsDOCRPath = $g_sBaseDOCRPathB & "\BattleEnds\"
+; Global $g_sASBattleEndsDOCRPath = $g_sBaseDOCRPathB & "\BattleEnds\"
 
 ; BoostST.
 ; Global $g_sASBoostSTDOCRPath = $g_sBaseDOCRPathB & "\BoostST\"

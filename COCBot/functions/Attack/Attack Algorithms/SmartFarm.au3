@@ -870,9 +870,11 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
     
 	#Region - Custom SmartZap - Team AIO Mod++
 	If $g_bDoneZAPsm = False Then
-		Local $sTime = _getBattleEnds()
-		Local $iTime = ConvertTime($sTime)
-		SetLog("Battle ends in: " & _getBattleEnds() & " | remain in seconds is " & $iTime & "s", $COLOR_INFO)
+		; Local $sTime = _getBattleEnds()
+		; Local $iTime = ConvertTime($sTime)
+		; SetLog("Battle ends in: " & _getBattleEnds() & " | remain in seconds is " & $iTime & "s", $COLOR_INFO)
+		Local $iTime = Int(AttackRemainingTime() / 1000)
+		SetLog("Remain in seconds is " & $iTime & "s", $COLOR_INFO)
 		If IsAttackPage() And $g_iRemainTimeToZap > $iTime And $g_iRemainTimeToZap <> 0 Then
 			SetLog("let's ZAP, even with troops on the ground", $COLOR_INFO)
 			smartZap()
@@ -999,9 +1001,11 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 
     #Region - Custom SmartZap - Team AIO Mod++
 	If $g_bDoneZAPsm = False Then
-		Local $sTime = _getBattleEnds()
-		Local $iTime = ConvertTime($sTime)
-		SetLog("Battle ends in: " & _getBattleEnds() & " | remain in seconds is " & $iTime & "s", $COLOR_INFO)
+		; Local $sTime = _getBattleEnds()
+		; Local $iTime = ConvertTime($sTime)
+		; SetLog("Battle ends in: " & _getBattleEnds() & " | remain in seconds is " & $iTime & "s", $COLOR_INFO)
+		Local $iTime = Int(AttackRemainingTime() / 1000)
+		SetLog("Remain in seconds is " & $iTime & "s", $COLOR_INFO)
 		If IsAttackPage() And $g_iRemainTimeToZap > $iTime And $g_iRemainTimeToZap <> 0 Then
 			SetLog("let's ZAP, even with troops on the ground", $COLOR_INFO)
 			smartZap()

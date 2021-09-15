@@ -95,9 +95,11 @@ Func GoldElixirChangeEBO()
 		CheckHeroesHealth()
 
 		#Region - Custom SmartZap - Team AIO Mod++
-		Local $sTime = _getBattleEnds()
-		Local $iTime = ConvertTime($sTime)
-		SetLog("Battle ends in: " & _getBattleEnds() & " | remain in seconds is " & $iTime & "s", $COLOR_INFO)
+		; Local $sTime = _getBattleEnds()
+		; Local $iTime = ConvertTime($sTime)
+		; SetLog("Battle ends in: " & _getBattleEnds() & " | remain in seconds is " & $iTime & "s", $COLOR_INFO)
+		Local $iTime = Int(AttackRemainingTime() / 1000)
+		SetLog("Remain in seconds is " & $iTime & "s", $COLOR_INFO)
 		If IsAttackPage() And (($g_iRemainTimeToZap > $iTime And $g_iRemainTimeToZap <> 0) Or $iTime < 45) And Not $bUsedZap Then
 			SetLog("let's ZAP, even with troops on the ground", $COLOR_INFO)
 			smartZap()

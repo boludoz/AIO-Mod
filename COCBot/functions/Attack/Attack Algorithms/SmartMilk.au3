@@ -390,10 +390,12 @@ Func _SmartFarmMilk($bDebug = False)
 			For $f = 0 To 7
 				If _Sleep(2000) Then Return
 				$g_iPercentageDamage = Number(getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY))
-				Local $sTime = _getBattleEnds()
-				Local $iTime = ConvertTime($sTime)
+				; Local $sTime = _getBattleEnds()
+				; Local $iTime = ConvertTime($sTime)
+				Local $iTime = Int(AttackRemainingTime() / 1000)
+				SetLog("Remain in seconds is " & $iTime & "s", $COLOR_INFO)
 				SetLog("Overall Damage is " & $g_iPercentageDamage & "%", $COLOR_INFO)
-				SetLog("Battle ends in: " & _getBattleEnds() & " | remain in seconds is " & $iTime & "s", $COLOR_INFO)
+				; SetLog("Battle ends in: " & _getBattleEnds() & " | remain in seconds is " & $iTime & "s", $COLOR_INFO)
 				If IsAttackPage() And (($g_iRemainTimeToZap > $iTime And $g_iRemainTimeToZap <> 0) Or $iTime < 45) And Not $UsedZap Then
 					SetLog("let's ZAP, even with troops on the ground", $COLOR_INFO)
 					smartZap()
@@ -562,6 +564,7 @@ Func DebugImageSmartMilk($aCollectorsAll, $sTime, $aHeroesDeployCloserToTH)
 	SetLog(" » Debug Image saved!")
 EndFunc   ;==>DebugImageSmartMilk
 
+#cs
 Func _getBattleEnds()
 	Local $sReturn = getOcrAndCaptureDOCR($g_sASBattleEndsDOCRPath, 380, 26, 106, 39, True, True)
 	$sReturn = StringReplace($sReturn, " ", "")
@@ -589,3 +592,4 @@ Func ConvertTime($sString)
 		Return $iSeconds
 	EndIf
 EndFunc   ;==>ConvertTime
+#ce

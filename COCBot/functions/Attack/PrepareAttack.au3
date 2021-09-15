@@ -358,6 +358,7 @@ Func IsUnitUsed($iMatchMode, $iTroopIndex)
 	Return False
 EndFunc   ;==>IsUnitUsed
 
+
 Func AttackRemainingTime($bInitialze = Default)
 	If $bInitialze Then
 		$g_hAttackTimer = __TimerInit()
@@ -386,8 +387,9 @@ Func AttackRemainingTime($bInitialze = Default)
 
 	; Return remaining attack time
 	Local $iAttackTime = 3 * 60 * 1000
-	Local $iRemaining = $iAttackTime - ConvertTime(_getBattleEnds())
+	Local $iRemaining = $iAttackTime - (__TimerDiff($g_hAttackTimer) - SuspendAndroidTime() - $g_iAttackTimerOffset)
 	If $iRemaining < 0 Then Return 0
 	Return $iRemaining
 
 EndFunc   ;==>AttackRemainingTime
+
