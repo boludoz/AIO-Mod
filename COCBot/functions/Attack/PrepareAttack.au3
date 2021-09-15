@@ -358,7 +358,6 @@ Func IsUnitUsed($iMatchMode, $iTroopIndex)
 	Return False
 EndFunc   ;==>IsUnitUsed
 
-
 Func AttackRemainingTime($bInitialze = Default)
 	If $bInitialze Then
 		$g_hAttackTimer = __TimerInit()

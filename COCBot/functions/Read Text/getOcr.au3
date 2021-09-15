@@ -140,7 +140,7 @@ Func getTroopCountBig($x_start, $y_start, $bNeedNewCapture = Default, $bRecheck 
 	Local $iReturn = 0
 	$iReturn = getOcrAndCapture("coc-t-b", $x_start, $y_start, 55, 17, True, Default, $bNeedNewCapture)
 	If Number($iReturn) = 0 And $bRecheck = True Then
-		$iReturn = SpecialOCRCut($g_sAttackBarDOCRB, $x_start, $y_start, 55, 16, True, $bNeedNewCapture)
+		$iReturn = SpecialOCRCut($g_sAttackBarDOCRB, $x_start, $y_start, 55, 17, True, $bNeedNewCapture)
 	EndIf
 	Return Number($iReturn)
 EndFunc   ;==>getTroopCountBig
