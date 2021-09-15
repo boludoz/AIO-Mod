@@ -157,9 +157,7 @@ Func GetAttackBar($bRemaining = False, $pMatchMode = $DB, $bDebug = False)
 					Local $iESpellLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 20, 704))
 					SetDebugLog("$iESpellLevel:" & $iESpellLevel)
 					If $iESpellLevel > 0 And $iESpellLevel <= 5 Then $g_iESpellLevel = $iESpellLevel
- 				EndIf
-				; Custom Smart Farm - Team AIO Mod++
-				If StringRegExp($aAttackBar[$i][0], "(RSpell)|(HSpell)", 0) > 0 And $g_bSmartFarmSpellsEnable Then
+ 				ElseIf StringRegExp($aAttackBar[$i][0], "(RSpell)|(HSpell)", 0) > 0 And $g_bSmartFarmSpellsEnable Then ; Custom Smart Farm - Team AIO Mod++
 					Local $iSpellLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 20, 704))
 					If StringInStr($aAttackBar[$i][0], "RSpell") <> 0 And $iSpellLevel > 0 Then $g_iRSpellLevel = $iSpellLevel
 					If StringInStr($aAttackBar[$i][0], "HSpell") <> 0 And $iSpellLevel > 0 Then $g_iHSpellLevel = $iSpellLevel
@@ -312,9 +310,7 @@ Func ExtendedAttackBarCheck($aAttackBarFirstSearch, $bRemaining, $sSearchDiamond
 					Local $iESpellLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 20, 704))
 					SetDebugLog("$iESpellLevel:" & $iESpellLevel)
 					If $iESpellLevel > 0 And $iESpellLevel <= 5 Then $g_iESpellLevel = $iESpellLevel
- 				EndIf
-				; Custom Smart Farm - Team AIO Mod++
-				If StringRegExp($aAttackBar[$i][0], "(RSpell)|(HSpell)", 0) > 0 And $g_bSmartFarmSpellsEnable Then
+ 				ElseIf StringRegExp($aAttackBar[$i][0], "(RSpell)|(HSpell)", 0) > 0 And $g_bSmartFarmSpellsEnable Then	; Custom Smart Farm - Team AIO Mod++
 					Local $iSpellLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 20, 704))
 					If StringInStr($aAttackBar[$i][0], "RSpell") <> 0 And $iSpellLevel > 0 Then $g_iRSpellLevel = $iSpellLevel
 					If StringInStr($aAttackBar[$i][0], "HSpell") <> 0 And $iSpellLevel > 0 Then $g_iHSpellLevel = $iSpellLevel
