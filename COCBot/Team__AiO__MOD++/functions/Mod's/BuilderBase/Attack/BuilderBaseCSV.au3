@@ -64,7 +64,7 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 	; Columm Names
 	Local $aIMGLtxt[8] = ["AirDefenses", "Crusher", "GuardPost", "Cannon", "AirBombs", "LavaLauncher", "Roaster", "BuilderHall"]
 	Local $aDefensesPos[8] = [$g_aAirdefensesPos, $g_aCrusherPos, $g_aGuardPostPos, $g_aCannonPos, $g_aAirBombs, $g_aLavaLauncherPos, $g_aRoasterPos, $g_aBuilderHallPos]
-	
+
 	Local $bDefenses = [$g_aAirdefensesPos, $g_aCrusherPos, $g_aGuardPostPos, $g_aCannonPos, $g_aBuilderHallPos]
 	Local $aIMGL = [False, False, False, False, False]
 	Local $aDROP = ["CMD", "QTY", "TROOPNAME__", "DROP_POINTS_", "ADDTILES_", "DROP_SIDE", "SLEEPAFTER_", "OBS"]
@@ -198,7 +198,7 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 
 					; TROOPNAME__: [ "Barb", "Arch", "Giant", "Minion", "Breaker", "BabyD", "Cannon", "Witch", "Drop", "Pekka", "HogG", "Machine" ]
 					; $aDROP[2]
-					
+
 					Local $sTroopName = "Barb"
 					Local $iTroop = _ArraySearchCSV($g_sTroopsBBAtk, $aDROP[2])
 					If $iTroop = -1 Then
@@ -265,7 +265,7 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 						Else
 						$SleepAfter = Int($aDROP[6])
 					EndIf
-					
+
 					SetDebugLog("$iQtyToDrop : " & $iQtyToDrop & ", $sQty : " & $sQty & ", $sTroopName : " & $sTroopName & ", $aSelectedDropSidePoints_XY : " & $sDropPoints & ", $iAddTiles : " & $iAddTiles & ", $sDropSide : " & $sDropSide & ", $SleepAfter : " & $SleepAfter)
 
 					Local $iQtyOfSelectedSlot = 0 ; Quantities on current slot
@@ -804,3 +804,25 @@ Func _ArraySearchCSV($aArray, $sTroop)
 	Return -1
 EndFunc   ;==>_ArraySearchCSV
 
+Func _ArraySearchCSVTest()
+	Local $sTroop = ""
+	Local $iS = ""
+	Local $sTroop1 = ""
+	Local $iS1 = ""
+
+	Setlog('"Barb", "Arch", "Giant", "Beta", "Bomb", "BabyDrag", "Cannon", "Night", "Drop", "Pekka", "HogG", "Machine"')
+
+	Local $a = StringSplit('Barb,Arch,Giant,Beta,Bomb,BabyDrag,Cannon,Night,Drop,Pekka,HogG,Machine', ",")
+	Local $a1 = StringSplit('Barb,Arch,Giant,Minion,Breaker,BabyD,Cannon,Witch,Drop,Pekka,HogG,Machine', ",")
+	For $i = 1 To UBound($a) -1
+		$sTroop = $a[$i]
+		$sTroop1 = $a1[$i]
+		$iS = _ArraySearchCSV($g_sTroopsBBAtk, $sTroop)
+		$iS1 = _ArraySearchCSV($g_sTroopsBBAtk, $sTroop1)
+		If $iS > -1 Then
+			SetLog($g_asAttackBarBB2[$iS]  & " " & $g_asAttackBarBB2[$iS1] & " " & $sTroop & " " & $sTroop1)
+		Else
+			SetLog($iS  & " " & $iS1 & " " & $sTroop)
+		EndIf
+	Next
+EndFunc   ;==>_ArraySearchCSV
