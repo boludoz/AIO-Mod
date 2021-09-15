@@ -432,7 +432,7 @@ Func WaitForVersusBattle()
 	EndIf
 	
 	SetLog("Battle search BAD.", $COLOR_ERROR)
-	CloseOpenCoc(True, True)
+	CloseCoC(True, True)
 	CheckMainScreen()
 	If _Sleep(3000) Then Return
 	Return False
