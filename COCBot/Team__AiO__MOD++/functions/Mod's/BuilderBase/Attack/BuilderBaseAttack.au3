@@ -408,17 +408,16 @@ Func WaitForVersusBattle()
 		
 	WEnd
 	
-	If $iErrorLoop >= 3 Then
-		If $iTime >= 100 Then
-			If _MultiPixelSearch(375, 547, 450, 555, 1, 1, Hex(0xFE2D40, 6), $aCancelVersusBattleBtn, 5) <> 0 Then
-				SetLog("Exit from battle search.", $COLOR_WARNING)
-				ClickP($g_iMultiPixelOffSet, 2, 0)
-				If _Sleep(3000) Then Return
-				Return False
-			EndIf
+	If $iTime >= 100 Then
+		If _MultiPixelSearch(375, 547, 450, 555, 1, 1, Hex(0xFE2D40, 6), $aCancelVersusBattleBtn, 5) <> 0 Then
+			SetLog("Exit from battle search.", $COLOR_WARNING)
+			ClickP($g_iMultiPixelOffSet, 2, 0)
+			If _Sleep(3000) Then Return
 		EndIf
+	EndIf
 	
-		For $i = 0 To 60
+	If $iErrorLoop < 3 Then
+		For $i = 0 To 65
 			If Not $g_bRunState Then Return False
 			If _MultiPixelSearch(711, 2, 856, 55, 1, 1, Hex(0xFFFF99, 6), $aAttackerVersusBattle, 15) <> 0 And _
 				_MultiPixelSearch(375, 547, 450, 555, 1, 1, Hex(0xFE2D40, 6), $aCancelVersusBattleBtn, 5) = 0 Then
@@ -431,12 +430,11 @@ Func WaitForVersusBattle()
 		Next
 	EndIf
 	
-	SetLog("Battle search BAD.", $COLOR_ERROR)
+	SetLog("Battle search BAD | ERROR LOOP = " & $iErrorLoop, $COLOR_ERROR)
 	CloseCoC(True, True)
 	CheckMainScreen()
 	If _Sleep(3000) Then Return
 	Return False
-
 EndFunc   ;==>WaitForVersusBattle
 
 Func BuilderBaseAttackToDrop($aAvailableTroops)
