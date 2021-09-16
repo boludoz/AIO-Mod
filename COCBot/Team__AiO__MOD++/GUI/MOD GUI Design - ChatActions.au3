@@ -38,7 +38,7 @@ Func TabChatActionsGUI()
 	$y -= 5
 	
 		GUICtrlCreateLabel("Frequency :", $x + 26, $y + 4, 60, 17)
-		$g_hCmbPriorityCHAT = GUICtrlCreateCombo("", $x + 128, $y, 89, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
+		$g_hCmbPriorityCHAT = GUICtrlCreateCombo("", $x + 128, $y, 89, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 		GUICtrlSetData(-1, GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptions", $g_sFrequenceChain))
 			_GUICtrlComboBox_SetCurSel($g_hCmbPriorityCHAT, $g_iCmbPriorityCHAT)
 		GUICtrlSetOnEvent(-1, "cmbChatActionsChat")
@@ -82,7 +82,7 @@ Func TabChatActionsGUI()
 	$x -= 10
 	$y -= 5
 		GUICtrlCreateLabel("Frequency :", $x + 26, $y + 4, 60, 17)
-		$g_hCmbPriorityFC = GUICtrlCreateCombo("", $x + 128, $y, 89, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
+		$g_hCmbPriorityFC = GUICtrlCreateCombo("", $x + 128, $y, 89, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 		GUICtrlSetData(-1, GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptions", -1))
 			_GUICtrlComboBox_SetCurSel($g_hCmbPriorityFC, $g_iCmbPriorityFC)
 		GUICtrlSetOnEvent(-1, "cmbChatActionsFC")
