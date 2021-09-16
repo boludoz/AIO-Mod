@@ -154,31 +154,29 @@ Global $g_sTagCallMybotCall = ""
 
 ; Advanced debugging.
 Global $g_bExecuteCapture = False
-
 Global $g_bNewModAvailable = False
-
-; ZoomMod
-Global $g_bZoomFixBB = False
-Global $Stonecoord
 
 ; Custom remain - Team AIO Mod++
 Global $g_bRemainTweak = True
 
-; Skip first check
+; Skip first check - Team AIO Mod++
 Global $g_bChkBuildingsLocate  = False, $g_hChkBuildingsLocate = 0, $g_bIsReallyOn = False
 
-; Request form chat / on a loop.
+; Firewall - Team AIO Mod++
+Global $g_hChkEnableFirewall = 0, $g_bChkEnableFirewall = False
+
+; Request form chat / on a loop - Team AIO Mod++
 Global $g_hChkReqCCAlways = 0, $g_hChkReqCCFromChat = 0
 Global $g_bChkReqCCAlways = 0, $g_bChkReqCCFromChat = 0
 
-; Stop for war - War Preparation Demen
+; Stop for war - War Preparation Demen - Team AIO Mod++
 Global $g_bStopForWar
 Global $g_iStopTime, $g_iReturnTime
 Global $g_bTrainWarTroop, $g_bUseQuickTrainWar, $g_aChkArmyWar[3], $g_aiWarCompTroops[$eTroopCount], $g_aiWarCompSpells[$eSpellCount]
 Global $g_bRequestCCForWar,	$g_sTxtRequestCCForWar
 Global $g_bClanWarLeague = True, $g_bClanWar = True
 
-; Custom BB Army
+; Custom BB Army - Team AIO Mod++
 Global $g_bDebugBBattack = False
 
 ;GUI

@@ -135,6 +135,7 @@ Func BotStart($bAutostartDelay = 0)
 		If Not $g_bRunState Then Return FuncReturn()
 		If $hWndActive = $g_hAndroidWindow And ($g_bAndroidBackgroundLaunched = True Or AndroidControlAvailable())  Then ; Really?
 			autoHideAndDockAndMinimize() ; Auto Dock, Hide Emulator & Bot - Team AiO MOD++
+			EnableFirewall() ; Firewall - Team AiO MOD++
 			Initiate() ; Initiate and run bot
 		Else
 			SetLog("Cannot use " & $g_sAndroidEmulator & ", please check log", $COLOR_ERROR)
@@ -146,6 +147,39 @@ Func BotStart($bAutostartDelay = 0)
 	EndIf
 	FuncReturn()
 EndFunc   ;==>BotStart
+
+#Region - Firewall - Team AiO MOD++
+Func EnableFirewall()
+	If $g_bChkEnableFirewall = False Then Return
+	
+    Local $aRuleName[8] = ["config.inmobi.com", "engine.mobileapptracking.com", "in.appcenter.ms", "Unbotifyadjust", "w.alikunlun.com", "telemetry.sdk.eastus", "gdpr.adjust.com", "polyfill.io"]
+    Local $aIps[8] = ["23.97.150.128", "13.225.13.0/24,13.32.83.78", "20.185.75.141", "185.151.204.0/24", "80.231.126.100-80.231.126.254", "52.150.55.162", "178.162.219.36", "151.101.130.109"]
+    Local $aRuleString = 'NETSH advfirewall firewall add rule name="'
+    Local $aRuleString1 = '" dir=out program=any protocol=any localip=any remoteip='
+    Local $aRuleString2 = ' action=block profile=any'
+    For $iRule = 0 To UBound($aRuleName) - 1
+        RunWait(@ComSpec & " /C " & 'NETSH advfirewall firewall delete rule name=' & $aRuleName[$iRule], "", @SW_HIDE)
+        RunWait(@ComSpec & " /C " & $aRuleString & $aRuleName[$iRule] & $aRuleString1 & $aIps[$iRule] & $aRuleString2, "", @SW_HIDE)
+    Next
+	
+    If ConnectAndroidAdb(True, True) Then
+        Local $sProcess_killed
+        Local $s = LaunchConsole($g_sAndroidAdbPath, "-s " & $g_sAndroidAdbDevice & " remount", $sProcess_killed)
+        If StringInStr($s, "succeeded") > 0 Then SetLog("Remount succeeded", $COLOR_SUCCESS)
+        If _Sleep(2000) Then Return
+        Local $sHostFile = @ScriptDir & "\lib\adb.scripts\hosts"
+        $s = LaunchConsole($g_sAndroidAdbPath, "-s " & $g_sAndroidAdbDevice & " push " & DoubleQuote($sHostFile) & " /system/etc/", $sProcess_killed)
+        If StringInStr($s, "pushed") > 0 Then SetLog("Patch for hosts file pushed", $COLOR_SUCCESS)
+        If _Sleep(2000) Then Return
+    Else
+        SetLog("ADB not connected.")
+    EndIf
+EndFunc   ;==>EnabledFirewall
+
+Func DoubleQuote($sString)
+    Return Chr(34) & $sString & Chr(34)
+EndFunc   ;==>DoubleQuote
+#EndRegion - Firewall - Team AiO MOD++
 
 Func BotStop()
 	FuncEnter(BotStop)

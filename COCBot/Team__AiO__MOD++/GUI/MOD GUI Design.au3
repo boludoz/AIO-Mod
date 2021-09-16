@@ -58,7 +58,7 @@ EndFunc   ;==>CreateMODTab
 
 	Local $iX = 32, $iY = 45
 
-	GUICtrlCreateGroup("Misc options", $iX - 28, $iY, 415 + 28, 164)
+	GUICtrlCreateGroup("Misc options", $iX - 28, $iY, 415 + 28, 164 + 25)
 
 	$iY += 25
 
@@ -86,6 +86,10 @@ EndFunc   ;==>CreateMODTab
   	$g_hChkBuildingsLocate = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "ChkBuildingsLocate",  "Skip buildings location."), 32, $iY, 244, 17)
 	GUICtrlSetOnEvent(-1, "chkMiscModOptions")
 	$iY += 25
+	
+  	$g_hChkEnableFirewall = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "ChkEnableFirewall",  "Timeout telemetry"), 32, $iY, 244, 17)
+	GUICtrlSetOnEvent(-1, "chkMiscModOptions")
+	$iY += 23
 
 	$g_hChkBotLogLineLimit = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "BotLogLineLimit", "Disable clear bot log, and line limit to: "), $iX, $iY, -1, -1)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MiscMODs", "BotLogLineLimitTips", "Bot log will never clear after battle, and clear bot log will replace will line limit."))

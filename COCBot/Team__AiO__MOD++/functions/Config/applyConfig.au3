@@ -211,6 +211,10 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			GUICtrlSetState($g_hChkColorfulAttackLog, $g_bChkColorfulAttackLog ? $GUI_CHECKED : $GUI_UNCHECKED)
 			#EndRegion - Colorful attack log - Team AIO Mod++
 
+			#Region - Firewall - Team AIO Mod++
+			GUICtrlSetState($g_hChkEnableFirewall, $g_bChkEnableFirewall ? $GUI_CHECKED : $GUI_UNCHECKED)
+			#EndRegion - Firewall - Team AIO Mod++
+
 			chkMaxSidesSF()
 			ChkReqCCAlways()
 			ChkReqCCFromChat()
@@ -314,8 +318,11 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			#Region - Colorful attack log - Team AIO Mod++
 			$g_bChkColorfulAttackLog = (GUICtrlRead($g_hChkColorfulAttackLog) = $GUI_CHECKED)
 			#EndRegion - Colorful attack log - Team AIO Mod++
-	EndSwitch
 
+			#Region - Firewall - Team AIO Mod++
+			$g_bChkEnableFirewall = (GUICtrlRead($g_hChkEnableFirewall) = $GUI_CHECKED)
+			#EndRegion - Firewall - Team AIO Mod++	EndSwitch
+    EndSwitch
 EndFunc   ;==>ApplyConfig_MOD_MiscTab
 
 Func ApplyConfig_MOD_SuperXP($TypeReadSave)

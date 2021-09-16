@@ -159,6 +159,9 @@ Func SaveConfig_MOD_MiscTab()
 	_Ini_Add("attack", "ChkColorfulAttackLog", $g_bChkColorfulAttackLog ? 1 : 0)
 	#EndRegion - Colorful attack log - Team AIO Mod++
 
+	#Region - Firewall - Team AIO Mod++
+	_Ini_Add("other", "ChkEnableFirewall", $g_bChkEnableFirewall ? 1 : 0)
+	#EndRegion - Firewall - Team AIO Mod++	EndSwitch
 EndFunc   ;==>SaveConfig_MOD_MiscTab
 
 Func SaveConfig_MOD_SuperXP()

@@ -81,6 +81,9 @@ EndFunc
 ; Misc tab - Team AiO MOD++
 
 Func chkMiscModOptions()
+	; Firewall - Team AIO Mod++
+	$g_bChkEnableFirewall = (GUICtrlRead($g_hChkEnableFirewall) = $GUI_CHECKED)
+
 	; Skip first loop
 	$g_bChkBuildingsLocate = (GUICtrlRead($g_hChkBuildingsLocate) = $GUI_CHECKED)
 

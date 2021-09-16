@@ -150,6 +150,10 @@ Func ReadConfig_MOD_MiscTab()
 	#Region - Colorful attack log - Team AIO Mod++
 	IniReadS($g_bChkColorfulAttackLog, $g_sProfileConfigPath, "attack", "ChkColorfulAttackLog", $g_bChkColorfulAttackLog, "Bool")
 	#EndRegion - Colorful attack log - Team AIO Mod++
+
+	#Region - Firewall - Team AIO Mod++
+	IniReadS($g_bChkEnableFirewall, $g_sProfileConfigPath, "other", "ChkEnableFirewall", $g_bChkEnableFirewall, "Bool")
+	#EndRegion - Firewall - Team AIO Mod++	EndSwitch
 EndFunc   ;==>ReadConfig_MOD_MiscTab
 
 Func ReadConfig_MOD_SuperXP()
