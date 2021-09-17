@@ -543,10 +543,11 @@ Func zapBuilding(ByRef $Spells, $x, $y)
 		SetLog("Dropping " & $Spells[$iSpell][0] & " " & String(GetTroopName($Spells[$iSpell][1], 0)), $COLOR_ACTION)
 		SelectDropTroop($Spells[$iSpell][2])
 		If _Sleep($DELAYCASTSPELL1) Then Return
-		If IsAttackPage() Then 
-			AttackClick($x, $y, $g_iInpSmartZapTimes, 500, "#0029")
+		If IsAttackPage() Then
+		
+			AttackClick($x, $y, $g_iInpSmartZapTimes, ($g_iInpSmartZapTimes > 1) ? (500) : (0), "#0029")
 		EndIf
-		$Spells[$iSpell][4] -= 1
+		$Spells[$iSpell][4] -= $g_iInpSmartZapTimes
 	Else
 		If $g_bDebugSmartZap = True Then SetLog("No " & String(GetTroopName($Spells[$iSpell][1], 0)) & " Found", $COLOR_DEBUG)
 	EndIf
