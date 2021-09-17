@@ -4,7 +4,7 @@
 ; Syntax ........:
 ; Parameters ....: None
 ; Return values .: None
-; Author ........: LunaEclipse(February, 2016)
+; Author ........: LunaEclipse(February, 2016), Team AIO Mod++ (2021)
 ; Modified ......: TheRevenor (November, 2016), TheRevenor (Desember, 2017), CodeSlinger69 (2017)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2018
 ;                  MyBot is distributed under the terms of the GNU GPL
@@ -20,7 +20,7 @@ Global $g_hChkSmartLightSpell = 0, $g_hChkSmartEQSpell = 0, $g_hChkNoobZap = 0, 
 Global $g_hLblSmartUseLSpell = 0, $g_hLblSmartUseEQSpell = 0, $g_hLblSmartZap = 0, $g_hLblNoobZap = 0, $g_hLblSmartLightningUsed = 0, $g_hLblSmartEarthQuakeUsed = 0, _
 		$g_hRemainTimeToZap = 0, $g_hLblRemainTimeToZap = 0
 		
-Global $g_hChkSmartZapDestroyCollectors = 0, $g_hChkSmartZapDestroyMines = 0
+Global $g_hChkSmartZapDestroyCollectors = 0, $g_hChkSmartZapDestroyMines = 0, $g_hInpSmartZapTimes = 0
 
 Func CreateAttackNewSmartZap()
 
@@ -80,11 +80,17 @@ Func CreateAttackNewSmartZap()
 			GUICtrlSetOnEvent(-1, "ChkSmartZapDestroyCollectors")
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
 			GUICtrlSetState(-1, $GUI_DISABLE)
-			$g_hChkSmartZapDestroyMines = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "ChkSmartZapDestroyMines", "Destroy Mines"), $x + 20 + 2, $y + 160, -1, -1)
+	$g_hChkSmartZapDestroyMines = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "ChkSmartZapDestroyMines", "Destroy Mines"), $x + 20 + 2, $y + 160, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "ChkSmartZapDestroyMines_Info_01", "Will try to destroy Mines after Drills."))
 			GUICtrlSetOnEvent(-1, "ChkSmartZapDestroyMines")
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
 			GUICtrlSetState(-1, $GUI_DISABLE)
+			GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "LblSmartZapTimes", "Zap times per collector"), $x + 20, $y + 120 + 65, -1, -1)
+	$g_hInpSmartZapTimes = GUICtrlCreateInput("1", $x + 160, $y + 116 + 65, 40, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "SmartZapTimes_Info_01", "How many times to zap per collector."))
+			GUICtrlSetLimit(-1, 1)
+			GUICtrlSetOnEvent(-1, "InpSmartZapTimes")
+			
 	$y -= 55
 			_GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 200 + 9, $y + 11, 24, 24)
 			GUICtrlCreateGroup("", $x + 199, $y - 1, 192, 106)

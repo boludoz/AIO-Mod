@@ -964,6 +964,7 @@ Func ApplyConfig_600_17($TypeReadSave)
 					GUICtrlSetState($g_hRdoUseElixirGold, $GUI_CHECKED)
 			EndSwitch
 			GUICtrlSetState($g_hChkSaveWallBldr, $g_bUpgradeWallSaveBuilder ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkOnlyIfRestABuilder, $g_bOnlyIfRestABuilder ? $GUI_CHECKED : $GUI_UNCHECKED) ; Custom Wall - Team AIO Mod++
 			_GUICtrlComboBox_SetCurSel($g_hCmbWalls, $g_iCmbUpgradeWallsLevel)
 			For $i = 4 To 15
 				GUICtrlSetData($g_ahWallsCurrentCount[$i], $g_aiWallsCurrentCount[$i])
@@ -982,6 +983,7 @@ Func ApplyConfig_600_17($TypeReadSave)
 				$g_iUpgradeWallLootType = 2
 			EndIf
 			$g_bUpgradeWallSaveBuilder = (GUICtrlRead($g_hChkSaveWallBldr) = $GUI_CHECKED)
+			$g_bOnlyIfRestABuilder = (GUICtrlRead($g_hChkOnlyIfRestABuilder) = $GUI_CHECKED) ; Custom Wall - Team AIO Mod++
 			$g_iCmbUpgradeWallsLevel = _GUICtrlComboBox_GetCurSel($g_hCmbWalls)
 			For $i = 4 To 15 ; added wall-lvl15
 				$g_aiWallsCurrentCount[$i] = Number(GUICtrlRead($g_ahWallsCurrentCount[$i]))
@@ -2432,6 +2434,7 @@ Func ApplyConfig_600_56($TypeReadSave)
 			GUICtrlSetState($g_hChkSmartZapDestroyMines, $g_bChkSmartZapDestroyMines = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hTxtSmartZapMinDE, $g_iSmartZapMinDE)
 			GUICtrlSetData($g_hTxtSmartExpectedDE, $g_iSmartZapExpectedDE)
+			GUICtrlSetData($g_hInpSmartZapTimes, $g_iInpSmartZapTimes)
 			chkSmartLightSpell()
 		Case "Save"
 			$g_bSmartZapEnable = (GUICtrlRead($g_hChkSmartLightSpell) = $GUI_CHECKED)
@@ -2445,6 +2448,7 @@ Func ApplyConfig_600_56($TypeReadSave)
 			$g_bChkSmartZapDestroyMines = (GUICtrlRead($g_hChkSmartZapDestroyMines) = $GUI_CHECKED)
 			$g_iSmartZapMinDE = Int(GUICtrlRead($g_hTxtSmartZapMinDE))
 			$g_iSmartZapExpectedDE = Int(GUICtrlRead($g_hTxtSmartExpectedDE))
+			$g_iInpSmartZapTimes = Int(GUICtrlRead($g_hInpSmartZapTimes))
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_56
 #EndRegion - Custom SmartZap - Team AIO Mod++

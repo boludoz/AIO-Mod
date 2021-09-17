@@ -657,6 +657,7 @@ Func SaveConfig_600_17()
 	_Ini_Add("upgrade", "minwallelixir", $g_iUpgradeWallMinElixir)
 	_Ini_Add("upgrade", "use-storage", $g_iUpgradeWallLootType)
 	_Ini_Add("upgrade", "savebldr", $g_bUpgradeWallSaveBuilder ? 1 : 0)
+	_Ini_Add("upgrade", "OnlyIfRestABuilder", $g_bOnlyIfRestABuilder ? 1 : 0) ; Custom Wall - Team AIO Mod++
 	_Ini_Add("upgrade", "walllvl", $g_iCmbUpgradeWallsLevel)
 	For $i = 4 To 15
 		_Ini_Add("Walls", "Wall" & StringFormat("%02d", $i), $g_aiWallsCurrentCount[$i])
@@ -1369,6 +1370,7 @@ Func SaveConfig_600_56()
 	_Ini_Add("SmartZap", "DestroyMines", $g_bChkSmartZapDestroyMines ? 1 : 0)
 	_Ini_Add("SmartZap", "MinDE", $g_iSmartZapMinDE)
 	_Ini_Add("SmartZap", "ExpectedDE", $g_iSmartZapExpectedDE)
+	_Ini_Add("SmartZap", "InpSmartZapTimes", $g_iInpSmartZapTimes)
 EndFunc   ;==>SaveConfig_600_56
 #EndRegion - Custom SmartZap - Team AIO Mod++
 

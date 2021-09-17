@@ -994,7 +994,7 @@ Global $g_abUpgradeRepeatEnable[$g_iUpgradeSlots] = [False, False, False, False,
 ; Walls
 Global $g_bAutoUpgradeWallsEnable = 0
 Global $g_iUpgradeWallMinGold = 0, $g_iUpgradeWallMinElixir = 0
-Global $g_iUpgradeWallLootType = 0, $g_bUpgradeWallSaveBuilder = False
+Global $g_iUpgradeWallLootType = 0, $g_bUpgradeWallSaveBuilder = False, $g_bOnlyIfRestABuilder = False ; Custom Wall - Team AIO Mod++
 Global $g_iCmbUpgradeWallsLevel = 6
 Global $g_aiWallsCurrentCount[16] = [-1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ; elements 0 to 3 are not referenced
 Global $g_aiLastGoodWallPos[2] = [-1, -1]
@@ -1284,7 +1284,7 @@ Global $g_abPlannedDropCCHours[24] = [True, True, True, True, True, True, True, 
 #Region - Custom SmartZap - Team AIO Mod++
 Global $g_bSmartZapEnable = False, $g_bEarthQuakeZap = False, $g_bNoobZap = False, $g_bSmartZapDB = True, $g_bSmartZapSaveHeroes = True, _
 		$g_bSmartZapFTW = False, $g_iSmartZapMinDE = 350, $g_iSmartZapExpectedDE = 320, $g_iRemainTimeToZap = 0
-Global $g_bChkSmartZapDestroyCollectors = False, $g_bChkSmartZapDestroyMines = False, $g_bDebugSmartZap = False
+Global $g_bChkSmartZapDestroyCollectors = False, $g_bChkSmartZapDestroyMines = False, $g_bDebugSmartZap = False, $g_iInpSmartZapTimes = 1
 #EndRegion - Custom SmartZap - Team AIO Mod++
 
 ; <><><><> Attack Plan / Search & Attack / Options / End Battle <><><><>

@@ -543,13 +543,16 @@ Func zapBuilding(ByRef $Spells, $x, $y)
 		SetLog("Dropping " & $Spells[$iSpell][0] & " " & String(GetTroopName($Spells[$iSpell][1], 0)), $COLOR_ACTION)
 		SelectDropTroop($Spells[$iSpell][2])
 		If _Sleep($DELAYCASTSPELL1) Then Return
-		If IsAttackPage() Then Click($x, $y, 1, 0, "#0029")
+		If IsAttackPage() Then 
+			AttackClick($x, $y, $g_iInpSmartZapTimes, 500, "#0029")
+		EndIf
 		$Spells[$iSpell][4] -= 1
 	Else
 		If $g_bDebugSmartZap = True Then SetLog("No " & String(GetTroopName($Spells[$iSpell][1], 0)) & " Found", $COLOR_DEBUG)
 	EndIf
 	Return $Spells[$iSpell][1]
 EndFunc   ;==>zapBuilding
+
 Func ReCheckDrillExist($x, $y)
 	_CaptureRegion2($x - 25, $y - 25, $x + 25, $y + 25)
 	Local $aResult = multiMatches($g_sImgSearchDrill, 1, "FV", "FV", "", 0, 1000, False)
@@ -585,7 +588,7 @@ Func zapCollectors(ByRef $aSpells)
 		If _Sleep($DELAYSMARTZAP2) Then ExitLoop
 	Next
 	_CaptureRegion2()
-	Local $iElixirEnded = Int(getGoldVillageSearch(48, 69))
+	Local $iElixirEnded = Int(getElixirVillageSearch(48, 69 + 29)) ; True dev fix.
 	SetDebugLog("$iElixirEnded is " & $iElixirEnded & " Elixir")
 	Local $iDamage = getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY)
 	SetDebugLog("Damage is " & $iDamage & "%")

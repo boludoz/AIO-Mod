@@ -24,7 +24,33 @@ Func UpgradeWall()
 		SetDebugLog("$iWallCost:" & $iWallCost)
 		If SkipWallUpgrade($iWallCost) Then Return
 		SetDebugLog("$g_iFreeBuilderCount:" & $g_iFreeBuilderCount)
-		If $g_iFreeBuilderCount > 0 Then
+		Local $iFreeBuilders = $g_iFreeBuilderCount
+		
+		; Custom Wall - Team AIO Mod++
+		If $g_bOnlyIfRestABuilder Then
+			Local $iReservedForHeroes = ReservedBuildersForHeroes()
+			If $g_bUpgradeWardenEnable = False Or $g_bChkBBUpgWallsGold = True Then
+				If $iFreeBuilders > $iReservedForHeroes Then
+					$iFreeBuilders -= $iReservedForHeroes
+				EndIf
+			EndIf
+			
+			If $iFreeBuilders <> 1 Then
+				$iFreeBuilders = 0
+				
+				Local $hMsgColor = $COLOR_INFO
+				SetLog("Wall upgrade: skipped, more than only one builder iddle:", $COLOR_INFO)
+				
+				$hMsgColor = ($g_bUpgradeWardenEnable = True) ? ($COLOR_ERROR) : ($COLOR_SUCCESS)
+				SetLog("- Is warden for upgrade? " & $g_bUpgradeWardenEnable, $hMsgColor)
+				
+				$hMsgColor = ($g_bChkBBUpgWallsGold = False) ? ($COLOR_ERROR) : ($COLOR_SUCCESS)
+				SetLog("- Is only gold mode active for walls? " & $g_bChkBBUpgWallsGold, $hMsgColor)
+			EndIf
+			
+		EndIf
+		
+		If $iFreeBuilders > 0 Then
 			ClickAway()
 			Local $MinWallGold = Number($g_aiCurrentLoot[$eLootGold] - $iWallCost) > Number($g_iUpgradeWallMinGold) ; Check if enough Gold
 			Local $MinWallElixir = Number($g_aiCurrentLoot[$eLootElixir] - $iWallCost) > Number($g_iUpgradeWallMinElixir) ; Check if enough Elixir

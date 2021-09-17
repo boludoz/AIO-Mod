@@ -912,6 +912,7 @@ Func ReadConfig_600_17()
 	IniReadS($g_iUpgradeWallMinElixir, $g_sProfileConfigPath, "upgrade", "minwallelixir", 0, "int")
 	IniReadS($g_iUpgradeWallLootType, $g_sProfileConfigPath, "upgrade", "use-storage", 0, "int")
 	IniReadS($g_bUpgradeWallSaveBuilder, $g_sProfileConfigPath, "upgrade", "savebldr", False, "Bool")
+	IniReadS($g_bOnlyIfRestABuilder, $g_sProfileConfigPath, "upgrade", "OnlyIfRestABuilder", False, "Bool") ; Custom Wall - Team AIO Mod++
 	IniReadS($g_iCmbUpgradeWallsLevel, $g_sProfileConfigPath, "upgrade", "walllvl", 6, "int")
 	For $i = 4 To 15
 		IniReadS($g_aiWallsCurrentCount[$i], $g_sProfileConfigPath, "Walls", "Wall" & StringFormat("%02d", $i), 0, "int")
@@ -1617,6 +1618,7 @@ Func ReadConfig_600_56()
 	$g_bChkSmartZapDestroyMines = (IniRead($g_sProfileConfigPath, "SmartZap", "DestroyMines", "0") = "1")
 	$g_iSmartZapMinDE = Int(IniRead($g_sProfileConfigPath, "SmartZap", "MinDE", 350))
 	$g_iSmartZapExpectedDE = Int(IniRead($g_sProfileConfigPath, "SmartZap", "ExpectedDE", 320))
+	$g_iInpSmartZapTimes = Int(IniRead($g_sProfileConfigPath, "SmartZap", "InpSmartZapTimes", $g_iInpSmartZapTimes))
 EndFunc   ;==>ReadConfig_600_56
 #EndRegion - Custom SmartZap - Team AIO Mod++
 
