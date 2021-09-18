@@ -36,11 +36,9 @@ Func _SetLog($sLogMessage, $Color = Default, $Font = Default, $FontSize = Defaul
 		$LogPrefix = Default, $bPostponed = Default, $bSilentSetLog = Default, $bWriteToLogFile = Default)
 
 	Local Static $bActive = False
-	
-	If $Color = Default Then $Color = $COLOR_INFO
-	$Font = "Verdana" ; Team AIO Mod++
-	$FontSize = 8 ; Team AIO Mod++
-	
+	If $Color = Default Then $Color = $COLOR_BLACK
+	If $Font = Default Then $Font = "Verdana"
+	If $FontSize = Default Then $FontSize = 7.5
 	If $statusbar = Default Then $statusbar = 1
     If $time = Default Then $time = Time()
 	Local $debugTime = TimeDebug()
@@ -92,10 +90,7 @@ Func _SetLog($sLogMessage, $Color = Default, $Font = Default, $FontSize = Defaul
 	If (($g_hTxtLog <> 0 Or $g_iGuiMode <> 1) And $g_bRunState = False) Or ($bPostponed = False And __TimerDiff($g_hTxtLogTimer) >= $g_iTxtLogTimerTimeout) Then
 		; log now to GUI
 		CheckPostponedLog()
-		
-		#Region - AIO ++ - Random / Custom delay
-		; ...
-		#EndRegion - AIO ++ - Random / Custom delay
+
 	EndIf
 	$bActive = False
 EndFunc   ;==>_SetLog
