@@ -429,7 +429,7 @@ EndFunc   ;==>sldTrainITDelay
 
 Func GUISpellsOrder()
 	For $i = 0 To UBound($g_ahCmbSpellsOrder[$i]) - 1 ; check for duplicate combobox index and flag problem
-		$g_aiCmbCustomBrewOrder[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbSpellsOrder[$i][$i])
+		$g_aiCmbCustomBrewOrder[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbSpellsOrder[$i])
 	Next
 EndFunc   ;==>_GUITrainOrder
 
@@ -456,6 +456,7 @@ Func BtnRemoveSpells()
 		_GUICtrlComboBox_SetCurSel($g_ahCmbSpellsOrder[$i], $i)
 		GUISetState()
 	Next
+	GUISpellsOrder()
 EndFunc   ;==>BtnRemoveSpells
 
 Func GUITrainOrder()
@@ -503,6 +504,7 @@ Func BtnRemoveTroops()
 		_GUICtrlComboBox_SetCurSel($g_ahCmbTroopOrder[$i], $i)
 		GUISetState()
 	Next
+	GUITrainOrder()
 EndFunc   ;==>BtnRemoveTroops
 
 Func LevUpDownTroop($iTroopIndex, $NoChangeLev = True)

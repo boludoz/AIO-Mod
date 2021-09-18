@@ -2360,7 +2360,9 @@ Func ApplyConfig_600_54($TypeReadSave)
 			For $z = 0 To UBound($g_ahCmbSpellsOrder) - 1
 				_GUICtrlComboBox_SetCurSel($g_ahCmbSpellsOrder[$z], $g_aiCmbCustomBrewOrder[$z])
 			Next
-
+			
+			ApplyConfig_600_54("Save")
+			
 			chkTotalCampForced()
 			radSelectTrainType() ; this function also calls calls lblTotalCount and TotalSpellCountClick
 			SetComboTroopComp() ; this function also calls lblTotalCount
@@ -2373,9 +2375,9 @@ Func ApplyConfig_600_54($TypeReadSave)
 				$g_aiCmbCustomTrainOrder[$z] = Number(_GUICtrlComboBox_GetCurSel($g_ahCmbTroopOrder[$z]))
 			Next
 			
-			If $g_aiCmbCustomTrainOrder[UBound($g_aiCmbCustomTrainOrder) -1] = 0 Then
+			If $g_aiCmbCustomTrainOrder[UBound($g_aiCmbCustomTrainOrder) -1] < 0 Then
 				BtnRemoveTroops()
-				ApplyConfig_600_54("Read")
+				; ApplyConfig_600_54("Read")
 			EndIf 
 			
 			; Spells Order
@@ -2384,9 +2386,9 @@ Func ApplyConfig_600_54($TypeReadSave)
 				$g_aiCmbCustomBrewOrder[$z] = Number(_GUICtrlComboBox_GetCurSel($g_ahCmbSpellsOrder[$z]))
 			Next
 			
-			If $g_aiCmbCustomBrewOrder[UBound($g_aiCmbCustomBrewOrder) -1] = 0 Then
+			If $g_aiCmbCustomBrewOrder[UBound($g_aiCmbCustomBrewOrder) -1] < 0 Then
 				BtnRemoveSpells()
-				ApplyConfig_600_54("Read")
+				; ApplyConfig_600_54("Read")
 			EndIf 
 
 			Local $iTmp = 0, $iTmp2 = 0

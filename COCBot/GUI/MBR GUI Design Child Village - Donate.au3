@@ -307,9 +307,9 @@ Func CreateRequestSubTab()
 	
 	$g_hGrpRequestCCDefenseTroops = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "Group_03", "Clan Castle Defense Troops"), $xStart - 20, $yStart - 20 + 288, $g_iSizeWGrpTab3, 89)
 	
-	$g_hChkRequestCCDefense = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "ChkRequestCCDefense", "Request Defense Troops"), $x, $y)
+	$g_hChkRequestCCDefense = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "ChkRequestCCDefense", "Request Defense Troops"), $x, $y - 3)
 	
-	$g_hChkRemoveCCForDefense = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "LblChkRemoveCCForDefense", "Remove CC Before Requesting Defense Troops"), $x + 145, $y)
+	$g_hChkRemoveCCForDefense = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "LblChkRemoveCCForDefense", "Remove CC Before Requesting Defense Troops"), $x + 145, $y - 3)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "LblChkRemoveCCForDefense_01", "If Checked Bot Will Remove All CC Troops Before Doing Defense Troops Request.") & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "LblChkRemoveCCForDefense_02", "Note: If Checked It will come out of clouds When 'Total PB Time' left to request Defense troops."))
 
 	$y += 25

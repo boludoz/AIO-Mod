@@ -19,22 +19,33 @@ Func chkRequestCCHours()
 
 	If GUICtrlRead($g_hChkRequestTroopsEnable) = $GUI_CHECKED Then
 		GUICtrlSetState($g_hTxtRequestCC, $GUI_SHOW + $GUI_ENABLE)
-		For $i = $g_hLblRequestType To $g_hLblRequestCCHoursPM
+		For $i = $g_hLblRequestCChour To $g_hLblRequestCCHoursPM
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
-		chkRequestCountCC()
 	Else
 		GUICtrlSetState($g_hTxtRequestCC, $GUI_SHOW + $GUI_DISABLE)
-		For $i = $g_hLblRequestType To $g_hLblRequestCCHoursPM
+		For $i = $g_hLblRequestCChour To $g_hLblRequestCCHoursPM
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
 	EndIf
 
 	SetRedrawBotWindowControls($bWasRedraw, $g_hGrpRequestCC, "chkRequestCCHours")
+	
+	If GUICtrlRead($g_hChkRequestTroopsEnable) = $GUI_CHECKED Then
+		For $i = $g_hLblRequestType To $g_hChkRequestType_Siege
+			GUICtrlSetState($i, $GUI_ENABLE)
+		Next
+	Else
+		For $i = $g_hLblRequestType To $g_hChkRequestType_Siege
+			GUICtrlSetState($i, $GUI_DISABLE)
+		Next
+	EndIf
+
+	chkRequestCountCC()
 EndFunc   ;==>chkRequestCCHours
 
 Func chkRequestCountCC()
-	If GUICtrlRead($g_hChkRequestType_Troops) = $GUI_CHECKED Then
+	If GUICtrlRead($g_hChkRequestType_Troops) = $GUI_CHECKED And GUICtrlRead($g_hChkRequestTroopsEnable) = $GUI_CHECKED Then
 		GUICtrlSetState($g_hTxtRequestCountCCTroop, $GUI_ENABLE)
 		For $i = $g_ahCmbClanCastleTroop[0] To $g_ahCmbClanCastleTroop[2]
 			GUICtrlSetState($i, $GUI_ENABLE)
@@ -46,7 +57,7 @@ Func chkRequestCountCC()
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
 	EndIf
-	If GUICtrlRead($g_hChkRequestType_Spells) = $GUI_CHECKED Then
+	If GUICtrlRead($g_hChkRequestType_Spells) = $GUI_CHECKED And GUICtrlRead($g_hChkRequestTroopsEnable) = $GUI_CHECKED Then
 		GUICtrlSetState($g_hTxtRequestCountCCSpell, $GUI_ENABLE)
 		GUICtrlSetState($g_ahCmbClanCastleSpell[0], $GUI_ENABLE)
 		GUICtrlSetState($g_ahCmbClanCastleSpell[1], $GUI_ENABLE)
@@ -58,7 +69,7 @@ Func chkRequestCountCC()
 		GUICtrlSetState($g_ahCmbClanCastleSpell[1], $GUI_DISABLE)
 		GUICtrlSetState($g_ahCmbClanCastleSpell[2], $GUI_DISABLE)
 	EndIf
-	If GUICtrlRead($g_hChkRequestType_Siege) = $GUI_CHECKED Then
+	If GUICtrlRead($g_hChkRequestType_Siege) = $GUI_CHECKED And GUICtrlRead($g_hChkRequestTroopsEnable) = $GUI_CHECKED Then
 		GUICtrlSetState($g_ahCmbClanCastleSiege[0], $GUI_ENABLE)
 		GUICtrlSetState($g_ahCmbClanCastleSiege[1], $GUI_ENABLE)
 	Else
