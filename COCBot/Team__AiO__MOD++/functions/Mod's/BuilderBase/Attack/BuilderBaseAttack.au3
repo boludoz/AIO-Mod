@@ -372,9 +372,8 @@ Func WaitForVersusBattle()
 	; Clouds
 	Local $iTime = 0
 	Local $iSwitch = 0
-	Local $iErrorLoop = 0
-	
-	While $iTime < 100 Or $iErrorLoop < 3
+
+	While $iTime < 100 ; 5 minutes
 		If Not $g_bRunState Then Return False
 
 		If (Mod($iTime, 3) = 0) Then $iSwitch += 1
@@ -383,18 +382,15 @@ Func WaitForVersusBattle()
 				SetLog("Searching for opponents.", $COLOR_ACTION)
 			Case 1
 				If isProblemAffect(True) Then
-					$iErrorLoop += 1
-					; Return False
+					Return False
 				EndIf
 			Case 2
 				If checkObstacles_Network(True, True) Then
-					$iErrorLoop += 1
-					; Return False
+					Return False
 				EndIf
 			Case 3
 				If isOnBuilderBase(True) Then
-					$iErrorLoop += 1
-					; Return False
+					Return False
 				EndIf
 				$iSwitch = 0
 		EndSwitch
@@ -405,37 +401,39 @@ Func WaitForVersusBattle()
 
 		If _Sleep(3000) Then Return
 		$iTime += 1
-		
 	WEnd
-	
+
 	If $iTime >= 100 Then
 		If _MultiPixelSearch(375, 547, 450, 555, 1, 1, Hex(0xFE2D40, 6), $aCancelVersusBattleBtn, 5) <> 0 Then
 			SetLog("Exit from battle search.", $COLOR_WARNING)
 			ClickP($g_iMultiPixelOffSet, 2, 0)
 			If _Sleep(3000) Then Return
+			CheckMainScreen(True)
+			Return False
 		EndIf
 	EndIf
-	
-	If $iErrorLoop < 3 Then
-		For $i = 0 To 65
-			If Not $g_bRunState Then Return False
-			If _MultiPixelSearch(711, 2, 856, 55, 1, 1, Hex(0xFFFF99, 6), $aAttackerVersusBattle, 15) <> 0 And _
-				_MultiPixelSearch(375, 547, 450, 555, 1, 1, Hex(0xFE2D40, 6), $aCancelVersusBattleBtn, 5) = 0 Then
-				
-				SetLog("The Versus Battle begins now.", $COLOR_SUCCESS)
-				Return True
-			EndIf
-			If _Sleep(2000) Then Return
-			If $i = 60 Then Return False
-		Next
-	EndIf
-	
-	SetLog("Battle search BAD | ERROR LOOP = " & $iErrorLoop, $COLOR_ERROR)
-	CloseCoC(True, True)
-	CheckMainScreen()
-	If _Sleep(3000) Then Return
-	Return False
+
+	For $i = 0 To 60
+		If Not $g_bRunState Then Return False
+		Local $bIsBBAttackPage = IsBBAttackPage()
+		SetDebugLog("WaitForVersusBattle: Is BB Attack Page ? " & $bIsBBAttackPage)
+		If $bIsBBAttackPage Then ExitLoop
+		If _Sleep(2000) Then Return
+		If $i = 60 Then 
+			CheckMainScreen(True)
+			Return False
+		EndIf
+	Next
+
+	SetLog("The Versus Battle begins NOW!", $COLOR_SUCCESS)
+
+	Return True
+
 EndFunc   ;==>WaitForVersusBattle
+
+Func IsBBAttackPage()
+	Return (WaitforPixel(378, 10, 482, 26, Hex(0xFFD6D5, 6), 15, 1) <> 0)
+EndFunc   ;==>IsSTPage
 
 Func BuilderBaseAttackToDrop($aAvailableTroops)
 	#comments-start

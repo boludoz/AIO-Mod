@@ -544,7 +544,6 @@ Func zapBuilding(ByRef $Spells, $x, $y)
 		SelectDropTroop($Spells[$iSpell][2])
 		If _Sleep($DELAYCASTSPELL1) Then Return
 		If IsAttackPage() Then
-		
 			AttackClick($x, $y, $g_iInpSmartZapTimes, ($g_iInpSmartZapTimes > 1) ? (500) : (0), "#0029")
 		EndIf
 		$Spells[$iSpell][4] -= $g_iInpSmartZapTimes
