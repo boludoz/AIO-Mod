@@ -826,20 +826,12 @@ Func runBot() ;Bot that runs everything in order
 			If _Sleep($DELAYRUNBOT5) Then Return
 			checkMainScreen(False)
 			If $g_bRestart Then ContinueLoop
-			#Region - Request form chat / on a loop - Team AIO Mod++
-			If $g_bChkReqCCAlways Then
-				$g_bCanRequestCC = True
-				RequestCC()
-				If _Sleep($DELAYRUNBOT1) = False Then checkMainScreen(False)
-			EndIf
-			#EndRegion - Request form chat / on a loop - Team AIO Mod++
-
+			;Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge']
 			If $g_bIsSearchLimit Then
 				Local $aRndFuncList = ['LabCheck', 'Collect', 'PetCheck']
 			Else
-				Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge', 'PetCheck', "ChatActions", "BotHumanization"] ; AIO Mod
+				Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge', 'PetCheck']
 			EndIf
-
 			_ArrayShuffle($aRndFuncList)
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
@@ -1048,12 +1040,12 @@ Func _Idle() ;Sequence that runs until Full Army
 		If $g_iCommandStop = 0 And $g_bTrainEnabled Then
 			If Not ($g_bIsFullArmywithHeroesAndSpells) Then
 				If $g_iActualTrainSkip < $g_iMaxTrainSkip Then
-					#Region - Custom train - Team AIO Mod++
-					If CheckNeedOpenTrain($g_sTimeBeforeTrain) Or (ProfileSwitchAccountEnabled() And $g_iActiveDonate And $g_bChkDonate) Then
-						$g_bForceDoubleTrain = True ; Force double train before switch account.
-						TrainSystem() ; force check trainsystem after donate and before switch account
-					EndIf
-					#EndRegion - Custom train - Team AIO Mod++
+                    #Region - Custom train - Team AIO Mod++
+                    If CheckNeedOpenTrain($g_sTimeBeforeTrain) Or (ProfileSwitchAccountEnabled() And $g_iActiveDonate And $g_bChkDonate) Then
+                        $g_bForceDoubleTrain = True ; Force double train before switch account.
+                        TrainSystem() ; force check trainsystem after donate and before switch account
+                    EndIf
+                    #EndRegion - Custom train - Team AIO Mod++
 					If $g_bRestart Then ExitLoop
 					If _Sleep($DELAYIDLE1) Then ExitLoop
 					checkMainScreen(False)
@@ -1267,6 +1259,7 @@ Func _RunFunction($sAction)
 				Return
 		EndSwitch
 	EndIf
+	
 	; Aviod CheckObstacles spam
 	Local $bNoProceed = False
 	Switch $sAction
@@ -1348,17 +1341,15 @@ Func _RunFunction($sAction)
 			Local $bUpgradePets = False
 
 			; Check at least one pet upgrade is enabled
-			For $i = 0 To $ePetCount - 1
+			For $i = 0 to $ePetCount - 1
 				If $g_bUpgradePetsEnable[$i] Then
 					$bUpgradePets = True
-					SetLog($g_asPetNames[$i] & " upgrade enabled") ;
+					SetLog($g_asPetNames[$i] & " upgrade enabled");
 				EndIf
 			Next
 			If Not $bUpgradePets Then $bNoProceed = True
 		Case "OneGemBoost"
 			If Not $g_bChkOneGemBoostBarracks And Not $g_bChkOneGemBoostSpells And Not $g_bChkOneGemBoostHeroes And Not $g_bChkOneGemBoostWorkshop Then $bNoProceed = True
-		Case "BoostSuperTroop"
-			If $g_bQuickTrainEnable = False Or $g_bSuperTroopsEnable = False Then $bNoProceed = True
 	EndSwitch
 	;
 
@@ -1482,12 +1473,11 @@ Func __RunFunction($sAction)
 			ChatActions()
 		Case "PetHouse"
 			PetHouse()
-			; BoostSuperTroop - xbebenk - Team AIO Mod++
-		Case "BoostSuperTroop"
-			If $g_bSuperTroopsEnable = False Then Return
-			BoostSuperTroop()
-			_Sleep($DELAYRUNBOT3)
-			; One Gem Boost - Team AiO MOD++
+		; BoostSuperTroop - xbebenk - Team AIO Mod++
+        ; Case "BoostSuperTroop"
+            ; BoostSuperTroop()
+            ; _Sleep($DELAYRUNBOT3)
+		; One Gem Boost - Team AiO MOD++
 		Case "OneGemBoost"
 			OneGemBoost()
 		Case ""
@@ -1522,7 +1512,7 @@ Func FirstCheck()
 	Local $iTownHallLevel = $g_iTownHallLevel
 	SetDebugLog("Detecting Town Hall level", $COLOR_INFO)
 	SetDebugLog("Town Hall level is currently saved as " & $g_iTownHallLevel, $COLOR_INFO)
-	imglocTHSearch(False, True, True) ;Sets $g_iTownHallLevel
+    imglocTHSearch(False, True, True) ;Sets $g_iTownHallLevel
 	SetDebugLog("Detected Town Hall level is " & $g_iTownHallLevel, $COLOR_INFO)
 	If $g_iTownHallLevel < $iTownHallLevel Then
 		SetDebugLog("Bad town hall level read...saving bigger old value", $COLOR_ERROR)
@@ -1531,7 +1521,7 @@ Func FirstCheck()
 		applyConfig()
 	Else
 		SetDebugLog("Town Hall level has changed!", $COLOR_INFO)
-		SetDebugLog("New Town hall level detected as " & $g_iTownHallLevel, $COLOR_INFO)
+		SetDebugLog("New Town hall level detected as " &  $g_iTownHallLevel, $COLOR_INFO)
 		saveConfig()
 		applyConfig()
 	EndIf
@@ -1566,7 +1556,7 @@ Func FirstCheck()
 	checkMainScreen(False)
 	If Not $g_bRunState Then Return
 	If $g_bRestart Then Return
-
+	
 	#Region - Custom - xbebenk - Team AIO Mod++
 	VillageReport()
 	If BotCommand() Then btnStop()
@@ -1629,7 +1619,7 @@ Func FirstCheckRoutine()
 		If checkObstacles() Then ContinueLoop
 	Next
 EndFunc
-#CE - Region - Custom - xbebenk - Team AIO Mod++
+#CE - EndRegion - Custom - xbebenk - Team AIO Mod++
 
 Func SetSAtk($attack = False)
 

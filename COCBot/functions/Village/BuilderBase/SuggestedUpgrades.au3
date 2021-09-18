@@ -142,34 +142,34 @@ Func MainSuggestedUpgradeCode($bDebug = $g_bDebugSetlog)
 	If $g_iChkBBSuggestedUpgrades = 0 Then Return
 
 	BuilderBaseReport()
-	
+
 	Local $aArrays = -1
 	Local $iMinScroll = -1, $iMaxScroll = -1
 	Local $iMinScroll1 = -1, $iMaxScroll1 = -1
 	Local $iMinScroll2 = -1, $iMaxScroll2 = -1
 	Local $bAlreadyCheked = False
-	
+
 	ClickAway(True)
 	If _Sleep(500) Then Return
-	
+
 	If isOnBuilderBase(True) Then
-		
+
 		If ClickOnBuilder() Then
-	
+
 			SetLog("Checking for upgrades in the builder base.", $COLOR_INFO)
-	
+
 			For $z = 0 To 2     ; For do scroll 3 times.
-							
+
 				If _Sleep(3000) Then Return
-				
+
 				_CaptureRegion2()
-	
+
 				$aArrays = _ImageSearchXML($g_sImgAutoUpgradeElixir, 10, $aAreaToSearch, False, True, True, 8, 0, 1000)
 				If IsArray($aArrays) Then
 					$iMinScroll1 = _ArrayMin($aArrays, 1, -1, -1, 2)
 					$iMaxScroll1 = _ArrayMax($aArrays, 1, -1, -1, 2)
 				EndIf
-				
+
 				If $g_iChkBBSuggestedUpgradesIgnoreElixir = 0 And $g_aiCurrentLootBB[$eLootElixirBB] > 250 Then
 					If UBound($aArrays) > 0 And Not @error Then
 						For $iItem = 0 To UBound($aArrays) - 1
@@ -184,13 +184,13 @@ Func MainSuggestedUpgradeCode($bDebug = $g_bDebugSetlog)
 						Next
 					EndIf
 				EndIf
-	
+
 				$aArrays =_ImageSearchXML($g_sImgAutoUpgradeGold, 10, $aAreaToSearch, False, True, True, 8, 0, 1000)
 				If IsArray($aArrays) Then
 					$iMinScroll2 = _ArrayMin($aArrays, 1, -1, -1, 2)
 					$iMaxScroll2 = _ArrayMax($aArrays, 1, -1, -1, 2)
 				EndIf
-				
+
 				If $g_iChkBBSuggestedUpgradesIgnoreGold = 0 And $g_aiCurrentLootBB[$eLootGoldBB] > 250 Then
 					If UBound($aArrays) > 0 And Not @error Then
 						For $iItem = 0 To UBound($aArrays) - 1
@@ -205,28 +205,28 @@ Func MainSuggestedUpgradeCode($bDebug = $g_bDebugSetlog)
 						Next
 					EndIf
 				EndIf
-				
+
 				If $iMinScroll2 > $iMinScroll1 And $iMinScroll1 > 0 Then
 					$iMinScroll = $iMinScroll1
 				Else
 					$iMinScroll = $iMinScroll2
 				EndIf
-				
+
 				If $iMaxScroll2 > $iMinScroll1 Then
 					$iMaxScroll = $iMaxScroll2
 				Else
 					$iMaxScroll = $iMaxScroll1
 				EndIf
-				
+
 				If $z <> 2 Then
 					$bAlreadyCheked = ($iMinScroll > 111) ? (False) : (True)
 				EndIf
-	
+
 				For $i = 0 To UBound($aResourcesPicks) - 1
 					$aResult[0] = $aResourcesPicks[$i][1]
 					$aResult[1] = $aResourcesPicks[$i][2]
 					$aResult[2] = $aResourcesPicks[$i][0]
-	
+
 					If $aResult[2] = "New" Then
 						$g_bBuildingUpgraded = NewBuildings($aResult)
 						If $g_bBuildingUpgraded Then
@@ -236,14 +236,14 @@ Func MainSuggestedUpgradeCode($bDebug = $g_bDebugSetlog)
 					Else
 						Click($aResult[0], $aResult[1], 1)
 						If _Sleep(1000) Then Return
-	
+
 						$g_bBuildingUpgraded = GetUpgradeButton($aResult, $bDebug)
 						If $g_bBuildingUpgraded Then
 							SetLog("[" & $i + 1 & "]" & " Building detected, try upgrading it.", $COLOR_INFO)
 							ExitLoop
 						EndIf
 					EndIf
-	
+
 					$vMultipix = _PixelSearch(443, 70, 444, 76, Hex(0xFFFFFF, 6), 35)
 					If $vMultipix = 0 Then
 						If ClickOnBuilder() = False Then
@@ -251,18 +251,18 @@ Func MainSuggestedUpgradeCode($bDebug = $g_bDebugSetlog)
 							ExitLoop
 						EndIf
 					EndIf
-	
+
 				Next
-	
+
 				If $g_bBuildingUpgraded Then
 					Setlog("Exiting of improvements.", $COLOR_INFO)
 					ExitLoop
 				EndIf
-				
+
 				$aResourcesPicks = $aResourcesReset
-				
+
 				If $iMaxScroll > -1 And $iMinScroll > -1 Then
-					Local $iFixY = Round(Abs($iMaxScroll - $iMinScroll) * 0.25) 
+					Local $iFixY = Round(Abs($iMaxScroll - $iMinScroll) * 0.25)
 					If $bAlreadyCheked = False Then
 						ClickDrag(333, $iMaxScroll - $iFixY, 333, $iMinScroll + $iFixY, 1000)     ; Do scroll down.
 					Else
@@ -271,13 +271,13 @@ Func MainSuggestedUpgradeCode($bDebug = $g_bDebugSetlog)
 				Else
 					ExitLoop
 				EndIf
-				
+
 				If _Sleep(1500) Then Return
 			Next
-	
+
 		EndIf
 	EndIf
-	
+
 	ClickAway()
 
 EndFunc   ;==>MainSuggestedUpgradeCode
@@ -343,16 +343,12 @@ Func GetUpgradeButton($sUpgButtom = "", $bDebug = False)
 				SetLog("Building: " & $g_aBBUpgradeNameLevel[1], $COLOR_INFO)
 
 				; Verify if is to Upgrade
-				Local $sMsg = "", $bBuildString = False
+				Local $sMsg = "", $i = -1
 				; Inspired in @xbebenk idea.
 				If $g_bRadioBBCustomOTTO = True Then
-					For $i = 0 To UBound($g_sBBOptimizeOTTO) - 1
-						$bBuildString = _CompareTexts($g_sBBOptimizeOTTO[$i], $g_aBBUpgradeNameLevel[1], 75)
-						If $bBuildString = True Then ExitLoop
-					Next
-					
-					If $bBuildString = False Then
-						$sMsg = "Ops! " & $g_aBBUpgradeNameLevel[1] & " is not to Upgrade! (Optimize O.T.T.O.)"
+					$i = _ArraySearchMaxStringDis($g_sBBOptimizeOTTO, $g_aBBUpgradeNameLevel[1], 1)
+					If $i = -1 Then
+						$sMsg = "Ops! Algorithm detection: none | Detection: " & $g_aBBUpgradeNameLevel[1] & " is not to Upgrade! (Optimize O.T.T.O.)"
 						SetLog($sMsg, $COLOR_ERROR)
 
 						$g_aBBUpgradeResourceCostDuration = $aResetBB
@@ -360,24 +356,23 @@ Func GetUpgradeButton($sUpgButtom = "", $bDebug = False)
 
 						Return False
 					Else
-						$sMsg = "Optimize O.T.T.O. : " & $g_aBBUpgradeNameLevel[1] & " is for Upgrade."
+						$sMsg = "Optimize O.T.T.O. : " & $g_sBBOptimizeOTTO[$i] & " is for Upgrade."
 						SetLog($sMsg, $COLOR_SUCCESS)
 					EndIf
 				Else
-					For $i = 0 To UBound($g_sBBUpgradesToIgnore) - 1
-						$bBuildString = _CompareTexts($g_sBBUpgradesToIgnore[$i], $g_aBBUpgradeNameLevel[1], 75)
-						If $bBuildString = True And $g_iChkBBUpgradesToIgnore[$i] = 1 Then
-							$sMsg = "Ops! " & $g_aBBUpgradeNameLevel[1] & " is not to Upgrade!"
-							SetLog($sMsg, $COLOR_ERROR)
+					$i = _ArraySearchMaxStringDis($g_sBBUpgradesToIgnore, $g_aBBUpgradeNameLevel[1], 1)
+					If $i > -1 And $g_iChkBBUpgradesToIgnore[$i] = 1 Then
+						$sMsg = "Ops! Algorithm: " & $g_sBBUpgradesToIgnore[$i] & " | Detection: " & $g_aBBUpgradeNameLevel[1] & " is not to Upgrade!"
+						SetLog($sMsg, $COLOR_ERROR)
 
-							$g_aBBUpgradeResourceCostDuration = $aResetBB
-							$g_aBBUpgradeNameLevel = $aResetBB
+						$g_aBBUpgradeResourceCostDuration = $aResetBB
+						$g_aBBUpgradeNameLevel = $aResetBB
 
-							Return False
-						ElseIf $bBuildString = True And $g_iChkBBUpgradesToIgnore[$i] = 0 Then
-							ExitLoop
-						EndIf
-					Next
+						Return False
+					Else
+						$sMsg = $g_aBBUpgradeNameLevel[1] & " is for Upgrade."
+						SetLog($sMsg, $COLOR_SUCCESS)
+					EndIf
 				EndIf
 
 				If _MultiPixelSearch($g_aImageSearchXML[0][1], 579, $g_aImageSearchXML[0][2] + 67, 613, 2, 2, Hex(0xFF887F, 6), StringSplit2D("0xFF887F-0-1|0xFF887F-4-0"), 35) <> 0 Then
@@ -448,6 +443,17 @@ Func GetUpgradeButton($sUpgButtom = "", $bDebug = False)
 
 	Return False
 EndFunc   ;==>GetUpgradeButton
+
+Func _ArraySearchMaxStringDis($aArray, $sItem, $iMaxDis = 1, $iTolEvery = 4)
+	Local $iSting = 1
+	For $i = 0 To UBound($aArray) - 1
+		$iSting = Ceiling(_Max(String($aArray[$i]), String($sItem)) / 4)
+		If _LevDis($aArray[$i], $sItem) <= ($iMaxDis * $iSting) Then
+			Return $i
+		EndIf
+	Next
+	Return -1
+EndFunc   ;==>_ArraySearchCSV
 #EndRegion - Bulder base upgrades - Team AIO Mod++
 
 Func NewBuildings($aResult)

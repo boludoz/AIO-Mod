@@ -50,16 +50,6 @@ Func txtLogLineLimit()
 EndFunc   ;==>txtLogLineLimit
 #EndRegion - Setlog limit - Team AIO Mod++
 
-
-; Request form chat / on a loop - Team AiO MOD++
-Func ChkReqCCAlways()
-		$g_bChkReqCCAlways = (GUICtrlRead($g_hChkReqCCAlways) = $GUI_CHECKED)
-EndFunc   ;==>ChkReqCCAlways
-
-Func ChkReqCCFromChat()
-		$g_bChkReqCCFromChat = (GUICtrlRead($g_hChkReqCCFromChat) = $GUI_CHECKED)
-EndFunc   ;==>ChkReqCCFromChat
-
 ; Drop trophy - Team AiO MOD++
 Func chkNoDropIfShield()
 		$g_bChkNoDropIfShield = (GUICtrlRead($g_hChkNoDropIfShield) = $GUI_CHECKED)

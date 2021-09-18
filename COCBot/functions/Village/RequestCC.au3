@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func RequestCC($bClickPAtEnd = True, $sText = "", $bRequestFast = $g_bChkReqCCFromChat) ; Request form chat / on a loop - Team AIO Mod++
+Func RequestCC($bClickPAtEnd = True, $sText = "")
 
 	If Not $g_bRequestTroopsEnable Or Not $g_bDonationEnabled Then
 		Return
@@ -29,53 +29,22 @@ Func RequestCC($bClickPAtEnd = True, $sText = "", $bRequestFast = $g_bChkReqCCFr
 		EndIf
 	EndIf
 
-	#Region - Request form chat / on a loop - Team AIO Mod++
-	If $bRequestFast Then
-		
-		If _Sleep($DELAYREQUESTCC1) Then Return
-		SetLog("Requesting Clan Castle reinforcements from chat", $COLOR_INFO)
-
-		If Not OpenClanChat() Then SetDebugLog("RequestCC | Chat open failed.")
-		
-		If RandomSleep(400) Then Return
-		
-		; Normal request x63 - y706
-		; Already request x104 - y706
-		
-		Local $aFindRequest = RequestFromChat()
-		
-		If Not $aFindRequest Then
-			SetDebugLog("Cannot request from chat.", $COLOR_ERROR)
-			CloseClanChat()
-			Return
-		EndIf
-		
-		_makerequest()
-		
-		CloseClanChat()
-
-		Return
-	EndIf
-	#EndRegion - Request form chat / on a loop - Team AIO Mod++
-	
 	;open army overview
 	If $sText <> "IsFullClanCastle" And Not OpenArmyOverview(True, "RequestCC()") Then Return
 
 	If _Sleep($DELAYREQUESTCC1) Then Return
 	SetLog("Requesting Clan Castle reinforcements", $COLOR_INFO)
 	checkAttackDisable($g_iTaBChkIdle) ; Early Take-A-Break detection
-	
-
 	If $bClickPAtEnd Then CheckCCArmy()
 
 	If Not $g_bRunState Then Return
-	
+
 	Local $sSearchDiamond = GetDiamondFromRect("718,580,780,614")
 	Local Static $aRequestButtonPos[2] = [-1, -1]
 
 	Local $aRequestButton = findMultiple($g_sImgRequestCCButton, $sSearchDiamond, $sSearchDiamond, 0, 1000, 1, "objectname,objectpoints", True)
 	If Not IsArray($aRequestButton) Then
-		SetLog("Error in RequestCC(): $aRequestButton is no Array")
+		SetDebugLog("Error in RequestCC(): $aRequestButton is no Array")
 		If $g_bDebugImageSave Then SaveDebugImage("RequestButtonStateError")
 		Return
 	EndIf
@@ -127,65 +96,25 @@ Func RequestCC($bClickPAtEnd = True, $sText = "", $bRequestFast = $g_bChkReqCCFr
 
 EndFunc   ;==>RequestCC
 
-#Region - Custom request - Team AIO Mod++
-Func RequestFromChat() ; Custom fix - Team__AiO__MOD
-	Local $i = 0, $bClicked = False
-	Do
-		$i += 1
-		$bClicked = ButtonClickDM(@ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\Button\RequestFromChat\", 4, 686, 66, 42)
-		If _Sleep(250) Then Return
-	Until $bClicked Or ($i > 3)
-	Return $bClicked
-EndFunc   ;==>RequestFromChat
-#EndRegion - Custom request - Team AIO Mod++
-
-#Region - Type once - Team AIO Mod++
-Func _makerequest($aRequestButtonPos = "")
+Func _makerequest($aRequestButtonPos)
 	Local $sSendButtonArea = GetDiamondFromRect("220,150,650,650")
 
-	If UBound($aRequestButtonPos) = 2 And Not @error Then ClickP($aRequestButtonPos, 1, 0, "0336") ;click button request troops
+	ClickP($aRequestButtonPos, 1, 0, "0336") ;click button request troops
 
 	If Not IsWindowOpen($g_sImgSendRequestButton, 20, 100, $sSendButtonArea) Then
 		SetLog("Request has already been made, or request window not available", $COLOR_ERROR)
 		ClickAway()
 		If _Sleep($DELAYMAKEREQUEST2) Then Return
 	Else
-		If Not StringIsSpace($g_sRequestTroopsText) Then
-
-			; 	X[$g_sProfileCurrentName|$g_sRequestTroopsText]
-			Local $bCanReq = True, $bAddNew = True
-
-			If $g_bRequestOneTimeEnable Then
-				For $i = 0 To UBound($g_aRequestTroopsTextOT) - 1
-					If $g_aRequestTroopsTextOT[$i][0] = $g_sProfileCurrentName Then
-						$bAddNew = False
-
-						If $g_aRequestTroopsTextOT[$i][1] = $g_sRequestTroopsText Then
-							$bCanReq = False
-						ElseIf $g_aRequestTroopsTextOT[$i][1] <> $g_sRequestTroopsText Then
-							$g_aRequestTroopsTextOT[$i][1] = $g_sRequestTroopsText
-						EndIf
-
-						ExitLoop
-					EndIf
-				Next
-
-				If $bAddNew = True Then
-					Local $aMatrixText[1][2] = [[$g_sProfileCurrentName, $g_sRequestTroopsText]]
-					_ArrayAdd($g_aRequestTroopsTextOT, $aMatrixText)
-				EndIf
-			EndIf
-
-			If $bCanReq = True Then
-				If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
-				; fix for Android send text bug sending symbols like ``"
-				AndroidSendText($g_sRequestTroopsText, True)
-				Click(Int($g_avWindowCoordinates[0]), Int($g_avWindowCoordinates[1] - 75), 1, 0, "#0254")
-				If _Sleep($DELAYMAKEREQUEST2) Then Return
-				If SendText($g_sRequestTroopsText) = 0 Then
-					SetLog(" Request text entry failed, try again", $COLOR_ERROR)
-					Return
-				EndIf
+		If $g_sRequestTroopsText <> "" Then
+			If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
+			; fix for Android send text bug sending symbols like ``"
+			AndroidSendText($g_sRequestTroopsText, True)
+			Click(Int($g_avWindowCoordinates[0]), Int($g_avWindowCoordinates[1] - 75), 1, 0, "#0254")
+			If _Sleep($DELAYMAKEREQUEST2) Then Return
+			If SendText($g_sRequestTroopsText) = 0 Then
+				SetLog(" Request text entry failed, try again", $COLOR_ERROR)
+				Return
 			EndIf
 		EndIf
 		If _Sleep($DELAYMAKEREQUEST2) Then Return ; wait time for text request to complete
@@ -201,7 +130,6 @@ Func _makerequest($aRequestButtonPos = "")
 	EndIf
 
 EndFunc   ;==>_makerequest
-#EndRegion - Type once - Team AIO Mod++
 
 Func IsFullClanCastleType($CCType = 0) ; Troops = 0, Spells = 1, Siege Machine = 2
 	Local $aCheckCCNotFull[3] = [24, 455, 631], $sLog[3] = ["Troop", "Spell", "Siege Machine"]
@@ -291,9 +219,9 @@ Func CheckCCArmy()
 	Next
 
 	SetLog("Getting current army in Clan Castle...")
-	
+
 	If Not $g_bRunState Then Return
-	
+
 	If Not $bSkipTroop Then $aTroopWSlot = getArmyCCTroops(False, False, False, True, True, True) ; X-Coord, Troop name index, Quantity
 	If Not $bSkipSpell Then $aSpellWSlot = getArmyCCSpells(False, False, False, True, True, True) ; X-Coord, Spell name index, Quantity
 	If Not $bSkipSiege Then getArmyCCSiegeMachines() ; getting value of $g_aiCurrentCCSiegeMachines

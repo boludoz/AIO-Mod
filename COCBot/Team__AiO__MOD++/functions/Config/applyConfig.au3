@@ -171,11 +171,6 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			GUICtrlSetState($g_hChkRequestCCForWar, $g_bRequestCCForWar ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hTxtRequestCCForWar, $g_sTxtRequestCCForWar)
 
-			; Request form chat / on a loop / Type once - Team AIO Mod++
-			GUICtrlSetState($g_hChkReqCCAlways, $g_bChkReqCCAlways ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkReqCCFromChat, $g_bChkReqCCFromChat ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkRequestOneTimeEnable, $g_bRequestOneTimeEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
-
 			#Region - Return Home by Time - Team AIO Mod++
 			GUICtrlSetState($g_hChkResetByCloudTimeEnable, $g_bResetByCloudTimeEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hTxtReturnTimer, $g_iTxtReturnTimer)
@@ -216,8 +211,6 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			#EndRegion - Firewall - Team AIO Mod++
 
 			chkMaxSidesSF()
-			ChkReqCCAlways()
-			ChkReqCCFromChat()
 			ReadConfig_600_52_2()
 			ChkStopForWar()
 			chkMiscModOptions()
@@ -283,11 +276,6 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			$g_bRequestCCForWar = GUICtrlRead($g_hChkRequestCCForWar) = $GUI_CHECKED
 			$g_sTxtRequestCCForWar = GUICtrlRead($g_hTxtRequestCCForWar)
 
-			; Request form chat / on a loop / Type once - Team AIO Mod++
-			$g_bChkReqCCAlways = GUICtrlRead($g_hChkReqCCAlways) = $GUI_CHECKED
-			$g_bChkReqCCFromChat = GUICtrlRead($g_hChkReqCCFromChat) = $GUI_CHECKED
-			$g_bRequestOneTimeEnable = GUICtrlRead($g_hChkRequestOneTimeEnable) = $GUI_CHECKED
-
 			#Region - Return Home by Time - Team AIO Mod++
 			$g_bResetByCloudTimeEnable = (GUICtrlRead($g_hChkResetByCloudTimeEnable) = $GUI_CHECKED)
 			$g_iTxtReturnTimer = GUICtrlRead($g_hTxtReturnTimer)
@@ -306,7 +294,7 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			For $i = 0 To UBound($g_iChkBBUpgradesToIgnore) - 1
 				$g_iChkBBUpgradesToIgnore[$i] = GUICtrlRead($g_hChkBBUpgradesToIgnore[$i]) = $GUI_CHECKED ? 1 : 0
 			Next
-			
+
 			$g_bRadioBBUpgradesToIgnore = (GUICtrlRead($g_hRadioBBUpgradesToIgnore) = $GUI_CHECKED)
 			$g_bRadioBBCustomOTTO = (GUICtrlRead($g_hRadioBBCustomOTTO) = $GUI_CHECKED)
 			#EndRegion - Custom Improve - Team AIO Mod++
@@ -607,7 +595,7 @@ Func ApplyConfig_MOD_600_35_1($TypeReadSave)
 			; <><><> Only Farm <><><>
 			GUICtrlSetState($g_hChkOnlyFarm, $g_bChkOnlyFarm = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			UpdateChkOnlyFarm() ;Applies it to farm button
-			
+
 			; <><><> AIO Updater <><><>
 			GUICtrlSetState($g_hChkForAIOUpdates, $g_bCheckVersionAIO ? $GUI_CHECKED : $GUI_UNCHECKED)
 		Case "Save"
@@ -618,7 +606,7 @@ Func ApplyConfig_MOD_600_35_1($TypeReadSave)
 
 			; <><><> Only Farm <><><>
 			$g_bChkOnlyFarm = (GUICtrlRead($g_hChkOnlyFarm) = $GUI_CHECKED)
-			
+
 			; <><><> AIO Updater <><><>
 			$g_bCheckVersionAIO = (GUICtrlRead($g_hChkForAIOUpdates) = $GUI_CHECKED)
 	EndSwitch

@@ -165,10 +165,6 @@ Global $g_bChkBuildingsLocate  = False, $g_hChkBuildingsLocate = 0, $g_bIsReally
 ; Firewall - Team AIO Mod++
 Global $g_hChkEnableFirewall = 0, $g_bChkEnableFirewall = False
 
-; Request form chat / on a loop - Team AIO Mod++
-Global $g_hChkReqCCAlways = 0, $g_hChkReqCCFromChat = 0
-Global $g_bChkReqCCAlways = 0, $g_bChkReqCCFromChat = 0
-
 ; Stop for war - War Preparation Demen - Team AIO Mod++
 Global $g_bStopForWar
 Global $g_iStopTime, $g_iReturnTime

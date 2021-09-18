@@ -124,11 +124,6 @@ Func SaveConfig_MOD_MiscTab()
 	_Ini_Add("war preparation", "RequestCC War", $g_bRequestCCForWar ? 1 : 0)
 	_Ini_Add("war preparation", "RequestCC War Text", $g_sTxtRequestCCForWar)
 
-	; Request form chat / on a loop / Type once - Team AIO Mod++
-	_Ini_Add("ReqCCOptions", "ReqCCAlways", $g_bChkReqCCAlways)
-	_Ini_Add("ReqCCOptions", "ReqCCFromChat", $g_bChkReqCCFromChat)
-	_Ini_Add("ReqCCOptions", "RequestOneTime", $g_bRequestOneTimeEnable)
-
 	#Region - Return Home by Time - Team AIO Mod++
 	_Ini_Add("search", "ChkResetByCloudTimeEnable", $g_bResetByCloudTimeEnable ? 1 : 0)
 	_Ini_Add("search", "ReturnTimer", $g_iTxtReturnTimer)
