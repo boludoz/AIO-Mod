@@ -753,42 +753,14 @@ Func FindPreferredAdbPath()
 	Local $adbPath = Execute("Get" & $g_sAndroidEmulator & "AdbPath()")
 	Local $sAdbFolder = StringLeft($adbPath, StringInStr($adbPath, "\", 0, -1))
 	Local $sAdbFile = StringMid($adbPath, StringLen($sAdbFolder) + 1)
-	Local $sRepoAdb = @ScriptDir & "\lib\adb\"
+	Local $sRealAdb = @ScriptDir & "\lib\adb\adb.exe"
 	Local $sDummyAdb = @ScriptDir & "\lib\DummyExe.exe"
 	Local $bDummy = $g_iAndroidAdbReplace = 2 And FileExists($sDummyAdb)
-	Local $sAndroidADBversion = ""
-	Local $sRealAdb = @ScriptDir & "\lib\TempAdb\" & $g_sAndroidInstance & "\"
-	Local $process_killed, $iPID, $sStringOut, $sOutput
-	If DirCreate($sRealAdb) <> 0 Then
-		$sRealAdb = $sRealAdb & "adb.exe"
-		$iPID = LaunchConsole($sRealAdb, "version", $process_killed)
-		$sStringOut = StringSplit($sOutput, @CR, $STR_NOCOUNT)
-		If UBound($sStringOut) > 2 Then $sAndroidADBversion = StringReplace($sStringOut[0], "Version ", "")
-		Local $Version = $sAndroidADBversion
-		Local $NewVersion = "4986621"
-		If Number($Version) < Number($NewVersion) Then
-			SetDebugLog("Updating instance ADB.", $COLOR_ACTION)
-			Local $DirPath = @ScriptDir & "\lib\TempAdb\" & $g_sAndroidInstance & "\"
-			Local $aAdbProcess = ProcessFindBy($DirPath & "adb.exe")
-			For $i = 0 To UBound($aAdbProcess) -1
-				; ensure target process is not running
-				KillProcess($aAdbProcess[$i], "FindPreferredAdbPath")
-			Next
-			If FileCopy($sRepoAdb & "adb.exe", $DirPath & "adb.exe", $FC_OVERWRITE) = 0 Then SetDebugLog("Adb was not updated!", $COLOR_ERROR)
-			For $s In $aDll
-				If FileCopy($sRepoAdb & $s, $DirPath & $s, $FC_OVERWRITE) = 0 Then SetDebugLog($s & " was not updated!", $COLOR_ERROR)
-			Next
-		EndIf
-	Else
-		$sRealAdb = $sRepoAdb & "adb.exe"
-	EndIf
-	
 	Local $sAdb = ($bDummy ? $sDummyAdb : $sRealAdb)
 
-
 	If $g_iAndroidAdbReplace And $adbPath And FileExists($sAdb) And (Not $bDummy Or (FileExists(@ScriptDir & "\lib\adb\" & $aDll[0]) And FileExists(@ScriptDir & "\lib\adb\" & $aDll[1]))) _
-	And (FileGetSize($adbPath) <> FileGetSize($sAdb) Or (Not $bDummy And (FileGetSize($sAdbFolder & $aDll[0]) <> FileGetSize(@ScriptDir & "\lib\adb\" & $aDll[0]) Or FileGetSize($sAdbFolder & $aDll[1]) <> FileGetSize(@ScriptDir & "\lib\adb\" & $aDll[1])))) Then
-		Local $aAdbProcess = ProcessFindBy($adbPath)
+			And (FileGetSize($adbPath) <> FileGetSize($sAdb) Or (Not $bDummy And (FileGetSize($sAdbFolder & $aDll[0]) <> FileGetSize(@ScriptDir & "\lib\adb\" & $aDll[0]) Or FileGetSize($sAdbFolder & $aDll[1]) <> FileGetSize(@ScriptDir & "\lib\adb\" & $aDll[1])))) Then
+		Local $aAdbProcess = ProcessesExist($adbPath)
 		For $i = 0 To UBound($aAdbProcess) -1
 			; ensure target process is not running
 			KillProcess($aAdbProcess[$i], "FindPreferredAdbPath")
@@ -799,7 +771,6 @@ Func FindPreferredAdbPath()
 			SetLog("Cannot replace " & $g_sAndroidEmulator & " ADB with MyBot.run version", $COLOR_ERROR)
 		EndIf
 	EndIf
-		
 	$sAdb = $sRealAdb
 	If $g_bAndroidAdbUseMyBot And FileExists($sAdb) Then
 		Return $sAdb
@@ -815,6 +786,10 @@ Func FindPreferredAdbPath()
 			$adbPath = Execute("Get" & $g_avAndroidAppConfig[$i][0] & "AdbPath()")
 			If $adbPath <> "" Then ExitLoop
 		Next
+	EndIf
+	If $adbPath <> "" Then
+		; Not used anymore since MBR v7.6.7
+		;_SaveProfileConfigAdbPath(Default, $adbPath) ; ensure profile.ini is saved as quickly as possible with new ADB path
 	EndIf
 	Return $adbPath
 EndFunc   ;==>FindPreferredAdbPath
