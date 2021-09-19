@@ -22,6 +22,7 @@ Func TestBuilderBase()
 	If $g_bDebugSetlog Then SetDebugLog("** TestrunBuilderBase END**", $COLOR_DEBUG)
 EndFunc   ;==>TestrunBuilderBase
 
+Global $g_bBonusObtainedAtStart = False
 Func BuilderBase($bTestRun = False)
 	Local $bReturn = False
 
@@ -123,7 +124,8 @@ Func _BuilderBase($bTestRun = False)
 	Local $iLoopsToDo = Random($g_iBBMinAttack, $g_iBBMaxAttack, 1)
 	Local $bIsBonus = True, $bIsBonusInternal = False
 	$bIsBonus = BuilderBaseReportAttack(False)
-
+	$g_bBonusObtainedAtStart = ($bIsBonus = False)
+	
 	Do
 		; ClickAway()
 		NotifyPendingActions()
@@ -164,7 +166,7 @@ Func _BuilderBase($bTestRun = False)
 			$g_bCloudsActive = True
 
 			; Attack
-			If BuilderBaseAttack($bTestRun, $bIsBonus) = True Then
+			If BuilderBaseAttack($bTestRun) = True Then
 				$iAttackLoops += 1
 	
 				;  $g_bCloudsActive fast network fix.
@@ -315,7 +317,7 @@ Func BuilderBaseReportAttack($bSetLog = True)
 
 EndFunc   ;==>BuilderBaseReportAttack
 
-Func IsBuilderBaseOCR($bSetLog = True, $bIsBonus = False)
+Func IsBuilderBaseOCR($bSetLog = True)
 	Local $iSeconds = 0, $iTimer = 0
 	Local $aTmp
 	Local $sString = QuickMIS("OCR", @ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\OCR\AvariableBB\", 404, 674, 477, 695, True, False, 3, 12, True)
@@ -350,7 +352,8 @@ Func IsBuilderBaseOCR($bSetLog = True, $bIsBonus = False)
 	If $bSetLog = True Then Setlog("All builder base attacks done.", $COLOR_SUCCESS)	
 	
 	Local $sMsg = ($iTimer > 1) ? (" hours.") : (" hour.")
-	If $bIsBonus = False Then
+	Local $bIsBonus = $g_bBonusObtainedAtStart
+	If $bIsBonus = True Then
 		; Hours
 		$aTmp = _StringBetween($sString, "", "H")
 		If Not @error Then
@@ -382,7 +385,7 @@ Func IsBuilderBaseOCR($bSetLog = True, $bIsBonus = False)
 		$iTimer = 24
 		$sMsg = ($iTimer > 1) ? (" hours.") : (" hour.")
 		$iSeconds += ($iTimer * 3600)
-		If $bSetLog = True And Not PlayBBOnly() And $g_bChkBBStopAt3 Then Setlog("Bonus obtained, we will return here in approximately " & $iTimer & $sMsg, $COLOR_SUCCESS)
+		If $bSetLog = True And Not PlayBBOnly() And $g_bChkBBStopAt3 Then Setlog("Return in 24 hours.", $COLOR_SUCCESS)
 	EndIf
 	
 	; To improve reliability, minutes and seconds are discarded

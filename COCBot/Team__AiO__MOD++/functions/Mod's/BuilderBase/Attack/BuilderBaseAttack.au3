@@ -26,7 +26,7 @@ Func TestBuilderBaseAttack()
 	Setlog("** TestBuilderBaseAttack END**", $COLOR_DEBUG)
 EndFunc   ;==>TestBuilderBaseAttack
 
-Func BuilderBaseAttack($bTestRun = False, $bIsBonus = False)
+Func BuilderBaseAttack($bTestRun = False)
 
 	If Not $g_bRunState Then Return
 
@@ -64,7 +64,7 @@ Func BuilderBaseAttack($bTestRun = False, $bIsBonus = False)
 	If RandomSleep(1500) Then Return
 
 	; Check if is present bonus OCR.
-	If IsBuilderBaseOCR($g_bChkBBStopAt3, $bIsBonus) Then
+	If IsBuilderBaseOCR($g_bChkBBStopAt3) Then
 		If $g_bChkBBStopAt3 = True And Not PlayBBOnly() Then
 			ClickAway(True)
 			If RandomSleep(1500) Then Return
