@@ -243,6 +243,12 @@ Func chkAttackSearchPersonalBreak()
 			Return True
 		EndIf
 	EndIf
+	; Check if it's time to request troops for defense (Demen)
+	If $g_bChkRemoveCCForDefense And IsRequestDefense() Then
+		SetLog("Prepare base to get defense Troops..", $COLOR_INFO)
+		CheckBaseQuick(True, "cloud")
+		Return True
+	EndIf
 	Return False
 EndFunc   ;==>chkAttackSearchPersonalBreak
 

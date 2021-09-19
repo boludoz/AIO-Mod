@@ -526,6 +526,18 @@ Func SaveConfig_600_11()
 		$string &= ($g_abRequestCCHours[$i] ? "1" : "0") & "|"
 	Next
 	_Ini_Add("planned", "RequestHours", $string)
+
+    ; Request defense CC (Demen)
+    _Ini_Add("donate", "RequestDefenseEnable", $g_bRequestCCDefense ? 1 : 0)
+    _Ini_Add("donate", "RequestDefenseText", $g_sRequestCCDefenseText)
+    _Ini_Add("donate", "RequestDefenseWhenPB", $g_iCmbRequestCCDefenseWhen ? 1 : 0)
+    _Ini_Add("donate", "RequestDefenseTime", $g_iRequestDefenseTime)
+    _Ini_Add("donate", "SaveCCTroopForDefense", $g_bSaveCCTroopForDefense ? 1 : 0)
+    For $i = 0 To 2
+        _Ini_Add("donate", "cmbClanCastleTroopDef" & $i, $g_aiClanCastleTroopDefType[$i])
+        _Ini_Add("donate", "txtClanCastleTroopDef" & $i, $g_aiClanCastleTroopDefQty[$i])
+    Next
+
 EndFunc   ;==>SaveConfig_600_11
 
 Func SaveConfig_600_12()

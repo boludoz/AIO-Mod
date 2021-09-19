@@ -19,15 +19,23 @@ Func CheckBaseQuick($bStopRecursion = False, $sReturnHome = "")
 
 	If $bStopRecursion Then $g_bDisableBreakCheck = True ; Set flag to stop checking for attackdisable messages, stop recursion
 
-	#Region - Custom - Team AIO Mod++
-	If ($sReturnHome = "cloud") Then
-		If (_WaitForCheckImg(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ClickFindMatch", "8,617,116,712", "ReturnVillage")) Then 
-			Click($g_aImageSearchXML[0][1] + Random(0, 20, 1), $g_aImageSearchXML[0][2] + Random(0, 20, 1), 1, 0, "#0513")
-			If Not WaitMainScreen() Then SetLog("Warning, Main page not found", $COLOR_WARNING)
-		EndIf
-	EndIf
-	#EndRegion - Custom - Team AIO Mod++
-	
+	Switch $sReturnHome
+		Case "cloud" ; PB found while in clouds searching for base, must press return home and wait for main base
+			If _CheckPixel($aRtnHomeCloud1, $g_bCapturePixel, Default, "Return Home Btn chk1", $COLOR_DEBUG) And _
+					_CheckPixel($aRtnHomeCloud2, $g_bCapturePixel, Default, "Return Home Btn chk2", $COLOR_DEBUG) Then ; verify return home button
+				ClickP($aRtnHomeCloud1, 1, 0, "#0513") ; click return home button, return to main screen for base check before log off
+				Local $wCount = 0
+				While IsMainPage() = False ; wait for main screen
+					If _Sleep($DELAYGETRESOURCES1) Then Return ; wait 250ms
+					$wCount += 1
+					If $wCount > 40 Then ; wait up to 40*250ms = 10 seconds for main page then exit
+						SetLog("Warning, Main page not found", $COLOR_WARNING)
+						ExitLoop
+					EndIf
+				WEnd
+			EndIf
+	EndSwitch
+
 	If IsMainPage() Then ; check for main page
 
 		If $g_bDebugSetlog Then SetDebugLog("CheckBaseQuick now", $COLOR_DEBUG)
@@ -39,9 +47,8 @@ Func CheckBaseQuick($bStopRecursion = False, $sReturnHome = "")
 			If $bStopRecursion Then $g_bDisableBreakCheck = False
 			Return
 		EndIf
-		
+
 		DonateCC() ; donate troops
-		
 		If _Sleep($DELAYRUNBOT1) Then Return
 		checkMainScreen(False) ; required here due to many possible function exits
 		If $g_bRestart Then

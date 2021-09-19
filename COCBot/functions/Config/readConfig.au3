@@ -586,6 +586,25 @@ Func ReadConfig_600_11()
 	For $i = 0 To 23
 		$g_abRequestCCHours[$i] = ($g_abRequestCCHours[$i] = "1")
 	Next
+
+    ; Request defense CC (Demen)
+    $g_bRequestCCDefense = (IniRead($g_sProfileConfigPath, "donate", "RequestDefenseEnable", "0") = "1")
+    $g_sRequestCCDefenseText = IniRead($g_sProfileConfigPath, "donate", "RequestDefenseText", "")
+    $g_iCmbRequestCCDefenseWhen = (IniRead($g_sProfileConfigPath, "donate", "RequestDefenseWhenPB", "1") = "1")
+    $g_iRequestDefenseTime = Int(IniRead($g_sProfileConfigPath, "donate", "RequestDefenseTime", "0"))
+    $g_bSaveCCTroopForDefense = (IniRead($g_sProfileConfigPath, "donate", "SaveCCTroopForDefense", "0") = "1")
+
+    For $i = 0 To $eTroopCount - 1
+        $g_aiCCTroopsExpectedForDef[$i] = 0
+    Next
+    For $i = 0 To 2
+        $g_aiClanCastleTroopDefType[$i] = Int(IniRead($g_sProfileConfigPath, "donate", "cmbClanCastleTroopDef" & $i, $eTroopCount))
+        $g_aiClanCastleTroopDefQty[$i] = Int(IniRead($g_sProfileConfigPath, "donate", "txtClanCastleTroopDef" & $i, "0"))
+        If $g_aiClanCastleTroopDefType[$i] < $eTroopCount Then ; barb - IceG
+            $g_aiCCTroopsExpectedForDef[$g_aiClanCastleTroopDefType[$i]] += $g_aiClanCastleTroopDefQty[$i]
+        EndIf
+    Next
+
 EndFunc   ;==>ReadConfig_600_11
 
 Func ReadConfig_600_12()

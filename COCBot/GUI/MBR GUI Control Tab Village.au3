@@ -22,6 +22,7 @@ Func chkRequestCCHours()
 		For $i = $g_hLblRequestCChour To $g_hLblRequestCCHoursPM
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
+		; GuiToggle_RequestOnlyDuringHours(True)
 	Else
 		GUICtrlSetState($g_hTxtRequestCC, $GUI_SHOW + $GUI_DISABLE)
 		For $i = $g_hLblRequestCChour To $g_hLblRequestCCHoursPM
@@ -165,3 +166,42 @@ Func chkDonateHoursE2()
 	Sleep(300)
 	GUICtrlSetState($g_ahChkDonateHoursE2, $GUI_UNCHECKED)
 EndFunc   ;==>chkDonateHoursE2
+
+; Request troops for defense (Demen)
+Func chkRequestDefense()
+    If GUICtrlRead($g_hChkRequestCCDefense) = $GUI_CHECKED Then
+        For $i = $g_hChkSaveCCTroopForDefense To $g_ahTxtClanCastleTroopDef[2]
+            GUICtrlSetState($i, $GUI_ENABLE)
+        Next
+		CmbClanCastleTroopDef()
+		GuiToggle_RequestOnlyDuringHours(True)
+    Else
+        For $i = $g_hChkSaveCCTroopForDefense To $g_ahTxtClanCastleTroopDef[2]
+            GUICtrlSetState($i, $GUI_DISABLE)
+        Next
+		If GUICtrlRead($g_hChkRequestTroopsEnable) = $GUI_UNCHECKED Then GuiToggle_RequestOnlyDuringHours(False)
+    EndIf
+EndFunc   ;==>chkRequestDefense
+
+Func CmbClanCastleTroopDef()
+	For $i = 0 To UBound($g_ahCmbClanCastleTroopDef) - 1
+		If _GUICtrlComboBox_GetCurSel($g_ahCmbClanCastleTroopDef[$i]) < $eTroopCount Then
+			GUICtrlSetState($g_ahTxtClanCastleTroopDef[$i], $GUI_ENABLE)
+		Else
+			GUICtrlSetState($g_ahTxtClanCastleTroopDef[$i], $GUI_DISABLE)
+		EndIf
+	Next
+EndFunc   ;==>CmbClanCastleTroopDef
+
+Func GuiToggle_RequestOnlyDuringHours($Enable = True)
+	If $Enable Then
+		For $i = $g_hLblRequestCChour To $g_hLblRequestCCHoursPM
+			GUICtrlSetState($i, $GUI_ENABLE)
+		Next
+	Else
+		For $i = $g_hLblRequestCChour To $g_hLblRequestCCHoursPM
+			GUICtrlSetState($i, $GUI_DISABLE)
+		Next
+	EndIf
+EndFunc   ;==>GuiToggle_RequestOnlyDuringHours
+

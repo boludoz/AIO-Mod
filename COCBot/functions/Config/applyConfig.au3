@@ -579,6 +579,18 @@ Func ApplyConfig_600_11($TypeReadSave)
 			For $i = 0 To 23
 				GUICtrlSetState($g_ahChkRequestCCHours[$i], $g_abRequestCCHours[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
 			Next
+
+            ; Request defense CC (Demen)
+            GUICtrlSetState($g_hChkRequestCCDefense, $g_bRequestCCDefense ? $GUI_CHECKED : $GUI_UNCHECKED)
+            GUICtrlSetData($g_hTxtRequestCCDefense, $g_sRequestCCDefenseText)
+            _GUICtrlComboBox_SetCurSel($g_hCmbRequestCCDefenseWhen, $g_iCmbRequestCCDefenseWhen ? 0 : 1)
+            GUICtrlSetData($g_hTxtRequestCCDefenseTime, $g_iRequestDefenseTime)
+            GUICtrlSetState($g_hChkSaveCCTroopForDefense, $g_bSaveCCTroopForDefense ? $GUI_CHECKED : $GUI_UNCHECKED)
+            For $i = 0 To 2
+                _GUICtrlComboBox_SetCurSel($g_ahCmbClanCastleTroopDef[$i] , $g_aiClanCastleTroopDefType[$i])
+                GUICtrlSetData($g_ahTxtClanCastleTroopDef[$i], $g_aiClanCastleTroopDefQty[$i])
+            Next
+            chkRequestDefense()
 		Case "Save"
 			$g_bRequestTroopsEnable = (GUICtrlRead($g_hChkRequestTroopsEnable) = $GUI_CHECKED)
 			$g_sRequestTroopsText = GUICtrlRead($g_hTxtRequestCC)
@@ -600,6 +612,17 @@ Func ApplyConfig_600_11($TypeReadSave)
 			For $i = 0 To 23
 				$g_abRequestCCHours[$i] = (GUICtrlRead($g_ahChkRequestCCHours[$i]) = $GUI_CHECKED)
 			Next
+
+            ; Request defense CC (Demen)
+            $g_bRequestCCDefense = (GUICtrlRead($g_hChkRequestCCDefense) = $GUI_CHECKED)
+            $g_sRequestCCDefenseText = GUICtrlRead($g_hTxtRequestCCDefense)
+            $g_iCmbRequestCCDefenseWhen = (_GUICtrlComboBox_GetCurSel($g_hCmbRequestCCDefenseWhen) = 0)
+            $g_iRequestDefenseTime = GUICtrlRead($g_hTxtRequestCCDefenseTime)
+            $g_bSaveCCTroopForDefense = (GUICtrlRead($g_hChkSaveCCTroopForDefense) = $GUI_CHECKED)
+            For $i = 0 To 2
+                $g_aiClanCastleTroopDefType[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbClanCastleTroopDef[$i])
+                $g_aiClanCastleTroopDefQty[$i] = GUICtrlRead($g_ahTxtClanCastleTroopDef[$i])
+            Next
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_11
 

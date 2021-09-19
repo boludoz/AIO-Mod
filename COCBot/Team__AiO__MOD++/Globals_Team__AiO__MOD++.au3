@@ -486,3 +486,10 @@ Global $g_hChkColorfulAttackLog = 0, _
 #Region - SmartMilk
 Global $g_bDebugSmartMilk = False, $g_bChkMilkForceDeployHeroes = False, $g_bChkMilkForceAllTroops = False, $g_iMilkStrategyArmy = 0
 #EndRegion - SmartMilk
+
+#Region - Request defense CC (Demen)
+Global $g_bRequestCCDefense, $g_sRequestCCDefenseText, $g_iCmbRequestCCDefenseWhen, $g_iRequestDefenseTime, $g_bSaveCCTroopForDefense
+Global $g_aiCCTroopsExpectedForDef[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_aiClanCastleTroopDefType[3], $g_aiClanCastleTroopDefQty[3]
+Global $g_bChkRemoveCCForDefense = False
+#EndRegion - Request defense CC (Demen)

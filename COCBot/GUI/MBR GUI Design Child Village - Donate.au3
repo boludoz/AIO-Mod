@@ -74,9 +74,11 @@ Global $g_hChkUseCCBalanced = 0, $g_hCmbCCDonated = 0, $g_hCmbCCReceived = 0, $g
 GLobal $g_hLblDonateCChour = 0, $g_ahLblDonateCChoursE = 0
 GLobal $g_hLblDonateCChours[12] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-; Request defense troops - Team AIO Mod++
-Global $g_hChkRequestCCDefense = 0, $g_hChkRemoveCCForDefense = 0, $g_hTxtRequestCCDefense = 0, _
-	   $g_hCmbRequestCCDefenseWhen = 0, $g_hTxtRequestCCDefenseTime = 0, $g_hLblRequestCCDefenseGuide = 0
+#Region - Request defense CC (Demen)
+Global $g_hChkRequestCCDefense = 0, $g_hChkSaveCCTroopForDefense = 0, $g_hTxtRequestCCDefense = 0, _
+	   $g_hCmbRequestCCDefenseWhen = 0, $g_hTxtRequestCCDefenseTime = 0
+Global $g_ahCmbClanCastleTroopDef[3], $g_ahTxtClanCastleTroopDef[3]
+#EndRegion - Request defense CC (Demen)
 
 Func CreateVillageDonate()
 	$g_hGUI_DONATE = _GUICreate("", $g_iSizeWGrpTab2, $g_iSizeHGrpTab2, 5, 25, BitOR($WS_CHILD, $WS_TABSTOP), -1, $g_hGUI_VILLAGE)
@@ -302,31 +304,48 @@ Func CreateRequestSubTab()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	
 	
+	#Region - Request defense CC (Demen)
 	$x = $xStart + 10 - 22
 	$y = $yStart + 288 - 2
 	
 	$g_hGrpRequestCCDefenseTroops = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "Group_03", "Clan Castle Defense Troops"), $xStart - 20, $yStart - 20 + 288, $g_iSizeWGrpTab3, 89)
 	
 	$g_hChkRequestCCDefense = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "ChkRequestCCDefense", "Request Defense Troops"), $x, $y - 3)
+            GUICtrlSetOnEvent(-1, "chkRequestDefense")
 	
-	$g_hChkRemoveCCForDefense = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "LblChkRemoveCCForDefense", "Remove CC Before Requesting Defense Troops"), $x + 145, $y - 3)
-	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "LblChkRemoveCCForDefense_01", "If Checked Bot Will Remove All CC Troops Before Doing Defense Troops Request.") & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "LblChkRemoveCCForDefense_02", "Note: If Checked It will come out of clouds When 'Total PB Time' left to request Defense troops."))
-
+	$g_hChkSaveCCTroopForDefense = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "ChkCCTroopForDefense", "Save CC for defense"), $x + 145, $y - 3)
+			; GUICtrlSetState(-1, $GUI_CHECKED)
+			_GUICtrlSetTip(-1, "Not dropping CC troops in attack to save for defense")
+			
 	$y += 25
 	$g_hTxtRequestCCDefense = GUICtrlCreateInput(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "TxtRequestCCDefense", "Defense troop please"), $x, $y - 6, 214, 20, BitOR($SS_CENTER, $ES_AUTOHSCROLL))
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "ChkRequestCCDefense_01", "This text is used on your request for defensive troops in the Clan chat."))
 	$y += 25
 	$g_hCmbRequestCCDefenseWhen = GUICtrlCreateCombo("", $x, $y - 6, 162, 15, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
-	GUICtrlSetData(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "CmbRequestCCDefenseWhen_01", "When Personal Break time <") & "|" & GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "CmbRequestCCDefenseWhen_02", "When Shield & Guard time <"), GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "CmbRequestCCDefenseWhen_01", -1))
+			GUICtrlSetData(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "CmbRequestCCDefenseWhen_01", "When Personal Break time <") & "|" & GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "CmbRequestCCDefenseWhen_02", "When Shield & Guard time <"), GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "CmbRequestCCDefenseWhen_01", -1))
 	$g_hTxtRequestCCDefenseTime = GUICtrlCreateInput("10", $x + 166, $y - 6, 28, 21, $SS_CENTER)
-	GUICtrlSetLimit(-1, 3)
-	GUICtrlSetBkColor(-1, $COLOR_MONEYGREEN)
-	GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "LblRequestCCDefenseWhenMin", "min"), $x + 195, $y - 3, 20, 15, $SS_RIGHT)
-	$g_hLblRequestCCDefenseGuide = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "LblRequestCCDefenseGuide", "Note: Total PB Time < 10"), $x + 220, $y - 3, 140)
-	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "LblRequestCCDefenseGuide_01", "'Subtract Early Pb Exit' + 'Personal Break Time' is Total PB Time.") & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "LblRequestCCDefenseGuide_02", "Bot Will Request Defense Troops When Total PB Time is Left."))
-	GUICtrlSetColor(-1, $COLOR_NAVY)
-	GUICtrlSetFont(-1, 8.5, $FW_BOLD, Default, "Arial", $CLEARTYPE_QUALITY)
+			GUICtrlSetLimit(-1, 3)
+			GUICtrlSetBkColor(-1, $COLOR_MONEYGREEN)
+			GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "LblRequestCCDefenseWhenMin", "min"), $x + 195, $y - 3, 20, 15, $SS_RIGHT)
 
+	;;;;;;;;;;;
+	$y -= 45
+	$x += 145 + 152
+		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "lblOnlyTake", "Only take"), $x, $y - 15)
+		For $i = 0 To 2
+			$g_ahCmbClanCastleTroopDef[$i] = GUICtrlCreateCombo("", $x, $y - 2 + $i * 22, 65, -1, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
+				GUICtrlSetData(-1, $sCmbTroopList, "Any")
+				GUICtrlSetOnEvent(-1, "CmbClanCastleTroopDef")
+				_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "Onlytake_Info_01", "Pick a troop type allowed to stay in your Clan Castle. \r\nTroops of other type shall be removed"))
+
+			$g_ahTxtClanCastleTroopDef[$i] = GUICtrlCreateInput("0", $x + 70, $y - 2 + $i * 22, 20, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_RIGHT, $ES_NUMBER))
+				GUICtrlSetState(-1, $GUI_DISABLE)
+				GUICtrlSetLimit(-1, 2)
+				_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "Onlytake_Info_02", "Set the maximum quantity to stay. \r\nExcessive quantity shall be removed") & @CRLF & _
+				GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "Onlytake_Info_03", "Set to ""0"" or ""40+"" means unlimited"))
+		Next
+	;;;;;;;;;;;
+	#EndRegion - Request defense CC (Demen)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 EndFunc   ;==>CreateRequestSubTab
