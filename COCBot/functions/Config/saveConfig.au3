@@ -167,10 +167,12 @@ Func SaveBuildingConfig()
 	#Region - Dates - Team AIO Mod++
 	_Ini_Add("Dates", "DateAndTimeMagicItems", $g_sDateAndTimeMagicItems)
 	_Ini_Add("Dates", "DateAndTimeHeroWUE", $g_sDateAndTimeHeroWUE)
+#cs
 	_Ini_Add("Dates", "DateAndTimeKing", $g_sDateAndTimeKing)
 	_Ini_Add("Dates", "DateAndTimeQueen", $g_sDateAndTimeQueen)
 	_Ini_Add("Dates", "DateAndTimeWarden", $g_sDateAndTimeWarden)
 	_Ini_Add("Dates", "DateAndTimeChampion", $g_sDateAndTimeChampion)
+#ce
 	_Ini_Add("Dates", "BuilderBaseTimer", $g_sDateBuilderBase)
 	#EndRegion - Dates - Team AIO Mod++
 	

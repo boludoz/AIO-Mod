@@ -65,6 +65,7 @@ Global $g_sDateAndTimeMagicItems = ""
 Global Const $g_sConstHeroWUESeconds = 172800 ; 172800 const = 2 days quality check.
 Global $g_sDateAndTimeHeroWUE = "2021/09/02 00:00:00"
 
+#cs
 ; King upgrade time.
 Global Const $g_sConstMaxHeroTime = 864000 ; 864000 const = 10 days quality check.
 Global $g_sDateAndTimeKing = "2021/09/02 00:00:00"
@@ -77,6 +78,7 @@ Global $g_sDateAndTimeWarden = "2021/09/02 00:00:00"
 
 ; Champion upgrade time.
 Global $g_sDateAndTimeChampion = "2021/09/02 00:00:00"
+#Ce
 
 ; Builder base play.
 Global Const $g_sConstMaxBuilderBase = 86400 ; 86400 const = 1 day quality check.
