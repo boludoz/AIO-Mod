@@ -586,11 +586,13 @@ Func ApplyConfig_600_11($TypeReadSave)
             _GUICtrlComboBox_SetCurSel($g_hCmbRequestCCDefenseWhen, $g_iCmbRequestCCDefenseWhen ? 0 : 1)
             GUICtrlSetData($g_hTxtRequestCCDefenseTime, $g_iRequestDefenseTime)
             GUICtrlSetState($g_hChkSaveCCTroopForDefense, $g_bSaveCCTroopForDefense ? $GUI_CHECKED : $GUI_UNCHECKED)
-            For $i = 0 To 2
+            GUICtrlSetState($g_hChkRemoveCCForDefense, $g_bChkRemoveCCForDefense ? $GUI_CHECKED : $GUI_UNCHECKED)
+           For $i = 0 To 2
                 _GUICtrlComboBox_SetCurSel($g_ahCmbClanCastleTroopDef[$i] , $g_aiClanCastleTroopDefType[$i])
-                GUICtrlSetData($g_ahTxtClanCastleTroopDef[$i], $g_aiClanCastleTroopDefQty[$i])
+                GUICtrlSetData($g_ahTxtClanCastleTroopDef[$i], $g_aiCCDefenseTroopWaitQty[$i])
             Next
             chkRequestDefense()
+			chkRemoveCCForDefense()
 		Case "Save"
 			$g_bRequestTroopsEnable = (GUICtrlRead($g_hChkRequestTroopsEnable) = $GUI_CHECKED)
 			$g_sRequestTroopsText = GUICtrlRead($g_hTxtRequestCC)
@@ -619,9 +621,10 @@ Func ApplyConfig_600_11($TypeReadSave)
             $g_iCmbRequestCCDefenseWhen = (_GUICtrlComboBox_GetCurSel($g_hCmbRequestCCDefenseWhen) = 0)
             $g_iRequestDefenseTime = GUICtrlRead($g_hTxtRequestCCDefenseTime)
             $g_bSaveCCTroopForDefense = (GUICtrlRead($g_hChkSaveCCTroopForDefense) = $GUI_CHECKED)
+            $g_bChkRemoveCCForDefense = (GUICtrlRead($g_hChkRemoveCCForDefense) = $GUI_CHECKED)
             For $i = 0 To 2
                 $g_aiClanCastleTroopDefType[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbClanCastleTroopDef[$i])
-                $g_aiClanCastleTroopDefQty[$i] = GUICtrlRead($g_ahTxtClanCastleTroopDef[$i])
+                $g_aiCCDefenseTroopWaitQty[$i] = GUICtrlRead($g_ahTxtClanCastleTroopDef[$i])
             Next
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_11

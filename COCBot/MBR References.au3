@@ -518,6 +518,7 @@ Func ReferenceGlobals()
 	$a1 = $TELEGRAM_URL
 	$a1 = $HTTP_STATUS_OK
 
+#cs
 	; Team AIO Mod++
 	; Queen
 	$a1 = $g_bUpgradeQueenEnable
@@ -542,4 +543,6 @@ Func ReferenceGlobals()
 	$a1 = $g_sDateAndTimeChampion
 	$a1 = $s_ChampionMin[$a1]
 	$a1 = $g_aiChampionAltarPos
+#ce
+
 EndFunc   ;==>ReferenceGlobals

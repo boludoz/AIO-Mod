@@ -167,10 +167,12 @@ Func SaveBuildingConfig()
 	#Region - Dates - Team AIO Mod++
 	_Ini_Add("Dates", "DateAndTimeMagicItems", $g_sDateAndTimeMagicItems)
 	_Ini_Add("Dates", "DateAndTimeHeroWUE", $g_sDateAndTimeHeroWUE)
+#cs
 	_Ini_Add("Dates", "DateAndTimeKing", $g_sDateAndTimeKing)
 	_Ini_Add("Dates", "DateAndTimeQueen", $g_sDateAndTimeQueen)
 	_Ini_Add("Dates", "DateAndTimeWarden", $g_sDateAndTimeWarden)
 	_Ini_Add("Dates", "DateAndTimeChampion", $g_sDateAndTimeChampion)
+#ce
 	_Ini_Add("Dates", "BuilderBaseTimer", $g_sDateBuilderBase)
 	#EndRegion - Dates - Team AIO Mod++
 	
@@ -533,9 +535,10 @@ Func SaveConfig_600_11()
     _Ini_Add("donate", "RequestDefenseWhenPB", $g_iCmbRequestCCDefenseWhen ? 1 : 0)
     _Ini_Add("donate", "RequestDefenseTime", $g_iRequestDefenseTime)
     _Ini_Add("donate", "SaveCCTroopForDefense", $g_bSaveCCTroopForDefense ? 1 : 0)
+    _Ini_Add("donate", "ChkRemoveCCForDefense", $g_bChkRemoveCCForDefense ? 1 : 0)
     For $i = 0 To 2
         _Ini_Add("donate", "cmbClanCastleTroopDef" & $i, $g_aiClanCastleTroopDefType[$i])
-        _Ini_Add("donate", "txtClanCastleTroopDef" & $i, $g_aiClanCastleTroopDefQty[$i])
+        _Ini_Add("donate", "txtClanCastleTroopDef" & $i, $g_aiCCDefenseTroopWaitQty[$i])
     Next
 
 EndFunc   ;==>SaveConfig_600_11

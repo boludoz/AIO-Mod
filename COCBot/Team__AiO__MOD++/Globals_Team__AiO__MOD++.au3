@@ -65,6 +65,7 @@ Global $g_sDateAndTimeMagicItems = ""
 Global Const $g_sConstHeroWUESeconds = 172800 ; 172800 const = 2 days quality check.
 Global $g_sDateAndTimeHeroWUE = "2021/09/02 00:00:00"
 
+#cs
 ; King upgrade time.
 Global Const $g_sConstMaxHeroTime = 864000 ; 864000 const = 10 days quality check.
 Global $g_sDateAndTimeKing = "2021/09/02 00:00:00"
@@ -77,6 +78,7 @@ Global $g_sDateAndTimeWarden = "2021/09/02 00:00:00"
 
 ; Champion upgrade time.
 Global $g_sDateAndTimeChampion = "2021/09/02 00:00:00"
+#Ce
 
 ; Builder base play.
 Global Const $g_sConstMaxBuilderBase = 86400 ; 86400 const = 1 day quality check.
@@ -490,6 +492,6 @@ Global $g_bDebugSmartMilk = False, $g_bChkMilkForceDeployHeroes = False, $g_bChk
 #Region - Request defense CC (Demen)
 Global $g_bRequestCCDefense, $g_sRequestCCDefenseText, $g_iCmbRequestCCDefenseWhen, $g_iRequestDefenseTime, $g_bSaveCCTroopForDefense
 Global $g_aiCCTroopsExpectedForDef[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_aiClanCastleTroopDefType[3], $g_aiClanCastleTroopDefQty[3]
+Global $g_aiClanCastleTroopDefType[3], $g_aiCCDefenseTroopWaitQty[3]
 Global $g_bChkRemoveCCForDefense = False
 #EndRegion - Request defense CC (Demen)

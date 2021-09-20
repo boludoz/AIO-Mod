@@ -153,10 +153,12 @@ Func ReadBuildingConfig()
 	#Region - Dates - Team AIO Mod++
 	IniReadS($g_sDateAndTimeMagicItems, $g_sProfileBuildingPath, "Dates", "DateAndTimeMagicItems", "", Default)
 	IniReadS($g_sDateAndTimeHeroWUE, $g_sProfileBuildingPath, "Dates", "DateAndTimeHeroWUE", "", Default)
+#cs
 	IniReadS($g_sDateAndTimeKing, $g_sProfileBuildingPath, "Dates", "DateAndTimeKing", "", Default)
 	IniReadS($g_sDateAndTimeQueen, $g_sProfileBuildingPath, "Dates", "DateAndTimeQueen", "", Default)
 	IniReadS($g_sDateAndTimeWarden, $g_sProfileBuildingPath, "Dates", "DateAndTimeWarden", "", Default)
 	IniReadS($g_sDateAndTimeChampion, $g_sProfileBuildingPath, "Dates", "DateAndTimeChampion", "", Default)
+#ce
 	IniReadS($g_sDateBuilderBase, $g_sProfileBuildingPath, "Dates", "BuilderBaseTimer", "", Default)
 	#EndRegion - Dates - Team AIO Mod++
 EndFunc   ;==>ReadBuildingConfig
@@ -593,15 +595,16 @@ Func ReadConfig_600_11()
     $g_iCmbRequestCCDefenseWhen = (IniRead($g_sProfileConfigPath, "donate", "RequestDefenseWhenPB", "1") = "1")
     $g_iRequestDefenseTime = Int(IniRead($g_sProfileConfigPath, "donate", "RequestDefenseTime", "0"))
     $g_bSaveCCTroopForDefense = (IniRead($g_sProfileConfigPath, "donate", "SaveCCTroopForDefense", "0") = "1")
+    $g_bChkRemoveCCForDefense = (IniRead($g_sProfileConfigPath, "donate", "ChkRemoveCCForDefense", "0") = "1")
 
     For $i = 0 To $eTroopCount - 1
         $g_aiCCTroopsExpectedForDef[$i] = 0
     Next
     For $i = 0 To 2
         $g_aiClanCastleTroopDefType[$i] = Int(IniRead($g_sProfileConfigPath, "donate", "cmbClanCastleTroopDef" & $i, $eTroopCount))
-        $g_aiClanCastleTroopDefQty[$i] = Int(IniRead($g_sProfileConfigPath, "donate", "txtClanCastleTroopDef" & $i, "0"))
+        $g_aiCCDefenseTroopWaitQty[$i] = Int(IniRead($g_sProfileConfigPath, "donate", "txtClanCastleTroopDef" & $i, "0"))
         If $g_aiClanCastleTroopDefType[$i] < $eTroopCount Then ; barb - IceG
-            $g_aiCCTroopsExpectedForDef[$g_aiClanCastleTroopDefType[$i]] += $g_aiClanCastleTroopDefQty[$i]
+            $g_aiCCTroopsExpectedForDef[$g_aiClanCastleTroopDefType[$i]] += $g_aiCCDefenseTroopWaitQty[$i]
         EndIf
     Next
 

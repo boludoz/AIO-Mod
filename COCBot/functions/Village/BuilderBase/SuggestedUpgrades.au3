@@ -444,16 +444,16 @@ Func GetUpgradeButton($sUpgButtom = "", $bDebug = False)
 	Return False
 EndFunc   ;==>GetUpgradeButton
 
-Func _ArraySearchMaxStringDis($aArray, $sItem, $iMaxDis = 1, $iTolEvery = 4)
+Func _ArraySearchMaxStringDis($aArray, $sItem, $iMaxDis = 1, $iEvery = 4)
 	Local $iSting = 1
 	For $i = 0 To UBound($aArray) - 1
-		$iSting = Ceiling(_Max(String($aArray[$i]), String($sItem)) / 4)
+		$iSting = Ceiling(_Max(StringLen($aArray[$i]), StringLen($sItem)) / $iEvery)
 		If _LevDis($aArray[$i], $sItem) <= ($iMaxDis * $iSting) Then
 			Return $i
 		EndIf
 	Next
 	Return -1
-EndFunc   ;==>_ArraySearchCSV
+EndFunc   ;==>_ArraySearchMaxStringDis
 #EndRegion - Bulder base upgrades - Team AIO Mod++
 
 Func NewBuildings($aResult)

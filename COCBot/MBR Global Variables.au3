@@ -1504,12 +1504,21 @@ EndFunc   ;==>TranslateTroopNames
 Global Const $g_aiWallCost[11] = [20000, 40000, 80000, 150000, 250000, 500000, 1000000, 2000000, 4000000, 6000000, 7000000]
 Global $g_iWallCost = 0
 
-#Region - Custom hero - Team AIO Mod++
 ; Upgrading - Heroes
-;...
+; Barbarian King/Queen Upgrade Costs = Dark Elixir in xxxK
+Global Const $g_iMaxKingLevel = 80
+Global Const $g_iMaxQueenLevel = 80
+Global Const $g_iMaxWardenLevel = 55
+Global Const $g_iMaxChampionLevel = 30
+Global Const $g_afKingUpgCost[$g_iMaxKingLevel] = [10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 53, 56, 59, 62, 65, 68, 72, 76, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 170, 173, 176, 179, 182, 185, 188, 191, 194, 197, 200, 203, 206, 209, 212, 215, 218, 221, 224, 227, 230, 233, 236, 239, 240, 250, 260, 270, 280, 290, 292, 294, 296, 298, 300, 305, 310, 315, 320, 325]
+
+Global Const $g_afQueenUpgCost[$g_iMaxQueenLevel] = [20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 53, 56, 59, 62, 65, 68, 71, 74, 77, 80, 83, 86, 89, 92, 98, 106, 114, 122, 130, 138, 146, 154, 162, 170, 180, 182, 184, 186, 188, 190, 192, 194, 196, 198, 200, 204, 208, 212, 216, 220, 224, 228, 232, 236, 240, 240, 240, 240, 240, 250, 260, 270, 280, 290, 292, 294, 296, 298, 300, 306, 312, 318, 324, 330]
+
+Global Const $g_afChampionUpgCost[$g_iMaxChampionLevel] = [120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 235, 240, 245, 250, 255, 260, 265, 270, 275, 280, 285, 290, 295, 300, 305, 310, 315, 320]
+
 ; Grand Warden Upgrade Costs = Elixir in xx.xK
-Global $g_iWardenCost = -1
-#EndRegion - Custom hero - Team AIO Mod++
+Global $g_iWardenLevel = -1
+Global Const $g_afWardenUpgCost[$g_iMaxWardenLevel] = [6, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.4, 8.8, 9.1, 9.4, 9.6, 9.8, 10, 10, 10.2, 10.4, 10.6, 10.8, 11, 11.2, 11.4, 11.6, 11.8, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12.5, 13, 13.5, 14, 14.5, 15, 15.5, 16, 16.5, 17, 17.5, 18, 18.5, 19]
 
 ; Special Bot activities active
 Global $g_bVillageSearchActive = False ;True during Village Search

@@ -24,7 +24,15 @@ Func TrainSystem()
 
 	$g_sTimeBeforeTrain = _NowCalc()
 	StartGainCost()
-
+	
+	; Custom BoostSuperTroop - Team AIO Mod++
+	If $g_bQuickTrainEnable Then
+		BoostSuperTroop()
+		If _Sleep(1000) Then Return
+		
+		CheckMainScreen(False, False)
+	EndIf
+	
 	If $g_bQuickTrainEnable Then CheckQuickTrainTroop() ; update values of $g_aiArmyComTroops, $g_aiArmyComSpells
 
 	CheckIfArmyIsReady()
