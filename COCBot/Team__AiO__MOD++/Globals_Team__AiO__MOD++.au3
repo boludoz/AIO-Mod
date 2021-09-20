@@ -490,6 +490,6 @@ Global $g_bDebugSmartMilk = False, $g_bChkMilkForceDeployHeroes = False, $g_bChk
 #Region - Request defense CC (Demen)
 Global $g_bRequestCCDefense, $g_sRequestCCDefenseText, $g_iCmbRequestCCDefenseWhen, $g_iRequestDefenseTime, $g_bSaveCCTroopForDefense
 Global $g_aiCCTroopsExpectedForDef[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_aiClanCastleTroopDefType[3], $g_aiClanCastleTroopDefQty[3]
+Global $g_aiClanCastleTroopDefType[3], $g_aiCCDefenseTroopWaitQty[3]
 Global $g_bChkRemoveCCForDefense = False
 #EndRegion - Request defense CC (Demen)

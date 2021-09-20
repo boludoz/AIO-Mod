@@ -533,9 +533,10 @@ Func SaveConfig_600_11()
     _Ini_Add("donate", "RequestDefenseWhenPB", $g_iCmbRequestCCDefenseWhen ? 1 : 0)
     _Ini_Add("donate", "RequestDefenseTime", $g_iRequestDefenseTime)
     _Ini_Add("donate", "SaveCCTroopForDefense", $g_bSaveCCTroopForDefense ? 1 : 0)
+    _Ini_Add("donate", "ChkRemoveCCForDefense", $g_bChkRemoveCCForDefense ? 1 : 0)
     For $i = 0 To 2
         _Ini_Add("donate", "cmbClanCastleTroopDef" & $i, $g_aiClanCastleTroopDefType[$i])
-        _Ini_Add("donate", "txtClanCastleTroopDef" & $i, $g_aiClanCastleTroopDefQty[$i])
+        _Ini_Add("donate", "txtClanCastleTroopDef" & $i, $g_aiCCDefenseTroopWaitQty[$i])
     Next
 
 EndFunc   ;==>SaveConfig_600_11

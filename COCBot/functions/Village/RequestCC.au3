@@ -12,74 +12,8 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-; Check if it's time to request troops for defense (Demen)
-Func IsRequestDefense($bShield = True)
-    ; Legend trophy protection - Team AIO Mod++
-    If $g_bLeagueAttack = True Then Return
-	
-	Local $bRequestDefense = False
-	If $g_bRequestCCDefense Then
-		Local $sTime = $g_iCmbRequestCCDefenseWhen ? _DateAdd('n', -(Int($g_iSinglePBForcedEarlyExitTime)), $g_sPBOriginalStartTime) : $g_asShieldStatus[2]
-		If Not $g_iCmbRequestCCDefenseWhen And $g_asShieldStatus[0] = "none" Then
-			$bRequestDefense = True
-			If $bShield Then SetLog("No shield! Request troops for defense", $COLOR_INFO)
-		ElseIf _DateIsValid($sTime) Then
-			Local $iTime = Int(_DateDiff('n', _NowCalc(), $sTime))
-			If $g_bDebugSetlog And $bShield Then SetDebugLog("IsRequestDefense->> $g_iCmbRequestCCDefenseWhen: " & $g_iCmbRequestCCDefenseWhen & " | " & "$sTime: " & $sTime & " | " & "$iTime: " & $iTime)
-			If Not $g_iCmbRequestCCDefenseWhen And $g_asShieldStatus[0] = "shield" Then $iTime += 30
-			If $bShield Then SetDebugLog(($g_iCmbRequestCCDefenseWhen ? "Personal Break time: " : "Guard time: ") & $sTime & "(" & $iTime & " minutes)")
-			If $iTime <= $g_iRequestDefenseTime Then
-				If $bShield Then SetLog(($g_iCmbRequestCCDefenseWhen ? "P.Break is about to come!" : "Guard is about to expire!") & " Request troops for defense", $COLOR_INFO)
-				$bRequestDefense = True
-			EndIf
-		EndIf
-	Else
-		If $g_bDebugSetlog And $bShield Then SetDebugLog("IsRequestDefense->> $g_bRequestCCDefense: " & $g_bRequestCCDefense & " | " & "$g_bCanRequestCC: " & $g_bCanRequestCC)
-	EndIf
-	
-	If $bRequestDefense Then
-		SetDebugLog("Loading defense CC request variable: ")
-		$g_sRequestTroopsText = $g_sRequestCCDefenseText
-		SetDebugLog("    $g_sRequestTroopsText: " & $g_sRequestTroopsText)
-		$g_abRequestType[0] = True ; enable request troops
-		$g_abRequestType[1] = False
-		$g_abRequestType[2] = False
-		$g_iRequestCountCCTroop = 0
-		$g_aiClanCastleTroopWaitType = $g_aiClanCastleTroopDefType
-		SetDebugLog("    Expecting troops (" & _ArrayToString($g_aiClanCastleTroopWaitType)& "):")
-		For $i = 0 To $eTroopCount - 1
-			$g_aiCCTroopsExpected[$i] = $g_aiCCTroopsExpectedForDef[$i]
-			If $g_aiCCTroopsExpected[$i] > 0 Then SetDebugLog("      - " & $g_asTroopNames[$i] & " x" & $g_aiCCTroopsExpected[$i])
-		Next
-		If $g_bSaveCCTroopForDefense Then
-			For $i = 0 To $g_iModeCount - 1
-				If $g_abAttackDropCC[$i] Then $g_abAttackDropCC[$i] = False
-			Next
-			SetDebugLog("    Disable $g_abAttackDropCC (" & _ArrayToString($g_abAttackDropCC)& ")")
-		EndIf
-
-	ElseIf $g_sRequestTroopsText = $g_sRequestCCDefenseText Then
-		SetDebugLog("Reloading offense CC request variable: ")
-		ReadConfig_600_11()
-		SetDebugLog("    $g_sRequestTroopsText: " & $g_sRequestTroopsText)
-		SetDebugLog("    $g_abRequestType: " & _ArrayToString($g_abRequestType))
-		SetDebugLog("    Expecting troops (" & _ArrayToString($g_aiClanCastleTroopWaitType)& "):")
-		If $g_abRequestType[0] Or _ArrayMin($g_aiClanCastleTroopWaitType) < $eTroopCount Then
-			For $i = 0 To $eTroopCount - 1
-				If $g_aiCCTroopsExpected[$i] > 0 Then SetDebugLog("      - " & $g_asTroopNames[$i] & " x" & $g_aiCCTroopsExpected[$i])
-			Next
-		EndIf
-		If $g_bSaveCCTroopForDefense Then
-			IniReadS($g_abAttackDropCC[$DB], $g_sProfileConfigPath, "attack", "DBDropCC", False, "Bool") ; ReadConfig_600_29_DB()
-			IniReadS($g_abAttackDropCC[$LB], $g_sProfileConfigPath, "attack", "ABDropCC", False, "Bool") ;ReadConfig_600_29_LB()
-			SetDebugLog("    Reloading $g_abAttackDropCC (" & _ArrayToString($g_abAttackDropCC)& ")")
-		EndIf
-
-	EndIf
-	Return $bRequestDefense
-EndFunc   ;==>IsRequestDefense
-
 Func RequestCC($bClickPAtEnd = True, $sText = "")
+	; Check if it's time to request troops for defense (Demen)
 	If Int($g_iTownHallLevel) < 3 And Int($g_iTownHallLevel) > 0 Then Return
 	Local $bRequestDefense = IsRequestDefense()
 	If (Not $g_bRequestTroopsEnable Or Not $g_bCanRequestCC Or Not $g_bDonationEnabled) And Not $bRequestDefense Then
@@ -88,7 +22,7 @@ Func RequestCC($bClickPAtEnd = True, $sText = "")
 
 	If Not $g_bRunState Then Return
 
-	If $g_bRequestTroopsEnable Then
+	If $g_bRequestTroopsEnable And Not $bRequestDefense Then ; Check if it's time to request troops for defense (Demen)
 		Local $hour = StringSplit(_NowTime(4), ":", $STR_NOCOUNT)
 		If Not $g_abRequestCCHours[$hour[0]] Then
 			SetLog("Request Clan Castle troops not planned, Skipped..", $COLOR_ACTION)
@@ -106,7 +40,15 @@ Func RequestCC($bClickPAtEnd = True, $sText = "")
 	If _Sleep($DELAYREQUESTCC1) Then Return
 	SetLog("Requesting Clan Castle reinforcements", $COLOR_INFO)
 	checkAttackDisable($g_iTaBChkIdle) ; Early Take-A-Break detection
-	If $bClickPAtEnd Then CheckCCArmy()
+	
+	; Check if it's time to request troops for defense (Demen)
+	; If $bClickPAtEnd Then CheckCCArmy()
+	If $bRequestDefense And $g_bChkRemoveCCForDefense Then
+		;Remove All CC Troops Before Doing Defense Troops Request
+		RemoveCCTroopBeforeDefenseRequest()
+	ElseIf $bClickPAtEnd Then
+		CheckCCArmy()
+	EndIf
 
 	If Not $g_bRunState Then Return
 
@@ -258,7 +200,13 @@ Func IsFullClanCastle()
 
     If ($g_abAttackTypeEnable[$DB] And $g_abSearchCastleWaitEnable[$DB]) Or ($g_abAttackTypeEnable[$LB] And $g_abSearchCastleWaitEnable[$LB]) Then
         Local $bRequestDefense = IsRequestDefense() ; check if it's time to request defense CC. ; Check if it's time to request troops for defense (Demen)
-		CheckCCArmy()
+		; Check if it's time to request troops for defense (Demen)
+		; CheckCCArmy()
+		If $bRequestDefense And $g_bChkRemoveCCForDefense Then
+			RemoveCCTroopBeforeDefenseRequest()
+		Else
+			CheckCCArmy()
+		EndIf
 		For $i = 0 To 2
 			If Not IsFullClanCastleType($i) Then
 				$bNeedRequest = True

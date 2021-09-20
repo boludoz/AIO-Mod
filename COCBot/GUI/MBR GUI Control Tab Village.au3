@@ -205,3 +205,14 @@ Func GuiToggle_RequestOnlyDuringHours($Enable = True)
 	EndIf
 EndFunc   ;==>GuiToggle_RequestOnlyDuringHours
 
+Func chkRemoveCCForDefense()
+    If GUICtrlRead($g_hChkRemoveCCForDefense) = $GUI_CHECKED Then
+        For $i = $g_ahCmbClanCastleTroopDef[0] To $g_ahTxtClanCastleTroopDef[2]
+            GUICtrlSetState($i, $GUI_ENABLE)
+        Next
+    Else
+        For $i = $g_ahCmbClanCastleTroopDef[0] To $g_ahTxtClanCastleTroopDef[2]
+            GUICtrlSetState($i, $GUI_DISABLE)
+        Next
+    EndIf
+EndFunc   ;==>chkRemoveCCForDefense
