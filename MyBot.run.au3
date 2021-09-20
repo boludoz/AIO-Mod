@@ -826,12 +826,12 @@ Func runBot() ;Bot that runs everything in order
 			If _Sleep($DELAYRUNBOT5) Then Return
 			checkMainScreen(False)
 			If $g_bRestart Then ContinueLoop
-			;Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge']
 			If $g_bIsSearchLimit Then
 				Local $aRndFuncList = ['LabCheck', 'Collect', 'PetCheck']
 			Else
-				Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge', 'PetCheck']
+				Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge', 'PetCheck', "ChatActions", "BotHumanization"] ; AIO Mod
 			EndIf
+
 			_ArrayShuffle($aRndFuncList)
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
@@ -1475,7 +1475,7 @@ Func __RunFunction($sAction)
 			PetHouse()
 		; BoostSuperTroop - xbebenk - Team AIO Mod++
         ; Case "BoostSuperTroop"
-            ; BoostSuperTroop()
+            ; BoostSuperTroop() 
             ; _Sleep($DELAYRUNBOT3)
 		; One Gem Boost - Team AiO MOD++
 		Case "OneGemBoost"
@@ -1521,7 +1521,7 @@ Func FirstCheck()
 		applyConfig()
 	Else
 		SetDebugLog("Town Hall level has changed!", $COLOR_INFO)
-		SetDebugLog("New Town hall level detected as " &  $g_iTownHallLevel, $COLOR_INFO)
+		SetDebugLog("New Town hall level detected as " & $g_iTownHallLevel, $COLOR_INFO)
 		saveConfig()
 		applyConfig()
 	EndIf
@@ -1619,7 +1619,7 @@ Func FirstCheckRoutine()
 		If checkObstacles() Then ContinueLoop
 	Next
 EndFunc
-#CE - EndRegion - Custom - xbebenk - Team AIO Mod++
+#CE - Region - Custom - xbebenk - Team AIO Mod++
 
 Func SetSAtk($attack = False)
 
