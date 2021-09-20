@@ -826,6 +826,12 @@ Func runBot() ;Bot that runs everything in order
 			If _Sleep($DELAYRUNBOT5) Then Return
 			checkMainScreen(False)
 			If $g_bRestart Then ContinueLoop
+			
+			#Region - Request Early - Team AIO Mod++
+			$g_bCanRequestCC = True
+			If $g_bChkReqCCFirst Then RequestCC()
+			#EndRegion - Request Early - Team AIO Mod++
+
 			If $g_bIsSearchLimit Then
 				Local $aRndFuncList = ['LabCheck', 'Collect', 'PetCheck']
 			Else
@@ -1254,7 +1260,7 @@ Func _RunFunction($sAction)
 
 	If $g_bChkOnlyFarm Then
 		Switch $sAction
-			Case 'UpgradeHeroes', 'Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'BuilderBase', 'UpgradeWall', 'LabCheck', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'ReplayShare', "BotHumanization", "ChatActions"
+			Case 'UpgradeHeroes', 'Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'BuilderBase', 'UpgradeWall', 'LabCheck', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'ReplayShare', 'BotHumanization', 'ChatActions', 'PetCheck', 'PetHouse'
 				SetLog("- Skipped by only farm mode : " & $sAction, $COLOR_INFO)
 				Return
 		EndSwitch
@@ -1438,7 +1444,7 @@ Func __RunFunction($sAction)
 		Case "PetCheck"
 			PetGuiDisplay()
 		Case "RequestCC"
-			RequestCC()
+			If Not $g_bChkReqCCFirst Then RequestCC()
 		Case "Laboratory"
 			Laboratory()
 		Case "UpgradeHeroes"
@@ -1473,10 +1479,6 @@ Func __RunFunction($sAction)
 			ChatActions()
 		Case "PetHouse"
 			PetHouse()
-		; BoostSuperTroop - xbebenk - Team AIO Mod++
-        ; Case "BoostSuperTroop"
-            ; BoostSuperTroop() 
-            ; _Sleep($DELAYRUNBOT3)
 		; One Gem Boost - Team AiO MOD++
 		Case "OneGemBoost"
 			OneGemBoost()

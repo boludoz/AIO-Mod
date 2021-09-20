@@ -169,6 +169,10 @@ Func btnStart()
 		$g_iBotAction = $eBotStart
 	EndIf
 	$g_iActualTrainSkip = 0
+	#Region - Type Once - ChacalGyn
+	Local $iRequestTroopTypeOnce[8] = [0, 0, 0, 0, 0, 0, 0, 0]
+	$g_aiRequestTroopTypeOnce = $iRequestTroopTypeOnce
+	#EndRegion - Type Once - ChacalGyn
 EndFunc   ;==>btnStart
 
 Func btnStop()

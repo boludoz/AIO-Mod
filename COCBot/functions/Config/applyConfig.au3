@@ -587,6 +587,9 @@ Func ApplyConfig_600_11($TypeReadSave)
             GUICtrlSetData($g_hTxtRequestCCDefenseTime, $g_iRequestDefenseTime)
             GUICtrlSetState($g_hChkSaveCCTroopForDefense, $g_bSaveCCTroopForDefense ? $GUI_CHECKED : $GUI_UNCHECKED)
             GUICtrlSetState($g_hChkRemoveCCForDefense, $g_bChkRemoveCCForDefense ? $GUI_CHECKED : $GUI_UNCHECKED)
+			
+			; Type Once - ChacalGyn 
+			GUICtrlSetState($g_hChkRequestTypeOnceEnable, $g_bChkRequestTypeOnceEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
            For $i = 0 To 2
                 _GUICtrlComboBox_SetCurSel($g_ahCmbClanCastleTroopDef[$i] , $g_aiClanCastleTroopDefType[$i])
                 GUICtrlSetData($g_ahTxtClanCastleTroopDef[$i], $g_aiCCDefenseTroopWaitQty[$i])
@@ -622,6 +625,9 @@ Func ApplyConfig_600_11($TypeReadSave)
             $g_iRequestDefenseTime = GUICtrlRead($g_hTxtRequestCCDefenseTime)
             $g_bSaveCCTroopForDefense = (GUICtrlRead($g_hChkSaveCCTroopForDefense) = $GUI_CHECKED)
             $g_bChkRemoveCCForDefense = (GUICtrlRead($g_hChkRemoveCCForDefense) = $GUI_CHECKED)
+			
+			; Type Once - ChacalGyn 
+			$g_bChkRequestTypeOnceEnable = (GUICtrlRead($g_hChkRequestTypeOnceEnable) = $GUI_CHECKED)
             For $i = 0 To 2
                 $g_aiClanCastleTroopDefType[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbClanCastleTroopDef[$i])
                 $g_aiCCDefenseTroopWaitQty[$i] = GUICtrlRead($g_ahTxtClanCastleTroopDef[$i])

@@ -33,16 +33,17 @@ Func chkRequestCCHours()
 	SetRedrawBotWindowControls($bWasRedraw, $g_hGrpRequestCC, "chkRequestCCHours")
 	
 	If GUICtrlRead($g_hChkRequestTroopsEnable) = $GUI_CHECKED Then
-		For $i = $g_hLblRequestType To $g_hChkRequestType_Siege
+		For $i = $g_hChkRequestTypeOnceEnable To $g_hChkRequestType_Siege
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
 	Else
-		For $i = $g_hLblRequestType To $g_hChkRequestType_Siege
+		For $i = $g_hChkRequestTypeOnceEnable To $g_hChkRequestType_Siege
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
 	EndIf
 
 	chkRequestCountCC()
+	chkRequestDefense()
 EndFunc   ;==>chkRequestCCHours
 
 Func chkRequestCountCC()

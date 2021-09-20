@@ -78,6 +78,12 @@ GLobal $g_hLblDonateCChours[12] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_hChkRequestCCDefense = 0, $g_hChkSaveCCTroopForDefense = 0, $g_hTxtRequestCCDefense = 0, _
 	   $g_hCmbRequestCCDefenseWhen = 0, $g_hTxtRequestCCDefenseTime = 0, $g_hChkRemoveCCForDefense = 0
 Global $g_ahCmbClanCastleTroopDef[3], $g_ahTxtClanCastleTroopDef[3]
+
+; Type Once - ChacalGyn 
+Global $g_hChkRequestTypeOnceEnable = 0
+
+; Request Early - Team AIO Mod++
+Global $g_hChkReqCCFirst = 0
 #EndRegion - Request defense CC (Demen)
 
 Func CreateVillageDonate()
@@ -121,9 +127,12 @@ Func CreateRequestSubTab()
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnCCRequest, $x - 5, $y, 64, 64, $BS_ICON)
 		$g_hChkRequestTroopsEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "ChkRequestTroopsEnable", "Request Troops / Spells"), $x + 40 + 30, $y - 6)
 			GUICtrlSetOnEvent(-1, "chkRequestCCHours")
-		$g_hTxtRequestCC = GUICtrlCreateInput(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "TxtRequestCC", "Anything please"), $x + 40 + 30, $y + 15, 214, 20, BitOR($SS_CENTER, $ES_AUTOHSCROLL))
+		$g_hTxtRequestCC = GUICtrlCreateInput(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "TxtRequestCC", "Anything please"), $x + 70, $y + 15, 214, 20, BitOR($SS_CENTER, $ES_AUTOHSCROLL))
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "TxtRequestCC_Info_01", "This text is used on your request for troops in the Clan chat."))
+		$g_hChkRequestTypeOnceEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "ChkRequestTypeOnceEnable", "Type Once"), $x + 205, $y - 6) ; Type Once - ChacalGyn 
+		$g_hChkReqCCFirst = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "LblChkReqCCFirst", "Request Early"), $x + 340, $y - 6) ; Request Early - Team AIO Mod++
+
 	$x += 70
 	$y += 90 - 47
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "Only_during_hours", "Only during these hours of each day"), $x, $y, 300, 20, $BS_MULTILINE)

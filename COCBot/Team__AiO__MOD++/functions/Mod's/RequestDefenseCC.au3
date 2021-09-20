@@ -32,17 +32,13 @@ Func IsRequestDefense($bShield = True)
 		EndIf
 	
 		If $bRequestDefense Then
-			$g_sRequestTroopsText = $g_sRequestCCDefenseText
-			SetDebugLog("$g_sRequestTroopsText is now: " & $g_sRequestTroopsText)
 			If $g_bSaveCCTroopForDefense Then
 				For $i = 0 To $g_iModeCount - 1
 					If $g_abAttackDropCC[$i] Then $g_abAttackDropCC[$i] = False
 				Next
 				SetDebugLog("    Disable $g_abAttackDropCC (" & _ArrayToString($g_abAttackDropCC)& ")")
 			EndIf
-		ElseIf $g_sRequestTroopsText = $g_sRequestCCDefenseText Then
-			$g_sRequestTroopsText = IniRead($g_sProfileConfigPath, "donate", "txtRequest", "")
-			SetDebugLog("Reload $g_sRequestTroopsText: " & $g_sRequestTroopsText)
+		Else
 			If $g_bSaveCCTroopForDefense Then
 				IniReadS($g_abAttackDropCC[$DB], $g_sProfileConfigPath, "attack", "DBDropCC", False, "Bool") ; ReadConfig_600_29_DB()
 				IniReadS($g_abAttackDropCC[$LB], $g_sProfileConfigPath, "attack", "ABDropCC", False, "Bool") ;ReadConfig_600_29_LB()

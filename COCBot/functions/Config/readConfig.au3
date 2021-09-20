@@ -597,7 +597,9 @@ Func ReadConfig_600_11()
     $g_bSaveCCTroopForDefense = (IniRead($g_sProfileConfigPath, "donate", "SaveCCTroopForDefense", "0") = "1")
     $g_bChkRemoveCCForDefense = (IniRead($g_sProfileConfigPath, "donate", "ChkRemoveCCForDefense", "0") = "1")
 
-    For $i = 0 To $eTroopCount - 1
+ 	; Type Once - ChacalGyn 
+ 	$g_bChkRequestTypeOnceEnable = (IniRead($g_sProfileConfigPath, "request", "RequestTypeOnce", "0") = "1")
+	For $i = 0 To $eTroopCount - 1
         $g_aiCCTroopsExpectedForDef[$i] = 0
     Next
     For $i = 0 To 2

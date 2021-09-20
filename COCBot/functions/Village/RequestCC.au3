@@ -29,18 +29,18 @@ Func RequestCC($bClickPAtEnd = True, $sText = "")
 			Return ; exit func if no planned donate checkmarks
 		EndIf
 	EndIf
-	
+
 	; Check if it's time to request troops for defense (Demen)
 	;open army overview
     If $sText <> "IsFullClanCastle" Then
         If Not OpenArmyOverview(True, "RequestCC()") Then Return
         If IsRequestDefense() Then SetLog("Time for defense"); check if it's time to request defense CC.
     EndIf
-	
+
 	If _Sleep($DELAYREQUESTCC1) Then Return
 	SetLog("Requesting Clan Castle reinforcements", $COLOR_INFO)
 	checkAttackDisable($g_iTaBChkIdle) ; Early Take-A-Break detection
-	
+
 	; Check if it's time to request troops for defense (Demen)
 	; If $bClickPAtEnd Then CheckCCArmy()
 	If $bRequestDefense And $g_bChkRemoveCCForDefense Then
@@ -90,7 +90,7 @@ Func RequestCC($bClickPAtEnd = True, $sText = "")
 
 			If $bNeedRequest Then
 				If Not $g_bRunState Then Return
-				Local $x = _makerequest($aRequestButtonPos)
+				Local $x = _makerequest($aRequestButtonPos, $bRequestDefense)
 			EndIf
 		ElseIf StringInStr($sButtonState, "Already", 0) > 0 Then
 			SetLog("Clan Castle Request has already been made", $COLOR_INFO)
@@ -109,7 +109,15 @@ Func RequestCC($bClickPAtEnd = True, $sText = "")
 
 EndFunc   ;==>RequestCC
 
-Func _makerequest($aRequestButtonPos)
+Func _makerequest($aRequestButtonPos, $bRequestDefense = False)
+	; Check if it's time to request troops for defense (Demen)
+	Local $sRequestTroopsText
+	If $bRequestDefense Then
+        $sRequestTroopsText = $g_sRequestCCDefenseText
+	Else
+		$sRequestTroopsText = $g_sRequestTroopsText
+	EndIf
+
 	Local $sSendButtonArea = GetDiamondFromRect("220,150,650,650")
 
 	ClickP($aRequestButtonPos, 1, 0, "0336") ;click button request troops
@@ -119,16 +127,27 @@ Func _makerequest($aRequestButtonPos)
 		ClickAway()
 		If _Sleep($DELAYMAKEREQUEST2) Then Return
 	Else
-		If $g_sRequestTroopsText <> "" Then
-			If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
-			; fix for Android send text bug sending symbols like ``"
-			AndroidSendText($g_sRequestTroopsText, True)
-			Click(Int($g_avWindowCoordinates[0]), Int($g_avWindowCoordinates[1] - 75), 1, 0, "#0254")
-			If _Sleep($DELAYMAKEREQUEST2) Then Return
-			If SendText($g_sRequestTroopsText) = 0 Then
-				SetLog(" Request text entry failed, try again", $COLOR_ERROR)
-				Return
+		If $sRequestTroopsText <> "" Then
+			#Region - Type Once - ChacalGyn
+			If $g_aiRequestTroopTypeOnce[$g_iCurAccount] = 0 Then
+				If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
+				; fix for Android send text bug sending symbols like ``"
+				AndroidSendText($sRequestTroopsText, True)
+				Click(Int($g_avWindowCoordinates[0]), Int($g_avWindowCoordinates[1] - 75), 1, 0, "#0254")
+				If _Sleep($DELAYMAKEREQUEST2) Then Return
+				If SendText($sRequestTroopsText) = 0 Then
+					SetLog(" Request text entry failed, try again", $COLOR_ERROR)
+					Return
+				EndIf
+			Else
+				SetLog("Ignore retype text when Request troops", $COLOR_INFO)
 			EndIf
+			If $g_bChkRequestTypeOnceEnable Then
+				$g_aiRequestTroopTypeOnce[$g_iCurAccount] += 1
+			Else
+				$g_aiRequestTroopTypeOnce[$g_iCurAccount] = 0
+			EndIf
+			#EndRegion - Type Once - ChacalGyn
 		EndIf
 		If _Sleep($DELAYMAKEREQUEST2) Then Return ; wait time for text request to complete
 

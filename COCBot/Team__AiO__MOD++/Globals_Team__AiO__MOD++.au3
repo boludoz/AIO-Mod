@@ -495,3 +495,12 @@ Global $g_aiCCTroopsExpectedForDef[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 Global $g_aiClanCastleTroopDefType[3], $g_aiCCDefenseTroopWaitQty[3]
 Global $g_bChkRemoveCCForDefense = False
 #EndRegion - Request defense CC (Demen)
+
+#Region - Type Once - ChacalGyn
+Global $g_aiRequestTroopTypeOnce[8] = [0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_bChkRequestTypeOnceEnable = True
+#EndRegion - Type Once - ChacalGyn
+
+#Region - Request Early - Team AIO Mod++
+Global $g_bChkReqCCFirst = 0
+#EndRegion - Request Early - Team AIO Mod++
