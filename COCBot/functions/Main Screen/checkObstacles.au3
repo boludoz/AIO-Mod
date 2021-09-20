@@ -458,10 +458,11 @@ Func checkObstacles_Foreground()
 			If $hCocForegroundTimer = 0 Then
 				$hCocForegroundTimer = __TimerInit()
 				SetLog("Maybe clash of clans is foreground? Let's pass this time.", $COLOR_ACTION)
-			ElseIf __TimerDiff($hCocForegroundTimer) > $g_iCoCReconnectingTimeout Then
+			ElseIf __TimerDiff($hCocForegroundTimer) > ($g_iCoCReconnectingTimeout / 2) Then
 				SetLog("Maybe clash of clans is foreground? Opening the game.", $COLOR_ERROR)
 				$hCocForegroundTimer = 0
-				StartAndroidCoC()
+				AndroidAdbSendShellCommand("am start --activity-single-top " & $g_sUserGamePackage & "/" & $g_sUserGameClass)
+				If _Sleep(3000) Then Return
 				If Not $g_bRunState Then Return
 				Return False ; Very Important
 			EndIf
