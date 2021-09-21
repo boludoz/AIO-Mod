@@ -502,5 +502,5 @@ Global $g_bChkRequestTypeOnceEnable = True
 #EndRegion - Type Once - ChacalGyn
 
 #Region - Request Early - Team AIO Mod++
-Global $g_bChkReqCCFirst = 0
+Global $g_bChkReqCCFirst = False, $g_bChkRequestFromChat = False
 #EndRegion - Request Early - Team AIO Mod++

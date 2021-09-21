@@ -539,6 +539,9 @@ Func SaveConfig_600_11()
 
  	; Type Once - ChacalGyn 
 	_Ini_Add("request", "RequestTypeOnce", $g_bChkRequestTypeOnceEnable ? 1 : 0)
+
+ 	; Request Early - Team AIO Mod++
+	_Ini_Add("request", "ChkRequestFromChat", $g_bChkRequestFromChat ? 1 : 0)
     For $i = 0 To 2
         _Ini_Add("donate", "cmbClanCastleTroopDef" & $i, $g_aiClanCastleTroopDefType[$i])
         _Ini_Add("donate", "txtClanCastleTroopDef" & $i, $g_aiCCDefenseTroopWaitQty[$i])

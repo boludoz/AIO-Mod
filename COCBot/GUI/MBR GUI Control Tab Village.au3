@@ -196,10 +196,12 @@ EndFunc   ;==>CmbClanCastleTroopDef
 
 Func GuiToggle_RequestOnlyDuringHours($Enable = True)
 	If $Enable Then
+		GUICtrlSetState($g_hChkRequestFromChat, $GUI_ENABLE)
 		For $i = $g_hLblRequestCChour To $g_hLblRequestCCHoursPM
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
 	Else
+		GUICtrlSetState($g_hChkRequestFromChat, $GUI_DISABLE)
 		For $i = $g_hLblRequestCChour To $g_hLblRequestCCHoursPM
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next

@@ -288,12 +288,13 @@ Func OpenClanChat($iDelay = 200, $bIUnders = True)
 		If IsArray($aiButton) And UBound($aiButton) >= 2 Then
 			If $aiButton[0] < 150 Then ClickP($aiButton, 1)
 			If $bIUnders and UnderstandChatRules() = True Then SetDebugLog("ChatBot|UnderstandChatRules", $COLOR_DEBUG) ; December Update(2018)
+			If RandomSleep(1500) Then Return
 			Return True
 		Else
-			ClickAway() ; ClickP($aAway2, 1, 0, "#0176")
+			ClickAway(Default, True) ; ClickP($aAway2, 1, 0, "#0176")
 		EndIf
 
-		If RandomSleep(100) Then Return
+		If RandomSleep(250) Then Return
 	Next
 	Return False
 EndFunc   ;==>OpenClanChat

@@ -590,7 +590,11 @@ Func ApplyConfig_600_11($TypeReadSave)
 			
 			; Type Once - ChacalGyn 
 			GUICtrlSetState($g_hChkRequestTypeOnceEnable, $g_bChkRequestTypeOnceEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
-           For $i = 0 To 2
+			
+			; Request Early - Team AIO Mod++
+			GUICtrlSetState($g_hChkRequestFromChat, $g_bChkRequestFromChat ? $GUI_CHECKED : $GUI_UNCHECKED)
+
+			For $i = 0 To 2
                 _GUICtrlComboBox_SetCurSel($g_ahCmbClanCastleTroopDef[$i] , $g_aiClanCastleTroopDefType[$i])
                 GUICtrlSetData($g_ahTxtClanCastleTroopDef[$i], $g_aiCCDefenseTroopWaitQty[$i])
             Next
@@ -628,6 +632,9 @@ Func ApplyConfig_600_11($TypeReadSave)
 			
 			; Type Once - ChacalGyn 
 			$g_bChkRequestTypeOnceEnable = (GUICtrlRead($g_hChkRequestTypeOnceEnable) = $GUI_CHECKED)
+
+			; Request Early - Team AIO Mod++
+			$g_bChkRequestFromChat = (GUICtrlRead($g_hChkRequestFromChat) = $GUI_CHECKED)
             For $i = 0 To 2
                 $g_aiClanCastleTroopDefType[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbClanCastleTroopDef[$i])
                 $g_aiCCDefenseTroopWaitQty[$i] = GUICtrlRead($g_ahTxtClanCastleTroopDef[$i])

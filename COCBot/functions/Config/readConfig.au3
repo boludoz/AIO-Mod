@@ -599,6 +599,10 @@ Func ReadConfig_600_11()
 
  	; Type Once - ChacalGyn 
  	$g_bChkRequestTypeOnceEnable = (IniRead($g_sProfileConfigPath, "request", "RequestTypeOnce", "0") = "1")
+ 	
+	; Request Early - Team AIO Mod++
+ 	$g_bChkRequestFromChat = (IniRead($g_sProfileConfigPath, "request", "ChkRequestFromChat", "0") = "1")
+
 	For $i = 0 To $eTroopCount - 1
         $g_aiCCTroopsExpectedForDef[$i] = 0
     Next

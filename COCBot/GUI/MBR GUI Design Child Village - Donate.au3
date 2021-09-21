@@ -84,6 +84,9 @@ Global $g_hChkRequestTypeOnceEnable = 0
 
 ; Request Early - Team AIO Mod++
 Global $g_hChkReqCCFirst = 0
+
+; Request from chat - Team AIO Mod++
+Global $g_hChkRequestFromChat = 0
 #EndRegion - Request defense CC (Demen)
 
 Func CreateVillageDonate()
@@ -130,8 +133,9 @@ Func CreateRequestSubTab()
 		$g_hTxtRequestCC = GUICtrlCreateInput(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "TxtRequestCC", "Anything please"), $x + 70, $y + 15, 214, 20, BitOR($SS_CENTER, $ES_AUTOHSCROLL))
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "TxtRequestCC_Info_01", "This text is used on your request for troops in the Clan chat."))
-		$g_hChkRequestTypeOnceEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "ChkRequestTypeOnceEnable", "Type Once"), $x + 205, $y - 6) ; Type Once - ChacalGyn 
-		$g_hChkReqCCFirst = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "LblChkReqCCFirst", "Request Early"), $x + 340, $y - 6) ; Request Early - Team AIO Mod++
+		$g_hChkRequestTypeOnceEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "ChkRequestTypeOnceEnable", "Type Once"), $x + 210, $y - 6) ; Type Once - ChacalGyn 
+		$g_hChkReqCCFirst = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "LblChkReqCCFirst", "Request Early"), $x + 290, $y - 6) ; Request Early - Team AIO Mod++
+		$g_hChkRequestFromChat = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "ChkRequestFromChat", "Request from chat"), $x + 290, $y - 6 + 25) ; Request from chat - Team AIO Mod++
 
 	$x += 70
 	$y += 90 - 47

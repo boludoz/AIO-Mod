@@ -18,7 +18,6 @@ Func _Wait4Pixel($x, $y, $sColor, $iColorVariation = 25, $iWait = 3000, $iDelay 
 EndFunc   ;==>_Wait4Pixel
 
 Func _Wait4PixelGone($x, $y, $sColor, $iColorVariation = 25, $iWait = 3000, $iDelay = 100, $sMsglog = Default) ; Return true if pixel is false
-	Local $aTemp[4] = [$x, $y, $sColor, $iColorVariation]
 	Local $hTimer = __TimerInit()
 	Do
 		If _ColorCheck(Hex($sColor, 6), _GetPixelColor($x, $y, $g_bCapturePixel), $iColorVariation) = False Then Return True

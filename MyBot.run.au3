@@ -829,7 +829,7 @@ Func runBot() ;Bot that runs everything in order
 			
 			#Region - Request Early - Team AIO Mod++
 			$g_bCanRequestCC = True
-			If $g_bChkReqCCFirst Then RequestCC()
+			If $g_bChkReqCCFirst Then RequestCCMain()
 			#EndRegion - Request Early - Team AIO Mod++
 
 			If $g_bIsSearchLimit Then
@@ -1312,7 +1312,7 @@ Func _RunFunction($sAction)
 		Case "LabCheck"
 		Case "PetCheck"
 		Case "RequestCC"
-			If Not $g_bRequestTroopsEnable Or Not $g_bDonationEnabled Then
+			If Not $g_bRequestTroopsEnable Or Not $g_bDonationEnabled Or $g_bChkReqCCFirst Then
 				$bNoProceed = True
 			EndIf
 		Case "Laboratory"
@@ -1444,7 +1444,9 @@ Func __RunFunction($sAction)
 		Case "PetCheck"
 			PetGuiDisplay()
 		Case "RequestCC"
-			If Not $g_bChkReqCCFirst Then RequestCC()
+			#Region - Request Early - Team AIO Mod++
+			If Not $g_bChkReqCCFirst Then RequestCCMain()
+			#EndRegion - Request Early - Team AIO Mod++
 		Case "Laboratory"
 			Laboratory()
 		Case "UpgradeHeroes"

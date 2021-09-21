@@ -16,7 +16,8 @@ Func RequestCC($bClickPAtEnd = True, $sText = "")
 	; Check if it's time to request troops for defense (Demen)
 	If Int($g_iTownHallLevel) < 3 And Int($g_iTownHallLevel) > 0 Then Return
 	Local $bRequestDefense = IsRequestDefense()
-	If (Not $g_bRequestTroopsEnable Or Not $g_bCanRequestCC Or Not $g_bDonationEnabled) And Not $bRequestDefense Then
+	; If (Not $g_bRequestTroopsEnable Or Not $g_bCanRequestCC Or Not $g_bDonationEnabled) And Not $bRequestDefense Then
+	If (Not $g_bRequestTroopsEnable Or Not $g_bDonationEnabled) And Not $bRequestDefense Then
 		Return
 	EndIf
 
@@ -49,7 +50,8 @@ Func RequestCC($bClickPAtEnd = True, $sText = "")
 	ElseIf $bClickPAtEnd Then
 		CheckCCArmy()
 	EndIf
-
+	; -------------------------------------------------------
+	
 	If Not $g_bRunState Then Return
 
 	Local $sSearchDiamond = GetDiamondFromRect("718,580,780,614")
@@ -110,13 +112,6 @@ Func RequestCC($bClickPAtEnd = True, $sText = "")
 EndFunc   ;==>RequestCC
 
 Func _makerequest($aRequestButtonPos, $bRequestDefense = False)
-	; Check if it's time to request troops for defense (Demen)
-	Local $sRequestTroopsText
-	If $bRequestDefense Then
-        $sRequestTroopsText = $g_sRequestCCDefenseText
-	Else
-		$sRequestTroopsText = $g_sRequestTroopsText
-	EndIf
 
 	Local $sSendButtonArea = GetDiamondFromRect("220,150,650,650")
 
@@ -127,9 +122,16 @@ Func _makerequest($aRequestButtonPos, $bRequestDefense = False)
 		ClickAway()
 		If _Sleep($DELAYMAKEREQUEST2) Then Return
 	Else
+		; Check if it's time to request troops for defense (Demen)
+		Local $iMode = ($bRequestDefense = True) ? (2) : (1)
+		Local $sRequestTroopsText = $g_sRequestTroopsText
+		If $bRequestDefense Then
+			$sRequestTroopsText = $g_sRequestCCDefenseText
+		EndIf
+		; --------------------------------------------------------
 		If $sRequestTroopsText <> "" Then
 			#Region - Type Once - ChacalGyn
-			If $g_aiRequestTroopTypeOnce[$g_iCurAccount] = 0 Then
+			If $g_aiRequestTroopTypeOnce[$g_iCurAccount] <> $iMode Then
 				If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
 				; fix for Android send text bug sending symbols like ``"
 				AndroidSendText($sRequestTroopsText, True)
@@ -143,7 +145,7 @@ Func _makerequest($aRequestButtonPos, $bRequestDefense = False)
 				SetLog("Ignore retype text when Request troops", $COLOR_INFO)
 			EndIf
 			If $g_bChkRequestTypeOnceEnable Then
-				$g_aiRequestTroopTypeOnce[$g_iCurAccount] += 1
+				$g_aiRequestTroopTypeOnce[$g_iCurAccount] = $iMode
 			Else
 				$g_aiRequestTroopTypeOnce[$g_iCurAccount] = 0
 			EndIf
