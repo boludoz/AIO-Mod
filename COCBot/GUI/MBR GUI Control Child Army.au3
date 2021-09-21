@@ -1315,15 +1315,18 @@ Func CmbTroopSetting()
 
 	$g_iCmbTroopSetting = _GUICtrlComboBox_GetCurSel($g_hCmbTroopSetting)
 
-	; For $T = 0 To $eTroopCount - 1
-		; $g_iCustomArmysMainVillage[$T][$g_iCmbTroopSetting] = GUICtrlRead($g_ahTxtTrainArmyTroopCount[$T])
-	; Next
-	; For $S = 0 To $eSpellCount - 1
-		; $g_iCustomBrewMainVillage[$S][$g_iCmbTroopSetting] = GUICtrlRead($g_ahTxtTrainArmySpellCount[$S])
-	; Next
-	; For $S = 0 To $eSiegeMachineCount - 1
-		; $g_iCustomSiegesMainVillage[$S][$g_iCmbTroopSetting] = GUICtrlRead($g_ahTxtTrainArmySiegeCount[$S])
-	; Next
+	For $T = 0 To $eTroopCount - 1
+		$g_iCustomArmysMainVillage[$T][$g_iCmbTroopSetting] = GUICtrlRead($g_ahTxtTrainArmyTroopCount[$T])
+	Next
+	For $S = 0 To $eSpellCount - 1
+		$g_iCustomBrewMainVillage[$S][$g_iCmbTroopSetting] = GUICtrlRead($g_ahTxtTrainArmySpellCount[$S])
+	Next
+	For $S = 0 To $eSiegeMachineCount - 1
+		$g_iCustomSiegesMainVillage[$S][$g_iCmbTroopSetting] = GUICtrlRead($g_ahTxtTrainArmySiegeCount[$S])
+	Next
 	
-	ApplyConfig_600_52_2("Read")
+	; ApplyConfig_600_52_2("Save")
+	; ApplyConfig_600_52_2("Read")
+	; ApplyConfig_600_54("Save")
+	ApplyConfig_600_54("Read")
 EndFunc   ;==>CmbTroopSetting
