@@ -1300,7 +1300,7 @@ Func CmbTroopSetting()
 	For $S = 0 To $eSiegeMachineCount - 1
 		$g_iCustomSiegesMainVillage[$S][$iOld] = GUICtrlRead($g_ahTxtTrainArmySiegeCount[$S])
 	Next
-	;;;;;;;;;;;;;;;;;;;;;;;;;
+
 	For $T = 0 To $eTroopCount - 1
 		GUICtrlSetData($g_ahTxtTrainArmyTroopCount[$T], Number($g_iCustomArmysMainVillage[$T][$iActual]))
 	Next
@@ -1314,4 +1314,16 @@ Func CmbTroopSetting()
 	Next
 
 	$g_iCmbTroopSetting = _GUICtrlComboBox_GetCurSel($g_hCmbTroopSetting)
+
+	For $T = 0 To $eTroopCount - 1
+		$g_iCustomArmysMainVillage[$T][$g_iCmbTroopSetting] = GUICtrlRead($g_ahTxtTrainArmyTroopCount[$T])
+	Next
+	For $S = 0 To $eSpellCount - 1
+		$g_iCustomBrewMainVillage[$S][$g_iCmbTroopSetting] = GUICtrlRead($g_ahTxtTrainArmySpellCount[$S])
+	Next
+	For $S = 0 To $eSiegeMachineCount - 1
+		$g_iCustomSiegesMainVillage[$S][$g_iCmbTroopSetting] = GUICtrlRead($g_ahTxtTrainArmySiegeCount[$S])
+	Next
+	
+	ApplyConfig_600_52_2("Read")
 EndFunc   ;==>CmbTroopSetting
