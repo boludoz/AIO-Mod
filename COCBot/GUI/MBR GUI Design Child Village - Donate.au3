@@ -134,12 +134,12 @@ Func CreateRequestSubTab()
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "TxtRequestCC_Info_01", "This text is used on your request for troops in the Clan chat."))
 		$g_hChkRequestTypeOnceEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "ChkRequestTypeOnceEnable", "Type Once"), $x + 210, $y - 6) ; Type Once - ChacalGyn 
-		$g_hChkReqCCFirst = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "LblChkReqCCFirst", "Request Early"), $x + 290, $y - 6) ; Request Early - Team AIO Mod++
-		$g_hChkRequestFromChat = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "ChkRequestFromChat", "Request from chat"), $x + 290, $y - 6 + 25) ; Request from chat - Team AIO Mod++
+		$g_hChkReqCCFirst = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "LblChkReqCCFirst", "Request Early"), $x + 290, $y - 6 + 25 - 8) ; Request Early - Team AIO Mod++
+		$g_hChkRequestFromChat = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "ChkRequestFromChat", "Request from chat"), $x + 290, $y - 6 + 45 - 8) ; Request from chat - Team AIO Mod++
 
 	$x += 70
 	$y += 90 - 47
-		GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "Only_during_hours", "Only during these hours of each day"), $x, $y, 300, 20, $BS_MULTILINE)
+		GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "Only_during_hours", "Only during these hours of each day"), $x, $y, 216, 20, $BS_MULTILINE)
 
 	$x += 40
 	$y += 20 
