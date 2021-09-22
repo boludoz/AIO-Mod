@@ -102,6 +102,8 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 
 	If $g_bIsSearchLimit = True Then $g_bIsSearchLimit = False
 
+	$g_bDoneSmartZap = False ; Custom SmartZap - Team AIO Mod++
+	
 	; Reset page errors.
 	InitAndroidPageError()
 	While 1 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;### Main Search Loop ###;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -359,78 +361,92 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
             Else
                 $bFlagSearchAnotherBase = False
             EndIf
-
+			
+			
             If ($bFlagSearchAnotherBase = False) Then
-                If $g_bDBMeetCollectorOutside Then ; check is that collector  near outside
-                    $g_bScanMineAndElixir = False
-
-                    If CollectorsAndRedLines(False) Then
-                        SetLog("Collectors are outside, match found !", $COLOR_SUCCESS)
-                        $bFlagSearchAnotherBase = False
-                    Else
-                        $bFlagSearchAnotherBase = True
-                        If $g_bSkipCollectorCheck Then
-                            If Number($g_iTxtSkipCollectorGold) <> 0 And Number($g_iTxtSkipCollectorElixir) <> 0 And Number($g_iTxtSkipCollectorDark) <> 0 Then
-                                If Number($g_iSearchGold) >= Number($g_iTxtSkipCollectorGold) And Number($g_iSearchElixir) >= Number($g_iTxtSkipCollectorElixir) And Number($g_iSearchDark) >= Number($g_iTxtSkipCollectorDark) Then
-                                    SetLog("Target Resource(G,E,D) over for skip collectors check, Prepare for attack...", $COLOR_INFO)
-                                    $bFlagSearchAnotherBase = False
-                                EndIf
-                            ElseIf Number($g_iTxtSkipCollectorGold) <> 0 And Number($g_iTxtSkipCollectorElixir) <> 0 Then
-                                If Number($g_iSearchGold) >= Number($g_iTxtSkipCollectorGold) And Number($g_iSearchElixir) >= Number($g_iTxtSkipCollectorElixir) Then
-                                    SetLog("Target Resource(G,E) over for skip collectors check, Prepare for attack...", $COLOR_INFO)
-                                    $bFlagSearchAnotherBase = False
-                                EndIf
-                            ElseIf Number($g_iTxtSkipCollectorGold) <> 0 And Number($g_iTxtSkipCollectorDark) <> 0 Then
-                                If Number($g_iSearchGold) >= Number($g_iTxtSkipCollectorGold) And Number($g_iSearchDark) >= Number($g_iTxtSkipCollectorDark) Then
-                                    SetLog("Target Resource(G,D) over for skip collectors check, Prepare for attack...", $COLOR_INFO)
-                                    $bFlagSearchAnotherBase = False
-                                EndIf
-                            ElseIf Number($g_iTxtSkipCollectorElixir) <> 0 And Number($g_iTxtSkipCollectorDark) <> 0 Then
-                                If Number($g_iSearchElixir) >= Number($g_iTxtSkipCollectorElixir) And Number($g_iSearchDark) >= Number($g_iTxtSkipCollectorDark) Then
-                                    SetLog("Target Resource(E,D) over for skip collectors check, Prepare for attack...", $COLOR_INFO)
-                                    $bFlagSearchAnotherBase = False
-                                EndIf
-                            ElseIf Number($g_iTxtSkipCollectorGold) <> 0 Then
-                                If Number($g_iSearchGold) >= Number($g_iTxtSkipCollectorGold) Then
-                                    SetLog("Target Resource(G) over for skip collectors check, Prepare for attack...", $COLOR_INFO)
-                                    $bFlagSearchAnotherBase = False
-                                EndIf
-                            ElseIf Number($g_iTxtSkipCollectorElixir) <> 0 Then
-                                If Number($g_iSearchElixir) >= Number($g_iTxtSkipCollectorElixir) Then
-                                    SetLog("Target Resource(E) over for skip collectors check, Prepare for attack...", $COLOR_INFO)
-                                    $bFlagSearchAnotherBase = False
-                                EndIf
-                            ElseIf Number($g_iTxtSkipCollectorDark) <> 0 Then
-                                If Number($g_iSearchDark) >= Number($g_iTxtSkipCollectorDark) Then
-                                    SetLog("Target Resource(D) over for skip collectors check, Prepare for attack...", $COLOR_INFO)
-                                    $bFlagSearchAnotherBase = False
-                                EndIf
-                            EndIf
-                            If $bFlagSearchAnotherBase Then
-                                SetLog("Collectors are not outside AND Target Resource not match for attack, skipping search !", $COLOR_ERROR, "Lucida Console", 7.5)
-                            EndIf
-                        Else
-                            SetLog("Collectors are not outside, skipping search !", $COLOR_ERROR, "Lucida Console", 7.5)
-                        EndIf
-                        If $g_bSkipCollectorCheckTH Then
-                            If $bFlagSearchAnotherBase Then
-                                If $g_iSearchTH <> "-" Then
-                                    If Number($g_iSearchTH) <= $g_iCmbSkipCollectorCheckTH Then
-                                        SetLog("Target TownHall Level is " & $g_iSearchTH & ", lower than or equal my setting " & $g_iCmbSkipCollectorCheckTH & ", Prepare for attack...", $COLOR_INFO)
-                                        $bFlagSearchAnotherBase = False
-                                    Else
-                                        SetLog("Collectors are not outside, and TownHall Level is " & $g_iSearchTH & " Over " & $g_iCmbSkipCollectorCheckTH & ", skipping search !", $COLOR_ERROR, "Lucida Console", 7.5)
-                                    EndIf
-                                Else
-                                    SetLog("Collectors are not outside, and failded to get townhall level, skipping search !", $COLOR_ERROR, "Lucida Console", 7.5)
-                                EndIf
-                            EndIf
-                        EndIf
-                    EndIf
-                    $g_iSearchTH = ""
-                Else
-                    $bFlagSearchAnotherBase = False
-                EndIf
+				
+				; SmartMilk
+				Local $bConditionOutside = False
+				If ForceCollectorsOutside() Then
+					$bConditionOutside = CollectorsAndRedLines(False)
+					$g_bByPassSmartFarm = ($bConditionOutside = False)
+					If $g_bByPassSmartFarm Then
+						SetLog("SmartMilk: Bypassing to smart farm attack.", $COLOR_ACTION)
+					EndIf
+				Else
+					$g_bByPassSmartFarm = False
+				
+					If $g_bDBMeetCollectorOutside And Not ForceCollectorsOutside() Then ; SmartMilk ; check is that collector near outside
+						$g_bScanMineAndElixir = False
+		
+						If CollectorsAndRedLines(False) Then
+							SetLog("Collectors are outside, match found !", $COLOR_SUCCESS)
+							$bFlagSearchAnotherBase = False
+						Else
+							$bFlagSearchAnotherBase = True
+							If $g_bSkipCollectorCheck Then
+								If Number($g_iTxtSkipCollectorGold) <> 0 And Number($g_iTxtSkipCollectorElixir) <> 0 And Number($g_iTxtSkipCollectorDark) <> 0 Then
+									If Number($g_iSearchGold) >= Number($g_iTxtSkipCollectorGold) And Number($g_iSearchElixir) >= Number($g_iTxtSkipCollectorElixir) And Number($g_iSearchDark) >= Number($g_iTxtSkipCollectorDark) Then
+										SetLog("Target Resource(G,E,D) over for skip collectors check, Prepare for attack...", $COLOR_INFO)
+										$bFlagSearchAnotherBase = False
+									EndIf
+								ElseIf Number($g_iTxtSkipCollectorGold) <> 0 And Number($g_iTxtSkipCollectorElixir) <> 0 Then
+									If Number($g_iSearchGold) >= Number($g_iTxtSkipCollectorGold) And Number($g_iSearchElixir) >= Number($g_iTxtSkipCollectorElixir) Then
+										SetLog("Target Resource(G,E) over for skip collectors check, Prepare for attack...", $COLOR_INFO)
+										$bFlagSearchAnotherBase = False
+									EndIf
+								ElseIf Number($g_iTxtSkipCollectorGold) <> 0 And Number($g_iTxtSkipCollectorDark) <> 0 Then
+									If Number($g_iSearchGold) >= Number($g_iTxtSkipCollectorGold) And Number($g_iSearchDark) >= Number($g_iTxtSkipCollectorDark) Then
+										SetLog("Target Resource(G,D) over for skip collectors check, Prepare for attack...", $COLOR_INFO)
+										$bFlagSearchAnotherBase = False
+									EndIf
+								ElseIf Number($g_iTxtSkipCollectorElixir) <> 0 And Number($g_iTxtSkipCollectorDark) <> 0 Then
+									If Number($g_iSearchElixir) >= Number($g_iTxtSkipCollectorElixir) And Number($g_iSearchDark) >= Number($g_iTxtSkipCollectorDark) Then
+										SetLog("Target Resource(E,D) over for skip collectors check, Prepare for attack...", $COLOR_INFO)
+										$bFlagSearchAnotherBase = False
+									EndIf
+								ElseIf Number($g_iTxtSkipCollectorGold) <> 0 Then
+									If Number($g_iSearchGold) >= Number($g_iTxtSkipCollectorGold) Then
+										SetLog("Target Resource(G) over for skip collectors check, Prepare for attack...", $COLOR_INFO)
+										$bFlagSearchAnotherBase = False
+									EndIf
+								ElseIf Number($g_iTxtSkipCollectorElixir) <> 0 Then
+									If Number($g_iSearchElixir) >= Number($g_iTxtSkipCollectorElixir) Then
+										SetLog("Target Resource(E) over for skip collectors check, Prepare for attack...", $COLOR_INFO)
+										$bFlagSearchAnotherBase = False
+									EndIf
+								ElseIf Number($g_iTxtSkipCollectorDark) <> 0 Then
+									If Number($g_iSearchDark) >= Number($g_iTxtSkipCollectorDark) Then
+										SetLog("Target Resource(D) over for skip collectors check, Prepare for attack...", $COLOR_INFO)
+										$bFlagSearchAnotherBase = False
+									EndIf
+								EndIf
+								If $bFlagSearchAnotherBase Then
+									SetLog("Collectors are not outside AND Target Resource not match for attack, skipping search !", $COLOR_ERROR, "Lucida Console", 7.5)
+								EndIf
+							Else
+								SetLog("Collectors are not outside, skipping search !", $COLOR_ERROR, "Lucida Console", 7.5)
+							EndIf
+							If $g_bSkipCollectorCheckTH Then
+								If $bFlagSearchAnotherBase Then
+									If $g_iSearchTH <> "-" Then
+										If Number($g_iSearchTH) <= $g_iCmbSkipCollectorCheckTH Then
+											SetLog("Target TownHall Level is " & $g_iSearchTH & ", lower than or equal my setting " & $g_iCmbSkipCollectorCheckTH & ", Prepare for attack...", $COLOR_INFO)
+											$bFlagSearchAnotherBase = False
+										Else
+											SetLog("Collectors are not outside, and TownHall Level is " & $g_iSearchTH & " Over " & $g_iCmbSkipCollectorCheckTH & ", skipping search !", $COLOR_ERROR, "Lucida Console", 7.5)
+										EndIf
+									Else
+										SetLog("Collectors are not outside, and failded to get townhall level, skipping search !", $COLOR_ERROR, "Lucida Console", 7.5)
+									EndIf
+								EndIf
+							EndIf
+						EndIf
+						$g_iSearchTH = ""
+					Else
+						$bFlagSearchAnotherBase = False
+					EndIf
+				EndIf
                 If Not $bFlagSearchAnotherBase Then
                     $g_iMatchMode = $DB
                     ExitLoop

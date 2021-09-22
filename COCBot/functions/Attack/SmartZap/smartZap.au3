@@ -5,7 +5,7 @@
 ; Parameters ....: None
 ; Return values .: None
 ; Author ........: LunaEclipse(03-2016)
-; Modified ......: TheRevenor(11-2016), ProMac(12-2016), TheRevenor(12-2016), TripleM(01-2017)
+; Modified ......: TheRevenor(11-2016), ProMac(12-2016), TheRevenor(12-2016), TripleM(01-2017), Custom SmartZap - Team AIO Mod++ (2021)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -13,6 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
+#Region - Custom SmartZap - Team AIO Mod++
 Func displayZapLog(Const ByRef $aDarkDrills, Const ByRef $Spells)
 	Local $drillStealableString = "Drills Lvl/Estimated Amount left: "
 	Local $spellsLeftString = "Spells left: "
@@ -89,7 +90,8 @@ Func getSpellOffset()
 	Return $result
 EndFunc   ;==>getSpellOffset
 
-Func smartZap($minDE = -1)
+Func smartZap($minDE = -1, $bLastChance = False)
+	
 	Local $strikeOffsets = [0, 14]
 	Local $drillLvlOffset, $spellAdjust, $numDrills, $testx, $testY, $tempTestX, $tempTestY, $strikeGain, $expectedDE
 	Local $g_iSearchDark, $oldSearchDark = 0, $performedZap = False, $dropPoint
@@ -98,7 +100,20 @@ Func smartZap($minDE = -1)
 			, ["Donated", $eESpell, -1, -1, 0]]
 	Local $bZapDrills = True
 	If $g_bDebugSmartZap = True Then SetLog("$g_bSmartZapEnable = " & $g_bSmartZapEnable & " | $g_bNoobZap = " & $g_bNoobZap, $COLOR_DEBUG)
-	If $g_bSmartZapEnable = False Then Return $performedZap
+	#Region - Custom SmartZap - Team AIO Mod++
+	If $g_bSmartZapEnable = False Or $g_bDoneSmartZap = True Then Return $performedZap
+	
+	Local $iTime = Int(AttackRemainingTime() / 1000)
+	SetDebugLog("Remain time in seconds is " & $iTime & "s", $COLOR_INFO)
+	If ($g_iRemainTimeToZap > $iTime And $g_iRemainTimeToZap <> 0) Or $bLastChance = True Then
+		SetLog("Let's ZAP, even with troops on the ground.", $COLOR_ACTION)
+	Else
+		Return $performedZap
+	EndIf
+
+	$g_bDoneSmartZap = True
+	#EndRegion - Custom SmartZap - Team AIO Mod++
+
 	If $bZapDrills Then
 		If $g_bSmartZapEnable = True And $g_bNoobZap = False Then
 			SetLog("====== You have activated SmartZap Mode ======", $COLOR_ERROR)
@@ -624,4 +639,4 @@ Func zapMines(ByRef $aSpells)
 	SetDebugLog("Damage is " & $iDamage & "%")
 	If $iGoldStarted - $iGoldEnded > 0 Then SetLog("Zapping Mines got " & $iGoldStarted - $iGoldEnded & " in Gold!", $COLOR_INFO)
 EndFunc   ;==>zapMines
-
+#EndRegion - Custom SmartZap - Team AIO Mod++

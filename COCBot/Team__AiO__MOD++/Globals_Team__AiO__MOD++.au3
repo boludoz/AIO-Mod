@@ -53,10 +53,11 @@ Global $g_bChkColorfulAttackLog = 0, $g_bChkBuyGuard = False
 Global $g_hChkColorfulAttackLog = 0, $g_hChkBuyGuard = 0
 #EndRegion - BuyGuard - Team AIO Mod++
 
-#Region - Dates - Team AIO Mod++
-; Custom PrepareSearch - Team AIO Mod++
+#Region - Custom PrepareSearch - Team AIO Mod++
 Global $g_bBadPrepareSearch = False
+#EndRegion - Custom PrepareSearch - Team AIO Mod++
 
+#Region - Dates - Team AIO Mod++
 ; Magic items check.
 Global Const $g_sConstMaxMagicItemsSeconds = 172800 ; 172800 const = 2 days quality check.
 Global $g_sDateAndTimeMagicItems = ""
@@ -487,6 +488,8 @@ Global $g_hChkColorfulAttackLog = 0, _
 
 #Region - SmartMilk
 Global $g_bDebugSmartMilk = False, $g_bChkMilkForceDeployHeroes = False, $g_bChkMilkForceAllTroops = False, $g_iMilkStrategyArmy = 0
+Global $g_bChkByPassToSmartFarm = False
+Global $g_bByPassSmartFarm = False
 #EndRegion - SmartMilk
 
 #Region - Request defense CC (Demen)
@@ -504,3 +507,7 @@ Global $g_bChkRequestTypeOnceEnable = True
 #Region - Request Early - Team AIO Mod++
 Global $g_bChkReqCCFirst = False, $g_bChkRequestFromChat = False
 #EndRegion - Request Early - Team AIO Mod++
+
+#Region - Custom SmartZap - Team AIO Mod++
+Global $g_bDoneSmartZap = False
+#EndRegion - Custom SmartZap - Team AIO Mod++

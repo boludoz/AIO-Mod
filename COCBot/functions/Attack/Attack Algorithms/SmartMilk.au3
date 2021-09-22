@@ -107,7 +107,6 @@ Func _SmartFarmMilk($bDebug = False)
 	SetLog(" ====== Start Smart Milking ====== ", $COLOR_INFO)
 	Local Enum $eSGiantSlot, $eGiantSlot, $eSWallSlot, $eWallSlot, $eSBarbSlot, $eBarbSlot, $eSArchSlot, $eArchSlot, $eSGoblSlot, $eGoblSlot, $eInfernoDSlot, $eBabyDSlot, $eSMiniSlot, $eMiniSlot, $eTotalSlots
 	Local $aSlots2deploy[$eTotalSlots][4]
-	Local $UsedZap = False
 	
 	For $i = 0 To UBound($g_avAttackTroops) - 1
 		Switch $g_avAttackTroops[$i][0]
@@ -388,17 +387,7 @@ Func _SmartFarmMilk($bDebug = False)
 			For $f = 0 To 7
 				If _Sleep(2000) Then Return
 				$g_iPercentageDamage = Number(getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY))
-				; Local $sTime = _getBattleEnds()
-				; Local $iTime = ConvertTime($sTime)
-				Local $iTime = Int(AttackRemainingTime() / 1000)
-				SetLog("Remain in seconds is " & $iTime & "s", $COLOR_INFO)
-				SetLog("Overall Damage is " & $g_iPercentageDamage & "%", $COLOR_INFO)
-				; SetLog("Battle ends in: " & _getBattleEnds() & " | remain in seconds is " & $iTime & "s", $COLOR_INFO)
-				If IsAttackPage() And (($g_iRemainTimeToZap > $iTime And $g_iRemainTimeToZap <> 0) Or $iTime < 45) And Not $UsedZap Then
-					SetLog("let's ZAP, even with troops on the ground", $COLOR_INFO)
-					smartZap()
-					$UsedZap = True
-				EndIf
+				If IsAttackPage() Then SmartZap() ; Custom SmartZap - Team AIO Mod++
 				If ($g_bIsHeroesDropped) Then
 					CheckHeroesHealth()
 				EndIf
@@ -428,11 +417,7 @@ Func _SmartFarmMilk($bDebug = False)
 				$g_bIsHeroesDropped = True
 				CheckHeroesHealth()
 			EndIf
-			If IsAttackPage() And (($g_iRemainTimeToZap > $iTime And $g_iRemainTimeToZap <> 0) Or $iTime < 45) And Not $UsedZap Then
-				SetLog("let's ZAP, even with troops on the ground", $COLOR_INFO)
-				smartZap()
-				$UsedZap = True
-			EndIf
+			If IsAttackPage() Then SmartZap() ; Custom SmartZap - Team AIO Mod++
 		EndIf
 		If $iLoops = 2 And $g_bChkMilkForceAllTroops Then
 			SetLog("Let's deploy all remain troops!", $COLOR_INFO)
@@ -468,12 +453,8 @@ Func _SmartFarmMilk($bDebug = False)
 				Next
 			Next
 		EndIf
-		If IsAttackPage() And (($g_iRemainTimeToZap > $iTime And $g_iRemainTimeToZap <> 0) Or $iTime < 45) And Not $UsedZap Then
-			SetLog("let's ZAP, even with troops on the ground", $COLOR_INFO)
-			smartZap()
-			$UsedZap = True
-		EndIf
-	Next
+		If IsAttackPage() Then SmartZap() ; Custom SmartZap - Team AIO Mod++
+		Next
 	SetLog("Finished Attacking, waiting for the battle to end")
 	Return True
 EndFunc   ;==>SmartFarmMilk
@@ -591,3 +572,7 @@ Func ConvertTime($sString)
 	EndIf
 EndFunc   ;==>ConvertTime
 #ce
+
+Func ForceCollectorsOutside()
+	Return ($g_bChkByPassToSmartFarm = True And $g_iMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 3)
+EndFunc

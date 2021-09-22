@@ -371,6 +371,7 @@ Func SaveConfig_MOD_SmartMilk()
 	_Ini_Add("SmartMilk", "MilkStrategyArmy", $g_iMilkStrategyArmy)
 	_Ini_Add("SmartMilk", "MilkForceDeployHeroes", $g_bChkMilkForceDeployHeroes)
 	_Ini_Add("SmartMilk", "ChkMilkForceAllTroops", $g_bChkMilkForceAllTroops)
+	_Ini_Add("SmartMilk", "ChkByPassToSmartFarm", $g_bChkByPassToSmartFarm)
 	_Ini_Add("SmartMilk", "DebugSmartMilk", $g_bDebugSmartMilk)
 EndFunc   ;==>SaveConfig_MOD_SmartMilk
 

@@ -21,20 +21,20 @@ Func ReadChatIA($sCondition = "hola", $bFast = True)
 	Local $asFCKeyword = ""
 	Local $aiDonateButton = -1
 	Local $aiSearchArray[4] = [200, 90, 300, 700]
-	
+
 	ScrollDown()
-	
+
 	If RandomSleep(500) Then Return
-	
+
 	_CaptureRegion2()
 	Local $aChatY = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ChatActions\Chat", 11, "259, 20, 269, 677", False, Default, False, 0)
-	
+
 	If Not IsArray($aChatY) Then Return False
-	
+
 	_ArraySort($aChatY, 1, 0, 0, 2) ; rearrange order by coor Y
-	
+
 	For $y = 0 To UBound($aChatY) - 1
-		
+
 		Local $yFix = (UBound($aChatY) - 1 <> $y) ? ($aChatY[$y + 1][2]) : (680)
 		$aiSearchArray[1] = _Min($yFix, $aChatY[$y][2])
 		$aiSearchArray[3] = _Max($yFix, $aChatY[$y][2])
@@ -43,7 +43,7 @@ Func ReadChatIA($sCondition = "hola", $bFast = True)
 		If UBound($aiDonateButton, 1) >= 2 And not @error Then
 			ContinueLoop
 		EndIf
-		
+
 		Local $Alphabets[4] = [$g_bChkExtraAlphabets, $g_bChkExtraChinese, $g_bChkExtraKorean, $g_bChkExtraPersian]
 		Local $TextAlphabetsNames[4] = ["Cyrillic and Latin", "Chinese", "Korean", "Persian"]
 		Local $AlphabetFunctions[4] = ["getChatString", "getChatStringChinese", "getChatStringKorean", "getChatStringPersian"]
@@ -88,20 +88,21 @@ Func ReadChatIA($sCondition = "hola", $bFast = True)
 					EndIf
 				EndIf
 			EndIf
-			
+
 		Next
-			
+
+		If StringIsSpace($ClanString) Then ContinueLoop
 		Local $sString = StringStripWS($ClanString, $STR_STRIPLEADING + $STR_STRIPTRAILING + $STR_STRIPSPACES)
 		Setlog("Chat texts : " & $sString, $COLOR_SUCCESS)
-		
+
 		If CheckDonateString($sCondition, $sString) Then
 			$sResult = $ClanString
 			If $bFast = True Then
 				Return $sResult
 			EndIf
 		EndIf
-		
+
 	Next
-	
+
 	Return $sResult ; IF THE STATE = -1 CHAT TEXT IS RETURNED IN TEXT, ANOTHER BOOLEAN OF RETURN
 EndFunc   ;==>ReadChatIA

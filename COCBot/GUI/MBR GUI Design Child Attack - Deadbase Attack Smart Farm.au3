@@ -16,7 +16,7 @@
 
 Global $g_hGUI_DEADBASE_ATTACK_SMARTFARM = 0
 
-Global $g_hTxtInsidePercentage = 0, $g_hTxtOutsidePercentage = 0, $g_hBtnCustomDropOrderDB1 = 0, $g_hChkDebugSmartFarm = 0
+Global $g_hTxtInsidePercentage = 0, $g_hTxtOutsidePercentage = 0, $g_hBtnCustomDropOrderDB1 = 0, $g_hChkDebugSmartFarm = 0, $g_hChkByPassToSmartFarm = 0
 
 Func CreateAttackSearchDeadBaseSmartFarm()
 
@@ -125,10 +125,12 @@ Func CreateAttackSearchDeadBaseSmartMilk()
 	GUICtrlSetData(-1, "Baby Dragons|Full Barbs|Full Archs|Gibarch|Full Gobs|Full Minions", "Baby Dragons")
 	GUICtrlSetOnEvent(-1, "CmbMilkStrategyArmy")
 	$y += 60
-	$g_hChkMilkForceDeployHeroes = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Milk", "ChkMilkForceDeployHeroes", "Force to Deploy Heroes/CC"), $x + 40, $y, -1, -1)
+	$g_hChkMilkForceDeployHeroes = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Milk", "ChkMilkForceDeployHeroes", "Force to Deploy Heroes/CC"), $x + 20, $y, -1, -1)
 	GUICtrlSetOnEvent(-1, "MilkForceDeployHeroes")
-	$g_hChkMilkForceAllTroops = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Milk", "ChkMilkForceAllTroops", "Force to Deploy All Troops"), $x + 40, $y + 25, -1, -1)
+	$g_hChkMilkForceAllTroops = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Milk", "ChkMilkForceAllTroops", "Force to Deploy All Troops"), $x + 20, $y + 25, -1, -1)
 	GUICtrlSetOnEvent(-1, "MilkForceDeployHeroes")
+	$g_hChkByPassToSmartFarm = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Milk", "ChkByPassToSmartFarm", "If the collectors are inside, use Smart Farm"), $x + 20, $y + 50, -1, -1)
+	GUICtrlSetOnEvent(-1, "ByPassToSmartFarm")
 	$g_hChkDebugSmartMilk = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Milk", "ChkDebugSmartMilk", "Debug Smart Milk"), $x, $g_iSizeHGrpTab4 - 30, -1, -1)
 	GUICtrlSetOnEvent(-1, "DebugSmartAttacks")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)

@@ -350,6 +350,7 @@ Func ReadConfig_MOD_SmartMilk()
 	IniReadS($g_iMilkStrategyArmy, $g_sProfileConfigPath, "SmartMilk", "MilkStrategyArmy", 0, "int")
 	IniReadS($g_bChkMilkForceDeployHeroes, $g_sProfileConfigPath, "SmartMilk", "MilkForceDeployHeroes", False, "Bool")
 	IniReadS($g_bChkMilkForceAllTroops, $g_sProfileConfigPath, "SmartMilk", "ChkMilkForceAllTroops", False, "Bool")
+	IniReadS($g_bChkByPassToSmartFarm, $g_sProfileConfigPath, "SmartMilk", "ChkByPassToSmartFarm", $g_bChkByPassToSmartFarm, "Bool")
 	IniReadS($g_bDebugSmartMilk, $g_sProfileConfigPath, "SmartMilk", "DebugSmartMilk", False, "Bool")
 EndFunc   ;==>ReadConfig_MOD_SmartMilk
 

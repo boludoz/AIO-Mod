@@ -353,6 +353,10 @@ Func MilkForceDeployHeroes()
 	$g_bChkMilkForceAllTroops = (GUICtrlRead($g_hChkMilkForceAllTroops) = $GUI_CHECKED)
 EndFunc   ;==>MilkForceDeployHeroes
 
+Func ByPassToSmartFarm()
+	$g_bChkByPassToSmartFarm = (GUICtrlRead($g_hChkByPassToSmartFarm) = $GUI_CHECKED)
+EndFunc   ;==>ByPassToSmartFarm
+
 Func DebugSmartAttacks()
 	$g_bDebugSmartMilk = (GUICtrlRead($g_hChkDebugSmartMilk) = $GUI_CHECKED)
 	$g_bDebugSmartFarm = (GUICtrlRead($g_hChkDebugSmartFarm) = $GUI_CHECKED)

@@ -701,12 +701,14 @@ Func ApplyConfig_MOD_SmartMilk($TypeReadSave)
 			_GUICtrlComboBox_SetCurSel($g_hCmbMilkStrategyArmy, $g_iMilkStrategyArmy)
 			GUICtrlSetState($g_hChkMilkForceDeployHeroes, $g_bChkMilkForceDeployHeroes ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkMilkForceAllTroops, $g_bChkMilkForceAllTroops ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkByPassToSmartFarm, $g_bChkByPassToSmartFarm ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkDebugSmartMilk, $g_bDebugSmartMilk ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlSetImage($g_ahPicMilk, $g_sLibIconPath, $g_hIcnMilk[$g_iMilkStrategyArmy])
 		Case "Save"
 			$g_iMilkStrategyArmy = _GUICtrlComboBox_GetCurSel($g_hCmbMilkStrategyArmy)
 			$g_bChkMilkForceDeployHeroes = (GUICtrlRead($g_hChkMilkForceDeployHeroes) = $GUI_CHECKED)
 			$g_bChkMilkForceAllTroops = (GUICtrlRead($g_hChkMilkForceAllTroops) = $GUI_CHECKED)
+			$g_bChkByPassToSmartFarm = (GUICtrlRead($g_hChkByPassToSmartFarm) = $GUI_CHECKED)
 			$g_bDebugSmartMilk = (GUICtrlRead($g_hChkDebugSmartMilk) = $GUI_CHECKED)
 	EndSwitch
 EndFunc   ;==>ApplyConfig_MOD_SmartMilk

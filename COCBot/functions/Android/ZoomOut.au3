@@ -422,6 +422,7 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag,
 	If $g_aiSearchZoomOutCounter[0] < 10 Then
 		$vVillage = GetVillageSize($bDebugLog, "stone", "tree", Default, $bOnBuilderBase, False) ; Capture region spam disabled - Team AIO Mod++
 	Else
+		ClickAway()
 		; try secondary images
 		$vVillage = GetVillageSize($bDebugLog, "2stone", "2tree", Default, $bOnBuilderBase, False) ; Capture region spam disabled - Team AIO Mod++
 	EndIf
@@ -460,6 +461,7 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag,
 					$iCallCount = 0
 					Return FuncReturn($aResult)
 				EndIf
+				ClickAway()
 				Local $aResult2 = SearchZoomOut(False, $UpdateMyVillage, "SearchZoomOut(1):" & $sSource, True, $bDebugLog)
 				; update difference in offset
 				$aResult2[3] = $aResult2[1] - $aResult[1]
