@@ -12,8 +12,6 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Global $g_iRemainTimeToZap = 90
-
 Func TestSmartMilk($bFast = True)
 
 	$g_iDetectedImageType = 0

@@ -143,31 +143,26 @@ Func BuildingClickP($point, $debugtxt = "")
 EndFunc   ;==>BuildingClickP
 
 Func PureClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
-	Local $aPrevCoor[2] = [$x, $y]
-
-	If $g_bDebugClick Then
-		Local $txt = _DecodeDebug($debugtxt)
-		SetLog("PureClick " & $x & "," & $y & "," & $times & "," & $speed & " " & $debugtxt & $txt, $COLOR_ACTION, "Verdana", "7.5", 0)
-	EndIf
-
+	Local $txt = "", $aPrevCoor[2] = [$x, $y]
     If $g_bUseRandomClick Then
-		$x += Random(-2, 2, 1)
-		$y += Random(-2, 2, 1)
-		If $x <= 0 Or $x >= $g_iGAME_WIDTH Then $x = $aPrevCoor[0]
-		If $y <= 0 Or $y >= $g_iGAME_HEIGHT Then $y = $aPrevCoor[1]
+		$x = Random($x - 5, $x + 5, 1)
+		$y = Random($y - 5, $y + 5, 1)
+		If $g_bDebugClick Then
+			$txt = _DecodeDebug($debugtxt)
+			SetLog("Random PureClick X: " & $aPrevCoor[0] & " To " & $x & ", Y: " & $aPrevCoor[1] & " To " & $y & ", Times: " & $times & ", Speed: " & $speed & " " & $debugtxt & $txt, $COLOR_ACTION, "Verdana", "7.5", 0)
+		EndIf
+    Else
+		If $g_bDebugClick Then
+			$txt = _DecodeDebug($debugtxt)
+			SetLog("PureClick " & $x & "," & $y & "," & $times & "," & $speed & " " & $debugtxt & $txt, $COLOR_ACTION, "Verdana", "7.5", 0)
+        EndIf
 	EndIf
 
 	If TestCapture() Then Return
 
-	; Custom - Team AIO Mod++
-	Local $iSpeedRND = 0, $iLastSpeedRND = 0
 	If $g_bAndroidAdbClick = True Then
-		For $i = 1 to $times
-			; Custom - Team AIO Mod++
-			$iSpeedRND = ($g_bUseRandomClick = True) ? (Ceiling($speed * Random(0.80, 1.20))) : ($speed)
-			If $iSpeedRND = $iLastSpeedRND Then $iSpeedRND += 100
-			AndroidClick($x, $y, 1, $iSpeedRND, False)
-			$iLastSpeedRND = $iSpeedRND
+		For $i = 1 To $times
+			AndroidClick($x, $y, 1, $speed, False)
 		Next
 		Return
 	EndIf
@@ -175,13 +170,9 @@ Func PureClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
 	Local $SuspendMode = ResumeAndroid()
 	If $times <> 1 Then
 		For $i = 0 To ($times - 1)
-			; Custom - Team AIO Mod++
-			$iSpeedRND = ($g_bUseRandomClick = True) ? (Ceiling($speed * Random(0.80, 1.20))) : ($speed)
-			If $iSpeedRND = $iLastSpeedRND Then $iSpeedRND += 100
 			MoveMouseOutBS()
 			_ControlClick($x, $y)
-			If _Sleep($iSpeedRND, False) Then ExitLoop 
-			$iLastSpeedRND = $iSpeedRND
+			If _Sleep($speed, False) Then ExitLoop
 		Next
 	Else
 		MoveMouseOutBS()
