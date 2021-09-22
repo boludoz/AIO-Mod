@@ -149,11 +149,32 @@ Func CleanSecureFiles($iAgeInUTCSeconds = 600)
 	Next
 EndFunc   ;==>CleanSecureFiles
 
-; Custom - Team AIO Mod++
-Func GetSecureFilename($sFilename)
-	If $g_iAndroidSecureFlags = 0 Then Return $sFilename
-	$sFilename = StringMid(_Crypt_HashData($sFilename, $CALG_SHA1), 3)
-	Return $sFilename
+#cs
+	Global $CALG_SHA1 = 1
+	Func _Crypt_Startup()
+	EndFunc
+	Func _Crypt_Shutdown()
+	EndFunc
+	Func _Crypt_HashData($sData, $iAlgorythm)
+	Local $s = "0x"
+	Static $chars = "0123456789ABCDEF"
+	Local $l = StringLen($sData)
+	For $i = 1 To 40
+	If $i <= $l Then
+	$s &= StringMid($chars, Mod(ASC(StringMid($sData, $i, 1)), 16) + 1, 1)
+	Else
+	$s &= StringMid($chars, Random(1, 16, 1), 1)
+	EndIf
+	Next
+	Return $s
+	EndFunc
+#ce
+
+Func GetSecureFilename($Filename)
+	If BitAND($g_iAndroidSecureFlags, 1) = 0 Then
+		Return $Filename
+	EndIf
+	Return StringMid(_Crypt_HashData($Filename, $CALG_SHA1), 3)
 EndFunc   ;==>GetSecureFilename
 
 ; Update Global Android variables based on $g_iAndroidConfig index
@@ -1394,22 +1415,18 @@ Func WaitForRunningVMS($WaitInSec = 120, $hTimer = 0)
 	Return False
 EndFunc   ;==>WaitForRunningVMS
 
-#Region - Custom fix - Team AIO Mod++
 Func FindAvaiableInstances($sVboxManage = $__VBoxManage_Path)
-	Local $a[0] 
+	Local $a = []
 	If FileExists($sVboxManage) = 0 Then
 		If $g_bDebugAndroid Then SetDebugLog("Cannot check for available " & $g_sAndroidEmulator & " instances: VBoxManager.exe not available", $COLOR_ERROR)
 		Return $a
 	EndIf
 	ResumeAndroid()
-	Local $cmdOutput, $process_killed
+	Local $cmdOutput, $connected_to, $running, $process_killed, $hMyTimer
 	$cmdOutput = LaunchConsole($sVboxManage, "list vms", $process_killed)
 	If $g_bDebugAndroid Then SetDebugLog("Available " & $g_sAndroidEmulator & " instances: " & $cmdOutput, $COLOR_ERROR)
 	$a = StringRegExp($cmdOutput, """(.*?)""", $STR_REGEXPARRAYGLOBALMATCH)
-	If @error Then 
-		Local $aFake[0] 
-		Return $aFake
-	EndIf
+	If @error Then Local $a = []
 	Return $a
 EndFunc   ;==>FindAvaiableInstances
 
@@ -1417,20 +1434,27 @@ Func GetAndroidVMinfo(ByRef $sVMinfo, $sVboxManage = $__VBoxManage_Path)
 	Local $process_killed
 	Local $as_Instances
 	$sVMinfo = LaunchConsole($sVboxManage, "showvminfo " & $g_sAndroidInstance, $process_killed)
+	Local $bBadlyInstances = False
 	; check if instance is known
 	If StringInStr($sVMinfo, "Could not find a registered machine named") > 0 Then
 		$as_Instances = FindAvaiableInstances($sVboxManage)
-		For $s In $as_Instances
-			If StringCompare($g_sAndroidInstance, $s, $STR_NOCASESENSE) = 0 Then
-				SetDebugLog("Using " & $g_sAndroidEmulator & " instance " & $s & " (" & $g_sAndroidInstance & " not found!)", $COLOR_ERROR)
-				$g_sAndroidInstance = $s
-				$sVMinfo = LaunchConsole($sVboxManage, "showvminfo " & $g_sAndroidInstance, $process_killed)
-				ExitLoop
-			EndIf
-		Next
+		If UBound($as_Instances) > 0 Then
+			; Prevent hard bug - Custom fix - Team__AiO__MOD
+			For $s In $as_Instances
+				If StringCompare($g_sAndroidInstance, $s, $STR_NOCASESENSE) = 0 Then
+					SetDebugLog("Using " & $g_sAndroidEmulator & " instance " & $s & " (" & $g_sAndroidInstance & " not found!)", $COLOR_ERROR)
+					$g_sAndroidInstance = $s
+					$sVMinfo = LaunchConsole($sVboxManage, "showvminfo " & $g_sAndroidInstance, $process_killed)
+					ExitLoop
+				EndIf
+			Next
+		Else
+			SetLog("Not instances of emulator found.", $COLOR_ERROR)
+			$bBadlyInstances = True
+		EndIf
 	EndIf
 
-	If StringInStr($sVMinfo, "Could not find a registered machine named") > 0 Then
+	If StringInStr($sVMinfo, "Could not find a registered machine named") > 0 Or $bBadlyInstances = True Then
 		; Unknown vm
 		SetLog("Cannot find " & $g_sAndroidEmulator & " instance " & $g_sAndroidInstance, $COLOR_ERROR)
 		If UBound($as_Instances) = 0 Then
@@ -1445,7 +1469,6 @@ Func GetAndroidVMinfo(ByRef $sVMinfo, $sVboxManage = $__VBoxManage_Path)
 	EndIf
 	Return True
 EndFunc   ;==>GetAndroidVMinfo
-#EndRegion - Custom fix - Team AIO Mod++
 
 Func WaitForAndroidBootCompleted($WaitInSec = 120, $hTimer = 0)
 	ResumeAndroid()

@@ -115,10 +115,10 @@ Func ForumAuthentication()
 			Local $iSpace = 30
 			Local $iButtonTop = $iH - 20 - $iSpace
 			GUICtrlCreateLabel($sTitleUsername, $iSpace, $iButtonTop - 18, 100, 20)
-			Local $hUser = _GUICtrlCreateInput("", $iSpace, $iButtonTop, 100, 20)
+			Local $hUser = GUICtrlCreateInput("", $iSpace, $iButtonTop, 100, 20)
 			GUICtrlSetLimit($hUser, 128, 1)
 			GUICtrlCreateLabel($sTitlePassword, $iSpace + 100 + 5, $iButtonTop - 18, 100, 20)
-			Local $hPass = _GUICtrlCreateInput("", $iSpace + 100 + 5, $iButtonTop, 100, 20, BitOR($ES_PASSWORD, $GUI_SS_DEFAULT_INPUT))
+			Local $hPass = GUICtrlCreateInput("", $iSpace + 100 + 5, $iButtonTop, 100, 20, BitOR($ES_PASSWORD, $GUI_SS_DEFAULT_INPUT))
 			GUICtrlSetLimit($hPass, 128, 1)
 			Local $iTextAddWidth = 30
 			Local $hText = GUICtrlCreateLabel($sYouNeedToLogin, $iSpace, $iH - 22, $iW - 2 * $iSpace, 20, $SS_CENTER)

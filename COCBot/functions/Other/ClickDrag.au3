@@ -103,7 +103,6 @@ Func _MakeLong($LowWORD, $HiWORD)
 	Return BitOR($HiWORD * 0x10000, BitAND($LowWORD, 0xFFFF))
 EndFunc   ;==>_MakeLong
 
-#Region - Custom - Team AIO Mod++
 Func ClickDrag($X1, $Y1, $X2, $Y2, $Delay = 50, $bSCIDSwitch = False)
 	If TestCapture() Then Return
 	;Return _PostMessage_ClickDrag($X1, $Y1, $X2, $Y2, "left", $Delay)
@@ -126,4 +125,5 @@ Func ClickDrag($X1, $Y1, $X2, $Y2, $Delay = 50, $bSCIDSwitch = False)
 	EndIf
 	Return SetError(0, 0, ($error = 0 ? True : False))
 EndFunc   ;==>ClickDrag
-#EndRegion - Custom - Team AIO Mod++
+
+

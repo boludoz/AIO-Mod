@@ -13,22 +13,21 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: Deletefiles("C:\Users\administrator\AppData\Local\Temp\", "*.*", 2,1) delete temp file >=2 days from now and put into recycle bin
 ; ===============================================================================================================================
-Func Deletefiles($sFolder, $sFilter = "*", $daydiff = 120, $type = 0, $Recursion = $FLTAR_NORECUR)
-	$sFolder &= "\" 
+Func Deletefiles($Folder, $Filter, $daydiff = 120, $type = 0, $Recursion = $FLTAR_NORECUR)
 	Local $x
-	Local $FileListName = _FileListToArrayRec($sFolder, $sFilter, $FLTAR_FILESFOLDERS, $Recursion) ; list files to an array
+	Local $FileListName = _FileListToArrayRec($Folder, $Filter, $FLTAR_FILESFOLDERS, $Recursion) ; list files to an array
 	If Not ((Not IsArray($FileListName)) Or (@error = 1)) Then
 		For $x = $FileListName[0] To 1 Step -1
-			Local $FileDate = FileGetTime($sFolder & $FileListName[$x])
+			Local $FileDate = FileGetTime($Folder & $FileListName[$x])
 			If IsArray($FileDate) Then
 				Local $Date = $FileDate[0] & '/' & $FileDate[1] & '/' & $FileDate[2] & ' ' & $FileDate[3] & ':' & $FileDate[4] & ':' & $FileDate[5]
 				;msgbox ("" , "" , " " & $FileListname[$x] & " ____ " & $Date & "_____" &  _DateDiff('D', $Date, _NowCalc()) )
 				If _DateDiff('D', $Date, _NowCalc()) < $daydiff Then ContinueLoop
 				;msgbox ("" , "" , "Delete " & $FileListname[$x] & " ____ " & $Date & "_____" &  _DateDiff('D', $Date, _NowCalc()) )
 				If $type = 0 Then
-					FileDelete($sFolder & $FileListName[$x])
+					FileDelete($Folder & $FileListName[$x])
 				Else
-					FileRecycle($sFolder & $FileListName[$x])
+					FileRecycle($Folder & $FileListName[$x])
 				EndIf
 			Else
 				ContinueLoop
@@ -37,11 +36,11 @@ Func Deletefiles($sFolder, $sFilter = "*", $daydiff = 120, $type = 0, $Recursion
 	Else
 		Return False
 	EndIf
-	If $sFolder = $g_sProfileTempDebugPath Then ; remove empty folders in DEBUG directory
-			$FileListName = _FileListToArray($sFolder, "*", $FLTA_FOLDERS)
+	If $Folder = $g_sProfileTempDebugPath Then ; remove empty folders in DEBUG directory
+			$FileListName = _FileListToArray($Folder, "*", $FLTA_FOLDERS)
 			If IsArray($FileListName) Then
 				For $x = $FileListName[0] To 1 Step -1
-					If DirGetSize($sFolder & $FileListName[$x]) = 0 Then DirRemove($sFolder & $FileListName[$x])
+					If DirGetSize($Folder & $FileListName[$x]) = 0 Then DirRemove($Folder & $FileListName[$x])
 				Next
 			EndIf
 		EndIf

@@ -17,7 +17,7 @@ Func FindPos()
 	AndroidToFront(Default, "FindPos") ; Activate Android Window
 	Local $wasDown = AndroidShieldForceDown(True, True)
 	While 1
-		If _IsPressed("01") Or _IsPressed("02") Then ; Custom fix - Team AIO Mod++
+		If _IsPressed("01") Or _IsPressed("02") Then
 			Local $Pos = MouseGetPos()
 			; adjust Android Control Position
 			$Pos[0] -= $g_aiBSpos[0]
@@ -25,7 +25,7 @@ Func FindPos()
 			; adjust village offset
 			ConvertFromVillagePos($Pos[0], $Pos[1])
 			; wait till released
-			While _IsPressed("01") Or _IsPressed("02") ; Custom fix - Team AIO Mod++
+			While _IsPressed("01") Or _IsPressed("02")
 				Sleep(10)
 			WEnd
 			AndroidShieldForceDown($wasDown, True)

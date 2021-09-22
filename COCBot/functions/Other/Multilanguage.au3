@@ -1036,7 +1036,6 @@ EndFunc   ;==>DetectLanguage
 
 Func GetTranslatedFileIni($iSection = -1, $iKey = -1, $sText = "", $var1 = Default, $var2 = Default, $var3 = Default)
 	Static $aNewLanguage[1][2] ;undimmed language array
-	Local $iFixCombo = StringSplit($sText, '|') ; Custom Fix - Team AIO Mod++
 	$sText = StringReplace($sText, @CRLF, "\r\n")
 
 	Local $sDefaultText, $g_sLanguageText
@@ -1107,17 +1106,6 @@ Func GetTranslatedFileIni($iSection = -1, $iKey = -1, $sText = "", $var1 = Defau
 		EndIf
 	Else ; translated language
 		$g_sLanguageText = IniRead($g_sDirLanguages & $g_sLanguage & ".ini", $iSection, $iKey, "-3")
-		
-		#Region - Custom Fix - Team AIO Mod++
-		If Not $sText = "-1" Then
-			Local $iFixComboLocal = StringSplit($g_sLanguageText, '|') ; Fix combos bad translated.
-			If Not @error Then
-				If IsArray($iFixCombo) And IsArray($iFixComboLocal) Then
-					If ($iFixCombo[0] <> $iFixComboLocal[0]) Then $g_sLanguageText = "-3"
-				EndIf
-			EndIf
-		EndIf
-		#EndRegion - Custom Fix - Team AIO Mod++
 
 		If $sText = "-1" Then
 			If $g_sLanguageText = "-3" Then
@@ -1128,6 +1116,8 @@ Func GetTranslatedFileIni($iSection = -1, $iKey = -1, $sText = "", $var1 = Defau
 					$aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][0] = $SearchInLanguage
 					$aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][1] = $sDefaultText
 					ReDim $aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) + 1][2]
+				Else
+					; $aNewLanguage[$result][1] = $sDefaultText
 				EndIf
 				Return $sDefaultText ; will also return "-1" as debug if english.ini does not contain the correct section/key
 			Else
@@ -1137,6 +1127,8 @@ Func GetTranslatedFileIni($iSection = -1, $iKey = -1, $sText = "", $var1 = Defau
 					$aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][0] = $SearchInLanguage
 					$aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) - 1][1] = $g_sLanguageText
 					ReDim $aNewLanguage[UBound($aNewLanguage, $UBOUND_ROWS) + 1][2]
+				Else
+					; $aNewLanguage[$result][1] = $g_sLanguageText
 				EndIf
 				Return $g_sLanguageText
 			EndIf

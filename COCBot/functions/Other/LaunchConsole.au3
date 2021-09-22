@@ -114,24 +114,21 @@ Func ProcessExists2($ProgramPath, $ProgramParameter = Default, $CompareMode = De
 	EndIf
 
 	Local $pid = 0, $i = 0
-	Local $aWmiQuery = WmiQuery($Query)
-	If UBound($aWmiQuery) > 0 and not @error Then
-		For $Process In $aWmiQuery
-			SetDebugLog($Process[0] & " = " & $Process[1] & " (" & $Process[2] & ")")
-			If $pid = 0 Then
-				Local $processCommandLineCompare = StringReplace(StringReplace(StringReplace(StringReplace($Process[2], ".exe", "", 1), " ", ""), '"', ""), "'", "")
-				If ($CompareMode = 0 And $commandLineCompare = $processCommandLineCompare) Or _
-						($CompareMode = 0 And StringRight($commandLineCompare, StringLen($processCommandLineCompare)) = $processCommandLineCompare) Or _
-						($CompareMode = 0 And $CompareCommandLineFunc <> "" And Execute($CompareCommandLineFunc & "(""" & StringReplace($Process[2], """", "") & """)") = True) Or _
-						$CompareMode = 1 Then
-					$pid = Number($Process[0])
-					;ExitLoop
-				EndIf
+	For $Process In WmiQuery($query)
+		SetDebugLog($Process[0] & " = " & $Process[1] & " (" & $Process[2] & ")")
+		If $pid = 0 Then
+			Local $processCommandLineCompare = StringReplace(StringReplace(StringReplace(StringReplace($Process[2], ".exe", "", 1), " ", ""), '"', ""), "'", "")
+			If ($CompareMode = 0 And $commandLineCompare = $processCommandLineCompare) Or _
+					($CompareMode = 0 And StringRight($commandLineCompare, StringLen($processCommandLineCompare)) = $processCommandLineCompare) Or _
+					($CompareMode = 0 And $CompareCommandLineFunc <> "" And Execute($CompareCommandLineFunc & "(""" & StringReplace($Process[2], """", "") & """)") = True) Or _
+					$CompareMode = 1 Then
+				$pid = Number($Process[0])
+				;ExitLoop
 			EndIf
-			$i += 1
-			$Process = 0
-		Next
-	EndIf
+		EndIf
+		$i += 1
+		$Process = 0
+	Next
 	If $pid = 0 Then
 		SetDebugLog("Process by CommandLine not found: " & $ProgramPath & ($ProgramParameter = "" ? "" : ($ProgramPath <> "" ? " " : "") & $ProgramParameter))
 	Else
@@ -171,29 +168,26 @@ Func ProcessesExist($ProgramPath, $ProgramParameter = Default, $CompareMode = De
 	Local $Process, $pid = 0, $i = 0
 	Local $PIDs[0]
 
-	Local $aWmiQuery = WmiQuery($Query)
-	If UBound($aWmiQuery) > 0 and not @error Then
-		For $Process In $aWmiQuery
-			SetDebugLog($Process[0] & " = " & $Process[2])
-			Local $processCommandLineCompare = StringReplace(StringReplace(StringReplace(StringReplace($Process[2], ".exe", "", 1), " ", ""), '"', ""), "'", "")
-			If ($CompareMode = 0 And $commandLineCompare = $processCommandLineCompare) Or _
-					($CompareMode = 0 And StringRight($commandLineCompare, StringLen($processCommandLineCompare)) = $processCommandLineCompare) Or _
-					($CompareMode = 0 And $CompareCommandLineFunc <> "" And Execute($CompareCommandLineFunc & "(""" & StringReplace($Process[2], """", "") & """)") = True) Or _
-					$CompareMode = 1 Then
-	
-				$pid = Number($Process[0])
-				ReDim $PIDs[$i + 1]
-				Local $a = $pid
-				If $bReturnDetailedArray Then
-					Local $a = [$pid, $Process[1], $Process[2]]
-				EndIf
-				$PIDs[$i] = $a
-				$i += 1
-	
-				$Process = 0
+	For $Process In WmiQuery($query)
+		SetDebugLog($Process[0] & " = " & $Process[2])
+		Local $processCommandLineCompare = StringReplace(StringReplace(StringReplace(StringReplace($Process[2], ".exe", "", 1), " ", ""), '"', ""), "'", "")
+		If ($CompareMode = 0 And $commandLineCompare = $processCommandLineCompare) Or _
+				($CompareMode = 0 And StringRight($commandLineCompare, StringLen($processCommandLineCompare)) = $processCommandLineCompare) Or _
+				($CompareMode = 0 And $CompareCommandLineFunc <> "" And Execute($CompareCommandLineFunc & "(""" & StringReplace($Process[2], """", "") & """)") = True) Or _
+				$CompareMode = 1 Then
+
+			$pid = Number($Process[0])
+			ReDim $PIDs[$i + 1]
+			Local $a = $pid
+			If $bReturnDetailedArray Then
+				Local $a = [$pid, $Process[1], $Process[2]]
 			EndIf
-		Next
-	EndIf
+			$PIDs[$i] = $a
+			$i += 1
+
+			$Process = 0
+		EndIf
+	Next
 	If $i = 0 Then
 		SetDebugLog("No process found by CommandLine: " & $ProgramPath & ($ProgramParameter = "" ? "" : " " & $ProgramParameter))
 	Else
@@ -212,17 +206,14 @@ Func ProcessGetCommandLine($pid, $strComputer = ".")
 	Local $query = "Select " & GetWmiSelectFields() & " from Win32_Process where Handle = " & $pid
 	Local $i = 0
 
-	Local $aWmiQuery = WmiQuery($Query)
-	If UBound($aWmiQuery) > 0 and not @error Then
-		For $Process In $aWmiQuery
-			SetDebugLog($Process[0] & " = " & $Process[2])
-			SetError(0, 0, 0)
-			Local $sProcessCommandLine = $Process[2]
-			$Process = 0
-			CloseWmiObject()
-			Return $sProcessCommandLine
-		Next
-	EndIf
+	For $Process In WmiQuery($query)
+		SetDebugLog($Process[0] & " = " & $Process[2])
+		SetError(0, 0, 0)
+		Local $sProcessCommandLine = $Process[2]
+		$Process = 0
+		CloseWmiObject()
+		Return $sProcessCommandLine
+	Next
 	SetDebugLog("Process not found with PID " & $pid)
 	$Process = 0
 	CloseWmiObject()
@@ -238,15 +229,12 @@ Func ProcessGetWmiProcess($pid, $strComputer = ".")
 	Local $query = "Select " & GetWmiSelectFields() & " from Win32_Process where Handle = " & $pid
 	Local $i = 0
 
-	Local $aWmiQuery = WmiQuery($Query)
-	If UBound($aWmiQuery) > 0 and not @error Then
-		For $Process In $aWmiQuery
-			SetDebugLog($Process[0] & " = " & $Process[2])
-			SetError(0, 0, 0)
-			CloseWmiObject()
-			Return $Process
-		Next
-	EndIf
+	For $Process In WmiQuery($query)
+		SetDebugLog($Process[0] & " = " & $Process[2])
+		SetError(0, 0, 0)
+		CloseWmiObject()
+		Return $Process
+	Next
 	SetDebugLog("Process not found with PID " & $pid)
 	$Process = 0
 	CloseWmiObject()

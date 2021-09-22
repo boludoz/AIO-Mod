@@ -16,13 +16,14 @@
 Func waitMainScreen() ;Waits for main screen to popup
 	If Not $g_bRunState Then Return
 	Local $iCount
-	SetLog("Waiting for Main Screen", $COLOR_ACTION)
+	SetLog("Waiting for Main Screen", $COLOR_INFO) ; Custom - Team AIO Mod++
 	$iCount = 0
 	Local $aPixelToCheck = $g_bStayOnBuilderBase ? $aIsOnBuilderBase : $aIsMain
 	For $i = 0 To 105 ;105*2000 = 3.5 Minutes
 		If Not $g_bRunState Then Return
 		If $g_bDebugSetlog Then SetDebugLog("waitMainScreen ChkObstl Loop = " & $i & ", ExitLoop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop
 		$iCount += 1
+		SetLog("[" & $iCount & "] " & "Waiting for main screen.", $COLOR_ACTION) ; Custom - Team AIO Mod++
 		Local $hWin = $g_hAndroidWindow
 		If TestCapture() = False Then
 			If WinGetAndroidHandle() = 0 Then
@@ -86,63 +87,32 @@ Func waitMainScreen() ;Waits for main screen to popup
 EndFunc   ;==>waitMainScreen
 
 Func waitMainScreenMini()
-	Static $bActiveMain = False
-	
-	If $bActiveMain = True Then Return
-	
-	$bActiveMain = True
-	
-	If Not $g_bRunState Then
-		$bActiveMain = False
-		Return
-	EndIf
-
-	Local $hTimer = __TimerInit()
-
-	If TestCapture() = False Then getBSPos() ; Update Android Window Positions
-	SetLog("Waiting for Main Screen " & $g_sAndroidEmulator, $COLOR_INFO)
-	Local $aPixelToCheck = ($g_bStayOnBuilderBase = True) ? ($aIsOnBuilderBase) : ($aIsMain)
-	Local $iTry = 0
+	If Not $g_bRunState Then Return
 	Local $iCount = 0
-	Local $iSeconds = 120
-	While __TimerDiff($hTimer) < ($iSeconds * 1000)
-		
+	Local $hTimer = __TimerInit()
+	SetDebugLog("waitMainScreenMini")
+	If TestCapture() = False Then getBSPos() ; Update Android Window Positions
+	SetLog("Waiting for Main Screen after " & $g_sAndroidEmulator & " restart", $COLOR_INFO)
+	Local $aPixelToCheck = $g_bStayOnBuilderBase ? $aIsOnBuilderBase : $aIsMain
+	For $i = 0 To 105 ; Like waitMainScreen
+		If Not $g_bRunState Then Return
 		If Not TestCapture() And WinGetAndroidHandle() = 0 Then ExitLoop ; sets @error to 1
-		
+		If $g_bDebugSetlog Then SetDebugLog("waitMainScreenMini ChkObstl Loop = " & $i & " ExitLoop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop
 		$iCount += 1
-		SetLog("[" & $iCount & "] " & "Waiting for main screen.", $COLOR_ACTION) ; Debug stuck loop
-		
-		If _Sleep(1500) Then
-			$bActiveMain = False
-			Return
-		EndIf
-		
+		SetLog("[" & $iCount & "] " & "Waiting for main screen.", $COLOR_ACTION) ; Custom - Team AIO Mod++
+		_CaptureRegion()
 		If Not _CheckPixel($aPixelToCheck, $g_bNoCapturePixel) Then ;Checks for Main Screen
-			If Not TestCapture() Then
-				$bActiveMain = False
-				Return
-			EndIf
-			
-			If CheckObstacles() Then 
-				$iTry += 1
-			EndIf
+			If Not TestCapture() And _Sleep(1000) Then Return
+			If CheckObstacles() Then $i = 0 ;See if there is anything in the way of mainscreen
 		Else
-			SetLog("Coc main window took " & Round(__TimerDiff($hTimer) / 1000, 2) & " seconds", $COLOR_SUCCESS)
-			$bActiveMain = False
+			SetLog("CoC main window took " & Round(__TimerDiff($hTimer) / 1000, 2) & " seconds", $COLOR_SUCCESS)
 			Return
 		EndIf
-		
-		
 		_StatusUpdateTime($hTimer, "Main Screen")
-
-		If ($iTry > 10) Or ($iCount > 60) Then
-			If TestCapture() Then
-				$bActiveMain = False
-				Return "Main screen not available"
-			EndIf
+		If ($i > 105) Or ($iCount > 120) Then ExitLoop ; If CheckObstacles forces reset, limit total time to 6 minute before Force restart BS
+		If TestCapture() Then
+			Return "Main screen not available"
 		EndIf
-		
-	WEnd
-	$bActiveMain = False
+	Next
 	Return SetError(1, 0, -1)
 EndFunc   ;==>waitMainScreenMini

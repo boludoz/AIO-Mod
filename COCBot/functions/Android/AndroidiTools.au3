@@ -72,22 +72,21 @@ Func GetiToolsProgramParameter($bAlternative = False)
 EndFunc   ;==>GetiToolsProgramParameter
 
 Func GetiToolsPath()
-	Local $iTools_Path = EnvGet("iToolsPath")
-	If FileExists($iTools_Path & "iToolsAVM.exe") = 0 Then
-		Local $InstallLocation = RegRead($g_sHKLM & "\SOFTWARE" & $g_sWow6432Node & "\ThinkSky\iToolsAVM\", "InstallLocation")
-		If @error = 0 And FileExists($InstallLocation & "\iToolsAVM.exe") = 1 Then
-			$iTools_Path = $InstallLocation
-		Else
-			Local $DisplayIcon = RegRead($g_sHKLM & "\SOFTWARE" & $g_sWow6432Node & "\ThinkSky\iToolsAVM\", "DisplayIcon")
-			If @error = 0 Then
-				Local $iLastBS = StringInStr($DisplayIcon, "\", 0, -1)
-				$iTools_Path = StringLeft($DisplayIcon, $iLastBS)
-				If StringLeft($iTools_Path, 1) = """" Then $iTools_Path = StringMid($iTools_Path, 2)
-			Else
-				$iTools_Path = @ProgramFilesDir & "\ThinkSky\iToolsAVM\"
-				SetError(0, 0, 0)
-			EndIf
-		EndIf
+	Local $iTools_Path = "" ;RegRead($g_sHKLM & "\SOFTWARE\iTools\iTools VM\", "InstallDir")
+	If $iTools_Path <> "" And FileExists($iTools_Path & "\iToolsAVM.exe") = 0 Then
+		$iTools_Path = ""
+	EndIf
+	Local $InstallLocation = ""
+	Local $DisplayIcon = RegRead($g_sHKLM & "\SOFTWARE" & $g_sWow6432Node & "\Microsoft\Windows\CurrentVersion\Uninstall\iToolsAVM\", "DisplayIcon")
+	If @error = 0 Then
+		Local $iLastBS = StringInStr($DisplayIcon, "\", 0, -1) - 1
+		$InstallLocation = StringLeft($DisplayIcon, $iLastBS)
+	EndIf
+	If $iTools_Path = "" And FileExists($InstallLocation & "\iToolsAVM.exe") = 1 Then
+		$iTools_Path = $InstallLocation
+	EndIf
+	If $iTools_Path = "" And FileExists(@ProgramFilesDir & "\iToolsAVM\iToolsAVM.exe") = 1 Then
+		$iTools_Path = @ProgramFilesDir & "\iToolsAVM"
 	EndIf
 	SetError(0, 0, 0)
 	If $iTools_Path <> "" And StringRight($iTools_Path, 1) <> "\" Then $iTools_Path &= "\"
@@ -95,50 +94,14 @@ Func GetiToolsPath()
 EndFunc   ;==>GetiToolsPath
 
 Func GetiToolsAdbPath()
-	Local $adbPath = EnvGet("iToolsADB")
-	If FileExists($adbPath & "adb.exe") = 0 Then
-		Local $ADBLocation = RegRead($g_sHKLM & "\SOFTWARE" & $g_sWow6432Node & "\ThinkSky\iToolsAVM", "ADBLocation")
-		If @error = 0 And FileExists($ADBLocation & "\adb.exe") = 1 Then
-			$adbPath = $ADBLocation
-		Else
-			Local $DisplayIcon = RegRead($g_sHKLM & "\SOFTWARE" & $g_sWow6432Node & "\ThinkSky\iToolsAVM", "DisplayIcon")
-			If @error = 0 Then
-				Local $iLastBS = StringInStr($DisplayIcon, "", 0, -1)
-				$adbPath = StringLeft($DisplayIcon, $iLastBS)
-				If StringLeft($adbPath, 1) = """" Then $adbPath = StringMid($adbPath, 2) & "\tools"
-			Else
-				$adbPath = @ProgramFilesDir & "\ThinkSky\iToolsAVM\tools"
-				SetError(0, 0, 0)
-			EndIf
-		EndIf
-	EndIf
-	$adbPath &= "\adb.exe"
-	$adbPath = StringReplace($adbPath, "\\", "\")
-	Return $adbPath
+	Local $adbPath = GetiToolsPath() & "tools\adb.exe"
+	If FileExists($adbPath) Then Return $adbPath
+	Return ""
 EndFunc   ;==>GetiToolsAdbPath
-
-Func GetiToolsBackgroundMode()
-	Local $iDirectX = $g_iAndroidBackgroundModeDirectX
-	Local $iOpenGL = $g_iAndroidBackgroundModeOpenGL
-	Local $graphics_render_mode = $g_iAndroidBackgroundModeDirectX = 1 ? 2 : 1
-	If @error = 0 Then
-		SetDebugLog($g_sAndroidEmulator & " instance " & $g_sAndroidInstance & " rendering mode is " & $graphics_render_mode)
-		Switch $graphics_render_mode
-			Case "1"
-				Return $iOpenGL
-			Case "2"
-				Return $iDirectX
-			Case Else
-				Return $iOpenGL
-		EndSwitch
-	EndIf
-	Return $iOpenGL
-EndFunc   ;==>GetiToolsBackgroundMode
 
 Func InitiTools($bCheckOnly = False)
 	Local $process_killed, $aRegExResult, $g_sAndroidAdbDeviceHost, $g_sAndroidAdbDevicePort, $oops = 0
-	Local $iToolsVersion = FileGetVersion(GetiToolsPath() & "iToolsAVM.exe")
-	$g_sAndroidVersion = $iToolsVersion
+	;Local $iToolsVersion = RegRead($g_sHKLM & "\SOFTWARE" & $g_sWow6432Node & "\Microsoft\Windows\CurrentVersion\Uninstall\iTools\", "DisplayVersion")
 	SetError(0, 0, 0)
 
 	Local $VirtualBox_Path = RegRead($g_sHKLM & "\SOFTWARE\Oracle\VirtualBox\", "InstallDir")
@@ -268,7 +231,7 @@ Func SetScreeniTools()
 	; Set dpi
 	$cmdOutput = LaunchConsole($__VBoxManage_Path, "guestproperty set " & $g_sAndroidInstance & " vbox_dpi 160", $process_killed)
 
-    ;vboxmanage sharedfolder add iTools --name picture --hostpath "C:\Users\Administrator\Pictures\iTools Photo" --automount
+	;vboxmanage sharedfolder add iTools --name picture --hostpath "C:\Users\Administrator\Pictures\iTools Photo" --automount
 	ConfigureSharedFolder(1, True)
 	ConfigureSharedFolder(2, True)
 
@@ -284,7 +247,6 @@ EndFunc   ;==>RebootiToolsSetScreen
 
 Func CloseiTools()
 
-	CloseEmulatorForce() ; Custom fix - Team AIO Mod++
 	Return CloseVboxAndroidSvc()
 
 EndFunc   ;==>CloseiTools
@@ -304,17 +266,9 @@ Func CheckScreeniTools($bSetLog = True)
 		If @error = 0 Then $Value = $aRegExResult[0]
 		If $Value <> $aValues[$i][1] Then
 			If $iErrCnt = 0 Then
-				If $bSetLog Then
-					SetGuiLog("MyBot doesn't work with " & $g_sAndroidEmulator & " screen configuration!", $COLOR_ERROR)
-				Else
-					SetDebugLog("MyBot doesn't work with " & $g_sAndroidEmulator & " screen configuration!", $COLOR_ERROR)
-				EndIf
+				SetGuiLog("MyBot doesn't work with " & $g_sAndroidEmulator & " screen configuration!", $COLOR_ERROR, $bSetLog)
 			EndIf
-			If $bSetLog Then
-				SetGuiLog("Setting of " & $aValues[$i][0] & " is " & $value & " and will be changed to " & $aValues[$i][1], $COLOR_ERROR)
-			Else
-				SetDebugLog("Setting of " & $aValues[$i][0] & " is " & $value & " and will be changed to " & $aValues[$i][1], $COLOR_ERROR)
-			EndIf
+			SetGuiLog("Setting of " & $aValues[$i][0] & " is " & $Value & " and will be changed to " & $aValues[$i][1], $COLOR_ERROR, $bSetLog)
 			$iErrCnt += 1
 		EndIf
 	Next
