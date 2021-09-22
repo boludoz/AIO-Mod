@@ -439,7 +439,7 @@ Func InitializeMBR(ByRef $sAI, $bConfigRead)
 			"With the first command line parameter, specify the Profilename (you can create profiles on the Bot/Profiles tab, if a " & _
 			"profilename contains a {space}, then enclose the profilename in double quotes). " & _
 			"With the second, specify the name of the Emulator and with the third, an Android Instance (not for BlueStacks). \r\n" & _
-			"Supported Emulators are MEmu, Droid4X, Nox, BlueStacks2, BlueStacks, KOPlayer and LeapDroid.\r\n\r\n" & _
+			"Supported Emulators are MEmu, Nox, BlueStacks2, BlueStacks and iTools.\r\n\r\n" & _
 			"Examples:\r\n" & _
 			"     MyBot.run.exe MyVillage BlueStacks2\r\n" & _
 			"     MyBot.run.exe ""My Second Village"" MEmu MEmu_1")
@@ -517,7 +517,7 @@ Func SetupFilesAndFolders()
 	DirCreate($g_sProfileLootsPath)
 	DirCreate($g_sProfileTempPath)
 	DirCreate($g_sProfileTempDebugPath)
-	DirCreate($g_sProfileTempDebugDOCRPath)
+	DirCreate($g_sProfileTempDebugDOCRPath) ; Dissociable - Team AIO Mod++
 
 	$g_sProfileDonateCapturePath = $g_sProfilePath & "\" & $g_sProfileCurrentName & '\Donate\'
 	$g_sProfileDonateCaptureWhitelistPath = $g_sProfilePath & "\" & $g_sProfileCurrentName & '\Donate\White List\'
@@ -879,11 +879,11 @@ Func runBot() ;Bot that runs everything in order
 				EndIf
 				If $g_bRestart Then ContinueLoop
 			EndIf
-			; Train Donate only - force a donate cc everytime
+			; Train Donate only - force a donate cc every time
 			If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) Then _RunFunction('DonateCC,Train')
 			If $g_bRestart Then ContinueLoop
 			If $g_bChkOnlyFarm = False Then MainSXHandler() ; Super XP - Team AIO Mod++
-			Local $aRndFuncList = ['Laboratory', 'UpgradeHeroes', 'UpgradeBuilding']
+			Local $aRndFuncList = ['Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'PetHouse']
 			_ArrayShuffle($aRndFuncList)
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
@@ -896,7 +896,7 @@ Func runBot() ;Bot that runs everything in order
 			If Not $g_bIsSearchLimit Then _ClanGames() ; move to here to pick event before going to BB.
 
 			; Ensure, that wall upgrade is last of the upgrades
-			Local $aRndFuncList = ['BuilderBase', 'UpgradeWall']
+			Local $aRndFuncList = ['UpgradeWall', 'BuilderBase'] ;Copied BuilderBase to AttackMain
 			_ArrayShuffle($aRndFuncList)
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
@@ -1154,6 +1154,8 @@ Func AttackMain() ;Main control for attack functions
 				; Check error count.
 				If $iErrorCount > 3 Then
 					SetLog("Error: AttackMain bad.", $COLOR_ERROR)
+					; Restart or stop in case.
+					If Not $g_bRunState Or $g_bOutOfGold Or $g_bRestart Then Return
 					ExitLoop
 				EndIf
 
@@ -1164,6 +1166,8 @@ Func AttackMain() ;Main control for attack functions
 				PrepareSearch()
 				If $g_bBadPrepareSearch = True Then
 					SetLog("Error: AttackMain (1)", $COLOR_ERROR)
+					; Restart or stop in case.
+					If Not $g_bRunState Or $g_bOutOfGold Or $g_bRestart Then Return
 					ContinueLoop
 				EndIf
 
@@ -1174,6 +1178,8 @@ Func AttackMain() ;Main control for attack functions
 				VillageSearch()
 				If $g_bBadPrepareSearch = True Then
 					SetLog("Error: AttackMain (2)", $COLOR_ERROR)
+					; Restart or stop in case.
+					If Not $g_bRunState Or $g_bOutOfGold Or $g_bRestart Then Return
 					ContinueLoop
 				EndIf
 
