@@ -177,7 +177,7 @@ Func ZoomBuilderBaseMecanics($bForceZoom = Default, $bVersusMode = Default, $bDe
 
 	Local $i = 0
 	Do
-		Setlog("Builder base force Zoomout ? " & $bForceZoom)
+		SetDebugLog("Builder base force Zoomout ? " & $bForceZoom)
 
 		If Not $g_bRunState Then Return
 
