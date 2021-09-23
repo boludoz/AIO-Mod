@@ -80,6 +80,10 @@ Func _ClanGames($test = False)
 				Return
 			ElseIf $aiScoreLimit[0] + 300 > $aiScoreLimit[1] Then
 				SetLog("Your Score limit is almost reached")
+				
+				; Custom BB - Team AIO Mod++
+				$g_bIsCaravanOn = "False"
+				
 				If $g_bChkClanGamesStopBeforeReachAndPurge Then
 					$sTimeCG = ConvertOCRTime("ClanGames()", $g_sClanGamesTimeRemaining, True)
 					Setlog("Clan Games Minute Remain: " & $sTimeCG)
