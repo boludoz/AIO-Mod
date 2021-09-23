@@ -235,6 +235,7 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 							$sDropSide = "FRONTE"
 						EndIf
 					EndIf
+					
 					; Gets Verify Quantities on Slot and what is necessary
 					Local $iTotalQtyByTroop = 0
 					For $i = 0 To UBound($aAvailableTroops_NXQ) - 1
@@ -242,8 +243,9 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 							$iTotalQtyByTroop += $aAvailableTroops_NXQ[$i][4]
 						EndIf
 					Next
-					Local $iQtyToDrop = $sQty = "ALL" ? $iTotalQtyByTroop : Int($sQty)
-
+					
+					Local $iQtyToDrop = ($sQty = "ALL") ? ($iTotalQtyByTroop) : (_Min(Int($sQty), $iTotalQtyByTroop)) ; A true dev do not overlook this.
+					
 					; DROP_POINTS_: Can Be Defined Like e.g Single Drop Point(5),Multi Drop Point(2,4,6),Multi Start To End(2-6)
 					; Each side will have 10 points 1-10 , the 5 is the Middle , 0 = closest to BuilderHall
 					; $aDROP[3]
@@ -670,6 +672,8 @@ Func VerifySlotTroop($sTroopName, ByRef $aSlot_XY, ByRef $iQtyOfSelectedSlot, By
 EndFunc   ;==>VerifySlotTroop
 
 Func DeployTroopBB($sTroopName, $aSlot_XY, $Point2Deploy, $iQtyToDrop)
+	If $iQtyToDrop < 1 Then Return False
+	
 	SetDebugLog("[" & _ArrayToString($aSlot_XY) & "] - Deploying " & $iQtyToDrop & " " & FullNametroops($sTroopName) & " At " & $Point2Deploy[0] & " x " & $Point2Deploy[1], $COLOR_INFO)
 	PureClickP($Point2Deploy, $iQtyToDrop, 0)
 
@@ -682,7 +686,8 @@ Func DeployTroopBB($sTroopName, $aSlot_XY, $Point2Deploy, $iQtyToDrop)
 			If ($g_aMachineBB[0] <> -1) Then
 				If _Sleep(1000) Then Return
 				$g_aMachineBB[2] = Not _ColorCheckSubjetive(_GetPixelColor($g_aMachineBB[0], 635, True), "FFFFFF", 5)
-				SetLog("- BB Machine is ok? " & $g_aMachineBB[2], $COLOR_INFO)
+				Local $sSay = ($g_aMachineBB[2] == True) ? ("Yeah! It's Deployed!") : (False)
+				SetLog("- BB Machine is ok? " & $sSay, $COLOR_INFO)
 			EndIf
 		EndIf
 	EndIf
