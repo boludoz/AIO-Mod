@@ -108,7 +108,7 @@ Func GoldElixirChangeEBO()
 			If _Sleep($DELAYGOLDELIXIRCHANGEEBO2) Then Return
 		EndIf
 
-		;--> Read Resources #2
+		;--> Read Ressources #2
 		$Gold2 = getGoldVillageSearch(48, 69)
 		If $Gold2 = "" Then
 			If _Sleep($DELAYGOLDELIXIRCHANGEEBO1) Then Return
@@ -125,7 +125,7 @@ Func GoldElixirChangeEBO()
 			$Trophies = getTrophyVillageSearch(48, 69 + 69)
 		EndIf
 		$CurDamage = getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY)
-		;--> Read Resources #2
+		;--> Read Ressources #2
 
 		CheckHeroesHealth()
 
@@ -192,12 +192,6 @@ Func GoldElixirChangeEBO()
 			If _Sleep($DELAYGOLDELIXIRCHANGEEBO2) Then Return
 			ExitLoop
 		EndIf
-		
-		#Region - Custom - Team AIO Mod++
-		If ($txtDiff = "0s") Then
-			Return False	; End Battle
-		EndIf
-		#EndRegion - Custom - Team AIO Mod++
 
 		;EXIT IF TWO STARS REACH
 		If $g_abStopAtkTwoStars[$g_iMatchMode] And _CheckPixel($aWonTwoStar, True) Then

@@ -1126,86 +1126,27 @@ Func AttackMain() ;Main control for attack functions
 				SetDebugLog(_PadStringCenter(" Hero status check" & BitAND($g_aiAttackUseHeroes[$LB], $g_aiSearchHeroWaitEnable[$LB], $g_iHeroAvailable) & "|" & $g_aiSearchHeroWaitEnable[$LB] & "|" & $g_iHeroAvailable, 54, "="), $COLOR_DEBUG)
 				;SetLog("BullyMode: " & $g_abAttackTypeEnable[$TB] & ", Bully Hero: " & BitAND($g_aiAttackUseHeroes[$g_iAtkTBMode], $g_aiSearchHeroWaitEnable[$g_iAtkTBMode], $g_iHeroAvailable) & "|" & $g_aiSearchHeroWaitEnable[$g_iAtkTBMode] & "|" & $g_iHeroAvailable, $COLOR_DEBUG)
 			EndIf
-
 			;_ClanGames() ;Trying to do this above in the main loop
 			;ClickAway()
 			If $g_bUpdateSharedPrefs Then PullSharedPrefs()
-
-			#Region - Custom PrepareSearch - Team AIO Mod++
-			Local $iErrorCount = 0
-			Do
-				; Add error to count.
-				$iErrorCount += 1
-
-				; Check main.
-				checkMainScreen(False)
-				If Not $g_bRunState Or $g_bRestart Then Return
-
-				; Litle sleep.
-				If RandomSleep($DELAYATTACKMAIN1) Then Return
-
-				; Check error count.
-				If $iErrorCount > 3 Then
-					SetLog("Error: AttackMain bad.", $COLOR_ERROR)
-					; Restart or stop in case.
-					If Not $g_bRunState Or $g_bOutOfGold Or $g_bRestart Then Return
-					ExitLoop
-				EndIf
-
-				; Prevents bot stucks in bad AttackMain case.
-				$g_bBadPrepareSearch = False
-
-				; Prepare search and check if it isn't in main (bad PrepareSearch case).
-				PrepareSearch()
-				If $g_bBadPrepareSearch = True Then
-					SetLog("Error: AttackMain (1)", $COLOR_ERROR)
-					; Restart or stop in case.
-					If Not $g_bRunState Or $g_bOutOfGold Or $g_bRestart Then Return
-					ContinueLoop
-				EndIf
-
-				; Restart or stop in case.
-				If Not $g_bRunState Or $g_bOutOfGold Or $g_bRestart Then Return
-
-				; Search village and check if it isn't in main (bad PrepareSearch case).
-				VillageSearch()
-				If $g_bBadPrepareSearch = True Then
-					SetLog("Error: AttackMain (2)", $COLOR_ERROR)
-					; Restart or stop in case.
-					If Not $g_bRunState Or $g_bOutOfGold Or $g_bRestart Then Return
-					ContinueLoop
-				EndIf
-
-				; Restart or stop in case.
-				If Not $g_bRunState Or $g_bOutOfGold Or $g_bRestart Then Return
-
-				; Simple PrepareAttack.
-				PrepareAttack($g_iMatchMode)
-				If Not $g_bRunState Or $g_bRestart Then Return
-
-				; Simple Attack.
-				Attack()
-				If Not $g_bRunState Or $g_bRestart Then Return
-
-				; Simple ReturnHome.
-				ReturnHome($g_bTakeLootSnapShot)
-				If Not $g_bRunState Or $g_bRestart Then Return
-
-				If RandomSleep($DELAYATTACKMAIN2) Then Return
-
-				; If all is ok get out.
-			Until $g_bBadPrepareSearch = False
-			Return True
-			#EndRegion - Custom PrepareSearch - Team AIO Mod++
-
-			#Region - Custom fix - Team AIO Mod++
-		ElseIf $g_bDropTrophyEnable And Number($g_aiCurrentLoot[$eLootTrophy]) > Number($g_iDropTrophyMax) Then ;If current trophy above max trophy, try drop first
-			DropTrophy()
+			PrepareSearch()
+			If Not $g_bRunState Then Return
+			If $g_bOutOfGold Then Return ; Check flag for enough gold to search
+			If $g_bRestart Then Return
+			VillageSearch()
+			If $g_bOutOfGold Then Return ; Check flag for enough gold to search
 			If Not $g_bRunState Then Return
 			If $g_bRestart Then Return
-			If _Sleep($DELAYATTACKMAIN1) Then Return
-			Return ; return to runbot, refill armycamps
-			#EndRegion - Custom fix - Team AIO Mod++
+			PrepareAttack($g_iMatchMode)
+			If Not $g_bRunState Then Return
+			If $g_bRestart Then Return
+			Attack()
+			If Not $g_bRunState Then Return
+			If $g_bRestart Then Return
+			ReturnHome($g_bTakeLootSnapShot)
+			If Not $g_bRunState Then Return
+			If _Sleep($DELAYATTACKMAIN2) Then Return
+			Return True
 		Else
 			SetLog("None of search condition match:", $COLOR_WARNING)
 			SetLog("Search, Trophy or Army Camp % are out of range in search setting", $COLOR_WARNING)

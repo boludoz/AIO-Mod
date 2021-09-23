@@ -291,46 +291,10 @@ Func BotSearchMode()
 	If _Sleep(100) Then Return FuncReturn()
 	If (IsSearchModeActive($DB) And checkCollectors(True, False)) Or IsSearchModeActive($LB) Then
 		If _Sleep(100) Then Return FuncReturn()
-		#Region - Custom PrepareSearch - Team AIO Mod++
-		Local $iErrorCount = 0
-		Do
-			$iErrorCount += 1
-
-			If _Sleep($DELAYATTACKMAIN1) Then Return FuncReturn()
-			
-			checkMainScreen(False)
-			If Not $g_bRunState Or $g_bRestart Then Return FuncReturn()
-
-			If $iErrorCount > 3 Then
-				SetLog("Error: BotSearchMode bad.", $COLOR_ERROR)
-				ExitLoop
-			EndIf
-
-			; Prevents bot stucks in bad BotSearchMode case.
-			$g_bBadPrepareSearch = False
-
-			If _Sleep(100) Then Return FuncReturn()
-
-			PrepareSearch()
-			If $g_bBadPrepareSearch = True Then
-				SetLog("Error: BotSearchMode (1)", $COLOR_ERROR)
-				ContinueLoop
-			EndIf
-			
-			If Not $g_bRunState Or $g_bOutOfGold Or $g_bRestart Then Return
-
-			If _Sleep(100) Then Return FuncReturn()
-
-			VillageSearch()
-			If $g_bBadPrepareSearch = True Then
-				SetLog("Error: BotSearchMode (2)", $COLOR_ERROR)
-				ContinueLoop
-			EndIf
-			
-			If Not $g_bRunState Or $g_bOutOfGold Or $g_bRestart Then Return
-
-		Until $g_bBadPrepareSearch = False
-		#EndRegion - Custom PrepareSearch - Team AIO Mod++
+		PrepareSearch()
+		If _Sleep(1000) Then Return FuncReturn()
+		VillageSearch()
+		If _Sleep(100) Then Return FuncReturn()
 	Else
 		SetLog("Your Army is not prepared, check the Attack/train options")
 	EndIf
