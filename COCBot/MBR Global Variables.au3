@@ -113,7 +113,7 @@ Global $g_aiSearchEnableDebugDeadBaseImage = 200 ; If $g_iDebugDeadBaseImage is 
 Global $g_bDebugOCRdonate = False ; Creates OCR/image data and simulate, but do not donate
 ; <><><><> Only enable this when debugging Android zoom out issues! <><><><>
 Global $g_bDebugDisableZoomout = False
-Global $g_bVillageSearchAlwaysMeasure = False ; If enabled, every village is measured, even if not attacked
+Global $g_bVillageSearchAlwaysMeasure = True ; If enabled, every village is measured, even if not attacked
 Global $g_bDebugDisableVillageCentering = False
 Global $g_iAndroidZoomoutMode = 0 ; 0 = Default, 1 = ADB minitouch script, 2 = ADB dd script, 3 = WinAPI, 4 = Update shared_prefs
 Global $g_bZoomoutFailureNotRestartingAnything = False

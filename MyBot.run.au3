@@ -72,7 +72,6 @@ getAllEmulators()
 MainLoop(CheckPrerequisites())
 
 Func UpdateBotTitle()
-	If $g_bDebugFuncCall Then SetLog('@@ (76) :(' & @MIN & ':' & @SEC & ') UpdateBotTitle()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 	Local $sTitle = "My Bot " & $g_sBotVersion & " - " & "AiO++ MOD " & $g_sModVersion & " -" ; AIO Mod
 	Local $sConsoleTitle ; Console title has also Android Emulator Name
 	If $g_sBotTitle = "" Then
@@ -96,7 +95,6 @@ Func UpdateBotTitle()
 EndFunc   ;==>UpdateBotTitle
 
 Func InitializeBot()
-	If $g_bDebugFuncCall Then SetLog('@@ (100) :(' & @MIN & ':' & @SEC & ') InitializeBot()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 
 	ProcessCommandLine()
 
@@ -191,7 +189,6 @@ EndFunc   ;==>InitializeBot
 ; Example .......: No
 ; ===============================================================================================================================
 Func ProcessCommandLine()
-	If $g_bDebugFuncCall Then SetLog('@@ (195) :(' & @MIN & ':' & @SEC & ') ProcessCommandLine()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 
 	; Handle Command Line Launch Options and fill $g_asCmdLine
 	If $CmdLine[0] > 0 Then
@@ -288,7 +285,6 @@ EndFunc   ;==>ProcessCommandLine
 ; Example .......: No
 ; ===============================================================================================================================
 Func InitializeAndroid($bConfigRead)
-	If $g_bDebugFuncCall Then SetLog('@@ (292) :(' & @MIN & ':' & @SEC & ') InitializeAndroid()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 
 	Local $s = GetTranslatedFileIni("MBR GUI Design - Loading", "StatusBar_Item_06", "Initializing Android...")
 	SplashStep($s)
@@ -350,7 +346,6 @@ EndFunc   ;==>InitializeAndroid
 ; Example .......: No
 ; ===============================================================================================================================
 Func SetupProfileFolder()
-	If $g_bDebugFuncCall Then SetLog('@@ (354) :(' & @MIN & ':' & @SEC & ') SetupProfileFolder()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 	If $g_bDebugSetlog Then SetDebugLog("SetupProfileFolder: " & $g_sProfilePath & "\" & $g_sProfileCurrentName)
 	$g_sProfileConfigPath = $g_sProfilePath & "\" & $g_sProfileCurrentName & "\config.ini"
 	$g_sProfileBuildingStatsPath = $g_sProfilePath & "\" & $g_sProfileCurrentName & "\stats_buildings.ini"
@@ -381,7 +376,6 @@ EndFunc   ;==>SetupProfileFolder
 ; Example .......: No
 ; ===============================================================================================================================
 Func InitializeMBR(ByRef $sAI, $bConfigRead)
-	If $g_bDebugFuncCall Then SetLog('@@ (385) :(' & @MIN & ':' & @SEC & ') InitializeMBR()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 
 	; license
 	If Not FileExists(@ScriptDir & "\License.txt") Then
@@ -494,7 +488,6 @@ EndFunc   ;==>InitializeMBR
 ; Example .......: No
 ; ===============================================================================================================================
 Func SetupFilesAndFolders()
-	If $g_bDebugFuncCall Then SetLog('@@ (498) :(' & @MIN & ':' & @SEC & ') SetupFilesAndFolders()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 
 	;Migrate old shared_prefs locations
 	Local $sOldProfiles = @MyDocumentsDir & "\MyBot.run-Profiles"
@@ -570,7 +563,6 @@ EndFunc   ;==>SetupFilesAndFolders
 ; Example .......: No
 ; ===============================================================================================================================
 Func FinalInitialization(Const $sAI)
-	If $g_bDebugFuncCall Then SetLog('@@ (573) :(' & @MIN & ':' & @SEC & ') FinalInitialization()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 	; check for VC2010, .NET software and MyBot Files and Folders
 	Local $bCheckPrerequisitesOK = CheckPrerequisites(True)
 	If $bCheckPrerequisitesOK Then
@@ -672,7 +664,6 @@ EndFunc   ;==>FinalInitialization
 ; Example .......: No
 ; ===============================================================================================================================
 Func MainLoop($bCheckPrerequisitesOK = True)
-	If $g_bDebugFuncCall Then SetLog('@@ (674) :(' & @MIN & ':' & @SEC & ') MainLoop()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 	Local $iStartDelay = 0
 
 	If $bCheckPrerequisitesOK And ($g_bAutoStart Or $g_bRestarted) Then
@@ -736,7 +727,6 @@ Func MainLoop($bCheckPrerequisitesOK = True)
 EndFunc   ;==>MainLoop
 
 Func runBot() ;Bot that runs everything in order
-	If $g_bDebugFuncCall Then SetLog('@@ (734) :(' & @MIN & ':' & @SEC & ') runBot()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 	Local $iWaitTime
 	InitiateSwitchAcc()
 	If ProfileSwitchAccountEnabled() And $g_bReMatchAcc Then
@@ -746,8 +736,15 @@ Func runBot() ;Bot that runs everything in order
 
 	; Skip first attack - Custom Team AIO Mod++
 	Local $bDoFirsCheck = ($g_bChkSkipFirstAttack <> True)
-
+	
 	While 1
+		If FileExists(@ScriptDir & "\EnableMBRDebug.txt") Then
+			While (FileReadLine(@ScriptDir & "\EnableMBRDebug.txt") = "wait")
+				If _SleepStatus(15000) Then Return
+				If Not $g_bRunState Then Return
+			WEnd
+		EndIf
+		
 		;Restart bot after these seconds
 		If $b_iAutoRestartDelay > 0 And __TimerDiff($g_hBotLaunchTime) > $b_iAutoRestartDelay * 1000 Then
 			If RestartBot(False) Then Return
@@ -757,6 +754,7 @@ Func runBot() ;Bot that runs everything in order
 
 		#Region - Custom BB - Team AIO Mod++
 		$g_bStayOnBuilderBase = False
+		$g_bRestart = False
 
 		Local $bReturn = PlayBBOnly()
 		If $bReturn = True Then
@@ -777,7 +775,6 @@ Func runBot() ;Bot that runs everything in order
 
 		PrepareDonateCC()
 
-		$g_bRestart = False
 		$g_bFullArmy = False
 		$g_bIsFullArmywithHeroesAndSpells = False
 		$g_iCommandStop = -1
@@ -969,7 +966,6 @@ Func runBot() ;Bot that runs everything in order
 EndFunc   ;==>runBot
 
 Func Idle() ;Sequence that runs until Full Army
-	If $g_bDebugFuncCall Then SetLog('@@ (922) :(' & @MIN & ':' & @SEC & ') Idle()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 	$g_bIdleState = True
 	Local $Result = _Idle()
 	$g_bIdleState = False
@@ -977,8 +973,6 @@ Func Idle() ;Sequence that runs until Full Army
 EndFunc   ;==>Idle
 
 Func _Idle() ;Sequence that runs until Full Army
-	If $g_bDebugFuncCall Then SetLog('@@ (930) :(' & @MIN & ':' & @SEC & ') _Idle()' & @CRLF, $COLOR_ACTION) ;### Function Trace
-
 	Local $TimeIdle = 0 ;In Seconds
 	If $g_bDebugSetlog Then SetDebugLog("Func Idle ", $COLOR_DEBUG)
 
@@ -1102,7 +1096,6 @@ Func _Idle() ;Sequence that runs until Full Army
 EndFunc   ;==>_Idle
 
 Func AttackMain() ;Main control for attack functions
-	If $g_bDebugFuncCall Then SetLog('@@ (1052) :(' & @MIN & ':' & @SEC & ') AttackMain()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
 	#Region - SuperXP / GoblinXP - Team AiO MOD++
 	If $g_bEnableSuperXP = True And $g_iActivateOptionSX = 2 Then
@@ -1227,7 +1220,6 @@ Func AttackMain() ;Main control for attack functions
 EndFunc   ;==>AttackMain
 
 Func Attack() ;Selects which algorithm
-	If $g_bDebugFuncCall Then SetLog('@@ (1122) :(' & @MIN & ':' & @SEC & ') Attack()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 	$g_bAttackActive = True
 	SetLog(" ====== Start Attack ====== ", $COLOR_SUCCESS)
 	If ($g_iMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 1) Or ($g_iMatchMode = $LB And $g_aiAttackAlgorithm[$LB] = 1) Then
@@ -1253,7 +1245,6 @@ EndFunc   ;==>Attack
 
 #Region - Custom - Team AIO Mod++
 Func _RunFunction($sAction)
-	If $g_bDebugFuncCall Then SetLog('@ _RunFunction @ (1143) :(' & @MIN & ':' & @SEC & ')' & $sAction & @CRLF, $COLOR_ACTION) ;### Function Trace
 	FuncEnter(_RunFunction)
 
 	#Region - Custom BB - Team AIO Mod++
@@ -1379,7 +1370,6 @@ Func _RunFunction($sAction)
 EndFunc   ;==>_RunFunction
 
 Func __RunFunction($sAction)
-	If $g_bDebugFuncCall Then SetLog('@@ (1158) :(' & @MIN & ':' & @SEC & ') __RunFunction()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 	If $g_bDebugSetlog Then SetDebugLog("_RunFunction: " & $sAction & " BEGIN", $COLOR_DEBUG2)
 	Switch $sAction
 		Case "Collect"
@@ -1500,7 +1490,6 @@ EndFunc   ;==>__RunFunction
 #EndRegion - Custom - Team AIO Mod++
 
 Func FirstCheck()
-	If $g_bDebugFuncCall Then SetLog('@@ (1271) :(' & @MIN & ':' & @SEC & ') FirstCheck()' & @CRLF, $COLOR_ACTION) ;### Function Trace
 
 	#Region - Custom BB - Team AIO Mod++
 	Local $bReturn = PlayBBOnly()
