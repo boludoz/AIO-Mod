@@ -63,8 +63,8 @@ Func GetAttackBarBB($bRemaining = False)
 			If String($aTroop[0]) <> "Machine" Then 
 				local $iCount = Number(_getTroopCountSmall($aTempCoords[0], $iTroopBanners))
 				If $iCount == 0 Then $iCount = Number(_getTroopCountBig($aTempCoords[0], $iTroopBanners-7))
-				If $iCount == 0 And $bRemaining = False Then
-					SetLog("Could not get count for " & $aTroop[0] & " in slot " & String($iSlot), $COLOR_ERROR)
+				If $iCount == 0 Then
+					If $bRemaining = False Then SetLog("Could not get count for " & $aTroop[0] & " in slot " & String($iSlot), $COLOR_ERROR)
 					ContinueLoop
 				EndIf
 			EndIf
