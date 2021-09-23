@@ -23,11 +23,20 @@ Func TestBuilderBase()
 EndFunc   ;==>TestrunBuilderBase
 
 Global $g_bBonusObtainedAtStart = False
+
+Func ByPassedForceBBAttackOnClanGames($bContion = True, $bReturnBy = True)
+	; I am too lazy...
+	If $g_bChkForceBBAttackOnClanGames = True And $g_bIsCaravanOn == "True" Then
+		Return $bReturnBy
+	EndIf
+	Return $bContion
+EndFunc
+
 Func BuilderBase($bTestRun = False)
 	Local $bReturn = False
-
+	
 	#Region - Dates - Team AIO Mod++
-	If Not $bTestRun And Not PlayBBOnly() And $g_bChkBBStopAt3 Then
+	If Not $bTestRun And Not PlayBBOnly() And ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3, False) Then
 		If _DateIsValid($g_sDateBuilderBase) Then
 			Local $iDateDiff = _DateDiff('s', _NowCalcDate() & " " & _NowTime(5), $g_sDateBuilderBase)
 			If $iDateDiff > 0 And ($g_sConstMaxBuilderBase < $iDateDiff) = False Then
@@ -39,7 +48,7 @@ Func BuilderBase($bTestRun = False)
 	#EndRegion - Dates - Team AIO Mod++
 
 	ClickAway(False, True, 3)
-	If Not $g_bChkBuilderAttack And Not $g_bChkCollectBuilderBase And Not $g_bChkStartClockTowerBoost And Not $g_iChkBBSuggestedUpgrades And Not $g_bChkCleanBBYard And Not $g_bChkUpgradeMachine Then
+	If Not ByPassedForceBBAttackOnClanGames($g_bChkBuilderAttack, True) And Not $g_bChkCollectBuilderBase And Not $g_bChkStartClockTowerBoost And Not $g_iChkBBSuggestedUpgrades And Not $g_bChkCleanBBYard And Not $g_bChkUpgradeMachine Then
 		If $g_bOnlyBuilderBase Then
 			SetLog("Play Only Builder Base Check Is On But BB Option's(Collect,Attack etc) Unchecked", $COLOR_ERROR)
 			SetLog("Please Check BB Options From Builder Base Tab", $COLOR_INFO)
@@ -145,18 +154,18 @@ Func _BuilderBase($bTestRun = False)
 
 		If Not $g_bRunState Then Return
 
-		SetDebugLog("BuilderBaseAttack|$g_bChkBuilderAttack" & $g_bChkBuilderAttack)
+		SetDebugLog("BuilderBaseAttack|ByPassedForceBBAttackOnClanGames($g_bChkBuilderAttack, True)" & ByPassedForceBBAttackOnClanGames($g_bChkBuilderAttack, True))
 		SetDebugLog("BuilderBaseAttack|$g_iAvailableAttacksBB" & $g_iAvailableAttacksBB)
-		SetDebugLog("BuilderBaseAttack|$g_bChkBBStopAt3" & $g_bChkBBStopAt3)
+		SetDebugLog("BuilderBaseAttack|ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3, False)" & ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3, False))
 		SetDebugLog("BuilderBaseAttack|$g_bIsCaravanOn" & $g_bIsCaravanOn)
 
 		; Check if Builder Base is to run
 		; New logic to add speed to the attack.
 		Do
-			If $g_bChkBuilderAttack = False Or ($bIsBonus = False And $g_bChkBBStopAt3 = True And $bFirstBBLoop = False) Then
+			If ByPassedForceBBAttackOnClanGames($g_bChkBuilderAttack, True) = False Or ($bIsBonus = False And ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3, False) = True And $bFirstBBLoop = False) Then
 				Setlog("Dynamic attack loop skipped.", $COLOR_INFO)
-				SetDebugLog("ChkBuilderAttack|$g_bChkBuilderAttack: " & $g_bChkBuilderAttack)
-				SetDebugLog("$g_iAvailableAttacksBB = 0 And $g_bChkBBStopAt3 = True: " & ($g_iAvailableAttacksBB = 0 And $g_bChkBBStopAt3 = True))
+				SetDebugLog("ChkBuilderAttack|ByPassedForceBBAttackOnClanGames($g_bChkBuilderAttack, True): " & ByPassedForceBBAttackOnClanGames($g_bChkBuilderAttack, True))
+				SetDebugLog("$g_iAvailableAttacksBB = 0 And ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3, False) = True: " & ($g_iAvailableAttacksBB = 0 And ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3, False) = True))
 				ExitLoop
 			EndIf
 			
@@ -200,7 +209,7 @@ Func _BuilderBase($bTestRun = False)
 				EndIf
 			EndIf
 
-		Until ($iAttackLoops >= $iLoopsToDo) Or ($g_bChkBBStopAt3 = True And $g_iAvailableAttacksBB = 0)
+		Until ($iAttackLoops >= $iLoopsToDo) Or (ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3, False) = True And $g_iAvailableAttacksBB = 0)
 		
 		$bFirstBBLoop = False
 		
@@ -236,7 +245,7 @@ Func _BuilderBase($bTestRun = False)
 		If Not $bBoostedClock Then ExitLoop
 
 		If $bBoostedClock Then
-			If $g_iAvailableAttacksBB = 0 And $g_bChkBBStopAt3 = True Then
+			If $g_iAvailableAttacksBB = 0 And ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3, False) = True Then
 				SetLog("Builder base idle ends, all attacks done.", $COLOR_SUCCESS)
 				ExitLoop
 			EndIf
@@ -245,7 +254,7 @@ Func _BuilderBase($bTestRun = False)
 		If Not $g_bRunState Then Return
 		BuilderBaseReport()
 
-		If Not $g_bChkBuilderAttack Then ExitLoop
+		If Not ByPassedForceBBAttackOnClanGames($g_bChkBuilderAttack, True) Then ExitLoop
 
 	Until ($iAttackLoops >= $iLoopsToDo)
 
@@ -269,7 +278,7 @@ Func GoToClanGames()
 	If $g_bIsCaravanOn = "True" Or $g_bIsCaravanOn = "Undefined" Then $bIsToByPass = True
 	If Not $g_bChkClanGamesEnabled Or Not ClanGamesBB() Then Return
 	If ($g_bIsSearchLimit Or $g_bRestart Or $g_bIsClientSyncError) Then Return
-	If $g_iAvailableAttacksBB > 0 Or Not $g_bChkBBStopAt3 Or $bIsToByPass Then
+	If $g_iAvailableAttacksBB > 0 Or Not ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3, False) Or $bIsToByPass Then
 		If isOnBuilderBase(True) Then
 			$g_bStayOnBuilderBase = False
 			SwitchBetweenBases()
@@ -289,13 +298,13 @@ Func PlayBBOnly()
 EndFunc   ;==>PlayBBOnly
 
 Func ClanGamesBB()
-	Return (($g_bChkClanGamesBBBattle Or $g_bChkClanGamesBBDestruction Or $g_bChkClanGamesSpell) And not $g_bChkClanGamesPurge)
+	Return (($g_bChkClanGamesBBBattle Or $g_bChkClanGamesBBDestruction Or $g_bChkClanGamesBBTroops) And not $g_bChkClanGamesPurge)
 EndFunc   ;==>ClanGamesBB
 
 Func BuilderBaseReportAttack($bSetLog = True)
     If $g_bRestart = True Then Return False
 
-    If $g_bChkBuilderAttack = True Then
+    If ByPassedForceBBAttackOnClanGames($g_bChkBuilderAttack, True) = True Then
 
         ; Get Trophies for drop.
         $g_aiCurrentLootBB[$eLootTrophyBB] = getTrophyMainScreen(67, 84)
@@ -361,7 +370,7 @@ Func IsBuilderBaseOCR($bSetLog = True)
 			$iSeconds += ($iTimer * 3600)
 			
 			$sMsg = ($iTimer > 1) ? (" hours.") : (" hour.")
-			If $bSetLog = True And Not PlayBBOnly() And $g_bChkBBStopAt3 Then Setlog("Bonus obtained, we will return here in approximately " & $iTimer & $sMsg, $COLOR_SUCCESS)
+			If $bSetLog = True And Not PlayBBOnly() And ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3, False) Then Setlog("Bonus obtained, we will return here in approximately " & $iTimer & $sMsg, $COLOR_SUCCESS)
 			
 			; Minutes
 			$aTmp = _StringBetween($sString, "H", "M")
@@ -385,7 +394,7 @@ Func IsBuilderBaseOCR($bSetLog = True)
 		$iTimer = 24
 		$sMsg = ($iTimer > 1) ? (" hours.") : (" hour.")
 		$iSeconds += ($iTimer * 3600)
-		If $bSetLog = True And Not PlayBBOnly() And $g_bChkBBStopAt3 Then Setlog("Return in 24 hours.", $COLOR_SUCCESS)
+		If $bSetLog = True And Not PlayBBOnly() And ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3, False) Then Setlog("Return in 24 hours.", $COLOR_SUCCESS)
 	EndIf
 	
 	; To improve reliability, minutes and seconds are discarded

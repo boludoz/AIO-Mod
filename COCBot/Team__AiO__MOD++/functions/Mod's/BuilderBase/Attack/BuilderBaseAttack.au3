@@ -31,7 +31,7 @@ Func BuilderBaseAttack($bTestRun = False)
 	If Not $g_bRunState Then Return
 
 	; Check if Builder Base is to run
-	If Not $g_bChkBuilderAttack Then Return False
+	; If Not ByPassedForceBBAttackOnClanGames($g_bChkBuilderAttack, True) Then Return False
 
 	; Stop when reach the value set it as minimum of trophies
 	If (Not $bTestRun) And Int($g_aiCurrentLootBB[$eLootTrophyBB]) < Int($g_iTxtBBDropTrophiesMin) And $g_iAvailableAttacksBB = 0 And $g_bChkBBTrophiesRange = True Then
@@ -64,8 +64,8 @@ Func BuilderBaseAttack($bTestRun = False)
 	If RandomSleep(1500) Then Return
 
 	; Check if is present bonus OCR.
-	If IsBuilderBaseOCR($g_bChkBBStopAt3) Then
-		If $g_bChkBBStopAt3 = True And Not PlayBBOnly() Then
+	If IsBuilderBaseOCR(ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3, False)) Then
+		If ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3, False) = True And Not PlayBBOnly() Then
 			ClickAway(True)
 			If RandomSleep(1500) Then Return
 			Return False
