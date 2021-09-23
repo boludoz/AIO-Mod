@@ -415,20 +415,16 @@ Func CreateMiscClanGamesV3SubTab()
 
 	; GUI SubTab
 	Local $x = 15, $y = 45
-	#cs
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_CG", "Clan Games"), $x - 10, $y - 20, $g_iSizeWGrpTab3, 245)
-		GUICtrlCreatePic($g_sLibIconPathMOD, $x + 5, $y, 94, 128, $SS_BITMAP)
-
-		GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGamesTimeRemaining", "Time Remaining"), $x - 5, $y + 135, 110, 40)
-			$g_hLblRemainTime = GUICtrlCreateLabel("0d 00h", $x + 15, $y + 135 + 15, 65, 17, $SS_CENTER)
+		GUICtrlCreateGroup("", $x - 5, $y + 158 + 5, 120, 40)
+			GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ClanGamesScore", "Score: "), $x, $y + 158 + 13, 65, 17)
+				GUICtrlSetFont(-1, 9.5, $FW_BOLD, $GUI_FONTNORMAL)
+			$g_hLblYourScore = GUICtrlCreateLabel("0/0", $x + 50, $y + 158 + 13, 65, 17)
+				GUICtrlSetFont(-1, 9.5, $FW_BOLD, $GUI_FONTNORMAL)
+			GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ClanGamesTime", "Time: "), $x, $y + 158 + 27, 65, 17)
+				GUICtrlSetFont(-1, 9.5, $FW_BOLD, $GUI_FONTNORMAL)
+			$g_hLblRemainTime = GUICtrlCreateLabel("0d 00h", $x + 50, $y + 158 + 27, 65, 17)
 				GUICtrlSetFont(-1, 9.5, $FW_BOLD, $GUI_FONTNORMAL)
 		GUICtrlCreateGroup("", -99, -99, 1, 1)
-
-		GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGamesYourScore", "Your Score"), $x - 5, $y + 158 + 20, 110, 40)
-			$g_hLblYourScore = GUICtrlCreateLabel("0/0", $x + 15, $y + 158 + 35, 65, 17, $SS_CENTER)
-				GUICtrlSetFont(-1, 9.5, $FW_BOLD, $GUI_FONTNORMAL)
-		GUICtrlCreateGroup("", -99, -99, 1, 1)
-		#ce
 	$y = 33
 	; $x = 135
 		$g_hChkClanGamesEnabled = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGamesEnabled", "Enabled"), $x, $y, -1, -1)
