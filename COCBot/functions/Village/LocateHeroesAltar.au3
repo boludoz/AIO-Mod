@@ -767,3 +767,103 @@ Func _LocateChampionAltar($bCollect = True)
 	IniWrite($g_sProfileBuildingPath, "other", "xChampionAltarPos", $g_aiChampionAltarPos[0])
 	IniWrite($g_sProfileBuildingPath, "other", "yChampionAltarPos", $g_aiChampionAltarPos[1])
 EndFunc   ;==>_LocateChampionAltar
+
+#cs Region - Auto locate builds - Team AIO Mod++
+Func DetectedAltar($eHeroCase = $eHeroNone)
+	Local $sTemplateDir = ""
+	Local $aDetectedPosition[2] = [-1, -1]
+	Local $sHeroName = ""
+	Switch $eHeroCase
+		Case $eHeroKing
+			$sTemplateDir = $g_sImgLocationKing
+			$sHeroName = "King"
+		Case $eHeroQueen
+			$sTemplateDir = $g_sImgLocationQueen
+			$sHeroName = "Queen"
+		Case $eHeroWarden
+			$sTemplateDir = $g_sImgLocationWarden
+			$sHeroName = "Warden"
+		Case $eHeroChampion
+			$sTemplateDir = $g_sImgLocationChamp
+			$sHeroName = "Champ"
+		Case Else
+			SetDebugLog("Hero Altar name error!", $COLOR_ERROR)
+			Return False
+	EndSwitch
+	SetDebugLog($sHeroName & " Template Dir: " & $sTemplateDir, $COLOR_INFO)
+	If $sTemplateDir <> "" Then
+		For $i = 0 To 1
+			If QuickMIS("BC1", $sTemplateDir, 100, 55, 775, 580, True, False) Then
+				SetLog($sHeroName & " Altar detected...", $COLOR_SUCCESS)
+				PureClick($g_iQuickMISWOffSetX, $g_iQuickMISWOffSetY)
+				If _Sleep(500) Then Return False
+				Local $sInfo = BuildingInfo(242, 464)
+				If @error Then SetError(0, 0, 0)
+				Local $CountGetInfo = 0
+				While IsArray($sInfo) = False
+					$sInfo = BuildingInfo(242, 464)
+					If @error Then SetError(0, 0, 0)
+					If _Sleep(100) Then Return False
+					$CountGetInfo += 1
+					If $CountGetInfo = 50 Then Return False
+				WEnd
+				SetDebugLog($sInfo[1] & $sInfo[2])
+				If @error Then Return SetError(0, 0, 0)
+				If StringInStr($sInfo[1], $sHeroName) > 0 Then
+					$aDetectedPosition[0] = $g_iQuickMISWOffSetX
+					$aDetectedPosition[1] = $g_iQuickMISWOffSetY
+					ClickP($aAway, 1, 200, "#0327")
+					If _Sleep(1000) Then Return
+					ExitLoop
+				Else
+					SetDebugLog($sHeroName & " Altar incorrect position!", $COLOR_ERROR)
+					If $i = 0 Then
+						If _Sleep(3000) Then Return False
+						ContinueLoop
+					EndIf
+					Return False
+				EndIf
+			Else
+				SetDebugLog($sHeroName & " Altar not detected!", $COLOR_ERROR)
+				If $i = 0 Then
+					If _Sleep(3000) Then Return False
+					ContinueLoop
+				EndIf
+				Return False
+			EndIf
+		Next
+	Else
+		Return False
+	EndIf
+	If $aDetectedPosition[0] > 0 Then
+		Switch $eHeroCase
+			Case $eHeroKing
+				$g_aiKingAltarPos[0] = $aDetectedPosition[0]
+				$g_aiKingAltarPos[1] = $aDetectedPosition[1]
+				IniWrite($g_sProfileBuildingPath, "other", "KingAltarPosX", $g_aiKingAltarPos[0])
+				IniWrite($g_sProfileBuildingPath, "other", "KingAltarPosY", $g_aiKingAltarPos[1])
+			Case $eHeroQueen
+				$g_aiQueenAltarPos[0] = $aDetectedPosition[0]
+				$g_aiQueenAltarPos[1] = $aDetectedPosition[1]
+				IniWrite($g_sProfileBuildingPath, "other", "QueenAltarPosX", $g_aiQueenAltarPos[0])
+				IniWrite($g_sProfileBuildingPath, "other", "QueenAltarPosY", $g_aiQueenAltarPos[1])
+			Case $eHeroWarden
+				$g_aiWardenAltarPos[0] = $aDetectedPosition[0]
+				$g_aiWardenAltarPos[1] = $aDetectedPosition[1]
+				IniWrite($g_sProfileBuildingPath, "other", "WardenAltarPosX", $g_aiWardenAltarPos[0])
+				IniWrite($g_sProfileBuildingPath, "other", "WardenAltarPosY", $g_aiWardenAltarPos[1])
+			Case $eHeroChampion
+				$g_aiChampionAltarPos[0] = $aDetectedPosition[0]
+				$g_aiChampionAltarPos[1] = $aDetectedPosition[1]
+				IniWrite($g_sProfileBuildingPath, "other", "ChampionAltarPosX", $g_aiChampionAltarPos[0])
+				IniWrite($g_sProfileBuildingPath, "other", "ChampionAltarPosY", $g_aiChampionAltarPos[1])
+			Case Else
+				SetDebugLog("Hero Altar name error!", $COLOR_ERROR)
+				Return False
+		EndSwitch
+		SetLog($sHeroName & " Altar Position Saved!", $COLOR_SUCCESS)
+		Return True
+	EndIf
+	Return False
+EndFunc   ;==>DetectedAltar
+#ce EndRegion - Auto locate builds - Team AIO Mod++
