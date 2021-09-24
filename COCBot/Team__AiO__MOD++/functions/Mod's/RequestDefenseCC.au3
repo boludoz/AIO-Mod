@@ -194,6 +194,8 @@ Func RequestCCMain()
 	
 	If Not $g_bRunState Then Return
 	
+	If _Sleep(1500) Then Return
+	
 	If $bRequestCCByPass = True Then
 		SetLog("Request from chat impossible.", $COLOR_INFO)
 		RequestCC()
