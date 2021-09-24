@@ -458,7 +458,7 @@ Func CreateMiscClanGamesV3SubTab()
 			$y += 23
 			$g_hChkClanGamesBattle = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkClanGamesBattle", "Battle"), $x, $y, -1, -1)
 			$y += 23
-            $g_hChkClanGamesDes = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGamesDestruction", "Destruction"), $x, $y, -1, -1)
+            $g_hChkClanGamesDes = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkClanGamesDestruction", "Destruction"), $x, $y, -1, -1)
             GUICtrlSetOnEvent(-1, "chkActivateClangames")
             $g_hBtnCGDes = GUICtrlCreateButton("...", $x + 80, $y, 20, 20)
                 GUICtrlSetOnEvent(-1, "btnCGDes")
@@ -489,7 +489,7 @@ Func CreateMiscClanGamesV3SubTab()
 			$g_hChkClanGamesBBBattle = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkClanGamesBBBattle", "BB Battle"), $x, $y, -1, -1)
 				GUICtrlSetOnEvent(-1, "chkClanGamesBB")
 			$y += 23
-            $g_hChkClanGamesBBDes = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGamesBBDestruction", "BB Destruction"), $x, $y, -1, -1)
+            $g_hChkClanGamesBBDes = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkClanGamesBBDestruction", "BB Destruction"), $x, $y, -1, -1)
 			GUICtrlSetOnEvent(-1, "chkActivateClangames")
 			$g_hBtnCGBBDes = GUICtrlCreateButton("...", $x + 90, $y, 20, 20)
 				GUICtrlSetOnEvent(-1, "btnCGBBDes")
@@ -523,8 +523,8 @@ Func CreateMiscClanGamesV3SubTab()
 	$x = 15
 	$y = 45
 	$g_hTxtClanGamesLog = GUICtrlCreateEdit("", $x - 10, 275, $g_iSizeWGrpTab3, 127, BitOR($GUI_SS_DEFAULT_EDIT, $ES_READONLY, $ES_AUTOVSCROLL))
-	GUICtrlSetData(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "TxtClanGamesLog", _
-			"--------------------------------------------------------- Clan Games LOG ------------------------------------------------"))
+	GUICtrlSetData(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan game", "TxtClanGamesLog", _
+			"--------------------------------------------------------- Clan Games LOG ------------------------------------------------") & @CRLF)
 
 EndFunc   ;==>CreateMiscClanGamesV3SubTab
 
