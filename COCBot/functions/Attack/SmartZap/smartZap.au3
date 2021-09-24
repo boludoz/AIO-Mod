@@ -100,18 +100,20 @@ Func smartZap($minDE = -1, $bLastChance = False)
 			, ["Donated", $eESpell, -1, -1, 0]]
 	Local $bZapDrills = True
 	If $g_bDebugSmartZap = True Then SetLog("$g_bSmartZapEnable = " & $g_bSmartZapEnable & " | $g_bNoobZap = " & $g_bNoobZap, $COLOR_DEBUG)
-	#Region - Custom SmartZap - Team AIO Mod++
-	If $g_bSmartZapEnable = False Or $g_bDoneSmartZap = True Then Return $performedZap
 	
+	#Region - Custom SmartZap - Team AIO Mod++
+	If $g_bSmartZapEnable = False Then Return $performedZap
+	
+	If $g_bDoneSmartZap = True Then Return $performedZap
+
 	Local $iTime = Int(AttackRemainingTime() / 1000)
 	SetDebugLog("Remain time in seconds is " & $iTime & "s", $COLOR_INFO)
 	If ($g_iRemainTimeToZap > $iTime And $g_iRemainTimeToZap <> 0) Or $bLastChance = True Then
 		SetLog("Let's ZAP, even with troops on the ground.", $COLOR_ACTION)
+		$g_bDoneSmartZap = True
 	Else
 		Return $performedZap
 	EndIf
-
-	$g_bDoneSmartZap = True
 	#EndRegion - Custom SmartZap - Team AIO Mod++
 
 	If $bZapDrills Then
