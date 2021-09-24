@@ -890,9 +890,6 @@ Func runBot() ;Bot that runs everything in order
 				If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 			Next
 
-			;ARCH Trying it out here.
-			If Not $g_bIsSearchLimit Then _ClanGames() ; move to here to pick event before going to BB.
-
 			; Ensure, that wall upgrade is last of the upgrades
 			Local $aRndFuncList = ['UpgradeWall', 'BuilderBase'] ;Copied BuilderBase to AttackMain
 			_ArrayShuffle($aRndFuncList)
@@ -1127,8 +1124,13 @@ Func AttackMain() ;Main control for attack functions
 				SetDebugLog(_PadStringCenter(" Hero status check" & BitAND($g_aiAttackUseHeroes[$LB], $g_aiSearchHeroWaitEnable[$LB], $g_iHeroAvailable) & "|" & $g_aiSearchHeroWaitEnable[$LB] & "|" & $g_iHeroAvailable, 54, "="), $COLOR_DEBUG)
 				;SetLog("BullyMode: " & $g_abAttackTypeEnable[$TB] & ", Bully Hero: " & BitAND($g_aiAttackUseHeroes[$g_iAtkTBMode], $g_aiSearchHeroWaitEnable[$g_iAtkTBMode], $g_iHeroAvailable) & "|" & $g_aiSearchHeroWaitEnable[$g_iAtkTBMode] & "|" & $g_iHeroAvailable, $COLOR_DEBUG)
 			EndIf
-			;_ClanGames() ;Trying to do this above in the main loop
-			;ClickAway()
+			
+			; Custom BB - Team__AiO__MOD
+			If Not ByPassedForceBBAttackOnClanGames($g_bChkBuilderAttack, True) Then
+				_ClanGames() ; Trying to do this above in the main loop
+				ClickAway(True)
+			EndIf
+			
 			If $g_bUpdateSharedPrefs Then PullSharedPrefs()
 			PrepareSearch()
 			If Not $g_bRunState Then Return
@@ -1499,6 +1501,7 @@ Func FirstCheck()
 	If $g_bRestart Then Return
 	
 	#Region - Custom - xbebenk - Team AIO Mod++
+	 
 	VillageReport()
 	If BotCommand() Then btnStop()
 	If ProfileSwitchAccountEnabled() And ($g_iCommandStop = 0 Or $g_bForceSwitch) Then checkSwitchAcc()
