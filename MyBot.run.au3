@@ -1126,10 +1126,8 @@ Func AttackMain() ;Main control for attack functions
 			EndIf
 			
 			; Custom BB - Team__AiO__MOD
-			If Not ByPassedForceBBAttackOnClanGames($g_bChkBuilderAttack, True) Then
-				_ClanGames() ; Trying to do this above in the main loop
-				ClickAway(True)
-			EndIf
+			_ClanGames() ; Trying to do this above in the main loop
+			ClickAway(True)
 			
 			If $g_bUpdateSharedPrefs Then PullSharedPrefs()
 			PrepareSearch()
