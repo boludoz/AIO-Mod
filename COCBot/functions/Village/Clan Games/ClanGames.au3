@@ -762,9 +762,11 @@ EndFunc   ;==>ClickOnEvent
 Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkClanGamesDebug = False)
 	If Not $g_bRunState Then Return
 
+	$g_bIsBBevent =  QuickMIS("BC1", $g_sImgBorderBB, 205, 130, 830, 550, $getCapture, False)
+	
 	If QuickMIS("BC1", $g_sImgStart, 220, 150, 830, 580, $getCapture, False) Then
 		Local $Timer = GetEventTimeInMinutes($g_iQuickMISX + 220, $g_iQuickMISY + 150)
-		SetLog("Starting Event" & " [" & $Timer & " min]", $COLOR_SUCCESS)
+		SetLog("Starting Event" & " [" & $Timer & " min]" & " Is builder base challenge? " & $g_bIsBBevent, $COLOR_SUCCESS)
 		Click($g_iQuickMISX + 220, $g_iQuickMISY + 150)
 		GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - Starting " & $sEventName & " for " & $Timer & " min", 1)
 		_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - Starting " & $sEventName & " for " & $Timer & " min")
@@ -790,25 +792,6 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 			Else
 				SetLog("$g_sImgTrashPurge Issue", $COLOR_ERROR)
 				Return False
-			EndIf
-		EndIf
-		
-		;check if Challenge is BB Challenge, enabling force BB attack
-		If $g_bChkForceBBAttackOnClanGames Then
-			Click(450,75) ;Click Clan Tab
-			If _Sleep(3000) Then Return
-			Click(300,75) ;Click Challenge Tab
-			If _Sleep(500) Then Return
-			Click(340,210) ;Click Active Challenge
-			If _Sleep(1000) Then Return
-			
-			SetLog("Re-Check If Running Challenge is BB Event or No?", $COLOR_DEBUG)
-			If QuickMIS("BC1", $g_sImgVersus, 425, 180, 700, 235, True, False) Then
-				Setlog("Running Challenge is BB Challenge", $COLOR_INFO)
-				$g_bIsBBevent = True
-			Else
-				Setlog("Running Challenge is Not BB Challenge", $COLOR_INFO)
-				$g_bIsBBevent = False
 			EndIf
 		EndIf
 		
