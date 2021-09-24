@@ -343,6 +343,8 @@ Func InitializeControlVariables()
 	For $i in $aTabControlsBuilderBase 
 		$oAlwaysEnabledControls($i) = 1
 	Next
+
+	$oAlwaysEnabledControls($g_hTxtClanGamesLog) = 1
 	#EndRegion
 	
 EndFunc

@@ -112,8 +112,8 @@ Func WaitForClouds()
 				    SetLog("Return home by time due to the long wait in the cloud.", $COLOR_INFO)
 					$g_bIsClientSyncError = True
 					$g_bRestart = True
-					CloseCoC(True, True)
-					ExitLoop
+					UniversalCloseWaitOpenCoC(0, "WaitForClouds", True, True, False)
+					Return
 				EndIf
 			EndIf
 			#EndRegion - Return Home by Time - Team AIO Mod++

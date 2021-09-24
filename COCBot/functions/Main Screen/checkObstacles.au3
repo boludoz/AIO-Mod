@@ -443,9 +443,9 @@ Func checkObstacles_Network($bForceCapture = False, $bReloadCoC = True)
 		$hCocReconnectingTimer = 0
 	EndIf
 
-	Return checkObstacles_Foreground()
+	Return False; checkObstacles_Foreground()
 EndFunc   ;==>checkObstacles_Network
-
+#cs
 Func checkObstacles_Foreground()
 	; This check if coc is active in first plane or android is stuck.
 	Static $hCocForegroundTimer = 0
@@ -485,7 +485,7 @@ Func checkObstacles_Foreground()
 	
 	Return False
 EndFunc   ;==>checkObstacles_Foreground
-
+#ce
 Func checkObstacles_GfxError($bForceCapture = False, $bRebootAndroid = True)
 	Local $aResult = decodeMultipleCoords(FindImage("GfxError", $g_sImgGfxError, "ECD", 100, $bForceCapture), 100, 100)
 	If UBound($aResult) >= 8 Then
