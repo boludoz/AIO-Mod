@@ -51,14 +51,14 @@ Func _ClanGames($test = False)
 
 	If $g_bChkClanGamesLoot Then ClanGameImageCopy($sImagePath, $sTempPath, "L") ;L for Loot
 	If $g_bChkClanGamesBattle Then ClanGameImageCopy($sImagePath, $sTempPath, "B") ;B for Battle
-	If $g_bChkClanGamesDestruction Then ClanGameImageCopy($sImagePath, $sTempPath, "D") ;D for Destruction
+	If $g_bChkClanGamesDes Then ClanGameImageCopy($sImagePath, $sTempPath, "D") ;D for Destruction
 	If $g_bChkClanGamesAirTroop Then ClanGameImageCopy($sImagePath, $sTempPath, "A") ;A for AirTroops
 	If $g_bChkClanGamesGroundTroop Then ClanGameImageCopy($sImagePath, $sTempPath, "G") ;G for GroundTroops
 
 	If $g_bChkClanGamesMiscellaneous Then ClanGameImageCopy($sImagePath, $sTempPath, "M") ;M for Misc
     If $g_bChkClanGamesSpell Then ClanGameImageCopy($sImagePath, $sTempPath, "S") ;S for GroundTroops
     If $g_bChkClanGamesBBBattle Then ClanGameImageCopy($sImagePath, $sTempPath, "BBB") ;BBB for BB Battle
-    If $g_bChkClanGamesBBDestruction Then ClanGameImageCopy($sImagePath, $sTempPath, "BBD") ;BBD for BB Destruction
+    If $g_bChkClanGamesBBDes Then ClanGameImageCopy($sImagePath, $sTempPath, "BBD") ;BBD for BB Destruction
 	If $g_bChkClanGamesBBTroops Then ClanGameImageCopy($sImagePath, $sTempPath, "BBT") ;BBT for BB Troops
 	
 	; Enter on Clan Games window
@@ -195,7 +195,7 @@ Func _ClanGames($test = False)
 
 	If UBound($aAllDetectionsOnScreen) > 0 Then
 		For $i = 0 To UBound($aAllDetectionsOnScreen) - 1
-            ;If IsBBChallenge($aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3]) and $g_bChkClanGamesBBBattle == 0 and $g_bChkClanGamesBBDestruction == 0 Then ContinueLoop ; only skip if it is a BB challenge not supported
+            ;If IsBBChallenge($aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3]) and $g_bChkClanGamesBBBattle == 0 and $g_bChkClanGamesBBDes == 0 Then ContinueLoop ; only skip if it is a BB challenge not supported
 
 			Switch $aAllDetectionsOnScreen[$i][0]
 				Case "L"
@@ -321,7 +321,7 @@ Func _ClanGames($test = False)
 						EndIf
 					Next
 				Case "D"
-					If Not $g_bChkClanGamesDestruction Then ContinueLoop
+					If Not $g_bChkClanGamesDes Then ContinueLoop
 					;[0] = Path Directory , [1] = Event Name , [2] = TH level , [3] = Difficulty Level , [4] = Time to do it
 					Local $DestructionChallenges = ClanGamesChallenges("$DestructionChallenges", False, $sINIPath, $g_bChkClanGamesDebug)
 					For $j = 0 To UBound($DestructionChallenges) - 1
@@ -397,7 +397,7 @@ Func _ClanGames($test = False)
                         EndIf
                     Next
                 Case "BBD" ; BB Destruction challenges
-					If Not $g_bChkClanGamesBBDestruction Then ContinueLoop
+					If Not $g_bChkClanGamesBBDes Then ContinueLoop
 
                     ;[0] = Path Directory , [1] = Event Name , [2] = TH level , [3] = Difficulty Level , [4] = Time to do it
                     Local $BBDestructionChallenges = ClanGamesChallenges("$BBDestructionChallenges", False, $sINIPath, $g_bChkClanGamesDebug)
@@ -600,23 +600,21 @@ Func IsClanGamesRunning($getCapture = True) ;to check whether clangames current 
 	Local $aGameTime[4] = [384, 388, 0xFFFFFF, 10]
 	Local $sState = "running"
 	If QuickMIS("BC1", $g_sImgWindow, 70, 100, 150, 150, $getCapture, False) Then
-			SetLog("Window Opened", $COLOR_DEBUG)
-
-			If QuickMIS("BC1", $g_sImgReward, 580, 480, 830, 570, $getCapture, False) Then
-				SetLog("Your Reward is Ready", $COLOR_INFO)
-				$sState = "end"
-			EndIf
-
-			If _CheckPixel($aGameTime, True) Then
-				Local $sTimeRemain = getOcrTimeGameTime(380, 461) ; read Clan Games waiting time
-				SetLog("Clan Games will start in " & $sTimeRemain, $COLOR_INFO)
-				$g_sClanGamesTimeRemaining = $sTimeRemain
-				$sState = "prepare"
-			EndIf
-		Else
-			SetLog("Clan Games Window Not Opened", $COLOR_DEBUG)
-			Return False
+		SetLog("Window Opened", $COLOR_DEBUG)
+		If QuickMIS("BC1", $g_sImgReward, 580, 480, 830, 570, $getCapture, False) Then
+			SetLog("Your Reward is Ready", $COLOR_INFO)
+			$sState = "end"
 		EndIf
+	Else
+		If _CheckPixel($aGameTime, True) Then
+			Local $sTimeRemain = getOcrTimeGameTime(380, 461) ; read Clan Games waiting time
+			SetLog("Clan Games will start in " & $sTimeRemain, $COLOR_INFO)
+			$g_sClanGamesTimeRemaining = $sTimeRemain
+			$sState = "prepare"
+		EndIf
+		SetLog("Clan Games Window Not Opened", $COLOR_DEBUG)
+		Return $sState
+	EndIf
 	Return $sState
 EndFunc ;==>IsClanGamesRunning
 
@@ -685,6 +683,7 @@ Func IsEventRunning($bOpenWindow = False)
 		If _CheckPixel($aEventFailed, True) Then
 			SetLog("Couldn't finish last event! Lets trash it and look for a new one", $COLOR_INFO)
 			If TrashFailedEvent() Then
+				If _Sleep(3000) Then Return ;Add sleep here, to wait ClanGames Challenge Tile ordered again as 1 has been deleted
 				Return False
 			Else
 				SetLog("Error happend while trashing failed event", $COLOR_ERROR)
@@ -783,6 +782,7 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 					GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - Purging Event ", 1)
 					_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - Purging Event ")
 					ClickAway()
+					$g_bIsBBEvent = False
 				Else
 					SetLog("$g_sImgOkayPurge Issue", $COLOR_ERROR)
 					Return False
@@ -801,14 +801,7 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 			If _Sleep(500) Then Return
 			Click(340,210) ;Click Active Challenge
 			If _Sleep(1000) Then Return
-			;Local $aCurEvent = decodeSingleCoord(findImage("BBChallenge", @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\BB*.xml", GetDiamondFromRect("300, 160, 380, 240"), 1, True, Default))
-			;If IsArray($aCurEvent) And UBound($aCurEvent, 1) >= 2 Then
-			;	Setlog("Running Challenge is BB Challenge", $COLOR_DEBUG)
-			;	$g_bIsBBevent = True
-			;Else
-			;	Setlog("Running Challenge is Not BB Challenge", $COLOR_DEBUG)
-			;	$g_bIsBBevent = False
-			;EndIf
+			
 			SetLog("Re-Check If Running Challenge is BB Event or No?", $COLOR_DEBUG)
 			If QuickMIS("BC1", $g_sImgVersus, 425, 180, 700, 235, True, False) Then
 				Setlog("Running Challenge is BB Challenge", $COLOR_INFO)
@@ -840,6 +833,7 @@ Func PurgeEvent($directoryImage, $sEventName, $getCapture = True)
 		If _Sleep(1500) Then Return
 		If StartsEvent($sEventName, True, $getCapture, $g_bChkClanGamesDebug) Then
 			ClickAway()
+			$g_bIsBBEvent = False
 			Return True
 		EndIf
 	EndIf
@@ -853,7 +847,7 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 
 	If _Sleep(1000) Then Return
 	If $startFirst Then
-		SetLog("ForcePurgeEvent: Start and Purge a Challenge", $COLOR_INFO)
+		SetLog("ForcePurgeEvent: No event Found, Start and Purge a Challenge", $COLOR_INFO)
 		If StartAndPurgeEvent($bTest) Then
 			ClickAway()
 			Return True
@@ -869,8 +863,9 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 				If $bTest Then Return
 				Click($g_iQuickMISX + 440, $g_iQuickMISY + 400)
 				If _Sleep(1500) Then Return
-				GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - Purging Event ", 1)
-				_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - Purging Event ")
+				GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - ForcePurgeEvent: Purge a Wrong Challenge ", 1)
+				_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - ForcePurgeEvent: Purge a Wrong Challenge ")
+				$g_bIsBBEvent = False
 			Else
 				SetLog("$g_sImgOkayPurge Issue", $COLOR_ERROR)
 				Return False
@@ -902,9 +897,10 @@ Func StartAndPurgeEvent($bTest = False)
 				If $bTest Then Return
 				Click($g_iQuickMISX + 440, $g_iQuickMISY + 400)
 				SetLog("StartAndPurgeEvent event!", $COLOR_SUCCESS)
-				GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - Purging Event ", 1)
-				_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - Purging Event ")
+				GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - StartAndPurgeEvent: No event Found ", 1)
+				_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - StartAndPurgeEvent: No event Found ")
 				ClickAway()
+				$g_bIsBBEvent = False
 			Else
 				SetLog("$g_sImgOkayPurge Issue", $COLOR_ERROR)
 				Return False
@@ -933,7 +929,7 @@ Func TrashFailedEvent()
 	EndIf
 
 	If _Sleep(500) Then Return
-
+	$g_bIsBBEvent = False
 	Return True
 EndFunc   ;==>TrashFailedEvent
 
@@ -1104,38 +1100,39 @@ Func ClanGamesChallenges($sReturnArray, $makeIni = False, $sINIPath = "", $bDebu
 			["SpeedyStars", 			"3 Stars in 60 seconds",		 6,  2, 5], _ ;
 			["Tremendous13s", 			"Tremendous 13s", 				13,  1, 8]]   ;
 
-	Local $DestructionChallenges[31][5] = [ _
-			["Cannon", 					"Cannon Carnage", 				 3,  1, 1], _ ; Destroy 5-25 Cannons in Multiplayer Battles					|1h-8h	|75-350
-			["ArcherT", 				"Archer Tower Assault", 		 3,  1, 1], _ ; Destroy 5-20 Archer Towers in Multiplayer Battles			|1h-8h	|75-350
-			["Mortar", 					"Mortar Mauling", 				 3,  1, 1], _ ; Destroy 4-12 Mortars in Multiplayer Battles					|1h-8h	|40-350
-			["AirD", 					"Destroy Air Defenses", 		 7,  2, 1], _ ; Destroy 3-12 Air Defenses in Multiplayer Battles			|1h-8h	|40-350
-			["WizardT", 				"Wizard Tower Warfare", 		 3,  1, 1], _ ; Destroy 4-12 Wizard Towers in Multiplayer Battles			|1h-8h	|40-350
-			["AirSweepers", 			"Destroy Air Sweepers", 		 8,  4, 1], _ ; Destroy 2-6 Air Sweepers in Multiplayer Battles				|1h-8h	|40-350
-			["Tesla", 					"Destroy Tesla Towers", 		 7,  5, 1], _ ; Destroy 4-12 Hidden Teslas in Multiplayer Battles			|1h-8h	|50-350
-			["BombT", 					"Destroy Bomb Towers", 			 8,  2, 1], _ ; Destroy 2 Bomb Towers in Multiplayer Battles				|1h-8h	|50-350
-			["Xbow", 					"Destroy X-Bows", 				 9,  5, 1], _ ; Destroy 3-12 X-Bows in Multiplayer Battles					|1h-8h	|50-350
-			["Inferno", 				"Destroy Inferno Towers", 		11,  5, 1], _ ; Destroy 2 Inferno Towers in Multiplayer Battles				|1h-2d	|50-600
-			["EagleA", 					"Eagle Artillery Elimination", 	11,  5, 1], _ ; Destroy 1-7 Eagle Artillery in Multiplayer Battles			|1h-2d	|50-600
-			["ClanC", 					"Clan Castle Charge", 			 5,  2, 1], _ ; Destroy 1-4 Clan Castle in Multiplayer Battles				|1h-8h	|40-350
-			["GoldSRaid", 				"Gold Storage Raid", 			 3,  2, 1], _ ; Destroy 3-15 Gold Storages in Multiplayer Battles			|1h-8h	|40-350
-			["ElixirSRaid", 			"Elixir Storage Raid", 			 3,  1, 1], _ ; Destroy 3-15 Elixir Storages in Multiplayer Battles			|1h-8h	|40-350
-			["DarkEStorageRaid", 		"Dark Elixir Storage Raid", 	 8,  3, 1], _ ; Destroy 1-4 Dark Elixir Storage in Multiplayer Battles		|1h-8h	|40-350
-			["GoldM", 					"Gold Mine Mayhem", 			 3,  1, 1], _ ; Destroy 6-20 Gold Mines in Multiplayer Battles				|1h-8h	|40-350
-			["ElixirPump", 				"Elixir Pump Elimination", 		 3,  1, 1], _ ; Destroy 6-20 Elixir Collectors in Multiplayer Battles		|1h-8h	|40-350
-			["DarkEPlumbers", 			"Dark Elixir Plumbers", 		 3,  1, 1], _ ; Destroy 2-8 Dark Elixir Drills in Multiplayer Battles		|1h-8h	|40-350
-			["Laboratory", 				"Laboratory Strike", 			 3,  1, 1], _ ; Destroy 2-6 Laboratories in Multiplayer Battles				|1h-8h	|40-200
-			["SFacto", 					"Spell Factory Sabotage", 		 3,  1, 1], _ ; Destroy 2-6 Spell Factories in Multiplayer Battles			|1h-8h	|40-200
-			["DESpell", 				"Dark Spell Factory Sabotage", 	 8,  1, 1], _ ; Destroy 2-6 Dark Spell Factories in Multiplayer Battles		|1h-8h	|40-200
-			["WallWhacker", 			"Wall Whacker", 				 3,  1, 1], _ ; Destroy 50-250 Walls in Multiplayer Battles					|
-			["BBreakdown",	 			"Building Breakdown", 			 3,  1, 1], _ ; Destroy 50-250 Buildings in Multiplayer Battles					|
-			["BKaltar", 				"Destroy Barbarian King Altars", 9,  4, 1], _ ; Destroy 2-5 Barbarian King Altars in Multiplayer Battles	|1h-8h	|50-150
-			["AQaltar", 				"Destroy Archer Queen Altars", 	10,  5, 1], _ ; Destroy 2-5 Archer Queen Altars in Multiplayer Battles		|1h-8h	|50-150
-			["GWaltar", 				"Destroy Grand Warden Altars", 	11,  5, 1], _ ; Destroy 2-5 Grand Warden Altars in Multiplayer Battles		|1h-8h	|50-150
-			["HeroLevelHunter", 		"Hero Level Hunter", 			 9,  5, 8], _ ; Knockout 125 Level Heroes on Multiplayer Battles			|8h		|100
-			["KingLevelHunter", 		"King Level Hunter", 			 9,  5, 8], _ ; Knockout 50 Level King on Multiplayer Battles				|8h		|100
-			["QueenLevelHunt", 			"Queen Level Hunter", 			10,  5, 8], _ ; Knockout 50 Level Queen on Multiplayer Battles				|8h		|100
-			["WardenLevelHunter", 		"Warden Level Hunter", 			11,  5, 8], _ ; Knockout 20 Level Warden on Multiplayer Battles				|8h		|100
-			["ScatterShotSabotage",		"Destroy ScatterShot",			13,  5, 1]]   ;
+	Local $DestructionChallenges[32][5] = [ _
+			["Cannon", 					"Cannon", 				 3,  1, 1], _ ; Destroy 5-25 Cannons in Multiplayer Battles					|1h-8h	|75-350
+			["ArcherT", 				"Archer Tower", 		 3,  1, 1], _ ; Destroy 5-20 Archer Towers in Multiplayer Battles			|1h-8h	|75-350
+			["BuilderHut", 				"Builder Hut", 		     3,  1, 1], _ ; Destroy 4-12 BuilderHut in Multiplayer Battles				|1h-8h	|40-350
+			["Mortar", 					"Mortar", 				 3,  1, 1], _ ; Destroy 4-12 Mortars in Multiplayer Battles					|1h-8h	|40-350
+			["AirD", 					"Air Defenses", 		 7,  2, 1], _ ; Destroy 3-12 Air Defenses in Multiplayer Battles			|1h-8h	|40-350
+			["WizardT", 				"Wizard Tower", 		 3,  1, 1], _ ; Destroy 4-12 Wizard Towers in Multiplayer Battles			|1h-8h	|40-350
+			["AirSweepers", 			"Air Sweepers", 		 8,  4, 1], _ ; Destroy 2-6 Air Sweepers in Multiplayer Battles				|1h-8h	|40-350
+			["Tesla", 					"Tesla Towers", 		 7,  5, 1], _ ; Destroy 4-12 Hidden Teslas in Multiplayer Battles			|1h-8h	|50-350
+			["BombT", 					"Bomb Towers", 			 8,  2, 1], _ ; Destroy 2 Bomb Towers in Multiplayer Battles				|1h-8h	|50-350
+			["Xbow", 					"X-Bows", 				 9,  5, 1], _ ; Destroy 3-12 X-Bows in Multiplayer Battles					|1h-8h	|50-350
+			["Inferno", 				"Inferno Towers", 		11,  5, 1], _ ; Destroy 2 Inferno Towers in Multiplayer Battles				|1h-2d	|50-600
+			["EagleA", 					"Eagle Artillery", 	    11,  5, 1], _ ; Destroy 1-7 Eagle Artillery in Multiplayer Battles			|1h-2d	|50-600
+			["ClanC", 					"Clan Castle", 			 5,  2, 1], _ ; Destroy 1-4 Clan Castle in Multiplayer Battles				|1h-8h	|40-350
+			["GoldSRaid", 				"Gold Storage", 		 3,  2, 1], _ ; Destroy 3-15 Gold Storages in Multiplayer Battles			|1h-8h	|40-350
+			["ElixirSRaid", 			"Elixir Storage", 		 3,  1, 1], _ ; Destroy 3-15 Elixir Storages in Multiplayer Battles			|1h-8h	|40-350
+			["DarkEStorageRaid", 		"Dark Elixir Storage", 	 8,  3, 1], _ ; Destroy 1-4 Dark Elixir Storage in Multiplayer Battles		|1h-8h	|40-350
+			["GoldM", 					"Gold Mine", 			 3,  1, 1], _ ; Destroy 6-20 Gold Mines in Multiplayer Battles				|1h-8h	|40-350
+			["ElixirPump", 				"Elixir Pump", 		 	 3,  1, 1], _ ; Destroy 6-20 Elixir Collectors in Multiplayer Battles		|1h-8h	|40-350
+			["DarkEPlumbers", 			"Dark Elixir Drill", 	 3,  1, 1], _ ; Destroy 2-8 Dark Elixir Drills in Multiplayer Battles		|1h-8h	|40-350
+			["Laboratory", 				"Laboratory", 			 3,  1, 1], _ ; Destroy 2-6 Laboratories in Multiplayer Battles				|1h-8h	|40-200
+			["SFacto", 					"Spell Factory", 		 3,  1, 1], _ ; Destroy 2-6 Spell Factories in Multiplayer Battles			|1h-8h	|40-200
+			["DESpell", 				"Dark Spell Factory", 	 8,  1, 1], _ ; Destroy 2-6 Dark Spell Factories in Multiplayer Battles		|1h-8h	|40-200
+			["WallWhacker", 			"Wall Whacker", 		 3,  1, 1], _ ; Destroy 50-250 Walls in Multiplayer Battles					|
+			["BBreakdown",	 			"Building Breakdown", 	 3,  1, 1], _ ; Destroy 50-250 Buildings in Multiplayer Battles					|
+			["BKaltar", 				"Barbarian King Altars", 9,  4, 1], _ ; Destroy 2-5 Barbarian King Altars in Multiplayer Battles	|1h-8h	|50-150
+			["AQaltar", 				"Archer Queen Altars", 	10,  5, 1], _ ; Destroy 2-5 Archer Queen Altars in Multiplayer Battles		|1h-8h	|50-150
+			["GWaltar", 				"Grand Warden Altars", 	11,  5, 1], _ ; Destroy 2-5 Grand Warden Altars in Multiplayer Battles		|1h-8h	|50-150
+			["HeroLevelHunter", 		"Hero Level Hunter", 	 9,  5, 8], _ ; Knockout 125 Level Heroes on Multiplayer Battles			|8h		|100
+			["KingLevelHunter", 		"King Level Hunter", 	 9,  5, 8], _ ; Knockout 50 Level King on Multiplayer Battles				|8h		|100
+			["QueenLevelHunt", 			"Queen Level Hunter", 	10,  5, 8], _ ; Knockout 50 Level Queen on Multiplayer Battles				|8h		|100
+			["WardenLevelHunter", 		"Warden Level Hunter", 	11,  5, 8], _ ; Knockout 20 Level Warden on Multiplayer Battles				|8h		|100
+			["ScatterShotSabotage",		"ScatterShot",			13,  5, 1]]   ;
 
 
 	Local $MiscChallenges[3][5] = [ _
@@ -1163,19 +1160,22 @@ Func ClanGamesChallenges($sReturnArray, $makeIni = False, $sINIPath = "", $bDebu
 			["StarTimed",				"BB Star Timed",				2,  2, 1], _
             ["Destruction",				"BB Destruction",				2,  1, 1]] ; Earn 225% - 900% on BB attacks
 
-	Local $BBDestructionChallenges[12][5] = [ _
-            ["Airbomb",					"BB Air Bomb",                  2,  1, 1], _
-			["BuildingDes",             "BB Building Destruction",		2,  1, 1], _
-            ["Cannon",                 	"BB Cannon",                  	2,  1, 1], _ ; no image
-            ["DoubleCannon",         	"BB Double Cannon",             2,  1, 1], _
-			["FireCrackers",         	"BB FireCrackers",              2,  1, 1], _
-			["GemMine",                 "BB GemMine",                  	2,  1, 1], _
-			["GiantCannon",             "BB GiantCannon",               2,  1, 1], _
-			["GuardPost",               "BB GuardPost",                 2,  1, 1], _
-			["MegaTesla",               "BB Mega Tesla",                2,  1, 1], _
-			["MultiMortar",             "BB MultiMortar",               2,  1, 1], _
-			["StarLab",                 "BB StarLab",                  	2,  1, 1], _
-			["WallDes",             	"BB Wall Whacker",              2,  1, 1]]
+	Local $BBDestructionChallenges[15][5] = [ _
+            ["Airbomb",					"Air Bomb",                 	2,  1, 1], _
+			["BuildingDes",             "BB Building",					2,  1, 1], _
+			["BuilderHall",             "BuilderHall",					2,  1, 1], _
+            ["Cannon",                 	"BB Cannon",                  	2,  1, 1], _ 
+			["ClockTower",             	"Clock Tower",                 	2,  1, 1], _ 
+			["Crusher",             	"Crusher",                 		2,  1, 1], _ 
+            ["DoubleCannon",         	"Double Cannon",             	2,  1, 1], _
+			["FireCrackers",         	"Fire Crackers",              	2,  1, 1], _
+			["GemMine",                 "Gem Mine",                  	2,  1, 1], _
+			["GiantCannon",             "Giant Cannon",               	2,  1, 1], _
+			["GuardPost",               "Guard Post",                 	2,  1, 1], _
+			["MegaTesla",               "Mega Tesla",               	2,  1, 1], _
+			["MultiMortar",             "Multi Mortar",               	2,  1, 1], _
+			["StarLab",                 "Star Laboratory",              2,  1, 1], _
+			["WallDes",             	"Wall Whacker",              	2,  1, 1]]
 
 	Local $BBTroopsChallenges[11][5] = [ _
             ["RBarb",					"Raged Barbarian",              2,  1, 1], _ ;BB Troops

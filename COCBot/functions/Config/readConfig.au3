@@ -483,10 +483,6 @@ Func ReadConfig_600_6()
 ;~ 	IniReadS($g_iChkBBSuggestedUpgradesIgnoreWall, $g_sProfileConfigPath, "other", "ChkBBSuggestedUpgradesIgnoreWall", $g_iChkBBSuggestedUpgradesIgnoreWall, "Int") ; AIO MOD++
 	IniReadS($g_iChkPlacingNewBuildings, $g_sProfileConfigPath, "other", "ChkPlacingNewBuildings", $g_iChkPlacingNewBuildings, "Int")
 
-	IniReadS($g_bChkClanGamesAir, $g_sProfileConfigPath, "other", "ChkClanGamesAir", False, "Bool")
-	IniReadS($g_bChkClanGamesGround, $g_sProfileConfigPath, "other", "ChkClanGamesGround", False, "Bool")
-	IniReadS($g_bChkClanGamesMisc, $g_sProfileConfigPath, "other", "ChkClanGamesMisc", False, "Bool")
-
 	; xbebenk clan games
 	IniReadS($g_bChkClanGamesAir, $g_sProfileConfigPath, "other", "ChkClanGamesAir", False, "Bool")
 	IniReadS($g_bChkClanGamesGround, $g_sProfileConfigPath, "other", "ChkClanGamesGround", False, "Bool")
@@ -503,8 +499,8 @@ Func ReadConfig_600_6()
 	IniReadS($g_bChkClanGamesBattle, $g_sProfileConfigPath, "other", "ChkClanGamesBattle", False, "Bool")
 
     IniReadS($g_bChkClanGamesBBBattle, $g_sProfileConfigPath, "other", "ChkClanGamesBBBattle", False, "Bool")
-    IniReadS($g_bChkClanGamesBBDestruction, $g_sProfileConfigPath, "other", "ChkClanGamesBBDestruction", False, "Bool")
-	$str = StringSplit(IniRead($g_sProfileConfigPath, "other", "EnabledBBDestruction", "-1|-1|-1|-1|-1|-1|-1|-1|-1|-1"), "|", $STR_NOCOUNT)
+    IniReadS($g_bChkClanGamesBBDes, $g_sProfileConfigPath, "other", "ChkClanGamesBBDestruction", False, "Bool")
+	$str = StringSplit(IniRead($g_sProfileConfigPath, "other", "EnabledBBDestruction", "2|1|0|4|14|6|7|8|10|13|"), "|", $STR_NOCOUNT)
 	For $i = 0 To UBound($g_aCmbCGBBDes) - 1
 		$g_aCmbCGBBDes[$i] = $str[$i]
 	Next
@@ -520,7 +516,11 @@ Func ReadConfig_600_6()
 	For $i = 0 To UBound($g_aCmbCGSpells) - 1
 		$g_aCmbCGSpells[$i] = $str[$i]
 	Next
-	IniReadS($g_bChkClanGamesDestruction, $g_sProfileConfigPath, "other", "ChkClanGamesDestruction", False, "Bool")
+	IniReadS($g_bChkClanGamesDes, $g_sProfileConfigPath, "other", "ChkClanGamesDestruction", False, "Bool")
+	$str = StringSplit(IniRead($g_sProfileConfigPath, "other", "EnabledCGDes", "0|1|2|3|16|17|18|19|20|21|-1|-1|-1|-1"), "|", $STR_NOCOUNT)
+	For $i = 0 To UBound($g_aCmbCGDes) - 1
+		$g_aCmbCGDes[$i] = $str[$i]
+	Next
 	IniReadS($g_bChkClanGamesAirTroop, $g_sProfileConfigPath, "other", "ChkClanGamesAirTroop", False, "Bool")
 	;xbenk
 	$str = StringSplit(IniRead($g_sProfileConfigPath, "other", "EnabledAirTroop", "0|-1|-1|-1|-1|-1|-1|-1|-1|-1|"), "|", $STR_NOCOUNT)
