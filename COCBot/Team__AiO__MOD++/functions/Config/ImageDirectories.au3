@@ -108,6 +108,15 @@ Global Const $g_sBundleWallsBB = $g_sModImageLocation & "\BuildersBase\Bundles\W
 Global Const $g_sImgTraderMod = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Traderfix"
 #EndRegion - MagicItems
 
+#Region - Auto Locate
+Global Const $g_sImgLocationLabs = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\AutoLocate\Lab\"
+Global Const $g_sImgLocationKing =	@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\AutoLocate\King\"
+Global Const $g_sImgLocationQueen =	@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\AutoLocate\Queen\"
+Global Const $g_sImgLocationChamp =	@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\AutoLocate\Champion\"
+Global Const $g_sImgLocationWarden = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\AutoLocate\Warden\"
+Global Const $g_sImgLocationCastle = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\AutoLocate\Castle\"
+#EndRegion - Auto Locate
+
 #Region - DMatchingBundles.au3
 
 ; #FUNCTION# ====================================================================================================================

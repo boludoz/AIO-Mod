@@ -257,78 +257,94 @@ Func chkBotStop()
 	EndIf
 EndFunc   ;==>chkBotStop
 
+#Region - Custom Locate - Team AIO Mod++
 Func btnLocateClanCastle()
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
 	ZoomOut()
-	LocateClanCastle()
+	LocateClanCastle(True)
 	$g_bRunState = $wasRunState
-	AndroidShield("btnLocateClanCastle") ; Update shield status due to manual $g_bRunState
+	AndroidShield("btnLocateClanCastle")
+	ChkLocations()
 EndFunc   ;==>btnLocateClanCastle
 
 Func btnLocateKingAltar()
-	LocateKingAltar()
+	Local $wasRunState = $g_bRunState
+	$g_bRunState = True
+	ZoomOut()
+	LocateKingAltar(True)
+	$g_bRunState = $wasRunState
+	AndroidShield("btnLocateKingAltar")
+	ChkLocations()
 EndFunc   ;==>btnLocateKingAltar
 
+Func btnLocateChampionAltar()
+	Local $wasRunState = $g_bRunState
+	$g_bRunState = True
+	ZoomOut()
+	LocateChampionAltar(True)
+	$g_bRunState = $wasRunState
+	AndroidShield("btnLocateChampionAltar")
+	ChkLocations()
+EndFunc   ;==>btnLocateChampionAltar
+
 Func btnLocateQueenAltar()
-	LocateQueenAltar()
+	Local $wasRunState = $g_bRunState
+	$g_bRunState = True
+	ZoomOut()
+	LocateQueenAltar(True)
+	$g_bRunState = $wasRunState
+	AndroidShield("btnLocateQueenAltar")
+	ChkLocations()
 EndFunc   ;==>btnLocateQueenAltar
 
 Func btnLocateWardenAltar()
-	LocateWardenAltar()
+	Local $wasRunState = $g_bRunState
+	$g_bRunState = True
+	ZoomOut()
+	LocateWardenAltar(True)
+	$g_bRunState = $wasRunState
+	AndroidShield("btnLocateWardenAltar")
+	ChkLocations()
 EndFunc   ;==>btnLocateWardenAltar
-
-Func btnLocateChampionAltar()
-	LocateChampionAltar()
-EndFunc   ;==>btnLocateChampionAltar
 
 Func btnLocateTownHall()
 	Local $wasRunState = $g_bRunState
 	Local $g_iOldTownHallLevel = $g_iTownHallLevel
 	$g_bRunState = True
 	ZoomOut()
-	LocateTownHall()
+	LocateTownHall(True)
 	If Not $g_iOldTownHallLevel = $g_iTownHallLevel Then
-		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 600)
-		Local $stext = @CRLF & GetTranslatedFileIni("MBR Popups", "Locating_your_TH", "If you locating your TH because you upgraded,") & @CRLF & _
-				GetTranslatedFileIni("MBR Popups", "Must_restart_bot", "then you must restart bot!!!") & @CRLF & @CRLF & _
-				GetTranslatedFileIni("MBR Popups", "OK_to_restart_bot", "Click OK to restart bot,") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Cancel_to_exit", "Or Click Cancel to exit") & @CRLF
-		Local $MsgBox = _ExtMsgBox(0, GetTranslatedFileIni("MBR Popups", "Ok_Cancel", "Ok|Cancel"), GetTranslatedFileIni("MBR Popups", "Close_Bot", "Close Bot Please!"), $stext, 120)
+		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Tahoma", 600)
+		Local $sText = @CRLF & GetTranslatedFileIni("MBR Popups", "Locating_your_TH", "If you locating your TH because you upgraded,") & @CRLF & GetTranslatedFileIni("MBR Popups", "Must_restart_bot", "then you must restart bot!!!") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "OK_to_restart_bot", "Click OK to restart bot,") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Cancel_to_exit", "Or Click Cancel to exit") & @CRLF
+		Local $MsgBox = _ExtMsgBox(0, GetTranslatedFileIni("MBR Popups", "Ok_Cancel", "Ok|Cancel"), GetTranslatedFileIni("MBR Popups", "Close_Bot", "Close Bot Please!"), $sText, 120)
 		If $g_bDebugSetlog Then SetDebugLog("$MsgBox= " & $MsgBox, $COLOR_DEBUG)
 		If $MsgBox = 1 Then
-			#cs
-				Local $stext = @CRLF & GetTranslatedFileIni("MBR Popups", "Sure_Close Bot", "Are you 100% sure you want to restart bot ?") & @CRLF & @CRLF & _
-				GetTranslatedFileIni("MBR Popups", "Restart_bot", "Click OK to close bot and then restart the bot (manually)") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Cancel_to_exit", -1) & @CRLF
-				Local $MsgBox = _ExtMsgBox(0, GetTranslatedFileIni("MBR Popups", "Ok_Cancel", -1), GetTranslatedFileIni("MBR Popups", "Close_Bot", -1), $stext, 120)
-				If $g_bDebugSetlog Then SetDebugLog("$MsgBox= " & $MsgBox, $COLOR_DEBUG)
-				If $MsgBox = 1 Then BotClose(False)
-			#ce
 			RestartBot(False, $wasRunState)
 		EndIf
 	EndIf
 	$g_bRunState = $wasRunState
-	AndroidShield("btnLocateTownHall") ; Update shield status due to manual $g_bRunState
+	AndroidShield("btnLocateTownHall")
+	ChkLocations()
 EndFunc   ;==>btnLocateTownHall
 
 Func btnResetBuilding()
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
 	While 1
-		If _Sleep(500) Then Return ; add small delay before display message window
-		If FileExists($g_sProfileBuildingPath) Then ; Check for building.ini file first
-			_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 600)
-			Local $stext = @CRLF & GetTranslatedFileIni("MBR Popups", "Delete_and_Reset_Building_info", "Click OK to Delete and Reset all Building info,") & @CRLF & @CRLF & _
-					GetTranslatedFileIni("MBR Popups", "Bot_will_exit", "NOTE =>> Bot will exit and need to be restarted when complete") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Cancel_to_exit", "Or Click Cancel to exit") & @CRLF
-			Local $MsgBox = _ExtMsgBox(0, GetTranslatedFileIni("MBR Popups", "Ok_Cancel", "Ok|Cancel"), GetTranslatedFileIni("MBR Popups", "Delete_Building_Info", "Delete Building Infomation ?"), $stext, 120)
+		If _Sleep(500) Then Return
+		If FileExists($g_sProfileBuildingPath) Then
+			_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Tahoma", 600)
+			Local $sText = @CRLF & GetTranslatedFileIni("MBR Popups", "Delete_and_Reset_Building_info", "Click OK to Delete and Reset all Building info,") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Bot_will_exit", "NOTE =>> Bot will exit and need to be restarted when complete") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Cancel_to_exit", "Or Click Cancel to exit") & @CRLF
+			Local $MsgBox = _ExtMsgBox(0, GetTranslatedFileIni("MBR Popups", "Ok_Cancel", "Ok|Cancel"), GetTranslatedFileIni("MBR Popups", "Delete_Building_Info", "Delete Building Information ?"), $sText, 120)
 			If $g_bDebugSetlog Then SetDebugLog("$MsgBox= " & $MsgBox, $COLOR_DEBUG)
 			If $MsgBox = 1 Then
-				Local $stext = @CRLF & GetTranslatedFileIni("MBR Popups", "Sure_Delete_Building_Info", "Are you 100% sure you want to delete Building information ?") & @CRLF & @CRLF & _
-						GetTranslatedFileIni("MBR Popups", "Delete_then_restart_bot", "Click OK to Delete and then restart the bot (manually)") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Cancel_to_exit", -1) & @CRLF
-				Local $MsgBox = _ExtMsgBox(0, GetTranslatedFileIni("MBR Popups", "Ok_Cancel", -1), GetTranslatedFileIni("MBR Popups", "Delete_Building_Info", -1), $stext, 120)
+				Local $sText = @CRLF & GetTranslatedFileIni("MBR Popups", "Sure_Delete_Building_Info", "Are you 100% sure you want to delete Building information ?") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Delete_then_restart_bot", "Click OK to Delete and then restart the bot (manually)") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Cancel_to_exit", -1) & @CRLF
+				Local $MsgBox = _ExtMsgBox(0, GetTranslatedFileIni("MBR Popups", "Ok_Cancel", -1), GetTranslatedFileIni("MBR Popups", "Delete_Building_Info", -1), $sText, 120)
 				If $g_bDebugSetlog Then SetDebugLog("$MsgBox= " & $MsgBox, $COLOR_DEBUG)
 				If $MsgBox = 1 Then
-					Local $Result = FileDelete($g_sProfileBuildingPath)
-					If $Result = 0 Then
+					Local $result = FileDelete($g_sProfileBuildingPath)
+					If $result = 0 Then
 						SetLog("Unable to remove building.ini file, please use manual method", $COLOR_ERROR)
 					Else
 						BotClose(False)
@@ -341,26 +357,72 @@ Func btnResetBuilding()
 		ExitLoop
 	WEnd
 	$g_bRunState = $wasRunState
-	AndroidShield("btnResetBuilding") ; Update shield status due to manual $g_bRunState
+	AndroidShield("btnResetBuilding")
 EndFunc   ;==>btnResetBuilding
+
+Func ChkLocations()
+	If (isInsideDiamond($g_aiTownHallPos) = False) Then
+		GUICtrlSetBkColor($g_hlblLocateTH, $COLOR_ORANGE)
+	Else
+		GUICtrlSetBkColor($g_hlblLocateTH, $COLOR_SUCCESS)
+	EndIf
+	If (isInsideDiamond($g_aiClanCastlePos) = False) Then
+		GUICtrlSetBkColor($g_hlblLocateCastle, $COLOR_ORANGE)
+	Else
+		GUICtrlSetBkColor($g_hlblLocateCastle, $COLOR_SUCCESS)
+	EndIf
+	If (isInsideDiamond($g_aiKingAltarPos) = False) Then
+		GUICtrlSetBkColor($g_hlblLocateKingAltar, $COLOR_ORANGE)
+	Else
+		GUICtrlSetBkColor($g_hlblLocateKingAltar, $COLOR_SUCCESS)
+	EndIf
+	If (isInsideDiamond($g_aiQueenAltarPos) = False) Then
+		GUICtrlSetBkColor($g_hlblLocateQueenAltar, $COLOR_ORANGE)
+	Else
+		GUICtrlSetBkColor($g_hlblLocateQueenAltar, $COLOR_SUCCESS)
+	EndIf
+	If (isInsideDiamond($g_aiWardenAltarPos) = False) Then
+		GUICtrlSetBkColor($g_hlblLocateWardenAltar, $COLOR_ORANGE)
+	Else
+		GUICtrlSetBkColor($g_hlblLocateWardenAltar, $COLOR_SUCCESS)
+	EndIf
+	If (isInsideDiamond($g_aiChampionAltarPos) = False) Then
+		GUICtrlSetBkColor($g_hlblLocateChampionAltar, $COLOR_ORANGE)
+	Else
+		GUICtrlSetBkColor($g_hlblLocateChampionAltar, $COLOR_SUCCESS)
+	EndIf
+	If (isInsideDiamond($g_aiLaboratoryPos) = False) Then
+		GUICtrlSetBkColor($g_hlblLocateLaboratory, $COLOR_ORANGE)
+	Else
+		GUICtrlSetBkColor($g_hlblLocateLaboratory, $COLOR_SUCCESS)
+	EndIf
+	If (isInsideDiamond($g_aiPetHousePos) = False) Then
+		GUICtrlSetBkColor($g_hlblLocatePetHouse, $COLOR_ORANGE)
+	Else
+		GUICtrlSetBkColor($g_hlblLocatePetHouse, $COLOR_SUCCESS)
+	EndIf
+EndFunc   ;==>ChkLocations
 
 Func btnLab()
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
 	ZoomOut()
-	LocateLab()
+	LocateLab(True)
 	$g_bRunState = $wasRunState
-	AndroidShield("btnLab") ; Update shield status due to manual $g_bRunState
+	AndroidShield("btnLab")
+	ChkLocations()
 EndFunc   ;==>btnLab
 
 Func btnPet()
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
 	ZoomOut()
-	LocatePetHouse()
+	LocatePetHouse(True, True)
 	$g_bRunState = $wasRunState
-	AndroidShield("btnPet") ; Update shield status due to manual $g_bRunState
+	AndroidShield("btnPet")
+	ChkLocations()
 EndFunc   ;==>btnPet
+#EndRegion - Custom Locate - Team AIO Mod++
 
 Func chkTrophyAtkDead()
 	If GUICtrlRead($g_hChkTrophyAtkDead) = $GUI_CHECKED Then
@@ -630,46 +692,46 @@ Func chkActivateClangames()
 		GUICtrlSetState($g_hChkClanGamesLoot, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkClanGamesBattle, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkClanGamesDestruction, $GUI_ENABLE)
-		
+
 		GUICtrlSetState($g_hChkClanGamesAirTroop, $GUI_ENABLE)
-		If GUICtrlRead($g_hChkClanGamesAirTroop) = $GUI_CHECKED Then 
+		If GUICtrlRead($g_hChkClanGamesAirTroop) = $GUI_CHECKED Then
 			GUICtrlSetState($g_hBtnCGAirTroop, $GUI_ENABLE)
 		Else
 			GUICtrlSetState($g_hBtnCGAirTroop, $GUI_DISABLE)
 		EndIf
-		
+
 		GUICtrlSetState($g_hChkClanGamesGroundTroop, $GUI_ENABLE)
-		If GUICtrlRead($g_hChkClanGamesGroundTroop) = $GUI_CHECKED Then 
+		If GUICtrlRead($g_hChkClanGamesGroundTroop) = $GUI_CHECKED Then
 			GUICtrlSetState($g_hBtnCGGroundTroop, $GUI_ENABLE)
 		Else
 			GUICtrlSetState($g_hBtnCGGroundTroop, $GUI_DISABLE)
 		EndIf
-		
+
 		GUICtrlSetState($g_hChkClanGamesBBTroops, $GUI_ENABLE)
-		If GUICtrlRead($g_hChkClanGamesBBTroops) = $GUI_CHECKED Then 
+		If GUICtrlRead($g_hChkClanGamesBBTroops) = $GUI_CHECKED Then
 			GUICtrlSetState($g_hBtnCGBBTroop, $GUI_ENABLE)
 		Else
 			GUICtrlSetState($g_hBtnCGBBTroop, $GUI_DISABLE)
 		EndIf
-		
+
 		GUICtrlSetState($g_hChkClanGamesMiscellaneous, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkClanGamesSpell, $GUI_ENABLE)
-		If GUICtrlRead($g_hChkClanGamesSpell) = $GUI_CHECKED Then 
+		If GUICtrlRead($g_hChkClanGamesSpell) = $GUI_CHECKED Then
 			GUICtrlSetState($g_hBtnCGSpell, $GUI_ENABLE)
 		Else
 			GUICtrlSetState($g_hBtnCGSpell, $GUI_DISABLE)
 		EndIf
-		
+
 		GUICtrlSetState($g_hChkClanGamesBBBattle, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkClanGamesBBDestruction, $GUI_ENABLE)
-		If GUICtrlRead($g_hChkClanGamesBBDestruction) = $GUI_CHECKED Then 
+		If GUICtrlRead($g_hChkClanGamesBBDestruction) = $GUI_CHECKED Then
 			GUICtrlSetState($g_hBtnCGBBDes, $GUI_ENABLE)
 		Else
 			GUICtrlSetState($g_hBtnCGBBDes, $GUI_DISABLE)
 		EndIf
 		GUICtrlSetState($g_hChkForceBBAttackOnClanGames, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkClanGamesPurgeAny, $GUI_ENABLE)
-		
+
 		GUICtrlSetState($g_hChkClanGamesPurge, $GUI_ENABLE)
 		If GUICtrlRead($g_hChkClanGamesPurge) = $GUI_CHECKED Then GUICtrlSetState($g_hcmbPurgeLimit, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkClanGamesStopBeforeReachAndPurge, $GUI_ENABLE)
@@ -677,21 +739,21 @@ Func chkActivateClangames()
 	Else
 		GUICtrlSetState($g_hChkClanGames60, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkClanGamesDebug, $GUI_DISABLE)
-		
+
 		GUICtrlSetState($g_hChkClanGamesLoot, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkClanGamesBattle, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkClanGamesDestruction, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkClanGamesAirTroop, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkClanGamesGroundTroop, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkClanGamesMiscellaneous, $GUI_DISABLE)
-		
+
 		GUICtrlSetState($g_hChkClanGamesSpell, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkClanGamesBBBattle, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkClanGamesBBDestruction, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkClanGamesBBTroops, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkForceBBAttackOnClanGames, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkClanGamesPurgeAny, $GUI_DISABLE)
-		
+
 		GUICtrlSetState($g_hChkClanGamesStopBeforeReachAndPurge, $GUI_DISABLE)
 		GUICtrlSetState($g_hcmbPurgeLimit, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkClanGamesPurge, $GUI_DISABLE)
@@ -699,7 +761,7 @@ Func chkActivateClangames()
 		GUICtrlSetState($g_hBtnCGGroundTroop, $GUI_DISABLE)
 		GUICtrlSetState($g_hBtnCGAirTroop, $GUI_DISABLE)
 		GUICtrlSetState($g_hBtnCGSpell, $GUI_DISABLE)
-		
+
 	EndIf
 	chkClanGamesBB()
 EndFunc   ;==>chkActivateClangames

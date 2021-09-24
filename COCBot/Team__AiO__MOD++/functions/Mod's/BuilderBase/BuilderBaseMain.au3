@@ -26,7 +26,7 @@ Global $g_bBonusObtainedAtStart = False
 
 Func ByPassedForceBBAttackOnClanGames($bContion = True, $bReturnBy = True)
 	; I am too lazy...
-	If $g_bChkForceBBAttackOnClanGames = True And $g_bIsCaravanOn == "True" Then
+	If $g_bChkForceBBAttackOnClanGames = True And $g_bIsCaravanOn == "True" And $g_bIsBBevent = True Then
 		Return $bReturnBy
 	EndIf
 	Return $bContion

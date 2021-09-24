@@ -162,8 +162,8 @@ Global $g_bNewModAvailable = False
 ; Custom remain - Team AIO Mod++
 Global $g_bRemainTweak = True
 
-; Skip first check - Team AIO Mod++
-Global $g_bChkBuildingsLocate  = False, $g_hChkBuildingsLocate = 0, $g_bIsReallyOn = False
+; Skip ubi buildings - Team AIO Mod++
+Global $g_bChkBuildingsLocate  = False, $g_hChkBuildingsLocate = 0
 
 ; Firewall - Team AIO Mod++
 Global $g_hChkEnableFirewall = 0, $g_bChkEnableFirewall = False

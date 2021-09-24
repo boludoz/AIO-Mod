@@ -12,7 +12,7 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func LocatePetHouse($bCollect = True)
+Func LocatePetHouse($bCollect = True, $bFromButton = False)
 	; reset position
 	$g_aiPetHousePos[0] = -1
 	$g_aiPetHousePos[0] = -1
@@ -24,6 +24,7 @@ Func LocatePetHouse($bCollect = True)
 
 	; auto locate 
 	ImgLocatePetHouse()
+	If $bFromButton = False And $g_bChkBuildingsLocate Or $g_bChkOnlyFarm Then Return
 	
 	SetLog("PetHouse: (" & $g_aiPetHousePos[0] & "," & $g_aiPetHousePos[1] & ")", $COLOR_DEBUG)
  
@@ -120,7 +121,7 @@ EndFunc   ;==>LocatePetHouse
 Func ImgLocatePetHouse()
 	Local $sImgDir = @ScriptDir & "\imgxml\Buildings\PetHouse\"
 
-	Local $sSearchArea = "FV"
+	Local $sSearchArea = "ECD"
 	Local $avPetHouse = findMultiple($sImgDir, $sSearchArea, $sSearchArea, 0, 1000, 1, "objectname,objectpoints", True)
 
 	If Not IsArray($avPetHouse) Or UBound($avPetHouse, $UBOUND_ROWS) <= 0 Then

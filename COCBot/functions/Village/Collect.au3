@@ -14,7 +14,7 @@
 ; ===============================================================================================================================
 #include-once
 #Region - Custom collect - Team AIO Mod++
-Func Collect($bCheckTreasury = True)
+Func Collect($bCheckTreasury = True, $bCollectCart = True)
 	If Not $g_bChkCollect Or Not $g_bRunState Then Return
 
 	ClickAway()
@@ -24,9 +24,9 @@ Func Collect($bCheckTreasury = True)
 
 	SetLog("Collecting Resources", $COLOR_INFO)
 	If _Sleep($DELAYCOLLECT2) Then Return
-	
+
 	Local $bLootCartFirst = (Random(1, 25, 1) > 5) ? (True) : (False)
-	If $bLootCartFirst And $g_bChkCollectLootCar And ($g_iTxtCollectGold = 0 Or $g_aiCurrentLoot[$eLootGold] < Number($g_iTxtCollectGold) Or $g_iTxtCollectElixir = 0 Or $g_aiCurrentLoot[$eLootElixir] < Number($g_iTxtCollectElixir) Or $g_iTxtCollectDark = 0 Or $g_aiCurrentLoot[$eLootDarkElixir] < Number($g_iTxtCollectDark)) Then CollectLootCart()
+	If $bLootCartFirst And $g_bChkCollectLootCar And $bCollectCart And ($g_iTxtCollectGold = 0 Or $g_aiCurrentLoot[$eLootGold] < Number($g_iTxtCollectGold) Or $g_iTxtCollectElixir = 0 Or $g_aiCurrentLoot[$eLootElixir] < Number($g_iTxtCollectElixir) Or $g_iTxtCollectDark = 0 Or $g_aiCurrentLoot[$eLootDarkElixir] < Number($g_iTxtCollectDark)) Then CollectLootCart()
 
 	; Setup arrays, including default return values for $return
 	Local $sFileName = ""
@@ -61,21 +61,21 @@ Func Collect($bCheckTreasury = True)
 				$t = Random(0, UBound($aCollectXY) - 1, 1) ; SC May 2017 update only need to pick one of each to collect all
 				If $g_bDebugSetlog Then SetDebugLog($sFileName & " found, random pick(" & $aCollectXY[$t][0] & "," & $aCollectXY[$t][1] & ")", $COLOR_GREEN)
 				If IsMainPage() Then Click($aCollectXY[$t][0], $aCollectXY[$t][1], 1, 0, "#0430")
-				
+
 				$aiLootPoint[0] = Number($aCollectXY[$t][0]) ; Magic items - AIO Team Mod++
 				$aiLootPoint[1] = Number($aCollectXY[$t][1]) ; Magic items - AIO Team Mod++
-				
+
 				If _Sleep($DELAYCOLLECT3) Then Return
 			EndIf
 		Next
-		
+
 		If IsArray($aiLootPoint) Then ResourceBoost($aiLootPoint[0], $aiLootPoint[1]) ; Magic items - AIO Team Mod++
 	EndIf
 
 	If _Sleep($DELAYCOLLECT3) Then Return
 	checkMainScreen(False) ; check if errors during function
 
-	If Not $bLootCartFirst And $g_bChkCollectLootCar And ($g_iTxtCollectGold = 0 Or $g_aiCurrentLoot[$eLootGold] < Number($g_iTxtCollectGold) Or $g_iTxtCollectElixir = 0 Or $g_aiCurrentLoot[$eLootElixir] < Number($g_iTxtCollectElixir) Or $g_iTxtCollectDark = 0 Or $g_aiCurrentLoot[$eLootDarkElixir] < Number($g_iTxtCollectDark)) Then CollectLootCart()
+	If Not $bLootCartFirst And $g_bChkCollectLootCar And $bCollectCart And ($g_iTxtCollectGold = 0 Or $g_aiCurrentLoot[$eLootGold] < Number($g_iTxtCollectGold) Or $g_iTxtCollectElixir = 0 Or $g_aiCurrentLoot[$eLootElixir] < Number($g_iTxtCollectElixir) Or $g_iTxtCollectDark = 0 Or $g_aiCurrentLoot[$eLootDarkElixir] < Number($g_iTxtCollectDark)) Then CollectLootCart()
 
 	If $g_bChkTreasuryCollect And $bCheckTreasury Then TreasuryCollect()
 	EndGainCost("Collect")
@@ -83,7 +83,7 @@ EndFunc   ;==>Collect
 #EndRegion - Custom collect - Team AIO Mod++
 
 Func CollectLootCart()
-	If Not $g_abNotNeedAllTime[0] Then 
+	If Not $g_abNotNeedAllTime[0] Then
 	    SetLog("Skipping loot cart check", $COLOR_INFO)
 	    Return
 	EndIf

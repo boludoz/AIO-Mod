@@ -58,7 +58,6 @@ Func BotDetectFirstTime()
 	If _Sleep($DELAYBOTDETECT1) Then Return
 	CheckImageType()
 	If _Sleep($DELAYBOTDETECT1) Then Return
-	
 
 	If $g_bScreenshotHideName Then
 		If _Sleep($DELAYBOTDETECT3) Then Return
