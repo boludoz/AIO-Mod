@@ -180,17 +180,6 @@ Func _BuilderBase($bTestRun = False)
 	
 				;  $g_bCloudsActive fast network fix.
 				$g_bCloudsActive = False
-	
-				If ClanGamesBB() And $g_bIsCaravanOn = "True" Then
-					; xbebenk
-					For $i = 0 To 4
-						If _Sleep(1000) Then Return
-						If QuickMIS("BC1", $g_sImgGameComplete, 760, 510, 820, 550, True, $g_bDebugImageSave) Then
-							SetLog("Nice, clan came completed", $COLOR_INFO)
-							GoToClanGames()
-						Endif
-					Next
-				EndIf
 			Else
 				$g_bCloudsActive = False
 				checkObstacles(True)

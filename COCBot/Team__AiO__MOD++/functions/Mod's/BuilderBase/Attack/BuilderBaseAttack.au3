@@ -231,7 +231,7 @@ Func BuilderBaseAttackOppoWait()
 			If Not $g_bRunState Then Return
 
 			If isOnBuilderBase(True) Or $iErrorLoop = 15 Then
-				SetLog("BuilderBaseAttackReport | Something weird happened here. Leave the screen alone.", $COLOR_ERROR)
+				SetLog("BuilderBaseAttackOppoWait | Something weird happened here. Leave the screen alone.", $COLOR_ERROR)
 				If checkObstacles(True) Then SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
 				Return
 			EndIf
@@ -264,7 +264,7 @@ Func BuilderBaseAttackOppoWait()
 	EndIf
 
 	Return False
-EndFunc   ;==>BuilderBaseAttackReport
+EndFunc   ;==>BuilderBaseAttackOppoWait
 
 Func ArmyStatus(ByRef $bIsReady)
 	If Not $g_bRunState Then Return
@@ -679,6 +679,19 @@ Func BuilderBaseAttackReport($bNoExit = False)
 		; Reset Variables
 		$g_aMachineBB = $g_aMachineBBReset
 		$g_iBBMachAbilityLastActivatedTime = -1
+
+		If $g_bIsBBevent = True Then
+			; xbebenk	
+			For $i = 0 To 8
+				_CaptureRegion2(760, 510, 820, 550)
+				If UBound(decodeSingleCoord(findImage("GameComplete", $g_sImgGameComplete & "\*", "FV", 1, False))) = 2 And not @error Then
+					SetLog("Nice, clan came completed.", $COLOR_INFO)
+					$g_bIsBBevent = False
+					GoToClanGames()
+				Endif
+				If _Sleep(500) Then Return
+			Next
+		EndIf
 
 		If RandomSleep(2000) Then Return
 
