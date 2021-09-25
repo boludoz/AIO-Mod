@@ -19,7 +19,8 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func _PixelSearch($iLeft, $iTop, $iRight, $iBottom, $sColor, $iColorVariation, $bNeedCapture = True)
+#Region - Custom - Team AIO Mod++
+Func _PixelSearch($iLeft, $iTop, $iRight, $iBottom, $sColor, $iColorVariation, $bNeedCapture = True, $bCIE76 = False)
 	Local $x1, $x2, $y1, $y2
 	If $bNeedCapture = True Then
 		_CaptureRegion($iLeft, $iTop, $iRight, $iBottom)
@@ -33,13 +34,28 @@ Func _PixelSearch($iLeft, $iTop, $iRight, $iBottom, $sColor, $iColorVariation, $
 		$y1 = $iTop
 		$y2 = $iBottom
 	EndIf
-	For $x = $x1 To $x2 Step -1
-		For $y = $y1 To $y2
-			If _ColorCheck(_GetPixelColor($x, $y), $sColor, $iColorVariation) Then
-				Local $Pos[2] = [$iLeft + $x - $x2, $iTop + $y - $y1]
-				Return $Pos
-			EndIf
+	Local $Pos[2]
+	If $bCIE76 = False Then
+		For $x = $x1 To $x2 Step -1
+			For $y = $y1 To $y2
+				If _ColorCheck(_GetPixelColor($x, $y), $sColor, $iColorVariation) Then
+					$Pos[0] = $iLeft + $x - $x2
+					$Pos[1] = $iTop + $y - $y1
+					Return $Pos
+				EndIf
+			Next
 		Next
-	Next
+	Else
+		For $x = $x1 To $x2 Step -1
+			For $y = $y1 To $y2
+				If _ColorCheckSubjetive(_GetPixelColor($x, $y), $sColor, $iColorVariation) Then
+					$Pos[0] = $iLeft + $x - $x2
+					$Pos[1] = $iTop + $y - $y1
+					Return $Pos
+				EndIf
+			Next
+		Next
+	EndIf
 	Return 0
 EndFunc   ;==>_PixelSearch
+#EndRegion - Custom - Team AIO Mod++
