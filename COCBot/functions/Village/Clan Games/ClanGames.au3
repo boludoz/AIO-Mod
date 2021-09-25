@@ -761,13 +761,12 @@ EndFunc   ;==>ClickOnEvent
 
 Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkClanGamesDebug = False)
 	If Not $g_bRunState Then Return
-
-	$g_bIsBBevent =  QuickMIS("BC1", $g_sImgBorderBB, 205, 130, 830, 550, $getCapture, False)
 	
-	If QuickMIS("BC1", $g_sImgStart, 220, 150, 830, 580, $getCapture, False) Then
-		Local $Timer = GetEventTimeInMinutes($g_iQuickMISX + 220, $g_iQuickMISY + 150)
+	Local $aStartButton = StartButton(True, $getCapture)
+	If IsArray($aStartButton) Then
+		Local $Timer = GetEventTimeInMinutes($aStartButton[0], $aStartButton[1])
 		SetLog("Starting Event" & " [" & $Timer & " min]" & " Is builder base challenge? " & $g_bIsBBevent, $COLOR_SUCCESS)
-		Click($g_iQuickMISX + 220, $g_iQuickMISY + 150)
+		Click($aStartButton[0], $aStartButton[1])
 		GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - Starting " & $sEventName & " for " & $Timer & " min", 1)
 		_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - Starting " & $sEventName & " for " & $Timer & " min")
 		
@@ -784,7 +783,6 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 					GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - Purging Event ", 1)
 					_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - Purging Event ")
 					ClickAway()
-					$g_bIsBBEvent = False
 				Else
 					SetLog("$g_sImgOkayPurge Issue", $COLOR_ERROR)
 					Return False
@@ -804,6 +802,24 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 	EndIf
 
 EndFunc   ;==>StartsEvent
+
+Func StartButton($bGetEventType = True, $getCapture = True)
+	If $bGetEventType = True Then
+		$g_bIsBBevent = False
+	EndIf
+	
+    If QuickMIS("BC1", $g_sImgStart, 220, 150, 830, 580, $getCapture, False) Then
+		$aButtonPixel[0] = ($g_iQuickMISX + 220)
+		$aButtonPixel[1] = ($g_iQuickMISY + 150)
+		If $bGetEventType = True Then
+			$g_bIsBBevent = (QuickMIS("Q1", $g_sImgBorderBB, $aButtonPixel[0] - 250, $aButtonPixel[1] - 70, $aButtonPixel[0] + 250, $aButtonPixel[1] + 70) > 0) ? (True) : (False)
+		EndIf
+		Return $aButtonPixel
+	Else
+		SetLog("Bad $g_sImgStart.", $COLOR_ERROR)
+	EndIf
+	Return 0
+EndFunc   ;==>StartButton
 
 Func PurgeEvent($directoryImage, $sEventName, $getCapture = True)
 	SetLog("Checking Builder Base Challenges to Purge", $COLOR_DEBUG)
@@ -828,7 +844,7 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 
 	Click(340,200) ;Most Top Challenge
 
-	If _Sleep(1000) Then Return
+	If _Sleep(1500) Then Return
 	If $startFirst Then
 		SetLog("ForcePurgeEvent: No event Found, Start and Purge a Challenge", $COLOR_INFO)
 		If StartAndPurgeEvent($bTest) Then
@@ -863,10 +879,11 @@ EndFunc   ;==>ForcePurgeEvent
 
 Func StartAndPurgeEvent($bTest = False)
 
-	If QuickMIS("BC1", $g_sImgStart, 220, 150, 700, 400, True, False) Then
-		Local $Timer = GetEventTimeInMinutes($g_iQuickMISX + 220, $g_iQuickMISY + 150)
+	Local $aStartButton = StartButton(False)
+	If IsArray($aStartButton) Then
+		Local $Timer = GetEventTimeInMinutes($aStartButton[0], $aStartButton[1])
 		SetLog("Starting  Event" & " [" & $Timer & " min]", $COLOR_SUCCESS)
-		Click($g_iQuickMISX + 220, $g_iQuickMISY + 150)
+		Click($aStartButton[0], $aStartButton[1])
 		GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - Starting Purge for " & $Timer & " min", 1)
 		_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - Starting Purge for " & $Timer & " min")
 
@@ -883,7 +900,7 @@ Func StartAndPurgeEvent($bTest = False)
 				GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - StartAndPurgeEvent: No event Found ", 1)
 				_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - StartAndPurgeEvent: No event Found ")
 				ClickAway()
-				$g_bIsBBEvent = False
+                $g_bIsBBEvent = False
 			Else
 				SetLog("$g_sImgOkayPurge Issue", $COLOR_ERROR)
 				Return False
@@ -933,8 +950,9 @@ Func GetEventTimeInMinutes($iXStartBtn, $iYStartBtn, $bIsStartBtn = True)
 EndFunc   ;==>GetEventTimeInMinutes
 
 Func GetEventInformation()
-	If QuickMIS("BC1", $g_sImgStart, 220, 150, 830, 580, True, False) Then
-		Return GetEventTimeInMinutes($g_iQuickMISX + 220, $g_iQuickMISY + 150)
+	Local $aStartButton = StartButton(False)
+	If IsArray($aStartButton) Then
+		Return GetEventTimeInMinutes($aStartButton[0], $aStartButton[1])
 	Else
 		Return 0
 	EndIf
