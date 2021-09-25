@@ -92,29 +92,32 @@ EndFunc   ;==>getSpellOffset
 
 Func smartZap($minDE = -1, $bLastChance = False)
 	
+	#Region - Custom SmartZap - Team AIO Mod++
+	Local $performedZap = False
+	
+	If $g_bSmartZapEnable = False Then Return $performedZap
+	If $g_bDoneSmartZap = True Then Return $performedZap
+
+	Local $iTime = Int(AttackRemainingTime() / 1000)
+	SetDebugLog("Remain time in seconds is " & $iTime & "s", $COLOR_INFO)
+	If $g_iRemainTimeToZap > $iTime And $g_iRemainTimeToZap <> 0 Or $bLastChance = True Then
+		SetLog("Let's ZAP, even with troops on the ground.", $COLOR_ACTION)
+		$g_bDoneSmartZap = True
+	Else
+		$g_bDoneSmartZap = False
+		Return $performedZap
+	EndIf
+	#EndRegion - Custom SmartZap - Team AIO Mod++
+	
 	Local $strikeOffsets = [0, 14]
 	Local $drillLvlOffset, $spellAdjust, $numDrills, $testx, $testY, $tempTestX, $tempTestY, $strikeGain, $expectedDE
-	Local $g_iSearchDark, $oldSearchDark = 0, $performedZap = False, $dropPoint
+	Local $g_iSearchDark, $oldSearchDark = 0, $dropPoint
 	Local $aSpells[3][5] = [["Own", $eLSpell, -1, -1, 0] _		 ; Own/Donated, SpellType, AttackbarPosition, Level, Count
 			, ["Donated", $eLSpell, -1, -1, 0] _
 			, ["Donated", $eESpell, -1, -1, 0]]
 	Local $bZapDrills = True
 	If $g_bDebugSmartZap = True Then SetLog("$g_bSmartZapEnable = " & $g_bSmartZapEnable & " | $g_bNoobZap = " & $g_bNoobZap, $COLOR_DEBUG)
 	
-	#Region - Custom SmartZap - Team AIO Mod++
-	If $g_bSmartZapEnable = False Then Return $performedZap
-	
-	If $g_bDoneSmartZap = True Then Return $performedZap
-
-	Local $iTime = Int(AttackRemainingTime() / 1000)
-	SetDebugLog("Remain time in seconds is " & $iTime & "s", $COLOR_INFO)
-	If ($g_iRemainTimeToZap > $iTime And $g_iRemainTimeToZap <> 0) Or $bLastChance = True Then
-		SetLog("Let's ZAP, even with troops on the ground.", $COLOR_ACTION)
-		$g_bDoneSmartZap = True
-	Else
-		Return $performedZap
-	EndIf
-	#EndRegion - Custom SmartZap - Team AIO Mod++
 
 	If $bZapDrills Then
 		If $g_bSmartZapEnable = True And $g_bNoobZap = False Then

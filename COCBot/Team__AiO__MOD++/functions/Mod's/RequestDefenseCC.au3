@@ -114,6 +114,8 @@ Func RequestFromChat()
 	
 	Local $bCanRequest = False
 	If OpenClanChat() Then
+		If _Sleep(3000) Then Return
+		
 		If _Wait4PixelArray($aChatTab) Then
 			_CaptureRegion()
 			Select
@@ -126,13 +128,13 @@ Func RequestFromChat()
 			EndSelect
 			
 			If $bCanRequest Then
+				SetLog("Requesting Clan Castle reinforcements from chat.", $COLOR_SUCCESS)
 				Local $aRequestButtonPos[2] = [$aReqOk[0] - 5, $aReqOk[1] + 5]
 				_makerequest($aRequestButtonPos)
 				
 				If _Wait4PixelGoneArray($aChatTab) Then
 					ClickAway(True, True)
 				EndIf
-				
 			EndIf
 			
 		Else
@@ -200,7 +202,7 @@ Func RequestCCMain()
 		SetLog("Request from chat impossible.", $COLOR_INFO)
 		RequestCC()
 	Else
-		SetLog("Requesting Clan Castle reinforcements from chat.", $COLOR_SUCCESS)
+		SetLog("Checking if it is possible to request reinforcements from the chat.", $COLOR_ACTION)
 		RequestFromChat()
 	EndIf
 

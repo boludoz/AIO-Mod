@@ -116,7 +116,8 @@ Func _makerequest($aRequestButtonPos, $bRequestDefense = False)
 	Local $sSendButtonArea = GetDiamondFromRect("220,150,650,650")
 
 	ClickP($aRequestButtonPos, 1, 0, "0336") ;click button request troops
-
+	If _Sleep(3000) Then Return
+	
 	If Not IsWindowOpen($g_sImgSendRequestButton, 20, 100, $sSendButtonArea) Then
 		SetLog("Request has already been made, or request window not available", $COLOR_ERROR)
 		ClickAway()
