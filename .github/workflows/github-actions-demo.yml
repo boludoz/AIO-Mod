@@ -6,8 +6,6 @@ on:
      - '.github/**'
      - '!.github/workflows/**'
      - '*.md'
-     - 'build.bat'
-     - 'build/**'
 jobs:
   build:
 
@@ -21,10 +19,14 @@ jobs:
             git clone https://github.com/boludoz/AIO-Mod.git
             git clone https://github.com/boludoz/buildAIO.git
             cd C:\build\buildAIO
-            Move-Item "build" C:\build\AIO-Mod
-            Move-Item "build.bat" C:\build\AIO-Mod
-            cd C:\build\AIO-Mod
+            Move-Item "build" C:\build\AIO-Mod\
+            Move-Item "build.bat" C:\build\AIO-Mod\
+            cd C:\build\AIO-Mod\
             ./build.bat
+            Remove-Item "build" -Recurse    
+            Remove-Item "build.bat" -Recurse
+            Remove-Item ".git" -Recurse     
+            Remove-Item ".github" -Recurse  
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
