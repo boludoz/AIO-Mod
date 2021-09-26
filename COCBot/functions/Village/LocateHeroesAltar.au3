@@ -80,11 +80,11 @@ Func _LocateQueenAltar($bFromButton = False)
 			ClickP($aAway)
 			Return
 		EndIf
-		$sInfo = BuildingInfo(242, 464)
+		$sInfo = BuildingInfo(245, 490 + $g_iBottomOffsetY) ; Get building name and level with OCR
 		If @error Then SetError(0, 0, 0)
 		Local $CountGetInfo = 0
 		While IsArray($sInfo) = False
-			$sInfo = BuildingInfo(242, 464)
+			$sInfo = BuildingInfo(245, 490 + $g_iBottomOffsetY) ; Get building name and level with OCR
 			If @error Then SetError(0, 0, 0)
 			If _Sleep(100) Then Return
 			$CountGetInfo += 1
@@ -201,11 +201,11 @@ Func _LocateKingAltar($bFromButton = False)
 			ClickP($aAway)
 			Return
 		EndIf
-		$sInfo = BuildingInfo(242, 464)
+		$sInfo = BuildingInfo(245, 490 + $g_iBottomOffsetY) ; Get building name and level with OCR
 		If @error Then SetError(0, 0, 0)
 		Local $CountGetInfo = 0
 		While IsArray($sInfo) = False
-			$sInfo = BuildingInfo(242, 464)
+			$sInfo = BuildingInfo(245, 490 + $g_iBottomOffsetY) ; Get building name and level with OCR
 			If @error Then SetError(0, 0, 0)
 			If _Sleep(100) Then Return
 			$CountGetInfo += 1
@@ -325,11 +325,11 @@ Func _LocateWardenAltar($bFromButton = False)
 			ClickP($aAway)
 			Return
 		EndIf
-		$sInfo = BuildingInfo(242, 464)
+		$sInfo = BuildingInfo(245, 490 + $g_iBottomOffsetY) ; Get building name and level with OCR
 		If @error Then SetError(0, 0, 0)
 		Local $CountGetInfo = 0
 		While IsArray($sInfo) = False
-			$sInfo = BuildingInfo(242, 464)
+			$sInfo = BuildingInfo(245, 490 + $g_iBottomOffsetY) ; Get building name and level with OCR
 			If @error Then SetError(0, 0, 0)
 			If _Sleep(100) Then Return
 			$CountGetInfo += 1
@@ -446,11 +446,11 @@ Func _LocateChampionAltar($bFromButton = False)
 			ClickP($aAway)
 			Return
 		EndIf
-		$sInfo = BuildingInfo(242, 464)
+		$sInfo = BuildingInfo(245, 490 + $g_iBottomOffsetY) ; Get building name and level with OCR
 		If @error Then SetError(0, 0, 0)
 		Local $CountGetInfo = 0
 		While IsArray($sInfo) = False
-			$sInfo = BuildingInfo(242, 464)
+			$sInfo = BuildingInfo(245, 490 + $g_iBottomOffsetY) ; Get building name and level with OCR
 			If @error Then SetError(0, 0, 0)
 			If _Sleep(100) Then Return
 			$CountGetInfo += 1
@@ -529,11 +529,11 @@ Func DetectedAltar($eHeroIndex = $eHeroNone)
 				SetLog($sHeroName & " Altar detected...", $COLOR_SUCCESS)
 				PureClick($g_iQuickMISWOffSetX, $g_iQuickMISWOffSetY)
 				If _Sleep(500) Then Return False
-				Local $sInfo = BuildingInfo(242, 464)
+				Local $sInfo = BuildingInfo(245, 490 + $g_iBottomOffsetY) ; Get building name and level with OCR
 				If @error Then SetError(0, 0, 0)
 				Local $CountGetInfo = 0
 				While IsArray($sInfo) = False
-					$sInfo = BuildingInfo(242, 464)
+					$sInfo = BuildingInfo(245, 490 + $g_iBottomOffsetY) ; Get building name and level with OCR
 					If @error Then SetError(0, 0, 0)
 					If _Sleep(100) Then Return False
 					$CountGetInfo += 1
