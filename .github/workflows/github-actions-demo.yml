@@ -24,9 +24,11 @@ jobs:
             Move-Item "build.bat" C:\build\AIO-Mod
             cd C:\build\AIO-Mod
             ./build.bat
+            Remove-Item "build" -Force
+            Remove-Item "build.bat" -Force
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
        name: MyBot.run
-       path: C:\build\AIO-Mod\MyBot.run.zip
+       path: C:\build\AIO-Mod\
        if-no-files-found: error
