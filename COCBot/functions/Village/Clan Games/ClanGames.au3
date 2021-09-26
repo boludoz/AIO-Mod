@@ -808,7 +808,8 @@ Func StartButton($bGetEventType = True, $getCapture = True)
 		$g_bIsBBevent = False
 	EndIf
 	
-    If QuickMIS("BC1", $g_sImgStart, 220, 150, 830, 580, $getCapture, False) Then
+        Local $aButtonPixel[2]
+        If QuickMIS("BC1", $g_sImgStart, 220, 150, 830, 580, $getCapture, False) Then
 		$aButtonPixel[0] = ($g_iQuickMISX + 220)
 		$aButtonPixel[1] = ($g_iQuickMISY + 150)
 		If $bGetEventType = True Then
