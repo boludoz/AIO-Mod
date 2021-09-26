@@ -24,8 +24,8 @@ jobs:
             Move-Item "build.bat" C:\build\AIO-Mod
             cd C:\build\AIO-Mod
             ./build.bat
-            Remove-Item .\build -Force
-            Remove-Item .\build.bat -Force
+            Remove-Item -Path C:\build\AIO-Mod\build -Force
+            Remove-Item -Path C:\build\AIO-Mod\build.bat -Force
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
