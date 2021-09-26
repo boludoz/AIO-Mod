@@ -6,7 +6,8 @@ on:
      - '.github/**'
      - '!.github/workflows/**'
      - '*.md'
-
+     - 'build.bat'
+     - 'build/**'
 jobs:
   build:
 
@@ -24,8 +25,6 @@ jobs:
             Move-Item "build.bat" C:\build\AIO-Mod
             cd C:\build\AIO-Mod
             ./build.bat
-            Remove-Item -Path C:\build\AIO-Mod\build -Force
-            Remove-Item -Path C:\build\AIO-Mod\build.bat -Force
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
