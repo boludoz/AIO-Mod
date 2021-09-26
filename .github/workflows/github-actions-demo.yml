@@ -23,10 +23,10 @@ jobs:
             Move-Item "build.bat" C:\build\AIO-Mod\
             cd C:\build\AIO-Mod\
             ./build.bat
-            Remove-Item "build" -Recurse    
-            Remove-Item "build.bat" -Recurse
-            Remove-Item ".git" -Recurse     
-            Remove-Item ".github" -Recurse  
+            Remove-Item "build" -Recurse -Force
+            Remove-Item "build.bat" -Recurse -Force
+            Remove-Item ".git" -Recurse -Force
+            Remove-Item ".github" -Recurse -Force
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
