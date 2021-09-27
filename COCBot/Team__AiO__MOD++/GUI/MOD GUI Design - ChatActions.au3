@@ -29,18 +29,20 @@ Global $g_hChkChatNotify = 0, $g_hChkPbSendNewChats = 0
 
 Global $g_hCmbPriorityCHAT = 0, $g_hCmbPriorityFC = 0
 
+Global $g_hChkHarangueCG = 0
+
 Func TabChatActionsGUI()
 	ChatbotReadSettings()
 
 	Local $x = 25, $y = 45
 	GUICtrlCreateGroup(GetTranslatedFileIni("MOD GUI Design - ChatActions", "Group_02", "Clan Chat"), $x - 20, $y - 20, $g_iSizeWGrpTab2 - 1, 118)
 	$x -= 10
-	$y -= 5
+	$y -= 10
 	
-		GUICtrlCreateLabel("Frequency :", $x + 26, $y + 4, 60, 17)
-		$g_hCmbPriorityCHAT = GUICtrlCreateCombo("", $x + 128, $y, 89, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+		GUICtrlCreateLabel("Frequency :", $x, $y + 4, 60, 17)
+		$g_hCmbPriorityCHAT = GUICtrlCreateCombo("", $x + 120, $y, 89, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 		GUICtrlSetData(-1, GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptions", $g_sFrequenceChain))
-			_GUICtrlComboBox_SetCurSel($g_hCmbPriorityCHAT, $g_iCmbPriorityCHAT)
+			_GUICtrlComboBox_SetCurSel($g_hCmbPriorityCHAT, 0)
 		GUICtrlSetOnEvent(-1, "cmbChatActionsChat")
         GUICtrlCreateLabel("Use each ... minutes :", $x + 272, $y + 4, 107, 17)
 		$g_hTxtDelayTimeClan = GUICtrlCreateInput("2", $x + 400, $y, 25, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
@@ -55,7 +57,13 @@ Func TabChatActionsGUI()
 
 	$y += 20
 		$g_hChkUseGeneric = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design - ChatActions", "ChkUseGeneric", "Generic chats"), $x, $y, -1, -1)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design - ChatActions", "ChkUseGeneric_Info_01", "Use generic chats if reading the latest chat failed or there are no new chats"))
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design - ChatActions", "ChkUseGeneric_Info_01", "Use generic chats if reading the latest chat failed or there are no new chats."))
+			GUICtrlSetState(-1, $GUI_UNCHECKED)
+			GUICtrlSetOnEvent(-1, "chkUseGeneric")
+	$y += 20
+		$g_hChkHarangueCG = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design - ChatActions", "ChkHarangueCG", "Only in clan games"), $x + 10, $y, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design - ChatActions", "ChkHarangueCG_Info_01", "You are not a populist, use this to harangue others (lazy players) to") & @CRLF & _
+			GetTranslatedFileIni("MOD GUI Design - ChatActions", "ChkHarangueCG_Info_02", "do clan games now you can be in your pool while others suffer."))
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
 			GUICtrlSetOnEvent(-1, "chkUseGeneric")
 
@@ -64,7 +72,7 @@ Func TabChatActionsGUI()
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design - ChatActions", "ChkCleverbot_Info_01", "Enabele on this function to communicate Cleverbot with your clan"))
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
 
-	$y -= 39
+	$y -= 55
 	$x += 120
 		$g_hLblEditResponses = GUICtrlCreateLabel(GetTranslatedFileIni("MOD GUI Design - ChatActions", "EditResponses", "Responses Messages"), $x + 2, $y, -1, -1)
 		$g_hTxtEditResponses = GUICtrlCreateEdit(_ArrayToString($g_aClanResponses, ":", -1, -1, @CRLF), $x, $y + 15, 150, 57, BitOR($GUI_SS_DEFAULT_EDIT, $ES_CENTER))
@@ -81,10 +89,10 @@ Func TabChatActionsGUI()
 	GUICtrlCreateGroup(GetTranslatedFileIni("MOD GUI Design - ChatActions", "Group_03", "Friend Challenge"), $x - 20, $y - 20, $g_iSizeWGrpTab2 - 1, 117)
 	$x -= 10
 	$y -= 5
-		GUICtrlCreateLabel("Frequency :", $x + 26, $y + 4, 60, 17)
-		$g_hCmbPriorityFC = GUICtrlCreateCombo("", $x + 128, $y, 89, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+		GUICtrlCreateLabel("Frequency :", $x, $y + 4, 60, 17)
+		$g_hCmbPriorityFC = GUICtrlCreateCombo("", $x + 120, $y, 89, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 		GUICtrlSetData(-1, GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptions", -1))
-			_GUICtrlComboBox_SetCurSel($g_hCmbPriorityFC, $g_iCmbPriorityFC)
+			_GUICtrlComboBox_SetCurSel($g_hCmbPriorityFC, 0)
 		GUICtrlSetOnEvent(-1, "cmbChatActionsFC")
         GUICtrlCreateLabel("Use each ... minutes :", $x + 272, $y + 4, 107, 17)
 		$g_hTxtDelayTimeFC = GUICtrlCreateInput("5", $x + 400, $y, 25, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))

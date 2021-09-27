@@ -200,8 +200,10 @@ EndFunc   ;==>SaveConfig_MOD_MagicItems
 Func SaveConfig_MOD_ChatActions()
 	; <><><> ChatActions <><><>
 	ApplyConfig_MOD_ChatActions(GetApplyConfigSaveAction())
-	_Ini_Add("ChatActions", "cmbPriorityCHAT", _GUICtrlComboBox_GetCurSel($g_hCmbPriorityCHAT))
-	_Ini_Add("ChatActions", "cmbPriorityFC", _GUICtrlComboBox_GetCurSel($g_hCmbPriorityFC))
+	_Ini_Add("ChatActions", "cmbPriorityCHAT", $g_iCmbPriorityCHAT)
+	_Ini_Add("ChatActions", "cmbPriorityFC", $g_iCmbPriorityFC)
+
+	_Ini_Add("ChatActions", "HarangueCG", $g_bChkHarangueCG ? 1 : 0)
 
 	; _Ini_Add("ChatActions", "EnableChatClan", $g_bChatClan ? 1 : 0)
 	_Ini_Add("ChatActions", "DelayTimeClan", $g_sDelayTimeClan)
@@ -224,9 +226,6 @@ Func SaveConfig_MOD_ChatActions()
 		$string &= ($g_abFriendlyChallengeHours[$i] ? "1" : "0") & "|"
 	Next
 	_Ini_Add("ChatActions", "FriendlyChallengePlannedRequestHours", $string)
-
-	Local $sPreIAVar = _ArrayToString($g_aIAVar, ",", -1, -1, "#")
-	_Ini_Add("ChatActions", "String2D", $sPreIAVar)
 
 	_Ini_Add("ChatActions", "ResponseMsgClan", $g_sClanResponses)
 	_Ini_Add("ChatActions", "GenericMsgClan", $g_sClanGeneric)

@@ -129,10 +129,12 @@ Func chkUseGeneric()
 			$g_bClanUseGeneric = True
 			GUICtrlSetState($g_hLblEditGeneric, $GUI_ENABLE)
 			GUICtrlSetState($g_hTxtEditGeneric, $GUI_ENABLE)
+			GUICtrlSetState($g_hChkHarangueCG, $GUI_ENABLE)
 		Else
 			$g_bClanUseGeneric = False
 			GUICtrlSetState($g_hLblEditGeneric, $GUI_DISABLE)
 			GUICtrlSetState($g_hTxtEditGeneric, $GUI_DISABLE)
+			GUICtrlSetState($g_hChkHarangueCG, $GUI_DISABLE)
 		EndIf
 	EndIf
 EndFunc   ;==>chkUseGeneric

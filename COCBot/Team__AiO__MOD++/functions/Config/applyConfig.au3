@@ -405,6 +405,8 @@ Func ApplyConfig_MOD_ChatActions($TypeReadSave)
 		Case "Read"
 			_GUICtrlComboBox_SetCurSel($g_hCmbPriorityCHAT, $g_iCmbPriorityCHAT)
 			_GUICtrlComboBox_SetCurSel($g_hCmbPriorityFC, $g_iCmbPriorityFC)
+			
+			GUICtrlSetState($g_hChkHarangueCG, $g_bChkHarangueCG = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 
 			; GUICtrlSetState($g_hChkClanChat, $g_bChatClan = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hTxtDelayTimeClan, $g_sDelayTimeClan)
@@ -430,7 +432,8 @@ Func ApplyConfig_MOD_ChatActions($TypeReadSave)
 			$g_iCmbPriorityCHAT = _GUICtrlComboBox_GetCurSel($g_hCmbPriorityCHAT)
 			$g_iCmbPriorityFC = _GUICtrlComboBox_GetCurSel($g_hCmbPriorityFC)
 
-			; $g_bChatClan = (GUICtrlRead($g_hChkClanChat) = $GUI_CHECKED)
+			$g_bChkHarangueCG = (GUICtrlRead($g_hChkHarangueCG) = $GUI_CHECKED)
+
 			$g_sDelayTimeClan = GUICtrlRead($g_hTxtDelayTimeClan)
 			$g_bClanUseResponses = (GUICtrlRead($g_hChkUseResponses) = $GUI_CHECKED)
 			$g_bClanUseGeneric = (GUICtrlRead($g_hChkUseGeneric) = $GUI_CHECKED)
@@ -438,7 +441,7 @@ Func ApplyConfig_MOD_ChatActions($TypeReadSave)
 			$g_bUseNotify = (GUICtrlRead($g_hChkChatNotify) = $GUI_CHECKED)
 			$g_bPbSendNew = (GUICtrlRead($g_hChkPbSendNewChats) = $GUI_CHECKED)
 
-			; $g_bEnableFriendlyChallenge = (GUICtrlRead($g_hChkEnableFriendlyChallenge) = $GUI_CHECKED)
+			$g_bChkHarangueCG = (GUICtrlRead($g_hChkHarangueCG) = $GUI_CHECKED)
 			$g_sDelayTimeFC = GUICtrlRead($g_hTxtDelayTimeFC)
 			$g_bOnlyOnRequest = (GUICtrlRead($g_hChkOnlyOnRequest) = $GUI_CHECKED)
 			For $i = 0 To 5

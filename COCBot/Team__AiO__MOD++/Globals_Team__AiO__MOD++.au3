@@ -256,9 +256,7 @@ Global $g_abFriendlyChallengeHours[24] = [True, True, True, True, True, True, Tr
 Global $ChatbotStartTime, $ChatbotQueuedChats[0], $ChatbotReadQueued = False, $ChatbotReadInterval = 0, $ChatbotIsOnInterval = False, _
 	$g_sGlobalChatLastMsgSentTime = "", $g_sClanChatLastMsgSentTime = "", $g_sFCLastMsgSentTime = ""
 
-Global $g_iCmbPriorityCHAT = 0, $g_iCmbPriorityFC = 0
-
-Global $g_aIAVar[5][2] = [[0,0],[1,0],[2,0],[3,0],[4,0]] , $g_sIAVar = '0,0#1,0#2,0#3,0#4,0'
+Global $g_iCmbPriorityCHAT = 0, $g_iCmbPriorityFC = 0, $g_bChkHarangueCG = 0
 
 Global $g_sGetOcrMod = "", $g_aImageSearchXML = -1
 Global $g_aClanResponses, $g_sClanResponses

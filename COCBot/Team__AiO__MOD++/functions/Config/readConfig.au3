@@ -193,6 +193,8 @@ Func ReadConfig_MOD_ChatActions()
 	IniReadS($g_iCmbPriorityCHAT, $g_sProfileConfigPath, "ChatActions", "cmbPriorityCHAT", $g_iCmbPriorityCHAT, "int")
 	IniReadS($g_iCmbPriorityFC, $g_sProfileConfigPath, "ChatActions", "cmbPriorityFC", $g_iCmbPriorityFC, "int")
 	
+	IniReadS($g_bChkHarangueCG, $g_sProfileConfigPath, "ChatActions", "HarangueCG", $g_bChkHarangueCG, "Bool")
+
 	; IniReadS($g_bChatClan, $g_sProfileConfigPath, "ChatActions", "EnableChatClan", $g_bChatClan, "Bool")
 	IniReadS($g_sDelayTimeClan, $g_sProfileConfigPath, "ChatActions", "DelayTimeClan", $g_sDelayTimeClan, "Int")
 	IniReadS($g_bClanUseResponses, $g_sProfileConfigPath, "ChatActions", "UseResponsesClan", $g_bClanUseResponses, "Bool")
@@ -211,16 +213,6 @@ Func ReadConfig_MOD_ChatActions()
 	$g_abFriendlyChallengeHours = StringSplit(IniRead($g_sProfileConfigPath, "ChatActions", "FriendlyChallengePlannedRequestHours", "1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1"), "|", $STR_NOCOUNT)
 	For $i = 0 To 23
 		$g_abFriendlyChallengeHours[$i] = ($g_abFriendlyChallengeHours[$i] = "1")
-	Next
-
-	IniReadS($g_sIAVar, $g_sProfileConfigPath, "ChatActions", "String2D", $g_sIAVar, Default)
-	Local $aPreIAVar = StringSplit($g_sIAVar, "#", $STR_NOCOUNT)
-	
-	Global $g_aIAVar[0][2]
-	For $i = 0 To UBound($aPreIAVar) - 1
-		Local $aSplitTmp = StringSplit($aPreIAVar[$i], ",", $STR_NOCOUNT)
-		Local $aTemp[1][2] = [[$aSplitTmp[0], $aSplitTmp[1]]]
-		_ArrayAdd($g_aIAVar, $aTemp)
 	Next
 	
 EndFunc   ;==>ReadConfig_MOD_ChatActions
