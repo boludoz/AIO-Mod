@@ -1433,12 +1433,7 @@ EndFunc   ;==>__RunFunction
 
 Func FirstCheck()
 
-	#Region - Custom BB - Team AIO Mod++
-	Local $bReturn = PlayBBOnly()
-	If $bReturn = True Then
-		Return
-	EndIf
-	#EndRegion - Custom BB - Team AIO Mod++
+	If PlayBBOnly() = True Then Return ; Custom BB - Team AIO Mod++
 
 	$g_bRestart = False
 	$g_bFullArmy = False
@@ -1468,9 +1463,13 @@ Func FirstCheck()
 	EndIf
 
 	#Region - Team AIO MOD++
+	Collect()
+	If Not $g_bRunState Then Return
+
 	VillageReport()
 	ProfileSwitch()
 	CheckFarmSchedule()
+	
 	If Not $g_bChkOnlyFarm Then
 		MainGTFO()
 		MainKickout()
@@ -1492,6 +1491,8 @@ Func FirstCheck()
 		SetLog("Switching back to normal setting after no elixir to train ...", $COLOR_SUCCESS)
 		Return ; Restart bot loop to reset $g_iCommandStop & $g_bTrainEnabled + $g_bDonationEnabled via BotCommand()
 	EndIf
+	
+	If PlayBBOnly() = True Then Return ; Custom BB - Team AIO Mod++
 
 	If _Sleep($DELAYRUNBOT5) Then Return
 	checkMainScreen(False)
@@ -1499,8 +1500,7 @@ Func FirstCheck()
 	If $g_bRestart Then Return
 	
 	#Region - Custom - xbebenk - Team AIO Mod++
-	 
-	VillageReport()
+	VillageReport(False, True)
 	If BotCommand() Then btnStop()
 	If ProfileSwitchAccountEnabled() And ($g_iCommandStop = 0 Or $g_bForceSwitch) Then checkSwitchAcc()
 	If Not $g_bRunState Then Return
@@ -1514,6 +1514,8 @@ Func FirstCheck()
 	EndIf
 	#Ce
 	#EndRegion - Custom - xbebenk - Team AIO Mod++
+	
+	If PlayBBOnly() = True Then Return ; Custom BB - Team AIO Mod++
 
 	If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
 		; VERIFY THE TROOPS AND ATTACK IF IS FULL
@@ -1543,25 +1545,6 @@ Func FirstCheck()
 		EndIf
 	EndIf
 EndFunc   ;==>FirstCheck
-
-#CS - Region - Custom - xbebenk - Team AIO Mod++
-Func FirstCheckRoutine()
-	RequestCC(False)
-	checkArmyCamp(False)
-	PrepareDonateCC()
-	DonateCC()
-
-	Local $aRndFuncList = ['CleanYard','UpgradeWall','LabCheck', 'Laboratory','UpgradeBuilding']
-	For $Index In $aRndFuncList
-		If Not $g_bRunState Then Return
-		_RunFunction($Index)
-		If _Sleep(50) Then Return
-		If $g_bRestart Then ExitLoop
-		If CheckAndroidReboot() Then ContinueLoop
-		If checkObstacles() Then ContinueLoop
-	Next
-EndFunc
-#CE - Region - Custom - xbebenk - Team AIO Mod++
 
 Func SetSAtk($attack = False)
 

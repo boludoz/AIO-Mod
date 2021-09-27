@@ -26,6 +26,7 @@ Func _ClanGames($test = False)
 		Return
 	EndIf
 	#EndRegion - Custom BB - Team AIO Mod++
+	$g_bIsBBevent = False ;just to be sure, reset to false
 	
 	Local $sINIPath = StringReplace($g_sProfileConfigPath, "config.ini", "ClanGames_config.ini")
 	If Not FileExists($sINIPath) Then ClanGamesChallenges("", True, $sINIPath, $g_bChkClanGamesDebug)
@@ -78,23 +79,21 @@ Func _ClanGames($test = False)
 			If $aiScoreLimit[0] = $aiScoreLimit[1] Then
 				SetLog("Your score limit is reached! Congrats")
 				ClickAway()
-				$g_bIsBBevent = False
 				Return
 			ElseIf $aiScoreLimit[0] + 300 > $aiScoreLimit[1] Then
-				SetLog("Your Score limit is almost reached")
-				
 				; Custom BB - Team AIO Mod++
 				$g_bIsCaravanOn = "False"
 				
+				SetLog("Your almost reached max point")
 				If $g_bChkClanGamesStopBeforeReachAndPurge Then
+					If IsEventRunning() Then Return
 					$sTimeCG = ConvertOCRTime("ClanGames()", $g_sClanGamesTimeRemaining, True)
 					Setlog("Clan Games Minute Remain: " & $sTimeCG)
-					If $g_bChkClanGamesPurgeAny And $sTimeCG > 1200 Then ; purge, but not purge on last 2 day of clangames
+					If $g_bChkClanGamesPurgeAny And $sTimeCG > 1200 Then ; purge, but not purge on last day of clangames
 						SetLog("Stop before completing your limit and only Purge")
 						SetLog("Lets only purge 1 most top event", $COLOR_WARNING)
 						ForcePurgeEvent(False, True)
 						ClickAway()
-						$g_bIsBBevent = False
 						Return
 					EndIf
 				EndIf
@@ -477,7 +476,10 @@ Func _ClanGames($test = False)
 		If UBound($aTempSelectChallenges) > 0 Then
 			SetDebugLog("$aTempSelectChallenges: " & _ArrayToString($aTempSelectChallenges))
 			; Sort by difficulties
-			_ArraySort($aTempSelectChallenges, 0, 0, 0, 3)
+			;_ArraySort($aTempSelectChallenges, 0, 0, 0, 3)
+			
+			; Sort by time
+			_ArraySort($aTempSelectChallenges, 1, 4, 0, 3)
 
 			Setlog("Next Event will be " & $aTempSelectChallenges[0][0] & " to make in " & $aTempSelectChallenges[0][4] & " min.")
 			; Select and Start EVENT
@@ -506,7 +508,6 @@ Func _ClanGames($test = False)
 		Return
 	EndIf
 
-	$g_bIsBBevent = False
 	If $g_bChkClanGamesPurgeAny Then ; still have to purge, because no enabled event on setting found
 		SetLog("Still have to purge, because no enabled event on setting found", $COLOR_WARNING)
 		SetLog("No Event found, lets purge 1 most top event", $COLOR_WARNING)
@@ -523,6 +524,14 @@ EndFunc ;==>_ClanGames
 Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 	If $sImageType = Default Then Return
 	Switch $sImageType
+		Case "D"
+			Local $CGDes = ClanGamesChallenges("$DestructionChallenges")
+			For $i = 0 To UBound($g_aCmbCGDes) - 1
+				If $g_aCmbCGDes[$i] >= 0 Then
+					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "DestructionChallenges: " & $CGDes[$g_aCmbCGDes[$i]][0], $COLOR_DEBUG)
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGDes[$g_aCmbCGDes[$i]][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
+				EndIf
+			Next
 		Case "A"
 			Local $AirTroopChallenges = ClanGamesChallenges("$AirTroopChallenges")
 			For $i = 0 To UBound($g_aCmbCGAirTroops) - 1
@@ -591,7 +600,6 @@ Func IsClanGamesWindow($getCapture = True)
 		$bRet = False
 	EndIf
 
-	If Not $bRet Then $g_bIsBBevent = False
 	SetLog("Clan Games Event is : " & $sState, $COLOR_INFO)
 	Return $bRet
 EndFunc   ;==>IsClanGamesWindow
@@ -613,7 +621,7 @@ Func IsClanGamesRunning($getCapture = True) ;to check whether clangames current 
 			$sState = "prepare"
 		EndIf
 		SetLog("Clan Games Window Not Opened", $COLOR_DEBUG)
-		Return $sState
+		$sState = "Cannot open ClanGames"
 	EndIf
 	Return $sState
 EndFunc ;==>IsClanGamesRunning
@@ -703,16 +711,6 @@ Func IsEventRunning($bOpenWindow = False)
 				;check if Challenge is BB Challenge, enabling force BB attack
 				If $g_bChkForceBBAttackOnClanGames Then
 					
-					;Local $aCurEvent = decodeSingleCoord(findImage("BBChallenge", @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\BB*.xml", GetDiamondFromRect("300, 160, 380, 240"), 1, True, Default))
-					;If IsArray($aCurEvent) And UBound($aCurEvent, 1) >= 2 Then
-					;	Setlog("Running Challenge is BB Challenge", $COLOR_DEBUG)
-					;	$g_bIsBBevent = True
-					;Else
-					;	Setlog("Running Challenge is Not BB Challenge", $COLOR_DEBUG)
-					;	$g_bIsBBevent = False
-					;EndIf
-					
-					
 					Click(340,210)
 					If _Sleep(1000) Then Return
 					SetLog("Re-Check If Running Challenge is BB Event or No?", $COLOR_DEBUG)
@@ -720,7 +718,7 @@ Func IsEventRunning($bOpenWindow = False)
 						Setlog("Running Challenge is BB Challenge", $COLOR_INFO)
 						$g_bIsBBevent = True
 					Else
-						Setlog("Running Challenge is Not BB Challenge", $COLOR_INFO)
+						Setlog("Running Challenge is MainVillage Challenge", $COLOR_INFO)
 						$g_bIsBBevent = False
 					EndIf
 				EndIf
@@ -833,7 +831,6 @@ Func PurgeEvent($directoryImage, $sEventName, $getCapture = True)
 		If _Sleep(1500) Then Return
 		If StartsEvent($sEventName, True, $getCapture, $g_bChkClanGamesDebug) Then
 			ClickAway()
-			$g_bIsBBEvent = False
 			Return True
 		EndIf
 	EndIf
@@ -865,7 +862,6 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 				If _Sleep(1500) Then Return
 				GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - ForcePurgeEvent: Purge a Wrong Challenge ", 1)
 				_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - ForcePurgeEvent: Purge a Wrong Challenge ")
-				$g_bIsBBEvent = False
 			Else
 				SetLog("$g_sImgOkayPurge Issue", $COLOR_ERROR)
 				Return False
@@ -901,7 +897,6 @@ Func StartAndPurgeEvent($bTest = False)
 				GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - StartAndPurgeEvent: No event Found ", 1)
 				_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - StartAndPurgeEvent: No event Found ")
 				ClickAway()
-                $g_bIsBBEvent = False
 			Else
 				SetLog("$g_sImgOkayPurge Issue", $COLOR_ERROR)
 				Return False
@@ -930,7 +925,6 @@ Func TrashFailedEvent()
 	EndIf
 
 	If _Sleep(500) Then Return
-	$g_bIsBBEvent = False
 	Return True
 EndFunc   ;==>TrashFailedEvent
 
