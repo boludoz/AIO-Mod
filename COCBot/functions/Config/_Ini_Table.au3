@@ -121,7 +121,8 @@ EndFunc   ;==>_Ini_Save
 
 Func _Ini_Clear()
 	$g_asIniTable = 0
-	Dim $g_asIniTable[$g_iIniLinesMax][3]
+	Local $asNewIniTable[$g_iIniLinesMax][3]
+	$g_asIniTable = $asNewIniTable
 	$g_iIniLineCount = 0
 	;SetDebugLog("Cleared Ini table")
 EndFunc   ;==>_Ini_Clear

@@ -835,7 +835,7 @@ Func btnSetCGDes()
 		$g_aCmbCGDes[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbCGDes[$i])
 		$d = $g_aCmbCGDes[$i]
 		If $d = -1 Then ContinueLoop
-		SetLog($i+1 & " : " & $DestructionChallenges[$d][0], $COLOR_SUCCESS)
+		SetLog($i+1 & " : " & $g_aCGDestructionChallenges[$d][0], $COLOR_SUCCESS)
 	Next
 EndFunc
 
@@ -871,7 +871,7 @@ Func btnSetCGAirTroops()
 ;~ 		$g_aCmbCGAirTroops[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbCGAirTroops[$i])
 ;~ 		$d = $g_aCmbCGAirTroops[$i]
 ;~ 		If $d = -1 Then ContinueLoop
-;~ 		SetLog($i+1 & " : " & $AirTroopChallenges[$d][0], $COLOR_SUCCESS)
+;~ 		SetLog($i+1 & " : " & $g_aCGAirTroopChallenges[$d][0], $COLOR_SUCCESS)
 ;~ 	Next
 EndFunc
 
@@ -882,11 +882,11 @@ Func BtnCGAirTroopsRemove()
 EndFunc
 
 Func btnCGGroundTroops()
-;~ 	GUISetState(@SW_SHOW, $g_hGUI_CGGroundTroops)
+ 	GUISetState(@SW_SHOW, $g_hGUI_CGGroundTroops)
 EndFunc
 
 Func CloseCGGroundTroops()
-;~ 	GUISetState(@SW_HIDE, $g_hGUI_CGGroundTroops)
+ 	GUISetState(@SW_HIDE, $g_hGUI_CGGroundTroops)
 EndFunc
 
 Func GUI_CGGroundTroops()
@@ -907,7 +907,7 @@ Func btnSetCGGroundTroops()
 ;~ 		$g_aCmbCGGroundTroops[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbCGGroundTroops[$i])
 ;~ 		$d = $g_aCmbCGGroundTroops[$i]
 ;~ 		If $d = -1 Then ContinueLoop
-;~ 		SetLog($i+1 & " : " & ClanGamesChallenges("$GroundTroopChallenges")[$d][0], $COLOR_SUCCESS)
+;~ 		SetLog($i+1 & " : " & ClanGamesChallenges("$g_aCGGroundTroopChallenges")[$d][0], $COLOR_SUCCESS)
 ;~ 	Next
 EndFunc
 
@@ -944,7 +944,7 @@ Func btnSetCGSpells()
 ;~ 		$g_aCmbCGSpells[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbCGSpells[$i])
 ;~ 		$d = $g_aCmbCGSpells[$i]
 ;~ 		If $d = -1 Then ContinueLoop
-;~ 		SetLog($i+1 & " : " & ClanGamesChallenges("$SpellChallenges")[$d][0], $COLOR_SUCCESS)
+;~ 		SetLog($i+1 & " : " & ClanGamesChallenges("$g_aCGSpellChallenges")[$d][0], $COLOR_SUCCESS)
 ;~ 	Next
 EndFunc
 
@@ -980,7 +980,7 @@ Func btnSetCGBBDes()
 ;~ 		$g_aCmbCGBBDes[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbCGBBDes[$i])
 ;~ 		$d = $g_aCmbCGBBDes[$i]
 ;~ 		If $d = -1 Then ContinueLoop
-;~ 		SetLog($i+1 & " : " & ClanGamesChallenges("$BBDestructionChallenges")[$d][0], $COLOR_SUCCESS)
+;~ 		SetLog($i+1 & " : " & ClanGamesChallenges("$g_aCGBBDestructionChallenges")[$d][0], $COLOR_SUCCESS)
 ;~ 	Next
 EndFunc
 
@@ -1016,7 +1016,7 @@ Func btnSetCGBBTroops()
 ;~ 		$g_aCmbCGBBTroops[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbCGBBTroops[$i])
 ;~ 		$d = $g_aCmbCGBBTroops[$i]
 ;~ 		If $d = -1 Then ContinueLoop
-;~ 		SetLog($i+1 & " : " & ClanGamesChallenges("$BBTroopChallenges")[$d][0], $COLOR_SUCCESS)
+;~ 		SetLog($i+1 & " : " & ClanGamesChallenges("$g_aCGBBTroopChallenges")[$d][0], $COLOR_SUCCESS)
 ;~ 	Next
 EndFunc
 

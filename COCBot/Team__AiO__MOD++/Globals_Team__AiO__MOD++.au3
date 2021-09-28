@@ -13,19 +13,19 @@
 ; Example .......: No
 ; ===============================================================================================================================
 #Tidy_Off
+Global $g_hCGDestructionChallenges[32]
 Global $g_hCGLootChallenges[6]
 Global $g_hCGAirTroopChallenges[14]
 Global $g_hCGGroundTroopChallenges[27]
 Global $g_hCGBattleChallenges[20]
-Global $g_hCGDestructionChallenges[32]
 Global $g_hCGMiscChallenges[3]
 Global $g_hCGSpellChallenges[11]
 Global $g_hCGBBBattleChallenges[4]
 Global $g_hCGBBDestructionChallenges[15]
 Global $g_hCGBBTroopChallenges[11]
 
-;[0]=ImageName 	 					[1]=Challenge Name		[3]=THlevel 	[4]=Priority/TroopsNeeded	[5] = ?	[6] = Enabled/Disabled
-Global $LootChallenges[6][6] = [ _
+;[0]=ImageName 	 					[1]=Challenge Name		[2]=THlevel 	[3]=Priority/TroopsNeeded	[4] = ?	[5] = Enabled/Disabled
+Global $g_aCGLootChallenges[6][6] = [ _
 		["GoldChallenge", 			"Gold Challenge", 				 7,  5, 8, True], _ ; Loot 150,000 Gold from a single Multiplayer Battle				|8h 	|50
 		["ElixirChallenge", 		"Elixir Challenge", 			 7,  5, 8, True], _ ; Loot 150,000 Elixir from a single Multiplayer Battle 			|8h 	|50
 		["DarkEChallenge", 			"Dark Elixir Challenge", 		 8,  5, 8, True], _ ; Loot 1,500 Dark elixir from a single Multiplayer Battle			|8h 	|50
@@ -33,7 +33,7 @@ Global $LootChallenges[6][6] = [ _
 		["ElixirEmbezz", 			"Elixir Embezzlement", 			 3,  1, 1, True], _ ; Loot a total of 500,000 TO 1,500,000 from Multiplayer Battle 	|1h-2d 	|100-600
 		["DarkEHeist", 				"Dark Elixir Heist", 			 9,  3, 1, True]]   ; Loot a total of 1,500 TO 12,500 from Multiplayer Battle 		|1h-2d 	|100-600
 
-Global $AirTroopChallenges[14][6] = [ _
+Global $g_aCGAirTroopChallenges[14][6] = [ _
 		["Ball", 					"Balloon", 						 4, 12, 1, True], _ ; Earn 2-5 Stars from Multiplayer Battles using 12 Balloons		|3h-8h	|40-100
 		["Heal", 					"Healer", 						 4, 12, 1, True], _ ; Earn 2-5 Stars from Multiplayer Battles using 12 Balloons		|3h-8h	|40-100
 		["Drag", 					"Dragon", 						 7,  6, 1, True], _ ; Earn 2-5 Stars from Multiplayer Battles using 6 Dragons			|3h-8h	|40-100
@@ -49,7 +49,7 @@ Global $AirTroopChallenges[14][6] = [ _
 		["BattleB", 				"Battle Blimp", 				10,  5, 1, True], _ ; moved to air troops
 		["StoneS",	 				"Stone Slammer", 				10,  5, 1, True]]   ; moved to air troops
 
-Global $GroundTroopChallenges[27][6] = [ _
+Global $g_aCGGroundTroopChallenges[27][6] = [ _
 		["Arch", 					"Archer", 						 1, 10, 1, True], _ ; Earn 2-5 Stars from Multiplayer Battles using 30 Barbarians		|3h-8h	|40-100
 		["Barb", 					"Barbarian", 					 1, 30, 1, True], _ ; Earn 2-5 Stars from Multiplayer Battles using 30 Archers		|3h-8h	|40-100
 		["Giant", 					"Giant", 						 1, 10, 1, True], _ ; Earn 2-5 Stars from Multiplayer Battles using 10 Giants			|3h-8h	|40-100
@@ -78,7 +78,7 @@ Global $GroundTroopChallenges[27][6] = [ _
 		["SiegeB", 					"Siege Barrack", 				10,  5, 1, True], _ ; moved to ground troops
 		["LogL", 					"Log Launcher", 				10,  5, 1, True]]   ; moved to ground troops
 
-Global $BattleChallenges[20][6] = [ _
+Global $g_aCGBattleChallenges[20][6] = [ _
 		["Start", 					"Star Collector", 				 3,  1, 8, True], _ ; Collect a total of 6-18 stars from Multiplayer Battles			|8h-2d	|100-600
 		["Destruction", 			"Lord of Destruction", 			 3,  1, 8, True], _ ; Gather a total of 100%-500% destruction from Multi Battles		|8h-2d	|100-600
 		["PileOfVictores", 			"Pile Of Victories", 			 3,  1, 8, True], _ ; Win 2-8 Multiplayer Battles										|8h-2d	|100-600
@@ -100,7 +100,7 @@ Global $BattleChallenges[20][6] = [ _
 		["SpeedyStars", 			"3 Stars in 60 seconds",		 6,  2, 5, True], _ ;
 		["Tremendous13s", 			"Tremendous 13s", 				13,  1, 8, True]]   ;
 
-Global $DestructionChallenges[32][6] = [ _
+Global $g_aCGDestructionChallenges[32][6] = [ _
 		["Cannon", 					"Cannon", 				 3,  1, 1, True], _ ; Destroy 5-25 Cannons in Multiplayer Battles					|1h-8h	|75-350
 		["ArcherT", 				"Archer Tower", 		 3,  1, 1, True], _ ; Destroy 5-20 Archer Towers in Multiplayer Battles			|1h-8h	|75-350
 		["BuilderHut", 				"Builder Hut", 		     3,  1, 1, True], _ ; Destroy 4-12 BuilderHut in Multiplayer Battles				|1h-8h	|40-350
@@ -135,13 +135,13 @@ Global $DestructionChallenges[32][6] = [ _
 		["ScatterShotSabotage",		"ScatterShot",			13,  5, 1, True]]   ;
 
 
-Global $MiscChallenges[3][6] = [ _
+Global $g_aCGMiscChallenges[3][6] = [ _
 		["Gard", 					"Gardening Exercise", 			 3,  6, 8, True], _ ; Clear 5 obstacles from your Home Village or Builder Base		|8h	|50
 		["DonateSpell", 			"Donate Spells", 				 9,  6, 8, True], _ ; Donate a total of 10 housing space worth of spells				|8h	|50
 		["DonateTroop", 			"Helping Hand", 				 6,  6, 8, True]]   ; Donate a total of 100 housing space worth of troops				|8h	|50
 
 
-Global $SpellChallenges[11][6] = [ _
+Global $g_aCGSpellChallenges[11][6] = [ _
 		["LSpell", 					"Lightning", 					 6,  5, 1, True], _ ;
 		["HSpell", 					"Heal",							 6,  5, 1, True], _ ; updated 25/01/2021
 		["RSpell", 					"Rage", 					 	 6,  5, 1, True], _ ;
@@ -154,13 +154,13 @@ Global $SpellChallenges[11][6] = [ _
 		["SkSpell",					"Skeleton", 					11,  5, 1, True], _ ;
 		["BtSpell",					"Bat", 					 		10,  5, 1, True]]   ;
 
-Global $BBBattleChallenges[4][6] = [ _
+Global $g_aCGBBBattleChallenges[4][6] = [ _
         ["StarM",					"BB Star Master",				2,  1, 1, True], _ ; Earn 6 - 24 stars on the BB
         ["Victories",				"BB Victories",					2,  5, 1, True], _ ; Earn 3 - 6 victories on the BB
 		["StarTimed",				"BB Star Timed",				2,  2, 1, True], _
         ["Destruction",				"BB Destruction",				2,  1, 1, True]] ; Earn 225% - 900% on BB attacks
 
-Global $BBDestructionChallenges[15][6] = [ _
+Global $g_aCGBBDestructionChallenges[15][6] = [ _
         ["Airbomb",					"Air Bomb",                 	2,  1, 1, True], _
 		["BuildingDes",             "BB Building",					2,  1, 1, True], _
 		["BuilderHall",             "BuilderHall",					2,  1, 1, True], _
@@ -177,7 +177,7 @@ Global $BBDestructionChallenges[15][6] = [ _
 		["StarLab",                 "Star Laboratory",              2,  1, 1, True], _
 		["WallDes",             	"Wall Whacker",              	2,  1, 1, True]]
 
-Global $BBTroopChallenges[11][6] = [ _
+Global $g_aCGBBTroopChallenges[11][6] = [ _
         ["RBarb",					"Raged Barbarian",              2,  1, 1, True], _ ;BB Troops
         ["SArch",                 	"Sneaky Archer",                2,  1, 1, True], _
         ["BGiant",         			"Boxer Giant",             		2,  1, 1, True], _
