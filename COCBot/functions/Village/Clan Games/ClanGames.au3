@@ -93,7 +93,7 @@ Func _ClanGames($test = False)
 	; Let's selected only the necessary images [Total=71]
 	Local $sImagePath = @ScriptDir & "\imgxml\Resources\ClanGamesImages\Challenges"
 	Local $sTempPath = @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\"
-
+	; ClanGameImageCopy(@ScriptDir & "\imgxml\Resources\ClanGamesImages\Challenges", @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\", "BBD")
 	;Remove All previous file (in case setting changed)
 	DirRemove($sTempPath, $DIR_REMOVE)
 
@@ -1082,10 +1082,10 @@ Func ReadClanGamesConfig()
 		For $j = 0 To UBound($aTmp) - 1
 
 			; Write the new value to the file
-			IniReadSCG($g_aChallengesClanGamesStrings[$i], $j, 3, $g_sProfileClanGamesPath, $g_aChallengesClanGamesStrings[$i], 		$aTmp[$j][0], 	$aTmp[$j][3], "Int")
+			IniReadSCG($g_aChallengesClanGamesStrings[$i], $j, 3, $g_sProfileClanGamesPath, $g_aChallengesClanGamesStrings[$i], 		$aTmp[$j][1], 	$aTmp[$j][3], "Int")
 
 			; Write boolean status
-			IniReadSCG($g_aChallengesClanGamesStrings[$i], $j, 5, $g_sProfileClanGamesPath, $g_aChallengesClanGamesStrings[$i], $aTmp[$j][0] & "Chk", 	$aTmp[$j][5], "Bool")
+			IniReadSCG($g_aChallengesClanGamesStrings[$i], $j, 5, $g_sProfileClanGamesPath, $g_aChallengesClanGamesStrings[$i], $aTmp[$j][1] & " Chk", 	$aTmp[$j][5], "Bool")
 
 		Next
 
