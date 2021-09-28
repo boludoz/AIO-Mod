@@ -438,6 +438,7 @@ Global Const $g_sPrivateAuthenticationFile = @AppDataDir & "\.mybot.run.authenti
 Global Const $g_sProfilePresetPath = @ScriptDir & "\Strategies"
 Global $g_sProfileCurrentName = "" ; Name of profile currently being used
 Global $g_sProfileConfigPath = "" ; Path to the current config.ini being used in this profile
+Global $g_sProfileClanGamesPath = "" ; Path to the current ClanGames_config.ini being used in this profile ; Team__AiO__MOD
 Global $g_sProfileBuildingStatsPath = "" ; Path to stats_chkweakbase.ini file for this profile
 Global $g_sProfileBuildingPath = "" ; Paths to building.ini file for this profile
 Global $g_sProfileLogsPath = "", $g_sProfileLootsPath = "", $g_sProfileTempPath = "", $g_sProfileTempDebugPath = "", $g_sProfileTempDebugDOCRPath = "" ; Paths to log/image/temp folders for this profile, AIO

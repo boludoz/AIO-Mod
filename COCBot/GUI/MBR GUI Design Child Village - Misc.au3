@@ -529,34 +529,34 @@ Func CreateMiscClanGamesV3SubTab()
 EndFunc   ;==>CreateMiscClanGamesV3SubTab
 
 Func CreateCGDes()
-    Local $CGDesChallenges = ClanGamesChallenges("$DestructionChallenges")
-    For $j = 0 To UBound($CGDesChallenges) - 1
-        $g_sTxtCGDes &= $CGDesChallenges[$j][1] & "|"
-    Next
+    Local $CGDesChallenges = $DestructionChallenges
 
-    $g_hGUI_CGDes = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_CGDes", "Main Village Destruction Challenge"), 322, 315, $g_iFrmBotPosX, -1, $WS_DLGFRAME, $WS_EX_TOPMOST)
+    $g_hGUI_CGDes = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_CGDes", "Main Village Destruction Challenge"), 322 * 2, 315, $g_iFrmBotPosX, -1, $WS_DLGFRAME, $WS_EX_TOPMOST)
     Local $x = 25, $y = 25
-    GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SelectCGDes", "Select Destruction Challenges"), $x - 20, $y - 20, 308, 220)
+    GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SelectCGDes", "Select Destruction Challenges"), $x - 20, $y - 20, (308 * 2) + 10, 220)
     $x += 10
     $y += 5
-    For $i = 0 To 13
-        If $i < 7 Then
-            GUICtrlCreateLabel($i + 1 & ":", $x - 19, $y + 3 + 25*$i, -1, 18)
-            $g_ahCmbCGDes[$i] = GUICtrlCreateCombo("", $x, $y + 25*$i, 115, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
-                GUICtrlSetOnEvent(-1, "GUI_CGDes")
-                GUICtrlSetData(-1,  $g_sTxtCGDes)
-        Else
-            GUICtrlCreateLabel($i + 1 & ":", $x + 150 - 19, $y + 3 + 25*($i-7), -1, 18)
-            $g_ahCmbCGDes[$i] = GUICtrlCreateCombo("", $x+150, $y + 25*($i-7), 115, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
-                GUICtrlSetOnEvent(-1, "GUI_CGDes")
-                GUICtrlSetData(-1,  $g_sTxtCGDes)
-        EndIf
+
+	Local $hA[UBound($CGDesChallenges)]
+	Local $ixFix = 0
+	Local $iyFix = 0
+
+    For $i = 0 To UBound($CGDesChallenges) -1
+		$hA[$i] = GUICtrlCreateCheckBox($CGDesChallenges[$i][1], $x + $ixFix - 19, $y + (20 * $iyFix))
+		GUICtrlSetState($hA[$i], ($CGDesChallenges[$i][5] = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
+
+		If $i <> 0 Then
+			$iyFix += 1
+			If Mod($i, 7) = 0 Then
+				$ixFix += 125
+				$iyFix = 0
+				$y = 30
+			EndIf
+		EndIf
+
     Next
+
     $y = 215
-    $g_hBtnCGDesSet = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnCGDesSet", "Apply Challenge"), $x - 20, $y, 118, 25)
-        GUICtrlSetOnEvent(-1, "btnSetCGDes")
-    $g_hBtnCGDesRemove = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnCGDesRemove", "Empty Challenge List"), $x + 150, $y, 118, 25)
-        GUICtrlSetOnEvent(-1, "BtnCGDesRemove")
     GUICtrlCreateGroup("", -99, -99, 1, 1)
 
     $g_hBtnCGDesClose = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnCGDesClose", "Close"), 230, $y - 5 + 50, 85, 25)
@@ -565,6 +565,7 @@ Func CreateCGDes()
 EndFunc ;==>CreateCGDes
 
 Func CreateClanGamesAirTroops()
+#cs
 	Local $AirTroopsChallenges = ClanGamesChallenges("$AirTroopChallenges")
 	For $j = 0 To UBound($AirTroopsChallenges) - 1
 		$g_sTxtCGAirTroop &= $AirTroopsChallenges[$j][1] & "|"
@@ -597,10 +598,12 @@ Func CreateClanGamesAirTroops()
 
 	$g_hBtnCGAirTroopsClose = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnCGAirTroopsClose", "Close"), 230, $y - 5 + 50, 85, 25)
 		GUICtrlSetOnEvent(-1, "CloseCGAirTroops")
+#ce
 
 EndFunc ;==>CreateClanGamesAirTroops
 
 Func CreateClanGamesGroundTroops()
+#cs
 	Local $GroundTroopChallenges = ClanGamesChallenges("$GroundTroopChallenges")
 	For $j = 0 To UBound($GroundTroopChallenges) - 1
 		$g_sTxtCGGroundTroop &= $GroundTroopChallenges[$j][1] & "|"
@@ -633,10 +636,12 @@ Func CreateClanGamesGroundTroops()
 
 	$g_hBtnCGGroundTroopClose = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnCGGroundTroopClose", "Close"), 230, $y - 5 + 50, 85, 25)
 		GUICtrlSetOnEvent(-1, "CloseCGGroundTroops")
+#ce
 
 EndFunc ;==>CreateClanGamesGroundTroops
 
 Func CreateClanGamesSpell()
+#cs
 	Local $SpellChallenges = ClanGamesChallenges("$SpellChallenges")
 	For $j = 0 To UBound($SpellChallenges) - 1
 		$g_sTxtCGSpell &= $SpellChallenges[$j][1] & "|"
@@ -669,10 +674,12 @@ Func CreateClanGamesSpell()
 
 	$g_hBtnCGSpellsClose = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnCGSpellsClose", "Close"), 230, $y - 5 + 50, 85, 25)
 		GUICtrlSetOnEvent(-1, "CloseCGSpells")
+#ce
 
 EndFunc ;==>CreateClanGamesSpell
 
 Func CreateClanGamesBBDes()
+#cs
 	Local $BBDesChallenges = ClanGamesChallenges("$BBDestructionChallenges")
 	For $j = 0 To UBound($BBDesChallenges) - 1
 		$g_sTxtCGBBDes &= $BBDesChallenges[$j][1] & "|"
@@ -706,13 +713,15 @@ Func CreateClanGamesBBDes()
 
 	$g_hBtnCGBBDesClose = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnCGBBDesClose", "Close"), 230, $y - 5 + 50, 85, 25)
 		GUICtrlSetOnEvent(-1, "CloseCGBBDes")
+#ce
 
 EndFunc ;==>CreateClanGamesBBDes
 
 Func CreateClanGamesBBTroops()
-	Local $BBTroopsChallenges = ClanGamesChallenges("$BBTroopChallenges")
-	For $j = 0 To UBound($BBTroopsChallenges) - 1
-		$g_sTxtCGBBTroop &= $BBTroopsChallenges[$j][1] & "|"
+#cs
+	Local $BBTroopChallenges = ClanGamesChallenges("$BBTroopChallenges")
+	For $j = 0 To UBound($BBTroopChallenges) - 1
+		$g_sTxtCGBBTroop &= $BBTroopChallenges[$j][1] & "|"
 	Next
 
 	$g_hGUI_CGBBTroops = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_CGBBTroops", "BB Troops Challenges"), 322, 265, $g_iFrmBotPosX, -1, $WS_DLGFRAME, $WS_EX_TOPMOST)
@@ -743,5 +752,6 @@ Func CreateClanGamesBBTroops()
 
 	$g_hBtnCGBBTroopsClose = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnCGBBTroopsClose", "Close"), 230, $y - 5 + 50, 85, 25)
 		GUICtrlSetOnEvent(-1, "CloseCGBBTroops")
+#ce
 
 EndFunc ;==>CreateClanGamesBBTroops

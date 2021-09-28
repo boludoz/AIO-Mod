@@ -27,6 +27,7 @@ Func readConfig($inputfile = $g_sProfileConfigPath) ;Reads config and sets it to
 	$g_aiWeakBaseStats = readWeakBaseStats()
 
 	ReadProfileConfig()
+	If FileExists($g_sProfileClanGamesPath) Then ReadClanGamesConfig()
 	If FileExists($g_sProfileBuildingPath) Then ReadBuildingConfig()
 	If FileExists($g_sProfileConfigPath) Then ReadRegularConfig()
 
