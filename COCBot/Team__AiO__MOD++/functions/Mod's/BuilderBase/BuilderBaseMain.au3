@@ -26,7 +26,7 @@ Global $g_bBonusObtainedAtStart = False
 
 Func ByPassedForceBBAttackOnClanGames($bContion = True, $bReturnBy = True)
 	; I am too lazy...
-	If $g_bChkForceBBAttackOnClanGames = True And $g_bIsCaravanOn == "True" And $g_bIsBBevent = True Then
+	If $g_bChkForceBBAttackOnClanGames = True And ClanGamesStatus() == "True" And $g_bIsBBevent = True Then
 		Return $bReturnBy
 	EndIf
 	Return $bContion
@@ -67,7 +67,7 @@ Func BuilderBase($bTestRun = False)
 	$g_bRestart = False
 	$g_bStayOnBuilderBase = True
 
-	If $g_bIsCaravanOn = "True" Or $g_bIsCaravanOn = "Undefined" Then
+	If ClanGamesStatus() = "True" Or ClanGamesStatus() = "Undefined" Then
 		GoToClanGames()
 	EndIf
 
@@ -157,7 +157,7 @@ Func _BuilderBase($bTestRun = False)
 		SetDebugLog("BuilderBaseAttack|ByPassedForceBBAttackOnClanGames($g_bChkBuilderAttack, True)" & ByPassedForceBBAttackOnClanGames($g_bChkBuilderAttack, True))
 		SetDebugLog("BuilderBaseAttack|$g_iAvailableAttacksBB" & $g_iAvailableAttacksBB)
 		SetDebugLog("BuilderBaseAttack|ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3, False)" & ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3, False))
-		SetDebugLog("BuilderBaseAttack|$g_bIsCaravanOn" & $g_bIsCaravanOn)
+		SetDebugLog("BuilderBaseAttack|ClanGamesStatus()" & ClanGamesStatus())
 
 		; Check if Builder Base is to run
 		; New logic to add speed to the attack.
@@ -262,9 +262,9 @@ EndFunc   ;==>runBuilderBase
 Func GoToClanGames()
 	SetDebugLog("GoToClanGames|$g_bChkClanGamesEnabled: " & $g_bChkClanGamesEnabled)
 	SetDebugLog("GoToClanGames|ClanGamesBB(): " & ClanGamesBB())
-	SetDebugLog("GoToClanGames|$g_bIsCaravanOn: " & $g_bIsCaravanOn)
+	SetDebugLog("GoToClanGames|ClanGamesStatus(): " & ClanGamesStatus())
 	Local $bIsToByPass = False
-	If $g_bIsCaravanOn = "True" Or $g_bIsCaravanOn = "Undefined" Then $bIsToByPass = True
+	If ClanGamesStatus() = "True" Or ClanGamesStatus() = "Undefined" Then $bIsToByPass = True
 	If Not $g_bChkClanGamesEnabled Or Not ClanGamesBB() Then Return
 	If ($g_bIsSearchLimit Or $g_bRestart Or $g_bIsClientSyncError) Then Return
 	If $g_iAvailableAttacksBB > 0 Or Not ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3, False) Or $bIsToByPass Then

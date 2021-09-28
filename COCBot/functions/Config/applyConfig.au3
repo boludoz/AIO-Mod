@@ -66,6 +66,8 @@ Func applyConfig($bRedrawAtExit = True, $TypeReadSave = "Read") ;Applies the dat
 	ApplyConfig_600_1($TypeReadSave)
 	; <><><><> Village / Misc <><><><>
 	ApplyConfig_600_6($TypeReadSave)
+	ApplyConfig_ClanGames($TypeReadSave)
+
 	; <><><><> Village / Achievements <><><><>
 	ApplyConfig_600_9($TypeReadSave)
 	; <><><><> Village / Donate - Request <><><><>

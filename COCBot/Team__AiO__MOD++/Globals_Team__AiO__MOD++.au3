@@ -12,6 +12,188 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+#Tidy_Off
+Global $g_hCGLootChallenges[6]
+Global $g_hCGAirTroopChallenges[14]
+Global $g_hCGGroundTroopChallenges[27]
+Global $g_hCGBattleChallenges[20]
+Global $g_hCGDestructionChallenges[32]
+Global $g_hCGMiscChallenges[3]
+Global $g_hCGSpellChallenges[11]
+Global $g_hCGBBBattleChallenges[4]
+Global $g_hCGBBDestructionChallenges[15]
+Global $g_hCGBBTroopChallenges[11]
+
+;[0]=ImageName 	 					[1]=Challenge Name		[3]=THlevel 	[4]=Priority/TroopsNeeded	[5] = ?	[6] = Enabled/Disabled
+Global $LootChallenges[6][6] = [ _
+		["GoldChallenge", 			"Gold Challenge", 				 7,  5, 8, True], _ ; Loot 150,000 Gold from a single Multiplayer Battle				|8h 	|50
+		["ElixirChallenge", 		"Elixir Challenge", 			 7,  5, 8, True], _ ; Loot 150,000 Elixir from a single Multiplayer Battle 			|8h 	|50
+		["DarkEChallenge", 			"Dark Elixir Challenge", 		 8,  5, 8, True], _ ; Loot 1,500 Dark elixir from a single Multiplayer Battle			|8h 	|50
+		["GoldGrab", 				"Gold Grab", 					 3,  1, 1, True], _ ; Loot a total of 500,000 TO 1,500,000 from Multiplayer Battle 	|1h-2d 	|100-600
+		["ElixirEmbezz", 			"Elixir Embezzlement", 			 3,  1, 1, True], _ ; Loot a total of 500,000 TO 1,500,000 from Multiplayer Battle 	|1h-2d 	|100-600
+		["DarkEHeist", 				"Dark Elixir Heist", 			 9,  3, 1, True]]   ; Loot a total of 1,500 TO 12,500 from Multiplayer Battle 		|1h-2d 	|100-600
+
+Global $AirTroopChallenges[14][6] = [ _
+		["Ball", 					"Balloon", 						 4, 12, 1, True], _ ; Earn 2-5 Stars from Multiplayer Battles using 12 Balloons		|3h-8h	|40-100
+		["Heal", 					"Healer", 						 4, 12, 1, True], _ ; Earn 2-5 Stars from Multiplayer Battles using 12 Balloons		|3h-8h	|40-100
+		["Drag", 					"Dragon", 						 7,  6, 1, True], _ ; Earn 2-5 Stars from Multiplayer Battles using 6 Dragons			|3h-8h	|40-100
+		["BabyD", 					"Baby Dragon", 					 9,  2, 1, True], _ ; Earn 2-5 Stars from Multiplayer Battles using 4 Baby Dragons	|3h-8h	|40-100
+		["Edrag", 					"Electro Dragon", 				10,  2, 1, True], _ ; Earn 2-4 Stars from Multiplayer Battles using 2 Electro Dragon	|3h-8h	|40-300
+		["RDrag", 					"Dragon Rider", 				10,  2, 1, True], _ ; Earn 2-4 Stars from Multiplayer Battles using 2 Electro Dragon	|3h-8h	|40-300
+		["Mini", 					"Minion", 						 7, 10, 1, True], _ ; Earn 2-5 Stars from Multiplayer Battles using 20 Minions		|3h-8h	|40-100
+		["Lava", 					"Lavahound", 					 9,  1, 1, True], _ ; Earn 2-5 Stars from Multiplayer Battles using 3 Lava Hounds		|3h-8h	|40-100
+		["RBall", 					"Rocket Balloon", 				12,  4, 1, True], _ ;
+		["Smini", 					"Super Minion", 				12,  4, 1, True], _ ;
+		["InfernoD",				"Inferno Dragon", 				12,  1, 1, True], _ ;
+		["IceH", 					"Ice Hound", 					13,  1, 1, True], _ ;
+		["BattleB", 				"Battle Blimp", 				10,  5, 1, True], _ ; moved to air troops
+		["StoneS",	 				"Stone Slammer", 				10,  5, 1, True]]   ; moved to air troops
+
+Global $GroundTroopChallenges[27][6] = [ _
+		["Arch", 					"Archer", 						 1, 10, 1, True], _ ; Earn 2-5 Stars from Multiplayer Battles using 30 Barbarians		|3h-8h	|40-100
+		["Barb", 					"Barbarian", 					 1, 30, 1, True], _ ; Earn 2-5 Stars from Multiplayer Battles using 30 Archers		|3h-8h	|40-100
+		["Giant", 					"Giant", 						 1, 10, 1, True], _ ; Earn 2-5 Stars from Multiplayer Battles using 10 Giants			|3h-8h	|40-100
+		["Gobl", 					"Goblin", 						 2, 20, 1, True], _ ; Earn 2-5 Stars from Multiplayer Battles using 20 Goblins		|3h-8h	|40-100
+		["Wall", 					"WallBreaker", 					 3,  2, 1, True], _ ; Earn 2-5 Stars from Multiplayer Battles using 6 Wall Breakers	|3h-8h	|40-100
+		["Wiza", 					"Wizard", 						 5,  6, 1, True], _ ; Earn 2-5 Stars from Multiplayer Battles using 12 Wizards		|3h-8h	|40-100
+		["Hogs", 					"HogRider", 					 7, 10, 1, True], _ ; Earn 2-5 Stars from Multiplayer Battles using 10 Hog Riders		|3h-8h	|40-100
+		["Mine", 					"Miner", 						10,  8, 1, True], _ ; Earn 2-5 Stars from Multiplayer Battles using 8 Miners			|3h-8h	|40-100
+		["Pekk", 					"Pekka", 						 8,  1, 1, True], _ ; updated 25/01/2021
+		["Witc", 					"Witch", 						 9,  2, 1, True], _ ; Earn 2-5 Stars from Multiplayer Battles using 2 Witches			|3h-8h	|40-100
+		["Bowl", 					"Bowler", 						10,  8, 1, True], _ ; Earn 2-5 Stars from Multiplayer Battles using 8 Bowlers			|3h-8h	|40-100
+		["Valk", 					"Valkyrie", 					 8,  4, 1, True], _ ; Earn 2-5 Stars from Multiplayer Battles using 8 Valkyries		|3h-8h	|40-100
+		["Gole", 					"Golem", 						 8,  2, 1, True], _ ; Earn 2-5 Stars from Multiplayer Battles using 2 Golems			|3h-8h	|40-100
+		["Yeti", 					"Yeti", 						 12, 1, 1, True], _ ; check quantity
+		["IceG", 					"IceGolem", 					 11, 2, 1, True], _ ; check quantity
+		["Hunt", 					"HeadHunters", 					 12, 2, 1, True], _ ; updated 25/01/2021
+		["Sbarb", 					"SuperBarbarian", 				 11, 4, 1, True], _ ; updated 25/01/2021
+		["Sarch", 					"SuperArcher", 					 11, 1, 1, True], _ ; check quantity missing xml
+		["Sgiant", 					"SuperGiant", 					 12, 1, 1, True], _ ; check quantity
+		["Sgobl", 					"SneakyGoblin", 				 11, 1, 1, True], _ ; check quantity
+		["Swall", 					"SuperWallBreaker", 			 11, 1, 1, True], _ ; check quantity
+		["Swiza", 					"SuperWizard",					 12, 1, 1, True], _ ; check quantity missing xml
+		["Svalk", 					"SuperValkyrie",				 12, 2, 1, True], _ ; updated 25/01/2021
+		["Switc", 					"SuperWitch", 					 12, 1, 1, True], _ ; check quantity
+		["WallW", 					"Wall Wrecker", 				10,  5, 1, True], _ ; moved to ground troops
+		["SiegeB", 					"Siege Barrack", 				10,  5, 1, True], _ ; moved to ground troops
+		["LogL", 					"Log Launcher", 				10,  5, 1, True]]   ; moved to ground troops
+
+Global $BattleChallenges[20][6] = [ _
+		["Start", 					"Star Collector", 				 3,  1, 8, True], _ ; Collect a total of 6-18 stars from Multiplayer Battles			|8h-2d	|100-600
+		["Destruction", 			"Lord of Destruction", 			 3,  1, 8, True], _ ; Gather a total of 100%-500% destruction from Multi Battles		|8h-2d	|100-600
+		["PileOfVictores", 			"Pile Of Victories", 			 3,  1, 8, True], _ ; Win 2-8 Multiplayer Battles										|8h-2d	|100-600
+		["StarThree", 				"Hunt for Three Stars", 		10,  5, 8, True], _ ; Score a perfect 3 Stars in Multiplayer Battles					|8h 	|200
+		["WinningStreak", 			"Winning Streak", 				 9,  5, 8, True], _ ; Win 2-8 Multiplayer Battles in a row							|8h-2d	|100-600
+		["SlayingTitans", 			"Slaying The Titans", 			11,  2, 5, True], _ ; Win 5 Multiplayer Battles In Tital LEague						|5h		|300
+		["NoHero", 					"No Heroics Allowed", 			 3,  5, 8, True], _ ; Win stars without using Heroes									|8h		|100
+		["NoMagic", 				"No-Magic Zone", 				 3,  5, 8, True], _ ; Win stars without using Spells									|8h		|100
+		["Scrappy6s", 				"Scrappy 6s", 					 6,  1, 8, True], _ ; Gain 3 Stars Against Town Hall level 6							|8h		|200
+		["Super7s", 				"Super 7s", 					 7,  1, 8, True], _ ; Gain 3 Stars Against Town Hall level 7							|8h		|200
+		["Exciting8s", 				"Exciting 8s", 					 8,  1, 8, True], _ ; Gain 3 Stars Against Town Hall level 8							|8h		|200
+		["Noble9s", 				"Noble 9s", 					 9,  1, 8, True], _ ; Gain 3 Stars Against Town Hall level 9							|8h		|200
+		["Terrific10s", 			"Terrific 10s", 				10,  1, 8, True], _ ; Gain 3 Stars Against Town Hall level 10							|8h		|200
+		["Exotic11s", 			    "Exotic 11s", 					11,  1, 8, True], _ ; Gain 3 Stars Against Town Hall level 11							|8h		|200
+		["Triumphant12s", 			"Triumphant 12s", 				12,  1, 8, True], _ ; Gain 3 Stars Against Town Hall level 12							|8h		|200
+		["AttackUp", 				"Attack Up", 					 3,  1, 8, True], _ ; Gain 3 Stars Against Town Hall a level higher					|8h		|200
+		["ClashOfLegends", 			"Clash of Legends", 			11,  2, 5, True], _ ;
+		["GainStarsFromClanWars",	"3 Stars From Clan War",		 6,  0, 5, True], _ ;
+		["SpeedyStars", 			"3 Stars in 60 seconds",		 6,  2, 5, True], _ ;
+		["Tremendous13s", 			"Tremendous 13s", 				13,  1, 8, True]]   ;
+
+Global $DestructionChallenges[32][6] = [ _
+		["Cannon", 					"Cannon", 				 3,  1, 1, True], _ ; Destroy 5-25 Cannons in Multiplayer Battles					|1h-8h	|75-350
+		["ArcherT", 				"Archer Tower", 		 3,  1, 1, True], _ ; Destroy 5-20 Archer Towers in Multiplayer Battles			|1h-8h	|75-350
+		["BuilderHut", 				"Builder Hut", 		     3,  1, 1, True], _ ; Destroy 4-12 BuilderHut in Multiplayer Battles				|1h-8h	|40-350
+		["Mortar", 					"Mortar", 				 3,  1, 1, True], _ ; Destroy 4-12 Mortars in Multiplayer Battles					|1h-8h	|40-350
+		["AirD", 					"Air Defenses", 		 7,  2, 1, True], _ ; Destroy 3-12 Air Defenses in Multiplayer Battles			|1h-8h	|40-350
+		["WizardT", 				"Wizard Tower", 		 3,  1, 1, True], _ ; Destroy 4-12 Wizard Towers in Multiplayer Battles			|1h-8h	|40-350
+		["AirSweepers", 			"Air Sweepers", 		 8,  4, 1, True], _ ; Destroy 2-6 Air Sweepers in Multiplayer Battles				|1h-8h	|40-350
+		["Tesla", 					"Tesla Towers", 		 7,  5, 1, True], _ ; Destroy 4-12 Hidden Teslas in Multiplayer Battles			|1h-8h	|50-350
+		["BombT", 					"Bomb Towers", 			 8,  2, 1, True], _ ; Destroy 2 Bomb Towers in Multiplayer Battles				|1h-8h	|50-350
+		["Xbow", 					"X-Bows", 				 9,  5, 1, True], _ ; Destroy 3-12 X-Bows in Multiplayer Battles					|1h-8h	|50-350
+		["Inferno", 				"Inferno Towers", 		11,  5, 1, True], _ ; Destroy 2 Inferno Towers in Multiplayer Battles				|1h-2d	|50-600
+		["EagleA", 					"Eagle Artillery", 	    11,  5, 1, True], _ ; Destroy 1-7 Eagle Artillery in Multiplayer Battles			|1h-2d	|50-600
+		["ClanC", 					"Clan Castle", 			 5,  2, 1, True], _ ; Destroy 1-4 Clan Castle in Multiplayer Battles				|1h-8h	|40-350
+		["GoldSRaid", 				"Gold Storage", 		 3,  2, 1, True], _ ; Destroy 3-15 Gold Storages in Multiplayer Battles			|1h-8h	|40-350
+		["ElixirSRaid", 			"Elixir Storage", 		 3,  1, 1, True], _ ; Destroy 3-15 Elixir Storages in Multiplayer Battles			|1h-8h	|40-350
+		["DarkEStorageRaid", 		"Dark Elixir Storage", 	 8,  3, 1, True], _ ; Destroy 1-4 Dark Elixir Storage in Multiplayer Battles		|1h-8h	|40-350
+		["GoldM", 					"Gold Mine", 			 3,  1, 1, True], _ ; Destroy 6-20 Gold Mines in Multiplayer Battles				|1h-8h	|40-350
+		["ElixirPump", 				"Elixir Pump", 		 	 3,  1, 1, True], _ ; Destroy 6-20 Elixir Collectors in Multiplayer Battles		|1h-8h	|40-350
+		["DarkEPlumbers", 			"Dark Elixir Drill", 	 3,  1, 1, True], _ ; Destroy 2-8 Dark Elixir Drills in Multiplayer Battles		|1h-8h	|40-350
+		["Laboratory", 				"Laboratory", 			 3,  1, 1, True], _ ; Destroy 2-6 Laboratories in Multiplayer Battles				|1h-8h	|40-200
+		["SFacto", 					"Spell Factory", 		 3,  1, 1, True], _ ; Destroy 2-6 Spell Factories in Multiplayer Battles			|1h-8h	|40-200
+		["DESpell", 				"Dark Spell Factory", 	 8,  1, 1, True], _ ; Destroy 2-6 Dark Spell Factories in Multiplayer Battles		|1h-8h	|40-200
+		["WallWhacker", 			"Wall Whacker", 		 3,  1, 1, True], _ ; Destroy 50-250 Walls in Multiplayer Battles					|
+		["BBreakdown",	 			"Building Breakdown", 	 3,  1, 1, True], _ ; Destroy 50-250 Buildings in Multiplayer Battles					|
+		["BKaltar", 				"Barbarian King Altars", 9,  4, 1, True], _ ; Destroy 2-5 Barbarian King Altars in Multiplayer Battles	|1h-8h	|50-150
+		["AQaltar", 				"Archer Queen Altars", 	10,  5, 1, True], _ ; Destroy 2-5 Archer Queen Altars in Multiplayer Battles		|1h-8h	|50-150
+		["GWaltar", 				"Grand Warden Altars", 	11,  5, 1, True], _ ; Destroy 2-5 Grand Warden Altars in Multiplayer Battles		|1h-8h	|50-150
+		["HeroLevelHunter", 		"Hero Level Hunter", 	 9,  5, 8, True], _ ; Knockout 125 Level Heroes on Multiplayer Battles			|8h		|100
+		["KingLevelHunter", 		"King Level Hunter", 	 9,  5, 8, True], _ ; Knockout 50 Level King on Multiplayer Battles				|8h		|100
+		["QueenLevelHunt", 			"Queen Level Hunter", 	10,  5, 8, True], _ ; Knockout 50 Level Queen on Multiplayer Battles				|8h		|100
+		["WardenLevelHunter", 		"Warden Level Hunter", 	11,  5, 8, True], _ ; Knockout 20 Level Warden on Multiplayer Battles				|8h		|100
+		["ScatterShotSabotage",		"ScatterShot",			13,  5, 1, True]]   ;
+
+
+Global $MiscChallenges[3][6] = [ _
+		["Gard", 					"Gardening Exercise", 			 3,  6, 8, True], _ ; Clear 5 obstacles from your Home Village or Builder Base		|8h	|50
+		["DonateSpell", 			"Donate Spells", 				 9,  6, 8, True], _ ; Donate a total of 10 housing space worth of spells				|8h	|50
+		["DonateTroop", 			"Helping Hand", 				 6,  6, 8, True]]   ; Donate a total of 100 housing space worth of troops				|8h	|50
+
+
+Global $SpellChallenges[11][6] = [ _
+		["LSpell", 					"Lightning", 					 6,  5, 1, True], _ ;
+		["HSpell", 					"Heal",							 6,  5, 1, True], _ ; updated 25/01/2021
+		["RSpell", 					"Rage", 					 	 6,  5, 1, True], _ ;
+		["JSpell", 					"Jump", 					 	 6,  5, 1, True], _ ;
+		["FSpell", 					"Freeze", 					 	 9,  5, 1, True], _ ;
+		["CSpell", 					"Clone", 					 	11,  5, 1, True], _ ;
+		["PSpell", 					"Poison", 					 	 6,  5, 1, True], _ ;
+		["ESpell", 					"Earthquake", 					 6,  5, 1, True], _ ;
+		["HaSpell", 				"Haste",	 					 6,  5, 1, True], _ ; updated 25/01/2021
+		["SkSpell",					"Skeleton", 					11,  5, 1, True], _ ;
+		["BtSpell",					"Bat", 					 		10,  5, 1, True]]   ;
+
+Global $BBBattleChallenges[4][6] = [ _
+        ["StarM",					"BB Star Master",				2,  1, 1, True], _ ; Earn 6 - 24 stars on the BB
+        ["Victories",				"BB Victories",					2,  5, 1, True], _ ; Earn 3 - 6 victories on the BB
+		["StarTimed",				"BB Star Timed",				2,  2, 1, True], _
+        ["Destruction",				"BB Destruction",				2,  1, 1, True]] ; Earn 225% - 900% on BB attacks
+
+Global $BBDestructionChallenges[15][6] = [ _
+        ["Airbomb",					"Air Bomb",                 	2,  1, 1, True], _
+		["BuildingDes",             "BB Building",					2,  1, 1, True], _
+		["BuilderHall",             "BuilderHall",					2,  1, 1, True], _
+        ["Cannon",                 	"BB Cannon",                  	2,  1, 1, True], _ 
+		["ClockTower",             	"Clock Tower",                 	2,  1, 1, True], _ 
+		["Crusher",             	"Crusher",                 		2,  1, 1, True], _ 
+        ["DoubleCannon",         	"Double Cannon",             	2,  1, 1, True], _
+		["FireCrackers",         	"Fire Crackers",              	2,  1, 1, True], _
+		["GemMine",                 "Gem Mine",                  	2,  1, 1, True], _
+		["GiantCannon",             "Giant Cannon",               	2,  1, 1, True], _
+		["GuardPost",               "Guard Post",                 	2,  1, 1, True], _
+		["MegaTesla",               "Mega Tesla",               	2,  1, 1, True], _
+		["MultiMortar",             "Multi Mortar",               	2,  1, 1, True], _
+		["StarLab",                 "Star Laboratory",              2,  1, 1, True], _
+		["WallDes",             	"Wall Whacker",              	2,  1, 1, True]]
+
+Global $BBTroopChallenges[11][6] = [ _
+        ["RBarb",					"Raged Barbarian",              2,  1, 1, True], _ ;BB Troops
+        ["SArch",                 	"Sneaky Archer",                2,  1, 1, True], _
+        ["BGiant",         			"Boxer Giant",             		2,  1, 1, True], _
+		["BMini",         			"Beta Minion",              	2,  1, 1, True], _
+		["Bomber",                 	"Bomber",                  		2,  1, 1, True], _
+		["BabyD",               	"Baby Dragon",                 	2,  1, 1, True], _
+		["CannCart",             	"Cannon Cart",               	2,  1, 1, True], _
+		["NWitch",                 	"Night Witch",                 	2,  1, 1, True], _
+		["DShip",                 	"Drop Ship",                  	2,  1, 1, True], _
+		["SPekka",                 	"Super Pekka",                  2,  1, 1, True], _
+		["HGlider",                 "Hog Glider",                  	2,  1, 1, True]]
+		
+Global $g_aChallengesClanGamesStrings = ["Loot Challenges", "Battle Challenges", "Destruction Challenges", "Misc Challenges", "Air Troop Challenges", "Ground Troop Challenges", "Spell Challenges", "BB Battle Challenges", "BB Destruction Challenges", "BB Troop Challenges"]
+#Tidy_Off
+
+
  
 Global $DiamondMiddleX 
 Global $DiamondMiddleY 

@@ -30,6 +30,9 @@ Func saveConfig()
 	SetDebugLog("saveConfig(), call number " & $iSaveConfigCount)
 
 	SaveProfileConfig()
+	
+	ReadClanGamesConfig()
+	;SetDebugLog("ReadClanGamesConfig(), time = " & Round(__TimerDiff($t)/1000, 2) & " sec")
 
 	SaveWeakBaseStats()
 	;SetDebugLog("saveWeakBaseStats(), time = " & Round(__TimerDiff($t)/1000, 2) & " sec")

@@ -35,247 +35,225 @@ Func DelayTime($chatType)
 		Case "CLAN"
 			If $g_sClanChatLastMsgSentTime = "" Then Return True ;If ClanLastMsgSentTime sent time is empty means it's first time sms allow it
 
-				$sDateTimeDiffOfLastMsgInMin = _DateDiff("s", $g_sClanChatLastMsgSentTime, _NowCalc()) / 60 ;For getting float value of minutes(s) we divided the diffsec by 60
-				SetDebugLog("$g_iTxtDelayTimeClan = " & $g_sDelayTimeClan)
-				SetDebugLog("$g_sClanChatLastMsgSentTime = " & $g_sClanChatLastMsgSentTime & ", $sDateTimeDiffOfLastMsgInMin = " & $sDateTimeDiffOfLastMsgInMin)
-				If $sDateTimeDiffOfLastMsgInMin > $g_sDelayTimeClan Then ;If ClanLastMsgSentTime sent time is empty means it's first time sms
-					Return True
-				Else
-					$sDateTimeDiffOfLastMsgInSec = _DateDiff("s", _NowCalc(), _DateAdd('n', $g_sDelayTimeClan, $g_sClanChatLastMsgSentTime))
-					SetDebugLog("$sDateTimeDiffOfLastMsgInSec = " & $sDateTimeDiffOfLastMsgInSec)
-					_TicksToTime($sDateTimeDiffOfLastMsgInSec * 1000, $hour, $min, $sec)
+			$sDateTimeDiffOfLastMsgInMin = _DateDiff("s", $g_sClanChatLastMsgSentTime, _NowCalc()) / 60     ;For getting float value of minutes(s) we divided the diffsec by 60
+			SetDebugLog("$g_iTxtDelayTimeClan = " & $g_sDelayTimeClan)
+			SetDebugLog("$g_sClanChatLastMsgSentTime = " & $g_sClanChatLastMsgSentTime & ", $sDateTimeDiffOfLastMsgInMin = " & $sDateTimeDiffOfLastMsgInMin)
+			If $sDateTimeDiffOfLastMsgInMin > $g_sDelayTimeClan Then     ;If ClanLastMsgSentTime sent time is empty means it's first time sms
+				Return True
+			Else
+				$sDateTimeDiffOfLastMsgInSec = _DateDiff("s", _NowCalc(), _DateAdd('n', $g_sDelayTimeClan, $g_sClanChatLastMsgSentTime))
+				SetDebugLog("$sDateTimeDiffOfLastMsgInSec = " & $sDateTimeDiffOfLastMsgInSec)
+				_TicksToTime($sDateTimeDiffOfLastMsgInSec * 1000, $hour, $min, $sec)
 
-					SetLog("Chatbot: Skip Sending Chats to Clan Chat", $COLOR_INFO)
-					SetLog("Delay Time " & StringFormat("%02i:%02i:%02i", $hour, $min, $sec) & " left before sending new msg.", $COLOR_INFO)
-					Return False
-				EndIf
+				SetLog("Chatbot: Skip Sending Chats to Clan Chat", $COLOR_INFO)
+				SetLog("Delay Time " & StringFormat("%02i:%02i:%02i", $hour, $min, $sec) & " left before sending new msg.", $COLOR_INFO)
+				Return False
+			EndIf
 		Case "FC"
 			If $g_sFCLastMsgSentTime = "" Then Return True ;If ClanLastMsgSentTime sent time is empty means it's first time sms allow it
 
-				$sDateTimeDiffOfLastMsgInMin = _DateDiff("s", $g_sFCLastMsgSentTime, _NowCalc()) / 60 ;For getting float value of minutes(s) we divided the diffsec by 60
-				SetDebugLog("$g_iTxtDelayTimeFC = " & $g_sDelayTimeFC)
-				SetDebugLog("$g_sFCLastMsgSentTime = " & $g_sFCLastMsgSentTime & ", $sDateTimeDiffOfLastMsgInMin = " & $sDateTimeDiffOfLastMsgInMin)
-				If $sDateTimeDiffOfLastMsgInMin > $g_sDelayTimeFC Then ;If ClanLastMsgSentTime sent time is empty means it's first time sms
-					Return True
-				Else
-					$sDateTimeDiffOfLastMsgInSec = _DateDiff("s", _NowCalc(), _DateAdd('n', $g_sDelayTimeFC, $g_sFCLastMsgSentTime))
-					SetDebugLog("$sDateTimeDiffOfLastMsgInSec = " & $sDateTimeDiffOfLastMsgInSec)
-					_TicksToTime($sDateTimeDiffOfLastMsgInSec * 1000, $hour, $min, $sec)
+			$sDateTimeDiffOfLastMsgInMin = _DateDiff("s", $g_sFCLastMsgSentTime, _NowCalc()) / 60     ;For getting float value of minutes(s) we divided the diffsec by 60
+			SetDebugLog("$g_iTxtDelayTimeFC = " & $g_sDelayTimeFC)
+			SetDebugLog("$g_sFCLastMsgSentTime = " & $g_sFCLastMsgSentTime & ", $sDateTimeDiffOfLastMsgInMin = " & $sDateTimeDiffOfLastMsgInMin)
+			If $sDateTimeDiffOfLastMsgInMin > $g_sDelayTimeFC Then     ;If ClanLastMsgSentTime sent time is empty means it's first time sms
+				Return True
+			Else
+				$sDateTimeDiffOfLastMsgInSec = _DateDiff("s", _NowCalc(), _DateAdd('n', $g_sDelayTimeFC, $g_sFCLastMsgSentTime))
+				SetDebugLog("$sDateTimeDiffOfLastMsgInSec = " & $sDateTimeDiffOfLastMsgInSec)
+				_TicksToTime($sDateTimeDiffOfLastMsgInSec * 1000, $hour, $min, $sec)
 
-					SetLog("Chatbot: Skip Sending Chats to Friendly Challenge", $COLOR_INFO)
-					SetLog("Delay Time " & StringFormat("%02i:%02i:%02i", $hour, $min, $sec) & " left before sending new challenge.", $COLOR_INFO)
-					Return False
-				EndIf
+				SetLog("Chatbot: Skip Sending Chats to Friendly Challenge", $COLOR_INFO)
+				SetLog("Delay Time " & StringFormat("%02i:%02i:%02i", $hour, $min, $sec) & " left before sending new challenge.", $COLOR_INFO)
+				Return False
+			EndIf
 	EndSwitch
 EndFunc   ;==>DelayTime
 
+Func ClanGamesChatOnly()
+	
+	If $g_bChatClan = True And $g_bChkHarangueCG = True And $g_bIsCaravanOn == "True" Then
+		Return True
+	ElseIf $g_bChatClan = True And $g_bChkHarangueCG = False Then
+		Return True
+	EndIf
+	
+	Return False
+EndFunc   ;==>ClanGamesChatOnly
+
 Func ChatActions() ; run the chatbot
 	
-	If $g_bChatClan Or (($g_bEnableFriendlyChallenge) And (Not $g_bStayOnBuilderBase)) Then
+	If IsMainPage(5) Then
 		
-		Local $bChat = False, $bFriendly = False
-				
-		Switch $g_iCmbPriorityFC
-			Case 1
-				$g_iMinimumPriority = 0
-			Case 2
-				$g_iMinimumPriority = 25
-			Case 3
-				$g_iMinimumPriority = 50
-			Case 4
-				$g_iMinimumPriority = 75
-		EndSwitch
-
-		$bFriendly = (Random($g_iMinimumPriority, 100, 1) > 75)
+		If $g_bIsCaravanOn == "Undefined" And $g_bChkHarangueCG = True Then
+			IsClanGamesWindow(True, True)
+		EndIf
+		
+		If ClanGamesChatOnly() Or (($g_bEnableFriendlyChallenge) And (Not $g_bStayOnBuilderBase)) Then
 			
-		Switch $g_iCmbPriorityCHAT
-			Case 1
-				$g_iMinimumPriority = 0
-			Case 2
-				$g_iMinimumPriority = 25
-			Case 3
-				$g_iMinimumPriority = 50
-			Case 4
-				$g_iMinimumPriority = 75
-		EndSwitch
-		
-		$bChat = (Random($g_iMinimumPriority, 100, 1) > 75)
-		
-		If $bChat = False And $bFriendly = False Then Return
-		
-		If $bChat And $g_sDelayTimeClan > 0 Then
-			If DelayTime("CLAN") = False Then
-				Return
-			EndIf
-		EndIf
-
-		If $bFriendly And $g_sDelayTimeFC > 0 Then
-			If DelayTime("FC") = False Then
-				Return
-			EndIf
-		EndIf
-
-		If Not OpenClanChat() Then
-			Setlog("ChatActions : OpenClanChat Error.", $COLOR_ERROR)
-			AndroidPageError("ChatActions")
-			Return False
-		EndIf
+			Local $bChat = (Random($g_iCmbPriorityCHAT, 5, 1) > 4), $bFriendly = (Random($g_iCmbPriorityFC, 5, 1) > 4)
+			If $bChat = False And $bFriendly = False Then Return
 			
-		Local $iRandom = Random(0, 1, 1)
-		For $i = 0 To 1
-			Switch $iRandom
-				Case 0
-					$iRandom = 1
-					
-					If $bChat = False Then ContinueLoop
-					
-					If $g_bChatClan Then
+			Local $bAlreadyOpen = False
+			Local $iRandom = Random(0, 1, 1)
+			For $i = 0 To 1
+				Switch $iRandom
+					Case 0
+						$iRandom = 1
+						
+						If $bChat = False Or ClanGamesChatOnly() = False Then ContinueLoop
+						
 						If $g_sDelayTimeClan > 0 Then
 							If DelayTime("CLAN") Then
-								ChatClan()
 								$g_sClanChatLastMsgSentTime = _NowCalc() ;Store msg sent time
+							Else
+								ContinueLoop
 							EndIf
-						Else
-							ChatClan()
 						EndIf
-					EndIf
-		
-				Case 1
-					$iRandom = 0
+						
+						If $bAlreadyOpen = False Then $bAlreadyOpen = OpenClanChat()
+						If $bAlreadyOpen = False Then ExitLoop
+						ChatClan()
+						
+					Case 1
+						$iRandom = 0
+						
+						If $bFriendly = False Or $g_bEnableFriendlyChallenge = False Then ContinueLoop
 	
-					If $bFriendly = False Then ContinueLoop
-
-					If $g_bEnableFriendlyChallenge And Not $g_bStayOnBuilderBase Then
 						If $g_sDelayTimeFC > 0 Then
 							If DelayTime("FC") Then
-								FriendlyChallenge()
 								$g_sFCLastMsgSentTime = _NowCalc() ;Store msg sent time
+							Else
+								ContinueLoop
 							EndIf
-						Else
-							FriendlyChallenge()
 						EndIf
-					EndIf
-			EndSwitch
-		Next
-
-		If Not CloseClanChat() Then
-			Setlog("ChatActions : CloseClanChat Error.", $COLOR_ERROR)
-			AndroidPageError("ChatActions")
-			Return False
-		Else
-			SetLog("ChatActions: Clan Chatting Done", $COLOR_SUCCESS)
+						If $bAlreadyOpen = False Then $bAlreadyOpen = OpenClanChat()
+						If $bAlreadyOpen = False Then ExitLoop
+						FriendlyChallenge()
+				EndSwitch
+			Next
+	
+			If Not CloseClanChat() Then
+				Setlog("ChatActions : CloseClanChat Error.", $COLOR_ERROR)
+				AndroidPageError("ChatActions")
+				Return False
+			Else
+				SetLog("ChatActions: Clan Chatting Done", $COLOR_SUCCESS)
+			EndIf
+			
+			CloseClanChat()
 		EndIf
 	EndIf
-
+	
 EndFunc   ;==>ChatActions
 
 Func ChatClan() ; Handle Clan Chat Logic
-	If Not $g_bChatClan Then Return
-		SetLog("Chatbot: Sending Chats To Clan", $COLOR_INFO)
-		If Not ChatbotCheckIfUserIsInClan() Then Return False
-		Local $bSentClanChat = False
-		If _Sleep(2000) Then Return
-		If $ChatbotReadQueued Then
+	If Not ClanGamesChatOnly() Then Return
+	SetLog("Chatbot: Sending Chats To Clan", $COLOR_INFO)
+	If Not ChatbotCheckIfUserIsInClan() Then Return False
+	Local $bSentClanChat = False
+	If _Sleep(2000) Then Return
+	
+	If $ChatbotReadQueued Then
+		ChatbotNotifySendChat()
+		$ChatbotReadQueued = False
+		$bSentClanChat = True
+	ElseIf $ChatbotIsOnInterval Then
+		If ChatbotIsInterval() Then
+			ChatbotStartTimer()
 			ChatbotNotifySendChat()
-			$ChatbotReadQueued = False
 			$bSentClanChat = True
-		ElseIf $ChatbotIsOnInterval Then
-			If ChatbotIsInterval() Then
-				ChatbotStartTimer()
-				ChatbotNotifySendChat()
-				$bSentClanChat = True
+		EndIf
+	EndIf
+
+	If UBound($ChatbotQueuedChats) > 0 Then
+		SetLog("Chatbot: Sending Notify Chats", $COLOR_SUCCESS)
+
+		For $a = 0 To UBound($ChatbotQueuedChats) - 1
+			Local $ChatToSend = $ChatbotQueuedChats[$a]
+			If Not ChatbotSelectChatInput("Clan") Then Return False
+			If Not ChatbotChatInput(_Encoding_JavaUnicodeDecode($ChatToSend)) Then Return False
+			If Not ChatbotSendChat("Clan") Then Return False
+		Next
+
+		Local $aTmp[0]     ; clear queue
+		$ChatbotQueuedChats = $aTmp
+		If _Sleep(2000) Then Return
+		ChatbotNotifySendChat()
+
+		Return False
+	EndIf
+
+	Local $bIsLast = ChatbotIsLastChatNew()
+	If Not $bIsLast Then
+		; get text of the latest message
+		Local $sOCRString = -1, $sCondition = ""
+
+		For $iRespInt = 0 To UBound($g_aClanResponses) - 1
+			If $iRespInt = 0 Then
+				$sCondition &= $g_aClanResponses[$iRespInt][0]
+			Else
+				$sCondition &= "|" & $g_aClanResponses[$iRespInt][0]
+			EndIf
+		Next
+
+		$sOCRString = ReadChatIA($sCondition, True)
+
+		SetDebugLog("ChatActions : Condition " & $sCondition)
+
+		Local $bSentMessage = False
+		If $sOCRString = -1 Then
+			If $g_bClanUseGeneric Then
+				If Not ChatbotSelectChatInput("Clan") Then Return False
+				If Not ChatbotChatInput($g_aClanGeneric[Random(0, UBound($g_aClanGeneric) - 1, 1)]) Then Return False
+				If Not ChatbotSendChat("Clan") Then Return False
+				$bSentMessage = True
 			EndIf
 		EndIf
 
-		If UBound($ChatbotQueuedChats) > 0 Then
-			SetLog("Chatbot: Sending Notify Chats", $COLOR_SUCCESS)
-
-			For $a = 0 To UBound($ChatbotQueuedChats) - 1
-				Local $ChatToSend = $ChatbotQueuedChats[$a]
-				If Not ChatbotSelectChatInput("Clan") Then Return False
-				If Not ChatbotChatInput(_Encoding_JavaUnicodeDecode($ChatToSend)) Then Return False
-				If Not ChatbotSendChat("Clan") Then Return False
+		If $sOCRString <> -1 And $g_bClanUseResponses And Not $bSentMessage Then
+			For $a = 0 To UBound($g_aClanResponses) - 1
+				If StringInStr($g_aClanResponses[$iRespInt - 1][0], $g_aClanResponses[$a][0]) Then
+					Local $sResponse = $g_aClanResponses[$a][1]
+					SetLog("Sending Response : " & $sResponse, $COLOR_SUCCESS)
+					If Not ChatbotSelectChatInput("Clan") Then Return False
+					If Not ChatbotChatInput($sResponse) Then Return False
+					If Not ChatbotSendChat("Clan") Then Return False
+					$bSentMessage = True
+					Return True
+				EndIf
 			Next
-
-			Local $aTmp[0] ; clear queue
-			$ChatbotQueuedChats = $aTmp
-			If _Sleep(2000) Then Return
-			ChatbotNotifySendChat()
-
-			Return False
 		EndIf
 
-		Local $bIsLast = ChatbotIsLastChatNew()
-			If Not $bIsLast Then
-				; get text of the latest message
-				Local $sOCRString = -1, $sCondition = ""
-
-				For $iRespInt = 0 To UBound($g_aClanResponses)-1
-					If $iRespInt = 0 Then
-						$sCondition &= $g_aClanResponses[$iRespInt][0]
-						Else
-						$sCondition &= "|" & $g_aClanResponses[$iRespInt][0]
-					EndIf
-				Next
-
-				$sOCRString = ReadChatIA($sCondition, True)
-
-				SetDebugLog("ChatActions : Condition " & $sCondition)
-
-				Local $bSentMessage = False
-				If $sOCRString = -1 Then
-					If $g_bClanUseGeneric Then
-						If Not ChatbotSelectChatInput("Clan") Then Return False
-						If Not ChatbotChatInput($g_aClanGeneric[Random(0, UBound($g_aClanGeneric) - 1, 1)]) Then Return False
-						If Not ChatbotSendChat("Clan") Then Return False
-						$bSentMessage = True
-					EndIf
-				EndIf
-
-				If $sOCRString <> -1 And $g_bClanUseResponses And Not $bSentMessage Then
-					For $a = 0 To UBound($g_aClanResponses) - 1
-						If StringInStr($g_aClanResponses[$iRespInt-1][0], $g_aClanResponses[$a][0]) Then
-							Local $sResponse = $g_aClanResponses[$a][1]
-							SetLog("Sending Response : " & $sResponse, $COLOR_SUCCESS)
-							If Not ChatbotSelectChatInput("Clan") Then Return False
-							If Not ChatbotChatInput($sResponse) Then Return False
-							If Not ChatbotSendChat("Clan") Then Return False
-							$bSentMessage = True
-							Return True
-						EndIf
-					Next
-				EndIf
-
-				If $g_bCleverbot And Not $bSentMessage Then
-					Local $sResponse = runHelper($sOCRString)
-					If $sResponse = False Or StringStripWS($sOCRString, $STR_STRIPALL) <> "" Then
-						SetLog("Got Cleverbot Response : " & $sResponse, $COLOR_SUCCESS)
-						If Not ChatbotSelectChatInput("Clan") Then Return False
-						If Not ChatbotChatInput($sResponse) Then Return False
-						If Not ChatbotSendChat("Clan") Then Return False
-						$bSentMessage = True
-					EndIf
-				EndIf
-				If Not $bSentMessage Then
-					If $g_bClanUseGeneric Then
-						If Not ChatbotSelectChatInput("Clan") Then Return False
-						If Not ChatbotChatInput($g_aClanGeneric[Random(0, UBound($g_aClanGeneric) - 1, 1)]) Then Return False
-						If Not ChatbotSendChat("Clan") Then Return False
-					EndIf
-				EndIf
-
-				; send it via Notify if it's new
-				; putting the code here makes sure the (cleverbot, specifically) response is sent as well :P
-				If $g_bUseNotify And $g_bPbSendNew Then
-					If Not $bSentClanChat Then ChatbotNotifySendChat()
-				EndIf
-			ElseIf $g_bClanUseGeneric And not $bIsLast Then
+		If $g_bCleverbot And Not $bSentMessage Then
+			Local $sResponse = runHelper($sOCRString)
+			If $sResponse = False Or StringStripWS($sOCRString, $STR_STRIPALL) <> "" Then
+				SetLog("Got Cleverbot Response : " & $sResponse, $COLOR_SUCCESS)
 				If Not ChatbotSelectChatInput("Clan") Then Return False
-				If Not ChatbotChatInput($g_sClanGeneric[Random(0, UBound($g_sClanGeneric) - 1, 1)]) Then Return False
+				If Not ChatbotChatInput($sResponse) Then Return False
 				If Not ChatbotSendChat("Clan") Then Return False
-			ElseIf $bIsLast Then
-				SetLog("ChatActions : The last chat is own, prevents floods.", $COLOR_INFO)
+				$bSentMessage = True
+			EndIf
 		EndIf
+		If Not $bSentMessage Then
+			If $g_bClanUseGeneric Then
+				If Not ChatbotSelectChatInput("Clan") Then Return False
+				If Not ChatbotChatInput($g_aClanGeneric[Random(0, UBound($g_aClanGeneric) - 1, 1)]) Then Return False
+				If Not ChatbotSendChat("Clan") Then Return False
+			EndIf
+		EndIf
+
+		; send it via Notify if it's new
+		; putting the code here makes sure the (cleverbot, specifically) response is sent as well :P
+		If $g_bUseNotify And $g_bPbSendNew Then
+			If Not $bSentClanChat Then ChatbotNotifySendChat()
+		EndIf
+	ElseIf $g_bClanUseGeneric And Not $bIsLast Then
+		If Not ChatbotSelectChatInput("Clan") Then Return False
+		If Not ChatbotChatInput($g_sClanGeneric[Random(0, UBound($g_sClanGeneric) - 1, 1)]) Then Return False
+		If Not ChatbotSendChat("Clan") Then Return False
+	ElseIf $bIsLast Then
+		SetLog("ChatActions : The last chat is own, prevents floods.", $COLOR_INFO)
+	EndIf
 
 	Return True
 EndFunc   ;==>ChatClan
@@ -287,7 +265,7 @@ Func OpenClanChat($iDelay = 200, $bIUnders = True)
 		Local $aiButton = findButton("ClanChat", Default, 1, True)
 		If IsArray($aiButton) And UBound($aiButton) >= 2 Then
 			If $aiButton[0] < 150 Then ClickP($aiButton, 1)
-			If $bIUnders and UnderstandChatRules() = True Then SetDebugLog("ChatBot|UnderstandChatRules", $COLOR_DEBUG) ; December Update(2018)
+			If $bIUnders And UnderstandChatRules() = True Then SetDebugLog("ChatBot|UnderstandChatRules", $COLOR_DEBUG) ; December Update(2018)
 			If RandomSleep(1500) Then Return
 			Return True
 		Else
@@ -305,7 +283,7 @@ Func CloseClanChat($iDelay = 200) ; close chat area
 	For $i = 0 To 2
 		Local $aiButton = findButton("ClanChat", Default, 1, True)
 		If IsArray($aiButton) And UBound($aiButton) >= 2 Then
-			If $aiButton[0] > 150 Then 
+			If $aiButton[0] > 150 Then
 				ClickP($aiButton, 1)
 				Return True
 			Else
@@ -371,8 +349,8 @@ Func ChatbotChatInput($g_sMessage)
 ;~ 		_SendExEx($g_sMessage)
 ;~ 		SendKeepActive("")
 ;~ 	Else
-		_Sleep($DELAYCHATACTIONS3)
-		SendText($g_sMessage)
+	_Sleep($DELAYCHATACTIONS3)
+	SendText($g_sMessage)
 ;~ 	EndIf
 	Return True
 	SetDebugLog("ChatBot|ChatbotChatInput Finished", $COLOR_DEBUG)
@@ -395,7 +373,7 @@ EndFunc   ;==>ChatbotSendChat
 Func ChatbotIsLastChatNew() ; returns true if the last chat was not by you, false otherwise
 	_CaptureRegion()
 	For $x = 38 To 261
-		If _ColorCheck(_GetPixelColor($x, 129), Hex(0x78BC10, 6), 5) Then Return True ; detect the green menu button
+		If _ColorCheck(_GetPixelColor($x, 129, False), Hex(0x78BC10, 6), 5) Then Return True ; detect the green menu button
 	Next
 	Return False
 EndFunc   ;==>ChatbotIsLastChatNew
@@ -589,7 +567,7 @@ Func FriendlyChallenge()
 	Setlog("Checking Friendly Challenge at Clan Chat", $COLOR_INFO)
 
 	If Not OpenClanChat() Then ; GTFO - Team AIO Mod++
-	SetLog("Error finding the Clan Tab Button", $COLOR_ERROR)
+		SetLog("Error finding the Clan Tab Button", $COLOR_ERROR)
 		Return
 	EndIf
 
@@ -602,9 +580,9 @@ Func FriendlyChallenge()
 		If $sOCRString <> -1 Then
 			$bDoFriendlyChallenge = True
 			$iTempR = Number(StringReverse($sOCRString))
-			$iRequested = ($iTempR > 0 And $iTempR < 7) ? ($iTempR-1) : (-1)
+			$iRequested = ($iTempR > 0 And $iTempR < 7) ? ($iTempR - 1) : (-1)
 			If $iRequested <> -1 Then
-				For $i = 0 To UBound($aBaseForShare) -1
+				For $i = 0 To UBound($aBaseForShare) - 1
 					If $aBaseForShare[$i][0] = $iRequested And $aBaseForShare[$i][1] = True Then
 						_ArrayDelete($aBaseForShare, $i)
 						Local $iTempFix = $g_bFriendlyChallengeBase[$i]
@@ -668,16 +646,16 @@ EndFunc   ;==>FriendlyChallenge
 Func RandomBaseIfNot($aBaseForShare)
 
 	; Profile entity diff.
-    Local Static $asLastTimeChecked[8] = ["", "", "", "", "", "", "", ""]
+	Local Static $asLastTimeChecked[8] = ["", "", "", "", "", "", "", ""]
 
 	If _Sleep($DELAYCHATACTIONS3) Then Return
 	For $i = 0 To UBound($aBaseForShare) - 1
-        If $aBaseForShare[$i][1] <> True Or (StringInStr($asLastTimeChecked[$g_iCurAccount], $aBaseForShare[$i][0]) > 0) Then ContinueLoop ; Check obstacles or if base is unchecked.
+		If $aBaseForShare[$i][1] <> True Or (StringInStr($asLastTimeChecked[$g_iCurAccount], $aBaseForShare[$i][0]) > 0) Then ContinueLoop ; Check obstacles or if base is unchecked.
 		Setlog("Friendly Challenge : Sharing base " & $aBaseForShare[$i][0] + 1 & ".", $COLOR_ACTION)
 		If CheckNeedSwipeFriendlyChallengeBase($aBaseForShare[$i][0]) = True Then
 			Return True
 		Else
-            $asLastTimeChecked[$g_iCurAccount] &= " " & $aBaseForShare[$i][0]
+			$asLastTimeChecked[$g_iCurAccount] &= " " & $aBaseForShare[$i][0]
 			Setlog("Friendly Challenge : The base has obstacles, it will not be taken into account until you correct it and restart the bot or change account.", $COLOR_INFO)
 		EndIf
 		If _Sleep($DELAYCHATACTIONS3) Then Return
@@ -719,7 +697,7 @@ Func CheckNeedSwipeFriendlyChallengeBase($iBaseSlot)
 		WEnd
 		If _Sleep($DELAYCHATACTIONS3) Then Return False
 		If _ImageSearchXML($g_sImgChatObstacles, 1, $aMeasures[$iBaseSlot], True, False) = -1 Then
-			Click($aClick[$iBaseSlot][0], $aClick[$iBaseSlot][1], 1, Random(500,570,1))
+			Click($aClick[$iBaseSlot][0], $aClick[$iBaseSlot][1], 1, Random(500, 570, 1))
 			Return True
 		EndIf
 	EndIf
