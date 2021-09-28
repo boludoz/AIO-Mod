@@ -531,6 +531,7 @@ EndFunc   ;==>CreateMiscClanGamesV3SubTab
 Func CreateCGDes()
     $g_hGUI_CGDes = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_CGDes", "Main Village Destruction Challenge"), 322 * 2, 315, $g_iFrmBotPosX, -1, $WS_DLGFRAME, $WS_EX_TOPMOST)
     Local $x = 25, $y = 25
+	GUISetBkColor($COLOR_WHITE, $g_hGUI_CGDes)
     GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SelectCGDes", "Select Destruction Challenges"), $x - 20, $y - 20, (308 * 2) + 10, 220)
     $x += 10
     $y += 5
@@ -560,7 +561,8 @@ EndFunc ;==>CreateCGDes
 
 Func CreateClanGamesAirTroops()
     $g_hGUI_CGAirTroops = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_CGAirTroops", "Air Troops Challenges"), 322 * 2 - 354, 315, $g_iFrmBotPosX, -1, $WS_DLGFRAME, $WS_EX_TOPMOST)
-    Local $x = 25, $y = 25
+    Local $x = 25, $y = 25 
+	GUISetBkColor($COLOR_WHITE, $g_hGUI_CGAirTroops)
     GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SelectCGAirTroops", "Select Air Troops Challenges"), $x - 20, $y - 20, (308 * 2) + 10 - 354, 220)
     $x += 10
     $y += 5
@@ -590,7 +592,8 @@ EndFunc ;==>CreateClanGamesAirTroops
 
 Func CreateClanGamesGroundTroops()
     $g_hGUI_CGGroundTroops = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_CGGroundTroop", "Ground Troops Challenges"), 322 * 2, 315, $g_iFrmBotPosX, -1, $WS_DLGFRAME, $WS_EX_TOPMOST)
-    Local $x = 25, $y = 25
+    Local $x = 25, $y = 25 
+	GUISetBkColor($COLOR_WHITE, $g_hGUI_CGGroundTroops)
     GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SelectCGGroundTroop", "Select Ground Troops Challenges"), $x - 20, $y - 20, (308 * 2) + 10, 220)
     $x += 10
     $y += 5
@@ -619,7 +622,8 @@ EndFunc ;==>CreateClanGamesGroundTroops
 
 Func CreateClanGamesSpell()
     $g_hGUI_CGSpells = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_CGSpells", "Spell Challenges"), 322 * 2 - 354, 315, $g_iFrmBotPosX, -1, $WS_DLGFRAME, $WS_EX_TOPMOST)
-    Local $x = 25, $y = 25
+    Local $x = 25, $y = 25 
+	GUISetBkColor($COLOR_WHITE, $g_hGUI_CGSpells)
     GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SelectCGSpells", "Select Spell Challenges"), $x - 20, $y - 20, (308 * 2) + 10 - 354, 220)
     $x += 10
     $y += 5
@@ -649,7 +653,8 @@ EndFunc ;==>CreateClanGamesSpell
 
 Func CreateClanGamesBBDes()
     $g_hGUI_CGBBDes = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_CGBBDes", "BB Destruction Challenges"), 322 * 2 - 250, 315, $g_iFrmBotPosX, -1, $WS_DLGFRAME, $WS_EX_TOPMOST)
-    Local $x = 25, $y = 25
+    Local $x = 25, $y = 25 
+	GUISetBkColor($COLOR_WHITE, $g_hGUI_CGBBDes)
     GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SelectCGBBDes", "Select BB Destruction Challenges"), $x - 20, $y - 20, (308 * 2) + 10 - 250, 220)
     $x += 10
     $y += 5
@@ -678,7 +683,8 @@ EndFunc ;==>CreateClanGamesBBDes
 
 Func CreateClanGamesBBTroops()
     $g_hGUI_CGBBTroops = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_CGBBTroops", "BB Troops Challenges"), 322 * 2 - 354, 315, $g_iFrmBotPosX, -1, $WS_DLGFRAME, $WS_EX_TOPMOST)
-    Local $x = 25, $y = 25
+    Local $x = 25, $y = 25 
+	GUISetBkColor($COLOR_WHITE, $g_hGUI_CGBBTroops)
     GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SelectCGBBTroops", "Select BB Troops Challenges"), $x - 20, $y - 20, (308 * 2) + 10 - 354, 220)
     $x += 10
     $y += 5

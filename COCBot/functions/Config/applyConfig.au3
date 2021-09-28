@@ -226,7 +226,7 @@ Func ApplyConfig_Android($TypeReadSave)
 			GUICtrlSetState($g_hChkUpdateSharedPrefs, $g_bUpdateSharedPrefs ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hTxtAndroidRebootHours, $g_iAndroidRebootHours)
 			_GUICtrlComboBox_SetCurSel($g_hCmbSuspendAndroid, AndroidSuspendFlagsToIndex($g_iAndroidSuspendModeFlags))
-			
+
 			; Custom sleep - Team AIO Mod++ (inspired in Samkie)
 			GUICtrlSetData($g_hInputAndroidSleep, $g_iInputAndroidSleep)
 		Case "Save"
@@ -243,7 +243,7 @@ Func ApplyConfig_Android($TypeReadSave)
 			$g_bUpdateSharedPrefs = (GUICtrlRead($g_hChkUpdateSharedPrefs) = $GUI_CHECKED ? True : False)
 			$g_iAndroidRebootHours = Int(GUICtrlRead($g_hTxtAndroidRebootHours)) ; Hours are entered
 			cmbSuspendAndroid()
-			
+
 			; Custom sleep - Team AIO Mod++ (inspired in Samkie)
 			$g_iInputAndroidSleep = GUICtrlRead($g_hInputAndroidSleep)
 	EndSwitch
@@ -399,31 +399,13 @@ Func ApplyConfig_600_6($TypeReadSave)
 
             GUICtrlSetState($g_hChkClanGamesBBBattle, $g_bChkClanGamesBBBattle ? $GUI_CHECKED : $GUI_UNCHECKED)
             GUICtrlSetState($g_hChkClanGamesBBDes, $g_bChkClanGamesBBDes ? $GUI_CHECKED : $GUI_UNCHECKED)
-			For $i = 0 To UBound($g_aCmbCGBBDes) - 1
-				_GUICtrlComboBox_SetCurSel($g_ahCmbCGBBDes[$i], $g_aCmbCGBBDes[$i])
-			Next
 			GUICtrlSetState($g_hChkClanGamesBBTroops, $g_bChkClanGamesBBTroops ? $GUI_CHECKED : $GUI_UNCHECKED)
-			For $i = 0 To UBound($g_aCmbCGBBTroops) - 1
-				_GUICtrlComboBox_SetCurSel($g_ahCmbCGBBTroops[$i], $g_aCmbCGBBTroops[$i])
-			Next
 			GUICtrlSetState($g_hChkForceBBAttackOnClanGames, $g_bChkForceBBAttackOnClanGames ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkClanGamesPurgeAny, $g_bChkClanGamesPurgeAny ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkClanGamesSpell, $g_bChkClanGamesSpell ? $GUI_CHECKED : $GUI_UNCHECKED)
-			For $i = 0 To UBound($g_aCmbCGSpells) - 1
-				_GUICtrlComboBox_SetCurSel($g_ahCmbCGSpells[$i], $g_aCmbCGSpells[$i])
-			Next
 			GUICtrlSetState($g_hChkClanGamesDes, $g_bChkClanGamesDes ? $GUI_CHECKED : $GUI_UNCHECKED)
-			For $i = 0 To UBound($g_aCmbCGDes) - 1
-				_GUICtrlComboBox_SetCurSel($g_ahCmbCGDes[$i], $g_aCmbCGDes[$i])
-			Next
 			GUICtrlSetState($g_hChkClanGamesAirTroop, $g_bChkClanGamesAirTroop ? $GUI_CHECKED : $GUI_UNCHECKED)
-			For $i = 0 To UBound($g_aCmbCGAirTroops) - 1
-				_GUICtrlComboBox_SetCurSel($g_ahCmbCGAirTroops[$i], $g_aCmbCGAirTroops[$i])
-			Next
 			GUICtrlSetState($g_hChkClanGamesGroundTroop, $g_bChkClanGamesGroundTroop ? $GUI_CHECKED : $GUI_UNCHECKED)
-			For $i = 0 To UBound($g_aCmbCGGroundTroops) - 1
-				_GUICtrlComboBox_SetCurSel($g_ahCmbCGGroundTroops[$i], $g_aCmbCGGroundTroops[$i])
-			Next
 			GUICtrlSetState($g_hChkClanGamesMiscellaneous, $g_bChkClanGamesMiscellaneous ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hcmbPurgeLimit, $g_iPurgeMax)
 
@@ -504,12 +486,12 @@ Func ApplyConfig_600_6($TypeReadSave)
 ;~ 			$g_bChkCTBoostLabBBActive = (GUICtrlRead($g_hChkCTBoostLabBBActive) = $GUI_CHECKED) ; AIO MOD++
 			 $g_iChkBBSuggestedUpgrades = (GUICtrlRead($g_hChkBBSuggestedUpgrades) = $GUI_CHECKED) ? 1 : 0
 			$g_iChkBBSuggestedUpgradesIgnoreGold = (GUICtrlRead($g_hChkBBSuggestedUpgradesIgnoreGold) = $GUI_CHECKED) ? 1 : 0
-			$g_iChkBBSuggestedUpgradesIgnoreElixir = (GUICtrlRead($g_hChkBBSuggestedUpgradesIgnoreElixir) = $GUI_CHECKED) ? 1 : 0	
+			$g_iChkBBSuggestedUpgradesIgnoreElixir = (GUICtrlRead($g_hChkBBSuggestedUpgradesIgnoreElixir) = $GUI_CHECKED) ? 1 : 0
 ;~ 			$g_iChkBBSuggestedUpgradesIgnoreHall = (GUICtrlRead($g_hChkBBSuggestedUpgradesIgnoreHall) = $GUI_CHECKED) ? 1 : 0 ; AIO MOD++
 ;~ 			$g_iChkBBSuggestedUpgradesIgnoreWall = (GUICtrlRead($g_hChkBBSuggestedUpgradesIgnoreWall) = $GUI_CHECKED) ? 1 : 0 ; AIO MOD++
 
 			$g_iChkPlacingNewBuildings = (GUICtrlRead($g_hChkPlacingNewBuildings) = $GUI_CHECKED) ? 1 : 0
-			
+
 			; xbebenk clan games
 			$g_bChkClanGamesEnabled = (GUICtrlRead($g_hChkClanGamesEnabled) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkClanGames60 = (GUICtrlRead($g_hChkClanGames60) = $GUI_CHECKED) ? 1 : 0
@@ -521,31 +503,13 @@ Func ApplyConfig_600_6($TypeReadSave)
 
             $g_bChkClanGamesBBBattle = (GUICtrlRead($g_hChkClanGamesBBBattle) = $GUI_CHECKED) ? 1 : 0
             $g_bChkClanGamesBBDes = (GUICtrlRead($g_hChkClanGamesBBDes) = $GUI_CHECKED) ? 1 : 0
-			For $i = 0 To UBound($g_ahCmbCGBBDes) - 1
-				$g_aCmbCGBBDes[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbCGBBDes[$i])
-			Next
 			$g_bChkClanGamesBBTroops = (GUICtrlRead($g_hChkClanGamesBBTroops) = $GUI_CHECKED) ? 1 : 0
-			For $i = 0 To UBound($g_ahCmbCGBBTroops) - 1
-				$g_aCmbCGBBTroops[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbCGBBTroops[$i])
-			Next
 			$g_bChkForceBBAttackOnClanGames = (GUICtrlRead($g_hChkForceBBAttackOnClanGames) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkClanGamesPurgeAny = (GUICtrlRead($g_hChkClanGamesPurgeAny) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkClanGamesSpell = (GUICtrlRead($g_hChkClanGamesSpell) = $GUI_CHECKED) ? 1 : 0
-			For $i = 0 To UBound($g_ahCmbCGSpells) - 1
-				$g_aCmbCGSpells[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbCGSpells[$i])
-			Next
 			$g_bChkClanGamesDes = (GUICtrlRead($g_hChkClanGamesDes) = $GUI_CHECKED) ? 1 : 0
-			For $i = 0 To UBound($g_ahCmbCGDes) - 1
-				$g_aCmbCGDes[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbCGDes[$i])
-			Next
 			$g_bChkClanGamesAirTroop = (GUICtrlRead($g_hChkClanGamesAirTroop) = $GUI_CHECKED) ? 1 : 0
-			For $i = 0 To UBound($g_ahCmbCGAirTroops) - 1
-				$g_aCmbCGAirTroops[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbCGAirTroops[$i])
-			Next
 			$g_bChkClanGamesGroundTroop = (GUICtrlRead($g_hChkClanGamesGroundTroop) = $GUI_CHECKED) ? 1 : 0
-			For $i = 0 To UBound($g_ahCmbCGGroundTroops) - 1
-				$g_aCmbCGGroundTroops[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbCGGroundTroops[$i])
-			Next
 			$g_bChkClanGamesMiscellaneous = (GUICtrlRead($g_hChkClanGamesMiscellaneous) = $GUI_CHECKED) ? 1 : 0
 			$g_iPurgeMax = _GUICtrlComboBox_GetCurSel($g_hcmbPurgeLimit)
 
@@ -625,10 +589,10 @@ Func ApplyConfig_600_11($TypeReadSave)
             GUICtrlSetData($g_hTxtRequestCCDefenseTime, $g_iRequestDefenseTime)
             GUICtrlSetState($g_hChkSaveCCTroopForDefense, $g_bSaveCCTroopForDefense ? $GUI_CHECKED : $GUI_UNCHECKED)
             GUICtrlSetState($g_hChkRemoveCCForDefense, $g_bChkRemoveCCForDefense ? $GUI_CHECKED : $GUI_UNCHECKED)
-			
-			; Type Once - ChacalGyn 
+
+			; Type Once - ChacalGyn
 			GUICtrlSetState($g_hChkRequestTypeOnceEnable, $g_bChkRequestTypeOnceEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
-			
+
 			; Request Early - Team AIO Mod++
 			GUICtrlSetState($g_hChkRequestFromChat, $g_bChkRequestFromChat ? $GUI_CHECKED : $GUI_UNCHECKED)
 
@@ -667,8 +631,8 @@ Func ApplyConfig_600_11($TypeReadSave)
             $g_iRequestDefenseTime = GUICtrlRead($g_hTxtRequestCCDefenseTime)
             $g_bSaveCCTroopForDefense = (GUICtrlRead($g_hChkSaveCCTroopForDefense) = $GUI_CHECKED)
             $g_bChkRemoveCCForDefense = (GUICtrlRead($g_hChkRemoveCCForDefense) = $GUI_CHECKED)
-			
-			; Type Once - ChacalGyn 
+
+			; Type Once - ChacalGyn
 			$g_bChkRequestTypeOnceEnable = (GUICtrlRead($g_hChkRequestTypeOnceEnable) = $GUI_CHECKED)
 
 			; Request Early - Team AIO Mod++
@@ -865,11 +829,11 @@ Func ApplyConfig_600_14($TypeReadSave)
             GUICtrlSetState($g_hChkAutoLabUpgrades, $g_bAutoLabUpgradeEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
             _GUICtrlComboBox_SetCurSel($g_hCmbLaboratory, $g_iCmbLaboratory)
 			#Region - Custom lab - Team AIO Mod++
-            _GUICtrlSetImage($g_hPicLabUpgrade, $g_sLibIconPath, $g_avLabTroops[$g_iCmbLaboratory][1])        
+            _GUICtrlSetImage($g_hPicLabUpgrade, $g_sLibIconPath, $g_avLabTroops[$g_iCmbLaboratory][1])
 			#EndRegion - Custom lab - Team AIO Mod++
             chkLab()
 			#Region - Custom lab - Team AIO Mod++
-            
+
             GUICtrlSetState($g_hChkLabUpgradeOrder, $g_bLabUpgradeOrderEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
             For $i = 0 To UBound($g_aCmbLabUpgradeOrder) - 1
                 _GUICtrlComboBox_SetCurSel($g_ahCmbLabUpgradeOrder[$i], $g_aCmbLabUpgradeOrder[$i])
@@ -880,7 +844,7 @@ Func ApplyConfig_600_14($TypeReadSave)
             _GUICtrlComboBox_SetCurSel($g_hCmbStarLaboratory, $g_iCmbStarLaboratory)
             _GUICtrlSetImage($g_hPicStarLabUpgrade, $g_sLibIconPath, $g_avStarLabTroops[$g_iCmbStarLaboratory][4])
             chkStarLab()
- 			#Region - Custom lab - Team AIO Mod++            
+ 			#Region - Custom lab - Team AIO Mod++
             GUICtrlSetState($g_hChkSLabUpgradeOrder, $g_bSLabUpgradeOrderEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
             For $i = 0 To UBound($g_aCmbSLabUpgradeOrder) - 1
                 _GUICtrlComboBox_SetCurSel($g_ahCmbSLabUpgradeOrder[$i], $g_aCmbSLabUpgradeOrder[$i])
@@ -1099,7 +1063,7 @@ Func ApplyConfig_600_18($TypeReadSave)
 
 			#Region - Discord - Team AIO Mod++
 			GUICtrlSetState($g_hChkNotifyAlertPetHouseIdle, $g_bNotifyAlertPetHouseIdle ? $GUI_CHECKED : $GUI_UNCHECKED)
-			
+
 			GUICtrlSetState($g_hChkNotifyDSEnable, $g_bNotifyDSEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
 			chkDSenabled()
 			GUICtrlSetData($g_hTxtNotifyDSToken, $g_sNotifyDSToken)
@@ -1129,11 +1093,11 @@ Func ApplyConfig_600_18($TypeReadSave)
 			; Telegram
 			$g_bNotifyTGEnable = (GUICtrlRead($g_hChkNotifyTGEnable) = $GUI_CHECKED)
 			$g_sNotifyTGToken = GUICtrlRead($g_hTxtNotifyTGToken)
-			
+
 			;Remote Control
 			$g_bNotifyRemoteEnable = (GUICtrlRead($g_hChkNotifyRemote) = $GUI_CHECKED)
 			$g_sNotifyOrigin = GUICtrlRead($g_hTxtNotifyOrigin)
-			
+
 			;Alerts
 			$g_bNotifyAlertMatchFound = (GUICtrlRead($g_hChkNotifyAlertMatchFound) = $GUI_CHECKED)
 			$g_bNotifyAlerLastRaidIMG = (GUICtrlRead($g_hChkNotifyAlertLastRaidIMG) = $GUI_CHECKED)
@@ -1151,10 +1115,10 @@ Func ApplyConfig_600_18($TypeReadSave)
 			$g_bNotifyAlertBOTUpdate = (GUICtrlRead($g_hChkNotifyBOTUpdate) = $GUI_CHECKED)
 			$g_bNotifyAlertSmartWaitTime = (GUICtrlRead($g_hChkNotifyAlertSmartWaitTime) = $GUI_CHECKED)
 			$g_bNotifyAlertLaboratoryIdle = (GUICtrlRead($g_hChkNotifyAlertLaboratoryIdle) = $GUI_CHECKED)
-			
+
 			#Region - Discord - Team AIO Mod++
 			$g_bNotifyAlertPetHouseIdle = (GUICtrlRead($g_hChkNotifyAlertPetHouseIdle) = $GUI_CHECKED)
-			
+
 			$g_bNotifyDSEnable = (GUICtrlRead($g_hChkNotifyDSEnable) = $GUI_CHECKED)
 			$g_sNotifyDSToken = GUICtrlRead($g_hTxtNotifyDSToken)
 			$g_sNotifyOriginDS = GUICtrlRead($g_hTxtNotifyOriginDS)
@@ -1198,7 +1162,7 @@ Func ApplyConfig_600_19($TypeReadSave)
 			For $i = 0 To 6
 				GUICtrlSetState($g_hChkNotifyWeekdays[$i], $g_abNotifyScheduleWeekDays[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
 			Next
-			
+
 			#Region - Discord - Team AIO Mod++
 			;Schedule DS
 			GUICtrlSetState($g_hChkNotifyOnlyHoursDS, $g_bNotifyScheduleHoursEnableDS ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -1222,7 +1186,7 @@ Func ApplyConfig_600_19($TypeReadSave)
 			For $i = 0 To 6
 				$g_abNotifyScheduleWeekDays[$i] = (GUICtrlRead($g_hChkNotifyWeekdays[$i]) = $GUI_CHECKED)
 			Next
-			
+
 			#Region - Discord - Team AIO Mod++
 			$g_bNotifyScheduleHoursEnableDS = (GUICtrlRead($g_hChkNotifyOnlyHoursDS) = $GUI_CHECKED)
 			For $i = 0 To 23
@@ -1815,7 +1779,7 @@ Func ApplyConfig_600_29_DB_SmartFarm($TypeReadSave)
 			GUICtrlSetState($g_hChkUseSmartFarmRedLine, $g_bUseSmartFarmRedLine ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbSmartFarmSpellsHowManySides, $g_iSmartFarmSpellsHowManySides - 1)
 			#EndRegion - Custom SmartFarm - Team AIO Mod++
-			
+
 			GUICtrlSetData($g_hTxtInsidePercentage, $g_iTxtInsidePercentage)
 			GUICtrlSetData($g_hTxtOutsidePercentage, $g_iTxtOutsidePercentage)
 			GUICtrlSetState($g_hChkDebugSmartFarm, $g_bDebugSmartFarm ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -1827,7 +1791,7 @@ Func ApplyConfig_600_29_DB_SmartFarm($TypeReadSave)
 			$g_bUseSmartFarmRedLine = (GUICtrlRead($g_hChkUseSmartFarmRedLine) = $GUI_CHECKED)
 			$g_iSmartFarmSpellsHowManySides = _GUICtrlComboBox_GetCurSel($g_hCmbSmartFarmSpellsHowManySides) + 1
 			#EndRegion - Custom SmartFarm - Team AIO Mod++
-			
+
 			$g_iTxtInsidePercentage = GUICtrlRead($g_hTxtInsidePercentage)
 			$g_iTxtOutsidePercentage = GUICtrlRead($g_hTxtOutsidePercentage)
 			$g_bDebugSmartFarm = (GUICtrlRead($g_hChkDebugSmartFarm) = $GUI_CHECKED)
@@ -2437,9 +2401,9 @@ Func ApplyConfig_600_54($TypeReadSave)
 			For $z = 0 To UBound($g_ahCmbSpellsOrder) - 1
 				_GUICtrlComboBox_SetCurSel($g_ahCmbSpellsOrder[$z], $g_aiCmbCustomBrewOrder[$z])
 			Next
-			
+
 			ApplyConfig_600_54("Save")
-			
+
 			chkTotalCampForced()
 			radSelectTrainType() ; this function also calls calls lblTotalCount and TotalSpellCountClick
 			SetComboTroopComp() ; this function also calls lblTotalCount
@@ -2451,34 +2415,34 @@ Func ApplyConfig_600_54($TypeReadSave)
 			For $z = 0 To UBound($g_ahCmbTroopOrder) - 1
 				$g_aiCmbCustomTrainOrder[$z] = Number(_GUICtrlComboBox_GetCurSel($g_ahCmbTroopOrder[$z]))
 			Next
-			
+
 			If $g_aiCmbCustomTrainOrder[UBound($g_aiCmbCustomTrainOrder) -1] < 0 Then
 				BtnRemoveTroops()
 				; ApplyConfig_600_54("Read")
-			EndIf 
-			
+			EndIf
+
 			; Spells Order
 			$g_bCustomBrewOrderEnable = (GUICtrlRead($g_hChkCustomBrewOrderEnable) = $GUI_CHECKED)
 			For $z = 0 To UBound($g_ahCmbSpellsOrder) - 1
 				$g_aiCmbCustomBrewOrder[$z] = Number(_GUICtrlComboBox_GetCurSel($g_ahCmbSpellsOrder[$z]))
 			Next
-			
+
 			If $g_aiCmbCustomBrewOrder[UBound($g_aiCmbCustomBrewOrder) -1] < 0 Then
 				BtnRemoveSpells()
 				; ApplyConfig_600_54("Read")
-			EndIf 
+			EndIf
 
 			Local $iTmp = 0, $iTmp2 = 0
 			$iTmp2 = UBound($g_ahCmbTroopOrder) - 1
 			If $g_bCustomTrainOrderEnable = False Then
 				For $z = 0 To $iTmp2
-					$g_aiTrainOrder[$z] = $z                                 
-				Next                                                         
+					$g_aiTrainOrder[$z] = $z
+				Next
 			Else
-				For $z = 0 To $iTmp2                 
+				For $z = 0 To $iTmp2
 					$iTmp = Abs(Number($g_aiCmbCustomTrainOrder[$z]))
 					$g_aiTrainOrder[$iTmp] = $z
-				Next                                                         
+				Next
 			EndIf
 
 			$iTmp2 = UBound($g_ahCmbSpellsOrder) - 1
@@ -2486,7 +2450,7 @@ Func ApplyConfig_600_54($TypeReadSave)
 				For $z = 0 To $iTmp2
 					$g_aiBrewOrder[$z] = $z
 				Next
-			Else	
+			Else
 				For $z = 0 To $iTmp2
 					$iTmp =	Abs(Number($g_aiCmbCustomBrewOrder[$z]))
 					$g_aiBrewOrder[$iTmp] = $z

@@ -817,68 +817,12 @@ Func CloseCGDes()
 	GUISetState(@SW_HIDE, $g_hGUI_CGDes)
 EndFunc
 
-Func GUI_CGDes()
-	Local $iGUI_CtrlId = @GUI_CtrlId
-	For $i = 0 To UBound($g_ahCmbCGDes) - 1 ; check for duplicate combobox index and flag problem
-		If $iGUI_CtrlId = $g_ahCmbCGDes[$i] Then ContinueLoop
-		If _GUICtrlComboBox_GetCurSel($iGUI_CtrlId) = _GUICtrlComboBox_GetCurSel($g_ahCmbCGDes[$i]) Then
-			_GUICtrlComboBox_SetCurSel($g_ahCmbCGDes[$i], -1)
-			GUISetState()
-		EndIf
-	Next
-EndFunc
-
-Func btnSetCGDes()
-	Local $d
-	SetLog("Set Enabled ClanGames Main Village Destruction",$COLOR_SUCCESS)
-	For $i = 0 To UBound($g_ahCmbCGDes) - 1
-		$g_aCmbCGDes[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbCGDes[$i])
-		$d = $g_aCmbCGDes[$i]
-		If $d = -1 Then ContinueLoop
-		SetLog($i+1 & " : " & $g_aCGDestructionChallenges[$d][0], $COLOR_SUCCESS)
-	Next
-EndFunc
-
-Func BtnCGDesRemove()
-	For $i = 0 To UBound($g_ahCmbCGDes) - 1
-		_GUICtrlComboBox_SetCurSel($g_ahCmbCGDes[$i], -1)
-	Next
-EndFunc
-
 Func btnCGAirTroops()
 	GUISetState(@SW_SHOW, $g_hGUI_CGAirTroops)
 EndFunc
 
 Func CloseCGAirTroops()
 	GUISetState(@SW_HIDE, $g_hGUI_CGAirTroops)
-EndFunc
-
-Func GUI_CGAirTroops()
-;~ 	Local $iGUI_CtrlId = @GUI_CtrlId
-;~ 	For $i = 0 To UBound($g_ahCmbCGAirTroops) - 1 ; check for duplicate combobox index and flag problem
-;~ 		If $iGUI_CtrlId = $g_ahCmbCGAirTroops[$i] Then ContinueLoop
-;~ 		If _GUICtrlComboBox_GetCurSel($iGUI_CtrlId) = _GUICtrlComboBox_GetCurSel($g_ahCmbCGAirTroops[$i]) Then
-;~ 			_GUICtrlComboBox_SetCurSel($g_ahCmbCGAirTroops[$i], -1)
-;~ 			GUISetState()
-;~ 		EndIf
-;~ 	Next
-EndFunc
-
-Func btnSetCGAirTroops()
-;~ 	Local $d
-;~ 	SetLog("Set Enabled ClanGames Air Troops",$COLOR_SUCCESS)
-;~ 	For $i = 0 To UBound($g_ahCmbCGAirTroops) - 1
-;~ 		$g_aCmbCGAirTroops[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbCGAirTroops[$i])
-;~ 		$d = $g_aCmbCGAirTroops[$i]
-;~ 		If $d = -1 Then ContinueLoop
-;~ 		SetLog($i+1 & " : " & $g_aCGAirTroopChallenges[$d][0], $COLOR_SUCCESS)
-;~ 	Next
-EndFunc
-
-Func BtnCGAirTroopsRemove()
-;~ 	For $i = 0 To UBound($g_ahCmbCGAirTroops) - 1
-;~ 		_GUICtrlComboBox_SetCurSel($g_ahCmbCGAirTroops[$i], -1)
-;~ 	Next
 EndFunc
 
 Func btnCGGroundTroops()
@@ -889,69 +833,12 @@ Func CloseCGGroundTroops()
  	GUISetState(@SW_HIDE, $g_hGUI_CGGroundTroops)
 EndFunc
 
-Func GUI_CGGroundTroops()
-;~ 	Local $iGUI_CtrlId = @GUI_CtrlId
-;~ 	For $i = 0 To UBound($g_ahCmbCGGroundTroops) - 1 ; check for duplicate combobox index and flag problem
-;~ 		If $iGUI_CtrlId = $g_ahCmbCGGroundTroops[$i] Then ContinueLoop
-;~ 		If _GUICtrlComboBox_GetCurSel($iGUI_CtrlId) = _GUICtrlComboBox_GetCurSel($g_ahCmbCGGroundTroops[$i]) Then
-;~ 			_GUICtrlComboBox_SetCurSel($g_ahCmbCGGroundTroops[$i], -1)
-;~ 			GUISetState()
-;~ 		EndIf
-;~ 	Next
-EndFunc
-
-Func btnSetCGGroundTroops()
-;~ 	Local $d
-;~ 	SetLog("Set Enabled ClanGames Ground Troops",$COLOR_SUCCESS)
-;~ 	For $i = 0 To UBound($g_ahCmbCGGroundTroops) - 1
-;~ 		$g_aCmbCGGroundTroops[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbCGGroundTroops[$i])
-;~ 		$d = $g_aCmbCGGroundTroops[$i]
-;~ 		If $d = -1 Then ContinueLoop
-;~ 		SetLog($i+1 & " : " & ClanGamesChallenges("$g_aCGGroundTroopChallenges")[$d][0], $COLOR_SUCCESS)
-;~ 	Next
-EndFunc
-
-Func BtnCGGroundTroopsRemove()
-;~ 	For $i = 0 To UBound($g_ahCmbCGGroundTroops) - 1
-;~ 		_GUICtrlComboBox_SetCurSel($g_ahCmbCGGroundTroops[$i], -1)
-;~ 	Next
-EndFunc
-
-
 Func btnCGSpells()
 	GUISetState(@SW_SHOW, $g_hGUI_CGSpells)
 EndFunc
 
 Func CloseCGSpells()
 	GUISetState(@SW_HIDE, $g_hGUI_CGSpells)
-EndFunc
-
-Func GUI_CGSpells()
-;~ 	Local $iGUI_CtrlId = @GUI_CtrlId
-;~ 	For $i = 0 To UBound($g_ahCmbCGSpells) - 1 ; check for duplicate combobox index and flag problem
-;~ 		If $iGUI_CtrlId = $g_ahCmbCGSpells[$i] Then ContinueLoop
-;~ 		If _GUICtrlComboBox_GetCurSel($iGUI_CtrlId) = _GUICtrlComboBox_GetCurSel($g_ahCmbCGSpells[$i]) Then
-;~ 			_GUICtrlComboBox_SetCurSel($g_ahCmbCGSpells[$i], -1)
-;~ 			GUISetState()
-;~ 		EndIf
-;~ 	Next
-EndFunc
-
-Func btnSetCGSpells()
-;~ 	Local $d
-;~ 	SetLog("Set Enabled ClanGames Spell",$COLOR_SUCCESS)
-;~ 	For $i = 0 To UBound($g_ahCmbCGSpells) - 1
-;~ 		$g_aCmbCGSpells[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbCGSpells[$i])
-;~ 		$d = $g_aCmbCGSpells[$i]
-;~ 		If $d = -1 Then ContinueLoop
-;~ 		SetLog($i+1 & " : " & ClanGamesChallenges("$g_aCGSpellChallenges")[$d][0], $COLOR_SUCCESS)
-;~ 	Next
-EndFunc
-
-Func BtnCGSpellsRemove()
-	For $i = 0 To UBound($g_ahCmbCGSpells) - 1
-		_GUICtrlComboBox_SetCurSel($g_ahCmbCGSpells[$i], -1)
-	Next
 EndFunc
 
 Func btnCGBBDes()
@@ -962,68 +849,12 @@ Func CloseCGBBDes()
 	GUISetState(@SW_HIDE, $g_hGUI_CGBBDes)
 EndFunc
 
-Func GUI_CGBBDes()
-;~ 	Local $iGUI_CtrlId = @GUI_CtrlId
-;~ 	For $i = 0 To UBound($g_ahCmbCGBBDes) - 1 ; check for duplicate combobox index and flag problem
-;~ 		If $iGUI_CtrlId = $g_ahCmbCGBBDes[$i] Then ContinueLoop
-;~ 		If _GUICtrlComboBox_GetCurSel($iGUI_CtrlId) = _GUICtrlComboBox_GetCurSel($g_ahCmbCGBBDes[$i]) Then
-;~ 			_GUICtrlComboBox_SetCurSel($g_ahCmbCGBBDes[$i], -1)
-;~ 			GUISetState()
-;~ 		EndIf
-;~ 	Next
-EndFunc
-
-Func btnSetCGBBDes()
-;~ 	Local $d
-;~ 	SetLog("Set Enabled ClanGames BB Destruction",$COLOR_SUCCESS)
-;~ 	For $i = 0 To UBound($g_ahCmbCGBBDes) - 1
-;~ 		$g_aCmbCGBBDes[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbCGBBDes[$i])
-;~ 		$d = $g_aCmbCGBBDes[$i]
-;~ 		If $d = -1 Then ContinueLoop
-;~ 		SetLog($i+1 & " : " & ClanGamesChallenges("$g_aCGBBDestructionChallenges")[$d][0], $COLOR_SUCCESS)
-;~ 	Next
-EndFunc
-
-Func BtnCGBBDesRemove()
-	For $i = 0 To UBound($g_ahCmbCGBBDes) - 1
-		_GUICtrlComboBox_SetCurSel($g_ahCmbCGBBDes[$i], -1)
-	Next
-EndFunc
-
 Func btnCGBBTroops()
 	GUISetState(@SW_SHOW, $g_hGUI_CGBBTroops)
 EndFunc
 
 Func CloseCGBBTroops()
 	GUISetState(@SW_HIDE, $g_hGUI_CGBBTroops)
-EndFunc
-
-Func GUI_CGBBTroops()
-;~ 	Local $iGUI_CtrlId = @GUI_CtrlId
-;~ 	For $i = 0 To UBound($g_ahCmbCGBBTroops) - 1 ; check for duplicate combobox index and flag problem
-;~ 		If $iGUI_CtrlId = $g_ahCmbCGBBTroops[$i] Then ContinueLoop
-;~ 		If _GUICtrlComboBox_GetCurSel($iGUI_CtrlId) = _GUICtrlComboBox_GetCurSel($g_ahCmbCGBBTroops[$i]) Then
-;~ 			_GUICtrlComboBox_SetCurSel($g_ahCmbCGBBTroops[$i], -1)
-;~ 			GUISetState()
-;~ 		EndIf
-;~ 	Next
-EndFunc
-
-Func btnSetCGBBTroops()
-;~ 	Local $d
-;~ 	SetLog("Set Enabled ClanGames BB Troops",$COLOR_SUCCESS)
-;~ 	For $i = 0 To UBound($g_ahCmbCGBBTroops) - 1
-;~ 		$g_aCmbCGBBTroops[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbCGBBTroops[$i])
-;~ 		$d = $g_aCmbCGBBTroops[$i]
-;~ 		If $d = -1 Then ContinueLoop
-;~ 		SetLog($i+1 & " : " & ClanGamesChallenges("$g_aCGBBTroopChallenges")[$d][0], $COLOR_SUCCESS)
-;~ 	Next
-EndFunc
-
-Func BtnCGBBTroopsRemove()
-	For $i = 0 To UBound($g_ahCmbCGBBTroops) - 1
-		_GUICtrlComboBox_SetCurSel($g_ahCmbCGBBTroops[$i], -1)
-	Next
 EndFunc
 #EndRegion - xbebenk - Clan Games
 

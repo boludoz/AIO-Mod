@@ -495,45 +495,20 @@ Func ReadConfig_600_6()
 	IniReadS($g_bChkClanGamesStopBeforeReachAndPurge, $g_sProfileConfigPath, "other", "ChkClanGamesStopBeforeReachAndPurge", False, "Bool")
 	IniReadS($g_bChkClanGamesDebug, $g_sProfileConfigPath, "other", "ChkClanGamesDebug", False, "Bool")
 	;xbenk
-	Local $str
 	IniReadS($g_bChkClanGamesLoot, $g_sProfileConfigPath, "other", "ChkClanGamesLoot", False, "Bool")
 	IniReadS($g_bChkClanGamesBattle, $g_sProfileConfigPath, "other", "ChkClanGamesBattle", False, "Bool")
 
     IniReadS($g_bChkClanGamesBBBattle, $g_sProfileConfigPath, "other", "ChkClanGamesBBBattle", False, "Bool")
     IniReadS($g_bChkClanGamesBBDes, $g_sProfileConfigPath, "other", "ChkClanGamesBBDestruction", False, "Bool")
-	$str = StringSplit(IniRead($g_sProfileConfigPath, "other", "EnabledBBDestruction", "2|1|0|4|14|6|7|8|10|13|"), "|", $STR_NOCOUNT)
-	For $i = 0 To UBound($g_aCmbCGBBDes) - 1
-		$g_aCmbCGBBDes[$i] = $str[$i]
-	Next
 	IniReadS($g_bChkClanGamesBBTroops, $g_sProfileConfigPath, "other", "ChkClanGamesBBTroops", False, "Bool")
-	$str = StringSplit(IniRead($g_sProfileConfigPath, "other", "EnabledBBTroop", "6|2|4|-1|-1|-1|-1|-1|-1|-1"), "|", $STR_NOCOUNT)
-	For $i = 0 To UBound($g_aCmbCGBBTroops) - 1
-		$g_aCmbCGBBTroops[$i] = $str[$i]
-	Next
 	IniReadS($g_bChkForceBBAttackOnClanGames, $g_sProfileConfigPath, "other", "ChkForceBBAttackOnClanGames", False, "Bool")
 	IniReadS($g_bChkClanGamesPurgeAny, $g_sProfileConfigPath, "other", "ChkClanGamesPurgeAny", True, "Bool")
 	IniReadS($g_bChkClanGamesSpell, $g_sProfileConfigPath, "other", "ChkClanGamesSpell", False, "Bool")
-	$str = StringSplit(IniRead($g_sProfileConfigPath, "other", "EnabledCGSpell", "-1|-1|-1|-1|-1|-1|-1|-1|-1|-1"), "|", $STR_NOCOUNT)
-	For $i = 0 To UBound($g_aCmbCGSpells) - 1
-		$g_aCmbCGSpells[$i] = $str[$i]
-	Next
 	IniReadS($g_bChkClanGamesDes, $g_sProfileConfigPath, "other", "ChkClanGamesDestruction", False, "Bool")
-	$str = StringSplit(IniRead($g_sProfileConfigPath, "other", "EnabledCGDes", "0|1|2|3|16|17|18|19|20|21|-1|-1|-1|-1"), "|", $STR_NOCOUNT)
-	For $i = 0 To UBound($g_aCmbCGDes) - 1
-		$g_aCmbCGDes[$i] = $str[$i]
-	Next
 	IniReadS($g_bChkClanGamesAirTroop, $g_sProfileConfigPath, "other", "ChkClanGamesAirTroop", False, "Bool")
 	;xbenk
-	$str = StringSplit(IniRead($g_sProfileConfigPath, "other", "EnabledAirTroop", "0|-1|-1|-1|-1|-1|-1|-1|-1|-1|"), "|", $STR_NOCOUNT)
-	For $i = 0 To UBound($g_aCmbCGAirTroops) - 1
-		$g_aCmbCGAirTroops[$i] = $str[$i]
-	Next
 	IniReadS($g_bChkClanGamesGroundTroop, $g_sProfileConfigPath, "other", "ChkClanGamesGroundTroop", False, "Bool")
 	;xbenk
-	$str = StringSplit(IniRead($g_sProfileConfigPath, "other", "EnabledGroundTroop", "-1|-1|-1|-1|-1|-1|-1|-1|-1|-1"), "|", $STR_NOCOUNT)
-	For $i = 0 To UBound($g_aCmbCGGroundTroops) - 1
-		$g_aCmbCGGroundTroops[$i] = $str[$i]
-	Next
 	IniReadS($g_bChkClanGamesMiscellaneous, $g_sProfileConfigPath, "other", "ChkClanGamesMiscellaneous", False, "Bool")
 	IniReadS($g_iPurgeMax, $g_sProfileConfigPath, "other", "PurgeMax", 5, "int")
 
@@ -628,9 +603,9 @@ Func ReadConfig_600_11()
     $g_bSaveCCTroopForDefense = (IniRead($g_sProfileConfigPath, "donate", "SaveCCTroopForDefense", "0") = "1")
     $g_bChkRemoveCCForDefense = (IniRead($g_sProfileConfigPath, "donate", "ChkRemoveCCForDefense", "0") = "1")
 
- 	; Type Once - ChacalGyn 
+ 	; Type Once - ChacalGyn
  	$g_bChkRequestTypeOnceEnable = (IniRead($g_sProfileConfigPath, "request", "RequestTypeOnce", "0") = "1")
- 	
+
 	; Request Early - Team AIO Mod++
  	$g_bChkRequestFromChat = (IniRead($g_sProfileConfigPath, "request", "ChkRequestFromChat", "0") = "1")
 

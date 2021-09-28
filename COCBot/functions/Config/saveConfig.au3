@@ -464,53 +464,22 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "ChkClanGamesStopBeforeReachAndPurge", $g_bChkClanGamesStopBeforeReachAndPurge ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesDebug", $g_bChkClanGamesDebug ? 1 : 0)
 	;xbenk
-	Local $str = ""
 	_Ini_Add("other", "ChkClanGamesLoot", $g_bChkClanGamesLoot ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesBattle", $g_bChkClanGamesBattle ? 1 : 0)
 
     _Ini_Add("other", "ChkClanGamesBBBattle", $g_bChkClanGamesBBBattle ? 1 : 0)
     _Ini_Add("other", "ChkClanGamesBBDestruction", $g_bChkClanGamesBBDes ? 1 : 0)
-	$str = ""
-	For $i = 0 To UBound($g_aCmbCGBBDes) - 1
-		$str &= $g_aCmbCGBBDes[$i] & "|"
-	Next
-	_Ini_Add("other", "EnabledBBDestruction", $str)
 	
 	_Ini_Add("other", "ChkClanGamesBBTroops", $g_bChkClanGamesBBTroops ? 1 : 0)
-	$str = ""
-	For $i = 0 To UBound($g_aCmbCGBBTroops) - 1
-		$str &= $g_aCmbCGBBTroops[$i] & "|"
-	Next
-	_Ini_Add("other", "EnabledBBTroop", $str)
 	
 	_Ini_Add("other", "ChkForceBBAttackOnClanGames", $g_bChkForceBBAttackOnClanGames ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesPurgeAny", $g_bChkClanGamesPurgeAny ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesSpell", $g_bChkClanGamesSpell ? 1 : 0)
-	$str = ""
-	For $i = 0 To UBound($g_aCmbCGSpells) - 1
-		$str &= $g_aCmbCGSpells[$i] & "|"
-	Next
-	_Ini_Add("other", "EnabledCGSpell", $str)
 
 	_Ini_Add("other", "ChkClanGamesDestruction", $g_bChkClanGamesDes ? 1 : 0)
-	$str = ""
-	For $i = 0 To UBound($g_aCmbCGDes) - 1
-		$str &= $g_aCmbCGDes[$i] & "|"
-	Next
-	_Ini_Add("other", "EnabledDestruction", $str)
 	_Ini_Add("other", "ChkClanGamesAirTroop", $g_bChkClanGamesAirTroop ? 1 : 0)
-	$str = ""
-	For $i = 0 To UBound($g_aCmbCGAirTroops) - 1
-		$str &= $g_aCmbCGAirTroops[$i] & "|"
-	Next
-	_Ini_Add("other", "EnabledAirTroop", $str)
 	
 	_Ini_Add("other", "ChkClanGamesGroundTroop ", $g_bChkClanGamesGroundTroop ? 1 : 0)
-	$str = ""
-	For $i = 0 To UBound($g_aCmbCGGroundTroops) - 1
-		$str &= $g_aCmbCGGroundTroops[$i] & "|"
-	Next
-	_Ini_Add("other", "EnabledGroundTroop", $str)
 	
 	_Ini_Add("other", "ChkClanGamesMiscellaneous", $g_bChkClanGamesMiscellaneous ? 1 : 0)
 	_Ini_Add("other", "PurgeMax", $g_iPurgeMax)
