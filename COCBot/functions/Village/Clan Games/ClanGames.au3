@@ -1054,10 +1054,10 @@ Func SaveClanGamesConfig()
 		For $j = 0 To UBound($aTmp) - 1
 
 			; Write the new value to the file
-			_Ini_Add($g_aChallengesClanGamesStrings[$i], $aTmp[$j][0], $aTmp[$j][3])
+			_Ini_Add($g_aChallengesClanGamesStrings[$i], $aTmp[$j][1], $aTmp[$j][3])
 
 			; Write boolean status
-			_Ini_Add($g_aChallengesClanGamesStrings[$i], $aTmp[$j][0] & "Chk", $aTmp[$j][5])
+			_Ini_Add($g_aChallengesClanGamesStrings[$i], $aTmp[$j][1] & " Chk", $aTmp[$j][5])
 
 		Next
 
