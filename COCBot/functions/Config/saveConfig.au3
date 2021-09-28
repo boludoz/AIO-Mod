@@ -31,8 +31,8 @@ Func saveConfig()
 
 	SaveProfileConfig()
 	
-	ReadClanGamesConfig()
-	;SetDebugLog("ReadClanGamesConfig(), time = " & Round(__TimerDiff($t)/1000, 2) & " sec")
+	SaveClanGamesConfig()
+	;SetDebugLog("SaveClanGamesConfig(), time = " & Round(__TimerDiff($t)/1000, 2) & " sec")
 
 	SaveWeakBaseStats()
 	;SetDebugLog("saveWeakBaseStats(), time = " & Round(__TimerDiff($t)/1000, 2) & " sec")
