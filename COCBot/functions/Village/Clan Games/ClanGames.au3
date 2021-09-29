@@ -1040,7 +1040,9 @@ Func ClanGames($bTest = False)
 EndFunc   ;==>ClanGames
 
 Func SaveClanGamesConfig()
-	Local $aChallengesClanGamesVars = [$g_aCGLootChallenges, $g_aCGBattleChallenges, $g_aCGDestructionChallenges, $g_aCGMiscChallenges, $g_aCGAirTroopChallenges, $g_aCGGroundTroopChallenges, $g_aCGSpellChallenges, $g_aCGBBBattleChallenges, $g_aCGBBDestructionChallenges, $g_aCGBBTroopChallenges]
+	ApplyConfig_600_6(GetApplyConfigSaveAction())
+
+	Local $aChallengesClanGamesVars = [$g_aCGLootChallenges, $g_aCGAirTroopChallenges, $g_aCGGroundTroopChallenges, $g_aCGBattleChallenges, $g_aCGDestructionChallenges, $g_aCGMiscChallenges, $g_aCGSpellChallenges, $g_aCGBBBattleChallenges, $g_aCGBBDestructionChallenges, $g_aCGBBTroopChallenges]
 
 	_Ini_Clear()
 
@@ -1068,7 +1070,7 @@ EndFunc   ;==>SaveClanGamesConfig
 
 
 Func ReadClanGamesConfig()
-	Local $aChallengesClanGamesVars = [$g_aCGLootChallenges, $g_aCGBattleChallenges, $g_aCGDestructionChallenges, $g_aCGMiscChallenges, $g_aCGAirTroopChallenges, $g_aCGGroundTroopChallenges, $g_aCGSpellChallenges, $g_aCGBBBattleChallenges, $g_aCGBBDestructionChallenges, $g_aCGBBTroopChallenges]
+	Local $aChallengesClanGamesVars = [$g_aCGLootChallenges, $g_aCGAirTroopChallenges, $g_aCGGroundTroopChallenges, $g_aCGBattleChallenges, $g_aCGDestructionChallenges, $g_aCGMiscChallenges, $g_aCGSpellChallenges, $g_aCGBBBattleChallenges, $g_aCGBBDestructionChallenges, $g_aCGBBTroopChallenges]
 
 	SetDebugLog("Read Clan Games Config " & $g_sProfileClanGamesPath)
 
@@ -1082,16 +1084,87 @@ Func ReadClanGamesConfig()
 		For $j = 0 To UBound($aTmp) - 1
 
 			; Write the new value to the file
-			IniReadSCG($g_aChallengesClanGamesStrings[$i], $j, 3, $g_sProfileClanGamesPath, $g_aChallengesClanGamesStrings[$i], 		$aTmp[$j][1], 	$aTmp[$j][3], "Int")
+			IniReadSCG($g_aChallengesClanGamesStrings[$i], $j, 3, $g_sProfileClanGamesPath, $g_aChallengesClanGamesStrings[$i], $aTmp[$j][1], $aTmp[$j][3], "Int")
 
 			; Write boolean status
-			IniReadSCG($g_aChallengesClanGamesStrings[$i], $j, 5, $g_sProfileClanGamesPath, $g_aChallengesClanGamesStrings[$i], $aTmp[$j][1] & " Chk", 	$aTmp[$j][5], "Bool")
+			IniReadSCG($g_aChallengesClanGamesStrings[$i], $j, 5, $g_sProfileClanGamesPath, $g_aChallengesClanGamesStrings[$i], $aTmp[$j][1] & " Chk", $aTmp[$j][5], "Bool")
 
 		Next
 
 	Next
 
 EndFunc   ;==>ReadClanGamesConfig
+
+Func ApplyConfig_ClanGames($TypeReadSave)
+	Local $ahChallengesClanGamesVarsHandle = [$g_hCGLootChallenges, $g_hCGAirTroopChallenges, $g_hCGGroundTroopChallenges, $g_hCGBattleChallenges, $g_hCGDestructionChallenges, $g_hCGMiscChallenges, $g_hCGSpellChallenges, $g_hCGBBBattleChallenges, $g_hCGBBDestructionChallenges, $g_hCGBBTroopChallenges]
+
+	Local $aTmp
+	; Loop through the CG strings
+	For $i = 0 To UBound($g_aChallengesClanGamesStrings) - 1
+		Local $ah = $ahChallengesClanGamesVarsHandle[$i]
+		For $j = 0 To UBound($ah) - 1
+			If Int($ah[$j]) = 0 Then ContinueLoop ; Handle GUI always have num ref, skip no implemented.
+			ApplyConfig_ClanGamesSwitch($TypeReadSave, $g_aChallengesClanGamesStrings[$i], $j, 5) ; Skip autoit limits.
+		Next
+
+	Next
+EndFunc   ;==>ApplyConfig_ClanGames
+
+
+Func ApplyConfig_ClanGamesSwitch($TypeReadSave, $sTring, $i, $j)
+	Switch $TypeReadSave
+		Case "Read"
+			Switch $sTring
+				Case "Loot Challenges"
+					GUICtrlSetState($g_hCGLootChallenges[$i], $g_aCGLootChallenges[$i][$j] ? $GUI_CHECKED : $GUI_UNCHECKED)
+				Case "Air Troop Challenges"
+					GUICtrlSetState($g_hCGAirTroopChallenges[$i], $g_aCGAirTroopChallenges[$i][$j] ? $GUI_CHECKED : $GUI_UNCHECKED)
+				Case "Ground Troop Challenges"
+					GUICtrlSetState($g_hCGGroundTroopChallenges[$i], $g_aCGGroundTroopChallenges[$i][$j] ? $GUI_CHECKED : $GUI_UNCHECKED)
+				Case "Battle Challenges"
+					GUICtrlSetState($g_hCGBattleChallenges[$i], $g_aCGBattleChallenges[$i][$j] ? $GUI_CHECKED : $GUI_UNCHECKED)
+				Case "Destruction Challenges"
+					GUICtrlSetState($g_hCGDestructionChallenges[$i], $g_aCGDestructionChallenges[$i][$j] ? $GUI_CHECKED : $GUI_UNCHECKED)
+				Case "Misc Challenges"
+					GUICtrlSetState($g_hCGMiscChallenges[$i], $g_aCGMiscChallenges[$i][$j] ? $GUI_CHECKED : $GUI_UNCHECKED)
+				Case "Spell Challenges"
+					GUICtrlSetState($g_hCGSpellChallenges[$i], $g_aCGSpellChallenges[$i][$j] ? $GUI_CHECKED : $GUI_UNCHECKED)
+				Case "BB Battle Challenges"
+					GUICtrlSetState($g_hCGBBBattleChallenges[$i], $g_aCGBBBattleChallenges[$i][$j] ? $GUI_CHECKED : $GUI_UNCHECKED)
+				Case "BB Destruction Challenges"
+					GUICtrlSetState($g_hCGBBDestructionChallenges[$i], $g_aCGBBDestructionChallenges[$i][$j] ? $GUI_CHECKED : $GUI_UNCHECKED)
+				Case "BB Troop Challenges"
+					GUICtrlSetState($g_hCGBBTroopChallenges[$i], $g_aCGBBTroopChallenges[$i][$j] ? $GUI_CHECKED : $GUI_UNCHECKED)
+				Case Else
+					SetLog("Badly SaveApply: " & $sTring, $COLOR_ERROR)
+			EndSwitch
+		Case "Save"
+			Switch $sTring
+				Case "Loot Challenges"
+					$g_aCGLootChallenges[$i][$j] = (GUICtrlRead($g_hCGLootChallenges[$i]) = $GUI_CHECKED)
+				Case "Air Troop Challenges"
+					$g_aCGAirTroopChallenges[$i][$j] = (GUICtrlRead($g_hCGAirTroopChallenges[$i]) = $GUI_CHECKED)
+				Case "Ground Troop Challenges"
+					$g_aCGGroundTroopChallenges[$i][$j] = (GUICtrlRead($g_hCGGroundTroopChallenges[$i]) = $GUI_CHECKED)
+				Case "Battle Challenges"
+					$g_aCGBattleChallenges[$i][$j] = (GUICtrlRead($g_hCGBattleChallenges[$i]) = $GUI_CHECKED)
+				Case "Destruction Challenges"
+					$g_aCGDestructionChallenges[$i][$j] = (GUICtrlRead($g_hCGDestructionChallenges[$i]) = $GUI_CHECKED)
+				Case "Misc Challenges"
+					$g_aCGMiscChallenges[$i][$j] = (GUICtrlRead($g_hCGMiscChallenges[$i]) = $GUI_CHECKED)
+				Case "Spell Challenges"
+					$g_aCGSpellChallenges[$i][$j] = (GUICtrlRead($g_hCGSpellChallenges[$i]) = $GUI_CHECKED)
+				Case "BB Battle Challenges"
+					$g_aCGBBBattleChallenges[$i][$j] = (GUICtrlRead($g_hCGBBBattleChallenges[$i]) = $GUI_CHECKED)
+				Case "BB Destruction Challenges"
+					$g_aCGBBDestructionChallenges[$i][$j] = (GUICtrlRead($g_hCGBBDestructionChallenges[$i]) = $GUI_CHECKED)
+				Case "BB Troop Challenges"
+					$g_aCGBBTroopChallenges[$i][$j] = (GUICtrlRead($g_hCGBBTroopChallenges[$i]) = $GUI_CHECKED)
+				Case Else
+					SetLog("Badly SaveApply: " & $sTring, $COLOR_ERROR)
+			EndSwitch
+		EndSwitch
+EndFunc   ;==>IniReadSCG
 
 Func IniReadSCG($sTring, $i, $j, $PrimaryInputFile, $section, $key, $defaultvalue, $valueType = Default)
 
@@ -1107,6 +1180,7 @@ Func IniReadSCG($sTring, $i, $j, $PrimaryInputFile, $section, $key, $defaultvalu
 		Case "Destruction Challenges"
 			IniReadS($g_aCGDestructionChallenges[$i][$j], $PrimaryInputFile, $section, $key, $defaultvalue, $valueType)
 		Case "Misc Challenges"
+			; _ArrayDisplay($g_aCGMiscChallenges)
 			IniReadS($g_aCGMiscChallenges[$i][$j], $PrimaryInputFile, $section, $key, $defaultvalue, $valueType)
 		Case "Spell Challenges"
 			IniReadS($g_aCGSpellChallenges[$i][$j], $PrimaryInputFile, $section, $key, $defaultvalue, $valueType)
@@ -1121,152 +1195,3 @@ Func IniReadSCG($sTring, $i, $j, $PrimaryInputFile, $section, $key, $defaultvalu
 	EndSwitch
 
 EndFunc   ;==>IniReadSCG
-
-; $g_hCGLootChallenges[6][6]
-; $g_hCGAirTroopChallenges[14][6]
-; $g_hCGGroundTroopChallenges[27][6]
-; $g_hCGBattleChallenges[20][6]
-; $g_hCGDestructionChallenges[32][6]
-; $g_hCGMiscChallenges[3][6]
-; $g_hCGSpellChallenges[11][6]
-; $g_hCGBBBattleChallenges[4][6]
-; $g_hCGBBDestructionChallenges[15][6]
-; $g_hCGBBTroopChallenges[11][6]
-
-; $g_aCGLootChallenges[6][6]
-; $g_aCGAirTroopChallenges[14][6]
-; $g_aCGGroundTroopChallenges[27][6]
-; $g_aCGBattleChallenges[20][6]
-; $g_aCGDestructionChallenges[32][6]
-; $g_aCGMiscChallenges[3][6]
-; $g_aCGSpellChallenges[11][6]
-; $g_aCGBBBattleChallenges[4][6]
-; $g_aCGBBDestructionChallenges[15][6]
-; $g_aCGBBTroopChallenges[11][6]
-
-Func ApplyConfig_ClanGames($TypeReadSave)
-	; <><><><> ApplyConfig_ClanGames <><><><>
-	Switch $TypeReadSave
-		Case "Read"
-			; $g_hCGLootChallenges
-			For $i = 0 To Ubound($g_hCGLootChallenges) -1
-				If $g_hCGLootChallenges[$i] = "" Then ContinueLoop
-				GUICtrlSetState($g_hCGLootChallenges[$i], $g_aCGLootChallenges[$i][5] ? $GUI_CHECKED : $GUI_UNCHECKED)
-			Next
-
-			; $g_aCGAirTroopChallenges
-			For $i = 0 To Ubound($g_hCGAirTroopChallenges) -1
-				If $g_hCGAirTroopChallenges[$i] = "" Then ContinueLoop
-				GUICtrlSetState($g_hCGAirTroopChallenges[$i], $g_aCGAirTroopChallenges[$i][5] ? $GUI_CHECKED : $GUI_UNCHECKED)
-			Next
-
-			; $g_hCGGroundTroopChallenges
-			For $i = 0 To Ubound($g_hCGGroundTroopChallenges) -1
-				If $g_hCGGroundTroopChallenges[$i] = "" Then ContinueLoop
-				GUICtrlSetState($g_hCGGroundTroopChallenges[$i], $g_aCGGroundTroopChallenges[$i][5] ? $GUI_CHECKED : $GUI_UNCHECKED)
-			Next
-
-			; $g_hCGBattleChallenges
-			For $i = 0 To Ubound($g_hCGBattleChallenges) -1
-				If $g_hCGBattleChallenges[$i] = "" Then ContinueLoop
-				GUICtrlSetState($g_hCGBattleChallenges[$i], $g_aCGBattleChallenges[$i][5] ? $GUI_CHECKED : $GUI_UNCHECKED)
-			Next
-
-			; $g_hCGDestructionChallenges
-			For $i = 0 To Ubound($g_hCGDestructionChallenges) -1
-				If $g_hCGDestructionChallenges[$i] = "" Then ContinueLoop
-				GUICtrlSetState($g_hCGDestructionChallenges[$i], $g_aCGDestructionChallenges[$i][5] ? $GUI_CHECKED : $GUI_UNCHECKED)
-			Next
-
-			; $g_hCGMiscChallenges
-			For $i = 0 To Ubound($g_hCGMiscChallenges) -1
-				If $g_hCGMiscChallenges[$i] = "" Then ContinueLoop
-				GUICtrlSetState($g_hCGMiscChallenges[$i], $g_aCGMiscChallenges[$i][5] ? $GUI_CHECKED : $GUI_UNCHECKED)
-			Next
-
-			; $g_hCGSpellChallenges
-			For $i = 0 To Ubound($g_hCGSpellChallenges) -1
-				If $g_hCGSpellChallenges[$i] = "" Then ContinueLoop
-				GUICtrlSetState($g_hCGSpellChallenges[$i], $g_aCGSpellChallenges[$i][5] ? $GUI_CHECKED : $GUI_UNCHECKED)
-			Next
-
-			; $g_hCGBBBattleChallenges
-			For $i = 0 To Ubound($g_hCGBBBattleChallenges) -1
-				If $g_hCGBBBattleChallenges[$i] = "" Then ContinueLoop
-				GUICtrlSetState($g_hCGBBBattleChallenges[$i], $g_aCGBBBattleChallenges[$i][5] ? $GUI_CHECKED : $GUI_UNCHECKED)
-			Next
-
-			; $g_hCGBBDestructionChallenges
-			For $i = 0 To Ubound($g_hCGBBDestructionChallenges) -1
-				If $g_hCGBBDestructionChallenges[$i] = "" Then ContinueLoop
-				GUICtrlSetState($g_hCGBBDestructionChallenges[$i], $g_aCGBBDestructionChallenges[$i][5] ? $GUI_CHECKED : $GUI_UNCHECKED)
-			Next
-
-			; $g_hCGBBTroopChallenges
-			For $i = 0 To Ubound($g_hCGBBTroopChallenges) -1
-				If $g_hCGBBTroopChallenges[$i] = "" Then ContinueLoop
-				GUICtrlSetState($g_hCGBBTroopChallenges[$i], $g_aCGBBTroopChallenges[$i][5] ? $GUI_CHECKED : $GUI_UNCHECKED)
-			Next
-
-		Case "Save"
-			; $g_aCGLootChallenges
-			For $i = 0 To Ubound($g_hCGLootChallenges) -1
-				If $g_hCGLootChallenges[$i] = "" Then ContinueLoop
-				$g_aCGLootChallenges[$i][5] = (GUICtrlRead($g_hCGLootChallenges[$i]) = $GUI_CHECKED)
-			Next
-
-			; $g_aCGAirTroopChallenges
-			For $i = 0 To Ubound($g_hCGAirTroopChallenges) -1
-				If $g_hCGAirTroopChallenges[$i] = "" Then ContinueLoop
-				$g_aCGAirTroopChallenges[$i][5] = (GUICtrlRead($g_hCGAirTroopChallenges[$i]) = $GUI_CHECKED)
-			Next
-
-			; $g_aCGGroundTroopChallenges
-			For $i = 0 To Ubound($g_hCGGroundTroopChallenges) -1
-				If $g_hCGGroundTroopChallenges[$i] = "" Then ContinueLoop
-				$g_aCGGroundTroopChallenges[$i][5] = (GUICtrlRead($g_hCGGroundTroopChallenges[$i]) = $GUI_CHECKED)
-			Next
-
-			; $g_aCGBattleChallenges
-			For $i = 0 To Ubound($g_hCGBattleChallenges) -1
-				If $g_hCGBattleChallenges[$i] = "" Then ContinueLoop
-				$g_aCGBattleChallenges[$i][5] = (GUICtrlRead($g_hCGBattleChallenges[$i]) = $GUI_CHECKED)
-			Next
-
-			; $g_aCGDestructionChallenges
-			For $i = 0 To Ubound($g_hCGDestructionChallenges) -1
-				If $g_hCGDestructionChallenges[$i] = "" Then ContinueLoop
-				$g_aCGDestructionChallenges[$i][5] = (GUICtrlRead($g_hCGDestructionChallenges[$i]) = $GUI_CHECKED)
-			Next
-
-			; $g_aCGMiscChallenges
-			For $i = 0 To Ubound($g_hCGMiscChallenges) -1
-				If $g_hCGMiscChallenges[$i] = "" Then ContinueLoop
-				$g_aCGMiscChallenges[$i][5] = (GUICtrlRead($g_hCGMiscChallenges[$i]) = $GUI_CHECKED)
-			Next
-
-			; $g_aCGSpellChallenges
-			For $i = 0 To Ubound($g_hCGSpellChallenges) -1
-				If $g_hCGSpellChallenges[$i] = "" Then ContinueLoop
-				$g_aCGSpellChallenges[$i][5] = (GUICtrlRead($g_hCGSpellChallenges[$i]) = $GUI_CHECKED)
-			Next
-
-			; $g_aCGBBBattleChallenges
-			For $i = 0 To Ubound($g_hCGBBBattleChallenges) -1
-				If $g_hCGBBBattleChallenges[$i] = "" Then ContinueLoop
-				$g_aCGBBBattleChallenges[$i][5] = (GUICtrlRead($g_hCGBBBattleChallenges[$i]) = $GUI_CHECKED)
-			Next
-
-			; $g_aCGBBDestructionChallenges
-			For $i = 0 To Ubound($g_hCGBBDestructionChallenges) -1
-				If $g_hCGBBDestructionChallenges[$i] = "" Then ContinueLoop
-				$g_aCGBBDestructionChallenges[$i][5] = (GUICtrlRead($g_hCGBBDestructionChallenges[$i]) = $GUI_CHECKED)
-			Next
-
-			; $g_aCGBBTroopChallenges
-			For $i = 0 To Ubound($g_hCGBBTroopChallenges) -1
-				If $g_hCGBBTroopChallenges[$i] = "" Then ContinueLoop
-				$g_aCGBBTroopChallenges[$i][5] = (GUICtrlRead($g_hCGBBTroopChallenges[$i]) = $GUI_CHECKED)
-			Next
-	EndSwitch
-EndFunc   ;==>ApplyConfig_ClanGames

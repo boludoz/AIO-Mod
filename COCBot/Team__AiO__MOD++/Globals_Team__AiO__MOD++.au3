@@ -190,7 +190,17 @@ Global $g_aCGBBTroopChallenges[11][6] = [ _
 		["SPekka",                 	"Super Pekka",                  2,  1, 1, True], _
 		["HGlider",                 "Hog Glider",                  	2,  1, 1, True]]
 		
-Global $g_aChallengesClanGamesStrings = ["Loot Challenges", "Battle Challenges", "Destruction Challenges", "Misc Challenges", "Air Troop Challenges", "Ground Troop Challenges", "Spell Challenges", "BB Battle Challenges", "BB Destruction Challenges", "BB Troop Challenges"]
+Global $g_aChallengesClanGamesStrings = ["Loot Challenges", _ 
+										"Air Troop Challenges", _ 
+										"Ground Troop Challenges", _ 
+										"Battle Challenges", _ 
+										"Destruction Challenges", _ 
+										"Misc Challenges", _ 
+										"Spell Challenges", _
+										"BB Battle Challenges", _ 
+										"BB Destruction Challenges", _ 
+										"BB Troop Challenges"]
+
 #Tidy_Off
 
 
