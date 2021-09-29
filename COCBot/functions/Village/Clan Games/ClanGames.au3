@@ -1040,7 +1040,7 @@ Func ClanGames($bTest = False)
 EndFunc   ;==>ClanGames
 
 Func SaveClanGamesConfig()
-	ApplyConfig_600_6(GetApplyConfigSaveAction())
+	ApplyConfig_ClanGames(GetApplyConfigSaveAction())
 
 	Local $aChallengesClanGamesVars = [$g_aCGLootChallenges, $g_aCGAirTroopChallenges, $g_aCGGroundTroopChallenges, $g_aCGBattleChallenges, $g_aCGDestructionChallenges, $g_aCGMiscChallenges, $g_aCGSpellChallenges, $g_aCGBBBattleChallenges, $g_aCGBBDestructionChallenges, $g_aCGBBTroopChallenges]
 
