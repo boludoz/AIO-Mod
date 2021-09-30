@@ -9,20 +9,20 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func _Wait4Pixel($x, $y, $sColor, $iColorVariation = 25, $iWait = 3000, $iDelay = 100, $sMsglog = Default) ; Return true if pixel is true
-	Local $hTimer = __TimerInit()
-	Do
+	Local $iSleep = Round($iWait / $iDelay) ; Can help in VPS Delay Case
+	For $i = 1 To $iSleep
 		If _ColorCheck(Hex($sColor, 6), _GetPixelColor($x, $y, $g_bCapturePixel), $iColorVariation) Then Return True
-		If _Sleep($iDelay) Then Return False
-	Until $iWait < __TimerDiff($hTimer)
+		If _Sleep($iDelay) Then Return
+	Next
 	Return False
 EndFunc   ;==>_Wait4Pixel
 
 Func _Wait4PixelGone($x, $y, $sColor, $iColorVariation = 25, $iWait = 3000, $iDelay = 100, $sMsglog = Default) ; Return true if pixel is false
-	Local $hTimer = __TimerInit()
-	Do
+	Local $iSleep = Round($iWait / $iDelay) ; Can help in VPS Delay Case
+	For $i = 1 To $iSleep
 		If _ColorCheck(Hex($sColor, 6), _GetPixelColor($x, $y, $g_bCapturePixel), $iColorVariation) = False Then Return True
-		If _Sleep($iDelay) Then Return False
-	Until $iWait < __TimerDiff($hTimer)
+		If _Sleep($iDelay) Then Return
+	Next
 	Return False
 EndFunc   ;==>_Wait4PixelGone
 
@@ -73,12 +73,12 @@ Func _WaitForCheckImg($sPathImage, $sSearchZone = Default, $aText = Default, $iW
 	If $iDelay = Default Then $iDelay = 250
 
 	Local $aReturn
-	Local $hTimer = TimerInit()
-	Do
+	Local $iSleep = Round($iWait / $iDelay) ; Can help in VPS Delay Case
+	For $i = 1 To $iSleep
 		$aReturn = findMultipleQuick($sPathImage, Default, $sSearchZone, True, $aText)
 		If IsArray($aReturn) Then Return True
 		If _Sleep($iDelay) Then Return
-	Until ($iWait < TimerDiff($hTimer))
+	Next
 	Return False
 EndFunc   ;==>_WaitForCheckImg
 
@@ -87,12 +87,12 @@ Func _WaitForCheckImgGone($sPathImage, $sSearchZone = Default, $aText = Default,
 	If $iDelay = Default Then $iDelay = 250
 	
 	Local $aReturn
-	Local $hTimer = TimerInit()
-	Do
+	Local $iSleep = Round($iWait / $iDelay) ; Can help in VPS Delay Case
+	For $i = 1 To $iSleep
 		$aReturn = findMultipleQuick($sPathImage, Default, $sSearchZone, True, $aText)
 		If Not IsArray($aReturn) Then Return True
 		If _Sleep($iDelay) Then Return
-	Until ($iWait < TimerDiff($hTimer))
+	Next
 	Return False
 EndFunc   ;==>_WaitForCheckImgGone
 
