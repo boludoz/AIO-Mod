@@ -19,8 +19,6 @@ Func getArmyCCStatus($bOpenArmyWindow = False, $bCloseArmyWindow = False, $Check
 
 	$g_iCCRemainTime = 0 ; reset global time
 
-    If $g_iTownHallLevel < 8 And not $g_iTownHallLevel < 1 Then Return ; Custom - Fix Team AIO Mod++
-
 	If $CheckWindow Then
 		If Not $bOpenArmyWindow And Not IsTrainPage() Then ; check for train page
 			SetError(1)
