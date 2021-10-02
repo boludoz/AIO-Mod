@@ -932,6 +932,7 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 										SetLog("You have " & UBound($aByGroups) & " Points to Deploy Speels/Side " & $sSide & " after Heroes")
 									EndIf
 								EndIf
+								
 								If ($g_bIsHeroesDropped) Then
 									If _Sleep(100) Then Return
 									CheckHeroesHealth()
@@ -1224,9 +1225,9 @@ EndFunc   ;==>DropTroopSmartFarm
 
 Global $g_FirstBitMap
 Global $g_SecondBitMap
-
+ 
 Func LaunchSpellsSmartFarm($SIDESNAMES = "TR|TL|BR|BL")
-	; $g_bDebugSmartFarm = True
+	$g_bDebugSmartFarm = True
 	_CaptureRegion2()
 	$g_FirstBitMap = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
 	Local $iTolerance = 25
@@ -1332,19 +1333,25 @@ EndFunc   ;==>LaunchSpellsSmartFarm
 
 Func _ImageCompareImagesMyBot($iTol = 30)
 	Local $aAllResults[0][2]
-	Local $iXS = 99, $iYS = 87, $iXE = $g_iGAME_WIDTH - 107, $iYE = $g_iGAME_HEIGHT - 225
+	Local $iXS = 19, $iYS = 28, $iXE = $g_iGAME_WIDTH - 13, $iYE = $g_iGAME_HEIGHT - 119
 	Local $iBits1, $iBits2
 	Local $iC = -1
-	For $iX = $iXS To $iXE Step 16
-		For $iY = $iYS To $iYE Step 16
-			$iBits1 = _GDIPlus_BitmapGetPixel($g_FirstBitMap, $iX, $iY)
-			$iBits2 = _GDIPlus_BitmapGetPixel($g_SecondBitMap, $iX, $iY)
-            If Ciede1976(rgb2lab(Hex($iBits1, 6), "Heroes"), rgb2lab(Hex($iBits2, 6), "Heroes")) > $iTol Then
-				$iC += 1
-				ReDim $aAllResults[$iC + 1][2]
-				$aAllResults[$iC][0] = $iX
-				$aAllResults[$iC][1] = $iY
-			EndIf
+	Local $Red1, $Red2, $Blue1, $Blue2, $Green1, $Green2
+	For $iX = $iXS To $iXE Step 12
+		For $iY = $iYS To $iYE Step 12
+			If Not isInsideDiamondInt($iX, $iY) Then ContinueLoop
+			$iBits1 = Hex(_GDIPlus_BitmapGetPixel($g_FirstBitMap, $iX, $iY), 6)
+			$iBits2 = Hex(_GDIPlus_BitmapGetPixel($g_SecondBitMap, $iX, $iY), 6)
+			$Red1 = Dec(StringMid(String($iBits1), 1, 2))
+			$Blue1 = Dec(StringMid(String($iBits1), 3, 2))
+			$Red2 = Dec(StringMid(String($iBits2), 1, 2))
+			$Blue2 = Dec(StringMid(String($iBits2), 3, 2))
+			If Abs($Blue1 - $Blue2) < $iTol Then ContinueLoop
+			If Abs($Red1 - $Red2) < $iTol Then ContinueLoop
+			$iC += 1
+			ReDim $aAllResults[$iC + 1][2]
+			$aAllResults[$iC][0] = $iX
+			$aAllResults[$iC][1] = $iY
 		Next
 	Next
 
