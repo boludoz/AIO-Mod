@@ -170,7 +170,7 @@ Func lblTotalCountTroop1()
 	ElseIf GUICtrlRead($g_hLblCountTotal) > $ArmyCampTemp Then
 		GUICtrlSetState($g_hLblTotalProgress, $GUI_SHOW)
 	Else
-		GUICtrlSetState($g_hLblTotalProgress, $GUI_HIDE)
+		; GUICtrlSetState($g_hLblTotalProgress, $GUI_HIDE)
 	EndIf
 
 	lblTotalCountTroop2()

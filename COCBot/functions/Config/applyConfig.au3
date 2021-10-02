@@ -2354,6 +2354,10 @@ Func ApplyConfig_600_52_2($TypeReadSave)
 			GUICtrlSetData($g_hInpPreTrainTroopsPercent, $g_iInpPreTrainTroopsPercent)
 			chkDoubleTrain()
 			_GUICtrlComboBox_SetCurSel($g_hCmbTroopSetting, $g_iCmbTroopSetting)
+			lblTotalCountTroop1()
+
+			GUICtrlSetState($g_hChkPreciseSpells, $g_bPreciseBrew ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkForcePreBrewSpells, $g_bForcePreBrewSpells ? $GUI_CHECKED : $GUI_UNCHECKED)
 			#EndRegion - Custom train - Team AIO Mod++
 		Case "Save"
 			; troop/spell levels and counts
@@ -2382,6 +2386,9 @@ Func ApplyConfig_600_52_2($TypeReadSave)
 			$g_bChkPreTrainTroopsPercent = (GUICtrlRead($g_hChkPreTrainTroopsPercent) = $GUI_CHECKED)
 			$g_iInpPreTrainTroopsPercent = Int(GUICtrlRead($g_hInpPreTrainTroopsPercent))
 			$g_iCmbTroopSetting = _GUICtrlComboBox_GetCurSel($g_hCmbTroopSetting)
+
+			$g_bPreciseBrew = (GUICtrlRead($g_hChkPreciseSpells) = $GUI_CHECKED)
+			$g_bForcePreBrewSpells = (GUICtrlRead($g_hChkForcePreBrewSpells) = $GUI_CHECKED)
 			#EndRegion - Custom train - Team AIO Mod++
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_52_2

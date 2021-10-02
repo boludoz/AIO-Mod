@@ -75,11 +75,9 @@ Func TrainCustomArmy($bPreTrainFlag = $g_bDoubleTrain) ; Custom train - Team AIO
 	;If $bDonateTrain = -1 Then SetbDonateTrain()
 	If $g_iActiveDonate = -1 Then PrepareDonateCC()
 
-	If $bPreTrainFlag = True Then ; Custom train - Team AIO Mod++
-		DoubleTrain()
-		Return
-	EndIf
-
+	DoubleTrain(False, $bPreTrainFlag)
+	
+	#cs
 	If Not $g_bRunState Then Return
 
 	If Not $g_bFullArmy Then
@@ -104,6 +102,7 @@ Func TrainCustomArmy($bPreTrainFlag = $g_bDoubleTrain) ; Custom train - Team AIO
 
 	If _Sleep(250) Then Return
 	If Not $g_bRunState Then Return
+	#ce
 EndFunc   ;==>TrainCustomArmy
 
 Func CheckIfArmyIsReady()

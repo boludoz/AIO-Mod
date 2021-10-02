@@ -1597,7 +1597,11 @@ Func ReadConfig_600_52_2()
 	; DoubleTrain - Demen
 	$g_bDoubleTrain = (IniRead($g_sProfileConfigPath, "troop", "DoubleTrain", "0") = "1")
 	$g_bPreciseArmy = (IniRead($g_sProfileConfigPath, "troop", "PreciseArmy", "0") = "1")
+
 	#Region - Custom train - Team AIO Mod++
+	$g_bPreciseBrew = (IniRead($g_sProfileConfigPath, "troop", "PreciseBrew", "0") = "1")
+	$g_bForcePreBrewSpells = (IniRead($g_sProfileConfigPath, "troop", "ForcePreBrewSpells", "0") = "1")
+	
 	IniReadS($g_bChkPreTrainTroopsPercent, $g_sProfileConfigPath, "troop", "ChkPreTrainTroopsPercent", True, "Bool")
 	IniReadS($g_iInpPreTrainTroopsPercent, $g_sProfileConfigPath, "troop", "InpPreTrainTroopsPercent", 95, "Int")
 	IniReadS($g_iCmbTroopSetting, $g_sProfileConfigPath, "troop", "CmbTroopSetting", $g_iCmbTroopSetting, "Int")

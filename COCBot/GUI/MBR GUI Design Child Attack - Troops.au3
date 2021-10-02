@@ -800,6 +800,7 @@ Func CreateTrainTroops()
 	$x = 170
 
 	; troop count
+	#cs
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnTroopsCost, $x, $y + 10, 24, 24)
 	$g_hLblTotalTimeCamp = GUICtrlCreateLabel(" 0s", $x + 28, $y + 15, 70, 15, $SS_RIGHT)
 	GUICtrlSetBkColor(-1, $COLOR_GRAY)
@@ -815,13 +816,15 @@ Func CreateTrainTroops()
 	GUICtrlSetFont(-1, 9, $FW_BOLD, Default, "Arial", $CLEARTYPE_QUALITY)
 	GUICtrlSetColor(-1, $COLOR_WHITE)
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 183, $y + 14, 16, 16)
-
+	#ce
 	$x = $iStartX
 	$y += 26
-	$g_hCalTotalTroops = GUICtrlCreateProgress($x, $y + 9, 336, 10)
-	$g_hLblTotalProgress = GUICtrlCreateLabel("", $x, $y + 9, 336, 10)
-	GUICtrlSetBkColor(-1, $COLOR_RED)
-	GUICtrlSetState(-1, BitOR($GUI_DISABLE, $GUI_HIDE))
+	$g_hCalTotalTroops = GUICtrlCreateProgress($iStartX, $iStartY + 273 - 8, 336 + 8, 10)
+	
+	; Joke?
+	; $g_hLblTotalProgress = GUICtrlCreateLabel("", $x, $y + 9, 336, 10)
+	; GUICtrlSetBkColor(-1, 0x06B025)
+	; GUICtrlSetState(-1, BitOR($GUI_DISABLE, $GUI_HIDE))
 
 	GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "LblCountTotal", "Total"), $x + 341, $y + 7, -1, -1)
 	$g_hLblCountTotal = GUICtrlCreateLabel(0, $x + 368, $y + 7, 30, 15, $SS_CENTER)
@@ -870,6 +873,7 @@ Func CreateTrainTroops()
 
 EndFunc   ;==>CreateTrainTroops
 
+Global $g_hChkPreciseSpells = 0, $g_hChkForcePreBrewSpells = 0
 Func CreateTrainSpells()
 	$g_hGUI_SPELLARMY_ARMY = _GUICreate("", $g_iSizeWGrpTab3, $g_iSizeHGrpTab3, 5, 25, BitOR($WS_CHILD, $WS_TABSTOP), -1, $g_hGUI_TRAINARMY)
 	GUISetBkColor($COLOR_WHITE, $g_hGUI_SPELLARMY_ARMY)
@@ -884,6 +888,9 @@ Func CreateTrainSpells()
 
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnResetButton, 0, 3, 16, 16)
 	GUICtrlSetOnEvent(-1, "Removecampspells")
+	
+	$g_hChkPreciseSpells = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "ChkPreciseBrew", "Precise brew") , 10 + 50, 3)
+	$g_hChkForcePreBrewSpells = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "ChkForcePreBrewSpells", "Force pre brew spells") , 10 + 150, 3)
 
 	Local $x = $iStartX, $y = $iStartY
 	Local $iCol = 0
@@ -924,8 +931,9 @@ Func CreateTrainSpells()
 		GUICtrlSetOnEvent(-1, "BtnRemoveSpells")
 	$g_hChkCustomBrewOrderEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Order", "Order") , $x + 20, $y + 14, -1, -1)
 		GUICtrlSetOnEvent(-1, "CustomBrewOrderEnable")
-		
+
 	$x += 70
+	#cs
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnSpellsCost, $x + 4, $y + 10, 24, 24)
 	$g_hLblTotalTimeSpell = GUICtrlCreateLabel(" 0s", $x + 33, $y + 15, 55, 15, $SS_RIGHT)
 	GUICtrlSetBkColor(-1, $COLOR_GRAY)
@@ -941,7 +949,7 @@ Func CreateTrainSpells()
 	GUICtrlSetFont(-1, 9, $FW_BOLD, Default, "Arial", $CLEARTYPE_QUALITY)
 	GUICtrlSetColor(-1, $COLOR_WHITE)
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 173, $y + 14, 16, 16)
-
+	#ce
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	GUICtrlCreateTabItem("")
 

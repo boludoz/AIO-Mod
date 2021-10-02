@@ -14,8 +14,9 @@
 ; Example .......: No
 ; ===============================================================================================================================
 #include-once
+Global $g_bForcePreBrewSpells = True, $g_bPreciseBrew = False
 
-Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
+Func DoubleTrain($bWarTroop = False, $bPreTrainFlag = True) ; Check Stop For War - Team AiO MOD++
 
 	; If Not $g_bDoubleTrain Then Return ; Custom train - Team AIO Mod++
 	Local $bDebug = $g_bDebugSetlogTrain Or $g_bDebugSetlog
@@ -26,15 +27,25 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 
 	#Region - Missing PreciseArmy - Team AIO Mod++
 	Local $bHasIncorrectTroop = False, $bHasIncorrectSpell = False
-	If $g_bPreciseArmy Then
+	If $g_bPreciseArmy Or $g_bPreciseBrew Then
 		Local $aWrongArmy = WhatToTrain(True)
 		If IsArray($aWrongArmy) Then
 			If $bDebug Then SetLog("$aWrongTroops: " & _ArrayToString($aWrongArmy), $COLOR_DEBUG)
 			If Not (UBound($aWrongArmy) = 1 And $aWrongArmy[0][1] = "Arch" And $aWrongArmy[0][1] = 0) Then ; Default result of WhatToTrain
 				For $i = 0 To UBound($aWrongArmy) - 1
-					If Not $bHasIncorrectTroop And _ArraySearch($g_asTroopShortNames, $aWrongArmy[$i][0]) >= 0 Then $bHasIncorrectTroop = True
-					If Not $bHasIncorrectSpell And _ArraySearch($g_asSpellShortNames, $aWrongArmy[$i][0]) >= 0 Then $bHasIncorrectSpell = True
-					If $bHasIncorrectTroop And $bHasIncorrectSpell Then ExitLoop
+					If Not $bHasIncorrectTroop And _ArraySearch($g_asTroopShortNames, $aWrongArmy[$i][0]) >= 0 And $g_bPreciseArmy Then
+						$bHasIncorrectTroop = True
+						If $bHasIncorrectSpell Or Not $g_bPreciseArmy Then
+							ExitLoop
+						EndIf
+					EndIf
+					
+					If Not $bHasIncorrectSpell And _ArraySearch($g_asSpellShortNames, $aWrongArmy[$i][0]) >= 0 And $g_bPreciseBrew Then
+						$bHasIncorrectSpell = True
+						If $bHasIncorrectTroop Or Not $g_bPreciseBrew Then
+							ExitLoop
+						EndIf
+					EndIf
 				Next
 				If $bDebug Then SetLog("$bNeedReCheckTroopTab: " & $bNeedReCheckTroopTab & "$bNeedReCheckSpellTab: " & $bNeedReCheckSpellTab, $COLOR_DEBUG)
 				SetLog("Found incorrect " & ($bHasIncorrectTroop ? "Troops " & ($bHasIncorrectSpell ? "and Spells " : "") : "Spells ") & "in army")
@@ -67,7 +78,7 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 			If $bDebug Then SetLog($Step & ". DeleteQueued('Troops'). $bNeedReCheckTroopTab: " & $bNeedReCheckTroopTab, $COLOR_DEBUG)
 
 		ElseIf $TroopCamp[0] = $TroopCamp[1] Then ; 280/280
-			TrainFullTroop(True)
+			TrainFullTroop($bPreTrainFlag)
 			If $bDebug Then SetLog($Step & ". TrainFullTroop(True) done!", $COLOR_DEBUG)
 
 		ElseIf $TroopCamp[0] <= $TroopCamp[1] * 2 Then ; 281-540/540
@@ -116,7 +127,7 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 				If $bDebug Then SetLog($Step & ". DeleteQueued('Spells'). $bNeedReCheckSpellTab: " & $bNeedReCheckSpellTab, $COLOR_DEBUG)
 
 			ElseIf $SpellCamp[0] = $SpellCamp[1] Or $SpellCamp[0] <= $SpellCamp[1] + $iUnbalancedSpell Then ; 11/22
-				BrewFullSpell(True)
+				BrewFullSpell($bPreTrainFlag)
 				If $iUnbalancedSpell > 0 Then TopUpUnbalancedSpell($iUnbalancedSpell)
 				If $bDebug Then SetLog($Step & ". BrewFullSpell(True) done!", $COLOR_DEBUG)
 
@@ -145,12 +156,12 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 		Local $aWhatToTrain = WhatToTrain(False, False)
 		If DoWhatToTrainContainTroop($aWhatToTrain) Then
 			TrainUsingWhatToTrain($aWhatToTrain)
-			TrainFullTroop(True)
+			TrainFullTroop($bPreTrainFlag)
 			If $bDebug Then SetLog("TrainFullTroop(True) done.", $COLOR_DEBUG)
 		EndIf
 		If DoWhatToTrainContainSpell($aWhatToTrain) Then
 			BrewUsingWhatToTrain($aWhatToTrain)
-			BrewFullSpell(True)
+			BrewFullSpell($bPreTrainFlag)
 			If $iUnbalancedSpell > 0 Then TopUpUnbalancedSpell($iUnbalancedSpell)
 			If $bDebug Then SetLog("BrewFullSpell(True) done.", $COLOR_DEBUG)
 		EndIf
@@ -161,16 +172,17 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 EndFunc   ;==>DoubleTrain
 
 Func TrainFullTroop($bQueue = False)
-	SetLog("Training " & ($bQueue ? "2nd Army..." : "1st Army..."))
+	SetLog("Training " & ($bQueue ? "2nd Army..." : "1st Army..."), $COLOR_ACTION)
+	
 	Local $ToReturn[1][2] = [["Arch", 0]]
-   For $i = 0 To $eTroopCount - 1
-	 Local $troopIndex = $g_aiTrainOrder[$i]
-	 If $g_aiArmyCompTroops[$troopIndex] > 0 Then
-		 $ToReturn[UBound($ToReturn) - 1][0] = $g_asTroopShortNames[$troopIndex]
-		 $ToReturn[UBound($ToReturn) - 1][1] = $g_aiArmyCompTroops[$troopIndex]
-		 ReDim $ToReturn[UBound($ToReturn) + 1][2]
-	  EndIf
-   Next
+	For $i = 0 To $eTroopCount - 1
+	Local $troopIndex = $g_aiTrainOrder[$i]
+	If $g_aiArmyCompTroops[$troopIndex] > 0 Then
+		$ToReturn[UBound($ToReturn) - 1][0] = $g_asTroopShortNames[$troopIndex]
+		$ToReturn[UBound($ToReturn) - 1][1] = $g_aiArmyCompTroops[$troopIndex]
+		ReDim $ToReturn[UBound($ToReturn) + 1][2]
+	EndIf
+	Next
 
 	If $ToReturn[0][0] = "Arch" And $ToReturn[0][1] = 0 Then Return
 
@@ -182,7 +194,8 @@ Func TrainFullTroop($bQueue = False)
 EndFunc   ;==>TrainFullTroop
 
 Func BrewFullSpell($bQueue = False)
-	SetLog("Brewing " & ($bQueue ? "2nd Army..." : "1st Army..."))
+	If $g_bForcePreBrewSpells Then $bQueue = True
+	SetLog("Brewing " & ($bQueue ? "2nd Army..." : "1st Army..."), $COLOR_ACTION)
 
 	Local $ToReturn[1][2] = [["Arch", 0]]
 	For $i = 0 To $eSpellCount - 1
