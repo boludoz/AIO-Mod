@@ -9,7 +9,7 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Global $g_bForceDocr = True
+Global $g_bForceDocr = False
 
 Func getUpgradeResources($x_start = 330, $y_start = 478, $iWidth = 415, $iHeight = 125)
 	Return getOcrAndCaptureDOCR($g_sASUpgradeResourcesDOCRPath, $x_start, $y_start, $iWidth, $iHeight, True, True) 
