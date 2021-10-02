@@ -28,7 +28,7 @@ EndFunc   ;==>_ClanGames
 
 Func __ClanGames($test = False)
 
-	Local $sINIPath = StringReplace($g_sProfileConfigPath, "config.ini", "ClanGames_config.ini")
+	; Local $sINIPath = StringReplace($g_sProfileConfigPath, "config.ini", "ClanGames_config.ini")
 
 	; A user Log and a Click away just in case
 	ClickAwayCross()
@@ -46,10 +46,10 @@ Func __ClanGames($test = False)
 	Local $sTempPath = @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\"
 
 	; Enter on Clan Games window
-	$g_bYourAccScoreCG[Int($g_iCurAccount)][2] = False
+	If IsClanGamesWindow() Then Return 
 
 	; Enter on Clan Games window
-	If IsClanGamesWindow() Then Return 
+	$g_bYourAccScoreCG[Int($g_iCurAccount)][2] = False
 
 	; Let's get some information , like Remain Timer, Score and limit
 	Local $aiScoreLimit = GetTimesAndScores()
@@ -594,19 +594,21 @@ Func IsClanGamesWindow($getCapture = True, $bOnlyCheck = False)
 			Case "end"
 				$bRet = False
 		EndSwitch
+		
+		SetLog("Clan Games Event is : " & $sState, $COLOR_INFO)
+		
+		If $bOnlyCheck = True Then
+			ClickAwayCross()
+			If _Sleep(1500) Then Return
+
+			CheckMainScreen(False, False)
+		EndIf
+		
 	Else
 		SetLog("Caravan not available", $COLOR_WARNING)
 		$bRet = False
 	EndIf
 
-	If $bOnlyCheck = True Then
-		ClickAwayCross()
-		If _Sleep(1500) Then Return
-
-		CheckMainScreen(False, False)
-	EndIf
-
-	SetLog("Clan Games Event is : " & $sState, $COLOR_INFO)
 	Return $bRet
 EndFunc   ;==>IsClanGamesWindow
 
