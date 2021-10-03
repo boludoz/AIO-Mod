@@ -701,3 +701,7 @@ Global $g_bChkReqCCFirst = False, $g_bChkRequestFromChat = False
 #Region - Custom SmartZap - Team AIO Mod++
 Global $g_bDoneSmartZap = False
 #EndRegion - Custom SmartZap - Team AIO Mod++
+
+#Region - Custom smart attack - Team AIO Mod++
+Global $g_abAttackStdSmartDropSpells[$g_iModeCount + 1] = [0, 0, 0, 0]
+#EndRegion - Custom smart attack - Team AIO Mod++

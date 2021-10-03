@@ -24,6 +24,11 @@ Global $g_hBtnCustomDropOrderDB = 0
 Global $g_hLblDBMultiFinger = 0
 Global $g_hCmbDBMultiFinger = 0
 #EndRegion - Multi Finger - Team AIO Mod++
+
+#Region - Custom smart attack - Team AIO Mod++
+Global $g_hChkAttackStdSmartDropSpellsDB = 0
+#EndRegion - Custom smart attack - Team AIO Mod++
+
 Func CreateAttackSearchDeadBaseStandard()
 
 	$g_hGUI_DEADBASE_ATTACK_STANDARD = _GUICreate("", $_GUI_MAIN_WIDTH - 195, $g_iSizeHGrpTab4, 150, 25, BitOR($WS_CHILD, $WS_TABSTOP), -1, $g_hGUI_DEADBASE)
@@ -91,6 +96,9 @@ Func CreateAttackSearchDeadBaseStandard()
 				_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "ChkSmartAttackRedArea_Info_01", "Use Smart Attack to detect the outer 'Red Line' of the village to attack. And drop your troops close to it."))
 				GUICtrlSetState(-1, $GUI_CHECKED)
 				GUICtrlSetOnEvent(-1, "chkSmartAttackRedAreaDB")
+		$y +=22
+			$g_hChkAttackStdSmartDropSpellsDB = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "ChkAttackStdSmartDropSpellsDB", "Drop Rage/Heal spell."), $x, $y, -1, -1)
+				GUICtrlSetState(-1, $GUI_CHECKED)
 
 		$y += 22
 			$g_hLblSmartDeployDB = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "LblSmartDeploy", "Drop Type") & ":", $x, $y + 5, -1, -1)

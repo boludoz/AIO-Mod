@@ -593,8 +593,11 @@ Func ApplyConfig_600_11($TypeReadSave)
 			; Type Once - ChacalGyn
 			GUICtrlSetState($g_hChkRequestTypeOnceEnable, $g_bChkRequestTypeOnceEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
 
-			; Request Early - Team AIO Mod++
+			; Request from chat - Team AIO Mod++
 			GUICtrlSetState($g_hChkRequestFromChat, $g_bChkRequestFromChat ? $GUI_CHECKED : $GUI_UNCHECKED)
+
+			; Request Early - Team AIO Mod++
+			GUICtrlSetState($g_hChkReqCCFirst, $g_bChkReqCCFirst ? $GUI_CHECKED : $GUI_UNCHECKED)
 
 			For $i = 0 To 2
                 _GUICtrlComboBox_SetCurSel($g_ahCmbClanCastleTroopDef[$i] , $g_aiClanCastleTroopDefType[$i])
@@ -635,8 +638,12 @@ Func ApplyConfig_600_11($TypeReadSave)
 			; Type Once - ChacalGyn
 			$g_bChkRequestTypeOnceEnable = (GUICtrlRead($g_hChkRequestTypeOnceEnable) = $GUI_CHECKED)
 
-			; Request Early - Team AIO Mod++
+			; Request from chat - Team AIO Mod++
 			$g_bChkRequestFromChat = (GUICtrlRead($g_hChkRequestFromChat) = $GUI_CHECKED)
+			
+			; Request Early - Team AIO Mod++
+			$g_bChkReqCCFirst = (GUICtrlRead($g_hChkReqCCFirst) = $GUI_CHECKED)
+
             For $i = 0 To 2
                 $g_aiClanCastleTroopDefType[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbClanCastleTroopDef[$i])
                 $g_aiCCDefenseTroopWaitQty[$i] = GUICtrlRead($g_ahTxtClanCastleTroopDef[$i])
@@ -1729,6 +1736,9 @@ Func ApplyConfig_600_29_DB_Standard($TypeReadSave)
 			GUICtrlSetState($g_hChkAttackNearGoldMineDB, $g_abAttackStdSmartNearCollectors[$DB][0] ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkAttackNearElixirCollectorDB, $g_abAttackStdSmartNearCollectors[$DB][1] ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkAttackNearDarkElixirDrillDB, $g_abAttackStdSmartNearCollectors[$DB][2] ? $GUI_CHECKED : $GUI_UNCHECKED)
+
+			; Custom smart attack - Team AIO Mod++
+			GUICtrlSetState($g_hChkAttackStdSmartDropSpellsDB, $g_abAttackStdSmartDropSpells[$DB] ? $GUI_CHECKED : $GUI_UNCHECKED)
 		Case "Save"
 			$g_aiAttackStdDropOrder[$DB] = _GUICtrlComboBox_GetCurSel($g_hCmbStandardDropOrderDB)
 			$g_aiAttackStdDropSides[$DB] = _GUICtrlComboBox_GetCurSel($g_hCmbStandardDropSidesDB)
@@ -1738,6 +1748,8 @@ Func ApplyConfig_600_29_DB_Standard($TypeReadSave)
 			$g_abAttackStdSmartNearCollectors[$DB][1] = (GUICtrlRead($g_hChkAttackNearElixirCollectorDB) = $GUI_CHECKED)
 			$g_abAttackStdSmartNearCollectors[$DB][2] = (GUICtrlRead($g_hChkAttackNearDarkElixirDrillDB) = $GUI_CHECKED)
 
+			; Custom smart attack - Team AIO Mod++
+			$g_abAttackStdSmartDropSpells[$DB] = (GUICtrlRead($g_hChkAttackStdSmartDropSpellsDB) = $GUI_CHECKED)
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_29_DB_Standard
 
@@ -1875,6 +1887,9 @@ Func ApplyConfig_600_29_LB_Standard($TypeReadSave)
 			GUICtrlSetState($g_hChkAttackNearGoldMineAB, $g_abAttackStdSmartNearCollectors[$LB][0] ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkAttackNearElixirCollectorAB, $g_abAttackStdSmartNearCollectors[$LB][1] ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkAttackNearDarkElixirDrillAB, $g_abAttackStdSmartNearCollectors[$LB][2] ? $GUI_CHECKED : $GUI_UNCHECKED)
+			
+			; Custom smart attack - Team AIO Mod++
+			GUICtrlSetState($g_hChkAttackStdSmartDropSpellsAB, $g_abAttackStdSmartDropSpells[$LB] ? $GUI_CHECKED : $GUI_UNCHECKED)
 		Case "Save"
 			$g_aiAttackStdDropOrder[$LB] = _GUICtrlComboBox_GetCurSel($g_hCmbStandardDropOrderAB)
 			$g_aiAttackStdDropSides[$LB] = _GUICtrlComboBox_GetCurSel($g_hCmbStandardDropSidesAB)
@@ -1883,6 +1898,9 @@ Func ApplyConfig_600_29_LB_Standard($TypeReadSave)
 			$g_abAttackStdSmartNearCollectors[$LB][0] = (GUICtrlRead($g_hChkAttackNearGoldMineAB) = $GUI_CHECKED)
 			$g_abAttackStdSmartNearCollectors[$LB][1] = (GUICtrlRead($g_hChkAttackNearElixirCollectorAB) = $GUI_CHECKED)
 			$g_abAttackStdSmartNearCollectors[$LB][2] = (GUICtrlRead($g_hChkAttackNearDarkElixirDrillAB) = $GUI_CHECKED)
+			
+			; Custom smart attack - Team AIO Mod++
+			$g_abAttackStdSmartDropSpells[$LB] = (GUICtrlRead($g_hChkAttackStdSmartDropSpellsAB) = $GUI_CHECKED)
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_29_LB_Standard
 

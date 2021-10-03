@@ -358,6 +358,8 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 		EndIf
     #EndRegion - Drop CC first - Team AIO Mod++ (By Boludoz)
 
+	; Custom smart attack - Team AIO Mod++
+	If $g_abAttackStdSmartDropSpells[$g_iModeCount] Then DeploySpell("", "", True) ; Custom SmartFarm - Team AIO Mod++
 	
 	#Region - Multi finger - Team AIO Mod+++
 	If $g_aiAttackStdDropSides[$g_iMatchMode] = 4 And $g_iMatchMode = $DB Then
@@ -370,6 +372,16 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 	#Region - Multi finger - Team AIO Mod+++
 
 	CheckHeroesHealth()
+	
+	#Region - Custom smart attack - Team AIO Mod++
+	If $g_abAttackStdSmartDropSpells[$g_iModeCount] Then
+		If _Sleep(500) Then Return
+		Local $aByGroups = LaunchSpellsSmartFarm()
+		DeploySpell($aByGroups, "")
+		SetLog("You have " & UBound($aByGroups) & " Points to Deploy Speels")
+		CheckHeroesHealth()
+	EndIf
+	#EndRegion - Custom smart attack - Team AIO Mod++
 
 	If _Sleep($DELAYALGORITHM_ALLTROOPS4) Then Return
 	SetLog("Dropping left over troops", $COLOR_INFO)

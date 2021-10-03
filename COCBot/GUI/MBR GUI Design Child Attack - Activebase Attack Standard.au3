@@ -21,6 +21,10 @@ Global $g_hCmbStandardDropOrderAB = 0, $g_hCmbStandardDropSidesAB = 0, $g_hCmbSt
 Global $g_hLblSmartDeployAB = 0, $g_hPicAttackNearDarkElixirDrillAB = 0
 Global $g_hBtnCustomDropOrderAB = 0
 
+#Region - Custom smart attack - Team AIO Mod++
+Global $g_hChkAttackStdSmartDropSpellsAB = 0
+#EndRegion - Custom smart attack - Team AIO Mod++
+
 Func CreateAttackSearchActiveBaseStandard()
 
 	$g_hGUI_ACTIVEBASE_ATTACK_STANDARD = _GUICreate("", $_GUI_MAIN_WIDTH - 195, $g_iSizeHGrpTab4, 150, 25, BitOR($WS_CHILD, $WS_TABSTOP), -1, $g_hGUI_ACTIVEBASE)
@@ -84,6 +88,9 @@ Func CreateAttackSearchActiveBaseStandard()
 				_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "ChkSmartAttackRedArea_Info_01", -1))
 				GUICtrlSetState(-1, $GUI_CHECKED)
 				GUICtrlSetOnEvent(-1, "chkSmartAttackRedAreaAB")
+		$y +=22
+			$g_hChkAttackStdSmartDropSpellsAB = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "ChkAttackStdSmartDropSpellsDB", "Drop Rage/Heal spell."), $x, $y, -1, -1)
+				GUICtrlSetState(-1, $GUI_CHECKED)
 
 		$y += 22
 			$g_hLblSmartDeployAB = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "LblSmartDeploy", -1) & ":", $x, $y + 5, -1, -1)

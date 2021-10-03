@@ -606,8 +606,11 @@ Func ReadConfig_600_11()
  	; Type Once - ChacalGyn
  	$g_bChkRequestTypeOnceEnable = (IniRead($g_sProfileConfigPath, "request", "RequestTypeOnce", "0") = "1")
 
-	; Request Early - Team AIO Mod++
+	; Request from chat - Team AIO Mod++
  	$g_bChkRequestFromChat = (IniRead($g_sProfileConfigPath, "request", "ChkRequestFromChat", "0") = "1")
+
+	; Request Early - Team AIO Mod++
+ 	$g_bChkReqCCFirst = (IniRead($g_sProfileConfigPath, "request", "ChkReqCCFirst", "0") = "1")
 
 	For $i = 0 To $eTroopCount - 1
         $g_aiCCTroopsExpectedForDef[$i] = 0
@@ -1269,6 +1272,8 @@ Func ReadConfig_600_29_DB()
 	IniReadS($g_abAttackStdSmartNearCollectors[$DB][0], $g_sProfileConfigPath, "attack", "DBSmartAttackGoldMine", False, "Bool")
 	IniReadS($g_abAttackStdSmartNearCollectors[$DB][1], $g_sProfileConfigPath, "attack", "DBSmartAttackElixirCollector", False, "Bool")
 	IniReadS($g_abAttackStdSmartNearCollectors[$DB][2], $g_sProfileConfigPath, "attack", "DBSmartAttackDarkElixirDrill", False, "Bool")
+	; Custom smart attack - Team AIO Mod++
+	IniReadS($g_abAttackStdSmartDropSpells[$DB], $g_sProfileConfigPath, "attack", "DBAttackStdSmartDropSpells", False, "Bool")
 	; <><><><> Attack Plan / Search & Attack / Deadbase / Attack / Scripted <><><><>
 	IniReadS($g_aiAttackScrRedlineRoutine[$DB], $g_sProfileConfigPath, "attack", "RedlineRoutineDB", $g_aiAttackScrRedlineRoutine[$DB], "Int")
 	IniReadS($g_aiAttackScrDroplineEdge[$DB], $g_sProfileConfigPath, "attack", "DroplineEdgeDB", $g_aiAttackScrDroplineEdge[$DB], "Int")
@@ -1323,6 +1328,8 @@ Func ReadConfig_600_29_LB()
 	IniReadS($g_abAttackStdSmartNearCollectors[$LB][0], $g_sProfileConfigPath, "attack", "ABSmartAttackGoldMine", False, "Bool")
 	IniReadS($g_abAttackStdSmartNearCollectors[$LB][1], $g_sProfileConfigPath, "attack", "ABSmartAttackElixirCollector", False, "Bool")
 	IniReadS($g_abAttackStdSmartNearCollectors[$LB][2], $g_sProfileConfigPath, "attack", "ABSmartAttackDarkElixirDrill", False, "Bool")
+	; Custom smart attack - Team AIO Mod++
+	IniReadS($g_abAttackStdSmartDropSpells[$LB], $g_sProfileConfigPath, "attack", "LBAttackStdSmartDropSpells", False, "Bool")
 	; <><><><> Attack Plan / Search & Attack / Activebase / Attack / Scripted <><><><>
 	IniReadS($g_aiAttackScrRedlineRoutine[$LB], $g_sProfileConfigPath, "attack", "RedlineRoutineAB", $g_aiAttackScrRedlineRoutine[$LB], "Int")
 	IniReadS($g_aiAttackScrDroplineEdge[$LB], $g_sProfileConfigPath, "attack", "DroplineEdgeAB", $g_aiAttackScrDroplineEdge[$LB], "Int")

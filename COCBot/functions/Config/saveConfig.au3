@@ -551,8 +551,12 @@ Func SaveConfig_600_11()
  	; Type Once - ChacalGyn 
 	_Ini_Add("request", "RequestTypeOnce", $g_bChkRequestTypeOnceEnable ? 1 : 0)
 
- 	; Request Early - Team AIO Mod++
+ 	; Request from chat - Team AIO Mod++
 	_Ini_Add("request", "ChkRequestFromChat", $g_bChkRequestFromChat ? 1 : 0)
+
+	; Request Early - Team AIO Mod++
+	_Ini_Add("request", "ChkReqCCFirst", $g_bChkReqCCFirst ? 1 : 0)
+
     For $i = 0 To 2
         _Ini_Add("donate", "cmbClanCastleTroopDef" & $i, $g_aiClanCastleTroopDefType[$i])
         _Ini_Add("donate", "txtClanCastleTroopDef" & $i, $g_aiCCDefenseTroopWaitQty[$i])
@@ -1024,6 +1028,8 @@ Func SaveConfig_600_29_DB_Standard()
 	_Ini_Add("attack", "DBSmartAttackGoldMine", $g_abAttackStdSmartNearCollectors[$DB][0] ? 1 : 0)
 	_Ini_Add("attack", "DBSmartAttackElixirCollector", $g_abAttackStdSmartNearCollectors[$DB][1] ? 1 : 0)
 	_Ini_Add("attack", "DBSmartAttackDarkElixirDrill", $g_abAttackStdSmartNearCollectors[$DB][2] ? 1 : 0)
+	; Custom smart attack - Team AIO Mod++
+	_Ini_Add("attack", "DBAttackStdSmartDropSpells", $g_abAttackStdSmartDropSpells[$DB] ? 1 : 0)
 EndFunc   ;==>SaveConfig_600_29_DB_Standard
 
 Func SaveConfig_600_29_DB_Scripted()
@@ -1091,6 +1097,8 @@ Func SaveConfig_600_29_LB_Standard()
 	_Ini_Add("attack", "ABSmartAttackGoldMine", $g_abAttackStdSmartNearCollectors[$LB][0] ? 1 : 0)
 	_Ini_Add("attack", "ABSmartAttackElixirCollector", $g_abAttackStdSmartNearCollectors[$LB][1] ? 1 : 0)
 	_Ini_Add("attack", "ABSmartAttackDarkElixirDrill", $g_abAttackStdSmartNearCollectors[$LB][2] ? 1 : 0)
+	; Custom smart attack - Team AIO Mod++
+	_Ini_Add("attack", "ABAttackStdSmartDropSpells", $g_abAttackStdSmartDropSpells[$LB] ? 1 : 0)
 EndFunc   ;==>SaveConfig_600_29_LB_Standard
 
 Func SaveConfig_600_29_LB_Scripted()
