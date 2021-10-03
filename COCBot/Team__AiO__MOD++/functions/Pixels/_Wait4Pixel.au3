@@ -12,7 +12,7 @@ Func _Wait4Pixel($x, $y, $sColor, $iColorVariation = 25, $iWait = 3000, $iDelay 
 	Local $iSleep = Round($iWait / $iDelay) ; Can help in VPS Delay Case
 	For $i = 1 To $iSleep
 		If _ColorCheck(Hex($sColor, 6), _GetPixelColor($x, $y, $g_bCapturePixel), $iColorVariation) Then Return True
-		If _Sleep($iDelay) Then Return
+		If _Sleep($iDelay) Then Return False
 	Next
 	Return False
 EndFunc   ;==>_Wait4Pixel
@@ -21,7 +21,7 @@ Func _Wait4PixelGone($x, $y, $sColor, $iColorVariation = 25, $iWait = 3000, $iDe
 	Local $iSleep = Round($iWait / $iDelay) ; Can help in VPS Delay Case
 	For $i = 1 To $iSleep
 		If _ColorCheck(Hex($sColor, 6), _GetPixelColor($x, $y, $g_bCapturePixel), $iColorVariation) = False Then Return True
-		If _Sleep($iDelay) Then Return
+		If _Sleep($iDelay) Then Return False
 	Next
 	Return False
 EndFunc   ;==>_Wait4PixelGone
@@ -77,7 +77,7 @@ Func _WaitForCheckImg($sPathImage, $sSearchZone = Default, $aText = Default, $iW
 	For $i = 1 To $iSleep
 		$aReturn = findMultipleQuick($sPathImage, Default, $sSearchZone, True, $aText)
 		If IsArray($aReturn) Then Return True
-		If _Sleep($iDelay) Then Return
+		If _Sleep($iDelay) Then Return False
 	Next
 	Return False
 EndFunc   ;==>_WaitForCheckImg
@@ -91,7 +91,7 @@ Func _WaitForCheckImgGone($sPathImage, $sSearchZone = Default, $aText = Default,
 	For $i = 1 To $iSleep
 		$aReturn = findMultipleQuick($sPathImage, Default, $sSearchZone, True, $aText)
 		If Not IsArray($aReturn) Then Return True
-		If _Sleep($iDelay) Then Return
+		If _Sleep($iDelay) Then Return False
 	Next
 	Return False
 EndFunc   ;==>_WaitForCheckImgGone

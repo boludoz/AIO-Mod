@@ -442,4 +442,9 @@ Func RadioIgnoreUpgradesBBOrOtto()
 		GUICtrlSetState($hCtrl, $hMode)
 	Next
 EndFunc   ;==>RadioIgnoreUpgradesBBOrOtto
+
+Func _RadioIgnoreUpgradesBBOrOtto()
+	RadioIgnoreUpgradesBBOrOtto()
+	If GUICtrlRead($g_hRadioBBCustomOTTO) = $GUI_CHECKED Then GUICtrlSetState($g_hChkPlacingNewBuildings, $GUI_CHECKED)
+EndFunc   ;==>_RadioIgnoreUpgradesBBOrOtto
 #EndRegion - Custom Improve - Team AIO Mod++

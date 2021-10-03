@@ -2214,7 +2214,7 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 			Local $aIconIndex = [$eIcnBarrack, $eIcnSpellFactory, $eIcnSiegeB, $eIcnGem, $eIcnOptions] ; Custom train - Team AIO Mod++
 
 		Case $g_hGUI_MISC_TAB
-			Local $aIconIndex = [$eIcnTH1, $eIcnStrongMan, $eIcnPowerPotion] ; BBase - Team AIO Mod++
+			Local $aIconIndex = [$eIcnTH1, $eIcnStrongMan, $eIcnOptions];, $eIcnPowerPotion] ; BBase - Team AIO Mod++
 
 		Case $g_hGUI_DONATE_TAB
 			; the icons for donate tab
@@ -2248,12 +2248,13 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 			; the icons for Attack Options tab
 			Local $aIconIndex = [$eIcnMagnifier, $eIcnCamp, $eIcnLightSpell, $eIcnSilverStar, $eIcnTrophy]
 
-			; Team AiO MOD++ (2019)
+		#Region - Custom  - Team AiO MOD++
 		Case $g_hGUI_MOD_TAB
 			; the icons for Mods tab
 			; $eIcnMiscMod, $eIcnWarPreparation
-			Local $aIconIndex = [$eIcnSuperXP, $eIcnHumanization, $eIcnChatActions, $eIcnGFTO, $eIcnPrewar, $eIcnMisc, $eIcnDebugMod]
-
+			; Local $aIconIndex = [$eIcnSuperXP, $eIcnHumanization, $eIcnChatActions, $eIcnGFTO, $eIcnPrewar, $eIcnMisc, $eIcnDebugMod]
+			Local $aIconIndex = [$eIcnSuperXP, $eIcnHumanization, $eIcnChatActions, $eIcnGFTO, $eIcnPrewar, $eIcnDebugMod]
+			#EndRegion - Custom  - Team AiO MOD++
 		Case $g_hGUI_BOT_TAB
 			; the icons for Bot tab
 			Local $aIconIndex = [$eIcnOptions, $eIcnAndroid, $eIcnModDebug, $eIcnProfile, $eIcnGold]
@@ -2271,7 +2272,7 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 			; the icons for stats tab
 			Local $aIconIndex = [$eIcnGoldElixir, $eIcnOptions, $eIcnCamp, $eIcnCCRequest, $eIcnGoldElixir]
 
-			#Region BBase - Team AIO Mod++
+		#Region BBase - Team AIO Mod++
 		Case $g_hGUI_BUILDER_BASE_TAB
 			; the icons for builder base tab
 			Local $aIconIndex = [$eIcnGold, $eIcnLaboratory, $eIcnTroops]
