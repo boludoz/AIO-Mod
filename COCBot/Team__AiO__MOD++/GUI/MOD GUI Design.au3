@@ -106,8 +106,7 @@ EndFunc   ;==>CreateMODTab
 	GUICtrlCreateTabItem("")
 EndFunc   ;==>TabMiscGUI
 
-Global $g_hChkCollectMagicItems, _ ;$g_hChkCollectFree, _
-$g_hBtnMagicItemsConfig, $g_hChkBuilderPotion, $g_hChkHeroPotion, $g_hChkLabPotion, $g_hChkPowerPotion, $g_hChkResourcePotion, _
+Global $g_hChkBuilderPotion, $g_hChkHeroPotion, $g_hChkLabPotion, $g_hChkPowerPotion, _
 $g_hComboHeroPotion, $g_hComboPowerPotion, $g_hInputBuilderPotion, $g_hInputLabPotion, $g_hInputGoldItems, $g_hInputElixirItems, $g_hInputDarkElixirItems;, $g_hCmbClockTowerPotion, $g_hChkClockTowerPotion
 
 Func CreateMiscMagicSubTab()
@@ -115,19 +114,19 @@ Func CreateMiscMagicSubTab()
 	; GUI SubTab
 	Local $x = 15, $y = 45
 
-	GUICtrlCreateGroup("Collect Items", 16, 24, 408, 78)
-	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnShop, 24, 46, 25, 25)
-	$g_hChkCollectMagicItems = GUICtrlCreateCheckbox("Collect magic items", 56, 48, 105, 17)
-	GUICtrlSetOnEvent(-1, "btnDDApply")
-	$g_hChkFreeMagicItems = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkFreeMagicItems", "Collect Free Magic Items"), 56, 73, 200, 17)
-	GUICtrlSetOnEvent(-1, "ChkFreeMagicItems")
-	$g_hBtnMagicItemsConfig = GUICtrlCreateButton("Settings", 176, 48, 97, 25)
-	GUICtrlSetOnEvent(-1, "btnDailyDiscounts")
+	; GUICtrlCreateGroup("Collect Items", 16, 24, 408, 78)
+	; _GUICtrlCreateIcon($g_sLibModIconPath, $eIcnShop, 24, 46, 25, 25)
+	; $g_hChkCollectMagicItems = GUICtrlCreateCheckbox("Collect magic items", 56, 48, 105, 17)
+	; GUICtrlSetOnEvent(-1, "btnDDApply")
+	; $g_hChkFreeMagicItems = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkFreeMagicItems", "Collect Free Magic Items"), 56, 73, 200, 17)
+	; GUICtrlSetOnEvent(-1, "ChkFreeMagicItems")
+	; $g_hBtnMagicItemsConfig = GUICtrlCreateButton("Settings", 176, 48, 97, 25)
+	; GUICtrlSetOnEvent(-1, "btnDailyDiscounts")
 
-	GUICtrlCreateGroup("", -99, -99, 1, 1)
+	; GUICtrlCreateGroup("", -99, -99, 1, 1)
 	GUICtrlCreateGroup("Magic Items", 16, 104, 408, 155)
 
-	$y = 128
+	; $y = 128
 	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModBuilderP, 24, $y - 5, 25, 25)
 	$g_hChkBuilderPotion = GUICtrlCreateCheckbox("Use builder potion when busy builders is > = : ", 56, $y, 225, 17)
 	GUICtrlSetOnEvent(-1, "MagicItemsRefresh")
@@ -141,11 +140,11 @@ Func CreateMiscMagicSubTab()
 	$g_hInputLabPotion = _GUICtrlCreateInput("Hours", 320, $y, 41, 21)
 	GUICtrlSetOnEvent(-1, "MagicItemsRefresh")
 		
-	$y += 32
-	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModResourceP, 24, $y - 5, 25, 25)
-	$g_hChkResourcePotion = GUICtrlCreateCheckbox("Use resource potion only if storage are :", 56, $y, 225, 17)
-	GUICtrlSetOnEvent(-1, "MagicItemsRefresh")	
-	
+	; $y += 32
+	; _GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModResourceP, 24, $y - 5, 25, 25)
+	; $g_hChkResourcePotion = GUICtrlCreateCheckbox("Use resource potion only if storage are :", 56, $y, 225, 17)
+	; GUICtrlSetOnEvent(-1, "MagicItemsRefresh")	
+	#cs
 	$y += 36
 	$g_hInputGoldItems = _GUICtrlCreateInput("1000000", 88, $y, 73, 21)
 	GUICtrlSetOnEvent(-1, "MagicItemsRefresh")
@@ -157,7 +156,7 @@ Func CreateMiscMagicSubTab()
 	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnGoldP, 163, $y - 2, 25, 25)
 	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnDarkP, 345, $y - 2, 25, 25)
 	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnElixirP, 265, $y - 2, 25, 25)
-
+	#ce
 	; $y += 32
 	; $g_hChkHeroPotion = GUICtrlCreateCheckbox("Use hero potion whem are avariable : ", 56, $y, 217, 17)
 	; GUICtrlSetState (-1, $GUI_DISABLE)

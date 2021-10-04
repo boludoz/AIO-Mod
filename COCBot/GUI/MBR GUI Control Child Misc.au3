@@ -641,6 +641,7 @@ Func ChkCollect()
 		GUICtrlSetState($g_hTxtCollectGold, $GUI_ENABLE)
 		GUICtrlSetState($g_hTxtCollectElixir, $GUI_ENABLE)
 		GUICtrlSetState($g_hTxtCollectDark, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkResourcePotion, $GUI_ENABLE) ; Magic items - Team AIO Mod++
 	Else
 		GUICtrlSetState($g_hChkCollectLootCar, $GUI_UNCHECKED)
 		GUICtrlSetState($g_hChkCollectLootCar, $GUI_DISABLE)
@@ -649,9 +650,19 @@ Func ChkCollect()
 		GUICtrlSetState($g_hTxtCollectGold, $GUI_DISABLE)
 		GUICtrlSetState($g_hTxtCollectElixir, $GUI_DISABLE)
 		GUICtrlSetState($g_hTxtCollectDark, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkResourcePotion, $GUI_UNCHECKED) ; Magic items - Team AIO Mod++
 	EndIf
 	ChkTreasuryCollect()
+	ChkResourcePotion() ; Magic items - Team AIO Mod++
 EndFunc   ;==>ChkCollect
+
+; Magic items - Team AIO Mod++
+Func ChkResourcePotion()
+	$g_bChkResourcePotion = (GUICtrlRead($g_hChkResourcePotion) = $GUI_CHECKED)
+	For $h = $g_hInputGoldItems To $g_hInputDarkElixirItems
+		GUICtrlSetState($h, ($g_bChkResourcePotion = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+	Next
+EndFunc   ;==>ConfigRefresh
 
 Func ChkTreasuryCollect()
 	If GUICtrlRead($g_hChkTreasuryCollect) = $GUI_CHECKED Then

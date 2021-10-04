@@ -376,7 +376,9 @@ Func ApplyConfig_MOD_MagicItems($TypeReadSave)
 			GUICtrlSetState($g_hChkLabPotion, $g_bChkLabPotion = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkPowerPotion, $g_bChkPowerPotion = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkResourcePotion, $g_bChkResourcePotion = True ? $GUI_CHECKED : $GUI_UNCHECKED)
-
+			
+			; ChkResourcePotion()
+			
 		Case "Save"
 			$g_iInputGoldItems = GUICtrlRead($g_hInputGoldItems)
 			$g_iInputElixirItems = GUICtrlRead($g_hInputElixirItems)
