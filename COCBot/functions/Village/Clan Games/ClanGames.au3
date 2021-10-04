@@ -1039,20 +1039,24 @@ Func SaveClanGamesConfig()
 	ApplyConfig_ClanGames(GetApplyConfigSaveAction())
 
 	Local $aChallengesClanGamesVars = [$g_aCGLootChallenges, $g_aCGAirTroopChallenges, $g_aCGGroundTroopChallenges, $g_aCGBattleChallenges, $g_aCGDestructionChallenges, $g_aCGMiscChallenges, $g_aCGSpellChallenges, $g_aCGBBBattleChallenges, $g_aCGBBDestructionChallenges, $g_aCGBBTroopChallenges]
+	Local $ahChallengesClanGamesVarsHandle = [$g_hCGLootChallenges, $g_hCGAirTroopChallenges, $g_hCGGroundTroopChallenges, $g_hCGBattleChallenges, $g_hCGDestructionChallenges, $g_hCGMiscChallenges, $g_hCGSpellChallenges, $g_hCGBBBattleChallenges, $g_hCGBBDestructionChallenges, $g_hCGBBTroopChallenges]
 
 	_Ini_Clear()
 
-	Local $aTmp, $iKey
+	Local $aTmp, $iKey, $ah
 	; Loop through the CG strings
 	For $i = 0 To UBound($g_aChallengesClanGamesStrings) - 1
 
 		; Loop through the CG Vars
 		$aTmp = $aChallengesClanGamesVars[$i]
+		$ah = $ahChallengesClanGamesVarsHandle[$i]
 
 		For $j = 0 To UBound($aTmp) - 1
 
 			; Write the new value to the file
 			_Ini_Add($g_aChallengesClanGamesStrings[$i], $aTmp[$j][1], $aTmp[$j][3])
+
+			If Int($ah[$j]) = 0 Then ContinueLoop ; Handle GUI always have num ref, skip no implemented.
 
 			; Write boolean status
 			_Ini_Add($g_aChallengesClanGamesStrings[$i], $aTmp[$j][1] & " Chk", $aTmp[$j][5])
@@ -1067,20 +1071,24 @@ EndFunc   ;==>SaveClanGamesConfig
 
 Func ReadClanGamesConfig()
 	Local $aChallengesClanGamesVars = [$g_aCGLootChallenges, $g_aCGAirTroopChallenges, $g_aCGGroundTroopChallenges, $g_aCGBattleChallenges, $g_aCGDestructionChallenges, $g_aCGMiscChallenges, $g_aCGSpellChallenges, $g_aCGBBBattleChallenges, $g_aCGBBDestructionChallenges, $g_aCGBBTroopChallenges]
+	Local $ahChallengesClanGamesVarsHandle = [$g_hCGLootChallenges, $g_hCGAirTroopChallenges, $g_hCGGroundTroopChallenges, $g_hCGBattleChallenges, $g_hCGDestructionChallenges, $g_hCGMiscChallenges, $g_hCGSpellChallenges, $g_hCGBBBattleChallenges, $g_hCGBBDestructionChallenges, $g_hCGBBTroopChallenges]
 
 	SetDebugLog("Read Clan Games Config " & $g_sProfileClanGamesPath)
 
-	Local $aTmp, $iKey
+	Local $aTmp, $iKey, $ah
 	; Loop through the CG strings
 	For $i = 0 To UBound($g_aChallengesClanGamesStrings) - 1
 
 		; Loop through the CG Vars
 		$aTmp = $aChallengesClanGamesVars[$i]
+		$ah = $ahChallengesClanGamesVarsHandle[$i]
 
 		For $j = 0 To UBound($aTmp) - 1
 
 			; Write the new value to the file
 			IniReadSCG($g_aChallengesClanGamesStrings[$i], $j, 3, $g_sProfileClanGamesPath, $g_aChallengesClanGamesStrings[$i], $aTmp[$j][1], $aTmp[$j][3], "Int")
+
+			If Int($ah[$j]) = 0 Then ContinueLoop ; Handle GUI always have num ref, skip no implemented.
 
 			; Write boolean status
 			IniReadSCG($g_aChallengesClanGamesStrings[$i], $j, 5, $g_sProfileClanGamesPath, $g_aChallengesClanGamesStrings[$i], $aTmp[$j][1] & " Chk", $aTmp[$j][5], "Bool")
