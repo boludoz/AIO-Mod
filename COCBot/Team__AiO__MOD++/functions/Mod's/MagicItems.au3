@@ -67,7 +67,6 @@ Func ResourceBoost($aPos1 = 0, $aPos2 = 0)
 	If Not $g_bChkResourcePotion Then Return
 	
 	ClickAway()
-	ZoomOut()
 	
 	If Not IsMainPage(5) Then Return False
 	

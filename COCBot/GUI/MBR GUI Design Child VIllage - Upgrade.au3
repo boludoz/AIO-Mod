@@ -77,6 +77,8 @@ Func CreateVillageUpgrade()
 
 EndFunc   ;==>CreateVillageUpgrade
 
+; Magic Items - Team AIO Mod++
+Global $g_hChkLabPotion = 0, $g_hInputLabPotion = 0
 Func CreateLaboratorySubTab()
 	Local $sTxtNames = GetTranslatedFileIni("MBR Global GUI Design", "Any", "Any") & "|" & _
 					   GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtBarbarians", "Barbarians") & "|" & _
@@ -138,7 +140,7 @@ Func CreateLaboratorySubTab()
 
 	#Region - Custom lab - Team AIO Mod++
 	Local $x = 25, $y = 45
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "Group_01", "Laboratory"), $x - 20, $y - 20, $g_iSizeWGrpTab3, 205)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "Group_01", "Laboratory"), $x - 20, $y - 20, $g_iSizeWGrpTab3, 205 + 65)
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnLaboratory, $x, $y, 64, 64)
 		$g_hChkAutoLabUpgrades = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkAutoLabUpgrades", "Auto Laboratory Upgrades"), $x + 80, $y , -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkAutoLabUpgrades_Info_01", "Check box to enable automatically starting Upgrades in laboratory"))
@@ -171,7 +173,7 @@ Func CreateLaboratorySubTab()
 		;Enable Lab Upgrade Order
 		$g_hChkLabUpgradeOrder = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkLabUpgradeOrder", "Enable Upgrades Order"), $x + 80, $y + 45, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkAutoLabUpgrades_Info_04", "Check box to enable Upgrades Order in laboratory"))
-			GUICtrlSetOnEvent(-1, "chkLabUpgradeOrder")
+			GUICtrlSetOnEvent(-1, "chkLabUpgradeOrder")	
 
 		; Create translated list of Troops for combo box
 		Local $sComboData = ""
@@ -213,6 +215,12 @@ Func CreateLaboratorySubTab()
 		GUICtrlSetState(-1, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
 		GUICtrlSetOnEvent(-1, "btnSetLabUpgradeOrder")
 
+		#Region - Magic Items - Team AIO Mod++
+		$y += 40
+		_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnLabP, 24 + 49, $y - 5 + 45, 25, 25)
+		$g_hChkLabPotion = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkLabPotion", "Use research potion when laboratory hours is >="), 56 + 49, $y + 45, -1, -1)
+		$g_hInputLabPotion = _GUICtrlCreateInput("0", 320 - 75 + 49, $y + 64, 41, 21, $GUI_SS_DEFAULT_INPUT + $ES_CENTER + $ES_NUMBER)
+		#EndRegion - Magic Items - Team AIO Mod++
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	#EndRegion - Custom lab - Team AIO Mod++
@@ -607,15 +615,25 @@ Func CreateWallsSubTab()
 EndFunc   ;==>CreateWallsSubTab
 
 #Region - Custom Improve - Team AIO Mod++
+
+; Magic Items - Team AIO Mod++
+Global $g_hChkLabPotion = 0, $g_hInputBuilderPotion = 0
 Func CreateAutoUpgradeSubTab()
 
 	Local $x = 25, $y = 45
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Group_01", "Auto Upgrade"), $x - 20, $y - 20, $g_iSizeWGrpTab3, 100)
 
-		$g_hChkAutoUpgrade = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "ChkAutoUpgrade", "Enable Auto Upgrade"), $x - 5, $y, -1, -1)
+		$g_hChkAutoUpgrade = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "ChkAutoUpgrade", "Enable Auto Upgrade"), $x - 5, $y - 8, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "ChkAutoUpgrade_Info_01", "Check box to enable automatically starting Upgrades from builders menu"))
 			GUICtrlSetOnEvent(-1, "chkAutoUpgrade")
-
+		
+		; Magic Items - Team AIO Mod++
+		_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModBuilderP, $x + 180, $y - 8, 24, 24)
+		$g_hChkLabPotion = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "ChkLabPotion", "Builder potion if busy builders >="), $x + 210, $y - 8, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child VIllage - AutoUpgrade", "ChkLabPotion_Info_01", "Check box to automatically use a Builder Potion (when available)."))
+		$g_hInputBuilderPotion = _GUICtrlCreateInput("0", $x + 210 + 100, $y + 14, 20, 15, BitOR($ES_CENTER, $ES_NUMBER))
+			GUICtrlSetLimit(-1, 1)
+			
 		$g_hLblAutoUpgrade = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Label_01", "Save"), $x, $y + 32, -1, -1)
 		$g_hTxtSmartMinGold = _GUICtrlCreateInput("150000", $x + 33, $y + 29, 60, 21, BitOR($ES_CENTER, $ES_NUMBER))
 			_GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 98, $y + 32, 16, 16)

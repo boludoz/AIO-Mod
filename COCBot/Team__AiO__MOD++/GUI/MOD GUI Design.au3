@@ -108,6 +108,7 @@ EndFunc   ;==>TabMiscGUI
 
 Global $g_hChkBuilderPotion, $g_hChkHeroPotion, $g_hChkLabPotion, $g_hChkPowerPotion, _
 $g_hComboHeroPotion, $g_hComboPowerPotion, $g_hInputBuilderPotion, $g_hInputLabPotion, $g_hInputGoldItems, $g_hInputElixirItems, $g_hInputDarkElixirItems;, $g_hCmbClockTowerPotion, $g_hChkClockTowerPotion
+#cs
 
 Func CreateMiscMagicSubTab()
 
@@ -171,3 +172,4 @@ Func CreateMiscMagicSubTab()
 	; _GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModHeroP, 24, 190, 25, 25)
 
 EndFunc   ;==>CreateMiscMagicSubTab
+#ce

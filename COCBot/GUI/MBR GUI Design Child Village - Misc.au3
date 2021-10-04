@@ -67,8 +67,9 @@ Func CreateVillageMisc()
 	#Region - Team AiO MOD++
 	$g_hGUI_MISC_TAB_ITEM2 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "MISC_TAB_ITEM3", "Clan Games"))
 	CreateMiscClanGamesV3SubTab()
-	$g_hGUI_MISC_TAB_ITEM3 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "MISC_TAB_ITEM4", "Magic Items"))
-	CreateMiscMagicSubTab()
+	$g_hGUI_MISC_TAB_ITEM3 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "MISC_TAB_ITEM_MISC", "Misc."))
+	TabMiscGUI()
+	; CreateMiscMagicSubTab()
 
 	CreateDailyDiscountGUI() ; Daily Discounts - Team AiO MOD++
 	;CreateBBDropOrderGUI() ; Builder Base Attack - Team AiO MOD++
