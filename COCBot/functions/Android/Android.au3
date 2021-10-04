@@ -1207,6 +1207,8 @@ Func _RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True
 	;$cmdOutput = LaunchConsole($g_sAndroidAdbPath, "connect " & $g_sAndroidAdbDevice, $process_killed)
 	;$connected_to = StringInStr($cmdOutput, "connected to")
 
+	If $g_bRunState = False Then Return
+
 	ResetAndroidProcess()
 	Local $sRestart = ""
 	If $bRestart = True Then

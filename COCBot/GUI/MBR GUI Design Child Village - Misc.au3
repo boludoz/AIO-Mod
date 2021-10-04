@@ -556,10 +556,10 @@ Func CreateMiscClanGamesV3SubTab()
 EndFunc   ;==>CreateMiscClanGamesV3SubTab
 
 Func CreateCGDes()
-	$g_hGUI_CGDes = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_CGDes", "Main Village Destruction Challenge"), 322 * 2, 315, $g_iFrmBotPosX, -1, $WS_DLGFRAME, $WS_EX_TOPMOST)
+	$g_hGUI_CGDes = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_CGDes", "Main Village Destruction Challenge"), 675, 315, $g_iFrmBotPosX, -1, $WS_DLGFRAME, $WS_EX_TOPMOST)
 	Local $x = 25, $y = 25
 	GUISetBkColor($COLOR_WHITE, $g_hGUI_CGDes)
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SelectCGDes", "Select Destruction Challenges"), $x - 20, $y - 20, (308 * 2) + 10, 220)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SelectCGDes", "Select Destruction Challenges"), $x - 20, $y - 20, 656, 220)
 	$x += 10
 	$y += 5
 
@@ -648,10 +648,10 @@ Func CreateClanGamesGroundTroops()
 EndFunc   ;==>CreateClanGamesGroundTroops
 
 Func CreateClanGamesSpell()
-	$g_hGUI_CGSpells = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_CGSpells", "Spell Challenges"), 322 * 2 - 354, 315, $g_iFrmBotPosX, -1, $WS_DLGFRAME, $WS_EX_TOPMOST)
+	$g_hGUI_CGSpells = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_CGSpellsEx", "Spell Challenges"), 290, 315, $g_iFrmBotPosX, -1, $WS_DLGFRAME, $WS_EX_TOPMOST)
 	Local $x = 25, $y = 25
 	GUISetBkColor($COLOR_WHITE, $g_hGUI_CGSpells)
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SelectCGSpells", "Select Spell Challenges"), $x - 20, $y - 20, (308 * 2) + 10 - 354, 220)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SelectCGSpellsEx", "Select Spell Challenges"), $x - 20, $y - 20, (308 * 2) + 10 - 354, 220)
 	$x += 10
 	$y += 5
 
@@ -720,7 +720,7 @@ Func CreateClanGamesBBTroops()
 	Local $iyFix = 0
 
 	For $i = 0 To UBound($g_hCGBBTroopChallenges) - 1
-		$g_hCGBBDestructionChallenges[$i] = GUICtrlCreateCheckbox($g_aCGBBTroopChallenges[$i][1], $x + $ixFix - 20, $y + ($iyFix * 20))
+		$g_hCGBBTroopChallenges[$i] = GUICtrlCreateCheckbox($g_aCGBBTroopChallenges[$i][1], $x + $ixFix - 20, $y + ($iyFix * 20))
 
 		$iyFix += 1
 		If Mod($i + 1, 7) = 0 Then

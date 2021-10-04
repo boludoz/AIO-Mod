@@ -18,7 +18,9 @@ Func CloseCoC($ReOpenCoC = False, $bCheckRunState = True)
 	$g_bSkipFirstZoomout = False
 	ResumeAndroid()
 	If $bCheckRunState And Not $g_bRunState Then Return FuncReturn()
-
+	
+	If $g_bRunState = False Then Return
+	
 	Local $Adb = ""
 	If $ReOpenCoC Then
 		SetLog("Please wait for CoC restart......", $COLOR_ERROR) ; Let user know we need time...

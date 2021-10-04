@@ -531,6 +531,7 @@ Func RestartBlueStacksXCoC()
 	If Not InitAndroid() Then Return False
 	If WinGetAndroidHandle() = 0 Then Return False
 	$cmdOutput = AndroidAdbSendShellCommand("am start -W -n " & $g_sAndroidGamePackage & "/" & $g_sAndroidGameClass, 60000) ; timeout of 1 Minute ; disabled -S due to long wait after 2017 Dec. Update
+	If $g_bRunState = False Then Return
 	SetLog("Please wait for CoC restart......", $COLOR_INFO) ; Let user know we need time...
 	Return True
 EndFunc   ;==>RestartBlueStacksXCoC
