@@ -359,7 +359,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetData($g_hTxtTreasuryDark, $g_iTxtTreasuryDark)
 			GUICtrlSetState($g_hChkCollectRewards, $g_bChkCollectRewards ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkSellRewards, $g_bChkSellRewards ? $GUI_CHECKED : $GUI_UNCHECKED)
-
+			ChkCollectRewards() ; Custom fix - Team AIO MOD++
 			GUICtrlSetState($g_hChkCollectBuilderBase, $g_bChkCollectBuilderBase ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkCleanBBYard, $g_bChkCleanBBYard ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkCleanYardBBall, $g_bChkCleanYardBBall ? $GUI_CHECKED : $GUI_UNCHECKED) ; AIO MOD++

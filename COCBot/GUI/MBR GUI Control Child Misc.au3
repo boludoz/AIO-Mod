@@ -676,6 +676,16 @@ Func ChkTreasuryCollect()
 	EndIf
 EndFunc   ;==>ChkTreasuryCollect
 
+#Region - Custom fix - Team AIO MOD++
+Func ChkCollectRewards()
+	If GUICtrlRead($g_hChkCollectRewards) = $GUI_CHECKED Then
+		GUICtrlSetState($g_hChkSellRewards, $GUI_ENABLE)
+	Else
+		GUICtrlSetState($g_hChkSellRewards, $GUI_DISABLE)
+	EndIf
+EndFunc   ;==>ChkCollectRewards
+#EndRegion - Custom fix - Team AIO MOD++
+
 #CS - AIO MOD++
 Func ChkFreeMagicItems()
 	If $g_iTownHallLevel >= 8 Or $g_iTownHallLevel = 0 Then ; Must be Th8 or more to use the Trader

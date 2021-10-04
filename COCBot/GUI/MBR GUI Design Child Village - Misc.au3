@@ -339,19 +339,22 @@ Func CreateMiscNormalVillageSubTab()
 	
 	$y += 20
 	$g_hChkFreeMagicItems = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkFreeMagicItems", "Collect Free Magic Items"), $x + 270, $y + 4, -1, -1)
-	GUICtrlSetOnEvent(-1, "ChkFreeMagicItems")
+		GUICtrlSetOnEvent(-1, "ChkFreeMagicItems")
 	
 	;;;;;;;;;;;
 	$y += 20
 	$g_hChkCollectRewards = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCollectRewards", "Collect Challenge Rewards"), $x + 270, $y + 4 + 5, -1, -1)
-	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkSeasonChallenges_Info_01", "Check this to automatically Collect Daily/Season Rewards."))
-	GUICtrlSetState(-1, $GUI_CHECKED)
-	$y += 20
-	$g_hChkSellRewards = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkSellRewards", "Sell Extras"), $x + 270 + 5, $y + 4 + 5, -1, -1)
-	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkAutoSellSeasonRewards_Info_01", "Check this to automatically Sell Daily/Season Rewards."))
-	GUICtrlSetState(-1, $GUI_UNCHECKED)
-	$y -= 45
+		GUICtrlSetOnEvent(-1, "ChkCollectRewards")
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkSeasonChallenges_Info_01", "Check this to automatically Collect Daily/Season Rewards."))
+		GUICtrlSetState(-1, $GUI_CHECKED)
 	
+	$y += 20
+	
+	$g_hChkSellRewards = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkSellRewards", "Sell Extras"), $x + 270 + 5, $y + 4 + 5, -1, -1)
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkAutoSellSeasonRewards_Info_01", "Check this to automatically Sell Daily/Season Rewards."))
+		GUICtrlSetState(-1, $GUI_UNCHECKED)
+	
+	$y -= 45
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnTree, $x, $y + 8, 24, 24)
 	; _GUICtrlCreateIcon($g_sLibIconPath, $eIcnBark, $x + 45, $y, 24, 24)
 	$g_hChkCleanYard = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCleanYard", "Remove Obstacles"), $x + 25, $y + 4, -1, -1)
