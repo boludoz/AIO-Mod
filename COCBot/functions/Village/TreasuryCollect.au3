@@ -20,7 +20,7 @@ Func TreasuryCollect()
 	
 	ClickAway()
 	
-	If IsMainPage() Then
+	If IsMainPage(5) Then
 	
 		ZoomOut()
 		
@@ -28,14 +28,14 @@ Func TreasuryCollect()
 		If UBound($aCollect) > 0 And not @error Then
 			$g_aiClanCastlePos[0] = $aCollect[0][1] + 5
 			$g_aiClanCastlePos[1] = $aCollect[0][2] + 21
-			ConvertFromVillagePos($g_aiClanCastlePos[0], $g_aiClanCastlePos[1])
+			; ConvertFromVillagePos($g_aiClanCastlePos[0], $g_aiClanCastlePos[1])
 		Else
 			If _Sleep($DELAYRESPOND) Then Return
 		
-			If ($g_aiClanCastlePos[0] = "-1" Or $g_aiClanCastlePos[1] = "-1") Then ;check for valid CC location
+			If ($g_aiClanCastlePos[0] = -1 Or $g_aiClanCastlePos[1] = -1) Then
 				SetLog("Need Clan Castle location for the Treasury, Please locate your Clan Castle.", $COLOR_WARNING)
-				LocateClanCastle()
-				If ($g_aiClanCastlePos[0] = "-1" Or $g_aiClanCastlePos[1] = "-1") Then ; can not assume CC was located due msgbox timeout and unattended bo, must verify
+				_LocateClanCastle()
+				If ($g_aiClanCastlePos[0] = -1 Or $g_aiClanCastlePos[1] = -1) Then
 					SetLog("Treasury skipped, bad Clan Castle location", $COLOR_ERROR)
 					If _Sleep($DELAYRESPOND) Then Return
 					Return
@@ -43,7 +43,7 @@ Func TreasuryCollect()
 			EndIf
 		EndIf
 		
-		If isInsideDiamondXY($g_aiClanCastlePos[0], $g_aiClanCastlePos[1]) Then 
+		If isInsideDiamondInt($g_aiClanCastlePos[0], $g_aiClanCastlePos[1]) Then 
 			If _Sleep($DELAYCOLLECT3) Then Return
 			BuildingClick($g_aiClanCastlePos[0], $g_aiClanCastlePos[1], "#0250") ; select CC
 			If _Sleep($DELAYTREASURY2) Then Return
@@ -58,6 +58,14 @@ Func TreasuryCollect()
 			If _Sleep($DELAYTREASURY1) Then Return
 		Else
 			SetLog("Cannot find the Treasury Button", $COLOR_ERROR)
+			_LocateClanCastle()
+			If ($g_aiClanCastlePos[0] = -1 Or $g_aiClanCastlePos[1] = -1) Then
+				SetLog("Treasury skipped, bad Clan Castle location", $COLOR_ERROR)
+				If _Sleep($DELAYRESPOND) Then Return
+				Return
+			EndIf
+			SetLog("Castle location done, Treasury will be OK next loop!", $COLOR_ERROR)
+			Return
 		EndIf
 		
 		If Not _WaitForCheckPixel($aTreasuryWindow, $g_bCapturePixel, Default, "Wait treasury window:") Then
