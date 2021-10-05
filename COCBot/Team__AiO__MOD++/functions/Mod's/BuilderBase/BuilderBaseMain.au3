@@ -287,7 +287,7 @@ Func PlayBBOnly()
 EndFunc   ;==>PlayBBOnly
 
 Func ClanGamesBB()
-	Return (($g_bChkClanGamesBBBattle Or $g_bChkClanGamesBBDes Or $g_bChkClanGamesBBTroops) And not $g_bChkClanGamesPurge)
+	Return ($g_bChkClanGamesBBBattle Or $g_bChkClanGamesBBDes Or $g_bChkClanGamesBBTroops)
 EndFunc   ;==>ClanGamesBB
 
 Func BuilderBaseReportAttack($bSetLog = True)
