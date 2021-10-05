@@ -472,6 +472,9 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "ChkClanGamesBBTroops", $g_bChkClanGamesBBTroops ? 1 : 0)
 
 	_Ini_Add("other", "ChkForceBBAttackOnClanGames", $g_bChkForceBBAttackOnClanGames ? 1 : 0)
+
+	_Ini_Add("other", "ChkOnlyBuilderBaseGC", $g_bChkOnlyBuilderBaseGC ? 1 : 0)
+
 	_Ini_Add("other", "ChkClanGamesPurgeAny", $g_bChkClanGamesPurgeAny ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesSpell", $g_bChkClanGamesSpell ? 1 : 0)
 

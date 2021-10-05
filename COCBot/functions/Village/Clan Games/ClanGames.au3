@@ -1185,6 +1185,8 @@ Func IniReadSCG($sTring, $i, $j, $PrimaryInputFile, $section, $key, $defaultvalu
 EndFunc   ;==>IniReadSCG
 
 Func ClanGamesStatus()
+	If Not $g_bChkClanGamesEnabled Then Return "False"
+	
 	If $g_bYourAccScoreCG[Int($g_iCurAccount)][2] = True Then
 		SetLog("Maximum number of points achieved in clan games.", $COLOR_SUCCESS)
 		Return "False"

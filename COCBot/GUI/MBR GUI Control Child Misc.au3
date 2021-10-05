@@ -791,15 +791,36 @@ EndFunc   ;==>chkActivateClangames
 
 ; Purging doesnt exist if we want BB challneges, because they are all attack basically... This avoids potential conflicts in code and logic if both are selected
 Func chkClanGamesBB()
+
+	Local $bBBChallenges = (GUICtrlRead($g_hChkClanGamesBBBattle) = $GUI_CHECKED Or GUICtrlRead($g_hChkClanGamesBBDes) = $GUI_CHECKED Or GUICtrlRead($g_hChkClanGamesBBTroops) = $GUI_CHECKED)
+	
+	
 	If GUICtrlRead($g_hChkClanGamesEnabled) = $GUI_CHECKED Then
-		If GUICtrlRead($g_hChkForceBBAttackOnClanGames) = $GUI_CHECKED Then
-			$g_bChkForceBBAttackOnClanGames = True
+		
+		If $bBBChallenges = True Then
+			GUICtrlSetState($g_hChkForceBBAttackOnClanGames, $GUI_ENABLE)
+			GUICtrlSetState($g_hChkOnlyBuilderBaseGC, $GUI_ENABLE)
 		Else
-			$g_bChkForceBBAttackOnClanGames = False
+			; GUICtrlSetState($g_hChkForceBBAttackOnClanGames, $GUI_DISABLE + $GUI_UNCHECKED)
+			; GUICtrlSetState($g_hChkOnlyBuilderBaseGC, $GUI_DISABLE + $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkForceBBAttackOnClanGames, $GUI_DISABLE)
+			GUICtrlSetState($g_hChkOnlyBuilderBaseGC, $GUI_DISABLE)
 		EndIf
-	ElseIf GUICtrlRead($g_hChkClanGamesEnabled) = $GUI_UNCHECKED Then
-		GUICtrlSetState($g_hChkClanGamesBBBattle, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkClanGamesBBDes, $GUI_DISABLE)
+		
+		; If GUICtrlRead($g_hChkForceBBAttackOnClanGames) = $GUI_CHECKED Then
+			; $g_bChkForceBBAttackOnClanGames = True
+		; Else
+			; $g_bChkForceBBAttackOnClanGames = False
+		; EndIf
+		
+		; If GUICtrlRead($g_hChkOnlyBuilderBaseGC) = $GUI_CHECKED Then
+			; $g_bChkOnlyBuilderBaseGC = True
+		; Else
+			; $g_bChkOnlyBuilderBaseGC = False
+		; EndIf
+	; Else
+		; $g_bChkForceBBAttackOnClanGames = False
+		; $g_bChkOnlyBuilderBaseGC = False
 	EndIf
 EndFunc
 

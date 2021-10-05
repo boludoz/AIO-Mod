@@ -24,14 +24,6 @@ EndFunc   ;==>TestrunBuilderBase
 
 Global $g_bBonusObtainedAtStart = False
 
-Func ByPassedForceBBAttackOnClanGames($bContion = True, $bReturnBy = True)
-	; I am too lazy...
-	If $g_bChkForceBBAttackOnClanGames = True And ClanGamesStatus() == "True" And $g_bIsBBevent = True Then
-		Return $bReturnBy
-	EndIf
-	Return $bContion
-EndFunc
-
 Func BuilderBase($bTestRun = False)
 	Local $bReturn = False
 	
@@ -280,11 +272,26 @@ Func GoToClanGames()
 	EndIf
 EndFunc   ;==>GoToClanGames
 
+Func SmartBuilderBase()
+	Local $bSmartBuilderBase = ($g_bChkOnlyBuilderBaseGC = True And ClanGamesStatus() == "True" And $g_bIsBBevent = True And ClanGamesBB())
+	Return $bSmartBuilderBase
+EndFunc   ;==>SmartBuilderBase
+
 Func PlayBBOnly()
 	Local $b = ($g_iCommandStop = 8) ? (True) : (False)
-	If $g_bOnlyBuilderBase = True Or $b = True Then Return True
+	If $g_bOnlyBuilderBase = True Or SmartBuilderBase() = True Or $b = True Then Return True
 	Return False
 EndFunc   ;==>PlayBBOnly
+
+Func ByPassedForceBBAttackOnClanGames($bContion = True, $bReturnBy = True)
+	; I am too lazy...
+	If $g_bChkForceBBAttackOnClanGames = True And ClanGamesStatus() == "True" And $g_bIsBBevent = True Then
+		Return $bReturnBy
+	ElseIf SmartBuilderBase() = True Then
+		Return $bReturnBy
+	EndIf
+	Return $bContion
+EndFunc
 
 Func ClanGamesBB()
 	Return ($g_bChkClanGamesBBBattle Or $g_bChkClanGamesBBDes Or $g_bChkClanGamesBBTroops)

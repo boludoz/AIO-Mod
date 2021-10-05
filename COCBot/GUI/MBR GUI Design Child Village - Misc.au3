@@ -51,7 +51,7 @@ Global $g_hChkClanGamesSpell = 0, $g_hBtnCGSpell = 0, $g_hGUI_CGSpells = 0, $g_h
 Global $g_hChkClanGamesBBBattle = 0
 Global $g_hChkClanGamesBBDes = 0, $g_hBtnCGBBDes = 0, $g_hGUI_CGBBDes = 0, $g_hBtnCGBBDesSet = 0, $g_hBtnCGBBDesRemove = 0, $g_hBtnCGBBDesClose = 0, $g_sTxtCGBBDes
 Global $g_hChkClanGamesBBTroops = 0, $g_hBtnCGBBTroop = 0, $g_hGUI_CGBBTroops = 0, $g_hBtnCGBBTroopsSet = 0, $g_hBtnCGBBTroopsRemove = 0, $g_hBtnCGBBTroopsClose = 0, $g_sTxtCGBBTroop
-Global $g_hChkForceBBAttackOnClanGames = 0, $g_hChkClanGamesPurgeAny = 0
+Global $g_hChkForceBBAttackOnClanGames = 0, $g_hChkClanGamesPurgeAny = 0, $g_hChkOnlyBuilderBaseGC = 0
 #cs
 For $h = $g_hChkClanGamesLoot To $g_hChkClanGamesStopBeforeReachAndPurge
 	GUICtrlSetState($h, $GUI_DISABLE)
@@ -460,19 +460,19 @@ Func CreateMiscClanGamesV3SubTab()
 	; GUI SubTab
 	Local $x = 15, $y = 45
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "Group_CG", "Clan Games"), $x - 10, $y - 20, $g_iSizeWGrpTab3, 245)
-	GUICtrlCreatePic($g_sLibIconPathMOD, $x + 5, $y, 94, 128, $SS_BITMAP)
+	GUICtrlCreatePic($g_sLibIconPathMOD, $x - 6, $y + 30, 76, 103, $SS_BITMAP)
 
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkClanGamesTimeRemaining", "Time Remaining"), $x - 5, $y + 135, 110, 40)
-	$g_hLblRemainTime = GUICtrlCreateLabel("0d 00h", $x + 15, $y + 135 + 15, 65, 17, $SS_CENTER)
-	GUICtrlSetFont(-1, 9.5, $FW_BOLD, $GUI_FONTNORMAL)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkClanGamesTime", "Time"), $x - 6, $y + 135, 110 - 36, 35)
+	$g_hLblRemainTime = GUICtrlCreateLabel("0d 00h", $x + 15 - 22, $y + 135 + 15, 65, 17, $SS_CENTER)
+	GUICtrlSetFont(-1, 8, $FW_BOLD, $GUI_FONTNORMAL)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkClanGamesYourScore", "Your Score"), $x - 5, $y + 158 + 20, 110, 40)
-	$g_hLblYourScore = GUICtrlCreateLabel("0/0", $x + 15, $y + 158 + 35, 65, 17, $SS_CENTER)
-	GUICtrlSetFont(-1, 9.5, $FW_BOLD, $GUI_FONTNORMAL)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkClanGamesYourScore", "Your Score"), $x - 6, $y + 158 + 20, 110 - 36, 35)
+	$g_hLblYourScore = GUICtrlCreateLabel("0/0", $x + 15 - 30, $y + 158 + 35, 65, 17, $SS_CENTER)
+	GUICtrlSetFont(-1, 8, $FW_BOLD, $GUI_FONTNORMAL)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	$y = 33
-	$x = 135
+	$x = 100
 	$g_hChkClanGamesEnabled = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkClanGamesEnabled", "Enabled"), $x, $y, -1, -1)
 	GUICtrlSetOnEvent(-1, "chkActivateClangames")
 	$g_hChkClanGames60 = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkClanGames60", "No 60min Events"), $x + 90, $y, -1, -1)
@@ -480,26 +480,26 @@ Func CreateMiscClanGamesV3SubTab()
 	$g_hChkClanGamesDebug = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkClanGamesDebug", "Debug"), $x + 215, $y, -1, -1)
 
 	$y += 40
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "Group_CG_Challenges", "Challenges"), $x - 10, $y - 15, $g_iSizeWGrpTab3 - 125, 205)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "Group_CG_Challenges", "Challenges"), $x - 10, $y - 15, 345, 205)
 	$g_hChkClanGamesLoot = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkClanGamesLoot", "Loot"), $x, $y, -1, -1)
 	$y += 23
 	$g_hChkClanGamesBattle = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkClanGamesBattle", "Battle"), $x, $y, -1, -1)
 	$y += 23
 	$g_hChkClanGamesDes = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkClanGamesDestruction", "Destruction"), $x, $y, -1, -1)
 	GUICtrlSetOnEvent(-1, "chkActivateClangames")
-	$g_hBtnCGDes = GUICtrlCreateButton("...", $x + 80, $y, 20, 20)
+	$g_hBtnCGDes = GUICtrlCreateButton("...", $x + 142, $y, 20, 20)
 	GUICtrlSetOnEvent(-1, "btnCGDes")
 	GUICtrlSetState(-1, $GUI_DISABLE)
 	$y += 23
 	$g_hChkClanGamesAirTroop = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkClanGamesAirTroop", "Air Troops"), $x, $y, -1, -1)
 	GUICtrlSetOnEvent(-1, "chkActivateClangames")
-	$g_hBtnCGAirTroop = GUICtrlCreateButton("...", $x + 70, $y, 20, 20)
+	$g_hBtnCGAirTroop = GUICtrlCreateButton("...", $x + 142, $y, 20, 20)
 	GUICtrlSetOnEvent(-1, "btnCGAirTroops")
 	GUICtrlSetState(-1, $GUI_DISABLE)
 	$y += 23
 	$g_hChkClanGamesGroundTroop = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkClanGamesGroundTroop", "Ground Troops"), $x, $y, -1, -1)
 	GUICtrlSetOnEvent(-1, "chkActivateClangames")
-	$g_hBtnCGGroundTroop = GUICtrlCreateButton("...", $x + 95, $y, 20, 20)
+	$g_hBtnCGGroundTroop = GUICtrlCreateButton("...", $x + 142, $y, 20, 20)
 	GUICtrlSetOnEvent(-1, "btnCGGroundTroops")
 	GUICtrlSetState(-1, $GUI_DISABLE)
 	$y += 23
@@ -509,38 +509,41 @@ Func CreateMiscClanGamesV3SubTab()
 	$y -= 115
 	$g_hChkClanGamesSpell = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkClanGamesSpell", "Spell"), $x, $y, -1, -1)
 	GUICtrlSetOnEvent(-1, "chkActivateClangames")
-	$g_hBtnCGSpell = GUICtrlCreateButton("...", $x + 50, $y, 20, 20)
+	$g_hBtnCGSpell = GUICtrlCreateButton("...", $x + 140, $y, 20, 20)
 	GUICtrlSetOnEvent(-1, "btnCGSpells")
 	GUICtrlSetState(-1, $GUI_DISABLE)
 	$y += 23
 	$g_hChkClanGamesBBBattle = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkClanGamesBBBattle", "BB Battle"), $x, $y, -1, -1)
-	GUICtrlSetOnEvent(-1, "chkClanGamesBB")
+	GUICtrlSetOnEvent(-1, "chkActivateClangames")
 	$y += 23
 	$g_hChkClanGamesBBDes = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkClanGamesBBDestruction", "BB Destruction"), $x, $y, -1, -1)
 	GUICtrlSetOnEvent(-1, "chkActivateClangames")
-	$g_hBtnCGBBDes = GUICtrlCreateButton("...", $x + 90, $y, 20, 20)
+	$g_hBtnCGBBDes = GUICtrlCreateButton("...", $x + 140, $y, 20, 20)
 	GUICtrlSetOnEvent(-1, "btnCGBBDes")
 	GUICtrlSetState(-1, $GUI_DISABLE)
 	$y += 23
 	$g_hChkClanGamesBBTroops = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkClanGamesBBTroop", "BB Troops"), $x, $y, -1, -1)
 	GUICtrlSetOnEvent(-1, "chkActivateClangames")
-	$g_hBtnCGBBTroop = GUICtrlCreateButton("...", $x + 75, $y, 20, 20)
+	$g_hBtnCGBBTroop = GUICtrlCreateButton("...", $x + 140, $y, 20, 20)
 	GUICtrlSetOnEvent(-1, "BtnCGBBTroops")
 	GUICtrlSetState(-1, $GUI_DISABLE)
-	$y += 23
-	$g_hChkForceBBAttackOnClanGames = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkForceBBAttackOnClanGames", "Force BB Attack"), $x, $y, -1, -1)
-	GUICtrlSetOnEvent(-1, "chkClanGamesBB")
-	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkClanGames60_Info_02", "If ClanGames Enabled : Ignore BB Trophy, BB Loot, BB Wait BM"))
-	$y += 23
+	$x = 125
+	$y += 63
 	$g_hChkClanGamesPurgeAny = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkClanGamesPurgeAny", "Purge Any Event"), $x, $y, -1, -1)
 	GUICtrlSetOnEvent(-1, "chkActivateClangames")
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkClanGames60_Info_03", "If No Event Found, Purge Any Event"))
-	$x = 135
-	$y += 23
+	$y += 17
 	$g_hChkClanGamesStopBeforeReachAndPurge = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkClanGamesStopBeforeReachAndPurge", "Stop before completing your limit and only Purge"), $x, $y, -1, -1)
+	$y += 17
+	$g_hChkForceBBAttackOnClanGames = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkForceBBAttackOnClanGames", "Force BB Attack"), $x, $y, -1, -1)
+	GUICtrlSetOnEvent(-1, "chkActivateClangames")
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkClanGames60_Info_02", "If ClanGames Enabled : Ignore BB Trophy, BB Loot, BB Wait BM"))
+	
+	$g_hChkOnlyBuilderBaseGC = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkOnlyBuilderBaseGC", "Builder base only if BB challenge"), $x + 125, $y, -1, -1)
+	GUICtrlSetOnEvent(-1, "chkActivateClangames")
+	
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
-
 
 	$x = 15
 	$y = 45

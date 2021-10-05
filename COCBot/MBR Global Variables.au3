@@ -1862,7 +1862,7 @@ Global $g_bChkClanGamesDebug = 0
 Global $g_sClanGamesScore = "N/A", $g_sClanGamesTimeRemaining = "N/A"
 
 ;ClanGames Challenges
-Global $g_bChkForceBBAttackOnClanGames = True, $g_bIsBBevent = False, $g_bChkClanGamesBBTroops = 0
+Global $g_bChkForceBBAttackOnClanGames = True, $g_bIsBBevent = False, $g_bChkClanGamesBBTroops = 0, $g_bChkOnlyBuilderBaseGC = 0
 Global $g_bChkClanGamesPurgeAny = 0
 
 ; Collect Achievement Rewards
