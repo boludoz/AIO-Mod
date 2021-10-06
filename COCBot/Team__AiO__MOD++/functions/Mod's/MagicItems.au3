@@ -44,6 +44,13 @@ Func BuilderPotionBoost($bDebug = False)
 			Local $aResult = getNameBuilding(242, 490 + $g_iBottomOffsetY)
 			If $aResult <> "" Then
 				If _Sleep($DELAYBOOSTHEROES2) Then Return
+				
+				If AlreadyBoosted() Then
+					Setlog("Already boosted.", $COLOR_INFO)
+					$iLastTimeChecked[Number($g_iCurAccount)] = 1
+					Return
+				EndIf
+
 				If BoostPotionMod("BuilderPotion", $bDebug) Then
 					$iLastTimeChecked[Number($g_iCurAccount)] = 1
 					Return True
@@ -63,6 +70,16 @@ Func BuilderPotionBoost($bDebug = False)
 	Return True
 EndFunc   ;==>BuilderPotionBoost
 
+Func AlreadyBoosted()
+	Local $aBoostBtn = findButton("BoostOne")
+	If UBound($aBoostBtn) > 1 And not @error Then
+		If UBound(_PixelSearch($aBoostBtn[0], $aBoostBtn[1], $aBoostBtn[0] + 25, $aBoostBtn[1] + 41, Hex(0xD5FE95, 6), 35, True)) > 0 And not @error Then
+			Return True
+		EndIf
+	EndIf
+	Return False
+EndFunc   ;==>AlreadyBoosted
+
 Func ResourceBoost($aPos1 = 0, $aPos2 = 0)
 	If Not $g_bChkResourcePotion Then Return
 	
@@ -79,6 +96,7 @@ Func ResourceBoost($aPos1 = 0, $aPos2 = 0)
 
 		BuildingClick($aPos1, $aPos2 + 25)
 		If _Sleep($DELAYBOOSTHEROES2) Then Return
+		
 		ForceCaptureRegion()
 		Local $aResult = BuildingInfo(242, 490 + $g_iBottomOffsetY)
 		If $aResult[0] > 1 Then
@@ -87,6 +105,13 @@ Func ResourceBoost($aPos1 = 0, $aPos2 = 0)
 			If Number($sL) > 0 Then      ; Multi Language
 				; Structure located
 				SetLog("Find " & $sN & " (Level " & $sL & ") located at " & $aPos1 & ", " & $aPos2, $COLOR_SUCCESS)
+				
+				If AlreadyBoosted() Then
+					Setlog("Already boosted.", $COLOR_INFO)
+					$iLastTimeChecked[Number($g_iCurAccount)] = 1
+					Return
+				EndIf
+				
 				If BoostPotionMod("ResourcePotion") Then
 					$iLastTimeChecked[Number($g_iCurAccount)] = 1
 					Return True
@@ -137,13 +162,15 @@ Func LabPotionBoost()
 	Return False
 EndFunc   ;==>LabPotionBoost
 
+; BoostPotionMod("LabPotion", False)
 Func BoostPotionMod($sName, $bDebug = False)
 	
-	; Slow but safe.
-	If _WaitForCheckImg($g_sImgPotionsBtn, "134, 580, 730, 675", $sName, 1500, 250) Then
-		If UBound($g_aImageSearchXML) > 0 And Not @error Then
+	Local $aFiles = _FileListToArray($g_sImgPotionsBtn, $sName & "*.*", $FLTA_FILES)
+	If UBound($aFiles) > 1 And not @error Then
+		Local $aCoords = decodeSingleCoord(findImage($aFiles[1], $g_sImgPotionsBtn & "\" & $aFiles[1], GetDiamondFromRect("134, 580, 730, 675"), 1, True))
+		If UBound($aCoords) > 1 And Not @error Then
 			Setlog("Magic Items : boosting " & $sName, $COLOR_INFO)
-			Click($g_aImageSearchXML[0][1], $g_aImageSearchXML[0][2], 1)
+			ClickP($aCoords, 1)
 			If _Sleep(1500) Then Return False
 			
 			If WaitforPixel(391, 314, 455, 500, Hex(0xE1E3CB, 6), 15, 15) Then
@@ -159,12 +186,12 @@ Func BoostPotionMod($sName, $bDebug = False)
 			Else
 				SetLog("No potion for boost: " & $sName & ".", $COLOR_INFO)
 			EndIf
-			
+		Else
+			SetLog("No potion detected : " & $sName & ".", $COLOR_INFO) ; In short, mistakes are seen by people, not a group of VIPs.
 		EndIf
 	Else
-		SetLog("No potion detected : " & $sName & ".", $COLOR_INFO) ; In short, mistakes are seen by people, not a group of VIPs.
+		SetLog("BoostPotionMod: No files found.", $COLOR_INFO)
 	EndIf
-	
 	ClickAway()
 	Return True
 EndFunc   ;==>BoostPotionMod
