@@ -219,7 +219,7 @@ Func CreateLaboratorySubTab()
 		$y += 40
 		_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnLabP, 24 + 49, $y - 5 + 45, 25, 25)
 		$g_hChkLabPotion = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkLabPotion", "Use research potion when laboratory hours is >="), 56 + 49, $y + 45, -1, -1)
-		$g_hInputLabPotion = _GUICtrlCreateInput("0", 320 - 75 + 49, $y + 64, 41, 21, $GUI_SS_DEFAULT_INPUT + $ES_CENTER + $ES_NUMBER)
+		$g_hInputLabPotion = _GUICtrlCreateInput("0", 320 - 75 + 49, $y + 64, 20, 15, BitOR($ES_CENTER, $ES_NUMBER))
 		#EndRegion - Magic Items - Team AIO Mod++
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
@@ -617,7 +617,7 @@ EndFunc   ;==>CreateWallsSubTab
 #Region - Custom Improve - Team AIO Mod++
 
 ; Magic Items - Team AIO Mod++
-Global $g_hChkLabPotion = 0, $g_hInputBuilderPotion = 0
+Global $g_hChkBuilderPotion = 0, $g_hInputBuilderPotion = 0
 Func CreateAutoUpgradeSubTab()
 
 	Local $x = 25, $y = 45
@@ -629,8 +629,8 @@ Func CreateAutoUpgradeSubTab()
 		
 		; Magic Items - Team AIO Mod++
 		_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModBuilderP, $x + 180, $y - 8, 24, 24)
-		$g_hChkLabPotion = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "ChkLabPotion", "Builder potion if busy builders >="), $x + 210, $y - 8, -1, -1)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child VIllage - AutoUpgrade", "ChkLabPotion_Info_01", "Check box to automatically use a Builder Potion (when available)."))
+		$g_hChkBuilderPotion = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "ChkBuilderPotion", "Builder potion if busy builders >="), $x + 210, $y - 8, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child VIllage - AutoUpgrade", "ChkBuilderPotion_Info_01", "Check box to automatically use a Builder Potion (when available)."))
 		$g_hInputBuilderPotion = _GUICtrlCreateInput("0", $x + 210 + 100, $y + 14, 20, 15, BitOR($ES_CENTER, $ES_NUMBER))
 			GUICtrlSetLimit(-1, 1)
 			

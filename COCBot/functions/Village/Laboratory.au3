@@ -29,12 +29,42 @@ EndFunc
 
 #Region - Magic Items - Team AIO Mod++
 Func Laboratory($bDebug = False)
-	Local $bReturn = _Laboratory($bDebug)
+	If Not $g_bAutoLabUpgradeEnable Then Return ; Lab upgrade not enabled.
 
+	If $g_iTownHallLevel < 3 Then
+		SetLog("Townhall Lvl " & $g_iTownHallLevel & " has no Lab.", $COLOR_ERROR)
+		Return
+	EndIf
+
+	If $g_aiLaboratoryPos[0] = 0 Or $g_aiLaboratoryPos[1] = 0 Then
+		SetLog("Laboratory Location unknown!", $COLOR_WARNING)
+		_LocateLab() ; Lab location unknown, so find it. ; Auto locate builds - Team AIO Mod++
+		If $g_aiLaboratoryPos[0] < 1 Or $g_aiLaboratoryPos[1] < 1 Then
+			SetLog("Problem locating Laboratory, re-locate laboratory position before proceeding", $COLOR_ERROR)
+			Return False
+		EndIf
+	EndIf
+
+	; Get updated village elixir and dark elixir values
+	VillageReport()
+
+	If Not ChkUpgradeInProgress() Then  ; see if we know about an upgrade in progress without checking the lab
+
+		;Click Laboratory
+		BuildingClickP($g_aiLaboratoryPos, "#0197") ; Team AIO Mod++
+		If _Sleep($DELAYLABORATORY3) Then Return ; Wait for window to open
+		
+		If Not FindResearchButton() Then Return False ; cant start becuase we cannot find the research button
+		
+		Local $bReturn = _Laboratory($bDebug)
+		
+	EndIf
+	
 	If $g_bChkLabPotion = True Then
 		LabPotionBoost()
 	EndIf
-
+	
+	ClickAway()
 	Return $bReturn
 EndFunc
 #EndRegion - Magic Items - Team AIO Mod++
@@ -45,32 +75,6 @@ Func _Laboratory($bDebug = False)
 	Local $sLabWindow = "99,122,760,616", $sLabTroopsSection = "115,363,750,577"
 	Local $sLabWindowDiam = GetDiamondFromRect($sLabWindow), $sLabTroopsSectionDiam = GetDiamondFromRect($sLabTroopsSection) ; easy to change search areas
 
-	If Not $g_bAutoLabUpgradeEnable Then Return ; Lab upgrade not enabled.
-
-	If $g_iTownHallLevel < 3 Then
-		SetLog("Townhall Lvl " & $g_iTownHallLevel & " has no Lab.", $COLOR_ERROR)
-		Return
-	EndIf
-
-	If $g_aiLaboratoryPos[0] = 0 Or $g_aiLaboratoryPos[1] = 0 Then
-		SetLog("Laboratory Location unknown!", $COLOR_WARNING)
-		LocateLab() ; Lab location unknown, so find it. ; Auto locate builds - Team AIO Mod++
-		If $g_aiLaboratoryPos[0] < 1 Or $g_aiLaboratoryPos[1] < 1 Then
-			SetLog("Problem locating Laboratory, re-locate laboratory position before proceeding", $COLOR_ERROR)
-			Return False
-		EndIf
-	EndIf
-
-	; Get updated village elixir and dark elixir values
-	VillageReport()
-
-	If ChkUpgradeInProgress() Then Return False ; see if we know about an upgrade in progress without checking the lab
-
-	;Click Laboratory
-	BuildingClickP($g_aiLaboratoryPos, "#0197") ; Team AIO Mod++
-	If _Sleep($DELAYLABORATORY3) Then Return ; Wait for window to open
-
-	If Not FindResearchButton() Then Return False ; cant start becuase we cannot find the research button
 
 	If ChkLabUpgradeInProgress() Then Return True ; cant start becuase we cannot find the research button
 
@@ -354,7 +358,7 @@ Func ChkUpgradeInProgress()
 EndFunc
 
 ; Find Research Button
-Func FindResearchButton()
+Func FindResearchButton($bOnLyCheck = False) ; Magic items - Team AIO Mod++
 
 	If QuickMIS("BC1", $g_sImgLabResearch, 200, 550, 670, 670, True, True) Then
 		SetLog("Laboratory is Upgrading!, Cannot start any upgrade", $COLOR_ERROR)
@@ -365,7 +369,7 @@ Func FindResearchButton()
 	Local $aResearchButton = findButton("Research", Default, 1, True)
 	If IsArray($aResearchButton) And UBound($aResearchButton, 1) = 2 Then
 		If $g_bDebugImageSave Then SaveDebugImage("LabUpgrade") ; Debug Only
-		ClickP($aResearchButton)
+		If $bOnLyCheck = True Then ClickP($aResearchButton) ; Magic items - Team AIO Mod++
 		If _Sleep($DELAYLABORATORY1) Then Return ; Wait for window to open
 		Return True
 	Else

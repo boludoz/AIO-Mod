@@ -129,36 +129,37 @@ EndFunc   ;==>ResourceBoost
 
 Func LabPotionBoost()
 	If Not $g_bChkLabPotion Then Return False
+	
+	If Not IsMainPage(5) Then Return False
 
 	Static $iLastTimeChecked[8] = [0, 0, 0, 0, 0, 0, 0, 0]
 
 	If $iLastTimeChecked[Number($g_iCurAccount)] = 0 Then
 		If _Sleep($DELAYBOOSTHEROES2) Then Return
 		
-		If $g_sLabUpgradeTime <> "" And (Number(_DateDiff("h", _NowCalc(), $g_sLabUpgradeTime)) > Int($g_iInputLabPotion)) Then
-			If BoostPotionMod("LabPotion") Then
-				$iLastTimeChecked[Number($g_iCurAccount)] = 1
-			Else
-				LocateLab() ; Lab location unknown, so find it.
-				If _Sleep($DELAYLABORATORY3) Then Return ; Wait for window to open
+		If ($g_sLabUpgradeTime <> "" And (Number(_DateDiff("h", _NowCalc(), $g_sLabUpgradeTime)) > Int($g_iInputLabPotion))) Or Int($g_iInputLabPotion) = 0 Then
 
-				If $g_aiLaboratoryPos[0] < 1 Or $g_aiLaboratoryPos[1] < 1 Then
-					SetLog("Problem locating Laboratory, re-locate laboratory position before proceeding", $COLOR_ERROR)
-					Return False
-				EndIf
-
+			If Not FindResearchButton(True) Then 
 				;Click Laboratory
 				BuildingClickP($g_aiLaboratoryPos, "#0197") ; Team AIO Mod++
 				If _Sleep($DELAYLABORATORY3) Then Return ; Wait for window to open
-				
-				If BoostPotionMod("LabPotion") Then
-					$iLastTimeChecked[Number($g_iCurAccount)] = 1
-				EndIf
-				
+			EndIf
+			
+			If Not FindResearchButton(True) Then Return False ; adieu bye bye
+		
+			If AlreadyBoosted() Then
+				Setlog("Already boosted lab.", $COLOR_INFO)
+				$iLastTimeChecked[Number($g_iCurAccount)] = 1
+				Return True
+			EndIf
+
+			If BoostPotionMod("LabPotion") Then
+				$iLastTimeChecked[Number($g_iCurAccount)] = 1
+				Return True
 			EndIf
 		EndIf
 	EndIf
-	
+
 	Return False
 EndFunc   ;==>LabPotionBoost
 
