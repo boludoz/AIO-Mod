@@ -77,7 +77,47 @@ Func getArmyTroopCapacity($bOpenArmyWindow = False, $bCloseArmyWindow = False, $
 		$g_CurrentCampUtilization = 0
 		CheckOverviewFullArmy()
 	EndIf
-
+	
+	#region - custom logic - team aio mod++
+	If $g_bTotalCampForced = False Then 
+		$g_iTotalCampSpace = _Max($tmpTotalCamp, $tmpCurCamp) ; Legend has it that the numbers are reversed from time to time.
+	EndIf
+	
+	If $g_iTotalCampSpace = 0 Then ; if Total camp size is still not set or value not same as read use forced value
+		If $g_bTotalCampForced = False Then ; check if forced camp size set in expert tab
+			Local $proposedTotalCamp = $tmpTotalCamp
+			If $g_iTotalCampSpace > $tmpTotalCamp Then $proposedTotalCamp = $g_iTotalCampSpace
+			$sInputbox = InputBox("Question", _
+					"Enter your total Army Camp capacity." & @CRLF & @CRLF & _
+					"Please check it matches with total Army Camp capacity" & @CRLF & _
+					"you see in Army Overview right now in Android Window:" & @CRLF & _
+					$g_sAndroidTitle & @CRLF & @CRLF & _
+					"(This window closes in 2 Minutes with value of " & $proposedTotalCamp & ")", $proposedTotalCamp, "", 330, 220, Default, Default, 120, $g_hFrmBot)
+			Local $error = @error
+			If $error = 1 Then
+				SetLog("Army Camp User input cancelled, still using " & $g_iTotalCampSpace, $COLOR_ACTION)
+			Else
+				If $error = 2 Then
+					; Cancelled, using proposed value
+					$g_iTotalCampSpace = 300
+				Else
+					$g_iTotalCampSpace = Number($sInputbox)
+				EndIf
+				If $error = 0 Then
+					$g_iTotalCampForcedValue = $g_iTotalCampSpace
+					$g_bTotalCampForced = True
+					SetLog("Army Camp User input = " & $g_iTotalCampSpace, $COLOR_INFO)
+				Else
+					; timeout
+					SetLog("Army Camp proposed value = " & $g_iTotalCampSpace, $COLOR_ERROR)
+				EndIf
+			EndIf
+		Else
+			$g_iTotalCampSpace = Number($g_iTotalCampForcedValue)
+		EndIf
+	EndIf
+	#endregion
+	#cs
 	If $g_iTotalCampSpace = 0 Or ($g_iTotalCampSpace <> $tmpTotalCamp) Then ; if Total camp size is still not set or value not same as read use forced value
 		If $g_bTotalCampForced = False Then ; check if forced camp size set in expert tab
 			Local $proposedTotalCamp = $tmpTotalCamp
@@ -111,6 +151,7 @@ Func getArmyTroopCapacity($bOpenArmyWindow = False, $bCloseArmyWindow = False, $
 			$g_iTotalCampSpace = Number($g_iTotalCampForcedValue)
 		EndIf
 	EndIf
+	#ce
 	If _Sleep($DELAYCHECKARMYCAMP4) Then Return
 
 	If $g_bTotalCampForced = True Then $g_iTotalCampSpace = Number($g_iTotalCampForcedValue)

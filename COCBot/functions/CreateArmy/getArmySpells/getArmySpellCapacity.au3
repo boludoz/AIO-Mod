@@ -68,6 +68,12 @@ Func getArmySpellCapacity($bOpenArmyWindow = False, $bCloseArmyWindow = False, $
 
 		If $bSetLog Then SetLog("Total Spell Factory Capacity: " & $g_iCurrentSpells & "/" & $g_iTotalSpells)
 	EndIf
+	
+	#Region - custom logic - team aio mod++
+	If $g_bTotalCampForced = False Then 
+		$g_iTotalSpellValue = _Max($g_iTotalSpells, $g_iCurrentSpells) ; Legend has it that the numbers are reversed from time to time.
+	EndIf
+	#EndRegion - custom logic - team aio mod++
 
 	If $g_iTotalSpells <> $g_iTotalSpellValue And $bSetLog Then SetLog("Warning: Total Spell Capacity is not the same as in GUI", $COLOR_WARNING)
 
