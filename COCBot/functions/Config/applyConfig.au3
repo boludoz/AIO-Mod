@@ -391,7 +391,6 @@ Func ApplyConfig_600_6($TypeReadSave)
 			; xbebenk clan games
 			GUICtrlSetState($g_hChkClanGamesEnabled, $g_bChkClanGamesEnabled ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkClanGames60, $g_bChkClanGames60 ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkClanGamesPurge, $g_bChkClanGamesPurge ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkClanGamesStopBeforeReachAndPurge, $g_bChkClanGamesStopBeforeReachAndPurge ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkClanGamesDebug, $g_bChkClanGamesDebug ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkClanGamesLoot, $g_bChkClanGamesLoot ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -401,16 +400,17 @@ Func ApplyConfig_600_6($TypeReadSave)
             GUICtrlSetState($g_hChkClanGamesBBDes, $g_bChkClanGamesBBDes ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkClanGamesBBTroops, $g_bChkClanGamesBBTroops ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkForceBBAttackOnClanGames, $g_bChkForceBBAttackOnClanGames ? $GUI_CHECKED : $GUI_UNCHECKED)
+
+			GUICtrlSetState($g_hChkOnlyBuilderBaseGC, $g_bChkOnlyBuilderBaseGC ? $GUI_CHECKED : $GUI_UNCHECKED)
+
 			GUICtrlSetState($g_hChkClanGamesPurgeAny, $g_bChkClanGamesPurgeAny ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkClanGamesSpell, $g_bChkClanGamesSpell ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkClanGamesDes, $g_bChkClanGamesDes ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkClanGamesAirTroop, $g_bChkClanGamesAirTroop ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkClanGamesGroundTroop, $g_bChkClanGamesGroundTroop ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkClanGamesMiscellaneous, $g_bChkClanGamesMiscellaneous ? $GUI_CHECKED : $GUI_UNCHECKED)
-			_GUICtrlComboBox_SetCurSel($g_hcmbPurgeLimit, $g_iPurgeMax)
 
 			chkActivateClangames()
-			chkPurgeLimits()
 
 			; Builder Base Attack
 			;GUICtrlSetState($g_hChkEnableBBAttack, $g_bChkEnableBBAttack ? $GUI_CHECKED : $GUI_UNCHECKED) ; AIO MOD++
@@ -495,7 +495,6 @@ Func ApplyConfig_600_6($TypeReadSave)
 			; xbebenk clan games
 			$g_bChkClanGamesEnabled = (GUICtrlRead($g_hChkClanGamesEnabled) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkClanGames60 = (GUICtrlRead($g_hChkClanGames60) = $GUI_CHECKED) ? 1 : 0
-			$g_bChkClanGamesPurge = (GUICtrlRead($g_hChkClanGamesPurge) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkClanGamesStopBeforeReachAndPurge = (GUICtrlRead($g_hChkClanGamesStopBeforeReachAndPurge) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkClanGamesDebug = (GUICtrlRead($g_hChkClanGamesDebug) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkClanGamesLoot = (GUICtrlRead($g_hChkClanGamesLoot) = $GUI_CHECKED) ? 1 : 0
@@ -505,13 +504,15 @@ Func ApplyConfig_600_6($TypeReadSave)
             $g_bChkClanGamesBBDes = (GUICtrlRead($g_hChkClanGamesBBDes) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkClanGamesBBTroops = (GUICtrlRead($g_hChkClanGamesBBTroops) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkForceBBAttackOnClanGames = (GUICtrlRead($g_hChkForceBBAttackOnClanGames) = $GUI_CHECKED) ? 1 : 0
+			
+			$g_bChkOnlyBuilderBaseGC = (GUICtrlRead($g_hChkOnlyBuilderBaseGC) = $GUI_CHECKED) ? 1 : 0
+
 			$g_bChkClanGamesPurgeAny = (GUICtrlRead($g_hChkClanGamesPurgeAny) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkClanGamesSpell = (GUICtrlRead($g_hChkClanGamesSpell) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkClanGamesDes = (GUICtrlRead($g_hChkClanGamesDes) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkClanGamesAirTroop = (GUICtrlRead($g_hChkClanGamesAirTroop) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkClanGamesGroundTroop = (GUICtrlRead($g_hChkClanGamesGroundTroop) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkClanGamesMiscellaneous = (GUICtrlRead($g_hChkClanGamesMiscellaneous) = $GUI_CHECKED) ? 1 : 0
-			$g_iPurgeMax = _GUICtrlComboBox_GetCurSel($g_hcmbPurgeLimit)
 
 			; Builder Base Attack
 			; $g_bChkEnableBBAttack = (GUICtrlRead($g_hChkEnableBBAttack) = $GUI_CHECKED) ; AIO MOD++
@@ -640,7 +641,7 @@ Func ApplyConfig_600_11($TypeReadSave)
 
 			; Request from chat - Team AIO Mod++
 			$g_bChkRequestFromChat = (GUICtrlRead($g_hChkRequestFromChat) = $GUI_CHECKED)
-			
+
 			; Request Early - Team AIO Mod++
 			$g_bChkReqCCFirst = (GUICtrlRead($g_hChkReqCCFirst) = $GUI_CHECKED)
 
@@ -1887,7 +1888,7 @@ Func ApplyConfig_600_29_LB_Standard($TypeReadSave)
 			GUICtrlSetState($g_hChkAttackNearGoldMineAB, $g_abAttackStdSmartNearCollectors[$LB][0] ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkAttackNearElixirCollectorAB, $g_abAttackStdSmartNearCollectors[$LB][1] ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkAttackNearDarkElixirDrillAB, $g_abAttackStdSmartNearCollectors[$LB][2] ? $GUI_CHECKED : $GUI_UNCHECKED)
-			
+
 			; Custom smart attack - Team AIO Mod++
 			GUICtrlSetState($g_hChkAttackStdSmartDropSpellsAB, $g_abAttackStdSmartDropSpells[$LB] ? $GUI_CHECKED : $GUI_UNCHECKED)
 		Case "Save"
@@ -1898,7 +1899,7 @@ Func ApplyConfig_600_29_LB_Standard($TypeReadSave)
 			$g_abAttackStdSmartNearCollectors[$LB][0] = (GUICtrlRead($g_hChkAttackNearGoldMineAB) = $GUI_CHECKED)
 			$g_abAttackStdSmartNearCollectors[$LB][1] = (GUICtrlRead($g_hChkAttackNearElixirCollectorAB) = $GUI_CHECKED)
 			$g_abAttackStdSmartNearCollectors[$LB][2] = (GUICtrlRead($g_hChkAttackNearDarkElixirDrillAB) = $GUI_CHECKED)
-			
+
 			; Custom smart attack - Team AIO Mod++
 			$g_abAttackStdSmartDropSpells[$LB] = (GUICtrlRead($g_hChkAttackStdSmartDropSpellsAB) = $GUI_CHECKED)
 	EndSwitch

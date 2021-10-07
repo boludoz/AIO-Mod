@@ -30,7 +30,7 @@ Func saveConfig()
 	SetDebugLog("saveConfig(), call number " & $iSaveConfigCount)
 
 	SaveProfileConfig()
-	
+
 	SaveWeakBaseStats()
 	;SetDebugLog("saveWeakBaseStats(), time = " & Round(__TimerDiff($t)/1000, 2) & " sec")
 
@@ -39,7 +39,7 @@ Func saveConfig()
 
 	SaveRegularConfig()
 	;SetDebugLog("SaveRegularConfig(), time = " & Round(__TimerDiff($t)/1000, 2) & " sec")
-	
+
 	SaveClanGamesConfig()
 	;SetDebugLog("SaveClanGamesConfig(), time = " & Round(__TimerDiff($t)/1000, 2) & " sec")
 
@@ -148,9 +148,9 @@ Func SaveBuildingConfig()
         $string &= $g_aCmbSLabUpgradeOrder[$i] & "|"
     Next
     _Ini_Add("upgrade", "Supgradeorderlist", $string)
-    
+
     #EndRegion - Custom lab - Team AIO Mod++
-	
+
 	; <><><><> Village / Upgrade - Buildings <><><><>
 	ApplyConfig_600_16(GetApplyConfigSaveAction())
 	For $iz = 0 To UBound($g_avBuildingUpgrades, 1) - 1
@@ -166,7 +166,7 @@ Func SaveBuildingConfig()
 		_Ini_Add("upgrade", "upgraderepeat" & $iz, $g_abUpgradeRepeatEnable[$iz] ? 1 : 0)
 		_Ini_Add("upgrade", "upgradestatusicon" & $iz, $g_aiPicUpgradeStatus[$iz])
 	Next
-	
+
 	#Region - Dates - Team AIO Mod++
 	_Ini_Add("Dates", "DateAndTimeMagicItems", $g_sDateAndTimeMagicItems)
 	_Ini_Add("Dates", "DateAndTimeHeroWUE", $g_sDateAndTimeHeroWUE)
@@ -178,7 +178,7 @@ Func SaveBuildingConfig()
 #ce
 	_Ini_Add("Dates", "BuilderBaseTimer", $g_sDateBuilderBase)
 	#EndRegion - Dates - Team AIO Mod++
-	
+
 
 	_Ini_Save($g_sProfileBuildingPath)
 EndFunc   ;==>SaveBuildingConfig
@@ -362,7 +362,7 @@ Func SaveConfig_Android()
 	_Ini_Add("android", "shared_prefs.update", ($g_bUpdateSharedPrefs ? "1" : "0"))
 	_Ini_Add("android", "process.affinity.mask", $g_iAndroidProcessAffinityMask)
 	_Ini_Add("android", "click.additional.delay", $g_iAndroidControlClickAdditionalDelay)
-	
+
 	; Custom sleep - Team AIO Mod++ (inspired in Samkie)
 	_Ini_Add("android", "AndroidSleep", $g_iInputAndroidSleep)
 
@@ -423,7 +423,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "minCollectdark", $g_iTxtCollectDark)
 	_Ini_Add("other", "chkTombstones", $g_bChkTombstones ? 1 : 0)
     _Ini_Add("other", "chkCleanYard", $g_bChkCleanYard ? 1 : 0)
-	
+
     _Ini_Add("other", "ChkCollectAchievements", $g_bChkCollectAchievements ? 1 : 0)
 	_Ini_Add("other", "ChkCollectFreeMagicItems", $g_bChkCollectFreeMagicItems ? 1 : 0) ; AIO MOD++
 	_Ini_Add("other", "ChkCollectRewards", $g_bChkCollectRewards ? 1 : 0)
@@ -450,9 +450,9 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreElixir", $g_iChkBBSuggestedUpgradesIgnoreElixir)
 ;~ 	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreHall", $g_iChkBBSuggestedUpgradesIgnoreHall) ; AIO MOD++
 ;~ 	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreWall", $g_iChkBBSuggestedUpgradesIgnoreWall) ; AIO MOD++
-	
+
 	_Ini_Add("other", "ChkPlacingNewBuildings", $g_iChkPlacingNewBuildings)
-	
+
 	; xbebenk clan games
 	_Ini_Add("other", "ChkClanGamesAir", $g_bChkClanGamesAir ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesGround", $g_bChkClanGamesGround ? 1 : 0)
@@ -460,7 +460,6 @@ Func SaveConfig_600_6()
 
 	_Ini_Add("other", "ChkClanGamesEnabled", $g_bChkClanGamesEnabled ? 1 : 0)
 	_Ini_Add("other", "ChkClanGames60", $g_bChkClanGames60 ? 1 : 0)
-	_Ini_Add("other", "ChkClanGamesPurge", $g_bChkClanGamesPurge ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesStopBeforeReachAndPurge", $g_bChkClanGamesStopBeforeReachAndPurge ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesDebug", $g_bChkClanGamesDebug ? 1 : 0)
 	;xbenk
@@ -469,20 +468,22 @@ Func SaveConfig_600_6()
 
     _Ini_Add("other", "ChkClanGamesBBBattle", $g_bChkClanGamesBBBattle ? 1 : 0)
     _Ini_Add("other", "ChkClanGamesBBDestruction", $g_bChkClanGamesBBDes ? 1 : 0)
-	
+
 	_Ini_Add("other", "ChkClanGamesBBTroops", $g_bChkClanGamesBBTroops ? 1 : 0)
-	
+
 	_Ini_Add("other", "ChkForceBBAttackOnClanGames", $g_bChkForceBBAttackOnClanGames ? 1 : 0)
+
+	_Ini_Add("other", "ChkOnlyBuilderBaseGC", $g_bChkOnlyBuilderBaseGC ? 1 : 0)
+
 	_Ini_Add("other", "ChkClanGamesPurgeAny", $g_bChkClanGamesPurgeAny ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesSpell", $g_bChkClanGamesSpell ? 1 : 0)
 
 	_Ini_Add("other", "ChkClanGamesDestruction", $g_bChkClanGamesDes ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesAirTroop", $g_bChkClanGamesAirTroop ? 1 : 0)
-	
+
 	_Ini_Add("other", "ChkClanGamesGroundTroop ", $g_bChkClanGamesGroundTroop ? 1 : 0)
-	
+
 	_Ini_Add("other", "ChkClanGamesMiscellaneous", $g_bChkClanGamesMiscellaneous ? 1 : 0)
-	_Ini_Add("other", "PurgeMax", $g_iPurgeMax)
 
 	; Builder Base Attack
 	;_Ini_Add("other", "ChkEnableBBAttack", $g_bChkEnableBBAttack) ; AIO MOD++
@@ -498,7 +499,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "bBBDropOrderSet", $g_bBBDropOrderSet)
 	#Region - Custom BB Army - Team AIO Mod++
 	For $i = 0 To $g_iBBTroopCount - 1
-		_Ini_Add("other", "sBBDropOrderSet" & $i, $g_aiCmbBBDropOrder[$i]) 
+		_Ini_Add("other", "sBBDropOrderSet" & $i, $g_aiCmbBBDropOrder[$i])
 	Next
 	#EndRegion - Custom BB Army - Team AIO Mod++
 
@@ -548,7 +549,7 @@ Func SaveConfig_600_11()
     _Ini_Add("donate", "SaveCCTroopForDefense", $g_bSaveCCTroopForDefense ? 1 : 0)
     _Ini_Add("donate", "ChkRemoveCCForDefense", $g_bChkRemoveCCForDefense ? 1 : 0)
 
- 	; Type Once - ChacalGyn 
+ 	; Type Once - ChacalGyn
 	_Ini_Add("request", "RequestTypeOnce", $g_bChkRequestTypeOnceEnable ? 1 : 0)
 
  	; Request from chat - Team AIO Mod++
@@ -707,11 +708,11 @@ Func SaveConfig_600_18()
 	_Ini_Add("notify", "TGEnabled", $g_bNotifyTGEnable ? 1 : 0)
 	_Ini_Add("notify", "TGToken", $g_sNotifyTGToken)
 	_Ini_Add("notify", "TGUserID", $g_sTGChatID)
-	
+
 	;Remote Control
 	_Ini_Add("notify", "PBRemote", $g_bNotifyRemoteEnable ? 1 : 0)
 	_Ini_Add("notify", "Origin", $g_sNotifyOrigin)
-	
+
 	;Alerts
 	_Ini_Add("notify", "AlertPBVMFound", $g_bNotifyAlertMatchFound ? 1 : 0)
 	_Ini_Add("notify", "AlertPBLastRaid", $g_bNotifyAlerLastRaidIMG ? 1 : 0)
@@ -774,7 +775,7 @@ Func SaveConfig_600_19()
 		$string &= ($g_abNotifyScheduleWeekDays[$i] ? "1" : "0") & "|"
 	Next
 	_Ini_Add("notify", "NotifyWeekDays", $string)
-	
+
 	#Region - Discord - Team AIO Mod++
 	_Ini_Add("notifyDS", "NotifyHoursEnable", $g_bNotifyScheduleHoursEnableDS ? 1 : 0)
 	$string = ""
@@ -1339,12 +1340,12 @@ Func SaveConfig_600_52_2()
 		_Ini_Add("Spells", $g_asSpellShortNames[$s], $g_aiArmyCustomSpells[$s])
 		_Ini_Add("LevelSpell", $g_asSpellShortNames[$s], $g_aiTrainArmySpellLevel[$s])
 	Next
-	
+
 	For $s = 0 To $eSiegeMachineCount - 1
 		_Ini_Add("Siege", $g_asSiegeMachineShortNames[$s], $g_aiArmyCompSiegeMachines[$s])
 		_Ini_Add("LevelSiege", $g_asSiegeMachineShortNames[$s], $g_aiTrainArmySiegeMachineLevel[$s])
 	Next
-	
+
 	; full & forced Total Camp values
 	_Ini_Add("troop", "fulltroop", $g_iTrainArmyFullTroopPct)
 	_Ini_Add("other", "ChkTotalCampForced", $g_bTotalCampForced ? 1 : 0)
@@ -1361,18 +1362,18 @@ Func SaveConfig_600_52_2()
 	_Ini_Add("troop", "ChkPreTrainTroopsPercent", $g_bChkPreTrainTroopsPercent ? 1 : 0)
 	_Ini_Add("troop", "InpPreTrainTroopsPercent", $g_iInpPreTrainTroopsPercent)
 	_Ini_Add("troop", "CmbTroopSetting", $g_iCmbTroopSetting)
-	
+
 	For $i = 0 To 2
 		For $t = 0 To $eTroopCount - 1
 			_Ini_Add("Cmbtroop" & $i, $g_asTroopShortNames[$t], $g_iCustomArmysMainVillage[$t][$i])
 			; _Ini_Add("LevelTroop", $g_asTroopShortNames[$t], $g_aiTrainArmyTroopLevel[$t])
 		Next
-		
+
 		For $s = 0 To $eSpellCount - 1
 			_Ini_Add("CmbSpells" & $i, $g_asSpellShortNames[$s], $g_iCustomBrewMainVillage[$s][$i])
 			; _Ini_Add("LevelSpell", $g_asSpellShortNames[$s], $g_aiTrainArmySpellLevel[$s])
 		Next
-		
+
 		For $s = 0 To $eSiegeMachineCount - 1
 			_Ini_Add("CmbSiege" & $i, $g_asSiegeMachineShortNames[$s], $g_iCustomSiegesMainVillage[$s][$i])
 			; _Ini_Add("LevelSiege", $g_asSiegeMachineShortNames[$s], $g_aiTrainArmySiegeMachineLevel[$s])

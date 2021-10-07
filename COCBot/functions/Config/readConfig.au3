@@ -491,7 +491,6 @@ Func ReadConfig_600_6()
 
 	IniReadS($g_bChkClanGamesEnabled, $g_sProfileConfigPath, "other", "ChkClanGamesEnabled", False, "Bool")
 	IniReadS($g_bChkClanGames60, $g_sProfileConfigPath, "other", "ChkClanGames60", False, "Bool")
-	IniReadS($g_bChkClanGamesPurge, $g_sProfileConfigPath, "other", "ChkClanGamesPurge", False, "Bool")
 	IniReadS($g_bChkClanGamesStopBeforeReachAndPurge, $g_sProfileConfigPath, "other", "ChkClanGamesStopBeforeReachAndPurge", False, "Bool")
 	IniReadS($g_bChkClanGamesDebug, $g_sProfileConfigPath, "other", "ChkClanGamesDebug", False, "Bool")
 	;xbenk
@@ -502,6 +501,9 @@ Func ReadConfig_600_6()
     IniReadS($g_bChkClanGamesBBDes, $g_sProfileConfigPath, "other", "ChkClanGamesBBDestruction", False, "Bool")
 	IniReadS($g_bChkClanGamesBBTroops, $g_sProfileConfigPath, "other", "ChkClanGamesBBTroops", False, "Bool")
 	IniReadS($g_bChkForceBBAttackOnClanGames, $g_sProfileConfigPath, "other", "ChkForceBBAttackOnClanGames", False, "Bool")
+	
+	IniReadS($g_bChkOnlyBuilderBaseGC, $g_sProfileConfigPath, "other", "ChkOnlyBuilderBaseGC", False, "Bool")
+
 	IniReadS($g_bChkClanGamesPurgeAny, $g_sProfileConfigPath, "other", "ChkClanGamesPurgeAny", True, "Bool")
 	IniReadS($g_bChkClanGamesSpell, $g_sProfileConfigPath, "other", "ChkClanGamesSpell", False, "Bool")
 	IniReadS($g_bChkClanGamesDes, $g_sProfileConfigPath, "other", "ChkClanGamesDestruction", False, "Bool")
@@ -510,7 +512,6 @@ Func ReadConfig_600_6()
 	IniReadS($g_bChkClanGamesGroundTroop, $g_sProfileConfigPath, "other", "ChkClanGamesGroundTroop", False, "Bool")
 	;xbenk
 	IniReadS($g_bChkClanGamesMiscellaneous, $g_sProfileConfigPath, "other", "ChkClanGamesMiscellaneous", False, "Bool")
-	IniReadS($g_iPurgeMax, $g_sProfileConfigPath, "other", "PurgeMax", 5, "int")
 
 	; Builder Base Attack
 	;IniReadS($g_bChkEnableBBAttack, $g_sProfileConfigPath, "other", "ChkEnableBBAttack", False, "Bool") ; AIO MOD++
@@ -1608,7 +1609,7 @@ Func ReadConfig_600_52_2()
 	#Region - Custom train - Team AIO Mod++
 	$g_bPreciseBrew = (IniRead($g_sProfileConfigPath, "troop", "PreciseBrew", "0") = "1")
 	$g_bForcePreBrewSpells = (IniRead($g_sProfileConfigPath, "troop", "ForcePreBrewSpells", "0") = "1")
-	
+
 	IniReadS($g_bChkPreTrainTroopsPercent, $g_sProfileConfigPath, "troop", "ChkPreTrainTroopsPercent", True, "Bool")
 	IniReadS($g_iInpPreTrainTroopsPercent, $g_sProfileConfigPath, "troop", "InpPreTrainTroopsPercent", 95, "Int")
 	IniReadS($g_iCmbTroopSetting, $g_sProfileConfigPath, "troop", "CmbTroopSetting", $g_iCmbTroopSetting, "Int")

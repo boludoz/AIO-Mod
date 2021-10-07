@@ -1857,15 +1857,12 @@ Global $g_bChkClanGamesDes = 0
 Global $g_bChkClanGamesAirTroop = 0
 Global $g_bChkClanGamesGroundTroop = 0
 Global $g_bChkClanGamesMiscellaneous = 0
-Global $g_bChkClanGamesPurge = 0
 Global $g_bChkClanGamesStopBeforeReachAndPurge = 0
 Global $g_bChkClanGamesDebug = 0
-Global $g_iPurgeJobCount[8] = [0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_iPurgeMax = 5 ; [0] is unlimited , 1-10
 Global $g_sClanGamesScore = "N/A", $g_sClanGamesTimeRemaining = "N/A"
 
 ;ClanGames Challenges
-Global $g_bChkForceBBAttackOnClanGames = True, $g_bIsBBevent = False, $g_bChkClanGamesBBTroops = 0
+Global $g_bChkForceBBAttackOnClanGames = True, $g_bIsBBevent = False, $g_bChkClanGamesBBTroops = 0, $g_bChkOnlyBuilderBaseGC = 0
 Global $g_bChkClanGamesPurgeAny = 0
 
 ; Collect Achievement Rewards

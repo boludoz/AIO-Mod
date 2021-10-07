@@ -73,11 +73,9 @@ Func ClanGamesChatOnly()
 	
 	If $g_bChatClan = True And $g_bChkHarangueCG = True And $g_bIsCaravanOn == "True" Then
 		Return True
-	ElseIf $g_bChatClan = True And $g_bChkHarangueCG = False Then
-		Return True
 	EndIf
 	
-	Return False
+	Return $g_bChatClan
 EndFunc   ;==>ClanGamesChatOnly
 
 Func ChatActions() ; run the chatbot
