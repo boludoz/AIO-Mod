@@ -15,7 +15,7 @@
 
 Func AddIdleTime()
 	; Avoid Locate - Team AIO Mod++ 
-	If $g_bChkBuildingsLocate Or $g_bChkOnlyFarm Then Return 
+	If $g_bChkBuildingsLocate Or $g_bChkOnlyFarm Then Return ; Va con prisa !
 	If Not $g_bTrainAddRandomDelayEnable Then Return
 
 	Local $iTimeToWait = Random($g_iTrainAddRandomDelayMin, $g_iTrainAddRandomDelayMax, 1)

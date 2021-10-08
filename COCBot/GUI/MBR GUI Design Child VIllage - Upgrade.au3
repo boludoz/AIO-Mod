@@ -220,6 +220,7 @@ Func CreateLaboratorySubTab()
 		_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnLabP, 24 + 49, $y - 5 + 45, 25, 25)
 		$g_hChkLabPotion = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkLabPotion", "Use research potion when laboratory hours is >="), 56 + 49, $y + 45, -1, -1)
 		$g_hInputLabPotion = _GUICtrlCreateInput("0", 320 - 75 + 49, $y + 64, 20, 15, BitOR($ES_CENTER, $ES_NUMBER))
+			GUICtrlSetLimit(-1, 2)
 		#EndRegion - Magic Items - Team AIO Mod++
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
