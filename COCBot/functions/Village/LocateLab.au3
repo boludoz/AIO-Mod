@@ -132,7 +132,7 @@ EndFunc
 Func DetectedLabs()
 	ZoomOut()
 	
-	Local $aResult = _ImageSearchXML($g_sImgLocationLabs, 0, "ECD")
+	Local $aResult = _ImageSearchXML($g_sImgLocationLabs, 0, "ECD", True, False, True, 25)
 	If UBound($aResult) < 1 Or @error Then Return False
 	
 	$aResult = CenterSort($aResult)
@@ -168,7 +168,7 @@ Func DetectedLabs()
 				$g_aiLaboratoryPos[0] = $aResult[$i][0] + 10
 				$g_aiLaboratoryPos[1] = $aResult[$i][1] + 10
 				ClickAway()
-				If _Sleep(1000) Then Return
+				If _Sleep(200) Then Return
 				IniWrite($g_sProfileBuildingPath, "upgrade", "LabPosX", $g_aiLaboratoryPos[0])
 				IniWrite($g_sProfileBuildingPath, "upgrade", "LabPosY", $g_aiLaboratoryPos[1])
 				SetLog("Laboratory level " & $sInfo[2] & " Position Saved!", $COLOR_SUCCESS)
