@@ -12,33 +12,34 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func LocateLab($bDummy = True)
+Func LocateLab($bForceOff = True)
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
 	AndroidShield("LocateLab 1")
-	Local $result = _LocateLab()
+	Local $result = _LocateLab($bForceOff)
 	$g_bRunState = $wasRunState
 	AndroidShield("LocateLab 2")
 	Return $result
 EndFunc   ;==>LocateLab
 
-Func _LocateLab()
+Func _LocateLab($bForceOff = True)
 	Local $sText, $MsgBox, $iStupid = 0, $iSilly = 0, $sErrorText = ""
 	If Int($g_iTownHallLevel) < 3 Then Return
 
 	SetLog("Locating Laboratory...", $COLOR_INFO)
-	ZoomOut()
 	Collect(False, False)
 	$g_aiLaboratoryPos[0] = -1
 	$g_aiLaboratoryPos[1] = -1
 	If DetectedLabs() Then Return True
+	If $bForceOff = True And ($g_bChkBuildingsLocate Or $g_bChkOnlyFarm) Then Return False ; Va con prisa !
+
 	While 1
 		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Tahoma", 600)
 		$sText = $sErrorText & @CRLF & GetTranslatedFileIni("MBR Popups", "Func_Locate_Laboratory_01", "Click OK then click on your Laboratory building") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Locate_building_01", -1) & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Locate_building_02", -1) & @CRLF
 		$MsgBox = _ExtMsgBox(0, GetTranslatedFileIni("MBR Popups", "Ok_Cancel", "Ok|Cancel"), GetTranslatedFileIni("MBR Popups", "Func_Locate_Laboratory_02", "Locate Laboratory at ") & $g_sAndroidTitle, $sText, 15)
 		If $MsgBox = 1 Then
 			WinGetAndroidHandle()
-			ClickP($aAway, 1, 0, "#0379")
+			ClickAway()
 			Local $aPos = FindPos()
 			$g_aiLaboratoryPos[0] = Int($aPos[0])
 			$g_aiLaboratoryPos[1] = Int($aPos[1])
@@ -60,19 +61,19 @@ Func _LocateLab()
 						ContinueLoop
 					Case $iStupid > 4
 						SetLog(" Operator Error - Bad Laboratory Location.", $COLOR_ERROR)
-						ClickP($aAway, 1, 0, "#0380")
+						ClickAway(True)
 						Return False
 					Case Else
 						SetLog(" Operator Error - Bad Laboratory Location.", $COLOR_ERROR)
 						$g_aiLaboratoryPos[0] = -1
 						$g_aiLaboratoryPos[1] = -1
-						ClickP($aAway, 1, 0, "#0381")
+						ClickAway(True)
 						Return False
 				EndSelect
 			EndIf
 		Else
 			SetLog("Locate Laboratory Cancelled", $COLOR_INFO)
-			ClickP($aAway, 1, 0, "#0382")
+			ClickAway()
 			Return
 		EndIf
 		Local $sLabInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY); 860x780
@@ -97,7 +98,7 @@ Func _LocateLab()
 						SetLog("Quit joking, Click the Army Camp, or restart bot and try again", $COLOR_ERROR)
 						$g_aiLaboratoryPos[0] = -1
 						$g_aiLaboratoryPos[1] = -1
-						ClickP($aAway, 1, 0, "#0383")
+						ClickAway(True)
 						Return False
 				EndSelect
 			EndIf
@@ -105,53 +106,79 @@ Func _LocateLab()
 			SetLog(" Operator Error - Bad Laboratory Location: " & "(" & $g_aiLaboratoryPos[0] & "," & $g_aiLaboratoryPos[1] & ")", $COLOR_ERROR)
 			$g_aiLaboratoryPos[0] = -1
 			$g_aiLaboratoryPos[1] = -1
-			ClickP($aAway, 1, 0, "#0384")
+			ClickAway()
 			Return False
 		EndIf
 		SetLog("Locate Laboratory Success: " & "(" & $g_aiLaboratoryPos[0] & "," & $g_aiLaboratoryPos[1] & ")", $COLOR_SUCCESS)
 		ExitLoop
 	WEnd
-	ClickP($aAway, 2, 0, "#0207")
+	ClickAway()
 EndFunc   ;==>_LocateLab
 
-Func DetectedLabs()
-	Local $aResult = QuickMIS("NxCx", $g_sImgLocationLabs, 100, 55, 775, 624, True, False)
-	If $aResult = 0 Then Return False
+Func CenterSort($aResult)
+	Local $iDis = -1
+	Local $iVillageCenter[2] = [$DiamondMiddleX, $DiamondMiddleY]
+	Local $aMostly[0][3]
 	For $i = 0 To UBound($aResult) - 1
-		Local $N17070 = $aResult[$i][0]
-		Local $aAllCoords = $aResult[$i][1]
-		SetDebugLog("How Many Coordinates? " & UBound($aAllCoords))
-		Local $aFinalCoords = $aAllCoords[0]
-		Local $aPOSITION[2] = [$aFinalCoords[0] + 10 + 100, $aFinalCoords[1] + 10 + 55]
-		Local $level = $aResult[$i][2]
-		FClick($aPOSITION[0], $aPOSITION[1])
-		SetDebugLog($aPOSITION[0] & "x" & $aPOSITION[1])
-		SetLog("Laboratory Lv" & $level & " detected...", $COLOR_SUCCESS)
-		If _Sleep(500) Then Return False
-		Local $sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY); 860x780
-		If @error Then SetError(0, 0, 0)
-		Local $CountGetInfo = 0
-		While IsArray($sInfo) = False
-			$sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY); 860x780
+		ReDim $aMostly[UBound($aMostly) + 1][4]
+		$aMostly[UBound($aMostly) - 1][0] = Int($aResult[$i][1])
+		$aMostly[UBound($aMostly) - 1][1] = Int($aResult[$i][2])
+		$aMostly[UBound($aMostly) - 1][2] = Int(Pixel_Distance($iVillageCenter[0], $iVillageCenter[1], $aResult[$i][1], $aResult[$i][2]))
+	Next
+	_ArraySort($aMostly, 0, 0, 0, 2)
+	Return $aMostly
+EndFunc
+
+Func DetectedLabs()
+	ZoomOut()
+	
+	Local $aResult = _ImageSearchXML($g_sImgLocationLabs, 0, "ECD", True, False, True, 25)
+	If UBound($aResult) < 1 Or @error Then Return False
+	
+	$aResult = CenterSort($aResult)
+	
+	Local $bStatus = $g_bUseRandomClick	
+	Local $aClick[2] = [0, 0]
+	For $i = 0 To UBound($aResult) - 1
+		If $i > 0 Then CheckMainScreen(False)
+		
+		$aClick[0] = Int($aResult[$i][0]) + 10
+		$aClick[1] = Int($aResult[$i][1]) + 10
+
+		If isInsideDiamondInt($aClick[0], $aClick[1])  Then
+			$g_bUseRandomClick = False
+			ClickP($aClick, 1)
+			If _Sleep(500) Then Return False
+			$g_bUseRandomClick = $bStatus
+
+			Local $sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY); 860x780
 			If @error Then SetError(0, 0, 0)
-			If _Sleep(100) Then Return False
-			$CountGetInfo += 1
-			If $CountGetInfo = 50 Then Return False
-		WEnd
-		SetDebugLog($sInfo[1] & " " & $sInfo[2])
-		If @error Then Return SetError(0, 0, 0)
-		If StringInStr($sInfo[1], "Lab") > 0 Then
-			$g_aiLaboratoryPos[0] = $aPOSITION[0]
-			$g_aiLaboratoryPos[1] = $aPOSITION[1]
-			ClickP($aAway, 1, 200, "#0327")
-			If _Sleep(1000) Then Return
-			IniWrite($g_sProfileBuildingPath, "upgrade", "LabPosX", $g_aiClanCastlePos[0])
-			IniWrite($g_sProfileBuildingPath, "upgrade", "LabPosY", $g_aiClanCastlePos[1])
-			SetLog($N17070 & " Lv" & $level & " Position Saved!", $COLOR_SUCCESS)
-			Return True
-		Else
-			SetDebugLog("Lab incorrect position!", $COLOR_ERROR)
+			Local $iCountGetInfo = 0
+			While IsArray($sInfo) = False
+				$sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY); 860x780
+				If @error Then SetError(0, 0, 0)
+				If _Sleep(100) Then Return False
+				$iCountGetInfo += 1
+				If $iCountGetInfo = 15 Then Return False
+			WEnd
+			SetDebugLog($sInfo[1] & " " & $sInfo[2])
+			If @error Then Return SetError(0, 0, 0)
+
+			If StringInStr($sInfo[1], "Lab") > 0 Then
+				$g_aiLaboratoryPos[0] = $aResult[$i][0] + 10
+				$g_aiLaboratoryPos[1] = $aResult[$i][1] + 10
+				ClickAway()
+				If _Sleep(200) Then Return
+				IniWrite($g_sProfileBuildingPath, "upgrade", "LabPosX", $g_aiLaboratoryPos[0])
+				IniWrite($g_sProfileBuildingPath, "upgrade", "LabPosY", $g_aiLaboratoryPos[1])
+				SetLog("Laboratory level " & $sInfo[2] & " Position Saved!", $COLOR_SUCCESS)
+				Return True
+			Else
+				SetDebugLog("Lab incorrect position!", $COLOR_ERROR)
+			EndIf
+
 		EndIf
 	Next
+	
 	Return False
 EndFunc   ;==>DetectedLabs

@@ -1256,7 +1256,7 @@ Func _RunFunction($sAction)
 				$bNoProceed = True
 			EndIf
 		Case "Laboratory"
-			If Not $g_bAutoLabUpgradeEnable Then $bNoProceed = True
+			If Not $g_bAutoLabUpgradeEnable And Not $g_bChkLabPotion Then $bNoProceed = True
 		Case "UpgradeHeroes"
 			If Not $g_bUpgradeKingEnable And Not $g_bUpgradeQueenEnable And Not $g_bUpgradeWardenEnable And Not $g_bUpgradeChampionEnable Then $bNoProceed = True
 		Case "UpgradeBuilding"
@@ -1388,6 +1388,7 @@ Func __RunFunction($sAction)
 			#EndRegion - Request Early - Team AIO Mod++
 		Case "Laboratory"
 			Laboratory()
+			checkMainScreen(False) ; xbebenk
 		Case "UpgradeHeroes"
 			UpgradeHeroes()
 		Case "UpgradeBuilding"

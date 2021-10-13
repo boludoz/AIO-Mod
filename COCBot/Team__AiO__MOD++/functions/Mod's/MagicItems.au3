@@ -127,7 +127,7 @@ Func ResourceBoost($aPos1 = 0, $aPos2 = 0)
 	Return False
 EndFunc   ;==>ResourceBoost
 
-Func LabPotionBoost()
+Func LabPotionBoost($bDebug = False)
 	If Not $g_bChkLabPotion Then Return False
 	
 	If Not IsMainPage(5) Then Return False
@@ -137,7 +137,7 @@ Func LabPotionBoost()
 	If $iLastTimeChecked[Number($g_iCurAccount)] = 0 Then
 		If _Sleep($DELAYBOOSTHEROES2) Then Return
 		
-		If ($g_sLabUpgradeTime <> "" And (Number(_DateDiff("h", _NowCalc(), $g_sLabUpgradeTime)) > Int($g_iInputLabPotion))) Or Int($g_iInputLabPotion) = 0 Then
+		If (Number(_DateDiff("h", _NowCalc(), $g_sLabUpgradeTime)) > Int($g_iInputLabPotion)) Or Int($g_iInputLabPotion) = 0 Then
 
 			If Not FindResearchButton(True) Then 
 				;Click Laboratory
@@ -153,7 +153,7 @@ Func LabPotionBoost()
 				Return True
 			EndIf
 
-			If BoostPotionMod("LabPotion") Then
+			If BoostPotionMod("LabPotion", $bDebug) Then
 				$iLastTimeChecked[Number($g_iCurAccount)] = 1
 				Return True
 			EndIf
