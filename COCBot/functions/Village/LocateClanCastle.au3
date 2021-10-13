@@ -13,17 +13,17 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func LocateClanCastle($bFromButton = False)
+Func LocateClanCastle($bForceOff = True)
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
 	AndroidShield("LocateClanCastle 1")
-	Local $result = _LocateClanCastle()
+	Local $result = _LocateClanCastle($bForceOff)
 	$g_bRunState = $wasRunState
 	AndroidShield("LocateClanCastle 2")
 	Return $result
 EndFunc   ;==>LocateClanCastle
 
-Func _LocateClanCastle()
+Func _LocateClanCastle($bForceOff = True)
 	Local $sText, $MsgBox, $iSilly = 0, $iStupid = 0, $sErrorText = "", $sInfo
 	If Int($g_iTownHallLevel) < 3 Then Return
 	SetLog("Locating Clan Castle...", $COLOR_INFO)
