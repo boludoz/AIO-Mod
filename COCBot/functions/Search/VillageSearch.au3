@@ -338,8 +338,9 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 			SetLog($GetResourcesTXT, $COLOR_SUCCESS, "Lucida Console", 7.5)
 			SetLog("      " & "Dead Base Found!", $COLOR_SUCCESS, "Lucida Console", 7.5)
 			$logwrited = True
-
             #Region - Custom - Team AIO Mod++
+			$g_iMatchMode = $DB
+			
             Local $bFlagSearchAnotherBase = False
             If $g_bChkNoLeague[$DB] Then
 				If SearchNoLeague() Then
@@ -448,7 +449,6 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 					EndIf
 				EndIf
                 If Not $bFlagSearchAnotherBase Then
-                    $g_iMatchMode = $DB
                     ExitLoop
                 EndIf
             EndIf
