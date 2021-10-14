@@ -831,10 +831,18 @@ Func runBot() ;Bot that runs everything in order
 			If $g_bChkReqCCFirst Then RequestCCMain()
 			#EndRegion - Request Early - Team AIO Mod++
 
+			#CS - xbebenk - Team AIO Mod++
 			If $g_bIsSearchLimit Then
 				Local $aRndFuncList = ['LabCheck', 'Collect', 'PetCheck']
 			Else
 				Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge', 'PetCheck', "ChatActions", "BotHumanization"] ; AIO Mod
+			EndIf
+			#CE - xbebenk - Team AIO Mod++
+			
+			If $g_bIsSearchLimit Then
+				Local $aRndFuncList = ['Collect', 'PetCheck']
+			Else
+				Local $aRndFuncList = ['Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge', 'PetCheck', "ChatActions", "BotHumanization"] ; AIO Mod
 			EndIf
 
 			_ArrayShuffle($aRndFuncList)
@@ -1249,7 +1257,7 @@ Func _RunFunction($sAction)
 			If Not AllowBoosting("Everything", $g_iCmbBoostEverything) Then $bNoProceed = True
 		Case "DailyChallenge"
 			If Not $g_bChkCollectRewards Then $bNoProceed = True
-		Case "LabCheck"
+		; Case "LabCheck" ; xbebenk
 		Case "PetCheck"
 		Case "RequestCC"
 			If Not $g_bRequestTroopsEnable Or Not $g_bDonationEnabled Or $g_bChkReqCCFirst Then
@@ -1378,8 +1386,8 @@ Func __RunFunction($sAction)
 			BoostEverything()
 		Case "DailyChallenge"
 			DailyChallenges()
-		Case "LabCheck"
-			LabGuiDisplay()
+		; Case "LabCheck" ; xbebenk
+			; LabGuiDisplay()
 		Case "PetCheck"
 			PetGuiDisplay()
 		Case "RequestCC"

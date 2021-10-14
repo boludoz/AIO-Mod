@@ -31,10 +31,14 @@ Func TestLaboratory()
 	Return $Result
 EndFunc   ;==>TestLaboratory
 
+; Credits for xbenk (xbebenk)
 #Region - Magic Items - Team AIO Mod++
 Func Laboratory($bDebug = False)
 	If Not $g_bAutoLabUpgradeEnable And Not $g_bChkLabPotion Then Return ; Lab upgrade not enabled.
-
+	
+	Local $bChkUpgradeInProgress = ChkUpgradeInProgress()
+	; If $bChkUpgradeInProgress = True And $g_bChkLabPotion = False Then Return True
+	
 	If $g_iTownHallLevel < 3 Then
 		SetLog("Townhall Lvl " & $g_iTownHallLevel & " has no Lab.", $COLOR_ERROR)
 		Return
@@ -52,22 +56,26 @@ Func Laboratory($bDebug = False)
 	; Get updated village elixir and dark elixir values
 	VillageReport(True, True)
 	Local $bReturn = False
-	If Not ChkUpgradeInProgress() Then  ; see if we know about an upgrade in progress without checking the lab
+	If Not $bChkUpgradeInProgress Then  ; see if we know about an upgrade in progress without checking the lab
 		
 		If Not FindResearchButton() Then Return False ; cant start becuase we cannot find the research button
+		If _Sleep(1000) Then Return
 		
-		ChkLabUpgradeInProgress() ; Lab currently running skip going further
+		Local $bUpgradeInProgress = ChkLabUpgradeInProgress() ; Lab currently running skip going further
 		
-		If $g_bAutoLabUpgradeEnable Then
+		If $g_bAutoLabUpgradeEnable And $bUpgradeInProgress = False Then
 			$bReturn = _Laboratory($bDebug)
+		ElseIf $bUpgradeInProgress = False Then
+			ClickAway()
+			If _Sleep(500) Then Return
 		EndIf
+		
 		
 	EndIf
 	
 	If $g_bChkLabPotion = True Then
 		LabPotionBoost($bDebug)		
 	EndIf
-	
 	
 	ClickAway()
 	Return $bReturn
