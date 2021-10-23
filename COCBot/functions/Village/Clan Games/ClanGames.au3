@@ -46,7 +46,7 @@ Func __ClanGames($test = False)
 	Local $sTempPath = @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\"
 
 	; Enter on Clan Games window
-	If IsClanGamesWindow() Then Return 
+	If Not IsClanGamesWindow() Then Return 
 
 	; Enter on Clan Games window
 	$g_bYourAccScoreCG[Int($g_iCurAccount)][2] = False
