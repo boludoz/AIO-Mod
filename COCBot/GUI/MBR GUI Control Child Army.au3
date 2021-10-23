@@ -612,7 +612,7 @@ Func TrainTroopLevelClick()
 
 	If $iTroop = -1 Then Return
 
-	While _IsPressed(01)
+	While _IsPressed("01")
 		LevUpDownTroop($iTroop)
 		Sleep($DELAYLVUP)
 		lblTotalCountTroop2()
@@ -632,7 +632,7 @@ Func TrainSiegeLevelClick()
 
 	If $iSiege = -1 Then Return
 
-	While _IsPressed(01)
+	While _IsPressed("01")
 		LevUpDownSiege($iSiege)
 		Sleep($DELAYLVUP)
 		lblTotalCountSiege()
@@ -652,7 +652,7 @@ Func TrainSpellLevelClick()
 
 	If $iSpell = -1 Then Return
 
-	While _IsPressed(01)
+	While _IsPressed("01")
 		LevUpDownSpell($iSpell)
 		Sleep($DELAYLVUP)
 		lblTotalCountSpell2()
@@ -872,7 +872,7 @@ Func SelectTroop_QTEdit()
 		EndIf
 	Next
 	If $iTroop = -1 Then Return
-	While _IsPressed(01)
+	While _IsPressed("01")
 		If Not AddTroop_QTEdit($iTroop) Then ExitLoop
 		TotalTroopCount_QTEdit()
 		Sleep(100)
@@ -943,7 +943,7 @@ Func RemoveTroop_QTEdit()
 		EndIf
 	Next
 	If $iSlot = -1 Then Return
-	While _IsPressed(01)
+	While _IsPressed("01")
 		_RemoveTroop_QTEdit($iSlot)
 		TotalTroopCount_QTEdit()
 	WEnd
@@ -990,7 +990,7 @@ Func SelectSpell_QTEdit()
 		EndIf
 	Next
 	If $iSpell = -1 Then Return
-	While _IsPressed(01)
+	While _IsPressed("01")
 		If Not AddSpell_QTEdit($iSpell) Then ExitLoop
 		TotalSpellCount_QTEdit()
 		Sleep(100)
@@ -1061,7 +1061,7 @@ Func RemoveSpell_QTEdit()
 		EndIf
 	Next
 	If $iSlot = -1 Then Return
-	While _IsPressed(01)
+	While _IsPressed("01")
 		_RemoveSpell_QTEdit($iSlot)
 		TotalSpellCount_QTEdit()
 	WEnd
@@ -1287,10 +1287,11 @@ Func cmbSuperTroopsResources()
 EndFunc   ;==>cmbSuperTroopsResources
 #EndRegion - Custom Super Troops - Team AIO Mod++
 
+#Region - Custom Train - Team AIO Mod++
 Func CmbTroopSetting()
 	Local $iOld = $g_iCmbTroopSetting
 	Local $iActual = _GUICtrlComboBox_GetCurSel($g_hCmbTroopSetting)
-	
+
 	For $T = 0 To $eTroopCount - 1
 		$g_iCustomArmysMainVillage[$T][$iOld] = GUICtrlRead($g_ahTxtTrainArmyTroopCount[$T])
 	Next
@@ -1303,14 +1304,17 @@ Func CmbTroopSetting()
 
 	For $T = 0 To $eTroopCount - 1
 		GUICtrlSetData($g_ahTxtTrainArmyTroopCount[$T], Number($g_iCustomArmysMainVillage[$T][$iActual]))
+		$g_aiArmyCustomTroops[$T] = Number($g_iCustomArmysMainVillage[$T][$iActual])
 	Next
-	
+
 	For $S = 0 To $eSpellCount - 1
 		GUICtrlSetData($g_ahTxtTrainArmySpellCount[$S], Number($g_iCustomBrewMainVillage[$S][$iActual]))
+		$g_aiArmyCustomSpells[$S] = Number($g_iCustomBrewMainVillage[$S][$iActual])
 	Next
-	
+
 	For $S = 0 To $eSiegeMachineCount - 1
 		GUICtrlSetData($g_ahTxtTrainArmySiegeCount[$S], Number($g_iCustomSiegesMainVillage[$S][$iActual]))
+		$g_aiArmyCompSiegeMachines[$S] = Number($g_iCustomSiegesMainVillage[$S][$iActual])
 	Next
 
 	$g_iCmbTroopSetting = _GUICtrlComboBox_GetCurSel($g_hCmbTroopSetting)
@@ -1324,9 +1328,10 @@ Func CmbTroopSetting()
 	For $S = 0 To $eSiegeMachineCount - 1
 		$g_iCustomSiegesMainVillage[$S][$g_iCmbTroopSetting] = GUICtrlRead($g_ahTxtTrainArmySiegeCount[$S])
 	Next
-	
+
 	; ApplyConfig_600_52_2("Save")
 	; ApplyConfig_600_52_2("Read")
 	; ApplyConfig_600_54("Save")
 	ApplyConfig_600_54("Read")
 EndFunc   ;==>CmbTroopSetting
+#EndRegion - Custom Train - Team AIO Mod++

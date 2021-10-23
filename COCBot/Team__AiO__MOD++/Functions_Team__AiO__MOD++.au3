@@ -80,7 +80,7 @@
 #include "functions\Mod's\GTFO\GTFO.au3"
 #include "functions\Mod's\GTFO\KickOut.au3"
 
-; Check if it's time to request troops for defense (Demen) 
+; Check if it's time to request troops for defense (Demen)
 #include "functions\Mod's\RequestDefenseCC.au3"
 
 ; Custom Builder Base - Team AiO MOD++
@@ -99,6 +99,9 @@
 
 #include "functions\Mod's\Attack\GetButtons.au3"
 #include "functions\Mod's\Attack\VerifyDropPoints.au3"
+
+; ModTrain
+#include "functions\Mod's\ModTrain.au3"
 
 ; Moved to the end to avoid any global declare issues - Team AiO MOD++
 #include "functions\Config\saveConfig.au3"

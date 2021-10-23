@@ -15,6 +15,81 @@
 
 #include-once
 #include <WinAPISys.au3>
+
+#Region - AIO
+Func ClickR($boundingBox, $x, $y, $times = 1, $speed = 0, $OutScreen = (680 + $g_iBottomOffsetY), $scale = 3, $density = 1, $centerX = 0, $centerY = 0)
+	Local $AncVal = " ValIn: X=" & $x & " Y=" & $y
+	Local Const $PI = 3.141592653589793
+	Local $boxWidth = $boundingBox[2] - $boundingBox[0]
+	Local $boxHeight = $boundingBox[3] - $boundingBox[1]
+	Local $boxCenterX = $boundingBox[0] + $boxWidth/2 + $centerX
+	Local $boxCenterY = $boundingBox[1] + $boxHeight/2 + $centerY
+	Local $loopStartTime = __TimerInit()
+	Do
+		Local $angle = Random() * 2 *$PI
+		Local $xR = Random()
+		If $xR = 0 Then $xR = 0.000001
+			Local $distance = $scale * (($xR ^ (-1.0/$density)) - 1)
+			Local $offsetX = $distance * Sin($angle)
+			Local $offsetY = $distance * Cos($angle)
+			$x = $boxCenterX + $boxWidth * $offsetX/4
+			$y = $boxCenterY + $boxHeight * $offsetY/4
+			If __TimerDiff($loopStartTime)>5000 Then
+			$x = $boxCenterX
+			$y = $boxCenterY
+			ExitLoop
+		EndIf
+	Until $x >= $boundingBox[0] And $x <= $boundingBox[2] And _
+	$y >= $boundingBox[1] And $y <= $boundingBox[3]
+	If $y > $OutScreen Then
+		$y = $OutScreen
+	Else
+		$y = $y
+	EndIf
+	$x = Round($x, 3)
+	$y = Round($y, 3)
+	If $times <> 1 Then
+		For $i = 0 To ($times - 1)
+			If $g_bDebugClick Then SetLog("ClickR " & "X=" & $x & " Y=" & $y & " ,t" & $times & ",s" & $speed & $AncVal, $COLOR_ACTION, "Verdana", "7.5", 0)
+			Click($x, $y)
+			If _Sleep($speed, False) Then ExitLoop
+		Next
+	Else
+		If $g_bDebugClick Then SetLog("ClickR " & "X=" & $x & " Y=" & $y & $AncVal, $COLOR_ACTION, "Verdana", "7.5", 0)
+		Click($x, $y)
+	EndIf
+EndFunc   ;==>ClickR
+
+Func ClickPR($point, ByRef $x, ByRef $y, $checkpixelcolor = 0, $bForceReCapRegion = True)
+	Local $aTemp = [$point[4], $point[5], $point[6], $point[7]]
+	Switch $checkpixelcolor
+		Case 1
+			If _CheckPixel($aTemp, $bForceReCapRegion) Then
+				$x = Random($point[0], $point[2], 1)
+				$y = Random($point[1], $point[3], 1)
+				Return 1
+			Else
+				If $g_bDebugClick Then SetLog($point[8] & " @ Pixel Color Not Match then skip click =-= x,y,color1,color2: " & $point[4] & "," & $point[5] & "," & Hex($point[6], 6) & "," & _GetPixelColor($point[4], $point[5], True), $COLOR_RED)
+				Return 2
+			EndIf
+		Case 2
+			If Not _CheckPixel($aTemp, $bForceReCapRegion) Then
+				$x = Random($point[0], $point[2], 1)
+				$y = Random($point[1], $point[3], 1)
+				Return 1
+			Else
+				If $g_bDebugClick Then SetLog($point[8] & " @ Pixel Color Match then skip click =-= x,y,color1,color2: " & $point[4] & "," & $point[5] & "," & Hex($point[6], 6) & "," & _GetPixelColor($point[4], $point[5], True), $COLOR_RED)
+				Return 2
+			EndIf
+		Case Else
+			$x = Random($point[0], $point[2], 1)
+			$y = Random($point[1], $point[3], 1)
+			Return 1
+	EndSwitch
+EndFunc   ;==>ClickPR
+
+#EndRegion - AIO
+
 Func Click($x, $y, $times = 1, $speed = 0, $debugtxt = "")
 	Static $LastCoordinate[2]
 	Static $LastSpeed
