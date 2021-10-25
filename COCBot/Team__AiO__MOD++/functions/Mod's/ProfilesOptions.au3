@@ -14,7 +14,7 @@ Func CheckFarmSchedule()
 
 	If Not ProfileSwitchAccountEnabled() Then Return
 
-	Static $aiActionDone[8] = [0, 0, 0, 0, 0, 0, 0, 0]
+	Static $aiActionDone = $g_PreResetZero
 	Static $iStartHour = @HOUR
 	Static $iDay = @YDay
 	Local $bNeedRunBot = False

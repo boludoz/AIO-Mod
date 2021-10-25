@@ -16,12 +16,28 @@
 Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 
 	; Empty arrays
-	Local $aiZero[8] = [0, 0, 0, 0, 0, 0, 0, 0], $aiTrue[8] = [1, 1, 1, 1, 1, 1, 1, 1], $aiMinus[8] = [-1, -1, -1, -1, -1, -1, -1, -1]
-	Local $aiZero83[8][3] = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
-	Local $aiZero84[8][4] = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
-	Local $asEmpty[8] = ["", "", "", "", "", "", "", ""]
+	Local $aiZero[$g_eTotalAcc] = [0, 0, 0, 0, 0, 0, 0, 0], $aiTrue[$g_eTotalAcc] = [1, 1, 1, 1, 1, 1, 1, 1], $aiMinus[$g_eTotalAcc] = [-1, -1, -1, -1, -1, -1, -1, -1]
+	Local $aiZero83[$g_eTotalAcc][3] = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
+	Local $aiZero84[$g_eTotalAcc][4] = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+	Local $asEmpty[$g_eTotalAcc] = ["", "", "", "", "", "", "", ""]
 	Local $aiZeroTroop[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 	Local $aiZeroSpell[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+	; Reset - Custom Acc - Team AIO Mod++
+	For $i = 0 To $g_eTotalAcc - 1
+		$aiZero[$i] = 0
+		$aiTrue[$i] = 1
+		$aiMinus[$i] = -1
+		
+		$aiZero83[$i][0] = 0
+		$aiZero83[$i][1] = 0
+		$aiZero83[$i][2] = 0
+		
+		$aiZero84[$i][0] = 0
+		$aiZero84[$i][1] = 0
+		$aiZero84[$i][2] = 0
+		$aiZero84[$i][3] = 0
+	Next
 
 	; FirstRun
 	Static $abFirstStart = $aiTrue
@@ -63,14 +79,19 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 	Static $aiHeroUpgrading = $aiZero83
 
 	; QuickTrain comp
-	Static $aaArmyQuickTroops[8] = [$aiZeroTroop, $aiZeroTroop, $aiZeroTroop, $aiZeroTroop, $aiZeroTroop, $aiZeroTroop, $aiZeroTroop, $aiZeroTroop]
-	Static $aaArmyQuickSpells[8] = [$aiZeroSpell, $aiZeroSpell, $aiZeroSpell, $aiZeroSpell, $aiZeroSpell, $aiZeroSpell, $aiZeroSpell, $aiZeroSpell]
+	Static $aaArmyQuickTroops[$g_eTotalAcc] = [$aiZeroTroop, $aiZeroTroop, $aiZeroTroop, $aiZeroTroop, $aiZeroTroop, $aiZeroTroop, $aiZeroTroop, $aiZeroTroop]
+	Static $aaArmyQuickSpells[$g_eTotalAcc] = [$aiZeroSpell, $aiZeroSpell, $aiZeroSpell, $aiZeroSpell, $aiZeroSpell, $aiZeroSpell, $aiZeroSpell, $aiZeroSpell]
+	; Reset - Custom Acc - Team AIO Mod++
+	For $i = 0 To $g_eTotalAcc - 1
+		$aaArmyQuickTroops[$i] = $aiZeroTroop
+		$aaArmyQuickSpells[$i] = $aiZeroSpell
+	Next
 	Static $aiTotalQuickTroops = $aiZero
 	Static $aiTotalQuickSpells = $aiZero
 	Static $abQuickArmyMixed = $aiZero
 
 	; Other global status
-
+	
 	#dude
 	Static $abNotNeedAllTime0 = $aiTrue
 	Static $abNotNeedAllTime1 = $aiTrue
@@ -80,7 +101,8 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 
 	Static $abFullStorage = $aiZero84
 	Static $aiBuilderBoostDiscount = $aiZero
-
+	
+	
 	; First time switch account
 	Switch $sType
 		Case "Reset"
@@ -157,7 +179,7 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			$aiHeroUpgrading = $aiZero83
 
 			; QuickTrain comp
-			For $i = 0 To 7
+			For $i = 0 To $g_eTotalAcc - 1
 				$aaArmyQuickTroops[$i] = $aiZeroTroop
 				$aaArmyQuickSpells[$i] = $aiZeroSpell
 			Next

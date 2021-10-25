@@ -644,7 +644,7 @@ EndFunc   ;==>FriendlyChallenge
 Func RandomBaseIfNot($aBaseForShare)
 
 	; Profile entity diff.
-	Local Static $asLastTimeChecked[8] = ["", "", "", "", "", "", "", ""]
+	Local Static $asLastTimeChecked[$g_eTotalAcc] = ["", "", "", "", "", "", "", ""]
 
 	If _Sleep($DELAYCHATACTIONS3) Then Return
 	For $i = 0 To UBound($aBaseForShare) - 1

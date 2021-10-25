@@ -212,7 +212,7 @@ Func chkSwitchAcc()
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
 		GUICtrlSetState($g_hChkOnlySCIDAccounts, $GUI_DISABLE + $GUI_UNCHECKED)
-		For $i = 0 To 7
+		For $i = 0 To $g_eTotalAcc - 1
 			GUICtrlSetState($g_ahChkSetFarm[$i], $GUI_ENABLE)
 			_chkSetFarmSchedule($i)
 		Next
@@ -222,7 +222,7 @@ Func chkSwitchAcc()
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
 		GUICtrlSetState($g_hChkOnlySCIDAccounts, $GUI_ENABLE)
-		For $i = 0 To 7
+		For $i = 0 To $g_eTotalAcc - 1
 			For $j = $g_ahChkSetFarm[$i] To $g_ahCmbTime2[$i]
 				GUICtrlSetState($j, $GUI_DISABLE)
 			Next
@@ -291,12 +291,12 @@ Func _cmbSwitchAcc($bReadSaveConfig = True)
 	EndIf
 
 	GUICtrlSetState($g_hChkSwitchAcc, (($bEnable Or ($iCmbSwitchAcc And $bAcquired)) ? $GUI_ENABLE : $GUI_DISABLE))
-	For $i = $g_hCmbTotalAccount To $g_ahChkDonate[7]
+	For $i = $g_hCmbTotalAccount To $g_ahChkDonate[$g_eTotalAcc-1] ; Custom ACC - Team AIO Mod++
 		GUICtrlSetState($i, (($bEnable) ? $GUI_ENABLE : $GUI_DISABLE))
 	Next
 	cmbTotalAcc()
 
-	For $i = 0 To 7
+	For $i = 0 To $g_eTotalAcc - 1
 		If $bEnable Then
 			GUICtrlSetState($g_ahChkSetFarm[$i], $GUI_ENABLE)
 			_chkSetFarmSchedule($i)
@@ -312,7 +312,19 @@ EndFunc   ;==>_cmbSwitchAcc
 
 Func cmbTotalAcc()
 	Local $iCmbTotalAcc = _GUICtrlComboBox_GetCurSel($g_hCmbTotalAccount) + 1 ; combobox data starts with 2
-	For $i = 0 To 7
+	
+	; Custom ACC - Team AIO Mod++
+	If $iCmbTotalAcc > 7 Then
+		GUICtrlSetState($g_hRadSwitchSharedPrefs, $GUI_ENABLE + $GUI_CHECKED)
+		GUICtrlSetState($g_hRadSwitchGooglePlay, $GUI_DISABLE + $GUI_UNCHECKED)
+		GUICtrlSetState($g_hRadSwitchSuperCellID, $GUI_DISABLE + $GUI_UNCHECKED)
+	Else
+		GUICtrlSetState($g_hRadSwitchSharedPrefs, $GUI_ENABLE)
+		GUICtrlSetState($g_hRadSwitchGooglePlay, $GUI_ENABLE)
+		GUICtrlSetState($g_hRadSwitchSuperCellID, $GUI_ENABLE)
+	EndIf
+	
+	For $i = 0 To $g_eTotalAcc - 1
 		If $iCmbTotalAcc >= 0 And $i <= $iCmbTotalAcc Then
 			_GUI_Value_STATE("SHOW", $g_ahChkAccount[$i] & "#" & $g_ahCmbProfile[$i] & "#" & $g_ahChkDonate[$i])
 			For $j = $g_ahChkSetFarm[$i] To $g_ahCmbTime2[$i]

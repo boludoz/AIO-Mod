@@ -17,7 +17,7 @@
 
 
 Func DailyChallenges()
-	Local Static $asLastTimeChecked[8]
+	Local Static $asLastTimeChecked[$g_eTotalAcc]
 	If $g_bFirstStart Then $asLastTimeChecked[$g_iCurAccount] = ""
 
 	checkMainScreen(False)

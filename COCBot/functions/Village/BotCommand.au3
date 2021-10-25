@@ -215,8 +215,11 @@ EndFunc   ;==>isTrophyMax
 
 Func StopAndResumeTimer($bResume = False)
 
-	Static $abStop[8] = [False, False, False, False, False, False, False, False]
-
+	Static $abStop[$g_eTotalAcc]
+	If $abStop[0] = "" Then ; Custom - Team AIO Mod++
+		$abStop = $g_PreResetFalse
+	EndIf
+	
 	Local $iTimerStop, $iTimerResume = 25
 	$iTimerStop = Number($g_iCmbTimeStop)
 	If $bResume Then $iTimerResume = Number($g_iResumeAttackTime)

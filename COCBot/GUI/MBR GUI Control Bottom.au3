@@ -170,7 +170,7 @@ Func btnStart()
 	EndIf
 	$g_iActualTrainSkip = 0
 	#Region - Type Once - ChacalGyn
-	Local $iRequestTroopTypeOnce[8] = [0, 0, 0, 0, 0, 0, 0, 0]
+	Local $iRequestTroopTypeOnce = $g_PreResetZero
 	$g_aiRequestTroopTypeOnce = $iRequestTroopTypeOnce
 	#EndRegion - Type Once - ChacalGyn
 EndFunc   ;==>btnStart

@@ -226,9 +226,9 @@ Func findButton($sButtonName, $buttonTileArrayOrPatternOrFullPath = Default, $ma
 			EndIf
 	
 		Next
-		If _Sleep(750) Then Return $aCoords
+		If _Sleep(500) Then Return $aCoords
 		$i += 1
-	Until ($i > 2)
+	Until ($i > 1)
 	#EndRegion - Custom fix - Team AIO Mod++
 
 	SetDebugLog($sButtonName & " Button Image(s) NOT FOUND : " & $sButtons, $COLOR_ERROR)

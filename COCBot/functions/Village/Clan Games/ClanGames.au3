@@ -14,7 +14,13 @@
 ;================================================================================================================================
 
 Global $g_bIsCaravanOn = "Undefined" ; Custom BB - Team AIO Mod++
-Global $g_bYourAccScoreCG[8][3] = [[-1, True, False], [-1, True, False], [-1, True, False], [-1, True, False], [-1, True, False], [-1, True, False], [-1, True, False], [-1, True, False]]
+Global $g_bYourAccScoreCG[$g_eTotalAcc][3]
+
+For $i = 0 To $g_eTotalAcc - 1
+	$g_bYourAccScoreCG[$i][0] = -1
+	$g_bYourAccScoreCG[$i][1] = True
+	$g_bYourAccScoreCG[$i][2] = False
+Next
 
 #Region - Custom BB - Team AIO Mod++
 Func _ClanGames($test = False)

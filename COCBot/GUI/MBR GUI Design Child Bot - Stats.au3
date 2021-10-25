@@ -44,18 +44,18 @@ Global $g_hLblDonSiegel[$eSiegeMachineCount] = [0, 0, 0, 0, 0]
 Global $g_hLblTotalTroopsQ = 0, $g_hLblTotalTroopsXP = 0, $g_hLblTotalSpellsQ = 0, $g_hLblTotalSpellsXP = 0
 
 ; Multi Stats
-Global $g_ahGrpVillageAcc[8], $g_ahGrpDefaultAcc[8], $g_ahGrpReportAcc[8], $g_ahGrpStatsAcc[8]
-Global $g_ahLblResultGoldNowAcc[8], $g_ahPicResultGoldNowAcc[8], $g_ahLblResultTrophyNowAcc[8], $g_ahPicResultTrophyNowAcc[8], _
-	$g_ahLblResultElixirNowAcc[8], $g_ahPicResultElixirNowAcc[8], $g_ahLblResultBuilderNowAcc[8], $g_ahPicResultBuilderNowAcc[8], _
-	$g_ahLblResultDENowAcc[8], $g_ahPicResultDENowAcc[8], $g_ahLblResultGemNowAcc[8], $g_ahPicResultGemNowAcc[8]
-Global $g_ahLblHourlyStatsGoldAcc[8], $g_ahLblResultRuntimeNowAcc[8], $g_ahPicResultRuntimeNowAcc[8], _
-	$g_ahLblHourlyStatsElixirAcc[8], $g_ahLblResultAttacked[8], $g_ahPicResultAttacked[8], _
-	$g_ahLblHourlyStatsDarkAcc[8], $g_ahLblResultSkipped[8], $g_ahPicResultSkipped[8]
-Global $g_ahPicArrowLeft[8], $g_ahPicArrowRight[8], _
-	$g_ahPicResultGoldTemp[8], $g_ahPicResultElixirTemp[8], $g_ahPicResultDETemp[8], $g_ahLblVillageReportTemp[8], $g_ahGrpTempAcc[8], _
-	$g_ahLblTroopTime[8], $g_ahPicTroopTime[8]
-Global $g_hPicHeroGrayStatus[3][8], $g_hPicHeroBlueStatus[3][8], $g_hPicHeroGreenStatus[3][8], $g_hPicHeroRedStatus[3][8], _
-	$g_hPicLabGrayStatus[8], $g_hPicLabGreenStatus[8], $g_hPicLabRedStatus[8], $g_hLblLabTimeStatus[8]
+Global $g_ahGrpVillageAcc[$g_eTotalAcc], $g_ahGrpDefaultAcc[$g_eTotalAcc], $g_ahGrpReportAcc[$g_eTotalAcc], $g_ahGrpStatsAcc[$g_eTotalAcc]
+Global $g_ahLblResultGoldNowAcc[$g_eTotalAcc], $g_ahPicResultGoldNowAcc[$g_eTotalAcc], $g_ahLblResultTrophyNowAcc[$g_eTotalAcc], $g_ahPicResultTrophyNowAcc[$g_eTotalAcc], _
+	$g_ahLblResultElixirNowAcc[$g_eTotalAcc], $g_ahPicResultElixirNowAcc[$g_eTotalAcc], $g_ahLblResultBuilderNowAcc[$g_eTotalAcc], $g_ahPicResultBuilderNowAcc[$g_eTotalAcc], _
+	$g_ahLblResultDENowAcc[$g_eTotalAcc], $g_ahPicResultDENowAcc[$g_eTotalAcc], $g_ahLblResultGemNowAcc[$g_eTotalAcc], $g_ahPicResultGemNowAcc[$g_eTotalAcc]
+Global $g_ahLblHourlyStatsGoldAcc[$g_eTotalAcc], $g_ahLblResultRuntimeNowAcc[$g_eTotalAcc], $g_ahPicResultRuntimeNowAcc[$g_eTotalAcc], _
+	$g_ahLblHourlyStatsElixirAcc[$g_eTotalAcc], $g_ahLblResultAttacked[$g_eTotalAcc], $g_ahPicResultAttacked[$g_eTotalAcc], _
+	$g_ahLblHourlyStatsDarkAcc[$g_eTotalAcc], $g_ahLblResultSkipped[$g_eTotalAcc], $g_ahPicResultSkipped[$g_eTotalAcc]
+Global $g_ahPicArrowLeft[$g_eTotalAcc], $g_ahPicArrowRight[$g_eTotalAcc], _
+	$g_ahPicResultGoldTemp[$g_eTotalAcc], $g_ahPicResultElixirTemp[$g_eTotalAcc], $g_ahPicResultDETemp[$g_eTotalAcc], $g_ahLblVillageReportTemp[$g_eTotalAcc], $g_ahGrpTempAcc[$g_eTotalAcc], _
+	$g_ahLblTroopTime[$g_eTotalAcc], $g_ahPicTroopTime[$g_eTotalAcc]
+Global $g_hPicHeroGrayStatus[3][$g_eTotalAcc], $g_hPicHeroBlueStatus[3][$g_eTotalAcc], $g_hPicHeroGreenStatus[3][$g_eTotalAcc], $g_hPicHeroRedStatus[3][$g_eTotalAcc], _
+	$g_hPicLabGrayStatus[$g_eTotalAcc], $g_hPicLabGreenStatus[$g_eTotalAcc], $g_hPicLabRedStatus[$g_eTotalAcc], $g_hLblLabTimeStatus[$g_eTotalAcc]
 
 Func CreateBotStats()
 

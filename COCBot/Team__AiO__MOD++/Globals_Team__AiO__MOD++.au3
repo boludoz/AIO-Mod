@@ -496,13 +496,13 @@ Global $g_abChkSwitchMax[4] = [False, False, False, False], $g_abChkSwitchMin[4]
 		$g_aiConditionMax[4] = ["12000000", "12000000", "240000", "5000"], $g_aiConditionMin[4] = ["1000000", "1000000", "20000", "3000"]
 
 ; Farm Schedule - Team AiO MOD++
-Global $g_abChkSetFarm[8], _
-		$g_aiCmbAction1[8], $g_aiCmbCriteria1[8], $g_aiTxtResource1[8], $g_aiCmbTime1[8], _
-		$g_aiCmbAction2[8], $g_aiCmbCriteria2[8], $g_aiTxtResource2[8], $g_aiCmbTime2[8]
+Global $g_abChkSetFarm[$g_eTotalAcc], _
+		$g_aiCmbAction1[$g_eTotalAcc], $g_aiCmbCriteria1[$g_eTotalAcc], $g_aiTxtResource1[$g_eTotalAcc], $g_aiCmbTime1[$g_eTotalAcc], _
+		$g_aiCmbAction2[$g_eTotalAcc], $g_aiCmbCriteria2[$g_eTotalAcc], $g_aiTxtResource2[$g_eTotalAcc], $g_aiCmbTime2[$g_eTotalAcc]
 
 ; Builder Status - Team AiO MOD++
 Global $g_sNextBuilderReadyTime = ""
-Global $g_asNextBuilderReadyTime[8] = ["", "", "", "", "", "", "", ""]
+Global $g_asNextBuilderReadyTime[$g_eTotalAcc] = ["", "", "", "", "", "", "", ""]
 
 ; Max logout time - Team AiO MOD++
 Global $g_bTrainLogoutMaxTime = False, $g_iTrainLogoutMaxTime = 4
@@ -690,7 +690,7 @@ Global $g_bChkRemoveCCForDefense = False
 #EndRegion - Request defense CC (Demen)
 
 #Region - Type Once - ChacalGyn
-Global $g_aiRequestTroopTypeOnce[8] = [0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_aiRequestTroopTypeOnce[$g_eTotalAcc] = [0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_bChkRequestTypeOnceEnable = True
 #EndRegion - Type Once - ChacalGyn
 

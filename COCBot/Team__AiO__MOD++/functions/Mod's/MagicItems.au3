@@ -30,7 +30,7 @@ EndFunc   ;==>DbgBuilderPotionBoost
 Func BuilderPotionBoost($bDebug = False)
 	If Not $g_bChkBuilderPotion Then Return
 
-	Static $iLastTimeChecked[8] = [0, 0, 0, 0, 0, 0, 0, 0]
+	Static $iLastTimeChecked = $g_PreResetZero
 	If $iLastTimeChecked[Number($g_iCurAccount)] = 0 Then
 
 		If _Sleep($DELAYBOOSTHEROES2 * 3) Then Return False
@@ -89,7 +89,7 @@ Func ResourceBoost($aPos1 = 0, $aPos2 = 0)
 	
 	If Not (($g_iInputGoldItems >= $g_aiTempGainCost[0]) And ($g_iInputElixirItems >= $g_aiTempGainCost[1]) And ($g_iInputDarkElixirItems >= $g_aiTempGainCost[2])) Then Return
 
-	Static $iLastTimeChecked[8] = [0, 0, 0, 0, 0, 0, 0, 0]
+	Static $iLastTimeChecked = $g_PreResetZero
 
 	If $iLastTimeChecked[Number($g_iCurAccount)] = 0 And isInsideDiamondInt($aPos1, $aPos2) Then
 		If _Sleep($DELAYBOOSTHEROES2) Then Return
@@ -130,9 +130,9 @@ EndFunc   ;==>ResourceBoost
 Func LabPotionBoost($bDebug = False)
 	If Not $g_bChkLabPotion Then Return False
 	
-	If Not IsMainPage(5) Then Return False
+	If Not IsMainPage(1) Then Return False
 
-	Static $iLastTimeChecked[8] = [0, 0, 0, 0, 0, 0, 0, 0]
+	Static $iLastTimeChecked = $g_PreResetZero
 
 	If $iLastTimeChecked[Number($g_iCurAccount)] = 0 Then
 		If _Sleep($DELAYBOOSTHEROES2) Then Return
@@ -145,14 +145,14 @@ Func LabPotionBoost($bDebug = False)
 				If _Sleep($DELAYLABORATORY3) Then Return ; Wait for window to open
 			EndIf
 			
-			If Not FindResearchButton(True) Then Return False ; adieu bye bye
-		
 			If AlreadyBoosted() Then
 				Setlog("Already boosted lab.", $COLOR_INFO)
 				$iLastTimeChecked[Number($g_iCurAccount)] = 1
 				Return True
 			EndIf
 
+			; If Not FindResearchButton(True) Then Return False ; adieu bye bye
+		
 			If BoostPotionMod("LabPotion", $bDebug) Then
 				$iLastTimeChecked[Number($g_iCurAccount)] = 1
 				Return True

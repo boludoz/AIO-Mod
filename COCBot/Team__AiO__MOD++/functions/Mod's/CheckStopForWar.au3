@@ -16,12 +16,12 @@
 
 Func CheckStopForWar()
 
-	Local $asResetTimer = ["", "", "", "", "", "", "", ""], $abResetBoolean[8] = [False, False, False, False, False, False, False, False]
+	Local $asResetTimer[$g_eTotalAcc] = ["", "", "", "", "", "", "", ""], $abResetBoolean = $g_PreResetFalse
 	Static $sTimeToRecheck = "", $bTimeToStop = False ; single account mode
-	Static $asTimeToRecheck[8] = ["", "", "", "", "", "", "", ""], $abTimeToStop[8] = [False, False, False, False, False, False, False, False] ; switch account mode
-	Static $asTimeToReturn[8] = ["", "", "", "", "", "", "", ""]
-	Static $abStopForWar[8] = [False, False, False, False, False, False, False, False]
-	Static $abTrainWarTroop[8] = [False, False, False, False, False, False, False, False]
+	Static $asTimeToRecheck[$g_eTotalAcc] = ["", "", "", "", "", "", "", ""], $abTimeToStop = $g_PreResetFalse ; switch account mode
+	Static $asTimeToReturn[$g_eTotalAcc] = ["", "", "", "", "", "", "", ""]
+	Static $abStopForWar = $g_PreResetFalse
+	Static $abTrainWarTroop = $g_PreResetFalse
 
 	If $g_bFirstStart Then ; reset statics
 		$sTimeToRecheck = ""

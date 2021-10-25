@@ -58,18 +58,18 @@ Func Laboratory($bDebug = False)
 	Local $bReturn = False
 	If Not $bChkUpgradeInProgress Then  ; see if we know about an upgrade in progress without checking the lab
 		
-		If Not FindResearchButton() Then Return False ; cant start becuase we cannot find the research button
-		If _Sleep(1000) Then Return
-		
-		Local $bUpgradeInProgress = ChkLabUpgradeInProgress() ; Lab currently running skip going further
-		
-		If $g_bAutoLabUpgradeEnable And $bUpgradeInProgress = False Then
-			$bReturn = _Laboratory($bDebug)
-		ElseIf $bUpgradeInProgress = False Then
-			ClickAway()
-			If _Sleep(500) Then Return
+		If FindResearchButton() Then ; cant start becuase we cannot find the research button
+			If _Sleep(1000) Then Return
+			
+			Local $bUpgradeInProgress = ChkLabUpgradeInProgress() ; Lab currently running skip going further
+			
+			If $g_bAutoLabUpgradeEnable And $bUpgradeInProgress = False Then
+				$bReturn = _Laboratory($bDebug)
+			ElseIf $bUpgradeInProgress = False Then
+				ClickAway()
+				If _Sleep(500) Then Return
+			EndIf
 		EndIf
-		
 		
 	EndIf
 	
@@ -393,13 +393,13 @@ Func FindResearchButton($bOnLyCheck = False) ; Magic items - Team AIO Mod++
 		;Click Laboratory
 		Click($g_aiLaboratoryPos[0], $g_aiLaboratoryPos[1])
 		If _Sleep(1000) Then Return ; Wait for window to open
-	EndIf
 	
-	Local $aCancelButton = findButton("Cancel")
-	If IsArray($aCancelButton) And UBound($aCancelButton, 1) = 2 Then
-		SetLog("Laboratory is Upgrading!, Cannot start any upgrade", $COLOR_ERROR)
-		ClickAway()
-		Return False
+		Local $aCancelButton = findButton("Cancel")
+		If IsArray($aCancelButton) And UBound($aCancelButton, 1) = 2 Then
+			SetLog("Laboratory is Upgrading!, Cannot start any upgrade", $COLOR_ERROR)
+			ClickAway()
+			Return False
+		EndIf
 	EndIf
 	
 	Local $aResearchButton = findButton("Research", Default, 1, True)

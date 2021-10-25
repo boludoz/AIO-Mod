@@ -34,7 +34,7 @@ Func setupProfileComboBox()
 	; Set the new data of available profiles
 	GUICtrlSetData($g_hCmbProfile, $profileString, "<No Profiles>")
 	; Switch Accounts
-	For $i = 0 To 7
+	For $i = 0 To $g_eTotalAcc - 1
 		GUICtrlSetData($g_ahCmbProfile[$i], "")
 		GUICtrlSetData($g_ahCmbProfile[$i], "|" & $profileString)
 		_GUICtrlComboBox_SetCurSel($g_ahCmbProfile[$i], 0)

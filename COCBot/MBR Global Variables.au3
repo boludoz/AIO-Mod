@@ -419,10 +419,21 @@ Global $__VBoxVMinfo ; Virtualbox vminfo config details of android instance
 Global $__VBoxGuestProperties ; Virtualbox guestproperties config details of android instance
 Global $__VBoxExtraData ; Virtualbox extra data details of android instance
 
+
 ; <><><><><><>  Android.au3 globals <><><><><><>
 ; <><><><><><><><><><><><><><><><><><><><><><><><>
 #Tidy_On
 #EndRegion Android.au3
+
+#Region - Custom Acc (inspired by xbebenk)  - Team AIO Mod++
+Global $g_eTotalAcc = 14
+Global $g_PreResetZero[$g_eTotalAcc]
+Global $g_PreResetFalse[$g_eTotalAcc]
+For $i = 0 To $g_eTotalAcc - 1
+	$g_PreResetZero[$i] = 0
+	$g_PreResetFalse[$i] = False
+Next
+#EndRegion - Custom Acc (inspired by xbebenk)  - Team AIO Mod++
 
 ; set ImgLoc threads use
 Global $g_iGlobalActiveBotsAllowed = EnvGet("NUMBER_OF_PROCESSORS") ; Number of parallel running bots allowed
@@ -1331,10 +1342,10 @@ Global $g_bForceSwitch = false ; use as a flag for when we want to force an acco
 Global $g_bChkSharedPrefs = True, $g_bChkGooglePlay = False, $g_bChkSuperCellID = False ; Accounts switch mode
 Global $g_bChkSwitchAcc = False, $g_bChkSmartSwitch = False, $g_bDonateLikeCrazy = False, $g_iTotalAcc = -1, $g_iTrainTimeToSkip = 0
 Global $g_bInitiateSwitchAcc = True, $g_bReMatchAcc = False, $g_bWaitForCCTroopSpell = False, $g_iNextAccount, $g_iCurAccount
-Global $g_abAccountNo[8], $g_asProfileName[8], $g_abDonateOnly[8]
-Global $g_aiAttackedCountSwitch[8], $g_iActiveSwitchCounter = 0, $g_iDonateSwitchCounter = 0
-Global $g_asTrainTimeFinish[8], $g_abPBActive[8]
-Global $g_aiRunTime[8], $g_ahTimerSinceSwitched[8]
+Global $g_abAccountNo[$g_eTotalAcc], $g_asProfileName[$g_eTotalAcc], $g_abDonateOnly[$g_eTotalAcc]
+Global $g_aiAttackedCountSwitch[$g_eTotalAcc], $g_iActiveSwitchCounter = 0, $g_iDonateSwitchCounter = 0
+Global $g_asTrainTimeFinish[$g_eTotalAcc], $g_abPBActive[$g_eTotalAcc]
+Global $g_aiRunTime[$g_eTotalAcc], $g_ahTimerSinceSwitched[$g_eTotalAcc]
 ; <><><><> Bot / Stats <><><><>
 ; <<< nothing here >>>
 

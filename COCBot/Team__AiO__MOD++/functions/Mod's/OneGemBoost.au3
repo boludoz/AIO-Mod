@@ -10,7 +10,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func OneGemBoost($bDebug = False)
-	Static $aHeroBoostedStartTime[8][$eHeroCount], $aBuildingBoostedStartTime[8][3], $aLastTimeChecked[8] = [0, 0, 0, 0, 0, 0, 0, 0]
+	Static $aHeroBoostedStartTime[$g_eTotalAcc][$eHeroCount], $aBuildingBoostedStartTime[$g_eTotalAcc][3], $aLastTimeChecked = $g_PreResetZero
 	If $aLastTimeChecked[$g_iCurAccount] <> 0 And Not $bDebug Then
 		Local $iDateCalc = _DateDiff('n', _NowCalc(), $aLastTimeChecked[$g_iCurAccount])
 		If $iDateCalc <= 0 Then

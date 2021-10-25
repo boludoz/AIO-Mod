@@ -246,7 +246,7 @@ EndFunc   ;==>ArmyHeroStatus
 #CS - xbebenk - Team AIO Mod++
 Func LabGuiDisplay() ; called from main loop to get an early status for indictors in bot bottom
 
-	Local Static $iLastTimeChecked[8]
+	Local Static $iLastTimeChecked[$g_eTotalAcc]
 	If $g_bFirstStart Then $iLastTimeChecked[$g_iCurAccount] = ""
 
 	; Check if is a valid date and Calculated the number of minutes from remain time Lab and now
