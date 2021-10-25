@@ -57,6 +57,8 @@ Func TestBuilderBaseGetHall()
 EndFunc   ;==>TestBuilderBaseGetHall
 
 Func BuilderBaseGetDeployPoints($FurtherFrom = $g_iFurtherFromBBDefault, $bDebugImage = False)
+	If _Sleep(3000) Then Return
+	
 	Local $bBadPoints = False, $Sides = -1
 
 	If Not $g_bRunState Then Return

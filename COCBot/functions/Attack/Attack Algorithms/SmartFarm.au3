@@ -1520,17 +1520,15 @@ Func DuplicatedGreen($aXYs, $x1, $y1, $i3, $iD = 15)
 	Return False
 EndFunc   ;==>DuplicatedGreen
 
-Func GetDiamondGreenTiles($iHnowManyPoints = 10)
+Func GetDiamondGreenTiles($iHnowManyPoints = 10, $sDirectory = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\DPSM\", $vCocDiamond = $CocDiamondECD, $iCentreX = $DiamondMiddleX, $iCentreY = $DiamondMiddleY)
 	$g_aGreenTiles = -1
-	; Local $aTmp = DMDecodeCoords(DFind(@ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\Image Matching\DPSM\", 19, 74, 805, 518, 0, 1000, 9999, True), 15)
-	Local $aTmp = _GreenTiles(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\DPSM\", 0, $CocDiamondECD, True, False, 15, 0, 1000); DMDecodeCoords(DFind(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\DPSM\", 19, 74, 805, 518, 0, 1000, 9999, True), 15)
+	Local $aTmp = _GreenTiles($sDirectory, 0, $vCocDiamond, True, False, 15, 0, 1000)
 	$g_aGreenTiles = IsArray($aTmp) ? ($aTmp) : (-1)
 	If Not IsArray($g_aGreenTiles) Or UBound($g_aGreenTiles) < 0 Then Return -1
 	Local $TL[0][3], $BL[0][3], $TR[0][3], $BR[0][3]
-	Local $aCentre = [$DiamondMiddleX, $DiamondMiddleY]
+	Local $aCentre = [$iCentreX, $iCentreY] ; [$DiamondMiddleX, $DiamondMiddleY]
 	_ArraySort($g_aGreenTiles, 0, 0, 0, 1)
 	For $i = 0 To UBound($g_aGreenTiles) - 1
-		; Local $iCoordinate = [$g_aGreenTiles[$i][0], $g_aGreenTiles[$i][1]]
 		Local $iCoordinate = [$g_aGreenTiles[$i][0], $g_aGreenTiles[$i][1]]
 		If not IsInsideDiamond($iCoordinate) Then ContinueLoop
 		If Side($iCoordinate) = "TL" Then

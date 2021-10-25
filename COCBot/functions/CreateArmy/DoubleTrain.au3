@@ -53,7 +53,11 @@ Func DoubleTrain($bWarTroop = False, $bPreTrainFlag = True) ; Check Stop For War
 		EndIf
 	EndIf
 	#EndRegion - Missing PreciseArmy - Team AIO Mod++
-
+	
+	#Region - Custom Army - Team AIO Mod++
+	
+	#EndRegion - Custom Army - Team AIO Mod++
+	
 	; Troop
 	If Not OpenTroopsTab(False, "DoubleTrain()") Then Return
 	If _Sleep(250) Then Return
