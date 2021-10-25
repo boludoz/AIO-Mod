@@ -1037,7 +1037,6 @@ Func CheckOnTrainSpells()
 	$g_bRunState = $currentRunState
 EndFunc   ;==>CheckOnTrainSpells
 
-#CS
 Func getArmySpells2($hHBitmap)
 	If Not $g_bRunState Then Return
 	If $g_bDebugSetlogTrain Then SetLog("getArmySpells2():", $COLOR_DEBUG)
@@ -1214,7 +1213,6 @@ Func getArmySpells2($hHBitmap)
 	EndIf
 	Return False
 EndFunc   ;==>getArmySpells2
-#CE
 Func O28380($i)
 	GdiDeleteHBitmap($g_hHBitmap_Av_Spell_Slot[$i])
 	GdiDeleteHBitmap($g_hHBitmap_Capture_Av_Spell_Slot[$i])
@@ -1899,7 +1897,7 @@ Func CheckOnBrewUnit($hHBitmap)
 				$sSpellName = GetTroopName(TroopIndexLookup($aiSpellInfo[$i][0]), $aiSpellInfo[$i][1])
 				If $bIsQueueSpell Then
 					$g_aiCurrentSpellsOnQ[$iSpellIndex] = $g_aiCurrentSpellsOnQ[$iSpellIndex] + $iQty
-					Local $hHbitmap_ready = GetHHBitmapArea($hHBitmap, Int(122 + ($g_iArmy_OnT_Troop_Slot_Width * $i)), 197 + 44, Int(122 + ($g_iArmy_OnT_Troop_Slot_Width * $i) + 5), 202 + 44)
+					Local $hHbitmap_ready = GetHHBitmapArea($hHBitmap, Int(122 + ($g_iArmy_OnT_Troop_Slot_Width * $i)), 197 + 44, Int(122 + ($g_iArmy_OnT_Troop_Slot_Width * $i) + 5), 202)
 					_debugSaveHBitmapToImage($hHbitmap_ready, "hHbitmap_ready" & $i + 1, "SpellsWindows\Ready", True)
 					$sDirectory = $g_sImgArmyReady
 					$result = findMultiImage($hHbitmap_ready, $sDirectory, "FV", "FV", 0, 1000, 1, $returnProps)
