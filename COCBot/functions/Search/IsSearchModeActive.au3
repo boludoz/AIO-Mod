@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func _IsSearchModeActive($g_iMatchMode, $bDontCheckHeroes = False, $bNoLog = False) ; AIO
+Func IsSearchModeActive($g_iMatchMode, $bDontCheckHeroes = False, $bNoLog = False)
 	Local $currentSearch = $g_iSearchCount + 1
 	Local $currentTropies = $g_aiCurrentLoot[$eLootTrophy]
 	Local $currentArmyCamps = Int($g_CurrentCampUtilization / $g_iTotalCampSpace * 100)

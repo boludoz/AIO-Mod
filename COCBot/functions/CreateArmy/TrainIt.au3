@@ -76,7 +76,6 @@ Func TrainIt($iIndex, $iQuantity = 1, $iSleep = 400, $bRecheckTroops = False)
 					If $bRecheckTroops = False And $g_bSuperTroopsEnable = True Then
 						;;;;;;;;;;;;;;
 						If $g_eFailSTBoostIndex <> -1 Then
-							$g_bForceCheckBoostedTroops = True
 
 							For $iB = 0 To 1
 								Local $iSTIndex = $g_iCmbSuperTroops[$iB] - 1

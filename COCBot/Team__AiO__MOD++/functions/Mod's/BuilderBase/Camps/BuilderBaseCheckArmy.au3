@@ -4,7 +4,7 @@
 ; Syntax ........: CheckArmyBuilderBase()
 ; Parameters ....:
 ; Return values .: None
-; Author ........: Boludoz (redo) (2019)
+; Author ........: Boludoz (redo) (2019), ProMac (03-2018), Fahid.Mahmood
 ; Modified ......: 
 ; Remarks .......: This file is part of MyBot, previously known as Multibot and ClashGameBot. Copyright 2015-2020
 ;                  MyBot is distributed under the terms of the GNU GPL
@@ -14,6 +14,7 @@
 ; ===============================================================================================================================
 #include-once
 Global $g_aTroopButton = 0
+
 
 Func TestCheckArmyBuilderBase() ; ProMac (03-2018), Fahid.Mahmood part.
 	SetDebugLog("** TestCheckArmyBuilderBase START**", $COLOR_DEBUG)
@@ -32,7 +33,7 @@ Func CheckArmyBuilderBase($bDebug = False)
 
 	SetDebugLog("** Click Away **", $COLOR_DEBUG)
 
-	ClickAway()
+	ClickAway() ; ClickP($aAway, 1, 0, "#0332") ;Click Away
 
 	Setlog("Entering troops", $COLOR_PURPLE)
 
@@ -107,11 +108,11 @@ Func DetectCamps()
 				If ($iA > -1) Then 
 					If (Int($aTrainLikeBoss[$iA]) < Int($aTrainedLikeBoss[$iA])) Then 
  						DeleteTroop($aTroops[$i2][1], $aTroops[$i2][2])
-					Else
+						Else
 						$aTrainedLikeBoss[$iA] += 1
 						$aTrainLikeBoss[$iA] -= 1
 					EndIf
-				Else
+					Else
 					DeleteTroop($aTroops[$i2][1], $aTroops[$i2][2])
 				EndIf
 		;	EndIf
@@ -130,11 +131,11 @@ Func DetectCamps()
 			;_ArrayDisplay($aLocateTroopButton, $i)
 			If IsArray($aLocateTroopButton) Then
 				SetLog("- x" & $aTrainLikeBoss[$i] & " " & $g_avStarLabTroops[$i+1][3], $COLOR_SUCCESS)
-				MyTrainClickBB($g_aTroopButton, $aTrainLikeBoss[$i])
+				MyTrainClick($g_aTroopButton, $aTrainLikeBoss[$i])
 				$iFillFix = $g_aTroopButton
 			Else
 				SetLog("Builder base army: LocateTroopButton troop not unlocked or fail.", $COLOR_ERROR)
-				MyTrainClickBB($iFillFix, $aTrainLikeBoss[$i]) ; Train 4 fill last "ok" (more smart)
+				MyTrainClick($iFillFix, $aTrainLikeBoss[$i]) ; Train 4 fill last "ok" (more smart)
 			EndIf
 		EndIf
 		If _Sleep(Random((200*90)/100, (300*110)/100, 1), False) Then Return
@@ -157,63 +158,61 @@ EndFunc   ;==>DeleteTroop
 
 ; Samkie inspired code
 Func LocateTroopButton($iTroopButton, $sImgTrain = $g_sImgPathTroopsTrain, $sRegionForScan = "37, 479, 891, 579", $bDebugLog = False)
-	Local $aTmp[2] = [0, 0]
-	Local $asAttackBarBB = $g_asAttackBarBB2
-	Local $iButtonIsIn, $aTroopPosition
+		Global $g_aTroopButton[2] = [0, 0]
+		Local $asAttackBarBB = $g_asAttackBarBB2
+		Local $iButtonIsIn, $aTroopPosition
 	
-	
-	If ($iTroopButton > (UBound($asAttackBarBB) -1)) Then SetLog("Train army on BB: Troop not rocognized, it return first.", $COLOR_ERROR)
-	
-	For $i = 0 To 3
-		Local $iButtonIsIn = __ArraySearch(_ImageSearchXML($g_sImgPathTroopsTrain, 0, $sRegionForScan, True, False, True, 25), $g_asAttackBarBB2[$iTroopButton])
-
-		$aTroopPosition = $g_aImageSearchXML
-		SetDebugLog("LocateTroopButton: " & "__ArraySearch($aTroopPosition, $asAttackBarBB[$iTroopButton]) " & $aTroopPosition)
 		
-		If ($iButtonIsIn > -1) Then
-			$aTmp[0] = $aTroopPosition[$iButtonIsIn][1]
-			$aTmp[1] = $aTroopPosition[$iButtonIsIn][2]
-			$g_aTroopButton = $aTmp
-			Return $aTmp
-		ElseIf __ArraySearch($asAttackBarBB , $aTroopPosition[0][0]) < $iTroopButton Then
-			SetDebugLog("LocateTroopButton: " & "ClickDrag(575, 522, 280, 522, 50)")
-			ClickDrag(575, 522, 280, 522, 50)
-			If _Sleep(Random((400*90)/100, (400*110)/100, 1)) Then Return
-		ElseIf __ArraySearch($asAttackBarBB, $aTroopPosition[UBound($aTroopPosition)-1][0]) > $iTroopButton Then
-			SetDebugLog("LocateTroopButton: " & "ClickDrag(280, 522, 575, 522, 50)")
-			ClickDrag(280, 522, 575, 522, 50)
-			If _Sleep(Random((400*90)/100, (400*110)/100, 1)) Then Return
-		EndIf
-		SetDebugLog("LocateTroopButton: " & "LOOP : " & $i)
+		If ($iTroopButton > (UBound($asAttackBarBB) -1)) Then SetLog("Train army on BB: Troop not rocognized, it return first.", $COLOR_ERROR)
 	
-		If _Sleep(500) Then Return
-	Next
+		For $i = 0 To 3
+			Local $iButtonIsIn = __ArraySearch(_ImageSearchXML($g_sImgPathTroopsTrain, 0, $sRegionForScan, True, False, True, 25), $g_asAttackBarBB2[$iTroopButton])
+
+			$aTroopPosition = $g_aImageSearchXML
+			SetDebugLog("LocateTroopButton: " & "__ArraySearch($aTroopPosition, $asAttackBarBB[$iTroopButton]) " & $aTroopPosition)
+			
+			If ($iButtonIsIn > -1) Then
+				$g_aTroopButton[0] = $aTroopPosition[$iButtonIsIn][1]
+				$g_aTroopButton[1] = $aTroopPosition[$iButtonIsIn][2]
+				Return $g_aTroopButton
+			ElseIf __ArraySearch($asAttackBarBB , $aTroopPosition[0][0]) < $iTroopButton Then
+				SetDebugLog("LocateTroopButton: " & "ClickDrag(575, 522, 280, 522, 50)")
+				ClickDrag(575, 522, 280, 522, 50)
+				If _Sleep(Random((400*90)/100, (400*110)/100, 1)) Then Return
+			ElseIf __ArraySearch($asAttackBarBB, $aTroopPosition[UBound($aTroopPosition)-1][0]) > $iTroopButton Then
+				SetDebugLog("LocateTroopButton: " & "ClickDrag(280, 522, 575, 522, 50)")
+				ClickDrag(280, 522, 575, 522, 50)
+				If _Sleep(Random((400*90)/100, (400*110)/100, 1)) Then Return
+			EndIf
+			SetDebugLog("LocateTroopButton: " & "LOOP : " & $i)
 	
-	SetLog("Cannot find " & $asAttackBarBB[$iTroopButton] & " for scan", $COLOR_ERROR)
+			If _Sleep(500) Then Return
+		Next
 	
-	$aTmp = 0
-	$g_aTroopButton = $aTmp
-	Return 0
+		SetLog("Cannot find " & $asAttackBarBB[$iTroopButton] & " for scan", $COLOR_ERROR)
+		
+		Global $g_aTroopButton = 0
+		Return 0
 
 EndFunc
 
-Func MyTrainClickBB($aXY, $iTimes = 1, $iSpeed = 0, $sdebugtxt="")
-	If not IsArray($aXY) Then Return False
-	Local $x = $aXY[0], $y = $aXY[1]
-	Local $iHLFClickMin = 7, $iHLFClickMax = 14
-	Local $isldHLFClickDelayTime = 2000
-	Local $iRandNum = Random($iHLFClickMin-1,$iHLFClickMax-1,1) ;Initialize value (delay awhile after $iRandNum times click)
-	Local $iRandX = Random($x - 5,$x + 5,1),$iRandY = Random($y - 5,$y + 5,1)
-	;If isProblemAffect(True) Then Return
-	For $i = 0 To $iTimes - 1
-		PureClick(Random($iRandX-2,$iRandX+2,1), Random($iRandY-2,$iRandY+2,1))
-		If ($i >= $iRandNum) Then
-			$iRandNum = $iRandNum + Random($iHLFClickMin,$iHLFClickMax,1)
-			$iRandX = Random($x - 5, $x + 5,1)
-			$iRandY = Random($y - 5, $y + 5,1)
-			If _Sleep(Random(($isldHLFClickDelayTime*138)/100, (($isldHLFClickDelayTime*138)*2)/100, 1), False) Then Return
-		Else
-			If _Sleep(Random(($isldHLFClickDelayTime*138)/100, (($isldHLFClickDelayTime*138)*3)/100, 1), False) Then Return
-		EndIf
-	Next
-EndFunc   ;==>MyTrainClickBB
+Func MyTrainClick($aXY, $iTimes = 1, $iSpeed = 0, $sdebugtxt="")
+			If not IsArray($aXY) Then Return False
+			Local $x = $aXY[0], $y = $aXY[1]
+			Local $iHLFClickMin = 7, $iHLFClickMax = 14
+			Local $isldHLFClickDelayTime = 2000
+			Local $iRandNum = Random($iHLFClickMin-1,$iHLFClickMax-1,1) ;Initialize value (delay awhile after $iRandNum times click)
+			Local $iRandX = Random($x - 5,$x + 5,1),$iRandY = Random($y - 5,$y + 5,1)
+			;If isProblemAffect(True) Then Return
+			For $i = 0 To $iTimes - 1
+				PureClick(Random($iRandX-2,$iRandX+2,1), Random($iRandY-2,$iRandY+2,1))
+				If ($i >= $iRandNum) Then
+					$iRandNum = $iRandNum + Random($iHLFClickMin,$iHLFClickMax,1)
+					$iRandX = Random($x - 5, $x + 5,1)
+					$iRandY = Random($y - 5, $y + 5,1)
+					If _Sleep(Random(($isldHLFClickDelayTime*138)/100, (($isldHLFClickDelayTime*138)*2)/100, 1), False) Then Return
+				Else
+					If _Sleep(Random(($isldHLFClickDelayTime*138)/100, (($isldHLFClickDelayTime*138)*3)/100, 1), False) Then Return
+				EndIf
+			Next
+EndFunc   ;==>MyTrainClick

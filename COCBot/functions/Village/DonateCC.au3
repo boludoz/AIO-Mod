@@ -173,7 +173,7 @@ Func DonateCC($bCheckForNewMsg = False)
 
 	Local $bOpen = True, $bClose = False
 
-	Local $ReturnT = ($g_CurrentCampUtilization >= ($g_iTotalCampSpace * $g_iTrainArmyFullTroopPct / 100) * 0.95) ? (True) : (False) ; Custom - Team AIO Mod++
+	Local $ReturnT = ($g_CurrentCampUtilization >= ($g_iTotalCampSpace * $g_iTrainArmyFullTroopPct / 100) * .95) ? (True) : (False)
 
 	Local $ClanString = ""
 

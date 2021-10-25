@@ -738,7 +738,7 @@ Func runBot() ;Bot that runs everything in order
 
 	; Skip first attack - Custom Team AIO Mod++
 	Local $bDoFirsCheck = ($g_bChkSkipFirstAttack <> True)
-
+	
 	While 1
 		If FileExists(@ScriptDir & "\EnableMBRDebug.txt") Then
 			While (FileReadLine(@ScriptDir & "\EnableMBRDebug.txt") = "wait")
@@ -746,7 +746,7 @@ Func runBot() ;Bot that runs everything in order
 				If Not $g_bRunState Then Return
 			WEnd
 		EndIf
-
+		
 		;Restart bot after these seconds
 		If $b_iAutoRestartDelay > 0 And __TimerDiff($g_hBotLaunchTime) > $b_iAutoRestartDelay * 1000 Then
 			If RestartBot(False) Then Return
@@ -779,13 +779,6 @@ Func runBot() ;Bot that runs everything in order
 
 		$g_bFullArmy = False
 		$g_bIsFullArmywithHeroesAndSpells = False
-		
-		#Region - AIO
-		$g_bDisableTrain = False
-		$g_bDisableBrewSpell = False
-		$g_bDisableSiegeTrain = False
-		#EndRegion - AIO
-
 		$g_iCommandStop = -1
 		If _Sleep($DELAYRUNBOT1) Then Return
 		checkMainScreen()
@@ -832,7 +825,7 @@ Func runBot() ;Bot that runs everything in order
 			If _Sleep($DELAYRUNBOT5) Then Return
 			checkMainScreen(False)
 			If $g_bRestart Then ContinueLoop
-
+			
 			#Region - Request Early - Team AIO Mod++
 			$g_bCanRequestCC = True
 			If $g_bChkReqCCFirst Then RequestCCMain()
@@ -845,7 +838,7 @@ Func runBot() ;Bot that runs everything in order
 				Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge', 'PetCheck', "ChatActions", "BotHumanization"] ; AIO Mod
 			EndIf
 			#CE - xbebenk - Team AIO Mod++
-
+			
 			If $g_bIsSearchLimit Then
 				Local $aRndFuncList = ['Collect', 'PetCheck']
 			Else
@@ -866,7 +859,7 @@ Func runBot() ;Bot that runs everything in order
 				If $g_bIsSearchLimit Then
 					Local $aRndFuncList = ['DonateCC,Train']
 				Else
-					Local $aRndFuncList = ['ReplayShare', 'NotifyReport', 'DonateCC,Train']; , 'RequestCC' - AIO - Samm0d
+					Local $aRndFuncList = ['ReplayShare', 'NotifyReport', 'DonateCC,Train', 'RequestCC']
 				EndIf
 				_ArrayShuffle($aRndFuncList)
 				For $Index In $aRndFuncList
@@ -1000,11 +993,10 @@ Func _Idle() ;Sequence that runs until Full Army
 		If $g_iCommandStop = -1 Then SetLog("====== Waiting for full army ======", $COLOR_SUCCESS)
 		Local $hTimer = __TimerInit()
 		; If Not $g_bChkOnlyFarm Then BotHumanization() ; Humanization - Team AiO MOD++
-		
+
 		If _Sleep($DELAYIDLE1) Then ExitLoop
 		checkObstacles() ; trap common error messages also check for reconnecting animation
 		checkMainScreen(False) ; required here due to many possible exits
-		#cs
 		If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) And $g_bTrainEnabled = True Then
 			CheckArmyCamp(True, True)
 			If _Sleep($DELAYIDLE1) Then Return
@@ -1013,7 +1005,6 @@ Func _Idle() ;Sequence that runs until Full Army
 				$g_iCommandStop = 0
 			EndIf
 		EndIf
-		#ce
 		If $g_bRestart Then ExitLoop
 		If Random(0, $g_iCollectAtCount - 1, 1) = 0 Then ; This is prevent from collecting all the time which isn't needed anyway, chance to run is 1/$g_iCollectAtCount
 			Local $aRndFuncList = ['Collect', 'CheckTombs', 'RequestCC', 'DonateCC', 'CleanYard']
@@ -1035,20 +1026,9 @@ Func _Idle() ;Sequence that runs until Full Army
 		EndIf
 		If Not $g_bChkOnlyFarm Then AddIdleTime()
 		checkMainScreen(False) ; required here due to many possible exits
-		#Region - AIO
-		TrainSystem()
-		If BotCommand() Then btnStop()
-		If $g_bForceCheckBoostedTroops Then BoostSuperTroop()
-		If Not $g_aSkipTrain[$g_iCurAccount] Then Return
-		If $g_bRestart = True Then ExitLoop
-		If _Sleep(200) Then ExitLoop
-		checkMainScreen(False)
-		If $g_bChkOnlyFarm = False Then MainSXHandler() ; Super XP - Team AIO Mod++
-		#EndRegion - AIO
-		#cs
 		If $g_iCommandStop = -1 Then
 			If $g_iActualTrainSkip < $g_iMaxTrainSkip Then
-				If $g_bChkOnlyFarm = False Then MainSXHandler() ; Super XP - Team AIO Mod++
+				MainSXHandler() ; SuperXP / GoblinXP - Team AiO MOD++
 				If CheckNeedOpenTrain($g_sTimeBeforeTrain) Then TrainSystem()
 				If $g_bRestart = True Then ExitLoop
 				If _Sleep($DELAYIDLE1) Then ExitLoop
@@ -1091,7 +1071,6 @@ Func _Idle() ;Sequence that runs until Full Army
 				$g_iCommandStop = 3
 			EndIf
 		EndIf
-		#ce
 		If _Sleep($DELAYIDLE1) Then Return
 		If $g_iCommandStop = -1 Then
 			DropTrophy()
@@ -1123,7 +1102,7 @@ Func _Idle() ;Sequence that runs until Full Army
 	WEnd
 EndFunc   ;==>_Idle
 
-Func AttackMain($bCallingFirstTime = False) ;Main control for attack functions
+Func AttackMain() ;Main control for attack functions
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
 	#Region - SuperXP / GoblinXP - Team AiO MOD++
 	If $g_bEnableSuperXP = True And $g_iActivateOptionSX = 2 Then
@@ -1154,11 +1133,11 @@ Func AttackMain($bCallingFirstTime = False) ;Main control for attack functions
 				SetDebugLog(_PadStringCenter(" Hero status check" & BitAND($g_aiAttackUseHeroes[$LB], $g_aiSearchHeroWaitEnable[$LB], $g_iHeroAvailable) & "|" & $g_aiSearchHeroWaitEnable[$LB] & "|" & $g_iHeroAvailable, 54, "="), $COLOR_DEBUG)
 				;SetLog("BullyMode: " & $g_abAttackTypeEnable[$TB] & ", Bully Hero: " & BitAND($g_aiAttackUseHeroes[$g_iAtkTBMode], $g_aiSearchHeroWaitEnable[$g_iAtkTBMode], $g_iHeroAvailable) & "|" & $g_aiSearchHeroWaitEnable[$g_iAtkTBMode] & "|" & $g_iHeroAvailable, $COLOR_DEBUG)
 			EndIf
-
+			
 			; Custom BB - Team__AiO__MOD
 			_ClanGames() ; Trying to do this above in the main loop
 			ClickAway(True)
-
+			
 			If $g_bUpdateSharedPrefs Then PullSharedPrefs()
 			PrepareSearch()
 			If Not $g_bRunState Then Return
@@ -1234,7 +1213,7 @@ Func _RunFunction($sAction)
 				Return
 		EndSwitch
 	EndIf
-
+	
 	; Aviod CheckObstacles spam
 	Local $bNoProceed = False
 	Switch $sAction
@@ -1248,7 +1227,6 @@ Func _RunFunction($sAction)
 			If Not $g_bShareAttackEnable Then $bNoProceed = True
 		Case "NotifyReport"
 			If $g_bNotifyAlertVillageReport = False And $g_bNotifyAlertVillageReportDS = False And $g_bNotifyAlertLastAttack = False And $g_bNotifyAlertLastAttackDS = False Then $bNoProceed = True
-			#cs
 		Case "DonateCC"
 			If $g_iActiveDonate And $g_bChkDonate And Not $g_bChkOnlyFarm Then ; Only farm - Team AIO Mod++
 			Else
@@ -1261,7 +1239,6 @@ Func _RunFunction($sAction)
 					$bNoProceed = True
 				EndIf
 			EndIf
-			#ce
 		Case "BoostBarracks"
 			If Not $g_bTrainEnabled Or $g_iCmbBoostBarracks <= 0 Then $bNoProceed = True
 		Case "BoostSpellFactory"
@@ -1356,7 +1333,6 @@ Func __RunFunction($sAction)
 			ReplayShare($g_bShareAttackEnableNow)
 		Case "NotifyReport"
 			NotifyReport()
-			#cs
 		Case "DonateCC"
 			If $g_iActiveDonate And $g_bChkDonate And Not $g_bChkOnlyFarm Then ; Only farm - Team AIO Mod++
 				; if in "Halt/Donate" don't skip near full army
@@ -1392,31 +1368,6 @@ Func __RunFunction($sAction)
 			Else
 				If $g_bDebugSetlogTrain Then SetLog("Halt mode - training disabled", $COLOR_DEBUG)
 			EndIf
-			#ce
-			#Region - AIO
-		Case "DonateCC"
-			If $g_bChkOnlyFarm = False Or (ProfileSwitchAccountEnabled() And Not $g_abDonateOnly[$g_iCurAccount]) Then
-				If $g_iActiveDonate And $g_bChkDonate Then
-					If Not SkipDonateNearFullTroops(True) And BalanceDonRec(True) Then DonateCC()
-					If _Sleep($DELAYRUNBOT1) = False Then checkMainScreen(False)
-				EndIf
-			EndIf
-		Case "DonateCC,Train"
-			If $g_bChkOnlyFarm = False Or (ProfileSwitchAccountEnabled() And Not $g_abDonateOnly[$g_iCurAccount]) Then
-				If $g_bTrainEnabled Then
-					TrainSystem()
-					If BotCommand() Then btnStop()
-					If $g_bForceCheckBoostedTroops Then BoostSuperTroop()
-					If Not $g_aSkipTrain[$g_iCurAccount] Then Return
-				Else
-					If $g_bDebugSetlog Then SetLog("Halt mode - training disabled [Before donate]", $COLOR_DEBUG)
-				EndIf
-				If $g_iActiveDonate And $g_bChkDonate Then
-					If SkipDonateNearFullTroops(True) = False And BalanceDonRec(True) Then DonateCC()
-					If _Sleep($DELAYRUNBOT1) = False Then checkMainScreen(False)
-				EndIf
-			EndIf
-			#EndRegion - AIO
 		Case "BoostBarracks"
 			BoostBarracks()
 		Case "BoostSpellFactory"
@@ -1496,11 +1447,6 @@ Func FirstCheck()
 
 	$g_bRestart = False
 	$g_bFullArmy = False
-	#Region - AIO
-	$g_bDisableTrain = False
-	$g_bDisableBrewSpell = False
-	$g_bDisableSiegeTrain = False
-	#EndRegion - AIO
 	$g_iCommandStop = -1
 
 	If $g_bDebugSetlog Then SetDebugLog("-- FirstCheck Loop --")
@@ -1533,7 +1479,7 @@ Func FirstCheck()
 	VillageReport()
 	ProfileSwitch()
 	CheckFarmSchedule()
-
+	
 	If Not $g_bChkOnlyFarm Then
 		MainGTFO()
 		MainKickout()
@@ -1555,14 +1501,14 @@ Func FirstCheck()
 		SetLog("Switching back to normal setting after no elixir to train ...", $COLOR_SUCCESS)
 		Return ; Restart bot loop to reset $g_iCommandStop & $g_bTrainEnabled + $g_bDonationEnabled via BotCommand()
 	EndIf
-
+	
 	If PlayBBOnly() = True Then Return ; Custom BB - Team AIO Mod++
 
 	If _Sleep($DELAYRUNBOT5) Then Return
 	checkMainScreen(False)
 	If Not $g_bRunState Then Return
 	If $g_bRestart Then Return
-
+	
 	#Region - Custom - xbebenk - Team AIO Mod++
 	VillageReport(False, True)
 	If BotCommand() Then btnStop()
@@ -1578,9 +1524,9 @@ Func FirstCheck()
 	EndIf
 	#Ce
 	#EndRegion - Custom - xbebenk - Team AIO Mod++
-
+	
 	If PlayBBOnly() = True Then Return ; Custom BB - Team AIO Mod++
-	#CS
+
 	If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
 		; VERIFY THE TROOPS AND ATTACK IF IS FULL
 		SetLog("-- FirstCheck on Train --", $COLOR_INFO)
@@ -1608,33 +1554,6 @@ Func FirstCheck()
 			EndIf
 		EndIf
 	EndIf
-	#CE
-	#Region - AiO
-	If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
-		SetDebugLog("-- FirstCheck on Train --")
-		TrainSystem()
-		If BotCommand() Then btnStop()
-		If $g_bForceCheckBoostedTroops Then BoostSuperTroop()
-		If Not $g_aSkipTrain[$g_iCurAccount] Then Return
-		If Not $g_bRunState Then Return
-		SetDebugLog("Are you ready? " & String($g_bIsFullArmywithHeroesAndSpells))
-		If $g_bIsFullArmywithHeroesAndSpells Then
-			If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
-				SetLog("Before any other routine let's attack!!", $COLOR_INFO)
-				If Not $g_bRunState Then Return
-
-				AttackMain(True)
-				$g_bSkipFirstZoomout = False
-				If $g_bOutOfGold = True Then
-					SetLog("Switching to Halt Attack, Stay Online/Collect mode ...", $COLOR_ERROR)
-					$g_bFirstStart = True
-					Return
-				EndIf
-				If _Sleep($DELAYRUNBOT1) Then Return
-			EndIf
-		EndIf
-	EndIf
-	#EndRegion - AiO
 EndFunc   ;==>FirstCheck
 
 Func SetSAtk($attack = False)

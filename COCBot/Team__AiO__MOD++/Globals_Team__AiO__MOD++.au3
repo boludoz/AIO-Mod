@@ -164,9 +164,9 @@ Global $g_aCGBBDestructionChallenges[15][6] = [ _
         ["Airbomb",					"Air Bomb",                 	2,  1, 1, True], _
 		["BuildingDes",             "BB Building",					2,  1, 1, True], _
 		["BuilderHall",             "BuilderHall",					2,  1, 1, True], _
-        ["Cannon",                 	"BB Cannon",                  	2,  1, 1, True], _
-		["ClockTower",             	"Clock Tower",                 	2,  1, 1, True], _
-		["Crusher",             	"Crusher",                 		2,  1, 1, True], _
+        ["Cannon",                 	"BB Cannon",                  	2,  1, 1, True], _ 
+		["ClockTower",             	"Clock Tower",                 	2,  1, 1, True], _ 
+		["Crusher",             	"Crusher",                 		2,  1, 1, True], _ 
         ["DoubleCannon",         	"Double Cannon",             	2,  1, 1, True], _
 		["FireCrackers",         	"Fire Crackers",              	2,  1, 1, True], _
 		["GemMine",                 "Gem Mine",                  	2,  1, 1, True], _
@@ -189,24 +189,24 @@ Global $g_aCGBBTroopChallenges[11][6] = [ _
 		["DShip",                 	"Drop Ship",                  	2,  1, 1, True], _
 		["SPekka",                 	"Super Pekka",                  2,  1, 1, True], _
 		["HGlider",                 "Hog Glider",                  	2,  1, 1, True]]
-
-Global $g_aChallengesClanGamesStrings = ["Loot Challenges", _
-										"Air Troop Challenges", _
-										"Ground Troop Challenges", _
-										"Battle Challenges", _
-										"Destruction Challenges", _
-										"Misc Challenges", _
+		
+Global $g_aChallengesClanGamesStrings = ["Loot Challenges", _ 
+										"Air Troop Challenges", _ 
+										"Ground Troop Challenges", _ 
+										"Battle Challenges", _ 
+										"Destruction Challenges", _ 
+										"Misc Challenges", _ 
 										"Spell Challenges", _
-										"BB Battle Challenges", _
-										"BB Destruction Challenges", _
+										"BB Battle Challenges", _ 
+										"BB Destruction Challenges", _ 
 										"BB Troop Challenges"]
 
 #Tidy_Off
 
 
-
-Global $DiamondMiddleX
-Global $DiamondMiddleY
+ 
+Global $DiamondMiddleX 
+Global $DiamondMiddleY 
 
 #Region - One Gem Boost - Team AiO MOD++
 Global $g_bChkOneGemBoostBarracks = False, $g_bChkOneGemBoostSpells = False, $g_bChkOneGemBoostHeroes = False, $g_bChkOneGemBoostWorkshop = False, $g_bOneGemEventEnded = False
@@ -341,16 +341,6 @@ Global $g_iCustomArmysMainVillage[$eTroopCount][3]
 Global $g_iCustomBrewMainVillage[$eSpellCount][3]
 Global $g_iCustomSiegesMainVillage[$eSiegeMachineCount][3]
 Global $g_hCmbTroopSetting = 0, $g_iCmbTroopSetting = 0
-
-;;;;;;
-Global $g_bForceCheckBoostedTroops = False
-Global $g_bChkUseRandomCSV = False
-
-; Dummy
-Global $g_iSamM0dDebugOCR, $g_iSamM0dDebugOCR, $g_bUseCVSAndRandomTroops[3], $g_bUseCVSAndRandomTroops[3], $g_bUseSmartFarmAndRandomTroops
-Global $g_bChkUseEventTroops = False
-
-Global $g_hChkDBSiegeWait, $g_hChkABSiegeWait
 #EndRegion - Custom train - Team AIO Mod++
 
 ; Debug tag for some capture modes.
@@ -571,7 +561,7 @@ Global Const $g_sBBUpgradesToIgnore[28] = ["Builder Hall", "Gold Mine", "Elixir 
 									 "Battle Machine", "Cannon", "Double Cannon", "Archer Tower", "Hidden Tesla", "Firecrackers", _
 									 "Crusher", "Guard Post", "Air Bombs", "Multi Mortar", "Roaster", "Giant Cannon", "Mega Tesla", _
 									 "Lava Launcher", "Push Trap", "Spring Trap", "Mega Mine", "Mine", "Wall"]
-
+	
 ; @snorlax x @xbebenk credits.
 Global Const $g_sBBOptimizeOTTO[14] = ["Builder Hall", "Gold Mine", "Elixir Collector", "Gold Storage", _
                                      "Elixir Storage", "Gem Mine", "Clock Tower", "Star Laboratory", "Builder Barracks", _
@@ -612,7 +602,7 @@ Global $g_bChkUpgradeTroops = False, $g_bChkUpgradeMachine = False
 
 ; BB Upgrade Walls - Team AiO MOD++
 Global Const $g_aWallBBInfoPerLevel[10][4] = [[0, 0, 0, 0], [1, 4000, 20, 2], [2, 10000, 50, 3], [3, 100000, 50, 3], [4, 300000, 75, 4], [5, 800000, 100, 5], [6, 1200000, 120, 6], [7, 2000000, 140, 7], [8, 3000000, 160, 8], [9, 4000000, 180, 9]]
-Global $g_bChkBBUpgradeWalls = False, $g_iCmbBBWallLevel, $g_iBBWallNumber = 0, _
+Global $g_bChkBBUpgradeWalls = False, $g_iCmbBBWallLevel, $g_iBBWallNumber = 0, _ 
 	   $g_bChkBBUpgWallsGold = True, $g_bChkBBUpgWallsElixir = False, $g_bChkBBWallRing = False
 
 ; Troops
@@ -681,7 +671,7 @@ Global $g_hChkUseSmartFarmRedLine, $g_bUseSmartFarmRedLine = False
 #Region - Misc - Team AIO Mod++
 Global $g_bChkColorfulAttackLog = False, _
        $g_bChkBuyGuard = False
-
+	   
 Global $g_hChkColorfulAttackLog = 0, _
 	   $g_hChkBuyGuard = 0
 #EndRegion - Misc - Team AIO Mod++

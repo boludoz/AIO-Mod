@@ -14,32 +14,16 @@
 ; ===============================================================================================================================
 
 Func BoostSuperTroop($bTest = False)
-
-	If Not $g_bForceCheckBoostedTroops Then Return True
-	$g_bForceCheckBoostedTroops = False
-
 	If Not $g_bSuperTroopsEnable Then
 		Return False
 	EndIf
 
-;~ 	If $g_iCommandStop = 0 Or $g_iCommandStop = 3 Then ;halt attack.. do not boost now
-;~ 		If $g_bSkipBoostSuperTroopOnHalt Then
-;~ 			SetLog("BoostSuperTroop() skipped, account on halt attack mode", $COLOR_DEBUG)
-;~ 			Return False
-;~ 		EndIf
-;~ 	EndIf
-
-
-	If Not IsMainPage() Then Return
-	VillageReport(True, True)
-
-	Local $iDarkElixirValue = Int($g_aiCurrentLoot[$eLootDarkElixir])
-	SetDebugLog("[BoostSuperTroop] $iDarkElixirValue: " & $iDarkElixirValue)
-	If $iDarkElixirValue < 25000 Then
-		SetLog("Not Enough Dark Elixir to boost troops!", $COLOR_ERROR)
-		SetLog("Please verify your train settings!!", $COLOR_ERROR)
-		Return False
-	EndIf
+	; If $g_iCommandStop = 0 Or $g_iCommandStop = 3 Then ;halt attack.. do not boost now
+	; If $g_bSkipBoostSuperTroopOnHalt Then
+	; SetLog("BoostSuperTroop() skipped, account on halt attack mode", $COLOR_DEBUG)
+	; Return False
+	; EndIf
+	; EndIf
 
 	SetLog("Checking super troops.", $COLOR_INFO)
 
@@ -192,24 +176,24 @@ Func BoostSuperTroop($bTest = False)
 														Setlog("Bad IsSTPageBoost.", $COLOR_ERROR)
 														ClickAway(True)
 														If _Sleep(1500) Then Return False
-
+														
 														ClickAway(True)
 														If _Sleep(1500) Then Return False
 														ExitLoop 3
 													EndIf
-
+													
 													#cs
 													If $bBadTryPotion == True And $bBadTryDark == True Then
 														Setlog("No resources for boost.", $COLOR_ERROR)
 														ClickAway(True)
 														If _Sleep(1500) Then Return False
-
+														
 														ClickAway(True)
 														If _Sleep(1500) Then Return False
 														ExitLoop 3
 													EndIf
 													#ce
-
+													
 													; #cs
 
 													If IsSTPageBoost(1) = True Then
@@ -259,7 +243,6 @@ Func BoostSuperTroop($bTest = False)
 		EndIf
 	Else
 		SetLog("BoostSuperTroop: Bad mainscreen.", $COLOR_ERROR)
-		Return False
 	EndIf
 
 	ClickAway()
@@ -275,7 +258,7 @@ Func FinalBoostST(ByRef $bBadTryPotion, ByRef $bBadTryDark, $bTest = False)
 	Local $bPotionAvariable = QuickMIS("BC1", $g_sImgBoostTroopsPotion, $aImgBoostBtn1[0], $aImgBoostBtn1[1], $aImgBoostBtn1[2], $aImgBoostBtn1[3], True, False)
 	Local $aClickPotion[2] = [$g_iQuickMISX + $aImgBoostBtn1[0], $g_iQuickMISY + $aImgBoostBtn1[1]]
 
-	Local $bDarkAvariable = QuickMIS("BC1", $g_sImgBoostTroopsButtons, $aImgBoostBtn1[0], $aImgBoostBtn1[1], $aImgBoostBtn1[2], $aImgBoostBtn1[3], True, False)
+	Local $bDarkAvariable = QuickMIS("BC1", $g_sImgBoostTroopsButtons, $aImgBoostBtn1[0], $aImgBoostBtn1[1], $aImgBoostBtn1[2], $aImgBoostBtn1[3], True, False) 
 	Local $aClickDark[2] = [$g_iQuickMISX + $aImgBoostBtn1[0], $g_iQuickMISY + $aImgBoostBtn1[1]]
 	$bDarkAvariable = IsDarkAvariable()
 	Local $aResource = [$bDarkAvariable, $bPotionAvariable]
@@ -292,7 +275,7 @@ Func FinalBoostST(ByRef $bBadTryPotion, ByRef $bBadTryDark, $bTest = False)
 		If $aResource[$iNum] == True Then
 			ClickP($aClick[$iNum])
 			If _Sleep(1500) Then Return
-
+			
 			Local $sMode = ($iNum = 0) ? ($g_sImgBoostTroopsButtons) : ($g_sImgBoostTroopsPotion)
 			If QuickMIS("BC1", $sMode, $aImgBoostBtn2[0], $aImgBoostBtn2[1], $aImgBoostBtn2[2], $aImgBoostBtn2[3], True, False) Then
 				If $bTest = False Then
@@ -300,11 +283,11 @@ Func FinalBoostST(ByRef $bBadTryPotion, ByRef $bBadTryDark, $bTest = False)
 				Else
 					ClickAway()
 					If _Sleep(1500) Then Return
-
+					
 					ClickAway()
 				EndIf
 			EndIf
-
+			
 			ExitLoop
 		Else
 			If $iNum = 0 Then

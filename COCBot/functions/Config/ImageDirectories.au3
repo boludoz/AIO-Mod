@@ -130,30 +130,12 @@ Global $g_sImgAutoUpgradeNewBldgNo = @ScriptDir & "\imgxml\Resources\BuildersBas
 #Region Train
 Global $g_sImgTrainTroops = @ScriptDir & "\imgxml\Train\Train_Train\"
 Global $g_sImgTrainSpells = @ScriptDir & "\imgxml\Train\Spell_Train\"
-Global $g_sImgArmyOverviewSpells = @ScriptDir & "\imgxml\ArmyOverview\Spells"
+Global $g_sImgArmyOverviewSpells = @ScriptDir & "\imgxml\ArmyOverview\Spells" ; @ScriptDir & "\imgxml\ArmySpells"
 Global $g_sImgRequestCCButton = @ScriptDir & "\imgxml\ArmyOverview\RequestCC"
 Global $g_sImgSendRequestButton = @ScriptDir & "\imgxml\ArmyOverview\RequestCC\SendRequest\SendButton*"
 Global $g_sImgArmyOverviewHeroes = @ScriptDir & "\imgxml\ArmyOverview\Heroes"
 Global $g_sImgQuickTrain = @ScriptDir & "\imgxml\Train\Quick_Train\*"
 Global $g_sImgEditQuickTrain = @ScriptDir & "\imgxml\Train\EditQuickTrain\"
-
-Global $g_sImgTrainTroops_ = @ScriptDir & "\imgxml\ArmyOverview_\Troops\Train"
-Global $g_sImgTrainSpells_ = @ScriptDir & "\imgxml\ArmyOverview_\Spells\Train"
-Global $g_sImgTrainSieges = @ScriptDir & "\imgxml\ArmyOverview_\Sieges\Train"
-Global $g_sImgArmyOverviewTroops = @ScriptDir & "\imgxml\ArmyOverview_\Troops\ArmyOverViewTab"
-Global $g_sImgArmyOverviewSpells_ = @ScriptDir & "\imgxml\ArmyOverview_\Spells"
-Global $g_sImgArmyOverviewSieges = @ScriptDir & "\imgxml\ArmyOverview_\Sieges"
-Global $g_sImgArmyOverviewCCTroops = @ScriptDir & "\imgxml\ArmyOverview_\Troops\CC"
-Global $g_sImgArmyOverviewCCSpells = @ScriptDir & "\imgxml\ArmyOverview_\Spells\CC"
-Global $g_sImgArmyOverviewCCSieges = @ScriptDir & "\imgxml\ArmyOverview_\Sieges\CC"
-Global $g_sImgArmyOnQueueTroops = @ScriptDir & "\imgxml\ArmyOverview_\Troops\OnQueue"
-Global $g_sImgArmyOnQueueSpells = @ScriptDir & "\imgxml\ArmyOverview_\Spells\OnQueue"
-Global $g_sImgArmyOnQueueSieges = @ScriptDir & "\imgxml\ArmyOverview_\Sieges\OnQueue"
-Global $g_sImgArmyOnTrainTroops = @ScriptDir & "\imgxml\ArmyOverview_\Troops\OnTrain"
-Global $g_sImgArmyOnTrainSpells = @ScriptDir & "\imgxml\ArmyOverview_\Spells\OnTrain"
-Global $g_sImgArmyOnTrainSieges = @ScriptDir & "\imgxml\ArmyOverview_\Sieges\OnTrain"
-Global $g_sImgArmyReady = @ScriptDir & "\imgxml\ArmyOverview_\Ready"
-Global $g_sImgArmyRequestCC = @ScriptDir & "\imgxml\ArmyOverview_\Request"
 #EndRegion
 
 #Region Attack

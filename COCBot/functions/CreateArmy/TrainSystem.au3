@@ -15,7 +15,7 @@
 #include-once
 #include <Array.au3>
 #include <MsgBoxConstants.au3>
-Func _TrainSystem() ; AIO
+Func TrainSystem()
 	If Not $g_bTrainEnabled Then ; check for training disabled in halt mode
 		If $g_bDebugSetlogTrain Then SetLog("Halt mode - training disabled", $COLOR_DEBUG)
 		$g_bForceDoubleTrain = False ; Custom train - Team AIO Mod++
@@ -26,10 +26,12 @@ Func _TrainSystem() ; AIO
 	StartGainCost()
 	
 	; Custom BoostSuperTroop - Team AIO Mod++
-	BoostSuperTroop()
-	If _Sleep(1000) Then Return
-	
-	CheckMainScreen(False, False)
+	If $g_bQuickTrainEnable Then
+		BoostSuperTroop()
+		If _Sleep(1000) Then Return
+		
+		CheckMainScreen(False, False)
+	EndIf
 	
 	If $g_bQuickTrainEnable Then CheckQuickTrainTroop() ; update values of $g_aiArmyComTroops, $g_aiArmyComSpells
 
