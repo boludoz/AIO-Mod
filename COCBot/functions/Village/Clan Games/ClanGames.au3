@@ -598,7 +598,7 @@ EndFunc   ;==>IsClanGamesWindow
 
 ; Close clan games with European lord manners.
 Func ClickAwayCross()
-	If _Wait4PixelGone(827, 78, 0xFFFFFF, 5, 1500, "ClickAwayCross") Then
+	If _Wait4PixelGone(827, 78, 0xFFFFFF, 5, 1500, 250, "ClickAwayCross") Then
 		If IsMainPage(1) Then Return
 		ClickAway() ;Click Away
 	Else

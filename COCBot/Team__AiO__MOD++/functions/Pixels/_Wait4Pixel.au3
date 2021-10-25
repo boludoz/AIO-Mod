@@ -9,7 +9,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func _Wait4Pixel($x, $y, $sColor, $iColorVariation = 25, $iWait = 3000, $iDelay = 100, $sMsglog = Default) ; Return true if pixel is true
-	Local $iSleep = Round($iWait / $iDelay) ; Can help in VPS Delay Case
+	Local $iSleep = Round(Int($iWait) / Int($iDelay)) ; Can help in VPS Delay Case
 	For $i = 1 To $iSleep
 		If _ColorCheck(Hex($sColor, 6), _GetPixelColor($x, $y, $g_bCapturePixel), $iColorVariation) Then Return True
 		If _Sleep($iDelay) Then Return False
@@ -18,7 +18,7 @@ Func _Wait4Pixel($x, $y, $sColor, $iColorVariation = 25, $iWait = 3000, $iDelay 
 EndFunc   ;==>_Wait4Pixel
 
 Func _Wait4PixelGone($x, $y, $sColor, $iColorVariation = 25, $iWait = 3000, $iDelay = 100, $sMsglog = Default) ; Return true if pixel is false
-	Local $iSleep = Round($iWait / $iDelay) ; Can help in VPS Delay Case
+	Local $iSleep = Round(Int($iWait) / Int($iDelay)) ; Can help in VPS Delay Case
 	For $i = 1 To $iSleep
 		If _ColorCheck(Hex($sColor, 6), _GetPixelColor($x, $y, $g_bCapturePixel), $iColorVariation) = False Then Return True
 		If _Sleep($iDelay) Then Return False

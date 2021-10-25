@@ -77,11 +77,11 @@ Func DoubleTrain($bWarTroop = False, $bPreTrainFlag = True) ; Check Stop For War
 			$bNeedReCheckTroopTab = True
 			If $bDebug Then SetLog($Step & ". DeleteQueued('Troops'). $bNeedReCheckTroopTab: " & $bNeedReCheckTroopTab, $COLOR_DEBUG)
 
-		ElseIf $TroopCamp[0] = $TroopCamp[1] Then ; 280/280
+		ElseIf $TroopCamp[0] = $TroopCamp[1] And ($g_bDoubleTrain And $bPreTrainFlag) Then ; 280/280
 			TrainFullTroop($bPreTrainFlag)
 			If $bDebug Then SetLog($Step & ". TrainFullTroop(True) done!", $COLOR_DEBUG)
 
-		ElseIf $TroopCamp[0] <= $TroopCamp[1] * 2 Then ; 281-540/540
+		ElseIf $TroopCamp[0] <= $TroopCamp[1] * 2 And ($g_bDoubleTrain And $bPreTrainFlag) Then ; 281-540/540
 			If CheckQueueTroopAndTrainRemain($TroopCamp, $bDebug) Then
 				If $bDebug Then SetLog($Step & ". CheckQueueAndTrainRemain() done!", $COLOR_DEBUG)
 			Else
@@ -126,12 +126,12 @@ Func DoubleTrain($bWarTroop = False, $bPreTrainFlag = True) ; Check Stop For War
 				$bNeedReCheckSpellTab = True
 				If $bDebug Then SetLog($Step & ". DeleteQueued('Spells'). $bNeedReCheckSpellTab: " & $bNeedReCheckSpellTab, $COLOR_DEBUG)
 
-			ElseIf $SpellCamp[0] = $SpellCamp[1] Or $SpellCamp[0] <= $SpellCamp[1] + $iUnbalancedSpell Then ; 11/22
+			ElseIf $SpellCamp[0] = $SpellCamp[1] Or $SpellCamp[0] <= $SpellCamp[1] + $iUnbalancedSpell And ($g_bForcePreBrewSpells Or ($g_bDoubleTrain And $bPreTrainFlag)) Then ; 11/22
 				BrewFullSpell($bPreTrainFlag)
 				If $iUnbalancedSpell > 0 Then TopUpUnbalancedSpell($iUnbalancedSpell)
 				If $bDebug Then SetLog($Step & ". BrewFullSpell(True) done!", $COLOR_DEBUG)
 
-			Else ; If $SpellCamp[0] <= $SpellCamp[1] * 2 Then ; 12-22/22
+			ElseIf ($g_bForcePreBrewSpells) Then ; If $SpellCamp[0] <= $SpellCamp[1] * 2 Then ; 12-22/22
 				If CheckQueueSpellAndTrainRemain($SpellCamp, $bDebug, $iUnbalancedSpell) Then
 					If $SpellCamp[0] < ($SpellCamp[1] + $iUnbalancedSpell) * 2 Then TopUpUnbalancedSpell($iUnbalancedSpell)
 					If $bDebug Then SetLog($Step & ". CheckQueueSpellAndTrainRemain() done!", $COLOR_DEBUG)
