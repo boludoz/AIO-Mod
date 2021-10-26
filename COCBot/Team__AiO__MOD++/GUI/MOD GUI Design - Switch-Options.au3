@@ -35,7 +35,7 @@ Global $g_hTxtSALog = 0
 
 Func CreateSwitchOptions()
 	; GUI Tab for Switch Accounts & Farm Schedule
-	$g_hGUI_LOG_SA = _GUICreate("", 205, 200, 235, 150, BitOR($WS_CHILD, 0), -1, $g_hGUI_SWITCH_OPTIONS)
+	$g_hGUI_LOG_SA = _GUICreate("", 205, 200, 235, 150 + 118, BitOR($WS_CHILD, 0), -1, $g_hGUI_SWITCH_OPTIONS)
 
 	GUISwitch($g_hGUI_SWITCH_OPTIONS)
 	$g_hGUI_SWITCH_OPTIONS_TAB = GUICtrlCreateTab(0, 0, $g_iSizeWGrpTab2 + 2, $g_iSizeHGrpTab4 + 5, BitOR($TCS_MULTILINE, $TCS_RIGHTJUSTIFY))
@@ -239,7 +239,7 @@ Func CreateBotSwitchAccLog()
 
 	Local $x = 0, $y = 0
 	Local $activeHWnD1 = WinGetHandle("") ; RichEdit Controls tamper with active window
-	$g_hTxtSALog = _GUICtrlRichEdit_Create($g_hGUI_LOG_SA, "", $x, $y + 118, 205, 200 - 118, BitOR($ES_MULTILINE, $ES_READONLY, $WS_VSCROLL, $WS_HSCROLL, $ES_UPPERCASE, $ES_AUTOHSCROLL, $ES_AUTOVSCROLL, $ES_NUMBER, 0x200), $WS_EX_STATICEDGE) ; Custom Acc - Team AIO Mod++
+	$g_hTxtSALog = _GUICtrlRichEdit_Create($g_hGUI_LOG_SA, "", $x, $y, 205, 200, BitOR($ES_MULTILINE, $ES_READONLY, $WS_VSCROLL, $WS_HSCROLL, $ES_UPPERCASE, $ES_AUTOHSCROLL, $ES_AUTOVSCROLL, $ES_NUMBER, 0x200), $WS_EX_STATICEDGE) ; Custom Acc - Team AIO Mod++
 	WinActivate($activeHWnD1) ; restore current active window
 
 EndFunc   ;==>CreateBotSwitchAccLog
