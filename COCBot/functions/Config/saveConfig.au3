@@ -1254,12 +1254,12 @@ Func SaveConfig_600_35_2()
 	Local $iCmbSwitchAcc = $g_iCmbSwitchAcc
 	If $iCmbSwitchAcc = 0 Then
 		; find group this profile belongs to: no switch profile config is saved in config.ini on purpose!
-		For $g = 1 To 8
+		For $g = 1 To $g_eTotalAcc
 			$sSwitchAccFile = $g_sProfilePath & "\SwitchAccount.0" & $g & ".ini"
 			If FileExists($sSwitchAccFile) = 0 Then ContinueLoop
 			Local $sProfile
 			Local $bEnabled
-			For $i = 1 To 8
+			For $i = 1 To $g_eTotalAcc
 				$bEnabled = IniRead($sSwitchAccFile, "SwitchAccount", "Enable" & $i, "") = "1"
 				If $bEnabled Then
 					$bEnabled = IniRead($sSwitchAccFile, "SwitchAccount", "AccountNo." & $i, "") = "1"
@@ -1285,7 +1285,7 @@ Func SaveConfig_600_35_2()
 		IniWrite($sSwitchAccFile, "SwitchAccount", "DonateLikeCrazy", $g_bDonateLikeCrazy ? 1 : 0)
 		IniWrite($sSwitchAccFile, "SwitchAccount", "TotalCocAccount", $g_iTotalAcc)
 		IniWrite($sSwitchAccFile, "SwitchAccount", "TrainTimeToSkip", $g_iTrainTimeToSkip)
-		For $i = 1 To 8
+		For $i = 1 To $g_eTotalAcc
 			IniWrite($sSwitchAccFile, "SwitchAccount", "AccountNo." & $i, $g_abAccountNo[$i - 1] ? 1 : 0)
 			IniWrite($sSwitchAccFile, "SwitchAccount", "ProfileName." & $i, $g_asProfileName[$i - 1])
 			IniWrite($sSwitchAccFile, "SwitchAccount", "DonateOnly." & $i, $g_abDonateOnly[$i - 1] ? 1 : 0)
