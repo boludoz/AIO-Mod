@@ -45,6 +45,10 @@ Func _ImageSearchXML($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = "FV", 
 	Local $result = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", ($bIsPtr = True) ? ($_hHBitmap) : ($g_hHBitmap2), "str", $sDirectory, "str", $vArea2SearchOri, "Int", $iQuantityMatch, "str", $vArea2SearchOri, "Int", $minLevel, "Int", $maxLevel)
 	$error = @error ; Store error values as they reset at next function call
 	$extError = @extended
+	If $_hHBitmap <> 0 Then
+		GdiDeleteHBitmap($_hHBitmap)
+	EndIf
+	$_hHBitmap = 0
 	If $error Then
 		_logErrorDLLCall($g_sLibMyBotPath, $error)
 		If $g_bDebugSetlog Then SetDebugLog(" imgloc DLL Error : " & $error & " --- " & $extError)
@@ -163,6 +167,10 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 	Local $result = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", ($bIsPtr = True) ? ($_hHBitmap) : ($g_hHBitmap2), "str", $sDirectory, "str", $vArea2SearchOri, "Int", $iQuantToMach, "str", $vArea2SearchOri2, "Int", $minLevel, "Int", $maxLevel)
 	$error = @error ; Store error values as they reset at next function call
 	$extError = @extended
+	If $_hHBitmap <> 0 Then
+		GdiDeleteHBitmap($_hHBitmap)
+	EndIf
+	$_hHBitmap = 0
 	If $error Then
 		_logErrorDLLCall($g_sLibMyBotPath, $error)
 		If $g_bDebugSetlog Then SetDebugLog(" imgloc DLL Error : " & $error & " --- " & $extError)

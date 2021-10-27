@@ -370,13 +370,6 @@ Global $g_bClanWarLeague = True, $g_bClanWar = True
 ; Custom BB Army - Team AIO Mod++
 Global $g_bDebugBBattack = False
 
-;GUI
-;CustomArmy
-Global $g_iCmbCampsBB[6] = [0, 0, 0, 0, 0, 0]
-Global $g_hIcnTroopBB[6]
-Global $g_hComboTroopBB[6]
-Global $g_bChkBBCustomArmyEnable = True, $g_hChkBBCustomArmyEnable
-
 ; Drop trophy - Team AiO MOD++
 Global $g_bChkNoDropIfShield = True, $g_bChkTrophyTroops = False, $g_bChkTrophyHeroesAndTroops = True
 ; GUI
@@ -549,6 +542,13 @@ $g_iInputBuilderPotion, $g_iInputLabPotion, $g_iInputGoldItems = 250000, $g_iInp
 
 #Region - Builder Base !!!
 Global $g_oTxtBBAtkLogInitText = ObjCreate("Scripting.Dictionary")
+
+;GUI
+;CustomArmy
+Global $g_iCmbCampsBB[6] = [0, 0, 0, 0, 0, 0]
+Global $g_hIcnTroopBB[6]
+Global $g_hComboTroopBB[6]
+Global $g_bChkBBCustomArmyEnable = True, $g_hChkBBCustomArmyEnable
 
 ; Custom Improve - Team AIO Mod++
 Global $g_aBBUpgradeNameLevel[3] = ["", "", ""]
