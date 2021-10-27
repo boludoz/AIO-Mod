@@ -6,8 +6,8 @@
 ; Parameters ....: None
 ; Return values .: None
 ; Author ........: Demen
-; Modified ......:
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
+; Modified ......: Team AIO Mod++
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2021
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
@@ -16,7 +16,7 @@
 #include-once
 Global $g_bForcePreBrewSpells = True, $g_bPreciseBrew = False
 
-Func DoubleTrain($bWarTroop = False, $bPreTrainFlag = True) ; Check Stop For War - Team AiO MOD++
+Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 
 	; If Not $g_bDoubleTrain Then Return ; Custom train - Team AIO Mod++
 	Local $bDebug = $g_bDebugSetlogTrain Or $g_bDebugSetlog
@@ -55,7 +55,18 @@ Func DoubleTrain($bWarTroop = False, $bPreTrainFlag = True) ; Check Stop For War
 	#EndRegion - Missing PreciseArmy - Team AIO Mod++
 	
 	#Region - Custom Army - Team AIO Mod++
-	
+	Local $bForceDouble = $g_bIsFullArmywithHeroesAndSpells
+	Local $bPreTrainFlag = $g_bDoubleTrain Or $bForceDouble
+	If $g_bChkPreTrainTroopsPercent And $g_bForceDoubleTrain = False Then
+		$bPreTrainFlag = ($g_iArmyCapacity >= $g_iInpPreTrainTroopsPercent)
+		SetLog("Double train condition ? " & $bPreTrainFlag, $COLOR_INFO)
+	ElseIf $g_bForceDoubleTrain = True Then
+		SetLog("Force double train before switch account.", $COLOR_SUCCESS)
+		$g_bForceDoubleTrain = False
+		$bPreTrainFlag = True
+	ElseIf $g_bIsFullArmywithHeroesAndSpells = True Then
+		SetLog("Force double train before attack.", $COLOR_SUCCESS)
+	EndIf	
 	#EndRegion - Custom Army - Team AIO Mod++
 	
 	; Troop
@@ -81,11 +92,11 @@ Func DoubleTrain($bWarTroop = False, $bPreTrainFlag = True) ; Check Stop For War
 			$bNeedReCheckTroopTab = True
 			If $bDebug Then SetLog($Step & ". DeleteQueued('Troops'). $bNeedReCheckTroopTab: " & $bNeedReCheckTroopTab, $COLOR_DEBUG)
 
-		ElseIf $TroopCamp[0] = $TroopCamp[1] And ($g_bDoubleTrain And $bPreTrainFlag) Then ; 280/280
+		ElseIf $TroopCamp[0] = $TroopCamp[1] And ($g_bDoubleTrain And $bPreTrainFlag Or $bForceDouble) Then ; 280/280
 			TrainFullTroop($bPreTrainFlag)
 			If $bDebug Then SetLog($Step & ". TrainFullTroop(True) done!", $COLOR_DEBUG)
 
-		ElseIf $TroopCamp[0] <= $TroopCamp[1] * 2 And ($g_bDoubleTrain And $bPreTrainFlag) Then ; 281-540/540
+		ElseIf $TroopCamp[0] <= $TroopCamp[1] * 2 And ($g_bDoubleTrain And $bPreTrainFlag Or $bForceDouble) Then ; 281-540/540
 			If CheckQueueTroopAndTrainRemain($TroopCamp, $bDebug) Then
 				If $bDebug Then SetLog($Step & ". CheckQueueAndTrainRemain() done!", $COLOR_DEBUG)
 			Else
@@ -130,12 +141,12 @@ Func DoubleTrain($bWarTroop = False, $bPreTrainFlag = True) ; Check Stop For War
 				$bNeedReCheckSpellTab = True
 				If $bDebug Then SetLog($Step & ". DeleteQueued('Spells'). $bNeedReCheckSpellTab: " & $bNeedReCheckSpellTab, $COLOR_DEBUG)
 
-			ElseIf $SpellCamp[0] = $SpellCamp[1] Or $SpellCamp[0] <= $SpellCamp[1] + $iUnbalancedSpell And ($g_bForcePreBrewSpells Or ($g_bDoubleTrain And $bPreTrainFlag)) Then ; 11/22
+			ElseIf $SpellCamp[0] = $SpellCamp[1] Or $SpellCamp[0] <= $SpellCamp[1] + $iUnbalancedSpell And ($g_bForcePreBrewSpells Or ($g_bDoubleTrain And $bPreTrainFlag) Or $bForceDouble) Then ; 11/22
 				BrewFullSpell($bPreTrainFlag)
 				If $iUnbalancedSpell > 0 Then TopUpUnbalancedSpell($iUnbalancedSpell)
 				If $bDebug Then SetLog($Step & ". BrewFullSpell(True) done!", $COLOR_DEBUG)
 
-			ElseIf ($g_bForcePreBrewSpells) Then ; If $SpellCamp[0] <= $SpellCamp[1] * 2 Then ; 12-22/22
+			ElseIf ($g_bForcePreBrewSpells Or ($g_bDoubleTrain And $bPreTrainFlag) Or $bForceDouble) Then ; If $SpellCamp[0] <= $SpellCamp[1] * 2 Then ; 12-22/22
 				If CheckQueueSpellAndTrainRemain($SpellCamp, $bDebug, $iUnbalancedSpell) Then
 					If $SpellCamp[0] < ($SpellCamp[1] + $iUnbalancedSpell) * 2 Then TopUpUnbalancedSpell($iUnbalancedSpell)
 					If $bDebug Then SetLog($Step & ". CheckQueueSpellAndTrainRemain() done!", $COLOR_DEBUG)

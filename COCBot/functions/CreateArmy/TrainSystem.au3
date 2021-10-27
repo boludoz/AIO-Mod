@@ -38,20 +38,19 @@ Func TrainSystem()
 	CheckIfArmyIsReady()
 	
 	#Region - Custom train - Team AIO Mod++
-	Local $bPreTrainFlag = $g_bDoubleTrain
-	If $g_bChkPreTrainTroopsPercent And $g_bForceDoubleTrain = False Then
-		$bPreTrainFlag = ($g_iArmyCapacity >= $g_iInpPreTrainTroopsPercent)
-		SetLog("Double train condition ? " & $bPreTrainFlag, $COLOR_INFO)
-	ElseIf $g_bForceDoubleTrain = True Then
-		SetLog("Force double train before switch account.", $COLOR_SUCCESS)
-		$g_bForceDoubleTrain = False
-		$bPreTrainFlag = True
-	EndIf
-						
 	If $g_bQuickTrainEnable Then
+		Local $bPreTrainFlag = $g_bDoubleTrain
+		If $g_bChkPreTrainTroopsPercent And $g_bForceDoubleTrain = False Then
+			$bPreTrainFlag = ($g_iArmyCapacity >= $g_iInpPreTrainTroopsPercent)
+			SetLog("Double train condition ? " & $bPreTrainFlag, $COLOR_INFO)
+		ElseIf $g_bForceDoubleTrain = True Then
+			SetLog("Force double train before switch account.", $COLOR_SUCCESS)
+			$g_bForceDoubleTrain = False
+			$bPreTrainFlag = True
+		EndIf
 		QuickTrain($bPreTrainFlag)
 	Else
-		TrainCustomArmy($bPreTrainFlag)
+		TrainCustomArmy()
 	EndIf
 	#EndRegion - Custom train - Team AIO Mod++
 
@@ -67,7 +66,7 @@ Func TrainSystem()
 	checkAttackDisable($g_iTaBChkIdle) ; Check for Take-A-Break after opening train page
 EndFunc   ;==>TrainSystem
 
-Func TrainCustomArmy($bPreTrainFlag = $g_bDoubleTrain) ; Custom train - Team AIO Mod++
+Func TrainCustomArmy() ; Custom train - Team AIO Mod++
 	If Not $g_bRunState Then Return
 
 	If $g_bDebugSetlogTrain Then SetLog(" == Initial Custom Train == ", $COLOR_ACTION)
@@ -75,7 +74,7 @@ Func TrainCustomArmy($bPreTrainFlag = $g_bDoubleTrain) ; Custom train - Team AIO
 	;If $bDonateTrain = -1 Then SetbDonateTrain()
 	If $g_iActiveDonate = -1 Then PrepareDonateCC()
 
-	DoubleTrain(False, $bPreTrainFlag)
+	DoubleTrain(False)
 	
 	#cs
 	If Not $g_bRunState Then Return
