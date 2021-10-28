@@ -1598,7 +1598,7 @@ Func ReadConfig_600_52_2()
 		IniReadS($g_aiTrainArmySiegeMachineLevel[$S], $g_sProfileConfigPath, "LevelSiege", $g_asSiegeMachineShortNames[$S], 0, "int")
 	Next
 	IniReadS($g_iTrainArmyFullTroopPct, $g_sProfileConfigPath, "troop", "fullTroop", 100, "int")
-	IniReadS($g_bTotalCampForced, $g_sProfileConfigPath, "troop", "ChkTotalCampForced", 0, "int")
+	IniReadS($g_bTotalCampForced, $g_sProfileConfigPath, "other", "ChkTotalCampForced", 0, "int")
 	$g_iTotalCampForcedValue = Int(IniRead($g_sProfileConfigPath, "other", "ValueTotalCampForced", 220))
 	IniReadS($g_iTotalSpellValue, $g_sProfileConfigPath, "Spells", "SpellFactory", 0, "int")
 	$g_iTotalSpellValue = Int($g_iTotalSpellValue)
