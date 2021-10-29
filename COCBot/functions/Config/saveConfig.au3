@@ -1355,7 +1355,12 @@ Func SaveConfig_600_52_2()
 	; DoubleTrain - Demen
 	_Ini_Add("troop", "DoubleTrain", $g_bDoubleTrain ? 1 : 0)
 	_Ini_Add("troop", "PreciseArmy", $g_bPreciseArmy ? 1 : 0)
+	
 	#Region - Custom train - Team AIO Mod++
+	_Ini_Add("troop", "TxtTotalCountSiege", $g_iTotalSiegeValue)
+	_Ini_Add("troop", "ChkPreciseSieges", $g_bPreciseSieges ? 1 : 0)
+	_Ini_Add("troop", "ChkForcePreBuildSieges", $g_bForcePreBuildSieges ? 1 : 0)
+
 	_Ini_Add("troop", "PreciseBrew", $g_bPreciseBrew ? 1 : 0)
 	_Ini_Add("troop", "ForcePreBrewSpells", $g_bForcePreBrewSpells ? 1 : 0)
 
@@ -1397,6 +1402,13 @@ Func SaveConfig_600_54()
 	For $z = 0 To UBound($g_aiCmbCustomBrewOrder) - 1
 		_Ini_Add("Spells", "cmbSpellOrder" & $z, $g_aiCmbCustomBrewOrder[$z])
 	Next
+	
+	; Sieges Machines Order - Custom Team AIO Mod++
+	_Ini_Add("Sieges", "chkSiegeOrder", $g_bCustomBuildOrderEnable ? 1 : 0)
+	For $z = 0 To UBound($g_aiCmbCustomBuildOrder) - 1
+		_Ini_Add("Sieges", "cmbBuildOrder" & $z, $g_aiCmbCustomBuildOrder[$z])
+	Next
+
 EndFunc   ;==>SaveConfig_600_54
 
 #Region - Custom SmartZap - Team AIO Mod++
