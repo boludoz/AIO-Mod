@@ -1598,7 +1598,7 @@ Func ReadConfig_600_52_2()
 		IniReadS($g_aiTrainArmySiegeMachineLevel[$S], $g_sProfileConfigPath, "LevelSiege", $g_asSiegeMachineShortNames[$S], 0, "int")
 	Next
 	IniReadS($g_iTrainArmyFullTroopPct, $g_sProfileConfigPath, "troop", "fullTroop", 100, "int")
-	IniReadS($g_bTotalCampForced, $g_sProfileConfigPath, "troop", "ChkTotalCampForced", 0, "int")
+	IniReadS($g_bTotalCampForced, $g_sProfileConfigPath, "other", "ChkTotalCampForced", 0, "int")
 	$g_iTotalCampForcedValue = Int(IniRead($g_sProfileConfigPath, "other", "ValueTotalCampForced", 220))
 	IniReadS($g_iTotalSpellValue, $g_sProfileConfigPath, "Spells", "SpellFactory", 0, "int")
 	$g_iTotalSpellValue = Int($g_iTotalSpellValue)
@@ -1607,6 +1607,10 @@ Func ReadConfig_600_52_2()
 	$g_bPreciseArmy = (IniRead($g_sProfileConfigPath, "troop", "PreciseArmy", "0") = "1")
 
 	#Region - Custom train - Team AIO Mod++
+	IniReadS($g_iTotalSiegeValue, $g_sProfileConfigPath, "troop", "TxtTotalCountSiege", 0, "Int")
+	IniReadS($g_bPreciseSieges, $g_sProfileConfigPath, "troop", "ChkPreciseSieges", False, "Bool")
+	IniReadS($g_bForcePreBuildSieges, $g_sProfileConfigPath, "troop", "ChkForcePreBuildSieges", False, "Bool")
+
 	$g_bPreciseBrew = (IniRead($g_sProfileConfigPath, "troop", "PreciseBrew", "0") = "1")
 	$g_bForcePreBrewSpells = (IniRead($g_sProfileConfigPath, "troop", "ForcePreBrewSpells", "0") = "1")
 
@@ -1648,6 +1652,13 @@ Func ReadConfig_600_54()
 	For $z = 0 To UBound($g_aiCmbCustomBrewOrder) - 1
 		IniReadS($g_aiCmbCustomBrewOrder[$z], $g_sProfileConfigPath, "Spells", "cmbSpellOrder" & $z, $z + 1)
 	Next
+	
+	; Sieges Machines Order - Custom Team AIO Mod++
+	IniReadS($g_bCustomBuildOrderEnable, $g_sProfileConfigPath, "Sieges", "chkSiegeOrder", False, "Bool")
+	For $z = 0 To UBound($g_aiCmbCustomBuildOrder) - 1
+		IniReadS($g_aiCmbCustomBuildOrder[$z], $g_sProfileConfigPath, "Sieges", "cmbBuildOrder" & $z, $z + 1)
+	Next
+
 EndFunc   ;==>ReadConfig_600_54
 
 #Region - Custom SmartZap - Team AIO Mod++

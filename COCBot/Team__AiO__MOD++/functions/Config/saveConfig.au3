@@ -367,6 +367,7 @@ Func SaveConfig_MOD_Humanization()
 EndFunc   ;==>SaveConfig_MOD_Humanization
 
 Func SaveConfig_MOD_SmartMilk()
+	ApplyConfig_MOD_SmartMilk(GetApplyConfigSaveAction())
 	_Ini_Add("SmartMilk", "MilkStrategyArmy", $g_iMilkStrategyArmy)
 	_Ini_Add("SmartMilk", "MilkForceDeployHeroes", $g_bChkMilkForceDeployHeroes)
 	_Ini_Add("SmartMilk", "ChkMilkForceAllTroops", $g_bChkMilkForceAllTroops)
@@ -376,6 +377,7 @@ EndFunc   ;==>SaveConfig_MOD_SmartMilk
 
 #Region - One Gem Boost - Team AiO MOD++
 Func SaveConfig_MOD_OneGem()
+	ApplyConfig_MOD_OneGem(GetApplyConfigSaveAction())
 	; <><><> Attack Plan / Train Army / Boost <><><>
 	_Ini_Add("boost", "ChkOneGemBoostBarracks", $g_bChkOneGemBoostBarracks ? 1 : 0)
 	_Ini_Add("boost", "ChkOneGemBoostSpells", $g_bChkOneGemBoostSpells ? 1 : 0)

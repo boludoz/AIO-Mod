@@ -191,12 +191,12 @@ Func TrainFullTroop($bQueue = False)
 	
 	Local $ToReturn[1][2] = [["Arch", 0]]
 	For $i = 0 To $eTroopCount - 1
-	Local $troopIndex = $g_aiTrainOrder[$i]
-	If $g_aiArmyCompTroops[$troopIndex] > 0 Then
-		$ToReturn[UBound($ToReturn) - 1][0] = $g_asTroopShortNames[$troopIndex]
-		$ToReturn[UBound($ToReturn) - 1][1] = $g_aiArmyCompTroops[$troopIndex]
-		ReDim $ToReturn[UBound($ToReturn) + 1][2]
-	EndIf
+		Local $troopIndex = $g_aiTrainOrder[$i]
+		If $g_aiArmyCompTroops[$troopIndex] > 0 Then
+			$ToReturn[UBound($ToReturn) - 1][0] = $g_asTroopShortNames[$troopIndex]
+			$ToReturn[UBound($ToReturn) - 1][1] = $g_aiArmyCompTroops[$troopIndex]
+			ReDim $ToReturn[UBound($ToReturn) + 1][2]
+		EndIf
 	Next
 
 	If $ToReturn[0][0] = "Arch" And $ToReturn[0][1] = 0 Then Return
