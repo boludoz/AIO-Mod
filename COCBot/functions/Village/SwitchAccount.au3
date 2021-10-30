@@ -339,6 +339,7 @@ Func SwitchCOCAcc($NextAccount)
 		$g_ahTimerSinceSwitched[$g_iCurAccount] = __TimerInit()
 		$g_bInitiateSwitchAcc = False
 		If $g_sProfileCurrentName <> $g_asProfileName[$g_iNextAccount] Then
+			BuilderBaseResetStats()
 			If $g_iGuiMode = 1 Then
 				; normal GUI Mode
 				_GUICtrlComboBox_SetCurSel($g_hCmbProfile, _GUICtrlComboBox_FindStringExact($g_hCmbProfile, $g_asProfileName[$g_iNextAccount]))

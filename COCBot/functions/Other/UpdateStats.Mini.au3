@@ -366,4 +366,13 @@ Func ResetStats()
 	$g_iTotalDonateStatsSiegeMachinesXP = 0
 
 	UpdateStats()
- EndFunc   ;==>ResetStats
+ 	BuilderBaseResetStats()
+EndFunc   ;==>ResetStats
+
+; AIO
+Func BuilderBaseResetStats()
+	GUICtrlSetData($g_hLblBBResultGoldNow, "")
+	GUICtrlSetData($g_hLblBBResultElixirNow, "")
+	GUICtrlSetData($g_hLblBBResultTrophyNow, "")
+	GUICtrlSetData($g_hLblBBResultBuilderNow, "")
+EndFunc   ;==>BuilderBaseResetStats

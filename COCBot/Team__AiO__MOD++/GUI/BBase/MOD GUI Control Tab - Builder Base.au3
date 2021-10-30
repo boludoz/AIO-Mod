@@ -359,10 +359,17 @@ EndFunc   ;==>cmbBBWall
 ; Global $g_hChkOnlyBuilderBase, $g_hTxtBBMinAttack, $g_hTxtBBMaxAttack ; AIO ++
 
 Func ChkOnlyBuilderBase()
+	Local $bStatusChk = $g_bOnlyBuilderBase
 	$g_bOnlyBuilderBase = GUICtrlRead($g_hChkOnlyBuilderBase) = $GUI_CHECKED ? True : False
-	If $g_bOnlyBuilderBase Then
-		If $g_bStayOnBuilderBase = False Then $g_bRestart = True ; Quick solution.
+	If $g_bOnlyBuilderBase <> $bStatusChk Then
+		$g_bRestart = True ; Quick solution.
 	EndIf
+	
+	If $g_bOnlyBuilderBase Then
+		$g_iCurrentReport = $g_iBBReport
+		btnVillageStat()
+	EndIf
+	
 EndFunc   ;==>chkPlayBBOnly
 
 Func ChkBBAttackLoops()

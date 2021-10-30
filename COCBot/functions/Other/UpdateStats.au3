@@ -741,6 +741,7 @@ Func ResetStats()
 		Next
 	EndIf
 	UpdateStats()
+	BuilderBaseResetStats()
 EndFunc   ;==>ResetStats
 
 Func WallsStatsMAJ()

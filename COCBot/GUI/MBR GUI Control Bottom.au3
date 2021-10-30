@@ -350,18 +350,27 @@ Func GetFont()
 EndFunc   ;==>GetFont
 
 Func btnVillageStat($source = "")
-
 	If $g_iFirstRun = 0 And $g_bRunState And Not $g_bBotPaused Then SetTime(True)
 
-	If GUICtrlGetState($g_hLblResultGoldNow) = $GUI_ENABLE + $GUI_SHOW Then
-		;hide normal values
+	If $g_iCurrentReport = $g_iVillageHourlyReport Then
+		;HIDE Village Report Values
 		GUICtrlSetState($g_hLblResultGoldNow, $GUI_ENABLE + $GUI_HIDE)
 		GUICtrlSetState($g_hLblResultElixirNow, $GUI_ENABLE + $GUI_HIDE)
 		GUICtrlSetState($g_hLblResultDENow, $GUI_ENABLE + $GUI_HIDE)
 		GUICtrlSetState($g_hLblResultTrophyNow, $GUI_ENABLE + $GUI_HIDE)
 		GUICtrlSetState($g_hLblResultBuilderNow, $GUI_ENABLE + $GUI_HIDE)
 		GUICtrlSetState($g_hLblResultGemNow, $GUI_ENABLE + $GUI_HIDE)
-		;show stats values
+		If $g_iFirstRun = 1 Then
+			GUICtrlSetState($g_hPicResultDETemp, $GUI_ENABLE + $GUI_SHOW)
+		Else
+			GUICtrlSetState($g_hPicResultDENow, $GUI_ENABLE + $GUI_SHOW)
+		EndIf
+		;HIDE BB Report Values
+		GUICtrlSetState($g_hLblBBResultGoldNow, $GUI_ENABLE + $GUI_HIDE)
+		GUICtrlSetState($g_hLblBBResultElixirNow, $GUI_ENABLE + $GUI_HIDE)
+		GUICtrlSetState($g_hLblBBResultTrophyNow, $GUI_ENABLE + $GUI_HIDE)
+		GUICtrlSetState($g_hLblBBResultBuilderNow, $GUI_ENABLE + $GUI_HIDE)
+		;SHOW Village HOURLY Values
 		GUICtrlSetState($g_hLblResultGoldHourNow, $GUI_ENABLE + $GUI_SHOW)
 		GUICtrlSetState($g_hLblResultElixirHourNow, $GUI_ENABLE + $GUI_SHOW)
 		GUICtrlSetState($g_hLblResultDEHourNow, $GUI_ENABLE + $GUI_SHOW)
@@ -370,37 +379,101 @@ Func btnVillageStat($source = "")
 			GUICtrlSetState($g_hLblResultAttackedHourNow, $GUI_ENABLE + $GUI_SHOW)
 			GUICtrlSetState($g_hLblResultSkippedHourNow, $GUI_ENABLE + $GUI_SHOW)
 		EndIf
-		; hide normal pics
+		;HIDE BB Report Pics
+		GUICtrlSetState($g_hPicBBResultTrophyNow, $GUI_ENABLE + $GUI_HIDE)
+		GUICtrlSetState($g_hPicBBResultBuilderNow, $GUI_ENABLE + $GUI_HIDE)
+		;HIDE Village Report Pics
 		GUICtrlSetState($g_hPicResultTrophyNow, $GUI_ENABLE + $GUI_HIDE)
 		GUICtrlSetState($g_hPicResultBuilderNow, $GUI_ENABLE + $GUI_HIDE)
 		GUICtrlSetState($g_hPicResultGemNow, $GUI_ENABLE + $GUI_HIDE)
-		;show stats pics
+		;SHOW Village HOURLY Pics
 		GUICtrlSetState($g_hPicResultRuntimeNow, $GUI_ENABLE + $GUI_SHOW)
 		GUICtrlSetState($g_hPicResultAttackedHourNow, $GUI_ENABLE + $GUI_SHOW)
 		GUICtrlSetState($g_hPicResultSkippedHourNow, $GUI_ENABLE + $GUI_SHOW)
-	Else
-		;show normal values
+		GUICtrlSetData($g_hLblVillageReportTemp, GetTranslatedFileIni("MBR GUI Design Bottom", "LblVillageReportTemp_01", "Village Report") & @CRLF & _
+				GetTranslatedFileIni("MBR GUI Design Bottom", "LblVillageReportTemp_02", "will appear here") & @CRLF & _
+				GetTranslatedFileIni("MBR GUI Design Bottom", "LblVillageReportTemp_03", "on first run."))
+		GUICtrlSetData($g_hGrpVillage, GetTranslatedFileIni("MBR Main GUI", "Tab_02", -1) & ": " & $g_sProfileCurrentName)
+	ElseIf $g_iCurrentReport = $g_iVillageReport Then
+		;SHOW Village Report Values
 		GUICtrlSetState($g_hLblResultGoldNow, $GUI_ENABLE + $GUI_SHOW)
 		GUICtrlSetState($g_hLblResultElixirNow, $GUI_ENABLE + $GUI_SHOW)
 		GUICtrlSetState($g_hLblResultDENow, $GUI_ENABLE + $GUI_SHOW)
 		GUICtrlSetState($g_hLblResultTrophyNow, $GUI_ENABLE + $GUI_SHOW)
 		GUICtrlSetState($g_hLblResultBuilderNow, $GUI_ENABLE + $GUI_SHOW)
 		GUICtrlSetState($g_hLblResultGemNow, $GUI_ENABLE + $GUI_SHOW)
-		;hide stats values
+		If $g_iFirstRun = 1 Then
+			GUICtrlSetState($g_hPicResultDETemp, $GUI_ENABLE + $GUI_SHOW)
+		Else
+			GUICtrlSetState($g_hPicResultDENow, $GUI_ENABLE + $GUI_SHOW)
+		EndIf
+		;HIDE BB Report Values
+		GUICtrlSetState($g_hLblBBResultGoldNow, $GUI_ENABLE + $GUI_HIDE)
+		GUICtrlSetState($g_hLblBBResultElixirNow, $GUI_ENABLE + $GUI_HIDE)
+		GUICtrlSetState($g_hLblBBResultTrophyNow, $GUI_ENABLE + $GUI_HIDE)
+		GUICtrlSetState($g_hLblBBResultBuilderNow, $GUI_ENABLE + $GUI_HIDE)
+		;HIDE Village HOURLY Values
 		GUICtrlSetState($g_hLblResultGoldHourNow, $GUI_ENABLE + $GUI_HIDE)
 		GUICtrlSetState($g_hLblResultElixirHourNow, $GUI_ENABLE + $GUI_HIDE)
 		GUICtrlSetState($g_hLblResultDEHourNow, $GUI_ENABLE + $GUI_HIDE)
 		GUICtrlSetState($g_hLblResultRuntimeNow, $GUI_ENABLE + $GUI_HIDE)
 		GUICtrlSetState($g_hLblResultAttackedHourNow, $GUI_ENABLE + $GUI_HIDE)
 		GUICtrlSetState($g_hLblResultSkippedHourNow, $GUI_ENABLE + $GUI_HIDE)
-		; show normal pics
+		;HIDE BB Report Pics
+		GUICtrlSetState($g_hPicBBResultTrophyNow, $GUI_ENABLE + $GUI_HIDE)
+		GUICtrlSetState($g_hPicBBResultBuilderNow, $GUI_ENABLE + $GUI_HIDE)
+		;SHOW Village Report Pics
 		GUICtrlSetState($g_hPicResultTrophyNow, $GUI_ENABLE + $GUI_SHOW)
 		GUICtrlSetState($g_hPicResultBuilderNow, $GUI_ENABLE + $GUI_SHOW)
 		GUICtrlSetState($g_hPicResultGemNow, $GUI_ENABLE + $GUI_SHOW)
-		;hide stats pics
+		;HIDE Village HOURLY Pics
 		GUICtrlSetState($g_hPicResultRuntimeNow, $GUI_ENABLE + $GUI_HIDE)
 		GUICtrlSetState($g_hPicResultAttackedHourNow, $GUI_ENABLE + $GUI_HIDE)
 		GUICtrlSetState($g_hPicResultSkippedHourNow, $GUI_ENABLE + $GUI_HIDE)
+		GUICtrlSetData($g_hLblVillageReportTemp, GetTranslatedFileIni("MBR GUI Design Bottom", "LblVillageReportTemp_01", "Village Report") & @CRLF & _
+				GetTranslatedFileIni("MBR GUI Design Bottom", "LblVillageReportTemp_02", "will appear here") & @CRLF & _
+				GetTranslatedFileIni("MBR GUI Design Bottom", "LblVillageReportTemp_03", "on first run."))
+		GUICtrlSetData($g_hGrpVillage, GetTranslatedFileIni("MBR Main GUI", "Tab_02", -1) & ": " & $g_sProfileCurrentName)
+	ElseIf $g_iCurrentReport = $g_iBBReport Then
+		;HIDE Village Report Values
+		GUICtrlSetState($g_hLblResultGoldNow, $GUI_ENABLE + $GUI_HIDE)
+		GUICtrlSetState($g_hLblResultElixirNow, $GUI_ENABLE + $GUI_HIDE)
+		GUICtrlSetState($g_hLblResultDENow, $GUI_ENABLE + $GUI_HIDE)
+		GUICtrlSetState($g_hLblResultTrophyNow, $GUI_ENABLE + $GUI_HIDE)
+		GUICtrlSetState($g_hLblResultBuilderNow, $GUI_ENABLE + $GUI_HIDE)
+		If $g_iFirstRun = 1 Then
+			GUICtrlSetState($g_hPicResultDETemp, $GUI_ENABLE + $GUI_HIDE)
+		Else
+			GUICtrlSetState($g_hPicResultDENow, $GUI_ENABLE + $GUI_HIDE)
+		EndIf
+		;SHOW BB Report Values
+		GUICtrlSetState($g_hLblBBResultGoldNow, $GUI_ENABLE + $GUI_SHOW)
+		GUICtrlSetState($g_hLblBBResultElixirNow, $GUI_ENABLE + $GUI_SHOW)
+		GUICtrlSetState($g_hLblBBResultTrophyNow, $GUI_ENABLE + $GUI_SHOW)
+		GUICtrlSetState($g_hLblBBResultBuilderNow, $GUI_ENABLE + $GUI_SHOW)
+		GUICtrlSetState($g_hLblResultGemNow, $GUI_ENABLE + $GUI_SHOW)
+		;HIDE Village HOURLY Values
+		GUICtrlSetState($g_hLblResultGoldHourNow, $GUI_ENABLE + $GUI_HIDE)
+		GUICtrlSetState($g_hLblResultElixirHourNow, $GUI_ENABLE + $GUI_HIDE)
+		GUICtrlSetState($g_hLblResultDEHourNow, $GUI_ENABLE + $GUI_HIDE)
+		GUICtrlSetState($g_hLblResultRuntimeNow, $GUI_ENABLE + $GUI_HIDE)
+		GUICtrlSetState($g_hLblResultAttackedHourNow, $GUI_ENABLE + $GUI_HIDE)
+		GUICtrlSetState($g_hLblResultSkippedHourNow, $GUI_ENABLE + $GUI_HIDE)
+		;SHOW BB Report Pics
+		GUICtrlSetState($g_hPicBBResultTrophyNow, $GUI_ENABLE + $GUI_SHOW)
+		GUICtrlSetState($g_hPicBBResultBuilderNow, $GUI_ENABLE + $GUI_SHOW)
+		GUICtrlSetState($g_hPicResultGemNow, $GUI_ENABLE + $GUI_SHOW)
+		;HIDE Village Report Pics
+		GUICtrlSetState($g_hPicResultTrophyNow, $GUI_ENABLE + $GUI_HIDE)
+		GUICtrlSetState($g_hPicResultBuilderNow, $GUI_ENABLE + $GUI_HIDE)
+		;HIDE Village HOURLY Pics
+		GUICtrlSetState($g_hPicResultRuntimeNow, $GUI_ENABLE + $GUI_HIDE)
+		GUICtrlSetState($g_hPicResultAttackedHourNow, $GUI_ENABLE + $GUI_HIDE)
+		GUICtrlSetState($g_hPicResultSkippedHourNow, $GUI_ENABLE + $GUI_HIDE)
+		GUICtrlSetData($g_hLblVillageReportTemp, GetTranslatedFileIni("MBR GUI Design Bottom", "LblVillageReportTemp_04", "BB Report") & @CRLF & _
+				GetTranslatedFileIni("MBR GUI Design Bottom", "LblVillageReportTemp_02", "will appear here") & @CRLF & _
+				GetTranslatedFileIni("MBR GUI Design Bottom", "LblVillageReportTemp_03", "on first run."))
+		GUICtrlSetData($g_hGrpVillage, GetTranslatedFileIni("MBR Main GUI", "Tab_04_Profile", "Builder Base") & ": " & $g_sProfileCurrentName)
 	EndIf
 
 EndFunc   ;==>btnVillageStat

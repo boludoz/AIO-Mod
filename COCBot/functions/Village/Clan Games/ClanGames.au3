@@ -1060,37 +1060,6 @@ Func SaveClanGamesConfig()
 	_Ini_Save($g_sProfileClanGamesPath)
 EndFunc   ;==>SaveClanGamesConfig
 
-
-Func ReadClanGamesConfig()
-	Local $aChallengesClanGamesVars = [$g_aCGLootChallenges, $g_aCGAirTroopChallenges, $g_aCGGroundTroopChallenges, $g_aCGBattleChallenges, $g_aCGDestructionChallenges, $g_aCGMiscChallenges, $g_aCGSpellChallenges, $g_aCGBBBattleChallenges, $g_aCGBBDestructionChallenges, $g_aCGBBTroopChallenges]
-	Local $ahChallengesClanGamesVarsHandle = [$g_hCGLootChallenges, $g_hCGAirTroopChallenges, $g_hCGGroundTroopChallenges, $g_hCGBattleChallenges, $g_hCGDestructionChallenges, $g_hCGMiscChallenges, $g_hCGSpellChallenges, $g_hCGBBBattleChallenges, $g_hCGBBDestructionChallenges, $g_hCGBBTroopChallenges]
-
-	SetDebugLog("Read Clan Games Config " & $g_sProfileClanGamesPath)
-
-	Local $aTmp, $iKey, $ah
-	; Loop through the CG strings
-	For $i = 0 To UBound($g_aChallengesClanGamesStrings) - 1
-
-		; Loop through the CG Vars
-		$aTmp = $aChallengesClanGamesVars[$i]
-		$ah = $ahChallengesClanGamesVarsHandle[$i]
-
-		For $j = 0 To UBound($aTmp) - 1
-
-			; Write the new value to the file
-			IniReadSCG($g_aChallengesClanGamesStrings[$i], $j, 3, $g_sProfileClanGamesPath, $g_aChallengesClanGamesStrings[$i], $aTmp[$j][1], $aTmp[$j][3], "Int")
-
-			If Int($ah[$j]) = 0 Then ContinueLoop ; Handle GUI always have num ref, skip no implemented.
-
-			; Write boolean status
-			IniReadSCG($g_aChallengesClanGamesStrings[$i], $j, 5, $g_sProfileClanGamesPath, $g_aChallengesClanGamesStrings[$i], $aTmp[$j][1] & " Chk", $aTmp[$j][5], "Bool")
-
-		Next
-
-	Next
-
-EndFunc   ;==>ReadClanGamesConfig
-
 Func ApplyConfig_ClanGames($TypeReadSave)
 	Local $ahChallengesClanGamesVarsHandle = [$g_hCGLootChallenges, $g_hCGAirTroopChallenges, $g_hCGGroundTroopChallenges, $g_hCGBattleChallenges, $g_hCGDestructionChallenges, $g_hCGMiscChallenges, $g_hCGSpellChallenges, $g_hCGBBBattleChallenges, $g_hCGBBDestructionChallenges, $g_hCGBBTroopChallenges]
 
@@ -1160,37 +1129,7 @@ Func ApplyConfig_ClanGamesSwitch($TypeReadSave, $sTring, $i, $j)
 					SetLog("Badly SaveApply: " & $sTring, $COLOR_ERROR)
 			EndSwitch
 		EndSwitch
-EndFunc   ;==>IniReadSCG
-
-Func IniReadSCG($sTring, $i, $j, $PrimaryInputFile, $section, $key, $defaultvalue, $valueType = Default)
-
-	Switch $sTring
-		Case "Loot Challenges"
-			IniReadS($g_aCGLootChallenges[$i][$j], $PrimaryInputFile, $section, $key, $defaultvalue, $valueType)
-		Case "Air Troop Challenges"
-			IniReadS($g_aCGAirTroopChallenges[$i][$j], $PrimaryInputFile, $section, $key, $defaultvalue, $valueType)
-		Case "Ground Troop Challenges"
-			IniReadS($g_aCGGroundTroopChallenges[$i][$j], $PrimaryInputFile, $section, $key, $defaultvalue, $valueType)
-		Case "Battle Challenges"
-			IniReadS($g_aCGBattleChallenges[$i][$j], $PrimaryInputFile, $section, $key, $defaultvalue, $valueType)
-		Case "Destruction Challenges"
-			IniReadS($g_aCGDestructionChallenges[$i][$j], $PrimaryInputFile, $section, $key, $defaultvalue, $valueType)
-		Case "Misc Challenges"
-			; _ArrayDisplay($g_aCGMiscChallenges)
-			IniReadS($g_aCGMiscChallenges[$i][$j], $PrimaryInputFile, $section, $key, $defaultvalue, $valueType)
-		Case "Spell Challenges"
-			IniReadS($g_aCGSpellChallenges[$i][$j], $PrimaryInputFile, $section, $key, $defaultvalue, $valueType)
-		Case "BB Battle Challenges"
-			IniReadS($g_aCGBBBattleChallenges[$i][$j], $PrimaryInputFile, $section, $key, $defaultvalue, $valueType)
-		Case "BB Destruction Challenges"
-			IniReadS($g_aCGBBDestructionChallenges[$i][$j], $PrimaryInputFile, $section, $key, $defaultvalue, $valueType)
-		Case "BB Troop Challenges"
-			IniReadS($g_aCGBBTroopChallenges[$i][$j], $PrimaryInputFile, $section, $key, $defaultvalue, $valueType)
-		Case Else
-			SetLog("Badly IniReadSCG: " & $sTring, $COLOR_ERROR)
-	EndSwitch
-
-EndFunc   ;==>IniReadSCG
+EndFunc   ;==>ApplyConfig_ClanGamesSwitch
 
 Func ClanGamesStatus()
 	If Not $g_bChkClanGamesEnabled Then Return "False"

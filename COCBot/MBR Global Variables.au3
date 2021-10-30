@@ -1353,7 +1353,8 @@ Global $g_aiAttackedCountSwitch[$g_eTotalAcc], $g_iActiveSwitchCounter = 0, $g_i
 Global $g_asTrainTimeFinish[$g_eTotalAcc], $g_abPBActive[$g_eTotalAcc]
 Global $g_aiRunTime[$g_eTotalAcc], $g_ahTimerSinceSwitched[$g_eTotalAcc]
 ; <><><><> Bot / Stats <><><><>
-; <<< nothing here >>>
+Global Enum $g_iVillageReport=0, $g_iVillageHourlyReport=1, $g_iBBReport=2
+Global $g_iCurrentReport = $g_iVillageReport
 
 ;--------------------------------------------------------------------------
 ; END: Variables to hold current GUI setting values

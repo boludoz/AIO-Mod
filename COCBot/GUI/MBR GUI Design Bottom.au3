@@ -39,6 +39,11 @@ Global $g_hlblLab = 0, $g_hPicLabGray = 0, $g_hPicLabRed = 0, $g_hPicLabGreen = 
 Global $g_hBtnEnableGUI = 0, $g_hBtnDisableGUI = 0
 ; Only farm - Team AiO MOD++
 Global $g_hChkOnlyFarm = 0
+
+Global $g_hLblBBResultGoldNow = 0, $g_hLblBBResultGoldHourNow = 0, $g_hPicBBResultGoldNow = 0
+Global $g_hLblBBResultElixirNow = 0, $g_hLblBBResultElixirHourNow = 0, $g_hPicBBResultElixirNow = 0
+Global $g_hLblBBResultTrophyNow = 0, $g_hPicBBResultTrophyNow = 0, $g_hLblBBResultBuilderNow = 0, $g_hPicBBResultBuilderNow = 0
+
 #EndRegion
 
 ; Pet House
@@ -234,54 +239,74 @@ Func CreateBottomPanel()
 	  		_GUICtrlSetTip(-1, $sTxtTip)
 		$g_hLbLPetTime = GUICtrlCreateLabel("", $x + 20, $y + 2, 50, 16, $SS_LEFT)
 
-	;~ Village
-		Local $x = 295, $y = $y_bottom + 20
-		$g_hGrpVillage = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Bottom", "GrpVillage", "Village"), $x - 0, $y - 20, 160, 85)
-		$g_hLblResultGoldNow = GUICtrlCreateLabel("", $x + 10, $y + 2, 60, 15, $SS_RIGHT)
-		$g_hLblResultGoldHourNow = GUICtrlCreateLabel("", $x + 10, $y + 2, 60, 15, $SS_RIGHT)
-			GUICtrlSetState(-1, $GUI_HIDE)
-		$g_hPicResultGoldNow = GUICtrlCreateIcon ($g_sLibIconPath, $eIcnGold, $x + 71, $y, 16, 16)
-			GUICtrlSetState(-1, $GUI_HIDE)
-		$g_hPicResultGoldTemp = GUICtrlCreateIcon ($g_sLibIconPath, $eIcnGold, $x + 15, $y, 16, 16)
+   ;~ Village
+   Local $x = 295, $y = $y_bottom + 20
+   $g_hGrpVillage = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Bottom", "GrpVillage", "Village"), $x - 0, $y - 20, 160, 75)
+	   $g_hLblResultGoldNow = GUICtrlCreateLabel("", $x + 10, $y - 2, 60, 15, $SS_RIGHT)
+	   $g_hLblBBResultGoldNow = GUICtrlCreateLabel("", $x + 10, $y - 2, 60, 15, $SS_RIGHT)
+		   GUICtrlSetState(-1, $GUI_HIDE)
+	   $g_hLblResultGoldHourNow = GUICtrlCreateLabel("", $x + 10, $y - 2, 60, 15, $SS_RIGHT)
+		   GUICtrlSetState(-1, $GUI_HIDE)
+	    $g_hLblBBResultGoldHourNow = GUICtrlCreateLabel("", $x + 10, $y - 2, 60, 15, $SS_RIGHT)
+		   GUICtrlSetState(-1, $GUI_HIDE)
+	   $g_hPicResultGoldNow = GUICtrlCreateIcon ($g_sLibIconPath, $eIcnGold, $x + 71, $y - 4, 16, 16)
+		   GUICtrlSetState(-1, $GUI_HIDE)
+	   $g_hPicBBResultGoldNow = GUICtrlCreateIcon ($g_sLibIconPath, $eIcnGold, $x + 71, $y - 4, 16, 16)
+		   GUICtrlSetState(-1, $GUI_HIDE)
+	   $g_hPicResultGoldTemp = GUICtrlCreateIcon ($g_sLibIconPath, $eIcnGold, $x + 15, $y - 4, 16, 16)
 
-		$g_hLblResultElixirNow = GUICtrlCreateLabel("", $x + 10, $y + 22, 60, 15, $SS_RIGHT)
-		$g_hLblResultElixirHourNow = GUICtrlCreateLabel("", $x + 10, $y + 22, 60, 15, $SS_RIGHT)
-			GUICtrlSetState(-1, $GUI_HIDE)
-		$g_hPicResultElixirNow = GUICtrlCreateIcon ($g_sLibIconPath, $eIcnElixir, $x + 71, $y + 20, 16, 16)
-			GUICtrlSetState(-1, $GUI_HIDE)
-		$g_hPicResultElixirTemp = GUICtrlCreateIcon ($g_sLibIconPath, $eIcnElixir, $x + 15, $y + 20, 16, 16)
+	   $g_hLblResultElixirNow = GUICtrlCreateLabel("", $x + 10, $y + 18, 60, 15, $SS_RIGHT)
+	   $g_hLblBBResultElixirNow = GUICtrlCreateLabel("", $x + 10, $y + 18, 60, 15, $SS_RIGHT)
+		   GUICtrlSetState(-1, $GUI_HIDE)
+	   $g_hLblResultElixirHourNow = GUICtrlCreateLabel("", $x + 10, $y + 18, 60, 15, $SS_RIGHT)
+		   GUICtrlSetState(-1, $GUI_HIDE)
+	   $g_hLblBBResultElixirHourNow = GUICtrlCreateLabel("", $x + 10, $y + 18, 60, 15, $SS_RIGHT)
+		   GUICtrlSetState(-1, $GUI_HIDE)
+	   $g_hPicResultElixirNow = GUICtrlCreateIcon ($g_sLibIconPath, $eIcnElixir, $x + 71, $y + 16, 16, 16)
+		   GUICtrlSetState(-1, $GUI_HIDE)
+	   $g_hPicBBResultElixirNow = GUICtrlCreateIcon ($g_sLibIconPath, $eIcnElixir, $x + 71, $y + 16, 16, 16)
+		   GUICtrlSetState(-1, $GUI_HIDE)
+	   $g_hPicResultElixirTemp = GUICtrlCreateIcon ($g_sLibIconPath, $eIcnElixir, $x + 15, $y + 16, 16, 16)
 
-		$g_hLblResultDENow = GUICtrlCreateLabel("", $x + 10, $y + 42, 60, 15, $SS_RIGHT)
-		$g_hLblResultDEHourNow = GUICtrlCreateLabel("", $x + 10, $y + 42, 60, 15, $SS_RIGHT)
-			GUICtrlSetState(-1, $GUI_HIDE)
-		$g_hPicResultDENow = GUICtrlCreateIcon ($g_sLibIconPath, $eIcnDark, $x + 71, $y + 40, 16, 16)
-			GUICtrlSetState(-1, $GUI_HIDE)
-		$g_hPicResultDETemp = GUICtrlCreateIcon ($g_sLibIconPath, $eIcnDark, $x + 15, $y + 40, 16, 16)
-	$x += 75
+	   $g_hLblResultDENow = GUICtrlCreateLabel("", $x + 10, $y + 38, 60, 15, $SS_RIGHT)
+	   $g_hLblResultDEHourNow = GUICtrlCreateLabel("", $x + 10, $y + 38, 60, 15, $SS_RIGHT)
+		   GUICtrlSetState(-1, $GUI_HIDE)
+	   $g_hPicResultDENow = GUICtrlCreateIcon ($g_sLibIconPath, $eIcnDark, $x + 71, $y + 36, 16, 16)
+		   GUICtrlSetState(-1, $GUI_HIDE)
+	   $g_hPicResultDETemp = GUICtrlCreateIcon ($g_sLibIconPath, $eIcnDark, $x + 15, $y + 36, 16, 16)
+	   $x += 75
 
-		;trophy / runtime
-		$g_hLblResultTrophyNow = GUICtrlCreateLabel("", $x + 13, $y + 2, 43, 15, $SS_RIGHT)
-		$g_hPicResultTrophyNow = GUICtrlCreateIcon ($g_sLibIconPath, $eIcnTrophy, $x + 59, $y , 16, 16)
-		$g_hLblResultRuntimeNow = GUICtrlCreateLabel("00:00:00", $x + 13, $y + 2, 43, 15, $SS_RIGHT)
-			GUICtrlSetState(-1, $GUI_HIDE)
-		$g_hPicResultRuntimeNow = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnHourGlass, $x +57, $y, 16, 16)
-			GUICtrlSetState(-1, $GUI_HIDE)
+	   ;trophy / runtime
+	   $g_hLblResultTrophyNow = GUICtrlCreateLabel("", $x + 13, $y - 2, 43, 15, $SS_RIGHT)
+	   $g_hPicResultTrophyNow = GUICtrlCreateIcon ($g_sLibIconPath, $eIcnTrophy, $x + 59, $y - 4, 16, 16)
+	   $g_hLblBBResultTrophyNow = GUICtrlCreateLabel("", $x + 13, $y - 2, 43, 15, $SS_RIGHT)
+	   GUICtrlSetState(-1, $GUI_HIDE)
+	   $g_hPicBBResultTrophyNow = GUICtrlCreateIcon ($g_sLibIconPath, $eIcnTrophy, $x + 59, $y - 4, 16, 16)
+	   GUICtrlSetState(-1, $GUI_HIDE)
+	   $g_hLblResultRuntimeNow = GUICtrlCreateLabel("00:00:00", $x + 13, $y - 2, 43, 15, $SS_RIGHT)
+	   GUICtrlSetState(-1, $GUI_HIDE)
+	   $g_hPicResultRuntimeNow = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnHourGlass, $x +57, $y - 4, 16, 16)
+	   GUICtrlSetState(-1, $GUI_HIDE)
 
-		;builders/attacked
-		$g_hLblResultBuilderNow = GUICtrlCreateLabel("", $x + 13, $y + 22, 43, 15, $SS_RIGHT)
-		$g_hPicResultBuilderNow = GUICtrlCreateIcon ($g_sLibIconPath, $eIcnBuilder, $x + 59, $y + 20, 16, 16)
-		$g_hLblResultAttackedHourNow = GUICtrlCreateLabel("0", $x + 13, $y + 22, 43, 15, $SS_RIGHT)
-			GUICtrlSetState(-1, $GUI_HIDE)
-		$g_hPicResultAttackedHourNow = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnBldgTarget, $x +59, $y + 20, 16, 16)
-			GUICtrlSetState(-1, $GUI_HIDE)
+	   ;builders/attacked
+	   $g_hLblResultBuilderNow = GUICtrlCreateLabel("", $x + 13, $y + 18, 43, 15, $SS_RIGHT)
+	   $g_hPicResultBuilderNow = GUICtrlCreateIcon ($g_sLibIconPath, $eIcnBuilder, $x + 59, $y + 16, 16, 16)
+	   $g_hLblBBResultBuilderNow = GUICtrlCreateLabel("", $x + 13, $y + 18, 43, 15, $SS_RIGHT)
+		   GUICtrlSetState(-1, $GUI_HIDE)
+	   $g_hPicBBResultBuilderNow = GUICtrlCreateIcon ($g_sLibIconPath, $eIcnBuilder, $x + 59, $y + 16, 16, 16)
+		   GUICtrlSetState(-1, $GUI_HIDE)
+	   $g_hLblResultAttackedHourNow = GUICtrlCreateLabel("0", $x + 13, $y + 18, 43, 15, $SS_RIGHT)
+	   GUICtrlSetState(-1, $GUI_HIDE)
+	   $g_hPicResultAttackedHourNow = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnBldgTarget, $x +59, $y + 16, 16, 16)
+	   GUICtrlSetState(-1, $GUI_HIDE)
 
-		;gems/skipped
-		$g_hLblResultGemNow = GUICtrlCreateLabel("", $x + 13, $y + 42, 43, 15, $SS_RIGHT)
-		$g_hPicResultGemNow = GUICtrlCreateIcon ($g_sLibIconPath, $eIcnGem, $x + 59, $y + 40, 16, 16)
-		$g_hLblResultSkippedHourNow = GUICtrlCreateLabel("0", $x + 13, $y + 42, 43, 15, $SS_RIGHT)
-			GUICtrlSetState(-1, $GUI_HIDE)
-		$g_hPicResultSkippedHourNow = GUICtrlCreateIcon ($g_sLibIconPath, $eIcnBldgX, $x + 59, $y + 40, 16, 16)
-			GUICtrlSetState(-1, $GUI_HIDE)
+	   ;gems/skipped
+	   $g_hLblResultGemNow = GUICtrlCreateLabel("", $x + 13, $y + 38, 43, 15, $SS_RIGHT)
+	   $g_hPicResultGemNow = GUICtrlCreateIcon ($g_sLibIconPath, $eIcnGem, $x + 59, $y + 36, 16, 16)
+	   $g_hLblResultSkippedHourNow = GUICtrlCreateLabel("0", $x + 13, $y + 38, 43, 15, $SS_RIGHT)
+	   GUICtrlSetState(-1, $GUI_HIDE)
+	   $g_hPicResultSkippedHourNow = GUICtrlCreateIcon ($g_sLibIconPath, $eIcnBldgX, $x + 59, $y + 36, 16, 16)
+	   GUICtrlSetState(-1, $GUI_HIDE)
 
 	$x = 335
 		$g_hLblVillageReportTemp = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Bottom", "LblVillageReportTemp_01", "Village Report") & @CRLF & GetTranslatedFileIni("MBR GUI Design Bottom", "LblVillageReportTemp_02", "will appear here") & @CRLF & GetTranslatedFileIni("MBR GUI Design Bottom", "LblVillageReportTemp_03", "on first run."), $x , $y + 5, 80, 45, BITOR($SS_CENTER, $BS_MULTILINE))

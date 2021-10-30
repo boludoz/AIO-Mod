@@ -185,7 +185,11 @@ Func setupProfile($sProfile = Default)
 	; Create the profile if needed, this also sets the variables if the profile exists.
 	createProfile()
 	; Set the profile name on the village info group.
-	GUICtrlSetData($g_hGrpVillage, GetTranslatedFileIni("MBR Main GUI", "Tab_02", "Village") & ": " & $g_sProfileCurrentName)
+	If $g_iCurrentReport = $g_iBBReport Then
+		GUICtrlSetData($g_hGrpVillage, GetTranslatedFileIni("MBR Main GUI", "Tab_10", -1) & ": " & $g_sProfileCurrentName)
+	Else
+		GUICtrlSetData($g_hGrpVillage, GetTranslatedFileIni("MBR Main GUI", "Tab_02", -1) & ": " & $g_sProfileCurrentName)
+	EndIf
 	GUICtrlSetData($g_hTxtNotifyOrigin, $g_sProfileCurrentName)
 	GUICtrlSetData($g_hTxtNotifyOriginDS, $g_sProfileCurrentName) ; Discord - Team AIO Mod++
 

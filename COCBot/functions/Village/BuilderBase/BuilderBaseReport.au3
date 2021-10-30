@@ -34,15 +34,44 @@ Func BuilderBaseReport($bBypass = False, $bSetLog = True)
 	$g_aiCurrentLootBB[$eLootTrophyBB] = getTrophyMainScreen(67, 84)
 	$g_aiCurrentLootBB[$eLootGoldBB] = getResourcesMainScreen(705, 23)
 	$g_aiCurrentLootBB[$eLootElixirBB] = getResourcesMainScreen(705, 72)
+	$g_iGemAmount = getResourcesMainScreen(740, 120)
 	If $bSetLog Then SetLog(" [G]: " & _NumberFormat($g_aiCurrentLootBB[$eLootGoldBB]) & " [E]: " & _NumberFormat($g_aiCurrentLootBB[$eLootElixirBB]) & "[T]: " & _NumberFormat($g_aiCurrentLootBB[$eLootTrophyBB]), $COLOR_SUCCESS)
 	
 	BuilderBaseReportAttack(False) ; Custom BB
 	
 	If Not $bBypass Then ; update stats
-		UpdateStats()
+		BuilderBaseStats() ;UpdateStats()
 	EndIf
 EndFunc   ;==>BuilderBaseReport
 
+Func BuilderBaseStats()
+	GUICtrlSetData($g_hLblBBResultGoldNow, _NumberFormat($g_aiCurrentLootBB[$eLootGoldBB], True))
+	GUICtrlSetData($g_hLblBBResultElixirNow, _NumberFormat($g_aiCurrentLootBB[$eLootElixirBB], True))
+	GUICtrlSetData($g_hLblBBResultTrophyNow, _NumberFormat($g_aiCurrentLootBB[$eLootTrophyBB], True))
+	GUICtrlSetData($g_hLblBBResultBuilderNow, $g_iFreeBuilderCountBB & "/" & $g_iTotalBuilderCountBB)
+	
+	GUICtrlSetState($g_hLblVillageReportTemp, $GUI_HIDE)
+	GUICtrlSetState($g_hPicResultGoldTemp, $GUI_HIDE)
+	GUICtrlSetState($g_hPicResultElixirTemp, $GUI_HIDE)
+	GUICtrlSetState($g_hPicResultDETemp, $GUI_HIDE)
+	GUICtrlSetState($g_hLblResultGoldNow, $GUI_SHOW + $GUI_DISABLE) ; $GUI_DISABLE to trigger default view in btnVillageStat
+	GUICtrlSetState($g_hPicResultGoldNow, $GUI_SHOW)
+	GUICtrlSetState($g_hLblResultElixirNow, $GUI_SHOW)
+	GUICtrlSetState($g_hPicResultElixirNow, $GUI_SHOW)
+	GUICtrlSetState($g_hPicResultDEStart, $GUI_HIDE)
+	GUICtrlSetState($g_hPicDarkLoot, $GUI_HIDE)
+	GUICtrlSetState($g_hPicDarkLastAttack, $GUI_HIDE)
+	GUICtrlSetState($g_hPicHourlyStatsDark, $GUI_HIDE)
+	GUICtrlSetState($g_hLblResultTrophyNow, $GUI_SHOW)
+	GUICtrlSetState($g_hLblResultBuilderNow, $GUI_SHOW)
+	GUICtrlSetState($g_hLblResultGemNow, $GUI_SHOW)
+	$g_iFirstRun = 0
+	btnVillageStat("UpdateStats")
+EndFunc   ;==>BuilderBaseStats
 
-
-
+Func BuilderBaseResetStats()
+	GUICtrlSetData($g_hLblBBResultGoldNow, "")
+	GUICtrlSetData($g_hLblBBResultElixirNow, "")
+	GUICtrlSetData($g_hLblBBResultTrophyNow, "")
+	GUICtrlSetData($g_hLblBBResultBuilderNow, "")
+EndFunc   ;==>BuilderBaseResetStats
