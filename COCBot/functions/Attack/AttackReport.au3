@@ -177,8 +177,14 @@ Func AttackReport()
 
     Local $AtkLogTxt
     $g_iStatsBonusLast[$eLootGold]=$g_iStatsBonusLast[$eLootGold]/1000
-
-    $AtkLogTxt = "| " & String($g_iCurAccount + 1) & "|" & _NowTime(4) & "|"
+	
+	; Custom Acc - Team AIO Mod++
+	Local $iAccNumber = $g_iCurAccount + 1
+	If $iAccNumber > 9 Then
+		$AtkLogTxt = "|" & String($iAccNumber) & "|" & _NowTime(4) & "|"
+	Else
+		$AtkLogTxt = "| " & String($iAccNumber) & "|" & _NowTime(4) & "|"
+	EndIf
     $AtkLogTxt &= StringFormat("%6d", $g_aiCurrentLoot[$eLootTrophy]) & "|"
     $AtkLogTxt &= StringFormat("%3d", $g_iSearchCount) & "|"
     $AtkLogTxt &= StringFormat("%2d", $g_iSidesAttack) & "|"

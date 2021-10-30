@@ -49,7 +49,8 @@ Func BuilderBaseStats()
 	GUICtrlSetData($g_hLblBBResultElixirNow, _NumberFormat($g_aiCurrentLootBB[$eLootElixirBB], True))
 	GUICtrlSetData($g_hLblBBResultTrophyNow, _NumberFormat($g_aiCurrentLootBB[$eLootTrophyBB], True))
 	GUICtrlSetData($g_hLblBBResultBuilderNow, $g_iFreeBuilderCountBB & "/" & $g_iTotalBuilderCountBB)
-	
+	GUICtrlSetData($g_hLblResultGemNow, $g_iGemAmount)
+
 	GUICtrlSetState($g_hLblVillageReportTemp, $GUI_HIDE)
 	GUICtrlSetState($g_hPicResultGoldTemp, $GUI_HIDE)
 	GUICtrlSetState($g_hPicResultElixirTemp, $GUI_HIDE)

@@ -447,13 +447,13 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 					Local $iLabTime = _DateDiff("s", _NowCalc(), $asLabUpgradeTime[$i]) * 1000
 					If $iLabTime > 0 Then
 						_TicksToDay($iLabTime, $day, $hour, $min, $sec)
-						GUICtrlSetData($g_hLblLabTimeStatus[$i], $day > 0 ? StringFormat("%2ud %02i:%02i:%02i", $day, $hour, $min, $sec) : ($hour > 0 ? StringFormat("%02i:%02i:%02i", $hour, $min, $sec) : StringFormat("%02i:%02i", $min, $sec)))
+						GUICtrlSetData($g_ahLblLabTime[$i], $day > 0 ? StringFormat("%2ud %02i:%02i:%02i", $day, $hour, $min, $sec) : ($hour > 0 ? StringFormat("%02i:%02i:%02i", $hour, $min, $sec) : StringFormat("%02i:%02i", $min, $sec)))
 						Local $SetColor = $COLOR_BLACK
 						If $i = $g_iCurAccount Then $SetColor = $COLOR_GREEN
-						GUICtrlSetColor($g_hLblLabTimeStatus[$i], $day > 0 ? $SetColor : $COLOR_ORANGE)
+						GUICtrlSetColor($g_ahLblLabTime[$i], $day > 0 ? $SetColor : $COLOR_ORANGE)
 					Else
-						GUICtrlSetData($g_hLblLabTimeStatus[$i], "00:00:00")
-						GUICtrlSetColor($g_hLblLabTimeStatus[$i], $COLOR_BLACK)
+						GUICtrlSetData($g_ahLblLabTime[$i], "00:00:00")
+						GUICtrlSetColor($g_ahLblLabTime[$i], $COLOR_BLACK)
 						$asLabUpgradeTime[$i] = ""
 					EndIf
 				EndIf
