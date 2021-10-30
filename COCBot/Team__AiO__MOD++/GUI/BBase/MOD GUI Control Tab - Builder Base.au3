@@ -361,7 +361,7 @@ EndFunc   ;==>cmbBBWall
 Func ChkOnlyBuilderBase()
 	$g_bOnlyBuilderBase = GUICtrlRead($g_hChkOnlyBuilderBase) = $GUI_CHECKED ? True : False
 	If $g_bOnlyBuilderBase Then
-		If not $g_bStayOnBuilderBase = True Then $g_bRestart = True ; Quick solution.
+		If $g_bStayOnBuilderBase = False Then $g_bRestart = True ; Quick solution.
 	EndIf
 EndFunc   ;==>chkPlayBBOnly
 

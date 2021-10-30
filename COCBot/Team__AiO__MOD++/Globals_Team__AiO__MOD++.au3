@@ -215,7 +215,8 @@ Global $g_aChallengesClanGamesStrings = ["Loot Challenges", _
 										"BB Troop Challenges"]
 #Tidy_Off
 
-
+Global $DiamondMiddleX
+Global $DiamondMiddleY
  
 #Region - One Gem Boost - Team AiO MOD++
 Global $g_bChkOneGemBoostBarracks = False, $g_bChkOneGemBoostSpells = False, $g_bChkOneGemBoostHeroes = False, $g_bChkOneGemBoostWorkshop = False, $g_bOneGemEventEnded = False

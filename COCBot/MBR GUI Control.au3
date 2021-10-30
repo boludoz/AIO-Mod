@@ -1303,32 +1303,23 @@ Func CheckBotRequests()
 EndFunc   ;==>CheckBotRequests
 
 #Region - Optimization - Team AIO Mod++
-#CS - Optimization - Team AIO Mod++
-Func BotCloseRequest()
-	If $g_iBotAction = $eBotClose Then
-		; already requested to close, but user is impatient, so close now
-		BotClose()
-	Else
-		SetLog("Closing " & $g_sBotTitle & ", please wait ...")
-	EndIf
-	$g_bRunState = False
-	$g_bBotPaused = False
-	$g_iBotAction = $eBotClose
-EndFunc   ;==>BotCloseRequest
-#CE - Optimization - Team AIO Mod++
-
 Func BotCloseRequest()
 	; The impatient user.
 	BotClose(Default, True)
 EndFunc   ;==>BotCloseRequest
 
 Func BotCloseRequestProcessed()
-	Return False ; no stable yet, so disabled for now
-	; Return $g_iBotAction = $eBotClose And $g_bAndroidEmbedded = False
+	Return $g_iBotAction = $eBotClose
 EndFunc   ;==>BotCloseRequestProcessed
-#EndRegion - Optimization - Team AIO Mod++
 
 Func BotClose($SaveConfig = Default, $bExit = True)
+	; Perhaps this provides the stability that was lacking.
+	Static $bActiveClose = False
+	If $bActiveClose = True Then Return
+	$bActiveClose = True 
+	
+#EndRegion - Optimization - Team AIO Mod++
+	
 	If $SaveConfig = Default Then $SaveConfig = IsBotLaunched()
 	$g_bRunState = False
 	$g_bBotPaused = False

@@ -891,12 +891,12 @@ Func IsClanChat()
 	Local $bResult = _Wait4Pixel(220, 10, 0x787458, 20, 3000, "IsClanChat") ;Wait for Clan Chat To Be Appear
 	Return $bResult
 EndFunc   ;==>IsClanChat
-
+#cs
 Func IsGlobalChat()
 	Local $bResult = _Wait4Pixel(80, 10, 0x787458, 20, 3000, "IsGlobalChat") ;Wait for Global Chat To Be Appear
 	Return $bResult
 EndFunc   ;==>IsGlobalChat
-
+#ce
 Func IsTextBox()
 	Local $bResult = _Wait4Pixel(190, 650 + $g_iBottomOffsetY, 0xFFFFFF, 20, 3000, "IsTextBox") ;Wait for Text Box To Be Appear
 	Return $bResult
@@ -1059,6 +1059,7 @@ Func ReadClanChat()
 	EndIf
 EndFunc   ;==>ReadClanChat
 
+#CS
 Func ReadGlobalChat()
 	Click(20, 380 + $g_iMidOffsetY) ; open chat
 	If randomSleep(3000) Then Return
@@ -1083,7 +1084,6 @@ Func ReadGlobalChat()
 	EndIf
 EndFunc   ;==>ReadGlobalChat
 
-#CS
 Func SaySomeChat()
 	Click(20, 380 + $g_iMidOffsetY) ; open chat
 	If randomSleep(3000) Then Return

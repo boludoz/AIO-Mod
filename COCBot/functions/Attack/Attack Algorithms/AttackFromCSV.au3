@@ -44,8 +44,8 @@ Global $DiamandAdjY = -22
 ;Global $OuterDiamondLeft = 10 - $DiamandAdjX, $OuterDiamondRight = 855 + $DiamandAdjX, $OuterDiamondTop = 10 - $DiamandAdjY, $OuterDiamondBottom = 655 + $DiamandAdjY
 Global $OuterDiamondLeft = 10 - $DiamandAdjX, $OuterDiamondRight = 850 + $DiamandAdjX, $OuterDiamondTop = 15 - $DiamandAdjY, $OuterDiamondBottom = 650 + $DiamandAdjY
 
-Global $DiamondMiddleX = ($OuterDiamondLeft + $OuterDiamondRight) / 2
-Global $DiamondMiddleY = ($OuterDiamondTop + $OuterDiamondBottom) / 2
+$DiamondMiddleX = ($OuterDiamondLeft + $OuterDiamondRight) / 2
+$DiamondMiddleY = ($OuterDiamondTop + $OuterDiamondBottom) / 2
 Global $InnerDiamandDiffX = 60 + $DiamandAdjX ; set the diamond shape based on reference village
 Global $InnerDiamandDiffY = 45 + $DiamandAdjY ; set the diamond shape based on reference village
 Global $InnerDiamondLeft = $OuterDiamondLeft + $InnerDiamandDiffX, $InnerDiamondRight = $OuterDiamondRight - $InnerDiamandDiffX, $InnerDiamondTop = $OuterDiamondTop + $InnerDiamandDiffY, $InnerDiamondBottom = $OuterDiamondBottom - $InnerDiamandDiffY

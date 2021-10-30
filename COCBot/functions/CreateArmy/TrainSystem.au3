@@ -917,67 +917,62 @@ Func SearchArmy($sImageDir = "", $x = 0, $y = 0, $x1 = 0, $y1 = 0, $sArmyType = 
 	; Setup arrays, including default return values for $return
 	Local $aResult[1][4], $aCoordArray[1][2], $aCoords, $aCoordsSplit, $aValue
 
-	For $iCount = 0 To 10  ;Why is this loop here?
-		If Not $g_bRunState Then Return $aResult
-		If Not getReceivedTroops(162, 200, $bSkipReceivedTroopsCheck) Then
-			; Perform the search
-			_CaptureRegion2($x, $y, $x1, $y1)
-			Local $res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sImageDir, "str", "FV", "Int", 0, "str", "FV", "Int", 0, "Int", 1000)
+	If Not $g_bRunState Then Return $aResult
+	If Not getReceivedTroops(162, 200, $bSkipReceivedTroopsCheck) Then
+		; Perform the search
+		_CaptureRegion2($x, $y, $x1, $y1)
+		Local $res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sImageDir, "str", "FV", "Int", 0, "str", "FV", "Int", 0, "Int", 1000)
 
-			If $res[0] <> "" Then
-				; Get the keys for the dictionary item.
-				Local $aKeys = StringSplit($res[0], "|", $STR_NOCOUNT)
+		If $res[0] <> "" Then
+			; Get the keys for the dictionary item.
+			Local $aKeys = StringSplit($res[0], "|", $STR_NOCOUNT)
 
-				; Redimension the result array to allow for the new entries
-				ReDim $aResult[UBound($aKeys)][4]
-				Local $iResultAddDup = 0
+			; Redimension the result array to allow for the new entries
+			ReDim $aResult[UBound($aKeys)][4]
+			Local $iResultAddDup = 0
 
-				; Loop through the array
-				For $i = 0 To UBound($aKeys) - 1
-					; Get the property values
-					$aResult[$i + $iResultAddDup][0] = RetrieveImglocProperty($aKeys[$i], "objectname")
-					; Get the coords property
-					$aValue = RetrieveImglocProperty($aKeys[$i], "objectpoints")
-					$aCoords = decodeMultipleCoords($aValue, 50) ; dedup coords by x on 50 pixel
-					$aCoordsSplit = $aCoords[0]
-					If UBound($aCoordsSplit) = 2 Then
-						; Store the coords into a two dimensional array
-						$aCoordArray[0][0] = $aCoordsSplit[0] + $x ; X coord.
-						$aCoordArray[0][1] = $aCoordsSplit[1] + $y ; Y coord.
-					Else
-						$aCoordArray[0][0] = -1
-						$aCoordArray[0][1] = -1
-					EndIf
-					; Store the coords array as a sub-array
-					$aResult[$i + $iResultAddDup][1] = Number($aCoordArray[0][0])
-					$aResult[$i + $iResultAddDup][2] = Number($aCoordArray[0][1])
-					SetDebugLog($aResult[$i + $iResultAddDup][0] & " | $aCoordArray: " & $aCoordArray[0][0] & "-" & $aCoordArray[0][1])
-					; If 1 troop type appears at more than 1 slot
-					Local $iMultipleCoords = UBound($aCoords)
-					If $iMultipleCoords > 1 Then
-						SetDebugLog($aResult[$i + $iResultAddDup][0] & " detected " & $iMultipleCoords & " times!")
-						For $j = 1 To $iMultipleCoords - 1
-							Local $aCoordsSplit2 = $aCoords[$j]
-							If UBound($aCoordsSplit2) = 2 Then
-								; add slot
-								$iResultAddDup += 1
-								ReDim $aResult[UBound($aKeys) + $iResultAddDup][4]
-								$aResult[$i + $iResultAddDup][0] = $aResult[$i + $iResultAddDup - 1][0] ; same objectname
-								$aResult[$i + $iResultAddDup][1] = $aCoordsSplit2[0] + $x
-								$aResult[$i + $iResultAddDup][2] = $aCoordsSplit2[1]
-								SetDebugLog($aResult[$i + $iResultAddDup][0] & " | $aCoordArray: " & $aResult[$i + $iResultAddDup][1] & "-" & $aResult[$i + $iResultAddDup][2])
-							EndIf
-						Next
-					EndIf
-				Next
-				ExitLoop
-			EndIf
-			ExitLoop
-		Else
-			If $iCount = 1 Then SetLog("You have received castle troops! Wait 5's...")
-			If _Sleep($DELAYTRAIN8) Then Return $aResult
+			; Loop through the array
+			For $i = 0 To UBound($aKeys) - 1
+				; Get the property values
+				$aResult[$i + $iResultAddDup][0] = RetrieveImglocProperty($aKeys[$i], "objectname")
+				; Get the coords property
+				$aValue = RetrieveImglocProperty($aKeys[$i], "objectpoints")
+				$aCoords = decodeMultipleCoords($aValue, 50) ; dedup coords by x on 50 pixel
+				$aCoordsSplit = $aCoords[0]
+				If UBound($aCoordsSplit) = 2 Then
+					; Store the coords into a two dimensional array
+					$aCoordArray[0][0] = $aCoordsSplit[0] + $x ; X coord.
+					$aCoordArray[0][1] = $aCoordsSplit[1] + $y ; Y coord.
+				Else
+					$aCoordArray[0][0] = -1
+					$aCoordArray[0][1] = -1
+				EndIf
+				; Store the coords array as a sub-array
+				$aResult[$i + $iResultAddDup][1] = Number($aCoordArray[0][0])
+				$aResult[$i + $iResultAddDup][2] = Number($aCoordArray[0][1])
+				SetDebugLog($aResult[$i + $iResultAddDup][0] & " | $aCoordArray: " & $aCoordArray[0][0] & "-" & $aCoordArray[0][1])
+				; If 1 troop type appears at more than 1 slot
+				Local $iMultipleCoords = UBound($aCoords)
+				If $iMultipleCoords > 1 Then
+					SetDebugLog($aResult[$i + $iResultAddDup][0] & " detected " & $iMultipleCoords & " times!")
+					For $j = 1 To $iMultipleCoords - 1
+						Local $aCoordsSplit2 = $aCoords[$j]
+						If UBound($aCoordsSplit2) = 2 Then
+							; add slot
+							$iResultAddDup += 1
+							ReDim $aResult[UBound($aKeys) + $iResultAddDup][4]
+							$aResult[$i + $iResultAddDup][0] = $aResult[$i + $iResultAddDup - 1][0] ; same objectname
+							$aResult[$i + $iResultAddDup][1] = $aCoordsSplit2[0] + $x
+							$aResult[$i + $iResultAddDup][2] = $aCoordsSplit2[1]
+							SetDebugLog($aResult[$i + $iResultAddDup][0] & " | $aCoordArray: " & $aResult[$i + $iResultAddDup][1] & "-" & $aResult[$i + $iResultAddDup][2])
+						EndIf
+					Next
+				EndIf
+			Next
 		EndIf
-	Next
+	Else
+		If _Sleep($DELAYTRAIN8) Then Return $aResult
+	EndIf
 
 	_ArraySort($aResult, 0, 0, 0, 1) ; Sort By X position , will be the Slot 0 to $i
 
