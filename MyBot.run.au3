@@ -730,6 +730,9 @@ EndFunc   ;==>MainLoop
 
 Func runBot() ;Bot that runs everything in order
 	Local $iWaitTime
+	checkMainScreen(False)
+	$g_bSkipFirstZoomout = False
+	ZoomOut()
 	InitiateSwitchAcc()
 	If ProfileSwitchAccountEnabled() And $g_bReMatchAcc Then
 		SetLog("Rematching Account [" & $g_iNextAccount + 1 & "] with Profile [" & GUICtrlRead($g_ahCmbProfile[$g_iNextAccount]) & "]")
@@ -781,7 +784,7 @@ Func runBot() ;Bot that runs everything in order
 		$g_bIsFullArmywithHeroesAndSpells = False
 		$g_iCommandStop = -1
 		If _Sleep($DELAYRUNBOT1) Then Return
-		checkMainScreen()
+		; checkMainScreen()
 		If $g_bRestart Then ContinueLoop
 		chkShieldStatus()
 		If Not $g_bRunState Then Return
