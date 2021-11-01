@@ -2450,39 +2450,6 @@ Func ApplyConfig_600_54($TypeReadSave)
 			SetComboTroopComp() ; this function also calls lblTotalCount
 			CustomTrainOrderEnable()
 			CustomBrewOrderEnable()
-		Case "Save"
-			; Troops Order
-			$g_bCustomTrainOrderEnable = (GUICtrlRead($g_hChkCustomTrainOrderEnable) = $GUI_CHECKED)
-			For $z = 0 To UBound($g_ahCmbTroopOrder) - 1
-				$g_aiCmbCustomTrainOrder[$z] = Number(_GUICtrlComboBox_GetCurSel($g_ahCmbTroopOrder[$z]))
-			Next
-
-			If $g_aiCmbCustomTrainOrder[UBound($g_aiCmbCustomTrainOrder) -1] < 0 Then
-				BtnRemoveTroops()
-				; ApplyConfig_600_54("Read")
-			EndIf
-
-			; Spells Order
-			$g_bCustomBrewOrderEnable = (GUICtrlRead($g_hChkCustomBrewOrderEnable) = $GUI_CHECKED)
-			For $z = 0 To UBound($g_ahCmbSpellsOrder) - 1
-				$g_aiCmbCustomBrewOrder[$z] = Number(_GUICtrlComboBox_GetCurSel($g_ahCmbSpellsOrder[$z]))
-			Next
-
-			If $g_aiCmbCustomBrewOrder[UBound($g_aiCmbCustomBrewOrder) -1] < 0 Then
-				BtnRemoveSpells()
-				; ApplyConfig_600_54("Read")
-			EndIf
-
-			; Sieges Machines Order - Custom Team AIO Mod++
-			$g_bCustomBuildOrderEnable = (GUICtrlRead($g_hChkCustomBuildOrderEnable) = $GUI_CHECKED)
-			For $z = 0 To UBound($g_ahCmbSiegesOrder) - 1
-				$g_aiCmbCustomBuildOrder[$z] = Number(_GUICtrlComboBox_GetCurSel($g_ahCmbSiegesOrder[$z]))
-			Next
-
-			If $g_aiCmbCustomBuildOrder[UBound($g_aiCmbCustomBuildOrder) -1] < 0 Then
-				BtnRemoveSieges()
-				; ApplyConfig_600_54("Read")
-			EndIf
 
 			Local $iTmp = 0, $iTmp2 = 0
 			$iTmp2 = UBound($g_ahCmbTroopOrder) - 1
@@ -2520,7 +2487,39 @@ Func ApplyConfig_600_54($TypeReadSave)
 					$g_aiBuildOrder[$iTmp] = $z
 				Next
 			EndIf
+		Case "Save"
+			; Troops Order
+			$g_bCustomTrainOrderEnable = (GUICtrlRead($g_hChkCustomTrainOrderEnable) = $GUI_CHECKED)
+			For $z = 0 To UBound($g_ahCmbTroopOrder) - 1
+				$g_aiCmbCustomTrainOrder[$z] = Number(_GUICtrlComboBox_GetCurSel($g_ahCmbTroopOrder[$z]))
+			Next
 
+			If $g_aiCmbCustomTrainOrder[UBound($g_aiCmbCustomTrainOrder) -1] < 0 Then
+				BtnRemoveTroops()
+				; ApplyConfig_600_54("Read")
+			EndIf
+
+			; Spells Order
+			$g_bCustomBrewOrderEnable = (GUICtrlRead($g_hChkCustomBrewOrderEnable) = $GUI_CHECKED)
+			For $z = 0 To UBound($g_ahCmbSpellsOrder) - 1
+				$g_aiCmbCustomBrewOrder[$z] = Number(_GUICtrlComboBox_GetCurSel($g_ahCmbSpellsOrder[$z]))
+			Next
+
+			If $g_aiCmbCustomBrewOrder[UBound($g_aiCmbCustomBrewOrder) -1] < 0 Then
+				BtnRemoveSpells()
+				; ApplyConfig_600_54("Read")
+			EndIf
+
+			; Sieges Machines Order - Custom Team AIO Mod++
+			$g_bCustomBuildOrderEnable = (GUICtrlRead($g_hChkCustomBuildOrderEnable) = $GUI_CHECKED)
+			For $z = 0 To UBound($g_ahCmbSiegesOrder) - 1
+				$g_aiCmbCustomBuildOrder[$z] = Number(_GUICtrlComboBox_GetCurSel($g_ahCmbSiegesOrder[$z]))
+			Next
+
+			If $g_aiCmbCustomBuildOrder[UBound($g_aiCmbCustomBuildOrder) -1] < 0 Then
+				BtnRemoveSieges()
+				; ApplyConfig_600_54("Read")
+			EndIf
 	EndSwitch
 	#EndRegion - Custom Train - Team AIO Mod++
 EndFunc   ;==>ApplyConfig_600_54
