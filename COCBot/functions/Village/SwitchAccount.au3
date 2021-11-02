@@ -97,17 +97,10 @@ Func CheckSwitchAcc()
 
 	SetLog("Start Switch Account!", $COLOR_INFO)
 
-	#Region - Custom BB - Team AIO Mod++
 	; Force Switch when PBT detected
-	If $g_abPBActive[$g_iCurAccount] = True Then
-		SetSwitchAccLog(" - PBT Active")
-		$bForceSwitch = True
-	ElseIf $g_bOnlyBuilderBase Then
-		SetLog("This account is Play BB Only, switching to another account", $COLOR_ACTION)
-		SetSwitchAccLog(" - Play BB Only")
-		$bForceSwitch = True
-	#EndRegion - Custom BB - Team AIO Mod++
-	ElseIf $g_iCommandStop = 0 Or $g_iCommandStop = 3 Then ; Forced to switch when in halt attack mode
+	If $g_abPBActive[$g_iCurAccount] Then $bForceSwitch = True
+
+	If $g_iCommandStop = 0 Or $g_iCommandStop = 3 Then ; Forced to switch when in halt attack mode
 		SetLog("This account is in halt attack mode, switching to another account", $COLOR_ACTION)
 		SetSwitchAccLog(" - Halt Attack, Force switch")
 		$bForceSwitch = True
@@ -665,7 +658,7 @@ Func SwitchCOCAcc_ConnectedSCID(ByRef $bResult)
 EndFunc   ;==>SwitchCOCAcc_ConnectedSCID
 
 Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
-	Local $sAccountDiamond = GetDiamondFromRect("440,353,859,732") ; Contains iXStart, $iYStart, $iXEnd, $iYEnd
+	Local $sAccountDiamond = GetDiamondFromRect("750,330,840,710") ; Contains iXStart, $iYStart, $iXEnd, $iYEnd
     Local $aSuperCellIDWindowsUI
 	Local $iIndexSCID = $NextAccount
 	Local $aSearchForAccount, $aCoordinates[0][2], $aTempArray

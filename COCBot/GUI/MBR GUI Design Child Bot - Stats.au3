@@ -1560,7 +1560,7 @@ EndFunc   ;==>CreateDonationsSubTab
 #Region MultiStats SubTab
 Func CreateMultiStatsSubTab1()
 	
-	For $i = 0 To 7
+	For $i = 0 To Int($g_eTotalAcc / 2) - 1
 		Local $x = 25
 		Local $y = 27
 
@@ -1632,7 +1632,7 @@ EndFunc   ;==>CreateMultiStatsSubTab1
 
 Func CreateMultiStatsSubTab2()
 
-	For $i = 0 To $g_eTotalAcc - 9
+	For $i = 0 To Int($g_eTotalAcc / 2) - 1
 		Local $x = 25
 		Local $y = 27
 		Local $real_i = $i + 8

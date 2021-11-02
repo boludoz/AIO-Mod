@@ -426,7 +426,7 @@ Global $__VBoxExtraData ; Virtualbox extra data details of android instance
 #EndRegion Android.au3
 
 #Region - Custom Acc (inspired by xbebenk)  - Team AIO Mod++
-Global $g_eTotalAcc = 14
+Global $g_eTotalAcc = 16
 Global $g_PreResetZero[$g_eTotalAcc]
 Global $g_PreResetFalse[$g_eTotalAcc]
 For $i = 0 To $g_eTotalAcc - 1
