@@ -521,12 +521,6 @@ Global $g_bChkOnlyFarm = False
 ; Check No League for Dead Base - Team AiO MOD++
 Global $g_bChkNoLeague[$g_iModeCount] = [False, False, False]
 
-; Attack - Milking (Compatibility vars.)
-Global Const $g_iMilkFarmOffsetX = 56
-Global Const $g_iMilkFarmOffsetY = 41
-Global Const $g_iMilkFarmOffsetXStep = 35
-Global Const $g_iMilkFarmOffsetYStep = 26
-
 ; GTFO
 Global $g_bChkUseGTFO = False, $g_bChkUseKickOut = False, $g_bChkKickOutSpammers = False
 Global $g_iTxtMinSaveGTFO_Elixir = 200000, $g_iTxtMinSaveGTFO_DE = 2000, _
@@ -687,12 +681,6 @@ Global $g_bChkColorfulAttackLog = False, _
 Global $g_hChkColorfulAttackLog = 0, _
 	   $g_hChkBuyGuard = 0
 #EndRegion - Misc - Team AIO Mod++
-
-#Region - SmartMilk
-Global $g_bDebugSmartMilk = False, $g_bChkMilkForceDeployHeroes = False, $g_bChkMilkForceAllTroops = False, $g_iMilkStrategyArmy = 0
-Global $g_bChkByPassToSmartFarm = False
-Global $g_bByPassSmartFarm = False
-#EndRegion - SmartMilk
 
 #Region - Request defense CC (Demen)
 Global $g_bRequestCCDefense, $g_sRequestCCDefenseText, $g_iCmbRequestCCDefenseWhen, $g_iRequestDefenseTime, $g_bSaveCCTroopForDefense

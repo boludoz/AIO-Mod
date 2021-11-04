@@ -114,15 +114,7 @@ Func ChkSmartFarm($sTypeResources = "All", $bTH = False)
 	EndIf
 
 	; [0] = x , [1] = y , [2] = Distance to Redline ,[3] = In/Out, [4] = Side,  [5]= Is array Dim[2] with 5 coordinates to deploy
-	#Region - AreCollectorsOutside - Team AIO Mod++
-	Local $aAll
-	If $g_vSmartFarmScanOut <> 0 And $sTypeResources = "Milk" Then
-		$aAll = $g_vSmartFarmScanOut
-		$g_vSmartFarmScanOut = 0
-	Else
-		$aAll = SmartFarmDetection($sTypeResources)
-	EndIf
-	#EndRegion - AreCollectorsOutside - Team AIO Mod++
+	Local $aAll = SmartFarmDetection($sTypeResources)
 
 	If $g_bDebugSetlog Then SetDebugLog(" TOTAL detection Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
 
@@ -316,14 +308,6 @@ Func SmartFarmDetection($txtBuildings = "Mines", $bForceCapture = True)
 				$sdirectory = @ScriptDir & "\imgxml\Storages\All"
 			EndIf
 			$iMaxReturnPoints = 21
-		Case "Milk"
-			If $g_iDetectedImageType = 1 Then
-				$sdirectory = @ScriptDir & "\imgxml\Storages\Milk_Snow"
-			Else
-				$sdirectory = @ScriptDir & "\imgxml\Storages\Milk"
-			EndIf
-			$iMaxReturnPoints = 0
-			$iMinLevel = 1
 	EndSwitch
 
 	Local $sCocDiamond = "ECD"

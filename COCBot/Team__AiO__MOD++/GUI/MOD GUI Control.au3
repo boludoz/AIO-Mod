@@ -157,21 +157,21 @@ EndFunc   ;==>CheckUseSmartFarmRedLine
 #Region - Multi Finger - Team AIO Mod++
 Func cmbDBMultiFinger()
     If _GUICtrlComboBox_GetCurSel($g_hCmbStandardDropSidesDB) = 4 Then
-        For $i = $g_hChkSmartAttackRedAreaDB To $g_hPicAttackNearDarkElixirDrillDB			
+        For $i = $g_hChkSmartAttackRedAreaDB To $g_hPicAttackNearDarkElixirDrillDB
 			; GUICtrlSetState($i, $GUI_DISABLE + $GUI_HIDE) ; Other settings should not be affected.
 			GUICtrlSetState($i, $GUI_HIDE)
 		Next
-		
+
 		; GUICtrlSetState($g_hChkSmartAttackRedAreaDB, $GUI_UNCHECKED)
 		GUICtrlSetState($g_hLblDBMultiFinger, $GUI_SHOW)
 		GUICtrlSetState($g_hCmbDBMultiFinger, $GUI_SHOW)
-	Else	 
+	Else
 		For $i = $g_hChkSmartAttackRedAreaDB To $g_hPicAttackNearDarkElixirDrillDB
 			; GUICtrlSetState($i, $GUI_ENABLE + $GUI_SHOW)
 			GUICtrlSetState($i, $GUI_SHOW)
 		Next
-        
-		; GUICtrlSetState($g_hChkSmartAttackRedAreaDB, $GUI_CHECKED) 
+
+		; GUICtrlSetState($g_hChkSmartAttackRedAreaDB, $GUI_CHECKED)
 		GUICtrlSetState($g_hLblDBMultiFinger, $GUI_HIDE)
 		GUICtrlSetState($g_hCmbDBMultiFinger, $GUI_HIDE)
         ; chkSmartAttackRedAreaDB()
@@ -341,24 +341,3 @@ Func chkNewDBSys()
 
 EndFunc   ;==>chkNewDBSys
 #EndRegion - No Upgrade In War - Team AIO Mod++
-
-#Region - SmartMilk
-Func CmbMilkStrategyArmy()
-	$g_iMilkStrategyArmy = _GUICtrlComboBox_GetCurSel($g_hCmbMilkStrategyArmy)
-	_GUICtrlSetImage($g_ahPicMilk, $g_sLibIconPath, $g_hIcnMilk[$g_iMilkStrategyArmy])
-EndFunc   ;==>CmbMilkStrategyArmy
-
-Func MilkForceDeployHeroes()
-	$g_bChkMilkForceDeployHeroes = (GUICtrlRead($g_hChkMilkForceDeployHeroes) = $GUI_CHECKED)
-	$g_bChkMilkForceAllTroops = (GUICtrlRead($g_hChkMilkForceAllTroops) = $GUI_CHECKED)
-EndFunc   ;==>MilkForceDeployHeroes
-
-Func ByPassToSmartFarm()
-	$g_bChkByPassToSmartFarm = (GUICtrlRead($g_hChkByPassToSmartFarm) = $GUI_CHECKED)
-EndFunc   ;==>ByPassToSmartFarm
-
-Func DebugSmartAttacks()
-	$g_bDebugSmartMilk = (GUICtrlRead($g_hChkDebugSmartMilk) = $GUI_CHECKED)
-	$g_bDebugSmartFarm = (GUICtrlRead($g_hChkDebugSmartFarm) = $GUI_CHECKED)
-EndFunc   ;==>DebugSmartAttacks
-#EndRegion - SmartMilk

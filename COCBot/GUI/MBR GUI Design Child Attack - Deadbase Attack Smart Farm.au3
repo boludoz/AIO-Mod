@@ -104,35 +104,3 @@ Func CreateAttackSearchDeadBaseSmartFarm()
 		GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 EndFunc   ;==>CreateAttackSearchDeadBaseStandard
-
-#Region - SmartMilk
-Global $g_hGUI_DEADBASE_ATTACK_SMARTMILK = 0
-Global $g_hCmbMilkStrategyArmy = 0, $g_hChkDebugSmartMilk = 0, $g_hChkMilkForceDeployHeroes = 0, $g_hChkMilkForceAllTroops = 0
-Global $g_hIcnMilk[6] = [$eIcnBabyDragon, $eIcnBarbarian, $eIcnArcher, $eIcnGiant, $eIcnGoblin, $eIcnMinion], $g_ahPicMilk = 0
-
-Func CreateAttackSearchDeadBaseSmartMilk()
-	$g_hGUI_DEADBASE_ATTACK_SMARTMILK = _GUICreate("", $_GUI_MAIN_WIDTH - 195, $g_iSizeHGrpTab4, 150, 25, BitOR($WS_CHILD, $WS_TABSTOP), -1, $g_hGUI_DEADBASE)
-	Local $sTxtTip = ""
-	Local $x = 35, $y = 20
-	
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Milk", "Group_01", "Options"), $x - 30, $y - 20, 270, $g_iSizeHGrpTab4)
-	GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Milk", "Lbl-CmbMilkStrategyArmy", "Army Composition Strategy") & ":", $x, $y + 5, -1, -1)
-	
-	$g_ahPicMilk = _GUICtrlCreateIcon($g_sLibIconPath, $g_hIcnMilk[$g_iMilkStrategyArmy], $x, $y + 20, 32, 32)
-	$g_hCmbMilkStrategyArmy = GUICtrlCreateCombo("", $x + 40, $y + 25, 150, 21, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
-	_GUICtrlSetTip(-1, $sTxtTip)
-	
-	GUICtrlSetData(-1, "Baby Dragons|Full Barbs|Full Archs|Gibarch|Full Gobs|Full Minions", "Baby Dragons")
-	GUICtrlSetOnEvent(-1, "CmbMilkStrategyArmy")
-	$y += 60
-	$g_hChkMilkForceDeployHeroes = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Milk", "ChkMilkForceDeployHeroes", "Force to Deploy Heroes/CC"), $x + 20, $y, -1, -1)
-	GUICtrlSetOnEvent(-1, "MilkForceDeployHeroes")
-	$g_hChkMilkForceAllTroops = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Milk", "ChkMilkForceAllTroops", "Force to Deploy All Troops"), $x + 20, $y + 25, -1, -1)
-	GUICtrlSetOnEvent(-1, "MilkForceDeployHeroes")
-	$g_hChkByPassToSmartFarm = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Milk", "ChkByPassToSmartFarm", "If the collectors are inside, use Smart Farm"), $x + 20, $y + 50, -1, -1)
-	GUICtrlSetOnEvent(-1, "ByPassToSmartFarm")
-	$g_hChkDebugSmartMilk = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Milk", "ChkDebugSmartMilk", "Debug Smart Milk"), $x, $g_iSizeHGrpTab4 - 30, -1, -1)
-	GUICtrlSetOnEvent(-1, "DebugSmartAttacks")
-	GUICtrlCreateGroup("", -99, -99, 1, 1)
-EndFunc   ;==>CreateAttackSearchDeadBaseSmartMilk
-#EndRegion - SmartMilk

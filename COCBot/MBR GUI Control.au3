@@ -2155,8 +2155,6 @@ Func tabDeadbase()
 			GUISetState(@SW_HIDE, $g_hGUI_DEADBASE_ATTACK_STANDARD)
 			GUISetState(@SW_HIDE, $g_hGUI_DEADBASE_ATTACK_SCRIPTED)
 			GUISetState(@SW_HIDE, $g_hGUI_DEADBASE_ATTACK_SMARTFARM)
-			;Region - SmartMilk
-			GUISetState(@SW_HIDE, $g_hGUI_DEADBASE_ATTACK_SMARTMILK)
 	EndSelect
 
 EndFunc   ;==>tabDeadbase

@@ -304,8 +304,6 @@ Func SaveRegularConfig()
 	SaveConfig_MOD_600_35_2()
 	; <><><> Humanization <><><>
 	SaveConfig_MOD_Humanization()
-	; <><><> SmartMilk <><><>
-	SaveConfig_MOD_SmartMilk()
 	; <><><> Attack Plan / Train Army / Boost <><><>
 	SaveConfig_MOD_OneGem()
 

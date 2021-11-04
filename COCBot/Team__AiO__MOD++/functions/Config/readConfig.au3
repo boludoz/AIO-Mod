@@ -338,14 +338,6 @@ Func ReadConfig_MOD_Humanization()
 	; IniReadS($g_iTxtChallengeMessage, $g_sProfileConfigPath, "Bot Humanization", "challengeMessage", $g_iTxtChallengeMessage)
 EndFunc   ;==>ReadConfig_MOD_Humanization
 
-Func ReadConfig_MOD_SmartMilk()
-	IniReadS($g_iMilkStrategyArmy, $g_sProfileConfigPath, "SmartMilk", "MilkStrategyArmy", 0, "int")
-	IniReadS($g_bChkMilkForceDeployHeroes, $g_sProfileConfigPath, "SmartMilk", "MilkForceDeployHeroes", False, "Bool")
-	IniReadS($g_bChkMilkForceAllTroops, $g_sProfileConfigPath, "SmartMilk", "ChkMilkForceAllTroops", False, "Bool")
-	IniReadS($g_bChkByPassToSmartFarm, $g_sProfileConfigPath, "SmartMilk", "ChkByPassToSmartFarm", $g_bChkByPassToSmartFarm, "Bool")
-	IniReadS($g_bDebugSmartMilk, $g_sProfileConfigPath, "SmartMilk", "DebugSmartMilk", False, "Bool")
-EndFunc   ;==>ReadConfig_MOD_SmartMilk
-
 #Region - One Gem Boost - Team AiO MOD++
 Func ReadConfig_MOD_OneGem()
 	; <><><> Attack Plan / Train Army / Boost <><><>
