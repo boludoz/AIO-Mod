@@ -1060,8 +1060,8 @@ Func chkBackground()
 EndFunc   ;==>chkBackground
 
 ; Only farm - Team AiO MOD++
-Func chkOnlyFarm()
-EndFunc   ;==>chkOnlyFarm
+Func ChkOnlyFarm()
+EndFunc   ;==>ChkOnlyFarm
 
 Func ButtonBoost()
 EndFunc   ;==>ButtonBoost

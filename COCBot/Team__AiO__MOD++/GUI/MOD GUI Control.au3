@@ -270,11 +270,11 @@ Func chkTrainLogoutMaxTime()
 EndFunc   ;==>chkTrainLogoutMaxTime
 
 ; Only farm - Team AiO MOD++
-Func chkOnlyFarm()
+Func ChkOnlyFarm()
 	If IsDeclared("g_hChkOnlyFarm") Then
 		UpdateChkOnlyFarm()
 	EndIf
-EndFunc   ;==>chkOnlyFarm
+EndFunc   ;==>ChkOnlyFarm
 
 Func UpdateChkOnlyFarm()
     $g_bChkOnlyFarm = (GUICtrlRead($g_hChkOnlyFarm) = $GUI_CHECKED)
