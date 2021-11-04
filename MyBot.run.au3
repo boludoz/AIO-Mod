@@ -908,6 +908,7 @@ Func runBot() ;Bot that runs everything in order
 				Next
 			Else
 				SetLog("First loop skiped: only attack enabled.", $COLOR_INFO)
+				_RunFunction("BuilderBase")
 			EndIf
 			
 			If Not $g_bRunState Then Return
