@@ -15,10 +15,7 @@
 #include-once
 
 Func cmbDBAlgorithm()
-	If $g_iGuiMode <> 1 Then Return
 	Local $iCmbValue = _GUICtrlComboBox_GetCurSel($g_hCmbDBAlgorithm)
-	SetDebugLog("cmbDBAlgorithm -> Control GetCurrent Selection " & $iCmbValue & " and $g_aiAttackAlgorithm[$DB] is " & $g_aiAttackAlgorithm[$DB])
-	$g_aiAttackAlgorithm[$DB] = $iCmbValue
 	; Algorithm Alltroops
 	_GUI_Value_STATE($iCmbValue = 1 ? "SHOW" : "HIDE", $g_aGroupAttackDBSpell & "#" & $groupIMGAttackDBSpell)
 
