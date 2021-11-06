@@ -120,23 +120,23 @@ Func BuilderBaseUpgradeMachine($bTestRun = False)
 							Return True
 						Else
 							SetLog("Machine upgrade not possible.", $COLOR_INFO)
-							_DebugFailedImageDetection("UpgradeMachine")
+							SaveDebugImage("UpgradeMachine")
 						EndIf
 					Else
 						Setlog("Upgrade machine: Not resources or skipped.", $COLOR_INFO)
-						; _DebugFailedImageDetection("UpgradeMachine")
+						; SaveDebugImage("UpgradeMachine")
 					EndIf
 				Else
 					Setlog("Error geting the Machine Info", $COLOR_ERROR)
-					_DebugFailedImageDetection("UpgradeMachine")
+					SaveDebugImage("UpgradeMachine")
 				EndIf
 			Else
 				Setlog("Machine upgrade bad (Not aMachinePosition)", $COLOR_ERROR)
-				_DebugFailedImageDetection("UpgradeMachine")
+				SaveDebugImage("UpgradeMachine")
 			EndIf
 		Else
 			SetLog("Machine upgrade bad (Not IsMainPageBuilderBase).", $COLOR_INFO)
-			_DebugFailedImageDetection("UpgradeMachine")
+			SaveDebugImage("UpgradeMachine")
 		EndIf
 		
 		ClickAway()

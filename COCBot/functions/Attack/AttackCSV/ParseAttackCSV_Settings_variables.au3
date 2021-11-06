@@ -38,13 +38,57 @@ Func ParseAttackCSV_Settings_variables(ByRef $aiCSVTroops, ByRef $aiCSVSpells, B
 				If Not StringRegExp($asCommand[$iCommandCol], "(TRAIN)|(REDLN)|(DRPLN)|(CCREQ)|(BOOST)", $STR_REGEXPMATCH) Then ContinueLoop
 
 				If $iTHCol = 0 Then ; select a command column TH based on camp space or skip all commands
-					If $g_iTownHallLevel > 5 Then
-						$iTHCol = ($g_iTownHallLevel - 2)
-						$iTH = $g_iTownHallLevel
-					Else
-						SetLog("Set your TownHall to get camps!", $COLOR_ERROR)
+					If $g_bDebugAttackCSV Then SetLog("Camp Total Space: " & $g_iTotalCampSpace, $COLOR_DEBUG)
+					If $g_bDebugAttackCSV Then SetLog("Spell Total Space: " & $g_iTotalSpellValue, $COLOR_DEBUG)
+					If $g_iTotalCampSpace = 0 Then
+						SetLog("Has to run bot once first to get correct total camp space", $COLOR_ERROR)
 						Return
 					EndIf
+					If $g_iTotalSpellValue = 0 Then
+						SetLog("Has to set spell capacity first", $COLOR_ERROR)
+						Return
+					EndIf
+					Switch $g_iTotalCampSpace
+						Case $g_iMaxCapTroopTH[12] + 5 To $g_iMaxCapTroopTH[13]	; TH13
+							; TH14 Custom - Team AIO Mod++
+							If $g_iTownHallLevel = 14 Then ; Ez
+								$iTHCol = $iTHBeginCol + 8
+								$iTH = 14
+							Else
+								$iTHCol = $iTHBeginCol + 7
+								$iTH = 13
+							EndIf
+						Case $g_iMaxCapTroopTH[11] + 5 To $g_iMaxCapTroopTH[12]	; TH12
+							$iTHCol = $iTHBeginCol + 6
+							$iTH = 12
+						Case $g_iMaxCapTroopTH[10] + 5 To $g_iMaxCapTroopTH[11]	; TH11
+							$iTHCol = $iTHBeginCol + 5
+							$iTH = 11
+						Case $g_iMaxCapTroopTH[9] + 5 To $g_iMaxCapTroopTH[10]	; TH10
+							$iTHCol = $iTHBeginCol + 4
+							$iTH = 10
+						Case $g_iMaxCapTroopTH[8] + 5 To $g_iMaxCapTroopTH[9]	; TH9
+							$iTHCol = $iTHBeginCol + 3
+							$iTH = 9
+						Case $g_iMaxCapTroopTH[6] + 5 To $g_iMaxCapTroopTH[8]	; TH7/8
+							Switch $g_iTotalSpellValue
+								Case $g_iMaxCapSpellTH[7] + 1 To $g_iMaxCapSpellTH[8]	; TH8
+									$iTHCol = $iTHBeginCol + 2
+									$iTH = 8
+								Case $g_iMaxCapSpellTH[6] + 1 To $g_iMaxCapSpellTH[7]	; TH7
+									$iTHCol = $iTHBeginCol + 1
+									$iTH = 7
+								Case Else
+									SetLog("Invalid spell size ( <" & $g_iMaxCapSpellTH[6] + 1 & " or >" & $g_iMaxCapSpellTH[8] & " ): " & $g_iTotalSpellValue & " for CSV", $COLOR_ERROR)
+									Return
+							EndSwitch
+						Case $g_iMaxCapTroopTH[5] + 5 To $g_iMaxCapTroopTH[6]	; TH6
+							$iTHCol = $iTHBeginCol
+							$iTH = 6
+						Case Else
+							SetLog("Invalid camp size ( <" & $g_iMaxCapTroopTH[5] + 5 & " or >" & $g_iMaxCapTroopTH[11] & " ): " & $g_iTotalCampSpace & " for CSV", $COLOR_ERROR)
+							Return
+					EndSwitch
 				EndIf
 
 				If $g_bDebugAttackCSV Then SetLog("Line: " & $iLine + 1 & " Command: " & $asCommand[$iCommandCol] & ($iTHCol >= $iTHBeginCol ? " Column: " & $iTHCol & " TH" & $iTH : ""), $COLOR_DEBUG)

@@ -117,6 +117,9 @@ Global Const $g_sImgLocationWarden = @ScriptDir & "\COCBot\Team__AiO__MOD++\Imag
 Global Const $g_sImgLocationCastle = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\AutoLocate\Castle\"
 #EndRegion - Auto Locate
 
+; Chk no league
+Global Const $g_sImgNoLeague = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\NoLeague\"
+
 #Region - DMatchingBundles.au3
 
 ; #FUNCTION# ====================================================================================================================

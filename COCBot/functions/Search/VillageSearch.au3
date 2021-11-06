@@ -47,7 +47,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 	Local $abHeroUse[$eHeroCount] = [False, False, False, False]
 	For $i = 0 To $eHeroCount - 1
 		$abHeroUse[$i] = ($g_abSearchSearchesEnable[$DB] ? IsUnitUsed($DB, $eKing + $i) : False) _
-							Or ($g_abSearchSearchesEnable[$LB] ? IsUnitUsed($LB, $eKing + $i) : False)
+				Or ($g_abSearchSearchesEnable[$LB] ? IsUnitUsed($LB, $eKing + $i) : False)
 	Next
 
 	If $g_bDebugDeadBaseImage Or $g_aiSearchEnableDebugDeadBaseImage > 0 Then
@@ -102,8 +102,6 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 
 	If $g_bIsSearchLimit = True Then $g_bIsSearchLimit = False
 
-	$g_bDoneSmartZap = False ; Custom SmartZap - Team AIO Mod++
-	
 	; Reset page errors.
 	InitAndroidPageError()
 	While 1 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;### Main Search Loop ###;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -297,7 +295,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		Local $sModeBase[3] = ["DB", "LB", "DT"]
 		If $g_bLeagueAttack = False Then
 			If (IsWeakBaseActive($DB) And $dbBase And ($match[$DB] Or $g_abFilterMeetOneConditionEnable[$DB])) Or _
-				(IsWeakBaseActive($LB) And ($match[$LB] Or $g_abFilterMeetOneConditionEnable[$LB])) Then
+					(IsWeakBaseActive($LB) And ($match[$LB] Or $g_abFilterMeetOneConditionEnable[$LB])) Then
 				If ($g_iSearchTH <> "-") Then
 					$weakBaseValues = IsWeakBase($g_iImglocTHLevel, $g_sImglocRedline, False)
 				Else
@@ -338,15 +336,14 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 			SetLog($GetResourcesTXT, $COLOR_SUCCESS, "Lucida Console", 7.5)
 			SetLog("      " & "Dead Base Found!", $COLOR_SUCCESS, "Lucida Console", 7.5)
 			$logwrited = True
-            #Region - Custom - Team AIO Mod++
-			$g_iMatchMode = $DB
-			
-            Local $bFlagSearchAnotherBase = False
-            If $g_bChkNoLeague[$DB] Then
+
+			#Region - Custom - Team AIO Mod++
+			Local $bFlagSearchAnotherBase = False
+			If $g_bChkNoLeague[$DB] Then
 				If SearchNoLeague() Then
 					SetLog(" - Dead Base is in No League, match found.", $COLOR_SUCCESS)
-                    $bFlagSearchAnotherBase = False
-                Else
+					$bFlagSearchAnotherBase = False
+				Else
 
 					; If you play against, this is disabled.
 					If ($g_iSearchCount > 25) Then
@@ -356,18 +353,17 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 
 					SetLog("- Dead Base is in a League, skipping search.", $COLOR_INFO)
 
-                    $match[$DB] = False ; got league skip attack, search another base
-                    $bFlagSearchAnotherBase = True
-                EndIf
-            Else
-                $bFlagSearchAnotherBase = False
-            EndIf
-			
+					$match[$DB] = False ; got league skip attack, search another base
+					$bFlagSearchAnotherBase = True
+				EndIf
+			Else
+				$bFlagSearchAnotherBase = False
+			EndIf
+
 			If ($bFlagSearchAnotherBase = False) Then
-			
-				If $g_bDBMeetCollectorOutside Then ; check is that collector near outside
+				If $g_bDBMeetCollectorOutside Then ; check is that collector  near outside
 					$g_bScanMineAndElixir = False
-		
+
 					If CollectorsAndRedLines(False) Then
 						SetLog("Collectors are outside, match found !", $COLOR_SUCCESS)
 						$bFlagSearchAnotherBase = False
@@ -435,11 +431,12 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 				Else
 					$bFlagSearchAnotherBase = False
 				EndIf
+				If Not $bFlagSearchAnotherBase Then
+					$g_iMatchMode = $DB
+					ExitLoop
+				EndIf
 			EndIf
-            If Not $bFlagSearchAnotherBase Then
-                ExitLoop
-            EndIf
-            #EndRegion - Custom - Team AIO Mod++
+			#EndRegion - Custom - Team AIO Mod++
 
 		ElseIf $match[$LB] And Not $dbBase Then
 			SetLog($GetResourcesTXT, $COLOR_SUCCESS, "Lucida Console", 7.5)
@@ -715,22 +712,22 @@ Func WriteLogVillageSearch($x)
 EndFunc   ;==>WriteLogVillageSearch
 
 Func TestCheckDeadBase()
-Local $dbBase
+	Local $dbBase
 	_CaptureRegion2()
 	#Region - No League - Team AIO Mod++
 	If $g_bChkNoLeague[$DB] Then
-			If SearchNoLeague() Then
-				SetLog("Dead Base is in No League, match found !", $COLOR_SUCCESS)
-				$dbBase = True
-			ElseIf $g_iSearchCount > 50 Then
-				$dbBase = checkDeadBase()
-			Else
-				SetLog("Dead Base is in a League, skipping search !", $COLOR_INFO)
-				$dbBase = False
-			EndIf
+		If SearchNoLeague() Then
+			SetLog("Dead Base is in No League, match found !", $COLOR_SUCCESS)
+			$dbBase = True
+		ElseIf $g_iSearchCount > 50 Then
+			$dbBase = checkDeadBase()
 		Else
+			SetLog("Dead Base is in a League, skipping search !", $COLOR_INFO)
+			$dbBase = False
+		EndIf
+	Else
 		$dbBase = checkDeadBase()
 	EndIf
 	#EndRegion - No League - Team AIO Mod++
 	Return $dbBase
-EndFunc
+EndFunc   ;==>TestCheckDeadBase

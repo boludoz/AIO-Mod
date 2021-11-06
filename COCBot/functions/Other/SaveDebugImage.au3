@@ -14,6 +14,8 @@
 ; ===============================================================================================================================
 
 Func SaveDebugImage($sImageName = "Unknown", $vCaptureNew = Default, $bCreateSubFolder = Default, $sTag = "")
+	
+	If $g_bDebugImageSave = False And $g_bDebugSetlog = False Then Return ; Custom - Team AIO Mod++
 
 	If $vCaptureNew = Default Then $vCaptureNew = True
 	If $bCreateSubFolder = Default Then $bCreateSubFolder = True

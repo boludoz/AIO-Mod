@@ -32,40 +32,15 @@ Func SearchNoLeague($bCheckOneTime = False)
 	If _Sleep($DELAYSPECIALCLICK1) Then Return False
 	
 	Local $bReturn = False
-	Local $offColors[2][3] = [[0x606060, 15, 0], [0x687070, 15, 15]]
-	Local $aNoLeaguePixel = _MultiPixelSearch(5, 10, 50, 50, 1, 1, Hex(0xFFFFFF, 6), $offColors, 25)
 	
-	For $i = 0 To 5
-		
-		If UBound($aNoLeaguePixel) > 0 And not @error Then
-			$bReturn = True
-			ExitLoop
-		EndIf
-		
-		If $bCheckOneTime = True Then
-			$bReturn = False
-			ExitLoop
-		EndIf
-		
-		If _Sleep($DELAYSPECIALCLICK2) Then Return False ; improve pause button response
-	Next
+	$bReturn = _WaitForCheckImg($g_sImgNoLeague, "3,4,47,53", Default, 500)
 	
 	If $g_bDebugSetlog Then
-		_CaptureRegion()
-		SetDebugLog("NoLeague pixel chk-#1: " & _GetPixelColor(13, 24, False) & _
-		", #2: " & _GetPixelColor(27, 24, False) & _
-		", #3: " & _GetPixelColor(27, 38, False) & _
-		", Is no league? " & $bReturn, $COLOR_DEBUG)
+		SetDebugLog("SearchNoLeague: Is no league? " & $bReturn, $COLOR_DEBUG)
 	EndIf
 	
 	Return $bReturn
 EndFunc   ;==>SearchNoLeague
-
-Func SpecialAway()
-	Local $aSpecialAway = [Random(224, 256, 1), Random(9, 15, 1)]
-	If $g_bDebugClick Or TestCapture() Then SetLog("Click SpecialAway " & $aSpecialAway[0] & ", " & $aSpecialAway[1], $COLOR_ACTION, "Verdana", "7.5", 0)
-	Click($aSpecialAway[0], $aSpecialAway[1])
-EndFunc   ;==>SpecialAway
 
 Func UnderstandChatRules()
 	;LEFT - 68, 447, 92, 479
@@ -139,20 +114,6 @@ Func _GUICtrlCreateInput($sText, $iLeft, $iTop, $iWidth, $iHeight, $vStyle = -1,
 	GUICtrlSetBkColor($hReturn, 0xD1DFE7)
 	Return $hReturn
 EndFunc   ;==>_GUICtrlCreateInput
-
-Func _DebugFailedImageDetection($Text)
-	If $g_bDebugImageSave Or $g_bDebugSetlog Then
-		_CaptureRegion2()
-		Local $sSubDir = $g_sProfileTempDebugPath & "NewImageDetectionFails"
-		DirCreate($sSubDir)
-		Local $sDate = @YEAR & "-" & @MON & "-" & @MDAY
-		Local $sTime = @HOUR & "." & @MIN & "." & @SEC
-		Local $sDebugImageName = String($sDate & "_" & $sTime & "__" & $Text & "_.png")
-		Local $hEditedImage = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
-		_GDIPlus_ImageSaveToFile($hEditedImage, $sSubDir & "\" & $sDebugImageName)
-		_GDIPlus_BitmapDispose($hEditedImage)
-	EndIf
-EndFunc   ;==>_DebugFailedImageDetection
 
 Func StringSplit2D($sMatches = "Hola-2-5-50-50-100-100|Hola-6-200-200-100-100", Const $sDelim_Item = "-", Const $sDelim_Row = "|", $bFixLast = Default)
     Local $iValDim_1, $iValDim_2 = 0, $iColCount

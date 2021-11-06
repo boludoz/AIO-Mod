@@ -76,7 +76,7 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB(), $bRemainCSV = False)
 	If IsArray($aBuilderHallPos) And UBound($aBuilderHallPos) > 0 Then
 		$g_aBuilderHallPos = $aBuilderHallPos
 	Else
-		_DebugFailedImageDetection("BuilderHall")
+		SaveDebugImage("BuilderHall")
 		Setlog("Builder Hall detection Error!", $Color_Error)
 		Local $aBuilderHall[1][4] = [["BuilderHall", 450, 425, 92]]
 		$g_aBuilderHallPos = $aBuilderHall

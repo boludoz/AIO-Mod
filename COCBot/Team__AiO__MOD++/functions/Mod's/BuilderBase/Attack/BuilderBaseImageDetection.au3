@@ -49,7 +49,7 @@ Func TestBuilderBaseGetHall()
 
 	Local $BuilderHallPos = _ImageSearchXML($g_sBundleBuilderHall, 1, "0,0,860,732", True, True)
 	If Not IsArray($BuilderHallPos) And UBound($BuilderHallPos) < 1 Then
-		_DebugFailedImageDetection("BuilderHall")
+		SaveDebugImage("BuilderHall")
 	EndIf
 	Setlog(_ArrayToString($BuilderHallPos))
 	$g_bRunState = $Status
@@ -84,7 +84,7 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = $g_iFurtherFromBBDefault, $bDebug
 	If IsArray($aBuilderHallPos) And UBound($aBuilderHallPos) > 0 Then
 		$g_aBuilderHallPos = $aBuilderHallPos
 	Else
-		_DebugFailedImageDetection("BuilderHall")
+		SaveDebugImage("BuilderHall")
 		Setlog("Builder Hall detection Error!", $Color_Error)
 		Local $aBuilderHall[1][4] = [["BuilderHall", 450, 425, -1]]
 		$g_aBuilderHallPos = $aBuilderHall
@@ -159,7 +159,7 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = $g_iFurtherFromBBDefault, $bDebug
 
 	$g_aBuilderBaseDiamond = PrintBBPoly(False) ;BuilderBaseAttackDiamond()
 	If @error Then 
-		_DebugFailedImageDetection("DeployPoints")
+		SaveDebugImage("DeployPoints")
 		Setlog("Deploy $g_aBuilderBaseDiamond - Points detection Error!", $Color_Error)
 		$g_aExternalEdges = BuilderBaseGetFakeEdges()
 	Else
@@ -173,7 +173,7 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = $g_iFurtherFromBBDefault, $bDebug
 	$g_aBuilderBaseOuterDiamond = PrintBBPoly(True)
 
 	If $g_aBuilderBaseOuterDiamond = -1 Then
-		_DebugFailedImageDetection("DeployPoints")
+		SaveDebugImage("DeployPoints")
 		Setlog("Deploy $g_aBuilderBaseOuterDiamond - Points detection Error!", $Color_Error)
 		$g_aOuterEdges = BuilderBaseGetFakeEdges()
 	Else
