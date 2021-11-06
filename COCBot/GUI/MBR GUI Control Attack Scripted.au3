@@ -264,6 +264,7 @@ Func ApplyScriptDB()
 	Local $iApply = 0
 	Local $aiCSVTroops[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 	Local $aiCSVSpells[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+	Local $aiCSVSieges[$eSiegeMachineCount] = [0, 0, 0, 0, 0]
 	Local $aiCSVHeros[$eHeroCount][2] = [[0, 0], [0, 0], [0, 0], [0, 0]]
 	Local $iCSVRedlineRoutineItem = 0, $iCSVDroplineEdgeItem = 0
 	Local $sCSVCCReq = ""
@@ -271,7 +272,7 @@ Func ApplyScriptDB()
 	Local $sFilename = $aTemp[_GUICtrlComboBox_GetCurSel($g_hCmbScriptNameDB) + 1]
 
 	SetLog("CSV settings apply starts: " & $sFilename, $COLOR_INFO)
-	$iApply = ParseAttackCSV_Settings_variables($aiCSVTroops, $aiCSVSpells, $aiCSVHeros, $iCSVRedlineRoutineItem, $iCSVDroplineEdgeItem, $sCSVCCReq, $sFilename)
+	$iApply = ParseAttackCSV_Settings_variables($aiCSVTroops, $aiCSVSpells, $aiCSVSieges, $aiCSVHeros, $iCSVRedlineRoutineItem, $iCSVDroplineEdgeItem, $sCSVCCReq, $sFilename)
 	If Not $iApply Then
 		SetLog("CSV settings apply failed", $COLOR_ERROR)
 		Return
@@ -284,15 +285,13 @@ Func ApplyScriptDB()
 	For $i = 0 To UBound($aiCSVSpells) - 1
 		If $aiCSVSpells[$i] > 0 Then $iApply += 1
 	Next
+	For $i = 0 To UBound($aiCSVSieges) - 1
+		If $aiCSVSieges[$i] > 0 Then $iApply += 1
+	Next
 	If $iApply > 0 Then
-		For $t = 0 To UBound($aiCSVTroops) - 1 ; set troops to level 1 if none on GUI
-			If $aiCSVTroops[$t] > 0 And $g_aiTrainArmyTroopLevel[$t] = 0 Then $g_aiTrainArmyTroopLevel[$t] = 1
-		Next
 		$g_aiArmyCustomTroops = $aiCSVTroops
-		For $s = 0 To UBound($aiCSVSpells) - 1 ; set spells to level 1 if none on GUI
-			If $aiCSVSpells[$s] > 0 And $g_aiTrainArmySpellLevel[$s] = 0 Then $g_aiTrainArmySpellLevel[$s] = 1
-		Next
 		$g_aiArmyCustomSpells = $aiCSVSpells
+		$g_aiArmyCompSiegeMachines = $aiCSVSieges
 		ApplyConfig_600_52_2("Read")
 		SetComboTroopComp() ; GUI refresh
 		lblTotalCountSpell2()
@@ -372,8 +371,9 @@ EndFunc   ;==>ApplyScriptDB
 
 Func ApplyScriptAB()
 	Local $iApply = 0
-	Local $aiCSVTroops[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+	Local $aiCSVTroops[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 	Local $aiCSVSpells[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+	Local $aiCSVSieges[$eSiegeMachineCount] = [0, 0, 0, 0, 0]
 	Local $aiCSVHeros[$eHeroCount][2] = [[0, 0], [0, 0], [0, 0], [0, 0]]
 	Local $iCSVRedlineRoutineItem = 0, $iCSVDroplineEdgeItem = 0
 	Local $sCSVCCReq = ""
@@ -381,7 +381,7 @@ Func ApplyScriptAB()
 	Local $sFilename = $aTemp[_GUICtrlComboBox_GetCurSel($g_hCmbScriptNameAB) + 1]
 
 	SetLog("CSV settings apply starts: " & $sFilename, $COLOR_INFO)
-	$iApply = ParseAttackCSV_Settings_variables($aiCSVTroops, $aiCSVSpells, $aiCSVHeros, $iCSVRedlineRoutineItem, $iCSVDroplineEdgeItem, $sCSVCCReq, $sFilename)
+	$iApply = ParseAttackCSV_Settings_variables($aiCSVTroops, $aiCSVSpells, $aiCSVSieges, $aiCSVHeros, $iCSVRedlineRoutineItem, $iCSVDroplineEdgeItem, $sCSVCCReq, $sFilename)
 	If Not $iApply Then
 		SetLog("CSV settings apply failed", $COLOR_ERROR)
 		Return
@@ -394,15 +394,13 @@ Func ApplyScriptAB()
 	For $i = 0 To UBound($aiCSVSpells) - 1
 		If $aiCSVSpells[$i] > 0 Then $iApply += 1
 	Next
+	For $i = 0 To UBound($aiCSVSieges) - 1
+		If $aiCSVSieges[$i] > 0 Then $iApply += 1
+	Next
 	If $iApply > 0 Then
-		For $t = 0 To UBound($aiCSVTroops) - 1 ; set troops to level 1 if none on GUI
-			If $aiCSVTroops[$t] > 0 And $g_aiTrainArmyTroopLevel[$t] = 0 Then $g_aiTrainArmyTroopLevel[$t] = 1
-		Next
 		$g_aiArmyCustomTroops = $aiCSVTroops
-		For $s = 0 To UBound($aiCSVSpells) - 1 ; set spells to level 1 if none on GUI
-			If $aiCSVSpells[$s] > 0 And $g_aiTrainArmySpellLevel[$s] = 0 Then $g_aiTrainArmySpellLevel[$s] = 1
-		Next
 		$g_aiArmyCustomSpells = $aiCSVSpells
+		$g_aiArmyCompSiegeMachines = $aiCSVSieges
 		ApplyConfig_600_52_2("Read")
 		SetComboTroopComp() ; GUI refresh
 		lblTotalCountSpell2()
