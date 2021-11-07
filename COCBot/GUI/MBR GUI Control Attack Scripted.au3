@@ -285,13 +285,14 @@ Func ApplyScriptDB()
 	For $i = 0 To UBound($aiCSVSpells) - 1
 		If $aiCSVSpells[$i] > 0 Then $iApply += 1
 	Next
+	Local $iApplySieges = 0
 	For $i = 0 To UBound($aiCSVSieges) - 1
-		If $aiCSVSieges[$i] > 0 Then $iApply += 1
+		If $aiCSVSieges[$i] > 0 Then $iApplySieges += 1
 	Next
 	If $iApply > 0 Then
 		$g_aiArmyCustomTroops = $aiCSVTroops
 		$g_aiArmyCustomSpells = $aiCSVSpells
-		$g_aiArmyCompSiegeMachines = $aiCSVSieges
+		If $iApplySieges > 0 Then $g_aiArmyCompSiegeMachines = $aiCSVSieges
 		ApplyConfig_600_52_2("Read")
 		SetComboTroopComp() ; GUI refresh
 		lblTotalCountSpell2()
@@ -394,13 +395,14 @@ Func ApplyScriptAB()
 	For $i = 0 To UBound($aiCSVSpells) - 1
 		If $aiCSVSpells[$i] > 0 Then $iApply += 1
 	Next
+	Local $iApplySieges = 0
 	For $i = 0 To UBound($aiCSVSieges) - 1
-		If $aiCSVSieges[$i] > 0 Then $iApply += 1
+		If $aiCSVSieges[$i] > 0 Then $iApplySieges += 1
 	Next
 	If $iApply > 0 Then
 		$g_aiArmyCustomTroops = $aiCSVTroops
 		$g_aiArmyCustomSpells = $aiCSVSpells
-		$g_aiArmyCompSiegeMachines = $aiCSVSieges
+		If $iApplySieges > 0 Then $g_aiArmyCompSiegeMachines = $aiCSVSieges
 		ApplyConfig_600_52_2("Read")
 		SetComboTroopComp() ; GUI refresh
 		lblTotalCountSpell2()
