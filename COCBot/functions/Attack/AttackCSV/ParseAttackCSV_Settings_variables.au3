@@ -138,10 +138,10 @@ Func ParseAttackCSV_Settings_variables(ByRef $aiCSVTroops, ByRef $aiCSVSpells, B
 							Case $eBarb To $eTroopCount - 1
 								$aiCSVTroops[$iTroopIndex] = int($asCommand[$iTHCol])
 								If int($asCommand[$iFlexCol]) > 0 Then $iFlexTroopIndex = $iTroopIndex
-							Case $eLSpell To $eSpellCount - 1
+							Case $eLSpell To $eSpellCount + $eLSpell - 1 
 								$aiCSVSpells[$iTroopIndex - $eLSpell] = int($asCommand[$iTHCol])
-							Case $eLSpell To $eSiegeMachineCount - 1
-								$aiCSVSpells[$iTroopIndex - $eWallW] = int($asCommand[$iTHCol])
+							Case $eWallW To $eSiegeMachineCount + $eWallW - 1
+								$aiCSVSieges[$iTroopIndex - $eWallW] = int($asCommand[$iTHCol])
 							Case $eKing To $eChampion
 								Local $iHeroRadioItem = int(StringLeft($asCommand[$iTHCol], 1))
 								Local $iHeroTimed = Int(StringTrimLeft($asCommand[$iTHCol], 1))
