@@ -355,10 +355,6 @@ Global $g_hCmbTroopSetting = 0, $g_iCmbTroopSetting = 0
 Global $g_iTotalSiegeValue = 0, $g_bPreciseSieges = 0, $g_bForcePreBuildSieges = 0
 #EndRegion - Custom train - Team AIO Mod++
 
-; Debug tag for some capture modes.
-Global $g_sFMQTag = "" ; For debug folder.
-Global $g_sTagCallMybotCall = ""
-
 ; Advanced debugging.
 Global $g_bExecuteCapture = False
 Global $g_bNewModAvailable = False
@@ -576,20 +572,22 @@ Global Const $g_sBBOptimizeOTTO[14] = ["Builder Hall", "Gold Mine", "Elixir Coll
 ; Extra options
 Global $g_iBBMinAttack = 1, $g_iBBMaxAttack = 4
 
+; Attack
 ; Globals for BB Machine
 ; X, Y, g_bIsBBMachineD, g_bBBIsFirst
 Global Const $g_aMachineBBReset[4] = [-1, -1, False, True]
 Global $g_aMachineBB[4] = [-1, -1, False, True]
 Global $g_iFurtherFromBBDefault = 3
-
-; Report
-Global $g_iAvailableAttacksBB = 0, $g_iLastDamage = 0
-Global $g_sTxtRegistrationToken = ""
-
 Global $g_aBuilderHallPos = -1, $g_aAirdefensesPos = -1, $g_aCrusherPos = -1, $g_aCannonPos = -1, $g_aGuardPostPos = -1, _
 $g_aAirBombs = -1, $g_aLavaLauncherPos = -1, $g_aRoasterPos = -1, $g_aDeployPoints, $g_aDeployBestPoints
 
 Global $g_aExternalEdges, $g_aBuilderBaseDiamond, $g_aOuterEdges, $g_aBuilderBaseOuterDiamond, $g_aBuilderBaseOuterPolygon, $g_aBuilderBaseAttackPolygon, $g_aFinalOuter[4]
+
+Global $g_bIsMachinePresent = False
+Global $g_iBBMachAbilityLastActivatedTime = -1 ; time between abilities
+
+; Report
+Global $g_iAvailableAttacksBB = 0, $g_iLastDamage = 0
 
 ; GUI
 Global Enum $g_eBBAttackCSV = 0, $g_eBBAttackSmart = 1
@@ -617,9 +615,6 @@ Global $g_sIcnBBOrder[$g_iBBTroopCount]
 Global Const $g_asAttackBarBB2[$g_iBBTroopCount] = ["Barbarian", "Archer", "BoxerGiant", "Minion", "WallBreaker", "BabyDrag", "CannonCart", "Witch", "DropShip", "SuperPekka", "HogGlider", "Machine"]
 Global Const $g_asBBTroopShortNames[$g_iBBTroopCount] = ["Barb", "Arch", "Giant", "Minion", "Breaker", "BabyD", "Cannon", "Witch", "Drop", "Pekka", "HogG", "Machine"]
 Global Const $g_sTroopsBBAtk[$g_iBBTroopCount] = ["Raged Barbarian", "Sneaky Archer", "Boxer Giant", "Beta Minion", "Bomber Breaker", "Baby Dragon", "Cannon Cart", "Night Witch", "Drop Ship", "Super Pekka", "Hog Glider", "Battle Machine"]
-
-Global $g_bIsMachinePresent = False
-Global $g_iBBMachAbilityLastActivatedTime = -1 ; time between abilities
 
 ; BB Drop Order
 Global $g_hBtnBBDropOrder = 0

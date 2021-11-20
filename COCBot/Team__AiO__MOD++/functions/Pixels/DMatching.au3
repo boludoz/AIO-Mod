@@ -199,11 +199,10 @@ Func DebugImgArrayClassic($aAR = 0, $sFrom = "")
 		addInfoToDebugImage($hGraphic, $hPenRED, $aAR[$i][0] & "_" & $aAR[$i][3], $aAR[$i][1], $aAR[$i][2])
 	Next
 
-	_GDIPlus_ImageSaveToFile($hEditedImage, $sSubDir & "\" & $g_sFMQTag & $sDebugImageName )
+	_GDIPlus_ImageSaveToFile($hEditedImage, $sSubDir & "\" & $sDebugImageName )
 	_GDIPlus_PenDispose($hPenRED)
 	_GDIPlus_GraphicsDispose($hGraphic)
 	_GDIPlus_BitmapDispose($hEditedImage)
-	$g_sFMQTag = ""
 EndFunc
 
 ; Check if an image in the Bundle can be found

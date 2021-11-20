@@ -36,7 +36,6 @@
 #include "functions\Mod's\ModFuncs.au3"
 #include "functions\Pixels\_Wait4Pixel.au3"
 #include "functions\Pixels\ImgFuncs.au3"
-#include "functions\Mod's\AngleFuncs.au3"
 
 ; DOCR - Team AiO MOD++
 #include "functions\Read Text\getOcrDissociable.au3"

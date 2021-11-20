@@ -1935,7 +1935,9 @@ Global $CocDiamondDCD = "DCD"
 Global $InternalArea[8][3]
 Global $ExternalArea[8][3]
 
+; Team AiO MOD++ (2019)
 Global $g_aVillageSize[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global Const $g_aVillageSizeReset[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 ; Pet House Alpha
 Global $g_aiPetHousePos[2] = [-1, -1] ; Position of Pet House
@@ -1960,7 +1962,6 @@ Global Const $g_aiPetUpgradeCostPerLevel[$ePetCount][$g_ePetLevels] = [ _
         [0, 210, 220, 230, 240, 250, 260, 270, 280, 290]]    ; Unicorn
 
 ; Team AiO MOD++ (2019)
-Global Const $g_aVillageSizeReset[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 #include "Team__AiO__MOD++\Globals_Team__AiO__MOD++.au3"
 
 Global $g_bIsModeActive[$g_iModeCount]
