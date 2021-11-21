@@ -1773,10 +1773,10 @@ Func ReadClanGamesConfig()
 			; Write the new value to the file
 			IniReadSCG($g_aChallengesClanGamesStrings[$i], $j, 3, $g_sProfileClanGamesPath, $g_aChallengesClanGamesStrings[$i], $aTmp[$j][1], $aTmp[$j][3], "Int")
 
-			If Int($ah[$j]) = 0 Then ContinueLoop ; Handle GUI always have num ref, skip no implemented.
+			; If Int($ah[$j]) = 0 Then ContinueLoop ; Handle GUI always have num ref, skip no implemented.
 
 			; Write boolean status
-			IniReadSCG($g_aChallengesClanGamesStrings[$i], $j, 5, $g_sProfileClanGamesPath, $g_aChallengesClanGamesStrings[$i], $aTmp[$j][1] & " Chk", $aTmp[$j][5], "Bool")
+			; IniReadSCG($g_aChallengesClanGamesStrings[$i], $j, 5, $g_sProfileClanGamesPath, $g_aChallengesClanGamesStrings[$i], $aTmp[$j][1] & " Chk", $aTmp[$j][5], "Bool")
 
 		Next
 

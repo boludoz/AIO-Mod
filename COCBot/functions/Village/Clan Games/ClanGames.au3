@@ -521,42 +521,42 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 	Switch $sImageType
 		Case "D"
 			For $i = 0 To UBound($g_aCGDestructionChallenges) - 1
-				If $g_aCGDestructionChallenges[$i][5] = True Then
+				If $g_aCGDestructionChallenges[$i][3] > -1 Then
 					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "DestructionChallenges: " & $g_aCGDestructionChallenges[$i][0], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $g_aCGDestructionChallenges[$i][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
 		Case "A"
 			For $i = 0 To UBound($g_aCGAirTroopChallenges) - 1
-				If $g_aCGAirTroopChallenges[$i][5] = True Then
+				If $g_aCGAirTroopChallenges[$i][3] > -1 Then
 					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "AirTroopChallenges: " & $g_aCGAirTroopChallenges[$i][0], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $g_aCGAirTroopChallenges[$i][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
 		Case "G"
 			For $i = 0 To UBound($g_aCGGroundTroopChallenges) - 1
-				If $g_aCGGroundTroopChallenges[$i][5] = True Then
+				If $g_aCGGroundTroopChallenges[$i][3] > -1 Then
 					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "GroundTroopChallenges: " & $g_aCGGroundTroopChallenges[$i][0], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $g_aCGGroundTroopChallenges[$i][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
 		Case "BBD"
 			For $i = 0 To UBound($g_aCGBBDestructionChallenges) - 1
-				If $g_aCGBBDestructionChallenges[$i][5] = True Then
+				If $g_aCGBBDestructionChallenges[$i][3] > -1 Then
 					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "BBDestructionChallenges: " & $g_aCGBBDestructionChallenges[$i][0], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $g_aCGBBDestructionChallenges[$i][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
 		Case "BBT"
 			For $i = 0 To UBound($g_aCGBBTroopChallenges) - 1
-				If $g_aCGBBTroopChallenges[$i][5] = True Then
+				If $g_aCGBBTroopChallenges[$i][3] > -1 Then
 					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "BBTroopChallenges: " & $g_aCGBBTroopChallenges[$i][0], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $g_aCGBBTroopChallenges[$i][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
 		Case "S"
 			For $i = 0 To UBound($g_aCGSpellChallenges) - 1
-				If $g_aCGSpellChallenges[$i][5] = True Then
+				If $g_aCGSpellChallenges[$i][3] > -1 Then
 					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "SpellChallenges: " & $g_aCGSpellChallenges[$i][0], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $g_aCGSpellChallenges[$i][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
@@ -1048,10 +1048,10 @@ Func SaveClanGamesConfig()
 			; Write the new value to the file
 			_Ini_Add($g_aChallengesClanGamesStrings[$i], $aTmp[$j][1], $aTmp[$j][3])
 
-			If Int($ah[$j]) = 0 Then ContinueLoop ; Handle GUI always have num ref, skip no implemented.
+			; If Int($ah[$j]) = 0 Then ContinueLoop ; Handle GUI always have num ref, skip no implemented.
 
 			; Write boolean status
-			_Ini_Add($g_aChallengesClanGamesStrings[$i], $aTmp[$j][1] & " Chk", $aTmp[$j][5])
+			; _Ini_Add($g_aChallengesClanGamesStrings[$i], $aTmp[$j][1] & " Chk", $aTmp[$j][5])
 
 		Next
 
@@ -1069,62 +1069,61 @@ Func ApplyConfig_ClanGames($TypeReadSave)
 		Local $ah = $ahChallengesClanGamesVarsHandle[$i]
 		For $j = 0 To UBound($ah) - 1
 			If Int($ah[$j]) = 0 Then ContinueLoop ; Handle GUI always have num ref, skip no implemented.
-			ApplyConfig_ClanGamesSwitch($TypeReadSave, $g_aChallengesClanGamesStrings[$i], $j, 5) ; Skip autoit limits.
+			ApplyConfig_ClanGamesSwitch($TypeReadSave, $g_aChallengesClanGamesStrings[$i], $j, 3) ; Skip autoit limits.
 		Next
 
 	Next
 EndFunc   ;==>ApplyConfig_ClanGames
-
 
 Func ApplyConfig_ClanGamesSwitch($TypeReadSave, $sTring, $i, $j)
 	Switch $TypeReadSave
 		Case "Read"
 			Switch $sTring
 				Case "Loot Challenges"
-					GUICtrlSetState($g_hCGLootChallenges[$i], $g_aCGLootChallenges[$i][$j] ? $GUI_CHECKED : $GUI_UNCHECKED)
+					GUICtrlSetState($g_hCGLootChallenges[$i], ($g_aCGLootChallenges[$i][$j] > -1) ? $GUI_CHECKED : $GUI_UNCHECKED)
 				Case "Air Troop Challenges"
-					GUICtrlSetState($g_hCGAirTroopChallenges[$i], $g_aCGAirTroopChallenges[$i][$j] ? $GUI_CHECKED : $GUI_UNCHECKED)
+					GUICtrlSetState($g_hCGAirTroopChallenges[$i], ($g_aCGAirTroopChallenges[$i][$j] > -1) ? $GUI_CHECKED : $GUI_UNCHECKED)
 				Case "Ground Troop Challenges"
-					GUICtrlSetState($g_hCGGroundTroopChallenges[$i], $g_aCGGroundTroopChallenges[$i][$j] ? $GUI_CHECKED : $GUI_UNCHECKED)
+					GUICtrlSetState($g_hCGGroundTroopChallenges[$i], ($g_aCGGroundTroopChallenges[$i][$j] > -1) ? $GUI_CHECKED : $GUI_UNCHECKED)
 				Case "Battle Challenges"
-					GUICtrlSetState($g_hCGBattleChallenges[$i], $g_aCGBattleChallenges[$i][$j] ? $GUI_CHECKED : $GUI_UNCHECKED)
+					GUICtrlSetState($g_hCGBattleChallenges[$i], ($g_aCGBattleChallenges[$i][$j] > -1) ? $GUI_CHECKED : $GUI_UNCHECKED)
 				Case "Destruction Challenges"
-					GUICtrlSetState($g_hCGDestructionChallenges[$i], $g_aCGDestructionChallenges[$i][$j] ? $GUI_CHECKED : $GUI_UNCHECKED)
+					GUICtrlSetState($g_hCGDestructionChallenges[$i], ($g_aCGDestructionChallenges[$i][$j] > -1) ? $GUI_CHECKED : $GUI_UNCHECKED)
 				Case "Misc Challenges"
-					GUICtrlSetState($g_hCGMiscChallenges[$i], $g_aCGMiscChallenges[$i][$j] ? $GUI_CHECKED : $GUI_UNCHECKED)
+					GUICtrlSetState($g_hCGMiscChallenges[$i], ($g_aCGMiscChallenges[$i][$j] > -1) ? $GUI_CHECKED : $GUI_UNCHECKED)
 				Case "Spell Challenges"
-					GUICtrlSetState($g_hCGSpellChallenges[$i], $g_aCGSpellChallenges[$i][$j] ? $GUI_CHECKED : $GUI_UNCHECKED)
+					GUICtrlSetState($g_hCGSpellChallenges[$i], ($g_aCGSpellChallenges[$i][$j] > -1) ? $GUI_CHECKED : $GUI_UNCHECKED)
 				Case "BB Battle Challenges"
-					GUICtrlSetState($g_hCGBBBattleChallenges[$i], $g_aCGBBBattleChallenges[$i][$j] ? $GUI_CHECKED : $GUI_UNCHECKED)
+					GUICtrlSetState($g_hCGBBBattleChallenges[$i], ($g_aCGBBBattleChallenges[$i][$j] > -1) ? $GUI_CHECKED : $GUI_UNCHECKED)
 				Case "BB Destruction Challenges"
-					GUICtrlSetState($g_hCGBBDestructionChallenges[$i], $g_aCGBBDestructionChallenges[$i][$j] ? $GUI_CHECKED : $GUI_UNCHECKED)
+					GUICtrlSetState($g_hCGBBDestructionChallenges[$i], ($g_aCGBBDestructionChallenges[$i][$j] > -1) ? $GUI_CHECKED : $GUI_UNCHECKED)
 				Case "BB Troop Challenges"
-					GUICtrlSetState($g_hCGBBTroopChallenges[$i], $g_aCGBBTroopChallenges[$i][$j] ? $GUI_CHECKED : $GUI_UNCHECKED)
+					GUICtrlSetState($g_hCGBBTroopChallenges[$i], ($g_aCGBBTroopChallenges[$i][$j] > -1) ? $GUI_CHECKED : $GUI_UNCHECKED)
 				Case Else
-					SetLog("Badly SaveApply: " & $sTring, $COLOR_ERROR)
+					SetLog("Badly SaveApply: " & $sTring, ($COLOR_ERROR)
 			EndSwitch
 		Case "Save"
 			Switch $sTring
 				Case "Loot Challenges"
-					$g_aCGLootChallenges[$i][$j] = (GUICtrlRead($g_hCGLootChallenges[$i]) = $GUI_CHECKED)
+					$g_aCGLootChallenges[$i][$j] = (GUICtrlRead($g_hCGLootChallenges[$i]) = $GUI_UNCHECKED) ? Abs($g_aCGLootChallenges[$i][$j]) : -Abs($g_aCGLootChallenges[$i][$j])
 				Case "Air Troop Challenges"
-					$g_aCGAirTroopChallenges[$i][$j] = (GUICtrlRead($g_hCGAirTroopChallenges[$i]) = $GUI_CHECKED)
+					$g_aCGAirTroopChallenges[$i][$j] = (GUICtrlRead($g_hCGAirTroopChallenges[$i]) = $GUI_CHECKED) ? Abs($g_aCGAirTroopChallenges[$i][$j]) : -Abs($g_aCGAirTroopChallenges[$i][$j])
 				Case "Ground Troop Challenges"
-					$g_aCGGroundTroopChallenges[$i][$j] = (GUICtrlRead($g_hCGGroundTroopChallenges[$i]) = $GUI_CHECKED)
+					$g_aCGGroundTroopChallenges[$i][$j] = (GUICtrlRead($g_hCGGroundTroopChallenges[$i]) = $GUI_CHECKED) ? Abs($g_aCGGroundTroopChallenges[$i][$j]) : -Abs($g_aCGGroundTroopChallenges[$i][$j])
 				Case "Battle Challenges"
-					$g_aCGBattleChallenges[$i][$j] = (GUICtrlRead($g_hCGBattleChallenges[$i]) = $GUI_CHECKED)
+					$g_aCGBattleChallenges[$i][$j] = (GUICtrlRead($g_hCGBattleChallenges[$i]) = $GUI_CHECKED) ? Abs($g_aCGBattleChallenges[$i][$j]) : -Abs($g_aCGBattleChallenges[$i][$j])
 				Case "Destruction Challenges"
-					$g_aCGDestructionChallenges[$i][$j] = (GUICtrlRead($g_hCGDestructionChallenges[$i]) = $GUI_CHECKED)
+					$g_aCGDestructionChallenges[$i][$j] = (GUICtrlRead($g_hCGDestructionChallenges[$i]) = $GUI_CHECKED) ? Abs($g_aCGDestructionChallenges[$i][$j]) : -Abs($g_aCGDestructionChallenges[$i][$j])
 				Case "Misc Challenges"
-					$g_aCGMiscChallenges[$i][$j] = (GUICtrlRead($g_hCGMiscChallenges[$i]) = $GUI_CHECKED)
+					$g_aCGMiscChallenges[$i][$j] = (GUICtrlRead($g_hCGMiscChallenges[$i]) = $GUI_CHECKED) ? Abs($g_aCGMiscChallenges[$i][$j]) : -Abs($g_aCGMiscChallenges[$i][$j])
 				Case "Spell Challenges"
-					$g_aCGSpellChallenges[$i][$j] = (GUICtrlRead($g_hCGSpellChallenges[$i]) = $GUI_CHECKED)
+					$g_aCGSpellChallenges[$i][$j] = (GUICtrlRead($g_hCGSpellChallenges[$i]) = $GUI_CHECKED) ? Abs($g_aCGSpellChallenges[$i][$j]) : -Abs($g_aCGSpellChallenges[$i][$j])
 				Case "BB Battle Challenges"
-					$g_aCGBBBattleChallenges[$i][$j] = (GUICtrlRead($g_hCGBBBattleChallenges[$i]) = $GUI_CHECKED)
+					$g_aCGBBBattleChallenges[$i][$j] = (GUICtrlRead($g_hCGBBBattleChallenges[$i]) = $GUI_CHECKED) ? Abs($g_aCGBBBattleChallenges[$i][$j]) : -Abs($g_aCGBBBattleChallenges[$i][$j])
 				Case "BB Destruction Challenges"
-					$g_aCGBBDestructionChallenges[$i][$j] = (GUICtrlRead($g_hCGBBDestructionChallenges[$i]) = $GUI_CHECKED)
+					$g_aCGBBDestructionChallenges[$i][$j] = (GUICtrlRead($g_hCGBBDestructionChallenges[$i]) = $GUI_CHECKED) ? Abs($g_aCGBBDestructionChallenges[$i][$j]) : -Abs($g_aCGBBDestructionChallenges[$i][$j])
 				Case "BB Troop Challenges"
-					$g_aCGBBTroopChallenges[$i][$j] = (GUICtrlRead($g_hCGBBTroopChallenges[$i]) = $GUI_CHECKED)
+					$g_aCGBBTroopChallenges[$i][$j] = (GUICtrlRead($g_hCGBBTroopChallenges[$i]) = $GUI_CHECKED) ? Abs($g_aCGBBTroopChallenges[$i][$j]) : -Abs($g_aCGBBTroopChallenges[$i][$j])
 				Case Else
 					SetLog("Badly SaveApply: " & $sTring, $COLOR_ERROR)
 			EndSwitch

@@ -1974,12 +1974,12 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 		$g_iAndroidVersionAPI = Int(AndroidAdbSendShellCommand("getprop ro.build.version.sdk", Default, $wasRunState, False))
 
 		; Custom AIO
-		If $g_iAndroidVersionAPI <= $g_iAndroidLollipop And $g_iAndroidVersionAPI <= $g_iAndroidPie Then
+		If $g_iAndroidVersionAPI >= $g_iAndroidLollipop And $g_iAndroidVersionAPI <= $g_iAndroidPie Then
 			SetDebugLog("Android Version API = " & $g_iAndroidVersionAPI & " " & " - OK", $COLOR_INFO)
 		Else
 			SetLog("Your emulator instance have unsupported android version.", $COLOR_RED)
 			SetLog("Please use 5.1 android version to 9.0 (max) android version.", $COLOR_RED)
-			PushMsg("Hard stuck, please check your android version to be compatible with clash of clans (5.1 - 9.0).")
+			PushMsg("Hard stuck, please check your android version to be compatible with clash of clans (Range supported : 5.1 - 9.0).")
 			BtnStop()
 		EndIf
 		
