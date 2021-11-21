@@ -125,5 +125,3 @@ Func ClickDrag($X1, $Y1, $X2, $Y2, $Delay = 50, $bSCIDSwitch = False)
 	EndIf
 	Return SetError(0, 0, ($error = 0 ? True : False))
 EndFunc   ;==>ClickDrag
-
-

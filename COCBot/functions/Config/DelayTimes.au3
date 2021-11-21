@@ -138,9 +138,9 @@ Global Const $DELAYISBUILDERBASE = 300
 Global Const $DELAYWAITMAINSCREEN1 = 2000
 
 ;ZoomOut
-Global Const $iDelayZOOMOUT1 = 1500
-Global Const $iDelayZOOMOUT2 = 200
-Global Const $iDelayZOOMOUT3 = 1000
+Global Const $DELAYZOOMOUT1 = 1500
+Global Const $DELAYZOOMOUT2 = 200
+Global Const $DELAYZOOMOUT3 = 1000
 
 ;CheckVersionHTML / download license
 Global Const $DELAYCHECKVERSIONHTML1 = 250

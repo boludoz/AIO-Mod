@@ -341,12 +341,19 @@ Global $g_bUpdateSharedPrefs = True ; Update shared_prefs/storage_new.xml before
 Global $g_iAndroidProcessAffinityMask = 0
 
 ; Android details
+
 ; Supported Android Versions, used for some ImgLoc functions and in GetAndroidCodeName()
 Global Const $g_iAndroidJellyBean = 17
 Global Const $g_iAndroidKitKat = 19
+
+; Supported versions
 Global Const $g_iAndroidLollipop = 21
 Global Const $g_iAndroidNougat = 24
-Global $g_iAndroidVersionAPI = $g_iAndroidJellyBean ; getprop ro.build.version.sdk
+Global Const $g_iAndroidOreo = 26
+Global Const $g_iAndroidPie = 28
+; Unsupported > 9 Not support minitouch... and mybot without minitouch not works.
+
+Global $g_iAndroidVersionAPI = $g_iAndroidLollipop ; getprop ro.build.version.sdk
 
 ; Updated in UpdateAndroidConfig() and $g_sAndroidEmulator&Init() as well
 Global $g_bInitAndroidActive = False

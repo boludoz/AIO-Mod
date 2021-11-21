@@ -917,6 +917,9 @@ Func NotifyPushMessageToBoth($Message, $Source = "")
 		Case "Misc"
 			NotifyPushToTelegram($Message)
 			NotifyPushToDiscord($Message)
+		Case Else
+			NotifyPushToTelegram(String($Message))
+			NotifyPushToDiscord(String($Message))
 	EndSwitch
 EndFunc   ;==>NotifyPushMessageToBoth
 

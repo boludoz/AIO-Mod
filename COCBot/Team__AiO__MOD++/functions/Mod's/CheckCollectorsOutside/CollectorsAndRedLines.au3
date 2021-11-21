@@ -27,14 +27,14 @@ Func CollectorsAndRedLines($bForceCapture = False)
 			For $i = 0 To $iLocated - 1
 				If ($aAllCollectors[$i][3] = "Out") Then $iOut += 1
 			Next
-			If $g_bDBMeetCollectorOutside Or ForceCollectorsOutside() Then
+			If $g_bDBMeetCollectorOutside Then
 				$bReturn = ($g_iCmbRedlineTiles <= $iOut)
 			ElseIf $g_bDBCollectorNearRedline Then
 				$bReturn = ($g_iDBMinCollectorOutsidePercent <= Round($iOut / $iLocated) * 100)
 			EndIf
 			SetLog($sText & " | " & $bReturn & " - Out: " & $iOut & " - Located: " & $iLocated, $COLOR_INFO)
 		EndIf
-	
+
 	EndIf
 	Return $bReturn
 EndFunc   ;==>AreCollectorsOutside

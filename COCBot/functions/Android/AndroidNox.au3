@@ -85,7 +85,7 @@ EndFunc   ;==>IsNoxCommandLine
 
 Func GetNoxProgramParameter($bAlternative = False)
 	; see http://en.bignox.com/blog/?p=354
-	Local $customScreen = "-root:true -resolution:" & $g_iAndroidClientWidth & "x" & $g_iAndroidClientHeight & " -dpi:160" ; Custom fix - Team AIO Mod++
+	Local $customScreen = "-resolution:" & $g_iAndroidClientWidth & "x" & $g_iAndroidClientHeight & " -dpi:160"
 	Local $clone = """-clone:" & ($g_sAndroidInstance = "" ? $g_avAndroidAppConfig[$g_iAndroidConfig][1] : $g_sAndroidInstance) & """"
 	If $bAlternative = False Then
 		; should be launched with these parameter
@@ -173,12 +173,12 @@ Func InitNox($bCheckOnly = False)
 
 	Local $Files = [$NoxFile, $AdbFile, $VBoxFile]
 
-	#Region - Custom fix - Team AIO Mod++
-	If Not $bCheckOnly And $g_iAndroidAdbReplace <> 2 And GetVersionNormalized($Version) >= GetVersionNormalized("6.2.0") Then
+	#cs
+	If Not $bCheckOnly And $g_bAndroidAdbReplaceEmulatorVersion And GetVersionNormalized($Version) >= GetVersionNormalized("6.2.0") Then
 		; replace adb with dummy
-		$g_iAndroidAdbReplace = 2
+		$g_bAndroidAdbReplaceEmulatorVersionWithDummy = True
 	EndIf
-	#EndRegion - Custom fix - Team AIO Mod++
+	#ce
 	
 	Local $sPreferredADB = FindPreferredAdbPath()
 	If $sPreferredADB Then _ArrayDelete($Files, 1)
