@@ -1972,21 +1972,8 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 		;AndroidAdbSendShellCommand("", Default, $wasRunState, False)
 		; update $g_iAndroidSystemAPI ; getprop ro.build.version.sdk
 		$g_iAndroidVersionAPI = Int(AndroidAdbSendShellCommand("getprop ro.build.version.sdk", Default, $wasRunState, False))
-		#cs
-		Switch $g_iAndroidVersionAPI
-			Case $g_iAndroidJellyBean
-				SetDebugLog("Android Version 4.1 - 4.3.1")
-			Case $g_iAndroidKitKat
-				SetDebugLog("Android Version 4.4")
-			Case $g_iAndroidLollipop
-				SetDebugLog("Android Version 5.1")
-			Case $g_iAndroidNougat
-				SetDebugLog("Android Version 7.0")
-			Case Else
-				SetDebugLog("Android Version not detected!")
-		EndSwitch
-		#ce
-		; AIO
+
+		; Custom AIO
 		If $g_iAndroidVersionAPI <= $g_iAndroidLollipop And $g_iAndroidVersionAPI <= $g_iAndroidPie Then
 			SetDebugLog("Android Version API = " & $g_iAndroidVersionAPI & " " & " - OK", $COLOR_INFO)
 		Else
@@ -4830,10 +4817,10 @@ Func CheckEmuNewVersions()
 
 	Switch $g_sAndroidEmulator
 		Case "BlueStacks2"
-			$NewVersion = GetVersionNormalized("4.111.0.0")
+			$NewVersion = GetVersionNormalized("4.280.0.4206") ; BlueStacks HyperV by Teknolojikpanda - Team__AiO__MOD
 		Case "MEmu"
-			$NewVersion = GetVersionNormalized("6.3.0.0")
-		Case "Nox"
+			$NewVersion = GetVersionNormalized("7.5.6.0")
+         Case "Nox"
 			$NewVersion = GetVersionNormalized("7.0.1.2")
 		Case Else
 			; diabled of the others
@@ -4841,7 +4828,7 @@ Func CheckEmuNewVersions()
 	EndSwitch
 
 	If $Version > $NewVersion Then
-		SetLog("You are using an unsupported " & $g_sAndroidEmulator & " version (" & $g_sAndroidVersion & ")!", $COLOR_ERROR)
+		SetLog("Compatibility has not been certified for " & $g_sAndroidEmulator & " version (" & $g_sAndroidVersion & ")!", $COLOR_INFO)
 		SetLog($HelpLink, $COLOR_INFO)
 	EndIf
 EndFunc   ;==>CheckEmuNewVersions

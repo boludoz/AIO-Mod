@@ -148,91 +148,6 @@ EndFunc   ;==>IsDir
 Func IsFile($sFilePath)
 	Return (FileGetSize($sFilePath) > 0 and not @error)
 EndFunc   ;==>IsDir
-
-;  	ProcessFindBy($g_sAndroidAdbPath), $sPort
-;	ProcessFindBy("C:\...\lib\TempAdb\MEmu\", "", true, false)
-Func ProcessFindBy($sPath = "", $sCommandline = "", $bAutoItMode = False, $bDontShootYourself = True)
-	Local $bGetProcessPath, $bGetProcessCommandLine, $bFail, $aReturn[0]
-
-	; In exe case, like emulator.
-	If IsFile($sPath) = True Then
-		Local $sFile = StringRegExpReplace($sPath, "^.*\\", "")
-		$sFile = StringTrimRight($sFile, StringLen($sFile))
-		_ConsoleWrite($sFile)
-	EndIf
-
-	$sPath = StringReplace($sPath, "\\", "\")
-	If StringIsSpace($sPath) And StringIsSpace($sCommandline) Then Return $aReturn
-	Local $sCommandlineParam
-	Local $aiProcessList = ProcessList()
-	If @error Then Return $aReturn
-	For $i = 2 To UBound($aiProcessList) - 1
-		$bGetProcessPath = StringInStr(_WinAPI_GetProcessFileName($aiProcessList[$i][1]), $sPath) > 0
-		$sCommandlineParam = _WinAPI_GetProcessCommandLine($aiProcessList[$i][1])
-		If $bGetProcessPath = False And $bAutoItMode Then $bGetProcessPath = StringInStr($sCommandlineParam, $sPath) > 0
-		$bGetProcessCommandLine = StringInStr($sCommandlineParam, $sCommandline) > 0
-		Local $iAdd = Int($aiProcessList[$i][1])
-		If $iAdd > 0 Then
-			Select
-				Case $bGetProcessPath And $bGetProcessCommandLine
-					If Not StringIsSpace($sPath) And Not StringIsSpace($sCommandline) Then
-						_ArrayAdd($aReturn, $iAdd, $ARRAYFILL_FORCE_INT)
-					EndIf
-				Case $bGetProcessPath And Not $bGetProcessCommandLine
-					If StringIsSpace($sCommandline) Then
-						_ArrayAdd($aReturn, $iAdd, $ARRAYFILL_FORCE_INT)
-					EndIf
-				Case Not $bGetProcessPath And $bGetProcessCommandLine
-					If StringIsSpace($sPath) Then
-						_ArrayAdd($aReturn, $iAdd, $ARRAYFILL_FORCE_INT)
-					EndIf
-			EndSelect
-		EndIf
-	Next
-
-	For $i = UBound($aReturn) - 1 To 0 Step -1
-		If $aReturn[$i] = @AutoItPID Then
-			If $bDontShootYourself = True Then
-				_ArrayDelete($aReturn, $i)
-			Else
-				Local $iNT = $i
-				_ArrayAdd($aReturn, $aReturn[$i], $ARRAYFILL_FORCE_INT)
-				_ArrayDelete($aReturn, $iNT)
-			EndIf
-			ExitLoop
-		EndIf
-	Next
-
-	Return $aReturn
-EndFunc   ;==>ProcessFindBy
-
-Func CloseEmulatorForce($bOnlyAdb = False)
-	Local $iPids[0], $a[0], $s
-
-	If $bOnlyAdb = False Then
-		$s = Execute("Get" & $g_sAndroidEmulator & "Path()")
-		If not @error Then
-			$a = ProcessFindBy($s, "")
-			_ArrayAdd($iPids, $a)
-		EndIf
-		$a = ProcessFindBy($__VBoxManage_Path, "")
-		_ArrayAdd($iPids, $a)
-	EndIf
-
-	$a = ProcessFindBy($g_sAndroidAdbPath)
-	_ArrayAdd($iPids, $a)
-
-	If UBound($iPids) > 0 and not @error Then
-		For $i = 0 To UBound($iPids) -1 ; Custom fix - Team AIO Mod++
-			KillProcess($iPids[$i], $g_sAndroidAdbPath)
-		Next
-
-		Return True
-	EndIf
-
-	Return False
-EndFunc   ;==>ProcessFindBy
-
 Func SecureClick($x, $y)
 	If $x < 68 And $y > 316 Then ; coordinates where the game will click on the CHAT tab (safe margin)
 		If $g_bDebugSetlog Then SetDebugLog("Coordinate Inside Village, but Exclude CHAT")
@@ -343,4 +258,89 @@ EndFunc   ;==>_CompareTexts
 	; AndroidAdbSendShellCommand("am start -n " & $g_sAndroidGamePackage & "/" & $g_sAndroidGameClass & " -a android.intent.action.VIEW -d ' "& $s & "'", Default)
 
 ; EndFunc   ;==>
+#cs
+Func CloseEmulatorForce($bOnlyAdb = False)
+	Local $iPids[0], $a[0], $s
 
+	If $bOnlyAdb = False Then
+		$s = Execute("Get" & $g_sAndroidEmulator & "Path()")
+		If not @error Then
+			$a = ProcessFindBy($s, "")
+			_ArrayAdd($iPids, $a)
+		EndIf
+		$a = ProcessFindBy($__VBoxManage_Path, "")
+		_ArrayAdd($iPids, $a)
+	EndIf
+
+	$a = ProcessFindBy($g_sAndroidAdbPath)
+	_ArrayAdd($iPids, $a)
+
+	If UBound($iPids) > 0 and not @error Then
+		For $i = 0 To UBound($iPids) -1 ; Custom fix - Team AIO Mod++
+			KillProcess($iPids[$i], $g_sAndroidAdbPath)
+		Next
+
+		Return True
+	EndIf
+
+	Return False
+EndFunc   ;==>ProcessFindBy
+
+
+;  	ProcessFindBy($g_sAndroidAdbPath), $sPort
+;	ProcessFindBy("C:\...\lib\TempAdb\MEmu\", "", true, false)
+Func ProcessFindBy($sPath = "", $sCommandline = "", $bAutoItMode = False, $bDontShootYourself = True)
+	Local $bGetProcessPath, $bGetProcessCommandLine, $bFail, $aReturn[0]
+
+	; In exe case, like emulator.
+	If IsFile($sPath) = True Then
+		Local $sFile = StringRegExpReplace($sPath, "^.*\\", "")
+		$sFile = StringTrimRight($sFile, StringLen($sFile))
+		_ConsoleWrite($sFile)
+	EndIf
+
+	$sPath = StringReplace($sPath, "\\", "\")
+	If StringIsSpace($sPath) And StringIsSpace($sCommandline) Then Return $aReturn
+	Local $sCommandlineParam
+	Local $aiProcessList = ProcessList()
+	If @error Then Return $aReturn
+	For $i = 2 To UBound($aiProcessList) - 1
+		$bGetProcessPath = StringInStr(_WinAPI_GetProcessFileName($aiProcessList[$i][1]), $sPath) > 0
+		$sCommandlineParam = _WinAPI_GetProcessCommandLine($aiProcessList[$i][1])
+		If $bGetProcessPath = False And $bAutoItMode Then $bGetProcessPath = StringInStr($sCommandlineParam, $sPath) > 0
+		$bGetProcessCommandLine = StringInStr($sCommandlineParam, $sCommandline) > 0
+		Local $iAdd = Int($aiProcessList[$i][1])
+		If $iAdd > 0 Then
+			Select
+				Case $bGetProcessPath And $bGetProcessCommandLine
+					If Not StringIsSpace($sPath) And Not StringIsSpace($sCommandline) Then
+						_ArrayAdd($aReturn, $iAdd, $ARRAYFILL_FORCE_INT)
+					EndIf
+				Case $bGetProcessPath And Not $bGetProcessCommandLine
+					If StringIsSpace($sCommandline) Then
+						_ArrayAdd($aReturn, $iAdd, $ARRAYFILL_FORCE_INT)
+					EndIf
+				Case Not $bGetProcessPath And $bGetProcessCommandLine
+					If StringIsSpace($sPath) Then
+						_ArrayAdd($aReturn, $iAdd, $ARRAYFILL_FORCE_INT)
+					EndIf
+			EndSelect
+		EndIf
+	Next
+
+	For $i = UBound($aReturn) - 1 To 0 Step -1
+		If $aReturn[$i] = @AutoItPID Then
+			If $bDontShootYourself = True Then
+				_ArrayDelete($aReturn, $i)
+			Else
+				Local $iNT = $i
+				_ArrayAdd($aReturn, $aReturn[$i], $ARRAYFILL_FORCE_INT)
+				_ArrayDelete($aReturn, $iNT)
+			EndIf
+			ExitLoop
+		EndIf
+	Next
+
+	Return $aReturn
+EndFunc   ;==>ProcessFindBy
+#ce
