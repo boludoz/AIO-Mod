@@ -948,13 +948,22 @@ Func ReadConfig_600_17()
 	IniReadS($g_iUpgradeWallMinElixir, $g_sProfileConfigPath, "upgrade", "minwallelixir", 0, "int")
 	IniReadS($g_iUpgradeWallLootType, $g_sProfileConfigPath, "upgrade", "use-storage", 0, "int")
 	IniReadS($g_bUpgradeWallSaveBuilder, $g_sProfileConfigPath, "upgrade", "savebldr", False, "Bool")
-	IniReadS($g_bOnlyIfRestABuilder, $g_sProfileConfigPath, "upgrade", "OnlyIfRestABuilder", False, "Bool") ; Custom Wall - Team AIO Mod++
 	IniReadS($g_iCmbUpgradeWallsLevel, $g_sProfileConfigPath, "upgrade", "walllvl", 6, "int")
 	For $i = 4 To 15
 		IniReadS($g_aiWallsCurrentCount[$i], $g_sProfileConfigPath, "Walls", "Wall" & StringFormat("%02d", $i), 0, "int")
 	Next
 	IniReadS($g_iWallCost, $g_sProfileConfigPath, "upgrade", "WallCost", 0, "int")
+	
+	; Custom Wall - Team AIO Mod++
+	ReadConfig_MOD_Walls()
 EndFunc   ;==>ReadConfig_600_17
+
+; Custom Wall - Team AIO Mod++
+Func ReadConfig_MOD_Walls()
+	; <><><><> Village / Upgrade - Walls <><><><>
+	IniReadS($g_bWallOnlyIfRestABuilder, $g_sProfileConfigPath, "upgrade", "OnlyIfRestABuilder", False, "Bool") ; Custom Wall - Team AIO Mod++
+	IniReadS($g_bImproveLowerWalls, $g_sProfileConfigPath, "upgrade", "ImproveLowerWalls", False, "Bool") ; Custom Wall - Team AIO Mod++
+EndFunc   ;==>ReadConfig_MOD_Walls
 
 Func ReadConfig_600_18()
 	; <><><><> Village / Notify <><><><>

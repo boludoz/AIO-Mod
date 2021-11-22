@@ -1011,7 +1011,6 @@ Func ApplyConfig_600_17($TypeReadSave)
 					GUICtrlSetState($g_hRdoUseElixirGold, $GUI_CHECKED)
 			EndSwitch
 			GUICtrlSetState($g_hChkSaveWallBldr, $g_bUpgradeWallSaveBuilder ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkOnlyIfRestABuilder, $g_bOnlyIfRestABuilder ? $GUI_CHECKED : $GUI_UNCHECKED) ; Custom Wall - Team AIO Mod++
 			_GUICtrlComboBox_SetCurSel($g_hCmbWalls, $g_iCmbUpgradeWallsLevel)
 			For $i = 4 To 15
 				GUICtrlSetData($g_ahWallsCurrentCount[$i], $g_aiWallsCurrentCount[$i])
@@ -1030,13 +1029,27 @@ Func ApplyConfig_600_17($TypeReadSave)
 				$g_iUpgradeWallLootType = 2
 			EndIf
 			$g_bUpgradeWallSaveBuilder = (GUICtrlRead($g_hChkSaveWallBldr) = $GUI_CHECKED)
-			$g_bOnlyIfRestABuilder = (GUICtrlRead($g_hChkOnlyIfRestABuilder) = $GUI_CHECKED) ; Custom Wall - Team AIO Mod++
 			$g_iCmbUpgradeWallsLevel = _GUICtrlComboBox_GetCurSel($g_hCmbWalls)
 			For $i = 4 To 15 ; added wall-lvl15
 				$g_aiWallsCurrentCount[$i] = Number(GUICtrlRead($g_ahWallsCurrentCount[$i]))
 			Next
 	EndSwitch
+	
+	; Custom Wall - Team AIO Mod++
+	ApplyConfig_MOD_Walls($TypeReadSave)
 EndFunc   ;==>ApplyConfig_600_17
+
+; Custom Wall - Team AIO Mod++
+Func ApplyConfig_MOD_Walls($TypeReadSave)
+	; <><><><> Village / Upgrade - Walls <><><><>
+	If $TypeReadSave = "Read" Then
+		GUICtrlSetState($g_hChkWallOnlyIfRestABuilder, $g_bWallOnlyIfRestABuilder ? $GUI_CHECKED : $GUI_UNCHECKED) ; Custom Wall - Team AIO Mod++
+		GUICtrlSetState($g_hChkImproveLowerWalls, $g_bImproveLowerWalls ? $GUI_CHECKED : $GUI_UNCHECKED) ; Custom Wall - Team AIO Mod++
+	Else
+		$g_bWallOnlyIfRestABuilder = (GUICtrlRead($g_hChkWallOnlyIfRestABuilder) = $GUI_CHECKED) ; Custom Wall - Team AIO Mod++
+		$g_bImproveLowerWalls = (GUICtrlRead($g_hChkImproveLowerWalls) = $GUI_CHECKED) ; Custom Wall - Team AIO Mod++
+	EndIf
+EndFunc   ;==>ApplyConfig_MOD_Walls
 
 Func ApplyConfig_600_18($TypeReadSave)
 	; <><><><> Village / Notify <><><><>

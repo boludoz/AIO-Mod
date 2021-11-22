@@ -41,8 +41,9 @@ Global $g_hChkUpgradeRepeat[$g_iUpgradeSlots] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 Global $g_hTxtUpgrMinGold = 0, $g_hTxtUpgrMinElixir = 0, $g_hTxtUpgrMinDark = 0
 
 ; Walls
-Global $g_hChkWalls = 0, $g_hTxtWallMinGold = 0, $g_hTxtWallMinElixir = 0, $g_hRdoUseGold = 0, $g_hRdoUseElixir = 0, $g_hRdoUseElixirGold = 0, $g_hChkOnlyIfRestABuilder = 0, $g_hChkSaveWallBldr = 0, _ ; Custom Wall - Team AIO Mod++
-	   $g_hCmbWalls = 4
+Global $g_hChkWalls = 0, $g_hTxtWallMinGold = 0, $g_hTxtWallMinElixir = 0, $g_hRdoUseGold = 0, $g_hRdoUseElixir = 0, $g_hRdoUseElixirGold = 0, $g_hChkWallOnlyIfRestABuilder = 0, $g_hChkSaveWallBldr = 0, $g_hChkImproveLowerWalls = 0, _ ; Custom Wall - Team AIO Mod++
+		$g_hCmbWalls = 4
+	   
 Global $g_hLblWallCost = 0, $g_hBtnFindWalls = 0
 Global $g_ahWallsCurrentCount[16] = [-1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ; elements 0 to 3 are not referenced
 Global $g_ahPicWallsLevel[16] = [-1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ; elements 0 to 3 are not referenced
@@ -523,12 +524,12 @@ Func CreateWallsSubTab()
 			GUICtrlSetOnEvent(-1, "chkSaveWallBldr")
 		
 		; Custom Wall - Team AIO Mod++
-		$g_hChkOnlyIfRestABuilder = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "OnlyIfRestABuilder", "Upgrade only if one builder remains."), $x + 18, $y + 72 + 25, -1, -1)
+		$g_hChkWallOnlyIfRestABuilder = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "OnlyIfRestABuilder", "Upgrade only if one builder remains."), $x + 18, $y + 72 + 25, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "OnlyIfRestABuilder_Info_01", "Save resources for buildings: upgrade only if one builder remains") & @CRLF & _
 			GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "OnlyIfRestABuilder_Info_02", "or if they are reserved for herpes and not is warden upgrade active and not > 1 is idle."))
 			GUICtrlSetState(-1, $GUI_ENABLE)
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
-			GUICtrlSetOnEvent(-1, "chkSaveWallBldr")
+			; GUICtrlSetOnEvent(-1, "chkSaveWallBldr")
 
 	$x += 225
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "LblSearchforWalls", "Search for Walls level") & ":", $x, $y + 2, -1, -1)
@@ -542,6 +543,11 @@ Func CreateWallsSubTab()
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "LblNextWalllevelcosts_Info_02", "The value will update if you select an other wall level."))
 		$g_hLblWallCost = GUICtrlCreateLabel("30 000", $x + 110, $y + 25, 50, -1, $SS_RIGHT)
 
+
+		; Custom Wall - Team AIO Mod++
+		$y += 25
+		$g_hChkImproveLowerWalls = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "ChkImproveLowerWalls", "Improve lower walls"), $x, $y + 17, -1, -1)
+		
 		_GUICtrlCreateIcon ($g_sLibIconPath, $eIcnGold, $x, $y + 47, 16, 16)
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "LblMin.Goldtosave", "Min. Gold to save"), $x + 20, $y + 47, -1, -1)
 		$g_hTxtWallMinGold = _GUICtrlCreateInput("250000", $x + 110, $y + 45, 61, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))

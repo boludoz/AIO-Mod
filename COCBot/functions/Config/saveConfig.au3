@@ -692,13 +692,22 @@ Func SaveConfig_600_17()
 	_Ini_Add("upgrade", "minwallelixir", $g_iUpgradeWallMinElixir)
 	_Ini_Add("upgrade", "use-storage", $g_iUpgradeWallLootType)
 	_Ini_Add("upgrade", "savebldr", $g_bUpgradeWallSaveBuilder ? 1 : 0)
-	_Ini_Add("upgrade", "OnlyIfRestABuilder", $g_bOnlyIfRestABuilder ? 1 : 0) ; Custom Wall - Team AIO Mod++
 	_Ini_Add("upgrade", "walllvl", $g_iCmbUpgradeWallsLevel)
 	For $i = 4 To 15
 		_Ini_Add("Walls", "Wall" & StringFormat("%02d", $i), $g_aiWallsCurrentCount[$i])
 	Next
 	_Ini_Add("upgrade", "WallCost", $g_iWallCost)
+
+	; Custom Wall - Team AIO Mod++
+	SaveConfig_MOD_Walls()
 EndFunc   ;==>SaveConfig_600_17
+
+; Custom Wall - Team AIO Mod++
+Func SaveConfig_MOD_Walls()
+	; <><><><> Village / Upgrade - Walls <><><><>
+	_Ini_Add("upgrade", "OnlyIfRestABuilder", $g_bWallOnlyIfRestABuilder ? 1 : 0) ; Custom Wall - Team AIO Mod++
+	_Ini_Add("upgrade", "ImproveLowerWalls", $g_bImproveLowerWalls ? 1 : 0) ; Custom Wall - Team AIO Mod++
+EndFunc   ;==>SaveConfig_MOD_Walls
 
 Func SaveConfig_600_18()
 	; <><><><> Village / Notify <><><><>
