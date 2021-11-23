@@ -14,12 +14,13 @@
 ; ===============================================================================================================================
 
 Func UpgradeWall()
-
-	Local $iWallCost = Int($g_iWallCost - ($g_iWallCost * Number($g_iBuilderBoostDiscount) / 100))
-
 	If Not $g_bRunState Then Return
 
 	If $g_bAutoUpgradeWallsEnable = True Then
+
+		ZoomOut()
+		Local $iWallCost = Int($g_iWallCost - ($g_iWallCost * Number($g_iBuilderBoostDiscount) / 100))
+		
 		SetLog("Checking Upgrade Walls", $COLOR_INFO)
 		SetDebugLog("$iWallCost:" & $iWallCost)
 		If SkipWallUpgrade($iWallCost) Then Return
@@ -43,7 +44,7 @@ Func UpgradeWall()
 			; Custom Wall - Team AIO Mod++
 			If $g_bImproveLowerWalls = False Then
 				While ($g_iUpgradeWallLootType = 0 And $MinWallGold) Or ($g_iUpgradeWallLootType = 1 And $MinWallElixir) Or ($g_iUpgradeWallLootType = 2 And ($MinWallGold Or $MinWallElixir))
-		
+					
 					Switch $g_iUpgradeWallLootType
 						Case 0
 							If $MinWallGold Then
@@ -66,7 +67,7 @@ Func UpgradeWall()
 								SetLog("Upgrading Wall using Elixir", $COLOR_SUCCESS)
 								If imglocCheckWall() Then
 									If Not UpgradeWallElixir($iWallCost) Then
-										SetLog("Upgrade with Elixier failed, skipping...", $COLOR_ERROR)
+										SetLog("Upgrade with Elixir failed, skipping...", $COLOR_ERROR)
 										Return
 									EndIf
 								ElseIf SwitchToNextWallLevel() Then
@@ -111,29 +112,29 @@ Func UpgradeWall()
 								EndIf
 							EndIf
 					EndSwitch
-		
+					
 					; Check Builder/Shop if open by accident
 					If _CheckPixel($g_aShopWindowOpen, $g_bCapturePixel, Default, "ChkShopOpen", $COLOR_DEBUG) = True Then
 						Click(820, 40, 1, 0, "#0315") ; Close it
 					EndIf
-		
+					
 					ClickAway()
 					VillageReport(True, True)
 					If SkipWallUpgrade($iWallCost) Then Return
 					$MinWallGold = Number($g_aiCurrentLoot[$eLootGold] - $iWallCost) > Number($g_iUpgradeWallMinGold) ; Check if enough Gold
 					$MinWallElixir = Number($g_aiCurrentLoot[$eLootElixir] - $iWallCost) > Number($g_iUpgradeWallMinElixir) ; Check if enough Elixir
-		
+					
 				WEnd
 			Else
 				Local $iXClickOffset = 0, $iYClickOffset = 0
 				Local $iLevelMaxWall = $g_iCmbUpgradeWallsLevel + 4
 				Local $iLastGoodWallX = $g_aiLastGoodWallPos[0]
 				Local $iLastGoodWallY = $g_aiLastGoodWallPos[1]
-				ConvertToVillagePos($iLastGoodWallX, $iLastGoodWallY)
-				
+				; ConvertToVillagePos($iLastGoodWallX, $iLastGoodWallY) Unestable
+				Local $iSkipMax = -1, $iSkipMin = -1
 				Local $aResult = _ImageSearchXML($g_sImgCheckWallDir, 500, "ECD", True, False, True, 4, 1, $iLevelMaxWall)
-				If UBound($aResult) > 0 and not @error Then
-					For $i = 0 To UBound($aResult) -1
+				If UBound($aResult) > 0 And Not @error Then
+					For $i = 0 To UBound($aResult) - 1
 						Switch $aResult[$i][3]
 							Case 10
 								$iXClickOffset = 2
@@ -148,50 +149,108 @@ Func UpgradeWall()
 						
 					Next
 					
+					VillageReportMini() ; Hasnt clickaway
+
 					_ArraySort($aResult, 0, 0, 0, 0)
 					Local $aCoord[2]
-					For $i = 0 To UBound($aResult) -1
-					
-						; If ($g_iUpgradeWallLootType = 0 And $MinWallGold) Or ($g_iUpgradeWallLootType = 1 And $MinWallElixir) Or ($g_iUpgradeWallLootType = 2 And ($MinWallGold Or $MinWallElixir)) Then
-							$aCoord[0] = $aResult[$i][1]
-							$aCoord[1] = $aResult[$i][2]
-							
-							GemClick($aCoord[0], $aCoord[1])
-							If _Sleep(2000) Then Return
-							
-							Local $aOcrResult = BuildingInfo(245, 490 + $g_iBottomOffsetY) ; Get building name and level with OCR
-							If $aOcrResult[0] = 2 Then ; We found a valid building name
-								If StringInStr($aOcrResult[1], "wall") = True And Number($aOcrResult[2]) < $g_iCmbUpgradeWallsLevel + 4 Then ; we found a wall
-									SetLog("Position : " & $aCoord[0] & ", " & $aCoord[1] & " is a Wall Level: " & $levelWall & ".")
-									$g_aiLastGoodWallPos[0] = $aCoord[0]
-									$g_aiLastGoodWallPos[1] = $aCoord[1]
-									ConvertFromVillagePos($g_aiLastGoodWallPos[0],$g_aiLastGoodWallPos[1])
+					SetLog("Calculating walls, wait.", $COLOR_INFO)
+					For $i = 0 To UBound($aResult) - 1
+						Local $iWallLvl = Int($aResult[$i][3])
+						
+						; More hard than crime theory
+						$g_iWallCost = $g_aiWallCost[$iWallLvl - 4]
+						$iWallCost = Int($g_iWallCost - ($g_iWallCost * Number($g_iBuilderBoostDiscount) / 100))
+						$MinWallGold = Number($g_aiCurrentLoot[$eLootGold] - $iWallCost) > Number($g_iUpgradeWallMinGold) ; Check if enough Gold
+						$MinWallElixir = Number($g_aiCurrentLoot[$eLootElixir] - $iWallCost) > Number($g_iUpgradeWallMinElixir) ; Check if enough Elixir
+						
+						Select
+							Case ($g_iUpgradeWallLootType = 0 And $MinWallGold)
+							Case $iWallLvl > 7
+								Select
+									Case ($g_iUpgradeWallLootType = 1 And $MinWallElixir)
+									Case ($g_iUpgradeWallLootType = 2 And ($MinWallGold Or $MinWallElixir))
+										If $MinWallElixir Then
+										ElseIf $MinWallGold Then
+										Else
+											ContinueLoop
+										EndIf
+									Case Else
+										ContinueLoop
+								EndSelect
+							Case Else
+								ContinueLoop
+						EndSelect			
+						
+						If Not IsMainPage(1) Then ExitLoop
+						
+						$aCoord[0] = $aResult[$i][1]
+						$aCoord[1] = $aResult[$i][2]
+						
+						GemClick($aCoord[0], $aCoord[1])
+						If _Sleep(2000) Then Return
+						
+						Local $aOcrResult = BuildingInfo(245, 490 + $g_iBottomOffsetY) ; Get building name and level with OCR
+						If $aOcrResult[0] = 2 Then ; We found a valid building name
+							If StringInStr($aOcrResult[1], "wall") = True And Number($aOcrResult[2]) <= $g_iCmbUpgradeWallsLevel + 4 Then ; we found a wall
+								SetLog("Position : " & $aCoord[0] & ", " & $aCoord[1] & " is a Wall Level: " & $aOcrResult[2] & ".")
+								$g_aiLastGoodWallPos[0] = $aCoord[0]
+								$g_aiLastGoodWallPos[1] = $aCoord[1]
+
+								If UBound($g_aiWallCost) - 1 >= Int($aOcrResult[2] - 4) Then
 
 									$g_iWallCost = $g_aiWallCost[$aOcrResult[2] - 4]
 									$iWallCost = Int($g_iWallCost - ($g_iWallCost * Number($g_iBuilderBoostDiscount) / 100))
-									VillageReport(True, True)
-									If SkipWallUpgrade($iWallCost) Then Return
+
+									VillageReportMini() ; Hasnt clickaway
+
+									If SkipWallUpgrade($iWallCost) Then
+										SetLog("Skipped wall")
+										Return
+									EndIf
+
 									$MinWallGold = Number($g_aiCurrentLoot[$eLootGold] - $iWallCost) > Number($g_iUpgradeWallMinGold) ; Check if enough Gold
 									$MinWallElixir = Number($g_aiCurrentLoot[$eLootElixir] - $iWallCost) > Number($g_iUpgradeWallMinElixir) ; Check if enough Elixir
+									Select
+										Case ($g_iUpgradeWallLootType = 0 And $MinWallGold)
+											If Not UpgradeWallGold($iWallCost) Then
+												SetLog("Upgrade with gold failed, skipping.", $COLOR_ERROR)
+												Return
+											EndIf
+										Case $aOcrResult[2] > 7
+											Select
+												Case ($g_iUpgradeWallLootType = 1 And $MinWallElixir)
+													If Not UpgradeWallElixir($iWallCost) Then
+														SetLog("Upgrade with elixir failed, skipping.", $COLOR_ERROR)
+														Return
+													EndIf
+												Case ($g_iUpgradeWallLootType = 2 And ($MinWallGold Or $MinWallElixir))
+													If $MinWallElixir Then
+														If Not UpgradeWallElixir($iWallCost) Then
+															SetLog("Upgrade with elixir failed, skipping.", $COLOR_ERROR)
+															Return
+														EndIf
+													Else
+														If Not UpgradeWallGold($iWallCost) Then
+															SetLog("Upgrade with gold failed, skipping.", $COLOR_ERROR)
+															Return
+														EndIf
+													EndIf
+											EndSelect
+									EndSelect
 									
 									If _Sleep(500) Then Return
-
-									Return True
 								Else
 									ClickAway()
-									If $g_bDebugSetlog Then
-										SetDebugLog("Position : " & $aCoord[0] & ", " & $aCoord[1] & " is not a Wall Level: " & $levelWall & ". It was: " & $aOcrResult[1] & ", " & $aOcrResult[2] & " !", $COLOR_DEBUG) ;debug
-									Else
-										SetLog("Position : " & $aCoord[0] & ", " & $aCoord[1] & " is not a Wall Level: " & $levelWall & ".", $COLOR_ERROR)
-										SetDebugLog("It was: " & $aOcrResult[1] & ", " & $aOcrResult[2], $COLOR_DEBUG, True) ; log actual wall values to file log only
-									EndIf
 								EndIf
 							Else
 								ClickAway()
 							EndIf
-
-						; EndIf
+						EndIf
 						
+						; Check Builder/Shop if open by accident
+						If _CheckPixel($g_aShopWindowOpen, $g_bCapturePixel, Default, "ChkShopOpen", $COLOR_DEBUG) = True Then
+							Click(820, 40, 1, 0, "#0315") ; Close it
+						EndIf
 					Next
 					
 				EndIf
@@ -207,7 +266,7 @@ EndFunc   ;==>UpgradeWall
 
 
 Func UpgradeWallGold($iWallCost = $g_iWallCost)
-
+	
 	If _Sleep($DELAYRESPOND) Then Return
 
 	Local $aUpgradeButton = findButton("Upgrade", Default, 2, True)
@@ -460,4 +519,3 @@ Func SwitchToNextWallLevel() ; switches wall level to upgrade to next level
 	EndIf
 	Return False
 EndFunc   ;==>SwitchToNextWallLevel
-

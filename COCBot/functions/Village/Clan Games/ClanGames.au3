@@ -27,7 +27,7 @@ Func _ClanGames($test = False)
 	$g_bIsBBevent = False ; Reset
 	; Check If this Feature is Enable on GUI.
 	If Not $g_bChkClanGamesEnabled Then Return
-	__ClanGames($test)	
+	__ClanGames($test)
 	ClickAwayCross()
 EndFunc   ;==>_ClanGames
 #EndRegion - Custom BB - Team AIO Mod++
@@ -47,7 +47,7 @@ Func __ClanGames($test = False)
 	; Initial Timer
 	Local $hTimer = TimerInit()
 
-    ; Let's selected only the necessary images 
+    ; Let's selected only the necessary images
     Local $sImagePath = @ScriptDir & "\imgxml\Resources\ClanGamesImages\Challenges"
     Local $sTempPath = @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\"
 
@@ -65,11 +65,11 @@ Func __ClanGames($test = False)
     If $g_bChkClanGamesBBBattle Then ClanGameImageCopy($sImagePath, $sTempPath, "BBB") ;BBB for BB Battle
     If $g_bChkClanGamesBBDes Then ClanGameImageCopy($sImagePath, $sTempPath, "BBD") ;BBD for BB Destruction
     If $g_bChkClanGamesBBTroops Then ClanGameImageCopy($sImagePath, $sTempPath, "BBT") ;BBT for BB Troops
-    
+
     ;now we need to copy selected challenge before checking current running event is not wrong event selected
 
 	; Enter on Clan Games window
-	If Not IsClanGamesWindow() Then Return 
+	If Not IsClanGamesWindow() Then Return
 
 	; Enter on Clan Games window
 	$g_bYourAccScoreCG[Int($g_iCurAccount)][2] = False
@@ -112,7 +112,7 @@ Func __ClanGames($test = False)
 	If Not $g_bRunState Then Return ;trap pause or stop bot
 
 	UpdateStats()
-	
+
 	Local $HowManyImages = _FileListToArray($sTempPath, "*", $FLTA_FILES)
 	If IsArray($HowManyImages) Then
 		Setlog($HowManyImages[0] & " Events to search")
@@ -586,16 +586,16 @@ Func IsClanGamesWindow($getCapture = True, $bOnlyCheck = False)
 			Case "end"
 				$bRet = False
 		EndSwitch
-		
+
 		SetLog("Clan Games Event is : " & $sState, $COLOR_INFO)
-		
+
 		If $bOnlyCheck = True Then
 			ClickAwayCross()
 			If _Sleep(1500) Then Return
 
 			CheckMainScreen(False, False)
 		EndIf
-		
+
 	Else
 		SetLog("Caravan not available", $COLOR_WARNING)
 		$bRet = False
@@ -1100,7 +1100,7 @@ Func ApplyConfig_ClanGamesSwitch($TypeReadSave, $sTring, $i, $j)
 				Case "BB Troop Challenges"
 					GUICtrlSetState($g_hCGBBTroopChallenges[$i], ($g_aCGBBTroopChallenges[$i][$j] > -1) ? $GUI_CHECKED : $GUI_UNCHECKED)
 				Case Else
-					SetLog("Badly SaveApply: " & $sTring, ($COLOR_ERROR)
+					SetLog("Badly SaveApply: " & $sTring, $COLOR_ERROR)
 			EndSwitch
 		Case "Save"
 			Switch $sTring
@@ -1132,7 +1132,7 @@ EndFunc   ;==>ApplyConfig_ClanGamesSwitch
 
 Func ClanGamesStatus()
 	If Not $g_bChkClanGamesEnabled Then Return "False"
-	
+
 	If $g_bYourAccScoreCG[Int($g_iCurAccount)][2] = True Then
 		SetLog("Maximum number of points achieved in clan games.", $COLOR_SUCCESS)
 		Return "False"
