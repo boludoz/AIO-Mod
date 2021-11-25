@@ -773,12 +773,14 @@ Func runBot() ;Bot that runs everything in order
 			; Skip first attack - Custom Team AIO Mod++
 			If $bDoFirsCheck = True Then
 				FirstCheck()
+				If _Sleep($DELAYRUNBOT1) Then Return
 				If $g_bChkOnlyFarm = False Then
 					$bDoFirsCheck = False
 				Else
 					$g_bForceSwitch = True
 					If ProfileSwitchAccountEnabled() Then checkSwitchAcc()
 					$g_bForceSwitch = False
+					ContinueLoop
 				EndIf
 			EndIf
 		EndIf
@@ -1454,6 +1456,10 @@ Func FirstCheck()
 	EndIf
 
 	If Not $g_bRunState Then Return
+	If $g_bRestart Then Return
+	If _Sleep($DELAYRUNBOT2) Then Return
+
+	If Not $g_bRunState Then Return
 	If $g_iCommandStop <> 3 And $g_iCommandStop <> 0 Then
 		; VERIFY THE TROOPS AND ATTACK IF IS FULL
 		SetLog("-- FirstCheck on Train --", $COLOR_DEBUG)
@@ -1479,6 +1485,9 @@ Func FirstCheck()
 							Setlog("[" & $loopcount & "] 1st Attack Loop, Failed", $COLOR_INFO)
 						EndIf
 					EndIf
+					If Not $g_bRunState Then Return
+					If $g_bRestart Then Return
+					If _Sleep($DELAYRUNBOT2) Then Return
 				Wend
 				If ByPassedForceBBAttackOnClanGames(False, True) Then
 					SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
@@ -1495,6 +1504,10 @@ Func FirstCheck()
 		EndIf
 
 	EndIf
+
+	If Not $g_bRunState Then Return
+	If $g_bRestart Then Return
+	If _Sleep($DELAYRUNBOT2) Then Return
 
 	If $g_bChkOnlyFarm Then ;Allow immediate Second Attack on FastSwitchAcc enabled
 		RequestCC() ;only do requestCC here
@@ -1529,6 +1542,9 @@ Func FirstCheck()
 								Setlog("[" & $loopcount & "] 2nd Attack Loop, Failed", $COLOR_INFO)
 							EndIf
 						EndIf
+						If Not $g_bRunState Then Return
+						If $g_bRestart Then Return
+						If _Sleep($DELAYRUNBOT2) Then Return
 					Wend
 					If ByPassedForceBBAttackOnClanGames(False, True) Then
 						SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
@@ -1546,6 +1562,10 @@ Func FirstCheck()
 		EndIf
 	EndIf
 
+	If Not $g_bRunState Then Return
+	If $g_bRestart Then Return
+	If _Sleep($DELAYRUNBOT2) Then Return
+
 	RequestCC(False)
 	checkArmyCamp(False, True)
 	PrepareDonateCC()
@@ -1553,6 +1573,9 @@ Func FirstCheck()
 	TrainSystem()
 	
 	SmartWait4Train()
+	If Not $g_bRunState Then Return
+	If $g_bRestart Then Return
+	If _Sleep($DELAYRUNBOT2) Then Return
 	
 	Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard'];, 'Laboratory', 'UpgradeWall', 'UpgradeBuilding']
 	For $Index In $aRndFuncList
