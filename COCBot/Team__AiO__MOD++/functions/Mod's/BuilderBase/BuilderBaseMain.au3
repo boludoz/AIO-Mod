@@ -287,7 +287,7 @@ Func PlayBBOnly()
 	Return False
 EndFunc   ;==>PlayBBOnly
 
-Func ByPassedForceBBAttackOnClanGames($bContion = True, $bReturnBy = True)
+Func ByPassedForceBBAttackOnClanGames($bContion = False, $bReturnBy = True)
 	; I am too lazy...
 	If $g_bChkForceBBAttackOnClanGames = True And ClanGamesStatus() == "True" And $g_bIsBBevent = True Then
 		Return $bReturnBy
