@@ -127,12 +127,26 @@ Func UpgradeWall()
 				WEnd
 			Else
 				Local $iXClickOffset = 0, $iYClickOffset = 0
-				Local $iLevelMaxWall = $g_iCmbUpgradeWallsLevel + 4
+				
+				Local $iLevelMaxWall = ($g_iCmbUpgradeWallsLevel + 4)
+				If $g_bAutomaticLevel = True And $g_iTownHallLevel > 0 Then
+					$iLevelMaxWall = $g_iTownHallLevel
+					$iLevelMaxWall -= 2
+					If $g_iTownHallLevel > 1 Then
+						$iLevelMaxWall += 1 
+					EndIf
+					If $g_iTownHallLevel > 8 Then
+						$iLevelMaxWall += 1 
+					EndIf
+					SetLog("Auto wall lvl: " & $iLevelMaxWall, $COLOR_WARNING)
+				ElseIf $g_iTownHallLevel > 0 Then
+					SetLog("Please locate townhall for auto wall lvl", $COLOR_WARNING)
+				EndIf
 				Local $iLastGoodWallX = $g_aiLastGoodWallPos[0]
 				Local $iLastGoodWallY = $g_aiLastGoodWallPos[1]
 				; ConvertToVillagePos($iLastGoodWallX, $iLastGoodWallY) Unestable
 				Local $iSkipMax = -1, $iSkipMin = -1
-				Local $aResult = _ImageSearchXML($g_sImgCheckWallDir, 500, "ECD", True, False, True, 4, 1, $iLevelMaxWall)
+				Local $aResult = _ImageSearchXML($g_sImgCheckWallDir, 500, "ECD", True, False, True, 4, 0, $iLevelMaxWall)
 				If UBound($aResult) > 0 And Not @error Then
 					For $i = 0 To UBound($aResult) - 1
 						Switch $aResult[$i][3]
@@ -154,8 +168,9 @@ Func UpgradeWall()
 					_ArraySort($aResult, 0, 0, 0, 0)
 					Local $aCoord[2]
 					SetLog("Calculating walls, wait.", $COLOR_INFO)
+					Local $iWallLvl
 					For $i = 0 To UBound($aResult) - 1
-						Local $iWallLvl = Int($aResult[$i][3])
+						$iWallLvl = Int($aResult[$i][3])
 						
 						; More hard than crime theory
 						$g_iWallCost = $g_aiWallCost[$iWallLvl - 4]
@@ -192,6 +207,8 @@ Func UpgradeWall()
 						Local $aOcrResult = BuildingInfo(245, 490 + $g_iBottomOffsetY) ; Get building name and level with OCR
 						If $aOcrResult[0] = 2 Then ; We found a valid building name
 							If StringInStr($aOcrResult[1], "wall") = True And Number($aOcrResult[2]) <= $g_iCmbUpgradeWallsLevel + 4 Then ; we found a wall
+								If $iWallLvl <> Number($aOcrResult[2]) Then ContinueLoop
+								
 								SetLog("Position : " & $aCoord[0] & ", " & $aCoord[1] & " is a Wall Level: " & $aOcrResult[2] & ".")
 								$g_aiLastGoodWallPos[0] = $aCoord[0]
 								$g_aiLastGoodWallPos[1] = $aCoord[1]

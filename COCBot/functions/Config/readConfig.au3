@@ -961,8 +961,9 @@ EndFunc   ;==>ReadConfig_600_17
 ; Custom Wall - Team AIO Mod++
 Func ReadConfig_MOD_Walls()
 	; <><><><> Village / Upgrade - Walls <><><><>
-	IniReadS($g_bWallOnlyIfRestABuilder, $g_sProfileConfigPath, "upgrade", "OnlyIfRestABuilder", False, "Bool") ; Custom Wall - Team AIO Mod++
-	IniReadS($g_bImproveLowerWalls, $g_sProfileConfigPath, "upgrade", "ImproveLowerWalls", False, "Bool") ; Custom Wall - Team AIO Mod++
+	IniReadS($g_bWallOnlyIfRestABuilder, $g_sProfileConfigPath, "upgrade", "OnlyIfRestABuilder", False, "Bool")
+	IniReadS($g_bImproveLowerWalls, $g_sProfileConfigPath, "upgrade", "ImproveLowerWalls", True, "Bool")
+	IniReadS($g_bAutomaticLevel, $g_sProfileConfigPath, "upgrade", "AutomaticLevel", True, "Bool")
 EndFunc   ;==>ReadConfig_MOD_Walls
 
 Func ReadConfig_600_18()

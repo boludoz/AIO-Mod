@@ -341,3 +341,9 @@ Func chkNewDBSys()
 
 EndFunc   ;==>chkNewDBSys
 #EndRegion - No Upgrade In War - Team AIO Mod++
+
+; Custom Wall - Team AIO Mod++
+Func chkImproveLowerWalls()
+	$g_bImproveLowerWalls = (GUICtrlRead($g_hChkImproveLowerWalls) = $GUI_CHECKED)
+	GUICtrlSetState($g_hChkAutomaticLevel, ($g_bImproveLowerWalls = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+EndFunc   ;==>chkImproveLowerWalls

@@ -1043,11 +1043,14 @@ EndFunc   ;==>ApplyConfig_600_17
 Func ApplyConfig_MOD_Walls($TypeReadSave)
 	; <><><><> Village / Upgrade - Walls <><><><>
 	If $TypeReadSave = "Read" Then
-		GUICtrlSetState($g_hChkWallOnlyIfRestABuilder, $g_bWallOnlyIfRestABuilder ? $GUI_CHECKED : $GUI_UNCHECKED) ; Custom Wall - Team AIO Mod++
-		GUICtrlSetState($g_hChkImproveLowerWalls, $g_bImproveLowerWalls ? $GUI_CHECKED : $GUI_UNCHECKED) ; Custom Wall - Team AIO Mod++
+		GUICtrlSetState($g_hChkWallOnlyIfRestABuilder, $g_bWallOnlyIfRestABuilder ? $GUI_CHECKED : $GUI_UNCHECKED)
+		GUICtrlSetState($g_hChkImproveLowerWalls, $g_bImproveLowerWalls ? $GUI_CHECKED : $GUI_UNCHECKED)
+		GUICtrlSetState($g_hChkAutomaticLevel, $g_bAutomaticLevel ? $GUI_CHECKED : $GUI_UNCHECKED)
+		chkImproveLowerWalls()
 	Else
-		$g_bWallOnlyIfRestABuilder = (GUICtrlRead($g_hChkWallOnlyIfRestABuilder) = $GUI_CHECKED) ; Custom Wall - Team AIO Mod++
-		$g_bImproveLowerWalls = (GUICtrlRead($g_hChkImproveLowerWalls) = $GUI_CHECKED) ; Custom Wall - Team AIO Mod++
+		$g_bWallOnlyIfRestABuilder = (GUICtrlRead($g_hChkWallOnlyIfRestABuilder) = $GUI_CHECKED)
+		$g_bImproveLowerWalls = (GUICtrlRead($g_hChkImproveLowerWalls) = $GUI_CHECKED)
+		$g_bAutomaticLevel = (GUICtrlRead($g_hChkAutomaticLevel) = $GUI_CHECKED)
 	EndIf
 EndFunc   ;==>ApplyConfig_MOD_Walls
 
