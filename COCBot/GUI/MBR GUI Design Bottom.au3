@@ -273,7 +273,8 @@ Func CreateBottomPanel()
 		   GUICtrlSetState(-1, $GUI_HIDE)
 	   $g_hPicResultDENow = GUICtrlCreateIcon ($g_sLibIconPath, $eIcnDark, $x + 71, $y + 36, 16, 16)
 		   GUICtrlSetState(-1, $GUI_HIDE)
-	   $g_hPicResultDETemp = GUICtrlCreateIcon ($g_sLibIconPath, $eIcnDark, $x + 15, $y + 36, 16, 16)
+	   $g_hPicResultDETemp = GUICtrlCreateIcon ($g_sLibIconPath, $eIcnDark, $x + 71, $y + 36, 16, 16)
+		   GUICtrlSetState(-1, $GUI_HIDE)
 	   $x += 75
 
 	   ;trophy / runtime
