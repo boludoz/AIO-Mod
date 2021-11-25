@@ -1510,7 +1510,7 @@ Func FirstCheck()
 	If $g_bRestart Then Return
 	If _Sleep($DELAYRUNBOT2) Then Return
 
-	If $g_bChkOnlyFarm Then ;Allow immediate Second Attack on FastSwitchAcc enabled
+	If $g_bChkOnlyFarm Or $g_bDouble Then ;Allow immediate Second Attack on FastSwitchAcc enabled
 		RequestCC() ;only do requestCC here
 		If _Sleep($DELAYRUNBOT2) Then Return
 		VillageReport()
@@ -1584,13 +1584,13 @@ Func FirstCheck()
 			If checkObstacles() Then ContinueLoop
 		Next
 	
-		If $g_bChkClanGamesEnabled Then _ClanGames()
-		If $g_iCommandStop = -1 And ByPassedForceBBAttackOnClanGames(False, True) = False Then
-			SmartWait4Train()
-			If Not $g_bRunState Then Return
-			If $g_bRestart Then Return ; if smart wait activated, exit to runbot in case user adjusted GUI or left emulator/bot in bad state
-			If _Sleep($DELAYRUNBOT2) Then Return
-		EndIf
+		; If $g_bChkClanGamesEnabled Then _ClanGames()
+		; If $g_iCommandStop = -1 And ByPassedForceBBAttackOnClanGames(False, True) = False Then
+			; SmartWait4Train()
+			; If Not $g_bRunState Then Return
+			; If $g_bRestart Then Return ; if smart wait activated, exit to runbot in case user adjusted GUI or left emulator/bot in bad state
+			; If _Sleep($DELAYRUNBOT2) Then Return
+		; EndIf
 	EndIf
 	
 EndFunc
