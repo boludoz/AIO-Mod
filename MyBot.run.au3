@@ -1510,7 +1510,7 @@ Func FirstCheck()
 	If $g_bRestart Then Return
 	If _Sleep($DELAYRUNBOT2) Then Return
 
-	If $g_bChkOnlyFarm Or $g_bDouble Then ;Allow immediate Second Attack on FastSwitchAcc enabled
+	If $g_bChkOnlyFarm Then ;Allow immediate Second Attack on FastSwitchAcc enabled
 		RequestCC() ;only do requestCC here
 		If _Sleep($DELAYRUNBOT2) Then Return
 		VillageReport()
