@@ -1588,7 +1588,7 @@ Func FirstCheck()
 		If $g_iCommandStop = -1 And ByPassedForceBBAttackOnClanGames(False, True) = False Then
 			SmartWait4Train()
 			If Not $g_bRunState Then Return
-			If $g_bRestart Then ExitLoop ; if smart wait activated, exit to runbot in case user adjusted GUI or left emulator/bot in bad state
+			If $g_bRestart Then Return ; if smart wait activated, exit to runbot in case user adjusted GUI or left emulator/bot in bad state
 			If _Sleep($DELAYRUNBOT2) Then Return
 		EndIf
 	EndIf

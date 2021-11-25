@@ -1080,25 +1080,25 @@ Func ApplyConfig_ClanGamesSwitch($TypeReadSave, $sTring, $i, $j)
 		Case "Read"
 			Switch $sTring
 				Case "Loot Challenges"
-					GUICtrlSetState($g_hCGLootChallenges[$i], ($g_aCGLootChallenges[$i][$j] > -1) ? $GUI_CHECKED : $GUI_UNCHECKED)
+					GUICtrlSetState($g_hCGLootChallenges[$i], ($g_aCGLootChallenges[$i][$j] > -1) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
 				Case "Air Troop Challenges"
-					GUICtrlSetState($g_hCGAirTroopChallenges[$i], ($g_aCGAirTroopChallenges[$i][$j] > -1) ? $GUI_CHECKED : $GUI_UNCHECKED)
+					GUICtrlSetState($g_hCGAirTroopChallenges[$i], ($g_aCGAirTroopChallenges[$i][$j] > -1) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
 				Case "Ground Troop Challenges"
-					GUICtrlSetState($g_hCGGroundTroopChallenges[$i], ($g_aCGGroundTroopChallenges[$i][$j] > -1) ? $GUI_CHECKED : $GUI_UNCHECKED)
+					GUICtrlSetState($g_hCGGroundTroopChallenges[$i], ($g_aCGGroundTroopChallenges[$i][$j] > -1) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
 				Case "Battle Challenges"
-					GUICtrlSetState($g_hCGBattleChallenges[$i], ($g_aCGBattleChallenges[$i][$j] > -1) ? $GUI_CHECKED : $GUI_UNCHECKED)
+					GUICtrlSetState($g_hCGBattleChallenges[$i], ($g_aCGBattleChallenges[$i][$j] > -1) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
 				Case "Destruction Challenges"
-					GUICtrlSetState($g_hCGDestructionChallenges[$i], ($g_aCGDestructionChallenges[$i][$j] > -1) ? $GUI_CHECKED : $GUI_UNCHECKED)
+					GUICtrlSetState($g_hCGDestructionChallenges[$i], ($g_aCGDestructionChallenges[$i][$j] > -1) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
 				Case "Misc Challenges"
-					GUICtrlSetState($g_hCGMiscChallenges[$i], ($g_aCGMiscChallenges[$i][$j] > -1) ? $GUI_CHECKED : $GUI_UNCHECKED)
+					GUICtrlSetState($g_hCGMiscChallenges[$i], ($g_aCGMiscChallenges[$i][$j] > -1) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
 				Case "Spell Challenges"
-					GUICtrlSetState($g_hCGSpellChallenges[$i], ($g_aCGSpellChallenges[$i][$j] > -1) ? $GUI_CHECKED : $GUI_UNCHECKED)
+					GUICtrlSetState($g_hCGSpellChallenges[$i], ($g_aCGSpellChallenges[$i][$j] > -1) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
 				Case "BB Battle Challenges"
-					GUICtrlSetState($g_hCGBBBattleChallenges[$i], ($g_aCGBBBattleChallenges[$i][$j] > -1) ? $GUI_CHECKED : $GUI_UNCHECKED)
+					GUICtrlSetState($g_hCGBBBattleChallenges[$i], ($g_aCGBBBattleChallenges[$i][$j] > -1) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
 				Case "BB Destruction Challenges"
-					GUICtrlSetState($g_hCGBBDestructionChallenges[$i], ($g_aCGBBDestructionChallenges[$i][$j] > -1) ? $GUI_CHECKED : $GUI_UNCHECKED)
+					GUICtrlSetState($g_hCGBBDestructionChallenges[$i], ($g_aCGBBDestructionChallenges[$i][$j] > -1) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
 				Case "BB Troop Challenges"
-					GUICtrlSetState($g_hCGBBTroopChallenges[$i], ($g_aCGBBTroopChallenges[$i][$j] > -1) ? $GUI_CHECKED : $GUI_UNCHECKED)
+					GUICtrlSetState($g_hCGBBTroopChallenges[$i], ($g_aCGBBTroopChallenges[$i][$j] > -1) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
 				Case Else
 					SetLog("Badly SaveApply: " & $sTring, $COLOR_ERROR)
 			EndSwitch
