@@ -1443,6 +1443,7 @@ Func __RunFunction($sAction)
 EndFunc   ;==>__RunFunction
 #EndRegion - Custom - Team AIO Mod++
 
+; xbebenk.
 Func FirstCheck()
 	SetLog("======== FirstCheck ========", $COLOR_ACTION)
 	checkMainScreen()
@@ -1519,7 +1520,7 @@ Func FirstCheck()
 		If $g_iCommandStop <> 3 And $g_iCommandStop <> 0 Then
 			; VERIFY THE TROOPS AND ATTACK IF IS FULL
 			SetLog("-- SecondCheck on Train --", $COLOR_DEBUG)
-			SetLog("Fast Switch Account Enabled", $COLOR_DEBUG)
+			SetLog("Only Farm Account Enabled", $COLOR_DEBUG)
 			TrainSystem()
 			SetLog("Are you ready? " & String($g_bIsFullArmywithHeroesAndSpells), $COLOR_INFO)
 			If $g_bIsFullArmywithHeroesAndSpells Then
@@ -1572,21 +1573,26 @@ Func FirstCheck()
 	DonateCC()
 	TrainSystem()
 	
-	SmartWait4Train()
-	If Not $g_bRunState Then Return
-	If $g_bRestart Then Return
-	If _Sleep($DELAYRUNBOT2) Then Return
+	If $g_bChkOnlyFarm Then
+		Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard'];, 'Laboratory', 'UpgradeWall', 'UpgradeBuilding']
+		For $Index In $aRndFuncList
+			If Not $g_bRunState Then Return
+			_RunFunction($Index)
+			If _Sleep(50) Then Return
+			If $g_bRestart Then ExitLoop
+			If CheckAndroidReboot() Then ContinueLoop
+			If checkObstacles() Then ContinueLoop
+		Next
 	
-	Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard'];, 'Laboratory', 'UpgradeWall', 'UpgradeBuilding']
-	For $Index In $aRndFuncList
-		If Not $g_bRunState Then Return
-		_RunFunction($Index)
-		If _Sleep(50) Then Return
-		If $g_bRestart Then ExitLoop
-		If CheckAndroidReboot() Then ContinueLoop
-		If checkObstacles() Then ContinueLoop
-	Next
-
+		If $g_bChkClanGamesEnabled Then _ClanGames()
+		If $g_iCommandStop = -1 And ByPassedForceBBAttackOnClanGames(False, True) = False Then
+			SmartWait4Train()
+			If Not $g_bRunState Then Return
+			If $g_bRestart Then ExitLoop ; if smart wait activated, exit to runbot in case user adjusted GUI or left emulator/bot in bad state
+			If _Sleep($DELAYRUNBOT2) Then Return
+		EndIf
+	EndIf
+	
 EndFunc
 
 Func SetSAtk($attack = False)

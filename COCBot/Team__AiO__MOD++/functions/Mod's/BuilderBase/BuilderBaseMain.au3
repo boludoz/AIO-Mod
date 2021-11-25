@@ -45,7 +45,6 @@ Func BuilderBase($bTestRun = False)
 			SetLog("Play Only Builder Base Check Is On But BB Option's(Collect,Attack etc) Unchecked", $COLOR_ERROR)
 			SetLog("Please Check BB Options From Builder Base Tab", $COLOR_INFO)
 			If ProfileSwitchAccountEnabled() Then ; (:
-				$g_bForceSwitch = True
 				Return
 			EndIf
 
@@ -243,13 +242,10 @@ Func _BuilderBase($bTestRun = False)
 	If _Sleep($DELAYRUNBOT3) Then Return
 	SetLog("Builder base idle ends", $COLOR_INFO)
 
-	If PlayBBOnly() And ProfileSwitchAccountEnabled() Then
-		$g_bForceSwitch = True
-        SetLog("This account is Play BB Only, switching to another account", $COLOR_ACTION)
-        SetSwitchAccLog(" - Play BB Only")
-	Else
+	If ProfileSwitchAccountEnabled() Then Return
+
+	If PlayBBOnly() Then
 		If _Sleep($DELAYRUNBOT1 * 15) Then Return
-        SetLog("Base Builder: cycle completed, wait a bit.", $COLOR_ACTION)
 	EndIf
 
 	Return True

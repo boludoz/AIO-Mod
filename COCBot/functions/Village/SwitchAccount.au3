@@ -97,10 +97,17 @@ Func CheckSwitchAcc()
 
 	SetLog("Start Switch Account!", $COLOR_INFO)
 
+	#Region - Custom BB - Team AIO Mod++
 	; Force Switch when PBT detected
-	If $g_abPBActive[$g_iCurAccount] Then $bForceSwitch = True
-
-	If $g_iCommandStop = 0 Or $g_iCommandStop = 3 Then ; Forced to switch when in halt attack mode
+	If $g_abPBActive[$g_iCurAccount] = True Then
+		SetSwitchAccLog(" - PBT Active")
+		$bForceSwitch = True
+	ElseIf $g_bOnlyBuilderBase Then
+		SetLog("This account is Play BB Only, switching to another account", $COLOR_ACTION)
+		SetSwitchAccLog(" - Play BB Only")
+		$bForceSwitch = True
+	#EndRegion - Custom BB - Team AIO Mod++
+	ElseIf $g_iCommandStop = 0 Or $g_iCommandStop = 3 Then ; Forced to switch when in halt attack mode
 		SetLog("This account is in halt attack mode, switching to another account", $COLOR_ACTION)
 		SetSwitchAccLog(" - Halt Attack, Force switch")
 		$bForceSwitch = True
