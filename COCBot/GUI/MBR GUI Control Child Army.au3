@@ -499,14 +499,6 @@ Func CustomBrewOrderEnable()
 	Next
 EndFunc   ;==>CustomBrewOrderEnable
 
-Func CustomBuildOrderEnable()
-	$g_bCustomBuildOrderEnable = (GUICtrlRead($g_hChkCustomBuildOrderEnable) = $GUI_CHECKED)
-
-	For $i = 0 To UBound($g_ahCmbSiegesOrder) - 1
-		GUICtrlSetState($g_ahCmbSiegesOrder[$i], $g_bCustomBuildOrderEnable ? $GUI_ENABLE : $GUI_DISABLE)
-	Next
-EndFunc   ;==>CustomBrewOrderEnable
-
 Func BtnRemoveTroops()
 	For $i = 0 To UBound($g_ahCmbTroopOrder) - 1 ; check for duplicate combobox index and flag problem
 		_GUICtrlComboBox_SetCurSel($g_ahCmbTroopOrder[$i], $i)
@@ -514,38 +506,6 @@ Func BtnRemoveTroops()
 	Next
 	GUITrainOrder()
 EndFunc   ;==>BtnRemoveTroops
-
-Func _GUIBuildOrder()
-	Local $iGUI_CtrlId = @GUI_CtrlId
-	Local $i = _ArraySearch($g_ahCmbSiegesOrder, @GUI_CtrlId)
-	Local $iOld = $g_aiCmbCustomBuildOrder[$i]
-
-	For $i = 0 To UBound($g_ahCmbSiegesOrder) - 1 ; check for duplicate combobox index and flag problem
-		If $iGUI_CtrlId = $g_ahCmbSiegesOrder[$i] Then ContinueLoop
-		If _GUICtrlComboBox_GetCurSel($iGUI_CtrlId) = _GUICtrlComboBox_GetCurSel($g_ahCmbSiegesOrder[$i]) Then
-			_GUICtrlComboBox_SetCurSel($g_ahCmbSiegesOrder[$i], $iOld)
-			GUISetState()
-		EndIf
-	Next
-
-	For $i = 0 To UBound($g_ahCmbSiegesOrder) - 1 ; check for duplicate combobox index and flag problem
-		$g_aiCmbCustomBuildOrder[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbSiegesOrder[$i])
-	Next
-EndFunc   ;==>_GUIBuildOrder
-
-Func BtnRemoveSieges()
-	For $i = 0 To UBound($g_ahCmbSiegesOrder) - 1 ; check for duplicate combobox index and flag problem
-		_GUICtrlComboBox_SetCurSel($g_ahCmbSiegesOrder[$i], $i)
-		GUISetState()
-	Next
-	GUIBuildOrder()
-EndFunc   ;==>BtnRemoveSieges
-
-Func GUIBuildOrder()
-	For $i = 0 To UBound($g_ahCmbSiegesOrder) - 1 ; check for duplicate combobox index and flag problem
-		$g_aiCmbCustomBuildOrder[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbSiegesOrder[$i])
-	Next
-EndFunc   ;==>_GUITrainOrder
 
 Func LevUpDownTroop($iTroopIndex, $NoChangeLev = True)
 	Local $MaxLev = $g_aiTroopCostPerLevel[$iTroopIndex][0]

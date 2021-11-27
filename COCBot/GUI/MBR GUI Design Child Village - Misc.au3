@@ -30,6 +30,9 @@ Global $g_hlblLocateTH = 0, $g_hlblLocateCastle = 0, $g_hlblLocateKingAltar = 0,
 Global $g_hBtnLocateTH = 0, $g_hBtnLocateCastle = 0
 Global $g_hBtnLocateKingAltar = 0, $g_hBtnLocateQueenAltar = 0, $g_hBtnLocateWardenAltar = 0, $g_hBtnLocateChampionAltar = 0, $g_hBtnLocateLaboratory = 0, $g_hBtnLocatePetHouse = 0, $g_hBtnResetBuilding = 0
 #EndRegion - Custom Locate - Team AIO Mod++
+
+Global $g_hInputDarkElixirItems = 0, $g_hInputElixirItems = 0, $g_hInputGoldItems = 0 ; Team AIO Mod++
+
 Global $g_hChkTreasuryCollect = 0, $g_hTxtTreasuryGold = 0, $g_hTxtTreasuryElixir = 0, $g_hTxtTreasuryDark = 0, $g_hChkCollectAchievements = 0, $g_hChkFreeMagicItems = 0, $g_hChkCollectRewards = 0, $g_hChkSellRewards = 0
 
 Global $g_hChkCollectMagicItems = 0, $g_hChkFreeMagicItems = 0, $g_hBtnMagicItemsConfig = 0, $g_hChkResourcePotion = 0
@@ -220,7 +223,7 @@ Func CreateMiscNormalVillageSubTab()
 	#Region - Custom - Team__AiO__MOD
 	Local $x = 15, $y = 192 - 16 ; Team__AiO__MOD
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_02", "Collect, Clear"), $x - 10, $y - 20, $g_iSizeWGrpTab3, 170 + 25) ; Team__AiO__MOD
-	
+
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnMine, $x, $y, 24, 24)
 	; _GUICtrlCreateIcon($g_sLibIconPath, $eIcnCollector, $x + 20, $y, 24, 24)
 	; _GUICtrlCreateIcon($g_sLibIconPath, $eIcnDrill, $x + 45, $y, 24, 24)
@@ -292,34 +295,34 @@ Func CreateMiscNormalVillageSubTab()
 	$g_hChkResourcePotion = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkResourcePotion", "Resource potion if"), $x + 25, $y - 6)
 		GUICtrlSetOnEvent(-1, "ChkResourcePotion")
 		GUICtrlSetState(-1, $GUI_UNCHECKED)
-	
+
 	$x += 120
 	GUICtrlCreateLabel("<", $x + 32, $y + 2, -1, -1)
-	
+
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 67 + 32, $y, 16, 16)
 	$g_hInputGoldItems = _GUICtrlCreateInput("1000000", $x + 10 + 32, $y, 55, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 		GUICtrlSetState(-1, $GUI_DISABLE)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "InputGoldItems_Info_01", "Minimum Gold Storage amount to resource potion."))
 		GUICtrlSetLimit(-1, 8)
-	
+
 	$x += 90
 		GUICtrlCreateLabel("<", $x + 32, $y + 2, -1, -1)
-	
+
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnElixir, $x + 67 + 32, $y, 16, 16)
 	$g_hInputElixirItems = _GUICtrlCreateInput("1000000", $x + 10 + 32, $y, 55, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 		GUICtrlSetState(-1, $GUI_DISABLE)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "InputElixirItems_Info_01", "Minimum Elixir Storage amount to resource potion."))
 		GUICtrlSetLimit(-1, 8)
-	
+
 	$x += 90
 		GUICtrlCreateLabel("<", $x + 32, $y + 2, -1, -1)
-	
+
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 67 + 32, $y, 16, 16)
 	$g_hInputDarkElixirItems = _GUICtrlCreateInput("1000", $x + 10 + 32, $y, 55, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 		GUICtrlSetState(-1, $GUI_DISABLE)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "InputDarkElixirItems_Info_01", "Minimum Dark Elixir Storage amount to resource potion."))
 		GUICtrlSetLimit(-1, 7)
-		
+
 	$x -= (120 + 180)
 	$y += 22 - 8
 	;;;;;;;;;;;
@@ -334,27 +337,27 @@ Func CreateMiscNormalVillageSubTab()
 	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnShop, $x + 245, $y + 8, 24, 24)
 	$g_hChkCollectMagicItems = GUICtrlCreateCheckbox("Collect magic items", $x + 270, $y + 4, 122, -1)
 	GUICtrlSetOnEvent(-1, "btnDDApply")
-	
+
 	$g_hBtnMagicItemsConfig = GUICtrlCreateButton("...", $x + 270 + 70 + 55, $y + 4, 20, 20)
 	GUICtrlSetOnEvent(-1, "btnDailyDiscounts")
-	
+
 	$y += 20
 	$g_hChkFreeMagicItems = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkFreeMagicItems", "Collect Free Magic Items"), $x + 270, $y + 4, -1, -1)
 		GUICtrlSetOnEvent(-1, "ChkFreeMagicItems")
-	
+
 	;;;;;;;;;;;
 	$y += 20
 	$g_hChkCollectRewards = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCollectRewards", "Collect Challenge Rewards"), $x + 270, $y + 4 + 5, -1, -1)
 		GUICtrlSetOnEvent(-1, "ChkCollectRewards")
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkSeasonChallenges_Info_01", "Check this to automatically Collect Daily/Season Rewards."))
 		GUICtrlSetState(-1, $GUI_CHECKED)
-	
+
 	$y += 20
-	
+
 	$g_hChkSellRewards = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkSellRewards", "Sell Extras"), $x + 270 + 5, $y + 4 + 5, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkAutoSellSeasonRewards_Info_01", "Check this to automatically Sell Daily/Season Rewards."))
 		GUICtrlSetState(-1, $GUI_UNCHECKED)
-	
+
 	$y -= 45
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnTree, $x, $y + 8, 24, 24)
 	; _GUICtrlCreateIcon($g_sLibIconPath, $eIcnBark, $x + 45, $y, 24, 24)
@@ -362,7 +365,7 @@ Func CreateMiscNormalVillageSubTab()
 	GUICtrlSetOnEvent(-1, "chkEdgeObstacle")         ; Team AiO MOD++
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCleanYard_Info_01", "Check this to automatically clear Yard from Trees, Trunks, etc."))
 	GUICtrlSetState(-1, $GUI_UNCHECKED)
-	
+
 	$y += 20 - 3
 	#Region - EdgeObstacles - Team AiO MOD++
 	$g_hEdgeObstacle = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "ChkEdgeObstacles", "Remove edge obstacles"), $x + 30, $y + 4, -1, -1)
@@ -379,7 +382,7 @@ Func CreateMiscNormalVillageSubTab()
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnCollectAchievements, $x, $y, 24, 24)
 	$g_hChkCollectAchievements = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCollectAchievements", "Collect Achievements"), $x + 25, $y + 4, -1, -1)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCollectAchievements_Info", "Check this to automatically collect achievement rewards."))
-	
+
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	#EndRegion - Custom Collect - Team AIO Mod++
 
@@ -538,10 +541,10 @@ Func CreateMiscClanGamesV3SubTab()
 	$g_hChkForceBBAttackOnClanGames = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkForceBBAttackOnClanGames", "Force BB Attack"), $x, $y, -1, -1)
 	GUICtrlSetOnEvent(-1, "chkActivateClangames")
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkClanGames60_Info_02", "If ClanGames Enabled : Ignore BB Trophy, BB Loot, BB Wait BM"))
-	
+
 	$g_hChkOnlyBuilderBaseGC = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkOnlyBuilderBaseGC", "Builder base only if BB challenge"), $x + 125, $y, -1, -1)
 	GUICtrlSetOnEvent(-1, "chkActivateClangames")
-	
+
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 

@@ -62,8 +62,7 @@ Func TrainSiege($bTrainFullSiege = False)
 	EndIf
 
 	; Refill
-	For $iBuildIndex = $eSiegeWallWrecker To $eSiegeMachineCount - 1 ; Custom Train - Team AIO Mod++		
-		Local $iSiegeIndex = $g_aiBuildOrder[$iBuildIndex] ; Custom Train - Team AIO Mod++		
+	For $iSiegeIndex = $eSiegeWallWrecker To $eSiegeMachineCount - 1
 		Local $HowMany = $g_aiArmyCompSiegeMachines[$iSiegeIndex] - $g_aiCurrentSiegeMachines[$iSiegeIndex] - $aiQueueSiegeMachine[$iSiegeIndex]
 		Local $checkPixel
 		If $iSiegeIndex = $eSiegeWallWrecker Then $checkPixel = $aCheckIsAvailableSiege
@@ -82,9 +81,8 @@ Func TrainSiege($bTrainFullSiege = False)
 	Next
 
 	; build 2nd army
-	If ($g_bDoubleTrain Or $bTrainFullSiege Or $g_bForcePreBuildSieges) And $g_iTotalTrainSpaceSiege <= $g_iTotalSiegeValue Then ; Custom Train - Team AIO Mod++
-		For $iBuildIndex = $eSiegeWallWrecker To $eSiegeMachineCount - 1 ; Custom Train - Team AIO Mod++
-			Local $iSiegeIndex = $g_aiBuildOrder[$iBuildIndex] ; Custom Train - Team AIO Mod++		
+	If ($g_bDoubleTrain Or $bTrainFullSiege) And $g_iTotalTrainSpaceSiege <= 3 Then
+		For $iSiegeIndex = $eSiegeWallWrecker To $eSiegeMachineCount - 1
 			Local $HowMany = $g_aiArmyCompSiegeMachines[$iSiegeIndex] * 2 - $aiTotalSiegeMachine[$iSiegeIndex]
 			Local $checkPixel
 			If $iSiegeIndex = $eSiegeWallWrecker Then $checkPixel = $aCheckIsAvailableSiege

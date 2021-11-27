@@ -351,8 +351,6 @@ Global $g_iCustomArmysMainVillage[$eTroopCount][3]
 Global $g_iCustomBrewMainVillage[$eSpellCount][3]
 Global $g_iCustomSiegesMainVillage[$eSiegeMachineCount][3]
 Global $g_hCmbTroopSetting = 0, $g_iCmbTroopSetting = 0
-
-Global $g_iTotalSiegeValue = 0, $g_bPreciseSieges = 0, $g_bForcePreBuildSieges = 0
 #EndRegion - Custom train - Team AIO Mod++
 
 ; Advanced debugging.

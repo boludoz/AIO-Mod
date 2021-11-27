@@ -767,7 +767,7 @@ Func CreateTrainTroops()
 
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Train_Troops", "grpTroops", "Troops"), $x - 10, $y - 15, 430, 345)
 	Local $sTroopName = ""
-	For $i = 0 To $eTroopCount - 1
+	For $i = 0 To UBound($g_aQuickTroopIcon) - 1
 		$sTroopName = GetTroopName($i, 2)
 		GUICtrlCreateIcon($g_sLibIconPath, $g_aQuickTroopIcon[$i], $x, $y, 23, 23)
 		; _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Level", "Level") & " " & $sTroopName & ":" & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Mouse_Left_Click", "Mouse Left Click to Up level" & @CRLF & "Shift + Mouse Left Click to Down level"))
@@ -784,7 +784,7 @@ Func CreateTrainTroops()
 			GUICtrlSetOnEvent(-1, "_GUITrainOrder")
 		$y += 26
 		$iCol += 1
-		If $iCol = Round($eTroopCount / 4) Then
+		If $iCol = Round(UBound($g_aQuickTroopIcon) / 4) Then
 			$iCol = 0
 			$x += 100
 			$y = $iStartY
@@ -884,7 +884,7 @@ Func CreateTrainSpells()
 	$g_hTxtTotalCountSpell = GUICtrlCreateCombo("", 10 + 380, 12 + 1 - 10, 35, 16, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "TxtTotalCountSpell_Info_01", "Enter the No. of Spells Capacity."))
 	GUICtrlSetData(-1, "0|2|4|6|7|8|9|10|11", "0")
-	; GUICtrlSetOnEvent(-1, "TotalSpellCountClick")
+	GUICtrlSetOnEvent(-1, "TotalSpellCountClick")
 
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnResetButton, 0, 3, 16, 16)
 	GUICtrlSetOnEvent(-1, "Removecampspells")
@@ -903,9 +903,12 @@ Func CreateTrainSpells()
 
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Train_Spells", "grpSpells", "Spells"), $x - 10, $y - 15, 430, 203)
 	$x += 70
-	For $i = 0 To $eSpellCount - 1
+	Local $sSpellName = ""
+	For $i = 0 To UBound($g_aQuickSpellIcon) - 1
+		$sSpellName = GetTroopName($i, 2)
 		GUICtrlCreateIcon($g_sLibIconPath, $g_aQuickSpellIcon[$i], $x, $y, 23, 23)
 		$g_ahTxtTrainArmySpellCount[$i] = _GUICtrlCreateInput("0", $x + 65 - 35, $y, 25, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("sam m0d", "txtNoOfS", "Enter the No. of") & " " & $sSpellName)
 			GUICtrlSetLimit(-1, 3)
 			GUICtrlSetOnEvent(-1, "TrainSpellCountEdit")
 		$g_ahCmbSpellsOrder[$i] = GUICtrlCreateCombo("", $x + 95 - 38, $y, 36, 23, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
@@ -914,7 +917,7 @@ Func CreateTrainSpells()
 			GUICtrlSetOnEvent(-1, "_GUISpellsOrder")
 		$y += 26
 		$iCol += 1
-		If $iCol = Round($eSpellCount / 2) Then
+		If $iCol = Round(UBound($g_aQuickSpellIcon) / 2) Then
 			$iCol = 0
 			$x += 150
 			$y = $iStartY
@@ -952,28 +955,14 @@ Func CreateTrainSpells()
 
 EndFunc   ;==>CreateTrainTroops
 
-Global $g_hChkCustomBuildOrderEnable = 0
-Global $g_hChkPreciseSieges = 0, $g_hChkForcePreBuildSieges = 0
-Global $g_ahCmbSiegesOrder[$eSiegeMachineCount] = [0, 0, 0, 0, 0]
-Global $g_hTxtTotalCountSiege = 0, $g_hChkPreciseSieges = 0, $g_hChkForcePreBuildSieges = 0
-
 Func CreateTrainSieges()
 	$g_hGUI_SIEGEARMY_ARMY = _GUICreate("", $g_iSizeWGrpTab3, $g_iSizeHGrpTab3, 5, 25, BitOR($WS_CHILD, $WS_TABSTOP), -1, $g_hGUI_TRAINARMY)
 	GUISetBkColor($COLOR_WHITE, $g_hGUI_SIEGEARMY_ARMY)
 	Local $iStartX = 10
 	Local $iStartY = 38
 
-	;;;;;;;;
-	GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "SiegeCapacity", "Siege Capacity") & ":", 10 + 288, 12 - 5, 90, 17, $SS_RIGHT)
-	$g_hTxtTotalCountSiege = _GUICtrlCreateInput("3", 10 + 380, 4, 35, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
-	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "TxtTotalCountSpell_Info_01", "Enter the No. of Sieges Capacity."))
-
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnResetButton, 0, 3, 16, 16)
 	GUICtrlSetOnEvent(-1, "Removecampsieges")
-	
-	$g_hChkPreciseSieges = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "ChkPreciseBuild", "Precise build") , 10 + 50, 3)
-	$g_hChkForcePreBuildSieges = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "ChkForcePreBuildSieges", "Force pre build sieges") , 10 + 150, 3)
-;;;;;;;;;;;
 
 	Local $x = $iStartX, $y = $iStartY
 	Local $iCol = 0
@@ -988,34 +977,23 @@ Func CreateTrainSieges()
 
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Train_Sieges", "grpSieges", "Sieges"), $x - 10, $y - 15, 430, 203)
 	$x += 70
-	For $i = 0 To $eSiegeMachineCount - 1
+	Local $sSiegeName = ""
+	For $i = 0 To UBound($ahPicTrainArmySiege) - 1
+		$sSiegeName = GetTroopName($i, 2)
 		GUICtrlCreateIcon($g_sLibIconPath, $ahPicTrainArmySiege[$i], $x, $y, 23, 23)
 		$g_ahTxtTrainArmySiegeCount[$i] = _GUICtrlCreateInput("0", $x + 65 - 35, $y, 25, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("sam m0d", "txtNoOfS", "Enter the No. of") & " " & $sSiegeName)
 			GUICtrlSetLimit(-1, 3)
 			GUICtrlSetOnEvent(-1, "TrainSiegeCountEdit")
-		$g_ahCmbSiegesOrder[$i] = GUICtrlCreateCombo("", $x + 95 - 38, $y, 36, 23, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
-			GUICtrlSetData(-1, $sComboData)
-			_GUICtrlComboBox_SetCurSel(-1, $i)
-			GUICtrlSetOnEvent(-1, "_GUIBuildOrder")
 		$y += 26
 		$iCol += 1
-		If $iCol = Round($eSiegeMachineCount / 2) Then
+		If $iCol = Round(UBound($ahPicTrainArmySiege) / 2) Then
 			$iCol = 0
 			$x += 150
 			$y = $iStartY
 		EndIf
 	Next
 
-	$y += 150
-	$x = $iStartX
-	
-	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnResetButton, $x, $y + 17, 16, 16)
-		GUICtrlSetOnEvent(-1, "BtnRemoveSieges")
-	$g_hChkCustomBuildOrderEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Order", "Order") , $x + 20, $y + 14, -1, -1)
-		GUICtrlSetOnEvent(-1, "CustomBuildOrderEnable")
-
-	$x += 70
-	#cs
 	$y += 100
 	$x = $iStartX
 	$x += 70
@@ -1034,7 +1012,7 @@ Func CreateTrainSieges()
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "LblCountTotal_Info_02", "The total units of Siege Machines"))
 	GUICtrlSetBkColor(-1, $COLOR_MONEYGREEN) ;lime, moneygreen
 	GUICtrlCreateLabel("x", $x + 232, $y + 10, -1, -1)
-	#ce
+
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	GUICtrlCreateTabItem("")
 

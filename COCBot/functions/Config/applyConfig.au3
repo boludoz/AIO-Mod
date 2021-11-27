@@ -502,7 +502,7 @@ Func ApplyConfig_600_6($TypeReadSave)
             $g_bChkClanGamesBBDes = (GUICtrlRead($g_hChkClanGamesBBDes) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkClanGamesBBTroops = (GUICtrlRead($g_hChkClanGamesBBTroops) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkForceBBAttackOnClanGames = (GUICtrlRead($g_hChkForceBBAttackOnClanGames) = $GUI_CHECKED) ? 1 : 0
-			
+
 			$g_bChkOnlyBuilderBaseGC = (GUICtrlRead($g_hChkOnlyBuilderBaseGC) = $GUI_CHECKED) ? 1 : 0
 
 			$g_bChkClanGamesPurgeAny = (GUICtrlRead($g_hChkClanGamesPurgeAny) = $GUI_CHECKED) ? 1 : 0
@@ -1034,7 +1034,7 @@ Func ApplyConfig_600_17($TypeReadSave)
 				$g_aiWallsCurrentCount[$i] = Number(GUICtrlRead($g_ahWallsCurrentCount[$i]))
 			Next
 	EndSwitch
-	
+
 	; Custom Wall - Team AIO Mod++
 	ApplyConfig_MOD_Walls($TypeReadSave)
 EndFunc   ;==>ApplyConfig_600_17
@@ -2385,10 +2385,6 @@ Func ApplyConfig_600_52_2($TypeReadSave)
 			GUICtrlSetState($g_hChkDoubleTrain, $g_bDoubleTrain ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkPreciseArmy, $g_bPreciseArmy ? $GUI_CHECKED : $GUI_UNCHECKED)
 			#Region - Custom train - Team AIO Mod++
-			GUICtrlSetData($g_hTxtTotalCountSiege, $g_iTotalSiegeValue)
-			GUICtrlSetState($g_hChkPreciseSieges, $g_bPreciseSieges ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkForcePreBuildSieges, $g_bForcePreBuildSieges ? $GUI_CHECKED : $GUI_UNCHECKED)
-
 			GUICtrlSetState($g_hChkPreTrainTroopsPercent, $g_bChkPreTrainTroopsPercent ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hInpPreTrainTroopsPercent, $g_iInpPreTrainTroopsPercent)
 			chkDoubleTrain()
@@ -2422,10 +2418,6 @@ Func ApplyConfig_600_52_2($TypeReadSave)
 			$g_bDoubleTrain = (GUICtrlRead($g_hChkDoubleTrain) = $GUI_CHECKED)
 			$g_bPreciseArmy = (GUICtrlRead($g_hChkPreciseArmy) = $GUI_CHECKED)
 			#Region - Custom train - Team AIO Mod++
-			$g_iTotalSiegeValue = GUICtrlRead($g_hTxtTotalCountSiege)
-			$g_bPreciseSieges = (GUICtrlRead($g_hChkPreciseSieges) = $GUI_CHECKED)
-			$g_bForcePreBuildSieges = (GUICtrlRead($g_hChkForcePreBuildSieges) = $GUI_CHECKED)
-
 			$g_bChkPreTrainTroopsPercent = (GUICtrlRead($g_hChkPreTrainTroopsPercent) = $GUI_CHECKED)
 			$g_iInpPreTrainTroopsPercent = Int(GUICtrlRead($g_hInpPreTrainTroopsPercent))
 			$g_iCmbTroopSetting = _GUICtrlComboBox_GetCurSel($g_hCmbTroopSetting)
@@ -2446,17 +2438,10 @@ Func ApplyConfig_600_54($TypeReadSave)
 			For $z = 0 To UBound($g_ahCmbTroopOrder) - 1
 				_GUICtrlComboBox_SetCurSel($g_ahCmbTroopOrder[$z], $g_aiCmbCustomTrainOrder[$z])
 			Next
-			
 			; Spells Order
 			GUICtrlSetState($g_hChkCustomBrewOrderEnable, $g_bCustomBrewOrderEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
 			For $z = 0 To UBound($g_ahCmbSpellsOrder) - 1
 				_GUICtrlComboBox_SetCurSel($g_ahCmbSpellsOrder[$z], $g_aiCmbCustomBrewOrder[$z])
-			Next
-
-			; Sieges Machines Order - Custom Team AIO Mod++
-			GUICtrlSetState($g_hChkCustomBuildOrderEnable, $g_bCustomBuildOrderEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
-			For $z = 0 To UBound($g_ahCmbSiegesOrder) - 1
-				_GUICtrlComboBox_SetCurSel($g_ahCmbSiegesOrder[$z], $g_aiCmbCustomBuildOrder[$z])
 			Next
 
 			ApplyConfig_600_54("Save")
@@ -2491,18 +2476,6 @@ Func ApplyConfig_600_54($TypeReadSave)
 					$g_aiBrewOrder[$iTmp] = $z
 				Next
 			EndIf
-
-			$iTmp2 = UBound($g_ahCmbSiegesOrder) - 1
-			If $g_bCustomBuildOrderEnable = False Then
-				For $z = 0 To $iTmp2
-					$g_aiBuildOrder[$z] = $z
-				Next
-			Else
-				For $z = 0 To $iTmp2
-					$iTmp =	Abs(Number($g_aiCmbCustomBuildOrder[$z]))
-					$g_aiBuildOrder[$iTmp] = $z
-				Next
-			EndIf
 		Case "Save"
 			; Troops Order
 			$g_bCustomTrainOrderEnable = (GUICtrlRead($g_hChkCustomTrainOrderEnable) = $GUI_CHECKED)
@@ -2526,16 +2499,6 @@ Func ApplyConfig_600_54($TypeReadSave)
 				; ApplyConfig_600_54("Read")
 			EndIf
 
-			; Sieges Machines Order - Custom Team AIO Mod++
-			$g_bCustomBuildOrderEnable = (GUICtrlRead($g_hChkCustomBuildOrderEnable) = $GUI_CHECKED)
-			For $z = 0 To UBound($g_ahCmbSiegesOrder) - 1
-				$g_aiCmbCustomBuildOrder[$z] = Number(_GUICtrlComboBox_GetCurSel($g_ahCmbSiegesOrder[$z]))
-			Next
-
-			If $g_aiCmbCustomBuildOrder[UBound($g_aiCmbCustomBuildOrder) -1] < 0 Then
-				BtnRemoveSieges()
-				; ApplyConfig_600_54("Read")
-			EndIf
 	EndSwitch
 	#EndRegion - Custom Train - Team AIO Mod++
 EndFunc   ;==>ApplyConfig_600_54

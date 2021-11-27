@@ -1148,12 +1148,6 @@ Global $g_aiBrewOrder[$eSpellCount] = [ _
 		$eSpellLightning, $eSpellHeal, $eSpellRage, $eSpellJump, $eSpellFreeze, $eSpellClone, _
 		$eSpellInvisibility, $eSpellPoison, $eSpellEarthquake, $eSpellHaste, $eSpellSkeleton, $eSpellBat]
 
-; Siege Build Order - Custom Army - Team__AiO__MOD
-Global $g_bCustomBuildOrderEnable = False, $g_aiCmbCustomBuildOrder[$eSiegeMachineCount] = [-1, -1, -1, -1, -1]
-
-Global $g_aiBuildOrder[$eSiegeMachineCount] = [ _
-		$eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL]
-
 ; Drop Order Troops
 Global Enum $eTroopBarbarianS, $eTroopSuperBarbarianS, $eTroopArcherS, $eTroopSuperArcherS, $eTroopGiantS, $eTroopSuperGiantS, $eTroopGoblinS, $eTroopSneakyGoblinS, $eTroopWallBreakerS, _
 		$eTroopSuperWallBreakerS, $eTroopBalloonS, $eTroopRocketBalloonS, $eTroopWizardS, $eTroopSuperWizardS, $eTroopHealerS, $eTroopDragonS, $eTroopPekkaS, $eTroopBabyDragonS, $eTroopInfernoDragonS, _

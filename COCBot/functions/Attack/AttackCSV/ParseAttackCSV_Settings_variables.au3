@@ -29,17 +29,17 @@ Func ParseAttackCSV_Settings_variables(ByRef $aiCSVTroops, ByRef $aiCSVSpells, B
 		Local $iTroopIndex, $iFlexTroopIndex = 999
 		Local $iCommandCol = 1, $iTroopNameCol = 2, $iFlexCol = 3, $iTHBeginCol = 4
 		Local $iHeroRadioItemTotal = 3, $iHeroTimedLimit = 99
-		
+
 		; Custom logic - Team AIO Mod++
 		Local $iTotalCampSpace = $g_iTotalCampSpace
 		Local $iTotalSpellValue = $g_iTotalSpellValue
-		Local $iTotalSiegeValue = $g_iTotalSiegeValue
+;~ 		Local $iTotalSiegeValue = $g_iTotalSiegeValue
 		If $g_bTotalCampForced Then
 			$iTotalCampSpace = $g_iTotalCampForcedValue
 			; $iTotalSpellValue = TotalSpellsToBrewInGUI() ; No
 		EndIf
 		; -----------------------------
-		
+
 		For $iLine = 0 To UBound($asLine) - 1
 			$sLine = $asLine[$iLine]
 			$asCommand = StringSplit($sLine, "|")
@@ -103,11 +103,11 @@ Func ParseAttackCSV_Settings_variables(ByRef $aiCSVTroops, ByRef $aiCSVSpells, B
 				EndIf
 
 				If $g_bDebugAttackCSV Then SetLog("Line: " & $iLine + 1 & " Command: " & $asCommand[$iCommandCol] & ($iTHCol >= $iTHBeginCol ? " Column: " & $iTHCol & " TH" & $iTH : ""), $COLOR_DEBUG)
-				
+
 				; Custom logic - Team AIO Mod++
 				ReDim $asCommand[$iTH - 1]
 				Local $sLastOk = ""
-				
+
 				Local $bFixed = False, $iCommandOld = $asCommand[0]
 				For $i = 2 To (UBound($asCommand) - 1)
 					$asCommand[$i] = StringStripWS($asCommand[$i], $STR_STRIPTRAILING)
@@ -120,7 +120,7 @@ Func ParseAttackCSV_Settings_variables(ByRef $aiCSVTroops, ByRef $aiCSVSpells, B
 				Next
 				If $asCommand[0] <> $iCommandOld Then $bFixed = True
 				; -----------------------------
-				
+
 				Switch $asCommand[$iCommandCol]
 					Case "TRAIN"
 						; Custom logic - Team AIO Mod++
@@ -138,7 +138,7 @@ Func ParseAttackCSV_Settings_variables(ByRef $aiCSVTroops, ByRef $aiCSVSpells, B
 							Case $eBarb To $eTroopCount - 1
 								$aiCSVTroops[$iTroopIndex] = int($asCommand[$iTHCol])
 								If int($asCommand[$iFlexCol]) > 0 Then $iFlexTroopIndex = $iTroopIndex
-							Case $eLSpell To $eSpellCount + $eLSpell - 1 
+							Case $eLSpell To $eSpellCount + $eLSpell - 1
 								$aiCSVSpells[$iTroopIndex - $eLSpell] = int($asCommand[$iTHCol])
 							Case $eWallW To $eSiegeMachineCount + $eWallW - 1
 								$aiCSVSieges[$iTroopIndex - $eWallW] = int($asCommand[$iTHCol])
