@@ -1,0 +1,18 @@
+diff a/COCBot/functions/Attack/ReturnHome.au3 b/COCBot/functions/Attack/ReturnHome.au3	(rejected hunks)
+@@ -86,14 +86,14 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
+ 	; ---- CLICK SURRENDER BUTTON ----
+ 	If Not (IsReturnHomeBattlePage(True, False)) Then ; check if battle is already over
+ 		For $i = 0 To 5 ; dynamic wait loop for surrender button to appear (if end battle or surrender button are not found in 5*(200)ms + 10*(200)ms or 3 seconds, then give up.)
+-			If $g_bDebugSetlog Then SetDebugLog("Wait for surrender button to appear #" & $i)
++			SetDebugLog("Wait for surrender button to appear #" & $i)
+ 			$aiSurrenderButton = findButton("EndBattle", Default, 1, True)
+ 			If IsArray($aiSurrenderButton) And UBound($aiSurrenderButton, 1) = 2 Then
+ 				If IsAttackPage() Then ; verify still on attack page, and battle has not ended magically before clicking
+ 					ClickP($aiSurrenderButton, 1, 0, "#0099") ;Click Surrender
+ 					$j = 0
+ 					While 1 ; dynamic wait for Okay button
+-						If $g_bDebugSetlog Then SetDebugLog("Wait for OK button to appear #" & $j)
++						SetDebugLog("Wait for OK button to appear #" & $j)
+ 						If IsEndBattlePage(False) Then
+ 							ClickOkay("SurrenderOkay") ; Click Okay to Confirm surrender
+ 							ExitLoop 2

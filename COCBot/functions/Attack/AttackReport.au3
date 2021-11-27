@@ -23,7 +23,7 @@ Func AttackReport()
 	While _CheckPixel($aEndFightSceneAvl, True) = False ; check for light gold pixle in the Gold ribbon in End of Attack Scene before reading values
 		$iCount += 1
 		If _Sleep($DELAYATTACKREPORT1) Then Return
-		If $g_bDebugSetlog Then SetDebugLog("Waiting Attack Report Ready, " & ($iCount / 2) & " Seconds.", $COLOR_DEBUG)
+		SetDebugLog("Waiting Attack Report Ready, " & ($iCount / 2) & " Seconds.", $COLOR_DEBUG)
 		If $iCount > 30 Then ExitLoop ; wait 30*500ms = 15 seconds max for the window to render
 	WEnd
 	If $iCount > 30 Then SetLog("End of Attack scene slow to appear, attack values my not be correct", $COLOR_INFO)
@@ -32,7 +32,7 @@ Func AttackReport()
 	While getResourcesLoot(290, 289 + $g_iMidOffsetY) = "" ; check for gold value to be non-zero before reading other values as a secondary timer to make sure all values are available
 		$iCount += 1
 		If _Sleep($DELAYATTACKREPORT1) Then Return
-		If $g_bDebugSetlog Then SetDebugLog("Waiting Attack Report Ready, " & ($iCount / 2) & " Seconds.", $COLOR_DEBUG)
+		SetDebugLog("Waiting Attack Report Ready, " & ($iCount / 2) & " Seconds.", $COLOR_DEBUG)
 		If $iCount > 20 Then ExitLoop ; wait 20*500ms = 10 seconds max before we have call the OCR read an error
 	WEnd
 	If $iCount > 20 Then SetLog("End of Attack scene read gold error, attack values my not be correct", $COLOR_INFO)
@@ -246,10 +246,10 @@ Func AttackReport()
 	; Share Replay
 	If $g_bShareAttackEnable Then
 		If (Number($g_iStatsLastAttack[$eLootGold]) >= Number($g_iShareMinGold)) And (Number($g_iStatsLastAttack[$eLootElixir]) >= Number($g_iShareMinElixir)) And (Number($g_iStatsLastAttack[$eLootDarkElixir]) >= Number($g_iShareMinDark)) Then
-			SetLog("Reached miminum Loot values. Share Replay")
+			SetLog("Reached minimum Loot values. Share Replay")
 			$g_bShareAttackEnableNow = True
 		Else
-			SetLog("Below miminum Loot values. No Share Replay")
+			SetLog("Below minimum Loot values. No Share Replay")
 			$g_bShareAttackEnableNow = False
 		EndIf
 	EndIf

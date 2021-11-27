@@ -38,7 +38,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 		EndIf
 		_CaptureRegion()
 		If _CheckPixel($aPixelToCheck, $g_bNoCapturePixel, Default, "waitMainScreen") Then ;Checks for Main Screen
-			If $g_bDebugSetlog Then SetDebugLog("Screen cleared, WaitMainScreen exit", $COLOR_DEBUG)
+			SetDebugLog("Screen cleared, WaitMainScreen exit", $COLOR_DEBUG)
 			Return
 		Else
 			If Not TestCapture() And _Sleep($DELAYWAITMAINSCREEN1) Then Return
@@ -65,7 +65,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 	While 1
 		If Not $g_bRunState Then Return
 		SetLog("Unable to load CoC, attempt to fix it", $COLOR_ERROR)
-		If $g_bDebugSetlog Then SetDebugLog("Restart Loop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop data
+		SetDebugLog("Restart Loop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop data
 		CloseAndroid("waitMainScreen") ; Android must die!
 		If _Sleep(1000) Then Return
 		OpenAndroid(True) ; Open BS and restart CoC

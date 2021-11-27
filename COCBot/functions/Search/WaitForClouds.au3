@@ -236,7 +236,7 @@ Func chkAttackSearchPersonalBreak()
 	EndIf
 	If $g_bForceSinglePBLogoff And _DateIsValid($g_sPBStartTime) Then ; silly feature to use with long clouds, but check if single PB is enabled.
 		Local $iTimeTillPBTstartSec = Int(_DateDiff('s', $g_sPBStartTime, _NowCalc())) ; time in seconds
-		If $g_bDebugSetlog Then SetDebugLog("PB starts in: " & $iTimeTillPBTstartSec & " Seconds", $COLOR_DEBUG)
+		SetDebugLog("PB starts in: " & $iTimeTillPBTstartSec & " Seconds", $COLOR_DEBUG)
 		If $iTimeTillPBTstartSec >= 0 Then ; test if PBT date/time in past (positive value) or future (negative value
 			SetLog("Prepare base before user forced Break..", $COLOR_INFO)
 			CheckBaseQuick(True, "cloud") ; check and restock base before exit.

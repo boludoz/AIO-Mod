@@ -358,20 +358,20 @@ Func DropTrophy($bDebug = False) ; Drop Throphy - Team AIO Mod++
 					If _Sleep($DELAYDROPTROPHY1) Then ExitLoop
 				EndIf
 				$iDateCalc = _DateDiff('s', _NowCalc(), $sWaitToDate)
-				If $g_bDebugSetlog Then SetDebugLog("ChkBaseQuick delay= " & $sWaitToDate & " Now= " & _NowCalc() & " Diff= " & $iDateCalc, $COLOR_DEBUG)
+				SetDebugLog("ChkBaseQuick delay= " & $sWaitToDate & " Now= " & _NowCalc() & " Diff= " & $iDateCalc, $COLOR_DEBUG)
 				If $iDateCalc <= 0 Then ; check length of time in drop trophy
 					SetLog(" Checking base during long drop cycle", $COLOR_INFO)
 					CheckBaseQuick() ; check base during long drop times
 					$sWaitToDate = _DateAdd('n', Int($iWaitTime), _NowCalc()) ; create new delay date/time
-					If $g_bDebugSetlog Then SetDebugLog("ChkBaseQuick new delay time= " & $sWaitToDate, $COLOR_DEBUG)
+					SetDebugLog("ChkBaseQuick new delay time= " & $sWaitToDate, $COLOR_DEBUG)
 				EndIf
 			Else
 				SetLog("Trophy Drop Complete", $COLOR_INFO)
 			EndIf
 		WEnd
-		If $g_bDebugSetlog Then SetDebugLog("DropTrophy(): End", $COLOR_DEBUG)
+		SetDebugLog("DropTrophy(): End", $COLOR_DEBUG)
 	Else
-		If $g_bDebugSetlog Then SetDebugLog("Drop Trophy SKIP", $COLOR_DEBUG)
+		SetDebugLog("Drop Trophy SKIP", $COLOR_DEBUG)
 	EndIf
 
 EndFunc   ;==>DropTrophy

@@ -510,7 +510,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		EndIf
 		If _Sleep($DELAYRESPOND) Then Return
 
-		; ------- Add attack not button delay and check button status
+		; ------- Add attack now button delay and check button status
 		If $g_bSearchAttackNowEnable And $g_iSearchAttackNowDelay > 0 Then
 			If _Sleep(1000 * $g_iSearchAttackNowDelay) Then Return ; add human reaction time on AttackNow button function
 		EndIf

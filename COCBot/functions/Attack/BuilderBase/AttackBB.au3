@@ -249,7 +249,10 @@ Func Okay()
 
 		If __TimerDiff($timer) >= 180000 Then
 			SetLog("Could not find button 'Okay'", $COLOR_ERROR)
+			SetLog($g_sImgOkButton & " file may be missing. Try reinstalling.", $COLOR_ERROR)
 			If $g_bDebugImageSave Then SaveDebugImage("BBFindOkay")
+			;Serious error.  Stuck on BB "Your attack:" screen.
+			RestartBot() ; Serious error.  Restart.
 			Return False
 		EndIf
 

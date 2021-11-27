@@ -73,6 +73,7 @@ Func InitiateSwitchAcc() ; Checking profiles setup in Mybot, First matching CoC 
 			EndIf
 		EndIf
 		SetLog("  - Account [" & $i + 1 & "]: " & $g_asProfileName[$i] & " - " & $sBotType)
+		;SetSwitchAccLog("  - Account [" & $i + 1 & "]: " & $g_asProfileName[$i] & " - " & $sBotType)
 		SetSwitchAccLog("  - Acc. " & $i + 1 & ": " & $sBotType)
 
 		$g_abPBActive[$i] = False
@@ -80,6 +81,7 @@ Func InitiateSwitchAcc() ; Checking profiles setup in Mybot, First matching CoC 
 	$g_iCurAccount = $g_iNextAccount ; make sure no crash
 	SwitchAccountVariablesReload("Reset")
 	SetLog("Let's start with Account [" & $g_iNextAccount + 1 & "]")
+	SetSwitchAccLog("Start with Acc [" & $g_iNextAccount + 1 & "]")
 	SwitchCOCAcc($g_iNextAccount)
 EndFunc   ;==>InitiateSwitchAcc
 
@@ -163,13 +165,13 @@ Func CheckSwitchAcc()
 			$nMinRemainTrain = CheckTroopTimeAllAccount($bForceSwitch)
 
 			If $nMinRemainTrain <= 1 And Not $bForceSwitch And Not $g_bDonateLikeCrazy Then ; Active (force switch shall give priority to Donate Account)
-				If $g_bDebugSetlog Then SetDebugLog("Switch to or Stay at Active Account: " & $g_iNextAccount + 1, $COLOR_DEBUG)
+				SetDebugLog("Switch to or Stay at Active Account: " & $g_iNextAccount + 1, $COLOR_DEBUG)
 				$g_iDonateSwitchCounter = 0
 			Else
 				If $g_iDonateSwitchCounter < UBound($aDonateAccount) Then ; Donate
 					$g_iNextAccount = $aDonateAccount[$g_iDonateSwitchCounter]
 					$g_iDonateSwitchCounter += 1
-					If $g_bDebugSetlog Then SetDebugLog("Switch to Donate Account " & $g_iNextAccount + 1 & ". $g_iDonateSwitchCounter = " & $g_iDonateSwitchCounter, $COLOR_DEBUG)
+					SetDebugLog("Switch to Donate Account " & $g_iNextAccount + 1 & ". $g_iDonateSwitchCounter = " & $g_iDonateSwitchCounter, $COLOR_DEBUG)
 					SetSwitchAccLog(" - Donate Acc [" & $g_iNextAccount + 1 & "]")
 				Else ; Active
 					$g_iDonateSwitchCounter = 0
@@ -396,6 +398,15 @@ Func SwitchCOCAcc($NextAccount)
 	EndIf
 	waitMainScreen()
 	If Not $g_bRunState Then Return
+	;switch using scid sometime makes emulator seem freeze but not, need to send back button first for click work again
+	If $g_bChkSuperCellID Then
+		SetDebugLog("Checkscidswitch: Send AndroidBackButton", $COLOR_DEBUG)
+		AndroidBackButton() ;Send back button to android
+		If _Sleep(1000) Then Return
+		If IsEndBattlePage() Then
+			AndroidBackButton()
+		EndIf
+	EndIf
 	CheckObstacles()
 	If $g_bForceSinglePBLogoff Then $g_bGForcePBTUpdate = True
 	runBot()
@@ -528,7 +539,7 @@ Func SwitchCOCAcc_ClickAccount(ByRef $bResult, $iNextAccount, $bStayDisconnected
 		Else ; SupercellID
 			Local $aSuperCellIDConnected = decodeSingleCoord(findImage("SupercellID Connected", $g_sImgSupercellIDConnected, GetDiamondFromRect("612,161,691,216"), 1, True, Default))
 			If IsArray($aSuperCellIDConnected) And UBound($aSuperCellIDConnected, 1) >= 2 Then
-				;SetLog("Account connected to SuperCell ID, cannot disconnect")
+				SetLog("Account connected to SuperCell ID, cannot disconnect")
 				If $bStayDisconnected Then
 					ClickAway()
 					Return FuncReturn("OK")
@@ -647,7 +658,8 @@ Func SwitchCOCAcc_ConnectedSCID(ByRef $bResult)
 		If IsArray($aSuperCellIDReload) And UBound($aSuperCellIDReload, 1) >= 2 Then
 			Click($aSuperCellIDReload[0], $aSuperCellIDReload[1], 1, 0, "Click Reload SC_ID")
 			Setlog("   1. Click Reload Supercell ID")
-			If _Sleep(2500) Then Return "Exit"
+			If $g_bDebugSetlog Then SetSwitchAccLog("   1. Click Reload Supercell ID")
+			If _Sleep(3000) Then Return "Exit"
 			If Not $g_bRunState Then Return "Exit"
 			;ExitLoop
 			Return "OK"
@@ -888,7 +900,7 @@ Func CheckGoogleSelectAccount($bSelectFirst = True)
 			Click($aAway[0], $aAway[1] + 40, 1)
 		EndIf
 	Else
-		If $g_bDebugSetlog Then SetDebugLog("CheckGoogleSelectAccount pixel color: " & _GetPixelColor($aListAccount[0], $aListAccount[1], False))
+		SetDebugLog("CheckGoogleSelectAccount pixel color: " & _GetPixelColor($aListAccount[0], $aListAccount[1], False))
 		Click($aAway[0], $aAway[1] + 40, 1)
 	EndIf
 
