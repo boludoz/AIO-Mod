@@ -124,7 +124,7 @@ Func chkBBStyle()
 		Local $scriptname
 		_GUICtrlComboBox_GetLBText($g_hCmbBBAttackStyle[$i], $indexofscript, $scriptname)
 		$g_sAttackScrScriptNameBB[$i] = $scriptname
-		If $g_bDebugSetlog Then SetDebugLog($g_sAttackScrScriptNameBB[$i] & " Loaded to use on BB attack!")
+		SetDebugLog($g_sAttackScrScriptNameBB[$i] & " Loaded to use on BB attack!")
 	Next
 	cmbScriptNameBB()
 EndFunc   ;==>chkBBStyle

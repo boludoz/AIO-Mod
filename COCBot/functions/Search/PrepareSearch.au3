@@ -157,7 +157,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 			EndIf
 
 			$g_bRestart = True
-			ClickAway(True)
+			ClickAway(Default, True)
 			Return
 
 		EndIf
@@ -206,7 +206,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 		_CaptureRegion()
 		$iCount += 1
 		If _Sleep($DELAYATTACKREPORT1) Then Return
-		If $g_bDebugSetlog Then SetDebugLog("Waiting PrepareSearch, " & ($iCount / 2) & " Seconds.", $COLOR_DEBUG)
+		SetDebugLog("Waiting PrepareSearch, " & ($iCount / 2) & " Seconds.", $COLOR_DEBUG)
 		If $iCount > 15 Then ExitLoop ; wait 15*500ms = 7,5 seconds max for the window to render
 	WEnd
 

@@ -353,7 +353,7 @@ Func AttackCSVDEBUGIMAGE()
 	Local $filename = $g_sProfileTempDebugPath & String("AttackDebug_" & $Date & "_" & $Time) & ".jpg"
 	_GDIPlus_ImageSaveToFile($EditedImage, $filename)
 	If @error Then SetLog("Debug Image save error: " & @extended, $COLOR_ERROR)
-	If $g_bDebugSetlog Then SetDebugLog("Attack CSV image saved: " & $filename)
+	SetDebugLog("Attack CSV image saved: " & $filename)
 
 	; Clean up resources
 	_GDIPlus_PenDispose($hPenLtGreen)
@@ -380,6 +380,6 @@ Func AttackCSVDEBUGIMAGE()
 		ShellExecute($filename)
 	EndIf
 
-	If $g_bDebugSetlog Then SetDebugLog("AttackCSV DEBUG IMAGE Create Required: " & Round((__TimerDiff($iTimer) * 0.001), 1) & "Seconds", $COLOR_DEBUG)
+	SetDebugLog("AttackCSV DEBUG IMAGE Create Required: " & Round((__TimerDiff($iTimer) * 0.001), 1) & "Seconds", $COLOR_DEBUG)
 
 EndFunc   ;==>AttackCSVDEBUGIMAGE

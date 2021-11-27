@@ -198,7 +198,7 @@ Func findButton($sButtonName, $buttonTileArrayOrPatternOrFullPath = Default, $ma
 	
 			If $bForceCapture Then _CaptureRegion2() ;to have FULL screen image to work with
 	
-			If $g_bDebugSetlog Then SetDebugLog(" imgloc searching for: " & $sButtonName & " : " & $buttonTile)
+			SetDebugLog(" imgloc searching for: " & $sButtonName & " : " & $buttonTile)
 			Local $result = DllCallMyBot("FindTile", "handle", $g_hHBitmap2, "str", $buttonTile, "str", $searchArea, "Int", $maxReturnPoints)
 			$error = @error ; Store error values as they reset at next function call
 			$extError = @extended
@@ -209,7 +209,7 @@ Func findButton($sButtonName, $buttonTileArrayOrPatternOrFullPath = Default, $ma
 			EndIf
 	
 			If $result[0] <> "" And checkImglocError($result, "imglocFindButton", $buttonTile) = False Then
-				If $g_bDebugSetlog Then SetDebugLog($sButtonName & " Button Image Found in: " & $result[0])
+				SetDebugLog($sButtonName & " Button Image Found in: " & $result[0])
 				$aCoords = StringSplit($result[0], "|", $STR_NOCOUNT)
 				;[0] - total points found
 				;[1] -  coordinates

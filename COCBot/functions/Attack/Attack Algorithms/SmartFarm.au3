@@ -88,7 +88,7 @@ Func ChkSmartFarm($sTypeResources = "All", $bTH = False)
 	; TL , TR , BL , BR
 	Local $aMainSide[4] = [0, 0, 0, 0]
 
-	If $g_bDebugSetlog Then SetDebugLog(" - INI|SmartFarm detection.", $COLOR_INFO)
+	SetDebugLog(" - INI|SmartFarm detection.", $COLOR_INFO)
 	_CaptureRegion2()
 	ConvertInternalExternArea("ChkSmartFarm")
 	If $g_bUseSmartFarmRedLine Then
@@ -116,7 +116,7 @@ Func ChkSmartFarm($sTypeResources = "All", $bTH = False)
 	; [0] = x , [1] = y , [2] = Distance to Redline ,[3] = In/Out, [4] = Side,  [5]= Is array Dim[2] with 5 coordinates to deploy
 	Local $aAll = SmartFarmDetection($sTypeResources)
 
-	If $g_bDebugSetlog Then SetDebugLog(" TOTAL detection Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
+	SetDebugLog(" TOTAL detection Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
 
 	; Let's determinate what resource is out or in side the village
 	; Collectors
@@ -153,12 +153,12 @@ Func ChkSmartFarm($sTypeResources = "All", $bTH = False)
 	If $g_bDebugSmartFarm Then
 		For $i = 0 To UBound($aResourcesIN) - 1
 			For $x = 0 To 4
-				If $g_bDebugSetlog Then SetDebugLog("$aResourcesIN[" & $i & "][" & $x & "]: " & $aResourcesIN[$i][$x], $COLOR_INFO)
+				SetDebugLog("$aResourcesIN[" & $i & "][" & $x & "]: " & $aResourcesIN[$i][$x], $COLOR_INFO)
 			Next
 		Next
 		For $i = 0 To UBound($aResourcesOUT) - 1
 			For $x = 0 To 4
-				If $g_bDebugSetlog Then SetDebugLog("$aResourcesOUT[" & $i & "][" & $x & "]: " & $aResourcesOUT[$i][$x], $COLOR_INFO)
+				SetDebugLog("$aResourcesOUT[" & $i & "][" & $x & "]: " & $aResourcesOUT[$i][$x], $COLOR_INFO)
 			Next
 		Next
 	EndIf
@@ -787,7 +787,7 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 EndFunc   ;==>AttackSmartFarm
 
 Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iChampion, $SIDESNAMES = "TR|TL|BR|BL")
-	If $g_bDebugSetlog Then SetDebugLog("LaunchTroopSmartFarm with CC " & $iCC & ", K " & $iKing & ", Q " & $iQueen & ", W " & $iWarden & ", C " & $iChampion, $COLOR_DEBUG)
+	SetDebugLog("LaunchTroopSmartFarm with CC " & $iCC & ", K " & $iKing & ", Q " & $iQueen & ", W " & $iWarden & ", C " & $iChampion, $COLOR_DEBUG)
 	Local $listListInfoDeployTroopPixel[0]
 	Local $pixelRandomDrop[2]
 	Local $pixelRandomDropcc[2]
@@ -875,20 +875,20 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 							If $g_aiDeployHeroesPosition[0] <> -1 Then
 								$pixelRandomDrop[0] = $g_aiDeployHeroesPosition[0]
 								$pixelRandomDrop[1] = $g_aiDeployHeroesPosition[1]
-								If $g_bDebugSetlog Then SetDebugLog("Deploy Heroes $g_aiDeployHeroesPosition")
+								SetDebugLog("Deploy Heroes $g_aiDeployHeroesPosition")
 							Else
 								$pixelRandomDrop[0] = $g_aaiBottomRightDropPoints[2][0]
 								$pixelRandomDrop[1] = $g_aaiBottomRightDropPoints[2][1]
-								If $g_bDebugSetlog Then SetDebugLog("Deploy Heroes $g_aaiBottomRightDropPoints")
+								SetDebugLog("Deploy Heroes $g_aaiBottomRightDropPoints")
 							EndIf
 							If $g_aiDeployCCPosition[0] <> -1 Then
 								$pixelRandomDropcc[0] = $g_aiDeployCCPosition[0]
 								$pixelRandomDropcc[1] = $g_aiDeployCCPosition[1]
-								If $g_bDebugSetlog Then SetDebugLog("Deploy CC $g_aiDeployHeroesPosition")
+								SetDebugLog("Deploy CC $g_aiDeployHeroesPosition")
 							Else
 								$pixelRandomDropcc[0] = $g_aaiBottomRightDropPoints[2][0]
 								$pixelRandomDropcc[1] = $g_aaiBottomRightDropPoints[2][1]
-								If $g_bDebugSetlog Then SetDebugLog("Deploy CC $g_aaiBottomRightDropPoints")
+								SetDebugLog("Deploy CC $g_aaiBottomRightDropPoints")
 							EndIf
 							If ($g_bIsCCDropped = False And $infoTroopListArrPixel[0] = "CC" And $i = $numberSidesDropTroop - 1) Then
 								$sSide = Side($pixelRandomDropcc)
@@ -1185,7 +1185,7 @@ Func DropTroopSmartFarm($troop, $nbSides, $number, $slotsPerEdge = 0, $name = ""
 			For $x = 0 To UBound($g_sRandomSidesNames) - 1
 				For $i = 0 To UBound($iTempSides) - 1
 					If $g_sRandomSidesNames[$x] = $iTempSides[$i] Then
-						If $g_bDebugSetlog Then SetDebugLog("$iTempSides[" & $i & "] : " & $iTempSides & " $g_sRandomSidesNames[" & $x & "]: " & $g_sRandomSidesNames[$x])
+						SetDebugLog("$iTempSides[" & $i & "] : " & $iTempSides & " $g_sRandomSidesNames[" & $x & "]: " & $g_sRandomSidesNames[$x])
 						ReDim $listInfoPixelDropTroop[UBound($listInfoPixelDropTroop) + 1]
 						$listInfoPixelDropTroop[UBound($listInfoPixelDropTroop) - 1] = $TEMPlistInfoPixelDropTroop[$x]
 						ExitLoop
@@ -1198,7 +1198,7 @@ Func DropTroopSmartFarm($troop, $nbSides, $number, $slotsPerEdge = 0, $name = ""
 			SetDebugLog("Original $SIDESNAMES: " & $SIDESNAMES)
 			For $x = 0 To UBound($g_sRandomSidesNames) - 1
 				If $SIDESNAMES = $g_sRandomSidesNames[$x] Then
-					If $g_bDebugSetlog Then SetDebugLog("$SIDESNAMES : " & $SIDESNAMES & " $g_sRandomSidesNames[" & $x & "]: " & $g_sRandomSidesNames[$x])
+					SetDebugLog("$SIDESNAMES : " & $SIDESNAMES & " $g_sRandomSidesNames[" & $x & "]: " & $g_sRandomSidesNames[$x])
 					$listInfoPixelDropTroop[0] = $TEMPlistInfoPixelDropTroop[$x]
 				EndIf
 			Next
@@ -1423,18 +1423,18 @@ Func _GreenTiles($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = "FV", $bFo
 	$extError = @extended
 	If $error Then
 		_logErrorDLLCall($g_sLibMyBotPath, $error)
-		If $g_bDebugSetlog Then SetDebugLog(" imgloc DLL Error : " & $error & " --- " & $extError)
+		SetDebugLog(" imgloc DLL Error : " & $error & " --- " & $extError)
 		SetError(2, $extError, $aCoords) ; Set external error code = 2 for DLL error
 		Return -1
 	EndIf
 
 	If checkImglocError($result, "_GreenTiles", $sDirectory) = True Then
-		If $g_bDebugSetlog Then SetDebugLog("_GreenTiles Returned Error or No values : ", $COLOR_DEBUG)
+		SetDebugLog("_GreenTiles Returned Error or No values : ", $COLOR_DEBUG)
 		Return -1
 	EndIf
 
 	Local $resultArr = StringSplit($result[0], "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
-	If $g_bDebugSetlog Then SetDebugLog(" ***  _GreenTiles multiples **** ", $COLOR_ORANGE)
+	SetDebugLog(" ***  _GreenTiles multiples **** ", $COLOR_ORANGE)
 
 	; Distance in pixels to check if is a duplicated detection , for deploy point will be 5
 	Local $iD2C = $iDistance2check

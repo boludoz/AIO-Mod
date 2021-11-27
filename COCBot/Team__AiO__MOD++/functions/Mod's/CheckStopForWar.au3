@@ -102,10 +102,10 @@ Func CheckStopForWar()
 		Else
 
 			Local $iBattleEndTime = _DateDiff("h", _NowCalc(), $sBattleEndTime) ; in hours
-			If $g_bDebugSetlog Then SetDebugLog("$iBattleEndTime: " & Round($iBattleEndTime, 2) & " hours")
+			SetDebugLog("$iBattleEndTime: " & Round($iBattleEndTime, 2) & " hours")
 
 			Local $iTimerToStop = $iBattleEndTime - 24 + Number($g_iStopTime)
-			If $g_bDebugSetlog Then SetDebugLog("$iTimerToStop: " & Round($iTimerToStop, 2) & " hours")
+			SetDebugLog("$iTimerToStop: " & Round($iTimerToStop, 2) & " hours")
 
 			If $iTimerToStop > 0 Then
 				$sTimeToRecheck = _DateAdd("h", $iTimerToStop, _NowCalc())
@@ -165,7 +165,7 @@ Func CheckWarTime(ByRef $sResult, ByRef $bResult, $bReturnFrom = True) ; return 
 	$g_bClanWarLeague = _ColorCheck(_GetPixelColor(10, 510, False), "FFED71", 20) ; Golden color at left side of clan war button
 	$g_bClanWar = _ColorCheck(_GetPixelColor(36, 502, False), "F0B345", 20) ; Ordinary war color at left side of clan war button
 	If $g_bClanWarLeague Then SetDebugLog("Your Clan Is Doing Clan War League.", $COLOR_INFO)
-	If $g_bDebugSetlog Then SetDebugLog("Checking battle notification, $bBattleDay_InWar = " & $bBattleDay_InWar)
+	SetDebugLog("Checking battle notification, $bBattleDay_InWar = " & $bBattleDay_InWar)
 	
 	Click(40, 530) ; open war menu
 	
@@ -190,7 +190,7 @@ Func CheckWarTime(ByRef $sResult, ByRef $bResult, $bReturnFrom = True) ; return 
 		Else
 			If $g_bClanWarLeague Then
 				If QuickMIS("BC1", $directoryDay & "\CWL_Preparation", 175, 645, 175 + 515, 645 + 30, True) Then ; By Default Battle Days Opens So Find Prepration Button
-					If $g_bDebugSetlog Then SetDebugLog("CWL Enter In Preparation page")
+					SetDebugLog("CWL Enter In Preparation page")
 					Click($g_iQuickMISX + 175, $g_iQuickMISY + 645, 1)
 					If _Sleep(500) Then Return
 					If Not IsWarMenu() Then
@@ -198,7 +198,7 @@ Func CheckWarTime(ByRef $sResult, ByRef $bResult, $bReturnFrom = True) ; return 
 						$bLocalReturn = SetError(1, 0, "Error Open CWL Preparation page")
 					EndIf
 				ElseIf QuickMIS("BC1", $directoryDay & "\CWL_Battle", 175, 645, 175 + 515, 645 + 30, True) Then ; When Battle Day Is Unselected
-					If $g_bDebugSetlog Then SetDebugLog("CWL Enter In Battle page")
+					SetDebugLog("CWL Enter In Battle page")
 					Click($g_iQuickMISX + 175, $g_iQuickMISY + 645, 1)
 					If _Sleep(500) Then Return
 					If Not IsWarMenu() Then
@@ -209,7 +209,7 @@ Func CheckWarTime(ByRef $sResult, ByRef $bResult, $bReturnFrom = True) ; return 
 			EndIf
 			$sWarDay = QuickMIS("N1", $directoryDay, 360, 85, 360 + 145, 85 + 28, True) ; Prepare or Battle
 			$bResult = Not (QuickMIS("BC1", $directoryDay, 359, 127, 510, 154, True)) ; $bInWar.... Fixed (08/2019)
-			If $g_bDebugSetlog Then SetDebugLog("$sResult QuickMIS N1/BC1: " & $sWarDay & "/ " & $bResult)
+			SetDebugLog("$sResult QuickMIS N1/BC1: " & $sWarDay & "/ " & $bResult)
 			If $sWarDay = "none" Then 
 				$bLocalReturn =  SetError(1, 0, "Error reading war day")
 			EndIf
@@ -220,7 +220,7 @@ Func CheckWarTime(ByRef $sResult, ByRef $bResult, $bReturnFrom = True) ; return 
 			$bLocalReturn = False
 		Else
 			$sTime = QuickMIS("OCR", $directoryTime, 396, 65, 396 + 70, 70 + 30, True)
-			If $g_bDebugSetlog Then SetDebugLog("$sResult QuickMIS OCR: " & ($bBattleDay_InWar ? $sWarDay & ", " : "") & $sTime)
+			SetDebugLog("$sResult QuickMIS OCR: " & ($bBattleDay_InWar ? $sWarDay & ", " : "") & $sTime)
 			If $sTime = "none" Then Return SetError(1, 0, "Error reading war time")
 
 			Local $iConvertedTime = ConvertOCRTime("War", $sTime, False)

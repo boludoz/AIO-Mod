@@ -21,7 +21,7 @@ Func CheckFarmSchedule()
 
 	If $g_bFirstStart And $iStartHour = -1 Then $iStartHour = @HOUR
 	Local $bActionDone = False
-	If $g_bDebugSetlog Then SetDebugLog("Checking Farm Schedule...", $COLOR_DEBUG)
+	SetDebugLog("Checking Farm Schedule...", $COLOR_DEBUG)
 
 	For $i = 0 To 7
 		If $i > $g_iTotalAcc Then ExitLoop
@@ -30,7 +30,7 @@ Func CheckFarmSchedule()
 			$aiActionDone[$i] = 0
 			$iStartHour = -1
 			If $i >= _Min($g_iTotalAcc, 7) Then $iDay = @YDay
-			If $g_bDebugSetlog Then SetDebugLog("New day is coming $iDay/ @YDay : " & $iDay & "/ " & @YDay, $COLOR_DEBUG)
+			SetDebugLog("New day is coming $iDay/ @YDay : " & $iDay & "/ " & @YDay, $COLOR_DEBUG)
 		EndIf
 		If $g_abChkSetFarm[$i] Then
 			Local $iAction = -1
@@ -39,7 +39,7 @@ Func CheckFarmSchedule()
 			Local $iTimer1 = 25, $iTimer2 = 25
 			If $g_aiCmbAction1[$i] >= 1 And $g_aiCmbCriteria1[$i] = 5 And $g_aiCmbTime1[$i] >= 0 Then $iTimer1 = Number($g_aiCmbTime1[$i])
 			If $g_aiCmbAction2[$i] >= 1 And $g_aiCmbCriteria2[$i] = 5 And $g_aiCmbTime2[$i] >= 0 Then $iTimer2 = Number($g_aiCmbTime2[$i])
-			If $g_bDebugSetlog Then SetDebugLog($i + 1 & ". $iTimer1: " & $iTimer1 & ", $iTimer2: " & $iTimer2 & ", Max: " & _Max($iTimer1, $iTimer2) & ", Min: " & _Min($iTimer1, $iTimer2) & ", ActionDone: " & $aiActionDone[$i], $COLOR_DEBUG)
+			SetDebugLog($i + 1 & ". $iTimer1: " & $iTimer1 & ", $iTimer2: " & $iTimer2 & ", Max: " & _Max($iTimer1, $iTimer2) & ", Min: " & _Min($iTimer1, $iTimer2) & ", ActionDone: " & $aiActionDone[$i], $COLOR_DEBUG)
 
 			If @HOUR < _Min($iTimer1, $iTimer2) Then ; both timers are ahead.
 				;Do nothing
@@ -55,7 +55,7 @@ Func CheckFarmSchedule()
 						$aiActionDone[$i] = 2
 					EndIf
 				EndIf
-				If $g_bDebugSetlog Then SetDebugLog($i + 1 & ". @HOUR (<): " & @HOUR & ", ActionDone: " & $aiActionDone[$i] & ", StartHour: " &$iStartHour & ", Action: " & $iAction, $COLOR_DEBUG)
+				SetDebugLog($i + 1 & ". @HOUR (<): " & @HOUR & ", ActionDone: " & $aiActionDone[$i] & ", StartHour: " &$iStartHour & ", Action: " & $iAction, $COLOR_DEBUG)
 			Else ; passed both timers
 				If $iTimer1 < $iTimer2 Then
 					If $aiActionDone[$i] <> 2 And $iStartHour < $iTimer2 Then
@@ -68,7 +68,7 @@ Func CheckFarmSchedule()
 						$aiActionDone[$i] = 1
 					EndIf
 				EndIf
-				If $g_bDebugSetlog Then SetDebugLog($i + 1 & ". @HOUR (>): " & @HOUR & ", ActionDone: " & $aiActionDone[$i] & ", StartHour: " &$iStartHour & ", Action: " & $iAction, $COLOR_DEBUG)
+				SetDebugLog($i + 1 & ". @HOUR (>): " & @HOUR & ", ActionDone: " & $aiActionDone[$i] & ", StartHour: " &$iStartHour & ", Action: " & $iAction, $COLOR_DEBUG)
 			EndIf
 
 			; Check resource criteria for current account
@@ -192,14 +192,14 @@ Func CheckLastActiveAccount($i)
 					Local $ConvertTime2 = $g_aiCmbTime2[$i] + $g_aiCmbTime2[$i] <= @HOUR ? 24 : 0
 					If $iSoonestTimer = -1 Or $iSoonestTimer > $ConvertTime2 Then $iSoonestTimer = $ConvertTime2
 				EndIf
-				If $g_bDebugSetlog Then SetDebugLog("@Hour: " & @HOUR & "Timers " & $i + 1 & ": " & $g_aiCmbTime1[$i] & " / " & $g_aiCmbTime2[$i] & ". $iSoonestTimer = " & $iSoonestTimer)
+				SetDebugLog("@Hour: " & @HOUR & "Timers " & $i + 1 & ": " & $g_aiCmbTime1[$i] & " / " & $g_aiCmbTime2[$i] & ". $iSoonestTimer = " & $iSoonestTimer)
 			EndIf
 		Next
-		If $g_bDebugSetlog Then SetDebugLog("$iSoonestTimer = " & $iSoonestTimer)
+		SetDebugLog("$iSoonestTimer = " & $iSoonestTimer)
 		If $iSoonestTimer >= 0 Then $iSleeptime = ($iSoonestTimer - $iCurrentTime) * 60
 	EndIf
 
-	If $g_bDebugSetlog Then SetDebugLog("$iSleeptime: " & Round($iSleeptime, 2) & " m")
+	SetDebugLog("$iSleeptime: " & Round($iSleeptime, 2) & " m")
 
 	Return $iSleeptime
 

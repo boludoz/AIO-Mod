@@ -56,7 +56,7 @@ Func GetPixelDropTroop($Troop, $Number, $slotsPerEdge)
 	Local $g_aaiEdgeDropPointsPixelToDrop[4]
 	For $x = 0 To UBound($g_aaiEdgeDropPointsPixelToDrop) - 1
 		$g_aaiEdgeDropPointsPixelToDrop[$x] = $NumberArray[$g_iRandomSides[$x]]
-		If $g_bDebugSetlog Then SetDebugLog("$g_aaiEdgeDropPointsPixelToDrop[" & $x & "] : $g_iRandomSides[$x]: " & $g_iRandomSides[$x] & " name:" & $g_sRandomSidesNames[$x])
+		SetDebugLog("$g_aaiEdgeDropPointsPixelToDrop[" & $x & "] : $g_iRandomSides[$x]: " & $g_iRandomSides[$x] & " name:" & $g_sRandomSidesNames[$x])
 	Next
 	Return $g_aaiEdgeDropPointsPixelToDrop
 EndFunc   ;==>GetPixelDropTroop

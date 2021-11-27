@@ -254,7 +254,7 @@ EndFunc   ;==>UpdateStatusBar
 
 #Region - Custom BB - Team AIO Mod++
 Func CheckPostponedLog($bNow = False)
-	;If $g_bDebugSetlog Then SetDebugLog("CheckPostponedLog: Entered, $bNow=" & $bNow & ", count=" & $g_oTxtLogInitText.Count & ", $g_hTxtLog=" & $g_hTxtLog & ", $g_iGuiMode=" & $g_iGuiMode)
+	;SetDebugLog("CheckPostponedLog: Entered, $bNow=" & $bNow & ", count=" & $g_oTxtLogInitText.Count & ", $g_hTxtLog=" & $g_hTxtLog & ", $g_iGuiMode=" & $g_iGuiMode)
 	Local $iLogs = 0
 	If $g_bCriticalMessageProcessing Or ($bNow = False And __TimerDiff($g_hTxtLogTimer) < $g_iTxtLogTimerTimeout) Then Return 0
 
@@ -306,7 +306,7 @@ Func CreateBBAttackLogFile()
 	Local $sBBAttackLogFName = "BBAttackLog" & "-" & @YEAR & "-" & @MON & ".log"
 	Local $sBBAttackLogPath = $g_sProfileLogsPath & $sBBAttackLogFName
 	$g_hBBAttackLogFile = FileOpen($sBBAttackLogPath, $FO_APPEND)
-	If $g_bDebugSetlog Then SetDebugLog("Created BB attack log file: " & $sBBAttackLogPath)
+	SetDebugLog("Created BB attack log file: " & $sBBAttackLogPath)
 EndFunc   ;==>CreateBBAttackLogFile
 #EndRegion - Custom BB - Team AIO Mod++
 

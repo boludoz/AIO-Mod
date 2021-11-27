@@ -106,7 +106,7 @@ Func BotStart($bAutostartDelay = 0)
 	If WinGetAndroidHandle() = 0 Then
 		$Result = OpenAndroid(False)
 	EndIf
-	If $g_bDebugSetlog Then SetDebugLog("Android Window Handle: " & WinGetAndroidHandle())
+	SetDebugLog("Android Window Handle: " & WinGetAndroidHandle())
 	If $g_hAndroidWindow <> 0 Then ;Is Android open?
 		If Not $g_bRunState Then Return FuncReturn()
 		If $g_bAndroidBackgroundLaunched = True Or AndroidControlAvailable() Then ; Really?

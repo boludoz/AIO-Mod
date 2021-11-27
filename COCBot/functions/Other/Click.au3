@@ -264,9 +264,8 @@ Func AttackClick($x, $y, $times = 1, $speed = 0, $afterDelay = 0, $debugtxt = ""
 EndFunc   ;==>AttackClick
 
 #Region - ClickAway - Team AIO Mod++
-Func ClickAway($bForce = Default, $bRight = Default, $eTimes = Default)
+Func ClickAway($sRegion = Default, $bForce = Default, $eTimes = Default)
 	If $bForce = Default Then $bForce = False
-	If $bRight = Default Then $bRight = $g_bStayOnBuilderBase
 	If $eTimes = Default Then $eTimes = 1
 
 	Local $bDo = True
@@ -291,11 +290,16 @@ Func ClickAway($bForce = Default, $bRight = Default, $eTimes = Default)
 	If $bDo = False Then Return False
 
 	Local $aiRegionToUse = 0
-	If $bRight = True Then
-		$aiRegionToUse = $aiClickAwayRegionRight
+	If $sRegion = Default Then
+		$aiRegionToUse = (Random(0, 100, 1) > 50) ? ($aiClickAwayRegionLeft) : ($aiClickAwayRegionRight)
 	Else
-		$aiRegionToUse = (Random(0, 1, 1) > 0) ? ($aiClickAwayRegionLeft) : ($aiClickAwayRegionRight)
+		If $sRegion = "Left" Then
+			$aiRegionToUse = $aiClickAwayRegionLeft
+		ElseIf $sRegion = "Right" Then
+			$aiRegionToUse = $aiClickAwayRegionRight
+		EndIf
 	EndIf
+	
 	Local $aiSpot[2] = [Random($aiRegionToUse[0], $aiRegionToUse[2], 1), Random($aiRegionToUse[1], $aiRegionToUse[3], 1)]
 	If $g_bDebugClick = True Then
 		SetLog("ClickAway(): on X:" & $aiSpot[0] & ", Y:" & $aiSpot[1], $COLOR_ACTION)

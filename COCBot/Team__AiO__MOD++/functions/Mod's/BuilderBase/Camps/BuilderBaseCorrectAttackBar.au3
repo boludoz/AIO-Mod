@@ -341,7 +341,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 				EndIf
 			Next
 			_ArraySort($aNewAvailableTroops, 0, 0, 0, 1)
-			If $g_bDebugSetlog Then SetDebugLog("New Army is " & _ArrayToString($aNewAvailableTroops, "-", -1, -1, "|", -1, -1), $COLOR_INFO)
+			SetDebugLog("New Army is " & _ArrayToString($aNewAvailableTroops, "-", -1, -1, "|", -1, -1), $COLOR_INFO)
 		Else
 			Click(8, 720, 1)
 			Return False

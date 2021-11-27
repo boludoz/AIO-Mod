@@ -15,7 +15,7 @@
 ; ===============================================================================================================================
 Func WaitForClouds()
 
-	If $g_bDebugSetlog Then SetDebugLog("Begin WaitForClouds:", $COLOR_DEBUG1)
+	SetDebugLog("Begin WaitForClouds:", $COLOR_DEBUG1)
 	$g_bCloudsActive = True
 
 	Local $iCount = 0
@@ -94,7 +94,7 @@ Func WaitForClouds()
 			_CaptureRegion()
 			$iSubCount += 1
 			If _Sleep($DELAYATTACKREPORT1) Then Return
-			If $g_bDebugSetlog Then SetDebugLog("Waiting WaitForClouds, " & ($iCount / 2) & " Seconds.", $COLOR_DEBUG)
+			SetDebugLog("Waiting WaitForClouds, " & ($iCount / 2) & " Seconds.", $COLOR_DEBUG)
 			If $iSubCount > 3 Then
 				SetLog("Error: Main screen detected! 'WaitforClouds'.", $COLOR_ERROR)
 				$g_bBadPrepareSearch = True
@@ -156,10 +156,10 @@ Func EnableLongSearch()
 	Local $result = ""
 	Static $aKeepAlive[2] = [271, 351 + $g_iMidOffsetY]
 
-	If $g_bDebugSetlog Then SetDebugLog("Begin EnableLongSearch:", $COLOR_DEBUG1)
+	SetDebugLog("Begin EnableLongSearch:", $COLOR_DEBUG1)
 
 	If Int($g_aiCurrentLoot[$eLootTrophy]) < 3700 Then ; If not searching Champion 1 or higher, skip long waiting to return and restart due error
-		If $g_bDebugSetlog Then SetDebugLog("Long cloud search not enabled due trophy count: " & $g_aiCurrentLoot[$eLootTrophy], $COLOR_DEBUG)
+		SetDebugLog("Long cloud search not enabled due trophy count: " & $g_aiCurrentLoot[$eLootTrophy], $COLOR_DEBUG)
 		Return False
 	EndIf
 
@@ -185,7 +185,7 @@ Func EnableLongSearch()
 		If chkAttackSearchFail() = 1 Then Return True ; OCR text for search fail message, and press retry if available, success continue searching
 
 		If chkSearchText() = False Then
-			If $g_bDebugSetlog Then SetDebugLog("Cloud Search Text not found...", $COLOR_DEBUG)
+			SetDebugLog("Cloud Search Text not found...", $COLOR_DEBUG)
 			Return False
 		Else
 			ClickP($aKeepAlive, 1, 0, "#0514") ; click on text just to keep game alive
@@ -266,7 +266,7 @@ Func chkSurrenderBtn($bCapture = True)
 	For $iCount = 0 To 60
 		If $bCapture = True Then _CaptureRegion()
 		If _CheckPixel( (Mod($iCount, 2) = 0) ? ($aSurrenderButton) : ($aSurrenderButtonFixed), False, Default, "Surrender btn wait #" & $iCount, $COLOR_DEBUG) = True Then
-			If $g_bDebugSetlog Then SetDebugLog("Surrender button found, clouds gone, continue...", $COLOR_DEBUG)
+			SetDebugLog("Surrender button found, clouds gone, continue...", $COLOR_DEBUG)
 			Return True
 		EndIf
 

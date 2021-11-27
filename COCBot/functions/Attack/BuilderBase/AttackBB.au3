@@ -234,7 +234,7 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB(), $bRemainCSV = False)
 	Until Not IsArray($aBBAttackBar)
 	SetLog("All Troops Deployed", $COLOR_SUCCESS)
 
-	If $g_bDebugSetlog Then SetDebugLog("Android Suspend Mode Enabled")
+	SetDebugLog("Android Suspend Mode Enabled")
 EndFunc   ;==>AttackBB
 
 Func Okay()

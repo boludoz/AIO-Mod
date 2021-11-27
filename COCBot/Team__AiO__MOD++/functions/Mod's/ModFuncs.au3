@@ -77,7 +77,7 @@ Func IsToRequestCC($ClickPAtEnd = True, $bSetLog = False, $bNeedCapture = True)
 			$aCCRequestCoords = StringSplit($aTempCCRequestArray[1], ",", $STR_NOCOUNT) ; Split the Coordinates where the Button got found into X and Y
 
 			If $g_bDebugSetlog Then
-				If $g_bDebugSetlog Then SetDebugLog($aTempCCRequestArray[0] & " Found on Coord: (" & $aCCRequestCoords[0] & "," & $aCCRequestCoords[1] & ")")
+				SetDebugLog($aTempCCRequestArray[0] & " Found on Coord: (" & $aCCRequestCoords[0] & "," & $aCCRequestCoords[1] & ")")
 			EndIf
 
 			If $aTempCCRequestArray[0] = "RequestFilled" Then ; Clan Castle Full
@@ -88,7 +88,7 @@ Func IsToRequestCC($ClickPAtEnd = True, $bSetLog = False, $bNeedCapture = True)
 				$g_bCanRequestCC = False
 			ElseIf $aTempCCRequestArray[0] = "CanRequest" Then ; Can make a request
 				If Not $g_abRequestType[0] And Not $g_abRequestType[1] And Not $g_abRequestType[2] Then
-					If $g_bDebugSetlog Then SetDebugLog("Request for Specific CC is not enable!", $COLOR_INFO)
+					SetDebugLog("Request for Specific CC is not enable!", $COLOR_INFO)
 					$bNeedRequest = True
 				ElseIf Not $ClickPAtEnd Then
 					$bNeedRequest = True
@@ -150,16 +150,16 @@ Func IsFile($sFilePath)
 EndFunc   ;==>IsDir
 Func SecureClick($x, $y)
 	If $x < 68 And $y > 316 Then ; coordinates where the game will click on the CHAT tab (safe margin)
-		If $g_bDebugSetlog Then SetDebugLog("Coordinate Inside Village, but Exclude CHAT")
+		SetDebugLog("Coordinate Inside Village, but Exclude CHAT")
 		Return False
 	ElseIf $y < 63 Then ; coordinates where the game will click on the BUILDER button or SHIELD button (safe margin)
-		If $g_bDebugSetlog Then SetDebugLog("Coordinate Inside Village, but Exclude BUILDER")
+		SetDebugLog("Coordinate Inside Village, but Exclude BUILDER")
 		Return False
 	ElseIf $x > 692 And $y > 156 And $y < 210 Then ; coordinates where the game will click on the GEMS button (safe margin)
-		If $g_bDebugSetlog Then SetDebugLog("Coordinate Inside Village, but Exclude GEMS")
+		SetDebugLog("Coordinate Inside Village, but Exclude GEMS")
 		Return False
 	ElseIf $x > 669 And $y > 489 Then ; coordinates where the game will click on the SHOP button (safe margin)
-		If $g_bDebugSetlog Then SetDebugLog("Coordinate Inside Village, but Exclude SHOP")
+		SetDebugLog("Coordinate Inside Village, but Exclude SHOP")
 		Return False
 	EndIf
 	Return True

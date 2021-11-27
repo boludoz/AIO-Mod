@@ -41,14 +41,14 @@ Func CleanBBYard()
 			Local $bNoBuilders = $g_iFreeBuilderCountBB < 1
 			If $g_iFreeBuilderCountBB > 0 And $g_bChkCleanBBYard = True And Number($g_aiCurrentLootBB[$eLootElixirBB]) > 50000 Then
 				Local $aCleanYardBBNXY = findMultipleQuick($g_sImgCleanBBYard, 0, "FV", Default, Default, Default, 5)
-				If $g_bDebugSetlog Then SetDebugLog("Benchmark Image Detection Of Builder Base Clean Yard: " & Round(_Timer_Diff($hStarttime), 2) & "'ms")
+				SetDebugLog("Benchmark Image Detection Of Builder Base Clean Yard: " & Round(_Timer_Diff($hStarttime), 2) & "'ms")
 				If UBound($aCleanYardBBNXY) > 0 And not @error Then
 					_ArrayShuffle($aCleanYardBBNXY)
 					SetDebugLog("Total Obstacles Found: " & UBound($aCleanYardBBNXY))
 					For $i = 0 To UBound($aCleanYardBBNXY) - 1
 						$iObstacleRemoved += 1
 						SetLog("Going to remove Builder Base Obstacle: " & $iObstacleRemoved, $COLOR_SUCCESS)
-						If $g_bDebugSetlog Then SetDebugLog($aCleanYardBBNXY[$i][0] & " found at (" & $aCleanYardBBNXY[$i][1] & "," & $aCleanYardBBNXY[$i][2] & ")", $COLOR_SUCCESS)
+						SetDebugLog($aCleanYardBBNXY[$i][0] & " found at (" & $aCleanYardBBNXY[$i][1] & "," & $aCleanYardBBNXY[$i][2] & ")", $COLOR_SUCCESS)
 						If SecureClick($aCleanYardBBNXY[$i][1], $aCleanYardBBNXY[$i][2]) = False Then ContinueLoop
 						$aPoly = ($g_bEdgeObstacle = False) ? ($g_aBuilderBaseAttackPolygon) : ($g_aBuilderBaseOuterPolygon)
 						If InDiamondBB($aCleanYardBBNXY[$i][1], $aCleanYardBBNXY[$i][2], $aPoly) = False Then ContinueLoop
@@ -99,7 +99,7 @@ Func CleanBBYard()
 				SetLog("Builder not available to remove Builder Base Obstacles!")
 			Else
 				If $iObstacleRemoved = 0 And $g_bChkCleanBBYard And Number($g_aiCurrentLootBB[$eLootElixirBB]) > 50000 Then SetLog("No Obstacles found, Builder Base Yard is clean!", $COLOR_SUCCESS)
-				If $g_bDebugSetlog Then SetDebugLog("Took Time: " & Round(__TimerDiff($hObstaclesTimer) / 1000, 2) & "'s", $COLOR_SUCCESS)
+				SetDebugLog("Took Time: " & Round(__TimerDiff($hObstaclesTimer) / 1000, 2) & "'s", $COLOR_SUCCESS)
 			EndIf
 		EndIf
 		ClickAway()

@@ -61,13 +61,13 @@ Func _LocateLab($bForceOff = True)
 						ContinueLoop
 					Case $iStupid > 4
 						SetLog(" Operator Error - Bad Laboratory Location.", $COLOR_ERROR)
-						ClickAway(True)
+						ClickAway(Default, True)
 						Return False
 					Case Else
 						SetLog(" Operator Error - Bad Laboratory Location.", $COLOR_ERROR)
 						$g_aiLaboratoryPos[0] = -1
 						$g_aiLaboratoryPos[1] = -1
-						ClickAway(True)
+						ClickAway(Default, True)
 						Return False
 				EndSelect
 			EndIf
@@ -98,7 +98,7 @@ Func _LocateLab($bForceOff = True)
 						SetLog("Quit joking, Click the Army Camp, or restart bot and try again", $COLOR_ERROR)
 						$g_aiLaboratoryPos[0] = -1
 						$g_aiLaboratoryPos[1] = -1
-						ClickAway(True)
+						ClickAway(Default, True)
 						Return False
 				EndSelect
 			EndIf

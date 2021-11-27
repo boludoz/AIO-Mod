@@ -66,7 +66,7 @@ Func BuilderBaseAttack($bTestRun = False)
 	; Check if is present bonus OCR.
 	If IsBuilderBaseOCR(ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3, False)) Then
 		If ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3, False) = True And Not PlayBBOnly() Then
-			ClickAway(True)
+			ClickAway(Default, True)
 			If RandomSleep(1500) Then Return
 			Return False
 		EndIf
@@ -189,7 +189,7 @@ Func CheckAttackBtn()
 			Click(Random(16, 107, 1), Random(627, 713, 1), 1)
 		Else
 			SetLog("Attack Button not available.", $COLOR_ERROR)
-			ClickAway(True)
+			ClickAway(Default, True)
 			Return False
 		EndIf
 	EndIf
@@ -211,7 +211,7 @@ Func isOnVersusBattleWindow()
 			Click($aOkayBTN[0] + Random(5, 10, 1), $aOkayBTN[1] + Random(5, 10, 1))
 		ElseIf Not BuilderBaseAttackOppoWait() Then
 			SetLog("Versus Battle window not available.", $COLOR_WARNING)
-			ClickAway(True)
+			ClickAway(Default, True)
 			Return False
 		EndIf
 	EndIf

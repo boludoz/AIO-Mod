@@ -161,7 +161,7 @@ Func CollectMagicItems($bDebug = False)
 				
 			Else
 				SetLog("No acquirable items were found.", $COLOR_ERROR)
-				ClickAway(True)     ;Click Away
+				ClickAway(Default, True)     ;Click Away
 			EndIf
 		Else
 			SetLog("CollectMagicItems : badly.", $COLOR_ERROR)

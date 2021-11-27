@@ -53,7 +53,7 @@ EndFunc   ;==>IsRequestDefense
 
 Func RemoveCCTroopBeforeDefenseRequest()
 	If Not $g_bRequestCCDefense Or Not $g_bChkRemoveCCForDefense Then
-		If $g_bDebugSetlog Then SetDebugLog("RemoveCCTroopBeforeDefenseRequest->> $g_bRequestCCDefense: " & $g_bRequestCCDefense & " | " & "$g_bCanRequestCC: " & $g_bCanRequestCC & " | " & "$g_bChkRemoveCCForDefense: " & $g_bChkRemoveCCForDefense)
+		SetDebugLog("RemoveCCTroopBeforeDefenseRequest->> $g_bRequestCCDefense: " & $g_bRequestCCDefense & " | " & "$g_bCanRequestCC: " & $g_bCanRequestCC & " | " & "$g_bChkRemoveCCForDefense: " & $g_bChkRemoveCCForDefense)
 		Return
 	EndIf
 	; CC troops

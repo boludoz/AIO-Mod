@@ -89,7 +89,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 	Local $bNetworkBadly = False ; Custom fix - Team AIO Mod++
 	If Not (IsReturnHomeBattlePage(True, False)) Then ; check if battle is already over
 		For $i = 0 To 5 ; dynamic wait loop for surrender button to appear (if end battle or surrender button are not found in 5*(200)ms + 5*(200)ms or 3 seconds, then give up.)
-			If $g_bDebugSetlog Then SetDebugLog("Wait for surrender button to appear #" & $i)
+			SetDebugLog("Wait for surrender button to appear #" & $i)
 			
 			; Custom fix - Team AIO Mod++
 			_CaptureRegion2() ;to have FULL screen image to work with
@@ -113,7 +113,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 					ClickP($aiSurrenderButton, 1, 0, "#0099") ;Click Surrender
 					$j = 0
 					While 1 ; dynamic wait for Okay button
-						If $g_bDebugSetlog Then SetDebugLog("Wait for OK button to appear #" & $j)
+						SetDebugLog("Wait for OK button to appear #" & $j)
 						If IsEndBattlePage(False) Then
 							ClickOkay("SurrenderOkay") ; Click Okay to Confirm surrender
 							ExitLoop 2

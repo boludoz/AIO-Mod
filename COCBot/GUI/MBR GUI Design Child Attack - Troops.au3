@@ -785,20 +785,20 @@ Func CreateTrainTroops()
 			_GUICtrlComboBox_SetCurSel(-1, $i)
 			GUICtrlSetOnEvent(-1, "_GUITrainOrder")
 		$y += 26
+
 		$iCol += 1
-		If $iCol = Round($eTroopCount / 4) Then
+		If $iCol = 10 Then
 			$iCol = 0
 			$x += 100
-			If $i = Int($eTroopCount - 1) Then $x += 100
 			$y = $iStartY
 		EndIf
 	Next
 
-	$y += 40 + 190
-	$x = $iStartX
-	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnResetButton, $x, $y + 17, 16, 16)
+	$y += 49
+	$x = $iStartX + 20
+	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnResetButton, $x + 321, $y + 13, 16, 16)
 		GUICtrlSetOnEvent(-1, "BtnRemoveTroops")
-	$g_hChkCustomTrainOrderEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Order", "Order") , $x + 20, $y + 14, -1, -1)
+	$g_hChkCustomTrainOrderEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Order", "Order") , $x + 341, $y + 10, -1, -1)
 			GUICtrlSetOnEvent(-1, "CustomTrainOrderEnable")
 	$x = 170
 

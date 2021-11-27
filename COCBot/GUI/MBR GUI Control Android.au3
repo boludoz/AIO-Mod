@@ -167,9 +167,13 @@ EndFunc   ;==>cmbAndroidInstance
 Func getAllEmulators()
 	If $g_iGuiMode <> 1 Then Return False
 
-	Local $cmbString = ""
+	; Initial Var with all emulators , will populate the ComboBox UI
+	Local $sEmulatorString = ""
+
+	; Reset content , Emulator ComboBox var
 	GUICtrlSetData($g_hCmbAndroidEmulator, '')
 
+	; Bluestacks :
 	$__BlueStacks_isHyperV = False
 	$__BlueStacks_Version = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks\", "Version")
 	$__BlueStacks_Path = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks\", "InstallDir")
@@ -192,25 +196,41 @@ Func getAllEmulators()
 	ElseIf $__BlueStacks_isHyperV = True Then
 		$sBluestacks = "BlueStacks2|"
 	EndIf
-	$cmbString &= $sBluestacks
-	
+	$sEmulatorString &= $sBluestacks
+
+	; Nox :
 	Local $Version = RegRead($g_sHKLM & "\SOFTWARE" & $g_sWow6432Node & "\Microsoft\Windows\CurrentVersion\Uninstall\Nox\", "DisplayVersion")
 	If Not @error Then
-		$cmbString &= "Nox|"
+		$sEmulatorString &= "Nox|"
 	EndIf
+
+	; Memu :
 	Local $MEmuVersion = RegRead($g_sHKLM & "\SOFTWARE" & $g_sWow6432Node & "\Microsoft\Windows\CurrentVersion\Uninstall\MEmu\", "DisplayVersion")
 	If Not @error Then
-		$cmbString &= "MEmu|"
+		$sEmulatorString &= "MEmu|"
 	EndIf
+
+	; iTools
 	Local $iToolsVersion = RegRead($g_sHKLM & "\SOFTWARE" & $g_sWow6432Node & "\ThinkSky\iToolsAVM\", "DisplayVersion")
 	If Not @error Then
-		$cmbString &= "iTools|"
+		$sEmulatorString &= "iTools|"
 	EndIf
-	Local $result = StringRight($cmbString, 1)
-	If $result == "|" Then $cmbString = StringTrimRight($cmbString, 1)
-	If $g_bDebugAndroid Then SetLog("All Emulator found in your machine: " & $cmbString, $COLOR_INFO)
-	GUICtrlSetData($g_hCmbAndroidEmulator, $cmbString)
+	
+	Local $sResult = StringRight($sEmulatorString, 1)
+	If $sResult == "|" Then $sEmulatorString = StringTrimRight($sEmulatorString, 1)
+	If $sEmulatorString <> "" Then
+		Setlog("All Emulator found in your machine: " & $sEmulatorString)
+	Else
+		Setlog("No Emulator found in your machine")
+		Return
+	EndIf
+
+	GUICtrlSetData($g_hCmbAndroidEmulator, $sEmulatorString)
+
+	; $g_sAndroidEmulator Cosote Var to store the Emulator
 	_GUICtrlComboBox_SelectString($g_hCmbAndroidEmulator, $g_sAndroidEmulator)
+
+	; Lets get all Instances
 	getAllEmulatorsInstances()
 EndFunc   ;==>getAllEmulators
 

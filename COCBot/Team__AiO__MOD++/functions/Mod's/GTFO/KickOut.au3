@@ -90,7 +90,7 @@ Func MainKickout()
 
 					EndSelect
 
-					If $g_bDebugSetlog Then SetDebugLog("Is This member 2 Kick? " & $bIsKick, $COLOR_DEBUG)
+					SetDebugLog("Is This member 2 Kick? " & $bIsKick, $COLOR_DEBUG)
 					If Not $bIsKick Then ContinueLoop
 
 					Local $aFixC[4] = [18, $aXPStar[$i][2], 68, $aXPStar[$i][2] + 36]

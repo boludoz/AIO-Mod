@@ -169,15 +169,15 @@ Func BoostSuperTroop($bTest = False)
 														If $bBadTryPotion == False And $bBadTryDark == False Then
 															FinalBoostST($bBadTryPotion, $bBadTryDark, $bTest)
 														Else
-															ClickAway(True)
+															ClickAway(Default, True)
 															If _Sleep(1500) Then Return False
 														EndIf
 													Else
 														Setlog("Bad IsSTPageBoost.", $COLOR_ERROR)
-														ClickAway(True)
+														ClickAway(Default, True)
 														If _Sleep(1500) Then Return False
 														
-														ClickAway(True)
+														ClickAway(Default, True)
 														If _Sleep(1500) Then Return False
 														ExitLoop 3
 													EndIf
@@ -185,10 +185,10 @@ Func BoostSuperTroop($bTest = False)
 													#cs
 													If $bBadTryPotion == True And $bBadTryDark == True Then
 														Setlog("No resources for boost.", $COLOR_ERROR)
-														ClickAway(True)
+														ClickAway(Default, True)
 														If _Sleep(1500) Then Return False
 														
-														ClickAway(True)
+														ClickAway(Default, True)
 														If _Sleep(1500) Then Return False
 														ExitLoop 3
 													EndIf

@@ -178,7 +178,7 @@ Func BoostPotionMod($sName, $bDebug = False)
 				If $bDebug = False Then
 					Click(420, 418, 1)
 				Else
-					ClickAway(True)
+					ClickAway(Default, True)
 				EndIf
 				
 				SetLog("Potion used: " & $sName & ".", $COLOR_SUCCESS)

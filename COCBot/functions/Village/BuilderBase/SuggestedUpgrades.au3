@@ -149,7 +149,7 @@ Func MainSuggestedUpgradeCode($bDebug = $g_bDebugSetlog)
 	Local $iMinScroll2 = -1, $iMaxScroll2 = -1
 	Local $bAlreadyCheked = False
 
-	ClickAway(True)
+	ClickAway(Default, True)
 	If _Sleep(500) Then Return
 
 	If isOnBuilderBase(True) Then

@@ -90,7 +90,7 @@ Func _LocateQueenAltar($bFromButton = False)
 			$CountGetInfo += 1
 			If $CountGetInfo = 50 Then Return
 		WEnd
-		If $g_bDebugSetlog Then SetDebugLog($sInfo[1] & $sInfo[2])
+		SetDebugLog($sInfo[1] & $sInfo[2])
 		If @error Then Return SetError(0, 0, 0)
 		If $sInfo[0] > 1 Or $sInfo[0] = "" Then
 			If @error Then Return SetError(0, 0, 0)
@@ -211,7 +211,7 @@ Func _LocateKingAltar($bFromButton = False)
 			$CountGetInfo += 1
 			If $CountGetInfo = 50 Then Return
 		WEnd
-		If $g_bDebugSetlog Then SetDebugLog($sInfo[1] & $sInfo[2])
+		SetDebugLog($sInfo[1] & $sInfo[2])
 		If @error Then Return SetError(0, 0, 0)
 		If $sInfo[0] > 1 Or $sInfo[0] = "" Then
 			If (StringInStr($sInfo[1], "Barb") = 0) And (StringInStr($sInfo[1], "King") = 0) Then
@@ -335,7 +335,7 @@ Func _LocateWardenAltar($bFromButton = False)
 			$CountGetInfo += 1
 			If $CountGetInfo = 50 Then Return
 		WEnd
-		If $g_bDebugSetlog Then SetDebugLog($sInfo[1] & $sInfo[2])
+		SetDebugLog($sInfo[1] & $sInfo[2])
 		If @error Then Return SetError(0, 0, 0)
 		If $sInfo[0] > 1 Or $sInfo[0] = "" Then
 			If @error Then Return SetError(0, 0, 0)
@@ -456,7 +456,7 @@ Func _LocateChampionAltar($bFromButton = False)
 			$CountGetInfo += 1
 			If $CountGetInfo = 50 Then Return
 		WEnd
-		If $g_bDebugSetlog Then SetDebugLog($sInfo[1] & $sInfo[2])
+		SetDebugLog($sInfo[1] & $sInfo[2])
 		If @error Then Return SetError(0, 0, 0)
 		If $sInfo[0] > 1 Or $sInfo[0] = "" Then
 			If @error Then Return SetError(0, 0, 0)

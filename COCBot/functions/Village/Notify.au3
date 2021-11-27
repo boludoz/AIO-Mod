@@ -36,12 +36,12 @@ EndFunc   ;==>__WinHttpURLEncode
 
 
 Func NotifyRemoteControl()
-	If $g_bDebugSetlog Then SetDebugLog("Notify | NotifyRemoteControl()")
+	SetDebugLog("Notify | NotifyRemoteControl()")
 	If $g_bNotifyRemoteEnable = True Then NotifyRemoteControlProc()
 EndFunc   ;==>NotifyRemoteControl
 
 Func NotifyReport()
-	If $g_bDebugSetlog Then SetDebugLog("Notify | NotifyReport()")
+	SetDebugLog("Notify | NotifyReport()")
 	If $g_bNotifyAlertVillageReport = True Or $g_bNotifyAlertVillageReportDS = True Then
 		Local $text = $g_sNotifyOrigin & ":" & chr(10)
 		$text &= " [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-G_Info_01", "G") & "]: " & _NumberFormat($g_aiCurrentLoot[$eLootGold])
@@ -101,7 +101,7 @@ EndFunc   ;==>NotifyPendingActions
 ; ONLY PUSH TELEGRAM MSG
 Func NotifyPushToTelegram($pMessage)
 
-	If $g_bDebugSetlog Then SetDebugLog("NotifyPushToTelegram(" & $pMessage & " ): ")
+	SetDebugLog("NotifyPushToTelegram(" & $pMessage & " ): ")
 
 	If Not $g_bNotifyTGEnable Or $g_sNotifyTGToken = "" Then Return False
 
@@ -117,15 +117,15 @@ Func NotifyPushToTelegram($pMessage)
 		Local $SdtOut = InetRead($TELEGRAM_URL & $g_sNotifyTGToken & "/sendMessage?chat_id=" & $g_sTGChatID & "&text=" & $text, $INET_FORCERELOAD)
 		Local $eError = @error ; Save error - Custom fix - Team AIO Mod++
 		
-		If $g_bDebugSetlog Then SetDebugLog("Telegram sent msg:" & $TELEGRAM_URL & $g_sNotifyTGToken & "/sendMessage?chat_id=" & $g_sTGChatID & "&text=" & $text)
-		If $g_bDebugSetlog Then SetDebugLog("NotifyPushToTelegram Send Return code:" & @error)
-		;If $g_bDebugSetlog Then SetDebugLog("NotifyPushToTelegram Send Return SdtOut:" & $SdtOut)
+		SetDebugLog("Telegram sent msg:" & $TELEGRAM_URL & $g_sNotifyTGToken & "/sendMessage?chat_id=" & $g_sTGChatID & "&text=" & $text)
+		SetDebugLog("NotifyPushToTelegram Send Return code:" & @error)
+		;SetDebugLog("NotifyPushToTelegram Send Return SdtOut:" & $SdtOut)
 
 		If $eError Or $SdtOut = "" Then Return False
 		; Convert Binary to String/Json Format
 		Local $sCorrectStdOut = BinaryToString($SdtOut, 4)
 		If @error Or $sCorrectStdOut = "" Then Return False
-		If $g_bDebugSetlog Then SetDebugLog("NotifyPushToTelegram Send Return msg:" & $sCorrectStdOut)
+		SetDebugLog("NotifyPushToTelegram Send Return msg:" & $sCorrectStdOut)
 		; Json Format :
 		; {"ok":true,"result":{"message_id":XXX,"from":{"id":XXXXXXX,"is_bot":true,"first_name":"TH12","username":"TH12bot"},"chat":{"id":XXXXXXX,"first_name":"XXXXX","username":"XXXXXX","type":"private"},"date":XXXXXXXX,"text":"XXXXXXX"}}
 		; Parse message id from Json Format , just to confirm if all are ok
@@ -134,7 +134,7 @@ Func NotifyPushToTelegram($pMessage)
 			SetDebugLog("NotifyPushToTelegram Send Error!: " & $sCorrectStdOut)
 			Return False
 		EndIf
-		If $g_bDebugSetlog Then SetDebugLog("Telegram last sent msg number is '" & $mdg[0] & "'")
+		SetDebugLog("Telegram last sent msg number is '" & $mdg[0] & "'")
 		Return True
 	EndIf
 EndFunc   ;==>NotifyPushToTelegram
@@ -142,7 +142,7 @@ EndFunc   ;==>NotifyPushToTelegram
 ; ONLY PUSH TELEGRAM FILES
 Func NotifyPushFileToTelegram($File, $Folder, $FileType, $body)
 
-	If $g_bDebugSetlog Then SetDebugLog("Notify | NotifyPushFileToTelegram($File, $Folder, $FileType, $body): " & $File & "," & $Folder & "," & $FileType & "," & $body)
+	SetDebugLog("Notify | NotifyPushFileToTelegram($File, $Folder, $FileType, $body): " & $File & "," & $Folder & "," & $FileType & "," & $body)
 
 	If Not $g_bNotifyTGEnable Or $g_sNotifyTGToken = "" Then Return
 
@@ -158,7 +158,7 @@ Func NotifyPushFileToTelegram($File, $Folder, $FileType, $body)
 			EndIf
 			Local $FullTelegram_url = $TELEGRAM_URL & $g_sNotifyTGToken & $sCmd
 
-			If $g_bDebugSetlog Then SetDebugLog("NotifyPushFileToTelegram(): " & $g_sCurlPath & " -i -X POST " & $FullTelegram_url & ' -F chat_id="' & $g_sTGChatID & '" -F ' & $sCmd1 & '=@"' & $g_sProfilePath & "\" & $g_sProfileCurrentName & '\' & $Folder & '\' & $File & '"')
+			SetDebugLog("NotifyPushFileToTelegram(): " & $g_sCurlPath & " -i -X POST " & $FullTelegram_url & ' -F chat_id="' & $g_sTGChatID & '" -F ' & $sCmd1 & '=@"' & $g_sProfilePath & "\" & $g_sProfileCurrentName & '\' & $Folder & '\' & $File & '"')
 
 			Local $Result = RunWait($g_sCurlPath & " -i -X POST " & $FullTelegram_url & ' -F chat_id="' & $g_sTGChatID & '" -F ' & $sCmd1 & '=@"' & $g_sProfilePath & "\" & $g_sProfileCurrentName & '\' & $Folder & '\' & $File & '"', "", @SW_HIDE)
 
@@ -168,7 +168,7 @@ Func NotifyPushFileToTelegram($File, $Folder, $FileType, $body)
 			; Convert Binary to String/Json Format
 			Local $sCorrectStdOut = BinaryToString($SdtOut, 4)
 			If @error Or $sCorrectStdOut = "" Then Return
-			If $g_bDebugSetlog Then SetDebugLog("NotifyPushFileToTelegram(): " & $sCorrectStdOut)
+			SetDebugLog("NotifyPushFileToTelegram(): " & $sCorrectStdOut)
 			; Parse The Json Format
 			Local $mdg = _StringBetween($sCorrectStdOut, '"message_id":', ',"from":')
 			If @error Or Not IsArray($mdg) Then SetDebugLog("NotifyPushFileToTelegram Send Error!")
@@ -213,7 +213,7 @@ Func NotifyGetLastMessageFromTelegram()
 	;convert \uxxxx to real word
 	$sCorrectStdOut = Json_StringDecode($sCorrectStdOut)
 	If @error Or $sCorrectStdOut = "" Then Return
-	If $g_bDebugSetlog Then SetDebugLog("Notify | getUpdates(): " & $sCorrectStdOut)
+	SetDebugLog("Notify | getUpdates(): " & $sCorrectStdOut)
 	; Parse user_id from Json Format
 	Local $chat_id = _StringBetween($sCorrectStdOut, 'from":{"id":', ',"is_bot":')
 	If @error Or Not IsArray($chat_id) Then Return
@@ -222,32 +222,32 @@ Func NotifyGetLastMessageFromTelegram()
 	If $g_sTGChatID = "" Or $g_sTGChatID <> $chat_id[0] Then
 		$g_sTGChatID = $chat_id[0]
 		SaveConfig_600_18()
-		If $g_bDebugSetlog Then SetDebugLog("Saved a new Chat_ID/User_ID for Telegram as " & $g_sTGChatID)
+		SetDebugLog("Saved a new Chat_ID/User_ID for Telegram as " & $g_sTGChatID)
 	Else
-		If $g_bDebugSetlog Then SetDebugLog("Telegram Chat_ID/User_ID:" & $g_sTGChatID)
+		SetDebugLog("Telegram Chat_ID/User_ID:" & $g_sTGChatID)
 	EndIf
 	; Parse update_id from Json Format
 	Local $uid = _StringBetween($sCorrectStdOut, '"update_id":', ',') ;take update id
 	If @error Or Not IsArray($uid) Then Return
-	If $g_bDebugSetlog Then SetDebugLog("You have " & UBound($uid) & " update_id to confirm!")
+	SetDebugLog("You have " & UBound($uid) & " update_id to confirm!")
 	$g_sTGLast_UID = $uid[UBound($uid) - 1]
-	If $g_bDebugSetlog Then SetDebugLog("Telegram getting update_ID: " & $g_sTGLast_UID)
-	If $g_bDebugSetlog Then SetDebugLog("Telegram last update_id was: " & $g_iTGLastRemote)
+	SetDebugLog("Telegram getting update_ID: " & $g_sTGLast_UID)
+	SetDebugLog("Telegram last update_id was: " & $g_iTGLastRemote)
 
 	; To confirm the last update_id is necessary send the last , to forget the last update is necessary send : update_id + 1
 	Local $SdtOut = InetRead($TELEGRAM_URL & $g_sNotifyTGToken & "/getupdates?offset=" & $g_sTGLast_UID, $INET_FORCERELOAD)
 	If @error Or $SdtOut = "" Then Return
 	Local $sCorrectStdOut = BinaryToString($SdtOut, 4)
 	$sCorrectStdOut = Json_StringDecode($sCorrectStdOut)
-	If $g_bDebugSetlog Then SetDebugLog("Notify | getupdates?offset=" & $g_sTGLast_UID & " : " & $sCorrectStdOut)
+	SetDebugLog("Notify | getupdates?offset=" & $g_sTGLast_UID & " : " & $sCorrectStdOut)
 
 	; Parse message text from Json Format
 	Local $msg = _StringBetween($sCorrectStdOut, '"text":"', '"')
 	If @error Or Not IsArray($msg) Then Return
 	; This array can be more than 1 , let's get the last!
-	If $g_bDebugSetlog Then SetDebugLog("You have " & UBound($msg) & " messages to read")
+	SetDebugLog("You have " & UBound($msg) & " messages to read")
 	$TGLastMessage = String($msg[UBound($msg) - 1])
-	If $g_bDebugSetlog Then SetDebugLog("Telegram last message was '" & $TGLastMessage & "'")
+	SetDebugLog("Telegram last message was '" & $TGLastMessage & "'")
 
 	Return $TGLastMessage
 
@@ -299,7 +299,7 @@ Func NotifyRemoteControlProcBtnStart()
 		If $g_iTGLastRemote <> $g_sTGLast_UID Then
 			$g_iTGLastRemote = $g_sTGLast_UID
 
-			If $g_bDebugSetlog Then SetDebugLog("Telegram | NotifyRemoteControlProcBtnStart $TGActionMSG1:" & $TGActionMSG)
+			SetDebugLog("Telegram | NotifyRemoteControlProcBtnStart $TGActionMSG1:" & $TGActionMSG)
 
 			Switch $TGActionMSG
 				Case "/START", GetTranslatedFileIni("MBR Func_Notify", "START", "START"), BinaryToString( Binary("0x25b6"), 3)&' ' & GetTranslatedFileIni("MBR Func_Notify", "START", "START")
@@ -322,7 +322,7 @@ Func NotifyRemoteBotisOnline()
 		local $TGRet = NotifyPushToTelegram($g_sNotifyOrigin & ":" & chr(10) & GetTranslatedFileIni("MBR Func_Notify", "Request-Start_Info_04", "The Bot is online, you can say:" & @CRLF & "/start - start the bot" & @CRLF & "/keyboard - get a command keyboard"))
 		;not send this msg again
 		If $TGRet = True Then $g_bNotifyBotOnline = TRUE
-		If $g_bDebugSetlog Then SetDebugLog("Telegram | NotifyRemoteBotisOnline $TGRet:" & $TGRet & " $g_bNotifyBotOnline:" & $g_bNotifyBotOnline)
+		SetDebugLog("Telegram | NotifyRemoteBotisOnline $TGRet:" & $TGRet & " $g_bNotifyBotOnline:" & $g_bNotifyBotOnline)
 	EndIf
 	;SetDebugLogSilent($bWasSilent)
 EndFunc   ;==>NotifyRemoteBotisOnline
@@ -341,16 +341,16 @@ Func NotifyRemoteControlProc()
 	If $g_bNotifyTGEnable And $g_sNotifyTGToken <> "" And $g_bRunState Then
 		$g_sTGLastMessage = NotifyGetLastMessageFromTelegram()
 		Local $TGActionMSG = StringUpper(StringStripWS($g_sTGLastMessage, $STR_STRIPLEADING + $STR_STRIPTRAILING + $STR_STRIPSPACES)) ;upercase & remove space laset message
-		If $g_bDebugSetlog Then SetDebugLog("Telegram | NotifyRemoteControlProc $TGActionMSG : " & $TGActionMSG)
-		If $g_bDebugSetlog Then SetDebugLog("Telegram | NotifyRemoteControlProc $g_iTGLastRemote : " & $g_iTGLastRemote)
-		If $g_bDebugSetlog Then SetDebugLog("Telegram | NotifyRemoteControlProc $g_sTGLast_UID : " & $g_sTGLast_UID)
+		SetDebugLog("Telegram | NotifyRemoteControlProc $TGActionMSG : " & $TGActionMSG)
+		SetDebugLog("Telegram | NotifyRemoteControlProc $g_iTGLastRemote : " & $g_iTGLastRemote)
+		SetDebugLog("Telegram | NotifyRemoteControlProc $g_sTGLast_UID : " & $g_sTGLast_UID)
 		If ($TGActionMSG = "/START" Or $TGActionMSG = "KEYB" Or $TGActionMSG = "/KEYBOARD") And $g_iTGLastRemote <> $g_sTGLast_UID Then
 			$g_iTGLastRemote = $g_sTGLast_UID
 			NotifyActivateKeyboardOnTelegram($g_sBotTitle & " | Notify " & $g_sNotifyVersion)
 		Else
 			If $g_iTGLastRemote <> $g_sTGLast_UID Then
 				$g_iTGLastRemote = $g_sTGLast_UID
-				If $g_bDebugSetlog Then SetDebugLog("Telegram | NotifyRemoteControlProc $TGActionMSG:" & $TGActionMSG)
+				SetDebugLog("Telegram | NotifyRemoteControlProc $TGActionMSG:" & $TGActionMSG)
 				Switch $TGActionMSG
 					Case GetTranslatedFileIni("MBR Func_Notify", "HELP", "HELP"), BinaryToString( Binary("0x2753"), 3)&' ' & GetTranslatedFileIni("MBR Func_Notify", "HELP", "HELP")
 						Local $txtHelp = "Telegram " & GetTranslatedFileIni("MBR Func_Notify", "HELP", "HELP") & " " & GetTranslatedFileIni("MBR Func_Notify", "Bot_Info_01", "- You can remotely control your bot sending COMMANDS from the following list:")
@@ -611,7 +611,7 @@ Func NotifyPushMessageToBoth($Message, $Source = "")
 
 	If Not $g_bNotifyTGEnable And Not $g_bNotifyDSEnable Then Return
 
-	If $g_bDebugSetlog Then SetDebugLog("Notify | NotifyPushMessageToBoth($Message, $Source = ""): " & $Message & "," & $Source)
+	SetDebugLog("Notify | NotifyPushMessageToBoth($Message, $Source = ""): " & $Message & "," & $Source)
 	Static $iReportIdleBuilder = 0
 
 	If Not IsPlanUseTelegram($Message) And  Not IsPlanUseDiscord($Message) Then Return
@@ -876,7 +876,7 @@ Func NotifyPushMessageToBoth($Message, $Source = "")
 			If Not $iDelete Then
 				SetLog("Notify Telegram: An error occurred deleting temporary screenshot file.", $COLOR_ERROR)
 			EndIf
-			ClickAway(True)
+			ClickAway(Default, True)
 		Case "ShieldInfo"
 			ClickAway()
 			If Not IsMainPage() Then Return
@@ -1045,7 +1045,7 @@ EndFunc   ;==>NotifyPushFileToDiscord
 ; ONLY PUSH DISCORD MSG
 Func NotifyPushToDiscord($pMessage)
 
-	If $g_bDebugSetlog Then SetDebugLog("NotifyPushToDiscord(" & $pMessage & " ): ")
+	SetDebugLog("NotifyPushToDiscord(" & $pMessage & " ): ")
 
 	If Not $g_bNotifyDSEnable Or $g_sNotifyDSToken = "" Then Return False
 
@@ -1057,7 +1057,7 @@ Func NotifyPushToDiscord($pMessage)
 
     If $g_bNotifyDSEnable And $g_sNotifyDSToken <> "" Then
         $pMessage = StringReplace($pMessage, chr(10), "\n")
-        If $g_bDebugSetlog Then SetDebugLog("NotifyPushToDiscord(" & $pMessage & " ): ")
+        SetDebugLog("NotifyPushToDiscord(" & $pMessage & " ): ")
         Local $sUrl = $g_sNotifyDSToken
         Local $oHTTP = ObjCreate("winhttp.winhttprequest.5.1")
         Local $sPacket = '{"content": "' & $pMessage & '"}'

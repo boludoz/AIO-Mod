@@ -11,7 +11,7 @@
 ; ===============================================================================================================================
 
 Func autoHideAndDockAndMinimize($g_bIsAutoMinimizeAllowed = True)
-	If $g_bDebugSetlog Then SetDebugLog("Inside autoHideAndDockAndMinimize: " & $g_bIsAutoMinimizeAllowed, $COLOR_INFO)
+	SetDebugLog("Inside autoHideAndDockAndMinimize: " & $g_bIsAutoMinimizeAllowed, $COLOR_INFO)
 	If $g_bEnableAuto Then
 		If $g_bChkAutoDock Then
 			If Not $g_bAndroidEmbedded Then

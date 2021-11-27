@@ -92,7 +92,7 @@ Func UpdateBotTitle()
 	; Update try icon title
 	TraySetToolTip($g_sBotTitle)
 
-	If $g_bDebugSetlog Then SetDebugLog("Bot title updated to: " & $g_sBotTitle)
+	SetDebugLog("Bot title updated to: " & $g_sBotTitle)
 EndFunc   ;==>UpdateBotTitle
 
 Func InitializeBot()
@@ -107,7 +107,7 @@ Func InitializeBot()
 			For $l = 0 To UBound($aText) - 1
 				If StringInStr($aText[$l], "DISABLEWATCHDOG", $STR_NOCASESENSEBASIC) <> 0 Then
 					$g_bBotLaunchOption_NoWatchdog = True
-					If $g_bDebugSetlog Then SetDebugLog("Watch Dog disabled by Developer Mode File Command", $COLOR_INFO)
+					SetDebugLog("Watch Dog disabled by Developer Mode File Command", $COLOR_INFO)
 				EndIf
 			Next
 		EndIf
@@ -234,7 +234,7 @@ Func ProcessCommandLine()
 						If ProcessExists($guidpid) Then
 							$g_iGuiPID = $guidpid
 						Else
-							If $g_bDebugSetlog Then SetDebugLog("GUI Process doesn't exist: " & $guidpid)
+							SetDebugLog("GUI Process doesn't exist: " & $guidpid)
 						EndIf
 					ElseIf StringInStr($CmdLine[$i], "/profiles=") = 1 Then
 						Local $sProfilePath = StringMid($CmdLine[$i], 11)
@@ -347,7 +347,7 @@ EndFunc   ;==>InitializeAndroid
 ; Example .......: No
 ; ===============================================================================================================================
 Func SetupProfileFolder()
-	If $g_bDebugSetlog Then SetDebugLog("SetupProfileFolder: " & $g_sProfilePath & "\" & $g_sProfileCurrentName)
+	SetDebugLog("SetupProfileFolder: " & $g_sProfilePath & "\" & $g_sProfileCurrentName)
 	$g_sProfileConfigPath = $g_sProfilePath & "\" & $g_sProfileCurrentName & "\config.ini"
 	$g_sProfileClanGamesPath = $g_sProfilePath & "\" & $g_sProfileCurrentName & "\ClanGames_config.ini" ; Team__AiO__MOD
 	$g_sProfileBuildingStatsPath = $g_sProfilePath & "\" & $g_sProfileCurrentName & "\stats_buildings.ini"
@@ -450,7 +450,7 @@ Func InitializeMBR(ByRef $sAI, $bConfigRead)
 	; Check if we are already running for this instance
 	$sMsg = GetTranslatedFileIni("MBR GUI Design - Loading", "Msg_Android_instance_01", "My Bot for %s is already running.\r\n\r\n", $sAI)
 	If $g_hMutex_BotTitle = 0 Then
-		If $g_bDebugSetlog Then SetDebugLog($g_sBotTitle & " is already running, exit now")
+		SetDebugLog($g_sBotTitle & " is already running, exit now")
 		DestroySplashScreen()
 		MsgBox(BitOR($MB_OK, $MB_ICONINFORMATION, $MB_TOPMOST), $g_sBotTitle, $sMsg & $cmdLineHelp)
 		__GDIPlus_Shutdown()
@@ -471,7 +471,7 @@ Func InitializeMBR(ByRef $sAI, $bConfigRead)
 	; Get mutex
 	$g_hMutex_MyBot = CreateMutex("MyBot.run")
 	$g_bOnlyInstance = $g_hMutex_MyBot <> 0 ; And False
-	If $g_bDebugSetlog Then SetDebugLog("My Bot is " & ($g_bOnlyInstance ? "" : "not ") & "the only running instance")
+	SetDebugLog("My Bot is " & ($g_bOnlyInstance ? "" : "not ") & "the only running instance")
 
 EndFunc   ;==>InitializeMBR
 
@@ -591,7 +591,7 @@ Func FinalInitialization(Const $sAI)
 	; wait for remote GUI to show when no GUI in this process
 	If $g_iGuiMode = 0 Then
 		SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "Waiting_for_Remote_GUI", "Waiting for remote GUI..."))
-		If $g_bDebugSetlog Then SetDebugLog("Wait for GUI Process...")
+		SetDebugLog("Wait for GUI Process...")
 
 		Local $timer = __TimerInit()
 		While $g_iGuiPID = @AutoItPID And __TimerDiff($timer) < 60000
@@ -599,11 +599,11 @@ Func FinalInitialization(Const $sAI)
 			Sleep(50) ; must be Sleep as no run state!
 		WEnd
 		If $g_iGuiPID = @AutoItPID Then
-			If $g_bDebugSetlog Then SetDebugLog("GUI Process not received, close bot")
+			SetDebugLog("GUI Process not received, close bot")
 			BotClose()
 			$bCheckPrerequisitesOK = False
 		Else
-			If $g_bDebugSetlog Then SetDebugLog("Linked to GUI Process " & $g_iGuiPID)
+			SetDebugLog("Linked to GUI Process " & $g_iGuiPID)
 		EndIf
 	EndIf
 
@@ -899,7 +899,7 @@ Func runBot() ;Bot that runs everything in order
 			If _Sleep($DELAYRUNBOT3) Then Return
 			;  OCR read current Village Trophies when OOS restart maybe due PB or else DropTrophy skips one attack cycle after OOS
 			$g_aiCurrentLoot[$eLootTrophy] = Number(getTrophyMainScreen($aTrophies[0], $aTrophies[1]))
-			If $g_bDebugSetlog Then SetDebugLog("Runbot Trophy Count: " & $g_aiCurrentLoot[$eLootTrophy], $COLOR_DEBUG)
+			SetDebugLog("Runbot Trophy Count: " & $g_aiCurrentLoot[$eLootTrophy], $COLOR_DEBUG)
 			If Not $g_bIsSearchLimit or Not $g_bCheckDonateOften Then AttackMain() ;If Search Limit hit, do main loop.
 			SetDebugLog("ARCH: Not case on SearchLimit or CheckDonateOften",$COLOR_DEBUG)
 			If Not $g_bRunState Then Return
@@ -924,7 +924,7 @@ EndFunc   ;==>Idle
 
 Func _Idle() ;Sequence that runs until Full Army
 	Local $TimeIdle = 0 ;In Seconds
-	If $g_bDebugSetlog Then SetDebugLog("Func Idle ", $COLOR_DEBUG)
+	SetDebugLog("Func Idle ", $COLOR_DEBUG)
 
 	While $g_bIsFullArmywithHeroesAndSpells = False
 
@@ -1108,16 +1108,16 @@ Func Attack() ;Selects which algorithm
 	$g_bAttackActive = True
 	SetLog(" ====== Start Attack ====== ", $COLOR_SUCCESS)
 	If ($g_iMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 1) Or ($g_iMatchMode = $LB And $g_aiAttackAlgorithm[$LB] = 1) Then
-		If $g_bDebugSetlog Then SetDebugLog("start scripted attack", $COLOR_ERROR)
+		SetDebugLog("start scripted attack", $COLOR_ERROR)
 		Algorithm_AttackCSV()
 	ElseIf $g_iMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 2 Then
-		If $g_bDebugSetlog Then SetDebugLog("start smart farm attack", $COLOR_ERROR)
+		SetDebugLog("start smart farm attack", $COLOR_ERROR)
 		; Variable to return : $Return[3]  [0] = To attack InSide  [1] = Quant. Sides  [2] = Name Sides
 		Local $Nside = ChkSmartFarm()
 		If Not $g_bRunState Then Return
 		AttackSmartFarm($Nside[1], $Nside[2])
 	Else
-		If $g_bDebugSetlog Then SetDebugLog("start standard attack", $COLOR_ERROR)
+		SetDebugLog("start standard attack", $COLOR_ERROR)
 		algorithm_AllTroops()
 	EndIf
 	$g_bAttackActive = False
@@ -1242,7 +1242,7 @@ Func _RunFunction($sAction)
 EndFunc   ;==>_RunFunction
 
 Func __RunFunction($sAction)
-	If $g_bDebugSetlog Then SetDebugLog("_RunFunction: " & $sAction & " BEGIN", $COLOR_DEBUG2)
+	SetDebugLog("_RunFunction: " & $sAction & " BEGIN", $COLOR_DEBUG2)
 	Switch $sAction
 		Case "Collect"
 			Collect()
@@ -1358,7 +1358,7 @@ Func __RunFunction($sAction)
 		Case Else
 			SetLog("Unknown function call: " & $sAction, $COLOR_ERROR)
 	EndSwitch
-	If $g_bDebugSetlog Then SetDebugLog("_RunFunction: " & $sAction & " END", $COLOR_DEBUG2)
+	SetDebugLog("_RunFunction: " & $sAction & " END", $COLOR_DEBUG2)
 EndFunc   ;==>__RunFunction
 #EndRegion - Custom - Team AIO Mod++
 

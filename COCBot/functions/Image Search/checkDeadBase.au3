@@ -104,10 +104,10 @@ Func checkDeadBase($bForceCapture = False)
 	EndIf
 	
 	If $g_bChkDeadEagle And $g_iSearchCount < $g_iDeadEagleSearch Then
-		If $g_bDebugSetlog Then SetDebugLog("Checking base for DeadEagle : " & $g_iSearchCount)
+		SetDebugLog("Checking base for DeadEagle : " & $g_iSearchCount)
 		Return CheckForDeadEagle(False)
 	Else
-		If $g_bDebugSetlog Then SetDebugLog("Checking base for Collector Level : " & $g_iSearchCount)
+		SetDebugLog("Checking base for Collector Level : " & $g_iSearchCount)
 		Return checkDeadBaseSuperNew(False)
 	EndIf
 EndFunc   ;==>checkDeadBase
@@ -143,7 +143,7 @@ Func checkDeadBaseSuperNew($bForceCapture = False, $sFillDirectory = @ScriptDir 
 	Local $minCollectorLevel = 0
 	Local $maxCollectorLevel = 0
 	Local $anyFillLevel[2] = [False, False] ; 50% and 100%
-	If $g_bDebugSetlog Then SetDebugLog("Checking Deadbase With IMGLOC + DMatch (super super new)", $COLOR_WARNING)
+	SetDebugLog("Checking Deadbase With IMGLOC + DMatch (super super new)", $COLOR_WARNING)
 
 	For $i = 6 To ubound($g_aiCollectorLevelFill) -1
 		If $g_abCollectorLevelEnabled[$i] Then
@@ -155,7 +155,7 @@ Func checkDeadBaseSuperNew($bForceCapture = False, $sFillDirectory = @ScriptDir 
 
 	If $maxCollectorLevel = 0 Then Return True
 
-	If $g_bDebugSetlog Then SetDebugLog("Checking Deadbase With IMGLOC START", $COLOR_WARNING)
+	SetDebugLog("Checking Deadbase With IMGLOC START", $COLOR_WARNING)
 
 	Local $TotalMatched = 0
 	Local $Matched[2] = [-1, -1]
@@ -289,7 +289,7 @@ Func checkDeadBaseSuperNew($bForceCapture = False, $sFillDirectory = @ScriptDir 
 			EndIf
 		Next
 
-		If $g_bDebugSetlog Then SetDebugLog("checkDeadBase DMatch | $iDminLevel : " & $iDminLevel & " $iDmaxLevel : " & $iDmaxLevel & " $aDFillLevel[0] : " & $aDFillLevel[0] & " $aDFillLevel[1] : " & $aDFillLevel[1])
+		SetDebugLog("checkDeadBase DMatch | $iDminLevel : " & $iDminLevel & " $iDmaxLevel : " & $iDmaxLevel & " $aDFillLevel[0] : " & $aDFillLevel[0] & " $aDFillLevel[1] : " & $aDFillLevel[1])
 
 		If $aDFillLevel[0] Then ; Scan optimized.
 			Local $sDFindResult50 = DFind($g_sECollectorDMatB & "50\", 19, 74, 805, 518, $iDminLevel, $iDmaxLevel, $g_iCollectorMatchesMin, False)
@@ -356,18 +356,18 @@ Func _ImageSearchSpecial($sDirectory, $iQuantityMatch = Default, $vArea2SearchOr
 	$extError = @extended
 	If $error Then
 		_logErrorDLLCall($g_sLibMyBotPath, $error)
-		If $g_bDebugSetlog Then SetDebugLog(" imgloc DLL Error : " & $error & " --- " & $extError)
+		SetDebugLog(" imgloc DLL Error : " & $error & " --- " & $extError)
 		SetError(2, $extError, $aCoords) ; Set external error code = 2 for DLL error
 		Return -1
 	EndIf
 
 	If checkImglocError($result, "_ImageSearchSpecial", $sDirectory) = True Then
-		If $g_bDebugSetlog Then SetDebugLog("_ImageSearchSpecial Returned Error or No values : ", $COLOR_DEBUG)
+		SetDebugLog("_ImageSearchSpecial Returned Error or No values : ", $COLOR_DEBUG)
 		Return -1
 	EndIf
 
 	Local $resultArr = StringSplit($result[0], "|", $STR_NOCOUNT)
-	If $g_bDebugSetlog Then SetDebugLog(" ***  _ImageSearchXML multiples **** ", $COLOR_ORANGE)
+	SetDebugLog(" ***  _ImageSearchXML multiples **** ", $COLOR_ORANGE)
 
 	; Distance in pixels to check if is a duplicated detection , for deploy point will be 5
 	Local $iD2C = ($bCheckDuplicatedpoints = True) ? ($iDistance2check) : (0)

@@ -132,7 +132,7 @@ Func MainSXHandler()
 	EndIf
 
 	$g_aiCurrentLoot[$eLootTrophy] = getTrophyMainScreen($aTrophies[0], $aTrophies[1]) ; get OCR to read current Village Trophies
-	If $g_bDebugSetlog Then SetDebugLog("Current Trophy Count: " & $g_aiCurrentLoot, $COLOR_DEBUG) ;Debug
+	SetDebugLog("Current Trophy Count: " & $g_aiCurrentLoot, $COLOR_DEBUG) ;Debug
 	If Number($g_aiCurrentLoot) > Number($g_iDropTrophyMax) Then Return
 	If Number($g_aiCurrentLoot) < 4900 Then chkShieldStatus()
 
@@ -296,7 +296,7 @@ Func SafeReturnSX()
 	If $g_bDebugSX Then SetDebugLog("Super XP : Begin SafeReturnSX", $COLOR_DEBUG)
 
 	Local $bObstacleResult = checkObstacles(False)
-	If $g_bDebugSetLog Then SetDebugLog("CheckObstacles Result = " & $bObstacleResult, $COLOR_DEBUG)
+	SetDebugLog("CheckObstacles Result = " & $bObstacleResult, $COLOR_DEBUG)
 
 	If (Not $bObstacleResult And $g_bMinorObstacle) Then
 		$g_bMinorObstacle = False
@@ -809,7 +809,7 @@ Func OpenGoblinMapSX()
 			ClickDrag(Random(305, 310, 1), 138 - $iRandom, Random(305, 310, 1), 398 + $iRandom, 50, True)
 		EndIf
 
-		If $g_bDebugSetlog Then SetDebugLog("FastScroll= " & $bFastScroll & " / Button OpenGoblinMapSX= " & _GetPixelColor($aFirstMapPosition[0], $aFirstMapPosition[1], True), $COLOR_DEBUG) ;Debug
+		SetDebugLog("FastScroll= " & $bFastScroll & " / Button OpenGoblinMapSX= " & _GetPixelColor($aFirstMapPosition[0], $aFirstMapPosition[1], True), $COLOR_DEBUG) ;Debug
 
 		For $i = 0 To 1
 			If RandomSleep(250) Then Return
@@ -922,7 +922,7 @@ Func OpenGoblinMapSX()
 		If $rIsGoblinMapSX = False Then
 			SetLog("Looks like we're not in " & $g_sGoblinMapOptSX, $COLOR_ERROR)
 			If _CheckPixel($aCloseSingleTab, $g_bNoCapturePixel) Then
-				If $g_bDebugSetlog Then SetDebugLog("#cOb# Clicks X, $aCloseSingleTab", $COLOR_INFO)
+				SetDebugLog("#cOb# Clicks X, $aCloseSingleTab", $COLOR_INFO)
 				PureClickP($aCloseSingleTab, 1, 0, "#CloseSingleTab") ;Clicks X
 				If _Sleep($DELAYcheckObstacles1) Then Return False
 				SafeReturnSX()

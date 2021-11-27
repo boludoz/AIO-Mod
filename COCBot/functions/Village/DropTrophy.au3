@@ -80,7 +80,7 @@ Func DropTrophy($bDebug = False) ; Drop Throphy - Team AIO Mod++
 
 		; if heroes enabled, check them and reset drop trophy disable
 		If $g_iHeroAvailable > 0 Then
-			If $g_bDebugSetlog Then SetDebugLog("Drop Trophy Found Hero BK|AQ|GW|RC: " & BitOR($g_iHeroAvailable, $eHeroKing) & "|" & BitOR($g_iHeroAvailable, $eHeroQueen) & "|" & BitOR($g_iHeroAvailable, $eHeroWarden) & "|" & BitOR($g_iHeroAvailable, $eHeroChampion), $COLOR_DEBUG)
+			SetDebugLog("Drop Trophy Found Hero BK|AQ|GW|RC: " & BitOR($g_iHeroAvailable, $eHeroKing) & "|" & BitOR($g_iHeroAvailable, $eHeroQueen) & "|" & BitOR($g_iHeroAvailable, $eHeroWarden) & "|" & BitOR($g_iHeroAvailable, $eHeroChampion), $COLOR_DEBUG)
 			$bHaveHero = True
 		EndIf
 		
@@ -211,7 +211,7 @@ Func DropTrophy($bDebug = False) ; Drop Throphy - Team AIO Mod++
 							$g_bIsClientSyncError = False ; reset OOS flag to get new new army
 							$g_bIsSearchLimit = False ; reset search limit flag to get new new army
 							$g_bRestart = True ; Set restart flag after dead base attack to ensure troops are trained
-							If $g_bDebugSetlog Then SetDebugLog("Drop Trophy END: Dead Base was attacked, reset army and return to Village.", $COLOR_DEBUG)
+							SetDebugLog("Drop Trophy END: Dead Base was attacked, reset army and return to Village.", $COLOR_DEBUG)
 							ExitLoop ; or Return, Will end function, no troops left to drop Trophies, will need to Train new Troops first
 						EndIf
 					EndIf
@@ -241,12 +241,12 @@ Func DropTrophy($bDebug = False) ; Drop Throphy - Team AIO Mod++
 					SetSlotSpecialTroops()
 
 					;b) calculate random drop point...
-					If $g_bDebugSetlog Then SetDebugLog("Bottom-Left Buttons Black Region: [" & $aBlackButtonRegion[0] & ", " & $aBlackButtonRegion[1] & ", " & $aBlackButtonRegion[2] & ", " & $aBlackButtonRegion[3] & "]", $COLOR_DEBUG)
+					SetDebugLog("Bottom-Left Buttons Black Region: [" & $aBlackButtonRegion[0] & ", " & $aBlackButtonRegion[1] & ", " & $aBlackButtonRegion[2] & ", " & $aBlackButtonRegion[3] & "]", $COLOR_DEBUG)
 					While (Not IsArray($iRandomXY))
 						$aRandomEdge = $g_aaiEdgeDropPoints[Round(Random(0, 3, 1))]
 						$iRandomXY = PickUpRandomVerifiedDropPoint($aRandomEdge, $aBlackButtonRegion)
 					WEnd
-					If $g_bDebugSetlog Then SetDebugLog("Hero Loc = " & $iRandomXY & ", X:Y= " & $iRandomXY[0] & "|" & $iRandomXY[1], $COLOR_DEBUG)
+					SetDebugLog("Hero Loc = " & $iRandomXY & ", X:Y= " & $iRandomXY[0] & "|" & $iRandomXY[1], $COLOR_DEBUG)
 
 					;c) check if hero avaiable and drop according to priority
 					If ($g_iQueenSlot <> -1 Or $g_iKingSlot <> -1 Or $g_iWardenSlot <> -1 Or $g_iChampionSlot <> -1) Then
@@ -331,12 +331,12 @@ Func DropTrophy($bDebug = False) ; Drop Throphy - Team AIO Mod++
 					EndIf
 				EndIf
 				If ($g_iQueenSlot = -1 And $g_iKingSlot = -1 And $g_iWardenSlot = -1 And $g_iChampionSlot = -1) Or Not BitOR($g_bDropTrophyUseHeroes, $g_bChkTrophyHeroesAndTroops) Then
-					If $g_bDebugSetlog Then SetDebugLog("Bottom-Left Buttons Black Region: [" & $aBlackButtonRegion[0] & ", " & $aBlackButtonRegion[1] & ", " & $aBlackButtonRegion[2] & ", " & $aBlackButtonRegion[3] & "]", $COLOR_DEBUG)
+					SetDebugLog("Bottom-Left Buttons Black Region: [" & $aBlackButtonRegion[0] & ", " & $aBlackButtonRegion[1] & ", " & $aBlackButtonRegion[2] & ", " & $aBlackButtonRegion[3] & "]", $COLOR_DEBUG)
 					While (Not IsArray($iRandomXY))
 						$aRandomEdge = $g_aaiEdgeDropPoints[Round(Random(0, 3))]
 						$iRandomXY = PickUpRandomVerifiedDropPoint($aRandomEdge, $aBlackButtonRegion)
 					WEnd
-					If $g_bDebugSetlog Then SetDebugLog("Troop Loc = " & $iRandomXY & ", X:Y= " & $iRandomXY[0] & "|" & $iRandomXY[1], $COLOR_DEBUG)
+					SetDebugLog("Troop Loc = " & $iRandomXY & ", X:Y= " & $iRandomXY[0] & "|" & $iRandomXY[1], $COLOR_DEBUG)
 
 					For $i = 0 To UBound($g_avAttackTroops) - 1
 						If ($g_avAttackTroops[$i][0] >= $eBarb And $g_avAttackTroops[$i][0] <= $eWiza) Or $g_avAttackTroops[$i][0] = $eMini Then

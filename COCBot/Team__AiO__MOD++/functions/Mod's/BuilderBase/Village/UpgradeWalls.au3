@@ -43,9 +43,9 @@ Func WallsUpgradeBB()
 		SetDebugLog("Level " & $iBBWallLevel + 1 & " value: " & $iBBNextLevelCost & " G: " & $g_aiCurrentLootBB[$eLootGoldBB] & " E: " & $g_aiCurrentLootBB[$eLootElixirBB])
 		If $g_iFreeBuilderCountBB > 0 And $g_bChkBBWallRing Then
 			For $i = 0 To 10
-				If $g_bDebugSetlog Then SetDebugLog("Using Walls Rings loop " & $i)
+				SetDebugLog("Using Walls Rings loop " & $i)
 				If DetectedWalls($iBBWallLevel) Then
-;~ 					If $g_bDebugSetlog Then SetDebugLog("Array Wall Rings button --> " & _ArrayToString($aWallRing, " ", -1, -1, "|"))
+;~ 					SetDebugLog("Array Wall Rings button --> " & _ArrayToString($aWallRing, " ", -1, -1, "|"))
 					If UpgradeCurrentWall("WallR") Then
 						SetLog("Walls Ring found, let's Click it!", $COLOR_INFO)
 						If _Sleep($DELAYAUTOUPGRADEBUILDING1) Then Return
@@ -63,7 +63,7 @@ Func WallsUpgradeBB()
 		EndIf
 		If $g_iFreeBuilderCountBB > 0 And Number($g_aiCurrentLootBB[$eLootGoldBB]) > $iBBNextLevelCost And $g_bChkBBUpgWallsGold Then
 			For $i = 0 To 10
-				If $g_bDebugSetlog Then SetDebugLog("Using Gold loop " & $i)
+				SetDebugLog("Using Gold loop " & $i)
 				If Number($g_aiCurrentLootBB[$eLootGoldBB]) <= $iBBNextLevelCost Then ExitLoop
 				If DetectedWalls($iBBWallLevel) Then
 					If UpgradeCurrentWall("Gold") Then
@@ -84,7 +84,7 @@ Func WallsUpgradeBB()
 		EndIf
 		If $g_iFreeBuilderCountBB > 0 And Number($g_aiCurrentLootBB[$eLootElixirBB]) > $iBBNextLevelCost And $g_bChkBBUpgWallsElixir Then
 			For $i = 0 To 10
-				If $g_bDebugSetlog Then SetDebugLog("Using Elixir loop " & $i)
+				SetDebugLog("Using Elixir loop " & $i)
 				If Number($g_aiCurrentLootBB[$eLootElixirBB]) <= $iBBNextLevelCost Then ExitLoop
 				If DetectedWalls($iBBWallLevel) Then
 					If UpgradeCurrentWall("Elixir") Then
@@ -112,11 +112,11 @@ Func DetectedWalls($iBBWallLevel = 1)
 	Local $hStarttime = _Timer_Init()
 	ClickAway()
 	Local $aWallsBBNXY = findMultipleQuick($g_sBundleWallsBB, Default, "FV", True, "", False, 25, $g_bDebugImageSave, $iBBWallLevel, $iBBWallLevel, Default)
-	If $g_bDebugSetlog Then SetDebugLog("Image Detection for Walls in Builder Base : " & Round(_Timer_Diff($hStarttime), 2) & "'ms")
+	SetDebugLog("Image Detection for Walls in Builder Base : " & Round(_Timer_Diff($hStarttime), 2) & "'ms")
 	If IsArray($aWallsBBNXY) And UBound($aWallsBBNXY) > 0 Then
 		SetDebugLog("Total Walls Found: " & UBound($aWallsBBNXY) & " --> " & _ArrayToString($aWallsBBNXY, " ", -1, -1, "|"))
 		For $i = 0 To UBound($aWallsBBNXY) - 1
-			If $g_bDebugSetlog Then SetDebugLog($aWallsBBNXY[$i][0] & " found at (" & $aWallsBBNXY[$i][1] & "," & $aWallsBBNXY[$i][2] & ")", $COLOR_SUCCESS)
+			SetDebugLog($aWallsBBNXY[$i][0] & " found at (" & $aWallsBBNXY[$i][1] & "," & $aWallsBBNXY[$i][2] & ")", $COLOR_SUCCESS)
 			If IsUnsafeDP($aWallsBBNXY[$i][1], $aWallsBBNXY[$i][2], False) Then ContinueLoop
 			If IsMainPageBuilderBase() Then Click($aWallsBBNXY[$i][1], $aWallsBBNXY[$i][2], 1, 0, "#902")
 			If _Sleep($DELAYCOLLECT3) Then Return

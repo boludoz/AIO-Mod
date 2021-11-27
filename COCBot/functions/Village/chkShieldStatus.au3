@@ -67,12 +67,12 @@ Func chkShieldStatus($bChkShield = True, $bForceChkPBT = False)
 						$g_bDonationEnabled = True
 						$g_bMeetCondStop = False
 					Else
-						If $g_bDebugSetlog Then SetDebugLog("Halt With Shield: Shield not found...", $COLOR_DEBUG)
+						SetDebugLog("Halt With Shield: Shield not found...", $COLOR_DEBUG)
 					EndIf
 				EndIf
 			EndIf
 		Else
-			If $g_bDebugSetlog Then SetDebugLog("Bad getShieldInfo() return value: " & $result, $COLOR_ERROR)
+			SetDebugLog("Bad getShieldInfo() return value: " & $result, $COLOR_ERROR)
 			If _Sleep($DELAYRESPOND) Then Return
 			For $i = 0 To UBound($g_asShieldStatus) - 1
 				$g_asShieldStatus[$i] = ""

@@ -34,13 +34,13 @@ Func getPBTInfo()
 	Select ; Check for Shield type
 		Case _CheckPixel($aNoShield, $g_bCapturePixel)
 			$aPBTReturnResult[0] = "none"
-			If $g_bDebugSetlog Then SetDebugLog("No shield active", $COLOR_DEBUG)
+			SetDebugLog("No shield active", $COLOR_DEBUG)
 		Case _CheckPixel($aHaveShield, $g_bCapturePixel)
 			$aPBTReturnResult[0] = "shield" ; check for shield
-			If $g_bDebugSetlog Then SetDebugLog("Shield Active", $COLOR_DEBUG)
+			SetDebugLog("Shield Active", $COLOR_DEBUG)
 		Case _CheckPixel($aHavePerGuard, $g_bCapturePixel)
 			$aPBTReturnResult[0] = "guard" ; check for personal guard timer
-			If $g_bDebugSetlog Then SetDebugLog("Guard Active", $COLOR_DEBUG)
+			SetDebugLog("Guard Active", $COLOR_DEBUG)
 		Case Else
 			SetLog("Sorry, Monkey needs more bananas to read shield type", $COLOR_ERROR) ; Check for pixel colors errors!
 			If $g_bDebugImageSave Then SaveDebugImage("ShieldInfo_", $g_bCapturePixel, "png", False)

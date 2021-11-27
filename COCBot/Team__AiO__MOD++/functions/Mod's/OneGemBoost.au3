@@ -95,7 +95,7 @@ Func CheckHeroOneGem($iIndex, $bDebug = False)
 
 	Local $aBoostBtn = findButton("BoostOne")
 	If IsArray($aBoostBtn) Then
-		If $g_bDebugSetlog Then SetDebugLog($g_asHeroNames[$iIndex] & " Boost Button X|Y = " & $aBoostBtn[0] & "|" & $aBoostBtn[1], $COLOR_DEBUG)
+		SetDebugLog($g_asHeroNames[$iIndex] & " Boost Button X|Y = " & $aBoostBtn[0] & "|" & $aBoostBtn[1], $COLOR_DEBUG)
 		ClickP($aBoostBtn)
 		If _Sleep($DELAYBOOSTHEROES1) Then Return
 		Local $aGemWindowBtn = findButton("GEM")
@@ -160,7 +160,7 @@ Func BoostOneGemBuilding($sBoostBuildingNames, $bDebug = False)
 
 	Local $aBoostBtn = findButton("BoostBarrack")
 	If IsArray($aBoostBtn) Then
-		If $g_bDebugSetlog Then SetDebugLog($sBoostBuildingNames & " Boost Button X|Y = " & $aBoostBtn[0] & "|" & $aBoostBtn[1], $COLOR_DEBUG)
+		SetDebugLog($sBoostBuildingNames & " Boost Button X|Y = " & $aBoostBtn[0] & "|" & $aBoostBtn[1], $COLOR_DEBUG)
 		ClickP($aBoostBtn)
 		If _Sleep($DELAYBOOSTBARRACKS1) Then Return
 		Local $aGemWindowBtn = findButton("GEM")

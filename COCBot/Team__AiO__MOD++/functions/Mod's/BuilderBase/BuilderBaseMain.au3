@@ -12,14 +12,14 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func TestBuilderBase()
-	If $g_bDebugSetlog Then SetDebugLog("** TestrunBuilderBase START**", $COLOR_DEBUG)
+	SetDebugLog("** TestrunBuilderBase START**", $COLOR_DEBUG)
 	Local $Status = $g_bRunState
 	$g_bRunState = True
 	$g_bStayOnBuilderBase = True
 	BuilderBase(False)
 	$g_bStayOnBuilderBase = False
 	$g_bRunState = $Status
-	If $g_bDebugSetlog Then SetDebugLog("** TestrunBuilderBase END**", $COLOR_DEBUG)
+	SetDebugLog("** TestrunBuilderBase END**", $COLOR_DEBUG)
 EndFunc   ;==>TestrunBuilderBase
 
 Global $g_bBonusObtainedAtStart = False
@@ -39,7 +39,7 @@ Func BuilderBase($bTestRun = False)
 	EndIf
 	#EndRegion - Dates - Team AIO Mod++
 
-	ClickAway(False, True, 3)
+	ClickAway("Right", False, 3)
 	If Not ByPassedForceBBAttackOnClanGames($g_bChkBuilderAttack, True) And Not $g_bChkCollectBuilderBase And Not $g_bChkStartClockTowerBoost And Not $g_iChkBBSuggestedUpgrades And Not $g_bChkCleanBBYard And Not $g_bChkUpgradeMachine Then
 		If $g_bOnlyBuilderBase Then
 			SetLog("Play Only Builder Base Check Is On But BB Option's(Collect,Attack etc) Unchecked", $COLOR_ERROR)

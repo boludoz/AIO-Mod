@@ -21,7 +21,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 	Local $aPixelToCheck = $g_bStayOnBuilderBase ? $aIsOnBuilderBase : $aIsMain
 	For $i = 0 To 105 ;105*2000 = 3.5 Minutes
 		If Not $g_bRunState Then Return
-		If $g_bDebugSetlog Then SetDebugLog("waitMainScreen ChkObstl Loop = " & $i & ", ExitLoop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop
+		SetDebugLog("waitMainScreen ChkObstl Loop = " & $i & ", ExitLoop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop
 		$iCount += 1
 		SetLog("[" & $iCount & "] " & "Waiting for main screen.", $COLOR_ACTION) ; Custom - Team AIO Mod++
 		Local $hWin = $g_hAndroidWindow
@@ -97,7 +97,7 @@ Func waitMainScreenMini()
 	For $i = 0 To 105 ; Like waitMainScreen
 		If Not $g_bRunState Then Return
 		If Not TestCapture() And WinGetAndroidHandle() = 0 Then ExitLoop ; sets @error to 1
-		If $g_bDebugSetlog Then SetDebugLog("waitMainScreenMini ChkObstl Loop = " & $i & " ExitLoop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop
+		SetDebugLog("waitMainScreenMini ChkObstl Loop = " & $i & " ExitLoop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop
 		$iCount += 1
 		SetLog("[" & $iCount & "] " & "Waiting for main screen.", $COLOR_ACTION) ; Custom - Team AIO Mod++
 		_CaptureRegion()
