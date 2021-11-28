@@ -829,93 +829,98 @@ Func runBot() ;Bot that runs everything in order
 			$g_bCanRequestCC = True
 			If $g_bChkReqCCFirst Then RequestCCMain()
 			#EndRegion - Request Early - Team AIO Mod++
+			
+			; Only farm - Team AIO Mod++
+			If $g_bChkOnlyFarm = False Then
 
-			;Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge']
-			If $g_bIsSearchLimit Then
-				Local $aRndFuncList = ['Collect', 'PetCheck']
-			Else
-				Local $aRndFuncList = ['Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge', 'PetCheck', "ChatActions", "BotHumanization"] ; AIO Mod
-			EndIf
-
-			_ArrayShuffle($aRndFuncList)
-			For $Index In $aRndFuncList
-				If Not $g_bRunState Then Return
-				_RunFunction($Index)
-				If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
-			Next
-
-			If Not $g_bChkOnlyFarm Then AddIdleTime() ; AIO Mod
-			If Not $g_bRunState Then Return
-			If $g_bRestart Then ContinueLoop
-			If IsSearchAttackEnabled() Then ; if attack is disabled skip reporting, requesting, donating, training, and boosting
+				;Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge']
 				If $g_bIsSearchLimit Then
-					Local $aRndFuncList = ['DonateCC,Train']
+					Local $aRndFuncList = ['Collect', 'PetCheck']
 				Else
-					Local $aRndFuncList = ['ReplayShare', 'NotifyReport', 'DonateCC,Train', 'RequestCC']
+					Local $aRndFuncList = ['Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge', 'PetCheck', "ChatActions", "BotHumanization"] ; AIO Mod
 				EndIf
+	
 				_ArrayShuffle($aRndFuncList)
 				For $Index In $aRndFuncList
 					If Not $g_bRunState Then Return
 					_RunFunction($Index)
 					If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
-					If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 				Next
-				BoostEverything() ; 1st Check if is to use Training Potion
-				If $g_bRestart Then ContinueLoop
-				Local $aRndFuncList = ['BoostBarracks', 'BoostSpellFactory', 'BoostWorkshop', 'BoostKing', 'BoostQueen', 'BoostWarden', 'BoostChampion']
-				_ArrayShuffle($aRndFuncList)
-				For $Index In $aRndFuncList
-					If Not $g_bRunState Then Return
-					_RunFunction($Index)
-					If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
-					If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
-				Next
-
+	
+				If Not $g_bChkOnlyFarm Then AddIdleTime() ; AIO Mod
 				If Not $g_bRunState Then Return
-				If $g_iUnbrkMode >= 1 Then
-					If Unbreakable() Then ContinueLoop
-					MainSXHandler() ; SuperXP / GoblinXP - Team AiO MOD++
-				EndIf
 				If $g_bRestart Then ContinueLoop
+				If IsSearchAttackEnabled() Then ; if attack is disabled skip reporting, requesting, donating, training, and boosting
+					If $g_bIsSearchLimit Then
+						Local $aRndFuncList = ['DonateCC,Train']
+					Else
+						Local $aRndFuncList = ['ReplayShare', 'NotifyReport', 'DonateCC,Train', 'RequestCC']
+					EndIf
+					_ArrayShuffle($aRndFuncList)
+					For $Index In $aRndFuncList
+						If Not $g_bRunState Then Return
+						_RunFunction($Index)
+						If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
+						If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
+					Next
+					BoostEverything() ; 1st Check if is to use Training Potion
+					If $g_bRestart Then ContinueLoop
+					Local $aRndFuncList = ['BoostBarracks', 'BoostSpellFactory', 'BoostWorkshop', 'BoostKing', 'BoostQueen', 'BoostWarden', 'BoostChampion']
+					_ArrayShuffle($aRndFuncList)
+					For $Index In $aRndFuncList
+						If Not $g_bRunState Then Return
+						_RunFunction($Index)
+						If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
+						If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
+					Next
+	
+					If Not $g_bRunState Then Return
+					If $g_iUnbrkMode >= 1 Then
+						If Unbreakable() Then ContinueLoop
+						MainSXHandler() ; SuperXP / GoblinXP - Team AiO MOD++
+					EndIf
+					If $g_bRestart Then ContinueLoop
+				EndIf
+				; Train Donate only - force a donate cc every time
+				If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) Then _RunFunction('DonateCC,Train')
+				If $g_bRestart Then ContinueLoop
+	
+				If $g_bChkOnlyFarm = False Then MainSXHandler() ; Super XP - Team AIO Mod++
+				Local $aRndFuncList = ['Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'PetHouse']
+				_ArrayShuffle($aRndFuncList)
+				For $Index In $aRndFuncList
+					If Not $g_bRunState Then Return
+					_RunFunction($Index)
+					If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
+					If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
+				Next
+	
+				;ARCH Trying it out here.
+				If Not $g_bIsSearchLimit Then _ClanGames() ; move to here to pick event before going to BB.
+	
+				; Ensure, that wall upgrade is last of the upgrades
+				Local $aRndFuncList = ['UpgradeWall', 'BuilderBase'] ;Copied BuilderBase to AttackMain
+				_ArrayShuffle($aRndFuncList)
+				For $Index In $aRndFuncList
+					If Not $g_bRunState Then Return
+					_RunFunction($Index)
+					If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
+					If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
+				Next
+				If Not $g_bRunState Then Return
+	
+				If $g_bFirstStart Then SetDebugLog("First loop completed!")
 			EndIf
-			; Train Donate only - force a donate cc every time
-			If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) Then _RunFunction('DonateCC,Train')
-			If $g_bRestart Then ContinueLoop
-
-			If $g_bChkOnlyFarm = False Then MainSXHandler() ; Super XP - Team AIO Mod++
-			Local $aRndFuncList = ['Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'PetHouse']
-			_ArrayShuffle($aRndFuncList)
-			For $Index In $aRndFuncList
-				If Not $g_bRunState Then Return
-				_RunFunction($Index)
-				If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
-				If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
-			Next
-
-			;ARCH Trying it out here.
-			If Not $g_bIsSearchLimit Then _ClanGames() ; move to here to pick event before going to BB.
-
-			; Ensure, that wall upgrade is last of the upgrades
-			Local $aRndFuncList = ['UpgradeWall', 'BuilderBase'] ;Copied BuilderBase to AttackMain
-			_ArrayShuffle($aRndFuncList)
-			For $Index In $aRndFuncList
-				If Not $g_bRunState Then Return
-				_RunFunction($Index)
-				If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
-				If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
-			Next
-			If Not $g_bRunState Then Return
-
-			If $g_bFirstStart Then SetDebugLog("First loop completed!")
+			
 			$g_bFirstStart = False ; already finished first loop since bot started.
-
+			
 			If ProfileSwitchAccountEnabled() And ($g_iCommandStop = 0 Or $g_iCommandStop = 3 Or $g_abDonateOnly[$g_iCurAccount] Or $g_bForceSwitch) Then checkSwitchAcc()
 			If IsSearchAttackEnabled() Then ; If attack scheduled has attack disabled now, stop wall upgrades, and attack.
 				Idle()
 				;$g_bFullArmy1 = $g_bFullArmy
 				If _Sleep($DELAYRUNBOT3) Then Return
 				If $g_bRestart = True Then ContinueLoop
-
+	
 				If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
 					AttackMain()
 					$g_bSkipFirstZoomout = False
@@ -1418,6 +1423,7 @@ EndFunc   ;==>__RunFunction
 
 ; xbebenk.
 Func FirstCheck()
+	; Custom - Team AIO Mod++
 	If $g_bChkOnlyFarm = False And $g_bChkSkipFirstAttack = True Then
 		Setlog("FirstCheck skipped, SkipFirstAttack enabled.", $COLOR_INFO)
 	ElseIf $g_bChkOnlyFarm = True Then
@@ -1426,7 +1432,6 @@ Func FirstCheck()
 		SetLog("======== FirstCheck ========", $COLOR_ACTION)
 	EndIf 
 	
-	checkMainScreen()
 	If $g_bChkClanGamesEnabled Then
 		SetLog("Check ClanGames", $COLOR_INFO)
 		_ClanGames()
@@ -1435,46 +1440,76 @@ Func FirstCheck()
 			BuilderBase()
 		EndIf
 	EndIf
-
+	; /////////////////////////////
+	
+	SetDebugLog("-- FirstCheck Loop --")
 	If Not $g_bRunState Then Return
+
+	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
+
+	$g_bRestart = False
+	$g_bFullArmy = False
+	$g_iCommandStop = -1
+
+	;;;;;Check Town Hall level
+	Local $iTownHallLevel = $g_iTownHallLevel
+	SetDebugLog("Detecting Town Hall level", $COLOR_INFO)
+	SetDebugLog("Town Hall level is currently saved as " &  $g_iTownHallLevel, $COLOR_INFO)
+	imglocTHSearch(False, True, True) ;Sets $g_iTownHallLevel
+	SetDebugLog("Detected Town Hall level is " &  $g_iTownHallLevel, $COLOR_INFO)
+	If $g_iTownHallLevel = $iTownHallLevel Then
+		SetDebugLog("Town Hall level has not changed", $COLOR_INFO)
+	Else
+		If $g_iTownHallLevel < $iTownHallLevel Then
+			SetDebugLog("Bad town hall level read...saving bigger old value", $COLOR_ERROR)
+			$g_iTownHallLevel = $iTownHallLevel
+			saveConfig()
+			applyConfig()
+		Else
+			SetDebugLog("Town Hall level has changed!", $COLOR_INFO)
+			SetDebugLog("New Town hall level detected as " &  $g_iTownHallLevel, $COLOR_INFO)
+			saveConfig()
+			applyConfig()
+		EndIf
+	EndIf
+	;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+	VillageReport()
+	If Not $g_bRunState Then Return
+
+	If $g_bOutOfGold And (Number($g_aiCurrentLoot[$eLootGold]) >= Number($g_iTxtRestartGold)) Then ; check if enough gold to begin searching again
+		$g_bOutOfGold = False ; reset out of gold flag
+		SetLog("Switching back to normal after no gold to search ...", $COLOR_SUCCESS)
+		Return ; Restart bot loop to reset $g_iCommandStop & $g_bTrainEnabled + $g_bDonationEnabled via BotCommand()
+	EndIf
+
+	If $g_bOutOfElixir And (Number($g_aiCurrentLoot[$eLootElixir]) >= Number($g_iTxtRestartElixir)) And (Number($g_aiCurrentLoot[$eLootDarkElixir]) >= Number($g_iTxtRestartDark)) Then ; check if enough elixir to begin searching again
+		$g_bOutOfElixir = False ; reset out of gold flag
+		SetLog("Switching back to normal setting after no elixir to train ...", $COLOR_SUCCESS)
+		Return ; Restart bot loop to reset $g_iCommandStop & $g_bTrainEnabled + $g_bDonationEnabled via BotCommand()
+	EndIf
+
+	If _Sleep($DELAYRUNBOT5) Then Return
+	checkMainScreen(False)
 	If $g_bRestart Then Return
-	If _Sleep($DELAYRUNBOT2) Then Return
 
-	If Not $g_bRunState Then Return
-	If $g_iCommandStop <> 3 And $g_iCommandStop <> 0 Then
+	If BotCommand() Then btnStop()
+
+	If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
 		; VERIFY THE TROOPS AND ATTACK IF IS FULL
-		SetLog("-- FirstCheck on Train --", $COLOR_DEBUG)
+		SetDebugLog("-- FirstCheck on Train --")
 		TrainSystem()
-		SetLog("Are you ready? " & String($g_bIsFullArmywithHeroesAndSpells), $COLOR_INFO)
+		If Not $g_bRunState Then Return
+		SetDebugLog("Are you ready? " & String($g_bIsFullArmywithHeroesAndSpells))
 		If $g_bIsFullArmywithHeroesAndSpells Then
+			; Just in case of new profile! or BotDetectFirstTime() failed on Initiate()
+			If Not isInsideDiamond($g_aiTownHallPos) Then BotDetectFirstTime()
 			; Now the bot can attack
 			If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
 				Setlog("Before any other routine let's attack!", $COLOR_INFO)
-				Local $loopcount = 1
-				While True
-					$g_bRestart = False
-					If Not $g_bRunState Then Return
-					If AttackMain(True) Then
-						Setlog("[" & $loopcount & "] 1st Attack Loop Success", $COLOR_SUCCESS)
-						ExitLoop
-					Else
-						$loopcount += 1
-						If $loopcount > 3 Then
-							Setlog("1st Attack Loop, Already Try 3 times... Exit", $COLOR_ERROR)
-							ExitLoop
-						Else
-							Setlog("[" & $loopcount & "] 1st Attack Loop, Failed", $COLOR_INFO)
-						EndIf
-					EndIf
-					If Not $g_bRunState Then Return
-					If $g_bRestart Then Return
-					If _Sleep($DELAYRUNBOT2) Then Return
-				Wend
-				If ByPassedForceBBAttackOnClanGames(False, True) Then
-					SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
-					SetLog("Because running CG Event is BB Challenges", $COLOR_INFO)
-					BuilderBase() ;force go to bb todo event
-				EndIf
+				If Not $g_bRunState Then Return
+				AttackMain()
+				$g_bSkipFirstZoomout = False
 				If $g_bOutOfGold Then
 					SetLog("Switching to Halt Attack, Stay Online/Collect mode", $COLOR_ERROR)
 					$g_bFirstStart = True ; reset First time flag to ensure army balancing when returns to training
@@ -1483,9 +1518,8 @@ Func FirstCheck()
 				If _Sleep($DELAYRUNBOT1) Then Return
 			EndIf
 		EndIf
-
 	EndIf
-
+	
 	If Not $g_bRunState Then Return
 	If $g_bRestart Then Return
 	If _Sleep($DELAYRUNBOT2) Then Return
@@ -1546,26 +1580,7 @@ Func FirstCheck()
 	If Not $g_bRunState Then Return
 	If $g_bRestart Then Return
 	If _Sleep($DELAYRUNBOT2) Then Return
-
-	RequestCC(False)
-	checkArmyCamp(False, True)
-	PrepareDonateCC()
-	DonateCC()
-	TrainSystem()
-	
-	If $g_bChkOnlyFarm Then
-		Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard'];, 'Laboratory', 'UpgradeWall', 'UpgradeBuilding']
-		For $Index In $aRndFuncList
-			If Not $g_bRunState Then Return
-			_RunFunction($Index)
-			If _Sleep(50) Then Return
-			If $g_bRestart Then ExitLoop
-			If CheckAndroidReboot() Then ContinueLoop
-			If checkObstacles() Then ContinueLoop
-		Next
-	EndIf
-	
-EndFunc
+EndFunc   ;==>FirstCheck
 
 Func SetSAtk($attack = False)
 
