@@ -273,7 +273,7 @@ Func GoToClanGames()
 EndFunc   ;==>GoToClanGames
 
 Func SmartBuilderBase()
-	Local $bSmartBuilderBase = ($g_bChkOnlyBuilderBaseGC = True And ClanGamesStatus() == "True" And $g_bIsBBevent = True And ClanGamesBB())
+	Local $bSmartBuilderBase = ($g_bChkOnlyBuilderBaseGC = True And ClanGamesStatus() == "True" And $g_bIsBBevent = True And ClanGamesBB() = True)
 	Return $bSmartBuilderBase
 EndFunc   ;==>SmartBuilderBase
 
@@ -285,7 +285,7 @@ EndFunc   ;==>PlayBBOnly
 
 Func ByPassedForceBBAttackOnClanGames($bContion = False, $bReturnBy = True)
 	; I am too lazy...
-	If $g_bChkForceBBAttackOnClanGames = True And ClanGamesStatus() == "True" And $g_bIsBBevent = True Then
+	If $g_bChkForceBBAttackOnClanGames = True And ClanGamesStatus() == "True" And $g_bIsBBevent = True And ClanGamesBB() = True Then
 		Return $bReturnBy
 	ElseIf SmartBuilderBase() = True Then
 		Return $bReturnBy

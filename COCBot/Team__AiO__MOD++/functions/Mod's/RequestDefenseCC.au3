@@ -133,7 +133,7 @@ Func RequestFromChat()
 				_makerequest($aRequestButtonPos)
 				
 				If _Wait4PixelGoneArray($aChatTab) Then
-					ClickAway(True, True)
+					ClickAway("Right", True)
 				EndIf
 			EndIf
 			
