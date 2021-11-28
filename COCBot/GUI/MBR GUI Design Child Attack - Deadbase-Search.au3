@@ -190,11 +190,7 @@ Func CreateAttackSearchDeadBaseSearch()
 		$g_hTxtDBMinGold = _GUICtrlCreateInput("80000", $x + 85, $y, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "TxtMinGold_Info_01", "Set the Min. amount of Gold to search for on a village to attack.")
 			_GUICtrlSetTip(-1, $sTxtTip)
-			GUICtrlSetLimit(-1, 7) ; Custom fix - Team AIO Mod++
-;~ 		; Gold DB - Team AiO MOD++
-;~ 		$g_hMinArmyUmbralGoldDB = _GUICtrlCreateInput("0", $x + 85 + 75, $y, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
-;~ 			_GUICtrlSetTip(-1, $sMinUmbralTip)
-;~ 			GUICtrlCreateLabel("%", $x + 85 + 85 + 20, $y, 12, 17)
+			GUICtrlSetLimit(-1, 7) ;HArchH Increase to 7 digits for Gold
 
 		$g_hPicDBMinGold = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 140, $y, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
@@ -203,11 +199,7 @@ Func CreateAttackSearchDeadBaseSearch()
 		$g_hTxtDBMinElixir = _GUICtrlCreateInput("80000", $x + 85, $y, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "TxtMinElixir_Info_01", "Set the Min. amount of Elixir to search for on a village to attack.")
 			_GUICtrlSetTip(-1, $sTxtTip)
-			GUICtrlSetLimit(-1, 7) ; Custom fix - Team AIO Mod++
-		; Elixir DB - Team AiO MOD++
-;~ 		$g_hMinArmyUmbralElixirDB = _GUICtrlCreateInput("0", $x + 85 + 75, $y + 1, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
-;~ 			_GUICtrlSetTip(-1, $sMinUmbralTip)
-;~ 			GUICtrlCreateLabel("%", $x + 85 + 85 + 20, $y + 1, 12, 17)
+			GUICtrlSetLimit(-1, 7) ;HArchH Increase to 7 digits for Elixir
 
 		$g_hPicDBMinElixir = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnElixir, $x + 140, $y, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
@@ -216,12 +208,8 @@ Func CreateAttackSearchDeadBaseSearch()
 		$g_hTxtDBMinGoldPlusElixir = _GUICtrlCreateInput("160000", $x + 85, $y, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "TxtMinGoldPlusElixir_Info_01", "Set the Min. amount of Gold + Elixir to search for on a village to attack.")
 			_GUICtrlSetTip(-1, $sTxtTip)
-			GUICtrlSetLimit(-1, 7) ; Custom fix - Team AIO Mod++
+			GUICtrlSetLimit(-1, 7) ;HArchH Increase to 7 digits for G+E
 			GUICtrlSetState (-1, $GUI_HIDE)
-		; Plus DB - Team AiO MOD++
-;~ 		$g_hMinArmyUmbralPlusDB = _GUICtrlCreateInput("0", $x + 85 + 75, $y + 35, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
-;~ 			_GUICtrlSetTip(-1, $sMinUmbralTip)
-;~ 			GUICtrlCreateLabel("%", $x + 85 + 85 + 20, $y + 35, 12, 17)
 
 		$g_hPicDBMinGPEGold = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnGoldElixir, $x + 140, $y + 1, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
@@ -236,10 +224,6 @@ Func CreateAttackSearchDeadBaseSearch()
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 5)
 			_GUICtrlEdit_SetReadOnly(-1, True)
-		; Dark Elixir DB - Team AiO MOD++
-;~ 		$g_hMinArmyUmbralDarkDB = _GUICtrlCreateInput("0", $x + 85 + 75, $y + 24, 25, 18, BitOR($GUI_SS_DEFAULT_INPUT,$ES_CENTER,$ES_NUMBER))
-;~ 			_GUICtrlSetTip(-1, $sMinUmbralTip)
-;~ 			GUICtrlCreateLabel("%", $x + 85 + 85 + 20, $y + 24, 12, 17)
 
 		$g_hPicDBMinDarkElixir = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 140, $y, 16, 16)
 			_GUICtrlSetTip(-1, $sTxtTip)
