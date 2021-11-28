@@ -742,7 +742,7 @@ Func runBot() ;Bot that runs everything in order
 		If isOnBuilderBase() Then SwitchBetweenBases()
 		_ClanGames()
 		SetLog("Let's play builder base only.")
-		runBuilderBase()
+		BuilderBase()
 	Else
 		FirstCheck()
 	EndIf
