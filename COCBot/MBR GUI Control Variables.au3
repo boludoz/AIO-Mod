@@ -179,7 +179,8 @@ Func InitializeControlVariables()
 	$groupStoneSlammer = $g_ahPicTrainArmySiege[$eSiegeStoneSlammer]&"#"&$g_ahTxtTrainArmySiegeCount[$eSiegeStoneSlammer]&"#"&$g_ahLblTrainArmySiegeLevel[$eSiegeStoneSlammer]
 	$groupSiegeBarracks = $g_ahPicTrainArmySiege[$eSiegeBarracks]&"#"&$g_ahTxtTrainArmySiegeCount[$eSiegeBarracks]&"#"&$g_ahLblTrainArmySiegeLevel[$eSiegeBarracks]
 	$groupLogLauncher = $g_ahPicTrainArmySiege[$eSiegeLogLauncher]&"#"&$g_ahTxtTrainArmySiegeCount[$eSiegeLogLauncher]&"#"&$g_ahLblTrainArmySiegeLevel[$eSiegeLogLauncher]
-	$groupListSieges = $groupWallWrecker&"#"&$groupBattleBlimp&"#"&$groupStoneSlammer&"#"&$groupSiegeBarracks&"#"&$groupLogLauncher
+	$groupFlameFlinger = $g_ahPicTrainArmySiege[$eSiegeFlameFlinger]&"#"&$g_ahTxtTrainArmySiegeCount[$eSiegeFlameFlinger]&"#"&$g_ahLblTrainArmySiegeLevel[$eSiegeFlameFlinger]
+	$groupListSieges = $groupWallWrecker&"#"&$groupBattleBlimp&"#"&$groupStoneSlammer&"#"&$groupSiegeBarracks&"#"&$groupFlameFlinger&"#"&$groupLogLauncher
 
    ;TH Level
    $g_aGroupListTHLevels = $g_ahPicTHLevels[4]&"#"&$g_ahPicTHLevels[5]&"#"&$g_ahPicTHLevels[6]&"#"&$g_ahPicTHLevels[7]&"#"&$g_ahPicTHLevels[8]&"#"& _
