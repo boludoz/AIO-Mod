@@ -114,27 +114,27 @@ EndFunc   ;==>chkMaxSidesSF
 
 Func chkUseSmartFarmAndRandomDeploy()
 	If $g_iGuiMode <> 1 Then Return
-	If GUICtrlRead($g_hChkSmartFarmAndRandomDeploy) = $GUI_CHECKED And $g_abAttackTypeEnable[$DB] And $g_aiAttackAlgorithm[$DB] = 2 And Not $g_abAttackTypeEnable[$LB] Then
+	If GUICtrlRead($g_hChkSmartFarmAndRandomDeploy) = $GUI_CHECKED Then
 		$g_bUseSmartFarmAndRandomDeploy = True
 	Else
-		GUICtrlSetState($g_hChkSmartFarmAndRandomDeploy, $GUI_UNCHECKED)
+		; GUICtrlSetState($g_hChkSmartFarmAndRandomDeploy, $GUI_UNCHECKED)
 		$g_bUseSmartFarmAndRandomDeploy = False
 	EndIf
 EndFunc   ;==>chkUseSmartFarmAndRandomDeploy
 
 Func chkUseSmartFarmAndRandomQuant()
 	If $g_iGuiMode <> 1 Then Return
-	If GUICtrlRead($g_hChkSmartFarmAndRandomQuant) = $GUI_CHECKED And $g_abAttackTypeEnable[$DB] And $g_aiAttackAlgorithm[$DB] = 2 And Not $g_abAttackTypeEnable[$LB] Then
+	If GUICtrlRead($g_hChkSmartFarmAndRandomQuant) = $GUI_CHECKED Then
 		$g_bUseSmartFarmAndRandomQuant = True
 	Else
-		GUICtrlSetState($g_hChkSmartFarmAndRandomQuant, $GUI_UNCHECKED)
+		; GUICtrlSetState($g_hChkSmartFarmAndRandomQuant, $GUI_UNCHECKED)
 		$g_bUseSmartFarmAndRandomQuant = False
 	EndIf
 EndFunc   ;==>chkUseSmartFarmAndRandomQuant
 
 Func ChkSmartFarmSpellsEnable()
 	If $g_iGuiMode <> 1 Then Return
-	If GUICtrlRead($g_hSmartFarmSpellsEnable) = $GUI_CHECKED And $g_abAttackTypeEnable[$DB] And $g_aiAttackAlgorithm[$DB] = 2 And Not $g_abAttackTypeEnable[$LB] Then
+	If GUICtrlRead($g_hSmartFarmSpellsEnable) = $GUI_CHECKED Then
 		$g_bSmartFarmSpellsEnable = True
 		GUICtrlSetState($g_hCmbSmartFarmSpellsHowManySides, $GUI_ENABLE)
 	Else
