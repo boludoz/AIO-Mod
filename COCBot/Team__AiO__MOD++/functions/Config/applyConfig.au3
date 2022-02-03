@@ -720,6 +720,9 @@ Func ApplyConfig_MOD_OneGem($TypeReadSave)
 			For $i = 0 To 2
 				 _GUICtrlComboBox_SetCurSel($g_hCmbSwitchBoostSchedule[$i], $g_iSwitchBoostSchedule[$i])
 			Next
+			
+			; Set on GUI 
+			CmbSwitchBoostSchedule()
 		Case "Save"
 			; One Gem Boost - Team AiO MOD++
 			$g_bChkOneGemBoostBarracks = (GUICtrlRead($g_hChkOneGemBoostBarracks) = $GUI_CHECKED)
