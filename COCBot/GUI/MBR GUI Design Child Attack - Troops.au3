@@ -509,7 +509,7 @@ Func CreateTrainBoost()
 	$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "LblEverythingBoost_Info_01", "Use this to boost everything with POTIONS! Use with caution!")
 	_GUICtrlSetTip(-1, $sTxtTip)
 	$g_hCmbBoostEverything = GUICtrlCreateCombo("", $x + 135, $y, 60, 25, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
-	GUICtrlSetData(-1, "0|1|2|3|4|5|" & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "Troops_Boost_No_Limit", "|" & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "Troops_Boost_No_Limit", "No limit")), "0") ; Custom boost - Team AIO Mod++
+	GUICtrlSetData(-1, "0|1|2|3|4|5|" & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "Troops_Boost_No_Limit", "No limit"), "0") ; Custom boost - Team AIO Mod++
 	_GUICtrlSetTip(-1, $sTxtTip)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
