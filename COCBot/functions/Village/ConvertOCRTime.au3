@@ -54,10 +54,19 @@ Func ConvertOCRTime($sCaller, $sConvertTo, $bSetLog = True, $sReturnFormat = "mi
 				SetError(3, "Error processing time string")
 				Return $iRemainTimer
 		EndSwitch
-
+		
 		If $iRemainTimer = 0 And $g_bDebugSetlog Then SetDebugLog($sCaller & ": Bad OCR string", $COLOR_ERROR)
-
-		If $bSetLog Then SetLog($sCaller & " Time: " & $iRemainTimer & " " & $sReturnFormat, $COLOR_INFO)
+		
+		#Region - Custom boost - Team AIO Mod++
+		Local $sBoosted = $iRemainTimer 
+		Switch $sCaller
+			Case "King", "Queen", "Warden", "Champion", "Siege", "Spells", "Troops"
+				BoostItemsTimeCalc($iRemainTimer, $g_sBoostEverythingTime)
+		EndSwitch
+		$sBoosted = ($sBoosted > $iRemainTimer) ? ("True") : ("False")
+		
+		If $bSetLog Then SetLog($sCaller & " Time: " & $iRemainTimer & " " & $sReturnFormat & " Is boosted? " & $sBoosted, $COLOR_INFO)
+		#EndRegion - Custom boost - Team AIO Mod++
 	Else
 		SetDebugLog("Can not read remaining time for " & $sCaller, $COLOR_ERROR)
 	EndIf

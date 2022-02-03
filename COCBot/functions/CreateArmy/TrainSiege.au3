@@ -77,6 +77,9 @@ Func TrainSiege($bTrainFullSiege = False)
 		Local $HowMany = $g_aiArmyCompSiegeMachines[$i] - $g_aiCurrentSiegeMachines[$i] - $aiQueueSiegeMachine[$i]
 		Local $checkPixel
 		SetDebugLog("HArchH: $HowMany = " & $HowMany, $COLOR_DEBUG)
+		If $HowMany > 0 And $iSiegeIndex = $eSiegeFlameFlinger Then 
+			DragSiege("Next", 1)
+		EndIf
 		;Regular price pixel colors
 		If $iSiegeIndex = $eSiegeWallWrecker Then $checkPixel = $aCheckIsAvailableSiege
 		If $iSiegeIndex = $eSiegeBattleBlimp Then $checkPixel = $aCheckIsAvailableSiege1
@@ -98,6 +101,9 @@ Func TrainSiege($bTrainFullSiege = False)
 			$aiTotalSiegeMachine[$i] += $HowMany
 			If _Sleep(250) Then Return
 		EndIf
+		If $HowMany > 0 And $iSiegeIndex = $eSiegeFlameFlinger Then 
+			DragSiege("Prev", 1)
+		EndIf
 		If Not $g_bRunState Then Return
 	Next
 
@@ -111,6 +117,9 @@ Func TrainSiege($bTrainFullSiege = False)
 			SetDebugLog("HArchH: Refill2", $COLOR_DEBUG)
 			Local $HowMany = $g_aiArmyCompSiegeMachines[$i] * 2 - $aiTotalSiegeMachine[$i]
 			Local $checkPixel
+			If $HowMany > 0 And $iSiegeIndex = $eSiegeFlameFlinger Then 
+				DragSiege("Next", 1)
+			EndIf
 			;Regular price pixel colors
 			If $iSiegeIndex = $eSiegeWallWrecker Then $checkPixel = $aCheckIsAvailableSiege
 			If $iSiegeIndex = $eSiegeBattleBlimp Then $checkPixel = $aCheckIsAvailableSiege1
@@ -130,6 +139,9 @@ Func TrainSiege($bTrainFullSiege = False)
 				Setlog("Build " & $HowMany & " " & $sSiegeName, $COLOR_SUCCESS)
 				If _Sleep(250) Then Return
 			EndIf
+			If $HowMany > 0 And $iSiegeIndex = $eSiegeFlameFlinger Then 
+				DragSiege("Prev", 1)
+			EndIf
 			If Not $g_bRunState Then Return
 		Next
 	EndIf
@@ -139,13 +151,22 @@ Func TrainSiege($bTrainFullSiege = False)
 	Local $sSiegeTime = getRemainBuildTimer(780, 244) ; Get time via OCR.
 	If $sSiegeTime <> "" Then
 		$g_aiTimeTrain[3] = ConvertOCRTime("Siege", $sSiegeTime, False) ; Update global array
-		
-		; Calc sieges - Custom boost - Team AIO Mod++
-		BoostItemsTimeCalc($g_aiTimeTrain[3], $g_sBoostEverythingTime)
-		
 		SetLog("Remaining Siege build time: " & StringFormat("%.2f", $g_aiTimeTrain[3]), $COLOR_INFO)
 	EndIf
 EndFunc   ;==>TrainSiege
+
+Func DragSiege($Direction = "Next", $HowMany = 1)
+	Local $DragYPoint =  500
+	For $i = 1 To $HowMany
+		Switch $Direction
+			Case "Next"
+				ClickDrag(550, $DragYPoint, 378, $DragYPoint, 500)
+			Case "Prev"
+				ClickDrag(370, $DragYPoint, 542, $DragYPoint, 500)
+		EndSwitch
+		If _Sleep(1000) Then Return
+	Next
+EndFunc
 
 Func CheckQueueSieges($bGetQuantity = True, $bSetLog = True, $x = 839, $bQtyWSlot = False)
 	Local $aResult[1] = [""]
@@ -188,3 +209,4 @@ Func CheckQueueSieges($bGetQuantity = True, $bSetLog = True, $x = 839, $bQtyWSlo
 	_ArrayReverse($aResult)
 	Return $aResult
 EndFunc   ;==>CheckQueueTroops
+

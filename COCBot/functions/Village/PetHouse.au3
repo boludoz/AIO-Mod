@@ -180,7 +180,7 @@ Func CheckPetUpgrade()
 		If _Sleep($DELAYLABORATORY2) Then Return
 		; upgrade in process and time not recorded so update completion time!
 		Local $sPetTimeOCR = getRemainTLaboratory(274, 286)
-		Local $iPetFinishTime = ConvertOCRTime("Lab Time", $sPetTimeOCR, False)
+		Local $iPetFinishTime = ConvertOCRTime("Pets Time", $sPetTimeOCR, False)
 		SetDebugLog("$sPetTimeOCR: " & $sPetTimeOCR & ", $iPetFinishTime = " & $iPetFinishTime & " m")
 		If $iPetFinishTime > 0 Then
 			$g_sPetUpgradeTime = _DateAdd('n', Ceiling($iPetFinishTime), _NowCalc())
@@ -334,7 +334,7 @@ Func PetGuiDisplay()
 		;===========================================
 		If _Sleep($DELAYLABORATORY2) Then Return
 		Local $sPetTimeOCR = getRemainTLaboratory(274, 286)
-		Local $iPetFinishTime = ConvertOCRTime("Lab Time", $sPetTimeOCR, False)
+		Local $iPetFinishTime = ConvertOCRTime("Pets Time", $sPetTimeOCR, False)
 		SetDebugLog("$sPetTimeOCR: " & $sPetTimeOCR & ", $iPetFinishTime = " & $iPetFinishTime & " m")
 		If $iPetFinishTime > 0 Then
 			$g_sPetUpgradeTime = _DateAdd('n', Ceiling($iPetFinishTime), _NowCalc())

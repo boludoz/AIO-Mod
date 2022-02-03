@@ -243,16 +243,16 @@ Func AttackReport()
 		setZombie($g_iStatsLastAttack[$eLootElixir])
 	EndIf
 
-	; Share Replay
-	If $g_bShareAttackEnable Then
-		If (Number($g_iStatsLastAttack[$eLootGold]) >= Number($g_iShareMinGold)) And (Number($g_iStatsLastAttack[$eLootElixir]) >= Number($g_iShareMinElixir)) And (Number($g_iStatsLastAttack[$eLootDarkElixir]) >= Number($g_iShareMinDark)) Then
+ 	; Share Replay
+ 	If $g_bShareAttackEnable Then
+ 		If (Number($g_iStatsLastAttack[$eLootGold]) >= Number($g_iShareMinGold)) And (Number($g_iStatsLastAttack[$eLootElixir]) >= Number($g_iShareMinElixir)) And (Number($g_iStatsLastAttack[$eLootDarkElixir]) >= Number($g_iShareMinDark)) Then
 			SetLog("Reached minimum Loot values. Share Replay")
-			$g_bShareAttackEnableNow = True
-		Else
+ 			$g_bShareAttackEnableNow = True
+ 		Else
 			SetLog("Below minimum Loot values. No Share Replay")
-			$g_bShareAttackEnableNow = False
-		EndIf
-	EndIf
+ 			$g_bShareAttackEnableNow = False
+ 		EndIf
+ 	EndIf
 
 	If $g_iFirstAttack = 0 Then $g_iFirstAttack = 1
 	$g_iStatsTotalGain[$eLootGold] += $g_iStatsLastAttack[$eLootGold] + $g_iStatsBonusLast[$eLootGold]

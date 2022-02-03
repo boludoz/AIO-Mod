@@ -63,7 +63,6 @@ Func getResourcesLoot($x_start, $y_start) ; -> Gets complete value of Gold/Elixi
 	Return getOcrAndCapture("coc-loot", $x_start, $y_start, 160, 22, True)
 EndFunc   ;==>getResourcesLoot
 
-;HArchH Needs to be a bit longer.  Was 75, trying 85
 Func getResourcesLootDE($x_start, $y_start) ; -> Gets complete value of Dark Elixir after attack xxx,xxx "AttackReport"
     Return getOcrAndCapture("coc-loot", $x_start, $y_start, 85, 22, True)
 EndFunc   ;==>getResourcesLootDE
