@@ -5,7 +5,7 @@
 ; Parameters ....:
 ; Return values .: None
 ; Author ........: MR.ViPER (9/9/2016)
-; Modified ......: MR.ViPER (17/10/2016), Fliegerfaust (21/12/2017)
+; Modified ......: MR.ViPER (17/10/2016), Fliegerfaust (21/12/2017), Boldina (29/1/2022)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -50,17 +50,17 @@ Func BoostTrainBuilding($sName, $iCmbBoost, $iCmbBoostCtrl)
 		Else
 			SetDebugLog("BoostTrainBuilding(): $sName called with a wrong Value.", $COLOR_ERROR)
 			ClickAway()
-			_Sleep($DELAYBOOSTBARRACKS2)
+			If _Sleep($DELAYBOOSTBARRACKS2) Then Return ; Custom fix - Team AIO Mod++
 			Return $bBoosted
 		EndIf
 		Local $aBoostBtn = findButton("BoostBarrack")
 		If IsArray($aBoostBtn) Then
 			ClickP($aBoostBtn)
-			_Sleep($DELAYBOOSTBARRACKS1)
+			If _Sleep($DELAYBOOSTBARRACKS1) Then Return ; Custom fix - Team AIO Mod++
 			Local $aGemWindowBtn = findButton("GEM")
 			If IsArray($aGemWindowBtn) Then
 				ClickP($aGemWindowBtn)
-				_Sleep($DELAYBOOSTBARRACKS2)
+				If _Sleep($DELAYBOOSTBARRACKS2) Then Return ; Custom fix - Team AIO Mod++
 				If IsArray(findButton("EnterShop")) Then
 					SetLog("Not enough gems to boost " & $sName, $COLOR_ERROR)
 				Else
@@ -90,11 +90,22 @@ Func BoostTrainBuilding($sName, $iCmbBoost, $iCmbBoostCtrl)
 	EndIf
 
 	ClickAway() ; ClickP($aAway, 1, 0, "#0161")
-	_Sleep($DELAYBOOSTBARRACKS2)
+	If _Sleep($DELAYBOOSTBARRACKS2) Then Return ; Custom fix - Team AIO Mod++
 	Return $bBoosted
 EndFunc   ;==>BoostTrainBuilding
 
 Func BoostEverything()
+	; Custom fix - Team AIO Mod++
+	#Region - Dates - Team AIO Mod++
+	If _DateIsValid($g_sBoostEverythingTime) Then
+		Local $iDateDiff = _DateDiff('s', _NowCalc(), $g_sBoostEverythingTime)
+		If $iDateDiff > 0 And $g_sConstBoostEverything > $iDateDiff Then
+			SetLog("Boost everything: We will return when the boost is neccessary.", $COLOR_INFO)
+			Return
+		EndIf
+	EndIf
+	#EndRegion - Dates - Team AIO Mod++
+
 	; Verifying existent Variables to run this routine
 	If Not AllowBoosting("Everything", $g_iCmbBoostEverything) Then Return
 
@@ -104,12 +115,51 @@ Func BoostEverything()
 		SaveConfig()
 		If _Sleep($DELAYBOOSTBARRACKS2) Then Return
 	EndIf
+	
+	; Custom fix - Team AIO Mod++
+	; Local $bReturn = BoostPotion("Everything", "Town Hall", $g_aiTownHallPos, $g_iCmbBoostEverything, $g_hCmbBoostEverything) = _NowCalc() ??????? 
+	Local $bReturn = BoostPotion("Everything", "Town Hall", $g_aiTownHallPos, $g_iCmbBoostEverything, $g_hCmbBoostEverything)
+	
+	If $bReturn Then
+	
+		; Custom boost - Team AIO Mod++ 
+		$g_sBoostEverythingTime = _DateAdd('n', 60, _NowCalc()) ; Very important save this in config, it is better than others things
 
-	Return BoostPotion("Everything", "Town Hall", $g_aiTownHallPos, $g_iCmbBoostEverything, $g_hCmbBoostEverything) = _NowCalc()
-	$g_aiTimeTrain[0] = 0 ; reset Troop remaining time
-	$g_aiTimeTrain[1] = 0 ; reset Spells remaining time
-	$g_aiTimeTrain[2] = 0 ; reset Heroes remaining time
+		; Reset troops
+		$g_aiTimeTrain[0] = 0
+
+		; Reset spells
+		$g_aiTimeTrain[1] = 0
+
+		; Reset heros
+		$g_aiTimeTrain[2] = 0
+		
+		; Reset sieges
+		$g_aiTimeTrain[3] = 0
+	EndIf
 
 	If _Sleep($DELAYBOOSTBARRACKS3) Then Return
 	checkMainScreen(False) ; Check for errors during function
+	Return $bReturn ; Custom fix - Team AIO Mod++
 EndFunc   ;==>BoostEverything
+	
+#cs - Usage
+; Calc troops - Custom boost - Team AIO Mod++
+BoostItemsTimeCalc($g_aiTimeTrain[0], $g_sBoostEverythingTime)
+
+; Calc spells - Custom boost - Team AIO Mod++
+BoostItemsTimeCalc($g_aiTimeTrain[1], $g_sBoostEverythingTime)
+
+; Calc heros - Custom boost - Team AIO Mod++
+BoostItemsTimeCalc($g_aiTimeTrain[2], $g_sBoostEverythingTime)
+
+; Calc sieges - Custom boost - Team AIO Mod++
+BoostItemsTimeCalc($g_aiTimeTrain[3], $g_sBoostEverythingTime)
+#ce
+
+; Boldina ! I am here ! Hola !
+Func BoostItemsTimeCalc(ByRef $iTrainMinutes, $sBoostFinishDate = $g_sBoostEverythingTime)
+	Local $sDate = _DateDiff('n', _NowCalc(), $sBoostFinishDate)
+	If @error Or $sDate <= 0 Then Return
+	$iTrainMinutes -= ($sDate * 0.75)
+ EndFunc   ;==>BoostEverythingTimeCalc

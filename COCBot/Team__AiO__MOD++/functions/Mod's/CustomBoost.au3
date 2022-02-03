@@ -1,5 +1,5 @@
 ; #FUNCTION# ====================================================================================================================
-; Name ..........: OneGemBoost.au3
+; Name ..........: CustomBoost.au3
 ; Description ...: Check one gem boost.
 ; Author ........: Ahsan Iqbal (2018)
 ; Modified ......: Boldina (08/2021)
@@ -10,6 +10,9 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func OneGemBoost($bDebug = False)
+	; Schedule boost - Team AIO Mod++ 
+	If Not IsScheduleBoost() Then Return
+	
 	Static $aHeroBoostedStartTime[$g_eTotalAcc][$eHeroCount], $aBuildingBoostedStartTime[$g_eTotalAcc][3], $aLastTimeChecked = $g_PreResetZero
 	If $aLastTimeChecked[$g_iCurAccount] <> 0 And Not $bDebug Then
 		Local $iDateCalc = _DateDiff('n', _NowCalc(), $aLastTimeChecked[$g_iCurAccount])
@@ -206,3 +209,80 @@ Func BoostOneGemBuilding($sBoostBuildingNames, $bDebug = False)
 	If _Sleep(250) Then Return
 	Return $bBuildingBoosted
 EndFunc   ;==>BoostOneGemBuilding
+
+; #FUNCTION# ====================================================================================================================
+; Name ..........: CustomBoost.au3
+; Description ...: Schedule boost.
+; Author ........: Boldina (02/02/2022)
+; Modified ......: 
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2022
+;                  MyBot is distributed under the terms of the GNU GPL
+; Related .......:
+; Link ..........: https://github.com/MyBotRun/MyBot/wiki
+; Example .......: No
+; ===============================================================================================================================
+Func TestIsScheduleBoost()
+	$g_aiCurrentLoot[$eLootGold] = 10000
+	$g_aiCurrentLoot[$eLootElixir] = 10000
+	$g_aiCurrentLoot[$eLootDarkElixir] = 10000
+	If IsScheduleBoost() Then
+		SetLog("TestIsScheduleBoost cond ok")
+	EndIf
+EndFunc   ;==>TestIsScheduleBoost
+
+Func IsScheduleBoost()
+	Local $bMustBoost = True
+	
+	If $g_iCommandStop = 0 Or $g_iCommandStop = 3 Then ;halt attack.. do not boost now
+		SetLog("Boost skipped, account on halt attack mode.", $COLOR_ACTION)
+		Return False
+	EndIf
+	
+	If $g_iSwitchBoostSchedule[$eLootGold] = 1 Then
+		$bMustBoost = ($g_aiCurrentLoot[$eLootGold] > $g_iMinBoostGold)
+	ElseIf $g_iSwitchBoostSchedule[$eLootGold] = 2 Then
+		$bMustBoost = ($g_aiCurrentLoot[$eLootGold] <= $g_iMinBoostGold)
+	EndIf
+	
+	If $g_iSwitchBoostSchedule[$eLootElixir] = 1 Then
+		$bMustBoost = $bMustBoost And ($g_aiCurrentLoot[$eLootElixir] > $g_iMinBoostElixir)
+	ElseIf $g_iSwitchBoostSchedule[$eLootElixir] = 2 Then
+		$bMustBoost = $bMustBoost And ($g_aiCurrentLoot[$eLootElixir] <= $g_iMinBoostElixir)
+	EndIf
+
+	If StringIsSpace($g_aiCurrentLoot[$eLootDarkElixir]) = 0 Then ; check if the village have a Dark Elixir Storage
+		If $g_iSwitchBoostSchedule[$eLootDarkElixir] = 1 Then
+			$bMustBoost = $bMustBoost And ($g_aiCurrentLoot[$eLootDarkElixir] > $g_iMinBoostDark)
+		ElseIf $g_iSwitchBoostSchedule[$eLootDarkElixir] = 2 Then
+			$bMustBoost = $bMustBoost And ($g_aiCurrentLoot[$eLootDarkElixir] <= $g_iMinBoostDark)
+		EndIf
+	EndIf
+	
+	If $bMustBoost = False Then SetLog("Boost skipped, resource condition successfully completed.", $COLOR_ACTION)
+
+	Return $bMustBoost
+EndFunc   ;==>IsScheduleBoost
+
+; GUI Ctrl
+Func CmbSwitchBoostSchedule()
+	$g_iSwitchBoostSchedule[$eLootGold] = _GUICtrlComboBox_GetCurSel($g_hCmbSwitchBoostSchedule[0])
+	If $g_iSwitchBoostSchedule[$eLootGold] = 0 Then
+		GUICtrlSetState($g_hTxtMinBoostGold, $GUI_DISABLE)
+	Else
+		GUICtrlSetState($g_hTxtMinBoostGold, $GUI_ENABLE)
+	EndIf
+
+	$g_iSwitchBoostSchedule[$eLootElixir] = _GUICtrlComboBox_GetCurSel($g_hCmbSwitchBoostSchedule[1])
+	If $g_iSwitchBoostSchedule[$eLootElixir] = 0 Then
+		GUICtrlSetState($g_hTxtMinBoostElixir, $GUI_DISABLE)
+	Else
+		GUICtrlSetState($g_hTxtMinBoostElixir, $GUI_ENABLE)
+	EndIf
+
+	$g_iSwitchBoostSchedule[$eLootDarkElixir] = _GUICtrlComboBox_GetCurSel($g_hCmbSwitchBoostSchedule[2])
+	If $g_iSwitchBoostSchedule[$eLootDarkElixir] = 0 Then
+		GUICtrlSetState($g_hTxtMinBoostDark, $GUI_DISABLE)
+	Else
+		GUICtrlSetState($g_hTxtMinBoostDark, $GUI_ENABLE)
+	EndIf
+EndFunc   ;==>CmbSwitchBoostSchedule

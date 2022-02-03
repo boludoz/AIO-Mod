@@ -215,13 +215,26 @@ Global $g_aChallengesClanGamesStrings = ["Loot Challenges", _
 										"BB Troop Challenges"]
 #Tidy_Off
 
-Global $DiamondMiddleX
-Global $DiamondMiddleY
+; Custom 
+Global $DiamondMiddleX, $DiamondMiddleY
  
-#Region - One Gem Boost - Team AiO MOD++
+#Region - Boost - Team AiO MOD++
+
+; One Gem Boost - Team AiO MOD++
 Global $g_bChkOneGemBoostBarracks = False, $g_bChkOneGemBoostSpells = False, $g_bChkOneGemBoostHeroes = False, $g_bChkOneGemBoostWorkshop = False, $g_bOneGemEventEnded = False
 Global $g_hChkOneGemBoostBarracks = 0, $g_hChkOneGemBoostSpells = 0, $g_hChkOneGemBoostHeroes = 0, $g_hChkOneGemBoostWorkshop = 0
-#EndRegion - One Gem Boost - Team AiO MOD++
+
+; Custom boost - Team AIO Mod++ 
+Global Const $g_sConstBoostEverything = 18000 ; 18000 const = 5 hours quality check (in seconds).
+Global $g_sBoostEverythingTime = "2022/01/31 00:00:00" ; "0001/01/01 00:00:00"
+
+; Schedule boost - Team AIO Mod++ 
+Global $g_hTxtminBoostGold = 0, $g_hTxtminBoostElixir = 0, $g_hTxtminBoostDark = 0
+Global $g_iMinBoostGold = 100000, $g_iMinBoostElixir = 100000, $g_iMinBoostDark = 10000
+
+Global $g_iSwitchBoostSchedule[3]
+Global $g_hCmbSwitchBoostSchedule[3]
+#EndRegion - Boost - Team AiO MOD++
 
 #Region - AIO Updater - Team AiO MOD++
 Global $g_bCheckVersionAIO = True, $g_hChkForAIOUpdates = 0
@@ -284,7 +297,7 @@ Global $g_sDateAndTimeChampion = "2021/09/02 00:00:00"
 #Ce
 
 ; Builder base play.
-Global Const $g_sConstMaxBuilderBase = 86400 ; 86400 const = 1 day quality check.
+Global Const $g_sConstMaxBuilderBase = 86400 ; 86400 const = 1 day quality check (in seconds).
 Global $g_sDateBuilderBase = "2021/09/02 00:00:00"
 #EndRegion - Dates - Team AIO Mod++
 

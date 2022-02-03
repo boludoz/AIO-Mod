@@ -76,6 +76,9 @@ Func getArmyHeroTime($iHeroType, $bOpenArmyWindow = False, $bCloseArmyWindow = F
 
 			$aResultHeroes[$index] = ConvertOCRTime($aHeroRemainData[$index][2] & " recover" , $sResult, False) ; update global array
 			;If _DateDiff("h", $g_aiHeroBoost[$index], _NowCalc()) < 1 Then $aResultHeroes[$index] /= 4 ; Check if Bot boosted Heroes and boost is still active and if it is then reduce heal time ;)
+			
+			; Calc heros - Custom boost - Team AIO Mod++
+			BoostItemsTimeCalc($aResultHeroes[$index], $g_sBoostEverythingTime)
 
 			SetLog("Remaining " & $aHeroRemainData[$index][2] & " recover time: " & StringFormat("%.2f", $aResultHeroes[$index]), $COLOR_INFO)
 

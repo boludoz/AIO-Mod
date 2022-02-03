@@ -341,9 +341,21 @@ EndFunc   ;==>ReadConfig_MOD_Humanization
 #Region - One Gem Boost - Team AiO MOD++
 Func ReadConfig_MOD_OneGem()
 	; <><><> Attack Plan / Train Army / Boost <><><>
+
+	; One Gem Boost - Team AiO MOD++
 	IniReadS($g_bChkOneGemBoostBarracks, $g_sProfileConfigPath, "boost", "ChkOneGemBoostBarracks", $g_bChkOneGemBoostBarracks, "Bool")
 	IniReadS($g_bChkOneGemBoostSpells, $g_sProfileConfigPath, "boost", "ChkOneGemBoostSpells", $g_bChkOneGemBoostSpells, "Bool")
 	IniReadS($g_bChkOneGemBoostHeroes, $g_sProfileConfigPath, "boost", "ChkOneGemBoostHeroes", $g_bChkOneGemBoostHeroes, "Bool")
 	IniReadS($g_bChkOneGemBoostWorkshop, $g_sProfileConfigPath, "boost", "ChkOneGemBoostWorkshop", $g_bChkOneGemBoostWorkshop, "Bool")
+	
+	; Schedule boost - Team AIO Mod++
+	IniReadS($g_iMinBoostGold, $g_sProfileConfigPath, "boost", "MinBoostGold", $g_iMinBoostGold, "Int")
+	IniReadS($g_iMinBoostElixir, $g_sProfileConfigPath, "boost", "MinBoostElixir", $g_iMinBoostElixir, "Int")
+	IniReadS($g_iMinBoostDark, $g_sProfileConfigPath, "boost", "MinBoostDark", $g_iMinBoostDark, "Int")
+
+	For $i = 0 To 2
+		IniReadS($g_iSwitchBoostSchedule[$i], $g_sProfileConfigPath, "boost", "CmbSwitchBoostSchedule_" & $i, $g_iSwitchBoostSchedule[$i], "Int")
+	Next
+
 EndFunc   ;==>ReadConfig_MOD_OneGem
 #EndRegion - One Gem Boost - Team AiO MOD++

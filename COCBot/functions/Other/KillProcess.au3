@@ -17,6 +17,11 @@
 ; ===============================================================================================================================
 
 Func KillProcess($pid, $process_info = "", $attempts = 3)
+	; _ConsoleWrite("$pid" & " " & $pid)
+	; _ConsoleWrite("$process_info" & " " & $process_info)
+	; _ConsoleWrite("$attempts" & " " & $attempts)
+; return
+	
 	Local $iCount = 0
 	If $process_info <> "" Then $process_info = ", " & $process_info
 	While ProcessExists($pid) And $iCount < $attempts

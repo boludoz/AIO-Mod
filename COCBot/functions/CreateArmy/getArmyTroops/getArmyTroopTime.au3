@@ -36,6 +36,9 @@ Func getArmyTroopTime($bOpenArmyWindow = False, $bCloseArmyWindow = False, $bChe
 	Local $sResultTroops = getRemainTrainTimer(495, 169, $bNeedCapture) ;Get time via OCR.
 	$g_aiTimeTrain[0] = ConvertOCRTime("Troops", $sResultTroops, $bSetLog) ; update global array
 
+	; Calc troops boost - Custom boost - Team AIO Mod++
+	BoostItemsTimeCalc($g_aiTimeTrain[0], $g_sBoostEverythingTime)
+
 	If $bCloseArmyWindow Then
 		ClickAway()
 		If _Sleep($DELAYCHECKARMYCAMP4) Then Return

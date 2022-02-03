@@ -139,6 +139,10 @@ Func TrainSiege($bTrainFullSiege = False)
 	Local $sSiegeTime = getRemainBuildTimer(780, 244) ; Get time via OCR.
 	If $sSiegeTime <> "" Then
 		$g_aiTimeTrain[3] = ConvertOCRTime("Siege", $sSiegeTime, False) ; Update global array
+		
+		; Calc sieges - Custom boost - Team AIO Mod++
+		BoostItemsTimeCalc($g_aiTimeTrain[3], $g_sBoostEverythingTime)
+		
 		SetLog("Remaining Siege build time: " & StringFormat("%.2f", $g_aiTimeTrain[3]), $COLOR_INFO)
 	EndIf
 EndFunc   ;==>TrainSiege

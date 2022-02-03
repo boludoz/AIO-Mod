@@ -759,6 +759,8 @@ Func chkActivateClangames()
 		GUICtrlSetState($g_hChkClanGamesPurgeAny, $GUI_ENABLE)
 
 		GUICtrlSetState($g_hChkClanGamesStopBeforeReachAndPurge, $GUI_ENABLE)
+		
+		GUICtrlSetState($g_hChkOnlyBuilderBaseGC, $GUI_ENABLE)
 
 	Else
 		GUICtrlSetState($g_hChkClanGames60, $GUI_DISABLE)
@@ -784,7 +786,7 @@ Func chkActivateClangames()
 		GUICtrlSetState($g_hBtnCGDes, $GUI_DISABLE)
 		GUICtrlSetState($g_hBtnCGAirTroop, $GUI_DISABLE)
 		GUICtrlSetState($g_hBtnCGSpell, $GUI_DISABLE)
-
+		GUICtrlSetState($g_hChkOnlyBuilderBaseGC, $GUI_DISABLE)
 	EndIf
 	chkClanGamesBB()
 EndFunc   ;==>chkActivateClangames

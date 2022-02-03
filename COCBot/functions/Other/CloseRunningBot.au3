@@ -73,6 +73,7 @@ Func CloseRunningBot($sBotWindowTitle = $g_sBotTitle, $bCheckOnly = False, $bGui
 				WinKill($otherHWnD)
 				SetDebugLog("Existing bot window killed")
 			EndIf
+			
 			; paranoia section...
 			If ProcessExists($otherPID) = $otherPID Then
 				SetDebugLog("Existing bot process still there...")

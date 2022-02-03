@@ -703,19 +703,38 @@ EndFunc   ;==>ApplyConfig_MOD_Humanization
 #Region - One Gem Boost - Team AiO MOD++
 Func ApplyConfig_MOD_OneGem($TypeReadSave)
 	; <><><> Attack Plan / Train Army / Boost <><><>
+
 	Switch $TypeReadSave
 		Case "Read"
-			; One Gem Boost
+			; One Gem Boost - Team AiO MOD++
 			GUICtrlSetState($g_hChkOneGemBoostBarracks, $g_bChkOneGemBoostBarracks ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkOneGemBoostSpells, $g_bChkOneGemBoostSpells ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkOneGemBoostHeroes, $g_bChkOneGemBoostHeroes ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkOneGemBoostWorkshop, $g_bChkOneGemBoostWorkshop ? $GUI_CHECKED : $GUI_UNCHECKED)
+			
+			; Schedule boost - Team AIO Mod++ 
+			GUICtrlSetData($g_hTxtminBoostGold, $g_iMinBoostGold)
+			GUICtrlSetData($g_hTxtminBoostElixir, $g_iMinBoostElixir)
+			GUICtrlSetData($g_hTxtminBoostDark, $g_iMinBoostDark)
+
+			For $i = 0 To 2
+				 _GUICtrlComboBox_SetCurSel($g_hCmbSwitchBoostSchedule[$i], $g_iSwitchBoostSchedule[$i])
+			Next
 		Case "Save"
-			; One Gem Boost
+			; One Gem Boost - Team AiO MOD++
 			$g_bChkOneGemBoostBarracks = (GUICtrlRead($g_hChkOneGemBoostBarracks) = $GUI_CHECKED)
 			$g_bChkOneGemBoostSpells = (GUICtrlRead($g_hChkOneGemBoostSpells) = $GUI_CHECKED)
 			$g_bChkOneGemBoostHeroes = (GUICtrlRead($g_hChkOneGemBoostHeroes) = $GUI_CHECKED)
 			$g_bChkOneGemBoostWorkshop = (GUICtrlRead($g_hChkOneGemBoostWorkshop) = $GUI_CHECKED)
+			
+			; Schedule boost - Team AIO Mod++ 
+			$g_iMinBoostGold = GUICtrlRead($g_hTxtminBoostGold)
+			$g_iMinBoostElixir = GUICtrlRead($g_hTxtminBoostElixir)
+			$g_iMinBoostDark = GUICtrlRead($g_hTxtminBoostDark)
+			
+			For $i = 0 To 2
+				$g_iSwitchBoostSchedule[$i] = _GUICtrlComboBox_GetCurSel($g_hCmbSwitchBoostSchedule[$i])
+			Next
 	EndSwitch
 EndFunc   ;==>ApplyConfig_MOD_OneGem
 #EndRegion - One Gem Boost - Team AiO MOD++

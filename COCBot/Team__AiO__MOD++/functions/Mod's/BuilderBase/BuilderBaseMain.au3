@@ -30,8 +30,8 @@ Func BuilderBase($bTestRun = False)
 	#Region - Dates - Team AIO Mod++
 	If Not $bTestRun And Not PlayBBOnly() And ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3, False) Then
 		If _DateIsValid($g_sDateBuilderBase) Then
-			Local $iDateDiff = _DateDiff('s', _NowCalcDate() & " " & _NowTime(5), $g_sDateBuilderBase)
-			If $iDateDiff > 0 And ($g_sConstMaxBuilderBase < $iDateDiff) = False Then
+			Local $iDateDiff = _DateDiff('s', _NowCalc(), $g_sDateBuilderBase)
+			If $iDateDiff > 0 And $g_sConstMaxBuilderBase > $iDateDiff Then
 				SetLog("Builder Base: We will return when the bonus is available.", $COLOR_INFO)
 				Return
 			EndIf
@@ -400,7 +400,7 @@ Func IsBuilderBaseOCR($bSetLog = True)
 		$iSeconds += 60
 	EndIf
 	
-	$g_sDateBuilderBase = _DateAdd('s', $iSeconds, _NowCalcDate() & " " & _NowTime(5))
+	$g_sDateBuilderBase = _DateAdd('s', $iSeconds, _NowCalc())
 	SetDebugLog("$g_sDateBuilderBase: " & $g_sDateBuilderBase)
 	$g_iAvailableAttacksBB = 0 ; Stop attacks.
 	Return True

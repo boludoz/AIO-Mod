@@ -74,6 +74,8 @@ Func BoostStructure($sName, $sOcrName, $aPos, ByRef $icmbBoostValue, $cmbBoostCt
 EndFunc   ;==>BoostStructure
 
 Func AllowBoosting($sName, $icmbBoost)
+	; Schedule boost - Team AIO Mod++ 
+	If Not IsScheduleBoost() Then Return
 
 	If ($g_bTrainEnabled = True And $icmbBoost > 0) = False Then Return False
 
@@ -131,11 +133,24 @@ Func BoostPotion($sName, $sOcrName, $aPos, ByRef $icmbBoostValue, $cmbBoostCtrl)
 				If IsArray($Boost) Then
 					Click($Boost[0], $Boost[1], 1, 0, "#0465")
 					If _Sleep($DELAYBOOSTHEROES4) Then Return
+					#cs - Custom boost - Team AIO Mod++
 					If $icmbBoostValue <= 5 Then
 						$icmbBoostValue -= 1
 						SetLog($sName & ' Boost completed. Remaining iterations: ' & $icmbBoostValue, $COLOR_SUCCESS)
 						_GUICtrlComboBox_SetCurSel($cmbBoostCtrl, $icmbBoostValue)
 					EndIf
+					#ce
+					
+					; Custom boost - Team AIO Mod++
+					If $icmbBoostValue >= 1 And $icmbBoostValue <= 5 Then
+						$icmbBoostValue -= 1
+						SetLog($sName & ' Boost completed. Remaining iterations: ' & $icmbBoostValue, $COLOR_SUCCESS)
+						_GUICtrlComboBox_SetCurSel($cmbBoostCtrl, $icmbBoostValue)
+					ElseIf $icmbBoostValue = 6 Then
+						SetLog($sName & ' Boost completed. Remaining iterations: Unlimited', $COLOR_SUCCESS)
+					EndIf
+					;
+					
 					$boosted = True
 				Else
 					SetLog($sName & " is already Boosted", $COLOR_SUCCESS)

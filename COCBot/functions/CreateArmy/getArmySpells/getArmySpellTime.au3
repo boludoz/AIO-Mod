@@ -35,6 +35,9 @@ Func getArmySpellTime($bOpenArmyWindow = False, $bCloseArmyWindow = False, $bChe
 	Local $sResultSpells = getRemainTrainTimer(450, 315, $bNeedCapture) ;Get time via OCR.
 	$g_aiTimeTrain[1] = ConvertOCRTime("Spells", $sResultSpells, $bSetLog) ; update global array
 
+	; Calc spells - Custom boost - Team AIO Mod++
+	BoostItemsTimeCalc($g_aiTimeTrain[1], $g_sBoostEverythingTime)
+
 	If $bCloseArmyWindow Then
 		ClickAway()
 		If _Sleep($DELAYCHECKARMYCAMP4) Then Return

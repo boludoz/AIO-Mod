@@ -22,7 +22,7 @@ Func CollectMagicItems($bDebug = False)
 	#Region - Dates - Team AIO Mod++
 	If Not $bDebug Then
 		If _DateIsValid($g_sDateAndTimeMagicItems) Then
-			Local $iDateDiff = _DateDiff('s', _NowCalcDate() & " " & _NowTime(5), $g_sDateAndTimeMagicItems)
+			Local $iDateDiff = _DateDiff('s', _NowCalc(), $g_sDateAndTimeMagicItems)
 			If $iDateDiff > 0 And ($g_sConstMaxMagicItemsSeconds < $iDateDiff) = False Then
 				SetLog("Collect Magic Items | We've been through here recently.", $COLOR_INFO)
 				Return
@@ -193,7 +193,7 @@ Func MagicItemsTime($x_start = 307, $y_start = 484, $iWidth = 240, $iHeight = 42
 		EndSwitch
 	EndIf
 	If $iSeconds < 3600 Then $iSeconds = Round(3600 * Random(1.4, 2.8)) ; 3600 Constant = 1 hour
-	$g_sDateAndTimeMagicItems = _DateAdd('s', $iSeconds, _NowCalcDate() & " " & _NowTime(5))
+	$g_sDateAndTimeMagicItems = _DateAdd('s', $iSeconds, _NowCalc())
 	SetDebugLog("$g_sDateAndTimeMagicItems: " & $g_sDateAndTimeMagicItems)
 EndFunc   ;==>MagicItemsTime
 

@@ -353,7 +353,60 @@ Func CreateTrainBoost()
 	$g_hGUI_TRAINARMY_BOOST = _GUICreate("", $g_iSizeWGrpTab3, $g_iSizeHGrpTab3, 5, 25, BitOR($WS_CHILD, $WS_TABSTOP), -1, $g_hGUI_TRAINARMY)
 	GUISetBkColor($COLOR_WHITE, $g_hGUI_TRAINARMY_BOOST)
 
-	Local $x = 25, $y = 20
+	Local $x = 25, $y = 3
+
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "Group_00", "Schedule boost gem / train potion. All conditions must be done."), $x - 20, $y - 5, $g_iSizeWGrpTab3 - 12, 38)
+
+	; Schedule boost - Team AIO Mod++ 
+	$y += 10
+	$g_hCmbSwitchBoostSchedule[0] = GUICtrlCreateCombo("", $x + 32, $y, 30, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+	#Tidy_off
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtMinBoost_Info_01", "<= : Stop boost if resources are more or equal than X value.") & @CRLF & _ 
+					   GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtMinBoost_Info_02", "> : Start boost if resources are less X value.") )
+	#Tidy_on
+	GUICtrlSetOnEvent(-1, "CmbSwitchBoostSchedule")
+	GUICtrlSetData(-1, 	"-|>|<=")
+	_GUICtrlComboBox_SetCurSel(-1, 0)
+	$x += 33
+	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 67 + 32, $y, 16, 16)
+	$g_hTxtMinBoostGold = _GUICtrlCreateInput("100000", $x + 10 + 32, $y, 55, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+	GUICtrlSetState(-1, $GUI_DISABLE)
+	GUICtrlSetLimit(-1, 8)
+	$x += 90
+	$g_hCmbSwitchBoostSchedule[1] = GUICtrlCreateCombo("", $x + 32, $y, 30, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+	#Tidy_off
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtMinBoost_Info_01", "<= : Stop boost if resources are more or equal than X value.") & @CRLF & _
+					   GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtMinBoost_Info_02", "> : Start boost if resources are less X value.") )
+	#Tidy_on
+	GUICtrlSetOnEvent(-1, "CmbSwitchBoostSchedule")
+	GUICtrlSetData(-1, 	"-|>|<=")
+	_GUICtrlComboBox_SetCurSel(-1, 0)
+	$x += 33
+	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnElixir, $x + 67 + 32, $y, 16, 16)
+	$g_hTxtMinBoostElixir = _GUICtrlCreateInput("100000", $x + 10 + 32, $y, 55, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+	GUICtrlSetState(-1, $GUI_DISABLE)
+	GUICtrlSetLimit(-1, 8)
+	$x += 90
+	$g_hCmbSwitchBoostSchedule[2] = GUICtrlCreateCombo("", $x + 32, $y, 30, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+	#Tidy_off
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtMinBoost_Info_01", "<= : Stop boost if resources are more or equal than X value.") & @CRLF & _
+					   GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtMinBoost_Info_02", "> : Start boost if resources are less X value.") )
+	#Tidy_on
+	GUICtrlSetOnEvent(-1, "CmbSwitchBoostSchedule")
+	GUICtrlSetData(-1, 	"-|>|<=")
+	_GUICtrlComboBox_SetCurSel(-1, 0)
+	$x += 33
+	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 67 + 32, $y, 16, 16)
+	$g_hTxtMinBoostDark = _GUICtrlCreateInput("3000", $x + 10 + 32, $y, 55, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+	GUICtrlSetState(-1, $GUI_DISABLE)
+	GUICtrlSetLimit(-1, 7)
+	$y -= 4
+
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+
+	$x = 25
+	$y += 45
+
 	; Army Buildings
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "Group_01", "Boost Army Buildings"), $x - 20, $y - 20, $g_iSizeWGrpTab3 - 12, 73)
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnBarrackBoost, $x - 10, $y - 2, 24, 24)
@@ -362,7 +415,7 @@ Func CreateTrainBoost()
 	$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "LblBarracksBoost_Info_01", "Use this to boost your Barracks with GEMS! Use with caution!")
 	_GUICtrlSetTip(-1, $sTxtTip)
 	$g_hCmbBoostBarracks = GUICtrlCreateCombo("", $x + 135, $y, 60, 25, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
-	GUICtrlSetData(-1, "0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|No limit", "0")
+	GUICtrlSetData(-1, "0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|" & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "Troops_Boost_No_Limit", "No limit"), "0")
 	_GUICtrlSetTip(-1, $sTxtTip)
 
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnSpellFactoryBoost, $x + 204, $y - 2, 24, 24)
@@ -371,7 +424,7 @@ Func CreateTrainBoost()
 	$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "LblSpellFactoryBoost_Info_01", "Use this to boost your Spell Factory with GEMS! Use with caution!")
 	_GUICtrlSetTip(-1, $sTxtTip)
 	$g_hCmbBoostSpellFactory = GUICtrlCreateCombo("", $x + 330, $y, 60, 25, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
-	GUICtrlSetData(-1, "0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|No limit", "0")
+	GUICtrlSetData(-1, "0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|" & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "Troops_Boost_No_Limit", "No limit"), "0")
 	_GUICtrlSetTip(-1, $sTxtTip)
 
 	$y += 25
@@ -380,7 +433,7 @@ Func CreateTrainBoost()
 	$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "LblWorkshopBoost_Info_01", "Use this to boost your Workshop with GEMS! Use with caution!")
 	_GUICtrlSetTip(-1, $sTxtTip)
 	$g_hCmbBoostWorkshop = GUICtrlCreateCombo("", $x + 135, $y, 60, 25, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
-	GUICtrlSetData(-1, "0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|No limit", "0")
+	GUICtrlSetData(-1, "0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|" & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "Troops_Boost_No_Limit", "No limit"), "0")
 	_GUICtrlSetTip(-1, $sTxtTip)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
@@ -392,7 +445,7 @@ Func CreateTrainBoost()
 	$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "LblKingBoost_Info_01", "Use this to boost your Barbarian King with GEMS! Use with caution!")
 	_GUICtrlSetTip(-1, $sTxtTip)
 	$g_hCmbBoostBarbarianKing = GUICtrlCreateCombo("", $x + 135, $y, 60, 25, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
-	GUICtrlSetData(-1, "0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|No limit", "0")
+	GUICtrlSetData(-1, "0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|" & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "Troops_Boost_No_Limit", "No limit"), "0")
 	_GUICtrlSetTip(-1, $sTxtTip)
 	GUICtrlSetOnEvent(-1, "chkUpgradeKing")
 
@@ -401,7 +454,7 @@ Func CreateTrainBoost()
 	$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "LblQueenBoost_Info_01", "Use this to boost your Archer Queen with GEMS! Use with caution!")
 	_GUICtrlSetTip(-1, $sTxtTip)
 	$g_hCmbBoostArcherQueen = GUICtrlCreateCombo("", $x + 330, $y, 60, 25, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
-	GUICtrlSetData(-1, "0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|No limit", "0")
+	GUICtrlSetData(-1, "0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|" & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "Troops_Boost_No_Limit", "No limit"), "0")
 	_GUICtrlSetTip(-1, $sTxtTip)
 	GUICtrlSetOnEvent(-1, "chkUpgradeQueen")
 
@@ -411,7 +464,7 @@ Func CreateTrainBoost()
 	$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "LblWardenBoost_Info_01", "Use this to boost your Grand Warden with GEMS! Use with caution!")
 	_GUICtrlSetTip(-1, $sTxtTip)
 	$g_hCmbBoostWarden = GUICtrlCreateCombo("", $x + 135, $y, 60, 25, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
-	GUICtrlSetData(-1, "0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|No limit", "0")
+	GUICtrlSetData(-1, "0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|" & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "Troops_Boost_No_Limit", "No limit"), "0")
 	_GUICtrlSetTip(-1, $sTxtTip)
 	GUICtrlSetOnEvent(-1, "chkUpgradeWarden")
 
@@ -420,15 +473,15 @@ Func CreateTrainBoost()
 	$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "LblChampionBoost_Info_01", "Use this to boost your Royal Champion with GEMS! Use with caution!")
 	_GUICtrlSetTip(-1, $sTxtTip)
 	$g_hCmbBoostChampion = GUICtrlCreateCombo("", $x + 330, $y, 60, 25, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
-	GUICtrlSetData(-1, "0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|No limit", "0")
+	GUICtrlSetData(-1, "0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|" & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "Troops_Boost_No_Limit", "No limit"), "0")
 	_GUICtrlSetTip(-1, $sTxtTip)
 	GUICtrlSetOnEvent(-1, "chkUpgradeChampion")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 
-	$y += 48
+	$y += 50
 	#Region - One Gem Boost - Team AiO MOD++
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "ChkOneGemBoostWorkshop_Group_01", "Boost one gem"), $x + 15 + 170 + 50, $y - 20, 165, 48 + 48 + 27)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "ChkOneGemBoostWorkshop_Group_01", "Boost one gem"), $x + 235, $y - 20, 167, 123)
 	$g_hChkOneGemBoostBarracks = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "ChkOneGemBoostBarracks_Info_01", "Barracks 1'Gem Boost"), $x + 15 + 170 + 60, $y, -1, -1)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "ChkOneGemBoostBarracks_Info_02", "Use this to boost your Barracks Automatically Only In 1-Gem Army Event."))
 	GUICtrlSetState(-1, $GUI_UNCHECKED)
@@ -455,7 +508,7 @@ Func CreateTrainBoost()
 	$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "LblEverythingBoost_Info_01", "Use this to boost everything with POTIONS! Use with caution!")
 	_GUICtrlSetTip(-1, $sTxtTip)
 	$g_hCmbBoostEverything = GUICtrlCreateCombo("", $x + 135, $y, 60, 25, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
-	GUICtrlSetData(-1, "0|1|2|3|4|5", "0")
+	GUICtrlSetData(-1, "0|1|2|3|4|5|" & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "Troops_Boost_No_Limit", "|" & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "Troops_Boost_No_Limit", "No limit")), "0") ; Custom boost - Team AIO Mod++
 	_GUICtrlSetTip(-1, $sTxtTip)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
@@ -545,8 +598,8 @@ Func CreateTrainBoost()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	#Region - Custom Super Troops - Team AIO Mod++
-	$y += 48
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "Group_05", "Boost Super Troops"), $x - 20, $y - 22, $g_iSizeWGrpTab3 - 12, 91)
+	$y += 49
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "Group_05", "Boost Super Troops"), $x - 20, $y - 22, $g_iSizeWGrpTab3 - 12, 70)
 
 	; Local $sCmbTroopList = GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtListOfSuperTroops", "Disabled|" & _ArrayToString($g_asSuperTroopNames))
 
@@ -560,6 +613,8 @@ Func CreateTrainBoost()
 		GUICtrlSetData(-1, "Prioritize dark elixir|Prioritize potion", "Prioritize dark elixir")
 		GUICtrlSetOnEvent(-1, "cmbSuperTroopsResources")
 
+	$y -= 17
+
 	For $i = 0 To $iMaxSupersTroop - 1
 		$g_ahLblSuperTroops[$i] = GUICtrlCreateLabel($i + 1 & ":", $x - 14, $y + 42, 50, -1)
 			GUICtrlSetState(-1, $GUI_DISABLE)
@@ -567,7 +622,7 @@ Func CreateTrainBoost()
 			GUICtrlSetData(-1, $sCmbTroopList, "Disabled")
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			GUICtrlSetOnEvent(-1, "cmbSuperTroops")
-		$g_ahPicSuperTroops[$i] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnOptions, $x + 125, $y + 15, 48, 48)
+		$g_ahPicSuperTroops[$i] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnOptions, $x + 125, $y + 35, 24, 24)
 			GUICtrlSetState(-1, $GUI_HIDE)
 		$x += 200
 	Next
@@ -750,7 +805,7 @@ Func CreateTrainTroops()
 
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnResetButton, 0, 3, 16, 16)
 	GUICtrlSetOnEvent(-1, "Removecamptroops")
-	
+
 	$g_hCmbTroopSetting = GUICtrlCreateCombo("", 20, 2, 124, 20, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
 		GUICtrlSetData(-1, GetTranslatedFileIni("sam m0d", 71, "Composition Army 1") & "|" & GetTranslatedFileIni("sam m0d", 72, "Composition Army 2") & "|" & GetTranslatedFileIni("sam m0d", 73, "Composition Army 3"), GetTranslatedFileIni("sam m0d", 71, "Composition Army 1"))
 		GUICtrlSetOnEvent(-1, "CmbTroopSetting")
@@ -823,7 +878,7 @@ Func CreateTrainTroops()
 	$x = $iStartX
 	$y += 26
 	$g_hCalTotalTroops = GUICtrlCreateProgress($iStartX, $iStartY + 273 - 8, 336 + 8, 10)
-	
+
 	; Joke?
 	; $g_hLblTotalProgress = GUICtrlCreateLabel("", $x, $y + 9, 336, 10)
 	; GUICtrlSetBkColor(-1, 0x06B025)
@@ -891,7 +946,7 @@ Func CreateTrainSpells()
 
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnResetButton, 0, 3, 16, 16)
 	GUICtrlSetOnEvent(-1, "Removecampspells")
-	
+
 	$g_hChkPreciseSpells = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "ChkPreciseBrew", "Precise brew") , 10 + 50, 3)
 	$g_hChkForcePreBrewSpells = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "ChkForcePreBrewSpells", "Force pre brew spells") , 10 + 150, 3)
 
@@ -929,7 +984,7 @@ Func CreateTrainSpells()
 
 	$y += 150
 	$x = $iStartX
-	
+
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnResetButton, $x, $y + 17, 16, 16)
 		GUICtrlSetOnEvent(-1, "BtnRemoveSpells")
 	$g_hChkCustomBrewOrderEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Order", "Order") , $x + 20, $y + 14, -1, -1)

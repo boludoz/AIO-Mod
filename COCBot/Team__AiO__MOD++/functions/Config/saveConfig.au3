@@ -370,10 +370,21 @@ EndFunc   ;==>SaveConfig_MOD_Humanization
 Func SaveConfig_MOD_OneGem()
 	ApplyConfig_MOD_OneGem(GetApplyConfigSaveAction())
 	; <><><> Attack Plan / Train Army / Boost <><><>
+	
+	; One Gem Boost - Team AiO MOD++
 	_Ini_Add("boost", "ChkOneGemBoostBarracks", $g_bChkOneGemBoostBarracks ? 1 : 0)
 	_Ini_Add("boost", "ChkOneGemBoostSpells", $g_bChkOneGemBoostSpells ? 1 : 0)
 	_Ini_Add("boost", "ChkOneGemBoostHeroes", $g_bChkOneGemBoostHeroes ? 1 : 0)
 	_Ini_Add("boost", "ChkOneGemBoostWorkshop", $g_bChkOneGemBoostWorkshop ? 1 : 0)
+	
+	; Schedule boost - Team AIO Mod++ 
+	_Ini_Add("boost", "MinBoostGold", Int($g_iMinBoostGold))
+	_Ini_Add("boost", "MinBoostElixir", Int($g_iMinBoostElixir))
+	_Ini_Add("boost", "MinBoostDark", Int($g_iMinBoostDark))
+	
+	For $i = 0 To 2
+		_Ini_Add("boost", "CmbSwitchBoostSchedule_" & $i, _GUICtrlComboBox_GetCurSel($g_hCmbSwitchBoostSchedule[$i]))
+	Next
 
 EndFunc   ;==>SaveConfig_MOD_OneGem
 #EndRegion - One Gem Boost - Team AiO MOD++

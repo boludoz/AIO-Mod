@@ -314,7 +314,7 @@ Func ReadPipe(ByRef $hPipe)
 	If _WinAPI_ReadFile($hPipe, DllStructGetPtr($tBuffer), 4096, $iRead) Then
 		Return SetError(0, 0, DllStructGetData($tBuffer, "Text"))
 	EndIf
-	Return SetError( _WinAPI_GetLastError(), 0, "")
+	Return SetError(_WinAPI_GetLastError(), 0, "")
 EndFunc   ;==>ReadPipe
 
 Func WritePipe(ByRef $hPipe, Const $s)
@@ -325,7 +325,7 @@ Func WritePipe(ByRef $hPipe, Const $s)
 	If _WinAPI_WriteFile($hPipe, DllStructGetPtr($tBuffer), $iToWrite, $iWritten) Then
 		Return SetError(0, 0, $iWritten)
 	EndIf
-	Return SetError( _WinAPI_GetLastError(), 0, 0)
+	Return SetError(_WinAPI_GetLastError(), 0, 0)
 EndFunc   ;==>WritePipe
 
 Func DataInPipe(ByRef $hPipe)
@@ -383,7 +383,7 @@ Func _WinAPI_SetConsoleIcon($g_sLibIconPath, $nIconID, $hWnD = Default)
 				$Result = DllCall("kernel32.dll", "hwnd", "GetConsoleWindow")
 				$error = @error
 				$extended = @extended
-				If UBound($Result) > 0 Then	$hWnD = $Result[0]
+				If UBound($Result) > 0 Then $hWnD = $Result[0]
 			EndIf
 			If IsHWnd($hWnD) Then
 				_SendMessage($hWnD, $WM_SETICON, 0, DllStructGetData($hIcon, 1)) ; SMALL_ICON

@@ -335,15 +335,19 @@ Func StarLabTroopImages($iStart, $iEnd) ; Debug function to record pixel values 
 		If $g_avStarLabTroops[$i][0] <> -1 And $g_avStarLabTroops[$i][1] <> -1 Then
 			StarDebugIconSave($g_avStarLabTroops[$i][3], $g_avStarLabTroops[$i][0], $g_avStarLabTroops[$i][1])
 			SetDebugLog($g_avStarLabTroops[$i][3], $COLOR_WARNING)
-			SetDebugLog("_GetPixelColor(+47, +1): " & _GetPixelColor($g_avStarLabTroops[$i][0] + 47, $g_avStarLabTroops[$i][1] + 1, True) & ":" & $sStarColorNA & " =Not unlocked", $COLOR_DEBUG)
-			SetDebugLog("_GetPixelColor(+67, +79): " & _GetPixelColor($g_avStarLabTroops[$i][0] + 67, $g_avStarLabTroops[$i][1] + 79, True) & ":" & $sStarColorNoLoot & " =No Loot1", $COLOR_DEBUG)
-			SetDebugLog("_GetPixelColor(+67, +82): " & _GetPixelColor($g_avStarLabTroops[$i][0] + 67, $g_avStarLabTroops[$i][1] + 82, True) & ":" & $sStarColorNoLoot & " =No Loot2", $COLOR_DEBUG)
-			SetDebugLog("_GetPixelColor(+81, +82): " & _GetPixelColor($g_avStarLabTroops[$i][0] + 81, $g_avStarLabTroops[$i][1] + 82, True) & ":XXXXXX =Loot type", $COLOR_DEBUG)
-			SetDebugLog("_GetPixelColor(+76, +76): " & _GetPixelColor($g_avStarLabTroops[$i][0] + 76, $g_avStarLabTroops[$i][1] + 76, True) & ":" & $sStarColorMaxLvl & " =Max L", $COLOR_DEBUG)
-			SetDebugLog("_GetPixelColor(+76, +80): " & _GetPixelColor($g_avStarLabTroops[$i][0] + 76, $g_avStarLabTroops[$i][1] + 80, True) & ":" & $sStarColorMaxLvl & " =Max L", $COLOR_DEBUG)
-			SetDebugLog("_GetPixelColor(+0, +20): " & _GetPixelColor($g_avStarLabTroops[$i][0] + 0, $g_avStarLabTroops[$i][1] + 20, True) & ":" & $sStarColorLabUgReq & " =Lab Upgrade", $COLOR_DEBUG)
-			SetDebugLog("_GetPixelColor(+93, +20): " & _GetPixelColor($g_avStarLabTroops[$i][0] + 93, $g_avStarLabTroops[$i][1] + 20, True) & ":" & $sStarColorLabUgReq & " =Lab Upgrade", $COLOR_DEBUG)
-			SetDebugLog("_GetPixelColor(+23, +60): " & _GetPixelColor($g_avStarLabTroops[$i][0] + 23, $g_avStarLabTroops[$i][1] + 60, True) & ":" & $sStarColorMaxTroop & " =Max troop", $COLOR_DEBUG)
+			; Custom optimization - Team AIO Mod++
+			If $g_bDebugSetlog Then
+				_CaptureRegion()
+				SetDebugLog("_GetPixelColor(+47, +1): " & _GetPixelColor($g_avStarLabTroops[$i][0] + 47, $g_avStarLabTroops[$i][1] + 1, False) & ":" & $sStarColorNA & " =Not unlocked", $COLOR_DEBUG)
+				SetDebugLog("_GetPixelColor(+67, +79): " & _GetPixelColor($g_avStarLabTroops[$i][0] + 67, $g_avStarLabTroops[$i][1] + 79, False) & ":" & $sStarColorNoLoot & " =No Loot1", $COLOR_DEBUG)
+				SetDebugLog("_GetPixelColor(+67, +82): " & _GetPixelColor($g_avStarLabTroops[$i][0] + 67, $g_avStarLabTroops[$i][1] + 82, False) & ":" & $sStarColorNoLoot & " =No Loot2", $COLOR_DEBUG)
+				SetDebugLog("_GetPixelColor(+81, +82): " & _GetPixelColor($g_avStarLabTroops[$i][0] + 81, $g_avStarLabTroops[$i][1] + 82, False) & ":XXXXXX =Loot type", $COLOR_DEBUG)
+				SetDebugLog("_GetPixelColor(+76, +76): " & _GetPixelColor($g_avStarLabTroops[$i][0] + 76, $g_avStarLabTroops[$i][1] + 76, False) & ":" & $sStarColorMaxLvl & " =Max L", $COLOR_DEBUG)
+				SetDebugLog("_GetPixelColor(+76, +80): " & _GetPixelColor($g_avStarLabTroops[$i][0] + 76, $g_avStarLabTroops[$i][1] + 80, False) & ":" & $sStarColorMaxLvl & " =Max L", $COLOR_DEBUG)
+				SetDebugLog("_GetPixelColor(+0, +20): " & _GetPixelColor($g_avStarLabTroops[$i][0] + 0, $g_avStarLabTroops[$i][1] + 20, False) & ":" & $sStarColorLabUgReq & " =Lab Upgrade", $COLOR_DEBUG)
+				SetDebugLog("_GetPixelColor(+93, +20): " & _GetPixelColor($g_avStarLabTroops[$i][0] + 93, $g_avStarLabTroops[$i][1] + 20, False) & ":" & $sStarColorLabUgReq & " =Lab Upgrade", $COLOR_DEBUG)
+				SetDebugLog("_GetPixelColor(+23, +60): " & _GetPixelColor($g_avStarLabTroops[$i][0] + 23, $g_avStarLabTroops[$i][1] + 60, False) & ":" & $sStarColorMaxTroop & " =Max troop", $COLOR_DEBUG)
+			EndIf
 		EndIf
 	Next
 EndFunc   ;==>StarLabTroopImages

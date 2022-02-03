@@ -88,6 +88,7 @@ Func CreateVillageMisc()
 	GUICtrlCreateTabItem("")
 
 EndFunc   ;==>CreateVillageMisc
+
 Func CreateMiscNormalVillageSubTab()
 	Local $sTxtTip = ""
 	Local $x = 15, $y = 45
@@ -233,7 +234,7 @@ Func CreateMiscNormalVillageSubTab()
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCollect_Info_01", "Check this to automatically collect the Villages Resources") & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCollect_Info_02", "from Gold Mines, Elixir Collectors and Dark Elixir Drills.") & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCollect_Info_03", "This will also search for a Loot Cart in your village and collect it."))
 	GUICtrlSetState(-1, $GUI_CHECKED)
 	#Region - Custom Collect - Team AIO Mod++
-	$g_hChkCollectLootCar = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCollectLootCar", "Collect Loot Cart"), $x + 175, $y - 6, -1, -1, -1)
+	$g_hChkCollectLootCar = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCollectLootCar", "Collect Loot Cart"), $x + 190, $y - 6, -1, -1, -1)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCollectLootCar_Info_01", "Not collecting the loot cart can save you time if you're in a rush, or want to save resources on it."))
 	GUICtrlSetState(-1, $GUI_CHECKED)
 	#Region - Custom Collect - Team AIO Mod++
