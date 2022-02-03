@@ -142,25 +142,3 @@ Func BoostEverything()
 	checkMainScreen(False) ; Check for errors during function
 	Return $bReturn ; Custom fix - Team AIO Mod++
 EndFunc   ;==>BoostEverything
-
-; Boldina ! I am here ! Hola !
-Func BoostItemsTimeCalc(ByRef $iTrainMinutes, $sBoostFinishDate = $g_sBoostEverythingTime, $sReturnFormat = "min")
-		
-		Local $sFormat = "n"
-		Switch StringLower($sReturnFormat)
-			Case "day"
-				$sFormat = 'D'
-			Case "hour"
-				$sFormat = 'h'
-			Case "min"
-				$sFormat = 'n'
-			Case "sec"
-				$sFormat = 's'
-			Case Else
-				SetLog("Error processing BoostItemsTimeCalc", $COLOR_ERROR)
-		EndSwitch
-
-	Local $sDate = _DateDiff($sFormat, _NowCalc(), $sBoostFinishDate)
-	If @error Or $sDate <= 0 Then Return
-	$iTrainMinutes -= ($sDate * 0.75)
- EndFunc   ;==>BoostEverythingTimeCalc
