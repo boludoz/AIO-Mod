@@ -910,6 +910,17 @@ Func runBot() ;Bot that runs everything in order
 				If Not $g_bRunState Then Return
 	
 				If $g_bFirstStart Then SetDebugLog("First loop completed!")
+			Else
+				BoostEverything() ; 1st Check if is to use Training Potion
+				If $g_bRestart Then ContinueLoop
+				Local $aRndFuncList = ['BoostBarracks', 'BoostSpellFactory', 'BoostWorkshop', 'BoostKing', 'BoostQueen', 'BoostWarden', 'BoostChampion']
+				_ArrayShuffle($aRndFuncList)
+				For $Index In $aRndFuncList
+					If Not $g_bRunState Then Return
+					_RunFunction($Index)
+					If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
+					If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
+				Next
 			EndIf
 			
 			$g_bFirstStart = False ; already finished first loop since bot started.

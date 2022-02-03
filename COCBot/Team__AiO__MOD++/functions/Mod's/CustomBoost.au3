@@ -222,8 +222,8 @@ EndFunc   ;==>BoostOneGemBuilding
 ; Example .......: No
 ; ===============================================================================================================================
 Func TestIsScheduleBoost()
-	$g_aiCurrentLoot[$eLootGold] = 10000
-	$g_aiCurrentLoot[$eLootElixir] = 10000
+	$g_aiCurrentLoot[$eLootGold] = 1000000
+	$g_aiCurrentLoot[$eLootElixir] = 1000000
 	$g_aiCurrentLoot[$eLootDarkElixir] = 10000
 	If IsScheduleBoost() Then
 		SetLog("TestIsScheduleBoost cond ok")
@@ -239,26 +239,31 @@ Func IsScheduleBoost()
 	EndIf
 	
 	If $g_iSwitchBoostSchedule[$eLootGold] = 1 Then
-		$bMustBoost = ($g_aiCurrentLoot[$eLootGold] > $g_iMinBoostGold)
+		$bMustBoost = ($g_aiCurrentLoot[$eLootGold] >= $g_iMinBoostGold) = False
 	ElseIf $g_iSwitchBoostSchedule[$eLootGold] = 2 Then
-		$bMustBoost = ($g_aiCurrentLoot[$eLootGold] <= $g_iMinBoostGold)
+		$bMustBoost = ($g_aiCurrentLoot[$eLootGold] < $g_iMinBoostGold)
 	EndIf
 	
-	If $g_iSwitchBoostSchedule[$eLootElixir] = 1 Then
-		$bMustBoost = $bMustBoost And ($g_aiCurrentLoot[$eLootElixir] > $g_iMinBoostElixir)
-	ElseIf $g_iSwitchBoostSchedule[$eLootElixir] = 2 Then
-		$bMustBoost = $bMustBoost And ($g_aiCurrentLoot[$eLootElixir] <= $g_iMinBoostElixir)
+	If $bMustBoost Then
+		If $g_iSwitchBoostSchedule[$eLootElixir] = 1 Then
+			$bMustBoost = ($g_aiCurrentLoot[$eLootElixir] >= $g_iMinBoostElixir) = False
+		ElseIf $g_iSwitchBoostSchedule[$eLootElixir] = 2 Then
+			$bMustBoost = ($g_aiCurrentLoot[$eLootElixir] < $g_iMinBoostElixir)
+		EndIf
+	
 	EndIf
-
-	If StringIsSpace($g_aiCurrentLoot[$eLootDarkElixir]) = 0 Then ; check if the village have a Dark Elixir Storage
-		If $g_iSwitchBoostSchedule[$eLootDarkElixir] = 1 Then
-			$bMustBoost = $bMustBoost And ($g_aiCurrentLoot[$eLootDarkElixir] > $g_iMinBoostDark)
-		ElseIf $g_iSwitchBoostSchedule[$eLootDarkElixir] = 2 Then
-			$bMustBoost = $bMustBoost And ($g_aiCurrentLoot[$eLootDarkElixir] <= $g_iMinBoostDark)
+	
+	If $bMustBoost Then
+		If StringIsSpace($g_aiCurrentLoot[$eLootDarkElixir]) = 0 Then ; check if the village have a Dark Elixir Storage
+			If $g_iSwitchBoostSchedule[$eLootDarkElixir] = 1 Then
+				$bMustBoost = ($g_aiCurrentLoot[$eLootDarkElixir] >= $g_iMinBoostDark) = False
+			ElseIf $g_iSwitchBoostSchedule[$eLootDarkElixir] = 2 Then
+				$bMustBoost = ($g_aiCurrentLoot[$eLootDarkElixir] < $g_iMinBoostDark)
+			EndIf
 		EndIf
 	EndIf
-	
-	If $bMustBoost = False Then SetLog("Boost skipped, resource condition successfully completed.", $COLOR_ACTION)
+
+	If $bMustBoost = False Then SetLog("Boost skipped, resource condition successfully completed.", $COLOR_SUCCESS)
 
 	Return $bMustBoost
 EndFunc   ;==>IsScheduleBoost
