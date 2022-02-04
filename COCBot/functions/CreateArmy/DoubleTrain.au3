@@ -14,7 +14,6 @@
 ; Example .......: No
 ; ===============================================================================================================================
 #include-once
-Global $g_bForcePreBrewSpells = True, $g_bPreciseBrew = False
 
 Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 

@@ -357,6 +357,7 @@ Global $g_aRequestTroopsTextOTR[0][2]
 #EndRegion - Type once - Team AIO Mod++
 
 #Region - Custom train - Team AIO Mod++
+Global $g_bForcePreBrewSpells = True, $g_bPreciseBrew = False
 Global $g_bChkPreTrainTroopsPercent = True, $g_iInpPreTrainTroopsPercent = 95, $g_bForceDoubleTrain = False
 Global $g_hChkPreTrainTroopsPercent = 0, $g_hInpPreTrainTroopsPercent = 0
 
