@@ -26,7 +26,7 @@ EndFunc   ;==>LocateClanCastle
 Func _LocateClanCastle($bForceOff = True)
 	Local $sText, $MsgBox, $iSilly = 0, $iStupid = 0, $sErrorText = "", $sInfo
 	If Int($g_iTownHallLevel) < 3 Then Return
-	SetLog("Locating Clan Castle...", $COLOR_INFO)
+	SetLog("Locating Clan Castle.", $COLOR_INFO)
 	ZoomOut()
 	Collect(False, False)
 	$g_aiClanCastlePos[0] = -1
@@ -162,7 +162,7 @@ Func DetectedCastle()
 				If _Sleep(200) Then Return
 				IniWrite($g_sProfileBuildingPath, "other", "CCPosX", $g_aiClanCastlePos[0])
 				IniWrite($g_sProfileBuildingPath, "other", "CCPosY", $g_aiClanCastlePos[1])
-				SetLog("Laboratory level " & $sInfo[2] & " Position Saved!", $COLOR_SUCCESS)
+				SetLog("Castle level " & $sInfo[2] & " Position Saved!", $COLOR_SUCCESS)
 				Return True
 			Else
 				SetDebugLog("Castle incorrect position!", $COLOR_ERROR)

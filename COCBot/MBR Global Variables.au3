@@ -583,13 +583,13 @@ Global Enum $eIcnArcher = 1, $eIcnDonArcher, $eIcnBalloon, $eIcnDonBalloon, $eIc
 		$eIcnMachineA, $eIcnHeadhunter, $eIcnDiscord, $eIcnCollectAchievements, _ ; Team__AiO__MOD
 		$eIcnInvisibilitySpell, $eIcnLogL, _ ; Team__AiO__MOD
 		$eIcnSuperBarbarian, $eIcnSuperArcher, $eIcnSuperGiant, $eIcnSneakyGoblin, $eIcnSuperWallBreaker, $eIcnSuperWizard, $eIcnInfernoDragon, $eIcnSuperMinion, $eIcnSuperValkyrie, $eIcnSuperWitch, $eIcnIceHound, _
-		$eIcnPetLassi, $eIcnPetElectroOwl, $eIcnPetMightyYak, $eIcnPetUnicorn, $eIcnTH14, $eWall15, $eIcnPetHouse, $eIcnRocketBalloon, $eIcnDragonRider, $eHdV14, $eIcnSuperBowler, $eIcnFlameF, $eIcnSuperDragon
-
+		$eIcnPetLassi, $eIcnPetElectroOwl, $eIcnPetMightyYak, $eIcnPetUnicorn, $eIcnTH14, $eWall15, $eIcnPetHouse, $eIcnRocketBalloon, $eIcnDragonRider, $eHdV14, $eIcnSuperBowler, $eIcnFlameF, $eIcnSuperDragon, _ ; Team__AiO__MOD
+		$eIcnSleepingChampion; Team__AiO__MOD
+		
 Global $eIcnDonBlank = $eIcnDonBlacklist
 Global $eIcnOptions = $eIcnDonBlacklist
 Global $eIcnAchievements = $eIcnMain
 Global $eIcnStrategies = $eIcnBlank
-Global $eIcnSleepingChampion = $eIcnSleepingWarden
 
 ; Controls bot startup and ongoing operation
 Global Const $g_iCollectAtCount = 10 ; Run Collect() after this amount of times before actually collect
