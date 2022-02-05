@@ -249,25 +249,8 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		If $g_bTestSceneryAttack = True And $g_bVillageSearchAlwaysMeasure = True Then
 			Local $sScenery = DetectScenery($g_aVillageSize[6])
 
-			If $sScenery = "Clashy Construction" Then
-				SetLog("Attacking Clashy Construction", $COLOR_ACTION)
-				ExitLoop
-			EndIf
-
-			If $sScenery = "Pirate Scenery" Then
-				SetLog("Attacking Pirate Scenery", $COLOR_ACTION)
-				ExitLoop
-			EndIf
-
-			If $sScenery = "Winter Scenery" Then
-				SetLog("Attacking Winter Scenery", $COLOR_ACTION)
-				ExitLoop
-			EndIf
-
-			If $sScenery = "Hog Mountain" Then
-				SetLog("Attacking Hog Mountain", $COLOR_ACTION)
-				ExitLoop
-			EndIf
+			SetLog("Attacking " & $sScenery, $COLOR_ACTION)
+			; ExitLoop
 
 		EndIf
 

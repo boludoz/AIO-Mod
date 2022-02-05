@@ -4,7 +4,12 @@
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
                     Based on MyBot.run v7.9.7
-
+**v4.7.6**
+	- Fix: New scenarios support:
+		Epic Jungle Scenery.
+		Lunar Scenery.
+		9th Clashiversary Scenery.
+ 
 **v4.7.5**
 	- New: Schedule boost: based on resources (> : start if lower | <= : stop if are equal or more than condition | - : off).
 	- Improved: Reduced training time while the training potion is on, for each account (The reduced training time is taken into account.).
