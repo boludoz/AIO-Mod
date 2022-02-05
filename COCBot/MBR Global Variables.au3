@@ -1260,10 +1260,10 @@ Global $g_iPercentageDamage = 0
 ; <<< nothing here - all in common Search & Attack grouping >>>
 
 ; <><><><> Attack Plan / Search & Attack / Deadbase / Collectors <><><><>
-Global $g_abCollectorLevelEnabled[15] = [-1, -1, -1, -1, -1, -1, True, True, True, True, True, True, True, True, True] ; elements 0 thru 5 are never referenced
-Global $g_aiCollectorLevelFill[15] = [-1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1] ; elements 0 thru 5 are never referenced
+Global $g_abCollectorLevelEnabled[16] = [-1, -1, -1, -1, -1, -1, False, False, False, True, True, True, True, True, True, True] ; elements 0 thru 5 are never referenced
+Global $g_aiCollectorLevelFill[16] = [-1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] ; elements 0 thru 5 are never referenced
 Global $g_bCollectorFilterDisable = False
-Global $g_iCollectorMatchesMin = 3
+Global $g_iCollectorMatchesMin = 2
 Global $g_iCollectorToleranceOffset = 0
 
 ; <><><><> Attack Plan / Search & Attack / Activebase / Search <><><><>

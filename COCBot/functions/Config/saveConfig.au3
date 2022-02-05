@@ -1186,7 +1186,7 @@ Func SaveConfig_600_31()
 	#Region -  New DB sys - Team AIO Mod++
 	_Ini_Add("search", "chkDisableCollectorsFilter", $g_bCollectorFilterDisable ? 1 : 0)
 	_Ini_Add("search", "chkDBCheckDefensesAlive", $g_bDefensesAlive ? 1 : 0)
-	_Ini_Add("search", "chkDBCheckDefensesMix", $g_bDefensesMix ? 1 : 0)
+	_Ini_Add("search", "chkDBCheckDefensesMix_", $g_bDefensesMix ? 1 : 0)
 	#EndRegion -  New DB sys - Team AIO Mod++
 	_Ini_Add("collectors", "minmatches", $g_iCollectorMatchesMin)
 	_Ini_Add("collectors", "tolerance", $g_iCollectorToleranceOffset)

@@ -1421,7 +1421,7 @@ Func ReadConfig_600_31()
 	#Region -  New DB sys - Team AIO Mod++
 	IniReadS($g_bCollectorFilterDisable, $g_sProfileConfigPath, "search", "chkDisableCollectorsFilter", False, "Bool")
 	IniReadS($g_bDefensesAlive, $g_sProfileConfigPath, "search", "chkDBCheckDefensesAlive", $g_bDefensesAlive, "Bool")
-	IniReadS($g_bDefensesMix, $g_sProfileConfigPath, "search", "chkDBCheckDefensesMix", $g_bDefensesMix, "Bool")
+	IniReadS($g_bDefensesMix, $g_sProfileConfigPath, "search", "chkDBCheckDefensesMix_", $g_bDefensesMix, "Bool")
 	#EndRegion -  New DB sys - Team AIO Mod++
 	IniReadS($g_iCollectorMatchesMin, $g_sProfileConfigPath, "collectors", "minmatches", $g_iCollectorMatchesMin) ; 1-6 collectors
 	If $g_iCollectorMatchesMin < 1 Or $g_iCollectorMatchesMin > 6 Then $g_iCollectorMatchesMin = 3

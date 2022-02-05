@@ -15,8 +15,8 @@
 #include-once
 
 Global $g_hChkDBDisableCollectorsFilter = 0
-Global $g_ahChkDBCollectorLevel[15] = [-1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0] ; elements 0 thru 5 are never referenced ; Custom - Team AiO MOD++
-Global $g_ahCmbDBCollectorLevel[15] = [-1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0] ; elements 0 thru 5 are never referenced ; Custom - Team AiO MOD++
+Global $g_ahChkDBCollectorLevel[16] = [-1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ; elements 0 thru 5 are never referenced ; Custom - Team AiO MOD++
+Global $g_ahCmbDBCollectorLevel[16] = [-1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ; elements 0 thru 5 are never referenced ; Custom - Team AiO MOD++
 Global $g_hCmbMinCollectorMatches = 0, $g_hSldCollectorTolerance = 0, $g_hLblCollectorWarning = 0
 
 ; Check Collectors Outside - Team AiO MOD++
@@ -29,7 +29,7 @@ Global $g_hChkSkipCollectorCheck = 0, $g_hLblSkipCollectorCheck = 0, _
 Global $g_hChkSkipCollectorCheckTH = 0, $g_hCmbSkipCollectorCheckTH = 0, $g_hLblSkipCollectorCheckTH = 0
 
 Func CreateAttackSearchDeadBaseCollectors()
-	Local $x = 10, $y = 45
+	Local $x = 10, $y = 43
 	Local $s_TxtTip1 = GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkCollectorLevel_Info_01", "If this box is checked, then the bot will look")
 	;Local $g_hTxtFull = GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkCollectorLevel_Info_02", "Full")
 	Local $sTxtTip = ""
@@ -53,7 +53,7 @@ Func CreateAttackSearchDeadBaseCollectors()
 		#EndRegion -  New DB sys - Team AIO Mod++
 
 	$y += 15
-	For $i = 6 To ubound($g_aiCollectorLevelFill) -1
+	For $i = 6 To Ubound($g_aiCollectorLevelFill) -1
 		$y += 25
 			$g_ahChkDBCollectorLevel[$i] = GUICtrlCreateCheckbox("", $x, $y, 18, 18)
 				$sTxtTip = $s_TxtTip1 & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkCollectorLevel" & $i & "_Info_01", "for level " & $i & " elixir collectors during dead base detection.")
@@ -108,7 +108,7 @@ Func CreateAttackSearchDeadBaseCollectors()
 			GUICtrlSetState(-1, $GUI_HIDE)
 
 	; Check Collectors Outside - Team AiO MOD++
-	$y -= 290
+	$y -= 300
 	$x += 230
 		$g_hChkDBCollectorNone = GUICtrlCreateRadio(GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkDBNone", "None"), $x, $y, -1, -1)
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
@@ -174,7 +174,7 @@ Func CreateAttackSearchDeadBaseCollectors()
 		$g_hLblSkipCollectorCheckTH = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "LblSkipCollectorCheckTH", "Target Townhall Level"), $x + 10, $y, -1, -1)
 		GUICtrlCreateLabel(ChrW(8804), $x + 120, $y, -1, -1)
 		$g_hCmbSkipCollectorCheckTH = GUICtrlCreateCombo("", $x + 130, $y - 2, 36, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
-			GUICtrlSetData(-1, "7|8|9|10|11|12|13", "8")
+			GUICtrlSetData(-1, "7|8|9|10|11|12|13|14", "8")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 EndFunc   ;==>CreateAttackSearchDeadBaseCollectors

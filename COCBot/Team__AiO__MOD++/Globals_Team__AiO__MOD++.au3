@@ -303,7 +303,7 @@ Global $g_sDateBuilderBase = "2021/09/02 00:00:00"
 
 #Region -  New DB sys - Team AIO Mod++
 Global $g_hChkDBCheckDefensesAlive, $g_hChkDBCheckDefensesMix
-Global $g_bDefensesAlive = False, $g_bDefensesMix = True
+Global $g_bDefensesAlive = False, $g_bDefensesMix = False
 #EndRegion - New DB sys - Team AIO Mod++
 
 #Region - No Upgrade In War - Team AIO Mod++
