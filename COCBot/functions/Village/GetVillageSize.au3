@@ -332,9 +332,11 @@ Func DetectScenery($sStone = "None")
 	ElseIf StringInStr($sStone, "EJS", $STR_CASESENSE) Then
 		$sScenery = "Epic Jungle Scenery"
 	ElseIf StringInStr($sStone, "LS", $STR_CASESENSE) Then
-		$sScenery = "Lunar Scenery"
+		$sScenery = "Tiger Mountain Scenery"
 	ElseIf StringInStr($sStone, "9CS", $STR_CASESENSE) Then
 		$sScenery = "9th Clashiversary Scenery"
+	ElseIf StringInStr($sStone, "SD", $STR_CASESENSE) Then
+		$sScenery = "Snow Day Scenery"
 	Else
 		$sScenery = "Failed scenery detection"
 	EndIf

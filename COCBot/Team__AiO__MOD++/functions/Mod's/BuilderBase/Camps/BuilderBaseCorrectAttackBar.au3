@@ -153,7 +153,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 				
 				If $iModeAttack <> 0 Then
 					SetLog("You are bad at CSV writing, but we can correct that.", $COLOR_ERROR)
-					ContinueLoop
+					ContinueCase
 				EndIf
 				
 				ExitLoop
