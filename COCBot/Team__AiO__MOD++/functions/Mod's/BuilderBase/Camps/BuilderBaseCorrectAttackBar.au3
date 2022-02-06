@@ -184,17 +184,12 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 
 	Local $iSlotWidth = 72
 	Local $iDefaultY = 708
-	Local $iCampsQuantities = 0
+	Local $iCampsQuantities = Ubound($aAvailableTroops)
 	Local $aSwicthBtn[0]
-	Local $aSlotSwitch[4] = [103, 706, 0xB5DF85, 25]
-	While _ColorCheck(_GetPixelColor($aSlotSwitch[0] + Int($iCampsQuantities * $iSlotWidth), $aSlotSwitch[1], False), Hex($aSlotSwitch[2], 6), $aSlotSwitch[3])
-		ReDim $aSwicthBtn[$iCampsQuantities + 1]
-		$aSwicthBtn[$iCampsQuantities] = $aSlotSwitch[0] + Int($iCampsQuantities * $iSlotWidth)
-		$iCampsQuantities += 1
-	WEnd
-	
-	; _ArrayDisplay($aSwicthBtn)
-	
+	For $z = 0 To Ubound($aAvailableTroops) - 1
+		ReDim $aSwicthBtn[$z+1]
+		$aSwicthBtn[$z] = $aAvailableTroops[$z][1] + 5
+	Next
 	Setlog("Available " & $iCampsQuantities & " Camps.", $COLOR_INFO)
 
 	Local $aCamps[0], $aCampsFake[0], $iLast = -1, $bOkCamps = False
@@ -221,8 +216,6 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 			EndIf
 		EndIf
 	Next
-	
-	; _ArrayDisplay($aCamps, $bOkCamps)
 
 	Local $sLastObj = "Barbarian", $sTmp
 	If $bOkCamps = False Then
@@ -251,8 +244,10 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 		;Just In Case Someone Mentioned Wrong Troop Name Select Default Barbarian Troop
 		$aCamps[$i] = __ArraySearch($g_asAttackBarBB2, $aCamps[$i]) < 0 ? ("Barbarian") : __ArraySearch($g_asAttackBarBB2, $aCamps[$i])
 	Next
+	
 	;After populate with the new priority position let's sort ascending column 1
 	_ArraySort($aCamps, 0, 0, 0, 1)
+	
 	;Just Assign The Short Names According to new priority positions
 	For $i = 0 To UBound($aCamps) - 1
 		$aCamps[$i] = $g_asAttackBarBB2[$aCamps[$i]]
@@ -310,7 +305,9 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 			$bDone = True
 			ExitLoop
 		EndIf
+		
 		$bWaschanged = True
+		
 		SetLog("Incorrect troop On Camp " & $aWrongCamps[0] + 1 & " - " & $aNewAvailableTroops[$aWrongCamps[0]][0] & " -> " & $sMissingCamp)
 		SetDebugLog("Click Switch Button " & $aWrongCamps[0], $COLOR_INFO)
 		Click($aSwicthBtn[$aWrongCamps[0]] + Random(2, 10, 1), $iDefaultY + Random(2, 10, 1))
@@ -320,11 +317,10 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 		If Not _WaitForCheckImg($g_sImgCustomArmyBB, "0,681,860,728", "ChangeTDis") Then
 			Setlog("_WaitForCheckImg Error at Camps!", $COLOR_ERROR)
 			$iAvoidInfLoop += 1
-			If Not $g_bRunState Then ExitLoop
+			If Not $g_bRunState Then Return
 			ContinueLoop
 		EndIf
 		
-		; Open eyes and learn.
 		$aAttackBar = decodeSingleCoord(findImageInPlace($sMissingCamp, $g_sImgDirBBTroops & "\" & $sMissingCamp & "*", "0,523(861,615)", True))
 		If UBound($aAttackBar) >= 2 Then
 			; If The item is The Troop that We Missing
@@ -347,14 +343,11 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 			Return False
 		EndIf
 	WEnd
+	
 	If RandomSleep(500) Then Return
 	
-	If $bWaschanged Then
-		If QuickMIS("N1", $g_sImgCustomArmyBB, 2, 681, 860, 728) = "ChangeTDis" Then
-			Click(8, 720, 1)
-		EndIf
-	Else
-		Return
+	If $bWaschanged And QuickMIS("N1", $g_sImgCustomArmyBB, 2, 681, 860, 728) = "ChangeTDis" Then
+		Click(8, 720, 1)
 	EndIf
 	
 	; populate the correct array with correct Troops
@@ -371,13 +364,14 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 			If $iCount == 0 Then $iCount = Number(_getTroopCountBig($aAvailableTroops[$i][1], $iTroopBanners - 7))
 			If $iCount == 0 And Not String($aAvailableTroops[$i][0]) = "Machine" Then
 				SetLog("Could not get count for " & $aAvailableTroops[$i][0] & " in slot " & String($aAvailableTroops[$i][3]), $COLOR_ERROR)
+				$aAvailableTroops[$i][4] = 2
 				ContinueLoop
 			ElseIf (StringInStr($aAvailableTroops[$i][0], "Machine") > 0) Then
 				$iCount = 1
 			EndIf
 		EndIf
 		$aAvailableTroops[$i][4] = $iCount
-	Next
+	Next 
 
 	For $i = 0 To UBound($aAvailableTroops) - 1
 		If Not $g_bRunState Then Return
