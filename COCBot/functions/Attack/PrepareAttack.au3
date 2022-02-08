@@ -95,7 +95,7 @@ Func PrepareAttack($pMatchMode, $bRemaining = False) ;Assigns troops
 							If $pMatchMode = $DB Or $pMatchMode = $LB Then
 								Switch $avAttackBar[$j][0]
 									Case $eCastle, $eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eFlameF
-										If $g_aiAttackUseSiege[$pMatchMode] <= 6 Then
+										If $g_aiAttackUseSiege[$pMatchMode] <= 7 Then
 											SelectCastleOrSiege($avAttackBar[$j][0], Number($avAttackBar[$j][5]), $g_aiAttackUseSiege[$pMatchMode])
 
 											If $g_aiAttackUseSiege[$pMatchMode] = 0 And Not($avAttackBar[$j][0] = $eCastle) Then ; if the user wanted to drop castle and no troops were available, do not drop a siege
@@ -157,7 +157,7 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 	Local $bNeedSwitch = False, $bAnySiege = False
 
 	Local $sLog = GetTroopName($iTroopIndex)
-
+	
 	Switch $ToUse
 		Case $iTroopIndex ; the same as current castle/siege
 			If $iTroopIndex <> $eCastle And $g_iSiegeLevel < 4 Then
@@ -169,7 +169,7 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 			$bNeedSwitch = True
 			SetLog(GetTroopName($iTroopIndex) & ($ToUse <> $eCastle ? " level " & $g_iSiegeLevel & " detected. Try looking for " : " detected. Switching to ") & GetTroopName($ToUse))
 
-		Case "Any" ; use any siege
+		Case Else ; use any siege
 			If $iTroopIndex = $eCastle Or ($iTroopIndex <> $eCastle And $g_iSiegeLevel < 4) Then ; found Castle or a low level Siege
 				$bNeedSwitch = True
 				$bAnySiege = True
