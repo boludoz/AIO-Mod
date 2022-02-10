@@ -1571,6 +1571,7 @@ Func ReadConfig_600_52_1()
 		IniReadS($g_aiTotalQuickTroop[$i], $g_sProfileConfigPath, "QuickTroop", "TotalQuickTroop" & $i + 1, 0, "int")
 		IniReadS($g_aiTotalQuickSpell[$i], $g_sProfileConfigPath, "QuickTroop", "TotalQuickSpell" & $i + 1, 0, "int")
 	Next
+	
 EndFunc   ;==>ReadConfig_600_52_1
 
 Func ReadConfig_600_52_2()
@@ -1662,7 +1663,13 @@ Func ReadConfig_600_54()
 	For $z = 0 To UBound($g_aiCmbCustomBrewOrder) - 1
 		IniReadS($g_aiCmbCustomBrewOrder[$z], $g_sProfileConfigPath, "Spells", "cmbSpellOrder" & $z, $z + 1)
 	Next
-
+	
+	; Custom pets - Team AIO Mod++
+	IniReadS($g_bPetHouseSelector, $g_sProfileConfigPath, "PetHouseSelector", "ChkPetHouseSelector", False, "Bool")
+	IniReadS($g_iCmbLassiPet, $g_sProfileConfigPath, "PetHouseSelector", "CmbLassiPet", 0, "int")
+	IniReadS($g_iCmbElectroOwlPet, $g_sProfileConfigPath, "PetHouseSelector", "CmbElectroOwlPet", 0, "int")
+	IniReadS($g_iCmbMightyYakPet, $g_sProfileConfigPath, "PetHouseSelector", "CmbMightyYakPet", 0, "int")
+	IniReadS($g_iCmbUnicornPet, $g_sProfileConfigPath, "PetHouseSelector", "CmbUnicornPet", 0, "int")
 EndFunc   ;==>ReadConfig_600_54
 
 #Region - Custom SmartZap - Team AIO Mod++

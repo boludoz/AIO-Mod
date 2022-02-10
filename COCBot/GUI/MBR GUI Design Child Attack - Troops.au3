@@ -176,7 +176,7 @@ Func CreateAttackTroops()
 	$g_hGUI_TRAINARMY_TAB = GUICtrlCreateTab(0, 0, $g_iSizeWGrpTab2, $g_iSizeHGrpTab2, BitOR($TCS_MULTILINE, $TCS_RIGHTJUSTIFY))
 	$g_hGUI_TRAINTYPE_TAB_ITEM1 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_03_STab_01_STab_Troops", "Troops"))
 	$g_hGUI_TRAINTYPE_TAB_ITEM2 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_03_STab_01_STab_Spells", "Spells"))
-	$g_hGUI_TRAINTYPE_TAB_ITEM3 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_03_STab_01_STab_Sieges", "Sieges"))
+	$g_hGUI_TRAINTYPE_TAB_ITEM3 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_03_STab_01_STab_Sieges_Pets", "Sieges / Pets"))
 	$g_hGUI_TRAINTYPE_TAB_ITEM4 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_03_STab_01_STab_02", "Boost"))
 	$g_hGUI_TRAINTYPE_TAB_ITEM5 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_03_STab_01_STab_04", "Options"))
 
@@ -1073,8 +1073,42 @@ Func CreateTrainSieges()
 	GUICtrlCreateLabel("x", $x + 232, $y + 10, -1, -1)
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
+	
+	; Custom pets - Team AIO Mod++
+	Local $sTxtHeroesNames = GetTranslatedFileIni("MBR Global GUI Design", "Any", "Any") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "Barbarian King", "Barbarian King") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "Archer Queen", "Archer Queen") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "Grand Warden", "Grand Warden") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "Royal Champion", "Royal Champion")
+	$x = $iStartX - 10
+	$y += 90
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Pet_House", "Group_01", "Pet Attack options"), $x, $y, 430, 95)
+	$g_hChkPetHouseSelector = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Pet_House", "CheckBox_01", "Link each heroes to their Pets:"), $x + 5, $y + 13, -1, -1)
+	GUICtrlSetOnEvent(-1, "ChkPetHouseSelector")
+	$y += 35
+	$g_hLblLassiHero = GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design Names Pet Troops", "TxtLassi", "L.A.S.S.I") & ":", $x + 6, $y + 5, 100, -1)
+	$g_hCmbLassiPet = GUICtrlCreateCombo("", $x + 70, $y + 2, 120, 25, $CBS_DROPDOWNLIST + $CBS_AUTOHSCROLL + $WS_VSCROLL) ; DONT use BitOR, this one doesn't work for that.
+	GUICtrlSetData(-1, $sTxtHeroesNames, GetTranslatedFileIni("MBR Global GUI Design", "Any", "Any"))
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Pet_House", "KingPet_Info_01", "Select which hero to link with L.A.S.S.I") & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Village - Pet_House", "KingPet_Info_02", "The hero icon will appear on the right."))
+	GUICtrlSetOnEvent(-1, "cmbPetSelector")
+	$x += 220
+	$g_hLblElectroOwlHero = GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design Names Pet Troops", "TxtElectroOwl", "Electro Owl") & ":", $x + 6, $y + 5, 100, -1)
+	$g_hCmbElectroOwlPet = GUICtrlCreateCombo("", $x + 70, $y + 2, 120, 25, $CBS_DROPDOWNLIST + $CBS_AUTOHSCROLL + $WS_VSCROLL) ; DONT use BitOR, this one doesn't work for that.
+	GUICtrlSetData(-1, $sTxtHeroesNames, GetTranslatedFileIni("MBR Global GUI Design", "Any", "Any"))
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Pet_House", "QueenPet_Info_01", "Select which hero to link with the Electro Owl") & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Village - Pet_House", "QueenPet_Info_02", "The hero icon will appear on the right."))
+	GUICtrlSetOnEvent(-1, "cmbPetSelector")
+	$x -= 220
+	$y += 30
+	$g_hLblMightyYakHero = GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design Names Pet Troops", "TxtMightyYak", "Mighty Yak") & ":", $x + 6, $y + 5, 100, -1)
+	$g_hCmbMightyYakPet = GUICtrlCreateCombo("", $x + 70, $y + 2, 120, 25, $CBS_DROPDOWNLIST + $CBS_AUTOHSCROLL + $WS_VSCROLL) ; DONT use BitOR, this one doesn't work for that.
+	GUICtrlSetData(-1, $sTxtHeroesNames, GetTranslatedFileIni("MBR Global GUI Design", "Any", "Any"))
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Pet_House", "WardenPet_Info_01", "Select which hero to link with the Mighty Yak") & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Village - Pet_House", "WardenPet_Info_02", "The hero icon will appear on the right."))
+	GUICtrlSetOnEvent(-1, "cmbPetSelector")
+	$x += 220
+	$g_hLblUnicornHero = GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design Names Pet Troops", "TxtUnicorn", "Unicorn") & ":", $x + 6, $y + 5, 100, -1)
+	$g_hCmbUnicornPet = GUICtrlCreateCombo("", $x + 70, $y + 2, 120, 25, $CBS_DROPDOWNLIST + $CBS_AUTOHSCROLL + $WS_VSCROLL) ; DONT use BitOR, this one doesn't work for that.
+	GUICtrlSetData(-1, $sTxtHeroesNames, GetTranslatedFileIni("MBR Global GUI Design", "Any", "Any"))
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Pet_House", "ChampionPet_Info_01", "Select which hero to link with the Unicorn") & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Village - Pet_House", "ChampionPet_Info_02", "The hero icon will appear on the right."))
+	GUICtrlSetOnEvent(-1, "cmbPetSelector")
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+
 	GUICtrlCreateTabItem("")
 
 EndFunc   ;==>CreateTrainTroops
-
 #ENDREGION

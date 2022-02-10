@@ -1,6 +1,6 @@
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: Boost a troop to super troop
-; Description ...:
+; Description ...: Supertroops with low maintenance level, based on images.
 ; Syntax ........: BoostSuperTroop()
 ; Parameters ....:
 ; Return values .:
@@ -18,6 +18,7 @@ Func BoostSuperTroop($bTest = False)
 		Return False
 	EndIf
 
+	; Not necessary
 	; If $g_iCommandStop = 0 Or $g_iCommandStop = 3 Then ;halt attack.. do not boost now
 	; If $g_bSkipBoostSuperTroopOnHalt Then
 	; SetLog("BoostSuperTroop() skipped, account on halt attack mode", $COLOR_DEBUG)
@@ -62,7 +63,7 @@ Func BoostSuperTroop($bTest = False)
 				If _Sleep(500) Then Return
 
 				; Nada al azar.
-				Local $eBeDrag = Round($iSuperTroopsCount / 4)
+				Local $eBeDrag = Ceiling($iSuperTroopsCount / 4)
 				If Mod($iSuperTroopsCount, 4) > 0 Then $eBeDrag += 1
 				For $iDrags = 1 To $eBeDrag
 
@@ -92,9 +93,7 @@ Func BoostSuperTroop($bTest = False)
 										EndIf
 									Next
 
-									If $g_bDebugSetlog Then
-										SetDebugLog($sFilenameST & " found (" & $aTroopsCoords[0] & "," & $aTroopsCoords[1] & ")", $COLOR_SUCCESS)
-									EndIf
+									SetDebugLog($sFilenameST & " found (" & $aTroopsCoords[0] & "," & $aTroopsCoords[1] & ")", $COLOR_SUCCESS)
 
 									If _ArraySearch($aAlreadyChecked, $sFilenameST) > -1 And Not @error Then
 										If $bTest Then Setlog("Skip checked " & $sFilenameST & ".", $COLOR_DEBUG)
@@ -106,7 +105,6 @@ Func BoostSuperTroop($bTest = False)
 
 									; Check If is boosted
 									If $bTest Then SetLog("Stage 1 - Check If is boosted.", $COLOR_INFO)
-
 									Local $aClock = findMultiple($g_sImgBoostTroopsClock, $sDiamond, $sDiamond, 0, 1000, 0, "objectname,objectlevel,objectpoints", False)
 									If UBound($aClock) > 0 And Not @error Then
 										For $aMatchedClocks In $aClock
@@ -114,11 +112,7 @@ Func BoostSuperTroop($bTest = False)
 											$sFilenameClock = $aMatchedClocks[0] ; Filename
 											For $i = 0 To UBound($aPoints) - 1
 												$aClockCoords = $aPoints[$i] ; Coords
-
-												If $g_bDebugSetlog Then
-													SetDebugLog($sFilenameClock & " found (" & $aClockCoords[0] & "," & $aClockCoords[1] & ")", $COLOR_SUCCESS)
-												EndIf
-
+												SetDebugLog($sFilenameClock & " found (" & $aClockCoords[0] & "," & $aClockCoords[1] & ")", $COLOR_SUCCESS)
 												$iDist = Pixel_Distance($aClockCoords[0], $aClockCoords[1], $aTroopsCoords[0], $aTroopsCoords[1])
 												SetDebuglog("Clock check in : " & $aClockCoords[0] & " / " & $aClockCoords[1] & " | " & $sFilenameST & " | Dist : " & $iDist)
 												If $iDist < 175 And ($aClockCoords[1] - $aTroopsCoords[1]) > 0 Then
@@ -149,9 +143,7 @@ Func BoostSuperTroop($bTest = False)
 											If $iIndex > -1 Then
 
 												If $bTest Then SetLog("_ArraySearch : " & $g_asTroopShortNames[$iIndex] & " | " & $sFilenameST & " | Index : " & $iIndex)
-
 												If $g_asTroopNames[$iIndex] = $g_asSuperTroopNames[$aCmbTmp[$i]] Then
-
 													If $bTest Then SetLog("Compare texts : " & $g_asTroopNames[$iIndex] & " | " & $g_asSuperTroopNames[$aCmbTmp[$i]])
 
 													; Boost Here
@@ -176,25 +168,11 @@ Func BoostSuperTroop($bTest = False)
 														Setlog("Bad IsSTPageBoost.", $COLOR_ERROR)
 														ClickAway(Default, True)
 														If _Sleep(1500) Then Return False
-														
+
 														ClickAway(Default, True)
 														If _Sleep(1500) Then Return False
 														ExitLoop 3
 													EndIf
-													
-													#cs
-													If $bBadTryPotion == True And $bBadTryDark == True Then
-														Setlog("No resources for boost.", $COLOR_ERROR)
-														ClickAway(Default, True)
-														If _Sleep(1500) Then Return False
-														
-														ClickAway(Default, True)
-														If _Sleep(1500) Then Return False
-														ExitLoop 3
-													EndIf
-													#ce
-													
-													; #cs
 
 													If IsSTPageBoost(1) = True Then
 														ClickAway()
@@ -205,7 +183,6 @@ Func BoostSuperTroop($bTest = False)
 														ClickAway()
 														If _Sleep(500) Then Return
 													EndIf
-													; #ce
 												EndIf
 											EndIf
 										EndIf
@@ -227,6 +204,7 @@ Func BoostSuperTroop($bTest = False)
 
 						ClickAway()
 						If _Sleep(500) Then Return
+						ExitLoop
 					EndIf
 				Next
 			EndIf
@@ -235,7 +213,7 @@ Func BoostSuperTroop($bTest = False)
 		EndIf
 
 		If UBound($aAlreadyChecked) > 0 Then
-			SetLog("Super troops checked:", $COLOR_INFO)
+			SetLog("Super troops active:", $COLOR_INFO)
 
 			For $i = 0 To UBound($aAlreadyChecked) - 1
 				SetLog("- " & $aAlreadyChecked[$i], $COLOR_INFO)
@@ -258,7 +236,7 @@ Func FinalBoostST(ByRef $bBadTryPotion, ByRef $bBadTryDark, $bTest = False)
 	Local $bPotionAvariable = QuickMIS("BC1", $g_sImgBoostTroopsPotion, $aImgBoostBtn1[0], $aImgBoostBtn1[1], $aImgBoostBtn1[2], $aImgBoostBtn1[3], True, False)
 	Local $aClickPotion[2] = [$g_iQuickMISX + $aImgBoostBtn1[0], $g_iQuickMISY + $aImgBoostBtn1[1]]
 
-	Local $bDarkAvariable = QuickMIS("BC1", $g_sImgBoostTroopsButtons, $aImgBoostBtn1[0], $aImgBoostBtn1[1], $aImgBoostBtn1[2], $aImgBoostBtn1[3], True, False) 
+	Local $bDarkAvariable = QuickMIS("BC1", $g_sImgBoostTroopsButtons, $aImgBoostBtn1[0], $aImgBoostBtn1[1], $aImgBoostBtn1[2], $aImgBoostBtn1[3], True, False)
 	Local $aClickDark[2] = [$g_iQuickMISX + $aImgBoostBtn1[0], $g_iQuickMISY + $aImgBoostBtn1[1]]
 	$bDarkAvariable = IsDarkAvariable()
 	Local $aResource = [$bDarkAvariable, $bPotionAvariable]
@@ -275,7 +253,7 @@ Func FinalBoostST(ByRef $bBadTryPotion, ByRef $bBadTryDark, $bTest = False)
 		If $aResource[$iNum] == True Then
 			ClickP($aClick[$iNum])
 			If _Sleep(1500) Then Return
-			
+
 			Local $sMode = ($iNum = 0) ? ($g_sImgBoostTroopsButtons) : ($g_sImgBoostTroopsPotion)
 			If QuickMIS("BC1", $sMode, $aImgBoostBtn2[0], $aImgBoostBtn2[1], $aImgBoostBtn2[2], $aImgBoostBtn2[3], True, False) Then
 				If $bTest = False Then
@@ -283,11 +261,11 @@ Func FinalBoostST(ByRef $bBadTryPotion, ByRef $bBadTryDark, $bTest = False)
 				Else
 					ClickAway()
 					If _Sleep(1500) Then Return
-					
+
 					ClickAway()
 				EndIf
 			EndIf
-			
+
 			ExitLoop
 		Else
 			If $iNum = 0 Then
@@ -301,7 +279,7 @@ EndFunc   ;==>FinalBoostST
 
 Func IsDarkAvariable()
 	Return (WaitforPixel(632, 543, 688, 576, Hex(0xFF887F, 6), 15, 1) = 0)
-EndFunc   ;==>IsSTPage
+EndFunc   ;==>IsDarkAvariable
 
 Func IsSTPage($iTry = 15)
 	Return WaitforPixel(428, 214, 430, 216, Hex(0xF0D028, 6), 15, $iTry)

@@ -396,6 +396,7 @@ Func GetWrongCamps($aCurCamps, $aCorrectCamps)
 		MsgBox(0, '', 'Error creating the dictionary object')
 		Return $aWrongCampsIndexes
 	EndIf
+	
 	Local $iCurTroopCamps = 0
 	; Loop Through Current Camps
 	For $i = 0 To UBound($aCurCamps) - 1
@@ -415,6 +416,7 @@ Func GetWrongCamps($aCurCamps, $aCorrectCamps)
 
 		; Check how many camps must be filled with this Current Camp Troop
 		Local $iNeededCamps = GetTroopCampCounts($aCurCamps[$i][0], $aCorrectCamps)
+		
 		; Check if Current Camp Troop is not totally used
 		If $iNeededCamps = 0 Then
 			_ArrayAdd($aWrongCampsIndexes, $i)

@@ -117,8 +117,14 @@ Global Const $g_sImgLocationWarden = @ScriptDir & "\COCBot\Team__AiO__MOD++\Imag
 Global Const $g_sImgLocationCastle = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\AutoLocate\Castle\"
 #EndRegion - Auto Locate
 
-; Chk no league
+#Region - Chk no league
 Global Const $g_sImgNoLeague = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\NoLeague\"
+#EndRegion - Chk no league
+
+#Region - Pets
+Global Const $g_sImgpetsHouseSelection = @ScriptDir & "\imgxml\Pets\SelectedHeroes\"
+Global Const $g_sImgpetsHouseHeroes = @ScriptDir & "\imgxml\Pets\Heroes\"
+#EndRegion - Pets
 
 #Region - DMatchingBundles.au3
 

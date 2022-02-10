@@ -1330,3 +1330,41 @@ Func CmbTroopSetting()
 	; ApplyConfig_600_54("Save")
 	ApplyConfig_600_54("Read")
 EndFunc   ;==>CmbTroopSetting
+
+; Custom pets - Team AIO Mod++
+Func ChkPetHouseSelector()
+	; $g_bPetHouseSelector = (GUICtrlRead($g_hChkPetHouseSelector) = $GUI_CHECKED)
+	; For $h = $g_hLblLassiHero To $g_hCmbUnicornPet
+		; GUICtrlSetState($h, ($g_bPetHouseSelector = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+	; Next
+EndFunc
+
+Func cmbPetSelector()
+	Local $hSelected = @GUI_CtrlId
+	
+	Static $oPetsMatrix = ObjCreate("Scripting.Dictionary")
+	If @error Then
+		MsgBox(0, '', 'Error creating the dictionary object')
+		Return
+	EndIf
+	
+	Local $iValue = _GUICtrlComboBox_GetCurSel($hSelected)
+	
+	If $iValue > 0 Then
+		$oPetsMatrix("Lassi") = $g_hCmbLassiPet
+		$oPetsMatrix("Electro Owl") = $g_hCmbElectroOwlPet
+		$oPetsMatrix("Mighty Yak") = $g_hCmbMightyYakPet
+		$oPetsMatrix("Unicorn") = $g_hCmbUnicornPet
+		Local $aPetsNames = ["Lassi", "Electro Owl", "Mighty Yak", "Unicorn"]
+		For $s In $aPetsNames
+			Local $sA = _GUICtrlComboBox_GetCurSel($oPetsMatrix($s))
+			If $oPetsMatrix($s) <> $hSelected And $iValue = _GUICtrlComboBox_GetCurSel($oPetsMatrix($s)) Then
+				_GUICtrlComboBox_SetCurSel($oPetsMatrix($s), 0)
+			EndIf
+		Next	
+		$g_iCmbLassiPet = _GUICtrlComboBox_GetCurSel($oPetsMatrix("Lassi"))
+		$g_iCmbElectroOwlPet =	_GUICtrlComboBox_GetCurSel($oPetsMatrix("Electro Owl"))
+		$g_iCmbMightyYakPet = _GUICtrlComboBox_GetCurSel($oPetsMatrix("Mighty Yak"))
+		$g_iCmbUnicornPet = _GUICtrlComboBox_GetCurSel($oPetsMatrix("Unicorn"))
+	EndIf
+EndFunc   ;==>cmbPetSelector

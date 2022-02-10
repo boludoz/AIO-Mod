@@ -2433,6 +2433,23 @@ Func ApplyConfig_600_54($TypeReadSave)
 	; <><><> Attack Plan / Train Army / Train Order <><><>
 	Switch $TypeReadSave
 		Case "Read"
+			; Custom pets - Team AIO Mod++
+			GUICtrlSetState($g_hChkPetHouseSelector, $g_bPetHouseSelector ? $GUI_CHECKED : $GUI_UNCHECKED)
+
+			If $g_iCmbLassiPet < 0 Then $g_iCmbLassiPet = 0
+			_GUICtrlComboBox_SetCurSel($g_hCmbLassiPet, $g_iCmbLassiPet)
+			
+			If $g_iCmbElectroOwlPet < 0 Then $g_iCmbElectroOwlPet = 0
+			_GUICtrlComboBox_SetCurSel($g_hCmbElectroOwlPet, $g_iCmbElectroOwlPet)
+			
+			If $g_iCmbMightyYakPet < 0 Then $g_iCmbMightyYakPet = 0
+			_GUICtrlComboBox_SetCurSel($g_hCmbMightyYakPet, $g_iCmbMightyYakPet)
+			
+			If $g_iCmbUnicornPet < 0 Then $g_iCmbUnicornPet = 0
+			_GUICtrlComboBox_SetCurSel($g_hCmbUnicornPet, $g_iCmbUnicornPet)
+			
+			ChkPetHouseSelector()
+
 			; Troops Order
 			GUICtrlSetState($g_hChkCustomTrainOrderEnable, $g_bCustomTrainOrderEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
 			For $z = 0 To UBound($g_ahCmbTroopOrder) - 1
@@ -2477,6 +2494,13 @@ Func ApplyConfig_600_54($TypeReadSave)
 				Next
 			EndIf
 		Case "Save"
+			; Custom pets - Team AIO Mod++
+			$g_bPetHouseSelector = (GUICtrlRead($g_hChkPetHouseSelector) = $GUI_CHECKED)
+			$g_iCmbLassiPet = _GUICtrlComboBox_GetCurSel($g_hCmbLassiPet)
+			$g_iCmbElectroOwlPet = _GUICtrlComboBox_GetCurSel($g_hCmbElectroOwlPet)
+			$g_iCmbMightyYakPet = _GUICtrlComboBox_GetCurSel($g_hCmbMightyYakPet)
+			$g_iCmbUnicornPet = _GUICtrlComboBox_GetCurSel($g_hCmbUnicornPet)
+
 			; Troops Order
 			$g_bCustomTrainOrderEnable = (GUICtrlRead($g_hChkCustomTrainOrderEnable) = $GUI_CHECKED)
 			For $z = 0 To UBound($g_ahCmbTroopOrder) - 1
@@ -2498,7 +2522,7 @@ Func ApplyConfig_600_54($TypeReadSave)
 				BtnRemoveSpells()
 				; ApplyConfig_600_54("Read")
 			EndIf
-
+			
 	EndSwitch
 	#EndRegion - Custom Train - Team AIO Mod++
 EndFunc   ;==>ApplyConfig_600_54

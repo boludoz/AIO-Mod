@@ -345,7 +345,8 @@ Func InitializeControlVariables()
 	For $i in $aTabControlsBuilderBase 
 		$oAlwaysEnabledControls($i) = 1
 	Next
-
+	
+	; AiO MOD++
 	$oAlwaysEnabledControls($g_hTxtClanGamesLog) = 1
 	#EndRegion
 	

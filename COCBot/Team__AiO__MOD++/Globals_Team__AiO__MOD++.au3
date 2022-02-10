@@ -365,6 +365,14 @@ Global $g_iCustomArmysMainVillage[$eTroopCount][3]
 Global $g_iCustomBrewMainVillage[$eSpellCount][3]
 Global $g_iCustomSiegesMainVillage[$eSiegeMachineCount][3]
 Global $g_hCmbTroopSetting = 0, $g_iCmbTroopSetting = 0
+
+; Custom pets - Team AIO Mod++
+Global $g_hChkPetHouseSelector = 0
+Global $g_bPetHouseSelector = False
+
+Global $g_hLblLassiHero = 0, $g_hLblElectroOwlHero = 0, $g_hLblMightyYakHero = 0, $g_hLblUnicornHero = 0
+Global $g_hCmbLassiPet = 0, $g_hCmbElectroOwlPet = 0, $g_hCmbMightyYakPet = 0, $g_hCmbUnicornPet = 0
+Global $g_iCmbLassiPet = 0, $g_iCmbElectroOwlPet = 0, $g_iCmbMightyYakPet = 0, $g_iCmbUnicornPet = 0
 #EndRegion - Custom train - Team AIO Mod++
 
 ; Advanced debugging.

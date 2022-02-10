@@ -1284,6 +1284,7 @@ Func _RunFunction($sAction)
 			If $g_bUseBotHumanization = False Then $bNoProceed = True
 		Case "ChatActions"
 			If 1 > $g_iCmbPriorityFC And 1 > $g_iCmbPriorityCHAT Then $bNoProceed = True
+		#cs
 		Case "PetHouse"
 			Local $bUpgradePets = False
 
@@ -1291,10 +1292,12 @@ Func _RunFunction($sAction)
 			For $i = 0 to $ePetCount - 1
 				If $g_bUpgradePetsEnable[$i] Then
 					$bUpgradePets = True
-					SetLog($g_asPetNames[$i] & " upgrade enabled");
+					; SetLog($g_asPetNames[$i] & " upgrade enabled");
+					ExitLoop
 				EndIf
 			Next
 			If Not $bUpgradePets Then $bNoProceed = True
+		#ce
 		Case "OneGemBoost"
 			If Not $g_bChkOneGemBoostBarracks And Not $g_bChkOneGemBoostSpells And Not $g_bChkOneGemBoostHeroes And Not $g_bChkOneGemBoostWorkshop Then $bNoProceed = True
 	EndSwitch

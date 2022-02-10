@@ -1335,7 +1335,7 @@ Func SaveConfig_600_52_1()
 		_Ini_Add("QuickTroop", "TotalQuickTroop" & $i + 1, $g_aiTotalQuickTroop[$i])
 		_Ini_Add("QuickTroop", "TotalQuickSpell" & $i + 1, $g_aiTotalQuickSpell[$i])
 	Next
-
+	
 EndFunc   ;==>SaveConfig_600_52_1
 
 Func SaveConfig_600_52_2()
@@ -1407,6 +1407,13 @@ Func SaveConfig_600_54()
 	For $z = 0 To UBound($g_aiCmbCustomBrewOrder) - 1
 		_Ini_Add("Spells", "cmbSpellOrder" & $z, $g_aiCmbCustomBrewOrder[$z])
 	Next
+
+	; Custom pets - Team AIO Mod++
+	_Ini_Add("PetHouseSelector", "ChkPetHouseSelector", $g_bPetHouseSelector ? 1 : 0)
+	_Ini_Add("PetHouseSelector", "CmbLassiPet", $g_iCmbLassiPet)
+	_Ini_Add("PetHouseSelector", "CmbElectroOwlPet", $g_iCmbElectroOwlPet)
+	_Ini_Add("PetHouseSelector", "CmbMightyYakPet", $g_iCmbMightyYakPet)
+	_Ini_Add("PetHouseSelector", "CmbUnicornPet", $g_iCmbUnicornPet)
 EndFunc   ;==>SaveConfig_600_54
 
 #Region - Custom SmartZap - Team AIO Mod++
