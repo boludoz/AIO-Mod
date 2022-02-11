@@ -240,8 +240,8 @@ Func CreateBottomPanel()
 		$g_hLbLPetTime = GUICtrlCreateLabel("", $x + 20, $y + 2, 50, 16, $SS_LEFT)
 
    ;~ Village
-   Local $x = 295, $y = $y_bottom + 35
-   $g_hGrpVillage = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Bottom", "GrpVillage", "Village"), $x - 0, $y - 20, 160, 75)
+   Local $x = 295, $y = $y_bottom + 20
+   $g_hGrpVillage = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Bottom", "GrpVillage", "Village"), $x - 0, $y - 20, 160, 85)
 	   $g_hLblResultGoldNow = GUICtrlCreateLabel("", $x + 10, $y - 2, 60, 15, $SS_RIGHT)
 	   $g_hLblBBResultGoldNow = GUICtrlCreateLabel("", $x + 10, $y - 2, 60, 15, $SS_RIGHT)
 		   GUICtrlSetState(-1, $GUI_HIDE)
