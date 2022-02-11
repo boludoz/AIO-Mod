@@ -720,3 +720,23 @@ Global $g_bDoneSmartZap = False
 #Region - Custom smart attack - Team AIO Mod++
 Global $g_abAttackStdSmartDropSpells[$g_iModeCount + 1] = [0, 0, 0, 0]
 #EndRegion - Custom smart attack - Team AIO Mod++
+
+#Region - Custom schedule - Team AIO Mod++
+Global $g_hChkRNDSchedAttack = 0, $g_hCmbRNDSchedAttack = 0
+Global $g_bChkRNDSchedAttack = False, $g_iRNDSchedAttack = 8, $g_iChkRNDSchedAttack = 24, $g_iTimeRNDSchedAttack = 0
+
+Global $g_aiAttackedCountAcc[$g_eTotalAcc]
+Global $g_bAttackAccountReachLimts[$g_eTotalAcc]
+Global $g_abPlannedAttackWeekDays[$g_eTotalAcc][7]
+Global $g_abPlannedattackHours[$g_eTotalAcc][24]
+For $i = 0 To $g_eTotalAcc - 1
+	For $h = 0 To UBound($g_abPlannedAttackWeekDays, $UBOUND_COLUMNS) - 1
+		$g_abPlannedAttackWeekDays[$i][$h] = True
+	Next
+	For $h = 0 To UBound($g_abPlannedattackHours, $UBOUND_COLUMNS) - 1
+		$g_abPlannedattackHours[$i][$h] = True
+	Next
+    $g_bAttackAccountReachLimts[$i] = False
+	$g_aiAttackedCountAcc[$i] = 0
+Next
+#EndRegion - Custom schedule - Team AIO Mod++

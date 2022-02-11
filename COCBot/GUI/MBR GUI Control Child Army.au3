@@ -1333,10 +1333,10 @@ EndFunc   ;==>CmbTroopSetting
 
 ; Custom pets - Team AIO Mod++
 Func ChkPetHouseSelector()
-	; $g_bPetHouseSelector = (GUICtrlRead($g_hChkPetHouseSelector) = $GUI_CHECKED)
-	; For $h = $g_hLblLassiHero To $g_hCmbUnicornPet
-		; GUICtrlSetState($h, ($g_bPetHouseSelector = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
-	; Next
+	$g_bPetHouseSelector = (GUICtrlRead($g_hChkPetHouseSelector) = $GUI_CHECKED)
+	For $h = $g_hLblLassiHero To $g_hCmbUnicornPet
+		GUICtrlSetState($h, ($g_bPetHouseSelector = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+	Next
 EndFunc
 
 Func cmbPetSelector()

@@ -68,7 +68,7 @@ Func SelectHeroPets()
 		$oPetsGUI($aPetsNames[$o]) = $aHeroNames[$aPetsHeroes[$o]]
 	Next
 	
-	Local $aIMGHerosMain = _ImageSearchXML($g_sImgpetsHouseHeroes, 1000, "127, 420, 578, 474", True, False, True, 70)
+	Local $aIMGHerosMain = _ImageSearchXML($g_sImgpetsHouseHeroes, 1000, "127, 420, 650, 474", True, False, True, 70)
 	If IsArray($aIMGHerosMain) And UBound($aIMGHerosMain) < 5 Then
 
 		Local $aIMGHeros = -1

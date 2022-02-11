@@ -271,8 +271,19 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		Local $checkDeadBase = $match[$DB] Or $match[$LB]
 
 		; Custom - AIO Mod++
-		If $checkDeadBase = True Then
-			$dbBase = ($g_bLeagueAttack = True) ? (False) : (checkDeadBase(False)) ; Legend bases are always alive.
+		If $g_bChkNoLeague[$DB] And $match[$DB] = True Then
+			If SearchNoLeague() Then
+				SetLog("Dead Base is in No League, match found.", $COLOR_SUCCESS)
+				$dbBase = True
+			Else
+				; If you play against, this is disabled.
+				If ($g_iSearchCount = 10) Then
+					SetLog("Disabling no league, it seems that there are no true dead bases in your league !", $COLOR_ACTION)
+				EndIf
+				If ($g_iSearchCount > 10) Then $dbBase = checkDeadBase(False)
+			EndIf
+		ElseIf $checkDeadBase = True Then
+			$dbBase = checkDeadBase(False)
 		EndIf
 
 		; ----------------- CHECK WEAK BASE -------------------------------------------------
@@ -324,26 +335,6 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 
 			#Region - Custom - Team AIO Mod++
 			Local $bFlagSearchAnotherBase = False
-			If $g_bChkNoLeague[$DB] Then
-				If SearchNoLeague() Then
-					SetLog(" - Dead Base is in No League, match found.", $COLOR_SUCCESS)
-					$bFlagSearchAnotherBase = False
-				Else
-
-					; If you play against, this is disabled.
-					If ($g_iSearchCount > 25) Then
-						SetLog(" - Disabling no league, it seems that there are no true dead bases in your league !", $COLOR_ACTION)
-						$g_bChkNoLeague[$DB] = False
-					EndIf
-
-					SetLog("- Dead Base is in a League, skipping search.", $COLOR_INFO)
-
-					$match[$DB] = False ; got league skip attack, search another base
-					$bFlagSearchAnotherBase = True
-				EndIf
-			Else
-				$bFlagSearchAnotherBase = False
-			EndIf
 
 			If ($bFlagSearchAnotherBase = False) Then
 				If $g_bDBMeetCollectorOutside Then ; check is that collector  near outside

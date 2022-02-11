@@ -1584,6 +1584,9 @@ Func ApplyConfig_600_29($TypeReadSave)
 	Switch $TypeReadSave
 		Case "Read"
 			radHerosApply()
+			; Custom schedule - Team AIO Mod++
+			GUICtrlSetState($g_hChkRNDSchedAttack, $g_bChkRNDSchedAttack = True ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetData($g_hCmbRNDSchedAttack, $g_iRNDSchedAttack)
 			GUICtrlSetState($g_hChkAttackPlannerEnable, $g_bAttackPlannerEnable = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkAttackPlannerCloseCoC, $g_bAttackPlannerCloseCoC = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkAttackPlannerCloseAll, $g_bAttackPlannerCloseAll = True ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -1595,11 +1598,12 @@ Func ApplyConfig_600_29($TypeReadSave)
 			GUICtrlSetData($g_hCmbAttackPlannerDayMin, $g_iAttackPlannerDayMin)
 			GUICtrlSetData($g_hCmbAttackPlannerDayMax, $g_iAttackPlannerDayMax)
 			_cmbAttackPlannerDayLimit()
+			; Custom schedule - Team AIO Mod++
 			For $i = 0 To 6
-				GUICtrlSetState($g_ahChkAttackWeekdays[$i], $g_abPlannedAttackWeekDays[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
+				GUICtrlSetState($g_ahChkAttackWeekdays[$i], $g_abPlannedAttackWeekDays[$g_iCurAccount][$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
 			Next
 			For $i = 0 To 23
-				GUICtrlSetState($g_ahChkAttackHours[$i], $g_abPlannedattackHours[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
+				GUICtrlSetState($g_ahChkAttackHours[$i], $g_abPlannedattackHours[$g_iCurAccount][$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
 			Next
 			GUICtrlSetState($g_hChkDropCCHoursEnable, $g_bPlannedDropCCHoursEnable = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			chkDropCCHoursEnable()
@@ -1608,6 +1612,9 @@ Func ApplyConfig_600_29($TypeReadSave)
 				GUICtrlSetState($g_ahChkDropCCHours[$i], $g_abPlannedDropCCHours[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
 			Next
 		Case "Save"
+			; Custom schedule - Team AIO Mod++
+			$g_bChkRNDSchedAttack = (GUICtrlRead($g_hChkRNDSchedAttack) = $GUI_CHECKED)
+			$g_iRNDSchedAttack = GUICtrlRead($g_hCmbRNDSchedAttack)
 			If GUICtrlRead($g_hRadAutoQueenAbility) = $GUI_CHECKED Then
 				$g_iActivateQueen = 0
 			ElseIf GUICtrlRead($g_hRadManQueenAbility) = $GUI_CHECKED Then
@@ -1653,13 +1660,15 @@ Func ApplyConfig_600_29($TypeReadSave)
 			$g_bAttackPlannerDayLimit = (GUICtrlRead($g_hChkAttackPlannerDayLimit) = $GUI_CHECKED)
 			$g_iAttackPlannerDayMin = GUICtrlRead($g_hCmbAttackPlannerDayMin)
 			$g_iAttackPlannerDayMax = GUICtrlRead($g_hCmbAttackPlannerDayMax)
+			; Custom schedule - Team AIO Mod++
 			Local $string = ""
 			For $i = 0 To 6
-				$g_abPlannedAttackWeekDays[$i] = (GUICtrlRead($g_ahChkAttackWeekdays[$i]) = $GUI_CHECKED)
+				$g_abPlannedAttackWeekDays[$g_iCurAccount][$i] = (GUICtrlRead($g_ahChkAttackWeekdays[$i]) = $GUI_CHECKED)
 			Next
 			Local $string = ""
 			For $i = 0 To 23
-				$g_abPlannedattackHours[$i] = (GUICtrlRead($g_ahChkAttackHours[$i]) = $GUI_CHECKED)
+				$g_abPlannedattackHours[$g_iCurAccount][$i] = (GUICtrlRead($g_ahChkAttackHours[$i]) = $GUI_CHECKED)
+				SetDebugLog("$g_abPlannedattackHours | " & $i & " -> " & $g_abPlannedattackHours[$g_iCurAccount][$i])
 			Next
 
 			$g_bPlannedDropCCHoursEnable = (GUICtrlRead($g_hChkDropCCHoursEnable) = $GUI_CHECKED)

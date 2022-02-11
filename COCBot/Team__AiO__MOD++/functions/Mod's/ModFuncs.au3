@@ -33,7 +33,7 @@ Func SearchNoLeague($bCheckOneTime = False)
 	
 	Local $bReturn = False
 	
-	$bReturn = _WaitForCheckImg($g_sImgNoLeague, "3,4,47,53", Default, 500)
+	$bReturn = _WaitForCheckImg($g_sImgNoLeague, "3,4,47,53", Default, ($bCheckOneTime = False) ? (1500) : (0))
 	
 	If $g_bDebugSetlog Then
 		SetDebugLog("SearchNoLeague: Is no league? " & $bReturn, $COLOR_DEBUG)

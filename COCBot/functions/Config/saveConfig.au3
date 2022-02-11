@@ -959,6 +959,9 @@ EndFunc   ;==>SaveConfig_600_28_LB
 
 Func SaveConfig_600_29()
 	; <><><><> Attack Plan / Search & Attack / Options / Attack <><><><>
+	; Custom schedule - Team AIO Mod++
+	_Ini_Add("planned", "chkRNDSchedAttack", $g_bChkRNDSchedAttack ? 1 : 0)
+	_Ini_Add("planned", "cmbRNDSchedAttack", $g_iRNDSchedAttack)
 	ApplyConfig_600_29(GetApplyConfigSaveAction())
 	_Ini_Add("attack", "ActivateQueen", $g_iActivateQueen)
 	_Ini_Add("attack", "ActivateKing", $g_iActivateKing)
@@ -977,14 +980,15 @@ Func SaveConfig_600_29()
 	_Ini_Add("planned", "chkAttackPlannerDayLimit", $g_bAttackPlannerDayLimit ? 1 : 0)
 	_Ini_Add("planned", "cmbAttackPlannerDayMin", $g_iAttackPlannerDayMin)
 	_Ini_Add("planned", "cmbAttackPlannerDayMax", $g_iAttackPlannerDayMax)
+	; Custom schedule - Team AIO Mod++
 	Local $string = ""
 	For $i = 0 To 6
-		$string &= ($g_abPlannedAttackWeekDays[$i] ? 1 : 0) & "|"
+		$string &= ($g_abPlannedAttackWeekDays[$g_iCurAccount][$i] ? 1 : 0) & "|"
 	Next
 	_Ini_Add("planned", "attackDays", $string)
 	Local $string = ""
 	For $i = 0 To 23
-		$string &= ($g_abPlannedattackHours[$i] ? 1 : 0) & "|"
+		$string &= ($g_abPlannedattackHours[$g_iCurAccount][$i] ? 1 : 0) & "|"
 	Next
 	_Ini_Add("planned", "attackHours", $string)
 	_Ini_Add("planned", "DropCCEnable", $g_bPlannedDropCCHoursEnable ? 1 : 0)

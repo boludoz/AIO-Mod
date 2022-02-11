@@ -751,7 +751,7 @@ Func ReadConfig_600_12()
 
 	$g_asTxtDonateTroop[$eTroopBowler] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateBowlers", "bowler|bowl"), "|", @CRLF)
 	$g_asTxtBlacklistTroop[$eTroopBowler] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtBlacklistBowlers", "no bowler|bowl no"), "|", @CRLF)
-	
+
 	$g_asTxtDonateTroop[$eTroopSuperBowler] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateSuperBowlers", "Super Bowler|SBowl"), "|", @CRLF)
 	$g_asTxtBlacklistTroop[$eTroopSuperBowler] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtBlacklistSuperBowlers", "No Super Bowler|SBowl No"), "|", @CRLF)
 
@@ -959,7 +959,7 @@ Func ReadConfig_600_17()
 		IniReadS($g_aiWallsCurrentCount[$i], $g_sProfileConfigPath, "Walls", "Wall" & StringFormat("%02d", $i), 0, "int")
 	Next
 	IniReadS($g_iWallCost, $g_sProfileConfigPath, "upgrade", "WallCost", 0, "int")
-	
+
 	; Custom Wall - Team AIO Mod++
 	ReadConfig_MOD_Walls()
 EndFunc   ;==>ReadConfig_600_17
@@ -1223,6 +1223,9 @@ EndFunc   ;==>ReadConfig_600_28_LB
 
 Func ReadConfig_600_29()
 	; <><><><> Attack Plan / Search & Attack / Options / Attack <><><><>
+	; Custom schedule - Team AIO Mod++
+	IniReadS($g_bChkRNDSchedAttack, $g_sProfileConfigPath, "planned", "chkRNDSchedAttack", False, "Bool")
+	IniReadS($g_iRNDSchedAttack, $g_sProfileConfigPath, "planned", "cmbRNDSchedAttack", 8, "int")
 	IniReadS($g_iActivateQueen, $g_sProfileConfigPath, "attack", "ActivateQueen", 0, "int")
 	IniReadS($g_iActivateKing, $g_sProfileConfigPath, "attack", "ActivateKing", 0, "int")
 	IniReadS($g_iActivateWarden, $g_sProfileConfigPath, "attack", "ActivateWarden", 0, "int")
@@ -1241,13 +1244,15 @@ Func ReadConfig_600_29()
 	$g_bAttackPlannerDayLimit = (IniRead($g_sProfileConfigPath, "planned", "chkAttackPlannerDayLimit", "0") = "1")
 	$g_iAttackPlannerDayMin = Int(IniRead($g_sProfileConfigPath, "planned", "cmbAttackPlannerDayMin", 12))
 	$g_iAttackPlannerDayMax = Int(IniRead($g_sProfileConfigPath, "planned", "cmbAttackPlannerDayMax", 15))
-	$g_abPlannedAttackWeekDays = StringSplit(IniRead($g_sProfileConfigPath, "planned", "attackDays", "1|1|1|1|1|1|1"), "|", $STR_NOCOUNT)
+	; Custom schedule - Team AIO Mod++
+	Local $aPlannedAttackWeekDays = StringSplit(IniRead($g_sProfileConfigPath, "planned", "attackDays", "1|1|1|1|1|1|1"), "|", $STR_NOCOUNT)
 	For $i = 0 To 6
-		$g_abPlannedAttackWeekDays[$i] = ($g_abPlannedAttackWeekDays[$i] = "1")
+		$g_abPlannedAttackWeekDays[$g_iCurAccount][$i] = ($aPlannedAttackWeekDays[$i] = "1")
 	Next
-	$g_abPlannedattackHours = StringSplit(IniRead($g_sProfileConfigPath, "planned", "attackHours", "1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1"), "|", $STR_NOCOUNT)
+	Local $string = IniRead($g_sProfileConfigPath, "planned", "attackHours", "1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1")
+	Local $PlannedattackHours = StringSplit($string, "|", $STR_NOCOUNT)
 	For $i = 0 To 23
-		$g_abPlannedattackHours[$i] = ($g_abPlannedattackHours[$i] = "1")
+		$g_abPlannedattackHours[$g_iCurAccount][$i] = ($PlannedattackHours[$i] = "1")
 	Next
 	$g_bPlannedDropCCHoursEnable = (IniRead($g_sProfileConfigPath, "planned", "DropCCEnable", "0") = "1")
 	$g_abPlannedDropCCHours = StringSplit(IniRead($g_sProfileConfigPath, "planned", "DropCCHours", "1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1"), "|", $STR_NOCOUNT)
@@ -1571,7 +1576,7 @@ Func ReadConfig_600_52_1()
 		IniReadS($g_aiTotalQuickTroop[$i], $g_sProfileConfigPath, "QuickTroop", "TotalQuickTroop" & $i + 1, 0, "int")
 		IniReadS($g_aiTotalQuickSpell[$i], $g_sProfileConfigPath, "QuickTroop", "TotalQuickSpell" & $i + 1, 0, "int")
 	Next
-	
+
 EndFunc   ;==>ReadConfig_600_52_1
 
 Func ReadConfig_600_52_2()
@@ -1663,7 +1668,7 @@ Func ReadConfig_600_54()
 	For $z = 0 To UBound($g_aiCmbCustomBrewOrder) - 1
 		IniReadS($g_aiCmbCustomBrewOrder[$z], $g_sProfileConfigPath, "Spells", "cmbSpellOrder" & $z, $z + 1)
 	Next
-	
+
 	; Custom pets - Team AIO Mod++
 	IniReadS($g_bPetHouseSelector, $g_sProfileConfigPath, "PetHouseSelector", "ChkPetHouseSelector", False, "Bool")
 	IniReadS($g_iCmbLassiPet, $g_sProfileConfigPath, "PetHouseSelector", "CmbLassiPet", 0, "int")

@@ -25,6 +25,11 @@ EndFunc   ;==>TestrunBuilderBase
 Global $g_bBonusObtainedAtStart = False
 
 Func BuilderBase($bTestRun = False)
+	; If IsRequestDefense(False) And Not $g_bChkPlayBBOnly Then
+		; SetLog("Skip Builder Base Checks, Because your CC Planned to have Defense Troops.", $COLOR_INFO)
+		; Return
+	; EndIf
+
 	Local $bReturn = False
 	
 	#Region - Dates - Team AIO Mod++

@@ -192,10 +192,11 @@ Func IschkAttackWeekdays()
 	Return False
 EndFunc   ;==>IschkAttackWeekdays
 
+#Region - Custom schedule - Team AIO Mod++
 Func chkAttackPlannerEnable()
+	If $g_iGuiMode <> 1 Then Return
 	If GUICtrlRead($g_hChkAttackPlannerEnable) = $GUI_CHECKED Then
 		$g_bAttackPlannerEnable = True
-
 		If GUICtrlRead($g_hChkAttackPlannerCloseAll) = $GUI_UNCHECKED Then
 			GUICtrlSetState($g_hChkAttackPlannerCloseAll, $GUI_ENABLE)
 			GUICtrlSetState($g_hChkAttackPlannerCloseCoC, $GUI_ENABLE)
@@ -204,39 +205,38 @@ Func chkAttackPlannerEnable()
 			GUICtrlSetState($g_hChkAttackPlannerCloseAll, $GUI_ENABLE)
 			GUICtrlSetState($g_hChkAttackPlannerCloseCoC, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
 		EndIf
-
 		GUICtrlSetState($g_hChkAttackPlannerRandom, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkAttackPlannerDayLimit, $GUI_ENABLE)
 		chkAttackPlannerDayLimit()
-		cmbAttackPlannerRandom() ; check and update label is needed
+		cmbAttackPlannerRandom()
 		If GUICtrlRead($g_hChkAttackPlannerRandom) = $GUI_CHECKED Then
 			GUICtrlSetState($g_hCmbAttackPlannerRandom, $GUI_ENABLE)
 			GUICtrlSetState($g_hLbAttackPlannerRandom, $GUI_ENABLE)
-
 			For $i = 0 To 6
 				GUICtrlSetState($g_ahChkAttackWeekdays[$i], $GUI_DISABLE)
 			Next
 			GUICtrlSetState($g_ahChkAttackWeekdaysE, $GUI_DISABLE)
-
 			For $i = 0 To 23
 				GUICtrlSetState($g_ahChkAttackHours[$i], $GUI_DISABLE)
 			Next
 			GUICtrlSetState($g_ahChkAttackHoursE1, $GUI_DISABLE)
 			GUICtrlSetState($g_ahChkAttackHoursE2, $GUI_DISABLE)
+			GUICtrlSetState($g_hChkRNDSchedAttack, $GUI_DISABLE)
+			GUICtrlSetState($g_hCmbRNDSchedAttack, $GUI_DISABLE)
 		Else
 			GUICtrlSetState($g_hCmbAttackPlannerRandom, $GUI_DISABLE)
 			GUICtrlSetState($g_hLbAttackPlannerRandom, $GUI_DISABLE)
-
 			For $i = 0 To 6
 				GUICtrlSetState($g_ahChkAttackWeekdays[$i], $GUI_ENABLE)
 			Next
 			GUICtrlSetState($g_ahChkAttackWeekdaysE, $GUI_ENABLE)
-
 			For $i = 0 To 23
 				GUICtrlSetState($g_ahChkAttackHours[$i], $GUI_ENABLE)
 			Next
 			GUICtrlSetState($g_ahChkAttackHoursE1, $GUI_ENABLE)
 			GUICtrlSetState($g_ahChkAttackHoursE2, $GUI_ENABLE)
+			GUICtrlSetState($g_hChkRNDSchedAttack, $GUI_ENABLE)
+			ChkRNDSchedAttack()
 		EndIf
 	Else
 		$g_bAttackPlannerEnable = False
@@ -253,13 +253,15 @@ Func chkAttackPlannerEnable()
 			GUICtrlSetState($g_ahChkAttackWeekdays[$i], $GUI_DISABLE)
 		Next
 		GUICtrlSetState($g_ahChkAttackWeekdaysE, $GUI_DISABLE)
-
 		For $i = 0 To 23
 			GUICtrlSetState($g_ahChkAttackHours[$i], $GUI_DISABLE)
 		Next
 		GUICtrlSetState($g_ahChkAttackHoursE2, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkRNDSchedAttack, $GUI_DISABLE)
+		GUICtrlSetState($g_hCmbRNDSchedAttack, $GUI_DISABLE)
 	EndIf
 EndFunc   ;==>chkAttackPlannerEnable
+#EndRegion - Custom schedule - Team AIO Mod++
 
 Func chkAttackPlannerCloseCoC()
 	If GUICtrlRead($g_hChkAttackPlannerCloseCoC) = $GUI_CHECKED Then
@@ -363,7 +365,95 @@ Func _cmbAttackPlannerDayLimit()
 	EndSwitch
 EndFunc   ;==>_cmbAttackPlannerDayLimit
 
+#Region - Custom schedule - Team AIO Mod++
+Func ChkRNDSchedAttack()
+	If GUICtrlRead($g_hChkRNDSchedAttack) = $GUI_CHECKED Then
+		$g_bChkRNDSchedAttack = True
+		GUICtrlSetState($g_hCmbRNDSchedAttack, $GUI_ENABLE)
+	Else
+		$g_bChkRNDSchedAttack = False
+		GUICtrlSetState($g_hCmbRNDSchedAttack, $GUI_DISABLE)
+	EndIf
+	_cmbRNDSchedAttack()
+	TimeRNDSchedAttack()
+EndFunc   ;==>ChkRNDSchedAttack
+
+Func RNDSchedAttack()
+	If Not $g_bChkRNDSchedAttack Then
+		SetDebugLog(GetTranslatedFileIni("MBR Global GUI Design", "ChkRNDSchedAttack", "Daily random schedule") & " not active -> " & $g_bChkRNDSchedAttack)
+		Return
+	EndIf
+	SetDebugLog(GetTranslatedFileIni("MBR Global GUI Design", "ChkRNDSchedAttack", "Daily random schedule") & " active -> " & $g_bChkRNDSchedAttack)
+	If $g_iGuiMode = 1 Then
+		SetDebugLog("Normal GUI, RNDSchedAttack")
+		$g_iRNDSchedAttack = Int(GUICtrlRead($g_hCmbRNDSchedAttack))
+		_cmbRNDSchedAttack()
+		For $i = 0 To 23
+			GUICtrlSetState($g_ahChkAttackHours[$i], $GUI_UNCHECKED)
+		Next
+		Local $aArray_Base[24] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+		Local $X21147 = $aArray_Base
+		_ArrayShuffle($X21147, 0, 23)
+		For $ivel = 0 To $g_iRNDSchedAttack - 1
+			GUICtrlSetState($g_ahChkAttackHours[$X21147[$ivel]], $GUI_CHECKED)
+		Next
+		For $i = 0 To 23
+			$g_abPlannedattackHours[$g_iCurAccount][$i] = (GUICtrlRead($g_ahChkAttackHours[$i]) = $GUI_CHECKED)
+		Next
+	Else
+		SetDebugLog("Mini GUI, RNDSchedAttack")
+		Local $aArray_Base[24] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+		Local $X21147 = $aArray_Base
+		_ArrayShuffle($X21147, 0, 23)
+		SetDebugLog("Mini GUI, _ArrayShuffle Done")
+		Local $ChkAttackHours[24]
+		For $i = 0 To UBound($ChkAttackHours) - 1
+			$ChkAttackHours[$i] = False
+		Next
+		For $ivel = 0 To $g_iRNDSchedAttack - 1
+			$ChkAttackHours[$X21147[$ivel]] = True
+		Next
+		For $i = 0 To 23
+			$g_abPlannedattackHours[$g_iCurAccount][$i] = $ChkAttackHours[$i]
+		Next
+		SetDebugLog("Mini GUI, $g_abPlannedattackHours: " & _ArrayToString($g_abPlannedattackHours[$g_iCurAccount], "-", -1, -1, " "))
+	EndIf
+EndFunc   ;==>RNDSchedAttack
+
+Func _cmbRNDSchedAttack()
+	Switch Int(GUICtrlRead($g_hCmbRNDSchedAttack))
+		Case 0 To 8
+			GUICtrlSetBkColor($g_hCmbRNDSchedAttack, $COLOR_MONEYGREEN)
+		Case 9 To 13
+			GUICtrlSetBkColor($g_hCmbRNDSchedAttack, $COLOR_YELLOW)
+		Case 14 To 24
+			GUICtrlSetBkColor($g_hCmbRNDSchedAttack, $COLOR_RED)
+	EndSwitch
+EndFunc   ;==>_cmbRNDSchedAttack
+
+Func TimeRNDSchedAttack()
+	If Not $g_bChkRNDSchedAttack Then
+		SetDebugLog(GetTranslatedFileIni("MBR Global GUI Design", "ChkRNDSchedAttack", "Daily random schedule") & " not active -> " & $g_bChkRNDSchedAttack)
+		Return
+	EndIf
+	SetDebugLog(GetTranslatedFileIni("MBR Global GUI Design", "ChkRNDSchedAttack", "Daily random schedule") & " active -> " & $g_bChkRNDSchedAttack)
+	If $g_iTimeRNDSchedAttack <= 0 Then $g_iTimeRNDSchedAttack = __TimerInit()
+	Local $iLaunched = __TimerDiff($g_iTimeRNDSchedAttack)
+	Local $day = 0, $hour = 0, $min = 0, $sec = 0, $sTime
+	_TicksToDay($g_iChkRNDSchedAttack * 60 * 60 * 1000 - $iLaunched, $day, $hour, $min, $sec)
+	$sTime = StringFormat("%ih %im", $hour, $min)
+	SetLog(GetTranslatedFileIni("MBR Global GUI Design", "ChkRNDSchedAttack", "Daily random schedule") & " in " & $sTime)
+	Local $iRunTimeHrs = $iLaunched / (60 * 60 * 1000)
+	If $iRunTimeHrs >= $g_iChkRNDSchedAttack Then
+		RNDSchedAttack()
+		$g_iTimeRNDSchedAttack = __TimerInit()
+		SetLog(GetTranslatedFileIni("MBR Global GUI Design", "ChkRNDSchedAttack", "Daily random schedule"))
+	EndIf
+EndFunc   ;==>TimeRNDSchedAttack
+#EndRegion - Custom schedule - Team AIO Mod++
+
 Func chkDropCCHoursEnable()
+
 	Local $bChk = GUICtrlRead($g_hChkDropCCHoursEnable) = $GUI_CHECKED
 
 	$g_bPlannedDropCCHoursEnable = ($bChk ? 1 : 0)

@@ -97,8 +97,12 @@ Func BotCommand()
 					$g_bDonationEnabled = False
 				EndIf
 			Case 22 ; At certain time in the day
-				Local $bResume = ($iCmbBotCommand = 0)
-				If StopAndResumeTimer($bResume) Then $g_bMeetCondStop = True
+				; Custom schedule - Team AIO Mod++
+				If $g_bAttackPlannerDayLimit Then $g_bAttackAccountReachLimts[$g_iCurAccount] = _OverAttackLimit()
+				; If ($g_bIsLegendLeague And $g_bLegendLeagueAttacksDone) Or ($g_bAttackPlannerDayLimit And $g_bAttackAccountReachLimts[$g_iCurAccount]) Then
+				If ($g_bAttackPlannerDayLimit And $g_bAttackAccountReachLimts[$g_iCurAccount]) Then
+					$g_bMeetCondStop = True
+				EndIf
 		EndSwitch
 
 		If $g_bMeetCondStop Then

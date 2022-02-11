@@ -203,17 +203,6 @@ Func CreateAttackSearchOptionsAttack()
 			GUICtrlSetLimit(-1, 3)
 			GUICtrlSetOnEvent(-1, "cmbAttackPlannerDayMax")
 
-		#Region - Legend trophy protection - Team AIO Mod++
-		$g_hChkProtectInLL = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-Attack", "ChkProtectInLL", "Legend league protection"), $x + 233, $y + 72, -1, -1)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-Attack", "ChkProtectInLL_Info_01", "This option adds protections in case of legend league, such as not returning if the attack is not completed."))
-			GUICtrlSetState(-1, $GUI_CHECKED)
-			GUICtrlSetOnEvent(-1, "ChkProtectInLL")
-		$g_hChkForceProtectLL = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-Attack", "ChkForceProtectLL", "Force"), $x + 233, $y + 92, -1, -1)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-Attack", "ChkForceProtectLL_Info_01", "This option will disable certain things to make the bot more efficient when collecting trophies."))
-			GUICtrlSetState(-1, $GUI_DISABLE)
-			GUICtrlSetOnEvent(-1, "ChkProtectInLL")
-		#EndRegion - Legend trophy protection - Team AIO Mod++
-
 	$x += 198
 	$y -= 5
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "Day", -1) & ":", $x, $y, -1, 15)
@@ -416,7 +405,16 @@ Func CreateAttackSearchOptionsAttack()
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Clear_set_row_of_boxes", -1))
 			GUICtrlSetOnEvent(-1, "chkattackHoursE2")
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "PM", "PM"), $x + 10, $y)
-	GUICtrlCreateGroup("", -99, -99, 1, 1)
+		#Region - Custom schedule - Team AIO Mod++
+		$g_hChkRNDSchedAttack = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design", "ChkRNDSchedAttack", "Daily random schedule"), $x + 35, $y + 15, -1, -1)
+			GUICtrlSetOnEvent(-1, "ChkRNDSchedAttack")
+		$g_hCmbRNDSchedAttack = GUICtrlCreateInput("8", $x + 165, $y + 17, 37, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "CmbRNDSchedAttack", "Enter maximum number of hours allowed per day"))
+			GUICtrlSetState(-1, $GUI_DISABLE)
+			GUICtrlSetLimit(-1, 3)
+			GUICtrlSetOnEvent(-1, "RNDSchedAttack")
+		#EndRegion - Custom schedule - Team AIO Mod++
+		GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	Local $x = 25, $y = 310
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-Attack", "Group_03", "ClanCastle"), $x - 20, $y - 20, $g_iSizeWGrpTab4, 82)

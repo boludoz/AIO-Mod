@@ -160,55 +160,79 @@ Func CheckSwitchAcc()
 
 	Else
 
-		If $g_bChkSmartSwitch = True Then ; Smart switch
+		If $g_bChkSmartSwitch = True Then
 			SetDebugLog("-Smart Switch-")
-			$nMinRemainTrain = CheckTroopTimeAllAccount($bForceSwitch)
-
-			If $nMinRemainTrain <= 1 And Not $bForceSwitch And Not $g_bDonateLikeCrazy Then ; Active (force switch shall give priority to Donate Account)
-				SetDebugLog("Switch to or Stay at Active Account: " & $g_iNextAccount + 1, $COLOR_DEBUG)
-				$g_iDonateSwitchCounter = 0
+			If CheckPlannedAttackLimits() Then
+				$g_iNextAccount = CheckPlannedAccountLimits($bForceSwitch)
+				If $g_iNextAccount = $g_iCurAccount Then
+					SetLog("Staying in this account")
+					SetSwitchAccLog("Stay at [" & $g_iCurAccount + 1 & "]", $COLOR_SUCCESS)
+					Return
+				EndIf
 			Else
-				If $g_iDonateSwitchCounter < UBound($aDonateAccount) Then ; Donate
-					$g_iNextAccount = $aDonateAccount[$g_iDonateSwitchCounter]
-					$g_iDonateSwitchCounter += 1
-					SetDebugLog("Switch to Donate Account " & $g_iNextAccount + 1 & ". $g_iDonateSwitchCounter = " & $g_iDonateSwitchCounter, $COLOR_DEBUG)
-					SetSwitchAccLog(" - Donate Acc [" & $g_iNextAccount + 1 & "]")
-				Else ; Active
+				; Custom schedule - Team AIO Mod++
+				$nMinRemainTrain = CheckTroopTimeAllAccount($bForceSwitch)
+				If $nMinRemainTrain <= 1 And Not $bForceSwitch And Not $g_bDonateLikeCrazy Then
+					If $g_bDebugSetlog Then SetDebugLog("Switch to or Stay at Active Account: " & $g_iNextAccount + 1, $COLOR_DEBUG)
 					$g_iDonateSwitchCounter = 0
+				Else
+					If $g_iDonateSwitchCounter < UBound($aDonateAccount) Then
+						$g_iNextAccount = $aDonateAccount[$g_iDonateSwitchCounter]
+						$g_iDonateSwitchCounter += 1
+						If $g_bDebugSetlog Then SetDebugLog("Switch to Donate Account " & $g_iNextAccount + 1 & ". $g_iDonateSwitchCounter = " & $g_iDonateSwitchCounter, $COLOR_DEBUG)
+						SetSwitchAccLog(" - Donate Acc [" & $g_iNextAccount + 1 & "]")
+					Else
+						$g_iDonateSwitchCounter = 0
+					EndIf
 				EndIf
 			EndIf
-		Else ; Normal switch (continuous)
+		Else
 			SetDebugLog("-Normal Switch-")
-			$g_iNextAccount = $g_iCurAccount + 1
-			If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0
-			While $abAccountNo[$g_iNextAccount] = False
-				$g_iNextAccount += 1
-				If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0 ; avoid idle Account
-				SetDebugLog("- While Account: " & $g_asProfileName[$g_iNextAccount] & " number: " & $g_iNextAccount + 1)
-			WEnd
+			; Custom schedule - Team AIO Mod++
+			If CheckPlannedAttackLimits() Then
+				$g_iNextAccount = CheckPlannedAccountLimits($bForceSwitch)
+				If $g_iNextAccount = $g_iCurAccount Then
+					SetLog("Staying in this account")
+					SetSwitchAccLog("Stay at [" & $g_iCurAccount + 1 & "]", $COLOR_SUCCESS)
+					Return
+				EndIf
+			Else
+				$g_iNextAccount = $g_iCurAccount + 1
+				If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0
+				While $abAccountNo[$g_iNextAccount] = False
+					$g_iNextAccount += 1
+					If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0
+					SetDebugLog("- While Account: " & $g_asProfileName[$g_iNextAccount] & " number: " & $g_iNextAccount + 1)
+				WEnd
+			EndIf
 		EndIf
-
-		If Not $g_bRunState Then Return
 
 		SetDebugLog("- Current Account: " & $g_asProfileName[$g_iCurAccount] & " number: " & $g_iCurAccount + 1)
 		SetDebugLog("- Next Account: " & $g_asProfileName[$g_iNextAccount] & " number: " & $g_iNextAccount + 1)
 
-		; Check if the next account is PBT and IF the remain train time is more than 2 minutes
-		If $g_abPBActive[$g_iNextAccount] And _DateDiff("n", _NowCalc(), $g_asTrainTimeFinish[$g_iNextAccount]) > 2 Then
-			SetLog("Account " & $g_iNextAccount + 1 & " is in a Personal Break Time!", $COLOR_INFO)
-			SetSwitchAccLog(" - Account " & $g_iNextAccount + 1 & " is in PTB")
-			$g_iNextAccount = $g_iNextAccount + 1
-			If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0
-			While $abAccountNo[$g_iNextAccount] = False
-				$g_iNextAccount += 1
-				If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0 ; avoid idle Account
-			WEnd
-		EndIf
+		For $i = 0 To $g_iTotalAcc
+			If ($g_abPBActive[$g_iNextAccount] And $g_asTrainTimeFinish[$g_iNextAccount] > 2) Or $abAccountNo[$g_iNextAccount] = False Then
+				If $abAccountNo[$g_iNextAccount] = False Then
+					SetLog("Account " & $g_iNextAccount + 1 & " disabled!", $COLOR_INFO)
+					SetSwitchAccLog(" - Account " & $g_iNextAccount + 1 & " disabled")
+				Else
+					SetLog("Account " & $g_iNextAccount + 1 & " is in a Personal Break Time!", $COLOR_INFO)
+					SetSwitchAccLog(" - Account " & $g_iNextAccount + 1 & " is in PTB")
+				EndIf
+				$g_iNextAccount = $g_iNextAccount + 1
+				If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0
+				While $abAccountNo[$g_iNextAccount] = False
+					$g_iNextAccount += 1
+					If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0
+				WEnd
+			Else
+				ExitLoop
+			EndIf
+		Next
 
 		If UBound($aActibePBTaccounts) + UBound($aDonateAccount) = UBound($aActiveAccount) Then
 			SetLog("All accounts set to Donate and/or are in PBT!", $COLOR_INFO)
 			SetSwitchAccLog("All accounts in PBT/Donate:")
-			; Just a Good User Log
 			For $i = 0 To $g_iTotalAcc
 				If $g_abDonateOnly[$i] Then SetSwitchAccLog(" - Donate Acc [" & $i + 1 & "]")
 				If $g_abPBActive[$i] Then SetSwitchAccLog(" - PBT Acc [" & $i + 1 & "]")
@@ -692,7 +716,7 @@ Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
 			SetLog("SupercellID Window Opened", $COLOR_DEBUG)
 			$bSCIDWindowOpened = True
 			ExitLoop
-		EndIf 
+		EndIf
 		If $i = 30 Then
 			$bResult = False
 			Return "Error"
@@ -700,11 +724,11 @@ Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
 		If _Sleep(900) Then Return
 		If Not $g_bRunState Then Return
 	Next
-	
+
 	If $bSCIDWindowOpened Then
 		If _Sleep(500) Then Return
 		SCIDScrollUp()
-		
+
 		SCIDScrollDown($NextAccount) ; Make Drag only when SCID window is visible.
 		If _Sleep(1000) Then Return
 		$aAccount = QuickMIS("CX", $g_sImgSupercellIDSlots, 750, 320, 850, 685, True, False)
@@ -715,20 +739,20 @@ Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
 				_ArrayAdd($aCoord, $aFound[0]+750 & "|" & $aFound[1]+320)
 			Next
 			_ArraySort($aCoord, 0, 0, 0, 1)
-			
+
 			; Correct Index for Profile if needs to drag
 			If $NextAccount >= 3 Then $iIndexSCID = 3 ; based on drag logic, the account will always be the bottom one
-			
+
 			; list all account see-able after drag on debug chat
 			For $j = 0 To UBound($aCoord) - 1
 				SetLog("[" & $j & "] Account coordinates: " & $aCoord[$j][0] & "," & $aCoord[$j][1] & " named: " & $g_asProfileName[$NextAccount-$iIndexSCID+$j])
 			Next
-			
-			If UBound($aCoord) < 4 And $NextAccount >= 3 Then 
+
+			If UBound($aCoord) < 4 And $NextAccount >= 3 Then
 				SetLog("Only Found " & UBound($aCoord) & " SCID Account, Select Last Account", $COLOR_INFO)
 				$iIndexSCID = UBound($aCoord) - 1
 			EndIf
-			
+
 			SetLog("   " & $iStep & ". Click Account [" & $NextAccount + 1 & "] Supercell ID with Profile: " & $g_asProfileName[$NextAccount])
 			Click($aCoord[$iIndexSCID][0]-75, $aCoord[$iIndexSCID][1] + 10, 1)
 			If _Sleep(750) Then Return
@@ -789,14 +813,19 @@ Func CheckTroopTimeAllAccount($bExcludeCurrent = False) ; Return the minimum rem
 		If $bExcludeCurrent And $i = $g_iCurAccount Then ContinueLoop
 		If $abAccountNo[$i] And Not $g_abDonateOnly[$i] Then ;	Only check Active profiles
 			If _DateIsValid($g_asTrainTimeFinish[$i]) Then
-				Local $iRemainTrain = _DateDiff("n", _NowCalc(), $g_asTrainTimeFinish[$i])
+				$iRemainTrain = _DateDiff("n", _NowCalc(), $g_asTrainTimeFinish[$i])
 				; if remaining time is negative and stop mode, force 0 to ensure other accounts will be picked
 				If $iRemainTrain < 0 And SwitchAccountVariablesReload("$g_iCommandStop", $i) <> -1 Then
 					; Account was last time in halt attack mode, set time to 0
 					$iRemainTrain = 0
 					SetLog("Account [" & $i + 1 & "]: " & $g_asProfileName[$i] & " halt mode detected, set negative remaining time to 0")
 				EndIf
-				SetLog("Account [" & $i + 1 & "]: " & $g_asProfileName[$i] & "'s train time: " & $g_asTrainTimeFinish[$i] & " (" & $iRemainTrain & " minutes)")
+				; Custom schedule - Team AIO Mod++
+				If $iRemainTrain >= 0 Then
+					SetLog("Account [" & $i + 1 & "]: " & $g_asProfileName[$i] & " will have full army in: " & $iRemainTrain & " minutes")
+				Else
+					SetLog("Account [" & $i + 1 & "]: " & $g_asProfileName[$i] & " was ready: " & - $iRemainTrain & " minutes ago")
+				EndIf
 				If $iMinRemainTrain > $iRemainTrain Then
 					If Not $bNextAccountDefined Then $g_iNextAccount = $i
 					$iMinRemainTrain = $iRemainTrain
@@ -1066,6 +1095,105 @@ Func SwitchAccountCheckProfileInUse($sNewProfile)
 		Return False
 	EndIf
 EndFunc   ;==>SwitchAccountCheckProfileInUse
+
+; Custom schedule - Team AIO Mod++
+Func CheckPlannedAttackLimits()
+	$g_bAttackAccountReachLimts[$g_iCurAccount] = _OverAttackLimit()
+	SetDebugLog("== CheckPlannedAttackLimits ==")
+	SetDebugLog("$g_bAttackPlannerEnable: " & $g_bAttackPlannerEnable)
+	SetDebugLog("$g_bAttackAccountReachLimts[$g_iCurAccount]: " & $g_bAttackAccountReachLimts[$g_iCurAccount])
+	If $g_bAttackPlannerEnable = False Then Return False
+	SetLog("Checking Limits and Schedule to attack!")
+	Static $bIsHour2Attack[$g_eTotalAcc] = ["-"]
+	If $bIsHour2Attack[0] = "-" Then
+		For $ib = 0 To UBound($bIsHour2Attack) -1
+			$bIsHour2Attack[$ib] = True
+		Next
+	EndIf
+
+	Local $bIsAvailable2Attack = False
+	Local $abAccountNo = AccountNoActive()
+	$bIsHour2Attack[$g_iCurAccount] = IsPlannedTimeNow(False)
+	If Not $g_bAttackAccountReachLimts[$g_iCurAccount] And $bIsHour2Attack[$g_iCurAccount] Then Return False
+	For $i = 0 To UBound($g_bAttackAccountReachLimts) - 1
+		If $abAccountNo[$i] And Not $g_abDonateOnly[$i] Then
+			$bIsHour2Attack[$i] = IsPlannedTimeNow(False, $i)
+			SetDebugLog("Acount: " & $g_asProfileName[$i] & " | $abAccountNo[" & $i + 1 & "]: " & $abAccountNo[$i])
+			SetDebugLog("Acount: " & $g_asProfileName[$i] & " | $g_bAttackAccountReachLimts[" & $i + 1 & "]: " & $g_bAttackAccountReachLimts[$i])
+			SetDebugLog("Acount: " & $g_asProfileName[$i] & " | $bIsHour2Attack: " & $bIsHour2Attack[$i])
+			If Not $g_bAttackAccountReachLimts[$i] And $bIsHour2Attack[$i] Then
+				SetDebugLog("Account available to attack is : " & $i + 1)
+				$bIsAvailable2Attack = True
+			EndIf
+		EndIf
+	Next
+	If $bIsAvailable2Attack Then
+		Return True
+	Else
+		Local $iWaitTime = _getTimeRemainTimeToday()
+		For $i = 0 To UBound($bIsHour2Attack) - 1
+			If $abAccountNo[$i] And Not $g_abDonateOnly[$i] And Not $g_bAttackAccountReachLimts[$i] Then
+				$iWaitTime = (61 - @MIN) * 60
+				SetLog("Account " & $g_asProfileName[$i] & " didn't reach the limit of daily attacks!")
+			EndIf
+		Next
+		If $iWaitTime > 3660 Then
+			SetLog("Doesn't exist accounts to attack!")
+		EndIf
+		UniversalCloseWaitOpenCoC($iWaitTime * 1000, "IsSearchAttackScheduled_", $g_bAttackPlannerCloseAll, True, $g_bAttackPlannerSuspendComputer)
+		$g_bRestart = True
+		Return False
+	EndIf
+EndFunc   ;==>CheckPlannedAttackLimits
+
+; Custom schedule - Team AIO Mod++
+Func CheckPlannedAccountLimits($bForceSwitch = False)
+	SetDebugLog("== CheckPlannedAccountLimits ==")
+	Local $abAccountNo = AccountNoActive()
+	Static $bIsHour2Attack[$g_eTotalAcc] = ["-"]
+	If $bIsHour2Attack[0] = "-" Then
+		For $ib = 0 To UBound($bIsHour2Attack) -1
+			$bIsHour2Attack[$ib] = True
+		Next
+	EndIf
+
+	$bIsHour2Attack[$g_iCurAccount] = IsPlannedTimeNow(False)
+	If $g_bChkSmartSwitch = True Then
+		SetDebugLog("== CheckTroopTimeAllAccount ==")
+		Local $iMinRemainTrain = CheckTroopTimeAllAccount($bForceSwitch)
+		SetDebugLog("$iMinRemainTrain: " & $iMinRemainTrain)
+		Local $Account2Return = $g_iCurAccount
+		For $j = 0 To UBound($abAccountNo) - 1
+			If $abAccountNo[$j] And Not $g_abDonateOnly[$j] Then
+				$bIsHour2Attack[$j] = IsPlannedTimeNow(False, $j)
+				SetDebugLog("2-Acount: " & $g_asProfileName[$j] & " | $abAccountNo[$j]: " & $abAccountNo[$j])
+				SetDebugLog("2-Acount: " & $g_asProfileName[$j] & " | $g_bAttackAccountReachLimts[$j]: " & $g_bAttackAccountReachLimts[$j])
+				SetDebugLog("2-Acount: " & $g_asProfileName[$j] & " | $bIsHour2Attack: " & $bIsHour2Attack[$j])
+				If _DateDiff("n", _NowCalc(), $g_asTrainTimeFinish[$j]) < $iMinRemainTrain And Not $g_bAttackAccountReachLimts[$j] And $bIsHour2Attack[$j] Then
+					$iMinRemainTrain = _DateDiff("n", _NowCalc(), $g_asTrainTimeFinish[$j])
+					SetDebugLog("2-Account available to attack is : " & $j)
+					$Account2Return = $j
+				EndIf
+			EndIf
+		Next
+		SetDebugLog("2-Account available to attack is and smaller time is: " & $Account2Return)
+		Return $Account2Return
+	Else
+		Local $iNextAccount = $g_iCurAccount + 1
+		If $iNextAccount > $g_iTotalAcc Then $iNextAccount = 0
+		For $i = 0 To $g_eTotalAcc - 1
+			If $iNextAccount > $g_iTotalAcc Then $iNextAccount = 0
+			SetDebugLog("2-Checking the account: " & $iNextAccount + 1)
+			$bIsHour2Attack[$iNextAccount] = IsPlannedTimeNow(False, $iNextAccount)
+			If $abAccountNo[$iNextAccount] And Not $g_abDonateOnly[$iNextAccount] And Not $g_bAttackAccountReachLimts[$iNextAccount] And $bIsHour2Attack[$iNextAccount] Then
+				SetDebugLog("2-Account available to attack is : " & $iNextAccount + 1)
+				Return $iNextAccount
+			EndIf
+			$iNextAccount += 1
+		Next
+	EndIf
+	Return $g_iCurAccount
+EndFunc   ;==>CheckPlannedAccountLimits
 
 Func SCIDScrollDown($iSCIDAccount)
 	If Not $g_bRunState Then Return
