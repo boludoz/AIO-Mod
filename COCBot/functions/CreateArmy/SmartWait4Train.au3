@@ -95,7 +95,8 @@ Func SmartWait4Train($iTestSeconds = Default)
 		If $g_bDebugImageSave Or $g_bDebugSetlogTrain Then SaveDebugImage("SmartWait4Troop2_")
 	EndIf
 	If _Sleep($DELAYRESPOND) Then Return
-	; Custom smart wait - Team AIO Mod++
+	
+	#Region - Custom smart wait - Team AIO Mod++
 	If ProfileSwitchAccountEnabled() Then
 		CheckTroopTimeAllAccount()
 		Local $iRemainTrain = 999, $account = Number($g_iCurAccount) ; Custom smart wait - Team AIO Mod++
@@ -112,15 +113,15 @@ Func SmartWait4Train($iTestSeconds = Default)
 				EndIf
 			EndIf
 		Next
-		#Region - Custom smart wait - Team AIO Mod++
 		If $g_bDebugSetlogTrain Or $g_bDebugSetlog Then
+			SetLog("[SmartWait4Train] _DateIsValid($g_asTrainTimeFinish[$i]): " & _DateIsValid($g_asTrainTimeFinish[$i]))
+			SetLog("[SmartWait4Train] $g_asTrainTimeFinish[$i]: " & $g_asTrainTimeFinish[$i])
 			SetLog("[SmartWait4Train] $iRemainTrain: " & $iRemainTrain)
 			SetLog("[SmartWait4Train] $g_iCloseMinimumTime: " & $g_iCloseMinimumTime)
 			SetLog("[SmartWait4Train] $iTrainWaitCloseFlag: " & $iTrainWaitCloseFlag)
 		EndIf
-		#EndRegion - Custom smart wait - Team AIO Mod++
 		If $iRemainTrain < $g_iCloseMinimumTime Then
-			If $LessTime = -999 Then
+			If $iRemainTrain = -999 Then
 				SetLog("SmartWait will not run, acc " & $g_asProfileName[$account] & " never ran.")
 			Else
 				SetLog("SmartWait will not run, acc " & $g_asProfileName[$account] & " is ready to attack!")
@@ -129,15 +130,13 @@ Func SmartWait4Train($iTestSeconds = Default)
 			If _Sleep($DELAYCHECKARMYCAMP4) Then Return
 			Return
 		Else
-			SetLog("SmartWait will proceed with acc " & $g_asProfileName[$account] & " will be ready with " & $LessTime & "min")
+			SetLog("SmartWait will proceed with acc " & $g_asProfileName[$account] & " will be ready with " & $iRemainTrain & "min")
 			$g_aiTimeTrain[0] = $iRemainTrain
 			$g_aiTimeTrain[1] = 0
 			$g_aiTimeTrain[2] = 0
 			$g_aiTimeTrain[3] = 0
 		EndIf
 	EndIf
-
-	#Region - Custom smart wait - Team AIO Mod++
 	If $g_bDebugSetlogTrain Or $g_bDebugSetlog Then
 		SetLog("[SmartWait4Train] $g_aiTimeTrain: " & _ArrayToString($g_aiTimeTrain))
 		SetLog("[SmartWait4Train] $g_iCCRemainTime: " & $g_iCCRemainTime)

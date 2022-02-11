@@ -264,11 +264,11 @@ Func _OverAttackLimit()
 	SetDebugLog("OverAttackLimit|$iNowDay: " & $iNowDay[$g_iCurAccount])
 	If ProfileSwitchAccountEnabled() Then
 		SetDebugLog("_OverAttackLimit| Switch accounts enabled")
-		For $i = 0 To UBound($g_aiAttackedCountAcc) - 1
-			SetDebugLog("_OverAttackLimit| $g_aiAttackedCountAcc[" & $i & "]" & $g_aiAttackedCountAcc[$i])
-			SetDebugLog("_OverAttackLimit| $iAttackCountToday[" & $i & "]" & $iAttackCountToday[$i])
-			SetDebugLog("_OverAttackLimit| $iTotalAttackCount[" & $i & "]" & $iTotalAttackCount[$i])
-		Next
+		; For $i = 0 To UBound($g_aiAttackedCountAcc) - 1
+			; SetDebugLog("_OverAttackLimit| $g_aiAttackedCountAcc[" & $i & "]" & $g_aiAttackedCountAcc[$i])
+			; SetDebugLog("_OverAttackLimit| $iAttackCountToday[" & $i & "]" & $iAttackCountToday[$i])
+			; SetDebugLog("_OverAttackLimit| $iTotalAttackCount[" & $i & "]" & $iTotalAttackCount[$i])
+		; Next
 		$g_aiAttackedCount = $g_aiAttackedCountAcc[$g_iCurAccount]
 	EndIf
 	If $iNowDay[$g_iCurAccount] <> @YDAY Or $iNowDay[$g_iCurAccount] = 0 Then
