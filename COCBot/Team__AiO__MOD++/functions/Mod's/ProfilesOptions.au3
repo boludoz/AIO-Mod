@@ -9,7 +9,7 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-
+#cs
 Func CheckFarmSchedule()
 
 	If Not ProfileSwitchAccountEnabled() Then Return
@@ -204,7 +204,7 @@ Func CheckLastActiveAccount($i)
 	Return $iSleeptime
 
 EndFunc   ;==>CheckLastActiveAccount
-
+#ce
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: Switch Profiles
 ; Description ...:

@@ -1305,6 +1305,7 @@ Func SaveConfig_600_35_2()
 			IniWrite($sSwitchAccFile, "SwitchAccount", "DonateOnly." & $i, $g_abDonateOnly[$i - 1] ? 1 : 0)
 
 			; Farm Schedule - Team AiO MOD++
+			#cs
 			IniWrite($sSwitchAccFile, "FarmStrategy", "ChkSetFarm" & $i, $g_abChkSetFarm[$i - 1] ? 1 : 0)
 
 			IniWrite($sSwitchAccFile, "FarmStrategy", "CmbAction1" & $i, $g_aiCmbAction1[$i - 1])
@@ -1316,6 +1317,7 @@ Func SaveConfig_600_35_2()
 			IniWrite($sSwitchAccFile, "FarmStrategy", "CmbCriteria2" & $i, $g_aiCmbCriteria2[$i - 1])
 			IniWrite($sSwitchAccFile, "FarmStrategy", "TxtResource2" & $i, $g_aiTxtResource2[$i - 1])
 			IniWrite($sSwitchAccFile, "FarmStrategy", "CmbTime2" & $i, $g_aiCmbTime2[$i - 1])
+			#ce
 		Next
 
 	EndIf

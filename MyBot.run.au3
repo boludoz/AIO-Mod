@@ -807,7 +807,7 @@ Func runBot() ;Bot that runs everything in order
 			VillageReport()
 			CheckStopForWar() ; War Preparation - Team AIO Mod++
 			ProfileSwitch()  ;  Team AIO Mod++
-			CheckFarmSchedule()  ;  Team AIO Mod++
+			; CheckFarmSchedule()  ;  Team AIO Mod++
 			If _Sleep($DELAYRUNBOT2) Then Return
 			If BotCommand() Then btnStop()
 			If Not $g_bRunState Then Return

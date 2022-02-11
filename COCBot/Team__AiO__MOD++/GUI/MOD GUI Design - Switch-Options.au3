@@ -26,11 +26,11 @@ Global $g_hChkSwitchAcc = 0, $g_hCmbSwitchAcc = 0, $g_hChkSharedPrefs = 0, $g_hC
 ; Switch Profiles
 Global $g_ahChk_SwitchMax[4], $g_ahCmb_SwitchMax[4], $g_ahChk_BotTypeMax[4], $g_ahCmb_BotTypeMax[4], $g_ahLbl_SwitchMax[4], $g_ahTxt_ConditionMax[4], _
 	   $g_ahChk_SwitchMin[4], $g_ahCmb_SwitchMin[4], $g_ahChk_BotTypeMin[4], $g_ahCmb_BotTypeMin[4], $g_ahLbl_SwitchMin[4], $g_ahTxt_ConditionMin[4]
-
+#cs
 Global $g_ahChkSetFarm[$g_eTotalAcc], _
 	   $g_ahCmbAction1[$g_eTotalAcc], $g_ahCmbCriteria1[$g_eTotalAcc], $g_ahTxtResource1[$g_eTotalAcc], $g_ahCmbTime1[$g_eTotalAcc], _
 	   $g_ahCmbAction2[$g_eTotalAcc], $g_ahCmbCriteria2[$g_eTotalAcc], $g_ahTxtResource2[$g_eTotalAcc], $g_ahCmbTime2[$g_eTotalAcc]
-
+#ce
 Global $g_hTxtSALog = 0
 
 Func CreateSwitchOptions()
@@ -43,9 +43,10 @@ Func CreateSwitchOptions()
 		CreateSwitchAccount()
 	$g_hGUI_SWITCH_OPTIONS_TAB_ITEM2 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_04_STab_04_STab_02", "Switch Profiles"))
 		CreateSwitchProfile()
+	#Cs
 	$g_hGUI_SWITCH_OPTIONS_TAB_ITEM3 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_04_STab_04_STab_03", "Farming Schedule"))
 		CreateFarmSchedule()
-
+	#ce
 	; This dummy is used in btnStart and btnStop to disable/enable all labels, text, buttons etc. on all tabs.
 	$g_hLastControlToHide = GUICtrlCreateDummy()
 	ReDim $g_aiControlPrevState[$g_hLastControlToHide + 1]
@@ -196,7 +197,7 @@ Func CreateSwitchProfile()
 EndFunc   ;==>CreateSwitchProfile
 #EndRegion
 
-#Region Farming Schedule tab
+#cs Region Farming Schedule tab
 Func CreateFarmSchedule()
 
 	Local $x = 10, $y = 30
@@ -241,7 +242,7 @@ Func CreateFarmSchedule()
 	Next
 
 EndFunc   ;==>CreateFarmSchedule
-#EndRegion
+#ce EndRegion
 
 Func CreateBotSwitchAccLog()
 

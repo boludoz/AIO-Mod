@@ -393,6 +393,7 @@ Func CreateMiscNormalVillageSubTab()
 	$x -= 9
 	$y -= 4
 	$g_hlblLocateTH = GUICtrlCreateLabel("", $x - 2, $y, 2, 36)
+		GUICtrlSetBkColor(-1, $COLOR_GRAY)
 	$g_hBtnLocateTH = GUICtrlCreateButton(GetTranslatedFileIni("MBR Global GUI Design", "LblTownhall", -1), $x, $y, 36, 36, $BS_ICON)
 	_GUICtrlSetImage(-1, $g_sLibIconPath, $eIcnTH14, 1)
 	_GUICtrlSetTip(-1, $sTxtRelocate & GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnTownhall", "Town Hall"))
@@ -400,6 +401,7 @@ Func CreateMiscNormalVillageSubTab()
 
 	$x += 40
 	$g_hlblLocateCastle = GUICtrlCreateLabel("", $x - 2, $y, 2, 36)
+		GUICtrlSetBkColor(-1, $COLOR_GRAY)
 	$g_hBtnLocateCastle = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnCC", "Clan Castle"), $x, $y, 36, 36, $BS_ICON)
 	_GUICtrlSetImage(-1, $g_sLibIconPath, $eIcnCC, 1)
 	_GUICtrlSetTip(-1, $sTxtRelocate & GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnCC", "Clan Castle"))
@@ -407,6 +409,7 @@ Func CreateMiscNormalVillageSubTab()
 
 	$x += 40
 	$g_hlblLocateKingAltar = GUICtrlCreateLabel("", $x - 2, $y, 2, 36)
+		GUICtrlSetBkColor(-1, $COLOR_GRAY)
 	$g_hBtnLocateKingAltar = GUICtrlCreateButton(GetTranslatedFileIni("MBR Global GUI Design Names Troops", "King", "King"), $x, $y, 36, 36, $BS_ICON)
 	_GUICtrlSetImage(-1, $g_sLibIconPath, $eIcnKingBoostLocate)
 	_GUICtrlSetTip(-1, $sTxtRelocate & GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnAltarKing_Info_01", "Barbarian King Altar"))
@@ -414,6 +417,7 @@ Func CreateMiscNormalVillageSubTab()
 
 	$x += 40
 	$g_hlblLocateQueenAltar = GUICtrlCreateLabel("", $x - 2, $y, 2, 36)
+		GUICtrlSetBkColor(-1, $COLOR_GRAY)
 	$g_hBtnLocateQueenAltar = GUICtrlCreateButton(GetTranslatedFileIni("MBR Global GUI Design Names Troops", "Queen", "Queen"), $x, $y, 36, 36, $BS_ICON)
 	_GUICtrlSetImage(-1, $g_sLibIconPath, $eIcnQueenBoostLocate)
 	_GUICtrlSetTip(-1, $sTxtRelocate & GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnAltarQueen_Info_01", "Archer Queen Altar"))
@@ -421,6 +425,7 @@ Func CreateMiscNormalVillageSubTab()
 
 	$x += 40
 	$g_hlblLocateWardenAltar = GUICtrlCreateLabel("", $x - 2, $y, 2, 36)
+		GUICtrlSetBkColor(-1, $COLOR_GRAY)
 	$g_hBtnLocateWardenAltar = GUICtrlCreateButton(GetTranslatedFileIni("MBR Global GUI Design Names Troops", "Grand Warden", "Grand Warden"), $x, $y, 36, 36, $BS_ICON)
 	_GUICtrlSetImage(-1, $g_sLibIconPath, $eIcnWardenBoostLocate)
 	_GUICtrlSetTip(-1, $sTxtRelocate & GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnAltarWarden_Info_01", "Grand Warden Altar"))
@@ -428,6 +433,7 @@ Func CreateMiscNormalVillageSubTab()
 
 	$x += 40
 	$g_hlblLocateChampionAltar = GUICtrlCreateLabel("", $x - 2, $y, 2, 36)
+		GUICtrlSetBkColor(-1, $COLOR_GRAY)
 	$g_hBtnLocateChampionAltar = GUICtrlCreateButton(GetTranslatedFileIni("MBR Global GUI Design Names Troops", "Royal Champion", "Royal Champion"), $x, $y, 36, 36, $BS_ICON)
 	_GUICtrlSetImage(-1, $g_sLibIconPath, $eIcnChampionBoostLocate)
 	_GUICtrlSetTip(-1, $sTxtRelocate & GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnAltarChampion_Info_01", "Royal Champion Altar"))
@@ -435,6 +441,7 @@ Func CreateMiscNormalVillageSubTab()
 
 	$x += 40
 	$g_hlblLocateLaboratory = GUICtrlCreateLabel("", $x - 2, $y, 2, 36)
+		GUICtrlSetBkColor(-1, $COLOR_GRAY)
 	$g_hBtnLocateLaboratory = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnLocateLaboratory", "Lab."), $x, $y, 36, 36, $BS_ICON)
 	_GUICtrlSetImage(-1, $g_sLibIconPath, $eIcnLaboratory)
 	_GUICtrlSetTip(-1, $sTxtRelocate & GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnLocateLaboratory_Info_01", "Laboratory"))
@@ -442,6 +449,7 @@ Func CreateMiscNormalVillageSubTab()
 
 	$x += 40
 	$g_hlblLocatePetHouse = GUICtrlCreateLabel("", $x - 2, $y, 2, 36)
+		GUICtrlSetBkColor(-1, $COLOR_GRAY)
 	$g_hBtnLocatePetHouse = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnLocateLaboratory", "Pet House"), $x, $y, 36, 36, $BS_ICON)
 	_GUICtrlSetImage(-1, $g_sLibIconPath, $eIcnPetHouse)
 	_GUICtrlSetTip(-1, $sTxtRelocate & GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnLocatePetHouse_Info_01", "Pet House"))

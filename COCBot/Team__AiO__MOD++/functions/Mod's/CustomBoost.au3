@@ -234,7 +234,7 @@ Func IsScheduleBoost()
 	Local $bMustBoost = True
 	
 	If $g_iCommandStop = 0 Or $g_iCommandStop = 3 Then ;halt attack.. do not boost now
-		SetLog("Boost skipped, account on halt attack mode.", $COLOR_ACTION)
+		; SetLog("Boost skipped, account on halt attack mode.", $COLOR_ACTION)
 		Return False
 	EndIf
 	
@@ -263,7 +263,7 @@ Func IsScheduleBoost()
 		EndIf
 	EndIf
 
-	If $bMustBoost = False Then SetLog("Boost skipped, resource condition successfully completed.", $COLOR_SUCCESS)
+	; If $bMustBoost = False Then SetLog("Boost skipped, resource condition successfully completed.", $COLOR_SUCCESS)
 
 	Return $bMustBoost
 EndFunc   ;==>IsScheduleBoost

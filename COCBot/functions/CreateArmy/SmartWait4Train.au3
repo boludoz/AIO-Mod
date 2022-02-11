@@ -99,26 +99,22 @@ Func SmartWait4Train($iTestSeconds = Default)
 	#Region - Custom smart wait - Team AIO Mod++
 	If ProfileSwitchAccountEnabled() Then
 		CheckTroopTimeAllAccount()
-		Local $iRemainTrain = 999, $account = Number($g_iCurAccount) ; Custom smart wait - Team AIO Mod++
+		Local $iRemainTrain = 999, $account = Number($g_iCurAccount)
 		Local $abAccountNo = AccountNoActive()
 		For $i = 0 To $g_iTotalAcc
 			If $abAccountNo[$i] And Not $g_abDonateOnly[$i] Then
 				If $g_asTrainTimeFinish[$i] < $iRemainTrain Then
-					If _DateIsValid($g_asTrainTimeFinish[$i]) Then
-						$iRemainTrain = _DateDiff("n", _NowCalc(), $g_asTrainTimeFinish[$i])
-					Else
-						$iRemainTrain = 999
-					EndIf
+					If _DateIsValid($g_asTrainTimeFinish[$i]) Then $iRemainTrain = _DateDiff("n", _NowCalc(), $g_asTrainTimeFinish[$i])
 					$account = $i
 				EndIf
 			EndIf
 		Next
 		If $g_bDebugSetlogTrain Or $g_bDebugSetlog Then
-			SetLog("[SmartWait4Train] _DateIsValid($g_asTrainTimeFinish[$i]): " & _DateIsValid($g_asTrainTimeFinish[$i]))
+			; SetLog("[SmartWait4Train] _DateIsValid($g_asTrainTimeFinish[$i]): " & _DateIsValid($g_asTrainTimeFinish[$i]))
 			SetLog("[SmartWait4Train] $g_asTrainTimeFinish[$i]: " & $g_asTrainTimeFinish[$i])
 			SetLog("[SmartWait4Train] $iRemainTrain: " & $iRemainTrain)
-			SetLog("[SmartWait4Train] $g_iCloseMinimumTime: " & $g_iCloseMinimumTime)
-			SetLog("[SmartWait4Train] $iTrainWaitCloseFlag: " & $iTrainWaitCloseFlag)
+			; SetLog("[SmartWait4Train] $g_iCloseMinimumTime: " & $g_iCloseMinimumTime)
+			; SetLog("[SmartWait4Train] $iTrainWaitCloseFlag: " & $iTrainWaitCloseFlag)
 		EndIf
 		If $iRemainTrain < $g_iCloseMinimumTime Then
 			If $iRemainTrain = -999 Then

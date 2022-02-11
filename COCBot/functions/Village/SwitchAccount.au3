@@ -250,8 +250,8 @@ Func CheckSwitchAcc()
 		Else
 			SetLog("Staying in this account")
 			SetSwitchAccLog("Stay at [" & $g_iCurAccount + 1 & "]", $COLOR_SUCCESS)
-			VillageReport()
-			CheckFarmSchedule()
+			; VillageReport()
+			; CheckFarmSchedule()
 		EndIf
 	EndIf
 	If Not $g_bRunState Then Return
