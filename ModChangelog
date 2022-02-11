@@ -9,9 +9,10 @@
 		Epic Jungle Scenery.
 		Tiger Mountain Scenery.
 		9th Clashiversary Scenery.
- 
+	- Fix: One gem boost and Schedule boost.
+	
 **v4.7.5**
-	- New: Schedule boost: based on resources (> : start if lower | <= : stop if are equal or more than condition | - : off).
+	- New: Schedule boost, based on resources (> : start if lower | <= : stop if are equal or more than condition | - : off).
 	- Improved: Reduced training time while the training potion is on, for each account (The reduced training time is taken into account.).
 	- Improved: Walls.
 	- Fix: Fixed hard bug at close bot.

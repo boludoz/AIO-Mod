@@ -23,10 +23,10 @@ Func IsSearchAttackEnabled()
 		Return False
 	EndIf
 
-	If $g_bAttackPlannerEnable = False Then Return True
-	
+	If $g_bAttackPlannerEnable = False Then Return True ; return true if attack planner is not enabled
+
 	Local $sStartTime = "", $sEndTime = ""
-	Local $aNoAttackTimes[2] = [$sStartTime, $sEndTime]
+	Local $aNoAttackTimes[2] = [$sStartTime, $sEndTime] ; array to hold start/end time for when attacking is disabled.
 	Local $iWaitTime = 0
 	
 	; Custom schedule - Team AIO Mod++

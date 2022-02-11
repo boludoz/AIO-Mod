@@ -760,7 +760,7 @@ Func runBot() ;Bot that runs everything in order
 		If $b_iAutoRestartDelay > 0 And __TimerDiff($g_hBotLaunchTime) > $b_iAutoRestartDelay * 1000 Then
 			If RestartBot(False) Then Return
 		EndIf
-		
+
 		PrepareDonateCC()
 		If Not $g_bRunState Then Return
 		$g_bRestart = False
@@ -780,7 +780,7 @@ Func runBot() ;Bot that runs everything in order
 		; Custom BB - Team AIO Mod++
 		If isOnBuilderBase() Then SwitchBetweenBases()
 		_ClanGames()
-		
+
 		If PlayBBOnly() Then
 			SetLog("Let's play builder base only.")
 			BuilderBase()
@@ -796,7 +796,7 @@ Func runBot() ;Bot that runs everything in order
 			MainKickout()
 		EndIf
 		#EndRegion - GTFO - Team AIO Mod++
-		
+
 		If CheckAndroidReboot() Then ContinueLoop
 		If Not $g_bIsClientSyncError Then ;ARCH:  was " And Not $g_bIsSearchLimit"
 			SetDebugLog("ARCH: Top of loop", $COLOR_DEBUG)
@@ -829,7 +829,7 @@ Func runBot() ;Bot that runs everything in order
 			$g_bCanRequestCC = True
 			If $g_bChkReqCCFirst Then RequestCCMain()
 			#EndRegion - Request Early - Team AIO Mod++
-			
+
 			; Only farm - Team AIO Mod++
 			If $g_bChkOnlyFarm = False Then
 
@@ -839,14 +839,14 @@ Func runBot() ;Bot that runs everything in order
 				Else
 					Local $aRndFuncList = ['Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge', 'PetCheck', "ChatActions", "BotHumanization"] ; AIO Mod
 				EndIf
-	
+
 				_ArrayShuffle($aRndFuncList)
 				For $Index In $aRndFuncList
 					If Not $g_bRunState Then Return
 					_RunFunction($Index)
 					If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 				Next
-	
+
 				If Not $g_bChkOnlyFarm Then AddIdleTime() ; AIO Mod
 				If Not $g_bRunState Then Return
 				If $g_bRestart Then ContinueLoop
@@ -863,6 +863,10 @@ Func runBot() ;Bot that runs everything in order
 						If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 						If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 					Next
+
+					OneGemBoost() ; One gem boost - Team AIO Mod++
+					If $g_bRestart Then ContinueLoop
+
 					BoostEverything() ; 1st Check if is to use Training Potion
 					If $g_bRestart Then ContinueLoop
 					Local $aRndFuncList = ['BoostBarracks', 'BoostSpellFactory', 'BoostWorkshop', 'BoostKing', 'BoostQueen', 'BoostWarden', 'BoostChampion']
@@ -873,7 +877,7 @@ Func runBot() ;Bot that runs everything in order
 						If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 						If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 					Next
-	
+
 					If Not $g_bRunState Then Return
 					If $g_iUnbrkMode >= 1 Then
 						If Unbreakable() Then ContinueLoop
@@ -884,7 +888,7 @@ Func runBot() ;Bot that runs everything in order
 				; Train Donate only - force a donate cc every time
 				If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) Then _RunFunction('DonateCC,Train')
 				If $g_bRestart Then ContinueLoop
-	
+
 				If $g_bChkOnlyFarm = False Then MainSXHandler() ; Super XP - Team AIO Mod++
 				Local $aRndFuncList = ['Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'PetHouse']
 				_ArrayShuffle($aRndFuncList)
@@ -894,10 +898,10 @@ Func runBot() ;Bot that runs everything in order
 					If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 					If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 				Next
-	
+
 				;ARCH Trying it out here.
 				If Not $g_bIsSearchLimit Then _ClanGames() ; move to here to pick event before going to BB.
-	
+
 				; Ensure, that wall upgrade is last of the upgrades
 				Local $aRndFuncList = ['UpgradeWall', 'BuilderBase'] ;Copied BuilderBase to AttackMain
 				_ArrayShuffle($aRndFuncList)
@@ -908,9 +912,13 @@ Func runBot() ;Bot that runs everything in order
 					If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 				Next
 				If Not $g_bRunState Then Return
-	
+
 				If $g_bFirstStart Then SetDebugLog("First loop completed!")
 			Else
+
+				OneGemBoost() ; One gem boost - Team AIO Mod++
+				If $g_bRestart Then ContinueLoop
+
 				BoostEverything() ; 1st Check if is to use Training Potion
 				If $g_bRestart Then ContinueLoop
 				Local $aRndFuncList = ['BoostBarracks', 'BoostSpellFactory', 'BoostWorkshop', 'BoostKing', 'BoostQueen', 'BoostWarden', 'BoostChampion']
@@ -922,16 +930,16 @@ Func runBot() ;Bot that runs everything in order
 					If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 				Next
 			EndIf
-			
+
 			$g_bFirstStart = False ; already finished first loop since bot started.
-			
+
 			If ProfileSwitchAccountEnabled() And ($g_iCommandStop = 0 Or $g_iCommandStop = 3 Or $g_abDonateOnly[$g_iCurAccount] Or $g_bForceSwitch) Then checkSwitchAcc()
 			If IsSearchAttackEnabled() Then ; If attack scheduled has attack disabled now, stop wall upgrades, and attack.
 				Idle()
 				;$g_bFullArmy1 = $g_bFullArmy
 				If _Sleep($DELAYRUNBOT3) Then Return
 				If $g_bRestart = True Then ContinueLoop
-	
+
 				If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
 					AttackMain()
 					$g_bSkipFirstZoomout = False
@@ -1151,7 +1159,7 @@ Func AttackMain($bFirstStart = False, $bCheckCG = True) ;Main control for attack
 				_ClanGames() ; Trying to do this above in the main loop
 				ClickAway(Default, True)
 			EndIf
-			
+
 			If $g_bUpdateSharedPrefs Then PullSharedPrefs()
 			PrepareSearch()
 			If Not $g_bRunState Then Return
@@ -1197,7 +1205,7 @@ Func Attack() ;Selects which algorithm
 		If Not $g_bRunState Then Return
 		AttackSmartFarm($Nside[1], $Nside[2])
 	Else
-		SetDebugLog("start standard attack", $COLOR_ERROR)
+		SetDebugLog("Start standard attack", $COLOR_ERROR)
 		algorithm_AllTroops()
 	EndIf
 	$g_bAttackActive = False
@@ -1446,8 +1454,8 @@ Func FirstCheck()
 		Setlog("Only farm enabled.", $COLOR_INFO)
 	Else
 		SetLog("======== FirstCheck ========", $COLOR_ACTION)
-	EndIf 
-	
+	EndIf
+
 	Local $bCheckCG = False
 	If $g_bChkClanGamesEnabled Then
 		SetLog("Check ClanGames", $COLOR_INFO)
@@ -1460,7 +1468,7 @@ Func FirstCheck()
 		EndIf
 	EndIf
 	; /////////////////////////////
-	
+
 	SetDebugLog("-- FirstCheck Loop --")
 	If Not $g_bRunState Then Return
 
@@ -1536,6 +1544,9 @@ Func FirstCheck()
 				EndIf
 				If _Sleep($DELAYRUNBOT1) Then Return
 			EndIf
+		Else
+			OneGemBoost() ; One gem boost - Team AIO Mod++
+			If $g_bRestart Then Return
 		EndIf
 	EndIf
 EndFunc   ;==>FirstCheck

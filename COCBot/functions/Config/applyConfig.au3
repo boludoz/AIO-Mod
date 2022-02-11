@@ -1668,7 +1668,7 @@ Func ApplyConfig_600_29($TypeReadSave)
 			Local $string = ""
 			For $i = 0 To 23
 				$g_abPlannedattackHours[$g_iCurAccount][$i] = (GUICtrlRead($g_ahChkAttackHours[$i]) = $GUI_CHECKED)
-				SetDebugLog("$g_abPlannedattackHours | " & $i & " -> " & $g_abPlannedattackHours[$g_iCurAccount][$i])
+				; SetDebugLog("$g_abPlannedattackHours | " & $i & " -> " & $g_abPlannedattackHours[$g_iCurAccount][$i])
 			Next
 
 			$g_bPlannedDropCCHoursEnable = (GUICtrlRead($g_hChkDropCCHoursEnable) = $GUI_CHECKED)

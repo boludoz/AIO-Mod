@@ -75,7 +75,7 @@ EndFunc   ;==>BoostStructure
 
 Func AllowBoosting($sName, $icmbBoost)
 	; Schedule boost - Team AIO Mod++ 
-	If Not IsScheduleBoost() Then Return
+	If Not IsScheduleBoost($sName) Then Return
 
 	If ($g_bTrainEnabled = True And $icmbBoost > 0) = False Then Return False
 

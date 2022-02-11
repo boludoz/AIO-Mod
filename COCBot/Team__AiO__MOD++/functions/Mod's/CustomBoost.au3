@@ -11,7 +11,7 @@
 ; ===============================================================================================================================
 Func OneGemBoost($bDebug = False)
 	; Schedule boost - Team AIO Mod++ 
-	If Not IsScheduleBoost() Then Return
+	If Not IsScheduleBoost("One gem boost") Then Return
 	
 	Static $aHeroBoostedStartTime[$g_eTotalAcc][$eHeroCount], $aBuildingBoostedStartTime[$g_eTotalAcc][3], $aLastTimeChecked = $g_PreResetZero
 	If $aLastTimeChecked[$g_iCurAccount] <> 0 And Not $bDebug Then
@@ -225,16 +225,16 @@ Func TestIsScheduleBoost()
 	$g_aiCurrentLoot[$eLootGold] = 1000000
 	$g_aiCurrentLoot[$eLootElixir] = 1000000
 	$g_aiCurrentLoot[$eLootDarkElixir] = 10000
-	If IsScheduleBoost() Then
+	If IsScheduleBoost("TestIsScheduleBoost") Then
 		SetLog("TestIsScheduleBoost cond ok")
 	EndIf
 EndFunc   ;==>TestIsScheduleBoost
 
-Func IsScheduleBoost()
+Func IsScheduleBoost($sCalledFrom = "-")
 	Local $bMustBoost = True
 	
 	If $g_iCommandStop = 0 Or $g_iCommandStop = 3 Then ;halt attack.. do not boost now
-		; SetLog("Boost skipped, account on halt attack mode.", $COLOR_ACTION)
+		SetLog("[" & $sCalledFrom & "] " & "Boost skipped, account on halt attack mode.", $COLOR_ACTION)
 		Return False
 	EndIf
 	
@@ -263,7 +263,7 @@ Func IsScheduleBoost()
 		EndIf
 	EndIf
 
-	; If $bMustBoost = False Then SetLog("Boost skipped, resource condition successfully completed.", $COLOR_SUCCESS)
+	If $bMustBoost = False Then SetLog("[" & $sCalledFrom & "] " & "Boost skipped, resource condition successfully completed.", $COLOR_SUCCESS)
 
 	Return $bMustBoost
 EndFunc   ;==>IsScheduleBoost
