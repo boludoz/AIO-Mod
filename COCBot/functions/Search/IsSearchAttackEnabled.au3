@@ -58,6 +58,7 @@ Func IsSearchAttackEnabled()
 		If _IsTimeInRange($aNoAttackTimes[0], $aNoAttackTimes[1]) Then ; returns true if time now is between start/end time
 			SetLog("Attack schedule random skip time found", $COLOR_INFO)
 			If _Sleep($DELAYRESPOND) Then Return True
+			If ProfileSwitchAccountEnabled() Then Return False
 			If $bCloseGame Then
 				$iWaitTime = _DateDiff("s", _NowCalc(), $aNoAttackTimes[1]) ; find time to stop attacking in seconds
 				If @error Then
@@ -75,13 +76,14 @@ Func IsSearchAttackEnabled()
 			Return True
 		EndIf
 	Else ; if not random stop attack time, use attack planner times set in GUI
-		If Not IsPlannedTimeNow() Then
+		If IsPlannedTimeNow() = False Then
 			SetLog("Attack schedule planned skip time found", $COLOR_INFO)
 			If _Sleep($DELAYRESPOND) Then Return True
+			If ProfileSwitchAccountEnabled() Then Return False
 			If $bCloseGame Then
 				; Custom schedule - Team AIO Mod++
 				; determine how long to close CoC or emulator if selected
-				If Not $g_abPlannedAttackWeekDays[$g_iCurAccount][@WDAY - 1] Then
+				If $g_abPlannedAttackWeekDays[$g_iCurAccount][@WDAY - 1] = False Then
 					$iWaitTime = _getTimeRemainTimeToday() ; get number of seconds remaining till Midnight today
 					For $i = @WDAY To 6
 						If Not $g_abPlannedAttackWeekDays[$g_iCurAccount][$i] Then $iWaitTime += 86400 ; add 1 day of seconds to wait time
