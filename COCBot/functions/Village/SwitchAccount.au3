@@ -100,55 +100,57 @@ Func CheckSwitchAcc()
 	SetLog("Start Switch Account!", $COLOR_INFO)
 
 	#Region - Custom BB - Team AIO Mod++
-	; Force Switch when PBT detected
-	If $g_abPBActive[$g_iCurAccount] = True Then
-		SetSwitchAccLog(" - PBT Active")
-		$bForceSwitch = True
-	ElseIf $g_bOnlyBuilderBase Then
-		SetLog("This account is Play BB Only, switching to another account", $COLOR_ACTION)
-		SetSwitchAccLog(" - Play BB Only")
-		$bForceSwitch = True
-	#EndRegion - Custom BB - Team AIO Mod++
-	ElseIf $g_iCommandStop = 0 Or $g_iCommandStop = 3 Then ; Forced to switch when in halt attack mode
-		SetLog("This account is in halt attack mode, switching to another account", $COLOR_ACTION)
-		SetSwitchAccLog(" - Halt Attack, Force switch")
-		$bForceSwitch = True
-	ElseIf $g_iCommandStop = 1 Then
-		SetLog("This account is turned off, switching to another account", $COLOR_ACTION)
-		SetSwitchAccLog(" - Turn idle, Force switch")
-		$bForceSwitch = True
-	ElseIf $g_iCommandStop = 2 Then
-		SetLog("This account is out of Attack Schedule, switching to another account", $COLOR_ACTION)
-		SetSwitchAccLog(" - Off Schedule, Force switch")
-		$bForceSwitch = True
-	ElseIf $g_bWaitForCCTroopSpell Then
-		SetLog("Still waiting for CC Troops/Spells, switching to another Account", $COLOR_ACTION)
-		SetSwitchAccLog(" - Waiting for CC")
-		$bForceSwitch = True
-	ElseIf $g_bAllBarracksUpgd Then ;Check if all barrack are upgrading, no army can be train --> Force Switch account
-		SetLog("Seems all your barracks are upgrading", $COLOR_INFO)
-		SetLog("No troops can be trained, let's switch account", $COLOR_INFO)
-		SetSwitchAccLog(" - All Barracks Upgrading, Force switch")
-		$bForceSwitch = True
-	Else
-		getArmyTroopTime(True, False) ; update $g_aiTimeTrain[0]
-
-		$g_aiTimeTrain[1] = 0
-		If IsWaitforSpellsActive() Then getArmySpellTime() ; update $g_aiTimeTrain[1]
-
-		$g_aiTimeTrain[2] = 0
-		If IsWaitforHeroesActive() Then CheckWaitHero() ; update $g_aiTimeTrain[2]
-
-		ClickAway()
-
-		$iWaitTime = _ArrayMax($g_aiTimeTrain, 1, 0, 2) ; Not check Siege Machine time: $g_aiTimeTrain[3]
-		If $bReachAttackLimit And $iWaitTime <= 0 Then
-			SetLog("This account has attacked twice in a row, switching to another account", $COLOR_INFO)
-			SetSwitchAccLog(" - Reach attack limit: " & $g_aiAttackedCount - $g_aiAttackedCountSwitch[$g_iCurAccount])
+	If $bForceSwitch = False Then
+		; Force Switch when PBT detected
+		If $g_abPBActive[$g_iCurAccount] = True Then
+			SetSwitchAccLog(" - PBT Active")
 			$bForceSwitch = True
+		ElseIf $g_bOnlyBuilderBase Then
+			SetLog("This account is Play BB Only, switching to another account", $COLOR_ACTION)
+			SetSwitchAccLog(" - Play BB Only")
+			$bForceSwitch = True
+		#EndRegion - Custom BB - Team AIO Mod++
+		ElseIf $g_iCommandStop = 0 Or $g_iCommandStop = 3 Then ; Forced to switch when in halt attack mode
+			SetLog("This account is in halt attack mode, switching to another account", $COLOR_ACTION)
+			SetSwitchAccLog(" - Halt Attack, Force switch")
+			$bForceSwitch = True
+		ElseIf $g_iCommandStop = 1 Then
+			SetLog("This account is turned off, switching to another account", $COLOR_ACTION)
+			SetSwitchAccLog(" - Turn idle, Force switch")
+			$bForceSwitch = True
+		ElseIf $g_iCommandStop = 2 Then
+			SetLog("This account is out of Attack Schedule, switching to another account", $COLOR_ACTION)
+			SetSwitchAccLog(" - Off Schedule, Force switch")
+			$bForceSwitch = True
+		ElseIf $g_bWaitForCCTroopSpell Then
+			SetLog("Still waiting for CC Troops/Spells, switching to another Account", $COLOR_ACTION)
+			SetSwitchAccLog(" - Waiting for CC")
+			$bForceSwitch = True
+		ElseIf $g_bAllBarracksUpgd Then ;Check if all barrack are upgrading, no army can be train --> Force Switch account
+			SetLog("Seems all your barracks are upgrading", $COLOR_INFO)
+			SetLog("No troops can be trained, let's switch account", $COLOR_INFO)
+			SetSwitchAccLog(" - All Barracks Upgrading, Force switch")
+			$bForceSwitch = True
+		Else
+			getArmyTroopTime(True, False) ; update $g_aiTimeTrain[0]
+	
+			$g_aiTimeTrain[1] = 0
+			If IsWaitforSpellsActive() Then getArmySpellTime() ; update $g_aiTimeTrain[1]
+	
+			$g_aiTimeTrain[2] = 0
+			If IsWaitforHeroesActive() Then CheckWaitHero() ; update $g_aiTimeTrain[2]
+	
+			ClickAway()
+	
+			$iWaitTime = _ArrayMax($g_aiTimeTrain, 1, 0, 2) ; Not check Siege Machine time: $g_aiTimeTrain[3]
+			If $bReachAttackLimit And $iWaitTime <= 0 Then
+				SetLog("This account has attacked twice in a row, switching to another account", $COLOR_INFO)
+				SetSwitchAccLog(" - Reach attack limit: " & $g_aiAttackedCount - $g_aiAttackedCountSwitch[$g_iCurAccount])
+				$bForceSwitch = True
+			EndIf
 		EndIf
 	EndIf
-
+	
 	Local $sLogSkip = ""
 	If Not $g_abDonateOnly[$g_iCurAccount] And $iWaitTime <= $g_iTrainTimeToSkip And Not $bForceSwitch Then
 		If Not $g_bRunState Then Return

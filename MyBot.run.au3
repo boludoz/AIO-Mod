@@ -884,6 +884,13 @@ Func runBot() ;Bot that runs everything in order
 						MainSXHandler() ; SuperXP / GoblinXP - Team AiO MOD++
 					EndIf
 					If $g_bRestart Then ContinueLoop
+				Else
+					If PlayBBOnly() Then BuilderBase()
+					SetLog("Attacking Not Planned, Skipped.", $COLOR_WARNING)
+					If ProfileSwitchAccountEnabled() Then
+						$g_bForceSwitch = True
+						CheckSwitchAcc()
+					EndIf
 				EndIf
 				; Train Donate only - force a donate cc every time
 				If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) Then _RunFunction('DonateCC,Train')
@@ -1103,16 +1110,24 @@ Func _Idle() ;Sequence that runs until Full Army
 		SetLog("Time Idle: " & StringFormat("%02i", Floor(Floor($TimeIdle / 60) / 60)) & ":" & StringFormat("%02i", Floor(Mod(Floor($TimeIdle / 60), 60))) & ":" & StringFormat("%02i", Floor(Mod($TimeIdle, 60))))
 
 		If $g_bOutOfGold Or $g_bOutOfElixir Then Return ; Halt mode due low resources, only 1 idle loop
-
-		If ProfileSwitchAccountEnabled() Then checkSwitchAcc() ; Forced to switch when in halt attack mode
-
-		If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) And $g_bTrainEnabled = False Then ExitLoop ; If training is not enabled, run only 1 idle loop
-
-		; If $g_iCommandStop = -1 And $g_bChkOnlyFarm = False Then ; AIO Mod ; Check if closing bot/emulator while training and not in halt mode
-		If $g_iCommandStop = -1 Then
-			SmartWait4Train()
-			If Not $g_bRunState Then Return
-			If $g_bRestart Then ExitLoop ; if smart wait activated, exit to runbot in case user adjusted GUI or left emulator/bot in bad state
+		
+		; Custom schedule - Team AIO Mod++
+		If IsSearchAttackEnabled() = False Then
+			If Not ProfileSwitchAccountEnabled() Then
+				$g_bForceSwitch = True
+				SetLog("Attacking not planned, skipped.", $COLOR_WARNING)
+				checkSwitchAcc() ; Forced to switch when in halt attack mode
+			EndIf
+			Return
+		Else
+			If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) And $g_bTrainEnabled = False Then ExitLoop ; If training is not enabled, run only 1 idle loop
+	
+			; If $g_iCommandStop = -1 And $g_bChkOnlyFarm = False Then ; AIO Mod ; Check if closing bot/emulator while training and not in halt mode
+			If $g_iCommandStop = -1 Then
+				SmartWait4Train()
+				If Not $g_bRunState Then Return
+				If $g_bRestart Then ExitLoop ; if smart wait activated, exit to runbot in case user adjusted GUI or left emulator/bot in bad state
+			EndIf
 		EndIf
 
 	WEnd
@@ -1189,6 +1204,10 @@ Func AttackMain($bFirstStart = False, $bCheckCG = True) ;Main control for attack
 		EndIf
 	Else
 		SetLog("Attacking Not Planned, Skipped..", $COLOR_WARNING)
+		If ProfileSwitchAccountEnabled() Then
+			$g_bForceSwitch = True
+			checkSwitchAcc() ; Forced to switch when in halt attack mode
+		EndIf
 	EndIf
 EndFunc   ;==>AttackMain
 
