@@ -277,9 +277,22 @@ Func SwitchCOCAcc($NextAccount)
 		If Not $g_bRunState Then Return
 	Else
 		If Not $g_bRunState Then Return
-		If IsMainPage() Then Click($aButtonSetting[0], $aButtonSetting[1], 1, 0, "Click Setting")
-		If _Sleep(500) Then Return
+		; AIO Mod++
+		If $bSharedPrefs And $g_bChkSharedPrefs Then
+		Else
+			If IsMainPage() Then Click($aButtonSetting[0], $aButtonSetting[1], 1, 0, "Click Setting")
+			If _Sleep(500) Then Return
+		EndIf
+		
 		While 1
+			; all good
+			; AIO Mod++
+			If $bSharedPrefs And $g_bChkSharedPrefs Then
+				CloseCoC(False)
+				$bResult = True
+				ExitLoop
+			EndIf
+
 			If Not IsSettingPage() Then ExitLoop
 
 			If $g_bChkGooglePlay Or $g_bChkSharedPrefs Then
