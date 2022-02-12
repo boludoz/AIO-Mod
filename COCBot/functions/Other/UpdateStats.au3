@@ -641,7 +641,7 @@ Func UpdateStats($bForceUpdate = False)
 
 		;gain stats
 		SwitchAccountVariablesReload("UpdateStats")
-		GUICtrlSetData($g_ahLblResultAttacked[$g_iCurAccount], $g_aiAttackedCount)
+		GUICtrlSetData($g_ahLblResultAttacked[$i], $g_aiAttackedCountAcc[$g_iCurAccount])
 		GUICtrlSetData($g_ahLblResultSkipped[$g_iCurAccount], $g_iSkippedVillageCount)
 	EndIf
 
@@ -738,6 +738,7 @@ Func ResetStats()
 	If ProfileSwitchAccountEnabled() Then
 		SwitchAccountVariablesReload("Reset")
 		For $i = 0 To $g_eTotalAcc - 1 ; Custom Acc - Team AIO Mod++
+			$g_aiAttackedCountAcc[$i] = 0
 			GUICtrlSetData($g_ahLblResultRuntimeNowAcc[$i], "00:00:00")
 			$g_aiRunTime[$i] = 0
 			GUICtrlSetData($g_hLbLLabTime, "")

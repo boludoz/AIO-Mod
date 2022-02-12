@@ -888,8 +888,8 @@ Func runBot() ;Bot that runs everything in order
 					If PlayBBOnly() Then BuilderBase()
 					SetLog("Attacking Not Planned, Skipped.", $COLOR_WARNING)
 					If ProfileSwitchAccountEnabled() Then
-						$g_bForceSwitch = True
-						CheckSwitchAcc()
+						$g_iCommandStop = 2
+						CheckSwitchAcc(True)
 					EndIf
 				EndIf
 				; Train Donate only - force a donate cc every time
@@ -939,6 +939,7 @@ Func runBot() ;Bot that runs everything in order
 			EndIf
 
 			$g_bFirstStart = False ; already finished first loop since bot started.
+			If $g_bRunState = False Then Return
 
 			If ProfileSwitchAccountEnabled() And ($g_iCommandStop = 0 Or $g_iCommandStop = 3 Or $g_abDonateOnly[$g_iCurAccount] Or $g_bForceSwitch) Then checkSwitchAcc()
 			If IsSearchAttackEnabled() Then ; If attack scheduled has attack disabled now, stop wall upgrades, and attack.
@@ -961,11 +962,12 @@ Func runBot() ;Bot that runs everything in order
 				If ProfileSwitchAccountEnabled() Then
 					$g_iCommandStop = 2
 					_RunFunction('DonateCC,Train')
-					checkSwitchAcc()
+					checkSwitchAcc(True)
+				ElseIf Not $g_bChkOnlyFarm Then
+					$iWaitTime = Random($DELAYWAITATTACK1, $DELAYWAITATTACK2)
+					SetLog("Attacking Not Planned and Skipped, Waiting random " & StringFormat("%0.1f", $iWaitTime / 1000) & " Seconds", $COLOR_WARNING)
+					If _SleepStatus($iWaitTime) Then Return False
 				EndIf
-				$iWaitTime = Random($DELAYWAITATTACK1, $DELAYWAITATTACK2)
-				SetLog("Attacking Not Planned and Skipped, Waiting random " & StringFormat("%0.1f", $iWaitTime / 1000) & " Seconds", $COLOR_WARNING)
-				If _SleepStatus($iWaitTime) Then Return False
 			EndIf
 		Else ;When error occurs directly goes to attack
 			Local $sRestartText = $g_bIsSearchLimit ? " due search limit" : " after Out of Sync Error: Attack Now"
@@ -986,6 +988,7 @@ Func runBot() ;Bot that runs everything in order
 			$g_bSkipFirstZoomout = False
 			If $g_bOutOfGold Then
 				SetLog("Switching to Halt Attack, Stay Online/Collect mode ...", $COLOR_ERROR)
+				$g_bFirstStart = True
 				$g_bIsClientSyncError = False ; reset fast restart flag to stop OOS mode and start collecting resources
 				ContinueLoop
 			EndIf
@@ -1111,25 +1114,26 @@ Func _Idle() ;Sequence that runs until Full Army
 
 		If $g_bOutOfGold Or $g_bOutOfElixir Then Return ; Halt mode due low resources, only 1 idle loop
 		
+		If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) And $g_bTrainEnabled = False Then ExitLoop ; If training is not enabled, run only 1 idle loop
+	
+		; If $g_iCommandStop = -1 And $g_bChkOnlyFarm = False Then ; AIO Mod ; Check if closing bot/emulator while training and not in halt mode
+		If $g_iCommandStop = -1 Then
+			SmartWait4Train()
+			If Not $g_bRunState Then Return
+			If $g_bRestart Then ExitLoop ; if smart wait activated, exit to runbot in case user adjusted GUI or left emulator/bot in bad state
+		EndIf
+		
 		; Custom schedule - Team AIO Mod++
+		If ProfileSwitchAccountEnabled() Then CheckSwitchAcc()
+		ClickAway()
 		If IsSearchAttackEnabled() = False Then
 			If Not ProfileSwitchAccountEnabled() Then
-				$g_bForceSwitch = True
+				$g_iCommandStop = 2
 				SetLog("Attacking not planned, skipped.", $COLOR_WARNING)
-				checkSwitchAcc() ; Forced to switch when in halt attack mode
+				checkSwitchAcc(True) ; Forced to switch when in halt attack mode
 			EndIf
 			Return
-		Else
-			If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) And $g_bTrainEnabled = False Then ExitLoop ; If training is not enabled, run only 1 idle loop
-	
-			; If $g_iCommandStop = -1 And $g_bChkOnlyFarm = False Then ; AIO Mod ; Check if closing bot/emulator while training and not in halt mode
-			If $g_iCommandStop = -1 Then
-				SmartWait4Train()
-				If Not $g_bRunState Then Return
-				If $g_bRestart Then ExitLoop ; if smart wait activated, exit to runbot in case user adjusted GUI or left emulator/bot in bad state
-			EndIf
 		EndIf
-
 	WEnd
 EndFunc   ;==>_Idle
 
@@ -1144,7 +1148,7 @@ Func AttackMain($bFirstStart = False, $bCheckCG = True) ;Main control for attack
 	ClickAway()
 	If IsSearchAttackEnabled() Then
 		If (IsSearchModeActive($DB) And checkCollectors(True, False)) Or IsSearchModeActive($LB) Then
-			If ProfileSwitchAccountEnabled() And ($g_aiAttackedCountSwitch[$g_iCurAccount] <= $g_aiAttackedCount - 2) Then checkSwitchAcc()
+			If ProfileSwitchAccountEnabled() And ($g_aiAttackedCountSwitch[$g_iCurAccount] <= $g_aiAttackedCountAcc[$g_iCurAccount] - 2) Then checkSwitchAcc()
 			If $g_bUseCCBalanced Then ;launch profilereport() only if option balance D/R is activated
 				ProfileReport()
 				If Not $g_bRunState Then Return
@@ -1205,8 +1209,8 @@ Func AttackMain($bFirstStart = False, $bCheckCG = True) ;Main control for attack
 	Else
 		SetLog("Attacking Not Planned, Skipped..", $COLOR_WARNING)
 		If ProfileSwitchAccountEnabled() Then
-			$g_bForceSwitch = True
-			checkSwitchAcc() ; Forced to switch when in halt attack mode
+			$g_iCommandStop = 2
+			checkSwitchAcc(True) ; Forced to switch when in halt attack mode
 		EndIf
 	EndIf
 EndFunc   ;==>AttackMain

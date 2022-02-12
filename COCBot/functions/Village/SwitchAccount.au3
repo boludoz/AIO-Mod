@@ -85,15 +85,16 @@ Func InitiateSwitchAcc() ; Checking profiles setup in Mybot, First matching CoC 
 	SwitchCOCAcc($g_iNextAccount)
 EndFunc   ;==>InitiateSwitchAcc
 
-Func CheckSwitchAcc()
+Func CheckSwitchAcc($bForce = False)
 	Local $abAccountNo = AccountNoActive()
 	If Not $g_bRunState Then Return
 	Local $aActiveAccount = _ArrayFindAll($abAccountNo, True)
 	If UBound($aActiveAccount) <= 1 Then Return
 
 	Local $aDonateAccount = _ArrayFindAll($g_abDonateOnly, True)
-	Local $bReachAttackLimit = ($g_aiAttackedCountSwitch[$g_iCurAccount] <= $g_aiAttackedCount - 2)
+	Local $bReachAttackLimit = ($g_aiAttackedCountSwitch[$g_iCurAccount] <= $g_aiAttackedCountAcc[$g_iCurAccount] - 2)
 	Local $bForceSwitch = $g_bForceSwitch
+	If $bForce Then $bForceSwitch = True
 	Local $nMinRemainTrain, $iWaitTime
 	Local $aActibePBTaccounts = _ArrayFindAll($g_abPBActive, True)
 
@@ -136,19 +137,19 @@ Func CheckSwitchAcc()
 				$bForceSwitch = True
 			Else
 				getArmyTroopTime(True, False) ; update $g_aiTimeTrain[0]
-		
+
 				$g_aiTimeTrain[1] = 0
 				If IsWaitforSpellsActive() Then getArmySpellTime() ; update $g_aiTimeTrain[1]
-		
+
 				$g_aiTimeTrain[2] = 0
 				If IsWaitforHeroesActive() Then CheckWaitHero() ; update $g_aiTimeTrain[2]
-		
+
 				ClickAway()
-		
+
 				$iWaitTime = _ArrayMax($g_aiTimeTrain, 1, 0, 2) ; Not check Siege Machine time: $g_aiTimeTrain[3]
 				If $bReachAttackLimit And $iWaitTime <= 0 Then
 					SetLog("This account has attacked twice in a row, switching to another account", $COLOR_INFO)
-					SetSwitchAccLog(" - Reach attack limit: " & $g_aiAttackedCount - $g_aiAttackedCountSwitch[$g_iCurAccount])
+					SetSwitchAccLog(" - Reach attack limit: " & $g_aiAttackedCountAcc[$g_iCurAccount] - $g_aiAttackedCountSwitch[$g_iCurAccount])
 					$bForceSwitch = True
 				EndIf
 			EndIf
@@ -245,13 +246,15 @@ Func CheckSwitchAcc()
 		EndIf
 
 		If $g_iNextAccount <> $g_iCurAccount Then
-			If $g_bRequestTroopsEnable And $g_bCanRequestCC Then
+			If $g_bRequestTroopsEnable And $g_bCanRequestCC And not $bForceSwitch Then
 				If _Sleep(1000) Then Return
 				SetLog("Try Request troops before switching account", $COLOR_INFO)
 				RequestCC(True)
 			EndIf
-			If Not IsMainPage() Then checkMainScreen()
-			SwitchCOCAcc($g_iNextAccount)
+			If Not $bForceSwitch Then
+				If Not IsMainPage() Then checkMainScreen()
+			EndIf
+			SwitchCOCAcc($g_iNextAccount, $bForceSwitch)
 		Else
 			SetLog("Staying in this account")
 			SetSwitchAccLog("Stay at [" & $g_iCurAccount + 1 & "]", $COLOR_SUCCESS)
@@ -264,7 +267,7 @@ Func CheckSwitchAcc()
 	$g_bForceSwitch = false ; reset the need to switch
 EndFunc   ;==>CheckSwitchAcc
 
-Func SwitchCOCAcc($NextAccount)
+Func SwitchCOCAcc($NextAccount, $bForceSwitch = False)
 	Local $abAccountNo = AccountNoActive()
 	If $NextAccount < 0 And $NextAccount > $g_iTotalAcc Then $NextAccount = _ArraySearch(True, $abAccountNo)
 	Static $iRetry = 0
@@ -281,88 +284,93 @@ Func SwitchCOCAcc($NextAccount)
 		SetLog("Profile shared_prefs already pushed")
 		If Not $g_bRunState Then Return
 	Else
-		If Not $g_bRunState Then Return
-		; AIO Mod++
-		If $bSharedPrefs And $g_bChkSharedPrefs Then
-		Else
-			If IsMainPage() Then Click($aButtonSetting[0], $aButtonSetting[1], 1, 0, "Click Setting")
-			If _Sleep(500) Then Return
-		EndIf
-		
-		While 1
-			; all good
+		If $bForceSwitch = True Then
+			If Not $g_bRunState Then Return
 			; AIO Mod++
 			If $bSharedPrefs And $g_bChkSharedPrefs Then
-				CloseCoC(False)
-				$bResult = True
-				ExitLoop
+			Else
+				If IsMainPage() Then Click($aButtonSetting[0], $aButtonSetting[1], 1, 0, "Click Setting")
+				If _Sleep(500) Then Return
 			EndIf
 
-			If Not IsSettingPage() Then ExitLoop
+			While 1
+				; all good
+				; AIO Mod++
+				If $bSharedPrefs And $g_bChkSharedPrefs Then
+					CloseCoC(False)
+					$bResult = True
+					ExitLoop
+				EndIf
 
-			If $g_bChkGooglePlay Or $g_bChkSharedPrefs Then
-				Switch SwitchCOCAcc_DisconnectConnect($bResult, $bSharedPrefs)
-					Case 0
-						Return
-					Case -1
-						ExitLoop
-				EndSwitch
-				Switch SwitchCOCAcc_ClickAccount($bResult, $NextAccount, $bSharedPrefs)
-					Case "OK"
-						; all good
-						If $g_bChkSharedPrefs Then
-							If $bSharedPrefs Then
-								CloseCoC(False)
-								$bResult = True
-								ExitLoop
-							Else
-								SetLog($g_asProfileName[$g_iNextAccount] & " missing shared_prefs, using normal switch account", $COLOR_WARNING)
+				If Not IsSettingPage() Then ExitLoop
+
+				If $g_bChkGooglePlay Or $g_bChkSharedPrefs Then
+					Switch SwitchCOCAcc_DisconnectConnect($bResult, $bSharedPrefs)
+						Case 0
+							Return
+						Case -1
+							ExitLoop
+					EndSwitch
+					Switch SwitchCOCAcc_ClickAccount($bResult, $NextAccount, $bSharedPrefs)
+						Case "OK"
+							; all good
+							If $g_bChkSharedPrefs Then
+								If $bSharedPrefs Then
+									CloseCoC(False)
+									$bResult = True
+									ExitLoop
+								Else
+									SetLog($g_asProfileName[$g_iNextAccount] & " missing shared_prefs, using normal switch account", $COLOR_WARNING)
+								EndIf
 							EndIf
-						EndIf
-					Case "Error"
-						; some problem
-						ExitLoop
-					Case "Exit"
-						; no $g_bRunState
-						Return
-				EndSwitch
-				Switch SwitchCOCAcc_ConfirmAccount($bResult)
-					Case "OK"
-						; all good
-					Case "Error"
-						; some problem
-						ExitLoop
-					Case "Exit"
-						; no $g_bRunState
-						Return
-				EndSwitch
+						Case "Error"
+							; some problem
+							ExitLoop
+						Case "Exit"
+							; no $g_bRunState
+							Return
+					EndSwitch
+					Switch SwitchCOCAcc_ConfirmAccount($bResult)
+						Case "OK"
+							; all good
+						Case "Error"
+							; some problem
+							ExitLoop
+						Case "Exit"
+							; no $g_bRunState
+							Return
+					EndSwitch
 
-			ElseIf $g_bChkSuperCellID Then
-				Switch SwitchCOCAcc_ConnectedSCID($bResult)
-					Case "OK"
-						; all good
-					Case "Error"
-						; some problem
-						ExitLoop
-					Case "Exit"
-						; no $g_bRunState
-						Return
-				EndSwitch
-				Switch SwitchCOCAcc_ClickAccountSCID($bResult, $NextAccount, 2)
-					Case "OK"
-						; all good
-					Case "Error"
-						; some problem
-						ExitLoop
-					Case "Exit"
-						; no $g_bRunState
-						Return
-				EndSwitch
+				ElseIf $g_bChkSuperCellID Then
+					Switch SwitchCOCAcc_ConnectedSCID($bResult)
+						Case "OK"
+							; all good
+						Case "Error"
+							; some problem
+							ExitLoop
+						Case "Exit"
+							; no $g_bRunState
+							Return
+					EndSwitch
+					Switch SwitchCOCAcc_ClickAccountSCID($bResult, $NextAccount, 2)
+						Case "OK"
+							; all good
+						Case "Error"
+							; some problem
+							ExitLoop
+						Case "Exit"
+							; no $g_bRunState
+							Return
+					EndSwitch
 
-			EndIf
-			ExitLoop
-		WEnd
-		If _Sleep(500) Then Return
+				EndIf
+				ExitLoop
+			WEnd
+			If _Sleep(500) Then Return
+		Else
+			SetLog("Forced Switch account!", $COLOR_ACTION)
+			$bResult = True
+		EndIf
 	EndIf
 
 	If $bResult Then
@@ -376,6 +384,8 @@ Func SwitchCOCAcc($NextAccount)
 			$g_aiRunTime[$g_iCurAccount] += __TimerDiff($g_ahTimerSinceSwitched[$g_iCurAccount])
 			$g_ahTimerSinceSwitched[$g_iCurAccount] = 0
 		EndIf
+
+		$g_aiAttackedCountSwitch[$g_iCurAccount] = $g_aiAttackedCountAcc[$g_iCurAccount]
 
 		$g_iCurAccount = $NextAccount
 		SwitchAccountVariablesReload()
