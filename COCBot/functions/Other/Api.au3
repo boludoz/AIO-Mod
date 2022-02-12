@@ -33,7 +33,7 @@ Global $tagSTRUCT_BOT_STATE = _
 		";endstruct"
 ; $tagSTRUCT_BOT_STATE can contain optional struct for additional information like Status Bar text or Stats
 Global Enum $g_eSTRUCT_NONE = 0, $g_eSTRUCT_STATUS_BAR, $g_eSTRUCT_UPDATE_STATS
-Global $tagSTRUCT_STATUS_BAR = "struct;char Text[255];endstruct"
+Global $tagSTRUCT_STATUS_BAR = "struct;char Text[255];endstruct", $g_aiCurrentLootBB[3]
 Global $tagSTRUCT_UPDATE_STATS = _
 		"struct" & _
 		";long g_aiCurrentLoot[" & UBound($g_aiCurrentLoot) & "]" & _
@@ -46,6 +46,9 @@ Global $tagSTRUCT_UPDATE_STATS = _
 		";int g_iFirstAttack" & _
 		";int g_aiAttackedCount" & _
 		";int g_iSkippedVillageCount" & _
+		";long g_aiCurrentLootBB[" & UBound($g_aiCurrentLootBB) & "]" & _ ; Custom BB - Team AIO Mod++
+		";int g_iFreeBuilderCountBB" & _
+		";int g_iTotalBuilderCountBB" & _
 		";endstruct"
 Global $tBotState = DllStructCreate($tagSTRUCT_BOT_STATE)
 Global $tStatusBar = DllStructCreate($tagSTRUCT_STATUS_BAR)

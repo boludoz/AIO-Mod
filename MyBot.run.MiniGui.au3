@@ -75,6 +75,11 @@ Global $hTimeoutAutoClose = 0 ; Timer Handle for $iTimeoutAutoClose
 Global $g_iMainLoopSleep = 50 ;
 ;Global $g_bBotLaunchOption_NoBotSlot = True
 
+ ; Custom - Team__AiO__MOD
+Global $g_bAutoDockMiniGUI = True
+Global $g_hAndroidHandleMini = 0
+Global $g_sEmulatorNameMini = ""
+
 Global $g_sBotTitle = "My Bot Mini " & $g_sBotVersion & " - " & "AiO++ MOD " & $g_sModVersion & " -" ;~ Don't use any non file name supported characters like \ / : * ? " < > |
 Global $g_hFrmBot = 0
 Global $g_hFrmBotBackend = 0
@@ -107,7 +112,7 @@ Global $g_hFrmBotEmbeddedMouse = 0
 
 ; Team AiO MOD++ (2019)
 #include "COCBot\Team__AiO__MOD++\functions\Config\readConfig.au3"
-#include "COCBot\functions\Other\KillProcess.au3"
+; #include "COCBot\functions\Other\KillProcess.au3"
 #include "COCBot\functions\Other\UpdateStats.Mini.au3"
 #include "COCBot\functions\Other\_NumberFormat.au3"
 
@@ -1185,7 +1190,7 @@ Func BotResumed()
 EndFunc   ;==>BotResumed
 
 Func UpdateManagedMyBot($aBotDetails)
-	;Global Enum $g_eBotDetailsBotForm = 0, $g_eBotDetailsTimer, $g_eBotDetailsProfile, $g_eBotDetailsCommandLine, $g_eBotDetailsTitle, $g_eBotDetailsRunState, $g_eBotDetailsPaused, $g_eBotDetailsLaunched, $g_eBotDetailsVerifyCount, $g_eBotDetailsBotStateStruct, $g_eBotDetailsOptionalStruct, $g_eBotDetailsArraySize
+;~ 	Global Enum $g_eBotDetailsBotForm = 0, $g_eBotDetailsTimer, $g_eBotDetailsProfile, $g_eBotDetailsCommandLine, $g_eBotDetailsTitle, $g_eBotDetailsRunState, $g_eBotDetailsPaused, $g_eBotDetailsLaunched, $g_eBotDetailsVerifyCount, $g_eBotDetailsBotStateStruct, $g_eBotDetailsOptionalStruct, $g_eBotDetailsArraySize
 	If $g_iDebugWindowMessages Then SetDebugLog("UpdateManagedMyBot: " & $aBotDetails[$g_eBotDetailsBotForm])
 	Local $sTitle = $aBotDetails[$g_eBotDetailsTitle]
 	Local $bRunState = $aBotDetails[$g_eBotDetailsRunState]
@@ -1209,6 +1214,8 @@ Func UpdateManagedMyBot($aBotDetails)
 		$pStructPtr = DllStructGetData($tBotState, "StructPtr")
 		$hTimerSinceStarted = DllStructGetData($tBotState, "g_hTimerSinceStarted")
 		$iTimePassed = DllStructGetData($tBotState, "g_iTimePassed")
+		$g_hAndroidHandleMini = DllStructGetData($tBotState, "AndroidHWnd")
+		$g_sEmulatorNameMini = $sEmulator
 	EndIf
 
 	Local $hFrmBotBackend = $g_hFrmBotBackend
@@ -1249,6 +1256,9 @@ Func UpdateManagedMyBot($aBotDetails)
 				_DllStructLoadData($tOptionalStruct, "g_iFirstAttack", $g_iFirstAttack)
 				_DllStructLoadData($tOptionalStruct, "g_aiAttackedCount", $g_aiAttackedCount)
 				_DllStructLoadData($tOptionalStruct, "g_iSkippedVillageCount", $g_iSkippedVillageCount)
+				_DllStructLoadData($tOptionalStruct, "g_aiCurrentLootBB", $g_aiCurrentLootBB)
+				_DllStructLoadData($tOptionalStruct, "g_iFreeBuilderCountBB", $g_iFreeBuilderCountBB)
+				_DllStructLoadData($tOptionalStruct, "g_iTotalBuilderCountBB", $g_iTotalBuilderCountBB)
 				$g_iBotAction = $eBotUpdateStats
 		EndSwitch
 	EndIf
@@ -1547,11 +1557,35 @@ While 1
 			If $hTimeUpdateTimer = 0 Or __TimerDiff($hTimeUpdateTimer) > 750 Then
 				SetTime()
 				$hTimeUpdateTimer = __TimerInit()
+				; Custom - Team__AiO__MOD
+				If $g_hAndroidHandleMini <> 0 And $g_bAutoDockMiniGUI Then
+					AutoDockMiniGUI()
+				EndIf
 			EndIf
 	EndSwitch
 
 	$iMainLoop += 1
 WEnd
+
+; Custom - Team__AiO__MOD
+Func AutoDockMiniGUI()
+	If $g_hAndroidHandleMini = 0 Or $g_hFrmBot = 0 Then Return
+	Local Static $_shFrmBot[4]
+	Local Static $_shAndroidHandleMini[4]
+	Local $hFrmBot = WinGetPos($g_hFrmBot)
+	Local $hAndroidHandleMini = WinGetPos($g_hAndroidHandleMini)
+	If @error Then Return
+	If ($hFrmBot[0] = $_shFrmBot[0] And $hFrmBot[1] = $_shFrmBot[1]) And ($hAndroidHandleMini[0] = $_shAndroidHandleMini[0] And $hAndroidHandleMini[1] = $_shAndroidHandleMini[1]) Then Return
+	Local $x = $g_sEmulatorNameMini <> "BlueStacks2" ? $hFrmBot[0] - 890 : $hFrmBot[0] - 864
+	Local $y = $g_sEmulatorNameMini <> "BlueStacks2" ? $hFrmBot[1] - 30 : $hFrmBot[1] - 24
+	WinMove($g_hAndroidHandleMini, "", $x, $y)
+	If $g_sEmulatorNameMini <> "BlueStacks2" Then
+		WinActivate($g_hAndroidHandleMini)
+		ControlClick($g_hAndroidHandleMini, "", "", "left", 1, 10, 2)
+	EndIf
+	$_shFrmBot = $hFrmBot
+	$_shAndroidHandleMini = $hAndroidHandleMini
+EndFunc   ;==>AutoDockMiniGUI
 
 ReferenceFunctions()
 ReferenceGlobals()

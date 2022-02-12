@@ -282,6 +282,9 @@ Func UpdateStats()
 		$topTrophyloot = $g_iStatsLastAttack[$eLootTrophy]
 	EndIf
 
+	; Custom BB - Team AIO Mod++
+	BuilderBaseSetStats()
+
 	If $ResetStats = 1 Then
 		$ResetStats = 0
 	EndIf
@@ -366,13 +369,23 @@ Func ResetStats()
 	$g_iTotalDonateStatsSiegeMachinesXP = 0
 
 	UpdateStats()
- 	_BuilderBaseResetStats()
+
+	; Custom BB - Team AIO Mod++
+	BuilderBaseResetStats()
 EndFunc   ;==>ResetStats
 
 ; Custom BB - Team AIO Mod++
-Func _BuilderBaseResetStats()
+Func BuilderBaseResetStats()
 	GUICtrlSetData($g_hLblBBResultGoldNow, "")
 	GUICtrlSetData($g_hLblBBResultElixirNow, "")
 	GUICtrlSetData($g_hLblBBResultTrophyNow, "")
 	GUICtrlSetData($g_hLblBBResultBuilderNow, "")
 EndFunc   ;==>BuilderBaseResetStats
+
+; Custom BB - Team AIO Mod++
+Func BuilderBaseSetStats()
+	GUICtrlSetData($g_hLblBBResultGoldNow, _NumberFormat($g_aiCurrentLootBB[$eLootGoldBB], True))
+	GUICtrlSetData($g_hLblBBResultElixirNow, _NumberFormat($g_aiCurrentLootBB[$eLootElixirBB], True))
+	GUICtrlSetData($g_hLblBBResultTrophyNow, _NumberFormat($g_aiCurrentLootBB[$eLootTrophyBB], True))
+	GUICtrlSetData($g_hLblBBResultBuilderNow, $g_iFreeBuilderCountBB & "/" & $g_iTotalBuilderCountBB)
+EndFunc   ;==>_BuilderBaseResetStats
