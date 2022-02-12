@@ -366,11 +366,11 @@ Func ResetStats()
 	$g_iTotalDonateStatsSiegeMachinesXP = 0
 
 	UpdateStats()
- 	BuilderBaseResetStats()
+ 	_BuilderBaseResetStats()
 EndFunc   ;==>ResetStats
 
-; AIO
-Func BuilderBaseResetStats()
+; Custom BB - Team AIO Mod++
+Func _BuilderBaseResetStats()
 	GUICtrlSetData($g_hLblBBResultGoldNow, "")
 	GUICtrlSetData($g_hLblBBResultElixirNow, "")
 	GUICtrlSetData($g_hLblBBResultTrophyNow, "")

@@ -69,10 +69,3 @@ Func BuilderBaseStats()
 	$g_iFirstRun = 0
 	btnVillageStat("UpdateStats")
 EndFunc   ;==>BuilderBaseStats
-
-Func BuilderBaseResetStats()
-	GUICtrlSetData($g_hLblBBResultGoldNow, "")
-	GUICtrlSetData($g_hLblBBResultElixirNow, "")
-	GUICtrlSetData($g_hLblBBResultTrophyNow, "")
-	GUICtrlSetData($g_hLblBBResultBuilderNow, "")
-EndFunc   ;==>BuilderBaseResetStats

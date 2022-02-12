@@ -759,3 +759,11 @@ Func UpdateStats_ClearArray(ByRef $a)
 		$a[$i] = 0
 	Next
 EndFunc   ;==>UpdateStats_ClearArray
+
+; Custom BB - Team AIO Mod++
+Func BuilderBaseResetStats()
+	GUICtrlSetData($g_hLblBBResultGoldNow, "")
+	GUICtrlSetData($g_hLblBBResultElixirNow, "")
+	GUICtrlSetData($g_hLblBBResultTrophyNow, "")
+	GUICtrlSetData($g_hLblBBResultBuilderNow, "")
+EndFunc   ;==>BuilderBaseResetStats
