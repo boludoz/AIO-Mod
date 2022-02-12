@@ -41,19 +41,32 @@ Func PetHouse($test = False)
 			SetLog($g_asPetNames[$i] & " upgrade enabled");
 		EndIf
 	Next
-
-	If Not $bUpgradePets Then Return
-
-	If $g_aiPetHousePos[0] <= 0 Or $g_aiPetHousePos[1] <= 0 Then
-		SetLog("Pet House Location unknown!", $COLOR_WARNING)
-		LocatePetHouse() ; Pet House location unknown, so find it.
-		If $g_aiPetHousePos[0] = 0 Or $g_aiPetHousePos[1] = 0 Then
-			SetLog("Problem locating Pet House, re-locate Pet House position before proceeding", $COLOR_ERROR)
-			Return False
-		EndIf
+	
+	; Custom pets - Team AIO Mod++
+	If Not $bUpgradePets Then
+		PetsByPassed()
+		Return
+	EndIf
+	
+	; Custom pets - Team AIO Mod++
+	 ; see if we know about an upgrade in progress without checking the Pet House
+ 	If PetUpgradeInProgress() Then 
+		PetsByPassed()
+		Return False
 	EndIf
 
- 	If PetUpgradeInProgress() Then Return False ; see if we know about an upgrade in progress without checking the Pet House
+	SetDebugLog("Pet House Position: " & $g_aiPetHousePos[0] & ", " & $g_aiPetHousePos[1], $COLOR_DEBUG)
+	If isInsideDiamond($g_aiPetHousePos) = False Then
+		LocatePetHouse()
+		If isInsideDiamond($g_aiPetHousePos) Then
+			saveConfig()
+		Else
+			Setlog("Pet House not located.", $COLOR_ERROR)
+			ClickAway()
+			Return
+		EndIf
+		If _Sleep(1000) Then Return False
+	EndIf
 
 	; Get updated village elixir and dark elixir values
 	VillageReport()
@@ -149,11 +162,13 @@ Func PetHouse($test = False)
 						EndIf
 
 					Else
-						ClickAway() ; close pet upgrade window
+						; ClickAway() ; close pet upgrade window
+						SelectHeroPets() ; Custom pets - Team AIO Mod++
 					EndIf
 
 					SetLog("Started upgrade for: " & $g_asPetNames[$i])
-					ClickAway() ; close pet house window
+					; ClickAway() ; close pet house window
+					SelectHeroPets() ; Custom pets - Team AIO Mod++
 					Return True
 				Else
 					SetLog("Failed to find the Pets button!", $COLOR_ERROR)
