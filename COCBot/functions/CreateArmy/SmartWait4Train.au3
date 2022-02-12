@@ -99,12 +99,16 @@ Func SmartWait4Train($iTestSeconds = Default)
 	#Region - Custom smart wait - Team AIO Mod++
 	If ProfileSwitchAccountEnabled() Then
 		CheckTroopTimeAllAccount()
-		Local $iRemainTrain = 999, $account = Number($g_iCurAccount)
+		Local $iRemainTrain = -1, $account = Number($g_iCurAccount)
 		Local $abAccountNo = AccountNoActive()
 		For $i = 0 To $g_iTotalAcc
 			If $abAccountNo[$i] And Not $g_abDonateOnly[$i] Then
-				If $g_asTrainTimeFinish[$i] < $iRemainTrain Then
-					If _DateIsValid($g_asTrainTimeFinish[$i]) Then $iRemainTrain = _DateDiff("n", _NowCalc(), $g_asTrainTimeFinish[$i])
+				If $g_asTrainTimeFinish[$i] < $iRemainTrain Or $iRemainTrain = -1 Then
+					If _DateIsValid($g_asTrainTimeFinish[$i]) Then 
+						$iRemainTrain = _DateDiff("n", _NowCalc(), $g_asTrainTimeFinish[$i])
+					Else
+						$iRemainTrain = 0
+					EndIf
 					$account = $i
 				EndIf
 			EndIf
@@ -126,7 +130,7 @@ Func SmartWait4Train($iTestSeconds = Default)
 			If _Sleep($DELAYCHECKARMYCAMP4) Then Return
 			Return
 		Else
-			SetLog("SmartWait will proceed with acc " & $g_asProfileName[$account] & " will be ready with " & $iRemainTrain & "min")
+			SetLog("SmartWait will proceed with acc " & $g_asProfileName[$account] & " will be ready with " & $iRemainTrain & " min")
 			$g_aiTimeTrain[0] = $iRemainTrain
 			$g_aiTimeTrain[1] = 0
 			$g_aiTimeTrain[2] = 0
