@@ -4,9 +4,9 @@
 ; Syntax ........:
 ; Parameters ....: None
 ; Return values .: None
-; Author ........: chalicucu (6/2016), demen (4/2017)
+; Author ........: chalicucu (6/2016), demen (4/2017), Team AIO Mod++ (13/02/2022)
 ; Modified ......:
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2016
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2021
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
@@ -14,6 +14,11 @@
 ; ===============================================================================================================================
 ; Return True or False if Switch Account is enabled and current profile in configured list
 Func ProfileSwitchAccountEnabled()
+	; Custom fix - Team AIO Mod++
+	Local $abAccountNo = AccountNoActive()
+	If UBound(_ArrayFindAll($abAccountNo, "True")) < 2 Then
+		Return SetError(0, 0, False)
+	EndIf
 	If Not $g_bChkSwitchAcc Or Not aquireSwitchAccountMutex() Then Return False
 	Return SetError(0, 0, _ArraySearch($g_asProfileName, $g_sProfileCurrentName) >= 0)
 EndFunc   ;==>ProfileSwitchAccountEnabled

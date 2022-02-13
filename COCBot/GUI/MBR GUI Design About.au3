@@ -126,6 +126,9 @@ Func ShowHelp($Source = Default)
 			$PathHelp = "CommandLineParameter"
 		Case $g_lblHepNotify
 			$PathHelp = "NotifyHelp"
+		; Discord - Team AIO Mod++
+		Case $g_lblHepNotifyDS
+			$PathHelp = "DiscordNotifyHelp"
 	EndSwitch
 
 	UpdateBotTitle()

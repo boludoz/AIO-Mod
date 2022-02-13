@@ -76,11 +76,8 @@ Func getResourcesValueTrainPage($x_start, $y_start) ; -> Gets CheckValuesCost on
 	Return getOcrAndCaptureDOCR($g_sMainResourcesDOCRB, $x_start, $y_start, 100, 18, True)
 EndFunc   ;==>getResourcesValueTrainPage
 
-Func getBuilders($x_start, $y_start) ;  -> Gets Builders number - main screen --> getBuilders(324,23)
-	If $g_bForceDocr = False Then 
-		Return _getBuilders($x_start, $y_start, True)
-	EndIf
-
+Func getBuilders($x_start, $y_start) ;  -> Gets Builders number - main screen --> getBuilders(324,23)  coc-profile
+	If $g_bForceDocr = False Then Return getOcrAndCapture("coc-Builders", $x_start, $y_start, 40, 18, True)
 	Return getOcrAndCaptureDOCR($g_sMainBuildersDOCRB, $x_start, $y_start, 45, 20, True)
 EndFunc   ;==>getBuilders
 
