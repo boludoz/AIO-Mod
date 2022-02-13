@@ -29,7 +29,7 @@ Func VillageReport($bBypass = False, $bSuppressLog = False)
 
 	If Random(1, 100) > 75 Then
 		CollectResourcesByPass()
-		If _Sleep($DELAYRUNBOT1) Then Return
+		If _Sleep($DELAYPREPARESEARCH2) Then Return
 	EndIf
 	
 	_CaptureRegion()
