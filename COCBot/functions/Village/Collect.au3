@@ -14,6 +14,53 @@
 ; ===============================================================================================================================
 #include-once
 #Region - Custom collect - Team AIO Mod++
+
+Func CollectResourcesByPass()
+	If IsMainPage() Then
+		; Setup arrays, including default return values for $return
+		Local $sFileName = ""
+		Local $aCollectXY, $t
+		Local $aResult = returnMultipleMatchesOwnVillage($g_sImgCollectRessources)
+		If UBound($aResult) > 1 Then ; we have an array with data of images found
+			For $i = 1 To UBound($aResult) - 1 ; loop through array rows
+				$sFileName = $aResult[$i][1] ; Filename
+				$aCollectXY = $aResult[$i][5] ; Coords
+				Switch StringLower($sFileName)
+					Case "collectmines"
+						If $g_iTxtCollectGold <> 0 And $g_aiCurrentLoot[$eLootGold] >= Number($g_iTxtCollectGold) Then
+							SetLog("Gold is high enough, skip collecting", $COLOR_ACTION)
+							ContinueLoop
+						EndIf
+					Case "collectelix"
+						If $g_iTxtCollectElixir <> 0 And $g_aiCurrentLoot[$eLootElixir] >= Number($g_iTxtCollectElixir) Then
+							SetLog("Elixir is high enough, skip collecting", $COLOR_ACTION)
+							ContinueLoop
+						EndIf
+					Case "collectdelix"
+						If $g_iTxtCollectDark <> 0 And $g_aiCurrentLoot[$eLootDarkElixir] >= Number($g_iTxtCollectDark) Then
+							SetLog("Dark Elixir is high enough, skip collecting", $COLOR_ACTION)
+							ContinueLoop
+						EndIf
+				EndSwitch
+				
+				If IsArray($aCollectXY) Then ; found array of locations
+					$t = Random(0, UBound($aCollectXY) - 1, 1) ; SC May 2017 update only need to pick one of each to collect all
+					SetDebugLog($sFileName & " found, random pick(" & $aCollectXY[$t][0] & "," & $aCollectXY[$t][1] & ")", $COLOR_GREEN)
+					If IsMainPage() Then
+						Click($aCollectXY[$t][0], $aCollectXY[$t][1], 1, 0, "#0430")
+					Else
+						ClickAway()
+						If _Sleep(500) Then Return
+						
+						If Not IsMainPage() Then Return False
+					EndIf
+					If _Sleep($DELAYCOLLECT3) Then Return
+				EndIf
+			Next
+		EndIf
+	EndIf
+EndFunc   ;==>CollectResourcesMini
+
 Func Collect($bCheckTreasury = True, $bCollectCart = True)
 	If Not $g_bChkCollect Or Not $g_bRunState Then Return
 
@@ -56,7 +103,7 @@ Func Collect($bCheckTreasury = True, $bCollectCart = True)
 						ContinueLoop
 					EndIf
 			EndSwitch
-			Local $bArrayExist = False
+			; Local $bArrayExist = False
 			If IsArray($aCollectXY) Then ; found array of locations
 				$t = Random(0, UBound($aCollectXY) - 1, 1) ; SC May 2017 update only need to pick one of each to collect all
 				SetDebugLog($sFileName & " found, random pick(" & $aCollectXY[$t][0] & "," & $aCollectXY[$t][1] & ")", $COLOR_GREEN)

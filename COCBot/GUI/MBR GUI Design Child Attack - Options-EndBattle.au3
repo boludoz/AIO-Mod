@@ -72,7 +72,7 @@ Func CreateAttackSearchOptionsEndBattle()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	$x = 20
-	$y += 100
+	$y += 95
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-EndBattle", "Group_02", "Take Loot Snapshot"), $x - 15, $y - 20, $g_iSizeWGrpTab4, 67)
 		$g_hChkTakeLootSS = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-EndBattle", "Group_02", -1), $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-EndBattle", "ChkTakeLootSS_Info_01", "Check this if you want to save a Loot snapshot of the Village that was attacked."))
@@ -83,6 +83,31 @@ Func CreateAttackSearchOptionsEndBattle()
 		$g_hChkScreenshotLootInfo = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-EndBattle", "ChkScreenshotLootInfo", "Include loot info in filename"), $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-EndBattle", "ChkScreenshotLootInfo_Info_01", "Include loot info in the screenshot filename"))
 			GUICtrlSetState(-1,$GUI_DISABLE)
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+	
+	$x = 20
+	$y += 50
+	#Region - Legend trophy protection - Team AIO Mod++
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-EndBattle", "Group_03", "Legends league attack"), $x - 15, $y - 20, 200, 67)
+		$g_hChkProtectInLL = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-EndBattle", "ChkProtectInLL", "Legend league protection"), $x, $y, -1, -1)
+            _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-Attack", "ChkProtectInLL_Info_01", "This option adds protections in case of legend league, such as not returning if the attack is not completed."))
+            GUICtrlSetState(-1, $GUI_CHECKED)
+            GUICtrlSetOnEvent(-1, "ChkProtectInLL")
+
+	$y += 18
+		$g_hChkForceProtectLL = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-EndBattle", "ChkForceProtectLL", "Force trophies raise"), $x, $y, -1, -1)
+            _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-Attack", "ChkForceProtectLL_Info_02", "This option will disable certain things to make the bot more efficient when collecting trophies."))
+            GUICtrlSetState(-1, $GUI_DISABLE)
+            GUICtrlSetOnEvent(-1, "ChkProtectInLL")
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+    #EndRegion - Legend trophy protection - Team AIO Mod++
+	
+	; Colorful Attack Log - Team AIO Mod++
+	$y -= 18
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Options", "Group_04", "Attack Log"), $x - 15 + 211, $y - 20, 211, 67)
+		$g_hChkColorfulAttackLog = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Options", "ChkColorfulAttackLog", "Colorful Attack Log"), $x + 211, $y, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Options", "ChkColorfulAttackLog_Info_01", "When you select this option, the avatar will be displayed in color. Each color indicates a star"))
+			GUICtrlSetState(-1, $GUI_CHECKED)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 EndFunc   ;==>CreateAttackSearchOptionsEndBattle

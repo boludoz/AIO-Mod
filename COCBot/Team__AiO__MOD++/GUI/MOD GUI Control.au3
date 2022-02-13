@@ -347,3 +347,12 @@ Func chkImproveLowerWalls()
 	$g_bImproveLowerWalls = (GUICtrlRead($g_hChkImproveLowerWalls) = $GUI_CHECKED)
 	GUICtrlSetState($g_hChkAutomaticLevel, ($g_bImproveLowerWalls = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
 EndFunc   ;==>chkImproveLowerWalls
+
+; Stick to Army page when time left
+Func txtStickToTrainWindow()
+	$g_iStickToTrainWindow = GUICtrlRead($g_hTxtStickToTrainWindow)
+	If $g_iStickToTrainWindow > 5 Then
+		$g_iStickToTrainWindow = 5
+		GUICtrlSetData($g_hTxtStickToTrainWindow, 5)
+	EndIf
+EndFunc   ;==>txtStickToTrainWindow

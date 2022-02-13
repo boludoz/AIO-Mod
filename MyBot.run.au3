@@ -1059,7 +1059,7 @@ Func _Idle() ;Sequence that runs until Full Army
 				If $g_bRestart = True Then ExitLoop
 				If _Sleep($DELAYIDLE1) Then ExitLoop
 				checkMainScreen(False)
-				$g_iActualTrainSkip = $g_iActualTrainSkip + 1
+				$g_iActualTrainSkip += 1
 			Else
 				SetLog("Humanize bot, prevent to delete and recreate troops " & $g_iActualTrainSkip + 1 & "/" & $g_iMaxTrainSkip, $color_blue)
 				If $g_iActualTrainSkip >= $g_iMaxTrainSkip Then
@@ -1083,7 +1083,7 @@ Func _Idle() ;Sequence that runs until Full Army
 					If _Sleep($DELAYIDLE1) Then ExitLoop
 					checkMainScreen(False)
 					If Not $g_bRunState Then Return
-					$g_iActualTrainSkip = $g_iActualTrainSkip + 1
+					$g_iActualTrainSkip += 1
 				Else
 					If $g_iActualTrainSkip >= $g_iMaxTrainSkip Then
 						$g_iActualTrainSkip = 0

@@ -6,8 +6,8 @@
 ; Parameters ....: None
 ; Return values .: None
 ; Author ........: Hervidero (2015-feb-10)
-; Modified ......: Safar46 (2015), Hervidero (2015), KnowJack (June-2015) , ProMac (2015), Sardo 2015-08, MonkeyHunter(6-2106)
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
+; Modified ......: Safar46 (2015), Hervidero (2015), KnowJack (June-2015) , ProMac (2015), Sardo 2015-08, MonkeyHunter(6-2016)
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2022
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
@@ -27,39 +27,58 @@ Func VillageReport($bBypass = False, $bSuppressLog = False)
 			If Not $bSuppressLog Then SetLog("Village Report Error, You have been a BAD programmer!", $COLOR_ERROR)
 	EndSwitch
 
-	getBuilderCount($bSuppressLog) ; update builder data
-	If _Sleep($DELAYRESPOND) Then Return
-
-	If Not $bBypass Then BuilderPotionBoost() ; Magic items - Team AiO MOD++
-
-	$g_aiCurrentLoot[$eLootTrophy] = getTrophyMainScreen($aTrophies[0], $aTrophies[1])
+	If Random(1, 100) > 75 Then
+		CollectResourcesByPass()
+		If _Sleep($DELAYRESPOND) Then Return
+	EndIf
+	
+	_CaptureRegion()
+	Local $sBuilderInfo = _getBuilders($aBuildersDigits[0], $aBuildersDigits[1])
+	$g_iFreeBuilderCount = StringLeft($sBuilderInfo, 1)
+	$g_iTotalBuilderCount = StringRight($sBuilderInfo, 1)
+	If Not StringIsDigit($g_iFreeBuilderCount) Or Not StringIsDigit($g_iTotalBuilderCount) Then 
+		SetLog("Unable to read Builders info at this time", $COLOR_ERROR)
+	EndIf
+	
+	$g_aiCurrentLoot[$eLootTrophy] = _getTrophyMainScreen($aTrophies[0], $aTrophies[1])
 	If Not $bSuppressLog Then SetLog(" [T]: " & _NumberFormat($g_aiCurrentLoot[$eLootTrophy]), $COLOR_SUCCESS)
 
-	If _CheckPixel($aVillageHasDarkElixir, $g_bCapturePixel) Then ; check if the village have a Dark Elixir Storage
-		$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(696, 23)
-		$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(696, 74)
-		$g_aiCurrentLoot[$eLootDarkElixir] = getResourcesMainScreen(728, 123)
-		$g_iGemAmount = getResourcesMainScreen(740, 171)
+	If _CheckPixel($aVillageHasDarkElixir, False) Then ; check if the village have a Dark Elixir Storage
+		$g_aiCurrentLoot[$eLootGold] = _getResourcesMainScreen(696, 23)
+		$g_aiCurrentLoot[$eLootElixir] = _getResourcesMainScreen(696, 74)
+		$g_aiCurrentLoot[$eLootDarkElixir] = _getResourcesMainScreen(728, 123)
+		$g_iGemAmount = _getResourcesMainScreen(740, 171)
 		If Not $bSuppressLog Then SetLog(" [G]: " & _NumberFormat($g_aiCurrentLoot[$eLootGold]) & " [E]: " & _NumberFormat($g_aiCurrentLoot[$eLootElixir]) & " [D]: " & _NumberFormat($g_aiCurrentLoot[$eLootDarkElixir]) & " [GEM]: " & _NumberFormat($g_iGemAmount), $COLOR_SUCCESS)
 	Else
-		$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(701, 23)
-		$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(701, 74)
-		$g_iGemAmount = getResourcesMainScreen(719, 123)
+		$g_aiCurrentLoot[$eLootGold] = _getResourcesMainScreen(701, 23)
+		$g_aiCurrentLoot[$eLootElixir] = _getResourcesMainScreen(701, 74)
+		$g_iGemAmount = _getResourcesMainScreen(719, 123)
 		If Not $bSuppressLog Then SetLog(" [G]: " & _NumberFormat($g_aiCurrentLoot[$eLootGold]) & " [E]: " & _NumberFormat($g_aiCurrentLoot[$eLootElixir]) & " [GEM]: " & _NumberFormat($g_iGemAmount), $COLOR_SUCCESS)
 		If ProfileSwitchAccountEnabled() Then $g_aiCurrentLoot[$eLootDarkElixir] = "" ; prevent applying Dark Elixir of previous account to current account
 	EndIf
 
+	If Not $bBypass Then BuilderPotionBoost() ; Magic items - Team AiO MOD++
+	
 	If $bBypass = False Then ; update stats
 		UpdateStats()
 	EndIf
-
+	
+	; Custom fix - Team AIO Mod++
+	If _Sleep($DELAYVILLAGEREPORT1) Then Return
+	If _ColorCheck(_GetPixelColor(819, 39, True), Hex(0xF8FCFF, 6), 20) = True Then 
+		Click(819, 39)
+	EndIf 
+	
+	; Insane and do nothing 500*20 = 10 seconds timeout
+	#cs -  Custom fix - Team AIO Mod++
 	Local $i = 0
 	While _ColorCheck(_GetPixelColor(819, 39, True), Hex(0xF8FCFF, 6), 20) = True ; wait for Builder/shop to close
 		$i += 1
 		If _Sleep($DELAYVILLAGEREPORT1) Then Return
 		If $i >= 20 Then ExitLoop
 	WEnd
-
+	#Ce - Custom fix - Team AIO Mod++
+	
 EndFunc   ;==>VillageReport
 
 ; Custom wall - Team AIO Mod++

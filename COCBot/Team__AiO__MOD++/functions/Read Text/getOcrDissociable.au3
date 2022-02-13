@@ -78,7 +78,7 @@ EndFunc   ;==>getResourcesValueTrainPage
 
 Func getBuilders($x_start, $y_start) ;  -> Gets Builders number - main screen --> getBuilders(324,23)
 	If $g_bForceDocr = False Then 
-		Return _getBuilders($x_start, $y_start)
+		Return _getBuilders($x_start, $y_start, True)
 	EndIf
 
 	Return getOcrAndCaptureDOCR($g_sMainBuildersDOCRB, $x_start, $y_start, 45, 20, True)

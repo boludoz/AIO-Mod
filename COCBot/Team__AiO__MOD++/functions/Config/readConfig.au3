@@ -251,6 +251,9 @@ Func ReadConfig_MOD_600_28()
 	; Check No League for Dead Base
 	IniReadS($g_bChkNoLeague[$DB], $g_sProfileConfigPath, "search", "DBNoLeague", $g_bChkNoLeague[$DB], "Bool")
 
+	; Stick to Army page when time left
+	IniReadS($g_iStickToTrainWindow, $g_sProfileConfigPath, "other", "StickToTrainWindow", $g_iStickToTrainWindow, "Int")
+
 EndFunc   ;==>ReadConfig_MOD_600_28
 
 Func ReadConfig_MOD_600_29()

@@ -357,7 +357,9 @@ Global $g_aRequestTroopsTextOTR[0][2]
 #EndRegion - Type once - Team AIO Mod++
 
 #Region - Custom train - Team AIO Mod++
+Global $g_hChkPreciseSpells = 0, $g_hChkForcePreBrewSpells = 0
 Global $g_bForcePreBrewSpells = True, $g_bPreciseBrew = False
+
 Global $g_bChkPreTrainTroopsPercent = True, $g_iInpPreTrainTroopsPercent = 95, $g_bForceDoubleTrain = False
 Global $g_hChkPreTrainTroopsPercent = 0, $g_hInpPreTrainTroopsPercent = 0
 
@@ -373,6 +375,10 @@ Global $g_bPetHouseSelector = False
 Global $g_hLblLassiHero = 0, $g_hLblElectroOwlHero = 0, $g_hLblMightyYakHero = 0, $g_hLblUnicornHero = 0
 Global $g_hCmbLassiPet = 0, $g_hCmbElectroOwlPet = 0, $g_hCmbMightyYakPet = 0, $g_hCmbUnicornPet = 0
 Global $g_iCmbLassiPet = 0, $g_iCmbElectroOwlPet = 0, $g_iCmbMightyYakPet = 0, $g_iCmbUnicornPet = 0
+
+; Stick to Army page when time left
+Global $g_iStickToTrainWindow = 0
+Global $g_hLblStickToTrainWindow = 0, $g_hTxtStickToTrainWindow = 0
 #EndRegion - Custom train - Team AIO Mod++
 
 ; Advanced debugging.
@@ -690,7 +696,7 @@ Global $g_hChkUseSmartFarmRedLine, $g_bUseSmartFarmRedLine = False
 #EndRegion - Custom SmartFarm - Team AIO Mod++
 
 #Region - Misc - Team AIO Mod++
-Global $g_bChkColorfulAttackLog = False, _
+Global $g_bChkColorfulAttackLog = True, _
        $g_bChkBuyGuard = False
 	   
 Global $g_hChkColorfulAttackLog = 0, _

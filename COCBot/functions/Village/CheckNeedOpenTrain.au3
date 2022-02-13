@@ -39,7 +39,10 @@ Func CheckNeedOpenTrain($TimeBeforeTrain)
 		SetLog("Train end time: " & $iTimeBeforeTrain1)
 		SetLog("Next Train in S: " & $iTimeBeforeTrain2)
 	EndIf
-
+	
+	; Custom train - Team AIO Mod++
+	If $iTimeBeforeTrain2 < Int($g_iStickToTrainWindow * 60) Then $bToReturn = True
+	
 	If $iTimeBeforeTrain2 <= 0 Then $bToReturn = True
 	If ($g_iActiveDonate Or $g_bDonationEnabled) And $g_bChkDonate Then $bToReturn = True
 	If Not $bToReturn Then SetLog("Train end time: " & $iTimeBeforeTrain1, $COLOR_DEBUG)

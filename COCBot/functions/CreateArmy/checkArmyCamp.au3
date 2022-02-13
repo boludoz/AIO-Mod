@@ -48,10 +48,35 @@ Func _checkArmyCamp($bOpenArmyWindow, $bCloseArmyWindow, $bGetHeroesTime, $bSetL
 	If $g_bDebugFuncTime Then StopWatchStopLog()
 	If _Sleep($DELAYCHECKARMYCAMP6) Then Return ; 10ms improve pause button response
 
-	If $g_bDebugFuncTime Then StopWatchStart("getArmyTroopTime")
-	getArmyTroopTime(False, False, False, $bSetLog) ; Last parameter is to check the Army Window
-	If $g_bDebugFuncTime Then StopWatchStopLog()
-	If _Sleep($DELAYCHECKARMYCAMP6) Then Return ; 10ms improve pause button response
+	#Region - Custom train - Team AIO Mod++
+	Local $iWait = 0, $iToWait = Int(10 + $g_iStickToTrainWindow), $hTimer = 0
+	For $iCount = 0 To $iToWait
+		If Not $g_bRunState Then Return
+
+		If $g_bDebugFuncTime Then StopWatchStart("getArmyTroopTime")
+		getArmyTroopTime(False, False, True, $bSetLog) ; Last parameter is to check the Army Window
+		If $g_bDebugFuncTime Then StopWatchStopLog()
+
+		If $g_aiTimeTrain[0] > $g_iStickToTrainWindow Or $g_aiTimeTrain[0] <= 0 Then
+			ExitLoop
+		Else
+			If $g_aiTimeTrain[0] < 1 Then
+				$iWait = Int($g_aiTimeTrain[0] * 60000)
+			ElseIf $g_aiTimeTrain[0] >= 2 Then
+				$iWait = 60000
+			Else
+				$iWait = 30000
+			EndIf
+			SetLog("[" & $iCount & "/" & $iToWait & "] Waiting for Troops to be Ready.", $COLOR_WARNING)
+
+			$hTimer = __TimerInit()
+			Do
+				If _Sleep(Ceiling($iWait / 6)) Then Return
+			Until $iWait < __TimerDiff($hTimer)
+
+		EndIf
+	Next
+	#EndRegion - Custom train - Team AIO Mod++
 
 	Local $HeroesRegenTime
 	If $g_bDebugFuncTime Then StopWatchStart("getArmyHeroCount")

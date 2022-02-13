@@ -38,8 +38,8 @@ Func _getDarkElixirVillageSearch($x_start, $y_start) ;48, 69+57 or 69+69  -> Get
 	Return getOcrAndCapture("coc-v-de", $x_start, $y_start, 75, 18, True)
 EndFunc   ;==>getDarkElixirVillageSearch
 
-Func _getTrophyMainScreen($x_start, $y_start) ; -> Gets trophy value, top left of main screen "VillageReport.au3"
-	Return getOcrAndCapture("coc-ms", $x_start, $y_start, 50, 16, True)
+Func _getTrophyMainScreen($x_start, $y_start, $bNeedCapture = False) ; -> Gets trophy value, top left of main screen "VillageReport.au3"
+	Return getOcrAndCapture("coc-ms", $x_start, $y_start, 50, 16, Default, Default, $bNeedCapture)
 EndFunc   ;==>getTrophyMainScreen
 #EndRegion - Team AIO Mod++ (Dissociable OCR)
 
@@ -55,8 +55,8 @@ Func getUpgradeResource($x_start, $y_start) ; -> Gets complete value of Gold/Eli
 	Return getOcrAndCapture("coc-u-r", $x_start, $y_start, 98, 16, True)
 EndFunc   ;==>getUpgradeResource
 #Region - Team AIO Mod++ (Dissociable OCR)
-Func _getResourcesMainScreen($x_start, $y_start) ; -> Gets complete value of Gold/Elixir/Dark Elixir/Trophies/Gems xxx,xxx "VillageReport.au3"
-	Return getOcrAndCapture("coc-ms", $x_start, $y_start, 110, 16, True)
+Func _getResourcesMainScreen($x_start, $y_start, $bNeedCapture = False) ; -> Gets complete value of Gold/Elixir/Dark Elixir/Trophies/Gems xxx,xxx "VillageReport.au3"
+	Return getOcrAndCapture("coc-ms", $x_start, $y_start, 110, 16, Default, Default, $bNeedCapture)
 EndFunc   ;==>getResourcesMainScreen
 #EndRegion - Team AIO Mod++ (Dissociable OCR)
 Func getResourcesLoot($x_start, $y_start) ; -> Gets complete value of Gold/Elixir after attack xxx,xxx "AttackReport"
@@ -116,8 +116,8 @@ Func getChatString($x_start, $y_start, $language) ; -> Get string chat request -
 EndFunc   ;==>getChatString
 
 #Region - Team AIO Mod++ (Dissociable OCR)
-Func _getBuilders($x_start, $y_start) ;  -> Gets Builders number - main screen --> getBuilders(324,23)  coc-profile
-	Return getOcrAndCapture("coc-Builders", $x_start, $y_start, 45, 20, True)
+Func _getBuilders($x_start, $y_start, $bNeedCapture = False) ;  -> Gets Builders number - main screen --> getBuilders(324,23)  coc-profile
+	Return getOcrAndCapture("coc-Builders", $x_start, $y_start, 45, 18, True, Default, $bNeedCapture)
 EndFunc   ;==>getBuilders
 #EndRegion - Team AIO Mod++ (Dissociable OCR)
 
@@ -375,7 +375,7 @@ Func getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpa
 	Else
 		$_hHBitmap = GetHHBitmapArea($g_hHBitmap2, $x_start, $y_start, $x_start + $width, $y_start + $height)
 	EndIf
-    ;If $g_bDebugOCR = True Then SaveDebugImage("OCR", $_hHBitmap) ; Team AIO Mod++
+    If $g_bDebugOCR = True And IsPtr($_hHBitmap) Then SaveDebugImage("OCR", $_hHBitmap)
 	Local $result
 	If $bImgLoc Then
 		If $_hHBitmap <> 0 Then

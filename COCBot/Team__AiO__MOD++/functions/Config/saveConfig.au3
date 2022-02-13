@@ -271,6 +271,9 @@ Func SaveConfig_MOD_600_28()
 	; Check No League for Dead Base
 	_Ini_Add("search", "DBNoLeague", $g_bChkNoLeague[$DB] ? 1 : 0)
 
+	; Stick to Army page when time left
+	_Ini_Add("other", "StickToTrainWindow", $g_iStickToTrainWindow)
+
 EndFunc   ;==>SaveConfig_MOD_600_28
 
 Func SaveConfig_MOD_600_29()

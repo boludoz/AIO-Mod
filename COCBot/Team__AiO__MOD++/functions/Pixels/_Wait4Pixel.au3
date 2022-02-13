@@ -16,7 +16,7 @@ Func _Wait4Pixel($x, $y, $sColor, $iColorVariation = 25, $iWait = 3000, $iDelay 
 	
 	Local $iSleep = Round(Int($iWait) / Int($iDelay)) ; Can help in VPS Delay Case
 	For $i = 1 To $iSleep
-		; Setlog($i & "/" & $iSleep)
+		; Setlog($i & "/" & $iSleep) 
 		If _ColorCheck(Hex($sColor, 6), _GetPixelColor($x, $y, $g_bCapturePixel), $iColorVariation) Then Return True
 		If _Sleep($iDelay) Then Return False
 	Next

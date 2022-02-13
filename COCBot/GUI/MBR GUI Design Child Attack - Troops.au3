@@ -780,20 +780,25 @@ Func CreateTrainOptions()
 	$g_hLblAddDelayIdlePhaseSec = GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "sec.", "sec."), $x + 110, $y, 20, -1)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	$x = 206
-	$y += 48
-	; Colorful Attack Log - Team AIO Mod++
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Options", "Group_06", "Attack Log"), $x - 20, $y - 20, 173, 50)
-	$g_hChkColorfulAttackLog = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Options", "ChkColorfulAttackLog", "Colorful Attack Log"), $x - 10, $y, -1, -1)
-	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Options", "ChkColorfulAttackLog_Info_01", "When you select this option, the avatar will be displayed in color. Each color indicates a star"))
-	GUICtrlSetState(-1, $GUI_UNCHECKED)
-	GUICtrlCreateGroup("", -99, -99, 1, 1)
-	$x = 206
 	$y += 50
 	; Buy guard - Team AIO Mod++
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Options", "Group_07", "Shop"), $x - 20, $y - 20, 173, 50)
 	$g_hChkBuyGuard = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Options", "ChkBuyTwoHourGuard", "Buy Two Hour Guard"), $x - 10, $y, -1, -1)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Options", "ChkBuyTwoHourGuard_Info_01", "When you select this option, Bot will buy two hour when available.") & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Options", "ChkBuyTwoHourGuard_Info_02", "You can use this option safely as it is implmented in that way bot will not buy anything else.") & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Options", "ChkBuyTwoHourGuard_Info_03", "Note: Use Only when u know what u are doing as Two Hour Guard cost is 10 Gems."))
 	GUICtrlSetState(-1, $GUI_UNCHECKED)
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+	$x = 206
+	$y += 50
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Options", "Group_05", "Advanced Options"), $x - 20, $y - 20, 173, 66)
+	$g_hLblStickToTrainWindow = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Train_Troops", "LblStickToTrainWindow", "Stick to Army page when time left"), $x - 10, $y - 1)
+	$g_hTxtStickToTrainWindow = GUICtrlCreateInput("2", $x, $y + 17, 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+	$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Train_Troops", "TxtStickToTrainWindow_Info_1", "Will stick to army train page until troops or spells train finish. (Max 5 minutes)(Spell only available if wait for spell enable)")
+	_GUICtrlSetTip(-1, $sTxtTip)
+	GUICtrlSetLimit(-1, 1)
+	GUICtrlSetData(-1, 2)
+	; GUICtrlSetOnEvent(-1, "txtStickToTrainWindow")
+	GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Train_Troops", "TxtStickToTrainWindowMinute", "minute(s)"), $x + 35, $y + 17, -1, -1)
+	_GUICtrlSetTip(-1, $sTxtTip)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 EndFunc   ;==>CreateTrainOptions
 
@@ -932,7 +937,6 @@ Func CreateTrainTroops()
 
 EndFunc   ;==>CreateTrainTroops
 
-Global $g_hChkPreciseSpells = 0, $g_hChkForcePreBrewSpells = 0
 Func CreateTrainSpells()
 	$g_hGUI_SPELLARMY_ARMY = _GUICreate("", $g_iSizeWGrpTab3, $g_iSizeHGrpTab3, 5, 25, BitOR($WS_CHILD, $WS_TABSTOP), -1, $g_hGUI_TRAINARMY)
 	GUISetBkColor($COLOR_WHITE, $g_hGUI_SPELLARMY_ARMY)
