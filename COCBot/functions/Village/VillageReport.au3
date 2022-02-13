@@ -29,10 +29,11 @@ Func VillageReport($bBypass = False, $bSuppressLog = False)
 
 	If Random(1, 100) > 75 Then
 		CollectResourcesByPass()
-		If _Sleep($DELAYRESPOND) Then Return
+		If _Sleep($DELAYRUNBOT1) Then Return
 	EndIf
 	
 	_CaptureRegion()
+	_CaptureRegion2Sync()
 	Local $sBuilderInfo = _getBuilders($aBuildersDigits[0], $aBuildersDigits[1])
 	$g_iFreeBuilderCount = StringLeft($sBuilderInfo, 1)
 	$g_iTotalBuilderCount = StringRight($sBuilderInfo, 1)
@@ -43,7 +44,6 @@ Func VillageReport($bBypass = False, $bSuppressLog = False)
 	$g_aiCurrentLoot[$eLootTrophy] = _getTrophyMainScreen($aTrophies[0], $aTrophies[1])
 	If Not $bSuppressLog Then SetLog(" [T]: " & _NumberFormat($g_aiCurrentLoot[$eLootTrophy]), $COLOR_SUCCESS)
 	
-	_CaptureRegion2Sync()
 	If _CheckPixel($aVillageHasDarkElixir, False) Then ; check if the village have a Dark Elixir Storage
 		$g_aiCurrentLoot[$eLootGold] = _getResourcesMainScreen(696, 23)
 		
