@@ -41,10 +41,13 @@ Func VillageReport($bBypass = False, $bSuppressLog = False)
 		SetLog("Unable to read Builders info at this time (2)", $COLOR_ERROR)
 	EndIf
 	
+	_CaptureRegion2Sync()
 	$g_aiCurrentLoot[$eLootTrophy] = _getTrophyMainScreen($aTrophies[0], $aTrophies[1])
 	If Not $bSuppressLog Then SetLog(" [T]: " & _NumberFormat($g_aiCurrentLoot[$eLootTrophy]), $COLOR_SUCCESS)
 	
+	_CaptureRegion2Sync()
 	If _CheckPixel($aVillageHasDarkElixir, False) Then ; check if the village have a Dark Elixir Storage
+		_CaptureRegion2Sync()
 		$g_aiCurrentLoot[$eLootGold] = _getResourcesMainScreen(696, 23)
 		
 		_CaptureRegion2Sync()
