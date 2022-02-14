@@ -521,8 +521,8 @@ Func ApplyConfig_MOD_600_28($TypeReadSave)
 	Switch $TypeReadSave
 		Case "Read"
 			GUICtrlSetState($g_hChkTrainLogoutMaxTime, $g_bTrainLogoutMaxTime = True ? $GUI_CHECKED : $GUI_UNCHECKED)
-			chkTrainLogoutMaxTime()
 			GUICtrlSetData($g_hTxtTrainLogoutMaxTime, $g_iTrainLogoutMaxTime)
+			chkTrainLogoutMaxTime()
 
 			; Check No League for Dead Base
 			GUICtrlSetState($g_hChkDBNoLeague, $g_bChkNoLeague[$DB] = True ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -538,7 +538,7 @@ Func ApplyConfig_MOD_600_28($TypeReadSave)
 			$g_bChkNoLeague[$DB] = (GUICtrlRead($g_hChkDBNoLeague) = $GUI_CHECKED)
 			
 			; Stick to Army page when time left
-			$g_hTxtStickToTrainWindow = Int(GUICtrlRead($g_iStickToTrainWindow))
+			$g_iStickToTrainWindow = Int(GUICtrlRead($g_hTxtStickToTrainWindow))
 	EndSwitch
 EndFunc   ;==>ApplyConfig_MOD_600_28
 

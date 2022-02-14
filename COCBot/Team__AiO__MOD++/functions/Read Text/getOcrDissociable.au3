@@ -22,33 +22,34 @@ EndFunc   ;==>getUpgradeResourcesRed
 ; Attack Screen
 Func getAttackScreenButtons($x_start, $y_start, $iWidth, $iHeight)
 	Return getOcrAndCaptureDOCR($g_sASButtonsDOCRPath, $x_start, $y_start, $iWidth, $iHeight, False, True)
-EndFunc   ;==>getGoldVillageSearch
+EndFunc   ;==>getAttackScreenButtons
 ; End Attack Screen
 
 ; Search village sector
-Func getGoldVillageSearch($x_start, $y_start) ;48, 69 -> Gets complete value of gold xxx,xxx while searching, top left, Getresources.au3
-	If $g_bForceDocr = False Then 
-		Return _getGoldVillageSearch($x_start, $y_start)
-	EndIf
-		
-	Return getOcrAndCaptureDOCR($g_sAttackRGold, $x_start, $y_start, 90, 16, True)
+#Region - Team AIO Mod++ (Dissociable OCR)
+Func getGoldVillageSearch($x_start, $y_start, $bNeedCapture = True) ;48, 69 -> Gets complete value of gold xxx,xxx while searching, top left, Getresources.au3
+	If $g_bForceDocr = False Then Return getOcrAndCapture("coc-v-g", $x_start, $y_start, 90, 16, True, Default, $bNeedCapture)
+	Return getOcrAndCaptureDOCR($g_sAttackRGold, $x_start, $y_start, 90, 16, True, $bNeedCapture)
 EndFunc   ;==>getGoldVillageSearch
 
-Func getElixirVillageSearch($x_start, $y_start) ;48, 69+29 -> Gets complete value of Elixir xxx,xxx, top left,  Getresources.au3
-	If $g_bForceDocr = False Then 
-		Return _getElixirVillageSearch($x_start, $y_start)
-	EndIf
-
-	Return getOcrAndCaptureDOCR($g_sAttackRPink, $x_start, $y_start, 90, 16, True)
+Func getElixirVillageSearch($x_start, $y_start, $bNeedCapture = True) ;48, 69+29 -> Gets complete value of Elixir xxx,xxx, top left,  Getresources.au3
+	If $g_bForceDocr = False Then Return getOcrAndCapture("coc-v-e", $x_start, $y_start, 90, 16, True, Default, $bNeedCapture)
+	Return getOcrAndCaptureDOCR($g_sAttackRPink, $x_start, $y_start, 90, 16, True, $bNeedCapture)
 EndFunc   ;==>getElixirVillageSearch
 
-Func getDarkElixirVillageSearch($x_start, $y_start) ;48, 69+57 or 69+69  -> Gets complete value of Dark Elixir xxx,xxx, top left,  Getresources.au3
-	If $g_bForceDocr = False Then 
-		Return _getDarkElixirVillageSearch($x_start, $y_start)
-	EndIf
-
-	Return getOcrAndCaptureDOCR($g_sAttackRBlack, $x_start, $y_start, 75, 18, True)
+Func getDarkElixirVillageSearch($x_start, $y_start, $bNeedCapture = True) ;48, 69+57 or 69+69  -> Gets complete value of Dark Elixir xxx,xxx, top left,  Getresources.au3
+	If $g_bForceDocr = False Then Return getOcrAndCapture("coc-v-de", $x_start, $y_start, 75, 18, True, Default, $bNeedCapture)
+	Return getOcrAndCaptureDOCR($g_sAttackRBlack, $x_start, $y_start, 75, 18, True, $bNeedCapture)
 EndFunc   ;==>getDarkElixirVillageSearch
+
+Func getTrophyVillageSearch($x_start, $y_start, $bNeedCapture = True) ;48, 69+99 or 69+69 -> Gets complete value of Trophies xxx,xxx , top left, Getresources.au3
+	Return getOcrAndCapture("coc-v-t", $x_start, $y_start, 75, 18, True, Default, $bNeedCapture)
+EndFunc   ;==>getTrophyVillageSearch
+
+Func getOcrOverAllDamage($x_start, $y_start, $bNeedCapture = True) ;  -> Get the Overall Damage %
+	Return getOcrAndCapture("coc-overalldamage", $x_start, $y_start, 50, 20, True, Default, $bNeedCapture)
+EndFunc   ;==>getOcrOverAllDamage
+#EndRegion - Team AIO Mod++ (Dissociable OCR)
 
 ; Search village sector end.
 

@@ -377,7 +377,7 @@ Global $g_hCmbLassiPet = 0, $g_hCmbElectroOwlPet = 0, $g_hCmbMightyYakPet = 0, $
 Global $g_iCmbLassiPet = 0, $g_iCmbElectroOwlPet = 0, $g_iCmbMightyYakPet = 0, $g_iCmbUnicornPet = 0
 
 ; Stick to Army page when time left
-Global $g_iStickToTrainWindow = 0
+Global $g_iStickToTrainWindow = 1
 Global $g_hLblStickToTrainWindow = 0, $g_hTxtStickToTrainWindow = 0
 #EndRegion - Custom train - Team AIO Mod++
 

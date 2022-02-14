@@ -13,11 +13,7 @@
 Func getNameBuilding($x_start, $y_start) ; getNameBuilding(242,520) -> Gets complete name and level of the buildings, bottom of screen
 	Return getOcrAndCapture("coc-build", $x_start, $y_start, 455, 27) ; Custom - Team AIO Mod++
 EndFunc   ;==>getNameBuilding
-#Region - Team AIO Mod++ (Dissociable OCR)
-Func _getGoldVillageSearch($x_start, $y_start) ;48, 69 -> Gets complete value of gold xxx,xxx while searching, top left, Getresources.au3
-	Return getOcrAndCapture("coc-v-g", $x_start, $y_start, 90, 16, True)
-EndFunc   ;==>getGoldVillageSearch
-#EndRegion - Team AIO Mod++ (Dissociable OCR)
+
 Func getRemainTrainTimer($x_start, $y_start, $bNeedCapture = True) ;
 	Return getOcrAndCapture("coc-RemainTrain", $x_start, $y_start, 70, 12, True, False, $bNeedCapture)
 EndFunc   ;==>getRemainTrainTimer
@@ -25,27 +21,16 @@ EndFunc   ;==>getRemainTrainTimer
 Func getRemainBuildTimer($x_start, $y_start, $bNeedCapture = True) ;
 	Return getOcrAndCapture("coc-siegeremain", $x_start, $y_start, 50, 10, True, False, $bNeedCapture)
 EndFunc   ;==>getRemainTrainTimer
-#Region - Team AIO Mod++ (Dissociable OCR)
-Func _getElixirVillageSearch($x_start, $y_start) ;48, 69+29 -> Gets complete value of Elixir xxx,xxx, top left,  Getresources.au3
-	Return getOcrAndCapture("coc-v-e", $x_start, $y_start, 90, 16, True)
-EndFunc   ;==>getElixirVillageSearch
 
+#Region - Team AIO Mod++ (Dissociable OCR)
 Func _getResourcesValueTrainPage($x_start, $y_start) ; -> Gets CheckValuesCost on Train Window
 	Return getOcrAndCapture("coc-ms", $x_start, $y_start, 113, 18, True)
 EndFunc   ;==>getResourcesValueTrainPage
-
-Func _getDarkElixirVillageSearch($x_start, $y_start) ;48, 69+57 or 69+69  -> Gets complete value of Dark Elixir xxx,xxx, top left,  Getresources.au3
-	Return getOcrAndCapture("coc-v-de", $x_start, $y_start, 75, 18, True)
-EndFunc   ;==>getDarkElixirVillageSearch
 
 Func _getTrophyMainScreen($x_start, $y_start, $bNeedCapture = False) ; -> Gets trophy value, top left of main screen "VillageReport.au3"
 	Return getOcrAndCapture("coc-ms", $x_start, $y_start, 50, 16, Default, Default, $bNeedCapture)
 EndFunc   ;==>getTrophyMainScreen
 #EndRegion - Team AIO Mod++ (Dissociable OCR)
-
-Func getTrophyVillageSearch($x_start, $y_start) ;48, 69+99 or 69+69 -> Gets complete value of Trophies xxx,xxx , top left, Getresources.au3
-	Return getOcrAndCapture("coc-v-t", $x_start, $y_start, 75, 18, True)
-EndFunc   ;==>getTrophyVillageSearch
 
 Func getTrophyLossAttackScreen($x_start, $y_start) ; 48,214 or 48,184 WO/DE -> Gets red number of trophy loss from attack screen, top left
 	Return getOcrAndCapture("coc-t-p", $x_start, $y_start, 50, 16, True)
@@ -181,10 +166,6 @@ EndFunc   ;==>getOcrLanguage
 Func getOcrSpaceCastleDonate($x_start, $y_start) ;  -> Get the number of troops donated/capacity from a request
 	Return getOcrAndCapture("coc-totalreq", $x_start, $y_start, 45, 12, True)
 EndFunc   ;==>getOcrSpaceCastleDonate
-
-Func getOcrOverAllDamage($x_start, $y_start) ;  -> Get the Overall Damage %
-	Return getOcrAndCapture("coc-overalldamage", $x_start, $y_start, 50, 20, True)
-EndFunc   ;==>getOcrOverAllDamage
 
 Func getOcrGuardShield($x_start, $y_start) ;  -> Get the guard/shield time left, middle top of the screen
 	Return getOcrAndCapture("coc-guardshield", $x_start, $y_start, 68, 15)
