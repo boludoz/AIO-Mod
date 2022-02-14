@@ -10,7 +10,7 @@
 #Au3Stripper_Off
 #Au3Stripper_On
 Global $g_sBotVersion = "v7.9.7"
-Global $g_sModVersion = "v4.7.6"
+Global $g_sModVersion = "v4.7.7"
 Opt("MustDeclareVars", 1)
 Global $g_sBotTitle = ""
 Global $g_hFrmBot = 0
@@ -2093,6 +2093,9 @@ Global $hMutex_BotTitle = 0
 Global $bCloseWhenAllBotsUnregistered = True
 Global $iTimeoutBroadcast = 30000
 Global $g_iMainLoopSleep = 50
+Global $g_bAutoDockMiniGUI = True
+Global $g_hAndroidHandleMini = 0
+Global $g_sEmulatorNameMini = ""
 Global $g_sBotTitle = "My Bot Mini " & $g_sBotVersion & " - " & "AiO++ MOD " & $g_sModVersion & " -"
 Global $g_hFrmBot = 0
 Global $g_hFrmBotBackend = 0
@@ -2819,6 +2822,7 @@ Global Enum $eHeroBarbarianKing, $eHeroArcherQueen, $eHeroGrandWarden, $eHeroRoy
 Global Const $g_asHeroNames[$eHeroCount] = ["Barbarian King", "Archer Queen", "Grand Warden", "Royal Champion"]
 Global Const $g_asHeroShortNames[$eHeroCount] = ["King", "Queen", "Warden", "Champion"]
 Global Enum $eLootGold, $eLootElixir, $eLootDarkElixir, $eLootTrophy, $eLootCount
+Global Enum $eLootGoldBB, $eLootElixirBB, $eLootTrophyBB, $eLootCountBB
 Func GetTroopName(Const $iIndex, $iQuantity = 1, $bShortName = False)
 If $bShortName = False Then
 If $iIndex >= $eBarb And $iIndex <= $eHunt Then
@@ -3056,6 +3060,7 @@ Global $g_bGUIControlDisabled = False
 Global Const $g_sDirLanguages = @ScriptDir & "\Languages\"
 Global Const $g_sDefaultLanguage = "English"
 Global $g_iFreeBuilderCount = 0, $g_iTotalBuilderCount = 0, $g_iGemAmount = 0
+Global $g_iFreeBuilderCountBB = 0, $g_iTotalBuilderCountBB = 0
 Global $g_iStatsStartedWith[$eLootCount] = [0, 0, 0, 0]
 Global $g_iStatsTotalGain[$eLootCount] = [0, 0, 0, 0]
 Global $g_iStatsLastAttack[$eLootCount] = [0, 0, 0, 0]
@@ -3071,6 +3076,7 @@ Global $g_aiWardenAltarPos[2] = [-1, -1]
 Global $g_aiChampionAltarPos[2] = [-1, -1]
 Global $g_aiLaboratoryPos[2] = [-1, -1]
 Global $g_aiClanCastlePos[2] = [-1, -1]
+Global $g_aiCurrentLootBB[$eLootCountBB] = [0, 0, 0]
 Global $g_aiStarLaboratoryPos[2] = [-1, -1]
 Global $g_CurrentCampUtilization = 0, $g_iTotalCampSpace = 0
 Global $g_iLaboratoryElixirCost = 0, $g_iLaboratoryDElixirCost = 0
@@ -3248,6 +3254,7 @@ Global $g_iCustomSiegesMainVillage[$eSiegeMachineCount][3]
 Global $g_hCmbTroopSetting = 0, $g_iCmbTroopSetting = 0
 Global $g_bPetHouseSelector = False
 Global $g_iCmbLassiPet = 0, $g_iCmbElectroOwlPet = 0, $g_iCmbMightyYakPet = 0, $g_iCmbUnicornPet = 0
+Global $g_iStickToTrainWindow = 1
 Global $g_bChkBuildingsLocate = False, $g_hChkBuildingsLocate = 0
 Global $g_hChkEnableFirewall = 0, $g_bChkEnableFirewall = False
 Global $g_bStopForWar
@@ -3321,7 +3328,7 @@ Global $g_hChkSmartFarmAndRandomDeploy, $g_bUseSmartFarmAndRandomDeploy = True
 Global $g_hChkSmartFarmAndRandomQuant, $g_bUseSmartFarmAndRandomQuant = False
 Global $g_hCmbSmartFarmSpellsHowManySides, $g_hSmartFarmSpellsEnable, $g_iSmartFarmSpellsHowManySides = 2, $g_bSmartFarmSpellsEnable = True
 Global $g_hChkUseSmartFarmRedLine, $g_bUseSmartFarmRedLine = False
-Global $g_bChkColorfulAttackLog = False, $g_bChkBuyGuard = False
+Global $g_bChkColorfulAttackLog = True, $g_bChkBuyGuard = False
 Global $g_hChkColorfulAttackLog = 0, $g_hChkBuyGuard = 0
 Global $g_bRequestCCDefense, $g_sRequestCCDefenseText, $g_iCmbRequestCCDefenseWhen, $g_iRequestDefenseTime, $g_bSaveCCTroopForDefense
 Global $g_aiCCTroopsExpectedForDef[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -3481,8 +3488,8 @@ EndFunc
 Global Enum $g_eBotDetailsBotForm = 0, $g_eBotDetailsTimer, $g_eBotDetailsProfile, $g_eBotDetailsCommandLine, $g_eBotDetailsTitle, $g_eBotDetailsRunState, $g_eBotDetailsPaused, $g_eBotDetailsLaunched, $g_eBotDetailsVerifyCount, $g_eBotDetailsBotStateStruct, $g_eBotDetailsOptionalStruct, $g_eBotDetailsArraySize
 Global $tagSTRUCT_BOT_STATE = "struct" & ";hwnd BotHWnd" & ";hwnd AndroidHWnd" & ";boolean RunState" & ";boolean Paused" & ";boolean Launched" & ";uint64 g_hTimerSinceStarted" & ";uint g_iTimePassed" & ";char Profile[64]" & ";char AndroidEmulator[32]" & ";char AndroidInstance[32]" & ";int StructType" & ";ptr StructPtr" & ";boolean RegisterInHost" & ";endstruct"
 Global Enum $g_eSTRUCT_NONE = 0, $g_eSTRUCT_STATUS_BAR, $g_eSTRUCT_UPDATE_STATS
-Global $tagSTRUCT_STATUS_BAR = "struct;char Text[255];endstruct"
-Global $tagSTRUCT_UPDATE_STATS = "struct" & ";long g_aiCurrentLoot[" & UBound($g_aiCurrentLoot) & "]" & ";long g_iFreeBuilderCount" & ";long g_iTotalBuilderCount" & ";long g_iGemAmount" & ";long g_iStatsTotalGain[" & UBound($g_iStatsTotalGain) & "]" & ";long g_iStatsLastAttack[" & UBound($g_iStatsLastAttack) & "]" & ";long g_iStatsBonusLast[" & UBound($g_iStatsBonusLast) & "]" & ";int g_iFirstAttack" & ";int g_aiAttackedCount" & ";int g_iSkippedVillageCount" & ";endstruct"
+Global $tagSTRUCT_STATUS_BAR = "struct;char Text[255];endstruct", $g_aiCurrentLootBB[3]
+Global $tagSTRUCT_UPDATE_STATS = "struct" & ";long g_aiCurrentLoot[" & UBound($g_aiCurrentLoot) & "]" & ";long g_iFreeBuilderCount" & ";long g_iTotalBuilderCount" & ";long g_iGemAmount" & ";long g_iStatsTotalGain[" & UBound($g_iStatsTotalGain) & "]" & ";long g_iStatsLastAttack[" & UBound($g_iStatsLastAttack) & "]" & ";long g_iStatsBonusLast[" & UBound($g_iStatsBonusLast) & "]" & ";int g_iFirstAttack" & ";int g_aiAttackedCount" & ";int g_iSkippedVillageCount" & ";long g_aiCurrentLootBB[" & UBound($g_aiCurrentLootBB) & "]" & ";int g_iFreeBuilderCountBB" & ";int g_iTotalBuilderCountBB" & ";endstruct"
 Global $tBotState = DllStructCreate($tagSTRUCT_BOT_STATE)
 Global $tStatusBar = DllStructCreate($tagSTRUCT_STATUS_BAR)
 Global $tUpdateStats = DllStructCreate($tagSTRUCT_UPDATE_STATS)
@@ -6446,6 +6453,7 @@ Func ReadConfig_MOD_600_28()
 IniReadS($g_bTrainLogoutMaxTime, $g_sProfileConfigPath, "other", "chkTrainLogoutMaxTime", $g_bTrainLogoutMaxTime, "Bool")
 IniReadS($g_iTrainLogoutMaxTime, $g_sProfileConfigPath, "other", "txtTrainLogoutMaxTime", $g_iTrainLogoutMaxTime, "int")
 IniReadS($g_bChkNoLeague[$DB], $g_sProfileConfigPath, "search", "DBNoLeague", $g_bChkNoLeague[$DB], "Bool")
+IniReadS($g_iStickToTrainWindow, $g_sProfileConfigPath, "other", "StickToTrainWindow", $g_iStickToTrainWindow, "Int")
 EndFunc
 Func ReadConfig_MOD_600_29()
 IniReadS($icmbCSVSpeed[$LB], $g_sProfileConfigPath, "attack", "cmbCSVSpeedLB", $icmbCSVSpeed[$LB], "int")
@@ -6711,9 +6719,16 @@ If Number($g_iStatsLastAttack[$eLootTrophy]) > Number($topTrophyloot) Then
 $bStatsUpdated = True
 $topTrophyloot = $g_iStatsLastAttack[$eLootTrophy]
 EndIf
+BuilderBaseSetStats()
 If $ResetStats = 1 Then
 $ResetStats = 0
 EndIf
+EndFunc
+Func BuilderBaseSetStats()
+GUICtrlSetData($g_hLblBBResultGoldNow, _NumberFormat($g_aiCurrentLootBB[$eLootGoldBB], True))
+GUICtrlSetData($g_hLblBBResultElixirNow, _NumberFormat($g_aiCurrentLootBB[$eLootElixirBB], True))
+GUICtrlSetData($g_hLblBBResultTrophyNow, _NumberFormat($g_aiCurrentLootBB[$eLootTrophyBB], True))
+GUICtrlSetData($g_hLblBBResultBuilderNow, $g_iFreeBuilderCountBB & "/" & $g_iTotalBuilderCountBB)
 EndFunc
 Func _NumberFormat($Number, $NullToZero = False)
 If $Number = "" Then
@@ -6731,7 +6746,7 @@ EndIf
 EndFunc
 Global Enum $eBotUpdateStats = $eBotClose + 1
 Func _GUICtrlCreateInput($sText, $iLeft, $iTop , $iWidth, $iHeight, $vStyle = -1, $vExStyle = -1)
-Local $hReturn = _GUICtrlCreateInput($sText, $iLeft, $iTop , $iWidth, $iHeight, $vStyle, $vExStyle)
+Local $hReturn = GUICtrlCreateInput($sText, $iLeft, $iTop , $iWidth, $iHeight, $vStyle, $vExStyle)
 GUICtrlSetBkColor($hReturn, 0xD1DFE7)
 Return $hReturn
 EndFunc
@@ -7537,6 +7552,8 @@ $eStructType = DllStructGetData($tBotState, "StructType")
 $pStructPtr = DllStructGetData($tBotState, "StructPtr")
 $hTimerSinceStarted = DllStructGetData($tBotState, "g_hTimerSinceStarted")
 $iTimePassed = DllStructGetData($tBotState, "g_iTimePassed")
+$g_hAndroidHandleMini = DllStructGetData($tBotState, "AndroidHWnd")
+$g_sEmulatorNameMini = $sEmulator
 EndIf
 Local $hFrmBotBackend = $g_hFrmBotBackend
 Local $WatchOnlyClientPID = $g_WatchOnlyClientPID
@@ -7570,6 +7587,9 @@ _DllStructLoadData($tOptionalStruct, "g_iStatsBonusLast", $g_iStatsBonusLast)
 _DllStructLoadData($tOptionalStruct, "g_iFirstAttack", $g_iFirstAttack)
 _DllStructLoadData($tOptionalStruct, "g_aiAttackedCount", $g_aiAttackedCount)
 _DllStructLoadData($tOptionalStruct, "g_iSkippedVillageCount", $g_iSkippedVillageCount)
+_DllStructLoadData($tOptionalStruct, "g_aiCurrentLootBB", $g_aiCurrentLootBB)
+_DllStructLoadData($tOptionalStruct, "g_iFreeBuilderCountBB", $g_iFreeBuilderCountBB)
+_DllStructLoadData($tOptionalStruct, "g_iTotalBuilderCountBB", $g_iTotalBuilderCountBB)
 $g_iBotAction = $eBotUpdateStats
 EndSwitch
 EndIf
@@ -7765,9 +7785,30 @@ EndIf
 If $hTimeUpdateTimer = 0 Or __TimerDiff($hTimeUpdateTimer) > 750 Then
 SetTime()
 $hTimeUpdateTimer = __TimerInit()
+If $g_hAndroidHandleMini <> 0 And $g_bAutoDockMiniGUI Then
+AutoDockMiniGUI()
+EndIf
 EndIf
 EndSwitch
 $iMainLoop += 1
 WEnd
+Func AutoDockMiniGUI()
+If $g_hAndroidHandleMini = 0 Or $g_hFrmBot = 0 Then Return
+Local Static $_shFrmBot[4]
+Local Static $_shAndroidHandleMini[4]
+Local $hFrmBot = WinGetPos($g_hFrmBot)
+Local $hAndroidHandleMini = WinGetPos($g_hAndroidHandleMini)
+If @error Then Return
+If($hFrmBot[0] = $_shFrmBot[0] And $hFrmBot[1] = $_shFrmBot[1]) And($hAndroidHandleMini[0] = $_shAndroidHandleMini[0] And $hAndroidHandleMini[1] = $_shAndroidHandleMini[1]) Then Return
+Local $x = $g_sEmulatorNameMini <> "BlueStacks2" ? $hFrmBot[0] - 890 : $hFrmBot[0] - 864
+Local $y = $g_sEmulatorNameMini <> "BlueStacks2" ? $hFrmBot[1] - 30 : $hFrmBot[1] - 24
+WinMove($g_hAndroidHandleMini, "", $x, $y)
+If $g_sEmulatorNameMini <> "BlueStacks2" Then
+WinActivate($g_hAndroidHandleMini)
+ControlClick($g_hAndroidHandleMini, "", "", "left", 1, 10, 2)
+EndIf
+$_shFrmBot = $hFrmBot
+$_shAndroidHandleMini = $hAndroidHandleMini
+EndFunc
 ReferenceFunctions()
 ReferenceGlobals()

@@ -106,7 +106,7 @@ Global $g_hTiShow = 0, $g_hTiHide = 0, $g_hTiDonate = 0, $g_hTiAbout = 0, $g_hTi
 Global $g_aFrmBotPosInit[8] = [0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_hFirstControlToHide = 0, $g_hLastControlToHide = 0, $g_aiControlPrevState[1]
 Global $g_bFrmBotMinimized = False ; prevents bot flickering
-Global $g_lblHepNotify = 0, $g_lblHelpBot = 0
+Global $g_lblHepNotify = 0, $g_lblHelpBot = 0, $g_lblHepNotifyDS = 0 ; Discord - Team AIO Mod++
 Global $g_hTblStart = 0, $g_hTblStop = 0, $g_hTblPause = 0, $g_hTblResume = 0, $g_hTblMakeScreenshot = 0 ; TaskBarList buttons
 
 Global $g_oCtrlIconData = ObjCreate("Scripting.Dictionary")

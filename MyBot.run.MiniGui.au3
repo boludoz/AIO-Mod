@@ -120,7 +120,7 @@ Global Enum $eBotUpdateStats = $eBotClose + 1
 
 #Region - _GUICtrlCreateInput custom.
 Func _GUICtrlCreateInput($sText, $iLeft, $iTop , $iWidth, $iHeight, $vStyle = -1, $vExStyle = -1)
-	Local $hReturn = _GUICtrlCreateInput ($sText, $iLeft, $iTop , $iWidth, $iHeight, $vStyle, $vExStyle)
+	Local $hReturn = GUICtrlCreateInput ($sText, $iLeft, $iTop , $iWidth, $iHeight, $vStyle, $vExStyle)
 	GUICtrlSetBkColor($hReturn, 0xD1DFE7)
 	Return $hReturn
 EndFunc

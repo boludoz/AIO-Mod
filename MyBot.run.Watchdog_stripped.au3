@@ -10,7 +10,7 @@
 #Au3Stripper_Off
 #Au3Stripper_On
 Global $g_sBotVersion = "v7.9.7"
-Global $g_sModVersion = "v4.7.6"
+Global $g_sModVersion = "v4.7.7"
 Opt("MustDeclareVars", 1)
 Global Const $WAIT_TIMEOUT = 258
 Global Const $STR_STRIPLEADING = 1
@@ -540,8 +540,8 @@ Opt("WinTitleMatchMode", 3)
 Global Enum $g_eBotDetailsBotForm = 0, $g_eBotDetailsTimer, $g_eBotDetailsProfile, $g_eBotDetailsCommandLine, $g_eBotDetailsTitle, $g_eBotDetailsRunState, $g_eBotDetailsPaused, $g_eBotDetailsLaunched, $g_eBotDetailsVerifyCount, $g_eBotDetailsBotStateStruct, $g_eBotDetailsOptionalStruct, $g_eBotDetailsArraySize
 Global $tagSTRUCT_BOT_STATE = "struct" & ";hwnd BotHWnd" & ";hwnd AndroidHWnd" & ";boolean RunState" & ";boolean Paused" & ";boolean Launched" & ";uint64 g_hTimerSinceStarted" & ";uint g_iTimePassed" & ";char Profile[64]" & ";char AndroidEmulator[32]" & ";char AndroidInstance[32]" & ";int StructType" & ";ptr StructPtr" & ";boolean RegisterInHost" & ";endstruct"
 Global Enum $g_eSTRUCT_NONE = 0, $g_eSTRUCT_STATUS_BAR, $g_eSTRUCT_UPDATE_STATS
-Global $tagSTRUCT_STATUS_BAR = "struct;char Text[255];endstruct"
-Global $tagSTRUCT_UPDATE_STATS = "struct" & ";long g_aiCurrentLoot[" & UBound($g_aiCurrentLoot) & "]" & ";long g_iFreeBuilderCount" & ";long g_iTotalBuilderCount" & ";long g_iGemAmount" & ";long g_iStatsTotalGain[" & UBound($g_iStatsTotalGain) & "]" & ";long g_iStatsLastAttack[" & UBound($g_iStatsLastAttack) & "]" & ";long g_iStatsBonusLast[" & UBound($g_iStatsBonusLast) & "]" & ";int g_iFirstAttack" & ";int g_aiAttackedCount" & ";int g_iSkippedVillageCount" & ";endstruct"
+Global $tagSTRUCT_STATUS_BAR = "struct;char Text[255];endstruct", $g_aiCurrentLootBB[3]
+Global $tagSTRUCT_UPDATE_STATS = "struct" & ";long g_aiCurrentLoot[" & UBound($g_aiCurrentLoot) & "]" & ";long g_iFreeBuilderCount" & ";long g_iTotalBuilderCount" & ";long g_iGemAmount" & ";long g_iStatsTotalGain[" & UBound($g_iStatsTotalGain) & "]" & ";long g_iStatsLastAttack[" & UBound($g_iStatsLastAttack) & "]" & ";long g_iStatsBonusLast[" & UBound($g_iStatsBonusLast) & "]" & ";int g_iFirstAttack" & ";int g_aiAttackedCount" & ";int g_iSkippedVillageCount" & ";long g_aiCurrentLootBB[" & UBound($g_aiCurrentLootBB) & "]" & ";int g_iFreeBuilderCountBB" & ";int g_iTotalBuilderCountBB" & ";endstruct"
 Global $tBotState = DllStructCreate($tagSTRUCT_BOT_STATE)
 Global $tStatusBar = DllStructCreate($tagSTRUCT_STATUS_BAR)
 Global $tUpdateStats = DllStructCreate($tagSTRUCT_UPDATE_STATS)
