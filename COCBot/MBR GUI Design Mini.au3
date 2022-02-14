@@ -290,7 +290,7 @@ Func CreateMainGUIControls()
 	GUICtrlSetCursor(-1, 0)
 
 	GUISwitch($g_hFrmBot)
-	$g_hFrmBotEmbeddedShieldInput = _GUICtrlCreateInput("", 0, 0, -1, -1, $WS_TABSTOP)
+	$g_hFrmBotEmbeddedShieldInput = GUICtrlCreateInput("", 0, 0, -1, -1, $WS_TABSTOP)
 	GUICtrlSetState($g_hFrmBotEmbeddedShieldInput, $GUI_HIDE)
 
 	$g_hFrmBotBottom = GUICreate("My Bot Buttons", $_GUI_MAIN_WIDTH, $_GUI_BOTTOM_HEIGHT, 0, $_GUI_MAIN_HEIGHT - $_GUI_BOTTOM_HEIGHT + $_GUI_MAIN_TOP, _
