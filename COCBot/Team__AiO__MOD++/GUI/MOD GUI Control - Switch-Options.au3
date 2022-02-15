@@ -63,7 +63,6 @@ Func chkSwitchBotType()
 EndFunc   ;==>chkSwitchBotType
 
 ; Farm Schedule
-#cs
 Func chkSetFarmSchedule()
 	For $i = 0 To UBound($g_ahChkSetFarm) - 1
 		If @GUI_CtrlId = $g_ahChkSetFarm[$i] Then
@@ -134,4 +133,3 @@ Func _cmbCriteria2($i)
 			GUICtrlSetState($g_ahCmbTime2[$i], BitOR($GUI_SHOW, $GUI_ENABLE))
 	EndSwitch
 EndFunc   ;==>_cmbCriteria2
-#ce

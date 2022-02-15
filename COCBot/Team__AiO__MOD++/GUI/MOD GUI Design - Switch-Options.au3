@@ -26,11 +26,11 @@ Global $g_hChkSwitchAcc = 0, $g_hCmbSwitchAcc = 0, $g_hChkSharedPrefs = 0, $g_hC
 ; Switch Profiles
 Global $g_ahChk_SwitchMax[4], $g_ahCmb_SwitchMax[4], $g_ahChk_BotTypeMax[4], $g_ahCmb_BotTypeMax[4], $g_ahLbl_SwitchMax[4], $g_ahTxt_ConditionMax[4], _
 	   $g_ahChk_SwitchMin[4], $g_ahCmb_SwitchMin[4], $g_ahChk_BotTypeMin[4], $g_ahCmb_BotTypeMin[4], $g_ahLbl_SwitchMin[4], $g_ahTxt_ConditionMin[4]
-#cs
+
 Global $g_ahChkSetFarm[$g_eTotalAcc], _
 	   $g_ahCmbAction1[$g_eTotalAcc], $g_ahCmbCriteria1[$g_eTotalAcc], $g_ahTxtResource1[$g_eTotalAcc], $g_ahCmbTime1[$g_eTotalAcc], _
 	   $g_ahCmbAction2[$g_eTotalAcc], $g_ahCmbCriteria2[$g_eTotalAcc], $g_ahTxtResource2[$g_eTotalAcc], $g_ahCmbTime2[$g_eTotalAcc]
-#ce
+
 Global $g_hTxtSALog = 0
 
 Func CreateSwitchOptions()
@@ -43,10 +43,9 @@ Func CreateSwitchOptions()
 		CreateSwitchAccount()
 	$g_hGUI_SWITCH_OPTIONS_TAB_ITEM2 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_04_STab_04_STab_02", "Switch Profiles"))
 		CreateSwitchProfile()
-	#Cs
 	$g_hGUI_SWITCH_OPTIONS_TAB_ITEM3 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_04_STab_04_STab_03", "Farming Schedule"))
 		CreateFarmSchedule()
-	#ce
+
 	; This dummy is used in btnStart and btnStop to disable/enable all labels, text, buttons etc. on all tabs.
 	$g_hLastControlToHide = GUICtrlCreateDummy()
 	ReDim $g_aiControlPrevState[$g_hLastControlToHide + 1]
@@ -197,19 +196,23 @@ Func CreateSwitchProfile()
 EndFunc   ;==>CreateSwitchProfile
 #EndRegion
 
-#cs Region Farming Schedule tab
+#Region Farming Schedule tab
 Func CreateFarmSchedule()
 
-	Local $x = 10, $y = 30
+	Local $x = 10, $y = 22
+	#cs
+	$y += 8
 	GUICtrlCreateLabel("Account", $x - 5, $y, 60, -1, $SS_CENTER)
 	GUICtrlCreateLabel("Farm Schedule 1", $x + 80, $y, 150, -1, $SS_CENTER)
 	GUICtrlCreateLabel("Farm Schedule 2", $x + 260, $y, 150, -1, $SS_CENTER)
-
+	
 	$y += 18
 	GUICtrlCreateGraphic($x, $y, 425, 1, $SS_GRAYRECT)
-
+	
 	$y += 8
-	For $i = 0 To 7
+	#ce
+	
+	For $i = 0 To $g_eTotalAcc - 1
 		$x = 10
 		$g_ahChkSetFarm[$i] = GUICtrlCreateCheckbox("Acc " & $i + 1 & ".", $x, $y + $i * 30, -1, -1)
 			GUICtrlSetOnEvent(-1, "chkSetFarmSchedule")
@@ -239,10 +242,11 @@ Func CreateFarmSchedule()
 			GUICtrlSetData(-1, 	"0 am|1 am|2 am|3 am|4 am|5 am|6 am|7 am|8 am|9 am|10am|11am|" & _
 								"12pm|1 pm|2 pm|3 pm|4 pm|5 pm|6 pm|7 pm|8 pm|9 pm|10pm|11pm")
 			GUICtrlSetState(-1, $GUI_HIDE)
+		 $y -= 9
 	Next
 
 EndFunc   ;==>CreateFarmSchedule
-#ce EndRegion
+#EndRegion
 
 Func CreateBotSwitchAccLog()
 
