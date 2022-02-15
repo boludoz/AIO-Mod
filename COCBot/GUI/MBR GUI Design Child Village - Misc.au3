@@ -64,6 +64,18 @@ Next
 Func CreateVillageMisc()
 	$g_hGUI_MISC = _GUICreate("", $g_iSizeWGrpTab2, $g_iSizeHGrpTab2, 5, 25, ($WS_CHILD + $WS_TABSTOP), -1, $g_hGUI_VILLAGE)
 
+	CreateDailyDiscountGUI() ; Daily Discounts - Team AiO MOD++
+	;CreateBBDropOrderGUI() ; Builder Base Attack - Team AiO MOD++
+	; #EndRegion - Team AiO MOD++
+
+	; xbebenk clan games
+	CreateCGDes()
+	CreateClanGamesAirTroops()
+	CreateClanGamesGroundTroops()
+	CreateClanGamesBBDes()
+	CreateClanGamesBBTroops()
+	CreateClanGamesSpell()
+
 	GUISwitch($g_hGUI_MISC)
 	$g_hGUI_MISC_TAB = GUICtrlCreateTab(0, 0, $g_iSizeWGrpTab2, $g_iSizeHGrpTab2, ($TCS_MULTILINE + $TCS_RIGHTJUSTIFY))
 	; #Cs
@@ -76,17 +88,7 @@ Func CreateVillageMisc()
 	TabMiscGUI()
 	; CreateMiscMagicSubTab()
 
-	CreateDailyDiscountGUI() ; Daily Discounts - Team AiO MOD++
-	;CreateBBDropOrderGUI() ; Builder Base Attack - Team AiO MOD++
-	; #EndRegion - Team AiO MOD++
 
-	; xbebenk clan games
-	CreateCGDes()
-	CreateClanGamesAirTroops()
-	CreateClanGamesGroundTroops()
-	CreateClanGamesBBDes()
-	CreateClanGamesBBTroops()
-	CreateClanGamesSpell()
 	; #ce
 	GUICtrlCreateTabItem("")
 
