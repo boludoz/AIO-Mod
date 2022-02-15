@@ -106,7 +106,7 @@ Global $g_hTiShow = 0, $g_hTiHide = 0, $g_hTiDonate = 0, $g_hTiAbout = 0, $g_hTi
 Global $g_aFrmBotPosInit[8] = [0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_hFirstControlToHide = 0, $g_hLastControlToHide = 0, $g_aiControlPrevState[1]
 Global $g_bFrmBotMinimized = False ; prevents bot flickering
-Global $g_lblHepNotify = 0, $g_lblHelpBot = 0
+Global $g_lblHepNotify = 0, $g_lblHelpBot = 0, $g_lblHepNotifyDS = 0 ; Discord - Team AIO Mod++
 Global $g_hTblStart = 0, $g_hTblStop = 0, $g_hTblPause = 0, $g_hTblResume = 0, $g_hTblMakeScreenshot = 0 ; TaskBarList buttons
 
 Global $g_oCtrlIconData = ObjCreate("Scripting.Dictionary")
@@ -290,7 +290,7 @@ Func CreateMainGUIControls()
 	GUICtrlSetCursor(-1, 0)
 
 	GUISwitch($g_hFrmBot)
-	$g_hFrmBotEmbeddedShieldInput = _GUICtrlCreateInput("", 0, 0, -1, -1, $WS_TABSTOP)
+	$g_hFrmBotEmbeddedShieldInput = GUICtrlCreateInput("", 0, 0, -1, -1, $WS_TABSTOP)
 	GUICtrlSetState($g_hFrmBotEmbeddedShieldInput, $GUI_HIDE)
 
 	$g_hFrmBotBottom = GUICreate("My Bot Buttons", $_GUI_MAIN_WIDTH, $_GUI_BOTTOM_HEIGHT, 0, $_GUI_MAIN_HEIGHT - $_GUI_BOTTOM_HEIGHT + $_GUI_MAIN_TOP, _

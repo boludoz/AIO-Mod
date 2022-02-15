@@ -27,8 +27,8 @@ Func _getResourcesValueTrainPage($x_start, $y_start) ; -> Gets CheckValuesCost o
 	Return getOcrAndCapture("coc-ms", $x_start, $y_start, 113, 18, True)
 EndFunc   ;==>getResourcesValueTrainPage
 
-Func _getTrophyMainScreen($x_start, $y_start, $bNeedCapture = False) ; -> Gets trophy value, top left of main screen "VillageReport.au3"
-	Return getOcrAndCapture("coc-ms", $x_start, $y_start, 50, 16, Default, Default, $bNeedCapture)
+Func _getTrophyMainScreen($x_start, $y_start, $bNeedCapture = True) ; -> Gets trophy value, top left of main screen "VillageReport.au3"
+	Return getOcrAndCapture("coc-ms", $x_start, $y_start, 50, 16, True, Default, $bNeedCapture)
 EndFunc   ;==>getTrophyMainScreen
 #EndRegion - Team AIO Mod++ (Dissociable OCR)
 
@@ -39,11 +39,14 @@ EndFunc   ;==>getTrophyLossAttackScreen
 Func getUpgradeResource($x_start, $y_start) ; -> Gets complete value of Gold/Elixir xxx,xxx , RED text on green upgrade button."UpgradeBuildings.au3"
 	Return getOcrAndCapture("coc-u-r", $x_start, $y_start, 98, 16, True)
 EndFunc   ;==>getUpgradeResource
+
 #Region - Team AIO Mod++ (Dissociable OCR)
-Func _getResourcesMainScreen($x_start, $y_start, $bNeedCapture = False) ; -> Gets complete value of Gold/Elixir/Dark Elixir/Trophies/Gems xxx,xxx "VillageReport.au3"
-	Return getOcrAndCapture("coc-ms", $x_start, $y_start, 110, 16, Default, Default, $bNeedCapture)
+Func _getResourcesMainScreen($x_start, $y_start, $bNeedCapture = True) ; -> Gets complete value of Gold/Elixir/Dark Elixir/Trophies/Gems xxx,xxx "VillageReport.au3"
+	Return getOcrAndCapture("coc-ms", $x_start, $y_start, 110, 16, True, Default, $bNeedCapture)
 EndFunc   ;==>getResourcesMainScreen
+
 #EndRegion - Team AIO Mod++ (Dissociable OCR)
+
 Func getResourcesLoot($x_start, $y_start) ; -> Gets complete value of Gold/Elixir after attack xxx,xxx "AttackReport"
 	Return getOcrAndCapture("coc-loot", $x_start, $y_start, 160, 22, True)
 EndFunc   ;==>getResourcesLoot

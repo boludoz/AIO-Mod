@@ -2292,7 +2292,6 @@ Func ApplyConfig_600_35_2($TypeReadSave)
 				GUICtrlSetState($g_ahChkDonate[$i], $g_abDonateOnly[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
 
 				; Farm Schedule - Team AiO MOD++
-				#cs
 				GUICtrlSetState($g_ahChkSetFarm[$i], $g_abChkSetFarm[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
 
 				_GUICtrlComboBox_SetCurSel($g_ahCmbAction1[$i], $g_aiCmbAction1[$i])
@@ -2304,7 +2303,6 @@ Func ApplyConfig_600_35_2($TypeReadSave)
 				_GUICtrlComboBox_SetCurSel($g_ahCmbCriteria2[$i], $g_aiCmbCriteria2[$i])
 				GUICtrlSetData($g_ahTxtResource2[$i], $g_aiTxtResource2[$i])
 				_GUICtrlComboBox_SetCurSel($g_ahCmbTime2[$i], $g_aiCmbTime2[$i])
-				#ce
 			Next
 			_GUICtrlComboBox_SetCurSel($g_hCmbTrainTimeToSkip, $g_iTrainTimeToSkip)
 			_cmbSwitchAcc(False)
@@ -2324,7 +2322,6 @@ Func ApplyConfig_600_35_2($TypeReadSave)
 				$g_abDonateOnly[$i] = (GUICtrlRead($g_ahChkDonate[$i]) = $GUI_CHECKED)
 
 				; Farm Schedule - Team AiO MOD++
-				#cs
 				$g_abChkSetFarm[$i] = (GUICtrlRead($g_ahChkSetFarm[$i]) = $GUI_CHECKED)
 
 				$g_aiCmbAction1[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbAction1[$i])
@@ -2336,7 +2333,6 @@ Func ApplyConfig_600_35_2($TypeReadSave)
 				$g_aiCmbCriteria2[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbCriteria2[$i])
 				$g_aiTxtResource2[$i] = GUICtrlRead($g_ahTxtResource2[$i])
 				$g_aiCmbTime2[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbTime2[$i])
-				#ce
 			Next
 			$g_iTrainTimeToSkip = _GUICtrlComboBox_GetCurSel($g_hCmbTrainTimeToSkip)
 	EndSwitch

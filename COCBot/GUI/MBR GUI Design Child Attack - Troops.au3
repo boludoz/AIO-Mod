@@ -161,6 +161,9 @@ Global $g_hLblCloseWaitRdmPercent = 0, $g_hLblCloseWaitingTroops = 0, $g_hLblSym
 ; Max logout time - Team AiO MOD++
 Global $g_hChkTrainLogoutMaxTime = 0, $g_hTxtTrainLogoutMaxTime = 0, $g_hLblTrainLogoutMaxTime = 0
 
+; Custom Train - Team AIO Mod++
+Global $g_hGUI_CreateQuickTrainSubTab = 0
+
 Func CreateAttackTroops()
 	$g_hGUI_TRAINARMY = _GUICreate("", $g_iSizeWGrpTab2, $g_iSizeHGrpTab2, 5, 25, BitOR($WS_CHILD, $WS_TABSTOP), -1, $g_hGUI_ATTACK)
 	GUISetBkColor($COLOR_WHITE, $g_hGUI_TRAINARMY)
@@ -171,6 +174,9 @@ Func CreateAttackTroops()
 	CreateTrainSieges()
 	CreateTrainBoost()
 	CreateTrainOptions()
+	
+	; Custom Train - Team AIO Mod++
+	CreateQuickTrainSubTab()
 
 	GUISwitch($g_hGUI_TRAINARMY)
 	$g_hGUI_TRAINARMY_TAB = GUICtrlCreateTab(0, 0, $g_iSizeWGrpTab2, $g_iSizeHGrpTab2, BitOR($TCS_MULTILINE, $TCS_RIGHTJUSTIFY))
@@ -186,8 +192,6 @@ Func CreateAttackTroops()
 
 EndFunc   ;==>CreateAttackTroops
 
-Global $g_hGUI_CreateQuickTrainSubTab = 0
-CreateQuickTrainSubTab()
 Func CreateQuickTrainSubTab()
 	; $g_hGUI_TRAINARMY_ARMY_TAB_ITEM2 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_03_STab_01_STab_01_STab_02", "Quick Train"))
 	$g_hGUI_CreateQuickTrainSubTab = _GUICreate(GetTranslatedFileIni("MBR Main GUI", "Tab_03_STab_01_STab_01_STab_02", "Quick Train"), 444, 500, -1, -1, $WS_BORDER, $WS_EX_CONTROLPARENT)

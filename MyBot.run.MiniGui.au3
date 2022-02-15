@@ -112,19 +112,10 @@ Global $g_hFrmBotEmbeddedMouse = 0
 
 ; Team AiO MOD++ (2019)
 #include "COCBot\Team__AiO__MOD++\functions\Config\readConfig.au3"
-; #include "COCBot\functions\Other\KillProcess.au3"
 #include "COCBot\functions\Other\UpdateStats.Mini.au3"
 #include "COCBot\functions\Other\_NumberFormat.au3"
 
 Global Enum $eBotUpdateStats = $eBotClose + 1
-
-#Region - _GUICtrlCreateInput custom.
-Func _GUICtrlCreateInput($sText, $iLeft, $iTop , $iWidth, $iHeight, $vStyle = -1, $vExStyle = -1)
-	Local $hReturn = _GUICtrlCreateInput ($sText, $iLeft, $iTop , $iWidth, $iHeight, $vStyle, $vExStyle)
-	GUICtrlSetBkColor($hReturn, 0xD1DFE7)
-	Return $hReturn
-EndFunc
-#EndRegion - _GUICtrlCreateInput custom.
 
 Func SetLog($String, $Color = $COLOR_BLACK, $LogPrefix = "L ")
 	Local $log = $LogPrefix & TimeDebug() & $String
@@ -1570,12 +1561,14 @@ WEnd
 ; Custom - Team__AiO__MOD
 Func AutoDockMiniGUI()
 	If $g_hAndroidHandleMini = 0 Or $g_hFrmBot = 0 Then Return
-	Local Static $_shFrmBot[4]
-	Local Static $_shAndroidHandleMini[4]
+	Static $_shFrmBot[4]
+	Static $_shAndroidHandleMini[4]
 	Local $hFrmBot = WinGetPos($g_hFrmBot)
 	Local $hAndroidHandleMini = WinGetPos($g_hAndroidHandleMini)
 	If @error Then Return
 	If ($hFrmBot[0] = $_shFrmBot[0] And $hFrmBot[1] = $_shFrmBot[1]) And ($hAndroidHandleMini[0] = $_shAndroidHandleMini[0] And $hAndroidHandleMini[1] = $_shAndroidHandleMini[1]) Then Return
+	If BitAND(WinGetState($g_hFrmBot), $WIN_STATE_MINIMIZED) Or BitAND(WinGetState($g_hAndroidHandleMini), $WIN_STATE_MINIMIZED) Then Return
+	If @error Then Return
 	Local $x = $g_sEmulatorNameMini <> "BlueStacks2" ? $hFrmBot[0] - 890 : $hFrmBot[0] - 864
 	Local $y = $g_sEmulatorNameMini <> "BlueStacks2" ? $hFrmBot[1] - 30 : $hFrmBot[1] - 24
 	WinMove($g_hAndroidHandleMini, "", $x, $y)
