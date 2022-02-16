@@ -154,8 +154,8 @@ Func ResetGroupSwAcc()
 		GUICtrlSetState($g_ahChkDonate[$i], $GUI_UNCHECKED)
 		
 		GUICtrlSetState($g_ahChkAccount[$i], $g_bChkSwitchAcc ? $GUI_ENABLE : $GUI_DISABLE)
-		GUICtrlSetState($g_ahChkDonate[$i], $g_bChkSwitchAcc ? $GUI_DISABLE)
-		GUICtrlSetState($g_ahCmbProfile[$i], $g_bChkSwitchAcc ? $GUI_DISABLE)
+		GUICtrlSetState($g_ahChkDonate[$i], $GUI_DISABLE)
+		GUICtrlSetState($g_ahCmbProfile[$i], $GUI_DISABLE)
 
 		; Farm Schedule - Team AiO MOD++
 		GUICtrlSetState($g_ahChkSetFarm[$i], $GUI_UNCHECKED)
