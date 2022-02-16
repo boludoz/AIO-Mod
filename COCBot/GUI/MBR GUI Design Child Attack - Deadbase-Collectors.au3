@@ -40,7 +40,6 @@ Func CreateAttackSearchDeadBaseCollectors()
 		$g_hChkDBDisableCollectorsFilter = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkDisableCollectorsFilter", "Disable Collector Filter"), $x, $y + 17, 120, 18)
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkDisableCollectorsFilter_Info_01", "Disable Collector Filter CHANGES DeadBase into another ActiveBase search"))
-			GUICtrlSetOnEvent(-1, "chkNewDBSys")
 
 	$y += 15
 	For $i = 6 To Ubound($g_aiCollectorLevelFill) -1

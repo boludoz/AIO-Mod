@@ -18,7 +18,6 @@
 ; ===============================================================================================================================
 ;
 #Region - Multi Finger - Team AIO Mod++
-
 Func DropOnEdges($troop, $nbSides, $number, $slotsPerEdge = 0)
 	If $nbSides = 0 Or $number = 1 Then
 		OldDropTroop($troop, $g_aaiEdgeDropPoints[0], $number) ;
