@@ -1567,7 +1567,7 @@ Func AutoDockMiniGUI()
 	Local $hAndroidHandleMini = WinGetPos($g_hAndroidHandleMini)
 	If @error Then Return
 	If ($hFrmBot[0] = $_shFrmBot[0] And $hFrmBot[1] = $_shFrmBot[1]) And ($hAndroidHandleMini[0] = $_shAndroidHandleMini[0] And $hAndroidHandleMini[1] = $_shAndroidHandleMini[1]) Then Return
-	If BitAND(WinGetState($g_hFrmBot), $WIN_STATE_MINIMIZED) Or BitAND(WinGetState($g_hAndroidHandleMini), $WIN_STATE_MINIMIZED) Then Return
+	; If BitAND(WinGetState($g_hFrmBot), $WIN_STATE_MINIMIZED) = $WIN_STATE_MINIMIZED Or BitAND(WinGetState($g_hAndroidHandleMini), $WIN_STATE_MINIMIZED) = $WIN_STATE_MINIMIZED Then Return
 	If @error Then Return
 	Local $x = $g_sEmulatorNameMini <> "BlueStacks2" ? $hFrmBot[0] - 890 : $hFrmBot[0] - 864
 	Local $y = $g_sEmulatorNameMini <> "BlueStacks2" ? $hFrmBot[1] - 30 : $hFrmBot[1] - 24

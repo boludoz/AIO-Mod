@@ -221,7 +221,8 @@ Func ChatClan() ; Handle Clan Chat Logic
 				EndIf
 			Next
 		EndIf
-
+		
+		#cs
 		If $g_bCleverbot And Not $bSentMessage Then
 			Local $sResponse = runHelper($sOCRString)
 			If $sResponse = False Or StringStripWS($sOCRString, $STR_STRIPALL) <> "" Then
@@ -232,6 +233,8 @@ Func ChatClan() ; Handle Clan Chat Logic
 				$bSentMessage = True
 			EndIf
 		EndIf
+		#Ce
+		
 		If Not $bSentMessage Then
 			If $g_bClanUseGeneric Then
 				If Not ChatbotSelectChatInput("Clan") Then Return False

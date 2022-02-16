@@ -4,8 +4,8 @@
 ; Syntax ........:
 ; Parameters ....: None
 ; Return values .: None
-; Author ........: NguyenAnhHD (03-2018)
-; Modified ......: Team AiO MOD++ (2019)
+; Author ........: Demen, NguyenAnhHD (03-2018)
+; Modified ......: Team AiO MOD++ (2019-2022)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -32,6 +32,8 @@ Global $g_ahChkSetFarm[$g_eTotalAcc], _
 	   $g_ahCmbAction2[$g_eTotalAcc], $g_ahCmbCriteria2[$g_eTotalAcc], $g_ahTxtResource2[$g_eTotalAcc], $g_ahCmbTime2[$g_eTotalAcc]
 
 Global $g_hTxtSALog = 0
+
+Global $g_hBtnNextFarmingScheduleTab = 0
 
 Func CreateSwitchOptions()
 	; GUI Tab for Switch Accounts & Farm Schedule
@@ -199,53 +201,81 @@ EndFunc   ;==>CreateSwitchProfile
 #Region Farming Schedule tab
 Func CreateFarmSchedule()
 
-	Local $x = 10, $y = 22
-	#cs
-	$y += 8
+	Local $x = 10, $y = 30
 	GUICtrlCreateLabel("Account", $x - 5, $y, 60, -1, $SS_CENTER)
-	GUICtrlCreateLabel("Farm Schedule 1", $x + 80, $y, 150, -1, $SS_CENTER)
-	GUICtrlCreateLabel("Farm Schedule 2", $x + 260, $y, 150, -1, $SS_CENTER)
-	
+	GUICtrlCreateLabel("Farm Schedule 1", $x + 80, $y, 80, -1, $SS_CENTER)
+	GUICtrlCreateLabel("Farm Schedule 2", $x + 260, $y, 80, -1, $SS_CENTER)
+	$g_hBtnNextFarmingScheduleTab = GUICtrlCreateButton ( "< >", $x + 400 - 14, $y -2, 35, 15, $SS_CENTER)
+	GUICtrlSetOnEvent(-1, "FarmScheduleNext")
+
 	$y += 18
 	GUICtrlCreateGraphic($x, $y, 425, 1, $SS_GRAYRECT)
 	
 	$y += 8
-	#ce
-	
+	Local $bSecondPart = False, $i2 = -1
 	For $i = 0 To $g_eTotalAcc - 1
+		$i2 += 1
 		$x = 10
-		$g_ahChkSetFarm[$i] = GUICtrlCreateCheckbox("Acc " & $i + 1 & ".", $x, $y + $i * 30, -1, -1)
+		$g_ahChkSetFarm[$i] = GUICtrlCreateCheckbox("Acc " & $i + 1 & ".", $x, $y + $i2 * 30, -1, -1)
 			GUICtrlSetOnEvent(-1, "chkSetFarmSchedule")
-		$g_ahCmbAction1[$i] = GUICtrlCreateCombo("Turn...", $x + 60, $y + $i * 30, 58, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+		$g_ahCmbAction1[$i] = GUICtrlCreateCombo("Turn...", $x + 60, $y + $i2 * 30, 58, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 			GUICtrlSetData(-1, "Idle|Donate|Active")
 			GUICtrlSetBkColor(-1, $COLOR_WHITE)
-		$g_ahCmbCriteria1[$i] = GUICtrlCreateCombo("When...", $x + 123, $y + $i * 30, 62, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+		$g_ahCmbCriteria1[$i] = GUICtrlCreateCombo("When...", $x + 123, $y + $i2 * 30, 62, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 			GUICtrlSetData(-1, "Gold >|Elixir >|DarkE >|Trop. >|Time:")
 			GUICtrlSetBkColor(-1, $COLOR_WHITE)
 			GUICtrlSetOnEvent(-1, "cmbCriteria1")
-		$g_ahTxtResource1[$i] = _GUICtrlCreateInput("", $x + 187, $y + $i * 30, 50, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
-		$g_ahCmbTime1[$i] = GUICtrlCreateCombo("", $x + 187, $y + $i * 30, 50, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+		$g_ahTxtResource1[$i] = _GUICtrlCreateInput("", $x + 187, $y + $i2 * 30, 50, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_ahCmbTime1[$i] = GUICtrlCreateCombo("", $x + 187, $y + $i2 * 30, 50, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 			GUICtrlSetData(-1, 	"0 am|1 am|2 am|3 am|4 am|5 am|6 am|7 am|8 am|9 am|10am|11am|" & _
 								"12pm|1 pm|2 pm|3 pm|4 pm|5 pm|6 pm|7 pm|8 pm|9 pm|10pm|11pm")
 			GUICtrlSetState(-1, $GUI_HIDE)
 
 		$x = 248 + 10 - 60
-		$g_ahCmbAction2[$i] = GUICtrlCreateCombo("Turn...", $x + 60, $y + $i * 30, 58, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+		$g_ahCmbAction2[$i] = GUICtrlCreateCombo("Turn...", $x + 60, $y + $i2 * 30, 58, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 			GUICtrlSetData(-1, "Idle|Donate|Active")
 			GUICtrlSetBkColor(-1, $COLOR_WHITE)
-		$g_ahCmbCriteria2[$i] = GUICtrlCreateCombo("When...", $x + 123, $y + $i * 30, 62, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+		$g_ahCmbCriteria2[$i] = GUICtrlCreateCombo("When...", $x + 123, $y + $i2 * 30, 62, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 			GUICtrlSetData(-1, "Gold <|Elixir <|DarkE <|Trop. <|Time:")
 			GUICtrlSetBkColor(-1, $COLOR_WHITE)
 			GUICtrlSetOnEvent(-1, "cmbCriteria2")
-		$g_ahTxtResource2[$i] = _GUICtrlCreateInput("", $x + 187, $y + $i * 30, 50, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
-		$g_ahCmbTime2[$i] = GUICtrlCreateCombo("", $x + 187, $y + $i * 30, 50, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+		$g_ahTxtResource2[$i] = _GUICtrlCreateInput("", $x + 187, $y + $i2 * 30, 50, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_ahCmbTime2[$i] = GUICtrlCreateCombo("", $x + 187, $y + $i2 * 30, 50, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 			GUICtrlSetData(-1, 	"0 am|1 am|2 am|3 am|4 am|5 am|6 am|7 am|8 am|9 am|10am|11am|" & _
 								"12pm|1 pm|2 pm|3 pm|4 pm|5 pm|6 pm|7 pm|8 pm|9 pm|10pm|11pm")
 			GUICtrlSetState(-1, $GUI_HIDE)
-		 $y -= 9
+		 $y -= 4
+		
+		If $i = 7 Then
+			$y = 56
+			$i2 = -1
+		EndIf
 	Next
 
 EndFunc   ;==>CreateFarmSchedule
+
+Func FarmScheduleNext()
+	Local $iCmbTotalAcc = _GUICtrlComboBox_GetCurSel($g_hCmbTotalAccount) + 1 ; combobox data starts with 2
+	If $iCmbTotalAcc < 8 Then Return
+	
+	Local $s_iFarmScheduleNext = (BitAND(GUICtrlGetState($g_ahChkSetFarm[0]), $GUI_SHOW) = $GUI_SHOW) ; Take ref
+	
+	For $i = 0 To $g_eTotalAcc - 1
+		If $iCmbTotalAcc >= 0 And $i <= $iCmbTotalAcc Then
+			For $j = $g_ahChkSetFarm[$i] To $g_ahCmbTime2[$i]
+				If ($s_iFarmScheduleNext = True And $i <= 7) Or ($s_iFarmScheduleNext = False And $i > 7) Then
+					GUICtrlSetState($j, $GUI_HIDE)
+				Else
+					GUICtrlSetState($j, $GUI_SHOW)
+				EndIf
+			Next
+		Else
+			For $j = $g_ahChkSetFarm[$i] To $g_ahCmbTime2[$i]
+				GUICtrlSetState($j, $GUI_HIDE)
+			Next
+		EndIf
+	Next
+EndFunc   ;==>FarmScheduleNext
 #EndRegion
 
 Func CreateBotSwitchAccLog()

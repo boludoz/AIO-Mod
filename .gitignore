@@ -31,3 +31,4 @@ lib/ModLibs/Updater/AIOMod.Updater.exe
 lib/ModLibs/Updater/AIOMod.Updater2.exe
 lib/ModLibs/Updater/AIOMod.Updater3.exe
 Profiles_/
+*_stripped.au3

@@ -2286,6 +2286,10 @@ Func ApplyConfig_600_35_2($TypeReadSave)
 			GUICtrlSetState($g_hChkSmartSwitch, $g_bChkSmartSwitch ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkDonateLikeCrazy, $g_bDonateLikeCrazy ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbTotalAccount, $g_iTotalAcc - 1)
+			
+			; Farm Schedule - Team AiO MOD++
+			GUICtrlSetState($g_hBtnNextFarmingScheduleTab, (($g_iTotalAcc - 1) < 8) ? ($GUI_DISABLE) : ($GUI_ENABLE))
+			
 			For $i = 0 To $g_eTotalAcc - 1
 				GUICtrlSetState($g_ahChkAccount[$i], $g_abAccountNo[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
 				_GUICtrlComboBox_SetCurSel($g_ahCmbProfile[$i], _GUICtrlComboBox_FindStringExact($g_ahCmbProfile[$i], $g_asProfileName[$i]))

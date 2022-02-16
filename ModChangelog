@@ -4,6 +4,10 @@
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
                     Based on MyBot.run v7.9.7
+**v4.8.0**
+	- Improved: Farm schedule profiles tab.
+	- Deleted: Cleverbot (reduced bot size).
+
 **v4.7.9**
 	- Restored: Farm schedule profiles.
 	- Fixed: Fixed GUI in mini GUI return.

@@ -209,7 +209,7 @@ Func SaveConfig_MOD_ChatActions()
 	_Ini_Add("ChatActions", "DelayTimeClan", $g_sDelayTimeClan)
 	_Ini_Add("ChatActions", "UseResponsesClan", $g_bClanUseResponses ? 1 : 0)
 	_Ini_Add("ChatActions", "UseGenericClan", $g_bClanUseGeneric ? 1 : 0)
-	_Ini_Add("ChatActions", "Cleverbot", $g_bCleverbot ? 1 : 0)
+	; _Ini_Add("ChatActions", "Cleverbot", $g_bCleverbot ? 1 : 0)
 	_Ini_Add("ChatActions", "ChatNotify", $g_bUseNotify ? 1 : 0)
 	_Ini_Add("ChatActions", "PbSendNewChats", $g_bPbSendNew ? 1 : 0)
 

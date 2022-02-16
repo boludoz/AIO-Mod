@@ -68,7 +68,7 @@ Func cmbChatActionsChat()
 	 $g_iCmbPriorityCHAT = _GUICtrlComboBox_GetCurSel($g_hCmbPriorityCHAT)
 	If $g_iCmbPriorityCHAT > 0 Then
 		$g_bChatClan = True
-		For $i = $g_hTxtDelayTimeClan To $g_hChkCleverbot
+		For $i = $g_hTxtDelayTimeClan To $g_hChkHarangueCG;$g_hChkCleverbot
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
 		GUICtrlSetState($g_hChkChatNotify, $GUI_ENABLE)

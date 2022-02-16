@@ -1268,12 +1268,12 @@ Func SaveConfig_600_35_2()
 	Local $iCmbSwitchAcc = $g_iCmbSwitchAcc
 	If $iCmbSwitchAcc = 0 Then
 		; find group this profile belongs to: no switch profile config is saved in config.ini on purpose!
-		For $g = 1 To $g_eTotalAcc
+		For $g = 1 To 8
 			$sSwitchAccFile = $g_sProfilePath & "\SwitchAccount.0" & $g & ".ini"
 			If FileExists($sSwitchAccFile) = 0 Then ContinueLoop
 			Local $sProfile
 			Local $bEnabled
-			For $i = 1 To $g_eTotalAcc
+			For $i = 1 To 8
 				$bEnabled = IniRead($sSwitchAccFile, "SwitchAccount", "Enable" & $i, "") = "1"
 				If $bEnabled Then
 					$bEnabled = IniRead($sSwitchAccFile, "SwitchAccount", "AccountNo." & $i, "") = "1"

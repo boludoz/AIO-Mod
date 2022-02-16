@@ -315,10 +315,12 @@ Func cmbTotalAcc()
 	
 	; Custom ACC - Team AIO Mod++
 	If $iCmbTotalAcc > 7 Then
+		GUICtrlSetState($g_hBtnNextFarmingScheduleTab, $GUI_ENABLE)
 		GUICtrlSetState($g_hRadSwitchSharedPrefs, $GUI_ENABLE + $GUI_CHECKED)
 		GUICtrlSetState($g_hRadSwitchGooglePlay, $GUI_DISABLE + $GUI_UNCHECKED)
 		GUICtrlSetState($g_hRadSwitchSuperCellID, $GUI_DISABLE + $GUI_UNCHECKED)
 	Else
+		GUICtrlSetState($g_hBtnNextFarmingScheduleTab, $GUI_DISABLE)
 		GUICtrlSetState($g_hRadSwitchSharedPrefs, $GUI_ENABLE)
 		GUICtrlSetState($g_hRadSwitchGooglePlay, $GUI_ENABLE)
 		GUICtrlSetState($g_hRadSwitchSuperCellID, $GUI_ENABLE)
@@ -327,19 +329,26 @@ Func cmbTotalAcc()
 	For $i = 0 To $g_eTotalAcc - 1
 		If $iCmbTotalAcc >= 0 And $i <= $iCmbTotalAcc Then
 			_GUI_Value_STATE("SHOW", $g_ahChkAccount[$i] & "#" & $g_ahCmbProfile[$i] & "#" & $g_ahChkDonate[$i])
+		ElseIf $i > $iCmbTotalAcc Then
+			GUICtrlSetState($g_ahChkAccount[$i], $GUI_UNCHECKED)
+			_GUI_Value_STATE("HIDE", $g_ahChkAccount[$i] & "#" & $g_ahCmbProfile[$i] & "#" & $g_ahChkDonate[$i])
+		EndIf
+		chkAccount($i)
+	Next
+
+	For $i = 0 To $g_eTotalAcc - 1
+		If $iCmbTotalAcc >= 0 And $i <= $iCmbTotalAcc And $i < 8 Then
 			For $j = $g_ahChkSetFarm[$i] To $g_ahCmbTime2[$i]
 				GUICtrlSetState($j, $GUI_SHOW)
 			Next
 			_chkSetFarmSchedule($i)
-		ElseIf $i > $iCmbTotalAcc Then
-			GUICtrlSetState($g_ahChkAccount[$i], $GUI_UNCHECKED)
-			_GUI_Value_STATE("HIDE", $g_ahChkAccount[$i] & "#" & $g_ahCmbProfile[$i] & "#" & $g_ahChkDonate[$i])
+		Else
 			For $j = $g_ahChkSetFarm[$i] To $g_ahCmbTime2[$i]
 				GUICtrlSetState($j, $GUI_HIDE)
 			Next
 		EndIf
-		chkAccount($i)
 	Next
+	
 EndFunc   ;==>cmbTotalAcc
 
 Func chkSmartSwitch()

@@ -467,7 +467,7 @@ Global $g_bOnReplayWindow, $g_iReplayToPause
 Global $g_iLastLayout = 0
 
 ; ChatActions - Team AiO MOD++
-Global $g_bChatClan = True, $g_sDelayTimeClan = 2, $g_bClanUseResponses = False, $g_bClanUseGeneric = False, $g_bCleverbot = False
+Global $g_bChatClan = True, $g_sDelayTimeClan = 2, $g_bClanUseResponses = False, $g_bClanUseGeneric = False;, $g_bCleverbot = False
 Global $g_bUseNotify = False, $g_bPbSendNew = False
 Global $g_bEnableFriendlyChallenge = True, $g_sDelayTimeFC = 5, $g_bOnlyOnRequest = False
 Global $g_bFriendlyChallengeBase[6] = [False, False, False, False, False, False]

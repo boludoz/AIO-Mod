@@ -14,8 +14,7 @@
 ; ===============================================================================================================================
 #include-once
 
-Global $g_hChkClanChat = 0, $g_hChkUseResponses = 0, $g_hChkUseGeneric = 0, $g_hChkCleverbot = 0, _
-	$g_hTxtDelayTimeClan = 0, $g_hTxtEditResponses = 0, $g_hTxtEditGeneric = 0, $g_hLblEditResponses = 0, $g_hLblEditGeneric = 0
+Global $g_hChkClanChat = 0, $g_hChkUseResponses = 0, $g_hChkUseGeneric = 0, $g_hTxtDelayTimeClan = 0, $g_hTxtEditResponses = 0, $g_hTxtEditGeneric = 0, $g_hLblEditResponses = 0, $g_hLblEditGeneric = 0;, $g_hChkCleverbot = 0
 
 Global $g_hChkEnableFriendlyChallenge = 0, $g_hChkOnlyOnRequest = 0, $g_hChkFriendlyChallengeBase[6] = [0, 0, 0, 0, 0, 0], _
 	$g_hTxtDelayTimeFC = 0, $g_hTxtChallengeText = 0, $g_hTxtKeywordForRequest = 0, $g_hLblChallengeText = 0, $g_hLblKeywordForRequest = 0
@@ -38,7 +37,7 @@ Func TabChatActionsGUI()
 	GUICtrlCreateGroup(GetTranslatedFileIni("MOD GUI Design - ChatActions", "Group_02", "Clan Chat"), $x - 20, $y - 20, $g_iSizeWGrpTab2 - 1, 118)
 	$x -= 10
 	$y -= 10
-	
+
 		GUICtrlCreateLabel("Frequency :", $x, $y + 4, 60, 17)
 		$g_hCmbPriorityCHAT = GUICtrlCreateCombo("", $x + 120, $y, 89, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 		GUICtrlSetData(-1, GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptions", $g_sFrequenceChain))
@@ -66,12 +65,12 @@ Func TabChatActionsGUI()
 			GetTranslatedFileIni("MOD GUI Design - ChatActions", "ChkHarangueCG_Info_02", "do clan games now you can be in your pool while others suffer."))
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
 			GUICtrlSetOnEvent(-1, "chkUseGeneric")
-
 	$y += 20
+	#cs
 		$g_hChkCleverbot = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design - ChatActions", "ChkCleverbot", "Cleverbot"), $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design - ChatActions", "ChkCleverbot_Info_01", "Enabele on this function to communicate Cleverbot with your clan"))
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
-
+	#ce
 	$y -= 55
 	$x += 120
 		$g_hLblEditResponses = GUICtrlCreateLabel(GetTranslatedFileIni("MOD GUI Design - ChatActions", "EditResponses", "Responses Messages"), $x + 2, $y, -1, -1)
