@@ -4,9 +4,9 @@
 ; Syntax ........:
 ; Parameters ....: None
 ; Return values .: None
-; Author ........: Demen, NguyenAnhHD (03-2018)
+; Author ........: Demen, NguyenAnhHD (03-2018), Boldina (16-2-2022)
 ; Modified ......: Team AiO MOD++ (2019-2022)
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2022
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
@@ -58,16 +58,19 @@ EndFunc   ;==>CreateBotProfileSchedule
 
 #Region Switch Accounts tab
 Func CreateSwitchAccount()
-	; xbebenk
 	Local $x = 15, $y = 30
 	$x -= 10
-		$g_hCmbSwitchAcc = GUICtrlCreateCombo("", $x, $y-3, 175, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+		$g_hCmbSwitchAcc = GUICtrlCreateCombo("", $x, $y-3, 145, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 		Local $s = "No Switch Accounts Group"
 		For $i = 1 To UBound($g_ahChkAccount)
 			$s &= "|Switch Accounts Group " & $i
 		Next
 		GUICtrlSetData(-1, GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "CmbSwitchAcc", $s), "No Switch Accounts Group")
 		GUICtrlSetOnEvent(-1, "cmbSwitchAcc")
+		
+		; Custom - Team AIO Mod++
+		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnResetButton, $x + 152, $y, 16, 16)
+		GUICtrlSetOnEvent(-1, "ResetGroupSwAcc")
 
 	$y += 20
 		$g_hChkSwitchAcc = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "ChkSwitchAcc", "Enable Switch"), $x, $y, -1, -1)
@@ -141,6 +144,38 @@ Func CreateSwitchAccount()
 		Next
 
 EndFunc   ;==>CreateSwitchAccount
+
+Func ResetGroupSwAcc()
+	If _GUICtrlComboBox_GetCurSel($g_hCmbSwitchAcc) <= 0 Then Return
+	
+	For $i = 0 To $g_eTotalAcc - 1
+		GUICtrlSetState($g_ahChkAccount[$i], $GUI_UNCHECKED)
+		_GUICtrlComboBox_SetCurSel($g_ahCmbProfile[$i], -1)
+		GUICtrlSetState($g_ahChkDonate[$i], $GUI_UNCHECKED)
+		
+		GUICtrlSetState($g_ahChkAccount[$i], $g_bChkSwitchAcc ? $GUI_ENABLE : $GUI_DISABLE)
+		GUICtrlSetState($g_ahChkDonate[$i], $g_bChkSwitchAcc ? $GUI_DISABLE)
+		GUICtrlSetState($g_ahCmbProfile[$i], $g_bChkSwitchAcc ? $GUI_DISABLE)
+
+		; Farm Schedule - Team AiO MOD++
+		GUICtrlSetState($g_ahChkSetFarm[$i], $GUI_UNCHECKED)
+
+		_GUICtrlComboBox_SetCurSel($g_ahCmbAction1[$i], 0)
+		_GUICtrlComboBox_SetCurSel($g_ahCmbCriteria1[$i], 0)
+		GUICtrlSetData($g_ahTxtResource1[$i], $g_aiTxtResource1[$i])
+		_GUICtrlComboBox_SetCurSel($g_ahCmbTime1[$i], 0)
+
+		_GUICtrlComboBox_SetCurSel($g_ahCmbAction2[$i], 0)
+		_GUICtrlComboBox_SetCurSel($g_ahCmbCriteria2[$i], 0)
+		GUICtrlSetData($g_ahTxtResource2[$i], $g_aiTxtResource2[$i])
+		_GUICtrlComboBox_SetCurSel($g_ahCmbTime2[$i], 0)
+		For $h = $g_ahCmbAction1[$i] To $g_ahCmbTime2[$i]
+			GUICtrlSetState($h, $GUI_DISABLE)
+		Next
+	Next
+	ApplyConfig_600_35_2("Save")
+EndFunc   ;==>ResetGroupSwAcc
+
 #EndRegion
 
 #Region Switch Profiles tab
