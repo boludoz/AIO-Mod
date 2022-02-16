@@ -32,16 +32,10 @@ Func VillageReport($bBypass = False, $bSuppressLog = False)
 		If _Sleep($DELAYPREPARESEARCH2) Then Return
 	EndIf
 	
-	_CaptureRegion()
-	_CaptureRegion2Sync()
-	Local $sBuilderInfo = _getBuilders($aBuildersDigits[0], $aBuildersDigits[1])
-	$g_iFreeBuilderCount = StringLeft($sBuilderInfo, 1)
-	$g_iTotalBuilderCount = StringRight($sBuilderInfo, 1)
-	If Not StringIsDigit($g_iFreeBuilderCount) Or Not StringIsDigit($g_iTotalBuilderCount) Then 
-		SetLog("Unable to read Builders info at this time (2)", $COLOR_ERROR)
-	EndIf
+	getBuilderCount($bSuppressLog) ; update builder data
+	If _Sleep($DELAYRESPOND) Then Return
 	
-	_CaptureRegion2Sync()
+	_CaptureRegions()
 	$g_aiCurrentLoot[$eLootTrophy] = _getTrophyMainScreen($aTrophies[0], $aTrophies[1])
 	If Not $bSuppressLog Then SetLog(" [T]: " & _NumberFormat($g_aiCurrentLoot[$eLootTrophy]), $COLOR_SUCCESS)
 	

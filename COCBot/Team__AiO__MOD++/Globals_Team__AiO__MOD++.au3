@@ -301,11 +301,6 @@ Global Const $g_sConstMaxBuilderBase = 86400 ; 86400 const = 1 day quality check
 Global $g_sDateBuilderBase = "2021/09/02 00:00:00"
 #EndRegion - Dates - Team AIO Mod++
 
-#Region -  New DB sys - Team AIO Mod++
-Global $g_hChkDBCheckDefensesAlive, $g_hChkDBCheckDefensesMix
-Global $g_bDefensesAlive = False, $g_bDefensesMix = False
-#EndRegion - New DB sys - Team AIO Mod++
-
 #Region - No Upgrade In War - Team AIO Mod++
 Global $g_hChkNoUpgradeInWar = True, $g_bNoUpgradeInWar
 #EndRegion - No Upgrade In War - Team AIO Mod++
