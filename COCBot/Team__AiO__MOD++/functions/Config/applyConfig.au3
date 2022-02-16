@@ -405,7 +405,9 @@ Func ApplyConfig_MOD_ChatActions($TypeReadSave)
 	; <><><> ChatActions <><><>
 	Switch $TypeReadSave
 		Case "Read"
+			If $g_iCmbPriorityCHAT < 0 Then $g_iCmbPriorityCHAT = 0
 			_GUICtrlComboBox_SetCurSel($g_hCmbPriorityCHAT, $g_iCmbPriorityCHAT)
+			If $g_iCmbPriorityFC < 0 Then $g_iCmbPriorityFC = 0
 			_GUICtrlComboBox_SetCurSel($g_hCmbPriorityFC, $g_iCmbPriorityFC)
 			
 			GUICtrlSetState($g_hChkHarangueCG, $g_bChkHarangueCG = True ? $GUI_CHECKED : $GUI_UNCHECKED)
