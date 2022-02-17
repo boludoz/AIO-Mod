@@ -19,7 +19,7 @@ Func VillageReport($bBypass = False, $bSuppressLog = False)
 	If _Sleep($DELAYVILLAGEREPORT1) Then Return
 	
 	If $g_bpushedsharedprefs == True Then
-		If PullSharedPrefs() Then
+		If PullSharedPrefs() == True Then
 			$g_bpushedsharedprefs = False
 		EndIf
 	EndIf
