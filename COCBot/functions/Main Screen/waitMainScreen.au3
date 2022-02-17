@@ -19,7 +19,8 @@ Func waitMainScreen() ;Waits for main screen to popup
 	SetLog("Waiting for Main Screen", $COLOR_INFO) ; Custom - Team AIO Mod++
 	$iCount = 0
 	Local $aPixelToCheck = $g_bStayOnBuilderBase ? $aIsOnBuilderBase : $aIsMain
-	For $i = 0 To 105 ;105*2000 = 3.5 Minutes
+	; xbenk
+	For $i = 0 To 25 ;105*2000 = 3.5 Minutes
 		If Not $g_bRunState Then Return
 		SetDebugLog("waitMainScreen ChkObstl Loop = " & $i & ", ExitLoop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop
 		$iCount += 1
@@ -44,6 +45,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 			If Not TestCapture() And _Sleep($DELAYWAITMAINSCREEN1) Then Return
 			If checkObstacles() Then $i = 0 ;See if there is anything in the way of mainscreen
 		EndIf
+		#cs - xbenk
 		If Mod($i, 5) = 0 Then ;every 10 seconds
 			If $g_bDebugImageSave Then SaveDebugImage("WaitMainScreen_", False)
 		EndIf
@@ -52,14 +54,26 @@ Func waitMainScreen() ;Waits for main screen to popup
 		If TestCapture() Then
 			Return "Main screen not available"
 		EndIf
-
+		#ce
 	Next
+	
+	; xbenk
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    CloseCoC(True) ; Close then Open CoC
+    ;CloseCoC(False) ; Close then Open CoC
+    ;_RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True, $iRetry = 0, $iRecursive = 0, $SkipSharedPrefs = False)
+    SetLog("=========RESTART COC==========", $COLOR_INFO)
+    CloseCoC()
+    _RestartAndroidCoC(False, False, True, 0, 0, True)
+    If _CheckPixel($aPixelToCheck, True) Then Return ; If its main screen return
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+	#cs - xbenk
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	CloseCoC(True) ; Close then Open CoC
 	If _CheckPixel($aPixelToCheck, True) Then Return ; If its main screen return
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-	#cs
+
 	; If mainscreen is not found, then fix it
 	$iCount = 0
 	While 1
