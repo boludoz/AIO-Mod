@@ -1271,7 +1271,7 @@ Func _RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True
 			EndIf
 			$iRetry += 1
 			SetLog("Unable to load Clash of Clans, " & $iRetry & ". retry...", $COLOR_ERROR)
-			If $iRetry = 2 And $iRecursive = 0 And HaveSharedPrefs() Then
+			If $iRetry = 2 And $iRecursive = 0 Or HaveSharedPrefs() Then ; Fix cache
 				; crash might get fixed by clearing cache
 				$cmdOutput = AndroidAdbSendShellCommand("set export=$(pm clear " & $g_sAndroidGamePackage & " >&2)", 15000) ; timeout of 15 Seconds
 				If StringInStr($cmdOutput, "Success") Then
