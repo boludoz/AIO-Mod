@@ -10,8 +10,9 @@
 Func setupProfileComboBox()
 	; Array to store Profile names to add to ComboBox
 	Local $profileString = ""
-	Local $aProfiles = _FileListToArray($g_sProfilePath, "*", $FLTA_FOLDERS)
 	Local $aProfileList = ["<No Profiles>"]
+	; Custom fix - Team AIO Mod++
+	Local $aProfiles = _FileListToArray($g_sProfilePath, "*", $FLTA_FOLDERS)
 	If @error Then
 		; No folders for profiles so lets set the combo box to a generic entry
 		$profileString = $aProfileList[0]
@@ -37,7 +38,9 @@ Func setupProfileComboBox()
 	For $i = 0 To $g_eTotalAcc - 1
 		GUICtrlSetData($g_ahCmbProfile[$i], "")
 		GUICtrlSetData($g_ahCmbProfile[$i], "|" & $profileString)
-		_GUICtrlComboBox_SetCurSel($g_ahCmbProfile[$i], 0)
+		
+		; Custom fix - Team AIO Mod++
+		_GUICtrlComboBox_SetCurSel($g_ahCmbProfile[$i], -1)
 	Next
 	; Switch Profiles
 	For $i = 0 To 3
@@ -61,6 +64,12 @@ Func renameProfile()
 		If $g_hAttackLogFile <> 0 Then
 			FileClose($g_hAttackLogFile)
 			$g_hAttackLogFile = 0
+		EndIf
+		
+		; Custom BB - Team AIO Mod++
+		If $g_hBBAttackLogFile <> 0 Then
+			FileClose($g_hBBAttackLogFile)
+			$g_hBBAttackLogFile = 0
 		EndIf
 
 		; rename the directory and all files and sub folders.
@@ -95,6 +104,12 @@ Func deleteProfile()
 			If $g_hAttackLogFile <> 0 Then
 				FileClose($g_hAttackLogFile)
 				$g_hAttackLogFile = 0
+			EndIf
+
+			; Custom BB - Team AIO Mod++
+			If $g_hBBAttackLogFile <> 0 Then
+				FileClose($g_hBBAttackLogFile)
+				$g_hBBAttackLogFile = 0
 			EndIf
 		EndIf
 		; Remove the directory and all files and sub folders.
@@ -178,6 +193,12 @@ Func setupProfile($sProfile = Default)
 			FileClose($g_hAttackLogFile)
 			$g_hAttackLogFile = 0
 		EndIf
+	EndIf
+
+	; Custom BB - Team AIO Mod++
+	If $g_hBBAttackLogFile <> 0 Then
+		FileClose($g_hBBAttackLogFile)
+		$g_hBBAttackLogFile = 0
 	EndIf
 
 	$g_sProfileCurrentName = $sProfile

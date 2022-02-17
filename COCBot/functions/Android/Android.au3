@@ -1988,6 +1988,7 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 		; update $g_iAndroidSystemAPI ; getprop ro.build.version.sdk
 		$g_iAndroidVersionAPI = Int(AndroidAdbSendShellCommand("getprop ro.build.version.sdk", Default, $wasRunState, False))
 
+		#cs
 		; Custom AIO
 		If $g_iAndroidVersionAPI >= $g_iAndroidLollipop And $g_iAndroidVersionAPI <= $g_iAndroidPie Then
 			SetDebugLog("Android Version API = " & $g_iAndroidVersionAPI & " " & " - OK", $COLOR_INFO)
@@ -1997,7 +1998,7 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 			PushMsg("Hard stuck, please check your android version to be compatible with clash of clans (Range supported : 5.1 - 9.0).")
 			BtnStop()
 		EndIf
-		
+		#ce
 		; check mouse device
 		If StringLen($g_sAndroidMouseDevice) > 0 And $g_sAndroidMouseDevice = $g_avAndroidAppConfig[$g_iAndroidConfig][13] Then
 			$iConnected = ConnectAndroidAdb($rebootAndroidIfNeccessary)

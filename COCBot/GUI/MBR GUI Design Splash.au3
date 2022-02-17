@@ -32,7 +32,7 @@ Func CreateSplashScreen($iSteps = Default)
 	Local $bCustomWindow = IsString($iSteps)
 
 	If $iSteps = Default Then
-		$g_iSplashTotalSteps = 10
+		$g_iSplashTotalSteps = 13 ; Custom - AIO Mod++
 	Else
 		$iGuiState = @SW_SHOW
 		$bDisableSplash = False
@@ -45,7 +45,7 @@ Func CreateSplashScreen($iSteps = Default)
 
 	Local $sSplashImg = $g_sLogoLoading
 	Local $iX, $iY
-	Local $iT = 4 ; Top of logo (additional space)
+	Local $iT = 0 ; Top of logo (additional space) ; Custom - AIO Mod++
 	Local $iB = 0 ; Bottom of logo (additional space)
 
 	If Not $bCustomWindow Then
