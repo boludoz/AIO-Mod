@@ -59,7 +59,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 	CloseCoC(True) ; Close then Open CoC
 	If _CheckPixel($aPixelToCheck, True) Then Return ; If its main screen return
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+	#cs
 	; If mainscreen is not found, then fix it
 	$iCount = 0
 	While 1
@@ -83,7 +83,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 		EndIf
 		If _CheckPixel($aPixelToCheck, $g_bCapturePixel) = True Then ExitLoop
 	WEnd
-
+	#ce
 EndFunc   ;==>waitMainScreen
 
 Func waitMainScreenMini()
