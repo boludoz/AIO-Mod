@@ -178,7 +178,12 @@ Func btnPullSharedPrefs()
 	PullSharedPrefs()
 EndFunc   ;==>btnPullSharedPrefs
 
+ ; Custom fix - Team AIO Mod++
 Func btnPushSharedPrefs()
+	Local $bWasRunState = $g_bRunState
+	$g_bRunState = True
+	CloseCOC()
+	$g_bRunState = $bWasRunState
 	PushSharedPrefs()
 EndFunc   ;==>btnPushSharedPrefs
 

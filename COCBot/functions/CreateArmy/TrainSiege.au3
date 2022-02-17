@@ -40,7 +40,7 @@ Func TrainSiege($bTrainFullSiege = False)
 	Local $aCheckIsAvailableSiege7[7] = [400, 556, 0x64BA29, 10]
 	Local $aCheckIsAvailableSiege8[8] = [576, 556, 0x64BA29, 10]
 	Local $aCheckIsAvailableSiege9[9] = [750, 556, 0x64BA29, 10]
-	Local $aiQueueSiegeMachine[$eSiegeMachineCount] = [0, 0, 0, 0, 0]
+	Local $aiQueueSiegeMachine[$eSiegeMachineCount] = [0, 0, 0, 0, 0, 0]
 	Local $aiTotalSiegeMachine = $g_aiCurrentSiegeMachines
 
 	; check queueing siege

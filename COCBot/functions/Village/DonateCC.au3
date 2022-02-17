@@ -437,9 +437,9 @@ Func DonateCC($bCheckForNewMsg = False)
 				ExitLoop ; Leave donate to prevent a bot hang condition
 			EndIf
 
-			;;; Variables to use in Loops for Custom.A to Custom.D
-			Local $eCustom[4] = [$eCustomA, $eCustomB, $eCustomC, $eCustomD]
-			Local $eDonateCustom[4] = [$g_aiDonateCustomTrpNumA, $g_aiDonateCustomTrpNumB, $g_aiDonateCustomTrpNumC, $g_aiDonateCustomTrpNumD]
+			;;; Variables to use in Loops for Custom.A to Custom.C ;Custom.D
+			Local $eCustom = [$eCustomA, $eCustomB, $eCustomC];, $eCustomD]
+			Local $eDonateCustom = [$g_aiDonateCustomTrpNumA, $g_aiDonateCustomTrpNumB, $g_aiDonateCustomTrpNumC];, $g_aiDonateCustomTrpNumD]
 
 			;;; Typical Donation
 			If $bDonateTroop Or $bDonateSpell Or $bDonateSiege Then
@@ -553,9 +553,9 @@ Func DonateCC($bCheckForNewMsg = False)
 					SetDebugLog("Troop All checkpoint.", $COLOR_DEBUG)
 
 					;;; DONATE TO ALL for Custom And Typical Donation
-					; 0 to 3 is Custom [A to D] and the 4 is the 'Typical'
-					For $x = 0 To 4
-						If $x <> 4 Then
+					; 0 to 3 is Custom [A to C] and the 3 is the 'Typical'
+					For $x = 0 To 3
+						If $x <> 3 Then
 							If $g_abChkDonateAllTroop[$eCustom[$x]] Then
 								Local $CorrectDonateCustom = $eDonateCustom[$x]
 								For $i = 0 To 2
@@ -580,7 +580,7 @@ Func DonateCC($bCheckForNewMsg = False)
 									DonateTroopType($CorrectDonateCustom[$i][0], $CorrectDonateCustom[$i][1], $abDonateQueueOnly[0], $bDonateAllTroop) ;;; Donate Custom Troop using DonateTroopType2
 								Next
 							EndIf
-						Else ; this is the $x = 4 [Typical Donation]
+						Else ; this is the $x = 3 [Typical Donation]
 							For $i = 0 To UBound($g_aiDonateTroopPriority) - 1
 								Local $iTroopIndex = $g_aiDonateTroopPriority[$i]
 								If $g_abChkDonateAllTroop[$iTroopIndex] Then
