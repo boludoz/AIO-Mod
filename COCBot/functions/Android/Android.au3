@@ -1212,6 +1212,17 @@ Func _RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True
 		If $bStopCoC Then
 			SetLog("Please wait for CoC restart.....", $COLOR_INFO) ; Let user know we need time...
 			$sRestart = "-S "
+			
+			If HaveSharedPrefs() Then ; Fix cache
+				; crash might get fixed by clearing cache
+				$cmdOutput = AndroidAdbSendShellCommand("set export=$(pm clear " & $g_sAndroidGamePackage & " >&2)", 15000) ; timeout of 15 Seconds
+				If StringInStr($cmdOutput, "Success") Then
+					SetLog("Clash of Clans cache now cleared", $COLOR_SUCCESS)
+					$g_PushedSharedPrefsProfile_Timer = 0
+				Else
+					SetLog("Clash of Clans cache not cleared: " & $cmdOutput, $COLOR_ERROR)
+				EndIf
+			EndIf
 		Else; xbenk
             SetLog("Starting CoC, Please wait...", $COLOR_INFO) ; Let user know we need time...
 		EndIf
@@ -1222,6 +1233,8 @@ Func _RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True
 	If Not $g_bRunState Then Return False
 	;AndroidAdbTerminateShellInstance()
 	If Not $g_bRunState Then Return False
+	
+
 	;$cmdOutput = LaunchConsole($g_sAndroidAdbPath, "-s " & $g_sAndroidAdbDevice & " shell am start " & $sRestart & "-n " & $g_sAndroidGamePackage & "/" & $g_sAndroidGameClass, $process_killed, 30 * 1000) ; removed "-W" option and added timeout (didn't exit sometimes)
 	If ((ProfileSwitchAccountEnabled() And $g_bChkSharedPrefs) Or $g_bUpdateSharedPrefs) And HaveSharedPrefs() And _
             ($g_bUpdateSharedPrefs Or $g_PushedSharedPrefsProfile <> $g_sProfileCurrentName Or ($g_PushedSharedPrefsProfile_Timer = 0 Or _ 

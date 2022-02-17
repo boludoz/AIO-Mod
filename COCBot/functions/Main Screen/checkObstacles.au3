@@ -256,7 +256,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 	CheckLoginWithSupercellID()
 
 	; optional game update
-	If UBound(decodeSingleCoord(FindImageInPlace("OptUpdateCoC", $g_sImgOptUpdateCoC, "155,220,705,510", False))) > 1 Then ; Found Optional Game Update Message
+	If UBound(decodeSingleCoord(FindImageInPlace("OptUpdateCoC", $g_sImgOptUpdateCoC, "380,220,705,510", False))) > 1 Then ; Found Optional Game Update Message
 		SetLog("Found Optional Game Update - Clicking No Thanks", $COLOR_INFO)
 
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return

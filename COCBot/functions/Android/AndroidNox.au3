@@ -480,7 +480,7 @@ Func EmbedNox($bEmbed = Default, $hHWndAfter = Default)
 
 	; Find QTool Parent Window
 	Local $aWin = _WinAPI_EnumProcessWindows(GetAndroidPid(), False)
-	Local $i
+	Local $i, $c
 	Local $hToolbar = 0
 
 	For $i = 1 To UBound($aWin) - 1
