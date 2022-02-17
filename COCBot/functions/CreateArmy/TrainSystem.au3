@@ -579,15 +579,16 @@ Func RemoveExtraTroopsQueue() ; Will remove All Extra troops in queue If there's
 	;Local $x = 834
 
 	Local Const $y = 186, $yRemoveBtn = 200, $xDecreaseRemoveBtn = 10
-	Local $bColorCheck = False, $bGotRemoved = False
+	Local $bColorCheck = False, $bGotRemoved = False, $iRandomCS = $g_iTrainClickDelay
 	For $x = 834 To 58 Step -70
 		If Not $g_bRunState Then Return
 		$bColorCheck = _ColorCheck(_GetPixelColor($x, $y, True), Hex(0xD7AFA9, 6), 20)
 		If $bColorCheck Then
 			$bGotRemoved = True
 			Do
-				Click($x - $xDecreaseRemoveBtn, $yRemoveBtn, 2, $g_iTrainClickDelay)
-				If _Sleep(20) Then Return
+				$iRandomCS = Random(2, 5)
+				Click($x - $xDecreaseRemoveBtn, $yRemoveBtn, Round($iRandomCS), Abs(Round($g_iTrainClickDelay / $iRandomCS)))
+				; If _Sleep(20) Then Return
 				$bColorCheck = _ColorCheck(_GetPixelColor($x, $y, True), Hex(0xD7AFA9, 6), 20)
 			Until $bColorCheck = False
 

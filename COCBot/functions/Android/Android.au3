@@ -4567,7 +4567,7 @@ Func PullSharedPrefs($sProfile = $g_sProfileCurrentName)
 	EndIf
 	Return SetError(0, 0, $Result)
 EndFunc   ;==>PullSharedPrefs
-
+global $g_bpushedsharedprefs = False
 Func PushSharedPrefs($sProfile = $g_sProfileCurrentName, $bCloseGameIfRunning = True)
 	Local $Result = False
 	Local $bWasRunState = $g_bRunState
@@ -4731,6 +4731,7 @@ Func PushSharedPrefs($sProfile = $g_sProfileCurrentName, $bCloseGameIfRunning = 
 		$g_PushedSharedPrefsProfile = $sProfile
 		$g_PushedSharedPrefsProfile_Timer = __TimerInit()
 		If $g_bUpdateSharedPrefs And $g_iAndroidZoomoutMode = 4 Then $g_bAndroidZoomoutModeFallback = True
+		$g_bpushedsharedprefs = True
 		_Sleep(3000)
 	Else
 		; something went wrong

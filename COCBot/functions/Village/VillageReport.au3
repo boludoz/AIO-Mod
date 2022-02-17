@@ -17,7 +17,13 @@
 Func VillageReport($bBypass = False, $bSuppressLog = False)
 	ClickAway()
 	If _Sleep($DELAYVILLAGEREPORT1) Then Return
-
+	
+	If $g_bpushedsharedprefs == True Then
+		If PullSharedPrefs() Then
+			$g_bpushedsharedprefs = False
+		EndIf
+	EndIf
+	
 	Switch $bBypass
 		Case False
 			If Not $bSuppressLog Then SetLog("Village Report", $COLOR_INFO)
