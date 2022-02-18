@@ -63,7 +63,7 @@ Func TabGTFOGUI()
 	GUICtrlSetOnEvent(-1, "chkGTFOReturnClan")
 
 	GUICtrlCreateLabel(GetTranslatedFileIni("MOD GUI Design - Misc", "LblClanReturn", "Return to clan") & ": ", $x + 25, $y + 125, -1, -1)
-	$g_hTxtClanID = _GUICtrlCreateInput("#XXXXXX", $x + 160 + 75, $y + 123, 56, 21)
+	$g_hTxtClanID = _GUICtrlCreateInput("#XXXXXX", $x + 160 + 75, $y + 123, 56, 21, $ES_NUMBER)
 	GUICtrlSetFont(-1, 9, $FW_BOLD, "Candara", $CLEARTYPE_QUALITY)
 	GUICtrlSetColor(-1, $COLOR_BLACK)
 	GUICtrlSetOnEvent(-1, "ApplyClanReturnGTFO")

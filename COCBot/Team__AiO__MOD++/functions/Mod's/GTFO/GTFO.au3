@@ -118,7 +118,7 @@ Func LeaveClanHop()
 	CloseClanChat()
 
 	Setlog("GTFO|Joining to native clan.", $COLOR_INFO)
-	Local $g_sTxtClanID = GUICtrlRead($g_hTxtClanID)
+
 	Local $sClaID = StringReplace($g_sTxtClanID, "#", "")
 	Setlog("Send : " & $sClaID, $COLOR_INFO)
 	AndroidAdbSendShellCommand("am start -n " & $g_sUserGamePackage & "/" & $g_sUserGameClass & " -a android.intent.action.VIEW -d 'https://link.clashofclans.com/?action=OpenClanProfile&tag=" & $sClaID & "'", Default)
@@ -311,6 +311,7 @@ Func ClanHop()
 			ClickP($g_aIsClanChat)
 
 			#Region - ClanHop return to clan alternative
+			#cs
 			If $g_bFirstHop = True And $g_bChkGTFOReturnClan = True Then
 				If _Wait4PixelArray($g_aShare) Then
 					ClickP($g_aShare)
@@ -332,6 +333,7 @@ Func ClanHop()
 					; Return False
 				EndIf
 			EndIf
+			#Ce
 			#EndRegion - ClanHop return to clan alternative
 
 

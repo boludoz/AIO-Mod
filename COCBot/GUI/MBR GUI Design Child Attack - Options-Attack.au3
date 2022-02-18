@@ -408,7 +408,7 @@ Func CreateAttackSearchOptionsAttack()
 		#Region - Custom schedule - Team AIO Mod++
 		$g_hChkRNDSchedAttack = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design", "ChkRNDSchedAttack", "Daily random schedule"), $x + 35, $y + 15, -1, -1)
 			GUICtrlSetOnEvent(-1, "ChkRNDSchedAttack")
-		$g_hCmbRNDSchedAttack = GUICtrlCreateInput("8", $x + 165, $y + 17, 37, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hCmbRNDSchedAttack = _GUICtrlCreateInput("8", $x + 165, $y + 17, 37, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "CmbRNDSchedAttack", "Enter maximum number of hours allowed per day"))
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			GUICtrlSetLimit(-1, 3)

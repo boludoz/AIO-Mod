@@ -486,10 +486,18 @@ Func ApplyConfig_MOD_600_12($TypeReadSave)
 		Case "Read"
 			GUICtrlSetState($g_hChkGTFOClanHop, $g_bChkGTFOClanHop = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkGTFOReturnClan, $g_bChkGTFOReturnClan = True ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetData($g_hTxtCyclesGTFO, $g_iTxtCyclesGTFO)
 			GUICtrlSetState($g_hChkUseGTFO, $g_bChkUseGTFO = True ? $GUI_CHECKED : $GUI_UNCHECKED)
+
+			If $g_iTxtCyclesGTFO < 1 Then $g_iTxtCyclesGTFO = 100
+			GUICtrlSetData($g_hTxtCyclesGTFO, $g_iTxtCyclesGTFO)
+			
+			If $g_iTxtCyclesGTFO < 1 Then $g_iTxtCyclesGTFO = 100
 			GUICtrlSetData($g_hTxtMinSaveGTFO_Elixir, $g_iTxtMinSaveGTFO_Elixir)
+
+			If $g_iTxtCyclesGTFO < 1 Then $g_iTxtCyclesGTFO = 100
 			GUICtrlSetData($g_hTxtMinSaveGTFO_DE, $g_iTxtMinSaveGTFO_DE)
+
+			If StringLeft($g_sTxtClanID, 1) <> "#" Then $g_sTxtClanID = "#XXXXXX"
 			GUICtrlSetData($g_hTxtClanID, $g_sTxtClanID)
 			ApplyGTFO()
 

@@ -795,7 +795,7 @@ Func CreateTrainOptions()
 	$y += 50
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Options", "Group_05", "Advanced Options"), $x - 20, $y - 20, 173, 66)
 	$g_hLblStickToTrainWindow = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Train_Troops", "LblStickToTrainWindow", "Stick to Army page when time left"), $x - 10, $y - 1)
-	$g_hTxtStickToTrainWindow = GUICtrlCreateInput("2", $x, $y + 17, 30, 20, $GUI_SS_DEFAULT_INPUT + $ES_CENTER + $ES_NUMBER)
+	$g_hTxtStickToTrainWindow = _GUICtrlCreateInput("2", $x, $y + 17, 30, 20, $GUI_SS_DEFAULT_INPUT + $ES_CENTER + $ES_NUMBER)
 	$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Train_Troops", "TxtStickToTrainWindow_Info_1", "Will stick to army train page until troops or spells train finish. (Max 5 minutes)(Spell only available if wait for spell enable)")
 	GUICtrlSetOnEvent(-1, "txtStickToTrainWindow")
 	_GUICtrlSetTip(-1, $sTxtTip)

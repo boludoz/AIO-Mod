@@ -889,7 +889,7 @@ Func runBot() ;Bot that runs everything in order
 					SetLog("Attacking Not Planned, Skipped.", $COLOR_WARNING)
 					If ProfileSwitchAccountEnabled() Then
 						$g_iCommandStop = 2
-						CheckSwitchAcc(True)
+						checkSwitchAcc()
 					EndIf
 				EndIf
 				; Train Donate only - force a donate cc every time
@@ -962,7 +962,7 @@ Func runBot() ;Bot that runs everything in order
 				If ProfileSwitchAccountEnabled() Then
 					$g_iCommandStop = 2
 					_RunFunction('DonateCC,Train')
-					checkSwitchAcc(True)
+					checkSwitchAcc()
 				ElseIf Not $g_bChkOnlyFarm Then
 					$iWaitTime = Random($DELAYWAITATTACK1, $DELAYWAITATTACK2)
 					SetLog("Attacking Not Planned and Skipped, Waiting random " & StringFormat("%0.1f", $iWaitTime / 1000) & " Seconds", $COLOR_WARNING)
@@ -1130,7 +1130,7 @@ Func _Idle() ;Sequence that runs until Full Army
 			If Not ProfileSwitchAccountEnabled() Then
 				$g_iCommandStop = 2
 				SetLog("Attacking not planned, skipped.", $COLOR_WARNING)
-				checkSwitchAcc(True) ; Forced to switch when in halt attack mode
+				checkSwitchAcc() ; Forced to switch when in halt attack mode
 			EndIf
 			Return
 		EndIf
@@ -1210,7 +1210,7 @@ Func AttackMain($bFirstStart = False, $bCheckCG = True) ;Main control for attack
 		SetLog("Attacking Not Planned, Skipped..", $COLOR_WARNING)
 		If ProfileSwitchAccountEnabled() Then
 			$g_iCommandStop = 2
-			checkSwitchAcc(True) ; Forced to switch when in halt attack mode
+			checkSwitchAcc() ; Forced to switch when in halt attack mode
 		EndIf
 	EndIf
 EndFunc   ;==>AttackMain
