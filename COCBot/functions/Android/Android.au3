@@ -4842,7 +4842,7 @@ Func CheckEmuNewVersions()
 		Case "BlueStacks2"
 			$NewVersion = GetVersionNormalized("4.280.0.4206") ; BlueStacks HyperV by Teknolojikpanda - Team__AiO__MOD
 		Case "MEmu"
-			$NewVersion = GetVersionNormalized("7.5.6.0")
+			$NewVersion = GetVersionNormalized("7.6.6.0")
          Case "Nox"
 			$NewVersion = GetVersionNormalized("7.0.1.2")
 		Case Else

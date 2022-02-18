@@ -7,7 +7,11 @@
 **v4.8.0**
 	- Improved: Farm schedule profiles tab.
 	- Deleted: Cleverbot (reduced bot size).
-
+	- Fixed: Quickfix shared_prefs (part of xbebenk)
+	- Fixed: The profiles can be renamed with tranquility.
+	- Improved: setupProfileComboBox fixed (too old mbr bug).
+	- New: Can donate Flame Flinger and Super Dragon.
+	
 **v4.7.9**
 	- Restored: Farm schedule profiles.
 	- Fixed: Fixed GUI in mini GUI return.
