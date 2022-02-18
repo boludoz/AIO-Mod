@@ -1049,7 +1049,7 @@ EndFunc   ;==>CheckLoginWithSupercellIDScreen
 Func SwitchAccountCheckProfileInUse($sNewProfile)
 	; now check if profile is used in another group
 	Local $sInGroups = ""
-	For $g = 1 To $g_eTotalAcc
+	For $g = 1 To 8
 		If $g = $g_iCmbSwitchAcc Then ContinueLoop
 		; find group this profile belongs to: no switch profile config is saved in config.ini on purpose!
 		Local $sSwitchAccFile = $g_sProfilePath & "\SwitchAccount.0" & $g & ".ini"
