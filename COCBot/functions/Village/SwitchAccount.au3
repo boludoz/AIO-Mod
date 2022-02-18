@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 ; Return True or False if Switch Account is enabled and current profile in configured list
-Func ProfileSwitchAccountEnabled()
+Func ProfileSwitchAccountEnabled() 
 	; Custom fix - Team AIO Mod++
 	Local $abAccountNo = AccountNoActive()
 	If UBound(_ArrayFindAll($abAccountNo, "True")) < 2 Then
@@ -1068,7 +1068,7 @@ EndFunc   ;==>CheckLoginWithSupercellIDScreen
 Func SwitchAccountCheckProfileInUse($sNewProfile)
 	; now check if profile is used in another group
 	Local $sInGroups = ""
-	For $g = 1 To 8
+	For $g = 1 To $g_eTotalAcc
 		If $g = $g_iCmbSwitchAcc Then ContinueLoop
 		; find group this profile belongs to: no switch profile config is saved in config.ini on purpose!
 		Local $sSwitchAccFile = $g_sProfilePath & "\SwitchAccount.0" & $g & ".ini"
