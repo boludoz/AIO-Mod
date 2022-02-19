@@ -526,7 +526,7 @@ Func CreateWallsSubTab()
 		; Custom Wall - Team AIO Mod++
 		$g_hChkWallOnlyIfRestABuilder = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "OnlyIfRestABuilder", "Upgrade only if one builder remains."), $x + 18, $y + 72 + 25, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "OnlyIfRestABuilder_Info_01", "Save resources for buildings: upgrade only if one builder remains") & @CRLF & _
-			GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "OnlyIfRestABuilder_Info_02", "or if they are reserved for herpes and not is warden upgrade active and not > 1 is idle."))
+			GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "OnlyIfRestABuilder_Info_02", "or if they are reserved for heroes and not is warden upgrade active and not > 1 is idle."))
 			GUICtrlSetState(-1, $GUI_ENABLE)
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
 			; GUICtrlSetOnEvent(-1, "chkSaveWallBldr")

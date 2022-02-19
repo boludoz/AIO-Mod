@@ -1307,24 +1307,29 @@ Func CheckBotRequests()
 	EndIf
 EndFunc   ;==>CheckBotRequests
 
-#Region - Optimization - Team AIO Mod++
 Func BotCloseRequest()
-	; The impatient user.
-	BotClose(Default, True)
+	If $g_iBotAction = $eBotClose Then
+		; already requested to close, but user is impatient, so close now
+		BotClose()
+	Else
+		SetLog("Closing " & $g_sBotTitle & ", please wait ...")
+	EndIf
+	$g_bRunState = False
+	$g_bBotPaused = False
+	$g_iBotAction = $eBotClose
 EndFunc   ;==>BotCloseRequest
 
 Func BotCloseRequestProcessed()
-	Return $g_iBotAction = $eBotClose
+	; Return False ; no stable yet, so disabled for now
+	Return $g_iBotAction = $eBotClose And $g_bAndroidEmbedded = False
 EndFunc   ;==>BotCloseRequestProcessed
 
 Func BotClose($SaveConfig = Default, $bExit = True)
-	; Perhaps this provides the stability that was lacking.
-	Static $bActiveClose = False
-	If $bActiveClose = True Then Return
-	$bActiveClose = True 
-	
-#EndRegion - Optimization - Team AIO Mod++
-	
+    ; Perhaps this provides the stability that was lacking.
+    Static $bActiveClose = False
+    If $bActiveClose = True Then Return
+    $bActiveClose = True 
+
 	If $SaveConfig = Default Then $SaveConfig = IsBotLaunched()
 	$g_bRunState = False
 	$g_bBotPaused = False
@@ -1333,7 +1338,7 @@ Func BotClose($SaveConfig = Default, $bExit = True)
 	LockBotSlot(False)
 
 	If $SaveConfig = True Then
-		setupProfile()
+		; setupProfile()
 		SaveConfig()
 	EndIf
 
@@ -1362,9 +1367,7 @@ Func BotClose($SaveConfig = Default, $bExit = True)
 	_Crypt_Shutdown()
 	_GUICtrlRichEdit_Destroy($g_hTxtLog)
 	_GUICtrlRichEdit_Destroy($g_hTxtAtkLog)
-	TCPShutdown() ; Close the TCP service.
-
-	; KillAdbDaemon(False) ; Close adb.
+	_GUICtrlRichEdit_Destroy($g_hTxtBBAtkLog)
 
 	_WinAPI_DeregisterShellHookWindow($g_hFrmBot)
 	If $g_hAndroidWindow <> 0 Then ControlFocus($g_hAndroidWindow, "", $g_hAndroidWindow) ; show Android in taskbar again
@@ -1372,7 +1375,7 @@ Func BotClose($SaveConfig = Default, $bExit = True)
 
 	; Global DllStuctCreate
 	$g_aiAndroidAdbScreencapBuffer = 0 ; Allocated in MBR Global Variables.au3
-	; $g_hStruct_SleepMicro = 0 ; Allocated in MBR Global Variables.au3, used in _Sleep.au3
+	$g_hStruct_SleepMicro = 0 ; Allocated in MBR Global Variables.au3, used in _Sleep.au3
 
 	; Unregister managing hosts
 	UnregisterManagedMyBotHost()

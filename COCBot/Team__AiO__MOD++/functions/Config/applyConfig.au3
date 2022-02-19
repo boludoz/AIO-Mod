@@ -619,7 +619,7 @@ Func ApplyConfig_MOD_600_35_1($TypeReadSave)
 			UpdateChkOnlyFarm() ;Applies it to farm button
 
 			; <><><> AIO Updater <><><>
-			GUICtrlSetState($g_hChkForAIOUpdates, $g_bCheckVersionAIO ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkForAIOUpdates, $g_bCheckVersionAIO ?  $GUI_UNCHECKED : $GUI_CHECKED )
 		Case "Save"
 			$g_bEnableAuto = (GUICtrlRead($g_hChkEnableAuto) = $GUI_CHECKED)
 			$g_bChkAutoDock = (GUICtrlRead($g_hChkAutoDock) = $GUI_CHECKED)
