@@ -362,3 +362,11 @@ Func ReadConfig_MOD_OneGem()
 
 EndFunc   ;==>ReadConfig_MOD_OneGem
 #EndRegion - One Gem Boost - Team AiO MOD++
+
+; Custom Wall - Team AIO Mod++
+Func ReadConfig_MOD_Walls()
+	; <><><><> Village / Upgrade - Walls <><><><>
+	inireads($g_bchkwallspriorities, $g_sprofileconfigpath, "upgrade", "builderpriority", True, "Bool")
+
+EndFunc   ;==>ReadConfig_MOD_Walls
+

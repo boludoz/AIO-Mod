@@ -26,13 +26,19 @@ Func UpgradeWall()
 		If SkipWallUpgrade($iWallCost) Then Return
 		SetDebugLog("$g_iFreeBuilderCount:" & $g_iFreeBuilderCount)
 		
+		#Region - Custom Wall - Team AIO Mod++ (Odin)
+		If $g_bupgradewardenenable AND BitAND($g_iheroupgradingbit, $eherowarden) <> $eherowarden AND $g_ifreebuildercount > 1 AND $g_bchkwallspriorities AND $g_iUpgradeWallLootType <> 0 Then
+			SetLog("Lets use Resources for Warden upgrades!", $color_info)
+			Return 
+		EndIf
+		
+		If $g_ifreebuildercount > ($g_bupgradewallsavebuilder ? 1 : 0) + Int(ReservedBuildersForHeroes()) AND $g_bchkwallspriorities Then
+			SetLog("Lets use Resources for next Building Upgrades!", $color_info)
+			Return 
+		EndIf
+		#EndRegion - Custom Wall - Team AIO Mod++
+		
 		If $g_iFreeBuilderCount > 0 Then
-			; Custom Wall - Team AIO Mod++
-			If $g_bWallOnlyIfRestABuilder And $g_iFreeBuilderCount > 1 Then
-				SetLog("Wall upgrade: skipped, more than only one builder iddle.", $COLOR_INFO)
-				Return
-			EndIf
-			
 			ClickAway()
 			Local $MinWallGold = Number($g_aiCurrentLoot[$eLootGold] - $iWallCost) > Number($g_iUpgradeWallMinGold) ; Check if enough Gold
 			Local $MinWallElixir = Number($g_aiCurrentLoot[$eLootElixir] - $iWallCost) > Number($g_iUpgradeWallMinElixir) ; Check if enough Elixir
@@ -42,7 +48,7 @@ Func UpgradeWall()
 			SetDebugLog("$MinWallElixir" & $MinWallElixir)
 
 			; Custom Wall - Team AIO Mod++
-			If $g_bImproveLowerWalls = False Then
+			; If $g_bImproveLowerWalls = False Then
 				While ($g_iUpgradeWallLootType = 0 And $MinWallGold) Or ($g_iUpgradeWallLootType = 1 And $MinWallElixir) Or ($g_iUpgradeWallLootType = 2 And ($MinWallGold Or $MinWallElixir))
 					
 					Switch $g_iUpgradeWallLootType
@@ -125,6 +131,7 @@ Func UpgradeWall()
 					$MinWallElixir = Number($g_aiCurrentLoot[$eLootElixir] - $iWallCost) > Number($g_iUpgradeWallMinElixir) ; Check if enough Elixir
 					
 				WEnd
+				#cs
 			Else
 				Local $iXClickOffset = 0, $iYClickOffset = 0
 				
@@ -272,6 +279,7 @@ Func UpgradeWall()
 					
 				EndIf
 			EndIf
+			#ce
 		Else
 			SetLog("No free builder, Upgrade Walls skipped..", $COLOR_ERROR)
 		EndIf

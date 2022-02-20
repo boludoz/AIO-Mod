@@ -809,7 +809,17 @@ Func runBot() ;Bot that runs everything in order
 			ProfileSwitch()  ;  Team AIO Mod++
 			CheckFarmSchedule()  ;  Team AIO Mod++
 			If _Sleep($DELAYRUNBOT2) Then Return
-			If BotCommand() Then btnStop()
+
+			; AIO
+			If botcommand() Then
+				If $g_ifreebuildercount - ($g_bautoupgradewallsenable And $g_bupgradewallsavebuilder ? 1 : 0) - ReservedBuildersForHeroes() <= 0 Then
+					SetLog("Lets use the Free Builders before check Halt Status!")
+					_RunFunction("UpgradeAll")
+					villagereport()
+					If botcommand() Then btnstop()
+				EndIf
+			EndIf
+
 			If Not $g_bRunState Then Return
 			If $g_bOutOfGold And (Number($g_aiCurrentLoot[$eLootGold]) >= Number($g_iTxtRestartGold)) Then ; check if enough gold to begin searching again
 				$g_bOutOfGold = False ; reset out of gold flag
@@ -830,98 +840,76 @@ Func runBot() ;Bot that runs everything in order
 			If $g_bChkReqCCFirst Then RequestCCMain()
 			#EndRegion - Request Early - Team AIO Mod++
 
-			; Only farm - Team AIO Mod++
-			If $g_bChkOnlyFarm = False Then
-
-				;Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge']
-				If $g_bIsSearchLimit Then
-					Local $aRndFuncList = ['Collect', 'PetCheck']
-				Else
-					Local $aRndFuncList = ['Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge', 'PetCheck', "ChatActions", "BotHumanization"] ; AIO Mod
-				EndIf
-
-				_ArrayShuffle($aRndFuncList)
-				For $Index In $aRndFuncList
-					If Not $g_bRunState Then Return
-					_RunFunction($Index)
-					If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
-				Next
-
-				If Not $g_bChkOnlyFarm Then AddIdleTime() ; AIO Mod
-				If Not $g_bRunState Then Return
-				If $g_bRestart Then ContinueLoop
-				If IsSearchAttackEnabled() Then ; if attack is disabled skip reporting, requesting, donating, training, and boosting
-					If $g_bIsSearchLimit Then
-						Local $aRndFuncList = ['DonateCC,Train']
-					Else
-						Local $aRndFuncList = ['ReplayShare', 'NotifyReport', 'DonateCC,Train', 'RequestCC']
-					EndIf
-					_ArrayShuffle($aRndFuncList)
-					For $Index In $aRndFuncList
-						If Not $g_bRunState Then Return
-						_RunFunction($Index)
-						If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
-						If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
-					Next
-
-					OneGemBoost() ; One gem boost - Team AIO Mod++
-					If $g_bRestart Then ContinueLoop
-
-					BoostEverything() ; 1st Check if is to use Training Potion
-					If $g_bRestart Then ContinueLoop
-					Local $aRndFuncList = ['BoostBarracks', 'BoostSpellFactory', 'BoostWorkshop', 'BoostKing', 'BoostQueen', 'BoostWarden', 'BoostChampion']
-					_ArrayShuffle($aRndFuncList)
-					For $Index In $aRndFuncList
-						If Not $g_bRunState Then Return
-						_RunFunction($Index)
-						If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
-						If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
-					Next
-
-					If Not $g_bRunState Then Return
-					If $g_iUnbrkMode >= 1 Then
-						If Unbreakable() Then ContinueLoop
-						MainSXHandler() ; SuperXP / GoblinXP - Team AiO MOD++
-					EndIf
-					If $g_bRestart Then ContinueLoop
-				Else
-					If PlayBBOnly() Then BuilderBase()
-					SetLog("Attacking Not Planned, Skipped.", $COLOR_WARNING)
-					If ProfileSwitchAccountEnabled() Then
-						$g_iCommandStop = 2
-						checkSwitchAcc()
-					EndIf
-				EndIf
-				; Train Donate only - force a donate cc every time
-				If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) Then _RunFunction('DonateCC,Train')
-				If $g_bRestart Then ContinueLoop
-
-				If $g_bChkOnlyFarm = False Then MainSXHandler() ; Super XP - Team AIO Mod++
-				Local $aRndFuncList = ['Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'PetHouse']
-				_ArrayShuffle($aRndFuncList)
-				For $Index In $aRndFuncList
-					If Not $g_bRunState Then Return
-					_RunFunction($Index)
-					If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
-					If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
-				Next
-
-				;ARCH Trying it out here.
-				If Not $g_bIsSearchLimit Then _ClanGames() ; move to here to pick event before going to BB.
-
-				; Ensure, that wall upgrade is last of the upgrades
-				Local $aRndFuncList = ['UpgradeWall', 'BuilderBase'] ;Copied BuilderBase to AttackMain
-				_ArrayShuffle($aRndFuncList)
-				For $Index In $aRndFuncList
-					If Not $g_bRunState Then Return
-					_RunFunction($Index)
-					If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
-					If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
-				Next
-				If Not $g_bRunState Then Return
-
-				If $g_bFirstStart Then SetDebugLog("First loop completed!")
+			;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+			;Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge']
+			If $g_bIsSearchLimit Or $g_bChkOnlyFarm Then
+				Local $aRndFuncList = ['Collect', 'PetCheck']
 			Else
+				Local $aRndFuncList = ['Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge', 'PetCheck', "ChatActions", "BotHumanization"] ; AIO Mod
+			EndIf
+
+			_ArrayShuffle($aRndFuncList)
+			For $Index In $aRndFuncList
+				If Not $g_bRunState Then Return
+				_RunFunction($Index)
+				If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
+			Next
+			villagereport(True, True)
+
+			Local $iavailbldr = $g_ifreebuildercount - ($g_bautoupgradewallsenable And $g_bupgradewallsavebuilder ? 1 : 0)
+			Local $reserved4heroes = ReservedBuildersForHeroes()
+
+			If Int($iavailbldr) > 0 Then
+				If ($g_iCommandStop = 0 Or $g_iCommandStop = 3) And profileswitchaccountenabled() And Not $g_abdonateonly[$g_icuraccount] Then
+					If Int($reserved4heroes) > 0 Then
+						Local $aRndFuncList = ["Laboratory", "UpgradeAll", "PetHouse"]
+					Else
+						Local $aRndFuncList = ["Laboratory", "UpgradeHeroes", "UpgradeBuilding", "PetHouse", "AutoUpgrade"]
+					EndIf
+					_ArrayShuffle($aRndFuncList)
+					For $Index In $aRndFuncList
+						If Not $g_bRunState Then Return
+						_RunFunction($Index)
+						If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
+						If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
+					Next
+				EndIf
+			EndIf
+
+			If ($g_iCommandStop = 0 Or $g_iCommandStop = 3) And profileswitchaccountenabled() And Not $g_abdonateonly[$g_icuraccount] Then
+				If $g_bChkOnlyFarm = False And $g_bautoupgradewallsenable And $g_bupgradewallsavebuilder Then
+					_RunFunction("upgradewall")
+					villagereport()
+					$g_iCommandStop = -1
+					If botcommand() Then
+						If $g_ifreebuildercount - ($g_bautoupgradewallsenable And $g_bupgradewallsavebuilder ? 1 : 0) - ReservedBuildersForHeroes() <= 0 Then
+							SetLog("Lets use the Free Builders before check Halt Status!")
+							_RunFunction("UpgradeAll")
+							villagereport()
+							If botcommand() Then btnstop()
+						EndIf
+					EndIf
+				EndIf
+				checkswitchacc()
+			EndIf
+			;=================??????????????????????????????
+
+			If Not $g_bChkOnlyFarm Then AddIdleTime() ; AIO Mod
+			If Not $g_bRunState Then Return
+			If $g_bRestart Then ContinueLoop
+			If IsSearchAttackEnabled() Then ; if attack is disabled skip reporting, requesting, donating, training, and boosting
+				If $g_bIsSearchLimit Or $g_bChkOnlyFarm Then
+					Local $aRndFuncList = ['DonateCC,Train']
+				Else
+					Local $aRndFuncList = ['ReplayShare', 'NotifyReport', 'DonateCC,Train', 'RequestCC']
+				EndIf
+				_ArrayShuffle($aRndFuncList)
+				For $Index In $aRndFuncList
+					If Not $g_bRunState Then Return
+					_RunFunction($Index)
+					If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
+					If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
+				Next
 
 				OneGemBoost() ; One gem boost - Team AIO Mod++
 				If $g_bRestart Then ContinueLoop
@@ -936,7 +924,59 @@ Func runBot() ;Bot that runs everything in order
 					If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 					If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 				Next
+
+				If Not $g_bRunState Then Return
+				If $g_iUnbrkMode >= 1 Then
+					If Unbreakable() Then ContinueLoop
+					MainSXHandler() ; SuperXP / GoblinXP - Team AiO MOD++
+				EndIf
+				If $g_bRestart Then ContinueLoop
+			Else
+				BuilderBase()
+				SetLog("Attacking Not Planned, Skipped.", $COLOR_WARNING)
+				If ProfileSwitchAccountEnabled() Then
+					$g_iCommandStop = 2
+					checkSwitchAcc()
+				EndIf
 			EndIf
+			; Train Donate only - force a donate cc every time
+			If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) Then _RunFunction('DonateCC,Train')
+			If $g_bRestart Then ContinueLoop
+
+			If $g_bChkOnlyFarm = False Then MainSXHandler() ; Super XP - Team AIO Mod++
+			If Not $g_bChkOnlyFarm Or (isGoldFull() And isElixirFull()) Then
+				If (isGoldFull() And isElixirFull()) And $g_bChkOnlyFarm Then SetLog("Only Farm but Resources Full, checking improvements.", $COLOR_INFO)
+				Local $aRndFuncList = ["Laboratory", "UpgradeHeroes", "UpgradeBuilding", "PetHouse", "AutoUpgrade"]
+				_ArrayShuffle($aRndFuncList)
+				For $Index In $aRndFuncList
+					If Not $g_bRunState Then Return
+					_RunFunction($Index)
+					If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
+					If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
+				Next
+			EndIf
+
+			;ARCH Trying it out here.
+			If Not $g_bIsSearchLimit Then _ClanGames() ; move to here to pick event before going to BB.
+
+			; Ensure, that wall upgrade is last of the upgrades
+
+			If Not $g_bChkOnlyFarm Or (isGoldFull() And isElixirFull()) Then
+				Local $aRndFuncList = ['UpgradeWall', 'BuilderBase'] ;Copied BuilderBase to AttackMain
+				_ArrayShuffle($aRndFuncList)
+				For $Index In $aRndFuncList
+					If Not $g_bRunState Then Return
+					_RunFunction($Index)
+					If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
+					If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
+				Next
+				If Not $g_bRunState Then Return
+			ElseIf (isGoldFull() And isElixirFull()) And $g_bChkOnlyFarm Then
+				SetLog("Only Farm but resources full, checking walls.", $COLOR_INFO)
+				_RunFunction('UpgradeWall')
+			EndIf
+
+			If $g_bFirstStart Then SetDebugLog("First loop completed!")
 
 			$g_bFirstStart = False ; already finished first loop since bot started.
 			If $g_bRunState = False Then Return
@@ -973,7 +1013,7 @@ Func runBot() ;Bot that runs everything in order
 			Local $sRestartText = $g_bIsSearchLimit ? " due search limit" : " after Out of Sync Error: Attack Now"
 			SetLog("Restarted" & $sRestartText, $COLOR_INFO)
 			;Use "CheckDonateOften" setting to run loop on hitting SearchLimit
-			If $g_bIsSearchLimit and $g_bCheckDonateOften Then
+			If $g_bIsSearchLimit And $g_bCheckDonateOften Then
 				SetDebugLog("ARCH: Clearing booleans", $COLOR_DEBUG)
 				$g_bIsClientSyncError = False
 				$g_bRestart = False
@@ -982,8 +1022,8 @@ Func runBot() ;Bot that runs everything in order
 			;  OCR read current Village Trophies when OOS restart maybe due PB or else DropTrophy skips one attack cycle after OOS
 			$g_aiCurrentLoot[$eLootTrophy] = Number(getTrophyMainScreen($aTrophies[0], $aTrophies[1]))
 			If $g_bDebugSetlog Then SetDebugLog("Runbot Trophy Count: " & $g_aiCurrentLoot[$eLootTrophy], $COLOR_DEBUG)
-			If Not $g_bIsSearchLimit or Not $g_bCheckDonateOften Then AttackMain() ;If Search Limit hit, do main loop.
-			SetDebugLog("ARCH: Not case on SearchLimit or CheckDonateOften",$COLOR_DEBUG)
+			If Not $g_bIsSearchLimit Or Not $g_bCheckDonateOften Then AttackMain() ;If Search Limit hit, do main loop.
+			SetDebugLog("ARCH: Not case on SearchLimit or CheckDonateOften", $COLOR_DEBUG)
 			If Not $g_bRunState Then Return
 			$g_bSkipFirstZoomout = False
 			If $g_bOutOfGold Then
@@ -1073,12 +1113,12 @@ Func _Idle() ;Sequence that runs until Full Army
 		If $g_iCommandStop = 0 And $g_bTrainEnabled Then
 			If Not ($g_bIsFullArmywithHeroesAndSpells) Then
 				If $g_iActualTrainSkip < $g_iMaxTrainSkip Then
-                    #Region - Custom train - Team AIO Mod++
-                    If CheckNeedOpenTrain($g_sTimeBeforeTrain) Or (ProfileSwitchAccountEnabled() And $g_iActiveDonate And $g_bChkDonate) Then
-                        $g_bForceDoubleTrain = True ; Force double train before switch account.
-                        TrainSystem() ; force check trainsystem after donate and before switch account
-                    EndIf
-                    #EndRegion - Custom train - Team AIO Mod++
+					#Region - Custom train - Team AIO Mod++
+					If CheckNeedOpenTrain($g_sTimeBeforeTrain) Or (ProfileSwitchAccountEnabled() And $g_iActiveDonate And $g_bChkDonate) Then
+						$g_bForceDoubleTrain = True ; Force double train before switch account.
+						TrainSystem() ; force check trainsystem after donate and before switch account
+					EndIf
+					#EndRegion - Custom train - Team AIO Mod++
 					If $g_bRestart Then ExitLoop
 					If _Sleep($DELAYIDLE1) Then ExitLoop
 					checkMainScreen(False)
@@ -1113,16 +1153,16 @@ Func _Idle() ;Sequence that runs until Full Army
 		SetLog("Time Idle: " & StringFormat("%02i", Floor(Floor($TimeIdle / 60) / 60)) & ":" & StringFormat("%02i", Floor(Mod(Floor($TimeIdle / 60), 60))) & ":" & StringFormat("%02i", Floor(Mod($TimeIdle, 60))))
 
 		If $g_bOutOfGold Or $g_bOutOfElixir Then Return ; Halt mode due low resources, only 1 idle loop
-		
+
 		If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) And $g_bTrainEnabled = False Then ExitLoop ; If training is not enabled, run only 1 idle loop
-	
+
 		; If $g_iCommandStop = -1 And $g_bChkOnlyFarm = False Then ; AIO Mod ; Check if closing bot/emulator while training and not in halt mode
 		If $g_iCommandStop = -1 Then
 			SmartWait4Train()
 			If Not $g_bRunState Then Return
 			If $g_bRestart Then ExitLoop ; if smart wait activated, exit to runbot in case user adjusted GUI or left emulator/bot in bad state
 		EndIf
-		
+
 		; Custom schedule - Team AIO Mod++
 		If ProfileSwitchAccountEnabled() Then CheckSwitchAcc()
 		ClickAway()
@@ -1235,121 +1275,65 @@ Func Attack() ;Selects which algorithm
 EndFunc   ;==>Attack
 
 #Region - Custom - Team AIO Mod++
-Func _RunFunction($sAction)
+Func _RunFunction($action)
 	FuncEnter(_RunFunction)
-
-	; Aviod CheckObstacles spam
-	Local $bNoProceed = False
-	Switch $sAction
-		Case "Collect"
-			If $g_bChkCollect = False Then $bNoProceed = True
-		Case "CheckTombs"
-			If $g_bChkTombstones = False Or $g_abNotNeedAllTime[1] = False Then $bNoProceed = True
-		Case "CleanYard"
-			If Not $g_bChkCleanYard And Not $g_bChkGemsBox And Not TestCapture() Then $bNoProceed = True
-		Case "ReplayShare"
-			If Not $g_bShareAttackEnable Then $bNoProceed = True
-		Case "NotifyReport"
-			If $g_bNotifyAlertVillageReport = False And $g_bNotifyAlertVillageReportDS = False And $g_bNotifyAlertLastAttack = False And $g_bNotifyAlertLastAttackDS = False Then $bNoProceed = True
-		Case "DonateCC"
-			If $g_iActiveDonate And $g_bChkDonate And Not $g_bChkOnlyFarm Then ; Only farm - Team AIO Mod++
-			Else
-				$bNoProceed = True
-			EndIf
-		Case "DonateCC,Train"
-			If $g_iActiveDonate And $g_bChkDonate And Not $g_bChkOnlyFarm Then ; Only farm - Team AIO Mod++
-			Else
-				If Not $g_bTrainEnabled Then ; check for training enabled in halt mode
-					$bNoProceed = True
-				EndIf
-			EndIf
-		Case "BoostBarracks"
-			If Not $g_bTrainEnabled Or $g_iCmbBoostBarracks <= 0 Then $bNoProceed = True
-		Case "BoostSpellFactory"
-			If Not $g_bTrainEnabled Or $g_iCmbBoostSpellFactory <= 0 Then $bNoProceed = True
-		Case "BoostWorkshop"
-			If Not $g_bTrainEnabled Or $g_iCmbBoostWorkshop <= 0 Then $bNoProceed = True
-		Case "BoostKing"
-			If AllowBoosting("Barbarian King", $g_iCmbBoostBarbarianKing) = False Then $bNoProceed = True
-		Case "BoostQueen"
-			If AllowBoosting("Archer Queen", $g_iCmbBoostArcherQueen) = False Then $bNoProceed = True
-		Case "BoostWarden"
-			If AllowBoosting("Grand Warden", $g_iCmbBoostWarden) = False Then $bNoProceed = True
-		Case "BoostChampion"
-			If AllowBoosting("Royal Champion", $g_iCmbBoostChampion) = False Then $bNoProceed = True
-		Case "BoostEverything"
-			If Not AllowBoosting("Everything", $g_iCmbBoostEverything) Then $bNoProceed = True
-		Case "DailyChallenge"
-			If Not $g_bChkCollectRewards Then $bNoProceed = True
-		; Case "LabCheck" ; xbebenk
-		Case "PetCheck"
-		Case "RequestCC"
-			If Not $g_bRequestTroopsEnable Or Not $g_bDonationEnabled Or $g_bChkReqCCFirst Then
-				$bNoProceed = True
-			EndIf
-		Case "Laboratory"
-			If Not $g_bAutoLabUpgradeEnable And Not $g_bChkLabPotion Then $bNoProceed = True
-		Case "UpgradeHeroes"
-			If Not $g_bUpgradeKingEnable And Not $g_bUpgradeQueenEnable And Not $g_bUpgradeWardenEnable And Not $g_bUpgradeChampionEnable Then $bNoProceed = True
-		Case "UpgradeBuilding"
-			; check to see if anything is enabled before wasting time.
-			Local $iUpgradeAction = -1
-			For $iz = 0 To UBound($g_avBuildingUpgrades, 1) - 1
-				If $g_abBuildingUpgradeEnable[$iz] = True Then
-					$iUpgradeAction += 2 ^ ($iz + 1)
-				EndIf
-			Next
-			If $iUpgradeAction < 0 Then
-				If Not $g_bAutoUpgradeEnabled Then $bNoProceed = True
-			EndIf
-		Case "UpgradeWall"
-			If $g_bAutoUpgradeWallsEnable = False Then $bNoProceed = True
-		Case "BuilderBase"
-			Local $bReturn = PlayBBOnly()
-			If Not ($g_iCmbBoostBarracks = 0) And $bReturn = False Then $bNoProceed = True
-		Case "CollectAchievements"
-			If Not $g_bChkCollectAchievements Then $bNoProceed = True
-		Case "CollectFreeMagicItems"
-			If $g_bChkCollectFreeMagicItems = False And $g_bChkCollectMagicItems = False Then $bNoProceed = True
-		Case "BotHumanization"
-			If $g_bUseBotHumanization = False Then $bNoProceed = True
-		Case "ChatActions"
-			If 1 > $g_iCmbPriorityFC And 1 > $g_iCmbPriorityCHAT Then $bNoProceed = True
-		#cs
-		Case "PetHouse"
-			Local $bUpgradePets = False
-
-			; Check at least one pet upgrade is enabled
-			For $i = 0 to $ePetCount - 1
-				If $g_bUpgradePetsEnable[$i] Then
-					$bUpgradePets = True
-					; SetLog($g_asPetNames[$i] & " upgrade enabled");
-					ExitLoop
-				EndIf
-			Next
-			If Not $bUpgradePets Then $bNoProceed = True
-		#ce
-		Case "OneGemBoost"
-			If Not $g_bChkOneGemBoostBarracks And Not $g_bChkOneGemBoostSpells And Not $g_bChkOneGemBoostHeroes And Not $g_bChkOneGemBoostWorkshop Then $bNoProceed = True
-	EndSwitch
-	;
-
-	Local $bResult = False
-	If $bNoProceed = False Then
-		; ensure that builder base flag is false
-		$g_bStayOnBuilderBase = False
-		checkMainScreen(False, False)
-		$bResult = __RunFunction($sAction)
-		; ensure that builder base flag is false
-		$g_bStayOnBuilderBase = False
-	EndIf
-
-	Return FuncReturn($bResult)
+	; ensure that builder base flag is false
+	$g_bStayOnBuilderBase = False
+	Local $Result = __RunFunction($action)
+	; ensure that builder base flag is false
+	$g_bStayOnBuilderBase = False
+	Return FuncReturn($Result)
 EndFunc   ;==>_RunFunction
 
 Func __RunFunction($sAction)
 	SetDebugLog("_RunFunction: " & $sAction & " BEGIN", $COLOR_DEBUG2)
 	Switch $sAction
+		;;;
+		Case "UpgradeHeroes"
+			If ($g_icmbboostbarracks = 0 Or $g_bFirstStart) And $g_bChkOnlyFarm = False Then
+				If $g_bupgradekingenable Or $g_bupgradequeenenable Or $g_bupgradewardenenable Or $g_bupgradechampionenable Then
+					cleanyard()
+					upgradeheroes()
+				EndIf
+			EndIf
+		Case "UpgradeAll"
+			If ($g_icmbboostbarracks = 0 Or $g_bFirstStart) And $g_bChkOnlyFarm = False Then
+				Local $iavailbldr = $g_ifreebuildercount - ($g_bautoupgradewallsenable And $g_bupgradewallsavebuilder ? 1 : 0) - ReservedBuildersForHeroes()
+				Local $yes = False
+				For $iz = 0 To UBound($g_avbuildingupgrades, 1) - 1
+					If $g_abbuildingupgradeenable[$iz] = True Then
+						$yes = True
+					EndIf
+				Next
+				If $g_bupgradekingenable Or $g_bupgradequeenenable Or $g_bupgradewardenenable Or $g_bupgradechampionenable Or $g_bAutoUpgradeEnabled Or $yes Then
+					cleanyard()
+					upgradeheroes()
+					autoupgrade(False)
+					upgradebuilding()
+				EndIf
+			EndIf
+		Case "AutoUpgrade"
+			If ($g_icmbboostbarracks = 0 Or $g_bFirstStart) And $g_bChkOnlyFarm = False Then
+				If $g_bAutoUpgradeEnabled Then
+					cleanyard()
+					autoupgrade(False)
+				EndIf
+			EndIf
+		Case "UpgradeBuilding"
+			If ($g_icmbboostbarracks = 0 Or $g_bFirstStart) And $g_bChkOnlyFarm = False Then
+				Local $yes = False
+				For $iz = 0 To UBound($g_avbuildingupgrades, 1) - 1
+					If $g_abbuildingupgradeenable[$iz] = True Then
+						$yes = True
+					EndIf
+				Next
+				If $yes Then
+					cleanyard()
+					upgradebuilding()
+				EndIf
+			EndIf
+			_sleep($delayrunbot3)
+			;;;
 		Case "Collect"
 			Collect()
 		Case "CheckTombs"
@@ -1413,7 +1397,7 @@ Func __RunFunction($sAction)
 			BoostEverything()
 		Case "DailyChallenge"
 			DailyChallenges()
-		; Case "LabCheck" ; xbebenk
+			; Case "LabCheck" ; xbebenk
 			; LabGuiDisplay()
 		Case "PetCheck"
 			PetGuiDisplay()
@@ -1424,22 +1408,16 @@ Func __RunFunction($sAction)
 		Case "Laboratory"
 			Laboratory()
 			checkMainScreen(False) ; xbebenk
-		Case "UpgradeHeroes"
-			UpgradeHeroes()
-		Case "UpgradeBuilding"
-			UpgradeBuilding()
-			If RandomSleep($DELAYRUNBOT3) Then Return
-			AutoUpgrade()
 		Case "UpgradeWall"
 			$g_iNbrOfWallsUpped = 0
 			UpgradeWall()
 			; Custom BB - Team AIO Mod++
 		Case "BuilderBase"
 			Local $bReturn = PlayBBOnly()
-			If Not ($g_iCmbBoostBarracks = 0) And $bReturn = False Then
+			If Not ($g_icmbboostbarracks = 0) And $bReturn = False Then
 				SetLog("There are not the conditions for you to play in the constructor base.", $COLOR_INFO)
 				; SetLog("- Is first start? " & $g_bFirstStart, $COLOR_INFO)
-				Local $bBoost = ($g_iCmbBoostBarracks = 0) ? (True) : (False)
+				Local $bBoost = ($g_icmbboostbarracks = 0) ? (True) : (False)
 				SetLog("- Is your army accelerated and would it be a waste? " & $bBoost, $COLOR_INFO)
 				Return True
 			EndIf
@@ -1456,7 +1434,7 @@ Func __RunFunction($sAction)
 			ChatActions()
 		Case "PetHouse"
 			PetHouse()
-		; One Gem Boost - Team AiO MOD++
+			; One Gem Boost - Team AiO MOD++
 		Case "OneGemBoost"
 			OneGemBoost()
 		Case ""
@@ -1504,9 +1482,9 @@ Func FirstCheck()
 	;;;;;Check Town Hall level
 	Local $iTownHallLevel = $g_iTownHallLevel
 	SetDebugLog("Detecting Town Hall level", $COLOR_INFO)
-	SetDebugLog("Town Hall level is currently saved as " &  $g_iTownHallLevel, $COLOR_INFO)
+	SetDebugLog("Town Hall level is currently saved as " & $g_iTownHallLevel, $COLOR_INFO)
 	imglocTHSearch(False, True, True) ;Sets $g_iTownHallLevel
-	SetDebugLog("Detected Town Hall level is " &  $g_iTownHallLevel, $COLOR_INFO)
+	SetDebugLog("Detected Town Hall level is " & $g_iTownHallLevel, $COLOR_INFO)
 	If $g_iTownHallLevel = $iTownHallLevel Then
 		SetDebugLog("Town Hall level has not changed", $COLOR_INFO)
 	Else
@@ -1517,7 +1495,7 @@ Func FirstCheck()
 			applyConfig()
 		Else
 			SetDebugLog("Town Hall level has changed!", $COLOR_INFO)
-			SetDebugLog("New Town hall level detected as " &  $g_iTownHallLevel, $COLOR_INFO)
+			SetDebugLog("New Town hall level detected as " & $g_iTownHallLevel, $COLOR_INFO)
 			saveConfig()
 			applyConfig()
 		EndIf
@@ -1542,8 +1520,6 @@ Func FirstCheck()
 	If _Sleep($DELAYRUNBOT5) Then Return
 	checkMainScreen(False)
 	If $g_bRestart Then Return
-
-	If BotCommand() Then btnStop()
 
 	If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
 		; VERIFY THE TROOPS AND ATTACK IF IS FULL

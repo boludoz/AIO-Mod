@@ -113,6 +113,7 @@ Func _LocateLab($bForceOff = True)
 		ExitLoop
 	WEnd
 	ClickAway()
+	Return True
 EndFunc   ;==>_LocateLab
 
 Func CenterSort($aResult)
@@ -165,8 +166,8 @@ Func DetectedLabs()
 			If @error Then Return SetError(0, 0, 0)
 
 			If StringInStr($sInfo[1], "Lab") > 0 Then
-				$g_aiLaboratoryPos[0] = $aResult[$i][0] + 10
-				$g_aiLaboratoryPos[1] = $aResult[$i][1] + 10
+				$g_aiLaboratoryPos[0] = $aResult[$i][0]
+				$g_aiLaboratoryPos[1] = $aResult[$i][1]
 				ClickAway()
 				If _Sleep(200) Then Return
 				IniWrite($g_sProfileBuildingPath, "upgrade", "LabPosX", $g_aiLaboratoryPos[0])

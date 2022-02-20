@@ -137,6 +137,7 @@ Func _LocateQueenAltar($bFromButton = False)
 	If _Sleep(1000) Then Return
 	IniWrite($g_sProfileBuildingPath, "other", "xQueenAltarPos", $g_aiQueenAltarPos[0])
 	IniWrite($g_sProfileBuildingPath, "other", "yQueenAltarPos", $g_aiQueenAltarPos[1])
+	Return True
 EndFunc   ;==>_LocateQueenAltar
 
 Func LocateKingAltar($bFromButton = False)
@@ -264,6 +265,7 @@ Func _LocateKingAltar($bFromButton = False)
 	If _Sleep(1000) Then Return
 	IniWrite($g_sProfileBuildingPath, "other", "xKingAltarPos", $g_aiKingAltarPos[0])
 	IniWrite($g_sProfileBuildingPath, "other", "yKingAltarPos", $g_aiKingAltarPos[1])
+	Return True
 EndFunc   ;==>_LocateKingAltar
 
 Func LocateWardenAltar($bFromButton = False)
@@ -393,6 +395,7 @@ Func _LocateWardenAltar($bFromButton = False)
 	If _Sleep(1000) Then Return
 	IniWrite($g_sProfileBuildingPath, "other", "xWardenAltarPos", $g_aiWardenAltarPos[0])
 	IniWrite($g_sProfileBuildingPath, "other", "yWardenAltarPos", $g_aiWardenAltarPos[1])
+	Return True
 EndFunc   ;==>_LocateWardenAltar
 
 Func LocateChampionAltar($bFromButton = False)
@@ -521,6 +524,7 @@ Func _LocateChampionAltar($bFromButton = False)
 	If _Sleep(1000) Then Return
 	IniWrite($g_sProfileBuildingPath, "other", "xChampionAltarPos", $g_aiChampionAltarPos[0])
 	IniWrite($g_sProfileBuildingPath, "other", "yChampionAltarPos", $g_aiChampionAltarPos[1])
+	Return True
 EndFunc   ;==>_LocateChampionAltar
 
 Func DetectedAltar($eHeroIndex = $eHeroNone)

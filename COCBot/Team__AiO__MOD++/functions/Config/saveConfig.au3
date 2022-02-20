@@ -391,3 +391,9 @@ Func SaveConfig_MOD_OneGem()
 
 EndFunc   ;==>SaveConfig_MOD_OneGem
 #EndRegion - One Gem Boost - Team AiO MOD++
+
+; Custom Wall - Team AIO Mod++
+Func SaveConfig_MOD_Walls()
+	; <><><><> Village / Upgrade - Walls <><><><>
+	_ini_add("upgrade", "builderpriority", $g_bchkwallspriorities ? 1 : 0)
+EndFunc   ;==>SaveConfig_MOD_Walls

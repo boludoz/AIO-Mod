@@ -741,3 +741,7 @@ For $i = 0 To $g_eTotalAcc - 1
 	$g_aiAttackedCountAcc[$i] = 0
 Next
 #EndRegion - Custom schedule - Team AIO Mod++
+
+#Region - Custom Wall - Team AIO Mod++
+Global $g_hchkwallspriorities = 0, $g_bchkwallspriorities = False
+#EndRegion - Custom Wall - Team AIO Mod++

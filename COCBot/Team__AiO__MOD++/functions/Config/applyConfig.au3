@@ -758,3 +758,15 @@ Func ApplyConfig_MOD_OneGem($TypeReadSave)
 	EndSwitch
 EndFunc   ;==>ApplyConfig_MOD_OneGem
 #EndRegion - One Gem Boost - Team AiO MOD++
+
+; Custom Wall - Team AIO Mod++
+Func ApplyConfig_MOD_Walls($TypeReadSave)
+	; <><><><> Village / Upgrade - Walls <><><><>
+	If $TypeReadSave = "Read" Then
+		GUICtrlSetState($g_hchkwallspriorities, $g_bchkwallspriorities ? $gui_checked : $gui_unchecked)
+		chkwallspriorities()
+	Else
+		$g_bchkwallspriorities = (GUICtrlRead($g_hchkwallspriorities) = $gui_checked)
+	EndIf
+EndFunc   ;==>ApplyConfig_MOD_Walls
+
