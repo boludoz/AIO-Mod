@@ -16,12 +16,12 @@
 Func DropTrophy($bDebug = False) ; Drop Throphy - Team AIO Mod++
 
 	If $g_bDropTrophyEnable Then
-		#Region - Legend trophy protection - Team AIO Mod++
+		#cs Region - Legend trophy protection - Team AIO Mod++
 		If (($g_bLeagueAttack Or $g_bForceProtectLL) And $g_bProtectInLL) Then
 			SetLog("Legend League protection: Skipped Drop Trophy.", $COLOR_ACTION)
 			Return
 		EndIf
-		#EndRegion - Legend trophy protection - Team AIO Mod++
+		#ce EndRegion - Legend trophy protection - Team AIO Mod++
 		
 		SetDebugLog("Drop Trophy()", $COLOR_DEBUG)
 		

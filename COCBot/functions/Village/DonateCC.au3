@@ -1279,17 +1279,20 @@ EndFunc   ;==>RemainingCCcapacity
 
 Func DetectSlotTroop(Const $iTroopIndex)
 	Local $FullTemp
-
+	
+	_CaptureRegion2()
 	For $Slot = 0 To 6
 		Local $x = 343 + (68 * $Slot)
 		Local $y = $g_iDonationWindowY + 37
 		Local $x1 = $x + 75
 		Local $y1 = $y + 43
 
-		$FullTemp = SearchImgloc($g_sImgDonateTroops, $x, $y, $x1, $y1)
+		$FullTemp = SearchImgloc($g_sImgDonateTroops, $x, $y, $x1, $y1, False)
 		SetDebugLog("Troop Slot: " & $Slot & " SearchImgloc returned:" & $FullTemp[0] & ".", $COLOR_DEBUG)
 
 		If StringInStr($FullTemp[0] & " ", "empty") > 0 Then ExitLoop
+
+		If $FullTemp[0] = "queued" Then ContinueLoop
 
 		If $FullTemp[0] <> "" Then
 			Local $iFoundTroopIndex = TroopIndexLookup($FullTemp[0])
@@ -1312,10 +1315,12 @@ Func DetectSlotTroop(Const $iTroopIndex)
 		Local $x1 = $x + 75
 		Local $y1 = $y + 43
 
-		$FullTemp = SearchImgloc($g_sImgDonateTroops, $x, $y, $x1, $y1)
+		$FullTemp = SearchImgloc($g_sImgDonateTroops, $x, $y, $x1, $y1, False)
 		SetDebugLog("Troop Slot: " & $Slot & " SearchImgloc returned:" & $FullTemp[0] & ".", $COLOR_DEBUG)
 
 		If StringInStr($FullTemp[0] & " ", "empty") > 0 Then ExitLoop
+
+		If $FullTemp[0] = "queued" Then ContinueLoop
 
 		If $FullTemp[0] <> "" Then
 			For $i = $eTroopArcher To $eTroopCount - 1
@@ -1339,26 +1344,29 @@ EndFunc   ;==>DetectSlotTroop
 Func DetectSlotSpell(Const $iSpellIndex)
 	Local $FullTemp
 
+	_CaptureRegion2()
 	For $Slot = 14 To 20
 		Local $x = 343 + (68 * ($Slot - 14))
 		Local $y = $g_iDonationWindowY + 241
 		Local $x1 = $x + 75
 		Local $y1 = $y + 43
 
-		$FullTemp = SearchImgloc($g_sImgDonateSpells, $x, $y, $x1, $y1)
+		$FullTemp = SearchImgloc($g_sImgDonateSpells, $x, $y, $x1, $y1, False)
 		SetDebugLog("Spell Slot: " & $Slot & " SearchImgloc returned:" & $FullTemp[0] & ".", $COLOR_DEBUG)
 
 		If StringInStr($FullTemp[0] & " ", "empty") > 0 Then ExitLoop
 
+		If $FullTemp[0] = "queued" Then ContinueLoop
+
 		If $FullTemp[0] <> "" Then
-			For $i = $eSpellLightning To $eSpellCount - 1
+			For $i = $eSpellLightning To $eSpellSkeleton
 				Local $sTmp = StringLeft($g_asSpellNames[$i], 4)
 				If StringInStr($FullTemp[0] & " ", $sTmp) > 0 Then
 					SetDebugLog("Detected " & $g_asSpellNames[$i], $COLOR_DEBUG)
 					If $iSpellIndex = $i Then Return $Slot
 					ExitLoop
 				EndIf
-				If $i = $eSpellCount - 1 Then ; detection failed
+				If $i = $eSpellCount - 1 Then ; detection failed ; AIO
 					SetDebugLog("Slot: " & $Slot & "Spell Detection Failed", $COLOR_DEBUG)
 				EndIf
 			Next
@@ -1372,16 +1380,19 @@ EndFunc   ;==>DetectSlotSpell
 Func DetectSlotSiege(Const $iSiegeIndex)
 	Local $FullTemp
 
+	_CaptureRegion2()
 	For $Slot = 0 To 6
 		Local $x = 343 + (68 * $Slot)
 		Local $y = $g_iDonationWindowY + 37
 		Local $x1 = $x + 75
 		Local $y1 = $y + 43
 
-		$FullTemp = SearchImgloc($g_sImgDonateSiege, $x, $y, $x1, $y1)
+		$FullTemp = SearchImgloc($g_sImgDonateSiege, $x, $y, $x1, $y1, False)
 		SetDebugLog("Siege Slot: " & $Slot & " SearchImgloc returned:" & $FullTemp[0] & ".", $COLOR_DEBUG)
 
 		If StringInStr($FullTemp[0] & " ", "empty") > 0 Then ExitLoop
+
+		If $FullTemp[0] = "queued" Then ContinueLoop ; AIO
 
 		If $FullTemp[0] <> "" Then
 			For $i = $eSiegeWallWrecker To $eSiegeMachineCount - 1
@@ -1403,10 +1414,12 @@ Func DetectSlotSiege(Const $iSiegeIndex)
 		Local $x1 = $x + 75
 		Local $y1 = $y + 43
 
-		$FullTemp = SearchImgloc($g_sImgDonateSiege, $x, $y, $x1, $y1)
+		$FullTemp = SearchImgloc($g_sImgDonateSiege, $x, $y, $x1, $y1, False)
 		SetDebugLog("Siege Slot: " & $Slot & " SearchImgloc returned:" & $FullTemp[0] & ".", $COLOR_DEBUG)
 
 		If StringInStr($FullTemp[0] & " ", "empty") > 0 Then ExitLoop
+
+		If $FullTemp[0] = "queued" Then ContinueLoop
 
 		If $FullTemp[0] <> "" Then
 			For $i = $eSiegeWallWrecker To $eSiegeMachineCount - 1
@@ -1515,14 +1528,16 @@ Func BalanceDonRec($bSetLog = False)
 	EndIf
 EndFunc   ;==>BalanceDonRec
 
-Func SearchImgloc($directory = "", $x = 0, $y = 0, $x1 = 0, $y1 = 0)
+#Region - Custom optimization - Team AIO Mod++
+Func SearchImgloc($directory = "", $x = 0, $y = 0, $x1 = $g_iGAME_WIDTH, $y1 = $g_iGAME_HEIGHT, $bNeedCapture = True)
 
 	; Setup arrays, including default return values for $return
 	Local $aResult[1], $aCoordArray[1][2], $aCoords, $aCoordsSplit, $aValue
-	Local $Redlines = "FV"
+
 	; Capture the screen for comparison
-	_CaptureRegion2($x, $y, $x1, $y1)
-	Local $res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $directory, "str", "FV", "Int", 0, "str", $Redlines, "Int", 0, "Int", 1000)
+	If $bNeedCapture = True Then _CaptureRegion2()
+	Local $Redlines = GetDiamondRectComma($x, $y, $x1, $y1)
+	Local $res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $directory, "str", $Redlines, "Int", 0, "str", $Redlines, "Int", 0, "Int", 1000)
 
 	If $res[0] <> "" Then
 		; Get the keys for the dictionary item.

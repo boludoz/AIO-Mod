@@ -600,6 +600,24 @@ Func GetDiamondFromArray($aRectArray)
 	Return $sReturnDiamond
 EndFunc   ;==>GetDiamondFromArray
 
+#Region - Custom - Team AIO Mod++
+Func GetDiamondRectComma($iX = -1, $iY = -1, $iEndX = $g_iGAME_WIDTH, $iEndY = $g_iGAME_HEIGHT)
+
+	If $iX = -1 Or $iY = -1 Or $iEndX = -1 Or $iEndY = -1 Then
+		SetDebugLog("GetDiamondRectComma: Bad input!", $COLOR_ERROR)
+		Return "FV"
+	EndIf
+
+	;If User inputed Width and Height then add start point to get the final End Coordinates
+	If $iEndY <= $iY Then $iEndY += $iY
+	If $iEndX <= $iX Then $iEndX += $iX
+
+	Local $sReturnDiamond = ""
+	$sReturnDiamond = $iX & "," & $iY & "|" & $iEndX & "," & $iY & "|" & $iEndX & "," & $iEndY & "|" & $iX & "," & $iEndY
+	Return $sReturnDiamond
+EndFunc   ;==>GetDiamondFromArray
+#EndRegion - Custom - Team AIO Mod++
+
 Func FindImageInPlace($sImageName, $sImageTile, $place, $bForceCaptureRegion = True, $AndroidTag = Default)
 	;creates a reduced capture of the place area a finds the image in that area
 	;returns string with X,Y of ACTUALL FULL SCREEN coordinates or Empty if not found

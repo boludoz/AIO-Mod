@@ -20,10 +20,11 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 	Local $i, $j
 	Local $aiSurrenderButton
 
-	If $g_bDESideDisableOther And $g_iMatchMode = $LB And $g_aiAttackStdDropSides[$LB] = 4 And $g_bDESideEndEnable And ($g_bDropQueen Or $g_bDropKing) Or (($g_bLeagueAttack Or $g_bForceProtectLL) And $g_bProtectInLL) Then
+	If $g_bDESideDisableOther And $g_iMatchMode = $LB And $g_aiAttackStdDropSides[$LB] = 4 And $g_bDESideEndEnable And ($g_bDropQueen Or $g_bDropKing) Then
+	; If $g_bDESideDisableOther And $g_iMatchMode = $LB And $g_aiAttackStdDropSides[$LB] = 4 And $g_bDESideEndEnable And ($g_bDropQueen Or $g_bDropKing) Or (($g_bLeagueAttack Or $g_bForceProtectLL) And $g_bProtectInLL) Then
 		SaveandDisableEBO()
 		SetLog("Disabling Normal End Battle Options", $COLOR_SUCCESS)
-		If (($g_bLeagueAttack Or $g_bForceProtectLL) And $g_bProtectInLL) Then SetLog("Legends league protection activated by default or forced.", $COLOR_WARNING)
+		; If (($g_bLeagueAttack Or $g_bForceProtectLL) And $g_bProtectInLL) Then SetLog("Legends league protection activated by default or forced.", $COLOR_WARNING)
 	EndIf
 
 	If $GoldChangeCheck Then
@@ -62,7 +63,8 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 		EndIf
 	EndIf
 
-	If $g_bDESideDisableOther And $g_iMatchMode = $LB And $g_aiAttackStdDropSides[$LB] = 4 And $g_bDESideEndEnable And ($g_bDropQueen Or $g_bDropKing) Or (($g_bLeagueAttack Or $g_bForceProtectLL) And $g_bProtectInLL) Then
+	If $g_bDESideDisableOther And $g_iMatchMode = $LB And $g_aiAttackStdDropSides[$LB] = 4 And $g_bDESideEndEnable And ($g_bDropQueen Or $g_bDropKing) Then
+	; If $g_bDESideDisableOther And $g_iMatchMode = $LB And $g_aiAttackStdDropSides[$LB] = 4 And $g_bDESideEndEnable And ($g_bDropQueen Or $g_bDropKing) Or (($g_bLeagueAttack Or $g_bForceProtectLL) And $g_bProtectInLL) Then
 		RevertEBO()
 	EndIf
 
