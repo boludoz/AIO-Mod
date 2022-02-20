@@ -202,8 +202,8 @@ Func _Laboratory($debug = False)
 
 					If Not $bUpgradeFound Then
 						SetLog("Lab Upgrade " & $g_avLabTroops[$g_iCmbLaboratory][0] & " - Not available.", $COLOR_INFO)
-						LabFirstPage($iCurPage, $iYMidPoint)
-						$iCurPage = 1     ;reset current page
+						LabPrevPage($iCurPage)
+                        $iCurPage = 1     ;reset current page
 					EndIf
 
 					If $bUpgradeFound Then
@@ -348,28 +348,31 @@ Func GetLabCostResult($aCoords)
 EndFunc
 
 ; if we are on last page, smaller clickdrag... for future dev: this is whatever is enough distance to move 6 off to the left and have the next page similarily aligned.  "-50" to avoid the white triangle.
- Func LabNextPage($iCurPage, $iPages, $iYMidPoint)
+ Func LabNextPage($iCurPage, $iPages, $iYMid = $iYMidPoint)
  	If $iCurPage >= $iPages Then Return ; nothing left to scroll
  	If $iCurPage = $iPages-1 Then ; last page
 		;Last page has 3 columns of icons.  3*(94+12)=3*106=318.  720-318=402
 		SetDebugLog("Drag to last page to pixel 401")
-		ClickDrag(720, $iYMidPoint-50, 401, $iYMidPoint) ;600
+		ClickDrag(720, $iYMid-50, 401, $iYMid) ;600
 		;If _Sleep(4000) Then Return ;Settling time on last page not needed if not rubber-band bounce.
  	Else
 		SetDebugLog("Drag to next full page.")
-		ClickDrag(720, $iYMidPoint-50, 85, $iYMidPoint)
+		ClickDrag(720, $iYMid-50, 85, $iYMid)
  	EndIf
 
  EndFunc
 
 ; if we are on last page, smaller clickdrag... for future dev: this is whatever is enough distance to move 6 off to the left and have the next page similarily aligned
-Func LabFirstPage($iCurPage, $iYMidPoint)
-	For $u = 1 To $iCurPage
-		If $iCurPage <= 1 Then Return ; nothing left to scroll
-		ClickDrag(130, $iYMidPoint, 780, $iYMidPoint, 500) ;600
-		$iCurPage -= 1
+Func LabPrevPage($iDragTo = 6, $iYMid = $iYMidPoint)
+	For $i = 1 To _Max($iDragTo, 6)
+		ClickDrag(130, $iYMid-50, 760, $iYMid-50, 2000) ;600
+		_CaptureRegion()
+		If _ColorCheck(_GetPixelColor(117, 457, False), Hex(0xD3D3CB, 6), 15) And _ColorCheck(_GetPixelColor(729, 458, False), Hex(0xFFFFFF, 6), 15) Then
+			If _Sleep(2000) Then Return
+			ExitLoop
+		EndIf
 	Next
-EndFunc   ;==>LabFirstPage
+EndFunc
 
 ; check the lab to see if something is upgrading in the lab already
 Func ChkLabUpgradeInProgress()

@@ -298,11 +298,13 @@ Func SwitchCOCAcc($NextAccount, $bForceSwitch = False)
 				CloseCoC(False)
 				$bResult = True
 				ExitLoop
+			ElseIf $g_bChkSharedPrefs Then
+				SetLog("No Shared prefs in acc.", $COLOR_ERROR)
 			EndIf
 		
 			If Not IsSettingPage() Then ExitLoop
 		
-			If $g_bChkGooglePlay Or $g_bChkSharedPrefs Then
+			If $g_bChkGooglePlay Then
 				Switch SwitchCOCAcc_DisconnectConnect($bResult, $bSharedPrefs)
 					Case 0
 						Return

@@ -10,10 +10,17 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func OneGemBoost($bDebug = False)
-	; Schedule boost - Team AIO Mod++ 
+	If $g_bChkOneGemBoostBarracks Or $g_bChkOneGemBoostSpells Or $g_bChkOneGemBoostHeroes Or $g_bChkOneGemBoostWorkshop Or $bDebug Then
+		SetLog("Checking 1-Gem Army Event", $COLOR_INFO)
+	Else
+		Return
+	EndIf
+
+	; Schedule boost - Team AIO Mod++
 	If Not IsScheduleBoost("One gem boost") Then Return
-	
+
 	Static $aHeroBoostedStartTime[$g_eTotalAcc][$eHeroCount], $aBuildingBoostedStartTime[$g_eTotalAcc][3], $aLastTimeChecked = $g_PreResetZero
+
 	If $aLastTimeChecked[$g_iCurAccount] <> 0 And Not $bDebug Then
 		Local $iDateCalc = _DateDiff('n', _NowCalc(), $aLastTimeChecked[$g_iCurAccount])
 		If $iDateCalc <= 0 Then
@@ -21,11 +28,12 @@ Func OneGemBoost($bDebug = False)
 			$g_bOneGemEventEnded = False
 		EndIf
 	EndIf
+
 	If $g_bOneGemEventEnded Then
 		SetLog("1-Gem Army Boost Event Ended. Skip It!", $COLOR_INFO)
 		Return
 	EndIf
-	If $g_bChkOneGemBoostBarracks Or $g_bChkOneGemBoostSpells Or $g_bChkOneGemBoostHeroes Or $g_bChkOneGemBoostWorkshop Or $bDebug Then SetLog("Checking 1-Gem Army Event", $COLOR_INFO)
+
 	If $g_bChkOneGemBoostHeroes Or $bDebug Then
 		For $i = 0 To $eHeroCount - 1
 			If $g_iHeroUpgrading[$i] <> 1 Then
@@ -214,7 +222,7 @@ EndFunc   ;==>BoostOneGemBuilding
 ; Name ..........: CustomBoost.au3
 ; Description ...: Schedule boost.
 ; Author ........: Boldina (02/02/2022)
-; Modified ......: 
+; Modified ......:
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2022
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -232,27 +240,33 @@ EndFunc   ;==>TestIsScheduleBoost
 
 Func IsScheduleBoost($sCalledFrom = "-")
 	Local $bMustBoost = True
-	
+
+	Local $aHours = StringSplit(_NowTime(4), ":", $STR_NOCOUNT)
+	If Not $g_abBoostBarracksHours[$aHours[0]] Then
+		SetLog("Boosting " & $sCalledFrom & " isn't planned, skipping", $COLOR_INFO)
+		Return $bMustBoost
+	EndIf
+
 	If $g_iCommandStop = 0 Or $g_iCommandStop = 3 Then ;halt attack.. do not boost now
 		SetLog("[" & $sCalledFrom & "] " & "Boost skipped, account on halt attack mode.", $COLOR_ACTION)
 		Return False
 	EndIf
-	
+
 	If $g_iSwitchBoostSchedule[$eLootGold] = 1 Then
 		$bMustBoost = ($g_aiCurrentLoot[$eLootGold] >= $g_iMinBoostGold) = False
 	ElseIf $g_iSwitchBoostSchedule[$eLootGold] = 2 Then
 		$bMustBoost = ($g_aiCurrentLoot[$eLootGold] < $g_iMinBoostGold)
 	EndIf
-	
+
 	If $bMustBoost Then
 		If $g_iSwitchBoostSchedule[$eLootElixir] = 1 Then
 			$bMustBoost = ($g_aiCurrentLoot[$eLootElixir] >= $g_iMinBoostElixir) = False
 		ElseIf $g_iSwitchBoostSchedule[$eLootElixir] = 2 Then
 			$bMustBoost = ($g_aiCurrentLoot[$eLootElixir] < $g_iMinBoostElixir)
 		EndIf
-	
+
 	EndIf
-	
+
 	If $bMustBoost Then
 		If StringIsSpace($g_aiCurrentLoot[$eLootDarkElixir]) = 0 Then ; check if the village have a Dark Elixir Storage
 			If $g_iSwitchBoostSchedule[$eLootDarkElixir] = 1 Then

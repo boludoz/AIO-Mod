@@ -27,16 +27,11 @@ EndFunc   ;==>BoostWorkshop
 Func BoostTrainBuilding($sName, $iCmbBoost, $iCmbBoostCtrl)
 	Local $bBoosted = False
 
-	If Not $g_bTrainEnabled Or $iCmbBoost <= 0 Then Return $bBoosted
-	
-	Local $aHours = StringSplit(_NowTime(4), ":", $STR_NOCOUNT)
-	If Not $g_abBoostBarracksHours[$aHours[0]] Then
-		SetLog("Boosting " & $sName & " isn't planned, skipping", $COLOR_INFO)
-		Return $bBoosted
-	EndIf
-	
 	; Schedule boost - Team AIO Mod++
+	If Not $g_bTrainEnabled Then Return $bBoosted
+	
 	If Not IsScheduleBoost($sName) Then Return $bBoosted
+	; ===============================
 	
 	Local $sIsAre = "are"
 	SetLog("Boosting " & $sName, $COLOR_INFO)

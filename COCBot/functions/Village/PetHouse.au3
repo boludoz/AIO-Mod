@@ -44,7 +44,7 @@ Func PetHouse($test = False)
 	
 	; Custom pets - Team AIO Mod++
 	If Not $bUpgradePets Then
-		PetsByPassed()
+		; PetsByPassed()
 		Return
 	EndIf
 	
@@ -336,6 +336,9 @@ Func PetGuiDisplay()
 		SetLog("Pet House Window did not open!", $COLOR_ERROR)
 		Return
 	EndIf
+
+	; Custom pets - Team AIO Mod++
+	PetsByPassed()
 
 	$g_iMinDark4PetUpgrade = GetMinDark4PetUpgrade()
 

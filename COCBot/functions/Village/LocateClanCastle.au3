@@ -39,7 +39,7 @@ Func _LocateClanCastle($bForceOff = True)
 		$MsgBox = _ExtMsgBox(0, GetTranslatedFileIni("MBR Popups", "Ok_Cancel", "Ok|Cancel"), GetTranslatedFileIni("MBR Popups", "Func_Locate_Clan_Castle_02", "Locate Clan Castle at ") & $g_sAndroidTitle, $sText, 15)
 		If $MsgBox = 1 Then
 			WinGetAndroidHandle()
-			ClickAway() ; ClickP($aAway, 1, 0, "#0373")
+			ClickAway() ; ClickAway(); ClickP($aAway, 1, 0, "#0373")
 			Local $aPos = FindPos()
 			$g_aiClanCastlePos[0] = $aPos[0]
 			$g_aiClanCastlePos[1] = $aPos[1]
@@ -61,20 +61,20 @@ Func _LocateClanCastle($bForceOff = True)
 						ContinueLoop
 					Case $iStupid > 4
 						SetLog(" Operator Error - Bad Clan Castle Location: " & "(" & $g_aiClanCastlePos[0] & "," & $g_aiClanCastlePos[1] & ")", $COLOR_ERROR)
-						ClickAway() ; ClickP($aAway, 1, 0, "#0374")
+						ClickAway() ; ClickAway(); ClickP($aAway, 1, 0, "#0374")
 						Return False
 					Case Else
 						SetLog(" Operator Error - Bad Clan Castle Location: " & "(" & $g_aiClanCastlePos[0] & "," & $g_aiClanCastlePos[1] & ")", $COLOR_ERROR)
 						$g_aiClanCastlePos[0] = -1
 						$g_aiClanCastlePos[1] = -1
-						ClickAway() ; ClickP($aAway, 1, 0, "#0375")
+						ClickAway() ; ClickAway(); ClickP($aAway, 1, 0, "#0375")
 						Return False
 				EndSelect
 			EndIf
 			SetLog("Clan Castle: " & "(" & $g_aiClanCastlePos[0] & "," & $g_aiClanCastlePos[1] & ")", $COLOR_SUCCESS)
 		Else
 			SetLog("Locate Clan Castle Cancelled", $COLOR_INFO)
-			ClickAway() ; ClickP($aAway, 1, 0, "#0376")
+			ClickAway() ; ClickAway(); ClickP($aAway, 1, 0, "#0376")
 			Return
 		EndIf
 		$sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY); 860x780
@@ -99,7 +99,7 @@ Func _LocateClanCastle($bForceOff = True)
 						SetLog("Quit joking, Click the Clan Castle, or restart bot and try again", $COLOR_ERROR)
 						$g_aiClanCastlePos[0] = -1
 						$g_aiClanCastlePos[1] = -1
-						ClickAway() ; ClickP($aAway, 1, 0, "#0377")
+						ClickAway() ; ClickAway(); ClickP($aAway, 1, 0, "#0377")
 						Return False
 				EndSelect
 			EndIf
@@ -112,12 +112,13 @@ Func _LocateClanCastle($bForceOff = True)
 			SetLog(" Operator Error - Bad Clan Castle Location: " & "(" & $g_aiClanCastlePos[0] & "," & $g_aiClanCastlePos[1] & ")", $COLOR_ERROR)
 			$g_aiClanCastlePos[0] = -1
 			$g_aiClanCastlePos[1] = -1
-			ClickAway() ; ClickP($aAway, 1, 0, "#0378")
+			ClickAway() ; ClickAway(); ClickP($aAway, 1, 0, "#0378")
 			Return False
 		EndIf
 		ExitLoop
 	WEnd
-	ClickAway() ; ClickP($aAway, 1, 200, "#0327")
+	ClickAway()
+	Return True
 EndFunc   ;==>_LocateClanCastle
 
 Func DetectedCastle()
@@ -156,8 +157,8 @@ Func DetectedCastle()
 			If @error Then Return SetError(0, 0, 0)
 
 			If StringInStr($sInfo[1], "Cast") > 0 Then
-				$g_aiClanCastlePos[0] = $aResult[$i][0] + 10
-				$g_aiClanCastlePos[1] = $aResult[$i][1] + 10
+				$g_aiClanCastlePos[0] = $aResult[$i][0]
+				$g_aiClanCastlePos[1] = $aResult[$i][1]
 				ClickAway()
 				If _Sleep(200) Then Return
 				IniWrite($g_sProfileBuildingPath, "other", "CCPosX", $g_aiClanCastlePos[0])

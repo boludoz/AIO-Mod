@@ -374,7 +374,13 @@ Func chkSpellWaitError()
 	Local $sErrorText, $sText, $MsgBox1, $MsgBox2, $MsgBox3
 
 	; Check if spell total GUI is larger than spell count trained for wait for spells to work properly!
-	If $g_iTotalTrainSpaceSpell > GUICtrlRead($g_hTxtTotalCountSpell) Then  ; we have an error!
+   
+   ; moebius14 - Custom Fix - Team AIO Mod++
+   $g_iTotalTrainSpaceSpell = 0
+    For $i = 0 To $eSpellCount - 1
+		$g_iTotalTrainSpaceSpell += $g_aiArmyCustomSpells[$i] * $g_aiSpellSpace[$i]
+    Next
+    If ($g_iTotalTrainSpaceSpell > GUICtrlRead($g_hTxtTotalCountSpell)) Then  ; we have an error!
 		$sErrorText = GetTranslatedFileIni("MBR GUI Control Tab Search", "Func_chkSpellWaitError_ErrorText_01", "Total number of trained spells exceeds total set in GUI!") & @CRLF & _
 			GetTranslatedFileIni("MBR GUI Control Tab Search", "Func_chkSpellWaitError_ErrorText_02", "Reduce number of trained spells,") & @CRLF & _
 			GetTranslatedFileIni("MBR GUI Control Tab Search", "Func_chkSpellWaitError_ErrorText_03", "OR ELSE BOT WILL NEVER ATTACK!!") & @CRLF

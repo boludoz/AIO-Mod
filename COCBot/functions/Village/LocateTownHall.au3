@@ -40,7 +40,7 @@ Func _LocateTownHall($bLocationOnly = False, $bFromButton = False)
 		$MsgBox = _ExtMsgBox(0, GetTranslatedFileIni("MBR Popups", "Ok_Cancel", "Ok|Cancel"), GetTranslatedFileIni("MBR Popups", "Func_Locate_TownHall_02", "Locate TownHall at ") & $g_sAndroidTitle, $sText, 30)
 		If $MsgBox = 1 Then
 			WinGetAndroidHandle()
-			ClickP($aAway, 1, 0, "#0391")
+			ClickAway(); ClickP($aAway, 1, 0, "#0391")
 			Local $aPos = FindPos()
 			$g_aiTownHallPos[0] = $aPos[0]
 			$g_aiTownHallPos[1] = $aPos[1]
@@ -65,14 +65,14 @@ Func _LocateTownHall($bLocationOnly = False, $bFromButton = False)
 						SetLog(" Operator Error - Bad Townhall Location: " & "(" & $g_aiTownHallPos[0] & "," & $g_aiTownHallPos[1] & ")", $COLOR_ERROR)
 						$g_aiTownHallPos[0] = -1
 						$g_aiTownHallPos[1] = -1
-						ClickP($aAway, 1, 0, "#0392")
+						ClickAway(); ClickP($aAway, 1, 0, "#0392")
 						Return False
 				EndSelect
 			EndIf
 			SetLog("Townhall: " & "(" & $g_aiTownHallPos[0] & "," & $g_aiTownHallPos[1] & ")", $COLOR_SUCCESS)
 		Else
 			SetLog("Locate TownHall Cancelled", $COLOR_INFO)
-			ClickP($aAway, 1, 0, "#0393")
+			ClickAway(); ClickP($aAway, 1, 0, "#0393")
 			Return
 		EndIf
 		If $bLocationOnly = False Then
@@ -101,7 +101,7 @@ Func _LocateTownHall($bLocationOnly = False, $bFromButton = False)
 						SetLog("Quit joking, Click on the TH, or restart bot and try again", $COLOR_ERROR)
 						$g_aiTownHallPos[0] = -1
 						$g_aiTownHallPos[1] = -1
-						ClickP($aAway, 1, 0, "#0394")
+						ClickAway(); ClickP($aAway, 1, 0, "#0394")
 						Return False
 				EndSelect
 			Else
@@ -110,7 +110,8 @@ Func _LocateTownHall($bLocationOnly = False, $bFromButton = False)
 		EndIf
 		ExitLoop
 	WEnd
-	ClickP($aAway, 1, 50, "#0209")
+	ClickAway(); ClickP($aAway, 1, 50, "#0209")
+	Return True
 EndFunc   ;==>_LocateTownHall
 
 Func DetectedTH()
@@ -128,9 +129,9 @@ Func DetectedTH()
 				Local $Name = $matchedValues[0]
 				For $i = 0 To UBound($aPoints) - 1
 					Local $aPOSITION = $aPoints[$i]
-					$aPOSITION[0] = $aPOSITION[0] + 10
-					$aPOSITION[1] = $aPOSITION[1] + 10
-					FClick($aPOSITION[0], $aPOSITION[1])
+					$aPOSITION[0] = $aPOSITION[0]
+					$aPOSITION[1] = $aPOSITION[1]
+					PureClick($aPOSITION[0], $aPOSITION[1])
 					SetLog($Name & " Lv" & $level & " detected...", $COLOR_SUCCESS)
 					If _Sleep(500) Then Return False
 					Local $sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY); 860x780
@@ -149,7 +150,7 @@ Func DetectedTH()
 						$g_aiTownHallPos[0] = $aPOSITION[0]
 						$g_aiTownHallPos[1] = $aPOSITION[1]
 						$g_iTownHallLevel = $level
-						ClickP($aAway, 1, 200, "#0327")
+						ClickAway(); ClickP($aAway, 1, 200, "#0327")
 						If _Sleep(1000) Then Return
 						IniWrite($g_sProfileBuildingPath, "other", "TownHallPosX", $g_aiTownHallPos[0])
 						IniWrite($g_sProfileBuildingPath, "other", "TownHallPosY", $g_aiTownHallPos[1])

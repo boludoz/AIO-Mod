@@ -103,7 +103,7 @@ Func KillProcess($iPid, $sProcess_info = "", $iAttempts = 3)
 					If _Sleep(1000) Then Return False
 					If ProcessExists($iPid) = 0 Then
 						SetDebugLog("KillProcess(" & $iCount & "): PID = " & $iPid & " killed (using taskkill -f -t)" & $sProcess_info)
-					EndIf		
+					EndIf
 				EndIf
 				$iCount += 1
 			Until ($iCount > $iAttempts) Or not ProcessExists($iPid)
@@ -242,7 +242,8 @@ Func LaunchUpdater()
 	EndIf
 
 	Local $cmd = """" & @ScriptDir & "\lib\ModLibs\Updater\AIOMod.Updater2.exe"""
-	; If @Compiled = 0 Then $cmd = """" & @AutoItExe & """ /AutoIt3ExecuteScript """ & @ScriptDir & "\lib\ModLibs\Updater\AIOMod.Updater2.au3" & """"
+	If @Compiled = 0 Then $cmd = """" & @AutoItExe & """ /AutoIt3ExecuteScript """ & @ScriptDir & "\lib\ModLibs\Updater\AIOMod.Updater2.au3" & """"
+;~ 	_ConsoleWrite($cmd)
 	Local $pid = Run($cmd, @ScriptDir)
 	If $pid = 0 Then
 		SetLog("Cannot launch updater.", $COLOR_RED)

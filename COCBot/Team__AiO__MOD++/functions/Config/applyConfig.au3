@@ -619,7 +619,7 @@ Func ApplyConfig_MOD_600_35_1($TypeReadSave)
 			UpdateChkOnlyFarm() ;Applies it to farm button
 
 			; <><><> AIO Updater <><><>
-			GUICtrlSetState($g_hChkForAIOUpdates, $g_bCheckVersionAIO ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkForAIOUpdates, $g_bCheckVersionAIO ?  $GUI_UNCHECKED : $GUI_CHECKED )
 		Case "Save"
 			$g_bEnableAuto = (GUICtrlRead($g_hChkEnableAuto) = $GUI_CHECKED)
 			$g_bChkAutoDock = (GUICtrlRead($g_hChkAutoDock) = $GUI_CHECKED)
@@ -758,3 +758,15 @@ Func ApplyConfig_MOD_OneGem($TypeReadSave)
 	EndSwitch
 EndFunc   ;==>ApplyConfig_MOD_OneGem
 #EndRegion - One Gem Boost - Team AiO MOD++
+
+; Custom Wall - Team AIO Mod++
+Func ApplyConfig_MOD_Walls($TypeReadSave)
+	; <><><><> Village / Upgrade - Walls <><><><>
+	If $TypeReadSave = "Read" Then
+		GUICtrlSetState($g_hchkwallspriorities, $g_bchkwallspriorities ? $gui_checked : $gui_unchecked)
+		chkwallspriorities()
+	Else
+		$g_bchkwallspriorities = (GUICtrlRead($g_hchkwallspriorities) = $gui_checked)
+	EndIf
+EndFunc   ;==>ApplyConfig_MOD_Walls
+

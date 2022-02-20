@@ -708,14 +708,6 @@ Func SaveConfig_600_17()
 	SaveConfig_MOD_Walls()
 EndFunc   ;==>SaveConfig_600_17
 
-; Custom Wall - Team AIO Mod++
-Func SaveConfig_MOD_Walls()
-	; <><><><> Village / Upgrade - Walls <><><><>
-	_Ini_Add("upgrade", "OnlyIfRestABuilder", $g_bWallOnlyIfRestABuilder ? 1 : 0)
-	_Ini_Add("upgrade", "ImproveLowerWalls", $g_bImproveLowerWalls ? 1 : 0)
-	_Ini_Add("upgrade", "AutomaticLevel", $g_bAutomaticLevel ? 1 : 0)
-EndFunc   ;==>SaveConfig_MOD_Walls
-
 Func SaveConfig_600_18()
 	; <><><><> Village / Notify <><><><>
 	ApplyConfig_600_18(GetApplyConfigSaveAction())

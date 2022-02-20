@@ -305,13 +305,19 @@ Func ChkNoUpgradeInWar()
 EndFunc   ;==>ChkNoUpgradeInWar
 #EndRegion - No Upgrade In War - Team AIO Mod++
 
-; Custom Wall - Team AIO Mod++
-Func chkImproveLowerWalls()
-	$g_bImproveLowerWalls = (GUICtrlRead($g_hChkImproveLowerWalls) = $GUI_CHECKED)
-	GUICtrlSetState($g_hChkAutomaticLevel, ($g_bImproveLowerWalls = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
-EndFunc   ;==>chkImproveLowerWalls
+#Region - Custom Wall - Team AIO Mod++
+Func chkwallspriorities()
+	If $g_bupgradewallsavebuilder Then
+		GUICtrlSetState($g_hchkwallspriorities, $gui_enable)
+		$g_bchkwallspriorities = GUICtrlRead($g_hchkwallspriorities) = $gui_checked ? 1 : 0
+	Else
+		$g_bchkwallspriorities = False
+		GUICtrlSetState($g_hchkwallspriorities, $gui_unchecked + $gui_disable)
+	EndIf
+EndFunc
+#EndRegion - Custom Wall - Team AIO Mod++
 
-; Stick to Army page when time left
+#Region - Stick to Army page when time left - Team AIO Mod++
 Func txtStickToTrainWindow()
 	$g_iStickToTrainWindow = GUICtrlRead($g_hTxtStickToTrainWindow)
 	If $g_iStickToTrainWindow > 5 Then
@@ -319,3 +325,4 @@ Func txtStickToTrainWindow()
 		GUICtrlSetData($g_hTxtStickToTrainWindow, 5)
 	EndIf
 EndFunc   ;==>txtStickToTrainWindow
+#EndRegion - Stick to Army page when time left - Team AIO Mod++
