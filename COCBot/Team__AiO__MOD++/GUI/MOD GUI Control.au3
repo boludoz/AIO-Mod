@@ -75,7 +75,7 @@ Func chkMiscModOptions()
 	$g_bChkEnableFirewall = (GUICtrlRead($g_hChkEnableFirewall) = $GUI_CHECKED)
 
 	; Skip first loop
-	$g_bChkBuildingsLocate = (GUICtrlRead($g_hChkBuildingsLocate) = $GUI_CHECKED)
+	$g_bChkAvoidBuildingsLocate = (GUICtrlRead($g_hChkBuildingsLocate) = $GUI_CHECKED)
 
 	For $i = 0 To UBound($g_hDeployWave) -1
 		$g_bChkEnableRandom[$i] = (GUICtrlRead($g_hChkEnableRandom[$i]) = $GUI_CHECKED)

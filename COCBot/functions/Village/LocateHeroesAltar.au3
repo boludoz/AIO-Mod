@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func LocateQueenAltar($bFromButton = False)
-	; If Int($g_iTownHallLevel) < 9 Then Return
+	If Int($g_iTownHallLevel) < 9 Then Return
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
 	AndroidShield("LocateQueenAltar 1")
@@ -39,7 +39,7 @@ Func _LocateQueenAltar($bFromButton = False)
 		SetLog('Skipping manual "Queen" locate (requires TH9)', $COLOR_WARNING)
 		Return
 	EndIf
-	If $bFromButton = False And $g_bChkBuildingsLocate Or $g_bChkOnlyFarm Then Return
+	If $bFromButton = False And $g_bChkAvoidBuildingsLocate Or $g_bChkOnlyFarm Then Return
 	While 1
 		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Tahoma", 500)
 		$sText = $sErrorText & @CRLF & GetTranslatedFileIni("MBR Popups", "Func_Locate_Queen_Altar_01", "Click OK then click on your Queen Altar") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Locate_building_01", -1) & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Locate_building_02", -1) & @CRLF
@@ -167,7 +167,7 @@ Func _LocateKingAltar($bFromButton = False)
 		SetLog('Skipping manual "Barbarian King" locate (requires TH7)', $COLOR_WARNING)
 		Return
 	EndIf
-	If $bFromButton = False And $g_bChkBuildingsLocate Or $g_bChkOnlyFarm Then Return
+	If $bFromButton = False And $g_bChkAvoidBuildingsLocate Or $g_bChkOnlyFarm Then Return
 	While 1
 		ClickAway()
 		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Tahoma", 500)
@@ -296,7 +296,7 @@ Func _LocateWardenAltar($bFromButton = False)
 		SetLog('Skipping manual "Grand Warden" locate (requires TH11)', $COLOR_WARNING)
 		Return
 	EndIf
-	If $bFromButton = False And $g_bChkBuildingsLocate Or $g_bChkOnlyFarm Then Return
+	If $bFromButton = False And $g_bChkAvoidBuildingsLocate Or $g_bChkOnlyFarm Then Return
 	While 1
 		ClickAway()
 		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Tahoma", 500)
@@ -425,7 +425,7 @@ Func _LocateChampionAltar($bFromButton = False)
 		SetLog('Skipping manual "Royal Champion" locate (requires TH13)', $COLOR_WARNING)
 		Return
 	EndIf
-	If $bFromButton = False And $g_bChkBuildingsLocate Or $g_bChkOnlyFarm Then Return
+	If $bFromButton = False And $g_bChkAvoidBuildingsLocate Or $g_bChkOnlyFarm Then Return
 	While 1
 		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Tahoma", 500)
 		$sText = $sErrorText & @CRLF & GetTranslatedFileIni("MBR Popups", "Func_Locate_Champion_Altar_01", "Click OK then click on your Royal Champion Altar") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Locate_building_01", -1) & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Locate_building_02", -1) & @CRLF

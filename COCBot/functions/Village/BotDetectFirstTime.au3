@@ -22,99 +22,98 @@ Func BotDetectFirstTime()
 
 	SetLog("Detecting your Buildings", $COLOR_INFO)
 
-	If Not isInsideDiamond($g_aiTownHallPos) Then
-		checkMainScreen()
-		Collect(False)
-		imglocTHSearch(True, True, True) ; search th on myvillage
-		SetLog("Townhall: (" & $g_aiTownHallPos[0] & "," & $g_aiTownHallPos[1] & ")", $COLOR_DEBUG)
-	EndIf
-	#EndRegion - Custom fix - Team AIO MOD++
+	checkMainScreen()
+	If $g_bRestart Then Return
+	Collect(False)
 
-	If Number($g_iTownHallLevel) < 2 Then
-		Local $aTownHallLevel = GetTownHallLevel(True) ; Get the Users TH level
-		If IsArray($aTownHallLevel) Then $g_iTownHallLevel = 0 ; Check for error finding TH level, and reset to zero if yes
+	;;;;;Check Town Hall level
+	Local $iTownHallLevel = $g_iTownHallLevel
+	SetDebugLog("Detecting Town Hall level", $COLOR_INFO)
+	SetDebugLog("Town Hall level is currently saved as " & $g_iTownHallLevel, $COLOR_INFO)
+	imglocTHSearch(False, True, True) ;Sets $g_iTownHallLevel
+	SetDebugLog("Detected Town Hall level is " & $g_iTownHallLevel, $COLOR_INFO)
+	If $g_iTownHallLevel = $iTownHallLevel Then
+		SetDebugLog("Town Hall level has not changed", $COLOR_INFO)
+	Else
+		If $g_iTownHallLevel < $iTownHallLevel Then
+			SetDebugLog("Bad town hall level read...saving bigger old value", $COLOR_ERROR)
+			$g_iTownHallLevel = $iTownHallLevel
+			saveConfig()
+			applyConfig()
+		Else
+			SetDebugLog("Town Hall level has changed!", $COLOR_INFO)
+			SetDebugLog("New Town hall level detected as " & $g_iTownHallLevel, $COLOR_INFO)
+			saveConfig()
+			applyConfig()
+		EndIf
 	EndIf
+	;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+	If $g_iTownHallLevel < 2 Or Not isInsideDiamond($g_aiTownHallPos) Then
+		LocateTownHall(False, False)
+		If _Sleep($DELAYBOTDETECT1) Then Return
+		SaveConfig()
+		applyConfig()
+	EndIf
+	
 	If Number($g_iTownHallLevel) > 1 And Number($g_iTownHallLevel) < 6 Then
 		SetLog("Warning: TownHall level below 6 NOT RECOMMENDED!", $COLOR_ERROR)
 		SetLog("Proceed with caution as errors may occur.", $COLOR_ERROR)
 	EndIf
-
-	#Region - ChkBuildingsLocate - Team AIO MOD++
-	If $g_bChkBuildingsLocate Or $g_bChkOnlyFarm Then 
-		SetLog("Detecting your buildings skipped", $COLOR_INFO)
-		;Display Level TH in Stats
-		GUICtrlSetData($g_hLblTHLevels, "")
-
-		_GUI_Value_STATE("HIDE", $g_aGroupListTHLevels)
-		SetDebugLog("Select TH Level:" & Number($g_iTownHallLevel), $COLOR_DEBUG)
-		GUICtrlSetState($g_ahPicTHLevels[$g_iTownHallLevel], $GUI_SHOW)
-		GUICtrlSetData($g_hLblTHLevels, $g_iTownHallLevel)
-		Return
-	EndIf
-	#EndRegion - ChkBuildingsLocate - Team AIO MOD++
 	
-	If $g_iTownHallLevel < 2 Or ($g_aiTownHallPos[1] = "" Or $g_aiTownHallPos[1] = -1) Then LocateTownHall(False, False)
-	If _Sleep($DELAYBOTDETECT1) Then Return
 	CheckImageType()
 	If _Sleep($DELAYBOTDETECT1) Then Return
 
-	If $g_bScreenshotHideName Then
-		If _Sleep($DELAYBOTDETECT3) Then Return
-		If $g_aiClanCastlePos[0] = -1 Then
-			LocateClanCastle(False)
-			SaveConfig()
-		EndIf
+	If Not isInsideDiamond($g_aiClanCastlePos) Then
+		LocateClanCastle(False)
+		SaveConfig()
 	EndIf
 
-	If _Sleep($DELAYBOTDETECT3) Then Return
-	If $g_aiLaboratoryPos[0] = "" Or $g_aiLaboratoryPos[0] = -1 Then
+	If Not isInsideDiamond($g_aiLaboratoryPos) Then
 		LocateLab(False)
 		SaveConfig()
 	EndIf
 
 	If Number($g_iTownHallLevel) >= 14 Then
 		If _Sleep($DELAYBOTDETECT3) Then Return
-		If $g_aiPetHousePos[0] = "" Or $g_aiPetHousePos[0] = -1 Then
+		If Not isInsideDiamond($g_aiPetHousePos) Then
 			LocatePetHouse(False)
 			SaveConfig()
 		EndIf
 	EndIf
 
 	If Number($g_iTownHallLevel) >= 7 Then
-		If $g_iCmbBoostBarbarianKing > 0 Or $g_bUpgradeKingEnable Then
-			If _Sleep($DELAYBOTDETECT3) Then Return
-			If $g_aiKingAltarPos[0] = -1 Then
+		If ($g_iCmbBoostBarbarianKing > 0 Or $g_bUpgradeQueenEnable Or $g_bChkOneGemBoostHeroes) Then
+			If Not isInsideDiamond($g_aiKingAltarPos) Then
 				LocateKingAltar(False)
-				SaveConfig()
-			EndIf
-		EndIf
-
-		If Number($g_iTownHallLevel) >= 9 And ($g_iCmbBoostArcherQueen > 0 Or $g_bUpgradeQueenEnable) Then
-			If _Sleep($DELAYBOTDETECT3) Then Return
-			If $g_aiQueenAltarPos[0] = -1 Then
-				LocateQueenAltar(False)
-				SaveConfig()
-			EndIf
-		EndIf
-
-		If Number($g_iTownHallLevel) >= 11 And ($g_iCmbBoostWarden > 0 Or $g_bUpgradeWardenEnable) Then
-			If _Sleep($DELAYBOTDETECT3) Then Return
-			If $g_aiWardenAltarPos[0] = -1 Then
-				LocateWardenAltar(False)
-				SaveConfig()
-			EndIf
-		EndIf
-
-		If Number($g_iTownHallLevel) >= 13 And ($g_iCmbBoostChampion > 0 Or $g_bUpgradeChampionEnable) Then
-			If _Sleep($DELAYBOTDETECT3) Then Return
-			If $g_aiChampionAltarPos[0] = -1 Then
-				LocateChampionAltar(False)
 				SaveConfig()
 			EndIf
 		EndIf
 	EndIf
 
+	If Number($g_iTownHallLevel) >= 9 And ($g_iCmbBoostArcherQueen > 0 Or $g_bUpgradeQueenEnable Or $g_bChkOneGemBoostHeroes) Then
+		If Not isInsideDiamond($g_aiQueenAltarPos) Then
+			LocateQueenAltar(False)
+			SaveConfig()
+		EndIf
+	EndIf
+
+	If Number($g_iTownHallLevel) >= 11 And ($g_iCmbBoostWarden > 0 Or $g_bUpgradeWardenEnable Or $g_bChkOneGemBoostHeroes) Then
+		If Not isInsideDiamond($g_aiWardenAltarPos) Then
+			LocateWardenAltar(False)
+			SaveConfig()
+		EndIf
+	EndIf
+
+	If Number($g_iTownHallLevel) >= 13 And ($g_iCmbBoostChampion > 0 Or $g_bUpgradeChampionEnable Or $g_bChkOneGemBoostHeroes) Then
+		If Not isInsideDiamond($g_aiChampionAltarPos) Then
+			LocateChampionAltar(False)
+			SaveConfig()
+		EndIf
+	EndIf
+	
+	chklocations()
+	
 	;Display Level TH in Stats
 	GUICtrlSetData($g_hLblTHLevels, "")
 

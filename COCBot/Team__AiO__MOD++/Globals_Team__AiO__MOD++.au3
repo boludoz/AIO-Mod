@@ -384,7 +384,7 @@ Global $g_bNewModAvailable = False
 Global $g_bRemainTweak = True
 
 ; Skip ubi buildings - Team AIO Mod++
-Global $g_bChkBuildingsLocate  = False, $g_hChkBuildingsLocate = 0
+Global $g_bChkAvoidBuildingsLocate  = False, $g_hChkBuildingsLocate = 0
 
 ; Firewall - Team AIO Mod++
 Global $g_hChkEnableFirewall = 0, $g_bChkEnableFirewall = False

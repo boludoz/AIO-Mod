@@ -318,16 +318,15 @@ Func btnLocateTownHall()
 	Local $g_iOldTownHallLevel = $g_iTownHallLevel
 	$g_bRunState = True
 	ZoomOut()
-	LocateTownHall(True)
+	LocateTownHall(False, True)
+
+	; It may not be necessary to restart.
 	If Not $g_iOldTownHallLevel = $g_iTownHallLevel Then
-		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Tahoma", 600)
-		Local $sText = @CRLF & GetTranslatedFileIni("MBR Popups", "Locating_your_TH", "If you locating your TH because you upgraded,") & @CRLF & GetTranslatedFileIni("MBR Popups", "Must_restart_bot", "then you must restart bot!!!") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "OK_to_restart_bot", "Click OK to restart bot,") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Cancel_to_exit", "Or Click Cancel to exit") & @CRLF
-		Local $MsgBox = _ExtMsgBox(0, GetTranslatedFileIni("MBR Popups", "Ok_Cancel", "Ok|Cancel"), GetTranslatedFileIni("MBR Popups", "Close_Bot", "Close Bot Please!"), $sText, 120)
-		SetDebugLog("$MsgBox= " & $MsgBox, $COLOR_DEBUG)
-		If $MsgBox = 1 Then
-			RestartBot(False, $wasRunState)
-		EndIf
+		SaveConfig()
+		readConfig()
+		applyConfig()
 	EndIf
+	
 	$g_bRunState = $wasRunState
 	AndroidShield("btnLocateTownHall")
 	ChkLocations()
@@ -336,77 +335,70 @@ EndFunc   ;==>btnLocateTownHall
 Func btnResetBuilding()
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
-	While 1
-		If _Sleep(500) Then Return
-		If FileExists($g_sProfileBuildingPath) Then
-			_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Tahoma", 600)
-			Local $sText = @CRLF & GetTranslatedFileIni("MBR Popups", "Delete_and_Reset_Building_info", "Click OK to Delete and Reset all Building info,") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Bot_will_exit", "NOTE =>> Bot will exit and need to be restarted when complete") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Cancel_to_exit", "Or Click Cancel to exit") & @CRLF
-			Local $MsgBox = _ExtMsgBox(0, GetTranslatedFileIni("MBR Popups", "Ok_Cancel", "Ok|Cancel"), GetTranslatedFileIni("MBR Popups", "Delete_Building_Info", "Delete Building Information ?"), $sText, 120)
-			SetDebugLog("$MsgBox= " & $MsgBox, $COLOR_DEBUG)
-			If $MsgBox = 1 Then
-				Local $sText = @CRLF & GetTranslatedFileIni("MBR Popups", "Sure_Delete_Building_Info", "Are you 100% sure you want to delete Building information ?") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Delete_then_restart_bot", "Click OK to Delete and then restart the bot (manually)") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Cancel_to_exit", -1) & @CRLF
-				Local $MsgBox = _ExtMsgBox(0, GetTranslatedFileIni("MBR Popups", "Ok_Cancel", -1), GetTranslatedFileIni("MBR Popups", "Delete_Building_Info", -1), $sText, 120)
-				SetDebugLog("$MsgBox= " & $MsgBox, $COLOR_DEBUG)
-				If $MsgBox = 1 Then
-					Local $result = FileDelete($g_sProfileBuildingPath)
-					If $result = 0 Then
-						SetLog("Unable to remove building.ini file, please use manual method", $COLOR_ERROR)
-					Else
-						BotClose(False)
-					EndIf
-				EndIf
-			EndIf
-		Else
-			SetLog("Building.ini file does not exist", $COLOR_INFO)
-		EndIf
-		ExitLoop
-	WEnd
+	
+	Local $aReset[2] = [-1, -1]
+
+	$g_aiClanCastlePos = $aReset
+	$g_aiLaboratoryPos = $aReset
+	$g_aiPetHousePos = $aReset
+	$g_aiKingAltarPos = $aReset
+	$g_aiQueenAltarPos = $aReset
+	$g_aiWardenAltarPos = $aReset
+	$g_aiChampionAltarPos = $aReset
+	
+	; It may not be necessary to restart.
+	SaveConfig()
+	readConfig()
+	applyConfig()
+
+	chklocations(True)
 	$g_bRunState = $wasRunState
 	AndroidShield("btnResetBuilding")
 EndFunc   ;==>btnResetBuilding
 
-Func ChkLocations()
-	If (isInsideDiamond($g_aiTownHallPos) = False) Then
-		GUICtrlSetBkColor($g_hlblLocateTH, $COLOR_ORANGE)
+; ProMac....
+Func chklocations($breset = False)
+	If (isinsidediamond($g_aitownhallpos) = False) OR $breset Then
+		GUICtrlSetBkColor($g_hlbllocateth, $color_orange)
 	Else
-		GUICtrlSetBkColor($g_hlblLocateTH, $COLOR_SUCCESS)
+		GUICtrlSetBkColor($g_hlbllocateth, $color_success)
 	EndIf
-	If (isInsideDiamond($g_aiClanCastlePos) = False) Then
-		GUICtrlSetBkColor($g_hlblLocateCastle, $COLOR_ORANGE)
+	If (isinsidediamond($g_aiclancastlepos) = False) OR $breset Then
+		GUICtrlSetBkColor($g_hlbllocatecastle, $color_orange)
 	Else
-		GUICtrlSetBkColor($g_hlblLocateCastle, $COLOR_SUCCESS)
+		GUICtrlSetBkColor($g_hlbllocatecastle, $color_success)
 	EndIf
-	If (isInsideDiamond($g_aiKingAltarPos) = False) Then
-		GUICtrlSetBkColor($g_hlblLocateKingAltar, $COLOR_ORANGE)
+	If (isinsidediamond($g_aikingaltarpos) = False) OR $breset Then
+		GUICtrlSetBkColor($g_hlbllocatekingaltar, $color_orange)
 	Else
-		GUICtrlSetBkColor($g_hlblLocateKingAltar, $COLOR_SUCCESS)
+		GUICtrlSetBkColor($g_hlbllocatekingaltar, $color_success)
 	EndIf
-	If (isInsideDiamond($g_aiQueenAltarPos) = False) Then
-		GUICtrlSetBkColor($g_hlblLocateQueenAltar, $COLOR_ORANGE)
+	If (isinsidediamond($g_aiqueenaltarpos) = False) OR $breset Then
+		GUICtrlSetBkColor($g_hlbllocatequeenaltar, $color_orange)
 	Else
-		GUICtrlSetBkColor($g_hlblLocateQueenAltar, $COLOR_SUCCESS)
+		GUICtrlSetBkColor($g_hlbllocatequeenaltar, $color_success)
 	EndIf
-	If (isInsideDiamond($g_aiWardenAltarPos) = False) Then
-		GUICtrlSetBkColor($g_hlblLocateWardenAltar, $COLOR_ORANGE)
+	If (isinsidediamond($g_aiwardenaltarpos) = False) OR $breset Then
+		GUICtrlSetBkColor($g_hlbllocatewardenaltar, $color_orange)
 	Else
-		GUICtrlSetBkColor($g_hlblLocateWardenAltar, $COLOR_SUCCESS)
+		GUICtrlSetBkColor($g_hlbllocatewardenaltar, $color_success)
 	EndIf
-	If (isInsideDiamond($g_aiChampionAltarPos) = False) Then
-		GUICtrlSetBkColor($g_hlblLocateChampionAltar, $COLOR_ORANGE)
+	If (isinsidediamond($g_aichampionaltarpos) = False) OR $breset Then
+		GUICtrlSetBkColor($g_hlbllocatechampionaltar, $color_orange)
 	Else
-		GUICtrlSetBkColor($g_hlblLocateChampionAltar, $COLOR_SUCCESS)
+		GUICtrlSetBkColor($g_hlbllocatechampionaltar, $color_success)
 	EndIf
-	If (isInsideDiamond($g_aiLaboratoryPos) = False) Then
-		GUICtrlSetBkColor($g_hlblLocateLaboratory, $COLOR_ORANGE)
+	If (isinsidediamond($g_ailaboratorypos) = False) OR $breset Then
+		GUICtrlSetBkColor($g_hlbllocatelaboratory, $color_orange)
 	Else
-		GUICtrlSetBkColor($g_hlblLocateLaboratory, $COLOR_SUCCESS)
+		GUICtrlSetBkColor($g_hlbllocatelaboratory, $color_success)
 	EndIf
-	If (isInsideDiamond($g_aiPetHousePos) = False) Then
-		GUICtrlSetBkColor($g_hlblLocatePetHouse, $COLOR_ORANGE)
+	If (isinsidediamond($g_aipethousepos) = False) OR $breset Then
+		GUICtrlSetBkColor($g_hlbllocatepethouse, $color_orange)
 	Else
-		GUICtrlSetBkColor($g_hlblLocatePetHouse, $COLOR_SUCCESS)
+		GUICtrlSetBkColor($g_hlbllocatepethouse, $color_success)
 	EndIf
-EndFunc   ;==>ChkLocations
+EndFunc
 
 Func btnLab()
 	Local $wasRunState = $g_bRunState
@@ -422,7 +414,7 @@ Func btnPet()
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
 	ZoomOut()
-	LocatePetHouse(True, True)
+	LocatePetHouse(True, False)
 	$g_bRunState = $wasRunState
 	AndroidShield("btnPet")
 	ChkLocations()

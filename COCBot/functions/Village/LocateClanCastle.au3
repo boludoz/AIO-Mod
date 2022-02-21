@@ -27,12 +27,13 @@ Func _LocateClanCastle($bForceOff = True)
 	Local $sText, $MsgBox, $iSilly = 0, $iStupid = 0, $sErrorText = "", $sInfo
 	If Int($g_iTownHallLevel) < 3 Then Return
 	SetLog("Locating Clan Castle.", $COLOR_INFO)
+	If DetectedCastle() Then Return True
+	If $bForceOff = True And ($g_bChkAvoidBuildingsLocate Or $g_bChkOnlyFarm) Then Return False ; Va con prisa !
+	
 	ZoomOut()
 	Collect(False, False)
 	$g_aiClanCastlePos[0] = -1
 	$g_aiClanCastlePos[1] = -1
-	If DetectedCastle() Then Return True
-	If $bForceOff = True And ($g_bChkBuildingsLocate Or $g_bChkOnlyFarm) Then Return False ; Va con prisa !
 	While 1
 		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Tahoma", 500)
 		$sText = $sErrorText & @CRLF & GetTranslatedFileIni("MBR Popups", "Func_Locate_Clan_Castle_01", "Click OK then click on your Clan Castle") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Locate_building_01", "Do not move mouse quickly after clicking location") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Locate_building_02", "Make sure the building name is visible for me!") & @CRLF

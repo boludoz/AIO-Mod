@@ -769,7 +769,8 @@ Func runBot() ;Bot that runs everything in order
 		; Custom BB - Team AIO Mod++
 		If $g_iCommandStop <> 8 Then $g_iCommandStop = -1
 		If _Sleep($DELAYRUNBOT1) Then Return
-		checkMainScreen()
+		; Just in case of new profile! or BotDetectFirstTime() failed on Initiate()
+		BotDetectFirstTime()
 		If $g_bRestart Then ContinueLoop
 		chkShieldStatus()
 		If Not $g_bRunState Then Return
@@ -1478,7 +1479,8 @@ Func FirstCheck()
 	$g_bRestart = False
 	$g_bFullArmy = False
 	$g_iCommandStop = -1
-
+	
+	#cs - no se va a poner a verificar el nivel justo aca, cambia la logica con aio.
 	;;;;;Check Town Hall level
 	Local $iTownHallLevel = $g_iTownHallLevel
 	SetDebugLog("Detecting Town Hall level", $COLOR_INFO)
@@ -1501,6 +1503,7 @@ Func FirstCheck()
 		EndIf
 	EndIf
 	;;;;;;;;;;;;;;;;;;;;;;;;;;
+	#Ce
 
 	VillageReport()
 	If Not $g_bRunState Then Return
@@ -1529,7 +1532,7 @@ Func FirstCheck()
 		SetDebugLog("Are you ready? " & String($g_bIsFullArmywithHeroesAndSpells))
 		If $g_bIsFullArmywithHeroesAndSpells Then
 			; Just in case of new profile! or BotDetectFirstTime() failed on Initiate()
-			If Not isInsideDiamond($g_aiTownHallPos) Then BotDetectFirstTime()
+			; BotDetectFirstTime() ; justo aca?
 			; Now the bot can attack
 			If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
 				Setlog("Before any other routine let's attack!", $COLOR_INFO)
@@ -1543,7 +1546,7 @@ Func FirstCheck()
 				EndIf
 				If _Sleep($DELAYRUNBOT1) Then Return
 			EndIf
-		Else
+		Else ;mmmm makes sense...
 			OneGemBoost() ; One gem boost - Team AIO Mod++
 			If $g_bRestart Then Return
 		EndIf

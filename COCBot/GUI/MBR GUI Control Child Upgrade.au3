@@ -649,6 +649,7 @@ EndFunc   ;==>chkWalls
 
 Func chkSaveWallBldr()
 	$g_bUpgradeWallSaveBuilder = (GUICtrlRead($g_hChkSaveWallBldr) = $GUI_CHECKED)
+	chkwallspriorities()
 EndFunc   ;==>chkSaveWallBldr
 
 Func cmbWalls()

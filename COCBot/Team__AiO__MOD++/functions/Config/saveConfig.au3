@@ -77,7 +77,7 @@ Func SaveConfig_MOD_MiscTab()
 	_Ini_Add("BotLogLineLimit", "LimitValue", GUICtrlRead($g_hTxtLogLineLimit))
 
 	; Skip first check
-	_Ini_Add("ChkBuildingsLocate", "Enable", $g_bChkBuildingsLocate ? 1 : 0)
+	_Ini_Add("ChkBuildingsLocate", "Enable", $g_bChkAvoidBuildingsLocate ? 1 : 0)
 
 	; Remove edge obstacles
 	_Ini_Add("MiscTab", "EdgeObstacle", $g_bEdgeObstacle ? 1 : 0)

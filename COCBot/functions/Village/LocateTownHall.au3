@@ -27,13 +27,22 @@ Func _LocateTownHall($bLocationOnly = False, $bFromButton = False)
 	Local $sText, $MsgBox, $Success, $sLocMsg
 	Local $iStupid = 0, $iSilly = 0, $sErrorText = ""
 	SetLog("Locating Town Hall ...", $COLOR_INFO)
-	WinGetAndroidHandle()
 	ZoomOut()
 	Collect(False, False)
+	
+	If $bLocationOnly Or $bFromButton = False Then
+		If DetectedTH() Then
+			chklocations()
+			Return True
+		EndIf
+		If $bLocationOnly Then Return False
+	EndIf
+	
+	If $bFromButton = False And $g_bChkAvoidBuildingsLocate Or $g_bChkOnlyFarm Then Return
+
 	$g_aiTownHallPos[0] = -1
 	$g_aiTownHallPos[1] = -1
-	If DetectedTH() Then Return True
-	If $bFromButton = False And $g_bChkBuildingsLocate Or $g_bChkOnlyFarm Then Return
+	
 	While 1
 		_ExtMsgBoxSet(1 + 64, 1, 0x004080, 0xFFFF00, 12, "Tahoma", 600)
 		$sText = $sErrorText & @CRLF & GetTranslatedFileIni("MBR Popups", "Func_Locate_TownHall_01", "Click OK then click on your Town Hall") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Locate_building_01", -1) & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Locate_building_02", -1) & @CRLF
@@ -73,40 +82,39 @@ Func _LocateTownHall($bLocationOnly = False, $bFromButton = False)
 		Else
 			SetLog("Locate TownHall Cancelled", $COLOR_INFO)
 			ClickAway(); ClickP($aAway, 1, 0, "#0393")
-			Return
+			Return False
 		EndIf
-		If $bLocationOnly = False Then
-			$Success = GetTownHallLevel()
-			$iSilly += 1
-			If IsArray($Success) Or $Success = False Then
-				If $Success = False Then
-					$sLocMsg = "Nothing"
-				Else
-					$sLocMsg = $Success[1]
-				EndIf
-				Select
-					Case $iSilly = 1
-						$sErrorText = "Wait, That is not a TownHall?, It was a " & $sLocMsg & @CRLF
-						ContinueLoop
-					Case $iSilly = 2
-						$sErrorText = "Quit joking, That was " & $sLocMsg & @CRLF
-						ContinueLoop
-					Case $iSilly = 3
-						$sErrorText = "This is not funny, why did you click " & $sLocMsg & "? Please stop!" & @CRLF
-						ContinueLoop
-					Case $iSilly = 4
-						$sErrorText = $sLocMsg & " ?!?!?!" & @CRLF & @CRLF & "Last Chance, DO NOT MAKE ME ANGRY, or" & @CRLF & "I will give ALL of your gold to Barbarian King," & @CRLF & "And ALL of your Gems to the Archer Queen!" & @CRLF
-						ContinueLoop
-					Case $iSilly > 4
-						SetLog("Quit joking, Click on the TH, or restart bot and try again", $COLOR_ERROR)
-						$g_aiTownHallPos[0] = -1
-						$g_aiTownHallPos[1] = -1
-						ClickAway(); ClickP($aAway, 1, 0, "#0394")
-						Return False
-				EndSelect
+		
+		$Success = GetTownHallLevel()
+		$iSilly += 1
+		If IsArray($Success) Or $Success = False Then
+			If $Success = False Then
+				$sLocMsg = "Nothing"
 			Else
-				SetLog("Locate TH Success!", $COLOR_SUCCESS)
+				$sLocMsg = $Success[1]
 			EndIf
+			Select
+				Case $iSilly = 1
+					$sErrorText = "Wait, That is not a TownHall?, It was a " & $sLocMsg & @CRLF
+					ContinueLoop
+				Case $iSilly = 2
+					$sErrorText = "Quit joking, That was " & $sLocMsg & @CRLF
+					ContinueLoop
+				Case $iSilly = 3
+					$sErrorText = "This is not funny, why did you click " & $sLocMsg & "? Please stop!" & @CRLF
+					ContinueLoop
+				Case $iSilly = 4
+					$sErrorText = $sLocMsg & " ?!?!?!" & @CRLF & @CRLF & "Last Chance, DO NOT MAKE ME ANGRY, or" & @CRLF & "I will give ALL of your gold to Barbarian King," & @CRLF & "And ALL of your Gems to the Archer Queen!" & @CRLF
+					ContinueLoop
+				Case $iSilly > 4
+					SetLog("Quit joking, Click on the TH, or restart bot and try again", $COLOR_ERROR)
+					$g_aiTownHallPos[0] = -1
+					$g_aiTownHallPos[1] = -1
+					ClickAway(); ClickP($aAway, 1, 0, "#0394")
+					Return False
+			EndSelect
+		Else
+			SetLog("Locate TH Success!", $COLOR_SUCCESS)
 		EndIf
 		ExitLoop
 	WEnd

@@ -125,7 +125,7 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			GUICtrlSetData($g_hTxtLogLineLimit, $g_iTxtLogLineLimit)
 
 			; Skip first check
-			GUICtrlSetState($g_hChkBuildingsLocate, $g_bChkBuildingsLocate ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkBuildingsLocate, $g_bChkAvoidBuildingsLocate ? $GUI_CHECKED : $GUI_UNCHECKED)
 
 			; DeployDelay
 			GUICtrlSetData($g_hDeployDelay[0], $g_iDeployDelay[0])
@@ -227,7 +227,7 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			$g_iTxtLogLineLimit = Int(GUICtrlRead($g_hTxtLogLineLimit))
 
 			; Skip first check
-			$g_bChkBuildingsLocate = GUICtrlRead($g_hChkBuildingsLocate) = $GUI_CHECKED
+			$g_bChkAvoidBuildingsLocate = GUICtrlRead($g_hChkBuildingsLocate) = $GUI_CHECKED
 
 			; Remove edge obstacles
 			$g_bEdgeObstacle = GUICtrlRead($g_hEdgeObstacle) = $GUI_CHECKED

@@ -12,27 +12,35 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func LocateLab($bForceOff = True)
+Func LocateLab($bFromButton = False)
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
 	AndroidShield("LocateLab 1")
-	Local $result = _LocateLab($bForceOff)
+	Local $result = _LocateLab($bFromButton)
 	$g_bRunState = $wasRunState
 	AndroidShield("LocateLab 2")
 	Return $result
 EndFunc   ;==>LocateLab
 
-Func _LocateLab($bForceOff = True)
+Func _LocateLab($bFromButton = False)
 	Local $sText, $MsgBox, $iStupid = 0, $iSilly = 0, $sErrorText = ""
 	If Int($g_iTownHallLevel) < 3 Then Return
-
 	SetLog("Locating Laboratory...", $COLOR_INFO)
+	
+	If $bFromButton = False Then
+		If DetectedLabs() Then
+			chklocations()
+			Return True
+		EndIf
+	EndIf
+	
+	If $bFromButton = False And $g_bChkAvoidBuildingsLocate Or $g_bChkOnlyFarm Then Return
+
+	ZoomOut()
 	Collect(False, False)
 	$g_aiLaboratoryPos[0] = -1
 	$g_aiLaboratoryPos[1] = -1
-	If DetectedLabs() Then Return True
-	If $bForceOff = True And ($g_bChkBuildingsLocate Or $g_bChkOnlyFarm) Then Return False ; Va con prisa !
-
+	
 	While 1
 		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Tahoma", 600)
 		$sText = $sErrorText & @CRLF & GetTranslatedFileIni("MBR Popups", "Func_Locate_Laboratory_01", "Click OK then click on your Laboratory building") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Locate_building_01", -1) & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Locate_building_02", -1) & @CRLF
@@ -131,7 +139,6 @@ Func CenterSort($aResult)
 EndFunc
 
 Func DetectedLabs()
-	ZoomOut()
 	
 	Local $aResult = _ImageSearchXML($g_sImgLocationLabs, 0, "ECD", True, False, True, 25)
 	If UBound($aResult) < 1 Or @error Then Return False
@@ -143,8 +150,8 @@ Func DetectedLabs()
 	For $i = 0 To UBound($aResult) - 1
 		If $i > 0 Then CheckMainScreen(False)
 		
-		$aClick[0] = Int($aResult[$i][0]) + 10
-		$aClick[1] = Int($aResult[$i][1]) + 10
+		$aClick[0] = Int($aResult[$i][0])
+		$aClick[1] = Int($aResult[$i][1])
 
 		If isInsideDiamondInt($aClick[0], $aClick[1])  Then
 			$g_bUseRandomClick = False

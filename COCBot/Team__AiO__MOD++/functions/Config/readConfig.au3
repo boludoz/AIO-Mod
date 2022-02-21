@@ -69,7 +69,7 @@ Func ReadConfig_MOD_MiscTab()
 	IniReadS($g_iTxtLogLineLimit, $g_sProfileConfigPath, "BotLogLineLimit", "LimitValue", "500","Int")
 
 	; Skip first check
-	IniReadS($g_bChkBuildingsLocate, $g_sProfileConfigPath, "ChkBuildingsLocate", "Enable", $g_bChkBuildingsLocate, "Bool")
+	IniReadS($g_bChkAvoidBuildingsLocate, $g_sProfileConfigPath, "ChkBuildingsLocate", "Enable", $g_bChkAvoidBuildingsLocate, "Bool")
 
 	; Remove edge obstacles
 	IniReadS($g_bEdgeObstacle, $g_sProfileConfigPath, "MiscTab", "EdgeObstacle", $g_bEdgeObstacle, "Bool")

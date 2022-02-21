@@ -12,23 +12,42 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func LocatePetHouse($bCollect = True, $bFromButton = False)
-	; reset position
-	$g_aiPetHousePos[0] = -1
-	$g_aiPetHousePos[0] = -1
+Func LocatePetHouse($bFromButton = False, $bManualAvoid = Default)
 
 	If $g_iTownHallLevel < 14 Then
 		SetLog("Townhall Lvl " & $g_iTownHallLevel & " has no Pet House, so skip locating.", $COLOR_DEBUG)
-		Return
+		Return False
 	EndIf
-
+	
+	If $bManualAvoid = Default Then
+		If $bFromButton = False Then
+			$bManualAvoid = ($g_bChkAvoidBuildingsLocate Or $g_bChkOnlyFarm)
+		EndIf
+	EndIf
+	
+	If $bFromButton = True Then ZoomOut()
+	
 	; auto locate 
-	ImgLocatePetHouse()
-	If $bFromButton = False And $g_bChkBuildingsLocate Or $g_bChkOnlyFarm Then Return
+	If $bFromButton = True Then
+		SetLog("Manual Pet House.", $COLOR_INFO)
+	ElseIf $bManualAvoid Then
+		If ImgLocatePetHouse() Then
+			chklocations()
+			Return True
+		EndIf
+		Return False
+	EndIf
+	
+	; reset position
+	$g_aiPetHousePos[0] = -1
+	$g_aiPetHousePos[0] = -1
 	
 	SetLog("PetHouse: (" & $g_aiPetHousePos[0] & "," & $g_aiPetHousePos[1] & ")", $COLOR_DEBUG)
- 
-	If $g_aiPetHousePos[1] = "" Or $g_aiPetHousePos[1] = -1 Then _LocatePetHouse($bCollect) ; manual locate
+	If Number($g_aiPetHousePos[1]) < 1 Then 
+		Return _LocatePetHouse($bFromButton) ; manual locate
+	EndIf
+	
+	Return False
 EndFunc
 
 Func _LocatePetHouse($bCollect = True)
@@ -114,7 +133,7 @@ Func _LocatePetHouse($bCollect = True)
 		ExitLoop
 	WEnd
 	ClickAway()
-
+	Return True
 EndFunc   ;==>LocatePetHouse
 
 ; Image Search for Pet House
