@@ -219,7 +219,7 @@ Func IsReturnHomeBattlePage($useReturnValue = False, $makeDebugImageScreenshot =
 	EndIf
 
 EndFunc   ;==>IsReturnHomeBattlePage
-#cs
+
 Func IsPostDefenseSummaryPage($bCapture = True)
 	;check for loot lost summary screen after base defense when log on and base is being attacked.
 	Local $result
@@ -238,7 +238,7 @@ Func IsPostDefenseSummaryPage($bCapture = True)
 	EndIf
 
 EndFunc   ;==>IsPostDefenseSummaryPage
-#ce
+
 Func IsPetHousePage($bSetLog = True, $iLoop = 30)
 	Local $aIsPetHousePage[4] = [425, 170, 0x006F5D, 10] ; green pixel under title 'Pet House'
 
