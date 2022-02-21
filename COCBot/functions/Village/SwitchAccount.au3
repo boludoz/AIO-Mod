@@ -14,11 +14,13 @@
 ; ===============================================================================================================================
 ; Return True or False if Switch Account is enabled and current profile in configured list
 Func ProfileSwitchAccountEnabled() 
+	#cs
 	; Custom fix - Team AIO Mod++
 	Local $abAccountNo = AccountNoActive()
 	If UBound(_ArrayFindAll($abAccountNo, "True")) < 2 Then
 		Return SetError(0, 0, False)
 	EndIf
+	#ce
 	If Not $g_bChkSwitchAcc Or Not aquireSwitchAccountMutex() Then Return False
 	Return SetError(0, 0, _ArraySearch($g_asProfileName, $g_sProfileCurrentName) >= 0)
 EndFunc   ;==>ProfileSwitchAccountEnabled
