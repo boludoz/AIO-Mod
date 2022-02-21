@@ -1137,7 +1137,7 @@ Func CheckPlannedAttackLimits()
 			SetDebugLog("Acount: " & $g_asProfileName[$i] & " | $g_bAttackAccountReachLimts[" & $i + 1 & "]: " & $g_bAttackAccountReachLimts[$i])
 			SetDebugLog("Acount: " & $g_asProfileName[$i] & " | $bIsHour2Attack: " & $bIsHour2Attack[$i])
 			If $bIsHour2Attack[$i] Then
-				If Not $g_bAttackPlannerDayLimit Or ($g_bAttackAccountReachLimts[$i] And $g_bAttackPlannerDayLimit) Then
+				If Not $g_bAttackPlannerDayLimit Or (Not $g_bAttackAccountReachLimts[$i] And $g_bAttackPlannerDayLimit) Then
 					SetDebugLog("Account available to attack is : " & $i + 1)
 					$bIsAvailable2Attack = True
 				EndIf
