@@ -1136,9 +1136,11 @@ Func CheckPlannedAttackLimits()
 			SetDebugLog("Acount: " & $g_asProfileName[$i] & " | $abAccountNo[" & $i + 1 & "]: " & $abAccountNo[$i])
 			SetDebugLog("Acount: " & $g_asProfileName[$i] & " | $g_bAttackAccountReachLimts[" & $i + 1 & "]: " & $g_bAttackAccountReachLimts[$i])
 			SetDebugLog("Acount: " & $g_asProfileName[$i] & " | $bIsHour2Attack: " & $bIsHour2Attack[$i])
-			If Not $g_bAttackAccountReachLimts[$i] And $bIsHour2Attack[$i] Then
-				SetDebugLog("Account available to attack is : " & $i + 1)
-				$bIsAvailable2Attack = True
+			If $bIsHour2Attack[$i] Then
+				If Not $g_bAttackPlannerDayLimit Or ($g_bAttackAccountReachLimts[$i] And $g_bAttackPlannerDayLimit) Then
+					SetDebugLog("Account available to attack is : " & $i + 1)
+					$bIsAvailable2Attack = True
+				EndIf
 			EndIf
 		EndIf
 	Next
@@ -1217,7 +1219,7 @@ Func SCIDragIfNeeded($iSCIDAccount)
 	If $g_bAndroidAdbClickDragScript Then
 		ClickDrag(450, 600, 450, 600 - (95 * ($iSCIDAccount - 3)), 2000, True) ; drag a multiple of 90 pixels up for how many accounts down it is
 	Else
-		ClickDrag(444, 720, 444, 720 - (64 * ($iSCIDAccount-3)), 2000) ; Custom fix - Team AIO Mod++
+		ClickDrag(444, 720, 444, 720 - (64 * ($iSCIDAccount - 3)), 2000) ; Custom fix - Team AIO Mod++
 	EndIf
 	If _Sleep(1500) Then Return
 EndFunc   ;==>SCIDragIfNeeded
