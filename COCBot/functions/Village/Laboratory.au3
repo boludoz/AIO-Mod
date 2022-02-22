@@ -214,7 +214,7 @@ Func _Laboratory($debug = False)
 							Local $LabUpgradeRequired = decodeSingleCoord(findImage("LabUpgradeRequired", $g_sImgLabZero & "Required*", GetDiamondFromRect($aCoords[0] - 40 & "," & $aCoords[1] & "," & $aCoords[0] + 40 & "," & $aCoords[1] + 80), 1, True, Default))
 							If UBound($LabUpgradeRequired) > 1 Then
 								SetLog("Lab Upgrade " & $g_avLabTroops[$g_iCmbLaboratory][0] & " - Max Level. Choose another upgrade.", $COLOR_INFO)
-								LabFirstPage($iCurPage, $iYMidPoint)
+								LabPrevPage($iCurPage, $iYMidPoint)
 								$iCurPage = 1     ;reset current page
 							Else
 								SetLog("Lab Upgrade " & $g_avLabTroops[$g_iCmbLaboratory][0] & " - Not enough Resources." & @CRLF & "We will try again later.", $COLOR_INFO)
