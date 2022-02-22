@@ -23,21 +23,22 @@ For $i = 0 To $g_eTotalAcc - 1
 Next
 
 #Region - Custom BB - Team AIO Mod++
-Func _ClanGames($test = False)
+Func _ClanGames($test = False, $bFromBB = False)
 	$g_bIsBBevent = False ; Reset
 	; Check If this Feature is Enable on GUI.
 	If Not $g_bChkClanGamesEnabled Then Return
-	__ClanGames($test)
+	__ClanGames($test, $bFromBB)
 	ClickAwayCross()
 EndFunc   ;==>_ClanGames
 #EndRegion - Custom BB - Team AIO Mod++
 
-Func __ClanGames($test = False)
+Func __ClanGames($test = False, $bFromBB = False)
+	If Not $g_bChkClanGamesEnabled Then Return
 
 	; Local $sINIPath = StringReplace($g_sProfileConfigPath, "config.ini", "ClanGames_config.ini")
 
 	; A user Log and a Click away just in case
-	ClickAwayCross()
+	; ClickAwayCross()
 	SetLog("Entering Clan Games", $COLOR_INFO)
 
 	; Local and Static Variables
@@ -69,8 +70,14 @@ Func __ClanGames($test = False)
     ;now we need to copy selected challenge before checking current running event is not wrong event selected
 
 	; Enter on Clan Games window
-	If Not IsClanGamesWindow() Then Return
+	If $bFromBB = False Then
+		If Not IsClanGamesWindow() Then Return
+	Else
+		$g_bIsCaravanOn = "True"
+	EndIf
 
+	If _Sleep(3000) Then Return
+	
 	; Enter on Clan Games window
 	$g_bYourAccScoreCG[Int($g_iCurAccount)][2] = False
 

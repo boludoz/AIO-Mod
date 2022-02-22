@@ -687,7 +687,9 @@ Func BuilderBaseAttackReport($bNoExit = False)
 				If UBound(decodeSingleCoord(findImage("GameComplete", $g_sImgGameComplete & "\*", "FV", 1, False))) = 2 And not @error Then
 					SetLog("Nice, clan came completed.", $COLOR_INFO)
 					$g_bIsBBevent = False
-					GoToClanGames()
+					; GoToClanGames()
+					Click(700, 570, 1)
+					_ClanGames(False, True)
 				Endif
 				If _Sleep(500) Then Return
 			Next

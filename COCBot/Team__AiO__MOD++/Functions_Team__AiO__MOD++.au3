@@ -4,9 +4,9 @@
 ; Syntax ........: #include
 ; Parameters ....: None
 ; Return values .: None
-; Author ........: Team AiO MOD++ (2019)
+; Author ........: Team AiO MOD++ (2022)
 ; Modified ......:
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2022
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
@@ -18,19 +18,9 @@
 #include "functions\Mod's\CustomBoost.au3"
 
 ; Multi Fingers Profile - (LunaEclipse) - Team AiO MOD++
-#include "functions\Mod's\Multi Fingers\4Fingers.au3"
-#include "functions\Mod's\Multi Fingers\8Fingers.au3"
 #include "functions\Mod's\Multi Fingers\MultiFinger.au3"
-#include "functions\Mod's\Multi Fingers\UnitInfo.au3"
-
 ; Vectors
-#include "functions\Mod's\Multi Fingers\Vectors\4FingerStandard.au3"
-#include "functions\Mod's\Multi Fingers\Vectors\4FingerSpiralLeft.au3"
-#include "functions\Mod's\Multi Fingers\Vectors\4FingerSpiralRight.au3"
-#include "functions\Mod's\Multi Fingers\Vectors\8FingerPinWheelLeft.au3"
-#include "functions\Mod's\Multi Fingers\Vectors\8FingerPinWheelRight.au3"
-#include "functions\Mod's\Multi Fingers\Vectors\8FingerBlossom.au3"
-#include "functions\Mod's\Multi Fingers\Vectors\8FingerImplosion.au3"
+#include "functions\Mod's\Multi Fingers\Vectors.au3"
 
 ; Other - Team AiO MOD++
 #include "functions\Mod's\ModFuncs.au3"
@@ -59,9 +49,7 @@
 #include "functions\Mod's\Humanization.au3"
 
 ; ChatActions - Team AiO MOD++
-#include "functions\Mod's\ChatActions\MultyLang.au3"
-#include "functions\Mod's\ChatActions\IAChat.au3"
-#include "functions\Mod's\ChatActions\ChatActions.au3"
+#include "functions\Mod's\ChatActions.au3"
 
 ; Auto Dock, Hide Emulator & Bot - Team AiO MOD++
 #include "functions\Mod's\AutoHideDockMinimize.au3"

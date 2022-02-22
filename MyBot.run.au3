@@ -1479,7 +1479,7 @@ Func FirstCheck()
 	$g_bRestart = False
 	$g_bFullArmy = False
 	$g_iCommandStop = -1
-	
+
 	#cs - no se va a poner a verificar el nivel justo aca, cambia la logica con aio.
 	;;;;;Check Town Hall level
 	Local $iTownHallLevel = $g_iTownHallLevel
@@ -1560,5 +1560,4 @@ Func SetSAtk($attack = False)
 	Else
 		$g_bTestSceneryAttack = False
 	EndIf
-
 EndFunc   ;==>SetSAtk

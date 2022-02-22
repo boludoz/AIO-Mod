@@ -159,6 +159,7 @@ Func _BuilderBase($bTestRun = False)
 		; Check if Builder Base is to run
 		; New logic to add speed to the attack.
 		Do
+			If Not $g_bRunState Then Return
 			If ByPassedForceBBAttackOnClanGames($g_bChkBuilderAttack, True) = False Or ($bIsBonus = False And ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3, False) = True And $bFirstBBLoop = False) Then
 				Setlog("Dynamic attack loop skipped.", $COLOR_INFO)
 				SetDebugLog("ChkBuilderAttack|ByPassedForceBBAttackOnClanGames($g_bChkBuilderAttack, True): " & ByPassedForceBBAttackOnClanGames($g_bChkBuilderAttack, True))

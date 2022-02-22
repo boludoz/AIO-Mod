@@ -626,7 +626,7 @@ Func CreateCGDes()
 
 	For $i = 0 To UBound($g_hCGDestructionChallenges) - 1
 		$g_hCGDestructionChallenges[$i] = GUICtrlCreateCheckbox($g_aCGDestructionChallenges[$i][1], $x + $ixFix - 20, $y + ($iyFix * 20))
-
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_CGDes_" & $g_aCGDestructionChallenges[$i][0], $g_aCGDestructionChallenges[$i][5]))
 		$iyFix += 1
 		If Mod($i + 1, 7) = 0 Then
 			$ixFix += 125
@@ -660,6 +660,7 @@ Func CreateClanGamesAirTroops()
 
 	For $i = 0 To UBound($g_hCGAirTroopChallenges) - 1
 		$g_hCGAirTroopChallenges[$i] = GUICtrlCreateCheckbox($g_aCGAirTroopChallenges[$i][1], $x + $ixFix - 20, $y + ($iyFix * 20))
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_CGAirTroops_" & $g_aCGAirTroopChallenges[$i][0], $g_aCGAirTroopChallenges[$i][5]))
 
 		$iyFix += 1
 		If Mod($i + 1, 7) = 0 Then
@@ -694,6 +695,7 @@ Func CreateClanGamesGroundTroops()
 
 	For $i = 0 To UBound($g_hCGGroundTroopChallenges) - 1
 		$g_hCGGroundTroopChallenges[$i] = GUICtrlCreateCheckbox($g_aCGGroundTroopChallenges[$i][1], $x + $ixFix - 20, $y + ($iyFix * 20))
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_CGGroundTroop_" & $g_aCGGroundTroopChallenges[$i][0], $g_aCGGroundTroopChallenges[$i][5]))
 
 		$iyFix += 1
 		If Mod($i + 1, 7) = 0 Then
@@ -727,6 +729,7 @@ Func CreateClanGamesSpell()
 
 	For $i = 0 To UBound($g_hCGSpellChallenges) - 1
 		$g_hCGSpellChallenges[$i] = GUICtrlCreateCheckbox($g_aCGSpellChallenges[$i][1], $x + $ixFix - 20, $y + ($iyFix * 20))
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_CGSpellsEx_" & $g_aCGSpellChallenges[$i][0], $g_aCGSpellChallenges[$i][5]))
 
 		$iyFix += 1
 		If Mod($i + 1, 7) = 0 Then
@@ -761,6 +764,7 @@ Func CreateClanGamesBBDes()
 
 	For $i = 0 To UBound($g_hCGBBDestructionChallenges) - 1
 		$g_hCGBBDestructionChallenges[$i] = GUICtrlCreateCheckbox($g_aCGBBDestructionChallenges[$i][1], $x + $ixFix - 20, $y + ($iyFix * 20))
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_CGBBDes_" & $g_aCGBBDestructionChallenges[$i][0], $g_aCGBBDestructionChallenges[$i][5]))
 
 		$iyFix += 1
 		If Mod($i + 1, 7) = 0 Then
@@ -794,6 +798,7 @@ Func CreateClanGamesBBTroops()
 
 	For $i = 0 To UBound($g_hCGBBTroopChallenges) - 1
 		$g_hCGBBTroopChallenges[$i] = GUICtrlCreateCheckbox($g_aCGBBTroopChallenges[$i][1], $x + $ixFix - 20, $y + ($iyFix * 20))
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_CGBBTroops_" & $g_aCGBBTroopChallenges[$i][0], $g_aCGBBTroopChallenges[$i][5]))
 
 		$iyFix += 1
 		If Mod($i + 1, 7) = 0 Then
