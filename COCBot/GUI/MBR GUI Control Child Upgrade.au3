@@ -397,10 +397,10 @@ Func cmbLab()
 	_GUICtrlSetImage($g_hPicLabUpgrade, $g_sLibIconPath, $g_avLabTroops[$g_iCmbLaboratory][1])
 	If $g_iCmbLaboratory = 0 Then
 		GUICtrlSetState($g_hChkLabUpgradeOrder, $GUI_ENABLE)
-		SetLog($g_iCmbLaboratory)
+		; SetLog($g_iCmbLaboratory)
 	Else
 		GUICtrlSetState($g_hChkLabUpgradeOrder, $GUI_DISABLE)
-		SetLog($g_iCmbLaboratory)
+		; SetLog($g_iCmbLaboratory)
 	EndIf
 	chkLabUpgradeOrder()
 EndFunc   ;==>cmbLab

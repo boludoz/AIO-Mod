@@ -115,7 +115,7 @@ Func ClickDrag($X1, $Y1, $X2, $Y2, $Delay = 50, $bSCIDSwitch = False)
 			AndroidClickDrag($X1, $Y1, $X2, $Y2, $g_bRunState, $bSCIDSwitch)
 			$error = @error
 		Else
-			AndroidInputSwipe($X1, $Y1, $X2, $Y2, $g_bRunState)
+			AndroidInputSwipe($X1, $Y1, $X2, $Y2, $g_bRunState, $bSCIDSwitch)
 			$error = @error
 		EndIf
 		If _Sleep($Delay / 5) Then Return SetError(-1, "", False)

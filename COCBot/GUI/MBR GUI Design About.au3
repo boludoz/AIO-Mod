@@ -100,7 +100,7 @@ Func CreateAboutTab()
 			"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even " & @CRLF & _
 			"the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General " & @CRLF & _
 			"Public License for more details. The license can be found in the main code folder location." & @CRLF & _
-			"Copyright (C) 2015-2019 MyBot.run"
+			"Copyright (C) 2015-2022 MyBot.run"
 	GUICtrlCreateLabel($sText, $x + 1, $y, 415, 56, BitOR($WS_VISIBLE, $ES_AUTOVSCROLL, $SS_LEFT, $ES_CENTER), 0)
 	GUICtrlSetColor(-1, 0x000053)
 	GUICtrlSetFont(-1, 6.5, $FW_BOLD, Default, "Arial", $CLEARTYPE_QUALITY)

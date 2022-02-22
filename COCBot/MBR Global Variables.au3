@@ -1453,13 +1453,13 @@ Global $g_sLabUpgradeTime = ""
 Global $g_sStarLabUpgradeTime = ""
 
 ; Array to hold Laboratory Troop information [LocX of upper left corner of image, LocY of upper left corner of image, PageLocation, Troop "name", Icon # in DLL file, ShortName on image file]
-Global $g_avLabTroops[42][3]
+Global $g_avLabTroops[43][3]
 Global $g_avStarLabTroops[13][5] ; Custom BB - Team AIO Mod++
 
 ; [0] Name, [1] Icon [2] ShortName
 Global $g_sBBTroopsOrderDefault, $g_sBBDropOrderDefault ; Team AIO Mod++
 Func TranslateTroopNames()
-	Static $s_avLabTroops[44][3] = [ _
+	Static $s_avLabTroops[43][3] = [ _
 			[GetTranslatedFileIni("MBR Global GUI Design", "Any", "Any"), $eIcnBlank], _
 			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtBarbarians", "Barbarians"), $eIcnBarbarian, "Barb"], _
 			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtArchers", "Archers"), $eIcnArcher, "Arch"], _

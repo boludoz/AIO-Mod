@@ -153,18 +153,10 @@ EndFunc   ;==>CreateUpgradeBuilderBaseSubTab
 Func CreateBBUpgradeOrderGUI()
 	$g_hGUI_BBUpgradeOrder = _GUICreate(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "GUISLabUpgradeOrder", "Enable upgrade order."), 444, 240, -1, -1, $WS_BORDER, $WS_EX_CONTROLPARENT)
 
-	Local $sTxtSLNames = GetTranslatedFileIni("MBR Global GUI Design", "Any", "Any") & "|" & _
-					   GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtRagedBarbarian", "Raged Barbarian") & "|" & _
-					   GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtSneakyArcher", "Sneaky Archer") & "|" & _
-					   GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtBoxerGiant", "Boxer Giant") & "|" & _
-					   GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtBetaMinion", "Beta Minion") & "|" & _
-					   GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtBomber", "Bomber") & "|" & _
-					   GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtBabyDragon", "Baby Dragon") & "|" & _
-					   GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtCannonCart", "Cannon Cart") & "|" & _
-					   GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtNightWitch", "Night Witch") & "|" & _
-					   GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtDropShip", "Drop Ship") & "|" & _
-					   GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtSuperPekka", "Super Pekka") & "|" & _
-					   GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtHogGlider", "Hog Glider")
+	Local $sTxtSLNames = $g_avStarLabTroops[0][0]
+	For $i = 1 To UBound($g_avStarLabTroops) -1
+		$sTxtSLNames &= "|" & $g_avStarLabTroops[$i][0]
+	Next
 
 	Local $x = 0, $y = 8
 		

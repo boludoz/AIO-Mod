@@ -326,3 +326,9 @@ Func txtStickToTrainWindow()
 	EndIf
 EndFunc   ;==>txtStickToTrainWindow
 #EndRegion - Stick to Army page when time left - Team AIO Mod++
+
+#Region - Magic Items - Team AIO Mod++
+Func ChkBuilderPotion()
+	GUICtrlSetState($g_hCmbInputBuilderPotion, GUICtrlRead($g_hChkBuilderPotion) = $GUI_CHECKED ? $GUI_ENABLE : $GUI_DISABLE)
+EndFunc   ;==>ChkBuilderPotion
+#EndRegion - Magic Items - Team AIO Mod++

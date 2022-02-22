@@ -858,6 +858,7 @@ Func ApplyConfig_600_14($TypeReadSave)
                 _GUICtrlComboBox_SetCurSel($g_ahCmbSLabUpgradeOrder[$i], $g_aCmbSLabUpgradeOrder[$i])
             Next
             chkSLabUpgradeOrder()
+			chkStarLab() ; Custom BB - Team AIO Mod++
  			#EndRegion - Custom lab - Team AIO Mod++
         Case "Save"
             $g_bAutoLabUpgradeEnable = (GUICtrlRead($g_hChkAutoLabUpgrades) = $GUI_CHECKED)

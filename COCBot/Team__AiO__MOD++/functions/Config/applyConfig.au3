@@ -359,11 +359,16 @@ Func ApplyConfig_MOD_MagicItems($TypeReadSave)
 
 	Switch $TypeReadSave
 		Case "Read"
+			; Magic Items - Team AIO Mod++
 			GUICtrlSetData($g_hInputGoldItems, $g_iInputGoldItems)
 			GUICtrlSetData($g_hInputElixirItems, $g_iInputElixirItems)
 			GUICtrlSetData($g_hInputDarkElixirItems, $g_iInputDarkElixirItems)
-
-			GUICtrlSetData($g_hInputBuilderPotion, $g_iInputBuilderPotion)
+			
+			If $g_iInputBuilderPotion < 0 Then $g_iInputBuilderPotion = 4
+			GUICtrlSetState($g_hChkBuilderPotion, $g_bChkBuilderPotion = True ? $GUI_CHECKED : $GUI_UNCHECKED)
+			_GUICtrlComboBox_SetCurSel($g_hCmbInputBuilderPotion, $g_iInputBuilderPotion)
+			ChkBuilderPotion()
+			
 			GUICtrlSetData($g_hInputLabPotion, $g_iInputLabPotion)
 
 			_GUICtrlComboBox_SetCurSel($g_hComboHeroPotion, $g_iComboHeroPotion)
@@ -371,7 +376,6 @@ Func ApplyConfig_MOD_MagicItems($TypeReadSave)
 
 			GUICtrlSetState($g_hChkCollectMagicItems, $g_bChkCollectMagicItems = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 
-			GUICtrlSetState($g_hChkBuilderPotion, $g_bChkBuilderPotion = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkHeroPotion, $g_bChkHeroPotion = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkLabPotion, $g_bChkLabPotion = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkPowerPotion, $g_bChkPowerPotion = True ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -380,11 +384,12 @@ Func ApplyConfig_MOD_MagicItems($TypeReadSave)
 			; ChkResourcePotion()
 			
 		Case "Save"
+			; Magic Items - Team AIO Mod++
 			$g_iInputGoldItems = GUICtrlRead($g_hInputGoldItems)
 			$g_iInputElixirItems = GUICtrlRead($g_hInputElixirItems)
 			$g_iInputDarkElixirItems = GUICtrlRead($g_hInputDarkElixirItems)
 
-			$g_iInputBuilderPotion = GUICtrlRead($g_hInputBuilderPotion)
+			$g_iInputBuilderPotion = _GUICtrlComboBox_GetCurSel($g_hCmbInputBuilderPotion)
 			$g_iInputLabPotion = GUICtrlRead($g_hInputLabPotion)
 
 			$g_iComboPowerPotion = _GUICtrlComboBox_GetCurSel($g_hComboPowerPotion)

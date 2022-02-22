@@ -269,6 +269,7 @@ Func ClickAway($sRegion = Default, $bForce = Default, $eTimes = Default)
 	If $eTimes = Default Then $eTimes = 1
 
 	Local $bDo = True
+	Local $aiRegionToUse = 0
 	If $bForce = False Then
 		_CaptureRegion()
 		If UBound(_PixelSearch(20, 12, 22, 14, Hex(0x3CBFEC, 6), 15, False)) > 0 And not @error Then
@@ -289,7 +290,6 @@ Func ClickAway($sRegion = Default, $bForce = Default, $eTimes = Default)
 
 	If $bDo = False Then Return False
 
-	Local $aiRegionToUse = 0
 	If $sRegion = Default Then
 		$aiRegionToUse = (Random(0, 100, 1) > 50) ? ($aiClickAwayRegionLeft) : ($aiClickAwayRegionRight)
 	Else

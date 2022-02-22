@@ -107,7 +107,7 @@ EndFunc   ;==>CreateMODTab
 EndFunc   ;==>TabMiscGUI
 
 Global $g_hChkBuilderPotion, $g_hChkHeroPotion, $g_hChkLabPotion, $g_hChkPowerPotion, _
-$g_hComboHeroPotion, $g_hComboPowerPotion, $g_hInputBuilderPotion, $g_hInputLabPotion, $g_hInputGoldItems, $g_hInputElixirItems, $g_hInputDarkElixirItems;, $g_hCmbClockTowerPotion, $g_hChkClockTowerPotion
+$g_hComboHeroPotion, $g_hComboPowerPotion, $g_hCmbInputBuilderPotion, $g_hInputLabPotion, $g_hInputGoldItems, $g_hInputElixirItems, $g_hInputDarkElixirItems;, $g_hCmbClockTowerPotion, $g_hChkClockTowerPotion
 #cs
 
 Func CreateMiscMagicSubTab()
@@ -131,7 +131,7 @@ Func CreateMiscMagicSubTab()
 	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModBuilderP, 24, $y - 5, 25, 25)
 	$g_hChkBuilderPotion = GUICtrlCreateCheckbox("Use builder potion when busy builders is > = : ", 56, $y, 225, 17)
 	GUICtrlSetOnEvent(-1, "MagicItemsRefresh")
-	$g_hInputBuilderPotion = _GUICtrlCreateInput("Number", 320, $y, 41, 21)
+	$g_hCmbInputBuilderPotion = _GUICtrlCreateInput("Number", 320, $y, 41, 21)
 	GUICtrlSetOnEvent(-1, "MagicItemsRefresh")
 
 	$y += 32
