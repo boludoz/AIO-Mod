@@ -280,9 +280,10 @@ Func PrepareUpdateStatsManagedMyBotHost($hFrmHost, ByRef $iMsg, ByRef $wParam, B
 	_DllStructSetData($tUpdateStats, "g_iFirstAttack", $g_iFirstAttack)
 	_DllStructSetData($tUpdateStats, "g_aiAttackedCount", $g_aiAttackedCount)
 	_DllStructSetData($tUpdateStats, "g_iSkippedVillageCount", $g_iSkippedVillageCount)
-	_DllStructSetData($tUpdateStats, "g_aiCurrentLootBB", $g_aiCurrentLootBB)
-	_DllStructSetData($tUpdateStats, "g_iFreeBuilderCountBB", $g_iFreeBuilderCountBB)
-	_DllStructSetData($tUpdateStats, "g_iTotalBuilderCountBB", $g_iTotalBuilderCountBB)
+	; Custom BB - Team AIO Mod++
+	_dllstructsetdata($tupdatestats, "g_aiCurrentLootBB", $g_aicurrentlootbb)
+	_dllstructsetdata($tupdatestats, "g_iFreeBuilderCountBB", $g_ifreebuildercountbb)
+	_dllstructsetdata($tupdatestats, "g_iTotalBuilderCountBB", $g_itotalbuildercountbb)
 	PrepareStructBotState($tBotState, $g_eSTRUCT_UPDATE_STATS, DllStructGetPtr($tUpdateStats))
 	If $g_iDebugWindowMessages Then SetDebugLog("PrepareUpdateStatsManagedMyBotHost: $hFrmHost=" & $hFrmHost & ",$iMsg=" & $iMsg & ",$wParam=" & $wParam & ",$lParam=" & $lParam)
 	Return True

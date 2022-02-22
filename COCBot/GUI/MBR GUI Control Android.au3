@@ -165,7 +165,6 @@ Func cmbAndroidInstance()
 EndFunc   ;==>cmbAndroidInstance
 
 Func getAllEmulators()
-	If $g_iGuiMode <> 1 Then Return False
 
 	; Initial Var with all emulators , will populate the ComboBox UI
 	Local $sEmulatorString = ""
