@@ -28,7 +28,7 @@ Func BoostTrainBuilding($sName, $iCmbBoost, $iCmbBoostCtrl)
 	Local $bBoosted = False
 
 	; Schedule boost - Team AIO Mod++
-	If Not $g_bTrainEnabled Then Return $bBoosted
+	If Not $g_bTrainEnabled Or $iCmbBoost <= 0 Then Return $bBoosted
 	
 	If Not IsScheduleBoost($sName) Then Return $bBoosted
 	; ===============================
