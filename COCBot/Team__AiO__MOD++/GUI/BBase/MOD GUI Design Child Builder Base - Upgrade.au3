@@ -153,9 +153,9 @@ EndFunc   ;==>CreateUpgradeBuilderBaseSubTab
 Func CreateBBUpgradeOrderGUI()
 	$g_hGUI_BBUpgradeOrder = _GUICreate(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "GUISLabUpgradeOrder", "Enable upgrade order."), 444, 240, -1, -1, $WS_BORDER, $WS_EX_CONTROLPARENT)
 
-	Local $sTxtSLNames = $g_avStarLabTroops[0][0]
+	Local $sTxtSLNames = $g_avStarLabTroops[0][3]
 	For $i = 1 To UBound($g_avStarLabTroops) -1
-		$sTxtSLNames &= "|" & $g_avStarLabTroops[$i][0]
+		$sTxtSLNames &= "|" & $g_avStarLabTroops[$i][3]
 	Next
 
 	Local $x = 0, $y = 8
