@@ -960,7 +960,7 @@ Func createdonationssubtab()
 	GUICtrlSetBkColor(-1, 0xD1DFE7)
 	GUICtrlCreateLabel("", $x + 35 + 130, $y, 30, 17, $ss_center)
 	GUICtrlSetBkColor(-1, 0xD1DFE7)
-	$g_hLblTotalTroopsQ = $g_hlbltotalq = GUICtrlCreateLabel("0", $x + 105, $y, 70, 17, $ss_right)
+	$g_hLblTotalTroopsQ = GUICtrlCreateLabel("0", $x + 105, $y, 70, 17, $ss_right)
 	GUICtrlSetBkColor(-1, 0xD1DFE7)
 	GUICtrlCreateLabel(gettranslatedfileini("MBR GUI Design Child Bot - Stats", "LblStatsDonTroopsXP", "XP") & ":", $x - 18 + 212, $y, 207, 17)
 	GUICtrlSetBkColor(-1, 0xD1DFE7)
@@ -968,15 +968,15 @@ Func createdonationssubtab()
 	GUICtrlSetBkColor(-1, 0xD1DFE7)
 
 	$y += 25
-	For $ind = 0 To UBound($g_aQuickTroopIcon) -1
-		_guictrlcreateicon($g_slibiconpath, $g_aQuickTroopIcon[$ind], $x + ($xMult * 60), $y, 24, 24)
-		_guictrlsettip(-1, $g_astroopnames[$ind])
+	For $i = 0 To UBound($g_aQuickTroopIcon) -1
+		_guictrlcreateicon($g_slibiconpath, $g_aQuickTroopIcon[$i], $x + ($xMult * 60), $y, 24, 24)
+		_guictrlsettip(-1, $g_astroopnames[$i])
 		GUICtrlCreateLabel(":", $x + ($xMult * 60) + 26, $y + 4, -1, 17)
 		GUICtrlSetFont(-1, 9, $fw_bold, Default, "Arial", $cleartype_quality)
-		$g_hlbldontroop[$ind] = GUICtrlCreateLabel("0", $x + ($xMult * 60) + 30, $y + 4, 35, 17, $ss_left)
+		$g_hlbldontroop[$i] = GUICtrlCreateLabel("0", $x + ($xMult * 60) + 30, $y + 4, 35, 17, $ss_left)
 		GUICtrlSetFont(-1, 9, $fw_bold, Default, "Arial", $cleartype_quality)
 		GUICtrlSetColor(-1, $color_black)
-		_guictrlsettip(-1, $g_astroopnames[$ind])
+		_guictrlsettip(-1, $g_astroopnames[$i])
 		$xMult += 1
 		If Mod($xMult, 7) = 0 Then
 			$y += 28
@@ -992,7 +992,7 @@ Func createdonationssubtab()
 		GUICtrlSetBkColor(-1, 0xD1DFE7)
 	GUICtrlCreateLabel("", $x + 35 + 130, $y, 30, 17, $ss_center)
 		GUICtrlSetBkColor(-1, 0xD1DFE7)
-	$g_hLblTotalSpellsQ = $g_hlbltotalq = GUICtrlCreateLabel("0", $x + 105, $y, 70, 17, $ss_right)
+	$g_hLblTotalSpellsQ = GUICtrlCreateLabel("0", $x + 105, $y, 70, 17, $ss_right)
 		GUICtrlSetBkColor(-1, 0xD1DFE7)
 	GUICtrlCreateLabel(gettranslatedfileini("MBR GUI Design Child Bot - Stats", "LblStatsDonSpellsXP", "XP") & ":", $x - 18 + 212, $y, 207, 17)
 		GUICtrlSetBkColor(-1, 0xD1DFE7)
@@ -1000,15 +1000,15 @@ Func createdonationssubtab()
 		GUICtrlSetBkColor(-1, 0xD1DFE7)
 
 	$y += 25
-	For $ind = 0 To UBound($g_aQuickSpellIcon) -1
-		_guictrlcreateicon($g_slibiconpath, $g_aQuickSpellIcon[$ind], $x + ($xMult * 60), $y, 24, 24)
-		_guictrlsettip(-1, $g_asspellnames[$ind])
+	For $i = 0 To UBound($g_aQuickSpellIcon) -1
+		_guictrlcreateicon($g_slibiconpath, $g_aQuickSpellIcon[$i], $x + ($xMult * 60), $y, 24, 24)
+		_guictrlsettip(-1, $g_asspellnames[$i])
 		GUICtrlCreateLabel(":", $x + ($xMult * 60) + 26, $y + 4, -1, 17)
 		GUICtrlSetFont(-1, 9, $fw_bold, Default, "Arial", $cleartype_quality)
-		$g_hlbldonspell[$ind] = GUICtrlCreateLabel("0", $x + ($xMult * 60) + 30, $y + 4, 35, 17, $ss_left)
+		$g_hlbldonspell[$i] = GUICtrlCreateLabel("0", $x + ($xMult * 60) + 30, $y + 4, 35, 17, $ss_left)
 		GUICtrlSetFont(-1, 9, $fw_bold, Default, "Arial", $cleartype_quality)
 		GUICtrlSetColor(-1, $color_black)
-		_guictrlsettip(-1, $g_asspellnames[$ind])
+		_guictrlsettip(-1, $g_asspellnames[$i])
 		$xMult += 1
 		If Mod($xMult, 7) = 0 Then
 			$y += 28
@@ -1024,7 +1024,7 @@ Func createdonationssubtab()
 		GUICtrlSetBkColor(-1, 0xD1DFE7)
 	GUICtrlCreateLabel("", $x + 35 + 130, $y, 30, 17, $ss_center)
 		GUICtrlSetBkColor(-1, 0xD1DFE7)
-	$g_hLblTotalSiegesQ = $g_hlbltotalq = GUICtrlCreateLabel("0", $x + 105, $y, 70, 17, $ss_right)
+	$g_hLblTotalSiegesQ = GUICtrlCreateLabel("0", $x + 105, $y, 70, 17, $ss_right)
 		GUICtrlSetBkColor(-1, 0xD1DFE7)
 	GUICtrlCreateLabel(gettranslatedfileini("MBR GUI Design Child Bot - Stats", "LblStatsDonSiegesXP", "XP") & ":", $x - 18 + 212, $y, 207, 17)
 		GUICtrlSetBkColor(-1, 0xD1DFE7)
@@ -1032,15 +1032,15 @@ Func createdonationssubtab()
 		GUICtrlSetBkColor(-1, 0xD1DFE7)
 
 	$y += 25
-	For $ind = 0 To UBound($g_assiegemachinenames) -1
-		_guictrlcreateicon($g_slibiconpath, $asiegesicons[$ind], $x + ($xMult * 60), $y, 24, 24)
-		_guictrlsettip(-1, $g_assiegemachinenames[$ind])
+	For $i = 0 To UBound($g_assiegemachinenames) -1
+		_guictrlcreateicon($g_slibiconpath, $asiegesicons[$i], $x + ($xMult * 60), $y, 24, 24)
+		_guictrlsettip(-1, $g_assiegemachinenames[$i])
 		GUICtrlCreateLabel(":", $x + ($xMult * 60) + 26, $y + 4, -1, 17)
 		GUICtrlSetFont(-1, 9, $fw_bold, Default, "Arial", $cleartype_quality)
-		$g_hlbldonsiegel[$ind] = GUICtrlCreateLabel("0", $x + ($xMult * 60) + 30, $y + 4, 35, 17, $ss_left)
+		$g_hlbldonsiegel[$i] = GUICtrlCreateLabel("0", $x + ($xMult * 60) + 30, $y + 4, 35, 17, $ss_left)
 		GUICtrlSetFont(-1, 9, $fw_bold, Default, "Arial", $cleartype_quality)
 		GUICtrlSetColor(-1, $color_black)
-		_guictrlsettip(-1, $g_assiegemachinenames[$ind])
+		_guictrlsettip(-1, $g_assiegemachinenames[$i])
 		$xMult += 1
 	Next
 	
@@ -1050,11 +1050,11 @@ Func createdonationssubtab()
 		GUICtrlSetBkColor(-1, 0xD1DFE7)
 	GUICtrlCreateLabel("", $x + 35 + 130, $y, 30, 17, $ss_center)
 		GUICtrlSetBkColor(-1, 0xD1DFE7)
-	$g_hlbltotalq = GUICtrlCreateLabel("0", $x + 105, $y, 70, 17, $ss_right)
+	$g_hLblTotalQ = GUICtrlCreateLabel("0", $x + 105, $y, 70, 17, $ss_right)
 		GUICtrlSetBkColor(-1, 0xD1DFE7)
 	GUICtrlCreateLabel(gettranslatedfileini("MBR GUI Design Child Bot - Stats", "LblStatsDonTotalXP", "Total XP") & ":", $x - 18 + 212, $y, 207, 17)
 		GUICtrlSetBkColor(-1, 0xD1DFE7)
-	$g_hlbltotalxp = GUICtrlCreateLabel("0", $x + 320, $y, 70, 17, $ss_right)
+	$g_hLblTotalXP = GUICtrlCreateLabel("0", $x + 320, $y, 70, 17, $ss_right)
 		GUICtrlSetBkColor(-1, 0xD1DFE7)
 EndFunc
 #EndRegion

@@ -422,71 +422,76 @@ Func UpdateStats($bForceUpdate = False)
 		$iOldDElixirFromDrills = $g_iDElixirFromDrills
 	EndIf
 
-	; Custom Stats - Team AIO Mod++
-	For $i = 0 To $etroopcount - 1
-		If $g_aidonatestatstroops[$i][0] <> $g_aidonatestatstroops[$i][1] Then
-			$bstatsupdated = True
-			GUICtrlSetData($g_hlbldontroop[$i], _numberformat($g_aidonatestatstroops[$i][0], True))
-			If $g_aidonatestatstroops[$i][0] > $g_aidonatestatstroops[$i][1] Then
-				$g_itotaldonatestatstroops += ($g_aidonatestatstroops[$i][0] - $g_aidonatestatstroops[$i][1])
-				$g_itotaldonatestatstroopsxp += (($g_aidonatestatstroops[$i][0] - $g_aidonatestatstroops[$i][1]) * $g_aitroopdonatexp[$i])
+	For $i = 0 To $eTroopCount - 1
+		If $g_aiDonateStatsTroops[$i][0] <> $g_aiDonateStatsTroops[$i][1] Then
+			$bStatsUpdated = True
+			GUICtrlSetData($g_hLblDonTroop[$i], _NumberFormat($g_aiDonateStatsTroops[$i][0], True))
+			If $g_aiDonateStatsTroops[$i][0] > $g_aiDonateStatsTroops[$i][1] Then
+				$g_iTotalDonateStatsTroops += ($g_aiDonateStatsTroops[$i][0] - $g_aiDonateStatsTroops[$i][1])
+				$g_iTotalDonateStatsTroopsXP += (($g_aiDonateStatsTroops[$i][0] - $g_aiDonateStatsTroops[$i][1]) * $g_aiTroopDonateXP[$i])
 			EndIf
-			$g_aidonatestatstroops[$i][1] = $g_aidonatestatstroops[$i][0]
-			$bdonatetroopsstatschanged = True
+			$g_aiDonateStatsTroops[$i][1] = $g_aiDonateStatsTroops[$i][0]
 		EndIf
 	Next
 
-	For $i = 0 To $espellcount - 1
-		If $g_aidonatestatsspells[$i][0] <> $g_aidonatestatsspells[$i][1] Then
-			$bstatsupdated = True
-			GUICtrlSetData($g_hlbldonspell[$i], _numberformat($g_aidonatestatsspells[$i][0], True))
-			If $g_aidonatestatsspells[$i][0] > $g_aidonatestatsspells[$i][1] Then
-				$g_itotaldonatestatsspells += ($g_aidonatestatsspells[$i][0] - $g_aidonatestatsspells[$i][1])
-				$g_itotaldonatestatsspellsxp += (($g_aidonatestatsspells[$i][0] - $g_aidonatestatsspells[$i][1]) * $g_aispelldonatexp[$i])
+	For $i = 0 To $eSpellCount - 1
+		If $g_aiDonateStatsSpells[$i][0] <> $g_aiDonateStatsSpells[$i][1] And $i <> $eSpellClone Then
+			$bStatsUpdated = True
+			GUICtrlSetData($g_hLblDonSpell[$i], _NumberFormat($g_aiDonateStatsSpells[$i][0], True))
+			If $g_aiDonateStatsSpells[$i][0] > $g_aiDonateStatsSpells[$i][1] Then
+				$g_iTotalDonateStatsSpells += ($g_aiDonateStatsSpells[$i][0] - $g_aiDonateStatsSpells[$i][1])
+				$g_iTotalDonateStatsSpellsXP += (($g_aiDonateStatsSpells[$i][0] - $g_aiDonateStatsSpells[$i][1]) * $g_aiSpellDonateXP[$i])
 			EndIf
-			$g_aidonatestatsspells[$i][1] = $g_aidonatestatsspells[$i][0]
-			$bdonatespellsstatschanged = True
+			$g_aiDonateStatsSpells[$i][1] = $g_aiDonateStatsSpells[$i][0]
+			$bDonateSpellsStatsChanged = True
 		EndIf
 	Next
 
-	For $i = 0 To $esiegemachinecount - 1
-		If $g_aidonatestatssieges[$i][0] <> $g_aidonatestatssieges[$i][1] Then
-			$bstatsupdated = True
-			GUICtrlSetData($g_hlbldonsiegel[$i], _numberformat($g_aidonatestatssieges[$i][0], True))
-			If $g_aidonatestatssieges[$i][0] > $g_aidonatestatssieges[$i][1] Then
-				$g_itotaldonatestatssiegemachines += ($g_aidonatestatssieges[$i][0] - $g_aidonatestatssieges[$i][1])
-				$g_itotaldonatestatssiegemachinesxp += (($g_aidonatestatssieges[$i][0] - $g_aidonatestatssieges[$i][1]) * $g_aisiegemachinedonatexp[$i])
+	For $i = 0 To $eSiegeMachineCount - 1
+		If $g_aiDonateStatsSieges[$i][0] <> $g_aiDonateStatsSieges[$i][1] Then
+			$bStatsUpdated = True
+			GUICtrlSetData($g_hLblDonSiegel[$i], _NumberFormat($g_aiDonateStatsSieges[$i][0], True))
+			If $g_aiDonateStatsSieges[$i][0] > $g_aiDonateStatsSieges[$i][1] Then
+				$g_iTotalDonateStatsSiegeMachines += ($g_aiDonateStatsSieges[$i][0] - $g_aiDonateStatsSieges[$i][1])
+				$g_iTotalDonateStatsSiegeMachinesXP += (($g_aiDonateStatsSieges[$i][0] - $g_aiDonateStatsSieges[$i][1]) * $g_aiSiegeMachineDonateXP[$i])
 			EndIf
-			$g_aidonatestatssieges[$i][1] = $g_aidonatestatssieges[$i][0]
-			$bdonatesiegestatschanged = True
+			$g_aiDonateStatsSieges[$i][1] = $g_aiDonateStatsSieges[$i][0]
+			$bDonateSiegeStatsChanged = True
 		EndIf
 	Next
-
-	If $bdonatetroopsstatschanged OR $bdonatespellsstatschanged OR $bdonatesiegestatschanged Then
-		$bstatsupdated = True
-		Local $total = $g_itotaldonatestatstroops + $g_itotaldonatestatsspells + $g_itotaldonatestatssiegemachines
-		Local $totalxp = $g_itotaldonatestatstroopsxp + $g_itotaldonatestatsspellsxp + $g_itotaldonatestatssiegemachinesxp
-		GUICtrlSetData($g_hlbltotalq, _numberformat($total, True))
-		GUICtrlSetData($g_hlbltotalxp, _numberformat($totalxp, True))
+	
+	; Update ALL
+	If $bDonateTroopsStatsChanged Or $bDonateSpellsStatsChanged Or $bDonateSiegeStatsChanged Then
+		Local $iTotal = $g_iTotalDonateStatsTroops + $g_iTotalDonateStatsSpells + $g_iTotalDonateStatsSiegeMachines
+		Local $iTotalXP = $g_iTotalDonateStatsTroopsXP + $g_iTotalDonateStatsSpellsXP + $g_iTotalDonateStatsSiegeMachinesXP
+		GUICtrlSetData($g_hLblTotalQ, _NumberFormat($iTotal, True))
+		GUICtrlSetData($g_hLblTotalXP, _NumberFormat($iTotalXP, True))
 		
-		If $bdonatetroopsstatschanged Then
-			GUICtrlSetData($g_hLblTotalTroopsQ, _numberformat($g_itotaldonatestatstroops, True))
-			GUICtrlSetData($g_hLblTotalTroopsXP, _numberformat($g_itotaldonatestatstroopsxp, True))
-			$bdonatetroopsstatschanged = False
-		EndIf
-		
-		If $bdonatespellsstatschanged Then
-			GUICtrlSetData($g_hLblTotalSpellsQ, _numberformat($g_itotaldonatestatsspells, True))
-			GUICtrlSetData($g_hLblTotalSpellsXP, _numberformat($g_itotaldonatestatsspellsxp, True))
-			$bdonatespellsstatschanged = False
+		; Update troops.
+		If $bDonateTroopsStatsChanged Then
+			$bStatsUpdated = True
+			GUICtrlSetData($g_hLblTotalTroopsQ, _NumberFormat($g_iTotalDonateStatsTroops, True))
+			GUICtrlSetData($g_hLblTotalTroopsXP, _NumberFormat($g_iTotalDonateStatsTroopsXP, True))
 		EndIf
 
-		If $bdonatesiegestatschanged Then
-			GUICtrlSetData($g_hLblTotalSiegesQ, _numberformat($g_itotaldonatestatssiegemachines, True))
-			GUICtrlSetData($g_hLblTotalSiegesXP, _numberformat($g_itotaldonatestatssiegemachinesxp, True))
-			$bdonatesiegestatschanged = False
+		; Update spells.
+		If $bDonateSpellsStatsChanged Then
+			$bStatsUpdated = True
+			GUICtrlSetData($g_hLblTotalSpellsQ, _NumberFormat($g_iTotalDonateStatsSpells, True))
+			GUICtrlSetData($g_hLblTotalSpellsXP, _NumberFormat($g_iTotalDonateStatsSpellsXP, True))
 		EndIf
 		
+		; Update sieges.
+		If $bDonateSiegeStatsChanged Then
+			$bStatsUpdated = True
+			GUICtrlSetData($g_hLblTotalSiegesQ, _NumberFormat($g_iTotalDonateStatsTroops, True))
+			GUICtrlSetData($g_hLblTotalSiegesXP, _NumberFormat($g_iTotalDonateStatsTroopsXP, True))
+		EndIf
+		
+		; Disable 
+		$bDonateTroopsStatsChanged = False
+		$bDonateSpellsStatsChanged = False
+		$bDonateSiegeStatsChanged = False
 	EndIf
 
 	If $s_iOldSmartZapGain <> $g_iSmartZapGain Then

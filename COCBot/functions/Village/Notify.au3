@@ -881,7 +881,7 @@ Func NotifyPushMessageToBoth($Message, $Source = "")
 			ClickAway()
 			If Not IsMainPage() Then Return
 			Click(435, 8)
-			If _Sleep(1000) Then Return
+			If _Sleep(1500) Then Return
 			If _Wait4PixelGoneArray($aIsMain) Then
 				Local $Date = @YEAR & "-" & @MON & "-" & @MDAY
 				Local $Time = @HOUR & "." & @MIN
