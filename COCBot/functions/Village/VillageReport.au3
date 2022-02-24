@@ -81,10 +81,10 @@ Func VillageReport($bBypass = False, $bSuppressLog = False)
 	EndIf
 	
 	; Custom fix - Team AIO Mod++
-	If _ColorCheck(_GetPixelColor(819, 39, True), Hex(0xF8FCFF, 6), 20) = True Then 
-		Click(819, 39)
-		If _Sleep($DELAYVILLAGEREPORT1) Then Return
-	EndIf 
+	; If _ColorCheck(_GetPixelColor(819, 39, True), Hex(0xF8FCFF, 6), 20) = True Then 
+		; Click(819, 39)
+		; If _Sleep($DELAYVILLAGEREPORT1) Then Return
+	; EndIf 
 	
 	; Insane and do nothing 500*20 = 10 seconds timeout
 	#cs -  Custom fix - Team AIO Mod++

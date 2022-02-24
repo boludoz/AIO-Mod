@@ -244,7 +244,7 @@ Func IsScheduleBoost($sCalledFrom = "-")
 	Local $aHours = StringSplit(_NowTime(4), ":", $STR_NOCOUNT)
 	If Not $g_abBoostBarracksHours[$aHours[0]] Then
 		SetLog("Boosting " & $sCalledFrom & " isn't planned, skipping", $COLOR_INFO)
-		Return $bMustBoost
+		Return False
 	EndIf
 
 	If $g_iCommandStop = 0 Or $g_iCommandStop = 3 Then ;halt attack.. do not boost now
