@@ -33,9 +33,20 @@ Func BoostTrainBuilding($sName, $iCmbBoost, $iCmbBoostCtrl)
 	If Not IsScheduleBoost($sName) Then Return $bBoosted
 	; ===============================
 	
+	; Safe logic
+	If $iCmbBoost <= 0 Then
+		Return
+	ElseIf $iCmbBoost >= 1 And $iCmbBoost <= 24 Then
+		$iCmbBoost -= 1
+		_GUICtrlComboBox_SetCurSel($iCmbBoostCtrl, $iCmbBoost)
+		SetLog("Remaining " & $sName & " Boosts: " & $iCmbBoost, $COLOR_SUCCESS)
+	ElseIf $iCmbBoost = 25 Then
+		SetLog("Remain " & $sName & " Boosts: Unlimited", $COLOR_SUCCESS)
+	EndIf
+	
 	Local $sIsAre = "are"
 	SetLog("Boosting " & $sName, $COLOR_INFO)
-
+	
 	If OpenArmyOverview(True, "BoostTrainBuilding()") Then
 		If $sName = "Barracks" Then
 			If Not OpenTroopsTab(True, "BoostTrainBuilding()") Then Return
@@ -62,13 +73,6 @@ Func BoostTrainBuilding($sName, $iCmbBoost, $iCmbBoostCtrl)
 				If IsArray(findButton("EnterShop")) Then
 					SetLog("Not enough gems to boost " & $sName, $COLOR_ERROR)
 				Else
-					If $iCmbBoost >= 1 And $iCmbBoost <= 24 Then
-						$iCmbBoost -= 1
-						_GUICtrlComboBox_SetCurSel($iCmbBoostCtrl, $iCmbBoost)
-						SetLog("Remaining " & $sName & " Boosts: " & $iCmbBoost, $COLOR_SUCCESS)
-					ElseIf $iCmbBoost = 25 Then
-						SetLog("Remain " & $sName & " Boosts: Unlimited", $COLOR_SUCCESS)
-					EndIf
 					$bBoosted = True
 					; Force to get the Remain Time
 					If $sName = "Barracks" Then
