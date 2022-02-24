@@ -127,7 +127,14 @@ EndFunc   ;==>deleteProfile
 
 Func createProfile($bCreateNew = False)
 	FuncEnter(createProfile)
-	If $bCreateNew = True Then
+    
+    ; Boldina note: Avoid create folders in root "Profiles" folder !.
+    If StringIsSpace($g_sProfileCurrentName) = 1 Then
+        SetLog("Error: Profile name empty.", $COLOR_ERROR)
+        Return False
+    EndIf
+	
+    If $bCreateNew = True Then
 		; create new profile (recursive call from setupProfile() and selectProfile() !!!)
 		setupProfileComboBox()
 		setupProfile()

@@ -771,103 +771,34 @@ Func DonateTroopType(Const $iTroopIndex, $Quant = 0, Const $bDonateQueueOnly = F
 			$Quant = $g_aiAvailQueuedTroop[$iTroopIndex]
 		EndIf
 	EndIf
-
-	; Detect the Troops Slot
-	If $g_bDebugOCRdonate Then
-		Local $oldDebugOcr = $g_bDebugOcr
-		$g_bDebugOcr = True
-	EndIf
-
+	
+	; Setlog("$iTroopIndex" & $iTroopIndex)
 	$Slot = DetectSlotTroop($iTroopIndex)
-	$detectedSlot = $Slot
-	If $g_bDebugOCRdonate Then $g_bDebugOcr = $oldDebugOcr
+	; Setlog("$Slot" & $Slot)
+	If Not IsArray($Slot) Then Return
+	
+	Local $hColor = "", $iDon = 0
+	
+	For $x = 0 To $Quant
+		If $x = 0 Then $hColor = _GetPixelColor($Slot[0], $Slot[1], True)
+		Click($Slot[0], $Slot[1], 1, $DELAYDONATECC3, "#0175")
+		$iDon += 1
+		
+		; Setlog(Hex("0x" & $hColor, 6))
+		; SetLog($Slot[0])
+		; SetLog($Slot[1])
 
-	; figure out row/position
-	If $Slot < 0 Or $Slot > 13 Then
-		SetLog("Invalid slot # found = " & $Slot & " for " & $g_asTroopNames[$iTroopIndex], $COLOR_ERROR)
-		Return
+		If WaitforPixel($Slot[0] - 5, $Slot[1] - 5, $Slot[0] + 5, $Slot[1] + 5, $hColor, 5, 3) = False Then
+			ExitLoop
+		EndIf
+	Next
+	
+	If $g_iCommandStop = 3 And $iDon > 0 Then
+		$g_iCommandStop = 0
+		$g_bFullArmy = False
 	EndIf
-	SetDebugLog("slot found = " & $Slot & ", " & $g_asTroopNames[$iTroopIndex], $COLOR_DEBUG)
-	$donaterow = 1 ;first row of troops
-	$donateposinrow = $Slot
-	If $Slot >= 7 And $Slot <= 13 Then
-		$donaterow = 2 ;second row of troops
-		$Slot = $Slot - 7
-		$donateposinrow = $Slot
-		$YComp = 88 ; correct 860x780
-	EndIf
-
-	; Verify if the type of troop to donate exists
-	SetLog("Troops Condition Matched", $COLOR_ORANGE)
-	If _ColorCheck(_GetPixelColor(350 + ($Slot * 68), $g_iDonationWindowY + 105 + $YComp, True), Hex(0x306ca8, 6), 20) Or _
-			_ColorCheck(_GetPixelColor(355 + ($Slot * 68), $g_iDonationWindowY + 106 + $YComp, True), Hex(0x306ca8, 6), 20) Or _
-			_ColorCheck(_GetPixelColor(360 + ($Slot * 68), $g_iDonationWindowY + 107 + $YComp, True), Hex(0x306ca8, 6), 20) Then ; check for 'blue'
-
-		If $bDonateAll Then $sTextToAll = " (to all requests)"
-		SetLog("Donating " & $Quant & " " & ($Quant > 1 ? $g_asTroopNamesPlural[$iTroopIndex] : $g_asTroopNames[$iTroopIndex]) & $sTextToAll, $COLOR_SUCCESS)
-
-		If $g_bDebugOCRdonate Then
-			SetLog("donate", $COLOR_ERROR)
-			SetLog("row: " & $donaterow, $COLOR_ERROR)
-			SetLog("pos in row: " & $donateposinrow, $COLOR_ERROR)
-			SetLog("coordinate: " & 365 + ($Slot * 68) & "," & $g_iDonationWindowY + 100 + $YComp, $COLOR_ERROR)
-			SaveDebugImage("LiveDonateCC-r" & $donaterow & "-c" & $donateposinrow & "-" & $g_asTroopNames[$iTroopIndex] & "_")
-		EndIf
-		; Use slow click when the Train system is Quicktrain
-		If $g_bQuickTrainEnable Then
-			Local $icount = 0
-			For $x = 0 To $Quant
-				If _ColorCheck(_GetPixelColor(350 + ($Slot * 68), $g_iDonationWindowY + 105 + $YComp, True), Hex(0x306ca8, 6), 20) Or _
-						_ColorCheck(_GetPixelColor(355 + ($Slot * 68), $g_iDonationWindowY + 106 + $YComp, True), Hex(0x306ca8, 6), 20) Or _
-						_ColorCheck(_GetPixelColor(360 + ($Slot * 68), $g_iDonationWindowY + 107 + $YComp, True), Hex(0x306ca8, 6), 20) Then ; check for 'blue'
-
-					Click(365 + ($Slot * 68), $g_iDonationWindowY + 100 + $YComp, 1, $DELAYDONATECC3, "#0175")
-					If $g_iCommandStop = 3 Then
-						$g_iCommandStop = 0
-						$g_bFullArmy = False
-					EndIf
-					If _Sleep(1000) Then Return
-					$icount += 1
-				EndIf
-			Next
-			$Quant = $icount ; Count Troops Donated Clicks
-			$g_aiDonateStatsTroops[$iTroopIndex][0] += $Quant
-		Else
-			If _ColorCheck(_GetPixelColor(350 + ($Slot * 68), $g_iDonationWindowY + 105 + $YComp, True), Hex(0x306ca8, 6), 20) Or _
-					_ColorCheck(_GetPixelColor(355 + ($Slot * 68), $g_iDonationWindowY + 106 + $YComp, True), Hex(0x306ca8, 6), 20) Or _
-					_ColorCheck(_GetPixelColor(360 + ($Slot * 68), $g_iDonationWindowY + 107 + $YComp, True), Hex(0x306ca8, 6), 20) Then ; check for 'blue'
-
-				Click(365 + ($Slot * 68), $g_iDonationWindowY + 100 + $YComp, $Quant, $DELAYDONATECC3, "#0175")
-				$g_aiDonateStatsTroops[$iTroopIndex][0] += $Quant
-				If $g_iCommandStop = 3 Then
-					$g_iCommandStop = 0
-					$g_bFullArmy = False
-				EndIf
-			EndIf
-		EndIf
-
-		; Adjust Values for donated troops to prevent a Double ghost donate to stats and train
-		If $iTroopIndex >= $eTroopBarbarian And $iTroopIndex <= $eTroopHeadhunter Then
-			;Reduce iTotalDonateCapacity by troops donated
-			$g_iTotalDonateTroopCapacity -= ($Quant * $g_aiTroopSpace[$iTroopIndex])
-			;If donated max allowed troop qty set $g_bSkipDonTroops = True
-			If $g_iDonTroopsLimit = $Quant Then
-				$g_bSkipDonTroops = True
-			EndIf
-		EndIf
-
-		; Assign the donated quantity troops to train : $Don $g_asTroopName
-		$g_aiDonateTroops[$iTroopIndex] += $Quant
-		If $bDonateQueueOnly Then $g_aiAvailQueuedTroop[$iTroopIndex] -= $Quant
-	Else
-		Local $Text = "Unable to donate " & ($g_iDonTroopsQuantity > 1 ? $g_asTroopNamesPlural[$iTroopIndex] : $g_asTroopNames[$iTroopIndex]) & ".Donate screen not visible, will retry next run.", $LocalColor = $COLOR_ERROR
-		If _ColorCheck(_GetPixelColor(350 + ($Slot * 68), $g_iDonationWindowY + 105 + $YComp, True), Hex(0x5e5e5e, 6), 10) Or _  	 ; Dark Gray from Queued Spells
-				_ColorCheck(_GetPixelColor(350 + ($Slot * 68), $g_iDonationWindowY + 105 + $YComp, True), Hex(0xdadad5, 6), 10) Then ; Light Gray from Empty Slots
-			$Text = "No " & ($g_iDonTroopsQuantity > 1 ? $g_asTroopNamesPlural[$iTroopIndex] : $g_asTroopNames[$iTroopIndex]) & " available to donate.."
-			$LocalColor = $COLOR_INFO
-		EndIf
-		SetLog($Text, $LocalColor)
-	EndIf
+	
+	$g_aiDonateStatsTroops[$iTroopIndex][0] += $iDon
 
 EndFunc   ;==>DonateTroopType
 
@@ -1278,67 +1209,28 @@ Func RemainingCCcapacity($aiDonateButton)
 EndFunc   ;==>RemainingCCcapacity
 
 Func DetectSlotTroop(Const $iTroopIndex)
-	Local $FullTemp
-	
-	_CaptureRegion2()
-	For $Slot = 0 To 6
-		Local $x = 343 + (68 * $Slot)
-		Local $y = $g_iDonationWindowY + 37
-		Local $x1 = $x + 75
-		Local $y1 = $y + 43
-
-		$FullTemp = SearchImgloc($g_sImgDonateTroops, $x, $y, $x1, $y1, False)
-		SetDebugLog("Troop Slot: " & $Slot & " SearchImgloc returned:" & $FullTemp[0] & ".", $COLOR_DEBUG)
-
-		If StringInStr($FullTemp[0] & " ", "empty") > 0 Then ExitLoop
-
-		If $FullTemp[0] = "queued" Then ContinueLoop
-
-		If $FullTemp[0] <> "" Then
-			Local $iFoundTroopIndex = TroopIndexLookup($FullTemp[0])
-			For $i = $eTroopBarbarian To $eTroopCount - 1
-				If $iFoundTroopIndex = $i Then
-					SetDebugLog("Detected " & $g_asTroopNames[$i], $COLOR_DEBUG)
-					If $iTroopIndex = $i Then Return $Slot
-					ExitLoop
+	If _Sleep(1000) Then Return
+	Local $aResult
+	Local $aregionforscan[4] = [338, $g_iDonationWindowY + 35, 751, $g_iDonationWindowY + 35 + 152]
+	_CaptureRegion2($aregionforscan[0], $aregionforscan[1], $aregionforscan[2], $aregionforscan[3])
+	Local $afiletoscan = _filelisttoarrayrec($g_sImgDonateTroops, $g_asTroopShortNames[$iTroopIndex] & "*", $fltar_files, $fltar_norecur, $fltar_sort, $fltar_nopath)
+	If Not @error Then
+		For $i = 1 To UBound($afiletoscan) - 1
+			If StringInStr($afiletoscan[$i], $g_asTroopShortNames[$iTroopIndex]) > 0 Then
+				$aResult = decodeSingleCoord(findImage($afiletoscan[$i], $g_sImgDonateTroops & $afiletoscan[$i], "FV", 1, False))
+				Setlog($g_asTroopShortNames[$iTroopIndex])
+				Setlog($g_sImgDonateTroops & $afiletoscan[$i])
+				If IsArray($aResult) And UBound($aResult) = 2 Then
+					$aResult[0] = $aResult[0] + $aregionforscan[0]
+					$aResult[1] = $aResult[1] + $aregionforscan[1]
+					Return $aResult
 				EndIf
-				If $i = $eTroopCount - 1 Then ; detection failed
-					SetDebugLog("Slot: " & $Slot & "Troop Detection Failed", $COLOR_DEBUG)
-				EndIf
-			Next
-		EndIf
-	Next
-
-	For $Slot = 7 To 13
-		Local $x = 343 + (68 * ($Slot - 7))
-		Local $y = $g_iDonationWindowY + 124
-		Local $x1 = $x + 75
-		Local $y1 = $y + 43
-
-		$FullTemp = SearchImgloc($g_sImgDonateTroops, $x, $y, $x1, $y1, False)
-		SetDebugLog("Troop Slot: " & $Slot & " SearchImgloc returned:" & $FullTemp[0] & ".", $COLOR_DEBUG)
-
-		If StringInStr($FullTemp[0] & " ", "empty") > 0 Then ExitLoop
-
-		If $FullTemp[0] = "queued" Then ContinueLoop
-
-		If $FullTemp[0] <> "" Then
-			For $i = $eTroopArcher To $eTroopCount - 1
-				Local $iFoundTroopIndex = TroopIndexLookup($FullTemp[0])
-				If $iFoundTroopIndex = $i Then
-					SetDebugLog("Detected " & $g_asTroopNames[$i], $COLOR_DEBUG)
-					If $iTroopIndex = $i Then Return $Slot
-					ExitLoop
-				EndIf
-				If $i = $eTroopCount - 1 Then ; detection failed
-					SetDebugLog("Slot: " & $Slot & "Troop Detection Failed", $COLOR_DEBUG)
-				EndIf
-			Next
-		EndIf
-	Next
-
-	Return -1
-
+			EndIf
+		Next
+	Else
+		Return -1
+	EndIf
+	Return 0
 EndFunc   ;==>DetectSlotTroop
 
 Func DetectSlotSpell(Const $iSpellIndex)

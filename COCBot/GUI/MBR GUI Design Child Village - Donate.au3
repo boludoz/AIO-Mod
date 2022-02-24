@@ -287,11 +287,12 @@ Func CreateRequestSubTab()
 			EndIf
 
 	$y += 40
-		Local $sCmbTroopList = GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtListOfTroops", "Any|" & _ArrayToString($g_asTroopNames))
-		For $i = 0 To 2
-			$g_ahCmbClanCastleTroop[$i] = GUICtrlCreateCombo("", $x, $y + $i * 25, 125, -1, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
-				GUICtrlSetData(-1, $sCmbTroopList, "Any")
+        Local $sCmbTroopList = GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtListOfTroops_Any", "Any") & "|" & _ArrayToString($g_asTroopNames)
+        For $i = 0 To 2
+            $g_ahCmbClanCastleTroop[$i] = GUICtrlCreateCombo("", $x, $y + $i * 25, 125, -1, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
 				GUICtrlSetOnEvent(-1, "CmbClanCastleTroop")
+                GUICtrlSetData(-1, $sCmbTroopList)
+                _GUICtrlComboBox_SetCurSel(-1, 0)
 				_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "Onlytake_Info_01", "Pick a troop type allowed to stay in your Clan Castle. \r\nTroops of other type shall be removed"))
 
 			$g_ahTxtClanCastleTroop[$i] = _GUICtrlCreateInput("0", $x + 130, $y + $i * 25, 20, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_RIGHT, $ES_NUMBER))
@@ -301,18 +302,20 @@ Func CreateRequestSubTab()
 				GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "Onlytake_Info_03", "Set to ""0"" or ""40+"" means unlimited"))
 		Next
 
-		Local $sCmbSpellList = GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtListOfSpells", "Any|" & _ArrayToString($g_asSpellNames))
-		For $i = 0 To 2
-			$g_ahCmbClanCastleSpell[$i] = GUICtrlCreateCombo("", $x + 170, $y + $i * 25, 85, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
-				GUICtrlSetData(-1, $sCmbSpellList, "Any")
+        Local $sCmbSpellList = GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtListOfSpells_Any", "Any") & "|" & _ArrayToString($g_asSpellNames)
+        For $i = 0 To 2
+            $g_ahCmbClanCastleSpell[$i] = GUICtrlCreateCombo("", $x + 170, $y + $i * 25, 85, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 				GUICtrlSetOnEvent(-1, "CmbClanCastleSpell")
-				_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "Onlytake_Info_04", "Only keep this spell (1 unit) in Clan Castle. \r\nOther spells or excessive quantity shall be removed"))
-		Next
+				GUICtrlSetData(-1, $sCmbSpellList)
+                _GUICtrlComboBox_SetCurSel(-1, 0)
+                _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "Onlytake_Info_04", "Only keep this spell (1 unit) in Clan Castle. \r\nOther spells or excessive quantity shall be removed"))
+        Next
 
-		Local $sCmbSiegeList = GetTranslatedFileIni("MBR Global GUI Design Names Sieges", "TxtListOfSieges", "Any|" & _ArrayToString($g_asSiegeMachineNames))
-		For $i = 0 To 1
-			$g_ahCmbClanCastleSiege[$i] = GUICtrlCreateCombo("", $x + 275, $y + $i * 25, 100, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
-				GUICtrlSetData(-1, $sCmbSiegeList, "Any")
+        Local $sCmbSiegeList = GetTranslatedFileIni("MBR Global GUI Design Names Sieges", "TxtListOfSieges_Any", "Any") & "|" & _ArrayToString($g_asSiegeMachineNames)
+        For $i = 0 To 1
+            $g_ahCmbClanCastleSiege[$i] = GUICtrlCreateCombo("", $x + 275, $y + $i * 25, 100, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+                GUICtrlSetData(-1, $sCmbSiegeList)
+                _GUICtrlComboBox_SetCurSel(-1, 0)
 				_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "Onlytake_Info_05", "Only keep this siege machine in Clan Castle. \r\nSiege machine of other types shall be removed"))
 		Next
 

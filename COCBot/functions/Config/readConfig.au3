@@ -575,21 +575,40 @@ Func ReadConfig_600_11()
 		If $i < $eSpellCount Then $g_aiCCSpellsExpected[$i] = 0
 		If $i < $eSiegeMachineCount Then $g_aiCCSiegeExpected[$i] = 0
 	Next
-	For $i = 0 To 2
-		$g_aiClanCastleTroopWaitType[$i] = Int(IniRead($g_sProfileConfigPath, "donate", "cmbClanCastleTroop" & $i, "0"))
-		$g_aiClanCastleTroopWaitQty[$i] = Int(IniRead($g_sProfileConfigPath, "donate", "txtClanCastleTroop" & $i, "0"))
-		If $g_aiClanCastleTroopWaitType[$i] > 0 Then ; Barb - Hunt
-			$g_aiCCTroopsExpected[$g_aiClanCastleTroopWaitType[$i] - 1] += $g_aiClanCastleTroopWaitQty[$i]
-		EndIf
+    Local $iTemp = 0
+    For $i = 0 To 2
+        $g_aiClanCastleTroopWaitType[$i] = Int(IniRead($g_sProfileConfigPath, "donate", "cmbClanCastleTroop" & $i, "0"))
+        $g_aiClanCastleTroopWaitQty[$i] = Int(IniRead($g_sProfileConfigPath, "donate", "txtClanCastleTroop" & $i, "0"))
 
-		$g_aiClanCastleSpellWaitType[$i] = Int(IniRead($g_sProfileConfigPath, "donate", "cmbClanCastleSpell" & $i, "0"))
-		If $g_aiClanCastleSpellWaitType[$i] > 0 Then ; LSpell - BtSpell
-			$g_aiCCSpellsExpected[$g_aiClanCastleSpellWaitType[$i] - 1] += 1
-		EndIf
+        If $g_aiClanCastleTroopWaitType[$i] > 0 Then ; Barb - Hunt
+            $iTemp = $g_aiClanCastleTroopWaitType[$i] - 1
+            If $iTemp >= UBound($g_aiCCTroopsExpected) Or $iTemp < 0 Then
+                SetDebugLog("Bad $g_aiCCTroopsExpected in ReadConfig_600_11")
+                $iTemp = 0
+            EndIf
+            $g_aiCCTroopsExpected[$iTemp] += $g_aiClanCastleTroopWaitQty[$i]
+        EndIf
 
-		If $i > 1 Then ContinueLoop ; Siege has only 2 combobox
-		$g_aiClanCastleSiegeWaitType[$i] = Int(IniRead($g_sProfileConfigPath, "donate", "cmbClanCastleSiege" & $i, "0"))
-		If $g_aiClanCastleSiegeWaitType[$i] > 0 Then $g_aiCCSiegeExpected[$g_aiClanCastleSiegeWaitType[$i] - 1] = 1 ; WallW - StoneS
+        $g_aiClanCastleSpellWaitType[$i] = Int(IniRead($g_sProfileConfigPath, "donate", "cmbClanCastleSpell" & $i, "0"))
+        If $g_aiClanCastleSpellWaitType[$i] > 0 Then ; LSpell - BtSpell
+            $iTemp = $g_aiClanCastleSpellWaitType[$i] - 1
+            If $iTemp >= UBound($g_aiClanCastleSpellWaitType) Or $iTemp < 0 Then
+                SetDebugLog("Bad $g_aiClanCastleSpellWaitType in ReadConfig_600_11")
+                $iTemp = 0
+            EndIf
+            $g_aiCCSpellsExpected[$iTemp] += 1
+        EndIf
+
+        If $i > 1 Then ContinueLoop ; Siege has only 2 combobox
+        $g_aiClanCastleSiegeWaitType[$i] = Int(IniRead($g_sProfileConfigPath, "donate", "cmbClanCastleSiege" & $i, "0"))
+        If $g_aiClanCastleSiegeWaitType[$i] > 0 Then
+            $iTemp = $g_aiClanCastleSiegeWaitType[$i] - 1
+            If $iTemp >= UBound($g_aiClanCastleSiegeWaitType) Or $iTemp < 0 Then
+                SetDebugLog("Bad $g_aiClanCastleSiegeWaitType in ReadConfig_600_11")
+                $iTemp = 0
+            EndIf
+            $g_aiCCSiegeExpected[$iTemp] = 1 ; WallW - StoneS
+        EndIf
 	Next
 
 	$g_abRequestCCHours = StringSplit(IniRead($g_sProfileConfigPath, "planned", "RequestHours", "1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1"), "|", $STR_NOCOUNT)
