@@ -15,6 +15,7 @@
 #Region - Custom - Team AIO Mod++
 Func GetAttackBarBB($bRemaining = False)
 	local $iTroopBanners = 640 ; y location of where to find troop quantities
+	local $iTroopBannersBig = 633 ; y location of where to find troop quantities big
 	local $aSlot1 = [85, 640] ; location of first slot
 	local $iSlotOffset = 73 ; slots are 73 pixels apart
 	local $iBarOffset = 66 ; 66 pixels from side to attack bar
@@ -62,8 +63,8 @@ Func GetAttackBarBB($bRemaining = False)
 			Local $iCount = 1
 			If String($aTroop[0]) <> "Machine" Then 
 				local $iCount = Number(_getTroopCountSmall($aTempCoords[0], $iTroopBanners))
-				If $iCount == 0 Then $iCount = Number(_getTroopCountBig($aTempCoords[0], $iTroopBanners-7))
-				If $iCount == 0 Then
+				If $iCount < 1 Then $iCount = Number(_getTroopCountBig($aTempCoords[0], $iTroopBannersBig))
+				If $iCount < 1 Then
 					If $bRemaining = False Then SetLog("Could not get count for " & $aTroop[0] & " in slot " & String($iSlot), $COLOR_ERROR)
 					ContinueLoop
 				EndIf

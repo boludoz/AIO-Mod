@@ -355,14 +355,12 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 		$aAvailableTroops[$i][0] = $aNewAvailableTroops[$i][0]
 	Next
 	
-	Local $iTroopBanners = 640 ; y location of where to find troop quantities
-
 	For $i = 0 To UBound($aAvailableTroops) - 1
 		If Not $g_bRunState Then Return
 		If $aAvailableTroops[$i][0] <> "" Then ;We Just Need To redo the ocr for mentioned troop only
-			Local $iCount = Number(_getTroopCountSmall($aAvailableTroops[$i][1], $iTroopBanners))
-			If $iCount == 0 Then $iCount = Number(_getTroopCountBig($aAvailableTroops[$i][1], $iTroopBanners - 7))
-			If $iCount == 0 And Not String($aAvailableTroops[$i][0]) = "Machine" Then
+			Local $iCount = Number(_getTroopCountSmall($aAvailableTroops[$i][1], 640))
+			If $iCount < 1 Then $iCount = Number(_getTroopCountBig($aAvailableTroops[$i][1], 633))
+			If $iCount < 1 And Not String($aAvailableTroops[$i][0]) = "Machine" Then
 				SetLog("Could not get count for " & $aAvailableTroops[$i][0] & " in slot " & String($aAvailableTroops[$i][3]), $COLOR_ERROR)
 				$aAvailableTroops[$i][4] = 2
 				ContinueLoop

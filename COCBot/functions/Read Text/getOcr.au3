@@ -132,14 +132,23 @@ Func getTroopCountBig($x_start, $y_start, $bNeedNewCapture = Default, $bRecheck 
 	Return Number($iReturn)
 EndFunc   ;==>getTroopCountBig
 
-Func _getTroopCountSmall($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for non-selected troop kind
-	Return getOcrAndCapture("coc-t-s", $x_start, $y_start, 55, 16, True, Default, $bNeedNewCapture)
+Func _getTroopCountSmall($x_start, $y_start, $bNeedNewCapture = Default, $bRecheck = True) ;  -> Gets troop amount on Attack Screen for non-selected troop kind
+	Local $iReturn = 0
+	$iReturn = getOcrAndCapture("coc-t-s", $x_start, $y_start, 55, 16, True, Default, $bNeedNewCapture)
+	If Number($iReturn) = 0 And $bRecheck = True Then
+		$iReturn = SpecialOCRCut($g_sAttackBarDOCRB, $x_start, $y_start, 55, 16, True, $bNeedNewCapture)
+	EndIf
+	Return Number($iReturn)
 EndFunc   ;==>getTroopCountSmall
 
-Func _getTroopCountBig($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for selected troop kind
-	Return getOcrAndCapture("coc-t-b", $x_start, $y_start, 55, 17, True, Default, $bNeedNewCapture)
+Func _getTroopCountBig($x_start, $y_start, $bNeedNewCapture = Default, $bRecheck = True) ;  -> Gets troop amount on Attack Screen for selected troop kind
+	Local $iReturn = 0
+	$iReturn = getOcrAndCapture("coc-t-b", $x_start, $y_start, 55, 17, True, Default, $bNeedNewCapture)
+	If Number($iReturn) = 0 And $bRecheck = True Then
+		$iReturn = SpecialOCRCut($g_sAttackBarDOCRB, $x_start, $y_start, 55, 17, True, $bNeedNewCapture)
+	EndIf
+	Return Number($iReturn)
 EndFunc   ;==>getTroopCountBig
-
 #EndRegion - Team AIO Mod++ (Dissociable OCR)
 
 Func getTroopsSpellsLevel($x_start, $y_start) ;  -> Gets spell level on Attack Screen for selected spell kind (could be used for troops too)
