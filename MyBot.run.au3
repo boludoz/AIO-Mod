@@ -1004,10 +1004,6 @@ Func runBot() ;Bot that runs everything in order
 					$g_iCommandStop = 2
 					_RunFunction('DonateCC,Train')
 					checkSwitchAcc()
-				ElseIf Not $g_bChkOnlyFarm Then
-					$iWaitTime = Random($DELAYWAITATTACK1, $DELAYWAITATTACK2)
-					SetLog("Attacking Not Planned and Skipped, Waiting random " & StringFormat("%0.1f", $iWaitTime / 1000) & " Seconds", $COLOR_WARNING)
-					If _SleepStatus($iWaitTime) Then Return False
 				EndIf
 			EndIf
 		Else ;When error occurs directly goes to attack
