@@ -261,7 +261,7 @@ Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl
 					If NOT @error Then
 						Local $adeploypoint[2] = [$aonepoint[0], $aonepoint[1]]
 						setdebuglog("$aDeployPoint: " & _arraytostring($adeploypoint))
-						If NOT $stest Then
+						If NOT $bDebug Then
 							For $i = 0 To UBound($aslots2deploy) - 1
 								If $aslots2deploy[$i][1] > 0 AND $aslots2deploy[$i][0] <> $iswall Then
 									If isattackpage() Then selectdroptroop($aslots2deploy[$i][0])
@@ -345,11 +345,11 @@ Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl
 						EndIf
 				EndSwitch
 			Next
-			If ($g_bdebugsmartmilk OR $stest) AND $iloops = 0 Then
+			If ($g_bdebugsmartmilk OR $bDebug) AND $iloops = 0 Then
 				SetLog("$aCollectorsAll: " & _arraytostring($acollectorsall, "-", -1, -1, "|"))
 				debugimagesmartmilk($acollectorsall, Round(TimerDiff($htimer) / 1000, 2) & "'s", $heroesdeployjustincase)
 			EndIf
-			If $stest Then Return
+			If $bDebug Then Return
 			Local $random = Random(0, 3, 1)
 			Switch $random
 				Case 0

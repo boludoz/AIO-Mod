@@ -19,44 +19,6 @@ Func SelectDropTroop($iSlotIndex, $iClicks = 1, $iDelay = Default, $bCheckAttack
 	If Not $bCheckAttackPage Or IsAttackPage() Then ClickP(GetSlotPosition($iSlotIndex), $iClicks, $iDelay, "#0111")
 EndFunc   ;==>SelectDropTroop
 
-Global $g_islotocrcompensation = 13
-
-Func GetXPosOfArmySlot($iSlotIndex, $bgetposxforclick = False, $bgetposxforocr = False, $bgetposxforheroesability = False)
-	If $iSlotIndex > UBound($g_avattacktroops) - 1 OR $iSlotIndex < 0 Then
-		SetLog("Error: GetXPosOfArmySlot Trying to check Slot: " & $iSlotIndex, $color_error)
-		Return 0
-	Else
-		Local $t4362 = GetTroopName($g_avattacktroops[$iSlotIndex][0])
-		If $g_bdraggedattackbar AND $iSlotIndex > -1 Then
-			Local $i2ndpageslotstartxspace = 27
-			Local $islotnewnumber = $iSlotIndex - ($g_itotalattackslot - 10)
-			If $g_bdebugsetlog Then SetLog("[" & $t4362 & "] Dragged GetXPosOfArmySlot » " & $iSlotIndex & " » 2nd Page Slot No : " & $islotnewnumber)
-			If ($iSlotIndex > 10) Then
-				Local $itroopsslotstartposx = $g_avattacktroops[$iSlotIndex][2]
-			Else
-				Local $itroopsslotstartposx = $g_avattacktroops[$iSlotIndex][2] - $g_avattacktroops[$iSlotIndex - $islotnewnumber][2] + $i2ndpageslotstartxspace
-			EndIf
-			$iSlotIndex = $islotnewnumber
-		Else
-			Local $itroopsslotstartposx = $g_avattacktroops[$iSlotIndex][2]
-		EndIf
-		If $bgetposxforclick Then
-			If $g_bdebugsetlog Then SetLog("[" & $t4362 & "] GetXPosOfArmySlot » " & $iSlotIndex & " » For Click: " & $itroopsslotstartposx + 32)
-			Return $itroopsslotstartposx + 32
-		EndIf
-		If $bgetposxforheroesability Then
-			If $g_bdebugsetlog Then SetLog("[" & $t4362 & "] GetXPosOfArmySlot » " & $iSlotIndex & " » For Heroes Ability: " & $itroopsslotstartposx + 26)
-			Return $itroopsslotstartposx + 28
-		EndIf
-		If $bgetposxforocr Then
-			If $g_bdebugsetlog Then SetLog("[" & $t4362 & "] GetXPosOfArmySlot » " & $iSlotIndex & " » For Ocr: " & $itroopsslotstartposx + $g_islotocrcompensation)
-			Return $itroopsslotstartposx + $g_islotocrcompensation
-		EndIf
-		If $g_bdebugsetlog Then SetLog("[" & $t4362 & "] GetXPosOfArmySlot » " & $iSlotIndex & " » Slot Start X: " & $itroopsslotstartposx)
-		Return $itroopsslotstartposx
-	EndIf
-EndFunc
-
 Func GetSlotPosition($iSlotIndex, $bOCRPosition = False)
 	Local $aiReturnPosition[2] = [0, 0]
 
