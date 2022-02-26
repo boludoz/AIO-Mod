@@ -370,3 +370,13 @@ Func ReadConfig_MOD_Walls()
 
 EndFunc   ;==>ReadConfig_MOD_Walls
 
+#Region - Smart milk - Team AIO Mod++
+Func Readconfig_600_29_DB_SmartMilk()
+	inireads($g_imilkstrategyarmy, $g_sprofileconfigpath, "SmartMilk", "MilkStrategyArmy", 0, "int")
+	inireads($g_bchkmilkforcedeployheroes, $g_sprofileconfigpath, "SmartMilk", "MilkForceDeployHeroes", False, "Bool")
+	inireads($g_bchkmilkforcealltroops, $g_sprofileconfigpath, "SmartMilk", "ChkMilkForceAllTroops", False, "Bool")
+	inireads($g_bchkmilkforceth, $g_sprofileconfigpath, "SmartMilk", "ChkMilkForceTH", False, "Bool")
+	inireads($g_imilkdelay, $g_sprofileconfigpath, "SmartMilk", "MilkDelay", 3, "int")
+	inireads($g_bdebugsmartmilk, $g_sprofileconfigpath, "SmartMilk", "DebugSmartMilk", False, "Bool")
+EndFunc   ;==>Readconfig_600_29_DB_SmartMilk
+#EndRegion - Smart milk - Team AIO Mod++

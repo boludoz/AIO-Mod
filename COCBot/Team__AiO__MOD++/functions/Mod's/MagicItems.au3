@@ -156,12 +156,10 @@ Func BoostPotionMod($sName, $bDebug = False)
 EndFunc   ;==>BoostPotionMod
 
 ; Builder Status - Team AIO Mod++
-; Part of Demen code.
-; Frankestein
 Func BuilderPotionBoost($bDebug = False)
 	If Not $g_bChkBuilderPotion Then Return
 	
-	If $g_iFreeBuilderCount >= $g_iInputBuilderPotion + 1 Or $bDebug Then
+	If Abs($g_iFreeBuilderCount - $g_iTotalBuilderCount) >= $g_iInputBuilderPotion + 1 Or $bDebug Then
 
 		Local $iBuilderTime = -1, $iTimeFromLastCheck = -1, $sBuilderTimeLastCheck = ""
 		Static $asBuilderTimeLastCheck[$g_eTotalAcc]
@@ -172,7 +170,7 @@ Func BuilderPotionBoost($bDebug = False)
 	
 			SetDebugLog("Magic Items | It has been " & $iTimeFromLastCheck & " s since last check (" & $sBuilderTimeLastCheck & ")")
 	
-			If $iTimeFromLastCheck <= 21600 And $iTimeFromLastCheck > 0 Then
+			If $iTimeFromLastCheck <= 21600 Then
 				SetDebugLog("$iTimeFromLastCheck: " & $iTimeFromLastCheck)
 				If $bDebug = False Then Return
 			EndIf

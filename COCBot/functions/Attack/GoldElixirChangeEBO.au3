@@ -5,7 +5,7 @@
 ; Parameters ....:
 ; Return values .: None
 ; Author ........:
-; Modified ......: Sardo (06-2015), Fliegerfaust (01-2017), Boldina (02-2022)
+; Modified ......: Sardo (06-2015), Fliegerfaust (01-2017)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:v
@@ -25,23 +25,17 @@ Func GoldElixirChangeEBO()
 	Local $Damage, $CurDamage
 	$g_iDarkLow = 0
 	;READ RESOURCES n.1
-	
-    _CaptureRegions()
-	$Gold1 = getGoldVillageSearch(48, 69, False)
-    _CaptureRegion2Sync()
-	$Elixir1 = getElixirVillageSearch(48, 69 + 29, False)
-    _CaptureRegion2Sync()
-	$Trophies = getTrophyVillageSearch(48, 69 + 99, False)
-    _CaptureRegion2Sync()
-	$Damage = getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY, False)
+	$Gold1 = getGoldVillageSearch(48, 69)
+	$Elixir1 = getElixirVillageSearch(48, 69 + 29)
+	$Trophies = getTrophyVillageSearch(48, 69 + 99)
+	$Damage = getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY)
 	If Number($Damage) > Number($g_iPercentageDamage) Then $g_iPercentageDamage = Number($Damage)
-    _CaptureRegion2Sync()
 	If $Trophies <> "" Then ; If trophy value found, then base has Dark Elixir
 		If _Sleep($DELAYGOLDELIXIRCHANGEEBO1) Then Return
-		$DarkElixir1 = getDarkElixirVillageSearch(48, 69 + 57, False)
+		$DarkElixir1 = getDarkElixirVillageSearch(48, 69 + 57)
 	Else
 		$DarkElixir1 = ""
-		$Trophies = getTrophyVillageSearch(48, 69 + 69, False)
+		$Trophies = getTrophyVillageSearch(48, 69 + 69)
 	EndIf
 
 	;CALCULATE WHICH TIMER TO USE
@@ -63,21 +57,21 @@ Func GoldElixirChangeEBO()
 	EndIf
 
 	;CALCULATE TWO STARS REACH
-	If $g_abStopAtkTwoStars[$g_iMatchMode] And _CheckPixel($aWonTwoStar, False) Then
+	If $g_abStopAtkTwoStars[$g_iMatchMode] And _CheckPixel($aWonTwoStar, True) Then
 		SetLog("Two Star Reach, exit", $COLOR_SUCCESS)
 		$exitTwoStars = 1
 		$z = 0
 	EndIf
 
 	;CALCULATE ONE STARS REACH
-	If $g_abStopAtkOneStar[$g_iMatchMode] And _CheckPixel($aWonOneStar, False) Then
+	If $g_abStopAtkOneStar[$g_iMatchMode] And _CheckPixel($aWonOneStar, True) Then
 		SetLog("One Star Reach, exit", $COLOR_SUCCESS)
 		$exitOneStar = 1
 		$z = 0
 	EndIf
 
 	; Early Check if Percentage is alreay higher than set
-	If $g_abStopAtkPctHigherEnable[$g_iMatchMode] And Number($Damage) > Number($g_aiStopAtkPctHigherAmt[$g_iMatchMode]) Then
+	If $g_abStopAtkPctHigherEnable[$g_iMatchMode] And Number(getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY)) > Number($g_aiStopAtkPctHigherAmt[$g_iMatchMode]) Then
 		SetLog("Overall Damage above " & Number($g_aiStopAtkPctHigherAmt[$g_iMatchMode]), $COLOR_SUCCESS)
 		$g_iPercentageDamage = Number(getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY))
 		$z = 0
@@ -92,18 +86,12 @@ Func GoldElixirChangeEBO()
 	Local $iSuspendAndroidTimeOffset = SuspendAndroidTime()
 	SetDebugLog("GoldElixirChangeEBO: Start waiting for battle end, Wait: " & $z & ", Offset: " & $iSuspendAndroidTimeOffset)
 
-	; Custom fix - Team AIO Mod++
-	Static $s_iGold2 = 0, $s_iElixir2 = 0, $s_iDarkElixir2 = 0, $s_iCurDamage = 0
-
 	Local $iTime = 0
 	Local $bOneLoop = True
 	While $bOneLoop Or ($iTime < $z And $z > 0 And $iTime >= 0)
 		$bOneLoop = False
-
 		;HEALTH HEROES
 		CheckHeroesHealth()
-
-		If IsAttackPage() Then SmartZap(-1) ; Check to see if we should zap the DE Drills ; Custom SmartZap - Team AIO Mod++
 
 		;DE SPECIAL END EARLY
 		If $g_iMatchMode = $LB And $g_aiAttackStdDropSides[$LB] = 4 And $g_bDESideEndEnable Then
@@ -117,34 +105,22 @@ Func GoldElixirChangeEBO()
 		EndIf
 
 		;--> Read Ressources #2
-		_CaptureRegions()
-		$Gold2 = getGoldVillageSearch(48, 69, False)
+		$Gold2 = getGoldVillageSearch(48, 69)
 		If $Gold2 = "" Then
 			If _Sleep($DELAYGOLDELIXIRCHANGEEBO1) Then Return
-			_CaptureRegion2Sync()
-			$Gold2 = getGoldVillageSearch(48, 69, False)
+			$Gold2 = getGoldVillageSearch(48, 69)
 		EndIf
-		
-		_CaptureRegion2Sync()
-		$Elixir2 = getElixirVillageSearch(48, 69 + 29, False)
-		
-		_CaptureRegion2Sync()
-		$Trophies = getTrophyVillageSearch(48, 69 + 69, False)
-		
+		$Elixir2 = getElixirVillageSearch(48, 69 + 29)
+		$Trophies = getTrophyVillageSearch(48, 69 + 99)
 		CheckHeroesHealth()
-
-		_CaptureRegions()
 		If $Trophies <> "" Then ; If trophy value found, then base has Dark Elixir
 			If _Sleep($DELAYGOLDELIXIRCHANGEEBO1) Then Return
-			$DarkElixir2 = getDarkElixirVillageSearch(48, 69 + 57, False)
+			$DarkElixir2 = getDarkElixirVillageSearch(48, 69 + 57)
 		Else
 			$DarkElixir2 = ""
-			$Trophies = getTrophyVillageSearch(48, 69 + 69, False)
+			$Trophies = getTrophyVillageSearch(48, 69 + 69)
 		EndIf
-		
-		_CaptureRegion2Sync()
-		$CurDamage = getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY, False)
-		
+		$CurDamage = getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY)
 		;--> Read Ressources #2
 
 		CheckHeroesHealth()
@@ -160,20 +136,10 @@ Func GoldElixirChangeEBO()
 			If $m > 0 Then $txtDiff = $m & "m "
 			$txtDiff &= $s & "s"
 		EndIf
-
-		$NoResourceOCR = StringIsSpace($Gold2) = 1 And StringIsSpace($Elixir2) = 1 And StringIsSpace($DarkElixir2) = 1
+		$NoResourceOCR = StringLen($Gold2) = 0 And StringLen($Elixir2) = 0 And StringLen($DarkElixir2) = 0
 		If $NoResourceOCR Then
-			SetLog("Exit now, last record, [G]: " & $s_iGold2 & " [E]: " & $s_iElixir2 & " [DE]: " & (StringIsSpace($s_iDarkElixir2) ? ("-") : String($s_iDarkElixir2)) & " [%]: " & $s_iCurDamage, $COLOR_INFO)
-			$s_iGold2 = 0
-			$s_iElixir2 = 0
-			$s_iDarkElixir2 = 0
-			$s_iCurDamage = 0
+			SetLog("Exit now, [G]: " & $Gold2 & " [E]: " & $Elixir2 & " [DE]: " & $DarkElixir2 & " [%]: " & $CurDamage, $COLOR_INFO)
 		Else
-			$s_iGold2 = Int($Gold2)
-			$s_iElixir2 = Int($Elixir2)
-			$s_iDarkElixir2 = Int($DarkElixir2)
-			$s_iCurDamage = Int($CurDamage)
-			
 			If $g_bDebugSetlog Then
 				SetDebugLog("Exit in " & $txtDiff & ", [G]: " & $Gold2 & " [E]: " & $Elixir2 & " [DE]: " & $DarkElixir2 & " [%]: " & $CurDamage & ", Suspend-Time: " & $g_iSuspendAndroidTime & ", Suspend-Count: " & $g_iSuspendAndroidTimeCount &  ", Offset: " & $iSuspendAndroidTimeOffset, $COLOR_INFO)
 			Else
@@ -223,37 +189,28 @@ Func GoldElixirChangeEBO()
 			ExitLoop
 		EndIf
 
-		_CaptureRegions()
-		
 		;EXIT IF TWO STARS REACH
-		If $g_abStopAtkTwoStars[$g_iMatchMode] Then
-			If _CheckPixel($aWonTwoStar, False) Then
-				SetLog("Two Star Reach, exit", $COLOR_SUCCESS)
-				$exitTwoStars = 1
-				ExitLoop
-			EndIf
+		If $g_abStopAtkTwoStars[$g_iMatchMode] And _CheckPixel($aWonTwoStar, True) Then
+			SetLog("Two Star Reach, exit", $COLOR_SUCCESS)
+			$exitTwoStars = 1
+			ExitLoop
 		EndIf
-		
+
 		;EXIT IF ONE STARS REACH
-		If $g_abStopAtkOneStar[$g_iMatchMode] Then
-			If _CheckPixel($aWonOneStar, False) Then
-				SetLog("One Star Reach, exit", $COLOR_SUCCESS)
-				$exitOneStar = 1
-				ExitLoop
-			EndIf
+		If $g_abStopAtkOneStar[$g_iMatchMode] And _CheckPixel($aWonOneStar, True) Then
+			SetLog("One Star Reach, exit", $COLOR_SUCCESS)
+			$exitOneStar = 1
+			ExitLoop
 		EndIf
 
 		;EXIT LOOP IF RESOURCES = "" ... battle end
-		If getGoldVillageSearch(48, 69, False) = "" Then
-			_CaptureRegion2Sync()
-			If getElixirVillageSearch(48, 69 + 29, False) = "" And $DarkElixir2 = "" Then
-				ExitLoop
-			EndIf
+		If getGoldVillageSearch(48, 69) = "" And getElixirVillageSearch(48, 69 + 29) = "" And $DarkElixir2 = "" Then
+			ExitLoop
 		EndIf
 
-		If $g_abStopAtkPctHigherEnable[$g_iMatchMode] And Number($CurDamage) > Number($g_aiStopAtkPctHigherAmt[$g_iMatchMode]) Then
+		If $g_abStopAtkPctHigherEnable[$g_iMatchMode] And Number(getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY)) > Number($g_aiStopAtkPctHigherAmt[$g_iMatchMode]) Then
 			SetLog("Overall Damage above " & Number($g_aiStopAtkPctHigherAmt[$g_iMatchMode]) & ", exit", $COLOR_SUCCESS)
-			$g_iPercentageDamage = Number($CurDamage)
+			$g_iPercentageDamage = Number(getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY))
 			ExitLoop
 		EndIf
 
@@ -266,7 +223,7 @@ Func GoldElixirChangeEBO()
 		;RETURN IF DAMAGE CHANGE DETECTED
 		If $g_abStopAtkPctNoChangeEnable[$g_iMatchMode] And (Number($Damage) <> Number($CurDamage)) Then
 			SetLog("Overall Damage Percentage change detected, waiting...", $COLOR_SUCCESS)
-			$g_iPercentageDamage = Number($CurDamage)
+			$g_iPercentageDamage = Number(getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY))
 			Return True
 		EndIf
 
@@ -296,11 +253,9 @@ Func GoldElixirChangeEBO()
 		SetLog("Battle has finished", $COLOR_SUCCESS)
 		Return False ;end battle
 	EndIf
-	
-    _CaptureRegions()
-	Local $iTmpDamage = Number(getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY, False))
-	If $g_abStopAtkPctHigherEnable[$g_iMatchMode] And $iTmpDamage > Number($g_aiStopAtkPctHigherAmt[$g_iMatchMode]) Then
-		$g_iPercentageDamage = $iTmpDamage
+
+	If $g_abStopAtkPctHigherEnable[$g_iMatchMode] And Number(getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY)) > Number($g_aiStopAtkPctHigherAmt[$g_iMatchMode]) Then
+		$g_iPercentageDamage = Number(getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY))
 		Return False
 	EndIf
 

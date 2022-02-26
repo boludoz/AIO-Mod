@@ -326,13 +326,16 @@ Func IsUnitUsed($iMatchMode, $iTroopIndex)
 				Case $eCastle, $eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eFlameF
 					If $g_abAttackDropCC[$iMatchMode] Then Return True
 				Case $eLSpell
-					If $g_abAttackUseLightSpell[$iMatchMode] Or $g_bSmartZapEnable Then Return True
+					If $g_abAttackUseLightSpell[$iMatchMode] Or $g_bSmartZapEnable Then Return True 
+				; Smart Farm - Team AIO Mod++
 				Case $eHSpell
-					If $g_abAttackUseHealSpell[$iMatchMode] Then Return True
+                    If $g_abAttackUseHealSpell[$iMatchMode] Or $g_bSmartFarmSpellsEnable Or $g_abAttackStdSmartDropSpells[$g_iMatchMode] Then Return True 
+				; Smart Farm - Team AIO Mod++
 				Case $eRSpell
-					If $g_abAttackUseRageSpell[$iMatchMode] Then Return True
+                    If $g_abAttackUseRageSpell[$iMatchMode] Or $g_bSmartFarmSpellsEnable Or $g_abAttackStdSmartDropSpells[$g_iMatchMode] Then Return True
+				; Smart Milk - Team AIO Mod++
 				Case $eJSpell
-					If $g_abAttackUseJumpSpell[$iMatchMode] Then Return True
+					If $g_abAttackUseJumpSpell[$iMatchMode] Or ($g_iMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 3) Then Return True
 				Case $eFSpell
 					If $g_abAttackUseFreezeSpell[$iMatchMode] Then Return True
 				Case $ePSpell

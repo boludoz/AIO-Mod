@@ -332,3 +332,54 @@ Func ChkBuilderPotion()
 	GUICtrlSetState($g_hCmbInputBuilderPotion, GUICtrlRead($g_hChkBuilderPotion) = $GUI_CHECKED ? $GUI_ENABLE : $GUI_DISABLE)
 EndFunc   ;==>ChkBuilderPotion
 #EndRegion - Magic Items - Team AIO Mod++
+
+#Region - SmartMilk
+Func cmbmilkstrategyarmy()
+	$g_imilkstrategyarmy = _guictrlcombobox_getcursel($g_hcmbmilkstrategyarmy)
+	cmbmilkstrategyarmytips()
+	_guictrlsetimage($g_ahpicmilk, $g_slibiconpath, $g_hicnmilk[$g_imilkstrategyarmy])
+EndFunc
+
+Func cmbmilkstrategyarmytips()
+	Local $stxttip = "You can use, Barbarians, Archers, Giants, Goblins, Minions, " & @CRLF & " Baby Dragons,Super Barbarians, Sneaky Goblins and Super Wall Breakers"
+	Switch $g_imilkstrategyarmy
+		Case 0
+			$stxttip = "Full Baby Dragons, deploying one on each resource" & @CRLF & "with distance to use 'enraged' ability"
+		Case 1
+			$stxttip = "Full barbarians, deploying 3~6 on each resource"
+		Case 2
+			$stxttip = "Full archers, deploying 3~6 on each resource"
+		Case 3
+			$stxttip = "GiBarch strategy, 1~2 Giant to Tank and barb+archers to take down the resource"
+		Case 4
+			$stxttip = "Full goblins, deploying 5~8 on each 'outside' resource"
+		Case 5
+			$stxttip = "Full Minions, deploying 4~6 on each resource"
+		Case 6
+			$stxttip = "Full Super Barbarians, deploying 2~3 on each resource"
+		Case 7
+			$stxttip = "Full Sneaky Goblins, deploying 2~3 on each resource" & @CRLF & "you can use Super WallBrakers to get inside resources"
+		Case Else
+			$stxttip = "You can use, Barbarians, Archers, Giants, Goblins, Minions," & @CRLF & "Baby Dragons,Super Barbarians, Sneaky Goblins and Super Wall Breakers"
+	EndSwitch
+	_guictrlsettip($g_hcmbmilkstrategyarmy, $stxttip)
+EndFunc
+
+Func milkforcedeployheroes()
+	$g_bchkmilkforcedeployheroes = (GUICtrlRead($g_hchkmilkforcedeployheroes) = $gui_checked)
+	$g_bchkmilkforcealltroops = (GUICtrlRead($g_hchkmilkforcealltroops) = $gui_checked)
+EndFunc
+
+Func milkforceth()
+	$g_bchkmilkforceth = (GUICtrlRead($g_hchkmilkforceth) = $gui_checked)
+EndFunc
+
+Func debugsmartattacks()
+	$g_bdebugsmartmilk = (GUICtrlRead($g_hchkdebugsmartmilk) = $gui_checked)
+	$g_bdebugsmartfarm = (GUICtrlRead($g_hchkdebugsmartfarm) = $gui_checked)
+EndFunc
+
+Func cmbmilkdelay()
+	$g_imilkdelay = Int(_guictrlcombobox_getcursel($g_hcmbmilkdelays))
+EndFunc
+#EndRegion - SmartMilk

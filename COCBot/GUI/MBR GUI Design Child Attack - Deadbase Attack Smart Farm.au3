@@ -26,7 +26,7 @@ Func CreateAttackSearchDeadBaseSmartFarm()
 	Local $sTxtTip = ""
 	Local $x = 25, $y = 20
 		GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "Group_01", "Options"), $x - 20, $y - 20, 270, $g_iSizeHGrpTab4)
-		
+
 		#Region - Custom SmartFarm - Team AIO Mod++
 		$y += 25
 			GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "Lbl-CmbStandardUnitDelay", "Delay Unit"), $x + 25, $y + 25, -1, -1)
@@ -55,7 +55,7 @@ Func CreateAttackSearchDeadBaseSmartFarm()
 		$g_hChkSmartFarmAndRandomDeploy = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Standard", "RandomDP_02", "Random drop points along line."), $x, $y, -1, -1)
 				_GUICtrlSetTip(-1, $sTxtTip)
 				; GUICtrlSetOnEvent(-1, "UseSmartFarmAndRandomDeploy")
-		
+
 		$y += 20
 		$g_hChkSmartFarmAndRandomQuant = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "ChkSmartFarmAndRandomQuant", "Use Random Troops Quant by side"), $x, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "ChkSmartFarmAndRandomDeploy_Info_03", "Will random deploy quantities each side from Barb, Arch, Wiza, Mini and Gobl"))
@@ -83,7 +83,7 @@ Func CreateAttackSearchDeadBaseSmartFarm()
 			GUICtrlSetData(-1, "1|2|3|4", "4")
 			GUICtrlSetOnEvent(-1, "chkMaxSidesSF")
 		#EndRegion - Custom SmartFarm - Team AIO Mod++
-		
+
 		$y += 40
 			GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "Lbl-TxtInsidePercentage", "Inside resources") & ":", $x, $y + 2, -1, -1)
 			$g_hTxtInsidePercentage = _GUICtrlCreateInput("65" , $x + 140, $y , 25 , -1)
@@ -104,3 +104,39 @@ Func CreateAttackSearchDeadBaseSmartFarm()
 		GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 EndFunc   ;==>CreateAttackSearchDeadBaseStandard
+
+#Region - SmartMilk
+Global $g_hgui_deadbase_attack_smartmilk = 0
+Global $g_hcmbmilkstrategyarmy = 0, $g_hchkdebugsmartmilk = 0, $g_hchkmilkforcedeployheroes = 0, $g_hchkmilkforcealltroops = 0, $g_hchkmilkforceth = 0, $g_hcmbmilkdelays = 0
+Global $g_hicnmilk[8] = [$eicnbabydragon, $eicnbarbarian, $eicnarcher, $eicngiant, $eicngoblin, $eicnminion, $eIcnSuperBarbarian, $eIcnSneakyGoblin], $g_ahpicmilk = 0
+
+Func createattacksearchdeadbasesmartmilk()
+	$g_hgui_deadbase_attack_smartmilk = _guicreate("", $_gui_main_width - 195, $g_isizehgrptab4, 150, 25, BitOR($ws_child, $ws_tabstop), -1, $g_hgui_deadbase)
+	Local $stxttip = "You can use, Barbarians, Archers, Giants, Goblins, Minions, " & @CRLF & " Baby Dragons, Super Barbarians, Sneak Goblins and Super Wall Breakers"
+	Local $x = 35, $y = 20
+	GUICtrlCreateGroup(gettranslatedfileini("MBR GUI Design Child Attack - Attack Smart Milk", "Group_01", "Options"), $x - 30, $y - 20, 270, $g_isizehgrptab4)
+	GUICtrlCreateLabel(gettranslatedfileini("MBR GUI Design Child Attack - Attack Smart Milk", "Lbl-CmbMilkStrategyArmy", "Army Composition Strategy") & ":", $x, $y + 5, -1, -1)
+	$g_ahpicmilk = _guictrlcreateicon($g_slibiconpath, $g_hicnmilk[$g_imilkstrategyarmy], $x, $y + 20, 32, 32)
+	$g_hcmbmilkstrategyarmy = GUICtrlCreateCombo("", $x + 40, $y + 25, 150, 21, BitOR($cbs_dropdownlist, $cbs_autohscroll))
+	_guictrlsettip(-1, $stxttip)
+	GUICtrlSetData(-1, "Full Baby Dragons|Full Barbs|Full Archs|Gibarch|Full Goblins|Full Minions|Full Super Barbarians|Full Sneaky Goblins", "Baby Dragons")
+	GUICtrlSetOnEvent(-1, "CmbMilkStrategyArmy")
+	$y += 60
+	$g_hchkmilkforcedeployheroes = GUICtrlCreateCheckbox(gettranslatedfileini("MBR GUI Design Child Attack - Attack Smart Milk", "ChkMilkForceDeployHeroes", "Force to Deploy Heroes/CC"), $x + 40, $y, -1, -1)
+	GUICtrlSetOnEvent(-1, "MilkForceDeployHeroes")
+	$g_hchkmilkforcealltroops = GUICtrlCreateCheckbox(gettranslatedfileini("MBR GUI Design Child Attack - Attack Smart Milk", "ChkMilkForceAllTroops", "Force to Deploy All Troops"), $x + 40, $y + 25, -1, -1)
+	GUICtrlSetOnEvent(-1, "MilkForceDeployHeroes")
+	$g_hchkmilkforceth = GUICtrlCreateCheckbox(gettranslatedfileini("MBR GUI Design Child Attack - Attack Smart Milk", "ChkMilkForceTH", "Force TH detection"), $x + 40, $y + 25 + 25, -1, -1)
+	_guictrlsettip(-1, gettranslatedfileini("MBR GUI Design Child Attack - Attack Smart Farm", "ChkMilkForceTH_Info_01", "Forcing TH detection, Town Hall sniping."))
+	GUICtrlSetOnEvent(-1, "MilkForceTH")
+	GUICtrlCreateLabel(gettranslatedfileini("MBR GUI Design Child Attack - Attack Smart Milk", "Lbl-CmbMilkDelay", "Speed Control") & ":", $x + 40, $y + 25 + 25 + 25, -1, -1)
+	_guictrlsettip(-1, gettranslatedfileini("MBR GUI Design Child Attack - Attack Smart Milk", "ChkMilkDelay_info_01", "Make the Script Faster or Slower! 0-Faster, 10-Slower"))
+	$g_hcmbmilkdelays = GUICtrlCreateCombo("", $x + 45, $y + 25 + 25 + 25 + 20, 50, 21, BitOR($cbs_dropdownlist, $cbs_autohscroll))
+	_guictrlsettip(-1, gettranslatedfileini("MBR GUI Design Child Attack - Attack Smart Milk", "ChkMilkDelay_info_01", "Make the Script Faster or Slower! 0-Faster, 10-Slower"))
+	GUICtrlSetData(-1, "00|01|02|03|04|05|06|07|08|09|10", "03")
+	GUICtrlSetOnEvent(-1, "CmbMilkDelay")
+	$g_hchkdebugsmartmilk = GUICtrlCreateCheckbox(gettranslatedfileini("MBR GUI Design Child Attack - Attack Smart Milk", "ChkDebugSmartMilk", "Debug Smart Milk"), $x, $g_isizehgrptab4 - 30, -1, -1)
+	GUICtrlSetOnEvent(-1, "DebugSmartAttacks")
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+EndFunc
+#EndRegion - SmartMilk

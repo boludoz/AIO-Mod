@@ -800,9 +800,10 @@ Func BattleIsOver()
 EndFunc   ;==>BattleIsOver
 
 ; Custom BB - Team AIO Mod++
-Func _ArraySearchCSV($aArray, $sTroop)
+Func _ArraySearchCSV($aArray, $sTroop, $iTol = Default)
+	If $iTol = Default Then $iTol = 60
 	For $i = 0 To UBound($aArray) - 1
-		If _CompareTexts($aArray[$i], $sTroop, 80, True) Then
+		If _CompareTexts($aArray[$i], $sTroop, $iTol, True) Then
 			Return $i
 		EndIf
 	Next

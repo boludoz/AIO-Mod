@@ -397,3 +397,16 @@ Func SaveConfig_MOD_Walls()
 	; <><><><> Village / Upgrade - Walls <><><><>
 	_ini_add("upgrade", "builderpriority", $g_bchkwallspriorities ? 1 : 0)
 EndFunc   ;==>SaveConfig_MOD_Walls
+
+#Region - Smart milk - Team AIO Mod++
+Func saveconfig_600_29_db_smartmilk()
+	If $g_imilkstrategyarmy < 0 Then $g_imilkstrategyarmy = 0
+	If $g_imilkdelay < 0 Then $g_imilkdelay = 0
+	_ini_add("SmartMilk", "MilkStrategyArmy", $g_imilkstrategyarmy)
+	_ini_add("SmartMilk", "MilkForceDeployHeroes", $g_bchkmilkforcedeployheroes)
+	_ini_add("SmartMilk", "ChkMilkForceAllTroops", $g_bchkmilkforcealltroops)
+	_ini_add("SmartMilk", "ChkMilkForceTH", $g_bchkmilkforceth)
+	_ini_add("SmartMilk", "MilkDelay", $g_imilkdelay)
+	_ini_add("SmartMilk", "DebugSmartMilk", $g_bdebugsmartmilk)
+EndFunc
+#EndRegion - Smart milk - Team AIO Mod++

@@ -1334,6 +1334,7 @@ Func ReadConfig_600_29_DB()
 	IniReadS($g_iTxtOutsidePercentage, $g_sProfileConfigPath, "SmartFarm", "OutsidePercentage", 80, "int")
 	IniReadS($g_bDebugSmartFarm, $g_sProfileConfigPath, "SmartFarm", "DebugSmartFarm", False, "Bool")
 
+	Readconfig_600_29_DB_SmartMilk()
 EndFunc   ;==>ReadConfig_600_29_DB
 
 Func ReadConfig_600_29_LB()

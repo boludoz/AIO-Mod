@@ -85,6 +85,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	Local $sLastObj = "Barbarian", $sTmp
 	Local $aFakeCsv[1]
 	Do
+		If Not $g_bRunState Then Return
 		Switch $iModeAttack
 			
 			; CSV
@@ -184,12 +185,13 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 
 	Local $iSlotWidth = 72
 	Local $iDefaultY = 708
-	Local $iCampsQuantities = Ubound($aAvailableTroops)
-	Local $aSwicthBtn[0]
-	For $z = 0 To Ubound($aAvailableTroops) - 1
-		ReDim $aSwicthBtn[$z+1]
-		$aSwicthBtn[$z] = $aAvailableTroops[$z][1] + 5
+	Local $aSwicthBtn[6] = [105, 180, 252, 324, 397, 469]
+	
+	Local $iCampsQuantities = 0
+	For $i = 0 To UBound($aAvailableTroops) - 1
+		If $aAvailableTroops[$i][0] <> "Machine" Then $iCampsQuantities += 1
 	Next
+	
 	Setlog("Available " & $iCampsQuantities & " Camps.", $COLOR_INFO)
 
 	Local $aCamps[0], $aCampsFake[0], $iLast = -1, $bOkCamps = False

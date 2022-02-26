@@ -1673,7 +1673,6 @@ Func ApplyConfig_600_29_DB($TypeReadSave)
 	Switch $TypeReadSave
 		Case "Read"
 			; Attack
-			If $g_aiAttackAlgorithm[$DB] > 2 Then $g_aiAttackAlgorithm[$DB] = 2 ; AIO
 			_GUICtrlComboBox_SetCurSel($g_hCmbDBAlgorithm, $g_aiAttackAlgorithm[$DB])
 			cmbDBAlgorithm()
 			_GUICtrlComboBox_SetCurSel($g_hCmbDBSelectTroop, $g_aiAttackTroopSelection[$DB])
@@ -1707,7 +1706,6 @@ Func ApplyConfig_600_29_DB($TypeReadSave)
 			_GUICtrlComboBox_SetCurSel($g_hCmbDBSiege, $g_aiAttackUseSiege[$DB])
 		Case "Save"
 			$g_aiAttackAlgorithm[$DB] = _GUICtrlComboBox_GetCurSel($g_hCmbDBAlgorithm)
-			If $g_aiAttackAlgorithm[$DB] > 2 Then $g_aiAttackAlgorithm[$DB] = 2 ; AIO
 			$g_aiAttackTroopSelection[$DB] = _GUICtrlComboBox_GetCurSel($g_hCmbDBSelectTroop)
 			Local $temp1, $temp2, $temp3, $temp4
 			$temp1 = GUICtrlRead($g_hChkDBKingAttack) = $GUI_CHECKED ? $eHeroKing : $eHeroNone
@@ -1736,6 +1734,8 @@ Func ApplyConfig_600_29_DB($TypeReadSave)
 	ApplyConfig_600_29_DB_Standard($TypeReadSave)
 	ApplyConfig_600_29_DB_Scripted($TypeReadSave)
 	ApplyConfig_600_29_DB_SmartFarm($TypeReadSave)
+	ApplyConfig_600_29_DB_SmartMilk($TypeReadSave)
+
 EndFunc   ;==>ApplyConfig_600_29_DB
 
 Func ApplyConfig_600_29_DB_Standard($TypeReadSave)

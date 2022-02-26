@@ -1,6 +1,6 @@
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: dropHeroes
-; Description ...: Will drop heroes in a specific coordinates, only if slot is not -1,Only drops when option is clicked.
+; Description ...: Will drop heroes in a specific coordinates, only if slot is Not -1,Only drops when option is clicked.
 ; Syntax ........: dropHeroes($x, $y, $iKingSlot = -1, $iQueenSlot = -1, $iWardenSlot = -1, $iChampionSlot = -1)
 ; Parameters ....: $x                   - an unknown value.
 ;                  $y                   - an unknown value.
@@ -16,103 +16,273 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func dropHeroes($iX, $iY, $iKingSlotNumber = -1, $iQueenSlotNumber = -1, $iWardenSlotNumber = -1, $iChampionSlotNumber = -1, $bSmartFarm = False) ;Drops for All Heroes
-	SetDebugLog("dropHeroes $iKingSlotNumber " & $iKingSlotNumber & " $iQueenSlotNumber " & $iQueenSlotNumber & " $iWardenSlotNumber " & $iWardenSlotNumber & " $iChampionSlotNumber " & $iChampionSlotNumber & " matchmode " & $g_iMatchMode, $COLOR_DEBUG)
-	If _Sleep($DELAYDROPHEROES1) Then Return
-	Local $bDropKing = False
-	Local $bDropQueen = False
-	Local $bDropWarden = False
-	Local $bDropChampion = False
-		
-	#Region - Custom remain - Team AIO Mod++
-	If not $g_bRemainTweak Then
-		;use hero if  slot (detected ) and ( ($g_iMatchMode <>DB and <>LB  ) or (check user GUI settings) )
-		If $iKingSlotNumber <> -1 And (($g_iMatchMode <> $DB And $g_iMatchMode <> $LB) Or BitAND($g_aiAttackUseHeroes[$g_iMatchMode], $eHeroKing) = $eHeroKing) Then $bDropKing = True
-		If $iQueenSlotNumber <> -1 And (($g_iMatchMode <> $DB And $g_iMatchMode <> $LB) Or BitAND($g_aiAttackUseHeroes[$g_iMatchMode], $eHeroQueen) = $eHeroQueen) Then $bDropQueen = True
-		If $iWardenSlotNumber <> -1 And (($g_iMatchMode <> $DB And $g_iMatchMode <> $LB) Or BitAND($g_aiAttackUseHeroes[$g_iMatchMode], $eHeroWarden) = $eHeroWarden) Then $bDropWarden = True
-		If $iChampionSlotNumber <> -1 And (($g_iMatchMode <> $DB And $g_iMatchMode <> $LB) Or BitAND($g_aiAttackUseHeroes[$g_iMatchMode], $eHeroChampion) = $eHeroChampion) Then $bDropChampion = True
+Func dropheroes($x, $y, $kingslot = -1, $queenslot = -1, $wardenslot = -1, $championslot = -1, $smartfarm = False, $bsmartmilk = False)
+	If $g_bdebugsetlog Then setdebuglog("dropHeroes KingSlot " & $kingslot & " QueenSlot " & $queenslot & " WardenSlot " & $wardenslot & " ChampionSlot " & $championslot & " matchmode " & $g_imatchmode, $color_debug)
+	If _sleep($delaydropheroes1) Then Return 
+	If $g_bAttackClickFC And $y > 485 + 88 And $x < 450 + 88 Then
+		$y = 480 + 88
+		setdebuglog("First Hero Deploy attack Protection")
+		$g_bAttackClickFC = False
+	EndIf
+	Local $bdropking = False
+	Local $bdropqueen = False
+	Local $bdropwarden = False
+	Local $bdropchampion = False
+	If $kingslot <> -1 AND (($g_imatchmode <> $db AND $g_imatchmode <> $lb) OR BitAND($g_aiattackuseheroes[$g_imatchmode], $eheroking) = $eheroking) Then $bdropking = True
+	If $queenslot <> -1 AND (($g_imatchmode <> $db AND $g_imatchmode <> $lb) OR BitAND($g_aiattackuseheroes[$g_imatchmode], $eheroqueen) = $eheroqueen) Then $bdropqueen = True
+	If $wardenslot <> -1 AND (($g_imatchmode <> $db AND $g_imatchmode <> $lb) OR BitAND($g_aiattackuseheroes[$g_imatchmode], $eherowarden) = $eherowarden) Then $bdropwarden = True
+	If $championslot <> -1 AND (($g_imatchmode <> $db AND $g_imatchmode <> $lb) OR BitAND($g_aiattackuseheroes[$g_imatchmode], $eherochampion) = $eherochampion) Then $bdropchampion = True
+	If $g_bdebugsetlog Then setdebuglog("drop KING = " & $bdropking, $color_debug)
+	If $g_bdebugsetlog Then setdebuglog("drop QUEEN = " & $bdropqueen, $color_debug)
+	If $g_bdebugsetlog Then setdebuglog("drop WARDEN = " & $bdropwarden, $color_debug)
+	If $g_bdebugsetlog Then setdebuglog("drop CHAMPION = " & $bdropchampion, $color_debug)
+	Local $deplay = 100
+	If $smartfarm Then $deplay = Random(1, 2, 1) * 1000
+	If $bsmartmilk Then
+		If $g_bdebugsetlog Then setdebuglog("$deplay: " & $deplay)
+		setdebuglog("Deploy Warden -> King -> Queen -> Champion")
+		dropwarden($bdropwarden, $wardenslot, $x, $y)
+		If _sleep($deplay) Then Return 
+		dropking($bdropking, $kingslot, $x, $y)
+		If _sleep($deplay) Then Return 
+		dropqueen($bdropqueen, $queenslot, $x, $y)
+		If _sleep($deplay) Then Return 
+		dropchampion($bdropchampion, $championslot, $x, $y)
 	Else
-		;use hero if  slot (detected ) and ( ($g_iMatchMode <>DB and <>LB  ) or (check user GUI settings) )
-		If $iKingSlotNumber <> -1 Then $bDropKing = True
-		If $iQueenSlotNumber <> -1 Then $bDropQueen = True
-		If $iWardenSlotNumber <> -1 Then $bDropWarden = True
-		If $iChampionSlotNumber <> -1 Then $bDropChampion = True
-		$g_bRemainTweak = False
+		Local $bRandom = Random(0, 100, 1) > 50
+		Switch $bRandom
+			Case True
+				dropking($bdropking, $kingslot, $x, $y)
+				If _sleep($deplay) Then Return 
+				dropqueen($bdropqueen, $queenslot, $x, $y)
+				If _sleep($deplay) Then Return 
+				setdebuglog("Deploy King -> Queen -> Warden -> Champion")
+			Case Else
+				dropqueen($bdropqueen, $queenslot, $x, $y)
+				If _sleep($deplay) Then Return 
+				dropking($bdropking, $kingslot, $x, $y)
+				If _sleep($deplay) Then Return 
+				setdebuglog("Deploy Queen -> King -> Warden -> Champion")
+		EndSwitch
+		If $g_bdebugsetlog Then setdebuglog("$deplay: " & $deplay)
+		If $g_bdebugsetlog Then setdebuglog("Warden Slot x: " & $wardenslot)
+		dropwarden($bdropwarden, $wardenslot, $x, $y)
+		If _sleep($deplay) Then Return 
+		If $g_bdebugsetlog Then setdebuglog("Champ Slot x: " & $wardenslot)
+		dropchampion($bdropchampion, $championslot, $x, $y)
 	EndIf
-	#EndRegion - Custom remain - Team AIO Mod++
+EndFunc
 
-	SetDebugLog("drop KING = " & $bDropKing, $COLOR_DEBUG)
-	SetDebugLog("drop QUEEN = " & $bDropQueen, $COLOR_DEBUG)
-	SetDebugLog("drop WARDEN = " & $bDropWarden, $COLOR_DEBUG)
-	SetDebugLog("drop CHAMPION = " & $bDropChampion, $COLOR_DEBUG)
-
-	If $bDropKing Then
-		SetLog("Dropping King at " & $iX & ", " & $iY, $COLOR_INFO)
-		SelectDropTroop($iKingSlotNumber, 1, Default, False)
-		If _Sleep($DELAYDROPHEROES2) Then Return
-		AttackClick($iX, $iY, 1, 0, 0, "#0093")
-		If Not $g_bDropKing Then ; check global flag, only begin hero health check on 1st hero drop as flag is reset to false after activation
-			$g_bCheckKingPower = True
-		Else
-			SetDebugLog("King dropped 2nd time, Check Power flag not changed") ; do nothing as hero already dropped
-		EndIf
-		$g_bDropKing = True ; Set global flag hero dropped
-		$g_aHeroesTimerActivation[$eHeroBarbarianKing] = __TimerInit() ; initialize fixed activation timer
-		If _Sleep($DELAYDROPHEROES1) Then Return
+Func dropking($bdropking, $kingslot, $x, $y)
+	If $bdropking AND Not $g_bdropking Then
+		Local $htimer = __timerinit()
+		SetLog("Dropping King", $color_info)
+		Local $ikingslotclickx = getxposofarmyslot($kingslot, True)
+		selectdroptroop($kingslot)
+		For $i = 0 To 2
+			If _wait4pixel($ikingslotclickx, 723, 0xFFFFFF, 1, 2000, "IsKingSlotSelected", 100) Then
+				If $i = 0 Then attackclick($x, $y, 1, 0, 0, "#x999")
+				If $i = 1 Then
+					$x += Random(-10, 10, 1)
+					$y += Random(-10, 10, 1)
+					setdebuglog("Trying a diff deploy position. (" & $x & "," & $y & ")", $color_info)
+					attackclick($x, $y, 1, 0, 0, "#x999")
+				EndIf
+				If _wait4pixelgone($ikingslotclickx, 723, 0xFFFFFF, 1, 1500, "IsKingDropped", 100) Then
+					setdebuglog("King Took " & Round(__timerdiff($htimer)) & " ms To Get Dropped", $color_success)
+					$g_bcheckkingpower = True
+					$g_bdropking = True
+					$g_aheroestimeractivation[$eherobarbarianking] = __timerinit()
+					ExitLoop
+				Else
+					SetLog("Something Happened King Not Dropped", $color_info)
+				EndIf
+			Else
+				SetLog("Something Happened Bot Unable To Select King Slot", $color_info)
+				selectdroptroop($kingslot)
+			EndIf
+			If _sleep(1000) Then Return 
+			If $i = 1 Then
+				SetLog("Error selecting/deploying the King", $color_debug)
+				If Not isdropredarea("King") Then
+					savedebugimage("DropKing")
+				Else
+					betterpoint2deploy($x, $y)
+				EndIf
+			EndIf
+		Next
+	ElseIf $bdropking AND $g_bdropking AND $g_bcheckkingpower Then
+		SetLog("Forcing King's ability on request", $color_info)
+		selectdroptroop($kingslot)
+		$g_icsvlasttrooppositiondroptroopfromini = $g_ikingslot
+		$g_bcheckkingpower = False
+	ElseIf $bdropking Then
+		setdebuglog("Do Nothing as King already dropped.")
 	EndIf
+EndFunc
 
-	If _Sleep($DELAYDROPHEROES1) Then Return
-
-	If $bDropQueen Then
-		SetLog("Dropping Queen at " & $iX & ", " & $iY, $COLOR_INFO)
-		SelectDropTroop($iQueenSlotNumber, 1, Default, False)
-		If _Sleep($DELAYDROPHEROES2) Then Return
-		AttackClick($iX, $iY, 1, 0, 0, "#0095")
-		If Not $g_bDropQueen Then ; check global flag, only begin hero health check on 1st hero drop as flag is reset to false after activation
-			$g_bCheckQueenPower = True
-		Else
-			SetDebugLog("Queen dropped 2nd time, Check Power flag not changed") ; do nothing as hero already dropped
-		EndIf
-		$g_bDropQueen = True ; Set global flag hero dropped
-		$g_aHeroesTimerActivation[$eHeroArcherQueen] = __TimerInit() ; initialize fixed activation timer
-		If _Sleep($DELAYDROPHEROES1) Then Return
+Func dropqueen($bdropqueen, $queenslot, $x, $y)
+	If $bdropqueen AND Not $g_bdropqueen Then
+		Local $htimer = __timerinit()
+		SetLog("Dropping Queen", $color_info)
+		Local $iqueenslotclickx = getxposofarmyslot($queenslot, True)
+		selectdroptroop($queenslot)
+		For $i = 0 To 2
+			If _wait4pixel($iqueenslotclickx, 723, 0xFFFFFF, 1, 2000, "IsQueenSlotSelected", 100) Then
+				If $i = 0 Then attackclick($x, $y, 1, 0, 0, "#x999")
+				If $i = 1 Then
+					$x += Random(-10, 10, 1)
+					$y += Random(-10, 10, 1)
+					setdebuglog("Trying a diff deploy position. (" & $x & "," & $y & ")", $color_info)
+					attackclick($x, $y, 1, 0, 0, "#x999")
+				EndIf
+				If _wait4pixelgone($iqueenslotclickx, 723, 0xFFFFFF, 1, 1500, "IsQueenDropped", 100) Then
+					setdebuglog("Queen Took " & Round(__timerdiff($htimer)) & " ms To Get Dropped", $color_success)
+					$g_bcheckqueenpower = True
+					$g_bdropqueen = True
+					$g_aheroestimeractivation[$eheroarcherqueen] = __timerinit()
+					ExitLoop
+				Else
+					SetLog("Something Happened Queen Not Dropped", $color_info)
+				EndIf
+			Else
+				SetLog("Something Happened Bot Unable To Select Queen Slot", $color_info)
+				selectdroptroop($queenslot)
+			EndIf
+			If _sleep(1000) Then Return 
+			If $i = 1 Then
+				SetLog("Error selecting/deploying the Queen", $color_debug)
+				If Not isdropredarea("Queen") Then
+					SaveDebugImage("DropQueen")
+				Else
+					betterpoint2deploy($x, $y)
+				EndIf
+			EndIf
+		Next
+	ElseIf $bdropqueen AND $g_bdropqueen AND $g_bcheckqueenpower Then
+		SetLog("Forcing Queen's ability on request", $color_info)
+		selectdroptroop($queenslot)
+		$g_icsvlasttrooppositiondroptroopfromini = $g_iqueenslot
+		$g_bcheckqueenpower = False
+	ElseIf $bdropqueen Then
+		setdebuglog("Do Nothing as Queen already dropped.")
 	EndIf
+EndFunc
 
-	If _Sleep($DELAYDROPHEROES1) Then Return
-
-	If $bDropWarden Then
-		SetLog("Dropping Grand Warden at " & $iX & ", " & $iY, $COLOR_INFO)
-		SelectDropTroop($iWardenSlotNumber, 1, Default, False)
-		If _Sleep($DELAYDROPHEROES2) Then Return
-		AttackClick($iX, $iY, 1, 0, 0, "#x999")
-		If Not $g_bDropWarden Then ; check global flag, only begin hero health check on 1st hero drop as flag is reset to false after activation
-			$g_bCheckWardenPower = True
-		Else
-			SetDebugLog("Warden dropped 2nd time, Check Power flag not changed") ; do nothing as hero already dropped
-		EndIf
-		$g_bDropWarden = True ; Set global flag hero dropped
-		$g_aHeroesTimerActivation[$eHeroGrandWarden] = __TimerInit() ; initialize fixed activation timer
-		If _Sleep($DELAYDROPHEROES1) Then Return
+Func dropwarden($bdropwarden, $wardenslot, $x, $y)
+	If $bdropwarden AND Not $g_bdropwarden Then
+		Local $htimer = __timerinit()
+		SetLog("Dropping Grand Warden", $color_info)
+		Local $iwardenslotclickx = getxposofarmyslot($wardenslot, True) - 11
+		selectdroptroop($wardenslot)
+		For $i = 0 To 2
+			setdebuglog("Warden Slot check white : " & $iwardenslotclickx & "," & 723)
+			If _wait4pixel($iwardenslotclickx, 723, 0xFFFFFF, 1, 2000, "IsWardenSlotSelected", 100) Then
+				If $i = 0 Then attackclick($x, $y, 1, 0, 0, "#x999")
+				If $i = 1 Then
+					$x += Random(-10, 10, 1)
+					$y += Random(-10, 10, 1)
+					setdebuglog("Trying a diff deploy position. (" & $x & "," & $y & ")", $color_info)
+					attackclick($x, $y, 1, 0, 0, "#x999")
+				EndIf
+				If _wait4pixelgone($iwardenslotclickx, 723, 0xFFFFFF, 1, 1500, "IsWardenDropped", 100) Then
+					setdebuglog("Grand Warden Took " & Round(__timerdiff($htimer)) & " ms To Get Dropped", $color_success)
+					$g_bcheckwardenpower = True
+					$g_bdropwarden = True
+					$g_aheroestimeractivation[$eherograndwarden] = __timerinit()
+					ExitLoop
+				Else
+					SetLog("Something Happened Warden Not Dropped", $color_info)
+				EndIf
+			Else
+				SetLog("Something Happened Bot Unable To Select Warden Slot", $color_info)
+				selectdroptroop($wardenslot)
+			EndIf
+			If _sleep(1000) Then Return 
+			If $i = 1 Then
+				SetLog("Error selecting/deploying the Warden", $color_debug)
+				If Not isdropredarea("Warden") Then
+					SaveDebugImage("DropWarden")
+				Else
+					betterpoint2deploy($x, $y)
+				EndIf
+			EndIf
+		Next
+	ElseIf $bdropwarden AND $g_bdropwarden AND $g_bcheckwardenpower Then
+		SetLog("Forcing Warden's ability on request", $color_info)
+		selectdroptroop($wardenslot)
+		$g_icsvlasttrooppositiondroptroopfromini = $g_iwardenslot
+		$g_bcheckwardenpower = False
+	ElseIf $bdropwarden Then
+		setdebuglog("Do Nothing as Warden already dropped.")
 	EndIf
+EndFunc
 
-	If _Sleep($DELAYDROPHEROES1) Then Return
-
-	If $bDropChampion Then
-		SetLog("Dropping Royal Champion at " & $iX & ", " & $iY, $COLOR_INFO)
-		SelectDropTroop($iChampionSlotNumber, 1, Default, False)
-		If _Sleep($DELAYDROPHEROES2) Then Return
-		AttackClick($iX, $iY, 1, 0, 0, "#x999")
-		If Not $g_bDropChampion Then ; check global flag, only begin hero health check on 1st hero drop as flag is reset to false after activation
-			$g_bCheckChampionPower = True
-		Else
-			SetDebugLog("Royal Champion dropped 2nd time, Check Power flag not changed") ; do nothing as hero already dropped
-		EndIf
-		$g_bDropChampion = True ; Set global flag hero dropped
-		$g_aHeroesTimerActivation[$eHeroRoyalChampion] = __TimerInit() ; initialize fixed activation timer
-		If _Sleep($DELAYDROPHEROES1) Then Return
+Func dropchampion($bdropchampion, $championslot, $x, $y)
+	If $bdropchampion AND Not $g_bdropchampion Then
+		Local $htimer = __timerinit()
+		SetLog("Dropping Royal Champion", $color_info)
+		Local $ichampionslotclickx = getxposofarmyslot($championslot, True)
+		selectdroptroop($championslot)
+		For $i = 0 To 2
+			setdebuglog("Champ Slot check white : " & $ichampionslotclickx & "," & 723)
+			If _wait4pixel($ichampionslotclickx, 723, 0xFFFFFF, 1, 2000, "IsChampionSlotSelected", 100) Then
+				If $i = 0 Then attackclick($x, $y, 1, 0, 0, "#x999")
+				If $i = 1 Then
+					$x += Random(-10, 10, 1)
+					$y += Random(-10, 10, 1)
+					setdebuglog("Trying a diff deploy position. (" & $x & "," & $y & ")", $color_info)
+					attackclick($x, $y, 1, 0, 0, "#x999")
+				EndIf
+				If _wait4pixelgone($ichampionslotclickx, 723, 0xFFFFFF, 1, 1500, "IsChampionDropped", 100) Then
+					setdebuglog("Royal Champion Took " & Round(__timerdiff($htimer)) & " ms To Get Dropped", $color_success)
+					$g_bcheckchampionpower = True
+					$g_bdropchampion = True
+					$g_aheroestimeractivation[$eheroroyalchampion] = __timerinit()
+					ExitLoop
+				Else
+					SetLog("Something Happened Champion Not Dropped", $color_info)
+				EndIf
+			Else
+				SetLog("Something Happened Bot Unable To Select Champion Slot", $color_info)
+				selectdroptroop($championslot)
+			EndIf
+			If _sleep(1000) Then Return 
+			If $i = 1 Then
+				SetLog("Error selecting/deploying the Champion", $color_debug)
+				If Not isdropredarea("Champion") Then
+					SaveDebugImage("DropChampion")
+				Else
+					betterpoint2deploy($x, $y)
+				EndIf
+			EndIf
+		Next
+	ElseIf $bdropchampion AND $g_bdropchampion AND $g_bcheckchampionpower Then
+		SetLog("Forcing Champion's ability on request", $color_info)
+		selectdroptroop($championslot)
+		$g_icsvlasttrooppositiondroptroopfromini = $g_ichampionslot
+		$g_bcheckchampionpower = False
+	ElseIf $bdropchampion Then
+		setdebuglog("Do Nothing as Champion already dropped.")
 	EndIf
+EndFunc
 
-EndFunc   ;==>dropHeroes
-
-
-
+Func betterpoint2deploy(ByRef $x, ByRef $y)
+	Local $pixel[2] = [$x, $y]
+	Local $j4534 = side($pixel)
+	Switch $j4534
+		Case "TL"
+			$x -= 10
+			$y -= 10
+		Case "TR"
+			$x += 10
+			$y -= 10
+		Case "BL"
+			$x -= 15
+			$y += 15
+		Case "BR"
+			$x += 15
+			$y += 15
+	EndSwitch
+	setdebuglog("New coordinate is (" & $x & "," & $y & ")")
+EndFunc

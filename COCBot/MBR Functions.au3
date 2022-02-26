@@ -34,6 +34,8 @@
 #include "functions\Attack\Attack Algorithms\algorithm_AllTroops.au3"
 #include "functions\Attack\Attack Algorithms\AttackFromCSV.au3"
 #include "functions\Attack\Attack Algorithms\SmartFarm.au3"
+; AIO
+#include "functions\Attack\Attack Algorithms\SmartMilk.au3"
 
 #include "functions\Attack\AttackCSV\AttackCSVDebugImage.au3"
 #include "functions\Attack\AttackCSV\CheckCSVValues.au3"

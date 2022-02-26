@@ -148,6 +148,7 @@ EndFunc   ;==>IsDir
 Func IsFile($sFilePath)
 	Return (FileGetSize($sFilePath) > 0 and not @error)
 EndFunc   ;==>IsDir
+
 Func SecureClick($x, $y)
 	If $x < 68 And $y > 316 Then ; coordinates where the game will click on the CHAT tab (safe margin)
 		SetDebugLog("Coordinate Inside Village, but Exclude CHAT")

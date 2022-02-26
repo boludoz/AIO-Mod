@@ -1765,13 +1765,13 @@ Global $g_iESpellLevel = 1
 Global $g_iRSpellLevel = 1 ; Team AIO Mod++
 Global $g_iHSpellLevel = 1 ; Team AIO Mod++
 Global Const $g_fDarkStealFactor = 0.75
-Global Const $g_fDarkFillLevel = 0.70
+Global Const $g_fDarkFillLevel = 0.7
 ; Array to hold Total HP of DE Drills at each level (1-8)
-Global Const $g_aDrillLevelHP[8] = [800, 860, 920, 980, 1060, 1160, 1280, 1380]
+Global Const $g_aDrillLevelHP[9] = [800, 860, 920, 980, 1060, 1160, 1280, 1380, 1480] ; Team AIO Mod++
 ; Array to hold Total Amount of DE available from Drill at each level (1-8)
-Global Const $g_aDrillLevelTotal[8] = [160, 300, 540, 840, 1280, 1800, 2400, 3000]
+Global Const $g_aDrillLevelTotal[9] = [160, 300, 540, 840, 1280, 1800, 2400, 3000, 3600] ; Team AIO Mod++
 ; Array to hold Total Damage of Lightning Spell at each level (1-9)
-Global Const $g_aLSpellDmg[9] = [150, 180, 210, 240, 270, 320, 400, 480, 560]
+Global Const $g_aLSpellDmg[9] = [150, 180, 210, 240, 270, 320, 400, 480, 560] ; Team AIO Mod++
 ; Array to hold Total Damage of Earthquake Spell at each level (1-5)
 Global Const $g_aEQSpellDmg[5] = [0.14, 0.17, 0.21, 0.25, 0.29]
 
@@ -1996,6 +1996,12 @@ Global Const $g_aiPetUpgradeCostPerLevel[$ePetCount][$g_ePetLevels] = [ _
 		[0, 135, 150, 165, 180, 195, 210, 225, 240, 255], _  ; Electro Owl
 		[0, 165, 185, 205, 225, 245, 255, 265, 275, 285], _  ; Mighty Yak
         [0, 210, 220, 230, 240, 250, 260, 270, 280, 290]]    ; Unicorn
+
+; TH
+Global $IMGLOCTHLOCATION
+Global $IMGLOCTHNEAR
+Global $IMGLOCTHFAR
+Global $IMGLOCTHRDISTANCE
 
 ; Team AiO MOD++ (2019)
 #include "Team__AiO__MOD++\Globals_Team__AiO__MOD++.au3"

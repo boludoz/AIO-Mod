@@ -748,3 +748,13 @@ Next
 #Region - Custom Wall - Team AIO Mod++
 Global $g_hchkwallspriorities = 0, $g_bchkwallspriorities = False
 #EndRegion - Custom Wall - Team AIO Mod++
+
+#Region - SmartMilk
+Global $g_bDebugSmartMilk = False, $g_bChkMilkForceDeployHeroes = False, $g_bChkMilkForceAllTroops = False, $g_iMilkStrategyArmy = 0, _
+	   $g_iMilkDelay = 3, $g_bMilksJumpSpells = False, $g_bChkmilkForceTH = False
+
+; Global $g_bChkByPassToSmartFarm = False, $g_bByPassSmartFarm = False
+#EndRegion - SmartMilk
+
+; Custom Fix - Team AIO Mod++
+Global $g_bAttackClickFC = False

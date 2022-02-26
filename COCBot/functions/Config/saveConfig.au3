@@ -1027,6 +1027,8 @@ Func SaveConfig_600_29_DB()
 
 	SaveConfig_600_29_DB_SmartFarm()
 
+	saveconfig_600_29_db_smartmilk() ; Smart milk - Team AIO Mod++
+
 EndFunc   ;==>SaveConfig_600_29_DB
 
 Func SaveConfig_600_29_DB_Standard()

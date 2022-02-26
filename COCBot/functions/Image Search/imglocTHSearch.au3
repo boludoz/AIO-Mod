@@ -14,11 +14,6 @@
 ; ===============================================================================================================================
 #include-once
 
-Global $IMGLOCTHLOCATION
-Global $IMGLOCTHNEAR
-Global $IMGLOCTHFAR
-Global $IMGLOCTHRDISTANCE
-
 Func imglocTHSearch($bReTest = False, $myVillage = False, $bForceCapture = True)
 	Local $xdirectorya = @ScriptDir & "\imgxml\Buildings\Townhall"
 	Local $xdirectoryb = @ScriptDir & "\imgxml\Buildings\Townhall2"

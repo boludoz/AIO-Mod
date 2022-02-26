@@ -255,8 +255,12 @@ EndFunc   ;==>GemClickP
 Func AttackClick($x, $y, $times = 1, $speed = 0, $afterDelay = 0, $debugtxt = "")
 	Local $timer = __TimerInit()
 	; Protect the Attack Bar
-	If $y > 555 + $g_iBottomOffsetY Then $y = 555 + $g_iBottomOffsetY
 	AttackRemainingTime(False) ; flag attack started
+	; Custom Fix - Team AIO Mod++
+	If $g_bAttackClickFC and $y > 555 + $g_iBottomOffsetY and $x < 450 Then
+		$g_bAttackClickFC = False
+		$y = 555 + $g_iBottomOffsetY
+	EndIf
 	Local $result = PureClick($x, $y, $times, $speed, $debugtxt)
 	Local $delay = $times * $speed + $afterDelay - __TimerDiff($timer)
 	If IsKeepClicksActive() = False And $delay > 0 Then _Sleep($delay, False)
@@ -299,7 +303,7 @@ Func ClickAway($sRegion = Default, $bForce = Default, $eTimes = Default)
 			$aiRegionToUse = $aiClickAwayRegionRight
 		EndIf
 	EndIf
-	
+
 	Local $aiSpot[2] = [Random($aiRegionToUse[0], $aiRegionToUse[2], 1), Random($aiRegionToUse[1], $aiRegionToUse[3], 1)]
 	If $g_bDebugClick = True Then
 		SetLog("ClickAway(): on X:" & $aiSpot[0] & ", Y:" & $aiSpot[1], $COLOR_ACTION)

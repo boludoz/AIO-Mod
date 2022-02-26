@@ -775,3 +775,28 @@ Func ApplyConfig_MOD_Walls($TypeReadSave)
 	EndIf
 EndFunc   ;==>ApplyConfig_MOD_Walls
 
+#Region - Smart milk - Team AIO Mod++
+Func ApplyConfig_600_29_DB_SmartMilk($TypeReadSave)
+	Switch $TypeReadSave
+		Case "Read"
+			If $g_imilkstrategyarmy < 0 Then $g_imilkstrategyarmy = 0
+			If $g_imilkdelay < 0 Then $g_imilkdelay = 0
+			_guictrlcombobox_setcursel($g_hcmbmilkstrategyarmy, $g_imilkstrategyarmy)
+			cmbmilkstrategyarmytips()
+			GUICtrlSetState($g_hchkmilkforcedeployheroes, $g_bchkmilkforcedeployheroes ? $gui_checked : $gui_unchecked)
+			GUICtrlSetState($g_hchkmilkforcealltroops, $g_bchkmilkforcealltroops ? $gui_checked : $gui_unchecked)
+			GUICtrlSetState($g_hchkdebugsmartmilk, $g_bdebugsmartmilk ? $gui_checked : $gui_unchecked)
+			GUICtrlSetState($g_hchkmilkforceth, $g_bchkmilkforceth ? $gui_checked : $gui_unchecked)
+			_guictrlsetimage($g_ahpicmilk, $g_slibiconpath, $g_hicnmilk[$g_imilkstrategyarmy])
+			_guictrlcombobox_setcursel($g_hcmbmilkdelays, $g_imilkdelay)
+		Case "Save"
+			$g_imilkstrategyarmy = _guictrlcombobox_getcursel($g_hcmbmilkstrategyarmy)
+			If $g_imilkstrategyarmy < 0 Then $g_imilkstrategyarmy = 0
+			$g_bchkmilkforcedeployheroes = (GUICtrlRead($g_hchkmilkforcedeployheroes) = $gui_checked)
+			$g_bchkmilkforcealltroops = (GUICtrlRead($g_hchkmilkforcealltroops) = $gui_checked)
+			$g_bdebugsmartmilk = (GUICtrlRead($g_hchkdebugsmartmilk) = $gui_checked)
+			$g_bchkmilkforceth = (GUICtrlRead($g_hchkmilkforceth) = $gui_checked)
+			$g_imilkdelay = _guictrlcombobox_getcursel($g_hcmbmilkdelays)
+	EndSwitch
+EndFunc   ;==>ApplyConfig_600_29_DB_SmartMilk
+#EndRegion - Smart milk - Team AIO Mod++
