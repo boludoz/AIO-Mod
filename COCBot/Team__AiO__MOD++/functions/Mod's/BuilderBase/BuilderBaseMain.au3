@@ -297,7 +297,7 @@ Func PlayBBOnly()
 EndFunc   ;==>PlayBBOnly
 
 Func ByPassedForceBBAttackOnClanGames($bByPassedContion = False, $bIfByPassReturn = True, $bCheckevent = False)
-	If $ForceBBAttackOnClanGames($bCheckevent) Then
+	If ForceBBAttackOnClanGames($bCheckevent) Then
 		Return $bIfByPassReturn
 	ElseIf SmartBuilderBase($bCheckevent) Then
 		Return $bIfByPassReturn
