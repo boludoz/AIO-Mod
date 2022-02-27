@@ -754,6 +754,8 @@ Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
 	If $bSCIDWindowOpened Then
 		If _Sleep(500) Then Return
 		For $iTry = 0 To 6
+			_CaptureRegion()
+			If _ColorCheck(_GetPixelColor(786, 340, False), Hex(0xF1F1F1, 6), 10) = True And _ColorCheck(_GetPixelColor(786, 357, False), Hex(0xEFEFEF, 6), 10) = True Then ExitLoop
 			SCIDScrollUp()
 			If _Sleep(1000) Then Return
 		Next

@@ -243,6 +243,7 @@ Func _BuilderBase($bTestRun = False)
 
 		If Not ByPassedForceBBAttackOnClanGames($g_bChkBuilderAttack, True) Then ExitLoop
 
+		If ProfileSwitchAccountEnabled() Then ExitLoop
 	Until ($iAttackLoops >= $iLoopsToDo)
 
 	If _Sleep($DELAYRUNBOT3) Then Return
@@ -251,7 +252,7 @@ Func _BuilderBase($bTestRun = False)
 	If ProfileSwitchAccountEnabled() Then Return
 
 	If PlayBBOnly() Then
-		If _Sleep($DELAYRUNBOT1 * 15) Then Return
+		; If _Sleep($DELAYRUNBOT1 * 15) Then Return
 	EndIf
 
 	Return True
