@@ -71,12 +71,10 @@ Func BuilderBase($bTestRun = False)
 	$bReturn = _BuilderBase($bTestRun)
 	$g_bStayOnBuilderBase = False
 
-	If isOnBuilderBase(True) Then
-		CheckMainScreen(False, False)
-	EndIf
-
+	If isOnBuilderBase(True) Then CheckMainScreen(False, False)
+	
 	SetLog("Returned to the main village.", $COLOR_SUCCESS)
-
+	
 	Return $bReturn
 EndFunc
 
@@ -241,19 +239,14 @@ Func _BuilderBase($bTestRun = False)
 		If Not $g_bRunState Then Return
 		BuilderBaseReport()
 
+		If ProfileSwitchAccountEnabled() And PlayBBOnly() Then Return
+		
 		If Not ByPassedForceBBAttackOnClanGames($g_bChkBuilderAttack, True) Then ExitLoop
 
-		If ProfileSwitchAccountEnabled() Then ExitLoop
 	Until ($iAttackLoops >= $iLoopsToDo)
 
 	If _Sleep($DELAYRUNBOT3) Then Return
 	SetLog("Builder base idle ends", $COLOR_INFO)
-
-	If ProfileSwitchAccountEnabled() Then Return
-
-	If PlayBBOnly() Then
-		; If _Sleep($DELAYRUNBOT1 * 15) Then Return
-	EndIf
 
 	Return True
 EndFunc   ;==>runBuilderBase

@@ -747,7 +747,7 @@ Func runBot() ;Bot that runs everything in order
 		FirstCheck()
 	EndIf
 
-	While 1
+	While 1		
 		; Custom - Team AIO Mod++
 		If FileExists(@ScriptDir & "\EnableMBRDebug.txt") Then
 			While (FileReadLine(@ScriptDir & "\EnableMBRDebug.txt") = "wait")
@@ -779,9 +779,6 @@ Func runBot() ;Bot that runs everything in order
 		If $g_bRestart Then ContinueLoop
 
 		; Custom BB - Team AIO Mod++
-		If isOnBuilderBase() Then SwitchBetweenBases()
-		_ClanGames()
-
 		If PlayBBOnly() Then
 			SetLog("Let's play builder base only.")
 			BuilderBase()
@@ -790,6 +787,9 @@ Func runBot() ;Bot that runs everything in order
 			EndIf
 			ContinueLoop
 		EndIf
+		
+		If isOnBuilderBase() Then SwitchBetweenBases()
+		_ClanGames()
 
 		#Region - GTFO - Team AIO Mod++
 		If $g_bChkOnlyFarm = False Then
@@ -940,6 +940,8 @@ Func runBot() ;Bot that runs everything in order
 					checkSwitchAcc()
 				EndIf
 			EndIf
+			If PlayBBOnly() Then ContinueLoop
+			
 			; Train Donate only - force a donate cc every time
 			If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) Then _RunFunction('DonateCC,Train')
 			If $g_bRestart Then ContinueLoop
