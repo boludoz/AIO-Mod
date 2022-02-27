@@ -278,15 +278,6 @@ Func SwitchCOCAcc($NextAccount, $bForceSwitch = False)
 
 	SetLog("Switching to Account [" & $NextAccount + 1 & "]")
 	
-	; Custom fix - Team AIO Mod++
-	Local $bOnlyResetVars = False
-	If $bForceSwitch = True Then
-		Local $abAccountNo = AccountNoActive()
-		If UBound(_ArrayFindAll($abAccountNo, "True")) < 2 Then
-			$bOnlyResetVars = True
-		EndIf
-	EndIf
-	
 	Local $bSharedPrefs = $g_bChkSharedPrefs And HaveSharedPrefs($g_asProfileName[$g_iNextAccount])
 	If $bSharedPrefs And $g_PushedSharedPrefsProfile = $g_asProfileName[$g_iNextAccount] Then
 		; shared prefs already pushed
@@ -294,7 +285,7 @@ Func SwitchCOCAcc($NextAccount, $bForceSwitch = False)
 		$bSharedPrefs = False ; don't push again
 		SetLog("Profile shared_prefs already pushed")
 		If Not $g_bRunState Then Return
-	ElseIf $bOnlyResetVars = False Then ; Custom Switch - Team AIO Mod++
+	Else
 		If Not $g_bRunState Then Return
 		; AIO Mod++
 		If $bSharedPrefs And $g_bChkSharedPrefs Then
@@ -380,8 +371,6 @@ Func SwitchCOCAcc($NextAccount, $bForceSwitch = False)
 		WEnd
 		If _Sleep(500) Then Return
 	EndIf
-	
-	If $bOnlyResetVars = True Then $bResult = True ; Custom Switch - Team AIO Mod++
 	
 	If $bResult Then
 		$iRetry = 0
