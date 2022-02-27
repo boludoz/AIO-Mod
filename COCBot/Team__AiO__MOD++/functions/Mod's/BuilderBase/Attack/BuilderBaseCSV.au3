@@ -200,11 +200,11 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 					; $aDROP[2]
 
 					Local $sTroopName = "Barb"
-					Local $iTroop = _ArraySearchCSV($g_sTroopsBBAtk, $aDROP[2])
+					Local $iTroop = TroopIndexLookupBB($aDROP[2], "Attack CSV")
 					If $iTroop = -1 Then
 						SetLog("Badly troop: " & $aDROP[2], $COLOR_ERROR)
 					Else
-						$sTroopName = $g_asAttackBarBB2[$iTroop]
+						$sTroopName = $g_asAttackBarBB[$iTroop]
 					EndIf
 
 					; DROP_SIDE: FRONT - BACK - LEFT - RIGHT (red lines)| FRONTE - BACKE - LEFTE - RIGHTE (external edges )
@@ -798,37 +798,3 @@ Func BattleIsOver()
 
 	If ($iBattleOverLoopCounter > 180) Then Setlog("Window Report Problem!", $COLOR_WARNING)
 EndFunc   ;==>BattleIsOver
-
-; Custom BB - Team AIO Mod++
-Func _ArraySearchCSV($aArray, $sTroop, $iTol = Default)
-	If $iTol = Default Then $iTol = 60
-	For $i = 0 To UBound($aArray) - 1
-		If _CompareTexts($aArray[$i], $sTroop, $iTol, True) Then
-			Return $i
-		EndIf
-	Next
-	Return -1
-EndFunc   ;==>_ArraySearchCSV
-
-Func _ArraySearchCSVTest()
-	Local $sTroop = ""
-	Local $iS = ""
-	Local $sTroop1 = ""
-	Local $iS1 = ""
-
-	Setlog('"Barb", "Arch", "Giant", "Beta", "Bomb", "BabyDrag", "Cannon", "Night", "Drop", "Pekka", "HogG", "Machine"')
-
-	Local $a = StringSplit('Barb,Arch,Giant,Beta,Bomb,BabyDrag,Cannon,Night,Drop,Pekka,HogG,Machine', ",")
-	Local $a1 = StringSplit('Barb,Arch,Giant,Minion,Breaker,BabyD,Cannon,Witch,Drop,Pekka,HogG,Machine', ",")
-	For $i = 1 To UBound($a) -1
-		$sTroop = $a[$i]
-		$sTroop1 = $a1[$i]
-		$iS = _ArraySearchCSV($g_sTroopsBBAtk, $sTroop)
-		$iS1 = _ArraySearchCSV($g_sTroopsBBAtk, $sTroop1)
-		If $iS > -1 Then
-			SetLog($g_asAttackBarBB2[$iS]  & " " & $g_asAttackBarBB2[$iS1] & " " & $sTroop & " " & $sTroop1)
-		Else
-			SetLog($iS  & " " & $iS1 & " " & $sTroop)
-		EndIf
-	Next
-EndFunc   ;==>_ArraySearchCSV

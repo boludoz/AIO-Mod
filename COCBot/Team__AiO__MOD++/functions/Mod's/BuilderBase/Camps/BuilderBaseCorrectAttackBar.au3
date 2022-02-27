@@ -26,8 +26,7 @@ Func TestGetAttackBarBB()
 EndFunc   ;==>TestGetAttackBarBB
 
 Func ArmyCampSelectedNames($g_iCmbBBArmy)
-	Local $aNames = $g_asAttackBarBB2
-	;$aNames[0] = "EmptyCamp"
+	Local $aNames = $g_asAttackBarBB
 	Return $aNames[$g_iCmbBBArmy]
 EndFunc   ;==>ArmyCampSelectedNames
 
@@ -46,8 +45,8 @@ Func BuilderBaseSelectCorrectCampDebug()
 EndFunc   ;==>BuilderBaseSelectCorrectCampDebug
 
 Func FullNametroops($aResults)
-	For $i = 0 To UBound($g_asAttackBarBB2) - 1
-		If $aResults = $g_asAttackBarBB2[$i] Then
+	For $i = 0 To UBound($g_asAttackBarBB) - 1
+		If $aResults = $g_asAttackBarBB[$i] Then
 			If UBound($g_avStarLabTroops) - 1 < $i + 1 Then ExitLoop
 			Return $g_avStarLabTroops[$i + 1][3]
 		EndIf
@@ -137,9 +136,10 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 						$iModeAttack = 0 ; CSV Mode
 						$sName = "CAMP" & "|"
 						For $i = 1 To UBound($aSplitLine) - 1
-							$iLast = _ArraySearchCSV($g_sTroopsBBAtk, $aSplitLine[$i])
+							If StringIsSpace($aSplitLine[$i]) = 1 Then ContinueLoop
+							$iLast = TroopIndexLookupBB($aSplitLine[$i], "BuilderBaseSelectCorrectScript|1")
 							If $iLast > -1 Then
-								$sTmp = $g_asAttackBarBB2[$iLast]
+								$sTmp = $g_asAttackBarBB[$iLast]
 								If Not StringIsSpace($sTmp) Then $sLastObj = $sTmp
 								$sName &= $sLastObj
 								If $i <> UBound($aSplitLine) - 1 Then $sName &= "|"
@@ -162,7 +162,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 			Case Else
 				Local $sName = "CAMP" & "|"
 				For $i = 0 To UBound($g_iCmbCampsBB) - 1
-					$sTmp = $g_asAttackBarBB2[$g_iCmbCampsBB[$i]]
+					$sTmp = $g_asAttackBarBB[$g_iCmbCampsBB[$i]]
 					If Not StringIsSpace($sTmp) Then $sLastObj = $sTmp
 					$sName &= $sLastObj
 					If $i <> UBound($g_iCmbCampsBB) - 1 Then $sName &= "|"
@@ -242,9 +242,12 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	EndIf
 
 	;First Find The Correct Index Of Camps In Attack Bar
+	Local $iFirstOK = ""
 	For $i = 0 To UBound($aCamps) - 1
 		;Just In Case Someone Mentioned Wrong Troop Name Select Default Barbarian Troop
-		$aCamps[$i] = __ArraySearch($g_asAttackBarBB2, $aCamps[$i]) < 0 ? ("Barbarian") : __ArraySearch($g_asAttackBarBB2, $aCamps[$i])
+		$iFirstOK = TroopIndexLookupBB($aCamps[$i], "BuilderBaseSelectCorrectScript|2")
+		If $iFirstOK < 0 Then SetLog("BuilderBaseSelectCorrectScript | BAD FILL " & $aCamps[$i], $COLOR_ERROR)
+		$aCamps[$i] = ($iFirstOK < 0) ? ("Barbarian") : ($iFirstOK)
 	Next
 	
 	;After populate with the new priority position let's sort ascending column 1
@@ -252,9 +255,11 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	
 	;Just Assign The Short Names According to new priority positions
 	For $i = 0 To UBound($aCamps) - 1
-		$aCamps[$i] = $g_asAttackBarBB2[$aCamps[$i]]
+		$aCamps[$i] = $g_asAttackBarBB[$aCamps[$i]]
 	Next
-
+	
+	; EOF TroopIndexLookupBB
+	
 	; [0] = Troops Name , [1] - Priority position
 	Local $aNewAvailableTroops[UBound($aAvailableTroops)][2]
 	
@@ -262,8 +267,8 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 		$aNewAvailableTroops[$i][0] = $aAvailableTroops[$i][0]
 		$aNewAvailableTroops[$i][1] = 0
 		
-		For $i2 = 0 To UBound($g_asAttackBarBB2) - 1
-			If (StringInStr($aAvailableTroops[$i][0], $g_asAttackBarBB2[$i2]) > 0) Then
+		For $i2 = 0 To UBound($g_asAttackBarBB) - 1
+			If (StringInStr($aAvailableTroops[$i][0], $g_asAttackBarBB[$i2]) > 0) Then
 				$aNewAvailableTroops[$i][1] = $i2
 				ContinueLoop 2
 			EndIf
@@ -333,8 +338,8 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 			SetDebugLog("Selected " & FullNametroops($sMissingCamp) & " X:| " & $aAttackBar[0] & " Y:| " & $aAttackBar[1], $COLOR_SUCCESS)
 			$aNewAvailableTroops[$aWrongCamps[0]][0] = $sMissingCamp
 			; Set the Priority Again
-			For $i2 = 0 To UBound($g_asAttackBarBB2) - 1
-				If (StringInStr($aNewAvailableTroops[$aWrongCamps[0]][0], $g_asAttackBarBB2[$i2]) > 0) Then
+			For $i2 = 0 To UBound($g_asAttackBarBB) - 1
+				If (StringInStr($aNewAvailableTroops[$aWrongCamps[0]][0], $g_asAttackBarBB[$i2]) > 0) Then
 					$aNewAvailableTroops[$aWrongCamps[0]][1] = $i2
 				EndIf
 			Next
@@ -440,3 +445,38 @@ Func GetTroopCampCounts($sTroopName, $aCamp)
 	Next
 	Return $iFoundInCamps
 EndFunc   ;==>GetTroopCampCounts
+
+
+; Custom BB - Team AIO Mod++
+Func TroopIndexLookupBB($sTroop, $iOrigin = "")
+
+	Switch StringStripWS($sTroop, $STR_STRIPALL)
+		Case "RBarb", "Barb", "Barbarian", "RagedBarbarian"
+			Return 0
+		Case "SArch", "Arch", "Archer" 
+			Return 1
+		Case "BGiant", "Giant", "BoxerGiant" 
+			Return 2
+		Case "BMini", "Beta", "Minion"
+			Return 3
+		Case "Bomber", "Bomb", "Breaker", "WallBreaker"
+			Return 4
+		Case "BabyD", "BabyDrag"
+			Return 5
+		Case "CannCart", "Cannon", "CannonCart"
+			Return 6
+		Case "NWitch", "Night", "Witch"
+			Return 7
+		Case "DShip", "Drop", "DropShip"
+			Return 8
+		Case "SPekka", "Pekka", "SuperPekka"
+			Return 9
+		Case "HGlider", "HogG", "HogGlider"
+			Return 10
+		Case "Machine"
+			Return 11
+	EndSwitch
+	SetLog("TroopIndexLookupBB : " & $sTroop & " BAD / Origin " & $iOrigin, $COLOR_ERROR)
+	Return -1
+	
+EndFunc   ;==>TroopIndexLookupBB

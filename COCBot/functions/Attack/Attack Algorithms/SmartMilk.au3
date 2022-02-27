@@ -547,24 +547,23 @@ Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl
 EndFunc
 
 Func debugimagesmartmilk($acollectorsall, $stime, $heroesdeployjustincase)
-	#cs
 	_captureregion()
 	Local $editedimage = $g_hbitmap
-	Local $subdirectory = @ScriptDir & "\SmartMilk\"
+	Local $subdirectory = $g_sProfileTempDebugPath & "\SmartMilk\"
 	DirCreate($subdirectory)
 	Local $date = @YEAR & "-" & @MON & "-" & @MDAY
 	Local $time = @HOUR & "." & @MIN & "." & @SEC
 	Local $filename = "SmartMilk" & "_" & $date & "_" & $time & ".png"
 	Local $filenameuntouched = "SmartMilk" & "_" & $date & "_" & $time & "_1.png"
 	Local $hgraphic = _gdiplus_imagegetgraphicscontext($editedimage)
-	Local $hpen = _gdiplus_pencreate(-65536, 2)
-	Local $hpen2 = _gdiplus_pencreate(-16777216, 2)
-	$hpen2 = _gdiplus_pencreate(-1, 2)
+	Local $hpen = _gdiplus_pencreate(0xFFFF0000, 2)
+	Local $hpen2 = _gdiplus_pencreate(0xFF000000, 2)
+	$hpen2 = _gdiplus_pencreate(0xFFFF, 2)
 	_gdiplus_graphicsdrawrect($hgraphic, $diamondmiddlex - 5, $diamondmiddley - 5, 10, 10, $hpen2)
-	$hpen2 = _gdiplus_pencreate(-1, 1)
-	_gdiplus_graphicsdrawline($hgraphic, 0, $diamondmiddley, 860, $diamondmiddley, $hpen2)
-	_gdiplus_graphicsdrawline($hgraphic, $diamondmiddlex, 0, $diamondmiddlex, 644, $hpen2)
-	$hpen2 = _gdiplus_pencreate(-16777216, 2)
+	$hpen2 = _gdiplus_pencreate(0xFFFF, 1)
+	_gdiplus_graphicsdrawline($hgraphic, 0, $diamondmiddley, $g_iGAME_WIDTH, $diamondmiddley, $hpen2)
+	_gdiplus_graphicsdrawline($hgraphic, $diamondmiddlex, 0, $diamondmiddlex, $g_iGAME_HEIGHT, $hpen2)
+	$hpen2 = _gdiplus_pencreate(0xFF000000, 2)
 	Local $tempobbj, $tempobbjs
 	If $heroesdeployjustincase[0] <> NULL  AND $heroesdeployjustincase[1] > 0 Then
 		_gdiplus_graphicsdrawrect($hgraphic, $heroesdeployjustincase[0] - 10, $heroesdeployjustincase[1] - 10, 20, 20, $hpen2)
@@ -576,9 +575,9 @@ Func debugimagesmartmilk($acollectorsall, $stime, $heroesdeployjustincase)
 	EndIf
 	For $i = 0 To UBound($acollectorsall) - 1
 		If $acollectorsall[$i][3] = "In" Then
-			$hpen = _gdiplus_pencreate(-65536, 2)
+			$hpen = _gdiplus_pencreate(0xFFFF0000, 2)
 		Else
-			$hpen = _gdiplus_pencreate(-16711893, 2)
+			$hpen = _gdiplus_pencreate(0xFF00FF2B, 2)
 		EndIf
 		_gdiplus_graphicsdrawellipse($hgraphic, $acollectorsall[$i][0] - 7, $acollectorsall[$i][1] - 7, 14, 14, $hpen)
 		If StringInStr($acollectorsall[$i][5], "|") Then
@@ -596,7 +595,7 @@ Func debugimagesmartmilk($acollectorsall, $stime, $heroesdeployjustincase)
 		$tempobbj = NULL
 		$tempobbjs = NULL
 	Next
-	$hpen2 = _gdiplus_pencreate(-13406465, 2)
+	$hpen2 = _gdiplus_pencreate(0xFF336EFF, 2)
 	Local $pixel
 	For $i = 0 To UBound($g_aipixeltopleft) - 1
 		$pixel = $g_aipixeltopleft[$i]
@@ -614,7 +613,7 @@ Func debugimagesmartmilk($acollectorsall, $stime, $heroesdeployjustincase)
 		$pixel = $g_aipixelbottomright[$i]
 		_gdiplus_graphicsdrawellipse($hgraphic, $pixel[0], $pixel[1], 2, 2, $hpen2)
 	Next
-	$hpen2 = _gdiplus_pencreate(-9502925, 2)
+	$hpen2 = _gdiplus_pencreate(0xFF6EFF33, 2)
 	For $i = 0 To UBound($g_aipixeltopleftfurther) - 1
 		$pixel = $g_aipixeltopleftfurther[$i]
 		_gdiplus_graphicsdrawellipse($hgraphic, $pixel[0], $pixel[1], 2, 2, $hpen2)
@@ -631,7 +630,7 @@ Func debugimagesmartmilk($acollectorsall, $stime, $heroesdeployjustincase)
 		$pixel = $g_aipixelbottomrightfurther[$i]
 		_gdiplus_graphicsdrawellipse($hgraphic, $pixel[0], $pixel[1], 2, 2, $hpen2)
 	Next
-	$hpen = _gdiplus_pencreate(-1, 1)
+	$hpen = _gdiplus_pencreate(0xFFFF, 1)
 	_addinfotodebugimage($hgraphic, $hpen, $stime, 370, 70, 20, 2, False)
 	_gdiplus_imagesavetofile($editedimage, $subdirectory & $filename)
 	_captureregion()
@@ -640,7 +639,6 @@ Func debugimagesmartmilk($acollectorsall, $stime, $heroesdeployjustincase)
 	_gdiplus_pendispose($hpen2)
 	_gdiplus_graphicsdispose($hgraphic)
 	SetLog(" » Debug Image saved!")
-#ce
 EndFunc
 
 Func _addinfotodebugimage(ByRef $hgraphic, ByRef $hpen, $filename, $x, $y, $ifontsize = 12, $ifontstyle = 2, $square = True)
@@ -658,8 +656,4 @@ Func _addinfotodebugimage(ByRef $hgraphic, ByRef $hpen, $filename, $x, $y, $ifon
 	_gdiplus_fontfamilydispose($hfamily)
 	_gdiplus_stringformatdispose($hformat)
 	_gdiplus_brushdispose($hbrush)
-EndFunc
-
-Func isdropredarea($sheroname)
-	Return True
 EndFunc

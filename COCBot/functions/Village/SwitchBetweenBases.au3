@@ -84,6 +84,7 @@ Func SwitchBetweenBases($bCheckMainScreen = True)
 			Else
 				SetLog("Cannot find the Boat on the Coast. Maybe it is still broken or not visible", $COLOR_ERROR)
 			EndIf
+			_ZoomOut()
 		EndIf
 	Next
 	Return False

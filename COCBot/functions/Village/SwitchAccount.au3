@@ -12,6 +12,7 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+
 ; Return True or False if Switch Account is enabled and current profile in configured list
 Func ProfileSwitchAccountEnabled() 
 	#cs
@@ -729,58 +730,69 @@ Func SwitchCOCAcc_ConnectedSCID(ByRef $bResult)
 EndFunc   ;==>SwitchCOCAcc_ConnectedSCID
 
 Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
-	Local $sAccountDiamond = GetDiamondFromRect("750,330,840,710") ; Contains iXStart, $iYStart, $iXEnd, $iYEnd
-    Local $aSuperCellIDWindowsUI
+    Local $aSuperCellIDWindowsUI, $bSCIDWindowOpened = False
 	Local $iIndexSCID = $NextAccount
-	Local $aSearchForAccount, $aCoordinates[0][2], $aTempArray
-	If Not $g_bRunState Then Return "Exit"
+	Local $aAccount, $aFound, $aCoord[0][2]
+	If Not $g_bRunState Then Return
 
 	For $i = 0 To 30 ; Checking "New SuperCellID UI" continuously in 30sec
-		$aSuperCellIDWindowsUI = decodeSingleCoord(findImage("SupercellID Windows", $g_sImgSupercellIDWindows, GetDiamondFromRect("440,1,859,243"), 1, True, Default))
-		If _Sleep(500) Then Return "Exit"
+		$aSuperCellIDWindowsUI = decodeSingleCoord(findImage("SupercellID Windows", $g_sImgSupercellIDWindows, GetDiamondFromRect("550,60,760,160"), 1, True, Default))
+		If _Sleep(500) Then Return
 		If IsArray($aSuperCellIDWindowsUI) And UBound($aSuperCellIDWindowsUI, 1) >= 2 Then
-			SCIDragIfNeeded($NextAccount) ; Make Drag only when SCID window is visible.
-			$aSearchForAccount = decodeMultipleCoords(findImage("Account Locations", $g_sImgSupercellIDSlots, $sAccountDiamond, 0, True, Default))
-			If _Sleep(500) Then Return "Exit"
-			If Not $g_bRunState Then Return "Exit"
-			If IsArray($aSearchForAccount) And UBound($aSearchForAccount) > 0 Then
-				SetDebugLog("SCID Accounts: " & UBound($aSearchForAccount), $COLOR_DEBUG)
-
-				; Correct Index for Profile if needs to drag
-				If $NextAccount >= 3 and UBound($aSearchForAccount) == 4 Then $iIndexSCID = 3 ; based on drag logic, the account will always be the bottom one
-
-				; fixes weird issue with arrays after getting image info
-				For $j = 0 To UBound($aSearchForAccount) - 1
-					$aTempArray = $aSearchForAccount[$j]
-					_ArrayAdd($aCoordinates, $aTempArray[0] & "|" & $aTempArray[1], 0, "|", @CRLF, $ARRAYFILL_FORCE_NUMBER)
-				Next
-
-				_ArraySort($aCoordinates, 0, 0, 0, 1) ; sort by column 1 [Y]... this is to keep them in order of actual list
-
-				; list all account see-able after drag on debug chat
-				Local $iProfiles = UBound($g_asProfileName)
-				For $j = 0 To UBound($aCoordinates) - 1
-					SetDebugLog("[" & $j & "] Account coordinates: " & $aCoordinates[$j][0] & "," & $aCoordinates[$j][1] & " named: " & $g_asProfileName[$NextAccount-$iIndexSCID+$j])
-				Next
-
-				SetLog("   " & $iStep & ". Click Account [" & $NextAccount + 1 & "] Supercell ID with Profile: " & $g_asProfileName[$NextAccount])
-				Click($aCoordinates[$iIndexSCID][0] - 100, $aCoordinates[$iIndexSCID][1] + 45, 1)
-				If _Sleep(750) Then Return "Exit"
-				SetLog("   " & $iStep + 1 & ". Please wait for loading CoC!")
-				$bResult = True
-				Return "OK"
-			EndIf
+			SetLog("SupercellID Window Opened", $COLOR_DEBUG)
+			$bSCIDWindowOpened = True
+			ExitLoop
 		EndIf
-
 		If $i = 30 Then
 			$bResult = False
-			;ExitLoop 2
 			Return "Error"
 		EndIf
-		If _Sleep(900) Then Return "Exit"
-		If Not $g_bRunState Then Return "Exit"
+		If _Sleep(900) Then Return
+		If Not $g_bRunState Then Return
 	Next
-	Return "" ; should never get here
+
+	If $bSCIDWindowOpened Then
+		If _Sleep(500) Then Return
+		For $iTry = 0 To 6
+			SCIDScrollUp()
+			If _Sleep(1000) Then Return
+		Next
+		
+		SCIDScrollDown($NextAccount) ; Make Drag only when SCID window is visible.
+		If _Sleep(1000) Then Return
+		$aAccount = QuickMIS("CX", $g_sImgSupercellIDSlots, 750, 320, 850, 685, True, False)
+		SetLog("Found: " & UBound($aAccount) & " SCID", $COLOR_SUCCESS)
+		If IsArray($aAccount) And UBound($aAccount) > 0 Then
+			For $j = 0 To UBound($aAccount) - 1
+				$aFound = StringSplit($aAccount[$j], ",", $STR_NOCOUNT)
+				_ArrayAdd($aCoord, $aFound[0]+750 & "|" & $aFound[1]+320)
+			Next
+			_ArraySort($aCoord, 0, 0, 0, 1)
+
+			; Correct Index for Profile if needs to drag
+			If $NextAccount >= 3 Then $iIndexSCID = 3 ; based on drag logic, the account will always be the bottom one
+
+			; list all account see-able after drag on debug chat
+			For $j = 0 To UBound($aCoord) - 1
+				SetLog("[" & $j & "] Account coordinates: " & $aCoord[$j][0] & "," & $aCoord[$j][1] & " named: " & $g_asProfileName[$NextAccount-$iIndexSCID+$j])
+			Next
+
+			If UBound($aCoord) < 4 And $NextAccount >= 3 Then
+				SetLog("Only Found " & UBound($aCoord) & " SCID Account, Select Last Account", $COLOR_INFO)
+				$iIndexSCID = UBound($aCoord) - 1
+			EndIf
+
+			SetLog("   " & $iStep & ". Click Account [" & $NextAccount + 1 & "] Supercell ID with Profile: " & $g_asProfileName[$NextAccount])
+			Click($aCoord[$iIndexSCID][0]-75, $aCoord[$iIndexSCID][1] + 10, 1)
+			If _Sleep(750) Then Return
+			SetLog("   " & $iStep + 1 & ". Please wait for loading CoC!")
+			$bResult = True
+			Return "OK"
+		Else
+			$bResult = False
+			Return "Error"
+		EndIf
+	EndIf
 EndFunc   ;==>SwitchCOCAcc_ClickAccountSCID
 
 Func CheckWaitHero() ; get hero regen time remaining if enabled
@@ -1214,15 +1226,30 @@ Func CheckPlannedAccountLimits($bForceSwitch = False)
 	Return $g_iCurAccount
 EndFunc   ;==>CheckPlannedAccountLimits
 
-Func SCIDragIfNeeded($iSCIDAccount)
+Func SCIDScrollDown($iSCIDAccount)
 	If Not $g_bRunState Then Return
 	If $iSCIDAccount < 4 Then Return
-	
-	If $g_bAndroidAdbClickDragScript Then
-		ClickDrag(450, 600, 450, 600 - (95 * ($iSCIDAccount - 3)), 2000, True) ; drag a multiple of 90 pixels up for how many accounts down it is
-	Else
-		ClickDrag(444, 720, 444, 720 - (64 * ($iSCIDAccount - 3)), 2000) ; Custom fix - Team AIO Mod++
-	EndIf
-	If _Sleep(1500) Then Return
-EndFunc   ;==>SCIDragIfNeeded
+	For $i = 0 To $iSCIDAccount - 4
+		Switch $g_sAndroidEmulator
+			Case "BlueStacks2"
+				AndroidAdbScript("ScrollDownSCID.Bluestacks")
+			Case Else ; Custom - Team AIO Mod++
+				AndroidAdbScript("ScrollDownSCID")
+		EndSwitch
+		If _Sleep(500) Then Return
+	Next
+EndFunc   ;==>SCIDScrollDown
 
+Func SCIDScrollUp()
+	If Not $g_bRunState Then Return
+	SetLog("Try to scroll up", $COLOR_DEBUG)
+	For $i = 0 To Ceiling($g_iTotalAcc/4) - 1
+		Switch $g_sAndroidEmulator
+			Case "BlueStacks2"
+				AndroidAdbScript("ScrollUpSCID.Bluestacks")
+			Case Else ; Custom - Team AIO Mod++
+				AndroidAdbScript("ScrollUpSCID")
+		EndSwitch
+		If _Sleep(500) Then Return
+	Next
+EndFunc   ;==>SCIDScrollUp

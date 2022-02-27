@@ -77,7 +77,7 @@ Func __ClanGames($test = False, $bFromBB = False)
 	EndIf
 
 	If _Sleep(3000) Then Return
-	
+
 	; Enter on Clan Games window
 	$g_bYourAccScoreCG[Int($g_iCurAccount)][2] = False
 
@@ -550,7 +550,7 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 			Next
 		Case "BBD"
 			If Not $bBuilderChallenge Then Return
-			
+
 			For $i = 0 To UBound($g_aCGBBDestructionChallenges) - 1
 				If $g_aCGBBDestructionChallenges[$i][3] > -1 Then
 					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "BBDestructionChallenges: " & $g_aCGBBDestructionChallenges[$i][0], $COLOR_DEBUG)
@@ -559,11 +559,11 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 			Next
 		Case "BBT"
 			If Not $bBuilderChallenge Then Return
-			
+
 			Local $iBBT = -1, $s = ""
 			Local $oBjs = BBCampsGet()
 			For $i = 0 To UBound($g_aCGBBTroopChallenges) - 1
-				$iBBT = _ArraySearchCSV($g_sTroopsBBAtk, $g_aCGBBTroopChallenges[$i][0], 60)
+				$iBBT = TroopIndexLookupBB($g_aCGBBTroopChallenges[$i][0], "Clan games BBT")
 				If $iBBT < 0 Then ContinueLoop
 				; SetLog("$iBBT" & $iBBT)
 				If $g_aCGBBTroopChallenges[$i][3] > -1 Then
@@ -599,7 +599,7 @@ Func BBCampsGet()
 	Local $bIsCampCSV = False
 	Local $aLines[0]
 	Local $iModeAttack = 0
-	
+
 	If ($g_iCmbBBAttack = $g_eBBAttackCSV) Then
 		$iModeAttack = 0
 		If ($g_bChkBBGetFromArmy = True) Then
@@ -611,37 +611,38 @@ Func BBCampsGet()
 			$iModeAttack = 0
 		EndIf
 	EndIf
-	
+
 	Local $sLastObj = "Barbarian", $sTmp
 	Local $aFakeCsv[1]
 	Do
 		Switch $iModeAttack
-			
+
 			; CSV
 			Case 0
 				If Not $g_bChkBBCustomAttack Or ($g_iCmbBBAttack = $g_eBBAttackSmart) Then
 					$g_iBuilderBaseScript = 0
 				EndIf
-				
+
 				; Let load the Command [Troop] from CSV
 				Local $aLArray[0]
 				Local $FileNamePath = @ScriptDir & "\CSV\BuilderBase\" & $g_sAttackScrScriptNameBB[$g_iBuilderBaseScript] & ".csv"
 				If FileExists($FileNamePath) Then $aLArray = FileReadToArray($FileNamePath)
-				
+
 				; Special case if CSV dont have camps.
 				$iModeAttack = 1 ; CSV Mode
 				Local $iLast = 0, $aSplitLine, $sName
 				For $iLine = 0 To UBound($aLArray) - 1
 					If Not $g_bRunState Then Return
 					$aSplitLine = StringSplit(StringStripWS($aLArray[$iLine], $STR_STRIPALL), "|", $STR_NOCOUNT)
-					
+
 					If ($aSplitLine[0] = "CAMP") Then
 						$iModeAttack = 0 ; CSV Mode
 						$sName = "CAMP" & "|"
 						For $i = 1 To UBound($aSplitLine) - 1
-							$iLast = _ArraySearchCSV($g_sTroopsBBAtk, $aSplitLine[$i])
+							If StringIsSpace($aSplitLine[$i]) = 1 Then ContinueLoop
+							$iLast = TroopIndexLookupBB($aSplitLine[$i], "Clan Games 1")
 							If $iLast > -1 Then
-								$sTmp = $g_asAttackBarBB2[$iLast]
+								$sTmp = $g_asAttackBarBB[$iLast]
 								If Not StringIsSpace($sTmp) Then $sLastObj = $sTmp
 								$sName &= $sLastObj
 								If $i <> UBound($aSplitLine) - 1 Then $sName &= "|"
@@ -649,29 +650,29 @@ Func BBCampsGet()
 						Next
 						$aFakeCsv[0] = $sName
 						_ArrayAdd($aLines, $aFakeCsv)
-						
+
 						; ExitLoop 2
 					EndIf
 				Next
-				
+
 				If $iModeAttack <> 0 Then
 					SetLog("You are bad at CSV writing, but we can correct that.", $COLOR_ERROR)
 					ContinueCase
 				EndIf
-				
+
 				ExitLoop
 				; Smart
 			Case Else
 				Local $sName = "CAMP" & "|"
 				For $i = 0 To UBound($g_iCmbCampsBB) - 1
-					$sTmp = $g_asAttackBarBB2[$g_iCmbCampsBB[$i]]
+					$sTmp = $g_asAttackBarBB[$g_iCmbCampsBB[$i]]
 					If Not StringIsSpace($sTmp) Then $sLastObj = $sTmp
 					$sName &= $sLastObj
 					If $i <> UBound($g_iCmbCampsBB) - 1 Then $sName &= "|"
 					$aFakeCsv[0] = $sName
 					_ArrayAdd($aLines, $aFakeCsv)
 				Next
-				
+
 				ExitLoop
 		EndSwitch
 	Until True
@@ -680,7 +681,7 @@ Func BBCampsGet()
 		SetLog("BuilderBaseSelectCorrectScript 0x12 error.", $COLOR_ERROR)
 		Return
 	EndIf
-	
+
 	Local $oDicCamps = ObjCreate("Scripting.Dictionary")
 
 	Local $aReturn[0]
@@ -689,10 +690,10 @@ Func BBCampsGet()
 		If StringIsSpace($aSplitLine[$i]) Then ContinueLoop
 		If Not $oDicCamps.Exists($aSplitLine[$i]) Then
 			$oDicCamps($aSplitLine[$i]) = True
-			_ArrayAdd($aReturn, _ArraySearchCSV($g_sTroopsBBAtk, $aSplitLine[$i]))
+			_ArrayAdd($aReturn, TroopIndexLookupBB($aSplitLine[$i], "Clan games | 2"))
 		EndIf
 	Next
-	
+
 	Return $aReturn
 EndFunc
 

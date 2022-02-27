@@ -866,7 +866,7 @@ Func GetTroopName(Const $iIndex, $iQuantity = 1, $bShortName = False)
 			Return $iQuantity > 1 ? $g_asSpellNames[$iIndex - $eLSpell] & " Spells" : $g_asSpellNames[$iIndex - $eLSpell] & " Spell"
 		ElseIf $iIndex >= $eKing And $iIndex <= $eChampion Then
 			Return $g_asHeroNames[$iIndex - $eKing]
-		ElseIf $iIndex >= $eWallW And $iIndex <= $eLogL Then
+		ElseIf $iIndex >= $eWallW And $iIndex <= $eFlameF Then
 			Return $g_asSiegeMachineNames[$iIndex - $eWallW]
 		ElseIf $iIndex = $eCastle Then
 			Return "Clan Castle"

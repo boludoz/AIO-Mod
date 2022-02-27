@@ -122,7 +122,7 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB(), $bRemainCSV = False)
 				; There might be several slots containing same Troop, so even here we should make another loop
 				For $j = 0 To $iNumSlots - 1
 					; If The Troop name in Slot were the same as Troop name in Current Drop Order index
-					If $aBBAttackBar[$j][0] = $g_asAttackBarBB2[Number($g_aiCmbBBDropOrder[$i])] Then ; Custom BB Army - Team AIO Mod++
+					If $aBBAttackBar[$j][0] = $g_asAttackBarBB[Number($g_aiCmbBBDropOrder[$i])] Then ; Custom BB Army - Team AIO Mod++
 						; Increase Total Dropped so at the end we can see if it hasn't dropped any, exit the For loop
 						If Not ($aBBAttackBar[$j][0] == "Machine") Then
 							; The Slot is not Battle Machine, is just a simple troop

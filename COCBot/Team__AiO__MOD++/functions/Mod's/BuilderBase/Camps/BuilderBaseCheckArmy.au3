@@ -65,7 +65,7 @@ EndFunc   ;==>CheckArmyBuilderBase
 
 Func DetectCamps()
 	Local $iArmyCampsInBB[6] = [0, 0, 0, 0, 0, 0]
-	Local $asAttackBarBB = $g_asAttackBarBB2
+	Local $asAttackBarBB = $g_asAttackBarBB
 	Local $bDebugLog = False
 	If $g_bDebugBBattack Then $bDebugLog = True
 
@@ -159,14 +159,14 @@ EndFunc   ;==>DeleteTroop
 ; Samkie inspired code
 Func LocateTroopButton($iTroopButton, $sImgTrain = $g_sImgPathTroopsTrain, $sRegionForScan = "37, 479, 891, 579", $bDebugLog = False)
 		Global $g_aTroopButton[2] = [0, 0]
-		Local $asAttackBarBB = $g_asAttackBarBB2
+		Local $asAttackBarBB = $g_asAttackBarBB
 		Local $iButtonIsIn, $aTroopPosition
 	
 		
 		If ($iTroopButton > (UBound($asAttackBarBB) -1)) Then SetLog("Train army on BB: Troop not rocognized, it return first.", $COLOR_ERROR)
 	
 		For $i = 0 To 3
-			Local $iButtonIsIn = __ArraySearch(_ImageSearchXML($g_sImgPathTroopsTrain, 0, $sRegionForScan, True, False, True, 25), $g_asAttackBarBB2[$iTroopButton])
+			Local $iButtonIsIn = __ArraySearch(_ImageSearchXML($g_sImgPathTroopsTrain, 0, $sRegionForScan, True, False, True, 25), $g_asAttackBarBB[$iTroopButton])
 
 			$aTroopPosition = $g_aImageSearchXML
 			SetDebugLog("LocateTroopButton: " & "__ArraySearch($aTroopPosition, $asAttackBarBB[$iTroopButton]) " & $aTroopPosition)
