@@ -57,10 +57,10 @@ Func TestSmartMilk($bFast = True)
 EndFunc   ;==>TestSmartFarm
 
 Func SmartFarmMilk($bDebug = False)
-    If $g_iMatchMode <> $DB And $g_aiAttackAlgorithm[$DB] <> 3 And $bDebug = False Then 
+    If $g_iMatchMode <> $DB And $g_aiAttackAlgorithm[$DB] <> 3 And $bDebug = False Then
         Return
     EndIf
-    
+
 	; Custom Fix - Team AIO Mod++
 	$g_bAttackActive = True
 
@@ -83,10 +83,10 @@ Func SmartFarmMilk($bDebug = False)
 	EndIf
 	resumeandroid()
 	SetLog(" ====== Start Smart Milking ====== ", $color_info)
-	Local Enum $eswallslot, $egiantslot, $ebarbslot, $earchslot, $egoblslot, $ebabydslot, $eminislot, $esgoblslot, $ejspellslot, $esbarbslot
-	Local $igiantslot = -1, $ibarbslot = -1, $iarchslot = -1, $igoblslot = -1, $ibabydslot = -1, $imini = -1, $isgobs = -1, $iswall = -1, $ijspell = -1, $isbarbslot = -1
-	Local $aslots[10] = [$iswall, $igiantslot, $ibarbslot, $iarchslot, $igoblslot, $ibabydslot, $imini, $isgobs, $ijspell, $isbarbslot]
-	Local $aslots2deploy[10][4]
+	Local Enum $eswallslot, $egiantslot, $ebarbslot, $earchslot, $egoblslot, $ebabydslot, $eminislot, $esminislot, $esgoblslot, $ejspellslot, $esbarbslot, $eminerslot
+	Local $igiantslot = -1, $ibarbslot = -1, $iarchslot = -1, $igoblslot = -1, $ibabydslot = -1, $imini = -1, $ismini = -1, $isgobs = -1, $iswall = -1, $ijspell = -1, $isbarbslot = -1, $isminerslot = -1
+	Local $aslots[12] = [$iswall, $igiantslot, $ibarbslot, $iarchslot, $igoblslot, $ibabydslot, $imini, $ismini, $isgobs, $ijspell, $isbarbslot, $isminerslot]
+	Local $aslots2deploy[12][4]
 	Local $usedzap = False
 	#cs
 Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl, $eWall, $eSWall, $eBall, $eRBall, $eWiza, $eSWiza, $eHeal, $eDrag, $eSDrag, $ePekk, $eBabyD, $eInfernoD, $eMine, $eEDrag, $eYeti, $eRDrag, _
@@ -147,6 +147,13 @@ Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl
 			$aslots2deploy[$eminislot][2] = "Random(4, 6, 1)"
 			$aslots2deploy[$eminislot][3] = $g_avattacktroops[$i][0]
 		EndIf
+		If $g_avattacktroops[$i][0] = $eSMini Then
+			$ismini = $i
+			$aslots2deploy[$esminislot][0] = $i
+			$aslots2deploy[$esminislot][1] = $g_avattacktroops[$i][1]
+			$aslots2deploy[$esminislot][2] = "Random(1, 3, 1)"
+			$aslots2deploy[$esminislot][3] = $g_avattacktroops[$i][0]
+		EndIf
 		If $g_avattacktroops[$i][0] = $eSGobl Then
 			$isgobs = $i
 			$aslots2deploy[$esgoblslot][0] = $i
@@ -168,8 +175,15 @@ Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl
 			$aslots2deploy[$esbarbslot][2] = "Random(2, 3, 1)"
 			$aslots2deploy[$esbarbslot][3] = $g_avattacktroops[$i][0]
 		EndIf
+		If $g_avattacktroops[$i][0] = $eMine Then
+			$isminerslot = $i
+			$aslots2deploy[$eminerslot][0] = $i
+			$aslots2deploy[$eminerslot][1] = $g_avattacktroops[$i][1]
+			$aslots2deploy[$eminerslot][2] = "Random(2, 3, 1)"
+			$aslots2deploy[$eminerslot][3] = $g_avattacktroops[$i][0]
+		EndIf
 	Next
-	Local Enum $efullbdragons = 0, $efullbarbs, $efullarchs, $efullgibarch, $efullgobs, $efullmin, $efullsgobs, $efullsbarbs
+	Local Enum $efullbdragons = 0, $efullbarbs, $efullarchs, $efullgibarch, $efullgobs, $efullmin, $efullsmin, $efullsgobs, $efullsbarbs, $efullminers
 	Local $itimebetweenloops = 1500
 	If $g_bdebugsmartmilk Then SetLog("Selected slot zero on  attack bar.")
 	If isattackpage() Then selectdroptroop(0)
@@ -213,11 +227,23 @@ Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl
 				If _sleep($delaylaunchtroop23) Then Return
 				If isattackpage() Then selectdroptroop($imini)
 			EndIf
+		Case $efullsmin
+			If $aslots[$esminislot] <> -1 Then
+				If isattackpage() Then selectdroptroop($ismini)
+				If _sleep($delaylaunchtroop23) Then Return
+				If isattackpage() Then selectdroptroop($ismini)
+			EndIf
 		Case $efullsbarbs
 			If $aslots[$esbarbslot] <> -1 Then
 				If isattackpage() Then selectdroptroop($isbarbslot)
 				If _sleep($delaylaunchtroop23) Then Return
 				If isattackpage() Then selectdroptroop($isbarbslot)
+			EndIf
+		Case $efullminers
+			If $aslots[$eminerslot] <> -1 Then
+				If isattackpage() Then selectdroptroop($isminerslot)
+				If _sleep($delaylaunchtroop23) Then Return
+				If isattackpage() Then selectdroptroop($isminerslot)
 			EndIf
 		Case $efullsgobs
 			If $aslots[$esgoblslot] <> -1 Then
@@ -282,6 +308,10 @@ Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl
 											$ideployunits = 7
 										Case $imini
 											$ideployunits = 15
+										Case $ismini
+											$ideployunits = 4
+										Case $isminerslot
+											$ideployunits = 7
 									EndSwitch
 									If $g_bdebugsmartmilk Then SetLog("AttackClick TH: " & $adeploypoint[0] & "," & $adeploypoint[1] & " - " & $ideployunits & "x")
 									Local $iRest = _Min($ideployunits, $aslots2deploy[$i][1])

@@ -321,10 +321,10 @@ Func btnLocateTownHall()
 	LocateTownHall(False, True)
 
 	; It may not be necessary to restart.
-	If $g_iOldTownHallLevel <> $g_iTownHallLevel Then
+	If $iOldTownHallLevel <> $g_iTownHallLevel Then
 		applyConfig()
 	EndIf
-	
+
 	$g_bRunState = $wasRunState
 	AndroidShield("btnLocateTownHall")
 	ChkLocations()
@@ -333,7 +333,7 @@ EndFunc   ;==>btnLocateTownHall
 Func btnResetBuilding()
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
-	
+
 	Local $aReset[2] = [-1, -1]
 
 	$g_aiClanCastlePos = $aReset
@@ -343,7 +343,7 @@ Func btnResetBuilding()
 	$g_aiQueenAltarPos = $aReset
 	$g_aiWardenAltarPos = $aReset
 	$g_aiChampionAltarPos = $aReset
-	
+
 	; It may not be necessary to restart.
 	SaveConfig()
 	readConfig()
@@ -754,7 +754,7 @@ Func chkActivateClangames()
 		GUICtrlSetState($g_hChkClanGamesPurgeAny, $GUI_ENABLE)
 
 		GUICtrlSetState($g_hChkClanGamesStopBeforeReachAndPurge, $GUI_ENABLE)
-		
+
 		GUICtrlSetState($g_hChkOnlyBuilderBaseGC, $GUI_ENABLE)
 
 	Else
@@ -790,10 +790,10 @@ EndFunc   ;==>chkActivateClangames
 Func chkClanGamesBB()
 
 	Local $bBBChallenges = (GUICtrlRead($g_hChkClanGamesBBBattle) = $GUI_CHECKED Or GUICtrlRead($g_hChkClanGamesBBDes) = $GUI_CHECKED Or GUICtrlRead($g_hChkClanGamesBBTroops) = $GUI_CHECKED)
-	
-	
+
+
 	If GUICtrlRead($g_hChkClanGamesEnabled) = $GUI_CHECKED Then
-		
+
 		If $bBBChallenges = True Then
 			GUICtrlSetState($g_hChkForceBBAttackOnClanGames, $GUI_ENABLE)
 			GUICtrlSetState($g_hChkOnlyBuilderBaseGC, $GUI_ENABLE)
@@ -803,13 +803,13 @@ Func chkClanGamesBB()
 			GUICtrlSetState($g_hChkForceBBAttackOnClanGames, $GUI_DISABLE)
 			GUICtrlSetState($g_hChkOnlyBuilderBaseGC, $GUI_DISABLE)
 		EndIf
-		
+
 		; If GUICtrlRead($g_hChkForceBBAttackOnClanGames) = $GUI_CHECKED Then
 			; $g_bChkForceBBAttackOnClanGames = True
 		; Else
 			; $g_bChkForceBBAttackOnClanGames = False
 		; EndIf
-		
+
 		; If GUICtrlRead($g_hChkOnlyBuilderBaseGC) = $GUI_CHECKED Then
 			; $g_bChkOnlyBuilderBaseGC = True
 		; Else
