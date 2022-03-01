@@ -1231,6 +1231,7 @@ Func ApplyConfig_600_22($TypeReadSave)
 				_GUICtrlSetImage($g_ahPicSuperTroops[$i], $g_sLibIconPath, $g_aSuperTroopsIcons[$g_iCmbSuperTroops[$i]])
 			Next
 			; Custom Super Troops - Team AIO Mod++
+			If $g_iCmbSuperTroopsResources < 0 Then $g_iCmbSuperTroopsResources = 0
 			_GUICtrlComboBox_SetCurSel($g_hCmbSuperTroopsResources, $g_iCmbSuperTroopsResources)
 			cmbSuperTroopsResources()
 		Case "Save"

@@ -360,17 +360,17 @@ Func CreateTrainBoost()
 
 	Local $x = 25, $y = 3
 
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost_", "Group_00", ">= Boost until more resources | < Boost if less than value"), $x - 20, $y - 5, $g_iSizeWGrpTab3 - 12, 38)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost_", "Group_00", "≥ Boost until more resources | < Boost if less than value"), $x - 20, $y - 5, $g_iSizeWGrpTab3 - 12, 38)
 
 	; Schedule boost - Team AIO Mod++ 
 	$y += 10
 	$g_hCmbSwitchBoostSchedule[0] = GUICtrlCreateCombo("", $x + 32, $y, 30, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 	#Tidy_off
-	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtMinBoost_Info_01_", ">= 	: Boost until this resources or more.") & @CRLF & _ 
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtMinBoost_Info_01_", "≥ 	: Boost until this resources or more.") & @CRLF & _ 
 					   GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtMinBoost_Info_02_", "< 	: Boost if resources are less of this value.") )
 	#Tidy_on
 	GUICtrlSetOnEvent(-1, "CmbSwitchBoostSchedule")
-	GUICtrlSetData(-1, 	"-|>=|<")
+	GUICtrlSetData(-1, 	"-|≥|<")
 	_GUICtrlComboBox_SetCurSel(-1, 0)
 	$x += 33
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 67 + 32, $y, 16, 16)
@@ -380,11 +380,11 @@ Func CreateTrainBoost()
 	$x += 90
 	$g_hCmbSwitchBoostSchedule[1] = GUICtrlCreateCombo("", $x + 32, $y, 30, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 	#Tidy_off
-	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtMinBoost_Info_01_", ">= 	: Boost until this resources or more.") & @CRLF & _ 
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtMinBoost_Info_01_", "≥ 	: Boost until this resources or more.") & @CRLF & _ 
 					   GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtMinBoost_Info_02_", "< 	: Boost if resources are less of this value.") )
 	#Tidy_on
 	GUICtrlSetOnEvent(-1, "CmbSwitchBoostSchedule")
-	GUICtrlSetData(-1, 	"-|>=|<")
+	GUICtrlSetData(-1, 	"-|≥|<")
 	_GUICtrlComboBox_SetCurSel(-1, 0)
 	$x += 33
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnElixir, $x + 67 + 32, $y, 16, 16)
@@ -394,11 +394,11 @@ Func CreateTrainBoost()
 	$x += 90
 	$g_hCmbSwitchBoostSchedule[2] = GUICtrlCreateCombo("", $x + 32, $y, 30, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 	#Tidy_off
-	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtMinBoost_Info_01_", ">= 	: Boost until this resources or more.") & @CRLF & _ 
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtMinBoost_Info_01_", "≥ 	: Boost until this resources or more.") & @CRLF & _ 
 					   GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtMinBoost_Info_02_", "< 	: Boost if resources are less of this value.") )
 	#Tidy_on
 	GUICtrlSetOnEvent(-1, "CmbSwitchBoostSchedule")
-	GUICtrlSetData(-1, 	"-|>=|<")
+	GUICtrlSetData(-1, 	"-|≥|<")
 	_GUICtrlComboBox_SetCurSel(-1, 0)
 	$x += 33
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 67 + 32, $y, 16, 16)
@@ -714,7 +714,7 @@ Func CreateTrainOptions()
 	$y += 28
 	$g_hLblCloseWaitingTroops = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Options", "LblCloseWaitingTroops", "Minimum Time To Close") & ": ", $x - 12, $y, -1, -1)
 	GUICtrlSetState(-1, $GUI_UNCHECKED)
-	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Options", "LblCloseWaitingTroops_Info_01", "Will be close CoC If train time troops >= (Minimum time required to close)" & @CRLF & _
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Options", "LblCloseWaitingTroops_Info_01", "Will be close CoC If train time troops ≥ (Minimum time required to close)" & @CRLF & _
 			"Just stay in the main screen if train time troops < (Minimum time required to close)"))
 	GUICtrlSetOnEvent(-1, "chkCloseWaitEnable")
 

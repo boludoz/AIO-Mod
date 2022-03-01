@@ -808,6 +808,8 @@ Func SaveConfig_600_22()
 	Next
 	_Ini_Add("planned", "BoostBarracksHours", $string)
 	_Ini_Add("SuperTroopsBoost", "SuperTroopsEnable", $g_bSuperTroopsEnable ? 1 : 0)
+	; Custom boost - Team AIO Mod++
+	_Ini_Add("planned", "CmbBoostEverything", $g_iCmbBoostEverything)
 	For $i = 0 To $iMaxSupersTroop - 1
 		_Ini_Add("SuperTroopsBoost", "SuperTroopsIndex" & $i, $g_iCmbSuperTroops[$i])
 	Next

@@ -1088,8 +1088,10 @@ Func ReadConfig_600_22()
 	For $i = 0 To $iMaxSupersTroop - 1
 		$g_iCmbSuperTroops[$i] = Int(IniRead($g_sProfileConfigPath, "SuperTroopsBoost", "SuperTroopsIndex" & $i, 0))
 	Next
+	; Custom boost - Team AIO Mod++
+	IniReadS($g_iCmbBoostEverything, $g_sProfileConfigPath, "planned", "CmbBoostEverything", 0, "Int")
 	; Note: These global variables are not stored to the ini file, to prevent automatic boosting (and spending of gems) when the bot is started:
-	; $g_iCmbBoostBarracks, $g_iCmbBoostSpellFactory, $g_iCmbBoostWorkshop, $g_iCmbBoostBarbarianKing, $g_iCmbBoostArcherQueen, $g_iCmbBoostWarden, $g_iCmbBoostEverything
+	; $g_iCmbBoostBarracks, $g_iCmbBoostSpellFactory, $g_iCmbBoostWorkshop, $g_iCmbBoostBarbarianKing, $g_iCmbBoostArcherQueen, $g_iCmbBoostWarden
 	; Custom Super Troops - Team AIO Mod++
 	$g_iCmbSuperTroopsResources = Int(IniRead($g_sProfileConfigPath, "SuperTroopsBoost", "CmbSuperTroopsResources", 0))
 EndFunc   ;==>ReadConfig_600_22
