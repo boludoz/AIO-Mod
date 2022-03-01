@@ -1209,9 +1209,6 @@ Func DropTroopSmartFarm($troop, $nbSides, $number, $slotsPerEdge = 0, $name = ""
 	Return $infoDropTroop
 EndFunc   ;==>DropTroopSmartFarm
 
-Global $g_FirstBitMap
-Global $g_SecondBitMap
- 
 Func LaunchSpellsSmartFarm($SIDESNAMES = "TR|TL|BR|BL")
 	$g_bDebugSmartFarm = True
 	_CaptureRegion2()
@@ -1242,6 +1239,7 @@ Func LaunchSpellsSmartFarm($SIDESNAMES = "TR|TL|BR|BL")
 				Local $DetectedPoint[2] = [$return[$j][0], $return[$j][1]]
 				If Not isInsideDiamond($DetectedPoint) Then ContinueLoop
 				If StringInStr($SIDESNAMES, Side($DetectedPoint)) = 0 Then ContinueLoop
+				; SetLog($return[$j][0] & " | " & $return[$j][1])
 				ReDim $ReturnArray[UBound($ReturnArray) + 1][2]
 				$ReturnArray[UBound($ReturnArray) - 1][0] = $return[$j][0]
 				$ReturnArray[UBound($ReturnArray) - 1][1] = $return[$j][1]

@@ -109,28 +109,28 @@ Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl
 			$igiantslot = $i
 			$aslots2deploy[$egiantslot][0] = $i
 			$aslots2deploy[$egiantslot][1] = $g_avattacktroops[$i][1]
-			$aslots2deploy[$egiantslot][2] = Random(1, 2, 1)
+			$aslots2deploy[$egiantslot][2] = "Random(1, 2, 1)"
 			$aslots2deploy[$egiantslot][3] = $g_avattacktroops[$i][0]
 		EndIf
 		If $g_avattacktroops[$i][0] = $eBarb Then
 			$ibarbslot = $i
 			$aslots2deploy[$ebarbslot][0] = $i
 			$aslots2deploy[$ebarbslot][1] = $g_avattacktroops[$i][1]
-			$aslots2deploy[$ebarbslot][2] = Random(3, 6, 1)
+			$aslots2deploy[$ebarbslot][2] = "Random(3, 6, 1)"
 			$aslots2deploy[$ebarbslot][3] = $g_avattacktroops[$i][0]
 		EndIf
 		If $g_avattacktroops[$i][0] = $eArch Then
 			$iarchslot = $i
 			$aslots2deploy[$earchslot][0] = $i
 			$aslots2deploy[$earchslot][1] = $g_avattacktroops[$i][1]
-			$aslots2deploy[$earchslot][2] = Random(3, 6, 1)
+			$aslots2deploy[$earchslot][2] = "Random(3, 6, 1)"
 			$aslots2deploy[$earchslot][3] = $g_avattacktroops[$i][0]
 		EndIf
 		If $g_avattacktroops[$i][0] = $eGobl Then
 			$igoblslot = $i
 			$aslots2deploy[$egoblslot][0] = $i
 			$aslots2deploy[$egoblslot][1] = $g_avattacktroops[$i][1]
-			$aslots2deploy[$egoblslot][2] = Random(5, 8, 1)
+			$aslots2deploy[$egoblslot][2] = "Random(5, 8, 1)"
 			$aslots2deploy[$egoblslot][3] = $g_avattacktroops[$i][0]
 		EndIf
 		If $g_avattacktroops[$i][0] = $eBabyD Then
@@ -144,14 +144,14 @@ Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl
 			$imini = $i
 			$aslots2deploy[$eminislot][0] = $i
 			$aslots2deploy[$eminislot][1] = $g_avattacktroops[$i][1]
-			$aslots2deploy[$eminislot][2] = Random(4, 6, 1)
+			$aslots2deploy[$eminislot][2] = "Random(4, 6, 1)"
 			$aslots2deploy[$eminislot][3] = $g_avattacktroops[$i][0]
 		EndIf
 		If $g_avattacktroops[$i][0] = $eSGobl Then
 			$isgobs = $i
 			$aslots2deploy[$esgoblslot][0] = $i
 			$aslots2deploy[$esgoblslot][1] = $g_avattacktroops[$i][1]
-			$aslots2deploy[$esgoblslot][2] = Random(2, 3, 1)
+			$aslots2deploy[$esgoblslot][2] = "Random(2, 3, 1)"
 			$aslots2deploy[$esgoblslot][3] = $g_avattacktroops[$i][0]
 		EndIf
 		If $g_avattacktroops[$i][0] = $eJSpell Then
@@ -165,7 +165,7 @@ Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl
 			$isbarbslot = $i
 			$aslots2deploy[$esbarbslot][0] = $i
 			$aslots2deploy[$esbarbslot][1] = $g_avattacktroops[$i][1]
-			$aslots2deploy[$esbarbslot][2] = Random(2, 3, 1)
+			$aslots2deploy[$esbarbslot][2] = "Random(2, 3, 1)"
 			$aslots2deploy[$esbarbslot][3] = $g_avattacktroops[$i][0]
 		EndIf
 	Next
@@ -284,8 +284,9 @@ Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl
 											$ideployunits = 15
 									EndSwitch
 									If $g_bdebugsmartmilk Then SetLog("AttackClick TH: " & $adeploypoint[0] & "," & $adeploypoint[1] & " - " & $ideployunits & "x")
-									attackclick($adeploypoint[0], $adeploypoint[1], $ideployunits, 100, 0, "#0098")
-									$aslots2deploy[$i][1] -= $ideployunits
+									Local $iRest = _Min($ideployunits, $aslots2deploy[$i][1])
+									attackclick($adeploypoint[0], $adeploypoint[1], $iRest, 100, 0, "#0098")
+									$aslots2deploy[$i][1] -= $iRest
 									SetLog("Deployed " & GetTroopName($aslots2deploy[$i][3], Number($ideployunits)) & " " & $ideployunits & "x - Snipping TH")
 									If $g_bdebugsmartmilk Then SetLog("Remains - " & GetTroopName($aslots2deploy[$i][3]) & " " & $aslots2deploy[$i][1] & "x")
 									If _sleep($delaylaunchtroop23) Then Return
@@ -412,6 +413,7 @@ Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl
 							$allpossibledeploypoints[UBound($allpossibledeploypoints) - 1][0] = $deploypoint[0]
 							$allpossibledeploypoints[UBound($allpossibledeploypoints) - 1][1] = $deploypoint[1]
 						EndIf
+						Local $iExecute = 1
 						For $i = 0 To UBound($aslots2deploy) - 1
 							If NOT $g_brunstate Then Return
 							If $aslots2deploy[$i][1] > 0 Then
@@ -425,8 +427,9 @@ Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl
 								If isattackpage() Then selectdroptroop($aslots2deploy[$i][0])
 								If _sleep($delaylaunchtroop21 * $g_imilkdelay) Then Return
 								If $g_bdebugsmartmilk Then SetLog("AttackClick: " & $deploypoint[0] & "," & $deploypoint[1])
-								attackclick($deploypoint[0], $deploypoint[1], $aslots2deploy[$i][2], 100, 0, "#0098")
-								$aslots2deploy[$i][1] -= $aslots2deploy[$i][2]
+								$iExecute = _Min(Execute($aslots2deploy[$i][2]), $aslots2deploy[$i][1])
+								attackclick($deploypoint[0], $deploypoint[1], $iExecute, 100, 0, "#0098")
+								$aslots2deploy[$i][1] -= $iExecute
 								SetLog("Deployed " & GetTroopName($aslots2deploy[$i][3], Number($aslots2deploy[$i][2])) & " " & $aslots2deploy[$i][2] & "x")
 								If $g_bdebugsmartmilk Then SetLog("Remains - " & GetTroopName($aslots2deploy[$i][3]) & " " & $aslots2deploy[$i][1] & "x")
 								If _sleep($delaylaunchtroop21 * $g_imilkdelay) Then Return
@@ -506,15 +509,16 @@ Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl
 			setdebuglog("How many last deploy points: " & UBound($allpossibledeploypoints))
 			For $point = 0 To UBound($allpossibledeploypoints) - 1
 				If $g_bisheroesdropped Then checkheroeshealth()
+				Local $iExecute = 1
 				For $i = 0 To UBound($aslots2deploy) - 1
+					$iExecute = Execute($aslots2deploy[$i][2])
 					If $aslots2deploy[$i][1] > 0 Then
 						If isattackpage() Then selectdroptroop($aslots2deploy[$i][0])
-						If _sleep($delaylaunchtroop23) Then Return
-						If _sleep($delaylaunchtroop23) Then Return
+						If _sleep($delaylaunchtroop23 * 2) Then Return
 						If $g_bdebugsmartmilk Then SetLog("AttackClick: " & $allpossibledeploypoints[$point][0] & "," & $allpossibledeploypoints[$point][1])
-						attackclick($allpossibledeploypoints[$point][0], $allpossibledeploypoints[$point][1], $aslots2deploy[$i][2], 100, 0, "#0098")
-						$aslots2deploy[$i][1] -= $aslots2deploy[$i][2]
-						SetLog("Deployed " & GetTroopName($aslots2deploy[$i][3], Number($aslots2deploy[$i][2])) & " " & $aslots2deploy[$i][2] & "x")
+						attackclick($allpossibledeploypoints[$point][0], $allpossibledeploypoints[$point][1], $iExecute, 100, 0, "#0098")
+						$aslots2deploy[$i][1] -= _Min(Execute($aslots2deploy[$i][2]), $aslots2deploy[$i][1])
+						SetLog("Deployed " & GetTroopName($aslots2deploy[$i][3], $iExecute) & " " & $iExecute & "x")
 						If $g_bdebugsmartmilk Then SetLog("Remains - " & GetTroopName($aslots2deploy[$i][3]) & " " & $aslots2deploy[$i][1] & "x")
 						If _sleep($delaylaunchtroop23) Then Return
 					EndIf

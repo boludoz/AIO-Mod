@@ -315,15 +315,13 @@ EndFunc   ;==>btnLocateWardenAltar
 
 Func btnLocateTownHall()
 	Local $wasRunState = $g_bRunState
-	Local $g_iOldTownHallLevel = $g_iTownHallLevel
 	$g_bRunState = True
 	ZoomOut()
+	Local $iOldTownHallLevel = $g_iTownHallLevel
 	LocateTownHall(False, True)
 
 	; It may not be necessary to restart.
-	If Not $g_iOldTownHallLevel = $g_iTownHallLevel Then
-		SaveConfig()
-		readConfig()
+	If $g_iOldTownHallLevel <> $g_iTownHallLevel Then
 		applyConfig()
 	EndIf
 	
