@@ -267,6 +267,26 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		Return False
 	EndIf
 
+	; friends request sc id for google play users.
+	If UBound(decodeSingleCoord(FindImageInPlace("OptReqFID", $g_sImgOptReqFID, "530,21,640,64", False))) > 1 Then ; Found Optional Game Update Message
+		SetLog("Found Friend Request - SC ID", $COLOR_INFO)
+		
+		PureClick(640, 44, 1, 0)
+		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+			
+		If IsMainPage(3) = False And IsMainPageBuilderBase(3) = False Then
+			androidbackbutton()
+			
+			If IsMainPage(2) = False And IsMainPageBuilderBase(2) = False Then
+				androidbackbutton()
+				If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+			EndIf
+		EndIf
+		
+		$g_bMinorObstacle = True
+		Return False
+	EndIf
+
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	If TestCapture() = 0 And GetAndroidProcessPID() = 0 Then
 		; CoC not running
