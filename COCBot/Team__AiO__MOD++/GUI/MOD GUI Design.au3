@@ -136,7 +136,7 @@ Func CreateMiscMagicSubTab()
 
 	$y += 32
 	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnLabP, 24, $y - 5, 25, 25)
-	$g_hChkLabPotion = GUICtrlCreateCheckbox("Use research potion when laboratory hours is >= ", 56, $y, 233, 17)
+	$g_hChkLabPotion = GUICtrlCreateCheckbox("Use research potion when laboratory hours is ≥ ", 56, $y, 233, 17)
 	GUICtrlSetOnEvent(-1, "MagicItemsRefresh")
 	$g_hInputLabPotion = _GUICtrlCreateInput("Hours", 320, $y, 41, 21)
 	GUICtrlSetOnEvent(-1, "MagicItemsRefresh")

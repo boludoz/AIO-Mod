@@ -168,7 +168,7 @@ Func CreateLaboratorySubTab()
 		#Region - Magic Items - Team AIO Mod++
 		$y += 40
 		_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnLabP, 24 + 49, $y - 5 + 45, 25, 25)
-		$g_hChkLabPotion = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkLabPotion", "Use research potion when laboratory hours is >="), 56 + 49, $y + 45, -1, -1)
+		$g_hChkLabPotion = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkLabPotion", "Use research potion when laboratory hours is ≥"), 56 + 49, $y + 45, -1, -1)
 		$g_hInputLabPotion = _GUICtrlCreateInput("0", 320 - 75 + 49, $y + 64, 20, 15, BitOR($ES_CENTER, $ES_NUMBER))
 			GUICtrlSetLimit(-1, 2)
 		#EndRegion - Magic Items - Team AIO Mod++
@@ -580,7 +580,7 @@ Func CreateAutoUpgradeSubTab()
 		
 		; Magic Items - Team AIO Mod++
 		_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModBuilderP, $x + 180, $y - 8, 24, 24)
-		$g_hChkBuilderPotion = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "ChkBuilderPotion", "Builder potion if busy builders >="), $x + 210, $y - 8, -1, -1)
+		$g_hChkBuilderPotion = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "ChkBuilderPotion", "Builder potion if busy builders ≥"), $x + 210, $y - 8, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child VIllage - AutoUpgrade", "ChkBuilderPotion_Info_01", "Check box to automatically use a Builder Potion (when available)."))
 			GUICtrlSetOnEvent(-1, "ChkBuilderPotion")
 		$g_hCmbInputBuilderPotion = GUICtrlCreateCombo("", $x + 381, $y - 6, 30, -1, $CBS_DROPDOWNLIST + $WS_VSCROLL + $CBS_AUTOHSCROLL)
