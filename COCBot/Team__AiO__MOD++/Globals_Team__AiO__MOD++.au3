@@ -562,9 +562,13 @@ Global $g_aNoClanBtn[4] = [163, 515, 0x6DBB1F, 20] ; OK - Green Join Button on C
 Global $g_aOKBtn[5] = [494, 409, 0xE0F989, 20, 500] ; OK - Fast OK button.
 Global $g_aJoinInvBtn[5] = [524, 215, 0xDFF886, 20, 500] ; OK - Join invitation button.
 
-; Magic Items
+#Region - Magic Items
 Global $g_bChkCollectMagicItems, $g_bChkBuilderPotion, $g_bChkClockTowerPotion, $g_bChkHeroPotion, $g_bChkLabPotion, $g_bChkPowerPotion, $g_bChkResourcePotion, $g_iComboHeroPotion, $g_iComboPowerPotion, _
 $g_iInputBuilderPotion, $g_iInputLabPotion, $g_iInputGoldItems = 250000, $g_iInputElixirItems = 300000, $g_iInputDarkElixirItems = 1000
+
+Global $g_hChkBuilderPotion, $g_hChkHeroPotion, $g_hChkLabPotion, $g_hChkPowerPotion, _
+$g_hComboHeroPotion, $g_hComboPowerPotion, $g_hCmbInputBuilderPotion, $g_hInputLabPotion, $g_hInputGoldItems, $g_hInputElixirItems, $g_hInputDarkElixirItems
+#EndRegion - Magic Items
 
 #Region - Builder Base !!!
 Global $g_oTxtBBAtkLogInitText = ObjCreate("Scripting.Dictionary")

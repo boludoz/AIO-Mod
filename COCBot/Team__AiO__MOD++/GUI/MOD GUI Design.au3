@@ -41,8 +41,6 @@ Func CreateMODTab()
 			TabGTFOGUI()
 		$g_hGUI_MOD_TAB_ITEM5 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_06_STab_05", "Prewar"))
 			TabWarPreparationGUI()
-		; $g_hGUI_MOD_TAB_ITEM6 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_06_STab_06", "Misc"))
-			; TabMiscGUI()
 
 	If $g_bDevMode Then
 		$g_hGUI_MOD_TAB_ITEM6 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_06_STab_06Ex", "Debug"))
@@ -55,7 +53,7 @@ EndFunc   ;==>CreateMODTab
 
 ; Tab Misc GUI - Team AiO MOD++
  Func TabMiscGUI()
-	SplashStep("Loading mod - misc options ...")
+	SplashStep("Loading mod - Misc options ...")
 
 	Local $iX = 32, $iY = 45
 
@@ -70,7 +68,7 @@ EndFunc   ;==>CreateMODTab
 	GUICtrlSetColor(-1, 0xFFCC00)
 
 	$iY += 30
-	
+
 	$g_hChkSkipFirstAttack = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "ChkSkipFirstAttack", "Skip attack first."), $iX, $iY, 244, 17)
   	GUICtrlSetOnEvent(-1, "chkMiscModOptions")
   	_GUICtrlSetTip(-1, GetTranslatedFileIni("MiscMODs", "ChkBuildingsLocateTip", "Skip first check without attack first."))
@@ -87,7 +85,7 @@ EndFunc   ;==>CreateMODTab
   	$g_hChkBuildingsLocate = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "ChkBuildingsLocate",  "Skip buildings location."), 32, $iY, 244, 17)
 	GUICtrlSetOnEvent(-1, "chkMiscModOptions")
 	$iY += 25
-	
+
   	$g_hChkEnableFirewall = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "ChkEnableFirewall",  "Timeout telemetry"), 32, $iY, 244, 17)
 	GUICtrlSetOnEvent(-1, "chkMiscModOptions")
 	$iY += 23
@@ -95,81 +93,13 @@ EndFunc   ;==>CreateMODTab
 	$g_hChkBotLogLineLimit = GUICtrlCreateCheckbox(GetTranslatedFileIni("MiscMODs", "BotLogLineLimit", "Disable clear bot log, and line limit to: "), $iX, $iY, -1, -1)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MiscMODs", "BotLogLineLimitTips", "Bot log will never clear after battle, and clear bot log will replace will line limit."))
 	GUICtrlSetOnEvent(-1, "chkBotLogLineLimit")
-	
+
 	$g_hTxtLogLineLimit = _GUICtrlCreateInput("240", $iX + 300, $iY + 2, 35, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MiscMODs", "BotLogLineLimitValue", "Please enter how many line to limit for the bot log."))
 	GUICtrlSetLimit(-1, 4)
 	GUICtrlSetOnEvent(-1, "txtLogLineLimit")
-	
+
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
-	
+
 	GUICtrlCreateTabItem("")
 EndFunc   ;==>TabMiscGUI
-
-Global $g_hChkBuilderPotion, $g_hChkHeroPotion, $g_hChkLabPotion, $g_hChkPowerPotion, _
-$g_hComboHeroPotion, $g_hComboPowerPotion, $g_hCmbInputBuilderPotion, $g_hInputLabPotion, $g_hInputGoldItems, $g_hInputElixirItems, $g_hInputDarkElixirItems;, $g_hCmbClockTowerPotion, $g_hChkClockTowerPotion
-#cs
-
-Func CreateMiscMagicSubTab()
-
-	; GUI SubTab
-	Local $x = 15, $y = 45
-
-	; GUICtrlCreateGroup("Collect Items", 16, 24, 408, 78)
-	; _GUICtrlCreateIcon($g_sLibModIconPath, $eIcnShop, 24, 46, 25, 25)
-	; $g_hChkCollectMagicItems = GUICtrlCreateCheckbox("Collect magic items", 56, 48, 105, 17)
-	; GUICtrlSetOnEvent(-1, "btnDDApply")
-	; $g_hChkFreeMagicItems = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkFreeMagicItems", "Collect Free Magic Items"), 56, 73, 200, 17)
-	; GUICtrlSetOnEvent(-1, "ChkFreeMagicItems")
-	; $g_hBtnMagicItemsConfig = GUICtrlCreateButton("Settings", 176, 48, 97, 25)
-	; GUICtrlSetOnEvent(-1, "btnDailyDiscounts")
-
-	; GUICtrlCreateGroup("", -99, -99, 1, 1)
-	GUICtrlCreateGroup("Magic Items", 16, 104, 408, 155)
-
-	; $y = 128
-	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModBuilderP, 24, $y - 5, 25, 25)
-	$g_hChkBuilderPotion = GUICtrlCreateCheckbox("Use builder potion when busy builders is > = : ", 56, $y, 225, 17)
-	GUICtrlSetOnEvent(-1, "MagicItemsRefresh")
-	$g_hCmbInputBuilderPotion = _GUICtrlCreateInput("Number", 320, $y, 41, 21)
-	GUICtrlSetOnEvent(-1, "MagicItemsRefresh")
-
-	$y += 32
-	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnLabP, 24, $y - 5, 25, 25)
-	$g_hChkLabPotion = GUICtrlCreateCheckbox("Use research potion when laboratory hours is ≥ ", 56, $y, 233, 17)
-	GUICtrlSetOnEvent(-1, "MagicItemsRefresh")
-	$g_hInputLabPotion = _GUICtrlCreateInput("Hours", 320, $y, 41, 21)
-	GUICtrlSetOnEvent(-1, "MagicItemsRefresh")
-		
-	; $y += 32
-	; _GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModResourceP, 24, $y - 5, 25, 25)
-	; $g_hChkResourcePotion = GUICtrlCreateCheckbox("Use resource potion only if storage are :", 56, $y, 225, 17)
-	; GUICtrlSetOnEvent(-1, "MagicItemsRefresh")	
-	#cs
-	$y += 36
-	$g_hInputGoldItems = _GUICtrlCreateInput("1000000", 88, $y, 73, 21)
-	GUICtrlSetOnEvent(-1, "MagicItemsRefresh")
-	$g_hInputElixirItems = _GUICtrlCreateInput("1000000", 192, $y, 73, 21)
-	GUICtrlSetOnEvent(-1, "MagicItemsRefresh")
-	$g_hInputDarkElixirItems = _GUICtrlCreateInput("1000", 296, $y, 49, 21)
-	GUICtrlSetOnEvent(-1, "MagicItemsRefresh")
-	GUICtrlCreateLabel("Lower : ", 40, $y, 42, 17)
-	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnGoldP, 163, $y - 2, 25, 25)
-	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnDarkP, 345, $y - 2, 25, 25)
-	_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnElixirP, 265, $y - 2, 25, 25)
-	#ce
-	; $y += 32
-	; $g_hChkHeroPotion = GUICtrlCreateCheckbox("Use hero potion whem are avariable : ", 56, $y, 217, 17)
-	; GUICtrlSetState (-1, $GUI_DISABLE)
-	; $y += 32
-	; $g_hChkPowerPotion = GUICtrlCreateCheckbox("Use power potion during : ", 56, 256, 225, 17)
-	; GUICtrlSetState (-1, $GUI_DISABLE)
-	; $g_hComboPowerPotion = GUICtrlCreateCombo("Select", 296, 256, 89, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
-	; GUICtrlSetState (-1, $GUI_DISABLE)
-	; $g_hComboHeroPotion = GUICtrlCreateCombo("Select", 296, 192, 89, 25, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
-	; GUICtrlSetState (-1, $GUI_HIDE)
-	; _GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModPowerP, 24, 254, 25, 25)
-	; _GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModHeroP, 24, 190, 25, 25)
-
-EndFunc   ;==>CreateMiscMagicSubTab
-#ce
