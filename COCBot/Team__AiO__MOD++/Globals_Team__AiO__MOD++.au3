@@ -692,6 +692,8 @@ Global $g_hChkSmartFarmAndRandomDeploy, $g_bUseSmartFarmAndRandomDeploy = True
 Global $g_hChkSmartFarmAndRandomQuant, $g_bUseSmartFarmAndRandomQuant = False
 Global $g_hCmbSmartFarmSpellsHowManySides, $g_hSmartFarmSpellsEnable, $g_iSmartFarmSpellsHowManySides = 2, $g_bSmartFarmSpellsEnable = True
 Global $g_hChkUseSmartFarmRedLine, $g_bUseSmartFarmRedLine = False
+
+Global $g_FirstBitMap, $g_SecondBitMap
 #EndRegion - Custom SmartFarm - Team AIO Mod++
 
 #Region - Misc - Team AIO Mod++

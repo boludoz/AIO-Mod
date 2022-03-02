@@ -108,18 +108,18 @@ EndFunc   ;==>CreateAttackSearchDeadBaseStandard
 #Region - SmartMilk
 Global $g_hgui_deadbase_attack_smartmilk = 0
 Global $g_hcmbmilkstrategyarmy = 0, $g_hchkdebugsmartmilk = 0, $g_hchkmilkforcedeployheroes = 0, $g_hchkmilkforcealltroops = 0, $g_hchkmilkforceth = 0, $g_hcmbmilkdelays = 0
-Global $g_hicnmilk[8] = [$eicnbabydragon, $eicnbarbarian, $eicnarcher, $eicngiant, $eicngoblin, $eicnminion, $eIcnSuperBarbarian, $eIcnSneakyGoblin], $g_ahpicmilk = 0
+Global $g_hicnmilk[10] = [$eicnbabydragon, $eicnbarbarian, $eicnarcher, $eicngiant, $eicngoblin, $eicnminion, $eIcnSuperMinion, $eIcnSuperBarbarian, $eIcnSneakyGoblin, $eIcnMiner], $g_ahpicmilk = 0
 
 Func createattacksearchdeadbasesmartmilk()
 	$g_hgui_deadbase_attack_smartmilk = _guicreate("", $_gui_main_width - 195, $g_isizehgrptab4, 150, 25, BitOR($ws_child, $ws_tabstop), -1, $g_hgui_deadbase)
-	Local $stxttip = "You can use, Barbarians, Archers, Giants, Goblins, Minions, " & @CRLF & " Baby Dragons, Super Barbarians, Sneak Goblins and Super Wall Breakers"
+	Local $stxttip = "You can use, Barbarians, Archers, Giants, Goblins, Minions, Super Minions, " & @CRLF & " Baby Dragons, Super Barbarians, Sneak Goblins, Miners and Super Wall Breakers"
 	Local $x = 35, $y = 20
 	GUICtrlCreateGroup(gettranslatedfileini("MBR GUI Design Child Attack - Attack Smart Milk", "Group_01", "Options"), $x - 30, $y - 20, 270, $g_isizehgrptab4)
 	GUICtrlCreateLabel(gettranslatedfileini("MBR GUI Design Child Attack - Attack Smart Milk", "Lbl-CmbMilkStrategyArmy", "Army Composition Strategy") & ":", $x, $y + 5, -1, -1)
 	$g_ahpicmilk = _guictrlcreateicon($g_slibiconpath, $g_hicnmilk[$g_imilkstrategyarmy], $x, $y + 20, 32, 32)
 	$g_hcmbmilkstrategyarmy = GUICtrlCreateCombo("", $x + 40, $y + 25, 150, 21, BitOR($cbs_dropdownlist, $cbs_autohscroll))
 	_guictrlsettip(-1, $stxttip)
-	GUICtrlSetData(-1, "Full Baby Dragons|Full Barbs|Full Archs|Gibarch|Full Goblins|Full Minions|Full Super Barbarians|Full Sneaky Goblins", "Baby Dragons")
+	GUICtrlSetData(-1, "Full Baby Dragons|Full Barbs|Full Archs|Gibarch|Full Goblins|Full Minions|Full Super Minions|Full Super Barbarians|Full Sneaky Goblins|Full Miners", "Baby Dragons")
 	GUICtrlSetOnEvent(-1, "CmbMilkStrategyArmy")
 	$y += 60
 	$g_hchkmilkforcedeployheroes = GUICtrlCreateCheckbox(gettranslatedfileini("MBR GUI Design Child Attack - Attack Smart Milk", "ChkMilkForceDeployHeroes", "Force to Deploy Heroes/CC"), $x + 40, $y, -1, -1)

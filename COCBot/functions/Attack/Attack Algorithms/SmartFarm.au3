@@ -613,8 +613,6 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 	Local $GiantComp = 0
 
 	_CaptureRegion2() ; ensure full screen is captured (not ideal for debugging as clean image was already saved, but...)
-	_GetRedArea()
-
 	Switch $Nside
 		Case 1 ;Single sides ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			SetLog("Attacking on a single side", $COLOR_INFO)
@@ -662,7 +660,7 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 	SetDebugLog("Giants : " & $GiantComp & "  , per side: " & ($GiantComp / $nbSides) & " / deploy points per side: " & $g_iSlotsGiants)
 
 	If $g_bCustomDropOrderEnable Then
-		Local $listInfoDeploy[38][5] = [[MatchTroopDropName(0), $nbSides, MatchTroopWaveNb(0), 1, MatchSlotsPerEdge(0)], _
+		Local $listInfoDeploy[40][5] = [[MatchTroopDropName(0), $nbSides, MatchTroopWaveNb(0), 1, MatchSlotsPerEdge(0)], _
 				[MatchTroopDropName(1), $nbSides, MatchTroopWaveNb(1), 1, MatchSlotsPerEdge(1)], _
 				[MatchTroopDropName(2), $nbSides, MatchTroopWaveNb(2), 1, MatchSlotsPerEdge(2)], _
 				[MatchTroopDropName(3), $nbSides, MatchTroopWaveNb(3), 1, MatchSlotsPerEdge(3)], _
@@ -699,48 +697,69 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 				[MatchTroopDropName(34), $nbSides, MatchTroopWaveNb(34), 1, MatchSlotsPerEdge(34)], _
 				[MatchTroopDropName(35), $nbSides, MatchTroopWaveNb(35), 1, MatchSlotsPerEdge(35)], _
 				[MatchTroopDropName(36), $nbSides, MatchTroopWaveNb(36), 1, MatchSlotsPerEdge(36)], _
-				[MatchTroopDropName(37), $nbSides, MatchTroopWaveNb(37), 1, MatchSlotsPerEdge(37)]]
+				[MatchTroopDropName(37), $nbSides, MatchTroopWaveNb(37), 1, MatchSlotsPerEdge(37)], _
+				[MatchTroopDropName(36), $nbSides, MatchTroopWaveNb(38), 1, MatchSlotsPerEdge(38)], _
+				[MatchTroopDropName(37), $nbSides, MatchTroopWaveNb(39), 1, MatchSlotsPerEdge(39)]]
 	Else
-		Local $listInfoDeploy[40][5] = [[$eGole, $nbSides, 1, 1, 2] _
-				, [$eLava, $nbSides, 1, 1, 2] _
-				, [$eIceH, $nbSides, 1, 1, 2] _
-				, [$eIceG, $nbSides, 1, 1, 2] _
-				, [$eYeti, $nbSides, 1, 1, 2] _
-				, [$eGiant, $nbSides, 1, 1, $g_iSlotsGiants] _
-				, [$eSGiant, $nbSides, 1, 1, $g_iSlotsGiants] _
-				, [$eDrag, $nbSides, 1, 1, 0] _
-				, [$eSDrag, $nbSides, 1, 1, 0] _
-				, [$eBall, $nbSides, 1, 1, 0] _
-				, [$eRBall, $nbSides, 1, 1, 0] _
-				, [$eBabyD, $nbSides, 1, 1, 0] _
-				, [$eInfernoD, $nbSides, 1, 1, 0] _
-				, [$eHogs, $nbSides, 1, 1, 1] _
-				, [$eValk, $nbSides, 1, 1, 0] _
-				, [$eSValk, $nbSides, 1, 1, 0] _
-				, [$eBowl, $nbSides, 1, 1, 0] _
-				, [$eSBowl, $nbSides, 1, 1, 0] _
-				, [$eMine, $nbSides, 1, 1, 0] _
-				, [$eEDrag, $nbSides, 1, 1, 0] _
-				, [$eRDrag, $nbSides, 1, 1, 0] _
-				, [$eWall, $nbSides, 1, 1, 1] _
-				, [$eSWall, $nbSides, 1, 1, 1] _
-				, [$eBarb, $nbSides, 1, 1, 0] _
-				, [$eSBarb, $nbSides, 1, 1, 0] _
-				, [$eArch, $nbSides, 1, 1, 0] _
-				, [$eSArch, $nbSides, 1, 1, 0] _
-				, [$eWiza, $nbSides, 1, 1, 0] _
-				, [$eSWiza, $nbSides, 1, 1, 0] _
-				, [$eMini, $nbSides, 1, 1, 0] _
-				, [$eSMini, $nbSides, 1, 1, 0] _
-				, [$eWitc, $nbSides, 1, 1, 1] _
-				, [$eSWitc, $nbSides, 1, 1, 1] _
-				, [$eGobl, $nbSides, 1, 1, 0] _
-				, [$eSGobl, $nbSides, 1, 1, 0] _
-				, [$eHeal, $nbSides, 1, 1, 1] _
-				, [$ePekk, $nbSides, 1, 1, 1] _
-				, [$eHunt, $nbSides, 1, 1, 0] _
-				, ["CC", 1, 1, 1, 1] _
-				, ["HEROES", 1, 2, 1, 1]]
+		Local $aRND[5][11] = [[$eBarb, $eSBarb, $eArch, $eSArch, $eWiza, $eSWiza, $eMini, $eSMini, $eWitc, $eGobl, $eSGobl], _
+				[$eArch, $eSArch, $eBarb, $eSBarb, $eMini, $eSMini, $eSWiza, $eWiza, $eWitc, $eGobl, $eSGobl], _ 
+				[$eGobl, $eSGobl, $eSWiza, $eWiza, $eArch, $eSArch, $eBarb, $eSBarb, $eMini, $eSMini, $eWitc], _
+				[$eSWiza, $eWiza, $eGobl, $eSGobl, $eArch, $eSArch, $eBarb, $eSBarb, $eMini, $eSMini, $eWitc], _
+				[$eMini, $eSMini, $eSWiza, $eWiza, $eBarb, $eSBarb, $eArch, $eSArch, $eWitc, $eGobl, $eSGobl]]
+								
+		Local $iRand = 0
+		Static $ilastRand = 0
+		If $g_bUseSmartFarmAndRandomDeploy = True Then
+			For $iLuckyMachine = 0 To Random(0, 1, 1)
+				If $g_bRunState = False Or _Sleep(10) Then Return
+				$iRand = Random(0, 4, 1)
+				If $iRand <> $ilastRand Then
+					$ilastRand = $iRand
+					ExitLoop
+				EndIf
+			Next
+		EndIf
+		
+		Local $listinfodeploy[40][5] = [[$eGole, $nbSides, 1, 1, 2], _ 
+				[$eRDRag, $nbSides, 1, 1, 2], _ 
+				[$eLava, $nbSides, 1, 1, 2], _ 
+				[$eIceH, $nbSides, 1, 1, 1], _ 
+				[$eGiant, $nbSides, 1, 1, $g_islotsgiants], _ 
+				[$eSGiant, $nbSides, 1, 1, $g_islotsgiants], _ 
+				[$eDRag, $nbSides, 1, 1, 0], _ 
+				["CC", 1, 1, 1, 1], _ 
+				[$eHeal, $nbSides, 1, 1, 1], _ 
+				[$eBall, $nbSides, 1, 1, 0], _ 
+				[$eBabyD, $nbSides, 1, 1, 0], _ 
+				[$eHogs, $nbSides, 1, 1, 1], _ 
+				[$eValk, $nbSides, 1, 1, 0], _ 
+				[$eSValk, $nbSides, 1, 1, 0], _ 
+				[$eBowl, $nbSides, 1, 1, 0], _ 
+				[$eSBowl, $nbSides, 1, 1, 0], _ 
+				[$eIceG, $nbSides, 1, 1, 1], _ 
+				[$eHunt, $nbSides, 1, 1, 1], _ 
+				[$eMine, $nbSides, 1, 1, 0], _ 
+				[$eeDRag, $nbSides, 1, 1, 0], _ 
+				[$eYeti, $nbSides, 1, 1, 0], _ 
+				[$eWall, $nbSides, 1, 1, 1], _ 
+				[$eSWall, $nbSides, 1, 1, 1], _ 
+				[$eInfernoD, $nbSides, 1, 1, 1], _ 
+				[$eSWitc, $nbSides, 1, 1, 1], _ 
+				[$eRBall, $nbSides, 1, 1, 0], _ 
+				[$eSDRag, $nbSides, 1, 1, 0], _ 
+				[$aRND[$iRand][0], $nbSides, 1, 1, 0], _ 
+				[$aRND[$iRand][1], $nbSides, 1, 1, 0], _ 
+				[$aRND[$iRand][2], $nbSides, 1, 1, 0], _ 
+				[$aRND[$iRand][3], $nbSides, 1, 1, 0], _ 
+				[$aRND[$iRand][4], $nbSides, 1, 1, 0], _ 
+				[$aRND[$iRand][5], $nbSides, 1, 1, 0], _ 
+				[$aRND[$iRand][6], $nbSides, 1, 1, 0], _ 
+				[$aRND[$iRand][7], $nbSides, 1, 1, 0], _ 
+				[$aRND[$iRand][8], $nbSides, 1, 1, 0], _ 
+				[$aRND[$iRand][9], $nbSides, 1, 1, 0], _ 
+				[$aRND[$iRand][10], $nbSides, 1, 1, 0], _ 
+				[$ePekk, $nbSides, 1, 1, 1], _ 
+				["HEROES", 1, 2, 1, 1]]
 	EndIf
 
 	$g_bIsCCDropped = False
@@ -801,7 +820,9 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 	Else
 		$iHowManySides = UBound($aWhatSides)
 	EndIf
-	If $g_bSmartFarmSpellsEnable Then DeploySpell("", "", True) ; Custom SmartFarm - Team AIO Mod++
+	
+	DeploySpell("", "", True) ; Custom SmartFarm - Team AIO Mod++
+	
 	For $i = 0 To UBound($listInfoDeploy) - 1
 		; Reset the variables
 		Local $troop = -1
@@ -1209,11 +1230,57 @@ Func DropTroopSmartFarm($troop, $nbSides, $number, $slotsPerEdge = 0, $name = ""
 	Return $infoDropTroop
 EndFunc   ;==>DropTroopSmartFarm
 
-Global $g_FirstBitMap
-Global $g_SecondBitMap
- 
 Func LaunchSpellsSmartFarm($SIDESNAMES = "TR|TL|BR|BL")
-	$g_bDebugSmartFarm = True
+	_CaptureRegion2()
+	$g_FirstBitMap = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
+	Local $iTolerance = 25
+	If _Sleep(750) Then Return
+	Local $FirstDetection
+	Local $SecondDetection
+	Local $FinalArray
+	For $i = 0 To 1
+		Local $ReturnArray[0][2]
+		_CaptureRegion2()
+		$g_SecondBitMap = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
+		Local $return = _ImageCompareImagesMyBot($iTolerance)
+		If $return <> -1 And IsArray($return) Then
+			For $j = 0 To UBound($return) - 1
+				Local $DetectedPoint[2] = [$return[$j][0], $return[$j][1]]
+				If isInsideDiamond($DetectedPoint) = False Then ContinueLoop
+				If StringInStr($SIDESNAMES, Side($DetectedPoint)) = 0 Then ContinueLoop
+				ReDim $ReturnArray[UBound($ReturnArray) + 1][2]
+				$ReturnArray[UBound($ReturnArray) - 1][0] = $return[$j][0]
+				$ReturnArray[UBound($ReturnArray) - 1][1] = $return[$j][1]
+			Next
+		EndIf
+		If $i = 0 Then $FirstDetection = $ReturnArray
+		If $i = 1 Then
+			$SecondDetection = $ReturnArray
+			$FinalArray = GroupArrays($FirstDetection, $SecondDetection)
+			If $FinalArray = -1 Or Not IsArray($FinalArray) Or UBound($FinalArray) < 1 Then
+				$FinalArray = UBound($SecondDetection) > 5 ? $SecondDetection : $FirstDetection
+			EndIf
+			Local $aByGroups = GroupsOfPoints($FinalArray)
+			For $j = 0 To UBound($aByGroups) - 1
+				Local $OneGroup = $aByGroups[$j]
+				_ArraySort($OneGroup, 0, 0, 0, 0)
+				Local $left = $OneGroup[0][0]
+				Local $right = $OneGroup[UBound($OneGroup) - 1][0]
+				_ArraySort($OneGroup, 0, 0, 0, 1)
+				Local $top = $OneGroup[0][1]
+				Local $bottom = $OneGroup[UBound($OneGroup) - 1][1]
+			Next
+		EndIf
+		$g_FirstBitMap = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
+		If _Sleep(750) Then Return
+	Next
+
+	Return $aByGroups
+EndFunc   ;==>LaunchSpellsSmartFarm
+
+#cs
+Func LaunchSpellsSmartFarm($SIDESNAMES = "TR|TL|BR|BL")
+	; $g_bDebugSmartFarm = True
 	_CaptureRegion2()
 	$g_FirstBitMap = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
 	Local $iTolerance = 25
@@ -1242,6 +1309,7 @@ Func LaunchSpellsSmartFarm($SIDESNAMES = "TR|TL|BR|BL")
 				Local $DetectedPoint[2] = [$return[$j][0], $return[$j][1]]
 				If Not isInsideDiamond($DetectedPoint) Then ContinueLoop
 				If StringInStr($SIDESNAMES, Side($DetectedPoint)) = 0 Then ContinueLoop
+				; SetLog($return[$j][0] & " | " & $return[$j][1])
 				ReDim $ReturnArray[UBound($ReturnArray) + 1][2]
 				$ReturnArray[UBound($ReturnArray) - 1][0] = $return[$j][0]
 				$ReturnArray[UBound($ReturnArray) - 1][1] = $return[$j][1]
@@ -1316,7 +1384,7 @@ Func LaunchSpellsSmartFarm($SIDESNAMES = "TR|TL|BR|BL")
 
 	Return $aByGroups
 EndFunc   ;==>LaunchSpellsSmartFarm
-
+#ce
 Func _ImageCompareImagesMyBot($iTol = 30)
 	Local $aAllResults[0][2]
 	Local $iXS = 19, $iYS = 28, $iXE = $g_iGAME_WIDTH - 13, $iYE = $g_iGAME_HEIGHT - 119

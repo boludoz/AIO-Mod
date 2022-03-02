@@ -356,9 +356,13 @@ Func cmbmilkstrategyarmytips()
 		Case 5
 			$stxttip = "Full Minions, deploying 4~6 on each resource"
 		Case 6
-			$stxttip = "Full Super Barbarians, deploying 2~3 on each resource"
+			$stxttip = "Full Super Minions, deploying 1~3 on each resource"
 		Case 7
+			$stxttip = "Full Super Barbarians, deploying 2~3 on each resource"
+		Case 8
 			$stxttip = "Full Sneaky Goblins, deploying 2~3 on each resource" & @CRLF & "you can use Super WallBrakers to get inside resources"
+		Case 9
+			$stxttip = "Full Miners, deploying 2~3 on each resource"
 		Case Else
 			$stxttip = "You can use, Barbarians, Archers, Giants, Goblins, Minions," & @CRLF & "Baby Dragons,Super Barbarians, Sneaky Goblins and Super Wall Breakers"
 	EndSwitch

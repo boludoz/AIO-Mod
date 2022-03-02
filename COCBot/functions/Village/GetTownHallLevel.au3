@@ -41,6 +41,7 @@ Func GetTownHallLevel($bFirstTime = False)
 		If $aTHInfo[2] <> "" Then
 			$g_iTownHallLevel = $aTHInfo[2] ; grab building level from building info array
 			SetLog("Your Town Hall Level read as: " & $g_iTownHallLevel, $COLOR_SUCCESS)
+			#cs - Custom - Team AIO Mod++
 			ChkFreeMagicItems()
 			chkUpgradeKing()
 			chkUpgradeQueen()
@@ -52,6 +53,8 @@ Func GetTownHallLevel($bFirstTime = False)
 			chkABKingWait()
 			chkABQueenWait()
 			chkABWardenWait()
+			#ce - Custom - Team AIO Mod++
+			applyConfig()
 			saveConfig()
 		Else
 			SetLog("Your Town Hall Level was not found! Please Manually Locate", $COLOR_INFO)
