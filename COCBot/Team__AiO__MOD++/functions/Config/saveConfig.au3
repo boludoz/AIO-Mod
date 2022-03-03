@@ -55,7 +55,7 @@ Func SaveConfig_MOD_CustomArmyBB()
 	_Ini_Add("BuilderBase", "CmbBBAttack", $g_iCmbBBAttack)
 	_Ini_Add("BuilderBase", "IntBBMinAttack", $g_iBBMinAttack)
 	_Ini_Add("BuilderBase", "IntBBMaxAttack", $g_iBBMaxAttack)
-	_Ini_Add("general", "PlayBBOnly", $g_bOnlyBuilderBase ? 1 : 0)
+	_Ini_Add("BuilderBase", "DSICGBB", $g_bDSICGBB ? 1 : 0)
 EndFunc   ;==>SaveConfig_MOD_CustomArmyBB
 
 Func SaveConfig_MOD_MiscTab()
@@ -311,7 +311,7 @@ Func SaveConfig_MOD_600_35_1()
 	_Ini_Add("general", "AutoMinimize", $g_bChkAutoMinimizeBot ? 1 : 0)
 
 	; <><><> Only Farm <><><>
-	_Ini_Add("general", "OnlyFarm", $g_bChkOnlyFarm ? 1 : 0)
+	_Ini_Add("general", "ComboStatusMode", Number($g_iComboStatusMode))
 
 	; <><><> AIO Updater <><><>
 	If FileExists($g_sLibPath & "\ModLibs\Updater\NoNotify.txt") = 1 Then

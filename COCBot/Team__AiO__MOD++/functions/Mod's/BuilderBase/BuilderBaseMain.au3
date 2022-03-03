@@ -125,7 +125,7 @@ Func _BuilderBase($bTestRun = False)
 
 	; Loops to do logic.
 	Local $iAttackLoops = 1
-	Local $iLoopsToDo = Random($g_iBBMinAttack, $g_iBBMaxAttack, 1)
+	Local $iLoopsToDo = (($g_bDSICGBB = True) ? (25) : (Random($g_iBBMinAttack, $g_iBBMaxAttack, 1)))
 	Local $bIsBonus = True, $bIsBonusInternal = False
 	$bIsBonus = BuilderBaseReportAttack(False)
 	$g_bBonusObtainedAtStart = ($bIsBonus = False)
@@ -184,16 +184,18 @@ Func _BuilderBase($bTestRun = False)
 			
 			; Improved logic, as long as the bot can be farmed it will continue doing the external while, otherwise it will continue attacking to fulfill the user's request more fast.
 			checkObstacles(True)
-
-			$bIsBonus = BuilderBaseReportAttack()
-			If $bIsBonusInternal = False And $bIsBonus = True Then
-				If $g_iAvailableAttacksBB = 0 Then
-					SetLog("Bonus obtained: we can continue attacking without improving things.", $COLOR_SUCCESS)
-					$bIsBonusInternal = True
-					ExitLoop
+			
+			If $g_bDSICGBB = False Then
+				$bIsBonus = BuilderBaseReportAttack()
+				If $bIsBonusInternal = False And $bIsBonus = True Then
+					If $g_iAvailableAttacksBB = 0 Then
+						SetLog("Bonus obtained: we can continue attacking without improving things.", $COLOR_SUCCESS)
+						$bIsBonusInternal = True
+						ExitLoop
+					EndIf
 				EndIf
 			EndIf
-
+			
 		Until ($iAttackLoops >= $iLoopsToDo) Or (ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3, False) = True And $g_iAvailableAttacksBB = 0)
 		
 		$bFirstBBLoop = False
@@ -243,7 +245,7 @@ Func _BuilderBase($bTestRun = False)
 		
 		If Not ByPassedForceBBAttackOnClanGames($g_bChkBuilderAttack, True) Then ExitLoop
 
-	Until ($iAttackLoops >= $iLoopsToDo)
+	Until ($iAttackLoops >= $iLoopsToDo) Or (ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3, False) = True And $g_iAvailableAttacksBB = 0)
 
 	If _Sleep($DELAYRUNBOT3) Then Return
 	SetLog("Builder base idle ends", $COLOR_INFO)
@@ -329,85 +331,16 @@ Func BuilderBaseReportAttack($bSetLog = True)
 EndFunc   ;==>BuilderBaseReportAttack
 
 Func IsBuilderBaseOCR($bSetLog = True)
-	Local $iSeconds = 0, $iTimer = 0
-	Local $aTmp
-	Local $sString = QuickMIS("OCR", @ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\OCR\AvariableBB\", 404, 674, 477, 695, True, False, 3, 12, True)
-	SetDebugLog("BuilderBaseTime : " & $sString)
-	
-	Local $iAvailableAttacksBB = 0
-	
-	Local $iSlot = 76
-	Local $aBonus[3] = [361, 675, 8]
-	Local $hColorAlt[3] = [0x525454, 0x525454, 0x6E706E]
-	
-	Local $hPixelC = 0x000000
-	For $i = 0 To 2
-		$hPixelC = _GetPixelColor($aBonus[0] + ($iSlot * $i), $aBonus[1], True)
-		SetDebugLog("IsBuilderBaseOCR pixel: " & $aBonus[0] + ($iSlot * $i) & "|" & $aBonus[1]  & "|" & $hPixelC)
-		If _ColorCheckSubjetive($hPixelC, Hex($hColorAlt[$i], 6), $aBonus[2]) Then
-			$iAvailableAttacksBB += 1
-		EndIf
-	Next
-	
-	If $iAvailableAttacksBB > 0 Then
-		$g_iAvailableAttacksBB = $iAvailableAttacksBB
-		If $bSetLog = True Then Setlog("Builder base: You have " & $g_iAvailableAttacksBB & " available attack(s).", $COLOR_INFO)	
-		Return False
-	EndIf
-	
-	If $sString = "none" Then
-		Setlog("IsBuilderBaseOCR bad.", $COLOR_ERROR)
-		Return False
-	Endif
-	
-	If $bSetLog = True Then Setlog("All builder base attacks done.", $COLOR_SUCCESS)	
-	
-	Local $sMsg = ($iTimer > 1) ? (" hours.") : (" hour.")
-	Local $bIsBonus = $g_bBonusObtainedAtStart
-	If $bIsBonus = True Then
-		; Hours
-		$aTmp = _StringBetween($sString, "", "H")
-		If Not @error Then
-			$iTimer = Number($aTmp[0])
-			$iSeconds += ($iTimer * 3600)
-			
-			$sMsg = ($iTimer > 1) ? (" hours.") : (" hour.")
-			If $bSetLog = True And Not PlayBBOnly() And ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3, False) Then Setlog("Bonus obtained, we will return here in approximately " & $iTimer & $sMsg, $COLOR_SUCCESS)
-			
-			; Minutes
-			$aTmp = _StringBetween($sString, "H", "M")
-			If @error Then
-				$aTmp = _StringBetween($sString, "H", "")
-				If Not @error Then
-					$iTimer = Number($aTmp[0])
-					$iSeconds += ($iTimer * 60)
-				EndIf
-			EndIf
-	
-		Else
-			; Hours
-			$aTmp = _StringBetween($sString, "", "M")
-			If Not @error Then
-				$iTimer = Number($aTmp[0])
-				$iSeconds += ($iTimer * 60)
+	If WaitforPixel(510, 650, 630, 700, Hex(0xB3E25B, 6), 15, 3) = True Then
+		Local $sString = GetBldgUpgradeTime(404, 677)
+		If StringLen($sString) > 2 Then
+			SetLog("Next attack in  : " & $sString, $COLOR_INFO)
+			$g_sDateBuilderBase = _DateAdd('m', Round(ConvertOCRLongTime("Builder Base Bonus", $sString) * Random(1.002, 1.005)), _NowCalc())
+			$g_iAvailableAttacksBB = 0
+			If ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3, False) = True And Not PlayBBOnly() Then
+				Return True
 			EndIf
 		EndIf
-	Else ; More reliable than OCR.
-		$iTimer = 24
-		$sMsg = ($iTimer > 1) ? (" hours.") : (" hour.")
-		$iSeconds += ($iTimer * 3600)
-		If $bSetLog = True And Not PlayBBOnly() And ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3, False) Then Setlog("Return in 24 hours.", $COLOR_SUCCESS)
 	EndIf
-	
-	; To improve reliability, minutes and seconds are discarded
-	If $iSeconds < 3600 Then 
-		$iSeconds = Floor(1300 * Random(0.8, 1.2)) ; 3600 Constant = 1 hour
-	Else
-		$iSeconds += 60
-	EndIf
-	
-	$g_sDateBuilderBase = _DateAdd('s', $iSeconds, _NowCalc())
-	SetDebugLog("$g_sDateBuilderBase: " & $g_sDateBuilderBase)
-	$g_iAvailableAttacksBB = 0 ; Stop attacks.
-	Return True
+	Return False
 EndFunc   ;==>IsBuilderBaseOCR

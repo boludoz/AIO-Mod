@@ -47,7 +47,7 @@ Func ReadConfig_MOD_CustomArmyBB()
 	IniReadS($g_iCmbBBAttack, $g_sProfileConfigPath, "BuilderBase", "CmbBBAttack", $g_iCmbBBAttack, "Int")
 	IniReadS($g_iBBMinAttack, $g_sProfileConfigPath, "BuilderBase", "IntBBMinAttack", $g_iBBMinAttack, "Int")
 	IniReadS($g_iBBMaxAttack, $g_sProfileConfigPath, "BuilderBase", "IntBBMaxAttack", $g_iBBMaxAttack, "Int")
-	IniReadS($g_bOnlyBuilderBase, $g_sProfileConfigPath, "general", "PlayBBOnly", False, "Bool")
+	IniReadS($g_bDSICGBB, $g_sProfileConfigPath, "BuilderBase", "DSICGBB", True, "Bool")
 
 EndFunc   ;==>ReadConfig_MOD_CustomArmyBB
 
@@ -295,10 +295,10 @@ Func ReadConfig_MOD_600_35_1()
 	IniReadS($g_bChkAutoMinimizeBot, $g_sProfileConfigPath, "general", "AutoMinimize", $g_bChkAutoMinimizeBot, "Bool")
 
 	; <><><> Only Farm <><><>
-	IniReadS($g_bChkOnlyFarm, $g_sProfileConfigPath, "general", "OnlyFarm", $g_bChkOnlyFarm, "Bool")
+	IniReadS($g_iComboStatusMode, $g_sProfileConfigPath, "general", "ComboStatusMode", 0, "Int")
 
 	; <><><> AIO Updater <><><>
-	$g_bCheckVersionAIO = (FileExists($g_sLibPath & "\ModLibs\Updater\NoNotify.txt") = 0) ? (False) : (True)
+	$g_bCheckVersionAIO = (FileExists($g_sLibPath & "\ModLibs\Updater\NoNotify.txt") = 0) ? (True) : (False)
 
 EndFunc   ;==>ReadConfig_MOD_600_35_1
 

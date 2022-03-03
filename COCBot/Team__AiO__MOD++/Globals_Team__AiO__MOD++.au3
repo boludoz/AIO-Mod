@@ -255,7 +255,7 @@ Global Enum $eIcnModKingGray = 1, $eIcnModKingBlue, $eIcnModKingGreen, $eIcnModK
 
 Global Const $g_sLibBBIconPath = $g_sLibPath & "\ModLibs\BuilderBase.dll" ; icon library
 Global Enum $eIcnBB = 1 , $eIcnLabBB, $eIcnBBElixir, $eIcnBBGold, $eIcnBBTrophies, $eIcnMachine, $eIcnBBWallInfo, $eIcnBBWallL1, $eIcnBBWallL2, $eIcnBBWallL3, $eIcnBBWallL4, $eIcnBBWallL5, _
-		$eIcnBBWallL6, $eIcnBBWallL7, $eIcnBBWallL8, $eIcnBBWallL9
+		$eIcnBBWallL6, $eIcnBBWallL7, $eIcnBBWallL8, $eIcnBBWallL9, $eIcnVersus
 #EndRegion - Icn - Team AIO Mod++
 
 #Region - Multi Finger - Team AIO Mod++
@@ -537,6 +537,7 @@ Global $g_iMultiPixelOffSet[2]
 
 ; Only farm - Team AiO MOD++
 Global $g_bChkOnlyFarm = False
+Global $g_iComboStatusMode = 0, $g_hCmbStatusMode = 0
 
 ; Check No League for Dead Base - Team AiO MOD++
 Global $g_bChkNoLeague[$g_iModeCount] = [False, False, False]
@@ -598,7 +599,7 @@ Global Const $g_sBBOptimizeOTTO[14] = ["Builder Hall", "Gold Mine", "Elixir Coll
                                      "Battle Machine", "Double Cannon", "Archer Tower", "Multi Mortar", "Mega Tesla"]
 
 ; Extra options
-Global $g_iBBMinAttack = 1, $g_iBBMaxAttack = 4
+Global $g_iBBMinAttack = 2, $g_iBBMaxAttack = 3
 
 ; Attack
 ; Globals for BB Machine
@@ -661,6 +662,9 @@ Global $g_aCamps[6] = ["", "", "", "", "", ""]
 ; General
 Global $g_bChkBuilderAttack = False, $g_bChkBBStopAt3 = False, $g_bChkBBTrophiesRange = False, $g_iTxtBBDropTrophiesMin = 0, $g_iTxtBBDropTrophiesMax = 0
 Global $g_iCmbBBArmy1 = 0, $g_iCmbBBArmy2 = 0, $g_iCmbBBArmy3 = 0, $g_iCmbBBArmy4 = 0, $g_iCmbBBArmy5 = 0, $g_iCmbBBArmy6 = 0
+
+; Attack cycles
+Global $g_bDSICGBB = True
 
 ; Internal & External Polygon
 ;~ Global $CocDiamondECD = "ECD"

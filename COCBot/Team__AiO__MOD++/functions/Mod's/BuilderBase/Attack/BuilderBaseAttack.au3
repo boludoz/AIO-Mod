@@ -64,12 +64,10 @@ Func BuilderBaseAttack($bTestRun = False)
 	If RandomSleep(1500) Then Return
 
 	; Check if is present bonus OCR.
-	If IsBuilderBaseOCR(ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3, False)) Then
-		If ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3, False) = True And Not PlayBBOnly() Then
-			ClickAway(Default, True)
-			If RandomSleep(1500) Then Return
-			Return False
-		EndIf
+	If IsBuilderBaseOCR() Then
+		ClickAway(Default, True)
+		If RandomSleep(1500) Then Return
+		Return False
 	EndIf
 
 	; Get Army Status
@@ -432,7 +430,7 @@ Func WaitForVersusBattle()
 EndFunc   ;==>WaitForVersusBattle
 
 Func IsBBAttackPage()
-	Return (WaitforPixel(378, 10, 482, 26, Hex(0xFFD6D5, 6), 15, 1) <> 0)
+	Return (WaitforPixel(378, 10, 482, 26, Hex(0xFFD6D5, 6), 15, 2) = True)
 EndFunc   ;==>IsSTPage
 
 Func BuilderBaseAttackToDrop($aAvailableTroops)

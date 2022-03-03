@@ -32,3 +32,4 @@ lib/ModLibs/Updater/AIOMod.Updater2.exe
 lib/ModLibs/Updater/AIOMod.Updater3.exe
 Profiles_/
 *_stripped.au3
+lib/ModLibs/Updater/NoNotify.txt

@@ -920,7 +920,7 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 							ElseIf ($g_bIsHeroesDropped = False And $infoTroopListArrPixel[0] = "HEROES" And $i = $numberSidesDropTroop - 1) Then
 								$sSide = Side($pixelRandomDrop)
 								SetLog("Dropping Hero at " & $sSide & " - " & _ArrayToString($pixelRandomDrop), $COLOR_SUCCESS)
-								dropHeroes($pixelRandomDrop[0], $pixelRandomDrop[1], $iKing, $iQueen, $iWarden, $iChampion)
+								dropHeroes($pixelRandomDrop[0], $pixelRandomDrop[1], $iKing, $iQueen, $iWarden, $iChampion, True)
 								$g_bIsHeroesDropped = True
 							EndIf
 							#Region - Custom SmartFarm - Team AIO Mod++

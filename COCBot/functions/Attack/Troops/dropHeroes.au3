@@ -42,16 +42,16 @@ Func dropHeroes($iX, $iY, $iKingSlotNumber = -1, $iQueenSlotNumber = -1, $iWarde
 	
 	; W K Q C
 	If $bSmartMilk Then
-		Local $aM[4] = ["Q", "K", "W", "C"]
+		Local $aM[4] = ["W", "K", "Q", "C"]
 		$a = $aM
-		SetDebugLog("Deploy Warden -> King -> Queen -> Champion")
 	; K Q W C
-	ElseIf Random(0, 100, 1) > 50 Then
-		Local $aR[4] = ["Q", "K", "W", "C"]
+	ElseIf Random(0, 100, 1) > 40 Then
+		Local $aR[4] = ["K", "Q", "W", "C"]
 		$a = $aR
-		SetDebugLog("Deploy King -> Queen -> Warden -> Champion")
 	EndIf
 	
+	SetDebugLog("Deploy " & $a[0] & " -> " & $a[1] & " -> " & $a[2] & " -> " & $a[3])
+		
 	Local $i = 0, $irx = 0, $iry = 0
 	Do
 		$irx = Random(-5, 5, 1)

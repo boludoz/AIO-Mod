@@ -270,15 +270,36 @@ Func chkTrainLogoutMaxTime()
 EndFunc   ;==>chkTrainLogoutMaxTime
 
 ; Only farm - Team AiO MOD++
-Func ChkOnlyFarm()
-	If IsDeclared("g_hChkOnlyFarm") Then
-		UpdateChkOnlyFarm()
+Func ComboStatusMode()
+	If IsDeclared("g_iComboStatusMode") Then
+		Local $iStatusFlag = 2, $iNewStatus = 2
+		If $g_bChkOnlyFarm = True Then $iStatusFlag += 8
+		If $g_bOnlyBuilderBase = True Then $iStatusFlag += 16
+		
+		$g_bChkOnlyFarm = False
+		$g_bOnlyBuilderBase = False
+		
+		Switch _GUICtrlComboBox_GetCurSel($g_hCmbStatusMode)
+			Case 1
+				$g_iComboStatusMode = 1
+				$g_bChkOnlyFarm = True
+				$iNewStatus += 8
+			Case 2
+				$g_iComboStatusMode = 2
+				$g_bOnlyBuilderBase = True
+				$iNewStatus += 16
+				$g_iCurrentReport = $g_iBBReport
+				btnVillageStat()
+			Case Else
+				$g_iComboStatusMode = 0
+				Return
+		EndSwitch
+		
+		; Quick solution.
+		If $iStatusFlag = $iNewStatus Then Return
+		$g_bRestart = True 
 	EndIf
-EndFunc   ;==>ChkOnlyFarm
-
-Func UpdateChkOnlyFarm()
-    $g_bChkOnlyFarm = (GUICtrlRead($g_hChkOnlyFarm) = $GUI_CHECKED)
-EndFunc   ;==>UpdateChkOnlyFarm
+EndFunc   ;==>ComboStatusMode
 
 ; Check No League for Dead Base - Team AiO MOD++
 Func chkDBNoLeague()

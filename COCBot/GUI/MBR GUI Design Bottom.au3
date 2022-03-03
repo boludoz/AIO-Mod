@@ -36,10 +36,8 @@ Global $g_hlblLab = 0, $g_hPicLabGray = 0, $g_hPicLabRed = 0, $g_hPicLabGreen = 
 ;Mod Logo
 ; Global $g_hLblMod = 0
 ; Enable/Disable GUI while botting - Team AiO MOD++
+Global $g_hCmbStatusMode = 0
 Global $g_hBtnEnableGUI = 0, $g_hBtnDisableGUI = 0
-; Only farm - Team AiO MOD++
-Global $g_hChkOnlyFarm = 0
-
 Global $g_hLblBBResultGoldNow = 0, $g_hLblBBResultGoldHourNow = 0, $g_hPicBBResultGoldNow = 0
 Global $g_hLblBBResultElixirNow = 0, $g_hLblBBResultElixirHourNow = 0, $g_hPicBBResultElixirNow = 0
 Global $g_hLblBBResultTrophyNow = 0, $g_hPicBBResultTrophyNow = 0, $g_hLblBBResultBuilderNow = 0, $g_hPicBBResultBuilderNow = 0
@@ -97,7 +95,7 @@ Func CreateBottomPanel()
 			GUICtrlSetOnEvent(-1, "btnEmbed")
 	$y -=15
 	#EndRegion - Team Aio Mod++
-		$g_hChkBackgroundMode = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Bottom", "ChkBackgroundMode", "Background Mode"), $x + 1, $y + 72, 110, 20) ; Team AiO MOD++
+		$g_hChkBackgroundMode = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Bottom", "ChkBackgroundMode", "Background Mode"), $x + 1, $y + 72, 95, 20) ; Team AiO MOD++
 			GUICtrlSetFont(-1, 7)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "ChkBackgroundMode_Info_01", "Check this to ENABLE the Background Mode of the Bot.") & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Bottom", "ChkBackgroundMode_Info_02", "With this you can also hide the Android Emulator window out of sight."))
@@ -107,10 +105,12 @@ Func CreateBottomPanel()
 
 		#Region - Team AiO MOD++
 		; Only farm - Team AiO MOD++
-		$g_hChkOnlyFarm = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Bottom", "ChkOnlyFarm", "Only Farm"), $x + 115, $y + 72, -1, 20)
-			GUICtrlSetFont(-1, 7)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "ChkOnlyFarm_01", "Only Attack."))
-			GUICtrlSetOnEvent(-1, "chkOnlyFarm")
+		$g_hCmbStatusMode = GUICtrlCreateCombo("", $x + 100, $y + 72, 82, 20, $CBS_DROPDOWNLIST)
+			GUICtrlSetData(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "ComboStatusMode_Normal", "Normal Farm") & "|" & _ 
+			GetTranslatedFileIni("MBR GUI Design Bottom", "ComboStatusMode_Farm", "Farm Mode") & "|" & _ 
+			GetTranslatedFileIni("MBR GUI Design Bottom", "ComboStatusMode_BB", "Builder Base Mode"))
+			_GUICtrlComboBox_SetCurSel(-1, 0)
+			GUICtrlSetOnEvent(-1, "ComboStatusMode")
 
 		$g_hBtnAttackNowDB = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnAttackNowDB", "DB Attack"), $x + 200, $y - 1, 60, 19)
 			GUICtrlSetState(-1, $GUI_HIDE)

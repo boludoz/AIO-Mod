@@ -2274,7 +2274,7 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 		#Region BBase - Team AIO Mod++
 		Case $g_hGUI_BUILDER_BASE_TAB
 			; the icons for builder base tab
-			Local $aIconIndex = [$eIcnGold, $eIcnLaboratory, $eIcnTroops]
+			Local $aIconIndex = [$eIcnGold, $eIcnLaboratory, $eIcnVersus]
 			#EndRegion BBase - Team AIO Mod++
 		Case Else
 			;do nothing
@@ -2283,25 +2283,30 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 	If IsArray($aIconIndex) Then ; if array is filled then $nCtrl was a valid control
 		For $i = 0 To UBound($aIconIndex) - 1
 			DllStructSetData($tTcItem, 6, $i)
-			If $nCtrl = $g_hGUI_MOD_TAB Then
-				AddImageToModTab($nCtrl, $hImageList, $i, $tTcItem, $g_sLibModIconPath, $aIconIndex[$i] - 1)
-			ElseIf $nCtrl = $g_hGUI_SWITCH_OPTIONS_TAB Then
-				AddImageToModTab($nCtrl, $hImageList, $i, $tTcItem, $g_sLibModIconPath, $aIconIndex[$i] - 1)
-			ElseIf $nCtrl = $g_hTabMain Then
-				If $i <> 4 Then
+			Switch $nCtrl
+				Case $g_hGUI_MOD_TAB, $g_hGUI_SWITCH_OPTIONS_TAB
+					AddImageToTab($nCtrl, $hImageList, $i, $tTcItem, $g_sLibModIconPath, $aIconIndex[$i] - 1)
+				Case $g_hTabMain
+					If $i <> 4 Then
+						AddImageToTab($nCtrl, $hImageList, $i, $tTcItem, $g_sLibIconPath, $aIconIndex[$i] - 1)
+					Else
+						AddImageToTab($nCtrl, $hImageList, $i, $tTcItem, $g_sLibModIconPath, $aIconIndex[$i] - 1)
+					EndIf
+				Case $g_hGUI_BOT_TAB
+					If $i <> 2 Then
+						AddImageToTab($nCtrl, $hImageList, $i, $tTcItem, $g_sLibIconPath, $aIconIndex[$i] - 1)
+					Else
+						AddImageToTab($nCtrl, $hImageList, $i, $tTcItem, $g_sLibModIconPath, $aIconIndex[$i] - 1)
+					EndIf
+				Case $g_hGUI_BUILDER_BASE_TAB
+					If $i <> 2 Then
+						AddImageToTab($nCtrl, $hImageList, $i, $tTcItem, $g_sLibIconPath, $aIconIndex[$i] - 1)
+					Else
+						AddImageToTab($nCtrl, $hImageList, $i, $tTcItem, $g_sLibBBIconPath, $aIconIndex[$i] - 1)
+					EndIf
+				Case Else
 					AddImageToTab($nCtrl, $hImageList, $i, $tTcItem, $g_sLibIconPath, $aIconIndex[$i] - 1)
-				Else
-					AddImageToModTab($nCtrl, $hImageList, $i, $tTcItem, $g_sLibModIconPath, $aIconIndex[$i] - 1)
-				EndIf
-			ElseIf $nCtrl = $g_hGUI_BOT_TAB Then
-				If $i <> 2 Then
-					AddImageToTab($nCtrl, $hImageList, $i, $tTcItem, $g_sLibIconPath, $aIconIndex[$i] - 1)
-				Else
-					AddImageToModTab($nCtrl, $hImageList, $i, $tTcItem, $g_sLibModIconPath, $aIconIndex[$i] - 1)
-				EndIf
-			Else
-				AddImageToTab($nCtrl, $hImageList, $i, $tTcItem, $g_sLibIconPath, $aIconIndex[$i] - 1)
-			EndIf
+			EndSwitch
 		Next
 		$aIconIndex = 0 ; empty array
 	EndIf
@@ -2320,19 +2325,6 @@ Func AddImageToTab($nCtrl, ByRef $hImageList, $nTabIndex, $nItem, $g_sLibIconPat
 		EndIf
 	EndIf
 EndFunc   ;==>AddImageToTab
-
-Func AddImageToModTab($nCtrl, ByRef $hImageList, $nTabIndex, $nItem, $g_sLibModIconPath, $nIconID)
-	Local $hIcon = DllStructCreate("int")
-	Local $Result = DllCall("shell32.dll", "int", "ExtractIconEx", "str", $g_sLibModIconPath, "int", $nIconID, "hwnd", 0, "ptr", DllStructGetPtr($hIcon), "int", 1)
-	If UBound($Result) > 0 Then
-		$Result = $Result[0]
-		If $Result > 0 Then
-			DllCall("comctl32.dll", "int", "ImageList_AddIcon", "hwnd", $hImageList, "hwnd", DllStructGetData($hIcon, 1))
-			DllCall("user32.dll", "int", "SendMessage", "hwnd", ControlGetHandle($g_hFrmBot, "", $nCtrl), "int", $TCM_SETITEM, "int", $nTabIndex, "ptr", DllStructGetPtr($nItem))
-			DllCall("user32.dll", "int", "DestroyIcon", "hwnd", DllStructGetData($hIcon, 1))
-		EndIf
-	EndIf
-EndFunc   ;==>AddImageToModTab
 
 Func _GUICtrlListView_SetItemHeightByFont($hListView, $iHeight)
 	; Get font of ListView control

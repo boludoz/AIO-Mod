@@ -18,11 +18,13 @@ Global $g_hChkCollectBuilderBase = 0, $g_hChkStartClockTowerPotion = 0
 Global $g_hChkCollectBldGE = 0, $g_hChkCollectBldGems = 0, $g_hChkActivateClockTower = 0, $g_hChkCleanBBYard = 0
 Global $g_hBtnBBAtkLogClear = 0,$g_hBtnBBAtkLogCopyClipboard=0
 
-Global $g_hChkOnlyBuilderBase, $g_hTxtBBMinAttack, $g_hTxtBBMaxAttack, $g_hDebugBBattack, $g_hbtnBBAttack ; AIO ++
+Global $g_hTxtBBMinAttack, $g_hTxtBBMaxAttack, $g_hDebugBBattack, $g_hbtnBBAttack ; AIO ++
 
 Global $g_hChkStartClockTowerBoost = 0, $g_hCmbStartClockTowerBoost = 0, $g_hChkClockTowerPotion = 0, $g_hCmbClockTowerPotion = 0 ; AIO ++
 
 Global $g_sTranslateBBTower = ""
+
+Global $g_hChkDSICGBB = 0
 
 Func TowerBoostTranslate()
 	Local $sTranslateBBTower = ""
@@ -81,8 +83,7 @@ Func CreateMiscBuilderBaseSubTab()
 	$y += 55
 
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "Group_03", "Builders Base Loop"), $x - 10, $y - 20, $g_iSizeWGrpTab2, 52)
-		$g_hChkOnlyBuilderBase = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "ChkOnlyBuilderBase", "Only play in Builder Base"), $x + 50, $y, -1, -1)
-		GUICtrlSetOnEvent(-1, "ChkOnlyBuilderBase")
+		$g_hChkDSICGBB = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "ChkDSICG", "Increase cycles during clan games"), $x + 25, $y, 155, -1)
 
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "LblMaxLoopsAttackBB", "Attack cycles :"), $x + 220, $y + 4, -1, -1)
 

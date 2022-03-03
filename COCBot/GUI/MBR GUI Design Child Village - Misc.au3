@@ -553,6 +553,7 @@ Func CreateMiscClanGamesV3SubTab()
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkClanGames60_Info_03", "If No Event Found, Purge Any Event"))
 	$y += 17
 	$g_hChkClanGamesStopBeforeReachAndPurge = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkClanGamesStopBeforeReachAndPurge", "Stop before completing your limit and only Purge"), $x, $y, -1, -1)
+	; #cs
 	$y += 17
 	$g_hChkForceBBAttackOnClanGames = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkForceBBAttackOnClanGames", "Force BB Attack"), $x, $y, -1, -1)
 	GUICtrlSetOnEvent(-1, "chkActivateClangames")
@@ -560,7 +561,7 @@ Func CreateMiscClanGamesV3SubTab()
 
 	$g_hChkOnlyBuilderBaseGC = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc - Clan games", "ChkOnlyBuilderBaseGC", "Builder base only if BB challenge"), $x + 125, $y, -1, -1)
 	GUICtrlSetOnEvent(-1, "chkActivateClangames")
-
+	; #ce
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	$x = 15

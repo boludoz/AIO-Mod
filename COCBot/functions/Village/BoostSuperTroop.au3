@@ -278,7 +278,7 @@ Func FinalBoostST(ByRef $bBadTryPotion, ByRef $bBadTryDark, $bTest = False)
 EndFunc   ;==>FinalBoostST
 
 Func IsDarkAvariable()
-	Return (WaitforPixel(632, 543, 688, 576, Hex(0xFF887F, 6), 15, 1) = 0)
+	Return (WaitforPixel(632, 543, 688, 576, Hex(0xFF887F, 6), 15, 1) = False)
 EndFunc   ;==>IsDarkAvariable
 
 Func IsSTPage($iTry = 15)

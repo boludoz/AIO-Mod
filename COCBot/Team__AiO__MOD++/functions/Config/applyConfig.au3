@@ -57,13 +57,12 @@ Func ApplyConfig_MOD_CustomArmyBB($TypeReadSave)
 			GUICtrlSetData($g_hTxtBBDropTrophiesMax, $g_iTxtBBDropTrophiesMax)
 			chkBBtrophiesRange()
 			; -- AIO BB
-			GUICtrlSetState($g_hChkOnlyBuilderBase, $g_bOnlyBuilderBase ? $GUI_CHECKED : $GUI_UNCHECKED)
-			ChkOnlyBuilderBase()
 			GUICtrlSetState($g_hChkBBGetFromCSV, $g_bChkBBGetFromCSV ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkBBGetFromArmy, $g_bChkBBGetFromArmy ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbBBAttack, $g_iCmbBBAttack) ; switching between smart and csv attack
 			GUICtrlSetData($g_hTxtBBMinAttack, $g_iBBMinAttack)
 			GUICtrlSetData($g_hTxtBBMaxAttack, $g_iBBMaxAttack)
+			GUICtrlSetState($g_hChkDSICGBB, $g_bDSICGBB ? $GUI_CHECKED : $GUI_UNCHECKED)
 			cmbBBAttack()
 			ChkBBGetFromArmy()
 			ChkBBGetFromCSV()
@@ -104,8 +103,8 @@ Func ApplyConfig_MOD_CustomArmyBB($TypeReadSave)
 			$g_iCmbBBAttack = _GUICtrlComboBox_GetCurSel($g_hCmbBBAttack)
 			$g_iBBMinAttack = Int(GUICtrlRead($g_hTxtBBMinAttack))
 			$g_iBBMaxAttack = Int(GUICtrlRead($g_hTxtBBMaxAttack))
-			$g_bOnlyBuilderBase = (GUICtrlRead($g_hChkOnlyBuilderBase) = $GUI_CHECKED)
 			$g_bChkUpgradeMachine = (GUICtrlRead($g_hChkUpgradeMachine) = $GUI_CHECKED)
+			$g_bDSICGBB = (GUICtrlRead($g_hChkDSICGBB) = $GUI_CHECKED)
 	EndSwitch
 EndFunc   ;==>ApplyConfig_MOD_CustomArmyBB
 
@@ -620,9 +619,10 @@ Func ApplyConfig_MOD_600_35_1($TypeReadSave)
 			GUICtrlSetState($g_hChkAutoMinimizeBot, $g_bChkAutoMinimizeBot = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 
 			; <><><> Only Farm <><><>
-			GUICtrlSetState($g_hChkOnlyFarm, $g_bChkOnlyFarm = True ? $GUI_CHECKED : $GUI_UNCHECKED)
-			UpdateChkOnlyFarm() ;Applies it to farm button
-
+			If $g_iComboStatusMode < 0 Then $g_iComboStatusMode = 0
+			_GUICtrlComboBox_SetCurSel($g_hCmbStatusMode, $g_iComboStatusMode)
+			ComboStatusMode()
+			
 			; <><><> AIO Updater <><><>
 			GUICtrlSetState($g_hChkForAIOUpdates, $g_bCheckVersionAIO ?  $GUI_UNCHECKED : $GUI_CHECKED )
 		Case "Save"
@@ -632,7 +632,7 @@ Func ApplyConfig_MOD_600_35_1($TypeReadSave)
 			$g_bChkAutoMinimizeBot = (GUICtrlRead($g_hChkAutoMinimizeBot) = $GUI_CHECKED)
 
 			; <><><> Only Farm <><><>
-			$g_bChkOnlyFarm = (GUICtrlRead($g_hChkOnlyFarm) = $GUI_CHECKED)
+			$g_iComboStatusMode = Int(_GUICtrlComboBox_GetCurSel($g_hCmbStatusMode))
 
 			; <><><> AIO Updater <><><>
 			$g_bCheckVersionAIO = (GUICtrlRead($g_hChkForAIOUpdates) = $GUI_CHECKED)
