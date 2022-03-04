@@ -76,10 +76,25 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 	While 1
 		Local $TroopCamp = GetCurrentArmy(48, 160, "DoubleTrain Troops")
 		SetLog("Checking Troop tab: " & $TroopCamp[0] & "/" & $TroopCamp[1] * 2)
-		If $TroopCamp[1] = 0 Then ExitLoop
-		If $TroopCamp[1] <> $g_iTotalCampSpace Then _
-			SetLog("Incorrect Troop combo: " & $g_iTotalCampSpace & " vs Total camp: " & $TroopCamp[1] & @CRLF & @TAB & "Double train may not work well", $COLOR_DEBUG)
-
+		If Number($TroopCamp[1]) = 0 Then ExitLoop
+		
+		#Region - Custom Train - Team AIO Mod++
+		Local $iTotal = 0
+		For $iTT = 0 To UBound($g_aiArmyCompTroops) -1
+			$iTotal += $g_aiArmyCompTroops[$iTT] * $g_aiTroopSpace[$iTT]
+		Next
+		
+		If $TroopCamp[1] <> $g_iTotalCampSpace Or $iTotal <> $TroopCamp[1] Then
+			If $g_bIgnoreIncorrectTroopCombo = False Then
+				SetLog("Incorrect Troop combo: " & $g_iTotalCampSpace & " vs Total camp: " & $TroopCamp[1] & @CRLF & @TAB & "Double train may not work well", $COLOR_DEBUG)
+			Else
+				SetLog("Incorrect Troop combo: don't worry I fix it.", $COLOR_DEBUG)
+				$g_iTotalCampSpace = $TroopCamp[1]
+				FixInDoubleTrain($g_aiArmyCompTroops, $g_iTotalCampSpace, $g_aiTroopSpace, TroopIndexLookup($g_sCmbFICTroops[$g_iCmbFillIncorrectTroopCombo][0], "DoubleTrain"))
+			EndIf
+		EndIf
+		#EndRegion - Custom Train - Team AIO Mod++
+		
 		If $bWarTroop Or $bHasIncorrectTroop Or $TroopCamp[0] < $TroopCamp[1] Then ; <280/280 ; Check Stop For War and DoubleTrain precise - Team AiO MOD++
 			If Not $bWarTroop And $g_bDonationEnabled And $g_bChkDonate And MakingDonatedTroops("Troops") Then ; Check Stop For War - Team AiO MOD++
 				If $bDebug Then SetLog($Step & ". MakingDonatedTroops('Troops')", $COLOR_DEBUG)
@@ -122,12 +137,26 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 		While 1
 			Local $SpellCamp = GetCurrentArmy(43, 160, "DoubleTrain Spells")
 			SetLog("Checking Spell tab: " & $SpellCamp[0] & "/" & $SpellCamp[1] * 2)
-
-			If $SpellCamp[1] > $TotalSpell Then
-				SetLog("Unbalance Total spell setting vs actual spell capacity: " & $TotalSpell & "/" & $SpellCamp[1] & @CRLF & @TAB & "Double train may not work well", $COLOR_DEBUG)
-				$iUnbalancedSpell = $SpellCamp[1] - $TotalSpell
-				$SpellCamp[1] = $TotalSpell
+			
+			#Region - Custom Train - Team AIO Mod++
+			Local $iTotal = 0
+			For $iTT = 0 To UBound($g_aiArmyCompSpells) -1
+				$iTotal += $g_aiArmyCompSpells[$iTT] * $g_aiSpellSpace[$iTT]
+			Next
+			
+			If $SpellCamp[1] <> $TotalSpell Or $iTotal <> $SpellCamp[1] Then
+				If $g_bIgnoreIncorrectSpellCombo = False Then
+					SetLog("Unbalance Total spell setting vs actual spell capacity: " & $TotalSpell & "/" & $SpellCamp[1] & @CRLF & @TAB & "Double train may not work well", $COLOR_DEBUG)
+					$iUnbalancedSpell = $SpellCamp[1] - $TotalSpell
+					$SpellCamp[1] = $TotalSpell
+				Else
+					SetLog("Unbalanced Total spell setting vs actual spell capacity: AIO fix's that now.", $COLOR_DEBUG)
+					$g_iTotalSpellValue = $SpellCamp[1]
+					$TotalSpell = $SpellCamp[1]
+					FixInDoubleTrain($g_aiArmyCompSpells, $TotalSpell, $g_aiSpellSpace, TroopIndexLookup($g_sCmbFICSpells[$g_iCmbFillIncorrectSpellCombo][0], "DoubleTrain") - $eLSpell)
+				EndIf
 			EndIf
+			#EndRegion - Custom Train - Team AIO Mod++
 
 			If $bWarTroop Or $bHasIncorrectSpell Or $SpellCamp[0] < $SpellCamp[1] Then ; 0-10/11 ; Check Stop For War and DoubleTrain precise - Team AiO MOD++
 				If Not $bWarTroop And $g_bDonationEnabled And $g_bChkDonate And MakingDonatedTroops("Spells") Then ; Check Stop For War - Team AiO MOD++
@@ -393,3 +422,52 @@ Func CheckQueueSpellAndTrainRemain($ArmyCamp, $bDebug, $iUnbalancedSpell = 0)
 	EndIf
 	Return True
 EndFunc   ;==>CheckQueueSpellAndTrainRemain
+
+#Region - Custom Train - Team AIO Mod++
+Func TestFixInDoubleTrain()
+	$g_iTotalCampSpace = 300
+	FixInDoubleTrain($g_aiArmyCompTroops, $g_iTotalCampSpace, $g_aiTroopSpace, 0)
+	_ArrayDisplay($g_aiArmyCompTroops)
+EndFunc
+
+Func FixInDoubleTrain(ByRef $aTroops, $iTotal, $aTroopSpace, $iIndexRemain = 0)
+	Local $iTotalFixed = 0, $iRealCAP = 0
+	Local $iCo = _Min(UBound($aTroops), UBound($aTroopSpace))
+
+	For $i = 0 To $iCo -1
+		$iRealCAP += $aTroops[$i] * $aTroopSpace[$i]
+	Next
+	
+	If $iRealCAP = 0 Or $iTotal = 0 Then
+		SetLog("FixInDoubleTrain error", $COLOR_ERROR)
+		Return False
+	EndIf
+	
+	If $iRealCAP = 0 Then
+		SetLog("Set-up your army !", $COLOR_ERROR)
+		$aTroops[$iIndexRemain] = $iTotal
+		Return
+	EndIf
+
+	For $i = 0 To $iCo -1
+		$aTroops[$i] = Floor(((((($aTroops[$i] * $aTroopSpace[$i]) / $iRealCAP)  * 100) * $iTotal) / 100) / $aTroopSpace[$i])
+		SetLog($aTroops[$i])
+		$iTotalFixed += $aTroops[$i] * $aTroopSpace[$i]
+	Next
+
+	Local $iFinal = $iTotalFixed
+	If $iTotalFixed <> $iTotal Then
+		For $i = 0 To $iCo -1
+			If $aTroops[$i] = 0 Then ContinueLoop
+			Local $iDiff = Abs($iTotalFixed - $iTotal)
+			If Mod($iDiff, $aTroopSpace[$i]) = 0 Then
+				$iFinal -= $aTroops[$i] * $aTroopSpace[$i]
+				$aTroops[$i] += $iDiff / $aTroopSpace[$i]
+				$iFinal += $aTroops[$i] * $aTroopSpace[$i]
+				ExitLoop
+			EndIf
+		Next
+	EndIf
+	$aTroops[$iIndexRemain] += Abs($iFinal - $iTotal)
+EndFunc   ;==>FixInDoubleTrain
+#EndRegion - Custom Train - Team AIO Mod++

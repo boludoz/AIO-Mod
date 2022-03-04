@@ -1365,6 +1365,11 @@ Func SaveConfig_600_52_2()
 	_Ini_Add("troop", "DoubleTrain", $g_bDoubleTrain ? 1 : 0)
 	_Ini_Add("troop", "PreciseArmy", $g_bPreciseArmy ? 1 : 0)
 	#Region - Custom train - Team AIO Mod++
+	_Ini_Add("other", "IgnoreIncorrectTroopCombo", $g_bIgnoreIncorrectTroopCombo)
+	_Ini_Add("other", "FillIncorrectTroopCombo", $g_iCmbFillIncorrectTroopCombo)
+	_Ini_Add("other", "IgnoreIncorrectSpellCombo", $g_bIgnoreIncorrectSpellCombo)
+	_Ini_Add("other", "FillIncorrectSpellCombo", $g_iCmbFillIncorrectSpellCombo)
+
 	_Ini_Add("troop", "PreciseBrew", $g_bPreciseBrew ? 1 : 0)
 	_Ini_Add("troop", "ForcePreBrewSpells", $g_bForcePreBrewSpells ? 1 : 0)
 

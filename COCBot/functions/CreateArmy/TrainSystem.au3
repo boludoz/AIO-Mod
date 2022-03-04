@@ -271,7 +271,7 @@ Func TrainUsingWhatToTrain($rWTT, $bQueue = $g_bIsFullArmywithHeroesAndSpells)
 			If IsSpellToBrew($rWTT[$i][0]) Then ContinueLoop
 			Local $iTroopIndex = TroopIndexLookup($rWTT[$i][0], "TrainUsingWhatToTrain()")
 
-			If $iTroopIndex >= $eBarb And $iTroopIndex <= $eHunt Then
+			If $iTroopIndex >= $eBarb And $iTroopIndex <= $eBarb + $eTroopCount - 1 Then
 				Local $NeededSpace = $g_aiTroopSpace[$iTroopIndex] * $rWTT[$i][1]
 			EndIf
 
@@ -280,7 +280,7 @@ Func TrainUsingWhatToTrain($rWTT, $bQueue = $g_bIsFullArmywithHeroesAndSpells)
 
 
 			If $NeededSpace > $LeftSpace Then
-				If $iTroopIndex >= $eBarb And $iTroopIndex <= $eHunt Then
+				If $iTroopIndex >= $eBarb And $iTroopIndex <= $eBarb + $eTroopCount - 1 Then
 					$rWTT[$i][1] = Int($LeftSpace / $g_aiTroopSpace[$iTroopIndex])
 				EndIf
 			EndIf
@@ -288,7 +288,7 @@ Func TrainUsingWhatToTrain($rWTT, $bQueue = $g_bIsFullArmywithHeroesAndSpells)
 			If $rWTT[$i][1] > 0 Then
 				If Not DragIfNeeded($rWTT[$i][0]) Then Return False
 
-				If $iTroopIndex >= $eBarb And $iTroopIndex <= $eHunt Then
+				If $iTroopIndex >= $eBarb And $iTroopIndex <= $eBarb + $eTroopCount - 1 Then
 					Local $sTroopName = ($rWTT[$i][1] > 1 ? $g_asTroopNamesPlural[$iTroopIndex] : $g_asTroopNames[$iTroopIndex])
 				EndIf
 
@@ -412,7 +412,7 @@ EndFunc   ;==>IsElixirTroop
 
 Func IsDarkTroop($Troop)
 	Local $iIndex = TroopIndexLookup($Troop, "IsDarkTroop")
-	If $iIndex >= $eMini And $iIndex <= $eHunt Then Return True
+	If $iIndex >= $eMini And $iIndex <= $eBarb + $eTroopCount - 1 Then Return True
 	Return False
 EndFunc   ;==>IsDarkTroop
 
@@ -1422,7 +1422,7 @@ Func CheckValuesCost($Troop = "Arch", $troopQuantity = 1)
 	Local $aTrainPos = GetTrainPos($iTroopIndex)
 	Local $iTempTroopCost, $iTempSpellCost
 	If IsArray($aTrainPos) And $aTrainPos[0] <> -1 Then
-		If $iTroopIndex >= $eBarb And $iTroopIndex <= $eHunt Then
+		If $iTroopIndex >= $eBarb And $iTroopIndex <= $eBarb + $eTroopCount - 1 Then
 			$iTempTroopCost = getArmyResourcesFromButtons($aTrainPos[0], $aTrainPos[1])
 			If $iTempTroopCost <> "" Then
 				$troopCost = Number($iTempTroopCost)

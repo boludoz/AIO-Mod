@@ -408,3 +408,26 @@ Func cmbmilkdelay()
 	$g_imilkdelay = Int(_guictrlcombobox_getcursel($g_hcmbmilkdelays))
 EndFunc
 #EndRegion - SmartMilk
+
+; xbebenk
+Func chkOnDoubleTrain()
+	If GUICtrlRead($g_hChkMMIgnoreIncorrectTroopCombo) = $GUI_CHECKED Then
+		$g_bIgnoreIncorrectTroopCombo = True
+		GUICtrlSetState($g_hLblFillIncorrectTroopCombo, $GUI_ENABLE)
+		GUICtrlSetState($g_hCmbFillIncorrectTroopCombo, $GUI_ENABLE)
+	Else
+		$g_bIgnoreIncorrectTroopCombo = False
+		GUICtrlSetState($g_hLblFillIncorrectTroopCombo, $GUI_DISABLE)
+		GUICtrlSetState($g_hCmbFillIncorrectTroopCombo, $GUI_DISABLE)
+	EndIf
+	If GUICtrlRead($g_hChkMMIgnoreIncorrectSpellCombo) = $GUI_CHECKED Then
+		$g_bIgnoreIncorrectSpellCombo = True
+		GUICtrlSetState($g_hLblFillIncorrectSpellCombo, $GUI_ENABLE)
+		GUICtrlSetState($g_hCmbFillIncorrectSpellCombo, $GUI_ENABLE)
+	Else
+		$g_bIgnoreIncorrectSpellCombo = False
+		GUICtrlSetState($g_hLblFillIncorrectSpellCombo, $GUI_DISABLE)
+		GUICtrlSetState($g_hCmbFillIncorrectSpellCombo, $GUI_DISABLE)
+	EndIf
+EndFunc ;==> chkOnDoubleTrain
+

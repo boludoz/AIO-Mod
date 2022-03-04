@@ -1644,6 +1644,11 @@ Func ReadConfig_600_52_2()
 	$g_bPreciseArmy = (IniRead($g_sProfileConfigPath, "troop", "PreciseArmy", "0") = "1")
 
 	#Region - Custom train - Team AIO Mod++
+	IniReadS($g_bIgnoreIncorrectTroopCombo, $g_sProfileConfigPath, "other", "IgnoreIncorrectTroopCombo", True, "Bool")
+	IniReadS($g_iCmbFillIncorrectTroopCombo, $g_sProfileConfigPath, "other", "FillIncorrectTroopCombo", 0, "int")
+	IniReadS($g_bIgnoreIncorrectSpellCombo, $g_sProfileConfigPath, "other", "IgnoreIncorrectSpellCombo", True, "Bool")
+	IniReadS($g_iCmbFillIncorrectSpellCombo, $g_sProfileConfigPath, "other", "FillIncorrectSpellCombo", 0, "int")
+
 	$g_bPreciseBrew = (IniRead($g_sProfileConfigPath, "troop", "PreciseBrew", "0") = "1")
 	$g_bForcePreBrewSpells = (IniRead($g_sProfileConfigPath, "troop", "ForcePreBrewSpells", "0") = "1")
 

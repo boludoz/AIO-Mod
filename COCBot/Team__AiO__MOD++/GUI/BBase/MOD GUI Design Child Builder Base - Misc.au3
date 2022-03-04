@@ -83,7 +83,7 @@ Func CreateMiscBuilderBaseSubTab()
 	$y += 55
 
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "Group_03", "Builders Base Loop"), $x - 10, $y - 20, $g_iSizeWGrpTab2, 52)
-		$g_hChkDSICGBB = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "ChkDSICG", "Increase cycles during clan games"), $x + 25, $y, 155, -1)
+		$g_hChkDSICGBB = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "ChkDSICG", "Increase cycles during clan games"), $x + 10, $y, 175, -1)
 
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "LblMaxLoopsAttackBB", "Attack cycles :"), $x + 220, $y + 4, -1, -1)
 

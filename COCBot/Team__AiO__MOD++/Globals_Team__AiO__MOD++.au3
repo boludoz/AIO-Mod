@@ -365,6 +365,19 @@ Global $g_iCustomArmysMainVillage[$eTroopCount][3]
 Global $g_iCustomBrewMainVillage[$eSpellCount][3]
 Global $g_iCustomSiegesMainVillage[$eSiegeMachineCount][3]
 Global $g_hCmbTroopSetting = 0, $g_iCmbTroopSetting = 0
+Global $g_bIgnoreIncorrectTroopCombo = False, $g_bIgnoreIncorrectSpellCombo = False, $g_iCmbFillIncorrectTroopCombo = 0, $g_iCmbFillIncorrectSpellCombo = 0
+
+Global $g_hChkMMIgnoreIncorrectTroopCombo = 0, $g_hLblFillIncorrectTroopCombo = 0, $g_hCmbFillIncorrectTroopCombo = 0, $g_hChkMMIgnoreIncorrectSpellCombo = 0, $g_hLblFillIncorrectSpellCombo = 0, $g_hCmbFillIncorrectSpellCombo = 0
+
+Global $g_sCmbFICTroops[2][3] = [ _ 
+								["Barb",	"Barbarians",		1], _
+								["Arch",	"Archers",			1]] 
+Global $g_sCmbFICSpells[5][3] = [ _ 
+								["LSpell",	"Lightning Spell",	1], _
+								["BtSpell",	"Bat Spell",		1], _
+								["HaSpell",	"Haste Spell",		1], _
+								["FSpell",	"Freeze Spell",		1], _
+								["ESpell",	"Earthquake Spell",	1]]
 
 ; Custom pets - Team AIO Mod++
 Global $g_hChkPetHouseSelector = 0
