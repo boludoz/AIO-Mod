@@ -451,7 +451,7 @@ Func FixInDoubleTrain(ByRef $aTroops, $iTotal, $aTroopSpace, $iIndexRemain = 0)
 
 	For $i = 0 To $iCo -1
 		$aTroops[$i] = Floor(((((($aTroops[$i] * $aTroopSpace[$i]) / $iRealCAP)  * 100) * $iTotal) / 100) / $aTroopSpace[$i])
-		SetLog($aTroops[$i])
+		; SetLog($aTroops[$i])
 		$iTotalFixed += $aTroops[$i] * $aTroopSpace[$i]
 	Next
 
