@@ -342,6 +342,16 @@ Func BrewUsingWhatToTrain($rWTT, $bQueue = $g_bIsFullArmywithHeroesAndSpells)
 	Next
 EndFunc   ;==>BrewUsingWhatToTrain
 
+Func TotalTroopsToTrainInGUI()
+	Local $iTotalTroopsInGUI = 0
+	If $g_iTotalCampSpace = 0 Then Return $iTotalTroopsInGUI
+	If Not $g_bRunState Then Return
+	For $i = 0 To $eTroopCount - 1
+		$iTotalTroopsInGUI += $g_aiArmyCompTroops[$i] * $g_aiTroopSpace[$i]
+	Next
+	Return $iTotalTroopsInGUI
+EndFunc   ;==>TotalSpellsToBrewInGUI
+
 Func TotalSpellsToBrewInGUI()
 	Local $iTotalSpellsInGUI = 0
 	If $g_iTotalSpellValue = 0 Then Return $iTotalSpellsInGUI

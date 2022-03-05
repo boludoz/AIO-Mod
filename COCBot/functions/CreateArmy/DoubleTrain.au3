@@ -67,28 +67,25 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 		SetLog("Force double train before attack.", $COLOR_SUCCESS)
 	EndIf	
 	#EndRegion - Custom Army - Team AIO Mod++
-	
-	; Troop
-	If Not OpenTroopsTab(False, "DoubleTrain()") Then Return
-	If _Sleep(250) Then Return
 
 	Local $Step = 1
 	While 1
+		
+		; Troop
+		If Not OpenTroopsTab(False, "DoubleTrain()") Then Return
+		If _Sleep(250) Then Return
+		
 		Local $TroopCamp = GetCurrentArmy(48, 160, "DoubleTrain Troops")
 		SetLog("Checking Troop tab: " & $TroopCamp[0] & "/" & $TroopCamp[1] * 2)
 		If Number($TroopCamp[1]) = 0 Then ExitLoop
-		
+
 		#Region - Custom Train - Team AIO Mod++
-		Local $iTotal = 0
-		For $iTT = 0 To UBound($g_aiArmyCompTroops) -1
-			$iTotal += $g_aiArmyCompTroops[$iTT] * $g_aiTroopSpace[$iTT]
-		Next
-		
-		If $TroopCamp[1] <> $g_iTotalCampSpace Or $iTotal <> $TroopCamp[1] Then
+		Local $iTotalTroopInGUI = Number(TotalTroopsToTrainInGUI())
+		If $TroopCamp[1] <> $g_iTotalCampSpace Or $iTotalTroopInGUI <> $TroopCamp[1] Then
 			If $g_bIgnoreIncorrectTroopCombo = False Then
 				SetLog("Incorrect Troop combo: " & $g_iTotalCampSpace & " vs Total camp: " & $TroopCamp[1] & @CRLF & @TAB & "Double train may not work well", $COLOR_DEBUG)
 			Else
-				SetLog("Incorrect Troop combo: don't worry I fix it.", $COLOR_DEBUG)
+				SetLog("Incorrect Troop combo: please, update you GUI values.", $COLOR_DEBUG)
 				$g_iTotalCampSpace = $TroopCamp[1]
 				FixInDoubleTrain($g_aiArmyCompTroops, $g_iTotalCampSpace, $g_aiTroopSpace, TroopIndexLookup($g_sCmbFICTroops[$g_iCmbFillIncorrectTroopCombo][0], "DoubleTrain"))
 			EndIf
@@ -127,7 +124,8 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 
 	; Spell
 	Local $iUnbalancedSpell = 0
-	Local $TotalSpell = _Min(Number(TotalSpellsToBrewInGUI()), Number($g_iTotalSpellValue))
+	Local $iTotalSpellInGUI = TotalSpellsToBrewInGUI()
+	Local $TotalSpell = _Min($iTotalSpellInGUI, $g_iTotalSpellValue)
 	If $TotalSpell = 0 Then
 		If $bDebug Then SetLog("No spell is required, skip checking spell tab", $COLOR_DEBUG)
 	Else
@@ -139,18 +137,13 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 			SetLog("Checking Spell tab: " & $SpellCamp[0] & "/" & $SpellCamp[1] * 2)
 			
 			#Region - Custom Train - Team AIO Mod++
-			Local $iTotal = 0
-			For $iTT = 0 To UBound($g_aiArmyCompSpells) -1
-				$iTotal += $g_aiArmyCompSpells[$iTT] * $g_aiSpellSpace[$iTT]
-			Next
-			
-			If $SpellCamp[1] <> $TotalSpell Or $iTotal <> $SpellCamp[1] Then
+			If $SpellCamp[1] <> $g_iTotalSpellValue Or $iTotalSpellInGUI <> $SpellCamp[1] Then
 				If $g_bIgnoreIncorrectSpellCombo = False Then
 					SetLog("Unbalance Total spell setting vs actual spell capacity: " & $TotalSpell & "/" & $SpellCamp[1] & @CRLF & @TAB & "Double train may not work well", $COLOR_DEBUG)
 					$iUnbalancedSpell = $SpellCamp[1] - $TotalSpell
 					$SpellCamp[1] = $TotalSpell
 				Else
-					SetLog("Unbalanced Total spell setting vs actual spell capacity: AIO fix's that now.", $COLOR_DEBUG)
+					SetLog("Unbalanced Total spell: please, update you GUI values.", $COLOR_DEBUG)
 					$g_iTotalSpellValue = $SpellCamp[1]
 					$TotalSpell = $SpellCamp[1]
 					FixInDoubleTrain($g_aiArmyCompSpells, $TotalSpell, $g_aiSpellSpace, TroopIndexLookup($g_sCmbFICSpells[$g_iCmbFillIncorrectSpellCombo][0], "DoubleTrain") - $eLSpell)
@@ -424,12 +417,6 @@ Func CheckQueueSpellAndTrainRemain($ArmyCamp, $bDebug, $iUnbalancedSpell = 0)
 EndFunc   ;==>CheckQueueSpellAndTrainRemain
 
 #Region - Custom Train - Team AIO Mod++
-Func TestFixInDoubleTrain()
-	$g_iTotalCampSpace = 300
-	FixInDoubleTrain($g_aiArmyCompTroops, $g_iTotalCampSpace, $g_aiTroopSpace, 0)
-	_ArrayDisplay($g_aiArmyCompTroops)
-EndFunc
-
 Func FixInDoubleTrain(ByRef $aTroops, $iTotal, $aTroopSpace, $iIndexRemain = 0)
 	Local $iTotalFixed = 0, $iRealCAP = 0
 	Local $iCo = _Min(UBound($aTroops), UBound($aTroopSpace))
@@ -441,9 +428,7 @@ Func FixInDoubleTrain(ByRef $aTroops, $iTotal, $aTroopSpace, $iIndexRemain = 0)
 	If $iTotal = 0 Then
 		SetLog("FixInDoubleTrain error", $COLOR_ERROR)
 		Return False
-	EndIf
-	
-	If $iRealCAP = 0 Then
+	ElseIf $iRealCAP = 0 Then
 		SetLog("Set-up your army !", $COLOR_ERROR)
 		$aTroops[$iIndexRemain] = $iTotal
 		Return
@@ -451,7 +436,6 @@ Func FixInDoubleTrain(ByRef $aTroops, $iTotal, $aTroopSpace, $iIndexRemain = 0)
 
 	For $i = 0 To $iCo -1
 		$aTroops[$i] = Floor(((((($aTroops[$i] * $aTroopSpace[$i]) / $iRealCAP)  * 100) * $iTotal) / 100) / $aTroopSpace[$i])
-		; SetLog($aTroops[$i])
 		$iTotalFixed += $aTroops[$i] * $aTroopSpace[$i]
 	Next
 

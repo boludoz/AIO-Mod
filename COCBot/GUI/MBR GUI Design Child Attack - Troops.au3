@@ -762,7 +762,7 @@ Func CreateTrainOptions()
 
 	$x = 55 + 151
 	$y = 22
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Options", "Group_03", "Training Add Random Delay"), $x - 20, $y - 20, 210, 81)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Options", "Group_03", "Training Add Random Delay"), $x - 20, $y - 20, 195, 81)
 	$y += 15
 	$g_hChkTrainAddRandomDelayEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Options", "ChkTrainAddRandomDelayEnable", "Add Random Delay"), $x + 18, $y - 11, 130, -1)
 	$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Options", "ChkTrainAddRandomDelayEnable_Info_01", "Add random delay between two calls of train army.") & @CRLF & _
@@ -786,14 +786,14 @@ Func CreateTrainOptions()
 	$x = 206
 	$y += 50
 	; Buy guard - Team AIO Mod++
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Options", "Group_07", "Shop"), $x - 20, $y - 20, 210, 50)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Options", "Group_07", "Shop"), $x - 20, $y - 20, 195, 50)
 	$g_hChkBuyGuard = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Options", "ChkBuyTwoHourGuard", "Buy Two Hour Guard"), $x - 10, $y, -1, -1)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Options", "ChkBuyTwoHourGuard_Info_01", "When you select this option, Bot will buy two hour when available.") & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Options", "ChkBuyTwoHourGuard_Info_02", "You can use this option safely as it is implmented in that way bot will not buy anything else.") & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Options", "ChkBuyTwoHourGuard_Info_03", "Note: Use Only when u know what u are doing as Two Hour Guard cost is 10 Gems."))
 	GUICtrlSetState(-1, $GUI_UNCHECKED)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	$x = 206
 	$y += 50
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Options", "Group_05", "Advanced Options"), $x - 20, $y - 20, 210, 66)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Options", "Group_05", "Advanced Options"), $x - 20, $y - 20, 195, 66)
 	$g_hLblStickToTrainWindow = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Train_Troops", "LblStickToTrainWindow", "Stick to Army page when time left"), $x - 10, $y - 1)
 	$g_hTxtStickToTrainWindow = _GUICtrlCreateInput("2", $x, $y + 17, 30, 20, $GUI_SS_DEFAULT_INPUT + $ES_CENTER + $ES_NUMBER)
 	$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Train_Troops", "TxtStickToTrainWindow_Info_1", "Will stick to army train page until troops or spells train finish. (Max 5 minutes)(Spell only available if wait for spell enable)")
@@ -804,10 +804,10 @@ Func CreateTrainOptions()
 	GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Train_Troops", "TxtStickToTrainWindowMinute", "minute(s)"), $x + 35, $y + 17, -1, -1)
 	_GUICtrlSetTip(-1, $sTxtTip)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
-	;::::::::::::::::::
+	#Region - Custom Train - Team AIO Mod++
 	$y += 45 + 27
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On Double Train"), $x - 20, $y - 20, 210, 125)
-		$g_hChkMMIgnoreIncorrectTroopCombo = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkIgnoreBadTroopCombo", "Ignore Bad Troop Combo"), $x, $y, -1, -1)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On Double Train"), $x - 20, $y - 20, 195, 125)
+		$g_hChkMMIgnoreIncorrectTroopCombo = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkIgnoreBadTroopCombo", "Ignore Bad Troop Combo"), $x - 10, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnDoubleTrain_Info_01", "If Enabled DoubleTrain, Wont Empty Queued Troop, will Disable Precise Army"))
 		GUICtrlSetOnEvent(-1, "chkOnDoubleTrain")
 		GUICtrlSetState(-1, $GUI_CHECKED)
@@ -821,7 +821,7 @@ Func CreateTrainOptions()
 		Next
 		GUICtrlSetData(-1, $sCmbTxt, "Barbarians")
 	$y += 23	
-		$g_hChkMMIgnoreIncorrectSpellCombo = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkIgnoreBadSpellCombo", "Ignore Bad Spell Combo"), $x, $y, -1, -1)
+		$g_hChkMMIgnoreIncorrectSpellCombo = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkIgnoreBadSpellCombo", "Ignore Bad Spell Combo"), $x - 10, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnDoubleTrain_Info_02", "If Enabled DoubleTrain, Wont Empty Queued Spell, will Disable Precise Army"))
 		GUICtrlSetOnEvent(-1, "chkOnDoubleTrain")
 		GUICtrlSetState(-1, $GUI_CHECKED)
@@ -834,6 +834,7 @@ Func CreateTrainOptions()
 			$sCmbTxt &= $g_sCmbFICSpells[$z][1] & "|"
 		Next
 		GUICtrlSetData(-1, $sCmbTxt, "Lightning Spell")
+	#EndRegion - Custom Train - Team AIO Mod++
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 		
 EndFunc   ;==>CreateTrainOptions
