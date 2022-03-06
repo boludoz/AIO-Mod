@@ -62,7 +62,7 @@ Func cmbBBAttack()
 		GUICtrlSetState($g_hCmbBBSameTroopDelay, $GUI_HIDE)
 		GUICtrlSetState($g_hBtnBBDropOrder, $GUI_HIDE)
 		GUICtrlSetState($g_hChkBBCustomAttack, $GUI_ENABLE)
-		For $i=$g_hGrpAttackStyleBB To $g_hIcnBBCSV[3] ; enable all csv stuff
+		For $i = $g_hCmbBBAttackStyle[0] To $g_hIcnBBCSV_3[3] ; enable all csv stuff
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
 	Else
@@ -90,11 +90,11 @@ Func ChkBBGetFromCSV()
 
 	$g_iCmbBBAttack = _GUICtrlComboBox_GetCurSel($g_hCmbBBAttack)
 	If $g_bChkBBGetFromCSV = True Or ($g_iCmbBBAttack = $g_eBBAttackCSV) Then
-		For $i=$g_hGrpAttackStyleBB To $g_hIcnBBCSV[3] ; enable all csv stuff
+		For $i = $g_hCmbBBAttackStyle[0] To $g_hIcnBBCSV_3[3] ; enable all csv stuff
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
 	Else
-		For $i=$g_hGrpAttackStyleBB To $g_hIcnBBCSV[3] ; enable all csv stuff
+		For $i = $g_hCmbBBAttackStyle[0] To $g_hIcnBBCSV_3[3] ; enable all csv stuff
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
 	EndIf
@@ -195,8 +195,15 @@ Func UpdateComboScriptNameBB()
 EndFunc   ;==>UpdateComboScriptNameBB
 
 Func EditScriptBB()
-	Local $tempvect1 = _GUICtrlComboBox_GetListArray($g_hCmbBBAttackStyle[0])
-	Local $filename = $tempvect1[_GUICtrlComboBox_GetCurSel($g_hCmbBBAttackStyle[0]) + 1]
+	Local $iCSVID = 0
+	If @GUI_CtrlId == $g_hIcnBBCSV_2[1] Then
+		$iCSVID = 1
+	ElseIf @GUI_CtrlId == $g_hIcnBBCSV_3[1] Then
+		$iCSVID = 2
+	EndIf
+	
+	Local $tempvect1 = _GUICtrlComboBox_GetListArray($g_hCmbBBAttackStyle[$iCSVID])
+	Local $filename = $tempvect1[_GUICtrlComboBox_GetCurSel($g_hCmbBBAttackStyle[$iCSVID]) + 1]
 	Local $f, $result = ""
 	Local $tempvect, $line, $t
 	If FileExists($g_sCSVBBAttacksPath & "\" & $filename & ".csv") Then
@@ -224,23 +231,30 @@ Func NewScriptBB()
 EndFunc   ;==>NewScriptBB
 
 Func DuplicateScriptBB()
-	Local $indexofscript = _GUICtrlComboBox_GetCurSel($g_hCmbBBAttackStyle[0])
+	Local $iCSVID = 0
+	If @GUI_CtrlId == $g_hIcnBBCSV_2[3] Then
+		$iCSVID = 1
+	ElseIf @GUI_CtrlId == $g_hIcnBBCSV_3[3] Then
+		$iCSVID = 2
+	EndIf
+	
+	Local $indexofscript = _GUICtrlComboBox_GetCurSel($g_hCmbBBAttackStyle[$iCSVID])
 	Local $scriptname
-	_GUICtrlComboBox_GetLBText($g_hCmbBBAttackStyle[0], $indexofscript, $scriptname)
-	$g_sAttackScrScriptNameBB[0] = $scriptname
-	Local $filenameScript = InputBox(GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_Copy_0", -1), GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_Copy_1", -1) & ": <" & $g_sAttackScrScriptNameBB[0] & ">" & @CRLF & GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_New_1", -1) & ":")
+	_GUICtrlComboBox_GetLBText($g_hCmbBBAttackStyle[$iCSVID], $indexofscript, $scriptname)
+	$g_sAttackScrScriptNameBB[$iCSVID] = $scriptname
+	Local $filenameScript = InputBox(GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_Copy_0", -1), GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_Copy_1", -1) & ": <" & $g_sAttackScrScriptNameBB[$iCSVID] & ">" & @CRLF & GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_New_1", -1) & ":")
 	If StringLen($filenameScript) > 0 Then
 		If FileExists($g_sCSVBBAttacksPath & "\" & $filenameScript & ".csv") Then
 			MsgBox("", "", GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_File-exists", -1))
 		Else
-			Local $hFileOpen = FileCopy($g_sCSVBBAttacksPath & "\" & $g_sAttackScrScriptNameBB[0] & ".csv", $g_sCSVBBAttacksPath & "\" & $filenameScript & ".csv")
+			Local $hFileOpen = FileCopy($g_sCSVBBAttacksPath & "\" & $g_sAttackScrScriptNameBB[$iCSVID] & ".csv", $g_sCSVBBAttacksPath & "\" & $filenameScript & ".csv")
 
 			If $hFileOpen = -1 Then
 				MsgBox($MB_SYSTEMMODAL, "", GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_Error", -1))
 				Return False
 			Else
 				FileClose($hFileOpen)
-				$g_sAttackScrScriptNameBB[0] = $filenameScript
+				$g_sAttackScrScriptNameBB[$iCSVID] = $filenameScript
 				UpdateComboScriptNameBB()
 			EndIf
 		EndIf
@@ -248,79 +262,26 @@ Func DuplicateScriptBB()
 EndFunc   ;==>DuplicateScriptBB
 
 Func ChkBBCustomAttack()
-#cs
 	If GUICtrlRead($g_hChkBBCustomAttack) = $GUI_CHECKED Then
-		GUICtrlSetState($g_hCmbBBAttackStyle[1], $GUI_SHOW)
-		GUICtrlSetState($g_hCmbBBAttackStyle[2], $GUI_SHOW)
-		GUICtrlSetState($g_hLblNotesScriptBB[1], $GUI_SHOW)
-		GUICtrlSetState($g_hLblNotesScriptBB[2], $GUI_SHOW)
-		GUICtrlSetState($g_hGrpGuideScriptBB[1], $GUI_SHOW)
-		GUICtrlSetState($g_hGrpGuideScriptBB[2], $GUI_SHOW)
-
-		GUICtrlSetState($g_hChkBBGetFromCSV, $GUI_HIDE) ; AIO ++
-		GUICtrlSetState($g_hChkBBGetFromArmy, $GUI_HIDE) ; AIO ++
-
-		GUICtrlSetState($g_hGrpAttackStyleBB, $GUI_HIDE)
-		GUICtrlSetState($g_hGrpGuideScriptBB[0], $GUI_SHOW)
-
-		GUICtrlSetPos($g_hGrpOptionsBB, -1, -1, $g_iSizeWGrpTab2 - 2, 65)
-		GUICtrlSetPos($g_hChkBBTrophiesRange, 100, 105)
-		GUICtrlSetPos($g_hTxtBBDropTrophiesMin, 203, 105)
-		GUICtrlSetPos($g_hLblBBDropTrophiesDash, 245, 105 + 2)
-		GUICtrlSetPos($g_hTxtBBDropTrophiesMax, 250, 105)
-		GUICtrlSetPos($g_hChkBBCustomAttack, 300, 105)
-		; GUICtrlSetPos($g_hChkBBGetFromCSV, 5, 187)
-		; GUICtrlSetPos($g_hChkBBGetFromArmy, 5, 187)
-		GUICtrlSetPos($g_hChkBBStopAt3, 300, 130)
-		WinMove($g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV, "", 0, 140, $g_iSizeWGrpTab2 - 2)
-		GUICtrlSetPos($g_hGrpAttackStyleBB, -1, -1, $g_iSizeWGrpTab2 - 12, $g_iSizeHGrpTab4 - 90)
-		GUICtrlSetPos($g_hCmbBBAttackStyle[0], -1, 35, 130)
-		GUICtrlSetPos($g_hLblNotesScriptBB[0], -1, 60, 130, 180)
-		For $i = 0 To UBound($g_hIcnBBCSV) - 1
-			GUICtrlSetPos($g_hIcnBBCSV[$i], 416)
-		Next
 		$g_bChkBBCustomAttack = True
-	Else
-#ce
-		$g_iCmbBBAttack = _GUICtrlComboBox_GetCurSel($g_hCmbBBAttack)
-		If $g_iCmbBBAttack = $g_eBBAttackCSV Then
-			GUICtrlSetState($g_hChkBBGetFromCSV, $GUI_HIDE) ; AIO ++
-			GUICtrlSetState($g_hChkBBGetFromArmy, $GUI_SHOW) ; AIO ++
-		Else
-			GUICtrlSetState($g_hChkBBGetFromCSV, $GUI_SHOW) ; AIO ++
-			GUICtrlSetState($g_hChkBBGetFromArmy, $GUI_HIDE) ; AIO ++
-		EndIf
-
-		GUICtrlSetState($g_hCmbBBAttackStyle[1], $GUI_HIDE)
-		GUICtrlSetState($g_hCmbBBAttackStyle[2], $GUI_HIDE)
-		GUICtrlSetState($g_hLblNotesScriptBB[1], $GUI_HIDE)
-		GUICtrlSetState($g_hLblNotesScriptBB[2], $GUI_HIDE)
-		GUICtrlSetState($g_hGrpGuideScriptBB[1], $GUI_HIDE)
-		GUICtrlSetState($g_hGrpGuideScriptBB[2], $GUI_HIDE)
-
-
-		GUICtrlSetState($g_hGrpAttackStyleBB, $GUI_SHOW)
-		GUICtrlSetState($g_hGrpGuideScriptBB[0], $GUI_HIDE)
-		#cs
-		WinMove($g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV, "", 200, 85, 240)
-		GUICtrlSetPos($g_hGrpOptionsBB, -1, -1, 200, 135)
-		GUICtrlSetPos($g_hChkBBTrophiesRange, 5, 150)
-		GUICtrlSetPos($g_hTxtBBDropTrophiesMin, 108, 151)
-		GUICtrlSetPos($g_hLblBBDropTrophiesDash, 150, 153)
-		GUICtrlSetPos($g_hTxtBBDropTrophiesMax, 155, 151)
-		GUICtrlSetPos($g_hChkBBCustomAttack, 5, 170)
-		GUICtrlSetPos($g_hChkBBStopAt3, 5, 130)
-		GUICtrlSetPos($g_hChkBBGetFromCSV, 5, 187)
-		GUICtrlSetPos($g_hChkBBGetFromArmy, 5, 187)
-		GUICtrlSetPos($g_hGrpAttackStyleBB, -1, -1, 233, $g_iSizeHGrpTab4 - 35)
-		GUICtrlSetPos($g_hCmbBBAttackStyle[0], -1, 25, 195)
-		GUICtrlSetPos($g_hLblNotesScriptBB[0], -1, 50, 195, 160)
-		For $i = 0 To UBound($g_hIcnBBCSV) - 1
-			GUICtrlSetPos($g_hIcnBBCSV[$i], 215)
+		For $h = $g_hCmbBBAttackStyle[1] To $g_hIcnBBCSV_3[3]
+			GUICtrlSetState($h, $GUI_ENABLE) ; AIO ++
 		Next
-		#ce
+	Else
 		$g_bChkBBCustomAttack = False
-	; EndIf
+		For $h = $g_hCmbBBAttackStyle[1] To $g_hIcnBBCSV_3[3]
+			GUICtrlSetState($h, $GUI_DISABLE) ; AIO ++
+		Next
+	EndIf
+	
+	$g_iCmbBBAttack = _GUICtrlComboBox_GetCurSel($g_hCmbBBAttack)
+	If $g_iCmbBBAttack = $g_eBBAttackCSV Then
+		GUICtrlSetState($g_hChkBBGetFromCSV, $GUI_HIDE) ; AIO ++
+		GUICtrlSetState($g_hChkBBGetFromArmy, $GUI_SHOW) ; AIO ++
+	Else
+		GUICtrlSetState($g_hChkBBGetFromCSV, $GUI_SHOW) ; AIO ++
+		GUICtrlSetState($g_hChkBBGetFromArmy, $GUI_HIDE) ; AIO ++
+	EndIf
 EndFunc   ;==>ChkBBCustomAttack
 
 ; AIO

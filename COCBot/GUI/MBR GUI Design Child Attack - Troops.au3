@@ -806,8 +806,8 @@ Func CreateTrainOptions()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	#Region - Custom Train - Team AIO Mod++
 	$y += 45 + 27
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On Double Train"), $x - 20, $y - 20, 195, 125)
-		$g_hChkMMIgnoreIncorrectTroopCombo = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkIgnoreBadTroopCombo", "Ignore Bad Troop Combo"), $x - 10, $y, -1, -1)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design - FillIncorrectTroopCombo", "Group_MiscMod_", "Train GUI fix"), $x - 20, $y - 20, 195, 125)
+		$g_hChkMMIgnoreIncorrectTroopCombo = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkIgnoreBadTroopCombo_", "Auto fix bad troop combo"), $x - 10, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnDoubleTrain_Info_01", "If Enabled DoubleTrain, Wont Empty Queued Troop, will Disable Precise Army"))
 		GUICtrlSetOnEvent(-1, "chkOnDoubleTrain")
 		GUICtrlSetState(-1, $GUI_CHECKED)
@@ -821,7 +821,7 @@ Func CreateTrainOptions()
 		Next
 		GUICtrlSetData(-1, $sCmbTxt, "Barbarians")
 	$y += 23	
-		$g_hChkMMIgnoreIncorrectSpellCombo = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkIgnoreBadSpellCombo", "Ignore Bad Spell Combo"), $x - 10, $y, -1, -1)
+		$g_hChkMMIgnoreIncorrectSpellCombo = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkIgnoreBadSpellCombo_", "Auto fix bad spell combo"), $x - 10, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnDoubleTrain_Info_02", "If Enabled DoubleTrain, Wont Empty Queued Spell, will Disable Precise Army"))
 		GUICtrlSetOnEvent(-1, "chkOnDoubleTrain")
 		GUICtrlSetState(-1, $GUI_CHECKED)
