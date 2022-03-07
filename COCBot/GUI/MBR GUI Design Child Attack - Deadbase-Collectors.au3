@@ -100,7 +100,6 @@ Func CreateAttackSearchDeadBaseCollectors()
 	$y -= 300
 	$x += 230
 		$g_hChkDBCollectorNone = GUICtrlCreateRadio(GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkDBNone", "None"), $x, $y, -1, -1)
-			GUICtrlSetState(-1, $GUI_UNCHECKED)
 			GUICtrlSetOnEvent(-1, "chkCollectorsAndRedLines")
 
 	$y += 20
@@ -117,9 +116,8 @@ Func CreateAttackSearchDeadBaseCollectors()
 			GUICtrlSetLimit(-1, 3)
 
 	$y += 20
-		$g_hChkDBCollectorNearRedline = GUICtrlCreateRadio(GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkDBCollectorNearRedline", "Collectors Near Redline"), $x, $y, -1, -1)
+		$g_hChkDBCollectorNearRedline = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkDBCollectorNearRedline", "Collectors Near Redline"), $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkDBCollectorNearRedline_Info_01", "Check how many collectors are near redline. If more than % you set then attack."))
-			GUICtrlSetState(-1, $GUI_UNCHECKED)
 			GUICtrlSetOnEvent(-1, "chkCollectorsAndRedLines")
 	$y += 28
 		$g_hLblRedlineTiles = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "LblRedlineTiles", "Tiles") & ": ", $x + 20, $y, -1, -1)

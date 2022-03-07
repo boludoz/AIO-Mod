@@ -42,7 +42,7 @@ Func CollectorsAndRedLines($bForceCapture = False)
 					$iOut += 1
 				EndIf
 			Next
-			$bReturn = ($g_iDBMinCollectorOutsidePercent <= Int(($iOut / $iLocated) * 100)
+			$bReturn = ($g_iDBMinCollectorOutsidePercent <= Round(Int(($iOut / $iLocated) * 100), 0)
 			SetLog($sText & " : " & $bReturn & " - Out: " & $iOut & " - Located: " & $iLocated, $COLOR_INFO)
 		EndIf
 	EndIf

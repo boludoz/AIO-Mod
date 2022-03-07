@@ -181,31 +181,31 @@ EndFunc ;==>cmbDBMultiFinger
 
 ; Check Collectors Outside
 Func chkCollectorsAndRedLines()
-	Select
-		Case @GUI_CtrlId = $g_hChkDBCollectorNone
-			_GUI_Value_STATE("DISABLE", $g_hChkSkipCollectorCheck & "#" & $g_hChkSkipCollectorCheckTH & "#" & $g_hCmbSkipCollectorCheckTH & "#" & $g_hTxtDBMinCollectorOutsidePercent & "#" & $g_hCmbRedlineTiles)
-		Case @GUI_CtrlId = $g_hChkDBCollectorNearRedline
-			_GUI_Value_STATE("ENABLE", $g_hChkSkipCollectorCheck & "#" & $g_hChkSkipCollectorCheckTH & "#" & $g_hCmbSkipCollectorCheckTH & "#" & $g_hCmbRedlineTiles)
-			_GUI_Value_STATE("DISABLE", $g_hTxtDBMinCollectorOutsidePercent)
-		Case @GUI_CtrlId = $g_hChkDBMeetCollectorOutside
-			_GUI_Value_STATE("ENABLE", $g_hChkSkipCollectorCheck & "#" & $g_hChkSkipCollectorCheckTH & "#" & $g_hCmbSkipCollectorCheckTH & "#" & $g_hTxtDBMinCollectorOutsidePercent)
-			_GUI_Value_STATE("DISABLE", $g_hCmbRedlineTiles)
-	EndSelect
+	; Select
+		; Case @GUI_CtrlId = $g_hChkDBCollectorNone
+			; _GUI_Value_STATE("DISABLE", $g_hChkSkipCollectorCheck & "#" & $g_hChkSkipCollectorCheckTH & "#" & $g_hCmbSkipCollectorCheckTH & "#" & $g_hTxtDBMinCollectorOutsidePercent & "#" & $g_hCmbRedlineTiles)
+		; Case @GUI_CtrlId = $g_hChkDBCollectorNearRedline
+			; _GUI_Value_STATE("ENABLE", $g_hChkSkipCollectorCheck & "#" & $g_hChkSkipCollectorCheckTH & "#" & $g_hCmbSkipCollectorCheckTH & "#" & $g_hCmbRedlineTiles)
+			; _GUI_Value_STATE("DISABLE", $g_hTxtDBMinCollectorOutsidePercent)
+		; Case @GUI_CtrlId = $g_hChkDBMeetCollectorOutside
+			; _GUI_Value_STATE("ENABLE", $g_hChkSkipCollectorCheck & "#" & $g_hChkSkipCollectorCheckTH & "#" & $g_hCmbSkipCollectorCheckTH & "#" & $g_hTxtDBMinCollectorOutsidePercent)
+			; _GUI_Value_STATE("DISABLE", $g_hCmbRedlineTiles)
+	; EndSelect
 	chkSkipCollectorCheck()
 	chkSkipCollectorCheckTH()
 EndFunc   ;==>chkCollectorsAndRedLines
 
 Func aplCollectorsAndRedLines()
-	Select
-		Case $g_bDBCollectorNone
-			_GUI_Value_STATE("DISABLE", $g_hChkSkipCollectorCheck & "#" & $g_hChkSkipCollectorCheckTH & "#" & $g_hCmbSkipCollectorCheckTH & "#" & $g_hTxtDBMinCollectorOutsidePercent & "#" & $g_hCmbRedlineTiles)
-		Case $g_bDBCollectorNearRedline
-			_GUI_Value_STATE("ENABLE", $g_hChkSkipCollectorCheck & "#" & $g_hChkSkipCollectorCheckTH & "#" & $g_hCmbSkipCollectorCheckTH & "#" & $g_hCmbRedlineTiles)
-			_GUI_Value_STATE("DISABLE", $g_hTxtDBMinCollectorOutsidePercent)
-		Case $g_bDBMeetCollectorOutside
-			_GUI_Value_STATE("ENABLE", $g_hChkSkipCollectorCheck & "#" & $g_hChkSkipCollectorCheckTH & "#" & $g_hCmbSkipCollectorCheckTH & "#" & $g_hTxtDBMinCollectorOutsidePercent)
-			_GUI_Value_STATE("DISABLE", $g_hCmbRedlineTiles)
-	EndSelect
+	; Select
+		; Case $g_bDBCollectorNone
+			; _GUI_Value_STATE("DISABLE", $g_hChkSkipCollectorCheck & "#" & $g_hChkSkipCollectorCheckTH & "#" & $g_hCmbSkipCollectorCheckTH & "#" & $g_hTxtDBMinCollectorOutsidePercent & "#" & $g_hCmbRedlineTiles)
+		; Case $g_bDBCollectorNearRedline
+			; _GUI_Value_STATE("ENABLE", $g_hChkSkipCollectorCheck & "#" & $g_hChkSkipCollectorCheckTH & "#" & $g_hCmbSkipCollectorCheckTH & "#" & $g_hCmbRedlineTiles)
+			; _GUI_Value_STATE("DISABLE", $g_hTxtDBMinCollectorOutsidePercent)
+		; Case $g_bDBMeetCollectorOutside
+			; _GUI_Value_STATE("ENABLE", $g_hChkSkipCollectorCheck & "#" & $g_hChkSkipCollectorCheckTH & "#" & $g_hCmbSkipCollectorCheckTH & "#" & $g_hTxtDBMinCollectorOutsidePercent)
+			; _GUI_Value_STATE("DISABLE", $g_hCmbRedlineTiles)
+	; EndSelect
 	chkSkipCollectorCheck()
 	chkSkipCollectorCheckTH()
 EndFunc   ;==>aplCollectorsAndRedLines
