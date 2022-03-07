@@ -50,9 +50,7 @@ Func TestSmartFarm($bFast = True)
 
 	$g_bAttackActive = True
 
-	; Variable to return : $Return[3]  [0] = To attack InSide  [1] = Quant. Sides  [2] = Name Sides
-	Local $Nside = ChkSmartFarm()
-	AttackSmartFarm($Nside[1], $Nside[2])
+	AttackSmartFarm()
 	$g_bAttackActive = False
 
 	ReturnHome($g_bTakeLootSnapShot)
@@ -65,7 +63,7 @@ Func TestSmartFarm($bFast = True)
 EndFunc   ;==>TestSmartFarm
 
 ; Collectors | Mines | Drills | All (Default)
-Func ChkSmartFarm($sTypeResources = "All", $bTH = False)
+Func ChkSmartFarm($sTypeResources = "All", $bTH = True)
 
 	; Initial Timer
 	Local $iRandomSides[4] = [0, 1, 2, 3]
@@ -228,8 +226,8 @@ Func ChkSmartFarm($sTypeResources = "All", $bTH = False)
 	If Not $g_bRunState Then Return
 
 	; DEBUG , image with all information
-	Local $redline[UBound($BestSideToAttack)]
 	If $g_bDebugSmartFarm Then
+		Local $redline[UBound($BestSideToAttack)]
 		For $i = 0 To UBound($BestSideToAttack) - 1
 			$redline[$i] = GetOffsetRedline($BestSideToAttack[$i], 5)
 		Next
@@ -257,14 +255,13 @@ Func ChkSmartFarm($sTypeResources = "All", $bTH = False)
 
 EndFunc   ;==>ChkSmartFarm
 
-Func SmartFarmDetection($txtBuildings = "Mines", $bForceCapture = True)
+Func SmartFarmDetection($txtBuildings = "Mines", $bSmartZap = False, $bForceCapture = True)
 	
 	; This Function will fill an Array with several informations after Mines, Collectores or Drills detection with Imgloc
 	; [0] = x , [1] = y , [2] = Distance to Redline ,[3] = In/Out, [4] = Side,  [5]= Is array Dim[2] with 5 coordinates to deploy
 	Local $aReturn[0][6]
 	Local $sdirectory, $iMaxReturnPoints, $iMaxLevel, $offsetx, $offsety
 	If Not $g_bRunState Then Return
-
 
 	; Initial Timer
 	Local $iMinLevel = 0
@@ -300,7 +297,7 @@ Func SmartFarmDetection($txtBuildings = "Mines", $bForceCapture = True)
 		Case "Drills"
 			$sdirectory = @ScriptDir & "\imgxml\Storages\Drills"
 			$iMaxReturnPoints = 3
-			$iMaxLevel = 8
+			$iMaxLevel = 9
 		Case "All"
 			If $g_iDetectedImageType = 1 Then
 				$sdirectory = @ScriptDir & "\imgxml\Storages\All_Snow"
@@ -399,7 +396,11 @@ Func SmartFarmDetection($txtBuildings = "Mines", $bForceCapture = True)
 		SetDebugLog($txtBuildings & " Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
 		Return $aReturn
 	Else
-		SetLog("ERROR|NONE Building - Detection: " & $txtBuildings, $COLOR_INFO)
+		If $bSmartZap Then
+			SetLog("No " & $txtBuildings & " found!", $COLOR_INFO)
+		Else
+			SetLog("ERROR|NONE Building - Detection: " & $txtBuildings, $COLOR_INFO)
+		EndIf
 	EndIf
 
 EndFunc   ;==>SmartFarmDetection
@@ -603,7 +604,14 @@ Func DebugImageSmartFarm($THdetails, $aIn, $aOut, $sTime, $BestSideToAttack, $re
 
 EndFunc   ;==>DebugImageSmartFarm
 
-Func AttackSmartFarm($Nside, $SIDESNAMES)
+Func AttackSmartFarm()
+
+	; Variable to return : $Return[3]  [0] = To attack InSide  [1] = Quant. Sides  [2] = Name Sides
+	Local $aResultSm = ChkSmartFarm()
+	If Not $g_bRunState Then Return
+	
+	Local $Nside = $aResultSm[0]
+	Local $SIDESNAMES = $aResultSm[1]
 
 	Setlog(" ====== Start Smart Farm Attack ====== ", $COLOR_INFO)
 

@@ -15,26 +15,36 @@
 ; ===============================================================================================================================
 Func CollectorsAndRedLines($bForceCapture = False)
 	Local $bReturn = False
-	If ($g_bDBCollectorNearRedline Or $g_bDBMeetCollectorOutside) Then
-		Local $hTimer = TimerInit()
-		Local $sText = ($g_bDBCollectorNearRedline) ? ("Are collectors near redline ?") : ("Are collectors outside ?")
-		SetLog($sText & " | Locating Mines & Collectors", $COLOR_ACTION)
-		Local $aAllCollectors = SmartFarmDetection("All", $bForceCapture)
-		SetLog($sText & " | Located collectors in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds", $COLOR_ACTION)
-		Local $iOut = 0, $iLocated = UBound($aAllCollectors)
+	
+	Local Const $imilkfarmoffsetxstep = 35
+	Local Const $imilkfarmoffsetystep = 26
+	Local $diamondx = $imilkfarmoffsetxstep + ($imilkfarmoffsetxstep * $g_iCmbRedlineTiles)
+	Local $diamondy = $imilkfarmoffsetystep + ($imilkfarmoffsetystep * $g_iCmbRedlineTiles)
+	Local $iPixelDistance = PixelDistance(0, 0, $diamondx, $diamondy)
+	
+	If $g_bDBMeetCollectorOutside Then
+		; Local $hTimer = TimerInit()
+		Local $sText = ($g_bDBCollectorNearRedline And $g_bDBMeetCollectorOutside) ? ("Are collectors near redline ?") : ("Are collectors outside ?")
+		If $bForceCapture = True Then _CaptureRegion2()
+		ConvertInternalExternArea("CollectorsAndRedLines")
+		_GetRedArea()
+		
+		Local $aAllCollectors = SmartFarmDetection("All", False, False)
+		; SetLog($sText & " | Located collectors in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds", $COLOR_ACTION)
+		Local $iOut = 0
+		Local $iLocated = UBound($aAllCollectors)
 		If $iLocated > 0 And not @error Then
-			$g_vSmartFarmScanOut = $aAllCollectors
 			For $i = 0 To $iLocated - 1
-				If ($aAllCollectors[$i][3] = "Out") Then $iOut += 1
+				SetLog($iPixelDistance & " / "& $iPixelDistance >= $aAllCollectors[$i][2] & " RD " & $aAllCollectors[$i][2])
+				If $g_bDBCollectorNearRedline And $iPixelDistance >= $aAllCollectors[$i][2] Then
+					$iOut += 1
+				ElseIf ($aAllCollectors[$i][3] = "Out") Then
+					$iOut += 1
+				EndIf
 			Next
-			If $g_bDBMeetCollectorOutside Then
-				$bReturn = ($g_iCmbRedlineTiles <= $iOut)
-			ElseIf $g_bDBCollectorNearRedline Then
-				$bReturn = ($g_iDBMinCollectorOutsidePercent <= Round($iOut / $iLocated) * 100)
-			EndIf
-			SetLog($sText & " | " & $bReturn & " - Out: " & $iOut & " - Located: " & $iLocated, $COLOR_INFO)
+			$bReturn = ($g_iDBMinCollectorOutsidePercent <= Int(($iOut / $iLocated) * 100)
+			SetLog($sText & " : " & $bReturn & " - Out: " & $iOut & " - Located: " & $iLocated, $COLOR_INFO)
 		EndIf
-
 	EndIf
 	Return $bReturn
 EndFunc   ;==>AreCollectorsOutside

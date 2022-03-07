@@ -627,7 +627,8 @@ Func UpdateStats($bForceUpdate = False)
 		GUICtrlSetData($g_hLblYourScore, $g_sClanGamesScore)
 		$sOldClanGamesScore = $g_sClanGamesScore
 	EndIf
-
+	
+	; Custom BB - Team AIO Mod++
 	; update Builder Base stats
 	For $i = 0 To UBound($g_aiCurrentLootBB) - 1
 		If $iOldCurrentLootBB[$i] <> $g_aiCurrentLootBB[$i] Then
@@ -636,7 +637,19 @@ Func UpdateStats($bForceUpdate = False)
 			$iOldCurrentLootBB[$i] = $g_aiCurrentLootBB[$i]
 		EndIf
 	Next
-
+	
+	If _DateIsValid($g_sDateBuilderBase) Then
+		Local $iDateDiff = _DateDiff('s', _NowCalc(), $g_sDateBuilderBase)
+		If $iDateDiff > 0 And $g_sConstMaxBuilderBase > $iDateDiff Then
+			GUICtrlSetData($g_hNextBBAttack, $g_sDateBuilderBase)
+		Else
+			GUICtrlSetData($g_hNextBBAttack, "Now")
+		EndIf
+	Else
+		GUICtrlSetData($g_hNextBBAttack, "---")
+	EndIf
+	; ---------------------------
+	
 	If Not _DateIsValid($g_sLabUpgradeTime) Then GUICtrlSetData($g_hLbLLabTime, "")
 
 	If ProfileSwitchAccountEnabled() Then
