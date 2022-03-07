@@ -1255,6 +1255,8 @@ Func AttackMain($bFirstStart = False, $bCheckCG = True) ;Main control for attack
 EndFunc   ;==>AttackMain
 
 Func Attack() ;Selects which algorithm
+	If Not $g_bRunState Then Return
+	
 	; Custom Fix - Team AIO Mod++
 	$g_bAttackActive = True
 	$g_bAttackClickFC = True
@@ -1264,10 +1266,7 @@ Func Attack() ;Selects which algorithm
 		Algorithm_AttackCSV()
 	ElseIf $g_iMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 2 Then
 		SetDebugLog("start smart farm attack", $COLOR_ERROR)
-		; Variable to return : $Return[3]  [0] = To attack InSide  [1] = Quant. Sides  [2] = Name Sides
-		Local $Nside = ChkSmartFarm()
-		If Not $g_bRunState Then Return
-		AttackSmartFarm($Nside[1], $Nside[2])
+		AttackSmartFarm() ; Smart Farm - Team AiO MOD++
 	#Region - SmartMilk
     ElseIf $g_iMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 3 Then
         If $g_bDebugSetlog Then SetDebugLog("Starting Smart Milk attack", $COLOR_ERROR)

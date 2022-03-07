@@ -14,6 +14,7 @@
 #include-once
 
 Global $g_alblBldBaseStats[4] = ["", "", "", ""]
+Global $g_hNextBBAttack = 0
 Global $g_hChkCollectBuilderBase = 0, $g_hChkStartClockTowerPotion = 0
 Global $g_hChkCollectBldGE = 0, $g_hChkCollectBldGems = 0, $g_hChkActivateClockTower = 0, $g_hChkCleanBBYard = 0
 Global $g_hBtnBBAtkLogClear = 0,$g_hBtnBBAtkLogCopyClipboard=0
@@ -114,16 +115,12 @@ Func CreateMiscBuilderBaseSubTab()
 		_GUICtrlCreateIcon($g_sLibBBIconPath, $eIcnBBTrophies, $x , $y, 16, 16)
 		$g_alblBldBaseStats[$eLootTrophyBB] = GUICtrlCreateLabel("---", $x + 35 , $y + 2, 100, -1)
 			GUICtrlSetFont(-1, 9, $FW_BOLD, Default, "Arial", $CLEARTYPE_QUALITY)
+		$y += 30
+		_GUICtrlCreateIcon($g_sLibBBIconPath, $eIcnVersus, $x , $y, 16, 16)
+		$g_hNextBBAttack = GUICtrlCreateLabel("---", $x + 35 , $y + 2, 100, 40)
+			GUICtrlSetFont(-1, 9, $FW_BOLD, Default, "Arial", $CLEARTYPE_QUALITY)
 
-		$y += 160 - 52
-
-		$g_hBtnBBAtkLogClear = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "BtnBBAtkLogClear", "Clear Atk. Log"), $x + 245, $y - 1, 80, 23)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "BtnBBAtkLogClear_Info_01", "Use this to clear the Attack Log."))
-			GUICtrlSetOnEvent(-1, "btnBBAtkLogClear")
-
-		$g_hBtnBBAtkLogCopyClipboard = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "BtnBBAtkLogCopyClipboard", "Copy to Clipboard"), $x + 325, $y - 1, 100, 23)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "BtnBBAtkLogCopyClipboard_Info_01", "Use this to copy the Attack Log to the Clipboard (CTRL+C)"))
-			GUICtrlSetOnEvent(-1, "btnBBAtkLogCopyClipboard")
+		$y += 100
 
 		$g_hDebugBBattack = GUICtrlCreateCheckbox("Debug BB Attack", $x, $y - 55, -1, -1)
 		If Not $g_bDevMode Then
@@ -135,6 +132,17 @@ Func CreateMiscBuilderBaseSubTab()
 			GUICtrlSetState(-1, $GUI_HIDE)
 		EndIf
 		GUICtrlSetOnEvent(-1, "DebugUI")
+
+		$y -= 22
+
+		$g_hBtnBBAtkLogClear = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "BtnBBAtkLogClear", "Clear Atk. Log"), $x + 245, $y - 1, 80, 23)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "BtnBBAtkLogClear_Info_01", "Use this to clear the Attack Log."))
+			GUICtrlSetOnEvent(-1, "btnBBAtkLogClear")
+
+		$g_hBtnBBAtkLogCopyClipboard = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "BtnBBAtkLogCopyClipboard", "Copy to Clipboard"), $x + 325, $y - 1, 100, 23)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "BtnBBAtkLogCopyClipboard_Info_01", "Use this to copy the Attack Log to the Clipboard (CTRL+C)"))
+			GUICtrlSetOnEvent(-1, "btnBBAtkLogCopyClipboard")
+
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
