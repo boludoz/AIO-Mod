@@ -20,7 +20,7 @@ Func CollectorsAndRedLines($bForceCapture = False)
 	Local Const $imilkfarmoffsetystep = 26
 	Local $diamondx = $imilkfarmoffsetxstep + ($imilkfarmoffsetxstep * $g_iCmbRedlineTiles)
 	Local $diamondy = $imilkfarmoffsetystep + ($imilkfarmoffsetystep * $g_iCmbRedlineTiles)
-	Local $iPixelDistance = PixelDistance(0, 0, $diamondx, $diamondy)
+	Local $iPixelDistance = Pixel_Distance(0, 0, $diamondx, $diamondy)
 	
 	If $g_bDBMeetCollectorOutside Then
 		; Local $hTimer = TimerInit()
