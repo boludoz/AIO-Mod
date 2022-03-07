@@ -35,9 +35,15 @@ Func CollectorsAndRedLines($bForceCapture = False)
 		Local $iLocated = UBound($aAllCollectors)
 		If $iLocated > 0 And not @error Then
 			For $i = 0 To $iLocated - 1
-				SetLog($iPixelDistance & " / "& $iPixelDistance >= $aAllCollectors[$i][2] & " RD " & $aAllCollectors[$i][2])
-				If $g_bDBCollectorNearRedline And $iPixelDistance >= $aAllCollectors[$i][2] Then
-					$iOut += 1
+				If $g_bDBCollectorNearRedline Then
+					;X - 0|Y - 1|IN/OUT - 2|SIDE - 3|Pixel D - 4|DP Closer - 5
+					Local $asString = StringSplit2D($aAllCollectors[$i][5], ",", "|")
+					For $iDp = 0 To UBound($asString) - 1
+						If Abs(($asString[$iDp][0] - $aAllCollectors[$i][0]) / $diamondx) + Abs(($asString[$iDp][1] - $aAllCollectors[$i][1]) / $diamondy) <= 1 Then
+							$iOut += 1
+							ExitLoop
+						EndIf
+					Next
 				ElseIf ($aAllCollectors[$i][3] = "Out") Then
 					$iOut += 1
 				EndIf
