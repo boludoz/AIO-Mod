@@ -150,7 +150,7 @@ Global $g_oCOMErrorHandler = 0
 If IsDeclared("COLOR_ORANGE") Then
 	Global Const $COLOR_MEDGRAY = 0xA0A0A4
 Else
-	Global Const $COLOR_ORANGE = 0xFF7700 ; Used for donate GUI buttons
+	Global Const $COLOR_ORANGE = 0xFFA500 ; Used for donate GUI buttons
 EndIf
 
 Global Const $COLOR_ERROR = $COLOR_RED ; Error messages
