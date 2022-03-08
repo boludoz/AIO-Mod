@@ -44,7 +44,12 @@ Global $g_iGlobalActiveBotsAllowed = 0 ; Dummy
 Global $g_hMutextOrSemaphoreGlobalActiveBots = 0 ; Dummy
 Global $g_bBotLaunchOption_NoBotSlot = True
 Global $g_hStatusBar = 0 ; Dummy
-Global Const $COLOR_ORANGE = 0xFF7700 ; Used for donate GUI buttons
+; Custom Fix - Team AIO Mod++
+If IsDeclared("COLOR_ORANGE") Then
+	Global Const $COLOR_MEDGRAY = 0xA0A0A4
+Else
+	Global Const $COLOR_ORANGE = 0xFF7700 ; Used for donate GUI buttons
+EndIf
 Global Const $COLOR_ERROR = $COLOR_RED ; Error messages
 Global Const $COLOR_WARNING = $COLOR_MAROON ; Warning messages
 Global Const $COLOR_INFO = $COLOR_BLUE ; Information or Status updates for user
