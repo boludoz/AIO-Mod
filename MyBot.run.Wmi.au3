@@ -46,7 +46,7 @@ Global $g_bBotLaunchOption_NoBotSlot = True
 Global $g_hStatusBar = 0 ; Dummy
 ; Custom Fix - Team AIO Mod++
 If IsDeclared("COLOR_ORANGE") Then
-	Global Const $COLOR_MEDGRAY = 0xA0A0A4
+	Global Const $COLOR_MEDGRAY = 0x808080
 Else
 	Global Const $COLOR_ORANGE = 0xFFA500 ; Used for donate GUI buttons
 EndIf
