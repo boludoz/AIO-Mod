@@ -48,6 +48,8 @@ Global $g_hStatusBar = 0 ; Dummy
 If IsDeclared("COLOR_ORANGE") Then
 	Global Const $COLOR_MEDGRAY = 0x808080
 	Global Const $COLOR_MONEYGREEN = 0x32CD32
+	Global Const $COLOR_CREAM = 0xFFFBF0
+	Global Const $COLOR_MEDBLUE = 0x0002C4
 Else
 	Global Const $COLOR_ORANGE = 0xFFA500 ; Used for donate GUI buttons
 EndIf
