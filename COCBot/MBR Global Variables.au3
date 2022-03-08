@@ -149,6 +149,7 @@ Global $g_oCOMErrorHandler = 0
 ; Custom Fix - Team AIO Mod++
 If IsDeclared("COLOR_ORANGE") Then
 	Global Const $COLOR_MEDGRAY = 0x808080
+	Global Const $COLOR_MONEYGREEN = 0x32CD32
 Else
 	Global Const $COLOR_ORANGE = 0xFFA500 ; Used for donate GUI buttons
 EndIf
