@@ -435,7 +435,7 @@ Func InitializeMBR(ByRef $sAI, $bConfigRead)
 			"With the first command line parameter, specify the Profilename (you can create profiles on the Bot/Profiles tab, if a " & _
 			"profilename contains a {space}, then enclose the profilename in double quotes). " & _
 			"With the second, specify the name of the Emulator and with the third, an Android Instance (not for BlueStacks). \r\n" & _
-			"Supported Emulators are MEmu, Nox, BlueStacks2, BlueStacks and iTools.\r\n\r\n" & _
+			"Supported Emulators are MEmu, Nox, BlueStacks2, BlueStacks.\r\n\r\n" & _
 			"Examples:\r\n" & _
 			"     MyBot.run.exe MyVillage BlueStacks2\r\n" & _
 			"     MyBot.run.exe ""My Second Village"" MEmu MEmu_1")

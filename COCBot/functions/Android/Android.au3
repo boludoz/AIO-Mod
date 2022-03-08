@@ -90,7 +90,7 @@ Func InitAndroidConfig($bRestart = False)
 	$g_bAndroidEmbed = $g_bAndroidEmbedEnabled = True And $g_iAndroidEmbedMode > -1 ; Enable Android Docking
 	$g_bAndroidBackgroundLaunch = $g_bAndroidBackgroundLaunchEnabled = True ; Enabled Android Background launch using Windows Scheduled Task
 	$g_bAndroidBackgroundLaunched = False ; True when Android was launched in headless mode without a window
-	$g_bUpdateAndroidWindowTitle = False ; If Android has always same title instance name will be added (iTools)
+	$g_bUpdateAndroidWindowTitle = False ; If Android has always same title instance name will be added
 	$g_bAndroidControlUseParentPos = False ; If true, control pos is used from parent control (only used to fix docking for Nox in DirectX mode)
 	$g_sAndroidAdbInstanceShellOptions = $g_sAndroidAdbInstanceShellOptionsDefault ; Additional shell options, only used by BlueStacks2 " -t -t"
 	$g_sAndroidAdbShellOptions = "" ; Additional shell options when launch shell with command, only used by BlueStacks2 " /data/anr/../../system/xbin/bstk/su root"

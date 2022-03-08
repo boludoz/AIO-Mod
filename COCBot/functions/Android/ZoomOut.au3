@@ -436,7 +436,6 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag,
 
 	; compare other stone measures
 	;GetVillageSize(True, "stoneBlueStacks2A")
-	;GetVillageSize(True, "stoneiTools")
 
 	Static $iCallCount = 0
 	If $g_aiSearchZoomOutCounter[0] > 0 Then

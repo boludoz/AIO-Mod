@@ -536,7 +536,7 @@ Func _AndroidEmbed($Embed = True, $CallWinGetAndroidHandle = True, $bForceEmbed 
 	_WinAPI_UpdateWindow($g_hFrmBotBottom)
 	;update Android Window
 	If $g_iAndroidEmbedMode = 0 Then
-		WinMove2($hCtrlTarget, "", 0, 0, $aPosCtl[2] - 1, $aPosCtl[3] - 1, $HWND_BOTTOM, 0, False) ; trigger window change (required for iTools and probably others)
+		WinMove2($hCtrlTarget, "", 0, 0, $aPosCtl[2] - 1, $aPosCtl[3] - 1, $HWND_BOTTOM, 0, False) ; trigger window change
 		WinMove2($hCtrlTarget, "", 0, 0, $aPosCtl[2], $aPosCtl[3], $HWND_BOTTOM, 0, False)
 		If $targetIsHWnD Then
 			; BlueStack can have a problem, so move control

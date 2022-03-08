@@ -209,12 +209,6 @@ Func getAllEmulators()
 		$sEmulatorString &= "MEmu|"
 	EndIf
 
-	; iTools
-	Local $iToolsVersion = RegRead($g_sHKLM & "\SOFTWARE" & $g_sWow6432Node & "\ThinkSky\iToolsAVM\", "DisplayVersion")
-	If Not @error Then
-		$sEmulatorString &= "iTools|"
-	EndIf
-	
 	Local $sResult = StringRight($sEmulatorString, 1)
 	If $sResult == "|" Then $sEmulatorString = StringTrimRight($sEmulatorString, 1)
 	If $sEmulatorString <> "" Then
@@ -259,8 +253,6 @@ Func getAllEmulatorsInstances()
 			$sEmulatorPath = GetNoxPath() & "\BignoxVMS"
 		Case "MEmu"
 			$sEmulatorPath = GetMEmuPath() & "\MemuHyperv VMs"
-		Case "iTools"
-			$sEmulatorPath = GetiToolsPath() & "\Repos\VMs"
 		Case Else
 			GUICtrlSetData($g_hCmbAndroidInstance, "Android", "Android")
 			Return
