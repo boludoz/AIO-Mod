@@ -357,42 +357,42 @@ EndFunc   ;==>btnResetBuilding
 ; ProMac....
 Func chklocations($breset = False)
 	If (isinsidediamond($g_aitownhallpos) = False) OR $breset Then
-		GUICtrlSetBkColor($g_hlbllocateth, $color_orange)
+		GUICtrlSetBkColor($g_hlbllocateth, $COLOR_ACTION)
 	Else
 		GUICtrlSetBkColor($g_hlbllocateth, $color_success)
 	EndIf
 	If (isinsidediamond($g_aiclancastlepos) = False) OR $breset Then
-		GUICtrlSetBkColor($g_hlbllocatecastle, $color_orange)
+		GUICtrlSetBkColor($g_hlbllocatecastle, $COLOR_ACTION)
 	Else
 		GUICtrlSetBkColor($g_hlbllocatecastle, $color_success)
 	EndIf
 	If (isinsidediamond($g_aikingaltarpos) = False) OR $breset Then
-		GUICtrlSetBkColor($g_hlbllocatekingaltar, $color_orange)
+		GUICtrlSetBkColor($g_hlbllocatekingaltar, $COLOR_ACTION)
 	Else
 		GUICtrlSetBkColor($g_hlbllocatekingaltar, $color_success)
 	EndIf
 	If (isinsidediamond($g_aiqueenaltarpos) = False) OR $breset Then
-		GUICtrlSetBkColor($g_hlbllocatequeenaltar, $color_orange)
+		GUICtrlSetBkColor($g_hlbllocatequeenaltar, $COLOR_ACTION)
 	Else
 		GUICtrlSetBkColor($g_hlbllocatequeenaltar, $color_success)
 	EndIf
 	If (isinsidediamond($g_aiwardenaltarpos) = False) OR $breset Then
-		GUICtrlSetBkColor($g_hlbllocatewardenaltar, $color_orange)
+		GUICtrlSetBkColor($g_hlbllocatewardenaltar, $COLOR_ACTION)
 	Else
 		GUICtrlSetBkColor($g_hlbllocatewardenaltar, $color_success)
 	EndIf
 	If (isinsidediamond($g_aichampionaltarpos) = False) OR $breset Then
-		GUICtrlSetBkColor($g_hlbllocatechampionaltar, $color_orange)
+		GUICtrlSetBkColor($g_hlbllocatechampionaltar, $COLOR_ACTION)
 	Else
 		GUICtrlSetBkColor($g_hlbllocatechampionaltar, $color_success)
 	EndIf
 	If (isinsidediamond($g_ailaboratorypos) = False) OR $breset Then
-		GUICtrlSetBkColor($g_hlbllocatelaboratory, $color_orange)
+		GUICtrlSetBkColor($g_hlbllocatelaboratory, $COLOR_ACTION)
 	Else
 		GUICtrlSetBkColor($g_hlbllocatelaboratory, $color_success)
 	EndIf
 	If (isinsidediamond($g_aipethousepos) = False) OR $breset Then
-		GUICtrlSetBkColor($g_hlbllocatepethouse, $color_orange)
+		GUICtrlSetBkColor($g_hlbllocatepethouse, $COLOR_ACTION)
 	Else
 		GUICtrlSetBkColor($g_hlbllocatepethouse, $color_success)
 	EndIf

@@ -343,7 +343,7 @@ Func CreateRequestSubTab()
 			GUICtrlSetData(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "CmbRequestCCDefenseWhen_01", "When Personal Break time <") & "|" & GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "CmbRequestCCDefenseWhen_02", "When Shield & Guard time <"), GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "CmbRequestCCDefenseWhen_01", -1))
 	$g_hTxtRequestCCDefenseTime = _GUICtrlCreateInput("10", $x + 166, $y - 6, 28, 21, $SS_CENTER)
 			GUICtrlSetLimit(-1, 3)
-			GUICtrlSetBkColor(-1, $COLOR_MONEYGREEN)
+			GUICtrlSetBkColor(-1, $_COLOR_MONEYGREEN)
 			GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "LblRequestCCDefenseWhenMin", "min"), $x + 195, $y - 3, 20, 15, $SS_RIGHT)
 
 	;;;;;;;;;;;

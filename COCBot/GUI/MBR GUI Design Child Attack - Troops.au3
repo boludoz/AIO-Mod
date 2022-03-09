@@ -930,7 +930,7 @@ Func CreateTrainTroops()
 	GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "LblCountTotal", "Total"), $x + 341, $y + 7, -1, -1)
 	$g_hLblCountTotal = GUICtrlCreateLabel(0, $x + 368, $y + 7, 30, 15, $SS_CENTER)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "LblCountTotal_Info_01", "The total Units of Troops should equal Total Army Camps."))
-	GUICtrlSetBkColor(-1, $COLOR_MONEYGREEN) ;lime, moneygreen
+	GUICtrlSetBkColor(-1, $_COLOR_MONEYGREEN) ;lime, moneygreen
 	GUICtrlCreateLabel("x", $x + 400, $y + 7, -1, -1)
 
 	$y += 25
@@ -1110,7 +1110,7 @@ Func CreateTrainSieges()
 	GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "LblCountTotal", "Total"), $x + 173, $y + 10, -1, -1)
 	$g_hLblCountTotalSiege = GUICtrlCreateLabel(0, $x + 200, $y + 10, 30, 15, $SS_CENTER)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "LblCountTotal_Info_02", "The total units of Siege Machines"))
-	GUICtrlSetBkColor(-1, $COLOR_MONEYGREEN) ;lime, moneygreen
+	GUICtrlSetBkColor(-1, $_COLOR_MONEYGREEN) ;lime, moneygreen
 	GUICtrlCreateLabel("x", $x + 232, $y + 10, -1, -1)
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)

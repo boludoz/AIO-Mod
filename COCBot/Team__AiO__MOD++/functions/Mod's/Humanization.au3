@@ -921,7 +921,7 @@ Func randomSleep($iSleepTime, $iRange = Default)
 	If Not $g_bRunState Or $g_bRestart Then Return
 	If $iRange = Default Then $iRange = $iSleepTime * 0.20
 	Local $iSleepTimeF = Abs(Round($iSleepTime + Random( -Abs($iRange), Abs($iRange))))
-	If $g_bDebugClick Or $g_bDebugSetlog Then SetLog("Default sleep : " & $iSleepTime & " - Random sleep : " & $iSleepTimeF, $COLOR_ORANGE)
+	If $g_bDebugClick Or $g_bDebugSetlog Then SetLog("Default sleep : " & $iSleepTime & " - Random sleep : " & $iSleepTimeF, $COLOR_ACTION)
 	Return _Sleep($iSleepTimeF)
 EndFunc   ;==>If randomSleep
 

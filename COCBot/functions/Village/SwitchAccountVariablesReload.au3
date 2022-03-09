@@ -450,7 +450,7 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 						GUICtrlSetData($g_ahLblLabTime[$i], $day > 0 ? StringFormat("%2ud %02i:%02i:%02i", $day, $hour, $min, $sec) : ($hour > 0 ? StringFormat("%02i:%02i:%02i", $hour, $min, $sec) : StringFormat("%02i:%02i", $min, $sec)))
 						Local $SetColor = $COLOR_BLACK
 						If $i = $g_iCurAccount Then $SetColor = $COLOR_GREEN
-						GUICtrlSetColor($g_ahLblLabTime[$i], $day > 0 ? $SetColor : $COLOR_ORANGE)
+						GUICtrlSetColor($g_ahLblLabTime[$i], $day > 0 ? $SetColor : $COLOR_ACTION)
 					Else
 						GUICtrlSetData($g_ahLblLabTime[$i], "00:00:00")
 						GUICtrlSetColor($g_ahLblLabTime[$i], $COLOR_BLACK)

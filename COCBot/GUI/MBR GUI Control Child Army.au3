@@ -147,11 +147,11 @@ Func lblTotalCountTroop1()
 	GUICtrlSetData($g_hLblCountTotal, String($TotalTroopsToTrain))
 
 	If GUICtrlRead($g_hChkTotalCampForced) = $GUI_CHECKED And GUICtrlRead($g_hLblCountTotal) = GUICtrlRead($g_hTxtTotalCampForced) Then
-		GUICtrlSetBkColor($g_hLblCountTotal, $COLOR_MONEYGREEN)
+		GUICtrlSetBkColor($g_hLblCountTotal, $_COLOR_MONEYGREEN)
 	ElseIf GUICtrlRead($g_hLblCountTotal) = $ArmyCampTemp Then
-		GUICtrlSetBkColor($g_hLblCountTotal, $COLOR_MONEYGREEN)
+		GUICtrlSetBkColor($g_hLblCountTotal, $_COLOR_MONEYGREEN)
 	ElseIf GUICtrlRead($g_hLblCountTotal) > $ArmyCampTemp / 2 And GUICtrlRead($g_hLblCountTotal) < $ArmyCampTemp Then
-		GUICtrlSetBkColor($g_hLblCountTotal, $COLOR_ORANGE)
+		GUICtrlSetBkColor($g_hLblCountTotal, $COLOR_ACTION)
 	Else
 		GUICtrlSetBkColor($g_hLblCountTotal, $COLOR_RED)
 	EndIf
@@ -228,7 +228,7 @@ Func lblTotalCountSiege()
 
 	GUICtrlSetData($g_hLblTotalTimeSiege, CalculTimeTo($iTotalTotalTimeSiege))
 	GUICtrlSetData($g_hLblCountTotalSiege, $g_iTotalTrainSpaceSiege)
-	GUICtrlSetBkColor($g_hLblCountTotalSiege, $g_iTotalTrainSpaceSiege <= 3 ? $COLOR_MONEYGREEN : $COLOR_RED)
+	GUICtrlSetBkColor($g_hLblCountTotalSiege, $g_iTotalTrainSpaceSiege <= 3 ? $_COLOR_MONEYGREEN : $COLOR_RED)
 
 	CalCostSiege()
 	; prepared for some new TH level !!
@@ -738,7 +738,7 @@ Func Removecamptroops()
 	GUICtrlSetData($g_hLblElixirCostCamp, "0")
 	GUICtrlSetData($g_hLblDarkCostCamp, "0")
 	GUICtrlSetData($g_hLblCountTotal, 0)
-	GUICtrlSetBkColor($g_hLblCountTotal, $COLOR_MONEYGREEN)
+	GUICtrlSetBkColor($g_hLblCountTotal, $_COLOR_MONEYGREEN)
 
 	; BtnRemoveTroops()
 EndFunc   ;==>Removecamptroops
@@ -772,7 +772,7 @@ Func Removecampsieges()
 	GUICtrlSetData($g_hLblGoldCostSiege, "0")
 	GUICtrlSetData($g_hLblCountTotalSiege, 0)
 	GUICtrlSetData($g_hLblTotalTimeSiege, " 0s")
-	GUICtrlSetBkColor($g_hLblCountTotalSiege, $COLOR_MONEYGREEN)
+	GUICtrlSetBkColor($g_hLblCountTotalSiege, $_COLOR_MONEYGREEN)
 
 EndFunc   ;==>Removecampsieges
 

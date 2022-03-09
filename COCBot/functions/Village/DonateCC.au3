@@ -397,7 +397,7 @@ Func DonateCC($bCheckForNewMsg = False)
 				$g_bSkipDonTroops = True
 			EndIf
 			If $g_iCurrentSpells = 0 And $g_iCurrentSpells <> "" Then
-				SetLog("No spells available, skip spell donation...", $COLOR_ORANGE)
+				SetLog("No spells available, skip spell donation...", $COLOR_ACTION)
 				$g_bSkipDonSpells = True
 			ElseIf $g_iTotalDonateSpellCapacity = 0 Then
 				SetLog("Clan Castle spells are full, skip spell donation...", $COLOR_ACTION)
@@ -411,7 +411,7 @@ Func DonateCC($bCheckForNewMsg = False)
 				SetLog("Siege donation is not enabled, skip siege donation", $COLOR_ACTION)
 				$g_bSkipDonSiege = True
 			ElseIf $g_aiCurrentSiegeMachines[$eSiegeWallWrecker] = 0 And $g_aiCurrentSiegeMachines[$eSiegeBattleBlimp] = 0 And $g_aiCurrentSiegeMachines[$eSiegeStoneSlammer] = 0 And $g_aiCurrentSiegeMachines[$eSiegeBarracks] = 0 And $g_aiCurrentSiegeMachines[$eSiegeLogLauncher] = 0 Then
-				SetLog("No siege machines available, skip siege donation", $COLOR_ORANGE)
+				SetLog("No siege machines available, skip siege donation", $COLOR_ACTION)
 				$g_bSkipDonSiege = True
 			ElseIf $g_iTotalDonateSiegeMachineCapacity = -1 Then
 				SetLog("This CC cannot accept Siege, skip Siege donation", $COLOR_ACTION)
@@ -852,7 +852,7 @@ Func DonateSpellType(Const $iSpellIndex, Const $bDonateQueueOnly = False, Const 
 	$donateposinrow = $Slot
 	$YComp = 203 ; correct 860x780
 
-	SetLog("Spells Condition Matched", $COLOR_ORANGE)
+	SetLog("Spells Condition Matched", $COLOR_ACTION)
 	If _ColorCheck(_GetPixelColor(350 + ($Slot * 68), $g_iDonationWindowY + 105 + $YComp, True), Hex(0x6038B0, 6), 20) Or _
 			_ColorCheck(_GetPixelColor(355 + ($Slot * 68), $g_iDonationWindowY + 106 + $YComp, True), Hex(0x6038B0, 6), 20) Or _
 			_ColorCheck(_GetPixelColor(360 + ($Slot * 68), $g_iDonationWindowY + 107 + $YComp, True), Hex(0x6038B0, 6), 20) Then ; check for 'purple'

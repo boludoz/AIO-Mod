@@ -147,15 +147,8 @@ Global $g_oCOMErrorHandler = 0
 #EndRegion debugging
 
 ; Custom Fix - Team AIO Mod++
-If IsDeclared("COLOR_ORANGE") Then
-	Global Const $COLOR_MEDGRAY = 0x808080
-	Global Const $COLOR_MONEYGREEN = 0x32CD32
-	Global Const $COLOR_CREAM = 0xFFFBF0
-	Global Const $COLOR_MEDBLUE = 0x0002C4
-Else
-	Global Const $COLOR_ORANGE = 0xFFA500 ; Used for donate GUI buttons
-EndIf
-
+Global Const $COLOR_DEBUGS = 0x808080
+Global Const $_COLOR_MONEYGREEN = 0x32CD32
 Global Const $COLOR_ERROR = $COLOR_RED ; Error messages
 Global Const $COLOR_WARNING = $COLOR_MAROON ; Warning messages
 Global Const $COLOR_INFO = $COLOR_BLUE ; Information or Status updates for user
@@ -164,7 +157,6 @@ Global Const $COLOR_SUCCESS1 = 0x009900 ; Med green, optional success message fo
 Global Const $COLOR_DEBUG = $COLOR_PURPLE ; Purple, basic debug color
 Global Const $COLOR_DEBUG1 = 0x7A00CC ; Dark Purple, Debug for successful status checks
 Global Const $COLOR_DEBUG2 = 0xAA80FF ; lt Purple, secondary debug color
-Global Const $COLOR_DEBUGS = $COLOR_MEDGRAY ; Med Grey, debug color for less important but needed supporting data points in multiple messages
 Global Const $COLOR_ACTION = 0xFF8000 ; Med Orange, debug color for individual actions, clicks, etc
 Global Const $COLOR_ACTION1 = 0xCC80FF ; Light Purple, debug color for pixel/window checks
 

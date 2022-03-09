@@ -434,7 +434,7 @@ EndFunc   ;==>RNDSchedAttack
 Func _cmbRNDSchedAttack()
 	Switch Int(GUICtrlRead($g_hCmbRNDSchedAttack))
 		Case 0 To 8
-			GUICtrlSetBkColor($g_hCmbRNDSchedAttack, $COLOR_MONEYGREEN)
+			GUICtrlSetBkColor($g_hCmbRNDSchedAttack, $_COLOR_MONEYGREEN)
 		Case 9 To 13
 			GUICtrlSetBkColor($g_hCmbRNDSchedAttack, $COLOR_YELLOW)
 		Case 14 To 24

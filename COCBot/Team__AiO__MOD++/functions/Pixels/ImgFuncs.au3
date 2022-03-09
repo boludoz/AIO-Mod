@@ -62,7 +62,7 @@ Func _ImageSearchXML($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = "FV", 
 	EndIf
 
 	Local $resultArr = StringSplit($result[0], "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
-	SetDebugLog(" ***  _ImageSearchXML multiples **** ", $COLOR_ORANGE)
+	SetDebugLog(" ***  _ImageSearchXML multiples **** ", $COLOR_ACTION)
 
 	; Distance in pixels to check if is a duplicated detection , for deploy point will be 5
 	Local $iD2C = ($bCheckDuplicatedpoints = True) ? ($iDistance2check) : (0)
@@ -185,9 +185,9 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 
 	Local $resultArr = StringSplit($result[0], "|", $STR_NOCOUNT + $STR_ENTIRESPLIT), $sSlipt = StringSplit($sOnlyFind, "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 	;_arraydisplay($resultArr)
-	SetDebugLog(" ***  findMultipleQuick multiples **** ", $COLOR_ORANGE)
+	SetDebugLog(" ***  findMultipleQuick multiples **** ", $COLOR_ACTION)
 	If CompKick($resultArr, $sSlipt, $bExactFind) Then
-		SetDebugLog(" ***  findMultipleQuick has no result **** ", $COLOR_ORANGE)
+		SetDebugLog(" ***  findMultipleQuick has no result **** ", $COLOR_ACTION)
 		Return -1
 	EndIf
 

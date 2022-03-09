@@ -235,7 +235,7 @@ Func lblTotalWarTroopCount($TotalArmyCamp = 0)
 	If $TotalTroopsToTrain = $TotalArmyCamp Then
 		GUICtrlSetBkColor($g_hLblCountWarTroopsTotal, 0xD1DFE7)
 	ElseIf $TotalTroopsToTrain > $TotalArmyCamp / 2 And $TotalTroopsToTrain < $TotalArmyCamp Then
-		GUICtrlSetBkColor($g_hLblCountWarTroopsTotal, $COLOR_ORANGE)
+		GUICtrlSetBkColor($g_hLblCountWarTroopsTotal, $COLOR_ACTION)
 	Else
 		GUICtrlSetBkColor($g_hLblCountWarTroopsTotal, $COLOR_RED)
 	EndIf
@@ -271,7 +271,7 @@ Func lblTotalWarSpellCount($TotalArmyCamp = 0 )
 	If $TotalSpellsToBrew = $TotalArmyCamp Then
 		GUICtrlSetBkColor($g_hLblCountWarSpellsTotal, 0xD1DFE7)
 	ElseIf $TotalSpellsToBrew > $TotalArmyCamp / 2 And $TotalSpellsToBrew < $TotalArmyCamp Then
-		GUICtrlSetBkColor($g_hLblCountWarSpellsTotal, $COLOR_ORANGE)
+		GUICtrlSetBkColor($g_hLblCountWarSpellsTotal, $COLOR_ACTION)
 	Else
 		GUICtrlSetBkColor($g_hLblCountWarSpellsTotal, $COLOR_RED)
 	EndIf

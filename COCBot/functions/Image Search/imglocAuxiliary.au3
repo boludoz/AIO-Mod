@@ -422,7 +422,7 @@ Func GetDeployableNextTo($sPoints, $distance = 3, $redlineoverride = "")
 	EndIf
 
 	If UBound($result) = 0 Then Return ""
-	SetDebugLog("GetDeployableNextTo : " & $sPoints & ", dist. = " & $distance & " : " & $result[0], $COLOR_ORANGE)
+	SetDebugLog("GetDeployableNextTo : " & $sPoints & ", dist. = " & $distance & " : " & $result[0], $COLOR_ACTION)
 	Return $result[0]
 EndFunc   ;==>GetDeployableNextTo
 
@@ -438,7 +438,7 @@ Func GetOffsetRedline($sArea = "TL", $distance = 3)
 	EndIf
 
 	If UBound($result) = 0 Then Return ""
-	SetDebugLog("GetOffSetRedline : " & $sArea & ", dist. = " & $distance & " : " & $result[0], $COLOR_ORANGE)
+	SetDebugLog("GetOffSetRedline : " & $sArea & ", dist. = " & $distance & " : " & $result[0], $COLOR_ACTION)
 	Return $result[0]
 EndFunc   ;==>GetOffsetRedline
 
@@ -446,15 +446,15 @@ Func findMultiple($directory, $sCocDiamond, $redLines, $minLevel = 0, $maxLevel 
 	; same has findButton, but allow custom area instead of button area decoding
 	; nice for dinamic locations
 	If $g_bDebugSetlog Then
-		SetDebugLog("******** findMultiple *** START ***", $COLOR_ORANGE)
-		SetDebugLog("findMultiple : directory : " & $directory, $COLOR_ORANGE)
-		SetDebugLog("findMultiple : sCocDiamond : " & $sCocDiamond, $COLOR_ORANGE)
-		SetDebugLog("findMultiple : redLines : " & $redLines, $COLOR_ORANGE)
-		SetDebugLog("findMultiple : minLevel : " & $minLevel, $COLOR_ORANGE)
-		SetDebugLog("findMultiple : maxLevel : " & $maxLevel, $COLOR_ORANGE)
-		SetDebugLog("findMultiple : maxReturnPoints : " & $maxReturnPoints, $COLOR_ORANGE)
-		SetDebugLog("findMultiple : returnProps : " & $returnProps, $COLOR_ORANGE)
-		SetDebugLog("******** findMultiple *** START ***", $COLOR_ORANGE)
+		SetDebugLog("******** findMultiple *** START ***", $COLOR_ACTION)
+		SetDebugLog("findMultiple : directory : " & $directory, $COLOR_ACTION)
+		SetDebugLog("findMultiple : sCocDiamond : " & $sCocDiamond, $COLOR_ACTION)
+		SetDebugLog("findMultiple : redLines : " & $redLines, $COLOR_ACTION)
+		SetDebugLog("findMultiple : minLevel : " & $minLevel, $COLOR_ACTION)
+		SetDebugLog("findMultiple : maxLevel : " & $maxLevel, $COLOR_ACTION)
+		SetDebugLog("findMultiple : maxReturnPoints : " & $maxReturnPoints, $COLOR_ACTION)
+		SetDebugLog("findMultiple : returnProps : " & $returnProps, $COLOR_ACTION)
+		SetDebugLog("******** findMultiple *** START ***", $COLOR_ACTION)
 	EndIf
 
 	Local $error, $extError
@@ -481,7 +481,7 @@ Func findMultiple($directory, $sCocDiamond, $redLines, $minLevel = 0, $maxLevel 
 
 	If checkImglocError($result, "findMultiple", $directory) = True Then
 		SetDebugLog("findMultiple Returned Error or No values : ", $COLOR_DEBUG)
-		SetDebugLog("******** findMultiple *** END ***", $COLOR_ORANGE)
+		SetDebugLog("******** findMultiple *** END ***", $COLOR_ACTION)
 		Return ""
 	Else
 		SetDebugLog("findMultiple found : " & $result[0])
@@ -514,12 +514,12 @@ Func findMultiple($directory, $sCocDiamond, $redLines, $minLevel = 0, $maxLevel 
 			$g_sImglocRedline = RetrieveImglocProperty("redline", "") ;global var set in imgltocTHSearch
 			SetDebugLog("findMultiple : Redline argument is emty, setting global Redlines")
 		EndIf
-		SetDebugLog("******** findMultiple *** END ***", $COLOR_ORANGE)
+		SetDebugLog("******** findMultiple *** END ***", $COLOR_ACTION)
 		Return $returnValues
 
 	Else
-		SetDebugLog(" ***  findMultiple has no result **** ", $COLOR_ORANGE)
-		SetDebugLog("******** findMultiple *** END ***", $COLOR_ORANGE)
+		SetDebugLog(" ***  findMultiple has no result **** ", $COLOR_ACTION)
+		SetDebugLog("******** findMultiple *** END ***", $COLOR_ACTION)
 		Return ""
 	EndIf
 
@@ -657,7 +657,7 @@ Func SearchRedLines($sCocDiamond = "ECD")
 	EndIf
 	If checkImglocError($result, "SearchRedLines") = True Then
 		SetDebugLog("SearchRedLines Returned Error or No values : ", $COLOR_DEBUG)
-		SetDebugLog("******** SearchRedLines *** END ***", $COLOR_ORANGE)
+		SetDebugLog("******** SearchRedLines *** END ***", $COLOR_ACTION)
 		Return ""
 	Else
 		SetDebugLog("SearchRedLines found : " & $result[0])

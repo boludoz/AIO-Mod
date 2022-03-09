@@ -1511,7 +1511,7 @@ Func _GreenTiles($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = "FV", $bFo
 	EndIf
 
 	Local $resultArr = StringSplit($result[0], "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
-	SetDebugLog(" ***  _GreenTiles multiples **** ", $COLOR_ORANGE)
+	SetDebugLog(" ***  _GreenTiles multiples **** ", $COLOR_ACTION)
 
 	; Distance in pixels to check if is a duplicated detection , for deploy point will be 5
 	Local $iD2C = $iDistance2check

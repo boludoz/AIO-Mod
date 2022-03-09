@@ -1681,7 +1681,7 @@ Func SetTime($bForceUpdate = False)
 		If $iLabTime > 0 Then
 			_TicksToDay($iLabTime, $day, $hour, $min, $sec)
 			GUICtrlSetData($g_hLbLLabTime, $day > 0 ? StringFormat("%2ud %02i:%02i'", $day, $hour, $min) : StringFormat("%02i:%02i:%02i", $hour, $min, $sec))
-			GUICtrlSetColor($g_hLbLLabTime, $day > 0 ? $COLOR_GREEN : $COLOR_ORANGE)
+			GUICtrlSetColor($g_hLbLLabTime, $day > 0 ? $COLOR_GREEN : $COLOR_ACTION)
 		Else
 			GUICtrlSetData($g_hLbLLabTime, "")
 			$g_sLabUpgradeTime = ""
