@@ -115,6 +115,38 @@ Global $g_hFrmBotEmbeddedMouse = 0
 #include "COCBot\functions\Other\UpdateStats.Mini.au3"
 #include "COCBot\functions\Other\_NumberFormat.au3"
 
+; Only farm - Team AiO MOD++
+Func ComboStatusMode()
+	If IsDeclared("g_iComboStatusMode") Then
+		Local $iStatusFlag = 2, $iNewStatus = 2
+		If $g_bChkOnlyFarm = True Then $iStatusFlag += 8
+		If $g_bOnlyBuilderBase = True Then $iStatusFlag += 16
+		
+		$g_bChkOnlyFarm = False
+		$g_bOnlyBuilderBase = False
+		
+		Switch _GUICtrlComboBox_GetCurSel($g_hCmbStatusMode)
+			Case 1
+				$g_iComboStatusMode = 1
+				$g_bChkOnlyFarm = True
+				$iNewStatus += 8
+			Case 2
+				$g_iComboStatusMode = 2
+				$g_bOnlyBuilderBase = True
+				$iNewStatus += 16
+				$g_iCurrentReport = $g_iBBReport
+				btnVillageStat()
+			Case Else
+				$g_iComboStatusMode = 0
+				Return
+		EndSwitch
+		
+		; Quick solution.
+		If $iStatusFlag = $iNewStatus Then Return
+		$g_bRestart = True 
+	EndIf
+EndFunc   ;==>ComboStatusMode
+
 Global Enum $eBotUpdateStats = $eBotClose + 1
 
 Func SetLog($String, $Color = $COLOR_BLACK, $LogPrefix = "L ")
