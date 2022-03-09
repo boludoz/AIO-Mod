@@ -32,7 +32,7 @@ Func CreateBuilderBaseTab()
 	$g_hGUI_LOG_BB = _GUICreate("", 310, 225 - 52, 130, 170 + 52, BitOR($WS_CHILD, 0), -1, $g_hGUI_BUILDER_BASE)
 	;creating subchilds first!
 	GUISwitch($g_hGUI_BUILDER_BASE)
-	$g_hGUI_BUILDER_BASE_TAB = GUICtrlCreateTab(0, 0, $g_iSizeWGrpTab1, $g_iSizeHGrpTab1, BitOR($TCS_MULTILINE, $TCS_RIGHTJUSTIFY))
+	$g_hGUI_BUILDER_BASE_TAB = GUICtrlCreateTab(0, 0, $g_iSizeWGrpTab1, $g_iSizeHGrpTab1, $WS_CLIPSIBLINGS)
 
 	$g_hGUI_BUILDER_BASE_TAB_ITEM1 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_006_STab_01", "Misc && Stats"))
 	CreateMiscBuilderBaseSubTab()

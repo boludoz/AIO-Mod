@@ -35,7 +35,7 @@ Func CreateVillageTab()
 	CreateVillageNotify()
 
 	GUISwitch($g_hGUI_VILLAGE)
-	$g_hGUI_VILLAGE_TAB = GUICtrlCreateTab(0, 0, $g_iSizeWGrpTab1, $g_iSizeHGrpTab1, BitOR($TCS_MULTILINE, $TCS_RIGHTJUSTIFY))
+	$g_hGUI_VILLAGE_TAB = GUICtrlCreateTab(0, 0, $g_iSizeWGrpTab1, $g_iSizeHGrpTab1, $WS_CLIPSIBLINGS)
 	$g_hGUI_VILLAGE_TAB_ITEM1 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_02_STab_01", "Misc"))
 	$g_hGUI_VILLAGE_TAB_ITEM2 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_02_STab_02", "Req. && Donate"))
 	$g_hGUI_VILLAGE_TAB_ITEM3 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_02_STab_03", "Upgrade"))

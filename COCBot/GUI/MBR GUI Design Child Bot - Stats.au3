@@ -64,7 +64,7 @@ Func CreateBotStats()
 
 	;GUISetBkColor($COLOR_WHITE, $g_hGUI_STATS)
 	GUISwitch($g_hGUI_STATS)
-	$g_hGUI_STATS_TAB = GUICtrlCreateTab(0, 0, $g_iSizeWGrpTab2, $g_iSizeHGrpTab2, BitOR($TCS_MULTILINE, $TCS_RIGHTJUSTIFY))
+	$g_hGUI_STATS_TAB = GUICtrlCreateTab(0, 0, $g_iSizeWGrpTab2, $g_iSizeHGrpTab2, $WS_CLIPSIBLINGS)
 	$btnResetStats = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Bot - Stats", "BtnResetStats", "Reset Stats"), 375, 0, 60, 20)
 		GUICtrlSetOnEvent(-1, "btnResetStats")
 		GUICtrlSetState(-1, $GUI_DISABLE)

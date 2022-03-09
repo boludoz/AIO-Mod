@@ -27,7 +27,7 @@ Func CreateAttackStrategies()
 
 	GUISwitch($g_hGUI_STRATEGIES)
 	Local $xStart = 5, $yStart = 25
-	$g_hGUI_STRATEGIES_TAB = GUICtrlCreateTab(0, 0, $g_iSizeWGrpTab2, $g_iSizeHGrpTab2, BitOR($TCS_MULTILINE, $TCS_RIGHTJUSTIFY))
+	$g_hGUI_STRATEGIES_TAB = GUICtrlCreateTab(0, 0, $g_iSizeWGrpTab2, $g_iSizeHGrpTab2, $WS_CLIPSIBLINGS)
 	$g_hGUI_STRATEGIES_TAB_ITEM1 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_03_STab_03_STab_01", "Load Strategy"))
 
 	Local $x = $xStart, $y = $yStart

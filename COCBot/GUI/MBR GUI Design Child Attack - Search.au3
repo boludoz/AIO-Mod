@@ -65,7 +65,7 @@ Func CreateAttackSearch()
 	GUISwitch($g_hGUI_SEARCH)
 	; SEARCH tab
 	;============
-	$g_hGUI_SEARCH_TAB = GUICtrlCreateTab(0, 0, $g_iSizeWGrpTab2, $g_iSizeHGrpTab2, BitOR($TCS_MULTILINE, $TCS_RIGHTJUSTIFY))
+	$g_hGUI_SEARCH_TAB = GUICtrlCreateTab(0, 0, $g_iSizeWGrpTab2, $g_iSizeHGrpTab2, $WS_CLIPSIBLINGS)
 	$g_hGUI_SEARCH_TAB_ITEM1 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_03_STab_02_STab_01", "DeadBase") & "    ") ; MUST add 4 spaces to make room for the Checkmark box!
 	; this tab will be empty because it is only used to display a child GUI
 	; below controls are only shown when the strategy is disabled and the child gui will be hidden.

@@ -40,7 +40,7 @@ Func CreateAttackSearchDeadBase()
 	#EndRegion - SmartMilk
 
 	GUISwitch($g_hGUI_DEADBASE)
-	$g_hGUI_DEADBASE_TAB = GUICtrlCreateTab(0, 0, $g_iSizeWGrpTab3, $g_iSizeHGrpTab3, BitOR($TCS_MULTILINE, $TCS_RIGHTJUSTIFY))
+	$g_hGUI_DEADBASE_TAB = GUICtrlCreateTab(0, 0, $g_iSizeWGrpTab3, $g_iSizeHGrpTab3, $WS_CLIPSIBLINGS)
 	$g_hGUI_DEADBASE_TAB_ITEM1 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_03_STab_02_STab_0X_STab_01", "Search"))
 		CreateAttackSearchDeadBaseSearch()
 	$g_hGUI_DEADBASE_TAB_ITEM2 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_03_STab_02_STab_0X_STab_02", "Attack"))

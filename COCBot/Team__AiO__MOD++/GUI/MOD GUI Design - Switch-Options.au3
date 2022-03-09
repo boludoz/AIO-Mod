@@ -40,7 +40,7 @@ Func CreateSwitchOptions()
 	$g_hGUI_LOG_SA = _GUICreate("", 205, 145, 235, 225, BitOR($WS_CHILD, 0), -1, $g_hGUI_SWITCH_OPTIONS)
 
 	GUISwitch($g_hGUI_SWITCH_OPTIONS)
-	$g_hGUI_SWITCH_OPTIONS_TAB = GUICtrlCreateTab(0, 0, $g_iSizeWGrpTab2 + 2, $g_iSizeHGrpTab4 + 5, BitOR($TCS_MULTILINE, $TCS_RIGHTJUSTIFY))
+	$g_hGUI_SWITCH_OPTIONS_TAB = GUICtrlCreateTab(0, 0, $g_iSizeWGrpTab2 + 2, $g_iSizeHGrpTab4 + 5, $WS_CLIPSIBLINGS)
 	$g_hGUI_SWITCH_OPTIONS_TAB_ITEM1 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_04_STab_04_STab_01", "Switch Accounts"))
 		CreateSwitchAccount()
 	$g_hGUI_SWITCH_OPTIONS_TAB_ITEM2 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_04_STab_04_STab_02", "Switch Profiles"))
