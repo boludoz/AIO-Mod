@@ -1,4 +1,4 @@
-0.0.0.0          0.0.0.0                                #AiO++
+127.0.0.1		 localhost                  			#AiO++
 0.0.0.0          app.adjust.com                  		#AiO++
 0.0.0.0          app.adjust.world                		#AiO++
 0.0.0.0          app.adjust.net.in               		#AiO++
@@ -34,3 +34,6 @@
 0.0.0.0          www.alikunlun.com               		#AiO++
 0.0.0.0          w.alikunlun.com                 		#AiO++
 0.0.0.0          alikunlun.com                   		#AiO++
+0.0.0.0 	     rt.applvn.com                   		#AiO++
+0.0.0.0 	     rt.applovin.com                   		#AiO++
+0.0.0.0 	     app-measurement.com                   	#AiO++
