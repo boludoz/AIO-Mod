@@ -1680,15 +1680,21 @@ EndFunc   ;==>ReadConfig_600_52_2
 Func ReadConfig_600_54()
 	; <><><><> Attack Plan / Train Army / Train Order <><><><>
 	; Troops Order
+	Local $sTName = -1
 	IniReadS($g_bCustomTrainOrderEnable, $g_sProfileConfigPath, "troop", "chkTroopOrder", False, "Bool")
 	For $z = 0 To UBound($g_aiCmbCustomTrainOrder) - 1
-		IniReadS($g_aiCmbCustomTrainOrder[$z], $g_sProfileConfigPath, "troop", "cmbTroopOrder" & $z, $z + 1)
+		$sTName = GetTroopName($z, 1, True)
+		If $sTName = -1 Then ContinueLoop
+		IniReadS($g_aiCmbCustomTrainOrder[$z], $g_sProfileConfigPath, "troop", "cmbTroopOrder_" & $sTName, $z)
 	Next
 
 	; Spells Order
+	Local $sSName = -1
 	IniReadS($g_bCustomBrewOrderEnable, $g_sProfileConfigPath, "Spells", "chkSpellOrder", False, "Bool")
 	For $z = 0 To UBound($g_aiCmbCustomBrewOrder) - 1
-		IniReadS($g_aiCmbCustomBrewOrder[$z], $g_sProfileConfigPath, "Spells", "cmbSpellOrder" & $z, $z + 1)
+		$sSName = GetTroopName($z + $eLSpell, 1, True)
+		If $sSName = -1 Then ContinueLoop
+		IniReadS($g_aiCmbCustomBrewOrder[$z], $g_sProfileConfigPath, "Spells", "cmbSpellOrder_" & $sSName, $z)
 	Next
 
 	; Custom pets - Team AIO Mod++

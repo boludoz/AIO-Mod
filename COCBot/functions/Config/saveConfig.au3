@@ -1401,15 +1401,21 @@ Func SaveConfig_600_54()
 	ApplyConfig_600_54(GetApplyConfigSaveAction())
 
 	; Troops Order
+	Local $sTName = -1
 	_Ini_Add("troop", "chkTroopOrder", $g_bCustomTrainOrderEnable ? 1 : 0)
 	For $z = 0 To UBound($g_aiCmbCustomTrainOrder) - 1
-		_Ini_Add("troop", "cmbTroopOrder" & $z, $g_aiCmbCustomTrainOrder[$z])
+		$sTName = GetTroopName($z, 1, True)
+		If $sTName = -1 Then ContinueLoop
+		_Ini_Add("troop", "cmbTroopOrder_" & $sTName, $g_aiCmbCustomTrainOrder[$z])
 	Next
 
 	; Spells Order
+	Local $sSName = -1
 	_Ini_Add("Spells", "chkSpellOrder", $g_bCustomBrewOrderEnable ? 1 : 0)
 	For $z = 0 To UBound($g_aiCmbCustomBrewOrder) - 1
-		_Ini_Add("Spells", "cmbSpellOrder" & $z, $g_aiCmbCustomBrewOrder[$z])
+		$sSName = GetTroopName($z + $eLSpell, 1, True)
+		If $sSName = -1 Then ContinueLoop
+		_Ini_Add("Spells", "cmbSpellOrder_" & $sSName, $g_aiCmbCustomBrewOrder[$z])
 	Next
 
 	; Custom pets - Team AIO Mod++

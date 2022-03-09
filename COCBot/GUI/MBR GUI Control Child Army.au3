@@ -483,12 +483,41 @@ Func _GUITrainOrder()
 	Next
 EndFunc   ;==>_GUITrainOrder
 
+Func Orden(ByRef $aArray)
+	Local Const $iMax = UBound($aArray) - 1
+	Local $iNum = -1
+	For $i = 0 To $iMax
+		If $aArray[$i] > $iMax Or $aArray[$i] < 0 Or Not StringIsDigit($aArray[$i]) Or _
+			($i > 1 And _ArraySearch($aArray, $aArray[$i], 0, $i-1) >= 0) Or ($i = 1 And $aArray[0] = $aArray[1]) Then
+			Do
+				$iNum += 1
+			Until _ArraySearch($aArray, $iNum) < 0
+			$aArray[$i] = $iNum
+		EndIf
+	Next
+EndFunc
+
 Func CustomTrainOrderEnable()
 	$g_bCustomTrainOrderEnable = (GUICtrlRead($g_hChkCustomTrainOrderEnable) = $GUI_CHECKED)
 
 	For $i = 0 To UBound($g_ahCmbTroopOrder) - 1
 		GUICtrlSetState($g_ahCmbTroopOrder[$i], $g_bCustomTrainOrderEnable ? $GUI_ENABLE : $GUI_DISABLE)
 	Next
+	
+	Local $iTmp = 0, $iTmp2 = 0
+	$iTmp2 = UBound($g_ahCmbTroopOrder) - 1
+	If $g_bCustomTrainOrderEnable = False Then
+		For $z = 0 To $iTmp2
+			$g_aiTrainOrder[$z] = $z
+		Next
+	Else
+		Orden($g_aiCmbCustomTrainOrder)
+		For $z = 0 To $iTmp2
+			$iTmp = Abs(Number($g_aiCmbCustomTrainOrder[$z]))
+			$g_aiTrainOrder[$iTmp] = $z
+		Next
+	EndIf
+
 EndFunc   ;==>CustomTrainOrderEnable
 
 Func CustomBrewOrderEnable()
@@ -497,6 +526,20 @@ Func CustomBrewOrderEnable()
 	For $i = 0 To UBound($g_ahCmbSpellsOrder) - 1
 		GUICtrlSetState($g_ahCmbSpellsOrder[$i], $g_bCustomBrewOrderEnable ? $GUI_ENABLE : $GUI_DISABLE)
 	Next
+
+	Local $iTmp = 0, $iTmp2 = 0
+	$iTmp2 = UBound($g_ahCmbSpellsOrder) - 1
+	If $g_bCustomBrewOrderEnable = False Then
+		For $z = 0 To $iTmp2
+			$g_aiBrewOrder[$z] = $z
+		Next
+	Else
+		Orden($g_aiCmbCustomBrewOrder)
+		For $z = 0 To $iTmp2
+			$iTmp =	Abs(Number($g_aiCmbCustomBrewOrder[$z]))
+			$g_aiBrewOrder[$iTmp] = $z
+		Next
+	EndIf
 EndFunc   ;==>CustomBrewOrderEnable
 
 Func BtnRemoveTroops()
