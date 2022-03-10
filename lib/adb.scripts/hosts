@@ -39,3 +39,8 @@
 0.0.0.0 	     app-measurement.com                   	#AiO++
 0.0.0.0 	     ms.applvn.com                   		#AiO++
 0.0.0.0 	     ms.applovin.com                   		#AiO++
+0.0.0.0 	     stat.microvirt.com                   	#AiO++
+0.0.0.0 	     d.applovin.com                   		#AiO++
+0.0.0.0 	     d.applvn.com                   		#AiO++
+0.0.0.0 	     analytics-tcp.mintegral.net            #AiO++
+0.0.0.0 	     o315582.ingest.sentry.io               #AiO++
