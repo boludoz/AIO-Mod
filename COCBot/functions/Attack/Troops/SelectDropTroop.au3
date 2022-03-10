@@ -16,8 +16,9 @@
 Func SelectDropTroop($iSlotIndex, $iClicks = 1, $iDelay = Default, $bCheckAttackPage = Default)
 	If $iDelay = Default Then $iDelay = 0
 	If $bCheckAttackPage = Default Then $bCheckAttackPage = True
+	Local $aiReturnPosition = GetSlotPosition($iSlotIndex) ; Custom Fix - Team AIO Mod++
 	If $aiReturnPosition[0] = 0 Or $aiReturnPosition[1] = 0 Then Return ; Custom Fix - Team AIO Mod++
-	If Not $bCheckAttackPage Or IsAttackPage() Then ClickP(GetSlotPosition($iSlotIndex), $iClicks, $iDelay, "#0111")
+	If Not $bCheckAttackPage Or IsAttackPage() Then ClickP($aiReturnPosition, $iClicks, $iDelay, "#0111") ; Custom Fix - Team AIO Mod++
 EndFunc   ;==>SelectDropTroop
 
 Func GetSlotPosition($iSlotIndex, $bOCRPosition = False)
