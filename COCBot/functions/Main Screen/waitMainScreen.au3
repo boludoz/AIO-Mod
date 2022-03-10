@@ -23,7 +23,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 		If Not $g_bRunState Then Return
 		SetDebugLog("waitMainScreen ChkObstl Loop = " & $i & ", ExitLoop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop
 		$iCount += 1
-		If Mod($iCount, 5) = 0 Then ForegroundFixer()
+		If Mod($iCount, 20) = 0 Then CloseEmulatorForce(True)
 		SetLog("[" & $iCount & "] " & "Waiting for main screen.", $COLOR_ACTION) ; Custom - Team AIO Mod++
 		Local $hWin = $g_hAndroidWindow
 		If TestCapture() = False Then
@@ -55,10 +55,12 @@ Func waitMainScreen() ;Waits for main screen to popup
 		EndIf
 
 	Next
-
+	
+	
 	#Region - Custom fix - Team AIO Mod++
 	; Credits : xbebenk
 	SetLog("RESTART COC: Wait MainScreen Timout", $COLOR_ERROR)
+	CloseEmulatorForce(True)
 	CloseCoC() ;only close coc
 	_RestartAndroidCoC(False, False, True, 0, 0, True) ;start coc, not updating shared_prefs
 	_SleepStatus(10000) ;give time for coc loading
@@ -79,7 +81,6 @@ Func waitMainScreenMini()
 		If Not TestCapture() And WinGetAndroidHandle() = 0 Then ExitLoop ; sets @error to 1
 		SetDebugLog("waitMainScreenMini ChkObstl Loop = " & $i & " ExitLoop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop
 		$iCount += 1
-		If Mod($iCount, 5) = 0 Then ForegroundFixer()
 		SetLog("[" & $iCount & "] " & "Waiting for main screen.", $COLOR_ACTION) ; Custom - Team AIO Mod++
 		_CaptureRegion()
 		If Not _CheckPixel($aPixelToCheck, $g_bNoCapturePixel) Then ;Checks for Main Screen
@@ -90,6 +91,7 @@ Func waitMainScreenMini()
 			Return
 		EndIf
 		_StatusUpdateTime($hTimer, "Main Screen")
+		If Mod($iCount, 15) = 0 Then CloseEmulatorForce(True)
 		If ($i > 105) Or ($iCount > 120) Then ExitLoop ; If CheckObstacles forces reset, limit total time to 6 minute before Force restart BS
 		If TestCapture() Then
 			Return "Main screen not available"
@@ -97,11 +99,3 @@ Func waitMainScreenMini()
 	Next
 	Return SetError(1, 0, -1)
 EndFunc   ;==>waitMainScreenMini
-
-Func ForegroundFixer($sPackage = Default)
-	If $sPackage = Default Then $sPackage = $g_sAndroidGamePackage
-	If GetAndroidProcessPID($sPackage, True, 0) = 0 Then
-		SetLog("Trying to bring the game into the foreground", $COLOR_DEBUG)
-		AndroidAdbSendShellCommand("am start -W -n " & $g_sAndroidGamePackage & "/" & $g_sAndroidGameClass, 60000)
-	EndIf
-EndFunc   ;==>ForegroundFixer

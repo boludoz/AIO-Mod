@@ -344,4 +344,12 @@ Func ProcessFindBy($sPath = "", $sCommandline = "", $bAutoItMode = False, $bDont
 
 	Return $aReturn
 EndFunc   ;==>ProcessFindBy
+
+Func ForegroundFixer($sPackage = Default)
+	If $sPackage = Default Then $sPackage = $g_sAndroidGamePackage
+	If GetAndroidProcessPID($sPackage, True, 0) = 0 Then
+		SetLog("Trying to bring the game into the foreground", $COLOR_DEBUG)
+		AndroidAdbSendShellCommand("am start -W -n " & $g_sAndroidGamePackage & "/" & $g_sAndroidGameClass, 60000)
+	EndIf
+EndFunc   ;==>ForegroundFixer
 ; #ce
