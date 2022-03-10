@@ -150,6 +150,7 @@ Func _BuilderBase($bTestRun = False)
 			If Not $g_bRunState Then Return
 			If ByPassedForceBBAttackOnClanGames($g_bChkBuilderAttack, True) = False Or (ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3 And $g_iAvailableAttacksBB = 0, False) = True And $bFirstBBLoop = False) Then
 				Setlog("Dynamic attack loop skipped.", $COLOR_INFO)
+				$iAttackLoops = $iLoopsToDo
 				ExitLoop
 			EndIf
 			
