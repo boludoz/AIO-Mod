@@ -1089,6 +1089,7 @@ Func OpenAndroid($bRestart = False, $bStartOnlyAndroid = False, $wasRunState = $
 EndFunc   ;==>OpenAndroid
 
 Func _OpenAndroid($bRestart = False, $bStartOnlyAndroid = False)
+    CloseEmulatorForce(True) ; Custom fix - Team AIO Mod++
 
 	; list Android devices to ensure ADB Daemon is launched
 	Local $hMutex = AquireAdbDaemonMutex(), $process_killed
@@ -1200,7 +1201,7 @@ Func _RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True
 	EndIf
 
 	Local $cmdOutput, $process_killed, $connected_to
-
+ 
 	; Test ADB is connected
 	;$cmdOutput = LaunchConsole($g_sAndroidAdbPath, "connect " & $g_sAndroidAdbDevice, $process_killed)
 	;$connected_to = StringInStr($cmdOutput, "connected to")
@@ -1668,6 +1669,9 @@ Func RebootAndroid($bRestart = True, $bStartOnlyAndroid = False)
 	ResumeAndroid()
 	If Not $g_bRunState Then Return FuncReturn(False)
 
+    ; Close all adb ports
+    CloseEmulatorForce(True) ; Custom fix - Team AIO Mod++
+    
 	; Close Android
 	If CloseUnsupportedAndroid() Then
 		; Unsupport Emulator now closed, screen config is now adjusted

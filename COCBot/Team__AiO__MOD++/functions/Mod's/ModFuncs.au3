@@ -259,7 +259,7 @@ EndFunc   ;==>_CompareTexts
 	; AndroidAdbSendShellCommand("am start -n " & $g_sAndroidGamePackage & "/" & $g_sAndroidGameClass & " -a android.intent.action.VIEW -d ' "& $s & "'", Default)
 
 ; EndFunc   ;==>
-#cs
+; #cs
 Func CloseEmulatorForce($bOnlyAdb = False)
 	Local $iPids[0], $a[0], $s
 
@@ -344,4 +344,4 @@ Func ProcessFindBy($sPath = "", $sCommandline = "", $bAutoItMode = False, $bDont
 
 	Return $aReturn
 EndFunc   ;==>ProcessFindBy
-#ce
+; #ce
