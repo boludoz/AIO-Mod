@@ -204,7 +204,7 @@ Func _BuilderBase($bTestRun = False)
 		CleanBBYard()
 		If Not $g_bRunState Then Return
 
-	Until ($iAttackLoops >= $iLoopsToDo) Or (ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3 And $g_iAvailableAttacksBB = 0, False) = True)
+	Until ($iAttackLoops >= $iLoopsToDo) Or (ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3 And $g_iAvailableAttacksBB = 0, False) = True) Or ByPassedForceBBAttackOnClanGames($g_bChkBuilderAttack, True) = False
 
 	If Not $g_bRunState Then Return
 	BuilderBaseReport()
