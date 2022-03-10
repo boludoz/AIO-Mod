@@ -44,7 +44,7 @@ Func TestSmartMilk($bFast = True)
     $g_bAttackActive = True
 
     ; Variable to return : $Return[3]  [0] = To attack InSide  [1] = Quant. Sides  [2] = Name Sides
-    SmartFarmMilk(True)
+    SmartFarmMilk()
 
     ReturnHome($g_bTakeLootSnapShot, False)
 
@@ -547,8 +547,8 @@ Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl
 						If $g_bdebugsmartmilk Then SetLog("AttackClick: " & $allpossibledeploypoints[$point][0] & "," & $allpossibledeploypoints[$point][1])
 						attackclick($allpossibledeploypoints[$point][0], $allpossibledeploypoints[$point][1], $iExecute, 100, 0, "#0098")
 						$aslots2deploy[$iZ][1] -= $iExecute
-						SetLog("Deployed " & nameoftroop($aslots2deploy[$iZ][3], Number($iExecute)) & " " & $iExecute & "x")
-						If $g_bdebugsmartmilk Then SetLog("Remains - " & nameoftroop($aslots2deploy[$iZ][3]) & " " & $aslots2deploy[$iZ][1] & "x")
+						SetLog("Deployed " & GetTroopName($aslots2deploy[$iZ][3], Number($iExecute)) & " " & $iExecute & "x")
+						If $g_bdebugsmartmilk Then SetLog("Remains - " & GetTroopName($aslots2deploy[$iZ][3]) & " " & $aslots2deploy[$iZ][1] & "x")
 						If _sleep($delaylaunchtroop23) Then Return 
 					EndIf
 				Next
