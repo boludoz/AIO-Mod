@@ -148,7 +148,7 @@ Global $g_oCOMErrorHandler = 0
 
 ; Custom Fix - Team AIO Mod++
 Global Const $COLOR_DEBUGS = 0x808080
-Global Const $_COLOR_MONEYGREEN = 0x32CD32
+Global Const $_COLOR_MONEYGREEN = 0x85BB65
 Global Const $COLOR_ERROR = $COLOR_RED ; Error messages
 Global Const $COLOR_WARNING = $COLOR_MAROON ; Warning messages
 Global Const $COLOR_INFO = $COLOR_BLUE ; Information or Status updates for user

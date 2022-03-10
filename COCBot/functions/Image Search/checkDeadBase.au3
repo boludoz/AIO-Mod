@@ -112,7 +112,7 @@ Func checkDeadBase($bForceCapture = False)
 	EndIf
 EndFunc   ;==>checkDeadBase
 
-Func checkDeadBaseSuperNew($bForceCapture = True, $sFillDirectory = @ScriptDir & "\imgxml\deadbase\elix\fill\", $sLvlDirectory = @ScriptDir & "\imgxml\deadbase\elix\lvl\")
+Func checkDeadBaseSuperNew($bForceCapture = True, $sFillDirectory = @ScriptDir & "\imgxml\deadbase\elix\fill\", $sLvlDirectory = @ScriptDir & "\imgxml\deadbase\elix\lvl\", $sAltFillDirectory = @ScriptDir & "\imgxml\deadbase\elix\Alt\")
 
 	If $g_bCollectorFilterDisable Then
 		Return True
@@ -157,7 +157,13 @@ Func checkDeadBaseSuperNew($bForceCapture = True, $sFillDirectory = @ScriptDir &
 	; check for any collector filling
 	Local $result = findMultiple($sFillDirectory, $sCocDiamond, $redLines, $minLevel, $maxLevel, $maxReturnPoints, $returnProps, $bForceCapture)
 	Local $foundFilledCollectors = IsArray($result) = 1
-
+	
+	; Custom - Team AIO Mod++
+	If $foundFilledCollectors = False Then
+		$result = findMultiple($sAltFillDirectory, $sCocDiamond, $redLines, $minLevel, $maxLevel, $maxReturnPoints, $returnProps, $bForceCapture)
+		Local $foundFilledCollectors = IsArray($result) = 1
+	EndIf
+	
 	If $foundFilledCollectors = True Then
 
 		For $matchedValues In $result

@@ -539,19 +539,20 @@ Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl
 			setdebuglog("How many last deploy points: " & UBound($allpossibledeploypoints))
 			For $point = 0 To UBound($allpossibledeploypoints) - 1
 				If $g_bisheroesdropped Then checkheroeshealth()
-				For $i = 0 To UBound($aslots2deploy) - 1
-					If $aslots2deploy[$i][1] > 0 Then
-						If isattackpage() Then selectdroptroop($aslots2deploy[$i][0])
-						If _sleep($delaylaunchtroop23 * 2) Then Return
+				For $iZ = 0 To UBound($aslots2deploy) - 1
+					Local $iExecute = Execute($aslots2deploy[$iZ][2])
+					If $aslots2deploy[$iZ][1] > 0 Then
+						If isattackpage() Then selectdroptroop($aslots2deploy[$iZ][0])
+						If _sleep($delaylaunchtroop23 * 2) Then Return 
 						If $g_bdebugsmartmilk Then SetLog("AttackClick: " & $allpossibledeploypoints[$point][0] & "," & $allpossibledeploypoints[$point][1])
-                        attackclick($allpossibledeploypoints[$point][0], $allpossibledeploypoints[$point][1], $aslots2deploy[$i][2], 100, 0, "#0098")
-                        $aslots2deploy[$i][1] -= $aslots2deploy[$i][2]
-                        SetLog("Deployed " & GetTroopName($aslots2deploy[$i][3], Number($aslots2deploy[$i][2])) & " " & $aslots2deploy[$i][2] & "x")
-						If $g_bdebugsmartmilk Then SetLog("Remains - " & GetTroopName($aslots2deploy[$i][3]) & " " & $aslots2deploy[$i][1] & "x")
-						If _sleep($delaylaunchtroop23) Then Return
+						attackclick($allpossibledeploypoints[$point][0], $allpossibledeploypoints[$point][1], $iExecute, 100, 0, "#0098")
+						$aslots2deploy[$iZ][1] -= $iExecute
+						SetLog("Deployed " & nameoftroop($aslots2deploy[$iZ][3], Number($iExecute)) & " " & $iExecute & "x")
+						If $g_bdebugsmartmilk Then SetLog("Remains - " & nameoftroop($aslots2deploy[$iZ][3]) & " " & $aslots2deploy[$iZ][1] & "x")
+						If _sleep($delaylaunchtroop23) Then Return 
 					EndIf
 				Next
-			Next 
+			Next
 			If _sleep($delayalgorithm_alltroops4) Then Return
 			SetLog("Dropping left over troops", $color_info)
 			For $x = 0 To 1
