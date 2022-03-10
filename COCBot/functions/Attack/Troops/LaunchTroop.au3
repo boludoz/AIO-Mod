@@ -21,7 +21,7 @@
 Func LaunchTroop($vTroopIndex, $iNumberSides, $iNumberWaves, $iMaxNumberWaves, $iSlotsPerEdge = 0)
 	Local $troop = -1
 	Local $iTroopAmount = 0
-	Local $name = ""
+	Local $sTroopName = ""
 	For $i = 0 To UBound($g_avAttackTroops) - 1
 		If $g_avAttackTroops[$i][0] = $vTroopIndex Then
 			If $g_avAttackTroops[$i][1] < 1 Then Return False
@@ -29,12 +29,12 @@ Func LaunchTroop($vTroopIndex, $iNumberSides, $iNumberWaves, $iMaxNumberWaves, $
 			$iTroopAmount = Ceiling($g_avAttackTroops[$i][1] / $iMaxNumberWaves)
 			Local $plural = 0
 			If $iTroopAmount > 1 Then $plural = 1
-			$name = GetTroopName($vTroopIndex, $plural)
+			$sTroopName = GetTroopName($vTroopIndex, $plural)
 			ExitLoop
 		EndIf
 	Next
 	
-	SetDebugLog("Dropping : " & $iTroopAmount & " " & $name, $COLOR_DEBUG)
+	SetDebugLog("Dropping : " & $iTroopAmount & " " & $sTroopName, $COLOR_DEBUG)
 	
 	If $troop = -1 Or $iTroopAmount = 0 Then
 		Return False
@@ -45,13 +45,13 @@ Func LaunchTroop($vTroopIndex, $iNumberSides, $iNumberWaves, $iMaxNumberWaves, $
 	If $iNumberWaves = 3 Then $wavename = "third"
 	If $iMaxNumberWaves = 1 Then $wavename = "only"
 	If $iNumberWaves = 0 Then $wavename = "last"
-	SetLog("Dropping " & $wavename & " wave of " & $iTroopAmount & " " & $sTroopName, $color_success)
+	SetLog("Dropping " & $wavename & " wave of " & $iTroopAmount & " " & $sTroopName, $COLOR_SUCCESS)
 	DropTroop($troop, $iNumberSides, $iTroopAmount, $iSlotsPerEdge)
 	Return True
 EndFunc   ;==>LaunchTroop
 
-Func LaunchTroop2($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $ichampion)
-	SetDebugLog("LaunchTroop2 with CC " & $iCC & ", K " & $iKing & ", Q " & $iQueen & ", W " & $iWarden & ", C " & $ichampion, $COLOR_DEBUG)
+Func LaunchTroop2($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iChampion)
+	SetDebugLog("LaunchTroop2 with CC " & $iCC & ", K " & $iKing & ", Q " & $iQueen & ", W " & $iWarden & ", C " & $iChampion, $COLOR_DEBUG)
 	Local $listlistInfoDeploytrooppixel[0]
 	Local $pixelRandomDrop[2]
 	Local $pixelRandomDropCC[2]
@@ -142,7 +142,7 @@ Func LaunchTroop2($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $ichampion)
 							DropCC($pixelRandomDropCC[0], $pixelRandomDropCC[1], $iCC)
 							$g_bisccdropped = True
 						ElseIf ($infopixeldroptroop[0] = "HEROES") Then
-							dropheroes($pixelRandomDrop[0], $pixelRandomDrop[1], $iKing, $iQueen, $iWarden, $ichampion)
+							dropheroes($pixelRandomDrop[0], $pixelRandomDrop[1], $iKing, $iQueen, $iWarden, $iChampion)
 							$g_bisheroesdropped = True
 						EndIf
 						If ($g_bisheroesdropped) Then
@@ -157,7 +157,7 @@ Func LaunchTroop2($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $ichampion)
 						If $numwave + 1 = 2 Then $wavename = "second"
 						If $numwave + 1 = 3 Then $wavename = "third"
 						If $numwave + 1 = 0 Then $wavename = "last"
-						SetLog("Dropping " & $wavename & " wave of " & $infopixeldroptroop[5] & " " & $infopixeldroptroop[4], $color_success)
+						SetLog("Dropping " & $wavename & " wave of " & $infopixeldroptroop[5] & " " & $infopixeldroptroop[4], $COLOR_SUCCESS)
 						droponpixel($infopixeldroptroop[0], $infopixeldroptroop[1], $infopixeldroptroop[2], $infopixeldroptroop[3])
 					EndIf
 					If ($g_bisheroesdropped) Then
@@ -223,7 +223,7 @@ Func LaunchTroop2($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $ichampion)
 										DropCC($pixelRandomDropCC[0], $pixelRandomDropCC[1], $iCC)
 										$g_bisccdropped = True
 									ElseIf ($g_bisheroesdropped = False And $infotrooplistarrpixel[0] = "HEROES" And $i = $numberSidesDropTroop - 1) Then
-										dropheroes($pixelRandomDrop[0], $pixelRandomDrop[1], $iKing, $iQueen, $iWarden, $ichampion)
+										dropheroes($pixelRandomDrop[0], $pixelRandomDrop[1], $iKing, $iQueen, $iWarden, $iChampion)
 										$g_bisheroesdropped = True
 									EndIf
 									If ($g_bisheroesdropped) Then
@@ -236,7 +236,7 @@ Func LaunchTroop2($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $ichampion)
 									If _Sleep($delaylaunchtroop21) Then Return
 									selectdroptroop($infotrooplistarrpixel[0])
 									If _Sleep($delaylaunchtroop23) Then Return
-									SetLog("Dropping " & $infotrooplistarrpixel[2] & " of " & $infotrooplistarrpixel[5] & " Points Per Side: " & $infotrooplistarrpixel[3] & " (side " & $i + 1 & ")", $color_success)
+									SetLog("Dropping " & $infotrooplistarrpixel[2] & " of " & $infotrooplistarrpixel[5] & " Points Per Side: " & $infotrooplistarrpixel[3] & " (side " & $i + 1 & ")", $COLOR_SUCCESS)
 									Local $pixeldroptroop[1] = [$listpixel]
 									droponpixel($infotrooplistarrpixel[0], $pixeldroptroop, $infotrooplistarrpixel[2], $infotrooplistarrpixel[3])
 								EndIf
@@ -261,7 +261,7 @@ Func LaunchTroop2($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $ichampion)
 						If _Sleep($delaylaunchtroop21) Then Return
 						selectdroptroop($infopixeldroptroop[0])
 						If _Sleep($delaylaunchtroop23) Then Return
-						SetLog("Dropping last " & $numberleft & " of " & $infopixeldroptroop[5], $color_success)
+						SetLog("Dropping last " & $numberleft & " of " & $infopixeldroptroop[5], $COLOR_SUCCESS)
 						droponpixel($infopixeldroptroop[0], $infopixeldroptroop[1], Ceiling($numberleft / UBound($infopixeldroptroop[1])), $infopixeldroptroop[3])
 						If ($g_bisheroesdropped) Then
 							If _Sleep($delaylaunchtroop22) Then Return

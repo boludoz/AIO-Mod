@@ -4,6 +4,17 @@
             |_| |___/_/ \_\_|  |_|   /_/ \_\_|\___/     |_|    |_|
 
                     Based on MyBot.run v7.9.7
+**v4.8.5** - Date: 10/3/2022 - GitID: c6f91aac495bc35f08588bdeeece754e166b8703 [c6f91aa]
+	- Improved : Custom train order stability.
+	- Improved : Adb stability.
+	- Improved : Game handle.
+	- Improved : Builder base tab simplified.
+	- Improved :  Dead base detection.
+	- Improved :  Bot restart.
+	- Fixed : Builder base loop.
+	- Fixed : Some tabs were not displayed correctly in languages ​​that have words longer than English.
+	- New : Train "AI" fill combo.
+
 **v4.8.4**
 
 **v4.8.0**
