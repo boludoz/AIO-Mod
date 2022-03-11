@@ -5,7 +5,9 @@
 
                     Based on MyBot.run v7.9.7
 **v4.8.6** - Date: 11/3/2022
-
+	- Fixed : SMF - Fixed.
+	- Fixed : SMM - Improved.
+	
 **v4.8.5** - Date: 10/3/2022 - GitID: c6f91aac495bc35f08588bdeeece754e166b8703 [c6f91aa]
 	- Improved : Custom train order stability.
 	- Improved : Adb stability.
