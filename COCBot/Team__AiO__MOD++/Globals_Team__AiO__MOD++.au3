@@ -390,6 +390,22 @@ Global $g_iCmbLassiPet = 0, $g_iCmbElectroOwlPet = 0, $g_iCmbMightyYakPet = 0, $
 ; Stick to Army page when time left
 Global $g_iStickToTrainWindow = 1
 Global $g_hLblStickToTrainWindow = 0, $g_hTxtStickToTrainWindow = 0
+
+; Sieges
+Global $g_iTotalSiegeValue = 0, $g_bPreciseSieges = 0, $g_bForcePreBuildSieges = 0
+Global $g_hChkCustomBuildOrderEnable = 0
+Global $g_hChkPreciseSieges = 0, $g_hChkForcePreBuildSieges = 0
+Global $g_ahCmbSiegesOrder[$eSiegeMachineCount] = [0, 0, 0, 0, 0, 0]
+Global $g_hTxtTotalCountSiege = 0, $g_hChkPreciseSieges = 0, $g_hChkForcePreBuildSieges = 0
+
+Global $g_bCustomBuildOrderEnable = False, $g_aiCmbCustomBuildOrder[$eSiegeMachineCount] = [-1, -1, -1, -1, -1, -1]
+
+Global $g_aiBuildOrder[$eSiegeMachineCount] = [ _
+        $eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eFlameF]
+		
+Global Const $g_ahPicTrainArmySiege[$eSiegeMachineCount] = [ _ 
+		$eIcnWallW, $eIcnBattleB, $eIcnStoneS, $eIcnSiegeB, $eIcnLogL, $eIcnFlameF]
+
 #EndRegion - Custom train - Team AIO Mod++
 
 ; Advanced debugging.

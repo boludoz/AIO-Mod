@@ -1364,14 +1364,19 @@ Func SaveConfig_600_52_2()
 	; DoubleTrain - Demen
 	_Ini_Add("troop", "DoubleTrain", $g_bDoubleTrain ? 1 : 0)
 	_Ini_Add("troop", "PreciseArmy", $g_bPreciseArmy ? 1 : 0)
+	
 	#Region - Custom train - Team AIO Mod++
-	_Ini_Add("other", "IgnoreIncorrectTroopCombo", $g_bIgnoreIncorrectTroopCombo)
+    _Ini_Add("Sieges", "TxtTotalCountSiege", $g_iTotalSiegeValue)
+    _Ini_Add("Sieges", "ChkPreciseSieges", $g_bPreciseSieges ? 1 : 0)
+    _Ini_Add("Sieges", "ChkForcePreBuildSieges", $g_bForcePreBuildSieges ? 1 : 0)
+
+	_Ini_Add("other", "IgnoreIncorrectTroopCombo", $g_bIgnoreIncorrectTroopCombo ? 1 : 0)
 	_Ini_Add("other", "FillIncorrectTroopCombo", $g_iCmbFillIncorrectTroopCombo)
-	_Ini_Add("other", "IgnoreIncorrectSpellCombo", $g_bIgnoreIncorrectSpellCombo)
+	_Ini_Add("other", "IgnoreIncorrectSpellCombo", $g_bIgnoreIncorrectSpellCombo ? 1 : 0)
 	_Ini_Add("other", "FillIncorrectSpellCombo", $g_iCmbFillIncorrectSpellCombo)
 
-	_Ini_Add("troop", "PreciseBrew", $g_bPreciseBrew ? 1 : 0)
-	_Ini_Add("troop", "ForcePreBrewSpells", $g_bForcePreBrewSpells ? 1 : 0)
+	_Ini_Add("Spells", "PreciseBrew", $g_bPreciseBrew ? 1 : 0)
+	_Ini_Add("Spells", "ForcePreBrewSpells", $g_bForcePreBrewSpells ? 1 : 0)
 
 	_Ini_Add("troop", "ChkPreTrainTroopsPercent", $g_bChkPreTrainTroopsPercent ? 1 : 0)
 	_Ini_Add("troop", "InpPreTrainTroopsPercent", $g_iInpPreTrainTroopsPercent)
@@ -1400,7 +1405,7 @@ Func SaveConfig_600_54()
 	; <><><> Attack Plan / Train Army / Train Order <><><>
 	ApplyConfig_600_54(GetApplyConfigSaveAction())
 
-	; Troops Order
+	; Troops Order - Custom Team AIO Mod++
 	Local $sTName = -1
 	_Ini_Add("troop", "chkTroopOrder", $g_bCustomTrainOrderEnable ? 1 : 0)
 	For $z = 0 To UBound($g_aiCmbCustomTrainOrder) - 1
@@ -1409,13 +1414,22 @@ Func SaveConfig_600_54()
 		_Ini_Add("troop", "cmbTroopOrder_" & $sTName, $g_aiCmbCustomTrainOrder[$z])
 	Next
 
-	; Spells Order
+	; Spells Order - Custom Team AIO Mod++
 	Local $sSName = -1
 	_Ini_Add("Spells", "chkSpellOrder", $g_bCustomBrewOrderEnable ? 1 : 0)
 	For $z = 0 To UBound($g_aiCmbCustomBrewOrder) - 1
 		$sSName = GetTroopName($z + $eLSpell, 1, True)
 		If $sSName = -1 Then ContinueLoop
 		_Ini_Add("Spells", "cmbSpellOrder_" & $sSName, $g_aiCmbCustomBrewOrder[$z])
+	Next
+
+	; Sieges Machines Order - Custom Team AIO Mod++
+	Local $sSgName = -1
+	_Ini_Add("Sieges", "chkSiegeOrder", $g_bCustomBuildOrderEnable ? 1 : 0)
+	For $z = 0 To UBound($g_aiCmbCustomBuildOrder) - 1
+		$sSgName = GetTroopName($z + $eWallW, 1, True)
+		If $sSgName = -1 Then ContinueLoop
+		_Ini_Add("Sieges", "cmbSiegeOrder_" & $sSgName, $g_aiCmbCustomBuildOrder[$z])
 	Next
 
 	; Custom pets - Team AIO Mod++

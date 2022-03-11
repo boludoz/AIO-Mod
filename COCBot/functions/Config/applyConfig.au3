@@ -2378,6 +2378,10 @@ Func ApplyConfig_600_52_2($TypeReadSave)
 			GUICtrlSetState($g_hChkDoubleTrain, $g_bDoubleTrain ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkPreciseArmy, $g_bPreciseArmy ? $GUI_CHECKED : $GUI_UNCHECKED)
 			#Region - Custom train - Team AIO Mod++
+            GUICtrlSetData($g_hTxtTotalCountSiege, $g_iTotalSiegeValue)
+            GUICtrlSetState($g_hChkPreciseSieges, $g_bPreciseSieges ? $GUI_CHECKED : $GUI_UNCHECKED)
+            GUICtrlSetState($g_hChkForcePreBuildSieges, $g_bForcePreBuildSieges ? $GUI_CHECKED : $GUI_UNCHECKED)
+
 			GUICtrlSetState($g_hChkMMIgnoreIncorrectTroopCombo, $g_bIgnoreIncorrectTroopCombo ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbFillIncorrectTroopCombo, $g_iCmbFillIncorrectTroopCombo)
 			GUICtrlSetState($g_hChkMMIgnoreIncorrectSpellCombo, $g_bIgnoreIncorrectSpellCombo ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -2417,6 +2421,10 @@ Func ApplyConfig_600_52_2($TypeReadSave)
 			$g_bDoubleTrain = (GUICtrlRead($g_hChkDoubleTrain) = $GUI_CHECKED)
 			$g_bPreciseArmy = (GUICtrlRead($g_hChkPreciseArmy) = $GUI_CHECKED)
 			#Region - Custom train - Team AIO Mod++
+            $g_iTotalSiegeValue = GUICtrlRead($g_hTxtTotalCountSiege)
+            $g_bPreciseSieges = (GUICtrlRead($g_hChkPreciseSieges) = $GUI_CHECKED)
+            $g_bForcePreBuildSieges = (GUICtrlRead($g_hChkForcePreBuildSieges) = $GUI_CHECKED)
+
 			$g_bIgnoreIncorrectTroopCombo = (GUICtrlRead($g_hChkMMIgnoreIncorrectTroopCombo) = $GUI_CHECKED)
 			$g_iCmbFillIncorrectTroopCombo = _GUICtrlComboBox_GetCurSel($g_hCmbFillIncorrectTroopCombo)
 			$g_bIgnoreIncorrectSpellCombo = (GUICtrlRead($g_hChkMMIgnoreIncorrectSpellCombo) = $GUI_CHECKED)
@@ -2458,18 +2466,26 @@ Func ApplyConfig_600_54($TypeReadSave)
 			SetComboTroopComp() ; this function also calls lblTotalCount
 
 			; Troops Order - Custom Train - Team AIO Mod++
+			CustomTrainOrderEnable() 
             GUICtrlSetState($g_hChkCustomTrainOrderEnable, $g_bCustomTrainOrderEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
             For $z = 0 To UBound($g_ahCmbTroopOrder) - 1
                 _GUICtrlComboBox_SetCurSel($g_ahCmbTroopOrder[$z], $g_aiCmbCustomTrainOrder[$z])
             Next
-			CustomTrainOrderEnable() 
 
 			; Spells Order - Custom Train - Team AIO Mod++
+			CustomBrewOrderEnable() 
             GUICtrlSetState($g_hChkCustomBrewOrderEnable, $g_bCustomBrewOrderEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
             For $z = 0 To UBound($g_ahCmbSpellsOrder) - 1
                 _GUICtrlComboBox_SetCurSel($g_ahCmbSpellsOrder[$z], $g_aiCmbCustomBrewOrder[$z])
             Next
-			CustomBrewOrderEnable() 
+			
+            ; Sieges Machines Order - Custom Team AIO Mod++
+			CustomBuildOrderEnable() 
+            GUICtrlSetState($g_hChkCustomBuildOrderEnable, $g_bCustomBuildOrderEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
+            For $z = 0 To UBound($g_ahCmbSiegesOrder) - 1
+                _GUICtrlComboBox_SetCurSel($g_ahCmbSiegesOrder[$z], $g_aiCmbCustomBuildOrder[$z])
+            Next
+
 			ApplyConfig_600_54("Save")
 		Case "Save"
 			; Custom pets - Team AIO Mod++
@@ -2479,18 +2495,23 @@ Func ApplyConfig_600_54($TypeReadSave)
 			$g_iCmbMightyYakPet = _GUICtrlComboBox_GetCurSel($g_hCmbMightyYakPet)
 			$g_iCmbUnicornPet = _GUICtrlComboBox_GetCurSel($g_hCmbUnicornPet)
 
-			; Troops Order
+			; Troops Order - Custom Team AIO Mod++
 			$g_bCustomTrainOrderEnable = (GUICtrlRead($g_hChkCustomTrainOrderEnable) = $GUI_CHECKED)
 			For $z = 0 To UBound($g_ahCmbTroopOrder) - 1
 				$g_aiCmbCustomTrainOrder[$z] = Number(_GUICtrlComboBox_GetCurSel($g_ahCmbTroopOrder[$z]))
 			Next
 
-			; Spells Order
+			; Spells Order - Custom Team AIO Mod++
 			$g_bCustomBrewOrderEnable = (GUICtrlRead($g_hChkCustomBrewOrderEnable) = $GUI_CHECKED)
 			For $z = 0 To UBound($g_ahCmbSpellsOrder) - 1
 				$g_aiCmbCustomBrewOrder[$z] = Number(_GUICtrlComboBox_GetCurSel($g_ahCmbSpellsOrder[$z]))
 			Next
-			
+
+            ; Sieges Machines Order - Custom Team AIO Mod++
+            $g_bCustomBuildOrderEnable = (GUICtrlRead($g_hChkCustomBuildOrderEnable) = $GUI_CHECKED)
+            For $z = 0 To UBound($g_ahCmbSiegesOrder) - 1
+                $g_aiCmbCustomBuildOrder[$z] = Number(_GUICtrlComboBox_GetCurSel($g_ahCmbSiegesOrder[$z]))
+            Next
 	EndSwitch
 	#EndRegion - Custom Train - Team AIO Mod++
 EndFunc   ;==>ApplyConfig_600_54

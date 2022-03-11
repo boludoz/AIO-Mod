@@ -50,7 +50,10 @@ Func TestSmartFarm($bFast = True)
 
 	$g_bAttackActive = True
 
-	AttackSmartFarm()
+	Local $Nside = ChkSmartFarm()
+	If Not $g_bRunState Then Return
+	AttackSmartFarm($Nside[1], $Nside[2])
+	
 	$g_bAttackActive = False
 
 	ReturnHome($g_bTakeLootSnapShot)
@@ -63,7 +66,7 @@ Func TestSmartFarm($bFast = True)
 EndFunc   ;==>TestSmartFarm
 
 ; Collectors | Mines | Drills | All (Default)
-Func ChkSmartFarm($sTypeResources = "All", $bTH = True)
+Func ChkSmartFarm($sTypeResources = "All", $bTH = False)
 
 	; Initial Timer
 	Local $iRandomSides[4] = [0, 1, 2, 3]
@@ -604,14 +607,7 @@ Func DebugImageSmartFarm($THdetails, $aIn, $aOut, $sTime, $BestSideToAttack, $re
 
 EndFunc   ;==>DebugImageSmartFarm
 
-Func AttackSmartFarm()
-
-	; Variable to return : $Return[3]  [0] = To attack InSide  [1] = Quant. Sides  [2] = Name Sides
-	Local $aResultSm = ChkSmartFarm()
-	If Not $g_bRunState Then Return
-	
-	Local $Nside = $aResultSm[0]
-	Local $SIDESNAMES = $aResultSm[1]
+Func AttackSmartFarm($Nside, $SIDESNAMES)
 
 	Setlog(" ====== Start Smart Farm Attack ====== ", $COLOR_INFO)
 
@@ -1038,7 +1034,7 @@ Func GroupArrays($firstArray, $secondArray)
 				$FinalArray[UBound($FinalArray) - 1][1] = $firstArray[$i][1]
 			EndIf
 		Next
-	Next
+	Next 
 	Return $FinalArray
 EndFunc   ;==>GroupArrays
 

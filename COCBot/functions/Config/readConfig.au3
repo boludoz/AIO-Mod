@@ -1640,17 +1640,21 @@ Func ReadConfig_600_52_2()
 	IniReadS($g_iTotalSpellValue, $g_sProfileConfigPath, "Spells", "SpellFactory", 0, "int")
 	$g_iTotalSpellValue = Int($g_iTotalSpellValue)
 	; DoubleTrain - Demen
-	$g_bDoubleTrain = (IniRead($g_sProfileConfigPath, "troop", "DoubleTrain", "0") = "1")
-	$g_bPreciseArmy = (IniRead($g_sProfileConfigPath, "troop", "PreciseArmy", "0") = "1")
+    IniReadS($g_bDoubleTrain, $g_sProfileConfigPath, "troop", "DoubleTrain", False, "Bool")
+    IniReadS($g_bPreciseArmy, $g_sProfileConfigPath, "troop", "PreciseArmy", False, "Bool")
 
 	#Region - Custom train - Team AIO Mod++
+    IniReadS($g_iTotalSiegeValue, $g_sProfileConfigPath, "Sieges", "TxtTotalCountSiege", 0, "Int")
+    IniReadS($g_bPreciseSieges, $g_sProfileConfigPath, "Sieges", "ChkPreciseSieges", False, "Bool")
+    IniReadS($g_bForcePreBuildSieges, $g_sProfileConfigPath, "Sieges", "ChkForcePreBuildSieges", False, "Bool")
+
 	IniReadS($g_bIgnoreIncorrectTroopCombo, $g_sProfileConfigPath, "other", "IgnoreIncorrectTroopCombo", True, "Bool")
 	IniReadS($g_iCmbFillIncorrectTroopCombo, $g_sProfileConfigPath, "other", "FillIncorrectTroopCombo", 0, "int")
 	IniReadS($g_bIgnoreIncorrectSpellCombo, $g_sProfileConfigPath, "other", "IgnoreIncorrectSpellCombo", True, "Bool")
 	IniReadS($g_iCmbFillIncorrectSpellCombo, $g_sProfileConfigPath, "other", "FillIncorrectSpellCombo", 0, "int")
 
-	$g_bPreciseBrew = (IniRead($g_sProfileConfigPath, "troop", "PreciseBrew", "0") = "1")
-	$g_bForcePreBrewSpells = (IniRead($g_sProfileConfigPath, "troop", "ForcePreBrewSpells", "0") = "1")
+	IniReadS($g_bPreciseBrew, $g_sProfileConfigPath, "Spells", "PreciseBrew", False, "Bool")
+	IniReadS($g_bForcePreBrewSpells, $g_sProfileConfigPath, "Spells", "ForcePreBrewSpells", False, "Bool")
 
 	IniReadS($g_bChkPreTrainTroopsPercent, $g_sProfileConfigPath, "troop", "ChkPreTrainTroopsPercent", True, "Bool")
 	IniReadS($g_iInpPreTrainTroopsPercent, $g_sProfileConfigPath, "troop", "InpPreTrainTroopsPercent", 95, "Int")
@@ -1679,7 +1683,7 @@ EndFunc   ;==>ReadConfig_600_52_2
 
 Func ReadConfig_600_54()
 	; <><><><> Attack Plan / Train Army / Train Order <><><><>
-	; Troops Order
+	; Troops Order - Team AIO Mod++
 	Local $sTName = -1
 	IniReadS($g_bCustomTrainOrderEnable, $g_sProfileConfigPath, "troop", "chkTroopOrder", False, "Bool")
 	For $z = 0 To UBound($g_aiCmbCustomTrainOrder) - 1
@@ -1688,13 +1692,22 @@ Func ReadConfig_600_54()
 		IniReadS($g_aiCmbCustomTrainOrder[$z], $g_sProfileConfigPath, "troop", "cmbTroopOrder_" & $sTName, $z)
 	Next
 
-	; Spells Order
+	; Spells Order - Team AIO Mod++
 	Local $sSName = -1
 	IniReadS($g_bCustomBrewOrderEnable, $g_sProfileConfigPath, "Spells", "chkSpellOrder", False, "Bool")
 	For $z = 0 To UBound($g_aiCmbCustomBrewOrder) - 1
 		$sSName = GetTroopName($z + $eLSpell, 1, True)
 		If $sSName = -1 Then ContinueLoop
 		IniReadS($g_aiCmbCustomBrewOrder[$z], $g_sProfileConfigPath, "Spells", "cmbSpellOrder_" & $sSName, $z)
+	Next
+
+	; Sieges Machines Order - Team AIO Mod++
+	Local $sSgName = -1
+	IniReadS($g_bCustomBuildOrderEnable, $g_sProfileConfigPath, "Sieges", "chkSiegeOrder", False, "Bool")
+	For $z = 0 To UBound($g_aiCmbCustomBuildOrder) - 1
+		$sSgName = GetTroopName($z + $eWallW, 1, True)
+		If $sSgName = -1 Then ContinueLoop
+		IniReadS($g_aiCmbCustomBuildOrder[$z], $g_sProfileConfigPath, "Sieges", "cmbSiegeOrder_" & $sSgName, $z)
 	Next
 
 	; Custom pets - Team AIO Mod++

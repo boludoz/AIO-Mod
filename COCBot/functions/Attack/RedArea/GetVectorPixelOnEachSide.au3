@@ -40,7 +40,7 @@ Func GetVectorPixelOnEachSide2($arrPixel, $vectorDirection, $slotsPerEdge)
 			If $g_bDebugSmartFarm Then SetLog("Deploy point Closer[" & $i + 1 & "] at: " & _ArrayToString($arrPixelCloser[0]))
 			$vectorPixelEachSide[$i] = $arrPixelCloser[0]
 		Next
-	 EndIf
+	 EndIf 
 
 	#Region - Randomize points along the line - Team AIO Mod++
 	If $g_bUseSmartFarmAndRandomDeploy = True And IsArray($vectorPixelEachSide) Then

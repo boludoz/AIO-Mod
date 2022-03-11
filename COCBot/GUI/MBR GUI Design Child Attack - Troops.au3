@@ -41,7 +41,6 @@ Global $g_hChkDoubleTrain = 0, $g_hChkPreciseArmy = 0
 Global $g_hGrpTrainTroops = 0
 Global $g_ahPicTrainArmyTroop[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_ahPicTrainArmySpell[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_ahPicTrainArmySiege[$eSiegeMachineCount] = [0, 0, 0, 0, 0, 0]
 Global $g_hLblTotalTimeCamp = 0, $g_hLblElixirCostCamp = 0, $g_hLblDarkCostCamp = 0, $g_hCalTotalTroops = 0, $g_hLblTotalProgress = 0, $g_hLblCountTotal = 0, _
 		$g_hTxtTotalCountSpell = 0, $g_hLblTotalTimeSpell = 0, $g_hLblElixirCostSpell = 0, $g_hLblDarkCostSpell = 0, _
 		$g_hLblTotalTimeSiege = 0, $g_hLblCountTotalSiege = 0, $g_hLblGoldCostSiege = 0
@@ -784,7 +783,7 @@ Func CreateTrainOptions()
 	$g_hLblAddDelayIdlePhaseSec = GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "sec.", "sec."), $x + 110, $y, 20, -1)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	$x = 206
-	$y += 50
+	$y += 48
 	; Buy guard - Team AIO Mod++
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Options", "Group_07", "Shop"), $x - 20, $y - 20, 195, 50)
 	$g_hChkBuyGuard = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Options", "ChkBuyTwoHourGuard", "Buy Two Hour Guard"), $x - 10, $y, -1, -1)
@@ -805,8 +804,9 @@ Func CreateTrainOptions()
 	_GUICtrlSetTip(-1, $sTxtTip)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	#Region - Custom Train - Team AIO Mod++
-	$y += 45 + 27
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design - FillIncorrectTroopCombo", "Group_MiscMod_", "Train GUI fix"), $x - 20, $y - 20, 195, 125)
+	$y += 66
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design - FillIncorrectTroopCombo", "Group_MiscMod_", "Train GUI fix"), $x - 20, $y - 20, 195, 115)
+	$y -= 3
 		$g_hChkMMIgnoreIncorrectTroopCombo = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkIgnoreBadTroopCombo_", "Auto fix bad troop combo"), $x - 10, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnDoubleTrain_Info_01", "If Enabled DoubleTrain, Wont Empty Queued Troop, will Disable Precise Army"))
 		GUICtrlSetOnEvent(-1, "chkOnDoubleTrain")
@@ -1005,7 +1005,7 @@ Func CreateTrainSpells()
 	$x += 70
 	Local $sSpellName = ""
 	For $i = 0 To UBound($g_aQuickSpellIcon) - 1
-		$sSpellName = GetTroopName($i, 2)
+		$sSpellName = GetTroopName($i + $eLSpell, 2)
 		GUICtrlCreateIcon($g_sLibIconPath, $g_aQuickSpellIcon[$i], $x, $y, 23, 23)
 		$g_ahTxtTrainArmySpellCount[$i] = _GUICtrlCreateInput("0", $x + 65 - 35, $y, 25, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("sam m0d", "txtNoOfS", "Enter the No. of") & " " & $sSpellName)
@@ -1061,39 +1061,59 @@ Func CreateTrainSieges()
 	Local $iStartX = 10
 	Local $iStartY = 38
 
-	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnResetButton, 0, 3, 16, 16)
-	GUICtrlSetOnEvent(-1, "Removecampsieges")
+    GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "SiegeCapacity", "Siege Capacity") & ":", 10 + 288, 12 - 5, 90, 17, $SS_RIGHT)
+    $g_hTxtTotalCountSiege = _GUICtrlCreateInput("3", 10 + 380, 4, 35, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+    _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "TxtTotalCountSpell_Info_01", "Enter the No. of Sieges Capacity."))
+
+    _GUICtrlCreateIcon($g_sLibIconPath, $eIcnResetButton, 0, 3, 16, 16)
+    GUICtrlSetOnEvent(-1, "Removecampsieges")
+    
+    $g_hChkPreciseSieges = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "ChkPreciseBuild", "Precise build") , 10 + 50, 3)
+    $g_hChkForcePreBuildSieges = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "ChkForcePreBuildSieges", "Force pre build sieges") , 10 + 150, 3)
 
 	Local $x = $iStartX, $y = $iStartY
 	Local $iCol = 0
 
-	Local $ahPicTrainArmySiege[$eSiegeMachineCount] = [$eIcnWallW, $eIcnBattleB, $eIcnStoneS, $eIcnSiegeB, $eIcnLogL, $eIcnFlameF]
-
 	; Create translated list of Troops for combo box
 	Local $sComboData = "1"
-	For $j = 1 To UBound($ahPicTrainArmySiege) - 1
+	For $j = 1 To UBound($g_ahPicTrainArmySiege) - 1
 		$sComboData &= "|" & String($j + 1)
 	Next
 
+	Local $sSiegeName = ""
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Train_Sieges", "grpSieges", "Sieges"), $x - 10, $y - 15, 430, 203)
 	$x += 70
-	Local $sSiegeName = ""
-	For $i = 0 To UBound($ahPicTrainArmySiege) - 1
-		$sSiegeName = GetTroopName($i, 2)
-		GUICtrlCreateIcon($g_sLibIconPath, $ahPicTrainArmySiege[$i], $x, $y, 23, 23)
+	For $i = 0 To $eSiegeMachineCount - 1
+		$sSiegeName = GetTroopName($i + $eWallW, 2)
+		GUICtrlCreateIcon($g_sLibIconPath, $g_ahPicTrainArmySiege[$i], $x, $y, 23, 23)
 		$g_ahTxtTrainArmySiegeCount[$i] = _GUICtrlCreateInput("0", $x + 65 - 35, $y, 25, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("sam m0d", "txtNoOfS", "Enter the No. of") & " " & $sSiegeName)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("sam m0d", "txtNoOfSg", "Enter the No. of") & " " & $sSiegeName)
 			GUICtrlSetLimit(-1, 3)
 			GUICtrlSetOnEvent(-1, "TrainSiegeCountEdit")
+		$g_ahCmbSiegesOrder[$i] = GUICtrlCreateCombo("", $x + 95 - 38, $y, 36, 23, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
+			GUICtrlSetData(-1, $sComboData)
+			_GUICtrlComboBox_SetCurSel(-1, $i)
+			GUICtrlSetOnEvent(-1, "_GUIBuildOrder")
 		$y += 26
 		$iCol += 1
-		If $iCol = Round(UBound($ahPicTrainArmySiege) / 2) Then
+		If $iCol = Round($eSiegeMachineCount / 2) Then
 			$iCol = 0
 			$x += 150
 			$y = $iStartY
 		EndIf
 	Next
 
+	$y += 150
+	$x = $iStartX
+	
+	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnResetButton, $x, $y + 17, 16, 16)
+		GUICtrlSetOnEvent(-1, "BtnRemoveSieges")
+	$g_hChkCustomBuildOrderEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Order", "Order") , $x + 20, $y + 14, -1, -1)
+		GUICtrlSetOnEvent(-1, "CustomBuildOrderEnable")
+
+	$y -= 50
+
+	#cs
 	$y += 100
 	$x = $iStartX
 	$x += 70
@@ -1112,8 +1132,9 @@ Func CreateTrainSieges()
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "LblCountTotal_Info_02", "The total units of Siege Machines"))
 	GUICtrlSetBkColor(-1, $_COLOR_MONEYGREEN) ;lime, moneygreen
 	GUICtrlCreateLabel("x", $x + 232, $y + 10, -1, -1)
-
+	#ce
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
+	GUICtrlCreateTabItem("")
 	
 	; Custom pets - Team AIO Mod++
 	Local $sTxtHeroesNames = GetTranslatedFileIni("MBR Global GUI Design", "Any", "Any") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "Barbarian King", "Barbarian King") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "Archer Queen", "Archer Queen") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "Grand Warden", "Grand Warden") & "|" & GetTranslatedFileIni("MBR Global GUI Design Names Troops", "Royal Champion", "Royal Champion")
