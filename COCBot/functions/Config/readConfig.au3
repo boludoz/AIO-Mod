@@ -1644,7 +1644,7 @@ Func ReadConfig_600_52_2()
     IniReadS($g_bPreciseArmy, $g_sProfileConfigPath, "troop", "PreciseArmy", False, "Bool")
 
 	#Region - Custom train - Team AIO Mod++
-    IniReadS($g_iTotalSiegeValue, $g_sProfileConfigPath, "Sieges", "TxtTotalCountSiege", 0, "Int")
+    IniReadS($g_iTotalSiegeValue, $g_sProfileConfigPath, "Sieges", "TxtTotalCountSiege", 3, "Int")
     IniReadS($g_bPreciseSieges, $g_sProfileConfigPath, "Sieges", "ChkPreciseSieges", False, "Bool")
     IniReadS($g_bForcePreBuildSieges, $g_sProfileConfigPath, "Sieges", "ChkForcePreBuildSieges", False, "Bool")
 

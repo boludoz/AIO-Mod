@@ -1068,7 +1068,7 @@ Func CreateTrainSieges()
     _GUICtrlCreateIcon($g_sLibIconPath, $eIcnResetButton, 0, 3, 16, 16)
     GUICtrlSetOnEvent(-1, "Removecampsieges")
     
-    $g_hChkPreciseSieges = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "ChkPreciseBuild", "Precise build") , 10 + 50, 3)
+    ; $g_hChkPreciseSieges = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "ChkPreciseBuild", "Precise build") , 10 + 50, 3)
     $g_hChkForcePreBuildSieges = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "ChkForcePreBuildSieges", "Force pre build sieges") , 10 + 150, 3)
 
 	Local $x = $iStartX, $y = $iStartY

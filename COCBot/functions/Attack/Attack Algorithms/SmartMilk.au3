@@ -86,7 +86,7 @@ Func SmartFarmMilk($bDebug = False)
 	Local Enum $eswallslot, $egiantslot, $ebarbslot, $eSWizaslot, $eWizaslot, $earchslot, $egoblslot, $ebabydslot, $eminislot, $esminislot, $esgoblslot, $ejspellslot, $esbarbslot, $eminerslot
 	Local $igiantslot = -1, $ibarbslot = -1, $iSWizaslot = -1, $iWizaslot = -1, $iarchslot = -1, $igoblslot = -1, $ibabydslot = -1, $imini = -1, $ismini = -1, $isgobs = -1, $iswall = -1, $ijspell = -1, $isbarbslot = -1, $isminerslot = -1
 	Local $aslots = [$iswall, $igiantslot, $ibarbslot, $iSWizaslot, $iWizaslot, $iarchslot, $igoblslot, $ibabydslot, $imini, $ismini, $isgobs, $ijspell, $isbarbslot, $isminerslot]
-	Local $aslots2deploy[12][4]
+	Local $aslots2deploy[UBound($aslots)][4]
 	Local $usedzap = False
 	#cs
 Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl, $eWall, $eSWall, $eBall, $eRBall, $eWiza, $eSWiza, $eHeal, $eDrag, $eSDrag, $ePekk, $eBabyD, $eInfernoD, $eMine, $eEDrag, $eYeti, $eRDrag, _

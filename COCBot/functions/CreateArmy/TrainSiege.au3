@@ -29,17 +29,6 @@ Func TrainSiege($bTrainFullSiege = False)
 
 	Local $aCheckIsOccupied[4] = [822, 206, 0xE00D0D, 10]
 	Local $aCheckIsFilled[4] = [802, 186, 0xD7AFA9, 10]
-	Local $aCheckIsAvailableSiege[4] = [58, 556, 0x47717E, 10] 
-	Local $aCheckIsAvailableSiege1[4] = [229, 556, 0x47717E, 10]
-	Local $aCheckIsAvailableSiege2[4] = [400, 556, 0x47717E, 10]
-	Local $aCheckIsAvailableSiege3[4] = [576, 556, 0x47717E, 10]
-	Local $aCheckIsAvailableSiege4[4] = [750, 556, 0x47717E, 10] 
-	;Sale pixel values
-	Local $aCheckIsAvailableSiege5[5] = [58, 556, 0x64BA29, 10] ;There are blue when on "sale"
-	Local $aCheckIsAvailableSiege6[6] = [229, 556, 0x64BA29, 10]
-	Local $aCheckIsAvailableSiege7[7] = [400, 556, 0x64BA29, 10]
-	Local $aCheckIsAvailableSiege8[8] = [576, 556, 0x64BA29, 10]
-	Local $aCheckIsAvailableSiege9[9] = [750, 556, 0x64BA29, 10]
 	Local $aiQueueSiegeMachine[$eSiegeMachineCount] = [0, 0, 0, 0, 0, 0]
 	Local $aiTotalSiegeMachine = $g_aiCurrentSiegeMachines
 
@@ -68,7 +57,8 @@ Func TrainSiege($bTrainFullSiege = False)
 
 	; Refill.  Do twice as many.  Regular price is green, sale price is blue.
 	Local $i
-	For $iSiegeIndex = $eSiegeWallWrecker To ($eSiegeMachineCount * 2) - 1
+    For $iBuildIndex = $eSiegeWallWrecker To $eSiegeMachineCount - 1 ; Custom Train - Team AIO Mod++        
+        Local $iSiegeIndex = $g_aiBuildOrder[$iBuildIndex] ; Custom Train - Team AIO Mod++        
 		$i = $iSiegeIndex ;Don't index over the actual count of Sieges
 		if $i >= $eSiegeMachineCount Then
 			$i = $i - $eSiegeMachinecount
@@ -80,20 +70,9 @@ Func TrainSiege($bTrainFullSiege = False)
 		If $HowMany > 0 And $iSiegeIndex = $eSiegeFlameFlinger Then 
 			DragSiege("Next", 1)
 		EndIf
-		;Regular price pixel colors
-		If $iSiegeIndex = $eSiegeWallWrecker Then $checkPixel = $aCheckIsAvailableSiege
-		If $iSiegeIndex = $eSiegeBattleBlimp Then $checkPixel = $aCheckIsAvailableSiege1
-		If $iSiegeIndex = $eSiegeStoneSlammer Then $checkPixel = $aCheckIsAvailableSiege2
-		If $iSiegeIndex = $eSiegeBarracks Then $checkPixel = $aCheckIsAvailableSiege3
-		If $iSiegeIndex = $eSiegeLogLauncher Then $checkPixel = $aCheckIsAvailableSiege4
-		;Sale price pixel colors
-		If $iSiegeIndex = $eSiegeWallWrecker+$eSiegeMachineCount Then $checkPixel = $aCheckIsAvailableSiege5
-		If $iSiegeIndex = $eSiegeBattleBlimp+$eSiegeMachineCount Then $checkPixel = $aCheckIsAvailableSiege6
-		If $iSiegeIndex = $eSiegeStoneSlammer+$eSiegeMachineCount Then $checkPixel = $aCheckIsAvailableSiege7
-		If $iSiegeIndex = $eSiegeBarracks+$eSiegeMachineCount Then $checkPixel = $aCheckIsAvailableSiege8
-		If $iSiegeIndex = $eSiegeLogLauncher+$eSiegeMachineCount Then $checkPixel = $aCheckIsAvailableSiege9
+		$checkPixel = decodeSingleCoord(findImage($g_asSiegeMachineShortNames[$iSiegeIndex], @ScriptDir & "\imgxml\ArmyOverview\SiegesMachinesTrainBtn\" & $g_asSiegeMachineShortNames[$iSiegeIndex] & "*", GetDiamondFromRect("29,365,838,581"), 1, True))
 		SetDebugLog("HArchH: $iSiegeIndex = " & $iSiegeIndex, $COLOR_DEBUG)
-		If $HowMany > 0 And _CheckPixel($checkPixel, True, Default, $g_asSiegeMachineNames[$i]) Then
+		If $HowMany > 0 And UBound($checkPixel) >= 2 and not @error Then
 			SetDebugLog("HArchH: Clicking in Refill.", $COLOR_DEBUG)
 			PureClick($checkPixel[0], $checkPixel[1], $HowMany, $g_iTrainClickDelay)
 			Local $sSiegeName = $HowMany >= 2 ? $g_asSiegeMachineNames[$i] & "s" : $g_asSiegeMachineNames[$i] & ""
@@ -108,8 +87,9 @@ Func TrainSiege($bTrainFullSiege = False)
 	Next
 
 	; build 2nd army
-	If ($g_bDoubleTrain Or $bTrainFullSiege) And $g_iTotalTrainSpaceSiege <= 3 Then
-		For $iSiegeIndex = $eSiegeWallWrecker To ($eSiegeMachineCount * 2) - 1
+    If ($g_bDoubleTrain Or $bTrainFullSiege Or $g_bForcePreBuildSieges) And $g_iTotalTrainSpaceSiege <= $g_iTotalSiegeValue Then ; Custom Train - Team AIO Mod++
+        For $iBuildIndex = $eSiegeWallWrecker To $eSiegeMachineCount - 1 ; Custom Train - Team AIO Mod++
+        Local $iSiegeIndex = $g_aiBuildOrder[$iBuildIndex] ; Custom Train - Team AIO Mod++        
 		$i = $iSiegeIndex ;Don't index over the actual count of Sieges
 			if $i >= $eSiegeMachineCount Then
 				$i = $i - $eSiegeMachinecount
@@ -120,20 +100,9 @@ Func TrainSiege($bTrainFullSiege = False)
 			If $HowMany > 0 And $iSiegeIndex = $eSiegeFlameFlinger Then 
 				DragSiege("Next", 1)
 			EndIf
-			;Regular price pixel colors
-			If $iSiegeIndex = $eSiegeWallWrecker Then $checkPixel = $aCheckIsAvailableSiege
-			If $iSiegeIndex = $eSiegeBattleBlimp Then $checkPixel = $aCheckIsAvailableSiege1
-			If $iSiegeIndex = $eSiegeStoneSlammer Then $checkPixel = $aCheckIsAvailableSiege2
-			If $iSiegeIndex = $eSiegeBarracks Then $checkPixel = $aCheckIsAvailableSiege3
-			If $iSiegeIndex = $eSiegeLogLauncher Then $checkPixel = $aCheckIsAvailableSiege4
-			;Sale price pixel colors
-			If $iSiegeIndex = $eSiegeWallWrecker+$eSiegeMachineCount Then $checkPixel = $aCheckIsAvailableSiege5
-			If $iSiegeIndex = $eSiegeBattleBlimp+$eSiegeMachineCount Then $checkPixel = $aCheckIsAvailableSiege6
-			If $iSiegeIndex = $eSiegeStoneSlammer+$eSiegeMachineCount Then $checkPixel = $aCheckIsAvailableSiege7
-			If $iSiegeIndex = $eSiegeBarracks+$eSiegeMachineCount Then $checkPixel = $aCheckIsAvailableSiege8
-			If $iSiegeIndex = $eSiegeLogLauncher+$eSiegeMachineCount Then $checkPixel = $aCheckIsAvailableSiege9
+			$checkPixel = decodeSingleCoord(findImage($g_asSiegeMachineShortNames[$iSiegeIndex], @ScriptDir & "\imgxml\ArmyOverview\SiegesMachinesTrainBtn\" & $g_asSiegeMachineShortNames[$iSiegeIndex] & "*", GetDiamondFromRect("29,365,838,581"), 1, True))
 			SetDebugLog("HArchH: 2nd Army $iSiegeIndex = " & $iSiegeIndex, $COLOR_DEBUG)
-			If $HowMany > 0 And _CheckPixel($checkPixel, True, Default, $g_asSiegeMachineNames[$i]) Then
+			If $HowMany > 0 And UBound($checkPixel) >= 2 and not @error Then
 				PureClick($checkPixel[0], $checkPixel[1], $HowMany, $g_iTrainClickDelay)
 				Local $sSiegeName = $HowMany >= 2 ? $g_asSiegeMachineNames[$i] & "s" : $g_asSiegeMachineNames[$i] & ""
 				Setlog("Build " & $HowMany & " " & $sSiegeName, $COLOR_SUCCESS)
@@ -158,12 +127,23 @@ EndFunc   ;==>TrainSiege
 Func DragSiege($Direction = "Next", $HowMany = 1)
 	Local $DragYPoint =  500
 	For $i = 1 To $HowMany
-		Switch $Direction
-			Case "Next"
-				ClickDrag(550, $DragYPoint, 378, $DragYPoint, 500)
-			Case "Prev"
-				ClickDrag(370, $DragYPoint, 542, $DragYPoint, 500)
-		EndSwitch
+		If $g_bAndroidAdbClickDragScript Then
+			Switch $Direction
+				Case "Next"
+					ClickDrag(550, $DragYPoint, 378, $DragYPoint, 500)
+				Case "Prev"
+					ClickDrag(370, $DragYPoint, 542, $DragYPoint, 500)
+			EndSwitch
+		Else
+			Switch $Direction
+				Case "Next"
+					ClickDrag(550, $DragYPoint, 378, $DragYPoint, 500, True)
+					ClickDrag(275, $DragYPoint, 189, $DragYPoint, 500, True)
+				Case "Prev"
+					ClickDrag(370, $DragYPoint, 542, $DragYPoint, 500, True)
+					ClickDrag(185, $DragYPoint, 271, $DragYPoint, 500, True)
+			EndSwitch
+		EndIf
 		If _Sleep(1000) Then Return
 	Next
 EndFunc

@@ -1379,7 +1379,9 @@ Func BotClose($SaveConfig = Default, $bExit = True)
 
 	; Unregister managing hosts
 	UnregisterManagedMyBotHost()
-
+	
+	CloseEmulatorForce(True)
+	
 	If $bExit = True Then Exit
 EndFunc   ;==>BotClose
 

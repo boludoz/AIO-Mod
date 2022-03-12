@@ -56,14 +56,15 @@ Func BoostSuperTroop($bTest = False)
 		If QuickMIS("BC1", $g_sImgBoostTroopsBarrel, 0, 0, 220, 225, True, False) Then
 			If $bTest Then SetLog("Found Barrel at " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_DEBUG)
 			Click($g_iQuickMISX, $g_iQuickMISY, 1)
+			If _Sleep(1500) Then Return
 
 			; Check the brown pixel below, just below the black one to avoid confusion.
 			If IsSTPage() = True Then
 
-				If _Sleep(500) Then Return
+				If _Sleep(1500) Then Return
 
 				; Nada al azar.
-				Local $eBeDrag = Ceiling($iSuperTroopsCount / 4)
+				Local $eBeDrag = Floor($iSuperTroopsCount / 4)
 				If Mod($iSuperTroopsCount, 4) > 0 Then $eBeDrag += 1
 				For $iDrags = 1 To $eBeDrag
 
@@ -82,7 +83,7 @@ Func BoostSuperTroop($bTest = False)
 
 								$aPoints = decodeMultipleCoords($aMatchedTroops[2])
 
-								If UBound($aPoints) > 0 Then
+								If UBound($aPoints) > 0 And not @error Then
 
 									$sFilenameST = $aMatchedTroops[0] ; Filename
 
@@ -194,7 +195,13 @@ Func BoostSuperTroop($bTest = False)
 							Next
 						EndIf
 
-						ClickDrag(428, 500, 428, 260, 200)
+						If $g_bAndroidAdbClickDragScript Then
+							ClickDrag(283, 500, 283, 260, 200)
+						Else
+							ClickDrag(283, 500, 283, 325, 200, True)
+							ClickDrag(283, 500, 283, 425, 200, True)
+						EndIf
+						
 						If $bTest Then SetLog("Stage ClickDrag.", $COLOR_INFO)
 						If _Sleep(1500) Then Return False
 					Else
@@ -212,7 +219,7 @@ Func BoostSuperTroop($bTest = False)
 			SetLog("Couldn't find super troop barrel.", $COLOR_ERROR)
 		EndIf
 
-		If UBound($aAlreadyChecked) > 0 Then
+		If UBound($aAlreadyChecked) > 0 And not @error Then
 			SetLog("Super troops active:", $COLOR_INFO)
 
 			For $i = 0 To UBound($aAlreadyChecked) - 1
