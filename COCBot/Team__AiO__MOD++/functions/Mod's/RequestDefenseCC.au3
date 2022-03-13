@@ -207,6 +207,14 @@ Func RequestCCMain()
 	EndIf
 
 	If Not $g_bRunState Then Return
-
-	CheckMainScreen(False, False)
+	
+	If IsMain(2) Then Return
+	ClickAway()
+	If _Sleep($DELAYRUNBOT2) Then Return
+	If IsMain(2) Then Return
+	If _Sleep($DELAYRUNBOT2) Then Return
+	ClickAway()
+	If IsMain(2) Then Return
+	
+	CheckMainScreen()
 EndFunc   ;==>RequestCCMain
