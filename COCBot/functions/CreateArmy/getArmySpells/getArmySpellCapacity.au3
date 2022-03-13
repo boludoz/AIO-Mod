@@ -6,7 +6,7 @@
 ; Return values .: None
 ; Author ........:
 ; Modified ......: CodeSlinger69 (01-2017)
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2020
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
@@ -68,15 +68,15 @@ Func getArmySpellCapacity($bOpenArmyWindow = False, $bCloseArmyWindow = False, $
 
 		If $bSetLog Then SetLog("Total Spell Factory Capacity: " & $g_iCurrentSpells & "/" & $g_iTotalSpells)
 	EndIf
-	
-	#Region - custom logic - team aio mod++
-	If $g_bTotalCampForced = False Then 
-		$g_iTotalSpellValue = _Max($g_iTotalSpells, $g_iCurrentSpells) ; Legend has it that the numbers are reversed from time to time.
+
+	If $g_iTotalSpells <> $g_iTotalSpellValue And $bSetLog Then
+		SetLog("Warning: Total Spell Capacity is not the same as in GUI", $COLOR_WARNING)
+		If $g_bIgnoreIncorrectSpellCombo = True Then
+			If $g_iTotalSpells <> 0 Then $g_iTotalSpellValue = $g_iTotalSpells
+			FixInDoubleTrain($g_aiArmyCompSpells, $g_iTotalSpellValue, $g_aiSpellSpace, TroopIndexLookup($g_sCmbFICSpells[$g_iCmbFillIncorrectSpellCombo][0], "DoubleTrain") - $eLSpell)
+		EndIf
 	EndIf
-	#EndRegion - custom logic - team aio mod++
-
-	If $g_iTotalSpells <> $g_iTotalSpellValue And $bSetLog Then SetLog("Warning: Total Spell Capacity is not the same as in GUI", $COLOR_WARNING)
-
+	
 	If $bCloseArmyWindow Then
 		ClickAway()
 		If _Sleep($DELAYCHECKARMYCAMP4) Then Return

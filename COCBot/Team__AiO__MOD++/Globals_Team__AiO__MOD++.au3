@@ -406,6 +406,8 @@ Global $g_aiBuildOrder[$eSiegeMachineCount] = [ _
 Global Const $g_ahPicTrainArmySiege[$eSiegeMachineCount] = [ _ 
 		$eIcnWallW, $eIcnBattleB, $eIcnStoneS, $eIcnSiegeB, $eIcnLogL, $eIcnFlameF]
 
+; Pre train spells
+Global $g_ahCmbSpellsPre[$eSpellCount]
 #EndRegion - Custom train - Team AIO Mod++
 
 ; Advanced debugging.

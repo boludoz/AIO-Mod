@@ -5,7 +5,7 @@
 ; Parameters ....: None
 ; Return values .: None
 ; Author ........: Demen
-; Modified ......: Boldina (Warning this is custom)!  (21/06/2021)
+; Modified ......:
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -14,7 +14,7 @@
 ; ===============================================================================================================================
 #include-once
 
-Func QuickTrain($bPreTrainFlag = $g_bDoubleTrain)
+Func QuickTrain($bPreTrainFlag = $g_bDoubleTrain) ; Custom train - Team AIO Mod++
 	Local $bDebug = $g_bDebugSetlogTrain Or $g_bDebugSetlog
 	Local $bNeedRecheckTroop = False, $bNeedRecheckSpell = False, $bNeedRecheckSiegeMachine = False
 	Local $iTroopStatus = -1, $iSpellStatus = -1, $iSiegeStatus = -1 ; 0 = empty, 1 = full camp, 2 = full queue
@@ -239,7 +239,7 @@ Func CheckQuickTrainTroop()
 	Local $bResult = True
 
 
-	Local Static $asLastTimeChecked[$g_eTotalAcc]
+	Local Static $asLastTimeChecked[8]
 	If $g_bFirstStart Then $asLastTimeChecked[$g_iCurAccount] = ""
 
 	If _DateIsValid($asLastTimeChecked[$g_iCurAccount]) Then
@@ -260,9 +260,9 @@ Func CheckQuickTrainTroop()
 	SetLog("Reading troops/spells/siege in quick train army")
 
 	; reset troops/spells in quick army
-	Local $aEmptyTroop[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+	Local $aEmptyTroop[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 	Local $aEmptySpell[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-	Local $aEmptySiegeMachine[$eSiegeMachineCount] = [0, 0, 0, 0, 0, 0]
+	Local $aEmptySiegeMachine[$eSiegeMachineCount] = [0, 0, 0, 0, 0]
 	$g_aiArmyQuickTroops = $aEmptyTroop
 	$g_aiArmyQuickSpells = $aEmptySpell
 	$g_aiArmyQuickSiegeMachines = $aEmptySiegeMachine
@@ -280,16 +280,25 @@ Func CheckQuickTrainTroop()
 	local $iDistanceBetweenArmies = 108 ; pixels
 	local $aArmy1Location = [758, 272] ; first area of quick train army buttons
 
-	; search for EditQuickTrainIcon
-	Local $aEditArmy[4] = [780, 293, 0xBDE98D, 10] ; * 108
-	Local $hPixelC = 0x000000
-		
+	; findImage needs filename and path
+	Local $avEditQuickTrainIcon = _FileListToArrayRec($g_sImgEditQuickTrain, "*", $FLTAR_FILES, $FLTAR_NORECUR, $FLTAR_NOSORT, $FLTAR_FULLPATH)
+
+	If Not IsArray($avEditQuickTrainIcon) Or UBound($avEditQuickTrainIcon, $UBOUND_ROWS) <= 0 Then
+		SetLog("Can't find EditQuickTrainIcon");
+		Return False
+	EndIf
+
 	For $i = 0 To UBound($g_bQuickTrainArmy) - 1 ; check all 3 army combo
 		If Not $g_bQuickTrainArmy[$i] Then ContinueLoop ; skip unchecked quick train army
 
-		$hPixelC = _GetPixelColor($aEditArmy[0], $aEditArmy[1] + (108 * $i), True)
-		If _ColorCheck($hPixelC, Hex($aEditArmy[2], 6), $aEditArmy[3]) Then
-			Click($aEditArmy[0], $aEditArmy[1] + (108 * $i), 1)
+		; calculate search area for EditQuickTrainIcon
+		Local $sSearchArea = $aArmy1Location[0] & ", " & ($aArmy1Location[1] + ($iDistanceBetweenArmies * $i)) & ", 815, " & ($aArmy1Location[1] + ($iDistanceBetweenArmies * ($i + 1)))
+
+		; search for EditQuickTrainIcon
+		Local $aiEditButton = decodeSingleCoord(findImage("EditQuickTrain", $avEditQuickTrainIcon[1], GetDiamondFromRect($sSearchArea), 1, True, Default))
+
+		If IsArray($aiEditButton) And UBound($aiEditButton, 1) >= 2 Then
+			ClickP($aiEditButton)
 			If _Sleep(1000) Then Return
 
 			Local $TempTroopTotal = 0, $TempSpellTotal = 0, $TempSiegeTotal = 0
@@ -457,7 +466,7 @@ Func CheckQuickTrainTroop()
 	If $g_iTotalQuickSpells > $iSpellCamp Then SetLog("Total spells in combo army " & $sLog & "exceeds your camp capacity (" & $g_iTotalQuickSpells & " vs " & $iSpellCamp & ")", $COLOR_ERROR)
 	If $g_iTotalQuickSiegeMachines > $iSiegeMachineCamp Then SetLog("Total siege machines in combo army " & $sLog & "exceeds your camp capacity (" & $g_iTotalQuickSiegeMachines & " vs " & $iSiegeMachineCamp & ")", $COLOR_ERROR)
 
-	ClickAway() ; ClickP($aAway, 2, 0, "#0000") ;Click Away
+	ClickP($aAway, 2, 0, "#0000") ;Click Away
 	$asLastTimeChecked[$g_iCurAccount] = $bResult ? _NowCalc() : ""
 
 EndFunc   ;==>CheckQuickTrainTroop

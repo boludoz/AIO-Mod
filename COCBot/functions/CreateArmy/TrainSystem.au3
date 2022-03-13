@@ -1102,24 +1102,22 @@ Func ResetVariables($sArmyType = "")
 EndFunc   ;==>ResetVariables
 
 Func TrainArmyNumber($abQuickTrainArmy)
+	Local $iDistanceBetweenArmies = 110
+	Local $aiTrainButton, $aiSearchArea[4] = [750, 270, 815, 380]
 
-	Local $a_TrainArmy[4] = [780, 337, 0xBDE98D, 10] ; * 108
-	SetLog("Using Quick Train Tab", $COLOR_INFO)
-	If Not $g_bRunState Then Return
-	
-	Local $hPixelC = 0x000000
-	For $iNum = 0 To 2
-		If $abQuickTrainArmy[$iNum] Then
-			$hPixelC = _GetPixelColor($a_TrainArmy[0], $a_TrainArmy[1] + (108 * $iNum), True)
-			If _ColorCheck($hPixelC, Hex($a_TrainArmy[2], 6), $a_TrainArmy[3]) Then
-				Click($a_TrainArmy[0], $a_TrainArmy[1] + (108 * $iNum), 1)
-				SetLog(" - Making the Army " & $iNum + 1, $COLOR_INFO)
+	For $iArmyNumber = 0 To 2
+		If $abQuickTrainArmy[$iArmyNumber] Then
+			$aiTrainButton = decodeSingleCoord(findImage("QuickTrainButton", $g_sImgQuickTrain, GetDiamondFromArray($aiSearchArea), 1, True))
+			If UBound($aiTrainButton, 1) = 2 Then
+				ClickP($aiTrainButton)
+				SetLog(" - Making the Army " & $iArmyNumber + 1, $COLOR_INFO)
 				If _Sleep(500) Then Return
 			Else
-				SetLog(" - Error Clicking On Army: " & $iNum + 1 & "| Pixel was :" & $hPixelC, $COLOR_ACTION)
-				SetLog(" - Please 'edit' the Army " & $iNum + 1 & " before start the BOT.", $COLOR_ERROR)
+				SetLog(" - Army: " & $iArmyNumber + 1 & " is already trained.")
 			EndIf
 		EndIf
+		$aiSearchArea[1] = ($aiSearchArea[1] + $iDistanceBetweenArmies)
+		$aiSearchArea[3] = ($aiSearchArea[3] + $iDistanceBetweenArmies)
 	Next
 
 EndFunc   ;==>TrainArmyNumber
