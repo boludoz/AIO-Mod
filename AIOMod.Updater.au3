@@ -1,7 +1,7 @@
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: MBR Bot Updater
 ; Description ...: This file contens the Sequence that runs all MBR Bot
-; Author ........: Boldina ! (2020)
+; Author ........: Boldina ! (2020|2022)
 ; Modified ......:
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
@@ -17,6 +17,7 @@
 #Au3Stripper_Parameters=/rsln
 #AutoIt3Wrapper_Change2CUI=y
 ;#pragma compile(Console, true)
+#pragma compile(Icon, "Images\MyBot.ico")
 #pragma compile(ProductName, AIOMod.Updater)
 #pragma compile(Out, AIOMod.Updater.exe) ; Required
 
