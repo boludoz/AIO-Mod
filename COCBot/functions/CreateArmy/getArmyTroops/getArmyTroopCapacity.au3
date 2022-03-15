@@ -71,6 +71,16 @@ Func getArmyTroopCapacity($bOpenArmyWindow = False, $bCloseArmyWindow = False, $
 
 	WEnd 
 	
+	If $iCount <= 50 Then
+		$g_CurrentCampUtilization = $tmpCurCamp
+		If $g_iTotalCampSpace = 0 Then $g_iTotalCampSpace = $tmpTotalCamp
+		If $g_bDebugSetlogTrain Then SetLog("$g_CurrentCampUtilization = " & $g_CurrentCampUtilization & ", $g_iTotalCampSpace = " & $g_iTotalCampSpace, $COLOR_DEBUG)
+	Else
+		SetLog("Army size read error, Troop numbers may not train correctly", $COLOR_ERROR) ; log if there is read error
+		$g_CurrentCampUtilization = 0
+		CheckOverviewFullArmy()
+	EndIf
+
     If $g_iTotalCampSpace = 0 Then ; if Total camp size is still not set or value not same as read use forced value
 		Local $proposedTotalCamp = $tmpTotalCamp
 		If $g_iTotalCampSpace > $tmpTotalCamp Then $proposedTotalCamp = $g_iTotalCampSpace

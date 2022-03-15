@@ -1669,9 +1669,6 @@ Func RebootAndroid($bRestart = True, $bStartOnlyAndroid = False)
 	ResumeAndroid()
 	If Not $g_bRunState Then Return FuncReturn(False)
 
-    ; Close all adb ports
-    CloseEmulatorForce(True) ; Custom fix - Team AIO Mod++
-    
 	; Close Android
 	If CloseUnsupportedAndroid() Then
 		; Unsupport Emulator now closed, screen config is now adjusted
