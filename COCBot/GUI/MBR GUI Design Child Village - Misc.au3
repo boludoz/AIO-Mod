@@ -572,40 +572,42 @@ Func CreateMiscClanGamesV3SubTab()
 
 EndFunc   ;==>CreateMiscClanGamesV3SubTab
 
+
 Func MarkUnMarkChallenges()
+	Local $iWIN_STATE_VISIBLE = 2
 	Local $bCondition = False
 	Select
-		Case BitAND(WinGetState($g_hGUI_CGDes), $WIN_STATE_VISIBLE) > 0
+		Case BitAND(WinGetState($g_hGUI_CGDes), $iWIN_STATE_VISIBLE) > 0
 			; Setlog("g_hGUI_CGDes")
             $bCondition = (GUICtrlRead($g_hCGDestructionChallenges[0]) = $GUI_CHECKED)
 			For $h In $g_hCGDestructionChallenges
 				GUICtrlSetState($h, ($bCondition = True) ? ($GUI_UNCHECKED) : ($GUI_CHECKED))
 			Next
-		Case BitAND(WinGetState($g_hGUI_CGAirTroops), $WIN_STATE_VISIBLE) > 0
+		Case BitAND(WinGetState($g_hGUI_CGAirTroops), $iWIN_STATE_VISIBLE) > 0
 			; Setlog("g_hGUI_CGAirTroops")
 			$bCondition = (GUICtrlRead($g_hCGAirTroopChallenges[0]) = $GUI_CHECKED)
 			For $h In $g_hCGAirTroopChallenges
 				GUICtrlSetState($h, ($bCondition = True) ? ($GUI_UNCHECKED) : ($GUI_CHECKED))
 			Next
-		Case BitAND(WinGetState($g_hGUI_CGGroundTroops), $WIN_STATE_VISIBLE) > 0
+		Case BitAND(WinGetState($g_hGUI_CGGroundTroops), $iWIN_STATE_VISIBLE) > 0
 			; Setlog("g_hGUI_CGGroundTroops")
 			$bCondition = (GUICtrlRead($g_hCGGroundTroopChallenges[0]) = $GUI_CHECKED)
 			For $h In $g_hCGGroundTroopChallenges
 				GUICtrlSetState($h, ($bCondition = True) ? ($GUI_UNCHECKED) : ($GUI_CHECKED))
 			Next
-		Case BitAND(WinGetState($g_hGUI_CGSpells), $WIN_STATE_VISIBLE) > 0
+		Case BitAND(WinGetState($g_hGUI_CGSpells), $iWIN_STATE_VISIBLE) > 0
 			; Setlog("g_hGUI_CGSpells")
 			$bCondition = (GUICtrlRead($g_hCGSpellChallenges[0]) = $GUI_CHECKED)
 			For $h In $g_hCGSpellChallenges
 				GUICtrlSetState($h, ($bCondition = True) ? ($GUI_UNCHECKED) : ($GUI_CHECKED))
 			Next
-		Case BitAND(WinGetState($g_hGUI_CGBBDes), $WIN_STATE_VISIBLE) > 0
+		Case BitAND(WinGetState($g_hGUI_CGBBDes), $iWIN_STATE_VISIBLE) > 0
 			; Setlog("g_hGUI_CGBBDes")
 			$bCondition = (GUICtrlRead($g_hCGBBDestructionChallenges[0]) = $GUI_CHECKED)
 			For $h In $g_hCGBBDestructionChallenges
 				GUICtrlSetState($h, ($bCondition = True) ? ($GUI_UNCHECKED) : ($GUI_CHECKED))
 			Next
-		Case BitAND(WinGetState($g_hGUI_CGBBTroops), $WIN_STATE_VISIBLE) > 0
+		Case BitAND(WinGetState($g_hGUI_CGBBTroops), $iWIN_STATE_VISIBLE) > 0
 			; Setlog("g_hGUI_CGBBTroops")
 			$bCondition = (GUICtrlRead($g_hCGBBTroopChallenges[0]) = $GUI_CHECKED)
 			For $h In $g_hCGBBTroopChallenges
