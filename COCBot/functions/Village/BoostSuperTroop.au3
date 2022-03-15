@@ -199,7 +199,7 @@ Func BoostSuperTroop($bTest = False)
 							ClickDrag(283, 500, 283, 260, 200)
 						Else
 							ClickDrag(283, 500, 283, 325, 200, True)
-							ClickDrag(283, 500, 283, 425, 200, True)
+							; ClickDrag(283, 500, 283, 450, 200, True)
 						EndIf
 						
 						If $bTest Then SetLog("Stage ClickDrag.", $COLOR_INFO)

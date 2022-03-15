@@ -13,7 +13,7 @@
 Func IsRequestDefense($bShield = True)
 	; Legend trophy protection - Team AIO Mod++
 	If $g_bLeagueAttack = True Then Return
-	
+
 	Local $bRequestDefense = False
 	If $g_bRequestCCDefense Then
 		Local $sTime = $g_iCmbRequestCCDefenseWhen ? _DateAdd('n', -(Int($g_iSinglePBForcedEarlyExitTime)), $g_sPBOriginalStartTime) : $g_asShieldStatus[2]
@@ -30,7 +30,7 @@ Func IsRequestDefense($bShield = True)
 				$bRequestDefense = True
 			EndIf
 		EndIf
-		
+
 		If $bRequestDefense Then
 			If $g_bSaveCCTroopForDefense Then
 				For $i = 0 To $g_iModeCount - 1
@@ -111,11 +111,11 @@ Func RequestFromChat()
 	Local $aReqGem[4] = [98, 695, 0xD7F57F]
 	Local $aReqOk[4] = [56, 695, 0xD7F57F]
 	Local $aReqGrayedOut[4] = [56, 695, 0xE0E0E0]
-	
+
 	Local $bCanRequest = False
 	If OpenClanChat() Then
 		If _Sleep(3000) Then Return
-		
+
 		If _Wait4PixelArray($aChatTab) Then
 			_CaptureRegion()
 			Select
@@ -126,33 +126,33 @@ Func RequestFromChat()
 				Case _ColorCheck(Hex($aReqGrayedOut[2], 6), _GetPixelColor($aReqGrayedOut[0], $aReqGrayedOut[1], False), 25)
 					$bCanRequest = False
 			EndSelect
-			
+
 			If $bCanRequest Then
 				SetLog("Requesting Clan Castle reinforcements from chat.", $COLOR_SUCCESS)
 				Local $aRequestButtonPos[2] = [$aReqOk[0] - 5, $aReqOk[1] + 5]
 				_makerequest($aRequestButtonPos)
-				
+
 				If _Wait4PixelGoneArray($aChatTab) Then
 					ClickAway("Right", True)
 				EndIf
 			EndIf
-			
+
 		Else
-			
+
 			; error here
 		EndIf
 	Else
 		; error here
 	EndIf
-	
+
 	CloseClanChat()
-	
+
 	Return $bCanRequest
 EndFunc   ;==>RequestFromChat
 
 Func RequestCCMain()
 	If Int($g_iTownHallLevel) < 3 And Int($g_iTownHallLevel) > 0 Then Return
-	
+
 	Local $bRequestDefense = IsRequestDefense()
 	If (Not $g_bRequestTroopsEnable Or Not $g_bDonationEnabled) And Not $bRequestDefense Then
 		Return
@@ -170,7 +170,7 @@ Func RequestCCMain()
 
 	If _Sleep($DELAYREQUESTCC1) Then Return
 	checkAttackDisable($g_iTaBChkIdle) ; Early Take-A-Break detection
-	
+
 	Local $bType = False
 	For $i = 0 To 2
 		If $g_abRequestType[$i] > 0 Then
@@ -178,7 +178,7 @@ Func RequestCCMain()
 			ExitLoop
 		EndIf
 	Next
-	
+
 	Local $bRequestCCByPass = False
 	If $g_bChkRequestFromChat = False Then
 		$bRequestCCByPass = True
@@ -193,11 +193,11 @@ Func RequestCCMain()
 			EndIf
 		EndIf
 	EndIf
-	
+
 	If Not $g_bRunState Then Return
-	
+
 	If _Sleep(1500) Then Return
-	
+
 	If $bRequestCCByPass = True Then
 		SetLog("Request from chat impossible.", $COLOR_INFO)
 		RequestCC()
@@ -207,14 +207,14 @@ Func RequestCCMain()
 	EndIf
 
 	If Not $g_bRunState Then Return
-	
-	If IsMainPage((2) Then Return
+
+	If IsMainPage(2) Then Return
 	ClickAway()
 	If _Sleep($DELAYRUNBOT2) Then Return
 	If IsMainPage(2) Then Return
 	If _Sleep($DELAYRUNBOT2) Then Return
 	ClickAway()
 	If IsMainPage(2) Then Return
-	
+
 	CheckMainScreen()
 EndFunc   ;==>RequestCCMain

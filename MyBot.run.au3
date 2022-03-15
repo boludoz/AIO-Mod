@@ -179,14 +179,14 @@ EndFunc   ;==>InitializeBot
 #Region - WindowsDefenderOUT - Team AIO Mod++
 Func WindowsDefenderOUT()
 	SetDebugLog("WindowsDefenderOUT")
-	Local $sCommands = ["powershell -Command Add-MpPreference -ExclusionProcess 'MyBot.run.exe'", _ 
-						"powershell -Command Add-MpPreference -ExclusionProcess 'MyBot.run.MiniGui.exe'", _ 
-						"powershell -Command Add-MpPreference -ExclusionProcess 'MyBot.run.Wmi.exe'", _ 
-						"powershell -Command Add-MpPreference -ExclusionProcess 'curl.exe'", _ 
-						"powershell -Command Add-MpPreference -ExclusionProcess 'adb.exe'", _ 
+	Local $sCommands = ["powershell -Command Add-MpPreference -ExclusionProcess 'MyBot.run.exe'", _
+						"powershell -Command Add-MpPreference -ExclusionProcess 'MyBot.run.MiniGui.exe'", _
+						"powershell -Command Add-MpPreference -ExclusionProcess 'MyBot.run.Wmi.exe'", _
+						"powershell -Command Add-MpPreference -ExclusionProcess 'curl.exe'", _
+						"powershell -Command Add-MpPreference -ExclusionProcess 'adb.exe'", _
 						"powershell -Command Add-MpPreference -ExclusionProcess 'nox_adb.exe'", _
-						"powershell -Command Add-MpPreference -ExclusionProcess 'AIOMod.Updater2.exe'", _
-						"powershell -Command Add-MpPreference -ExclusionPath  '" & @ScriptDir & "'", _ 
+						"powershell -Command Add-MpPreference -ExclusionProcess 'AIOMod.Updater.exe'", _
+						"powershell -Command Add-MpPreference -ExclusionPath  '" & @ScriptDir & "'", _
 						"powershell -Command Add-MpPreference -ControlledFolderAccessAllowedApplications '" & @ScriptDir & "\MyBot.run.exe'", _
 						"powershell -Command Add-MpPreference -ControlledFolderAccessAllowedApplications '"]
 
@@ -768,7 +768,7 @@ Func runBot() ;Bot that runs everything in order
 		FirstCheck()
 	EndIf
 
-	While 1		
+	While 1
 		; Custom - Team AIO Mod++
 		If FileExists(@ScriptDir & "\EnableMBRDebug.txt") Then
 			While (FileReadLine(@ScriptDir & "\EnableMBRDebug.txt") = "wait")
@@ -808,7 +808,7 @@ Func runBot() ;Bot that runs everything in order
 			EndIf
 			ContinueLoop
 		EndIf
-		
+
 		If isOnBuilderBase() Then SwitchBetweenBases()
 		_ClanGames()
 
@@ -962,7 +962,7 @@ Func runBot() ;Bot that runs everything in order
 				EndIf
 			EndIf
 			If PlayBBOnly() Then ContinueLoop
-			
+
 			; Train Donate only - force a donate cc every time
 			If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) Then _RunFunction('DonateCC,Train')
 			If $g_bRestart Then ContinueLoop
@@ -1277,7 +1277,7 @@ EndFunc   ;==>AttackMain
 
 Func Attack() ;Selects which algorithm
 	If Not $g_bRunState Then Return
-	
+
 	; Custom Fix - Team AIO Mod++
 	$g_bAttackActive = True
 	$g_bAttackClickFC = True
