@@ -112,7 +112,7 @@ Func PetHouse($test = False)
 			If _Sleep($DELAYLABORATORY2) Then Return
 
 			; get DE requirement to upgrade Pet
-			Local $iDarkElixirReq = 1000 * number($g_aiPetUpgradeCostPerLevel[$i][$iPetLevel])
+			Local $iDarkElixirReq = 1000 * number($aiPetUpgradeCostPerLevel[$i][$iPetLevel])
 			SetLog("DE Requirement: " & $iDarkElixirReq)
 
 			If $iDarkElixirReq < $g_aiCurrentLoot[$eLootDarkElixir] Then
@@ -396,13 +396,14 @@ Func PetGuiDisplay()
 
 EndFunc   ;==>PetGuiDisplay
 
-Global $g_aiPetUpgradeCostPerLevel[$ePetCount][$g_ePetLevels] = [ _
+
+Func GetMinDark4PetUpgrade()
+	Local $aiPetUpgradeCostPerLevel[$ePetCount][$g_ePetLevels] = [ _
 		[0, 115, 130, 145, 160, 175, 190, 205, 220, 235], _  ; LASSI
 		[0, 135, 150, 165, 180, 195, 210, 225, 240, 255], _  ; Electro Owl
 		[0, 165, 185, 205, 225, 245, 255, 265, 275, 285], _  ; Mighty Yak
         [0, 210, 220, 230, 240, 250, 260, 270, 280, 290]]    ; Unicorn
-
-Func GetMinDark4PetUpgrade()
+		
 	Local $iPetUnlockedxCoord[4] = [190, 345, 500, 655]
 	Local $iPetLevelxCoord[4] = [134, 288, 443, 598]
 	Local $iMinDark4PetUpgrade = 999999
@@ -419,7 +420,7 @@ Func GetMinDark4PetUpgrade()
 			If _Sleep($DELAYLABORATORY2) Then Return
 
 			; get DE requirement to upgrade Pet
-			Local $iDarkElixirReq = 1000 * number($g_aiPetUpgradeCostPerLevel[$i][$iPetLevel])
+			Local $iDarkElixirReq = 1000 * number($aiPetUpgradeCostPerLevel[$i][$iPetLevel])
 
 			SetLog("DE Requirement: " & $iDarkElixirReq)
 
