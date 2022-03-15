@@ -47,7 +47,11 @@ Func SwitchBetweenBases($bCheckMainScreen = True)
 			$sRegionToSearch = "66,432,388,627"
 			If $g_bStayOnBuilderBase = False Then Return True
 		EndIf
+		
+		 ; Stop hitting the stone like a monkey in search of money and force the zoomout!
+		If $i = 1 Then $g_bSkipFirstZoomout = False
 		ZoomOut()
+		
 		If _Sleep(1000) Then Return
 		If Not $g_bRunState Then Return
 		$aButtonCoords = decodeSingleCoord(FindImageInPlace($sTile, $sTileDir, $sRegionToSearch))
