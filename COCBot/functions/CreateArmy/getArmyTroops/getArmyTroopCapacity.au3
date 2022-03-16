@@ -41,7 +41,7 @@ Func getArmyTroopCapacity($bOpenArmyWindow = False, $bCloseArmyWindow = False, $
 	; Verify troop current and full capacity
 	$sArmyInfo = getArmyCampCap($aArmyCampSize[0], $aArmyCampSize[1], $bNeedCapture) ; OCR read army trained and total
 	
-	While $iCount < 50 ; 15 - 20 sec
+	While $iCount < 100 ; 15 - 20 sec
 
 		$iCount += 1
 		If _Sleep($DELAYCHECKARMYCAMP5) Then Return ; Wait 250ms before reading again
@@ -71,7 +71,7 @@ Func getArmyTroopCapacity($bOpenArmyWindow = False, $bCloseArmyWindow = False, $
 
 	WEnd 
 	
-	If $iCount <= 50 Then
+	If $iCount <= 99 Then
 		$g_CurrentCampUtilization = $tmpCurCamp
 		If $g_iTotalCampSpace = 0 Then $g_iTotalCampSpace = $tmpTotalCamp
 		If $g_bDebugSetlogTrain Then SetLog("$g_CurrentCampUtilization = " & $g_CurrentCampUtilization & ", $g_iTotalCampSpace = " & $g_iTotalCampSpace, $COLOR_DEBUG)
@@ -110,8 +110,6 @@ Func getArmyTroopCapacity($bOpenArmyWindow = False, $bCloseArmyWindow = False, $
 			EndIf
 		EndIf
     EndIf
-
-	If $g_bIgnoreIncorrectTroopCombo = True And $g_iTotalCampSpace > 0 Then FixInDoubleTrain($g_aiArmyCompTroops, $g_iTotalCampSpace, $g_aiTroopSpace, TroopIndexLookup($g_sCmbFICTroops[$g_iCmbFillIncorrectTroopCombo][0], "getArmyTroopCapacity"))
 					
 	If $g_bDebugSetlogTrain Then SetLog("$g_iTotalCampSpace = " & $g_iTotalCampSpace & ", Camp OCR = " & $tmpTotalCamp, $COLOR_DEBUG)
 
