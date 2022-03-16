@@ -15,10 +15,6 @@
 Global $g_sImgOneGemBoostOCR = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Boost\BoostOcr\"
 #EndRegion - One Gem Boost - Team AiO MOD++
 
-#Region Maintenance
-Global $g_sImgMaintenanceMod = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Maintenance\"
-#EndRegion Maintenance
-
 #Region BuilderBaseCustomArmy
 Global $g_sImgCustomArmyBB = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\Attack\VersusBattle\ChangeTroops\"
 Global $aArmyTrainButtonBB = [46, 572, 0xE5A439, 10]

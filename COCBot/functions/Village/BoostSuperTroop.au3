@@ -194,13 +194,8 @@ Func BoostSuperTroop($bTest = False)
 								EndIf
 							Next
 						EndIf
-
-						If $g_bAndroidAdbClickDragScript Then
-							ClickDrag(283, 500, 283, 260, 200)
-						Else
-							ClickDrag(283, 500, 283, 325, 200, True)
-							; ClickDrag(283, 500, 283, 450, 200, True)
-						EndIf
+						
+						ClickDrag(283, 500, 283, 260, 200)
 						
 						If $bTest Then SetLog("Stage ClickDrag.", $COLOR_INFO)
 						If _Sleep(1500) Then Return False

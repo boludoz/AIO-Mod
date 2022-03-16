@@ -3832,16 +3832,12 @@ Func AndroidSwipeNotWorking($x1, $y1, $x2, $y2, $wasRunState = $g_bRunState) ; T
 	EndIf
 EndFunc   ;==>AndroidSwipeNotWorking
 
-Func AndroidInputSwipe($x1, $y1, $x2, $y2, $wasRunState = $g_bRunState, $bNoTap = False) ; Only used for BlueStacks/BlueStacks2
+Func AndroidInputSwipe($x1, $y1, $x2, $y2, $wasRunState = $g_bRunState) ; Only used for BlueStacks/BlueStacks2
 	AndroidAdbLaunchShellInstance($wasRunState)
+	Local $iSleep = Celling(Pixel_Distance($x1, $y1, $x2, $y2) * 25)
 	If @error = 0 Then
-		If $bNoTap = False Then
-			androidadbsendshellcommand("input swipe " & $x1 & " " & $y1 & " " & $x2 & " " & $y2 & " 1000;input tap " & $x2 & " " & $y2, 6000, $wasRunState) ; use 6 secs for additional timeout
-			SetError(0, 0)
-		Else
-			androidadbsendshellcommand("input swipe " & $x1 & " " & $y1 & " " & $x2 & " " & $y2 & " 1000", 6000, $wasRunState) ; use 6 secs for additional timeout
-			SetError(0, 0)
-		EndIf
+		androidadbsendshellcommand("input swipe " & $x1 & " " & $y1 & " " & $x2 & " " & $y2 & " " & $iSleep & ";", $iSleep + 5000, $wasRunState) ; use 6 secs for additional timeout
+		SetError(0, 0)
 	Else
 		Local $error = @error
 		SetDebugLog("Disabled " & $g_sAndroidEmulator & " ADB input due to error", $COLOR_ERROR)
