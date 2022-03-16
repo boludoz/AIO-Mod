@@ -123,7 +123,7 @@ Func _BuilderBase($bTestRun = False)
 
 	; Loops to do logic.
 	Local $iAttackLoops = 1
-	Local $iLoopsToDo = (($g_bDSICGBB = True) ? (25) : (Random($g_iBBMinAttack, $g_iBBMaxAttack, 1)))
+	Local $iLoopsToDo = (ByPassedForceBBAttackOnClanGames($g_bDSICGBB, False)) ? (25) : (Random($g_iBBMinAttack, $g_iBBMaxAttack, 1)))
 	
 	Do
 		; ClickAway()
