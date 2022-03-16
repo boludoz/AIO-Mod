@@ -3832,9 +3832,11 @@ Func AndroidSwipeNotWorking($x1, $y1, $x2, $y2, $wasRunState = $g_bRunState) ; T
 	EndIf
 EndFunc   ;==>AndroidSwipeNotWorking
 
-Func AndroidInputSwipe($x1, $y1, $x2, $y2, $wasRunState = $g_bRunState) ; Only used for BlueStacks/BlueStacks2
+#Region - Custom fix - Team AIO Mod++
+Func AndroidInputSwipe($x1, $y1, $x2, $y2, $wasRunState = $g_bRunState, $bPrecise = False)
 	AndroidAdbLaunchShellInstance($wasRunState)
-	Local $iSleep = _Max(Ceiling(Pixel_Distance($x1, $y1, $x2, $y2) * 25), 1000)
+	Local $iMultiplicator = ($bPrecise = False) ? (9) : (12.5)
+	Local $iSleep = _Max(Ceiling(Pixel_Distance($x1, $y1, $x2, $y2) * $iMultiplicator), 1000)
 	If @error = 0 Then
 		androidadbsendshellcommand("input swipe " & $x1 & " " & $y1 & " " & $x2 & " " & $y2 & " " & $iSleep & ";", $iSleep + 5000, $wasRunState) ; use 6 secs for additional timeout
 		SetError(0, 0)
@@ -3845,6 +3847,7 @@ Func AndroidInputSwipe($x1, $y1, $x2, $y2, $wasRunState = $g_bRunState) ; Only u
 		Return SetError($error, 0)
 	EndIf
 EndFunc   ;==>AndroidInputSwipe
+#EndRegion - Custom fix - Team AIO Mod++
 
 Func SuspendAndroidTime($Action = False)
 	If IsBool($Action) And $Action = True Then
