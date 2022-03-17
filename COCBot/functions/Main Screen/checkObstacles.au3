@@ -249,19 +249,24 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		Return False
 	EndIf
 
-	; friends request sc id for google play users.
+	; friends request sc id for google play users - Team AIO Mod++.
 	If UBound(decodeSingleCoord(FindImageInPlace("OptReqFID", $g_sImgOptReqFID, "530,21,640,64", False))) > 1 Then ; Found Optional Game Update Message
 		SetLog("Found Friend Request - SC ID", $COLOR_INFO)
 		
 		PureClick(640, 44, 1, 0)
-		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+		If _Sleep($DELAYCHECKOBSTACLES3) Then Return
 			
 		If IsMainPage(3) = False And IsMainPageBuilderBase(3) = False Then
 			androidbackbutton()
-			
+			If _Sleep($DELAYCHECKOBSTACLES3) Then Return
+
 			If IsMainPage(2) = False And IsMainPageBuilderBase(2) = False Then
 				androidbackbutton()
-				If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+				If _Sleep($DELAYCHECKOBSTACLES3) Then Return
+			EndIf
+
+			If IsMainPage(2) = False And IsMainPageBuilderBase(2) = False Then
+				checkObstacles_ReloadCoC()
 			EndIf
 		EndIf
 		
@@ -461,47 +466,7 @@ Func checkObstacles_Network($bForceCapture = False, $bReloadCoC = True)
 
 	Return False; checkObstacles_Foreground()
 EndFunc   ;==>checkObstacles_Network
-#cs
-Func checkObstacles_Foreground()
-	; This check if coc is active in first plane or android is stuck.
-	Static $hCocForegroundTimer = 0
-	Static $hAndroidIsFrezee = 0
 
-	Local $sDumpsys = AndroidAdbSendShellCommand("dumpsys window windows | grep -E 'mCurrentFocus'", Default)
-	If Not @error Then
-		$hAndroidIsFrezee = 0
-		If StringInStr($sDumpsys, $g_sAndroidGamePackage) < 1 And StringInStr($sDumpsys, "mCurrentFocus") > 0 Then 
-			If $hCocForegroundTimer = 0 Then
-				$hCocForegroundTimer = __TimerInit()
-				SetLog("Maybe clash of clans is foreground? Let's pass this time.", $COLOR_ACTION)
-			ElseIf __TimerDiff($hCocForegroundTimer) > ($g_iCoCReconnectingTimeout / 2) Then
-				SetLog("Maybe clash of clans is foreground? Opening the game.", $COLOR_ERROR)
-				$hCocForegroundTimer = 0
-				AndroidAdbSendShellCommand("am start --activity-single-top " & $g_sUserGamePackage & "/" & $g_sUserGameClass)
-				If _Sleep(3000) Then Return
-				If Not $g_bRunState Then Return
-				Return False ; Very Important
-			EndIf
-		Else
-			$hCocForegroundTimer = 0
-		EndIf
-	Else
-		; Hard timeout.
-		If $hAndroidIsFrezee = 0 Then
-			$hAndroidIsFrezee = __TimerInit()
-			SetLog("Android is stuck? Let's pass this time.", $COLOR_ACTION)
-		ElseIf __TimerDiff($hAndroidIsFrezee) > $g_iCoCReconnectingTimeout Then
-			SetLog("Android is stuck? Fixing it.", $COLOR_ERROR)
-			$hAndroidIsFrezee = 0
-			checkObstacles_RebootAndroid()
-			If Not $g_bRunState Then Return
-			Return False ; Very Important
-		EndIf
-	EndIf
-	
-	Return False
-EndFunc   ;==>checkObstacles_Foreground
-#ce
 Func checkObstacles_GfxError($bForceCapture = False, $bRebootAndroid = True)
 	Local $aResult = decodeMultipleCoords(FindImage("GfxError", $g_sImgGfxError, "ECD", 100, $bForceCapture), 100, 100)
 	If UBound($aResult) >= 8 Then

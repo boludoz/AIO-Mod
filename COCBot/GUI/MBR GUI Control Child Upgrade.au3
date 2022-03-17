@@ -657,14 +657,14 @@ Func cmbWalls()
 	$g_iWallCost = $g_aiWallCost[$g_iCmbUpgradeWallsLevel]
 	GUICtrlSetData($g_hLblWallCost, _NumberFormat($g_iWallCost))
 
-   For $i = 4 To 14; $g_iCmbUpgradeWallsLevel+  ;Will now always show all.
+   For $i = 4 To $g_iCmbUpgradeWallsLevel+5
 	  GUICtrlSetState($g_ahWallsCurrentCount[$i], $GUI_SHOW)
 	  GUICtrlSetState($g_ahPicWallsLevel[$i], $GUI_SHOW)
    Next
-   ;For $i = $g_iCmbUpgradeWallsLevel+6 To 14
-   ;  GUICtrlSetState($g_ahWallsCurrentCount[$i], $GUI_HIDE)
-   ;  GUICtrlSetState($g_ahPicWallsLevel[$i], $GUI_HIDE)
-   ;Next
+   For $i = $g_iCmbUpgradeWallsLevel+6 To 15
+	  GUICtrlSetState($g_ahWallsCurrentCount[$i], $GUI_HIDE)
+	  GUICtrlSetState($g_ahPicWallsLevel[$i], $GUI_HIDE)
+   Next
 
    If $g_iCmbUpgradeWallsLevel <= 3 Then GUICtrlSetState($g_hRdoUseGold, $GUI_CHECKED)
 
