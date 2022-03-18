@@ -60,7 +60,7 @@ Func getArmyTroopCapacity($bOpenArmyWindow = False, $bCloseArmyWindow = False, $
 				$tmpCurCamp = Number($aGetArmyCap[1])
 				If $g_bDebugSetlogTrain Then SetLog("$tmpCurCamp = " & $tmpCurCamp, $COLOR_DEBUG)
 				$tmpTotalCamp = Number($aGetArmyCap[2])
-				If $iHoldCamp = $tmpTotalCamp And $g_bIgnoreIncorrectTroopCombo = True Then
+				If $iHoldCamp = $tmpTotalCamp And $g_bIgnoreIncorrectTroopCombo = True And Not $g_bQuickTrainEnable Then
 					$g_iTotalCampSpace = Number($tmpTotalCamp)
 					$g_iTotalCampForcedValue = $g_iTotalCampSpace
 					ExitLoop ; check to make sure the OCR read value is same in 2 reads before exit
@@ -111,7 +111,7 @@ Func getArmyTroopCapacity($bOpenArmyWindow = False, $bCloseArmyWindow = False, $
 		EndIf
     EndIf
 
-	If $g_bIgnoreIncorrectTroopCombo = True And $g_iTotalCampSpace > 0 Then FixInDoubleTrain($g_aiArmyCompTroops, $g_iTotalCampSpace, $g_aiTroopSpace, TroopIndexLookup($g_sCmbFICTroops[$g_iCmbFillIncorrectTroopCombo][0], "getArmyTroopCapacity"))
+	If $g_bIgnoreIncorrectTroopCombo = True And Not $g_bQuickTrainEnable And $g_iTotalCampSpace > 0 Then FixInDoubleTrain($g_aiArmyCompTroops, $g_iTotalCampSpace, $g_aiTroopSpace, TroopIndexLookup($g_sCmbFICTroops[$g_iCmbFillIncorrectTroopCombo][0], "getArmyTroopCapacity"))
 					
 	If $g_bDebugSetlogTrain Then SetLog("$g_iTotalCampSpace = " & $g_iTotalCampSpace & ", Camp OCR = " & $tmpTotalCamp, $COLOR_DEBUG)
 
