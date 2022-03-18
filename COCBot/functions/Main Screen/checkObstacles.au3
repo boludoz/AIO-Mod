@@ -200,26 +200,16 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		If TestCapture() Then Return "Village is out of sync or inactivity or connection lost or maintenance"
         Return checkObstacles_ReloadCoC($aReloadButton, "#0131", $bRecursive) ; Click for out of sync or inactivity or connection lost or maintenance
 	EndIf
-
-	If UBound(decodeSingleCoord(FindImageInPlace("Maintenance", $g_sImgMaintenance, "270,70,640, 160", False))) > 1 Then ; Maintenance Break
+	
+	; Custom Maintenance - Team AIO Mod++
+	If UBound(decodeSingleCoord(FindImageInPlace("Maintenance", $g_sImgMaintenance, "65,545,785,635", False))) > 1 Then ; Maintenance Break
 		$Result = getOcrMaintenanceTime(310, 575, "Check Obstacles OCR Maintenance Break=")         ; OCR text to find wait time
-		Local $iMaintenanceWaitTime = 0
-		Local $avTime = StringRegExp($Result, "([\d]+)[Mm]|(soon)|([\d]+[Hh])", $STR_REGEXPARRAYMATCH)
-		If UBound($avTime, 1) = 1 And Not @error Then
-			If UBound($avTime, 1) = 3 Then
-				$iMaintenanceWaitTime = $DELAYCHECKOBSTACLES10
-			Else
-				$iMaintenanceWaitTime = Int($avTime[0]) * 60000
-				If $iMaintenanceWaitTime > $DELAYCHECKOBSTACLES10 Then $iMaintenanceWaitTime = $DELAYCHECKOBSTACLES10
-			EndIf
-		Else
-			$iMaintenanceWaitTime = $DELAYCHECKOBSTACLES4         ; Wait 2 min
-			If @error Then SetLog("Error reading Maintenance Break time?", $COLOR_ERROR)
-		EndIf
+		Local $iMaintenanceWaitTime = Number(StringRegExpReplace($Result, "\D", ""))
+		$iMaintenanceWaitTime = ($iMaintenanceWaitTime < 4) ? (Round(Random(4, 8) * 60000)) : ($iMaintenanceWaitTime * 60000)
 		SetLog("Maintenance Break, waiting: " & $iMaintenanceWaitTime / 60000 & " minutes", $COLOR_ERROR)
 		#Region - Discord - Team AIO Mod++
 		If $g_bNotifyAlertMaintenance = True Or $g_bNotifyAlertMaintenanceDS = True Then 
-			Local $sTring = "Maintenance Break, waiting: " & $iMaintenanceWaitTime / 60000 & " minutes...."
+			Local $sTring = "Maintenance Break, waiting: " & $iMaintenanceWaitTime / 60000 & " minutes."
 			If $g_bNotifyAlertMaintenance Then 
 				NotifyPushToTelegram($sTring)
 			EndIf
