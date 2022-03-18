@@ -71,7 +71,7 @@ Func getArmySpellCapacity($bOpenArmyWindow = False, $bCloseArmyWindow = False, $
 
 	If $g_iTotalSpells <> $g_iTotalSpellValue And $bSetLog Then
 		SetLog("Warning: Total Spell Capacity is not the same as in GUI", $COLOR_WARNING)
-		If $g_bIgnoreIncorrectSpellCombo = True And Not $g_bQuickTrainEnable Then
+		If $g_bIgnoreIncorrectSpellCombo = True Then
 			If $g_iTotalSpells <> 0 Then $g_iTotalSpellValue = $g_iTotalSpells
 			FixInDoubleTrain($g_aiArmyCompSpells, $g_iTotalSpellValue, $g_aiSpellSpace, TroopIndexLookup($g_sCmbFICSpells[$g_iCmbFillIncorrectSpellCombo][0], "DoubleTrain") - $eLSpell)
 		EndIf
