@@ -64,6 +64,8 @@ Func getArmyTroopCapacity($bOpenArmyWindow = False, $bCloseArmyWindow = False, $
 					$g_iTotalCampSpace = Number($tmpTotalCamp)
 					$g_iTotalCampForcedValue = $g_iTotalCampSpace
 					ExitLoop ; check to make sure the OCR read value is same in 2 reads before exit
+				ElseIf $iHoldCamp = $tmpTotalCamp Then
+					ExitLoop ; check to make sure the OCR read value is same in 2 reads before exit
 				EndIf
 				$iHoldCamp = $tmpTotalCamp ; Store last OCR read value
 			EndIf
