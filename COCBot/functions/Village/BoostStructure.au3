@@ -13,12 +13,26 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func BoostStructure($sName, $sOcrName, $aPos, ByRef $icmbBoostValue, $cmbBoostCtrl)
+Func BoostStructure($sName, $sOcrName, ByRef $aPos, ByRef $icmbBoostValue, $cmbBoostCtrl)
 	Local $boosted = False
 	Local $ok = False
 
 	If UBound($aPos) > 1 And $aPos[0] > 0 And $aPos[1] > 0 Then
-		BuildingClickP($aPos, "#0462")
+		#Region - Custom Locate - Team AIO Mod++
+		Switch $sName
+			Case "Barbarian King"
+				If BuildChecker($aPos, $g_sImgLocationKing) = False Then Return False
+			Case "Archer Queen"
+				If BuildChecker($aPos, $g_sImgLocationQueen) = False Then Return False
+			Case "Grand Warden"
+				If BuildChecker($aPos, $g_sImgLocationWarden) = False Then Return False
+			Case "Royal Champion"
+				If BuildChecker($aPos, $g_sImgLocationChamp) = False Then Return False
+			Case Else
+				BuildingClickP($aPos, "#0462")
+		EndSwitch
+		#EndRegion - Custom Locate - Team AIO Mod++
+
 		If _Sleep($DELAYBOOSTHEROES2) Then Return
 		ForceCaptureRegion()
 		Local $aResult = BuildingInfo(242, 490 + $g_iBottomOffsetY)

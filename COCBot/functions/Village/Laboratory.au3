@@ -12,8 +12,8 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Global $iSlotWidth = 94, $iDistBetweenSlots = 12, $iYMidPoint = 530; use for logic to upgrade troops.. good for generic-ness
-$iYMidPoint=468 ;HArchH I don't see this as "530" at all...Anyone?  Diff of 62
+Global $iSlotWidth = 94, $iDistBetweenSlots = 12, $iYMidPoint = 530 ; use for logic to upgrade troops.. good for generic-ness
+$iYMidPoint = 468 ;HArchH I don't see this as "530" at all...Anyone?  Diff of 62
 Global $iPicsPerPage = 12, $iPages = 4 ; used to know exactly which page the users choice is on
 Global $sLabWindow = "99,122,760,616", $sLabTroopsSection = "115,363,750,577", $sLabTroopLastPage = "435,363,750,577"
 ;$sLabTroopLastPage for partial last page, currently 3 columns of siege machines.
@@ -40,22 +40,12 @@ Func Laboratory($bDebug = False)
 	If Not $g_bAutoLabUpgradeEnable And Not $g_bChkLabPotion Then Return ; Lab upgrade not enabled.
 
 	Local $bChkUpgradeInProgress = ChkUpgradeInProgress()
-	; If $bChkUpgradeInProgress = True And $g_bChkLabPotion = False Then Return True
 
 	If $g_iTownHallLevel < 3 Then
 		SetLog("Townhall Lvl " & $g_iTownHallLevel & " has no Lab.", $COLOR_ERROR)
 		Return
 	EndIf
-
-	If $g_aiLaboratoryPos[0] = 0 Or $g_aiLaboratoryPos[1] = 0 Then
-		SetLog("Laboratory Location unknown!", $COLOR_WARNING)
-		_LocateLab() ; Lab location unknown, so find it. ; Auto locate builds - Team AIO Mod++
-		If $g_aiLaboratoryPos[0] < 1 Or $g_aiLaboratoryPos[1] < 1 Then
-			SetLog("Problem locating Laboratory, re-locate laboratory position before proceeding", $COLOR_ERROR)
-			Return False
-		EndIf
-	EndIf
-
+	
 	; Get updated village elixir and dark elixir values
 	VillageReport(True, True)
 	Local $bReturn = False
@@ -83,29 +73,9 @@ Func Laboratory($bDebug = False)
 	ClickAway()
 	Return $bReturn
 EndFunc   ;==>Laboratory
+#EndRegion - Magic Items - Team AIO Mod++
 
 Func _Laboratory($debug = False)
-
-	#cs
-	If Not $g_bAutoLabUpgradeEnable Then Return ; Lab upgrade not enabled.
-	If $g_aiLaboratoryPos[0] = 0 Or $g_aiLaboratoryPos[1] = 0 Then
-		SetLog("Laboratory Location unknown!", $COLOR_WARNING)
-		LocateLab() ; Lab location unknown, so find it.
-		If $g_aiLaboratoryPos[0] = 0 Or $g_aiLaboratoryPos[1] = 0 Then
-			SetLog("Problem locating Laboratory, re-locate laboratory position before proceeding", $COLOR_ERROR)
-			Return False
-		EndIf
-	EndIf
-
-		If ChkUpgradeInProgress() Then Return False ; see if we know about an upgrade in progress without checking the lab
-	; Get updated village elixir and dark elixir values
-	VillageReport(True, True)
-
-	If Not FindResearchButton() Then Return False ; cant start becuase we cannot find the research button
-
-	If ChkLabUpgradeInProgress() Then Return False ; Lab currently running skip going further
-	#ce
-	#EndRegion - Magic Items - Team AIO Mod++
 
 	; Lab upgrade is not in progress and not upgrading, so we need to start an upgrade.
 	Local $iCurPage = 1
@@ -115,7 +85,7 @@ Func _Laboratory($debug = False)
 	If $g_iCmbLaboratory <> 0 Then
 		SetDebugLog("User picked to upgrade " & $g_avLabTroops[$g_iCmbLaboratory][0])
 		Local $iPage = Ceiling($g_iCmbLaboratory / $iPicsPerPage) ; page # of user choice
-		While($iCurPage < $iPage) ; go directly to the needed page
+		While ($iCurPage < $iPage) ; go directly to the needed page
 			LabNextPage($iCurPage, $iPages, $iYMidPoint) ; go to next page of upgrades
 			$iCurPage += 1 ; Next page
 			If _Sleep(2000) Then Return
@@ -123,14 +93,14 @@ Func _Laboratory($debug = False)
 		SetDebugLog("On page " & $iCurPage & " of " & $iPages)
 		; Get coords of upgrade the user wants
 		If $iCurPage >= $iPages Then ;Use last partial page
-		SetDebugLog("Finding on last page diamond")
-			local $aPageUpgrades = findMultiple($g_sImgLabResearch, $sLabTroopsLastPageDiam, $sLabTroopsLastPageDiam, 0, 1000, 0, "objectname,objectpoints", True) ; Returns $aCurrentTroops[index] = $aArray[2] = ["TroopShortName", CordX,CordY]
+			SetDebugLog("Finding on last page diamond")
+			Local $aPageUpgrades = findMultiple($g_sImgLabResearch, $sLabTroopsLastPageDiam, $sLabTroopsLastPageDiam, 0, 1000, 0, "objectname,objectpoints", True) ; Returns $aCurrentTroops[index] = $aArray[2] = ["TroopShortName", CordX,CordY]
 		Else ;Use full page
-			local $aPageUpgrades = findMultiple($g_sImgLabResearch, $sLabTroopsSectionDiam, $sLabTroopsSectionDiam, 0, 1000, 0, "objectname,objectpoints", True) ; Returns $aCurrentTroops[index] = $aArray[2] = ["TroopShortName", CordX,CordY]
+			Local $aPageUpgrades = findMultiple($g_sImgLabResearch, $sLabTroopsSectionDiam, $sLabTroopsSectionDiam, 0, 1000, 0, "objectname,objectpoints", True) ; Returns $aCurrentTroops[index] = $aArray[2] = ["TroopShortName", CordX,CordY]
 		EndIf
- 		Local $aCoords, $bUpgradeFound = False
- 		If UBound($aPageUpgrades, 1) >= 1 Then ; if we found any troops
- 			For $i = 0 To UBound($aPageUpgrades, 1) - 1 ; Loop through found upgrades
+		Local $aCoords, $bUpgradeFound = False
+		If UBound($aPageUpgrades, 1) >= 1 Then  ; if we found any troops
+			For $i = 0 To UBound($aPageUpgrades, 1) - 1  ; Loop through found upgrades
 				Local $aTempTroopArray = $aPageUpgrades[$i]     ; Declare Array to Temp Array
 
 				If $aTempTroopArray[0] = $g_avLabTroops[$g_iCmbLaboratory][2] Then     ; if this is the file we want
@@ -203,7 +173,7 @@ Func _Laboratory($debug = False)
 					If Not $bUpgradeFound Then
 						SetLog("Lab Upgrade " & $g_avLabTroops[$g_iCmbLaboratory][0] & " - Not available.", $COLOR_INFO)
 						LabPrevPage($iCurPage)
-                        $iCurPage = 1     ;reset current page
+						$iCurPage = 1     ;reset current page
 					EndIf
 
 					If $bUpgradeFound Then
@@ -226,13 +196,13 @@ Func _Laboratory($debug = False)
 			Next     ;search next
 
 		Else ; users choice is any upgrade
-			While($iCurPage <= $iPages)
+			While ($iCurPage <= $iPages)
 				SetDebugLog("User picked any upgrade.")
 				If $iCurPage >= $iPages Then ;Use last partial page
 					SetDebugLog("Finding on last page diamond")
-					local $aPageUpgrades = findMultiple($g_sImgLabResearch, $sLabTroopsLastPageDiam, $sLabTroopsLastPageDiam, 0, 1000, 0, "objectname,objectpoints", True) ; Returns $aCurrentTroops[index] = $aArray[2] = ["TroopShortName", CordX,CordY]
+					Local $aPageUpgrades = findMultiple($g_sImgLabResearch, $sLabTroopsLastPageDiam, $sLabTroopsLastPageDiam, 0, 1000, 0, "objectname,objectpoints", True) ; Returns $aCurrentTroops[index] = $aArray[2] = ["TroopShortName", CordX,CordY]
 				Else ;Use full page
-					local $aPageUpgrades = findMultiple($g_sImgLabResearch, $sLabTroopsSectionDiam, $sLabTroopsSectionDiam, 0, 1000, 0, "objectname,objectpoints", True) ; Returns $aCurrentTroops[index] = $aArray[2] = ["TroopShortName", CordX,CordY]
+					Local $aPageUpgrades = findMultiple($g_sImgLabResearch, $sLabTroopsSectionDiam, $sLabTroopsSectionDiam, 0, 1000, 0, "objectname,objectpoints", True) ; Returns $aCurrentTroops[index] = $aArray[2] = ["TroopShortName", CordX,CordY]
 				EndIf
 				If UBound($aPageUpgrades, 1) >= 1 Then ; if we found any troops
 					SetDebugLog("Found " & UBound($aPageUpgrades, 1) & " possible on this page #" & $iCurPage)
@@ -273,12 +243,6 @@ Func LaboratoryUpgrade($name, $aCoords, $sCostResult, $debug = False)
 	SetLog("Selected upgrade: " & $name & " Cost: " & $sCostResult, $COLOR_INFO)
 	ClickP($aCoords) ; click troop
 	If _Sleep(2000) Then Return
-
-	;If Not(SetLabUpgradeTime($name)) Then
-	;	Click(243, 33)
-	;	Return False ; couldnt set time to upgrade started
-	;EndIf
-	;If _Sleep($DELAYLABUPGRADE1) Then Return
 
 	LabStatusGUIUpdate()
 	If $debug = True Then ; if debugging, do not actually click it
@@ -325,54 +289,54 @@ Func SetLabUpgradeTime($sTrooopName)
 	Return True ; success
 EndFunc   ;==>SetLabUpgradeTime
 
- ; get the cost of an upgrade based on its coords
- ; find image slot that we found so that we can read the cost to see if we can upgrade it... slots read 1-12 top to bottom so barb = 1, arch = 2, giant = 3, etc...
+; get the cost of an upgrade based on its coords
+; find image slot that we found so that we can read the cost to see if we can upgrade it... slots read 1-12 top to bottom so barb = 1, arch = 2, giant = 3, etc...
 Func GetLabCostResult($aCoords)
 	SetDebugLog("Getting lab cost.")
 	SetDebugLog("$iYMidPoint=" & $iYMidPoint)
 	Local $iCurSlotOnPage, $iCurSlotsToTheRight, $sCostResult
-	$iCurSlotsToTheRight = Ceiling( ( Int($aCoords[0]) - Int(StringSplit($sLabTroopsSection, ",")[1]) ) / ($iSlotWidth + $iDistBetweenSlots) )
+	$iCurSlotsToTheRight = Ceiling((Int($aCoords[0]) - Int(StringSplit($sLabTroopsSection, ",")[1])) / ($iSlotWidth + $iDistBetweenSlots))
 	If Int($aCoords[1]) < $iYMidPoint Then ; first row
 		SetDebugLog("First row.")
-		$iCurSlotOnPage = 2*$iCurSlotsToTheRight - 1
+		$iCurSlotOnPage = 2 * $iCurSlotsToTheRight - 1
 		SetDebugLog("$iCurSlotOnPage=" & $iCurSlotOnPage)
-		$sCostResult = getLabUpgrdResourceWht( Int(StringSplit($sLabTroopsSection, ",")[1]) + 10 + ($iCurSlotsToTheRight-1)*($iSlotWidth + $iDistBetweenSlots),  Int(StringSplit($sLabTroopsSection, ",")[2]) + 76)
-	Else; second row
+		$sCostResult = getLabUpgrdResourceWht(Int(StringSplit($sLabTroopsSection, ",")[1]) + 10 + ($iCurSlotsToTheRight - 1) * ($iSlotWidth + $iDistBetweenSlots), Int(StringSplit($sLabTroopsSection, ",")[2]) + 76)
+	Else ; second row
 		SetDebugLog("Second row.")
-		$iCurSlotOnPage = 2*$iCurSlotsToTheRight
+		$iCurSlotOnPage = 2 * $iCurSlotsToTheRight
 		SetDebugLog("$iCurSlotOnPage=" & $iCurSlotOnPage)
-		$sCostResult = getLabUpgrdResourceWht( Int(StringSplit($sLabTroopsSection, ",")[1]) + 10 + ($iCurSlotsToTheRight-1)*($iSlotWidth + $iDistBetweenSlots),  $iYMidPoint + 76 + 2) ;was 76
+		$sCostResult = getLabUpgrdResourceWht(Int(StringSplit($sLabTroopsSection, ",")[1]) + 10 + ($iCurSlotsToTheRight - 1) * ($iSlotWidth + $iDistBetweenSlots), $iYMidPoint + 76 + 2) ;was 76
 	EndIf
 	SetDebugLog("Cost found is " & $sCostResult)
 	Return $sCostResult
-EndFunc
+EndFunc   ;==>GetLabCostResult
 
 ; if we are on last page, smaller clickdrag... for future dev: this is whatever is enough distance to move 6 off to the left and have the next page similarily aligned.  "-50" to avoid the white triangle.
- Func LabNextPage($iCurPage, $iPages, $iYMid = $iYMidPoint)
- 	If $iCurPage >= $iPages Then Return ; nothing left to scroll
- 	If $iCurPage = $iPages-1 Then ; last page
+Func LabNextPage($iCurPage, $iPages, $iYMid = $iYMidPoint)
+	If $iCurPage >= $iPages Then Return  ; nothing left to scroll
+	If $iCurPage = $iPages - 1 Then ; last page
 		;Last page has 3 columns of icons.  3*(94+12)=3*106=318.  720-318=402
 		SetDebugLog("Drag to last page to pixel 401")
-		ClickDrag(720, $iYMid-50, 401, $iYMid) ;600
+		ClickDrag(720, $iYMid - 50, 401, $iYMid) ;600
 		;If _Sleep(4000) Then Return ;Settling time on last page not needed if not rubber-band bounce.
- 	Else
+	Else
 		SetDebugLog("Drag to next full page.")
-		ClickDrag(720, $iYMid-50, 85, $iYMid)
- 	EndIf
+		ClickDrag(720, $iYMid - 50, 85, $iYMid)
+	EndIf
 
- EndFunc
+EndFunc   ;==>LabNextPage
 
 ; if we are on last page, smaller clickdrag... for future dev: this is whatever is enough distance to move 6 off to the left and have the next page similarily aligned
 Func LabPrevPage($iDragTo = 6, $iYMid = $iYMidPoint)
 	For $i = 1 To _Max($iDragTo, 6)
-		ClickDrag(130, $iYMid-50, 760, $iYMid-50, 2000) ;600
+		ClickDrag(130, $iYMid - 50, 760, $iYMid - 50, 2000) ;600
 		_CaptureRegion()
 		If _ColorCheck(_GetPixelColor(117, 457, False), Hex(0xD3D3CB, 6), 15) And _ColorCheck(_GetPixelColor(729, 458, False), Hex(0xFFFFFF, 6), 15) Then
 			If _Sleep(2000) Then Return
 			ExitLoop
 		EndIf
 	Next
-EndFunc
+EndFunc   ;==>LabPrevPage
 
 ; check the lab to see if something is upgrading in the lab already
 Func ChkLabUpgradeInProgress()
@@ -449,7 +413,7 @@ Func FindResearchButton($bOnLyCheck = False) ; Magic items - Team AIO Mod++
 	If Not $ResearchButtonFound Then
 		SetLog("Try to Locate Laboratory!", $COLOR_INFO)
 		ClickAway()
-		If _LocateLab() Then ;try locate lab again
+		If BuildChecker($g_aiLaboratoryPos, $g_sImgLocationLabs) Then ;try locate lab again
 			SetLog("Laboratory located on coords: " & "[" & $g_aiLaboratoryPos[0] & "," & $g_aiLaboratoryPos[1] & "], Saving Lab Loc for future", $COLOR_INFO)
 			Click($g_aiLaboratoryPos[0], $g_aiLaboratoryPos[1])
 			If _Sleep(1000) Then Return
@@ -464,3 +428,67 @@ Func FindResearchButton($bOnLyCheck = False) ; Magic items - Team AIO Mod++
 		EndIf
 	EndIf
 EndFunc   ;==>FindResearchButton
+
+; clickp($g_aiKingAltarPos)
+
+Func BuildChecker(ByRef $aPosXY, $sImgDir)
+	Local $aImgLocPos[2] = [-1, -1]
+	
+	ZoomOut()
+	
+	CheckObstacles()
+	Local $bOkLegacy = IsInsideDiamond($aPosXY)
+	Local $bImgLocPosOk = ImgLocateBuilds($aImgLocPos, $sImgDir)
+	If UBound($aPosXY) > 0 And Not @error And $bOkLegacy And $bImgLocPosOk Then
+		
+		Local $bFirstPos = Pixel_Distance($aPosXY[0], $aPosXY[1], $aImgLocPos[0], $aImgLocPos[1]) < 75
+		
+		If $bFirstPos = True Then
+			BuildingClick($aPosXY[0], $aPosXY[1], "#4546")
+		Else
+			ConvertFromVillagePos($aImgLocPos[0], $aImgLocPos[1])
+			BuildingClick($aImgLocPos[0], $aImgLocPos[1], "#4547")
+			$aPosXY[0] = $aImgLocPos[0]
+			$aPosXY[1] = $aImgLocPos[0]
+		EndIf
+
+	ElseIf $bImgLocPosOk Then
+		ConvertFromVillagePos($aImgLocPos[0], $aImgLocPos[1])
+		BuildingClick($aImgLocPos[0], $aImgLocPos[1], "#4548")
+		$aPosXY[0] = $aImgLocPos[0]
+		$aPosXY[1] = $aImgLocPos[0]
+	ElseIf UBound($aPosXY) > 0 And Not @error And $bOkLegacy Then
+		BuildingClick($aPosXY[0], $aPosXY[1], "#4549")
+	Else
+		$aPosXY[0] = 0
+		$aPosXY[1] = 0
+		Return False
+	EndIf
+	
+	If _Sleep(1000) Then Return
+	Return True
+EndFunc   ;==>BuildChecker
+
+Func ImgLocateBuilds(ByRef $aiCoords, $sImgDir)
+	Local $sSearchArea = "ECD"
+	Local $avBuild = findMultiple($sImgDir, $sSearchArea, $sSearchArea, 0, 1000, 1, "objectname,objectpoints", True)
+
+	If Not IsArray($avBuild) Or UBound($avBuild, $UBOUND_ROWS) <= 0 Then
+		If $g_bDebugImageSave Then SaveDebugImage("ImgLocateBuilds", False)
+		Return False
+	EndIf
+
+	Local $avBuildRes
+	
+	For $i = 0 To UBound($avBuild, $UBOUND_ROWS) - 1
+		$avBuildRes = $avBuild[$i]
+		$aiCoords = decodeSingleCoord($avBuildRes)
+		If UBound($aiCoords) > 1 And Not @error Then
+			If IsInsideDiamond($aiCoords) Then
+				Return True
+			EndIf
+		EndIf
+	Next
+
+	Return False
+EndFunc   ;==>ImgLocateBuilds

@@ -20,30 +20,26 @@ Func UpgradeHeroes()
 	checkMainScreen(False)
 
 	If $g_bRestart Then Return
+	
+	#Region - Custom Locate - Team AIO Mod++
+	ZoomOut()
 
 	If $g_bUpgradeKingEnable Then
-		If Not isInsideDiamond($g_aiKingAltarPos) Then LocateKingAltar()
-		If $g_aiKingAltarPos[0] = -1 Or $g_aiKingAltarPos[1] = -1 Then LocateKingAltar()
-		SaveConfig()
+		If BuildChecker($g_aiKingAltarPos, $g_sImgLocationKing) = False Then Return False
 	EndIf
 
 	If $g_bUpgradeQueenEnable Then
-		If Not isInsideDiamond($g_aiQueenAltarPos) Then LocateQueenAltar()
-		If $g_aiQueenAltarPos[0] = -1 Or $g_aiQueenAltarPos[1] = -1 Then LocateQueenAltar()
-		SaveConfig()
+		If BuildChecker($g_aiQueenAltarPos, $g_sImgLocationQueen) = False Then Return False
 	EndIf
 
 	If $g_bUpgradeWardenEnable Then
-		If Not isInsideDiamond($g_aiWardenAltarPos) Then LocateWardenAltar()
-		If $g_aiWardenAltarPos[0] = -1 Or $g_aiWardenAltarPos[1] = -1 Then LocateWardenAltar()
-		SaveConfig()
+		If BuildChecker($g_aiWardenAltarPos, $g_sImgLocationWarden) = False Then Return False
 	EndIf
 
 	If $g_bUpgradeChampionEnable Then
-		If Not isInsideDiamond($g_aiChampionAltarPos) Then LocateChampionAltar()
-		If $g_aiChampionAltarPos[0] = -1 Or $g_aiChampionAltarPos[1] = -1 Then LocateChampionAltar()
-		SaveConfig()
+		If BuildChecker($g_aiChampionAltarPos, $g_sImgLocationChamp) = False Then Return False
 	EndIf
+	#EndRegion - Custom Locate - Team AIO Mod++
 
 	SetLog("Upgrading Heroes", $COLOR_INFO)
 

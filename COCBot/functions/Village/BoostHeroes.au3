@@ -13,6 +13,8 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
+; Team AIO Mod notes: did this ever really work? This had all the ocr tags broken.
+
 Func BoostKing()
 	; Verifying existent Variables to run this routine
 	If AllowBoosting("Barbarian King", $g_iCmbBoostBarbarianKing) = False Then Return
@@ -24,7 +26,7 @@ Func BoostKing()
 		If _Sleep($DELAYBOOSTHEROES4) Then Return
 	EndIf
 
-	If BoostStructure("Barbarian King", "King", $g_aiKingAltarPos, $g_iCmbBoostBarbarianKing, $g_hCmbBoostBarbarianKing) Then $g_aiHeroBoost[$eHeroBarbarianKing] = _NowCalc()
+	If BoostStructure("Barbarian King", "Barb", $g_aiKingAltarPos, $g_iCmbBoostBarbarianKing, $g_hCmbBoostBarbarianKing) Then $g_aiHeroBoost[$eHeroBarbarianKing] = _NowCalc()
 	$g_aiTimeTrain[2] = 0 ; reset Heroes remaining time
 
 	If _Sleep($DELAYBOOSTBARRACKS3) Then Return
@@ -43,7 +45,7 @@ Func BoostQueen()
 		If _Sleep($DELAYBOOSTHEROES4) Then Return
 	EndIf
 
-	If BoostStructure("Archer Queen", "Queen", $g_aiQueenAltarPos, $g_iCmbBoostArcherQueen, $g_hCmbBoostArcherQueen) Then $g_aiHeroBoost[$eHeroArcherQueen] = _NowCalc()
+	If BoostStructure("Archer Queen", "Quee", $g_aiQueenAltarPos, $g_iCmbBoostArcherQueen, $g_hCmbBoostArcherQueen) Then $g_aiHeroBoost[$eHeroArcherQueen] = _NowCalc()
 	$g_aiTimeTrain[2] = 0 ; reset Heroes remaining time
 
 	If _Sleep($DELAYBOOSTBARRACKS3) Then Return
@@ -79,7 +81,7 @@ Func BoostChampion()
 		If _Sleep($DELAYBOOSTHEROES4) Then Return
 	EndIf
 
-	If BoostStructure("Royal Champion", "Champion", $g_aiChampionAltarPos, $g_iCmbBoostChampion, $g_hCmbBoostChampion) Then $g_aiHeroBoost[$eHeroRoyalChampion] = _NowCalc()
+	If BoostStructure("Royal Champion", "Champ", $g_aiChampionAltarPos, $g_iCmbBoostChampion, $g_hCmbBoostChampion) Then $g_aiHeroBoost[$eHeroRoyalChampion] = _NowCalc()
 	$g_aiTimeTrain[2] = 0 ; reset Heroes remaining time
 
 	If _Sleep($DELAYBOOSTBARRACKS3) Then Return

@@ -135,7 +135,7 @@ Func BuildingClick($x, $y, $debugtxt = "")
 		Local $txt = _DecodeDebug($debugtxt)
 		SetLog("BuildingClick " & $point[0] & "," & $point[1] & " converted to " & $x & "," & $y & " " & $debugtxt & $txt, $COLOR_ACTION)
 	EndIf
-	Return Click($x, $y, 1, 0, $debugtxt)
+	Return PureClick($x, $y, 1, 0, $debugtxt)
 EndFunc   ;==>BuildingClick
 
 Func BuildingClickP($point, $debugtxt = "")
