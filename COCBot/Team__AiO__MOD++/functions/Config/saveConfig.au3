@@ -314,16 +314,16 @@ Func SaveConfig_MOD_600_35_1()
 	_Ini_Add("general", "ComboStatusMode", Number($g_iComboStatusMode))
 
 	; <><><> AIO Updater <><><>
-	If FileExists($g_sLibPath & "\ModLibs\Updater\NoNotify.txt") = 1 Then
+	If FileExists($g_sLibPath & "\NoNotify.txt") = 1 Then
 		If $g_bCheckVersionAIO = True Then
-			FileDelete($g_sLibPath & "\ModLibs\Updater\NoNotify.txt")
+			FileDelete($g_sLibPath & "\NoNotify.txt")
 		EndIf
 	Else
 		If $g_bCheckVersionAIO = False Then
-			Local $hHandle = FileOpen($g_sLibPath & "\ModLibs\Updater\NoNotify.txt", $FO_APPEND)
+			Local $hHandle = FileOpen($g_sLibPath & "\NoNotify.txt", $FO_APPEND)
 			FileClose($hHandle)
 		Else
-			FileDelete($g_sLibPath & "\ModLibs\Updater\NoNotify.txt")
+			FileDelete($g_sLibPath & "\NoNotify.txt")
 		EndIf
 	EndIf
 

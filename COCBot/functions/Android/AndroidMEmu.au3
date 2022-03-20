@@ -171,13 +171,13 @@ Func InitMEmu($bCheckOnly = False)
 
 	; Read ADB host and Port
 	If Not $bCheckOnly Then
-		;$g_iAndroidRecoverStrategy = 0
-		; newer MEmu doesn't support yet ADB mouse click/minitouch
-		local $memuCurr = GetVersionNormalized($MEmuVersion)
-		Local $memu6 = GetVersionNormalized("6.0")
-		If $memuCurr > $memu6 Then
-			;SetDebugLog("Disable ADB Mouse Click as not support for " & $g_sAndroidEmulator & " version " & $MEmuVersion)
-			;AndroidSupportFeaturesRemove(4) ; disable ADB Mouse Click support
+		; Custom fix - Team AIO Mod++
+		local $iMemuCurr = GetVersionNormalized($MEmuVersion)
+		Local $iMemu6 = GetVersionNormalized("6.0")
+		Local $iMemu7 = GetVersionNormalized("7.0")
+		If $iMemuCurr >= $iMemu6 And $iMemuCurr < $iMemu7 Then
+			$g_bAndroidAdbClickEnabled = True
+			GUICtrlSetState($g_hChkAndroidAdbClick, $GUI_ENABLE)
 		EndIf
 
 		InitAndroidConfig(True) ; Restore default config

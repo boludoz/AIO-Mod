@@ -298,7 +298,7 @@ Func ReadConfig_MOD_600_35_1()
 	IniReadS($g_iComboStatusMode, $g_sProfileConfigPath, "general", "ComboStatusMode", 0, "Int")
 
 	; <><><> AIO Updater <><><>
-	$g_bCheckVersionAIO = (FileExists($g_sLibPath & "\ModLibs\Updater\NoNotify.txt") = 0) ? (True) : (False)
+	$g_bCheckVersionAIO = (FileExists($g_sLibPath & "\NoNotify.txt") = 0) ? (True) : (False)
 
 EndFunc   ;==>ReadConfig_MOD_600_35_1
 

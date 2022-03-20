@@ -177,7 +177,7 @@ Func UpdateMod()
 
 			$aFiles = _FileListToArrayRec($g_sMBRDir, "*||build*", $FLTAR_FILES + $FLTAR_NOHIDDEN + $FLTAR_NOSYSTEM + $FLTAR_NOLINK, $FLTAR_RECUR, $FLTAR_SORT)
 			For $i = UBound($aFiles) - 1 To 0 Step -1
-				If (StringInStr($aFiles[$i], "\") > 0 Or StringInStr($aFiles[$i], "MyBot.run") > 0) And Not (StringInStr($aFiles[$i], "\Updater") > 0 Or StringInStr($aFiles[$i], "CSV\") > 0 Or StringInStr($aFiles[$i], "Strategies\") > 0 Or StringInStr($aFiles[$i], "Profiles\") > 0) Then
+				If (StringInStr($aFiles[$i], "\") > 0) And Not (StringInStr($aFiles[$i], "AIOMod.Updater") > 0 Or StringInStr($aFiles[$i], "CSV\") > 0 Or StringInStr($aFiles[$i], "Strategies\") > 0 Or StringInStr($aFiles[$i], "Profiles\") > 0) Then
 					ContinueLoop
 				EndIf
 				_ArrayDelete($aFiles, $i)
@@ -201,7 +201,6 @@ Func UpdateMod()
 				  ProgressSet($iPct, $iPct & "%") ;Set progress bar
 			   WEnd
 
-			   ProgressOff()
 
 			   $iFileSize = FileGetSize($sLocate)
 			   If $iFileSizeOnline <> $iFileSize Then
@@ -248,6 +247,7 @@ Func UpdateMod()
 					ShellExecute($aRestaurate[$i][0], $aRestaurate[$i][1])
 				Next
 			EndIf
+			ProgressOff()
 
 			Exit
 		ElseIf $iNewVersion = $IDNO Then

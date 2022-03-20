@@ -24,13 +24,10 @@ lib/debug/
 Strategies/strategy *.ini
 *.sqlite3
 lib/ModLibs/Dissociable.Imaging.DebugImages/*
-SmartFarm/
 lib/TempAdb/
 Nueva carpeta/
-lib/ModLibs/Updater/AIOMod.Updater.exe
-lib/ModLibs/Updater/AIOMod.Updater2.exe
-lib/ModLibs/Updater/AIOMod.Updater3.exe
 Profiles_/
 *_stripped.au3
-lib/ModLibs/Updater/NoNotify.txt
 AIOMod.Updater.exe
+NoNotify.txt
+AutoUpdate.txt

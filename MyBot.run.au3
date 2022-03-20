@@ -1590,3 +1590,12 @@ Func SetSAtk($attack = False)
 		$g_bTestSceneryAttack = False
 	EndIf
 EndFunc   ;==>SetSAtk
+
+Func DebugfindMultiple($directory, $sCocDiamond, $redLines, $minLevel = 0, $maxLevel = 1000, $maxReturnPoints = 0, $returnProps = "objectname,objectlevel,objectpoints", $bForceCapture = True)
+	Local $vArray = findMultiple($directory, $sCocDiamond, $redLines, $minLevel, $maxLevel, $maxReturnPoints, $returnProps, $bForceCapture)
+	If UBound($vArray) < 1 Or @error Then Return -1
+	For $i = 0 To UBound($vArray) - 1
+		_ArrayDisplay($vArray[$i], $i)
+	Next
+	Return 1
+EndFunc
