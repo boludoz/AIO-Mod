@@ -420,6 +420,7 @@ Func InitializeMBR(ByRef $sAI, $bConfigRead)
 	_ReadFullIni()
 	; must be called after language is detected
 	TranslateTroopNames()
+	LoadTranslatedDropOrderList() ; Custom - Team AIO Mod++
 	InitializeCOCDistributors()
 
 	; check for compiled x64 version
