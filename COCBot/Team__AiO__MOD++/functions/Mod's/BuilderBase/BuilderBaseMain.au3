@@ -196,6 +196,7 @@ Func _BuilderBase($bTestRun = False)
 
 		If Not $bBoostedClock Then
 			$bBoostedClock = StartClockTowerBoost()
+                        Exitloop ; tmp
 		ElseIf $bBoostedClock And ByPassedForceBBAttackOnClanGames($g_iAvailableAttacksBB = 0 And $g_bChkBBStopAt3, False) = True Then
 			SetLog("Builder base idle ends, all attacks done.", $COLOR_SUCCESS)
 			ExitLoop
