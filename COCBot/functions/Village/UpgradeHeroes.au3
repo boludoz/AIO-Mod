@@ -20,38 +20,30 @@ Func UpgradeHeroes()
 	checkMainScreen(False)
 
 	If $g_bRestart Then Return
-	
-	#Region - Custom Locate - Team AIO Mod++
-	ZoomOut()
 
 	If $g_bUpgradeKingEnable Then
-		If BuildChecker($g_aiKingAltarPos, $g_sImgLocationKing) = False Then
-			LocateKingAltar()
-			If BuildChecker($g_aiKingAltarPos, $g_sImgLocationKing) = False Then Return False ; Custom locate - Team AIO Mod++
-		EndIf
+		If Not isInsideDiamond($g_aiKingAltarPos) Then LocateKingAltar()
+		If $g_aiKingAltarPos[0] = -1 Or $g_aiKingAltarPos[1] = -1 Then LocateKingAltar()
+		SaveConfig()
 	EndIf
 
 	If $g_bUpgradeQueenEnable Then
-		If BuildChecker($g_aiQueenAltarPos, $g_sImgLocationQueen) = False Then
-			LocateQueenAltar()
-			If BuildChecker($g_aiQueenAltarPos, $g_sImgLocationQueen) = False Then Return False ; Custom locate - Team AIO Mod++
-		EndIf
+		If Not isInsideDiamond($g_aiQueenAltarPos) Then LocateQueenAltar()
+		If $g_aiQueenAltarPos[0] = -1 Or $g_aiQueenAltarPos[1] = -1 Then LocateQueenAltar()
+		SaveConfig()
 	EndIf
 
 	If $g_bUpgradeWardenEnable Then
-		If BuildChecker($g_aiWardenAltarPos, $g_sImgLocationWarden) = False Then
-			LocateWardenAltar()		
-			If BuildChecker($g_aiWardenAltarPos, $g_sImgLocationWarden) = False Then Return False ; Custom locate - Team AIO Mod++
-		EndIf
+		If Not isInsideDiamond($g_aiWardenAltarPos) Then LocateWardenAltar()
+		If $g_aiWardenAltarPos[0] = -1 Or $g_aiWardenAltarPos[1] = -1 Then LocateWardenAltar()
+		SaveConfig()
 	EndIf
 
 	If $g_bUpgradeChampionEnable Then
-		If BuildChecker($g_aiChampionAltarPos, $g_sImgLocationChamp) = False Then
-			LocateChampionAltar()
-			If BuildChecker($g_aiChampionAltarPos, $g_sImgLocationChamp) = False Then Return False ; Custom locate - Team AIO Mod++
-		EndIf
+		If Not isInsideDiamond($g_aiChampionAltarPos) Then LocateChampionAltar()
+		If $g_aiChampionAltarPos[0] = -1 Or $g_aiChampionAltarPos[1] = -1 Then LocateChampionAltar()
+		SaveConfig()
 	EndIf
-	#EndRegion - Custom Locate - Team AIO Mod++
 
 	SetLog("Upgrading Heroes", $COLOR_INFO)
 
@@ -120,10 +112,10 @@ Func QueenUpgrade()
 	Local $aHeroLevel = 0
 
 	SetLog("Upgrade Queen")
-	; ClickAway()
+	ClickAway()
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
-	; BuildingClickP($g_aiQueenAltarPos) ;Click Queen Altar
-	; If _Sleep($DELAYUPGRADEHERO2) Then Return
+	BuildingClickP($g_aiQueenAltarPos) ;Click Queen Altar
+	If _Sleep($DELAYUPGRADEHERO2) Then Return
 
 	;Get Queen info and Level
 	Local $sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY) ; 860x780
@@ -224,10 +216,10 @@ Func KingUpgrade()
 	Local $aHeroLevel = 0
 
 	SetLog("Upgrade King")
-	; ClickAway()
+	ClickAway()
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
-	; BuildingClickP($g_aiKingAltarPos) ;Click King Altar
-	; If _Sleep($DELAYUPGRADEHERO2) Then Return
+	BuildingClickP($g_aiKingAltarPos) ;Click King Altar
+	If _Sleep($DELAYUPGRADEHERO2) Then Return
 
 	;Get King info
 	Local $sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY) ; 860x780
@@ -332,11 +324,13 @@ Func WardenUpgrade()
 	EndIf
 
 	SetLog("Upgrade Grand Warden")
-	
-	; ClickAway()
+	ClickAway()
+
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
-	; BuildingClickP($g_aiWardenAltarPos) ; Click Warden Altar
-	; If _Sleep($DELAYUPGRADEHERO2) Then Return
+
+	ClickP($g_aiWardenAltarPos, 1, 0, "#8888") ;Click Warden Altar
+
+	If _Sleep($DELAYUPGRADEHERO2) Then Return
 
 	;Get Warden info
 	Local $sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY) ; 860x780
@@ -446,10 +440,10 @@ Func ChampionUpgrade()
 	Local $aHeroLevel = 0
 
 	SetLog("Upgrade Champion")
-	; ClickAway()
+	ClickAway()
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
-	; BuildingClickP($g_aiChampionAltarPos) ;Click Champion Altar
-	; If _Sleep($DELAYUPGRADEHERO2) Then Return
+	BuildingClickP($g_aiChampionAltarPos) ;Click Champion Altar
+	If _Sleep($DELAYUPGRADEHERO2) Then Return
 
 	;Get Champion info and Level
 	Local $sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY) ; 860x780
