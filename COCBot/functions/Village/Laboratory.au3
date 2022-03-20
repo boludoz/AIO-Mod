@@ -435,8 +435,9 @@ Func BuildChecker(ByRef $aPosXY, $sImgDir)
 	Local $aImgLocPos[2] = [-1, -1]
 	
 	ZoomOut()
-	
 	CheckObstacles()
+	ClickAway()
+	
 	Local $bOkLegacy = IsInsideDiamond($aPosXY)
 	Local $bImgLocPosOk = ImgLocateBuilds($aImgLocPos, $sImgDir)
 	If UBound($aPosXY) > 0 And Not @error And $bOkLegacy And $bImgLocPosOk Then

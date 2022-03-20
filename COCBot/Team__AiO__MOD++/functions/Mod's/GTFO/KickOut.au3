@@ -27,10 +27,6 @@ Func MainKickout()
 		CheckMainScreen()
 		
 		If OpenClanPage() Then
-			; If RandomSleep(1500) Then Return
-			;If Go2Bottom() Then
-			; Bottom to Top [0 is Bottom , 9 Top ]
-			; TODO : check how many slots exist 9/8/7/6
 
 			SetLog("Donated CAP: " & $g_iTxtDonatedCap & " /Received CAP: " & $g_iTxtReceivedCap & " /Kick Spammers: " & $g_bChkKickOutSpammers, $COLOR_INFO)
 			For $Rank = 0 To 9
@@ -137,7 +133,9 @@ Func MainKickout()
 			If $g_iTxtKickLimit >= $Number2Kick Then Return
 			Click(825, 5, 1)     ; Exit From Clan page
 		Else
-			Return
+			If _ColorCheck(_GetPixelColor(329, 362), Hex(0x2D9FF9, 6), 20) Then CloseClanChat()
+			ClickAway("Right", True, 2)
+			CheckMainScreen()
 		EndIf
 		If $g_iTxtKickLimit >= $Number2Kick Then Return
 	Next
@@ -146,7 +144,6 @@ Func MainKickout()
 EndFunc   ;==>MainKickout
 
 Func SuperSlotInt($aXPStar = -1)
-	;Local $aXPStar = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\KickOut", 0, "140, 167, 190, 667", Default, "Star", True, 44)
 	Local $vLastIntKickOut
 
 	If IsArray($aXPStar) Then
@@ -188,40 +185,35 @@ Func OpenClanPage()
 	Click(Random(20, 59, 1), Random(10, 60, 1), 1, 0, "#0222")
 	If _Sleep(2500) Then Return
 
-	; Check the 'My Profile' tab region
-	Local $iCount = 0
-	While Not IsArray(findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\KickOut", 1, "291, 59, 308, 69", Default, "MyClan", True, 0))
-		; 1000ms between checks
-		If _Sleep($DELAYPROFILEREPORT2) Then Return
-		$iCount += 1
-		If $iCount > 4 Then
-			Setlog("Excess wait time for profile to open: " & $iCount, $COLOR_DEBUG)
+	; Check the '[X]' tab region
+	If _Wait4Pixel(811, 81, 0xF02227, 25, 4000) Then
+
+		; Click on Clan Tab
+		Click(Random(278, 419, 1), Random(62, 103, 1), 1)
+		
+		If _Wait4Pixel(348, 64, 0x928C82, 25, 4000) Then
+	
+			; Click on Home Village
+			If Not _Wait4Pixel(358, 125, 0xC9C7BA, 25, 500) Then Click(Random(148, 410, 1), Random(122, 149, 1), 1)
+		
+			; Clan Edit Button
+			Local $aCheckEditButton[4] = [419, 332, 0xD7F37F, 10]
+			If RandomSleep(500) Then Return
+		
+			If Not _ColorCheck(_GetPixelColor($aCheckEditButton[0], $aCheckEditButton[1], True), Hex($aCheckEditButton[2], 6), $aCheckEditButton[3]) = True Then
+				SetLog("You are not a Co-Leader/Leader of your clan! ", $COLOR_DEBUG)
+				ClickAway()
+				Return False
+			Else
+				Return True
+			EndIf
+		
+			SetLog(" ## OpenClanPage ## didn't Openned", $COLOR_DEBUG)
 			Return False
 		EndIf
-	WEnd
-
-	; Click on Clan Tab
-	Click(Random(278, 419, 1), Random(62, 103, 1), 1)
-	_Wait4Pixel(159,255,0x797E61,25,4000)
-
-	; Click on Home Village
-	If Not IsArray(findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\KickOut", 1, "147, 121, 410, 149", Default, "NotHome", True, 0)) Then Click(Random(148, 410, 1), Random(122, 149, 1), 1)
-	If RandomSleep(500) Then Return
-
-	; Clan Edit Button
-	Local $aCheckEditButton[4] = [419, 332, 0xD7F37F, 10]
-	If RandomSleep(500) Then Return
-
-	If Not _ColorCheck(_GetPixelColor($aCheckEditButton[0], $aCheckEditButton[1], True), Hex($aCheckEditButton[2], 6), $aCheckEditButton[3]) = True Then
-		SetLog("You are not a Co-Leader/Leader of your clan! ", $COLOR_DEBUG)
-		Return False
 	Else
-		Return True
+		
 	EndIf
-
-	SetLog(" ## OpenClanPage ## didn't Openned", $COLOR_DEBUG)
-	Return False
-
 EndFunc   ;==>OpenClanPage
 
 Func Swipe($x1, $y1, $X2, $Y2, $Delay, $wasRunState = $g_bRunState)
