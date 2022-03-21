@@ -41,6 +41,23 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 
 	_CaptureRegions()
 
+	; friends request sc id for google play users - Team AIO Mod++.
+	If UBound(decodeSingleCoord(FindImageInPlace("OptReqFID", $g_sImgOptReqFID, "530,21,640,64", False))) > 1 Then ; Found Optional Game Update Message
+		SetLog("Found Friend Request - SC ID", $COLOR_INFO)
+		
+		PureClick(640, 44, 1, 0)
+
+		Local $iMaxCount = 10
+		Local $i = 0
+		Do 
+			If _Sleep($DELAYCHECKOBSTACLES3) Then Return
+			androidbackbutton()
+		Until IsMainPage(2) = True Or IsMainPageBuilderBase(2) = True Or $i >= $iMaxCount
+		
+		$g_bMinorObstacle = True
+		Return False
+	EndIf
+
 	If Not $bRecursive Then
 		If checkObstacles_Network() Then Return True
 		If checkObstacles_GfxError() Then Return True
@@ -236,31 +253,6 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		$g_bMinorObstacle = True
 		
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-		Return False
-	EndIf
-
-	; friends request sc id for google play users - Team AIO Mod++.
-	If UBound(decodeSingleCoord(FindImageInPlace("OptReqFID", $g_sImgOptReqFID, "530,21,640,64", False))) > 1 Then ; Found Optional Game Update Message
-		SetLog("Found Friend Request - SC ID", $COLOR_INFO)
-		
-		PureClick(640, 44, 1, 0)
-		If _Sleep($DELAYCHECKOBSTACLES3) Then Return
-			
-		If IsMainPage(3) = False And IsMainPageBuilderBase(3) = False Then
-			androidbackbutton()
-			If _Sleep($DELAYCHECKOBSTACLES3) Then Return
-
-			If IsMainPage(2) = False And IsMainPageBuilderBase(2) = False Then
-				androidbackbutton()
-				If _Sleep($DELAYCHECKOBSTACLES3) Then Return
-			EndIf
-
-			If IsMainPage(2) = False And IsMainPageBuilderBase(2) = False Then
-				checkObstacles_ReloadCoC()
-			EndIf
-		EndIf
-		
-		$g_bMinorObstacle = True
 		Return False
 	EndIf
 

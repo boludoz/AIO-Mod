@@ -1701,6 +1701,13 @@ Func ReadConfig_600_54()
 		IniReadS($g_aiCmbCustomBrewOrder[$z], $g_sProfileConfigPath, "Spells", "cmbSpellOrder_" & $sSName, $z)
 	Next
 
+	; Spells pre train - Team AIO Mod++
+	For $z = 0 To UBound($g_aiChkSpellsPre) - 1
+		$sSName = GetTroopName($z + $eLSpell, 1, True)
+		If $sSName = -1 Then ContinueLoop
+		IniReadS($g_aiChkSpellsPre[$z], $g_sProfileConfigPath, "Spells", "ChkSpellPre_" & $sSName, False, "Bool")
+	Next
+
 	; Sieges Machines Order - Team AIO Mod++
 	Local $sSgName = -1
 	IniReadS($g_bCustomBuildOrderEnable, $g_sProfileConfigPath, "Sieges", "chkSiegeOrder", False, "Bool")

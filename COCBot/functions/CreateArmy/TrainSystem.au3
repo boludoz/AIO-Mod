@@ -491,8 +491,9 @@ Func RemoveExtraTroops($toRemove)
 				SetLog(" - " & $g_asSpellNames[TroopIndexLookup($toRemove[$i][0]) - $eLSpell] & ": " & $toRemove[$i][1] & "x", $COLOR_SUCCESS)
 			Next
 		EndIf
-
-		If Not _CheckPixel($aButtonEditArmy, True) Then ; If no 'Edit Army' Button found in army tab to edit troops
+		
+		; Custom multilanguaje support - Team AIO Mod++
+		If Not WaitforPixel($aButtonEditArmy[0], $aButtonEditArmy[1], $aButtonEditArmy[0] + 34, $aButtonEditArmy[1] + 24, Hex($aButtonEditArmy[2], 6), $aButtonEditArmy[3], 3) Then ; If no 'Edit Army' Button found in army tab to edit troops
 			SetLog("Cannot find/verify 'Edit Army' Button in Army tab", $COLOR_WARNING)
 			Return False ; Exit function
 		EndIf

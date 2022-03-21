@@ -2465,20 +2465,25 @@ Func ApplyConfig_600_54($TypeReadSave)
 			radSelectTrainType() ; this function also calls calls lblTotalCount and TotalSpellCountClick
 			SetComboTroopComp() ; this function also calls lblTotalCount
 
-			; Troops Order - Custom Train - Team AIO Mod++
+			; Troops Order - Team AIO Mod++
 			CustomTrainOrderEnable() 
             GUICtrlSetState($g_hChkCustomTrainOrderEnable, $g_bCustomTrainOrderEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
             For $z = 0 To UBound($g_ahCmbTroopOrder) - 1
                 _GUICtrlComboBox_SetCurSel($g_ahCmbTroopOrder[$z], $g_aiCmbCustomTrainOrder[$z])
             Next
 
-			; Spells Order - Custom Train - Team AIO Mod++
+			; Spells Order - Team AIO Mod++
 			CustomBrewOrderEnable() 
             GUICtrlSetState($g_hChkCustomBrewOrderEnable, $g_bCustomBrewOrderEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
             For $z = 0 To UBound($g_ahCmbSpellsOrder) - 1
                 _GUICtrlComboBox_SetCurSel($g_ahCmbSpellsOrder[$z], $g_aiCmbCustomBrewOrder[$z])
             Next
-			
+
+			; Spells pre train - Team AIO Mod++
+            For $z = 0 To UBound($g_aiChkSpellsPre) - 1
+                GUICtrlSetState($g_ahChkSpellsPre[$z], $g_aiChkSpellsPre[$z] ? $GUI_CHECKED : $GUI_UNCHECKED)
+            Next
+
             ; Sieges Machines Order - Custom Team AIO Mod++
 			CustomBuildOrderEnable() 
             GUICtrlSetState($g_hChkCustomBuildOrderEnable, $g_bCustomBuildOrderEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -2495,17 +2500,22 @@ Func ApplyConfig_600_54($TypeReadSave)
 			$g_iCmbMightyYakPet = _GUICtrlComboBox_GetCurSel($g_hCmbMightyYakPet)
 			$g_iCmbUnicornPet = _GUICtrlComboBox_GetCurSel($g_hCmbUnicornPet)
 
-			; Troops Order - Custom Team AIO Mod++
+			; Troops Order - Team AIO Mod++
 			$g_bCustomTrainOrderEnable = (GUICtrlRead($g_hChkCustomTrainOrderEnable) = $GUI_CHECKED)
 			For $z = 0 To UBound($g_ahCmbTroopOrder) - 1
 				$g_aiCmbCustomTrainOrder[$z] = Number(_GUICtrlComboBox_GetCurSel($g_ahCmbTroopOrder[$z]))
 			Next
 
-			; Spells Order - Custom Team AIO Mod++
+			; Spells Order - Team AIO Mod++
 			$g_bCustomBrewOrderEnable = (GUICtrlRead($g_hChkCustomBrewOrderEnable) = $GUI_CHECKED)
 			For $z = 0 To UBound($g_ahCmbSpellsOrder) - 1
 				$g_aiCmbCustomBrewOrder[$z] = Number(_GUICtrlComboBox_GetCurSel($g_ahCmbSpellsOrder[$z]))
 			Next
+
+			; Spells pre train - Team AIO Mod++
+            For $z = 0 To UBound($g_aiChkSpellsPre) - 1
+				$g_aiChkSpellsPre[$z] = (GUICtrlRead($g_ahChkSpellsPre[$z]) = $GUI_CHECKED)
+            Next
 
             ; Sieges Machines Order - Custom Team AIO Mod++
             $g_bCustomBuildOrderEnable = (GUICtrlRead($g_hChkCustomBuildOrderEnable) = $GUI_CHECKED)

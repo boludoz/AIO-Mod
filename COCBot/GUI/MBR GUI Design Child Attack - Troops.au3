@@ -1015,7 +1015,7 @@ Func CreateTrainSpells()
 			GUICtrlSetData(-1, $sComboData)
 			_GUICtrlComboBox_SetCurSel(-1, $i)
 			GUICtrlSetOnEvent(-1, "_GUISpellsOrder")
-		$g_ahCmbSpellsPre[$i] = GUICtrlCreateCheckbox("Pre. " & StringLeft($sSpellName, 1) & ".", $x + 97, $y - 1, 50, 23)
+		$g_ahChkSpellsPre[$i] = GUICtrlCreateCheckbox("Pre. " & StringLeft($sSpellName, 1) & ".", $x + 97, $y - 1, 50, 23)
 		$y += 26
 		$iCol += 1
 		If $iCol = Round(UBound($g_aQuickSpellIcon) / 2) Then

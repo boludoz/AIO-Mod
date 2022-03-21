@@ -1405,7 +1405,7 @@ Func SaveConfig_600_54()
 	; <><><> Attack Plan / Train Army / Train Order <><><>
 	ApplyConfig_600_54(GetApplyConfigSaveAction())
 
-	; Troops Order - Custom Team AIO Mod++
+	; Troops Order - Team AIO Mod++
 	Local $sTName = -1
 	_Ini_Add("troop", "chkTroopOrder", $g_bCustomTrainOrderEnable ? 1 : 0)
 	For $z = 0 To UBound($g_aiCmbCustomTrainOrder) - 1
@@ -1414,7 +1414,7 @@ Func SaveConfig_600_54()
 		_Ini_Add("troop", "cmbTroopOrder_" & $sTName, $g_aiCmbCustomTrainOrder[$z])
 	Next
 
-	; Spells Order - Custom Team AIO Mod++
+	; Spells Order - Team AIO Mod++
 	Local $sSName = -1
 	_Ini_Add("Spells", "chkSpellOrder", $g_bCustomBrewOrderEnable ? 1 : 0)
 	For $z = 0 To UBound($g_aiCmbCustomBrewOrder) - 1
@@ -1423,7 +1423,15 @@ Func SaveConfig_600_54()
 		_Ini_Add("Spells", "cmbSpellOrder_" & $sSName, $g_aiCmbCustomBrewOrder[$z])
 	Next
 
-	; Sieges Machines Order - Custom Team AIO Mod++
+	; Spells pre train - Team AIO Mod++
+	Local $sSName = -1
+	For $z = 0 To UBound($g_aiChkSpellsPre) - 1
+		$sSName = GetTroopName($z + $eLSpell, 1, True)
+		If $sSName = -1 Then ContinueLoop
+		_Ini_Add("Spells", "chkSpellPre_" & $sSName, $g_aiChkSpellsPre[$z] ? 1 : 0)
+	Next
+
+	; Sieges Machines Order - Team AIO Mod++
 	Local $sSgName = -1
 	_Ini_Add("Sieges", "chkSiegeOrder", $g_bCustomBuildOrderEnable ? 1 : 0)
 	For $z = 0 To UBound($g_aiCmbCustomBuildOrder) - 1

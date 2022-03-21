@@ -158,10 +158,9 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 					If $Step = 6 Then ExitLoop
 					ContinueLoop
 				EndIf
-			ElseIf Not ($g_bForcePreBrewSpells Or ($g_bDoubleTrain And $bPreTrainFlag) Or $bForceDouble) Then ; If $SpellCamp[0] <= $SpellCamp[1] * 2 Then ; 12-22/22
+			ElseIf $iUnbalancedSpell = 0 Then
 				If CheckQueueSpellAndTrainRemain($SpellCamp, $bDebug, $iUnbalancedSpell, True) Then
-					If $SpellCamp[0] < ($SpellCamp[1] + $iUnbalancedSpell) * 2 Then TopUpUnbalancedSpell($iUnbalancedSpell)
-					If $bDebug Then SetLog($Step & ". CheckQueueSpellAndTrainRemain() done!", $COLOR_DEBUG)
+					If $bDebug Then SetLog($Step & ". CheckQueueSpellAndTrainRemain() force pre train!", $COLOR_DEBUG)
 				EndIf
 			EndIf
 			ExitLoop
@@ -354,12 +353,12 @@ Func CheckQueueSpellAndTrainRemain($ArmyCamp, $bDebug, $iUnbalancedSpell = 0, $b
 		EndIf
 	Next
 
-	Local $aiQueueSpells = CheckQueueSpells(True, $bDebug, $XQueueStart)
-	If Not IsArray($aiQueueSpells) Then Return False
-	For $i = 0 To UBound($aiQueueSpells) - 1
-		If $aiQueueSpells[$i] > 0 Then $iTotalQueue += $aiQueueSpells[$i] * $g_aiSpellSpace[$i]
-	Next
+	Local $aiQueueSpells = CheckQueueSpells(True, true, 839)
 	If $bBrewPre = False Then
+		If Not IsArray($aiQueueSpells) Then Return False
+		For $i = 0 To UBound($aiQueueSpells) - 1
+			If $aiQueueSpells[$i] > 0 Then $iTotalQueue += $aiQueueSpells[$i] * $g_aiSpellSpace[$i]
+		Next
 		; Check block spell
 		If $ArmyCamp[0] < $ArmyCamp[1] + $iTotalQueue Then
 			SetLog("A big guy blocks our camp")
@@ -380,12 +379,13 @@ Func CheckQueueSpellAndTrainRemain($ArmyCamp, $bDebug, $iUnbalancedSpell = 0, $b
 		Next
 	EndIf
 	
-	If $ArmyCamp[0] < $ArmyCamp[1] * 2 Then
+	If $ArmyCamp[0] < $ArmyCamp[1] * 2 And Not $bBrewPre Then
 		; Train remain
 		SetLog("Checking spells queue:")
 		Local $rWTT[1][2] = [["Arch", 0]] ; what to train
 		For $i = 0 To UBound($aiQueueSpells) - 1
 			Local $iIndex = $g_aiBrewOrder[$i]
+			$aiQueueSpells[$iIndex] = Number($aiQueueSpells[$iIndex])
 			If $aiQueueSpells[$iIndex] > 0 Then SetLog("  - " & $g_asSpellNames[$iIndex] & ": " & $aiQueueSpells[$iIndex] & "x")
 			If $g_aiArmyCompSpells[$iIndex] - $aiQueueSpells[$iIndex] > 0 Then
 				$rWTT[UBound($rWTT) - 1][0] = $g_asSpellShortNames[$iIndex]
@@ -402,11 +402,16 @@ Func CheckQueueSpellAndTrainRemain($ArmyCamp, $bDebug, $iUnbalancedSpell = 0, $b
 		If $NewSpellCamp[0] < $ArmyCamp[1] * 2 Then Return False
 	ElseIf $bBrewPre And $ArmyCamp[0] = $ArmyCamp[1] Then ;- $iUnbalancedSlot Then
 		; Train remain
+		If Not IsArray($aiQueueSpells) Then
+			Local $aiFake[UBound($g_ahChkSpellsPre)]
+			$aiQueueSpells = $aiFake
+		EndIf
 		SetLog("Checking pre spells queue:")
 		Local $rWTT[1][2] = [["Arch", 0]] ; what to train
 		For $i = 0 To UBound($aiQueueSpells) - 1
 			Local $iIndex = $g_aiBrewOrder[$i]
-			If (GUICtrlRead($g_ahCmbSpellsPre[$i]) = $GUI_UNCHECKED) Then ContinueLoop
+			If (GUICtrlRead($g_ahChkSpellsPre[$i]) = $GUI_UNCHECKED) Then ContinueLoop
+			$aiQueueSpells[$iIndex] = Number($aiQueueSpells[$iIndex])
 			If $aiQueueSpells[$iIndex] > 0 Then SetLog("  - " & $g_asSpellNames[$iIndex] & ": " & $aiQueueSpells[$iIndex] & "x")
 			If $g_aiArmyCompSpells[$iIndex] - $aiQueueSpells[$iIndex] > 0 Then
 				$rWTT[UBound($rWTT) - 1][0] = $g_asSpellShortNames[$iIndex]
