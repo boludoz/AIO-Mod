@@ -5,9 +5,9 @@
 ; Syntax ........:
 ; Parameters ....: None
 ; Return values .: None
-; Author ........: Demen
-; Modified ......: Team AIO Mod++
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2021
+; Author ........: Demen (2018)
+; Modified ......: Boldina (2018 in debug / 2022), Team AIO Mod++
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2022
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
@@ -157,6 +157,11 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 					$Step += 1
 					If $Step = 6 Then ExitLoop
 					ContinueLoop
+				EndIf
+			ElseIf Not ($g_bForcePreBrewSpells Or ($g_bDoubleTrain And $bPreTrainFlag) Or $bForceDouble) Then ; If $SpellCamp[0] <= $SpellCamp[1] * 2 Then ; 12-22/22
+				If CheckQueueSpellAndTrainRemain($SpellCamp, $bDebug, $iUnbalancedSpell, True) Then
+					If $SpellCamp[0] < ($SpellCamp[1] + $iUnbalancedSpell) * 2 Then TopUpUnbalancedSpell($iUnbalancedSpell)
+					If $bDebug Then SetLog($Step & ". CheckQueueSpellAndTrainRemain() done!", $COLOR_DEBUG)
 				EndIf
 			EndIf
 			ExitLoop
@@ -335,7 +340,7 @@ Func CheckQueueTroopAndTrainRemain($ArmyCamp, $bDebug)
 	Return True
 EndFunc   ;==>CheckQueueTroopAndTrainRemain
 
-Func CheckQueueSpellAndTrainRemain($ArmyCamp, $bDebug, $iUnbalancedSpell = 0)
+Func CheckQueueSpellAndTrainRemain($ArmyCamp, $bDebug, $iUnbalancedSpell = 0, $bBrewPre = False)
 	If $ArmyCamp[0] = $ArmyCamp[1] * 2 And ((ProfileSwitchAccountEnabled() And $g_abAccountNo[$g_iCurAccount] And $g_abDonateOnly[$g_iCurAccount]) Or $g_iCommandStop = 0) Then Return True ; bypass Donate account when full queue
 
 	Local $iTotalQueue = 0
@@ -354,23 +359,27 @@ Func CheckQueueSpellAndTrainRemain($ArmyCamp, $bDebug, $iUnbalancedSpell = 0)
 	For $i = 0 To UBound($aiQueueSpells) - 1
 		If $aiQueueSpells[$i] > 0 Then $iTotalQueue += $aiQueueSpells[$i] * $g_aiSpellSpace[$i]
 	Next
-	; Check block spell
-	If $ArmyCamp[0] < $ArmyCamp[1] + $iTotalQueue Then
-		SetLog("A big guy blocks our camp")
-		Return False
-	EndIf
-	; check wrong queue
-	Local $iUnbalancedSlot = 0, $iTypeOfSpell = 0
-	For $i = 0 To UBound($aiQueueSpells) - 1
-		If $aiQueueSpells[$i] > 0 Then $iTypeOfSpell += 1
-		If $aiQueueSpells[$i] - $g_aiArmyCompSpells[$i] > 0 Then
-			$iUnbalancedSlot += ($aiQueueSpells[$i] - $g_aiArmyCompSpells[$i]) * $g_aiSpellSpace[$i]
-			If $iTypeOfSpell > 1 Or $iUnbalancedSlot > $iUnbalancedSpell * 2 Then ; more than 2 spell types
-				SetLog("Some wrong spells in queue (" & $g_asSpellNames[$i] & " x" & $aiQueueSpells[$i] & "/" & $g_aiArmyCompSpells[$i] & ")")
-				Return False
-			EndIf
+	If $bBrewPre = False Then
+		; Check block spell
+		If $ArmyCamp[0] < $ArmyCamp[1] + $iTotalQueue Then
+			SetLog("A big guy blocks our camp")
+			Return False
 		EndIf
-	Next
+		
+		; check wrong queue
+		Local $iUnbalancedSlot = 0, $iTypeOfSpell = 0
+		For $i = 0 To UBound($aiQueueSpells) - 1
+			If $aiQueueSpells[$i] > 0 Then $iTypeOfSpell += 1
+			If $aiQueueSpells[$i] - $g_aiArmyCompSpells[$i] > 0 Then
+				$iUnbalancedSlot += ($aiQueueSpells[$i] - $g_aiArmyCompSpells[$i]) * $g_aiSpellSpace[$i]
+				If $iTypeOfSpell > 1 Or $iUnbalancedSlot > $iUnbalancedSpell * 2 Then ; more than 2 spell types
+					SetLog("Some wrong spells in queue (" & $g_asSpellNames[$i] & " x" & $aiQueueSpells[$i] & "/" & $g_aiArmyCompSpells[$i] & ")")
+					Return False
+				EndIf
+			EndIf
+		Next
+	EndIf
+	
 	If $ArmyCamp[0] < $ArmyCamp[1] * 2 Then
 		; Train remain
 		SetLog("Checking spells queue:")
@@ -391,6 +400,25 @@ Func CheckQueueSpellAndTrainRemain($ArmyCamp, $bDebug, $iUnbalancedSpell = 0)
 		Local $NewSpellCamp = GetCurrentArmy(43, 160, "CheckQueueSpellAndTrainRemain brew")
 		SetLog("Checking spell tab: " & $NewSpellCamp[0] & "/" & $NewSpellCamp[1] * 2 & ($NewSpellCamp[0] < $ArmyCamp[1] * 2 ? ". Top-up queue failed!" : ""))
 		If $NewSpellCamp[0] < $ArmyCamp[1] * 2 Then Return False
+	ElseIf $bBrewPre And $ArmyCamp[0] = $ArmyCamp[1] Then ;- $iUnbalancedSlot Then
+		; Train remain
+		SetLog("Checking pre spells queue:")
+		Local $rWTT[1][2] = [["Arch", 0]] ; what to train
+		For $i = 0 To UBound($aiQueueSpells) - 1
+			Local $iIndex = $g_aiBrewOrder[$i]
+			If (GUICtrlRead($g_ahCmbSpellsPre[$i]) = $GUI_UNCHECKED) Then ContinueLoop
+			If $aiQueueSpells[$iIndex] > 0 Then SetLog("  - " & $g_asSpellNames[$iIndex] & ": " & $aiQueueSpells[$iIndex] & "x")
+			If $g_aiArmyCompSpells[$iIndex] - $aiQueueSpells[$iIndex] > 0 Then
+				$rWTT[UBound($rWTT) - 1][0] = $g_asSpellShortNames[$iIndex]
+				$rWTT[UBound($rWTT) - 1][1] = Abs($g_aiArmyCompSpells[$iIndex] - $aiQueueSpells[$iIndex])
+				SetLog("    missing: " & $g_asSpellNames[$iIndex] & " x" & $rWTT[UBound($rWTT) - 1][1])
+				ReDim $rWTT[UBound($rWTT) + 1][2]
+			EndIf
+		Next
+		BrewUsingWhatToTrain($rWTT, True)
+
+		If _Sleep(1000) Then Return
+		Return True
 	EndIf
 	Return True
 EndFunc   ;==>CheckQueueSpellAndTrainRemain
