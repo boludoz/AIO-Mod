@@ -457,7 +457,7 @@ Func TroopIndexLookupBB($sTroop, $iOrigin = "")
 			Return 1
 		Case "BGiant", "Giant", "BoxerGiant" 
 			Return 2
-		Case "BMini", "Beta", "Minion"
+		Case "BMini", "Beta", "Minion", "BetaMinion"
 			Return 3
 		Case "Bomber", "Bomb", "Breaker", "WallBreaker"
 			Return 4
