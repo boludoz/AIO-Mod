@@ -31,7 +31,7 @@ Func BuilderBase($bTestRun = False)
 	Local $bReturn = False
 	
 	#Region - Dates - Team AIO Mod++
-	If Not $bTestRun And Not PlayBBOnly() And ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3, False) Then
+	If Not $bTestRun And Not PlayBBOnly() And ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3, True, True) Then
 		If _DateIsValid($g_sDateBuilderBase) Then
 			Local $iDateDiff = _DateDiff('s', _NowCalc(), $g_sDateBuilderBase)
 			If $iDateDiff > 0 And $g_sConstMaxBuilderBase > $iDateDiff Then
@@ -43,7 +43,7 @@ Func BuilderBase($bTestRun = False)
 	#EndRegion - Dates - Team AIO Mod++
 
 	ClickAway("Right", False, 3)
-	If Not ByPassedForceBBAttackOnClanGames($g_bChkBuilderAttack, True) And Not $g_bChkCollectBuilderBase And Not $g_bChkStartClockTowerBoost And Not $g_iChkBBSuggestedUpgrades And Not $g_bChkCleanBBYard And Not $g_bChkUpgradeMachine Then
+	If Not ByPassedForceBBAttackOnClanGames($g_bChkBuilderAttack, True, True) And Not $g_bChkCollectBuilderBase And Not $g_bChkStartClockTowerBoost And Not $g_iChkBBSuggestedUpgrades And Not $g_bChkCleanBBYard And Not $g_bChkUpgradeMachine Then
 		If $g_bOnlyBuilderBase Then
 			SetLog("Play Only Builder Base Check Is On But BB Option's(Collect,Attack etc) Unchecked", $COLOR_ERROR)
 			SetLog("Please Check BB Options From Builder Base Tab", $COLOR_INFO)
@@ -77,9 +77,9 @@ Func BuilderBase($bTestRun = False)
 EndFunc
 
 Func _BuilderBase($bTestRun = False)
-	If Not $g_bRunState Then Return
+	$g_iAvailableAttacksBB = 0
 	
-	Local $bFirstBBLoop = True
+	If Not $g_bRunState Then Return
 	
 	; Check if is in Builder Base.
 	If Not isOnBuilderBase(True) Then
@@ -123,10 +123,14 @@ Func _BuilderBase($bTestRun = False)
 
 	; Loops to do logic.
 	Local $iAttackLoops = 1
-	;Local $iLoopsToDo = (ByPassedForceBBAttackOnClanGames($g_bDSICGBB, False)) ? (25) : (Random($g_iBBMinAttack, $g_iBBMaxAttack, 1)))
-	Local $iLoopsToDo = (ByPassedForceBBAttackOnClanGames($g_bDSICGBB, False) ? (25) : (Random($g_iBBMinAttack, $g_iBBMaxAttack, 1)))
+	Local $iLoopsToDoCG = 25
+	Local $iLoopsToDoNormal = Random($g_iBBMinAttack, $g_iBBMaxAttack, 1)
+	
+	Local $iLoopsToDo = 0
+	Local $iBigLoops = 0
 	Do
-		; ClickAway()
+		$iBigLoops += 1
+
 		NotifyPendingActions()
 		If Not $g_bRunState Then Return
 
@@ -146,24 +150,30 @@ Func _BuilderBase($bTestRun = False)
 
 		; Check if Builder Base is to run
 		; New logic to add speed to the attack.
+		Local $bCondition = True, $bOkAttack = True, $bFunctionPassed = True
 		Do
 			If Not $g_bRunState Then Return
-			If ByPassedForceBBAttackOnClanGames($g_bChkBuilderAttack, True) = False Or (ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3 And $g_iAvailableAttacksBB = 0, False) = True And $bFirstBBLoop = False) Then
+			$bFunctionPassed = ByPassedForceBBAttackOnClanGames(False, True, True)
+			$bCondition = (($g_bChkBuilderAttack And not $g_bChkBBStopAt3) Or ($g_bChkBuilderAttack And $g_bChkBBStopAt3 And $g_iAvailableAttacksBB > 0)) Or $bFunctionPassed
+
+			If $bCondition = False Then
 				Setlog("Dynamic attack loop skipped.", $COLOR_INFO)
-				$iAttackLoops = $iLoopsToDo
+				$iBigLoops = 3
 				ExitLoop
 			EndIf
 			
-			Setlog("Dynamic attack loop: " & $iAttackLoops & "/" & $iLoopsToDo, $COLOR_INFO)
+			$iLoopsToDo = ($bCondition = True And $bFunctionPassed) ? ($iLoopsToDoCG) : ($iLoopsToDoNormal)
+
+			Setlog("Dynamic attack loop: " & $iAttackLoops & " / " & $iLoopsToDo, $COLOR_INFO)
 
 			;  $g_bCloudsActive fast network fix.
 			$g_bCloudsActive = True
 
 			; Attack
-			If BuilderBaseAttack($bTestRun) = True Then
-				$iAttackLoops += 1
-	
-				;  $g_bCloudsActive fast network fix.
+			$bOkAttack = BuilderBaseAttack($bTestRun)
+			$iAttackLoops += 1
+			
+			If $bOkAttack = True Then
 				$g_bCloudsActive = False
 			Else
 				$g_bCloudsActive = False
@@ -174,10 +184,11 @@ Func _BuilderBase($bTestRun = False)
 			; Improved logic, as long as the bot can be farmed it will continue doing the external while, otherwise it will continue attacking to fulfill the user's request more fast.
 			checkObstacles(True)
 			
-		Until ($iAttackLoops >= $iLoopsToDo) Or (ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3 And $g_iAvailableAttacksBB = 0, False) = True)
+		Until ($iAttackLoops >= $iLoopsToDo) Or $iBigLoops = 3
 		
-		$bFirstBBLoop = False
-		
+		$bFunctionPassed = ByPassedForceBBAttackOnClanGames(False, True, True)
+		$bCondition = (($g_bChkBuilderAttack And not $g_bChkBBStopAt3) Or ($g_bChkBuilderAttack And $g_bChkBBStopAt3 And $g_iAvailableAttacksBB > 0)) Or $bFunctionPassed
+
 		If Not $g_bRunState Then Return
 
 		WallsUpgradeBB()
@@ -190,22 +201,15 @@ Func _BuilderBase($bTestRun = False)
 		If Not $g_bRunState Then Return
 
 		If ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart Or PlayBBOnly()) And $g_bChkOnlyFarm = False And $g_iAvailableAttacksBB = 0 Then
-			; If Not BuilderBaseZoomOut() Then Return
 			MainSuggestedUpgradeCode()
 		EndIf
 
-		If Not $bBoostedClock Then
-			$bBoostedClock = StartClockTowerBoost()
-                        Exitloop ; tmp
-		ElseIf $bBoostedClock And ByPassedForceBBAttackOnClanGames($g_iAvailableAttacksBB = 0 And $g_bChkBBStopAt3, False) = True Then
-			SetLog("Builder base idle ends, all attacks done.", $COLOR_SUCCESS)
-			ExitLoop
-		EndIf
+		$bBoostedClock = StartClockTowerBoost() And Not $bCondition
 
 		CleanBBYard()
 		If Not $g_bRunState Then Return
 
-	Until ($iAttackLoops >= $iLoopsToDo) Or (ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3 And $g_iAvailableAttacksBB = 0, False) = True) Or ByPassedForceBBAttackOnClanGames($g_bChkBuilderAttack, True) = False
+	Until ($iAttackLoops >= $iLoopsToDo) Or $iBigLoops > 2 Or $bBoostedClock
 
 	If Not $g_bRunState Then Return
 	BuilderBaseReport()
@@ -236,13 +240,15 @@ EndFunc   ;==>GoToClanGames
 
 ; Only attack in bb if CG active
 Func SmartBuilderBase($bCheckevent = True)
-	Local $bSmartBuilderBase = ($g_bChkOnlyBuilderBaseGC = True And ClanGamesStatus() == "True" And ($g_bIsBBevent = True And $bCheckevent = True) And ClanGamesBB() = True)
+	Local $bSmartBuilderBase = ($g_bChkOnlyBuilderBaseGC And ClanGamesStatus() == "True" And ClanGamesBB())
+	If $bCheckevent And not $g_bIsBBevent Then $bSmartBuilderBase = False
 	Return $bSmartBuilderBase
 EndFunc   ;==>SmartBuilderBase
 
 ; Force attack bb in CG active
 Func ForceBBAttackOnClanGames($bCheckevent = True)
-	Local $bSmartBuilderBase = ($g_bChkForceBBAttackOnClanGames = True And ClanGamesStatus() == "True" And ($g_bIsBBevent = True And $bCheckevent = True) And ClanGamesBB() = True)
+	Local $bSmartBuilderBase = ($g_bChkForceBBAttackOnClanGames And ClanGamesStatus() == "True" And ClanGamesBB())
+	If $bCheckevent And not $g_bIsBBevent Then $bSmartBuilderBase = False
 	Return $bSmartBuilderBase
 EndFunc   ;==>ForceBBAttackOnClanGames
 

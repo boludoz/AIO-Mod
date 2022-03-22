@@ -168,7 +168,7 @@ Global $aButtonRemoveTroopsOK1[4] = [747, 582, 0x76BF2F, 20]
 Global $aButtonRemoveTroopsOK2[4] = [500, 447, 0x6DBC1F, 20]
 
 ;Change Language To English
-Global $aButtonLanguage[4] = [620, 275 + $g_iMidOffsetY, 0xDDF685, 20]
+Global $aButtonLanguage[4] = [330, 407, 0xDDF685, 20]
 Global $aListLanguage[4] = [110, 100 + $g_iMidOffsetY, 0xFFFFFF, 10]
 Global $aEnglishLanguage[4] = [420, 145 + $g_iMidOffsetY, 0xD7D5C7, 20]
 Global $aLanguageOkay[4] = [510, 420 + $g_iMidOffsetY, 0x6FBD1F, 20]

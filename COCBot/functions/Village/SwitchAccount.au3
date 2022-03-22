@@ -780,10 +780,17 @@ Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
 			Next
 
 			If UBound($aCoord) < 4 And $NextAccount >= 3 Then
-				SetLog("Only Found " & UBound($aCoord) & " SCID Account, Select Last Account", $COLOR_INFO)
-				$iIndexSCID = UBound($aCoord) - 1
+				SetLog("Only Found " & UBound($aCoord) & " SCID Account", $COLOR_ERROR)
+				$bResult = False
+				Return "Error"
 			EndIf
-
+			
+			If UBound($aCoord) <= $iIndexSCID Then 
+				SetLog("Error in SCID Account, out of range.", $COLOR_ERROR)
+				$bResult = False
+				Return "Error"
+			EndIf
+			
 			SetLog("   " & $iStep & ". Click Account [" & $NextAccount + 1 & "] Supercell ID with Profile: " & $g_asProfileName[$NextAccount])
 			Click($aCoord[$iIndexSCID][0]-75, $aCoord[$iIndexSCID][1] + 10, 1)
 			If _Sleep(750) Then Return
