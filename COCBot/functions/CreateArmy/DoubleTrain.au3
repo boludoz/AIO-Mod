@@ -442,7 +442,9 @@ Func FixInDoubleTrain(ByRef $aTroops, $iTotal, $aTroopSpace, $iIndexRemain = 0)
     For $i = 0 To $iCo -1
         $iRealCAP += $aTroops[$i] * $aTroopSpace[$i]
     Next
-    
+	
+    If $iRealCAP == $g_iTotalCampSpace Then Return
+	
     If $iRealCAP = 0 Or $iTotal = 0 Then
         SetLog("FixInDoubleTrain error", $COLOR_ERROR)
         Return False

@@ -694,11 +694,6 @@ Func BuilderBaseAttackReport($bNoExit = False)
 		EndIf
 
 		If RandomSleep(2000) Then Return
-
-		If checkObstacles(True) Then
-			SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
-			Return
-		EndIf
 	Else
 		Local $aOkayBTN = [664, 465, 0xD9F481, 30]
 		If _CheckPixel($aOkayBTN, True) Then

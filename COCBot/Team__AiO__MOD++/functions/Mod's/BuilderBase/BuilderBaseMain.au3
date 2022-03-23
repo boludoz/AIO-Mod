@@ -172,17 +172,13 @@ Func _BuilderBase($bTestRun = False)
 			; Attack
 			$bOkAttack = BuilderBaseAttack($bTestRun)
 			$iAttackLoops += 1
-			
-			If $bOkAttack = True Then
-				$g_bCloudsActive = False
-			Else
-				$g_bCloudsActive = False
-				checkObstacles(True)
-				ExitLoop
-			EndIf
+			$g_bCloudsActive = False
 			
 			; Improved logic, as long as the bot can be farmed it will continue doing the external while, otherwise it will continue attacking to fulfill the user's request more fast.
-			checkObstacles(True)
+			If checkObstacles(True) Then
+				SetLog("Window clean required, but no problem!", $COLOR_INFO)
+				ExitLoop
+			EndIf
 			
 		Until ($iAttackLoops >= $iLoopsToDo) Or $iBigLoops = 3
 		
