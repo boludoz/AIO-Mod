@@ -135,6 +135,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 			Case UBound(decodeSingleCoord(FindImageInPlace("AnyoneThere", $g_sImgAnyoneThere, "440,340,580,390", False))) > 1 ; Inactive only
 				SetLog("Village was Inactive, Reloading CoC", $COLOR_ERROR)
 				If $g_bForceSinglePBLogoff Then $g_bGForcePBTUpdate = True
+				Return checkObstacles_ReloadCoC($aReloadButton, "#0128", $bRecursive) ;Click on reload button
 			Case _CheckPixel($aIsConnectLost, $g_bNoCapturePixel) Or UBound(decodeSingleCoord(FindImageInPlace("ConnectionLost", $g_sImgConnectionLost, "160,300,700,450", False))) > 1 ; Connection Lost
 				;  Add check for banned account :(
 				$Result = getOcrReloadMessage(171, 358 + $g_iMidOffsetY, "Check Obstacles OCR 'policy at super'=") ; OCR text for "policy at super"
@@ -215,7 +216,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 				ClickAway(Default, True)
 		EndSelect
 		If TestCapture() Then Return "Village is out of sync or inactivity or connection lost or maintenance"
-        Return checkObstacles_ReloadCoC($aReloadButton, "#0131", $bRecursive) ; Click for out of sync or inactivity or connection lost or maintenance
+        Return checkObstacles_ReloadCoC() ; Click for out of sync or inactivity or connection lost or maintenance
 	EndIf
 	
 	; Custom Maintenance - Team AIO Mod++
