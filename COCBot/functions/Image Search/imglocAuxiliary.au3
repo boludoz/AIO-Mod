@@ -136,14 +136,14 @@ EndFunc   ;==>checkImglocError
 
 Func ClickB($sButtonName, $buttonTileArrayOrPatternOrFullPath = Default, $iDelay = 100, $iLoop = 1)
 	Local $aiButton = -1
-	
+
 	For $i = 1 To $iLoop
 		$aiButton = findButton($sButtonName, $buttonTileArrayOrPatternOrFullPath, 1, True)
 		If $iLoop = 1 Then ExitLoop
 		If _Sleep($iDelay) Then Return
 		If IsArray($aiButton) And UBound($aiButton) >= 2 Then ExitLoop
 	Next
-	
+
 	If IsArray($aiButton) And UBound($aiButton) >= 2 Then
 		ClickP($aiButton, 1)
 		If _Sleep($iDelay) Then Return
@@ -192,12 +192,12 @@ Func findButton($sButtonName, $buttonTileArrayOrPatternOrFullPath = Default, $ma
 	Local $i = 0
 	Do
 		For $buttonTile In $aButtons
-	
+
 			; Check function parameters
 			If FileExists($buttonTile) = 0 Then ContinueLoop ; Team AIO Mod++
-	
+
 			If $bForceCapture Then _CaptureRegion2() ;to have FULL screen image to work with
-	
+
 			SetDebugLog(" imgloc searching for: " & $sButtonName & " : " & $buttonTile)
 			Local $result = DllCallMyBot("FindTile", "handle", $g_hHBitmap2, "str", $buttonTile, "str", $searchArea, "Int", $maxReturnPoints)
 			$error = @error ; Store error values as they reset at next function call
@@ -207,7 +207,7 @@ Func findButton($sButtonName, $buttonTileArrayOrPatternOrFullPath = Default, $ma
 				SetDebugLog(" imgloc DLL Error imgloc " & $error & " --- " & $extError)
 				Return SetError(2, 1, $extError) ; Set external error code = 2 for DLL error
 			EndIf
-	
+
 			If $result[0] <> "" And checkImglocError($result, "imglocFindButton", $buttonTile) = False Then
 				SetDebugLog($sButtonName & " Button Image Found in: " & $result[0])
 				$aCoords = StringSplit($result[0], "|", $STR_NOCOUNT)
@@ -223,7 +223,7 @@ Func findButton($sButtonName, $buttonTileArrayOrPatternOrFullPath = Default, $ma
 					Return $aReturnResult ; return 2D array
 				EndIf
 			EndIf
-	
+
 		Next
 		If _Sleep(500) Then Return $aCoords
 		$i += 1
@@ -837,3 +837,55 @@ Func ImgLogDebugProps($result)
 		Next
 	Next
 EndFunc   ;==>ImgLogDebugProps
+
+Func CaptureReg($sDir, $searchArea = "FV", $bForceCapture = True, $maxReturnPoints = 1000)
+	Local $aReturnResult[0][4]
+	If $bForceCapture Then _CaptureRegion2() ;to have FULL screen image to work with
+
+	Local $aFiles = _FileListToArrayRec($sDir, "*.png;*.xml", 1, 0, 1,2)
+	If @error Then
+		Setlog("findMulti: No files in " & $sDir, $COLOR_ERROR)
+		Return SetError(1, 1, False)
+	EndIf
+
+	Local $asResult, $iError, $bFirst = False, $aCoords, $iCount = 0, $sFname = ""
+	For $buttonTile In $aFiles
+		If $bFirst = False Then
+			$bFirst = True
+			ContinueLoop
+		EndIf
+		
+		$asResult = DllCallMyBot("FindTile", "handle", $g_hHBitmap2, "str", $buttonTile, "str", $searchArea, "Int", $maxReturnPoints)
+		If @error Then _logErrorDLLCall($g_sLibMyBotPath, @error)
+
+		If IsArray($asResult) Then
+			If $asResult[0] = "0" Then
+				$iError = 0
+			ElseIf $asResult[0] = "-1" Then
+				$iError = -1
+			ElseIf $asResult[0] = "-2" Then
+				$iError = -2
+			Else
+				If $asResult[0] = "" Then ContinueLoop
+				$aCoords = StringSplit($asResult[0], "|", $STR_NOCOUNT)
+				For $i = 1 To UBound($aCoords) - 1
+					$sFname = StringRegExpReplace($buttonTile, "^.*\\|\_.*$", "")
+					ReDim $aReturnResult[$iCount + 1][4]
+					$aReturnResult[$iCount][0] = $sFname
+					$aReturnResult[$iCount][1] = Number(StringRegExpReplace($aCoords[$i], "\,.*$", ""))
+					$aReturnResult[$iCount][2] = Number(StringRegExpReplace($aCoords[$i], "^.*\,", ""))
+					$aReturnResult[$iCount][3] = _StringBetween($sFname, "_", ".")
+					$iCount += 1
+				Next
+			EndIf
+		EndIf
+	Next
+	
+	If UBound($aReturnResult) < 1 Then 
+		Return -1
+	EndIf
+	
+	; DebugImgArrayClassic($aReturnResult, "CaptureReg")
+	
+	Return $aReturnResult ; return 3D array
+EndFunc

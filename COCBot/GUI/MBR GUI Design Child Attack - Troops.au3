@@ -68,7 +68,7 @@ Global $g_hLblBoosthour = 0, $g_ahLblBoosthoursE = 0
 Global $g_hLblBoosthours[12] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_hChkBoostBarracksHours[24] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], $g_hChkBoostBarracksHoursE1 = 0, $g_hChkBoostBarracksHoursE2 = 0
 Global $g_hChkSuperTroops = 0, $g_ahLblSuperTroops[$iMaxSupersTroop] = [0, 0], $g_ahCmbSuperTroops[$iMaxSupersTroop] = [0, 0], $g_ahPicSuperTroops[$iMaxSupersTroop] = [0, 0]
-Global $g_hCmbSuperTroopsResources = 0	; Custom Super Troops - Team AIO Mod++
+Global $g_hCmbSuperTroopsResources = 0, $g_hChkSuperAutoTroops = 0	; Custom Super Troops - Team AIO Mod++
 
 ; Train Order sub-tab
 Global $g_asTroopOrderList, $g_asSpellsOrderList ; Custom fix - Team AIO Mod++
@@ -613,10 +613,14 @@ Func CreateTrainBoost()
 		GUICtrlSetOnEvent(-1, "chkSuperTroops")
 
 	; Custom Super Troops - Team AIO Mod++
+	$g_hChkSuperAutoTroops = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "ChkAutoSuperTroops", "Automatic"), $x + 288, $y - 8, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkSuperTroops")
+		GUICtrlSetState(-1, $GUI_CHECKED)
+
 	$g_hCmbSuperTroopsResources = GUICtrlCreateCombo("", $x + 135, $y - 7, 115, 25, BitOR($CBS_DROPDOWNLIST + $CBS_AUTOHSCROLL, $WS_VSCROLL))
 		GUICtrlSetData(-1, "Prioritize dark elixir|Prioritize potion", "Prioritize dark elixir")
 		GUICtrlSetOnEvent(-1, "cmbSuperTroopsResources")
-
+	; ------------------------------------
 	$y -= 17
 
 	For $i = 0 To $iMaxSupersTroop - 1

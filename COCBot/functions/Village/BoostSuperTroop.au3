@@ -4,7 +4,7 @@
 ; Syntax ........: BoostSuperTroop()
 ; Parameters ....:
 ; Return values .:
-; Author ........: xbebenk (08/2021), Boldina (08/2021)
+; Author ........: xbebenk (08/2021), Boldina (08/2021 - 03/2022)
 ; Modified ......:
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2021
 ;                  MyBot is distributed under the terms of the GNU GPL
@@ -18,24 +18,42 @@ Func BoostSuperTroop($bTest = False)
 		Return False
 	EndIf
 
-	; Not necessary
-	; If $g_iCommandStop = 0 Or $g_iCommandStop = 3 Then ;halt attack.. do not boost now
-	; If $g_bSkipBoostSuperTroopOnHalt Then
-	; SetLog("BoostSuperTroop() skipped, account on halt attack mode", $COLOR_DEBUG)
-	; Return False
-	; EndIf
-	; EndIf
-
 	SetLog("Checking super troops.", $COLOR_INFO)
 
 	Local $aAlreadyChecked[0]
-	Local $aCmbTmp[2] = [_ArrayMin($g_iCmbSuperTroops, 1) - 1, _ArrayMax($g_iCmbSuperTroops, 1) - 1]
+
+	Local $aTroopsAuto[$iMaxSupersTroop] = [0, 0], $iCount = 0
+
+	If $g_bSuperAutoTroops = True And $g_bQuickTrainEnable = False Then
+		Local $iH = 0, $iMiniIndex = 0
+		For $iAssignSt = 0 To UBound($g_ahTxtTrainArmyTroopCount) - 1
+			If $g_aiArmyCustomTroops[$iAssignSt] = 0 Then ContinueLoop
+
+			$iMiniIndex = -1
+
+			For $i2 = 0 To $iSuperTroopsCount -1
+				If $iAssignSt == $g_asSuperTroopIndex[$i2] Then
+					$aTroopsAuto[$iCount] = $i2 + 1
+					$iCount += 1
+					If $iCount = $iMaxSupersTroop + 1 Then
+						SetLog("Max Super Troops limit in game overflow on GUI (" & $iMaxSupersTroop & ")", $COLOR_ERROR)
+						ExitLoop 2
+					EndIf
+					ExitLoop
+				EndIf
+			Next
+
+		Next
+	EndIf
+
+	Local $aiSTCombos = ($g_bSuperAutoTroops = True And $g_bQuickTrainEnable = False) ? ($aTroopsAuto) : ($g_iCmbSuperTroops)
+	Local $aCmbTmp[2] = [_ArrayMin($aiSTCombos, 1) - 1, _ArrayMax($aiSTCombos, 1) - 1]
 
 	If $bTest = True Then _ArrayDisplay($aCmbTmp)
 
 	Local $iActive = 0
 	For $i = 0 To 1
-		If $g_iCmbSuperTroops[$i] > 0 Then
+		If $aiSTCombos[$i] > 0 Then
 			$iActive += 1
 		EndIf
 	Next
@@ -194,9 +212,9 @@ Func BoostSuperTroop($bTest = False)
 								EndIf
 							Next
 						EndIf
-						
+
 						ClickDrag(283, 500, 283, 260, 200)
-						
+
 						If $bTest Then SetLog("Stage ClickDrag.", $COLOR_INFO)
 						If _Sleep(1500) Then Return False
 					Else

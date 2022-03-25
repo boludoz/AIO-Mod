@@ -16,6 +16,7 @@
 
 Func radSelectTrainType()
 	If GUICtrlRead($g_hRadCustomTrain) = $GUI_CHECKED Then
+		$g_bQuickTrainEnable = False
 		_GUICtrlTab_ClickTab($g_hGUI_TRAINARMY_ARMY_TAB, 0)
 		For $i = 0 To 2
 			_GUI_Value_STATE("DISABLE", $g_ahChkArmy[$i] & "#" & $g_ahChkUseInGameArmy[$i] & "#" & $g_ahLblEditArmy[$i] & "#" & $g_ahBtnEditArmy[$i])
@@ -24,6 +25,7 @@ Func radSelectTrainType()
 		lblTotalCountTroop1()
 		TotalSpellCountClick()
 	Else
+		$g_bQuickTrainEnable = True
 		_GUICtrlTab_ClickTab($g_hGUI_TRAINARMY_ARMY_TAB, 1)
 		_GUI_Value_STATE("ENABLE", $g_ahChkArmy[0] & "#" & $g_ahChkArmy[1] & "#" & $g_ahChkArmy[2])
 		For $i = 0 To 2
@@ -38,6 +40,7 @@ Func radSelectTrainType()
 		GUICtrlSetData($g_hLblDarkCostSpell, "0")
 	EndIf
 	lblTotalCountSiege()
+	chkSuperTroops() ; Custom Super Troops - Team AIO Mod++
 EndFunc   ;==>radSelectTrainType
 
 Func chkQuickTrainArmy()
@@ -1266,7 +1269,7 @@ EndFunc   ;==>ApplyQuickTrainArmy
 Func TxtQTEdit_Troop()
 	Local $iTroop, $iQty, $iSpace, $iSlot, $iTotalCampSpace=0
 
-   $iTotalCampSpace=Number(GUICtrlRead($g_hTxtTotalCampForced))
+   $iTotalCampSpace = Number(GUICtrlRead($g_hTxtTotalCampForced))
 
    For $j = 0 To 6
 		If @GUI_CtrlId = $g_ahTxtQTEdit_Troop[$j] Then
@@ -1295,7 +1298,7 @@ EndFunc   ;==>TxtQTEdit_Troop
 Func TxtQTEdit_Spell()
 	Local $iSpell, $iQty, $iSpace, $iSlot, $iTotalSpellSpace=0
 
-	$iTotalSpellSpace=Number(GUICtrlRead($g_hTxtTotalCountSpell))
+	$iTotalSpellSpace = Number(GUICtrlRead($g_hTxtTotalCountSpell))
 
 	For $j = 0 To 6
 		If @GUI_CtrlId = $g_ahTxtQTEdit_Spell[$j] Then
@@ -1342,26 +1345,25 @@ Func TotalSpellCount_QTEdit()
 EndFunc   ;==>TotalSpellCount_QTEdit
 #EndRegion QuickTrain
 
+; Custom Super Troops - Team AIO Mod++
 Func chkSuperTroops()
-	If GUICtrlRead($g_hChkSuperTroops) = $GUI_CHECKED Then
-		$g_bSuperTroopsEnable = True
-		GUICtrlSetState($g_hCmbSuperTroopsResources, $GUI_ENABLE)
-		For $i = 0 To $iMaxSupersTroop - 1
-			GUICtrlSetState($g_ahLblSuperTroops[$i], $GUI_ENABLE)
-			GUICtrlSetState($g_ahCmbSuperTroops[$i], $GUI_ENABLE)
-			GUICtrlSetState($g_ahPicSuperTroops[$i], $GUI_SHOW)
-			_GUICtrlSetImage($g_ahPicSuperTroops[$i], $g_sLibIconPath, $g_aSuperTroopsIcons[$g_iCmbSuperTroops[$i]])
-		Next
-	Else
-		$g_bSuperTroopsEnable = False
-		GUICtrlSetState($g_hCmbSuperTroopsResources, $GUI_DISABLE)
-		For $i = 0 To $iMaxSupersTroop - 1
-			GUICtrlSetState($g_ahLblSuperTroops[$i], $GUI_DISABLE)
-			GUICtrlSetState($g_ahCmbSuperTroops[$i], $GUI_DISABLE)
-			GUICtrlSetState($g_ahPicSuperTroops[$i], $GUI_HIDE)
-			_GUICtrlSetImage($g_ahPicSuperTroops[$i], $g_sLibIconPath, $g_aSuperTroopsIcons[$g_iCmbSuperTroops[$i]])
-		Next
-	EndIf
+	$g_bSuperAutoTroops = GUICtrlRead($g_hChkSuperAutoTroops) = $GUI_CHECKED
+	
+	GUICtrlSetState($g_hChkSuperAutoTroops, ($g_bQuickTrainEnable = True) ? ($GUI_DISABLE) : ($GUI_ENABLE))
+	
+	$g_bSuperTroopsEnable = GUICtrlRead($g_hChkSuperTroops) = $GUI_CHECKED
+	GUICtrlSetState($g_hCmbSuperTroopsResources, ($g_bSuperTroopsEnable = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+	GUICtrlSetState($g_hChkSuperAutoTroops, ($g_bSuperTroopsEnable = True And $g_bQuickTrainEnable = False) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+	
+	Local $bCondition = $g_bSuperTroopsEnable And not $g_bSuperAutoTroops
+	If $g_bQuickTrainEnable And $g_bSuperTroopsEnable Then $bCondition = True
+	
+	For $i = 0 To $iMaxSupersTroop - 1
+		GUICtrlSetState($g_ahLblSuperTroops[$i], ($bCondition = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+		GUICtrlSetState($g_ahCmbSuperTroops[$i], ($bCondition = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+		GUICtrlSetState($g_ahPicSuperTroops[$i], ($bCondition = True) ? ($GUI_SHOW) : ($GUI_HIDE))
+		_GUICtrlSetImage($g_ahPicSuperTroops[$i], $g_sLibIconPath, $g_aSuperTroopsIcons[$g_iCmbSuperTroops[$i]])
+	Next
 EndFunc   ;==>chkSuperTroops
 
 Func cmbSuperTroops()

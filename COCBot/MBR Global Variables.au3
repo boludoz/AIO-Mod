@@ -726,7 +726,7 @@ Global $g_aSuperTroopsIcons[$iSuperTroopsCount + 1] = [$eIcnOptions, _
 
 Global $g_bSuperTroopsEnable = False
 Global $g_iCmbSuperTroops[$iMaxSupersTroop] = [0, 0]
-Global $g_iCmbSuperTroopsResources = 0	; Custom Super Troops - Team AIO Mod++
+Global $g_iCmbSuperTroopsResources = 0, $g_bSuperAutoTroops = True	; Custom Super Troops - Team AIO Mod++
 
 ; Spells
 Global Enum $eSpellLightning, $eSpellHeal, $eSpellRage, $eSpellJump, $eSpellFreeze, $eSpellClone, $eSpellInvisibility, _
