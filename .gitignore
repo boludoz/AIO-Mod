@@ -31,3 +31,4 @@ Profiles_/
 AIOMod.Updater.exe
 NoNotify.txt
 AutoUpdate.txt
+*.db

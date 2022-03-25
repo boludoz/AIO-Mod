@@ -245,8 +245,8 @@ Func UpgradeNormal($iUpgradeNumber)
 		If $g_bDebugImageSave Then SaveDebugImage("UpgradeRegBtn1")
 		Local $aBldgUpgradeWinChk[4] = [687, 161 + $g_iMidOffsetY, 0xCD1419, 20] ; Red pixel on botton X to close window
 		If _WaitForCheckPixel($aBldgUpgradeWinChk, $g_bCapturePixel,Default, "BldgUpgradeWinChk", Default, Default, 100) Then ; wait up to 2 seconds for hero upgrade window to open
-			If _ColorCheck(_GetPixelColor(459, 490 + $g_iMidOffsetY, True), Hex(0xE70A12, 6), 20) And _ColorCheck(_GetPixelColor(459, 494 + $g_iMidOffsetY), Hex(0xE70A12, 6), 20) And _
-					_ColorCheck(_GetPixelColor(459, 498 + $g_iMidOffsetY, True), Hex(0xE70A12, 6), 20) Then ; Check for Red Zero = means not enough loot!
+			Local $aRedNumbers[6] = [365, 504, 365 + 70, 504 + 35, Hex(0xFF887F, 6), 20] ; Custom fix - Team AIO Mod++
+			If _PixelSearch($aRedNumbers[0], $aRedNumbers[1], $aRedNumbers[2], $aRedNumbers[3], $aRedNumbers[4], $aRedNumbers[5]) Then ; Check for Red Zero = means not enough loot!
 
 				SetLog("Upgrade Fail #" & $iUpgradeNumber + 1 & " " & $g_avBuildingUpgrades[$iUpgradeNumber][4] & ", No Loot!", $COLOR_ERROR)
 
@@ -286,8 +286,8 @@ Func UpgradeNormal($iUpgradeNumber)
 				Return True
 			EndIf
 		ElseIf _ColorCheck(_GetPixelColor(721, 118 + $g_iMidOffsetY, True), Hex(0xDF0408, 6), 20) Then ; Check if the building Upgrade window is open, FOR WARDEN
-			If _ColorCheck(_GetPixelColor(459, 490 + $g_iMidOffsetY, True), Hex(0xE70A12, 6), 20) And _ColorCheck(_GetPixelColor(459, 494 + $g_iMidOffsetY), Hex(0xE70A12, 6), 20) And _
-					_ColorCheck(_GetPixelColor(459, 498 + $g_iMidOffsetY, True), Hex(0xE70A12, 6), 20) Then ; Check for Red Zero = means not enough loot!
+			Local $aRedNumbersWarden[6] = [600, 535, 600 + 70, 535 + 35, Hex(0xFF887F, 6), 20] ; Custom fix - Team AIO Mod++
+			If _PixelSearch($aRedNumbersWarden[0], $aRedNumbersWarden[1], $aRedNumbersWarden[2], $aRedNumbersWarden[3], $aRedNumbersWarden[4], $aRedNumbersWarden[5]) Then ; Check for Red Zero = means not enough loot!
 
 				SetLog("Upgrade Fail #" & $iUpgradeNumber + 1 & " " & $g_avBuildingUpgrades[$iUpgradeNumber][4] & ", No Loot!", $COLOR_RED)
 
@@ -349,9 +349,9 @@ Func UpgradeHero($iUpgradeNumber)
 		If _Sleep($DELAYUPGRADEHERO3) Then Return ; Wait for window to open
 		If $g_bDebugImageSave Then SaveDebugImage("UpgradeDarkBtn1")
 		Local $aHeroUpgradeWinChk[4] = [729, 128 + $g_iMidOffsetY, 0xCD161D, 20] ; Red pixel on botton X to close window
-		If _WaitForCheckPixel($aHeroUpgradeWinChk, $g_bCapturePixel,Default, "HeroUpgradeWinChk", Default, Default, 100) Then ; wait up to 2 seconds for hero upgrade window to open
-			If _ColorCheck(_GetPixelColor(691, 523 + $g_iMidOffsetY, True), Hex(0xE70A12, 6), 20) And _ColorCheck(_GetPixelColor(691, 527 + $g_iMidOffsetY), Hex(0xE70A12, 6), 20) And _
-					_ColorCheck(_GetPixelColor(691, 531 + $g_iMidOffsetY, True), Hex(0xE70A12, 6), 20) Then ; Check for Red Zero = means not enough loot!
+		Local $aRedNumbers[6] = [600, 535, 600 + 70, 535 + 35, Hex(0xFF887F, 6), 20] ; Custom fix - Team AIO Mod++
+		If _WaitForCheckPixel($aHeroUpgradeWinChk, $g_bCapturePixel, Default, "HeroUpgradeWinChk", Default, Default, 100) Then ; wait up to 2 seconds for hero upgrade window to open
+			If _PixelSearch($aRedNumbers[0], $aRedNumbers[1], $aRedNumbers[2], $aRedNumbers[3], $aRedNumbers[4], $aRedNumbers[5]) Then ; Check for Red Zero = means not enough loot!
 				SetLog("Hero Upgrade Fail #" & $iUpgradeNumber + 1 & " " & $g_avBuildingUpgrades[$iUpgradeNumber][4] & " No DE!", $COLOR_ERROR)
 				ClickAway()
 				Return False
