@@ -11,13 +11,21 @@
 ; ===============================================================================================================================
 Global $g_bForceDocr = False
 
-Func getUpgradeResources($x_start = 330, $y_start = 478, $iWidth = 415, $iHeight = 125)
-	Return getOcrAndCaptureDOCR($g_sASUpgradeResourcesDOCRPath, $x_start, $y_start, $iWidth, $iHeight, True, True) 
-EndFunc   ;==>getUpgradeResources
+#Region - Team AIO Mod++ (Dissociable OCR)
+Func getResourcesBonus($x_start, $y_start) ; -> Gets complete value of Gold/Elixir bonus loot in "AttackReport.au3"
+	If $g_bForceDocr = False Then Return getOcrAndCapture("coc-bonus", $x_start, $y_start, 98, 20, True)
+	Return getOcrAndCaptureDOCR($g_sASUpgradeResourcesDOCRPath, $x_start, $y_start, 98, 18, True, True) 
+EndFunc   ;==>getResourcesBonus
 
-Func getUpgradeResourcesRed($x_start = 330, $y_start = 478, $iWidth = 415, $iHeight = 125)
-	Return getOcrAndCaptureDOCR($g_sASUpgradeResourcesRedDOCRPath, $x_start, $y_start, $iWidth, $iHeight, True, True)
-EndFunc   ;==>getUpgradeResourcesRed
+Func getUpgradeResource($x_start, $y_start) ; -> Gets complete value of Gold/Elixir xxx,xxx , RED text on green upgrade button."UpgradeBuildings.au3"
+	If $g_bForceDocr = False Then Return getOcrAndCapture("coc-u-r", $x_start, $y_start, 98, 20, True)
+	Return getOcrAndCaptureDOCR($g_sASUpgradeResourcesRedDOCRPath, $x_start, $y_start, 98, 18, True, True)
+EndFunc   ;==>getUpgradeResource
+
+Func getBldgUpgradeTime($x_start, $y_start) ; -> Gets complete remain building upgrade time
+	Return getOcrAndCapture("coc-uptime", $x_start, $y_start, 72, 18) ; Was 42. 72 tested as enough : "12d 19h" now
+EndFunc   ;==>getBldgUpgradeTime
+#EndRegion - Team AIO Mod++ (Dissociable OCR)
 
 ; Attack Screen
 Func getAttackScreenButtons($x_start, $y_start, $iWidth, $iHeight)
