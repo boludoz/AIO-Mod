@@ -74,6 +74,8 @@ Func BuilderBase($bTestRun = False, $bSkipBBCG = False)
 	Return $bReturn
 EndFunc
 
+Global $g_sTimerStatusBB
+
 Func _BuilderBase($bTestRun = False)
 	$g_iAvailableAttacksBB = 0
 	
@@ -121,11 +123,12 @@ Func _BuilderBase($bTestRun = False)
 
 	; Loops to do logic.
 	Local $iAttackLoops = 1
-	Local $iLoopsToDoCG = 25
 	Local $iLoopsToDoNormal = Random($g_iBBMinAttack, $g_iBBMaxAttack, 1)
+	Local $iLoopsToDoCG = 25 + $iLoopsToDoNormal
 	
 	Local $iLoopsToDo = 0
 	Local $iBigLoops = 0
+	$g_sTimerStatusBB = _DateAdd('n', Round(10 * Random(1.002, 1.005)), _NowCalc())
 	Do
 		$iBigLoops += 1
 
@@ -163,6 +166,15 @@ Func _BuilderBase($bTestRun = False)
 			$iLoopsToDo = ($bCondition = True And $bFunctionPassed) ? ($iLoopsToDoCG) : ($iLoopsToDoNormal)
 
 			Setlog("Dynamic attack loop: " & $iAttackLoops & " / " & $iLoopsToDo, $COLOR_INFO)
+			
+			If _DateIsValid($g_sTimerStatusBB) Then
+				Local $iDateDiff = _DateDiff('n', _NowCalc(), $g_sTimerStatusBB)
+				If $iDateDiff < 0 Then
+					SetLog("It's been a long time, checking clan games.", $COLOR_INFO)
+					$g_sTimerStatusBB = _DateAdd('n', Round(10 * Random(1.002, 1.005)), _NowCalc())
+					GoToClanGames()
+				EndIf
+			EndIf
 
 			;  $g_bCloudsActive fast network fix.
 			$g_bCloudsActive = True
@@ -202,6 +214,15 @@ Func _BuilderBase($bTestRun = False)
 
 		CleanBBYard()
 		If Not $g_bRunState Then Return
+
+		If _DateIsValid($g_sTimerStatusBB) Then
+			Local $iDateDiff = _DateDiff('n', _NowCalc(), $g_sTimerStatusBB)
+			If $iDateDiff > 0 Then
+				SetLog("It's been a long time, checking clan games.", $COLOR_INFO)
+				$g_sTimerStatusBB = _DateAdd('n', Round(10 * Random(1.002, 1.005)), _NowCalc())
+				GoToClanGames()
+			EndIf
+		EndIf
 
 	Until ($iAttackLoops >= $iLoopsToDo) Or $iBigLoops > 2 Or $bBoostedClock
 

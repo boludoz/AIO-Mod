@@ -986,6 +986,7 @@ Func runBot() ;Bot that runs everything in order
 
 			;ARCH Trying it out here.
 			If Not $g_bIsSearchLimit Then
+				If isOnBuilderBase() Then SwitchBetweenBases()
 				_ClanGames() ; move to here to pick event before going to BB.
 			EndIf
 			
@@ -1240,6 +1241,7 @@ Func AttackMain($bFirstStart = False, $bCheckCG = True) ;Main control for attack
 
 			; Custom BB - Team__AiO__MOD
 			If $bCheckCG = True Then
+				If isOnBuilderBase() Then SwitchBetweenBases()
 				_ClanGames() ; Trying to do this above in the main loop
 				ClickAway(Default, True)
 			EndIf
@@ -1494,6 +1496,7 @@ Func FirstCheck()
 	Local $bCheckCG = False
 	If $g_bChkClanGamesEnabled Then
 		SetLog("Check ClanGames", $COLOR_INFO)
+		If isOnBuilderBase() Then SwitchBetweenBases()
 		_ClanGames()
 		If ByPassedForceBBAttackOnClanGames(False, True, True) Then
 			SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
@@ -1594,13 +1597,3 @@ Func SetSAtk($attack = False)
 		$g_bTestSceneryAttack = False
 	EndIf
 EndFunc   ;==>SetSAtk
-
-Func DebugfindMultiple($directory, $sCocDiamond, $redLines, $minLevel = 0, $maxLevel = 1000, $maxReturnPoints = 0, $returnProps = "objectname,objectlevel,objectpoints", $bForceCapture = True)
-	Local $vArray = findMultiple($directory, $sCocDiamond, $redLines, $minLevel, $maxLevel, $maxReturnPoints, $returnProps, $bForceCapture)
-	If UBound($vArray) < 1 Or @error Then Return -1
-	For $i = 0 To UBound($vArray) - 1
-		_ArrayDisplay($vArray[$i], $i)
-	Next
-	Return 1
-EndFunc
-

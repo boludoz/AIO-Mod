@@ -90,9 +90,12 @@ Func BuilderBaseAttack($bTestRun = False)
 	SetLog(" - " & $HeroStatus, $COLOR_INFO)
 
 	If $g_bRestart = True Then Return
-	If FindVersusBattlebtn() And $IsReaddy And (($bIsToDropTrophies) Or ($g_iCmbBBAttack = $g_eBBAttackCSV) Or ($g_iCmbBBAttack = $g_eBBAttackSmart)) Then
-		ClickP($g_iMultiPixelOffSet, 1)
-		If RandomSleep(3000) Then Return
+	If $IsReaddy And (($bIsToDropTrophies) Or ($g_iCmbBBAttack = $g_eBBAttackCSV) Or ($g_iCmbBBAttack = $g_eBBAttackSmart)) Then
+		
+		If Not FindVersusBattlebtn() Then 
+			ClickAway()
+			Return False
+		EndIf
 
 		; Clouds
 		If Not WaitForVersusBattle() Then Return
@@ -163,7 +166,8 @@ Func BuilderBaseAttack($bTestRun = False)
 
 	; Exit
 	Setlog("Exit from Builder Base Attack!", $COLOR_INFO)
-	ClickAway() ; ClickP($aAway, 2, 0, "#0332") ;Click Away
+	ClickAway(Default, True, 2)
+	CheckMainScreen(True)
 	If _Sleep(2000) Then Return
 	Return True
 EndFunc   ;==>BuilderBaseAttack
@@ -338,11 +342,18 @@ Func FindVersusBattlebtn()
 	Local $aOkayVersusBattleBtn[2][3] = [[0xFDDF685, 1, 0], [0xDDF685, 2, 0]]
 
 	SetLog("Finding Button Now!")
-
-	For $i = 0 To 5
-		If _Sleep(1200) Then Return False
+	
+	Local $aXY[2] = [Random(515, 675, 1), Random(295, 350, 1)]
+	Local $bClicked = False
+	
+	For $i = 0 To 6
 		If _MultiPixelSearch(490, 284, 710, 375, 1, 1, Hex(0xFFCA4A, 6), $aFindVersusBattleBtn, 25) <> 0 Then
-			ExitLoop
+			PureClickP($aXY, 1)
+			If _Sleep(Random(800, 1200, 1)) Then Return False
+			$bClicked = True
+		ElseIf $bClicked = True Then
+			SetDebugLog("Find Now! Button detected: " & $g_iMultiPixelOffSet[0] & "," & $g_iMultiPixelOffSet[1])
+			Return True
 		Else
 			If _MultiPixelSearch(600, 452, 745, 510, 1, 1, Hex(0xDDF685, 6), $aOkayVersusBattleBtn, 25) <> 0 Then
 				SetDebugLog("OKAY! Button detected: " & $g_iMultiPixelOffSet[0] & "," & $g_iMultiPixelOffSet[1])
@@ -352,13 +363,11 @@ Func FindVersusBattlebtn()
 		EndIf
 	Next
 
-	If ($i >= 5) Or ($g_iMultiPixelOffSet[0] = Null) Then
+	If ($i >= 5) Or ($g_iMultiPixelOffSet[0] = Null) And $bClicked = False Then
 		SetLog("Find Now! Button not available...", $COLOR_DEBUG)
-		Return False
 	EndIf
 
-	SetDebugLog("Find Now! Button detected: " & $g_iMultiPixelOffSet[0] & "," & $g_iMultiPixelOffSet[1])
-	Return True
+	Return False
 EndFunc   ;==>FindVersusBattlebtn
 
 Func WaitForVersusBattle()
