@@ -764,7 +764,7 @@ Func runBot() ;Bot that runs everything in order
 		If isOnBuilderBase() Then SwitchBetweenBases()
 		_ClanGames()
 		SetLog("Let's play builder base only.")
-		BuilderBase()
+		BuilderBase(False, True)
 	Else
 		FirstCheck()
 	EndIf
@@ -969,8 +969,7 @@ Func runBot() ;Bot that runs everything in order
 			If $g_bRestart Then ContinueLoop
 
 			If $g_bChkOnlyFarm = False Then MainSXHandler() ; Super XP - Team AIO Mod++
-			If Not $g_bChkOnlyFarm Or (isGoldFull() And isElixirFull()) Then
-				If (isGoldFull() And isElixirFull()) And $g_bChkOnlyFarm Then SetLog("Only Farm but Resources Full, checking improvements.", $COLOR_INFO)
+			If Not $g_bChkOnlyFarm Then
 				Local $aRndFuncList = ["Laboratory", "UpgradeHeroes", "UpgradeBuilding", "PetHouse", "AutoUpgrade"]
 				_ArrayShuffle($aRndFuncList)
 				For $Index In $aRndFuncList
@@ -979,14 +978,19 @@ Func runBot() ;Bot that runs everything in order
 					If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 					If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 				Next
+			; ElseIf (isGoldFull() And isElixirFull()) And $g_bChkOnlyFarm And not $bBuilderBase Then 
+				; SetLog("Only Farm but Resources Full, checking improvements.", $COLOR_INFO)
+				; _RunFunction("UpgradeAll")
+				; If $g_bRestart Then ContinueLoop
 			EndIf
 
 			;ARCH Trying it out here.
-			If Not $g_bIsSearchLimit Then _ClanGames() ; move to here to pick event before going to BB.
-
+			If Not $g_bIsSearchLimit Then
+				_ClanGames() ; move to here to pick event before going to BB.
+			EndIf
+			
 			; Ensure, that wall upgrade is last of the upgrades
-
-			If Not $g_bChkOnlyFarm Or (isGoldFull() And isElixirFull()) Then
+			If Not $g_bChkOnlyFarm Then
 				Local $aRndFuncList = ['UpgradeWall', 'BuilderBase'] ;Copied BuilderBase to AttackMain
 				_ArrayShuffle($aRndFuncList)
 				For $Index In $aRndFuncList
@@ -996,9 +1000,9 @@ Func runBot() ;Bot that runs everything in order
 					If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 				Next
 				If Not $g_bRunState Then Return
-			ElseIf (isGoldFull() And isElixirFull()) And $g_bChkOnlyFarm Then
-				SetLog("Only Farm but resources full, checking walls.", $COLOR_INFO)
-				_RunFunction('UpgradeWall')
+			; ElseIf (isGoldFull() And isElixirFull()) And $g_bChkOnlyFarm And not $bBuilderBase Then
+				; SetLog("Only Farm but resources full, checking walls.", $COLOR_INFO)
+				; _RunFunction('UpgradeWall')
 			EndIf
 
 			If $g_bFirstStart Then SetDebugLog("First loop completed!")
@@ -1338,8 +1342,8 @@ Func __RunFunction($sAction)
 				If $g_bupgradekingenable Or $g_bupgradequeenenable Or $g_bupgradewardenenable Or $g_bupgradechampionenable Or $g_bAutoUpgradeEnabled Or $yes Then
 					cleanyard()
 					upgradeheroes()
-					autoupgrade(False)
 					upgradebuilding()
+					autoupgrade(False)
 				EndIf
 			EndIf
 		Case "AutoUpgrade"
@@ -1491,9 +1495,9 @@ Func FirstCheck()
 	If $g_bChkClanGamesEnabled Then
 		SetLog("Check ClanGames", $COLOR_INFO)
 		_ClanGames()
-		If ByPassedForceBBAttackOnClanGames(False, True) Then
+		If ByPassedForceBBAttackOnClanGames(False, True, True) Then
 			SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
-			BuilderBase()
+			BuilderBase(False, True)
 		Else
 			$bCheckCG = True
 		EndIf
@@ -1599,3 +1603,4 @@ Func DebugfindMultiple($directory, $sCocDiamond, $redLines, $minLevel = 0, $maxL
 	Next
 	Return 1
 EndFunc
+

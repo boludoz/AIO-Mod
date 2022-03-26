@@ -73,7 +73,7 @@ Func SaveConfig_MOD_MiscTab()
 	Next
 
 	; Save - Setlog limit - Team AIO Mod++
-	_Ini_Add("BotLogLineLimit", "Enable", (GUICtrlRead($g_hChkBotLogLineLimit) = ($GUI_CHECKED) ? (True) : (False) ))
+	_Ini_Add("BotLogLineLimit", "Enable", $g_bChkBotLogLineLimit ? 1 : 0)
 	_Ini_Add("BotLogLineLimit", "LimitValue", GUICtrlRead($g_hTxtLogLineLimit))
 
 	; Skip first check

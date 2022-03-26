@@ -22,7 +22,7 @@ Func TestBuilderBase()
 	SetDebugLog("** TestrunBuilderBase END**", $COLOR_DEBUG)
 EndFunc   ;==>TestrunBuilderBase
 
-Func BuilderBase($bTestRun = False)
+Func BuilderBase($bTestRun = False, $bSkipBBCG = False)
 	; If IsRequestDefense(False) And Not $g_bChkPlayBBOnly Then
 		; SetLog("Skip Builder Base Checks, Because your CC Planned to have Defense Troops.", $COLOR_INFO)
 		; Return
@@ -62,9 +62,7 @@ Func BuilderBase($bTestRun = False)
 	$g_bRestart = False
 	$g_bStayOnBuilderBase = True
 
-	If ClanGamesStatus() = "True" Or ClanGamesStatus() = "Undefined" Then
-		GoToClanGames()
-	EndIf
+	If $bSkipBBCG = False Then GoToClanGames()
 
 	$bReturn = _BuilderBase($bTestRun)
 	$g_bStayOnBuilderBase = False

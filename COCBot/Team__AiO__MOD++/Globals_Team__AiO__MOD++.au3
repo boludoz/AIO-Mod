@@ -556,10 +556,6 @@ Global $g_abChkSetFarm[$g_eTotalAcc], _
 		$g_aiCmbAction1[$g_eTotalAcc], $g_aiCmbCriteria1[$g_eTotalAcc], $g_aiTxtResource1[$g_eTotalAcc], $g_aiCmbTime1[$g_eTotalAcc], _
 		$g_aiCmbAction2[$g_eTotalAcc], $g_aiCmbCriteria2[$g_eTotalAcc], $g_aiTxtResource2[$g_eTotalAcc], $g_aiCmbTime2[$g_eTotalAcc]
 
-; Builder Status - Team AiO MOD++
-Global $g_sNextBuilderReadyTime = ""
-Global $g_asNextBuilderReadyTime[$g_eTotalAcc] = ["", "", "", "", "", "", "", ""]
-
 ; Max logout time - Team AiO MOD++
 Global $g_bTrainLogoutMaxTime = False, $g_iTrainLogoutMaxTime = 4
 
@@ -684,8 +680,6 @@ Global $g_bBBDropOrderSet = False
 Global $g_aiCmbBBDropOrder[$g_iBBTroopCount] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 Global $g_ahCmbBBDropOrder[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_iBBNextTroopDelay = 2000,  $g_iBBSameTroopDelay = 300; delay time between different and same troops
-
-
 
 ; Camps
 Global $g_aCamps[6] = ["", "", "", "", "", ""]
