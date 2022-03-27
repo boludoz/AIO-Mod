@@ -157,8 +157,15 @@ Func MainSuggestedUpgradeCode($bDebug = $g_bDebugSetlog)
 		If ClickOnBuilder() Then
 
 			SetLog("Checking for upgrades in the builder base.", $COLOR_INFO)
-
-			For $z = 0 To 2     ; For do scroll 3 times.
+			
+			Local $iMaxLoop = -1
+			While _PixelSearch(309, 79, 440, 103, Hex(0xD4FF80, 6), 25) = False And $iMaxLoop < 3
+				Swipe(344, 124, 344, 374, 1000)
+				If _Sleep(Random(1000, 2000, 1)) Then Return
+				$iMaxLoop += 1
+			Wend 
+			
+			For $z = 0 To 6     ; For do scroll 7 times.
 
 				If _Sleep(3000) Then Return
 
@@ -273,6 +280,7 @@ Func MainSuggestedUpgradeCode($bDebug = $g_bDebugSetlog)
 				EndIf
 
 				If _Sleep(1500) Then Return
+				If _PixelSearch(309, 79, 440, 103, Hex(0xD4FF80, 6), 25) = True Then ExitLoop
 			Next
 
 		EndIf

@@ -45,15 +45,22 @@ Func _ZoomOut() ;Zooms out
 			$Result = AndroidOnlyZoomOut()
 		EndIf
 		$g_bSkipFirstZoomout = True
-		Local $a = SearchZoomOut()
-		Return StringIsSpace($a[0]) = 0 ? True : False
+		If UBound($a) > 0 And not @error Then
+			Return (StringIsSpace($a[0]) = 0) ? (True) : (False)
+		Else
+			Return False
+		EndIf
 	EndIf
 
 	; Android embedded, only use Android zoomout
 	$Result = AndroidOnlyZoomOut()
 	$g_bSkipFirstZoomout = True
 	Local $a = SearchZoomOut()
-	Return StringIsSpace($a[0]) = 0 ? True : False
+	If UBound($a) > 0 And not @error Then
+		Return (StringIsSpace($a[0]) = 0) ? (True) : (False)
+	Else
+		Return False
+	EndIf
 EndFunc   ;==>_ZoomOut
 
 Func ZoomOutBlueStacks() ;Zooms out

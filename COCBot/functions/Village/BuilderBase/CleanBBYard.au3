@@ -13,16 +13,15 @@
 ; Example .......: No
 ; ===============================================================================================================================
 #Region - Custom Yard - Team AIO Mod++
-Func CleanBBYard() 
+Func CleanBBYard()
 	If Not $g_bRunState Then Return
 
 	; Early exist if noting to do
 	If Not $g_bChkCleanBBYard And Not TestCapture() Then Return
 
 	FuncEnter(CleanBBYard)
-
+	
 	Local $bBuilderBase = True
-
 	If isOnBuilderBase(True) Then
 		SetLog("Going to check Builder Base Yard For Obstacles!", $COLOR_INFO)
 		Local $hObstaclesTimer = __TimerInit()
@@ -33,16 +32,15 @@ Func CleanBBYard()
 		If Not @error Then
 			; Get Builders available
 			If Not getBuilderCount(False, $bBuilderBase) Then Return
-			If $g_aiCurrentLootBB[$eLootElixirBB] = 0 Then BuilderBaseReport()
+			BuilderBaseReport()
 			If _Sleep($DELAYRESPOND) Then Return
 			Local $hStarttime = _Timer_Init()
-			Local $aPoly
 			Local $iObstacleRemoved = 0
 			Local $bNoBuilders = $g_iFreeBuilderCountBB < 1
 			If $g_iFreeBuilderCountBB > 0 And $g_bChkCleanBBYard = True And Number($g_aiCurrentLootBB[$eLootElixirBB]) > 50000 Then
-				Local $aCleanYardBBNXY = findMultipleQuick($g_sImgCleanBBYard, 0, "FV", Default, Default, Default, 5)
-				SetDebugLog("Benchmark Image Detection Of Builder Base Clean Yard: " & Round(_Timer_Diff($hStarttime), 2) & "'ms")
+				Local $aCleanYardBBNXY = findMultipleQuick($g_sImgCleanBBYard)
 				If UBound($aCleanYardBBNXY) > 0 And not @error Then
+					SetDebugLog("Benchmark Image Detection Of Builder Base Clean Yard: " & Round(_Timer_Diff($hStarttime), 2) & "'ms")
 					_ArrayShuffle($aCleanYardBBNXY)
 					SetDebugLog("Total Obstacles Found: " & UBound($aCleanYardBBNXY))
 					For $i = 0 To UBound($aCleanYardBBNXY) - 1
@@ -50,8 +48,7 @@ Func CleanBBYard()
 						SetLog("Going to remove Builder Base Obstacle: " & $iObstacleRemoved, $COLOR_SUCCESS)
 						SetDebugLog($aCleanYardBBNXY[$i][0] & " found at (" & $aCleanYardBBNXY[$i][1] & "," & $aCleanYardBBNXY[$i][2] & ")", $COLOR_SUCCESS)
 						If SecureClick($aCleanYardBBNXY[$i][1], $aCleanYardBBNXY[$i][2]) = False Then ContinueLoop
-						$aPoly = ($g_bEdgeObstacle = False) ? ($g_aBuilderBaseAttackPolygon) : ($g_aBuilderBaseOuterPolygon)
-						If InDiamondBB($aCleanYardBBNXY[$i][1], $aCleanYardBBNXY[$i][2], $aPoly) = False Then ContinueLoop
+						If InDiamondBB($aCleanYardBBNXY[$i][1], $aCleanYardBBNXY[$i][2], $g_aBuilderBaseAttackPolygon) = False Then ContinueLoop
 						If IsMainPageBuilderBase() Then Click($aCleanYardBBNXY[$i][1], $aCleanYardBBNXY[$i][2], 1, 0, "#0430")
 						If _Sleep($DELAYCOLLECT3) Then Return
 						If Not ClickRemoveObstacle() Then 
@@ -92,7 +89,7 @@ Func CleanBBYard()
 					Next
 				EndIf
 			ElseIf $g_iFreeBuilderCountBB > 0 And $g_bChkCleanBBYard = True And Number($g_aiCurrentLootBB[$eLootElixirBB]) < 50000 Then
-				SetLog("Sorry, Low Builder Base Elixer(" & $g_aiCurrentLootBB[$eLootElixirBB] & ") Skip remove Obstacles check!", $COLOR_INFO)
+				SetLog("Sorry, Low Builder Base Elixir (" & $g_aiCurrentLootBB[$eLootElixirBB] & ") Skip remove Obstacles check!", $COLOR_INFO)
 			EndIf
 	
 			If $bNoBuilders Then

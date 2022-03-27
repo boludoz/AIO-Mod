@@ -194,7 +194,7 @@ Func BuilderPotionBoost($bDebug = False)
 				EndIf
 				ExitLoop
 			Else
-				clickdrag(344, 124, 344, 374, 1000, True)
+				Swipe(344, 124, 344, 374, 1000)
 				If _Sleep($DELAYBOOSTHEROES2 * 2) Then Return
 			EndIf
 		Next
