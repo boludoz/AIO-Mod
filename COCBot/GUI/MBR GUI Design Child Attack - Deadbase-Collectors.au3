@@ -47,7 +47,7 @@ Func CreateAttackSearchDeadBaseCollectors()
 			$g_ahChkDBCollectorLevel[$i] = GUICtrlCreateCheckbox("", $x, $y, 18, 18)
 				$sTxtTip = $s_TxtTip1 & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkCollectorLevel" & $i & "_Info_01", "for level " & $i & " elixir collectors during dead base detection.")
 				_GUICtrlSetTip(-1, $sTxtTip)
-				GUICtrlSetState(-1, ($i = 6 ? GUICtrlSetState(-1, BitOR($GUI_UNCHECKED, $GUI_DISABLE)) : $GUI_CHECKED))
+				GUICtrlSetState(-1, ($i = 6) ? (GUICtrlSetState(-1, $GUI_UNCHECKED + $GUI_DISABLE)) : (($g_abCollectorLevelEnabled[$i] = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED)))
 				GUICtrlSetOnEvent(-1, "chkDBCollector")
 			_GUICtrlCreateIcon($g_sLibIconPath, $eIcnCollector, $x + 20, $y, 16, 16)
 				_GUICtrlSetTip(-1, $sTxtTip)
@@ -55,7 +55,7 @@ Func CreateAttackSearchDeadBaseCollectors()
 				_GUICtrlSetTip(-1, $sTxtTip)
 			$g_ahCmbDBCollectorLevel[$i] = GUICtrlCreateCombo("", $x + 125, $y, 75, 20, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 				_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "LblCollectorLevel" & $i & "_Info_01", "Select how full a level " & $i & ' collector needs to be for it to be marked "dead"'))
-				GUICtrlSetData(-1, "50%|100%", "100%")
+				GUICtrlSetData(-1, "50%|100%", ($i > 12) ? ("50%") : ("100%"))
 				GUICtrlSetOnEvent(-1, "cmbDBCollector")
 			;GUICtrlCreateLabel($g_hTxtFull, $x + 205, $y + 3)
 	Next
@@ -66,7 +66,7 @@ Func CreateAttackSearchDeadBaseCollectors()
 			_GUICtrlSetTip(-1, $sTxtTip)
 		$g_hCmbMinCollectorMatches = GUICtrlCreateCombo("", $x + 125, $y, 75, 20, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 			_GUICtrlSetTip(-1, $sTxtTip)
-			GUICtrlSetData(-1, "1|2|3|4|5|6", "3")
+			GUICtrlSetData(-1, "1|2|3|4|5|6", String($g_iCollectorMatchesMin))
 			GUICtrlSetOnEvent(-1, "cmbMinCollectorMatches")
 
 	$y += 25
@@ -100,12 +100,13 @@ Func CreateAttackSearchDeadBaseCollectors()
 	$y -= 300
 	$x += 230
 		$g_hChkDBCollectorNone = GUICtrlCreateRadio(GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkDBNone", "None"), $x, $y, -1, -1)
+			GUICtrlSetState(-1, $GUI_CHECKED)
 			GUICtrlSetOnEvent(-1, "chkCollectorsAndRedLines")
 
 	$y += 20
 		$g_hChkDBMeetCollectorOutside = GUICtrlCreateRadio(GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkDBMeetCollectorOutside", "Check Collectors Outside"), $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkDBMeetCollectorOutside_Info_01", "Search for bases that has their collectors outside."))
-			GUICtrlSetState(-1, $GUI_CHECKED)
+			GUICtrlSetState(-1, $GUI_UNCHECKED)
 			GUICtrlSetOnEvent(-1, "chkCollectorsAndRedLines")
 
 	$y += 28

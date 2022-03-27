@@ -1190,7 +1190,7 @@ Func RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True,
 	Return FuncReturn()
 EndFunc   ;==>RestartAndroidCoC
 
-Func _RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True, $iRetry = 0, $iRecursive = 0, $bSkipSharedPrefs = False) ; Custom fix - Team AIO Mod++ (Credits xbebenk)
+Func _RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True, $iRetry = 0, $iRecursive = 0)
 	ClearClicks() ; it can happen the clicks are hold back, ensure it's cleared
 	$g_bSkipFirstZoomout = False
 	ResumeAndroid()
@@ -1201,7 +1201,7 @@ Func _RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True
 	EndIf
 
 	Local $cmdOutput, $process_killed, $connected_to
- 
+
 	; Test ADB is connected
 	;$cmdOutput = LaunchConsole($g_sAndroidAdbPath, "connect " & $g_sAndroidAdbDevice, $process_killed)
 	;$connected_to = StringInStr($cmdOutput, "connected to")
@@ -1213,7 +1213,7 @@ Func _RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True
 			SetLog("Please wait for CoC restart.....", $COLOR_INFO) ; Let user know we need time...
 			$sRestart = "-S "
 		Else
-			SetLog("Starting CoC, Please wait...", $COLOR_INFO) ; Let user know we need time...
+			SetLog("Please wait for CoC restart....", $COLOR_INFO) ; Let user know we need time...
 		EndIf
 	Else
 		SetLog("Launch Clash of Clans now...", $COLOR_SUCCESS)
@@ -1223,12 +1223,8 @@ Func _RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True
 	;AndroidAdbTerminateShellInstance()
 	If Not $g_bRunState Then Return False
 	;$cmdOutput = LaunchConsole($g_sAndroidAdbPath, "-s " & $g_sAndroidAdbDevice & " shell am start " & $sRestart & "-n " & $g_sAndroidGamePackage & "/" & $g_sAndroidGameClass, $process_killed, 30 * 1000) ; removed "-W" option and added timeout (didn't exit sometimes)
-	#Region - Custom fix - Team AIO Mod++
-	; Credits : xbebenk
 	If ((ProfileSwitchAccountEnabled() And $g_bChkSharedPrefs) Or $g_bUpdateSharedPrefs) And HaveSharedPrefs() And _
-			($g_bUpdateSharedPrefs Or $g_PushedSharedPrefsProfile <> $g_sProfileCurrentName Or ($g_PushedSharedPrefsProfile_Timer = 0 Or _ 
-			__TimerDiff($g_PushedSharedPrefsProfile_Timer) > 120000)) And Not $bSkipSharedPrefs Then PushSharedPrefs()
-	#EndRegion - Custom fix - Team AIO Mod++
+			($g_bUpdateSharedPrefs Or $g_PushedSharedPrefsProfile <> $g_sProfileCurrentName Or ($g_PushedSharedPrefsProfile_Timer = 0 Or __TimerDiff($g_PushedSharedPrefsProfile_Timer) > 120000)) Then PushSharedPrefs()
 
 	$cmdOutput = AndroidAdbSendShellCommand("set export=$(am start " & $sRestart & "-n " & $g_sAndroidGamePackage & "/" & $g_sAndroidGameClass & " >&2)", 15000) ; timeout of 15 Seconds
 	If StringInStr($cmdOutput, "Error:") > 0 And StringInStr($cmdOutput, $g_sAndroidGamePackage) > 0 Then
@@ -1246,7 +1242,7 @@ Func _RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True
 	If Not IsAdbConnected($cmdOutput) Then
 		If Not ConnectAndroidAdb() Then Return False
 	EndIf
-	
+
 	If Not $g_bRunState Then Return False
 	AndroidAdbLaunchShellInstance()
 
@@ -1254,10 +1250,8 @@ Func _RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True
 	InitAndroidTimeLag()
 
 	; wait 3 sec. CoC might have just crashed
-	If _SleepStatus(20000) Then Return False ;AndroidAdbSendShellCommand $timeout seem not working, make more time here ; Custom fix - Team AIO Mod++ (Credits xbebenk)
-	
-	If GetAndroidProcessPID(Default, False) > 0 Then Return True ; Custom fix - Team AIO Mod++ (Credits xbebenk)
-	
+	If _SleepStatus(3000) Then Return False
+
 	If GetAndroidProcessPID(Default, False) = 0 And @error = 0 Then
 		If $iRetry > 2 And $iRecursive > 2 Then
 			SetLog("Unable to load Clash of Clans ! ! !", $COLOR_ERROR)
