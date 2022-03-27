@@ -45,6 +45,7 @@ Func _ZoomOut() ;Zooms out
 			$Result = AndroidOnlyZoomOut()
 		EndIf
 		$g_bSkipFirstZoomout = True
+		Local $a = SearchZoomOut()
 		If UBound($a) > 0 And not @error Then
 			Return (StringIsSpace($a[0]) = 0) ? (True) : (False)
 		Else
@@ -119,7 +120,7 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 			$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
 		EndIf
 	    Local $tryCtrlWheelScroll = False
-		
+
 		If IsArray($aPicture) Then
 			While StringInStr($aPicture[0], "zoomout") = 0 and Not $tryCtrlWheelScroll
 
@@ -161,7 +162,7 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 				$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
 			WEnd
 		EndIf
-			
+
 		If $tryCtrlWheelScroll Then
 		    SetLog($g_sAndroidEmulator & " zoom-out with key " & $ZoomOutKey & " didn't work, try now Ctrl+MouseWheel...", $COLOR_INFO)
 			Return ZoomOutCtrlWheelScroll(False, False, False, False)
@@ -396,7 +397,7 @@ Func AndroidOnlyZoomOut() ;Zooms out
 				$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
 			WEnd
 			Return True
-		Else 
+		Else
 			Return True
 		EndIf
 	EndIf
