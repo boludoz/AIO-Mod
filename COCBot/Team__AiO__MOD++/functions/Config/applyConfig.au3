@@ -112,19 +112,19 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 	; <><><> MiscTab <><><>
 	Switch $TypeReadSave
 		Case "Read"
-			GUICtrlSetState($g_hChkSkipFirstAttack, ($g_bChkSkipFirstAttack = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
-			GUICtrlSetState($g_hEdgeObstacle, ($g_bEdgeObstacle = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+			GUICtrlSetState($g_hChkSkipFirstAttack, ($g_bChkSkipFirstAttack = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
+			GUICtrlSetState($g_hEdgeObstacle, ($g_bEdgeObstacle = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
 
 			For $i = $DB To $LB
-				GUICtrlSetState($g_hDeployCastleFirst[$i], ($g_bDeployCastleFirst[$i] = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+				GUICtrlSetState($g_hDeployCastleFirst[$i], ($g_bDeployCastleFirst[$i] = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
 			Next
 
 			; Setlog limit
-			GUICtrlSetState($g_hTxtLogLineLimit, ($g_bChkBotLogLineLimit = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+			GUICtrlSetState($g_hTxtLogLineLimit, ($g_bChkBotLogLineLimit = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
 			GUICtrlSetData($g_hTxtLogLineLimit, Abs($g_iTxtLogLineLimit))
 
 			; Skip first check
-			GUICtrlSetState($g_hChkBuildingsLocate, ($g_bChkAvoidBuildingsLocate = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+			GUICtrlSetState($g_hChkBuildingsLocate, ($g_bChkAvoidBuildingsLocate = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
 
 			; DeployDelay
 			GUICtrlSetData($g_hDeployDelay[0], $g_iDeployDelay[0])
@@ -137,9 +137,9 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			GUICtrlSetData($g_hDeployWave[2], $g_iDeployWave[2])
 
 			; ChkEnableRandom
-			GUICtrlSetState($g_hChkEnableRandom[0], ($g_bChkEnableRandom[0] = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
-			GUICtrlSetState($g_hChkEnableRandom[1], ($g_bChkEnableRandom[1] = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
-			GUICtrlSetState($g_hChkEnableRandom[2], ($g_bChkEnableRandom[2] = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+			GUICtrlSetState($g_hChkEnableRandom[0], ($g_bChkEnableRandom[0] = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
+			GUICtrlSetState($g_hChkEnableRandom[1], ($g_bChkEnableRandom[1] = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
+			GUICtrlSetState($g_hChkEnableRandom[2], ($g_bChkEnableRandom[2] = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
 
 			; Max sides
 			GUICtrlSetState($g_hMaxSidesSF, ($g_bMaxSidesSF = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
@@ -149,16 +149,16 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			GUICtrlSetState($g_hChkSmartFarmAndRandomDeploy, ($g_bUseSmartFarmAndRandomDeploy = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
 
 			; War Preparation
-			GUICtrlSetState($g_hChkStopForWar, ($g_bStopForWar = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+			GUICtrlSetState($g_hChkStopForWar, ($g_bStopForWar = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
 			_GUICtrlComboBox_SetCurSel($g_hCmbStopTime, Abs($g_iStopTime))
 			_GUICtrlComboBox_SetCurSel($g_hCmbStopBeforeBattle, $g_iStopTime < 0 ? 0 : 1)
 			_GUICtrlComboBox_SetCurSel($g_hCmbReturnTime, $g_iReturnTime)
 
-			GUICtrlSetState($g_hChkTrainWarTroop, ($g_bTrainWarTroop = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
-			GUICtrlSetState($g_hChkUseQuickTrainWar, ($g_bUseQuickTrainWar = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
-			GUICtrlSetState($g_ahChkArmyWar[0], ($g_aChkArmyWar[0] = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
-			GUICtrlSetState($g_ahChkArmyWar[1], ($g_aChkArmyWar[1] = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
-			GUICtrlSetState($g_ahChkArmyWar[2], ($g_aChkArmyWar[2] = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+			GUICtrlSetState($g_hChkTrainWarTroop, ($g_bTrainWarTroop = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
+			GUICtrlSetState($g_hChkUseQuickTrainWar, ($g_bUseQuickTrainWar = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
+			GUICtrlSetState($g_ahChkArmyWar[0], ($g_aChkArmyWar[0] = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
+			GUICtrlSetState($g_ahChkArmyWar[1], ($g_aChkArmyWar[1] = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
+			GUICtrlSetState($g_ahChkArmyWar[2], ($g_aChkArmyWar[2] = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
 
 			For $i = 0 To $eTroopCount - 1
 				GUICtrlSetData($g_ahTxtTrainWarTroopCount[$i], $g_aiWarCompTroops[$i])
@@ -167,28 +167,28 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			For $j = 0 To $eSpellCount - 1
 				GUICtrlSetData($g_ahTxtTrainWarSpellCount[$j], $g_aiWarCompSpells[$j])
 			Next
-			GUICtrlSetState($g_hChkRequestCCForWar, ($g_bRequestCCForWar = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+			GUICtrlSetState($g_hChkRequestCCForWar, ($g_bRequestCCForWar = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
 			GUICtrlSetData($g_hTxtRequestCCForWar, $g_sTxtRequestCCForWar)
 
 			#Region - Return Home by Time - Team AIO Mod++
-			GUICtrlSetState($g_hChkResetByCloudTimeEnable, ($g_bResetByCloudTimeEnable = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+			GUICtrlSetState($g_hChkResetByCloudTimeEnable, ($g_bResetByCloudTimeEnable = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
 			GUICtrlSetData($g_hTxtReturnTimer, $g_iTxtReturnTimer)
 			chkReturnTimer()
 			#EndRegion - Return Home by Time - Team AIO Mod++
 
 			#Region - No Upgrade In War - Team AIO Mod++
-			GUICtrlSetState($g_hChkNoUpgradeInWar, ($g_bNoUpgradeInWar = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+			GUICtrlSetState($g_hChkNoUpgradeInWar, ($g_bNoUpgradeInWar = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
 			#EndRegion - No Upgrade In War - Team AIO Mod++
 
 			#Region - Legend trophy protection - Team AIO Mod++
-			GUICtrlSetState($g_hChkProtectInLL, ($g_bProtectInLL = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
-			GUICtrlSetState($g_hChkForceProtectLL, ($g_bForceProtectLL = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+			GUICtrlSetState($g_hChkProtectInLL, ($g_bProtectInLL = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
+			GUICtrlSetState($g_hChkForceProtectLL, ($g_bForceProtectLL = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
 			ChkProtectInLL()
 			#EndRegion - Legend trophy protection - Team AIO Mod++
 
 			#Region - Custom Improve - Team AIO Mod++
 			For $i = 0 To UBound($g_iChkBBUpgradesToIgnore) - 1
-				GUICtrlSetState($g_hChkBBUpgradesToIgnore[$i], ($g_iChkBBUpgradesToIgnore[$i] = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+				GUICtrlSetState($g_hChkBBUpgradesToIgnore[$i], ($g_iChkBBUpgradesToIgnore[$i] = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
 			Next
 			chkBBUpgradesToIgnore()
 

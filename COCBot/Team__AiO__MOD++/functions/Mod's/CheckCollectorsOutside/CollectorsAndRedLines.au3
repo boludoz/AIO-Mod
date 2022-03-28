@@ -22,7 +22,7 @@ Func CollectorsAndRedLines($bForceCapture = False)
 	Local $diamondy = $imilkfarmoffsetystep + ($imilkfarmoffsetystep * $g_iCmbRedlineTiles)
 	Local $iPixelDistance = Pixel_Distance(0, 0, $diamondx, $diamondy)
 
-	If $g_bDBMeetCollectorOutside Then
+	If $g_bDBMeetCollectorOutside Or $g_bDBCollectorNearRedline Then
 		Local $hTimer = TimerInit()
 		Local $sText = ($g_bDBCollectorNearRedline And $g_bDBMeetCollectorOutside) ? ("Are collectors near redline ?") : ("Are collectors outside ?")
 		If $bForceCapture = True Then _CaptureRegion2()
@@ -71,13 +71,10 @@ Func AreCollectorsNearRedline($aAllCollectors)
 
 	Local $colNbr = UBound($aAllCollectors)
 
-	Local Const $iMilkFarmOffsetX = 56
-	Local Const $iMilkFarmOffsetY = 41
+    Local Const $iMilkFarmOffsetX = 56
+    Local Const $iMilkFarmOffsetY = 41
 	Local Const $imilkfarmoffsetxstep = 35
 	Local Const $imilkfarmoffsetystep = 26
-
-	Local $iDiamondX = $iMilkFarmOffsetX + ($imilkfarmoffsetxstep * $g_iCmbRedlineTiles)
-	Local $iDiamondY = $iMilkFarmOffsetY + ($imilkfarmoffsetystep * $g_iCmbRedlineTiles)
 
 	Local $arrCollectorsFlag[0]
 	Local $aPixelCoord[2], $aPixelCoord2[2]
@@ -90,7 +87,8 @@ Func AreCollectorsNearRedline($aAllCollectors)
 				If $arrCollectorsFlag[$j] <> True Then
 					$aPixelCoord2[0] = $aAllCollectors[$j][0]
 					$aPixelCoord2[1] = $aAllCollectors[$j][1]
-					If Abs(($aPixelCoord[0] - $aPixelCoord2[0]) / $iDiamondX) + Abs(($aPixelCoord[1] - $aPixelCoord2[1]) / $iDiamondY) <= 1 Then
+					; Setlog($aPixelCoord2[0] & " " & $aPixelCoord2[1] & " " & $aPixelCoord[0] & " " & $aPixelCoord[1])
+					If Pixel_Distance($aPixelCoord2[0], $aPixelCoord2[1], $aPixelCoord[0], $aPixelCoord[1]) < (Pixel_Distance($iMilkFarmOffsetX, $iMilkFarmOffsetY, 0, 0) + (Pixel_Distance($imilkfarmoffsetxstep, $imilkfarmoffsetystep, 0, 0) * $g_iCmbRedlineTiles)) Then
 						$arrCollectorsFlag[$j] = True
 						$iTotalCollectorNearRedline += 1
 					EndIf

@@ -117,7 +117,8 @@ Func CreateAttackSearchDeadBaseCollectors()
 			GUICtrlSetLimit(-1, 3)
 
 	$y += 20
-		$g_hChkDBCollectorNearRedline = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkDBCollectorNearRedline", "Collectors Near Redline"), $x, $y, -1, -1)
+		$g_hChkDBCollectorNearRedline = GUICtrlCreateRadio(GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkDBCollectorNearRedline", "Collectors Near Redline"), $x, $y, -1, -1)
+			GUICtrlSetState(-1, $GUI_UNCHECKED)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Deadbase-Collectors", "ChkDBCollectorNearRedline_Info_01", "Check how many collectors are near redline. If more than % you set then attack."))
 			GUICtrlSetOnEvent(-1, "chkCollectorsAndRedLines")
 	$y += 28
