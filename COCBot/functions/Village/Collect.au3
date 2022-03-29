@@ -16,6 +16,7 @@
 #Region - Custom collect - Team AIO Mod++
 
 Func CollectResourcesByPass()
+	If Not $g_bChkCollect Or Not $g_bRunState Then Return
 	If IsMainPage() Then
 		; Setup arrays, including default return values for $return
 		Local $sFileName = ""
