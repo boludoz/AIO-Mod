@@ -28,6 +28,7 @@ Func _ClanGames($test = False, $bFromBB = False)
 	; Check If this Feature is Enable on GUI.
 	If Not $g_bChkClanGamesEnabled Then Return
 	__ClanGames($test, $bFromBB)
+	$g_sTimerStatusBB = _DateAdd('n', Round(10 * Random(1.05, 1.25)), _NowCalc()) ; Custom BB - Team AIO Mod++
 	ClickAwayCross()
 EndFunc   ;==>_ClanGames
 #EndRegion - Custom BB - Team AIO Mod++
@@ -70,11 +71,7 @@ Func __ClanGames($test = False, $bFromBB = False)
     ;now we need to copy selected challenge before checking current running event is not wrong event selected
 
 	; Enter on Clan Games window
-	If $bFromBB = False Then
-		If Not IsClanGamesWindow() Then Return
-	Else
-		$g_bIsCaravanOn = "True"
-	EndIf
+	If Not IsClanGamesWindow(True, False, $bFromBB) Then Return ; Custom BB - Team AIO Mod++
 
 	If _Sleep(3000) Then Return
 
@@ -706,15 +703,26 @@ Func BBCampsGet()
 	Return $aReturn
 EndFunc
 
-Func IsClanGamesWindow($getCapture = True, $bOnlyCheck = False)
+Func IsClanGamesWindow($getCapture = True, $bOnlyCheck = False, $bFromBB = False)
 	Local $sState, $bRet = False
-
+	
+	
 	$g_bIsCaravanOn = "False"
-	If QuickMIS("BC1", $g_sImgCaravan, 230, 55, 330, 155, $getCapture, False) Then
-		SetLog("Caravan available! Entering Clan Games", $COLOR_SUCCESS)
-		Click($g_iQuickMISX + 230, $g_iQuickMISY + 55)
-		; Just wait for window open
-		If _Sleep(2500) Then Return
+	If $bFromBB = False Then
+		If QuickMIS("BC1", $g_sImgCaravan, 230, 55, 330, 155, $getCapture, False) Then
+			SetLog("Caravan available! Entering Clan Games", $COLOR_SUCCESS)
+			Click($g_iQuickMISX + 230, $g_iQuickMISY + 55)
+		Else
+			SetLog("Caravan not available", $COLOR_WARNING)
+			$bRet = False
+			$g_bIsCaravanOn = "False"
+			Return $bRet
+		EndIf
+	EndIf
+	
+	; Just wait for window open
+	If _Wait4Pixel(827, 78, 0xFFFFFF, 5, 2500, 250, "IsClanGamesWindow") Then
+		
 		$sState = IsClanGamesRunning()
 		Switch $sState
 			Case "prepare"
@@ -725,21 +733,20 @@ Func IsClanGamesWindow($getCapture = True, $bOnlyCheck = False)
 			Case "end"
 				$bRet = False
 		EndSwitch
-
+	
 		SetLog("Clan Games Event is : " & $sState, $COLOR_INFO)
-
+	
 		If $bOnlyCheck = True Then
 			ClickAwayCross()
 			If _Sleep(1500) Then Return
-
+	
 			CheckMainScreen(False, False)
 		EndIf
-
 	Else
-		SetLog("Caravan not available", $COLOR_WARNING)
-		$bRet = False
+		SetLog("Caravan bad pixel.", $COLOR_ERROR)
 	EndIf
-
+	
+	ClickAway()
 	Return $bRet
 EndFunc   ;==>IsClanGamesWindow
 

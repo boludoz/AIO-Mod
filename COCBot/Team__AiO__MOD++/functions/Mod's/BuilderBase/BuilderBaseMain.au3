@@ -74,8 +74,6 @@ Func BuilderBase($bTestRun = False, $bSkipBBCG = False)
 	Return $bReturn
 EndFunc
 
-Global $g_sTimerStatusBB
-
 Func _BuilderBase($bTestRun = False)
 	$g_iAvailableAttacksBB = 0
 	
@@ -128,7 +126,7 @@ Func _BuilderBase($bTestRun = False)
 	
 	Local $iLoopsToDo = 0
 	Local $iBigLoops = 0
-	$g_sTimerStatusBB = _DateAdd('n', Round(10 * Random(1.05, 1.25)), _NowCalc())
+	; $g_sTimerStatusBB = _DateAdd('n', Round(10 * Random(1.05, 1.25)), _NowCalc())
 	Do
 		$iBigLoops += 1
 
@@ -151,7 +149,7 @@ Func _BuilderBase($bTestRun = False)
 
 		; Check if Builder Base is to run
 		; New logic to add speed to the attack.
-		Local $bCondition = True, $bOkAttack = True, $bFunctionPassed = True
+		Local $bCondition = True, $bOkAttack = True, $bFunctionPassed = True, $bLastLoop = True
 		Do
 			If Not $g_bRunState Then Return
 			$bFunctionPassed = ByPassedForceBBAttackOnClanGames(False, True, True)
@@ -166,16 +164,8 @@ Func _BuilderBase($bTestRun = False)
 			$iLoopsToDo = ($bCondition = True And $bFunctionPassed) ? ($iLoopsToDoCG) : ($iLoopsToDoNormal)
 
 			Setlog("Dynamic attack loop: " & $iAttackLoops & " / " & $iLoopsToDo, $COLOR_INFO)
+			$bLastLoop = ($iLoopsToDoCG == $iAttackLoops)
 			
-			If _DateIsValid($g_sTimerStatusBB) Then
-				Local $iDateDiff = _DateDiff('n', _NowCalc(), $g_sTimerStatusBB)
-				If $iDateDiff < 0 Then
-					SetLog("It's been a long time, checking clan games.", $COLOR_INFO)
-					$g_sTimerStatusBB = _DateAdd('n', Round(10 * Random(1.05, 1.25)), _NowCalc())
-					GoToClanGames()
-				EndIf
-			EndIf
-
 			;  $g_bCloudsActive fast network fix.
 			$g_bCloudsActive = True
 
@@ -184,6 +174,14 @@ Func _BuilderBase($bTestRun = False)
 			$iAttackLoops += 1
 			$g_bCloudsActive = False
 			
+			If Not $bLastLoop And $g_bChkClanGamesEnabled And _DateIsValid($g_sTimerStatusBB) Then
+				Local $iDateDiff = _DateDiff('n', _NowCalc(), $g_sTimerStatusBB)
+				If $iDateDiff < 0 Then
+					$g_sTimerStatusBB = _DateAdd('n', Round(10 * Random(1.05, 1.25)), _NowCalc())
+					GoToClanGames()
+				EndIf
+			EndIf
+
 			; Improved logic, as long as the bot can be farmed it will continue doing the external while, otherwise it will continue attacking to fulfill the user's request more fast.
 			If checkObstacles(True) Then
 				SetLog("Window clean required, but no problem!", $COLOR_INFO)
@@ -231,12 +229,13 @@ Func GoToClanGames()
 	If ClanGamesStatus() = "True" Or ClanGamesStatus() = "Undefined" Then $bIsToByPass = True
 	If Not $g_bChkClanGamesEnabled Or Not ClanGamesBB() Then Return
 	If ($g_bIsSearchLimit Or $g_bRestart Or $g_bIsClientSyncError) Then Return
+	SetLog("Checking clan games.", $COLOR_INFO)
 	If $g_iAvailableAttacksBB > 0 Or Not ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3, False) Or $bIsToByPass Then
 		If isOnBuilderBase(True) Then
 			$g_bStayOnBuilderBase = False
 			SwitchBetweenBases()
 		EndIf
-		_ClanGames()
+		ClanGames()
 		If Not isOnBuilderBase(True) Then
 			$g_bStayOnBuilderBase = True
 			SwitchBetweenBases()

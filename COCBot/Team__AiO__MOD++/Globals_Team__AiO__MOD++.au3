@@ -300,6 +300,7 @@ Global $g_sDateAndTimeChampion = "2021/09/02 00:00:00"
 #Ce
 
 ; Builder base play.
+Global $g_sTimerStatusBB = "2022/03/29 20:09:00"
 Global Const $g_sConstMaxBuilderBase = 86400 ; 86400 const = 1 day quality check (in seconds).
 Global $g_sDateBuilderBase = "2021/09/02 00:00:00"
 #EndRegion - Dates - Team AIO Mod++
