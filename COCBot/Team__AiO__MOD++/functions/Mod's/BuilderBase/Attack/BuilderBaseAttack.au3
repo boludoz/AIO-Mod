@@ -696,8 +696,12 @@ Func BuilderBaseAttackReport($bNoExit = False)
 					$g_bIsBBevent = False
 
 					Click(700, 570, 1)
-					_ClanGames(False, True)
 					
+					If _Wait4Pixel(827, 78, 0xFFFFFF, 5, 2500, 250, "BuilderBaseAttackReport") Then
+						_ClanGames(False, True)
+						ExitLoop
+					EndIf
+				
 				Endif
 				If _Sleep(500) Then Return
 			Next
