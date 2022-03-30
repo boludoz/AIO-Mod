@@ -13,6 +13,37 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
+Func SetOnStAuto($i, $bTest = False)
+	If $g_bSuperAutoTroops = False Or $g_bQuickTrainEnable = True Then Return Abs($g_iCmbSuperTroops[$i] - 1)
+		
+	Local $aTroopsAuto[$iMaxSupersTroop] = [0, 0], $iCount = 0
+	If $i > $iMaxSupersTroop - 1 Then Return SetError(1, 1, -1)
+	If $g_bSuperAutoTroops = True And $g_bQuickTrainEnable = False Then
+		For $iAssignSt = 0 To UBound($g_ahTxtTrainArmyTroopCount) - 1
+			If $g_aiArmyCustomTroops[$iAssignSt] = 0 Then ContinueLoop
+
+			For $i2 = 0 To $iSuperTroopsCount -1
+				If $iAssignSt == $g_asSuperTroopIndex[$i2] Then
+					$aTroopsAuto[$iCount] = $i2 + 1
+					$iCount += 1
+					If $iCount = $iMaxSupersTroop + 1 Then
+						ExitLoop 2
+					EndIf
+					ExitLoop
+				EndIf
+			Next
+
+		Next
+	EndIf
+	
+	Local $aCmbTmp[2] = [_ArrayMin($aTroopsAuto, 1) - 1, _ArrayMax($aTroopsAuto, 1) - 1]
+	If $aCmbTmp[0] = $aCmbTmp[1] Then $aCmbTmp[1] = -1
+	
+	If $bTest = True Then _ArrayDisplay($aCmbTmp)
+
+	Return $aCmbTmp[$i]
+EndFunc   ;==>SetOnStAuto
+
 Func BoostSuperTroop($bTest = False)
 	If Not $g_bSuperTroopsEnable Then
 		Return False
@@ -25,11 +56,8 @@ Func BoostSuperTroop($bTest = False)
 	Local $aTroopsAuto[$iMaxSupersTroop] = [0, 0], $iCount = 0
 
 	If $g_bSuperAutoTroops = True And $g_bQuickTrainEnable = False Then
-		Local $iH = 0, $iMiniIndex = 0
 		For $iAssignSt = 0 To UBound($g_ahTxtTrainArmyTroopCount) - 1
 			If $g_aiArmyCustomTroops[$iAssignSt] = 0 Then ContinueLoop
-
-			$iMiniIndex = -1
 
 			For $i2 = 0 To $iSuperTroopsCount -1
 				If $iAssignSt == $g_asSuperTroopIndex[$i2] Then
@@ -42,13 +70,13 @@ Func BoostSuperTroop($bTest = False)
 					ExitLoop
 				EndIf
 			Next
-
 		Next
 	EndIf
 
 	Local $aiSTCombos = ($g_bSuperAutoTroops = True And $g_bQuickTrainEnable = False) ? ($aTroopsAuto) : ($g_iCmbSuperTroops)
 	Local $aCmbTmp[2] = [_ArrayMin($aiSTCombos, 1) - 1, _ArrayMax($aiSTCombos, 1) - 1]
-
+	If $aCmbTmp[0] = $aCmbTmp[1] Then $aCmbTmp[1] = -1
+	
 	If $bTest = True Then _ArrayDisplay($aCmbTmp)
 
 	Local $iActive = 0

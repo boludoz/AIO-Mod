@@ -73,7 +73,7 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 		
 		; Troop
 		If Not OpenTroopsTab(False, "DoubleTrain()") Then Return
-		If _Sleep(250) Then Return
+		If _Sleep(500) Then Return
 		
 		Local $TroopCamp = GetCurrentArmy(48, 160, "DoubleTrain Troops")
 		SetLog("Checking Troop tab: " & $TroopCamp[0] & "/" & $TroopCamp[1] * 2)
@@ -117,10 +117,11 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 	If $TotalSpell = 0 Then
 		If $bDebug Then SetLog("No spell is required, skip checking spell tab", $COLOR_DEBUG)
 	Else
-		If Not OpenSpellsTab(False, "DoubleTrain()") Then Return
-		If _Sleep(250) Then Return
 		$Step = 1
 		While 1
+			If Not OpenSpellsTab(False, "DoubleTrain()") Then Return
+			If _Sleep(500) Then Return
+			
 			Local $SpellCamp = GetCurrentArmy(43, 160, "DoubleTrain Spells")
 			SetLog("Checking Spell tab: " & $SpellCamp[0] & "/" & $SpellCamp[1] * 2)
 
@@ -195,12 +196,12 @@ Func TrainFullTroop($bQueue = False)
 	
 	Local $ToReturn[1][2] = [["Arch", 0]]
 	For $i = 0 To $eTroopCount - 1
-	Local $troopIndex = $g_aiTrainOrder[$i]
-	If $g_aiArmyCompTroops[$troopIndex] > 0 Then
-		$ToReturn[UBound($ToReturn) - 1][0] = $g_asTroopShortNames[$troopIndex]
-		$ToReturn[UBound($ToReturn) - 1][1] = $g_aiArmyCompTroops[$troopIndex]
-		ReDim $ToReturn[UBound($ToReturn) + 1][2]
-	EndIf
+		Local $troopIndex = $g_aiTrainOrder[$i]
+		If $g_aiArmyCompTroops[$troopIndex] > 0 Then
+			$ToReturn[UBound($ToReturn) - 1][0] = $g_asTroopShortNames[$troopIndex]
+			$ToReturn[UBound($ToReturn) - 1][1] = $g_aiArmyCompTroops[$troopIndex]
+			ReDim $ToReturn[UBound($ToReturn) + 1][2]
+		EndIf
 	Next
 
 	If $ToReturn[0][0] = "Arch" And $ToReturn[0][1] = 0 Then Return

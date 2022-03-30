@@ -15,11 +15,11 @@
 ; Example .......: No
 ; ===============================================================================================================================
 #include-once
-Func TrainIt($iIndex, $iQuantity = 1, $iSleep = 400, $bRecheckTroops = False)
+Func TrainIt($iIndex, $iQuantity = 1, $iSleep = 400, $bRecheckTroops = False) ; Custom Train - Team AIO Mod++
 	If $g_bDebugSetlogTrain Then SetLog("Func TrainIt $iIndex=" & $iIndex & " $howMuch=" & $iQuantity & " $iSleep=" & $iSleep, $COLOR_DEBUG)
 	Local $bDark = ($iIndex >= $eMini And $iIndex <= $eHunt)
 
-	Static $s_eFailSTBoostIndex = -1
+	Static $s_eFailSTBoostIndex = -1 ; Custom Train - Team AIO Mod++
 
 	For $i = 1 To 5 ; Do
 
@@ -71,14 +71,15 @@ Func TrainIt($iIndex, $iQuantity = 1, $iSleep = 400, $bRecheckTroops = False)
 					If $g_bDebugSetlogTrain Then SaveDebugImage("TroopIconNotFound_" & GetTroopName($iIndex))
 					SetLog("TrainIt troop position " & GetTroopName($iIndex) & " did not find icon", $COLOR_ERROR)
 					#Region - Custom Train - Team AIO Mod++
+					Local $iSt = -1
 					If $bRecheckTroops = False And $g_bSuperTroopsEnable = True Then
 						$s_eFailSTBoostIndex = $iIndex
 						If $s_eFailSTBoostIndex <> -1 Then
 							For $iB = 0 To 1
-								Local $iSTIndex = $g_iCmbSuperTroops[$iB] - 1
-								If $iSTIndex > -1 And UBound($g_asSuperTroopNames) - 1 >= $iSTIndex Then
+								Local $iSTIndex = SetOnStAuto($i)
+								If $iSTIndex > -1 And UBound($g_asSuperTroopNames) > $iSTIndex Then
 									; Translate GUI to TRUE index.
-									Local $iSt = _ArraySearch($g_asTroopNames, $g_asSuperTroopNames[$iSTIndex])
+									$iSt = _ArraySearch($g_asTroopNames, $g_asSuperTroopNames[$iSTIndex])
 									If Not @error And $iSt <> -1 Then
 										; Only boost troops if user require this in GUI, or this is ST. iF USER DONT REQUIRE BOOST, TRAIN NORMAL TROOP.
 										If $s_eFailSTBoostIndex == $iSt Then
@@ -123,7 +124,7 @@ Func TrainIt($iIndex, $iQuantity = 1, $iSleep = 400, $bRecheckTroops = False)
 			EndIf
 		EndIf
 
-	Next ; Until $iErrors = 0
+	Next
 EndFunc   ;==>TrainIt
 
 Func GetTrainPos(Const $iIndex)

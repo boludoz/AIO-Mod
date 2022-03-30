@@ -279,9 +279,11 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		Return False
 	EndIf
-	If _ColorCheck(_GetPixelColor(792, 39), Hex(0xDC0408, 6), 20) Then
+	; Custom fix - Team AIO Mod++
+	Local $aiCross = decodeSingleCoord(FindImageInPlace("Cross", $g_sImgCrossObs, "790,10,855,105", False))
+	If UBound($aiCross) > 1 And not @error Then ; Clicks X
 		SetDebugLog("checkObstacles: Found Window with Close Button to close")
-		PureClick(792, 39, 1, 0, "#0134") ;Clicks X
+		PureClickP($aiCross, 1, 0, "#0134") ;Clicks X
 		$g_bMinorObstacle = True
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		Return False

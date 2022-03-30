@@ -45,9 +45,9 @@ Func _ZoomOut() ;Zooms out
 			$Result = AndroidOnlyZoomOut()
 		EndIf
 		$g_bSkipFirstZoomout = True
-		Local $a = SearchZoomOut()
-		If UBound($a) > 0 And not @error Then
-			Return (StringIsSpace($a[0]) = 0) ? (True) : (False)
+		Local $aSearchZoomOut = SearchZoomOut()
+		If UBound($aSearchZoomOut) > 1 And not @error Then
+			Return (StringIsSpace($aSearchZoomOut[0]) = 0) ? (True) : (False)
 		Else
 			Return False
 		EndIf
@@ -56,9 +56,9 @@ Func _ZoomOut() ;Zooms out
 	; Android embedded, only use Android zoomout
 	$Result = AndroidOnlyZoomOut()
 	$g_bSkipFirstZoomout = True
-	Local $a = SearchZoomOut()
-	If UBound($a) > 0 And not @error Then
-		Return (StringIsSpace($a[0]) = 0) ? (True) : (False)
+	Local $aSearchZoomOut = SearchZoomOut()
+	If UBound($aSearchZoomOut) > 1 And not @error Then
+		Return (StringIsSpace($aSearchZoomOut[0]) = 0) ? (True) : (False)
 	Else
 		Return False
 	EndIf
@@ -160,6 +160,9 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 				$i += 1  ; add one to index value to prevent endless loop if controlsend fails
 				ForceCaptureRegion()
 				$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
+				If Not (UBound($aPicture) > 1 And not @error) Then 
+					ExitLoop
+				EndIf
 			WEnd
 		EndIf
 
@@ -265,6 +268,9 @@ Func ZoomOutCtrlWheelScroll($CenterMouseWhileZooming = True, $GlobalMouseWheel =
 			$i += 1  ; add one to index value to prevent endless loop if controlsend fails
 			ForceCaptureRegion()
 			$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
+			If Not (UBound($aPicture) > 1 And not @error) Then 
+				ExitLoop
+			EndIf
 		 WEnd
 
 		 If $CenterMouseWhileZooming And $AndroidZoomOut = False Then MouseMove($aMousePos[0], $aMousePos[1], 0)
@@ -285,6 +291,9 @@ Func ZoomOutCtrlClick($CenterMouseWhileZooming = False, $AlwaysControlFocus = Fa
 	Local $ZoomActions[4] = ["ControlFocus", "Ctrl Down", "Click", "Ctrl Up"]
 	ForceCaptureRegion()
 	Local $aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
+	If Not (UBound($aPicture) > 1 And not @error) Then 
+		Return False
+	EndIf
 
 	If StringInStr($aPicture[0], "zoomou") = 0 Then
 
@@ -353,6 +362,9 @@ Func ZoomOutCtrlClick($CenterMouseWhileZooming = False, $AlwaysControlFocus = Fa
 			$i += 1  ; add one to index value to prevent endless loop if controlsend fails
 			ForceCaptureRegion()
 			$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
+			If Not (UBound($aPicture) > 1 And not @error) Then 
+				ExitLoop
+			EndIf
 		 WEnd
 
 		 If $SendCtrlUp Then ControlSend($g_hAndroidWindow, "", "", "{CTRLUP}{SPACE}")
@@ -371,6 +383,9 @@ Func AndroidOnlyZoomOut() ;Zooms out
 	Local $exitCount = 80
 	ForceCaptureRegion()
 	Local $aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
+	If Not (UBound($aPicture) > 1 And not @error) Then 
+		Return False
+	EndIf
 
 	If StringInStr($aPicture[0], "zoomout") = 0 Then
 
@@ -395,6 +410,9 @@ Func AndroidOnlyZoomOut() ;Zooms out
 				$i += 1  ; add one to index value to prevent endless loop if controlsend fails
 				ForceCaptureRegion()
 				$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
+				If Not (UBound($aPicture) > 1 And not @error) Then 
+					ExitLoop
+				EndIf
 			WEnd
 			Return True
 		Else
@@ -413,6 +431,13 @@ EndFunc   ;==>AndroidOnlyZoomOut
 ; 3 = Difference of previous Village X Offset and current (after centering village)
 ; 4 = Difference of previous Village Y Offset and current (after centering village)
 Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag, $UpdateMyVillage = True, $sSource = "", $CaptureRegion = True, $DebugLog = $g_bDebugSetlog)
+	Local $aResultSafe = ["", 0, 0, 0, 0] ; expected dummy value
+	Local $aResult = _SearchZoomOut($CenterVillageBoolOrScrollPos, $UpdateMyVillage, $sSource, $CaptureRegion, $DebugLog)
+	If UBound($aResult) >= 5 And not @error Then Return $aResult
+	Return $aResultSafe
+EndFunc
+
+Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag, $UpdateMyVillage = True, $sSource = "", $CaptureRegion = True, $DebugLog = $g_bDebugSetlog)
 	FuncEnter(SearchZoomOut)
 	If Not $g_bRunState Then Return
 	If $sSource <> "" Then $sSource = " (" & $sSource & ")"
