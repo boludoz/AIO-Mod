@@ -14,16 +14,20 @@
 ; ===============================================================================================================================
 
 Func SetOnStAuto($i, $bTest = False)
-	If $g_bSuperAutoTroops = False Or $g_bQuickTrainEnable = True Then Return Abs($g_iCmbSuperTroops[$i] - 1)
-		
+	If $g_bSuperAutoTroops = False Or $g_bQuickTrainEnable = True Then 
+		Return Int($g_iCmbSuperTroops[$i] - 1)
+	EndIf
+
 	Local $aTroopsAuto[$iMaxSupersTroop] = [0, 0], $iCount = 0
-	If $i > $iMaxSupersTroop - 1 Then Return SetError(1, 1, -1)
+	
+	If $i > Int($iMaxSupersTroop - 1) Then Return SetError(1, 1, -1)
+	
 	If $g_bSuperAutoTroops = True And $g_bQuickTrainEnable = False Then
 		For $iAssignSt = 0 To UBound($g_ahTxtTrainArmyTroopCount) - 1
 			If $g_aiArmyCustomTroops[$iAssignSt] = 0 Then ContinueLoop
 
 			For $i2 = 0 To $iSuperTroopsCount -1
-				If $iAssignSt == $g_asSuperTroopIndex[$i2] Then
+				If $iAssignSt = $g_asSuperTroopIndex[$i2] Then
 					$aTroopsAuto[$iCount] = $i2 + 1
 					$iCount += 1
 					If $iCount = $iMaxSupersTroop + 1 Then
@@ -60,7 +64,7 @@ Func BoostSuperTroop($bTest = False)
 			If $g_aiArmyCustomTroops[$iAssignSt] = 0 Then ContinueLoop
 
 			For $i2 = 0 To $iSuperTroopsCount -1
-				If $iAssignSt == $g_asSuperTroopIndex[$i2] Then
+				If $iAssignSt = $g_asSuperTroopIndex[$i2] Then
 					$aTroopsAuto[$iCount] = $i2 + 1
 					$iCount += 1
 					If $iCount = $iMaxSupersTroop + 1 Then

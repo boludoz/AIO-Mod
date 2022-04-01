@@ -19,7 +19,7 @@ Func TrainIt($iIndex, $iQuantity = 1, $iSleep = 400, $bRecheckTroops = False) ; 
 	If $g_bDebugSetlogTrain Then SetLog("Func TrainIt $iIndex=" & $iIndex & " $howMuch=" & $iQuantity & " $iSleep=" & $iSleep, $COLOR_DEBUG)
 	Local $bDark = ($iIndex >= $eMini And $iIndex <= $eHunt)
 
-	Static $s_eFailSTBoostIndex = -1 ; Custom Train - Team AIO Mod++
+	Static $s_eFailSTBoostIndex[$g_eTotalAcc] ; Custom Train - Team AIO Mod++
 
 	For $i = 1 To 5 ; Do
 
@@ -65,55 +65,58 @@ Func TrainIt($iIndex, $iQuantity = 1, $iSleep = 400, $bRecheckTroops = False) ; 
 			EndIf
 		Else
 			If UBound($aTrainPos) > 0 And $aTrainPos[0] = -1 Then
+				#Region - Custom Train - Team AIO Mod++
+				Local $iSt = -1
+				If $bRecheckTroops = False And $g_bSuperTroopsEnable = True Then
+					$s_eFailSTBoostIndex[Number($g_iCurAccount)] = $iIndex
+					If $s_eFailSTBoostIndex[Number($g_iCurAccount)] <> "" Then
+						For $iB = 0 To 1
+							Local $iSTIndex = SetOnStAuto($iB)
+							; setlog("$iSTIndex " & $iSTIndex)
+							If $iSTIndex <> -1 Then
+								; Translate GUI to TRUE index.
+								$iSt = _ArraySearch($g_asTroopNames, $g_asSuperTroopNames[$iSTIndex])
+								; setlog("$iSt " & $iSt)
+								If Not @error And $iSt <> -1 Then
+									; Only boost troops if user require this in GUI, or this is ST. iF USER DONT REQUIRE BOOST, TRAIN NORMAL TROOP.
+									; setlog("$s_eFailSTBoostIndex " & $s_eFailSTBoostIndex[Number($g_iCurAccount)])
+									If $s_eFailSTBoostIndex[Number($g_iCurAccount)] = $iSt Then
+										ClickAway()
+										If _Sleep(1500) Then Return
+
+										BoostSupertroop()
+										If _Sleep(1500) Then Return
+
+										ClickAway()
+										If _Sleep(1500) Then Return
+
+										; Open train window at troops.
+										If OpenArmyOverview(True, "TrainIt") Then
+											If _Sleep(1500) Then Return
+
+											If OpenTroopsTab(True, "TrainIt") Then
+												If _Sleep(1500) Then Return
+
+												Return TrainIt($iIndex, $iQuantity, $iSleep, True)
+											Else
+												Return False
+											EndIf
+										Else
+											Return False
+										EndIf
+									EndIf
+								EndIf
+							EndIf
+						Next
+						$s_eFailSTBoostIndex[Number($g_iCurAccount)] = ""
+					EndIf
+				EndIf
+				#EndRegion - Custom Train - Team AIO Mod++
 				If $i < 5 Then
 					ForceCaptureRegion()
 				Else
 					If $g_bDebugSetlogTrain Then SaveDebugImage("TroopIconNotFound_" & GetTroopName($iIndex))
 					SetLog("TrainIt troop position " & GetTroopName($iIndex) & " did not find icon", $COLOR_ERROR)
-					#Region - Custom Train - Team AIO Mod++
-					Local $iSt = -1
-					If $bRecheckTroops = False And $g_bSuperTroopsEnable = True Then
-						$s_eFailSTBoostIndex = $iIndex
-						If $s_eFailSTBoostIndex <> -1 Then
-							For $iB = 0 To 1
-								Local $iSTIndex = SetOnStAuto($i)
-								If $iSTIndex > -1 And UBound($g_asSuperTroopNames) > $iSTIndex Then
-									; Translate GUI to TRUE index.
-									$iSt = _ArraySearch($g_asTroopNames, $g_asSuperTroopNames[$iSTIndex])
-									If Not @error And $iSt <> -1 Then
-										; Only boost troops if user require this in GUI, or this is ST. iF USER DONT REQUIRE BOOST, TRAIN NORMAL TROOP.
-										If $s_eFailSTBoostIndex == $iSt Then
-											ClickAway()
-											If _Sleep(1500) Then Return
-
-											BoostSupertroop()
-											If _Sleep(1500) Then Return
-
-											ClickAway()
-											If _Sleep(1500) Then Return
-
-											; Open train window at troops.
-											If OpenArmyOverview(True, "TrainIt") Then
-												If _Sleep(1500) Then Return
-
-												If OpenTroopsTab(True, "TrainIt") Then
-													If _Sleep(1500) Then Return
-
-													Return TrainIt($iIndex, $iQuantity, $iSleep, True)
-												Else
-													Return False
-												EndIf
-											Else
-												Return False
-											EndIf
-										EndIf
-									EndIf
-								EndIf
-							Next
-							$s_eFailSTBoostIndex = -1
-						EndIf
-					EndIf
-					#EndRegion - Custom Train - Team AIO Mod++
 					If $i = 5 Then
 						SetLog("Seems all your barracks are upgrading!", $COLOR_ERROR)
 						$g_bAllBarracksUpgd = True
