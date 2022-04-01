@@ -125,6 +125,7 @@ Func BoostSuperTroop($bTest = False)
 
 						; Check If is boosted
 						Local $aSuperT = findMultiple($g_sImgBoostTroopsIcons, GetDiamondFromRect("140, 235, 720, 565"), GetDiamondFromRect("140, 235, 720, 565"), 0, 1000, 0, "objectname,objectlevel,objectpoints", False)
+						Local $aClock = findMultiple($g_sImgBoostTroopsClock, $sDiamond, $sDiamond, 0, 1000, 0, "objectname,objectlevel,objectpoints", False)
 						If UBound($aSuperT) > 0 And Not @error Then
 							For $aMatchedTroops In $aSuperT
 								If $iActive = UBound($aAlreadyChecked) Then
@@ -156,7 +157,6 @@ Func BoostSuperTroop($bTest = False)
 
 									; Check If is boosted
 									If $bTest Then SetLog("Stage 1 - Check If is boosted.", $COLOR_INFO)
-									Local $aClock = findMultiple($g_sImgBoostTroopsClock, $sDiamond, $sDiamond, 0, 1000, 0, "objectname,objectlevel,objectpoints", False)
 									If UBound($aClock) > 0 And Not @error Then
 										For $aMatchedClocks In $aClock
 											$aPoints = decodeMultipleCoords($aMatchedClocks[2])
@@ -164,10 +164,10 @@ Func BoostSuperTroop($bTest = False)
 											For $i = 0 To UBound($aPoints) - 1
 												$aClockCoords = $aPoints[$i] ; Coords
 												SetDebugLog($sFilenameClock & " found (" & $aClockCoords[0] & "," & $aClockCoords[1] & ")", $COLOR_SUCCESS)
-												$iDist = Pixel_Distance($aClockCoords[0], $aClockCoords[1], $aTroopsCoords[0], $aTroopsCoords[1])
-												SetDebuglog("Clock check in : " & $aClockCoords[0] & " / " & $aClockCoords[1] & " | " & $sFilenameST & " | Dist : " & $iDist)
-												If $iDist < 175 And ($aClockCoords[1] - $aTroopsCoords[1]) > 0 Then
-													If $bTest Then SetLog($sFilenameST & " is boosted.", $COLOR_INFO)
+												Local $bIsOnArea = IsOnArea($aClockCoords[0] - 30, $aClockCoords[1] - 110, $aClockCoords[0] + 95, $aClockCoords[1], $aTroopsCoords[0], $aTroopsCoords[1])
+												SetDebuglog("Clock check in : " & $aClockCoords[0] & " / " & $aClockCoords[1] & " | " & $sFilenameST & " | IS ON AREA : " & $bIsOnArea)
+												If $bIsOnArea = True Then
+													SetLog($sFilenameST & " is boosted.", $COLOR_INFO)
 
 													ReDim $aAlreadyChecked[UBound($aAlreadyChecked) + 1]
 													$aAlreadyChecked[UBound($aAlreadyChecked) - 1] = $sFilenameST
@@ -341,3 +341,10 @@ Func IsSTPageBoost($iTry = 15)
 	Return WaitforPixel(545, 165, 610, 220, Hex(0xF0D028, 6), 15, $iTry)
 EndFunc   ;==>IsSTPageBoost
 
+Func IsOnArea($x, $y, $x1, $y1, $iPointX, $iPointY)
+	Local $iAreaX, $iAreaY
+	$iAreaX = Abs($x - $x1) / (_Max($x, $x1) - $iPointX)
+	$iAreaY = Abs($y - $y1) / (_Max($y, $y1) - $iPointY)
+	If (1 > $iAreaY) Or (1 > $iAreaX) Then Return False
+	Return True
+EndFunc   ;==>IsOnSquare
