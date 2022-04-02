@@ -1487,6 +1487,7 @@ Func FirstCheck()
 	; Custom - Team AIO Mod++
 	If $g_bChkOnlyFarm = False And $g_bChkSkipFirstAttack = True Then
 		Setlog("FirstCheck skipped, SkipFirstAttack enabled.", $COLOR_INFO)
+		Return
 	ElseIf $g_bChkOnlyFarm = True Then
 		Setlog("Only farm enabled.", $COLOR_INFO)
 	Else
@@ -1516,31 +1517,6 @@ Func FirstCheck()
 	$g_bFullArmy = False
 	$g_iCommandStop = -1
 
-	#cs - no se va a poner a verificar el nivel justo aca, cambia la logica con aio.
-	;;;;;Check Town Hall level
-	Local $iTownHallLevel = $g_iTownHallLevel
-	SetDebugLog("Detecting Town Hall level", $COLOR_INFO)
-	SetDebugLog("Town Hall level is currently saved as " & $g_iTownHallLevel, $COLOR_INFO)
-	imglocTHSearch(False, True, True) ;Sets $g_iTownHallLevel
-	SetDebugLog("Detected Town Hall level is " & $g_iTownHallLevel, $COLOR_INFO)
-	If $g_iTownHallLevel = $iTownHallLevel Then
-		SetDebugLog("Town Hall level has not changed", $COLOR_INFO)
-	Else
-		If $g_iTownHallLevel < $iTownHallLevel Then
-			SetDebugLog("Bad town hall level read...saving bigger old value", $COLOR_ERROR)
-			$g_iTownHallLevel = $iTownHallLevel
-			saveConfig()
-			applyConfig()
-		Else
-			SetDebugLog("Town Hall level has changed!", $COLOR_INFO)
-			SetDebugLog("New Town hall level detected as " & $g_iTownHallLevel, $COLOR_INFO)
-			saveConfig()
-			applyConfig()
-		EndIf
-	EndIf
-	;;;;;;;;;;;;;;;;;;;;;;;;;;
-	#Ce
-
 	VillageReport()
 	If Not $g_bRunState Then Return
 
@@ -1560,6 +1536,8 @@ Func FirstCheck()
 	checkMainScreen(False)
 	If $g_bRestart Then Return
 
+	If BotCommand() Then btnStop()
+	
 	If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
 		; VERIFY THE TROOPS AND ATTACK IF IS FULL
 		SetDebugLog("-- FirstCheck on Train --")
@@ -1582,9 +1560,6 @@ Func FirstCheck()
 				EndIf
 				If _Sleep($DELAYRUNBOT1) Then Return
 			EndIf
-		Else ;mmmm makes sense...
-			OneGemBoost() ; One gem boost - Team AIO Mod++
-			If $g_bRestart Then Return
 		EndIf
 	EndIf
 EndFunc   ;==>FirstCheck
