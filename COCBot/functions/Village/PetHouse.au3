@@ -27,8 +27,10 @@ Func TestPetHouse()
 EndFunc
 
 Func PetHouse($test = False)
-	Local $bUpgradePets = False
-
+   Local $bUpgradePets = False
+   
+   PetUpgradeCostPerLevel()
+	
    If $g_iTownHallLevel < 14 Then
 		;SetLog("Townhall Lvl " & $g_iTownHallLevel & " has no Pet House.", $COLOR_ERROR)
 		Return
