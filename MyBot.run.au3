@@ -1536,8 +1536,16 @@ Func FirstCheck()
 	checkMainScreen(False)
 	If $g_bRestart Then Return
 
-	If BotCommand() Then btnStop()
-	
+	; AIO
+	If botcommand() Then
+		If $g_ifreebuildercount - ($g_bautoupgradewallsenable And $g_bupgradewallsavebuilder ? 1 : 0) - ReservedBuildersForHeroes() <= 0 Then
+			SetLog("Lets use the Free Builders before check Halt Status!")
+			_RunFunction("UpgradeAll")
+			villagereport()
+			If botcommand() Then btnstop()
+		EndIf
+	EndIf
+
 	If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
 		; VERIFY THE TROOPS AND ATTACK IF IS FULL
 		SetDebugLog("-- FirstCheck on Train --")
