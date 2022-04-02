@@ -2031,11 +2031,17 @@ Global Const $g_asPetNames[$ePetCount] = ["Lassi", "Eletro Owl", "Mighty Yak", "
 Global Const $g_asPetShortNames[$ePetCount] = ["Lassi", "Owl", "Yak", "Unicorn"]
 Global Const $g_ePetLevels = 10
 
-Global Const $g_aiPetUpgradeCostPerLevel[$ePetCount][$g_ePetLevels] = [ _
-		[0, 115, 130, 145, 160, 175, 190, 205, 220, 235], _  ; LASSI
-		[0, 135, 150, 165, 180, 195, 210, 225, 240, 255], _  ; Electro Owl
-		[0, 165, 185, 205, 225, 245, 255, 265, 275, 285], _  ; Mighty Yak
-        [0, 210, 220, 230, 240, 250, 260, 270, 280, 290]]    ; Unicorn
+Global $g_aiPetUpgradeCostPerLevel
+
+Func PetUpgradeCostPerLevel()
+	Local $aiPetUpgradeCostPerLevel[$ePetCount][$g_ePetLevels] = [ _
+			[0, 115, 130, 145, 160, 175, 190, 205, 220, 235], _  ; LASSI
+			[0, 135, 150, 165, 180, 195, 210, 225, 240, 255], _  ; Electro Owl
+			[0, 165, 185, 205, 225, 245, 255, 265, 275, 285], _  ; Mighty Yak
+			[0, 210, 220, 230, 240, 250, 260, 270, 280, 290]]    ; Unicorn
+			
+	$g_aiPetUpgradeCostPerLevel = $aiPetUpgradeCostPerLevel
+EndFunc
 
 ; TH
 Global $IMGLOCTHLOCATION

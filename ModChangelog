@@ -6,11 +6,12 @@
 					Do everything you project.
 
                     Based on MyBot.run v7.9.7
-v4.9.4 - Date: 28/3/2022
+v4.9.4 - Date: 2/4/2022
 	- Improved : Village detection.
     - New : Primal Scenery support.
 	- Fixed : misc fixes.
 	- Fixed : pets.
+	- Fixed : Halt attack on first loop.
 
 v4.9.3 - Date: 28/3/2022
 	- Fixed : misc fixes in GUI.

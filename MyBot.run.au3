@@ -1485,15 +1485,6 @@ EndFunc   ;==>__RunFunction
 ; xbebenk.
 Func FirstCheck()
 	; Custom - Team AIO Mod++
-	If $g_bChkOnlyFarm = False And $g_bChkSkipFirstAttack = True Then
-		Setlog("FirstCheck skipped, SkipFirstAttack enabled.", $COLOR_INFO)
-		Return
-	ElseIf $g_bChkOnlyFarm = True Then
-		Setlog("Only farm enabled.", $COLOR_INFO)
-	Else
-		SetLog("======== FirstCheck ========", $COLOR_ACTION)
-	EndIf
-
 	Local $bCheckCG = False
 	If $g_bChkClanGamesEnabled Then
 		SetLog("Check ClanGames", $COLOR_INFO)
@@ -1506,7 +1497,16 @@ Func FirstCheck()
 			$bCheckCG = True
 		EndIf
 	EndIf
-	; /////////////////////////////
+
+	If $g_bChkOnlyFarm = False And $g_bChkSkipFirstAttack = True Then
+		Setlog("FirstCheck skipped, SkipFirstAttack enabled.", $COLOR_INFO)
+		Return
+	ElseIf $g_bChkOnlyFarm = True Then
+		Setlog("Only farm enabled.", $COLOR_INFO)
+	Else
+		SetLog("======== FirstCheck ========", $COLOR_ACTION)
+	EndIf
+
 
 	SetDebugLog("-- FirstCheck Loop --")
 	If Not $g_bRunState Then Return
