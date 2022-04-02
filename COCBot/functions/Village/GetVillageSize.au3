@@ -27,11 +27,12 @@
 Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix = Default, $sFixedPrefix = Default, $bOnBuilderBase = Default, $bCaptureRegion = Default) ; Capture region spam disabled - Team AIO Mod++
 	FuncEnter(GetVillageSize)
 	
-    ; Capture region spam disabled - Team AIO Mod++
-	If $bCaptureRegion = Default Then $bCaptureRegion = True 
+	; Capture region spam disabled - Team AIO Mod++
+	Local Static $aLast[$g_eTotalAcc]
 	
 	; Capture region spam disabled - Team AIO Mod++	
-	If $bCaptureRegion = True Then
+	If $bCaptureRegion = True Or $bCaptureRegion = Default Then
+		$bCaptureRegion = True 
 		_CaptureRegion2()
 	EndIf
 	
@@ -42,7 +43,6 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		$sFixedPrefix = ""
 		If $g_bUpdateSharedPrefs Then $sFixedPrefix = "fixed"
 	EndIf
-    
 	
 	Local $aResult = 0
 	Local $sDirectory
@@ -60,31 +60,38 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	Else
 		$sDirectory = $g_sImgZoomOutDir
 	EndIf
-	Local $aStoneFiles = _FileListToArray($sDirectory, $sStonePrefix & "*.*", $FLTA_FILES)
+	Local $aStoneFiles = _FileListToArray($sDirectory, "*" & $sStonePrefix & "*", $FLTA_FILES)
 	If @error Then
 		SetLog("Error: Missing stone files (" & @error & ")", $COLOR_ERROR)
 		$g_aVillageSize = $g_aVillageSizeReset ; Deprecated dim - Team AIO Mod++
 		Return FuncReturn($aResult)
 	EndIf
-	; use stoneBlueStacks2A stones first
-	Local $iNewIdx = 1
+	
+	_ArraySort($aStoneFiles, 1, 1)
+	
+	; use prev stones first
+	Local $iNewIdx = 1, $s
 	For $i = 1 To $aStoneFiles[0]
-		If StringInStr($aStoneFiles[$i], "stoneBlueStacks2A") = 1 Then
-			Local $s = $aStoneFiles[$iNewIdx]
+		If $aLast[$g_iCurAccount] = "" Or $bOnBuilderBase = False Then ExitLoop
+		If StringInStr($aStoneFiles[$i], $aLast[$g_iCurAccount]) = 1 Then
+			$s = $aStoneFiles[$iNewIdx]
 			$aStoneFiles[$iNewIdx] = $aStoneFiles[$i]
 			$aStoneFiles[$i] = $s
 			$iNewIdx += 1
 		EndIf
 	Next
-	Local $aTreeFiles = _FileListToArray($sDirectory, $sTreePrefix & "*.*", $FLTA_FILES)
+	
+	Local $aTreeFiles = _FileListToArray($sDirectory, "*" & $sTreePrefix & "*", $FLTA_FILES)
 	If @error Then
 		SetLog("Error: Missing tree (" & @error & ")", $COLOR_ERROR)
 		$g_aVillageSize = $g_aVillageSizeReset ; Deprecated dim - Team AIO Mod++
 		Return FuncReturn($aResult)
 	EndIf
+	_ArraySort($aTreeFiles, 1, 1)
+	
 	Local $i, $findImage, $sArea, $a
 
-	Local $aFixedFiles = ($sFixedPrefix ? _FileListToArray($sDirectory, $sFixedPrefix & "*.*", $FLTA_FILES) : 0)
+	Local $aFixedFiles = ($sFixedPrefix ? _FileListToArray($sDirectory, "*" & $sFixedPrefix & "*", $FLTA_FILES) : 0)
 
 	If UBound($aFixedFiles) > 0 Then
 		For $i = 1 To $aFixedFiles[0]
@@ -121,6 +128,8 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 			EndIf
 		Next
 	EndIf
+	
+	_ArraySort($aFixedFiles, 1, 1)
 
 	For $i = 1 To $aStoneFiles[0]
 		$findImage = $aStoneFiles[$i]
@@ -158,8 +167,14 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 
 	If $stone[0] = 0 And $fixed[0] = 0 Then
 		SetDebugLog("GetVillageSize cannot find stone", $COLOR_WARNING)
-			$g_aVillageSize = $g_aVillageSizeReset ; Deprecated dim - Team AIO Mod++
+		$g_aVillageSize = $g_aVillageSizeReset ; Deprecated dim - Team AIO Mod++
 		Return FuncReturn($aResult)
+	Else
+		; Custom - Team AIO Mod++
+		If $bOnBuilderBase = False Then
+			Local $sStones = StringBetween($findImage, "stone", "-")
+			If Not @error Then $aLast[$g_iCurAccount] = "stone" & $sStones
+		EndIf
 	EndIf
 
 	If $stone[0] Then
@@ -337,6 +352,8 @@ Func DetectScenery($sStone = "None")
 		$sScenery = "9th Clashiversary Scenery"
 	ElseIf StringInStr($sStone, "SD", $STR_CASESENSE) Then
 		$sScenery = "Snow Day Scenery"
+	ElseIf StringInStr($sStone, "PS", $STR_CASESENSE) Then
+		$sScenery = "Primal Scenery"
 	Else
 		$sScenery = "Failed scenery detection"
 	EndIf

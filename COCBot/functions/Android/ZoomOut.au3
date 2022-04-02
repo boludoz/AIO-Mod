@@ -460,17 +460,8 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 	Local $bUpdateSharedPrefs = $g_bUpdateSharedPrefs And $g_iAndroidZoomoutMode = 4
 
 	Local $village
-	Local $bOnBuilderBase = isOnBuilderBase(True)
-	If $g_aiSearchZoomOutCounter[0] = 10 Then SetLog("Try secondary village measuring...", $COLOR_INFO)
-	If $g_aiSearchZoomOutCounter[0] < 10 Then
-		$village = GetVillageSize($DebugLog, "stone", "tree", Default, $bOnBuilderBase)
-	Else
-		; try secondary images
-		$village = GetVillageSize($DebugLog, "2stone", "2tree", Default, $bOnBuilderBase)
-	EndIf
-
-	; compare other stone measures
-	;GetVillageSize(True, "stoneBlueStacks2A")
+	Local $bOnBuilderBase = isOnBuilderBase($CaptureRegion)
+	$village = GetVillageSize($DebugLog, "stone", "tree", Default, $bOnBuilderBase, $CaptureRegion)
 
 	Static $iCallCount = 0
 	If $g_aiSearchZoomOutCounter[0] > 0 Then

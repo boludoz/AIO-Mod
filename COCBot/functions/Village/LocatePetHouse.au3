@@ -19,35 +19,33 @@ Func LocatePetHouse($bFromButton = False, $bManualAvoid = Default)
 		Return False
 	EndIf
 	
-	If $bManualAvoid = Default Then
-		If $bFromButton = False Then
-			$bManualAvoid = ($g_bChkAvoidBuildingsLocate Or $g_bChkOnlyFarm)
-		EndIf
-	EndIf
-	
-	If $bFromButton = True Then ZoomOut()
+	ZoomOut()
 	
 	; auto locate 
 	If $bFromButton = True Then
 		SetLog("Manual Pet House.", $COLOR_INFO)
-	ElseIf $bManualAvoid Then
+	Else
+		$bManualAvoid = ($g_bChkAvoidBuildingsLocate Or $g_bChkOnlyFarm)
+	EndIf
+	
+	If $bManualAvoid Or Not $bFromButton Then
 		If ImgLocatePetHouse() Then
 			chklocations()
 			Return True
 		EndIf
-		Return False
+		If $bManualAvoid Then Return False
 	EndIf
 	
 	; reset position
 	$g_aiPetHousePos[0] = -1
-	$g_aiPetHousePos[0] = -1
+	$g_aiPetHousePos[1] = -1
 	
 	SetLog("PetHouse: (" & $g_aiPetHousePos[0] & "," & $g_aiPetHousePos[1] & ")", $COLOR_DEBUG)
-	If Number($g_aiPetHousePos[1]) < 1 Then 
-		Return _LocatePetHouse($bFromButton) ; manual locate
-	EndIf
 	
-	Return False
+	Local $bResult = _LocatePetHouse(True) ; manual locate
+	; chklocations()
+	
+	Return $bResult
 EndFunc
 
 Func _LocatePetHouse($bCollect = True)
@@ -95,7 +93,7 @@ Func _LocatePetHouse($bCollect = True)
 		Else
 			SetLog("Locate Pet House Cancelled", $COLOR_INFO)
 			ClickAway()
-			Return
+			Return False
 		EndIf
 		Local $sPetHouseInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY); 860x780
 		If $sPetHouseInfo[0] > 1 Or $sPetHouseInfo[0] = "" Then
@@ -166,4 +164,4 @@ Func ImgLocatePetHouse()
 	EndIf
 	
 	Return False
-EndFunc
+EndFunc   ;==>ImgLocatePetHouse

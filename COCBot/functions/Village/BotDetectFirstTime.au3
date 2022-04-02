@@ -75,10 +75,14 @@ Func BotDetectFirstTime()
 	EndIf
 
 	If Number($g_iTownHallLevel) >= 14 Then
-		If _Sleep($DELAYBOTDETECT3) Then Return
-		If Not isInsideDiamond($g_aiPetHousePos) Then
-			LocatePetHouse(False)
-			SaveConfig()
+		; Custom builings - Team AIO Mod++
+		Local $iUpgradePets = _ArraySearch($g_bUpgradePetsEnable, True)
+		If Not @error Or $g_bPetHouseSelector = True Or $iUpgradePets > 0 Then
+			If _Sleep($DELAYBOTDETECT3) Then Return
+			If Not isInsideDiamond($g_aiPetHousePos) Then
+				LocatePetHouse(False)
+				SaveConfig()
+			EndIf
 		EndIf
 	EndIf
 

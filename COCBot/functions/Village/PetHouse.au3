@@ -28,11 +28,6 @@ EndFunc
 
 Func PetHouse($test = False)
 	Local $bUpgradePets = False
-	Local $aiPetUpgradeCostPerLevel[$ePetCount][$g_ePetLevels] = [ _
-		[0, 115, 130, 145, 160, 175, 190, 205, 220, 235], _  ; LASSI
-		[0, 135, 150, 165, 180, 195, 210, 225, 240, 255], _  ; Electro Owl
-		[0, 165, 185, 205, 225, 245, 255, 265, 275, 285], _  ; Mighty Yak
-        [0, 210, 220, 230, 240, 250, 260, 270, 280, 290]]    ; Unicorn
 
    If $g_iTownHallLevel < 14 Then
 		;SetLog("Townhall Lvl " & $g_iTownHallLevel & " has no Pet House.", $COLOR_ERROR)
@@ -46,32 +41,19 @@ Func PetHouse($test = False)
 			SetLog($g_asPetNames[$i] & " upgrade enabled");
 		EndIf
 	Next
-	
-	; Custom pets - Team AIO Mod++
-	If Not $bUpgradePets Then
-		; PetsByPassed()
-		Return
-	EndIf
-	
-	; Custom pets - Team AIO Mod++
-	 ; see if we know about an upgrade in progress without checking the Pet House
- 	If PetUpgradeInProgress() Then 
-		PetsByPassed()
-		Return False
+
+	If Not $bUpgradePets Then Return
+
+	If $g_aiPetHousePos[0] <= 0 Or $g_aiPetHousePos[1] <= 0 Then
+		SetLog("Pet House Location unknown!", $COLOR_WARNING)
+		LocatePetHouse() ; Pet House location unknown, so find it.
+		If $g_aiPetHousePos[0] = 0 Or $g_aiPetHousePos[1] = 0 Then
+			SetLog("Problem locating Pet House, re-locate Pet House position before proceeding", $COLOR_ERROR)
+			Return False
+		EndIf
 	EndIf
 
-	SetDebugLog("Pet House Position: " & $g_aiPetHousePos[0] & ", " & $g_aiPetHousePos[1], $COLOR_DEBUG)
-	If isInsideDiamond($g_aiPetHousePos) = False Then
-		LocatePetHouse()
-		If isInsideDiamond($g_aiPetHousePos) Then
-			saveConfig()
-		Else
-			Setlog("Pet House not located.", $COLOR_ERROR)
-			ClickAway()
-			Return
-		EndIf
-		If _Sleep(1000) Then Return False
-	EndIf
+ 	If PetUpgradeInProgress() Then Return False ; see if we know about an upgrade in progress without checking the Pet House
 
 	; Get updated village elixir and dark elixir values
 	VillageReport()
@@ -88,15 +70,7 @@ Func PetHouse($test = False)
 	EndIf
 
 	;Click Pet House
-	BuildingClickP($g_aiPetHousePos, "#0197")
-	If _Sleep(1500) Then Return ; Wait for window to open
-
-	If Not FindPetsButton() Then Return False ; cant start becuase we cannot find the Pets button
-
-	If Not IsPetHousePage() Then
-		SetLog("Failed to open Pet House Window!", $COLOR_ERROR)
-		Return
-	EndIf
+	If PetsByPassed() Then Return False ; Custom buildings - Team AIO Mod++
 
 	If CheckPetUpgrade() Then Return False ; cant start if something upgrading
 
@@ -117,7 +91,7 @@ Func PetHouse($test = False)
 			If _Sleep($DELAYLABORATORY2) Then Return
 
 			; get DE requirement to upgrade Pet
-			Local $iDarkElixirReq = 1000 * number($aiPetUpgradeCostPerLevel[$i][$iPetLevel])
+			Local $iDarkElixirReq = 1000 * number($g_aiPetUpgradeCostPerLevel[$i][$iPetLevel])
 			SetLog("DE Requirement: " & $iDarkElixirReq)
 
 			If $iDarkElixirReq < $g_aiCurrentLoot[$eLootDarkElixir] Then
@@ -167,13 +141,11 @@ Func PetHouse($test = False)
 						EndIf
 
 					Else
-						; ClickAway() ; close pet upgrade window
-						SelectHeroPets() ; Custom pets - Team AIO Mod++
+						ClickAway() ; close pet upgrade window
 					EndIf
 
 					SetLog("Started upgrade for: " & $g_asPetNames[$i])
-					; ClickAway() ; close pet house window
-					SelectHeroPets() ; Custom pets - Team AIO Mod++
+					ClickAway() ; close pet house window
 					Return True
 				Else
 					SetLog("Failed to find the Pets button!", $COLOR_ERROR)
@@ -250,6 +222,15 @@ EndFunc
 ; called from main loop to get an early status for indictors in bot bottom
 ; run every if no upgradeing pet
 Func PetGuiDisplay()
+	
+	; Custom builings - Team AIO Mod++
+	Local $iUpgradePets = _ArraySearch($g_bUpgradePetsEnable, True)
+	Local $bCheck
+	If Not @error Or $g_bPetHouseSelector = True Or $iUpgradePets > 0 Then
+		SetDebugLog("Checking pets")
+	Else
+		Return False
+	EndIf
 
 	Local Static $iLastTimeChecked[$g_eTotalAcc]
 	If $g_bFirstStart Then $iLastTimeChecked[$g_iCurAccount] = ""
@@ -298,33 +279,7 @@ Func PetGuiDisplay()
 
 	;=================Section 2 Lab Gui
 
-	; If $g_bAutoLabUpgradeEnable = True Then  ====>>>> TODO : or use this or make a checkbox on GUI
-	; make sure lab is located, if not locate lab
-	If $g_aiPetHousePos[0] <= 0 Or $g_aiPetHousePos[1] <= 0 Then
-		SetLog("Pet House Location is unknown!", $COLOR_ERROR)
-		;============Hide Red  Hide Green  Show Gray==
-		GUICtrlSetState($g_hPicPetGreen, $GUI_HIDE)
-		GUICtrlSetState($g_hPicPetRed, $GUI_HIDE)
-		GUICtrlSetState($g_hPicPetGray, $GUI_SHOW)
-		GUICtrlSetData($g_hLbLPetTime, "")
-		;============================================
-		Return
-	EndIf
-
-	SetLog("Pet House (x,y): " & $g_aiPetHousePos[0] & "," & $g_aiPetHousePos[1])
-
-	BuildingClickP($g_aiPetHousePos, "#0197") ;Click Laboratory
-	If _Sleep(1500) Then Return ; Wait for window to open
-	; Find Research Button
-
-	$iLastTimeChecked[$g_iCurAccount] = _NowCalc()
-
-	Local $aPetsButton = findButton("Pets", Default, 1, True)
-	If IsArray($aPetsButton) And UBound($aPetsButton, 1) = 2 Then
-		If $g_bDebugImageSave Then SaveDebugImage("PetsUpgrade") ; Debug Only
-		ClickP($aPetsButton)
-		If _Sleep(1500) Then Return ; Wait for window to open
-	Else
+	If Not PetsByPassed() Then
 		SetLog("Cannot find the Pet House Button!", $COLOR_ERROR)
 		ClickAway()
 		;CloseWindow("ClosePetHouse")
@@ -341,9 +296,6 @@ Func PetGuiDisplay()
 		SetLog("Pet House Window did not open!", $COLOR_ERROR)
 		Return
 	EndIf
-
-	; Custom pets - Team AIO Mod++
-	PetsByPassed()
 
 	$g_iMinDark4PetUpgrade = GetMinDark4PetUpgrade()
 

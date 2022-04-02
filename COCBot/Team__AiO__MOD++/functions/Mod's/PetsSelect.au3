@@ -14,42 +14,49 @@
 ; ===============================================================================================================================
 #include-once
 Func PetsByPassed()
-	If $g_bPetHouseSelector = False Then Return
-	If $g_iTownHallLevel <> 0 And $g_iTownHallLevel < 14 Then Return
+	If $g_iTownHallLevel <> 0 And $g_iTownHallLevel < 14 Then Return False
 
-	Local Static $aDate[$g_eTotalAcc]
-	If $aDate[$g_iCurAccount] <> @MDAY Or $aDate[$g_iCurAccount] = "" Then
-		If IsMainPage() Then
+	If IsMainPage() Then
 		
-			SetDebugLog("Pet House Position: " & $g_aiPetHousePos[0] & ", " & $g_aiPetHousePos[1], $COLOR_DEBUG)
-			If isInsideDiamond($g_aiPetHousePos) = False Then
-				LocatePetHouse()
-				If isInsideDiamond($g_aiPetHousePos) Then
-					saveConfig()
-				Else
-					Setlog("Pet House not located.", $COLOR_ERROR)
-					ClickAway()
-					Return
-				EndIf
-				If _Sleep(1000) Then Return False
+		SetDebugLog("Pet House Position: " & $g_aiPetHousePos[0] & ", " & $g_aiPetHousePos[1], $COLOR_DEBUG)
+		If isInsideDiamond($g_aiPetHousePos) = False Then
+			LocatePetHouse()
+			If isInsideDiamond($g_aiPetHousePos) Then
+				saveConfig()
+			Else
+				Setlog("Pet House not located.", $COLOR_ERROR)
+				ClickAway()
+				Return False
 			EndIf
-			
-			BuildingClickP($g_aiPetHousePos, "#0197")
-			If _Sleep(1500) Then Return ; Wait for window to open
-			
-		
-			If Not FindPetsButton() Then Return
-			
-			$aDate[$g_iCurAccount] = @MDAY
-			
-			SelectHeroPets()
-			ClickAway()
-		Else
-			SetDebugLog("Pets error , is not at main page!")
-			SaveDebugImage("Pets", True)
+			If _Sleep(1000) Then Return False
 		EndIf
+		
+		BuildingClickP($g_aiPetHousePos, "#0197")
+		If _Sleep(1500) Then Return     ; Wait for window to open
+		
+		If Not FindPetsButton() Then Return
+		If _Sleep(1500) Then Return     ; Wait for window to open
+
+		If Not IsPetHousePage() Then
+			SetLog("Failed to open Pet House Window!", $COLOR_ERROR)
+			ClickAway()
+			Return False
+		EndIf
+		
+		If $g_bPetHouseSelector = False Then Return True
+		
+		SelectHeroPets()
+		If _Sleep(1500) Then Return     ; Wait for window to open
+		
+		Return True
+	Else
+		SetDebugLog("Pets error , is not at main page!")
+		SaveDebugImage("Pets", True)
+		ClickAway()
 	EndIf
-EndFunc   ;==>Pets
+	ClickAway()
+	Return False
+EndFunc   ;==>PetsByPassed
 
 Func SelectHeroPets()
 	If $g_bPetHouseSelector = False Then Return
@@ -137,9 +144,9 @@ Func SelectHeroPets()
 			$iCount += 1
 			If $iCount > Int(UBound($aIMGHerosMain) - 1) Then ExitLoop
 			
-			SetLog("	- " & $aPetsNames[$iCount] & " : " & $o, $COLOR_INFO)
+			SetLog("- " & $aPetsNames[$iCount] & " : " & $o, $COLOR_INFO)
 
-			SetLog("		Must be : " & $oPetsGUI($aPetsNames[$iCount]), $COLOR_INFO)
+			SetLog(" Must be : " & $oPetsGUI($aPetsNames[$iCount]), $COLOR_INFO)
 			
 			If String($oPetsGUI($aPetsNames[$iCount])) <> String($o) Then
 				Click($aIMGHerosMain[$iCount][1], $aIMGHerosMain[$iCount][2])
