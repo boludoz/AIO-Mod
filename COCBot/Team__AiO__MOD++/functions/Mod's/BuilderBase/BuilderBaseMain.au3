@@ -209,7 +209,8 @@ Func _BuilderBase($bTestRun = False)
 		EndIf
 
 		$bBoostedClock = StartClockTowerBoost() And Not $bCondition
-
+		
+		BuilderBaseZoomOut(False, False)
 		CleanBBYard()
 		If Not $g_bRunState Then Return
 

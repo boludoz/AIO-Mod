@@ -333,6 +333,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			For $i = 0 To $eLootCount - 1
 				GUICtrlSetData($g_ahTxtResumeAttackLoot[$i], $g_aiResumeAttackLoot[$i])
 			Next
+			GUICtrlSetState($g_hChkAvoidInCG, $g_bAvoidInCG ? $GUI_CHECKED : $GUI_UNCHECKED) ; Custom CG - Team AIO Mod++
 			GUICtrlSetState($g_hChkCollectStarBonus, $g_bCollectStarBonus ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbTimeStop, $g_iCmbTimeStop)
 			_GUICtrlComboBox_SetCurSel($g_hCmbResumeTime, $g_iResumeAttackTime)
@@ -449,6 +450,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			For $i = 0 To $eLootCount - 1
 				$g_aiResumeAttackLoot[$i] = GUICtrlRead($g_ahTxtResumeAttackLoot[$i])
 			Next
+			$g_bAvoidInCG = (GUICtrlRead($g_hChkAvoidInCG) = $GUI_CHECKED) ; Custom CG - Team AIO Mod++
 			$g_bCollectStarBonus = (GUICtrlRead($g_hChkCollectStarBonus) = $GUI_CHECKED)
 			$g_iCmbTimeStop = _GUICtrlComboBox_GetCurSel($g_hCmbTimeStop)
 			$g_iResumeAttackTime = _GUICtrlComboBox_GetCurSel($g_hCmbResumeTime)
@@ -2390,6 +2392,7 @@ Func ApplyConfig_600_52_2($TypeReadSave)
 			
 			GUICtrlSetState($g_hChkPreTrainTroopsPercent, $g_bChkPreTrainTroopsPercent ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hInpPreTrainTroopsPercent, $g_iInpPreTrainTroopsPercent)
+			GUICtrlSetState($g_hChkTrainBeforeAttack, $g_bTrainBeforeAttack ? $GUI_CHECKED : $GUI_UNCHECKED)
 			chkDoubleTrain()
 			_GUICtrlComboBox_SetCurSel($g_hCmbTroopSetting, $g_iCmbTroopSetting)
 			lblTotalCountTroop1()
@@ -2432,6 +2435,7 @@ Func ApplyConfig_600_52_2($TypeReadSave)
 
 			$g_bChkPreTrainTroopsPercent = (GUICtrlRead($g_hChkPreTrainTroopsPercent) = $GUI_CHECKED)
 			$g_iInpPreTrainTroopsPercent = Int(GUICtrlRead($g_hInpPreTrainTroopsPercent))
+			$g_bTrainBeforeAttack = (GUICtrlRead($g_hChkTrainBeforeAttack) = $GUI_CHECKED)
 			$g_iCmbTroopSetting = _GUICtrlComboBox_GetCurSel($g_hCmbTroopSetting)
 
 			$g_bPreciseBrew = (GUICtrlRead($g_hChkPreciseSpells) = $GUI_CHECKED)

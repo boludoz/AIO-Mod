@@ -359,8 +359,8 @@ Global $g_aRequestTroopsTextOTR[0][2]
 Global $g_hChkPreciseSpells = 0, $g_hChkForcePreBrewSpells = 0
 Global $g_bForcePreBrewSpells = True, $g_bPreciseBrew = False
 
-Global $g_bChkPreTrainTroopsPercent = True, $g_iInpPreTrainTroopsPercent = 95, $g_bForceDoubleTrain = False
-Global $g_hChkPreTrainTroopsPercent = 0, $g_hInpPreTrainTroopsPercent = 0
+Global $g_bChkPreTrainTroopsPercent = True, $g_iInpPreTrainTroopsPercent = 95, $g_bForceDoubleTrain = False, $g_bTrainBeforeAttack = False
+Global $g_hChkPreTrainTroopsPercent = 0, $g_hInpPreTrainTroopsPercent = 0, $g_hChkTrainBeforeAttack = 0, $g_hLblPreTrainTroopsPercent = 0
 
 Global $g_iCustomArmysMainVillage[$eTroopCount][3]
 Global $g_iCustomBrewMainVillage[$eSpellCount][3]

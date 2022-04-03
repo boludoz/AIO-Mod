@@ -122,8 +122,14 @@ EndFunc   ;==>chkTotalCampForced
 #Region - Custom train - Team AIO Mod++
 Func chkDoubleTrain()
 	$g_bDoubleTrain = (GUICtrlRead($g_hChkDoubleTrain) = $GUI_CHECKED)
-	GUICtrlSetState($g_hChkPreTrainTroopsPercent, ($g_bDoubleTrain = True) ? ($GUI_ENABLE) : ($GUI_DISABLE + $GUI_UNCHECKED))
-	GUICtrlSetState($g_hInpPreTrainTroopsPercent, ($g_bDoubleTrain = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+	$g_bChkPreTrainTroopsPercent = (GUICtrlRead($g_hChkPreTrainTroopsPercent) = $GUI_CHECKED)
+	
+	GUICtrlSetState($g_hInpPreTrainTroopsPercent, ($g_bDoubleTrain = True And $g_bChkPreTrainTroopsPercent = True) ? ($GUI_ENABLE) : ($GUI_DISABLE))
+	GUICtrlSetState($g_hChkPreTrainTroopsPercent, ($g_bDoubleTrain = True) ? ($GUI_SHOW) : ($GUI_HIDE))
+	GUICtrlSetState($g_hLblPreTrainTroopsPercent, ($g_bDoubleTrain = True) ? ($GUI_SHOW) : ($GUI_HIDE))
+	GUICtrlSetState($g_hInpPreTrainTroopsPercent, ($g_bDoubleTrain = True) ? ($GUI_SHOW) : ($GUI_HIDE))
+
+	GUICtrlSetState($g_hChkTrainBeforeAttack, ($g_bDoubleTrain = False) ? ($GUI_SHOW) : ($GUI_HIDE))
 EndFunc   ;==>chkTotalCampForced
 #EndRegion - Custom train - Team AIO Mod++
 

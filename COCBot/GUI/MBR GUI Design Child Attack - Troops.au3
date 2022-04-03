@@ -965,12 +965,17 @@ Func CreateTrainTroops()
 			GetTranslatedFileIni("MBR Global GUI Design", "DoubleTrainTip3", "Note: Donations + Double Train can produce an unbalanced army!"))
 
 	#Region - Custom train - Team AIO Mod++
-	$g_hChkPreTrainTroopsPercent = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "ChkDoubleTrainIf", "Double if") & " " & ChrW(8805), $x + 200, $y, -1, -1)
+	$g_hChkPreTrainTroopsPercent = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "ChkDoubleTrainIf", "Double if") & " " & ChrW(8805), $x + 250, $y, -1, -1)
+	GUICtrlSetOnEvent(-1, "ChkDoubleTrain") ; Custom train - Team AIO Mod++
+	
+	$g_hChkTrainBeforeAttack = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "ChkTrainBeforeAttack", "If full army pre train"), $x + 250, $y, -1, -1)
+	GUICtrlSetOnEvent(-1, "ChkDoubleTrain") ; Custom train - Team AIO Mod++
 
-	$g_hInpPreTrainTroopsPercent = _GUICtrlCreateInput("100", $x + 272, $y, 30, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+	$g_hInpPreTrainTroopsPercent = _GUICtrlCreateInput("100", $x + 322, $y, 30, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+	GUICtrlSetOnEvent(-1, "ChkDoubleTrain") ; Custom train - Team AIO Mod++
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "TxtDoubleTrainIf_Info_01", "Only double train when reaching this %."))
 			GUICtrlSetLimit(-1, 3)
-			GUICtrlCreateLabel("%", $x + 303, $y+2, -1, 17)
+	$g_hLblPreTrainTroopsPercent = GUICtrlCreateLabel("%", $x + 353, $y + 2, -1, 17)
 	#EndRegion - Custom train - Team AIO Mod++
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)

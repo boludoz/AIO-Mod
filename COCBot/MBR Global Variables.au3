@@ -911,6 +911,7 @@ Global $g_bMakeScreenshotNow = False ; Used to create Screenshot in _Sleep if Sc
 Global $g_bChkBotStop = False, $g_iCmbBotCommand = 0, $g_iCmbBotCond = 0, $g_iCmbHoursStop = 0, $g_iCmbTimeStop = 0
 Global $g_abFullStorage[$eLootCount] = [False, False, False, False], $g_aiResumeAttackLoot[$eLootCount] = [0, 0, 0, 0], $g_iResumeAttackTime = 0
 Global $g_bCollectStarBonus = False
+Global $g_bAvoidInCG = False ; Custom CG - Team AIO Mod++
 Global $g_iTxtRestartGold = 10000
 Global $g_iTxtRestartElixir = 25000
 Global $g_iTxtRestartDark = 500

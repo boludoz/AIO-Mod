@@ -19,7 +19,7 @@ Global $g_hGUI_MISC = 0, $g_hGUI_MISC_TAB = 0, $g_hGUI_MISC_TAB_ITEM1 = 0, $g_hG
 
 Global $g_hChkBotStop = 0, $g_hCmbBotCommand = 0, $g_hCmbBotCond = 0, $g_hCmbHoursStop = 0, $g_hCmbTimeStop = 0
 Global $g_LblResumeAttack = 0, $g_ahTxtResumeAttackLoot[$eLootCount] = [0, 0, 0, 0], $g_hCmbResumeTime = 0
-Global $g_hChkCollectStarBonus = 0
+Global $g_hChkCollectStarBonus = 0, $g_hChkAvoidInCG = 0 ; Custom CG - Team AIO Mod++
 Global $g_hTxtRestartGold = 0, $g_hTxtRestartElixir = 0, $g_hTxtRestartDark = 0
 Global $g_hChkTrap = 1, $g_hChkCollect = 1, $g_hChkTombstones = 1, $g_hChkCleanYard = 0, $g_hChkGemsBox = 0
 ; Global $g_hChkCollectCartFirst = 0, $g_hTxtCollectGold = 0, $g_hTxtCollectElixir = 0, $g_hTxtCollectDark = 0  ; Custom Collect - Team AIO Mod++
@@ -177,7 +177,10 @@ Func CreateMiscNormalVillageSubTab()
 	GUICtrlCreateLabel("<", $x + 5, $y + 2, -1, -1)
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnTrophy, $x + 56, $y, 16, 16) ;HArchH Was 65, now 56.
 
-	$g_hChkCollectStarBonus = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCollectStarBonus", "When star bonus available"), $x + 15, $y + 20, -1, -1)
+	$g_hChkCollectStarBonus = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCollectStarBonus", "When star bonus available"), $x + 15 - 30, $y + 20, -1, -1)
+	
+	; Custom CG - Team AIO Mod++
+	$g_hChkAvoidInCG = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkAvoidInCG", "Avoid in CG"), $x + 15 + 30, $y + 20, -1, -1)
 
 	$x += 75
 	GUICtrlCreateLabel("<", $x + 5, $y + 2, -1, -1)

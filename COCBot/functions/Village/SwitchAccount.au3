@@ -1167,6 +1167,7 @@ Func CheckPlannedAttackLimits()
 			EndIf
 		EndIf
 	Next
+	
 	If $bIsAvailable2Attack Then
 		Return True
 	Else
@@ -1177,9 +1178,11 @@ Func CheckPlannedAttackLimits()
 				SetLog("Account " & $g_asProfileName[$i] & " didn't reach the limit of daily attacks!")
 			EndIf
 		Next
+		
 		If $iWaitTime > 3660 Then
 			SetLog("Doesn't exist accounts to attack!")
 		EndIf
+		
 		UniversalCloseWaitOpenCoC($iWaitTime * 1000, "IsSearchAttackScheduled_", $g_bAttackPlannerCloseAll, True, $g_bAttackPlannerSuspendComputer)
 		$g_bRestart = True
 		Return False

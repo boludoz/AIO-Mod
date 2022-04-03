@@ -214,6 +214,12 @@ EndFunc   ;==>WhatSCIDAccount2Use
 
 Func cmbBotCond()
 	Local $iCond = _GUICtrlComboBox_GetCurSel($g_hCmbBotCond)
+	; Custom CG - Team AIO Mod++
+	If $iCond > 0 Then
+		GUICtrlSetState($g_hChkAvoidInCG, $GUI_ENABLE)
+	Else
+		GUICtrlSetState($g_hChkAvoidInCG, $GUI_DISABLE)
+	EndIf
 	If $iCond = 15 Then
 		If _GUICtrlComboBox_GetCurSel($g_hCmbHoursStop) = 0 Then _GUICtrlComboBox_SetCurSel($g_hCmbHoursStop, 1)
 		GUICtrlSetState($g_hCmbHoursStop, $GUI_ENABLE)

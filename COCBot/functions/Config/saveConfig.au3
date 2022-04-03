@@ -409,6 +409,7 @@ Func SaveConfig_600_6()
 	For $i = 0 To $eLootCount - 1
 		_Ini_Add("other", "MinResumeAttackLoot_" & $i, $g_aiResumeAttackLoot[$i])
 	Next
+	_Ini_Add("general", "AvoidInCG", $g_bAvoidInCG ? 1 : 0) ; Custom CG - Team AIO Mod++
 	_Ini_Add("general", "CollectStarBonus", $g_bCollectStarBonus ? 1 : 0)
 	_Ini_Add("general", "CmbTimeStop", $g_iCmbTimeStop)
 	_Ini_Add("other", "ResumeAttackTime", $g_iResumeAttackTime)
@@ -1380,6 +1381,7 @@ Func SaveConfig_600_52_2()
 
 	_Ini_Add("troop", "ChkPreTrainTroopsPercent", $g_bChkPreTrainTroopsPercent ? 1 : 0)
 	_Ini_Add("troop", "InpPreTrainTroopsPercent", $g_iInpPreTrainTroopsPercent)
+	_Ini_Add("troop", "TrainBeforeAttack", $g_bTrainBeforeAttack ? 1 : 0)
 	_Ini_Add("troop", "CmbTroopSetting", $g_iCmbTroopSetting)
 
 	For $i = 0 To 2

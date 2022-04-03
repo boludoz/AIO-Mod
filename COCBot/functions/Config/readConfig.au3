@@ -442,6 +442,7 @@ Func ReadConfig_600_6()
 	For $i = 0 To $eLootCount - 1
 		IniReadS($g_aiResumeAttackLoot[$i], $g_sProfileConfigPath, "other", "MinResumeAttackLoot_" & $i, 0, "int")
 	Next
+	IniReadS($g_bAvoidInCG, $g_sProfileConfigPath, "general", "AvoidInCG", False, "Bool") ; Custom CG - Team AIO Mod++
 	IniReadS($g_bCollectStarBonus, $g_sProfileConfigPath, "general", "CollectStarBonus", False, "Bool")
 	IniReadS($g_iCmbTimeStop, $g_sProfileConfigPath, "general", "CmbTimeStop", 0, "int")
 	IniReadS($g_iResumeAttackTime, $g_sProfileConfigPath, "other", "ResumeAttackTime", 12, "int")
@@ -1658,6 +1659,7 @@ Func ReadConfig_600_52_2()
 
 	IniReadS($g_bChkPreTrainTroopsPercent, $g_sProfileConfigPath, "troop", "ChkPreTrainTroopsPercent", True, "Bool")
 	IniReadS($g_iInpPreTrainTroopsPercent, $g_sProfileConfigPath, "troop", "InpPreTrainTroopsPercent", 95, "Int")
+	IniReadS($g_bTrainBeforeAttack, $g_sProfileConfigPath, "troop", "TrainBeforeAttack", True, "Bool")
 	IniReadS($g_iCmbTroopSetting, $g_sProfileConfigPath, "troop", "CmbTroopSetting", $g_iCmbTroopSetting, "Int")
 
 	For $i = 0 To 2
