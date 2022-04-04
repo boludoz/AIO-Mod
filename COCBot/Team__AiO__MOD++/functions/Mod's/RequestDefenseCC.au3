@@ -16,15 +16,16 @@ Func IsRequestDefense($bShield = True)
 
 	Local $bRequestDefense = False
 	If $g_bRequestCCDefense Then
-		Local $sTime = $g_iCmbRequestCCDefenseWhen ? _DateAdd('n', -(Int($g_iSinglePBForcedEarlyExitTime)), $g_sPBOriginalStartTime) : $g_asShieldStatus[2]
+		Local $sTime = $g_iCmbRequestCCDefenseWhen ? $g_sPBStartTime : $g_asShieldStatus[2]
+
 		If Not $g_iCmbRequestCCDefenseWhen And $g_asShieldStatus[0] = "none" Then
 			$bRequestDefense = True
 			If $bShield Then SetLog("No shield! Request troops for defense", $COLOR_INFO)
 		ElseIf _DateIsValid($sTime) Then
-			Local $iTime = Int(_DateDiff('n', _NowCalc(), $sTime))
-			If $g_bDebugSetlog And $bShield Then SetDebugLog("IsRequestDefense->> $g_iCmbRequestCCDefenseWhen: " & $g_iCmbRequestCCDefenseWhen & " | " & "$sTime: " & $sTime & " | " & "$iTime: " & $iTime)
-			If Not $g_iCmbRequestCCDefenseWhen And $g_asShieldStatus[0] = "shield" Then $iTime += 30
-			If $bShield Then SetDebugLog(($g_iCmbRequestCCDefenseWhen ? "Personal Break time: " : "Guard time: ") & $sTime & "(" & $iTime & " minutes)")
+			Local $iTime = Int(_DateDiff('n', _NowCalc(), $sTime)) ; time till P.Break or Guard expiry (in minutes)
+			If Not $g_iCmbRequestCCDefenseWhen And $g_asShieldStatus[0] = "shield" Then $iTime += 30 ; add 30 minutes guard time
+			SetDebugLog(($g_iCmbRequestCCDefenseWhen ? "Personal Break time: " : "Guard time: ") & $sTime & "(" & $iTime & " minutes)")
+            If $bShield Then SetDebugLog(($g_iCmbRequestCCDefenseWhen ? "Personal Break time: " : "Guard time: ") & $sTime & "(" & $iTime & " minutes)")
 			If $iTime <= $g_iRequestDefenseTime Then
 				If $bShield Then SetLog(($g_iCmbRequestCCDefenseWhen ? "P.Break is about to come!" : "Guard is about to expire!") & " Request troops for defense", $COLOR_INFO)
 				$bRequestDefense = True

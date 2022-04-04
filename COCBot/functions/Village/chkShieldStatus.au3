@@ -6,7 +6,7 @@
 ; Parameters ....: $bForceChkShield     - [optional] a boolean value. Default is False.
 ; ...............; $bForceChkPBT        - [optional] a boolean value. Default is False.
 ; Return values .: None
-; Author ........: MonkeyHunter (2016-02), Team AIO Mod++ (2021)
+; Author ........: MonkeyHunter (2016-02)
 ; Modified ......:
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
@@ -14,51 +14,46 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Global $g_sPBOriginalStartTime = ""
 Func chkShieldStatus($bChkShield = True, $bForceChkPBT = False)
-    ; Legend trophy protection - Team AIO Mod++
-    If $g_bLeagueAttack = True Then Return
 
-    If ($g_bForceSinglePBLogoff = False And ($g_bChkBotStop = True And $g_iCmbBotCond >= 19) = False) And $g_bCloseWhileTrainingEnable = False And Not $g_bRequestCCDefense Or Not (IsMainPage()) Then
-		SetDebugLog("chkShieldStatus is OFF")
-		Return
-	EndIf
+	; skip shield data collection if force single PB, wait for shield, or close while training not enabled, or window is not on main base
+	Local $bHaltModeWithShield = $g_bChkBotStop And $g_iCmbBotCond >= 19 And $g_iCmbBotCond <= 21
+	If (Not $g_bForceSinglePBLogoff And Not $bHaltModeWithShield) And Not $g_bCloseWhileTrainingEnable Or Not (IsMainPage()) Then Return
 
-	; Buy shield - Team AiO MOD++
-	If $g_bChkBuyGuard Then
-		BuyGuard()
-	EndIf
+	Local $Result, $iTimeTillPBTstartSec, $ichkTime = 0, $ichkSTime = 0, $ichkPBTime = 0
 
-	SetDebugLog("-- chkShieldStatus --")
-	SetDebugLog("$g_sPBStartTime : " & $g_sPBStartTime)
-	SetDebugLog("chkShieldStatus: " & _ArrayToString($g_asShieldStatus, "|"))
-	Local $result, $iTimeTillPBTstartSec, $ichkTime = 0, $ichkSTime = 0, $ichkPBTime = 0
-	If $bChkShield Or $g_asShieldStatus[0] = "" Or $g_asShieldStatus[1] = "" Or $g_asShieldStatus[2] = "" Or $g_sPBStartTime = "" Or $g_bGForcePBTUpdate = True Then
-		$result = getShieldInfo()
+	If $bChkShield Or $g_asShieldStatus[0] = "" Or $g_asShieldStatus[1] = "" Or $g_asShieldStatus[2] = "" Or $g_sPBStartTime = "" Or $g_bGForcePBTUpdate = True Then ; almost always get shield information
+
+		$Result = getShieldInfo() ; get expire time of shield
+
 		If @error Then SetLog("chkShieldStatus Shield OCR error= " & @error & "Extended= " & @extended, $COLOR_ERROR)
 		If _Sleep($DELAYRESPOND) Then Return
-		If IsArray($result) Then
-			Local $iShieldExp = _DateDiff('n', $result[2], _NowCalc())
+
+		If IsArray($Result) Then
+			Local $iShieldExp = _DateDiff('n', $Result[2], _NowCalc())
 			If Abs($iShieldExp) > 0 Then
-				Local $sFormattedDiff = _Date_Difference(_NowCalc(), $result[2], 4)
+				Local $sFormattedDiff = _Date_Difference(_NowCalc(), $Result[2], 4)
 				SetLog("Shield expires in: " & $sFormattedDiff)
 			Else
 				SetLog("Shield has expired")
 			EndIf
-			If _DateIsValid($g_asShieldStatus[2]) Then
-				$ichkTime = Abs(Int(_DateDiff('s', $g_asShieldStatus[2], $result[2])))
-				If $ichkTime > 60 Then
-					$bForceChkPBT = True
+
+			If _DateIsValid($g_asShieldStatus[2]) Then ; if existing global shield time is valid
+				$ichkTime = Abs(Int(_DateDiff('s', $g_asShieldStatus[2], $Result[2]))) ; compare old and new time
+				If $ichkTime > 60 Then ; test if more than 60 seconds different in case of attack while shield has reduced time
+					$bForceChkPBT = True ; update PB time
 					SetDebugLog("Shield time changed: " & $ichkTime & " Sec, Force PBT OCR: " & $bForceChkPBT, $COLOR_WARNING)
 				EndIf
 			EndIf
-			$g_asShieldStatus = $result
-			If $g_bChkBotStop = True And $g_iCmbBotCond >= 19 Then
-				If $g_asShieldStatus[0] = "shield" Then
+
+			$g_asShieldStatus = $Result ; update ShieldStatus global values
+
+			If $bHaltModeWithShield Then ; is Halt mode enabled and With Shield selected?
+				If $g_asShieldStatus[0] = "shield" Then ; verify shield
 					SetLog("Shield found, Halt Attack Now!", $COLOR_INFO)
 					$g_bWaitShield = True
-					$g_bIsClientSyncError = False
-					$g_bIsSearchLimit = False
+					$g_bIsClientSyncError = False ; cancel OOS restart to enable BotCommand to process Halt mode
+					$g_bIsSearchLimit = False ; reset search limit flag to enable BotCommand to process Halt mode
 				Else
 					$g_bWaitShield = False
 					If $g_bMeetCondStop = True Then
@@ -72,61 +67,65 @@ Func chkShieldStatus($bChkShield = True, $bForceChkPBT = False)
 				EndIf
 			EndIf
 		Else
-			SetDebugLog("Bad getShieldInfo() return value: " & $result, $COLOR_ERROR)
+			SetDebugLog("Bad getShieldInfo() return value: " & $Result, $COLOR_ERROR)
 			If _Sleep($DELAYRESPOND) Then Return
-			For $i = 0 To UBound($g_asShieldStatus) - 1
+
+			For $i = 0 To UBound($g_asShieldStatus) - 1 ; clear global shieldstatus if no shield data returned
 				$g_asShieldStatus[$i] = ""
 			Next
+
 		EndIf
 	EndIf
-	If Not $g_bForceSinglePBLogoff And Not $g_bRequestCCDefense Then Return
+
+	If $g_bForceSinglePBLogoff = False Then Return ; return if force single PB feature not enabled.
+
 	If _DateIsValid($g_sPBStartTime) Then
-		$ichkPBTime = Int(_DateDiff('s', $g_sPBStartTime, _NowCalc()))
+		$ichkPBTime = Int(_DateDiff('s', $g_sPBStartTime, _NowCalc())) ; compare existing shield date/time to now.
 		If $ichkPBTime >= 295 Then
-			$bForceChkPBT = True
+			$bForceChkPBT = True ; test if PBT date/time in more than 5 minutes past, force update
 			SetDebugLog("Found old PB time= " & $ichkPBTime & " Seconds, Force update:" & $bForceChkPBT, $COLOR_WARNING)
 		EndIf
 	EndIf
+
 	If $bForceChkPBT Or $g_bGForcePBTUpdate Or $g_sPBStartTime = "" Then
-		$g_bGForcePBTUpdate = False
-		$result = getPBTime()
+
+		$g_bGForcePBTUpdate = False ; Reset global flag to force PB update
+
+		$Result = getPBTime() ; Get time in future that PBT starts
+
 		If @error Then SetLog("chkShieldStatus getPBTime OCR error= " & @error & ", Extended= " & @extended, $COLOR_ERROR)
+		;SetDebugLog("getPBTime() returned: " & $Result, $COLOR_DEBUG)
 		If _Sleep($DELAYRESPOND) Then Return
-		If _DateIsValid($result) Then
-			$g_sPBOriginalStartTime = $result
-			Local $iTimeTillPBTstartMin = Int(_DateDiff('n', $result, _NowCalc()))
+
+		If _DateIsValid($Result) Then
+			Local $iTimeTillPBTstartMin = Int(_DateDiff('n', $Result, _NowCalc())) ; time in minutes
+
 			If Abs($iTimeTillPBTstartMin) > 0 Then
-				Local $sFormattedDiff = _Date_Difference(_DateAdd("n", -1, _NowCalc()), $result, 4)
+				Local $sFormattedDiff = _Date_Difference(_DateAdd("n", -1, _NowCalc()), $Result, 4)
 				SetLog("Personal Break starts in: " & $sFormattedDiff)
 				Local $CorrectstringPB_GUI = StringReplace($sFormattedDiff, StringInStr($sFormattedDiff, " hours ") >= 1 ? " hours " : " hour ", "h")
 				$CorrectstringPB_GUI = StringReplace($CorrectstringPB_GUI, StringInStr($CorrectstringPB_GUI, " minutes ") >= 1 ? " minutes " : " minute ", "'")
-;~ 				$g_aiPersonalBreak[$g_iCurAccount] = $CorrectstringPB_GUI
-			Else
-;~ 				$g_aiPersonalBreak[$g_iCurAccount] = ""
 			EndIf
+
 			If $iTimeTillPBTstartMin < -(Int($g_iSinglePBForcedEarlyExitTime)) Then
-				$g_sPBStartTime = _DateAdd('n', -(Int($g_iSinglePBForcedEarlyExitTime)), $result)
-			ElseIf $iTimeTillPBTstartMin < 0 Then
-				$g_sPBStartTime = $result
+				$g_sPBStartTime = _DateAdd('n', -(Int($g_iSinglePBForcedEarlyExitTime)), $Result) ; subtract GUI time setting from PB start time to set early forced break time
+			ElseIf $iTimeTillPBTstartMin < 0 Then ; Might have missed it if less 15 min, but try anyway
+				$g_sPBStartTime = $Result
 			Else
-				$g_sPBStartTime = ""
-				$g_sPBOriginalStartTime = ""
+				$g_sPBStartTime = "" ; clear value, can not log off ealy.
 			EndIf
 			SetDebugLog("Early Log Off time=" & $g_sPBStartTime & ", In " & _DateDiff('n', $g_sPBStartTime, _NowCalc()) & " Minutes", $COLOR_DEBUG)
 		Else
-			SetLog("Bad getPBTtime() return value: " & $result, $COLOR_ERROR)
-			$g_sPBStartTime = ""
-			$g_sPBOriginalStartTime = ""
-;~ 			$g_aiPersonalBreak[$g_iCurAccount] = ""
+			If $Result = "Legend" Then 
+				SetLog("No PBT on Legend League", $COLOR_INFO)
+				Return 
+			Else
+				SetLog("Bad getPBTtime() return value: " & $Result, $COLOR_ERROR)
+				$g_sPBStartTime = "" ; reset to force update next pass
+			EndIf
 		EndIf
 	EndIf
-	If checkObstacles() Then checkMainScreen(False)
-	SetDebugLog("$g_sPBStartTime : " & $g_sPBStartTime)
-	SetDebugLog("chkShieldStatus: " & _ArrayToString($g_asShieldStatus, "|"))
-;~ 	SetDebugLog("$g_aiPersonalBreak[$g_iCurAccount]: " & $g_aiPersonalBreak[$g_iCurAccount])
-	SetDebugLog("$g_sPBOriginalStartTime: " & $g_sPBOriginalStartTime)
-	SetDebugLog("$g_iSinglePBForcedEarlyExitTime: " & $g_iSinglePBForcedEarlyExitTime)
-	SetDebugLog("-- chkShieldStatus ends --")
+
 EndFunc   ;==>chkShieldStatus
 
 ; Returns formatted difference between two dates
