@@ -13,7 +13,6 @@
 ; Example .......: ---
 ;================================================================================================================================
 
-Global $g_bIsCaravanOn = "Undefined" ; Custom BB - Team AIO Mod++
 Global $g_bYourAccScoreCG[$g_eTotalAcc][3]
 
 For $i = 0 To $g_eTotalAcc - 1

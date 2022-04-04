@@ -791,3 +791,4 @@ Global $g_bDebugSmartMilk = False, $g_bChkMilkForceDeployHeroes = False, $g_bChk
 
 ; Custom Fix - Team AIO Mod++
 Global $g_bAttackClickFC = False
+Global $g_bIsCaravanOn = "Undefined" ; Custom BB - Team AIO Mod++
