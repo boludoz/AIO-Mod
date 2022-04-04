@@ -706,6 +706,7 @@ EndFunc
 Func IsClanGamesWindow($getCapture = True, $bOnlyCheck = False, $bFromBB = False)
 	Local $sState, $bRet = False
 	
+	If Not IsMainPage(3) Then Return False
 	
 	$g_bIsCaravanOn = "False"
 	If $bFromBB = False Then

@@ -214,12 +214,6 @@ EndFunc   ;==>WhatSCIDAccount2Use
 
 Func cmbBotCond()
 	Local $iCond = _GUICtrlComboBox_GetCurSel($g_hCmbBotCond)
-	; Custom CG - Team AIO Mod++
-	If $iCond > 0 Then
-		GUICtrlSetState($g_hChkAvoidInCG, $GUI_ENABLE)
-	Else
-		GUICtrlSetState($g_hChkAvoidInCG, $GUI_DISABLE)
-	EndIf
 	If $iCond = 15 Then
 		If _GUICtrlComboBox_GetCurSel($g_hCmbHoursStop) = 0 Then _GUICtrlComboBox_SetCurSel($g_hCmbHoursStop, 1)
 		GUICtrlSetState($g_hCmbHoursStop, $GUI_ENABLE)
@@ -247,7 +241,11 @@ Func cmbBotCond()
 	Next
 	If _GUICtrlComboBox_GetCurSel($g_hCmbBotCommand) <> 0 Then Return
 	If $iCond <= 14 Or $iCond = 22 Then GUICtrlSetState($g_LblResumeAttack, $GUI_ENABLE)
-	If $iCond <= 14 Then GUICtrlSetState($g_hChkCollectStarBonus, $GUI_ENABLE)
+	; Custom CG - Team AIO Mod++
+	If $iCond <= 14 Then
+		GUICtrlSetState($g_hChkAvoidInCG, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkCollectStarBonus, $GUI_ENABLE)
+	EndIf
 	If $iCond <= 6 Or $iCond = 8 Or $iCond = 10 Or $iCond = 14 Then GUICtrlSetState($g_ahTxtResumeAttackLoot[$eLootGold], $GUI_ENABLE)
 	If $iCond <= 5 Or $iCond = 7 Or $iCond = 9 Or $iCond = 11 Or $iCond = 14 Then GUICtrlSetState($g_ahTxtResumeAttackLoot[$eLootElixir], $GUI_ENABLE)
 	If $iCond = 13 Or $iCond = 14 Then GUICtrlSetState($g_ahTxtResumeAttackLoot[$eLootDarkElixir], $GUI_ENABLE)

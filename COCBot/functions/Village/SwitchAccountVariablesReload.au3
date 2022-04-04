@@ -23,7 +23,11 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 	Local $aiZeroTroop[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 	Local $aiZeroSpell[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
+	Local $aiZeroCG[$eSpellCount]
+
 	; Reset - Custom Acc - Team AIO Mod++
+	Static $abIsCaravanOnR[$g_eTotalAcc]	; Custom GC - Team AIO Mod++
+	
 	For $i = 0 To $g_eTotalAcc - 1
 		$aiZero[$i] = 0
 		$aiTrue[$i] = 1
@@ -37,12 +41,17 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 		$aiZero84[$i][1] = 0
 		$aiZero84[$i][2] = 0
 		$aiZero84[$i][3] = 0
+		
+		$abIsCaravanOnR[$i] = "Undefined"	; Custom GC - Team AIO Mod++
 	Next
+	
+	; Custom GC - Team AIO Mod++
+	Static $abIsCaravanOn = $abIsCaravanOnR
 
 	; FirstRun
 	Static $abFirstStart = $aiTrue
 	Static $aiFirstRun = $aiTrue
-
+	
 	; Bottom & Multi-Stats
 	Static $aiSkippedVillageCount = $aiZero
 	Static $aiAttackedCount = $aiZero
@@ -108,7 +117,8 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 		Case "Reset"
 			$abFirstStart = $aiTrue
 			$aiFirstRun = $aiTrue
-
+			$abIsCaravanOn = $abIsCaravanOnR ; Custom GC - Team AIO Mod++
+			
 			$g_asTrainTimeFinish = $asEmpty
 			For $i = 0 To $g_iTotalAcc
 				GUICtrlSetData($g_ahLblTroopTime[$i], "")
@@ -198,7 +208,8 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 		Case "Save"
 			$abFirstStart[$iAccount] = $g_bFirstStart
 			$aiFirstRun[$iAccount] = $g_iFirstRun
-
+			$abIsCaravanOn[$iAccount] = $g_bIsCaravanOn ; Custom GC - Team AIO Mod++
+			
 			; Multi-Stats
 			$aiSkippedVillageCount[$iAccount] = $g_iSkippedVillageCount
 			$aiAttackedCount[$iAccount] = $g_aiAttackedCount
@@ -293,6 +304,7 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 		Case "Load"
 			$g_bFirstStart = $abFirstStart[$iAccount]
 			$g_iFirstRun = $aiFirstRun[$iAccount]
+			$g_bIsCaravanOn = $abIsCaravanOn[$iAccount] ; Custom GC - Team AIO Mod++
 
 			; Multi-Stats
 			$g_iSkippedVillageCount = $aiSkippedVillageCount[$iAccount]

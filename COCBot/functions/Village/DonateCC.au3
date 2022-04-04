@@ -772,9 +772,7 @@ Func DonateTroopType(Const $iTroopIndex, $Quant = 0, Const $bDonateQueueOnly = F
 		EndIf
 	EndIf
 	
-	; Setlog("$iTroopIndex" & $iTroopIndex)
 	$Slot = DetectSlotTroop($iTroopIndex)
-	; Setlog("$Slot" & $Slot)
 	If Not IsArray($Slot) Then Return
 	
 	Local $hColor = "", $iDon = 0
@@ -784,11 +782,7 @@ Func DonateTroopType(Const $iTroopIndex, $Quant = 0, Const $bDonateQueueOnly = F
 		Click($Slot[0], $Slot[1], 1, $DELAYDONATECC3, "#0175")
 		$iDon += 1
 		
-		; Setlog(Hex("0x" & $hColor, 6))
-		; SetLog($Slot[0])
-		; SetLog($Slot[1])
-
-		If WaitforPixel($Slot[0] - 5, $Slot[1] - 5, $Slot[0] + 5, $Slot[1] + 5, $hColor, 5, 3) = False Then
+ 		If WaitforPixel($Slot[0] - 5, $Slot[1] - 5, $Slot[0] + 5, $Slot[1] + 5, $hColor, 5, 3) = False Then
 			ExitLoop
 		EndIf
 	Next
@@ -1218,8 +1212,6 @@ Func DetectSlotTroop(Const $iTroopIndex)
 		For $i = 1 To UBound($afiletoscan) - 1
 			If StringInStr($afiletoscan[$i], $g_asTroopShortNames[$iTroopIndex]) > 0 Then
 				$aResult = decodeSingleCoord(findImage($afiletoscan[$i], $g_sImgDonateTroops & $afiletoscan[$i], "FV", 1, False))
-				Setlog($g_asTroopShortNames[$iTroopIndex])
-				Setlog($g_sImgDonateTroops & $afiletoscan[$i])
 				If IsArray($aResult) And UBound($aResult) = 2 Then
 					$aResult[0] = $aResult[0] + $aregionforscan[0]
 					$aResult[1] = $aResult[1] + $aregionforscan[1]

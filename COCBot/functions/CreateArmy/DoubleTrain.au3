@@ -54,21 +54,27 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 	#EndRegion - Missing PreciseArmy - Team AIO Mod++
 	
 	#Region - Custom Army - Team AIO Mod++
-	Local $bForceDouble = $g_bIsFullArmywithHeroesAndSpells Or $bWarTroop
+	Local $bForceDouble = $g_bIsFullArmywithHeroesAndSpells
 	Local $bPreTrainFlag = $g_bDoubleTrain Or $bForceDouble
 	
-	If $bWarTroop = True Then
-		$bPreTrainFlag = True
-	ElseIf $g_bChkPreTrainTroopsPercent = True And $g_bForceDoubleTrain = False Then
+	If $g_bChkPreTrainTroopsPercent = True And $g_bForceDoubleTrain = False Then
 		$bPreTrainFlag = ($g_iArmyCapacity >= $g_iInpPreTrainTroopsPercent)
 		SetLog("Double train condition ? " & $bPreTrainFlag, $COLOR_INFO)
 	ElseIf $g_bForceDoubleTrain = True Then
 		SetLog("Force double train before switch account.", $COLOR_SUCCESS)
 		$bPreTrainFlag = True
-	ElseIf $g_bIsFullArmywithHeroesAndSpells = True And ($g_bDoubleTrain = False And $g_bTrainBeforeAttack = True) Then
+	EndIf
+	
+	If $g_bIsFullArmywithHeroesAndSpells = True And $g_bDoubleTrain = False Then
+		$bPreTrainFlag = $g_bTrainBeforeAttack
+		$bForceDouble = $g_bTrainBeforeAttack
+		If $g_bIsFullArmywithHeroesAndSpells = True And $g_bTrainBeforeAttack = True Then SetLog("Force double train before attack.", $COLOR_SUCCESS)
+	EndIf
+	
+	If $bWarTroop = True Or ($g_bDoubleTrain = True And $g_bIsFullArmywithHeroesAndSpells = True) Then
 		$bPreTrainFlag = True
-		If $g_bIsFullArmywithHeroesAndSpells = True And $bWarTroop = False Then SetLog("Force double train before attack.", $COLOR_SUCCESS)
-	EndIf	
+		$bForceDouble = True
+	EndIf
 	#EndRegion - Custom Army - Team AIO Mod++
 
 	Local $Step = 1

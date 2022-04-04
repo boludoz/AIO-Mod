@@ -113,11 +113,22 @@ Func BotCommand()
 						ChatActions() ; ChatActions - Team AiO MOD++
 						MainSXHandler() ; SuperXP / GoblinXP - Team AiO MOD++
 					EndIf
-					#EndRegion - Team AiO MOD++
 					If $iCmbBotCond <= 14 And $g_bCollectStarBonus And WaitforPixel(84, 630, 97, 635, 0xAF5725, 20, 2) Then
-						SetLog("Star bonus available. Continue attacking to collect them.")
+						SetLog("Star bonus available. Continue attacking to collect them.", $COLOR_ACTION)
 						Return False
 					EndIf
+					
+					; Custom CG - Team AIO Mod++
+					If $g_bIsCaravanOn == "Undefined" And $g_bAvoidInCG = True Then
+						IsClanGamesWindow(True, True, False)
+					EndIf
+					
+					If $iCmbBotCond <= 14 And $g_bAvoidInCG And $g_bIsCaravanOn == "True" Then
+						SetLog("Clan games available. Continue attacking to finish them.", $COLOR_ACTION)
+						Return False
+					EndIf
+					#EndRegion - Team AiO MOD++
+					
 					If Not $g_bDonationEnabled Then
 						SetLog("Halt Attack, Stay Online/Collect", $COLOR_INFO)
 					ElseIf Not $g_bTrainEnabled Then

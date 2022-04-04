@@ -177,10 +177,9 @@ Func CreateMiscNormalVillageSubTab()
 	GUICtrlCreateLabel("<", $x + 5, $y + 2, -1, -1)
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnTrophy, $x + 56, $y, 16, 16) ;HArchH Was 65, now 56.
 
-	$g_hChkCollectStarBonus = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCollectStarBonus", "When star bonus available"), $x + 15 - 30, $y + 20, -1, -1)
+	$g_hChkCollectStarBonus = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCollectStarBonus", "When star bonus available"), $x - 45, $y + 20, -1, -1)  ; Custom CG - Team AIO Mod++
 	
-	; Custom CG - Team AIO Mod++
-	$g_hChkAvoidInCG = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkAvoidInCG", "Avoid in CG"), $x + 15 + 30, $y + 20, -1, -1)
+	$g_hChkAvoidInCG = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkAvoidInCG", "Avoid in clan games"), $x + 175, $y + 20, -1, -1) ; Custom CG - Team AIO Mod++
 
 	$x += 75
 	GUICtrlCreateLabel("<", $x + 5, $y + 2, -1, -1)

@@ -484,6 +484,7 @@ Func ChatbotClickLanguageButton() ; Click on language button in settings
 EndFunc   ;==>ChatbotClickLanguageButton
 
 ; Returns the response from cleverbot or simsimi, if any
+#cs
 Func runHelper($sMsg) ; run a script to get a response from cleverbot.com or simsimi.com
 	Local $sCommand, $sDOS, $tHelperStartTime, $tTime_Difference
 	Static $sMessage = ''
@@ -511,7 +512,7 @@ Func runHelper($sMsg) ; run a script to get a response from cleverbot.com or sim
 	WEnd
 	Return StringStripWS($sMessage, 7)
 EndFunc   ;==>runHelper
-
+#ce
 Func _Encoding_JavaUnicodeDecode($sString)
 	Local $iOld_Opt_EVS = Opt('ExpandVarStrings', 0)
 	Local $iOld_Opt_EES = Opt('ExpandEnvStrings', 0)
