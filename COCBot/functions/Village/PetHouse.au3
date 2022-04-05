@@ -93,7 +93,7 @@ Func PetHouse($test = False)
 			If _Sleep($DELAYLABORATORY2) Then Return
 
 			; get DE requirement to upgrade Pet
-			Local $iDarkElixirReq = 1000 * number($g_aiPetUpgradeCostPerLevel[$i][$iPetLevel])
+			Local $iDarkElixirReq = 1000 * Number($g_aiPetUpgradeCostPerLevel[$i][$iPetLevel])
 			SetLog("DE Requirement: " & $iDarkElixirReq)
 
 			If $iDarkElixirReq < $g_aiCurrentLoot[$eLootDarkElixir] Then
@@ -123,7 +123,7 @@ Func PetHouse($test = False)
 						; Just incase the buy Gem Window pop up!
 						If isGemOpen(True) Then
 							SetDebugLog("Not enough DE for to upgrade: " & $g_asPetNames[$i], $COLOR_DEBUG)
-							ClickAway()
+							ClickAway(Default, True, 2)
 							Return False
 						EndIf
 
@@ -143,15 +143,15 @@ Func PetHouse($test = False)
 						EndIf
 
 					Else
-						ClickAway() ; close pet upgrade window
+						ClickAway(Default, True, 2) ; close pet upgrade window
 					EndIf
 
 					SetLog("Started upgrade for: " & $g_asPetNames[$i])
-					ClickAway() ; close pet house window
+					ClickAway(Default, True, 2) ; close pet house window
 					Return True
 				Else
 					SetLog("Failed to find the Pets button!", $COLOR_ERROR)
-					ClickAway()
+					ClickAway(Default, True, 2)
 					Return False
 				EndIf
 			   SetLog("Failed to find Upgrade button", $COLOR_ERROR)
@@ -357,16 +357,12 @@ EndFunc   ;==>PetGuiDisplay
 
 
 Func GetMinDark4PetUpgrade()
-	Local $aiPetUpgradeCostPerLevel[$ePetCount][$g_ePetLevels] = [ _
-		[0, 115, 130, 145, 160, 175, 190, 205, 220, 235], _  ; LASSI
-		[0, 135, 150, 165, 180, 195, 210, 225, 240, 255], _  ; Electro Owl
-		[0, 165, 185, 205, 225, 245, 255, 265, 275, 285], _  ; Mighty Yak
-        [0, 210, 220, 230, 240, 250, 260, 270, 280, 290]]    ; Unicorn
-		
 	Local $iPetUnlockedxCoord[4] = [190, 345, 500, 655]
 	Local $iPetLevelxCoord[4] = [134, 288, 443, 598]
 	Local $iMinDark4PetUpgrade = 999999
 
+	PetUpgradeCostPerLevel()
+	
 	For $i = 0 to $ePetCount - 1
 		; check if pet upgrade enabled and unlocked ; c3b6a5 nox c1b7a5 memu?
 		If _ColorCheck(_GetPixelColor($iPetUnlockedxCoord[$i], 415, True), Hex(0xc3b6a5, 6), 20) And $g_bUpgradePetsEnable[$i] Then
@@ -379,7 +375,7 @@ Func GetMinDark4PetUpgrade()
 			If _Sleep($DELAYLABORATORY2) Then Return
 
 			; get DE requirement to upgrade Pet
-			Local $iDarkElixirReq = 1000 * number($aiPetUpgradeCostPerLevel[$i][$iPetLevel])
+			Local $iDarkElixirReq = 1000 * number($g_aiPetUpgradeCostPerLevel[$i][$iPetLevel])
 
 			SetLog("DE Requirement: " & $iDarkElixirReq)
 
