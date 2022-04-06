@@ -32,6 +32,7 @@ Func SwitchBetweenBases($bCheckMainScreen = True)
 			If $g_bStayOnBuilderBase = True Then Return True
 
 		Else
+			#cs
 			; Deconstructed boat.
 			Local $sNoBoat = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Noboat\"
 			If QuickMIS("BC1", $sNoBoat, 66, 432, 388, 627, True) Then
@@ -39,6 +40,7 @@ Func SwitchBetweenBases($bCheckMainScreen = True)
 				$g_bStayOnBuilderBase = False
 				Return False
 			EndIf
+			#ce
 			$sSwitchFrom = "Normal Village"
 			$sSwitchTo = "Builder Base"
 			$bIsOnBuilderBase = False

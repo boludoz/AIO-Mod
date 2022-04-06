@@ -1183,11 +1183,72 @@ Func CheckPlannedAttackLimits()
 			SetLog("Doesn't exist accounts to attack!")
 		EndIf
 		
-		UniversalCloseWaitOpenCoC($iWaitTime * 1000, "IsSearchAttackScheduled_", $g_bAttackPlannerCloseAll, True, $g_bAttackPlannerSuspendComputer)
+		UniversalCloseWaitOpenCoC(TimePickAttackLimits() * 1000, "IsSearchAttackScheduled_", $g_bAttackPlannerCloseAll, True, $g_bAttackPlannerSuspendComputer)
 		$g_bRestart = True
 		Return False
 	EndIf
 EndFunc   ;==>CheckPlannedAttackLimits
+
+Func TimePickAttackLimits()
+	#REGION
+	Static $s_abMinimalTime[$g_eTotalAcc]
+	
+	Local $aiActiveAccs = AccountNoActive()
+	Local $bSafe = $g_sProfileConfigPath, $iSafe = $g_iCurAccount, $iWaitTime = 0
+	
+	For $eAccNId = 0 To UBound($aiActiveAccs) - 1
+		If $aiActiveAccs[$eAccNId] = False Then
+			$s_abMinimalTime[$eAccNId] = 604800
+			ContinueLoop
+		EndIf
+		
+		$g_sProfileConfigPath = $g_asProfileName[$eAccNId]
+		$g_iCurAccount = $eAccNId
+		
+		; Someone who programs since he was 5 years old does not forget this, the important thing is to reason, not to know, a technician is not better than an engineer.
+		$g_sProfileConfigPath = $g_sProfilePath & "\" & $g_sProfileConfigPath & "\config.ini"
+		ReadConfig_600_29()
+		; _ArrayDisplay($g_abPlannedAttackWeekDays)
+		
+		$iWaitTime = 0
+		
+		If _Sleep($DELAYRESPOND) Then Return True
+		Local $bCloseGameAtaall = $g_bAttackPlannerCloseCoC = True Or $g_bAttackPlannerCloseAll = True Or $g_bAttackPlannerSuspendComputer = True
+		If $bCloseGameAtaall Then
+			; Custom schedule - Team AIO Mod++
+			; determine how long to close CoC or emulator if selected
+			If $g_abPlannedAttackWeekDays[$eAccNId][@WDAY - 1] = False Then
+				$iWaitTime = _getTimeRemainTimeToday() ; get number of seconds remaining till Midnight today
+				For $i = @WDAY To 6
+					If Not $g_abPlannedAttackWeekDays[$eAccNId][$i] Then $iWaitTime += 86400 ; add 1 day of seconds to wait time
+					If $g_abPlannedAttackWeekDays[$eAccNId][$i] Then ExitLoop ; stop adding days when find attack planner enabled
+					; SetDebugLog("Subtotal wait time= " & $iWaitTime & " Seconds", $COLOR_DEBUG)
+				Next
+			EndIf
+			If $iWaitTime = 0 Then ; if days are not set then compute wait time from hours
+				If $g_abPlannedAttackWeekDays[$eAccNId][@WDAY - 1] And $g_abPlannedattackHours[$eAccNId][@HOUR] = False Then
+					$iWaitTime += (59 - @MIN) * 60 ; compute seconds left this hour
+					For $i = @HOUR + 1 To 23
+						If Not $g_abPlannedattackHours[$eAccNId][$i] Then $iWaitTime += 3600 ; add 1 hour of seconds to wait time
+						If $g_abPlannedattackHours[$eAccNId][$i] Then ExitLoop ; stop adding hours when find attack planner enabled
+						; SetDebugLog("Subtotal wait time= " & $iWaitTime & " Seconds", $COLOR_DEBUG)
+					Next
+				EndIf
+			EndIf
+		EndIf
+		
+		$s_abMinimalTime[$eAccNId] = $iWaitTime
+	Next
+	
+	; _ArrayDisplay($s_abMinimalTime)
+	Local $iMinimalTime = _ArrayMin($s_abMinimalTime)
+	
+	$g_sProfileConfigPath = $bSafe
+	$g_iCurAccount = $iSafe
+	ReadConfig_600_29()
+	#ENDREGION
+	Return $iMinimalTime
+EndFunc   ;==>TimePickAttackLimits
 
 ; Custom schedule - Team AIO Mod++
 Func CheckPlannedAccountLimits($bForceSwitch = False)
