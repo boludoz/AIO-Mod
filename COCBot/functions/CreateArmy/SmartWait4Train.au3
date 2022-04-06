@@ -97,7 +97,7 @@ Func SmartWait4Train($iTestSeconds = Default)
 	If _Sleep($DELAYRESPOND) Then Return
 	
 	#Region - Custom smart wait - Team AIO Mod++
-	If ProfileSwitchAccountEnabled() Then
+	If ProfileSwitchAccountEnabled(True) Then
 		CheckTroopTimeAllAccount()
 		Local $iRemainTrain = -999, $account = Number($g_iCurAccount)
 		Local $abAccountNo = AccountNoActive()

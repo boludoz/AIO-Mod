@@ -47,7 +47,7 @@ Func BuilderBase($bTestRun = False, $bSkipBBCG = False)
 		If $g_bOnlyBuilderBase Then
 			SetLog("Play Only Builder Base Check Is On But BB Option's(Collect,Attack etc) Unchecked", $COLOR_ERROR)
 			SetLog("Please Check BB Options From Builder Base Tab", $COLOR_INFO)
-			If ProfileSwitchAccountEnabled() Then ; (:
+			If ProfileSwitchAccountEnabled(True) Then ; (:
 				Return
 			EndIf
 

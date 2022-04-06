@@ -58,7 +58,7 @@ Func IsSearchAttackEnabled()
 		If _IsTimeInRange($aNoAttackTimes[0], $aNoAttackTimes[1]) Then ; returns true if time now is between start/end time
 			SetLog("Attack schedule random skip time found", $COLOR_INFO)
 			If _Sleep($DELAYRESPOND) Then Return True
-			If ProfileSwitchAccountEnabled() Then Return False
+			If ProfileSwitchAccountEnabled(True) Then Return False
 			If $bCloseGame Then
 				$iWaitTime = _DateDiff("s", _NowCalc(), $aNoAttackTimes[1]) ; find time to stop attacking in seconds
 				If @error Then
@@ -79,7 +79,7 @@ Func IsSearchAttackEnabled()
 		If IsPlannedTimeNow() = False Then
 			SetLog("Attack schedule planned skip time found", $COLOR_INFO)
 			If _Sleep($DELAYRESPOND) Then Return True
-			If ProfileSwitchAccountEnabled() Then Return False
+			If ProfileSwitchAccountEnabled(True) Then Return False
 			If $bCloseGame Then
 				; Custom schedule - Team AIO Mod++
 				; determine how long to close CoC or emulator if selected
@@ -264,7 +264,7 @@ Func _OverAttackLimit()
 	EndIf
 
 	SetDebugLog("OverAttackLimit|$iNowDay: " & $iNowDay[$g_iCurAccount])
-	If ProfileSwitchAccountEnabled() Then
+	If ProfileSwitchAccountEnabled(True) Then
 		SetDebugLog("_OverAttackLimit| Switch accounts enabled")
 		; For $i = 0 To UBound($g_aiAttackedCountAcc) - 1
 			; SetDebugLog("_OverAttackLimit| $g_aiAttackedCountAcc[" & $i & "]" & $g_aiAttackedCountAcc[$i])
