@@ -181,6 +181,126 @@ Func getArmyHeroCount($bOpenArmyWindow = False, $bCloseArmyWindow = False, $Chec
 
 EndFunc   ;==>getArmyHeroCount
 
+; temp fix, thanks xbebenk
+Func ArmyHeroStatus($i)
+	Local $sResult = ""
+	Local Const $aHeroesRect[$eHeroCount][4] = [[540, 340, 616, 380], [620, 340, 691, 370], [692, 340, 766, 370], [767, 340, 840, 380]] ; Review
+
+	; Perform the search
+	If QuickMIS("BC1", $g_sImgArmyOverviewHeroes, $aHeroesRect[$i][0], $aHeroesRect[$i][1], $aHeroesRect[$i][2], $aHeroesRect[$i][3]) Then
+		$sResult = $g_iQuickMISName
+		SetDebugLog($sResult)
+		Select
+			Case $i = 0
+				Switch $sResult
+					Case "heal" ; Blue
+						GUICtrlSetState($g_hPicKingGray, $GUI_HIDE)
+						GUICtrlSetState($g_hPicKingGreen, $GUI_HIDE)
+						GUICtrlSetState($g_hPicKingRed, $GUI_HIDE)
+						GUICtrlSetState($g_hPicKingBlue, $GUI_SHOW)
+					Case "upgrade" ; Red
+						GUICtrlSetState($g_hPicKingGray, $GUI_HIDE)
+						GUICtrlSetState($g_hPicKingGreen, $GUI_HIDE)
+						GUICtrlSetState($g_hPicKingBlue, $GUI_HIDE)
+						GUICtrlSetState($g_hPicKingRed, $GUI_SHOW)
+					Case "king" ; Green
+						GUICtrlSetState($g_hPicKingGray, $GUI_HIDE)
+						GUICtrlSetState($g_hPicKingRed, $GUI_HIDE)
+						GUICtrlSetState($g_hPicKingBlue, $GUI_HIDE)
+						GUICtrlSetState($g_hPicKingGreen, $GUI_SHOW)
+				EndSwitch
+
+			Case $i = 1
+				Switch $sResult
+					Case "heal" ; Blue
+						GUICtrlSetState($g_hPicQueenGray, $GUI_HIDE)
+						GUICtrlSetState($g_hPicQueenGreen, $GUI_HIDE)
+						GUICtrlSetState($g_hPicQueenRed, $GUI_HIDE)
+						GUICtrlSetState($g_hPicQueenBlue, $GUI_SHOW)
+					Case "upgrade" ; Red
+						GUICtrlSetState($g_hPicQueenGray, $GUI_HIDE)
+						GUICtrlSetState($g_hPicQueenGreen, $GUI_HIDE)
+						GUICtrlSetState($g_hPicQueenBlue, $GUI_HIDE)
+						GUICtrlSetState($g_hPicQueenRed, $GUI_SHOW)
+					Case "queen" ; Green
+						GUICtrlSetState($g_hPicQueenGray, $GUI_HIDE)
+						GUICtrlSetState($g_hPicQueenRed, $GUI_HIDE)
+						GUICtrlSetState($g_hPicQueenBlue, $GUI_HIDE)
+						GUICtrlSetState($g_hPicQueenGreen, $GUI_SHOW)
+				EndSwitch
+
+			Case $i = 2
+				Switch $sResult
+					Case "heal" ; Blue
+						GUICtrlSetState($g_hPicWardenGray, $GUI_HIDE)
+						GUICtrlSetState($g_hPicWardenGreen, $GUI_HIDE)
+						GUICtrlSetState($g_hPicWardenRed, $GUI_HIDE)
+						GUICtrlSetState($g_hPicWardenBlue, $GUI_SHOW)
+					Case "upgrade" ; Red
+						GUICtrlSetState($g_hPicWardenGray, $GUI_HIDE)
+						GUICtrlSetState($g_hPicWardenGreen, $GUI_HIDE)
+						GUICtrlSetState($g_hPicWardenBlue, $GUI_HIDE)
+						GUICtrlSetState($g_hPicWardenRed, $GUI_SHOW)
+					Case "warden" ; Green
+						GUICtrlSetState($g_hPicWardenGray, $GUI_HIDE)
+						GUICtrlSetState($g_hPicWardenRed, $GUI_HIDE)
+						GUICtrlSetState($g_hPicWardenBlue, $GUI_HIDE)
+						GUICtrlSetState($g_hPicWardenGreen, $GUI_SHOW)
+				EndSwitch
+
+			Case $i = 3
+				Switch $sResult
+					Case "heal" ; Blue
+						GUICtrlSetState($g_hPicChampionGray, $GUI_HIDE)
+						GUICtrlSetState($g_hPicChampionGreen, $GUI_HIDE)
+						GUICtrlSetState($g_hPicChampionRed, $GUI_HIDE)
+						GUICtrlSetState($g_hPicChampionBlue, $GUI_SHOW)
+					Case "upgrade" ; Red
+						GUICtrlSetState($g_hPicChampionGray, $GUI_HIDE)
+						GUICtrlSetState($g_hPicChampionGreen, $GUI_HIDE)
+						GUICtrlSetState($g_hPicChampionBlue, $GUI_HIDE)
+						GUICtrlSetState($g_hPicChampionRed, $GUI_SHOW)
+					Case "Champion" ; Green
+						GUICtrlSetState($g_hPicChampionGray, $GUI_HIDE)
+						GUICtrlSetState($g_hPicChampionRed, $GUI_HIDE)
+						GUICtrlSetState($g_hPicChampionBlue, $GUI_HIDE)
+						GUICtrlSetState($g_hPicChampionGreen, $GUI_SHOW)
+				EndSwitch
+		EndSelect
+		Return $sResult
+	EndIf
+	
+	;return 'none' if there was a problem with the search ; or no Hero slot
+	Switch $i
+		Case 0
+			GUICtrlSetState($g_hPicKingGreen, $GUI_HIDE)
+			GUICtrlSetState($g_hPicKingRed, $GUI_HIDE)
+			GUICtrlSetState($g_hPicKingBlue, $GUI_HIDE)
+			GUICtrlSetState($g_hPicKingGray, $GUI_SHOW)
+			Return "none"
+		Case 1
+			GUICtrlSetState($g_hPicQueenGreen, $GUI_HIDE)
+			GUICtrlSetState($g_hPicQueenRed, $GUI_HIDE)
+			GUICtrlSetState($g_hPicQueenBlue, $GUI_HIDE)
+			GUICtrlSetState($g_hPicQueenGray, $GUI_SHOW)
+			Return "none"
+		Case 2
+			GUICtrlSetState($g_hPicWardenGreen, $GUI_HIDE)
+			GUICtrlSetState($g_hPicWardenRed, $GUI_HIDE)
+			GUICtrlSetState($g_hPicWardenBlue, $GUI_HIDE)
+			GUICtrlSetState($g_hPicWardenGray, $GUI_SHOW)
+			Return "none"
+		Case 3
+			GUICtrlSetState($g_hPicChampionGreen, $GUI_HIDE)
+			GUICtrlSetState($g_hPicChampionRed, $GUI_HIDE)
+			GUICtrlSetState($g_hPicChampionBlue, $GUI_HIDE)
+			GUICtrlSetState($g_hPicChampionGray, $GUI_SHOW)
+			Return "none"
+	EndSwitch
+
+EndFunc   ;==>ArmyHeroStatus
+
+#cs
 Func ArmyHeroStatus($i)
 	Local $sResult = ""
 	Local Const $aHeroesRect[$eHeroCount][4] = [[540, 340, 616, 380], [620, 340, 691, 370], [692, 340, 766, 370], [767, 340, 840, 380]] ; Review
@@ -242,7 +362,7 @@ Func ArmyHeroStatus($i)
 	EndSwitch
 
 EndFunc   ;==>ArmyHeroStatus
-
+#ce
 #CS - xbebenk - Team AIO Mod++
 Func LabGuiDisplay() ; called from main loop to get an early status for indictors in bot bottom
 

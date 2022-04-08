@@ -354,6 +354,8 @@ Func DetectScenery($sStone = "None")
 		$sScenery = "Snow Day Scenery"
 	ElseIf StringInStr($sStone, "PS", $STR_CASESENSE) Then
 		$sScenery = "Primal Scenery"
+	ElseIf StringInStr($sStone, "SHS", $STR_CASESENSE) Then
+		$sScenery = "Shadow Scenery"
 	Else
 		$sScenery = "Failed scenery detection"
 	EndIf
