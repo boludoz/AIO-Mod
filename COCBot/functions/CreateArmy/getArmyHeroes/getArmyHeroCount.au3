@@ -181,14 +181,13 @@ Func getArmyHeroCount($bOpenArmyWindow = False, $bCloseArmyWindow = False, $Chec
 
 EndFunc   ;==>getArmyHeroCount
 
-; temp fix, thanks xbebenk
 Func ArmyHeroStatus($i)
 	Local $sResult = ""
 	Local Const $aHeroesRect[$eHeroCount][4] = [[540, 340, 616, 380], [620, 340, 691, 370], [692, 340, 766, 370], [767, 340, 840, 380]] ; Review
 
 	; Perform the search
-	If QuickMIS("BC1", $g_sImgArmyOverviewHeroes, $aHeroesRect[$i][0], $aHeroesRect[$i][1], $aHeroesRect[$i][2], $aHeroesRect[$i][3]) Then
-		$sResult = $g_iQuickMISName
+	$sResult = QuickMIS("N1", $g_sImgArmyOverviewHeroes, $aHeroesRect[$i][0], $aHeroesRect[$i][1], $aHeroesRect[$i][2], $aHeroesRect[$i][3])
+	If $sResult <> "none" Then
 		SetDebugLog($sResult)
 		Select
 			Case $i = 0
