@@ -784,14 +784,22 @@ EndFunc ;==>IsClanGamesRunning
 
 Func GetTimesAndScores()
 	Local $iRestScore = -1, $sYourGameScore = "", $aiScoreLimit, $sTimeRemain = 0
-
+	
 	;Ocr for game time remaining
-	$sTimeRemain = StringReplace(getOcrTimeGameTime(55, 470), " ", "") ; read Clan Games waiting time
-
-	;Check if OCR returned a valid timer format
-	If Not StringRegExp($sTimeRemain, "([0-2]?[0-9]?[DdHhSs]+)", $STR_REGEXPMATCH, 1) Then
-		SetLog("getOcrTimeGameTime(): no valid return value (" & $sTimeRemain & ")", $COLOR_ERROR)
-	EndIf
+	For $i = 0 To 5
+		If _Sleep(800) Then Return
+		
+		$sTimeRemain = StringReplace(getOcrTimeGameTime(55, 470), " ", "") ; read Clan Games waiting time
+		If StringIsSpace($sTimeRemain) Then ContinueLoop
+		
+		;Check if OCR returned a valid timer format
+		If Not StringRegExp($sTimeRemain, "([0-2]?[0-9]?[DdHhSs]+)", $STR_REGEXPMATCH, 1) Then
+			SetLog("[" & $i & "] getOcrTimeGameTime(): no valid return value (" & $sTimeRemain & ")", $COLOR_ERROR)
+		Else
+			ExitLoop
+		EndIf
+		
+	Next
 
 	SetLog("Clan Games time remaining: " & $sTimeRemain, $COLOR_INFO)
 
