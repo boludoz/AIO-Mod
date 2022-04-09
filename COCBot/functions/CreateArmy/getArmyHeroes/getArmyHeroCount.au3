@@ -183,7 +183,7 @@ EndFunc   ;==>getArmyHeroCount
 
 Func ArmyHeroStatus($i)
 	Local $sResult = ""
-	Local Const $aHeroesRect[$eHeroCount][4] = [[540, 340, 616, 380], [620, 340, 691, 370], [692, 340, 766, 370], [767, 340, 840, 380]] ; Review
+	Local Const $aHeroesRect[$eHeroCount][4] = [[540, 340, 616, 380], [620, 340, 691, 370], [692, 340, 766, 370], [767, 348, 856, 467]] ; Review
 
 	; Perform the search
 	$sResult = QuickMIS("N1", $g_sImgArmyOverviewHeroes, $aHeroesRect[$i][0], $aHeroesRect[$i][1], $aHeroesRect[$i][2], $aHeroesRect[$i][3])

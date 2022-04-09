@@ -87,7 +87,7 @@ Func SmartFarmMilk($bDebug = False)
 	Local $igiantslot = -1, $ibarbslot = -1, $iSWizaslot = -1, $iWizaslot = -1, $iarchslot = -1, $igoblslot = -1, $ibabydslot = -1, $imini = -1, $ismini = -1, $isgobs = -1, $iswall = -1, $ijspell = -1, $isbarbslot = -1, $isminerslot = -1
 	Local $aslots = [$iswall, $igiantslot, $ibarbslot, $iSWizaslot, $iWizaslot, $iarchslot, $igoblslot, $ibabydslot, $imini, $ismini, $isgobs, $ijspell, $isbarbslot, $isminerslot]
 	Local $aslots2deploy[UBound($aslots)][4]
-	Local $usedzap = False
+	Local $bUsedZap = False, $sTime = "", $iTime = 0 
 	#cs
 Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl, $eWall, $eSWall, $eBall, $eRBall, $eWiza, $eSWiza, $eHeal, $eDrag, $eSDrag, $ePekk, $eBabyD, $eInfernoD, $eMine, $eEDrag, $eYeti, $eRDrag, _
 		$eMini, $eSMini, $eHogs, $eValk, $eSValk, $eGole, $eWitc, $eSWitc, $eLava, $eIceH, $eBowl, $eSBowl, $eIceG, $eHunt, _
@@ -96,7 +96,7 @@ Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl
 		$eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eFlameF, $eArmyCount
 		#ce
 	For $i = 0 To UBound($g_avattacktroops) - 1
-		If _sleep(10) Then Return
+		If _Sleep(10) Then Return
 		If NOT $g_brunstate Then Return
 		If $g_avattacktroops[$i][0] = $eSWall Then
 			$iswall = $i
@@ -198,93 +198,93 @@ Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl
 		EndIf
 	Next
 	Local Enum $efullbdragons = 0, $efullbarbs, $efullSWiza, $efullWiza, $efullarchs, $efullgibarch, $efullgobs, $efullmin, $efullsmin, $efullsgobs, $efullsbarbs, $efullminers
-	Local $itimebetweenloops = 1500
+	Local $iTimebetweenloops = 1500
 	If $g_bdebugsmartmilk Then SetLog("Selected slot zero on  attack bar.")
 	If isattackpage() Then selectdroptroop(0)
-	If _sleep($delaylaunchtroop23) Then Return
+	If _Sleep($delaylaunchtroop23) Then Return
 	If isattackpage() Then selectdroptroop(0)
 	If $g_bdebugsmartmilk Then SetLog("$g_iMilkStrategyArmy: " & $g_imilkstrategyarmy)
 	Switch $g_imilkstrategyarmy
 		Case $efullbdragons
 			If $aslots[$ebabydslot] <> -1 Then
 				If isattackpage() Then selectdroptroop($ibabydslot)
-				If _sleep($delaylaunchtroop23) Then Return
+				If _Sleep($delaylaunchtroop23) Then Return
 				If isattackpage() Then selectdroptroop($ibabydslot)
 			EndIf
 		Case $efullbarbs
 			If $aslots[$ebarbslot] <> -1 Then
 				If isattackpage() Then selectdroptroop($ibarbslot)
-				If _sleep($delaylaunchtroop23) Then Return
+				If _Sleep($delaylaunchtroop23) Then Return
 				If isattackpage() Then selectdroptroop($ibarbslot)
 			EndIf
 		Case $efullSWiza
 			If $aslots[$eSWizaslot] <> -1 Then
 				If isattackpage() Then selectdroptroop($iSWizaslot)
-				If _sleep($delaylaunchtroop23) Then Return
+				If _Sleep($delaylaunchtroop23) Then Return
 				If isattackpage() Then selectdroptroop($iSWizaslot)
 			EndIf
 		Case $efullWiza
 			If $aslots[$eWizaslot] <> -1 Then
 				If isattackpage() Then selectdroptroop($iWizaslot)
-				If _sleep($delaylaunchtroop23) Then Return
+				If _Sleep($delaylaunchtroop23) Then Return
 				If isattackpage() Then selectdroptroop($iWizaslot)
 			EndIf
 		Case $efullarchs
 			If $aslots[$earchslot] <> -1 Then
 				If isattackpage() Then selectdroptroop($iarchslot)
-				If _sleep($delaylaunchtroop23) Then Return
+				If _Sleep($delaylaunchtroop23) Then Return
 				If isattackpage() Then selectdroptroop($iarchslot)
 			EndIf
 		Case $efullgibarch
 			If $aslots[$egiantslot] <> -1 Then
 				If isattackpage() Then selectdroptroop($igiantslot)
-				If _sleep($delaylaunchtroop23) Then Return
+				If _Sleep($delaylaunchtroop23) Then Return
 				If isattackpage() Then selectdroptroop($igiantslot)
 			EndIf
 		Case $efullgobs
 			If $aslots[$egoblslot] <> -1 Then
 				If isattackpage() Then selectdroptroop($igoblslot)
-				If _sleep($delaylaunchtroop23) Then Return
+				If _Sleep($delaylaunchtroop23) Then Return
 				If isattackpage() Then selectdroptroop($igoblslot)
 			EndIf
 		Case $efullmin
 			If $aslots[$eminislot] <> -1 Then
 				If isattackpage() Then selectdroptroop($imini)
-				If _sleep($delaylaunchtroop23) Then Return
+				If _Sleep($delaylaunchtroop23) Then Return
 				If isattackpage() Then selectdroptroop($imini)
 			EndIf
 		Case $efullsmin
 			If $aslots[$esminislot] <> -1 Then
 				If isattackpage() Then selectdroptroop($ismini)
-				If _sleep($delaylaunchtroop23) Then Return
+				If _Sleep($delaylaunchtroop23) Then Return
 				If isattackpage() Then selectdroptroop($ismini)
 			EndIf
 		Case $efullsbarbs
 			If $aslots[$esbarbslot] <> -1 Then
 				If isattackpage() Then selectdroptroop($isbarbslot)
-				If _sleep($delaylaunchtroop23) Then Return
+				If _Sleep($delaylaunchtroop23) Then Return
 				If isattackpage() Then selectdroptroop($isbarbslot)
 			EndIf
 		Case $efullminers
 			If $aslots[$eminerslot] <> -1 Then
 				If isattackpage() Then selectdroptroop($isminerslot)
-				If _sleep($delaylaunchtroop23) Then Return
+				If _Sleep($delaylaunchtroop23) Then Return
 				If isattackpage() Then selectdroptroop($isminerslot)
 			EndIf
 		Case $efullsgobs
 			If $aslots[$esgoblslot] <> -1 Then
 				If isattackpage() Then selectdroptroop($isgobs)
-				If _sleep($delaylaunchtroop23) Then Return
+				If _Sleep($delaylaunchtroop23) Then Return
 				If isattackpage() Then selectdroptroop($isgobs)
 			EndIf
 			If $aslots[$eswallslot] <> -1 Then
 				If isattackpage() Then selectdroptroop($iswall)
-				If _sleep($delaylaunchtroop23) Then Return
+				If _Sleep($delaylaunchtroop23) Then Return
 				If isattackpage() Then selectdroptroop($iswall)
 			EndIf
 		Case Else
 			If isattackpage() Then selectdroptroop(0)
-			If _sleep($delaylaunchtroop23) Then Return
+			If _Sleep($delaylaunchtroop23) Then Return
 			If isattackpage() Then selectdroptroop(0)
 	EndSwitch
 	If $g_bdebugsmartmilk Then SetLog("$aSlots2deploy: " & _arraytostring($aslots2deploy, "-", -1, -1, "|"))
@@ -317,7 +317,7 @@ Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl
 							For $i = 0 To UBound($aslots2deploy) - 1
 								If $aslots2deploy[$i][1] > 0 AND $aslots2deploy[$i][0] <> $iswall Then
 									If isattackpage() Then selectdroptroop($aslots2deploy[$i][0])
-									If _sleep($delaylaunchtroop23) Then Return
+									If _Sleep($delaylaunchtroop23) Then Return
 									Local $ideployunits = 1
 									Switch $aslots2deploy[$i][0]
 										Case $ibarbslot
@@ -341,23 +341,23 @@ Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl
 									EndSwitch
 									If $g_bdebugsmartmilk Then SetLog("AttackClick TH: " & $adeploypoint[0] & "," & $adeploypoint[1] & " - " & $ideployunits & "x")
 									Local $iRest = _Min($ideployunits, $aslots2deploy[$i][1])
-									attackclick($adeploypoint[0], $adeploypoint[1], $iRest, 100, 0, "#0098")
+									AttackClick($adeploypoint[0], $adeploypoint[1], $iRest, 100, 0, "#0098")
 									$aslots2deploy[$i][1] -= $iRest
 									SetLog("Deployed " & GetTroopName($aslots2deploy[$i][3], Number($ideployunits)) & " " & $ideployunits & "x - Snipping TH")
 									If $g_bdebugsmartmilk Then SetLog("Remains - " & GetTroopName($aslots2deploy[$i][3]) & " " & $aslots2deploy[$i][1] & "x")
-									If _sleep($delaylaunchtroop23) Then Return
+									If _Sleep($delaylaunchtroop23) Then Return
 								EndIf
 							Next
 						EndIf
 					EndIf
 				EndIf
-				If _sleep($delaylaunchtroop23) Then Return
+				If _Sleep($delaylaunchtroop23) Then Return
 			EndIf
 		EndIf
 		setdebuglog(" TOTAL detection Calculated  (in " & Round(TimerDiff($htimer) / 1000, 2) & " seconds)", $color_info)
 		If IsArray($acollectorsall) AND UBound($acollectorsall) > 0 Then
 			For $collector = 0 To UBound($acollectorsall) - 1
-				If _sleep(10) Then Return
+				If _Sleep(10) Then Return
 				If NOT $g_brunstate Then Return
 				Switch $acollectorsall[$collector][4]
 					Case "TL"
@@ -450,7 +450,7 @@ Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl
 								Local $nearpoint = StringSplit($tempobbj[$t], ",", $str_nocount)
 								$nearpoints[UBound($nearpoints) - 1][0] = $nearpoint[0]
 								$nearpoints[UBound($nearpoints) - 1][1] = $nearpoint[1]
-								If _sleep(10) Then Return
+								If _Sleep(10) Then Return
 								If NOT $g_brunstate Then Return
 							Next
 						Else
@@ -481,14 +481,14 @@ Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl
 									ContinueLoop
 								EndIf
 								If isattackpage() Then selectdroptroop($aslots2deploy[$i][0])
-								If _sleep($delaylaunchtroop21 * $g_imilkdelay) Then Return
+								If _Sleep($delaylaunchtroop21 * $g_imilkdelay) Then Return
 								If $g_bdebugsmartmilk Then SetLog("AttackClick: " & $deploypoint[0] & "," & $deploypoint[1])
 								$iExecute = _Min(Execute($aslots2deploy[$i][2]), $aslots2deploy[$i][1])
-								attackclick($deploypoint[0], $deploypoint[1], $iExecute, 100, 0, "#0098")
+								AttackClick($deploypoint[0], $deploypoint[1], $iExecute, 100, 0, "#0098")
 								$aslots2deploy[$i][1] -= $iExecute
 								SetLog("Deployed " & GetTroopName($aslots2deploy[$i][3], $iExecute) & " " & $iExecute & "x", $COLOR_ACTION)
 								If $g_bdebugsmartmilk Then SetLog("Remains - " & GetTroopName($aslots2deploy[$i][3]) & " " & $aslots2deploy[$i][1] & "x")
-								If _sleep($delaylaunchtroop21 * $g_imilkdelay) Then Return
+								If _Sleep($delaylaunchtroop21 * $g_imilkdelay) Then Return
 								Local $ikingslot = NOT $g_bdropking ? $g_ikingslot : -1
 								Local $iqueenslot = NOT $g_bdropqueen ? $g_iqueenslot : -1
 								Local $iwardenslot = NOT $g_bdropwarden ? $g_iwardenslot : -1
@@ -498,22 +498,22 @@ Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl
 								EndIf
 							EndIf
 						Next
-						If _sleep($delaylaunchtroop21 * $g_imilkdelay) Then Return
+						If _Sleep($delaylaunchtroop21 * $g_imilkdelay) Then Return
 					Else
 						If $g_bdebugsmartmilk Then SetLog("Pixel (" & $asidecollectors[$collector][0] & "," & $asidecollectors[$collector][1] & ") doesn't have the min distance to deploy..")
 					EndIf
 				Next
 			Next
-			If _sleep($itimebetweenloops * $g_imilkdelay) Then Return
+			If _Sleep($iTimebetweenloops * $g_imilkdelay) Then Return
 			$g_ipercentagedamage = Number(getocroveralldamage(780, 527 + $g_ibottomoffsety))
-			Local $stime = Round(Int(AttackRemainingTime() / 1000), 2)
-			Local $itime = Int(AttackRemainingTime() / 1000)
+			$sTime = Round(Int(AttackRemainingTime() / 1000), 2)
+			$iTime = Int(AttackRemainingTime() / 1000)
 			SetLog("Overall Damage is " & $g_ipercentagedamage & "%", $color_info)
-			SetLog("Battle ends in: " & $stime & " | remain in seconds is " & $itime & "s", $color_info)
-			If isattackpage() AND (($g_iremaintimetozap > $itime AND $g_iremaintimetozap <> 0) OR $itime < 45) AND NOT $usedzap Then
+			SetLog("Battle ends in: " & $sTime & " | remain in seconds is " & $iTime & "s", $color_info)
+			If isattackpage() AND (($g_iRemainTimeToZap > $iTime AND $g_iRemainTimeToZap <> 0) OR $iTime < 45) AND NOT $bUsedZap Then
 				SetLog("let's ZAP, even with troops on the ground", $color_info)
 				smartzap()
-				$usedzap = True
+				$bUsedZap = True
 			EndIf
 			If $g_bisheroesdropped Then checkheroeshealth()
 		EndIf
@@ -537,7 +537,7 @@ Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl
 				SetLog("Dropping Heros & CC at " & $sside & " - " & _arraytostring($heroesdeployjustincase, "|", -1, -1, " "), $color_success)
 				dropcc($heroesdeployjustincase[0], $heroesdeployjustincase[1], $icc)
 				$g_bisccdropped = True
-				If _sleep(2000) Then Return
+				If _Sleep(2000) Then Return
 				dropheroes($heroesdeployjustincase[0], $heroesdeployjustincase[1], $ikingslot, $iqueenslot, $iwardenslot, $ichampionslot, False, True)
 				$g_bisheroesdropped = True
 				checkheroeshealth()
@@ -556,7 +556,7 @@ Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl
 			setdebuglog("Check available Mines and Elixir collectors")
 			If $aslots[$ejspellslot] <> -1 Then
 				If isattackpage() Then selectdroptroop($ijspell)
-				If _sleep($delaylaunchtroop23) Then Return
+				If _Sleep($delaylaunchtroop23) Then Return
 				If isattackpage() Then selectdroptroop($ijspell)
 			EndIf
 		EndIf
@@ -569,17 +569,17 @@ Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl
 					Local $iExecute = Execute($aslots2deploy[$iZ][2])
 					If $aslots2deploy[$iZ][1] > 0 Then
 						If isattackpage() Then selectdroptroop($aslots2deploy[$iZ][0])
-						If _sleep($delaylaunchtroop23 * 2) Then Return 
+						If _Sleep($delaylaunchtroop23 * 2) Then Return 
 						If $g_bdebugsmartmilk Then SetLog("AttackClick: " & $allpossibledeploypoints[$point][0] & "," & $allpossibledeploypoints[$point][1])
-						attackclick($allpossibledeploypoints[$point][0], $allpossibledeploypoints[$point][1], $iExecute, 100, 0, "#0098")
+						AttackClick($allpossibledeploypoints[$point][0], $allpossibledeploypoints[$point][1], $iExecute, 100, 0, "#0098")
 						$aslots2deploy[$iZ][1] -= $iExecute
 						SetLog("Deployed " & GetTroopName($aslots2deploy[$iZ][3], Number($iExecute)) & " " & $iExecute & "x")
 						If $g_bdebugsmartmilk Then SetLog("Remains - " & GetTroopName($aslots2deploy[$iZ][3]) & " " & $aslots2deploy[$iZ][1] & "x")
-						If _sleep($delaylaunchtroop23) Then Return 
+						If _Sleep($delaylaunchtroop23) Then Return 
 					EndIf
 				Next
 			Next
-			If _sleep($delayalgorithm_alltroops4) Then Return
+			If _Sleep($delayalgorithm_alltroops4) Then Return
 			SetLog("Dropping left over troops", $color_info)
 			For $x = 0 To 1
 				If prepareattack($g_imatchmode, True) = 0 Then
@@ -589,15 +589,16 @@ Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl
 				For $i = $eBarb To $eTroopCount -1
 					If launchtroop($i, 2, 1, 1, 1) Then
 						If $g_bisheroesdropped Then checkheroeshealth()
-						If _sleep($delayalgorithm_alltroops5) Then Return
+						If _Sleep($delayalgorithm_alltroops5) Then Return
 					EndIf
 				Next
 			Next
 		EndIf
-		If isattackpage() AND (($g_iremaintimetozap > $itime AND $g_iremaintimetozap <> 0) OR $itime < 45) AND NOT $usedzap Then
+		$iTime = Int(AttackRemainingTime() / 1000)
+		If isattackpage() AND (($g_iRemainTimeToZap > $iTime AND $g_iRemainTimeToZap <> 0) OR $iTime < 45) AND NOT $bUsedZap Then
 			SetLog("let's ZAP, even with troops on the ground", $color_info)
 			smartzap()
-			$usedzap = True
+			$bUsedZap = True
 		EndIf
 		If $g_bisheroesdropped Then checkheroeshealth()
 	Next
