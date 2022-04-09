@@ -57,6 +57,57 @@ Func TrainSystem()
 	TrainSiege()
 
 	If $g_bDonationEnabled And $g_bChkDonate Then ResetVariables("donated")
+	
+	#Region - Custom train - Team AIO Mod++
+	; Inspired in Samkie
+	; Stick to Army page when time left - Team AIO Mod++
+	If $g_iStickToTrainWindow = 0 Or (ProfileSwitchAccountEnabled() And (Abs($g_aiAttackedCountSwitch[$g_iCurAccount]) <= 2)) Then
+		SetDebugLog("Not enabled waiting.")
+	ElseIf OpenArmyTab(False, "TrainSystem()") Then 
+
+		Local $iLoop = 0
+		Do
+			$iLoop += 1
+			
+			Local $iCount = 0, $iStickDelay = 0
+			While 1
+				
+				If Not $g_bRunState Then Return
+				getArmyTroopTime(False, False, True, ($iCount = 0))
+				
+				If $g_aiTimeTrain[0] <= 0 Then
+					Local $sResultTroops = getRemainTrainTimer(495, 169)
+					If StringRight($sResultTroops, 1) = "s" And StringLen($sResultTroops) < 4 Then
+						$g_aiTimeTrain[0] = Number("0." & Number($sResultTroops))
+						$g_aiTimeTrain[0] = Int($g_aiTimeTrain[0] * Random(1.10, 1.25, 1))
+					EndIf
+				EndIf
+				
+				If _Sleep($DELAYRESPOND) Then Return
+				If $g_aiTimeTrain[0] > $g_iStickToTrainWindow Or $g_aiTimeTrain[0] <= 0 Then
+					If $iLoop <> 1 Then
+						ExitLoop
+					Else
+						ContinueLoop 2
+					EndIf
+				Else
+					If $g_aiTimeTrain[0] < 1 Then
+						$iStickDelay = Round($g_aiTimeTrain[0] * 1000)
+						$g_aiTimeTrain[0] = 0
+					ElseIf $g_aiTimeTrain[0] >= 2 Then
+						$iStickDelay = 60000
+					Else
+						$iStickDelay = 30000
+					EndIf
+					SetLog("[" & $iCount & "] Waiting for troops to be ready.", $COLOR_INFO)
+					If _Sleep($iStickDelay) Then Return
+				EndIf
+				$iCount += 1
+				If $iCount > (10 + $g_iStickToTrainWindow) Then ExitLoop
+			WEnd
+		Until True
+	EndIf
+	#EndRegion - Custom train - Team AIO Mod++
 
 	ClickAway() ; ClickP($aAway, 2, 0, "#0346") ;Click Away
 	If _Sleep(500) Then Return ; Delay AFTER the click Away Prevents lots of coc restarts

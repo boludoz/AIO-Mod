@@ -15,14 +15,14 @@
 Func OpenArmyOverview($bCheckMain = True, $sWhereFrom = "Undefined")
 
 	If $bCheckMain Then
-		If Not IsMainPage() Then ; check for main page, avoid random troop drop
+		If Not IsMainPage(10) Then ; check for main page, avoid random troop drop
 			SetLog("Cannot open Army Overview window", $COLOR_ERROR)
 			SetError(1)
 			Return False
 		EndIf
 	EndIf
 
-	If WaitforPixel(23, 505 + $g_iBottomOffsetY, 53, 507 + $g_iBottomOffsetY, Hex(0xEEB344, 6), 5, 10) Then
+	If WaitforPixel(20, 565, 55, 605, Hex(0xDE9A39, 6), 20, 5) Then
 		If $g_bDebugSetlogTrain Then SetLog("Click $aArmyTrainButton" & " (Called from " & $sWhereFrom & ")", $COLOR_SUCCESS)
 		ClickP($aArmyTrainButton, 1, 0, "#0293") ; Button Army Overview
 	EndIf

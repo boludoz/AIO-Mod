@@ -21,82 +21,37 @@ Func checkArmyCamp($bOpenArmyWindow = False, $bCloseArmyWindow = False, $bGetHer
 EndFunc
 
 Func _checkArmyCamp($bOpenArmyWindow, $bCloseArmyWindow, $bGetHeroesTime, $bSetLog)
-	#Region - Custom train - Team AIO Mod++
-	Local $iLoop = 0
-	Do
-		$iLoop += 1
-		If $g_bDebugFuncTime Then StopWatchStart("checkArmyCamp")
-	
-		If $g_bDebugSetlogTrain Then SetLog("Begin checkArmyCamp:", $COLOR_DEBUG1)
-	
-		If $g_bDebugFuncTime Then StopWatchStart("IsTrainPage/openArmyOverview")
-		If Not $bOpenArmyWindow And Not IsTrainPage() Then ; check for train page
-			SetError(1)
-			Return; not open, not requested to be open - error.
-		ElseIf $bOpenArmyWindow Then
-			If Not OpenArmyOverview(True, "_checkArmyCamp()") Then
-				SetError(2)
-				Return; not open, requested to be open - error.
-			EndIf
-			If _Sleep($DELAYCHECKARMYCAMP5) Then Return
+	If $g_bDebugFuncTime Then StopWatchStart("checkArmyCamp")
+
+	If $g_bDebugSetlogTrain Then SetLog("Begin checkArmyCamp:", $COLOR_DEBUG1)
+
+	If $g_bDebugFuncTime Then StopWatchStart("IsTrainPage/openArmyOverview")
+	If Not $bOpenArmyWindow And Not IsTrainPage() Then ; check for train page
+		SetError(1)
+		Return; not open, not requested to be open - error.
+	ElseIf $bOpenArmyWindow Then
+		If Not OpenArmyOverview(True, "_checkArmyCamp()") Then
+			SetError(2)
+			Return; not open, requested to be open - error.
 		EndIf
-		If $g_bDebugFuncTime Then StopWatchStopLog()
-	
-		If $g_bDebugFuncTime Then StopWatchStart("getArmyTroopsCapacity")
-		getArmyTroopCapacity(False, False, False, $bSetLog) ; Last parameter is to check the Army Window
-		If $g_bDebugFuncTime Then StopWatchStopLog()
-		If _Sleep($DELAYCHECKARMYCAMP6) Then Return ; 10ms improve pause button response
-	
-		If $g_bDebugFuncTime Then StopWatchStart("getArmyTroops")
-		getArmyTroops(False, False, False, $bSetLog)
-		If $g_bDebugFuncTime Then StopWatchStopLog()
-		If _Sleep($DELAYCHECKARMYCAMP6) Then Return ; 10ms improve pause button response
-		
-		; Stick to Army page when time left - Team AIO Mod++
-		If $g_iStickToTrainWindow = 0 Or ProfileSwitchAccountEnabled() And ($g_aiAttackedCountSwitch[$g_iCurAccount] <= $g_aiAttackedCountAcc[$g_iCurAccount] - 2) Then
-			If $g_bDebugFuncTime Then StopWatchStart("getArmyTroopTime")
-			getArmyTroopTime(False, False, False, $bSetLog) ; Last parameter is to check the Army Window
-			If $g_bDebugFuncTime Then StopWatchStopLog()
-			If _Sleep($DELAYCHECKARMYCAMP6) Then Return ; 10ms improve pause button response
-		Else
-			Local $iCount = 0, $iStickDelay = 0
-			While 1
-				If Not $g_bRunState Then Return
-				getArmyTroopTime(False, False, True, ($iCount = 0))
-				
-				If $g_aiTimeTrain[0] <= 0 Then
-					Local $sResultTroops = getRemainTrainTimer(495, 169)
-					If StringRight($sResultTroops, 1) = "s" And StringLen($sResultTroops) < 4 Then
-						$g_aiTimeTrain[0] = Number("0." & Number($sResultTroops))
-						$g_aiTimeTrain[0] = Int($g_aiTimeTrain[0] * Random(1.10, 1.25, 1))
-					EndIf
-				EndIf
-				
-				If _Sleep($DELAYRESPOND) Then Return
-				If $g_aiTimeTrain[0] > $g_iStickToTrainWindow Or $g_aiTimeTrain[0] <= 0 Then
-					If $iLoop <> 1 Then
-						ExitLoop
-					Else
-						ContinueLoop 2
-					EndIf
-				Else
-					If $g_aiTimeTrain[0] < 1 Then
-						$iStickDelay = Round($g_aiTimeTrain[0] * 1000)
-						$g_aiTimeTrain[0] = 0
-					ElseIf $g_aiTimeTrain[0] >= 2 Then
-						$iStickDelay = 60000
-					Else
-						$iStickDelay = 30000
-					EndIf
-					SetLog("[" & $iCount & "] Waiting for troops to be ready.", $COLOR_INFO)
-					If _Sleep($iStickDelay) Then Return
-				EndIf
-				$iCount += 1
-				If $iCount > (10 + $g_iStickToTrainWindow) Then ExitLoop
-			WEnd
-		EndIf
-	Until True
-	#EndRegion - Custom train - Team AIO Mod++
+		If _Sleep($DELAYCHECKARMYCAMP5) Then Return
+	EndIf
+	If $g_bDebugFuncTime Then StopWatchStopLog()
+
+	If $g_bDebugFuncTime Then StopWatchStart("getArmyTroopsCapacity")
+	getArmyTroopCapacity(False, False, False, $bSetLog) ; Last parameter is to check the Army Window
+	If $g_bDebugFuncTime Then StopWatchStopLog()
+	If _Sleep($DELAYCHECKARMYCAMP6) Then Return ; 10ms improve pause button response
+
+	If $g_bDebugFuncTime Then StopWatchStart("getArmyTroops")
+	getArmyTroops(False, False, False, $bSetLog)
+	If $g_bDebugFuncTime Then StopWatchStopLog()
+	If _Sleep($DELAYCHECKARMYCAMP6) Then Return ; 10ms improve pause button response
+
+	If $g_bDebugFuncTime Then StopWatchStart("getArmyTroopTime")
+	getArmyTroopTime(False, False, False, $bSetLog) ; Last parameter is to check the Army Window
+	If $g_bDebugFuncTime Then StopWatchStopLog()
+	If _Sleep($DELAYCHECKARMYCAMP6) Then Return ; 10ms improve pause button response
 
 	Local $HeroesRegenTime
 	If $g_bDebugFuncTime Then StopWatchStart("getArmyHeroCount")
