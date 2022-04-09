@@ -165,7 +165,7 @@ Func CreateBBUpgradeOrderGUI()
 	
 	;Enable StarLab Upgrade Order
 	$g_hChkSLabUpgradeOrder = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkSLabUpgradeOrder", "Enable StarLab Upgrades Order"), 16, $y, -1, -1)
-		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkAutoLabUpgrades_Info_04", "Check box to enable Upgrades Order in Star laboratory"))
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkAutoLabUpgrades_Info_04_Star", "Check box to enable Upgrades Order in Star laboratory"))
 		GUICtrlSetOnEvent(-1, "chkSLabUpgradeOrder")
 
 	; Create translated list of Troops for combo box

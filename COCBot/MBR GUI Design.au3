@@ -336,7 +336,7 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 	CreateAttackTab()
 	
 	#Region - Team AIO Mod++
-	SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_06", "Loading Builder Base tab..."))
+	SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_11", "Loading Builder Base tab..."))
 	CreateBuilderBaseTab()
 
 	SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_10", "Loading Mods tab..."))
