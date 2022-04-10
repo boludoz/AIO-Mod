@@ -177,7 +177,7 @@ Func UpdateMod()
 
 			$aFiles = _FileListToArrayRec($g_sMBRDir, "*||build*", $FLTAR_FILES + $FLTAR_NOHIDDEN + $FLTAR_NOSYSTEM + $FLTAR_NOLINK, $FLTAR_RECUR, $FLTAR_SORT)
 			For $i = UBound($aFiles) - 1 To 0 Step -1
-				If (StringInStr($aFiles[$i], "\") > 0) And Not (StringInStr($aFiles[$i], "AIOMod.Updater") > 0 Or StringInStr($aFiles[$i], "CSV\") > 0 Or StringInStr($aFiles[$i], "Strategies\") > 0 Or StringInStr($aFiles[$i], "Profiles\") > 0) Then
+				If (StringInStr($aFiles[$i], "\") > 0) And Not (StringInStr($aFiles[$i], "bin\") > 0 Or StringInStr($aFiles[$i], "AIOMod.Updater") > 0 Or StringInStr($aFiles[$i], "CSV\") > 0 Or StringInStr($aFiles[$i], "Strategies\") > 0 Or StringInStr($aFiles[$i], "Profiles\") > 0) Then
 					ContinueLoop
 				EndIf
 				_ArrayDelete($aFiles, $i)

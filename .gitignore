@@ -4,8 +4,6 @@ Help/desktop.ini
 #MyBot.run.Watchdog_stripped.au3
 #MyBot.run.Wmi_stripped.au3
 #MyBot.run_stripped.au3
-MyBot.run.exe
-MyBot.run.MiniGui.exe
 MyBot.run.Watchdog.exe
 EnableMBRDebug.txt
 MyBot.run.Wmi.exe
@@ -28,7 +26,9 @@ lib/TempAdb/
 Nueva carpeta/
 Profiles_/
 *_stripped.au3
-AIOMod.Updater.exe
 NoNotify.txt
 AutoUpdate.txt
 *.db
+#AIOMod.Updater.exe
+#MyBot.run.exe
+#MyBot.run.MiniGui.exe
