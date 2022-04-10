@@ -75,6 +75,7 @@ Func CreateVillageMisc()
 	CreateClanGamesBBDes()
 	CreateClanGamesBBTroops()
 	CreateClanGamesSpell()
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	GUISwitch($g_hGUI_MISC)
 	$g_hGUI_MISC_TAB = GUICtrlCreateTab(0, 0, $g_iSizeWGrpTab2, $g_iSizeHGrpTab2, ($TCS_MULTILINE + $TCS_RIGHTJUSTIFY))
