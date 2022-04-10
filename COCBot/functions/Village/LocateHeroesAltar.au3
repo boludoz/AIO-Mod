@@ -528,6 +528,7 @@ Func _LocateChampionAltar($bFromButton = False)
 EndFunc   ;==>_LocateChampionAltar
 
 Func DetectedAltar($eHeroIndex = $eHeroNone)
+	ZoomOut()
 	Local $sTemplateDir = ""
 	Local $aDetectedPosition[2] = [-1, -1]
 	Local $sHeroName = "", $sOCRString = ""
@@ -555,11 +556,15 @@ Func DetectedAltar($eHeroIndex = $eHeroNone)
 
 	SetDebugLog($sHeroName & " Template Dir: " & $sTemplateDir, $COLOR_INFO)
 
+	Local $bStatus = $g_bUseRandomClick	
 	If $sTemplateDir <> "" Then
 		For $i = 0 To 1
-			If QuickMIS("BC1", $sTemplateDir, 100, 55, 775, 580 + 44, True, False) Then
+			If QuickMIS("BC1", $sTemplateDir, 100, 55, 775, 580 + 88, True, False) Then
 				SetLog($sHeroName & " Altar detected...", $COLOR_SUCCESS)
+				$g_bUseRandomClick = False
 				PureClick($g_iQuickMISWOffSetX, $g_iQuickMISWOffSetY)
+				If _Sleep(500) Then Return False
+				$g_bUseRandomClick = $bStatus
 
 				Local $sInfo = ""
 				For $iCountGetInfo = 0 To 10
@@ -603,6 +608,7 @@ Func DetectedAltar($eHeroIndex = $eHeroNone)
 	EndIf
 	
 	; Only save pos if is OK, original Boldina logic.
+	ConvertFromVillagePos($aDetectedPosition[0], $aDetectedPosition[1])
 	If $aDetectedPosition[0] > 0 Then
 		Switch $eHeroIndex
 			Case $eHeroKing

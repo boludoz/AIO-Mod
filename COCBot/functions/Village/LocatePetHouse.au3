@@ -136,6 +136,7 @@ EndFunc   ;==>LocatePetHouse
 
 ; Image Search for Pet House
 Func ImgLocatePetHouse()
+	ZoomOut()
 	Local $sImgDir = @ScriptDir & "\imgxml\Buildings\PetHouse\"
 
 	Local $sSearchArea = "ECD"

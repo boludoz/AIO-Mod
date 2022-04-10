@@ -125,7 +125,7 @@ EndFunc   ;==>_LocateClanCastle
 Func DetectedCastle()
 	ZoomOut()
 	
-	Local $aResult = _ImageSearchXML($g_sImgLocationCastle, 0, "ECD", True, False, True, 25)
+	Local $aResult = _ImageSearchXML($g_sImgLocationCastle, 0, "ECD")
 	If UBound($aResult) < 1 Or @error Then Return False
 	
 	$aResult = CenterSort($aResult)
@@ -135,12 +135,12 @@ Func DetectedCastle()
 	For $i = 0 To UBound($aResult) - 1
 		If $i > 0 Then CheckMainScreen(False)
 		
-		$aClick[0] = Int($aResult[$i][0]) + 10
-		$aClick[1] = Int($aResult[$i][1]) + 10
+		$aClick[0] = Int($aResult[$i][0])
+		$aClick[1] = Int($aResult[$i][1])
 
 		If isInsideDiamondInt($aClick[0], $aClick[1])  Then
 			$g_bUseRandomClick = False
-			ClickP($aClick, 1)
+			PureClickP($aClick)
 			If _Sleep(500) Then Return False
 			$g_bUseRandomClick = $bStatus
 
@@ -160,6 +160,7 @@ Func DetectedCastle()
 			If StringInStr($sInfo[1], "Cast") > 0 Then
 				$g_aiClanCastlePos[0] = $aResult[$i][0]
 				$g_aiClanCastlePos[1] = $aResult[$i][1]
+				ConvertFromVillagePos($g_aiClanCastlePos[0], $g_aiClanCastlePos[1])
 				ClickAway()
 				If _Sleep(200) Then Return
 				IniWrite($g_sProfileBuildingPath, "other", "CCPosX", $g_aiClanCastlePos[0])

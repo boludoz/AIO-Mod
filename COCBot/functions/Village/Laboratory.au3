@@ -387,27 +387,32 @@ Func FindResearchButton($bOnLyCheck = False) ; Magic items - Team AIO Mod++
 	If $bOnLyCheck = False Then
 		CheckMainScreen(False)
 		;Click Laboratory
-		Click($g_aiLaboratoryPos[0], $g_aiLaboratoryPos[1])
-		If _Sleep(1000) Then Return ; Wait for window to open
-
-		Local $aCancelButton = findButton("Cancel")
-		If IsArray($aCancelButton) And UBound($aCancelButton, 1) = 2 Then
-			SetLog("Laboratory is Upgrading!, Cannot start any upgrade", $COLOR_ERROR)
-			ClickAway()
-			Return False
-		EndIf
-	EndIf
-
-	Local $aResearchButton = findButton("Research", Default, 1, True)
-	If IsArray($aResearchButton) And UBound($aResearchButton, 1) = 2 Then
-		If $g_bDebugImageSave Then SaveDebugImage("LabUpgrade") ; Debug Only
-		If $bOnLyCheck = False Then ClickP($aResearchButton)
-		$ResearchButtonFound = True
-		If _Sleep($DELAYLABORATORY1) Then Return ; Wait for window to open
-		Return True
-	Else
-		SetLog("Cannot find the Laboratory Research Button!", $COLOR_INFO)
+		ZoomOut()
+		CheckObstacles()
 		ClickAway()
+		If IsInsideDiamond($g_aiLaboratoryPos) Then
+			BuildingClick($g_aiLaboratoryPos[0], $g_aiLaboratoryPos[1], "#4548")
+		
+			If _Sleep(1000) Then Return ; Wait for window to open
+	
+			Local $aCancelButton = findButton("Cancel")
+			If IsArray($aCancelButton) And UBound($aCancelButton, 1) = 2 Then
+				SetLog("Laboratory is Upgrading!, Cannot start any upgrade", $COLOR_ERROR)
+				ClickAway()
+				Return False
+			EndIf
+		EndIf
+
+		Local $aResearchButton = findButton("Research", Default, 1, True)
+		If IsArray($aResearchButton) And UBound($aResearchButton, 1) = 2 Then
+			If $g_bDebugImageSave Then SaveDebugImage("LabUpgrade") ; Debug Only
+			If $bOnLyCheck = False Then ClickP($aResearchButton)
+			$ResearchButtonFound = True
+			If _Sleep($DELAYLABORATORY1) Then Return ; Wait for window to open
+			Return True
+		Else
+			SetLog("Cannot find the Laboratory Research Button!", $COLOR_INFO)
+		EndIf
 	EndIf
 
 	If Not $ResearchButtonFound Then
@@ -415,7 +420,6 @@ Func FindResearchButton($bOnLyCheck = False) ; Magic items - Team AIO Mod++
 		ClickAway()
 		If BuildChecker($g_aiLaboratoryPos, $g_sImgLocationLabs) Then ;try locate lab again
 			SetLog("Laboratory located on coords: " & "[" & $g_aiLaboratoryPos[0] & "," & $g_aiLaboratoryPos[1] & "], Saving Lab Loc for future", $COLOR_INFO)
-			Click($g_aiLaboratoryPos[0], $g_aiLaboratoryPos[1])
 			If _Sleep(1000) Then Return
 			If $bOnLyCheck = False Then
 				ClickB("Research")
@@ -424,12 +428,14 @@ Func FindResearchButton($bOnLyCheck = False) ; Magic items - Team AIO Mod++
 			Return True
 		Else
 			SetLog("Laboratory location not found, please locate manually", $COLOR_DEBUG)
-			Return False
 		EndIf
 	EndIf
+	
+	ClickAway()
+	Return False
 EndFunc   ;==>FindResearchButton
 
-; clickp($g_aiKingAltarPos)
+; BuildingClick($g_aiLaboratoryPos)
 
 Func BuildChecker(ByRef $aPosXY, $sImgDir)
 	Local $aImgLocPos[2] = [-1, -1]
@@ -438,6 +444,9 @@ Func BuildChecker(ByRef $aPosXY, $sImgDir)
 	CheckObstacles()
 	ClickAway()
 	
+	Local $bStatus = $g_bUseRandomClick	
+	$g_bUseRandomClick = False
+
 	Local $bOkLegacy = IsInsideDiamond($aPosXY)
 	Local $bImgLocPosOk = ImgLocateBuilds($aImgLocPos, $sImgDir)
 	If UBound($aPosXY) > 0 And Not @error And $bOkLegacy And $bImgLocPosOk Then
@@ -445,51 +454,64 @@ Func BuildChecker(ByRef $aPosXY, $sImgDir)
 		Local $bFirstPos = Pixel_Distance($aPosXY[0], $aPosXY[1], $aImgLocPos[0], $aImgLocPos[1]) < 75
 		
 		If $bFirstPos = True Then
-			BuildingClick($aPosXY[0], $aPosXY[1], "#4546")
+			BuildingClick($aPosXY[0], $aPosXY[1] - 25, "#4546")
 		Else
-			ConvertFromVillagePos($aImgLocPos[0], $aImgLocPos[1])
-			BuildingClick($aImgLocPos[0], $aImgLocPos[1], "#4547")
+			PureClickP($aImgLocPos)
+			; ConvertFromVillagePos($aImgLocPos[0], $aImgLocPos[1])
+			; BuildingClick($aImgLocPos[0], $aImgLocPos[1], "#4547")
 			$aPosXY[0] = $aImgLocPos[0]
-			$aPosXY[1] = $aImgLocPos[0]
+			$aPosXY[1] = $aImgLocPos[1]
 		EndIf
 
 	ElseIf $bImgLocPosOk Then
-		ConvertFromVillagePos($aImgLocPos[0], $aImgLocPos[1])
-		BuildingClick($aImgLocPos[0], $aImgLocPos[1], "#4548")
+		PureClickP($aImgLocPos)
+		; ConvertFromVillagePos($aImgLocPos[0], $aImgLocPos[1])
+		; BuildingClick($aImgLocPos[0], $aImgLocPos[1], "#4548")
 		$aPosXY[0] = $aImgLocPos[0]
-		$aPosXY[1] = $aImgLocPos[0]
+		$aPosXY[1] = $aImgLocPos[1]
 	ElseIf UBound($aPosXY) > 0 And Not @error And $bOkLegacy Then
 		BuildingClick($aPosXY[0], $aPosXY[1], "#4549")
 	Else
 		$aPosXY[0] = 0
 		$aPosXY[1] = 0
+		$g_bUseRandomClick = $bStatus
 		Return False
 	EndIf
 	
+	$g_bUseRandomClick = $bStatus
+	Local $aCancelButton = findButton("Cancel")
+	If IsArray($aCancelButton) And UBound($aCancelButton, 1) = 2 Then
+	Else
+		Local $aResearchButton = findButton("Research", Default, 1, True)
+		If IsArray($aResearchButton) And UBound($aResearchButton, 1) = 2 Then
+			If $bImgLocPosOk Then
+				ConvertFromVillagePos($aImgLocPos[0], $aImgLocPos[1])
+				$aPosXY[0] = $aImgLocPos[0]
+				$aPosXY[1] = $aImgLocPos[1]
+			EndIf
+			Return True
+		EndIf
+	EndIf
+
+	ClickAway()
 	If _Sleep(1000) Then Return
-	Return True
+	Return False
 EndFunc   ;==>BuildChecker
 
+;ImgLocateBuilds($g_aiLaboratoryPos, $g_sImgLocationLabs)
 Func ImgLocateBuilds(ByRef $aiCoords, $sImgDir)
-	Local $sSearchArea = "ECD"
-	Local $avBuild = findMultiple($sImgDir, $sSearchArea, $sSearchArea, 0, 1000, 1, "objectname,objectpoints", True)
+	ZoomOut()
+	Local $avBuild = _ImageSearchXML($g_sImgLocationLabs, 0, "ECD")
 
-	If Not IsArray($avBuild) Or UBound($avBuild, $UBOUND_ROWS) <= 0 Then
-		If $g_bDebugImageSave Then SaveDebugImage("ImgLocateBuilds", False)
-		Return False
+	If UBound($avBuild) > 0 And not @error Then
+		For $i = 0 To UBound($avBuild) - 1
+			$aiCoords[0] = $avBuild[$i][1]
+			$aiCoords[1] = $avBuild[$i][2]
+			Return True
+		Next
+	ElseIf $g_bDebugImageSave Then
+		SaveDebugImage("ImgLocateBuilds", False)
 	EndIf
-
-	Local $avBuildRes
-	
-	For $i = 0 To UBound($avBuild, $UBOUND_ROWS) - 1
-		$avBuildRes = $avBuild[$i]
-		$aiCoords = decodeSingleCoord($avBuildRes)
-		If UBound($aiCoords) > 1 And Not @error Then
-			If IsInsideDiamond($aiCoords) Then
-				Return True
-			EndIf
-		EndIf
-	Next
 
 	Return False
 EndFunc   ;==>ImgLocateBuilds
