@@ -1973,16 +1973,19 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 		;AndroidAdbSendShellCommand("", Default, $wasRunState, False)
 		; update $g_iAndroidSystemAPI ; getprop ro.build.version.sdk
 		$g_iAndroidVersionAPI = Int(AndroidAdbSendShellCommand("getprop ro.build.version.sdk", Default, $wasRunState, False))
-
-		; Custom AIO
-		If $g_iAndroidVersionAPI >= $g_iAndroidLollipop And $g_iAndroidVersionAPI <= $g_iAndroidPie Then
-			SetDebugLog("Android Version API = " & $g_iAndroidVersionAPI & " " & " - OK", $COLOR_INFO)
-		Else
-			SetLog("Your emulator instance have unsupported android version.", $COLOR_RED)
-			SetLog("Please use 5.1 android version to 9.0 (max) android version.", $COLOR_RED)
-			PushMsg("Hard stuck, please check your android version to be compatible with clash of clans (Range supported : 5.1 - 9.0).")
-			BtnStop()
-		EndIf
+		SetDebugLog("Android Version API = " & $g_iAndroidVersionAPI)
+		Switch $g_iAndroidVersionAPI
+			Case $g_iAndroidJellyBean To $g_iAndroidKitKat - 1
+				SetLog("Android Version 4.1 - 4.3.1, NOT SUPPORTED", $COLOR_ERROR)
+			Case $g_iAndroidKitKat To $g_iAndroidLollipop - 1
+				SetLog("Android Version 4.4, NOT SUPPORTED", $COLOR_ERROR)
+			Case $g_iAndroidLollipop To $g_iAndroidNougat - 1
+				SetDebugLog("Android Version 5.1")
+			Case $g_iAndroidNougat
+				SetDebugLog("Android Version 7.0")
+			Case Else
+				SetDebugLog("Android Version not detected!")
+		EndSwitch
 		
 		; check mouse device
 		If StringLen($g_sAndroidMouseDevice) > 0 And $g_sAndroidMouseDevice = $g_avAndroidAppConfig[$g_iAndroidConfig][13] Then
