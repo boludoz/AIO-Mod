@@ -1981,7 +1981,7 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 				SetLog("Android Version 4.4, NOT SUPPORTED", $COLOR_ERROR)
 			Case $g_iAndroidLollipop To $g_iAndroidNougat - 1
 				SetDebugLog("Android Version 5.1")
-			Case $g_iAndroidNougat
+			Case $g_iAndroidNougat To $g_iAndroidPie - 1
 				SetDebugLog("Android Version 7.0")
 			Case Else
 				SetDebugLog("Android Version not detected!")
@@ -4449,17 +4449,28 @@ Func UpdateAndroidBackgroundMode()
 	UpdateChkBackground()
 EndFunc   ;==>UpdateAndroidBackgroundMode
 
-
+#Region - Team__AiO__MOD
 Func GetAndroidCodeName($iAPI = $g_iAndroidVersionAPI)
-
-	If $iAPI >= $g_iAndroidNougat Then Return "Nougat"
-	If $iAPI >= $g_iAndroidLollipop Then Return "Lollipop"
-		If $iAPI >= $g_iAndroidKitKat Then Return "KitKat"
-	If $iAPI >= $g_iAndroidJellyBean Then Return "JellyBean"
-
-	SetDebugLog("Unsupported Android API Version: " & $iAPI, $COLOR_ERROR)
+	Switch $iAPI
+		Case $g_iAndroidJellyBean To $g_iAndroidKitKat - 1
+			; SetLog("Android Version 4.1 - 4.3.1, NOT SUPPORTED", $COLOR_ERROR)
+			Return "JellyBean"
+		Case $g_iAndroidKitKat To $g_iAndroidLollipop - 1
+			; SetLog("Android Version 4.4, NOT SUPPORTED", $COLOR_ERROR)
+			Return "KitKat"
+		Case $g_iAndroidLollipop To $g_iAndroidNougat - 1
+			; SetDebugLog("Android Version 5.1")
+			Return "Lollipop"
+		Case $g_iAndroidNougat To $g_iAndroidPie - 1
+			; SetDebugLog("Android Version 7.0-7.1.2")
+			Return "Nougat"
+		Case Else
+			SetDebugLog("Unsupported Android API Version: " & $iAPI, $COLOR_ERROR)
+	EndSwitch
+	
 	Return ""
 EndFunc   ;==>GetAndroidCodeName
+#EndRegion - Team__AiO__MOD
 
 Func HaveSharedPrefs($sProfile = $g_sProfileCurrentName, $BothNewOrOld = Default, $bReturnArray = False)
 	If $sProfile = Default Then $sProfile = $g_sProfileCurrentName

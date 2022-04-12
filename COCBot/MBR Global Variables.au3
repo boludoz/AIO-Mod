@@ -350,6 +350,7 @@ Global Const $g_iAndroidLollipop = 21
 Global Const $g_iAndroidNougat = 24
 Global Const $g_iAndroidOreo = 26
 Global Const $g_iAndroidPie = 28
+
 ; Unsupported > 9 Not support minitouch... and mybot without minitouch not works.
 
 Global $g_iAndroidVersionAPI = $g_iAndroidLollipop ; getprop ro.build.version.sdk
