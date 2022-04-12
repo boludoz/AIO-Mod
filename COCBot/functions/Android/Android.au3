@@ -1972,6 +1972,7 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 		; clear output
 		;AndroidAdbSendShellCommand("", Default, $wasRunState, False)
 		; update $g_iAndroidSystemAPI ; getprop ro.build.version.sdk
+		#Region - Team__AiO__MOD
 		$g_iAndroidVersionAPI = Int(AndroidAdbSendShellCommand("getprop ro.build.version.sdk", Default, $wasRunState, False))
 		SetDebugLog("Android Version API = " & $g_iAndroidVersionAPI)
 		Switch $g_iAndroidVersionAPI
@@ -1982,10 +1983,11 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 			Case $g_iAndroidLollipop To $g_iAndroidNougat - 1
 				SetDebugLog("Android Version 5.1")
 			Case $g_iAndroidNougat To $g_iAndroidPie - 1
-				SetDebugLog("Android Version 7.0")
+				SetDebugLog("Android Version 7.0-7.1.2")
 			Case Else
 				SetDebugLog("Android Version not detected!")
 		EndSwitch
+		#EndRegion - Team__AiO__MOD
 		
 		; check mouse device
 		If StringLen($g_sAndroidMouseDevice) > 0 And $g_sAndroidMouseDevice = $g_avAndroidAppConfig[$g_iAndroidConfig][13] Then
