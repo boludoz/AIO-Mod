@@ -191,7 +191,7 @@ Func ArmyHeroStatus($i)
 		Local $res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $g_sImgArmyOverviewHeroes, "str", "FV", "Int", 0, "str", "FV", "Int", 0, "Int", 1000)
 		If $res[0] <> "" Then ExitLoop
 		If _Sleep(800) Then Return "none"
-	EndIf
+	Next
 		
 	If $res[0] <> "" Then
 		Local $aKeys = StringSplit($res[0], "|", $STR_NOCOUNT)
