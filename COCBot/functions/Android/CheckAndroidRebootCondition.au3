@@ -24,16 +24,18 @@ Func InitAndroidRebootCondition($bLaunched = True)
 EndFunc   ;==>InitAndroidRebootCondition
 
 Func CheckAndroidRebootCondition($bRebootAndroid = True, $bLogOnly = False)
-
+	
 	If $g_hAndroidLaunchTime = 0 Then InitAndroidRebootCondition(True) ; Android was already launched, start time now
-
+	
 	; check for additional reboot conditions
 	If $g_bGfxError Then
 		$g_bGfxError = False
 		SetLog("Reboot " & $g_sAndroidEmulator & " (" & $g_sAndroidInstance & ") due to detected Gfx Errors")
 		Return True
 	EndIF
-
+	
+	GetCOCDistributors() ; load of distributors to prevent rare bot freeze during boot
+	
 	; check only for timeout reboot condition
 	If $g_iAndroidRebootHours <= 0 Then Return False
 

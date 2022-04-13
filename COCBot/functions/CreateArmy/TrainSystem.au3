@@ -799,7 +799,7 @@ Func WhatToTrain($ReturnExtraTroopsOnly = False, $bFullArmy = $g_bIsFullArmywith
 		If Not $g_bFullArmySpells Then getArmySpells(False, False, False, False) ; in case $g_bIsFullArmywithHeroesAndSpells but not $g_bFullArmySpells
 
 		Local $bHaltAttack = $g_iCommandStop = 3 Or $g_iCommandStop = 0 Or ($g_abDonateOnly[$g_iCurAccount] And ProfileSwitchAccountEnabled())
-		If Not $bHaltAttack Then
+		If Not $bHaltAttack And $g_bTrainBeforeAttack Then ; Custom Train - Team AIO Mod++
 			SetLog(" - Your Army is Full, let's make troops before Attack!", $COLOR_INFO)
 			; Elixir Troops
 			For $i = 0 To $eTroopCount - 1
