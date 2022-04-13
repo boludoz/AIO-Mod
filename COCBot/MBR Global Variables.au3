@@ -1163,43 +1163,43 @@ Global Enum $eTroopBarbarianS, $eTroopSuperBarbarianS, $eTroopArcherS, $eTroopSu
 
 Global $g_asDropOrderNames, $g_asDropOrderList ; Custom - Team AIO Mod++
 Func LoadTranslatedDropOrderList()
-	Local $asDropOrderList[$eDropOrderCount + 1] = ["", _   
-	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtBarbarians", "Barbarians"), _ 
+	Local $asDropOrderList[$eDropOrderCount + 1] = ["", _
+	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtBarbarians", "Barbarians"), _
 	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSuperBarbarians", "Super Barbarians"), _
 	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtArchers", "Archers"), _
-	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSuperArchers", "Super Archers"), _ 
-	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtGiants", "Giants"), _  
-	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSuperGiants", "Super Giants"), _   
+	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSuperArchers", "Super Archers"), _
+	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtGiants", "Giants"), _
+	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSuperGiants", "Super Giants"), _
 	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtGoblins", "Goblins"), _
-	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSneakyGoblins", "Sneaky Goblins"), _    
-	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtWallBreakers", "Wall Breakers"), _ 
+	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSneakyGoblins", "Sneaky Goblins"), _
+	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtWallBreakers", "Wall Breakers"), _
 	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSuperWallBreakers", "Super Wall Breakers"), _
-	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtBalloons", "Balloons"), _   
-	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtRocketBalloons", "Rocket Balloons"), _  
+	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtBalloons", "Balloons"), _
+	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtRocketBalloons", "Rocket Balloons"), _
 	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtWizards", "Wizards"), _
-	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSuperWizards", "Super Wizards"), _ 
+	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSuperWizards", "Super Wizards"), _
 	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtHealers", "Healers"), _
 	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtDragons", "Dragons"), _
-	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSuperDragons", "Super Dragons"), _ 
-	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtPekkas", "Pekkas"), _  
-	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtBabyDragons", "Baby Dragons"), _   
-	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtInfernoDragons", "Inferno Dragons"), _				  
-	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtMiners", "Miners"), _  
-	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtElectroDragons", "Electro Dragons"), _  
-	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtYetis", "Yetis"), _    
-	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtDragonRiders", "Dragon Riders"), _ 
+	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSuperDragons", "Super Dragons"), _
+	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtPekkas", "Pekkas"), _
+	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtBabyDragons", "Baby Dragons"), _
+	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtInfernoDragons", "Inferno Dragons"), _
+	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtMiners", "Miners"), _
+	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtElectroDragons", "Electro Dragons"), _
+	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtYetis", "Yetis"), _
+	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtDragonRiders", "Dragon Riders"), _
 	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtMinions", "Minions"), _
-	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSuperMinions", "Super Minions"), _ 
+	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSuperMinions", "Super Minions"), _
 	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtHogRiders", "Hog Riders"), _
-	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtValkyries", "Valkyries"), _ 
-	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSuperValkyries", "Super Valkyries"), _  
-	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtGolems", "Golems"), _  
+	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtValkyries", "Valkyries"), _
+	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSuperValkyries", "Super Valkyries"), _
+	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtGolems", "Golems"), _
 	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtWitches", "Witches"), _
-	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSuperWitches", "Super Witches"), _  
+	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSuperWitches", "Super Witches"), _
 	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtLavaHounds", "Lava Hounds"), _
 	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtIceHounds", "Ice Hounds"), _
 	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtBowlers", "Bowlers"), _
-	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSuperBowlers", "Super Bowlers"), _					
+	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSuperBowlers", "Super Bowlers"), _
 	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtIceGolems", "Ice Golems"), _
 	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtHeadhunters", "Headhunters"), _
 	GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtClanCastle", "Clan Castle"), _
@@ -1729,6 +1729,8 @@ Global $g_bCSVLocateWizTower = False
 Global $g_bCSVLocateMortar = False
 Global $g_bCSVLocateAirDefense = False
 Global $g_bCSVLocateWall = False
+Global $g_bCSVLocateClanCastle = False ; Custom CSV - Team AIO Mod++ (Thx to BigSalami)
+Global $g_sTownHallVectors = "" ; Custom CSV - Team AIO Mod++ (Thx to BigSalami)
 Global $g_iCSVLastTroopPositionDropTroopFromINI = -1
 ; Assigned/Evaluated Attack vector variables
 Global $ATTACKVECTOR_A, $ATTACKVECTOR_B, $ATTACKVECTOR_C, $ATTACKVECTOR_D, $ATTACKVECTOR_E, $ATTACKVECTOR_F
@@ -1822,10 +1824,10 @@ Global Enum $eWeakEagle = 1, $eWeakInferno, $eWeakXBow, $eWeakWizard, $eWeakMort
 Global $g_aWeakDefenseNames = ["None", "Eagle Artillery", "Inferno Tower", "XBow", "Wizard Tower", "Mortar", "Air Defense", "Scatter Shot"]
 
 ; Building variables used by CSV attacks
-Global Enum $eBldgRedLine, $eBldgTownHall, $eBldgGoldM, $eBldgElixirC, $eBldgDrill, $eBldgGoldS, $eBldgElixirS, $eBldgDarkS, $eBldgEagle, $eBldgInferno, $eBldgXBow, $eBldgWizTower, $eBldgMortar, $eBldgAirDefense, $eBldgScatter, $eExternalWall, $eInternalWall
-Global $g_sBldgNames = ["Red Line", "Town Hall", "Gold Mine", "Elixir Collector", "Dark Elixir Drill", "Gold Storage", "Elixir Storage", "Dark Elixir Storage", "Eagle Artillery", "Inferno Tower", "XBow", "Wizard Tower", "Mortar", "Air Defense", "Scatter Shot", "External Wall", "Internal Wall"]
-Global Const $g_iMaxCapTroopTH[15] = [0, 20, 30, 70, 80, 135, 150, 200, 200, 220, 240, 260, 280, 300, 300] ; element 0 is a dummy
-Global Const $g_iMaxCapSpellTH[15] = [0, 0, 0, 0, 0, 2, 4, 6, 7, 9, 11, 11, 11, 11, 13] ; element 0 is a dummy
+Global Enum $eBldgRedLine, $eBldgTownHall, $eBldgGoldM, $eBldgElixirC, $eBldgDrill, $eBldgGoldS, $eBldgElixirS, $eBldgDarkS, $eBldgEagle, $eBldgInferno, $eBldgXBow, $eBldgWizTower, $eBldgMortar, $eBldgAirDefense, $eBldgScatter, $eExternalWall, $eInternalWall, $ebldgclancastle
+Global $g_sBldgNames = ["Red Line", "Town Hall", "Gold Mine", "Elixir Collector", "Dark Elixir Drill", "Gold Storage", "Elixir Storage", "Dark Elixir Storage", "Eagle Artillery", "Inferno Tower", "XBow", "Wizard Tower", "Mortar", "Air Defense", "Scatter Shot", "External Wall", "Internal Wall", "Clan Castle"]
+Global Const $g_iMaxCapTroopTH[$g_iMaxTHLevel + 1] = [0, 20, 30, 70, 80, 135, 150, 200, 200, 220, 240, 260, 280, 300, 300] ; element 0 is a dummy
+Global Const $g_iMaxCapSpellTH[$g_iMaxTHLevel + 1] = [0, 0, 0, 0, 0, 2, 4, 6, 7, 9, 11, 11, 11, 11, 13] ; element 0 is a dummy
 Global $g_oBldgAttackInfo = ObjCreate("Scripting.Dictionary") ; stores building information of base being attacked
 $g_oBldgAttackInfo.CompareMode = 1 ; use case in-sensitve compare for key values
 
@@ -1857,10 +1859,10 @@ Global $g_oBldgLevels = ObjCreate("Scripting.Dictionary")
 ; to find max level for any defense = $g_oBldgLevels.item(Building enum)[TownHall level -1]
 
 Func _FilloBldgLevels()
-	Local Const $aBldgCollector[$g_iMaxTHLevel] = [2, 4, 6, 8, 10, 10, 11, 12, 12, 12, 12, 12, 12, 12]
+	Local Const $aBldgCollector[$g_iMaxTHLevel] = [2, 4, 6, 8, 10, 10, 11, 12, 12, 13, 14, 14, 14, 15]
 	$g_oBldgLevels.add($eBldgGoldM, $aBldgCollector)
 	$g_oBldgLevels.add($eBldgElixirC, $aBldgCollector)
-	Local Const $aBldgDrill[$g_iMaxTHLevel] = [0, 0, 0, 0, 0, 0, 3, 3, 6, 6, 6, 6, 6, 6]
+	Local Const $aBldgDrill[$g_iMaxTHLevel] = [0, 0, 0, 0, 0, 0, 3, 3, 6, 7, 8, 8, 8, 9]
 	$g_oBldgLevels.add($eBldgDrill, $aBldgDrill)
 	Local Const $aBldgStorage[$g_iMaxTHLevel] = [1, 3, 6, 8, 9, 10, 11, 11, 11, 11, 12, 13, 14, 15]
 	$g_oBldgLevels.add($eBldgGoldS, $aBldgStorage)
@@ -1871,11 +1873,11 @@ Func _FilloBldgLevels()
 	$g_oBldgLevels.add($eBldgEagle, $aBldgEagle)
 	Local Const $aBldgInferno[$g_iMaxTHLevel] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 5, 6, 7, 8]
 	$g_oBldgLevels.add($eBldgInferno, $aBldgInferno)
-	Local Const $aBldgMortar[$g_iMaxTHLevel] = [0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 11, 12]
+	Local Const $aBldgMortar[$g_iMaxTHLevel] = [0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 13, 14]
 	$g_oBldgLevels.add($eBldgMortar, $aBldgMortar)
-	Local Const $aBldgWizTower[$g_iMaxTHLevel + 1] = [0, 0, 0, 0, 2, 3, 4, 6, 7, 9, 10, 11, 12, 13, 14]
+	Local Const $aBldgWizTower[$g_iMaxTHLevel] = [0, 0, 0, 0, 2, 3, 4, 6, 7, 9, 10, 11, 13, 14]
 	$g_oBldgLevels.add($eBldgWizTower, $aBldgWizTower)
-	Local Const $aBldgXBow[$g_iMaxTHLevel] = [0, 0, 0, 0, 0, 0, 0, 0, 3, 4, 5, 6, 7, 8]
+	Local Const $aBldgXBow[$g_iMaxTHLevel] = [0, 0, 0, 0, 0, 0, 0, 0, 3, 4, 5, 6, 8, 9]
 	$g_oBldgLevels.add($eBldgXBow, $aBldgXBow)
 	Local Const $aBldgAirDefense[$g_iMaxTHLevel] = [0, 0, 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 	$g_oBldgLevels.add($eBldgAirDefense, $aBldgAirDefense)
@@ -1891,26 +1893,26 @@ Global $g_oBldgMaxQty = ObjCreate("Scripting.Dictionary")
 Func _FilloBldgMaxQty()
 	Local Const $aBldgCollector[$g_iMaxTHLevel] = [1, 2, 3, 4, 5, 6, 6, 6, 6, 7, 7, 7, 7, 7]
 	$g_oBldgMaxQty.add($eBldgGoldM, $aBldgCollector)
-	$g_oBldgMaxQty.add($eBldgElixirC, $aBldgCollector)
-	Local Const $aBldgDrill[$g_iMaxTHLevel] = [0, 0, 0, 0, 0, 0, 1, 2, 2, 3, 3, 3, 3, 3]
+	$g_oBldgMaxQty.add($eBldgElixirC, $aBldgcollector)
+	Local Const $aBldgDrill[$g_iMaxTHLevel]  = [0, 0, 0, 0, 0, 0, 1, 2, 2, 3, 3, 3, 3, 3]
 	$g_oBldgMaxQty.add($eBldgDrill, $aBldgDrill)
 	Local Const $aBldgStorage[$g_iMaxTHLevel] = [1, 1, 2, 2, 2, 2, 2, 3, 4, 4, 4, 4, 4, 4]
 	$g_oBldgMaxQty.add($eBldgGoldS, $aBldgStorage)
-	$g_oBldgMaxQty.add($eBldgElixirS, $aBldgStorage)
+	$g_oBldgMaxQty.add($eBldgElixirS, $aBldgstorage)
 	Local Const $aBldgDarkStorage[$g_iMaxTHLevel] = [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1]
-	$g_oBldgMaxQty.add($eBldgDarkS, $aBldgDarkStorage)
-	Local Const $aBldgEagle[$g_iMaxTHLevel] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1]
+	$g_oBldgMaxQty.add($eBldgDarkS, $aBldgDarkstorage)
+	Local Const $aBldgEagle[$g_iMaxTHLevel]  = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1]
 	$g_oBldgMaxQty.add($eBldgEagle, $aBldgEagle)
 	Local Const $aBldgInferno[$g_iMaxTHLevel] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 3, 3, 3]
-	$g_oBldgMaxQty.add($eBldgInferno, $aBldgInferno)
-	Local Const $aBldgMortar[$g_iMaxTHLevel] = [0, 0, 1, 1, 1, 2, 3, 4, 4, 4, 4, 4, 4, 4]
+	$g_oBldgMaxQty.add($eBldgInferno, $aBldginferno)
+	Local Const $aBldgMortar[$g_iMaxTHLevel]  = [0, 0, 1, 1, 1, 2, 3, 4, 4, 4, 4, 4, 4, 4]
 	$g_oBldgMaxQty.add($eBldgMortar, $aBldgMortar)
 	Local Const $aBldgWizTower[$g_iMaxTHLevel] = [0, 0, 0, 0, 1, 2, 2, 3, 4, 4, 5, 5, 5, 5]
-	$g_oBldgMaxQty.add($eBldgWizTower, $aBldgWizTower)
-	Local Const $aBldgXBow[$g_iMaxTHLevel] = [0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 4, 4, 4, 4]
+	$g_oBldgMaxQty.add($eBldgWizTower, $aBldgwiztower)
+	Local Const $aBldgXBow[$g_iMaxTHLevel] =  [0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 4, 4, 4, 4]
 	$g_oBldgMaxQty.add($eBldgXBow, $aBldgXBow)
 	Local Const $aBldgAirDefense[$g_iMaxTHLevel] = [0, 0, 0, 1, 1, 2, 3, 3, 4, 4, 4, 4, 4, 4]
-	$g_oBldgMaxQty.add($eBldgAirDefense, $aBldgAirDefense)
+	$g_oBldgMaxQty.add($eBldgAirDefense, $aBldgairdefense)
 	Local const $aBldgScatterShot[$g_iMaxTHLevel] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2]
 	$g_oBldgMaxQty.add($eBldgScatter, $aBldgScatterShot)
 EndFunc   ;==>_FilloBldgMaxQty
@@ -1935,6 +1937,7 @@ $g_oBldgImages.add($eBldgWizTower & "_" & "1", @ScriptDir & "\imgxml\Buildings\W
 $g_oBldgImages.add($eBldgMortar & "_" & "0", @ScriptDir & "\imgxml\Buildings\Mortars")
 $g_oBldgImages.add($eBldgAirDefense & "_" & "0", @ScriptDir & "\imgxml\Buildings\ADefense")
 $g_oBldgImages.add($eBldgScatter & "_" & "0", @ScriptDir & "\imgxml\Buildings\ScatterShot")
+$g_obldgimages.add($ebldgclancastle & "_" & "0", @ScriptDir & "\imgxml\Buildings\ClanCastle") ; Custom CSV - Team AIO Mod++
 ; EOF
 
 ; Clan Games v3
@@ -2041,7 +2044,7 @@ Func PetUpgradeCostPerLevel()
 			[0, 135, 150, 165, 180, 195, 210, 225, 240, 255], _  ; Electro Owl
 			[0, 165, 185, 205, 225, 245, 255, 265, 275, 285], _  ; Mighty Yak
 			[0, 210, 220, 230, 240, 250, 260, 270, 280, 290]]    ; Unicorn
-			
+
 	$g_aiPetUpgradeCostPerLevel = $aiPetUpgradeCostPerLevel
 EndFunc
 

@@ -197,7 +197,7 @@ Func GetLocationBuilding($iBuildingType, $iAttackingTH = 13, $bForceCaptureRegio
 	Local $tempNewLevel, $tempExistingLevel, $sLocCoord, $sNearCoord, $sFarCoord, $directory, $iCountUpdate
 
 	; error proof TH level
-	If Not IsInt($iAttackingTH) Or not (Number($iAttackingTH) > 0) Then $iAttackingTH = 13 ; Custom fix - Team AIO Mod++
+	If Not IsInt($iAttackingTH) Or not (Number($iAttackingTH) > 0) Then $iAttackingTH = $g_iMaxTHLevel ; Custom fix - Team AIO Mod++
 
 	; Get path to image file
 	If _ObjSearch($g_oBldgImages, $iBuildingType & "_" & $g_iDetectedImageType) = True Then ; check if image exists to prevent error when snow images are not avialable for building type
@@ -224,6 +224,8 @@ Func GetLocationBuilding($iBuildingType, $iAttackingTH = 13, $bForceCaptureRegio
 	EndIf
 
 	; Get redline data
+	$redLines = "ECD"
+	#cs
 	If _ObjSearch($g_oBldgAttackInfo, $eBldgRedLine & "_OBJECTPOINTS") = True Then
 		If _ObjGetValue($g_oBldgAttackInfo, $eBldgRedLine & "_COUNT") > 50 Then ; if count is less 50, try again to more red line locations
 			$redLines = _ObjGetValue($g_oBldgAttackInfo, $eBldgRedLine & "_OBJECTPOINTS")
@@ -242,7 +244,8 @@ Func GetLocationBuilding($iBuildingType, $iAttackingTH = 13, $bForceCaptureRegio
 		$redLines = ""
 		$bRedLineExists = False
 	EndIf
-
+	#ce
+	
 	; get max building level available for TH
 	Local $maxLevel = _ObjGetValue($g_oBldgLevels, $iBuildingType)[$iAttackingTH - 1]
 	If @error Then

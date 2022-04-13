@@ -29,7 +29,7 @@ Func ParseAttackCSV_Read_SIDE_variables()
 	$g_bCSVLocateMortar = False
 	$g_bCSVLocateAirDefense = False
 	$g_bCSVLocateWall = False
-	; $g_bCSVLocateGemBox = False
+	$g_bCSVLocateClanCastle = False ; Custom CSV - Team AIO Mod++
 
 	If $g_iMatchMode = $DB Then
 		Local $filename = $g_sAttackScrScriptName[$DB]
@@ -103,7 +103,7 @@ Func ParseAttackCSV_Read_SIDE_variables()
 									$g_bCSVLocateInferno = True
 								Case "XBOW"
 									$g_bCSVLocateXBow = True
-								Case "SCATTER"
+								Case "SCATTER", "SCATTERSHOT"
 									$g_bCSVLocateScatter = True
 								Case "WIZTOWER"
 									$g_bCSVLocateWizTower = True
@@ -115,6 +115,8 @@ Func ParseAttackCSV_Read_SIDE_variables()
 									$g_bCSVLocateWall = True
 								Case "IN-WALL"
 									$g_bCSVLocateWall = True
+								Case "CLANCASTLE"
+									$g_bCSVLocateClanCastle = True
 								Case Else
 									SetDebugLog("Invalid MAKE building target name: " & $value8, $COLOR_WARNING)
 									debugAttackCSV("Invalid MAKE building target name: " & $value8)

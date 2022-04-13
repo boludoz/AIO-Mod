@@ -21,6 +21,11 @@ Func ParseAttackCSV($debug = False)
 	; TL , TR , BL , BR
 	Local $sides2drop[4] = [False, False, False, False]
 
+	#Region - Custom CSV - Team AIO Mod++
+	$g_sTownHallVectors = ""
+	Local $iHowNamyInferno = 0
+	#EndRegion - Custom CSV - Team AIO Mod++
+
 	For $v = 0 To 25 ; Zero all 26 vectors from last atttack in case here is error MAKE'ing new vectors
 		Assign("ATTACKVECTOR_" & Chr(65 + $v), "", $ASSIGN_EXISTFAIL) ; start with character "A" = ASCII 65
 		If @error Then SetLog("Failed to erase old vector: " & Chr(65 + $v) & ", ask code monkey to fix!", $COLOR_ERROR)
@@ -167,12 +172,21 @@ Func ParseAttackCSV($debug = False)
 									; value7 = randomY ignored as image find location will be "random" without need to add more variability
 									; value8 = Building target for drop points
 									If $value3 > 0 Then ; check for valid number of drop points
-										Local $tmpArray = MakeTargetDropPoints(Eval($sidex), $value3, $value4, $value8)
+										If $value8 = "INFERNO" Then $iHowNamyInferno += 1
+										SetDebugLog("$value8: " & $value8 & " $iHowNamyInferno: " & $iHowNamyInferno)
+										debugattackcsv("$value8: " & $value8 & " $iHowNamyInferno: " & $iHowNamyInferno)
+										Local $tmparray = MakeTargetDropPoints(Eval($sidex), $value3, $value4, $value8, $iHowNamyInferno)
 										If @error Then
-											$sErrorText = "MakeTargetDropPoints: " & @error ; set flag
+											$serrortext = "MakeTargetDropPoints: " & @error
+											If @error = 2 Then
+												SetLog("ERROR NUMBER 2 " & StringUpper($value8) & " WITHOUT ANY DETECTION")
+												DebugAttackCSV($value8 & " Locations not found, ATTACKVECTOR_" & $value1 & " EMPTY")
+												ContinueLoop
+											EndIf
 										Else
-											Assign("ATTACKVECTOR_" & $value1, $tmpArray) ; assing vector
-											$sTargetVectors &= $value1 ; add letter of every vector using building target to string to error check DROP command
+											Assign("ATTACKVECTOR_" & $value1, $tmparray)
+											If $value8 = "TOWNHALL" Then $g_sTownHallVectors &= $value1
+											$stargetvectors &= $value1
 										EndIf
 									Else
 										$sErrorText = "value 3"
@@ -197,6 +211,18 @@ Func ParseAttackCSV($debug = False)
 						EndIf
 					#Region - Custom DROP - Team AIO Mod++
 					Case "DROP"
+						
+						If $g_iimglocthlevel < 12 And $g_iimglocthlevel > 0 And $value4 = "FSpell" And $g_sTownHallVectors <> "" And StringInStr($g_sTownHallVectors, $value1) Then
+							CheckIfTownHallGotDestroyed("")
+							If $g_sTownHallVectors <> "" Then
+								releaseclicks()
+								SetLog("Skip Drop Of Freeze Spell As It's Townhall " & $g_iimglocthlevel)
+								CheckHeroesHealth()
+								If _Sleep($delayrespond) Then Return 
+								ContinueLoop
+							EndIf
+						EndIf
+						
 						KeepClicks()
 						;index...
 						Local $index1, $index2, $indexArray, $indexvect
@@ -644,16 +670,92 @@ Func ParseAttackCSV($debug = False)
 					Case "RECALC"
 						ReleaseClicks()
 						PrepareAttack($g_iMatchMode, True)
-
+						
+					#Region - Custom CSV - Team AIO Mod++
+					Case "PHOTO"
+						releaseclicks()
+						attackcsvdebugimage()
+					Case "SWIPEAB"
+						releaseclicks()
+						If $g_itotalattackslot > 10 Then
+							If $g_bdraggedattackbar Then
+								SetLog("SWIPEAB: Swipe to 1st Page of attackbar.")
+								debugattackcsv("SWIPEAB: Swipe to 1st Page of attackbar.")
+								DragAttackBar($g_itotalattackslot, True)
+							Else
+								SetLog("SWIPEAB: Swipe to 2nd Page of attackbar.")
+								debugattackcsv("SWIPEAB: Swipe to 2nd Page of attackbar.")
+								DragAttackBar($g_itotalattackslot, False)
+							EndIf
+						Else
+							SetLog("Discard row: " & $iline + 1 & ", SWIPEAB: You should have 11+ slot to use this commAnd")
+							debugattackcsv("Discard row: " & $iline + 1 & ", SWIPEAB: You should have 11+ slot to use this commAnd")
+						EndIf
+						If _Sleep($delayrespond) Then Return 
 					Case Else
+						; BBS Comment: tanks for pro mac.
 						Switch StringLeft($command, 1)
 							Case ";", "#", "'"
 								; also comment
 								debugAttackCSV("comment line")
 							Case Else
-								SetLog("attack row bad, discard: row " & $iLine + 1, $COLOR_ERROR)
+								Local $bFoundCondition = False
+								
+								If StringInStr($command, "RETH") Then
+									$bFoundCondition = True
+									debugattackcsv("RETH line")
+									releaseclicks()
+									If $g_bcsvlocatestoragetownhall = True And not CheckIfTownHallGotDestroyed() Then
+										ReLocateBuildings("TOWNHALL")
+									Else
+										SetLog("> Townhall search not needed, skip")
+									EndIf
+								EndIf
+								
+								If StringInStr($command, "REEAG") Then
+									$bFoundCondition = True
+									debugattackcsv("REEAG line")
+									releaseclicks()
+									If $g_bcsvlocateeagle = True Then
+										SetLog("Recalculating Eagle position!, Please wait...")
+										ReLocateBuildings("EAGLE")
+										debugattackcsv("$g_aiCSVEagleArtilleryPos: " & UBound($g_aicsveagleartillerypos))
+									Else
+										SetDebugLog("> " & $g_sbldgnames[$ebldgeagle] & " detection not needed, skipping", $color_debug)
+									EndIf
+								EndIf
+		
+								If StringInStr($command, "REAIR") Then
+									$bFoundCondition = True
+									debugattackcsv("REAIR line")
+									releaseclicks()
+									If $g_bcsvlocateairdefense = True Then
+										SetLog("Recalculating Air Defenses positions!, Please wait...")
+										ReLocateBuildings("AIRDEFENSE")
+										debugattackcsv("$g_aiCSVAirDefensePos: " & UBound($g_aicsvairdefensepos))
+									Else
+										SetDebugLog("> " & $g_sbldgnames[$ebldgairdefense] & " detection not needed, skipping", $color_debug)
+									EndIf
+								EndIf
+		
+								If StringInStr($command, "REINF") Then
+									$bFoundCondition = True
+									$iHowNamyInferno = 0
+									debugattackcsv("REINF line")
+									releaseclicks()
+									If $g_bcsvlocateinferno = True Then
+										SetLog("Recalculating Infernos positions!, Please wait...")
+										ReLocateBuildings("INFERNO")
+										debugattackcsv("$g_aiCSVInfernoPos: " & UBound($g_aicsvinfernopos))
+									Else
+										SetDebugLog("> " & $g_sbldgnames[$ebldginferno] & " detection not needed, skipping", $color_debug)
+									EndIf
+								EndIf
+
+								If $bFoundCondition = False Then SetLog("attack row bad, discard: row " & $iLine + 1, $COLOR_ERROR)
 						EndSwitch
 				EndSwitch
+				#EndRegion - Custom CSV - Team AIO Mod++
 			Else
 				If StringLeft($line, 7) <> "NOTE  |" And StringLeft($line, 7) <> "      |" And StringStripWS(StringUpper($line), 2) <> "" Then SetLog("attack row error, discard: row " & $iLine + 1, $COLOR_ERROR)
 			EndIf
@@ -687,17 +789,19 @@ Func CheckIfSiegeDroppedTheTroops($hSleepTimer, $aSiegeSlotPos)
 EndFunc   ;==>CheckIfSiegeDroppedTheTroops
 
 ;This Function is used to check if Townhall is destroyed
-Func CheckIfTownHallGotDestroyed($hSleepTimer)
+Func CheckIfTownHallGotDestroyed($hSleepTimer = "")
 	Static $hPopupTimer = 0
+	
 	Local $bIsTHDestroyed = False
 	; Check if got any star
-	Local $bWonOneStar = _CheckPixel($aWonOneStar, True)
-	Local $bWonTwoStar = _CheckPixel($aWonTwoStar, True)
+	_CaptureRegion()
+	Local $bWonOneStar = _CheckPixel($aWonOneStar, False)
+	Local $bWonTwoStar = _CheckPixel($aWonTwoStar, False)
 	; Check for the centrally popped up star
-	Local $bCentralStarPopup = _ColorCheck(_GetPixelColor(Int($g_iGAME_WIDTH / 2) - 2, Int($g_iGAME_HEIGHT / 2) - 2, True), Hex(0xC0C4C0, 6), 20) And _
-							   _ColorCheck(_GetPixelColor(Int($g_iGAME_WIDTH / 2) - 2, Int($g_iGAME_HEIGHT / 2) + 2, True), Hex(0xC0C4C0, 6), 20) And _
-							   _ColorCheck(_GetPixelColor(Int($g_iGAME_WIDTH / 2) + 2, Int($g_iGAME_HEIGHT / 2) + 2, True), Hex(0xC0C4C0, 6), 20) And _
-							   _ColorCheck(_GetPixelColor(Int($g_iGAME_WIDTH / 2) + 2, Int($g_iGAME_HEIGHT / 2) - 2, True), Hex(0xC0C4C0, 6), 20)
+	Local $bCentralStarPopup = _ColorCheck(_GetPixelColor(Int($g_iGAME_WIDTH / 2) - 2, Int($g_iGAME_HEIGHT / 2) - 2, False), Hex(0xC0C4C0, 6), 20) And _
+							   _ColorCheck(_GetPixelColor(Int($g_iGAME_WIDTH / 2) - 2, Int($g_iGAME_HEIGHT / 2) + 2, False), Hex(0xC0C4C0, 6), 20) And _
+							   _ColorCheck(_GetPixelColor(Int($g_iGAME_WIDTH / 2) + 2, Int($g_iGAME_HEIGHT / 2) + 2, False), Hex(0xC0C4C0, 6), 20) And _
+							   _ColorCheck(_GetPixelColor(Int($g_iGAME_WIDTH / 2) + 2, Int($g_iGAME_HEIGHT / 2) - 2, False), Hex(0xC0C4C0, 6), 20)
 	;Get Current Damge %
 	Local $iDamage = Number(getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY))
 
@@ -726,6 +830,7 @@ Func CheckIfTownHallGotDestroyed($hSleepTimer)
 	EndIf
 	SetDebugLog("WAIT--> $iDamage: " & $iDamage & ", $bCentralStarPopup: " & $bCentralStarPopup & ", $bWonOneStar: " & $bWonOneStar & ", $bWonTwoStar: " & $bWonTwoStar & ", $bIsTHDestroyed: " & $bIsTHDestroyed, $COLOR_INFO)
 	If $bIsTHDestroyed Then SetDebugLog("WAIT--> Town Hall Got Destroyed After " & Round(__TimerDiff($hSleepTimer)) & "ms.", $COLOR_SUCCESS)
+	If $bIsTHDestroyed Then $g_sTownHallVectors = ""
 	Return $bIsTHDestroyed
 EndFunc   ;==>CheckIfTownHallGotDestroyed
 
@@ -1156,3 +1261,142 @@ Func ParseAttackCSV_MainSide($debug = False)
 	EndIf
 EndFunc   ;==>ParseAttackCSV_MainSide
 
+; Custom CSV - Team AIO Mod++ (Thx to BigSalami) inspired in pro mac
+Func ReLocateBuildings($sBuilding)
+	Local $buildingenum = getemunbuildings($sBuilding)
+	If @error Then Return @error
+	Local $aBuildings = NULL 
+	Local $sreducedsearchzone = NULL , $simagepath = NULL 
+	Local $htimer = __timerinit()
+	If _objsearch($g_obldgattackinfo, $buildingenum & "_LOCATION") Then
+		$aBuildings = _objgetvalue($g_obldgattackinfo, $buildingenum & "_LOCATION")
+		If NOT @error Then
+			Local $atempbuildingloc[0]
+			If IsArray($aBuildings) And UBound($aBuildings, $ubound_rows) > 0 Then
+				If IsArray($aBuildings) And UBound($aBuildings) > 0 And IsArray($aBuildings[0]) And $aBuildings[0] <> "" Then
+					For $item = 0 To UBound($aBuildings) - 1
+						Local $single = $aBuildings[$item]
+						debugattackcsv("ReLocateBuildings " & $g_sbldgnames[$buildingenum] & " _LOCATION " & $item + 1 & " located at " & _arraytostring($single))
+						Local $x = $single[0] - 50, $y = $single[1] - 50, $x1 = $single[0] + 50, $y1 = $single[1] + 50
+						$sreducedsearchzone = $x & "," & $y & "," & $x1 & "," & $y1
+						debugattackcsv("ReLocateBuildings " & "To reduce the search we can use " & $sreducedsearchzone)
+						$simagepath = DefenseNameInObj($sBuilding)
+						debugattackcsv("ReLocateBuildings " & "$sImagePath: " & $simagepath)
+						If buildingexist($sreducedsearchzone, $simagepath) Then
+							ReDim $atempbuildingloc[UBound($atempbuildingloc) + 1]
+							$atempbuildingloc[UBound($atempbuildingloc) - 1] = $single
+						EndIf
+					Next
+					If UBound($atempbuildingloc) > 0 Then
+						debugattackcsv(StringUpper($sBuilding) & " FOUND " & UBound($atempbuildingloc) & " POSITIONS.")
+					Else
+						debugattackcsv(StringUpper($sBuilding) & " WITHOUT ANY LOCATION")
+					EndIf
+					updatepositions($sBuilding, $atempbuildingloc)
+				Else
+					debugattackcsv("ReLocateBuildings " & $g_sbldgnames[$buildingenum] & " _LOCATION KEY not an array")
+				EndIf
+			Else
+				debugattackcsv("ReLocateBuildings " & "Doesn't exist the " & $sBuilding & "_LOCATION KEY")
+			EndIf
+		Else
+			debugattackcsv("ReLocateBuildings " & $sBuilding & "_LOCATION KEY ERROR " & @error)
+		EndIf
+	Else
+		debugattackcsv("ReLocateBuildings " & "Doesn't exist the " & $sBuilding & " Dictionary")
+	EndIf
+	Local $itime = __timerdiff($htimer) * 0.001
+	debugattackcsv("ReLocateBuildings(s) found in: " & Round($itime, 2) & " seconds ")
+EndFunc
+
+Func updatepositions($sBuilding, $atempbuildingloc)
+	Local $buildingenum = getemunbuildings($sBuilding)
+	If IsArray($atempbuildingloc) And UBound($atempbuildingloc) > 0 Then
+		_objputvalue($g_obldgattackinfo, $buildingenum & "_LOCATION", $atempbuildingloc)
+		If @error Then
+			debugattackcsv("UpdatePositions ERROR _ObjPutValue ")
+			$atempbuildingloc = ""
+		EndIf
+	Else
+		$atempbuildingloc = ""
+		_objdeletekey($g_obldgattackinfo, $buildingenum & "_LOCATION")
+	EndIf
+	Switch $sBuilding
+		Case "TOWNHALL"
+			If IsArray($atempbuildingloc) And UBound($atempbuildingloc) > 0 Then
+				Local $th = $atempbuildingloc[0]
+				$g_aitownhalldetails[0] = $th[0]
+				$g_aitownhalldetails[1] = $th[1]
+				$g_ithx = $th[0]
+				$g_ithy = $th[1]
+			Else
+				$g_aitownhalldetails[0] = -1
+				$g_aitownhalldetails[1] = -1
+				$g_ithx = 0
+				$g_ithy = 0
+			EndIf
+		Case "EAGLE"
+			$g_aicsveagleartillerypos = $atempbuildingloc
+		Case "INFERNO"
+			$g_aicsvinfernopos = $atempbuildingloc
+		Case "XBOW"
+			$g_aicsvxbowpos = $atempbuildingloc
+		Case "SCATTER", "SCATTERSHOT"
+			$g_aicsvscatterpos = $atempbuildingloc
+		Case "WIZTOWER"
+			$g_aicsvwiztowerpos = $atempbuildingloc
+		Case "MORTAR"
+			$g_aicsvmortarpos = $atempbuildingloc
+		Case "AIRDEFENSE"
+			$g_aicsvairdefensepos = $atempbuildingloc
+		Case Else
+			SetLog("Defense name not understood", $color_error)
+			Return SetError(1, 0, "")
+	EndSwitch
+EndFunc
+
+Func buildingexist($sreducedsearchzone, $simagepath)
+	Local $abuildingdiamond = getdiamondfromrect($sreducedsearchzone)
+	Local $aResult = findmultiple($simagepath, $abuildingdiamond, $abuildingdiamond, 0, 1000, 0, "objectpoints", True)
+	If UBound($aResult) > 0 And not @error Then Return True
+	Return False
+EndFunc
+
+Func getemunbuildings($sBuilding)
+	Local $buildingenum = NULL 
+	Switch $sBuilding
+		Case "TOWNHALL"
+			$buildingenum = $ebldgtownhall
+		Case "EAGLE"
+			$buildingenum = $ebldgeagle
+		Case "INFERNO"
+			$buildingenum = $ebldginferno
+		Case "XBOW"
+			$buildingenum = $ebldgxbow
+		Case "WIZTOWER"
+			$buildingenum = $ebldgwiztower
+		Case "MORTAR"
+			$buildingenum = $ebldgmortar
+		Case "AIRDEFENSE"
+			$buildingenum = $ebldgairdefense
+		Case "EX-WALL"
+			$buildingenum = $eexternalwall
+		Case "IN-WALL"
+			$buildingenum = $einternalwall
+		Case "SCATTER", "SCATTERSHOT"
+			$buildingenum = $eBldgScatter
+		Case "CLANCASTLE"
+			$buildingenum = $ebldgclancastle
+		Case Else
+			SetLog("Defense name not understood", $COLOR_ERROR) ; impossible error as value is checked earlier
+			Return SetError(1, 0, "")
+	EndSwitch
+	Return $buildingenum
+EndFunc
+
+Func DefenseNameInObj($sBuilding)
+	Local $buildingpath = _objgetvalue($g_obldgimages, getemunbuildings($sBuilding) & "_0")
+	If Not @error Then Return $buildingpath
+	SetLog("Defense name not understood", $COLOR_ERROR) ; impossible error as value is checked earlier
+	Return ""
+EndFunc

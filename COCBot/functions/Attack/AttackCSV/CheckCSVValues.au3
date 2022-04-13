@@ -97,7 +97,10 @@ Func CheckCsvValues($instruction, $variablenumber, $variable)
 							Return True
 						Case "IN-WALL"
 							Return True
-						Case "SCATTER"
+						; Custom CSV - Team AIO Mod++ (Thx to BigSalami)
+						Case "SCATTER", "SCATTERSHOT"
+							Return True
+						Case "CLANCASTLE"
 							Return True
 						Case Else
 							Return False

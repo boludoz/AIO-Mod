@@ -18,147 +18,107 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func MakeDropPoints($side, $pointsQty, $addtiles, $versus, $randomx = 2, $randomy = 2)
-	debugAttackCSV("make for side " & $side)
-	Local $Vector, $Output = ""
-	Local $rndx = Random(0, Abs(Int($randomx)), 1)
-	Local $rndy = Random(0, Abs(Int($randomy)), 1)
-	If $side = "RANDOM" Then
+	Local $asidenames = ["TOP-LEFT-DOWN", "TOP-LEFT-UP", "TOP-RIGHT-DOWN", "TOP-RIGHT-UP", "BOTTOM-LEFT-DOWN", "BOTTOM-LEFT-UP", "BOTTOM-RIGHT-DOWN", "BOTTOM-RIGHT-UP"]
+	debugattackcsv("make for side " & $side)
+	Local $droppoints, $Output = ""
+	If StringInStr($randomx, "_S") Then
+		Local $rndx = StringRegExpReplace($randomx, "[^-0-9]", "")
+	Else
+		Local $rndx = Random(0, Abs(Int($randomx)), 1)
+		If Int($randomx) < 0 Then $rndx = -$rndx
 	EndIf
+	
+	If StringInStr($randomy, "_S") Then
+		Local $rndy = StringRegExpReplace($randomy, "[^-0-9]", "")
+	Else
+		Local $rndy = Random(0, Abs(Int($randomy)), 1)
+		If Int($randomy) < 0 Then $rndy = -$rndy
+	EndIf
+	
+	If $side = "RANDOM" Then
+		$side = $asidenames[Random(0, UBound($asidenames) - 1, 1)]
+	EndIf
+	
 	Switch $side
 		Case "TOP-LEFT-DOWN"
-			Local $Vector = $g_aiPixelTopLeftDOWNDropLine
+			$droppoints = $g_aipixeltopleftdowndropline
 		Case "TOP-LEFT-UP"
-			Local $Vector = $g_aiPixelTopLeftUPDropLine
+			$droppoints = $g_aipixeltopleftupdropline
 		Case "TOP-RIGHT-DOWN"
-			Local $Vector = $g_aiPixelTopRightDOWNDropLine
+			$droppoints = $g_aipixeltoprightdowndropline
 		Case "TOP-RIGHT-UP"
-			Local $Vector = $g_aiPixelTopRightUPDropLine
+			$droppoints = $g_aipixeltoprightupdropline
 		Case "BOTTOM-LEFT-UP"
-			Local $Vector = $g_aiPixelBottomLeftUPDropLine
+			$droppoints = $g_aipixelbottomleftupdropline
 		Case "BOTTOM-LEFT-DOWN"
-			Local $Vector = $g_aiPixelBottomLeftDOWNDropLine
+			$droppoints = $g_aipixelbottomleftdowndropline
 		Case "BOTTOM-RIGHT-UP"
-			Local $Vector = $g_aiPixelBottomRightUPDropLine
+			$droppoints = $g_aipixelbottomrightupdropline
 		Case "BOTTOM-RIGHT-DOWN"
-			Local $Vector = $g_aiPixelBottomRightDOWNDropLine
+			$droppoints = $g_aipixelbottomrightdowndropline
 		Case Else
 	EndSwitch
+	
+	If UBound($droppoints) <= 0 Then Return ""
+	
 	If $versus = "IGNORE" Then $versus = "EXT-INT" ; error proof use input if misuse targeted MAKE command
-	If Int($pointsQty) > 0 Then
-		Local $pointsQtyCleaned = Abs(Int($pointsQty))
+	If Int($pointsQty) > 1 Then
+		$pointsQty = Abs(Int($pointsQty)) - 1
 	Else
-		Local $pointsQtyCleaned = 1
+		$pointsQty = 2
 	EndIf
-	Local $p = Int(UBound($Vector) / $pointsQtyCleaned)
-	If $p = 0 Then $p = 1
+	
 	Local $x = 0
 	Local $y = 0
-
-	Local $str = ""
-	For $i = 0 To UBound($Vector) - 1
-		Local $pixel = $Vector[$i]
-		$str &= $pixel[0] & "-" & $pixel[1] & "|"
-	Next
-
-	Switch $side & "|" & $versus
-		Case "TOP-LEFT-DOWN|INT-EXT", "TOP-LEFT-UP|EXT-INT", "TOP-RIGHT-DOWN|EXT-INT", "TOP-RIGHT-UP|INT-EXT", "BOTTOM-LEFT-DOWN|EXT-INT", "BOTTOM-LEFT-UP|INT-EXT", "BOTTOM-RIGHT-DOWN|INT-EXT", "BOTTOM-RIGHT-UP|EXT-INT"
+	Switch $side
+		Case "TOP-LEFT-DOWN", "TOP-LEFT-UP", "TOP-RIGHT-DOWN", "TOP-RIGHT-UP", "BOTTOM-LEFT-DOWN", "BOTTOM-LEFT-UP", "BOTTOM-RIGHT-DOWN", "BOTTOM-RIGHT-UP"
 			;From right to left
-			For $i = UBound($Vector) To 1 Step -1
-				$pixel = $Vector[$i - 1]
+			For $i = 0 To $pointsQty
+				Local $percent = $i / $pointsQty
+				Local $idx = Round($percent * (UBound($droppoints) - 1))
+				Local $pixel = $droppoints[$idx]
 				$x += $pixel[0]
 				$y += $pixel[1]
-				If Mod(UBound($Vector) - $i + 1, $p) = 0 Then
-					For $u = 8 * Abs(Int($addtiles)) To 0 Step -1
-						If Int($addtiles) > 0 Then
-							Local $l = $u
-						Else
-							Local $l = -$u
-						EndIf
-						Switch $side
-							Case "TOP-LEFT-UP", "TOP-LEFT-DOWN"
-								Local $x1 = Round($x / $p) - $l
-								Local $y1 = Round($y / $p) - $l
-								Local $x2 = Round($x / $p) - $l - $rndx
-								Local $y2 = Round($y / $p) - $l - $rndy
-							Case "TOP-RIGHT-UP", "TOP-RIGHT-DOWN"
-								Local $x1 = Round($x / $p) + $l
-								Local $y1 = Round($y / $p) - $l
-								Local $x2 = Round($x / $p) + $l + $rndx
-								Local $y2 = Round($y / $p) - $l - $rndy
-							Case "BOTTOM-LEFT-UP", "BOTTOM-LEFT-DOWN"
-								Local $x1 = Round($x / $p) - $l
-								Local $y1 = Round($y / $p) + $l
-								Local $x2 = Round($x / $p) - $l - $rndx
-								Local $y2 = Round($y / $p) + $l + $rndy
-							Case "BOTTOM-RIGHT-UP", "BOTTOM-RIGHT-DOWN"
-								Local $x1 = Round($x / $p) + $l
-								Local $y1 = Round($y / $p) + $l
-								Local $x2 = Round($x / $p) + $l + $rndx
-								Local $y2 = Round($y / $p) + $l + $rndy
-							Case Else
-						EndSwitch
-						$pixel = StringSplit($x2 & "-" & $y2, "-", 2)
-						If isInsideDiamondRedArea($pixel) Then ExitLoop
-					Next
+				For $u = 8 * Abs(Int($addtiles)) To 0 Step -1
+					If Int($addtiles) > 0 Then
+						Local $l = $u
+					Else
+						Local $l = -$u
+					EndIf
+					Switch $side
+						Case "TOP-LEFT-UP", "TOP-LEFT-DOWN"
+							Local $x2 = $x - $l - $rndx - $addtiles
+							Local $y2 = $y - $l - $rndy + $addtiles
+						Case "TOP-RIGHT-UP", "TOP-RIGHT-DOWN"
+							Local $x2 = $x + $l + $rndx + $addtiles
+							Local $y2 = $y - $l - $rndy + $addtiles
+						Case "BOTTOM-LEFT-UP", "BOTTOM-LEFT-DOWN"
+							Local $x2 = $x - $l - $rndx - $addtiles
+							Local $y2 = $y + $l + $rndy - $addtiles
+						Case "BOTTOM-RIGHT-UP", "BOTTOM-RIGHT-DOWN"
+							Local $x2 = $x + $l + $rndx + $addtiles
+							Local $y2 = $y + $l + $rndy - $addtiles
+						Case Else
+					EndSwitch
 					$pixel = StringSplit($x2 & "-" & $y2, "-", 2)
-					$Output &= $pixel[0] & "-" & $pixel[1] & "|"
-					$x = 0
-					$y = 0
-				EndIf
+					If isinsidediamondredarea($pixel) Then ExitLoop
+					If $addtiles < 0 And $y2 > $deployablelrtb[3] Then ExitLoop
+				Next
+				$pixel = StringSplit($x2 & "-" & $y2, "-", 2)
+				$Output &= $pixel[0] & "-" & $pixel[1] & "|"
+				$x = 0
+				$y = 0
 			Next
-		Case "TOP-LEFT-DOWN|EXT-INT", "TOP-LEFT-UP|INT-EXT", "TOP-RIGHT-DOWN|INT-EXT", "TOP-RIGHT-UP|EXT-INT", "BOTTOM-LEFT-DOWN|INT-EXT", "BOTTOM-LEFT-UP|EXT-INT", "BOTTOM-RIGHT-DOWN|EXT-INT", "BOTTOM-RIGHT-UP|INT-EXT"
-			;From left to right
-			For $i = 1 To UBound($Vector)
-				$pixel = $Vector[$i - 1]
-				$x += $pixel[0]
-				$y += $pixel[1]
-				If Mod($i, $p) = 0 Then
-					For $u = 8 * Abs(Int($addtiles)) To 0 Step -1
-						If Int($addtiles) > 0 Then
-							Local $l = $u
-						Else
-							Local $l = -$u
-						EndIf
-						Switch $side
-							Case "TOP-LEFT-UP", "TOP-LEFT-DOWN"
-								Local $x1 = Round($x / $p) - $l
-								Local $y1 = Round($y / $p) - $l
-								Local $x2 = Round($x / $p) - $l - $rndx
-								Local $y2 = Round($y / $p) - $l - $rndy
-							Case "TOP-RIGHT-UP", "TOP-RIGHT-DOWN"
-								Local $x1 = Round($x / $p) + $l
-								Local $y1 = Round($y / $p) - $l
-								Local $x2 = Round($x / $p) + $l + $rndx
-								Local $y2 = Round($y / $p) - $l - $rndy
-							Case "BOTTOM-LEFT-UP", "BOTTOM-LEFT-DOWN"
-								Local $x1 = Round($x / $p) - $l
-								Local $y1 = Round($y / $p) + $l
-								Local $x2 = Round($x / $p) - $l - $rndx
-								Local $y2 = Round($y / $p) + $l + $rndy
-							Case "BOTTOM-RIGHT-UP", "BOTTOM-RIGHT-DOWN"
-								Local $x1 = Round($x / $p) + $l
-								Local $y1 = Round($y / $p) + $l
-								Local $x2 = Round($x / $p) + $l + $rndx
-								Local $y2 = Round($y / $p) + $l + $rndy
-							Case Else
-						EndSwitch
-						$pixel = StringSplit($x2 & "-" & $y2, "-", 2)
-						If isInsideDiamondRedArea($pixel) Then ExitLoop
-					Next
-					$pixel = StringSplit($x2 & "-" & $y2, "-", 2)
-					$Output &= $pixel[0] & "-" & $pixel[1] & "|"
-					$x = 0
-					$y = 0
-				EndIf
-			Next
-
 		Case Else
 	EndSwitch
-
 	If StringLen($Output) > 0 Then $Output = StringLeft($Output, StringLen($Output) - 1)
-	Return GetListPixel($Output)
+	Local $outputdroppoints = getlistpixel($Output)
+	Switch $side & "|" & $versus
+		Case "TOP-LEFT-DOWN|INT-EXT", "TOP-LEFT-UP|EXT-INT", "TOP-RIGHT-DOWN|EXT-INT", "TOP-RIGHT-UP|INT-EXT", "BOTTOM-LEFT-DOWN|EXT-INT", "BOTTOM-LEFT-UP|INT-EXT", "BOTTOM-RIGHT-DOWN|INT-EXT", "BOTTOM-RIGHT-UP|EXT-INT"
+			_ArrayReverse($outputdroppoints)
+	EndSwitch
+	Return $outputdroppoints
 EndFunc   ;==>MakeDropPoints
-
 
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: MakeTargetDropPoints
@@ -182,51 +142,25 @@ EndFunc   ;==>MakeDropPoints
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func MakeTargetDropPoints($side, $pointsQty, $addtiles, $building)
-	;MakeTargetDropPoints(Eval($sidex), $value3,   $value4,   $value8))
-
-	debugAttackCSV("make for side " & $side & ", target: " & $building)
-
-	Local $Vector, $Output = ""
+Func MakeTargetDropPoints($side, $pointsQty, $addtiles, $building, $hownamybuildings = 1)
+	debugattackcsv("MakeTargetDropPoints(" & $side & "," & $pointsQty & "," & $addtiles & "," & $building & "," & $hownamybuildings & ")")
+	
+	Local $Output = ""
 	Local $x, $y
 	Local $sLoc, $aLocation, $pixel[2], $BuildingEnum, $result, $array
-
-	Switch $building ; translate CSV building name into building enum
-		Case "TOWNHALL"
-			$BuildingEnum = $eBldgTownHall
-		Case "EAGLE"
-			$BuildingEnum = $eBldgEagle
-		Case "INFERNO"
-			$BuildingEnum = $eBldgInferno
-		Case "XBOW"
-			$BuildingEnum = $eBldgXBow
-		Case "WIZTOWER"
-			$BuildingEnum = $eBldgWizTower
-		Case "MORTAR"
-			$BuildingEnum = $eBldgMortar
-		Case "AIRDEFENSE"
-			$BuildingEnum = $eBldgAirDefense
-		Case "EX-WALL"
-			$BuildingEnum = $eExternalWall
-		Case "IN-WALL"
-			$BuildingEnum = $eInternalWall
-		Case "SCATTER"
-			$BuildingEnum = $eBldgScatter
-		Case Else
-			SetLog("Defense name not understood", $COLOR_ERROR) ; impossible error as value is checked earlier
-			SetError(1, 0, "")
-			Return
-	EndSwitch
-
-	Local $aBuildingLoc = _ObjGetValue($g_oBldgAttackInfo, $BuildingEnum & "_LOCATION")
-	;Local $aBuildingLoc  = $g_oBldgAttackInfo.item($BuildingEnum & "_LOCATION") ; Get building location data without error check
+	$BuildingEnum = getemunbuildings($building)
+	If @error Then Return @error
+	
+	Local $aBuildingLoc = _objgetvalue($g_obldgattackinfo, $BuildingEnum & "_LOCATION")
 	If @error Then
-		_ObjErrMsg("_ObjGetValue " & $g_sBldgNames[$BuildingEnum] & " _LOCATION", @error) ; Log errors
-		SetError(2, 0, "")
-		Return
+		_objerrmsg("_ObjGetValue " & $g_sbldgnames[$BuildingEnum] & " _LOCATION", @error)
+		debugattackcsv("_ObjGetValue " & $g_sbldgnames[$BuildingEnum] & " _LOCATION, Dictonary error " & @error)
+		Return SetError(2, 0, "")
 	EndIf
-
-	If IsArray($aBuildingLoc) Then
+	
+	Local $aDistances[0][2]
+	debugattackcsv("$aBuildingLoc _LOCATION array: " & _ArrayToString($aBuildingLoc, ",", -1, -1, "|"))
+	If IsArray($aBuildingLoc) And UBound($aBuildingLoc, $ubound_rows) > 0 Then
 		If UBound($aBuildingLoc, 1) > 1 And IsArray($aBuildingLoc[1]) Then ; cycle thru all building locations
 			;For Inferno Get Closet To Townhall First Regarding of what there side was assigned.
 			If $building = "INFERNO" Then
@@ -236,33 +170,49 @@ Func MakeTargetDropPoints($side, $pointsQty, $addtiles, $building)
 				;MAKE  |Z          |RIGHT-FRONT|1          |0          |IGNORE     |0          |0          |INFERNO    |           |
 				;W will have most closet inferno Locaion then X Will have 2nd closest Location then Z will have Most Far Away Inferno Location
 				Local $iMinDistance = 0
-				Local $aTownhallLoc = [$g_iTHx, $g_iTHy]
+				Local $aTownhallLoc = [$g_ithx, $g_ithy]
 				For $p = 0 To UBound($aBuildingLoc) - 1
 					Local $aTempLocation = $aBuildingLoc[$p]     ; pull sub-array from inside location array
 					;Chcek If Building Location Not Assigned Already
 					If Not CheckIfBuildingAssigenedToVector($aTempLocation, $aBuildingLoc) Then
-						Local $d = GetPixelDistance($aTownhallLoc, $aTempLocation)
-						SetDebugLog("GetPixelDistance: " & $d & " | From Townhall | " & _ArrayToString($aTownhallLoc, ",") & " | Points: " & _ArrayToString($aTempLocation, ","))
+						Local $d = getpixeldistance($aTownhallLoc, $aTempLocation)
+						ReDim $aDistances[UBound($aDistances) + 1][2]
+						$aDistances[UBound($aDistances) - 1][0] = Int($d)
+						$aDistances[UBound($aDistances) - 1][1] = $aTempLocation
+						debugattackcsv("GetPixelDistance: " & $d & " | From Townhall | " & _ArrayToString($aTownhallLoc, ",") & " | Points: " & _ArrayToString($aTempLocation, ","))
 						If ($d < $iMinDistance Or $iMinDistance = 0) Then
 							$iMinDistance = $d
 							$aLocation = $aTempLocation
 						EndIf
+					Else
+						debugattackcsv("Building " & $building & " points are in ATTACKVECTOR_" & PointsAssigenedToVector($aTempLocation, $aBuildingLoc))
 					EndIf
 				Next
+				debugattackcsv("INFERNOS | $aDistances: " & UBound($aDistances) & " $hownamybuildings: " & $hownamybuildings)
+				debugattackcsv("BEFORE: " & _ArrayToString($aDistances, ",", -1, -1, "|"))
+				_ArraySort($aDistances, 0, 0, 0, 0)
+				If UBound($aDistances) >= $hownamybuildings Then
+					debugattackcsv("AFTER: " & _ArrayToString($aDistances, ",", -1, -1, "|"))
+					$aLocation = $aDistances[$hownamybuildings - 1][1]
+				Else
+					If IsArray($aDistances) And UBound($aDistances) > 0 Then $aLocation = $aDistances[0][1]
+				EndIf
 			Else
 				For $p = 0 To UBound($aBuildingLoc) - 1
 					$array = $aBuildingLoc[$p] ; pull sub-array from inside location array
 					$result = IsPointOnSide($array, $side) ; Determine if target building on side specified
-					If @error Then ; not normal
+					If @error Then
 						Return SetError(4, 0, "")
 					EndIf
-					SetDebugLog("Building location IsPointOnSide: " & $side & " | " & $result & " | Points: " & _ArrayToString($array, ","))
+					debugattackcsv("Building location IsPointOnSide: " & $side & " | " & $result & " | Points: " & _ArrayToString($array, ","))
 					If $result = True Then
 						Local $aTempLocation = $aBuildingLoc[$p] ; pull sub-array from inside location array
 						;Chcek If Building Location Not Assigned Already
 						If Not CheckIfBuildingAssigenedToVector($aTempLocation, $aBuildingLoc) Then
 							$aLocation = $aTempLocation
 							ExitLoop
+						Else
+							debugattackcsv("Building " & $building & " points are in ATTACKVECTOR_" & PointsAssigenedToVector($aTempLocation, $aBuildingLoc))
 						EndIf
 					EndIf
 				Next
@@ -275,34 +225,42 @@ Func MakeTargetDropPoints($side, $pointsQty, $addtiles, $building)
 						If Not CheckIfBuildingAssigenedToVector($aTempLocation, $aBuildingLoc) Then
 							$aLocation = $aTempLocation
 							ExitLoop
+						Else
+							debugattackcsv("Building " & $building & " points are in ATTACKVECTOR_" & PointsAssigenedToVector($aTempLocation, $aBuildingLoc))
 						EndIf
 					Next
 				EndIf
 			EndIf
 		Else     ; use only building found even if not on user chosen side?
-			Local $aTempLocation = $aBuildingLoc[0] ; pull sub-array from inside location array
-			;Chcek If Building Location Not Assigned Already
-			If Not CheckIfBuildingAssigenedToVector($aTempLocation, $aBuildingLoc) Then
-				$aLocation = $aTempLocation
+			If IsArray($aBuildingLoc) And UBound($aBuildingLoc) > 0 And IsArray($aBuildingLoc[0]) And $aBuildingLoc[0] <> "" Then
+				Local $aTempLocation = $aBuildingLoc[0] ; pull sub-array from inside location array
+				;Chcek If Building Location Not Assigned Already
+				If Not CheckIfBuildingAssigenedToVector($aTempLocation, $aBuildingLoc) Then
+					$aLocation = $aTempLocation
+				Else
+					debugattackcsv("Building " & $building & " points are in ATTACKVECTOR_" & PointsAssigenedToVector($aTempLocation, $aBuildingLoc))
+				EndIf
+			Else
+				SetLog($g_sbldgnames[$BuildingEnum] & " _LOCATION not an array", $COLOR_ERROR)
+				Return SetError(3, 0, "")
 			EndIf
 		EndIf
 	Else
-		SetLog($g_sBldgNames[$BuildingEnum] & " _LOCATION not an array", $COLOR_ERROR)
+		SetLog($g_sbldgnames[$BuildingEnum] & " _LOCATION not an array", $COLOR_ERROR)
 		Return SetError(3, 0, "")
 	EndIf
-
 	If ($aLocation = "") Then
-		SetLog($g_sBldgNames[$BuildingEnum] & " No Unique Location Found", $COLOR_ERROR)
+		SetLog($g_sbldgnames[$BuildingEnum] & " No Unique Location Found", $COLOR_ERROR)
 		Return SetError(3, 0, "")
 	EndIf
-
+	
 	;Just make sure Drop points is not nagative
 	Local $pointsQtyCleaned = 1
 	If Int($pointsQty) > 0 Then
 		$pointsQtyCleaned = Abs(Int($pointsQty))
 	EndIf
 	;Building Vector Can Only Be An Odd Number
-	If Mod(Int($pointsQtyCleaned), 2) = 1 Then ; _MathCheckDiv deprecated - Team AIO Mod++
+	If Mod(Int($pointsQtyCleaned), 2) <> 0 Then ; _MathCheckDiv deprecated - Team AIO Mod++
 		;First Check Add Tiles To Buildings Location
 		$x += $aLocation[0]
 		$y += $aLocation[1]
@@ -315,31 +273,30 @@ Func MakeTargetDropPoints($side, $pointsQty, $addtiles, $building)
 			EndIf
 			Switch $side
 				Case "TOP-LEFT-UP", "TOP-LEFT-DOWN"
-					$pixel[0] = $x - $l
-					$pixel[1] = $y - $l
+					$pixel[0] = $x - $l - $addtiles
+					$pixel[1] = $y - $l + $addtiles
 				Case "TOP-RIGHT-UP", "TOP-RIGHT-DOWN"
-					$pixel[0] = $x + $l
-					$pixel[1] = $y - $l
+					$pixel[0] = $x + $l + $addtiles
+					$pixel[1] = $y - $l + $addtiles
 				Case "BOTTOM-LEFT-UP", "BOTTOM-LEFT-DOWN"
-					$pixel[0] = $x - $l
-					$pixel[1] = $y + $l
+					$pixel[0] = $x - $l - $addtiles
+					$pixel[1] = $y + $l - $addtiles
 				Case "BOTTOM-RIGHT-UP", "BOTTOM-RIGHT-DOWN"
-					$pixel[0] = $x + $l
-					$pixel[1] = $y + $l
+					$pixel[0] = $x + $l + $addtiles
+					$pixel[1] = $y + $l - $addtiles
 				Case Else
 					SetLog("Silly code monkey 'MAKE' TargetDropPoints mistake", $COLOR_ERROR)
-					SetError(5, 0, "")
-					Return
+					Return SetError(5, 0, "")
 			EndSwitch
-			If isInsideDiamondRedArea($pixel) Then ExitLoop
+			If isinsidediamondredarea($pixel) Then ExitLoop
 		Next
-		If isInsideDiamondRedArea($pixel) = False Then SetDebugLog("MakeTargetDropPoints() ADDTILES error!")
-
+		If isinsidediamondredarea($pixel) = False Then SetDebugLog("MakeTargetDropPoints() ADDTILES error!")
 		;if Just One Drop Point Defined
 		If $pointsQtyCleaned = 1 Then
 			$sLoc = $pixel[0] & "-" & $pixel[1]     ; make string for modified building location
-			SetLog("Target drop point for " & $g_sBldgNames[$BuildingEnum] & " (adding " & $addtiles & " tiles): " & $sLoc)
-			Return GetListPixel($sLoc, "-", "MakeTargetDropPoints TARGET")     ; return ADDTILES modified location array
+			SetLog("Target drop points for " & $g_sbldgnames[$BuildingEnum] & " (adding " & $addtiles & " tiles): " & $sLoc)
+			debugattackcsv("Target drop points for " & $g_sbldgnames[$BuildingEnum] & " (adding " & $addtiles & " tiles): " & $sLoc)
+			Return getlistpixel($sLoc, "-", "MakeTargetDropPoints TARGET")     ; return ADDTILES modified location array
 		Else
 			;Second Check On Drop Points Add Left And Right Tiles To The Drop Points
 			;Modify Building Location After Adding Tile, Now X,Y Has After Add Tiles Pixel
@@ -361,6 +318,7 @@ Func MakeTargetDropPoints($side, $pointsQty, $addtiles, $building)
 					_ArrayReverse($iBuildingTiles)
 			EndSwitch
 			SetDebugLog($side & " | iBuildingTiles: " & _ArrayToString($iBuildingTiles))
+			debugattackcsv($side & " | iBuildingTiles: " & _ArrayToString($iBuildingTiles))
 			For $i = 0 To UBound($iBuildingTiles) - 1
 				$x += $aLocation[0]
 				$y += $aLocation[1]
@@ -373,23 +331,22 @@ Func MakeTargetDropPoints($side, $pointsQty, $addtiles, $building)
 					EndIf
 					Switch $side
 						Case "TOP-LEFT-UP", "TOP-LEFT-DOWN"
-							$pixel[0] = $x + $l
-							$pixel[1] = $y - $l
+							$pixel[0] = $x + $l + $iBuildingTiles[$i]
+							$pixel[1] = $y - $l + $iBuildingTiles[$i]
 						Case "TOP-RIGHT-UP", "TOP-RIGHT-DOWN"
-							$pixel[0] = $x + $l
-							$pixel[1] = $y + $l
+							$pixel[0] = $x + $l + $iBuildingTiles[$i]
+							$pixel[1] = $y + $l - $iBuildingTiles[$i]
 						Case "BOTTOM-LEFT-UP", "BOTTOM-LEFT-DOWN"
-							$pixel[0] = $x + $l
-							$pixel[1] = $y + $l
+							$pixel[0] = $x + $l + $iBuildingTiles[$i]
+							$pixel[1] = $y + $l - $iBuildingTiles[$i]
 						Case "BOTTOM-RIGHT-UP", "BOTTOM-RIGHT-DOWN"
-							$pixel[0] = $x + $l
-							$pixel[1] = $y - $l
+							$pixel[0] = $x + $l + $iBuildingTiles[$i]
+							$pixel[1] = $y - $l + $iBuildingTiles[$i]
 						Case Else
 							SetLog("Silly code monkey 'MAKE' TargetDropPoints mistake", $COLOR_ERROR)
-							SetError(5, 0, "")
-							Return
+							Return SetError(5, 0, "")
 					EndSwitch
-					If isInsideDiamondRedArea($pixel) Then ExitLoop
+					If isinsidediamondredarea($pixel) Then ExitLoop
 					ExitLoop
 				Next
 				$Output &= $pixel[0] & "-" & $pixel[1] & "|"
@@ -397,14 +354,14 @@ Func MakeTargetDropPoints($side, $pointsQty, $addtiles, $building)
 				$y = 0
 			Next
 			If StringLen($Output) > 0 Then $Output = StringLeft($Output, StringLen($Output) - 1)
-			SetLog("Target drop points for " & $g_sBldgNames[$BuildingEnum] & " (adding " & $addtiles & " tiles): " & $Output)
-			Return GetListPixel($Output)
+			SetLog("Target drop points for " & $g_sbldgnames[$BuildingEnum] & " (adding " & $addtiles & " tiles): " & $Output)
+			debugattackcsv("Target drop points for " & $g_sbldgnames[$BuildingEnum] & " (adding " & $addtiles & " tiles): " & $Output)
+			Return getlistpixel($Output)
 		EndIf
 	Else
 		SetLog("MakeTargetDropPoint Error Building Drop Point Can't be Even Number", $COLOR_ERROR)
 		Return SetError(6, 0, "")
 	EndIf
-
 EndFunc   ;==>MakeTargetDropPoints
 
 ; Interate Over All Vectors And See If Building Location Is Already Assiged To Any Other Vector
@@ -422,3 +379,17 @@ Func CheckIfBuildingAssigenedToVector($aTempLocation, $aBuildingLoc)
 	Next
 	Return $isFound
 EndFunc   ;==>CheckIfBuildingAssigenedToVector
+
+Func PointsAssigenedToVector($aTempLocation, $aBuildingLoc)
+	Local $isFound = "ERROR"
+	For $v = 0 To 25
+		Local $sAlphabat = Chr(65 + $v)                 ; start with character "A" = ASCII 65
+		For $i = 0 To UBound(Execute("$ATTACKVECTOR_" & $sAlphabat)) - 1
+			Local $pixel = Execute("$ATTACKVECTOR_" & $sAlphabat & "[" & $i & "]")
+			If ($aTempLocation[0] = $pixel[0] And $aTempLocation[1] = $pixel[1]) Then
+				Return $sAlphabat
+			EndIf
+		Next
+	Next
+	Return $isFound
+EndFunc   ;==>PointsAssigenedToVector

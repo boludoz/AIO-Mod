@@ -159,6 +159,7 @@ Func ReferenceGlobals()
 	$a1 = $aIsReloadError
 	$a1 = $g_iAndroidControlClickWindow
 
+	$a1 = $g_sTownHallVectors ; Custom DROP - Team AIO Mod++
 	$a1 = $ATTACKVECTOR_A
 	$a1 = $ATTACKVECTOR_B
 	$a1 = $ATTACKVECTOR_C
