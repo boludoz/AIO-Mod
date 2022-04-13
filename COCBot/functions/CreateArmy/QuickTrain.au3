@@ -215,7 +215,7 @@ Func QuickTrain($bPreTrainFlag = $g_bDoubleTrain) ; Custom train - Team AIO Mod+
 		SetLog("Quick Train failed. Unable to detect training status.", $COLOR_ERROR)
 		Return
 	EndIf
-
+	
 	Switch _Min($iTroopStatus, $iSpellStatus)
 		Case 0
 			If Not OpenQuickTrainTab(False, "QuickTrain()") Then Return
@@ -223,7 +223,7 @@ Func QuickTrain($bPreTrainFlag = $g_bDoubleTrain) ; Custom train - Team AIO Mod+
 			TrainArmyNumber($g_bQuickTrainArmy)
 			If $bPreTrainFlag Then TrainArmyNumber($g_bQuickTrainArmy)
 		Case 1
-			If $g_bIsFullArmywithHeroesAndSpells Or $bPreTrainFlag Then
+			If $g_bIsFullArmywithHeroesAndSpells Or $bPreTrainFlag And $g_bTrainBeforeAttack Then ; Custom Train - Team AIO Mod++
 				If $g_bIsFullArmywithHeroesAndSpells Then SetLog(" - Your Army is Full, let's make troops before Attack!", $COLOR_INFO)
 				If Not OpenQuickTrainTab(False, "QuickTrain()") Then Return
 				If _Sleep(750) Then Return
@@ -410,7 +410,9 @@ Func CheckQuickTrainTroop()
 			; check if an army has troops , spells
 			If Not $g_bQuickArmyMixed And $TempTroopTotal > 0 And $TempSpellTotal > 0 Then $g_bQuickArmyMixed = True
 			SetDebugLog("$g_bQuickArmyMixed: " & $g_bQuickArmyMixed)
-
+			
+			If _Sleep(1500) Then Return
+			
 			; cross check with army camp
 			If _ArrayMax($g_aiArmyQuickTroops) > 0 Then
 				Local $TroopCamp = GetCurrentArmy(48, 160)
