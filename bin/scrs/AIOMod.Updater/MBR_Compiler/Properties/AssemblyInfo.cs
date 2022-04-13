@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Allgemeine Informationen über eine Assembly werden über die folgenden
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
 // die einer Assembly zugeordnet sind.
-[assembly: AssemblyTitle("MyBot.run Compiler")]
+[assembly: AssemblyTitle("AIOMod.Updater Compiler")]
 [assembly: AssemblyDescription("Compiler to generate a zipped Bot Version")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("MyBot.run Team")]
-[assembly: AssemblyProduct("MyBot.run Compiler")]
+[assembly: AssemblyCompany("AIOMod.Updater Team")]
+[assembly: AssemblyProduct("AIOMod.Updater Compiler")]
 [assembly: AssemblyCopyright("Copyright ©  2021")]
 [assembly: AssemblyTrademark("MBR")]
 [assembly: AssemblyCulture("")]

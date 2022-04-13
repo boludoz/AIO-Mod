@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29306.81
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyBot.run Compiler", "MBR_Compiler\MyBot.run Compiler.csproj", "{BCDB36D5-4544-4EF3-B807-8189EE50A9D4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIOMod.Updater Compiler", "MBR_Compiler\AIOMod.Updater Compiler.csproj", "{BCDB36D5-4544-4EF3-B807-8189EE50A9D4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
