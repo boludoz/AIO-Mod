@@ -120,7 +120,7 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			Next
 
 			; Setlog limit
-			GUICtrlSetState($g_hTxtLogLineLimit, ($g_bChkBotLogLineLimit = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
+			GUICtrlSetState($g_hChkBotLogLineLimit, ($g_bChkBotLogLineLimit = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
 			GUICtrlSetData($g_hTxtLogLineLimit, Abs($g_iTxtLogLineLimit))
 
 			; Skip first check
