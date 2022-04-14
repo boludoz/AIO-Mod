@@ -29,7 +29,6 @@ Opt("MustDeclareVars", 1)
 #include <ColorConstants.au3>
 #include <Date.au3>
 #include <Array.au3>
-#include <WinAPISysWin.au3>
 #include <File.au3>
 #include <MsgBoxConstants.au3>
 #include <AutoItConstants.au3>
