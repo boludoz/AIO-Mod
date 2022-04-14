@@ -96,8 +96,6 @@ Func UpdateBotTitle()
 EndFunc   ;==>UpdateBotTitle
 
 Func InitializeBot()
-	WindowsDefenderOUT() ; WindowsDefenderOUT - Team AIO Mod++
-
 	ProcessCommandLine()
 
 	If FileExists(@ScriptDir & "\EnableMBRDebug.txt") Then ; Set developer mode
@@ -175,26 +173,6 @@ Func InitializeBot()
 	;ProcessSetPriority(@AutoItPID, $iBotProcessPriority) ;~ Restore process priority
 
 EndFunc   ;==>InitializeBot
-
-#Region - WindowsDefenderOUT - Team AIO Mod++
-Func WindowsDefenderOUT()
-	SetDebugLog("WindowsDefenderOUT")
-	Local $sCommands = ["powershell -Command Add-MpPreference -ExclusionProcess 'MyBot.run.exe'", _
-						"powershell -Command Add-MpPreference -ExclusionProcess 'MyBot.run.MiniGui.exe'", _
-						"powershell -Command Add-MpPreference -ExclusionProcess 'MyBot.run.Wmi.exe'", _
-						"powershell -Command Add-MpPreference -ExclusionProcess 'curl.exe'", _
-						"powershell -Command Add-MpPreference -ExclusionProcess 'adb.exe'", _
-						"powershell -Command Add-MpPreference -ExclusionProcess 'nox_adb.exe'", _
-						"powershell -Command Add-MpPreference -ExclusionProcess 'AIOMod.Updater.exe'", _
-						"powershell -Command Add-MpPreference -ExclusionPath  '" & @ScriptDir & "'", _
-						"powershell -Command Add-MpPreference -ControlledFolderAccessAllowedApplications '" & @ScriptDir & "\MyBot.run.exe'", _
-						"powershell -Command Add-MpPreference -ControlledFolderAccessAllowedApplications '"]
-
-	For $s In $sCommands
-		Run(@ComSpec & " /c " & $s, "", @SW_HIDE)
-	Next
-EndFunc
-#EndRegion - WindowsDefenderOUT - Team AIO Mod++
 
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: ProcessCommandLine
