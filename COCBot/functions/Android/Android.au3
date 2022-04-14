@@ -1089,7 +1089,11 @@ Func OpenAndroid($bRestart = False, $bStartOnlyAndroid = False, $wasRunState = $
 EndFunc   ;==>OpenAndroid
 
 Func _OpenAndroid($bRestart = False, $bStartOnlyAndroid = False)
-    CloseEmulatorForce(True) ; Custom fix - Team AIO Mod++
+	; Custom fix - Team AIO Mod++
+	FindPreferredAdbPath()
+	resumeAndroid()
+	; Custom fix - Team AIO Mod++
+    CloseEmulatorForce(True)
 
 	; list Android devices to ensure ADB Daemon is launched
 	Local $hMutex = AquireAdbDaemonMutex(), $process_killed

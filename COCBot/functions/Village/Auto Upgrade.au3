@@ -20,23 +20,70 @@ Func AutoUpgrade($bTest = False)
 	Return $Result
 EndFunc
 
+; Based in xbebenk and snorlax (the best devs)
+Func ClickDragAUpgrade($YY = Default, $DragCount = 1)
+	Local $x = 420, $yUp = 103, $yDown = 800, $Delay = 1000
+	Local $Yscroll =  164 + (($g_iTotalBuilderCount - $g_iFreeBuilderCount) * 28)
+	If $YY = Default Then $YY = $Yscroll
+	For $checkCount = 0 To 2
+		If Not $g_bRunState Then Return
+		If _ColorCheck(_GetPixelColor(350,73, True), "fdfefd", 20) Then ;check upgrade window border
+			If $YY < 100 Then $YY = 150
+			If $DragCount > 1 Then
+				For $i = 1 To $DragCount
+					ClickDrag($x, $YY, $x, $yUp, $Delay) ;drag up
+				Next
+			Else
+				ClickDrag($x, $YY, $x, $yUp, $Delay) ;drag up
+			EndIf
+			If _Sleep(1000) Then Return
+		EndIf
+		
+		If _ColorCheck(_GetPixelColor(350,73, True), "fdfefd", 20) Then ;check upgrade window border
+			SetLog("Upgrade Window Exist", $COLOR_INFO)
+			Return True
+		Else
+			SetLog("Upgrade Window Gone!", $COLOR_DEBUG)
+			Click(295, 30)
+			If _Sleep(1000) Then Return
+		EndIf
+	Next
+	Return False
+EndFunc ;==>IsUpgradeWindow
+
 Func _AutoUpgrade()
 	If Not $g_bAutoUpgradeEnabled Then Return
 
 	SetLog("Starting Auto Upgrade", $COLOR_INFO)
 	Local $iLoopAmount = 0
-	Local $iLoopMax = 6
+	Local $iLoopMax = 100
 
+	ClickAway()
+	
+	VillageReport(True, True)
+	If _sleep($DELAYAUTOUPGRADEBUILDING1) Then Return
+	
+	; open the builders menu
+	Click(295, 30)
+	If _Sleep($DELAYAUTOUPGRADEBUILDING1) Then Return
+
+	Static $s_hHBitmap  = 0
+	Static $s_hHBitmap2 = 0
 	While 1
 
-		$iLoopAmount += 1
-		If $iLoopAmount >= $iLoopMax Or $iLoopAmount >= 12 Then ExitLoop ; 6 loops max, to avoid infinite loop
-
-		ClickAway()
-		If _sleep($DELAYAUTOUPGRADEBUILDING1) Then Return
-		VillageReport(True, True)
+		$iloopamount += 1
+		If $iloopamount >= $iloopmax And $iloopmax <> 0 Then
+			Local $iMaxLoop = -1
+			While _PixelSearch(205, 79, 305, 103, Hex(0xD4FF80, 6), 25) = False And $iMaxLoop < 3
+				Swipe(345, 125, 345, 375, 1000)
+				If _Sleep(Random(1000, 2000, 1)) Then Return
+				$iMaxLoop += 1
+			Wend 
+			ExitLoop
+		EndIf
 
 		;Check if there is a free builder for Auto Upgrade
+		getBuilderCount(True) ;check if we have available builder
 		If ($g_iFreeBuilderCount - ($g_bAutoUpgradeWallsEnable And $g_bUpgradeWallSaveBuilder ? 1 : 0) - ReservedBuildersForHeroes()) <= 0 Then
 			SetLog("No builder available. Skipping Auto Upgrade!", $COLOR_WARNING)
 			ExitLoop
@@ -48,17 +95,40 @@ Func _AutoUpgrade()
 			ExitLoop
 		EndIf
 
-		; open the builders menu
-		Click(295, 30)
-		If _Sleep($DELAYAUTOUPGRADEBUILDING1) Then Return
-
 		; search for 000 in builders menu, if 000 found, a possible upgrade is available
 		If QuickMIS("BC1", $g_sImgAUpgradeZero, 180, 80 + $g_iNextLineOffset, 480, 350) Then
-			SetLog("Possible upgrade found !", $COLOR_SUCCESS)
+			SetLog("Possible upgrade found !", $color_success)
 			$g_iCurrentLineOffset = $g_iNextLineOffset + $g_iQuickMISY
 		Else
-			SetLog("No upgrade available... Exiting Auto Upgrade...", $COLOR_INFO)
-			ExitLoop
+			If $iloopamount <= $iloopmax And $iloopmax <> 0 Then
+				SetLog("Scroll Attempts: " & $iloopamount & " / " & $iloopmax, $color_info)
+				
+				; Cap 1
+				_CaptureRegion()
+				If $s_hHBitmap <> 0 Then GdiDeleteHBitmap($s_hHBitmap) ; Prevent memory leaks.
+				$s_hHBitmap = GetHHBitmapArea($g_hHBitmap)
+				
+				ClickDragAUpgrade(328)
+				
+				; Cap 2
+				If _Sleep($DELAYDONATECC2 * 5) Then Return
+				
+				_CaptureRegion()
+				If $s_hHBitmap2 <> 0 Then GdiDeleteHBitmap($s_hHBitmap2) ; Prevent memory leaks.
+				$s_hHBitmap2 = GetHHBitmapArea($g_hHBitmap)
+				
+				If _MasivePixelCompare($s_hHBitmap, $s_hHBitmap2, 205, 85, 335, 135, 15, 5, False, 15.0) Then
+					$iloopamount = $iLoopMax + 1
+					SetLog("My eye detected the end, chau.", $COLOR_INFO)
+				EndIf
+				
+				$g_icurrentlineoffset = 0
+				$g_inextlineoffset = 0
+				ContinueLoop
+			Else
+				SetLog("No possible upgrade found!", $color_success)
+				ExitLoop
+			EndIf
 		EndIf
 
 		; check in the line of the 000 if we can see "New" or the Gear of the equipment, in this case, will not do the upgrade
