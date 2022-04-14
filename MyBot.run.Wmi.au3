@@ -28,10 +28,9 @@
 Opt("MustDeclareVars", 1)
 
 #include <APIErrorsConstants.au3>
-#include <Misc.au3>
-#include <WinAPI.au3>
-#include <WinAPISys.au3>
-#include <WinAPISysWin.au3>
+;~ #include <Misc.au3>
+;~ #include <WinAPI.au3>
+;~ #include <WinAPISys.au3>
 #include <WinAPIProc.au3>
 #include <ProcessConstants.au3>
 #include <ColorConstants.au3>
