@@ -10,7 +10,7 @@
 
 ; #INDEX# =======================================================================================================================
 ; Title .........: GDIPlus
-; AutoIt Version : 3.3.15.4
+; AutoIt Version : 3.3.16.0
 ; Language ......: English
 ; Description ...: Functions that assist with Microsoft Windows GDI+ management.
 ;                  It enables applications to use graphics and formatted text on both the video display and the printer.
@@ -1894,7 +1894,7 @@ Func _GDIPlus_GraphicsGetCompositingMode($hGraphics)
 	If @error Then Return SetError(@error, @extended, -1)
 	If $aCall[0] Then Return SetError(10, $aCall[0], -1)
 
-	Return $aCall[2]
+	Return $aCall[2] - 1
 EndFunc   ;==>_GDIPlus_GraphicsGetCompositingMode
 
 ; #FUNCTION# ====================================================================================================================
@@ -1906,7 +1906,7 @@ Func _GDIPlus_GraphicsGetCompositingQuality($hGraphics)
 	If @error Then Return SetError(@error, @extended, -1)
 	If $aCall[0] Then Return SetError(10, $aCall[0], -1)
 
-	Return $aCall[2]
+	Return $aCall[2] - 1
 EndFunc   ;==>_GDIPlus_GraphicsGetCompositingQuality
 
 ; #FUNCTION# ====================================================================================================================
@@ -1930,7 +1930,7 @@ Func _GDIPlus_GraphicsGetInterpolationMode($hGraphics)
 	If @error Then Return SetError(@error, @extended, -1)
 	If $aCall[0] Then Return SetError(10, $aCall[0], -1)
 
-	Return $aCall[2]
+	Return $aCall[2] - 1
 EndFunc   ;==>_GDIPlus_GraphicsGetInterpolationMode
 
 ; #FUNCTION# ====================================================================================================================
@@ -2136,7 +2136,7 @@ EndFunc   ;==>_GDIPlus_GraphicsSetClipRegion
 ; Modified.......: Eukalyptus
 ; ===============================================================================================================================
 Func _GDIPlus_GraphicsSetCompositingMode($hGraphics, $iCompositionMode)
-	Local $aCall = DllCall($__g_hGDIPDll, "int", "GdipSetCompositingMode", "handle", $hGraphics, "int", $iCompositionMode)
+	Local $aCall = DllCall($__g_hGDIPDll, "int", "GdipSetCompositingMode", "handle", $hGraphics, "int", $iCompositionMode + 1)
 	If @error Then Return SetError(@error, @extended, False)
 	If $aCall[0] Then Return SetError(10, $aCall[0], False)
 
@@ -2148,7 +2148,7 @@ EndFunc   ;==>_GDIPlus_GraphicsSetCompositingMode
 ; Modified.......: Eukalyptus
 ; ===============================================================================================================================
 Func _GDIPlus_GraphicsSetCompositingQuality($hGraphics, $iCompositionQuality)
-	Local $aCall = DllCall($__g_hGDIPDll, "int", "GdipSetCompositingQuality", "handle", $hGraphics, "int", $iCompositionQuality)
+	Local $aCall = DllCall($__g_hGDIPDll, "int", "GdipSetCompositingQuality", "handle", $hGraphics, "int", $iCompositionQuality + 1)
 	If @error Then Return SetError(@error, @extended, False)
 	If $aCall[0] Then Return SetError(10, $aCall[0], False)
 
@@ -2160,7 +2160,7 @@ EndFunc   ;==>_GDIPlus_GraphicsSetCompositingQuality
 ; Modified.......: UEZ
 ; ===============================================================================================================================
 Func _GDIPlus_GraphicsSetInterpolationMode($hGraphics, $iInterpolationMode)
-	Local $aCall = DllCall($__g_hGDIPDll, "int", "GdipSetInterpolationMode", "handle", $hGraphics, "int", $iInterpolationMode)
+	Local $aCall = DllCall($__g_hGDIPDll, "int", "GdipSetInterpolationMode", "handle", $hGraphics, "int", $iInterpolationMode + 1)
 	If @error Then Return SetError(@error, @extended, False)
 	If $aCall[0] Then Return SetError(10, $aCall[0], False)
 
@@ -2172,7 +2172,7 @@ EndFunc   ;==>_GDIPlus_GraphicsSetInterpolationMode
 ; Modified.......: UEZ
 ; ===============================================================================================================================
 Func _GDIPlus_GraphicsSetPixelOffsetMode($hGraphics, $iPixelOffsetMode)
-	Local $aCall = DllCall($__g_hGDIPDll, "int", "GdipSetPixelOffsetMode", "handle", $hGraphics, "int", $iPixelOffsetMode)
+	Local $aCall = DllCall($__g_hGDIPDll, "int", "GdipSetPixelOffsetMode", "handle", $hGraphics, "int", $iPixelOffsetMode + 1)
 	If @error Then Return SetError(@error, @extended, False)
 	If $aCall[0] Then Return SetError(10, $aCall[0], False)
 

@@ -9,7 +9,7 @@
 
 ; #INDEX# =======================================================================================================================
 ; Title .........: Debug
-; AutoIt Version : 3.3.15.4
+; AutoIt Version : 3.3.16.0
 ; Language ......: English
 ; Description ...: Functions to help script debugging.
 ; Author(s) .....: Nutster, Jpm, Valik, guinness, water
@@ -157,6 +157,7 @@ Func _DebugSetup(Const $sTitle = Default, $bBugReportInfos = Default, $vReportTy
 	Switch $vReportType
 		Case 1
 			; Report Log window
+			#forceref __Debug_ReportWindowWrite
 			$__g_sReportCallBack_Debug = "__Debug_ReportWindowWrite("
 		Case 2
 			; ConsoleWrite
@@ -169,6 +170,7 @@ Func _DebugSetup(Const $sTitle = Default, $bBugReportInfos = Default, $vReportTy
 			$__g_sReportCallBack_Debug = "FileWrite('" & $sLogFile & "',"
 		Case 5
 			; Report notepad window
+			#forceref __Debug_ReportNotepadWrite
 			$__g_sReportCallBack_Debug = "__Debug_ReportNotepadWrite("
 		Case Else
 			If Not IsString($vReportType) Then Return SetError(2, 0, 0) ; invalid Report type

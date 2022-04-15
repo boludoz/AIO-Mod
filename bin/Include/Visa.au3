@@ -4,7 +4,7 @@
 
 ; #INDEX# =======================================================================================================================
 ; Title .........: Visa
-; AutoIt Version : 3.3.15.4
+; AutoIt Version : 3.3.16.0
 ; Language ......: English
 ; Description ...: VISA (GPIB & TCP) library for AutoIt.
 ;                  Functions that allow controlling instruments (e.g. oscilloscopes,

@@ -11,7 +11,7 @@
 
 ; #INDEX# =======================================================================================================================
 ; Title .........: WinAPI Extended UDF Library for AutoIt3
-; AutoIt Version : 3.3.15.4
+; AutoIt Version : 3.3.16.0
 ; Description ...: Additional variables, constants and functions for the WinAPIFiles.au3
 ; Author(s) .....: Yashied, jpm
 ; ===============================================================================================================================
@@ -985,7 +985,7 @@ Func _WinAPI_GetDriveNumber($sDrive)
 	Local $hFile = _WinAPI_CreateFileEx('\\.\' & $sDrive, $OPEN_EXISTING, 0, $FILE_SHARE_READWRITE)
 	If @error Then Return SetError(@error + 20, @extended, 0)
 
-	Local $tSDN = DllStructCreate('dword;ulong;ulong')
+	Local $tSDN = DllStructCreate('dword;dword;dword')
 	Local $aCall = DllCall('kernel32.dll', 'bool', 'DeviceIoControl', 'handle', $hFile, 'dword', 0x002D1080, 'ptr', 0, _
 			'dword', 0, 'struct*', $tSDN, 'dword', DllStructGetSize($tSDN), 'dword*', 0, 'ptr', 0)
 	If __CheckErrorCloseHandle($aCall, $hFile) Then Return SetError(@error, @extended, 0)

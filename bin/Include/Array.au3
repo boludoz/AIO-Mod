@@ -7,7 +7,7 @@
 
 ; #INDEX# =======================================================================================================================
 ; Title .........: Array
-; AutoIt Version : 3.3.15.4
+; AutoIt Version : 3.3.16.0
 ; Language ......: English
 ; Description ...: Functions for manipulating arrays.
 ; Author(s) .....: JdeB, Erik Pilsits, Ultima, Dale (Klaatu) Thompson, Cephas,randallc, Gary Frost, GEOSoft,
@@ -1676,7 +1676,7 @@ EndFunc   ;==>_ArrayToClip
 ; Author ........: Brian Keene <brian_keene at yahoo dot com>, Valik - rewritten
 ; Modified.......: Ultima - code cleanup; Melba23 - added support for empty and 2D arrays
 ; ===============================================================================================================================
-Func _ArrayToString(Const ByRef $aArray, $sDelim_Col = "|", $iStart_Row = -1, $iEnd_Row = -1, $sDelim_Row = @CRLF, $iStart_Col = -1, $iEnd_Col = -1)
+Func _ArrayToString(Const ByRef $aArray, $sDelim_Col = "|", $iStart_Row = Default, $iEnd_Row = Default, $sDelim_Row = @CRLF, $iStart_Col = Default, $iEnd_Col = Default)
 
 	If $sDelim_Col = Default Then $sDelim_Col = "|"
 	If $sDelim_Row = Default Then $sDelim_Row = @CRLF
@@ -1707,11 +1707,12 @@ Func _ArrayToString(Const ByRef $aArray, $sDelim_Col = "|", $iStart_Row = -1, $i
 			If $iStart_Col < -1 Or $iEnd_Col < -1 Then Return SetError(5, 0, -1)
 			If $iStart_Col > $iDim_2 Or $iEnd_Col > $iDim_2 Then Return SetError(5, 0, -1)
 			If $iStart_Col > $iEnd_Col Then Return SetError(6, 0, -1)
+			Local $iDelimColLen = StringLen($sDelim_Col)
 			For $i = $iStart_Row To $iEnd_Row
 				For $j = $iStart_Col To $iEnd_Col
 					$sRet &= $aArray[$i][$j] & $sDelim_Col
 				Next
-				$sRet = StringTrimRight($sRet, StringLen($sDelim_Col)) & $sDelim_Row
+				$sRet = StringTrimRight($sRet, $iDelimColLen) & $sDelim_Row
 			Next
 			Return StringTrimRight($sRet, StringLen($sDelim_Row))
 		Case Else

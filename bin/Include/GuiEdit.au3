@@ -12,7 +12,7 @@
 
 ; #INDEX# =======================================================================================================================
 ; Title .........: Edit
-; AutoIt Version : 3.3.15.4
+; AutoIt Version : 3.3.16.0
 ; Language ......: English
 ; Description ...: Functions that assist with Edit control management.
 ;                  An edit control is a rectangular control window typically used in a dialog box to permit the user to enter
@@ -97,6 +97,7 @@ Global Const $__EDITCONSTANT_SB_SCROLLCARET = 4
 ; _GUICtrlEdit_SetLimitText
 ; _GUICtrlEdit_SetMargins
 ; _GUICtrlEdit_SetModify
+; _GUICtrlEdit_SetPadding
 ; _GUICtrlEdit_SetPasswordChar
 ; _GUICtrlEdit_SetReadOnly
 ; _GUICtrlEdit_SetRECT
@@ -816,13 +817,9 @@ EndFunc   ;==>_GUICtrlEdit_Scroll
 Func _GUICtrlEdit_SetCueBanner($hWnd, $sText, $bOnFocus = False)
 	If Not IsHWnd($hWnd) Then $hWnd = GUICtrlGetHandle($hWnd)
 
-	If IsString($sText) Then
-		Return _SendMessage($hWnd, $EM_SETCUEBANNER, $bOnFocus, $sText, 0, "wparam", "wstr") = 1
-	Else
-		Local $tText = _WinAPI_MultiByteToWideChar($sText)
+	Local $tText = _WinAPI_MultiByteToWideChar($sText)
 
-		Return _SendMessage($hWnd, $EM_SETCUEBANNER, $bOnFocus, $tText, 0, "wparam", "struct*") = 1
-	EndIf
+	Return _SendMessage($hWnd, $EM_SETCUEBANNER, $bOnFocus, $tText, 0, "wparam", "struct*") = 1
 EndFunc   ;==>_GUICtrlEdit_SetCueBanner
 
 ; #NO_DOC_FUNCTION# =============================================================================================================
@@ -898,6 +895,21 @@ Func _GUICtrlEdit_SetModify($hWnd, $bModified)
 
 	_SendMessage($hWnd, $EM_SETMODIFY, $bModified)
 EndFunc   ;==>_GUICtrlEdit_SetModify
+
+; #FUNCTION# ====================================================================================================================
+; Author ........: Danyfirex
+; Modified.......: mLipok, Zedna
+; ===============================================================================================================================
+Func _GUICtrlEdit_SetPadding($hWnd, $iCX, $iCY)
+    Local $tRect = DllStructCreate($tagRECT)
+    If Not IsHWnd($hWnd) Then $hWnd = GUICtrlGetHandle($hWnd)
+    _SendMessage($hWnd, $EM_GETRECT, 0, $tRect, 0, "wparam", "struct*")
+    $tRect.left += $iCX
+    $tRect.right -= $iCX
+    $tRect.top += $iCY
+    $tRect.bottom -= $iCY
+    Return _SendMessage($hWnd, $EM_SETRECT, 0, $tRect, 0, "wparam", "struct*")
+EndFunc   ;==>_GUICtrlEdit_SetPadding
 
 ; #FUNCTION# ====================================================================================================================
 ; Author ........: Gary Frost
@@ -1041,25 +1053,15 @@ EndFunc   ;==>_GUICtrlEdit_SetWordBreakProc
 Func _GUICtrlEdit_ShowBalloonTip($hWnd, $sTitle, $sText, $iIcon)
 	If Not IsHWnd($hWnd) Then $hWnd = GUICtrlGetHandle($hWnd)
 
-	Local $tTitle
-	If IsString($sTitle) Then
-		$tTitle = DllStructCreate("wchar[" & StringLen($sTitle) & "]")
-		DllStructSetData($tTitle, 1, $sTitle)
-	Else
-		$tTitle = _WinAPI_MultiByteToWideChar($sTitle)
-	EndIf
-	Local $tText
-	If IsString($sText) Then
-		$tText = DllStructCreate("wchar[" & StringLen($sText) & "]")
-		DllStructSetData($tText, 1, $sText)
-	Else
-		$tText = _WinAPI_MultiByteToWideChar($sText)
-	EndIf
+	Local $tBuffer = DllStructCreate('wchar Title[' & StringLen($sTitle) + 1 & '];wchar Text[' & StringLen($sText) + 1 & ']')
+	DllStructSetData($tBuffer, 'Title', $sTitle)
+	DllStructSetData($tBuffer, 'Text', $sText)
+
 	Local $tTT = DllStructCreate($__tagEDITBALLOONTIP)
-	DllStructSetData($tTT, "Size", DllStructGetSize($tTT))
-	DllStructSetData($tTT, "Title", DllStructGetPtr($tTitle))
-	DllStructSetData($tTT, "Text", DllStructGetPtr($tText))
-	DllStructSetData($tTT, "Icon", $iIcon)
+	DllStructSetData($tTT, 'Size', DllStructGetSize($tTT))
+	DllStructSetData($tTT, 'Title', DllStructGetPtr($tBuffer, 'Title'))
+	DllStructSetData($tTT, 'Text', DllStructGetPtr($tBuffer, 'Text'))
+	DllStructSetData($tTT, 'Icon', $iIcon)
 	Return _SendMessage($hWnd, $EM_SHOWBALLOONTIP, 0, $tTT, 0, "wparam", "struct*") <> 0
 EndFunc   ;==>_GUICtrlEdit_ShowBalloonTip
 

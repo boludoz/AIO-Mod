@@ -8,7 +8,7 @@
 
 ; #INDEX# =======================================================================================================================
 ; Title .........: ScreenCapture
-; AutoIt Version : 3.3.15.4
+; AutoIt Version : 3.3.16.0
 ; Language ......: English
 ; Description ...: Functions that assist with Screen Capture management.
 ;                  This module allows you to copy the screen or a region of the screen and save it to file. Depending on the type

@@ -11,7 +11,7 @@
 
 ; #INDEX# =======================================================================================================================
 ; Title .........: WinAPI Extended UDF Library for AutoIt3
-; AutoIt Version : 3.3.15.4
+; AutoIt Version : 3.3.16.0
 ; Description ...: Additional variables, constants and functions for the WinAPISys.au3
 ; Author(s) .....: Yashied, jpm
 ; ===============================================================================================================================
@@ -1210,7 +1210,7 @@ EndFunc   ;==>_WinAPI_RegisterPowerSettingNotification
 ; ===============================================================================================================================
 Func _WinAPI_RegisterRawInputDevices($paDevice, $iCount = 1)
 	Local $aCall = DllCall('user32.dll', 'bool', 'RegisterRawInputDevices', 'struct*', $paDevice, 'uint', $iCount, _
-			'uint', DllStructGetSize(DllStructCreate($tagRAWINPUTDEVICE)) * $iCount)
+			'uint', DllStructGetSize(DllStructCreate($tagRAWINPUTDEVICE)))
 	If @error Or Not $aCall[0] Then Return SetError(@error, @extended, 0)
 	; If Not $aCall[0] Then Return SetError(1000, 0, 0)
 

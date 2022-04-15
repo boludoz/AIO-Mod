@@ -6,7 +6,7 @@
 
 ; #INDEX# =======================================================================================================================
 ; Title .........: Internal UDF Library for AutoIt3 _ArrayDisplay() and _DebugArrayDisplay()
-; AutoIt Version : 3.3.14.5
+; AutoIt Version : 3.3.16.0
 ; Description ...: Internal functions for the Array.au3 and Debug.au3
 ; Author(s) .....: Melba23, jpm, LarsJ, pixelsearch
 ; ===============================================================================================================================
@@ -31,8 +31,10 @@ Global $_g_ArrayDisplay_aIndex
 Global $_g_ArrayDisplay_aIndexes[1]
 Global $_g_ArrayDisplay_iSortDir
 Global $_g_ArrayDisplay_asHeader
+Global $_g_ArrayDisplay_aNumericSort
 
-Global $g_sArrayDisplay_RowPrefix = "#"
+Global $ARRAYDISPLAY_ROWPREFIX = "#"
+Global $ARRAYDISPLAY_NUMERICSORT = "*"
 ; ===============================================================================================================================
 
 ; #CONSTANTS# ===================================================================================================================
@@ -102,6 +104,9 @@ Func __ArrayDisplay_Share(Const ByRef $aArray, $sTitle = Default, $sArrayRange =
 		If $_g_ArrayDisplay_iDims = 1 Then $_g_ArrayDisplay_iTranspose = 0
 		$_g_ArrayDisplay_nRows = UBound($_g_ArrayDisplay_aArray, $UBOUND_ROWS)
 		$_g_ArrayDisplay_nCols = ($_g_ArrayDisplay_iDims = 2) ? UBound($_g_ArrayDisplay_aArray, $UBOUND_COLUMNS) : 1
+
+		; Split custom header on separator
+		Dim $_g_ArrayDisplay_aNumericSort[$_g_ArrayDisplay_nCols]
 
 		; Dimension checking
 		If $_g_ArrayDisplay_iDims > 2 Then
@@ -222,24 +227,6 @@ Func __ArrayDisplay_Share(Const ByRef $aArray, $sTitle = Default, $sArrayRange =
 
 	#EndRegion Check array range
 
-	#Region Generate Sort index for columns
-
-	__ArrayDisplay_SortIndexes(0, -1)
-
-	; compute the time to generate one colum info to to the sorting
-	Local $hTimer = TimerInit()
-	__ArrayDisplay_SortIndexes(1, 1)
-	$fTimer = TimerDiff($hTimer)
-	If $fTimer * $_g_ArrayDisplay_nCols < 1000 Then
-		; 		__ArrayDisplay_SortIndexes(-1)
-		__ArrayDisplay_SortIndexes(2, $_g_ArrayDisplay_nCols)
-		ConsoleWrite("Sorting all indexes = " & TimerDiff($hTimer) & @CRLF & @CRLF)
-	Else
-		ConsoleWrite("Sorting one index = " & TimerDiff($hTimer) & @CRLF)
-	EndIf
-
-	#EndRegion Generate Sort index for columns
-
 	#Region Check custom header
 
 	; Split custom header on separator
@@ -251,7 +238,7 @@ Func __ArrayDisplay_Share(Const ByRef $aArray, $sTitle = Default, $sArrayRange =
 		; All default headers
 		$sHeader = "Row"
 		For $j = 0 To $_g_ArrayDisplay_nCols - 1
-			$sHeader &= $sCurr_Separator & $g_sArrayDisplay_RowPrefix & " " & $j + $_g_ArrayDisplay_iSubItem_Start
+			$sHeader &= $sCurr_Separator & $ARRAYDISPLAY_ROWPREFIX & " " & $j + $_g_ArrayDisplay_iSubItem_Start
 		Next
 	Else
 		; Create custom header with available items
@@ -260,6 +247,11 @@ Func __ArrayDisplay_Share(Const ByRef $aArray, $sTitle = Default, $sArrayRange =
 			For $iIndex = $_g_ArrayDisplay_iSubItem_Start To $_g_ArrayDisplay_iSubItem_End
 				; Check custom header available
 				If $iIndex >= UBound($_g_ArrayDisplay_asHeader) Then ExitLoop
+				If StringRight($_g_ArrayDisplay_asHeader[$iIndex], 1) = $ARRAYDISPLAY_NUMERICSORT Then
+					$_g_ArrayDisplay_asHeader[$iIndex] = StringTrimRight($_g_ArrayDisplay_asHeader[$iIndex], 1) ; remove "*" from right
+					$_g_ArrayDisplay_aNumericSort[$iIndex - $_g_ArrayDisplay_iSubItem_Start] = 1 ; 1 (numeric sort) or empty (natural sort)
+				EndIf
+
 				$sHeader &= $sCurr_Separator & $_g_ArrayDisplay_asHeader[$iIndex]
 			Next
 		EndIf
@@ -271,14 +263,32 @@ Func __ArrayDisplay_Share(Const ByRef $aArray, $sTitle = Default, $sArrayRange =
 	; Remove "Row" header if not needed
 	If Not $_g_ArrayDisplay_iDisplayRow Then $sHeader = StringTrimLeft($sHeader, 4)
 
+	#EndRegion Check custom header
+
+	#Region Generate Sort index for columns
+
+	__ArrayDisplay_SortIndexes(0, -1)
+
+	; compute the time to generate one colum info to to the sorting
+	Local $hTimer = TimerInit()
+	__ArrayDisplay_SortIndexes(1, 1)
+	$fTimer = TimerDiff($hTimer)
+	If $fTimer * $_g_ArrayDisplay_nCols < 1000 Then
+		; 		__ArrayDisplay_SortIndexes(-1)
+		__ArrayDisplay_SortIndexes(2, $_g_ArrayDisplay_nCols)
+		If $bDebug Then ConsoleWrite("Sorting all indexes = " & TimerDiff($hTimer) & @CRLF & @CRLF)
+	Else
+		If $bDebug Then ConsoleWrite("Sorting one index = " & TimerDiff($hTimer) & @CRLF)
+	EndIf
+
+	#EndRegion Generate Sort index for columns
+
+	#Region GUI and Listview generation
+
 	; Display splash dialog if required
 	If $iVerbose And ($_g_ArrayDisplay_nRows * $_g_ArrayDisplay_nCols) > 1000 Then
 		SplashTextOn($sMsgBoxTitle, "Preparing display" & @CRLF & @CRLF & "Please be patient", 300, 100)
 	EndIf
-
-	#EndRegion Check custom header
-
-	#Region GUI and Listview generation
 
 	; GUI Constants
 	Local Const $_ARRAYCONSTANT_GUI_DOCKBOTTOM = 64
@@ -415,7 +425,7 @@ Func __ArrayDisplay_Share(Const ByRef $aArray, $sTitle = Default, $sArrayRange =
 				; Retain width
 				$iWidth += $aiColWidth[$i]
 			EndIf
-			If $i < 20 Then ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $iWidth = ' & $iWidth & " $i = " & $i & @CRLF)                      ;### Debug Console
+			If $i < 20 And $bDebug Then ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $iWidth = ' & $iWidth & " $i = " & $i & @CRLF)                      ;### Debug Console
 		Next
 	EndIf
 
@@ -518,7 +528,7 @@ Func __ArrayDisplay_Share(Const ByRef $aArray, $sTitle = Default, $sArrayRange =
 						$sItem = __ArrayDisplay_GetItemTextStringSelected($idListView, $i, $iFirstCol)
 						If $aMsg[0] = $idCopy_ID And Not $_g_ArrayDisplay_iDisplayRow Then
 							; Add row data
-							$sItem = $g_sArrayDisplay_RowPrefix & " " & ($i + $_g_ArrayDisplay_iItem_Start) & $sCurr_Separator & $sItem
+							$sItem = $ARRAYDISPLAY_ROWPREFIX & " " & ($i + $_g_ArrayDisplay_iItem_Start) & $sCurr_Separator & $sItem
 						EndIf
 						If $iCW_ColWidth Then
 							; Expand columns
@@ -608,6 +618,11 @@ Func __ArrayDisplay_Share(Const ByRef $aArray, $sTitle = Default, $sArrayRange =
 
 	; Cleanup
 	DllCall("comctl32.dll", "bool", "RemoveWindowSubclass", "hwnd", $hGUI, "ptr", $p__ArrayDisplay_NotifyHandler, "uint_ptr", 0)   ; $iSubclassId = 0
+
+	; Release resources in case of big array used
+	$_g_ArrayDisplay_aIndex = 0
+	Dim $_g_ArrayDisplay_aIndexes[1]
+
 	GUIDelete($hGUI)
 	Opt("GUICoordMode", $iCoordMode) ; Reset original Coord mode
 	Opt("GUIOnEventMode", $iOnEventMode) ; Reset original GUI mode
@@ -658,11 +673,13 @@ Func __ArrayDisplay_NotifyHandler($hWnd, $iMsg, $wParam, $lParam, $iSubclassId, 
 								Local $sCaptionCplt = ""
 								If $iRow + $_g_ArrayDisplay_iItem_Start < UBound($_g_ArrayDisplay_asHeader) _
 										And StringStripWS($_g_ArrayDisplay_asHeader[$iRow + $_g_ArrayDisplay_iItem_Start], 1 + 2) <> "" Then
-									$sCaptionCplt = " (" & StringStripWS($_g_ArrayDisplay_asHeader[$iRow + $_g_ArrayDisplay_iItem_Start], 1 + 2) & ")"
+									$sCaptionCplt = " (" & StringStripWS($_g_ArrayDisplay_asHeader[$iRow + $_g_ArrayDisplay_iItem_Start], 1 + 2)
+									If StringRight($sCaptionCplt, 1) = $ARRAYDISPLAY_NUMERICSORT Then $sCaptionCplt = StringTrimRight($sCaptionCplt, 1)
+									$sCaptionCplt &= ")"
 								EndIf
 								DllStructSetData($tText, 1, "Col " & ($iRow + $_g_ArrayDisplay_iItem_Start) & $sCaptionCplt)
 							Else
-								DllStructSetData($tText, 1, $g_sArrayDisplay_RowPrefix & " " & $iRow + $_g_ArrayDisplay_iItem_Start)
+								DllStructSetData($tText, 1, $ARRAYDISPLAY_ROWPREFIX & " " & $iRow + $_g_ArrayDisplay_iItem_Start)
 							EndIf
 							DllStructSetData($tNMLVDISPINFO, "Text", $pText)
 						Else
@@ -693,18 +710,18 @@ EndFunc   ;==>__ArrayDisplay_NotifyHandler
 
 Func __ArrayDisplay_SortIndexes($iColStart, $iColEnd = $iColStart)
 	Dim $_g_ArrayDisplay_aIndex[$_g_ArrayDisplay_nRows]
-	Local $hTimer
+;~ 	Local $hTimer
 	If $iColEnd = -1 Then
 		; column (0) already sorted
 		Dim $_g_ArrayDisplay_aIndexes[$_g_ArrayDisplay_nCols + $_g_ArrayDisplay_iDisplayRow + 1]
-		$hTimer = TimerInit()
+;~ 		$hTimer = TimerInit()
 
 		For $i = 0 To $_g_ArrayDisplay_nRows - 1
 			$_g_ArrayDisplay_aIndex[$i] = $i
 		Next
 
 		$_g_ArrayDisplay_aIndexes[0] = $_g_ArrayDisplay_aIndex
-		ConsoleWrite("Sorting array col#0 = " & TimerDiff($hTimer) & @CRLF)
+;~ 		ConsoleWrite("Sorting array col#0 = " & TimerDiff($hTimer) & @CRLF)
 	EndIf
 
 	If $iColStart = -1 Then
@@ -717,7 +734,7 @@ Func __ArrayDisplay_SortIndexes($iColStart, $iColEnd = $iColStart)
 		; Index aArray columns
 		Local $tIndex
 		For $i = $iColStart To $iColEnd
-			$hTimer = TimerInit()
+;~ 			$hTimer = TimerInit()
 			$tIndex = __ArrayDisplay_GetSortColStruct($_g_ArrayDisplay_aArray, $i - 1)
 
 			For $j = 0 To $_g_ArrayDisplay_nRows - 1
@@ -725,7 +742,7 @@ Func __ArrayDisplay_SortIndexes($iColStart, $iColEnd = $iColStart)
 			Next
 
 			$_g_ArrayDisplay_aIndexes[$i] = $_g_ArrayDisplay_aIndex
-			If $i < 20 Then ConsoleWrite("Sorting array col#" & $i & " = " & TimerDiff($hTimer) & @CRLF)
+;~ 			If $i < 20 Then ConsoleWrite("Sorting array col#" & $i & " = " & TimerDiff($hTimer) & @CRLF)
 		Next
 	EndIf
 
@@ -745,7 +762,7 @@ EndFunc   ;==>__ArrayDisplay_SortIndexes
 Func __ArrayDisplay_GetSortColStruct(Const ByRef $aArray, $iCol)
 
 	If UBound($aArray, $UBOUND_DIMENSIONS) < 1 Or UBound($aArray, $UBOUND_DIMENSIONS) > 2 Then
-		ConsoleWrite("$aArray is not a 1D or 2D array variable" & @CRLF)
+;~ 		ConsoleWrite("$aArray is not a 1D or 2D array variable" & @CRLF)
 		Return SetError(6, 0, 0)
 	EndIf
 
@@ -759,19 +776,29 @@ Func __ArrayDisplay_SortArrayStruct(Const ByRef $aArray, $iCol)
 	Static $hDll = DllOpen("kernel32.dll")
 	Static $hDllComp = DllOpen("shlwapi.dll")
 
-	Local $lo, $hi, $mi, $r, $k = 0
+	Local $lo, $hi, $mi, $r, $nVal1, $nVal2
 
 	; Sorting by one column
 	For $i = 1 To $_g_ArrayDisplay_nRows - 1
-		$k += 1
 		$lo = 0
 		$hi = $i - 1
 		Do
 			$mi = Int(($lo + $hi) / 2)
-			If $iDims = 1 Then
-				$r = DllCall($hDllComp, 'int', 'StrCmpLogicalW', 'wstr', $aArray[$i], 'wstr', $aArray[DllStructGetData($tIndex, 1, $mi + 1)])[0]
-			Else
-				$r = DllCall($hDllComp, 'int', 'StrCmpLogicalW', 'wstr', $aArray[$i][$iCol], 'wstr', $aArray[DllStructGetData($tIndex, 1, $mi + 1)][$iCol])[0]
+			If Not $_g_ArrayDisplay_iTranspose And $_g_ArrayDisplay_aNumericSort[$iCol] Then ; Numeric sort
+				If $iDims = 1 Then
+					$nVal1 = Number($aArray[$i])
+					$nVal2 = Number($aArray[DllStructGetData($tIndex, 1, $mi + 1)])
+				Else
+					$nVal1 = Number($aArray[$i][$iCol])
+					$nVal2 = Number($aArray[DllStructGetData($tIndex, 1, $mi + 1)][$iCol])
+				EndIf
+				$r = $nVal1 < $nVal2 ? -1 : $nVal1 > $nVal2 ? 1 : 0
+			Else ; Natural sort
+				If $iDims = 1 Then
+					$r = DllCall($hDllComp, 'int', 'StrCmpLogicalW', 'wstr', $aArray[$i], 'wstr', $aArray[DllStructGetData($tIndex, 1, $mi + 1)])[0]
+				Else
+					$r = DllCall($hDllComp, 'int', 'StrCmpLogicalW', 'wstr', $aArray[$i][$iCol], 'wstr', $aArray[DllStructGetData($tIndex, 1, $mi + 1)][$iCol])[0]
+				EndIf
 			EndIf
 			Switch $r
 				Case -1
@@ -782,8 +809,8 @@ Func __ArrayDisplay_SortArrayStruct(Const ByRef $aArray, $iCol)
 					ExitLoop
 			EndSwitch
 		Until $lo > $hi
-		DllCall($hDll, "none", "RtlMoveMemory", "struct*", $pIndex + ($mi + 1) * 4, "struct*", $pIndex + $mi * 4, "ulong_ptr", ($k - $mi) * 4)
-		DllStructSetData($tIndex, 1, $k, $mi + 1 + ($lo = $mi + 1))
+		DllCall($hDll, "none", "RtlMoveMemory", "struct*", $pIndex + ($mi + 1) * 4, "struct*", $pIndex + $mi * 4, "ulong_ptr", ($i - $mi) * 4)
+		DllStructSetData($tIndex, 1, $i, $mi + 1 + ($lo = $mi + 1))
 	Next
 
 	Return $tIndex

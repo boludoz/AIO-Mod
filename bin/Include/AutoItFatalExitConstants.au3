@@ -2,7 +2,7 @@
 
 ; #INDEX# =======================================================================================================================
 ; Title .........: AutoIt3 Fatal Exit Codes
-; AutoIt Version : 3.3.15.4
+; AutoIt Version : 3.3.16.0
 ; Language ......: English
 ; Description ...: Constants to format @exitCode set by Opt("SetExitCode", 1)
 ; Author(s) .....: Jpm

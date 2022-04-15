@@ -2,7 +2,7 @@
 
 ; #INDEX# =======================================================================================================================
 ; Title .........: API Constants UDF Library for AutoIt3
-; AutoIt Version : 3.3.15.4
+; AutoIt Version : 3.3.16.0
 ; Language ......: English
 ; Description ...: Constants that can be used with UDF library
 ; Author(s) .....: Yashied, Jpm
@@ -60,6 +60,11 @@ Global Const $LLKHF_LOWER_IL_INJECTED = 0x02
 Global Const $LLKHF_INJECTED = 0x10
 Global Const $LLKHF_ALTDOWN = BitShift($KF_ALTDOWN, 8)
 Global Const $LLKHF_UP = BitShift($KF_UP, 8)
+
+; flags for $tagNMITEMACTIVATE
+Global Const $LVKF_ALT = 0x0001
+Global Const $LVKF_CONTROL = 0x0002
+Global Const $LVKF_SHIFT = 0x0004
 
 ; flags for $tagOPENFILENAME
 Global Const $OFN_ALLOWMULTISELECT = 0x00000200

@@ -2,7 +2,7 @@
 
 ; #INDEX# =======================================================================================================================
 ; Title .........: Constants
-; AutoIt Version : 3.3.15.4
+; AutoIt Version : 3.3.16.0
 ; Language ......: English
 ; Description ...: Constants to be included in an AutoIt v3 script.
 ; Author(s) .....: JLandes, Nutster, CyberSlug, Holger, ...
@@ -75,34 +75,24 @@ Global Const $DLG_TEXTVCENTER = 32 ; Splash text centered vertically
 
 ; Mouse Constants
 ; Indicates current mouse cursor
-Global Const $IDC_UNKNOWN = 0 ; Unknown cursor
-Global Const $IDC_APPSTARTING = 1 ; Standard arrow and small hourglass
-Global Const $IDC_ARROW = 2 ; Standard arrow
-Global Const $IDC_CROSS = 3 ; Crosshair
-Global Const $IDC_HAND = 32649 ; Hand cursor
-Global Const $IDC_HELP = 4 ; Arrow and question mark
-Global Const $IDC_IBEAM = 5 ; I-beam
-Global Const $IDC_ICON = 6 ; Obsolete
-Global Const $IDC_NO = 7 ; Slashed circle
-Global Const $IDC_SIZE = 8 ; Obsolete
-Global Const $IDC_SIZEALL = 9 ; Four-pointed arrow pointing N, S, E, and W
-Global Const $IDC_SIZENESW = 10 ; Double-pointed arrow pointing NE and SW
-Global Const $IDC_SIZENS = 11 ; Double-pointed arrow pointing N and S
-Global Const $IDC_SIZENWSE = 12 ; Double-pointed arrow pointing NW and SE
-Global Const $IDC_SIZEWE = 13 ; Double-pointed arrow pointing W and E
-Global Const $IDC_UPARROW = 14 ; Vertical arrow
-Global Const $IDC_WAIT = 15 ; Hourglass
-
-Global Const $IDI_APPLICATION = 32512 ; Application icon
-Global Const $IDI_ASTERISK = 32516 ; Asterisk icon
-Global Const $IDI_EXCLAMATION = 32515 ; Exclamation point icon
-Global Const $IDI_HAND = 32513 ; Stop sign icon
-Global Const $IDI_QUESTION = 32514 ; Question-mark icon
-Global Const $IDI_WINLOGO = 32517 ; Windows logo icon. Windows XP: Application icon
-Global Const $IDI_SHIELD = 32518
-Global Const $IDI_ERROR = $IDI_HAND
-Global Const $IDI_INFORMATION = $IDI_ASTERISK
-Global Const $IDI_WARNING = $IDI_EXCLAMATION
+Global Const $MCID_UNKNOWN = -1 ; Unknown cursor
+Global Const $MCID_HAND = 0 ; Hand cursor
+Global Const $MCID_APPSTARTING = 1 ; Standard arrow and small hourglass
+Global Const $MCID_ARROW = 2 ; Standard arrow
+Global Const $MCID_CROSS = 3 ; Crosshair
+Global Const $MCID_HELP = 4 ; Arrow and question mark
+Global Const $MCID_IBEAM = 5 ; I-beam
+Global Const $MCID_ICON = 6 ; Icon Obsolete
+Global Const $MCID_NO = 7 ; Slashed circle
+Global Const $MCID_SIZE = 8 ; Size Obsolete
+Global Const $MCID_SIZEALL = 9 ; Four-pointed arrow pointing N, S, E, and W
+Global Const $MCID_SIZENESW = 10 ; Double-pointed arrow pointing NE and SW
+Global Const $MCID_SIZENS = 11 ; Double-pointed arrow pointing N and S
+Global Const $MCID_SIZENWSE = 12 ; Double-pointed arrow pointing NW and SE
+Global Const $MCID_SIZEWE = 13 ; Double-pointed arrow pointing W and E
+Global Const $MCID_UPARROW = 14 ; Vertical arrow
+Global Const $MCID_WAIT = 15 ; Hourglass
+Global Const $MCID_NONE = 16 ; None
 
 ; Process Constants
 ; Indicates the type of shutdown

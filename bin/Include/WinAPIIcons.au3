@@ -7,7 +7,7 @@
 
 ; #INDEX# =======================================================================================================================
 ; Title .........: WinAPI Extended UDF Library for AutoIt3
-; AutoIt Version : 3.3.15.4
+; AutoIt Version : 3.3.16.0
 ; Description ...: Additional variables, constants and functions for the WinAPIIcons.au3
 ; Author(s) .....: Yashied, jpm
 ; ===============================================================================================================================
@@ -18,6 +18,32 @@
 ; ===============================================================================================================================
 
 ; #CONSTANTS# ===================================================================================================================
+Global Const $IDC_UNKNOWN = 0 ; Unknown cursor
+Global Const $IDC_APPSTARTING = 32650 ; Standard arrow and small hourglass
+Global Const $IDC_ARROW = 32512 ; Standard arrow
+Global Const $IDC_CROSS = 32515 ; Crosshair
+Global Const $IDC_HAND = 32649 ; Hand cursor
+Global Const $IDC_HELP = 32651 ; Arrow and question mark
+Global Const $IDC_IBEAM = 32513 ; I-beam
+Global Const $IDC_NO = 32648 ; Slashed circle
+Global Const $IDC_SIZEALL = 32646 ; Four-pointed arrow pointing N, S, E, and W
+Global Const $IDC_SIZENESW = 32643 ; Double-pointed arrow pointing NE and SW
+Global Const $IDC_SIZENS = 32645 ; Double-pointed arrow pointing N and S
+Global Const $IDC_SIZENWSE = 32642 ; Double-pointed arrow pointing NW and SE
+Global Const $IDC_SIZEWE = 32644 ; Double-pointed arrow pointing W and E
+Global Const $IDC_UPARROW = 32516 ; Vertical arrow
+Global Const $IDC_WAIT = 32514 ; Hourglass
+
+Global Const $IDI_APPLICATION = 32512 ; Application icon
+Global Const $IDI_ASTERISK = 32516 ; Asterisk icon
+Global Const $IDI_EXCLAMATION = 32515 ; Exclamation point icon
+Global Const $IDI_HAND = 32513 ; Stop sign icon
+Global Const $IDI_QUESTION = 32514 ; Question-mark icon
+Global Const $IDI_WINLOGO = 32517 ; Windows logo icon. Windows XP: Application icon
+Global Const $IDI_SHIELD = 32518
+Global Const $IDI_ERROR = $IDI_HAND
+Global Const $IDI_INFORMATION = $IDI_ASTERISK
+Global Const $IDI_WARNING = $IDI_EXCLAMATION
 ; ===============================================================================================================================
 
 #EndRegion Global Variables and Constants

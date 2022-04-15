@@ -18,7 +18,7 @@
 
 ; #INDEX# =======================================================================================================================
 ; Title .........: ListView
-; AutoIt Version : 3.3.15.4
+; AutoIt Version : 3.3.16.0
 ; Language ......: English
 ; Description ...: Functions that assist with ListView control management.
 ;                  A ListView control is a window that displays a collection of items; each item consists of an icon and a label.
@@ -630,15 +630,17 @@ Func _GUICtrlListView_ClickItem($hWnd, $iIndex, $sButton = "left", $bMove = Fals
 	$tPoint = _WinAPI_ClientToScreen($hWnd, $tPoint)
 	Local $iX, $iY
 	_WinAPI_GetXYFromPoint($tPoint, $iX, $iY)
+	; to locate point inside the listview area
+	Local $iXPlus = DllStructGetData($tRECT, "Left") < 0 ? DllStructGetData($tRECT, "Left") * -1 : 0
 	Local $iMode = Opt("MouseCoordMode", 1)
 	If Not $bMove Then
 		Local $aPos = MouseGetPos()
 		_WinAPI_ShowCursor(False)
-		MouseClick($sButton, $iX, $iY, $iClicks, $iSpeed)
+		MouseClick($sButton, $iX + $iXPlus, $iY, $iClicks, $iSpeed)
 		MouseMove($aPos[0], $aPos[1], 0)
 		_WinAPI_ShowCursor(True)
 	Else
-		MouseClick($sButton, $iX, $iY, $iClicks, $iSpeed)
+		MouseClick($sButton, $iX + $iXPlus, $iY, $iClicks, $iSpeed)
 	EndIf
 	Opt("MouseCoordMode", $iMode)
 EndFunc   ;==>_GUICtrlListView_ClickItem
@@ -2085,6 +2087,10 @@ Func _GUICtrlListView_GetItemTextString($hWnd, $iItem = -1)
 	Else
 		$iSelected = $iItem ; get row
 	EndIf
+
+	; here is required to check if _GUICtrlListView_GetNextItem() has failed
+	If $iSelected < 0 Or $iSelected > _GUICtrlListView_GetItemCount($hWnd) - 1 Then Return SetError(1, 0, 0)
+
 	For $x = 0 To _GUICtrlListView_GetColumnCount($hWnd) - 1
 		$sRow &= _GUICtrlListView_GetItemText($hWnd, $iSelected, $x) & $sSeparatorChar
 	Next

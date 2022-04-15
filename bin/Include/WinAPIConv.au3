@@ -6,7 +6,7 @@
 
 ; #INDEX# =======================================================================================================================
 ; Title .........: WinAPI Extended UDF Library for AutoIt3
-; AutoIt Version : 3.3.15.4
+; AutoIt Version : 3.3.16.0
 ; Description ...: Additional variables, constants and functions for the WinAPIConv.au3
 ; Author(s) .....: Yashied, jpm
 ; ===============================================================================================================================
@@ -355,8 +355,10 @@ EndFunc   ;==>_WinAPI_MakeWord
 ; Modified.......: JPM, Alexander Samuelsson (AdmiralAlkex)
 ; ===============================================================================================================================
 Func _WinAPI_MultiByteToWideChar($vText, $iCodePage = 0, $iFlags = 0, $bRetString = False)
-	Local $sTextType = "str"
-	If Not IsString($vText) Then $sTextType = "struct*"
+	Local $sTextType = ""
+	If IsString($vText) Then $sTextType = "str"
+	If (IsDllStruct($vText) Or IsPtr($vText)) Then $sTextType = "struct*"
+	If $sTextType = "" Then Return SetError(1, 0, 0) ; invalid input parameter type
 
 	; compute size for the output WideChar
 	Local $aCall = DllCall("kernel32.dll", "int", "MultiByteToWideChar", "uint", $iCodePage, "dword", $iFlags, _

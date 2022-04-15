@@ -2,7 +2,7 @@
 
 ; #INDEX# =======================================================================================================================
 ; Title .........: StatusBar_Constants
-; AutoIt Version : 3.3.15.4
+; AutoIt Version : 3.3.16.0
 ; Language ......: English
 ; Description ...: Constants for StatusBar functions.
 ; Author(s) .....: Valik, Gary Frost, ...

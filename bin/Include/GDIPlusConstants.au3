@@ -2,7 +2,7 @@
 
 ; #INDEX# =======================================================================================================================
 ; Title .........: GDIPlus_Constants
-; AutoIt Version : 3.3.15.4
+; AutoIt Version : 3.3.16.0
 ; Language ......: English
 ; Description ...: Constants for GDI+
 ; Author(s) .....: Valik, Gary Frost, UEZ
@@ -187,14 +187,6 @@ Global Const $GDIP_INTERPOLATIONMODE_NEARESTNEIGHBOR = 5 ; Specifies nearest-nei
 Global Const $GDIP_INTERPOLATIONMODE_HIGHQUALITYBILINEAR = 6 ; Specifies high-quality, bilinear interpolation. Prefiltering is performed to ensure high-quality shrinking.
 Global Const $GDIP_INTERPOLATIONMODE_HIGHQUALITYBICUBIC = 7 ; Specifies high-quality, bicubic interpolation. Prefiltering is performed to ensure high-quality shrinking. This mode produces the highest quality transformed images.
 
-; TextRenderingHint constants
-Global Const $GDIP_TEXTRENDERINGHINT_SYSTEMDEFAULT = 0 ; Specifies that a character is drawn using the currently selected system font smoothing mode (also called a rendering hint).
-Global Const $GDIP_TEXTRENDERINGHINT_SINGLEBITPERPIXELGRIDFIT = 1 ; Specifies that a character is drawn using its glyph bitmap and hinting to improve character appearance on stems and curvature.
-Global Const $GDIP_TEXTRENDERINGHINT_SINGLEBITPERPIXEL = 2 ; Specifies that a character is drawn using its glyph bitmap and no hinting. This results in better performance at the expense of quality.
-Global Const $GDIP_TEXTRENDERINGHINT_ANTIALIASGRIDFIT = 3 ; Specifies that a character is drawn using its antialiased glyph bitmap and hinting. This results in much better quality due to antialiasing at a higher performance cost.
-Global Const $GDIP_TEXTRENDERINGHINT_ANTIALIAS = 4 ; Specifies that a character is drawn using its antialiased glyph bitmap and no hinting. Stem width differences may be noticeable because hinting is turned off.
-Global Const $GDIP_TEXTRENDERINGHINT_CLEARTYPEGRIDFIT = 5 ; Specifies that a character is drawn using its glyph ClearType bitmap and hinting. This type of text rendering cannot be used along with CompositingModeSourceCopy.
-
 ; PixelOffsetMode constants
 Global Const $GDIP_PIXELOFFSETMODE_INVALID = -1 ; Used internally.
 Global Const $GDIP_PIXELOFFSETMODE_DEFAULT = 0 ; Equivalent to $GDIP_PIXELOFFSETMODE_NONE
@@ -228,16 +220,15 @@ Global Const $GDIP_QUALITYMODELOW = 1
 Global Const $GDIP_QUALITYMODEHIGH = 2
 
 ; Alpha Compositing mode constants
-Global Const $GDIP_COMPOSITINGMODESOURCEOVER = 0 ; Specifies that when a color is rendered, it is blended with the background color. The blend is determined by the alpha component of the color being rendered
-Global Const $GDIP_COMPOSITINGMODESOURCECOPY = 1 ; Specifies that when a color is rendered, it overwrites the background color. This mode cannot be used along with $TextRenderingHintClearTypeGridFit
+Global Const $GDIP_COMPOSITINGMODESOURCEOVER = 0
+Global Const $GDIP_COMPOSITINGMODESOURCECOPY = 1
 
 ; Alpha Compositing quality constants
-Global Const $GDIP_COMPOSITINGQUALITYINVALID = $GDIP_QUALITYMODEINVALID ; Invalid quality
-Global Const $GDIP_COMPOSITINGQUALITYDEFAULT = $GDIP_QUALITYMODEDEFAULT ; Gamma correction is not applied
-Global Const $GDIP_COMPOSITINGQUALITYHIGHSPEED = $GDIP_QUALITYMODELOW ; Gamma correction is not applied. High speed, low quality
-Global Const $GDIP_COMPOSITINGQUALITYHIGHQUALITY = $GDIP_QUALITYMODEHIGH ; Gamma correction is applied. Composition of high quality and speed.
-Global Const $GDIP_COMPOSITINGQUALITYGAMMACORRECTED = 3 ; Gamma correction is applied
-Global Const $GDIP_COMPOSITINGQUALITYASSUMELINEAR = 4 ; Gamma correction is not applied. Linear values are used
+Global Const $GDIP_COMPOSITINGQUALITY_DEFAULT = 0
+Global Const $GDIP_COMPOSITINGQUALITY_HIGHSPEED = 1
+Global Const $GDIP_COMPOSITINGQUALITY_HIGHQUALITY = 2
+Global Const $GDIP_COMPOSITINGQUALITY_GAMMACORRECTED = 3
+Global Const $GDIP_COMPOSITINGQUALITY_ASSUMELINEAR = 4
 
 ; Various hatch styles
 Global Const $GDIP_HATCHSTYLE_HORIZONTAL = 0
@@ -376,12 +367,12 @@ Global Const $GDIP_HistogramFormatR = 6
 Global Const $GDIP_HistogramFormatA = 7
 
 ;TextRenderingHint constants
-Global Const $GDIP_TextRenderingHintSystemDefault = 0
-Global Const $GDIP_TextRenderingHintSingleBitPerPixelGridFit = 1
-Global Const $GDIP_TextRenderingHintSingleBitPerPixel = 2
-Global Const $GDIP_TextRenderingHintAntialiasGridFit = 3
-Global Const $GDIP_TextRenderingHintAntialias = 4
-Global Const $GDIP_TextRenderingHintClearTypeGridFit = 5
+Global Const $GDIP_TEXTRENDERINGHINTSYSTEMDEFAULT = 0
+Global Const $GDIP_TEXTRENDERINGHINTSINGLEBITPERPIXELGRIDFIT = 1
+Global Const $GDIP_TEXTRENDERINGHINTSINGLEBITPERPIXEL = 2
+Global Const $GDIP_TEXTRENDERINGHINTANTIALIASGRIDFIT = 3
+Global Const $GDIP_TEXTRENDERINGHINTANTIALIAS = 4
+Global Const $GDIP_TEXTRENDERINGHINTCLEARTYPEGRIDFIT = 5
 
 ;RotateFlipType constants
 Global Const $GDIP_RotateNoneFlipNone = 0
