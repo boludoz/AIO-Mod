@@ -1088,18 +1088,18 @@ Func OpenAndroid($bRestart = False, $bStartOnlyAndroid = False, $wasRunState = $
 	Return FuncReturn($Result)
 EndFunc   ;==>OpenAndroid
 
+; Custom - Team AIO Mod++
 Func _OpenAndroid($bRestart = False, $bStartOnlyAndroid = False)
-	; Custom fix - Team AIO Mod++
+
+	ResumeAndroid()
 	FindPreferredAdbPath()
-	resumeAndroid()
-	; Custom fix - Team AIO Mod++
     CloseEmulatorForce(True)
 
 	; list Android devices to ensure ADB Daemon is launched
 	Local $hMutex = AquireAdbDaemonMutex(), $process_killed
 	LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "devices", $process_killed)
 	ReleaseAdbDaemonMutex($hMutex)
-
+	
 	If Not InitAndroid() Then
 		SetLog("Unable to open " & $g_sAndroidEmulator & ($g_sAndroidInstance = "" ? "" : " instance '" & $g_sAndroidInstance & "'"), $COLOR_ERROR)
 		SetLog("Please check emulator/installation", $COLOR_ERROR)
@@ -1109,8 +1109,6 @@ Func _OpenAndroid($bRestart = False, $bStartOnlyAndroid = False)
 		SetError(1, 1, -1)
 		Return False
 	EndIf
-
-	ResumeAndroid()
 
 	AndroidAdbTerminateShellInstance()
 	If Not $g_bRunState Then Return False
@@ -1808,6 +1806,7 @@ Func AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecce
 	Return FuncReturn(SetError($err, 0, $Result))
 EndFunc   ;==>AndroidAdbLaunchShellInstance
 
+; Custom - Team AIO Mod++
 Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNeccessary = $g_bRunState)
 	;If Not $g_bAndroidInitialized Then Return
 	If $wasRunState = Default Then $wasRunState = $g_bRunState
@@ -1824,60 +1823,6 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 			Return SetError(3, 0)
 		ElseIf $iConnected = 2 And $g_iAndroidAdbProcess[0] Then
 			; return OK
-			Return SetError(0, 0)
-		EndIf
-
-		; check shared folder
-		Local $pathFound = False
-		Local $iMount
-		For $iMount = 0 To 29
-			$s = LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "-s " & $g_sAndroidAdbDevice & " shell" & $g_sAndroidAdbShellOptions & " mount", $process_killed)
-			Local $path = $g_sAndroidPicturesPath
-			If StringRight($path, 1) = "/" Then $path = StringLeft($path, StringLen($path) - 1)
-			Local $aRegExResult = StringRegExp($s, "[^ ]+(?: on)* ([^ ]+).+", $STR_REGEXPARRAYGLOBALMATCH)
-			;_ArrayDisplay($aRegExResult)
-			SetError(0)
-			Local $aMounts[0]
-			If $path Then _ArrayConcatenate($aMounts, StringSplit(((StringLeft($path, 1) = "(" And StringRight($path, 1) = ")") ? StringMid($path, 2, StringLen($path) - 2) : $path), "|", $STR_NOCOUNT))
-			If UBound($aRegExResult) > 0 Then _ArrayConcatenate($aMounts, $aRegExResult)
-			; check which path contains dummy file
-			Local $dummyFile = StringMid(_Crypt_HashData($g_sBotTitle & _Now(), $CALG_SHA1), 3)
-			If FileWriteLine($g_sAndroidPicturesHostPath & $dummyFile, _Now()) Then
-				SetDebugLog("Created dummy file: " & $g_sAndroidPicturesHostPath & $dummyFile)
-			Else
-				SetLog("Cannot create dummy file: " & $g_sAndroidPicturesHostPath & $dummyFile, $COLOR_ERROR)
-				Return SetError(4, 0)
-			EndIf
-			For $i = 0 To UBound($aMounts) - 1
-				$path = $aMounts[$i]
-				If $path = "" Then ContinueLoop
-				If StringRight($path, 1) <> "/" Then $path &= "/"
-				$s = LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "-s " & $g_sAndroidAdbDevice & " shell" & $g_sAndroidAdbShellOptions & " ls '" & $path & $dummyFile & "'", $process_killed)
-				If StringInStr($s, $dummyFile) > 0 And StringInStr($s, $dummyFile & ":") = 0 And StringInStr($s, "No such file or directory") = 0 And StringInStr($s, "syntax error") = 0 And StringInStr($s, "Permission denied") = 0 Then
-					$pathFound = True
-					$g_sAndroidPicturesPath = $path
-					SetDebugLog("Using " & $g_sAndroidPicturesPath & " for Android shared folder")
-					ExitLoop
-				EndIf
-			Next
-			; delete dummy FileChangeDir
-			FileDelete($g_sAndroidPicturesHostPath & $dummyFile)
-			If $pathFound = True Then ExitLoop
-			If $iMount = 0 Then
-				SetLog("Waiting for shared folder to get mounted...", $COLOR_GREEN)
-			Else
-				SetDebugLog("Still waiting for shared folder to get mounted...")
-			EndIf
-			If _Sleep(6000) Then Return
-		Next
-		$g_sAndroidPicturesPathAvailable = $pathFound
-		If $pathFound = False Then
-			SetLog($g_sAndroidEmulator & " cannot use ADB on shared folder, """ & $g_sAndroidPicturesPath & """ not found", $COLOR_ERROR)
-		EndIf
-
-		; if shared folder is not available, configure it
-		If (Not $g_sAndroidPicturesHostPath Or Not $g_bAndroidSharedFolderAvailable) And $g_bAndroidPicturesPathAutoConfig And $rebootAndroidIfNeccessary Then
-			RebootAndroidSetScreenDefault()
 			Return SetError(0, 0)
 		EndIf
 
@@ -1948,6 +1893,83 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 			EndIf
 		EndIf
 
+		; if shared folder is not available, configure it
+		If (Not $g_sAndroidPicturesHostPath Or Not $g_bAndroidSharedFolderAvailable) And $g_bAndroidPicturesPathAutoConfig And $rebootAndroidIfNeccessary Then
+			RebootAndroidSetScreenDefault()
+			Return SetError(0, 0)
+		EndIf
+
+		; check shared folder
+		Local $pathFound = False
+		Local $iMount
+		For $iMount = 0 To 29
+			$iconnected = connectAndroidadb($rebootAndroidifneccessary)
+			If $iconnected = 0 OR ($iconnected = 2 And $g_iAndroidadbprocess[0] = 0) Then
+				Return SetError(3, 0)
+			ElseIf $iconnected = 2 And $g_iAndroidadbprocess[0] Then
+				Return SetError(0, 0)
+			EndIf
+
+			$s = LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "-s " & $g_sAndroidAdbDevice & " shell" & $g_sAndroidAdbShellOptions & " mount", $process_killed)
+			SetDebugLog("Display existing mounts: " & $s)
+			Local $path = $g_sAndroidpicturespath
+			If StringRight($path, 1) = "/" Then $path = StringLeft($path, StringLen($path) - 1)
+			Local $aregexresult = StringRegExp($s, "[^ ]+(?: on)* ([^ ]+).+", $str_regexparrayglobalmatch)
+			SetError(0)
+			Local $amounts[0]
+			If $path Then _arrayconcatenate($amounts, StringSplit(((StringLeft($path, 1) = "(" And StringRight($path, 1) = ")") ? StringMid($path, 2, StringLen($path) - 2) : $path), "|", $str_nocount))
+			If UBound($aregexresult) > 0 Then _arrayconcatenate($amounts, $aregexresult)
+			Local $dummyfile = StringMid(_crypt_hashdata($g_sbottitle & _now(), $calg_sha1), 3)
+			If FileWriteLine($g_sAndroidpictureshostpath & $dummyfile, _now()) Then
+				If _Sleep(100) Then Return SetError(4, 0)
+				SetDebugLog("Created dummy file: " & $g_sAndroidpictureshostpath & $dummyfile)
+				If FileExists($g_sAndroidpictureshostpath & $dummyfile) Then
+					SetDebugLog("Dummy file size: " & FileGetSize($g_sAndroidpictureshostpath & $dummyfile))
+				Else
+					SetLog("Cannot create dummy file: " & $g_sAndroidpictureshostpath & $dummyfile, $COLOR_ERROR)
+					Return SetError(4, 0)
+				EndIf
+			Else
+				SetLog("Cannot create dummy file: " & $g_sAndroidpictureshostpath & $dummyfile, $COLOR_ERROR)
+				Return SetError(4, 0)
+			EndIf
+			
+			For $i = 0 To UBound($amounts) - 1
+				$path = $amounts[$i]
+				If $path = "" Then ContinueLoop
+				If StringRight($path, 1) <> "/" Then $path &= "/"
+				$s = AndroidadbsendshellcommAnd("set result=$(ls '" & $path & $dummyfile & "' >&2)", 10000, $wasrunstate, False)
+				If StringInStr($s, $dummyfile) > 0 And StringInStr($s, $dummyfile & ":") = 0 And StringInStr($s, "No such file or directory") = 0 And StringInStr($s, "syntax error") = 0 And StringInStr($s, "Permission denied") = 0 Then
+					$pathfound = True
+					$g_sAndroidpicturespath = $path
+					SetDebugLog("Using " & $g_sAndroidpicturespath & " for Android shared folder")
+					ExitLoop
+				EndIf
+			Next
+	
+			FileDelete($g_sAndroidpictureshostpath & $dummyfile)
+			If $pathfound = True Then ExitLoop
+			If $imount = 0 Then
+				SetLog("Waiting for shared folder to get mounted...", $color_green)
+			Else
+				SetDebugLog("Still waiting for shared folder to get mounted...")
+			EndIf
+			If $imount = 10 Then
+				SetDebugLog("Restart adb with root permissions!", $color_warning)
+				Local $process_killed
+				Local $cmdoutput = launchconsole($g_sAndroidadbpath, "root", $process_killed)
+				SetDebugLog("Remount adb.", $color_action)
+				$cmdoutput = launchconsole($g_sAndroidadbpath, "remount", $process_killed)
+				SetDebugLog("OutPut: " & $cmdoutput)
+			EndIf
+			If _Sleep(6000) Then Return 
+		Next
+		
+		$g_sAndroidPicturesPathAvailable = $pathFound
+		If $pathFound = False Then
+			SetLog($g_sAndroidEmulator & " cannot use ADB on shared folder, """ & $g_sAndroidPicturesPath & """ not found", $COLOR_ERROR)
+		EndIf
+
 		; call init script
 		If $g_bAndroidAdbInstance = True Then
 			$s = ""
@@ -1959,12 +1981,13 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 				$renice = "renice -- -20 "
 				$s = AndroidAdbSendShellCommand($renice & "$$", Default, $wasRunState, False) ; increase shell priority to maximum
 				EndIf
-				$s &= AndroidAdbSendShellCommand("stop media", Default, $wasRunState, False) ; stop media service as it can consume up to 30% Android CPU
+				$s &= AndroidAdbSendShellCommand("stop media", Default, Default, False) ; stop media service as it can consume up to 30% Android CPU
 			#ce
 			Local $scriptFile = ""
 			If $scriptFile = "" And FileExists($g_sAdbScriptsPath & "\shell.init." & $g_sAndroidEmulator & ".script") = 1 Then $scriptFile = "shell.init." & $g_sAndroidEmulator & ".script"
 			If $scriptFile = "" Then $scriptFile = "shell.init.script"
 			$s &= AndroidAdbSendShellCommandScript($scriptFile, Default, True, 3000, $wasRunState, False)
+			; $s &= AndroidAdbSendShellCommand("stop media", Default, $wasRunState, False) ; stop media service as it can consume up to 30% Android CPU
 			$s &= AndroidInitPrompt()
 			Local $error = @error
 			SetDebugLog("ADB shell launched, PID = " & $g_iAndroidAdbProcess[0] & ": " & $s)
@@ -1976,23 +1999,31 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 		; clear output
 		;AndroidAdbSendShellCommand("", Default, $wasRunState, False)
 		; update $g_iAndroidSystemAPI ; getprop ro.build.version.sdk
-		#Region - Team__AiO__MOD
 		$g_iAndroidVersionAPI = Int(AndroidAdbSendShellCommand("getprop ro.build.version.sdk", Default, $wasRunState, False))
 		SetDebugLog("Android Version API = " & $g_iAndroidVersionAPI)
-		Switch $g_iAndroidVersionAPI
-			Case $g_iAndroidJellyBean To $g_iAndroidKitKat - 1
-				SetLog("Android Version 4.1 - 4.3.1, NOT SUPPORTED", $COLOR_ERROR)
-			Case $g_iAndroidKitKat To $g_iAndroidLollipop - 1
-				SetLog("Android Version 4.4, NOT SUPPORTED", $COLOR_ERROR)
-			Case $g_iAndroidLollipop To $g_iAndroidNougat - 1
+		Switch $g_iAndroidversionapi
+			Case $g_iAndroidpie
+				SetDebugLog("Android Version 9.0")
+			Case $g_iAndroidoreo81
+				SetDebugLog("Android Version 8.1")
+			Case $g_iAndroidoreo
+				SetDebugLog("Android Version 8.0")
+			Case $g_iAndroidnougat72
+				SetDebugLog("Android Version 7.1")
+			Case $g_iAndroidnougat
+				SetDebugLog("Android Version 7.0")
+			Case $g_iAndroidlollipop51
 				SetDebugLog("Android Version 5.1")
-			Case $g_iAndroidNougat To $g_iAndroidPie - 1
-				SetDebugLog("Android Version 7.0-7.1.2")
+			Case $g_iAndroidlollipop
+				SetDebugLog("Android Version 5.0")
+			Case $g_iAndroidkitkat
+				SetDebugLog("Android Version 4.4")
+			Case $g_iAndroidjellybean
+				SetDebugLog("Android Version 4.1 - 4.3.1")
 			Case Else
 				SetDebugLog("Android Version not detected!")
 		EndSwitch
-		#EndRegion - Team__AiO__MOD
-		
+
 		; check mouse device
 		If StringLen($g_sAndroidMouseDevice) > 0 And $g_sAndroidMouseDevice = $g_avAndroidAppConfig[$g_iAndroidConfig][13] Then
 			$iConnected = ConnectAndroidAdb($rebootAndroidIfNeccessary)
@@ -2720,6 +2751,9 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 				SetDebugLog("File too small (" & $iSize & " < " & $ExpectedFileSize & "): " & $hostPath & $Filename, $COLOR_ERROR)
 			EndIf
 		EndIf
+		
+		If $g_bRunState = False Then Return
+		
 		If $hFile = 0 Or $iSize < $ExpectedFileSize Or $iReadHeader < $iHeaderSize Or $iReadData < $iDataSize Then
 			If $hFile = 0 Then
 				SetLog("File not found: " & $hostPath & $Filename, $COLOR_ERROR)
@@ -2843,7 +2877,7 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 		; delete file
 		FileDelete($hostPath & $Filename)
 	EndIf
-	#cs
+
 	Local $duration = Int(__TimerDiff($startTimer))
 	; dynamically adjust $g_iAndroidAdbScreencapTimeout to 3 x of current duration ($g_iAndroidAdbScreencapTimeoutDynamic)
 	$g_iAndroidAdbScreencapTimeout = ($g_iAndroidAdbScreencapTimeoutDynamic = 0 ? $g_iAndroidAdbScreencapTimeoutMax : $duration * $g_iAndroidAdbScreencapTimeoutDynamic)
@@ -2876,7 +2910,6 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 			SetDebugLog("AdbScreencap: " & $totalAvg & "/" & $lastAvg & "/" & $duration & " ms (all/" & $iLastCount & "/1)," & $shellLogInfo & "," & $iLoopCountFile & ",l=" & $iLeft & ",t=" & $iTop & ",w=" & $iWidth & ",h=" & $iHeight & ", " & $Filename & ": w=" & $g_iAndroidAdbScreencapWidth & ",h=" & $g_iAndroidAdbScreencapHeight & ",f=" & $iF)
 		EndIf
 	EndIf
-	#ce
 	$tBIV5HDR = 0 ; Release the resources used by the structure
 	Return $hHBitmap
 EndFunc   ;==>_AndroidScreencap
@@ -4456,26 +4489,16 @@ Func UpdateAndroidBackgroundMode()
 EndFunc   ;==>UpdateAndroidBackgroundMode
 
 #Region - Team__AiO__MOD
-Func GetAndroidCodeName($iAPI = $g_iAndroidVersionAPI)
-	Switch $iAPI
-		Case $g_iAndroidJellyBean To $g_iAndroidKitKat - 1
-			; SetLog("Android Version 4.1 - 4.3.1, NOT SUPPORTED", $COLOR_ERROR)
-			Return "JellyBean"
-		Case $g_iAndroidKitKat To $g_iAndroidLollipop - 1
-			; SetLog("Android Version 4.4, NOT SUPPORTED", $COLOR_ERROR)
-			Return "KitKat"
-		Case $g_iAndroidLollipop To $g_iAndroidNougat - 1
-			; SetDebugLog("Android Version 5.1")
-			Return "Lollipop"
-		Case $g_iAndroidNougat To $g_iAndroidPie - 1
-			; SetDebugLog("Android Version 7.0-7.1.2")
-			Return "Nougat"
-		Case Else
-			SetDebugLog("Unsupported Android API Version: " & $iAPI, $COLOR_ERROR)
-	EndSwitch
-	
+Func getAndroidcodename($iapi = $g_iAndroidversionapi)
+	If $iapi >= $g_iAndroidpie Then Return "Pie"
+	If $iapi >= $g_iAndroidoreo Then Return "Oreo"
+	If $iapi >= $g_iAndroidnougat Then Return "Nougat"
+	If $iapi >= $g_iAndroidlollipop Then Return "Lollipop"
+	If $iapi >= $g_iAndroidkitkat Then Return "KitKat"
+	If $iapi >= $g_iAndroidjellybean Then Return "JellyBean"
+	SetDebugLog("Unsupported Android API Version: " & $iapi, $COLOR_ERROR)
 	Return ""
-EndFunc   ;==>GetAndroidCodeName
+EndFunc
 #EndRegion - Team__AiO__MOD
 
 Func HaveSharedPrefs($sProfile = $g_sProfileCurrentName, $BothNewOrOld = Default, $bReturnArray = False)
