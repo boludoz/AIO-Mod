@@ -71,6 +71,25 @@ Func VillageReport($bBypass = False, $bSuppressLog = False)
 	If Not $bBypass Then BuilderPotionBoost() ; Magic items - Team AiO MOD++
 	ClickAway()
 	
+	; Custom - Team AiO MOD++
+	If $g_bNotifyAlertVillageReport = True Or $g_bNotifyAlertVillageReportDS = True Then 
+		If _CheckPixel($aIsGoldFull, False) Then ;Hex if color of gold (orange)
+			$g_abFullStorage[$eLootGold] = True
+		EndIf
+		
+		If _CheckPixel($aIsElixirFull, False) Then ;Hex if color of elixir (purple)
+			$g_abFullStorage[$eLootElixir] = True
+		EndIf
+
+		If _CheckPixel($aIsDarkElixirFull, False) Then ;Check for black/purple pixel in full bar
+			$g_abFullStorage[$eLootDarkElixir] = True
+		EndIf
+		
+		If Number($g_aiCurrentLoot[$eLootTrophy]) > Number($g_iDropTrophyMax) Then
+			$g_abFullStorage[$eLootTrophy] = True
+		EndIf
+	EndIf
+	
 	If $bBypass = False Then ; update stats
 		UpdateStats()
 	EndIf

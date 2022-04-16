@@ -76,10 +76,10 @@ Func CollectDailyRewards($bGoldPass = False)
 	ClickP($aPersonalChallengeRewardsTab, 1, 0, "Rewards tab") ; Click Rewards tab
 	If _Sleep(1000) Then Return
 
-	Local $iClaim = 0
+	Local $iClaim = 0, $bShellEnabled = False, $sItemName = "", $aAreas[4]
 	For $i = 0 To 10
 		If Not $g_bRunState Then Return
-		Local $SearchArea = $bGoldPass ? GetDiamondFromRect("25,336(810,240)") : GetDiamondFromRect("25,535(810,35)")
+		Local $SearchArea = $bGoldPass ? GetDiamondFromRect("13,308,776,557") : GetDiamondFromRect("13,528,776,557")
 		Local $aResult = findMultiple(@ScriptDir & "\imgxml\DailyChallenge\", $SearchArea, $SearchArea, 0, 1000, $bGoldPass ? 5 : 2, "objectname,objectpoints", True)
 		If $aResult <> "" And IsArray($aResult) Then
 			For $i = 0 To UBound($aResult) - 1
@@ -91,9 +91,30 @@ Func CollectDailyRewards($bGoldPass = False)
 					Local $aAllCoords = decodeMultipleCoords($sAllCoordsString, 50, 50) ; [{coords1}, {coords2}, ...]
 
 					For $j = 0 To UBound($aAllCoords) - 1
+						Local $aCoords = $aAllCoords[$j]
+						
+						$bShellEnabled = False
+						If $g_bChkSellRewards Then
+							$aAreas[0] = $aCoords[0] - 125
+							If $aAreas[0] < 0 Then $aAreas[0] = 0
+							$aAreas[1] = $aCoords[1] - 125
+							If $aAreas[1] < 0 Then $aAreas[1] = 0
+							$aAreas[2] = $aCoords[0] + 125
+							If $aAreas[2] > $g_iGAME_WIDTH Then $aAreas[2] = $g_iGAME_WIDTH
+							$aAreas[3] = $aCoords[1] + 125
+							If $aAreas[3] > $g_iGAME_HEIGHT Then $aAreas[3] = $g_iGAME_HEIGHT
+							
+							$sItemName = QuickMIS("N1", @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\SeasonPass", $aAreas[0], $aAreas[1], $aAreas[2], $aAreas[3])
+							If $sItemName <> "None" Then
+								$bShellEnabled = True
+								SetLog("Found item ready for shell " & "(" & $sItemName & ")", $COLOR_INFO)
+							Else
+							EndIf
+						EndIf
+						
 						ClickP($aAllCoords[$j], 1, 0, "Claim " & $j + 1) ; Click Claim button
 						If WaitforPixel(350, 410, 351, 411, Hex(0xFDC875, 6), 20, 3) Then; wait for Cancel Button popped up in 1.5 second
-						    If $g_bChkSellRewards Then
+						    If $g_bChkSellRewards And $bShellEnabled = True Then
 							    Setlog("Selling extra reward for gems", $COLOR_SUCCESS)
 								ClickP($aPersonalChallengeOkBtn, 1, 0, "Okay Btn") ; Click the Okay
 								$iClaim += 1

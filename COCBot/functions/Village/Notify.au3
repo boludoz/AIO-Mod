@@ -33,8 +33,6 @@ Func __WinHttpURLEncode($sData)
 	Return $sOut
 EndFunc   ;==>__WinHttpURLEncode
 
-
-
 Func NotifyRemoteControl()
 	SetDebugLog("Notify | NotifyRemoteControl()")
 	If $g_bNotifyRemoteEnable = True Then NotifyRemoteControlProc()
@@ -44,11 +42,20 @@ Func NotifyReport()
 	SetDebugLog("Notify | NotifyReport()")
 	If $g_bNotifyAlertVillageReport = True Or $g_bNotifyAlertVillageReportDS = True Then
 		Local $text = $g_sNotifyOrigin & ":" & chr(10)
-		$text &= " [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-G_Info_01", "G") & "]: " & _NumberFormat($g_aiCurrentLoot[$eLootGold])
+		$text &= " [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-G_Info_01", "G") & "]: " & _NumberFormat($g_aiCurrentLoot[$eLootGold]) & chr(10)
 		$text &= " [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-E_Info_01", "E") & "]: " & _NumberFormat($g_aiCurrentLoot[$eLootElixir]) & chr(10)
-		$text &= " [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-DE_Info_01", "DE") & "]: " & _NumberFormat($g_aiCurrentLoot[$eLootDarkElixir])
+		$text &= " [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-DE_Info_01", "DE") & "]: " & _NumberFormat($g_aiCurrentLoot[$eLootDarkElixir]) & chr(10)
 		$text &= " [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-T_Info_01", "T") & "]: " & _NumberFormat($g_aiCurrentLoot[$eLootTrophy]) & chr(10)
-		$text &= " [" & GetTranslatedFileIni("MBR Func_Notify", "Free-Builders_Info_01", "No. of Free Builders") & "]: " & $g_iFreeBuilderCount
+		$text &= " [" & GetTranslatedFileIni("MBR Func_Notify", "Free-Builders_Info_01", "No. of Free Builders") & "]: " & $g_iFreeBuilderCount & chr(10)
+		
+		
+		If $g_abFullStorage[$eLootGold] = True Or $g_abFullStorage[$eLootElixir] = True Or $g_abFullStorage[$eLootDarkElixir] = True Or $g_abFullStorage[$eLootTrophy] = True Then
+			$text &= " [" & GetTranslatedFileIni("MBR Func_Notify", "Free-FullResources_Info_01", "Is Full Gold? ") & "]: " & String($g_abFullStorage[$eLootGold] = True) & chr(10)
+			$text &= " [" & GetTranslatedFileIni("MBR Func_Notify", "Free-FullResources_Info_02", "Is Full Elixir? ") & "]: " & String($g_abFullStorage[$eLootElixir] = True) & chr(10)
+			$text &= " [" & GetTranslatedFileIni("MBR Func_Notify", "Free-FullResources_Info_03", "Is Full Dark Elixir? ") & "]: " & String($g_abFullStorage[$eLootDarkElixir] = True) & chr(10)
+			$text &= " [" & GetTranslatedFileIni("MBR Func_Notify", "Free-FullResources_Info_04", "Is Full Trophies? ") & "]: " & String($g_abFullStorage[$eLootTrophy] = True) & chr(10)
+		EndIf
+		
 		If $g_bNotifyAlertVillageReport = True Then NotifyPushToTelegram($text)
 		If $g_bNotifyAlertVillageReportDS = True Then NotifyPushToDiscord($text)
 	EndIf
