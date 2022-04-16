@@ -107,7 +107,7 @@ Func CollectDailyRewards($bGoldPass = False)
 							$sItemName = QuickMIS("N1", @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\SeasonPass", $aAreas[0], $aAreas[1], $aAreas[2], $aAreas[3])
 							If $sItemName <> "None" Then
 								$bShellEnabled = True
-								SetLog("Found item ready for shell " & "(" & $sItemName & ")", $COLOR_INFO)
+								SetLog("Found item ready for sell " & "(" & $sItemName & ")", $COLOR_INFO)
 							Else
 							EndIf
 						EndIf
