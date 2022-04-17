@@ -17,19 +17,13 @@
 Global $g_hToolTip = 0
 
 Func _GUICtrlSetTip($controlID, $tiptext, $title = Default, $icon = Default, $options = Default, $useControlID = True)
-	;Return GUICtrlSetTip($controlID, $tiptext, $title, $icon, $options)
-	If $g_hToolTip = 0 Then
-		SetDebugLog("_GUICtrlSetTip: Missing $hToolTip! $controlID=" & $controlID, $COLOR_ERROR)
-		Return False
-	EndIf
+	Return GUICtrlSetTip($controlID, $tiptext, $title, $icon, $options)
+	; If $g_hToolTip = 0 Then
+		; SetDebugLog("_GUICtrlSetTip: Missing $hToolTip! $controlID=" & $controlID, $COLOR_ERROR)
+		; Return False
+	; EndIf
 
-	Local $hCtrl = ($useControlID = True ? GUICtrlGetHandle($controlID) : $controlID)
+	; Local $hCtrl = ($useControlID = True ? GUICtrlGetHandle($controlID) : $controlID)
 
-	Return _GUIToolTip_AddTool($g_hToolTip, 0, $tiptext, $hCtrl)
+	; Return _GUIToolTip_AddTool($g_hToolTip, 0, $tiptext, $hCtrl)
 EndFunc   ;==>_GUICtrlSetTip
-
-Func _GUICtrlGetControlID($hCtrl = -1)
-	Local $aRet = DllCall("user32.dll", "int", "GetDlgCtrlID", "hwnd", ($hCtrl = -1 ? GUICtrlGetHandle(-1) : $hCtrl))
-	Return (IsArray($aRet) ? $aRet[0] : -1)
-EndFunc   ;==>_GUICtrlGetControlID
-

@@ -1090,26 +1090,34 @@ EndFunc   ;==>OpenAndroid
 
 ; Custom - Team AIO Mod++
 Func _OpenAndroid($bRestart = False, $bStartOnlyAndroid = False)
-
-	ResumeAndroid()
-	FindPreferredAdbPath()
-    CloseEmulatorForce(True)
-
-	; list Android devices to ensure ADB Daemon is launched
-	Local $hMutex = AquireAdbDaemonMutex(), $process_killed
-	LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "devices", $process_killed)
-	ReleaseAdbDaemonMutex($hMutex)
-	
-	If Not InitAndroid() Then
-		SetLog("Unable to open " & $g_sAndroidEmulator & ($g_sAndroidInstance = "" ? "" : " instance '" & $g_sAndroidInstance & "'"), $COLOR_ERROR)
-		SetLog("Please check emulator/installation", $COLOR_ERROR)
-		SetLog("To switch to another emualtor, please use bot with command line parameter", $COLOR_BLUE)
-		SetLog("Unable to continue........", $COLOR_ERROR)
-		btnStop()
-		SetError(1, 1, -1)
-		Return False
+	If StringIsSpace($g_sAndroidAdbPath) = 0 Then
+		Local $aWith = ["RA", "IA"]
+	Else
+		Local $aWith = ["IA", "RA"]
 	EndIf
-
+	
+	For $iStage = 0 To 1
+		Switch $aWith[$iStage]
+			Case "RA"
+				ResumeAndroid()
+			
+				; list Android devices to ensure ADB Daemon is launched
+				Local $hMutex = AquireAdbDaemonMutex(), $process_killed
+				LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "devices", $process_killed)
+				ReleaseAdbDaemonMutex($hMutex)
+			Case "IA"
+				If Not InitAndroid() Then
+					SetLog("Unable to open " & $g_sAndroidEmulator & ($g_sAndroidInstance = "" ? "" : " instance '" & $g_sAndroidInstance & "'"), $COLOR_ERROR)
+					SetLog("Please check emulator/installation", $COLOR_ERROR)
+					SetLog("To switch to another emualtor, please use bot with command line parameter", $COLOR_BLUE)
+					SetLog("Unable to continue........", $COLOR_ERROR)
+					btnStop()
+					SetError(1, 1, -1)
+					Return False
+				EndIf
+		EndSwitch
+	Next
+	
 	AndroidAdbTerminateShellInstance()
 	If Not $g_bRunState Then Return False
 
@@ -1902,13 +1910,14 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 		; check shared folder
 		Local $pathFound = False
 		Local $iMount
-		For $iMount = 0 To 29
-			$iconnected = connectAndroidadb($rebootAndroidifneccessary)
-			If $iconnected = 0 OR ($iconnected = 2 And $g_iAndroidadbprocess[0] = 0) Then
-				Return SetError(3, 0)
-			ElseIf $iconnected = 2 And $g_iAndroidadbprocess[0] Then
-				Return SetError(0, 0)
-			EndIf
+		$iconnected = connectAndroidadb($rebootAndroidifneccessary)
+		If $iconnected = 0 OR ($iconnected = 2 And $g_iAndroidadbprocess[0] = 0) Then
+			Return SetError(3, 0)
+		ElseIf $iconnected = 2 And $g_iAndroidadbprocess[0] Then
+			Return SetError(0, 0)
+		EndIf
+		
+		For $iMount = 0 To 5
 
 			$s = LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "-s " & $g_sAndroidAdbDevice & " shell" & $g_sAndroidAdbShellOptions & " mount", $process_killed)
 			SetDebugLog("Display existing mounts: " & $s)
@@ -1963,6 +1972,7 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 				SetDebugLog("OutPut: " & $cmdoutput)
 			EndIf
 			If _Sleep(6000) Then Return 
+			$g_iAndroidVersionAPI = Int(AndroidAdbSendShellCommand("getprop ro.build.version.sdk", Default, $wasRunState, False))
 		Next
 		
 		$g_sAndroidPicturesPathAvailable = $pathFound

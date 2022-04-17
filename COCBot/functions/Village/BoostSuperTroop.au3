@@ -97,7 +97,7 @@ Func BoostSuperTroop($bTest = False)
 
 	Local $aBrownDown[4] = [150, 552, 0x685C50, 20]
 
-	Local $bCheckBottom = False, $bBadTryPotion = False, $bBadTryDark = False
+	Local $bCheckBottom = False, $bBadTryPotion = False, $bBadTryDark = False, $bTroopCord = False, $bIsGrayed = False
 	Local $iIndex = -1, $aSuperT = -1, $aClock = -1, $aTmp = -1, $aBarD = 0, $iDist = 0, $sFilenameClock = "", $sFilenameST = ""
 	Local $aClockCoords[0], $aTroopsCoords[0], $aPoints[0], $sDiamond = GetDiamondFromRect("140, 235, 720, 565"), $sDiamondTroops = GetDiamondFromRect("140, 235, 720, 565")
 
@@ -129,21 +129,73 @@ Func BoostSuperTroop($bTest = False)
 						If UBound($aSuperT) > 0 And Not @error Then
 							For $aMatchedTroops In $aSuperT
 								If $iActive = UBound($aAlreadyChecked) Then
-									ExitLoop
+									ContinueLoop
 								EndIf
-
+								
 								$aPoints = decodeMultipleCoords($aMatchedTroops[2])
-
+								
 								If UBound($aPoints) > 0 And not @error Then
-
+								
 									$sFilenameST = $aMatchedTroops[0] ; Filename
-
-									For $i3 = 0 To UBound($aPoints) - 1
-										$aTroopsCoords = $aPoints[$i3] ; Coords
-										If $aTroopsCoords[1] > 472 Then
-											ExitLoop
+									
+									$aTroopsCoords = $aPoints[0]
+									
+									; $bTroopCord = False
+									$bIsGrayed = True
+									
+									Local $iEndColor = -1, $iLoops = -1, $yEnd = $aTroopsCoords[1]
+									Do 	
+										$yEnd += 1
+										If 573 < $yEnd Then ExitLoop
+										
+										If _ColorCheck(_GetPixelColor($aTroopsCoords[0], $yEnd, False), Hex(0x685C50, 6), 20) = True Then
+											SETLOG("FOUNDCOLOR", $COLOR_ERROR)
+											$iEndColor += 1
 										EndIf
-									Next
+									Until $iEndColor = 3
+									
+									If $iEndColor >= 3 Then
+										$yEnd -= 3
+										Local $aColorArray = [Hex(0xCD9365, 6), Hex(0x5D60CA, 6), Hex(0xFF3565, 6), Hex(0xFC3664, 6), Hex(0xAB744A, 6)]
+										For $hHexs In $aColorArray
+											Local $iTop = $yEnd - 135
+											Local $iBottom = $yEnd
+											Select 
+												Case $aTroopsCoords[0] > 150 And $aTroopsCoords[0] < 277
+													SETLOG("FOUNDCOLOR1-", $COLOR_ERROR)
+													If _PixelSearch(150, $iTop, 277, $iBottom, $hHexs, 20, False, True) <> 0 Then
+														SETLOG("FOUNDCOLOR1" & $sFilenameST, $COLOR_ERROR)
+														$bIsGrayed = False
+														ExitLoop
+													EndIf
+												Case $aTroopsCoords[0] > 293 And $aTroopsCoords[0] < 418
+													SETLOG("FOUNDCOLOR2-", $COLOR_ERROR)
+													If _PixelSearch(293, $iTop, 418, $iBottom, $hHexs, 20, False, True) <> 0 Then
+														SETLOG("FOUNDCOLOR2" & $sFilenameST, $COLOR_ERROR)
+														$bIsGrayed = False
+														ExitLoop
+													EndIf
+												Case $aTroopsCoords[0] > 435 And $aTroopsCoords[0] < 560
+													SETLOG("FOUNDCOLOR3-", $COLOR_ERROR)
+													If _PixelSearch(435, $iTop, 560, $iBottom, $hHexs, 20, False, True) <> 0 Then
+														SETLOG("FOUNDCOLOR3" & $sFilenameST, $COLOR_ERROR)
+														$bIsGrayed = False
+														ExitLoop
+													EndIf
+												Case $aTroopsCoords[0] > 578 And $aTroopsCoords[0] < 703
+													SETLOG("FOUNDCOLOR4-", $COLOR_ERROR)
+													If _PixelSearch(578, $iTop, 703, $iBottom, $hHexs, 20, False, True) <> 0 Then
+														SETLOG("FOUNDCOLOR4" & $sFilenameST, $COLOR_ERROR)
+														$bIsGrayed = False
+														ExitLoop
+													EndIf
+											EndSelect
+										Next
+									EndIf
+									
+									If $bIsGrayed = True Then
+										ContinueLoop
+									EndIf
 
 									SetDebugLog($sFilenameST & " found (" & $aTroopsCoords[0] & "," & $aTroopsCoords[1] & ")", $COLOR_SUCCESS)
 
