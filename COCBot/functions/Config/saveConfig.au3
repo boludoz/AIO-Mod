@@ -815,6 +815,7 @@ Func SaveConfig_600_22()
 		_Ini_Add("SuperTroopsBoost", "SuperTroopsIndex" & $i, $g_iCmbSuperTroops[$i])
 	Next
 	; Custom Super Troops - Team AIO Mod++
+	_Ini_Add("SuperTroopsBoost", "SuperAutoTroops", $g_bSuperAutoTroops ? 1 : 0)
 	_Ini_Add("SuperTroopsBoost", "CmbSuperTroopsResources", $g_iCmbSuperTroopsResources)
 EndFunc   ;==>SaveConfig_600_22
 
