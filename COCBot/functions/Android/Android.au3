@@ -767,13 +767,43 @@ Func DetectInstalledAndroid()
 	FuncReturn()
 EndFunc   ;==>DetectInstalledAndroid
 
+; Custom - Team AIO Mod++
 ; Find preferred Adb Path. Current Android ADB is used and saved in profile.ini and shared across instances.
 Func FindPreferredAdbPath()
+	Local $aFCopy = ["AdbWinApi.dll", "AdbWinUsbApi.dll", "adb.exe"]
 	Local $aDll = ["AdbWinApi.dll", "AdbWinUsbApi.dll"]
 	Local $adbPath = Execute("Get" & $g_sAndroidEmulator & "AdbPath()")
 	Local $sAdbFolder = StringLeft($adbPath, StringInStr($adbPath, "\", 0, -1))
 	Local $sAdbFile = StringMid($adbPath, StringLen($sAdbFolder) + 1)
-	Local $sRealAdb = @ScriptDir & "\lib\adb\adb.exe"
+
+	Local $sToAdb = "", $sMatrixFolder = "", $sRealAdb = ""
+	Local $sInPath = @ScriptDir & "\Bin\AdbPath\" & $g_sAndroidinstance & "\"
+	If DirCreate($sInPath) = 0 Then
+		SetLog("Bad ADB path", $COLOR_ERROR)
+		$sInPath = @ScriptDir & "\lib\adb\"
+		If $g_sAndroidemulator = "Nox" Then $aFCopy[2] = "nox_adb.exe"
+		$sRealAdb = $sInPath & $aFCopy[2]
+	Else
+		For $s in $aFCopy
+			$sMatrixFolder = @ScriptDir & "\lib\adb\" & $s
+			
+			If "adb.exe" = $s Then
+				If $g_sAndroidemulator = "Nox" Then $aFCopy[2] = "nox_adb.exe"
+				$sToAdb = $sInPath & $aFCopy[2]
+				$sRealAdb = $sToAdb
+			Else
+				$sToAdb = $sInPath & $s
+			EndIf
+			
+			If FileExists($sMatrixFolder) = 1 Or FileExists($sToAdb) = 0 Or FileGetSize($sMatrixFolder) <> FileGetSize($sToAdb) Then
+				If FileCopy($sMatrixFolder, $sToAdb, $FC_OVERWRITE) = 0 Then
+					SetLog($sMatrixFolder & " ADB SetUp OK (" & $s & ")", $COLOR_SUCCESS)
+				EndIf
+			EndIf
+		Next
+	EndIf
+	
+	$g_sAndroidadbpath = $sRealAdb
 	Local $sDummyAdb = @ScriptDir & "\lib\DummyExe.exe"
 	Local $bDummy = $g_iAndroidAdbReplace = 2 And FileExists($sDummyAdb)
 	Local $sAdb = ($bDummy ? $sDummyAdb : $sRealAdb)
@@ -807,10 +837,8 @@ Func FindPreferredAdbPath()
 			If $adbPath <> "" Then ExitLoop
 		Next
 	EndIf
-	If $adbPath <> "" Then
-		; Not used anymore since MBR v7.6.7
-		;_SaveProfileConfigAdbPath(Default, $adbPath) ; ensure profile.ini is saved as quickly as possible with new ADB path
-	EndIf
+
+	If $adbPath = "" Then Return $sRealAdb
 	Return $adbPath
 EndFunc   ;==>FindPreferredAdbPath
 
@@ -949,7 +977,7 @@ Func InitAndroid($bCheckOnly = False, $bLogChangesOnly = True)
 	If Not $bCheckOnly And $Result Then
 
 		InitAndroidAdbPorts()
-
+	
 		; exclude Android for WerFault reporting
 		If $b_sAndroidProgramWerFaultExcluded = True Then
 			Local $sFileOnly = StringMid($g_sAndroidProgramPath, StringInStr($g_sAndroidProgramPath, "\", 0, -1) + 1)
@@ -970,7 +998,7 @@ Func InitAndroid($bCheckOnly = False, $bLogChangesOnly = True)
 				EndIf
 			EndIf
 		EndIf
-
+		
 		; update Virtualbox properties
 		If FileExists($__VBoxManage_Path) Then
 			If $__VBoxGuestProperties = "" Then $__VBoxGuestProperties = LaunchConsole($__VBoxManage_Path, "guestproperty enumerate " & $g_sAndroidInstance, $process_killed)
@@ -1091,33 +1119,33 @@ EndFunc   ;==>OpenAndroid
 ; Custom - Team AIO Mod++
 Func _OpenAndroid($bRestart = False, $bStartOnlyAndroid = False)
 	If StringIsSpace($g_sAndroidAdbPath) = 0 Then
-		Local $aWith = ["RA", "IA"]
-	Else
-		Local $aWith = ["IA", "RA"]
+		ResumeAndroid()
+		
+		; list Android devices to ensure ADB Daemon is launched
+		Local $hMutex = AquireAdbDaemonMutex(), $process_killed
+		LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "devices", $process_killed)
+		ReleaseAdbDaemonMutex($hMutex)
 	EndIf
 	
-	For $iStage = 0 To 1
-		Switch $aWith[$iStage]
-			Case "RA"
-				ResumeAndroid()
-			
-				; list Android devices to ensure ADB Daemon is launched
-				Local $hMutex = AquireAdbDaemonMutex(), $process_killed
-				LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "devices", $process_killed)
-				ReleaseAdbDaemonMutex($hMutex)
-			Case "IA"
-				If Not InitAndroid() Then
-					SetLog("Unable to open " & $g_sAndroidEmulator & ($g_sAndroidInstance = "" ? "" : " instance '" & $g_sAndroidInstance & "'"), $COLOR_ERROR)
-					SetLog("Please check emulator/installation", $COLOR_ERROR)
-					SetLog("To switch to another emualtor, please use bot with command line parameter", $COLOR_BLUE)
-					SetLog("Unable to continue........", $COLOR_ERROR)
-					btnStop()
-					SetError(1, 1, -1)
-					Return False
-				EndIf
-		EndSwitch
-	Next
-	
+	If Not InitAndroid() Then
+		SetLog("Unable to open " & $g_sAndroidEmulator & ($g_sAndroidInstance = "" ? "" : " instance '" & $g_sAndroidInstance & "'"), $COLOR_ERROR)
+		SetLog("Please check emulator/installation", $COLOR_ERROR)
+		SetLog("To switch to another emualtor, please use bot with command line parameter", $COLOR_BLUE)
+		SetLog("Unable to continue........", $COLOR_ERROR)
+		btnStop()
+		SetError(1, 1, -1)
+		Return False
+	EndIf
+
+	If StringIsSpace($g_sAndroidAdbPath) = 0 Then
+		ResumeAndroid()
+		
+		; list Android devices to ensure ADB Daemon is launched
+		Local $hMutex = AquireAdbDaemonMutex(), $process_killed
+		LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "devices", $process_killed)
+		ReleaseAdbDaemonMutex($hMutex)
+	EndIf
+
 	AndroidAdbTerminateShellInstance()
 	If Not $g_bRunState Then Return False
 
@@ -1917,7 +1945,7 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 			Return SetError(0, 0)
 		EndIf
 		
-		For $iMount = 0 To 5
+		For $iMount = 0 To 15
 
 			$s = LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "-s " & $g_sAndroidAdbDevice & " shell" & $g_sAndroidAdbShellOptions & " mount", $process_killed)
 			SetDebugLog("Display existing mounts: " & $s)
@@ -4886,7 +4914,7 @@ Func CheckEmuNewVersions()
 		Case "MEmu"
 			$NewVersion = GetVersionNormalized("7.6.6.0")
          Case "Nox"
-			$NewVersion = GetVersionNormalized("7.0.1.2")
+			$NewVersion = GetVersionNormalized("7.0.2.5")
 		Case Else
 			; diabled of the others
 			$NewVersion = GetVersionNormalized("99.0.0.0")
