@@ -795,7 +795,7 @@ Func FindPreferredAdbPath()
 				$sToAdb = $sInPath & $s
 			EndIf
 			
-			If FileExists($sMatrixFolder) = 1 Or FileExists($sToAdb) = 0 Or FileGetSize($sMatrixFolder) <> FileGetSize($sToAdb) Then
+			If FileExists($sMatrixFolder) = 1 And FileExists($sToAdb) = 0 Or FileGetSize($sMatrixFolder) <> FileGetSize($sToAdb) Then
 				If FileCopy($sMatrixFolder, $sToAdb, $FC_OVERWRITE) = 0 Then
 					SetLog($sMatrixFolder & " ADB SetUp OK (" & $s & ")", $COLOR_SUCCESS)
 				EndIf
