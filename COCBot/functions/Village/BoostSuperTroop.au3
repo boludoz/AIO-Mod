@@ -140,60 +140,32 @@ Func BoostSuperTroop($bTest = False)
 									
 									$aTroopsCoords = $aPoints[0]
 									
-									; $bTroopCord = False
-									$bIsGrayed = True
-									
-									Local $iEndColor = -1, $iLoops = -1, $yEnd = $aTroopsCoords[1]
+									Local $iRedColor = -1, $yEnd = $aTroopsCoords[1]
 									Do 	
-										$yEnd += 1
-										If 573 < $yEnd Then ExitLoop
+										$yEnd -= 1
 										
-										If _ColorCheck(_GetPixelColor($aTroopsCoords[0], $yEnd, False), Hex(0x685C50, 6), 20) = True Then
-											SETLOG("FOUNDCOLOR", $COLOR_ERROR)
-											$iEndColor += 1
+										If Abs($yEnd - $aTroopsCoords[1]) = 150 Then ExitLoop
+										
+										Local $xMid = 0
+										Select 
+											Case $aTroopsCoords[0] > 150 And $aTroopsCoords[0] < 277
+												$xMid = 150 + 65
+											Case $aTroopsCoords[0] > 293 And $aTroopsCoords[0] < 418
+												$xMid = 293 + 65
+											Case $aTroopsCoords[0] > 435 And $aTroopsCoords[0] < 560
+												$xMid = 435 + 65
+											Case $aTroopsCoords[0] > 578 And $aTroopsCoords[0] < 703
+												$xMid = 578 + 65
+											Case Else
+												ContinueLoop
+										EndSelect
+										
+										If _ColorCheck(_GetPixelColor($xMid, $yEnd, False), Hex(0xDD4545, 6), 25) = True Then
+											$iRedColor += 1
 										EndIf
-									Until $iEndColor = 3
+									Until $iRedColor = 3
 									
-									If $iEndColor >= 3 Then
-										$yEnd -= 3
-										Local $aColorArray = [Hex(0xCD9365, 6), Hex(0x5D60CA, 6), Hex(0xFF3565, 6), Hex(0xFC3664, 6), Hex(0xAB744A, 6)]
-										For $hHexs In $aColorArray
-											Local $iTop = $yEnd - 135
-											Local $iBottom = $yEnd
-											Select 
-												Case $aTroopsCoords[0] > 150 And $aTroopsCoords[0] < 277
-													SETLOG("FOUNDCOLOR1-", $COLOR_ERROR)
-													If _PixelSearch(150, $iTop, 277, $iBottom, $hHexs, 20, False, True) <> 0 Then
-														SETLOG("FOUNDCOLOR1" & $sFilenameST, $COLOR_ERROR)
-														$bIsGrayed = False
-														ExitLoop
-													EndIf
-												Case $aTroopsCoords[0] > 293 And $aTroopsCoords[0] < 418
-													SETLOG("FOUNDCOLOR2-", $COLOR_ERROR)
-													If _PixelSearch(293, $iTop, 418, $iBottom, $hHexs, 20, False, True) <> 0 Then
-														SETLOG("FOUNDCOLOR2" & $sFilenameST, $COLOR_ERROR)
-														$bIsGrayed = False
-														ExitLoop
-													EndIf
-												Case $aTroopsCoords[0] > 435 And $aTroopsCoords[0] < 560
-													SETLOG("FOUNDCOLOR3-", $COLOR_ERROR)
-													If _PixelSearch(435, $iTop, 560, $iBottom, $hHexs, 20, False, True) <> 0 Then
-														SETLOG("FOUNDCOLOR3" & $sFilenameST, $COLOR_ERROR)
-														$bIsGrayed = False
-														ExitLoop
-													EndIf
-												Case $aTroopsCoords[0] > 578 And $aTroopsCoords[0] < 703
-													SETLOG("FOUNDCOLOR4-", $COLOR_ERROR)
-													If _PixelSearch(578, $iTop, 703, $iBottom, $hHexs, 20, False, True) <> 0 Then
-														SETLOG("FOUNDCOLOR4" & $sFilenameST, $COLOR_ERROR)
-														$bIsGrayed = False
-														ExitLoop
-													EndIf
-											EndSelect
-										Next
-									EndIf
-									
-									If $bIsGrayed = True Then
+									If $iRedColor < 2 Then
 										ContinueLoop
 									EndIf
 
@@ -219,8 +191,13 @@ Func BoostSuperTroop($bTest = False)
 												Local $bIsOnArea = IsOnArea($aClockCoords[0] - 30, $aClockCoords[1] - 110, $aClockCoords[0] + 95, $aClockCoords[1], $aTroopsCoords[0], $aTroopsCoords[1])
 												SetDebuglog("Clock check in : " & $aClockCoords[0] & " / " & $aClockCoords[1] & " | " & $sFilenameST & " | IS ON AREA : " & $bIsOnArea)
 												If $bIsOnArea = True Then
-													SetLog($sFilenameST & " is boosted.", $COLOR_INFO)
-
+													Local $iIndexName = TroopIndexLookup($sFilenameST)
+													If $iIndexName <> -1 Then
+														SetLog($g_asTroopNamesPlural[$iIndexName] & " is boosted.", $COLOR_INFO)
+													Else
+														SetLog("Unrecognized " & $sFilenameST)
+													EndIf
+													
 													ReDim $aAlreadyChecked[UBound($aAlreadyChecked) + 1]
 													$aAlreadyChecked[UBound($aAlreadyChecked) - 1] = $sFilenameST
 
@@ -296,9 +273,13 @@ Func BoostSuperTroop($bTest = False)
 								EndIf
 							Next
 						EndIf
-
-						ClickDrag(283, 500, 283, 260, 200)
-
+						
+						If $iDrags = 1 Then
+							ClickDrag(283, 500, 283, 260, 200)
+						Else
+							ClickDrag(283, 500 - 67, 283, 260, 200)
+						EndIf
+						
 						If $bTest Then SetLog("Stage ClickDrag.", $COLOR_INFO)
 						If _Sleep(1500) Then Return False
 					Else
@@ -317,10 +298,15 @@ Func BoostSuperTroop($bTest = False)
 		EndIf
 
 		If UBound($aAlreadyChecked) > 0 And not @error Then
-			SetLog("Super troops active:", $COLOR_INFO)
+			SetLog("Super troops checked:", $COLOR_INFO)
 
 			For $i = 0 To UBound($aAlreadyChecked) - 1
-				SetLog("- " & $aAlreadyChecked[$i], $COLOR_INFO)
+				Local $iIndexName = TroopIndexLookup($aAlreadyChecked[$i])
+				If $iIndexName <> -1 Then
+					SetLog("- " & $g_asTroopNamesPlural[$iIndexName], $COLOR_INFO)
+				Else
+					SetLog(" - Unrecognized " & $aAlreadyChecked[$i])
+				EndIf
 			Next
 		EndIf
 	Else
@@ -357,12 +343,15 @@ Func FinalBoostST(ByRef $bBadTryPotion, ByRef $bBadTryDark, $bTest = False)
 		If $aResource[$iNum] == True Then
 			ClickP($aClick[$iNum])
 			If _Sleep(1500) Then Return
-
-			Local $sMode = ($iNum = 0) ? ($g_sImgBoostTroopsButtons) : ($g_sImgBoostTroopsPotion)
+			
+			Local $sMode = ""
+			$sMode = ($iNum = 0) ? ($g_sImgBoostTroopsButtons) : ($g_sImgBoostTroopsPotion)
 			If QuickMIS("BC1", $sMode, $aImgBoostBtn2[0], $aImgBoostBtn2[1], $aImgBoostBtn2[2], $aImgBoostBtn2[3], True, False) Then
 				If $bTest = False Then
 					Click($g_iQuickMISX + $aImgBoostBtn2[0], $g_iQuickMISY + $aImgBoostBtn2[1], 1)
 				Else
+					$sMode = ($iNum = 0) ? ("dark") : ("potion")
+					SetLog("Not possible boost with " & $sMode, $COLOR_ERROR)
 					ClickAway()
 					If _Sleep(1500) Then Return
 
