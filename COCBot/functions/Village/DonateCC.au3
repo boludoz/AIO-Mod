@@ -779,20 +779,25 @@ Func DonateTroopType(Const $iTroopIndex, $Quant = 0, Const $bDonateQueueOnly = F
 	
 	For $x = 0 To $Quant
 		If $x = 0 Then $hColor = _GetPixelColor($Slot[0], $Slot[1], True)
-		Click($Slot[0], $Slot[1], 1, $DELAYDONATECC3, "#0175")
-		$iDon += 1
+		PureClick($Slot[0], $Slot[1], 1, $DELAYDONATECC3, "#0175")
 		
- 		If WaitforPixel($Slot[0] - 5, $Slot[1] - 5, $Slot[0] + 5, $Slot[1] + 5, $hColor, 5, 3) = False Then
+		If _Sleep(500) Then Return
+		
+		If Not IsArray(_PixelSearch($Slot[0] - 5, $Slot[1] - 5, $Slot[0] + 5, $Slot[1] + 5, $hColor, 15)) Then
 			ExitLoop
 		EndIf
+		
+		$iDon += 1
 	Next
-	
+
 	If $g_iCommandStop = 3 And $iDon > 0 Then
 		$g_iCommandStop = 0
 		$g_bFullArmy = False
 	EndIf
 	
+	; Assign the donated quantity troops to train : $Don $g_asTroopName
 	$g_aiDonateStatsTroops[$iTroopIndex][0] += $iDon
+	If $bDonateQueueOnly Then $g_aiAvailQueuedTroop[$iTroopIndex] -= $iDon
 
 EndFunc   ;==>DonateTroopType
 

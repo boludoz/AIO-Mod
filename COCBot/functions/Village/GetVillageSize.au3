@@ -29,6 +29,9 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	
 	; Capture region spam disabled - Team AIO Mod++
 	Local Static $aLast[$g_eTotalAcc]
+	For $i = 0 To $g_eTotalAcc - 1
+		$aLast[$i] = "DS-"
+	Next
 	
 	; Capture region spam disabled - Team AIO Mod++	
 	If $bCaptureRegion = True Or $bCaptureRegion = Default Then
@@ -69,18 +72,19 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	
 	_ArraySort($aStoneFiles, 1, 1)
 	
+	; Custom - Team AIO Mod++
 	; use prev stones first
 	Local $iNewIdx = 1, $s
 	For $i = 1 To $aStoneFiles[0]
-		If $aLast[$g_iCurAccount] = "" Or $bOnBuilderBase = False Then ExitLoop
-		If StringInStr($aStoneFiles[$i], $aLast[$g_iCurAccount]) = 1 Then
+		If $aLast[Int($g_iCurAccount)] = "" Or $bOnBuilderBase = True Then ExitLoop
+		If StringInStr($aStoneFiles[$i], $aLast[Int($g_iCurAccount)]) > 0 Then
 			$s = $aStoneFiles[$iNewIdx]
 			$aStoneFiles[$iNewIdx] = $aStoneFiles[$i]
 			$aStoneFiles[$i] = $s
 			$iNewIdx += 1
 		EndIf
 	Next
-	
+		
 	Local $aTreeFiles = _FileListToArray($sDirectory, "*" & $sTreePrefix & "*", $FLTA_FILES)
 	If @error Then
 		SetLog("Error: Missing tree (" & @error & ")", $COLOR_ERROR)
@@ -173,9 +177,22 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		; Custom - Team AIO Mod++
 		If $bOnBuilderBase = False Then
 			Local $sStones = StringBetween($findImage, "stone", "-")
-			If Not @error Then $aLast[$g_iCurAccount] = "stone" & $sStones
+			If Not @error Then $aLast[Int($g_iCurAccount)] = $sStones & "-"
 		EndIf
 	EndIf
+	
+	; Custom - Team AIO Mod++
+	; use prev stones first
+	Local $iNewIdx = 1, $s
+	For $i = 1 To $aTreeFiles[0]
+		If $aLast[Int($g_iCurAccount)] = "" Or $bOnBuilderBase = True Then ExitLoop
+		If StringInStr($aTreeFiles[$i], $aLast[Int($g_iCurAccount)]) > 0 Then
+			$s = $aTreeFiles[$iNewIdx]
+			$aTreeFiles[$iNewIdx] = $aTreeFiles[$i]
+			$aTreeFiles[$i] = $s
+			$iNewIdx += 1
+		EndIf
+	Next
 
 	If $stone[0] Then
 		For $i = 1 To $aTreeFiles[0]
