@@ -746,7 +746,7 @@ Func IsClanGamesWindow($getCapture = True, $bOnlyCheck = False, $bFromBB = False
 		SetLog("Caravan bad pixel.", $COLOR_ERROR)
 	EndIf
 	
-	ClickAway()
+	If $bOnlyCheck = True Then ClickAwayCross()
 	Return $bRet
 EndFunc   ;==>IsClanGamesWindow
 
