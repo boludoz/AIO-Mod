@@ -494,7 +494,12 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 					$aScrollPos[1] = $aCenterHomeVillageClickDrag[1]
 				EndIf
 				ClickAway()
-				ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y)
+				
+				; Custom fix - Team AIO Mod++
+				If Pixel_Distance($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y) > 5 Then
+					ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y) 
+				EndIf
+				
 				If _Sleep(250) Then
 					$iCallCount = 0
 					Return FuncReturn($aResult)
