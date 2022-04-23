@@ -345,7 +345,12 @@ Func WinGetAndroidHandle($bInitAndroid = Default, $bTestPid = False)
 			EndIf
 			If $g_bIsHidden = True And ($aPos[0] > -30000 Or $aPos[1] > -30000) Then
 				; rehide Android
-				HideAndroidWindow(True, Default, Default, "WinGetAndroidHandle:2")
+				; Credits: based in xbebenk, but really compatible with win 11 and others so. - Custom fix - Team AIO Mod++.
+				If @OSBuild >= 10240 And $g_iAndroidBackgroundMode <> 1 Then
+					HideAndroidWindow(True, Default, Default, "WinGetAndroidHandle:2")
+				Else
+					HideAndroidWindow(True, Default, Default, "WinGetAndroidHandle:2")
+				EndIf
 			EndIf
 		EndIf
 		$g_bWinGetAndroidHandleActive = False
@@ -2209,7 +2214,8 @@ Func _AndroidAdbSendShellCommand($cmd = Default, $timeout = Default, $wasRunStat
 				Sleep(10)
 				$s &= ReadPipe($aReadPipe[0])
 				$loopCount += 1
-				If $wasRunState And Not $g_bRunState Then ExitLoop ; stop pressed here, exit without error
+				; Custom fix - Team__AiO__MOD
+				If $wasRunState <> $g_bRunState Then ExitLoop ; stop pressed here, exit without error ; Custom fix - Team__AiO__MOD
 				;SetDebugLog("Prompt-Check: tail is '"  & StringRight($s, StringLen($g_sAndroidAdbPrompt) + 1) & "', result " & StringCompare(StringRight($s, StringLen($g_sAndroidAdbPrompt) + 1), @LF & $g_sAndroidAdbPrompt, $STR_CASESENSE))
 			WEnd
 		Else
@@ -2743,7 +2749,8 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 		If $hFile = 0 Then $hFile = _WinAPI_CreateFile($hostPath & $Filename, 2, 2, 7)
 		If $hFile <> 0 Then $iSize = _WinAPI_GetFileSizeEx($hFile)
 		Sleep(10)
-		If $wasRunState And Not $g_bRunState Then
+		; Custom fix - Team__AiO__MOD
+		If $wasRunState <> $g_bRunState Then
 			If $hFile <> 0 Then _WinAPI_CloseHandle($hFile)
 			Return SetError(1, 0)
 		EndIf
@@ -2789,9 +2796,6 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 				SetDebugLog("File too small (" & $iSize & " < " & $ExpectedFileSize & "): " & $hostPath & $Filename, $COLOR_ERROR)
 			EndIf
 		EndIf
-		
-		If $g_bRunState = False Then Return
-		
 		If $hFile = 0 Or $iSize < $ExpectedFileSize Or $iReadHeader < $iHeaderSize Or $iReadData < $iDataSize Then
 			If $hFile = 0 Then
 				SetLog("File not found: " & $hostPath & $Filename, $COLOR_ERROR)
@@ -2837,7 +2841,8 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 		If $hFile = 0 Then $hFile = _WinAPI_CreateFile($hostPath & $Filename, 2, 2, 7)
 		If $hFile <> 0 Then $iSize = _WinAPI_GetFileSizeEx($hFile)
 		Sleep(10)
-		If $wasRunState And Not $g_bRunState Then
+		; Custom fix - Team__AiO__MOD
+		If $wasRunState <> $g_bRunState Then
 			If $hFile <> 0 Then _WinAPI_CloseHandle($hFile)
 			Return SetError(1, 0)
 		EndIf
@@ -2948,6 +2953,7 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 			SetDebugLog("AdbScreencap: " & $totalAvg & "/" & $lastAvg & "/" & $duration & " ms (all/" & $iLastCount & "/1)," & $shellLogInfo & "," & $iLoopCountFile & ",l=" & $iLeft & ",t=" & $iTop & ",w=" & $iWidth & ",h=" & $iHeight & ", " & $Filename & ": w=" & $g_iAndroidAdbScreencapWidth & ",h=" & $g_iAndroidAdbScreencapHeight & ",f=" & $iF)
 		EndIf
 	EndIf
+
 	$tBIV5HDR = 0 ; Release the resources used by the structure
 	Return $hHBitmap
 EndFunc   ;==>_AndroidScreencap
@@ -4194,7 +4200,7 @@ EndFunc   ;==>GetAndroidProcessPID
 
 Func AndroidToFront($hHWndAfter = Default, $sSource = "Unknown")
 	If $hHWndAfter = Default Then $hHWndAfter = $HWND_TOPMOST
-	SetDebugLog("AndroidToFront: Source " & $sSource)
+	;SetDebugLog("AndroidToFront: Source " & $sSource)
 	WinMove2(GetAndroidDisplayHWnD(), "", -1, -1, -1, -1, $hHWndAfter, 0, False)
 	If $g_bChkBackgroundMode And ($hHWndAfter = $HWND_TOPMOST Or $hHWndAfter = $HWND_TOP) Then WinMove2(GetAndroidDisplayHWnD(), "", -1, -1, -1, -1, $HWND_NOTOPMOST, 0, False)
 EndFunc   ;==>AndroidToFront
@@ -4206,7 +4212,7 @@ EndFunc   ;==>ShowAndroidWindow
 Func HideAndroidWindow($bHide = True, $bRestorePosAndActivateWhenShow = Default, $bFastCheck = Default, $sSource = "Unknown", $hHWndAfter = Default)
 	If $bFastCheck = Default Then $bFastCheck = True
 	If $hHWndAfter = Default Then $hHWndAfter = $HWND_TOPMOST
-	SetDebugLog("HideAndroidWindow: " & $bHide & ", " & $bRestorePosAndActivateWhenShow & ", " & $bFastCheck & ", " & $sSource)
+	;SetDebugLog("HideAndroidWindow: " & $bHide & ", " & $bRestorePosAndActivateWhenShow & ", " & $bFastCheck & ", " & $sSource)
 	ResumeAndroid()
 	SetError(0)
 	If $bFastCheck Then
@@ -4216,24 +4222,62 @@ Func HideAndroidWindow($bHide = True, $bRestorePosAndActivateWhenShow = Default,
 		WinGetPos($g_hAndroidWindow)
 	EndIf
 	If @error <> 0 Or AndroidEmbedded() Then Return SetError(0, 0, 0)
-
+	
 	If $bHide = True Then
-		WinMove($g_hAndroidWindow, "", -32000, -32000)
-	ElseIf $bHide = False Then
+		; Credits: based in xbebenk, but really compatible with win 11 and others so. - Custom fix - Team AIO Mod++.
+		If @OSBuild >= 10240 And $g_iAndroidBackgroundMode = 1 Then
+			_MoveAppToSpecificDesktop($g_hAndroidWindow, 2)
+		Else
+			WinMove($g_hAndroidWindow, "", -32000, -32000)
+		EndIf
+		SetDebugLog($sSource & " - Hide Android window", $COLOR_INFO)
+	EndIf
+	
+	Local $DesktopWidth = @DeskTopWidth
+	Local $mid = $DesktopWidth/2
+	If $bHide = False Then
 		Switch $bRestorePosAndActivateWhenShow
 			Case True
 				; move and activate
-				WinMove($g_hAndroidWindow, "", $g_iAndroidPosX, $g_iAndroidPosY)
-				WinActivate($g_hAndroidWindow)
+				; Credits: based in xbebenk, but really compatible with win 11 and others so. - Custom fix - Team AIO Mod++.
+				If @OSBuild >= 10240 And $g_iAndroidBackgroundMode = 1 Then
+					_MoveAppToSpecificDesktop($g_hAndroidWindow, 1)
+					If $g_iFrmBotPosX + 236 <= $mid Then 
+						WinMove($g_hAndroidWindow, "", $g_iFrmBotPosX + 472, $g_iFrmBotPosY)
+					Else
+						WinMove($g_hAndroidWindow, "", $g_iFrmBotPosX - 870, $g_iFrmBotPosY)
+					EndIf
+					; WinActivate($g_hAndroidWindow)
+				Else
+					WinMove($g_hAndroidWindow, "", $g_iAndroidPosX, $g_iAndroidPosY)
+					WinActivate($g_hAndroidWindow)
+				EndIf
 			Case False
 				; don't move, only when hidden
-				Local $a = WinGetPos($g_hAndroidWindow)
-				If UBound($a) > 1 And ($a[0] < -30000 Or $a[1] < -30000) Then WinMove($g_hAndroidWindow, "", $g_iAndroidPosX, $g_iAndroidPosY)
-				_WinAPI_ShowWindow($g_hAndroidWindow, @SW_SHOWNOACTIVATE)
+				; Credits: based in xbebenk, but really compatible with win 11 and others so. - Custom fix - Team AIO Mod++
+				If @OSBuild >= 10240 And $g_iAndroidBackgroundMode = 1 Then
+					_MoveAppToSpecificDesktop($g_hAndroidWindow, 1)
+					_WinAPI_ShowWindow($g_hAndroidWindow, @SW_SHOWNOACTIVATE)
+				Else
+					Local $a = WinGetPos($g_hAndroidWindow)
+					If UBound($a) > 1 And ($a[0] < -30000 Or $a[1] < -30000) Then WinMove($g_hAndroidWindow, "", $g_iAndroidPosX, $g_iAndroidPosY)
+					_WinAPI_ShowWindow($g_hAndroidWindow, @SW_SHOWNOACTIVATE)
+				EndIf
 			Case Default
 				; just move
-				Local $a = WinGetPos($g_hAndroidWindow)
-				If UBound($a) > 1 And ($a[0] <> $g_iAndroidPosX Or $a[1] <> $g_iAndroidPosY) Then WinMove($g_hAndroidWindow, "", $g_iAndroidPosX, $g_iAndroidPosY)
+				; Credits: based in xbebenk, but really compatible with win 11 and others so. - Custom fix - Team AIO Mod++.
+				If @OSBuild >= 10240 And $g_iAndroidBackgroundMode = 1 Then
+					_MoveAppToSpecificDesktop($g_hAndroidWindow, 1)
+					If $g_iFrmBotPosX + 236 <= $mid Then 
+						WinMove($g_hAndroidWindow, "", $g_iFrmBotPosX + 472, $g_iFrmBotPosY)
+					Else
+						WinMove($g_hAndroidWindow, "", $g_iFrmBotPosX - 870, $g_iFrmBotPosY)
+					EndIf
+					WinActivate($g_hAndroidWindow)
+				Else
+					Local $a = WinGetPos($g_hAndroidWindow)
+					If UBound($a) > 1 And ($a[0] <> $g_iAndroidPosX Or $a[1] <> $g_iAndroidPosY) Then WinMove($g_hAndroidWindow, "", $g_iAndroidPosX, $g_iAndroidPosY)
+				EndIf
 		EndSwitch
 		If $hHWndAfter <> $g_hAndroidWindow Then AndroidToFront($hHWndAfter, $sSource & "->HideAndroidWindow")
 	EndIf
@@ -4744,17 +4788,17 @@ Func PushSharedPrefs($sProfile = $g_sProfileCurrentName, $bCloseGameIfRunning = 
 						FileClose($hFile)
 						If $sStorage Then
 							Local $sStorageUpdated = $sStorage
-						;Quick fix for "can't stop snow" proposed by Famine098 in Forum
-						Local $aTags[4][3] = _
-						[[$g_bUpdateSharedPrefsLanguage, "d0h6phQUOxO/uSfvat949w==", "FWCNTu39RUlYoSt0Y6mCwg=="], _
-						[$g_bUpdateSharedPrefsZoomLevel, "MjhxqoFNUV+begGvsz3gkg==", "oiMa1oDch9dThLoIKokZqQ=="], _
-                        [$g_bUpdateSharedPrefsRated, "7lJCTt3TmNyzikZuHh9wZQ==", "pmvEzdQuRQuKZob4KB0IeA=="], _
-                        [$g_bUpdateSharedPrefsGoogleDisconnected, "AQ+/D2n+JXPIPpMLdPZcqHpYSGJ5PpF3sOnowks5I5s=", "pmvEzdQuRQuKZob4KB0IeA=="]]
-;						Local $aTags[5][3] = [[$g_bUpdateSharedPrefsLanguage, "d0h6phQUOxO/uSfvat949w==", "FWCNTu39RUlYoSt0Y6mCwg=="], _
-;						[$g_bUpdateSharedPrefsSnow, "WnITdUFs6FnH4NScnkEtyg==", "jS26iozgAh+i/424eyY5cA=="], _
-;						[$g_bUpdateSharedPrefsZoomLevel, "MjhxqoFNUV+begGvsz3gkg==", "oiMa1oDch9dThLoIKokZqQ=="], _
-;						[$g_bUpdateSharedPrefsRated, "7lJCTt3TmNyzikZuHh9wZQ==", "pmvEzdQuRQuKZob4KB0IeA=="], _
-;						[$g_bUpdateSharedPrefsGoogleDisconnected, "AQ+/D2n+JXPIPpMLdPZcqHpYSGJ5PpF3sOnowks5I5s=", "pmvEzdQuRQuKZob4KB0IeA=="]]
+							;Quick fix for "can't stop snow" proposed by Famine098 in Forum
+							Local $aTags[4][3] = _
+							[[$g_bUpdateSharedPrefsLanguage, "d0h6phQUOxO/uSfvat949w==", "FWCNTu39RUlYoSt0Y6mCwg=="], _
+							[$g_bUpdateSharedPrefsZoomLevel, "MjhxqoFNUV+begGvsz3gkg==", "oiMa1oDch9dThLoIKokZqQ=="], _
+							[$g_bUpdateSharedPrefsRated, "7lJCTt3TmNyzikZuHh9wZQ==", "pmvEzdQuRQuKZob4KB0IeA=="], _
+							[$g_bUpdateSharedPrefsGoogleDisconnected, "AQ+/D2n+JXPIPpMLdPZcqHpYSGJ5PpF3sOnowks5I5s=", "pmvEzdQuRQuKZob4KB0IeA=="]]
+	;						Local $aTags[5][3] = [[$g_bUpdateSharedPrefsLanguage, "d0h6phQUOxO/uSfvat949w==", "FWCNTu39RUlYoSt0Y6mCwg=="], _
+	;						[$g_bUpdateSharedPrefsSnow, "WnITdUFs6FnH4NScnkEtyg==", "jS26iozgAh+i/424eyY5cA=="], _
+	;						[$g_bUpdateSharedPrefsZoomLevel, "MjhxqoFNUV+begGvsz3gkg==", "oiMa1oDch9dThLoIKokZqQ=="], _
+	;						[$g_bUpdateSharedPrefsRated, "7lJCTt3TmNyzikZuHh9wZQ==", "pmvEzdQuRQuKZob4KB0IeA=="], _
+	;						[$g_bUpdateSharedPrefsGoogleDisconnected, "AQ+/D2n+JXPIPpMLdPZcqHpYSGJ5PpF3sOnowks5I5s=", "pmvEzdQuRQuKZob4KB0IeA=="]]
 
 							For $i = 0 To UBound($aTags) -1
 								If $aTags[$i][0] Then

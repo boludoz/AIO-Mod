@@ -22,7 +22,8 @@ Func Initiate()
 		SetLogCentered(" " & $g_sBotTitle & " Powered by MyBot.run ", "~", $COLOR_DEBUG)
 
 		Local $Compiled = @ScriptName & (@Compiled ? " Executable" : " Script")
-		SetLog($Compiled & " running on " & @OSVersion & " " & @OSServicePack & " " & @OSArch)
+		Local $iFixV = String((@OSVersion = "WIN_10" And @OSBuild >= "22000") ? ("WIN_11") : (@OSVersion))
+		SetLog($Compiled & " running on " & $iFixV & " " & @OSServicePack & " " & @OSArch)
 		If Not $g_bSearchMode Then
 			SetLogCentered(" Bot Start ", Default, $COLOR_SUCCESS)
 		Else

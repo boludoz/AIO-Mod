@@ -642,7 +642,8 @@ Func FinalInitialization(Const $sAI)
 	EndIf
 
 	If $g_bAndroidShieldEnabled = False Then
-		SetLog(GetTranslatedFileIni("MBR GUI Design - Loading", "Msg_Android_instance_05", "Android Shield not available for %s", @OSVersion), $COLOR_ACTION)
+		Local $iFixV = String((@OSVersion = "WIN_10" And @OSBuild >= "22000") ? ("WIN_11") : (@OSVersion))
+		SetLog(GetTranslatedFileIni("MBR GUI Design - Loading", "Msg_Android_instance_05", "Android Shield not available for %s", $iFixV), $COLOR_ACTION)
 	EndIf
 
 	DisableProcessWindowsGhosting()

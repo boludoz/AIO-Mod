@@ -114,6 +114,7 @@ Global $g_hFrmBotEmbeddedMouse = 0
 #include "COCBot\Team__AiO__MOD++\functions\Config\readConfig.au3"
 #include "COCBot\functions\Other\UpdateStats.Mini.au3"
 #include "COCBot\functions\Other\_NumberFormat.au3"
+#Include "COCBot\functions\Other\VritDsktLibrary.au3"
 
 ; Only farm - Team AiO MOD++
 Func ComboStatusMode()
@@ -1075,8 +1076,26 @@ Func btnVillageStat($source = "")
 
 EndFunc   ;==>btnVillageStat
 
+; xbebenk - Custom - Team__AiO__MOD
 Func btnHide()
+    $g_bIsHidden = Not $g_bIsHidden
+    btnHideAndroid($g_bIsHidden)
+    BtnHideState()
 EndFunc   ;==>btnHide
+
+Func BtnHideState()
+    Local $sText
+    If $g_bIsHidden Then
+        $sText = GetTranslatedFileIni("MBR GUI Control Bottom", "Func_btnHide_False", "Show")
+    Else
+        $sText = GetTranslatedFileIni("MBR GUI Control Bottom", "Func_btnHide_True", "Hide")
+    EndIf
+    If GUICtrlRead($g_hBtnHide) <> $sText Then
+        ; update text
+        GUICtrlSetData($g_hBtnHide, $sText)
+    EndIf
+EndFunc   ;==>updateBtnHideState
+; ---------------------------------
 
 Func btnSearchMode()
 EndFunc   ;==>btnSearchMode
@@ -1296,11 +1315,13 @@ Func UpdateManagedMyBot($aBotDetails)
 
 	If $g_iDebugWindowMessages Then SetDebugLog("UpdateManagedMyBot: " & $aBotDetails[$g_eBotDetailsBotForm] & ", Profile: " & $sProfile & ", Android: " & $sEmulator & ", Instance: " & $sInstance & ", StructType: " & $eStructType & ", Ptr: " & $pStructPtr & ", Data:" & $AdditionalData)
 
-	If $g_sProfileCurrentName <> $sProfile Then
-		$g_sProfileCurrentName = $sProfile
-		; Set the profile name on the village info group.
-		GUICtrlSetData($g_hGrpVillage, GetTranslatedFileIni("MBR GUI Design Bottom", "GrpVillage", "Village") & ": " & $g_sProfileCurrentName)
-	EndIf
+	; xbebenk - Custom - Team__AiO__MOD
+    If $g_sProfileCurrentName <> $sProfile Then $g_sProfileCurrentName = $sProfile
+
+    ; Set the profile name on the village info group.
+    GUICtrlSetData($g_hGrpVillage, GetTranslatedFileIni("MBR GUI Design Bottom", "GrpVillage", "Village") & ": " & $g_sProfileCurrentName)
+	; --------------------------------
+	
 	If $sEmulator <> "" Then $g_sAndroidEmulator = $sEmulator
 	If $sInstance <> "" Then $g_sAndroidInstance = $sInstance
 
@@ -1434,6 +1455,16 @@ Func btnMakeScreenshot()
 	_WinAPI_PostMessage($g_hFrmBotBackend, $WM_MYBOTRUN_API, 0x1050, $g_hFrmBot)
 EndFunc   ;==>btnMakeScreenshot
 
+ ; xbebenk - Custom - Team__AiO__MOD
+Func btnHideAndroid($g_bIsHidden = True)
+    If $g_bIsHidden Then
+        _WinAPI_PostMessage($g_hFrmBotBackend, $WM_MYBOTRUN_API, 0x1070, $g_hFrmBot)
+    Else
+        _WinAPI_PostMessage($g_hFrmBotBackend, $WM_MYBOTRUN_API, 0x1080, $g_hFrmBot)
+    EndIf
+EndFunc   ;==>btnHideAndroid
+ ; --------------------------------
+
 Func TogglePauseImpl($source)
 	If $g_bBotPaused Then
 		_WinAPI_PostMessage($g_hFrmBotBackend, $WM_MYBOTRUN_API, 0x1020, $g_hFrmBot)
@@ -1522,6 +1553,8 @@ EndIf
 
 ;UpdateMainGUI()
 GUICtrlSetState($g_hBtnStart, $GUI_ENABLE)
+; xbebenk - Custom - Team__AiO__MOD
+GUICtrlSetState($g_hBtnHide, $GUI_ENABLE)
 
 ; Show main GUI
 ShowMainGUI()
@@ -1543,6 +1576,7 @@ DllCall("user32.dll", "none", "DisableProcessWindowsGhosting")
 
 Local $hStatusUpdateTimer = 0, $hTimeUpdateTimer = 0
 Local $iMainLoop = 1
+WinGetAndroidHandle() ; xbebenk - Custom - Team__AiO__MOD
 While 1
 	_Sleep($g_iMainLoopSleep, True, False)
 
@@ -1592,25 +1626,24 @@ WEnd
 
 ; Custom - Team__AiO__MOD
 Func AutoDockMiniGUI()
-	If $g_hAndroidHandleMini = 0 Or $g_hFrmBot = 0 Then Return
-	Static $_shFrmBot[4]
-	Static $_shAndroidHandleMini[4]
-	Local $hFrmBot = WinGetPos($g_hFrmBot)
-	Local $hAndroidHandleMini = WinGetPos($g_hAndroidHandleMini)
-	If @error Then Return
-	If ($hFrmBot[0] = $_shFrmBot[0] And $hFrmBot[1] = $_shFrmBot[1]) And ($hAndroidHandleMini[0] = $_shAndroidHandleMini[0] And $hAndroidHandleMini[1] = $_shAndroidHandleMini[1]) Then Return
-	; If BitAND(WinGetState($g_hFrmBot), $WIN_STATE_MINIMIZED) = $WIN_STATE_MINIMIZED Or BitAND(WinGetState($g_hAndroidHandleMini), $WIN_STATE_MINIMIZED) = $WIN_STATE_MINIMIZED Then Return
-	If @error Then Return
-	Local $x = $g_sEmulatorNameMini <> "BlueStacks2" ? $hFrmBot[0] - 890 : $hFrmBot[0] - 864
-	Local $y = $g_sEmulatorNameMini <> "BlueStacks2" ? $hFrmBot[1] - 30 : $hFrmBot[1] - 24
-	WinMove($g_hAndroidHandleMini, "", $x, $y)
-	If $g_sEmulatorNameMini <> "BlueStacks2" Then
-		WinActivate($g_hAndroidHandleMini)
-		ControlClick($g_hAndroidHandleMini, "", "", "left", 1, 10, 2)
-	EndIf
-	$_shFrmBot = $hFrmBot
-	$_shAndroidHandleMini = $hAndroidHandleMini
+	If $g_bIsHidden = True Then Return
+    If $g_hAndroidHandleMini = 0 Or $g_hFrmBot = 0 Then Return
+    Local Static $_shFrmBot[4]
+    Local Static $_shAndroidHandleMini[4]
+    Local $hFrmBot = WinGetPos($g_hFrmBot)
+    Local $hAndroidHandleMini = WinGetPos($g_hAndroidHandleMini)
+    If @error Then Return
+    If ($hFrmBot[0] = $_shFrmBot[0] And $hFrmBot[1] = $_shFrmBot[1]) And ($hAndroidHandleMini[0] = $_shAndroidHandleMini[0] And $hAndroidHandleMini[1] = $_shAndroidHandleMini[1]) Then Return
+    Local $x = $g_sEmulatorNameMini <> "BlueStacks2" ? $hFrmBot[0] - 890 : $hFrmBot[0] - 864
+    Local $y = $g_sEmulatorNameMini <> "BlueStacks2" ? $hFrmBot[1] - 30 : $hFrmBot[1] - 24
+    WinMove($g_hAndroidHandleMini, "", $x, $y)
+    If $g_sEmulatorNameMini <> "BlueStacks2" Then
+        WinActivate($g_hAndroidHandleMini)
+        ControlClick($g_hAndroidHandleMini, "", "", "left", 1, 10, 2)
+    EndIf
+    $_shFrmBot = $hFrmBot
+    $_shAndroidHandleMini = $hAndroidHandleMini
 EndFunc   ;==>AutoDockMiniGUI
-
+ 
 ReferenceFunctions()
 ReferenceGlobals()
