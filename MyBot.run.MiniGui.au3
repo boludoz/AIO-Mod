@@ -133,11 +133,14 @@ Func ComboStatusMode()
 				$iNewStatus += 8
 			Case 2
 				$g_iComboStatusMode = 2
+				$g_bChkOnlyFarm = False
 				$g_bOnlyBuilderBase = True
 				$iNewStatus += 16
 				$g_iCurrentReport = $g_iBBReport
 				btnVillageStat()
 			Case Else
+				$g_bChkOnlyFarm = False
+				$g_bOnlyBuilderBase = False
 				$g_iComboStatusMode = 0
 				Return
 		EndSwitch

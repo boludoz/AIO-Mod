@@ -310,9 +310,6 @@ Func SaveConfig_MOD_600_35_1()
 	_Ini_Add("general", "AutoHide", $g_bChkAutoHideEmulator ? 1 : 0)
 	_Ini_Add("general", "AutoMinimize", $g_bChkAutoMinimizeBot ? 1 : 0)
 
-	; <><><> Only Farm <><><>
-	_Ini_Add("general", "ComboStatusMode", Number($g_iComboStatusMode))
-
 	; <><><> AIO Updater <><><>
 	If FileExists($g_sLibPath & "\NoNotify.txt") = 1 Then
 		If $g_bCheckVersionAIO = True Then

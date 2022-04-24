@@ -43,12 +43,12 @@ Func applyConfig($bRedrawAtExit = True, $TypeReadSave = "Read") ;Applies the dat
 			Switch $TypeReadSave
                 Case "Read"
                     GUICtrlSetState($g_hChkBackgroundMode, $g_bChkBackgroundMode = True ? $GUI_CHECKED : $GUI_UNCHECKED)
-					
 					; <><><> Only Farm <><><>
-                    GUICtrlSetState($g_hCmbStatusMode, $g_iComboStatusMode)
+                    _GUICtrlComboBox_SetCurSel($g_hCmbStatusMode, $g_iComboStatusMode)
 					ComboStatusMode()
 				Case "Save"
 					$g_bChkBackgroundMode = (GUICtrlRead($g_hChkBackgroundMode) = $GUI_CHECKED)
+					; <><><> Only Farm <><><>
 					$g_iComboStatusMode = Number(_GUICtrlComboBox_GetCurSel($g_hCmbStatusMode))
 			EndSwitch
 		EndIf
@@ -315,10 +315,15 @@ Func ApplyConfig_600_1($TypeReadSave)
 			; <><><><> Bottom panel <><><><>
 			GUICtrlSetState($g_hChkBackgroundMode, $g_bChkBackgroundMode = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			UpdateChkBackground() ;Applies it to hidden button
+			; <><><> Only Farm <><><>
+            _GUICtrlComboBox_SetCurSel($g_hCmbStatusMode, $g_iComboStatusMode)
+			ComboStatusMode()
 		Case "Save"
 			$g_iCmbLogDividerOption = _GUICtrlComboBox_GetCurSel($g_hCmbLogDividerOption)
 			; <><><><> Bottom panel <><><><>
 			$g_bChkBackgroundMode = (GUICtrlRead($g_hChkBackgroundMode) = $GUI_CHECKED)
+			; <><><> Only Farm <><><>
+			$g_iComboStatusMode = Abs(Number(_GUICtrlComboBox_GetCurSel($g_hCmbStatusMode)))
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_1
 

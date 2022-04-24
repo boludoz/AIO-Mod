@@ -336,11 +336,9 @@ Func SaveConfig_Android()
 	_Ini_Add("android", "adb.replace", $g_iAndroidAdbReplace)
 	_Ini_Add("android", "check.time.lag.enabled", ($g_bAndroidCheckTimeLagEnabled ? "1" : "0"))
 	_Ini_Add("android", "adb.dedicated.instance", ($g_bAndroidAdbPortPerInstance ? "1" : "0"))
-	#CS - Custom AndroidScreencap - Team AIO Mod ++
 	_Ini_Add("android", "adb.screencap.timeout.min", $g_iAndroidAdbScreencapTimeoutMin)
 	_Ini_Add("android", "adb.screencap.timeout.max", $g_iAndroidAdbScreencapTimeoutMax)
 	_Ini_Add("android", "adb.screencap.timeout.dynamic", $g_iAndroidAdbScreencapTimeoutDynamic)
-	#CE - Custom AndroidScreencap - Team AIO Mod ++
 	_Ini_Add("android", "adb.input.enabled", ($g_bAndroidAdbInputEnabled ? "1" : "0"))
 	_Ini_Add("android", "adb.click.enabled", ($g_bAndroidAdbClickEnabled ? "1" : "0"))
 	_Ini_Add("android", "adb.click.drag.script", ($g_bAndroidAdbClickDragScript ? "1" : "0"))
@@ -397,6 +395,8 @@ Func SaveConfig_600_1()
 	_Ini_Add("general", "LogDividerY", $g_iLogDividerY)
 	; <><><><> Bottom panel <><><><>
 	_Ini_Add("general", "Background", $g_bChkBackgroundMode ? 1 : 0)
+	; <><><> Only Farm <><><>
+	_Ini_Add("general", "ComboStatusMode", Abs(Number($g_iComboStatusMode)))
 EndFunc   ;==>SaveConfig_600_1
 
 Func SaveConfig_600_6()

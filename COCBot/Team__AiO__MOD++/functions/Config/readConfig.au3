@@ -294,9 +294,6 @@ Func ReadConfig_MOD_600_35_1()
 	IniReadS($g_bChkAutoHideEmulator, $g_sProfileConfigPath, "general", "AutoHide", $g_bChkAutoHideEmulator, "Bool")
 	IniReadS($g_bChkAutoMinimizeBot, $g_sProfileConfigPath, "general", "AutoMinimize", $g_bChkAutoMinimizeBot, "Bool")
 
-	; <><><> Only Farm <><><>
-	IniReadS($g_iComboStatusMode, $g_sProfileConfigPath, "general", "ComboStatusMode", 0, "Int")
-
 	; <><><> AIO Updater <><><>
 	$g_bCheckVersionAIO = (FileExists($g_sLibPath & "\NoNotify.txt") = 0) ? (True) : (False)
 
