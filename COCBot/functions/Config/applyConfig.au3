@@ -377,6 +377,17 @@ Func ApplyConfig_600_6($TypeReadSave)
 
 			GUICtrlSetState($g_hChkPlacingNewBuildings, $g_iChkPlacingNewBuildings = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 
+			#Region - Custom Improve - Team AIO Mod++
+			For $i = 0 To UBound($g_iChkBBUpgradesToIgnore) - 1
+				GUICtrlSetState($g_hChkBBUpgradesToIgnore[$i], ($g_iChkBBUpgradesToIgnore[$i] = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
+			Next
+
+			GUICtrlSetState($g_hRadioBBUpgradesToIgnore, $g_bRadioBBUpgradesToIgnore ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hRadioBBCustomOTTO, $g_bRadioBBCustomOTTO ? $GUI_CHECKED : $GUI_UNCHECKED)
+			chkActivateBBSuggestedUpgrades()
+			#EndRegion - Custom Improve - Team AIO Mod++
+
+			chkBBUpgradesToIgnore()
 			chkActivateBBSuggestedUpgrades()
 			chkActivateBBSuggestedUpgradesGold()
 			chkActivateBBSuggestedUpgradesElixir()
@@ -521,6 +532,15 @@ Func ApplyConfig_600_6($TypeReadSave)
 				$g_aiCmbBBDropOrder[$i] = Number(_GUICtrlComboBox_GetCurSel($g_ahCmbBBDropOrder[$i]))
 			Next
 			#EndRegion - Custom BB Army - Team AIO Mod++
+
+			#Region - Custom Improve - Team AIO Mod++
+			For $i = 0 To UBound($g_iChkBBUpgradesToIgnore) - 1
+				$g_iChkBBUpgradesToIgnore[$i] = GUICtrlRead($g_hChkBBUpgradesToIgnore[$i]) = $GUI_CHECKED ? 1 : 0
+			Next
+
+			$g_bRadioBBUpgradesToIgnore = (GUICtrlRead($g_hRadioBBUpgradesToIgnore) = $GUI_CHECKED)
+			$g_bRadioBBCustomOTTO = (GUICtrlRead($g_hRadioBBCustomOTTO) = $GUI_CHECKED)
+			#EndRegion - Custom Improve - Team AIO Mod++
 
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_6

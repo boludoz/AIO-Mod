@@ -130,18 +130,35 @@ Func _AutoUpgrade()
 				ExitLoop
 			EndIf
 		EndIf
-
+		
 		; check in the line of the 000 if we can see "New" or the Gear of the equipment, in this case, will not do the upgrade
+		Local $bIsNewUpdate = False
 		If QuickMIS("NX",$g_sImgAUpgradeObst, 180, 80 + $g_iCurrentLineOffset - 15, 480, 80 + $g_iCurrentLineOffset + 15) <> "none" Then
 			SetLog("This is a New Building or an Equipment, looking next...", $COLOR_WARNING)
-			$g_iNextLineOffset = $g_iCurrentLineOffset
-			ContinueLoop
+			$bIsNewUpdate = True
 		EndIf
 
 		; if it's an upgrade, will click on the upgrade, in builders menu
-		Click(180 + $g_iQuickMISX, 80 + $g_iCurrentLineOffset)
+		PureClick(180 + $g_iQuickMISX, 80 + $g_iCurrentLineOffset)
 		If _Sleep($DELAYAUTOUPGRADEBUILDING1) Then Return
+		
+		If $bIsNewUpdate = True Then
+			$bIsNewUpdate = False
+			
+			If $g_bNewUpdateMainVillage = True Then
+				#Region - OK Case
+				If NewBuildings() Then
+					$g_iNextLineOffset = 0
+					ContinueLoop
+				EndIf
+				#EndRegion - OK Case
+			EndIf
 
+			; Wrong Case
+            $g_iNextLineOffset = $g_iCurrentLineOffset
+			ContinueLoop
+		EndIf
+		
 		; check if any wrong click by verifying the presence of the Upgrade button (the hammer)
 		Local $aUpgradeButton = findButton("Upgrade", Default, 1, True)
 		If Not(IsArray($aUpgradeButton) And UBound($aUpgradeButton, 1) = 2) Then
@@ -477,3 +494,40 @@ Func IsHonestOCR($sTring, $sItem, $iMaxDis = 1, $iEvery = 4)
 	EndIf
 	Return False
 EndFunc   ;==>IsHonestOCR
+
+Func NewBuildings()
+
+	Local $Screencap = True, $Debug = False
+
+	If _WaitForCheckImg(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\Upgrade\New\", "14, 175, 847, 667", Default, 4500) Then
+		Click($g_aImageSearchXML[0][1] - 100, $g_aImageSearchXML[0][2] + 100, 1)
+		If _Sleep(2000) Then Return
+
+		; Lets search for the Correct Symbol on field
+		If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgYes, 150, 150, 650, 550, $Screencap, $Debug) Then
+			Click($g_iQuickMISX + 150, $g_iQuickMISY + 150, 1)
+			SetLog("Placed a new Building on main village! [" & $g_iQuickMISX + 150 & "," & $g_iQuickMISY + 150 & "]", $COLOR_INFO)
+			If _Sleep(1000) Then Return
+
+			; Lets check if exist the [x] , Some Buildings like Traps when you place one will give other to place automaticly!
+			If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgNo, 150, 150, 650, 550, $Screencap, $Debug) Then
+				Click($g_iQuickMISX + 150, $g_iQuickMISY + 150, 1)
+			EndIf
+
+			Return True
+		Else
+			If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgNo, 150, 150, 650, 550, $Screencap, $Debug) Then
+				SetLog("Sorry! Wrong place to deploy a new building! [" & $g_iQuickMISX + 150 & "," & $g_iQuickMISY + 150 & "]", $COLOR_ERROR)
+				Click($g_iQuickMISX + 150, $g_iQuickMISY + 150, 1)
+			Else
+				SetLog("Error on Undo symbol!", $COLOR_ERROR)
+			EndIf
+		EndIf
+	Else
+		SetLog("Fail NewBuildings.", $COLOR_INFO)
+		Click(820, 38, 1) ; exit from Shop
+	EndIf
+
+	Return False
+
+EndFunc   ;==>NewBuildings

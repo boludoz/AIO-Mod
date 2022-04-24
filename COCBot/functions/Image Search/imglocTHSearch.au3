@@ -15,12 +15,14 @@
 #include-once
 
 Func imglocTHSearch($bReTest = False, $myVillage = False, $bForceCapture = True)
-	Local $xdirectorya = @ScriptDir & "\imgxml\Buildings\Townhall"
-	Local $xdirectoryb = @ScriptDir & "\imgxml\Buildings\Townhall2"
-	Local $xdirectory
-	Local $sCocDiamond = "ECD"
-	Local $redLines = ""
-	Local $minLevel = 6 ; We only support TH6+
+    Local $xdirectorya = @ScriptDir & "\imgxml\Buildings\Townhall"
+    Local $xdirectoryb = @ScriptDir & "\imgxml\Buildings\Townhall2"
+    Local $xdirectorySnowa = @ScriptDir & "\imgxml\Buildings\snow-Townhall"
+    Local $xdirectorySnowb = @ScriptDir & "\imgxml\Buildings\snow-Townhall2"
+    Local $xdirectory, $xdirectorySnow
+    Local $sCocDiamond = "ECD"
+    Local $redLines = ""
+    Local $minLevel = 6 ; We only support TH6+
 	Local $maxLevel = 100
 	Local $maxReturnPoints = 1
 	Local $returnProps = "objectname,objectlevel,objectpoints,nearpoints,farpoints,redlinedistance"
@@ -42,17 +44,22 @@ Func imglocTHSearch($bReTest = False, $myVillage = False, $bForceCapture = True)
 	EndIf
 
 	For $retry = 0 To $numRetry
-		Local $iLvlFound = 0
-		If Mod($retry, 2) = 0 Then
-			$xdirectory = $xdirectorya
-		Else
-			$xdirectory = $xdirectoryb
-		EndIf
+        Local $iLvlFound = 0
+        If Mod($retry, 2) = 0 Then
+            $xdirectory = $xdirectorya
+            $xdirectorySnow = $xdirectorySnowa
+        Else
+            $xdirectory = $xdirectoryb
+            $xdirectorySnow = $xdirectorySnowb
+        EndIf
+        
+        SetDebugLog("$xdirectory = " & $xdirectory, $COLOR_DEBUG)
 
-		If $g_iDetectedImageType = 1 And $retry < 2 Then ;Snow theme on
-			$xdirectory = "snow-" & $xdirectory
-		EndIf
-
+        If $g_iDetectedImageType = 1 And $retry < 2 Then ;Snow theme on
+            $xdirectory = $xdirectorySnow ;"snow-" & $xdirectory
+            SetDebugLog("With snow $xdirectory = " & $xdirectory, $COLOR_DEBUG)
+        EndIf
+		
 		If $retry > 0 And $g_sImglocRedline <> "" Then ; on retry IMGLOCREDLNE is already populated
 			;$redLines = $g_sImglocRedline ;quick fix for bad redline data, so disabled for now
 		EndIf

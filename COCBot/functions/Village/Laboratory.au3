@@ -12,8 +12,8 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Global $iSlotWidth = 94, $iDistBetweenSlots = 12, $iYMidPoint = 530 ; use for logic to upgrade troops.. good for generic-ness
-$iYMidPoint = 468 ;HArchH I don't see this as "530" at all...Anyone?  Diff of 62
+Global $iSlotWidth = 94, $iDistBetweenSlots = 12 ; use for logic to upgrade troops.. good for generic-ness
+Global $iYMidPoint = 468 ;Space between rows in lab screen.  CHANGE ONLY WITH EXTREME CAUTION.
 Global $iPicsPerPage = 12, $iPages = 4 ; used to know exactly which page the users choice is on
 Global $sLabWindow = "99,122,760,616", $sLabTroopsSection = "115,363,750,577", $sLabTroopLastPage = "435,363,750,577"
 ;$sLabTroopLastPage for partial last page, currently 3 columns of siege machines.
@@ -317,11 +317,11 @@ Func LabNextPage($iCurPage, $iPages, $iYMid = $iYMidPoint)
 	If $iCurPage = $iPages - 1 Then ; last page
 		;Last page has 3 columns of icons.  3*(94+12)=3*106=318.  720-318=402
 		SetDebugLog("Drag to last page to pixel 401")
-		ClickDrag(720, $iYMid - 50, 401, $iYMid) ;600
+        ClickDrag(720, $iYMid - 50, 401, $iYMid) ;"-50" to avoid the little triangle.
 		;If _Sleep(4000) Then Return ;Settling time on last page not needed if not rubber-band bounce.
 	Else
 		SetDebugLog("Drag to next full page.")
-		ClickDrag(720, $iYMid - 50, 85, $iYMid)
+        ClickDrag(720, $iYMid - 50, 85, $iYMid) ;"-50" to avoid the little triangle.  Diagonal drag doesn't matter.  Every human will diagonal drag.
 	EndIf
 
 EndFunc   ;==>LabNextPage

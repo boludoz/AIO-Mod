@@ -391,14 +391,19 @@ Func chkBBUpgradesToIgnore()
 EndFunc   ;==>chkBBUpgradesToIgnore
 
 Func RadioIgnoreUpgradesBBOrOtto()
+	If GUICtrlRead($g_hRadioBBCustomOTTO) = $GUI_UNCHECKED And GUICtrlRead($g_hRadioBBUpgradesToIgnore) = $GUI_UNCHECKED Then
+		GUICtrlSetState($g_hRadioBBCustomOTTO, $GUI_CHECKED)
+	EndIf
+	
+	If GUICtrlRead($g_hRadioBBCustomOTTO) = $GUI_CHECKED Then
+		GUICtrlSetState($g_hChkPlacingNewBuildings, $GUI_CHECKED)
+	EndIf
+	
 	Local $hMode = (GUICtrlRead($g_hRadioBBUpgradesToIgnore) = $GUI_CHECKED And GUICtrlRead($g_hChkBBSuggestedUpgrades) = $GUI_CHECKED) ? ($GUI_ENABLE) : ($GUI_DISABLE)
+	
 	For $hCtrl = $g_hChkBBUpgradesToIgnore[0] To $g_hChkBBUpgradesToIgnore[UBound($g_hChkBBUpgradesToIgnore) -1]
 		GUICtrlSetState($hCtrl, $hMode)
 	Next
+	
 EndFunc   ;==>RadioIgnoreUpgradesBBOrOtto
-
-Func _RadioIgnoreUpgradesBBOrOtto()
-	RadioIgnoreUpgradesBBOrOtto()
-	If GUICtrlRead($g_hRadioBBCustomOTTO) = $GUI_CHECKED Then GUICtrlSetState($g_hChkPlacingNewBuildings, $GUI_CHECKED)
-EndFunc   ;==>_RadioIgnoreUpgradesBBOrOtto
 #EndRegion - Custom Improve - Team AIO Mod++

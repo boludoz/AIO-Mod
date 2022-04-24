@@ -186,17 +186,6 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			ChkProtectInLL()
 			#EndRegion - Legend trophy protection - Team AIO Mod++
 
-			#Region - Custom Improve - Team AIO Mod++
-			For $i = 0 To UBound($g_iChkBBUpgradesToIgnore) - 1
-				GUICtrlSetState($g_hChkBBUpgradesToIgnore[$i], ($g_iChkBBUpgradesToIgnore[$i] = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
-			Next
-			chkBBUpgradesToIgnore()
-
-			GUICtrlSetState($g_hRadioBBUpgradesToIgnore, $g_bRadioBBUpgradesToIgnore ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hRadioBBCustomOTTO, $g_bRadioBBCustomOTTO ? $GUI_CHECKED : $GUI_UNCHECKED)
-			; RadioIgnoreUpgradesBBOrOtto()
-			#EndRegion - Custom Improve - Team AIO Mod++
-
 			#Region - Buy Guard - Team AIO Mod++
 			GUICtrlSetState($g_hChkBuyGuard, $g_bChkBuyGuard ? $GUI_CHECKED : $GUI_UNCHECKED)
 			#EndRegion - Buy Guard - Team AIO Mod++
@@ -288,15 +277,6 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			#Region - No Upgrade In War - Team AIO Mod++
 			$g_bNoUpgradeInWar = (GUICtrlRead($g_hChkNoUpgradeInWar) = $GUI_CHECKED)
 			#EndRegion - No Upgrade In War - Team AIO Mod++
-
-			#Region - Custom Improve - Team AIO Mod++
-			For $i = 0 To UBound($g_iChkBBUpgradesToIgnore) - 1
-				$g_iChkBBUpgradesToIgnore[$i] = GUICtrlRead($g_hChkBBUpgradesToIgnore[$i]) = $GUI_CHECKED ? 1 : 0
-			Next
-
-			$g_bRadioBBUpgradesToIgnore = (GUICtrlRead($g_hRadioBBUpgradesToIgnore) = $GUI_CHECKED)
-			$g_bRadioBBCustomOTTO = (GUICtrlRead($g_hRadioBBCustomOTTO) = $GUI_CHECKED)
-			#EndRegion - Custom Improve - Team AIO Mod++
 
 			#Region - Buy Guard - Team AIO Mod++
 			$g_bChkBuyGuard = (GUICtrlRead($g_hChkBuyGuard) = $GUI_CHECKED)

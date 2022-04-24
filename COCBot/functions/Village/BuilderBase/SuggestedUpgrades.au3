@@ -235,7 +235,7 @@ Func MainSuggestedUpgradeCode($bDebug = $g_bDebugSetlog)
 					$aResult[2] = $aResourcesPicks[$i][0]
 
 					If $aResult[2] = "New" Then
-						$g_bBuildingUpgraded = NewBuildings($aResult)
+						$g_bBuildingUpgraded = BBNewBuildings($aResult)
 						If $g_bBuildingUpgraded Then
 							SetLog("[" & $i + 1 & "]" & " New Building detected, placing it.", $COLOR_INFO)
 							ExitLoop
@@ -464,7 +464,7 @@ Func _ArraySearchMaxStringDis($aArray, $sItem, $iMaxDis = 1, $iEvery = 4)
 EndFunc   ;==>_ArraySearchMaxStringDis
 #EndRegion - Bulder base upgrades - Team AIO Mod++
 
-Func NewBuildings($aResult)
+Func BBNewBuildings($aResult)
 
 	Local $Screencap = True, $Debug = False
 
@@ -498,7 +498,7 @@ Func NewBuildings($aResult)
 				EndIf
 			EndIf
 		Else
-			SetLog("Fail NewBuildings.", $COLOR_INFO)
+			SetLog("Fail BBNewBuildings.", $COLOR_INFO)
 			Click(820, 38, 1) ; exit from Shop
 		EndIf
 
@@ -506,5 +506,5 @@ Func NewBuildings($aResult)
 
 	Return False
 
-EndFunc   ;==>NewBuildings
+EndFunc   ;==>BBNewBuildings
 

@@ -39,8 +39,8 @@ Func CreateUpgradeBuilderBaseSubTab()
 	$g_hRadioBBUpgradesToIgnore = GUICtrlCreateRadio(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Radio_01", "Upgrades to ignore"), $x + 80, $y + 43, -1, -1)
 	GUICtrlSetOnEvent(-1, "RadioIgnoreUpgradesBBOrOtto")
 	$g_hRadioBBCustomOTTO = GUICtrlCreateRadio(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Radio_02", "Optimize O.T.T.O."), $x + 200, $y + 43, -1, -1) ; xbebenk
+	GUICtrlSetOnEvent(-1, "RadioIgnoreUpgradesBBOrOtto")
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBSuggestedUpgradesIgnore_05", "Optimize OTTO, will only upgrade suggested on OTTO Upgrade.\r\nSuch: Archer Tower, DoubleCannon, MultiMortar, Mega Tesla and Battle Machine"))
-	GUICtrlSetOnEvent(-1, "_RadioIgnoreUpgradesBBOrOtto")
 	$x = 20
 	$y += 60
 
