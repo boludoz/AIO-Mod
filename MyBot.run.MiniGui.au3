@@ -117,6 +117,36 @@ Global $g_hFrmBotEmbeddedMouse = 0
 #Include "COCBot\functions\Other\VritDsktLibrary.au3"
 
 ; Only farm - Team AiO MOD++
+Func ApplyMiniCFG($TypeReadSave = "Read")
+
+	$g_bApplyConfigIsActive = True
+	
+	If $g_iGuiMode = 2 Then ; mini mode controls
+		Switch $TypeReadSave
+			Case "Read"
+				GUICtrlSetState($g_hChkBackgroundMode, $g_bChkBackgroundMode = True ? $GUI_CHECKED : $GUI_UNCHECKED)
+				; <><><> Only Farm <><><>
+				_GUICtrlComboBox_SetCurSel($g_hCmbStatusMode, $g_iComboStatusMode)
+				ComboStatusMode()
+			Case "Save"
+				$g_bChkBackgroundMode = (GUICtrlRead($g_hChkBackgroundMode) = $GUI_CHECKED)
+				; <><><> Only Farm <><><>
+				$g_iComboStatusMode = Number(_GUICtrlComboBox_GetCurSel($g_hCmbStatusMode))
+		EndSwitch
+	EndIf
+    
+	$g_bApplyConfigIsActive = False
+EndFunc   ;==>ApplyMiniCFG
+
+Func SaveMiniCFG()
+	; <><><><> Village / Misc <><><><>
+	ApplyMiniCFG("Save")
+	; <><><><> Bottom panel <><><><>
+	IniWrite($g_sProfileConfigPath, "general", "Background", $g_bChkBackgroundMode ? 1 : 0)
+	; <><><> Only Farm <><><>
+	IniWrite($g_sProfileConfigPath, "general", "ComboStatusMode", Abs(Number($g_iComboStatusMode)))
+EndFunc   ;==>SaveMiniCFG
+
 Func ComboStatusMode()
 	If IsDeclared("g_iComboStatusMode") Then
 		Local $iStatusFlag = 2, $iNewStatus = 2
@@ -1478,6 +1508,8 @@ EndFunc   ;==>TogglePauseImpl
 
 Func BotClose($SaveConfig = Default, $bExit = True)
 	_WinAPI_PostMessage($g_hFrmBotBackend, $WM_MYBOTRUN_API, 0x1040, $g_hFrmBot)
+		
+	SaveMiniCFG()
 
 	$g_bRunState = False
 	$g_bBotPaused = False
@@ -1577,9 +1609,12 @@ GUIRegisterMsg($WM_MOVE, "GUIControl_WM_MOVE")
 ;DllCall($g_hLibUser32DLL, "none", "DisableProcessWindowsGhosting")
 DllCall("user32.dll", "none", "DisableProcessWindowsGhosting")
 
+; Custom - Team__AiO__MOD
+ApplyMiniCFG("Read")
+
 Local $hStatusUpdateTimer = 0, $hTimeUpdateTimer = 0
 Local $iMainLoop = 1
-WinGetAndroidHandle() ; xbebenk - Custom - Team__AiO__MOD
+WinGetAndroidHandle()
 While 1
 	_Sleep($g_iMainLoopSleep, True, False)
 

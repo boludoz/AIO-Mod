@@ -39,19 +39,6 @@ Func applyConfig($bRedrawAtExit = True, $TypeReadSave = "Read") ;Applies the dat
 	EndIf
 
 	If $g_iGuiMode <> 1 Then
-		If $g_iGuiMode = 2 Then ; mini mode controls
-			Switch $TypeReadSave
-                Case "Read"
-                    GUICtrlSetState($g_hChkBackgroundMode, $g_bChkBackgroundMode = True ? $GUI_CHECKED : $GUI_UNCHECKED)
-					; <><><> Only Farm <><><>
-                    _GUICtrlComboBox_SetCurSel($g_hCmbStatusMode, $g_iComboStatusMode)
-					ComboStatusMode()
-				Case "Save"
-					$g_bChkBackgroundMode = (GUICtrlRead($g_hChkBackgroundMode) = $GUI_CHECKED)
-					; <><><> Only Farm <><><>
-					$g_iComboStatusMode = Number(_GUICtrlComboBox_GetCurSel($g_hCmbStatusMode))
-			EndSwitch
-		EndIf
 		UpdateBotTitle()
 		$g_bApplyConfigIsActive = False
 		Return
