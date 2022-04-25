@@ -22,13 +22,7 @@ Func MakeScreenshot($TargetDir, $type = "png")
 		Local $iLeft = 0, $iTop = 0, $iRight = $g_iAndroidClientWidth, $iBottom = $g_iAndroidClientHeight ; set size of ENTIRE screen to save
 		Local $iW = Number($iRight) - Number($iLeft)
 		Local $iH = Number($iBottom) - Number($iTop)
-		; Custom - Team AIO Mod++
-		Static $_hHBitmap = 0
-		If $_hHBitmap <> 0 Then
-			GdiDeleteHBitmap($_hHBitmap)
-		EndIf
-		Local $hHBitmapScreenshot = _CaptureGameScreen($_hHBitmap, $iLeft, $iTop, $iRight, $iBottom)
-		; ----------------------
+		Local $hHBitmapScreenshot = _CaptureRegion($iLeft, $iTop, $iRight, $iBottom, True)
 		Local $hBitmapScreenshot = _GDIPlus_BitmapCreateFromHBITMAP($hHBitmapScreenshot)
 		Local $hGraphic = _GDIPlus_ImageGetGraphicsContext($hBitmapScreenshot) ; Get graphics content from bitmap image
 		Local $hBrush = _GDIPlus_BrushCreateSolid(0xFF000029) ;create a brush AARRGGBB (using 0x000029 = Dark Blue)

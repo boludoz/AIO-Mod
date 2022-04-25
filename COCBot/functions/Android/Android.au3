@@ -2798,7 +2798,14 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 		EndIf
 		If $hFile = 0 Or $iSize < $ExpectedFileSize Or $iReadHeader < $iHeaderSize Or $iReadData < $iDataSize Then
 			If $hFile = 0 Then
-				SetLog("File not found: " & $hostPath & $Filename, $COLOR_ERROR)
+				
+				If $g_bRunState = False Then
+					SetLog("File not found: Try start a game first!", $COLOR_ERROR)
+					Return
+				Else
+					SetLog("File not found: " & $hostPath & $Filename, $COLOR_ERROR)
+				EndIf
+				
 			Else
 				If $iSize <> $ExpectedFileSize Then SetDebugLog("File size " & $iSize & " is not " & $ExpectedFileSize & " for " & $hostPath & $Filename, $COLOR_ERROR)
 				SetDebugLog("Captured screen size " & $g_iAndroidAdbScreencapWidth & " x " & $g_iAndroidAdbScreencapHeight, $COLOR_ERROR)

@@ -186,6 +186,9 @@ Func ReadConfig_MOD_MagicItems()
 	IniReadS($g_bChkPowerPotion, $g_sProfileConfigPath, "MagicItems", "ChkPowerPotion", $g_bChkPowerPotion, "Bool")
 	IniReadS($g_bChkResourcePotion, $g_sProfileConfigPath, "MagicItems", "ChkResourcePotion", $g_bChkResourcePotion, "Bool")
 
+	; New building MV - Team AIO Mod++
+	IniReadS($g_bNewUpdateMainVillage, $g_sProfileConfigPath, "AutoBuilds", "ChkAutoBuildNew", $g_bNewUpdateMainVillage, "Bool")
+
 EndFunc   ;==>ReadConfig_MOD_MagicItems
 
 Func ReadConfig_MOD_ChatActions()

@@ -574,16 +574,23 @@ Func CreateAutoUpgradeSubTab()
 	Local $x = 25, $y = 45
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Group_01", "Auto Upgrade"), $x - 20, $y - 20, $g_iSizeWGrpTab3, 100)
 
+		; New building MV - Team AIO Mod++
 		$g_hChkAutoUpgrade = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "ChkAutoUpgrade", "Enable Auto Upgrade"), $x - 5, $y - 8, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "ChkAutoUpgrade_Info_01", "Check box to enable automatically starting Upgrades from builders menu"))
 			GUICtrlSetOnEvent(-1, "chkAutoUpgrade")
 		
+		$g_hChkAutoBuildNew = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "ChkAutoBuildNew", "Build 'New' tagged buildings"), $x - 5, $y + 10, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "ChkAutoBuildNew_Info_01", "Check box to enable automatically deploy new buildings from builders menu"))
+			GUICtrlSetOnEvent(-1, "chkAutoUpgrade")
+
+		$x += 4
+
 		; Magic Items - Team AIO Mod++
 		_GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModBuilderP, $x + 180, $y - 8, 24, 24)
 		$g_hChkBuilderPotion = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "ChkBuilderPotion", "Builder potion if busy builders ≥"), $x + 210, $y - 8, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child VIllage - AutoUpgrade", "ChkBuilderPotion_Info_01", "Check box to automatically use a Builder Potion (when available)."))
 			GUICtrlSetOnEvent(-1, "ChkBuilderPotion")
-		$g_hCmbInputBuilderPotion = GUICtrlCreateCombo("", $x + 381, $y - 6, 30, -1, $CBS_DROPDOWNLIST + $WS_VSCROLL + $CBS_AUTOHSCROLL)
+		$g_hCmbInputBuilderPotion = GUICtrlCreateCombo("", $x + 378, $y - 7, 30, -1, $CBS_DROPDOWNLIST + $WS_VSCROLL + $CBS_AUTOHSCROLL)
 			GUICtrlSetData(-1, "1|2|3|4|5|6")
 			_GUICtrlComboBox_SetCurSel(-1, 4)
 			
