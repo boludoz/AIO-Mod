@@ -362,6 +362,8 @@ Func ApplyConfig_MOD_MagicItems($TypeReadSave)
 			
 			; ChkResourcePotion()
 			
+			; New building MV - Team AIO Mod++
+			GUICtrlSetState($g_hChkAutoBuildNew, $g_bNewUpdateMainVillage = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 		Case "Save"
 			; Magic Items - Team AIO Mod++
 			$g_iInputGoldItems = GUICtrlRead($g_hInputGoldItems)
@@ -381,6 +383,9 @@ Func ApplyConfig_MOD_MagicItems($TypeReadSave)
 			$g_bChkLabPotion = (GUICtrlRead($g_hChkLabPotion) = $GUI_CHECKED)
 			$g_bChkPowerPotion = (GUICtrlRead($g_hChkPowerPotion) = $GUI_CHECKED)
 			$g_bChkResourcePotion = (GUICtrlRead($g_hChkResourcePotion) = $GUI_CHECKED)
+
+			; New building MV - Team AIO Mod++
+			$g_bNewUpdateMainVillage = (GUICtrlRead($g_hChkAutoBuildNew) = $GUI_CHECKED)
 	EndSwitch
 
 EndFunc   ;==>ApplyConfig_MOD_MagicItems

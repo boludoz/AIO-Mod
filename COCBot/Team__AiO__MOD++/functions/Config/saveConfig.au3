@@ -195,6 +195,10 @@ Func SaveConfig_MOD_MagicItems()
 	_Ini_Add("MagicItems", "ChkLabPotion", $g_bChkLabPotion ? 1 : 0)
 	_Ini_Add("MagicItems", "ChkPowerPotion", $g_bChkPowerPotion ? 1 : 0)
 	_Ini_Add("MagicItems", "ChkResourcePotion", $g_bChkResourcePotion ? 1 : 0)
+	
+	; New building MV - Team AIO Mod++
+	_Ini_Add("AutoBuilds", "ChkAutoBuildNew", $g_bNewUpdateMainVillage ? 1 : 0)
+
 EndFunc   ;==>SaveConfig_MOD_MagicItems
 
 Func SaveConfig_MOD_ChatActions()

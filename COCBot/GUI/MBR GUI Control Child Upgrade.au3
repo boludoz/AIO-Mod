@@ -683,16 +683,20 @@ Func btnWalls()
 	AndroidShield("btnWalls") ; Update shield status due to manual $g_bRunState
 EndFunc   ;==>btnWalls
 
+; New building MV - Team AIO Mod++
+; Magic Items - Team AIO Mod++
 Func chkAutoUpgrade()
 	If GUICtrlRead($g_hChkAutoUpgrade) = $GUI_CHECKED Then
 		$g_bAutoUpgradeEnabled = True
-		For $i = $g_hLblAutoUpgrade To $g_hTxtAutoUpgradeLog
-			GUICtrlSetState($i, $GUI_ENABLE)
+		For $h = $g_hChkAutoBuildNew To $g_hTxtAutoUpgradeLog
+			If $g_hChkBuilderPotion = $h Or $g_hCmbInputBuilderPotion = $h Then ContinueLoop
+			GUICtrlSetState($h, $GUI_ENABLE)
 		Next
 	Else
 		$g_bAutoUpgradeEnabled = False
-		For $i = $g_hLblAutoUpgrade To $g_hTxtAutoUpgradeLog
-			GUICtrlSetState($i, $GUI_DISABLE)
+		For $h = $g_hChkAutoBuildNew To $g_hTxtAutoUpgradeLog
+			If $g_hChkBuilderPotion = $h Or $g_hCmbInputBuilderPotion = $h Then ContinueLoop
+			GUICtrlSetState($h, $GUI_DISABLE)
 		Next
 	EndIf
 EndFunc   ;==>chkAutoUpgrade
