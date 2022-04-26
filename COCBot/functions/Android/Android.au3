@@ -978,6 +978,9 @@ Func InitAndroid($bCheckOnly = False, $bLogChangesOnly = True)
 		SetLog("Android support for " & $g_sAndroidEmulator & " is not available", $COLOR_ERROR)
 	EndIf
 
+	; Check the Supported Emulator versions
+	CheckEmuNewVersions() ; Custom - Team AIO Mod++
+
 	Local $successful = @error = 0, $process_killed
 	If Not $bCheckOnly And $Result Then
 
@@ -4956,6 +4959,9 @@ EndFunc   ;==>AddSpace
 Func CheckEmuNewVersions()
 
 	Local $Version = GetVersionNormalized($g_sAndroidVersion)
+	
+	GuiCtrlSetData($g_hLblAndroidInfo, $g_sAndroidEmulator & " v" & $g_sAndroidVersion)
+	
 	Local $NewVersion = ""
 	Local $HelpLink = "Please visit MyBot Forum!"
 
@@ -4965,7 +4971,7 @@ Func CheckEmuNewVersions()
 		Case "MEmu"
 			$NewVersion = GetVersionNormalized("7.6.6.0")
          Case "Nox"
-			$NewVersion = GetVersionNormalized("7.0.2.5")
+			$NewVersion = GetVersionNormalized("7.0.2.6")
 		Case Else
 			; diabled of the others
 			$NewVersion = GetVersionNormalized("99.0.0.0")
