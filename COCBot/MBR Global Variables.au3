@@ -1820,9 +1820,9 @@ Global $g_iRSpellLevel = 1 ; Team AIO Mod++
 Global $g_iHSpellLevel = 1 ; Team AIO Mod++
 Global Const $g_fDarkStealFactor = 0.75
 Global Const $g_fDarkFillLevel = 0.7
-; Array to hold Total HP of DE Drills at each level (1-8)
+; Array to hold Total HP of DE Drills at each level (1-9)
 Global Const $g_aDrillLevelHP[9] = [800, 860, 920, 980, 1060, 1160, 1280, 1380, 1480] ; Team AIO Mod++
-; Array to hold Total Amount of DE available from Drill at each level (1-8)
+; Array to hold Total Amount of DE available from Drill at each level (1-9)
 Global Const $g_aDrillLevelTotal[9] = [160, 300, 540, 840, 1280, 1800, 2400, 3000, 3600] ; Team AIO Mod++
 ; Array to hold Total Damage of Lightning Spell at each level (1-9)
 Global Const $g_aLSpellDmg[9] = [150, 180, 210, 240, 270, 320, 400, 480, 560] ; Team AIO Mod++

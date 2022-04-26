@@ -134,8 +134,8 @@ Func InitializeBot()
 
 	Local $sAndroidInfo = ""
 	; Disabled process priority tampering as not best practice
-	;Local $iBotProcessPriority = _ProcessGetPriority(@AutoItPID)
-	;ProcessSetPriority(@AutoItPID, $PROCESS_BELOWNORMAL) ;~ Boost launch time by increasing process priority (will be restored again when finished launching)
+	; Local $iBotProcessPriority = _ProcessGetPriority(@AutoItPID)
+	; ProcessSetPriority(@AutoItPID, $PROCESS_REALTIME) ;~ Boost launch time by increasing process priority (will be restored again when finished launching)
 
 	_ITaskBar_Init(False)
 	_Crypt_Startup()
@@ -170,7 +170,7 @@ Func InitializeBot()
 	; Some final setup steps and checks
 	FinalInitialization($sAndroidInfo)
 
-	;ProcessSetPriority(@AutoItPID, $iBotProcessPriority) ;~ Restore process priority
+	; ProcessSetPriority(@AutoItPID, $iBotProcessPriority) ;~ Restore process priority
 
 EndFunc   ;==>InitializeBot
 

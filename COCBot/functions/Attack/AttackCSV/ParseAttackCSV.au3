@@ -24,6 +24,7 @@ Func ParseAttackCSV($debug = False)
 	#Region - Custom CSV - Team AIO Mod++
 	$g_sTownHallVectors = ""
 	Local $iHowNamyInferno = 0
+	Local $oDicPrcntFix = ObjCreate("Scripting.Dictionary")
 	#EndRegion - Custom CSV - Team AIO Mod++
 
 	For $v = 0 To 25 ; Zero all 26 vectors from last atttack in case here is error MAKE'ing new vectors
@@ -283,7 +284,14 @@ Func ParseAttackCSV($debug = False)
 								EndIf
 								If $theTroopPosition >= 0 And UBound($g_avAttackTroops) > $theTroopPosition Then
 									If Int($qtyvect[0]) > 0 Then
-										$qty1 = Round((Number($qtyvect[0]) / 100) * Number($g_avAttackTroops[Number($theTroopPosition)][1]))
+										; Custom fix - Team AIO Mod++
+										Local $sTroopPer = $g_avAttackTroops[Number($theTroopPosition)][0]
+										If $oDicPrcntFix.Exists($sTroopPer) = False Then
+											$qty1 = Ceiling((Number($qtyvect[0]) / 100) * Number($g_avAttackTroops[Number($theTroopPosition)][1]))
+											$oDicPrcntFix.Add($sTroopPer, True)
+										Else
+											$qty1 = Floor((Number($qtyvect[0]) / 100) * Number($g_avAttackTroops[Number($theTroopPosition)][1]))
+										EndIf
 										$qty2 = $qty1
 										SetLog($qtyvect[0] & "% Of x" & Number($g_avAttackTroops[$theTroopPosition][1]) & " " & GetTroopName($g_avAttackTroops[$theTroopPosition][0]) & " = " & $qty1, $COLOR_INFO)
 									Else
