@@ -683,7 +683,7 @@ Func MainLoop($bCheckPrerequisitesOK = True)
 	Local $hStarttime = _Timer_Init()
 
 	; Check the Supported Emulator versions
-	; CheckEmuNewVersions() ; Custom - Team AIO Mod++
+	CheckEmuNewVersions()
 
 	;Reset Telegram message
 	NotifyGetLastMessageFromTelegram()

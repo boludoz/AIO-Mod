@@ -795,3 +795,6 @@ Global $g_bIsCaravanOn = "Undefined" ; Custom BB - Team AIO Mod++
 
 ; New building MV - Team AIO Mod++
 Global $g_bNewUpdateMainVillage = False, $g_hChkAutoBuildNew = 0
+
+; Android version
+Global $g_hLblAndroidInfo = 0

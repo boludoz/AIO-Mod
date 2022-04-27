@@ -4957,6 +4957,14 @@ Func AddSpace($s, $Option = Default)
 EndFunc   ;==>AddSpace
 
 Func CheckEmuNewVersions()
+	
+	; Custom fix - Team AIO Mod++
+	; call Android initialization routine
+	Local $sResult = Execute("Init" & $g_sAndroidEmulator & "(False)")
+	If $sResult = "" And @error <> 0 Then
+		; Not implemented
+		SetLog("Android support for " & $g_sAndroidEmulator & " is not available", $COLOR_ERROR)
+	EndIf
 
 	Local $Version = GetVersionNormalized($g_sAndroidVersion)
 	
