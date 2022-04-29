@@ -345,12 +345,7 @@ Func WinGetAndroidHandle($bInitAndroid = Default, $bTestPid = False)
 			EndIf
 			If $g_bIsHidden = True And ($aPos[0] > -30000 Or $aPos[1] > -30000) Then
 				; rehide Android
-				; Credits: based in xbebenk, but really compatible with win 11 and others so. - Custom fix - Team AIO Mod++.
-				If @OSBuild >= 10240 And $g_iAndroidBackgroundMode <> 1 Then
-					HideAndroidWindow(True, Default, Default, "WinGetAndroidHandle:2")
-				Else
-					HideAndroidWindow(True, Default, Default, "WinGetAndroidHandle:2")
-				EndIf
+				HideAndroidWindow(True, Default, Default, "WinGetAndroidHandle:2")
 			EndIf
 		EndIf
 		$g_bWinGetAndroidHandleActive = False
@@ -2802,12 +2797,13 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 		If $hFile = 0 Or $iSize < $ExpectedFileSize Or $iReadHeader < $iHeaderSize Or $iReadData < $iDataSize Then
 			If $hFile = 0 Then
 				
-				If $g_bRunState = False Then
-					SetLog("File not found: Try start a game first!", $COLOR_ERROR)
-					Return
-				Else
-					SetLog("File not found: " & $hostPath & $Filename, $COLOR_ERROR)
-				EndIf
+                If $g_bRunState = False Then
+                    SetLog("File not found: Try start android first!", $COLOR_ERROR)
+                    If $hFile <> 0 Then _WinAPI_CloseHandle($hFile)
+                    Return SetError(7, 0)
+                Else
+                    SetLog("File not found: " & $hostPath & $Filename, $COLOR_ERROR)
+                EndIf
 				
 			Else
 				If $iSize <> $ExpectedFileSize Then SetDebugLog("File size " & $iSize & " is not " & $ExpectedFileSize & " for " & $hostPath & $Filename, $COLOR_ERROR)
@@ -4210,7 +4206,7 @@ EndFunc   ;==>GetAndroidProcessPID
 
 Func AndroidToFront($hHWndAfter = Default, $sSource = "Unknown")
 	If $hHWndAfter = Default Then $hHWndAfter = $HWND_TOPMOST
-	;SetDebugLog("AndroidToFront: Source " & $sSource)
+	SetDebugLog("AndroidToFront: Source " & $sSource)
 	WinMove2(GetAndroidDisplayHWnD(), "", -1, -1, -1, -1, $hHWndAfter, 0, False)
 	If $g_bChkBackgroundMode And ($hHWndAfter = $HWND_TOPMOST Or $hHWndAfter = $HWND_TOP) Then WinMove2(GetAndroidDisplayHWnD(), "", -1, -1, -1, -1, $HWND_NOTOPMOST, 0, False)
 EndFunc   ;==>AndroidToFront
@@ -4222,7 +4218,7 @@ EndFunc   ;==>ShowAndroidWindow
 Func HideAndroidWindow($bHide = True, $bRestorePosAndActivateWhenShow = Default, $bFastCheck = Default, $sSource = "Unknown", $hHWndAfter = Default)
 	If $bFastCheck = Default Then $bFastCheck = True
 	If $hHWndAfter = Default Then $hHWndAfter = $HWND_TOPMOST
-	;SetDebugLog("HideAndroidWindow: " & $bHide & ", " & $bRestorePosAndActivateWhenShow & ", " & $bFastCheck & ", " & $sSource)
+	SetDebugLog("HideAndroidWindow: " & $bHide & ", " & $bRestorePosAndActivateWhenShow & ", " & $bFastCheck & ", " & $sSource)
 	ResumeAndroid()
 	SetError(0)
 	If $bFastCheck Then
@@ -4232,62 +4228,24 @@ Func HideAndroidWindow($bHide = True, $bRestorePosAndActivateWhenShow = Default,
 		WinGetPos($g_hAndroidWindow)
 	EndIf
 	If @error <> 0 Or AndroidEmbedded() Then Return SetError(0, 0, 0)
-	
+
 	If $bHide = True Then
-		; Credits: based in xbebenk, but really compatible with win 11 and others so. - Custom fix - Team AIO Mod++.
-		If @OSBuild >= 10240 And $g_iAndroidBackgroundMode = 1 Then
-			_MoveAppToSpecificDesktop($g_hAndroidWindow, 2)
-		Else
-			WinMove($g_hAndroidWindow, "", -32000, -32000)
-		EndIf
-		SetDebugLog($sSource & " - Hide Android window", $COLOR_INFO)
-	EndIf
-	
-	Local $DesktopWidth = @DeskTopWidth
-	Local $mid = $DesktopWidth/2
-	If $bHide = False Then
+		WinMove($g_hAndroidWindow, "", -32000, -32000)
+	ElseIf $bHide = False Then
 		Switch $bRestorePosAndActivateWhenShow
 			Case True
 				; move and activate
-				; Credits: based in xbebenk, but really compatible with win 11 and others so. - Custom fix - Team AIO Mod++.
-				If @OSBuild >= 10240 And $g_iAndroidBackgroundMode = 1 Then
-					_MoveAppToSpecificDesktop($g_hAndroidWindow, 1)
-					If $g_iFrmBotPosX + 236 <= $mid Then 
-						WinMove($g_hAndroidWindow, "", $g_iFrmBotPosX + 472, $g_iFrmBotPosY)
-					Else
-						WinMove($g_hAndroidWindow, "", $g_iFrmBotPosX - 870, $g_iFrmBotPosY)
-					EndIf
-					; WinActivate($g_hAndroidWindow)
-				Else
-					WinMove($g_hAndroidWindow, "", $g_iAndroidPosX, $g_iAndroidPosY)
-					WinActivate($g_hAndroidWindow)
-				EndIf
+				WinMove($g_hAndroidWindow, "", $g_iAndroidPosX, $g_iAndroidPosY)
+				WinActivate($g_hAndroidWindow)
 			Case False
 				; don't move, only when hidden
-				; Credits: based in xbebenk, but really compatible with win 11 and others so. - Custom fix - Team AIO Mod++
-				If @OSBuild >= 10240 And $g_iAndroidBackgroundMode = 1 Then
-					_MoveAppToSpecificDesktop($g_hAndroidWindow, 1)
-					_WinAPI_ShowWindow($g_hAndroidWindow, @SW_SHOWNOACTIVATE)
-				Else
-					Local $a = WinGetPos($g_hAndroidWindow)
-					If UBound($a) > 1 And ($a[0] < -30000 Or $a[1] < -30000) Then WinMove($g_hAndroidWindow, "", $g_iAndroidPosX, $g_iAndroidPosY)
-					_WinAPI_ShowWindow($g_hAndroidWindow, @SW_SHOWNOACTIVATE)
-				EndIf
+				Local $a = WinGetPos($g_hAndroidWindow)
+				If UBound($a) > 1 And ($a[0] < -30000 Or $a[1] < -30000) Then WinMove($g_hAndroidWindow, "", $g_iAndroidPosX, $g_iAndroidPosY)
+				_WinAPI_ShowWindow($g_hAndroidWindow, @SW_SHOWNOACTIVATE)
 			Case Default
 				; just move
-				; Credits: based in xbebenk, but really compatible with win 11 and others so. - Custom fix - Team AIO Mod++.
-				If @OSBuild >= 10240 And $g_iAndroidBackgroundMode = 1 Then
-					_MoveAppToSpecificDesktop($g_hAndroidWindow, 1)
-					If $g_iFrmBotPosX + 236 <= $mid Then 
-						WinMove($g_hAndroidWindow, "", $g_iFrmBotPosX + 472, $g_iFrmBotPosY)
-					Else
-						WinMove($g_hAndroidWindow, "", $g_iFrmBotPosX - 870, $g_iFrmBotPosY)
-					EndIf
-					WinActivate($g_hAndroidWindow)
-				Else
-					Local $a = WinGetPos($g_hAndroidWindow)
-					If UBound($a) > 1 And ($a[0] <> $g_iAndroidPosX Or $a[1] <> $g_iAndroidPosY) Then WinMove($g_hAndroidWindow, "", $g_iAndroidPosX, $g_iAndroidPosY)
-				EndIf
+				Local $a = WinGetPos($g_hAndroidWindow)
+				If UBound($a) > 1 And ($a[0] <> $g_iAndroidPosX Or $a[1] <> $g_iAndroidPosY) Then WinMove($g_hAndroidWindow, "", $g_iAndroidPosX, $g_iAndroidPosY)
 		EndSwitch
 		If $hHWndAfter <> $g_hAndroidWindow Then AndroidToFront($hHWndAfter, $sSource & "->HideAndroidWindow")
 	EndIf
