@@ -353,3 +353,30 @@ Func ForegroundFixer($sPackage = Default)
 	EndIf
 EndFunc   ;==>ForegroundFixer
 ; #ce
+Func _OSVersion()
+	Static $s_iTrueOSVersion = 0
+	If $s_iTrueOSVersion > 0 Then
+		Return $s_iTrueOSVersion
+	EndIf
+	
+	$s_iTrueOSVersion = @OSVersion
+	
+	Local $sCurrentBuildNumber = RegRead($g_sHKLM & "\SOFTWARE" & $g_sWow6432Node & "\Microsoft\Windows NT\CurrentVersion\", "ProductName")
+	If @error Then $sCurrentBuildNumber = ""
+
+	If ("WIN_10" = @OSVersion Or StringInStr($sCurrentBuildNumber, "Windows 10") > 0) And (_OSBuild() >= "22000" And _OSBuild() <= "32000") Then
+		$s_iTrueOSVersion = "WIN_11"
+	EndIf
+	
+	Return $s_iTrueOSVersion
+EndFunc   ;==>_OSVersion
+
+Func _OSBuild()
+	Static $s_iTrueOSBuild = 0
+	If $s_iTrueOSBuild > 0 Then
+		Return $s_iTrueOSBuild
+	EndIf
+	$s_iTrueOSBuild = RegRead($g_sHKLM & "\SOFTWARE" & $g_sWow6432Node & "\Microsoft\Windows NT\CurrentVersion\", "CurrentBuildNumber")
+	If @error Or Number($s_iTrueOSBuild) = 0 Then $s_iTrueOSBuild = @OSBuild
+	Return SetError(0, 0, $s_iTrueOSBuild)
+EndFunc   ;==>_OSBuild

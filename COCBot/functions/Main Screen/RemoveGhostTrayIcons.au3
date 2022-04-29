@@ -567,7 +567,7 @@ Func _FindTrayToolbarWindow($iWin = 1)
 		If @error Then Return -1
 		$hWnd = DllCall("user32.dll", "hwnd", "FindWindowEx", "hwnd", $hWnd[0], "hwnd", 0, "str", "TrayNotifyWnd", "ptr", 0)
 		If @error Then Return -1
-		If @OSVersion <> "WIN_2000" Then
+		If _OSVersion() <> "WIN_2000" Then
 			$hWnd = DllCall("user32.dll", "hwnd", "FindWindowEx", "hwnd", $hWnd[0], "hwnd", 0, "str", "SysPager", "ptr", 0)
 			If @error Then Return -1
 		EndIf
