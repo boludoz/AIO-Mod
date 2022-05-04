@@ -45,23 +45,13 @@ Func _ZoomOut() ;Zooms out
 			$Result = AndroidOnlyZoomOut()
 		EndIf
 		$g_bSkipFirstZoomout = True
-		Local $aSearchZoomOut = SearchZoomOut()
-		If UBound($aSearchZoomOut) > 1 And not @error Then
-			Return (StringIsSpace($aSearchZoomOut[0]) = 0) ? (True) : (False)
-		Else
-			Return False
-		EndIf
+		Return $Result
 	EndIf
 
 	; Android embedded, only use Android zoomout
 	$Result = AndroidOnlyZoomOut()
 	$g_bSkipFirstZoomout = True
-	Local $aSearchZoomOut = SearchZoomOut()
-	If UBound($aSearchZoomOut) > 1 And not @error Then
-		Return (StringIsSpace($aSearchZoomOut[0]) = 0) ? (True) : (False)
-	Else
-		Return False
-	EndIf
+	Return $Result
 EndFunc   ;==>_ZoomOut
 
 Func ZoomOutBlueStacks() ;Zooms out
@@ -459,26 +449,32 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 	Local $aResult = ["", 0, 0, 0, 0] ; expected dummy value
 	Local $bUpdateSharedPrefs = $g_bUpdateSharedPrefs And $g_iAndroidZoomoutMode = 4
 
+	
+	Local $iMultipler = ($g_aisearchzoomoutcounter[0] > 5) ? (2) : (1)
+	
+	Static $iCallCount = 0
 	Local $bDisableCenter = False
-	If $g_aisearchzoomoutcounter[0] > 4 And Mod($g_aisearchzoomoutcounter[0], 5) = 0 Then
-		ClickDrag($aCenterHomeVillageClickDrag[0], $aCenterHomeVillageClickDrag[1], $aCenterHomeVillageClickDrag[0] - 300, $aCenterHomeVillageClickDrag[1], 1000)
-		If _Sleep(1000) Then
-			$iCallCount = 0
-			Return FuncReturn($aResult)
-		EndIf
-		ClickDrag($aCenterHomeVillageClickDrag[0], $aCenterHomeVillageClickDrag[1], $aCenterHomeVillageClickDrag[0] + 113, $aCenterHomeVillageClickDrag[1] + 160, 1000)
-		If _Sleep(1000) Then
-			$iCallCount = 0
-			Return FuncReturn($aResult)
-		EndIf
+	If $CenterVillageBoolOrScrollPos == False Then
 		$bDisableCenter = True
+	Else
+		If $g_aisearchzoomoutcounter[0] > 1 And Mod($g_aisearchzoomoutcounter[0], 5 * $iMultipler) = 0 Then
+			$bDisableCenter = True
+			ClickDrag($aCenterHomeVillageClickDrag[0], $aCenterHomeVillageClickDrag[1], $aCenterHomeVillageClickDrag[0] - 300, $aCenterHomeVillageClickDrag[1], 1000)
+			If _Sleep(1000) Then
+				$iCallCount = 0
+				Return FuncReturn($aResult)
+			EndIf
+			ClickDrag($aCenterHomeVillageClickDrag[0], $aCenterHomeVillageClickDrag[1], $aCenterHomeVillageClickDrag[0] + 113, $aCenterHomeVillageClickDrag[1] + 160, 1000)
+			If _Sleep(1000) Then
+				$iCallCount = 0
+				Return FuncReturn($aResult)
+			EndIf
+		EndIf
 	EndIf
-
 	Local $village
 	Local $bOnBuilderBase = isOnBuilderBase($CaptureRegion)
 	$village = GetVillageSize($DebugLog, "stone", "tree", Default, $bOnBuilderBase, $CaptureRegion)
 
-	Static $iCallCount = 0
 	If $g_aiSearchZoomOutCounter[0] > 0 Then
 		If _Sleep(1000) Then
 			$iCallCount = 0
@@ -512,13 +508,14 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 				
 				; Custom fix - Team AIO Mod++
 				If $bDisableCenter = False And Pixel_Distance($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y) > 5 Then
-					ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y) 
+					ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y)
 				EndIf
-				
+
 				If _Sleep(250) Then
 					$iCallCount = 0
 					Return FuncReturn($aResult)
 				EndIf
+				
 				Local $aResult2 = SearchZoomOut(False, $UpdateMyVillage, "SearchZoomOut(1):" & $sSource, True, $DebugLog)
 				; update difference in offset
 				$aResult2[3] = $aResult2[1] - $aResult[1]
@@ -540,7 +537,7 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 
 	If $bCenterVillage And Not $g_bZoomoutFailureNotRestartingAnything And Not $g_bAndroidZoomoutModeFallback Then
 		If $aResult[0] = "" Or ($bUpdateSharedPrefs And $villageSize > 300 And $villageSize < 400) Then
-			If $g_aiSearchZoomOutCounter[0] > 20 Or ($bUpdateSharedPrefs And $g_aiSearchZoomOutCounter[0] > 3) Then
+			If $g_aiSearchZoomOutCounter[0] > 25 Or ($bUpdateSharedPrefs And $g_aiSearchZoomOutCounter[0] > 3) Then
 				$g_aiSearchZoomOutCounter[0] = 0
 				$iCallCount += 1
 				If $iCallCount <= 1 Then

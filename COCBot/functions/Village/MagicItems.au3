@@ -13,6 +13,8 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func CollectMagicItems($bDebug = False)
+	Return
+	
 	If Not $g_bRunState Or $g_bRestart Then Return
 	
 	If Not ($g_iTownHallLevel >= 8 And not $g_iTownHallLevel = 0) Then Return ; Must be Th8 or more to use the Trader
