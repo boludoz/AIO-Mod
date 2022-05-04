@@ -459,6 +459,21 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 	Local $aResult = ["", 0, 0, 0, 0] ; expected dummy value
 	Local $bUpdateSharedPrefs = $g_bUpdateSharedPrefs And $g_iAndroidZoomoutMode = 4
 
+	Local $bDisableCenter = False
+	If $g_aisearchzoomoutcounter[0] > 4 And Mod($g_aisearchzoomoutcounter[0], 5) = 0 Then
+		ClickDrag($aCenterHomeVillageClickDrag[0], $aCenterHomeVillageClickDrag[1], $aCenterHomeVillageClickDrag[0] - 300, $aCenterHomeVillageClickDrag[1], 1000)
+		If _Sleep(1000) Then
+			$iCallCount = 0
+			Return FuncReturn($aResult)
+		EndIf
+		ClickDrag($aCenterHomeVillageClickDrag[0], $aCenterHomeVillageClickDrag[1], $aCenterHomeVillageClickDrag[0] + 113, $aCenterHomeVillageClickDrag[1] + 160, 1000)
+		If _Sleep(1000) Then
+			$iCallCount = 0
+			Return FuncReturn($aResult)
+		EndIf
+		$bDisableCenter = True
+	EndIf
+
 	Local $village
 	Local $bOnBuilderBase = isOnBuilderBase($CaptureRegion)
 	$village = GetVillageSize($DebugLog, "stone", "tree", Default, $bOnBuilderBase, $CaptureRegion)
@@ -496,7 +511,7 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 				ClickAway()
 				
 				; Custom fix - Team AIO Mod++
-				If Pixel_Distance($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y) > 5 Then
+				If $bDisableCenter = False And Pixel_Distance($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y) > 5 Then
 					ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y) 
 				EndIf
 				

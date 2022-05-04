@@ -105,6 +105,7 @@ EndFunc   ;==>_MakeLong
 
 Func ClickDrag($X1, $Y1, $X2, $Y2, $Delay = 50, $bSCIDSwitch = False)
 	If TestCapture() Then Return
+	$bSCIDSwitch = False
 	;Return _PostMessage_ClickDrag($X1, $Y1, $X2, $Y2, "left", $Delay)
 	Local $error = 0
 	If $g_bDebugClick Then

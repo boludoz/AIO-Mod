@@ -216,9 +216,6 @@ Func GetBuilderBaseSize($bWithClick = False, $bVersusMode = Default, $bDebugLog 
 
 	If Not $g_bRunState Then Return
 
-	Local $sFiles = ["", "2"]
-
-	
 	If $bWithClick = True Then
 		ClickDrag(100, 130, 230, 30)
 		If _Sleep(500) Then Return 
@@ -232,24 +229,21 @@ Func GetBuilderBaseSize($bWithClick = False, $bVersusMode = Default, $bDebugLog 
 		EndIf
 	EndIf
 	
-	For $sMode In $sFiles
 	
-		If Not $g_bRunState Then Return
+	If Not $g_bRunState Then Return
 	
-		$aVillage = GetVillageSize($bDebugLog, $sMode & "stone", $sMode & "tree", Default, True, False)
-		
-		If UBound($aVillage) > 8 And not @error Then
-			If StringLen($aVillage[9]) > 5 And StringIsSpace($aVillage[9]) = 0 Then
-				$iResult = Floor(Pixel_Distance($aVillage[4], $aVillage[5], $aVillage[7], $aVillage[8]))
-				Return $iResult
-			ElseIf StringIsSpace($aVillage[9]) = 1 Then
-				Return 0
-			EndIf
+	$aVillage = GetVillageSize($bDebugLog, "stone", "tree", Default, True, False)
+	
+	If UBound($aVillage) > 8 And not @error Then
+		If StringLen($aVillage[9]) > 5 And StringIsSpace($aVillage[9]) = 0 Then
+			$iResult = Floor(Pixel_Distance($aVillage[4], $aVillage[5], $aVillage[7], $aVillage[8]))
+			Return $iResult
+		ElseIf StringIsSpace($aVillage[9]) = 1 Then
+			Return 0
 		EndIf
+	EndIf
 	
-		If _Sleep($DELAYSLEEP * 10) Then Return
-	
-	Next
+	If _Sleep($DELAYSLEEP * 10) Then Return
 	
 	Return 0
 EndFunc   ;==>GetBuilderBaseSize
