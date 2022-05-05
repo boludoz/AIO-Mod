@@ -770,77 +770,74 @@ EndFunc   ;==>DetectInstalledAndroid
 ; Custom - Team AIO Mod++
 ; Find preferred Adb Path. Current Android ADB is used and saved in profile.ini and shared across instances.
 Func FindPreferredAdbPath()
-	Local $aFCopy = ["AdbWinApi.dll", "AdbWinUsbApi.dll", "adb.exe"]
-	Local $aDll = ["AdbWinApi.dll", "AdbWinUsbApi.dll"]
-	Local $adbPath = Execute("Get" & $g_sAndroidEmulator & "AdbPath()")
-	Local $sAdbFolder = StringLeft($adbPath, StringInStr($adbPath, "\", 0, -1))
-	Local $sAdbFile = StringMid($adbPath, StringLen($sAdbFolder) + 1)
-
-	Local $sToAdb = "", $sMatrixFolder = "", $sRealAdb = ""
-	Local $sInPath = @ScriptDir & "\Bin\AdbPath\" & $g_sAndroidinstance & "\"
-	If DirCreate($sInPath) = 0 Then
-		SetLog("Bad ADB path", $COLOR_ERROR)
-		$sInPath = @ScriptDir & "\lib\adb\"
-		If $g_sAndroidemulator = "Nox" Then $aFCopy[2] = "nox_adb.exe"
-		$sRealAdb = $sInPath & $aFCopy[2]
-	Else
-		For $s in $aFCopy
-			$sMatrixFolder = @ScriptDir & "\lib\adb\" & $s
-			
-			If "adb.exe" = $s Then
-				If $g_sAndroidemulator = "Nox" Then $aFCopy[2] = "nox_adb.exe"
-				$sToAdb = $sInPath & $aFCopy[2]
-				$sRealAdb = $sToAdb
-			Else
-				$sToAdb = $sInPath & $s
-			EndIf
-			
-			If FileExists($sMatrixFolder) = 1 And FileExists($sToAdb) = 0 Or FileGetSize($sMatrixFolder) <> FileGetSize($sToAdb) Then
-				If FileCopy($sMatrixFolder, $sToAdb, $FC_OVERWRITE) = 0 Then
-					SetLog($sMatrixFolder & " ADB SetUp OK (" & $s & ")", $COLOR_SUCCESS)
-				EndIf
-			EndIf
-		Next
-	EndIf
+	Local $sADB = ($g_sAndroidEmulator = "Nox") ? ("nox_adb.exe") : ("adb.exe")
+	Local $sADBPathExeOri = @ScriptDir & "\lib\adb\adb.exe"
+	Local $sADBPath = $sADBPathExeOri
+	Local $sADBPathvdll = @ScriptDir & "\lib\adb\AdbWinApi.dll"
+	Local $sADBPathvdll1 = @ScriptDir & "\lib\adb\AdbWinUsbApi.dll"
+	Local $sFolderBy = @ScriptDir & "\lib\AdbTemp\" & $g_sAndroidInstance & "\"
+	Local $iMyBotPath = 0, $iNewADBSize = 0, $iError = 0
 	
-	$g_sAndroidadbpath = $sRealAdb
-	Local $sDummyAdb = @ScriptDir & "\lib\DummyExe.exe"
-	Local $bDummy = $g_iAndroidAdbReplace = 2 And FileExists($sDummyAdb)
-	Local $sAdb = ($bDummy ? $sDummyAdb : $sRealAdb)
-
-	If $g_iAndroidAdbReplace And $adbPath And FileExists($sAdb) And (Not $bDummy Or (FileExists(@ScriptDir & "\lib\adb\" & $aDll[0]) And FileExists(@ScriptDir & "\lib\adb\" & $aDll[1]))) _
-			And (FileGetSize($adbPath) <> FileGetSize($sAdb) Or (Not $bDummy And (FileGetSize($sAdbFolder & $aDll[0]) <> FileGetSize(@ScriptDir & "\lib\adb\" & $aDll[0]) Or FileGetSize($sAdbFolder & $aDll[1]) <> FileGetSize(@ScriptDir & "\lib\adb\" & $aDll[1])))) Then
-		Local $aAdbProcess = ProcessesExist($adbPath)
-		For $i = 0 To UBound($aAdbProcess) -1
-			; ensure target process is not running
-			KillProcess($aAdbProcess[$i], "FindPreferredAdbPath")
-		Next
-		If FileCopy($sAdb, $adbPath, 1) And ($bDummy Or (FileCopy(@ScriptDir & "\lib\adb\" & $aDll[0], $sAdbFolder & $aDll[0], 1) And FileCopy(@ScriptDir & "\lib\adb\" & $aDll[1], $sAdbFolder & $aDll[1], 1))) Then
-			SetLog("Replaced " & $g_sAndroidEmulator & " ADB with MyBot.run version")
-		Else
-			SetLog("Cannot replace " & $g_sAndroidEmulator & " ADB with MyBot.run version", $COLOR_ERROR)
+	If FileExists(getmemupath() & "adb.exe") Then
+		If FileMove(getmemupath() & "adb.exe", getmemupath() & "_Old_adb.exe", $FC_OVERWRITE + $FC_CREATEPATH) = 0 Then
+			SetLog("An error occurred whilst rename the file adb.")
+		EndIf
+		If FileDelete(getmemupath() & "adb.exe") = 0 Then
+			SetLog("An error occurred whilst deleting the file adb.")
 		EndIf
 	EndIf
-	$sAdb = $sRealAdb
-	If $g_bAndroidAdbUseMyBot And FileExists($sAdb) Then
-		Return $sAdb
+
+	If DirCreate($sFolderBy) = 0 Then
+		SetLog("Adb Directory error!", $COLOR_ERROR)
+		$sADBPath = $sADBPathExeOri
+		$g_sandroidadbpath = $sADBPath
+	Else
+		SetLog("ADB Checking", $COLOR_ACTION)
+		$sADBPath = $sFolderBy & $sADB
+		$g_sandroidadbpath = $sADBPath
+		
+		$iMyBotPath = FileGetSize($sADBPathExeOri)
+		$iError = @error
+		$iNewADBSize = FileGetSize($sADBPath)
+		If Not $iError Then $iError = @error
+		If $iMyBotPath <> $iNewADBSize And not $iError Then
+			SetDebugLog("$g_sAndroidADBPath: " & $g_sAndroidADBPath)
+			If FileCopy($sADBPathExeOri, $sFolderBy & $sADB, $FC_OVERWRITE + $FC_CREATEPATH) = 0 Then
+				SetLog("$sADBPathExeOri FAIL", $COLOR_ERROR)
+			EndIf
+		EndIf
+
+		$iMyBotPath = FileGetSize($sADBPathvdll)
+		If Not $iError Then $iError = @error
+		$iNewADBSize = FileGetSize($sFolderBy & "AdbWinApi.dll")
+		If Not $iError Then $iError = @error
+		If $iMyBotPath <> $iNewADBSize And not $iError Then
+			If FileCopy($sADBPathvdll, $sFolderBy & "AdbWinApi.dll", $FC_OVERWRITE + $FC_CREATEPATH) = 0 Then
+				SetLog("$sADBPathvdll FAIL", $COLOR_ERROR)
+			EndIf
+		EndIf
+
+		$iMyBotPath = FileGetSize($sADBPathvdll1)
+		If Not $iError Then $iError = @error
+		$iNewADBSize = FileGetSize($sFolderBy & "AdbWinUsbApi.dll")
+		If Not $iError Then $iError = @error
+		If $iMyBotPath <> $iNewADBSize And not $iError Then
+			If FileCopy($sADBPathvdll1, $sFolderBy & "AdbWinUsbApi.dll", $FC_OVERWRITE + $FC_CREATEPATH) = 0 Then
+				SetLog("$sADBPathvdll1 FAIL", $COLOR_ERROR)
+			EndIf
+		EndIf
 	EndIf
 
-	If FileExists($g_sAndroidAdbPath) Then
-		Return $g_sAndroidAdbPath
+	If $iError Then
+		$sADBPath = $sADBPathExeOri
+		$g_sandroidadbpath = $sADBPath
+		SetLog("ADB Checking failed", $COLOR_ERROR)
+	Else
+		SetLog("ADB Checking OK", $COLOR_INFO)
 	EndIf
-
-	If $adbPath = "" Then
-		; find any
-		For $i = 0 To UBound($g_avAndroidAppConfig) - 1
-			$adbPath = Execute("Get" & $g_avAndroidAppConfig[$i][0] & "AdbPath()")
-			If $adbPath <> "" Then ExitLoop
-		Next
-	EndIf
-
-	If $adbPath = "" Then Return $sRealAdb
-	Return $adbPath
-EndFunc   ;==>FindPreferredAdbPath
+	
+	Return $sADBPath
+EndFunc   ;==>FindPreferredsADBPath
 
 Func CompareAndUpdate(ByRef $UpdateWhenDifferent, Const $New)
 	Local $bDifferent = $UpdateWhenDifferent <> $New
@@ -1875,7 +1872,7 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 				Local $srcFile = $g_sAdbScriptsPath & "\" & $tool
 				Local $dstFile = $hostFolder & $tool
 				If FileGetTime($srcFile, $FT_MODIFIED, $FT_STRING) <> FileGetTime($dstFile, $FT_MODIFIED, $FT_STRING) Then
-					FileCopy($srcFile, $dstFile, $FC_OVERWRITE)
+					FileCopy($srcFile, $dstFile, $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
 		EndIf
@@ -2464,7 +2461,7 @@ Func AndroidAdbSendShellCommandScript($scriptFile, $variablesArray = Default, $c
 			Local $secFile = GetSecureFilename($scriptFile & "." & $i)
 			Local $dstFile = $hostPath & $secFile
 			If FileGetTime($srcFile, $FT_MODIFIED, $FT_STRING) <> FileGetTime($dstFile, $FT_MODIFIED, $FT_STRING) Then
-				FileCopy($srcFile, $dstFile, $FC_OVERWRITE)
+				FileCopy($srcFile, $dstFile, $FC_OVERWRITE + $FC_CREATEPATH)
 			EndIf
 			$iAdditional = $i
 			ReDim $additionalFilenames[$iAdditional]
@@ -4622,11 +4619,11 @@ Func PullSharedPrefs($sProfile = $g_sProfileCurrentName)
 				Local $hostFolder = $g_sAndroidPicturesHostPath & $g_sAndroidPicturesHostFolder & $sProfileMD5
 				$iFilesPulled = UBound(_FileListToArray($hostFolder & "\shared_prefs", "*", $FLTA_FILES)) - 1
 				If $iFilesPulled >= $iFiles Then
-					;If DirCopy($hostFolder & "\shared_prefs", $g_sPrivateProfilePath & "\" & $sProfile, $FC_OVERWRITE) = 1 Then
+					;If DirCopy($hostFolder & "\shared_prefs", $g_sPrivateProfilePath & "\" & $sProfile, $FC_OVERWRITE + $FC_CREATEPATH) = 1 Then
 					FileDelete($g_sPrivateProfilePath & "\" & $sProfile & "\shared_prefs") ; ensure folder doen't exist as file
 					DirRemove($g_sPrivateProfilePath & "\" & $sProfile & "\shared_prefs", 1) ; delete shared_prefs folder
 					DirCreate($g_sPrivateProfilePath & "\" & $sProfile & "\shared_prefs")
-					If FileCopy($hostFolder & "\shared_prefs\*", $g_sPrivateProfilePath & "\" & $sProfile & "\shared_prefs", $FC_OVERWRITE) And UBound(_FileListToArray($g_sPrivateProfilePath & "\" & $sProfile & "\shared_prefs", "*", $FLTA_FILES)) - 1 >= $iFiles Then
+					If FileCopy($hostFolder & "\shared_prefs\*", $g_sPrivateProfilePath & "\" & $sProfile & "\shared_prefs", $FC_OVERWRITE + $FC_CREATEPATH) And UBound(_FileListToArray($g_sPrivateProfilePath & "\" & $sProfile & "\shared_prefs", "*", $FLTA_FILES)) - 1 >= $iFiles Then
 						; OK, files pulled
 						AndroidAdbSendShellCommand("set result=$(rm -r """ & $androidFolder & """ >&2)")
 						$Result = True
@@ -4746,7 +4743,7 @@ Func PushSharedPrefs($sProfile = $g_sProfileCurrentName, $bCloseGameIfRunning = 
 			Local $iFilesInShared = UBound(_FileListToArray($hostFolder & "\shared_prefs", "*", $FLTA_FILES)) - 1
 			If FileExists($hostFolder & "\shared_prefs") And $iFilesInShared < 1 Then
 				; copy files
-				If FileCopy($g_sPrivateProfilePath & "\" & $sProfile & "\shared_prefs\*", $hostFolder & "\shared_prefs", $FC_OVERWRITE) And UBound(_FileListToArray($hostFolder & "\shared_prefs", "*", $FLTA_FILES)) - 1 >= $iFiles Then
+				If FileCopy($g_sPrivateProfilePath & "\" & $sProfile & "\shared_prefs\*", $hostFolder & "\shared_prefs", $FC_OVERWRITE + $FC_CREATEPATH) And UBound(_FileListToArray($hostFolder & "\shared_prefs", "*", $FLTA_FILES)) - 1 >= $iFiles Then
 
 					; files copied, now check to update storage_new.xml
 					If $g_bUpdateSharedPrefs And ($g_bUpdateSharedPrefsLanguage OR $g_bUpdateSharedPrefsSnow Or $g_bUpdateSharedPrefsZoomLevel Or $g_bUpdateSharedPrefsGoogleDisconnected Or $g_bUpdateSharedPrefsRated) Then
