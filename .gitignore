@@ -33,3 +33,4 @@ AutoUpdate.txt
 #MyBot.run.exe
 #MyBot.run.MiniGui.exe
 bin/AdbPath/
+lib/AdbTemp/

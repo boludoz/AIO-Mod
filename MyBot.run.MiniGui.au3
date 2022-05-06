@@ -114,13 +114,12 @@ Global $g_hFrmBotEmbeddedMouse = 0
 #include "COCBot\Team__AiO__MOD++\functions\Config\readConfig.au3"
 #include "COCBot\functions\Other\UpdateStats.Mini.au3"
 #include "COCBot\functions\Other\_NumberFormat.au3"
-#Include "COCBot\functions\Other\VritDsktLibrary.au3"
 
 ; Only farm - Team AiO MOD++
 Func ApplyMiniCFG($TypeReadSave = "Read")
 
 	$g_bApplyConfigIsActive = True
-	
+
 	If $g_iGuiMode = 2 Then ; mini mode controls
 		Switch $TypeReadSave
 			Case "Read"
@@ -134,7 +133,7 @@ Func ApplyMiniCFG($TypeReadSave = "Read")
 				$g_iComboStatusMode = Number(_GUICtrlComboBox_GetCurSel($g_hCmbStatusMode))
 		EndSwitch
 	EndIf
-    
+
 	$g_bApplyConfigIsActive = False
 EndFunc   ;==>ApplyMiniCFG
 
@@ -152,10 +151,10 @@ Func ComboStatusMode()
 		Local $iStatusFlag = 2, $iNewStatus = 2
 		If $g_bChkOnlyFarm = True Then $iStatusFlag += 8
 		If $g_bOnlyBuilderBase = True Then $iStatusFlag += 16
-		
+
 		$g_bChkOnlyFarm = False
 		$g_bOnlyBuilderBase = False
-		
+
 		Switch _GUICtrlComboBox_GetCurSel($g_hCmbStatusMode)
 			Case 1
 				$g_iComboStatusMode = 1
@@ -174,10 +173,10 @@ Func ComboStatusMode()
 				$g_iComboStatusMode = 0
 				Return
 		EndSwitch
-		
+
 		; Quick solution.
 		If $iStatusFlag = $iNewStatus Then Return
-		$g_bRestart = True 
+		$g_bRestart = True
 	EndIf
 EndFunc   ;==>ComboStatusMode
 
@@ -1354,7 +1353,7 @@ Func UpdateManagedMyBot($aBotDetails)
     ; Set the profile name on the village info group.
     GUICtrlSetData($g_hGrpVillage, GetTranslatedFileIni("MBR GUI Design Bottom", "GrpVillage", "Village") & ": " & $g_sProfileCurrentName)
 	; --------------------------------
-	
+
 	If $sEmulator <> "" Then $g_sAndroidEmulator = $sEmulator
 	If $sInstance <> "" Then $g_sAndroidInstance = $sInstance
 
@@ -1508,7 +1507,7 @@ EndFunc   ;==>TogglePauseImpl
 
 Func BotClose($SaveConfig = Default, $bExit = True)
 	_WinAPI_PostMessage($g_hFrmBotBackend, $WM_MYBOTRUN_API, 0x1040, $g_hFrmBot)
-		
+
 	SaveMiniCFG()
 
 	$g_bRunState = False
@@ -1682,6 +1681,6 @@ Func AutoDockMiniGUI()
     $_shFrmBot = $hFrmBot
     $_shAndroidHandleMini = $hAndroidHandleMini
 EndFunc   ;==>AutoDockMiniGUI
- 
+
 ReferenceFunctions()
 ReferenceGlobals()

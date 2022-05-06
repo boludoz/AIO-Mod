@@ -771,20 +771,38 @@ EndFunc   ;==>DetectInstalledAndroid
 ; Find preferred Adb Path. Current Android ADB is used and saved in profile.ini and shared across instances.
 Func FindPreferredAdbPath()
 	Local $sADB = ($g_sAndroidEmulator = "Nox") ? ("nox_adb.exe") : ("adb.exe")
+	$sADB = (StringInStr($g_sAndroidEmulator, "BlueStacks") <> 0) ? ("HD-adb.exe") : ($sADB)
 	Local $sADBPathExeOri = @ScriptDir & "\lib\adb\adb.exe"
 	Local $sADBPath = $sADBPathExeOri
 	Local $sADBPathvdll = @ScriptDir & "\lib\adb\AdbWinApi.dll"
 	Local $sADBPathvdll1 = @ScriptDir & "\lib\adb\AdbWinUsbApi.dll"
 	Local $sFolderBy = @ScriptDir & "\lib\AdbTemp\" & $g_sAndroidInstance & "\"
-	Local $iMyBotPath = 0, $iNewADBSize = 0, $iError = 0
+	Local $iMyBotPath = 0, $iNewADBSize = 0, $iError = 0, $aAdbProcess = 0
+
+	Local $sPathAdbLegacy = Execute("Get" & $g_sAndroidEmulator & "AdbPath()")
+	If not @error And FileExists($sPathAdbLegacy) Then
+		$aAdbProcess = ProcessesExist($sPathAdbLegacy)
+		For $i = 0 To UBound($aAdbProcess) -1
+			; ensure target process is not running
+			KillProcess($aAdbProcess[$i], "FindPreferredAdbPath (1)")
+		Next
 	
-	If FileExists(getmemupath() & "adb.exe") Then
-		If FileMove(getmemupath() & "adb.exe", getmemupath() & "_Old_adb.exe", $FC_OVERWRITE + $FC_CREATEPATH) = 0 Then
-			SetLog("An error occurred whilst rename the file adb.")
-		EndIf
-		If FileDelete(getmemupath() & "adb.exe") = 0 Then
-			SetLog("An error occurred whilst deleting the file adb.")
-		EndIf
+		Switch $g_iAndroidAdbReplace
+			Case 2
+				Local $sDummyAdb = @ScriptDir & "\lib\DummyExe.exe"
+				Local $bDummy = FileExists($sDummyAdb)
+				If Not $bDummy Then ContinueCase
+				If FileGetSize($sDummyAdb) <> FileGetSize($sPathAdbLegacy) And not @error Then
+					If FileCopy($sDummyAdb, $sPathAdbLegacy, $FC_OVERWRITE) = 1 Then SetLog("Replaced ADB.EXE by Dummy", $COLOR_INFO)
+				EndIf
+			Case 1
+				If FileGetSize($sADBPathExeOri) <> FileGetSize($sPathAdbLegacy) And not @error Then
+					If FileCopy($sADBPathExeOri, $sPathAdbLegacy, $FC_OVERWRITE) = 1 Then SetLog("Replaced ADB.EXE by MyBot ADB", $COLOR_INFO)
+					Local $sDirectory = StringRegExpReplace($sPathAdbLegacy, "(^.*\\)(.*)", "\1")
+					FileCopy($sADBPathvdll, $sDirectory & StringRegExpReplace($sADBPathvdll, "^.*\\", ""), $FC_OVERWRITE)
+					FileCopy($sADBPathvdll1, $sDirectory & StringRegExpReplace($sADBPathvdll1, "^.*\\", ""), $FC_OVERWRITE)
+				EndIf
+		EndSwitch
 	EndIf
 
 	If DirCreate($sFolderBy) = 0 Then
@@ -792,17 +810,29 @@ Func FindPreferredAdbPath()
 		$sADBPath = $sADBPathExeOri
 		$g_sandroidadbpath = $sADBPath
 	Else
-		SetLog("ADB Checking", $COLOR_ACTION)
+		SetDebugLog("ADB Checking", $COLOR_ACTION)
 		$sADBPath = $sFolderBy & $sADB
 		$g_sandroidadbpath = $sADBPath
-		
+
 		$iMyBotPath = FileGetSize($sADBPathExeOri)
 		$iError = @error
 		$iNewADBSize = FileGetSize($sADBPath)
-		If Not $iError Then $iError = @error
 		If $iMyBotPath <> $iNewADBSize And not $iError Then
+
+			$aAdbProcess = ProcessesExist($sFolderBy & $sADB)
+			For $i = 0 To UBound($aAdbProcess) -1
+				; ensure target process is not running
+				KillProcess($aAdbProcess[$i], "FindPreferredAdbPath (2)")
+			Next
+
+			$aAdbProcess = ProcessesExist($sADBPathExeOri)
+			For $i = 0 To UBound($aAdbProcess) -1
+				; ensure target process is not running
+				KillProcess($aAdbProcess[$i], "FindPreferredAdbPath (3)")
+			Next
+
 			SetDebugLog("$g_sAndroidADBPath: " & $g_sAndroidADBPath)
-			If FileCopy($sADBPathExeOri, $sFolderBy & $sADB, $FC_OVERWRITE + $FC_CREATEPATH) = 0 Then
+			If FileCopy($sADBPathExeOri, $sFolderBy & $sADB, $FC_OVERWRITE) = 0 Then
 				SetLog("$sADBPathExeOri FAIL", $COLOR_ERROR)
 			EndIf
 		EndIf
@@ -810,9 +840,8 @@ Func FindPreferredAdbPath()
 		$iMyBotPath = FileGetSize($sADBPathvdll)
 		If Not $iError Then $iError = @error
 		$iNewADBSize = FileGetSize($sFolderBy & "AdbWinApi.dll")
-		If Not $iError Then $iError = @error
 		If $iMyBotPath <> $iNewADBSize And not $iError Then
-			If FileCopy($sADBPathvdll, $sFolderBy & "AdbWinApi.dll", $FC_OVERWRITE + $FC_CREATEPATH) = 0 Then
+			If FileCopy($sADBPathvdll, $sFolderBy & "AdbWinApi.dll", $FC_OVERWRITE) = 0 Then
 				SetLog("$sADBPathvdll FAIL", $COLOR_ERROR)
 			EndIf
 		EndIf
@@ -820,9 +849,8 @@ Func FindPreferredAdbPath()
 		$iMyBotPath = FileGetSize($sADBPathvdll1)
 		If Not $iError Then $iError = @error
 		$iNewADBSize = FileGetSize($sFolderBy & "AdbWinUsbApi.dll")
-		If Not $iError Then $iError = @error
 		If $iMyBotPath <> $iNewADBSize And not $iError Then
-			If FileCopy($sADBPathvdll1, $sFolderBy & "AdbWinUsbApi.dll", $FC_OVERWRITE + $FC_CREATEPATH) = 0 Then
+			If FileCopy($sADBPathvdll1, $sFolderBy & "AdbWinUsbApi.dll", $FC_OVERWRITE) = 0 Then
 				SetLog("$sADBPathvdll1 FAIL", $COLOR_ERROR)
 			EndIf
 		EndIf
@@ -833,9 +861,9 @@ Func FindPreferredAdbPath()
 		$g_sandroidadbpath = $sADBPath
 		SetLog("ADB Checking failed", $COLOR_ERROR)
 	Else
-		SetLog("ADB Checking OK", $COLOR_INFO)
+		SetDebugLog("ADB Checking OK", $COLOR_INFO)
 	EndIf
-	
+
 	Return $sADBPath
 EndFunc   ;==>FindPreferredsADBPath
 
@@ -987,7 +1015,7 @@ Func InitAndroid($bCheckOnly = False, $bLogChangesOnly = True)
 			Else
 				SetDebugLog("Cannot disable WerFault for " & $sFileOnly)
 			EndIf
-			Local $sPath = Execute("Get" & $g_sAndroidEmulator & "AdbPath()")
+			Local $sPath = FindPreferredAdbPath() ; Execute("Get" & $g_sAndroidEmulator & "AdbPath()") - Custom Fix - Team__AiO__MOD
 			If $sPath Then
 				Local $sFileOnly = StringMid($sPath, StringInStr($sPath, "\", 0, -1) + 1)
 				Local $aResult = DllCall("Wer.dll", "int", "WerAddExcludedApplication", "wstr", $sFileOnly, "bool", True)
