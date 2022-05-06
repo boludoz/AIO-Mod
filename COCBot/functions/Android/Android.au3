@@ -1872,7 +1872,7 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 				Local $srcFile = $g_sAdbScriptsPath & "\" & $tool
 				Local $dstFile = $hostFolder & $tool
 				If FileGetTime($srcFile, $FT_MODIFIED, $FT_STRING) <> FileGetTime($dstFile, $FT_MODIFIED, $FT_STRING) Then
-					FileCopy($srcFile, $dstFile, $FC_OVERWRITE + $FC_CREATEPATH)
+					FileCopy($srcFile, $dstFile, $FC_OVERWRITE)
 				EndIf
 			Next
 		EndIf
@@ -2461,7 +2461,7 @@ Func AndroidAdbSendShellCommandScript($scriptFile, $variablesArray = Default, $c
 			Local $secFile = GetSecureFilename($scriptFile & "." & $i)
 			Local $dstFile = $hostPath & $secFile
 			If FileGetTime($srcFile, $FT_MODIFIED, $FT_STRING) <> FileGetTime($dstFile, $FT_MODIFIED, $FT_STRING) Then
-				FileCopy($srcFile, $dstFile, $FC_OVERWRITE + $FC_CREATEPATH)
+				FileCopy($srcFile, $dstFile, $FC_OVERWRITE)
 			EndIf
 			$iAdditional = $i
 			ReDim $additionalFilenames[$iAdditional]
@@ -4619,11 +4619,11 @@ Func PullSharedPrefs($sProfile = $g_sProfileCurrentName)
 				Local $hostFolder = $g_sAndroidPicturesHostPath & $g_sAndroidPicturesHostFolder & $sProfileMD5
 				$iFilesPulled = UBound(_FileListToArray($hostFolder & "\shared_prefs", "*", $FLTA_FILES)) - 1
 				If $iFilesPulled >= $iFiles Then
-					;If DirCopy($hostFolder & "\shared_prefs", $g_sPrivateProfilePath & "\" & $sProfile, $FC_OVERWRITE + $FC_CREATEPATH) = 1 Then
+					;If DirCopy($hostFolder & "\shared_prefs", $g_sPrivateProfilePath & "\" & $sProfile, $FC_OVERWRITE) = 1 Then
 					FileDelete($g_sPrivateProfilePath & "\" & $sProfile & "\shared_prefs") ; ensure folder doen't exist as file
 					DirRemove($g_sPrivateProfilePath & "\" & $sProfile & "\shared_prefs", 1) ; delete shared_prefs folder
 					DirCreate($g_sPrivateProfilePath & "\" & $sProfile & "\shared_prefs")
-					If FileCopy($hostFolder & "\shared_prefs\*", $g_sPrivateProfilePath & "\" & $sProfile & "\shared_prefs", $FC_OVERWRITE + $FC_CREATEPATH) And UBound(_FileListToArray($g_sPrivateProfilePath & "\" & $sProfile & "\shared_prefs", "*", $FLTA_FILES)) - 1 >= $iFiles Then
+					If FileCopy($hostFolder & "\shared_prefs\*", $g_sPrivateProfilePath & "\" & $sProfile & "\shared_prefs", $FC_OVERWRITE) And UBound(_FileListToArray($g_sPrivateProfilePath & "\" & $sProfile & "\shared_prefs", "*", $FLTA_FILES)) - 1 >= $iFiles Then
 						; OK, files pulled
 						AndroidAdbSendShellCommand("set result=$(rm -r """ & $androidFolder & """ >&2)")
 						$Result = True
@@ -4743,7 +4743,7 @@ Func PushSharedPrefs($sProfile = $g_sProfileCurrentName, $bCloseGameIfRunning = 
 			Local $iFilesInShared = UBound(_FileListToArray($hostFolder & "\shared_prefs", "*", $FLTA_FILES)) - 1
 			If FileExists($hostFolder & "\shared_prefs") And $iFilesInShared < 1 Then
 				; copy files
-				If FileCopy($g_sPrivateProfilePath & "\" & $sProfile & "\shared_prefs\*", $hostFolder & "\shared_prefs", $FC_OVERWRITE + $FC_CREATEPATH) And UBound(_FileListToArray($hostFolder & "\shared_prefs", "*", $FLTA_FILES)) - 1 >= $iFiles Then
+				If FileCopy($g_sPrivateProfilePath & "\" & $sProfile & "\shared_prefs\*", $hostFolder & "\shared_prefs", $FC_OVERWRITE) And UBound(_FileListToArray($hostFolder & "\shared_prefs", "*", $FLTA_FILES)) - 1 >= $iFiles Then
 
 					; files copied, now check to update storage_new.xml
 					If $g_bUpdateSharedPrefs And ($g_bUpdateSharedPrefsLanguage OR $g_bUpdateSharedPrefsSnow Or $g_bUpdateSharedPrefsZoomLevel Or $g_bUpdateSharedPrefsGoogleDisconnected Or $g_bUpdateSharedPrefsRated) Then
