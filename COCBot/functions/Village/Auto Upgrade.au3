@@ -137,8 +137,8 @@ Func _AutoUpgrade()
 		; check in the line of the 000 if we can see "New" or the Gear of the equipment, in this case, will not do the upgrade
 		If QuickMIS("NX",$g_sImgAUpgradeObst, 180, 80 + $g_iCurrentLineOffset - 15, 480, 80 + $g_iCurrentLineOffset + 15) <> "none" Then
 			SetLog("This is a New Building or an Equipment, looking next...", $COLOR_WARNING)
-			$bIsNewUpdate = True
 			If $g_bNewUpdateMainVillage = False Then ContinueLoop
+			$bIsNewUpdate = True
 		EndIf
 
 		; if it's an upgrade, will click on the upgrade, in builders menu
