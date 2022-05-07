@@ -69,6 +69,7 @@ Func _AutoUpgrade()
 
 	Static $s_hHBitmap  = 0
 	Static $s_hHBitmap2 = 0
+	Local $bIsNewUpdate = False
 	While 1
 
 		$iloopamount += 1
@@ -131,11 +132,13 @@ Func _AutoUpgrade()
 			EndIf
 		EndIf
 		
+		$bIsNewUpdate = False
+		
 		; check in the line of the 000 if we can see "New" or the Gear of the equipment, in this case, will not do the upgrade
-		Local $bIsNewUpdate = False
 		If QuickMIS("NX",$g_sImgAUpgradeObst, 180, 80 + $g_iCurrentLineOffset - 15, 480, 80 + $g_iCurrentLineOffset + 15) <> "none" Then
 			SetLog("This is a New Building or an Equipment, looking next...", $COLOR_WARNING)
 			$bIsNewUpdate = True
+			If $g_bNewUpdateMainVillage = False Then ContinueLoop
 		EndIf
 
 		; if it's an upgrade, will click on the upgrade, in builders menu
