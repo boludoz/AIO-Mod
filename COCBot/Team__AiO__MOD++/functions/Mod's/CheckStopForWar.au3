@@ -189,7 +189,7 @@ Func CheckWarTime(ByRef $sResult, ByRef $bResult, $bReturnFrom = True) ; return 
 			$bResult = True
 		Else
 			If $g_bClanWarLeague Then
-				If QuickMIS("BC1", $directoryDay & "\CWL_Preparation", 175, 645, 175 + 515, 645 + 30, True) Then ; By Default Battle Days Opens So Find Prepration Button
+				If QuickMIS("BC1", $directoryDay & "\CWL_Preparation", 175, 645 + $g_iBottomOffsetYFixed, 175 + 515, 645 + $g_iBottomOffsetYFixed + 30, True) Then ; By Default Battle Days Opens So Find Prepration Button ; Resolution changed
 					SetDebugLog("CWL Enter In Preparation page")
 					Click($g_iQuickMISX + 175, $g_iQuickMISY + 645, 1)
 					If _Sleep(500) Then Return
@@ -197,7 +197,7 @@ Func CheckWarTime(ByRef $sResult, ByRef $bResult, $bReturnFrom = True) ; return 
 						SetLog("Error when trying to open CWL Preparation page.", $COLOR_ERROR)
 						$bLocalReturn = SetError(1, 0, "Error Open CWL Preparation page")
 					EndIf
-				ElseIf QuickMIS("BC1", $directoryDay & "\CWL_Battle", 175, 645, 175 + 515, 645 + 30, True) Then ; When Battle Day Is Unselected
+				ElseIf QuickMIS("BC1", $directoryDay & "\CWL_Battle", 175, 645 + $g_iBottomOffsetYFixed, 175 + 515, 645 + 30 + $g_iBottomOffsetYFixed, True) Then ; When Battle Day Is Unselected ; Resolution changed
 					SetDebugLog("CWL Enter In Battle page")
 					Click($g_iQuickMISX + 175, $g_iQuickMISY + 645, 1)
 					If _Sleep(500) Then Return
@@ -207,8 +207,8 @@ Func CheckWarTime(ByRef $sResult, ByRef $bResult, $bReturnFrom = True) ; return 
 					EndIf
 				EndIf
 			EndIf
-			$sWarDay = QuickMIS("N1", $directoryDay, 360, 85, 360 + 145, 85 + 28, True) ; Prepare or Battle
-			$bResult = Not (QuickMIS("BC1", $directoryDay, 359, 127, 510, 154, True)) ; $bInWar.... Fixed (08/2019)
+			$sWarDay = QuickMIS("N1", $directoryDay, 360, 85 + $g_iMidOffsetYFixed, 360 + 145, 85 + $g_iMidOffsetYFixed + 28, True) ; Prepare or Battle ; Resolution changed ?
+			$bResult = Not (QuickMIS("BC1", $directoryDay, 359, 127 + $g_iMidOffsetYFixed, 510, 154 + $g_iMidOffsetYFixed, True)) ; $bInWar.... Fixed (08/2019) ; Resolution changed ?
 			SetDebugLog("$sResult QuickMIS N1/BC1: " & $sWarDay & "/ " & $bResult)
 			If $sWarDay = "none" Then 
 				$bLocalReturn =  SetError(1, 0, "Error reading war day")
@@ -219,7 +219,7 @@ Func CheckWarTime(ByRef $sResult, ByRef $bResult, $bReturnFrom = True) ; return 
 			SetLog("Your Clan is not in active war yet.", $COLOR_INFO)
 			$bLocalReturn = False
 		Else
-			$sTime = QuickMIS("OCR", $directoryTime, 396, 65, 396 + 70, 70 + 30, True)
+			$sTime = QuickMIS("OCR", $directoryTime, 396, 65 + $g_iMidOffsetYFixed, 396 + 70, 70 + 30 + $g_iMidOffsetYFixed, True) ; Resolution changed?
 			SetDebugLog("$sResult QuickMIS OCR: " & ($bBattleDay_InWar ? $sWarDay & ", " : "") & $sTime)
 			If $sTime = "none" Then Return SetError(1, 0, "Error reading war time")
 

@@ -185,10 +185,10 @@ Func RemoveChangeTroopsDialog()
 EndFunc   ;==>RemoveChangeTroopsDialog
 
 Func CheckAttackBtn()
-	If QuickMIS("BC1", $g_sImgAttackBtnBB, 16, 627, 107, 713, True, False) Then
-		If $g_iQuickMISWOffSetX > 16 And $g_iQuickMISWOffSetX < 107 And $g_iQuickMISWOffSetY > 627 And $g_iQuickMISWOffSetY < 713 Then
-			SetDebugLog("Attack Button detected: " & $g_iQuickMISWOffSetX & "," & $g_iQuickMISWOffSetY)
-			Click(Random(16, 107, 1), Random(627, 713, 1), 1)
+	If QuickMIS("BC1", $g_sImgAttackBtnBB, 16, 627 + $g_iBottomOffsetYFixed, 107, 713 + $g_iBottomOffsetYFixed, True, False) Then ; Resolution changed
+		If $g_iQuickMISWOffSetX > 16 And $g_iQuickMISWOffSetX < 107 And $g_iQuickMISWOffSetY > 627 + $g_iBottomOffsetYFixed And $g_iQuickMISWOffSetY < 713 + $g_iBottomOffsetYFixed Then ; Resolution changed
+			SetDebugLog("Attack Button detected: " & $g_iQuickMISWOffSetX & "," & $g_iQuickMISWOffSetY) ; Resolution changed
+			Click(Random(16, 107, 1), Random(627, 713, 1) + $g_iBottomOffsetYFixed, 1) ; Resolution changed
 		Else
 			SetLog("Attack Button not available.", $COLOR_ERROR)
 			ClickAway(Default, True)
@@ -272,7 +272,7 @@ Func ArmyStatus(ByRef $bIsReady)
 	If Not $g_bRunState Then Return
 
 	#Region Legacy Chilly-Chill fragment.
-	Local $sSearchDiamond = GetDiamondFromRect("114,384,190,450") ; start of trained troops bar untill a bit after the 'r' "in Your Troops"
+	Local $sSearchDiamond = GetDiamondFromRect("114,340(76,66)") ; start of trained troops bar untill a bit after the 'r' "in Your Troops" ; Resolution changed
 	Local $aNeedTrainCoords = decodeSingleCoord(findImage("NeedTrainBB", $g_sImgBBNeedTrainTroops, $sSearchDiamond, 1, True))
 
 	If IsArray($aNeedTrainCoords) And UBound($aNeedTrainCoords) = 2 Then
@@ -288,21 +288,16 @@ Func ArmyStatus(ByRef $bIsReady)
 	EndIf
 	#EndRegion Legacy Chilly-Chill fragment.
 
-	If QuickMis("BC1", $g_sImgFullArmyBB, 108, 355, 431, 459, True, False) Then
+	If QuickMis("BC1", $g_sImgFullArmyBB, 108, 355 + $g_iMidOffsetYFixed, 431, 459 + $g_iMidOffsetYFixed, True, False) Then ; Resolution changed
 		SetDebugLog("Full Army detected.")
 		SetLog("Full Army detected", $COLOR_INFO)
 		$bIsReady = True
-	ElseIf QuickMis("BC1", $g_sImgHeroStatusUpg, 108, 355, 431, 459, True, False) Then
+	ElseIf QuickMis("BC1", $g_sImgHeroStatusUpg, 108, 355 + $g_iMidOffsetYFixed, 431, 459 + $g_iMidOffsetYFixed, True, False) Then ; Resolution changed
 		SetLog("Full Army detected, But Battle Machine is on Upgrade", $COLOR_INFO)
 		$bIsReady = True
 	Else
 		$bIsReady = False
 	EndIf
-
-	; If $g_bChkBBWaitForMachine And QuickMis("BC1", $g_sImgHeroStatusRec, 108, 355, 431, 459, True, False) Then
-		; SetLog("Battle Machine is not ready.", $COLOR_INFO)
-		; $bIsReady = False
-	; EndIf
 
 	$g_bBBMachineReady = $bIsReady
 
@@ -311,13 +306,13 @@ EndFunc   ;==>ArmyStatus
 Func HeroStatus()
 	If Not $g_bRunState Then Return
 	Local $Status = "No Hero to use in Battle"
-	If QuickMis("BC1", $g_sImgHeroStatusRec, 108, 355, 431, 459, True, False) Then
+	If QuickMis("BC1", $g_sImgHeroStatusRec, 108, 355 + $g_iMidOffsetYFixed, 431, 459 + $g_iMidOffsetYFixed, True, False) Then ; Resolution changed
 		$Status = "Battle Machine Recovering"
 	EndIf
-	If QuickMis("BC1", $g_sImgHeroStatusMachine, 108, 355, 431, 459, True, False) Then
+	If QuickMis("BC1", $g_sImgHeroStatusMachine, 108, 355 + $g_iMidOffsetYFixed, 431, 459 + $g_iMidOffsetYFixed, True, False) Then ; Resolution changed
 		$Status = "Battle Machine ready to use"
 	EndIf
-	If QuickMis("BC1", $g_sImgHeroStatusUpg, 108, 355, 431, 459, True, False) Then
+	If QuickMis("BC1", $g_sImgHeroStatusUpg, 108, 355 + $g_iMidOffsetYFixed, 431, 459 + $g_iMidOffsetYFixed, True, False) Then ; Resolution changed
 		$Status = "Battle Machine Upgrading"
 	EndIf
 	Return $Status

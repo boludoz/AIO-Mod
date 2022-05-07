@@ -212,7 +212,7 @@ Func DonateGTFO()
 			SetDebugLog("While Donation Get all Buttons in " & StringFormat("%.2f", $iBenchmark) & "'ms", $COLOR_DEBUG)
 			
 			 ; Heavy artillery LoL.
-			 $aiDonateButtons = findMultipleQuick($g_sImgDonateCC, $iToShearch, "200, 90, 300, 700", True, "DonateButton", False)
+			 $aiDonateButtons = findMultipleQuick($g_sImgDonateCC, $iToShearch, "200, 46, 300, 612", True, "DonateButton", False) ; Resolution changed
 			
 			If UBound($aiDonateButtons) > 0 And Not @error Then     ; if Donate Button found
 				For $iBig = 0 To UBound($aiDonateButtons) - 1

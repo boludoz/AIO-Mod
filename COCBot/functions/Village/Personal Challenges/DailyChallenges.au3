@@ -79,7 +79,7 @@ Func CollectDailyRewards($bGoldPass = False)
 	Local $iClaim = 0, $bShellEnabled = False, $sItemName = "", $aAreas[4]
 	For $i = 0 To 10
 		If Not $g_bRunState Then Return
-		Local $SearchArea = $bGoldPass ? GetDiamondFromRect("13,308,776,557") : GetDiamondFromRect("13,528,776,557")
+		Local $SearchArea = $bGoldPass ? GetDiamondFromRect("13,264,776,513") : GetDiamondFromRect("13,484,776,513") ; Resolution changed
 		Local $aResult = findMultiple(@ScriptDir & "\imgxml\DailyChallenge\", $SearchArea, $SearchArea, 0, 1000, $bGoldPass ? 5 : 2, "objectname,objectpoints", True)
 		If $aResult <> "" And IsArray($aResult) Then
 			For $i = 0 To UBound($aResult) - 1

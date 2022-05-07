@@ -36,12 +36,12 @@ Func ProfileReport()
    ; Check If exist 'Claim Reward' button , click and return to Top of the Profile Page
 	Local $aSearchResult
 	For $i = 0 to 1 ; Check twice,  because the button is animated
-		$aSearchResult = decodeSingleCoord(findImage("CollectReward", $g_sImgCollectReward, GetDiamondFromRect("680,165,855,680"), 1, True))
+		$aSearchResult = decodeSingleCoord(findImage("CollectReward", $g_sImgCollectReward, GetDiamondFromRect("680,121,855,636"), 1, True)) ; Resolution changed
 		If IsArray($aSearchResult) And UBound($aSearchResult) = 2 Then
 			Click($aSearchResult[0], $aSearchResult[1])
 			SetLog("Reward collected", $COLOR_SUCCESS)
 			For $i = 0 To 9
-				ClickDrag(421, 200, 421, 630, 2000)
+				ClickDrag(421, 200 + $g_iMidOffsetYFixed, 421, 630 + $g_iBottomOffsetYFixed, 2000) ; Resolution changed
 				If _Sleep(2000) Then Return ; 2000ms
 				If _ColorCheck(_GetPixelColor($aCheckTopProfile[0], $aCheckTopProfile[1], True), Hex($aCheckTopProfile[2], 6), $aCheckTopProfile[3])= True _
 				  And _ColorCheck(_GetPixelColor($aCheckTopProfile2[0], $aCheckTopProfile2[1], True), Hex($aCheckTopProfile2[2], 6), $aCheckTopProfile2[3]) = True Then ExitLoop

@@ -185,8 +185,7 @@ Func WatchWarReplays()
 				If randomSleep(1500) Then Return
 
 				If IsBestClans() Then
-					Local $aSarea[4] = [780, 210 + $g_iMidOffsetY, 840, 610 + $g_iBottomOffsetY]
-					Local $vReplayNumber = findMultipleQuick($g_sImgHumanizationReplay, 6, $aSarea, True, "", False, 36)
+					Local $vReplayNumber = findMultipleQuick($g_sImgHumanizationReplay, 6, $g_aHumanizationReplayArea, True, "", False, 36)
 					If UBound($vReplayNumber) > 0 And not @error Then
 						SetLog("There Are " & UBound($vReplayNumber) & " Replays To Watch ... We Will Choose One Of Them ...", $COLOR_INFO)
 						Local $iReplayToLaunch = Random(0, UBound($vReplayNumber) -1, 1)
@@ -717,13 +716,13 @@ Func LookAtRedNotifications()
 		If $NeedScroll = 1 Then
 			Local $xStart = Random(300, 800, 1)
 			Local $xEnd = Random($xStart - 250, $xStart - 220, 1)
-			Local $y = Random(330 - 10 + $g_iMidOffsetY, 330 + 10 + $g_iMidOffsetY, 1)
+			Local $y = Random(330 - 10 + $g_iMidOffsetY, 330 + 10 + $g_iMidOffsetY, 1) ; Resolution changed
 			ClickDrag($xStart, $y, $xEnd, $y) ; scroll the shop
 			If $NeedScroll2 = 1 Then
 				If randomSleep(2000) Then Return
 				$xEnd = Random(300, 800, 1)
 				$xStart = Random($xEnd - 250, $xEnd - 220, 1)
-				$y = Random(330 - 10 + $g_iMidOffsetY, 330 + 10 + $g_iMidOffsetY, 1)
+				$y = Random(330 - 10 + $g_iMidOffsetY, 330 + 10 + $g_iMidOffsetY, 1) ; Resolution changed
 				ClickDrag($xStart, $y, $xEnd, $y) ; scroll the shop
 			EndIf
 		EndIf
@@ -804,8 +803,8 @@ EndFunc   ;==>CollectAchievements
 Func Scroll($MaxScroll)
 	For $i = 0 To $MaxScroll
 		Local $x = Random(430 - 20, 430 + 20, 1)
-		Local $yStart = Random(475 - 20 + $g_iMidOffsetY, 475 + 20 + $g_iMidOffsetY, 1)
-		Local $yEnd = Random(200 - 20 + $g_iMidOffsetY, 200 + 20 + $g_iMidOffsetY, 1)
+		Local $yStart = Random(475 - 20 + $g_iMidOffsetY, 475 + 20 + $g_iMidOffsetY, 1) ; Resolution changed
+		Local $yEnd = Random(200 - 20 + $g_iMidOffsetY, 200 + 20 + $g_iMidOffsetY, 1) ; Resolution changed
 		ClickDrag($x, $yStart, $x, $yEnd) ; generic random scroll
 		If randomSleep(4000) Then Return
 	Next
@@ -1043,13 +1042,13 @@ Func ReadClanChat()
 		Click(230, 20) ; go to clan chat
 		If randomSleep(1500) Then Return
 		If Not IsClanChat() Then SetLog("Warning, We Will Scroll Global Chat ...", $COLOR_WARNING) ;=> Note: Global Chat has been Removed
-		ClickIUnderstandIfExist()
+		UnderstandChatRules()
 		Local $MaxScroll = Random(0, 3, 1)
 		SetLog("Let's Scrolling The Chat ...", $COLOR_OLIVE)
 		For $i = 0 To $MaxScroll
 			Local $x = Random(180 - 10, 180 + 10, 1)
-			Local $yStart = Random(110 - 10, 110 + 10, 1)
-			Local $yEnd = Random(570 - 10, 570 + 10, 1)
+			Local $yStart = Random(110 - 10 + $g_iMidOffsetYFixed, 110 + 10 + $g_iMidOffsetYFixed, 1) ; Resolution changed
+			Local $yEnd = Random(570 - 10 + $g_iBottomOffsetYFixed, 570 + 10 + $g_iBottomOffsetYFixed, 1) ; Resolution changed
 			ClickDrag($x, $yStart, $x, $yEnd) ; scroll the chat
 			If randomSleep(10000, 3000) Then Return
 		Next
@@ -1059,62 +1058,6 @@ Func ReadClanChat()
 	EndIf
 EndFunc   ;==>ReadClanChat
 
-#CS
-Func ReadGlobalChat()
-	Click(20, 380 + $g_iMidOffsetY) ; open chat
-	If randomSleep(3000) Then Return
-
-	If ChatOpen() Then
-		Click(80, 20) ; go to global chat
-		If randomSleep(1500) Then Return
-		If Not IsGlobalChat() Then SetLog("Warning, We Will Scroll Clan Chat ...", $COLOR_WARNING)
-		ClickIUnderstandIfExist()
-		Local $MaxScroll = Random(0, 3, 1)
-		SetLog("Let's Scrolling The Chat ...", $COLOR_OLIVE)
-		For $i = 0 To $MaxScroll
-			Local $x = Random(180 - 10, 180 + 10, 1)
-			Local $yStart = Random(110 - 10, 110 + 10, 1)
-			Local $yEnd = Random(570 - 10, 570 + 10, 1)
-			ClickDrag($x, $yStart, $x, $yEnd) ; scroll the chat
-			If randomSleep(10000, 3000) Then Return
-		Next
-		Click(330, 380 + $g_iMidOffsetY) ; close chat
-	Else
-		SetLog("Error When Trying To Open Chat ... Skipping ...", $COLOR_WARNING)
-	EndIf
-EndFunc   ;==>ReadGlobalChat
-
-Func SaySomeChat()
-	Click(20, 380 + $g_iMidOffsetY) ; open chat
-	If randomSleep(3000) Then Return
-
-	If ChatOpen() Then
-		Click(230, 20) ; go to clan chat
-		If randomSleep(1500) Then Return
-		If Not IsClanChat() Then SetLog("Warning, We Will Chat On Global Chat ... ", $COLOR_WARNING) ;=> Note: Global Chat has been Removed
-		ClickIUnderstandIfExist()
-		Click(280, 650 + $g_iBottomOffsetY) ; click message button
-		If randomSleep(2000) Then Return
-		If IsTextBox() Then
-			Local $ChatToSay = Random(0, 1, 1)
-			Local $CleanMessage = SecureMessage(GUICtrlRead($g_ahumanMessage[$ChatToSay]))
-			SetLog("Writing """ & $CleanMessage & """ To The Chat Box ...", $COLOR_OLIVE)
-			SendText($CleanMessage)
-
-			If randomSleep(500) Then Return
-			Click(840, 650 + $g_iBottomOffsetY) ; click send message
-
-			If randomSleep(1500) Then Return
-			Click(330, 380 + $g_iMidOffsetY) ; close chat
-		Else
-			SetLog("Error When Trying To Open Text Box For Chatting ... Skipping...", $COLOR_WARNING)
-		EndIf
-	Else
-		SetLog("Error When Trying To Open Chat ... Skipping...", $COLOR_WARNING)
-	EndIf
-EndFunc   ;==>SaySomeChat
-#CE
-
 Func LaunchChallenges()
 	Click(20, 380 + $g_iMidOffsetY) ; open chat
 	If randomSleep(3000) Then Return
@@ -1123,7 +1066,7 @@ Func LaunchChallenges()
 		Click(230, 20) ; go to clan chat
 		If randomSleep(1500) Then Return
 		If IsClanChat() Then
-			ClickIUnderstandIfExist()
+			UnderstandChatRules()
 			Click(200, 650 + $g_iBottomOffsetY) ; click challenge button
 			If randomSleep(1500) Then Return
 			If IsChallengeWindow() Then
@@ -1138,13 +1081,13 @@ Func LaunchChallenges()
 						Switch $Layout
 							Case 1
 								$g_iLastLayout = 1
-								Local $y = Random(190 - 10, 190 + 10, 1)
+								Local $y = Random(180 + $g_iMidOffsetYFixed, 200 + $g_iMidOffsetYFixed, 1) ; Resolution changed
 								Local $xStart = Random(170 - 10, 170 + 10, 1)
 								Local $xEnd = Random(830 - 10, 830 + 10, 1)
 								ClickDrag($xStart, $y, $xEnd, $y) ; scroll the layout bar to see normal bases
 							Case 2
 								$g_iLastLayout = 2
-								Local $y = Random(190 - 10, 190 + 10, 1)
+								Local $y = Random(180 + $g_iMidOffsetYFixed, 200 + $g_iMidOffsetYFixed, 1) ; Resolution changed
 								Local $xStart = Random(690 - 10, 690 + 10, 1)
 								Local $xEnd = Random(20 - 10, 20 + 10, 1)
 								ClickDrag($xStart, $y, $xEnd, $y) ; scroll the layout bar to see war bases
@@ -1160,7 +1103,7 @@ Func LaunchChallenges()
 
 				If IsChallengeWindow() Then
 					If randomSleep(1500) Then Return
-					Click(530, 300) ; click start button
+					Click(530, 300 + $g_iMidOffsetYFixed) ; click start button ; Resolution changed
 					If randomSleep(1500) Then Return
 					Click(330, 380 + $g_iMidOffsetY) ; close chat
 				Else
@@ -1176,19 +1119,3 @@ Func LaunchChallenges()
 		SetLog("Error When Trying To Open Chat ... Skipping ...", $COLOR_WARNING)
 	EndIf
 EndFunc   ;==>LaunchChallenges
-
-Func ClickIUnderstandIfExist() ; December Update(2018) Check for "I Understand" Warning
-	Local $aButtonCoords = findMultiple($g_sImgChatIUnterstandMultiLang, GetDiamondFromRect("50,475,260,520"), GetDiamondFromRect("50,475,260,520"), 0, 1000, 0, "objectpoints") ; not working so maybe I will loop through all language options
-
-	If UBound($aButtonCoords) = 0 Then ; button not found
-		Return
-	EndIf
-
-	local $button = $aButtonCoords[0] ; always one button
-	local $aTempMultiCoords = decodeMultipleCoords($button[0]) ; object points
-	local $aButtonCoords = $aTempMultiCoords[0] ; one location of button again... must do for some reason or arrays glitch
-
-	SetLog("Chat Rules: Clicking 'I Understand' Button", $COLOR_ACTION)
-	Click($aButtonCoords[0], $aButtonCoords[1])
-	If _Sleep($DELAYDONATECC2) Then Return
-EndFunc   ;==>ClickIUnderstandIfExist

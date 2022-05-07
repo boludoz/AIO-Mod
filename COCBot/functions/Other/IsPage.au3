@@ -169,7 +169,7 @@ Func IsLaunchAttackPage()
 EndFunc   ;==>IsLaunchAttackPage
 
 Func IsMultiplayerTabOpen()
-	Local $aMultiplayerTab = findImage("IsMultiplayerTab", $g_sImgIsMultiplayerTab, GetDiamondFromRect("4,46,258,680"), 1, True, Default)
+	Local $aMultiplayerTab = findImage("IsMultiplayerTab", $g_sImgIsMultiplayerTab, GetDiamondFromRect("4,20,258,636"), 1, True, Default) ; Resolution changed
 	If IsArray($aMultiplayerTab) And UBound($aMultiplayerTab, 1) > 0 Then
 		Local $aCoordinates = decodeSingleCoord($aMultiplayerTab)
 		ClickP($aCoordinates, 1)

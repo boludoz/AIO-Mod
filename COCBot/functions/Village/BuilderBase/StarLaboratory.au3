@@ -42,7 +42,7 @@ Func StarLaboratory($bTestRun = False)
 	;Create local array to hold upgrade values
 	Local $aUpgradeValue[12] = [-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 	Local $iAvailElixir, $sElixirCount, $TimeDiff, $aArray, $Result, $aSearchForTroop
-	Local $iXMoved = 0, $iYMoved = 0, $iFirstPageOffset = 0, $iLastPageOffset = 0
+	Local $iXMoved = 0, $iYMoved = $g_iMidOffsetYFixed, $iFirstPageOffset = 0, $iLastPageOffset = 0
 	Local $iSelectedUpgrade = $g_iCmbStarLaboratory
 
 	If $g_sStarLabUpgradeTime <> "" Then $TimeDiff = _DateDiff("n", _NowCalc(), $g_sStarLabUpgradeTime) ; what is difference between end time and now in minutes?
@@ -114,7 +114,7 @@ Func StarLaboratory($bTestRun = False)
 		$g_avStarLabTroops[$i][1] = -1
 	Next
 	; find upgradeable troops by elixir image
-	$aSearchForTroop = decodeMultipleCoords(findImage("TroopPositions", $g_sImgStarLabElex, GetDiamondFromRect("100,375,730,575"), 0, True, Default))
+	$aSearchForTroop = decodeMultipleCoords(findImage("TroopPositions", $g_sImgStarLabElex, GetDiamondFromRect("100,331,730,531"), 0, True, Default)) ; Resolution changed
 	If IsArray($aSearchForTroop) And UBound($aSearchForTroop, 1) > 0 Then
 		For $i = 0 To UBound($aSearchForTroop) - 1
 			Local $aTempArray = $aSearchForTroop[$i]
@@ -220,7 +220,7 @@ Func StarLaboratory($bTestRun = False)
 
 EndFunc   ;==>Laboratory
 ;
-Func StarLabUpgrade($iSelectedUpgrade, $iXMoved = 0, $iYMoved = 0, $bTestRun = False)
+Func StarLabUpgrade($iSelectedUpgrade, $iXMoved = 0, $iYMoved = $g_iMidOffsetYFixed, $bTestRun = False)
 	Local $StartTime, $EndTime, $EndPeriod, $Result, $TimeAdd = 0
 	Select
 		Case _ColorCheck(_GetPixelColor($g_avStarLabTroops[$iSelectedUpgrade][0] + 47, $g_avStarLabTroops[$iSelectedUpgrade][1] + 1, True), $sStarColorNA, 20) = True

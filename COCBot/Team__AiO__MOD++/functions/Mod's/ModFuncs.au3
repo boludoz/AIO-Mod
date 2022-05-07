@@ -33,7 +33,7 @@ Func SearchNoLeague($bCheckOneTime = False)
 	
 	Local $bReturn = False
 	
-	$bReturn = _WaitForCheckImg($g_sImgNoLeague, "3,4,47,53", Default, ($bCheckOneTime = False) ? (1500) : (0))
+	$bReturn = _WaitForCheckImg($g_sImgNoLeague, "3,4,47,53", Default, ($bCheckOneTime = False) ? (1500) : (0)) ; Resolution changed ?
 	
 	If $g_bDebugSetlog Then
 		SetDebugLog("SearchNoLeague: Is no league? " & $bReturn, $COLOR_DEBUG)
@@ -43,17 +43,12 @@ Func SearchNoLeague($bCheckOneTime = False)
 EndFunc   ;==>SearchNoLeague
 
 Func UnderstandChatRules()
-	;LEFT - 68, 447, 92, 479
-	;RIGHT - 223, 448, 249, 479
-	;DDF685
-	Local $aClanBadgeNoClan[4] = [151, 307, 0xF05538, 20] ; OK - Orange Tile of Clan Logo on Chat Tab if you are not in a Clan
 	Local $bReturn = False
 
-
 	; check for "I Understand" button
-	Local $aCoord = decodeSingleCoord(findImage("I Understand", $g_sImgChatIUnterstand, GetDiamondFromRect("50,400,280,550")))
+	Local $aCoord = decodeSingleCoord(findImage("I Understand", $g_sImgChatIUnterstand, GetDiamondFromRect("50,356(230,150)"))) ; Resolution changed
 
-	If UBound($aCoord) > 1 And _Wait4PixelGoneArray($aClanBadgeNoClan) Then
+	If UBound($aCoord) > 1 And _Wait4PixelGoneArray($g_aClanBadgeNoClan) Then
 		SetLog('Clicking "I Understand" button', $COLOR_ACTION)
 		ClickP($aCoord)
 		If _Sleep($DELAYDONATECC2) Then Return
@@ -67,7 +62,7 @@ EndFunc   ;==>UnderstandChatRules
 
 Func IsToRequestCC($ClickPAtEnd = True, $bSetLog = False, $bNeedCapture = True)
 	Local $bNeedRequest = False
-	Local $sCCRequestDiamond = GetDiamondFromRect("715, 576, 845, 617") ; Contains iXStart, $iYStart, $iXEnd, $iYEnd
+	Local $sCCRequestDiamond = GetDiamondFromRect("715, 534, 842, 571") ; Contains iXStart, $iYStart, $iXEnd, $iYEnd ; Resolution changed
 	Local $aCurrentCCRequest = findMultiple($g_sImgArmyRequestCC, $sCCRequestDiamond, $sCCRequestDiamond, 0, 1000, 0, "objectname,objectpoints", $bNeedCapture)
 
 	Local $aTempCCRequestArray, $aCCRequestCoords

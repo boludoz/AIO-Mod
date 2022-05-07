@@ -13,9 +13,9 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Global $iSlotWidth = 94, $iDistBetweenSlots = 12 ; use for logic to upgrade troops.. good for generic-ness
-Global $iYMidPoint = 468 ;Space between rows in lab screen.  CHANGE ONLY WITH EXTREME CAUTION.
+Global $iYMidPoint = 468 + $g_iMidOffsetYFixed ;Space between rows in lab screen.  CHANGE ONLY WITH EXTREME CAUTION. ; Resolution changed
 Global $iPicsPerPage = 12, $iPages = 4 ; used to know exactly which page the users choice is on
-Global $sLabWindow = "99,122,760,616", $sLabTroopsSection = "115,363,750,577", $sLabTroopLastPage = "435,363,750,577"
+Global $sLabWindow = "99,78,760,572", $sLabTroopsSection = "115,319,750,533", $sLabTroopLastPage = "435,319,750,533" ; Resolution changed
 ;$sLabTroopLastPage for partial last page, currently 3 columns of siege machines.
 Global $sLabWindowDiam = GetDiamondFromRect($sLabWindow), $sLabTroopsSectionDiam = GetDiamondFromRect($sLabTroopsSection), $sLabTroopsLastPageDiam = GetDiamondFromRect($sLabTroopLastPage) ; easy to change search areas
 

@@ -134,7 +134,7 @@ Func MainSuggestedUpgradeCode($bDebug = $g_bDebugSetlog)
 
 	Local $vMultipix = 0
 	Local $iyMax = 368
-	Local $aAreaToSearch[4] = [374, 72, 503, 368]
+	Local $aAreaToSearch[4] = [374, 72 + $g_iMidOffsetYFixed, 503, 368 + $g_iMidOffsetYFixed] ; Resolution changed
 
 	$g_bBuildingUpgraded = False
 
@@ -294,9 +294,6 @@ EndFunc   ;==>MainSuggestedUpgradeCode
 ; This fucntion will Open the Suggested Window and check if is OK
 Func ClickOnBuilder()
 
-	; Master Builder Check pixel [i] icon
-	Local Const $aMasterBuilder[4] = [360, 11, 0x7cbdde, 10]
-
 	; Debug Stuff
 	Local $sDebugText = ""
 	Local Const $Debug = False
@@ -310,9 +307,9 @@ Func ClickOnBuilder()
 	; Master Builder available
 	If $g_iFreeBuilderCountBB > 0 Then
 		; Check the Color and click
-		If _CheckPixel($aMasterBuilder, True) Then
+		If _CheckPixel($g_aMasterBuilder, True) Then
 			; Click on Builder
-			Click($aMasterBuilder[0], $aMasterBuilder[1], 1)
+			Click($g_aMasterBuilder[0], $g_aMasterBuilder[1], 1)
 			If _Sleep(3000) Then Return
 			; Let's verify if the Suggested Window open
 			If _PixelSearch(443, 70, 444, 76, Hex(0xFFFFFF, 6), 35) <> 0 Then
@@ -478,19 +475,19 @@ Func BBNewBuildings($aResult)
 			If _Sleep(2000) Then Return
 
 			; Lets search for the Correct Symbol on field
-			If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgYes, 150, 150, 650, 550, $Screencap, $Debug) Then
+			If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgYes, 150, 150 + $g_iMidOffsetYFixed, 650, 550 + $g_iBottomOffsetYFixed, $Screencap, $Debug) Then ; Resolution changed
 				Click($g_iQuickMISX + 150, $g_iQuickMISY + 150, 1)
 				SetLog("Placed a new Building on Builder Island! [" & $g_iQuickMISX + 150 & "," & $g_iQuickMISY + 150 & "]", $COLOR_INFO)
 				If _Sleep(1000) Then Return
 
 				; Lets check if exist the [x] , Some Buildings like Traps when you place one will give other to place automaticly!
-				If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgNo, 150, 150, 650, 550, $Screencap, $Debug) Then
+				If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgNo, 150, 150 + $g_iMidOffsetYFixed, 650, 550 + $g_iBottomOffsetYFixed, $Screencap, $Debug) Then ; Resolution changed
 					Click($g_iQuickMISX + 150, $g_iQuickMISY + 150, 1)
 				EndIf
 
 				Return True
 			Else
-				If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgNo, 150, 150, 650, 550, $Screencap, $Debug) Then
+				If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgNo, 150, 150 + $g_iMidOffsetYFixed, 650, 550 + $g_iBottomOffsetYFixed, $Screencap, $Debug) Then ; Resolution changed
 					SetLog("Sorry! Wrong place to deploy a new building on BB! [" & $g_iQuickMISX + 150 & "," & $g_iQuickMISY + 150 & "]", $COLOR_ERROR)
 					Click($g_iQuickMISX + 150, $g_iQuickMISY + 150, 1)
 				Else

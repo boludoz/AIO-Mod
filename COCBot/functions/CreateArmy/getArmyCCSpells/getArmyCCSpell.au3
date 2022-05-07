@@ -32,7 +32,7 @@ Func getArmyCCSpells($bOpenArmyWindow = False, $bCloseArmyWindow = False, $bChec
 		If _Sleep($DELAYCHECKARMYCAMP5) Then Return
 	EndIf
 
-	Local $sCCSpellDiamond = GetDiamondFromRect("450,495,605,593")
+	Local $sCCSpellDiamond = GetDiamondFromRect("450,451,605,549") ; Resolution changed
 	Local $aCurrentCCSpells = findMultiple(@ScriptDir & "\imgxml\ArmyOverview\Spells", $sCCSpellDiamond, $sCCSpellDiamond, 0, 1000, 0,"objectname,objectpoints", $bNeedCapture) ; Returns $aCurrentSpells[index] = $aArray[2] = ["SpellShortName", CordX,CordY]
 
 	Local $aTempSpellArray, $aSpells, $aSpellCoords

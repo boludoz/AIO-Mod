@@ -79,7 +79,7 @@ Func OneGemBoost($bDebug = False)
 EndFunc   ;==>OneGemBoost
 
 Func CheckOneGem()
-	If Number(StringStripWS(QuickMIS("OCR", $g_sImgOneGemBoostOCR, 370, 420, 500, 470), $STR_STRIPALL)) = 1 Then Return True
+	If Number(StringStripWS(QuickMIS("OCR", $g_sImgOneGemBoostOCR, 370, 420 + $g_iBottomOffsetYFixed, 500, 470 + $g_iBottomOffsetYFixed), $STR_STRIPALL)) = 1 Then Return True ; Resolution changed ?
 	SetLog("The 1 gem event is not available.", $COLOR_ERROR)
 	Return False
 EndFunc   ;==>CheckOneGem

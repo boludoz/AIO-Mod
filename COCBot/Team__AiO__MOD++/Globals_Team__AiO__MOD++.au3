@@ -580,17 +580,6 @@ Global $g_bChkGTFOClanHop = False, $g_bChkGTFOReturnClan = False
 Global $g_bExitAfterCyclesGTFO = False
 Global $g_iCycle = 0
 
-Global $g_aClanBadgeNoClan[4] = [151, 307, 0xF05538, 20] ; OK - Orange Tile of Clan Logo on Chat Tab if you are not in a Clan
-Global $g_aShare[4] = [438, 190, 0xFFFFFF, 20] ; OK - Share clan
-Global $g_aCopy[4] = [512, 182, 0xDDF685, 20] ; OK - Copy button
-Global $g_aClanPage[4] = [821, 400, 0xFB5D63, 20] ; OK - Red Leave Clan Button on Clan Page
-Global $g_aClanLabel[4] = [522, 70, 0xEDEDE8, 20] ; OK - Select white label
-Global $g_aJoinClanBtn[4] = [821, 400, 0xDBF583, 25] ; OK - Join Button on Tab
-Global $g_aIsClanChat[4] = [86, 12, 0xC1BB91, 20] ; OK - Verify is in clan.
-Global $g_aNoClanBtn[4] = [163, 515, 0x6DBB1F, 20] ; OK - Green Join Button on Chat Tab when you are not in a Clan
-Global $g_aOKBtn[5] = [494, 409, 0xE0F989, 20, 500] ; OK - Fast OK button.
-Global $g_aJoinInvBtn[5] = [524, 215, 0xDFF886, 20, 500] ; OK - Join invitation button.
-
 #Region - Magic Items
 Global $g_bChkCollectMagicItems, $g_bChkBuilderPotion, $g_bChkClockTowerPotion, $g_bChkHeroPotion, $g_bChkLabPotion, $g_bChkPowerPotion, $g_bChkResourcePotion, $g_iComboHeroPotion, $g_iComboPowerPotion, _
 $g_iInputBuilderPotion, $g_iInputLabPotion, $g_iInputGoldItems = 250000, $g_iInputElixirItems = 300000, $g_iInputDarkElixirItems = 1000

@@ -63,11 +63,13 @@ Global Const $g_sLogoLoading = @ScriptDir & "\Images\LogoLoading.png"
 Global Const $g_sLogoUrlPath = @ScriptDir & "\Images\LogoURL.png"
 Global Const $g_sLogoUrlSmallPath = @ScriptDir & "\Images\LogoURLsmall.png"
 Global Const $g_iGAME_WIDTH = 860
-Global Const $g_iGAME_HEIGHT = 732
-Global Const $g_iDEFAULT_HEIGHT = 780
+Global Const $g_iGAME_HEIGHT = 644
+Global Const $g_iDEFAULT_HEIGHT = 644 + 48
 Global Const $g_iDEFAULT_WIDTH = 860
-Global Const $g_iMidOffsetY = Int(($g_iDEFAULT_HEIGHT - 720) / 2)
-Global Const $g_iBottomOffsetY = $g_iDEFAULT_HEIGHT - 720
+Global Const $g_iMidOffsetYFixed = Floor((644 - 732) / 2)
+Global Const $g_iBottomOffsetYFixed = Floor((644 - 732))
+Global Const $g_iMidOffsetY = Floor(($g_iDEFAULT_HEIGHT - 720) / 2)
+Global Const $g_iBottomOffsetY = Floor($g_iDEFAULT_HEIGHT - 720)
 
 Global $g_hBotLaunchTime = __TimerInit() ; Keeps track of time bot launched
 Global $g_iBotLaunchTime = 0 ; Keeps track of time (in millseconds) from bot launch to ready for use

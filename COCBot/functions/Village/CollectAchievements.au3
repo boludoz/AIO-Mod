@@ -33,7 +33,7 @@ Func CollectAchievements($bTestMode = False) ;Run with True parameter if testing
 	While $Collecting
 		If Not $g_bRunState Then Return
 		;Check if possible rewards available from main screen
-		Local $aImgAchievementsMainScreen = decodeSingleCoord(findImage("AchievementsMainScreen", $g_sImgAchievementsMainScreen, GetDiamondFromRect("5, 60, 70, 2"), 1, True))
+		Local $aImgAchievementsMainScreen = decodeSingleCoord(findImage("AchievementsMainScreen", $g_sImgAchievementsMainScreen, GetDiamondFromRect("5, 60, 70, 2"), 1, True)) ; Resolution changed ?
 		If UBound($aImgAchievementsMainScreen) > 1 Then
 			SetDebugLog("Achievement counter found on main screen", $COLOR_SUCCESS)
 			Click($aImgAchievementsMainScreen[0] - 10, $aImgAchievementsMainScreen[1] + 20)
@@ -45,7 +45,7 @@ Func CollectAchievements($bTestMode = False) ;Run with True parameter if testing
 		EndIf
 		
 		;Check if MyProfile window Opened correctly
-		Local $aImgAchievementsMyProfile = decodeSingleCoord(findImage("MyProfile", $g_sImgAchievementsMyProfile, GetDiamondFromRect("100, 110, 275, 55"), 1, True))
+		Local $aImgAchievementsMyProfile = decodeSingleCoord(findImage("MyProfile", $g_sImgAchievementsMyProfile, GetDiamondFromRect("100, 66, 275, 55"), 1, True)) ; Resolution changed ?
 		If UBound($aImgAchievementsMainScreen) > 1 Then
 			SetDebugLog("My Profile window opened successfully", $COLOR_SUCCESS)
 			If _Sleep(1500) Then Return
@@ -93,10 +93,10 @@ EndFunc   ;==>CollectAchievementsRandomization
 
 Func CollectAchievementsScroll()
 
-	ClickDrag(70, 630, 70, 220)
+	ClickDrag(70, 630 + $g_iBottomOffsetYFixed, 70, 220 + $g_iMidOffsetYFixed) ; Resolution changed
 	If _Sleep(1000) Then Return
 
-	Local $aImgAchievementsScrollEnd = decodeSingleCoord(findImage("ScrollEnd", $g_sImgAchievementsScrollEnd, GetDiamondFromRect("50, 700, 250, 550"), 1, True))
+	Local $aImgAchievementsScrollEnd = decodeSingleCoord(findImage("ScrollEnd", $g_sImgAchievementsScrollEnd, GetDiamondFromRect("50, 612, 250, 506"), 1, True)) ; Resolution changed
 	If UBound($aImgAchievementsScrollEnd) > 1 Then
 		SetDebugLog("End of achievements list located", $COLOR_INFO)
 		$g_iFoundScrollEnd = $g_iFoundScrollEnd + 1
@@ -113,7 +113,7 @@ Func CollectAchievementsClaimReward()
 	;Check Profile for Achievements and collect
 	If Not $g_bRunState Then Return
 
-	Local $sSearchArea = GetDiamondFromRect("660, 160, 845, 675")
+	Local $sSearchArea = GetDiamondFromRect("660, 116, 845, 631") ; Resolution changed
 	Local $aClaimButtons = findMultiple($g_sImgAchievementsClaimReward, $sSearchArea, $sSearchArea, 0, 1000, 0, "objectname,objectpoints", True)
 	If IsArray($aClaimButtons) And UBound($aClaimButtons) > 0 Then
 		For $i = 0 To UBound($aClaimButtons) - 1

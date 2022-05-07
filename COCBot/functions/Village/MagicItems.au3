@@ -13,7 +13,8 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func CollectMagicItems($bDebug = False)
-	Return
+EndFunc
+#cs
 	
 	If Not $g_bRunState Or $g_bRestart Then Return
 	
@@ -248,3 +249,4 @@ Func GetDealIndex($sName)
 			Return -1 ; error
 	EndSwitch
 EndFunc   ;==>GetDealIndex
+#ce

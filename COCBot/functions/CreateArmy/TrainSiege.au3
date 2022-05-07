@@ -27,8 +27,8 @@ Func TrainSiege($bTrainFullSiege = False)
 	If Not OpenSiegeMachinesTab(True, "TrainSiege()") Then Return
 	If _Sleep(500) Then Return
 
-	Local $aCheckIsOccupied[4] = [822, 206, 0xE00D0D, 10]
-	Local $aCheckIsFilled[4] = [802, 186, 0xD7AFA9, 10]
+	Local $aCheckIsOccupied[4] = [822, 206 + $g_iMidOffsetYFixed, 0xE00D0D, 10]
+	Local $aCheckIsFilled[4] = [802, 186 + $g_iMidOffsetYFixed, 0xD7AFA9, 10]
 	Local $aiQueueSiegeMachine[$eSiegeMachineCount] = [0, 0, 0, 0, 0, 0]
 	Local $aiTotalSiegeMachine = $g_aiCurrentSiegeMachines
 
@@ -70,7 +70,7 @@ Func TrainSiege($bTrainFullSiege = False)
 		If $HowMany > 0 And $iSiegeIndex = $eSiegeFlameFlinger Then 
 			DragSiege("Next", 1)
 		EndIf
-		$checkPixel = decodeSingleCoord(findImage($g_asSiegeMachineShortNames[$iSiegeIndex], @ScriptDir & "\imgxml\ArmyOverview\SiegesMachinesTrainBtn\" & $g_asSiegeMachineShortNames[$iSiegeIndex] & "*", GetDiamondFromRect("29,365,838,581"), 1, True))
+		$checkPixel = decodeSingleCoord(findImage($g_asSiegeMachineShortNames[$iSiegeIndex], @ScriptDir & "\imgxml\ArmyOverview\SiegesMachinesTrainBtn\" & $g_asSiegeMachineShortNames[$iSiegeIndex] & "*", GetDiamondFromRect("29,321,838,537"), 1, True)) ; Resolution changed
 		SetDebugLog("HArchH: $iSiegeIndex = " & $iSiegeIndex, $COLOR_DEBUG)
 		If $HowMany > 0 And UBound($checkPixel) >= 2 and not @error Then
 			SetDebugLog("HArchH: Clicking in Refill.", $COLOR_DEBUG)
@@ -100,7 +100,7 @@ Func TrainSiege($bTrainFullSiege = False)
 			If $HowMany > 0 And $iSiegeIndex = $eSiegeFlameFlinger Then 
 				DragSiege("Next", 1)
 			EndIf
-			$checkPixel = decodeSingleCoord(findImage($g_asSiegeMachineShortNames[$iSiegeIndex], @ScriptDir & "\imgxml\ArmyOverview\SiegesMachinesTrainBtn\" & $g_asSiegeMachineShortNames[$iSiegeIndex] & "*", GetDiamondFromRect("29,365,838,581"), 1, True))
+			$checkPixel = decodeSingleCoord(findImage($g_asSiegeMachineShortNames[$iSiegeIndex], @ScriptDir & "\imgxml\ArmyOverview\SiegesMachinesTrainBtn\" & $g_asSiegeMachineShortNames[$iSiegeIndex] & "*", GetDiamondFromRect("29,321,838,537"), 1, True)) ; Resolution changed
 			SetDebugLog("HArchH: 2nd Army $iSiegeIndex = " & $iSiegeIndex, $COLOR_DEBUG)
 			If $HowMany > 0 And UBound($checkPixel) >= 2 and not @error Then
 				PureClick($checkPixel[0], $checkPixel[1], $HowMany, $g_iTrainClickDelay)
@@ -125,7 +125,7 @@ Func TrainSiege($bTrainFullSiege = False)
 EndFunc   ;==>TrainSiege
 
 Func DragSiege($Direction = "Next", $HowMany = 1)
-	Local $DragYPoint =  500
+	Local $DragYPoint =  500 + $g_iBottomOffsetYFixed
 	For $i = 1 To $HowMany
 		If $g_bAndroidAdbClickDragScript Then
 			Switch $Direction

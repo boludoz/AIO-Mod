@@ -467,7 +467,7 @@ Func SwitchCOCAcc($NextAccount, $bForceSwitch = False)
 EndFunc   ;==>SwitchCOCAcc
 
 Func SwitchCOCAcc_DisconnectConnect(ByRef $bResult, $bDisconnectOnly = $g_bChkSharedPrefs)
-	Local $sGooglePlayButtonArea = GetDiamondFromRect("50,100,800,600")
+	Local $sGooglePlayButtonArea = GetDiamondFromRect("50,66,800,600") ; Resolution changed ?
 	Local $avGoogleButtonStatus, $sButtonState, $avGoogleButtonSubResult, $aiButtonPos
 	If Not $g_bRunState Then Return -1
 
@@ -506,7 +506,7 @@ Func SwitchCOCAcc_DisconnectConnect(ByRef $bResult, $bDisconnectOnly = $g_bChkSh
 				Return -1
 			EndIf
 		Else ; SupercellID
-			Local $aSuperCellIDConnected = decodeSingleCoord(findImage("SupercellID Connected", $g_sImgSupercellIDConnected, GetDiamondFromRect("612,161,691,216"), 1, True, Default))
+			Local $aSuperCellIDConnected = decodeSingleCoord(findImage("SupercellID Connected", $g_sImgSupercellIDConnected, GetDiamondFromRect("612,117,691,216"), 1, True, Default)) ; Resolution changed
 			If IsArray($aSuperCellIDConnected) And UBound($aSuperCellIDConnected, 1) >= 2 Then
 				SetLog("Account connected to SuperCell ID")
 				;ExitLoop
@@ -539,7 +539,7 @@ Func SwitchCOCAcc_ClickAccount(ByRef $bResult, $iNextAccount, $bStayDisconnected
 			If _Sleep(600) Then Return FuncReturn("Exit")
 			If Not $g_bRunState Then Return FuncReturn("Exit")
 
-			$aSearchForAccount = decodeMultipleCoords(findImage("AccountLocations", $g_sImgGoogleAccounts, GetDiamondFromRect("155,100,705,710"), 0, True, Default))
+			$aSearchForAccount = decodeMultipleCoords(findImage("AccountLocations", $g_sImgGoogleAccounts, GetDiamondFromRect("155,66,705,666"), 0, True, Default)) ; Resolution changed ?
 			If UBound($aSearchForAccount, 1) <= 0 Then
 				SetLog("No GooglePlay accounts detected!", $COLOR_ERROR)
 				Return FuncReturn("Error")
@@ -578,7 +578,7 @@ Func SwitchCOCAcc_ClickAccount(ByRef $bResult, $iNextAccount, $bStayDisconnected
 			If Not $g_bRunState Then Return FuncReturn("Exit")
 			If _sleep(1000) Then Return FuncReturn("Exit")
 			Return FuncReturn("Error")
-		ElseIf (Not $bLateDisconnectButtonCheck Or $i = 6) And UBound(decodeSingleCoord(findImage("Google Play Disconnected", $g_sImgGoogleButtonState & "GooglePlayRed*", GetDiamondFromRect("50,100,800,600"), 1, True, Default)), 1) > 0 Then ; Red, double click did not work, try click Disconnect 1 more time
+		ElseIf (Not $bLateDisconnectButtonCheck Or $i = 6) And UBound(decodeSingleCoord(findImage("Google Play Disconnected", $g_sImgGoogleButtonState & "GooglePlayRed*", GetDiamondFromRect("50,66,800,556"), 1, True, Default)), 1) > 0 Then ; Red, double click did not work, try click Disconnect 1 more time ; Resolution changed ?
 			If $bStayDisconnected Then
 				ClickAway()
 				Return FuncReturn("OK")
@@ -586,11 +586,11 @@ Func SwitchCOCAcc_ClickAccount(ByRef $bResult, $iNextAccount, $bStayDisconnected
 			If _Sleep(250) Then Return FuncReturn("Exit")
 			If Not $g_bRunState Then Return FuncReturn("Exit")
 			SetLog("   1.1. Click Disconnect again")
-			Local $aiButtonDisconnect = decodeSingleCoord(findImage("Google Play Connected", $g_sImgGoogleButtonState & "GooglePlayRed*", GetDiamondFromRect("50,100,800,600"), 1, True, Default))
+			Local $aiButtonDisconnect = decodeSingleCoord(findImage("Google Play Connected", $g_sImgGoogleButtonState & "GooglePlayRed*", GetDiamondFromRect("50,66,800,556"), 1, True, Default)) ; Resolution changed ?
 			If IsArray($aiButtonDisconnect) And UBound($aiButtonDisconnect, 1) >= 2 Then ClickP($aiButtonDisconnect)
 			If _Sleep(600) Then Return FuncReturn("Exit")
 		Else ; SupercellID
-			Local $aSuperCellIDConnected = decodeSingleCoord(findImage("SupercellID Connected", $g_sImgSupercellIDConnected, GetDiamondFromRect("612,161,691,216"), 1, True, Default))
+			Local $aSuperCellIDConnected = decodeSingleCoord(findImage("SupercellID Connected", $g_sImgSupercellIDConnected, GetDiamondFromRect("612,117,691,216"), 1, True, Default)) ; Resolution changed ?
 			If IsArray($aSuperCellIDConnected) And UBound($aSuperCellIDConnected, 1) >= 2 Then
 				SetLog("Account connected to SuperCell ID, cannot disconnect")
 				If $bStayDisconnected Then
@@ -678,7 +678,7 @@ Func SwitchCOCAcc_ConfirmAccount(ByRef $bResult, $iStep = 3, $bDisconnectAfterSw
 				If _Sleep(900) Then Return "Exit"
 				If Not $g_bRunState Then Return "Exit"
 			Next
-		ElseIf UBound(decodeSingleCoord(findImage("Google Play Connected", $g_sImgGoogleButtonState & "GooglePlayGreen*", GetDiamondFromRect("50,100,800,600"), 1, True, Default)), 1) >= 2 Then
+		ElseIf UBound(decodeSingleCoord(findImage("Google Play Connected", $g_sImgGoogleButtonState & "GooglePlayGreen*", GetDiamondFromRect("50,66,800,556"), 1, True, Default)), 1) >= 2 Then ; Resolution changed ?
 			SetLog("Already in current account")
 			If $bDisconnectAfterSwitch Then
 				Switch SwitchCOCAcc_DisconnectConnect($bResult)
@@ -707,7 +707,7 @@ EndFunc   ;==>SwitchCOCAcc_ConfirmAccount
 
 Func SwitchCOCAcc_ConnectedSCID(ByRef $bResult)
 	For $i = 0 To 20 ; Checking Blue Reload button continuously in 20sec
-		Local $aSuperCellIDReload = decodeSingleCoord(findImage("SupercellID Reload", $g_sImgSupercellIDReload, GetDiamondFromRect("563,163,612,217"), 1, True, Default))
+		Local $aSuperCellIDReload = decodeSingleCoord(findImage("SupercellID Reload", $g_sImgSupercellIDReload, GetDiamondFromRect("563,119,612,217"), 1, True, Default)) ; Resolution changed?
 		If IsArray($aSuperCellIDReload) And UBound($aSuperCellIDReload, 1) >= 2 Then
 			Click($aSuperCellIDReload[0], $aSuperCellIDReload[1], 1, 0, "Click Reload SC_ID")
 			Setlog("   1. Click Reload Supercell ID")
@@ -736,7 +736,7 @@ Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
 	If Not $g_bRunState Then Return
 
 	For $i = 0 To 30 ; Checking "New SuperCellID UI" continuously in 30sec
-		$aSuperCellIDWindowsUI = decodeSingleCoord(findImage("SupercellID Windows", $g_sImgSupercellIDWindows, GetDiamondFromRect("550,60,760,160"), 1, True, Default))
+		$aSuperCellIDWindowsUI = decodeSingleCoord(findImage("SupercellID Windows", $g_sImgSupercellIDWindows, GetDiamondFromRect("550,60,760,160"), 1, True, Default)) ; Resolution changed ?
 		If _Sleep(500) Then Return
 		If IsArray($aSuperCellIDWindowsUI) And UBound($aSuperCellIDWindowsUI, 1) >= 2 Then
 			SetLog("SupercellID Window Opened", $COLOR_DEBUG)
@@ -762,7 +762,7 @@ Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
 		
 		SCIDScrollDown($NextAccount) ; Make Drag only when SCID window is visible.
 		If _Sleep(1000) Then Return
-		$aAccount = QuickMIS("CX", $g_sImgSupercellIDSlots, 750, 320, 850, 685, True, False)
+		$aAccount = QuickMIS("CX", $g_sImgSupercellIDSlots, 750, 320 + $g_iMidOffsetYFixed, 850, 685 + $g_iBottomOffsetYFixed, True, False) ; Resolution changed
 		SetLog("Found: " & UBound($aAccount) & " SCID", $COLOR_SUCCESS)
 		If IsArray($aAccount) And UBound($aAccount) > 0 Then
 			For $j = 0 To UBound($aAccount) - 1

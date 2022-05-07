@@ -41,7 +41,7 @@ Func getArmyTroops($bOpenArmyWindow = False, $bCloseArmyWindow = False, $bCheckW
 		WEnd
 	EndIf
 
-	Local $sTroopDiamond = GetDiamondFromRect("23,215,585,260") ; Contains iXStart, $iYStart, $iXEnd, $iYEnd
+	Local $sTroopDiamond = GetDiamondFromRect("23,171,585,216") ; Contains iXStart, $iYStart, $iXEnd, $iYEnd ; Resolution changed
 	If $g_bDebugFuncTime Then StopWatchStart("findMultiple, \imgxml\ArmyOverview\Troops")
 	Local $aCurrentTroops = findMultiple(@ScriptDir & "\imgxml\ArmyOverview\Troops", $sTroopDiamond, $sTroopDiamond, 0, 1000, 0, "objectname,objectpoints", $bNeedCapture) ; Returns $aCurrentTroops[index] = $aArray[2] = ["TroopShortName", CordX,CordY]
 	If $g_bDebugFuncTime Then StopWatchStopLog()

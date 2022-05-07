@@ -47,9 +47,9 @@ Func ChangeLanguage()
 
 	For $i = 0 To 20 ; Checking Language List continuously in 20sec
 		If _ColorCheck(_GetPixelColor($aListLanguage[0], $aListLanguage[1], True), Hex($aListLanguage[2], 6), $aListLanguage[3]) Then ;	Green
-			ClickDrag(Random(370, 375, 1), Random(170, 175, 1), Random(370, 375, 1), Random(590, 595, 1), 200)
+			ClickDrag(Random(370, 375, 1), Random(170, 175, 1) + $g_iMidOffsetYFixed, Random(370, 375, 1), Random(590, 595, 1) + $g_iBottomOffsetYFixed, 200) ; Resolution changed
 			If _Sleep(200) Then Return False
-			ClickDrag(Random(370, 375, 1), Random(170, 175, 1), Random(370, 375, 1), Random(380, 385, 1), 200)
+			ClickDrag(Random(370, 375, 1), Random(170, 175, 1) + $g_iMidOffsetYFixed, Random(370, 375, 1), Random(380, 385, 1) + $g_iMidOffsetYFixed, 200) ; Resolution changed
 			If _Sleep(900) Then Return False
 			If _ColorCheck(_GetPixelColor($aEnglishLanguage[0], $aEnglishLanguage[1], True), Hex($aEnglishLanguage[2], 6), $aEnglishLanguage[3]) Then ;	Grey
 				Click($aEnglishLanguage[0], $aEnglishLanguage[1], 1, 1000) ; Click Language Button

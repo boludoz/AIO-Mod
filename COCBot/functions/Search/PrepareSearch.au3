@@ -64,7 +64,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 	EndIf
 
 	If _Sleep($DELAYPREPARESEARCH1) Then Return
-	If Not IsWindowOpen($g_sImgGeneralCloseButton, 10, 200, GetDiamondFromRect("716,1,860,179")) Then
+	If Not IsWindowOpen($g_sImgGeneralCloseButton, 10, 200, GetDiamondFromRect("716,1,860,179")) Then ; Resolution changed
 		SetLog("Attack Window did not open!", $COLOR_ERROR)
 		AndroidPageError("PrepareSearch")
 		checkMainScreen()
@@ -86,9 +86,9 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 	$g_bBadPrepareSearch = False
 
 	Local $aiMatch, $aConfirmAttackButton, $bIsItJustified = False, $bIsOkLegendAttack = False
-	Local $aLegendSignUpBtn[4] = [556, 461, 0x3583F3, 30]
-	Local $aLegendWindow[4] = [340, 170, 0xD8A71C, 20]
-	Local $aAllAttacksDone[4] = [522, 508, 0x3582F1, 30]
+	Local $aLegendSignUpBtn[4] = [556, 461 + $g_iBottomOffsetYFixed, 0x3583F3, 30] ; Resolution changed
+	Local $aLegendWindow[4] = [340, 170 + $g_iMidOffsetYFixed, 0xD8A71C, 20] ; Resolution changed
+	Local $aAllAttacksDone[4] = [522, 508 + $g_iBottomOffsetYFixed, 0x3582F1, 30] ; Resolution changed
 
 	If Number($g_aiCurrentLoot[$eLootTrophy]) >= Number($g_asLeagueDetails[21][4]) Then
 		$g_bLeagueAttack = True

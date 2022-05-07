@@ -353,7 +353,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	
 	If RandomSleep(500) Then Return
 	
-	If $bWaschanged And QuickMIS("N1", $g_sImgCustomArmyBB, 2, 681, 860, 728) = "ChangeTDis" Then
+	If $bWaschanged And QuickMIS("N1", $g_sImgCustomArmyBB, 2, 681 + $g_iBottomOffsetYFixed, 860, 728 + $g_iBottomOffsetYFixed) = "ChangeTDis" Then ; Resolution changed
 		Click(8, 720, 1)
 	EndIf
 	

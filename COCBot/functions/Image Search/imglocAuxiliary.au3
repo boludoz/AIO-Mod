@@ -239,68 +239,66 @@ Func GetButtonDiamond($sButtonName)
 
 	Switch $sButtonName
 		Case "UpgradePets"
-			$btnDiamond = GetDiamondFromRect("590,530,735,595")
+			$btnDiamond = GetDiamondFromRect("590,486,735,551") ; Resolution changed
 		Case "ReloadButton"
-			$btnDiamond = GetDiamondFromRect("550,450,850,700")
+			$btnDiamond = GetDiamondFromRect("550,406,850,656") ; Resolution changed
 		Case "CloseFindMatch" ;Find Match Screen
-			$btnDiamond = "780,15|830,15|830,60|780,60"
-		Case "CloseFindMatch" ;Find Match Screen
-			$btnDiamond = "780,15|830,15|830,60|780,60"
+			$btnDiamond = "806,12|848,12|848,52|806,52" ; Resolution changed
 		Case "AttackButton" ;Main Window Screen
-			$btnDiamond = GetDiamondFromRect("0,600,160,720")
+			$btnDiamond = "15,532|112,532|112,627|15,627" ; Resolution changed
 		Case "OpenTrainWindow" ;Main Window Screen
-			$btnDiamond = "15,560|65,560|65,610|15,610"
+			$btnDiamond = "15,472|65,472|65,522|15,522" ; Resolution changed
 		Case "TrashEvent"
-			$btnDiamond = GetDiamondFromRect("100,200,840,540")
+			$btnDiamond = GetDiamondFromRect("100,156(740,340)") ; Resolution changed
 		Case "EventFailed"
-			$btnDiamond = GetDiamondFromRect("230,130,777,560")
+			$btnDiamond = GetDiamondFromRect("230,130(547,430)") ; Resolution changed
 		Case "OK"
-			$btnDiamond = "440,395|587,395|587,460|440,460"
+			$btnDiamond = "440,351|587,351|587,416|440,416" ; Resolution changed
 		Case "CANCEL"
-			$btnDiamond = "272,395|420,395|420,460|272,460"
+			$btnDiamond = "272,351|420,351|420,416|272,416" ; Resolution changed
 		Case "ReturnHome"
-			$btnDiamond = "357,545|502,545|502,607|357,607"
+			$btnDiamond = "357,501|502,501|502,563|357,563" ; Resolution changed
 		Case "Next" ; attackpage attackwindow
-			$btnDiamond = "697,542|850,542|850,610|697,610"
+			$btnDiamond = "697,454|850,454|850,522|697,522" ; Resolution changed
 		Case "ObjectButtons", "BoostOne", "BoostCT", "Upgrade", "Research", "Treasury", "RemoveObstacle", "CollectLootCart", "Pets" ; Full size of object buttons at the bottom
-			$btnDiamond = GetDiamondFromRect("140,591,720,671")
+			$btnDiamond = GetDiamondFromRect("140,500(580,80)") ; Resolution changed
 		Case "GEM", "BOOSTBtn" ; Boost window button (full button size)
-			$btnDiamond = GetDiamondFromRect("359,412(148,66)")
+			$btnDiamond = GetDiamondFromRect("359,368(148,66)") ; Resolution changed
 		Case "EnterShop"
-			$btnDiamond = GetDiamondFromRect("359,392(148,66)")
+			$btnDiamond = GetDiamondFromRect("359,348(148,66)") ; Resolution changed
 		Case "EndBattleSurrender" ;surrender - attackwindow
-			$btnDiamond = "12,577|125,577|125,615|12,615"
+			$btnDiamond = "12,489|125,489|125,527|12,527" ; Resolution changed
 		Case "ClanChat"
-			$btnDiamond = GetDiamondFromRect("0,300,400,450")
+			$btnDiamond = GetDiamondFromRect("0,256(400,250)") ; Resolution changed
 		Case "ChatOpenRequestPage" ;mainwindow - chat open
-			$btnDiamond = "5,688|65,688|65,615|5,725"
+			$btnDiamond = "5,600|65,600|65,637|5,637" ; Resolution changed
 		Case "Profile" ;mainwindow - only visible if chat closed
-			$btnDiamond = "172,15|205,15|205,48|172,48"
+			$btnDiamond = "172,15|205,15|205,48|172,48" ; Resolution changed
 		Case "DonateWindow" ;mainwindow - only when donate window is visible
-			$btnDiamond = "310,0|360,0|360,732|310,732"
+			$btnDiamond = "310,0|360,0|360,644|310,644" ; Resolution changed
 		Case "DonateButton" ;mainwindow - only when chat window is visible
-			$btnDiamond = "200,85|305,85|305,680|200,680"
+			$btnDiamond = "200,85|305,85|305,590|200,590" ; Resolution changed
 		Case "UpDonation" ;mainwindow - only when chat window is visible
-			$btnDiamond = "282,85|306,85|306,130|282,130"
+			$btnDiamond = "282,85|306,85|306,130|282,130" ; Resolution changed
 		Case "DownDonation" ;mainwindow - only when chat window is visible
-			$btnDiamond = "282,635|306,635|306,680|282,680"
+			$btnDiamond = "282,547|306,547|306,590|282,590" ; Resolution changed
 		Case "Collect"
-			$btnDiamond = "350,450|505,450|505,521|350,521"
+			$btnDiamond = "350,410|505,410|505,480|350,480" ; Resolution changed
 		Case "BoostBarrack", "BarrackBoosted"
-			$btnDiamond = GetDiamondFromRect("630,280,850,360")
+			$btnDiamond = GetDiamondFromRect("630,236,850,316") ; Resolution changed
 		Case "ArmyTab", "TrainTroopsTab", "BrewSpellsTab", "BuildSiegeMachinesTab", "QuickTrainTab"
-			$btnDiamond = GetDiamondFromRect("18,100,800,150")
+			$btnDiamond = GetDiamondFromRect("18,56,800,106") ; Resolution changed
 		Case "MessagesButton"
-			$btnDiamond = GetDiamondFromRect("0,0,250,250")
+			$btnDiamond = GetDiamondFromRect("0,0,250,250") ; Resolution changed
 		Case "AttackLogTab", "ShareReplayButton"
-			$btnDiamond = GetDiamondFromRect("280,85,600,300")
+			$btnDiamond = GetDiamondFromRect("280,41,600,256") ; Resolution changed ?
 		Case "EndBattle", "Surrender"
-			$btnDiamond = GetDiamondFromRect("1,570,140,628")
+			$btnDiamond = "12,489|125,489|125,527|12,527" ; Resolution changed
 		Case "Okay"
-			$btnDiamond = GetDiamondFromRect("241,249,616,478")
+			$btnDiamond = "440,351|587,351|587,416|440,416" ; Resolution changed
 		#Region - BoostPotion - Team AIO Mod
         Case "MagicItems", "Boostleft" ; Team AIO Mod++
-			$btnDiamond = GetDiamondFromRect("140,591,720,671")
+			$btnDiamond = GetDiamondFromRect("200,490(500,100)") ; Resolution changed
 		#EndRegion - BoostPotion - Team AIO Mod
 		Case Else
 			$btnDiamond = "FV" ; use full image to locate button

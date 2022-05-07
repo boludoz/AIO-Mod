@@ -40,7 +40,7 @@ Func getArmySiegeMachines($bOpenArmyWindow = False, $bCloseArmyWindow = False, $
 		WEnd
 	EndIf
 
-	Local $sSiegeDiamond = GetDiamondFromRect("605,215,840,255") ; Contains iXStart, $iYStart, $iXEnd, $iYEnd
+	Local $sSiegeDiamond = GetDiamondFromRect("605,171,840,211") ; Contains iXStart, $iYStart, $iXEnd, $iYEnd ; Resolution changed
 	If $g_bDebugFuncTime Then StopWatchStart("findMultiple, \imgxml\ArmyOverview\SiegeMachines")
 	Local $aCurrentSiegeMachines = findMultiple(@ScriptDir & "\imgxml\ArmyOverview\SiegeMachines", $sSiegeDiamond, $sSiegeDiamond, 0, 1000, 0, "objectname,objectpoints", $bNeedCapture) ; Returns $aCurrentSiegeMachines[index] = $aArray[2] = ["Siege M Shortname", CordX,CordY]
 	If $g_bDebugFuncTime Then StopWatchStopLog()

@@ -77,16 +77,12 @@ Func PetHouse($test = False)
 	If CheckPetUpgrade() Then Return False ; cant start if something upgrading
 
 	; Pet upgrade is not in progress and not upgreading, so we need to start an upgrade.
-	Local $iPetUnlockedxCoord[4] = [190, 345, 500, 655]
-	Local $iPetLevelxCoord[4] = [134, 288, 443, 598]
-
-
 	For $i = 0 to $ePetCount - 1
 		; check if pet upgrade enabled and unlocked ; c3b6a5 nox c1b7a5 memu?
-		If $g_bUpgradePetsEnable[$i] And _ColorCheck(_GetPixelColor($iPetUnlockedxCoord[$i], 415, True), Hex(0xc3b6a5, 6), 20) Then
+		If $g_bUpgradePetsEnable[$i] And _ColorCheck(_GetPixelColor($g_iPetUnlockedxCoord[$i], 415, True), Hex(0xc3b6a5, 6), 20) Then
 
 			; get the Pet Level
-			Local $iPetLevel = getTroopsSpellsLevel($iPetLevelxCoord[$i], 533)
+			Local $iPetLevel = getTroopsSpellsLevel($g_iPetLevelxCoord[$i], 533)
 			SetLog($g_asPetNames[$i] & " is at level " & $iPetLevel)
 			If $iPetLevel = $g_ePetLevels Then ContinueLoop
 
@@ -100,7 +96,7 @@ Func PetHouse($test = False)
 				SetLog("Will now upgrade " & $g_asPetNames[$i])
 
 			   ; Randomise X,Y click
-				Local $iX = Random($iPetUnlockedxCoord[$i]-10, $iPetUnlockedxCoord[$i]+10, 1)
+				Local $iX = Random($g_iPetUnlockedxCoord[$i]-10, $g_iPetUnlockedxCoord[$i]+10, 1)
 				Local $iY = Random(500, 520, 1)
 				Click($iX, $iY)
 
@@ -357,18 +353,16 @@ EndFunc   ;==>PetGuiDisplay
 
 
 Func GetMinDark4PetUpgrade()
-	Local $iPetUnlockedxCoord[4] = [190, 345, 500, 655]
-	Local $iPetLevelxCoord[4] = [134, 288, 443, 598]
 	Local $iMinDark4PetUpgrade = 999999
 
 	PetUpgradeCostPerLevel()
 	
 	For $i = 0 to $ePetCount - 1
 		; check if pet upgrade enabled and unlocked ; c3b6a5 nox c1b7a5 memu?
-		If _ColorCheck(_GetPixelColor($iPetUnlockedxCoord[$i], 415, True), Hex(0xc3b6a5, 6), 20) And $g_bUpgradePetsEnable[$i] Then
+		If _ColorCheck(_GetPixelColor($g_iPetUnlockedxCoord[$i], 415, True), Hex(0xc3b6a5, 6), 20) And $g_bUpgradePetsEnable[$i] Then
 
 			; get the Pet Level
-			Local $iPetLevel = getTroopsSpellsLevel($iPetLevelxCoord[$i], 533)
+			Local $iPetLevel = getTroopsSpellsLevel($g_iPetLevelxCoord[$i], 533)
 			SetLog($g_asPetNames[$i] & " is at level " & $iPetLevel)
 			If $iPetLevel = $g_ePetLevels Then ContinueLoop
 

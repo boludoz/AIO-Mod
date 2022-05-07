@@ -22,7 +22,7 @@ EndFunc
 
 ; Based in xbebenk and snorlax (the best devs)
 Func ClickDragAUpgrade($YY = Default, $DragCount = 1)
-	Local $x = 420, $yUp = 103, $yDown = 800, $Delay = 1000
+	Local $x = 420, $yUp = 103 + $g_iMidOffsetYFixed, $yDown = 800 + $g_iBottomOffsetYFixed, $Delay = 1000  ; Resolution changed
 	Local $Yscroll =  164 + (($g_iTotalBuilderCount - $g_iFreeBuilderCount) * 28)
 	If $YY = Default Then $YY = $Yscroll
 	For $checkCount = 0 To 2
@@ -97,7 +97,7 @@ Func _AutoUpgrade()
 		EndIf
 
 		; search for 000 in builders menu, if 000 found, a possible upgrade is available
-		If QuickMIS("BC1", $g_sImgAUpgradeZero, 180, 80 + $g_iNextLineOffset, 480, 350) Then
+		If QuickMIS("BC1", $g_sImgAUpgradeZero, 180, 80 + $g_iNextLineOffset + $g_iMidOffsetYFixed, 480, 350 + $g_iMidOffsetYFixed) Then ; Resolution changed
 			SetLog("Possible upgrade found !", $color_success)
 			$g_iCurrentLineOffset = $g_iNextLineOffset + $g_iQuickMISY
 		Else
@@ -135,7 +135,7 @@ Func _AutoUpgrade()
 		$bIsNewUpdate = False
 		
 		; check in the line of the 000 if we can see "New" or the Gear of the equipment, in this case, will not do the upgrade
-		If QuickMIS("NX",$g_sImgAUpgradeObst, 180, 80 + $g_iCurrentLineOffset - 15, 480, 80 + $g_iCurrentLineOffset + 15) <> "none" Then
+		If QuickMIS("NX",$g_sImgAUpgradeObst, 180, 80 + $g_iCurrentLineOffset - 15, 480, 80 + $g_iCurrentLineOffset + 15) <> "none" Then ; Resolution changed
 			SetLog("This is a New Building or an Equipment, looking next...", $COLOR_WARNING)
 			If $g_bNewUpdateMainVillage = False Then ContinueLoop
 			$bIsNewUpdate = True
@@ -273,11 +273,11 @@ Func _AutoUpgrade()
 
 		Switch $g_aUpgradeNameLevel[1]
 			Case "Barbarian King", "Archer Queen", "Grand Warden", "Royal Champion"
-				$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 690, 540, 730, 580) ; get resource
+				$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 690, 540 + $g_iBottomOffsetYFixed, 730, 580 + $g_iBottomOffsetYFixed) ; get resource ; Resolution changed
 				$g_aUpgradeResourceCostDuration[1] = getResourcesBonus(598, 522 + $g_iMidOffsetY) ; get cost
 				$g_aUpgradeResourceCostDuration[2] = getHeroUpgradeTime(578, 465 + $g_iMidOffsetY) ; get duration
 			Case Else
-				$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 460, 510, 500, 550) ; get resource
+				$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 460, 510 + $g_iBottomOffsetYFixed, 500, 550 + $g_iBottomOffsetYFixed) ; get resource ; Resolution changed
 				$g_aUpgradeResourceCostDuration[1] = getResourcesBonus(366, 487 + $g_iMidOffsetY) ; get cost
 				$g_aUpgradeResourceCostDuration[2] = getBldgUpgradeTime(195, 307 + $g_iMidOffsetY) ; get duration
 		EndSwitch
@@ -339,11 +339,11 @@ Func _AutoUpgrade()
 
         ;Check for 'End Boost?' pop-up
         If _Sleep(1000) Then Return
-        Local $aImgAUpgradeEndBoost = decodeSingleCoord(findImage("EndBoost", $g_sImgAUpgradeEndBoost, GetDiamondFromRect("350, 310, 570, 230"), 1, True))
+        Local $aImgAUpgradeEndBoost = decodeSingleCoord(findImage("EndBoost", $g_sImgAUpgradeEndBoost, GetDiamondFromRect("350,266(220,80)"), 1, True)) ; Resolution changed
         If UBound($aImgAUpgradeEndBoost) > 1 Then
             SetLog("End Boost? pop-up found", $COLOR_INFO)
             SetLog("Clicking OK", $COLOR_INFO)
-            Local $aImgAUpgradeEndBoostOKBtn = decodeSingleCoord(findImage("EndBoostOKBtn", $g_sImgAUpgradeEndBoostOKBtn, GetDiamondFromRect("420, 470, 610, 380"), 1, True))
+            Local $aImgAUpgradeEndBoostOKBtn = decodeSingleCoord(findImage("EndBoostOKBtn", $g_sImgAUpgradeEndBoostOKBtn, GetDiamondFromRect("420,426(140,90)"), 1, True)) ; Resolution changed
             If UBound($aImgAUpgradeEndBoostOKBtn) > 1 Then
                 Click($aImgAUpgradeEndBoostOKBtn[0], $aImgAUpgradeEndBoostOKBtn[1])
                 If _Sleep(1000) Then Return
@@ -502,24 +502,24 @@ Func NewBuildings()
 
 	Local $Screencap = True, $Debug = False
 
-	If _WaitForCheckImg(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\Upgrade\New\", "14, 175, 847, 667", Default, 4500) Then
+	If _WaitForCheckImg(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\Upgrade\New\", "14, 131, 847, 579", Default, 4500) Then ; Resolution changed
 		Click($g_aImageSearchXML[0][1] - 100, $g_aImageSearchXML[0][2] + 100, 1)
 		If _Sleep(2000) Then Return
 
 		; Lets search for the Correct Symbol on field
-		If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgYes, 150, 150, 650, 550, $Screencap, $Debug) Then
+		If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgYes, 150, 150 + $g_iMidOffsetYFixed, 650, 550 + $g_iBottomOffsetYFixed, $Screencap, $Debug) Then ; Resolution changed
 			Click($g_iQuickMISX + 150, $g_iQuickMISY + 150, 1)
 			SetLog("Placed a new Building on main village! [" & $g_iQuickMISX + 150 & "," & $g_iQuickMISY + 150 & "]", $COLOR_INFO)
 			If _Sleep(1000) Then Return
 
 			; Lets check if exist the [x] , Some Buildings like Traps when you place one will give other to place automaticly!
-			If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgNo, 150, 150, 650, 550, $Screencap, $Debug) Then
+			If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgNo, 150, 150 + $g_iMidOffsetYFixed, 650, 550 + $g_iBottomOffsetYFixed, $Screencap, $Debug) Then ; Resolution changed
 				Click($g_iQuickMISX + 150, $g_iQuickMISY + 150, 1)
 			EndIf
 
 			Return True
 		Else
-			If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgNo, 150, 150, 650, 550, $Screencap, $Debug) Then
+			If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgNo, 150, 150 + $g_iMidOffsetYFixed, 650, 550 + $g_iBottomOffsetYFixed, $Screencap, $Debug) Then ; Resolution changed
 				SetLog("Sorry! Wrong place to deploy a new building! [" & $g_iQuickMISX + 150 & "," & $g_iQuickMISY + 150 & "]", $COLOR_ERROR)
 				Click($g_iQuickMISX + 150, $g_iQuickMISY + 150, 1)
 			Else

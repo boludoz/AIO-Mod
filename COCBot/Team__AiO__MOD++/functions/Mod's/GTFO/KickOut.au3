@@ -34,7 +34,7 @@ Func MainKickout()
 				#Region - Nucleus
 				If RandomSleep(1500) Then Return
 
-				Local $aXPStar = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\KickOut", 0, "140, 167, 190, 667", Default, "Star", True, 44)
+				Local $aXPStar = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\KickOut", 0, "140, 123, 190, 579", Default, "Star", True, 44) ; Resolution changed
 
 				If Not IsArray($aXPStar) Then
 					CheckMainScreen()
@@ -90,12 +90,12 @@ Func MainKickout()
 					If Not $bIsKick Then ContinueLoop
 
 					Local $aFixC[4] = [18, $aXPStar[$i][2], 68, $aXPStar[$i][2] + 36]
-					Local $bFixOne = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\KickOut", 2, $aFixC, Default, "FixC", True, 10)
+					Local $bFixOne = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\KickOut", 2, $aFixC, Default, "FixC", True, 10) ; Resolution changed
 
 					Click(Random(166, 708, 1), Random($aXPStar[$i][2] - 7, $aXPStar[$i][2] + 29, 1))
 					If RandomSleep(500) Then Return
 
-					Local $aClickMod = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\KickOut", 10, "556, 1, 579, 731", Default, "Btn", True, 40)
+					Local $aClickMod = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\KickOut", 10, "556, 1, 579, 643", Default, "Btn", True, 40) ; Resolution changed
 
 					If Not IsArray($aClickMod) Then
 						Setlog("- KickOut fail : $aClickMod", $COLOR_ERROR)
@@ -114,7 +114,7 @@ Func MainKickout()
 							If RandomSleep(500) Then Return
 						EndIf
 
-						Local $aSendOut = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\KickOut", 1, "457, 205, 585, 263", Default, "SendKick", True, 0)
+						Local $aSendOut = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\KickOut", 1, "457, 161, 585, 219", Default, "SendKick", True, 0) ; Resolution changed
 
 						If Not IsArray($aSendOut) Then
 							Setlog("- KickOut fail : $aSendOut", $COLOR_ERROR)
@@ -174,9 +174,6 @@ EndFunc   ;==>Go2Bottom
 Func OpenClanPage()
 
 	$g_bDebugOcr = True
-
-;~ 	Local $_aClanColor[4] = [360, 19, 0xf0f4f0, 5]
-;~ 	Local $_aClanMainVillage = [360, 81, 0xc8c8b8, 5]
 
 	; ********* OPEN TAB AND CHECK IT PROFILE ***********
 

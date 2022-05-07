@@ -217,7 +217,7 @@ Func GetBuilderBaseSize($bWithClick = False, $bVersusMode = Default, $bDebugLog 
 	If Not $g_bRunState Then Return
 
 	If $bWithClick = True Then
-		ClickDrag(100, 130, 230, 30)
+		ClickDrag(100, 130 + $g_iMidOffsetYFixed, 230, 30)
 		If _Sleep(500) Then Return 
 	EndIf
 	

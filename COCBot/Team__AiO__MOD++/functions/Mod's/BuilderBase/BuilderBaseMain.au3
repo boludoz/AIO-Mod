@@ -286,7 +286,7 @@ Func BuilderBaseReportAttack($bSetLog = True)
         $g_aiCurrentLootBB[$eLootTrophyBB] = getTrophyMainScreen(67, 84)
         If $bSetLog = True Then Setlog("- Builder base trophies report: " & $g_aiCurrentLootBB[$eLootTrophyBB], $COLOR_INFO)
 
-        $g_iAvailableAttacksBB = UBound(QuickMIS("CX", $g_sImgBBLootAvail, 20, 625, 110, 650, True))
+        $g_iAvailableAttacksBB = UBound(QuickMIS("CX", $g_sImgBBLootAvail, 20, 625 + $g_iBottomOffsetYFixed, 110, 650 + $g_iBottomOffsetYFixed, True)) ; Resolution changed
 
 		If $bSetLog = True Then Setlog("- Builder base: You have " & $g_iAvailableAttacksBB & " available attack(s).", $COLOR_INFO)
 

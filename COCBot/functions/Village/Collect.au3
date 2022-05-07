@@ -138,7 +138,7 @@ Func CollectLootCart()
 
 	SetLog("Searching for a Loot Cart", $COLOR_INFO)
 
-	Local $aLootCart = decodeSingleCoord(findImage("LootCart", $g_sImgCollectLootCart, GetDiamondFromRect("20,220,120,290"), 1, True))
+	Local $aLootCart = decodeSingleCoord(findImage("LootCart", $g_sImgCollectLootCart, GetDiamondFromRect("20,176,120,246"), 1, True)) ; Resolution changed
 	If UBound($aLootCart) > 1 Then
 		$aLootCart[1] += 15
 		If IsMainPage() Then ClickP($aLootCart, 1, 0, "#0330")

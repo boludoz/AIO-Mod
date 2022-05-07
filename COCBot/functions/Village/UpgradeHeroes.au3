@@ -178,7 +178,7 @@ Func QueenUpgrade()
 		If $g_bDebugImageSave Then SaveDebugImage("UpgradeDarkBtn1")
 		If _ColorCheck(_GetPixelColor(721, 118 + $g_iMidOffsetY, True), Hex(0xE00408, 6), 20) Then ; Check if the Hero Upgrade window is open
 
-			Local $aWhiteZeros = decodeSingleCoord(findImage("UpgradeWhiteZero" ,$g_sImgUpgradeWhiteZero, GetDiamondFromRect("408,519,747,606"), 1, True, Default))
+			Local $aWhiteZeros = decodeSingleCoord(findImage("UpgradeWhiteZero" ,$g_sImgUpgradeWhiteZero, GetDiamondFromRect("408,475(339,87)"), 1, True, Default)) ; Resolution changed
 			If IsArray($aWhiteZeros) And UBound($aWhiteZeros, 1) = 2 Then
 				ClickP($aWhiteZeros, 1, 0) ; Click upgrade buttton
 				ClickAway()
@@ -282,7 +282,7 @@ Func KingUpgrade()
 		If $g_bDebugImageSave Then SaveDebugImage("UpgradeDarkBtn1")
 
 		If _ColorCheck(_GetPixelColor(715, 120 + $g_iMidOffsetY, True), Hex(0xE01C20, 6), 20) Then ; Check if the Hero Upgrade window is open
-			Local $aWhiteZeros = decodeSingleCoord(findImage("UpgradeWhiteZero" ,$g_sImgUpgradeWhiteZero, GetDiamondFromRect("408,519,747,606"), 1, True, Default))
+			Local $aWhiteZeros = decodeSingleCoord(findImage("UpgradeWhiteZero" ,$g_sImgUpgradeWhiteZero, GetDiamondFromRect("408,475(339,87)"), 1, True, Default)) ; Resolution changed
 			If IsArray($aWhiteZeros) And UBound($aWhiteZeros, 1) = 2 Then
 				ClickP($aWhiteZeros, 1, 0) ; Click upgrade buttton
 				ClickAway()
@@ -399,7 +399,7 @@ Func WardenUpgrade()
 		SetDebugLog("pixel: " & _GetPixelColor(718, 120 + $g_iMidOffsetY, True) & " expected " & Hex(0xDD0408, 6) & " result: " & _ColorCheck(_GetPixelColor(718, 120 + $g_iMidOffsetY, True), Hex(0xDD0408, 6), 20), $COLOR_DEBUG)
 		If _ColorCheck(_GetPixelColor(718, 120 + $g_iMidOffsetY, True), Hex(0xDD0408, 6), 20) Then ; Check if the Hero Upgrade window is open
 
-			Local $aWhiteZeros = decodeSingleCoord(findImage("UpgradeWhiteZero" ,$g_sImgUpgradeWhiteZero, GetDiamondFromRect("408,519,747,606"), 1, True, Default))
+			Local $aWhiteZeros = decodeSingleCoord(findImage("UpgradeWhiteZero" ,$g_sImgUpgradeWhiteZero, GetDiamondFromRect("408,475(339,87)"), 1, True, Default)) ; Resolution changed
 			If IsArray($aWhiteZeros) And UBound($aWhiteZeros, 1) = 2 Then
 				ClickP($aWhiteZeros, 1, 0) ; Click upgrade buttton
 				ClickAway()
@@ -506,7 +506,7 @@ Func ChampionUpgrade()
 		If $g_bDebugImageSave Then SaveDebugImage("UpgradeDarkBtn1")
 		If _ColorCheck(_GetPixelColor(721, 118 + $g_iMidOffsetY, True), Hex(0xE00408, 6), 20) Then ; Check if the Hero Upgrade window is open
 
-			Local $aWhiteZeros = decodeSingleCoord(findImage("UpgradeWhiteZero" ,$g_sImgUpgradeWhiteZero, GetDiamondFromRect("408,519,747,606"), 1, True, Default))
+			Local $aWhiteZeros = decodeSingleCoord(findImage("UpgradeWhiteZero", $g_sImgUpgradeWhiteZero, GetDiamondFromRect("408,475(339,87)"), 1, True, Default)) ; Resolution changed
 			If IsArray($aWhiteZeros) And UBound($aWhiteZeros, 1) = 2 Then
 				ClickP($aWhiteZeros, 1, 0) ; Click upgrade buttton
 				ClickAway()

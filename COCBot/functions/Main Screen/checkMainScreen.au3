@@ -115,15 +115,16 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default) ;Checks if in
 EndFunc   ;==>_checkMainScreen
 
 Func _checkMainScreenImage(ByRef $bLocated, $aPixelToCheck, $bNeedCaptureRegion = $g_bNoCapturePixel)
-	$bLocated = _CheckPixel($aPixelToCheck, $bNeedCaptureRegion) And Not checkObstacles_Network(False, False) And checkChatTabPixel()
+	$bLocated = _CheckPixel($aPixelToCheck, $bNeedCaptureRegion) And Not checkObstacles_Network(False, False) ; And checkChatTabPixel() ; Resolution changed
 	Return $bLocated
 EndFunc
-
+#cs
 Func checkChatTabPixel()
 	SetDebugLog("Checking chat tab pixel exists to ensure images have loaded correctly")
 	ZoomOut()
 	If _Sleep(500) Then Return
-	Local $aChatTabPixel = decodeSingleCoord(findImage("ChatTabPixel", $g_sImgChatTabPixel, GetDiamondFromRect("0,450,50,300"), 1, True))
+	; re
+	Local $aChatTabPixel = decodeSingleCoord(findImage("ChatTabPixel", $g_sImgChatTabPixel, GetDiamondFromRect("0,406(50,300)"), 1, True)) ; Resolution changed boldina: this thing never worked on this manner
 	If UBound($aChatTabPixel) > 0 Then 
 		SetDebugLog("ChatTabPixel found", $COLOR_SUCCESS)
 		Return True
@@ -132,7 +133,7 @@ Func checkChatTabPixel()
 	EndIf
 	Return False
 EndFunc   ;==>checkChatTabPixel
-
+#ce
 Func isOnMainVillage($bNeedCaptureRegion = $g_bNoCapturePixel)
 	Local $aPixelToCheck = $aIsMain
 	Local $bLocated = False

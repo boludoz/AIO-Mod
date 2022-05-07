@@ -109,10 +109,6 @@ EndFunc   ;==>RemoveCCTroopBeforeDefenseRequest
 ; ===============================================================================================================================
 
 Func RequestFromChat()
-	Local $aReqGem[4] = [98, 695, 0xD7F57F]
-	Local $aReqOk[4] = [56, 695, 0xD7F57F]
-	Local $aReqGrayedOut[4] = [56, 695, 0xE0E0E0]
-
 	Local $bCanRequest = False
 	If OpenClanChat() Then
 		If _Sleep(3000) Then Return
@@ -120,17 +116,17 @@ Func RequestFromChat()
 		If _Wait4PixelArray($aChatTab) Then
 			_CaptureRegion()
 			Select
-				Case _ColorCheck(Hex($aReqGem[2], 6), _GetPixelColor($aReqGem[0], $aReqGem[1], False), 25)
+				Case _ColorCheck(Hex($g_aReqGem[2], 6), _GetPixelColor($g_aReqGem[0], $g_aReqGem[1], False), 25)
 					$bCanRequest = False
-				Case _ColorCheck(Hex($aReqOk[2], 6), _GetPixelColor($aReqOk[0], $aReqOk[1], False), 25)
+				Case _ColorCheck(Hex($g_aReqOk[2], 6), _GetPixelColor($g_aReqOk[0], $g_aReqOk[1], False), 25)
 					$bCanRequest = True
-				Case _ColorCheck(Hex($aReqGrayedOut[2], 6), _GetPixelColor($aReqGrayedOut[0], $aReqGrayedOut[1], False), 25)
+				Case _ColorCheck(Hex($g_aReqGrayedOut[2], 6), _GetPixelColor($g_aReqGrayedOut[0], $g_aReqGrayedOut[1], False), 25)
 					$bCanRequest = False
 			EndSelect
 
 			If $bCanRequest Then
 				SetLog("Requesting Clan Castle reinforcements from chat.", $COLOR_SUCCESS)
-				Local $aRequestButtonPos[2] = [$aReqOk[0] - 5, $aReqOk[1] + 5]
+				Local $aRequestButtonPos[2] = [$g_aReqOk[0] - 5, $g_aReqOk[1] + 5]
 				_makerequest($aRequestButtonPos)
 
 				If _Wait4PixelGoneArray($aChatTab) Then

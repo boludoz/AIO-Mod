@@ -122,8 +122,11 @@ Global Const $g_sImgpetsHouseSelection = @ScriptDir & "\imgxml\Pets\SelectedHero
 Global Const $g_sImgpetsHouseHeroes = @ScriptDir & "\imgxml\Pets\Heroes\"
 #EndRegion - Pets
 
-#Region - DMatchingBundles.au3
+#Region - Collect forge
 
+#EndRegion - Collect forge
+
+#Region - DMatchingBundles.au3
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: DMatchingBundles.au3
 ; Description ...: Dissociable.Matching.dll Bundles

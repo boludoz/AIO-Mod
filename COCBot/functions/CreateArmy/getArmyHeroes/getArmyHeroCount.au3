@@ -183,7 +183,7 @@ EndFunc   ;==>getArmyHeroCount
 
 Func ArmyHeroStatus($i)
 	Local $sResult = ""
-	Local Const $aHeroesRect[$eHeroCount][4] = [[540, 340, 616, 380], [620, 340, 691, 370], [692, 340, 766, 370], [767, 348, 856, 467]] ; Review
+	Local Const $aHeroesRect[$eHeroCount][4] = [[540, 340 + $g_iMidOffsetYFixed, 616, 380 + $g_iMidOffsetYFixed], [620, 340 + $g_iMidOffsetYFixed, 691, 370 + $g_iMidOffsetYFixed], [692, 340 + $g_iMidOffsetYFixed, 766, 370 + $g_iMidOffsetYFixed], [767, 348 + $g_iMidOffsetYFixed, 856, 467 + $g_iMidOffsetYFixed]] ; Review ; Resolution changed
 
 	; Perform the search
 	For $iTry = 0 To 2
@@ -313,7 +313,7 @@ EndFunc   ;==>ArmyHeroStatus
 #cs
 Func ArmyHeroStatus($i)
 	Local $sResult = ""
-	Local Const $aHeroesRect[$eHeroCount][4] = [[540, 340, 616, 380], [620, 340, 691, 370], [692, 340, 766, 370], [767, 340, 840, 380]] ; Review
+	Local Const $aHeroesRect[$eHeroCount][4] = [[540, 340 + $g_iMidOffsetYFixed, 616, 380 + $g_iMidOffsetYFixed], [620, 340 + $g_iMidOffsetYFixed, 691, 370 + $g_iMidOffsetYFixed], [692, 340 + $g_iMidOffsetYFixed, 766, 370 + $g_iMidOffsetYFixed], [767, 340 + $g_iMidOffsetYFixed, 840, 380 + $g_iMidOffsetYFixed]] ; Review ; Resolution changed
 	Local Const $aHeroCondition[$eHeroCount][3] = [["King", 0, $eKing], ["Queen", 1, $eQueen], ["Warden", 2, $eWarden], ["Champion", 3, $eChampion]]
 	#Tidy_Off
 	Local Const $aPicHero[$eHeroCount][4] = _

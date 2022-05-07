@@ -54,7 +54,7 @@ Func RequestCC($bClickPAtEnd = True, $sText = "")
 	
 	If Not $g_bRunState Then Return
 
-	Local $sSearchDiamond = GetDiamondFromRect("718,580,780,614")
+	Local $sSearchDiamond = GetDiamondFromRect("718,492,780,570") ; Resolution changed
 	Local Static $aRequestButtonPos[2] = [-1, -1]
 
 	Local $aRequestButton = findMultiple($g_sImgRequestCCButton, $sSearchDiamond, $sSearchDiamond, 0, 1000, 1, "objectname,objectpoints", True)
@@ -113,7 +113,7 @@ EndFunc   ;==>RequestCC
 
 Func _makerequest($aRequestButtonPos, $bRequestDefense = False)
 
-	Local $sSendButtonArea = GetDiamondFromRect("220,150,650,650")
+	Local $sSendButtonArea = GetDiamondFromRect("220,150,650,606") ; Resolution changed
 
 	ClickP($aRequestButtonPos, 1, 0, "0336") ;click button request troops
 	If _Sleep(3000) Then Return

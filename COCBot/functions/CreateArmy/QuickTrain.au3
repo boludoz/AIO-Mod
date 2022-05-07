@@ -273,12 +273,12 @@ Func CheckQuickTrainTroop()
 
 	Local $iTroopCamp = 0, $iSpellCamp = 0, $iSiegeMachineCamp = 0, $sLog = ""
 
-	Local $aSaveButton[4] = [808, 300, 0xdcf684, 20] ; green
-	Local $aCancelButton[4] = [650, 300, 0xff8c91, 20] ; red
-	Local $aRemoveButton[4] = [535, 300, 0xff8f94, 20] ; red
+	Local $aSaveButton[4] = [808, 300 + $g_iMidOffsetYFixed, 0xdcf684, 20] ; green ; Resolution changed
+	Local $aCancelButton[4] = [650, 300 + $g_iMidOffsetYFixed, 0xff8c91, 20] ; red ; Resolution changed
+	Local $aRemoveButton[4] = [535, 300 + $g_iMidOffsetYFixed, 0xff8f94, 20] ; red ; Resolution changed
 
 	local $iDistanceBetweenArmies = 108 ; pixels
-	local $aArmy1Location = [758, 272] ; first area of quick train army buttons
+	local $aArmy1Location = [758, 265] ; first area of quick train army buttons ; Resolution changed
 
 	; findImage needs filename and path
 	Local $avEditQuickTrainIcon = _FileListToArrayRec($g_sImgEditQuickTrain, "*", $FLTAR_FILES, $FLTAR_NORECUR, $FLTAR_NOSORT, $FLTAR_FULLPATH)
@@ -295,7 +295,7 @@ Func CheckQuickTrainTroop()
 		Local $sSearchArea = $aArmy1Location[0] & ", " & ($aArmy1Location[1] + ($iDistanceBetweenArmies * $i)) & ", 815, " & ($aArmy1Location[1] + ($iDistanceBetweenArmies * ($i + 1)))
 
 		; search for EditQuickTrainIcon
-		Local $aiEditButton = decodeSingleCoord(findImage("EditQuickTrain", $avEditQuickTrainIcon[1], GetDiamondFromRect($sSearchArea), 1, True, Default))
+		Local $aiEditButton = decodeSingleCoord(findImage("EditQuickTrain", $avEditQuickTrainIcon[1], GetDiamondFromRect($sSearchArea), 1, True, Default)) ; Resolution changed
 
 		If IsArray($aiEditButton) And UBound($aiEditButton, 1) >= 2 Then
 			ClickP($aiEditButton)
@@ -476,7 +476,7 @@ EndFunc   ;==>CheckQuickTrainTroop
 Func CreateQuickTrainPreset($i)
 	SetLog("Creating troops/spells/siege machines preset for Army " & $i + 1)
 
-	Local $aRemoveButton[4] = [535, 300, 0xff8f94, 20] ; red
+	Local $aRemoveButton[4] = [535, 300 + $g_iMidOffsetYFixed, 0xff8f94, 20] ; red ; Resolution changed
 	Local $iArmyPage = 0
 
 	If _ColorCheck(_GetPixelColor($aRemoveButton[0], $aRemoveButton[1], True), Hex($aRemoveButton[2], 6), $aRemoveButton[2]) Then
@@ -513,23 +513,23 @@ Func CreateQuickTrainPreset($i)
 			If _ArrayIndexValid($g_aiArmyQuickSpells, $iIndex) Then
 				If $iArmyPage = 0 Then
 				    If _Sleep(250) Then Return
-					ClickDrag(715, 475, 25, 475, 2000)
+					ClickDrag(715, 475 + $g_iBottomOffsetYFixed, 25, 475 + $g_iBottomOffsetYFixed, 2000) ; Resolution changed
 					If _Sleep(1500) Then Return
-					ClickDrag(715, 475, 25, 475, 2000)
+					ClickDrag(715, 475 + $g_iBottomOffsetYFixed, 25, 475 + $g_iBottomOffsetYFixed, 2000) ; Resolution changed
 					If _Sleep(1500) Then Return
-					ClickDrag(510, 475, 25, 475, 2000)
+					ClickDrag(510, 475 + $g_iBottomOffsetYFixed, 25, 475 + $g_iBottomOffsetYFixed, 2000) ; Resolution changed
 					If _Sleep(1500) Then Return
 					$iArmyPage = 3
 				ElseIf $iArmyPage = 1 Then
 				    If _Sleep(250) Then Return
-					ClickDrag(715, 475, 25, 475, 2000)
+					ClickDrag(715, 475 + $g_iBottomOffsetYFixed, 25, 475 + $g_iBottomOffsetYFixed, 2000) ; Resolution changed
 					If _Sleep(1500) Then Return
-					ClickDrag(510, 475, 25, 475, 2000)
+					ClickDrag(510, 475 + $g_iBottomOffsetYFixed, 25, 475 + $g_iBottomOffsetYFixed, 2000) ; Resolution changed
 					If _Sleep(1500) Then Return
 					$iArmyPage = 3
 				ElseIf $iArmyPage = 2 Then
 				    If _Sleep(250) Then Return
-					ClickDrag(510, 475, 25, 475, 2000)
+					ClickDrag(510, 475 + $g_iBottomOffsetYFixed, 25, 475 + $g_iBottomOffsetYFixed, 2000) ; Resolution changed
 					If _Sleep(1500) Then Return
 					$iArmyPage = 3
 				EndIf

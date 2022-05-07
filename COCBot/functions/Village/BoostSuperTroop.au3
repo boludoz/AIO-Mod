@@ -95,15 +95,16 @@ Func BoostSuperTroop($bTest = False)
 		Return False
 	EndIf
 
-	Local $aBrownDown[4] = [150, 552, 0x685C50, 20]
+	Local $aBrownDown[4] = [150, 552 + $g_iMidOffsetYFixed, 0x685C50, 20] ; Resolution changed
 
 	Local $bCheckBottom = False, $bBadTryPotion = False, $bBadTryDark = False, $bTroopCord = False, $bIsGrayed = False
 	Local $iIndex = -1, $aSuperT = -1, $aClock = -1, $aTmp = -1, $aBarD = 0, $iDist = 0, $sFilenameClock = "", $sFilenameST = ""
-	Local $aClockCoords[0], $aTroopsCoords[0], $aPoints[0], $sDiamond = GetDiamondFromRect("140, 235, 720, 565"), $sDiamondTroops = GetDiamondFromRect("140, 235, 720, 565")
+	Local $aClockCoords[0], $aTroopsCoords[0], $aPoints[0]
+	Local $sGetDiamondFromRect = GetDiamondFromRect("140,191(580,330)") ; Resolution changed
 
 	ClickAway()
 	If IsMainPage(1) Then
-		If QuickMIS("BC1", $g_sImgBoostTroopsBarrel, 0, 0, 220, 225, True, False) Then
+		If QuickMIS("BC1", $g_sImgBoostTroopsBarrel, 0, 0, 220, 225 + $g_iMidOffsetYFixed, True, False) Then ; Resolution changed
 			If $bTest Then SetLog("Found Barrel at " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_DEBUG)
 			Click($g_iQuickMISX, $g_iQuickMISY, 1)
 			If _Sleep(1500) Then Return
@@ -124,7 +125,7 @@ Func BoostSuperTroop($bTest = False)
 						$bCheckBottom = _CheckPixel($aBrownDown, False)
 
 						; Check If is boosted
-						Local $aSuperT = findMultiple($g_sImgBoostTroopsIcons, GetDiamondFromRect("140, 235, 720, 565"), GetDiamondFromRect("140, 235, 720, 565"), 0, 1000, 0, "objectname,objectlevel,objectpoints", False)
+						Local $aSuperT = findMultiple($g_sImgBoostTroopsIcons, $sGetDiamondFromRect, $sGetDiamondFromRect, 0, 1000, 0, "objectname,objectlevel,objectpoints", False)
 						Local $aClock = findMultiple($g_sImgBoostTroopsClock, $sDiamond, $sDiamond, 0, 1000, 0, "objectname,objectlevel,objectpoints", False)
 						If UBound($aSuperT) > 0 And Not @error Then
 							For $aMatchedTroops In $aSuperT
@@ -275,9 +276,9 @@ Func BoostSuperTroop($bTest = False)
 						EndIf
 						
 						If $iDrags = 1 Then
-							ClickDrag(283, 500, 283, 260, 200)
+							ClickDrag(283, 500 + $g_iBottomOffsetYFixed, 283, 260 + $g_iMidOffsetYFixed, 200) ; Resolution changed
 						Else
-							ClickDrag(283, 500 - 67, 283, 260, 200)
+							ClickDrag(283, 500 - 67 + $g_iBottomOffsetYFixed, 283, 260 + $g_iMidOffsetYFixed, 200) ; Resolution changed
 						EndIf
 						
 						If $bTest Then SetLog("Stage ClickDrag.", $COLOR_INFO)
@@ -320,8 +321,8 @@ EndFunc   ;==>BoostSuperTroop
 
 Func FinalBoostST(ByRef $bBadTryPotion, ByRef $bBadTryDark, $bTest = False)
 
-	Local $aImgBoostBtn1[4] = [400, 525, 750, 600]
-	Local $aImgBoostBtn2[4] = [100, 375, 750, 520]
+	Local $aImgBoostBtn1[4] = [400, 525 + $g_iMidOffsetYFixed, 750, 600 + $g_iMidOffsetYFixed] ; Resolution changed
+	Local $aImgBoostBtn2[4] = [100, 375 + $g_iMidOffsetYFixed, 750, 520 + $g_iMidOffsetYFixed] ; Resolution changed
 
 	Local $bPotionAvariable = QuickMIS("BC1", $g_sImgBoostTroopsPotion, $aImgBoostBtn1[0], $aImgBoostBtn1[1], $aImgBoostBtn1[2], $aImgBoostBtn1[3], True, False)
 	Local $aClickPotion[2] = [$g_iQuickMISX + $aImgBoostBtn1[0], $g_iQuickMISY + $aImgBoostBtn1[1]]

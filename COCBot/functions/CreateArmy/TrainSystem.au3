@@ -1542,7 +1542,7 @@ EndFunc   ;==>CheckValuesCost
 Func getArmyResources($bSetLog = True, $bNeedCapture = True)
 
 	If $bSetLog Then SetDebugLog("getArmyResources():", $COLOR_DEBUG)
-	Local $sResourceDiamond = GetDiamondFromRect("11,583,848,623")
+	Local $sResourceDiamond = GetDiamondFromRect("11,539,848,579") ; Resolution changed
 	Local $aCurrentResources = findMultiple(@ScriptDir & "\imgxml\ArmyOverview\Resources", $sResourceDiamond, $sResourceDiamond, 0, 1000, 0, "objectname,objectpoints", $bNeedCapture)
 	Local $aTempResourceArray, $aResourceCoords, $iResourceIndex = -1
 	Local $aResources[4] = [0, 0, 0, 0] ; Gold, Elixir, Dark Elixir, Gems

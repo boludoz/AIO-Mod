@@ -669,16 +669,16 @@ EndFunc   ;==>RandomBaseIfNot
 
 Func CheckNeedSwipeFriendlyChallengeBase($iBaseSlot)
 	If _Sleep($DELAYCHATACTIONS1) Then Return False
-	Local $aMeasures[3] = ["148, 180, 330, 300", "330, 180, 518, 300", "516, 180, 712, 300"]
-	Local $aClick[3][2] = [[250, 245], [435, 235], [595, 226]]
+	Local $aMeasures[3] = ["148, 136, 330, 256", "330, 136, 518, 256", "516, 136, 712, 256"] ; Resolution changed
+	Local $aClick[3][2] = [[250, 245 + $g_iMidOffsetYFixed], [435, 235 + $g_iMidOffsetYFixed], [595, 226 + $g_iMidOffsetYFixed]] ; Resolution changed
 
 	; check need swipe
 	Local $iSwipeNum = 2
 	Local $iCount = 0
 	If $iBaseSlot > $iSwipeNum Then
 		$iCount = 0
-		While Not _ColorCheck(_GetPixelColor(712, 295, True), Hex(0XD3D3CB, 6), 10)
-			ClickDrag(700, 250, 150, 250, 250)
+		While Not _ColorCheck(_GetPixelColor(712, 295 + $g_iMidOffsetYFixed, True), Hex(0XD3D3CB, 6), 10) ; Resolution changed
+			ClickDrag(700, 250 + $g_iMidOffsetYFixed, 150, 250 + $g_iMidOffsetYFixed, 250) ; Resolution changed
 			If _Sleep($DELAYCHATACTIONS2) Then Return False
 			$iCount += 1
 			If $iCount > 3 Then Return False
@@ -691,8 +691,8 @@ Func CheckNeedSwipeFriendlyChallengeBase($iBaseSlot)
 		EndIf
 	Else
 		$iCount = 0
-		While Not _ColorCheck(_GetPixelColor(146, 295, True), Hex(0XD3D3CB, 6), 10)
-			ClickDrag(155, 250, 705, 250, 250)
+		While Not _ColorCheck(_GetPixelColor(146, 295 + $g_iMidOffsetYFixed, True), Hex(0XD3D3CB, 6), 15) ; Resolution changed
+			ClickDrag(155, 250 + $g_iMidOffsetYFixed, 705, 250 + $g_iMidOffsetYFixed, 250) ; Resolution changed
 			If _Sleep($DELAYCHATACTIONS2) Then Return False
 			$iCount += 1
 			If $iCount > 3 Then Return False
@@ -728,14 +728,14 @@ Func ReadChatIA($sCondition = "hola", $bFast = True)
 	Local $sResult = -1
 	Local $asFCKeyword = ""
 	Local $aiDonateButton = -1
-	Local $aiSearchArray[4] = [200, 90, 300, 700]
+	Local $aiSearchArray[4] = [200, 90 + $g_iMidOffsetYFixed, 300, 700 + $g_iMidOffsetYFixed]
 
 	ScrollDown()
 
 	If RandomSleep(500) Then Return
 
 	_CaptureRegion2()
-	Local $aChatY = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ChatActions\Chat", 11, "259, 20, 269, 677", False, Default, False, 0)
+	Local $aChatY = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\ChatActions\Chat", 11, "259, 20, 269, 589", False, Default, False, 0) ; Resolution changed
 
 	If Not IsArray($aChatY) Then Return False
 

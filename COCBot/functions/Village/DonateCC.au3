@@ -228,7 +228,7 @@ Func DonateCC($bCheckForNewMsg = False)
 	If _Sleep($DELAYDONATECC4) Then Return
 
 	; check for "I Understand" button
-	Local $aCoord = decodeSingleCoord(findImage("I Understand", $g_sImgChatIUnterstand, GetDiamondFromRect("50,400,280,550")))
+	Local $aCoord = decodeSingleCoord(findImage("I Understand", $g_sImgChatIUnterstand, GetDiamondFromRect("50,356,280,506"))) ; Resolution changed
 	If UBound($aCoord) > 1 Then
 		SetLog('Clicking "I Understand" button', $COLOR_ACTION)
 		ClickP($aCoord)

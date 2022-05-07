@@ -38,7 +38,7 @@ Func GetAttackBarBB($bRemaining = False)
 		[n][4] = The Amount
 	#comments-end
 
-	local $sSearchDiamond = GetDiamondFromRect("0,630,860,732")
+	local $sSearchDiamond = GetDiamondFromRect("0,542,860,644") ; Resolution changed
 	local $aBBAttackBarResult = findMultiple($g_sImgDirBBTroops, $sSearchDiamond, $sSearchDiamond, 0, 1000, 0, "objectname,objectpoints", True)
 	
 	If Not $g_bRunState Then Return ; Stop Button

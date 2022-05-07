@@ -804,9 +804,9 @@ Func OpenGoblinMapSX()
 
 		Local $iRandom = Random(0, 3, 1)
 		If $bFastScroll = True Then
-			ClickDrag(Random(305, 310, 1), 138 - $iRandom, Random(305, 310, 1), 658 + $iRandom, 25, True)
+			ClickDrag(Random(305, 310, 1), 138 + $g_iMidOffsetYFixed - $iRandom, Random(305, 310, 1), 658 + $g_iBottomOffsetYFixed + $iRandom, 25, True) ; Resolution changed
 		Else
-			ClickDrag(Random(305, 310, 1), 138 - $iRandom, Random(305, 310, 1), 398 + $iRandom, 50, True)
+			ClickDrag(Random(305, 310, 1), 138 + $g_iMidOffsetYFixed - $iRandom, Random(305, 310, 1), 398 + $g_iMidOffsetYFixed + $iRandom, 50, True) ; Resolution changed
 		EndIf
 
 		SetDebugLog("FastScroll= " & $bFastScroll & " / Button OpenGoblinMapSX= " & _GetPixelColor($aFirstMapPosition[0], $aFirstMapPosition[1], True), $COLOR_DEBUG) ;Debug
@@ -831,7 +831,7 @@ Func OpenGoblinMapSX()
 		Return False
 	Else
 		If $aMapPick[UBound($aMapPick) -1][2] > 420 Then
-			ClickDrag(Random(305, 310, 1), 304, Random(305, 310, 1), 138, 100, True)
+			ClickDrag(Random(305, 310, 1), 304 + $g_iMidOffsetYFixed, Random(305, 310, 1), 138 + $g_iMidOffsetYFixed, 100, True) ; Resolution changed
 			For $i = 0 To 1
 				If RandomSleep(500) Then Return
 				$aMapPick = FixPosMapSX()
@@ -942,7 +942,7 @@ EndFunc   ;==>OpenGoblinMapSX
 
 Func FixPosMapSX()
 	Local $aMapPickR[1][4]
-	Local $aMapPick = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\SuperXP\Find", 0, "282, 138, 833, 671", True)
+	Local $aMapPick = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\SuperXP\Find", 0, "282, 94, 833, 583", True) ; Resolution changed
 
 	Local $bKing = IIf($g_bBKingSX = $eHeroNone, False, BitAND($g_iHeroAvailable, $eHeroKing) = $eHeroKing)
 	Local $bQueen = IIf($g_bAQueenSX = $eHeroNone, False, BitAND($g_iHeroAvailable, $eHeroQueen) = $eHeroQueen)

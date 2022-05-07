@@ -129,7 +129,7 @@ Func __ClanGames($test = False, $bFromBB = False)
 	; [0]=ChallengeName [1]=EventName [2]=Xaxis [3]=Yaxis
 	Local $aAllDetectionsOnScreen[0][4]
 
-	Local $sClanGamesWindow = GetDiamondFromRect("300,155,765,550")
+	Local $sClanGamesWindow = GetDiamondFromRect("300,111,765,504") ; Resolution changed
 	Local $aCurrentDetection = findMultiple($sTempPath, $sClanGamesWindow, $sClanGamesWindow, 0, 1000, 0, "objectname,objectpoints", True)
 	Local $aEachDetection
 
@@ -481,7 +481,7 @@ Func __ClanGames($test = False, $bFromBB = False)
 		; Drop to top again , because coordinates Xaxis and Yaxis
 		ClickP($TabChallengesPosition, 2, 0, "#Tab")
 		If _sleep(250) Then Return
-		ClickDrag(807, 210, 807, 385, 500)
+		ClickDrag(807, 210 + $g_iMidOffsetYFixed, 807, 385 + $g_iMidOffsetYFixed, 500) ; Resolution changed
 		If _Sleep(500) Then Return
 	EndIf
 
@@ -709,7 +709,7 @@ Func IsClanGamesWindow($getCapture = True, $bOnlyCheck = False, $bFromBB = False
 	
 	$g_bIsCaravanOn = "False"
 	If $bFromBB = False Then
-		If QuickMIS("BC1", $g_sImgCaravan, 230, 55, 330, 155, $getCapture, False) Then
+		If QuickMIS("BC1", $g_sImgCaravan, 230, 55 + $g_iMidOffsetYFixed, 330, 155 + $g_iMidOffsetYFixed, $getCapture, False) Then ; Resolution changed
 			SetLog("Caravan available! Entering Clan Games", $COLOR_SUCCESS)
 			Click($g_iQuickMISX + 230, $g_iQuickMISY + 55)
 		Else
@@ -761,17 +761,16 @@ Func ClickAwayCross()
 EndFunc   ;==>CloseClanGamesWindow
 
 Func IsClanGamesRunning($getCapture = True) ;to check whether clangames current state, return string of the state "prepare" "running" "end"
-	Local $aGameTime[4] = [384, 388, 0xFFFFFF, 10]
 	Local $sState = "running"
-	If QuickMIS("BC1", $g_sImgWindow, 70, 100, 150, 150, $getCapture, False) Then
+	If QuickMIS("BC1", $g_sImgWindow, 70, 100 + $g_iMidOffsetYFixed, 150, 150 + $g_iMidOffsetYFixed, $getCapture, False) Then ; Resolution changed
 		SetLog("Window Opened", $COLOR_DEBUG)
-		If QuickMIS("BC1", $g_sImgReward, 580, 480, 830, 570, $getCapture, False) Then
+		If QuickMIS("BC1", $g_sImgReward, 580, 480 + $g_iBottomOffsetYFixed, 830, 570 + $g_iBottomOffsetYFixed, $getCapture, False) Then ; Resolution changed
 			SetLog("Your Reward is Ready", $COLOR_INFO)
 			$sState = "end"
 		EndIf
 	Else
-		If _CheckPixel($aGameTime, True) Then
-			Local $sTimeRemain = getOcrTimeGameTime(380, 461) ; read Clan Games waiting time
+		If _CheckPixel($g_aGameTime, True) Then
+			Local $sTimeRemain = getOcrTimeGameTime(380, 461 + $g_iBottomOffsetYFixed) ; read Clan Games waiting time ; Resolution changed
 			SetLog("Clan Games will start in " & $sTimeRemain, $COLOR_INFO)
 			$g_sClanGamesTimeRemaining = $sTimeRemain
 			$sState = "prepare"
@@ -830,7 +829,7 @@ EndFunc   ;==>GetTimesAndScores
 
 Func CooldownTime($getCapture = True)
 	;check cooldown purge
-	Local $aiCoolDown = decodeSingleCoord(findImage("Cooldown", $g_sImgCoolPurge & "\*.xml", GetDiamondFromRect("480,370,570,410"), 1, True, Default))
+	Local $aiCoolDown = decodeSingleCoord(findImage("Cooldown", $g_sImgCoolPurge & "\*.xml", GetDiamondFromRect("480,326,570,366"), 1, True, Default)) ; Resolution changed 
 	If IsArray($aiCoolDown) And UBound($aiCoolDown, 1) >= 2 Then
 		SetLog("Cooldown Purge Detected", $COLOR_INFO)
 		ClickAwayCross()
@@ -840,9 +839,6 @@ Func CooldownTime($getCapture = True)
 EndFunc   ;==>CooldownTime
 
 Func IsEventRunning($bOpenWindow = False)
-	Local $aEventFailed[4] = [300, 255, 0xEA2B24, 20]
-	Local $aEventPurged[4] = [300, 266, 0x57c68f, 20]
-
 	If $bOpenWindow Then
 		ClickAwayCross()
 		SetLog("Entering Clan Games", $COLOR_INFO)
@@ -852,7 +848,7 @@ Func IsEventRunning($bOpenWindow = False)
 	; Check if any event is running or not
 	If Not _ColorCheck(_GetPixelColor(300, 266, True), Hex(0x53E050, 6), 5) Then ; Green Bar from First Position
 		;Check if Event failed
-		If _CheckPixel($aEventFailed, True) Then
+		If _CheckPixel($g_aEventFailed, True) Then
 			SetLog("Couldn't finish last event! Lets trash it and look for a new one", $COLOR_INFO)
 			If TrashFailedEvent() Then
 				If _Sleep(3000) Then Return ;Add sleep here, to wait ClanGames Challenge Tile ordered again as 1 has been deleted
@@ -862,7 +858,7 @@ Func IsEventRunning($bOpenWindow = False)
 				ClickAwayCross()
 				Return True
 			EndIf
-		ElseIf _CheckPixel($aEventPurged, True) Then
+		ElseIf _CheckPixel($g_aEventPurged, True) Then
 			SetLog("An event purge cooldown in progress!", $COLOR_WARNING)
 			ClickAwayCross()
 			Return True
@@ -870,7 +866,7 @@ Func IsEventRunning($bOpenWindow = False)
 			SetLog("An event is already in progress!", $COLOR_SUCCESS)
 
 			;check if its Enabled Challenge, if not = purge
-			If QuickMIS("BC1", @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\", 300, 160, 380, 240, True, False) Then
+			If QuickMIS("BC1", @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\", 300, 160 + $g_iMidOffsetYFixed, 380, 240 + $g_iMidOffsetYFixed, True, False) Then ; Resolution changed
 				SetLog("Active Challenge is Enabled on Setting, OK!!", $COLOR_DEBUG)
 				;check if Challenge is BB Challenge, enabling force BB attack
 				If $g_bChkForceBBAttackOnClanGames Then
@@ -878,7 +874,7 @@ Func IsEventRunning($bOpenWindow = False)
 					Click(340,210)
 					If _Sleep(1000) Then Return
 					SetLog("Re-Check If Running Challenge is BB Event or No?", $COLOR_DEBUG)
-					If QuickMIS("BC1", $g_sImgVersus, 425, 180, 700, 235, True, False) Then
+					If QuickMIS("BC1", $g_sImgVersus, 425, 180 + $g_iMidOffsetYFixed, 700, 235 + $g_iMidOffsetYFixed, True, False) Then ; Resolution changed
 						Setlog("Running Challenge is BB Challenge", $COLOR_INFO)
 						$g_bIsBBevent = True
 					Else
@@ -934,11 +930,11 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 
 		If $g_bPurgeJob Then
 			If _Sleep(2500) Then Return
-			If QuickMIS("BC1", $g_sImgTrashPurge, 400, 200, 700, 350, True, False) Then
+			If QuickMIS("BC1", $g_sImgTrashPurge, 400, 200 + $g_iMidOffsetYFixed, 700, 350 + $g_iMidOffsetYFixed, True, False) Then ; Resolution changed
 				Click($g_iQuickMISX + 400, $g_iQuickMISY + 200)
 				If _Sleep(1500) Then Return
 				SetLog("Click Trash", $COLOR_INFO)
-				If QuickMIS("BC1", $g_sImgOkayPurge, 440, 400, 580, 450, True, False) Then
+				If QuickMIS("BC1", $g_sImgOkayPurge, 440, 400 + $g_iMidOffsetYFixed, 580, 450 + $g_iMidOffsetYFixed, True, False) Then ; Resolution changed
 					SetLog("Click OK", $COLOR_INFO)
 					Click($g_iQuickMISX + 440, $g_iQuickMISY + 400)
 					SetLog("StartsEvent and Purge job!", $COLOR_SUCCESS)
@@ -971,11 +967,11 @@ Func StartButton($bGetEventType = True, $getCapture = True)
 	EndIf
 
     Local $aButtonPixel[2]
-    If QuickMIS("BC1", $g_sImgStart, 220, 150, 830, 580, $getCapture, False) Then
+    If QuickMIS("BC1", $g_sImgStart, 220, 150 + $g_iMidOffsetYFixed, 830, 580 + $g_iBottomOffsetYFixed, $getCapture, False) Then ; Resolution changed
 		$aButtonPixel[0] = ($g_iQuickMISX + 220)
 		$aButtonPixel[1] = ($g_iQuickMISY + 150)
 		If $bGetEventType = True Then
-			$g_bIsBBevent = (QuickMIS("Q1", $g_sImgBorderBB, $aButtonPixel[0] - 250, $aButtonPixel[1] - 70, $aButtonPixel[0] + 250, $aButtonPixel[1] + 70) > 0) ? (True) : (False)
+			$g_bIsBBevent = (QuickMIS("Q1", $g_sImgBorderBB, $aButtonPixel[0] - 250, $aButtonPixel[1] - 70, $aButtonPixel[0] + 250, $aButtonPixel[1] + 70) > 0) ? (True) : (False) ; Resolution changed
 		EndIf
 		Return $aButtonPixel
 	Else
@@ -987,7 +983,7 @@ EndFunc   ;==>StartButton
 Func PurgeEvent($directoryImage, $sEventName, $getCapture = True)
 	SetLog("Checking Builder Base Challenges to Purge", $COLOR_DEBUG)
 	; Screen coordinates for ScreenCapture
-	Local $x = 281, $y = 150, $x1 = 775, $y1 = 545
+	Local $x = 281, $y = 150 + $g_iMidOffsetYFixed, $x1 = 775, $y1 = 545 + $g_iBottomOffsetYFixed ; Resolution changed
 	If QuickMIS("BC1", $directoryImage, $x, $y, $x1, $y1, $getCapture, False) Then
 		Click($g_iQuickMISX + $x, $g_iQuickMISY + $y)
 		; Start and Purge at same time
@@ -1015,11 +1011,11 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 		EndIf
 	Else
 		SetLog("ForcePurgeEvent: Purge a Wrong Challenge", $COLOR_INFO)
-		If QuickMIS("BC1", $g_sImgTrashPurge, 400, 200, 700, 350, True, False) Then
+		If QuickMIS("BC1", $g_sImgTrashPurge, 400, 200 + $g_iMidOffsetYFixed, 700, 350 + $g_iMidOffsetYFixed, True, False) Then ; Resolution changed
 			Click($g_iQuickMISX + 400, $g_iQuickMISY + 200)
 			If _Sleep(1200) Then Return
 			SetLog("Click Trash", $COLOR_INFO)
-			If QuickMIS("BC1", $g_sImgOkayPurge, 440, 400, 580, 450, True, False) Then
+			If QuickMIS("BC1", $g_sImgOkayPurge, 440, 400 + $g_iBottomOffsetYFixed, 580, 450 + $g_iBottomOffsetYFixed, True, False) Then ; Resolution changed
 				SetLog("Click OK", $COLOR_INFO)
 				If $bTest Then Return
 				Click($g_iQuickMISX + 440, $g_iQuickMISY + 400)
@@ -1049,11 +1045,11 @@ Func StartAndPurgeEvent($bTest = False)
 		_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - Starting Purge for " & $Timer & " min")
 
 		If _Sleep(2500) Then Return
-		If QuickMIS("BC1", $g_sImgTrashPurge, 400, 200, 700, 350, True, False) Then
+		If QuickMIS("BC1", $g_sImgTrashPurge, 400, 200 + $g_iMidOffsetYFixed, 700, 350 + $g_iMidOffsetYFixed, True, False) Then ; Resolution changed
 			Click($g_iQuickMISX + 400, $g_iQuickMISY + 200)
 			If _Sleep(2000) Then Return
 			SetLog("Click Trash", $COLOR_INFO)
-			If QuickMIS("BC1", $g_sImgOkayPurge, 440, 400, 580, 450, True, False) Then
+			If QuickMIS("BC1", $g_sImgOkayPurge, 440, 400 + $g_iBottomOffsetYFixed, 580, 450 + $g_iBottomOffsetYFixed, True, False) Then ; Resolution changed
 				SetLog("Click OK", $COLOR_INFO)
 				If $bTest Then Return
 				Click($g_iQuickMISX + 440, $g_iQuickMISY + 400)
@@ -1121,7 +1117,7 @@ EndFunc   ;==>GetEventInformation
 Func IsBBChallenge($i = Default, $j = Default)
 
 	Local $BorderX[4] = [292, 418, 546, 669]
-	Local $BorderY[3] = [205, 363, 520]
+	Local $BorderY[3] = [205 + $g_iMidOffsetYFixed, 363 + $g_iMidOffsetYFixed, 520 + $g_iBottomOffsetYFixed] ; Resolution changed
 	Local $iColumn, $iRow, $bReturn
 
 	Switch $i

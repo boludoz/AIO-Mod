@@ -125,7 +125,7 @@ Func BoostPotionMod($sName, $bDebug = False)
 	
 	Local $aFiles = _FileListToArray($g_sImgPotionsBtn, $sName & "*.*", $FLTA_FILES)
 	If UBound($aFiles) > 1 And not @error Then
-		Local $aCoords = decodeSingleCoord(findImage($aFiles[1], $g_sImgPotionsBtn & "\" & $aFiles[1], GetDiamondFromRect("134, 580, 730, 675"), 1, True))
+		Local $aCoords = decodeSingleCoord(findImage($aFiles[1], $g_sImgPotionsBtn & "\" & $aFiles[1], GetDiamondFromRect("134,536(596,95)"), 1, True)) ; Resolution changed
 		If UBound($aCoords) > 1 And Not @error Then
 			Setlog("Magic Items : boosting " & $sName, $COLOR_INFO)
 			ClickP($aCoords, 1)
@@ -184,7 +184,7 @@ Func BuilderPotionBoost($bDebug = False)
 		Local $sBuilderTime = ""
 		
 		For $i = 0 To 2
-			$sBuilderTime = QuickMIS("OCR", @ScriptDir & "\imgxml\BuilderTime", 335, 102, 465, 124, True)
+			$sBuilderTime = QuickMIS("OCR", @ScriptDir & "\imgxml\BuilderTime", 335, 102 + $g_iMidOffsetYFixed, 465, 124 + $g_iMidOffsetYFixed, True) ; Resolution changed
 			If StringInStr($sBuilderTime, "h") > 0 Or StringInStr($sBuilderTime, "m") > 0 Then
 				$iBuilderTime = ConvertOCRLongTime("Builder Time", $sBuilderTime, False)
 				SetDebugLog("$sResult QuickMIS OCR: " & $sBuilderTime & " (" & Round($iBuilderTime,2) & " minutes)")
