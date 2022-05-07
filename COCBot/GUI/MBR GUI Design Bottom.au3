@@ -56,44 +56,44 @@ Func CreateBottomPanel()
 	;~ Buttons
 	Local $y_bottom = 0 ; 515
 	Local $x = 10, $y = $y_bottom + 10
-	GUICtrlCreateGroup("https://mybot.run " & GetTranslatedFileIni("MBR GUI Design Bottom", "Group_01", "- freeware bot -"), $x - 5, $y - 10, 190, 108)
+	GUICtrlCreateGroup("https://mybot.run " & GetTranslatedFileIni("MBR GUI Design Bottom", "Group_01", "- freeware bot -"), $x - 5, $y - 10, 190, 108 - 15)
 	#Region GUI - Team Aio Mod++
-	$y +=15
-		$g_hBtnStart = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnStart", "Start Bot"), $x, $y, 90, 28)
+		$y += 5
+		$g_hBtnStart = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnStart", "Start Bot"), $x, $y, 90, 18)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "BtnStart_Info_01", "Use this to START the bot."))
 			If $g_bBtnColor then GUICtrlSetBkColor(-1, 0x5CAD85)
 			GUICtrlSetState(-1, $GUI_DISABLE)
-		$g_hBtnStop = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnStop", "Stop Bot"), -1, -1, 90, 28)
+		$g_hBtnStop = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnStop", "Stop Bot"), -1, -1, 90, 18)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "BtnStop_Info_01", "Use this to STOP the bot (or ESC key)."))
 			If $g_bBtnColor then GUICtrlSetBkColor(-1, 0xDB4D4D)
 			GUICtrlSetState(-1, $GUI_HIDE)
-		$g_hBtnPause = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnPause", "Pause"), $x + 90, -1, 90, 28)
+		$g_hBtnPause = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnPause", "Pause"), $x + 90, -1, 90, 18)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "BtnPause_Info_01", "Use this to PAUSE all actions of the bot until you Resume (or Pause/Break key)."))
 			If $g_bBtnColor then GUICtrlSetBkColor(-1,  0xFFA500)
 			GUICtrlSetState(-1, $GUI_HIDE)
-		$g_hBtnResume = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnResume", "Resume"), -1, -1, 90, 28)
+		$g_hBtnResume = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnResume", "Resume"), -1, -1, 90, 18)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "BtnResume_Info_01", "Use this to RESUME a paused Bot (or Pause/Break key)."))
 			If $g_bBtnColor then GUICtrlSetBkColor(-1,  0xFFA500)
 			GUICtrlSetState(-1, $GUI_HIDE)
-		$g_hBtnSearchMode = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnSearchMode", "Search Mode"), -1, -1, 90, 28)
+		$g_hBtnSearchMode = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnSearchMode", "Search Mode"), -1, -1, 90, 18)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "BtnSearchMode_Info_01", "Does not attack. Searches for a Village that meets conditions."))
 			GUICtrlSetOnEvent(-1, "btnSearchMode")
 			If $g_bBtnColor then GUICtrlSetBkColor(-1,  0xFFA500)
 			GUICtrlSetState(-1, $GUI_DISABLE)
-		$g_hBtnMakeScreenshot = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnMakeScreenshot", "Photo"), $x , $y + 28, 40, -1)
+		$g_hBtnMakeScreenshot = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnMakeScreenshot", "Photo"), $x , $y + 18, 40, 15)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "BtnMakeScreenshot_Info_01", "Click here to take a snapshot of your village and save it to a file."))
 			If $g_bBtnColor then GUICtrlSetBkColor(-1, 0x5CAD85)
-		$g_hBtnHide = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnHide", "Hide"), $x + 40, $y + 28, 50, -1)
+		$g_hBtnHide = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnHide", "Hide"), $x + 40, $y + 18, 50, 15)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "BtnHide_Info_01", "Use this to move the Android Window out of sight.") & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Bottom", "BtnHide_Info_02", "(Not minimized, but hidden)"))
 			If $g_bBtnColor Then GUICtrlSetBkColor(-1, 0x22C4F5)
 			GUICtrlSetState(-1, $GUI_DISABLE)
-		$g_hBtnEmbed = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnEmbed", "Dock"), $x + 90, $y + 28, 90, -1)
+		$g_hBtnEmbed = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnEmbed", "Dock"), $x + 90, $y + 18, 90, 15)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "BtnEmbed_Info_01", "Use this to embed the Android Window into Bot."))
 			If $g_bBtnColor Then GUICtrlSetBkColor(-1, 0x22C4F5)
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			GUICtrlSetOnEvent(-1, "btnEmbed")
-	$y -=15
+	$y -=35
 	#EndRegion - Team Aio Mod++
 		$g_hChkBackgroundMode = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Bottom", "ChkBackgroundMode", "Background Mode"), $x + 1, $y + 72, 95, 20) ; Team AiO MOD++
 			GUICtrlSetFont(-1, 7)
@@ -102,7 +102,6 @@ Func CreateBottomPanel()
 			If $g_bGuiRemote Then GUICtrlSetState(-1, $GUI_DISABLE)
 			GUICtrlSetOnEvent(-1, "chkBackground")
 			GUICtrlSetState(-1, (($g_bAndroidAdbScreencap = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED)))
-
 		#Region - Team AiO MOD++
 		; Only farm - Team AiO MOD++
 		$g_hCmbStatusMode = GUICtrlCreateCombo("", $x + 100, $y + 72, 82, 20, $CBS_DROPDOWNLIST)
@@ -111,6 +110,7 @@ Func CreateBottomPanel()
 			GetTranslatedFileIni("MBR GUI Design Bottom", "ComboStatusMode_BB", "Builder Base Mode"))
 			_GUICtrlComboBox_SetCurSel(-1, 0)
 			GUICtrlSetOnEvent(-1, "ComboStatusMode")
+	$y +=15
 
 		$g_hBtnAttackNowDB = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnAttackNowDB", "DB Attack"), $x + 200, $y - 1, 60, 19)
 			GUICtrlSetState(-1, $GUI_HIDE)
@@ -210,7 +210,26 @@ Func CreateBottomPanel()
 		$g_hlblChampion = GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design Names Troops", "Champion_C", "C"), $x + 4, $y + 18, 10, 16, $SS_LEFT)
 	  		_GUICtrlSetTip(-1, $sTxtTip)
 
-	$x += 19
+	; Pet House display
+	$x -= 19 * 3
+	$Y += 30
+
+		$sTxtTip = GetTranslatedFileIni("MBR GUI Design Bottom","GrpStatus_Info_02", "Gray - N/A" & @CRLF & "Green - Pet House is Running" & @CRLF & "Red - Pet House Has Stopped")
+		$g_hPicPetGray = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnGrayShield, $x , $y, 16, 16 )
+	  		_GUICtrlSetTip(-1, $sTxtTip)
+		$g_hPicPetGreen = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnGreenShield, $x, $y, 16, 16 )
+	  		_GUICtrlSetTip(-1, $sTxtTip)
+			GUICtrlSetState(-1, $GUI_HIDE)
+		$g_hPicPetRed = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnRedShield, $x, $y, 16, 16 )
+	  		_GUICtrlSetTip(-1, $sTxtTip)
+			GUICtrlSetState(-1, $GUI_HIDE)
+		$g_hlblPet = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Bottom", "Pet_P", "P"), $x + 4, $y + 21, 10, 16, $SS_LEFT)
+	  		_GUICtrlSetTip(-1, $sTxtTip)
+		$g_hLbLPetTime = GUICtrlCreateLabel("", $x + 20, $y + 2, 50, 16, $SS_LEFT)
+
+	$x += 19 * 4
+	$Y -= 30
+
 		$sTxtTip = GetTranslatedFileIni("MBR GUI Design Bottom","GrpStatus_Info_02", "Gray - N/A" & @CRLF & "Green - Lab is Running" & @CRLF & "Red - Lab Has Stopped")
 		$g_hPicLabGray = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnGrayShield, $x , $y, 16, 16 )
 	  		_GUICtrlSetTip(-1, $sTxtTip)
@@ -224,20 +243,6 @@ Func CreateBottomPanel()
 	  		_GUICtrlSetTip(-1, $sTxtTip)
 		$g_hLbLLabTime = GUICtrlCreateLabel("", $x - 54, $y + 35, 50, 16, $SS_LEFT)
 
-	; Pet House display
-	Local $x = 199, $y = $y_bottom + 72
-		$sTxtTip = GetTranslatedFileIni("MBR GUI Design Bottom","GrpStatus_Info_02", "Gray - N/A" & @CRLF & "Green - Pet House is Running" & @CRLF & "Red - Pet House Has Stopped")
-		$g_hPicPetGray = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnGrayShield, $x , $y, 16, 16 )
-	  		_GUICtrlSetTip(-1, $sTxtTip)
-		$g_hPicPetGreen = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnGreenShield, $x, $y, 16, 16 )
-	  		_GUICtrlSetTip(-1, $sTxtTip)
-			GUICtrlSetState(-1, $GUI_HIDE)
-		$g_hPicPetRed = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnRedShield, $x, $y, 16, 16 )
-	  		_GUICtrlSetTip(-1, $sTxtTip)
-			GUICtrlSetState(-1, $GUI_HIDE)
-		$g_hlblPet = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Bottom", "Pet_P", "P"), $x + 4, $y + 21, 10, 16, $SS_LEFT)
-	  		_GUICtrlSetTip(-1, $sTxtTip)
-		$g_hLbLPetTime = GUICtrlCreateLabel("", $x + 20, $y + 2, 50, 16, $SS_LEFT)
 
    ;~ Village
    Local $x = 295, $y = $y_bottom + 20

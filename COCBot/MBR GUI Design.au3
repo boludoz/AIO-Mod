@@ -22,8 +22,9 @@
 #include "functions\GUI\GUI_State.au3"
 
 Global Const $TCM_SETITEM = 0x1306
+Global Const $iFixResolution = 71
 Global $_GUI_MAIN_WIDTH = 472 ; changed from 470 to 472 for DPI scaling cutting off right by 2 pixel
-Global $_GUI_MAIN_HEIGHT = 692 ; changed from 690 to 692 for DPI scaling cutting off bottom by 2 pixel
+Global $_GUI_MAIN_HEIGHT = 692 - $iFixResolution ; changed from 690 to 692 for DPI scaling cutting off bottom by 2 pixel
 Global Const $_NORMALGUI_MAIN_WIDTH = $_GUI_MAIN_WIDTH ; changed from 470 to 472 for DPI scaling cutting off right by 2 pixel
 Global Const $_NORMALGUI_MAIN_HEIGHT = $_GUI_MAIN_HEIGHT ; changed from 690 to 692 for DPI scaling cutting off bottom by 2 pixel
 Global Const $_MINIGUI_MAIN_WIDTH = $_GUI_MAIN_WIDTH ; changed from 470 to 472 for DPI scaling cutting off right by 2 pixel
@@ -31,19 +32,19 @@ Global Const $_MINIGUI_MAIN_HEIGHT = 220 ; changed from 690 to 692 for DPI scali
 Global $_GUI_MAIN_TOP = 23 ; Adjusted in CreateMainGUI()
 Global $_GUI_MAIN_BUTTON_SIZE = [25, 17] ; minimize/close button size
 Global $_GUI_MAIN_BUTTON_COUNT = 4
-Global $_GUI_CHILD_TOP = 110 + $_GUI_MAIN_TOP ; Adjusted in CreateMainGUI()
-Global Const $_GUI_BOTTOM_HEIGHT = 135
+Global $_GUI_CHILD_TOP = 78 + $_GUI_MAIN_TOP ; Adjusted in CreateMainGUI()
+Global Const $_GUI_BOTTOM_HEIGHT = 170 - $iFixResolution
 Global Const $_GUI_CHILD_LEFT = 10
 Global Const $g_bBtnColor = False ; True
 
 Global Const $g_iSizeWGrpTab1 = $_GUI_MAIN_WIDTH - 20
-Global Const $g_iSizeHGrpTab1 = $_GUI_MAIN_HEIGHT - 255
+Global Const $g_iSizeHGrpTab1 = $_GUI_MAIN_HEIGHT - 255 + $iFixResolution
 Global Const $g_iSizeWGrpTab2 = $_GUI_MAIN_WIDTH - 30 ;440
-Global Const $g_iSizeHGrpTab2 = $_GUI_MAIN_HEIGHT - 285 ;405
-Global Const $g_iSizeWGrpTab3 = $_GUI_MAIN_WIDTH - 38 ;430
-Global Const $g_iSizeHGrpTab3 = $_GUI_MAIN_HEIGHT - 315 ;375
+Global Const $g_iSizeHGrpTab2 = $_GUI_MAIN_HEIGHT - 285 + $iFixResolution ;405
+Global Const $g_iSizeWGrpTab3 = $_GUI_MAIN_WIDTH - 40 ;430
+Global Const $g_iSizeHGrpTab3 = $_GUI_MAIN_HEIGHT - 315 + $iFixResolution ;375
 Global Const $g_iSizeWGrpTab4 = $_GUI_MAIN_WIDTH - 50 ;420
-Global Const $g_iSizeHGrpTab4 = $_GUI_MAIN_HEIGHT - 345 ;345
+Global Const $g_iSizeHGrpTab4 = $_GUI_MAIN_HEIGHT - 345 + $iFixResolution ;345
 
 Global $g_iBotDesignFlags = 3 ; Bit 0 = Use Windows Default Title Bar, 1 = Use new custom Title Bar, 2 = Auto Slide bot when docked and window activation changes, 4, 8, ... future features
 Global $g_bCustomTitleBarActive = Default ; Current state if custom title bar has been designed, set to True or False in CreateMainGUI()
@@ -264,16 +265,15 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 			GUICtrlSetBkColor(-1, $COLOR_WHITE)
 		EndIf
 
-		$g_hFrmBot_MAIN_PIC = _GUICtrlCreatePic($g_sLogoPath, 0, $_GUI_MAIN_TOP, $_GUI_MAIN_WIDTH, 67)
+		$g_hFrmBot_MAIN_PIC = _GUICtrlCreatePic($g_sLogoPath, 0, $_GUI_MAIN_TOP, $_GUI_MAIN_WIDTH, 40)
 		GUICtrlSetOnEvent(-1, "BotMoveRequest")
 
-		; $g_hLblAndroidInfo = GUICtrlCreateLabel($g_sAndroidEmulator & " v" & $g_sAndroidVersion, $_GUI_MAIN_WIDTH - 390, $_GUI_MAIN_TOP + 54, -1, 12, $SS_LEFT)
-		$g_hLblAndroidInfo = GUICtrlCreateLabel("", $_GUI_MAIN_WIDTH - 390, $_GUI_MAIN_TOP + 54, 150, 12, $SS_LEFT)
+		$g_hLblAndroidInfo = GUICtrlCreateLabel("", $_GUI_MAIN_WIDTH - 166 + 85, $_GUI_MAIN_TOP, 160, 26, $SS_LEFT)
 		GUICtrlSetFont(-1, 8.5, $FW_BOLD)
-		GUICtrlSetColor(-1, 0x804001)
+		GUICtrlSetColor(-1, 0x0E67BC)
 		GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
 
-		$g_hFrmBot_URL_PIC = _GUICtrlCreatePic($g_sLogoUrlPath, 0, $_GUI_MAIN_TOP + 67, $_GUI_MAIN_WIDTH, 13)
+		$g_hFrmBot_URL_PIC = _GUICtrlCreatePic($g_sLogoUrlPath, 0, $_GUI_MAIN_TOP + 40, $_GUI_MAIN_WIDTH, 13)
 		GUICtrlSetCursor(-1, 0)
 
 		GUISwitch($g_hFrmBot)
@@ -363,7 +363,8 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 ;~ GUI Main Tab Control
 ;~ ------------------------------------------------------
 	GUISwitch($g_hFrmBotEx)
-	$g_hTabMain = GUICtrlCreateTab(5, 85 + $_GUI_MAIN_TOP, $_GUI_MAIN_WIDTH - 9, $_GUI_MAIN_HEIGHT - 225) ; , $TCS_MULTILINE)
+	; $g_hTabMain = GUICtrlCreateTab(5, 85 + $_GUI_MAIN_TOP, $_GUI_MAIN_WIDTH - 9, $_GUI_MAIN_HEIGHT - 225) ; , $TCS_MULTILINE)
+	$g_hTabMain = GUICtrlCreateTab(5, 53 + $_GUI_MAIN_TOP, $_GUI_MAIN_WIDTH - 9, $_GUI_MAIN_HEIGHT - (225 - $iFixResolution))  ; Fixed resolution
 	$g_hTabLog = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_01", "Log"))
 	$g_hTabVillage = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_02", "Village"))
 	$g_hTabAttack = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_03", "Attack Plan"))

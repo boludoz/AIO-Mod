@@ -273,11 +273,11 @@ Func _AutoUpgrade()
 
 		Switch $g_aUpgradeNameLevel[1]
 			Case "Barbarian King", "Archer Queen", "Grand Warden", "Royal Champion"
-				$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 690, 540 + $g_iBottomOffsetYFixed, 730, 580 + $g_iBottomOffsetYFixed) ; get resource ; Resolution changed
+				$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 690, 540 + $g_iBottomOffsetYFixed, 730, 580 + $g_iBottomOffsetYFixed) ; get resource ; Resolution changed ; RC Done
 				$g_aUpgradeResourceCostDuration[1] = getResourcesBonus(598, 522 + $g_iMidOffsetY) ; get cost
 				$g_aUpgradeResourceCostDuration[2] = getHeroUpgradeTime(578, 465 + $g_iMidOffsetY) ; get duration
 			Case Else
-				$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 460, 510 + $g_iBottomOffsetYFixed, 500, 550 + $g_iBottomOffsetYFixed) ; get resource ; Resolution changed
+				$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 460, 510 + $g_iBottomOffsetYFixed, 500, 550 + $g_iBottomOffsetYFixed) ; get resource ; Resolution changed ; RC Done
 				$g_aUpgradeResourceCostDuration[1] = getResourcesBonus(366, 487 + $g_iMidOffsetY) ; get cost
 				$g_aUpgradeResourceCostDuration[2] = getBldgUpgradeTime(195, 307 + $g_iMidOffsetY) ; get duration
 		EndSwitch

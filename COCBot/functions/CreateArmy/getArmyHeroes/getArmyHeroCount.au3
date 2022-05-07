@@ -495,7 +495,7 @@ EndFunc   ;==>LabGuiDisplay
 #CE - xbebenk - Team AIO Mod++
 
 Func HideShields($bHide = False)
-	Local Static $ShieldState[25]
+	Local Static $ShieldState[30]
 	Local $counter
 	If $bHide = True Then
 		$counter = 0
