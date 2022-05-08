@@ -177,7 +177,7 @@ Func CheckWarTime(ByRef $sResult, ByRef $bResult, $bReturnFrom = True) ; return 
 	EndIf
 
 	Local $sDirectory = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\WarPage\Window"
-	If _WaitForCheckImg($sDirectory, "339, 13, 847, 673") Then ; Check Clan War Leage Result [X] or View Map.
+	If _WaitForCheckImg($sDirectory, "339, 13, 847, 585") Then ; Check Clan War Leage Result [X] or View Map. ; Resolution changed
 		Click($g_aImageSearchXML[0][1], $g_aImageSearchXML[0][2])
 		SetLog("War is finished.", $COLOR_WARNING)
 		If RandomSleep(1000) Then Return False

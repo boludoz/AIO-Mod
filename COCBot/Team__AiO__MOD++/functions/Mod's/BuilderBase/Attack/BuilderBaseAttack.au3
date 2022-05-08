@@ -201,10 +201,10 @@ EndFunc   ;==>CheckAttackBtn
 Func isOnVersusBattleWindow()
 	If Not $g_bRunState Then Return
 
-	Local $aOkayBTN = [664, 465, 0xD9F481, 30]
-	Local $aIsAttackBB = [550, 345, 0xFEFFFF, 20]
-	Local $aOnVersusBattleWindow = [375, 245, 0xE8E8E0, 20]
-	Local $aFindBattle = [592, 301, 0xFFC949, 30]
+	Local $aOkayBTN = [664, 465 + $g_iBottomOffsetYFixed, 0xD9F481, 30] ; Resolution changed
+	Local $aIsAttackBB = [550, 345 + $g_iMidOffsetYFixed, 0xFEFFFF, 20] ; Resolution changed
+	Local $aOnVersusBattleWindow = [375, 245 + $g_iMidOffsetYFixed, 0xE8E8E0, 20] ; Resolution changed
+	Local $aFindBattle = [592, 301 + $g_iMidOffsetYFixed, 0xFFC949, 30] ; Resolution changed
 
 	If _Wait4PixelArray($aOnVersusBattleWindow) Then
 		If _Wait4PixelArray($aFindBattle) Then
@@ -225,7 +225,7 @@ Func BuilderBaseAttackOppoWait()
 	Local $iWait = 180000 ; 3 min
 	Local $hTimer = TimerInit()
 	Local $iErrorLoop = 0
-	Local $aIsAttackBB = [550, 345, 0xFEFFFF, 20]
+	Local $aIsAttackBB = [550, 345 + $g_iMidOffsetYFixed, 0xFEFFFF, 20] ; Resolution changed
 	Local $i = 0, $hResultColor = 0x000000
 	If _CheckPixel($aIsAttackBB, True) Then
 		Do

@@ -28,7 +28,7 @@ Func SwitchBetweenBases($bCheckMainScreen = True)
 			$bIsOnBuilderBase = True
 			$sTile = "BoatBuilderBase"
 			$sTileDir = $g_sImgBoatBB
-			$sRegionToSearch = "487,44,708,242"
+			$sRegionToSearch = GetDiamondFromComma(487, 22, 708, 242 + $g_iBottomOffsetYFixed)
 			If $g_bStayOnBuilderBase = True Then Return True
 
 		Else
@@ -46,17 +46,17 @@ Func SwitchBetweenBases($bCheckMainScreen = True)
 			$bIsOnBuilderBase = False
 			$sTile = "BoatNormalVillage"
 			$sTileDir = $g_sImgBoat
-			$sRegionToSearch = "66,432,388,627"
+			$sRegionToSearch = GetDiamondFromComma(66, 432 + $g_iBottomOffsetYFixed, 388, 627 + $g_iBottomOffsetYFixed)
 			If $g_bStayOnBuilderBase = False Then Return True
 		EndIf
 		
 		 ; Stop hitting the stone like a monkey in search of money and force the zoomout!
 		If $i = 1 Then $g_bSkipFirstZoomout = False
 		ZoomOut()
-		
+
 		If _Sleep(1000) Then Return
 		If Not $g_bRunState Then Return
-		$aButtonCoords = decodeSingleCoord(FindImageInPlace($sTile, $sTileDir, $sRegionToSearch))
+		$aButtonCoords = decodeSingleCoord(findMultiple($sTileDir, $sRegionToSearch, $sRegionToSearch, 0, 1000, 0, "objectname,objectpoints", True))
 		If UBound($aButtonCoords) > 1 Then
 			SetLog("[" & $i & "] Going to " & $sSwitchTo, $COLOR_INFO)
 			ClickP($aButtonCoords)

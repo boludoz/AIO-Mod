@@ -321,14 +321,14 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 		If Not $g_bRunState Then Return
 		If RandomSleep(250) Then Return
 
-		If Not _WaitForCheckImg($g_sImgCustomArmyBB, "0,681,860,728", "ChangeTDis") Then
+		If Not _WaitForCheckImg($g_sImgCustomArmyBB, "0,593,860,640", "ChangeTDis") Then ; Resolution changed
 			Setlog("_WaitForCheckImg Error at Camps!", $COLOR_ERROR)
 			$iAvoidInfLoop += 1
 			If Not $g_bRunState Then Return
 			ContinueLoop
 		EndIf
 		
-		$aAttackBar = decodeSingleCoord(findImageInPlace($sMissingCamp, $g_sImgDirBBTroops & "\" & $sMissingCamp & "*", "0,523(861,615)", True))
+		$aAttackBar = decodeSingleCoord(findImageInPlace($sMissingCamp, $g_sImgDirBBTroops & "\" & $sMissingCamp & "*", "0,542,860,644", True))
 		If UBound($aAttackBar) >= 2 Then
 			; If The item is The Troop that We Missing
 			If RandomSleep(250) Then Return

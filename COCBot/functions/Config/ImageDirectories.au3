@@ -40,7 +40,7 @@ Global Const $g_sImgCrossObs = @ScriptDir & "\imgxml\other\Cross*"
 #Region Main Village
 Global $g_sImgCollectRessources = @ScriptDir & "\imgxml\Resources\Collect"
 Global $g_sImgCollectLootCart = @ScriptDir & "\imgxml\Resources\LootCart*"
-Global $g_sImgBoat = @ScriptDir & "\imgxml\Boat\BoatNormalVillage*.xml"
+Global $g_sImgBoat = @ScriptDir & "\imgxml\Boat\BoatNormalVillage\" ; Custom Team - Team AIO Mod++
 Global $g_sImgZoomOutDir = @ScriptDir & "\imgxml\village\NormalVillage\"
 Global $g_sImgCheckWallDir = @ScriptDir & "\imgxml\Walls"
 Global $g_sImgClearTombs = @ScriptDir & "\imgxml\Resources\Tombs"
@@ -72,7 +72,7 @@ Global $g_sImgSTProgress = @ScriptDir & "\imgxml\SuperTroops\Progress\Progress*.
 
 #Region Builder Base
 Global $g_sImgCollectRessourcesBB = @ScriptDir & "\imgxml\Resources\BuildersBase\Collect"
-Global $g_sImgBoatBB = @ScriptDir & "\imgxml\Boat\BoatBuilderBase*.xml"
+Global $g_sImgBoatBB = @ScriptDir & "\imgxml\Boat\BoatBuilderBase\" ; Custom Team - Team AIO Mod++
 Global $g_sImgZoomOutDirBB = @ScriptDir & "\imgxml\village\BuilderBase\"
 Global $g_sImgStartCTBoost = @ScriptDir & "\imgxml\Resources\BuildersBase\ClockTower\ClockTowerAvailable*.xml"
 Global $g_sImgCleanBBYard = @ScriptDir & "\imgxml\Resources\ObstaclesBB"

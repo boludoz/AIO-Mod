@@ -16,18 +16,9 @@
 Func GetAttackBarBB($bRemaining = False)
 	local $iTroopBanners = 640 ; y location of where to find troop quantities
 	local $iTroopBannersBig = 633 ; y location of where to find troop quantities big
-	local $aSlot1 = [85, 640] ; location of first slot
 	local $iSlotOffset = 73 ; slots are 73 pixels apart
 	local $iBarOffset = 66 ; 66 pixels from side to attack bar
 	
-	; testing troop count logic
-	;PureClickP($aSlot1)
-	;local $iTroopCount = Number(getTroopCountSmall($aSlot1[0], $aSlot1[1]))
-	;If $iTroopCount == 0 Then $iTroopCount = Number(getTroopCountBig($aSlot1[0], $aSlot1[1]-2))
-	;SetLog($iTroopCount)
-	;$iTroopCount = Number(getTroopCountSmall($aSlot1[0] + 144, $aSlot1[1]))
-	;SetLog($iTroopCount)
-
 	local $aBBAttackBar[0][5]
 	#comments-start
 		$aAttackBar[n][8]
@@ -38,7 +29,7 @@ Func GetAttackBarBB($bRemaining = False)
 		[n][4] = The Amount
 	#comments-end
 
-	local $sSearchDiamond = GetDiamondFromRect("0,542,860,644") ; Resolution changed
+    local $sSearchDiamond = GetDiamondFromRect("0,542,860,644") ; Resolution fixed
 	local $aBBAttackBarResult = findMultiple($g_sImgDirBBTroops, $sSearchDiamond, $sSearchDiamond, 0, 1000, 0, "objectname,objectpoints", True)
 	
 	If Not $g_bRunState Then Return ; Stop Button
@@ -62,8 +53,8 @@ Func GetAttackBarBB($bRemaining = False)
 			Local $iSlot = Int(($aTempCoords[0] - $iBarOffset) / $iSlotOffset)
 			Local $iCount = 1
 			If String($aTroop[0]) <> "Machine" Then 
-				local $iCount = Number(_getTroopCountSmall($aTempCoords[0], $iTroopBanners))
-				If $iCount < 1 Then $iCount = Number(_getTroopCountBig($aTempCoords[0], $iTroopBannersBig))
+				local $iCount = Number(_getTroopCountSmall($aTempCoords[0], $iTroopBanners + $g_iBottomOffsetYFixed)) ; Fixed resolution
+				If $iCount < 1 Then $iCount = Number(_getTroopCountBig($aTempCoords[0], $iTroopBannersBig + $g_iBottomOffsetYFixed)) ; Fixed resolution
 				If $iCount < 1 Then
 					If $bRemaining = False Then SetLog("Could not get count for " & $aTroop[0] & " in slot " & String($iSlot), $COLOR_ERROR)
 					ContinueLoop

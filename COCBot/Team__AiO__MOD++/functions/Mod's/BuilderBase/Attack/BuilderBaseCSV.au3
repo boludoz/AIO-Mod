@@ -781,14 +781,14 @@ Func BattleIsOver()
 
 		TriggerMachineAbility()
 
-		Local $iDamage = Number(getOcrOverAllDamage(780, 587))
+		Local $iDamage = Number(getOcrOverAllDamage(780, 587 + $g_iBottomOffsetYFixed))  ; Resolution changed
 		If Int($iDamage) > Int($g_iLastDamage) Then
 			$g_iLastDamage = Int($iDamage)
 			Setlog("- Total Damage: " & $g_iLastDamage & "%", $COLOR_INFO)
 		EndIf
 
 		If _CheckPixel($g_aBBBlackArts, True) Then
-			If _WaitForCheckImg($g_sImgOkButton, "345, 540, 524, 615") Then $bIsEnded = True
+			If _WaitForCheckImg($g_sImgOkButton, "345, 452, 524, 615") Then $bIsEnded = True ; Resolution changed
 			SetDebugLog("BattleIsOver | $bIsEnded : " & $bIsEnded)
 			ExitLoop
 		EndIf

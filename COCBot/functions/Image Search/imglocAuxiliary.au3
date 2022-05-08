@@ -89,6 +89,29 @@ Func decodeMultipleCoords($coords, $iDedupX = Default, $iDedupY = Default, $iSor
 EndFunc   ;==>decodeMultipleCoords
 
 Func decodeSingleCoord($coords)
+	#Region - Custom fix - Team AIO Mod++
+	If UBound($coords) > 0 And not @error Then
+		Local $aArray = $coords[0]
+		; _ArrayDisplay($aArray)
+		If UBound($aArray) > 0 And not @error Then
+			For $sIn In $aArray
+				; SetLog($sIn)
+				If StringInStr($sIn, ",") > 0 Then
+					; SetLog($sIn)
+					Local $aSplit = StringSplit2D($sIn, ",", "|", True)
+					; _ArrayDisplay($aSplit)
+					If UBound($aSplit, $UBOUND_COLUMNS) > 0 And not @error Then
+						; SetlOG("OK")
+						Local $aReturn[2] = [$aSplit[0][0], $aSplit[0][1]]
+						; _ArrayDisplay($aReturn)
+						Return $aReturn
+					EndIf
+				EndIf
+			Next
+		EndIf
+	EndIf
+	#EndRegion - Custom fix - Team AIO Mod++
+
 	;returns array with 2 coordinates 0=x, 1=y
 	Local $aCoordsSplit = StringSplit($coords, ",", $STR_NOCOUNT)
 	If UBound($aCoordsSplit) > 1 Then
@@ -599,7 +622,7 @@ Func GetDiamondFromArray($aRectArray)
 EndFunc   ;==>GetDiamondFromArray
 
 #Region - Custom - Team AIO Mod++
-Func GetDiamondRectComma($iX = -1, $iY = -1, $iEndX = $g_iGAME_WIDTH, $iEndY = $g_iGAME_HEIGHT)
+Func GetDiamondFromComma($iX = -1, $iY = -1, $iEndX = $g_iGAME_WIDTH, $iEndY = $g_iGAME_HEIGHT)
 
 	If $iX = -1 Or $iY = -1 Or $iEndX = -1 Or $iEndY = -1 Then
 		SetDebugLog("GetDiamondRectComma: Bad input!", $COLOR_ERROR)
