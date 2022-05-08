@@ -328,7 +328,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 			ContinueLoop
 		EndIf
 		
-		$aAttackBar = decodeSingleCoord(findImageInPlace($sMissingCamp, $g_sImgDirBBTroops & "\" & $sMissingCamp & "*", "0,542,860,644", True))
+		$aAttackBar = decodeSingleCoord(findImageInPlace($sMissingCamp, $g_sImgDirBBTroops & "\" & $sMissingCamp & "*", "0,454,860,556", True)) ; Fixed resolution
 		If UBound($aAttackBar) >= 2 Then
 			; If The item is The Troop that We Missing
 			If RandomSleep(250) Then Return

@@ -29,7 +29,7 @@ Func QuickTrain($bPreTrainFlag = $g_bDoubleTrain) ; Custom train - Team AIO Mod+
 
 	Local $iStep = 1
 	While 1
-		Local $avTroopCamp = GetCurrentArmy(48, 160)
+		Local $avTroopCamp = GetCurrentArmy(48, 160 + $g_iMidOffsetYFixed)
 		SetLog("Checking Troop tab: " & $avTroopCamp[0] & "/" & $avTroopCamp[1] * 2)
 		If $avTroopCamp[1] = 0 Then ExitLoop
 
@@ -81,7 +81,7 @@ Func QuickTrain($bPreTrainFlag = $g_bDoubleTrain) ; Custom train - Team AIO Mod+
 
 		Local $Step = 1, $iUnbalancedSpell = 0
 		While 1
-			Local $aiSpellCamp = GetCurrentArmy(43, 160)
+			Local $aiSpellCamp = GetCurrentArmy(43, 160 + $g_iMidOffsetYFixed)
 			SetLog("Checking Spell tab: " & $aiSpellCamp[0] & "/" & $aiSpellCamp[1] * 2)
 			If $aiSpellCamp[1] > $g_iTotalQuickSpells Then
 				SetLog("Unbalance total quick spell vs actual spell capacity: " & $g_iTotalQuickSpells & "/" & $aiSpellCamp[1])
@@ -146,7 +146,7 @@ Func QuickTrain($bPreTrainFlag = $g_bDoubleTrain) ; Custom train - Team AIO Mod+
 
 		Local $iStep = 0
 		While 1
-			Local $aiSiegeMachineCamp = GetCurrentArmy(56, 160)
+			Local $aiSiegeMachineCamp = GetCurrentArmy(56, 160 + $g_iMidOffsetYFixed)
 			SetLog("Checking siege machine tab: " & $aiSiegeMachineCamp[0] & "/" & $aiSiegeMachineCamp[1] * 2)
 
 			If $aiSiegeMachineCamp[0] <= 0 Then ;0/6
@@ -415,7 +415,7 @@ Func CheckQuickTrainTroop()
 			
 			; cross check with army camp
 			If _ArrayMax($g_aiArmyQuickTroops) > 0 Then
-				Local $TroopCamp = GetCurrentArmy(48, 160)
+				Local $TroopCamp = GetCurrentArmy(48, 160 + $g_iMidOffsetYFixed)
 				$iTroopCamp = $TroopCamp[1] * 2
 				If $TempTroopTotal <> $TroopCamp[0] Then
 					SetLog("Error reading troops in army setting (" & $TempTroopTotal & " vs " & $TroopCamp[0] & ")", $COLOR_ERROR)
@@ -426,7 +426,7 @@ Func CheckQuickTrainTroop()
 				EndIf
 			EndIf
 			If _ArrayMax($g_aiArmyQuickSpells) > 0 Then
-				Local $aiSpellCamp = GetCurrentArmy(146, 160)
+				Local $aiSpellCamp = GetCurrentArmy(146, 160 + $g_iMidOffsetYFixed)
 				$iSpellCamp = $aiSpellCamp[1] * 2
 				If $TempSpellTotal <> $aiSpellCamp[0] Then
 					SetLog("Error reading spells in army setting (" & $TempSpellTotal & " vs " & $aiSpellCamp[0] & ")", $COLOR_ERROR)
@@ -437,7 +437,7 @@ Func CheckQuickTrainTroop()
 				EndIf
 			EndIf
 			If _ArrayMax($g_aiArmyQuickSiegeMachines) > 0 Then
-				Local $aiSiegeCamp = GetCurrentArmy(236, 160)
+				Local $aiSiegeCamp = GetCurrentArmy(236, 160 + $g_iMidOffsetYFixed)
 				$iSiegeMachineCamp = $aiSiegeCamp[1] * 2
 				If $TempSiegeTotal <> $aiSiegeCamp[0] Then
 					SetLog("Error reading siege machines in army setting (" & $TempSiegeTotal & " vs " & $aiSiegeCamp[0] & ")", $COLOR_ERROR)

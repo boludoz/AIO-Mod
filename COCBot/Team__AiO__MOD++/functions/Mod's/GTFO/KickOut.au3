@@ -31,7 +31,7 @@ Func MainKickout()
 			SetLog("Donated CAP: " & $g_iTxtDonatedCap & " /Received CAP: " & $g_iTxtReceivedCap & " /Kick Spammers: " & $g_bChkKickOutSpammers, $COLOR_INFO)
 			For $Rank = 0 To 9
 
-				#Region - Nucleus
+				#Region - Core
 				If RandomSleep(1500) Then Return
 
 				Local $aXPStar = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\KickOut", 0, "140, 123, 190, 579", Default, "Star", True, 44) ; Resolution changed
@@ -128,12 +128,12 @@ Func MainKickout()
 
 					EndIf
 				Next
-				#EndRegion - Nucleus
+				#EndRegion - Core
 			Next
 			If $g_iTxtKickLimit >= $Number2Kick Then Return
 			Click(825, 5, 1)     ; Exit From Clan page
 		Else
-			If _ColorCheck(_GetPixelColor(329, 362), Hex(0x2D9FF9, 6), 20) Then CloseClanChat()
+			If _ColorCheck(_GetPixelColor(329, 362 + $g_iMidOffsetYFixed), Hex(0x2D9FF9, 6), 20) Then CloseClanChat() ; RC Done
 			ClickAway("Right", True, 2)
 			CheckMainScreen()
 		EndIf
@@ -179,22 +179,22 @@ Func OpenClanPage()
 
 	SetLog(" ## OpenClanPage ## ", $COLOR_DEBUG)
 	; Click Info Profile Button
-	Click(Random(20, 59, 1), Random(10, 60, 1), 1, 0, "#0222")
+	Click(Random(20, 59, 1), Random(10, 60, 1) + $g_iMidOffsetYFixed, 1, 0, "#0222")
 	If _Sleep(2500) Then Return
 
 	; Check the '[X]' tab region
-	If _Wait4Pixel(811, 81, 0xF02227, 25, 4000) Then
+	If _Wait4Pixel(811, 81 + $g_iMidOffsetYFixed, 0xF02227, 25, 4000) Then
 
 		; Click on Clan Tab
-		Click(Random(278, 419, 1), Random(62, 103, 1), 1)
+		Click(Random(278, 419, 1), Random(62, 103, 1) + $g_iMidOffsetYFixed, 1)
 		
 		If _Wait4Pixel(348, 64, 0x928C82, 25, 4000) Then
 	
 			; Click on Home Village
-			If Not _Wait4Pixel(358, 125, 0xC9C7BA, 25, 500) Then Click(Random(148, 410, 1), Random(122, 149, 1), 1)
+			If Not _Wait4Pixel(358, 125 + $g_iMidOffsetYFixed, 0xC9C7BA, 25, 500) Then Click(Random(148, 410, 1), Random(122, 149, 1), 1)
 		
 			; Clan Edit Button
-			Local $aCheckEditButton[4] = [419, 332, 0xD7F37F, 10]
+			Local $aCheckEditButton[4] = [419, 332 + $g_iMidOffsetYFixed, 0xD7F37F, 10]
 			If RandomSleep(500) Then Return
 		
 			If Not _ColorCheck(_GetPixelColor($aCheckEditButton[0], $aCheckEditButton[1], True), Hex($aCheckEditButton[2], 6), $aCheckEditButton[3]) = True Then

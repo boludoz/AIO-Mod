@@ -99,7 +99,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		;;;;;;;##### 1- Another device #####;;;;;;;
 		$Result = getOcrReloadMessage(184, 325 + $g_iMidOffsetY, "Another Device OCR:") ; OCR text to find Another device message
 		If StringInStr($Result, "device", $STR_NOCASESENSEBASIC) Or _
-				UBound(decodeSingleCoord(FindImageInPlace("Device", $g_sImgAnotherDevice, "220,330(130,60)", False))) > 1 Then
+				UBound(decodeSingleCoord(FindImageInPlace("Device", $g_sImgAnotherDevice, "220,286(130,60)", False))) > 1 Then ; Fixed resolution
 			If TestCapture() Then Return "Another Device has connected"
 			If $g_iAnotherDeviceWaitTime > 3600 Then
 				SetLog("Another Device has connected, waiting " & Floor(Floor($g_iAnotherDeviceWaitTime / 60) / 60) & " hours " & Floor(Mod(Floor($g_iAnotherDeviceWaitTime / 60), 60)) & " minutes " & Floor(Mod($g_iAnotherDeviceWaitTime, 60)) & " seconds", $COLOR_ERROR)
@@ -119,7 +119,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		EndIf
 
 		;;;;;;;##### 2- Take a break #####;;;;;;;
-		If UBound(decodeSingleCoord(FindImageInPlace("Break", $g_sImgPersonalBreak, "165,287,335,335", False))) > 1 Then ; used for all 3 different break messages
+		If UBound(decodeSingleCoord(FindImageInPlace("Break", $g_sImgPersonalBreak, "165,243,335,291", False))) > 1 Then ; used for all 3 different break messages ; Fixed resolution
 			SetLog("Village must take a break, wait", $COLOR_ERROR)
 			If TestCapture() Then Return "Village must take a break"
 			PushMsg("TakeBreak")
@@ -132,11 +132,11 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 
 		;;;;;;;##### Connection Lost & OoS & Inactive & Maintenance #####;;;;;;;
 		Select
-			Case UBound(decodeSingleCoord(FindImageInPlace("AnyoneThere", $g_sImgAnyoneThere, "440,340,580,390", False))) > 1 ; Inactive only
+			Case UBound(decodeSingleCoord(FindImageInPlace("AnyoneThere", $g_sImgAnyoneThere, "440,296,580,346", False))) > 1 ; Inactive only ; Fixed resolution
 				SetLog("Village was Inactive, Reloading CoC", $COLOR_ERROR)
 				If $g_bForceSinglePBLogoff Then $g_bGForcePBTUpdate = True
 				Return checkObstacles_ReloadCoC($aReloadButton, "#0128", $bRecursive) ;Click on reload button
-			Case _CheckPixel($aIsConnectLost, $g_bNoCapturePixel) Or UBound(decodeSingleCoord(FindImageInPlace("ConnectionLost", $g_sImgConnectionLost, "160,300,700,450", False))) > 1 ; Connection Lost
+			Case _CheckPixel($aIsConnectLost, $g_bNoCapturePixel) Or UBound(decodeSingleCoord(FindImageInPlace("ConnectionLost", $g_sImgConnectionLost, "160,256,700,362", False))) > 1 ; Connection Lost ; Fixed resolution
 				;  Add check for banned account :(
 				$Result = getOcrReloadMessage(171, 358 + $g_iMidOffsetY, "Check Obstacles OCR 'policy at super'=") ; OCR text for "policy at super"
 				If StringInStr($Result, "policy", $STR_NOCASESENSEBASIC) Then
@@ -157,17 +157,17 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 					If Not $bRecursive Then OpenCoC()
 					Return True
 				EndIf
-			Case _CheckPixel($aIsCheckOOS, $g_bNoCapturePixel) Or (UBound(decodeSingleCoord(FindImageInPlace("OOS", $g_sImgOutOfSync, "355,335,435,395", False, $g_iAndroidLollipop))) > 1) ; Check OoS
+			Case _CheckPixel($aIsCheckOOS, $g_bNoCapturePixel) Or (UBound(decodeSingleCoord(FindImageInPlace("OOS", $g_sImgOutOfSync, "355,291,435,351", False, $g_iAndroidLollipop))) > 1) ; Check OoS ; Fixed resolution
 				SetLog("Out of Sync Error, Reloading CoC", $COLOR_ERROR)
-			Case (UBound(decodeSingleCoord(FindImageInPlace("ImportantNotice", $G_sImgImportantNotice, "150,250,430,320", False))) > 1)
+			Case (UBound(decodeSingleCoord(FindImageInPlace("ImportantNotice", $G_sImgImportantNotice, "150,206,430,276", False))) > 1) ; Fixed resolution
 				SetLog("Found the 'Important Notice' window, closing it", $COLOR_INFO)
 			Case Else
 				;  Add check for game update and Rate CoC error messages
 				If $g_bDebugImageSave Then SaveDebugImage("ChkObstaclesReloadMsg_", False) ; debug only
 				;$Result = getOcrRateCoc(228, 390 + $g_iMidOffsetY, "Check Obstacles getOCRRateCoC= ")
-				Local $sRegion = "220,420(60,25)"
+				Local $sRegion = "220,360(60,25)" ; Fixed resolution
 				If $g_iAndroidVersionAPI >= $g_iAndroidLollipop Then
-					$sRegion = "555,400(60,25)"
+					$sRegion = "555,340(60,25)" ; Fixed resolution
 				EndIf
 				$Result = decodeSingleCoord(FindImageInPlace("RateNever", $g_sImgAppRateNever, $sRegion, False, True))
 				If UBound($Result) > 1 Then
@@ -220,8 +220,8 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 	EndIf
 	
 	; Custom Maintenance - Team AIO Mod++
-	If UBound(decodeSingleCoord(FindImageInPlace("Maintenance", $g_sImgMaintenance, "65,545,785,635", False))) > 1 Then ; Maintenance Break
-		$Result = getOcrMaintenanceTime(310, 575, "Check Obstacles OCR Maintenance Break=")         ; OCR text to find wait time
+	If UBound(decodeSingleCoord(FindImageInPlace("Maintenance", $g_sImgMaintenance, "65,457,785,547", False))) > 1 Then ; Maintenance Break ; Fixed resolution
+		$Result = getOcrMaintenanceTime(310, 575 + $g_iBottomOffsetYFixed, "Check Obstacles OCR Maintenance Break=")         ; OCR text to find wait time ; Fixed resolution
 		Local $iMaintenanceWaitTime = Number(StringRegExpReplace($Result, "\D", ""))
 		$iMaintenanceWaitTime = ($iMaintenanceWaitTime < 4) ? (Round(Random(4, 8) * 60000)) : ($iMaintenanceWaitTime * 60000)
 		SetLog("Maintenance Break, waiting: " & $iMaintenanceWaitTime / 60000 & " minutes", $COLOR_ERROR)
@@ -246,11 +246,11 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 	CheckLoginWithSupercellID()
 
 	; optional game update
-	If UBound(decodeSingleCoord(FindImageInPlace("OptUpdateCoC", $g_sImgOptUpdateCoC, "470,412,790,572", False))) > 1 Then ; Found Optional Game Update Message
+	If UBound(decodeSingleCoord(FindImageInPlace("OptUpdateCoC", $g_sImgOptUpdateCoC, "470,324,790,528", False))) > 1 Then ; Found Optional Game Update Message ; Click No Thanks
 		SetLog("Found Optional Game Update - Clicking No Thanks", $COLOR_INFO)
 
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-		PureClick(520, 475, 1, 0) ; Click No Thanks
+		PureClick(520, 475 + $g_iBottomOffsetYFixed, 1, 0) ; Fixed resolution
 		$g_bMinorObstacle = True
 		
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
@@ -280,7 +280,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		Return False
 	EndIf
 	; Custom fix - Team AIO Mod++
-	Local $aiCross = decodeSingleCoord(FindImageInPlace("Cross", $g_sImgCrossObs, "790,10,855,105", False))
+	Local $aiCross = decodeSingleCoord(FindImageInPlace("Cross", $g_sImgCrossObs, "790,10,855,105", False)) ; Fixed resolution
 	If UBound($aiCross) > 1 And not @error Then ; Clicks X
 		SetDebugLog("checkObstacles: Found Window with Close Button to close")
 		PureClickP($aiCross, 1, 0, "#0134") ;Clicks X
@@ -334,7 +334,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		EndIf
 	EndIf
 
-	Local $CSFoundCoords = decodeSingleCoord(FindImageInPlace("CocStopped", $g_sImgCocStopped, "250,358,618,432", False))
+	Local $CSFoundCoords = decodeSingleCoord(FindImageInPlace("CocStopped", $g_sImgCocStopped, "250,314,618,388", False)) ; Fixed resolution
 	If UBound($CSFoundCoords) > 1 Then
 		SetLog("CoC Has Stopped Error .....", $COLOR_ERROR)
 		If TestCapture() Then Return "CoC Has Stopped Error ....."
@@ -433,7 +433,7 @@ EndFunc   ;==>BanMsgBox
 Func checkObstacles_Network($bForceCapture = False, $bReloadCoC = True)
 	Static $hCocReconnectingTimer = 0 ; TimerHandle of first CoC reconnecting animation
 
-	If UBound(decodeSingleCoord(FindImageInPlace("CocReconnecting", $g_sImgCocReconnecting, "420,355,440,375", $bForceCapture))) > 1 Then
+	If UBound(decodeSingleCoord(FindImageInPlace("CocReconnecting", $g_sImgCocReconnecting, "420,311,440,331", $bForceCapture))) > 1 Then ; Fixed resolution
 		If $hCocReconnectingTimer = 0 Then
 			SetLog("Network Connection lost...", $COLOR_ERROR)
 			$hCocReconnectingTimer = __TimerInit()

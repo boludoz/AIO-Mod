@@ -154,7 +154,7 @@ Func CheckQueueSieges($bGetQuantity = True, $bSetLog = True, $x = 839, $bQtyWSlo
 
 	Local $Dir = @ScriptDir & "\imgxml\ArmyOverview\SiegeMachinesQueued"
 
-	Local $aSearchResult = SearchArmy($Dir, 18, 182, $x, 261, $bGetQuantity ? "queue" : "")
+	Local $aSearchResult = SearchArmy($Dir, 18, 182 + $g_iMidOffsetYFixed, $x, 261 + $g_iMidOffsetYFixed, $bGetQuantity ? "queue" : "")
 	ReDim $aResult[UBound($aSearchResult)]
 
 	If $aSearchResult[0][0] = "" Then

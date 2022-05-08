@@ -28,7 +28,7 @@ Func LookAtWarLog()
 				If QuickMIS("BC1", $g_sImgHumanizationWarLog) Then ; October Update Changed
 					Click($g_iQuickMISWOffSetX, $g_iQuickMISWOffSetY) ; open war log
 					If randomSleep(500) Then Return
-					Click(258, 135) ;Click Classic War Log
+					Click(258, 135 + $g_iMidOffsetYFixed) ;Click Classic War Log
 					If randomSleep(500) Then Return
 					SetLog("Let's Scrolling The War Log ...", $COLOR_OLIVE)
 					Scroll(Random(1, 3, 1)) ; scroll the war log
@@ -262,7 +262,7 @@ EndFunc   ;==>WatchWarReplays
 ;================================================================================================================================
 
 Func WatchDefense()
-	Click(40, 150) ; open messages tab - defenses tab
+	Click(40, 150 + $g_iMidOffsetYFixed) ; open messages tab - defenses tab
 	If randomSleep(1500) Then Return
 
 	If IsMessagesReplayWindow() Then
@@ -319,7 +319,7 @@ Func WatchDefense()
 EndFunc   ;==>WatchDefense
 
 Func WatchAttack()
-	Click(40, 150) ; open messages tab - defenses tab
+	Click(40, 150 + $g_iMidOffsetYFixed) ; open messages tab - defenses tab
 	If randomSleep(1500) Then Return
 
 	If IsMessagesReplayWindow() Then
@@ -375,75 +375,6 @@ Func WatchAttack()
 		SetLog("Error When Trying To Open Replays Menu ... Skipping ...", $COLOR_WARNING)
 	EndIf
 EndFunc   ;==>WatchAttack
-
-; #FUNCTION# ====================================================================================================================
-; Name ..........: Bot Humanization / BotHumanization.au3
-; Description ...: This file contains all functions of Bot Humanization feature
-; Syntax ........: ---
-; Parameters ....: ---
-; Return values .: ---
-; Author ........: RoroTiti
-; Modified ......: TheRevenor (22.10.2016), RoroTiti (08.05.2017), ProMac (02.2017), Chilly-Chill (08.2019)
-; Remarks .......: This file is part of MyBotRun. Copyright 2018
-;                  MyBotRun is distributed under the terms of the GNU GPL
-; Related .......: ---
-; Link ..........: https://www.mybot.run
-; Example .......: ---
-;================================================================================================================================
-
-#cs; ================================================== RANDOM CLICK/SLEEP PART ================================================== ;
-Func Click($x, $y, $times = 1, $speed = 0, $debugtxt = "")
-
-	; !!! Not original function but randomization calculation which is linked to original function renamed FClick !!!
-	; !!! Still compatible with all original function parameters !!!
-
-	If $g_bUseAltRClick = True Then
-		Local $xclick = Random($x - 5, $x, 1)
-		Local $yclick = Random($y, $y + 5, 1)
-		If $xclick <= 0 Or $xclick >= 860 Then $xclick = $x ; Out Of Screen protection
-		If $yclick <= 0 Or $yclick >= 650 + ($g_iMidOffsetY) Then $yclick = $y ; Out Of Screen protection
-		FClick($xclick, $yclick, $times, $speed, $debugtxt)
-	Else
-		FClick($x, $y, $times, $speed, $debugtxt)
-	EndIf
-
-EndFunc   ;==>Click
-
-Func PureClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
-
-	; !!! Not original function but randomization calculation which is linked to original function renamed FPureClick !!!
-	; !!! Still compatible with all original function parameters !!!
-
-	If $g_bUseAltRClick = True Then
-		Local $xclick = Random($x - 5, $x, 1)
-		Local $yclick = Random($y, $y + 5, 1)
-		If $xclick <= 0 Or $xclick >= 860 Then $xclick = $x ; Out Of Screen protection
-		If $yclick <= 0 Or $yclick >= 650 + ($g_iMidOffsetY) Then $yclick = $y ; Out Of Screen protection
-		FPureClick($xclick, $yclick, $times, $speed, $debugtxt)
-	Else
-		FPureClick($x, $y, $times, $speed, $debugtxt)
-	EndIf
-
-EndFunc   ;==>PureClick
-
-Func GemClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
-
-	; !!! Not original function but randomization calculation which is linked to original function renamed FGemClick !!!
-	; !!! Still compatible with all original function parameters !!!
-
-	If $g_bUseAltRClick = True Then
-		Local $xclick = Random($x - 5, $x, 1)
-		Local $yclick = Random($y, $y + 5, 1)
-		If $xclick <= 0 Or $xclick >= 860 Then $xclick = $x ; Out Of Screen protection
-		If $yclick <= 0 Or $yclick >= 650 + ($g_iMidOffsetY) Then $yclick = $y ; Out Of Screen protection
-		FGemClick($xclick, $yclick, $times, $speed, $debugtxt)
-	Else
-		FGemClick($x, $y, $times, $speed, $debugtxt)
-	EndIf
-
-EndFunc   ;==>GemClick
-#ce; ================================================== RANDOM CLICK/SLEEP PART ================================================== ;
-; ================================================== HUMAN FUNCTIONS PART ================================================== ;
 
 Func BotHumanization()
    If Not $g_bRunState Then Return
@@ -648,7 +579,7 @@ Func LookAtRedNotifications()
 	ReturnAtHome()
 	If _ColorCheck(_GetPixelColor(50, 137, True), "F5151D", 20) Then
 		SetLog("You Have a New Message ...", $COLOR_OLIVE)
-		Click(40, 150) ; open Messages button
+		Click(40, 150 + $g_iMidOffsetYFixed) ; open Messages button
 		If randomSleep(8000, 3000) Then Return
 		Click(765, 87 + $g_iMidOffsetY) ; close window
 		If randomSleep(2000) Then Return
@@ -658,7 +589,7 @@ Func LookAtRedNotifications()
 	ReturnAtHome()
 	If _ColorCheck(_GetPixelColor(50, 76, True), "F5151D", 20) Then
 		SetLog("Let's See The Current League You Are In ...", $COLOR_OLIVE)
-		Click(40, 90) ; open Cup button
+		Click(40, 90 + $g_iMidOffsetYFixed) ; open Cup button
 		If randomSleep(4000) Then Return
 		Click(445, 580 + $g_iMidOffsetY) ; click Okay
 		If randomSleep(1500) Then Return
@@ -768,38 +699,6 @@ Func LookAtRedNotifications()
 	If $NoNotif = 7 Then SetLog("No Notification Found, Nothing To Look At ...", $COLOR_OLIVE)
 EndFunc   ;==>LookAtRedNotifications
 
-#CS
-Func CollectAchievements()
-	SetLog("Looking For Achievement To Collect ...", $COLOR_INFO)
-	ReturnAtHome()
-	If _ColorCheck(_GetPixelColor(50, 17, True), "F5151D", 20) Then
-		SetLog("WoW, Maybe An Achievement To Collect !", $COLOR_OLIVE)
-		Click(40, 40) ; open profile
-		If randomSleep(4000) Then Return
-
-		If IsClanOverview() Then
-			If QuickMIS("BC1", $g_sImgHumanizationClaimReward, 680) Then
-				Click($g_iQuickMISWOffSetX, $g_iQuickMISY)
-				SetLog("Reward Collected! Good Job Chief!", $COLOR_SUCCESS)
-				If randomSleep(3000) Then Return
-			Else
-				SetLog("No 'Claim Reward' Button Found ... Let Me Retry ...", $COLOR_ERROR)
-				If QuickMIS("BC1", $g_sImgHumanizationClaimReward, 680) Then
-					Click($g_iQuickMISWOffSetX, $g_iQuickMISY)
-					SetLog("Reward Collected! Good Job Chief!", $COLOR_SUCCESS)
-					If randomSleep(3000) Then Return
-				Else
-					SetLog("No 'Claim Reward' Button Found ... Skipping ...", $COLOR_ERROR)
-				EndIf
-			EndIf
-		Else
-			SetLog("Error When Trying To Open Profile Tab ... Skipping ...", $COLOR_WARNING)
-		EndIf
-	Else
-		SetLog("No Achievement To Collect ...", $COLOR_OLIVE)
-	EndIf
-EndFunc   ;==>CollectAchievements
-#CE
 Func Scroll($MaxScroll)
 	For $i = 0 To $MaxScroll
 		Local $x = Random(430 - 20, 430 + 20, 1)

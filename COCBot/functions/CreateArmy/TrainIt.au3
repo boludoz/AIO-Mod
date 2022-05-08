@@ -196,54 +196,10 @@ Func GetRNDName(Const $iIndex, Const $aTrainPos)
 	Return 0
 EndFunc   ;==>GetRNDName
 
-;Func GetVariable(Const $ImageToUse, Const $iIndex)
-;   Local $aTrainPos[4] = [-1, -1, -1, -1]
-; Capture the screen for comparison
-;   _CaptureRegion2(25, 375, 840, 548)
-
-;   Local $asResult = DllCallMyBot("FindTile", "handle", $g_hHBitmap2, "str", $ImageToUse, "str", "FV", "int", 1)
-
-;   If @error Then _logErrorDLLCall($g_sLibMyBotPath, @error)
-
-;   If IsArray($asResult) Then
-;	  If $asResult[0] = "0" Then
-;		 SetLog("No " & GetTroopName($iIndex) & " Icon found!", $COLOR_ERROR)
-;	  ElseIf $asResult[0] = "-1" Then
-;		 SetLog("TrainIt.au3 GetVariable(): ImgLoc DLL Error Occured!", $COLOR_ERROR)
-;	  ElseIf $asResult[0] = "-2" Then
-;		 SetLog("TrainIt.au3 GetVariable(): Wrong Resolution used for ImgLoc Search!", $COLOR_ERROR)
-;	  Else
-;		 If $g_bDebugSetlogTrain Then SetLog("String: " & $asResult[0])
-;		 Local $aResult = StringSplit($asResult[0], "|", $STR_NOCOUNT)
-;		 If UBound($aResult) > 1 Then
-;			Local $aCoordinates = StringSplit($aResult[1], ",", $STR_NOCOUNT)
-;			If UBound($aCoordinates) > 1 Then
-;			   Local $iButtonX = 25 + Int($aCoordinates[0])
-;			   Local $iButtonY = 375 + Int($aCoordinates[1])
-;			   Local $sColorToCheck = "0x" & _GetPixelColor($iButtonX, $iButtonY, $g_bCapturePixel)
-;			   Local $iTolerance = 40
-;			   Local $aTrainPos[4] = [$iButtonX, $iButtonY, $sColorToCheck, $iTolerance]
-;			   If $g_bDebugSetlogTrain Then SetLog("Found: [" & $iButtonX & "," & $iButtonY & "]", $COLOR_SUCCESS)
-;			   If $g_bDebugSetlogTrain Then SetLog("$sColorToCheck: " & $sColorToCheck, $COLOR_SUCCESS)
-;			   If $g_bDebugSetlogTrain Then SetLog("$iTolerance: " & $iTolerance, $COLOR_SUCCESS)
-;			   Return $aTrainPos
-;			Else
-;				  SetLog("Don't know how to train the troop with index " & $iIndex & " yet.")
-;			EndIf
-;		 Else
-;			SetLog("Don't know how to train the troop with index " & $iIndex & " yet..")
-;		 EndIf
-;	  EndIf
-;  Else
-;		 SetLog("Don't know how to train the troop with index " & $iIndex & " yet...")
-;   EndIf
-;   Return $aTrainPos
-;EndFunc   ;==>GetVariable
-
 Func GetVariable(Const $asImageToUse, Const $iIndex)
 	Local $aTrainPos[5] = [-1, -1, -1, -1, $eBarb]
 	; Capture the screen for comparison
-	_CaptureRegion2(25, 375, 840, 548)
+	_CaptureRegion2(25, 375 + $g_iMidOffsetYFixed, 840, 548 + $g_iMidOffsetYFixed)
 
 	Local $iError = ""
 	For $i = 1 To $asImageToUse[0]
@@ -309,14 +265,16 @@ Func GetFullNameSlot(Const $iTrainPos, Const $sTroopType)
 				$iSlotH = 101
 			Case 105 To 199 ; 2 Column
 				$iSlotH = 199
-			Case 203 To 297 ; 3 Column
+			Case 200 To 297 ; 3 Column
 				$iSlotH = 297
-			Case 302 To 395 ; 4 Column
+			Case 298 To 404 ; 4 Column
 				$iSlotH = 404
-			Case 400 To 498 ; 5 Column
+			Case 396 To 502 ; 5 Column
 				$iSlotH = 502
-			Case 499 To 597 ; 6 Column
-				$iSlotH = 597
+			Case 495 To 600 ; 6 Column
+				$isloth = 600
+			Case 593 To 698 ; 7 Column
+				$iSlotH = 698
 			Case Else
 				If _ColorCheck(_GetPixelColor($iTrainPos[0], $iTrainPos[1], True), Hex(0xd3d3cb, 6), 5) Then
 					SetLog("GetFullNameSlot(): It seems that there is no Slot for an Spell on: " & $iTrainPos[0] & "," & $iTrainPos[1] & "!", $COLOR_ERROR)
@@ -324,10 +282,10 @@ Func GetFullNameSlot(Const $iTrainPos, Const $sTroopType)
 		EndSwitch
 
 		Switch $iTrainPos[1]
-			Case 0 To 445
-				$iSlotV = 387 ; First ROW
-			Case 446 To 550 ; Second ROW
-				$iSlotV = 488
+			Case 0 To 445 + $g_iMidOffsetYFixed
+				$iSlotV = 387 + $g_iMidOffsetYFixed ; First ROW
+			Case 446 + $g_iMidOffsetYFixed To 550 + $g_iMidOffsetYFixed ; Second ROW
+				$iSlotV = 488 + $g_iMidOffsetYFixed
 		EndSwitch
 
 		Local $aSlot[4] = [$iSlotH, $iSlotV, 0x9d9d9d, 20] ; Gray [i] icon
@@ -358,10 +316,10 @@ Func GetFullNameSlot(Const $iTrainPos, Const $sTroopType)
 		EndSwitch
 
 		Switch $iTrainPos[1]
-			Case 0 To 445
-				$iSlotV = 387 ; First ROW
-			Case 446 To 550 ; Second ROW
-				$iSlotV = 488
+			Case 0 To 445 + $g_iMidOffsetYFixed
+				$iSlotV = 387 + $g_iMidOffsetYFixed ; First ROW
+			Case 446 + $g_iMidOffsetYFixed To 550 + $g_iMidOffsetYFixed ; Second ROW
+				$iSlotV = 488 + $g_iMidOffsetYFixed
 		EndSwitch
 
 		Local $aSlot[4] = [$iSlotH, $iSlotV, 0x9F9F9F, 20] ; Gray [i] icon
@@ -372,13 +330,15 @@ Func GetFullNameSlot(Const $iTrainPos, Const $sTroopType)
 
 	If $sTroopType = "Dark" Then
 		Switch $iTrainPos[0]
-			Case 440 To 517
-				$iSlotH = 517
-			Case 518 To 615
-				$iSlotH = 615
-			Case 616 To 714
+			Case 345 To 440 ; 1 Column
+				$iSlotH = 420
+			Case 440 To 540 ; 2 Column
+				$iSlotH = 518
+			Case 540 To 640 ; 3 Column
+				$iSlotH = 616
+			Case 640 To 740 ; 4 Column
 				$iSlotH = 714
-			Case 715 To 812
+			Case 740 To 840 ; 5 Column
 				$iSlotH = 812
 			Case Else
 				If _ColorCheck(_GetPixelColor($iTrainPos[0], $iTrainPos[1], True), Hex(0xd3d3cb, 6), 5) Then
@@ -387,10 +347,10 @@ Func GetFullNameSlot(Const $iTrainPos, Const $sTroopType)
 		EndSwitch
 
 		Switch $iTrainPos[1]
-			Case 0 To 445
-				$iSlotV = 397 ; First ROW
-			Case 446 To 550 ; Second ROW
-				$iSlotV = 498
+			Case 0 To 445 + $g_iMidOffsetYFixed
+				$iSlotV = 398 + $g_iMidOffsetYFixed ; First ROW
+			Case 446 + $g_iMidOffsetYFixed To 550 + $g_iMidOffsetYFixed ; Second ROW
+				$iSlotV = 498 + $g_iMidOffsetYFixed
 		EndSwitch
 
 		Local $aSlot[4] = [$iSlotH, $iSlotV, 0x9f9f9f, 20] ; Gray [i] icon

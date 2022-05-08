@@ -89,6 +89,10 @@ Func decodeMultipleCoords($coords, $iDedupX = Default, $iDedupY = Default, $iSor
 EndFunc   ;==>decodeMultipleCoords
 
 Func decodeSingleCoord($coords)
+	Return _decodeSingleCoord($coords)
+EndFunc   ;==>decodeSingleCoord
+
+Func _decodeSingleCoord($coords)
 	#Region - Custom fix - Team AIO Mod++
 	If UBound($coords) > 0 And not @error Then
 		Local $aArray = $coords[0]
@@ -119,7 +123,7 @@ Func decodeSingleCoord($coords)
 		$aCoordsSplit[1] = Int($aCoordsSplit[1])
 	EndIf
 	Return $aCoordsSplit
-EndFunc   ;==>decodeSingleCoord
+EndFunc   ;==>_decodeSingleCoord
 
 Func RetrieveImglocProperty($key, $property)
 	; Get the property

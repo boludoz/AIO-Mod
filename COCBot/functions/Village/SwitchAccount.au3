@@ -945,7 +945,7 @@ Func CheckGoogleSelectAccount($bSelectFirst = True)
 		SetDebugLog("Found open Google Accounts list pixel")
 
 		; Account List check be there, validate with imgloc
-		If UBound(decodeSingleCoord(FindImageInPlace("GoogleSelectAccount", $g_sImgGoogleSelectAccount, "180,400(90,300)", False))) > 1 Then
+		If UBound(decodeSingleCoord(FindImageInPlace("GoogleSelectAccount", $g_sImgGoogleSelectAccount, "180,312(90,300)", False))) > 1 Then ; Fixed resolution
 			; Google Account selection found
 			SetLog("Found open Google Accounts list")
 
@@ -955,7 +955,7 @@ Func CheckGoogleSelectAccount($bSelectFirst = True)
 				Return True
 			EndIf
 
-			Local $aiSelectGoogleEmail = decodeSingleCoord(FindImageInPlace("GoogleSelectEmail", $g_sImgGoogleSelectEmail, "220,80(400,600)", False))
+			Local $aiSelectGoogleEmail = decodeSingleCoord(FindImageInPlace("GoogleSelectEmail", $g_sImgGoogleSelectEmail, "220,36(400,600)", False)) ; Fixed resolution
 			If UBound($aiSelectGoogleEmail) > 1 Then
 				SetLog("   1. Click first Google Account")
 				ClickP($aiSelectGoogleEmail)
@@ -993,7 +993,7 @@ Func CheckLoginWithSupercellID()
 	If Not $g_bRunState Then Return
 
 	; Account List check be there, validate with imgloc
-	If UBound(decodeSingleCoord(FindImageInPlace("LoginWithSupercellID", $g_sImgLoginWithSupercellID, "355,705,125,30", False))) > 1 Then
+	If UBound(decodeSingleCoord(FindImageInPlace("LoginWithSupercellID", $g_sImgLoginWithSupercellID, "355,617(125,30)", False))) > 1 Then ; Fixed resolution
 		; Google Account selection found
 		SetLog("Verified Log in with Supercell ID boot screen")
 
@@ -1047,7 +1047,7 @@ Func CheckLoginWithSupercellIDScreen()
 	EndIf
 
 	; Account List check be there, validate with imgloc
-	If UBound(decodeSingleCoord(FindImageInPlace("LoginWithSupercellID", $g_sImgLoginWithSupercellID, "318,678(125,30)", False))) > 1 Then
+	If UBound(decodeSingleCoord(FindImageInPlace("LoginWithSupercellID", $g_sImgLoginWithSupercellID, "318,590(125,30)", False))) > 1 Then ; Fixed resolution
 		; Google Account selection found
 		SetLog("Verified Log in with Supercell ID boot screen for login")
 

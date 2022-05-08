@@ -125,7 +125,7 @@ Func BoostPotion($sName, $sOcrName, $aPos, ByRef $icmbBoostValue, $cmbBoostCtrl)
 		EndIf
 	EndIf
 	If $ok = True Then
-		Local $sTile = "BoostPotion_0_90.xml", $sRegionToSearch = "172,238,684,469"
+		Local $sTile = "BoostPotion_0_90.xml", $sRegionToSearch = "172,194,684,381" ; Fixed resolution
 		Local $Boost = findButton("MagicItems")
 		If UBound($Boost) > 1 Then
 			SetDebugLog("Magic Items Button X|Y = " & $Boost[0] & "|" & $Boost[1], $COLOR_DEBUG)
@@ -136,12 +136,12 @@ Func BoostPotion($sName, $sOcrName, $aPos, ByRef $icmbBoostValue, $cmbBoostCtrl)
 				SetDebugLog("Boost Potion Button X|Y = " & $Boost[0] & "|" & $Boost[1], $COLOR_DEBUG)
 				ClickP($Boost)
 				If _Sleep($DELAYBOOSTHEROES1) Then Return
-				If Not _ColorCheck(_GetPixelColor(255, 535, True), Hex(0xFFFFFF, 6), 25) Then
+				If Not _ColorCheck(_GetPixelColor(255, 535 + $g_iBottomOffsetYFixed, True), Hex(0xFFFFFF, 6), 25) Then ; Fixed resolution
 					SetLog("Cannot find/verify 'Use' Button", $COLOR_WARNING)
 					ClickAway()
 					Return False ; Exit Function
 				EndIf
-				Click(305, 556) ; Click on 'Use'
+				Click(305, 556 + $g_iBottomOffsetYFixed) ; Click on 'Use'
 				If _Sleep($DELAYBOOSTHEROES2) Then Return
 				$Boost = findButton("BoostPotionGreen")
 				If IsArray($Boost) Then
