@@ -137,7 +137,7 @@ Func IsClanInfoPage()
 		Return True
 	EndIf
 
-	Local $result = _ColorCheck(_GetPixelColor(214, 106, True), Hex(0xFFFFFF, 6), 1) And _ColorCheck(_GetPixelColor(815, 58, True), Hex(0xD80402, 6), 5) ; if are not in a clan
+	Local $result = _ColorCheck(_GetPixelColor(214, 106 + $g_iMidOffsetYFixed, True), Hex(0xFFFFFF, 6), 1) And _ColorCheck(_GetPixelColor(815, 58 + $g_iMidOffsetYFixed, True), Hex(0xD80402, 6), 5) ; if are not in a clan ; Fixed resolution
 	If $result Then
 		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("**Clan Info Window OK**", $COLOR_ACTION)
 		SetLog("Join a Clan to donate and receive troops!", $COLOR_ACTION)
@@ -240,7 +240,7 @@ Func IsPostDefenseSummaryPage($bCapture = True)
 EndFunc   ;==>IsPostDefenseSummaryPage
 
 Func IsPetHousePage($bSetLog = True, $iLoop = 30)
-	Local $aIsPetHousePage[4] = [425, 170, 0x006F5D, 10] ; green pixel under title 'Pet House'
+	Local $aIsPetHousePage[4] = [425, 170 + $g_iMidOffsetYFixed, 0x006F5D, 10] ; green pixel under title 'Pet House' ; Fixed resolution
 
 	If IsPageLoop($aIsPetHousePage, $iLoop) Then
 		If ($g_bDebugSetlog Or $g_bDebugClick) And $bSetLog Then SetLog("**Pet House Window OK**", $COLOR_ACTION)

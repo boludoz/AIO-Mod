@@ -23,11 +23,6 @@ Func TestBuilderBase()
 EndFunc   ;==>TestrunBuilderBase
 
 Func BuilderBase($bTestRun = False, $bSkipBBCG = False)
-	; If IsRequestDefense(False) And Not $g_bChkPlayBBOnly Then
-		; SetLog("Skip Builder Base Checks, Because your CC Planned to have Defense Troops.", $COLOR_INFO)
-		; Return
-	; EndIf
-
 	Local $bReturn = False
 	
 	#Region - Dates - Team AIO Mod++
@@ -303,8 +298,8 @@ Func BuilderBaseReportAttack($bSetLog = True)
 EndFunc   ;==>BuilderBaseReportAttack
 
 Func IsBuilderBaseOCR($bSetLog = True)
-	If WaitforPixel(510, 650, 630, 700, Hex(0xB3E25B, 6), 15, 3) = True Then
-		Local $sString = GetBldgUpgradeTime(404, 677)
+	If WaitforPixel(510, 650 + $g_iBottomOffsetYFixed, 630, 700 + $g_iBottomOffsetYFixed, Hex(0xB3E25B, 6), 15, 3) = True Then ; Fixed resolution
+		Local $sString = GetBldgUpgradeTime(404, 677 + $g_iBottomOffsetYFixed) ; Fixed resolution
 		If StringLen($sString) > 2 Then
 			SetLog("Next attack in  : " & $sString, $COLOR_INFO)
 			$g_sDateBuilderBase = _DateAdd('n', Round(ConvertOCRLongTime("Builder Base Bonus", $sString) * Random(1.002, 1.005)), _NowCalc())

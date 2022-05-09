@@ -95,7 +95,7 @@ Func BoostSuperTroop($bTest = False)
 		Return False
 	EndIf
 
-	Local $aBrownDown[4] = [150, 552 + $g_iMidOffsetYFixed, 0x685C50, 20] ; Resolution changed
+	Local $aBrownDown[4] = [150, 552 + $g_iBottomOffsetYFixed, 0x685C50, 20] ; Resolution changed
 
 	Local $bCheckBottom = False, $bBadTryPotion = False, $bBadTryDark = False, $bTroopCord = False, $bIsGrayed = False
 	Local $iIndex = -1, $aSuperT = -1, $aClock = -1, $aTmp = -1, $aBarD = 0, $iDist = 0, $sFilenameClock = "", $sFilenameST = ""
@@ -104,7 +104,7 @@ Func BoostSuperTroop($bTest = False)
 
 	ClickAway()
 	If IsMainPage(1) Then
-		If QuickMIS("BC1", $g_sImgBoostTroopsBarrel, 0, 0, 220, 225 + $g_iMidOffsetYFixed, True, False) Then ; Resolution changed
+		If QuickMIS("BC1", $g_sImgBoostTroopsBarrel, 0, 0, 170, 250, True, False) Then ; Resolution changed
 			If $bTest Then SetLog("Found Barrel at " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_DEBUG)
 			Click($g_iQuickMISX, $g_iQuickMISY, 1)
 			If _Sleep(1500) Then Return
@@ -126,7 +126,7 @@ Func BoostSuperTroop($bTest = False)
 
 						; Check If is boosted
 						Local $aSuperT = findMultiple($g_sImgBoostTroopsIcons, $sGetDiamondFromRect, $sGetDiamondFromRect, 0, 1000, 0, "objectname,objectlevel,objectpoints", False)
-						Local $aClock = findMultiple($g_sImgBoostTroopsClock, $sDiamond, $sDiamond, 0, 1000, 0, "objectname,objectlevel,objectpoints", False)
+						Local $aClock = findMultiple($g_sImgBoostTroopsClock, $sGetDiamondFromRect, $sGetDiamondFromRect, 0, 1000, 0, "objectname,objectlevel,objectpoints", False)
 						If UBound($aSuperT) > 0 And Not @error Then
 							For $aMatchedTroops In $aSuperT
 								If $iActive = UBound($aAlreadyChecked) Then
@@ -321,15 +321,15 @@ EndFunc   ;==>BoostSuperTroop
 
 Func FinalBoostST(ByRef $bBadTryPotion, ByRef $bBadTryDark, $bTest = False)
 
-	Local $aImgBoostBtn1[4] = [400, 525 + $g_iMidOffsetYFixed, 750, 600 + $g_iMidOffsetYFixed] ; Resolution changed
-	Local $aImgBoostBtn2[4] = [100, 375 + $g_iMidOffsetYFixed, 750, 520 + $g_iMidOffsetYFixed] ; Resolution changed
+	Local $aImgBoostBtn1[4] = [430, 485, 740, 550] ; Resolution changed
+	Local $aImgBoostBtn2[4] = [330, 400, 515, 465] ; Resolution changed
 
 	Local $bPotionAvariable = QuickMIS("BC1", $g_sImgBoostTroopsPotion, $aImgBoostBtn1[0], $aImgBoostBtn1[1], $aImgBoostBtn1[2], $aImgBoostBtn1[3], True, False)
 	Local $aClickPotion[2] = [$g_iQuickMISX + $aImgBoostBtn1[0], $g_iQuickMISY + $aImgBoostBtn1[1]]
 
 	Local $bDarkAvariable = QuickMIS("BC1", $g_sImgBoostTroopsButtons, $aImgBoostBtn1[0], $aImgBoostBtn1[1], $aImgBoostBtn1[2], $aImgBoostBtn1[3], True, False)
 	Local $aClickDark[2] = [$g_iQuickMISX + $aImgBoostBtn1[0], $g_iQuickMISY + $aImgBoostBtn1[1]]
-	$bDarkAvariable = IsDarkAvariable()
+	$bDarkAvariable = IsDarkAvariable() And $bDarkAvariable
 	Local $aResource = [$bDarkAvariable, $bPotionAvariable]
 	Local $aClick = [$aClickDark, $aClickPotion]
 	Local $iDOW = $g_iCmbSuperTroopsResources + 1
@@ -372,15 +372,15 @@ Func FinalBoostST(ByRef $bBadTryPotion, ByRef $bBadTryDark, $bTest = False)
 EndFunc   ;==>FinalBoostST
 
 Func IsDarkAvariable()
-	Return (WaitforPixel(632, 543, 688, 576, Hex(0xFF887F, 6), 15, 1) = False)
+	Return (WaitforPixel(632, 543 + $g_iBottomOffsetYFixed, 688, 576 + $g_iBottomOffsetYFixed, Hex(0xFF887F, 6), 15, 1) = False)
 EndFunc   ;==>IsDarkAvariable
 
 Func IsSTPage($iTry = 15)
-	Return WaitforPixel(428, 214, 430, 216, Hex(0xF0D028, 6), 15, $iTry)
+	Return WaitforPixel(428, 214 + $g_iMidOffsetYFixed, 430, 216 + $g_iMidOffsetYFixed, Hex(0xF0D028, 6), 15, $iTry)
 EndFunc   ;==>IsSTPage
 
 Func IsSTPageBoost($iTry = 15)
-	Return WaitforPixel(545, 165, 610, 220, Hex(0xF0D028, 6), 15, $iTry)
+	Return WaitforPixel(545, 165 + $g_iMidOffsetYFixed, 610, 220 + $g_iMidOffsetYFixed, Hex(0xF0D028, 6), 15, $iTry)
 EndFunc   ;==>IsSTPageBoost
 
 Func IsOnArea($x, $y, $x1, $y1, $iPointX, $iPointY)

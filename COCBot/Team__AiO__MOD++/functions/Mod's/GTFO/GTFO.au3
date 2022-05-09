@@ -461,7 +461,7 @@ Func ScrollUp()
 	ForceCaptureRegion()
 	Local $y = 81
 	$aScroll = _PixelSearch(293, $y, 295, 8 + $y, Hex(0xFFFFFF, 6), 10)
-	If IsArray($aScroll) And _ColorCheck(_GetPixelColor(300, 95, True), Hex(0x5da515, 6), 15) Then
+	If IsArray($aScroll) And _ColorCheck(_GetPixelColor(300, 95 + $g_iMidOffsetYFixed, True), Hex(0x5da515, 6), 15) Then
 		Click($aScroll[0], $aScroll[1], 1, 0, "#0172")
 		Local $aOk, $iLoop = 0
 		Do

@@ -301,7 +301,7 @@ Func CheckQueueTroopAndTrainRemain($ArmyCamp, $bDebug)
 
 	Local $XQueueStart = 839
 	For $i = 0 To 10
-		If _ColorCheck(_GetPixelColor(825 - $i * 70, 186, True), Hex(0xD7AFA9, 6), 20) Then ; Pink background found
+		If _ColorCheck(_GetPixelColor(825 - $i * 70, 186 + $g_iMidOffsetYFixed, True), Hex(0xD7AFA9, 6), 20) Then ; Pink background found ; Fixed resolution
 			$XQueueStart -= 70.5 * $i
 			ExitLoop
 		EndIf
@@ -357,7 +357,7 @@ Func CheckQueueSpellAndTrainRemain($ArmyCamp, $bDebug, $iUnbalancedSpell = 0, $b
 
 	Local $XQueueStart = 839
 	For $i = 0 To 10
-		If _ColorCheck(_GetPixelColor(825 - $i * 70, 186, True), Hex(0xD7AFA9, 6), 20) Then ; Pink background found
+		If _ColorCheck(_GetPixelColor(825 - $i * 70, 186 + $g_iMidOffsetYFixed, True), Hex(0xD7AFA9, 6), 20) Then ; Pink background found ; Fixed resolution
 			$XQueueStart -= 70.5 * $i
 			ExitLoop
 		EndIf

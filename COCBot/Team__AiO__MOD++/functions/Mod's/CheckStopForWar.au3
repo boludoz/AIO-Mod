@@ -161,9 +161,9 @@ Func CheckWarTime(ByRef $sResult, ByRef $bResult, $bReturnFrom = True) ; return 
 	EndIf
 	
 	_CaptureRegion()
-	$bBattleDay_InWar = _ColorCheck(_GetPixelColor(45, 500, False), "ED151D", 20) ; Red color in war button
-	$g_bClanWarLeague = _ColorCheck(_GetPixelColor(10, 510, False), "FFED71", 20) ; Golden color at left side of clan war button
-	$g_bClanWar = _ColorCheck(_GetPixelColor(36, 502, False), "F0B345", 20) ; Ordinary war color at left side of clan war button
+	$bBattleDay_InWar = _ColorCheck(_GetPixelColor(45, 500 + $g_iBottomOffsetYFixed, False), "ED151D", 20) ; Red color in war button
+	$g_bClanWarLeague = _ColorCheck(_GetPixelColor(10, 510 + $g_iBottomOffsetYFixed, False), "FFED71", 20) ; Golden color at left side of clan war button
+	$g_bClanWar = _ColorCheck(_GetPixelColor(36, 502 + $g_iBottomOffsetYFixed, False), "F0B345", 20) ; Ordinary war color at left side of clan war button
 	If $g_bClanWarLeague Then SetDebugLog("Your Clan Is Doing Clan War League.", $COLOR_INFO)
 	SetDebugLog("Checking battle notification, $bBattleDay_InWar = " & $bBattleDay_InWar)
 	
@@ -242,7 +242,7 @@ Func CheckWarTime(ByRef $sResult, ByRef $bResult, $bReturnFrom = True) ; return 
 			$bLocalReturn = True
 		EndIf
 	Else
-		If (_ColorCheck(_GetPixelColor(825, 33, True), Hex(0xFFFFFF, 6), 5)) Then
+		If (_ColorCheck(_GetPixelColor(825, 33 + $g_iMidOffsetYFixed, True), Hex(0xFFFFFF, 6), 5)) Then
 			SetLog("War is finished.", $COLOR_WARNING)
 			$bLocalReturn = True
 		Else

@@ -374,7 +374,7 @@ EndFunc   ;==>ChatbotSendChat
 Func ChatbotIsLastChatNew() ; returns true if the last chat was not by you, false otherwise
 	_CaptureRegion()
 	For $x = 38 To 261
-		If _ColorCheck(_GetPixelColor($x, 129, False), Hex(0x78BC10, 6), 5) Then Return True ; detect the green menu button
+		If _ColorCheck(_GetPixelColor($x, 129 + $g_iMidOffsetYFixed, False), Hex(0x78BC10, 6), 5) Then Return True ; detect the green menu button
 	Next
 	Return False
 EndFunc   ;==>ChatbotIsLastChatNew

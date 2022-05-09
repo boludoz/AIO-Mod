@@ -577,7 +577,7 @@ Func LookAtRedNotifications()
 	SetLog("Looking For Notifications ...", $COLOR_INFO)
 	Local $NoNotif = 0
 	ReturnAtHome()
-	If _ColorCheck(_GetPixelColor(50, 137, True), "F5151D", 20) Then
+	If _ColorCheck(_GetPixelColor(50, 137 + $g_iMidOffsetYFixed, True), "F5151D", 20) Then
 		SetLog("You Have a New Message ...", $COLOR_OLIVE)
 		Click(40, 150 + $g_iMidOffsetYFixed) ; open Messages button
 		If randomSleep(8000, 3000) Then Return
@@ -587,7 +587,7 @@ Func LookAtRedNotifications()
 		$NoNotif += 1
 	EndIf
 	ReturnAtHome()
-	If _ColorCheck(_GetPixelColor(50, 76, True), "F5151D", 20) Then
+	If _ColorCheck(_GetPixelColor(50, 76 + $g_iMidOffsetYFixed, True), "F5151D", 20) Then
 		SetLog("Let's See The Current League You Are In ...", $COLOR_OLIVE)
 		Click(40, 90 + $g_iMidOffsetYFixed) ; open Cup button
 		If randomSleep(4000) Then Return
@@ -671,7 +671,7 @@ Func LookAtRedNotifications()
 		If randomSleep(2000) Then Return
 
 		If IsClanOverview() Then
-			If _ColorCheck(_GetPixelColor(773, 63, True), "E20814", 20) Then
+			If _ColorCheck(_GetPixelColor(773, 63 + $g_iMidOffsetYFixed, True), "E20814", 20) Then
 				SetLog("It's Confirmed, You Have a New Friend Request, Let Me Check ...", $COLOR_OLIVE)
 				Click(720, 50 + $g_iMidOffsetY)
 				If randomSleep(2000) Then Return

@@ -45,7 +45,7 @@ EndFunc   ;==>displayZapLog
 
 Func getDarkElixir()
 	Local $g_iSearchDark = "", $H37925 = 0
-	If _CheckPixel($aAtkHasDarkElixir, $g_bCapturePixel, Default, "HasDarkElixir") Or _ColorCheck(_GetPixelColor(31, 144, True), Hex(0x0F0617, 6), 5) Then
+	If _CheckPixel($aAtkHasDarkElixir, $g_bCapturePixel, Default, "HasDarkElixir") Or _ColorCheck(_GetPixelColor(31, 144 + $g_iMidOffsetYFixed, True), Hex(0x0F0617, 6), 5) Then ; Fixed resolution
 		While $g_iSearchDark = ""
 			If Not $g_bRunState Then ExitLoop
 			$g_iSearchDark = getDarkElixirVillageSearch(48, 126)

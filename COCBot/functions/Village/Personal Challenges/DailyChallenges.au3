@@ -113,7 +113,7 @@ Func CollectDailyRewards($bGoldPass = False)
 						EndIf
 						
 						ClickP($aAllCoords[$j], 1, 0, "Claim " & $j + 1) ; Click Claim button
-						If WaitforPixel(350, 410, 351, 411, Hex(0xFDC875, 6), 20, 3) Then; wait for Cancel Button popped up in 1.5 second
+						If WaitforPixel(350, 410 + $g_iMidOffsetYFixed, 351, 411 + $g_iMidOffsetYFixed, Hex(0xFDC875, 6), 20, 3) Then; wait for Cancel Button popped up in 1.5 second ; Resolution changed
 						    If $g_bChkSellRewards And $bShellEnabled = True Then
 							    Setlog("Selling extra reward for gems", $COLOR_SUCCESS)
 								ClickP($aPersonalChallengeOkBtn, 1, 0, "Okay Btn") ; Click the Okay
@@ -161,7 +161,7 @@ Func CheckDiscountPerks()
 	If _Sleep(500) Then Return
 
 	; find builder boost rate %
-	Local $sDiscount = getOcrAndCapture("coc-builderboost", 370, 330, 110, 46)
+	Local $sDiscount = getOcrAndCapture("coc-builderboost", 370, 330 + $g_iBottomOffsetYFixed, 110, 46) ; Fixed resolution
 	SetDebugLog("Builder boost OCR: " & $sDiscount)
 	If StringInStr($sDiscount, "%") Then
 		Local $aDiscount = StringSplit($sDiscount, "%", $STR_NOCOUNT)

@@ -125,15 +125,15 @@ Func BoostPotionMod($sName, $bDebug = False)
 	
 	Local $aFiles = _FileListToArray($g_sImgPotionsBtn, $sName & "*.*", $FLTA_FILES)
 	If UBound($aFiles) > 1 And not @error Then
-		Local $aCoords = decodeSingleCoord(findImage($aFiles[1], $g_sImgPotionsBtn & "\" & $aFiles[1], GetDiamondFromRect("134,536(596,95)"), 1, True)) ; Resolution changed
+		Local $aCoords = decodeSingleCoord(findImage($aFiles[1], $g_sImgPotionsBtn & "\" & $aFiles[1], GetDiamondFromComma(198, 477, 678, 585), 1, True))
 		If UBound($aCoords) > 1 And Not @error Then
 			Setlog("Magic Items : boosting " & $sName, $COLOR_INFO)
 			ClickP($aCoords, 1)
 			If _Sleep(1500) Then Return False
 			
-			If WaitforPixel(391, 314, 455, 500, Hex(0xE1E3CB, 6), 15, 15) Then
+			If WaitforPixel(391, 314 + $g_iMidOffsetYFixed, 455, 500 + $g_iBottomOffsetYFixed, Hex(0xE1E3CB, 6), 15, 15) Then ; Resolution changed
 				If $bDebug = False Then
-					Click(420, 418, 1)
+					Click(420, 418 + $g_iMidOffsetYFixed, 1) ; Resolution changed
 				Else
 					ClickAway(Default, True)
 				EndIf

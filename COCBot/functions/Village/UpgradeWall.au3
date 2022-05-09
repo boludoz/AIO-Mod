@@ -149,7 +149,7 @@ Func UpgradeWallGold($iWallCost = $g_iWallCost)
 	Local $aUpgradeButton = findButton("Upgrade", Default, 2, True)
 	If IsArray($aUpgradeButton) And UBound($aUpgradeButton) > 0 Then
 		For $i = 0 To UBound($aUpgradeButton) - 1  ; Check for elixircolor in right top button corner and click, if present
-			If WaitforPixel($aUpgradeButton[$i][0] + 25, 595, $aUpgradeButton[$i][0] + 67, 605, Hex(0xFFE41D, 6), 25, 1) = True Then
+			If WaitforPixel($aUpgradeButton[$i][0] + 25, 595 + $g_iBottomOffsetYFixed, $aUpgradeButton[$i][0] + 67, 605 + $g_iBottomOffsetYFixed, Hex(0xFFE41D, 6), 25, 1) = True Then ; Fixed resolution
 				Click($aUpgradeButton[$i][0], $aUpgradeButton[$i][1])
 				
 				If _Sleep($DELAYUPGRADEWALLGOLD2) Then Return
@@ -201,7 +201,7 @@ Func UpgradeWallElixir($iWallCost)
 	Local $aUpgradeButton = findButton("Upgrade", Default, 2, True)
 	If IsArray($aUpgradeButton) And UBound($aUpgradeButton) > 0 Then
 		For $i = UBound($aUpgradeButton) - 1 To 0 Step -1 ; Check for elixircolor in right top button corner and click, if present
-			If WaitforPixel($aUpgradeButton[$i][0] + 25, 595, $aUpgradeButton[$i][0] + 67, 605, Hex(0xF032FF, 6), 25, 1) = True Then
+			If WaitforPixel($aUpgradeButton[$i][0] + 25, 595 + $g_iBottomOffsetYFixed, $aUpgradeButton[$i][0] + 67, 605 + $g_iBottomOffsetYFixed, Hex(0xF032FF, 6), 25, 1) = True Then ; Fixed resolution
 				Click($aUpgradeButton[$i][0], $aUpgradeButton[$i][1])
 				
 				If _Sleep($DELAYUPGRADEWALLELIXIR2) Then Return

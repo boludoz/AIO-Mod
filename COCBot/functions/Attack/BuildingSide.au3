@@ -115,7 +115,7 @@ Func DELow()
 					$g_iDarkLow = 1
 					SetLog("Low De. De = ( " & $DarkE & " ) and AQ health Low. Return to protect Heroes.  Returning immediately", $COLOR_SUCCESS)
 					Return False
-				ElseIf Not _ColorCheck(_GetPixelColor(68 + (72 * $g_iQueenSlot), 572, True), Hex(0x72F50B, 6), 120, "Heroes") Then
+				ElseIf Not _ColorCheck(_GetPixelColor(68 + (72 * $g_iQueenSlot), 572 + $g_iBottomOffsetYFixed, True), Hex(0x72F50B, 6), 120, "Heroes") Then ; Fixed resolution
 					$g_iDarkLow = 1
 					SetLog("Low De. De = ( " & $DarkE & " ) and AQ health Low. Return to protect Heroes.  Returning immediately", $COLOR_SUCCESS)
 					Return False
@@ -126,7 +126,7 @@ Func DELow()
 					$g_iDarkLow = 1
 					SetLog("Low De. De = ( " & $DarkE & " ) and BK health Low. Return to protect Heroes.  Returning immediately", $COLOR_SUCCESS)
 					Return False
-				ElseIf Not _ColorCheck(_GetPixelColor(68 + (72 * $g_iKingSlot), 572, True), Hex(0x4FD404, 6), 120, "Heroes") Then
+				ElseIf Not _ColorCheck(_GetPixelColor(68 + (72 * $g_iKingSlot), 572 + $g_iBottomOffsetYFixed, True), Hex(0x4FD404, 6), 120, "Heroes") Then ; Fixed resolution
 					$g_iDarkLow = 1
 					SetLog("Low De. De = ( " & $DarkE & " ) and BK health Low. Return to protect Heroes.  Returning immediately", $COLOR_SUCCESS)
 					Return False

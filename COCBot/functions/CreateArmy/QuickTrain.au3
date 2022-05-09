@@ -176,8 +176,8 @@ Func QuickTrain($bPreTrainFlag = $g_bDoubleTrain) ; Custom train - Team AIO Mod+
 
 		RemoveExtraTroops($aWhatToRemove)
 
-		Local $bEmptyTroop = _ColorCheck(_GetPixelColor(30, 205, True), Hex(0xCAC9C1, 6), 20) ; remove all troops
-		Local $bEmptySpell = _ColorCheck(_GetPixelColor(30, 350, True), Hex(0xCAC9C1, 6), 20) ; remove all spells
+		Local $bEmptyTroop = _ColorCheck(_GetPixelColor(30, 205 + $g_iMidOffsetYFixed, True), Hex(0xCAC9C1, 6), 20) ; remove all troops ; Fixed resolution
+		Local $bEmptySpell = _ColorCheck(_GetPixelColor(30, 350 + $g_iMidOffsetYFixed, True), Hex(0xCAC9C1, 6), 20) ; remove all spells ; Fixed resolution
 
 		Local $aWhatToTrain = WhatToTrain(False, False) ; $g_bIsFullArmywithHeroesAndSpells = False
 

@@ -30,9 +30,6 @@ Func BuilderBaseAttack($bTestRun = False)
 
 	If Not $g_bRunState Then Return
 
-	; Check if Builder Base is to run
-	; If Not ByPassedForceBBAttackOnClanGames($g_bChkBuilderAttack, True) Then Return False
-
 	; Stop when reach the value set it as minimum of trophies
 	If (Not $bTestRun) And Int($g_aiCurrentLootBB[$eLootTrophyBB]) < Int($g_iTxtBBDropTrophiesMin) And $g_iAvailableAttacksBB = 0 And $g_bChkBBTrophiesRange = True Then
 		Setlog("You reach the value set it as minimum of trophies!", $COLOR_INFO)
@@ -173,7 +170,7 @@ Func BuilderBaseAttack($bTestRun = False)
 EndFunc   ;==>BuilderBaseAttack
 
 Func RemoveChangeTroopsDialog()
-	If _ColorCheck(_GetPixelColor(103, 710, True), Hex(0x6C6E6F, 6), 25) Then
+	If _ColorCheck(_GetPixelColor(103, 710 + $g_iBottomOffsetYFixed, True), Hex(0x6C6E6F, 6), 25) Then ; Resolution changed
 		SetLog("Removing change troops dialog to start attack...", $COLOR_INFO)
 		Local $aClickPoints = [64, 648]
 		$aClickPoints[0] += Random(1, 282, 1)
@@ -246,8 +243,8 @@ Func BuilderBaseAttackOppoWait()
 			EndIf
 
 			; Thropy
-			If _WaitForCheckImg($g_sImgReportFinishedBB, "465, 493, 490, 505", Default, 5000, 250) Then
-				$hResultColor = _GetPixelColor(150, 192, True)
+			If _WaitForCheckImg($g_sImgReportFinishedBB, "465, 405, 490, 461", Default, 5000, 250) Then ; Resolution changed
+				$hResultColor = _GetPixelColor(150, 192 + $g_iBottomOffsetYFixed, True) ; Resolution changed
 				ExitLoop
 			Else
 				$iErrorLoop += 1
@@ -257,7 +254,7 @@ Func BuilderBaseAttackOppoWait()
 
 		If _Sleep(5000) Then Return
 
-		Local $aOkayBTN = [664, 465, 0xD9F481, 30]
+		Local $aOkayBTN = [664, 465 + $g_iBottomOffsetYFixed, 0xD9F481, 30] ; Resolution changed
 		If _CheckPixel($aOkayBTN, True) Then
 			Click($aOkayBTN[0] + Random(5, 10, 1), $aOkayBTN[1] + Random(5, 10, 1))
 			If _Sleep(1500) Then Return
@@ -342,7 +339,7 @@ Func FindVersusBattlebtn()
 	Local $bClicked = False
 	
 	For $i = 0 To 6
-		If _MultiPixelSearch(490, 284, 710, 375, 1, 1, Hex(0xFFCA4A, 6), $aFindVersusBattleBtn, 25) <> 0 Then
+		If _MultiPixelSearch(490, 284 + $g_iMidOffsetYFixed, 710, 375 + $g_iMidOffsetYFixed, 1, 1, Hex(0xFFCA4A, 6), $aFindVersusBattleBtn, 25) <> 0 Then
 			PureClickP($aXY, 1)
 			If _Sleep(Random(800, 1200, 1)) Then Return False
 			$bClicked = True
@@ -406,7 +403,7 @@ Func WaitForVersusBattle()
 	WEnd
 
 	If $iTime >= 100 Then
-		If _MultiPixelSearch(375, 547, 450, 555, 1, 1, Hex(0xFE2D40, 6), $aCancelVersusBattleBtn, 5) <> 0 Then
+		If _MultiPixelSearch(375, 547 + $g_iBottomOffsetYFixed, 450, 555 + $g_iBottomOffsetYFixed, 1, 1, Hex(0xFE2D40, 6), $aCancelVersusBattleBtn, 5) <> 0 Then
 			SetLog("Exit from battle search.", $COLOR_WARNING)
 			ClickP($g_iMultiPixelOffSet, 2, 0)
 			If _Sleep(3000) Then Return
@@ -434,7 +431,7 @@ Func WaitForVersusBattle()
 EndFunc   ;==>WaitForVersusBattle
 
 Func IsBBAttackPage()
-	Return (WaitforPixel(378, 10, 482, 26, Hex(0xFFD6D5, 6), 15, 2) = True)
+	Return (WaitforPixel(378, 5, 482, 26, Hex(0xFFD6D5, 6), 15, 2) = True)
 EndFunc   ;==>IsSTPage
 
 Func BuilderBaseAttackToDrop($aAvailableTroops)
@@ -497,7 +494,7 @@ Func BuilderBaseAttackToDrop($aAvailableTroops)
 		ClickP($aUniqueDeployPoint, 1, 0)
 	EndIf
 
-	Local $aBlackArts[4] = [520, 600, 0x000000, 5]
+	Local $aBlackArts[4] = [520, 600 + $g_iMidOffsetYFixed, 0x000000, 5] ; Fixed resolution
 	For $i = 0 To 15
 		; Surrender button [FC5D64]
 		If chkSurrenderBtn() = True Then
@@ -557,7 +554,7 @@ EndFunc   ;==>BuilderBaseCSVAttack
 
 Func BuilderBaseAttackReport($bNoExit = False)
 	; Verify the Window Report , Point[0] Archer Shadow Black Zone [155,460,000000], Point[1] Ok Green Button [430,590, 6DBC1F]
-	Local $aSurrenderBtn = [65, 607]
+	Local $aSurrenderBtn = [65, 607 + $g_iBottomOffsetYFixed] ; Fixed resolution
 	Local $sReturn ;, $bTrueCap = False
 
 	; Check if BattleIsOver.
@@ -574,7 +571,7 @@ Func BuilderBaseAttackReport($bNoExit = False)
 	EndIf
 
 	Local $iStars = 0
-	Local $StarsPositions[3][2] = [[326, 394], [452, 388], [546, 413]]
+	Local $StarsPositions[3][2] = [[326, 394 + $g_iMidOffsetYFixed], [452, 388 + $g_iMidOffsetYFixed], [546, 413 + $g_iMidOffsetYFixed]] ; Fixed resolution
 	Local $iColor[3] = [0xD0D4D0, 0xDBDEDB, 0xDBDDD8]
 	Local $hResultColor = 0x000000
 
@@ -597,7 +594,7 @@ Func BuilderBaseAttackReport($bNoExit = False)
 	Local $iWait = 180000 ; 3 min
 	Local $hTimer = TimerInit()
 	Local $iErrorLoop = 0
-	Local $aIsAttackBB = [550, 345, 0xFEFFFF, 20]
+	Local $aIsAttackBB = [550, 345 + $g_iMidOffsetYFixed, 0xFEFFFF, 20] ; Fixed resolution
 	Local $i = 0
 	Do
 		$i += 1
@@ -617,8 +614,8 @@ Func BuilderBaseAttackReport($bNoExit = False)
 		EndIf
 
 		; Thropy
-		If _WaitForCheckImg($g_sImgReportFinishedBB, "465, 493, 490, 505", Default, 5000, 250) Then
-			$hResultColor = _GetPixelColor(150, 192, True)
+		If _WaitForCheckImg($g_sImgReportFinishedBB, "465, 405, 490, 461", Default, 5000, 250) Then ; Fixed resolution
+			$hResultColor = _GetPixelColor(150, 192 + $g_iMidOffsetYFixed, True) ; Fixed resolution
 			ExitLoop
 		Else
 			$iErrorLoop += 1
@@ -643,11 +640,10 @@ Func BuilderBaseAttackReport($bNoExit = False)
 	; Get the LOOT :
 	Local $iGain[3]
 
-	; To get trophies getOcrOverAllDamage(493, 480)
-	$iGain[$eLootTrophyBB] = Int(getOcrOverAllDamage(493, 480))
-	$iGain[$eLootGoldBB] = Int(getTrophyVillageSearch(150, 483))
-	$iGain[$eLootElixirBB] = Int(getTrophyVillageSearch(310, 483))
-	Local $iLastDamage = Int(_getTroopCountBig(222, 304))
+	$iGain[$eLootTrophyBB] = Int(getOcrOverAllDamage(493, 480 + $g_iMidOffsetYFixed)) ; Fixed resolution
+	$iGain[$eLootGoldBB] = Int(getTrophyVillageSearch(150, 483 + $g_iMidOffsetYFixed)) ; Fixed resolution
+	$iGain[$eLootElixirBB] = Int(getTrophyVillageSearch(310, 483 + $g_iMidOffsetYFixed)) ; Fixed resolution
+	Local $iLastDamage = Int(_getTroopCountBig(222, 304 + $g_iMidOffsetYFixed)) ; Fixed resolution
 	If $iLastDamage > $g_iLastDamage Then $g_iLastDamage = $iLastDamage
 
 	; 0, 1, 2
@@ -676,7 +672,7 @@ Func BuilderBaseAttackReport($bNoExit = False)
 
 	If $bNoExit = False Then
 		; Return to Main Page
-		ClickAway() ; ClickP($aAway, 2, 0, "#0332") ;Click Away
+		ClickAway()
 
 		; Reset Variables
 		$g_aMachineBB = $g_aMachineBBReset
@@ -685,14 +681,14 @@ Func BuilderBaseAttackReport($bNoExit = False)
 		If $g_bIsBBevent = True Then
 			; xbebenk	
 			For $i = 0 To 8
-				_CaptureRegion2(760, 510, 820, 550)
+				_CaptureRegion2(760, 510 + $g_iBottomOffsetYFixed, 820, 550 + $g_iBottomOffsetYFixed) ; Fixed resolution
 				If UBound(decodeSingleCoord(findImage("GameComplete", $g_sImgGameComplete & "\*", "FV", 1, False))) = 2 And not @error Then
 					SetLog("Nice, clan came completed.", $COLOR_INFO)
 					$g_bIsBBevent = False
 
-					Click(700, 570, 1)
+					Click(700, 570 + $g_iBottomOffsetYFixed, 1) ; Fixed resolution
 					
-					If _Wait4Pixel(827, 78, 0xFFFFFF, 5, 2500, 250, "BuilderBaseAttackReport") Then
+					If _Wait4Pixel(827, 78 + $g_iBottomOffsetYFixed, 0xFFFFFF, 5, 2500, 250, "BuilderBaseAttackReport") Then ; Fixed resolution
 						_ClanGames(False, True)
 						ExitLoop
 					EndIf
@@ -704,7 +700,7 @@ Func BuilderBaseAttackReport($bNoExit = False)
 
 		If RandomSleep(2000) Then Return
 	Else
-		Local $aOkayBTN = [664, 465, 0xD9F481, 30]
+		Local $aOkayBTN = [664, 465 + $g_iBottomOffsetYFixed, 0xD9F481, 30] ; Fixed resolution
 		If _CheckPixel($aOkayBTN, True) Then
 			Click($aOkayBTN[0] + Random(5, 10, 1), $aOkayBTN[1] + Random(5, 10, 1))
 			If _Sleep(1500) Then Return

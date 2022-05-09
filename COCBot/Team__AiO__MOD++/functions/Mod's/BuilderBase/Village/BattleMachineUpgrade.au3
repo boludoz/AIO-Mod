@@ -148,9 +148,8 @@ Func BuilderBaseUpgradeMachine($bTestRun = False)
 EndFunc   ;==>BuilderBaseUpgradeMachine
 
 Func BattleMachineUpgradeUpgrade(ByRef $iMachineFinishTime, $bTestRun = False)
-	; If _ColorCheck(_GetPixelColor(398, 568, True), Hex(0xE1433F, 6), 20) Then Return False
 	; get upgrade time from window part 
-	$iMachineFinishTime = ConvertOCRTime("Machine Time", getLabUpgradeTime(581, 495), False)
+	$iMachineFinishTime = ConvertOCRTime("Machine Time", getLabUpgradeTime(581, 495 + $g_iBottomOffsetYFixed), False)
 	If ($iMachineFinishTime > 0) Then
 		Return True
 	Else

@@ -212,7 +212,7 @@ Func MainSXHandler()
 			$CurrentXPgain += 11
 		EndIf
 
-		If ((BalanceDonRec(False)) And (Not SkipDonateNearFullTroops(False, $aHeroResult)) And (not $g_bFastSuperXP) And ((_ColorCheck(_GetPixelColor(26, 342, True), Hex(0xEA0810, 6), 20)))) Then
+		If ((BalanceDonRec(False)) And (Not SkipDonateNearFullTroops(False, $aHeroResult)) And (not $g_bFastSuperXP) And ((_ColorCheck(_GetPixelColor(26, 342 + $g_iMidOffsetYFixed, True), Hex(0xEA0810, 6), 20)))) Then
 			DonateCC(True)
 		EndIf
 

@@ -128,7 +128,7 @@ Func CheckHeroOneGem($iIndex, $bDebug = False)
 				ClickAway()
 			EndIf
 			If _Sleep($DELAYBOOSTHEROES4) Then Return
-			If WaitforPixel(280, 320, 310, 425, Hex(0xE0F297, 6), 25, 5) Then
+			If WaitforPixel(360, 347, 500, 405, Hex(0xE5F985, 6), 25, 2) Then ; Fixed resolution
 				SetLog("Not enough gems to boost " & $g_asHeroNames[$iIndex], $COLOR_ERROR)
 			Else
 				$bHeroBoosted = True
@@ -193,7 +193,7 @@ Func BoostOneGemBuilding($sBoostBuildingNames, $bDebug = False)
 				ClickAway()
 			EndIf
 			If _Sleep($DELAYBOOSTBARRACKS2) Then Return
-			If WaitforPixel(280, 320, 310, 425, Hex(0xE0F297, 6), 25, 5) Then
+			If WaitforPixel(360, 347, 500, 405, Hex(0xE5F985, 6), 25, 2) Then ; Fixed resolution
 				SetLog("Not enough gems to boost ", $COLOR_ERROR)
 			Else
 				$bBuildingBoosted = True
