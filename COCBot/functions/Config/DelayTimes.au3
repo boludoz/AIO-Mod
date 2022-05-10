@@ -304,8 +304,11 @@ Global Const $g_iQuickTrainButtonRetryDelay = 1000
 Global Const $DELAYISTRAINPAGE1 = 100
 Global Const $DELAYISTRAINPAGE2 = 1000
 
-;AutoUpgradeBuilding
+;AutoUpgradeBuilding - Custom - Team AIO Mod++
 Global Const $DELAYAUTOUPGRADEBUILDING1 = 1000
+Global Const $DELAYAUTOUPGRADEBUILDING2 = 1500
+Global Const $DELAYAUTOUPGRADEBUILDING3 = 500
+Global Const $DELAYAUTOUPGRADEBUILDING4 = 2000
 
 ;UpgradeBuilding
 Global Const $DELAYUPGRADEBUILDING1 = 200
@@ -313,7 +316,7 @@ Global Const $DELAYUPGRADEBUILDING2 = 500
 
 ;UpgradeNormal
 Global Const $DELAYUPGRADENORMAL1 = 700
-Global Const $DELAYUPGRADENORMAL2 = 200
+Global Const $DELAYUPGRADENORMAL2 = 1000
 Global Const $DELAYUPGRADENORMAL3 = 750
 
 ;UpgradeHero

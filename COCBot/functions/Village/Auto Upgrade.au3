@@ -12,34 +12,28 @@
 ; Link ..........: https://www.mybot.run
 ; Example .......: ---
 ;================================================================================================================================
-Func AutoUpgrade($bTest = False)
-	Local $bWasRunState = $g_bRunState
-	$g_bRunState = True
-	Local $Result = _AutoUpgrade()
-	$g_bRunState = $bWasRunState
-	Return $Result
-EndFunc
-
 ; Based in xbebenk and snorlax (the best devs)
-Func ClickDragAUpgrade($YY = Default, $DragCount = 1)
-	Local $x = 420, $yUp = 103 + $g_iMidOffsetYFixed, $yDown = 800 + $g_iBottomOffsetYFixed, $Delay = 1000  ; Resolution changed
-	Local $Yscroll =  164 + (($g_iTotalBuilderCount - $g_iFreeBuilderCount) * 28)
+Func ClickDragAUpgrade($YY = Default, $DragCount = 3)
+	Local $x = 345, $yUp = 10, $yDown = 800, $iDelay = 1000
+	Local $Yscroll =  123
 	If $YY = Default Then $YY = $Yscroll
 	For $checkCount = 0 To 2
 		If Not $g_bRunState Then Return
-		If _ColorCheck(_GetPixelColor(350, 73, True), "fdfefd", 20) Then ;check upgrade window border
+		If _ColorCheck(_GetPixelColor(350, 73, True), "FDFEFD", 20) Then ; check upgrade window border
+				
 			If $YY < 100 Then $YY = 150
 			If $DragCount > 1 Then
 				For $i = 1 To $DragCount
-					ClickDrag($x, $YY, $x, $yUp, $Delay) ;drag up
+					ClickDrag($x, $YY, $x, $yUp, $iDelay) ;drag up
 				Next
 			Else
-				ClickDrag($x, $YY, $x, $yUp, $Delay) ;drag up
+				ClickDrag($x, $YY, $x, $yUp, $iDelay) ;drag up
 			EndIf
-			If _Sleep(1000) Then Return
+			
+			If _Sleep($DELAYAUTOUPGRADEBUILDING1) Then Return
 		EndIf
-		
-		If _ColorCheck(_GetPixelColor(350, 73, True), "fdfefd", 20) Then ;check upgrade window border
+
+		If _ColorCheck(_GetPixelColor(350, 73, True), "FDFEFD", 20) Then ;check upgrade window border
 			SetLog("Upgrade Window Exist", $COLOR_INFO)
 			Return True
 		Else
@@ -51,69 +45,84 @@ Func ClickDragAUpgrade($YY = Default, $DragCount = 1)
 	Return False
 EndFunc ;==>IsUpgradeWindow
 
-Func _AutoUpgrade()
+Func AutoUpgrade($bDebug = False)
+	Local $bwasrunstate = $g_brunstate
+	$g_brunstate = True
+	Local $result = _AutoUpgrade($bDebug)
+	$g_brunstate = $bwasrunstate
+	Return $result
+EndFunc
+
+Func _AutoUpgrade($bDebug = False)
+	
 	If Not $g_bAutoUpgradeEnabled Then Return
-
-	SetLog("Starting Auto Upgrade", $COLOR_INFO)
+	
+	If Not $bDebug And $g_ifreebuildercount < 1 Then
+		SetLog("No builder available... Skipping Auto Upgrade...", $color_warning)
+		Return
+	EndIf
+	
+	SetLog("Entering Auto Upgrade...", $COLOR_INFO)
+	
 	Local $iLoopAmount = 0
-	Local $iLoopMax = 100
-
-	ClickAway()
+	Local $iloopmax = 50
+	
+	SetDebugLog("Scroll Attempts? " & $iloopmax)
+	
+	SetLog("Scroll Attempts: " & $iLoopAmount & " / " & $iloopmax, $COLOR_INFO)
+	
+	$g_icurrentlineoffset = 0
+	$g_inextlineoffset = 0
+	
+	If RandomSleep($DELAYAUTOUPGRADEBUILDING1) Then Return
 	
 	VillageReport(True, True)
-	If _sleep($DELAYAUTOUPGRADEBUILDING1) Then Return
-	
-	; open the builders menu
 	Click(295, 30)
+	
 	If _Sleep($DELAYAUTOUPGRADEBUILDING1) Then Return
-
+	
 	Static $s_hHBitmap  = 0
 	Static $s_hHBitmap2 = 0
 	Local $bIsNewUpdate = False
 	While 1
-
-		$iloopamount += 1
-		If $iloopamount >= $iloopmax And $iloopmax <> 0 Then
-			Local $iMaxLoop = -1
-			While _PixelSearch(205, 79, 305, 103, Hex(0xD4FF80, 6), 25) = False And $iMaxLoop < 3
-				Swipe(345, 125, 345, 375, 1000)
-				If _Sleep(Random(1000, 2000, 1)) Then Return
-				$iMaxLoop += 1
-			Wend 
+		$iLoopAmount += 1
+		If $iLoopAmount >= $iloopmax And $iloopmax <> 0 Then
+			SetLog("Scroll to top!")
+			For $i = 0 To 2
+				Clickdrag(345, 125, 345, 375, 1000)
+			Next
 			ExitLoop
 		EndIf
-
-		;Check if there is a free builder for Auto Upgrade
-		getBuilderCount(True) ;check if we have available builder
-		If ($g_iFreeBuilderCount - ($g_bAutoUpgradeWallsEnable And $g_bUpgradeWallSaveBuilder ? 1 : 0) - ReservedBuildersForHeroes()) <= 0 Then
-			SetLog("No builder available. Skipping Auto Upgrade!", $COLOR_WARNING)
+		
+		If Not $bDebug And $g_ifreebuildercount < 1 Then
+			SetLog("No builder available... Skipping Auto Upgrade...", $color_warning)
 			ExitLoop
 		EndIf
-
-		; check if builder head is clickable
+		
+		If Not $bDebug And ($g_ifreebuildercount - ($g_bAutoUpgradewallsenable And $g_bupgradewallsavebuilder ? 1 : 0) - ReservedBuildersForHeroes()) <= 0 Then
+			SetLog("No builder available. Skipping Auto Upgrade!", $color_warning)
+			ExitLoop
+		EndIf
+		
 		If Not (_ColorCheck(_GetPixelColor(275, 15, True), "F5F5ED", 20) = True) Then
 			SetLog("Unable to find the Builder menu button... Exiting Auto Upgrade...", $COLOR_ERROR)
 			ExitLoop
 		EndIf
-
-		; search for 000 in builders menu, if 000 found, a possible upgrade is available
-		If QuickMIS("BC1", $g_sImgAUpgradeZero, 180, 80 + $g_iNextLineOffset + $g_iMidOffsetYFixed, 480, 350 + $g_iMidOffsetYFixed) Then ; Resolution changed
+		
+		If QuickMIS("BC1", $g_simgaupgradezero, 180, 80 + $g_inextlineoffset + $g_iMidOffsetYFixed, 480, 410 + $g_iMidOffsetYFixed) Then
 			SetLog("Possible upgrade found !", $color_success)
-			$g_iCurrentLineOffset = $g_iNextLineOffset + $g_iQuickMISY
+			$g_icurrentlineoffset = $g_inextlineoffset + $g_iQuickMISy
 		Else
 			If $iloopamount <= $iloopmax And $iloopmax <> 0 Then
 				SetLog("Scroll Attempts: " & $iloopamount & " / " & $iloopmax, $color_info)
 				
-				; Cap 1
 				_CaptureRegion()
 				If $s_hHBitmap <> 0 Then GdiDeleteHBitmap($s_hHBitmap) ; Prevent memory leaks.
 				$s_hHBitmap = GetHHBitmapArea($g_hHBitmap)
-				
-				ClickDragAUpgrade(328)
-				
-				; Cap 2
-				If _Sleep($DELAYDONATECC2 * 5) Then Return
-				
+
+				ClickDragAUpgrade(Default, 3)
+				If _Sleep($DELAYAUTOUPGRADEBUILDING4) Then Return			
+
 				_CaptureRegion()
 				If $s_hHBitmap2 <> 0 Then GdiDeleteHBitmap($s_hHBitmap2) ; Prevent memory leaks.
 				$s_hHBitmap2 = GetHHBitmapArea($g_hHBitmap)
@@ -122,7 +131,7 @@ Func _AutoUpgrade()
 					$iloopamount = $iLoopMax + 1
 					SetLog("My eye detected the end, chau.", $COLOR_INFO)
 				EndIf
-				
+
 				$g_icurrentlineoffset = 0
 				$g_inextlineoffset = 0
 				ContinueLoop
@@ -132,59 +141,57 @@ Func _AutoUpgrade()
 			EndIf
 		EndIf
 		
-		$bIsNewUpdate = False
-		
-		; check in the line of the 000 if we can see "New" or the Gear of the equipment, in this case, will not do the upgrade
-		If QuickMIS("NX",$g_sImgAUpgradeObst, 180, 80 + $g_iCurrentLineOffset - 15, 480, 80 + $g_iCurrentLineOffset + 15) <> "none" Then ; Resolution changed
-			SetLog("This is a New Building or an Equipment, looking next...", $COLOR_WARNING)
-			If $g_bNewUpdateMainVillage = False Then ContinueLoop
-			$bIsNewUpdate = True
-		EndIf
-
-		; if it's an upgrade, will click on the upgrade, in builders menu
-		PureClick(180 + $g_iQuickMISX, 80 + $g_iCurrentLineOffset)
-		If _Sleep($DELAYAUTOUPGRADEBUILDING1) Then Return
-		
-		If $bIsNewUpdate = True Then
-			$bIsNewUpdate = False
-			
-			If $g_bNewUpdateMainVillage = True Then
-				#Region - OK Case
-				If NewBuildings() Then
-					$g_iNextLineOffset = 0
-					ContinueLoop
-				EndIf
-				#EndRegion - OK Case
-			EndIf
-
-			; Wrong Case
-            $g_iNextLineOffset = $g_iCurrentLineOffset
+		If QuickMIS("NX", $g_simgaupgradeobst, 180, 80 + $g_icurrentlineoffset - 15 + $g_iMidOffsetYFixed, 480, 80 + $g_icurrentlineoffset + 15 + $g_iMidOffsetYFixed) <> "none" Then
+			SetLog("This is a New Building or an Equipment, looking next...", $color_warning)
+			$g_inextlineoffset = $g_icurrentlineoffset
 			ContinueLoop
 		EndIf
 		
-		; check if any wrong click by verifying the presence of the Upgrade button (the hammer)
+		Click($g_iQuickMISwoffsetx, $g_iQuickMISwoffsety)
+		
+		If _Sleep($DELAYAUTOUPGRADEBUILDING2) Then Return
+		
+		Local $g_bdebugocrtemp = $g_bdebugocr
+		Local $g_bdebugsetlogtemp = $g_bdebugsetlog
+		Local $aReset[3] = ["", "", ""]
+		
+		$g_aupgradenamelevel = $aReset
+		
+		For $i = 0 To 5
+			$g_aupgradenamelevel = buildinginfo(242, 464)
+			SetLog("Clicked in " & $g_aupgradenamelevel[1])
+			If $g_aupgradenamelevel[1] <> "" Then ExitLoop
+			If _Sleep($DELAYAUTOUPGRADEBUILDING3) Then ExitLoop
+			If $i = 5 And $g_aupgradenamelevel[1] = "" Then
+				$g_bdebugocr = True
+				$g_bdebugsetlog = True
+				buildinginfo(242, 464)
+				SetLog("Unable to find the building title... Exiting Auto Upgrade...", $COLOR_ERROR)
+				SetLog("Taking a Image for debug! And OCR debug!", $COLOR_ERROR)
+				savedebugimage("AutoUpgrade")
+				$g_bdebugocr = $g_bdebugocrtemp
+				$g_bdebugsetlog = $g_bdebugsetlogtemp
+			EndIf
+		Next
+		
+		; check if any wrong Click by verifying the presence of the Upgrade button (the hammer)
 		Local $aUpgradeButton = findButton("Upgrade", Default, 1, True)
 		If Not(IsArray($aUpgradeButton) And UBound($aUpgradeButton, 1) = 2) Then
-			SetLog("No upgrade here... Wrong click, looking next...", $COLOR_WARNING)
+			SetLog("No upgrade here... Wrong Click, looking next...", $COLOR_WARNING)
 			;$g_iNextLineOffset = $g_iCurrentLineOffset -> not necessary finally, but in case, I keep lne commented
 			$g_iNextLineOffset = $g_iCurrentLineOffset
 			ContinueLoop
 		EndIf
 
-		; get the name and actual level of upgrade selected, if strings are empty, will exit Auto Upgrade, an error happens
-		$g_aUpgradeNameLevel = BuildingInfo(242, 490 + $g_iBottomOffsetY)
-		If StringIsSpace($g_aUpgradeNameLevel[1]) Then
-			SetLog("Error when trying to get upgrade name and level, looking next...", $COLOR_ERROR)
-			$g_iNextLineOffset = $g_iCurrentLineOffset
+		If $g_aupgradenamelevel[0] = "" Then
+			SetLog("Error when trying to get upgrade name And level, looking next...", $COLOR_ERROR)
+			$g_inextlineoffset = $g_icurrentlineoffset
 			ContinueLoop
 		EndIf
 
-		 ; Custom Improve - Team AIO Mod++
-		Local $bMustIgnoreUpgrade = False
-		Local $sEvaluateUpgrade = String($g_aUpgradeNameLevel[1])
-		SetDebugLog("[_AutoUpgrade] " & $sEvaluateUpgrade)
-
 		; It uses sensitive text with algorithm, like wikipedia bots for fix white spaces.
+		Local $sEvaluateUpgrade = $g_aupgradenamelevel[1]
+		Local $bmustignoreupgrade = False
 		Select
 			Case IsHonestOCR($sEvaluateUpgrade, "Town Hall")
 				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[0] = 1)
@@ -259,137 +266,143 @@ Func _AutoUpgrade()
 			Case Else
 				$bMustIgnoreUpgrade = False
 		EndSelect
-
-		; check if the upgrade name is on the list of upgrades that must be ignored
-		If $bMustIgnoreUpgrade = True Then
-			SetLog("This upgrade must be ignored, looking next...", $COLOR_WARNING)
-			$g_iNextLineOffset = $g_iCurrentLineOffset
+		
+		If $bmustignoreupgrade = True Then
+			SetLog("This upgrade must be ignored, looking next...", $color_warning)
+			$g_inextlineoffset = $g_icurrentlineoffset
 			ContinueLoop
 		EndIf
-
-		; if upgrade don't have to be ignored, click on the Upgrade button to open Upgrade window
+		
+		; if upgrade don't have to be ignored, Click on the Upgrade button to open Upgrade window
 		ClickP($aUpgradeButton)
 		If _Sleep($DELAYAUTOUPGRADEBUILDING1) Then Return
 
-		Switch $g_aUpgradeNameLevel[1]
-			Case "Barbarian King", "Archer Queen", "Grand Warden", "Royal Champion"
-				$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 690, 540 + $g_iMidOffsetYFixed, 730, 580 + $g_iMidOffsetYFixed) ; get resource ; Resolution changed
-				$g_aUpgradeResourceCostDuration[1] = getResourcesBonus(598, 522 + $g_iMidOffsetY) ; get cost
-				$g_aUpgradeResourceCostDuration[2] = getHeroUpgradeTime(578, 465 + $g_iMidOffsetY) ; get duration
-			Case Else
-				$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 460, 510 + $g_iMidOffsetYFixed, 500, 550 + $g_iMidOffsetYFixed) ; get resource ; Resolution changed
-				$g_aUpgradeResourceCostDuration[1] = getResourcesBonus(366, 487 + $g_iMidOffsetY) ; get cost
-				$g_aUpgradeResourceCostDuration[2] = getBldgUpgradeTime(195, 307 + $g_iMidOffsetY) ; get duration
-		EndSwitch
-
-		; if one of the value is empty, there is an error, we must exit Auto Upgrade
-		For $i = 0 To 2
-			If $g_aUpgradeResourceCostDuration[$i] = "" Then
+		_CaptureRegion2()
+		Local $aClickP[2]
+		Local $aHandle = QuickMIS("N1Cx1", $g_sImgAUpgradeRes, 690, 540 + $g_iMidOffsetYFixed, 730, 580 + $g_iMidOffsetYFixed)
+		If UBound($aHandle) >= 2 And not @error Then
+			$aClickP = $aHandle[1]
+			$g_aupgraderesourcecostduration[0] = $aHandle[0]
+			$g_aupgraderesourcecostduration[1] = getResourcesBonus(598, 509)
+			$g_aupgraderesourcecostduration[2] = GetHeroUpgradeTime(578, 450)
+		Else
+			$aHandle = QuickMIS("N1Cx1", $g_sImgAUpgradeRes, 460, 510 + $g_iMidOffsetYFixed, 500, 550 + $g_iMidOffsetYFixed)
+			If UBound($aHandle) >= 2 And not @error Then
+				$aClickP = $aHandle[1]
+				$g_aupgraderesourcecostduration[0] = $aHandle[0]
+				$g_aupgraderesourcecostduration[1] = getResourcesBonus(366, 487 + $g_imidoffsety)
+				$g_aupgraderesourcecostduration[2] = getbldgupgradetime(190, 307 + $g_imidoffsety)
+			Else
 				SetLog("Error when trying to get upgrade details, looking next...", $COLOR_ERROR)
-				$g_iNextLineOffset = $g_iCurrentLineOffset
+				$g_inextlineoffset = $g_icurrentlineoffset
+				ContinueLoop
+			EndIf
+		EndIf
+		
+		For $i = 0 To 2
+			If $g_aupgraderesourcecostduration[$i] = "" Then
+				SetLog("Error when trying to get upgrade details, looking next...", $COLOR_ERROR)
+				$g_inextlineoffset = $g_icurrentlineoffset
 				ContinueLoop 2
 			EndIf
 		Next
-
+		
 		Local $bMustIgnoreResource = False
-		; matchmaking between resource name and the ignore list
-		Switch $g_aUpgradeResourceCostDuration[0]
+		Switch $g_aupgraderesourcecostduration[0]
 			Case "Gold"
-				$bMustIgnoreResource = ($g_iChkResourcesToIgnore[0] = 1)
+				$bMustIgnoreResource = ($g_ichkresourcestoignore[0] = 1) ? True : False
 			Case "Elixir"
-				$bMustIgnoreResource = ($g_iChkResourcesToIgnore[1] = 1)
+				$bMustIgnoreResource = ($g_ichkresourcestoignore[1] = 1) ? True : False
 			Case "Dark Elixir"
-				$bMustIgnoreResource = ($g_iChkResourcesToIgnore[2] = 1)
+				$bMustIgnoreResource = ($g_ichkresourcestoignore[2] = 1) ? True : False
 			Case Else
 				$bMustIgnoreResource = False
 		EndSwitch
-
-		; check if the resource of the upgrade must be ignored
+		
 		If $bMustIgnoreResource = True Then
-			SetLog("This resource must be ignored, looking next...", $COLOR_WARNING)
-			$g_iNextLineOffset = $g_iCurrentLineOffset
+			SetLog("This resource must be ignored, looking next...", $color_warning)
+			$g_inextlineoffset = $g_icurrentlineoffset
 			ContinueLoop
 		EndIf
-
-		; initiate a False boolean, that firstly says that there is no sufficent resource to launch upgrade
-		Local $bSufficentResourceToUpgrade = False
-		; if Cost of upgrade + Value set in settings to be kept after upgrade > Current village resource, make boolean True and can continue
-		Switch $g_aUpgradeResourceCostDuration[0]
+		
+		Local $bsufficentresourcetoupgrade = False
+		Switch $g_aupgraderesourcecostduration[0]
 			Case "Gold"
-				If $g_aiCurrentLoot[$eLootGold] >= ($g_aUpgradeResourceCostDuration[1] + $g_iTxtSmartMinGold) Then $bSufficentResourceToUpgrade = True
+				If $g_aicurrentloot[$elootgold] >= ($g_aupgraderesourcecostduration[1] + $g_itxtsmartmingold) Then $bsufficentresourcetoupgrade = True
 			Case "Elixir"
-				If $g_aiCurrentLoot[$eLootElixir] >= ($g_aUpgradeResourceCostDuration[1] + $g_iTxtSmartMinElixir) Then $bSufficentResourceToUpgrade = True
+				If $g_aicurrentloot[$elootelixir] >= ($g_aupgraderesourcecostduration[1] + $g_itxtsmartminelixir) Then $bsufficentresourcetoupgrade = True
 			Case "Dark Elixir"
-				If $g_aiCurrentLoot[$eLootDarkElixir] >= ($g_aUpgradeResourceCostDuration[1] + $g_iTxtSmartMinDark) Then $bSufficentResourceToUpgrade = True
+				If $g_aicurrentloot[$elootdarkelixir] >= ($g_aupgraderesourcecostduration[1] + $g_itxtsmartmindark) Then $bsufficentresourcetoupgrade = True
 		EndSwitch
-		; if boolean still False, we can't launch upgrade, exiting...
-		If Not $bSufficentResourceToUpgrade Then
-            SetLog("Insufficent " & $g_aUpgradeResourceCostDuration[0] & " to launch this upgrade, looking Next...", $COLOR_WARNING)
-			$g_iNextLineOffset = $g_iCurrentLineOffset
+		
+		If Not $bsufficentresourcetoupgrade Then
+			SetLog("Insufficient " & $g_aupgraderesourcecostduration[0] & " to launch this upgrade, looking Next...", $color_warning)
+			$g_inextlineoffset = $g_icurrentlineoffset
+			SetLog("Scroll to check another possible upgrade")
+			ClickP($aaway, 1, 0, "#0000")
+			If _Sleep($DELAYAUTOUPGRADEBUILDING1) Then Return
+			Click(295, 30)
+			If _Sleep($DELAYAUTOUPGRADEBUILDING1) Then Return
+			Local $x = 345
+			Local $ystart = 123
+			Local $yend = 10
 			ContinueLoop
 		EndIf
 
-		; final click on upgrade button, click coord is get looking at upgrade type (heroes have a diferent place for Upgrade button)
-		Switch $g_aUpgradeNameLevel[1]
-			Case "Barbarian King", "Archer Queen", "Grand Warden", "Royal Champion"
-				Click(660, 560 + $g_iBottomOffsetYFixed) ; Resolution fixed
-			Case Else
-				Click(440, 530 + $g_iBottomOffsetYFixed) ; Resolution fixed
-		EndSwitch
-
-        ;Check for 'End Boost?' pop-up
-        If _Sleep(1000) Then Return
-        Local $aImgAUpgradeEndBoost = decodeSingleCoord(findImage("EndBoost", $g_sImgAUpgradeEndBoost, GetDiamondFromRect("350,266(220,80)"), 1, True)) ; Resolution changed
-        If UBound($aImgAUpgradeEndBoost) > 1 Then
-            SetLog("End Boost? pop-up found", $COLOR_INFO)
-            SetLog("Clicking OK", $COLOR_INFO)
-            Local $aImgAUpgradeEndBoostOKBtn = decodeSingleCoord(findImage("EndBoostOKBtn", $g_sImgAUpgradeEndBoostOKBtn, GetDiamondFromRect("420,426(140,90)"), 1, True)) ; Resolution changed
-            If UBound($aImgAUpgradeEndBoostOKBtn) > 1 Then
-                Click($aImgAUpgradeEndBoostOKBtn[0], $aImgAUpgradeEndBoostOKBtn[1])
-                If _Sleep(1000) Then Return
-            Else
-                SetLog("Unable to locate OK Button", $COLOR_ERROR)
-                If _Sleep(1000) Then Return
-                ClickAway()
-                Return
-            EndIf
-        EndIf
-
-        ; Upgrade completed, but at the same line there might be more...		$g_iCurrentLineOffset -= $g_iQuickMISY
-		$iLoopMax += 1
-
-		; update Logs and History file
-		SetLog("Launched upgrade of " & $g_aUpgradeNameLevel[1] & " to level " & $g_aUpgradeNameLevel[2] + 1 & " successfully !", $COLOR_SUCCESS)
-		SetLog(" - Cost : " & _NumberFormat($g_aUpgradeResourceCostDuration[1]) & " " & $g_aUpgradeResourceCostDuration[0], $COLOR_SUCCESS)
-		SetLog(" - Duration : " & $g_aUpgradeResourceCostDuration[2], $COLOR_SUCCESS)
-
-		_GUICtrlEdit_AppendText($g_hTxtAutoUpgradeLog, _
-				@CRLF & _NowDate() & " " & _NowTime() & _
-				" - Upgrading " & $g_aUpgradeNameLevel[1] & _
-				" to level " & $g_aUpgradeNameLevel[2] + 1 & _
-				" for " & _NumberFormat($g_aUpgradeResourceCostDuration[1]) & _
-				" " & $g_aUpgradeResourceCostDuration[0] & _
-				" - Duration : " & $g_aUpgradeResourceCostDuration[2])
-
-		_FileWriteLog($g_sProfileLogsPath & "\AutoUpgradeHistory.log", _
-				"Upgrading " & $g_aUpgradeNameLevel[1] & _
-				" to level " & $g_aUpgradeNameLevel[2] + 1 & _
-				" for " & _NumberFormat($g_aUpgradeResourceCostDuration[1]) & _
-				" " & $g_aUpgradeResourceCostDuration[0] & _
-				" - Duration : " & $g_aUpgradeResourceCostDuration[2])
-
+		ClickP($aClickP)
+		If _Sleep(2000) Then Return
+		
+		If StringInStr($g_aupgradenamelevel[1], "Elixir") > 0 OR StringInStr($g_aupgradenamelevel[1], "Mine") > 0 Then
+			Local $string = getocrAndcapture("coc-boosted", 361, 221, 150, 19, True)
+			If StringInStr($string, "End") > 0 Then
+				SetLog("Upgrading the building will end the boost.", $COLOR_INFO)
+				Click(510, 380)
+				If _Sleep(2000) Then Return
+			EndIf
+		EndIf
+		
+		If StringInStr($g_aupgradenamelevel[1], "Wall") > 0 Then
+			SetLog($g_aupgradenamelevel[1] & " Upgraded to Level: " & $g_aupgradenamelevel[2] + 1 & " successfully!", $color_success)
+			SetLog(" - Cost : " & _numberformat($g_aupgraderesourcecostduration[1]) & " " & $g_aupgraderesourcecostduration[0], $color_success)
+		Else
+			SetLog("Launched upgrade of " & $g_aupgradenamelevel[1] & " to level " & $g_aupgradenamelevel[2] + 1 & " successfully!", $color_success)
+			SetLog(" - Cost : " & _numberformat($g_aupgraderesourcecostduration[1]) & " " & $g_aupgraderesourcecostduration[0], $color_success)
+			SetLog(" - Duration : " & $g_aupgraderesourcecostduration[2], $color_success)
+		EndIf
+		
+		Local $supgradelog = (StringInStr($g_aupgradenamelevel[1], "Wall") > 0 ? "Upgraded " : "Upgrading ") & $g_aupgradenamelevel[1] & " to level " & $g_aupgradenamelevel[2] + 1 & " for " & _numberformat($g_aupgraderesourcecostduration[1]) & " " & $g_aupgraderesourcecostduration[0] & (StringInStr($g_aupgradenamelevel[1], "Wall") > 0 ? "" : "Duration : " & $g_aupgraderesourcecostduration[2])
+		_guictrledit_appendtext($g_htxtAutoUpgradelog, @CRLF & String($g_icuraccount + 1) & " " & _nowdate() & " " & _nowtime(4) & "  " & $supgradelog)
+		_filewritelog($g_sprofilelogspath & "\AutoUpgradeHistory.log", $supgradelog)
+		PushMsg("BuildingUpgrading")
+		$g_icurrentlineoffset -= $g_iQuickMISy
+		$g_ifreebuildercount -= 1
+		ClickAway()
+		Click(295, 30)
+		If _Sleep($DELAYAUTOUPGRADEBUILDING1) Then Return
+		
+		If Not $bDebug And $g_ifreebuildercount < 1 Then
+			SetLog("All builders are now working, exit Auto Upgrade ...", $color_success)
+			ExitLoop
+		EndIf
+		
+		If Not $bDebug And ($g_ifreebuildercount - ($g_bAutoUpgradewallsenable And $g_bupgradewallsavebuilder ? 1 : 0) - ReservedBuildersForHeroes()) <= 0 Then
+			SetLog("All builders are now working, keeping 1 idle for wall upgrade ...", $color_success)
+			ExitLoop
+		EndIf
 	WEnd
+	SetLog("Auto Upgrade finished", $COLOR_INFO)
+	ClickAway()
+	CheckMainScreen()
 
 	; resetting the offsets of the lines
 	$g_iCurrentLineOffset = 0
 	$g_iNextLineOffset = 0
 
 	SetLog("Auto Upgrade finished", $COLOR_INFO)
-	ClickAway()
+	ClickAway() ;Click Away
 
 EndFunc   ;==>AutoUpgrade
 
-; #cs
 Func AutoUpdTest($sText = "")
 		Local $bMustIgnoreUpgrade = False
 
@@ -402,7 +415,7 @@ Func AutoUpdTest($sText = "")
 
 		Local $sEvaluateUpgrade = String($g_aUpgradeNameLevel[1])
 		SetDebugLog("[AutoUpdtest] " & $sEvaluateUpgrade)
-					
+
 		; It uses sensitive text with algorithm, like wikipedia bots for fix white spaces.
 		Select
 			Case IsHonestOCR($sEvaluateUpgrade, "Town Hall")
@@ -530,7 +543,8 @@ Func NewBuildings()
 		SetLog("Fail NewBuildings.", $COLOR_INFO)
 		Click(820, 38, 1) ; exit from Shop
 	EndIf
-
+	
+	CheckObstacles()
 	Return False
 
 EndFunc   ;==>NewBuildings
