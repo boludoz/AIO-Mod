@@ -231,6 +231,7 @@ Func ParseAttackCSV($debug = False)
 						If UBound($indexvect) > 1 Then
 							$indexArray = 0
 							If Int($indexvect[0]) > 0 And Int($indexvect[1]) > 0 Then
+								Setlog("(1) Vectors available: " & UBound($indexvect), $COLOR_DEBUG)
 								$index1 = Int($indexvect[0])
 								$index2 = Int($indexvect[1])
 							Else
@@ -238,8 +239,9 @@ Func ParseAttackCSV($debug = False)
 								$index2 = 1
 							EndIf
 						Else
-							$indexArray = StringSplit($value2, ",", 2)
-							If UBound($indexArray) > 1 Then
+							$indexArray = StringSplit($value2, ",", $STR_NOCOUNT)
+							If UBound($indexArray) > 1 And not @error Then
+								Setlog("(2) Vectors available: " & UBound($indexArray), $COLOR_DEBUG)
 								$index1 = 0
 								$index2 = UBound($indexArray) - 1
 							Else
@@ -347,6 +349,27 @@ Func ParseAttackCSV($debug = False)
 						; Custom sleep time before drop - Team AIO Mod++
 						Local $aTmp = StringSplit($value8, "-")
 						Local $aSleepbeforedrop[2] = [Round($aTmp[1]), Round($aTmp[$aTmp[0]])]
+						
+						If UBound($indexArray) > 1 And not @error Then
+							Local $iIniciarFrom = 0
+							ReDim $indexArray[_Max($qty1, $qty2) + 1] 
+							For $iIndexFixer = 0 To UBound($indexArray) - 1
+								If StringIsSpace($indexArray[$iIndexFixer]) = 0 Then ContinueLoop
+								
+								For $iIndexFixerIn = $iIniciarFrom To UBound($indexArray) - 1
+									If StringIsSpace($indexArray[$iIndexFixerIn]) = 1 Then ContinueLoop
+									$indexArray[$iIndexFixer] = $indexArray[$iIndexFixerIn]
+									
+									If $iIniciarFrom = $iIndexFixerIn Then
+										$iIniciarFrom = 0
+										ExitLoop
+									EndIf
+									
+									$iIniciarFrom = $iIndexFixerIn
+									ExitLoop
+								Next
+							Next
+						EndIf
 						#EndRegion - Custom DROP - Team AIO Mod++
 
 						; check for targeted vectors and validate index numbers, need too many values for check logic to use CheckCSVValues()
@@ -362,15 +385,10 @@ Func ParseAttackCSV($debug = False)
 										EndIf
 									Next
 								ElseIf $indexArray = 0 Then ; index is either 2 values comma separated, range "-" separated between 1 & 5, or single index
-									Select
-										Case $index1 = 1 And $index1 = $index2
-											; do nothing, is valid
-										Case $index1 >= 1 And $index1 <= 5 And $index2 > 1 And $index2 <= 5
-											; do nothing valid index values for near location targets
-										Case Else
-											$sErrorText &= "Invalid INDEX for building target"
-											SetDebugLog("$index1: " & $index1 & ", $index2: " & $index2, $COLOR_ERROR)
-									EndSelect
+									If Not ($index1 = 1 And $index1 = $index2) And Not ($index1 >= 1 And $index1 <= 5 And $index2 > 1 And $index2 <= 5) Then
+										$sErrorText &= "Invalid INDEX for building target"
+										SetDebugLog("$index1: " & $index1 & ", $index2: " & $index2, $COLOR_ERROR)
+									EndIf
 								Else
 									SetDebugLog("Monkey found a bad banana checking Bdlg target INDEX!", $COLOR_ERROR)
 								EndIf
