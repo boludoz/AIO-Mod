@@ -19,7 +19,7 @@ Global $_g_asDISTRIBUTORS[22][4] = [ _
 	["Kunlun", "com.supercell.clashofclans.kunlun", "com.supercell.titan.kunlun.GameAppKunlun", "Kunlun"], _
 	["Qihoo", "com.supercell.clashofclans.qihoo", "com.supercell.titan.kunlun.GameAppKunlun","Qihoo"], _
 	["Baidu", "com.supercell.clashofclans.baidu", "com.supercell.titan.kunlun.GameAppKunlun", "Baidu"], _
-	["9game", "com.supercell.clashofclans.uc", "com.supercell.titan.GameApp", "9game"], _
+	["9game", "com.supercell.clashofclans.uc", "com.supercell.titan.kunlun.uc.GameAppKunlunUC", "9game"], _
 	["Wandoujia/Downjoy", "com.supercell.clashofclans.wdj", "com.supercell.titan.kunlun.GameAppKunlun", "Wandoujia/Downjoy"], _
 	["Huawei", "com.supercell.clashofclans.huawei", "com.supercell.titan.kunlun.GameAppKunlun", "Huawei"], _
 	["OPPO", "com.supercell.clashofclans.nearme.gamecenter", "com.supercell.titan.kunlun.GameAppKunlun", "OPPO"], _
