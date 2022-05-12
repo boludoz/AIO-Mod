@@ -20,7 +20,7 @@ Func TestBuilderBaseAttackBB()
 
 	Local $bTempDebug = $g_bDOCRDebugImages
 	$g_bDOCRDebugImages = True
-	
+
 	BuilderBaseResetAttackVariables()
 
 	; Attack Bar | [0] = Troops Name , [1] = X-axis , [2] - Quantities
@@ -31,10 +31,10 @@ Func TestBuilderBaseAttackBB()
 
 		; Zoomout the Opponent Village.
 		BuilderBaseZoomOut(False, True)
-		
+
 		; Correct Script.
 		BuilderBaseSelectCorrectScript($aAvailableTroops)
-		
+
 		; AttackBB
 		AttackBB($aAvailableTroops)
 
@@ -54,25 +54,25 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB(), $bRemainCSV = False)
 	Local $aBMPos = 0
 
 	; If ZoomBuilderBaseMecanics(True) < 1 Then Return False
-	
-	$g_aBuilderBaseDiamond = PrintBBPoly(False) ;BuilderBaseAttackDiamond()
-	If @error Then 
+
+	$g_aBuilderBaseDiamond = BuilderBaseAttackDiamond()
+	If @error Then
 		Return -1
 	EndIf
-	
+
 	If IsArray($g_aBuilderBaseDiamond) <> True Or Not (UBound($g_aBuilderBaseDiamond) > 0) Then Return False
 
 	$g_aExternalEdges = BuilderBaseGetEdges($g_aBuilderBaseDiamond, "External Edges")
 
 	Local $sSideNames[4] = ["TopLeft", "TopRight", "BottomRight", "BottomLeft"]
-	
+
 	Local $aBuilderHallPos
 	For $i = 0 To 3
 		$aBuilderHallPos = findMultipleQuick($g_sBundleBuilderHall, 1)
 		If IsArray($aBuilderHallPos) Then ExitLoop
 		If _Sleep(250) Then Return
 	Next
-	
+
 	If IsArray($aBuilderHallPos) And UBound($aBuilderHallPos) > 0 Then
 		$g_aBuilderHallPos = $aBuilderHallPos
 	Else
@@ -88,20 +88,20 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB(), $bRemainCSV = False)
 		SetLog("Fail AttackBB 0x2")
 		Return False
 	EndIf
-	
+
 	If $bRemainCSV = False Then
 		BuilderBaseGetDeployPoints(15)
 	EndIf
-	
+
 	Local $aVar
 	If UBound($g_aDeployPoints) > 0 Then
 		$aVar = $g_aDeployPoints[$iSide]
 	EndIf
-	
-	If UBound($aVar) < 1 Then 
+
+	If UBound($aVar) < 1 Then
 		$aVar = $g_aExternalEdges[$iSide]
 	EndIf
-	
+
     If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Disabled")
 
 	; Get troops on attack bar and their quantities
@@ -230,7 +230,7 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB(), $bRemainCSV = False)
 		If UBound($aBBAttackBar) = $iUBound1 Then $iLoopControl += 1
 		If ($iLoopControl > 3) Then ExitLoop
 		$iUBound1 = UBound($aBBAttackBar)
-		
+
 	Until Not IsArray($aBBAttackBar)
 	SetLog("All Troops Deployed", $COLOR_SUCCESS)
 

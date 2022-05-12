@@ -94,7 +94,7 @@ Func CreateBotAndroid()
 	$y += 25
 		GUICtrlCreateLabel(GetTranslatedFileIni("Android", "LblZoomoutMode", "Zoomout Mode"), $x - 8, $y + 5, 180, 22, $SS_RIGHT)
 		$g_hCmbAndroidZoomoutMode = GUICtrlCreateCombo("", $x - 8 + 180 + 5, $y, 200, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
-			GUICtrlSetData(-1, GetTranslatedFileIni("Android", "CmbZoomoutMode", "Default|Use Minitouch script|Use dd script|WinAPI|Update shared_prefs"))
+			GUICtrlSetData(-1, GetTranslatedFileIni("Android", "CmbZoomoutMode", "Default|Use Minitouch script|WinAPI|Update shared_prefs"))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("Android", "CmbZoomoutMode_Info", 'Control how the zoomout is done. Default chooses usually Minitouch script, which is most stable.'))
 			_GUICtrlComboBox_SetCurSel(-1, $g_iAndroidZoomoutMode)
 	$y += 25

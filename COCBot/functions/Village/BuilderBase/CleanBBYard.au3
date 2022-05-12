@@ -20,15 +20,14 @@ Func CleanBBYard()
 	If Not $g_bChkCleanBBYard And Not TestCapture() Then Return
 
 	FuncEnter(CleanBBYard)
-	
+
 	Local $bBuilderBase = True
 	If isOnBuilderBase(True) Then
 		SetLog("Going to check Builder Base Yard For Obstacles!", $COLOR_INFO)
 		Local $hObstaclesTimer = __TimerInit()
 
 		ZoomBuilderBaseMecanics(False)
-		
-		PrintBBPoly()
+
 		If Not @error Then
 			; Get Builders available
 			If Not getBuilderCount(False, $bBuilderBase) Then Return
@@ -47,22 +46,22 @@ Func CleanBBYard()
 						$iObstacleRemoved += 1
 						SetLog("Going to remove Builder Base Obstacle: " & $iObstacleRemoved, $COLOR_SUCCESS)
 						SetDebugLog($aCleanYardBBNXY[$i][0] & " found at (" & $aCleanYardBBNXY[$i][1] & "," & $aCleanYardBBNXY[$i][2] & ")", $COLOR_SUCCESS)
-						If SecureClick($aCleanYardBBNXY[$i][1], $aCleanYardBBNXY[$i][2]) = False Then ContinueLoop
-						If InDiamondBB($aCleanYardBBNXY[$i][1], $aCleanYardBBNXY[$i][2], $g_aBuilderBaseAttackPolygon) = False Then ContinueLoop
+						; If SecureClick($aCleanYardBBNXY[$i][1], $aCleanYardBBNXY[$i][2]) = False Then ContinueLoop
+						If _IsPointInPoly($aCleanYardBBNXY[$i][1], $aCleanYardBBNXY[$i][2], $g_aBuilderBaseAttackPolygon) = False Then ContinueLoop ; Check if X,Y is inside Builderbase or outside
 						If IsMainPageBuilderBase() Then Click($aCleanYardBBNXY[$i][1], $aCleanYardBBNXY[$i][2], 1, 0, "#0430")
 						If _Sleep($DELAYCOLLECT3) Then Return
-						If Not ClickRemoveObstacle() Then 
+						If Not ClickRemoveObstacle() Then
 							ClickAway()
 							ContinueLoop
 						EndIf
 						If _Sleep($DELAYCHECKTOMBS2) Then Return
 						ClickAway()
 						If _Sleep($DELAYCHECKTOMBS1) Then Return
-	
+
 						; Aca
 						If $g_bChkCleanYardBBall Then
 							Local $iloops = 0
-							Do 
+							Do
 								If Not $g_bRunState Then ExitLoop
 								If getBuilderCount(False, $bBuilderBase) = False Then Return
 								If _Sleep($DELAYCHECKTOMBS3) Then Return
@@ -72,15 +71,15 @@ Func CleanBBYard()
 						Else
 							If getBuilderCount(False, $bBuilderBase) = False Then Return
 						EndIf
-	
+
 						If _Sleep($DELAYRESPOND) Then Return
 						If $g_iFreeBuilderCountBB = 0 Then
 							SetLog("No More Builders available in Builder Base to remove Obstacles!")
 							ExitLoop
 						EndIf
-	
+
 						BuilderBaseReport()
-	
+
 						If _Sleep($DELAYRESPOND) Then Return
 						If Number($g_aiCurrentLootBB[$eLootElixirBB]) < 50000 Then
 							SetLog("Remove Obstacles stopped due to insufficient Elixir.", $COLOR_INFO)
@@ -91,7 +90,7 @@ Func CleanBBYard()
 			ElseIf $g_iFreeBuilderCountBB > 0 And $g_bChkCleanBBYard = True And Number($g_aiCurrentLootBB[$eLootElixirBB]) < 50000 Then
 				SetLog("Sorry, Low Builder Base Elixir (" & $g_aiCurrentLootBB[$eLootElixirBB] & ") Skip remove Obstacles check!", $COLOR_INFO)
 			EndIf
-	
+
 			If $bNoBuilders Then
 				SetLog("Builder not available to remove Builder Base Obstacles!")
 			Else

@@ -380,7 +380,7 @@ Func GetUpgradeButton($sUpgButtom = "", $bDebug = False)
 					EndIf
 				EndIf
 
-				If _MultiPixelSearch($g_aImageSearchXML[0][1], 579, $g_aImageSearchXML[0][2] + 67, 613, 2, 2, Hex(0xFF887F, 6), StringSplit2D("0xFF887F-0-1|0xFF887F-4-0"), 35) <> 0 Then
+				If _MultiPixelSearch($g_aImageSearchXML[0][1], 579 + $g_iBottomOffsetYFixed, $g_aImageSearchXML[0][2] + 67, 613 + $g_iBottomOffsetYFixed, 2, 2, Hex(0xFF887F, 6), StringSplit2D("0xFF887F-0-1|0xFF887F-4-0"), 35) <> 0 Then
 					SetLog("Upgrade stopped due to insufficient loot", $COLOR_ERROR)
 					ClickAway()
 
@@ -470,7 +470,7 @@ Func BBNewBuildings($aResult)
 		Click($aResult[0], $aResult[1], 1)
 		If _Sleep(3000) Then Return
 
-		If _WaitForCheckImg(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\Upgrade\New\", "14, 175, 847, 667", Default, 4500) Then
+		If _WaitForCheckImg(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\Upgrade\New\", "14, 131, 847, 579", Default, 4500) Then ; Resolution changed
 			Click($g_aImageSearchXML[0][1] - 100, $g_aImageSearchXML[0][2] + 100, 1)
 			If _Sleep(2000) Then Return
 

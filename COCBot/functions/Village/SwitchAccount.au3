@@ -753,12 +753,7 @@ Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
 
 	If $bSCIDWindowOpened Then
 		If _Sleep(500) Then Return
-		For $iTry = 0 To 6
-			_CaptureRegion()
-			If _ColorCheck(_GetPixelColor(786, 340, False), Hex(0xF1F1F1, 6), 10) = True And _ColorCheck(_GetPixelColor(786, 357, False), Hex(0xEFEFEF, 6), 10) = True Then ExitLoop
-			SCIDScrollUp()
-			If _Sleep(1000) Then Return
-		Next
+		SCIDScrollUp()
 		
 		SCIDScrollDown($NextAccount) ; Make Drag only when SCID window is visible.
 		If _Sleep(1000) Then Return
@@ -767,7 +762,7 @@ Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
 		If IsArray($aAccount) And UBound($aAccount) > 0 Then
 			For $j = 0 To UBound($aAccount) - 1
 				$aFound = StringSplit($aAccount[$j], ",", $STR_NOCOUNT)
-				_ArrayAdd($aCoord, $aFound[0]+750 & "|" & $aFound[1]+320)
+				_ArrayAdd($aCoord, $aFound[0] + 750 & "|" & $aFound[1] + 320)
 			Next
 			_ArraySort($aCoord, 0, 0, 0, 1)
 
@@ -1299,30 +1294,36 @@ Func CheckPlannedAccountLimits($bForceSwitch = False)
 	Return $g_iCurAccount
 EndFunc   ;==>CheckPlannedAccountLimits
 
+; Boldina TM - Swipe 2022 
 Func SCIDScrollDown($iSCIDAccount)
 	If Not $g_bRunState Then Return
+	
+	Local $x1 = Random(450, 457, 1)
+	Local $x2 = Random(450, 457, 1)
+	Local $y  = Random(542, 546, 1)
+	
+	If $iSCIDAccount = 3 Then 
+		AndroidInputSwipe($x1, $y, $x2, $y - 61, $g_bRunState, True)
+		If _Sleep(Random(400, 700, 1)) Then Return
+		Return True
+	EndIf
+	
 	If $iSCIDAccount < 4 Then Return
-	For $i = 0 To $iSCIDAccount - 4
-		Switch $g_sAndroidEmulator
-			Case "BlueStacks2"
-				AndroidAdbScript("ScrollDownSCID.Bluestacks")
-			Case Else ; Custom - Team AIO Mod++
-				AndroidAdbScript("ScrollDownSCID")
-		EndSwitch
-		If _Sleep(500) Then Return
-	Next
+	
+	AndroidInputSwipe($x1, $y, $x2, $y - (94 * ($iSCIDAccount - 3)) - 61, $g_bRunState, True) ; drag a multiple of 90 pixels up for how many accounts down it is
+	If _Sleep(Random(400, 700, 1)) Then Return
+	
+	Return True
 EndFunc   ;==>SCIDScrollDown
 
 Func SCIDScrollUp()
 	If Not $g_bRunState Then Return
 	SetLog("Try to scroll up", $COLOR_DEBUG)
-	For $i = 0 To Ceiling($g_iTotalAcc/4) - 1
-		Switch $g_sAndroidEmulator
-			Case "BlueStacks2"
-				AndroidAdbScript("ScrollUpSCID.Bluestacks")
-			Case Else ; Custom - Team AIO Mod++
-				AndroidAdbScript("ScrollUpSCID")
-		EndSwitch
+	For $i = 1 To 6
+		_CaptureRegion()
+		If _ColorCheck(_GetPixelColor(786, 340 + $g_iMidOffsetYFixed, False), Hex(0xF1F1F1, 6), 10) = True And _ColorCheck(_GetPixelColor(786, 357 + $g_iMidOffsetYFixed, False), Hex(0xEFEFEF, 6), 10) = True Then Return True
+		Swipe(Random(450, 456, 1), 316, Random(450, 456, 1), 316 + Random(100, 400, 1), 1000)
 		If _Sleep(500) Then Return
 	Next
+	Return False
 EndFunc   ;==>SCIDScrollUp

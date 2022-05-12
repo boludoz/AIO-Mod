@@ -74,7 +74,7 @@ Global Const $g_aReqGrayedOut[4] = [56, 695 + $g_iBottomOffsetYFixed, 0xE0E0E0, 
 Global Const $g_aHumanizationReplayArea[4] = [780, 210 + $g_iMidOffsetY, 840, 610 + $g_iBottomOffsetY]
 
 ; Builder Base
-Global Const $g_aBBBlackArts[4] = [520, 600 + $g_iBottomOffsetYFixed, 0x000000, 5]
+Global Const $g_aBBBlackArts[4] = [700, 575, 0x000000, 5]
 
 ; Buy Shield
 Global Const $g_aShopOpen[4] = [808, 50, 0xE41115, 15]
@@ -89,9 +89,9 @@ Global Const $g_iPetUnlockedxCoord[4] = [190, 345 + $g_iMidOffsetYFixed, 500, 65
 Global Const $g_iPetLevelxCoord[4] = [134, 288 + $g_iMidOffsetYFixed, 443, 598 + $g_iBottomOffsetYFixed]
 
 ; Clan Games
-Global Const $aEventFailed[4] = [300, 255 + $g_iMidOffsetYFixed, 0xEA2B24, 20]
-Global Const $aEventPurged[4] = [300, 266 + $g_iMidOffsetYFixed, 0x57c68f, 20]
-Global Const $aGameTime[4] = [384, 388 + $g_iMidOffsetYFixed, 0xFFFFFF, 10]
+Global Const $g_aEventFailed[4] = [300, 255 + $g_iMidOffsetYFixed, 0xEA2B24, 20]
+Global Const $g_aEventPurged[4] = [300, 266 + $g_iMidOffsetYFixed, 0x57c68f, 20]
+Global Const $g_aGameTime[4] = [384, 388 + $g_iMidOffsetYFixed, 0xFFFFFF, 10]
 
 ; Sugested upgrades
 Global Const $g_aMasterBuilder[4] = [360, 11, 0x7cbdde, 10] ; Master Builder Check pixel [i] icon

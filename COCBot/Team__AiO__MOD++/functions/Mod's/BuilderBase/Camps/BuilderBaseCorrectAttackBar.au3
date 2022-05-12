@@ -184,7 +184,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	_ArraySort($aAvailableTroops, 0, 0, 0, 1)
 
 	Local $iSlotWidth = 72
-	Local $iDefaultY = 708
+	Local $iDefaultY = 708 + $g_iBottomOffsetYFixed
 	Local $aSwicthBtn[6] = [105, 180, 252, 324, 397, 469]
 	
 	Local $iCampsQuantities = 0
@@ -365,8 +365,8 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	For $i = 0 To UBound($aAvailableTroops) - 1
 		If Not $g_bRunState Then Return
 		If $aAvailableTroops[$i][0] <> "" Then ;We Just Need To redo the ocr for mentioned troop only
-			Local $iCount = Number(_getTroopCountSmall($aAvailableTroops[$i][1], 640))
-			If $iCount < 1 Then $iCount = Number(_getTroopCountBig($aAvailableTroops[$i][1], 633))
+			Local $iCount = Number(_getTroopCountSmall($aAvailableTroops[$i][1], 640 + $g_iBottomOffsetYFixed))
+			If $iCount < 1 Then $iCount = Number(_getTroopCountBig($aAvailableTroops[$i][1], 633 + $g_iBottomOffsetYFixed))
 			If $iCount < 1 And Not String($aAvailableTroops[$i][0]) = "Machine" Then
 				SetLog("Could not get count for " & $aAvailableTroops[$i][0] & " in slot " & String($aAvailableTroops[$i][3]), $COLOR_ERROR)
 				$aAvailableTroops[$i][4] = 2

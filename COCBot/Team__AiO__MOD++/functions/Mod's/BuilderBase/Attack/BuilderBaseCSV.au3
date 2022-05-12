@@ -223,8 +223,8 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 								If _CompareTexts("Machine", $sTroopName, 80) Then
 									$aAvailableTroops_NXQ[$i][4] = 1
 								Else
-									$aAvailableTroops_NXQ[$i][4] = Number(_getTroopCountSmall(Number($aAvailableTroops_NXQ[$i][1]), 640))
-									If $aAvailableTroops_NXQ[$i][4] < 1 Then $aAvailableTroops_NXQ[$i][4] = Number(_getTroopCountBig(Number($aAvailableTroops_NXQ[$i][1]), 633)) ; For Big numbers when the troop is selected
+									$aAvailableTroops_NXQ[$i][4] = Number(_getTroopCountSmall(Number($aAvailableTroops_NXQ[$i][1]), 640 + $g_iBottomOffsetYFixed))
+									If $aAvailableTroops_NXQ[$i][4] < 1 Then $aAvailableTroops_NXQ[$i][4] = Number(_getTroopCountBig(Number($aAvailableTroops_NXQ[$i][1]), 633 + $g_iBottomOffsetYFixed)) ; For Big numbers when the troop is selected
 								EndIf
 							EndIf
 						Next
@@ -618,7 +618,7 @@ Func AddTilesToDeployPoint(ByRef $aSelectedDropSidePoints_XY, $iAddTiles, $sSele
 					$pixel[0] = $x + $l
 					$pixel[1] = $y + $l
 			EndSwitch
-			If InDiamondBB($pixel[0], $pixel[1], $g_aBuilderBaseOuterPolygon) Then ; Check if X,Y is inside Builderbase or outside
+			If _IsPointInPoly($pixel[0], $pixel[1], $g_aBuilderBaseOuterPolygon) Then ; Check if X,Y is inside Builderbase or outside
 				If $bDebug Then SetDebugLog("After AddTile: " & $iAddTiles & ", DropSide: " & $sSelectedDropSideName & ", Deploy Point: " & $i + 1 & " - " & $pixel[0] & " x " & $pixel[1])
 				$aSelectedDropSidePoints_XY[$i][0] = $pixel[0]
 				$aSelectedDropSidePoints_XY[$i][1] = $pixel[1]

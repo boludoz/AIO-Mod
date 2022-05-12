@@ -117,7 +117,7 @@ Func DetectedWalls($iBBWallLevel = 1)
 		SetDebugLog("Total Walls Found: " & UBound($aWallsBBNXY) & " --> " & _ArrayToString($aWallsBBNXY, " ", -1, -1, "|"))
 		For $i = 0 To UBound($aWallsBBNXY) - 1
 			SetDebugLog($aWallsBBNXY[$i][0] & " found at (" & $aWallsBBNXY[$i][1] & "," & $aWallsBBNXY[$i][2] & ")", $COLOR_SUCCESS)
-			If IsUnsafeDP($aWallsBBNXY[$i][1], $aWallsBBNXY[$i][2], False) Then ContinueLoop
+;~ 			If IsUnsafeDP($aWallsBBNXY[$i][1], $aWallsBBNXY[$i][2], False) Then ContinueLoop
 			If IsMainPageBuilderBase() Then Click($aWallsBBNXY[$i][1], $aWallsBBNXY[$i][2], 1, 0, "#902")
 			If _Sleep($DELAYCOLLECT3) Then Return
 			Local $aResult = BuildingInfo(245, 490 + $g_iBottomOffsetY) ; Get building name and level with OCR
@@ -167,34 +167,34 @@ Func HammerSearch($sResource = "Gold", $bDebug = False)
 			If StringInStr($aButtons[$i][0], "Hammer") > 0 Then
 				Switch $sResource
 					Case "Gold"
-						$bResourcesToImprove = (_MultiPixelSearch($aButtons[$i][1], 579, $aButtons[$i][1] + 67, 613, 2, 2, Hex(0xFFFFFF, 6), StringSplit2D("0xFFFFFF-0-1|0xFFF955-8-0"), 35) <> 0)
+						$bResourcesToImprove = (_MultiPixelSearch($aButtons[$i][1], 579 + $g_iBottomOffsetYFixed, $aButtons[$i][1] + 67, 613 + $g_iBottomOffsetYFixed, 2, 2, Hex(0xFFFFFF, 6), StringSplit2D("0xFFFFFF-0-1|0xFFF955-8-0"), 35) <> 0)
 					Case "Elixir"
-						$bResourcesToImprove = (_MultiPixelSearch($aButtons[$i][1], 579, $aButtons[$i][1] + 67, 613, 2, 2, Hex(0xFFFFFF, 6), StringSplit2D("0xFFFFFF-0-1|0xFF60FF-8-0"), 35) <> 0) Or (_MultiPixelSearch($aButtons[$i][1], 579, $aButtons[$i][1] + 67, 613, 2, 2, Hex(0xFFFFFF, 6), StringSplit2D("0xFFFFFF-0-1|0xB52DFF-8-0"), 35) <> 0)
+						$bResourcesToImprove = (_MultiPixelSearch($aButtons[$i][1], 579 + $g_iBottomOffsetYFixed, $aButtons[$i][1] + 67, 613 + $g_iBottomOffsetYFixed, 2, 2, Hex(0xFFFFFF, 6), StringSplit2D("0xFFFFFF-0-1|0xFF60FF-8-0"), 35) <> 0) Or (_MultiPixelSearch($aButtons[$i][1], 579 + $g_iBottomOffsetYFixed, $aButtons[$i][1] + 67, 613 + $g_iBottomOffsetYFixed, 2, 2, Hex(0xFFFFFF, 6), StringSplit2D("0xFFFFFF-0-1|0xB52DFF-8-0"), 35) <> 0)
 					Case "Dark"
-						$bResourcesToImprove = (_MultiPixelSearch($aButtons[$i][1], 579, $aButtons[$i][1] + 67, 613, 2, 2, Hex(0xFFFFFF, 6), StringSplit2D("0xFFFFFF-0-1|0x3A2C3E-8-0"), 35) <> 0)
+						$bResourcesToImprove = (_MultiPixelSearch($aButtons[$i][1], 579 + $g_iBottomOffsetYFixed, $aButtons[$i][1] + 67, 613 + $g_iBottomOffsetYFixed, 2, 2, Hex(0xFFFFFF, 6), StringSplit2D("0xFFFFFF-0-1|0x3A2C3E-8-0"), 35) <> 0)
 				EndSwitch
 			ElseIf StringInStr($aButtons[$i][0], $sResource) > 0 Then
 				$bResourcesToImprove = True
 			EndIf
-			
+
 			If $bResourcesToImprove = True Then
 				$aHammer[0] = $aButtons[$i][1]
 				$aHammer[1] = $aButtons[$i][2]
 				ExitLoop
 			EndIf
 		Next
-		
+
 		If $bResourcesToImprove = True Then
 			ClickP($aHammer)
 			If _Sleep(3000) Then Return
-			
+
 			Switch $sResource
 				Case "Gold", "Elixir", "Dark"
-					$aButtonPixel = _MultiPixelSearch(45, 356, 802, 621, 15, 15, Hex(0xDFF885, 6), StringSplit2D("0x77C422-0-30|0xE0F884-15-0"), 35)
+					$aButtonPixel = _MultiPixelSearch(45, 356 + $g_iMidOffsetYFixed, 802, 621 + $g_iBottomOffsetYFixed, 15, 15, Hex(0xDFF885, 6), StringSplit2D("0x77C422-0-30|0xE0F884-15-0"), 35)
 				Case "BuildH", "WallR"
-					$aButtonPixel = _MultiPixelSearch(45, 356, 802, 621, 15, 15, Hex(0xDADEFF, 6), StringSplit2D("0x7C8AFF-0-30|0xDADEFF-15-0"), 35)
+					$aButtonPixel = _MultiPixelSearch(45, 356 + $g_iMidOffsetYFixed, 802, 621 + $g_iBottomOffsetYFixed, 15, 15, Hex(0xDADEFF, 6), StringSplit2D("0x7C8AFF-0-30|0xDADEFF-15-0"), 35)
 			EndSwitch
-	
+
 			If $aButtonPixel <> 0 Then
 				If $bDebug = False Then
 					ClickP($aButtonPixel)
@@ -215,7 +215,7 @@ Func HammerSearch($sResource = "Gold", $bDebug = False)
 			Else
 				SetLog("Failed HammerSearch.", $COLOR_ERROR)
 			EndIf
-			
+
 		Else
 			SetLog("No " & $sResource & " for improve.", $COLOR_INFO)
 		EndIf

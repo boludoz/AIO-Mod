@@ -477,7 +477,7 @@ Func BuilderBaseAttackToDrop($aAvailableTroops)
 	EndIf
 
 	If $aUniqueDeployPoint[0] = 0 Then
-        $g_aBuilderBaseDiamond = PrintBBPoly(False) ;BuilderBaseAttackDiamond()
+        $g_aBuilderBaseDiamond = BuilderBaseAttackDiamond()
 		If @error Then
 			Return False
 		EndIf
