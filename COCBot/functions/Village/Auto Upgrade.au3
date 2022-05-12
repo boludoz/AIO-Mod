@@ -121,13 +121,13 @@ Func _AutoUpgrade($bDebug = False)
 				$s_hHBitmap = GetHHBitmapArea($g_hHBitmap)
 
 				ClickDragAUpgrade(Default, 3)
-				If _Sleep($DELAYAUTOUPGRADEBUILDING4) Then Return			
+				If _Sleep($DELAYAUTOUPGRADEBUILDING4 * 2) Then Return			
 
 				_CaptureRegion()
 				If $s_hHBitmap2 <> 0 Then GdiDeleteHBitmap($s_hHBitmap2) ; Prevent memory leaks.
 				$s_hHBitmap2 = GetHHBitmapArea($g_hHBitmap)
 				
-				If _MasivePixelCompare($s_hHBitmap, $s_hHBitmap2, 205, 85, 335, 135, 15, 5, False, 15.0) Then
+				If _MasivePixelCompare($s_hHBitmap, $s_hHBitmap2, 180, 80, 480, 410 + 160, 15, 5, False, 15.0) Then
 					$iloopamount = $iLoopMax + 1
 					SetLog("My eye detected the end, chau.", $COLOR_INFO)
 				EndIf
@@ -335,7 +335,7 @@ Func _AutoUpgrade($bDebug = False)
 				If $g_aicurrentloot[$elootdarkelixir] >= ($g_aupgraderesourcecostduration[1] + $g_itxtsmartmindark) Then $bsufficentresourcetoupgrade = True
 		EndSwitch
 		
-		If Not $bsufficentresourcetoupgrade Then
+		If Not $bsufficentresourcetoupgrade Or $bDebug Then
 			SetLog("Insufficient " & $g_aupgraderesourcecostduration[0] & " to launch this upgrade, looking Next...", $color_warning)
 			$g_inextlineoffset = $g_icurrentlineoffset
 			SetLog("Scroll to check another possible upgrade")

@@ -64,7 +64,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 	EndIf
 
 	If _Sleep($DELAYPREPARESEARCH1) Then Return
-	If Not IsWindowOpen($g_sImgGeneralCloseButton, 10, 200, GetDiamondFromRect("716,1,860,179")) Then ; Resolution changed
+	If Not IsWindowOpen($g_sImgGeneralCloseButton, 10, 200, GetDiamondFromRect("716,1,860,179"))  Then ; Resolution changed
 		SetLog("Attack Window did not open!", $COLOR_ERROR)
 		AndroidPageError("PrepareSearch")
 		checkMainScreen()
@@ -99,7 +99,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 	
 	SetLog("Are you a legend? " & $g_bLeagueAttack)
 
-	$aiMatch = _PixelSearch(650, 355, 730, 545, Hex(0xC95918, 6), 30)
+	$aiMatch = _PixelSearch(650, 355 + $g_iMidOffsetYFixed, 730, 545 + $g_iBottomOffsetYFixed, Hex(0xC95918, 6), 30)
 	If $aiMatch <> 0 Then
 		ClickP($aiMatch)
 		If _Sleep(500) Then Return

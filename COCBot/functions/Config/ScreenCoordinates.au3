@@ -26,7 +26,7 @@ Global $aIsOnBuilderBase[4] = [838, 18, 0xffff46, 10] ; Check the Gold Coin from
 
 Global $aIsConnectLost[4] = [255, 271 + $g_iMidOffsetY, 0x33B5E5, 20] ; COC message : 'Connection Lost' network error or annother device
 Global $aIsCheckOOS[4] = [223, 272 + $g_iMidOffsetY, 0x33B5E5, 20] ; COC message : 'Connection Lost' network error or annother device
-Global $aReloadButton[4] = [190, 412 + $g_iBottomOffsetYFixed, 0x80CAC3, 10] ; Reload Coc Button after Out of Sync, 860x780
+Global $aReloadButton[4] = [190, 408 + $g_imidoffsety, 0x80CAC3, 10] ; Reload Coc Button after Out of Sync, 860x780
 Global $aAttackButton[2] = [60, 614 + $g_iBottomOffsetY] ; Attack Button, Main Screen
 Global $aFindMatchButton[4] = [470, 20 + $g_iBottomOffsetY, 0xD8A420, 10] ; Find Multiplayer Match Button, Attack Screen 860x780 without shield
 Global $aIsAttackShield[4] = [250, 415 + $g_iMidOffsetY, 0xE8E8E0, 10] ; Attack window, white shield verification window
@@ -89,8 +89,8 @@ Global $aGreenArrowTrainSiegeMachines[2] = [623, 127 + $g_iMidOffsetYFixed]
 Global $g_aShopWindowOpen[4] = [804, 54 + $g_iMidOffsetYFixed, 0xC00508, 15] ; Red pixel in lower right corner of RED X to close shop window
 Global $aTreasuryWindow[4] = [689, 138 + $g_iMidOffsetY, 0xFF8D95, 20] ; Redish pixel above X to close treasury window
 Global $aAttackForTreasury[4] = [88, 619 + $g_iMidOffsetY, 0xF0EBE8, 5] ; Red pixel below X to close treasury window
-Global $aAtkHasDarkElixir[4]  = [ 31, 144 + $g_iMidOffsetYFixed, 0x282020, 10] ; Attack Page, Check for DE icon
-Global $aVillageHasDarkElixir[4] = [837, 134 + $g_iMidOffsetYFixed, 0x3D2D3D, 10] ; Main Page, Base has dark elixir storage
+Global $aAtkHasDarkElixir[4]  = [ 31, 144, 0x282020, 10] ; Attack Page, Check for DE icon
+Global $aVillageHasDarkElixir[4] = [837, 134, 0x3D2D3D, 10] ; Main Page, Base has dark elixir storage
 
 Global $aCheckTopProfile[4] = [200, 166 + $g_iMidOffsetYFixed, 0x868CAC, 5]
 Global $aCheckTopProfile2[4] = [220, 355 + $g_iMidOffsetYFixed, 0x4E4D79, 5]
