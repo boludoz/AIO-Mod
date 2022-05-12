@@ -215,7 +215,7 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 					If $iSiegeIndex >= $eWallW And $iSiegeIndex <= Int($eWallW + $eSiegeMachineCount - 1) And ($bAnySiege Or $iSiegeIndex = $iToUse) Then
 						For $j = 0 To UBound($aAllCoords) - 1
 							$aCoords = $aAllCoords[$j]
-							$SiegeLevel = Number(getTroopsSpellsLevel(Number($aCoords[0]) - 30, 587))
+							$SiegeLevel = Number(getTroopsSpellsLevel(Number($aCoords[0]) - 30, 587 + $g_iBottomOffsetYFixed))
 
 							; Just in case of Level 1
 							If $SiegeLevel = 0 Then $SiegeLevel = 1 ; Number if not found digit returns 0.

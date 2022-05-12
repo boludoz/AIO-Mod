@@ -85,8 +85,8 @@ Global Const $g_aSbonusWindowChk1[4] = [640, 184 + $g_iMidOffsetY, 0xCD1A1F, 15]
 Global Const $g_aSbonusWindowChk2[4] = [650, 462 + $g_iBottomOffsetY, 0xE8E8E0, 10] ; White pixel on top trees where it does not belong
 
 ; Pet House
-Global Const $g_iPetUnlockedxCoord[4] = [190, 345 + $g_iMidOffsetYFixed, 500, 655 + $g_iBottomOffsetYFixed]
-Global Const $g_iPetLevelxCoord[4] = [134, 288 + $g_iMidOffsetYFixed, 443, 598 + $g_iBottomOffsetYFixed]
+Global Const $g_iPetUnlockedxCoord[4] = [190, 345, 500, 655]
+Global Const $g_iPetLevelxCoord[4] = [134, 288, 443, 598]
 
 ; Clan Games
 Global Const $g_aEventFailed[4] = [300, 255 + $g_iMidOffsetYFixed, 0xEA2B24, 20]

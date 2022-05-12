@@ -126,7 +126,7 @@ Func Unbreakable()
 	WEnd
 	If _Sleep($DELAYUNBREAKABLE4) Then Return True
 
-	Local $Message = _PixelSearch(20, 624, 105, 627, Hex(0xE1E3CB, 6), 15) ;Check if Return Home button available and close the screen
+	Local $Message = _PixelSearch(20, 624 + $g_iBottomOffsetYFixed, 105, 627 + $g_iBottomOffsetYFixed, Hex(0xE1E3CB, 6), 15) ;Check if Return Home button available and close the screen
 	If IsArray($Message) Then
 		SetDebugLog("Return Home Pixel = " & _GetPixelColor($Message[0], $Message[1], True) & ", Pos: " & $Message[0] & "/" & $Message[1], $COLOR_DEBUG)
 		PureClick(67, 602 + $g_iBottomOffsetY, 1, 0, "#0138")

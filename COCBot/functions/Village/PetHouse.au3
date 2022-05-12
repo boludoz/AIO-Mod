@@ -79,10 +79,10 @@ Func PetHouse($test = False)
 	; Pet upgrade is not in progress and not upgreading, so we need to start an upgrade.
 	For $i = 0 to $ePetCount - 1
 		; check if pet upgrade enabled and unlocked ; c3b6a5 nox c1b7a5 memu?
-		If $g_bUpgradePetsEnable[$i] And _ColorCheck(_GetPixelColor($g_iPetUnlockedxCoord[$i], 415, True), Hex(0xc3b6a5, 6), 20) Then
+		If $g_bUpgradePetsEnable[$i] And _ColorCheck(_GetPixelColor($g_iPetUnlockedxCoord[$i], 415 + $g_iMidOffsetYFixed, True), Hex(0xc3b6a5, 6), 20) Then
 
 			; get the Pet Level
-			Local $iPetLevel = getTroopsSpellsLevel($g_iPetLevelxCoord[$i], 533)
+			Local $iPetLevel = getTroopsSpellsLevel($g_iPetLevelxCoord[$i], 533 + $g_iMidOffsetYFixed)
 			SetLog($g_asPetNames[$i] & " is at level " & $iPetLevel)
 			If $iPetLevel = $g_ePetLevels Then ContinueLoop
 
@@ -96,8 +96,8 @@ Func PetHouse($test = False)
 				SetLog("Will now upgrade " & $g_asPetNames[$i])
 
 			   ; Randomise X,Y click
-				Local $iX = Random($g_iPetUnlockedxCoord[$i]-10, $g_iPetUnlockedxCoord[$i]+10, 1)
-				Local $iY = Random(500, 520, 1)
+				Local $iX = Random($g_iPetUnlockedxCoord[$i] - 10, $g_iPetUnlockedxCoord[$i] + 10, 1)
+				Local $iY = Random(500, 520, 1) + $g_iMidOffsetYFixed
 				Click($iX, $iY)
 
 			   ; wait for ungrade window to open
@@ -130,7 +130,7 @@ Func PetHouse($test = False)
 						GUICtrlSetState($g_hPicPetGreen, $GUI_SHOW)
 						;===========================================
 						If _Sleep($DELAYLABORATORY2) Then Return
-						Local $sPetTimeOCR = getRemainTLaboratory(274, 286)
+						Local $sPetTimeOCR = getRemainTLaboratory(274, 286 + $g_iMidOffsetYFixed)
 						Local $iPetFinishTime = ConvertOCRTime("Lab Time", $sPetTimeOCR, False)
 						SetDebugLog("$sPetTimeOCR: " & $sPetTimeOCR & ", $iPetFinishTime = " & $iPetFinishTime & " m")
 						If $iPetFinishTime > 0 Then
@@ -164,12 +164,12 @@ EndFunc
 ; check the Pet House to see if a Pet is upgrading already
 Func CheckPetUpgrade()
 	; check for upgrade in process - look for green in finish upgrade with gems button
-	If $g_bDebugSetlog Then SetLog("_GetPixelColor(730, 200): " & _GetPixelColor(730, 200, True) & ":E5FD94", $COLOR_DEBUG)
-	If _ColorCheck(_GetPixelColor(695, 265, True), Hex(0xE5FD94, 6), 20) Then
+	If $g_bDebugSetlog Then SetLog("_GetPixelColor(730, 200 + $g_iMidOffsetYFixed): " & _GetPixelColor(730, 200 + $g_iMidOffsetYFixed, True) & ":E5FD94", $COLOR_DEBUG)
+	If _ColorCheck(_GetPixelColor(695, 265 + $g_iMidOffsetYFixed, True), Hex(0xE5FD94, 6), 20) Then
 		SetLog("Pet House Upgrade in progress, waiting for completion", $COLOR_INFO)
 		If _Sleep($DELAYLABORATORY2) Then Return
 		; upgrade in process and time not recorded so update completion time!
-		Local $sPetTimeOCR = getRemainTLaboratory(274, 286)
+		Local $sPetTimeOCR = getRemainTLaboratory(274, 286 + $g_iMidOffsetYFixed)
 		Local $iPetFinishTime = ConvertOCRTime("Pets Time", $sPetTimeOCR, False)
 		SetDebugLog("$sPetTimeOCR: " & $sPetTimeOCR & ", $iPetFinishTime = " & $iPetFinishTime & " m")
 		If $iPetFinishTime > 0 Then
@@ -298,7 +298,7 @@ Func PetGuiDisplay()
 	$g_iMinDark4PetUpgrade = GetMinDark4PetUpgrade()
 
 	; check for upgrade in process - look for green in finish upgrade with gems button
-	If _ColorCheck(_GetPixelColor(695, 265, True), Hex(0xE5FD94, 6), 20) Then ; Look for light green in upper right corner of lab window.
+	If _ColorCheck(_GetPixelColor(695, 265 + $g_iMidOffsetYFixed, True), Hex(0xE5FD94, 6), 20) Then ; Look for light green in upper right corner of lab window.
 		SetLog("Pet House is Running", $COLOR_INFO)
 		;==========Hide Red  Show Green Hide Gray===
 		GUICtrlSetState($g_hPicPetGray, $GUI_HIDE)
@@ -317,7 +317,7 @@ Func PetGuiDisplay()
 		ClickAway()
 		;If ProfileSwitchAccountEnabled() Then SwitchAccountVariablesReload("Save") ; saving $asLabUpgradeTime[$g_iCurAccount] = $g_sLabUpgradeTime for instantly displaying in multi-stats
 			Return True
-	ElseIf _ColorCheck(_GetPixelColor(260, 260, True), Hex(0xCCB43B, 6), 20) Then ; Look for the paw in the Pet House window.
+	ElseIf _ColorCheck(_GetPixelColor(260, 260 + $g_iMidOffsetYFixed, True), Hex(0xCCB43B, 6), 20) Then ; Look for the paw in the Pet House window.
 		SetLog("Pet House has Stopped", $COLOR_INFO)
         #Region - Discord - Team AIO Mod++
         If $g_bNotifyTGEnable And $g_bNotifyAlertPetHouseIdle Then NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "PetHouse-Idle_Info_01", "PetHouse Idle") & chr(10) & GetTranslatedFileIni("MBR Func_Notify", "PetHouse-Idle_Info_02", "Pet house has Stopped"))
@@ -359,10 +359,10 @@ Func GetMinDark4PetUpgrade()
 	
 	For $i = 0 to $ePetCount - 1
 		; check if pet upgrade enabled and unlocked ; c3b6a5 nox c1b7a5 memu?
-		If _ColorCheck(_GetPixelColor($g_iPetUnlockedxCoord[$i], 415, True), Hex(0xc3b6a5, 6), 20) And $g_bUpgradePetsEnable[$i] Then
+		If _ColorCheck(_GetPixelColor($g_iPetUnlockedxCoord[$i], 415 + $g_iMidOffsetYFixed, True), Hex(0xc3b6a5, 6), 20) And $g_bUpgradePetsEnable[$i] Then
 
 			; get the Pet Level
-			Local $iPetLevel = getTroopsSpellsLevel($g_iPetLevelxCoord[$i], 533)
+			Local $iPetLevel = getTroopsSpellsLevel($g_iPetLevelxCoord[$i], 533 + $g_iMidOffsetYFixed)
 			SetLog($g_asPetNames[$i] & " is at level " & $iPetLevel)
 			If $iPetLevel = $g_ePetLevels Then ContinueLoop
 

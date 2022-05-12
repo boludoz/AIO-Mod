@@ -138,7 +138,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 				$bIsItJustified = True
 			EndIf
 
-			$aiMatch = _PixelSearch(447, 431, 724, 472, Hex(0xAD751E, 6), 15)
+			$aiMatch = _PixelSearch(447, 431 + $g_iBottomOffsetYFixed, 724, 472 + $g_iBottomOffsetYFixed, Hex(0xAD751E, 6), 15)
 			If $aiMatch <> 0 Then
 				$bIsItJustified = True
 				SetLog("Finding opponents.", $COLOR_ACTION)

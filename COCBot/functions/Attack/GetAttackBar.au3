@@ -140,7 +140,7 @@ Func GetAttackBar($bRemaining = False, $pMatchMode = $DB, $bDebug = False)
 			If StringRegExp($aAttackBar[$i][0], "(King)|(Queen)|(Warden)|(Champion)|(Castle)|(WallW)|(BattleB)|(StoneS)|(SiegeB)|(LogL)|(FlameF)", 0) Then
 				If Not $bRemoved Then $aAttackBar[$i][4] = 1
 				If ($pMatchMode = $DB Or $pMatchMode = $LB) And StringRegExp($aAttackBar[$i][0], "(WallW)|(BattleB)|(StoneS)|(SiegeB)|(LogL)|(FlameF)", 0) And $g_abAttackDropCC[$pMatchMode] And $g_aiAttackUseSiege[$pMatchMode] > 0 And $g_aiAttackUseSiege[$pMatchMode] <= $eSiegeMachineCount + 1 Then
-					$g_iSiegeLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 30, 704))
+					$g_iSiegeLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 30, 704 + $g_iBottomOffsetYFixed))
 					If $g_iSiegeLevel = 0 Then $g_iSiegeLevel = 1 ; Number if not found digit returns 0.
 					SetDebugLog($aAttackBar[$i][0] & " level: " & $g_iSiegeLevel)
 				EndIf
@@ -150,15 +150,15 @@ Func GetAttackBar($bRemaining = False, $pMatchMode = $DB, $bDebug = False)
 					If $aAttackBar[$i][4] = 0 Then $aAttackBar[$i][4] = Number(getTroopCountBig(Number($aAttackBar[$i][5]), Number($aAttackBar[$i][6] - 2)))
 				EndIf
 				If StringRegExp($aAttackBar[$i][0], "(LSpell)", 0) And $g_bSmartZapEnable Then
-					Local $iLSpellLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 20, 704))
+					Local $iLSpellLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 20, 704 + $g_iBottomOffsetYFixed))
 					SetDebugLog("$iLSpellLevel:" & $iLSpellLevel)
 					If $iLSpellLevel > 0 And $iLSpellLevel <= 9 Then $g_iLSpellLevel = $iLSpellLevel
 				ElseIf StringRegExp($aAttackBar[$i][0], "(ESpell)", 0) And $g_bEarthQuakeZap Then
-					Local $iESpellLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 20, 704))
+					Local $iESpellLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 20, 704 + $g_iBottomOffsetYFixed))
 					SetDebugLog("$iESpellLevel:" & $iESpellLevel)
 					If $iESpellLevel > 0 And $iESpellLevel <= 5 Then $g_iESpellLevel = $iESpellLevel
  				ElseIf StringRegExp($aAttackBar[$i][0], "(RSpell)|(HSpell)", 0) > 0 And $g_bSmartFarmSpellsEnable Then ; Custom Smart Farm - Team AIO Mod++
-					Local $iSpellLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 20, 704))
+					Local $iSpellLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 20, 704 + $g_iBottomOffsetYFixed))
 					If StringInStr($aAttackBar[$i][0], "RSpell") <> 0 And $iSpellLevel > 0 Then $g_iRSpellLevel = $iSpellLevel
 					If StringInStr($aAttackBar[$i][0], "HSpell") <> 0 And $iSpellLevel > 0 Then $g_iHSpellLevel = $iSpellLevel
 				EndIf
@@ -303,15 +303,15 @@ Func ExtendedAttackBarCheck($aAttackBarFirstSearch, $bRemaining, $sSearchDiamond
 					If $aAttackBar[$i][4] = 0 Then $aAttackBar[$i][4] = Number(getTroopCountBig(Number($aAttackBar[$i][5]), Number($aAttackBar[$i][6] - 2)))
 				EndIf
 				If StringRegExp($aAttackBar[$i][0], "(LSpell)", 0) And $g_bSmartZapEnable Then
-					Local $iLSpellLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 20, 704))
+					Local $iLSpellLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 20, 704 + $g_iBottomOffsetYFixed))
 					SetDebugLog("$iLSpellLevel:" & $iLSpellLevel)
 					If $iLSpellLevel > 0 And $iLSpellLevel <= 9 Then $g_iLSpellLevel = $iLSpellLevel
 				ElseIf StringRegExp($aAttackBar[$i][0], "(ESpell)", 0) And $g_bEarthQuakeZap Then
-					Local $iESpellLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 20, 704))
+					Local $iESpellLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 20, 704 + $g_iBottomOffsetYFixed))
 					SetDebugLog("$iESpellLevel:" & $iESpellLevel)
 					If $iESpellLevel > 0 And $iESpellLevel <= 5 Then $g_iESpellLevel = $iESpellLevel
  				ElseIf StringRegExp($aAttackBar[$i][0], "(RSpell)|(HSpell)", 0) > 0 And $g_bSmartFarmSpellsEnable Then	; Custom Smart Farm - Team AIO Mod++
-					Local $iSpellLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 20, 704))
+					Local $iSpellLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 20, 704 + $g_iBottomOffsetYFixed))
 					If StringInStr($aAttackBar[$i][0], "RSpell") <> 0 And $iSpellLevel > 0 Then $g_iRSpellLevel = $iSpellLevel
 					If StringInStr($aAttackBar[$i][0], "HSpell") <> 0 And $iSpellLevel > 0 Then $g_iHSpellLevel = $iSpellLevel
 				EndIf

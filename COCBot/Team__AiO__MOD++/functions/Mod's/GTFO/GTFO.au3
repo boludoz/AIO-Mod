@@ -362,7 +362,7 @@ Func ClanHop()
 			Local $hTimer = TimerInit()
 			Local $aReturn = 0
 			Do
-				$aReturn = _PixelSearch(485, 270, 495, 670, Hex(0xF0E77B, 6), 15)
+				$aReturn = _PixelSearch(485, 270 + $g_iMidOffsetYFixed, 495, 670 + $g_iBottomOffsetYFixed, Hex(0xF0E77B, 6), 15)
 				If IsArray($aReturn) Then
 					Click($aReturn[0], $aReturn[1] + (67 * Random(1, 4, 1)))
 					If RandomSleep(250) Then Return
@@ -459,7 +459,7 @@ EndFunc   ;==>ClickAwayChat
 Func ScrollUp()
 	Local $aScroll
 	ForceCaptureRegion()
-	Local $y = 81
+	Local $y = 81 + $g_iMidOffsetYFixed
 	$aScroll = _PixelSearch(293, $y, 295, 8 + $y, Hex(0xFFFFFF, 6), 10)
 	If IsArray($aScroll) And _ColorCheck(_GetPixelColor(300, 95 + $g_iMidOffsetYFixed, True), Hex(0x5da515, 6), 15) Then
 		Click($aScroll[0], $aScroll[1], 1, 0, "#0172")
@@ -469,7 +469,7 @@ Func ScrollUp()
 			_CaptureRegion()
 			If _Sleep($DELAYDONATECC2) Then Return
 			_CaptureRegion2()
-			$aOk = _MasivePixelCompare($g_hHBitmap2, $g_hHBitmap, 13, 49, 20, 678, 15, 5)
+			$aOk = _MasivePixelCompare($g_hHBitmap2, $g_hHBitmap, 13, 49, 20, 678 + $g_iBottomOffsetYFixed, 15, 5)
 		Until $aOk = -1 Or $iLoop > 15
 		Return True
 	EndIf
@@ -479,7 +479,7 @@ EndFunc   ;==>ScrollUp
 Func ScrollDown()
 	Local $aScroll
 	ForceCaptureRegion()
-	$aScroll = _PixelSearch(24, 629, 31, 679, Hex(0x6EBD39, 6), 10)
+	$aScroll = _PixelSearch(24, 629 + $g_iBottomOffsetYFixed, 31, 679 + $g_iBottomOffsetYFixed, Hex(0x6EBD39, 6), 10)
 	If IsArray($aScroll) Then
 		Click($aScroll[0], $aScroll[1], 1, 0, "#0172")
 		Local $aOk, $iLoop = 0

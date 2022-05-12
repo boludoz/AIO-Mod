@@ -278,7 +278,7 @@ Func ClickAway($sRegion = Default, $bForce = Default, $eTimes = Default)
 		_CaptureRegion()
 		If UBound(_PixelSearch(20, 12, 22, 14, Hex(0x3CBFEC, 6), 15, False)) > 0 And not @error Then
 			$bDo = "0x3CBFEC"
-			If UBound(_PixelSearch(419, 564, 438, 566, Hex(0xFEFEB6, 6), 3, False)) > 0 And not @error Then
+			If UBound(_PixelSearch(419, 564 + $g_iBottomOffsetYFixed, 438, 566 + $g_iBottomOffsetYFixed, Hex(0xFEFEB6, 6), 3, False)) > 0 And not @error Then
 				$bDo = "0xFEFEB6"
 			ElseIf UBound(_PixelSearch(443, 70, 444, 76, Hex(0xFFFFFF, 6), 15, False)) > 0 And not @error Then
 				$bDo = "0xFFFFFF"

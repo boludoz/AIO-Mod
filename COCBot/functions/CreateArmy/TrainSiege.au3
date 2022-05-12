@@ -35,7 +35,7 @@ Func TrainSiege($bTrainFullSiege = False)
 	; check queueing siege
 	If _CheckPixel($aCheckIsFilled, True, Default, "Siege is Filled") Or _CheckPixel($aCheckIsOccupied, True, Default, "Siege is Queued") Then
 		Local $Dir = @ScriptDir & "\imgxml\ArmyOverview\SiegeMachinesQueued"
-		Local $aSearchResult = SearchArmy($Dir, 18, 182, 840, 261, "Queue")
+		Local $aSearchResult = SearchArmy($Dir, 18, 182 + $g_iMidOffsetYFixed, 840, 261 + $g_iMidOffsetYFixed, "Queue")
 		If $aSearchResult[0][0] <> "" Then
 			For $i = 0 To UBound($aSearchResult) - 1
 				Local $iSiegeIndex = TroopIndexLookup($aSearchResult[$i][0]) - $eWallW
@@ -117,7 +117,7 @@ Func TrainSiege($bTrainFullSiege = False)
 	If _Sleep(500) Then Return
 
 	; OCR to get remain time - coc-siegeremain
-	Local $sSiegeTime = getRemainBuildTimer(780, 244) ; Get time via OCR.
+	Local $sSiegeTime = getRemainBuildTimer(780, 244 + $g_iMidOffsetYFixed) ; Get time via OCR.
 	If $sSiegeTime <> "" Then
 		$g_aiTimeTrain[3] = ConvertOCRTime("Siege", $sSiegeTime, False) ; Update global array
 		SetLog("Remaining Siege build time: " & StringFormat("%.2f", $g_aiTimeTrain[3]), $COLOR_INFO)

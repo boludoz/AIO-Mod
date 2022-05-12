@@ -12,6 +12,7 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+; ALL RESOLUTION FIXED
 Func CollectMagicItems($bTest = False)
 	If Not $g_bRunState Or $g_bRestart Then Return
 	

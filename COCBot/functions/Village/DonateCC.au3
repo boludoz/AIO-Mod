@@ -239,7 +239,7 @@ Func DonateCC($bCheckForNewMsg = False)
 	; add scroll here
 	While 1
 		ForceCaptureRegion()
-		$iScrollY = 77
+		$iScrollY = 77 + $g_iMidOffsetYFixed
 		$Scroll = _PixelSearch(293, 8 + $iScrollY, 295, 23 + $iScrollY, Hex(0xFFFFFF, 6), 20)
 		If IsArray($Scroll) And _ColorCheck(_GetPixelColor(300, 85, True), Hex(0x95CD0E, 6), 20) Then ; a second pixel for the green
 			$bDonate = True
@@ -254,7 +254,7 @@ Func DonateCC($bCheckForNewMsg = False)
 	If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then SetLog("Checking for Donate Requests in Clan Chat", $COLOR_INFO)
 
 	Local $iTimer
-	Local $sSearchArea, $aiSearchArray[4] = [200, 90, 300, 700], $aiSearchArrayBackUp = $aiSearchArray
+	Local $sSearchArea, $aiSearchArray[4] = [200, 90 + $g_iMidOffsetYFixed, 300, 700 + $g_iBottomOffsetYFixed], $aiSearchArrayBackUp = $aiSearchArray
 	Local $aiDonateButton
 
 	While $bDonate
@@ -655,7 +655,7 @@ Func DonateCC($bCheckForNewMsg = False)
 
 		;;; Scroll Down
 		ForceCaptureRegion()
-		$Scroll = _PixelSearch(293, 687 - 30, 295, 693 - 30, Hex(0xFFFFFF, 6), 20)
+		$Scroll = _PixelSearch(293, 687 - 30 + $g_iBottomOffsetYFixed, 295, 693 - 30 + $g_iBottomOffsetYFixed, Hex(0xFFFFFF, 6), 20)
 		If IsArray($Scroll) Then
 			$bDonate = True
 			Click($Scroll[0], $Scroll[1], 1, 0, "#0172")

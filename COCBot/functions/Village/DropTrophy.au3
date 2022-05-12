@@ -378,10 +378,10 @@ EndFunc   ;==>DropTrophy
 
 Func SetTrophyLoss()
 	Local $sTrophyLoss
-	If _ColorCheck(_GetPixelColor(33, 148, True), Hex(0x000000, 6), 10) Or _CheckPixel($aAtkHasDarkElixir, $g_bCapturePixel, Default, "HasDarkElixir") Then ; check if the village have a Dark Elixir Storage
-		$sTrophyLoss = getTrophyLossAttackScreen(48, 214)
+	If _ColorCheck(_GetPixelColor(33, 148, True), Hex(0x000000, 6), 10) Or _CheckPixel($aAtkHasDarkElixir, $g_bCapturePixel, Default, "HasDarkElixir") Then ; check if the village have a Dark Elixir Storage ; Resolution checked
+		$sTrophyLoss = getTrophyLossAttackScreen(48, 214) ; Resolution checked
 	Else
-		$sTrophyLoss = getTrophyLossAttackScreen(48, 184)
+		$sTrophyLoss = getTrophyLossAttackScreen(48, 184) ; Resolution checked
 	EndIf
 	SetLog(" Trophy loss = " & $sTrophyLoss, $COLOR_DEBUG) ; record trophy loss
 	$g_iDroppedTrophyCount -= Number($sTrophyLoss)
