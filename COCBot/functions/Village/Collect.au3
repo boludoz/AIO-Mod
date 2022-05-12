@@ -66,6 +66,19 @@ Func Collect($bCheckTreasury = True, $bCollectCart = True)
 	If Not $g_bChkCollect Or Not $g_bRunState Then Return
 
 	ClickAway()
+	
+	If QuickMIS("BC1", @ScriptDir & "\imgxml\Forge\Collect\", 172, 403, 683, 638) Then
+		Click($g_iQuickMISWOffSetX, $g_iQuickMISWOffSetY)
+		If _Sleep(1500) Then Return
+		
+		If WaitforPixel(137, 346, 234, 375, Hex(0x89D335, 6), 20, 2) Then
+			Click(Random(137, 234, 1), Random(346, 375, 1))
+			If _Sleep(1500) Then Return
+		EndIf
+		
+		ClickAway()
+		
+	EndIf
 
 	StartGainCost()
 	checkAttackDisable($g_iTaBChkIdle) ; Early Take-A-Break detection
