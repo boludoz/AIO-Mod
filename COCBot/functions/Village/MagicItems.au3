@@ -4,7 +4,7 @@
 ; Syntax ........: CollectMagicItems()
 ; Parameters ....:
 ; Return values .: None
-; Author ........: Chilly-Chill, Boldina (boludoz) (7/5/2019 | 26/06/2021), NguyenAnhHD, Dissociable (3/5/2020), Team AIO Mod++ (2020)
+; Author ........: Chilly-Chill, Boldina (boludoz) (7/5/2019 | 26/06/2021), NguyenAnhHD, Dissociable (3/5/2020), Team AIO Mod++ (2020), GrumpyHog
 ; Modified ......:
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2020
 ;                  MyBot is distributed under the terms of the GNU GPL
@@ -12,8 +12,95 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func CollectMagicItems($bDebug = False)
-EndFunc
+Func CollectMagicItems($bTest = False)
+	If Not $g_bRunState Or $g_bRestart Then Return
+	
+	If Not ($g_iTownHallLevel >= 8 And not $g_iTownHallLevel = 0) Then Return ; Must be Th8 or more to use the Trader
+	
+	If $g_bChkCollectFreeMagicItems = False And $g_bChkCollectMagicItems = False Then Return
+
+	Local Static $iLastTimeChecked[$g_eTotalAcc]
+	If $iLastTimeChecked[$g_iCurAccount] = @MDAY And Not $bTest Then Return
+
+	;ClickAway()
+
+	If Not IsMainPage() Then Return
+
+	SetLog("Collecting Free Magic Items", $COLOR_INFO)
+	If _Sleep($DELAYCOLLECT2) Then Return
+
+	; Check Trader Icon on Main Village
+
+	If QuickMis("BC1", $g_sImgTrader, 120, 140, 210, 215, True, False) Then
+		SetLog("Trader available, Entering Daily Discounts", $color_success)
+		click($g_iQuickMiswOffsetX, $g_iQuickMiswOffsetY)
+		If _sleep(1500) Then Return
+	Else
+		SetLog("Trader unavailable", $color_info)
+		Return
+	EndIf
+
+	Local $aiDailyDiscount = decodeSingleCoord(findImage("DailyDiscount", $g_sImgDailyDiscountWindow, GetDiamondFromComma(370, 145 + $g_iMidOffsetYFixed, 480, 175 + $g_iMidOffsetYFixed), 1, True, Default))
+	If Not IsArray($aiDailyDiscount) Or UBound($aiDailyDiscount, 1) < 1 Then
+		ClickAway()
+		Return
+	EndIf
+
+	If Not $g_bRunState Then Return
+	Local $aOcrPositions[3][2] = [[280, 350 + $g_iMidOffsetYFixed], [475, 350 + $g_iMidOffsetYFixed], [650, 350 + $g_iMidOffsetYFixed]]
+	Local $aResults[3] = ["", "", ""]
+
+	If Not $bTest Then $iLastTimeChecked[$g_iCurAccount] = @MDAY
+
+	Local $aFreeItem[4] = [255, 265 + $g_iMidOffsetYFixed, 0xA0A0A0, 10]
+	
+	If _CheckPixel($aFreeItem, True, Default, "CollectFreeMagicItems") Then
+		SetLog("Free Item not available!", $COLOR_INFO)
+		If _Sleep(100) Then Return
+		Click(755, 160 + $g_iMidOffsetYFixed) ; Click Close Window Button
+		If _Sleep(100) Then Return
+		Return
+	EndIf
+
+	For $i = 0 To 2
+		$aResults[$i] = getOcrAndCapture("coc-freemagicitems", $aOcrPositions[$i][0], $aOcrPositions[$i][1], 80, 25, True)
+		;$aResults[$i] = getOcrAndCapture("coc-freemagicitems", $aOcrPositions[$i][0], $aOcrPositions[$i][1], 80, 30, True) ;CLASHIVERSARY title
+		; 5D79C5 ; >Blue Background price
+		; 0D997C ; >Xmas
+		If $aResults[$i] <> "" Then
+			If Not $bTest Then
+				If $aResults[$i] = "FREE" Or $aResults[$i] = "mianfei" Then
+					Click($aOcrPositions[$i][0], $aOcrPositions[$i][1], 2, 500)
+					SetLog("Free Magic Item detected", $COLOR_INFO)
+					;CloseWindow("CloseDD")
+					If _Sleep(100) Then Return
+					Click(755, 160 + $g_iMidOffsetYFixed) ; Click Close Window Button
+					If _Sleep(100) Then Return
+					Return
+				Else
+					If _ColorCheck(_GetPixelColor($aOcrPositions[$i][0], $aOcrPositions[$i][1] + 5, True), Hex(0x5D79C5, 6), 5) Then
+						$aResults[$i] = $aResults[$i] & " Gems"
+					Else
+						$aResults[$i] = Int($aResults[$i]) > 0 ? "No Space In Castle" : "Collected"
+					EndIf
+				EndIf
+			EndIf
+		ElseIf $aResults[$i] = "" Then
+			$aResults[$i] = "N/A"
+		EndIf
+
+		If Not $g_bRunState Then Return
+	Next
+
+	SetLog("Daily Discounts: " & $aResults[0] & " | " & $aResults[1] & " | " & $aResults[2])
+	SetLog("Nothing free to collect!", $COLOR_INFO)
+
+	;CloseWindow("CloseDD")
+	If _Sleep(100) Then Return
+	Click(755, 160 + $g_iMidOffsetYFixed) ; Click Close Window Button
+	If _Sleep(100) Then Return
+	CheckMainScreen()
+EndFunc   ;==>CollectMagicItems
 #cs
 	
 	If Not $g_bRunState Or $g_bRestart Then Return
