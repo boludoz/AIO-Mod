@@ -640,7 +640,7 @@ Func RemoveExtraTroopsQueue() ; Will remove All Extra troops in queue If there's
 	;Local Const $DecreaseBy = 70
 	;Local $x = 834
 
-	Local Const $y = 186 + $g_iMidOffsetYFixed, $yRemoveBtn = 200, $xDecreaseRemoveBtn = 10
+	Local Const $y = 186 + $g_iMidOffsetYFixed, $yRemoveBtn = 200 + $g_iMidOffsetYFixed, $xDecreaseRemoveBtn = 10
 	Local $bColorCheck = False, $bGotRemoved = False, $iRandomCS = $g_iTrainClickDelay
 	For $x = 834 To 58 Step -70
 		If Not $g_bRunState Then Return

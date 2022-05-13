@@ -471,6 +471,7 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 			EndIf
 		EndIf
 	EndIf
+	
 	Local $village
 	Local $bOnBuilderBase = isOnBuilderBase($CaptureRegion)
 	$village = GetVillageSize($DebugLog, "stone", "tree", Default, $bOnBuilderBase, $CaptureRegion)
