@@ -257,9 +257,9 @@ Func AttackClick($x, $y, $times = 1, $speed = 0, $afterDelay = 0, $debugtxt = ""
 	; Protect the Attack Bar
 	AttackRemainingTime(False) ; flag attack started
 	; Custom Fix - Team AIO Mod++
-	If $g_bAttackClickFC and $y > 555 + $g_iBottomOffsetY and $x < 450 Then
+	If $g_bAttackClickFC and $y > 485 and $x < 450 Then
 		$g_bAttackClickFC = False
-		$y = 555 + $g_iBottomOffsetY
+		$y = 480
 	EndIf
 	Local $result = PureClick($x, $y, $times, $speed, $debugtxt)
 	Local $delay = $times * $speed + $afterDelay - __TimerDiff($timer)
