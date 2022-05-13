@@ -222,7 +222,7 @@ Func GetVariable(Const $asImageToUse, Const $iIndex)
 					Local $aCoordinates = StringSplit($aResult[1], ",", $STR_NOCOUNT)
 					If UBound($aCoordinates) > 1 Then
 						Local $iButtonX = 25 + Int($aCoordinates[0])
-						Local $iButtonY = 375 + Int($aCoordinates[1])
+						Local $iButtonY = 375 + Int($aCoordinates[1]) + $g_iMidOffsetYFixed ; Resolution fixed
 						Local $sColorToCheck = "0x" & _GetPixelColor($iButtonX, $iButtonY, $g_bCapturePixel)
 						Local $iTolerance = 40
 						Local $aTrainPos[5] = [$iButtonX, $iButtonY, $sColorToCheck, $iTolerance, $eBarb]
