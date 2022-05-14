@@ -445,11 +445,17 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 	Local $villageSize = 0
 
 	If $CaptureRegion Then _CaptureRegion2()
+	
+	Local $bOnBuilderBase = isOnBuilderBase($CaptureRegion)
+	If $bOnBuilderBase Then
+		If builderbasezoomout() Then
+			Local $array[5] = ["zoomout:"]
+			Return $array
+		EndIf
+	EndIf
 
 	Local $aResult = ["", 0, 0, 0, 0] ; expected dummy value
-	Local $bUpdateSharedPrefs = $g_bUpdateSharedPrefs And $g_iAndroidZoomoutMode = 4
-
-	
+	Local $bUpdateSharedPrefs = $g_bUpdateSharedPrefs And $g_iAndroidZoomoutMode = 4	
 	Local $iMultipler = ($g_aisearchzoomoutcounter[0] > 5) ? (2) : (1)
 	
 	Static $iCallCount = 0
@@ -472,8 +478,7 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 		EndIf
 	EndIf
 	
-	Local $village
-	Local $bOnBuilderBase = isOnBuilderBase($CaptureRegion)
+	Local $village	
 	$village = GetVillageSize($DebugLog, "stone", "tree", Default, $bOnBuilderBase, $CaptureRegion)
 
 	If $g_aiSearchZoomOutCounter[0] > 0 Then

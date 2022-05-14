@@ -146,6 +146,12 @@ Global $g_sECollectorDMatB = $g_sBaseDMatchingPathB & "\deadbase\Elixir\"
 ; DPBB !
 Global Const $g_sBundleDeployPointsBBD = $g_sBaseDMatchingPathB & "\DPBB\"
 
+; Forge 
+Global Const $g_sForgeCollect = $g_sBaseDMatchingPathB & "\Forge\Collect\"
+
+; Cross 
+Global Const $g_sCrossX = $g_sBaseDMatchingPathB & "\Cross\"
+
 ; DPSM !
 ; Global Const $g_sBundleDeployPointsSMD = $g_sBaseDMatchingPathB & "\DPSM\"
 

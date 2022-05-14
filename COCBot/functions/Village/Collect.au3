@@ -67,8 +67,14 @@ Func Collect($bCheckTreasury = True, $bCollectCart = True)
 
 	ClickAway()
 	
-	If QuickMIS("BC1", @ScriptDir & "\imgxml\Forge\Collect\", 172, 403, 683, 638) Then
-		Click($g_iQuickMISWOffSetX, $g_iQuickMISWOffSetY)
+	StartGainCost()
+	checkAttackDisable($g_iTaBChkIdle) ; Early Take-A-Break detection
+
+	; Shooting a missile at a rooster - Forge - Team AIO Mod++
+	Local $aDeployPointsResult = DMClassicArray(DFind($g_sForgeCollect, 172, 403, 683, 638, 0, 0, 1000, True), 10, $g_bDebugImageSave)
+
+	If UBound($aDeployPointsResult) > 0 And not @error Then
+		Click($aDeployPointsResult[0][1], $aDeployPointsResult[0][2])
 		If _Sleep(1500) Then Return
 		
 		If WaitforPixel(137, 346, 234, 375, Hex(0x89D335, 6), 20, 2) Then
@@ -79,9 +85,6 @@ Func Collect($bCheckTreasury = True, $bCollectCart = True)
 		ClickAway()
 		
 	EndIf
-
-	StartGainCost()
-	checkAttackDisable($g_iTaBChkIdle) ; Early Take-A-Break detection
 
 	SetLog("Collecting Resources", $COLOR_INFO)
 	If _Sleep($DELAYCOLLECT2) Then Return
