@@ -47,7 +47,7 @@ Func TestBuilderBaseGetHall()
 	Local $Status = $g_bRunState
 	$g_bRunState = True
 
-	Local $BuilderHallPos = _ImageSearchXML($g_sBundleBuilderHall, 1, "0,0,860,732", True, True)
+	Local $BuilderHallPos = _ImageSearchXML($g_sBundleBuilderHall, 1, "79,50,784,597", True, True)
 	If Not IsArray($BuilderHallPos) And UBound($BuilderHallPos) < 1 Then
 		SaveDebugImage("BuilderHall")
 	EndIf
