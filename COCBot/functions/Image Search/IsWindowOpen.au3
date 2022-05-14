@@ -11,9 +11,14 @@
 ; ===============================================================================================================================
 Global $g_avWindowCoordinates[2] = [-1, -1]
 
-Func IsWindowOpen($sImagePath, $iLoopCount = 1, $iDelay = 200, $sSearchArea = "FV")
-	Local $aDeployPointsResult = DMClassicArray(DFind($g_sCrossX, 439, 0, 859, 373, 0, 0, 1000, True), 10, $g_bDebugImageSave)
-	Return (UBound($aDeployPointsResult) > 0 And not @error) ? (True) : (False)
+Func IsWindowOpen($sImagePath = "", $iLoopCount = 1, $iDelay = 200, $sSearchArea = "FV")
+	For $i = 0 To $iLoopCount
+		Local $aDeployPointsResult = DMClassicArray(DFind($g_sCrossX, 439, 0, 859, 373, 0, 0, 1000, True), 10, $g_bDebugImageSave)
+		If UBound($aDeployPointsResult) > 0 And not @error Then Return True
+		If _Sleep($iDelay) Then Return False
+	Next
+	
+	Return False
 	#CS
 	Local $aFiles = _FileListToArrayRec($sImagePath)
 	Local $aWindow, $avResetCoords[2] = [-1, -1]
