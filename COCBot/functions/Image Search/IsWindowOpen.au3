@@ -13,7 +13,7 @@ Global $g_avWindowCoordinates[2] = [-1, -1]
 
 Func IsWindowOpen($sImagePath = "", $iLoopCount = 1, $iDelay = 200, $sSearchArea = "FV")
 	For $i = 0 To $iLoopCount
-		Local $aDeployPointsResult = DMClassicArray(DFind($g_sCrossX, 439, 0, 859, 373, 0, 0, 1000, True), 10, $g_bDebugImageSave)
+		Local $aDeployPointsResult = DMClassicArray(DFind($g_sCrossX, 439, 0, 859, 373, 0, 0, 1000, True), 10, $g_bDebugImageSave) ; _MultiPixelSearch(439, 0, 859, 373, 1, 2, Hex(0xF02227, 6), StringSplit2D("0xF02227/0/5|0xFFFFFF/12/-5|0xFFFFFF/13/-1|0xF02227/25/1|0xF02227/26/4", "/", "|"), 25)
 		If UBound($aDeployPointsResult) > 0 And not @error Then Return True
 		If _Sleep($iDelay) Then Return False
 	Next
