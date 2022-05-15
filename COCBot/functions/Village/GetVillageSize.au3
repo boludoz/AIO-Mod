@@ -104,7 +104,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 			If UBound($a) = 4 Then
 
 				$x0 = $a[0]
-				$y0 = $a[1]
+				$y0 = $a[1] - 44
 				$d0 = StringReplace($a[2], ",", ".")
 
 				$x1 = $x0 - $iAdditionalX
@@ -141,7 +141,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		If UBound($a) = 4 Then
 
 			$x0 = $a[0]
-			$y0 = $a[1]
+			$y0 = $a[1] - 44
 			$d0 = StringReplace($a[2], ",", ".")
 
 			$x1 = $x0 - $iAdditionalX
@@ -201,7 +201,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 			If UBound($a) = 4 Then
 
 				$x0 = $a[0]
-				$y0 = $a[1]
+				$y0 = $a[1] - 44
 				$d0 = StringReplace($a[2], ",", ".")
 
 				$x1 = $x0 - $iAdditionalX

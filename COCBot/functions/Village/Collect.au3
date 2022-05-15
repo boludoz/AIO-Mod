@@ -71,7 +71,7 @@ Func Collect($bCheckTreasury = True, $bCollectCart = True)
 	checkAttackDisable($g_iTaBChkIdle) ; Early Take-A-Break detection
 
 	; Shooting a missile at a rooster - Forge - Team AIO Mod++
-	Local $aDeployPointsResult = DMClassicArray(DFind($g_sForgeCollect, 172, 403, 683, 638, 0, 0, 1000, True), 10, $g_bDebugImageSave)
+	Local $aDeployPointsResult = DMClassicArray(DFind($g_sForgeCollect, 172, 403, 683, 644, 0, 0, 1000, True), 10, $g_bDebugImageSave)
 
 	If UBound($aDeployPointsResult) > 0 And not @error Then
 		Click($aDeployPointsResult[0][1], $aDeployPointsResult[0][2])
