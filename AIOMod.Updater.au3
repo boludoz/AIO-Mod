@@ -353,8 +353,9 @@ Func KillProcess($iPid, $sProcess_info = "", $iAttempts = 3)
 				EndIf
 				$iCount += 1
 			Until ($iCount > $iAttempts) Or not ProcessExists($iPid)
+
 			If ProcessExists($iPid) Then
-				SetDebugLog("KillProcess(" & $iCount & "): PID = " & $iPid & " failed to kill" & $sProcess_info, $COLOR_ERROR)
+				SetDebugLog("KillProcess(" & $iCount & "): PID = " & $iPid & " not killed" & $sProcess_info)
 				Return False
 			EndIf
 			Return True
