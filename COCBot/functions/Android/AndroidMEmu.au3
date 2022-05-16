@@ -94,7 +94,17 @@ EndFunc   ;==>GetMEmuPath
 
 Func GetMEmuAdbPath()
 	Local $adbPath = GetMEmuPath() & "adb.exe"
-	If FileExists($adbPath) Then Return $adbPath
+	If FileExists($adbPath) Then
+		Return $adbPath
+	Else
+		; Custom fix - Team AIO Mod++
+		Local $aFileList = _FileListToArray(GetMEmuPath(), "*adb.exe", $FLTA_FILESFOLDERS)
+		Local $sMove = (UBound($aFileList) > 0 And not @error) ? ($aFileList[1]) : (@ScriptDir & "\lib\adb\adb.exe")
+		If FileCopy($sMove, $adbPath, $FC_OVERWRITE + $FC_CREATEPATH) Then
+			SetLog("Fixed ADB !!!", $COLOR_DEBUG)
+			Return $adbPath
+		EndIf
+	EndIf
 	Return ""
 EndFunc   ;==>GetMEmuAdbPath
 

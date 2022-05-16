@@ -164,7 +164,17 @@ EndFunc   ;==>_OpenBlueStacks2
 
 Func GetBlueStacksXAdbPath()
 	Local $adbPath = $__BlueStacks_Path & "HD-Adb.exe"
-	If FileExists($adbPath) Then Return $adbPath
+	If FileExists($adbPath) Then
+		Return $adbPath
+	Else
+		; Custom fix - Team AIO Mod++
+		Local $aFileList = _FileListToArray($__BlueStacks_Path, "*adb.exe", $FLTA_FILESFOLDERS)
+		Local $sMove = (UBound($aFileList) > 0 And not @error) ? ($aFileList[1]) : (@ScriptDir & "\lib\adb\adb.exe")
+		If FileCopy($sMove, $adbPath, $FC_OVERWRITE + $FC_CREATEPATH) Then
+			SetLog("Fixed ADB !!!", $COLOR_DEBUG)
+			Return $adbPath
+		EndIf
+	EndIf
 	Return ""
 EndFunc   ;==>GetBlueStacksXAdbPath
 

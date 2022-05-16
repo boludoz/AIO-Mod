@@ -802,6 +802,14 @@ Func FindPreferredAdbPath()
 					FileCopy($sADBPathvdll, $sDirectory & StringRegExpReplace($sADBPathvdll, "^.*\\", ""), $FC_OVERWRITE)
 					FileCopy($sADBPathvdll1, $sDirectory & StringRegExpReplace($sADBPathvdll1, "^.*\\", ""), $FC_OVERWRITE)
 				EndIf
+				
+				$sPathAdbLegacy = Execute("Get" & $g_sAndroidEmulator & "AdbPath()")
+				
+				If FileExists($sPathAdbLegacy) Then
+					$g_sAndroidAdbPath = $sPathAdbLegacy
+					Return $g_sAndroidAdbPath
+				EndIf
+
 		EndSwitch
 	EndIf
 
