@@ -651,7 +651,7 @@ Func BotMinimizeRestore($bMinimize, $sCaller, $iForceUpdatingWhenMinimized = Fal
 	Local $botPosX = ($g_bAndroidEmbedded = False ? $g_iFrmBotPosX : $g_iFrmBotDockedPosX)
 	Local $botPosY = ($g_bAndroidEmbedded = False ? $g_iFrmBotPosY : $g_iFrmBotDockedPosY)
 	Local $aPos = [$botPosX, $botPosY]
-	SetDebugLog("Restore bot window to " & $botPosX & ", " & $botPosY & ", caller: " & $sCaller, Default, True)
+	;SetDebugLog("Restore bot window to " & $botPosX & ", " & $botPosY & ", caller: " & $sCaller, Default, True)
 	Local $iExStyle = _WinAPI_GetWindowLong($g_hFrmBot, $GWL_EXSTYLE)
 	If BitAND($iExStyle, $WS_EX_TOOLWINDOW) Then
 		WinMove2($g_hFrmBot, "", -1, -1, -1, -1, 0, $SWP_HIDEWINDOW, False)

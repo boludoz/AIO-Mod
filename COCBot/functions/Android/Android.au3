@@ -4251,7 +4251,7 @@ EndFunc   ;==>ShowAndroidWindow
 Func HideAndroidWindow($bHide = True, $bRestorePosAndActivateWhenShow = Default, $bFastCheck = Default, $sSource = "Unknown", $hHWndAfter = Default)
 	If $bFastCheck = Default Then $bFastCheck = True
 	If $hHWndAfter = Default Then $hHWndAfter = $HWND_TOPMOST
-	SetDebugLog("HideAndroidWindow: " & $bHide & ", " & $bRestorePosAndActivateWhenShow & ", " & $bFastCheck & ", " & $sSource)
+	;SetDebugLog("HideAndroidWindow: " & $bHide & ", " & $bRestorePosAndActivateWhenShow & ", " & $bFastCheck & ", " & $sSource)
 	ResumeAndroid()
 	SetError(0)
 	If $bFastCheck Then
