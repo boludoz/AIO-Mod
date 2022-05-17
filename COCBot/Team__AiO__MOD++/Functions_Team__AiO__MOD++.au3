@@ -90,6 +90,9 @@
 #include "functions\Mod's\Attack\GetButtons.au3"
 #include "functions\Mod's\Attack\VerifyDropPoints.au3"
 
+; Forge - Team AiO MOD++
+#include "functions\Mod's\Forge\Forge.au3"
+
 ; Moved to the end to avoid any global declare issues - Team AiO MOD++
 #include "functions\Config\saveConfig.au3"
 #include "functions\Config\readConfig.au3"
