@@ -122,10 +122,6 @@ Global Const $g_sImgpetsHouseSelection = @ScriptDir & "\imgxml\Pets\SelectedHero
 Global Const $g_sImgpetsHouseHeroes = @ScriptDir & "\imgxml\Pets\Heroes\"
 #EndRegion - Pets
 
-#Region - Collect forge
-
-#EndRegion - Collect forge
-
 #Region - DMatchingBundles.au3
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: DMatchingBundles.au3
@@ -146,23 +142,25 @@ Global $g_sECollectorDMatB = $g_sBaseDMatchingPathB & "\deadbase\Elixir\"
 ; DPBB !
 Global Const $g_sBundleDeployPointsBBD = $g_sBaseDMatchingPathB & "\DPBB\"
 
-; Forge 
-Global Const $g_sForgeCollect = $g_sBaseDMatchingPathB & "\Forge\Collect\"
-
 ; Cross 
 Global Const $g_sCrossX = $g_sBaseDMatchingPathB & "\Cross\"
 
-; DPSM !
-; Global Const $g_sBundleDeployPointsSMD = $g_sBaseDMatchingPathB & "\DPSM\"
-
-; Heroes !
-; Global Const $g_sBundleHeroesUbiKing = $g_sBaseDMatchingPathB & "\Heroes\King\"
-; Global Const $g_sBundleHeroesUbiQueen = $g_sBaseDMatchingPathB & "\Heroes\Queen\"
-; Global Const $g_sBundleHeroesUbiWarden = $g_sBaseDMatchingPathB & "\Heroes\Warden\"
-; Global Const $g_sBundleHeroesUbiChampion = $g_sBaseDMatchingPathB & "\Heroes\Champion\"
-
 ; New DB.
 Global Const $g_sBundleDefensesEagle = $g_sBaseDMatchingPathB & "\deadbase\Defenses\Eagle\"
+
+; Forge 
+Global Const $g_sForgeCollect = $g_sBaseDMatchingPathB & "\Forge\Collect\"
+
+;Clan Capital
+; 105, 93, 754, 673
+; DMClassicArray(DFind("C:\Users\Admin\Documents\AIO-Mod\COCBot\Team__AiO__MOD++\Bundles\Image Matching\ClanCapital\Locked\", 105, 93, 754, 673, 0, 0, 1000, True), 10, $g_bDebugImageSave)
+Global Const $g_sClanCapitalLocked = $g_sBaseDMatchingPathB & "\ClanCapital\Locked\"
+;298, 1, 415, 37
+; DMClassicArray(DFind($g_sBaseDMatchingPathB & "\ClanCapital\Info\", 298, 1, 415, 37, 0, 0, 1000, True), 10, $g_bDebugImageSave)
+Global Const $g_sClanCapitalInfo = $g_sBaseDMatchingPathB & "\ClanCapital\Info\"
+; 427, 73, 573, 370
+; DMClassicArray(DFind($g_sBaseDMatchingPathB & "\ClanCapital\AutoUpgrade\GoldIconAutoInProgress\", 427, 73, 573, 370, 0, 0, 1000, True), 10, $g_bDebugImageSave)
+Global Const $g_sClanCapitalInProgress = $g_sBaseDMatchingPathB & "\ClanCapital\AutoUpgrade\GoldIconAutoInProgress\"
 #EndRegion - DMatchingBundles.au3
 
 ; #FUNCTION# ====================================================================================================================
@@ -200,19 +198,7 @@ Global $g_sASButtonsDOCRPath = $g_sBaseDOCRPathB & "\AttackScreen\Buttons"
 Global $g_sASUpgradeResourcesDOCRPath = $g_sBaseDOCRPathB & "\UpgradeResources\OK.docr"
 Global $g_sASUpgradeResourcesRedDOCRPath = $g_sBaseDOCRPathB & "\UpgradeResources\Red.docr"
 
-; Magic items.
-Global $g_sASMagicItemsDOCRPath = $g_sBaseDOCRPathB & "\MagicItems\"
-
-; EndTime.
-; Global $g_sASBattleEndsDOCRPath = $g_sBaseDOCRPathB & "\BattleEnds\"
-
-; BoostST.
-; Global $g_sASBoostSTDOCRPath = $g_sBaseDOCRPathB & "\BoostST\"
-
 ; Gems
 Global $g_sASGemsSDOCRPath = $g_sBaseDOCRPathB & "\GemsS\"
 
-; OCR CG
-Global $g_sASOCRCGDOCRPath = $g_sBaseDOCRPathB & "\CG\"
-
-; getOcrAndCaptureDOCR($g_sASOCRCGDOCRPath, 585, 475, 855, 565, True, True)
+; getOcrAndCaptureDOCR($g_sASForgeValueDOCRPath, 585, 475, 855, 565, True, True)

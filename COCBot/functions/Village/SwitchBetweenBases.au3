@@ -14,6 +14,16 @@
 ; ===============================================================================================================================
 
 #Region - Custom - Team AIO Mod++
+Func SwitchBetweenBasesTest()
+	If isOnBuilderBase(True) Then
+		$g_bStayOnBuilderBase = False
+	Else
+		$g_bStayOnBuilderBase = True
+	EndIf
+	
+	Return SwitchBetweenBases()
+EndFunc
+
 Func SwitchBetweenBases($bCheckMainScreen = True)
 	Local $sSwitchFrom, $sSwitchTo, $bIsOnBuilderBase = False, $aButtonCoords
 	Local $sTile, $sTileDir, $sRegionToSearch
@@ -46,12 +56,12 @@ Func SwitchBetweenBases($bCheckMainScreen = True)
 			$bIsOnBuilderBase = False
 			$sTile = "BoatNormalVillage"
 			$sTileDir = $g_sImgBoat
-			$sRegionToSearch = GetDiamondFromComma(66, 432 + $g_iBottomOffsetYFixed, 388, 627 + $g_iBottomOffsetYFixed)
+			$sRegionToSearch = GetDiamondFromComma(0, 274, 515, 644)
 			If $g_bStayOnBuilderBase = False Then Return True
 		EndIf
 		
 		 ; Stop hitting the stone like a monkey in search of money and force the zoomout!
-		If $i = 1 Then $g_bSkipFirstZoomout = False
+		$g_bSkipFirstZoomout = False
 		ZoomOut()
 
 		If _Sleep(1000) Then Return

@@ -11,8 +11,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 ; 	   $aiSomeVar = [StartX, StartY, EndX, EndY]
-;Global $aiClickAwayRegionLeft = [225, 10, 255, 30]
-;Global $aiClickAwayRegionRight = [605, 10, 645, 30]
+
 ;Let's tighten these up to avoid clicking on shields.
 Global $aiClickAwayRegionLeft = [235, 10, 245 + $g_iMidOffsetYFixed, 30]
 Global $aiClickAwayRegionRight = [625, 10, 635 + $g_iBottomOffsetYFixed, 30]
@@ -146,14 +145,14 @@ Global $aAttackButtonRND[4] = [20, 610 + $g_iMidOffsetY, 100, 670 + $g_iMidOffse
 ;Switch Account
 Global $aLoginWithSupercellID[4] = [280, 640 + $g_iMidOffsetY, 0xDCF684, 20] ; Upper green button section "Log in with Supercell ID" 0xB1E25A
 Global $aLoginWithSupercellID2[4] = [266, 653 + $g_iMidOffsetY, 0xFFFFFF , 10] ; White Font "Log in with Supercell ID"
-Global $aButtonSetting[4] = [820, 550 + $g_iMidOffsetY, 0xFFFFFF, 10] ; Setting button, Main Screen
+Global $aButtonSetting[4] = [820, 495, 0xFFFFFF, 10] ; Setting button, Main Screen ; Resolution fixed
 Global $aIsSettingPage[4] = [753, 81 + $g_iMidOffsetY, 0xFF8F95, 10] ; Main Screen, Setting page open - left upper corner of x button
 
 ;Google Play
 Global $aListAccount[4] = [635, 230 + $g_iMidOffsetY, 0xFFFFFF, 20] ; Accounts list google, White
 Global $aButtonVillageLoad[4] = [515, 411 + $g_iMidOffsetY, 0x6EBD1F, 20] ; Load button, Green
 Global $aTextBox[4] = [320, 160 + $g_iMidOffsetY, 0xFFFFFF, 10] ; Text box, White
-Global $aButtonVillageOkay[4] = [500, 170 + $g_iMidOffsetY, 0x81CA2D, 20] ; Okay button, Green
+Global $aButtonVillageOkay[4] = [500, 200, 0x81CA2D, 20] ; Okay button, Green
 
 ;SuperCell ID
 Global $aButtonConnectedSCID[4] = [640, 160 + $g_iMidOffsetY, 0x2D89FD, 20] ; Setting screen, Supercell ID Connected button (Blue Part)
@@ -165,10 +164,10 @@ Global $aButtonRemoveTroopsOK1[4] = [747, 582 + $g_iBottomOffsetYFixed, 0x76BF2F
 Global $aButtonRemoveTroopsOK2[4] = [500, 447 + $g_iBottomOffsetYFixed, 0x6DBC1F, 20]
 
 ;Change Language To English
-Global $aButtonLanguage[4] = [330, 407 + $g_iBottomOffsetYFixed, 0xDDF685, 20]
-Global $aListLanguage[4] = [110, 100 + $g_iMidOffsetY, 0xFFFFFF, 10]
-Global $aEnglishLanguage[4] = [420, 145 + $g_iMidOffsetY, 0xD7D5C7, 20]
-Global $aLanguageOkay[4] = [510, 420 + $g_iMidOffsetY, 0x6FBD1F, 20]
+Global $aButtonLanguage[4] = [570, 270, 0xDDF685, 20]  ; Resolution fixed
+Global $aListLanguage[4] = [110, 87, 0xFFFFFF, 10]     ; Resolution fixed
+Global $aEnglishLanguage[4] = [146, 140, 0xD7D5C7, 20] ; Resolution fixed
+Global $aLanguageOkay[4] = [510, 400, 0x6FBD1F, 20]    ; Resolution fixed
 
 ;Personal Challenges
 Global Const $aPersonalChallengeOpenButton1[4] = [149, 631 + $g_iBottomOffsetY, 0xB5CEE4, 20] ; Personal Challenge Button
