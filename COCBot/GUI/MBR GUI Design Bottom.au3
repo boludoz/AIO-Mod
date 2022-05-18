@@ -55,45 +55,58 @@ Func CreateBottomPanel()
 
 	;~ Buttons
 	Local $y_bottom = 0 ; 515
-	Local $x = 10, $y = $y_bottom + 10
-	GUICtrlCreateGroup("https://mybot.run " & GetTranslatedFileIni("MBR GUI Design Bottom", "Group_01", "- freeware bot -"), $x - 5, $y - 10, 190, 108 - 15)
+	Local $x = 10, $y = $y_bottom
+	; GUICtrlCreateGroup("https://mybot.run " & GetTranslatedFileIni("MBR GUI Design Bottom", "Group_01", "- freeware bot -"), $x - 5, $y - 10, 190, 108 - 15)
 	#Region GUI - Team Aio Mod++
-		$y += 5
-		$g_hBtnStart = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnStart", "Start Bot"), $x, $y, 90, 18)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "BtnStart_Info_01", "Use this to START the bot."))
-			If $g_bBtnColor then GUICtrlSetBkColor(-1, 0x5CAD85)
-			GUICtrlSetState(-1, $GUI_DISABLE)
-		$g_hBtnStop = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnStop", "Stop Bot"), -1, -1, 90, 18)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "BtnStop_Info_01", "Use this to STOP the bot (or ESC key)."))
-			If $g_bBtnColor then GUICtrlSetBkColor(-1, 0xDB4D4D)
-			GUICtrlSetState(-1, $GUI_HIDE)
-		$g_hBtnPause = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnPause", "Pause"), $x + 90, -1, 90, 18)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "BtnPause_Info_01", "Use this to PAUSE all actions of the bot until you Resume (or Pause/Break key)."))
-			If $g_bBtnColor then GUICtrlSetBkColor(-1,  0xFFA500)
-			GUICtrlSetState(-1, $GUI_HIDE)
-		$g_hBtnResume = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnResume", "Resume"), -1, -1, 90, 18)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "BtnResume_Info_01", "Use this to RESUME a paused Bot (or Pause/Break key)."))
-			If $g_bBtnColor then GUICtrlSetBkColor(-1,  0xFFA500)
-			GUICtrlSetState(-1, $GUI_HIDE)
-		$g_hBtnSearchMode = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnSearchMode", "Search Mode"), -1, -1, 90, 18)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "BtnSearchMode_Info_01", "Does not attack. Searches for a Village that meets conditions."))
-			GUICtrlSetOnEvent(-1, "btnSearchMode")
-			If $g_bBtnColor then GUICtrlSetBkColor(-1,  0xFFA500)
-			GUICtrlSetState(-1, $GUI_DISABLE)
-		$g_hBtnMakeScreenshot = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnMakeScreenshot", "Photo"), $x , $y + 18, 40, 15)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "BtnMakeScreenshot_Info_01", "Click here to take a snapshot of your village and save it to a file."))
-			If $g_bBtnColor then GUICtrlSetBkColor(-1, 0x5CAD85)
-		$g_hBtnHide = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnHide", "Hide"), $x + 40, $y + 18, 50, 15)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "BtnHide_Info_01", "Use this to move the Android Window out of sight.") & @CRLF & _
-							   GetTranslatedFileIni("MBR GUI Design Bottom", "BtnHide_Info_02", "(Not minimized, but hidden)"))
-			If $g_bBtnColor Then GUICtrlSetBkColor(-1, 0x22C4F5)
-			GUICtrlSetState(-1, $GUI_DISABLE)
-		$g_hBtnEmbed = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnEmbed", "Dock"), $x + 90, $y + 18, 90, 15)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "BtnEmbed_Info_01", "Use this to embed the Android Window into Bot."))
-			If $g_bBtnColor Then GUICtrlSetBkColor(-1, 0x22C4F5)
-			GUICtrlSetState(-1, $GUI_DISABLE)
-			GUICtrlSetOnEvent(-1, "btnEmbed")
-	$y -=35
+	$g_hBtnStart = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnStart", "Start Bot"), $x, $y, 90, 28)
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "BtnStart_Info_01", "Use this to START the bot."))
+		GUICtrlSetOnEvent(-1, "btnStart")
+		If $g_bBtnColor then GUICtrlSetBkColor(-1, 0x5CAD85)
+		GUICtrlSetState(-1, $GUI_DISABLE)
+	$g_hBtnStop = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnStop", "Stop Bot"), -1, -1, 90, 28)
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "BtnStop_Info_01", "Use this to STOP the bot (or ESC key)."))
+		If $g_bBtnColor then GUICtrlSetBkColor(-1, 0xDB4D4D)
+		GUICtrlSetState(-1, $GUI_HIDE)
+	$g_hBtnPause = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnPause", "Pause"), $x + 90, -1, 90, 28)
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "BtnPause_Info_01", "Use this to PAUSE all actions of the bot until you Resume (or Pause/Break key)."))
+		If $g_bBtnColor then GUICtrlSetBkColor(-1,  0xFFA500)
+		GUICtrlSetState(-1, $GUI_HIDE)
+	$g_hBtnResume = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnResume", "Resume"), -1, -1, 90, 28)
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "BtnResume_Info_01", "Use this to RESUME a paused Bot (or Pause/Break key)."))
+		If $g_bBtnColor then GUICtrlSetBkColor(-1,  0xFFA500)
+		GUICtrlSetState(-1, $GUI_HIDE)
+	$g_hBtnSearchMode = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnSearchMode", "Search Mode"), -1, -1, 90, 28)
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "BtnSearchMode_Info_01", "Does not attack. Searches for a Village that meets conditions."))
+		GUICtrlSetOnEvent(-1, "btnSearchMode")
+		If $g_bBtnColor then GUICtrlSetBkColor(-1,  0xFFA500)
+		GUICtrlSetState(-1, $GUI_DISABLE)
+	; Enable/Disable GUI while botting - Team AiO MOD++
+	   	 $g_hBtnEnableGUI = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnEnableGUI", "Enable GUI"), $x + 180, -1, 82, 28)
+		   	 _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "BtnEnableGUI_Info_01", "Enable GUI control while botting") & @CRLF & _
+			 				  GetTranslatedFileIni("MBR GUI Design Bottom", "BtnEnableGUI_Info_02", "Warning: USE THIS WITH CAUTION!") & @CRLF & _
+			 				  GetTranslatedFileIni("MBR GUI Design Bottom", "BtnEnableGUI_Info_03", "This function may create errors that require bot/PC restart") & @CRLF & _
+			 				  GetTranslatedFileIni("MBR GUI Design Bottom", "BtnEnableGUI_Info_04", "Better to stop the Bot completely if you need to change the setting"))
+		   	 GUICtrlSetOnEvent(-1, "btnEnableGUI")
+		   	 GUICtrlSetState(-1, $GUI_HIDE)
+	   	 $g_hBtnDisableGUI = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnDisableGUI", "Disable GUI"), $x + 180, -1, 82, 28)
+		   	 _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "BtnDisableGUI_Info_01", "Disable GUI control to continue botting"))
+			  GUICtrlSetOnEvent(-1, "btnDisableGUI")
+		  	  GUICtrlSetState(-1, $GUI_HIDE)
+
+	$g_hBtnMakeScreenshot = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnMakeScreenshot", "Photo"), $x , $y + 28, 40, -1)
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "BtnMakeScreenshot_Info_01", "Click here to take a snapshot of your village and save it to a file."))
+		If $g_bBtnColor then GUICtrlSetBkColor(-1, 0x5CAD85)
+	$g_hBtnHide = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnHide", "Hide"), $x + 40, $y + 28, 50, -1)
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "BtnHide_Info_01", "Use this to move the Android Window out of sight.") & @CRLF & _
+							GetTranslatedFileIni("MBR GUI Design Bottom", "BtnHide_Info_02", "(Not minimized, but hidden)"))
+		If $g_bBtnColor Then GUICtrlSetBkColor(-1, 0x22C4F5)
+		GUICtrlSetState(-1, $GUI_DISABLE)
+	$g_hBtnEmbed = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnEmbed", "Dock"), $x + 90, $y + 28, 90, -1)
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "BtnEmbed_Info_01", "Use this to embed the Android Window into Bot."))
+		If $g_bBtnColor Then GUICtrlSetBkColor(-1, 0x22C4F5)
+		GUICtrlSetState(-1, $GUI_DISABLE)
+		GUICtrlSetOnEvent(-1, "btnEmbed")
+	$y -=18
 	#EndRegion - Team Aio Mod++
 		$g_hChkBackgroundMode = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Bottom", "ChkBackgroundMode", "Background Mode"), $x + 1, $y + 72, 95, 20) ; Team AiO MOD++
 			GUICtrlSetFont(-1, 7)
@@ -110,31 +123,20 @@ Func CreateBottomPanel()
 			GetTranslatedFileIni("MBR GUI Design Bottom", "ComboStatusMode_BB", "Builder Base Mode"))
 			_GUICtrlComboBox_SetCurSel(-1, 0)
 			GUICtrlSetOnEvent(-1, "ComboStatusMode")
-	$y +=15
+	$y +=18
 
 		$g_hBtnAttackNowDB = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnAttackNowDB", "DB Attack"), $x + 200, $y - 1, 60, 19)
 			GUICtrlSetState(-1, $GUI_HIDE)
 		$g_hBtnAttackNowLB = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnAttackNowLB", "LB Attack"), $x + 200, $y + 18, 60, 19)
 			GUICtrlSetState(-1, $GUI_HIDE)
-
-		; Enable/Disable GUI while botting - Team AiO MOD++
-		$g_hBtnEnableGUI = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnEnableGUI", "GUI On"), $x + 200, $y + 37, 60, 19)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "BtnEnableGUI_Info_01", "Enable GUI control while Botting.") & @CRLF & _
-					GetTranslatedFileIni("MBR GUI Design Bottom", "BtnEnableGUI_Info_02", "This function may cause errors that require bot restart.") & @CRLF & _
-					GetTranslatedFileIni("MBR GUI Design Bottom", "BtnEnableGUI_Info_03", "Better to stop the Bot completely to change the setting."))
-			GUICtrlSetOnEvent(-1, "btnEnableGUI")
-			GUICtrlSetState(-1, $GUI_HIDE)
-		$g_hBtnDisableGUI = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnDisableGUI", "GUI Off"), $x + 200, $y + 37, 60, 19)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "BtnDisableGUI_Info_01", "Disable GUI control to continue botting"))
-			GUICtrlSetOnEvent(-1, "btnDisableGUI")
-			GUICtrlSetState(-1, $GUI_HIDE)
 		#EndRegion 
-
+#cs
 		$g_hLblDonate = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Bottom", "LblDonate", "Support the Development"), $x + 293, $y + 80, 142, 24, $SS_RIGHT)
 			GUICtrlSetCursor(-1, 0) ; https://www.autoitscript.com/autoit3/docs/functions/MouseGetCursor.htm
 			GUICtrlSetFont(-1, 8.5, $FW_BOLD) ;, $GUI_FONTITALIC + $GUI_FONTUNDER)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "LblDonate_Info_01", "Paypal Donate?"))
-	GUICtrlCreateGroup("", -99, -99, 1, 1)
+#Ce
+	; GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 		If $g_bAndroidAdbScreencap Then chkBackground() ; update background mode GUI
 
@@ -246,7 +248,7 @@ Func CreateBottomPanel()
 
    ;~ Village
    Local $x = 295, $y = $y_bottom + 20
-   $g_hGrpVillage = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Bottom", "GrpVillage", "Village"), $x - 0, $y - 20, 160, 85)
+   $g_hGrpVillage = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Bottom", "GrpVillage", "Village"), $x + 0, $y - 20, 160, 75)
 	   $g_hLblResultGoldNow = GUICtrlCreateLabel("", $x + 10, $y - 2, 60, 15, $SS_RIGHT)
 	   $g_hLblBBResultGoldNow = GUICtrlCreateLabel("", $x + 10, $y - 2, 60, 15, $SS_RIGHT)
 		   GUICtrlSetState(-1, $GUI_HIDE)

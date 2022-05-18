@@ -44,6 +44,15 @@ Global $DiamandAdjY = -37
 ;Global $OuterDiamondLeft = 10 - $DiamandAdjX, $OuterDiamondRight = 855 + $DiamandAdjX, $OuterDiamondTop = 10 - $DiamandAdjY, $OuterDiamondBottom = 655 + $DiamandAdjY
 Global $OuterDiamondLeft = 10 - $DiamandAdjX, $OuterDiamondRight = 850 + $DiamandAdjX, $OuterDiamondTop = 15 - $DiamandAdjY, $OuterDiamondBottom = 650 + $DiamandAdjY
 
+Func SetOnFlyAdjX($iSet)
+	$DiamandAdjX = $iSet
+EndFunc
+
+Func SetOnFlyAdjY($iSet)
+	$DiamandAdjY = $iSet
+EndFunc
+
+
 Global $DiamondMiddleX = ($OuterDiamondLeft + $OuterDiamondRight) / 2
 Global $DiamondMiddleY = ($OuterDiamondTop + $OuterDiamondBottom) / 2
 Global $InnerDiamandDiffX = 60 + $DiamandAdjX ; set the diamond shape based on reference village
