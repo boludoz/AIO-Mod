@@ -310,7 +310,7 @@ Func SmartFarmDetection($txtBuildings = "Mines", $bSmartZap = False, $bForceCapt
 			$iMaxReturnPoints = 21
 	EndSwitch
 
-	Local $sCocDiamond = "ECD"
+	Local $sCocDiamond = $CocDiamondECD
 	Local $sRedLines = ""
 	Local $sReturnProps = "objectname,objectpoints,nearpoints,redlinedistance"
 	Local $aResult = findMultiple($sdirectory, $sCocDiamond, $sRedLines, $iMinLevel, $iMaxLevel, $iMaxReturnPoints, $sReturnProps, $bForceCapture)

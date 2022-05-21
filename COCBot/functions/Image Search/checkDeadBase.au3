@@ -19,7 +19,7 @@ Func hasElixirStorage($bForceCapture = False)
 
 	Local $has = False
 
-	Local $result = findMultiple($g_sImgElixirStorage, "ECD", $g_sImglocRedline, 0, 1000, 0, "objectname,objectpoints,objectlevel", $bForceCapture)
+	Local $result = findMultiple($g_sImgElixirStorage, $CocDiamondECD, $g_sImglocRedline, 0, 1000, 0, "objectname,objectpoints,objectlevel", $bForceCapture)
 
 	If IsArray($result) Then
 		For $matchedValues In $result
@@ -144,7 +144,7 @@ Func checkDeadBaseSuperNew($bForceCapture = True, $sFillDirectory = @ScriptDir &
 	; found fill positions (deduped)
 	Local $aPos[0]
 
-	Local $sCocDiamond = "ECD" ;
+	Local $sCocDiamond = $CocDiamondECD ;
 	Local $redLines = $g_sImglocRedline ; if TH was Search then redline is set!
 	Local $minLevel = 0
 	Local $maxLevel = 1000
@@ -276,8 +276,8 @@ EndFunc   ;==>checkDeadBaseSuperNew
 ; return True if found
 Func CheckForDeadEagle($bForceCapture = False)
 	Local $sImgDeadEagleImages = @ScriptDir & "\imgxml\Buildings\DeadEagle"
-	Local $sBoostDiamond = "ECD"
-	Local $redlines = "ECD"
+	Local $sBoostDiamond = $CocDiamondECD
+	Local $redlines = $CocDiamondECD
 
 	Local $avDeadEagle = findMultiple($sImgDeadEagleImages, $sBoostDiamond, $redlines, 0, 1000, 0, "objectname,objectpoints", $bForceCapture)
 

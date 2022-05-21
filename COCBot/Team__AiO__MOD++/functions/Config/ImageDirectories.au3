@@ -161,6 +161,11 @@ Global Const $g_sClanCapitalInfo = $g_sBaseDMatchingPathB & "\ClanCapital\Info\"
 ; 427, 73, 573, 370
 ; DMClassicArray(DFind($g_sBaseDMatchingPathB & "\ClanCapital\AutoUpgrade\GoldIconAutoInProgress\", 427, 73, 573, 370, 0, 0, 1000, True), 10, $g_bDebugImageSave)
 Global Const $g_sClanCapitalInProgress = $g_sBaseDMatchingPathB & "\ClanCapital\AutoUpgrade\GoldIconAutoInProgress\"
+
+; RedLine
+Global Const $g_sBundleRedLineNV = $g_sBaseDMatchingPathB & "\RedLine\"
+; DMClassicArray(DFind($g_sBundleRedLineNV, 0, 0, 0, 0, 0, 0, 1000, True), 10, $g_bDebugImageSave)
+
 #EndRegion - DMatchingBundles.au3
 
 ; #FUNCTION# ====================================================================================================================

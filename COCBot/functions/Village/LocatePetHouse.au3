@@ -139,7 +139,7 @@ Func ImgLocatePetHouse()
 	ZoomOut()
 	Local $sImgDir = @ScriptDir & "\imgxml\Buildings\PetHouse\"
 
-	Local $sSearchArea = "ECD"
+	Local $sSearchArea = $CocDiamondECD
 	Local $avPetHouse = findMultiple($sImgDir, $sSearchArea, $sSearchArea, 0, 1000, 1, "objectname,objectpoints", True)
 
 	If Not IsArray($avPetHouse) Or UBound($avPetHouse, $UBOUND_ROWS) <= 0 Then

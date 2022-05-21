@@ -128,7 +128,7 @@ Func DetectedTH()
 	Local $xdirectoryb = @ScriptDir & "\imgxml\Buildings\Townhall2"
 	Local $aPaths = [$xdirectorya, $xdirectoryb]
 	For $sPath In $aPaths
-		Local $aResults = findMultiple($sPath, "ECD", "", 6, 14, 1, $returnProps, True)
+		Local $aResults = findMultiple($sPath, $CocDiamondECD, "", 6, 14, 1, $returnProps, True)
 
 		If IsArray($aResults) Then
 			For $matchedValues In $aResults

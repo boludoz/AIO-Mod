@@ -256,11 +256,13 @@ Func AttackClick($x, $y, $times = 1, $speed = 0, $afterDelay = 0, $debugtxt = ""
 	Local $timer = __TimerInit()
 	; Protect the Attack Bar
 	AttackRemainingTime(False) ; flag attack started
+	
 	; Custom Fix - Team AIO Mod++
-	If $g_bAttackClickFC and $y > 485 and $x < 450 Then
+	If $g_bAttackClickFC And $y > 485 And $x < 450 Then
 		$g_bAttackClickFC = False
 		$y = 480
 	EndIf
+	
 	Local $result = PureClick($x, $y, $times, $speed, $debugtxt)
 	Local $delay = $times * $speed + $afterDelay - __TimerDiff($timer)
 	If IsKeepClicksActive() = False And $delay > 0 Then _Sleep($delay, False)

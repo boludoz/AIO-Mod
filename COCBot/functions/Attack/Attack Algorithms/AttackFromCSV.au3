@@ -37,7 +37,7 @@ Global $g_aiPixelBottomLeftDOWNDropLine
 Global $g_aiPixelBottomRightUPDropLine
 Global $g_aiPixelBottomRightDOWNDropLine
 
-Global $DeployableLRTB = [0, $g_iGAME_WIDTH - 1, 0, 528] ; Resolution fixed.
+Global $DeployableLRTB = [0, $g_iGAME_WIDTH - 1, 0, 527] ; Resolution fixed.
 Global $DiamandAdjX = -40
 Global $DiamandAdjY = -37
 ; set the diamond shape based on reference village
@@ -90,21 +90,21 @@ Func ConvertInternalExternArea($sCalledFrom = "")
 	; Full ECD Diamond $CocDiamondECD
 	; Top
 	$x = $ExternalAreaRef[2][0]
-	$y = $ExternalAreaRef[2][1] + ($DiamandAdjY * 0.70)
+	$y = $ExternalAreaRef[2][1] + ($DiamandAdjY * 0.70) ; Resolution fixed.
 	ConvertToVillagePos($x, $y)
 	$CocDiamondECD = $x & "," & $y
 	; Right
-	$x = $ExternalAreaRef[1][0] - ($DiamandAdjX * 0.70)
+	$x = $ExternalAreaRef[1][0] - ($DiamandAdjX * 0.70) ; Resolution fixed.
 	$y = $ExternalAreaRef[1][1]
 	ConvertToVillagePos($x, $y)
 	$CocDiamondECD &= "|" & $x & "," & $y
 	; Bottom
 	$x = $ExternalAreaRef[3][0]
-	$y = $ExternalAreaRef[3][1] - ($DiamandAdjY * 0.70)
+	$y = $ExternalAreaRef[3][1] - ($DiamandAdjY * 0.70) ; Resolution fixed.
 	ConvertToVillagePos($x, $y)
 	$CocDiamondECD &= "|" & $x & "," & $y
 	; Left
-	$x = $ExternalAreaRef[0][0] + ($DiamandAdjX * 0.70)
+	$x = $ExternalAreaRef[0][0] + ($DiamandAdjX * 0.70) ; Resolution fixed.
 	$y = $ExternalAreaRef[0][1]
 	ConvertToVillagePos($x, $y)
 	$CocDiamondECD &= "|" & $x & "," & $y

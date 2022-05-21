@@ -125,7 +125,7 @@ EndFunc   ;==>_LocateClanCastle
 Func DetectedCastle()
 	ZoomOut()
 	
-	Local $aResult = _ImageSearchXML($g_sImgLocationCastle, 0, "ECD")
+	Local $aResult = _ImageSearchXML($g_sImgLocationCastle, 0, $CocDiamondECD)
 	If UBound($aResult) < 1 Or @error Then Return False
 	
 	$aResult = CenterSort($aResult)

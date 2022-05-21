@@ -20,7 +20,7 @@ Func CheckImageType()
 	If Not IsMainPage() Then ClickAway()
 
 	Local $sImgSnowTheme = @ScriptDir & "\imgxml\SnowTheme\Snow*.xml"
-	Local $aResult = decodeMultipleCoords(findImage("Snow", $sImgSnowTheme, "DCD", 0, True))
+	Local $aResult = decodeMultipleCoords(findImage("Snow", $sImgSnowTheme, $CocDiamondDCD, 0, True))
 
 	If IsArray($aResult) And UBound($aResult) >= 5 Then
 		$g_iDetectedImageType = 1 ;Snow Theme

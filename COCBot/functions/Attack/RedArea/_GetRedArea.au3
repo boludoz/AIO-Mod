@@ -29,7 +29,7 @@ Func _GetRedArea($iMode = $REDLINE_IMGLOC, $iMaxAllowedPixelDistance = 25, $fMin
 	Local $ySkip = 5
 	Local $result = 0
 	Local $listPixelBySide
-
+	#cs
 	If $g_iMatchMode = $LB And $g_aiAttackAlgorithm[$LB] = 0 And $g_aiAttackStdDropSides[$LB] = 4 Then ; Used for DES Side Attack (need to know the side the DES is on)
 		$result = DllCallMyBot("getRedAreaSideBuilding", "ptr", $g_hHBitmap2, "int", $xSkip, "int", $ySkip, "int", $colorVariation, "int", $eSideBuildingDES)
 		SetDebugLog("Debug: Redline with DES Side chosen")
@@ -51,13 +51,13 @@ Func _GetRedArea($iMode = $REDLINE_IMGLOC, $iMaxAllowedPixelDistance = 25, $fMin
 				SearchRedLinesMultipleTimes()
 				Local $dropPoints = GetOffSetRedline("TL") & "|" & GetOffSetRedline("BL") & "|" & GetOffSetRedline("BR") & "|" & GetOffSetRedline("TR")
 				$listPixelBySide = getRedAreaSideBuilding($dropPoints)
-				#cs
-					$g_aiPixelTopLeft = _SortRedline(GetOffSetRedline("TL"))
-					$g_aiPixelBottomLeft =  _SortRedline(GetOffSetRedline("BL"))
-					$g_aiPixelBottomRight = _SortRedline(GetOffSetRedline("BR"))
-					$g_aiPixelTopRight =  _SortRedline(GetOffSetRedline("TR"))
-					Local $listPixelBySide = ["ImgLoc", $g_aiPixelTopLeft, $g_aiPixelBottomLeft, $g_aiPixelBottomRight, $g_aiPixelTopRight]
-				#ce
+				; #cs
+					; $g_aiPixelTopLeft = _SortRedline(GetOffSetRedline("TL"))
+					; $g_aiPixelBottomLeft =  _SortRedline(GetOffSetRedline("BL"))
+					; $g_aiPixelBottomRight = _SortRedline(GetOffSetRedline("BR"))
+					; $g_aiPixelTopRight =  _SortRedline(GetOffSetRedline("TR"))
+					; Local $listPixelBySide = ["ImgLoc", $g_aiPixelTopLeft, $g_aiPixelBottomLeft, $g_aiPixelBottomRight, $g_aiPixelTopRight]
+				; #ce
 			Case $REDLINE_ORIGINAL ; Original red line routine
 				Local $result = DllCallMyBot("getRedArea", "ptr", $g_hHBitmap2, "int", $xSkip, "int", $ySkip, "int", $colorVariation)
 		EndSwitch
@@ -72,6 +72,34 @@ Func _GetRedArea($iMode = $REDLINE_IMGLOC, $iMaxAllowedPixelDistance = 25, $fMin
 	$g_aiPixelBottomRight = GetPixelSide($listPixelBySide, 3)
 	$g_aiPixelTopRight = GetPixelSide($listPixelBySide, 4)
 
+	#ce
+	Local $aReset[0]
+	$g_aiPixelTopLeft = $aReset
+	$g_aiPixelBottomLeft = $aReset
+	$g_aiPixelBottomRight = $aReset
+	$g_aiPixelTopRight = $aReset
+
+	$result = DMClassicArray(DFind($g_sBundleRedLineNV, 0, 0, 0, 0, 0, 0, 1000, False), 10, $g_bDebugImageSave)
+	If UBound($result) > 0 and not @error Then
+		For $i = 0 To UBound($result) -1
+			Local $aXY[2] = [$result[$i][1], $result[$i][2]]
+			Switch Side($aXY)
+				Case "TL"
+					ReDim $g_aiPixelTopLeft[UBound($g_aiPixelTopLeft) + 1]
+					$g_aiPixelTopLeft[UBound($g_aiPixelTopLeft) - 1] = $aXY
+				Case "BL"
+					ReDim $g_aiPixelBottomLeft[UBound($g_aiPixelBottomLeft) + 1]
+					$g_aiPixelBottomLeft[UBound($g_aiPixelBottomLeft) - 1] = $aXY
+				Case "BR"
+					ReDim $g_aiPixelBottomRight[UBound($g_aiPixelBottomRight) + 1]
+					$g_aiPixelBottomRight[UBound($g_aiPixelBottomRight) - 1] = $aXY
+				Case "TR"
+					ReDim $g_aiPixelTopRight[UBound($g_aiPixelTopRight) + 1]
+					$g_aiPixelTopRight[UBound($g_aiPixelTopRight) - 1] = $aXY
+			EndSwitch
+		Next
+	EndIf
+		
 	;02.02  - CLEAN REDAREA BAD POINTS -----------------------------------------------------------------------------------------------------------------------
 	CleanRedArea($g_aiPixelTopLeft)
 	CleanRedArea($g_aiPixelTopRight)

@@ -91,7 +91,7 @@ Func CleanYard()
 	Local $Filename = ""
 	Local $Locate = 0
 	Local $CleanYardXY
-	Local $sCocDiamond = ($g_bEdgeObstacle = False) ? ("DCD") : ("ECD") ;$CocDiamondECD ; Custom Yard - Team AIO Mod++
+	Local $sCocDiamond = ($g_bEdgeObstacle = False) ? ($CocDiamondDCD) : ($CocDiamondECD) ;$CocDiamondECD ; Custom Yard - Team AIO Mod++
 	Local $redLines = $sCocDiamond
 	Local $bNoBuilders = $g_iFreeBuilderCount < 1
 

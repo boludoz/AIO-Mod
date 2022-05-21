@@ -682,8 +682,8 @@ Global $g_iCmbBBArmy1 = 0, $g_iCmbBBArmy2 = 0, $g_iCmbBBArmy3 = 0, $g_iCmbBBArmy
 Global $g_bDSICGBB = True
 
 ; Internal & External Polygon
-;~ Global $CocDiamondECD = "ECD"
-;~ Global $CocDiamondDCD = "DCD"
+;~ Global $CocDiamondECD = $CocDiamondECD
+;~ Global $CocDiamondDCD = $CocDiamondDCD
 Global $InternalArea[8][3]
 Global $ExternalArea[8][3]
 

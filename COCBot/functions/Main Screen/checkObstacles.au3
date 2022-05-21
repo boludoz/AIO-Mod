@@ -453,7 +453,7 @@ Func checkObstacles_Network($bForceCapture = False, $bReloadCoC = True)
 EndFunc   ;==>checkObstacles_Network
 
 Func checkObstacles_GfxError($bForceCapture = False, $bRebootAndroid = True)
-	Local $aResult = decodeMultipleCoords(FindImage("GfxError", $g_sImgGfxError, "ECD", 100, $bForceCapture), 100, 100)
+	Local $aResult = decodeMultipleCoords(FindImage("GfxError", $g_sImgGfxError, $CocDiamondECD, 100, $bForceCapture), 100, 100)
 	If UBound($aResult) >= 8 Then
 		SetLog(UBound($aResult) & " Gfx Errors detected, Reloading Android...", $COLOR_ERROR)
 		; Save debug image

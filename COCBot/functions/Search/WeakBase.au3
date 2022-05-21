@@ -333,11 +333,11 @@ EndFunc   ;==>IsWeakBase
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: DefenseSearchMultiMatch
 ; Description ...: Embellished clone of returnHighestLevelSingleMatch() except also copies ALL defense building matches to dictionary for later use by CSV to avoid repeating searches
-; Syntax ........: DefenseSearchMultiMatch($iDefenseType, $directory[, $redlines = "DCD"[, $statFile = ""[, $minLevel = 0[,
+; Syntax ........: DefenseSearchMultiMatch($iDefenseType, $directory[, $redlines = $CocDiamondDCD[, $statFile = ""[, $minLevel = 0[,
 ;                  $maxLevel = 100[, $bForceCaptureRegion = True]]]]])
 ; Parameters ....: $iDefenseType         - integer value, Weak base enum for defense type being searched.
 ;                  $directory           - string value, folder location where defense images to search for are found
-;                  $redlines            - [optional] string value. Default is "DCD".
+;                  $redlines            - [optional] string value. Default is $CocDiamondDCD.
 ;                  $statFile            - [optional] string value. Default is "". Path name to location of stats data
 ;                  $minLevel            - [optional] integer value. Default is 0. min level of building to search
 ;                  $maxLevel            - [optional] integer value. Default is 100. Max level of building to search
@@ -351,7 +351,7 @@ EndFunc   ;==>IsWeakBase
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func DefenseSearchMultiMatch($iDefenseType, $directory, $redlines = "DCD", $statFile = "", $minLevel = 0, $maxLevel = 100, $bForceCaptureRegion = True)
+Func DefenseSearchMultiMatch($iDefenseType, $directory, $redlines = $CocDiamondDCD, $statFile = "", $minLevel = 0, $maxLevel = 100, $bForceCaptureRegion = True)
 
 	SetDebugLog("Begin DefenseSearchMultiMatch: " & $g_sBldgNames[$iDefenseType + 7], $COLOR_DEBUG1)
 
@@ -372,7 +372,7 @@ Func DefenseSearchMultiMatch($iDefenseType, $directory, $redlines = "DCD", $stat
 		_ObjErrMsg("_ObjGetValue $g_oBldgMaxQty", @error) ; Log COM error prevented
 	EndIf
 	; Set search area to be inside dark green border
-	Local $fullCocAreas = "DCD"
+	Local $fullCocAreas = $CocDiamondDCD
 	; Set max buidling level to search, except if using scripted CSV attack, then override max level
 	#cs Not required!
 	If isScriptedAttackActive() Then
@@ -384,11 +384,11 @@ Func DefenseSearchMultiMatch($iDefenseType, $directory, $redlines = "DCD", $stat
 	$maxLevelSearch = $maxLevel
 
 	; verify if red line data exists in dictionary, or was passed as parameter, to set flag for later retrevial of red line data and storage if needed.
-	If $redlines = "" Or $redlines = "DCD" Then
+	If $redlines = "" Or $redlines = $CocDiamondDCD Then
 		If _ObjSearch($g_oBldgAttackInfo, $eBldgRedLine & "_OBJECTPOINTS") = True Then
 			If _ObjGetValue($g_oBldgAttackInfo, $eBldgRedLine & "_COUNT") > 50 Then ; if count is less 50, try again to more red line locations
 				$redlines = $g_oBldgAttackInfo.item($eBldgRedLine & "_LOCATION")
-				If IsString($redlines) And $redlines <> "" And $redlines <> "DCD" Then ; error check for null red line data in dictionary
+				If IsString($redlines) And $redlines <> "" And $redlines <> $CocDiamondDCD Then ; error check for null red line data in dictionary
 					$bRedLineExists = True
 				Else
 					$bRedLineExists = False
@@ -399,10 +399,10 @@ Func DefenseSearchMultiMatch($iDefenseType, $directory, $redlines = "DCD", $stat
 		Else
 			$bRedLineExists = False
 		EndIf
-	ElseIf $redlines <> "" And $redlines <> "DCD" Then
+	ElseIf $redlines <> "" And $redlines <> $CocDiamondDCD Then
 		$bRedLineExists = True
 		If _ObjSearch($g_oBldgAttackInfo, $eBldgRedLine & "_OBJECTPOINTS") = False Then ; error check for dictionary value stored
-			If $redlines <> "DCD" Then ; ensure redline is valid location string
+			If $redlines <> $CocDiamondDCD Then ; ensure redline is valid location string
 				$aCoordsSplit = StringSplit($redlines, "|") ; split redlines in x,y, to get count of redline locations
 				$redlinesCount = $aCoordsSplit[0] ; assign to variable to avoid constant check for array exists
 				If $redlinesCount > 50 Then
@@ -420,7 +420,7 @@ Func DefenseSearchMultiMatch($iDefenseType, $directory, $redlines = "DCD", $stat
 	EndIf
 
 	If $bRedLineExists = False Then
-		$redlines = "DCD"
+		$redlines = $CocDiamondDCD
 	EndIf
 
 	If $g_bDebugSetlog Then

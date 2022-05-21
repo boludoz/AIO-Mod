@@ -501,7 +501,7 @@ EndFunc   ;==>BuildChecker
 ;ImgLocateBuilds($g_aiLaboratoryPos, $g_sImgLocationLabs)
 Func ImgLocateBuilds(ByRef $aiCoords, $sImgDir)
 	ZoomOut()
-	Local $avBuild = _ImageSearchXML($g_sImgLocationLabs, 0, "ECD")
+	Local $avBuild = _ImageSearchXML($g_sImgLocationLabs, 0, $CocDiamondECD)
 
 	If UBound($avBuild) > 0 And not @error Then
 		For $i = 0 To UBound($avBuild) - 1

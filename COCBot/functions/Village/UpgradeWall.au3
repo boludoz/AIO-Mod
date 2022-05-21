@@ -421,7 +421,7 @@ EndFunc   ;==>SwitchToNextWallLevel
 				Local $iLastGoodWallY = $g_aiLastGoodWallPos[1]
 				; ConvertToVillagePos($iLastGoodWallX, $iLastGoodWallY) Unestable
 				Local $iSkipMax = -1, $iSkipMin = -1
-				Local $aResult = _ImageSearchXML($g_sImgCheckWallDir, 500, "ECD", True, False, True, 4, 0, $iLevelMaxWall)
+				Local $aResult = _ImageSearchXML($g_sImgCheckWallDir, 500, $CocDiamondECD, True, False, True, 4, 0, $iLevelMaxWall)
 				If UBound($aResult) > 0 And Not @error Then
 					For $i = 0 To UBound($aResult) - 1
 						Switch $aResult[$i][3]

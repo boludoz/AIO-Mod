@@ -669,7 +669,7 @@ Func FindImageInPlace($sImageName, $sImageTile, $place, $bForceCaptureRegion = T
 	Return $returnvalue
 EndFunc   ;==>FindImageInPlace
 
-Func SearchRedLines($sCocDiamond = "ECD")
+Func SearchRedLines($sCocDiamond = $CocDiamondECD)
 	If $g_sImglocRedline <> "" Then Return $g_sImglocRedline
 	Local $result = DllCallMyBot("SearchRedLines", "handle", $g_hHBitmap2, "str", $sCocDiamond)
 	Local $error = @error ; Store error values as they reset at next function call
@@ -691,7 +691,7 @@ Func SearchRedLines($sCocDiamond = "ECD")
 	Return $g_sImglocRedline
 EndFunc   ;==>SearchRedLines
 
-Func SearchRedLinesMultipleTimes($sCocDiamond = "ECD", $iCount = 3, $iDelay = 300)
+Func SearchRedLinesMultipleTimes($sCocDiamond = $CocDiamondECD, $iCount = 3, $iDelay = 300)
 	Local $bHBitmap_synced = ($g_hHBitmap = $g_hHBitmap2)
 	Local $g_hHBitmap2_old = $g_hHBitmap2
 	Local $g_sImglocRedline_old

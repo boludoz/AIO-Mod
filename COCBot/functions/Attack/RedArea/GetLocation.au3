@@ -25,7 +25,7 @@ Func GetLocationMine($bCaptureRegion = True) ; Custom - Team AIO Mod++
 		$sTxtName = "SnowMines"
 	EndIf
 
-	Local $aTempResult = returnMultipleMatches($sDirectory, $iMaxReturns, "DCD", "", 0, 1000, $bCaptureRegion) ; Custom - Team AIO Mod++
+	Local $aTempResult = returnMultipleMatches($sDirectory, $iMaxReturns, $CocDiamondDCD, "", 0, 1000, $bCaptureRegion) ; Custom - Team AIO Mod++
 	Local $aEndResult = ConvertImgloc2MBR($aTempResult, $iMaxReturns)
 	If $g_bDebugBuildingPos Then SetLog("#*# GetLocation" & $sTxtName & ": " & $aEndResult, $COLOR_DEBUG)
 	If $g_bDebugGetLocation Then DebugImageGetLocation($aEndResult, $sTxtName)
@@ -44,7 +44,7 @@ Func GetLocationElixir($bCaptureRegion = True) ; Custom - Team AIO Mod++
 		$sTxtName = "SnowCollectors"
 	EndIf
 
-	Local $aTempResult = returnMultipleMatches($sDirectory, $iMaxReturns, "DCD", "", 0, 1000, $bCaptureRegion) ; Custom - Team AIO Mod++
+	Local $aTempResult = returnMultipleMatches($sDirectory, $iMaxReturns, $CocDiamondDCD, "", 0, 1000, $bCaptureRegion) ; Custom - Team AIO Mod++
 	Local $aEndResult = ConvertImgloc2MBR($aTempResult, $iMaxReturns)
 	If $g_bDebugBuildingPos Then SetLog("#*# GetLocation" & $sTxtName & ": " & $aEndResult, $COLOR_DEBUG)
 	If $g_bDebugGetLocation Then DebugImageGetLocation($aEndResult, $sTxtName)
@@ -55,7 +55,7 @@ EndFunc   ;==>GetLocationElixir
 Func GetLocationDarkElixir($bCaptureRegion = True) ; Custom - Team AIO Mod++
 	Local $sDirectory = @ScriptDir & "\imgxml\Storages\Drills"
 	Local $iMaxReturns = 3
-	Local $aTempResult = returnMultipleMatches($sDirectory, $iMaxReturns, "DCD", "", 0, 1000, $bCaptureRegion) ; Custom - Team AIO Mod++
+	Local $aTempResult = returnMultipleMatches($sDirectory, $iMaxReturns, $CocDiamondDCD, "", 0, 1000, $bCaptureRegion) ; Custom - Team AIO Mod++
 	Local $aEndResult = ConvertImgloc2MBR($aTempResult, $iMaxReturns)
 
 	If $g_bDebugBuildingPos Then SetLog("#*# GetLocationDarkElixir: " & $aEndResult, $COLOR_DEBUG)
@@ -192,7 +192,7 @@ Func GetLocationBuilding($iBuildingType, $iAttackingTH = 13, $bForceCaptureRegio
 	Local $TotalBuildings = 0
 	Local $minLevel = 0
 	Local $statFile = ""
-	Local $fullCocAreas = "DCD"
+	Local $fullCocAreas = $CocDiamondDCD
 	Local $BuildingXY, $redLines, $bRedLineExists, $aBldgCoord, $sTempCoord, $tmpNumFound
 	Local $tempNewLevel, $tempExistingLevel, $sLocCoord, $sNearCoord, $sFarCoord, $directory, $iCountUpdate
 
@@ -224,13 +224,13 @@ Func GetLocationBuilding($iBuildingType, $iAttackingTH = 13, $bForceCaptureRegio
 	EndIf
 
 	; Get redline data
-	$redLines = "ECD"
+	$redLines = $CocDiamondECD
 	#cs
 	If _ObjSearch($g_oBldgAttackInfo, $eBldgRedLine & "_OBJECTPOINTS") = True Then
 		If _ObjGetValue($g_oBldgAttackInfo, $eBldgRedLine & "_COUNT") > 50 Then ; if count is less 50, try again to more red line locations
 			$redLines = _ObjGetValue($g_oBldgAttackInfo, $eBldgRedLine & "_OBJECTPOINTS")
 			If @error Then _ObjErrMsg("_ObjGetValue $g_oBldgAttackInfo redline", @error) ; Log COM error prevented
-			If IsString($redLines) And $redLines <> "" And $redLines <> "ECD" Then ; error check for null red line data in dictionary
+			If IsString($redLines) And $redLines <> "" And $redLines <> $CocDiamondECD Then ; error check for null red line data in dictionary
 				$bRedLineExists = True
 			Else
 				$redLines = ""

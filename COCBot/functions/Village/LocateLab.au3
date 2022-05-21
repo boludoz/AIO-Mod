@@ -140,7 +140,7 @@ EndFunc
 
 Func DetectedLabs()
 	
-	Local $aResult = _ImageSearchXML($g_sImgLocationLabs, 0, "ECD", True, False, True, 25)
+	Local $aResult = _ImageSearchXML($g_sImgLocationLabs, 0, $CocDiamondECD, True, False, True, 25)
 	If UBound($aResult) < 1 Or @error Then Return False
 	
 	$aResult = CenterSort($aResult)
