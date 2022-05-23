@@ -20,7 +20,7 @@
 ;			Sort each sides
 ;			Add each sides in one array (not use, but it can help to get closer pixel of all the red area)
 
-Func _GetRedArea($iMode = $REDLINE_IMGLOC, $iMaxAllowedPixelDistance = 25, $fMinSideLengthFactor = 0.65)
+Func _GetRedArea($iMode = Default, $iMaxAllowedPixelDistance = 25, $fMinSideLengthFactor = 0.65)
 	Local $nameFunc = "[_GetRedArea] "
 	debugRedArea($nameFunc & " IN")
 
@@ -29,77 +29,73 @@ Func _GetRedArea($iMode = $REDLINE_IMGLOC, $iMaxAllowedPixelDistance = 25, $fMin
 	Local $ySkip = 5
 	Local $result = 0
 	Local $listPixelBySide
-	#cs
-	If $g_iMatchMode = $LB And $g_aiAttackAlgorithm[$LB] = 0 And $g_aiAttackStdDropSides[$LB] = 4 Then ; Used for DES Side Attack (need to know the side the DES is on)
-		$result = DllCallMyBot("getRedAreaSideBuilding", "ptr", $g_hHBitmap2, "int", $xSkip, "int", $ySkip, "int", $colorVariation, "int", $eSideBuildingDES)
-		SetDebugLog("Debug: Redline with DES Side chosen")
-	ElseIf $g_iMatchMode = $LB And $g_aiAttackAlgorithm[$LB] = 0 And $g_aiAttackStdDropSides[$LB] = 5 Then ; Used for TH Side Attack (need to know the side the TH is on)
-		$result = DllCallMyBot("getRedAreaSideBuilding", "ptr", $g_hHBitmap2, "int", $xSkip, "int", $ySkip, "int", $colorVariation, "int", $eSideBuildingTH)
-		SetDebugLog("Debug: Redline with TH Side chosen")
-	Else ; Normal getRedArea
-
-		Switch $iMode
-			Case $REDLINE_NONE ; No red line
-				Local $a = ["NoRedLine", "", "", "", ""]
-				$listPixelBySide = $a
-			Case $REDLINE_IMGLOC_RAW ; ImgLoc raw red line routine
-				; ensure redline exists
-				SearchRedLinesMultipleTimes()
-				$listPixelBySide = getRedAreaSideBuilding()
-			Case $REDLINE_IMGLOC ; New ImgLoc based deployable red line routine
-				; ensure redline exists
-				SearchRedLinesMultipleTimes()
-				Local $dropPoints = GetOffSetRedline("TL") & "|" & GetOffSetRedline("BL") & "|" & GetOffSetRedline("BR") & "|" & GetOffSetRedline("TR")
-				$listPixelBySide = getRedAreaSideBuilding($dropPoints)
-				; #cs
-					; $g_aiPixelTopLeft = _SortRedline(GetOffSetRedline("TL"))
-					; $g_aiPixelBottomLeft =  _SortRedline(GetOffSetRedline("BL"))
-					; $g_aiPixelBottomRight = _SortRedline(GetOffSetRedline("BR"))
-					; $g_aiPixelTopRight =  _SortRedline(GetOffSetRedline("TR"))
-					; Local $listPixelBySide = ["ImgLoc", $g_aiPixelTopLeft, $g_aiPixelBottomLeft, $g_aiPixelBottomRight, $g_aiPixelTopRight]
-				; #ce
-			Case $REDLINE_ORIGINAL ; Original red line routine
-				Local $result = DllCallMyBot("getRedArea", "ptr", $g_hHBitmap2, "int", $xSkip, "int", $ySkip, "int", $colorVariation)
-		EndSwitch
-		SetDebugLog("Debug: Redline chosen")
+	
+	If $iMode = Default Then
+		$iMode = $REDLINE_DISSOCIABLE
 	EndIf
+	$iMode = $REDLINE_DISSOCIABLE
+
+	Switch $iMode
+		Case $REDLINE_NONE ; No red line
+			Local $a = ["NoRedLine", "", "", "", ""]
+			$listPixelBySide = $a
+		Case $REDLINE_IMGLOC_RAW ; ImgLoc raw red line routine
+			; ensure redline exists
+			SearchRedLinesMultipleTimes()
+			$listPixelBySide = getRedAreaSideBuilding()
+		Case $REDLINE_IMGLOC ; New ImgLoc based deployable red line routine
+			; ensure redline exists
+			SearchRedLinesMultipleTimes()
+			Local $dropPoints = GetOffSetRedline("TL") & "|" & GetOffSetRedline("BL") & "|" & GetOffSetRedline("BR") & "|" & GetOffSetRedline("TR")
+			$listPixelBySide = getRedAreaSideBuilding($dropPoints)
+			; #cs
+				; $g_aiPixelTopLeft = _SortRedline(GetOffSetRedline("TL"))
+				; $g_aiPixelBottomLeft =  _SortRedline(GetOffSetRedline("BL"))
+				; $g_aiPixelBottomRight = _SortRedline(GetOffSetRedline("BR"))
+				; $g_aiPixelTopRight =  _SortRedline(GetOffSetRedline("TR"))
+				; Local $listPixelBySide = ["ImgLoc", $g_aiPixelTopLeft, $g_aiPixelBottomLeft, $g_aiPixelBottomRight, $g_aiPixelTopRight]
+			; #ce
+		Case $REDLINE_ORIGINAL ; Original red line routine
+			Local $result = DllCallMyBot("getRedArea", "ptr", $g_hHBitmap2, "int", $xSkip, "int", $ySkip, "int", $colorVariation)
+		; Custom fix - Team AIO Mod++
+		Case $REDLINE_DISSOCIABLE
+			Local $aReset[0]
+			$g_aiPixelTopLeft = $aReset
+			$g_aiPixelBottomLeft = $aReset
+			$g_aiPixelBottomRight = $aReset
+			$g_aiPixelTopRight = $aReset
+		
+			Local $aDFind = DMClassicArray(DFind($g_sBundleRedLineNV, 0, 0, 0, 0, 0, 0, 1000, False), _Max($ySkip, $xSkip), $g_bDebugImageSave)
+			If UBound($aDFind) > 0 and not @error Then
+				For $i = 0 To UBound($aDFind) -1
+					Local $aXY[2] = [$aDFind[$i][1], $aDFind[$i][2]]
+					Switch Side($aXY)
+						Case "TL"
+							ReDim $g_aiPixelTopLeft[UBound($g_aiPixelTopLeft) + 1]
+							$g_aiPixelTopLeft[UBound($g_aiPixelTopLeft) - 1] = $aXY
+						Case "BL"
+							ReDim $g_aiPixelBottomLeft[UBound($g_aiPixelBottomLeft) + 1]
+							$g_aiPixelBottomLeft[UBound($g_aiPixelBottomLeft) - 1] = $aXY
+						Case "BR"
+							ReDim $g_aiPixelBottomRight[UBound($g_aiPixelBottomRight) + 1]
+							$g_aiPixelBottomRight[UBound($g_aiPixelBottomRight) - 1] = $aXY
+						Case "TR"
+							ReDim $g_aiPixelTopRight[UBound($g_aiPixelTopRight) + 1]
+							$g_aiPixelTopRight[UBound($g_aiPixelTopRight) - 1] = $aXY
+					EndSwitch
+				Next
+			EndIf
+	EndSwitch
+	SetDebugLog("Debug: Redline chosen")
 
 	If IsArray($result) Then
 		$listPixelBySide = StringSplit($result[0], "#")
+		$g_aiPixelTopLeft = GetPixelSide($listPixelBySide, 1)
+		$g_aiPixelBottomLeft = GetPixelSide($listPixelBySide, 2)
+		$g_aiPixelBottomRight = GetPixelSide($listPixelBySide, 3)
+		$g_aiPixelTopRight = GetPixelSide($listPixelBySide, 4)
 	EndIf
-	$g_aiPixelTopLeft = GetPixelSide($listPixelBySide, 1)
-	$g_aiPixelBottomLeft = GetPixelSide($listPixelBySide, 2)
-	$g_aiPixelBottomRight = GetPixelSide($listPixelBySide, 3)
-	$g_aiPixelTopRight = GetPixelSide($listPixelBySide, 4)
 
-	#ce
-	Local $aReset[0]
-	$g_aiPixelTopLeft = $aReset
-	$g_aiPixelBottomLeft = $aReset
-	$g_aiPixelBottomRight = $aReset
-	$g_aiPixelTopRight = $aReset
-
-	$result = DMClassicArray(DFind($g_sBundleRedLineNV, 0, 0, 0, 0, 0, 0, 1000, False), 10, $g_bDebugImageSave)
-	If UBound($result) > 0 and not @error Then
-		For $i = 0 To UBound($result) -1
-			Local $aXY[2] = [$result[$i][1], $result[$i][2]]
-			Switch Side($aXY)
-				Case "TL"
-					ReDim $g_aiPixelTopLeft[UBound($g_aiPixelTopLeft) + 1]
-					$g_aiPixelTopLeft[UBound($g_aiPixelTopLeft) - 1] = $aXY
-				Case "BL"
-					ReDim $g_aiPixelBottomLeft[UBound($g_aiPixelBottomLeft) + 1]
-					$g_aiPixelBottomLeft[UBound($g_aiPixelBottomLeft) - 1] = $aXY
-				Case "BR"
-					ReDim $g_aiPixelBottomRight[UBound($g_aiPixelBottomRight) + 1]
-					$g_aiPixelBottomRight[UBound($g_aiPixelBottomRight) - 1] = $aXY
-				Case "TR"
-					ReDim $g_aiPixelTopRight[UBound($g_aiPixelTopRight) + 1]
-					$g_aiPixelTopRight[UBound($g_aiPixelTopRight) - 1] = $aXY
-			EndSwitch
-		Next
-	EndIf
-		
 	;02.02  - CLEAN REDAREA BAD POINTS -----------------------------------------------------------------------------------------------------------------------
 	CleanRedArea($g_aiPixelTopLeft)
 	CleanRedArea($g_aiPixelTopRight)
@@ -193,7 +189,7 @@ Func _GetRedArea($iMode = $REDLINE_IMGLOC, $iMaxAllowedPixelDistance = 25, $fMin
 
 	; Pixel further calc
 
-	Local $offsetArcher = 15
+	Local $offsetArcher = Random(13, 16, 1)
 
 	ReDim $g_aiPixelRedArea[UBound($g_aiPixelTopLeft) + UBound($g_aiPixelBottomLeft) + UBound($g_aiPixelTopRight) + UBound($g_aiPixelBottomRight)]
 	ReDim $g_aiPixelRedAreaFurther[UBound($g_aiPixelRedArea)]
@@ -277,9 +273,51 @@ Func _GetRedArea($iMode = $REDLINE_IMGLOC, $iMaxAllowedPixelDistance = 25, $fMin
 	EndIf
 
 	debugRedArea($nameFunc & "  Size of arr pixel for TopLeft [" & UBound($g_aiPixelTopLeft) & "] /  BottomLeft [" & UBound($g_aiPixelBottomLeft) & "] /  TopRight [" & UBound($g_aiPixelTopRight) & "] /  BottomRight [" & UBound($g_aiPixelBottomRight) & "] ")
-
+	
+	If $g_bDebugRedArea Or $g_sBundleRedLineNV Then 
+		DebugDropPoints()
+	EndIf
+	
 	debugRedArea($nameFunc & " OUT ")
 EndFunc   ;==>_GetRedArea
+
+Func DebugDropPoints($sFrom = "")
+	If IsPtr($g_hHBitmap2) Then
+		Local $sDir = ($sFrom <> "") ? ($sFrom) : ("DropPoints")
+		Local $sSubDir = $g_sProfileTempDebugPath & $sDir
+	
+		DirCreate($sSubDir)
+	
+		Local $sDate = @YEAR & "-" & @MON & "-" & @MDAY, $sTime = @HOUR & "." & @MIN & "." & @SEC
+		Local $sDebugImageName = String($sDate & "_" & $sTime & "_.png")
+		Local $hEditedImage = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
+		Local $hGraphic = _GDIPlus_ImageGetGraphicsContext($hEditedImage)
+		Local $hPenRED = _GDIPlus_PenCreate(0xFFFF0000, 1)
+		
+		Local $aXY[2]
+		For $i = 0 To UBound($g_aiPixelTopLeft) - 1
+			$aXY = $g_aiPixelTopLeft[$i]
+			addInfoToDebugImage($hGraphic, $hPenRED, "", $aXY[0], $aXY[1])
+		Next
+		For $i = 0 To UBound($g_aiPixelBottomLeft) - 1
+			$aXY = $g_aiPixelBottomLeft[$i]
+			addInfoToDebugImage($hGraphic, $hPenRED, "", $aXY[0], $aXY[1])
+		Next
+		For $i = 0 To UBound($g_aiPixelTopRight) - 1
+			$aXY = $g_aiPixelTopRight[$i]
+			addInfoToDebugImage($hGraphic, $hPenRED, "", $aXY[0], $aXY[1])
+		Next
+		For $i = 0 To UBound($g_aiPixelBottomRight) - 1
+			$aXY = $g_aiPixelBottomRight[$i]
+			addInfoToDebugImage($hGraphic, $hPenRED, "", $aXY[0], $aXY[1])
+		Next
+	
+		_GDIPlus_ImageSaveToFile($hEditedImage, $sSubDir & "\" & $sDebugImageName )
+		_GDIPlus_PenDispose($hPenRED)
+		_GDIPlus_GraphicsDispose($hGraphic)
+		_GDIPlus_BitmapDispose($hEditedImage)
+	EndIf
+EndFunc
 
 Func SortRedline($redline, $StartPixel, $EndPixel, $sDelim = ",")
 	Local $aPoints = StringSplit($redline, "|", $STR_NOCOUNT)

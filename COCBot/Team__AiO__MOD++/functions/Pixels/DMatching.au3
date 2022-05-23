@@ -117,16 +117,10 @@ Func IsImageFound($sBundle, $iRegionX = 0, $iRegionY = 0, $iRegionWidth = 0, $iR
         $iLevelStart = 0
         $iLevelEnd = 0
     EndIf
-    If $g_iThreads > 0 And $g_iDMatchingThreads <> $g_iThreads Then
-        $g_iDMatchingThreads = $g_iThreads
-    Else
-        $g_iDMatchingThreads = $g_iDMatchingDefa
-    EndIf
-    ; End Setting Parameters
-    
+
     If $bForceCapture Then _CaptureRegion2() ; to have FULL screen image to work with
 
-    Local $sResult = DllCallDMatching("Find", "str", "handle", $g_hHBitmap2, "str", $sBundle, "ushort", $iLevelStart, "ushort", $iLevelEnd, "ushort", $iRegionX, "ushort", $iRegionY, "ushort", $iRegionWidth, "ushort", $iRegionHeight, "ushort", $g_iDMatchingThreads, "ushort", 1, "boolean", $g_bDMatchingDebugImages)
+    Local $sResult = DllCallDMatching("Find", "str", "handle", $g_hHBitmap2, "str", $sBundle, "ushort", $iLevelStart, "ushort", $iLevelEnd, "ushort", $iRegionX, "ushort", $iRegionY, "ushort", $iRegionWidth, "ushort", $iRegionHeight, "ushort", $g_iThreads, "ushort", 1, "boolean", $g_bDMatchingDebugImages)
 
     Return StringLen($sResult) > 0
 EndFunc
@@ -146,16 +140,10 @@ Func DFind($sBundle, $iRegionX = 0, $iRegionY = 0, $iRegionWidth = 0, $iRegionHe
     If $iLimit = Default Then
         $iLimit = 0
     EndIf
-    If $g_iThreads > 0 And $g_iDMatchingThreads <> $g_iThreads Then
-        $g_iDMatchingThreads = $g_iThreads
-    Else
-        $g_iDMatchingThreads = $g_iDMatchingDefa
-    EndIf
-    ; End Setting Parameters
 
     If $bForceCapture Then _CaptureRegion2() ; To have FULL screen image to work with
 
-    Local $sResult = DllCallDMatching("Find", "str", "handle", $g_hHBitmap2, "str", $sBundle, "ushort", $iLevelStart, "ushort", $iLevelEnd, "ushort", $iRegionX, "ushort", $iRegionY, "ushort", $iRegionWidth, "ushort", $iRegionHeight, "ushort", $g_iDMatchingThreads, "ushort", $iLimit, "boolean", $g_bDMatchingDebugImages)
+    Local $sResult = DllCallDMatching("Find", "str", "handle", $g_hHBitmap2, "str", $sBundle, "ushort", $iLevelStart, "ushort", $iLevelEnd, "ushort", $iRegionX, "ushort", $iRegionY, "ushort", $iRegionWidth, "ushort", $iRegionHeight, "ushort", $g_iThreads, "ushort", $iLimit, "boolean", $g_bDMatchingDebugImages)
 
     Return $sResult
 EndFunc
@@ -226,7 +214,7 @@ Func ButtonClickDM($sBundle, $iRegionX = 0, $iRegionY = 0, $iRegionWidth = 0, $i
 
     If $bForceCapture Then _CaptureRegion2() ; To have FULL screen image to work with
 
-    Local $sResult = DllCallDMatching("Find", "str", "handle", $g_hHBitmap2, "str", $sBundle, "ushort", $iLevelStart, "ushort", $iLevelEnd, "ushort", $iRegionX, "ushort", $iRegionY, "ushort", $iRegionWidth, "ushort", $iRegionHeight, "ushort", $g_iDMatchingThreads, "ushort", $iLimit, "boolean", $g_bDMatchingDebugImages)
+    Local $sResult = DllCallDMatching("Find", "str", "handle", $g_hHBitmap2, "str", $sBundle, "ushort", $iLevelStart, "ushort", $iLevelEnd, "ushort", $iRegionX, "ushort", $iRegionY, "ushort", $iRegionWidth, "ushort", $iRegionHeight, "ushort", $g_iThreads, "ushort", $iLimit, "boolean", $g_bDMatchingDebugImages)
     Local $aSplittedMatches = StringSplit($sResult, "|", $STR_NOCOUNT)
     For $i = 0 To UBound($aSplittedMatches) - 1
         Local $aDecodedMatch = DMDecodeMatch($aSplittedMatches[$i])

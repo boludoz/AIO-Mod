@@ -549,8 +549,6 @@ Global Const $g_sDissociableMatchLib = "\ModLibs\Dissociable.Matching.dll"
 Global Const $g_sLibDissociableMatchPath = $g_sLibPath & "\" & $g_sDissociableMatchLib
 Global $g_hLibDissociableMatch = -1 ; Handle to Dissociable.Matching.dll
 Global $g_bDMatchingDebugImages = False
-Global $g_iDMatchingDefa = 1; 32
-Global $g_iDMatchingThreads = $g_iDMatchingDefa
 #EndRegion - Dissociable.Matching - Team AIO Mod++
 Global Const $g_sLibIconPath = $g_sLibPath & "\MBRBOT.dll" ; icon library
 Global Const $g_sCSVAttacksPath = @ScriptDir & "\CSV\Attack"
@@ -635,6 +633,7 @@ Global Const $REDLINE_IMGLOC_RAW = 0
 Global Const $REDLINE_IMGLOC = 1
 Global Const $REDLINE_ORIGINAL = 2
 Global Const $REDLINE_NONE = 3
+Global Const $REDLINE_DISSOCIABLE = 4 ; Custom fix - Team__AiO__MOD
 
 ; 0 = Use fixed village corner (default), 1 = Find fist red line point, 2 = Fixed village corner on full drop line, 3 = First red line point on full drop line
 Global Const $DROPLINE_EDGE_FIXED = 0
