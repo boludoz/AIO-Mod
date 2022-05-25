@@ -16,7 +16,7 @@ Func CleanRedArea(ByRef $InputVect, $side = "")
 	Local $TempVectStr = ""
 	For $i = 0 To UBound($InputVect) - 1
 		Local $pixel = $InputVect[$i]
-		For $iatan2 = 0 To UBound($a) -1
+		For $iatan2 = 0 To UBound($InputVect) -1
 			Local $a = $InputVect[$iatan2]
 			Local $aiPoint = Abs(atan2($a[1] - $pixel[1], $a[0] - $pixel[0]) * 180 / $PI)
 			If Abs($aiPoint - 37) < 13 Then

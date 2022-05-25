@@ -37,20 +37,31 @@ Global $g_aiPixelBottomLeftDOWNDropLine
 Global $g_aiPixelBottomRightUPDropLine
 Global $g_aiPixelBottomRightDOWNDropLine
 
-Global $DeployableLRTB = [0, $g_iGAME_WIDTH - 1, 0, 527] ; Resolution fixed.
-Global $DiamandAdjX = -40
-Global $DiamandAdjY = -37
-; set the diamond shape based on reference village
-;Global $OuterDiamondLeft = 10 - $DiamandAdjX, $OuterDiamondRight = 855 + $DiamandAdjX, $OuterDiamondTop = 10 - $DiamandAdjY, $OuterDiamondBottom = 655 + $DiamandAdjY
-Global $OuterDiamondLeft = 10 - $DiamandAdjX, $OuterDiamondRight = 850 + $DiamandAdjX, $OuterDiamondTop = 15 - $DiamandAdjY, $OuterDiamondBottom = 650 + $DiamandAdjY
+Global $DeployableLRTB = [0, $g_iGAME_WIDTH - 1, 0, 527]
+Global $ExternalAreaRef[8][3], $InternalAreaRef[8][3], $ExternalArea[8][3], $InternalArea[8][3]
+; village size, left, right, top, bottom
 
-Global $DiamondMiddleX = ($OuterDiamondLeft + $OuterDiamondRight) / 2
-Global $DiamondMiddleY = ($OuterDiamondTop + $OuterDiamondBottom) / 2
-Global $InnerDiamandDiffX = 60 + $DiamandAdjX ; set the diamond shape based on reference village
-Global $InnerDiamandDiffY = 45 + $DiamandAdjY ; set the diamond shape based on reference village
-Global $InnerDiamondLeft = $OuterDiamondLeft + $InnerDiamandDiffX, $InnerDiamondRight = $OuterDiamondRight - $InnerDiamandDiffX, $InnerDiamondTop = $OuterDiamondTop + $InnerDiamandDiffY, $InnerDiamondBottom = $OuterDiamondBottom - $InnerDiamandDiffY
+ConvertInternalExternArea("Start", True)	
 
-Global $ExternalAreaRef[8][3] = [ _
+Func ConvertInternalExternArea($sCalledFrom = "", $bStartUp = False)	
+	; set the diamond shape based on reference village
+	Local $InnerDiamondLeft = 54
+	Local $InnerDiamondRight = 800
+	Local $InnerDiamondTop = 62
+	Local $InnerDiamondBottom = 623
+
+	Local $DiamandAdjX = 30
+	Local $DiamandAdjY = 30
+	
+	Local $OuterDiamondLeft =  $InnerDiamondLeft - $DiamandAdjX 
+	Local $OuterDiamondRight = $InnerDiamondRight + $DiamandAdjX 
+	Local $OuterDiamondTop =  $InnerDiamondTop - $DiamandAdjY
+	Local $OuterDiamondBottom = $InnerDiamondBottom + $DiamandAdjY
+
+	Local $DiamondMiddleX = ($OuterDiamondLeft + $OuterDiamondRight) / 2
+	Local $DiamondMiddleY = ($OuterDiamondTop + $OuterDiamondBottom) / 2
+
+	Local $aExternalAreaRef[8][3] = [ _
 		[$OuterDiamondLeft, $DiamondMiddleY, "LEFT"], _
 		[$OuterDiamondRight, $DiamondMiddleY, "RIGHT"], _
 		[$DiamondMiddleX, $OuterDiamondTop, "TOP"], _
@@ -60,8 +71,8 @@ Global $ExternalAreaRef[8][3] = [ _
 		[$OuterDiamondLeft + ($DiamondMiddleX - $OuterDiamondLeft) / 2, $DiamondMiddleY + ($OuterDiamondBottom - $DiamondMiddleY) / 2, "BOTTOM-LEFT"], _
 		[$DiamondMiddleX + ($OuterDiamondRight - $DiamondMiddleX) / 2, $DiamondMiddleY + ($OuterDiamondBottom - $DiamondMiddleY) / 2, "BOTTOM-RIGHT"] _
 		]
-
-Global $InternalAreaRef[8][3] = [ _
+			
+	Local $aInternalAreaRef[8][3] = [ _
 		[$InnerDiamondLeft, $DiamondMiddleY, "LEFT"], _
 		[$InnerDiamondRight, $DiamondMiddleY, "RIGHT"], _
 		[$DiamondMiddleX, $InnerDiamondTop, "TOP"], _
@@ -71,17 +82,15 @@ Global $InternalAreaRef[8][3] = [ _
 		[$InnerDiamondLeft + ($DiamondMiddleX - $InnerDiamondLeft) / 2, $DiamondMiddleY + ($InnerDiamondBottom - $DiamondMiddleY) / 2, "BOTTOM-LEFT"], _
 		[$DiamondMiddleX + ($InnerDiamondRight - $DiamondMiddleX) / 2, $DiamondMiddleY + ($InnerDiamondBottom - $DiamondMiddleY) / 2, "BOTTOM-RIGHT"] _
 		]
-
-ConvertInternalExternArea("Startup") ; initial layout so variables are not empty
-
-Func ConvertInternalExternArea($sCalledFrom = "")
+		
+	
 	Local $x, $y
-	If $sCalledFrom <> "" Then SetDebugLog("ConvertInternalExternArea : " & $sCalledFrom)
+
 	; Update External coord.
 	For $i = 0 To 7
 		$x = $ExternalAreaRef[$i][0]
 		$y = $ExternalAreaRef[$i][1]
-		ConvertToVillagePos($x, $y)
+		If $bStartUp = False Then ConvertToVillagePos($x, $y)
 		$ExternalArea[$i][0] = $x
 		$ExternalArea[$i][1] = $y
 		$ExternalArea[$i][2] = $ExternalAreaRef[$i][2]
@@ -90,30 +99,30 @@ Func ConvertInternalExternArea($sCalledFrom = "")
 	; Full ECD Diamond $CocDiamondECD
 	; Top
 	$x = $ExternalAreaRef[2][0]
-	$y = $ExternalAreaRef[2][1] + ($DiamandAdjY * 0.80) ; Resolution fixed.
-	ConvertToVillagePos($x, $y)
+	$y = $ExternalAreaRef[2][1] + $DiamandAdjY
+	If $bStartUp = False Then ConvertToVillagePos($x, $y)
 	$CocDiamondECD = $x & "," & $y
 	; Right
-	$x = $ExternalAreaRef[1][0] - ($DiamandAdjX * 0.80) ; Resolution fixed.
+	$x = $ExternalAreaRef[1][0] - $DiamandAdjX
 	$y = $ExternalAreaRef[1][1]
-	ConvertToVillagePos($x, $y)
+	If $bStartUp = False Then ConvertToVillagePos($x, $y)
 	$CocDiamondECD &= "|" & $x & "," & $y
 	; Bottom
 	$x = $ExternalAreaRef[3][0]
-	$y = $ExternalAreaRef[3][1] - ($DiamandAdjY * 0.80) ; Resolution fixed.
-	ConvertToVillagePos($x, $y)
+	$y = $ExternalAreaRef[3][1] - $DiamandAdjY
+	If $bStartUp = False Then ConvertToVillagePos($x, $y)
 	$CocDiamondECD &= "|" & $x & "," & $y
 	; Left
-	$x = $ExternalAreaRef[0][0] + ($DiamandAdjX * 0.80) ; Resolution fixed.
+	$x = $ExternalAreaRef[0][0] + $DiamandAdjX
 	$y = $ExternalAreaRef[0][1]
-	ConvertToVillagePos($x, $y)
+	If $bStartUp = False Then ConvertToVillagePos($x, $y)
 	$CocDiamondECD &= "|" & $x & "," & $y
 
 	; Update Internal coord.
 	For $i = 0 To 7
 		$x = $InternalAreaRef[$i][0]
 		$y = $InternalAreaRef[$i][1]
-		ConvertToVillagePos($x, $y)
+		If $bStartUp = False Then ConvertToVillagePos($x, $y)
 		$InternalArea[$i][0] = $x
 		$InternalArea[$i][1] = $y
 		$InternalArea[$i][2] = $InternalAreaRef[$i][2]
@@ -123,6 +132,9 @@ Func ConvertInternalExternArea($sCalledFrom = "")
 			$InternalArea[1][0] & "," & $InternalArea[1][1] & "|" & _
 			$InternalArea[3][0] & "," & $InternalArea[3][1] & "|" & _
 			$InternalArea[0][0] & "," & $InternalArea[0][1]
+
+	$ExternalAreaRef = $aExternalAreaRef
+	$InternalAreaRef = $aInternalAreaRef
 
 EndFunc   ;==>ConvertInternalExternArea
 

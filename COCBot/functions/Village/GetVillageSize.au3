@@ -24,9 +24,10 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix = Default, $sFixedPrefix = Default, $bOnBuilderBase = Default, $bCaptureRegion = Default) ; Capture region spam disabled - Team AIO Mod++
+Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix = Default, $sFixedPrefix = Default, $bOnBuilderBase = Default, $bCaptureRegion = Default, $debugwithimage = False) ; Capture region spam disabled - Team AIO Mod++
 	FuncEnter(GetVillageSize)
 	
+	Local $debugimage[0][3]
 	; Capture region spam disabled - Team AIO Mod++
 	Local Static $aLast[$g_eTotalAcc]
 	For $i = 0 To $g_eTotalAcc - 1
@@ -37,6 +38,24 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	If $bCaptureRegion = True Or $bCaptureRegion = Default Then
 		$bCaptureRegion = True 
 		_CaptureRegion2()
+	EndIf
+	
+	If $debugwithimage Then
+		Local $subdirectory = $g_sprofiletempdebugpath & "ZoomOut"
+		DirCreate($subdirectory)
+		Local $date = @YEAR & "-" & @MON & "-" & @MDAY
+		Local $time = @HOUR & "." & @MIN & "." & @SEC
+		Local $editedimage = _gdiplus_bitmapcreatefromhbitmap($g_hhbitmap2)
+		Local $hgraphic = _gdiplus_imagegetgraphicscontext($editedimage)
+		Local $hpenred = _gdiplus_pencreate(-65536, 3)
+		Local $hpenwhite = _gdiplus_pencreate(-1, 3)
+		Local $hpenyellow = _gdiplus_pencreate(-1118185, 1)
+		Local $hpenblue = _gdiplus_pencreate(-10464519, 3)
+		Local $hbrush = _gdiplus_brushcreatesolid(-1)
+		Local $hformat = _gdiplus_stringformatcreate()
+		Local $hfamily = _gdiplus_fontfamilycreate("Arial")
+		Local $hfont = _gdiplus_fontcreate($hfamily, 8)
+		Local $filename = String($date & "_" & $time & "_ZoomOut_.png")
 	EndIf
 	
 	If $DebugLog = Default Then $DebugLog = False
@@ -161,6 +180,14 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 				$stone[3] = $y0 ; y ref. center of stone
 				$stone[4] = $d0 ; distance to village map in pixel
 				$stone[5] = $findImage
+				If $debugwithimage Then
+					_gdiplus_graphicsdrawrect($hgraphic, $x1, $y1, $right - $x1, $bottom - $y1, $hpenyellow)
+					_gdiplus_graphicsdrawrect($hgraphic, $x - 5, $y - 5, 10, 10, $hpenblue)
+					_gdiplus_graphicsdrawrect($hgraphic, $x0 - 5, $y0 - 5, 10, 10, $hpenwhite)
+					Local $tlayout = _gdiplus_rectfcreate(Abs($x - $x0) + $x, Abs($y - $y0) + $y, 0, 0)
+					Local $ainfo = _gdiplus_graphicsmeasurestring($hgraphic, $findimage & "_" & $d0, $hfont, $tlayout, $hformat)
+					_gdiplus_graphicsdrawstringex($hgraphic, $findimage & "_" & $d0, $hfont, $ainfo[0], $hformat, $hbrush)
+				EndIf
 				ExitLoop
 			EndIf
 
@@ -171,6 +198,19 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 
 	If $stone[0] = 0 And $fixed[0] = 0 Then
 		SetDebugLog("GetVillageSize cannot find stone", $COLOR_WARNING)
+		If $debugwithimage Then
+			_gdiplus_imagesavetofile($editedimage, $subdirectory & "\" & $filename)
+			_gdiplus_fontdispose($hfont)
+			_gdiplus_fontfamilydispose($hfamily)
+			_gdiplus_stringformatdispose($hformat)
+			_gdiplus_brushdispose($hbrush)
+			_gdiplus_pendispose($hpenred)
+			_gdiplus_pendispose($hpenwhite)
+			_gdiplus_pendispose($hpenyellow)
+			_gdiplus_pendispose($hpenblue)
+			_gdiplus_graphicsdispose($hgraphic)
+			_gdiplus_bitmapdispose($editedimage)
+		EndIf
 		$g_aVillageSize = $g_aVillageSizeReset ; Deprecated dim - Team AIO Mod++
 		Return FuncReturn($aResult)
 	Else
@@ -223,6 +263,26 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 					$tree[3] = $y0 ; y ref. center of tree
 					$tree[4] = $d0 ; distance to village map in pixel
 					$tree[5] = $findImage
+					If $debugwithimage Then
+						;-- DRAW EXTERNAL PERIMETER LINES
+						_GDIPlus_GraphicsDrawLine($hGraphic, $ExternalArea[0][0], $ExternalArea[0][1], $ExternalArea[2][0], $ExternalArea[2][1], $hpenyellow)
+						_GDIPlus_GraphicsDrawLine($hGraphic, $ExternalArea[0][0], $ExternalArea[0][1], $ExternalArea[3][0], $ExternalArea[3][1], $hpenyellow)
+						_GDIPlus_GraphicsDrawLine($hGraphic, $ExternalArea[1][0], $ExternalArea[1][1], $ExternalArea[2][0], $ExternalArea[2][1], $hpenyellow)
+						_GDIPlus_GraphicsDrawLine($hGraphic, $ExternalArea[1][0], $ExternalArea[1][1], $ExternalArea[3][0], $ExternalArea[3][1], $hpenyellow)
+
+						;-- DRAW EXTERNAL PERIMETER LINES
+						_GDIPlus_GraphicsDrawLine($hGraphic, $InternalArea[0][0], $InternalArea[0][1], $InternalArea[2][0], $InternalArea[2][1], $hpenyellow)
+						_GDIPlus_GraphicsDrawLine($hGraphic, $InternalArea[0][0], $InternalArea[0][1], $InternalArea[3][0], $InternalArea[3][1], $hpenyellow)
+						_GDIPlus_GraphicsDrawLine($hGraphic, $InternalArea[1][0], $InternalArea[1][1], $InternalArea[2][0], $InternalArea[2][1], $hpenyellow)
+						_GDIPlus_GraphicsDrawLine($hGraphic, $InternalArea[1][0], $InternalArea[1][1], $InternalArea[3][0], $InternalArea[3][1], $hpenyellow)
+						
+						_gdiplus_graphicsdrawrect($hgraphic, $x1, $y1, $right - $x1, $bottom - $y1, $hpenyellow)
+						_gdiplus_graphicsdrawrect($hgraphic, $x - 5, $y - 5, 10, 10, $hpenblue)
+						_gdiplus_graphicsdrawrect($hgraphic, $x0 - 5, $y0 - 5, 10, 10, $hpenwhite)
+						Local $tlayout = _gdiplus_rectfcreate(Abs($x - $x0) + $x - 150, Abs($y - $y0) + $y + 10, 0, 0)
+						Local $ainfo = _gdiplus_graphicsmeasurestring($hgraphic, $findimage & "_" & $d0, $hfont, $tlayout, $hformat)
+						_gdiplus_graphicsdrawstringex($hgraphic, $findimage & "_" & $d0, $hfont, $ainfo[0], $hformat, $hbrush)
+					EndIf
 					ExitLoop
 				EndIf
 
@@ -239,6 +299,19 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		If $tree[0] = 0 And $fixed[0] = 0 And Not $g_bRestart Then
 			SetDebugLog("GetVillageSize cannot find tree", $COLOR_WARNING)
 			$g_aVillageSize = $g_aVillageSizeReset ; Deprecated dim - Team AIO Mod++
+			If $debugwithimage Then
+				_gdiplus_imagesavetofile($editedimage, $subdirectory & "\" & $filename)
+				_gdiplus_fontdispose($hfont)
+				_gdiplus_fontfamilydispose($hfamily)
+				_gdiplus_stringformatdispose($hformat)
+				_gdiplus_brushdispose($hbrush)
+				_gdiplus_pendispose($hpenred)
+				_gdiplus_pendispose($hpenwhite)
+				_gdiplus_pendispose($hpenyellow)
+				_gdiplus_pendispose($hpenblue)
+				_gdiplus_graphicsdispose($hgraphic)
+				_gdiplus_bitmapdispose($editedimage)
+			EndIf
 			Return FuncReturn($aResult)
 		EndIf
 	EndIf
@@ -247,7 +320,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	Local $a = $tree[0] - $stone[0]
 	Local $b = $stone[1] - $tree[1]
 	Local $c = Sqrt($a * $a + $b * $b) - $stone[4] - $tree[4]
-
+	
 	If $g_bUpdateSharedPrefs And Not $bOnBuilderBase And $fixed[0] = 0 And $c >= 500 Then
 		; On main village use stone as fixed point when village size is too large, as that might cause an infinite loop when obstacle blocked (and another tree found)
 		$fixed = $stone
@@ -257,6 +330,30 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	Local $iRefSize = 448 ; 2022 Update village measuring as outer edges didn't align anymore
 	Local $iDefSize = 444 ; 2019-04-01 New default size using shared_prefs zoom level
 	Local $z = $c / $iRefSize
+
+	Local $txtdebug = "White square : Expected position" & @CRLF & "Blue square : Detected position" & @CRLF & "$tree[0]: " & $tree[0] & " - $stone[0]: " & $stone[0] & " = " & $a & @CRLF & "$stone[1]: " & $stone[1] & " - $tree[1]: " & $tree[1] & " = " & $b & @CRLF & "Distance is : " & Sqrt($a * $a + $b * $b) & @CRLF & "Dist Stone to village map: " & $stone[4] & @CRLF & "Dist Tree to village map: " & $tree[4] & @CRLF & "Final: " & $c
+
+	If $debugwithimage Then
+		SetLog("Distance from tree to stone is : " & Sqrt($a * $a + $b * $b) - $stone[4] - $tree[4])
+		SetLog("Village Distance is: " & $c)
+		SetLog("Dist Tree to village map: " & $tree[4])
+		SetLog("Dist Stone to village map: " & $stone[4])
+		SetLog("Village Factor is: " & $z)
+		Local $tlayout = _gdiplus_rectfcreate(430, 630 + $g_ibottomoffsetyfixed, 0, 0)
+		Local $ainfo = _gdiplus_graphicsmeasurestring($hgraphic, $txtdebug, $hfont, $tlayout, $hformat)
+		_gdiplus_graphicsdrawstringex($hgraphic, $txtdebug, $hfont, $ainfo[0], $hformat, $hbrush)
+		_gdiplus_imagesavetofile($editedimage, $subdirectory & "\" & $filename)
+		_gdiplus_fontdispose($hfont)
+		_gdiplus_fontfamilydispose($hfamily)
+		_gdiplus_stringformatdispose($hformat)
+		_gdiplus_brushdispose($hbrush)
+		_gdiplus_pendispose($hpenred)
+		_gdiplus_pendispose($hpenwhite)
+		_gdiplus_pendispose($hpenyellow)
+		_gdiplus_pendispose($hpenblue)
+		_gdiplus_graphicsdispose($hgraphic)
+		_gdiplus_bitmapdispose($editedimage)
+	EndIf
 
 	Local $stone_x_exp = $stone[2]
 	Local $stone_y_exp = $stone[3]
