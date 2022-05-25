@@ -23,7 +23,7 @@ Func TrainClick($iX, $iY, $iTimes, $iSpeed, $aWatchSpot, $sdebugtxt, $TypeTroops
 	If IsTrainPage() Then
 		If $g_bDebugClick Then
 			Local $txt = _DecodeDebug($sdebugtxt)
-			SetLog("TrainClick(" & $iX & "," & $iX & "," & $iTimes & "," & $iSpeed & "," & $sdebugtxt & $txt & "," & $TypeTroops & ")", $COLOR_DEBUG)
+			SetLog("TrainClick(" & $iX & "," & $iY & "," & $iTimes & "," & $iSpeed & "," & $sdebugtxt & $txt & "," & $TypeTroops & ")", $COLOR_DEBUG)
 		EndIf
 
 		If $iTimes <> 1 Then
