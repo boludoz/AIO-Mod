@@ -282,10 +282,10 @@ Func GetFullNameSlot(Const $iTrainPos, Const $sTroopType)
 		EndSwitch
 
 		Switch $iTrainPos[1]
-			Case 0 To 445 + $g_iMidOffsetYFixed
-				$iSlotV = 387 + $g_iMidOffsetYFixed ; First ROW
-			Case 446 + $g_iMidOffsetYFixed To 550 + $g_iMidOffsetYFixed ; Second ROW
+			Case 0 To 445 + $g_iMidOffsetYFixed; First ROW
 				$iSlotV = 488 + $g_iMidOffsetYFixed
+			Case 446 + $g_iMidOffsetYFixed To 550 + $g_iMidOffsetYFixed ; Second ROW
+				$iSlotV = 387 + $g_iMidOffsetYFixed 
 		EndSwitch
 
 		Local $aSlot[4] = [$iSlotH, $iSlotV, 0x9d9d9d, 20] ; Gray [i] icon
@@ -347,10 +347,10 @@ Func GetFullNameSlot(Const $iTrainPos, Const $sTroopType)
 		EndSwitch
 
 		Switch $iTrainPos[1]
-			Case 0 To 445 + $g_iMidOffsetYFixed
-				$iSlotV = 398 + $g_iMidOffsetYFixed ; First ROW
-			Case 446 + $g_iMidOffsetYFixed To 550 + $g_iMidOffsetYFixed ; Second ROW
+			Case 0 To 445 + $g_iMidOffsetYFixed ; First ROW
 				$iSlotV = 498 + $g_iMidOffsetYFixed
+			Case 446 + $g_iMidOffsetYFixed To 550 + $g_iMidOffsetYFixed ; Second ROW
+				$iSlotV = 398 + $g_iMidOffsetYFixed 
 		EndSwitch
 
 		Local $aSlot[4] = [$iSlotH, $iSlotV, 0x9f9f9f, 20] ; Gray [i] icon
