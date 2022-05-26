@@ -45,10 +45,10 @@ ConvertInternalExternArea("Start", True)
 
 Func ConvertInternalExternArea($sCalledFrom = "", $bStartUp = False)	
 	; set the diamond shape based on reference village
-	Local $InnerDiamondLeft = 54
-	Local $InnerDiamondRight = 800
-	Local $InnerDiamondTop = 62
-	Local $InnerDiamondBottom = 623
+	Local $InnerDiamondLeft = $g_afRefVillage[$g_iTree][1]
+	Local $InnerDiamondRight = $g_afRefVillage[$g_iTree][2]
+	Local $InnerDiamondTop = $g_afRefVillage[$g_iTree][3]
+	Local $InnerDiamondBottom = $g_afRefVillage[$g_iTree][4]
 
 	Local $DiamandAdjX = 30
 	Local $DiamandAdjY = 30

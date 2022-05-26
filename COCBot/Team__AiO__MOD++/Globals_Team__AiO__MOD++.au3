@@ -787,3 +787,31 @@ Global $g_bNewUpdateMainVillage = False, $g_hChkAutoBuildNew = 0
 
 ; Android version
 Global $g_hLblAndroidInfo = 0
+
+
+; Grumpy hog - My respects for him.
+; Spring, Autumn, Clashy, Pirate, Epic Winter, Hog Mountain, Jungle, Epic Jungle, 9th Clash, PumpKin GraveYard, Snow Day, Tiger Mountain, Primal(PR), Shadow(SH), Royale
+Global Enum $eTreeDS, $eTreeAS, $eTreeCC, $eTreePS, $eTreeEW, $eTreeHM, $eTreeJS, $eTreeEJ, $eTree9C, $eTreePG, $eTreeSD, $eTreeTM, $eTreePR, $eTreeSH, $eTreeRS, $eTreeCS, $eTreeIT, $eTreeCount
+Global Const $g_aThemesNames[$eTreeCount] = ["DS", "AS", "CC", "PS", "EW", "HM", "JS", "EJ", "9C", "PG", "TM", "PR", "SH", "CS", "IT"]
+
+
+Global Const $g_afRefVillage[$eTreeCount][5] = [ _
+    [481.536485225372, 35, 809, 57, 632], _        ; DS
+    [480, 35, 809, 57, 632], _                ; AS
+    [481.359352186882, 35, 809, 57, 632], _        ; CC
+    [487.190577721375, 35, 809, 57, 632], _			; PS
+    [485.292934467294, 35, 809, 57, 632], _        ; EW
+    [479.574528317581, 35, 809, 57, 632], _        ; HM
+    [480.758630217939, 35, 809, 57, 632], _        ; JS
+    [481.531257240053, 35, 809, 57, 632], _        ; EJ
+    [481.956344570969, 35, 809, 57, 632], _        ; 9C
+    [480, 35, 809, 57, 632], _                ; PG
+    [480, 35, 809, 57, 632], _                ; SD
+    [480, 35, 809, 57, 632], _                ; TM
+    [480, 35, 809, 57, 632], _                ; PR
+    [480, 35, 809, 57, 632], _                ; SH
+    [480, 35, 809, 57, 632], _                ; RS
+    [480, 35, 809, 57, 632], _                ; CS
+    [480, 35, 809, 57, 632]]                    ; IT
+	
+Global $g_iTree = $eTreeDS						; default to classic

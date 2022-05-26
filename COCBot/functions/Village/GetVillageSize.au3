@@ -325,10 +325,26 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		; On main village use stone as fixed point when village size is too large, as that might cause an infinite loop when obstacle blocked (and another tree found)
 		$fixed = $stone
 	EndIf
-
-	; initial reference village had a width of 473.60282919315 (and not 440) and stone located at 226, 567, so center on that reference and used zoom factor on that size
-	Local $iRefSize = 448 ; 2022 Update village measuring as outer edges didn't align anymore
-	Local $iDefSize = 444 ; 2019-04-01 New default size using shared_prefs zoom level
+    Local $iRefSize = 448 ; 2022 Update village measuring as outer edges didn't align anymore
+    Local $iDefSize = 444 ; 2019-04-01 New default size using shared_prefs zoom level
+	
+	; Local $iRefSize = 445
+	; If $bOnBuilderBase = False Then
+		; Local $i = -1
+		; Local $iDefa = $eTreeDS
+		; For $sStringNames In $g_aThemesNames
+			; $i += 1
+			; If StringInStr($sStringNames & "-", $aLast[Int($g_iCurAccount)]) Then
+				; $iDefa = $i
+				; ExitLoop
+			; EndIf
+		; Next
+		; $g_iTree = $iDefa
+		; $iRefSize = $g_afRefVillage[$g_iTree][0]
+	; EndIf
+	
+	; Local $iDefSize = 450 ; 2019-04-01 New default size using shared_prefs zoom level 444
+	
 	Local $z = $c / $iRefSize
 
 	Local $txtdebug = "White square : Expected position" & @CRLF & "Blue square : Detected position" & @CRLF & "$tree[0]: " & $tree[0] & " - $stone[0]: " & $stone[0] & " = " & $a & @CRLF & "$stone[1]: " & $stone[1] & " - $tree[1]: " & $tree[1] & " = " & $b & @CRLF & "Distance is : " & Sqrt($a * $a + $b * $b) & @CRLF & "Dist Stone to village map: " & $stone[4] & @CRLF & "Dist Tree to village map: " & $tree[4] & @CRLF & "Final: " & $c
