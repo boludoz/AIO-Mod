@@ -270,11 +270,11 @@ Func GetFullNameSlot(Const $iTrainPos, Const $sTroopType)
 			Case 298 To 404 ; 4 Column
 				$iSlotH = 404
 			Case 396 To 502 ; 5 Column
-				$iSlotH = 502
+				$iSlotH = 500
 			Case 495 To 600 ; 6 Column
-				$isloth = 600
+				$isloth = 598
 			Case 593 To 698 ; 7 Column
-				$iSlotH = 698
+				$iSlotH = 696
 			Case Else
 				If _ColorCheck(_GetPixelColor($iTrainPos[0], $iTrainPos[1], True), Hex(0xd3d3cb, 6), 5) Then
 					SetLog("GetFullNameSlot(): It seems that there is no Slot for an Spell on: " & $iTrainPos[0] & "," & $iTrainPos[1] & "!", $COLOR_ERROR)
@@ -283,11 +283,12 @@ Func GetFullNameSlot(Const $iTrainPos, Const $sTroopType)
 
 		Switch $iTrainPos[1]
 			Case 0 To 445 + $g_iMidOffsetYFixed; First ROW
-				$iSlotV = 488 + $g_iMidOffsetYFixed
-			Case 446 + $g_iMidOffsetYFixed To 550 + $g_iMidOffsetYFixed ; Second ROW
 				$iSlotV = 387 + $g_iMidOffsetYFixed 
+			Case 446 + $g_iMidOffsetYFixed To 550 + $g_iMidOffsetYFixed ; Second ROW
+				$iSlotV = 488 + $g_iMidOffsetYFixed
 		EndSwitch
 
+		SetLog("iSlotH: " & $iSlotH & ", iSlotV: " & $iSlotV & ", g_iMidOffsetYFixed: " & $g_iMidOffsetYFixed, $COLOR_DEBUG)
 		Local $aSlot[4] = [$iSlotH, $iSlotV, 0x9d9d9d, 20] ; Gray [i] icon
 		If $g_bDebugSetlogTrain Then SetLog("GetFullNameSlot(): Spell Icon found on: " & $iSlotH & "," & $iSlotV, $COLOR_DEBUG)
 		Return $aSlot
@@ -316,12 +317,13 @@ Func GetFullNameSlot(Const $iTrainPos, Const $sTroopType)
 		EndSwitch
 
 		Switch $iTrainPos[1]
-			Case 0 To 445 + $g_iMidOffsetYFixed
-				$iSlotV = 387 + $g_iMidOffsetYFixed ; First ROW
+			Case 0 To 445 + $g_iMidOffsetYFixed ; First ROW
+				$iSlotV = 387 + $g_iMidOffsetYFixed
 			Case 446 + $g_iMidOffsetYFixed To 550 + $g_iMidOffsetYFixed ; Second ROW
 				$iSlotV = 488 + $g_iMidOffsetYFixed
 		EndSwitch
 
+		SetLog("iSlotH: " & $iSlotH & ", iSlotV: " & $iSlotV & ", g_iMidOffsetYFixed: " & $g_iMidOffsetYFixed, $COLOR_DEBUG)
 		Local $aSlot[4] = [$iSlotH, $iSlotV, 0x9F9F9F, 20] ; Gray [i] icon
 		If $g_bDebugSetlogTrain Then SetLog("GetFullNameSlot(): Elixir Troop Icon found on: " & $iSlotH & "," & $iSlotV, $COLOR_DEBUG)
 
@@ -353,6 +355,7 @@ Func GetFullNameSlot(Const $iTrainPos, Const $sTroopType)
 				$iSlotV = 398 + $g_iMidOffsetYFixed 
 		EndSwitch
 
+		SetLog("iSlotH: " & $iSlotH & ", iSlotV: " & $iSlotV & ", g_iMidOffsetYFixed: " & $g_iMidOffsetYFixed, $COLOR_DEBUG)
 		Local $aSlot[4] = [$iSlotH, $iSlotV, 0x9f9f9f, 20] ; Gray [i] icon
 		If $g_bDebugSetlogTrain Then SetLog("GetFullNameSlot(): Dark Elixir Troop Icon found on: " & $iSlotH & "," & $iSlotV, $COLOR_DEBUG)
 		Return $aSlot
