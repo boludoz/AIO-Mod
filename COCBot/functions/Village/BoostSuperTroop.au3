@@ -325,10 +325,10 @@ Func FinalBoostST(ByRef $bBadTryPotion, ByRef $bBadTryDark, $bTest = False)
 	Local $aImgBoostBtn2[4] = [330, 400, 515, 465] ; Resolution changed
 
 	Local $bPotionAvariable = QuickMIS("BC1", $g_sImgBoostTroopsPotion, $aImgBoostBtn1[0], $aImgBoostBtn1[1], $aImgBoostBtn1[2], $aImgBoostBtn1[3], True, False)
-	Local $aClickPotion[2] = [$g_iQuickMISX + $aImgBoostBtn1[0], $g_iQuickMISY + $aImgBoostBtn1[1]]
+	Local $aClickPotion[2] = [$g_iQuickMISX, $g_iQuickMISY]
 
 	Local $bDarkAvariable = QuickMIS("BC1", $g_sImgBoostTroopsButtons, $aImgBoostBtn1[0], $aImgBoostBtn1[1], $aImgBoostBtn1[2], $aImgBoostBtn1[3], True, False)
-	Local $aClickDark[2] = [$g_iQuickMISX + $aImgBoostBtn1[0], $g_iQuickMISY + $aImgBoostBtn1[1]]
+	Local $aClickDark[2] = [$g_iQuickMISX, $g_iQuickMISY]
 	$bDarkAvariable = IsDarkAvariable() And $bDarkAvariable
 	Local $aResource = [$bDarkAvariable, $bPotionAvariable]
 	Local $aClick = [$aClickDark, $aClickPotion]
@@ -349,7 +349,7 @@ Func FinalBoostST(ByRef $bBadTryPotion, ByRef $bBadTryDark, $bTest = False)
 			$sMode = ($iNum = 0) ? ($g_sImgBoostTroopsButtons) : ($g_sImgBoostTroopsPotion)
 			If QuickMIS("BC1", $sMode, $aImgBoostBtn2[0], $aImgBoostBtn2[1], $aImgBoostBtn2[2], $aImgBoostBtn2[3], True, False) Then
 				If $bTest = False Then
-					Click($g_iQuickMISX + $aImgBoostBtn2[0], $g_iQuickMISY + $aImgBoostBtn2[1], 1)
+					Click($g_iQuickMISX, $g_iQuickMISY, 1)
 				Else
 					$sMode = ($iNum = 0) ? ("dark") : ("potion")
 					SetLog("Not possible boost with " & $sMode, $COLOR_ERROR)

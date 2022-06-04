@@ -183,14 +183,12 @@ EndFunc   ;==>RemoveChangeTroopsDialog
 
 Func CheckAttackBtn()
 	If QuickMIS("BC1", $g_sImgAttackBtnBB, 16, 627 + $g_iBottomOffsetYFixed, 107, 713 + $g_iBottomOffsetYFixed, True, False) Then ; Resolution changed
-		If $g_iQuickMISWOffSetX > 16 And $g_iQuickMISWOffSetX < 107 And $g_iQuickMISWOffSetY > 627 + $g_iBottomOffsetYFixed And $g_iQuickMISWOffSetY < 713 + $g_iBottomOffsetYFixed Then ; Resolution changed
-			SetDebugLog("Attack Button detected: " & $g_iQuickMISWOffSetX & "," & $g_iQuickMISWOffSetY) ; Resolution changed
-			Click(Random(16, 107, 1), Random(627, 713, 1) + $g_iBottomOffsetYFixed, 1) ; Resolution changed
-		Else
-			SetLog("Attack Button not available.", $COLOR_ERROR)
-			ClickAway(Default, True)
-			Return False
-		EndIf
+		SetDebugLog("Attack Button detected: " & $g_iQuickMISX & "," & $g_iQuickMISY) ; Resolution changed
+		Click(Random(16, 107, 1), Random(627, 713, 1) + $g_iBottomOffsetYFixed, 1) ; Resolution changed
+	Else
+		SetLog("Attack Button not available.", $COLOR_ERROR)
+		ClickAway(Default, True)
+		Return False
 	EndIf
 	Return True
 EndFunc   ;==>CheckAttackBtn

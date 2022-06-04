@@ -14,7 +14,7 @@
 Global $g_sImgImgLocButtons = @ScriptDir & "\imgxml\imglocbuttons"
 
 #Region Windows
-Global Const $g_sImgGeneralCloseButton = @ScriptDir & "\imgxml\Windows\CloseButton*"
+Global Const $g_sImgGeneralCloseButton = @ScriptDir & "\imgxml\Windows\CloseButton\"
 #EndRegion
 
 #Region Obstacles

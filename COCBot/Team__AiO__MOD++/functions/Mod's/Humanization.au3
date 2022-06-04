@@ -26,7 +26,7 @@ Func LookAtWarLog()
 
 			If IsClanOverview() Then
 				If QuickMIS("BC1", $g_sImgHumanizationWarLog) Then ; October Update Changed
-					Click($g_iQuickMISWOffSetX, $g_iQuickMISWOffSetY) ; open war log
+					Click($g_iQuickMISX, $g_iQuickMISY) ; open war log
 					If randomSleep(500) Then Return
 					Click(258, 135 + $g_iMidOffsetYFixed) ;Click Classic War Log
 					If randomSleep(500) Then Return
@@ -676,10 +676,10 @@ Func LookAtRedNotifications()
 				Click(720, 50 + $g_iMidOffsetY)
 				If randomSleep(2000) Then Return
 				If QuickMIS("BC1", $g_sImgHumanizationFriend, 720, 130 + $g_iMidOffsetY, 780, 570 + $g_iMidOffsetY) Then
-					Click($g_iQuickMISWOffSetX, $g_iQuickMISWOffSetY)
+					Click($g_iQuickMISX, $g_iQuickMISY)
 					If randomSleep(1500) Then Return
 					If QuickMIS("BC1", $g_sImgHumanizationFriend, 440, 350 + $g_iMidOffsetY, 590, 440 + $g_iMidOffsetY) Then
-						Click($g_iQuickMISWOffSetX, $g_iQuickMISWOffSetY)
+						Click($g_iQuickMISX, $g_iQuickMISY)
 					Else
 						SetLog("Error When Trying To Find Okay Button ... Skipping ...", $COLOR_WARNING)
 					EndIf

@@ -77,7 +77,7 @@ Func CreateDropOrderGUI()
 
 	$y += 5
 		For $p = 0 To $eDropOrderCount - 1
-			If $p < 13 Then
+			If $p < 14 Then
 				GUICtrlCreateLabel($p + 1 & ":", $x - 19, $y + 3, -1, 18)
 				$g_ahCmbDropOrder[$p] = GUICtrlCreateCombo("", $x, $y, 120, 18, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
 					GUICtrlSetOnEvent(-1, "GUIDropOrder")
@@ -86,8 +86,8 @@ Func CreateDropOrderGUI()
 					GUICtrlSetState(-1, $GUI_DISABLE)
 				$g_ahImgDropOrder[$p] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnOptions, $x + 122, $y + 1, 18, 18)
 				$y += 25 ; move down to next combobox location
-			ElseIf $p < 26 Then
-				If $p = 13 Then
+			ElseIf $p < 28 Then
+				If $p = 14 Then
 					$x += 150
 					$y = 49
 				EndIf
@@ -100,7 +100,7 @@ Func CreateDropOrderGUI()
 				$g_ahImgDropOrder[$p] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnOptions, $x + 132, $y + 1, 18, 18)
 				$y += 25 ; move down to next combobox location
 			Else
-				If $p = 26 Then
+				If $p = 28 Then
 					$x += 160
 					$y = 49
 				EndIf

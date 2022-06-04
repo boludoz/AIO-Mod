@@ -1560,7 +1560,7 @@ Func isInsideDiamondInt($iX, $iY)
 	If $DX >= 5 Then $DX -= 5
 	If $DY >= 5 Then $DY -= 5
 
-	If ($DX / $aSize[0] + $DY / $aSize[1] <= 1) And $iX > $DeployableLRTB[0] And $iX <= $DeployableLRTB[1] And $iY >= $DeployableLRTB[2] And $iY <= $DeployableLRTB[3] Then
+	If ($DX / $aSize[0] + $DY / $aSize[1] <= 1) And $iX > $g_aiDeployableLRTB[0] And $iX <= $g_aiDeployableLRTB[1] And $iY >= $g_aiDeployableLRTB[2] And $iY <= $g_aiDeployableLRTB[3] Then
 		Return True ; Inside Village
 	Else
 		;debugAttackCSV("isInsideDiamondInt outside: " & $iX & "," & $iY)

@@ -147,7 +147,7 @@ Func _AutoUpgrade($bDebug = False)
 			ContinueLoop
 		EndIf
 		
-		Click($g_iQuickMISwoffsetx, $g_iQuickMISwoffsety)
+		Click($g_iQuickMISX, $g_iQuickMISY)
 		
 		If _Sleep($DELAYAUTOUPGRADEBUILDING2) Then Return
 		
@@ -521,20 +521,20 @@ Func NewBuildings()
 
 		; Lets search for the Correct Symbol on field
 		If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgYes, 150, 150 + $g_iMidOffsetYFixed, 650, 550 + $g_iBottomOffsetYFixed, $Screencap, $Debug) Then ; Resolution changed
-			Click($g_iQuickMISX + 150, $g_iQuickMISY + 150, 1)
-			SetLog("Placed a new Building on main village! [" & $g_iQuickMISX + 150 & "," & $g_iQuickMISY + 150 & "]", $COLOR_INFO)
+			Click($g_iQuickMISX, $g_iQuickMISY, 1)
+			SetLog("Placed a new Building on main village! [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
 			If _Sleep(1000) Then Return
 
 			; Lets check if exist the [x] , Some Buildings like Traps when you place one will give other to place automaticly!
 			If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgNo, 150, 150 + $g_iMidOffsetYFixed, 650, 550 + $g_iBottomOffsetYFixed, $Screencap, $Debug) Then ; Resolution changed
-				Click($g_iQuickMISX + 150, $g_iQuickMISY + 150, 1)
+				Click($g_iQuickMISX, $g_iQuickMISY, 1)
 			EndIf
 
 			Return True
 		Else
 			If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgNo, 150, 150 + $g_iMidOffsetYFixed, 650, 550 + $g_iBottomOffsetYFixed, $Screencap, $Debug) Then ; Resolution changed
-				SetLog("Sorry! Wrong place to deploy a new building! [" & $g_iQuickMISX + 150 & "," & $g_iQuickMISY + 150 & "]", $COLOR_ERROR)
-				Click($g_iQuickMISX + 150, $g_iQuickMISY + 150, 1)
+				SetLog("Sorry! Wrong place to deploy a new building! [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_ERROR)
+				Click($g_iQuickMISX, $g_iQuickMISY, 1)
 			Else
 				SetLog("Error on Undo symbol!", $COLOR_ERROR)
 			EndIf

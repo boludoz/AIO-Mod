@@ -356,7 +356,7 @@ Func CreateTelegramSubTab()
 			GUICtrlSetState(-1, $GUI_UNCHECKED + $GUI_DISABLE)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Clear_set_row_of_boxes", -1))
 			GUICtrlSetOnEvent(-1, "chkNotifyhoursE1")
-		$g_hLblNotifyhoursAM = GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "AM", -1), $x + 10, $y)
+		$g_hLblNotifyhoursAM = GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "AM", -1), $x + 5, $y)
 	$y += 15
 		For $i = 12 to 23
 			$g_hChkNotifyhours[$i] = GUICtrlCreateCheckbox("", $x + 30 + (15 * ($i - 12)), $y, 15, 15)

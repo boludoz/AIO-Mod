@@ -102,7 +102,7 @@ Func MakeDropPoints($side, $pointsQty, $addtiles, $versus, $randomx = 2, $random
 					EndSwitch
 					$pixel = StringSplit($x2 & "-" & $y2, "-", 2)
 					If isinsidediamondredarea($pixel) Then ExitLoop
-					If $addtiles < 0 And $y2 > $deployablelrtb[3] Then ExitLoop
+					If $addtiles < 0 And $y2 > $g_aiDeployableLRTB[3] Then ExitLoop
 				Next
 				$pixel = StringSplit($x2 & "-" & $y2, "-", 2)
 				$Output &= $pixel[0] & "-" & $pixel[1] & "|"

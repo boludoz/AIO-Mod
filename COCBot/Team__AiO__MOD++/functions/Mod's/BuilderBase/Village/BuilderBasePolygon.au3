@@ -63,7 +63,7 @@ Func BuilderBaseZoomOut($bForceZoom = False, $bVersusMode = True, $DebugImage = 
 				If _Sleep(500) Then ExitLoop
 				If Not $g_bRunState Then Return
 				; Get the Distances between images
-				Local $Size = GetBuilderBaseSize(True, $DebugImage)
+				Local $Size = GetBuilderBaseSize($bVersusMode = False, $DebugImage)
 				SetDebugLog("[" & $i & "]BuilderBaseZoomOut $Size: " & $Size)
 				If IsNumber($Size) And $Size > 0 Then ExitLoop
 			Next
@@ -99,15 +99,15 @@ Func GetBuilderBaseSize($WithClick = True, $DebugImage = False)
 	If Not $g_bRunState Then Return
 	; Get The boat at TOP
 	If QuickMIS("BC1", $g_sImgZoomOutDirBB & "V2\", $BoatSize[0], $BoatSize[1], $BoatSize[2], $BoatSize[3], True, False) Then ; RC Done
-		$BoatCoord[0] = $g_iQuickMISWOffSetX
-		$BoatCoord[1] = $g_iQuickMISWOffSetY
+		$BoatCoord[0] = $g_iQuickMISX
+		$BoatCoord[1] = $g_iQuickMISY
 		If $DebugImage Then SetDebugLog("[BBzoomout] Coordinate Boat: " & $BoatCoord[0] & "/" & $BoatCoord[01])
 		$g_aBoatPos[0] = Int($BoatCoord[0])
 		$g_aBoatPos[1] = Int($BoatCoord[1])
 		; Get the Stone at Left
 		If QuickMIS("BC1", $g_sImgZoomOutDirBB & "V2\", $StoneSize[0], $StoneSize[1], $StoneSize[2], $StoneSize[3], True, False) Then ; RC Done
-			$Stonecoord[0] = $g_iQuickMISWOffSetX
-			$Stonecoord[1] = $g_iQuickMISWOffSetY
+			$Stonecoord[0] = $g_iQuickMISX
+			$Stonecoord[1] = $g_iQuickMISY
 			If $DebugImage Then SetDebugLog("[BBzoomout] Coordinate Stone: " & $Stonecoord[0] & "/" & $Stonecoord[01])
 			; Get the Distance between Images
 			Local $resul = Floor(Village_Distances($BoatCoord[0], $BoatCoord[1], $Stonecoord[0], $Stonecoord[1]))

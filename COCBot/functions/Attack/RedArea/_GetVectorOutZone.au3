@@ -48,8 +48,8 @@ Func _GetVectorOutZone($eVectorType)
 	For $i = 0 To $iSteps
 		Local $pixel = [Round($xMin + (($xMax - $xMin) * $i) / $iSteps), Round($yMin + (($yMax - $yMin) * $i) / $iSteps)]
 		ReDim $vectorOutZone[UBound($vectorOutZone) + 1]
-		If $pixel[1] > $DeployableLRTB[3] Then
-			$pixel[1] = $DeployableLRTB[3]
+		If $pixel[1] > $g_aiDeployableLRTB[3] Then
+			$pixel[1] = $g_aiDeployableLRTB[3]
 		EndIf
 		$vectorOutZone[UBound($vectorOutZone) - 1] = $pixel
 

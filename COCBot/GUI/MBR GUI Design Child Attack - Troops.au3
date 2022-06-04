@@ -274,15 +274,15 @@ EndFunc
 
 Func CreateQuickTrainEdit()
 
-	$g_hGUI_QuickTrainEdit = _GUICreate(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "GUI_QuickTrainEdit", "Edit troops and spells for quick train"), $g_iSizeWGrpTab2, 370, -1, -1, $WS_BORDER, $WS_EX_CONTROLPARENT)
+	$g_hGUI_QuickTrainEdit = _GUICreate(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "GUI_QuickTrainEdit", "Edit troops and spells for quick train"), 472, 370, -1, -1, $WS_BORDER, $WS_EX_CONTROLPARENT)
 
 	Local $x = 7
 	Local $y = 5
-	$g_hGrp_QTEdit = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "GUI_QuickTrainEdit", "Edit troops and spells for quick train"), $x, $y, 422, 280)
+	$g_hGrp_QTEdit = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "GUI_QuickTrainEdit", "Edit troops and spells for quick train"), $x, $y, 454, 280)
 
 		$x = 12
 		$y = 20
-		GUICtrlCreateGroup("", $x, $y - 3, 412, 125)
+		GUICtrlCreateGroup("", $x, $y - 3, 444, 125)
 
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnResetButton, $x + 10, $y + 15, 22, 22)
 		GUICtrlSetOnEvent(-1, "RemoveArmy_QTEdit")
@@ -307,29 +307,29 @@ Func CreateQuickTrainEdit()
 			GUICtrlSetState(-1, $GUI_HIDE)
 		Next
 
-		$g_ahLblQTEdit_TotalTroop = GUICtrlCreateLabel(0, $x + 360, $y + 25, 40, 15, $SS_RIGHT)
+		$g_ahLblQTEdit_TotalTroop = GUICtrlCreateLabel(0, $x + 390, $y + 25, 40, 15, $SS_RIGHT)
 		GUICtrlSetBkColor(-1, $COLOR_GRAY)
 		GUICtrlSetColor(-1, $COLOR_WHITE)
 		GUICtrlSetFont(-1, 9, $FW_BOLD, Default, "Arial", $CLEARTYPE_QUALITY)
-		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnTroopsCost, $x + 353, $y + 20, 24, 24)
+		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnTroopsCost, $x + 380, $y + 20, 24, 24)
 
-		$g_ahLblQTEdit_TotalSpell = GUICtrlCreateLabel(0, $x + 360, $y + 85, 40, 15, $SS_RIGHT)
+		$g_ahLblQTEdit_TotalSpell = GUICtrlCreateLabel(0, $x + 390, $y + 85, 40, 15, $SS_RIGHT)
 		GUICtrlSetBkColor(-1, $COLOR_GRAY)
 		GUICtrlSetColor(-1, $COLOR_WHITE)
 		GUICtrlSetFont(-1, 9, $FW_BOLD, Default, "Arial", $CLEARTYPE_QUALITY)
-		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnSpellsCost, $x + 350, $y + 80, 24, 24)
+		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnSpellsCost, $x + 380, $y + 80, 24, 24)
 
 		GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 		For $i = 0 To $eTroopCount - 1
-			If $i <= 11 Then
+			If $i <= 12 Then
 				$x = 14 + (34 * $i)
 				$y = 160
-			ElseIf $i > 11 And $i <= 23 Then
-				$x = 14 + (34 * ($i - 12))
+			ElseIf $i > 12 And $i <= 25 Then
+				$x = 14 + (34 * ($i - 13))
 				$y = 200
 			Else
-				$x = 14 + (34 * ($i - 24))
+				$x = 14 + (34 * ($i - 26))
 				$y = 240
 			EndIf
 			$g_ahPicTroop_QTEdit[$i] = _GUICtrlCreateIcon($g_sLibIconPath, $g_aQuickTroopIcon[$i], $x, $y, 32, 32)

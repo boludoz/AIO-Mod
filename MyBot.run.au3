@@ -846,7 +846,7 @@ Func runBot() ;Bot that runs everything in order
 			If $g_bIsSearchLimit Or $g_bChkOnlyFarm Then
 				Local $aRndFuncList = ['Collect', 'PetCheck']
 			Else
-				Local $aRndFuncList = ['Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge', 'PetCheck', "ChatActions", "BotHumanization"] ; AIO Mod
+				Local $aRndFuncList = ['Collect', 'CollectCCGold', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge', 'PetCheck', "ChatActions", "BotHumanization"] ; AIO Mod
 			EndIf
 
 			_ArrayShuffle($aRndFuncList)
@@ -865,7 +865,7 @@ Func runBot() ;Bot that runs everything in order
 					If Int($reserved4heroes) > 0 Then
 						Local $aRndFuncList = ["Laboratory", "UpgradeAll", "PetHouse"]
 					Else
-						Local $aRndFuncList = ["Laboratory", "UpgradeHeroes", "UpgradeBuilding", "PetHouse", "AutoUpgrade"]
+						Local $aRndFuncList = ["Laboratory", "UpgradeHeroes", "UpgradeBuilding", "PetHouse", "AutoUpgrade", 'ForgeClanCapitalGold', 'AutoUpgradeCC']
 					EndIf
 					_ArrayShuffle($aRndFuncList)
 					For $Index In $aRndFuncList
@@ -1077,7 +1077,7 @@ Func _Idle() ;Sequence that runs until Full Army
 		EndIf
 		If $g_bRestart Then ExitLoop
 		If Random(0, $g_iCollectAtCount - 1, 1) = 0 Then ; This is prevent from collecting all the time which isn't needed anyway, chance to run is 1/$g_iCollectAtCount
-			Local $aRndFuncList = ['Collect', 'CheckTombs', 'RequestCC', 'DonateCC', 'CleanYard']
+			Local $aRndFuncList = ['Collect', 'CollectCCGold', 'CheckTombs', 'RequestCC', 'DonateCC', 'CleanYard']
 			_ArrayShuffle($aRndFuncList)
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
@@ -1441,6 +1441,13 @@ Func __RunFunction($sAction)
 		Case "CollectFreeMagicItems"
 			CollectMagicItems()
 			; BotHumanization - Team AIO Mod++
+		Case "ForgeClanCapitalGold"
+			ForgeClanCapitalGold()
+		Case "AutoUpgradeCC"
+			AutoUpgradeCC()
+			_Sleep($DELAYRUNBOT3)
+		Case "CollectCCGold"
++            CollectCCGold()
 		Case "BotHumanization"
 			BotHumanization()
 			; ChatActions - Team AIO Mod++
@@ -1494,6 +1501,16 @@ Func FirstCheck()
 	$g_bRestart = False
 	$g_bFullArmy = False
 	$g_iCommandStop = -1
+	
+	; AIO
+	Local $aRndFuncList = ['Collect', 'CollectCCGold', 'CollectCCGold', 'CleanYard']
+	_ArrayShuffle($aRndFuncList)
+	For $Index In $aRndFuncList
+		If Not $g_bRunState Then Return
+		_RunFunction($Index)
+		If $g_bRestart Then ExitLoop
+		If CheckAndroidReboot() Then ContinueLoop 2
+	Next
 
 	VillageReport()
 	If Not $g_bRunState Then Return

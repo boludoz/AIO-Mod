@@ -156,7 +156,6 @@ Func cmbDonateCustomC()
 	_GUICtrlSetImage($g_ahPicDonateCustomC[2], $g_sLibIconPath, $g_aiDonIcons[$combo3])
 EndFunc   ;==>cmbDonateCustomC
 
-#CS
 Func cmbDonateCustomD()
 	Local $combo1 = _GUICtrlComboBox_GetCurSel($g_ahCmbDonateCustomD[0])
 	Local $combo2 = _GUICtrlComboBox_GetCurSel($g_ahCmbDonateCustomD[1])
@@ -165,7 +164,7 @@ Func cmbDonateCustomD()
 	_GUICtrlSetImage($g_ahPicDonateCustomD[1], $g_sLibIconPath, $g_aiDonIcons[$combo2])
 	_GUICtrlSetImage($g_ahPicDonateCustomD[2], $g_sLibIconPath, $g_aiDonIcons[$combo3])
 EndFunc   ;==>cmbDonateCustomD
-#CE
+
 Func _DonateBtn($hFirstControl, $hLastControl)
     Static $hLastDonateBtn1 = -1, $hLastDonateBtn2 = -1
 

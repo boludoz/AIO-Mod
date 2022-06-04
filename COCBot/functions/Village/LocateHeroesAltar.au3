@@ -562,7 +562,7 @@ Func DetectedAltar($eHeroIndex = $eHeroNone)
 			If QuickMIS("BC1", $sTemplateDir, 100, 55, 775, 580, True, False) Then ; Resolution changed
 				SetLog($sHeroName & " Altar detected...", $COLOR_SUCCESS)
 				$g_bUseRandomClick = False
-				PureClick($g_iQuickMISWOffSetX, $g_iQuickMISWOffSetY)
+				PureClick($g_iQuickMISX, $g_iQuickMISY)
 				If _Sleep(500) Then Return False
 				$g_bUseRandomClick = $bStatus
 
@@ -581,8 +581,8 @@ Func DetectedAltar($eHeroIndex = $eHeroNone)
 				SetDebugLog($sInfo[1] & $sInfo[2])
 				
 				If StringInStr($sInfo[1], $sOCRString) > 0 Then
-					$aDetectedPosition[0] = $g_iQuickMISWOffSetX
-					$aDetectedPosition[1] = $g_iQuickMISWOffSetY
+					$aDetectedPosition[0] = $g_iQuickMISX
+					$aDetectedPosition[1] = $g_iQuickMISY
 					ClickAway()
 					If _Sleep(1000) Then Return
 					ExitLoop

@@ -711,7 +711,7 @@ Func IsClanGamesWindow($getCapture = True, $bOnlyCheck = False, $bFromBB = False
 	If $bFromBB = False Then
 		If QuickMIS("BC1", $g_sImgCaravan, 230, 55 + $g_iMidOffsetYFixed, 330, 155 + $g_iMidOffsetYFixed, $getCapture, False) Then ; Resolution changed
 			SetLog("Caravan available! Entering Clan Games", $COLOR_SUCCESS)
-			Click($g_iQuickMISX + 230, $g_iQuickMISY + 55)
+			Click($g_iQuickMISX, $g_iQuickMISY)
 		Else
 			SetLog("Caravan not available", $COLOR_WARNING)
 			$bRet = False
@@ -931,12 +931,12 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 		If $g_bPurgeJob Then
 			If _Sleep(2500) Then Return
 			If QuickMIS("BC1", $g_sImgTrashPurge, 400, 200 + $g_iMidOffsetYFixed, 700, 350 + $g_iMidOffsetYFixed, True, False) Then ; Resolution changed
-				Click($g_iQuickMISX + 400, $g_iQuickMISY + 200)
+				Click($g_iQuickMISX, $g_iQuickMISY)
 				If _Sleep(1500) Then Return
 				SetLog("Click Trash", $COLOR_INFO)
 				If QuickMIS("BC1", $g_sImgOkayPurge, 440, 400 + $g_iMidOffsetYFixed, 580, 450 + $g_iMidOffsetYFixed, True, False) Then ; Resolution changed
 					SetLog("Click OK", $COLOR_INFO)
-					Click($g_iQuickMISX + 440, $g_iQuickMISY + 400)
+					Click($g_iQuickMISX, $g_iQuickMISY)
 					SetLog("StartsEvent and Purge job!", $COLOR_SUCCESS)
                     GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - Purging Event ", 1)
                     _FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - Purging Event ")
@@ -968,8 +968,8 @@ Func StartButton($bGetEventType = True, $getCapture = True)
 
     Local $aButtonPixel[2]
     If QuickMIS("BC1", $g_sImgStart, 220, 150 + $g_iMidOffsetYFixed, 830, 580 + $g_iBottomOffsetYFixed, $getCapture, False) Then ; Resolution changed
-		$aButtonPixel[0] = ($g_iQuickMISX + 220)
-		$aButtonPixel[1] = ($g_iQuickMISY + 150)
+		$aButtonPixel[0] = $g_iQuickMISX
+		$aButtonPixel[1] = $g_iQuickMISY
 		If $bGetEventType = True Then
 			$g_bIsBBevent = (QuickMIS("Q1", $g_sImgBorderBB, $aButtonPixel[0] - 250, $aButtonPixel[1] - 70, $aButtonPixel[0] + 250, $aButtonPixel[1] + 70) > 0) ? (True) : (False) ; Resolution changed
 		EndIf
@@ -985,7 +985,7 @@ Func PurgeEvent($directoryImage, $sEventName, $getCapture = True)
 	; Screen coordinates for ScreenCapture
 	Local $x = 281, $y = 150 + $g_iMidOffsetYFixed, $x1 = 775, $y1 = 545 + $g_iBottomOffsetYFixed ; Resolution changed
 	If QuickMIS("BC1", $directoryImage, $x, $y, $x1, $y1, $getCapture, False) Then
-		Click($g_iQuickMISX + $x, $g_iQuickMISY + $y)
+		Click($g_iQuickMISX, $g_iQuickMISY)
 		; Start and Purge at same time
 		SetLog("Starting Impossible Job to purge", $COLOR_INFO)
 		If _Sleep(1500) Then Return
@@ -1012,13 +1012,13 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 	Else
 		SetLog("ForcePurgeEvent: Purge a Wrong Challenge", $COLOR_INFO)
 		If QuickMIS("BC1", $g_sImgTrashPurge, 400, 200 + $g_iMidOffsetYFixed, 700, 350 + $g_iMidOffsetYFixed, True, False) Then ; Resolution changed
-			Click($g_iQuickMISX + 400, $g_iQuickMISY + 200)
+			Click($g_iQuickMISX, $g_iQuickMISY)
 			If _Sleep(1200) Then Return
 			SetLog("Click Trash", $COLOR_INFO)
 			If QuickMIS("BC1", $g_sImgOkayPurge, 440, 400 + $g_iBottomOffsetYFixed, 580, 450 + $g_iBottomOffsetYFixed, True, False) Then ; Resolution changed
 				SetLog("Click OK", $COLOR_INFO)
 				If $bTest Then Return
-				Click($g_iQuickMISX + 440, $g_iQuickMISY + 400)
+				Click($g_iQuickMISX, $g_iQuickMISY)
 				If _Sleep(1500) Then Return
 			Else
                 GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - ForcePurgeEvent: Purge a Wrong Challenge ", 1)
@@ -1046,13 +1046,13 @@ Func StartAndPurgeEvent($bTest = False)
 
 		If _Sleep(2500) Then Return
 		If QuickMIS("BC1", $g_sImgTrashPurge, 400, 200 + $g_iMidOffsetYFixed, 700, 350 + $g_iMidOffsetYFixed, True, False) Then ; Resolution changed
-			Click($g_iQuickMISX + 400, $g_iQuickMISY + 200)
+			Click($g_iQuickMISX, $g_iQuickMISY)
 			If _Sleep(2000) Then Return
 			SetLog("Click Trash", $COLOR_INFO)
 			If QuickMIS("BC1", $g_sImgOkayPurge, 440, 400 + $g_iBottomOffsetYFixed, 580, 450 + $g_iBottomOffsetYFixed, True, False) Then ; Resolution changed
 				SetLog("Click OK", $COLOR_INFO)
 				If $bTest Then Return
-				Click($g_iQuickMISX + 440, $g_iQuickMISY + 400)
+				Click($g_iQuickMISX, $g_iQuickMISY)
 				SetLog("StartAndPurgeEvent event!", $COLOR_SUCCESS)
                 GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - StartAndPurgeEvent: No event Found ", 1)
                 _FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - StartAndPurgeEvent: No event Found ")

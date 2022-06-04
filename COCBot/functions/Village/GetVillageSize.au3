@@ -2,6 +2,11 @@
 ; Name ..........: GetVillageSize
 ; Description ...: Measures the size of village. After CoC October 2016 update, max'ed zoomed out village is 440 (reference!)
 ;                  But usually sizes around 470 - 490 pixels are measured due to lock on max zoom out.
+;                  The 'zoom' has changed in the Spring 2022 update.  Prior to the update, the game screen at max'ed zoom has no 'up down'
+;                  movement and only a little sideways movement.  This meant the fixed points used to 'center and measure' the village
+;                  was always visible.  After the update, at max'ed zoom out, it is now possible to move both the 'tree' fixed points
+;                  out of view or move the 'main' stone fixed point out of view.  The top and bottom black bars that sometimes appear
+;                  at max'ed zoom are no longer present.
 ; Syntax ........: GetVillageSize()
 ; Parameters ....:
 ; Return values .: 0 if not identified or Array with index
@@ -16,8 +21,8 @@
 ;                      8 = Y coordinate of tree
 ;                      9 = tree image file name
 ; Author ........: Cosote (Oct 17th 2016)
-; Modified ......:
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
+; Modified ......: GrumpyHog (05-2022)
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2022
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
@@ -127,7 +132,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 				$d0 = StringReplace($a[2], ",", ".")
 
 				$x1 = $x0 - $iAdditionalX
-				$y1 = $y0 - $iAdditionalY
+				$y1 = _Max($y0 - $iAdditionalY, 45)
 				$right = $x0 + $iAdditionalX
 				$bottom = $y0 + $iAdditionalY
 				$sArea = Int($x1) & "," & Int($y1) & "|" & Int($right) & "," & Int($y1) & "|" & Int($right) & "," & Int($bottom) & "|" & Int($x1) & "," & Int($bottom)
@@ -164,7 +169,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 			$d0 = StringReplace($a[2], ",", ".")
 
 			$x1 = $x0 - $iAdditionalX
-			$y1 = $y0 - $iAdditionalY
+			$y1 = _Max($y0 - $iAdditionalY, 45)
 			$right = $x0 + $iAdditionalX
 			$bottom = $y0 + $iAdditionalY
 			$sArea = Int($x1) & "," & Int($y1) & "|" & Int($right) & "," & Int($y1) & "|" & Int($right) & "," & Int($bottom) & "|" & Int($x1) & "," & Int($bottom)
@@ -245,7 +250,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 				$d0 = StringReplace($a[2], ",", ".")
 
 				$x1 = $x0 - $iAdditionalX
-				$y1 = $y0 - $iAdditionalY
+				$y1 = _Max($y0 - $iAdditionalY, 45)
 				$right = $x0 + $iAdditionalX
 				$bottom = $y0 + $iAdditionalY
 				$sArea = Int($x1) & "," & Int($y1) & "|" & Int($right) & "," & Int($y1) & "|" & Int($right) & "," & Int($bottom) & "|" & Int($x1) & "," & Int($bottom)

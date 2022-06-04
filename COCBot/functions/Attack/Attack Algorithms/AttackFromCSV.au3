@@ -1,12 +1,12 @@
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........:
-; Description ...: This file contens the attack algorithm SCRIPTED
+; Description ...: This file contains the attack algorithm SCRIPTED
 ; Syntax ........:
 ; Parameters ....: None
 ; Return values .: None
 ; Author ........: Sardo (2016)
-; Modified ......: CodeSlinger69 (01-2017)
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
+; Modified ......: CodeSlinger69 (01-2017) GrumpyHog (05-2022)
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2022
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
@@ -37,31 +37,15 @@ Global $g_aiPixelBottomLeftDOWNDropLine
 Global $g_aiPixelBottomRightUPDropLine
 Global $g_aiPixelBottomRightDOWNDropLine
 
-Global $DeployableLRTB = [0, $g_iGAME_WIDTH - 1, 0, 527]
-Global $ExternalAreaRef[8][3], $InternalAreaRef[8][3], $ExternalArea[8][3], $InternalArea[8][3]
-; village size, left, right, top, bottom
+Global $g_aiDeployableLRTB = [0, $g_igame_width - 1, 0, 529]
+Global $OuterDiamondLeft = 20, $OuterDiamondRight = 840, $OuterDiamondTop = 10, $OuterDiamondBottom = 612 ; set the diamond shape based on reference village
+Global $DiamondMiddleX = ($OuterDiamondLeft + $OuterDiamondRight) / 2
+Global $DiamondMiddleY = ($OuterDiamondTop + $OuterDiamondBottom) / 2
+Global $InnerDiamandDiffX = 50 ; set the diamond shape based on reference village
+Global $InnerDiamandDiffY = 38 ; set the diamond shape based on reference village
+Global $InnerDiamondLeft = $OuterDiamondLeft + $InnerDiamandDiffX, $InnerDiamondRight = $OuterDiamondRight - $InnerDiamandDiffX, $InnerDiamondTop = $OuterDiamondTop + $InnerDiamandDiffY, $InnerDiamondBottom = $OuterDiamondBottom - $InnerDiamandDiffY
 
-ConvertInternalExternArea("Start", True)	
-
-Func ConvertInternalExternArea($sCalledFrom = "", $bStartUp = False)	
-	; set the diamond shape based on reference village
-	Local $InnerDiamondLeft = 20
-	Local $InnerDiamondRight = 809
-	Local $InnerDiamondTop = 57
-	Local $InnerDiamondBottom = 632
-
-	Local $DiamandAdjX = 30
-	Local $DiamandAdjY = 30
-	
-	Local $OuterDiamondLeft =  $InnerDiamondLeft - $DiamandAdjX 
-	Local $OuterDiamondRight = $InnerDiamondRight + $DiamandAdjX 
-	Local $OuterDiamondTop =  $InnerDiamondTop - $DiamandAdjY
-	Local $OuterDiamondBottom = $InnerDiamondBottom + $DiamandAdjY
-
-	Local $DiamondMiddleX = ($OuterDiamondLeft + $OuterDiamondRight) / 2
-	Local $DiamondMiddleY = ($OuterDiamondTop + $OuterDiamondBottom) / 2
-
-	Local $aExternalAreaRef[8][3] = [ _
+Global $ExternalAreaRef[8][3] = [ _
 		[$OuterDiamondLeft, $DiamondMiddleY, "LEFT"], _
 		[$OuterDiamondRight, $DiamondMiddleY, "RIGHT"], _
 		[$DiamondMiddleX, $OuterDiamondTop, "TOP"], _
@@ -71,8 +55,8 @@ Func ConvertInternalExternArea($sCalledFrom = "", $bStartUp = False)
 		[$OuterDiamondLeft + ($DiamondMiddleX - $OuterDiamondLeft) / 2, $DiamondMiddleY + ($OuterDiamondBottom - $DiamondMiddleY) / 2, "BOTTOM-LEFT"], _
 		[$DiamondMiddleX + ($OuterDiamondRight - $DiamondMiddleX) / 2, $DiamondMiddleY + ($OuterDiamondBottom - $DiamondMiddleY) / 2, "BOTTOM-RIGHT"] _
 		]
-			
-	Local $aInternalAreaRef[8][3] = [ _
+
+Global $InternalAreaRef[8][3] = [ _
 		[$InnerDiamondLeft, $DiamondMiddleY, "LEFT"], _
 		[$InnerDiamondRight, $DiamondMiddleY, "RIGHT"], _
 		[$DiamondMiddleX, $InnerDiamondTop, "TOP"], _
@@ -82,70 +66,52 @@ Func ConvertInternalExternArea($sCalledFrom = "", $bStartUp = False)
 		[$InnerDiamondLeft + ($DiamondMiddleX - $InnerDiamondLeft) / 2, $DiamondMiddleY + ($InnerDiamondBottom - $DiamondMiddleY) / 2, "BOTTOM-LEFT"], _
 		[$DiamondMiddleX + ($InnerDiamondRight - $DiamondMiddleX) / 2, $DiamondMiddleY + ($InnerDiamondBottom - $DiamondMiddleY) / 2, "BOTTOM-RIGHT"] _
 		]
-		
-	
+
+convertinternalexternarea("Start")
+
+Func ConvertInternalExternArea($FunctionName = "")
 	Local $x, $y
+
+	SetDebugLog("ConvertInternalExternArea called from " & $FunctionName)
 
 	; Update External coord.
 	For $i = 0 To 7
 		$x = $ExternalAreaRef[$i][0]
 		$y = $ExternalAreaRef[$i][1]
-		If $bStartUp = False Then ConvertToVillagePos($x, $y)
+		If $FunctionName <> "Start" Then ConvertToVillagePos($x, $y)
 		$ExternalArea[$i][0] = $x
 		$ExternalArea[$i][1] = $y
 		$ExternalArea[$i][2] = $ExternalAreaRef[$i][2]
-		;debugAttackCSV("External Area Point " & $ExternalArea[$i][2] & ": " & $x & ", " & $y)
+		If $g_bDebugAttackCSV Then SetDebugLog("External Area Point " & $ExternalArea[$i][2] & ": " & $x & ", " & $y)
 	Next
 	; Full ECD Diamond $CocDiamondECD
-	; Top
-	$x = $ExternalAreaRef[2][0]
-	$y = $ExternalAreaRef[2][1] + $DiamandAdjY
-	If $bStartUp = False Then ConvertToVillagePos($x, $y)
-	$CocDiamondECD = $x & "," & $y
-	; Right
-	$x = $ExternalAreaRef[1][0] - $DiamandAdjX
-	$y = $ExternalAreaRef[1][1]
-	If $bStartUp = False Then ConvertToVillagePos($x, $y)
-	$CocDiamondECD &= "|" & $x & "," & $y
-	; Bottom
-	$x = $ExternalAreaRef[3][0]
-	$y = $ExternalAreaRef[3][1] - $DiamandAdjY
-	If $bStartUp = False Then ConvertToVillagePos($x, $y)
-	$CocDiamondECD &= "|" & $x & "," & $y
-	; Left
-	$x = $ExternalAreaRef[0][0] + $DiamandAdjX
-	$y = $ExternalAreaRef[0][1]
-	If $bStartUp = False Then ConvertToVillagePos($x, $y)
-	$CocDiamondECD &= "|" & $x & "," & $y
+	$CocDiamondECD = $ExternalArea[2][0] & "," & $ExternalArea[2][1] & "|" & _
+			$ExternalArea[1][0] & "," & $ExternalArea[1][1] & "|" & _
+			$ExternalArea[3][0] & "," & $ExternalArea[3][1] & "|" & _
+			$ExternalArea[0][0] & "," & $ExternalArea[0][1]
 
 	; Update Internal coord.
 	For $i = 0 To 7
 		$x = $InternalAreaRef[$i][0]
 		$y = $InternalAreaRef[$i][1]
-		If $bStartUp = False Then ConvertToVillagePos($x, $y)
+		ConvertToVillagePos($x, $y)
 		$InternalArea[$i][0] = $x
 		$InternalArea[$i][1] = $y
 		$InternalArea[$i][2] = $InternalAreaRef[$i][2]
-		;debugAttackCSV("Internal Area Point " & $InternalArea[$i][2] & ": " & $x & ", " & $y)
+		If $g_bDebugAttackCSV Then SetDebugLog("Internal Area Point " & $InternalArea[$i][2] & ": " & $x & ", " & $y)
 	Next
+
+	; Full DCD Diamond $CocDiamondDCD
 	$CocDiamondDCD = $InternalArea[2][0] & "," & $InternalArea[2][1] & "|" & _
 			$InternalArea[1][0] & "," & $InternalArea[1][1] & "|" & _
 			$InternalArea[3][0] & "," & $InternalArea[3][1] & "|" & _
 			$InternalArea[0][0] & "," & $InternalArea[0][1]
 
-	$ExternalAreaRef = $aExternalAreaRef
-	$InternalAreaRef = $aInternalAreaRef
+	; $CocDiamondDCD
+	$DiamondMiddleX = $InternalArea[2][0]
+	$DiamondMiddleY = $InternalArea[0][1]
 
 EndFunc   ;==>ConvertInternalExternArea
-
-Func CheckAttackLocation(ByRef $iX, ByRef $iY)
-	If $iY > $DeployableLRTB[3] Then
-		$iY = $DeployableLRTB[3]
-		Return False
-	EndIf
-
-	Return True
-EndFunc   ;==>CheckAttackLocation
 
 Func GetMinPoint($PointList, $Dim)
 	Local $Result = [9999, 9999]

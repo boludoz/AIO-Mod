@@ -69,7 +69,7 @@ Func Collect($bCheckTreasury = True, $bCollectCart = True)
 	
 	StartGainCost()
 	checkAttackDisable($g_iTaBChkIdle) ; Early Take-A-Break detection
-
+#cs
 	; Shooting a missile at a rooster - Forge - Team AIO Mod++
 	Local $aDeployPointsResult = DMClassicArray(DFind($g_sForgeCollect, 172, 403, 683, 644, 0, 0, 1000, True), 10, $g_bDebugImageSave) ; _MultiPixelSearch(172, 403, 683, 638, 2, 2, Hex(0xCACBA8, 6), StringSplit2D("0xC2C69F/-1/2|0x9B08BB/9/7", "/", "|"), 25)
 
@@ -86,7 +86,7 @@ Func Collect($bCheckTreasury = True, $bCollectCart = True)
 		ClickAway()
 		
 	EndIf
-
+#Ce
 	SetLog("Collecting Resources", $COLOR_INFO)
 	If _Sleep($DELAYCOLLECT2) Then Return
 

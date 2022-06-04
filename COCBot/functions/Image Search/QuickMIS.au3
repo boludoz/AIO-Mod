@@ -39,6 +39,10 @@ Func QuickMIS($ValueReturned, $directory, $left = 0, $top = 0, $right = $g_iGAME
 					Return False
 				Case "CX"
 					Return -1
+				Case "CXR"
+					Return -1
+				Case "CNX"
+					Return -1
 				Case "N1"
 					Return "none"
 				Case "NX"
@@ -71,16 +75,15 @@ Func QuickMIS($ValueReturned, $directory, $left = 0, $top = 0, $right = $g_iGAME
 					If UBound($aCords) = 0 Then Return False
 					Local $aCord = $aCords[0]
 					If UBound($aCord) < 2 Then Return False
-					$g_iQuickMISX = $aCord[0]
-					$g_iQuickMISY = $aCord[1]
-					$g_iQuickMISWOffSetX = $aCord[0] + $left
-					$g_iQuickMISWOffSetY = $aCord[1] + $top
+					$g_iQuickMISX = $aCord[0] + $left
+					$g_iQuickMISY = $aCord[1] + $top
 					$Name = RetrieveImglocProperty($KeyValue[0], "objectname")
 					If $g_bDebugSetlog Or $debug Then
 						SetDebugLog($ValueReturned & " Found: " & $result & ", using " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_PURPLE)
-						If $g_bDebugImageSave Then DebugQuickMIS($left, $top, "BC1_detected[" & $Name & "_" & $g_iQuickMISWOffSetX & "x" & $g_iQuickMISWOffSetY & "]")
+						If $g_bDebugImageSave Then DebugQuickMIS($left, $top, "BC1_detected[" & $Name & "_" & $g_iQuickMISX & "x" & $g_iQuickMISY & "]")
 					EndIf
 					Return True
+					
 				Case "CX" ; coordinates of each image found - eg: $Array[0] = [X1, Y1] ; $Array[1] = [X2, Y2]
 					Local $result = ""
 					Local $KeyValue = StringSplit($res[0], "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
@@ -92,10 +95,12 @@ Func QuickMIS($ValueReturned, $directory, $left = 0, $top = 0, $right = $g_iGAME
 					SetDebugLog($ValueReturned & " Found: " & $result, $COLOR_PURPLE)
 					Local $CoordsInArray = StringSplit($result, "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 					Return $CoordsInArray
+					
 				Case "N1" ; name of first file found
 					Local $MultiImageSearchResult = StringSplit($res[0], "|")
 					Local $FilenameFound = StringSplit($MultiImageSearchResult[1], "_")
 					Return $FilenameFound[1]
+					
 				Case "NX" ; names of all files found
 					Local $AllFilenamesFound = ""
 					Local $MultiImageSearchResult = StringSplit($res[0], "|")
@@ -105,6 +110,7 @@ Func QuickMIS($ValueReturned, $directory, $left = 0, $top = 0, $right = $g_iGAME
 					Next
 					If StringRight($AllFilenamesFound, 1) = "|" Then $AllFilenamesFound = StringLeft($AllFilenamesFound, (StringLen($AllFilenamesFound) - 1))
 					Return $AllFilenamesFound
+					
 				Case "Q1" ; quantity of first/one tiles found
 					Local $result = ""
 					Local $KeyValue = StringSplit($res[0], "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
@@ -116,9 +122,46 @@ Func QuickMIS($ValueReturned, $directory, $left = 0, $top = 0, $right = $g_iGAME
 					SetDebugLog($ValueReturned & " Found: " & $result, $COLOR_PURPLE)
 					Local $QuantityInArray = StringSplit($result, "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 					Return $QuantityInArray[0]
+					
 				Case "QX" ; quantity of files found
 					Local $MultiImageSearchResult = StringSplit($res[0], "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 					Return UBound($MultiImageSearchResult)
+					
+				Case "CXR" ; coordinates of each image found - eg: $Array[0] = [X1, Y1] ; $Array[1] = [X2, Y2]
+
+					Local $Result[0][2]
+					Local $KeyValue = StringSplit($Res[0], "|", $STR_NOCOUNT)
+					For $i = 0 To UBound($KeyValue) - 1
+						Local $DLLRes = DllCallMyBot("GetProperty", "str", $KeyValue[$i], "str", "objectpoints")
+						Local $xy = StringSplit($DLLRes[0], "|", $STR_NOCOUNT)
+						For $j = 0 To Ubound($xy) - 1
+							If UBound(decodeSingleCoord($xy[$j])) > 1 Then 
+								Local $Tmpxy = StringSplit($xy[$j], ",", $STR_NOCOUNT)
+								_ArrayAdd($Result, $Tmpxy[0] + $Left & "|" & $Tmpxy[1] + $Top)
+							EndIf
+						Next
+					Next
+					If $g_bDebugSetlog Then SetDebugLog($ValueReturned & " Found: " & _ArrayToString($Result), $COLOR_PURPLE)
+					Return $Result
+					
+				Case "CNX" 
+					Local $Result[0][4]
+					Local $KeyValue = StringSplit($Res[0], "|", $STR_NOCOUNT)
+					For $i = 0 To UBound($KeyValue) - 1
+						Local $DLLRes = DllCallMyBot("GetProperty", "str", $KeyValue[$i], "str", "objectpoints")
+						Local $objName = StringSplit($KeyValue[$i], "_", $STR_NOCOUNT)
+						Local $xy = StringSplit($DLLRes[0], "|", $STR_NOCOUNT)
+						;SetDebugLog(_ArrayToString($xy))
+						For $j = 0 To Ubound($xy) - 1
+							If UBound(decodeSingleCoord($xy[$j])) > 1 Then 
+								Local $Tmpxy = StringSplit($xy[$j], ",", $STR_NOCOUNT)
+								_ArrayAdd($Result, $objName[0] & "|" & $Tmpxy[0] + $Left & "|" & $Tmpxy[1] + $Top & "|" & $objName[1])
+							EndIf
+						Next
+					Next
+					If $g_bDebugSetlog Then SetDebugLog($ValueReturned & " Found: " & _ArrayToString($Result), $COLOR_PURPLE)
+					Return $Result
+
 				Case "N1Cx1"
 					Local $NameAndCords[2]
 					Local $result = "", $Name = ""
@@ -141,6 +184,7 @@ Func QuickMIS($ValueReturned, $directory, $left = 0, $top = 0, $right = $g_iGAME
 						SetDebugLog($ValueReturned & " Found: " & $Name & ", using " & $aCord[0] & "," & $aCord[1], $COLOR_PURPLE)
 					EndIf
 					Return $NameAndCords
+					
 				Case "NxCx"
 					Local $KeyValue = StringSplit($res[0], "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 					Local $Name = ""
@@ -159,6 +203,7 @@ Func QuickMIS($ValueReturned, $directory, $left = 0, $top = 0, $right = $g_iGAME
 						$AllFilenamesFound[$i][2] = $level
 					Next
 					Return $AllFilenamesFound
+					
 				Case "OCR"
 					Local $sOCRString = ""
 					Local $aResults[1][2] = [[-1, ""]]

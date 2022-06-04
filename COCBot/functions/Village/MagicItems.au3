@@ -34,7 +34,7 @@ Func CollectMagicItems($bTest = False)
 
 	If QuickMis("BC1", $g_sImgTrader, 120, 140, 210, 215, True, False) Then
 		SetLog("Trader available, Entering Daily Discounts", $color_success)
-		click($g_iQuickMiswOffsetX, $g_iQuickMiswOffsetY)
+		click($g_iQuickMISX, $g_iQuickMISY)
 		If _sleep(1500) Then Return
 	Else
 		SetLog("Trader unavailable", $color_info)

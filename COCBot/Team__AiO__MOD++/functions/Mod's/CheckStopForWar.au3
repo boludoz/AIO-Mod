@@ -191,7 +191,7 @@ Func CheckWarTime(ByRef $sResult, ByRef $bResult, $bReturnFrom = True) ; return 
 			If $g_bClanWarLeague Then
 				If QuickMIS("BC1", $directoryDay & "\CWL_Preparation", 175, 645 + $g_iBottomOffsetYFixed, 175 + 515, 645 + $g_iBottomOffsetYFixed + 30, True) Then ; By Default Battle Days Opens So Find Prepration Button ; Resolution changed
 					SetDebugLog("CWL Enter In Preparation page")
-					Click($g_iQuickMISX + 175, $g_iQuickMISY + 645, 1)
+					Click($g_iQuickMISX, $g_iQuickMISY, 1)
 					If _Sleep(500) Then Return
 					If Not IsWarMenu() Then
 						SetLog("Error when trying to open CWL Preparation page.", $COLOR_ERROR)
@@ -199,7 +199,7 @@ Func CheckWarTime(ByRef $sResult, ByRef $bResult, $bReturnFrom = True) ; return 
 					EndIf
 				ElseIf QuickMIS("BC1", $directoryDay & "\CWL_Battle", 175, 645 + $g_iBottomOffsetYFixed, 175 + 515, 645 + 30 + $g_iBottomOffsetYFixed, True) Then ; When Battle Day Is Unselected ; Resolution changed
 					SetDebugLog("CWL Enter In Battle page")
-					Click($g_iQuickMISX + 175, $g_iQuickMISY + 645, 1)
+					Click($g_iQuickMISX, $g_iQuickMISY, 1)
 					If _Sleep(500) Then Return
 					If Not IsWarMenu() Then
 						SetLog("Error when trying to open CWL Battle page.", $COLOR_ERROR)
