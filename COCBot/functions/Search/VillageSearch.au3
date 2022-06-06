@@ -180,32 +180,29 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		ForceCaptureRegion()
 		_CaptureRegion2()
 
-		#Region - Custom fix - Team AIO Mod++
 		; measure enemy village (only if resources match)
-		; Custom fix - Team AIO Mod++
-		If $g_bVillageSearchAlwaysMeasure = True Then
-			For $i = 0 To $g_iModeCount - 1
-				If $match[$i] Then
-					If Not CheckZoomOut("VillageSearch", True, False) Then
-						SaveDebugImage("VillageSearchMeasureFailed", False) ; make clean snapshot as well
-						; ExitLoop ; disable exiting search for December 2018 update due to zoomout issues
-						; check two more times, only required for snow theme (snow fall can make it easily fail), but don't hurt to keep it
-						$i = 0
-						Local $bMeasured
-						Do
-							$i += 1
-							If _Sleep($DELAYPREPARESEARCH2) Then Return ; wait 500 ms
-							ForceCaptureRegion()
-							_CaptureRegion2()
-							$bMeasured = CheckZoomOut("VillageSearch", $i < 2, False)
-						Until $bMeasured = True Or $i >= 2
-						If Not $bMeasured Then Return ; exit func
-					EndIf
-					ExitLoop
+		Local $bAlwaysMeasure = $g_bVillageSearchAlwaysMeasure
+		; If $bAlwaysMeasure Then TestDropLine(True) ;g_bVillageSearchAlwaysMeasure must enabled manually by editing Global var
+		For $i = 0 To $g_iModeCount - 1
+			If $match[$i] Or $bAlwaysMeasure Then
+				If Not CheckZoomOut("VillageSearch", True, False) Then
+					SaveDebugImage("VillageSearchMeasureFailed", False) ; make clean snapshot as well
+					ExitLoop ; disable exiting search for December 2018 update due to zoomout issues
+					; check two more times, only required for snow theme (snow fall can make it easily fail), but don't hurt to keep it
+					$i = 0
+					Local $bMeasured
+					Do
+						$i += 1
+						If _Sleep($DELAYPREPARESEARCH2) Then Return ; wait 500 ms
+						ForceCaptureRegion()
+						_CaptureRegion2()
+						$bMeasured = CheckZoomOut("VillageSearch", $i < 2, False)
+					Until $bMeasured = True Or $i >= 2
+					If Not $bMeasured Then Return ; exit func
 				EndIf
-			Next
-		EndIf
-		#EndRegion - Custom fix - Team AIO Mod++
+				ExitLoop
+			EndIf
+		Next
 
 		If $g_bRestart Then Return
 

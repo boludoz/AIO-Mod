@@ -78,6 +78,7 @@ Func QuickMIS($ValueReturned, $directory, $left = 0, $top = 0, $right = $g_iGAME
 					$g_iQuickMISX = $aCord[0] + $left
 					$g_iQuickMISY = $aCord[1] + $top
 					$Name = RetrieveImglocProperty($KeyValue[0], "objectname")
+					$g_iQuickMISName = $Name
 					If $g_bDebugSetlog Or $debug Then
 						SetDebugLog($ValueReturned & " Found: " & $result & ", using " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_PURPLE)
 						If $g_bDebugImageSave Then DebugQuickMIS($left, $top, "BC1_detected[" & $Name & "_" & $g_iQuickMISX & "x" & $g_iQuickMISY & "]")
