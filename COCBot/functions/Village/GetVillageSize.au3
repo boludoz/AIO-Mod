@@ -54,9 +54,11 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 
 	; Capture region spam disabled - Team AIO Mod++
 	Local Static $aLast[$g_eTotalAcc]
-	For $i = 0 To $g_eTotalAcc - 1
-		$aLast[$i] = "DS-"
-	Next
+	If $aLast[0] = "" Then
+		For $i = 0 To $g_eTotalAcc - 1
+			$aLast[$i] = "DS-"
+		Next
+	EndIf
 	
 	; Capture region spam disabled - Team AIO Mod++	
 	If $bCaptureRegion = Default Then $bCaptureRegion = True
@@ -101,14 +103,14 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	Local $bStoneSameScenery = False
 		
 	If Not $bOnBuilderBase Then
-		$stone = FindStone($sDirectory, "stone" & $g_sSceneryCode, $iAdditionalX, $iAdditionalY)
+		$stone = FindStone($sDirectory, "stone" & $g_sSceneryCode, $iAdditionalX, $iAdditionalY, "")
 		If IsArray($stone) And String($stone[4]) = $g_sSceneryCode Then 
 			$bStoneSameScenery = True
 			SetDebugLog(String($bStoneSameScenery) & "," & String($stone[4]) & "," & $g_sSceneryCode)
 		EndIf
 	EndIf
 	
-	If Not $bStoneSameScenery Then $stone = FindStone($sDirectory, $sStonePrefix, $iAdditionalX, $iAdditionalY)
+	If Not $bStoneSameScenery Then $stone = FindStone($sDirectory, $sStonePrefix, $iAdditionalX, $iAdditionalY, $aLast[Int($g_iCurAccount)])
 	If IsArray($stone) And $stone[0] = 0 Or not IsArray($stone) Then
 		SetDebugLog("GetVillageSize cannot find stone", $COLOR_WARNING)
 		If $bDebugWithImage Then
@@ -137,6 +139,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		
 		If $stone[0] Then
 			$tree = FindTree($sDirectory, $sTreePrefix, $iAdditionalX, $iAdditionalY, $stone[4])
+			
 			If IsArray($tree) And $tree[0] = 0 Or not IsArray($stone) Then
 				SetDebugLog("GetVillageSize cannot find tree", $COLOR_ACTION)
 				If $bDebugWithImage Then
@@ -153,6 +156,9 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 					_gdiplus_bitmapdispose($editedimage)
 				EndIf
 				Return FuncReturn($aResult)
+			Else
+				Local $sStones = StringBetween($stone[4], "stone", "-")
+				If Not @error Then $aLast[Int($g_iCurAccount)] = $sStones & "-"
 			EndIf
 		EndIf
 			
@@ -262,7 +268,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 
 EndFunc   ;==>GetVillageSize
 
-Func FindStone($sDirectory = $g_sImgZoomOutDir, $sStonePrefix = "stone", $iAdditionalX = 100, $iAdditionalY = 100)
+Func FindStone($sDirectory = $g_sImgZoomOutDir, $sStonePrefix = "stone", $iAdditionalX = 100, $iAdditionalY = 100, $sLast = "")
 	Local $aTmpDebugVillage[4]
 	$g_aDebugVillage = $aTmpDebugVillage
 
@@ -273,6 +279,21 @@ Func FindStone($sDirectory = $g_sImgZoomOutDir, $sStonePrefix = "stone", $iAddit
 		SetLog("Error: Missing stone files (" & @error & ")", $COLOR_ERROR)
 		Return
 	EndIf
+	
+	; Custom - Team AIO Mod++
+	; use prev stones first
+	If $sLast <> "" Then
+		Local $iNewIdx = 1, $s
+		For $i = 1 To $aStoneFiles[0]
+			If StringInStr($aStoneFiles[$i], $sLast) > 0 Then
+				$s = $aStoneFiles[$iNewIdx]
+				$aStoneFiles[$iNewIdx] = $aStoneFiles[$i]
+				$aStoneFiles[$i] = $s
+				$iNewIdx += 1
+			EndIf
+		Next
+	EndIf
+	
 	Local $i, $findImage, $sArea, $StoneName
 	For $i = 1 To $aStoneFiles[0]
 		$findImage = $aStoneFiles[$i]
