@@ -128,6 +128,14 @@ Func ConvertInternalExternArea($FunctionName = "")
 
 EndFunc   ;==>ConvertInternalExternArea
 
+Func CheckAttackLocation(ByRef $iX, ByRef $iY)
+	If $iY > $g_aiDeployableLRTB[3] Then
+		$iY = $g_aiDeployableLRTB[3]
+		Return False
+	EndIf
+	Return True
+EndFunc   ;==>CheckAttackLocation
+
 Func GetMinPoint($PointList, $Dim)
 	Local $Result = [9999, 9999]
 	For $i = 0 To UBound($PointList) - 1
