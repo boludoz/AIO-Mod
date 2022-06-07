@@ -2215,7 +2215,7 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 			Local $aIconIndex = [$eIcnBarrack, $eIcnSpellFactory, $eIcnSiegePets, $eIcnGem, $eIcnOptions] ; Custom train - Team AIO Mod++
 
 		Case $g_hGUI_MISC_TAB
-			Local $aIconIndex = [$eIcnTH1, $eIcnStrongMan, $eIcnOptions];, $eIcnPowerPotion] ; BBase - Team AIO Mod++
+			Local $aIconIndex = [$eIcnTH1, $eIcnStrongMan, $eIcnClanCapital, $eIcnOptions];, $eIcnPowerPotion] ; BBase - Team AIO Mod++
 
 		Case $g_hGUI_DONATE_TAB
 			; the icons for donate tab

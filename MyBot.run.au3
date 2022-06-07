@@ -956,7 +956,7 @@ Func runBot() ;Bot that runs everything in order
 					If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 					If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 				Next
-			; ElseIf (isGoldFull() And isElixirFull()) And $g_bChkOnlyFarm And not $bBuilderBase Then 
+			; ElseIf (isGoldFull() And isElixirFull()) And $g_bChkOnlyFarm And not $bBuilderBase Then
 				; SetLog("Only Farm but Resources Full, checking improvements.", $COLOR_INFO)
 				; _RunFunction("UpgradeAll")
 				; If $g_bRestart Then ContinueLoop
@@ -967,7 +967,7 @@ Func runBot() ;Bot that runs everything in order
 				If isOnBuilderBase() Then SwitchBetweenBases()
 				_ClanGames() ; move to here to pick event before going to BB.
 			EndIf
-			
+
 			; Ensure, that wall upgrade is last of the upgrades
 			If Not $g_bChkOnlyFarm Then
 				Local $aRndFuncList = ['UpgradeWall', 'BuilderBase'] ;Copied BuilderBase to AttackMain
@@ -1447,7 +1447,7 @@ Func __RunFunction($sAction)
 			AutoUpgradeCC()
 			_Sleep($DELAYRUNBOT3)
 		Case "CollectCCGold"
-+            CollectCCGold()
+            CollectCCGold()
 		Case "BotHumanization"
 			BotHumanization()
 			; ChatActions - Team AIO Mod++
@@ -1501,7 +1501,7 @@ Func FirstCheck()
 	$g_bRestart = False
 	$g_bFullArmy = False
 	$g_iCommandStop = -1
-	
+
 	; AIO
 	Local $aRndFuncList = ['Collect', 'CollectCCGold', 'CollectCCGold', 'CleanYard']
 	_ArrayShuffle($aRndFuncList)

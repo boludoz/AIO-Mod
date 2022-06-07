@@ -504,6 +504,17 @@ Func SaveConfig_600_6()
 	Next
 	#EndRegion - Custom BB Army - Team AIO Mod++
 
+	;Clan Capital
+	_Ini_Add("ClanCapital", "ChkCollectCCGold", $g_bChkEnableCollectCCGold)
+	_Ini_Add("ClanCapital", "ChkEnableForgeGold", $g_bChkEnableForgeGold)
+	_Ini_Add("ClanCapital", "ChkEnableForgeElix", $g_bChkEnableForgeElix)
+	_Ini_Add("ClanCapital", "ChkEnableForgeDE", $g_bChkEnableForgeDE)
+	_Ini_Add("ClanCapital", "ChkEnableForgeBBGold", $g_bChkEnableForgeBBGold)
+	_Ini_Add("ClanCapital", "ChkEnableForgeBBElix", $g_bChkEnableForgeBBElix)
+	_Ini_Add("ClanCapital", "ForgeUseBuilder", $g_iCmbForgeBuilder)
+	_Ini_Add("ClanCapital", "AutoUpgradeCC", $g_bChkEnableAutoUpgradeCC)
+	_Ini_Add("ClanCapital", "ChkAutoUpgradeCCIgnore", $g_bChkAutoUpgradeCCIgnore)
+	
 EndFunc   ;==>SaveConfig_600_6
 
 Func SaveConfig_600_9()
