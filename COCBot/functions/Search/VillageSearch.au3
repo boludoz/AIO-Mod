@@ -566,8 +566,8 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 
 	; center village, also update global village coordinates (that overwrites home base data, but will reset when returning anyway)
 	; centering disabled and village measuring moved to top
-	;Local $aCenterVillage = SearchZoomOut($aCenterEnemyVillageClickDrag, True, "VillageSearch")
-	;updateGlobalVillageOffset($aCenterVillage[3], $aCenterVillage[4]) ; update red line and TH location
+	Local $aCenterVillage = SearchZoomOut($aCenterEnemyVillageClickDrag, True, "VillageSearch") ; Team AIO Mod++
+	updateGlobalVillageOffset($aCenterVillage[3], $aCenterVillage[4]) ; update red line and TH location
 
 	;--- show buttons attacknow ----
 	If $g_bBtnAttackNowPressed = True Then

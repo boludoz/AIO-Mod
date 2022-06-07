@@ -362,7 +362,7 @@ Func FindTree($sDirectory = $g_sImgZoomOutDir, $sTreePrefix = "tree", $iAddition
 			$d0 = "notused"
 			
 			$x1 = $x0 - $iAdditionalX
-			$y1 = $y0 - $iAdditionalY
+			$y1 = _Max($y0 - $iAdditionalY, 45) 
 			$right = $x0 + $iAdditionalX
 			$bottom = $y0 + $iAdditionalY
 			$sArea = Int($x1) & "," & Int($y1) & "|" & Int($right) & "," & Int($y1) & "|" & Int($right) & "," & Int($bottom) & "|" & Int($x1) & "," & Int($bottom)
