@@ -186,18 +186,15 @@ Func DropTroopFromINI($sDropVectors, $iStartIndex, $iEndIndex, $aiIndexArray, $i
 		#EndRegion - Sleep before - Team AIO Mod++
 
 		;drop
-		For $i = $iStartIndex To UBound($aiIndexArray) - 1
+		For $i = $iStartIndex To $iEndIndex
 			Local $delayDrop = 0
 			Local $index = $i
-			Local $indexMax = UBound($aiIndexArray) -1
-			$indexMax = $aiIndexArray[$indexMax]
-			If UBound($aiIndexArray) > $i And not @error Then
+			Local $indexMax = $iEndIndex
+			If IsArray($aiIndexArray) = 1 Then
 				; adjust $index and $indexMax based on array
 				$index = $aiIndexArray[$i]
-			Else
-				$index = $aiIndexArray[Random(0, UBound($aiIndexArray) -1, 1)]
+				$indexMax = $aiIndexArray[$iEndIndex]
 			EndIf
-			
 			If $index <> $indexMax Then
 				;delay time between 2 drops in different point
 				If $delayDropMin <> $delayDropMax Then
