@@ -249,14 +249,15 @@ Func _GetRedArea($iMode = $REDLINE_IMGLOC, $iMaxAllowedPixelDistance = 25, $fMin
 	EndIf
 
 	debugRedArea($nameFunc & "  Size of arr pixel for TopLeft [" & UBound($g_aiPixelTopLeft) & "] /  BottomLeft [" & UBound($g_aiPixelBottomLeft) & "] /  TopRight [" & UBound($g_aiPixelTopRight) & "] /  BottomRight [" & UBound($g_aiPixelBottomRight) & "] ")
-	
-	If $g_bDebugRedArea Or $g_sBundleRedLineNV Then 
+	; Custom - Team AIO Mod++
+	If $g_bDebugRedArea Or $g_sBundleRedLineNV Or $g_bDebugImageSave Then 
 		DebugDropPoints()
 	EndIf
 	
 	debugRedArea($nameFunc & " OUT ")
 EndFunc   ;==>_GetRedArea
 
+; Custom - Team AIO Mod++
 Func DebugDropPoints($sFrom = "")
 	If IsPtr($g_hHBitmap2) Then
 		Local $sDir = ($sFrom <> "") ? ($sFrom) : ("DropPoints")
@@ -268,24 +269,25 @@ Func DebugDropPoints($sFrom = "")
 		Local $sDebugImageName = String($sDate & "_" & $sTime & "_.png")
 		Local $hEditedImage = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
 		Local $hGraphic = _GDIPlus_ImageGetGraphicsContext($hEditedImage)
-		Local $hPenRED = _GDIPlus_PenCreate(0xFFFF0000, 1)
+		Local $hPenYellow = _GDIPlus_PenCreate(0xFFFFFF00, 1)
 		
 		Local $aXY[2]
 		For $i = 0 To UBound($g_aiPixelTopLeft) - 1
 			$aXY = $g_aiPixelTopLeft[$i]
-			addInfoToDebugImage($hGraphic, $hPenRED, "", $aXY[0], $aXY[1])
+			_GDIPlus_GraphicsDrawRect($hGraphic, $aXY[0], $aXY[1], 1, 1, $hPenYellow)
+
 		Next
 		For $i = 0 To UBound($g_aiPixelBottomLeft) - 1
 			$aXY = $g_aiPixelBottomLeft[$i]
-			addInfoToDebugImage($hGraphic, $hPenRED, "", $aXY[0], $aXY[1])
+			_GDIPlus_GraphicsDrawRect($hGraphic, $aXY[0], $aXY[1], 1, 1, $hPenYellow)
 		Next
 		For $i = 0 To UBound($g_aiPixelTopRight) - 1
 			$aXY = $g_aiPixelTopRight[$i]
-			addInfoToDebugImage($hGraphic, $hPenRED, "", $aXY[0], $aXY[1])
+			_GDIPlus_GraphicsDrawRect($hGraphic, $aXY[0], $aXY[1], 1, 1, $hPenYellow)
 		Next
 		For $i = 0 To UBound($g_aiPixelBottomRight) - 1
 			$aXY = $g_aiPixelBottomRight[$i]
-			addInfoToDebugImage($hGraphic, $hPenRED, "", $aXY[0], $aXY[1])
+			_GDIPlus_GraphicsDrawRect($hGraphic, $aXY[0], $aXY[1], 1, 1, $hPenYellow)
 		Next
 	
 		_GDIPlus_ImageSaveToFile($hEditedImage, $sSubDir & "\" & $sDebugImageName )

@@ -43,34 +43,27 @@ Func TestBuilderBaseZoomOut()
 EndFunc   ;==>TestBuilderBaseZoomOut
 
 Func BuilderBaseZoomOut($bForceZoom = False, $bVersusMode = True, $DebugImage = False)
-
-	Local $Size = GetBuilderBaseSize(False, $DebugImage) ; WihtoutClicks
-	If $Size > 520 And $Size < 590 Then
-		SetDebugLog("BuilderBaseZoomOut check!")
-		Return True
-	EndIf
-
+	$g_aiSearchZoomOutCounter[0] = 0
+	$g_aiSearchZoomOutCounter[1] = 0
+	
 	; Small loop just in case
-	For $i = 0 To 5
+	For $i = 0 To 6
 		; Necessary a small drag to Up and right to get the Stone and Boat Images, Just once , coz in attack will display a red text and hide the boat
-		If $i = 0 Or $i = 3 Then ClickDrag(100, 130, 230, 30)
-
+		If $i = 0 Or $i = 3 Then
+			ClickDrag(100, 130, 230, 30)
+			If $i = 3 Then ClickDrag(230, 130, 230, 30)
+		EndIf
+		
 		; Update shield status
 		AndroidShield("AndroidOnlyZoomOut")
 		; Run the ZoomOut Script
 		If BuilderBaseSendZoomOut(False, $i) Then
-			For $i = 0 To 5
-				If _Sleep(500) Then ExitLoop
-				If Not $g_bRunState Then Return
-				; Get the Distances between images
-				Local $Size = GetBuilderBaseSize($bVersusMode = False, $DebugImage)
-				SetDebugLog("[" & $i & "]BuilderBaseZoomOut $Size: " & $Size)
-				If IsNumber($Size) And $Size > 0 Then ExitLoop
-			Next
-			; Can't be precise each time we enter at Builder base was deteced a new Zoom Factor!! from 563-616
-			If $Size > 520 And $Size < 590 Then
-				Return True
-			EndIf
+			If _Sleep(500) Then ExitLoop
+			If Not $g_bRunState Then Return
+			; Get the Distances between images
+			Local $aSize = SearchZoomOutBB()
+			If @error Then Return False
+			If IsArray($aSize) And $aSize[0] <> "" Then Return True
 		Else
 			SetDebugLog("[BBzoomout] Send Script Error!", $COLOR_DEBUG)
 		EndIf
@@ -86,65 +79,6 @@ Func BuilderBaseSendZoomOut($bWar = False, $i = 0)
 	SetDebugLog("[" & $i & "][BuilderBaseSendZoomOut OUT]")
 	Return True
 EndFunc   ;==>BuilderBaseSendZoomOut
-
-Func GetBuilderBaseSize($WithClick = True, $DebugImage = False)
-
-	Local $BoatCoord[2], $Stonecoord[2]
-	Local $BoatSize = [545, 20, 660, 200]
-	Local $StoneSize = [125, 400, 225, 580]
-	Local $SetBoat[2] = [610, 85]
-	Local $SetBoatAttack[2] = [610, 60]
-	Local $OffsetForBoat = 50
-
-	If Not $g_bRunState Then Return
-	; Get The boat at TOP
-	If QuickMIS("BC1", $g_sImgZoomOutDirBB & "V2\", $BoatSize[0], $BoatSize[1], $BoatSize[2], $BoatSize[3], True, False) Then ; RC Done
-		$BoatCoord[0] = $g_iQuickMISX
-		$BoatCoord[1] = $g_iQuickMISY
-		If $DebugImage Then SetDebugLog("[BBzoomout] Coordinate Boat: " & $BoatCoord[0] & "/" & $BoatCoord[01])
-		$g_aBoatPos[0] = Int($BoatCoord[0])
-		$g_aBoatPos[1] = Int($BoatCoord[1])
-		; Get the Stone at Left
-		If QuickMIS("BC1", $g_sImgZoomOutDirBB & "V2\", $StoneSize[0], $StoneSize[1], $StoneSize[2], $StoneSize[3], True, False) Then ; RC Done
-			$Stonecoord[0] = $g_iQuickMISX
-			$Stonecoord[1] = $g_iQuickMISY
-			If $DebugImage Then SetDebugLog("[BBzoomout] Coordinate Stone: " & $Stonecoord[0] & "/" & $Stonecoord[01])
-			; Get the Distance between Images
-			Local $resul = Floor(Village_Distances($BoatCoord[0], $BoatCoord[1], $Stonecoord[0], $Stonecoord[1]))
-			If $DebugImage Then SetDebugLog("[BBzoomout] GetDistance Boat to Stone: " & $resul)
-			; Debug Image
-			Local $boat = isOnBuilderBase() ? $SetBoat : $SetBoatAttack
-			If $DebugImage Then DebugZoomOutBB($BoatCoord[0], $BoatCoord[1], $Stonecoord[0], $Stonecoord[1], $boat, "GetBuilerBaseSize_" & $resul & "_")
-			If $DebugImage Then SetDebugLog("[BBzoomout] ClickDrag: X(" & $BoatCoord[0] & "/" & $SetBoat[0] & ") Y(" & $BoatCoord[1] & "/" & $SetBoat[1] & ")")
-			; Centering the Village, use the $OffsetForBoat just to not click on boat and return to village
-			If Not isOnBuilderBase() And ($g_aBoatPos[0] <> $boat[0] Or $g_aBoatPos[1] <> $boat[1]) Then
-				If $WithClick Then ClickDrag($g_aBoatPos[0], $g_aBoatPos[1] + $OffsetForBoat, $boat[0], $boat[1] + $OffsetForBoat)
-				; To release click , a possible problem on BS2
-				If $WithClick Then ClickP($aAway, 1, 0, "#0332")
-			EndIf
-			Return $resul
-		EndIf
-	Else
-		$g_aBoatPos[0] = Null
-		$g_aBoatPos[1] = Null
-	EndIf
-	SetDebugLog("[BBzoomout] GetDistance Boat to Stone Error", $COLOR_ERROR)
-	Return 0
-EndFunc   ;==>GetBuilderBaseSize
-
-Func Village_Distances($x1, $y1, $x2, $y2)
-	If Not $g_bRunState Then Return
-	;Pythagoras theorem for 2D
-	Local $a, $b, $c
-	If $x2 = $x1 And $y2 = $y1 Then
-		Return 0
-	Else
-		$a = $y2 - $y1
-		$b = $x2 - $x1
-		$c = Sqrt($a * $a + $b * $b)
-		Return $c
-	EndIf
-EndFunc   ;==>Village_Distances
 
 Func DebugZoomOutBB($x, $y, $x1, $y1, $aBoat, $DebugText)
 
@@ -177,42 +111,38 @@ EndFunc   ;==>DebugZoomOutBB
 ; TODO RC
 Func BuilderBaseAttackDiamond()
 
-	Local $Size = GetBuilderBaseSize(False) ; Wihtout Clicks
-	If Not $g_bRunState Then Return
-	Setlog("Builder Base Diamond: " & $Size)
-	If ($Size < 520 And $Size > 590) Or $Size = 0 Then
-		Setlog("Builder Base Attack Zoomout.")
-		BuilderBaseZoomOut()
-		If _Sleep(1000) Then Return
-		$Size = GetBuilderBaseSize(False) ; Wihtout Clicks
-	EndIf
-
-	If $Size = 0 Then Return -1
-
-	; ZoomFactor
-	Local $CorrectSizeLR = Floor(($Size - 590) / 2)
-	Local $CorrectSizeT = Floor(($Size - 590) / 4)
-	Local $CorrectSizeB = ($Size - 590)
-
 	; Polygon Points
 	Local $Top[2], $Right[2], $BottomR[2], $BottomL[2], $Left[2]
 
-	$Top[0] = $g_aBoatPos[0] - (180 + $CorrectSizeT)
-	$Top[1] = $g_aBoatPos[1] + 6
+	$Left[0] = $InternalArea[0][0]
+	$Left[1] = $InternalArea[0][1]
 
-	$Right[0] = $g_aBoatPos[0] + (160 + $CorrectSizeLR)
-	$Right[1] = $g_aBoatPos[1] + (260 + $CorrectSizeLR)
+	$Right[0] = $InternalArea[1][0]
+	$Right[1] = $InternalArea[1][1]
 
-	$Left[0] = $g_aBoatPos[0] - (515 + $CorrectSizeB)
-	$Left[1] = $g_aBoatPos[1] + (260 + $CorrectSizeLR)
+	$Top[0] = $InternalArea[2][0]
+	$Top[1] = $InternalArea[2][1]
+	
+	Local $aFinal[2], $aCut[2], $iPrecision = 10
+	For $iPoints = 1 To Ceiling(Pixel_Distance($InternalArea[1][0], $InternalArea[1][1], $InternalArea[3][0], $InternalArea[3][1]) / $iPrecision) * 2
+		$aCut = Linecutter($InternalArea[1][0], $InternalArea[1][1], $InternalArea[3][0], $InternalArea[3][1], $iPoints * $iPrecision, 0, 0)
+		If $aCut[1] > $g_aiDeployableLRTB[3] Then ExitLoop
+		$aFinal = $aCut
+	Next	
+	
+	$BottomR[0] = $aFinal[0]
+	$BottomR[1] = $aFinal[1]
 
-	$BottomR[0] = $g_aBoatPos[0] - (110 - $CorrectSizeB)
-	$BottomR[1] = 540
+	For $iPoints = 1 To Ceiling(Pixel_Distance($InternalArea[0][0], $InternalArea[0][1], $InternalArea[3][0], $InternalArea[3][1]) / $iPrecision) * 2
+		$aCut = Linecutter($InternalArea[0][0], $InternalArea[0][1], $InternalArea[3][0], $InternalArea[3][1], $iPoints * $iPrecision, 0, 0)
+		If $aCut[1] > $g_aiDeployableLRTB[3] Then ExitLoop
+		$aFinal = $aCut
+	Next	
 
-	$BottomL[0] = $g_aBoatPos[0] - (225 + $CorrectSizeB)
-	$BottomL[1] = 540
+	$BottomL[0] = $aFinal[0]
+	$BottomL[1] = $aFinal[1]
 
-	Local $BuilderBaseDiamond[6] = [$Size, $Top, $Right, $BottomR, $BottomL, $Left]
+	Local $BuilderBaseDiamond[6] = [550, $Top, $Right, $BottomR, $BottomL, $Left]
 	;This Format is for _IsPointInPoly function
 	Dim $g_aBuilderBaseAttackPolygon[7][2] = [[5, -1], [$Top[0], $Top[1]], [$Right[0], $Right[1]], [$BottomR[0], $BottomR[1]], [$BottomL[0], $BottomL[1]], [$Left[0], $Left[1]], [$Top[0], $Top[1]]] ; Make Polygon From Points
 	SetDebugLog("Builder Base Attack Polygon : " & _ArrayToString($g_aBuilderBaseAttackPolygon))
@@ -220,42 +150,38 @@ Func BuilderBaseAttackDiamond()
 EndFunc   ;==>BuilderBaseAttackDiamond
 
 Func BuilderBaseAttackOuterDiamond()
-	Local $Size = GetBuilderBaseSize(False) ; WihtoutClicks
-	If Not $g_bRunState Then Return
-	Setlog("Builder Base Diamond: " & $Size)
-	If ($Size < 520 And $Size > 590) Or $Size = 0 Then
-		Setlog("Builder Base Attack Zoomout.")
-		BuilderBaseZoomOut()
-		If _Sleep(1000) Then Return
-		$Size = GetBuilderBaseSize(False) ; WihtoutClicks
-	EndIf
-
-	If $Size = 0 Then Return -1
-
-	; ZoomFactor
-	Local $CorrectSizeLR = Floor(($Size - 590) / 2)
-	Local $CorrectSizeT = Floor(($Size - 590) / 4)
-	Local $CorrectSizeB = ($Size - 590)
-
 	; Polygon Points
 	Local $Top[2], $Right[2], $BottomR[2], $BottomL[2], $Left[2]
 
-	$Top[0] = $g_aBoatPos[0] - (180 + $CorrectSizeT)
-	$Top[1] = $g_aBoatPos[1] - 25
+	$Left[0] = $ExternalArea[0][0]
+	$Left[1] = $ExternalArea[0][1]
 
-	$Right[0] = $g_aBoatPos[0] + (205 + $CorrectSizeLR)
-	$Right[1] = $g_aBoatPos[1] + (260 + $CorrectSizeLR)
+	$Right[0] = $ExternalArea[1][0]
+	$Right[1] = $ExternalArea[1][1]
 
-	$Left[0] = $g_aBoatPos[0] - (560 + $CorrectSizeB)
-	$Left[1] = $g_aBoatPos[1] + (260 + $CorrectSizeLR)
+	$Top[0] = $ExternalArea[2][0]
+	$Top[1] = $ExternalArea[2][1]
+	
+	Local $aFinal[2], $aCut[2], $iPrecision = 10
+	For $iPoints = 1 To Ceiling(Pixel_Distance($ExternalArea[1][0], $ExternalArea[1][1], $ExternalArea[3][0], $ExternalArea[3][1]) / $iPrecision) * 2
+		$aCut = Linecutter($ExternalArea[1][0], $ExternalArea[1][1], $ExternalArea[3][0], $ExternalArea[3][1], $iPoints * $iPrecision, 0, 0)
+		If $aCut[1] > $g_aiDeployableLRTB[3] Then ExitLoop
+		$aFinal = $aCut
+	Next	
+	
+	$BottomR[0] = $aFinal[0]
+	$BottomR[1] = $aFinal[1]
 
-	$BottomR[0] = $g_aBoatPos[0] - (70 - $CorrectSizeB)
-	$BottomR[1] = 540
+	For $iPoints = 1 To Ceiling(Pixel_Distance($ExternalArea[0][0], $ExternalArea[0][1], $ExternalArea[3][0], $ExternalArea[3][1]) / $iPrecision) * 2
+		$aCut = Linecutter($ExternalArea[0][0], $ExternalArea[0][1], $ExternalArea[3][0], $ExternalArea[3][1], $iPoints * $iPrecision, 0, 0)
+		If $aCut[1] > $g_aiDeployableLRTB[3] Then ExitLoop
+		$aFinal = $aCut
+	Next	
 
-	$BottomL[0] = $g_aBoatPos[0] - (275 + $CorrectSizeB)
-	$BottomL[1] = 540
+	$BottomL[0] = $aFinal[0]
+	$BottomL[1] = $aFinal[1]
 
-	Local $BuilderBaseDiamond[6] = [$Size, $Top, $Right, $BottomR, $BottomL, $Left]
+	Local $BuilderBaseDiamond[6] = [550, $Top, $Right, $BottomR, $BottomL, $Left]
 	;This Format is for _IsPointInPoly function
 	Dim $g_aBuilderBaseOuterPolygon[7][2] = [[5, -1], [$Top[0], $Top[1]], [$Right[0], $Right[1]], [$BottomR[0], $BottomR[1]], [$BottomL[0], $BottomL[1]], [$Left[0], $Left[1]], [$Top[0], $Top[1]]] ; Make Polygon From Points
 	SetDebugLog("Builder Base Outer Polygon : " & _ArrayToString($g_aBuilderBaseOuterPolygon))
@@ -292,6 +218,7 @@ Func BuilderBaseGetEdges($BuilderBaseDiamond, $Text)
 		$BottomRight[UBound($BottomRight) - 1][1] = Floor($Y[0])
 		$Y[0] += 15
 		If $Y[0] > $Y[1] Then ExitLoop
+		; If $Y[0] >= $g_aiDeployableLRTB[3] Then ContinueLoop
 	Next
 
 	Local $X = [$BottomL[0], $Left[0]]
@@ -304,6 +231,7 @@ Func BuilderBaseGetEdges($BuilderBaseDiamond, $Text)
 		$BottomLeft[UBound($BottomLeft) - 1][1] = Ceiling($Y[0])
 		$Y[0] -= 15
 		If $Y[0] < $Y[1] Then ExitLoop
+		; If $Y[0] >= $g_aiDeployableLRTB[3] Then ContinueLoop
 	Next
 
 	Local $X = [$Left[0], $Top[0]]
@@ -354,242 +282,6 @@ Func BuilderBaseGetFakeEdges()
 	Return $ExternalEdges
 EndFunc   ;==>BuilderBaseGetFakeEdges
 
-#cs
-Func PrintBBPoly($bOuterPolygon = True) ; Or Internal, but it always update globals.
-	Local $aReturn[6] = [-1, -1, -1, -1, -1, -1]
-
-	Local $iSize = ZoomBuilderBaseMecanics(False)
-	If $iSize < 1 Then
-		SetLog("Bad PrintBBPoly village size.", $COLOR_ERROR)
-		Return SetError(1, 0, $aReturn)
-	EndIf
-	
-	; Polygon Points
-	Local $iTop[2], $iRight[2], $iBottom[2], $iBottomR[2], $iBottomL[2], $iLeft[2]
-	
-	$iSize = Floor(Pixel_Distance($g_aVillageSize[4], $g_aVillageSize[5], $g_aVillageSize[7], $g_aVillageSize[8]))
-	
-	; Fix ship coord
-	Local $x = $g_aVillageSize[7] + Floor((590 * 14) / $iSize)
-	Local $y = $g_aVillageSize[8]
-
-	; ZoomFactor
-	Local $iCorrectSizeLR = Floor(($iSize - 590) / 2)
-	Local $iCorrectSizeT = Floor(($iSize - 590) / 4)
-	Local $iCorrectSizeB = ($iSize - 590)
-	
-	Local $iFixA = Floor((590 * 6) / $iSize)
-	Local $iFixE = Floor((590 * 25) / $iSize)
-	
-	; BuilderBaseAttackDiamond
-	$iTop[0] = $x - (180 + $iCorrectSizeT)
-	$iTop[1] = $y + $iFixA
-
-	$iRight[0] = $x + (160 + $iCorrectSizeLR)
-	$iRight[1] = $y + (260 + $iCorrectSizeLR)
-
-	$iLeft[0] = $x - (515 + $iCorrectSizeB)
-	$iLeft[1] = $y + (260 + $iCorrectSizeLR)
-
-	$iBottom[0] = $x - (180 + $iCorrectSizeT)
-	$iBottom[1] = $y + (515 + $iCorrectSizeB) - $iFixA
-
-	If $bOuterPolygon = False Then
-		$iBottomL[0] = $x - (225 + $iCorrectSizeB) - $iFixA
-		$iBottomL[1] = 628
-		
-		$iBottomR[0] = $x - (110 - $iCorrectSizeB)
-		$iBottomR[1] = 628
-
-		$aReturn[0] = $iSize
-		$aReturn[1] = $iTop
-		$aReturn[2] = $iRight
-		$aReturn[3] = $iBottomR
-		$aReturn[4] = $iBottomL
-		$aReturn[5] = $iLeft
-	EndIf
-	
-	;This Format is for _IsPointInPoly function
-	Local $aTmpBuilderBaseAttackPolygon[7][2] = [[5, -1], [$iTop[0], $iTop[1]], [$iRight[0], $iRight[1]], [$iBottom[0], $iBottom[1]], [$iBottom[0], $iBottom[1]], [$iLeft[0], $iLeft[1]], [$iTop[0], $iTop[1]]] ; Make Polygon From Points
-	$g_aBuilderBaseAttackPolygon = $aTmpBuilderBaseAttackPolygon
-	SetDebugLog("Builder Base Attack Polygon : " & _ArrayToString($aTmpBuilderBaseAttackPolygon))
-	
-	; BuilderBaseAttackOuterDiamond
-	$iTop[0] = $x - (180 + $iCorrectSizeT)
-	$iTop[1] = $y - $iFixE
-
-	$iRight[0] = $x + (205 + $iCorrectSizeLR)
-	$iRight[1] = $y + (260 + $iCorrectSizeLR)
-
-	$iLeft[0] = $x - (560 + $iCorrectSizeB)
-	$iLeft[1] = $y + (260 + $iCorrectSizeLR)
-
-	$iBottom[0] = $x - (180 + $iCorrectSizeT)
-	$iBottom[1] = $y + (515 + $iCorrectSizeB) + $iFixE
-
-	
-	If $bOuterPolygon = True Then
-		$iBottomL[0] = $x - (275 + $iCorrectSizeB) - $iFixA
-		$iBottomL[1] = 628
-
-		$iBottomR[0] = $x - (70 - $iCorrectSizeB)
-		$iBottomR[1] = 628
-	
-		$aReturn[0] = $iSize
-		$aReturn[1] = $iTop
-		$aReturn[2] = $iRight
-		$aReturn[3] = $iBottomR
-		$aReturn[4] = $iBottomL
-		$aReturn[5] = $iLeft
-	EndIf
-
-	;This Format is for _IsPointInPoly function
-	Local $aTmpBuilderBaseOuterPolygon[7][2] = [[5, -1], [$iTop[0], $iTop[1]], [$iRight[0], $iRight[1]], [$iBottom[0], $iBottom[1]], [$iBottom[0], $iBottom[1]], [$iLeft[0], $iLeft[1]], [$iTop[0], $iTop[1]]] ; Make Polygon From Points
-	$g_aBuilderBaseOuterPolygon = $aTmpBuilderBaseOuterPolygon
-	SetDebugLog("Builder Base Outer Polygon : " & _ArrayToString($aTmpBuilderBaseOuterPolygon))
-	
-	Return $aReturn
-EndFunc   ;==>PrintBBPoly
-
-Func InDiamondBB($iX, $iY, $aBigArray, $bAttack = True)
-    If IsUnsafeDP($iX, $iY, $bAttack) = False And UBound($aBigArray) > 1 And not @error Then 
-		; _ArrayDisplay($aBigArray)
-        Return _IsPointInPoly($iX, $iY, $aBigArray)
-    EndIf
-    
-    Return False
-EndFunc   ;==>InDiamondBB
-
-Func IsUnsafeDP($iX, $iY, $bAttack = True)
-    If ($bAttack = True And $iY > 630) Or ($iX < 453 And $iY > 572) Then 
-        Return True
-    EndIf
-    Return False
-EndFunc   ;==>IsUnsafeDP
-
-Func TestGetBuilderBaseSize()
-	Setlog("** TestGetBuilderBaseSize START**", $COLOR_DEBUG)
-	Local $Status = $g_bRunState
-	$g_bRunState = True
-	GetBuilderBaseSize(True, True)
-	$g_bRunState = $Status
-	Setlog("** TestGetBuilderBaseSize END**", $COLOR_DEBUG)
-EndFunc   ;==>TestGetBuilderBaseSize
-
-Func TestBuilderBaseZoomOut()
-	Setlog("** TestBuilderBaseZoomOutOnAttack START**", $COLOR_DEBUG)
-	Local $Status = $g_bRunState
-	$g_bRunState = True
-	BuilderBaseZoomOut(True)
-	$g_bRunState = $Status
-	Setlog("** TestBuilderBaseZoomOutOnAttack END**", $COLOR_DEBUG)
-EndFunc   ;==>TestBuilderBaseZoomOut
-
-Func BuilderBaseZoomOut($bForceZoom = False, $bVersusMode = True)
-	If ZoomBuilderBaseMecanics($bForceZoom, $bVersusMode) > 0 Then
-		Return True
-	EndIf
-	
-	Return False
-EndFunc   ;==>BuilderBaseZoomOut
-
-Func BuilderBaseSendZoomOut($i = 0)
-	SetDebugLog("[" & $i & "][BuilderBaseSendZoomOut IN]")
-	If Not $g_bRunState Then Return
-	AndroidZoomOut(0, Default, ($g_iAndroidZoomoutMode <> 2)) ; use new ADB zoom-out
-	If @error <> 0 Then Return False
-	SetDebugLog("[" & $i & "][BuilderBaseSendZoomOut OUT]")
-	Return True
-EndFunc   ;==>BuilderBaseSendZoomOut
-
-Func ZoomBuilderBaseMecanics($bForceZoom = Default, $bVersusMode = Default, $bDebugLog = False)
-	If $bForceZoom = Default Then $bForceZoom = True
-	If $bVersusMode = Default Then $bVersusMode = True
-
-	Local $iSize = ($bForceZoom = True) ? (0) : (GetBuilderBaseSize())
-
-	If $iSize = 0 Then
-		BuilderBaseSendZoomOut(0)
-		If _Sleep(1000) Then Return
-		
-		$iSize = GetBuilderBaseSize(False, $bVersusMode, $bDebugLog)
-	EndIf
-
-	If Not $g_bRunState Then Return
-
-	Local $i = 0
-	Do
-		SetDebugLog("Builder base force Zoomout ? " & $bForceZoom)
-
-		If Not $g_bRunState Then Return
-
-		If Not ($iSize > 520 And $iSize < 620) Then
-
-			; Update shield status
-			AndroidShield("AndroidOnlyZoomOut")
-			
-			; Send zoom-out.
-			If BuilderBaseSendZoomOut($i) Then
-				If _Sleep(1000) Then Return
-				
-				If Not $g_bRunState Then Return
-				$iSize = GetBuilderBaseSize(($i = 3), $bVersusMode, $bDebugLog) ; WihtoutClicks
-			EndIf
-		EndIf
-
-		If $i > 5 Then ExitLoop
-		$i += 1
-	Until ($iSize > 520 And $iSize < 620)
-
-	SetDebugLog("Builder Base Diamond: " & $iSize, $COLOR_INFO)
-	
-	If $iSize = 0 Then
-		SetDebugLog("[BBzoomout] ZoomOut Builder Base - FAIL", $COLOR_ERROR)
-	Else
-		SetDebugLog("[BBzoomout] ZoomOut Builder Base - OK", $COLOR_SUCCESS)
-	EndIf
-
-	Return $iSize
-EndFunc   ;==>ZoomBuilderBaseMecanics
-
-Func GetBuilderBaseSize($bWithClick = False, $bVersusMode = Default, $bDebugLog = False)
-	If $bVersusMode = Default Then $bVersusMode = True
-	Local $iResult = 0, $aVillage = 0
-
-	If Not $g_bRunState Then Return
-
-	If $bWithClick = True Then
-		ClickDrag(100, 130 + $g_iMidOffsetYFixed, 230, 30)
-		If _Sleep(500) Then Return 
-	EndIf
-	
-	_CaptureRegion2()
-	If $bVersusMode = False Then
-		If Not IsOnBuilderBase(False) Then
-			SetDebugLog("You not are in builder base!")
-			CheckObstacles(True)
-		EndIf
-	EndIf
-	
-	
-	If Not $g_bRunState Then Return
-	
-	$aVillage = GetVillageSize($bDebugLog, "stone", "tree", Default, True, False)
-	
-	If UBound($aVillage) > 8 And not @error Then
-		If StringLen($aVillage[9]) > 5 And StringIsSpace($aVillage[9]) = 0 Then
-			$iResult = Floor(Pixel_Distance($aVillage[4], $aVillage[5], $aVillage[7], $aVillage[8]))
-			Return $iResult
-		ElseIf StringIsSpace($aVillage[9]) = 1 Then
-			Return 0
-		EndIf
-	EndIf
-	
-	If _Sleep($DELAYSLEEP * 10) Then Return
-	
-	Return 0
-EndFunc   ;==>GetBuilderBaseSize
-#ce
 ; Cartesian axis, by percentage, instead convert village pos, ready to implement in the constructor base. (Boldina, "the true dev").
 ; No reference village is based and no external DLL calls are made, just take the x and y endpoints, 
 ; then subtract the endpoints and generate the percentages they represent on the axes.
@@ -653,3 +345,162 @@ Func atan2($y, $x)
 	Return (2 * ATan($y / ($x + Sqrt($x * $x + $y * $y))))
 EndFunc   ;==>atan2
 
+; SearchZoomOutBB returns always an Array.
+; If village can be measured and villages size < 500 pixel then it returns in idx 0 a String starting with "zoomout:" and tries to center base
+; Return Array:
+; 0 = Empty string if village cannot be measured (e.g. window blocks village or not zoomed out)
+; 1 = Current Village X Offset (after centering village)
+; 2 = Current Village Y Offset (after centering village)
+; 3 = Difference of previous Village X Offset and current (after centering village)
+; 4 = Difference of previous Village Y Offset and current (after centering village)
+Func SearchZoomOutBB($CenterVillageBoolOrScrollPos = $aCenterEnemyVillageClickDrag, $UpdateMyVillage = True, $sSource = "", $CaptureRegion = True, $DebugLog = $g_bDebugSetlog)
+	If Not $g_bRunState Then Return
+	If $sSource <> "" Then $sSource = " (" & $sSource & ")"
+	Local $bCenterVillage = $CenterVillageBoolOrScrollPos
+	If $bCenterVillage = Default Or $g_bDebugDisableVillageCentering Then $bCenterVillage = (Not $g_bDebugDisableVillageCentering)
+	Local $aScrollPos[2] = [0, 0]
+	If UBound($CenterVillageBoolOrScrollPos) >= 2 Then
+		$aScrollPos[0] = $CenterVillageBoolOrScrollPos[0]
+		$aScrollPos[1] = $CenterVillageBoolOrScrollPos[1]
+		$bCenterVillage = (Not $g_bDebugDisableVillageCentering)
+	EndIf
+
+	; Setup arrays, including default return values for $return
+	Local $x, $y, $z, $stone[2]
+	Local $villageSize = 0
+
+	If $CaptureRegion Then _CaptureRegion2()
+	
+ 	Local $aResult = ["", 0, 0, 0, 0] ; expected dummy value
+	Local $bUpdateSharedPrefs = False
+	
+	Static $iCallCount = 0
+	
+	Local $village = GetVillageSize($DebugLog, "stone", "tree", Default, True, $CaptureRegion)
+
+	If $g_aiSearchZoomOutCounter[0] > 0 Then
+		If _Sleep(1000) Then
+			$iCallCount = 0
+			Return SetError(1, 0, $aResult)
+		EndIf
+	EndIf
+
+	If IsArray($village) = 1 Then
+		$villageSize = $village[0]
+		If $villageSize < 750 Or $g_bDebugDisableZoomout Then ; xbebenk
+			$z = $village[1]
+			$x = $village[2]
+			$y = $village[3]
+			$stone[0] = $village[4]
+			$stone[1] = $village[5]
+			$aResult[0] = "zoomout:" & $village[6]
+			$aResult[1] = $x
+			$aResult[2] = $y
+			$g_bAndroidZoomoutModeFallback = False
+
+			If $bCenterVillage And ($x <> 0 Or $y <> 0) And ($UpdateMyVillage = False Or $x <> $g_iVILLAGE_OFFSET[0] Or $y <> $g_iVILLAGE_OFFSET[1]) Then
+				If $DebugLog Then SetDebugLog("Center Village" & $sSource & " by: " & $x & ", " & $y)
+				If $aScrollPos[0] = 0 And $aScrollPos[1] = 0 Then
+					;$aScrollPos[0] = $stone[0]
+					;$aScrollPos[1] = $stone[1]
+					; use fixed position now to prevent boat activation
+					$aScrollPos[0] = $aCenterHomeVillageClickDrag[0]
+					$aScrollPos[1] = $aCenterHomeVillageClickDrag[1]
+				EndIf
+				
+				; Custom fix - Team AIO Mod++
+				If Pixel_Distance($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y) > 5 Then
+					ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y)
+				EndIf
+
+				If _Sleep(250) Then
+					$iCallCount = 0
+					Return SetError(1, 0, $aResult)
+				EndIf
+				
+				Local $aResult2 = SearchZoomOutBB(False, $UpdateMyVillage, "SearchZoomOutBB(1):" & $sSource, True, $DebugLog)
+				; update difference in offset
+				$aResult2[3] = $aResult2[1] - $aResult[1]
+				$aResult2[4] = $aResult2[2] - $aResult[2]
+				If $DebugLog Then SetDebugLog("Centered Village Offset" & $sSource & ": " & $aResult2[1] & ", " & $aResult2[2] & ", change: " & $aResult2[3] & ", " & $aResult2[4])
+				$iCallCount = 0
+				Return FuncReturn($aResult2)
+			EndIf
+
+			If $UpdateMyVillage Then
+				If $x <> $g_iVILLAGE_OFFSET[0] Or $y <> $g_iVILLAGE_OFFSET[1] Or $z <> $g_iVILLAGE_OFFSET[2] Then
+					If $DebugLog Then SetDebugLog("Village Offset" & $sSource & " updated to " & $x & ", " & $y & ", " & $z)
+				EndIf
+				setVillageOffset($x, $y, $z)
+				ConvertInternalExternArea() ; generate correct internal/external diamond measures
+			EndIf
+		EndIf
+	EndIf
+
+	If $bCenterVillage And Not $g_bZoomoutFailureNotRestartingAnything And Not $g_bAndroidZoomoutModeFallback Then
+		If $aResult[0] = "" Or ($bUpdateSharedPrefs And $villageSize > 300 And $villageSize < 400) Then
+			If $g_aiSearchZoomOutCounter[0] > 25 Or ($bUpdateSharedPrefs And $g_aiSearchZoomOutCounter[0] > 3) Then
+				$g_aiSearchZoomOutCounter[0] = 0
+				$iCallCount += 1
+				If $iCallCount <= 1 Then
+					;CloseCoC(True)
+					SetLog("Restart CoC to reset zoom" & $sSource & "...", $COLOR_INFO)
+					PoliteCloseCoC("Zoomout" & $sSource)
+					If _Sleep(1000) Then
+						$iCallCount = 0
+						Return SetError(1, 0, $aResult)
+					EndIf
+					CloseCoC() ; ensure CoC is gone
+					OpenCoC()
+
+					waitMainScreen()
+
+					Return FuncReturn(SearchZoomOutBB($CenterVillageBoolOrScrollPos, $UpdateMyVillage, "SearchZoomOutBB(2):" & $sSource, True, $DebugLog))
+				Else
+					SetLog("Restart Android to reset zoom" & $sSource & "...", $COLOR_INFO)
+					$iCallCount = 0
+					RebootAndroid()
+					If _Sleep(1000) Then
+						$iCallCount = 0
+						Return SetError(1, 0, $aResult)
+					EndIf
+					
+					waitMainScreen()
+					
+					$aResult = SearchZoomOutBB($CenterVillageBoolOrScrollPos, $UpdateMyVillage, "SearchZoomOutBB(2):" & $sSource, True, $DebugLog)
+					If $bUpdateSharedPrefs And StringInStr($aResult[0], "zoomou") = 0 Then
+						; disable this CoC/Android restart
+						SetLog("Disable restarting CoC or Android on zoom-out failure", $COLOR_ERROR)
+						SetLog("Please clean village to allow village measuring and start bot again", $COLOR_ERROR)
+						$g_bZoomoutFailureNotRestartingAnything = True
+					EndIF
+					Return SetError(1, 0, $aResult)
+				EndIf
+			Else
+				; failed to find village
+				$g_aiSearchZoomOutCounter[0] += 1
+				If $bUpdateSharedPrefs Then
+					If _Sleep(3000) Then
+						$iCallCount = 0
+						Return SetError(1, 0, $aResult)
+					EndIf
+					Return FuncReturn(SearchZoomOutBB($CenterVillageBoolOrScrollPos, $UpdateMyVillage, "SearchZoomOutBB(3):" & $sSource, True, $DebugLog))
+				EndIf
+			EndIf
+		Else
+			If Not $g_bDebugDisableZoomout And $villageSize > 480 And Not $bUpdateSharedPrefs Then
+				If Not $g_bSkipFirstZoomout Then
+					; force additional zoom-out
+					$aResult[0] = ""
+				ElseIf $g_aiSearchZoomOutCounter[1] > 0 And $g_aiSearchZoomOutCounter[0] > 0  Then
+					; force additional zoom-out
+					$g_aiSearchZoomOutCounter[1] -= 1
+					$aResult[0] = ""
+				EndIf
+			EndIf
+		EndIf
+		$g_bSkipFirstZoomout = True
+	EndIf
+
+	Return $aResult
+EndFunc   ;==>SearchZoomOutBB

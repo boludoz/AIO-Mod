@@ -316,35 +316,52 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 		$bWaschanged = True
 		
 		SetLog("Incorrect troop On Camp " & $aWrongCamps[0] + 1 & " - " & $aNewAvailableTroops[$aWrongCamps[0]][0] & " -> " & $sMissingCamp)
+		
+		If _CheckPixel($aSurrenderButton, $g_bCapturePixel) Then
+			SetLog("Battle started can't change troops. Skip It!", $color_info)
+			ExitLoop
+		EndIf
+		
 		SetDebugLog("Click Switch Button " & $aWrongCamps[0], $COLOR_INFO)
 		Click($aSwicthBtn[$aWrongCamps[0]] + Random(2, 10, 1), $iDefaultY + Random(2, 10, 1))
 		If Not $g_bRunState Then Return
-		If RandomSleep(250) Then Return
+		If RandomSleep(500) Then Return
 
-		If Not _WaitForCheckImg($g_sImgCustomArmyBB, "0,593,860,640", "ChangeTDis") Then ; Resolution changed
-			Setlog("_WaitForCheckImg Error at Camps!", $COLOR_ERROR)
-			$iAvoidInfLoop += 1
+		If Not _WaitForCheckImg($g_sImgDirBBTroops, "0,454,860,556", Default, 1500, 500) Then ; Resolution changed
+			; _debugfailedimagedetection("Attackbar")
+			SetLog("Unable to find any troop to change from change window", $COLOR_ERROR)
+			Click(8, 720, 1)
 			If Not $g_bRunState Then Return
-			ContinueLoop
+			ExitLoop
 		EndIf
 		
-		$aAttackBar = decodeSingleCoord(findImageInPlace($sMissingCamp, $g_sImgDirBBTroops & "\" & $sMissingCamp & "*", "0,454,860,556", True)) ; Fixed resolution
-		If UBound($aAttackBar) >= 2 Then
-			; If The item is The Troop that We Missing
-			If RandomSleep(250) Then Return
-			; Select The New Troop
-			PureClick($aAttackBar[0] + Random(1, 5, 1), $aAttackBar[1] + Random(1, 5, 1), 1, 0)
-			If RandomSleep(250) Then Return
-			SetDebugLog("Selected " & FullNametroops($sMissingCamp) & " X:| " & $aAttackBar[0] & " Y:| " & $aAttackBar[1], $COLOR_SUCCESS)
-			$aNewAvailableTroops[$aWrongCamps[0]][0] = $sMissingCamp
-			; Set the Priority Again
-			For $i2 = 0 To UBound($g_asAttackBarBB) - 1
-				If (StringInStr($aNewAvailableTroops[$aWrongCamps[0]][0], $g_asAttackBarBB[$i2]) > 0) Then
-					$aNewAvailableTroops[$aWrongCamps[0]][1] = $i2
+		Local $iTroopIndex = TroopIndexLookupBB($sMissingCamp)
+
+		If UBound($g_aImageSearchXML) > 0 And not @error Then
+			For $iTroops = 0 To UBound($g_aImageSearchXML) - 1
+				
+				If TroopIndexLookupBB($g_aImageSearchXML[$iTroops][0]) = $iTroopIndex Then
+				
+					; Select The New Troop
+					PureClick($g_aImageSearchXML[$iTroops][1] + Random(1, 5, 1), $g_aImageSearchXML[$iTroops][2] + Random(1, 5, 1), 1, 0)
+					If RandomSleep(250) Then Return
+					
+					SetDebugLog("Selected " & FullNametroops($sMissingCamp) & " X:| " & $g_aImageSearchXML[$iTroops][1] & " Y:| " & $g_aImageSearchXML[$iTroops][2], $COLOR_SUCCESS)
+					$aNewAvailableTroops[$aWrongCamps[0]][0] = $sMissingCamp
+					
+					; Set the Priority Again
+					For $i2 = 0 To UBound($g_asAttackBarBB) - 1
+						If (StringInStr($aNewAvailableTroops[$aWrongCamps[0]][0], $g_asAttackBarBB[$i2]) > 0) Then
+							$aNewAvailableTroops[$aWrongCamps[0]][1] = $i2
+						EndIf
+					Next
+					
+					_ArraySort($aNewAvailableTroops, 0, 0, 0, 1)
+					SetDebugLog("New Army is " & _ArrayToString($aNewAvailableTroops, "-", -1, -1, "|", -1, -1), $COLOR_INFO)
+					
+					ExitLoop
 				EndIf
 			Next
-			_ArraySort($aNewAvailableTroops, 0, 0, 0, 1)
-			SetDebugLog("New Army is " & _ArrayToString($aNewAvailableTroops, "-", -1, -1, "|", -1, -1), $COLOR_INFO)
 		Else
 			Click(8, 720, 1)
 			Return False
