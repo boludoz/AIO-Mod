@@ -684,7 +684,7 @@ Func DeployTroopBB($sTroopName, $aSlot_XY, $Point2Deploy, $iQtyToDrop)
 			; It look for the white border in case it failed to launch.
 			If ($g_aMachineBB[0] <> -1) Then
 				If _Sleep(1000) Then Return
-				$g_aMachineBB[2] = Not _ColorCheckSubjetive(_GetPixelColor($g_aMachineBB[0], 635, True), "FFFFFF", 5)
+				$g_aMachineBB[2] = Not _ColorCheckSubjetive(_GetPixelColor($g_aMachineBB[0], 635 , True), "FFFFFF", 5)
 				Local $sSay = ($g_aMachineBB[2] == True) ? ("Yeah! It's Deployed!") : (False)
 				SetLog("- BB Machine is ok? " & $sSay, $COLOR_INFO)
 			EndIf
@@ -743,28 +743,27 @@ Func TriggerMachineAbility($bBBIsFirst = -1, $ix = -1, $iy = -1, $bTest = False)
 
 	SetDebugLog("Checking ability of machine.", $COLOR_ACTION)
 
-	Local $hPixel = 0x000000
-	$hPixel = _GetPixelColor(Int($g_aMachineBB[0]), 721, True)
+	Local $hPixel = _GetPixelColor(Int($g_aMachineBB[0]), 633, True) ; Resolution fixed
 	If $bTest Or $g_bDebugSetlog Then SetDebugLog("Machine " & $hPixel & " ability color.", $COLOR_DEBUG)
 
 	If $bBBIsFirst And ($g_aMachineBB[0] <> -1) Then
 		If $bTest Or $g_bDebugSetlog Then Setlog(_ArrayToString($g_aMachineBB), $COLOR_INFO)
 		If _ColorCheckSubjetive($hPixel, "472CC5", 5) Then
 			Click(Int($g_aMachineBB[0] + Random(5, 15, 1)), Int($g_aMachineBB[1] + Random(5, 15, 1)), Random(1, 3, 1), 100)
-			SetLog("- BB Machine : Activated Ability for the first time.", $COLOR_ACTION)
+			SetLog("BB Machine : Activated Ability for the first time.", $COLOR_ACTION)
 			$bBBIsFirst = False
 			$g_aMachineBB[3] = $bBBIsFirst
 			$g_iBBMachAbilityLastActivatedTime = __TimerInit()
 			If RandomSleep(300) Then Return
 			Return True
 		Else
-			If $g_aMachineBB[3] Then SetLog("- BB Machine : Skill not present.", $COLOR_INFO)
+			If $g_aMachineBB[3] Then SetLog("BB Machine : Skill not present.", $COLOR_INFO)
 			Return False
 		EndIf
 	EndIf
 	If _ColorCheckSubjetive($hPixel, "432CCE", 8) Then
 		Click(Int($g_aMachineBB[0] + Random(5, 15, 1)), Int($g_aMachineBB[1] + Random(5, 15, 1)), Random(1, 3, 1), 100)
-		SetLog("- BB Machine : Activated Ability.", $COLOR_ACTION)
+		SetLog("BB Machine : Activated Ability.", $COLOR_ACTION)
 		$g_iBBMachAbilityLastActivatedTime = __TimerInit()
 		If RandomSleep(300) Then Return
 		Return True

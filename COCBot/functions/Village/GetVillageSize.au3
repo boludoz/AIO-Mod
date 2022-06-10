@@ -85,24 +85,32 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	Local $stone = [0, 0, 0, 0, 0, ""], $tree = [0, 0, 0, 0, 0, ""]
 	If $DebugLog = Default Then $DebugLog = False
 	If $sStonePrefix = Default Then $sStonePrefix = "stone"
-	
+	If $sTreePrefix = Default Then $sTreePrefix = "tree"
 	If $bOnBuilderBase = Default Then
 		$bOnBuilderBase = isOnBuilderBase(False)
 	EndIf
 	
-	Local $iAdditionalX = 120
-	Local $iAdditionalY = 120
-	Local $aResult = 0, $stone, $tree, $x, $y
-	
 	Local $sDirectory
 	If $bOnBuilderBase Then
 		$sDirectory = $g_sImgZoomOutDirBB
-		$stone = FindStone($sDirectory, $sStonePrefix, $iAdditionalX, $iAdditionalY, "")
 	Else
 		$sDirectory = $g_sImgZoomOutDir
-		$stone = FindStone($sDirectory, $sStonePrefix, $iAdditionalX, $iAdditionalY, $aLast[Int($g_iCurAccount)])
 	EndIf
 	
+	Local $iAdditionalX = 100
+	Local $iAdditionalY = 100
+	Local $aResult = 0, $stone, $tree, $x, $y
+	Local $bStoneSameScenery = False
+		
+	If Not $bOnBuilderBase Then
+		$stone = FindStone($sDirectory, "stone" & $g_sSceneryCode, $iAdditionalX, $iAdditionalY, "")
+		If IsArray($stone) And String($stone[4]) = $g_sSceneryCode Then 
+			$bStoneSameScenery = True
+			SetDebugLog(String($bStoneSameScenery) & "," & String($stone[4]) & "," & $g_sSceneryCode)
+		EndIf
+	EndIf
+	
+	If Not $bStoneSameScenery Then $stone = FindStone($sDirectory, $sStonePrefix, $iAdditionalX, $iAdditionalY, $aLast[Int($g_iCurAccount)])
 	If IsArray($stone) And $stone[0] = 0 Or not IsArray($stone) Then
 		SetDebugLog("GetVillageSize cannot find stone", $COLOR_WARNING)
 		If $bDebugWithImage Then
@@ -129,27 +137,8 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 			_gdiplus_graphicsdrawstringex($hgraphic, $stone[5] & "_" & $stone[4], $hfont, $ainfo[0], $hformat, $hbrush)
 		EndIf
 		
-		Local $aNumberRet = StringSplit($stone[4], "", $STR_NOCOUNT)
-		If @error Then Return FuncReturn($aResult)
-		
-		Local $iNumber = ""
-		For $i = 0 To UBound($aNumberRet) - 1
-			If StringIsDigit($aNumberRet) = 1 Then
-				$iNumber &= $aNumberRet[$i]
-			Else
-				ExitLoop
-			EndIf
-		Next
-		
-		If $sTreePrefix = Default Then $sTreePrefix = "tree"
-		$sTreePrefix = $iNumber & $sTreePrefix
-				
 		If $stone[0] Then
-			If $bOnBuilderBase Then
-				$tree = FindTree($sDirectory, $sTreePrefix, $iAdditionalX + 100, $iAdditionalY + 200, $stone[4]) ; The boat
-			Else
-				$tree = FindTree($sDirectory, $sTreePrefix, $iAdditionalX, $iAdditionalY, $stone[4])
-			EndIf
+			$tree = FindTree($sDirectory, $sTreePrefix, $iAdditionalX, $iAdditionalY, $stone[4])
 			
 			If IsArray($tree) And $tree[0] = 0 Or not IsArray($stone) Then
 				SetDebugLog("GetVillageSize cannot find tree", $COLOR_ACTION)
@@ -167,7 +156,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 					_gdiplus_bitmapdispose($editedimage)
 				EndIf
 				Return FuncReturn($aResult)
-			ElseIf Not $bOnBuilderBase Then
+			Else
 				Local $sStones = StringBetween($stone[4], "stone", "-")
 				If Not @error Then $aLast[Int($g_iCurAccount)] = $sStones & "-"
 			EndIf
@@ -204,8 +193,10 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	Local $iIndex = _ArraySearch($g_aVillageRefSize, $stone[4])
 	If $iIndex <> -1 Then 
 		$iRefSize = $g_aVillageRefSize[$iIndex][2]
-		$g_sSceneryCode = $g_aVillageRefSize[$iIndex][0]
-		$g_sCurrentScenery = $g_aVillageRefSize[$iIndex][1]
+		If Not $bOnBuilderBase Then 
+			$g_sSceneryCode = $g_aVillageRefSize[$iIndex][0]
+			$g_sCurrentScenery = $g_aVillageRefSize[$iIndex][1]
+		EndIf
 		$InnerDiamondLeft = $g_aVillageRefSize[$iIndex][3]
 		$InnerDiamondRight = $g_aVillageRefSize[$iIndex][4]
 		$InnerDiamondTop = $g_aVillageRefSize[$iIndex][5]
@@ -283,7 +274,7 @@ Func FindStone($sDirectory = $g_sImgZoomOutDir, $sStonePrefix = "stone", $iAddit
 
 	Local $stone = [0, 0, 0, 0, 0, ""]
 	Local $x0, $y0, $d0, $x, $y, $x1, $y1, $right, $bottom, $a, $b
-	Local $aStoneFiles = _FileListToArray($sDirectory & "stone\", "*" & $sStonePrefix & "*.*", $FLTA_FILES)
+	Local $aStoneFiles = _FileListToArray($sDirectory & "stone\", $sStonePrefix & "*.*", $FLTA_FILES)
 	If @error Then
 		SetLog("Error: Missing stone files (" & @error & ")", $COLOR_ERROR)
 		Return
@@ -324,7 +315,7 @@ Func FindStone($sDirectory = $g_sImgZoomOutDir, $sStonePrefix = "stone", $iAddit
 			$g_aDebugVillage[3] = $bottom
 			
 			SetDebugLog("GetVillageSize check for image " & $findImage)
-			$b = decodeSingleCoord(findImage($sStonePrefix & $StoneName, $sDirectory & "stone\" & $findImage, $sArea, 1, False))
+			$b = decodeSingleCoord(findImage("stone" & $StoneName, $sDirectory & "stone\" & $findImage, $sArea, 1, False))
 			If UBound($b) = 2 Then
 				$x = Int($b[0])
 				$y = Int($b[1])
@@ -357,7 +348,7 @@ Func FindTree($sDirectory = $g_sImgZoomOutDir, $sTreePrefix = "tree", $iAddition
 		Return
 	EndIf
 	
-	Local $scenerycode = $sTreePrefix & $sStoneName
+	Local $scenerycode = "tree" & $sStoneName
 	For $i = 1 To $aTreeFiles[0]
 		$findImage = $aTreeFiles[$i]
 		If StringRegExp($findImage, $scenerycode, $STR_REGEXPMATCH) <> 1 Then ; if stone found is DS, filter only DS tree
