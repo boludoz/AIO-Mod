@@ -1546,8 +1546,8 @@ Func _GreenTiles($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = "FV", $bFo
 	Return $aAR
 EndFunc   ;==>_GreenTiles
 
-Func isInsideDiamondInt($iX, $iY)
-
+Func isInsideDiamondInt($iX, $iY, $iTolerance = 5)
+		
 	Local $Left = $InternalArea[0][0], $Right = $InternalArea[1][0], $Top = $InternalArea[2][1], $Bottom = $InternalArea[3][1]
 	Local $aDiamond[2][2] = [[$Left, $Top], [$Right, $Bottom]]
 	Local $aMiddle = [($aDiamond[0][0] + $aDiamond[1][0]) / 2, ($aDiamond[0][1] + $aDiamond[1][1]) / 2]
@@ -1557,8 +1557,8 @@ Func isInsideDiamondInt($iX, $iY)
 	Local $DY = Abs($iY - $aMiddle[1])
 
 	; allow additional 5 pixels
-	If $DX >= 5 Then $DX -= 5
-	If $DY >= 5 Then $DY -= 5
+	If $DX >= $iTolerance Then $DX -= $iTolerance
+	If $DY >= $iTolerance Then $DY -= $iTolerance
 
 	If ($DX / $aSize[0] + $DY / $aSize[1] <= 1) And $iX > $g_aiDeployableLRTB[0] And $iX <= $g_aiDeployableLRTB[1] And $iY >= $g_aiDeployableLRTB[2] And $iY <= $g_aiDeployableLRTB[3] Then
 		Return True ; Inside Village

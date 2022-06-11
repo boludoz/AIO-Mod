@@ -618,7 +618,8 @@ Func AddTilesToDeployPoint(ByRef $aSelectedDropSidePoints_XY, $iAddTiles, $sSele
 					$pixel[0] = $x + $l
 					$pixel[1] = $y + $l
 			EndSwitch
-			If _IsPointInPoly($pixel[0], $pixel[1], $g_aBuilderBaseOuterPolygon) Then ; Check if X,Y is inside Builderbase or outside
+
+			If isInsideDiamondExt($pixel[0], $pixel[1], $iTWithOutFF) Then ; Check if X,Y is inside Builderbase or outside
 				If $bDebug Then SetDebugLog("After AddTile: " & $iAddTiles & ", DropSide: " & $sSelectedDropSideName & ", Deploy Point: " & $i + 1 & " - " & $pixel[0] & " x " & $pixel[1])
 				$aSelectedDropSidePoints_XY[$i][0] = $pixel[0]
 				$aSelectedDropSidePoints_XY[$i][1] = $pixel[1]
@@ -626,10 +627,32 @@ Func AddTilesToDeployPoint(ByRef $aSelectedDropSidePoints_XY, $iAddTiles, $sSele
 			Else
 				If $bDebug Or $g_bDebugAndroid Then SetLog("Outside Polygon DropSide, restored secure: " & $sSelectedDropSideName & ", Deploy Point: " & $i + 1 & " - " & $pixel[0] & " x " & $pixel[1], $COLOR_DEBUG)
 			EndIf
+
 		Next
 	Next
 
 EndFunc   ;==>AddTilesToDeployPoint
+
+Func isInsideDiamondExt($iX, $iY, $iTolerance = 5)
+		
+	Local $Left = $ExternalArea[0][0], $Right = $ExternalArea[1][0], $Top = $ExternalArea[2][1], $Bottom = $ExternalArea[3][1]
+	Local $aDiamond[2][2] = [[$Left, $Top], [$Right, $Bottom]]
+	Local $aMiddle = [($aDiamond[0][0] + $aDiamond[1][0]) / 2, ($aDiamond[0][1] + $aDiamond[1][1]) / 2]
+	Local $aSize = [$aMiddle[0] - $aDiamond[0][0], $aMiddle[1] - $aDiamond[0][1]]
+
+	Local $DX = Abs($iX - $aMiddle[0])
+	Local $DY = Abs($iY - $aMiddle[1])
+
+	; allow additional 5 pixels
+	If $DX >= $iTolerance Then $DX -= $iTolerance
+	If $DY >= $iTolerance Then $DY -= $iTolerance
+
+	If ($DX / $aSize[0] + $DY / $aSize[1] <= 1) And $iX > $g_aiDeployableLRTB[0] And $iX <= $g_aiDeployableLRTB[1] And $iY >= $g_aiDeployableLRTB[2] And $iY <= $g_aiDeployableLRTB[3] Then
+		Return True ; Inside Village
+	Else
+		Return False ; Outside Village
+	EndIf
+EndFunc   ;==>isInsideDiamondExt
 
 Func VerifySlotTroop($sTroopName, ByRef $aSlot_XY, ByRef $iQtyOfSelectedSlot, ByRef $iSlotNumber, $aAvailableTroops_NXQ)
 	; Select Slot.

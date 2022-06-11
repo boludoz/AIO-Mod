@@ -5,7 +5,7 @@
 ; Parameters ....: None
 ; Return values .: -
 ; Author ........: Boldina (2021)
-; Modified ......: 
+; Modified ......:
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2021
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -16,19 +16,17 @@ Global $g_aBoatPos[2] = [Null, Null]
 
 Func ZoomBuilderBaseMecanics($bForceZoom = Default, $bVersusMode = Default, $bDebugLog = False)
 	BuilderBaseZoomOut()
-	Local $iSize = GetBuilderBaseSize()
-	If $iSize > 0 Then
-		BuilderBaseAttackDiamond()
-		BuilderBaseAttackOuterDiamond()
-	EndIf
-	Return $iSize
+	BuilderBaseAttackDiamond()
+	BuilderBaseAttackOuterDiamond()
+	Return 512
 EndFunc   ;==>ZoomBuilderBaseMecanics
 
 Func TestGetBuilderBaseSize()
 	Setlog("** TestGetBuilderBaseSize START**", $COLOR_DEBUG)
 	Local $Status = $g_bRunState
 	$g_bRunState = True
-	GetBuilderBaseSize(True, True)
+;~ 	GetBuilderBaseSize(True, True)
+	SetLOG("DEPRECATED", $COLOR_ERROR)
 	$g_bRunState = $Status
 	Setlog("** TestGetBuilderBaseSize END**", $COLOR_DEBUG)
 EndFunc   ;==>TestGetBuilderBaseSize
@@ -45,19 +43,14 @@ EndFunc   ;==>TestBuilderBaseZoomOut
 Func BuilderBaseZoomOut($bForceZoom = False, $bVersusMode = True, $DebugImage = False)
 	$g_aiSearchZoomOutCounter[0] = 0
 	$g_aiSearchZoomOutCounter[1] = 0
-	
+
 	; Small loop just in case
 	For $i = 0 To 6
-		; Necessary a small drag to Up and right to get the Stone and Boat Images, Just once , coz in attack will display a red text and hide the boat
-		If $i = 0 Or $i = 3 Then
-			ClickDrag(100, 130, 230, 30)
-			If $i = 3 Then ClickDrag(230, 130, 230, 30)
-		EndIf
-		
 		; Update shield status
 		AndroidShield("AndroidOnlyZoomOut")
 		; Run the ZoomOut Script
 		If BuilderBaseSendZoomOut(False, $i) Then
+			ClickDrag(100, 130, 230, 30)
 			If _Sleep(500) Then ExitLoop
 			If Not $g_bRunState Then Return
 			; Get the Distances between images
@@ -122,14 +115,14 @@ Func BuilderBaseAttackDiamond()
 
 	$Top[0] = $InternalArea[2][0]
 	$Top[1] = $InternalArea[2][1]
-	
+
 	Local $aFinal[2], $aCut[2], $iPrecision = 10
 	For $iPoints = 1 To Ceiling(Pixel_Distance($InternalArea[1][0], $InternalArea[1][1], $InternalArea[3][0], $InternalArea[3][1]) / $iPrecision) * 2
 		$aCut = Linecutter($InternalArea[1][0], $InternalArea[1][1], $InternalArea[3][0], $InternalArea[3][1], $iPoints * $iPrecision, 0, 0)
 		If $aCut[1] > $g_aiDeployableLRTB[3] Then ExitLoop
 		$aFinal = $aCut
-	Next	
-	
+	Next
+
 	$BottomR[0] = $aFinal[0]
 	$BottomR[1] = $aFinal[1]
 
@@ -137,7 +130,7 @@ Func BuilderBaseAttackDiamond()
 		$aCut = Linecutter($InternalArea[0][0], $InternalArea[0][1], $InternalArea[3][0], $InternalArea[3][1], $iPoints * $iPrecision, 0, 0)
 		If $aCut[1] > $g_aiDeployableLRTB[3] Then ExitLoop
 		$aFinal = $aCut
-	Next	
+	Next
 
 	$BottomL[0] = $aFinal[0]
 	$BottomL[1] = $aFinal[1]
@@ -161,14 +154,14 @@ Func BuilderBaseAttackOuterDiamond()
 
 	$Top[0] = $ExternalArea[2][0]
 	$Top[1] = $ExternalArea[2][1]
-	
+
 	Local $aFinal[2], $aCut[2], $iPrecision = 10
 	For $iPoints = 1 To Ceiling(Pixel_Distance($ExternalArea[1][0], $ExternalArea[1][1], $ExternalArea[3][0], $ExternalArea[3][1]) / $iPrecision) * 2
 		$aCut = Linecutter($ExternalArea[1][0], $ExternalArea[1][1], $ExternalArea[3][0], $ExternalArea[3][1], $iPoints * $iPrecision, 0, 0)
 		If $aCut[1] > $g_aiDeployableLRTB[3] Then ExitLoop
 		$aFinal = $aCut
-	Next	
-	
+	Next
+
 	$BottomR[0] = $aFinal[0]
 	$BottomR[1] = $aFinal[1]
 
@@ -176,7 +169,7 @@ Func BuilderBaseAttackOuterDiamond()
 		$aCut = Linecutter($ExternalArea[0][0], $ExternalArea[0][1], $ExternalArea[3][0], $ExternalArea[3][1], $iPoints * $iPrecision, 0, 0)
 		If $aCut[1] > $g_aiDeployableLRTB[3] Then ExitLoop
 		$aFinal = $aCut
-	Next	
+	Next
 
 	$BottomL[0] = $aFinal[0]
 	$BottomL[1] = $aFinal[1]
@@ -283,7 +276,7 @@ Func BuilderBaseGetFakeEdges()
 EndFunc   ;==>BuilderBaseGetFakeEdges
 
 ; Cartesian axis, by percentage, instead convert village pos, ready to implement in the constructor base. (Boldina, "the true dev").
-; No reference village is based and no external DLL calls are made, just take the x and y endpoints, 
+; No reference village is based and no external DLL calls are made, just take the x and y endpoints,
 ; then subtract the endpoints and generate the percentages they represent on the axes.
 
 Func VillageToPercent($x, $y, $xv1, $xv2, $ya1, $ya2)
@@ -370,12 +363,12 @@ Func SearchZoomOutBB($CenterVillageBoolOrScrollPos = $aCenterEnemyVillageClickDr
 	Local $villageSize = 0
 
 	If $CaptureRegion Then _CaptureRegion2()
-	
+
  	Local $aResult = ["", 0, 0, 0, 0] ; expected dummy value
 	Local $bUpdateSharedPrefs = False
-	
+
 	Static $iCallCount = 0
-	
+
 	Local $village = GetVillageSize($DebugLog, "stone", "tree", Default, True, $CaptureRegion)
 
 	If $g_aiSearchZoomOutCounter[0] > 0 Then
@@ -398,35 +391,6 @@ Func SearchZoomOutBB($CenterVillageBoolOrScrollPos = $aCenterEnemyVillageClickDr
 			$aResult[2] = $y
 			$g_bAndroidZoomoutModeFallback = False
 
-			If $bCenterVillage And ($x <> 0 Or $y <> 0) And ($UpdateMyVillage = False Or $x <> $g_iVILLAGE_OFFSET[0] Or $y <> $g_iVILLAGE_OFFSET[1]) Then
-				If $DebugLog Then SetDebugLog("Center Village" & $sSource & " by: " & $x & ", " & $y)
-				If $aScrollPos[0] = 0 And $aScrollPos[1] = 0 Then
-					;$aScrollPos[0] = $stone[0]
-					;$aScrollPos[1] = $stone[1]
-					; use fixed position now to prevent boat activation
-					$aScrollPos[0] = $aCenterHomeVillageClickDrag[0]
-					$aScrollPos[1] = $aCenterHomeVillageClickDrag[1]
-				EndIf
-				
-				; Custom fix - Team AIO Mod++
-				If Pixel_Distance($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y) > 5 Then
-					ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y)
-				EndIf
-
-				If _Sleep(250) Then
-					$iCallCount = 0
-					Return SetError(1, 0, $aResult)
-				EndIf
-				
-				Local $aResult2 = SearchZoomOutBB(False, $UpdateMyVillage, "SearchZoomOutBB(1):" & $sSource, True, $DebugLog)
-				; update difference in offset
-				$aResult2[3] = $aResult2[1] - $aResult[1]
-				$aResult2[4] = $aResult2[2] - $aResult[2]
-				If $DebugLog Then SetDebugLog("Centered Village Offset" & $sSource & ": " & $aResult2[1] & ", " & $aResult2[2] & ", change: " & $aResult2[3] & ", " & $aResult2[4])
-				$iCallCount = 0
-				Return FuncReturn($aResult2)
-			EndIf
-
 			If $UpdateMyVillage Then
 				If $x <> $g_iVILLAGE_OFFSET[0] Or $y <> $g_iVILLAGE_OFFSET[1] Or $z <> $g_iVILLAGE_OFFSET[2] Then
 					If $DebugLog Then SetDebugLog("Village Offset" & $sSource & " updated to " & $x & ", " & $y & ", " & $z)
@@ -435,71 +399,6 @@ Func SearchZoomOutBB($CenterVillageBoolOrScrollPos = $aCenterEnemyVillageClickDr
 				ConvertInternalExternArea() ; generate correct internal/external diamond measures
 			EndIf
 		EndIf
-	EndIf
-
-	If $bCenterVillage And Not $g_bZoomoutFailureNotRestartingAnything And Not $g_bAndroidZoomoutModeFallback Then
-		If $aResult[0] = "" Or ($bUpdateSharedPrefs And $villageSize > 300 And $villageSize < 400) Then
-			If $g_aiSearchZoomOutCounter[0] > 25 Or ($bUpdateSharedPrefs And $g_aiSearchZoomOutCounter[0] > 3) Then
-				$g_aiSearchZoomOutCounter[0] = 0
-				$iCallCount += 1
-				If $iCallCount <= 1 Then
-					;CloseCoC(True)
-					SetLog("Restart CoC to reset zoom" & $sSource & "...", $COLOR_INFO)
-					PoliteCloseCoC("Zoomout" & $sSource)
-					If _Sleep(1000) Then
-						$iCallCount = 0
-						Return SetError(1, 0, $aResult)
-					EndIf
-					CloseCoC() ; ensure CoC is gone
-					OpenCoC()
-
-					waitMainScreen()
-
-					Return FuncReturn(SearchZoomOutBB($CenterVillageBoolOrScrollPos, $UpdateMyVillage, "SearchZoomOutBB(2):" & $sSource, True, $DebugLog))
-				Else
-					SetLog("Restart Android to reset zoom" & $sSource & "...", $COLOR_INFO)
-					$iCallCount = 0
-					RebootAndroid()
-					If _Sleep(1000) Then
-						$iCallCount = 0
-						Return SetError(1, 0, $aResult)
-					EndIf
-					
-					waitMainScreen()
-					
-					$aResult = SearchZoomOutBB($CenterVillageBoolOrScrollPos, $UpdateMyVillage, "SearchZoomOutBB(2):" & $sSource, True, $DebugLog)
-					If $bUpdateSharedPrefs And StringInStr($aResult[0], "zoomou") = 0 Then
-						; disable this CoC/Android restart
-						SetLog("Disable restarting CoC or Android on zoom-out failure", $COLOR_ERROR)
-						SetLog("Please clean village to allow village measuring and start bot again", $COLOR_ERROR)
-						$g_bZoomoutFailureNotRestartingAnything = True
-					EndIF
-					Return SetError(1, 0, $aResult)
-				EndIf
-			Else
-				; failed to find village
-				$g_aiSearchZoomOutCounter[0] += 1
-				If $bUpdateSharedPrefs Then
-					If _Sleep(3000) Then
-						$iCallCount = 0
-						Return SetError(1, 0, $aResult)
-					EndIf
-					Return FuncReturn(SearchZoomOutBB($CenterVillageBoolOrScrollPos, $UpdateMyVillage, "SearchZoomOutBB(3):" & $sSource, True, $DebugLog))
-				EndIf
-			EndIf
-		Else
-			If Not $g_bDebugDisableZoomout And $villageSize > 480 And Not $bUpdateSharedPrefs Then
-				If Not $g_bSkipFirstZoomout Then
-					; force additional zoom-out
-					$aResult[0] = ""
-				ElseIf $g_aiSearchZoomOutCounter[1] > 0 And $g_aiSearchZoomOutCounter[0] > 0  Then
-					; force additional zoom-out
-					$g_aiSearchZoomOutCounter[1] -= 1
-					$aResult[0] = ""
-				EndIf
-			EndIf
-		EndIf
-		$g_bSkipFirstZoomout = True
 	EndIf
 
 	Return $aResult

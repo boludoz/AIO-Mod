@@ -44,12 +44,14 @@ Global $InnerDiamondTop = 60
 Global $InnerDiamondBottom = 636
 Global $InnerDiamandDiffX = 28
 Global $InnerDiamandDiffY = 20
+Global $DiamondMiddleX = ($InnerDiamondLeft + $InnerDiamondRight) / 2
+Global $DiamondMiddleY = ($InnerDiamondTop + $InnerDiamondBottom) / 2
 
 convertinternalexternarea("Start")
 
 Func ConvertInternalExternArea($FunctionName = "")
-	Local $DiamondMiddleX = ($InnerDiamondLeft + $InnerDiamondRight) / 2
-	Local $DiamondMiddleY = ($InnerDiamondTop + $InnerDiamondBottom) / 2
+	$DiamondMiddleX = ($InnerDiamondLeft + $InnerDiamondRight) / 2
+	$DiamondMiddleY = ($InnerDiamondTop + $InnerDiamondBottom) / 2
 
 	Local $OuterDiamondLeft = $InnerDiamondLeft - $InnerDiamandDiffX
 	Local $OuterDiamondRight = $InnerDiamondRight + $InnerDiamandDiffX
@@ -125,7 +127,10 @@ Func ConvertInternalExternArea($FunctionName = "")
 			$InternalArea[1][0] & "," & $InternalArea[1][1] & "|" & _
 			$InternalArea[3][0] & "," & $InternalArea[3][1] & "|" & _
 			$InternalArea[0][0] & "," & $InternalArea[0][1]
-
+	
+	; Custom fix - Team AIO Mod++
+	$DiamondMiddleX = $InternalArea[0][1]
+	$DiamondMiddleY = $InternalArea[2][0]
 EndFunc   ;==>ConvertInternalExternArea
 
 Func CheckAttackLocation(ByRef $iX, ByRef $iY)

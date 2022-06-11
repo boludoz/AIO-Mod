@@ -11,6 +11,12 @@
 ; ===============================================================================================================================
 Global $g_aImageSearchXML = - 1
 
+; Local $aArea = StringSplit($vArea2SearchOri, "", $STR_NOCOUNT)
+
+; For $i = 0 To UBound($aArea) -1
+	; If StringIsDigit($aArea[$i]) = 1 Then
+	; EndIf
+; Next
 Func _ImageSearchXML($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = "FV", $vForceCaptureOrPtr = True, $bDebugLog = False, $bCheckDuplicatedpoints = False, $iDistance2check = 25, $minLevel = 0, $maxLevel = 1000)
 
 	$g_aImageSearchXML = -1

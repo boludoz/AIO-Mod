@@ -46,7 +46,6 @@ Func CleanBBYard()
 						$iObstacleRemoved += 1
 						SetLog("Going to remove Builder Base Obstacle: " & $iObstacleRemoved, $COLOR_SUCCESS)
 						SetDebugLog($aCleanYardBBNXY[$i][0] & " found at (" & $aCleanYardBBNXY[$i][1] & "," & $aCleanYardBBNXY[$i][2] & ")", $COLOR_SUCCESS)
-						; If SecureClick($aCleanYardBBNXY[$i][1], $aCleanYardBBNXY[$i][2]) = False Then ContinueLoop
 						If _IsPointInPoly($aCleanYardBBNXY[$i][1], $aCleanYardBBNXY[$i][2], $g_aBuilderBaseAttackPolygon) = False Then ContinueLoop ; Check if X,Y is inside Builderbase or outside
 						If IsMainPageBuilderBase() Then Click($aCleanYardBBNXY[$i][1], $aCleanYardBBNXY[$i][2], 1, 0, "#0430")
 						If _Sleep($DELAYCOLLECT3) Then Return
