@@ -281,6 +281,8 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	Local $iAvoidInfLoop = 0
 	
 	Local $aAttackBar = -1
+	Local $aTroopsImg = -1
+	Local $iTroopIndex = -1
 	Local $bDone = False
 	While ($bDone = False And $iAvoidInfLoop < 4)
 		Local $aWrongCamps = GetWrongCamps($aNewAvailableTroops, $aCamps)
@@ -298,6 +300,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 			$bDone = True
 			ExitLoop
 		EndIf
+		
 		Local $sMissingCamp = GetAMissingCamp($aNewAvailableTroopsOneD, $aCamps)
 		If $sMissingCamp = "-" Then
 			; No Camps are missing
@@ -305,6 +308,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 			$bDone = True
 			ExitLoop
 		EndIf
+		
 		; Check if Troop index is Equal or Higher than the Builder Machine, it's not a switchable Slot!
 		If $aNewAvailableTroops[$aWrongCamps[0]][1] >= $eBBTroopMachine Then
 			; Slot is Builder machine or things like that.
@@ -326,8 +330,16 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 		Click($aSwicthBtn[$aWrongCamps[0]] + Random(2, 10, 1), $iDefaultY + Random(2, 10, 1))
 		If Not $g_bRunState Then Return
 		If RandomSleep(500) Then Return
-
-		If Not _WaitForCheckImg($g_sImgDirBBTroops, "0,454,860,556", Default, 1500, 500) Then ; Resolution changed
+		
+		Local $aResult = 0
+		For $i = 1 To 5
+			$aResult = _PixelSearch(0, 524, 859, 529, "F4F5F5", 25)
+			If IsArray($aResult) Then ExitLoop
+			If Not $g_bRunState Then Return
+			If _Sleep(250) Then Return
+		Next
+		
+		If $aResult = 0 Then
 			; _debugfailedimagedetection("Attackbar")
 			SetLog("Unable to find any troop to change from change window", $COLOR_ERROR)
 			Click(8, 720, 1)
@@ -335,18 +347,25 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 			ExitLoop
 		EndIf
 		
-		Local $iTroopIndex = TroopIndexLookupBB($sMissingCamp)
-
-		If UBound($g_aImageSearchXML) > 0 And not @error Then
-			For $iTroops = 0 To UBound($g_aImageSearchXML) - 1
+		$iTroopIndex = TroopIndexLookupBB($sMissingCamp)
+		If IsArray($aTroopsImg) Then
+			For $iSlotsTroops = 0 To UBound($aTroopsImg) - 1
+				$aTroopsImg[$iSlotsTroops][1] += $aResult[0]
+			Next
+		Else
+			$aTroopsImg = QuickMIS("CNX", $g_sImgDirBBTroops, 0, 454, 860, 556, True, False)
+		EndIf
+		
+		If UBound($aTroopsImg) > 0 And not @error Then
+			For $iTroops = 0 To UBound($aTroopsImg) - 1
 				
-				If TroopIndexLookupBB($g_aImageSearchXML[$iTroops][0]) = $iTroopIndex Then
+				If TroopIndexLookupBB($aTroopsImg[$iTroops][0]) = $iTroopIndex Then
 				
 					; Select The New Troop
-					PureClick($g_aImageSearchXML[$iTroops][1] + Random(1, 5, 1), $g_aImageSearchXML[$iTroops][2] + Random(1, 5, 1), 1, 0)
-					If RandomSleep(250) Then Return
+					PureClick($aTroopsImg[$iTroops][1] + Random(1, 5, 1), $aTroopsImg[$iTroops][2] + Random(1, 5, 1), 1, 0)
+					If RandomSleep(1000) Then Return
 					
-					SetDebugLog("Selected " & FullNametroops($sMissingCamp) & " X:| " & $g_aImageSearchXML[$iTroops][1] & " Y:| " & $g_aImageSearchXML[$iTroops][2], $COLOR_SUCCESS)
+					SetDebugLog("Selected " & FullNametroops($sMissingCamp) & " X:| " & $aTroopsImg[$iTroops][1] & " Y:| " & $aTroopsImg[$iTroops][2], $COLOR_SUCCESS)
 					$aNewAvailableTroops[$aWrongCamps[0]][0] = $sMissingCamp
 					
 					; Set the Priority Again
@@ -362,12 +381,17 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 					ExitLoop
 				EndIf
 			Next
+			
+			For $iSlotsTroops = 0 To UBound($aTroopsImg) - 1
+				$aTroopsImg[$iSlotsTroops][1] -= $aResult[0]
+			Next
 		Else
 			Click(8, 720, 1)
 			Return False
 		EndIf
+		
 	WEnd
-	
+
 	If RandomSleep(500) Then Return
 	
 	If $bWaschanged And QuickMIS("N1", $g_sImgCustomArmyBB, 2, 681 + $g_iBottomOffsetYFixed, 860, 728 + $g_iBottomOffsetYFixed) = "ChangeTDis" Then ; Resolution changed
