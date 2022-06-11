@@ -291,7 +291,7 @@ Func DebugDropPoints($sFrom = "")
 		Next
 	
 		_GDIPlus_ImageSaveToFile($hEditedImage, $sSubDir & "\" & $sDebugImageName )
-		_GDIPlus_PenDispose($hPenRED)
+		_GDIPlus_PenDispose($hPenYellow)
 		_GDIPlus_GraphicsDispose($hGraphic)
 		_GDIPlus_BitmapDispose($hEditedImage)
 	EndIf
