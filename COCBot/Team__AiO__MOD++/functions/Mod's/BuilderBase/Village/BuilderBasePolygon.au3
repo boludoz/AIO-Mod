@@ -346,54 +346,34 @@ EndFunc   ;==>atan2
 ; 2 = Current Village Y Offset (after centering village)
 ; 3 = Difference of previous Village X Offset and current (after centering village)
 ; 4 = Difference of previous Village Y Offset and current (after centering village)
-Func SearchZoomOutBB($CenterVillageBoolOrScrollPos = $aCenterEnemyVillageClickDrag, $UpdateMyVillage = True, $sSource = "", $CaptureRegion = True, $DebugLog = $g_bDebugSetlog)
+Func SearchZoomOutBB($bUpdateMyVillage = True, $sSource = "", $bCaptureRegion = True, $bDebugLog = $g_bDebugSetlog)
 	If Not $g_bRunState Then Return
 	If $sSource <> "" Then $sSource = " (" & $sSource & ")"
-	Local $bCenterVillage = $CenterVillageBoolOrScrollPos
-	If $bCenterVillage = Default Or $g_bDebugDisableVillageCentering Then $bCenterVillage = (Not $g_bDebugDisableVillageCentering)
-	Local $aScrollPos[2] = [0, 0]
-	If UBound($CenterVillageBoolOrScrollPos) >= 2 Then
-		$aScrollPos[0] = $CenterVillageBoolOrScrollPos[0]
-		$aScrollPos[1] = $CenterVillageBoolOrScrollPos[1]
-		$bCenterVillage = (Not $g_bDebugDisableVillageCentering)
-	EndIf
 
 	; Setup arrays, including default return values for $return
-	Local $x, $y, $z, $stone[2]
-	Local $villageSize = 0
+	Local $x, $y, $z, $aStone[2]
+	Local $iVillageSize = 0
 
-	If $CaptureRegion Then _CaptureRegion2()
+	If $bCaptureRegion Then _CaptureRegion2()
 
  	Local $aResult = ["", 0, 0, 0, 0] ; expected dummy value
-	Local $bUpdateSharedPrefs = False
+	Local $aVillage = GetVillageSize($bDebugLog, "stone", "tree", Default, True, $bCaptureRegion)
 
-	Static $iCallCount = 0
-
-	Local $village = GetVillageSize($DebugLog, "stone", "tree", Default, True, $CaptureRegion)
-
-	If $g_aiSearchZoomOutCounter[0] > 0 Then
-		If _Sleep(1000) Then
-			$iCallCount = 0
-			Return SetError(1, 0, $aResult)
-		EndIf
-	EndIf
-
-	If IsArray($village) = 1 Then
-		$villageSize = $village[0]
-		If $villageSize < 750 Or $g_bDebugDisableZoomout Then ; xbebenk
-			$z = $village[1]
-			$x = $village[2]
-			$y = $village[3]
-			$stone[0] = $village[4]
-			$stone[1] = $village[5]
-			$aResult[0] = "zoomout:" & $village[6]
+	If IsArray($aVillage) = 1 Then
+		$iVillageSize = $aVillage[0]
+		If $iVillageSize > 400 And $iVillageSize < 750 Or $g_bDebugDisableZoomout Then ; xbebenk
+			$z = $aVillage[1]
+			$x = $aVillage[2]
+			$y = $aVillage[3]
+			$aStone[0] = $aVillage[4]
+			$aStone[1] = $aVillage[5]
+			$aResult[0] = "zoomout:" & $aVillage[6]
 			$aResult[1] = $x
 			$aResult[2] = $y
-			$g_bAndroidZoomoutModeFallback = False
 
-			If $UpdateMyVillage Then
+			If $bUpdateMyVillage Then
 				If $x <> $g_iVILLAGE_OFFSET[0] Or $y <> $g_iVILLAGE_OFFSET[1] Or $z <> $g_iVILLAGE_OFFSET[2] Then
-					If $DebugLog Then SetDebugLog("Village Offset" & $sSource & " updated to " & $x & ", " & $y & ", " & $z)
+					If $bDebugLog Then SetDebugLog("Village Offset" & $sSource & " updated to " & $x & ", " & $y & ", " & $z)
 				EndIf
 				setVillageOffset($x, $y, $z)
 				ConvertInternalExternArea() ; generate correct internal/external diamond measures
