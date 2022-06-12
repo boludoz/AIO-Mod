@@ -618,16 +618,16 @@ Func AddTilesToDeployPoint(ByRef $aSelectedDropSidePoints_XY, $iAddTiles, $sSele
 					$pixel[0] = $x + $l
 					$pixel[1] = $y + $l
 			EndSwitch
-
-			If isInsideDiamondExt($pixel[0], $pixel[1], $iTWithOutFF) Then ; Check if X,Y is inside Builderbase or outside
+			; #CS
+			; If isInsideDiamondExt($pixel[0], $pixel[1], $iTWithOutFF) Then ; Check if X,Y is inside Builderbase or outside
 				If $bDebug Then SetDebugLog("After AddTile: " & $iAddTiles & ", DropSide: " & $sSelectedDropSideName & ", Deploy Point: " & $i + 1 & " - " & $pixel[0] & " x " & $pixel[1])
 				$aSelectedDropSidePoints_XY[$i][0] = $pixel[0]
 				$aSelectedDropSidePoints_XY[$i][1] = $pixel[1]
 				ExitLoop
-			Else
-				If $bDebug Or $g_bDebugAndroid Then SetLog("Outside Polygon DropSide, restored secure: " & $sSelectedDropSideName & ", Deploy Point: " & $i + 1 & " - " & $pixel[0] & " x " & $pixel[1], $COLOR_DEBUG)
-			EndIf
-
+			; Else
+				; If $bDebug Or $g_bDebugAndroid Then SetLog("Outside Polygon DropSide, restored secure: " & $sSelectedDropSideName & ", Deploy Point: " & $i + 1 & " - " & $pixel[0] & " x " & $pixel[1], $COLOR_DEBUG)
+			; EndIf
+			; #CE
 		Next
 	Next
 

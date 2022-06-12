@@ -430,6 +430,11 @@ EndFunc
 
 Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag, $UpdateMyVillage = True, $sSource = "", $CaptureRegion = True, $DebugLog = $g_bDebugSetlog)
 	If Not $g_bRunState Then Return
+	If $CaptureRegion Then _CaptureRegion2()
+	
+	Local $bOnBuilderBase = isOnBuilderBase($CaptureRegion)
+	If $bOnBuilderBase Then Return SearchZoomOutBB($UpdateMyVillage, $sSource, $CaptureRegion, $DebugLog)
+	
 	If $sSource <> "" Then $sSource = " (" & $sSource & ")"
 	Local $bCenterVillage = $CenterVillageBoolOrScrollPos
 	If $bCenterVillage = Default Or $g_bDebugDisableVillageCentering Then $bCenterVillage = (Not $g_bDebugDisableVillageCentering)
@@ -444,31 +449,24 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 	Local $x, $y, $z, $stone[2]
 	Local $villageSize = 0
 
-	If $CaptureRegion Then _CaptureRegion2()
-	
-	Local $bOnBuilderBase = isOnBuilderBase($CaptureRegion)
-
 	Local $aResult = ["", 0, 0, 0, 0] ; expected dummy value
 	Local $bUpdateSharedPrefs = $g_bUpdateSharedPrefs And $g_iAndroidZoomoutMode = 4	
 	Local $iMultipler = ($g_aisearchzoomoutcounter[0] > 5) ? (2) : (1)
 	
 	Static $iCallCount = 0
 	Local $bDisableCenter = False
-	If $CenterVillageBoolOrScrollPos == False Then
+
+	If $g_aisearchzoomoutcounter[0] > 1 And Mod($g_aisearchzoomoutcounter[0], 5 * $iMultipler) = 0 Then
 		$bDisableCenter = True
-	Else
-		If $g_aisearchzoomoutcounter[0] > 1 And Mod($g_aisearchzoomoutcounter[0], 5 * $iMultipler) = 0 Then
-			$bDisableCenter = True
-			ClickDrag($aCenterHomeVillageClickDrag[0], $aCenterHomeVillageClickDrag[1], $aCenterHomeVillageClickDrag[0] - 300, $aCenterHomeVillageClickDrag[1], 1000)
-			If _Sleep(1000) Then
-				$iCallCount = 0
-				Return FuncReturn($aResult)
-			EndIf
-			ClickDrag($aCenterHomeVillageClickDrag[0], $aCenterHomeVillageClickDrag[1], $aCenterHomeVillageClickDrag[0] + 113, $aCenterHomeVillageClickDrag[1] + 160, 1000, True)
-			If _Sleep(1000) Then
-				$iCallCount = 0
-				Return FuncReturn($aResult)
-			EndIf
+		ClickDrag($aCenterHomeVillageClickDrag[0], $aCenterHomeVillageClickDrag[1], $aCenterHomeVillageClickDrag[0] - 300, $aCenterHomeVillageClickDrag[1], 1000)
+		If _Sleep(1000) Then
+			$iCallCount = 0
+			Return FuncReturn($aResult)
+		EndIf
+		ClickDrag($aCenterHomeVillageClickDrag[0], $aCenterHomeVillageClickDrag[1], $aCenterHomeVillageClickDrag[0] + 113, $aCenterHomeVillageClickDrag[1] + 160, 1000, True)
+		If _Sleep(1000) Then
+			$iCallCount = 0
+			Return FuncReturn($aResult)
 		EndIf
 	EndIf
 	

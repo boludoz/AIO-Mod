@@ -61,7 +61,7 @@ Func SwitchBetweenBases($bCheckMainScreen = True)
 		EndIf
 		
 		 ; Stop hitting the stone like a monkey in search of money and force the zoomout!
-		$g_bSkipFirstZoomout = False
+		$g_bSkipFirstZoomout = True
 		ZoomOut()
 
 		If _Sleep(1000) Then Return

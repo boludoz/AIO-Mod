@@ -98,11 +98,6 @@ Func BuilderBaseAttack($bTestRun = False)
 		If Not WaitForVersusBattle() Then Return
 		If Not $g_bRunState Then Return
 
-		; Zoomout the Opponent Village
-		BuilderBaseZoomOut(False, True)
-		If $g_bRestart = True Then Return
-		If Not $g_bRunState Then Return
-
 		; Attack Bar | [0] = Troops Name , [1] = X-axis , [2] - Y-axis, [3] - Slot starting at 0, [4] - Amount
 		; Local $aAvailableTroops = BuilderBaseAttackBar()
 		Local $aAvailableTroops = GetAttackBarBB()
@@ -113,6 +108,11 @@ Func BuilderBaseAttack($bTestRun = False)
 			CheckMainScreen()
 			Return -1
 		EndIf
+
+		; Zoomout the Opponent Village
+		BuilderBaseZoomOut(False, True)
+		If $g_bRestart = True Then Return
+		If Not $g_bRunState Then Return
 
 		; Verify the scripts and attack bar
 		If Not $bIsToDropTrophies Then BuilderBaseSelectCorrectScript($aAvailableTroops)
