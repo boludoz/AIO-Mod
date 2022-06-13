@@ -340,7 +340,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 		Next
 		
 		If $aResult = 0 Then
-			; _debugfailedimagedetection("Attackbar")
+			If $g_bDebugImageSave Then SaveDebugImage("Attackbar")
 			SetLog("Unable to find any troop to change from change window", $COLOR_ERROR)
 			Click(8, 720, 1)
 			If Not $g_bRunState Then Return
@@ -348,13 +348,13 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 		EndIf
 		
 		$iTroopIndex = TroopIndexLookupBB($sMissingCamp)
-		If IsArray($aTroopsImg) Then
-			For $iSlotsTroops = 0 To UBound($aTroopsImg) - 1
-				$aTroopsImg[$iSlotsTroops][1] += $aResult[0]
-			Next
-		Else
+		; If IsArray($aTroopsImg) Then
+			; For $iSlotsTroops = 0 To UBound($aTroopsImg) - 1
+				; $aTroopsImg[$iSlotsTroops][1] += $aResult[0]
+			; Next
+		; Else
 			$aTroopsImg = QuickMIS("CNX", $g_sImgDirBBTroops, 0, 454, 860, 556, True, False)
-		EndIf
+		; EndIf
 		
 		If UBound($aTroopsImg) > 0 And not @error Then
 			For $iTroops = 0 To UBound($aTroopsImg) - 1
@@ -382,9 +382,9 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 				EndIf
 			Next
 			
-			For $iSlotsTroops = 0 To UBound($aTroopsImg) - 1
-				$aTroopsImg[$iSlotsTroops][1] -= $aResult[0]
-			Next
+			; For $iSlotsTroops = 0 To UBound($aTroopsImg) - 1
+				; $aTroopsImg[$iSlotsTroops][1] -= $aResult[0]
+			; Next
 		Else
 			Click(8, 720, 1)
 			Return False

@@ -546,7 +546,7 @@ Func BuilderBaseCSVAttack($aAvailableTroops, $bDebug = False)
 	BuilderBaseGetDeployPoints($FurtherFrom, $bDebug)
 	If Not $g_bRunState Then Return
 	; Parse CSV , Deploy Troops and Get Machine Status [attack algorithm] , waiting for Battle ends window
-	BuilderBaseParseAttackCSV($aAvailableTroops, $g_aDeployPoints, $g_aDeployBestPoints, $bDebug)
+	BuilderBaseParseAttackCSV($aAvailableTroops, $g_aDeployPoints, $g_aBestDeployPoints, $g_aOuterDeployPoints, $bDebug)
 
 EndFunc   ;==>BuilderBaseCSVAttack
 

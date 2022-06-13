@@ -49,7 +49,7 @@ Global $DiamondMiddleY = ($InnerDiamondTop + $InnerDiamondBottom) / 2
 
 convertinternalexternarea("Start")
 
-Func ConvertInternalExternArea($FunctionName = "")
+Func ConvertInternalExternArea($FunctionName = "", $bDebugImage = Default)
 	$DiamondMiddleX = ($InnerDiamondLeft + $InnerDiamondRight) / 2
 	$DiamondMiddleY = ($InnerDiamondTop + $InnerDiamondBottom) / 2
 
@@ -131,7 +131,41 @@ Func ConvertInternalExternArea($FunctionName = "")
 	; Custom fix - Team AIO Mod++
 	$DiamondMiddleX = $InternalArea[0][1]
 	$DiamondMiddleY = $InternalArea[2][0]
+	
+	If $bDebugImage = Default Then $bDebugImage = $g_bDebugAttackCSV Or $g_bDebugImageSave
+	If $FunctionName <> "Start" And $bDebugImage = True Then
+		DebugInternalExternArea()
+	EndIf
 EndFunc   ;==>ConvertInternalExternArea
+
+Func DebugInternalExternArea()
+	Local $subdirectory = $g_sprofiletempdebugpath & "ConvertInternalExternArea"
+	DirCreate($subdirectory)
+	Local $date = @YEAR & "-" & @MON & "-" & @MDAY, $time = @HOUR & "." & @MIN & "." & @SEC
+	Local $editedimage = _gdiplus_bitmapcreatefromhbitmap($g_hhbitmap2)
+	Local $hgraphic = _gdiplus_imagegetgraphicscontext($editedimage)
+	Local $hpenwhite = _gdiplus_pencreate(0xc0ffffff, 3)
+	Local $hpenblue = _gdiplus_pencreate(0xc00fbae9, 3)
+	Local $filename = String($date & "_" & $time & "_ConvertInternalExternArea_.png")
+	
+	;-- DRAW EXTERNAL PERIMETER LINES
+	_GDIPlus_GraphicsDrawLine($hGraphic, $ExternalArea[0][0], $ExternalArea[0][1], $ExternalArea[2][0], $ExternalArea[2][1], $hpenblue)
+	_GDIPlus_GraphicsDrawLine($hGraphic, $ExternalArea[0][0], $ExternalArea[0][1], $ExternalArea[3][0], $ExternalArea[3][1], $hpenblue)
+	_GDIPlus_GraphicsDrawLine($hGraphic, $ExternalArea[1][0], $ExternalArea[1][1], $ExternalArea[2][0], $ExternalArea[2][1], $hpenblue)
+	_GDIPlus_GraphicsDrawLine($hGraphic, $ExternalArea[1][0], $ExternalArea[1][1], $ExternalArea[3][0], $ExternalArea[3][1], $hpenblue)
+
+	;-- DRAW INTERNAL PERIMETER LINES
+	_GDIPlus_GraphicsDrawLine($hGraphic, $InternalArea[0][0], $InternalArea[0][1], $InternalArea[2][0], $InternalArea[2][1], $hpenwhite)
+	_GDIPlus_GraphicsDrawLine($hGraphic, $InternalArea[0][0], $InternalArea[0][1], $InternalArea[3][0], $InternalArea[3][1], $hpenwhite)
+	_GDIPlus_GraphicsDrawLine($hGraphic, $InternalArea[1][0], $InternalArea[1][1], $InternalArea[2][0], $InternalArea[2][1], $hpenwhite)
+	_GDIPlus_GraphicsDrawLine($hGraphic, $InternalArea[1][0], $InternalArea[1][1], $InternalArea[3][0], $InternalArea[3][1], $hpenwhite)
+	_gdiplus_imagesavetofile($editedimage, $subdirectory & "\" & $filename)
+	
+	_gdiplus_pendispose($hpenwhite)
+	_gdiplus_pendispose($hpenblue)
+	_gdiplus_graphicsdispose($hgraphic)
+	_gdiplus_bitmapdispose($editedimage)
+EndFunc   ;==>DebugInternalExternArea
 
 Func CheckAttackLocation(ByRef $iX, ByRef $iY)
 	If $iY > $g_aiDeployableLRTB[3] Then

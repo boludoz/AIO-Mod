@@ -45,47 +45,20 @@ Global $g_aVillageRefSize[15][7] = [["DS", "Default", 612.8, 45, 815, 60, 636], 
 									["PR", "Primal", 580.41, 74, 803, 64, 613], _ ;ok
 									["SH", "Shadow", 598.40, 81, 790, 61, 592], _ ;ok
 									["RY", "Royal", 610.20, 57, 799, 48, 603]] ;ok
-Global $g_sCurrentScenery = "", $g_sSceneryCode = ""
-
-Global $g_aDebugVillage[4]
+Global $g_sCurrentScenery = "", $g_sSceneryCode = "DS"
 
 Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix = Default, $sFixedPrefix = Default, $bOnBuilderBase = Default, $bCaptureRegion = Default, $bDebugWithImage = False) ; Capture region spam disabled - Team AIO Mod++
 	FuncEnter(GetVillageSize)
-
-	; Capture region spam disabled - Team AIO Mod++
-	Local Static $aLast[$g_eTotalAcc]
-	If $aLast[0] = "" Then
-		For $i = 0 To $g_eTotalAcc - 1
-			$aLast[$i] = "DS-"
-		Next
-	EndIf
-	
-	; Capture region spam disabled - Team AIO Mod++	
-	If $bCaptureRegion = Default Then $bCaptureRegion = True
-	If $bCaptureRegion = True Then _CaptureRegion2()
-	
-	If $bDebugWithImage Then
-		Local $subdirectory = $g_sprofiletempdebugpath & "ZoomOut"
-		DirCreate($subdirectory)
-		Local $date = @YEAR & "-" & @MON & "-" & @MDAY
-		Local $time = @HOUR & "." & @MIN & "." & @SEC
-		Local $editedimage = _gdiplus_bitmapcreatefromhbitmap($g_hhbitmap2)
-		Local $hgraphic = _gdiplus_imagegetgraphicscontext($editedimage)
-		Local $hpenred = _gdiplus_pencreate(0xc0e90f0f, 3)
-		Local $hpenwhite = _gdiplus_pencreate(0xc0ffffff, 3)
-		Local $hpenyellow = _gdiplus_pencreate(0xc0e2e90f, 1)
-		Local $hpenblue = _gdiplus_pencreate(0xc00fbae9, 3)
-		Local $hbrush = _gdiplus_brushcreatesolid(-1)
-		Local $hformat = _gdiplus_stringformatcreate()
-		Local $hfamily = _gdiplus_fontfamilycreate("Arial")
-		Local $hfont = _gdiplus_fontcreate($hfamily, 8)
-		Local $filename = String($date & "_" & $time & "_ZoomOut_.png")
-	EndIf
-
 	Local $stone = [0, 0, 0, 0, 0, ""], $tree = [0, 0, 0, 0, 0, ""]
 	If $DebugLog = Default Then $DebugLog = False
 	If $sStonePrefix = Default Then $sStonePrefix = "stone"
 	If $sTreePrefix = Default Then $sTreePrefix = "tree"
+	If $bCaptureRegion = Default Then $bCaptureRegion = True
+	
+	If $bCaptureRegion = True Then
+		_CaptureRegion2()
+	EndIf
+	
 	If $bOnBuilderBase = Default Then
 		$bOnBuilderBase = isOnBuilderBase(False)
 	EndIf
@@ -97,249 +70,154 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		$sDirectory = $g_sImgZoomOutDir
 	EndIf
 	
-	Local $iAdditionalX = 100
-	Local $iAdditionalY = 100
-	Local $aResult = 0, $stone, $tree, $x, $y
-	Local $bStoneSameScenery = False
+	Local $iAdditionalX = 150
+	Local $iAdditionalY = 150
+	Local $aResult = 0, $x, $y
 		
-	If Not $bOnBuilderBase Then
-		$stone = FindStone($sDirectory, "stone" & $g_sSceneryCode, $iAdditionalX, $iAdditionalY, "")
-		If IsArray($stone) And String($stone[4]) = $g_sSceneryCode Then 
-			$bStoneSameScenery = True
-			SetDebugLog(String($bStoneSameScenery) & "," & String($stone[4]) & "," & $g_sSceneryCode)
-		EndIf
+	$stone = FindStone($sDirectory, $sStonePrefix, $iAdditionalX, $iAdditionalY, $bCaptureRegion)
+	
+	If UBound($stone) > 3 And not @error And $stone[0] = 0 Then	
+		$tree = FindTree($sDirectory, $sTreePrefix, $iAdditionalX, $iAdditionalY, "", $bCaptureRegion)
+	Else
+		$tree = FindTree($sDirectory, $sTreePrefix, $iAdditionalX, $iAdditionalY, $stone[4], $bCaptureRegion)
 	EndIf
 	
-	If Not $bStoneSameScenery Then $stone = FindStone($sDirectory, $sStonePrefix, $iAdditionalX, $iAdditionalY, $aLast[Int($g_iCurAccount)])
-	If IsArray($stone) And $stone[0] = 0 Or not IsArray($stone) Then
+	If (UBound($stone) > 3 And Not @error And $stone[0] = 0) Or @error Then
 		SetDebugLog("GetVillageSize cannot find stone", $COLOR_WARNING)
-		If $bDebugWithImage Then
-			_gdiplus_imagesavetofile($editedimage, $subdirectory & "\" & $filename)
-			_gdiplus_fontdispose($hfont)
-			_gdiplus_fontfamilydispose($hfamily)
-			_gdiplus_stringformatdispose($hformat)
-			_gdiplus_brushdispose($hbrush)
-			_gdiplus_pendispose($hpenred)
-			_gdiplus_pendispose($hpenwhite)
-			_gdiplus_pendispose($hpenyellow)
-			_gdiplus_pendispose($hpenblue)
-			_gdiplus_graphicsdispose($hgraphic)
-			_gdiplus_bitmapdispose($editedimage)
+		If UBound($tree) > 3 And not @error And $tree[0] > 0 Then
+			ClickDrag($tree[0], $tree[1], $tree[2], $tree[3], 1000)
 		EndIf
 		Return FuncReturn($aResult)
 	Else
-		If $bDebugWithImage Then
-			_gdiplus_graphicsdrawrect($hgraphic, $g_aDebugVillage[0], $g_aDebugVillage[1], $g_aDebugVillage[2] - $g_aDebugVillage[0], $g_aDebugVillage[3] - $g_aDebugVillage[1], $hpenyellow)
-			_gdiplus_graphicsdrawrect($hgraphic, $stone[0] - 5, $stone[1] - 5, 10, 10, $hpenblue)
-			_gdiplus_graphicsdrawrect($hgraphic, $stone[2] - 5, $stone[3] - 5, 10, 10, $hpenwhite)
-			Local $tlayout = _gdiplus_rectfcreate(Abs($stone[0] - $stone[2]) + $stone[0], Abs($stone[1] - $stone[3]) + $stone[1], 0, 0)
-			Local $ainfo = _gdiplus_graphicsmeasurestring($hgraphic, $stone[5] & "_" & $stone[4], $hfont, $tlayout, $hformat)
-			_gdiplus_graphicsdrawstringex($hgraphic, $stone[5] & "_" & $stone[4], $hfont, $ainfo[0], $hformat, $hbrush)
-		EndIf
-		
-		If $stone[0] Then
-			$tree = FindTree($sDirectory, $sTreePrefix, $iAdditionalX, $iAdditionalY, $stone[4])
-			
-			If IsArray($tree) And $tree[0] = 0 Or not IsArray($stone) Then
-				SetDebugLog("GetVillageSize cannot find tree", $COLOR_ACTION)
-				If $bDebugWithImage Then
-					_gdiplus_imagesavetofile($editedimage, $subdirectory & "\" & $filename)
-					_gdiplus_fontdispose($hfont)
-					_gdiplus_fontfamilydispose($hfamily)
-					_gdiplus_stringformatdispose($hformat)
-					_gdiplus_brushdispose($hbrush)
-					_gdiplus_pendispose($hpenred)
-					_gdiplus_pendispose($hpenwhite)
-					_gdiplus_pendispose($hpenyellow)
-					_gdiplus_pendispose($hpenblue)
-					_gdiplus_graphicsdispose($hgraphic)
-					_gdiplus_bitmapdispose($editedimage)
-				EndIf
-				Return FuncReturn($aResult)
-			Else
-				Local $sStones = StringBetween($stone[4], "stone", "-")
-				If Not @error Then $aLast[Int($g_iCurAccount)] = $sStones & "-"
-			EndIf
-		EndIf
-			
-		If $bDebugWithImage Then
-			;-- DRAW EXTERNAL PERIMETER LINES
-			_GDIPlus_GraphicsDrawLine($hGraphic, $ExternalArea[0][0], $ExternalArea[0][1], $ExternalArea[2][0], $ExternalArea[2][1], $hpenblue)
-			_GDIPlus_GraphicsDrawLine($hGraphic, $ExternalArea[0][0], $ExternalArea[0][1], $ExternalArea[3][0], $ExternalArea[3][1], $hpenblue)
-			_GDIPlus_GraphicsDrawLine($hGraphic, $ExternalArea[1][0], $ExternalArea[1][1], $ExternalArea[2][0], $ExternalArea[2][1], $hpenblue)
-			_GDIPlus_GraphicsDrawLine($hGraphic, $ExternalArea[1][0], $ExternalArea[1][1], $ExternalArea[3][0], $ExternalArea[3][1], $hpenblue)
-
-			;-- DRAW INTERNAL PERIMETER LINES
-			_GDIPlus_GraphicsDrawLine($hGraphic, $InternalArea[0][0], $InternalArea[0][1], $InternalArea[2][0], $InternalArea[2][1], $hpenwhite)
-			_GDIPlus_GraphicsDrawLine($hGraphic, $InternalArea[0][0], $InternalArea[0][1], $InternalArea[3][0], $InternalArea[3][1], $hpenwhite)
-			_GDIPlus_GraphicsDrawLine($hGraphic, $InternalArea[1][0], $InternalArea[1][1], $InternalArea[2][0], $InternalArea[2][1], $hpenwhite)
-			_GDIPlus_GraphicsDrawLine($hGraphic, $InternalArea[1][0], $InternalArea[1][1], $InternalArea[3][0], $InternalArea[3][1], $hpenwhite)
-			
-			_gdiplus_graphicsdrawrect($hgraphic, $g_aDebugVillage[0], $g_aDebugVillage[1], $g_aDebugVillage[2] - $g_aDebugVillage[0], $g_aDebugVillage[3] - $g_aDebugVillage[1], $hpenyellow)
-			_gdiplus_graphicsdrawrect($hgraphic, $tree[0] - 5, $tree[1] - 5, 10, 10, $hpenblue)
-			_gdiplus_graphicsdrawrect($hgraphic, $tree[2] - 5, $tree[3] - 5, 10, 10, $hpenwhite)
-			Local $tlayout = _gdiplus_rectfcreate(Abs($tree[0] - $tree[2]) + $tree[0] - 150, Abs($tree[1] - $tree[3]) + $tree[1] + 10, 0, 0)
-			Local $ainfo = _gdiplus_graphicsmeasurestring($hgraphic, $tree[5] & "_" & $tree[4], $hfont, $tlayout, $hformat)
-			_gdiplus_graphicsdrawstringex($hgraphic, $tree[5] & "_" & $tree[4], $hfont, $ainfo[0], $hformat, $hbrush)
-		EndIf
+		SetDebugLog("stone: " & _ArrayToString($stone))
 	EndIf
 	
-	; calculate village size, see https://en.wikipedia.org/wiki/Pythagorean_theorem
-	Local $a = $tree[0] - $stone[0]
-	Local $b = $stone[1] - $tree[1]
-	Local $c = Sqrt($a * $a + $b * $b) ;measure distance from stone to tree
+	
+	If (UBound($tree) > 3 And Not @error And $tree[0] = 0) Or @error Then
+		SetDebugLog("GetVillageSize cannot find tree", $COLOR_ACTION)
+		If UBound($stone) > 3 And not @error And $stone[0] > 0 Then
+			ClickDrag($stone[0], $stone[1], $stone[2], $stone[3], 1000)
+		EndIf
+		Return FuncReturn($aResult)
+	Else
+		SetDebugLog("tree: " & _ArrayToString($tree))
 		
-	Local $iRefSize = 600
-	Local $iIndex = _ArraySearch($g_aVillageRefSize, $stone[4])
-	If $iIndex <> -1 Then 
-		$iRefSize = $g_aVillageRefSize[$iIndex][2]
-		If Not $bOnBuilderBase Then 
+		; calculate village size, see https://en.wikipedia.org/wiki/Pythagorean_theorem
+		Local $a = $tree[0] - $stone[0]
+		Local $b = $stone[1] - $tree[1]
+		Local $c = Sqrt($a * $a + $b * $b) ;measure distance from stone to tree
+			
+		Local $iRefSize = 600
+		Local $iIndex = _ArraySearch($g_aVillageRefSize, $stone[4])
+		If $iIndex <> -1 Then 
+			$iRefSize = $g_aVillageRefSize[$iIndex][2]
 			$g_sSceneryCode = $g_aVillageRefSize[$iIndex][0]
 			$g_sCurrentScenery = $g_aVillageRefSize[$iIndex][1]
+			$InnerDiamondLeft = $g_aVillageRefSize[$iIndex][3]
+			$InnerDiamondRight = $g_aVillageRefSize[$iIndex][4]
+			$InnerDiamondTop = $g_aVillageRefSize[$iIndex][5]
+			$InnerDiamondBottom = $g_aVillageRefSize[$iIndex][6]
+			SetDebugLog("LRTB: " & $InnerDiamondLeft & "," & $InnerDiamondRight & "," & $InnerDiamondTop & "," & $InnerDiamondBottom)
+		Else
+			SetLog("Reference Size no match", $COLOR_ERROR)
+			Return FuncReturn($aResult)
 		EndIf
-		$InnerDiamondLeft = $g_aVillageRefSize[$iIndex][3]
-		$InnerDiamondRight = $g_aVillageRefSize[$iIndex][4]
-		$InnerDiamondTop = $g_aVillageRefSize[$iIndex][5]
-		$InnerDiamondBottom = $g_aVillageRefSize[$iIndex][6]
-		SetDebugLog("LRTB: " & $InnerDiamondLeft & "," & $InnerDiamondRight & "," & $InnerDiamondTop & "," & $InnerDiamondBottom)
-	Else
-		SetLog("Reference Size no match", $COLOR_ACTION)
+		
+		Local $z = $c / $iRefSize
+		SetDebugLog("Scenery = " & $g_sCurrentScenery, $COLOR_INFO)
+		SetDebugLog("Stone2tree = " & $c)
+		SetDebugLog("Reference = " & $iRefSize)
+		SetDebugLog("ZoomLevel = " & $z)
+
+		Local $stone_x_exp = $stone[2]
+		Local $stone_y_exp = $stone[3]
+		ConvertVillagePos($stone_x_exp, $stone_y_exp, $z) ; expected x, y position of stone
+		$x = $stone[0] - $stone_x_exp
+		$y = $stone[1] - $stone_y_exp
+		
+		If $DebugLog Then SetDebugLog("GetVillageSize measured: " & $c & ", Zoom factor: " & $z & ", Offset: " & $x & ", " & $y, $COLOR_INFO)
+
+		Dim $aResult[10]
+		$aResult[0] = $c
+		$aResult[1] = $z
+		$aResult[2] = $x
+		$aResult[3] = $y
+		$aResult[4] = $stone[0]
+		$aResult[5] = $stone[1]
+		$aResult[6] = $stone[5]
+		$aResult[7] = $tree[0]
+		$aResult[8] = $tree[1]
+		$aResult[9] = $tree[5]
+
+		$g_aVillageSize = $aResult
+		
+		Return FuncReturn($aResult)
 	EndIf
-	;Local $iRefSize = Int($stone[4]) ;reference size based on village manual measure
-	Local $z = $c / $iRefSize
-
-	Local $txtdebug = "White square : Expected position" & @CRLF & _
-					  "Blue square : Detected position" & @CRLF & _
-					  "$tree[0]: " & $tree[0] & " - $stone[0]: " & $stone[0] & " = " & $a & @CRLF & _
-					  "$stone[1]: " & $stone[1] & " - $tree[1]: " & $tree[1] & " = " & _
-					  $b & @CRLF & "Distance is : " & Sqrt($a * $a + $b * $b) & @CRLF & _
-					  "Dist Stone to village map: " & $stone[4] & @CRLF & _
-					  "Dist Tree to village map: " & $tree[4] & @CRLF &  _
-					  "Final: " & $c
-
-	If $bDebugWithImage Then
-		SetLog("Village scenery :" & $g_sCurrentScenery)
-		SetLog("Reference size :" & $iRefSize)
-		SetLog("Distance from tree to stone is : " & Sqrt($a * $a + $b * $b) - $stone[4] - $tree[4])
-		SetLog("Village distance is: " & $c)
-		SetLog("Dist tree to village map: " & $tree[4])
-		SetLog("Dist stone to village map: " & $stone[4])
-		SetLog("Village factor is: " & $z)
-		Local $tlayout = _gdiplus_rectfcreate(430, 630 + $g_ibottomoffsetyfixed, 0, 0)
-		Local $ainfo = _gdiplus_graphicsmeasurestring($hgraphic, $txtdebug, $hfont, $tlayout, $hformat)
-		_gdiplus_graphicsdrawstringex($hgraphic, $txtdebug, $hfont, $ainfo[0], $hformat, $hbrush)
-		_gdiplus_imagesavetofile($editedimage, $subdirectory & "\" & $filename)
-		_gdiplus_fontdispose($hfont)
-		_gdiplus_fontfamilydispose($hfamily)
-		_gdiplus_stringformatdispose($hformat)
-		_gdiplus_brushdispose($hbrush)
-		_gdiplus_pendispose($hpenred)
-		_gdiplus_pendispose($hpenwhite)
-		_gdiplus_pendispose($hpenyellow)
-		_gdiplus_pendispose($hpenblue)
-		_gdiplus_graphicsdispose($hgraphic)
-		_gdiplus_bitmapdispose($editedimage)
-	EndIf
-
-	Local $stone_x_exp = $stone[2]
-	Local $stone_y_exp = $stone[3]
-	ConvertVillagePos($stone_x_exp, $stone_y_exp, $z) ; expected x, y position of stone
-	$x = $stone[0] - $stone_x_exp
-	$y = $stone[1] - $stone_y_exp
-	
-	If $DebugLog Then SetDebugLog("GetVillageSize measured: " & $c & ", Zoom factor: " & $z & ", Offset: " & $x & ", " & $y, $COLOR_INFO)
-
-	Dim $aResult[10]
-	$aResult[0] = $c
-	$aResult[1] = $z
-	$aResult[2] = $x
-	$aResult[3] = $y
-	$aResult[4] = $stone[0]
-	$aResult[5] = $stone[1]
-	$aResult[6] = $stone[5]
-	$aResult[7] = $tree[0]
-	$aResult[8] = $tree[1]
-	$aResult[9] = $tree[5]
-
-	$g_aVillageSize = $aResult
-	
-	Return FuncReturn($aResult)
 	FuncReturn()
-
 EndFunc   ;==>GetVillageSize
 
-Func FindStone($sDirectory = $g_sImgZoomOutDir, $sStonePrefix = "stone", $iAdditionalX = 100, $iAdditionalY = 100, $sLast = "")
-	Local $aTmpDebugVillage[4]
-	$g_aDebugVillage = $aTmpDebugVillage
-
+Func FindStone($sDirectory = $g_sImgZoomOutDir, $sStonePrefix = "stone", $iAdditionalX = 100, $iAdditionalY = 100, $bCaptureRegion = True)
 	Local $stone = [0, 0, 0, 0, 0, ""]
 	Local $x0, $y0, $d0, $x, $y, $x1, $y1, $right, $bottom, $a, $b
-	Local $aStoneFiles = _FileListToArray($sDirectory & "stone\", $sStonePrefix & "*.*", $FLTA_FILES)
-	If @error Then
-		SetLog("Error: Missing stone files (" & @error & ")", $COLOR_ERROR)
-		Return
-	EndIf
+	Local $aStoneFiles
 	
-	; Custom - Team AIO Mod++
-	; use prev stones first
-	If $sLast <> "" Then
-		Local $iNewIdx = 1, $s
+	For $check = 1 To 2
+		If $check = 1 Then 
+			SetDebugLog("Checking for same scenery: " & $g_sSceneryCode)
+			$aStoneFiles = _FileListToArray($sDirectory & "stone\", $sStonePrefix & "*" & $g_sSceneryCode & "*.*", $FLTA_FILES)
+		Else
+			$aStoneFiles = _FileListToArray($sDirectory & "stone\", $sStonePrefix & "*.*", $FLTA_FILES)
+		EndIf
+		
+		If @error Then
+			SetDebugLog("Error: Missing stone files (" & @error & ")", $COLOR_ERROR)
+			ContinueLoop
+		EndIf
+		
+		Local $i, $findImage, $sArea, $StoneName, $aiCorrection[4]
 		For $i = 1 To $aStoneFiles[0]
-			If StringInStr($aStoneFiles[$i], $sLast) > 0 Then
-				$s = $aStoneFiles[$iNewIdx]
-				$aStoneFiles[$iNewIdx] = $aStoneFiles[$i]
-				$aStoneFiles[$i] = $s
-				$iNewIdx += 1
+			$findImage = $aStoneFiles[$i]
+			$a = StringRegExp($findImage, "stone([0-9A-Z]+)-(\d+)-(\d+)_.*[.](xml|png|bmp)$", $STR_REGEXPARRAYMATCH)
+			If UBound($a) = 4 Then
+				$StoneName = $a[0]
+				$d0 = $StoneName
+				$x0 = $a[1]
+				$y0 = $a[2]
+
+				$aiCorrection[0] = _Max($x0 - $iAdditionalX, 0)
+				$aiCorrection[1] = _Max($y0 - $iAdditionalY, 45)
+				$aiCorrection[2] = _Min($x0 + Abs($aiCorrection[0] - Abs($x0 - $iAdditionalX)) + $iAdditionalX, $g_iGAME_WIDTH)
+				$aiCorrection[3] = _Min($y0 + Abs($aiCorrection[1] - Abs($y0 - $iAdditionalX)) + $iAdditionalY, $g_iGAME_HEIGHT)
+				
+				$x1 = $aiCorrection[0]
+				$y1 = $aiCorrection[1]
+				$right = $aiCorrection[2]
+                $bottom = $aiCorrection[3]
+				
+				$sArea = Int($x1) & "," & Int($y1) & "|" & Int($right) & "," & Int($y1) & "|" & Int($right) & "," & Int($bottom) & "|" & Int($x1) & "," & Int($bottom)
+				SetDebugLog("GetVillageSize check for image " & $findImage)
+				$b = decodeSingleCoord(findImage("stone" & $StoneName, $sDirectory & "stone\" & $findImage, $sArea, 1, $bCaptureRegion))
+				If UBound($b) = 2 Then
+					$x = Int($b[0])
+					$y = Int($b[1])
+					SetDebugLog("Found stone image at " & $x & ", " & $y & ": " & $findImage, $COLOR_INFO)
+					$stone[0] = $x ; x center of stone found
+					$stone[1] = $y ; y center of stone found
+					$stone[2] = $x0 ; x center of reference stone
+					$stone[3] = $y0 ; y center of reference stone
+					$stone[4] = $d0 ; distance from stone to tree in pixel
+					$stone[5] = $findImage
+					ExitLoop 2
+				EndIf
+			Else
+				SetDebugLog("GetVillageSize ignore image " & $findImage & ", reason: " & UBound($a), $COLOR_WARNING)
 			EndIf
 		Next
-	EndIf
-	
-	Local $i, $findImage, $sArea, $StoneName
-	For $i = 1 To $aStoneFiles[0]
-		$findImage = $aStoneFiles[$i]
-		$a = StringRegExp($findImage, "stone([0-9A-Z]+)-(\d+)-(\d+)_.*[.](xml|png|bmp)$", $STR_REGEXPARRAYMATCH)
-		If UBound($a) = 4 Then
-			$StoneName = $a[0]
-			$d0 = $StoneName
-			$x0 = $a[1]
-			$y0 = $a[2]
-			$x1 = $x0 - $iAdditionalX
-			$y1 = $y0 - $iAdditionalY
-			$right = $x0 + $iAdditionalX
-			$bottom = $y0 + $iAdditionalY
-			$sArea = Int($x1) & "," & Int($y1) & "|" & Int($right) & "," & Int($y1) & "|" & Int($right) & "," & Int($bottom) & "|" & Int($x1) & "," & Int($bottom)
-			
-			$g_aDebugVillage[0] = $x1
-			$g_aDebugVillage[1] = $y1
-			$g_aDebugVillage[2] = $right
-			$g_aDebugVillage[3] = $bottom
-			
-			SetDebugLog("GetVillageSize check for image " & $findImage)
-			$b = decodeSingleCoord(findImage("stone" & $StoneName, $sDirectory & "stone\" & $findImage, $sArea, 1, False))
-			If UBound($b) = 2 Then
-				$x = Int($b[0])
-				$y = Int($b[1])
-				SetDebugLog("Found stone image at " & $x & ", " & $y & ": " & $findImage, $COLOR_INFO)
-				$stone[0] = $x ; x center of stone found
-				$stone[1] = $y ; y center of stone found
-				$stone[2] = $x0 ; x center of reference stone
-				$stone[3] = $y0 ; y center of reference stone
-				$stone[4] = $d0 ; distance from stone to tree in pixel
-				$stone[5] = $findImage
-				ExitLoop
-			EndIf
-
-		Else
-			SetDebugLog("GetVillageSize ignore image " & $findImage & ", reason: " & UBound($a), $COLOR_WARNING)
-		EndIf
 	Next
 	Return $stone
 EndFunc
 
-Func FindTree($sDirectory = $g_sImgZoomOutDir, $sTreePrefix = "tree", $iAdditionalX = 100, $iAdditionalY = 100, $sStoneName = "DS")
-	Local $aTmpDebugVillage[4]
-	$g_aDebugVillage = $aTmpDebugVillage
-
+Func FindTree($sDirectory = $g_sImgZoomOutDir, $sTreePrefix = "tree", $iAdditionalX = 100, $iAdditionalY = 100, $sStoneName = "DS", $bCaptureRegion = True)
 	Local $tree = [0, 0, 0, 0, 0, ""]
 	Local $x0, $y0, $d0, $x, $y, $x1, $y1, $right, $bottom, $a, $b, $i, $findImage, $sArea
 	Local $aTreeFiles = _FileListToArray($sDirectory & "tree\", $sTreePrefix & "*.*", $FLTA_FILES)
@@ -348,7 +226,7 @@ Func FindTree($sDirectory = $g_sImgZoomOutDir, $sTreePrefix = "tree", $iAddition
 		Return
 	EndIf
 	
-	Local $scenerycode = "tree" & $sStoneName
+	Local $scenerycode = "tree" & "*" & $sStoneName, $aiCorrection[4]
 	For $i = 1 To $aTreeFiles[0]
 		$findImage = $aTreeFiles[$i]
 		If StringRegExp($findImage, $scenerycode, $STR_REGEXPMATCH) <> 1 Then ; if stone found is DS, filter only DS tree
@@ -361,19 +239,19 @@ Func FindTree($sDirectory = $g_sImgZoomOutDir, $sTreePrefix = "tree", $iAddition
 			$y0 = $a[2]
 			$d0 = "notused"
 			
-			$x1 = $x0 - $iAdditionalX
-			$y1 = _Max($y0 - $iAdditionalY, 45) 
-			$right = $x0 + $iAdditionalX
-			$bottom = $y0 + $iAdditionalY
+			$aiCorrection[1] = _Max($y0 - $iAdditionalY, 45)
+			$aiCorrection[2] = _Min($x0 + $iAdditionalX, $g_iGAME_WIDTH)
+			$aiCorrection[3] = _Min($y0 + Abs($aiCorrection[1] - Abs($y0 - $iAdditionalY)) + $iAdditionalY, $g_iGAME_HEIGHT)
+			$aiCorrection[0] = _Max($x0 - Abs($aiCorrection[2] - Abs($x0 + $iAdditionalX)) - $iAdditionalX, 0)
+			
+			$x0 = $aiCorrection[0]
+			$y0 = $aiCorrection[1]
+			$right = $aiCorrection[2]
+            $bottom = $aiCorrection[3]
+
 			$sArea = Int($x1) & "," & Int($y1) & "|" & Int($right) & "," & Int($y1) & "|" & Int($right) & "," & Int($bottom) & "|" & Int($x1) & "," & Int($bottom)
-			
-			$g_aDebugVillage[0] = $x1
-			$g_aDebugVillage[1] = $y1
-			$g_aDebugVillage[2] = $right
-			$g_aDebugVillage[3] = $bottom
-			
 			SetDebugLog("GetVillageSize check for image " & $findImage)
-			$b = decodeSingleCoord(findImage($scenerycode, $sDirectory & "tree\" & $findImage, $sArea, 1, False))
+			$b = decodeSingleCoord(findImage($scenerycode, $sDirectory & "tree\" & $findImage, $sArea, 1, $bCaptureRegion))
 			; sort by x because there can be a 2nd at the right that should not be used
 			If UBound($b) = 2 Then
 				$x = Int($b[0])

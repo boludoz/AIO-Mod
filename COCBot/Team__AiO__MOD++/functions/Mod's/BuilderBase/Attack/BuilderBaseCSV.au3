@@ -41,7 +41,7 @@ Func TestBuilderBaseParseAttackCSV()
 		BuilderBaseGetDeployPoints($FurtherFrom, True)
 
 		; Parse CSV , Deploy Troops and Get Machine Status [attack algorithm] , waiting for Battle ends window.
-		BuilderBaseParseAttackCSV($aAvailableTroops, $g_aDeployPoints, $g_aDeployBestPoints, True)
+		BuilderBaseParseAttackCSV($aAvailableTroops, $g_aDeployPoints, $g_aBestDeployPoints, $g_aOuterDeployPoints, True)
 
 		; Attack Report Window.
 		BuilderBaseAttackReport()
@@ -55,7 +55,7 @@ Func TestBuilderBaseParseAttackCSV()
 EndFunc   ;==>TestBuilderBaseParseAttackCSV
 
 ; Main Function
-Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoints, $bDebug = False)
+Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $BestDeployPoints, $OuterDeployPoints, $bDebug = False)
 
 	; Reset Stats
 	$g_iLastDamage = 0
@@ -68,15 +68,15 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 	Local $bDefenses = [$g_aAirdefensesPos, $g_aCrusherPos, $g_aGuardPostPos, $g_aCannonPos, $g_aBuilderHallPos]
 	Local $aIMGL = [False, False, False, False, False]
 	Local $aDROP = ["CMD", "QTY", "TROOPNAME__", "DROP_POINTS_", "ADDTILES_", "DROP_SIDE", "SLEEPAFTER_", "OBS"]
-	Local $sFrontSide = ""
 	Local $aSplitLine, $command
 
 	; [x][0] = Troops Name , [x][1] = X-axis , [x][2] - Y-Axis [x][3] - Slot starting at 0, [x][4] - Quantity
 	Local $aAvailableTroops_NXQ = $aAvailableTroops
 
 	; [0] - TopLeft ,[1] - TopRight , [2] - BottomRight , [3] - BottomLeft
-	Local $aDeployBestPoints = $DeployBestPoints ;Best Filtered 10 Points
+	Local $aBestDeployPoints = $BestDeployPoints ;Best Filtered 10 Points
 	Local $aDeployPoints = $DeployPoints ; Non Filterd Deploy Points
+	Local $aOuterDeployPoints = $OuterDeployPoints ; Non Filterd Deploy Points
 
 	If FileExists($FileNamePath) Then
 		Local $aLines = FileReadToArray($FileNamePath)
@@ -155,10 +155,8 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 							Next
 
 							; Main Side to attack
-							If $sFrontSide = "" Then
-								$sFrontSide = BuilderBaseAttackMainSide()
-								Setlog("Detected Front Side: " & $sFrontSide, $COLOR_INFO)
-							EndIf
+							$g_aBBMainSide = BuilderBaseAttackMainSide()
+							Setlog("Detected Front Side: " & $g_aBBMainSide, $COLOR_INFO)
 						Case "FORC"
 							; Main Side to attack If necessary
 							Local $bAlreadyForcedSide = False
@@ -180,8 +178,8 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 										Setlog("Detected Pos: " & _ArrayToString($aBuildPosition, ","))
 										; Get in string the FORCED Side name
 										If Not $bAlreadyForcedSide Then
-											$sFrontSide = DeployPointsPosition($aBuildPosition)
-											Setlog("Forced Front Side To " & $aIMGLtxt[$i] & " : " & $sFrontSide, $COLOR_INFO)
+											$g_aBBMainSide = DeployPointsPosition($aBuildPosition)
+											Setlog("Forced Front Side To " & $aIMGLtxt[$i] & " : " & $g_aBBMainSide, $COLOR_INFO)
 											$bAlreadyForcedSide = True
 										Else
 											Setlog("Forced Side Can Be Applied To Only 1 Building Ignore " & $aIMGLtxt[$i], $COLOR_INFO)
@@ -283,7 +281,7 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 					If $sDropSide <> "BH" And $sDropSide <> "EDGEB" Then
 						Local $sSelectedDropSideName ;Using For AddTile That Which Side Was Choosed To Attack
 						; Correct FRONT - BACK - LEFT - RIGHT - BH - EDGEB
-						Local $aSelectedDropSidePoints_XY = CorrectDropPoints($sFrontSide, $sDropSide, $aDeployBestPoints, $sSelectedDropSideName)
+						Local $aSelectedDropSidePoints_XY = CorrectDropPoints($sDropSide, $BestDeployPoints, $OuterDeployPoints, $sSelectedDropSideName)
 						SortPoints($aSelectedDropSidePoints_XY, $bDebug)
 						; Just in Case
 						If UBound($aSelectedDropSidePoints_XY) = 0 Then
@@ -296,7 +294,7 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 						; Before Parsing Points Do Add Tiles Distance if defined
 						AddTilesToDeployPoint($aSelectedDropSidePoints_XY, $iAddTiles, $sSelectedDropSideName, $bDebug)
 
-						If $bDebug And $iAddTiles > 1 Then DebugBuilderBaseBuildingsDetection($aDeployPoints, $aDeployBestPoints, "CSVAddTile_" & $iAddTiles, $aSelectedDropSidePoints_XY, True) ;Take ScreenShot After AddTile For Debug
+						If $bDebug And $iAddTiles > 1 Then DebugBuilderBaseBuildingsDetection($aDeployPoints, $aBestDeployPoints, $aOuterDeployPoints, "CSVAddTile_" & $iAddTiles, $aSelectedDropSidePoints_XY, True) ;Take ScreenShot After AddTile For Debug
 						;Get Points which is mentioned in CSV
 						Local $aCSVParsedDeployPoint_XY = ParseCSVDropPoints($sDropPoints, $aSelectedDropSidePoints_XY, $bDebug)
 						; Just in Case
@@ -448,7 +446,6 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 	EndIf
 EndFunc   ;==>BuilderBaseParseAttackCSV
 
-
 ; Extra Methods
 Func DebugPrintDropPoint($DropPoint, $Text, $bDebug)
 	If $bDebug Then
@@ -464,47 +461,42 @@ Func DebugPrintDropPoint($DropPoint, $Text, $bDebug)
 	EndIf
 EndFunc   ;==>DebugPrintDropPoint
 
-Func CorrectDropPoints($FrontSide, $sDropSide, $aDeployBestPoints, ByRef $sSelectedDropSideName)
-	Enum $TL = 0, $TR, $BR, $BL
-	Local $Front = 0
-	Local $sSideNames[4] = ["TopLeft", "TopRight", "BottomRight", "BottomLeft"]
-	Local $ToReturn
-
-	; FRONT - BACK - LEFT - RIGHT
-	For $i = 0 To UBound($sSideNames) - 1
-		If $FrontSide = $sSideNames[$i] Then $Front = $i
+Func CorrectDropPoints($sDropSide, $BestDeployPoints, $OuterDeployPoints, ByRef $sSelectedDropSideName)
+	Enum $tl = 0, $tr, $br, $bl
+	Local $front = 0
+	Local $ssidenames[4] = ["TopLeft", "TopRight", "BottomRight", "BottomLeft"]
+	Local $toreturn
+	For $i = 0 To UBound($ssidenames) - 1
+		If $g_aBBMainSide = $ssidenames[$i] Then $front = $i
 	Next
-
-	Local $iDimToReturn = 0
+	Local $dimtoreturn = 0
 	Switch $sDropSide
 		Case "FRONT", "FRONTE"
-			$iDimToReturn = $Front
+			$dimtoreturn = $front
 		Case "BACK", "BACKE"
-			$iDimToReturn = ($Front + 2 > 3) ? Abs(($Front + 2) - 4) : $Front + 2
+			$dimtoreturn = ($front + 2 > 3) ? Abs(($front + 2) - 4) : $front + 2
 		Case "LEFT", "LEFTE"
-			$iDimToReturn = ($Front + 1 > 3) ? Abs(($Front + 1) - 4) : $Front + 1
+			$dimtoreturn = ($front + 1 > 3) ? Abs(($front + 1) - 4) : $front + 1
 		Case "RIGHT", "RIGHTE"
-			$iDimToReturn = ($Front - 1 < 0) ? 4 - Abs($Front - 1) : $Front - 1
-		Case Else ;Incase of Wrong CSV Side Just Return To avoid crash
-			SetLog("CSV DropSide Command '" & $sDropSide & "' Not Supported.", $COLOR_ERROR)
-			Return
+			$dimtoreturn = ($front - 1 < 0) ? 4 - Abs($front - 1) : $front - 1
+		Case Else
+			SetLog("CSV DropSide CommAnd '" & $sDropSide & "' Not Supported.", $COLOR_ERROR)
+			Return 
 	EndSwitch
-
-	$sSelectedDropSideName = $sSideNames[$iDimToReturn] ;Save Choosed Site
-
-	If ($sDropSide = "FRONTE" Or $sDropSide = "BACKE" Or $sDropSide = "LEFTE" Or $sDropSide = "RIGHTE") And IsArray($g_aFinalOuter) And $iDimToReturn < UBound($g_aFinalOuter) Then
-		$ToReturn = FindBestDropPoints($g_aFinalOuter[$iDimToReturn], 10)
+	If $dimtoreturn < 0 Then $dimtoreturn = 0
+	$sSelectedDropSideName = $ssidenames[$dimtoreturn]
+	If ($sDropSide = "FRONTE" OR $sDropSide = "BACKE" OR $sDropSide = "LEFTE" OR $sDropSide = "RIGHTE") And IsArray($OuterDeployPoints) And $dimtoreturn < UBound($OuterDeployPoints) Then
+		$toreturn = $OuterDeployPoints[$dimtoreturn]
 	Else
-		If IsArray($aDeployBestPoints) And $iDimToReturn < UBound($aDeployBestPoints) Then
-			$ToReturn = $aDeployBestPoints[$iDimToReturn]
-		ElseIf IsArray($g_aFinalOuter) And $iDimToReturn < UBound($g_aFinalOuter) Then ; In Worst Case Senerio If Depoly Points Was Not detected then use outer points.
-			$ToReturn = FindBestDropPoints($g_aFinalOuter[$iDimToReturn], 10)
+		If IsArray($BestDeployPoints) And $dimtoreturn < UBound($BestDeployPoints) Then
+			$toreturn = $BestDeployPoints[$dimtoreturn]
+		ElseIf IsArray($OuterDeployPoints) And $dimtoreturn < UBound($OuterDeployPoints) Then
+			$toreturn = $OuterDeployPoints[$dimtoreturn]
 		EndIf
 	EndIf
-
-	SetDebugLog("Main Side is " & $FrontSide & " - Drop on " & $sDropSide & " correct side will be " & $sSideNames[$iDimToReturn])
-	Return $ToReturn
-EndFunc   ;==>CorrectDropPoints
+	SetDebugLog("Main Side is " & $g_aBBMainSide & " - Drop on " & $sDropSide & " correct side will be " & $ssidenames[$dimtoreturn])
+	Return $toreturn
+EndFunc
 
 Func ParseCSVDropPoints($sDropPoints, $aSelectedDropSidePoints_XY, $bDebug)
 	Local $aCSVParsedDeployPoint_XY[0], $atempDeploy[2]
@@ -618,16 +610,15 @@ Func AddTilesToDeployPoint(ByRef $aSelectedDropSidePoints_XY, $iAddTiles, $sSele
 					$pixel[0] = $x + $l
 					$pixel[1] = $y + $l
 			EndSwitch
-			; #CS
-			; If isInsideDiamondExt($pixel[0], $pixel[1], $iTWithOutFF) Then ; Check if X,Y is inside Builderbase or outside
+
+			If isInsideDiamondExt($pixel[0], $pixel[1], $iTWithOutFF) Then ; Check if X,Y is inside Builderbase or outside
 				If $bDebug Then SetDebugLog("After AddTile: " & $iAddTiles & ", DropSide: " & $sSelectedDropSideName & ", Deploy Point: " & $i + 1 & " - " & $pixel[0] & " x " & $pixel[1])
 				$aSelectedDropSidePoints_XY[$i][0] = $pixel[0]
 				$aSelectedDropSidePoints_XY[$i][1] = $pixel[1]
 				ExitLoop
-			; Else
-				; If $bDebug Or $g_bDebugAndroid Then SetLog("Outside Polygon DropSide, restored secure: " & $sSelectedDropSideName & ", Deploy Point: " & $i + 1 & " - " & $pixel[0] & " x " & $pixel[1], $COLOR_DEBUG)
-			; EndIf
-			; #CE
+			Else
+				If $bDebug Or $g_bDebugAndroid Then SetLog("Outside Polygon DropSide, restored secure: " & $sSelectedDropSideName & ", Deploy Point: " & $i + 1 & " - " & $pixel[0] & " x " & $pixel[1], $COLOR_DEBUG)
+			EndIf
 		Next
 	Next
 

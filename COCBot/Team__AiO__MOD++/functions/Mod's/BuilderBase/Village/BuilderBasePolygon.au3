@@ -50,7 +50,7 @@ Func BuilderBaseZoomOut($bForceZoom = Default, $bVersusMode = True, $bDebugWithI
 		; Run the ZoomOut Script
 		If BuilderBaseSendZoomOut(False, $i) Then
 			; Get the Distances between images
-			Local $aSize = SearchZoomOutBB(True, "", $bVersusMode, True, $g_bDebugSetlog, $bDebugWithImage)
+			Local $aSize = SearchZoomOutBB(True, "", $bVersusMode = False, True, $g_bDebugSetlog, $bDebugWithImage)
 			If @error Then Return False
 			If IsArray($aSize) And $aSize[0] <> "" Then Return True
 		Else
@@ -127,10 +127,10 @@ Func SearchZoomOutBB($bUpdateMyVillage = True, $sSource = "", $bCenterVillage = 
 					If $bDebugLog Then SetDebugLog("Village Offset" & $sSource & " updated to " & $x & ", " & $y & ", " & $z)
 				EndIf
 				setVillageOffset($x, $y, $z)
-				ConvertInternalExternArea() ; generate correct internal/external diamond measures
+				ConvertInternalExternArea("SearchZoomOutBB", $bDebugWithImage) ; generate correct internal/external diamond measures
 			EndIf
 		EndIf
-	ElseIf $bCenterVillage = False Then
+	Else
 		ClickDrag(100, 130, 230, 30, 1000)
 		If _Sleep(1500) Then Return
 		If Not $g_bRunState Then Return

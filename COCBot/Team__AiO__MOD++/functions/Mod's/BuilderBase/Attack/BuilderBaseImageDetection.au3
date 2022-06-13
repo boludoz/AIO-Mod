@@ -56,225 +56,173 @@ Func TestBuilderBaseGetHall()
 	Setlog("** TestBuilderBaseGetHall END**", $COLOR_DEBUG)
 EndFunc   ;==>TestBuilderBaseGetHall
 
-Func BuilderBaseGetDeployPoints($FurtherFrom = $g_iFurtherFromBBDefault, $bDebugImage = False)
-	If _Sleep(3000) Then Return
-	
-	Local $bBadPoints = False, $Sides = -1
-
-	If Not $g_bRunState Then Return
-
-	Local $DebugLog
-	If $g_bDebugBBattack Or $bDebugImage Then
-		$DebugLog = True
-	EndIf
-
-	; [0] - TopLeft ,[1] - TopRight , [2] - BottomRight , [3] - BottomLeft
-	; Each with an Array [$i][2] =[x,y]  for Xaxis and Yaxis
+Func builderbasegetdeploypoints($furtherfrom = 0, $bDebug = False)
+	If Not $g_brunstate Then Return 
+	Local $debuglog
+	If $g_bDebugBBattack OR $bDebug Then $debuglog = True
 	Local $DeployPoints[4]
 	Local $Name[4] = ["TopLeft", "TopRight", "BottomRight", "BottomLeft"]
-	Local $hStarttime = __TimerInit()
-
-	Local $aBuilderHallPos
-	For $i = 0 To 3
-		$aBuilderHallPos = findMultipleQuick($g_sBundleBuilderHall, 1)
-		If IsArray($aBuilderHallPos) Then ExitLoop
-		If _Sleep(250) Then Return
-	Next
-
-	If IsArray($aBuilderHallPos) And UBound($aBuilderHallPos) > 0 Then
-		$g_aBuilderHallPos = $aBuilderHallPos
-	Else
-		SaveDebugImage("BuilderHall")
-		Setlog("Builder Hall detection Error!", $Color_Error)
-		Local $aBuilderHall[1][4] = [["BuilderHall", 450, 425, -1]]
-		$g_aBuilderHallPos = $aBuilderHall
-	EndIf
-
-	If Not $g_bRunState Then Return
-
-	Setlog("Builder Base Hall detection: " & Round(__timerdiff($hStarttime) / 1000, 2) & " seconds", $COLOR_DEBUG)
-	$hStarttime = __TimerInit()
-
-	; Dissociable drop points.
-	Local $aDeployPointsResult = DMClassicArray(DFind($g_sBundleDeployPointsBBD, 0, 0, 0, 0, 0, 0, 1000, True), 10, ($g_bDebugImageSave Or $bDebugImage))
-	If Not $g_bRunState Then Return
-	SetDebugLog(_ArrayToString($aDeployPointsResult))
-	
-	If IsArray($aDeployPointsResult) And UBound($aDeployPointsResult) > 0 Then
-		Local $Point[2], $Local = ""
-		Local $iTopLeft[0][2], $iTopRight[0][2], $iBottomRight[0][2], $iBottomLeft[0][2]
-		For $i = 0 To UBound($aDeployPointsResult) - 1
-			$Point[0] = Int($aDeployPointsResult[$i][1])
-			$Point[1] = Int($aDeployPointsResult[$i][2])
-			SetDebugLog("[" & $i & "]Deploy Point: (" & $Point[0] & "," & $Point[1] & ")")
-			$Local = DeployPointsPosition($Point)
-			SetDebugLog("[" & $i & "]Deploy Local: (" & $Local & ")")
-			Switch $Local
-				Case "TopLeft"
-					$Point[0] -= $FurtherFrom
-					$Point[1] -= $FurtherFrom
-					ReDim $iTopLeft[UBound($iTopLeft) + 1][2]
-					$iTopLeft[UBound($iTopLeft) - 1][0] = $Point[0]
-					$iTopLeft[UBound($iTopLeft) - 1][1] = $Point[1]
-				Case "TopRight"
-					$Point[0] += $FurtherFrom
-					$Point[1] -= $FurtherFrom
-					ReDim $iTopRight[UBound($iTopRight) + 1][2]
-					$iTopRight[UBound($iTopRight) - 1][0] = $Point[0]
-					$iTopRight[UBound($iTopRight) - 1][1] = $Point[1]
-				Case "BottomRight"
-					$Point[0] += $FurtherFrom
-					$Point[1] += $FurtherFrom
-					ReDim $iBottomRight[UBound($iBottomRight) + 1][2]
-					$iBottomRight[UBound($iBottomRight) - 1][0] = $Point[0]
-					$iBottomRight[UBound($iBottomRight) - 1][1] = $Point[1]
-				Case "BottomLeft"
-					$Point[0] -= $FurtherFrom
-					$Point[1] += $FurtherFrom
-					ReDim $iBottomLeft[UBound($iBottomLeft) + 1][2]
-					$iBottomLeft[UBound($iBottomLeft) - 1][0] = $Point[0]
-					$iBottomLeft[UBound($iBottomLeft) - 1][1] = $Point[1]
-			EndSwitch
+	Local $hstarttime = __timerinit()
+	Local $deploypointsresult = DMClassicArray(DFind($g_sBundleDeployPointsBBD, 0, 0, 0, 0, 0, 0, 1000, True), 10, ($g_bDebugImageSave Or $debuglog))
+	If $deploypointsresult <> -1 And UBound($deploypointsresult) > 0 Then
+		Local $topleft[0][2], $topright[0][2], $bottomright[0][2], $bottomleft[0][2]
+		Local $point[2], $local = ""
+		For $i = 0 To UBound($deploypointsresult) - 1
+			$point[0] = Int($deploypointsresult[$i][1])
+			$point[1] = Int($deploypointsresult[$i][2])
+			SetDebugLog("[" & $i & "]Deploy Point: (" & $point[0] & "," & $point[1] & ")")
+			$local = deploypointsposition($point)
+			SetDebugLog("[" & $i & "]Deploy Local: (" & $local & ")")
+			Select 
+				Case $local = "TopLeft"
+					ReDim $topleft[UBound($topleft) + 1][2]
+					$topleft[UBound($topleft) - 1][0] = $point[0] - $furtherfrom
+					$topleft[UBound($topleft) - 1][1] = $point[1] - $furtherfrom
+				Case $local = "TopRight"
+					ReDim $topright[UBound($topright) + 1][2]
+					$topright[UBound($topright) - 1][0] = $point[0] + $furtherfrom
+					$topright[UBound($topright) - 1][1] = $point[1] - $furtherfrom
+				Case $local = "BottomRight"
+					ReDim $bottomright[UBound($bottomright) + 1][2]
+					$bottomright[UBound($bottomright) - 1][0] = $point[0] + $furtherfrom
+					$bottomright[UBound($bottomright) - 1][1] = $point[1] + $furtherfrom
+				Case $local = "BottomLeft"
+					ReDim $bottomleft[UBound($bottomleft) + 1][2]
+					$bottomleft[UBound($bottomleft) - 1][0] = $point[0] - $furtherfrom
+					$bottomleft[UBound($bottomleft) - 1][1] = $point[1] + $furtherfrom
+			EndSelect
 		Next
-
-		Local $aTmpSides[4] = [$iTopLeft, $iTopRight, $iBottomRight, $iBottomLeft]
-		$Sides = $aTmpSides
-		Else
-		$bBadPoints = True
-	EndIf
-
-	If Not $g_bRunState Then Return
-
-	If $bBadPoints = False Then
+		Local $sides[4] = [$topleft, $topright, $bottomright, $bottomleft]
 		For $i = 0 To 3
-			Setlog($Name[$i] & " points: " & UBound($Sides[$i]))
-			$DeployPoints[$i] = $Sides[$i]
+			If Not $g_brunstate Then Return 
+			SetLog($Name[$i] & " points: " & UBound($sides[$i]))
+			$DeployPoints[$i] = $sides[$i]
 		Next
+	Else
+		If $g_bDebugImageSave Then SaveDebugImage("DeployPoints")
+		SetLog("Deploy Points detection Error!", $COLOR_ERROR)
+		Return -1
 	EndIf
-
-	If Not $g_bRunState Then Return
-
-	Setlog("Builder Base Internal Deploy Points: " & Round(__timerdiff($hStarttime) / 1000, 2) & " seconds", $COLOR_DEBUG)
-	$hStarttime = __TimerInit()
+	SetLog("Builder Base Internal Deploy Points: " & Round(__timerdiff($hstarttime) / 1000, 2) & " seconds", $color_debug)
+	$hstarttime = __timerinit()
 
 	$g_aBuilderBaseDiamond = BuilderBaseAttackDiamond()
-	If @error Then 
-		SaveDebugImage("DeployPoints")
-		Setlog("Deploy $g_aBuilderBaseDiamond - Points detection Error!", $Color_Error)
-		$g_aExternalEdges = BuilderBaseGetFakeEdges()
-	Else
-		$g_aExternalEdges = BuilderBaseGetEdges($g_aBuilderBaseDiamond, "External Edges")
-	EndIf
-
-	Setlog("Builder Base Edges Deploy Points: " & Round(__timerdiff($hStarttime) / 1000, 2) & " seconds", $COLOR_DEBUG)
-
-	$hStarttime = __TimerInit()
-
 	$g_aBuilderBaseOuterDiamond = BuilderBaseAttackOuterDiamond()
-
-	If $g_aBuilderBaseOuterDiamond = -1 Then
-		SaveDebugImage("DeployPoints")
-		Setlog("Deploy $g_aBuilderBaseOuterDiamond - Points detection Error!", $Color_Error)
-		$g_aOuterEdges = BuilderBaseGetFakeEdges()
+	
+	If $g_aBuilderBaseDiamond = -1 Then
+		If $g_bDebugImageSave Then SaveDebugImage("DeployPoints")
+		SetLog("Deploy $g_aBuilderBaseDiamond - Points detection Error!", $COLOR_ERROR)
+		$g_aExternalEdges = builderbasegetfakeedges()
 	Else
-		$g_aOuterEdges = BuilderBaseGetEdges($g_aBuilderBaseOuterDiamond, "Outer Edges")
+		$g_aExternalEdges = builderbasegetedges($g_aBuilderBaseDiamond, "External Edges")
 	EndIf
-
-	; Let's get the correct side by BH position  for Outer Points
-	Local $iTopLeft[0][2], $iTopRight[0][2], $iBottomRight[0][2], $iBottomLeft[0][2]
-
+	If $g_aBuilderBaseOuterDiamond = -1 Then
+		If $g_bDebugImageSave Then SaveDebugImage("DeployPoints")
+		SetLog("Deploy $g_aBuilderBaseOuterDiamond - Points detection Error!", $COLOR_ERROR)
+		$g_aOuterEdges = builderbasegetfakeedges()
+	Else
+		$g_aOuterEdges = builderbasegetedges($g_aBuilderBaseOuterDiamond, "Outer Edges")
+	EndIf
+	SetLog("Builder Base Edges Deploy Points: " & Round(__timerdiff($hstarttime) / 1000, 2) & " seconds", $color_debug)
+	Local $topleft[0][2], $topright[0][2], $bottomright[0][2], $bottomleft[0][2]
 	For $i = 0 To 3
-		If Not $g_bRunState Then Return
-		Local $iCorrectSide = $g_aOuterEdges[$i]
-		For $j = 0 To UBound($iCorrectSide) - 1
-			Local $Point[2] = [$iCorrectSide[$j][0], $iCorrectSide[$j][1]]
-			Local $Local = DeployPointsPosition($Point)
-			Select
-				Case $Local = "TopLeft"
-					ReDim $iTopLeft[UBound($iTopLeft) + 1][2]
-					$iTopLeft[UBound($iTopLeft) - 1][0] = $Point[0]
-					$iTopLeft[UBound($iTopLeft) - 1][1] = $Point[1]
-
-				Case $Local = "TopRight"
-					ReDim $iTopRight[UBound($iTopRight) + 1][2]
-					$iTopRight[UBound($iTopRight) - 1][0] = $Point[0]
-					$iTopRight[UBound($iTopRight) - 1][1] = $Point[1]
-
-				Case $Local = "BottomRight"
-					ReDim $iBottomRight[UBound($iBottomRight) + 1][2]
-					$iBottomRight[UBound($iBottomRight) - 1][0] = $Point[0]
-					$iBottomRight[UBound($iBottomRight) - 1][1] = $Point[1]
-
-				Case $Local = "BottomLeft"
-					ReDim $iBottomLeft[UBound($iBottomLeft) + 1][2]
-					$iBottomLeft[UBound($iBottomLeft) - 1][0] = $Point[0]
-					$iBottomLeft[UBound($iBottomLeft) - 1][1] = $Point[1]
+		If Not $g_brunstate Then Return 
+		Local $correctside = $g_aOuterEdges[$i]
+		For $j = 0 To UBound($correctside) - 1
+			Local $point[2] = [$correctside[$j][0], $correctside[$j][1]]
+			Local $local = deploypointsposition($point)
+			Select 
+				Case $local = "TopLeft"
+					ReDim $topleft[UBound($topleft) + 1][2]
+					$topleft[UBound($topleft) - 1][0] = $point[0]
+					$topleft[UBound($topleft) - 1][1] = $point[1]
+				Case $local = "TopRight"
+					ReDim $topright[UBound($topright) + 1][2]
+					$topright[UBound($topright) - 1][0] = $point[0]
+					$topright[UBound($topright) - 1][1] = $point[1]
+				Case $local = "BottomRight"
+					ReDim $bottomright[UBound($bottomright) + 1][2]
+					$bottomright[UBound($bottomright) - 1][0] = $point[0]
+					$bottomright[UBound($bottomright) - 1][1] = $point[1]
+				Case $local = "BottomLeft"
+					ReDim $bottomleft[UBound($bottomleft) + 1][2]
+					$bottomleft[UBound($bottomleft) - 1][0] = $point[0]
+					$bottomleft[UBound($bottomleft) - 1][1] = $point[1]
 			EndSelect
 		Next
 	Next
-	; Final array
-	$g_aFinalOuter[0] = $iTopLeft
-	$g_aFinalOuter[1] = $iTopRight
-	$g_aFinalOuter[2] = $iBottomRight
-	$g_aFinalOuter[3] = $iBottomLeft
-
-	#Region - Bad Points
-	; In no 'DP' case.
-	If $bBadPoints = True Then
-		Setlog("BuilderBaseGetDeployPoints | No DP,	GET FROM EDGE.", $Color_Error)
-
-		If Not $g_bRunState Then Return
-
-		$Sides = $g_aOuterEdges
-
-		For $i = 0 To 3
-			Setlog($Name[$i] & " points: " & UBound($Sides[$i]))
-			$DeployPoints[$i] = $Sides[$i]
-		Next
-
-	EndIf
-	#EndRegion - Bad Points
-
-	; Verify how many point and if needs OuterEdges points [5 points]
+	$g_aFinalOuter[0] = $topleft
+	$g_aFinalOuter[1] = $topright
+	$g_aFinalOuter[2] = $bottomright
+	$g_aFinalOuter[3] = $bottomleft
 	For $i = 0 To 3
-		If Not $g_bRunState Then Return
-		If UBound($DeployPoints[$i]) < 5 Then
-			Setlog($Name[$i] & " doesn't have enough deploy points(" & UBound($DeployPoints[$i]) & ") let's use Outer points", $COLOR_DEBUG)
-			;When arrayconcatenate does not work so just simply use outer points(Because it can happen due to non array etc)
-			If UBound($DeployPoints[$i], $UBOUND_COLUMNS) <> UBound($g_aFinalOuter[$i], $UBOUND_COLUMNS) Then
-				SetDebugLog("$DeployPoints Array dimension array diff from $g_aFinalOuter array", $COLOR_DEBUG)
+		If Not $g_brunstate Then Return 
+		If UBound($DeployPoints[$i]) < 10 Then
+			SetLog($Name[$i] & " doesn't have enough deploy points(" & UBound($DeployPoints[$i]) & ") let's use Outer points", $color_debug)
+			If UBound($DeployPoints[$i], $ubound_columns) <> UBound($g_aFinalOuter[$i], $ubound_columns) Then
+				SetDebugLog("$DeployPoints Array dimension array diff from $g_aFinalOuter array", $color_debug)
 				$DeployPoints[$i] = $g_aFinalOuter[$i]
 			Else
-				; Array Combine
-				Local $tempDeployPoints = $DeployPoints[$i]
+				Local $tempdeploypoints = $DeployPoints[$i]
 				SetDebugLog($Name[$i] & " Outer points are " & UBound($g_aFinalOuter[$i]))
-				Local $tempFinalOuter = $g_aFinalOuter[$i]
-				For $j = 0 To UBound($tempFinalOuter, $UBOUND_ROWS) - 1
-					ReDim $tempDeployPoints[UBound($tempDeployPoints, $UBOUND_ROWS) + 1][2]
-					$tempDeployPoints[UBound($tempDeployPoints, $UBOUND_ROWS) - 1][0] = $tempFinalOuter[$j][0]
-					$tempDeployPoints[UBound($tempDeployPoints, $UBOUND_ROWS) - 1][1] = $tempFinalOuter[$j][1]
+				Local $tempfinalouter = $g_aFinalOuter[$i]
+				For $j = 0 To UBound($tempfinalouter, $ubound_rows) - 1
+					ReDim $tempdeploypoints[UBound($tempdeploypoints, $ubound_rows) + 1][2]
+					$tempdeploypoints[UBound($tempdeploypoints, $ubound_rows) - 1][0] = $tempfinalouter[$j][0]
+					$tempdeploypoints[UBound($tempdeploypoints, $ubound_rows) - 1][1] = $tempfinalouter[$j][1]
 				Next
-				$DeployPoints[$i] = $tempDeployPoints
+				$DeployPoints[$i] = $tempdeploypoints
 			EndIf
-			Setlog($Name[$i] & " points(" & UBound($DeployPoints[$i]) & ") after using outer one", $COLOR_DEBUG)
+			SetLog($Name[$i] & " points(" & UBound($DeployPoints[$i]) & ") after using outer one", $color_debug)
 		EndIf
 	Next
-	;Find Best 10 points 1-10 , the 5 is the Middle , 1 = closest to BuilderHall
 	Local $BestDeployPoints[4]
 	For $i = 0 To 3
-		;Before Finding Best Drop Points First we need to sort x-axis so we have best points
-		_ArraySort($DeployPoints[$i], 0, 0, 0, 0) ; Sort By X-Axis
+		_arraysort($DeployPoints[$i], 0, 0, 0, 0)
 		SetDebugLog("Get the best Points for " & $Name[$i])
-		$BestDeployPoints[$i] = FindBestDropPoints($DeployPoints[$i])
+		$BestDeployPoints[$i] = findbestdroppoints($DeployPoints[$i])
 	Next
-
-	Setlog("Builder Base Outer Edges Deploy Points: " & Round(__timerdiff($hStarttime) / 1000, 2) & " seconds", $COLOR_DEBUG)
-
-	If $bDebugImage Or $g_bDebugBBattack Then DebugBuilderBaseBuildingsDetection($DeployPoints, $BestDeployPoints, "Deploy_Points")
+	Local $OuterDeployPoints[4]
+	For $i = 0 To 3
+		_arraysort($g_aFinalOuter[$i], 0, 0, 0, 0)
+		SetDebugLog("Get the best Outer Points for " & $Name[$i])
+		$OuterDeployPoints[$i] = findbestdroppoints($g_aFinalOuter[$i])
+	Next
+	Switch $g_aBBMainSide
+		Case "TopLeft"
+		Case "TopRight"
+			_arraysort($BestDeployPoints[0], 1, 0, 0, 0)
+			_arraysort($BestDeployPoints[2], 1, 0, 0, 0)
+			_arraysort($OuterDeployPoints[0], 1, 0, 0, 0)
+			_arraysort($OuterDeployPoints[2], 1, 0, 0, 0)
+		Case "BottomRight"
+			_arraysort($BestDeployPoints[1], 1, 0, 0, 0)
+			_arraysort($BestDeployPoints[3], 1, 0, 0, 0)
+			_arraysort($OuterDeployPoints[1], 1, 0, 0, 0)
+			_arraysort($OuterDeployPoints[3], 1, 0, 0, 0)
+		Case "BottomLeft"
+	EndSwitch
+	SetLog("Builder Base Outer Edges Deploy Points: " & Round(__timerdiff($hstarttime) / 1000, 2) & " seconds", $color_debug)
+	If $bDebug OR $g_bDebugBBattack Then debugbuilderbasebuildingsdetection($DeployPoints, $BestDeployPoints, $OuterDeployPoints, "Deploy_Points")
+	If $g_bDebugBBattack Then debugbuilderbasecleanimage()
 	$g_aDeployPoints = $DeployPoints
-	$g_aDeployBestPoints = $BestDeployPoints
+	$g_aBestDeployPoints = $BestDeployPoints
+	$g_aOuterDeployPoints = $OuterDeployPoints
+EndFunc
 
-EndFunc   ;==>BuilderBaseGetDeployPoints
+Func debugbuilderbasecleanimage()
+	If $g_bDebugBBattack Then
+		_captureregion2()
+		Local $ssubdir = $g_sprofiletempdebugpath & "BuilderBase\Clean"
+		DirCreate($ssubdir)
+		Local $sdate = @YEAR & "-" & @MON & "-" & @MDAY
+		Local $stime = @HOUR & "." & @MIN & "." & @SEC
+		Local $sdebugimagename = String("BuilderBase_" & $sdate & "_" & $stime & ".png")
+		Local $heditedimage = _gdiplus_bitmapcreatefromhbitmap($g_hhbitmap2)
+		_gdiplus_imagesavetofile($heditedimage, $ssubdir & "\" & $sdebugimagename)
+		_gdiplus_bitmapdispose($heditedimage)
+	EndIf
+EndFunc
 
 Func FindBestDropPoints($DropPoints, $MaxDropPoint = 10)
 	;Find Best 10 points 1-10 , the 5 is the Middle , 1 = closest to BuilderHall
@@ -384,110 +332,126 @@ Func DebugBuilderBaseBuildingsDetection2($DetectedBuilding)
 	_GDIPlus_BitmapDispose($editedImage)
 EndFunc   ;==>DebugBuilderBaseBuildingsDetection2
 
-Func DebugBuilderBaseBuildingsDetection($DeployPoints, $BestDeployPoints, $DebugText, $CSVDeployPoints = 0, $isCSVDeployPoints = False)
-
-	_CaptureRegion2()
-	Local $subDirectory = $g_sProfileTempDebugPath & "BuilderBase"
-	DirCreate($subDirectory)
-	Local $Date = @YEAR & "-" & @MON & "-" & @MDAY
-	Local $Time = @HOUR & "." & @MIN & "." & @SEC
-	Local $editedImage = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
-	Local $hGraphic = _GDIPlus_ImageGetGraphicsContext($editedImage)
+Func debugbuilderbasebuildingsdetection($DeployPoints, $BestDeployPoints, $OuterDeployPoints, $debugtext, $csvdeploypoints = 0, $iscsvdeploypoints = False)
+	_captureregion2()
+	Local $subdirectory = $g_sprofiletempdebugpath & "BuilderBase"
+	DirCreate($subdirectory)
+	Local $date = @YEAR & "-" & @MON & "-" & @MDAY
+	Local $time = @HOUR & "." & @MIN & "." & @SEC
+	Local $editedimage = _gdiplus_bitmapcreatefromhbitmap($g_hhbitmap2)
+	Local $hgraphic = _gdiplus_imagegetgraphicscontext($editedimage)
 	Local $hPenRED = _GDIPlus_PenCreate(0xFFFF0000, 3) ; Create a pencil Color FF0000/RED
 	Local $hPenWhite = _GDIPlus_PenCreate(0xFFFFFFFF, 3) ; Create a pencil Color FFFFFF/WHITE
+	Local $hpenwhitebold = _gdiplus_pencreate(-1, 5)
 	Local $hPenYellow = _GDIPlus_PenCreate(0xFFEEF017, 3) ; Create a pencil Color EEF017/YELLOW
 	Local $hPenBlue = _GDIPlus_PenCreate(0xFF6052F9, 3) ; Create a pencil Color 6052F9/BLUE
-
-	If IsArray($g_aBuilderHallPos) Then
-		_GDIPlus_GraphicsDrawRect($hGraphic, $g_aBuilderHallPos[0][1] - 5, $g_aBuilderHallPos[0][2] - 5, 10, 10, $hPenRED)
-		_GDIPlus_GraphicsDrawLine($hGraphic, 0, $g_aBuilderHallPos[0][2], 860, $g_aBuilderHallPos[0][2], $hPenWhite)
-		_GDIPlus_GraphicsDrawLine($hGraphic, $g_aBuilderHallPos[0][1], 0, $g_aBuilderHallPos[0][1], 628, $hPenWhite)
+	Local $harrowendcap = _gdiplus_arrowcapcreate(10, 10)
+    If UBound($g_aBuilderHallPos, $UBOUND_COLUMNS) >= 4 And not @error Then
+		_gdiplus_graphicsdrawrect($hgraphic, $g_aBuilderHallPos[0][0] - 5, $g_aBuilderHallPos[0][1] - 5, 10, 10, $hpenred)
+		_gdiplus_graphicsdrawline($hgraphic, 0, $g_aBuilderHallPos[0][1], 860, $g_aBuilderHallPos[0][1], $hpenwhite)
+		_gdiplus_graphicsdrawline($hgraphic, $g_aBuilderHallPos[0][0], 0, $g_aBuilderHallPos[0][0], 628, $hpenwhite)
 	EndIf
-
-	Local $Text = ["TL", "TR", "BR", "BL"]
-	Local $Position[4][2] = [[180, 230], [730, 230], [730, 600], [180, 600]]
-
-	Local $hBrush = _GDIPlus_BrushCreateSolid(0xFFFFFFFF)
-	Local $hFormat = _GDIPlus_StringFormatCreate()
-	Local $hFamily = _GDIPlus_FontFamilyCreate("Arial")
-	Local $hFont = _GDIPlus_FontCreate($hFamily, 20)
-
-	If IsArray($g_aBuilderBaseDiamond) <> True Or Not (UBound($g_aBuilderBaseDiamond) > 0) Then Return False
-
-	Local $iSize = $g_aBuilderBaseDiamond[0]
-
+	Local $hbrush = _gdiplus_brushcreatesolid(-1)
+	Local $hformat = _gdiplus_stringformatcreate()
+	Local $hfamily = _gdiplus_fontfamilycreate("Arial")
+	Local $hfont = _gdiplus_fontcreate($hfamily, 18)
+	Local $size = 0
+	If IsArray($g_aBuilderBaseDiamond) And UBound($g_aBuilderBaseDiamond) > 0 Then
+		$size = $g_aBuilderBaseDiamond[0]
+	EndIf
 	For $i = 1 To UBound($g_aBuilderBaseDiamond) - 1
-		Local $Coord = $g_aBuilderBaseDiamond[$i]
-		Local $NextCoord = ($i = UBound($g_aBuilderBaseDiamond) - 1) ? $g_aBuilderBaseDiamond[1] : $g_aBuilderBaseDiamond[$i + 1]
-		_GDIPlus_GraphicsDrawLine($hGraphic, $Coord[0], $Coord[1], $NextCoord[0], $NextCoord[1], $hPenBlue)
+		Local $coord = $g_aBuilderBaseDiamond[$i]
+		Local $nextcoord = ($i = UBound($g_aBuilderBaseDiamond) - 1) ? $g_aBuilderBaseDiamond[1] : $g_aBuilderBaseDiamond[$i + 1]
+		_gdiplus_graphicsdrawline($hgraphic, $coord[0], $coord[1], $nextcoord[0], $nextcoord[1], $hpenblue)
 	Next
-
-	Local $iSize = $g_aBuilderBaseOuterDiamond[0]
-
 	For $i = 1 To UBound($g_aBuilderBaseOuterDiamond) - 1
-		Local $Coord = $g_aBuilderBaseOuterDiamond[$i]
-		Local $NextCoord = ($i = UBound($g_aBuilderBaseOuterDiamond) - 1) ? $g_aBuilderBaseOuterDiamond[1] : $g_aBuilderBaseOuterDiamond[$i + 1]
-		_GDIPlus_GraphicsDrawLine($hGraphic, $Coord[0], $Coord[1], $NextCoord[0], $NextCoord[1], $hPenBlue)
+		Local $coord = $g_aBuilderBaseOuterDiamond[$i]
+		Local $nextcoord = ($i = UBound($g_aBuilderBaseOuterDiamond) - 1) ? $g_aBuilderBaseOuterDiamond[1] : $g_aBuilderBaseOuterDiamond[$i + 1]
+		_gdiplus_graphicsdrawline($hgraphic, $coord[0], $coord[1], $nextcoord[0], $nextcoord[1], $hpenblue)
 	Next
-
-
 	For $i = 0 To UBound($g_aExternalEdges) - 1
-		Local $Local = $g_aExternalEdges[$i]
-		For $j = 0 To UBound($Local) - 1
-			_GDIPlus_GraphicsDrawRect($hGraphic, $Local[$j][0] - 2, $Local[$j][1] - 2, 4, 4, $hPenYellow)
+		Local $local = $g_aExternalEdges[$i]
+		For $j = 0 To UBound($local) - 1
+			_gdiplus_graphicsdrawrect($hgraphic, $local[$j][0] - 2, $local[$j][1] - 2, 4, 4, $hpenyellow)
 		Next
 	Next
-
 	For $i = 0 To UBound($g_aOuterEdges) - 1
-		Local $Local = $g_aOuterEdges[$i]
-		For $j = 0 To UBound($Local) - 1
-			_GDIPlus_GraphicsDrawRect($hGraphic, $Local[$j][0] - 2, $Local[$j][1] - 2, 4, 4, $hPenWhite)
+		Local $local = $g_aOuterEdges[$i]
+		For $j = 0 To UBound($local) - 1
+			_gdiplus_graphicsdrawrect($hgraphic, $local[$j][0] - 2, $local[$j][1] - 2, 4, 4, $hpenwhite)
 		Next
 	Next
-
 	For $i = 0 To 3
-		Local $Local = $DeployPoints[$i]
-		Local $tLayout = _GDIPlus_RectFCreate($Position[$i][0], $Position[$i][1], 0, 0)
-		Local $aInfo = _GDIPlus_GraphicsMeasureString($hGraphic, $Text[$i], $hFont, $tLayout, $hFormat)
-		_GDIPlus_GraphicsDrawStringEx($hGraphic, $Text[$i], $hFont, $aInfo[0], $hFormat, $hBrush)
-		For $j = 0 To UBound($Local) - 1
-			_GDIPlus_GraphicsDrawRect($hGraphic, $Local[$j][0] - 2, $Local[$j][1] - 2, 4, 4, $hPenYellow)
+		Local $local = $DeployPoints[$i]
+		For $j = 0 To UBound($local) - 1
+			_gdiplus_graphicsdrawrect($hgraphic, $local[$j][0] - 2, $local[$j][1] - 2, 4, 4, $hpenyellow)
 		Next
 	Next
-
 	For $i = 0 To 3
-		Local $Local = $BestDeployPoints[$i]
-		Local $tLayout = _GDIPlus_RectFCreate($Position[$i][0], $Position[$i][1], 0, 0)
-		Local $aInfo = _GDIPlus_GraphicsMeasureString($hGraphic, $Text[$i], $hFont, $tLayout, $hFormat)
-		_GDIPlus_GraphicsDrawStringEx($hGraphic, $Text[$i], $hFont, $aInfo[0], $hFormat, $hBrush)
-		For $j = 0 To UBound($Local) - 1
-			_GDIPlus_GraphicsDrawRect($hGraphic, $Local[$j][0] - 2, $Local[$j][1] - 2, 4, 4, $hPenRED)
+		Local $local = $BestDeployPoints[$i]
+		For $j = 0 To UBound($local) - 1
+			_gdiplus_graphicsdrawrect($hgraphic, $local[$j][0] - 2, $local[$j][1] - 2, 4, 4, $hpenred)
+			_gdiplus_graphicsdrawstring($hgraphic, $j + 1, $local[$j][0] - 5, $local[$j][1] + 5, "Arial", 12)
 		Next
 	Next
-
-	If $isCSVDeployPoints And IsArray($CSVDeployPoints) = 1 Then
-		For $j = 0 To UBound($CSVDeployPoints) - 1
-			_GDIPlus_GraphicsDrawRect($hGraphic, $CSVDeployPoints[$j][0], $CSVDeployPoints[$j][1] - 2, 4, 4, $hPenWhite)
+	For $i = 0 To 3
+		Local $local = $OuterDeployPoints[$i]
+		For $j = 0 To UBound($local) - 1
+			_gdiplus_graphicsdrawrect($hgraphic, $local[$j][0] - 2, $local[$j][1] - 2, 4, 4, $hpenred)
+			_gdiplus_graphicsdrawstring($hgraphic, $j + 1, $local[$j][0] - 5, $local[$j][1] + 5, "Arial", 12)
+		Next
+	Next
+	If $iscsvdeploypoints And IsArray($csvdeploypoints) = 1 Then
+		For $j = 0 To UBound($csvdeploypoints) - 1
+			_gdiplus_graphicsdrawrect($hgraphic, $csvdeploypoints[$j][0], $csvdeploypoints[$j][1] - 2, 4, 4, $hpenwhite)
 		Next
 	EndIf
-
-	Local $filename = String($Date & "_" & $Time & "_" & $DebugText & "_" & $iSize & "_.png")
-
-	_GDIPlus_ImageSaveToFile($editedImage, $subDirectory & "\" & $filename)
-	_GDIPlus_FontDispose($hFont)
-	_GDIPlus_FontFamilyDispose($hFamily)
-	_GDIPlus_StringFormatDispose($hFormat)
-	_GDIPlus_BrushDispose($hBrush)
-	_GDIPlus_PenDispose($hPenRED)
-	_GDIPlus_PenDispose($hPenWhite)
-	_GDIPlus_PenDispose($hPenYellow)
-	_GDIPlus_PenDispose($hPenBlue)
-	_GDIPlus_GraphicsDispose($hGraphic)
-	_GDIPlus_BitmapDispose($editedImage)
-
-EndFunc   ;==>DebugBuilderBaseBuildingsDetection
+	Local $ssidecsvnames[4] = ["FRONT", "BACK", "LEFT", "RIGHT"]
+	Local $ssidenames[4] = ["TopLeft", "TopRight", "BottomRight", "BottomLeft"]
+	Local $abasesidesposition[4][2] = [[155, 150], [720, 150], [720, 460], [155, 460]]
+	Local $bbdiamondmiddlex = 450
+	Local $bbdiamondmiddley = 325
+	Local $amainsidesposition[4][4] = [[$bbdiamondmiddlex - 280, $bbdiamondmiddley - 215, $bbdiamondmiddlex - 280 + 80, $bbdiamondmiddley - 215 + 60], [$bbdiamondmiddlex + 280, $bbdiamondmiddley - 215, $bbdiamondmiddlex + 280 - 80, $bbdiamondmiddley - 215 + 60], [$bbdiamondmiddlex + 280, $bbdiamondmiddley + 215, $bbdiamondmiddlex + 280 - 80, $bbdiamondmiddley + 215 - 60], [$bbdiamondmiddlex - 280, $bbdiamondmiddley + 215, $bbdiamondmiddlex - 280 + 80, $bbdiamondmiddley + 215 - 60]]
+	Local $imainsidepostionindex = _arraysearch($ssidenames, $g_aBBMainSide)
+	If $imainsidepostionindex <> -1 Then
+		_gdiplus_arrowcapsetmiddleinset($harrowendcap, 0.5)
+		_gdiplus_pensetcustomendcap($hpenwhitebold, $harrowendcap)
+		_gdiplus_graphicsdrawline($hgraphic, $amainsidesposition[$imainsidepostionindex][0], $amainsidesposition[$imainsidepostionindex][1], $amainsidesposition[$imainsidepostionindex][2], $amainsidesposition[$imainsidepostionindex][3], $hpenwhitebold)
+		For $i = 0 To UBound($ssidecsvnames) - 1
+			Local $isideactualindex = 0
+			Switch $ssidecsvnames[$i]
+				Case "FRONT"
+					$isideactualindex = $imainsidepostionindex
+				Case "BACK"
+					$isideactualindex = ($imainsidepostionindex + 2 > 3) ? Abs(($imainsidepostionindex + 2) - 4) : $imainsidepostionindex + 2
+				Case "LEFT"
+					$isideactualindex = ($imainsidepostionindex + 1 > 3) ? Abs(($imainsidepostionindex + 1) - 4) : $imainsidepostionindex + 1
+				Case "RIGHT"
+					$isideactualindex = ($imainsidepostionindex - 1 < 0) ? 4 - Abs($imainsidepostionindex - 1) : $imainsidepostionindex - 1
+			EndSwitch
+			Local $tlayout = _gdiplus_rectfcreate($abasesidesposition[$isideactualindex][0], $abasesidesposition[$isideactualindex][1], 0, 0)
+			Local $ainfo = _gdiplus_graphicsmeasurestring($hgraphic, $ssidecsvnames[$i], $hfont, $tlayout, $hformat)
+			_gdiplus_graphicsdrawstringex($hgraphic, $ssidecsvnames[$i], $hfont, $ainfo[0], $hformat, $hbrush)
+		Next
+	EndIf
+	Local $filename = String($date & "_" & $time & "_" & $debugtext & "_" & $size & "_.png")
+	_gdiplus_imagesavetofile($editedimage, $subdirectory & "\" & $filename)
+	_gdiplus_fontdispose($hfont)
+	_gdiplus_fontfamilydispose($hfamily)
+	_gdiplus_stringformatdispose($hformat)
+	_gdiplus_brushdispose($hbrush)
+	_gdiplus_pendispose($hpenred)
+	_gdiplus_pendispose($hpenwhite)
+	_gdiplus_pendispose($hpenwhitebold)
+	_gdiplus_pendispose($hpenyellow)
+	_gdiplus_pendispose($hpenblue)
+	_gdiplus_arrowcapdispose($harrowendcap)
+	_gdiplus_graphicsdispose($hgraphic)
+	_gdiplus_bitmapdispose($editedimage)
+EndFunc
 
 Func BuilderBaseResetAttackVariables()
+	$g_aBBMainSide = "TopLeft"
 	$g_aAirdefensesPos = -1
 	$g_aGuardPostPos = -1
 	$g_aCrusherPos = -1
@@ -498,7 +462,7 @@ Func BuilderBaseResetAttackVariables()
 	$g_aBuilderHallPos = -1
 
 	$g_aDeployPoints = -1
-	$g_aDeployBestPoints = -1
+	$g_aBestDeployPoints = -1
 
 	Global $g_aExternalEdges, $g_aBuilderBaseDiamond, $g_aOuterEdges, $g_aBuilderBaseOuterDiamond, $g_aBuilderBaseOuterPolygon, $g_aFinalOuter[4]
 EndFunc   ;==>BuilderBaseResetAttackVariables

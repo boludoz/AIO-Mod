@@ -625,8 +625,8 @@ Global Const $g_aMachineBBReset[4] = [-1, -1, False, True]
 Global $g_aMachineBB[4] = [-1, -1, False, True]
 Global $g_iFurtherFromBBDefault = 3
 Global $g_aBuilderHallPos = -1, $g_aAirdefensesPos = -1, $g_aCrusherPos = -1, $g_aCannonPos = -1, $g_aGuardPostPos = -1, _
-$g_aAirBombs = -1, $g_aLavaLauncherPos = -1, $g_aRoasterPos = -1, $g_aDeployPoints, $g_aDeployBestPoints
-
+$g_aAirBombs = -1, $g_aLavaLauncherPos = -1, $g_aRoasterPos = -1, $g_aDeployPoints, $g_aBestDeployPoints, $g_aOuterDeployPoints
+Global $g_aBBMainSide = "TopLeft"
 Global $g_aExternalEdges, $g_aBuilderBaseDiamond, $g_aOuterEdges, $g_aBuilderBaseOuterDiamond, $g_aBuilderBaseOuterPolygon, $g_aBuilderBaseAttackPolygon, $g_aFinalOuter[4]
 
 Global $g_bIsMachinePresent = False
