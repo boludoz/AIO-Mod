@@ -454,10 +454,8 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 	Local $iMultipler = ($g_aisearchzoomoutcounter[0] > 5) ? (2) : (1)
 
 	Static $iCallCount = 0
-	Local $bDisableCenter = False
 
 	If $g_aisearchzoomoutcounter[0] > 1 And Mod($g_aisearchzoomoutcounter[0], 5 * $iMultipler) = 0 Then
-		$bDisableCenter = True
 		ClickDrag($aCenterHomeVillageClickDrag[0], $aCenterHomeVillageClickDrag[1], $aCenterHomeVillageClickDrag[0] - 300, $aCenterHomeVillageClickDrag[1], 1000)
 		If _Sleep(1000) Then
 			$iCallCount = 0
@@ -469,7 +467,9 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 			Return FuncReturn($aResult)
 		EndIf
 	EndIf
-
+	
+	$g_aFallbackDragFix = -1
+	
 	Local $village
 	$village = GetVillageSize($DebugLog, "stone", "tree", Default, $bOnBuilderBase, $CaptureRegion, $bCenterVillage = False)
 
@@ -502,7 +502,7 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 					$aScrollPos[0] = $aCenterHomeVillageClickDrag[0]
 					$aScrollPos[1] = $aCenterHomeVillageClickDrag[1]
 				EndIf
-				ClickAway()
+				; ClickAway()
 
 				; Custom fix - Team AIO Mod++
 				If Pixel_Distance($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y) > 5 Then
@@ -532,6 +532,14 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 			Else
 			EndIf
 		EndIf
+	ElseIf $g_aFallbackDragFix <> -1 Then
+		If $aScrollPos[0] = 0 And $aScrollPos[1] = 0 Then
+			; use fixed position now to prevent boat activation
+			$aScrollPos[0] = $aCenterHomeVillageClickDrag[0]
+			$aScrollPos[1] = $aCenterHomeVillageClickDrag[1]
+		EndIf
+		SetLog("Fixing center of village", $COLOR_INFO)
+		ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] + ($g_aFallbackDragFix[0] - $g_aFallbackDragFix[2]), $aScrollPos[1])
 	EndIf
 
 	If $bCenterVillage And Not $g_bZoomoutFailureNotRestartingAnything And Not $g_bAndroidZoomoutModeFallback Then

@@ -47,6 +47,8 @@ Global $g_aVillageRefSize[15][7] = [["DS", "Default", 612.8, 45, 815, 60, 636], 
 									["RY", "Royal", 610.20, 57, 799, 48, 603]] ;ok
 Global $g_sCurrentScenery = "", $g_sSceneryCode = "DS"
 
+Global $g_aFallbackDragFix = -1
+
 Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix = Default, $sFixedPrefix = Default, $bOnBuilderBase = Default, $bCaptureRegion = Default, $bDebugWithImage = False) ; Capture region spam disabled - Team AIO Mod++
 	FuncEnter(GetVillageSize)
 	Local $stone = [0, 0, 0, 0, 0, ""], $tree = [0, 0, 0, 0, 0, ""]
@@ -82,10 +84,11 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		$tree = FindTree($sDirectory, $sTreePrefix, $iAdditionalX, $iAdditionalY, $stone[4], $bCaptureRegion)
 	EndIf
 	
-	If (UBound($stone) > 3 And Not @error And $stone[0] = 0) Or @error Then
+	If $stone[0] = 0 Then
 		SetDebugLog("GetVillageSize cannot find stone", $COLOR_WARNING)
-		If UBound($tree) > 3 And not @error And $tree[0] > 0 Then
-			ClickDrag($tree[0], $tree[1], $tree[2], $tree[3], 1000)
+		If $tree[0] > 0 Then
+			Local $aFallbackDragFix[4] = [$tree[0], $tree[1], $tree[2], $tree[3]]
+			$g_aFallbackDragFix = $aFallbackDragFix
 		EndIf
 		Return FuncReturn($aResult)
 	Else
@@ -93,10 +96,11 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	EndIf
 	
 	
-	If (UBound($tree) > 3 And Not @error And $tree[0] = 0) Or @error Then
+	If $tree[0] = 0 Then
 		SetDebugLog("GetVillageSize cannot find tree", $COLOR_ACTION)
-		If UBound($stone) > 3 And not @error And $stone[0] > 0 Then
-			ClickDrag($stone[0], $stone[1], $stone[2], $stone[3], 1000)
+		If $stone[0] > 0 Then
+			Local $aFallbackDragFix[4] = [$stone[0], $stone[1], $stone[2], $stone[3]]
+			$g_aFallbackDragFix = $aFallbackDragFix
 		EndIf
 		Return FuncReturn($aResult)
 	Else

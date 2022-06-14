@@ -53,11 +53,17 @@ Func BuilderBaseAttack($bTestRun = False)
 	EndIf
 
 	; Check Attack Button
-	If Not CheckAttackBtn() Then Return False
+	If Not CheckAttackBtn() Then
+		SetLog("CheckAttackBtn not possible", $COLOR_DEBUG)
+		Return False
+	EndIf
 	If RandomSleep(1500) Then Return
 
 	; Check Versus Battle window status
-	If Not isOnVersusBattleWindow() Then Return False
+	If Not isOnVersusBattleWindow() Then Return Then
+		SetLog("isOnVersusBattleWindow not possible", $COLOR_DEBUG)
+		Return False
+	EndIf
 	If RandomSleep(1500) Then Return
 
 	; Check if is present bonus OCR.
@@ -90,12 +96,17 @@ Func BuilderBaseAttack($bTestRun = False)
 	If $IsReaddy And (($bIsToDropTrophies) Or ($g_iCmbBBAttack = $g_eBBAttackCSV) Or ($g_iCmbBBAttack = $g_eBBAttackSmart)) Then
 		
 		If Not FindVersusBattlebtn() Then 
+			SetLog("FindVersusBattlebtn not possible", $COLOR_DEBUG)
 			ClickAway()
 			Return False
 		EndIf
 
 		; Clouds
-		If Not WaitForVersusBattle() Then Return
+		If Not WaitForVersusBattle() Then 
+			SetLog("WaitForVersusBattle not possible", $COLOR_DEBUG)
+			ClickAway()
+			Return False
+		EndIf
 		If Not $g_bRunState Then Return
 
 		; Attack Bar | [0] = Troops Name , [1] = X-axis , [2] - Y-axis, [3] - Slot starting at 0, [4] - Amount
