@@ -782,6 +782,27 @@ Global $g_bDebugSmartMilk = False, $g_bChkMilkForceDeployHeroes = False, $g_bChk
 Global $g_bAttackClickFC = False
 Global $g_bIsCaravanOn = "Undefined" ; Custom BB - Team AIO Mod++
 
+;Village Reference size, add info here for every scenery:
+;[stoneName, SceneryName, stone2tree distance, DiamondInnerXleft, DiamondInnerXRight, DiamondInnerYTop, DiamondInnerYBottom]
+Global $g_aVillageRefSize[15][7] = [["DS", "Default", 612.8, 45, 815, 60, 636], _ ;ok
+									["JS", "Jungle", 566.60, 69, 796, 64, 609], _ ;ok
+									["BB", "BuilderBase", 523, 117, 748, 128, 595], _
+									["CC", "Clashy Construction", 642.40, 50, 811, 60, 636], _ ;ok
+									["PC", "Pirate", 598.68, 50, 812, 63, 634], _ ;ok
+									["EW", "Winter", 576.41, 68, 794, 61, 607], _ ;ok
+									["HM", "Hog Mountain", 637.4, 52, 810, 62, 636], _ ;ok
+									["EP", "Epic Jungle", 636.8, 45, 815, 60, 636], _ ;ok
+									["9C", "9th Clashivery", 617.21, 76, 803, 64, 611], _ ;ok
+									["PG", "Pumpkin Graveyard", 567.01, 94, 784, 58, 581], _
+									["SD", "Snow Day", 569.2, 84, 789, 58, 584], _ ;ok
+									["TM", "Tiger Mountain", 616, 74, 805, 45, 594], _ ;ok
+									["PR", "Primal", 580.41, 74, 803, 64, 613], _ ;ok
+									["SH", "Shadow", 598.40, 81, 790, 61, 592], _ ;ok
+									["RY", "Royal", 610.20, 57, 799, 48, 603]] ;ok
+									
+Global $g_sCurrentScenery = "", $g_sSceneryCode = "DS"
+Global $g_aFallbackDragFix = -1
+
 ; New building MV - Team AIO Mod++
 Global $g_bNewUpdateMainVillage = False, $g_hChkAutoBuildNew = 0
 

@@ -57,14 +57,6 @@ Func BuilderBaseAttack($bTestRun = False)
 		SetLog("CheckAttackBtn not possible", $COLOR_DEBUG)
 		Return False
 	EndIf
-	If RandomSleep(1500) Then Return
-
-	; Check Versus Battle window status
-	If Not isOnVersusBattleWindow() Then Return Then
-		SetLog("isOnVersusBattleWindow not possible", $COLOR_DEBUG)
-		Return False
-	EndIf
-	If RandomSleep(1500) Then Return
 
 	; Check if is present bonus OCR.
 	If IsBuilderBaseOCR() Then
@@ -94,15 +86,15 @@ Func BuilderBaseAttack($bTestRun = False)
 
 	If $g_bRestart = True Then Return
 	If $IsReaddy And (($bIsToDropTrophies) Or ($g_iCmbBBAttack = $g_eBBAttackCSV) Or ($g_iCmbBBAttack = $g_eBBAttackSmart)) Then
-		
-		If Not FindVersusBattlebtn() Then 
+
+		If Not FindVersusBattlebtn() Then
 			SetLog("FindVersusBattlebtn not possible", $COLOR_DEBUG)
 			ClickAway()
 			Return False
 		EndIf
 
 		; Clouds
-		If Not WaitForVersusBattle() Then 
+		If Not WaitForVersusBattle() Then
 			SetLog("WaitForVersusBattle not possible", $COLOR_DEBUG)
 			ClickAway()
 			Return False
@@ -192,48 +184,57 @@ Func RemoveChangeTroopsDialog()
 	Return False
 EndFunc   ;==>RemoveChangeTroopsDialog
 
-Func CheckAttackBtn()
-	If QuickMIS("BC1", $g_sImgAttackBtnBB, 16, 627 + $g_iBottomOffsetYFixed, 107, 713 + $g_iBottomOffsetYFixed, True, False) Then ; Resolution changed
-		SetDebugLog("Attack Button detected: " & $g_iQuickMISX & "," & $g_iQuickMISY) ; Resolution changed
-		Click(Random(16, 107, 1), Random(627, 713, 1) + $g_iBottomOffsetYFixed, 1) ; Resolution changed
-	Else
-		SetLog("Attack Button not available.", $COLOR_ERROR)
-		ClickAway(Default, True)
-		Return False
-	EndIf
-	Return True
-EndFunc   ;==>CheckAttackBtn
-
-Func isOnVersusBattleWindow()
+Func CheckAttackBtn($bOnTandem = False)
+	Local $i = 0, $bFoundWindows = False
+	Do
+		$i += 1
+		If $bOnTandem = True Then
+			$bFoundWindows = _CheckPixel($g_aFindBattleBB, True)
+		EndIf
+	Until ($i = 5) Or QuickMIS("BC1", $g_sImgAttackBtnBB, 0, 620 + $g_iBottomOffsetYFixed, 120, 732 + $g_iBottomOffsetYFixed, True, False) Or $bFoundWindows Or Not $g_bRunState Or _Sleep(500) ; Resolution changed
+	
 	If Not $g_bRunState Then Return
-
-	Local $aOkayBTN = [664, 465 + $g_iBottomOffsetYFixed, 0xD9F481, 30] ; Resolution changed
-	Local $aIsAttackBB = [550, 345 + $g_iMidOffsetYFixed, 0xFEFFFF, 20] ; Resolution changed
-	Local $aOnVersusBattleWindow = [375, 245 + $g_iMidOffsetYFixed, 0xE8E8E0, 20] ; Resolution changed
-	Local $aFindBattle = [592, 301 + $g_iMidOffsetYFixed, 0xFFC949, 30] ; Resolution changed
-
-	If _Wait4PixelArray($aOnVersusBattleWindow) Then
-		If _Wait4PixelArray($aFindBattle) Then
-			SetDebugLog("Versus Battle window detected.")
-		ElseIf _CheckPixel($aOkayBTN, True) Then
-			Click($aOkayBTN[0] + Random(5, 10, 1), $aOkayBTN[1] + Random(5, 10, 1))
-		ElseIf Not BuilderBaseAttackOppoWait() Then
-			SetLog("Versus Battle window not available.", $COLOR_WARNING)
+	
+	If $bFoundWindows = False Then
+	
+		If $i < 5 Then
+			SetDebugLog("Attack Button detected: " & $g_iQuickMISX & "," & $g_iQuickMISY) ; Resolution changed
+			PureClick(Random(30, 94, 1), Random(636, 696, 1) + $g_iBottomOffsetYFixed, 1) ; Resolution changed
+		Else
+			SetLog("Attack Button not available.", $COLOR_ERROR)
 			ClickAway(Default, True)
 			Return False
 		EndIf
+		
+		If Not $g_bRunState Then Return
+		
+		If Not _Wait4PixelArray($g_aOnVersusBattleWindowBB) Then
+			SetLog("Attack Button not available.", $COLOR_ERROR)
+			ClickAway(Default, True)
+			Return False
+		EndIf
+
+	EndIf
+	
+	If _CheckPixel($g_aFindBattleBB, True) Then
+		SetDebugLog("Versus Battle window detected.")
+	ElseIf _CheckPixel($g_aOkayBtnBB, True) Then
+		Click($g_aOkayBtnBB[0] + Random(5, 10, 1), $g_aOkayBtnBB[1] + Random(5, 10, 1))
+	ElseIf Not BuilderBaseAttackOppoWait() Then
+		SetLog("Versus Battle window not available.", $COLOR_WARNING)
+		ClickAway(Default, True)
+		Return False
 	EndIf
 
 	Return True
-EndFunc   ;==>isOnVersusBattleWindow
+EndFunc   ;==>CheckAttackBtn
 
 Func BuilderBaseAttackOppoWait()
 	Local $iWait = 180000 ; 3 min
 	Local $hTimer = TimerInit()
 	Local $iErrorLoop = 0
-	Local $aIsAttackBB = [550, 345 + $g_iMidOffsetYFixed, 0xFEFFFF, 20] ; Resolution changed
-	Local $i = 0, $hResultColor = 0x000000
-	If _CheckPixel($aIsAttackBB, True) Then
+	Local $i = 0;, $hResultColor = 0x000000
+	If _CheckPixel($g_aIsAttackBB, True) Then
 		Do
 			$i += 1
 			If Not $g_bRunState Then Return
@@ -245,7 +246,7 @@ Func BuilderBaseAttackOppoWait()
 			EndIf
 
 			; Wait
-			If _CheckPixel($aIsAttackBB, True) Then
+			If _CheckPixel($g_aIsAttackBB, True) Then
 				If (Mod($i  + 1, 4) = 0) Then Setlog("Opponent is attacking.", $COLOR_INFO)
 				If _Sleep(3000) Then Return ; 3 seconds
 				ContinueLoop
@@ -253,7 +254,7 @@ Func BuilderBaseAttackOppoWait()
 
 			; Thropy
 			If _WaitForCheckImg($g_sImgReportFinishedBB, "465, 405, 490, 461", Default, 5000, 250) Then ; Resolution changed
-				$hResultColor = _GetPixelColor(150, 192 + $g_iBottomOffsetYFixed, True) ; Resolution changed
+				; $hResultColor = _GetPixelColor(150, 192 + $g_iMidOffsetYFixed, True) ; Resolution changed
 				ExitLoop
 			Else
 				$iErrorLoop += 1
@@ -263,9 +264,8 @@ Func BuilderBaseAttackOppoWait()
 
 		If _Sleep(5000) Then Return
 
-		Local $aOkayBTN = [664, 465 + $g_iBottomOffsetYFixed, 0xD9F481, 30] ; Resolution changed
-		If _CheckPixel($aOkayBTN, True) Then
-			Click($aOkayBTN[0] + Random(5, 10, 1), $aOkayBTN[1] + Random(5, 10, 1))
+		If _CheckPixel($g_aOkayBtnBB, True) Then
+			Click($g_aOkayBtnBB[0] + Random(5, 10, 1), $g_aOkayBtnBB[1] + Random(5, 10, 1))
 			If _Sleep(1500) Then Return
 			Return True
 		EndIf
@@ -343,10 +343,10 @@ Func FindVersusBattlebtn()
 	Local $aOkayVersusBattleBtn[2][3] = [[0xFDDF685, 1, 0], [0xDDF685, 2, 0]]
 
 	SetLog("Finding Button Now!", $COLOR_INFO)
-	
+
 	Local $aXY[2] = [Random(528, 666, 1), Random(254, 312, 1)]
 	Local $bClicked = False
-	
+
 	For $i = 0 To 6
 		If _MultiPixelSearch(490, 284 + $g_iMidOffsetYFixed, 710, 375 + $g_iMidOffsetYFixed, 1, 1, Hex(0xFFCA4A, 6), $aFindVersusBattleBtn, 25) <> 0 Then
 			PureClickP($aXY, 1)
@@ -427,7 +427,7 @@ Func WaitForVersusBattle()
 		SetDebugLog("WaitForVersusBattle: Is BB Attack Page ? " & $bIsBBAttackPage)
 		If $bIsBBAttackPage Then ExitLoop
 		If _Sleep(2000) Then Return
-		If $i = 60 Then 
+		If $i = 60 Then
 			CheckMainScreen(True)
 			Return False
 		EndIf
@@ -543,6 +543,7 @@ EndFunc   ;==>BuilderBaseAttackToDrop
 Func BuilderBaseCSVAttack($aAvailableTroops, $bDebug = False)
 	; $aAvailableTroops[$x][0] = Name , $aAvailableTroops[$x][1] = X axis
 	If Not $g_bRunState Then Return
+
 	; Reset all variables
 	BuilderBaseResetAttackVariables()
 	; $aAvailableTroops[$x][0] = Name , $aAvailableTroops[$x][1] = X axis
@@ -603,7 +604,6 @@ Func BuilderBaseAttackReport($bNoExit = False)
 	Local $iWait = 180000 ; 3 min
 	Local $hTimer = TimerInit()
 	Local $iErrorLoop = 0
-	Local $aIsAttackBB = [550, 345 + $g_iMidOffsetYFixed, 0xFEFFFF, 20] ; Fixed resolution
 	Local $i = 0
 	Do
 		$i += 1
@@ -616,7 +616,7 @@ Func BuilderBaseAttackReport($bNoExit = False)
 		EndIf
 
 		; Wait
-        If _CheckPixel($aIsAttackBB, True) Then
+        If _CheckPixel($g_aIsAttackBB, True) Then
 			If (Mod($i  + 1, 4) = 0) Then Setlog("Opponent is attacking.", $COLOR_INFO)
 			If _Sleep(3000) Then Return ; 3 seconds
 			ContinueLoop
@@ -688,7 +688,7 @@ Func BuilderBaseAttackReport($bNoExit = False)
 		$g_iBBMachAbilityLastActivatedTime = -1
 
 		If $g_bIsBBevent = True Then
-			; xbebenk	
+			; xbebenk
 			For $i = 0 To 8
 				_CaptureRegion2(760, 510 + $g_iBottomOffsetYFixed, 820, 550 + $g_iBottomOffsetYFixed) ; Fixed resolution
 				If UBound(decodeSingleCoord(findImage("GameComplete", $g_sImgGameComplete & "\*", "FV", 1, False))) = 2 And not @error Then
@@ -696,12 +696,12 @@ Func BuilderBaseAttackReport($bNoExit = False)
 					$g_bIsBBevent = False
 
 					Click(700, 570 + $g_iBottomOffsetYFixed, 1) ; Fixed resolution
-					
+
 					If _Wait4Pixel(827, 78 + $g_iBottomOffsetYFixed, 0xFFFFFF, 5, 2500, 250, "BuilderBaseAttackReport") Then ; Fixed resolution
 						_ClanGames(False, True)
 						ExitLoop
 					EndIf
-				
+
 				Endif
 				If _Sleep(500) Then Return
 			Next
@@ -709,9 +709,8 @@ Func BuilderBaseAttackReport($bNoExit = False)
 
 		If RandomSleep(2000) Then Return
 	Else
-		Local $aOkayBTN = [664, 465 + $g_iBottomOffsetYFixed, 0xD9F481, 30] ; Fixed resolution
-		If _CheckPixel($aOkayBTN, True) Then
-			Click($aOkayBTN[0] + Random(5, 10, 1), $aOkayBTN[1] + Random(5, 10, 1))
+		If _CheckPixel($g_aOkayBtnBB, True) Then
+			Click($g_aOkayBtnBB[0] + Random(5, 10, 1), $g_aOkayBtnBB[1] + Random(5, 10, 1))
 			If _Sleep(1500) Then Return
 			Return True
 		EndIf

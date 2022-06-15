@@ -95,3 +95,9 @@ Global Const $g_aGameTime[4] = [384, 388 + $g_iMidOffsetYFixed, 0xFFFFFF, 10]
 
 ; Sugested upgrades
 Global Const $g_aMasterBuilder[4] = [360, 11, 0x7cbdde, 10] ; Master Builder Check pixel [i] icon
+
+; Builder base
+Global Const $g_aOkayBtnBB = [664, 465 + $g_iMidOffsetYFixed, 0xD9F481, 30] ; Resolution changed
+Global Const $g_aOnVersusBattleWindowBB = [375, 245 + $g_iMidOffsetYFixed, 0xE8E8E0, 20] ; Resolution changed
+Global Const $g_aFindBattleBB = [592, 301 + $g_iMidOffsetYFixed, 0xFFC949, 30] ; Resolution changed
+Global Const $g_aIsAttackBB = [550, 345 + $g_iMidOffsetYFixed, 0xFEFFFF, 20] ; Resolution changed
