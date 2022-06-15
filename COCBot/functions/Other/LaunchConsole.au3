@@ -74,21 +74,17 @@ EndFunc   ;==>LaunchConsole
 ; $CompareParameterFunc is func that returns True or False if parameter is matching, "" not used
 Func ProcessExists2($ProgramPath, $ProgramParameter = Default, $CompareMode = Default, $SearchMode = 0, $CompareCommandLineFunc = "")
 
-	If IsInt($ProgramPath) Then ;Return ProcessExists($ProgramPath) ; Be compatible with ProcessExists
-		Local $hProcess, $pid = Int($ProgramPath)
-		If _WinAPI_GetVersion() >= 6.0 Then
-			$hProcess = _WinAPI_OpenProcess($PROCESS_QUERY_LIMITED_INFORMATION, 0, $pid)
-		Else
-			$hProcess = _WinAPI_OpenProcess($PROCESS_QUERY_INFORMATION, 0, $pid)
-		EndIf
-		Local $iExitCode = 0
-		If $hProcess And @error = 0 Then
-			$iExitCode = _WinAPI_GetExitCodeProcess($hProcess)
+	If IsInt($ProgramPath) Then
+		Local $pid = Int($ProgramPath)
+		Local $hProcess = _WinAPI_OpenProcess($PROCESS_QUERY_LIMITED_INFORMATION, 0, $pid)
+		If @error = 0 And IsPtr($hProcess) Then
+			Local $iExitCode = _WinAPI_GetExitCodeProcess($hProcess)
 			_WinAPI_CloseHandle($hProcess)
+			Return (($iExitCode = 259) ? ($pid) : (0))
 		EndIf
-		Return (($iExitCode = 259) ? $pid : 0)
+		Return 0
 	EndIf
-
+	
 	If $ProgramParameter = Default Then
 		$ProgramParameter = ""
 		If $CompareMode = Default Then $CompareMode = 1
@@ -97,7 +93,11 @@ Func ProcessExists2($ProgramPath, $ProgramParameter = Default, $CompareMode = De
 	If $CompareMode = Default Then
 		$CompareMode = 0
 	EndIf
-
+	
+	Local $aReturn = ProcessFindBy($ProgramPath, $ProgramParameter)
+	If UBound($aReturn) > 0 And not @error then Return $aReturn[0]
+	Return 0
+	#cs
 	Local $exe = $ProgramPath
 	Local $iLastBS = StringInStr($exe, "\", 0, -1)
 	If $iLastBS > 0 Then $exe = StringMid($exe, $iLastBS + 1)
@@ -136,11 +136,13 @@ Func ProcessExists2($ProgramPath, $ProgramParameter = Default, $CompareMode = De
 	EndIf
 	CloseWmiObject()
 	Return $pid
+	#ce
 EndFunc   ;==>ProcessExists2
 
 ; Special version of ProcessExists2 that returns Array of all processes found
 Func ProcessesExist($ProgramPath, $ProgramParameter = Default, $CompareMode = Default, $SearchMode = Default, $CompareCommandLineFunc = Default, $bReturnDetailedArray = Default, $strComputer = ".")
-
+	Return ProcessFindBy($ProgramPath, $ProgramParameter)
+	#cs
 	If $ProgramParameter = Default Then $ProgramParameter = ""
 	If $CompareMode = Default Then $CompareMode = 0
 	If $SearchMode = Default Then $SearchMode = 0
@@ -195,6 +197,7 @@ Func ProcessesExist($ProgramPath, $ProgramParameter = Default, $CompareMode = De
 	EndIf
 	CloseWmiObject()
 	Return $PIDs
+	#ce
 EndFunc   ;==>ProcessesExist
 
 ; Get complete Command Line by PID
