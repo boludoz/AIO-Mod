@@ -342,9 +342,9 @@ Func FindVersusBattlebtn()
 	Local $aFindVersusBattleBtn[2][3] = [[0xFFCA4A, 1, 0], [0xFFCA4A, 0, 1]]
 	Local $aOkayVersusBattleBtn[2][3] = [[0xFDDF685, 1, 0], [0xDDF685, 2, 0]]
 
-	SetLog("Finding Button Now!")
+	SetLog("Finding Button Now!", $COLOR_INFO)
 	
-	Local $aXY[2] = [Random(515, 675, 1), Random(295, 350, 1)]
+	Local $aXY[2] = [Random(528, 666, 1), Random(254, 312, 1)]
 	Local $bClicked = False
 	
 	For $i = 0 To 6
