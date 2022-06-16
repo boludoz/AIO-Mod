@@ -80,21 +80,11 @@ EndFunc   ;==>LaunchConsole
 ; $CompareParameterFunc is func that returns True or False if parameter is matching, "" not used
 Func ProcessExists2($ProgramPath, $ProgramParameter = Default, $CompareMode = Default, $SearchMode = 0, $CompareCommandLineFunc = "")
 
-	If IsInt($ProgramPath) Then ;Return ProcessExists($ProgramPath) ; Be compatible with ProcessExists
-		Local $hProcess, $pid = Int($ProgramPath)
-		If _WinAPI_GetVersion() >= 6.0 Then
-			$hProcess = _WinAPI_OpenProcess($PROCESS_QUERY_LIMITED_INFORMATION, 0, $pid)
-		Else
-			$hProcess = _WinAPI_OpenProcess($PROCESS_QUERY_INFORMATION, 0, $pid)
-		EndIf
-		Local $iExitCode = 0
-		If $hProcess And @error = 0 Then
-			$iExitCode = _WinAPI_GetExitCodeProcess($hProcess)
-			_WinAPI_CloseHandle($hProcess)
-		EndIf
-		Return (($iExitCode = 259) ? $pid : 0)
+	If IsInt($ProgramPath) Then
+		Local $iPid = Int($ProgramPath)
+		Return ProcessExists($iPid)
 	EndIf
-
+	
 	If $ProgramParameter = Default Then
 		$ProgramParameter = ""
 		If $CompareMode = Default Then $CompareMode = 1
@@ -103,104 +93,15 @@ Func ProcessExists2($ProgramPath, $ProgramParameter = Default, $CompareMode = De
 	If $CompareMode = Default Then
 		$CompareMode = 0
 	EndIf
-
-	Local $exe = $ProgramPath
-	Local $iLastBS = StringInStr($exe, "\", 0, -1)
-	If $iLastBS > 0 Then $exe = StringMid($exe, $iLastBS + 1)
-	Local $commandLine = ($ProgramPath <> "" ? ('"' & $ProgramPath & '"' & ($ProgramParameter = "" ? "" : " " & $ProgramParameter)) : $ProgramParameter)
-	Local $commandLineCompare = StringReplace(StringReplace(StringReplace(StringReplace($commandLine, ".exe", "", 1), " ", ""), '"', ""), "'", "")
-	Local $query = "Select " & GetWmiSelectFields() & " from Win32_Process" ; replaced CommandLine with ExecutablePath
-	If StringLen($commandLine) > 0 Then
-		$query &= " where "
-		If StringLen($ProgramPath) > 0 Then
-			$query &= "ExecutablePath like '%" & StringReplace($ProgramPath, "\", "\\") & "%'"
-			If $SearchMode = 1 And StringLen($ProgramParameter) > 0 Then $query &= " And "
-		EndIf
-		If $SearchMode = 1 And StringLen($ProgramParameter) > 0 Then $query &= "CommandLine like '%" & StringReplace($ProgramParameter, "\", "\\") & "%'"
-	EndIf
-
-	Local $pid = 0, $i = 0
-	For $Process In WmiQuery($query)
-		SetDebugLog($Process[0] & " = " & $Process[1] & " (" & $Process[2] & ")")
-		If $pid = 0 Then
-			Local $processCommandLineCompare = StringReplace(StringReplace(StringReplace(StringReplace($Process[2], ".exe", "", 1), " ", ""), '"', ""), "'", "")
-			If ($CompareMode = 0 And $commandLineCompare = $processCommandLineCompare) Or _
-					($CompareMode = 0 And StringRight($commandLineCompare, StringLen($processCommandLineCompare)) = $processCommandLineCompare) Or _
-					($CompareMode = 0 And $CompareCommandLineFunc <> "" And Execute($CompareCommandLineFunc & "(""" & StringReplace($Process[2], """", "") & """)") = True) Or _
-					$CompareMode = 1 Then
-				$pid = Number($Process[0])
-				;ExitLoop
-			EndIf
-		EndIf
-		$i += 1
-		$Process = 0
-	Next
-	If $pid = 0 Then
-		SetDebugLog("Process by CommandLine not found: " & $ProgramPath & ($ProgramParameter = "" ? "" : ($ProgramPath <> "" ? " " : "") & $ProgramParameter))
-	Else
-		SetDebugLog("Found Process " & $pid & " by CommandLine: " & $ProgramPath & ($ProgramParameter = "" ? "" : ($ProgramPath <> "" ? " " : "") & $ProgramParameter))
-	EndIf
-	CloseWmiObject()
-	Return $pid
+	
+	Local $aReturn = ProcessFindBy($ProgramPath, $ProgramParameter)
+	If UBound($aReturn) > 0 And not @error then Return $aReturn[0]
+	Return 0
 EndFunc   ;==>ProcessExists2
 
 ; Special version of ProcessExists2 that returns Array of all processes found
 Func ProcessesExist($ProgramPath, $ProgramParameter = Default, $CompareMode = Default, $SearchMode = Default, $CompareCommandLineFunc = Default, $bReturnDetailedArray = Default, $strComputer = ".")
-
-	If $ProgramParameter = Default Then $ProgramParameter = ""
-	If $CompareMode = Default Then $CompareMode = 0
-	If $SearchMode = Default Then $SearchMode = 0
-	If $CompareCommandLineFunc = Default Then $CompareCommandLineFunc = ""
-	If $bReturnDetailedArray = Default Then $bReturnDetailedArray = False
-
-	If IsNumber($ProgramPath) Then
-		Local $a[1] = [ProcessExists($ProgramPath)] ; Be compatible with ProcessExists
-		Return $a
-	EndIf
-	Local $exe = $ProgramPath
-	Local $iLastBS = StringInStr($exe, "\", 0, -1)
-	If $iLastBS > 0 Then $exe = StringMid($exe, $iLastBS + 1)
-	Local $commandLine = ($ProgramPath <> "" ? ('"' & $ProgramPath & '"' & ($ProgramParameter = "" ? "" : " " & $ProgramParameter)) : $ProgramParameter)
-	Local $commandLineCompare = StringReplace(StringReplace(StringReplace(StringReplace($commandLine, ".exe", "", 1), " ", ""), '"', ""), "'", "")
-	Local $query = "Select " & GetWmiSelectFields() & " from Win32_Process" ; replaced CommandLine with ExecutablePath
-	If StringLen($commandLine) > 0 Then
-		$query &= " where "
-		If StringLen($ProgramPath) > 0 Then
-			$query &= "ExecutablePath like '%" & StringReplace($ProgramPath, "\", "\\") & "%'"
-			If $SearchMode = 1 And StringLen($ProgramParameter) > 0 Then $query &= " And "
-		EndIf
-		If $SearchMode = 1 And StringLen($ProgramParameter) > 0 Then $query &= "CommandLine like '%" & StringReplace($ProgramParameter, "\", "\\") & "%'"
-	EndIf
-	Local $Process, $pid = 0, $i = 0
-	Local $PIDs[0]
-
-	For $Process In WmiQuery($query)
-		SetDebugLog($Process[0] & " = " & $Process[2])
-		Local $processCommandLineCompare = StringReplace(StringReplace(StringReplace(StringReplace($Process[2], ".exe", "", 1), " ", ""), '"', ""), "'", "")
-		If ($CompareMode = 0 And $commandLineCompare = $processCommandLineCompare) Or _
-				($CompareMode = 0 And StringRight($commandLineCompare, StringLen($processCommandLineCompare)) = $processCommandLineCompare) Or _
-				($CompareMode = 0 And $CompareCommandLineFunc <> "" And Execute($CompareCommandLineFunc & "(""" & StringReplace($Process[2], """", "") & """)") = True) Or _
-				$CompareMode = 1 Then
-
-			$pid = Number($Process[0])
-			ReDim $PIDs[$i + 1]
-			Local $a = $pid
-			If $bReturnDetailedArray Then
-				Local $a = [$pid, $Process[1], $Process[2]]
-			EndIf
-			$PIDs[$i] = $a
-			$i += 1
-
-			$Process = 0
-		EndIf
-	Next
-	If $i = 0 Then
-		SetDebugLog("No process found by CommandLine: " & $ProgramPath & ($ProgramParameter = "" ? "" : " " & $ProgramParameter))
-	Else
-		SetDebugLog("Found " & $i & " process(es) with " & $ProgramPath & ($ProgramParameter = "" ? "" : " " & $ProgramParameter))
-	EndIf
-	CloseWmiObject()
-	Return $PIDs
+	Return ProcessFindBy($ProgramPath, $ProgramParameter)
 EndFunc   ;==>ProcessesExist
 
 ; Get complete Command Line by PID
@@ -405,10 +306,10 @@ Func _WinAPI_SetConsoleIcon($g_sLibIconPath, $nIconID, $hWnD = Default)
 EndFunc   ;==>_WinAPI_SetConsoleIcon
 
 Func _ConsoleWrite($Text)
+	If StringTrimRight($Text, 1) <> @CRLF Then $Text &= @CRLF ; Custom fix - Team AIO Mod++
 	Local $hFile, $pBuffer, $iToWrite, $iWritten, $tBuffer = DllStructCreate("char[" & StringLen($Text) & "]")
 	DllStructSetData($tBuffer, 1, $Text)
 	$hFile = _WinAPI_GetStdHandle(1)
 	_WinAPI_WriteFile($hFile, $tBuffer, StringLen($Text), $iWritten)
 	Return $iWritten
 EndFunc   ;==>_ConsoleWrite
-
