@@ -23,46 +23,52 @@
 
 Func LaunchConsole($cmd, $param, ByRef $process_killed, $timeout = 10000, $bUseSemaphore = False, $bNoLog = False)
 
+	If $cmd = Default Then Return SetError(1)
+	If $param = Default Then $param = ""
+	If $timeout = Default Then $timeout = 10000
+
+	Local $sCommand, $sDOS, $tHelperStartTime, $tTime_Difference, $sMessage = ''
+	
+	$process_killed = False
+
 	If $bUseSemaphore Then
 		Local $hSemaphore = LockSemaphore(StringReplace($cmd, "\", "/"), "Waiting to launch: " & $cmd)
 	EndIf
 
-	Local $data, $pid, $hStdIn[2], $hStdOut[2], $hTimer, $hProcess, $hThread
-
-	If StringLen($param) > 0 Then $cmd &= " " & $param
-
-	$hTimer = __TimerInit()
-	$process_killed = False
-
-	If Not $bNoLog Then SetDebugLog("Func LaunchConsole: " & $cmd, $COLOR_DEBUG) ; Debug Run
-	$pid = RunPipe($cmd, "", @SW_HIDE, $STDERR_MERGED, $hStdIn, $hStdOut, $hProcess, $hThread)
-	If $pid = 0 Then
+	$sCommand &= @ComSpec & String(' /c ') ; You can use all cmd commands.
+	$sCommand &= Chr(34) & $cmd & Chr(34)
+	$sCommand &= " "
+	$sCommand &= String($param)
+	
+	SetDebugLog("runCommand | " & $sCommand)
+	$sDOS = Run($sCommand, "", @SW_HIDE, 8)
+	If $sDOS = 0 Then
 		SetLog("Launch failed: " & $cmd, $COLOR_ERROR)
 		If $bUseSemaphore = True Then UnlockSemaphore($hSemaphore)
 		Return SetError(1, 0, "")
 	EndIf
-
-	Local $timeout_sec = Round($timeout / 1000)
-	Local $iWaitResult
-
-	Do
-		$iWaitResult = _WinAPI_WaitForSingleObject($hProcess, $DELAYSLEEP)
-		$data &= ReadPipe($hStdOut[0])
-	Until ($timeout > 0 And __TimerDiff($hTimer) > $timeout) Or $iWaitResult <> $WAIT_TIMEOUT
-
-	If ProcessExists($pid) Then
-		If ClosePipe($pid, $hStdIn, $hStdOut, $hProcess, $hThread) = 1 Then
-			If Not $bNoLog Then SetDebugLog("Process killed: " & $cmd, $COLOR_ERROR)
-			$process_killed = True
+	$tHelperStartTime = TimerInit()
+	SetDebugLog("runCommand | Waiting for runCommand helper...")
+	While ProcessExists($sDOS)
+		ProcessWaitClose($sDOS, 10)
+		SetDebugLog("runCommand | Still waiting for runCommand helper...")
+		$tTime_Difference = TimerDiff($tHelperStartTime)
+		If $tTime_Difference > $timeout Then
+			SetDebugLog("runCommand | is taking too long!", $COLOR_RED)
+			If KillProcess($sDOS, "LaunchConsole") Then
+				$process_killed = True
+			EndIf
+			Return ''
 		EndIf
-	Else
-		ClosePipe($pid, $hStdIn, $hStdOut, $hProcess, $hThread)
-	EndIf
-	CleanLaunchOutput($data)
-
-	If Not $bNoLog Then SetDebugLog("Func LaunchConsole Output: " & $data, $COLOR_DEBUG) ; Debug Run Output
+	WEnd
+	Do
+		$sMessage &= StdoutRead($sDOS)
+	Until @error
+	
+	If Not $bNoLog Then SetDebugLog("Func LaunchConsole Output: " & $sMessage, $COLOR_DEBUG) ; Debug Run Output
 	If $bUseSemaphore Then UnlockSemaphore($hSemaphore)
-	Return SetError(0, 0, $data)
+	Return SetError(0, 0, $sMessage)
+
 EndFunc   ;==>LaunchConsole
 
 ; Special version of ProcessExists that checks process based on full process image path AND parameters
@@ -74,17 +80,21 @@ EndFunc   ;==>LaunchConsole
 ; $CompareParameterFunc is func that returns True or False if parameter is matching, "" not used
 Func ProcessExists2($ProgramPath, $ProgramParameter = Default, $CompareMode = Default, $SearchMode = 0, $CompareCommandLineFunc = "")
 
-	If IsInt($ProgramPath) Then
-		Local $pid = Int($ProgramPath)
-		Local $hProcess = _WinAPI_OpenProcess($PROCESS_QUERY_LIMITED_INFORMATION, 0, $pid)
-		If @error = 0 And IsPtr($hProcess) Then
-			Local $iExitCode = _WinAPI_GetExitCodeProcess($hProcess)
-			_WinAPI_CloseHandle($hProcess)
-			Return (($iExitCode = 259) ? ($pid) : (0))
+	If IsInt($ProgramPath) Then ;Return ProcessExists($ProgramPath) ; Be compatible with ProcessExists
+		Local $hProcess, $pid = Int($ProgramPath)
+		If _WinAPI_GetVersion() >= 6.0 Then
+			$hProcess = _WinAPI_OpenProcess($PROCESS_QUERY_LIMITED_INFORMATION, 0, $pid)
+		Else
+			$hProcess = _WinAPI_OpenProcess($PROCESS_QUERY_INFORMATION, 0, $pid)
 		EndIf
-		Return 0
+		Local $iExitCode = 0
+		If $hProcess And @error = 0 Then
+			$iExitCode = _WinAPI_GetExitCodeProcess($hProcess)
+			_WinAPI_CloseHandle($hProcess)
+		EndIf
+		Return (($iExitCode = 259) ? $pid : 0)
 	EndIf
-	
+
 	If $ProgramParameter = Default Then
 		$ProgramParameter = ""
 		If $CompareMode = Default Then $CompareMode = 1
@@ -93,11 +103,7 @@ Func ProcessExists2($ProgramPath, $ProgramParameter = Default, $CompareMode = De
 	If $CompareMode = Default Then
 		$CompareMode = 0
 	EndIf
-	
-	Local $aReturn = ProcessFindBy($ProgramPath, $ProgramParameter)
-	If UBound($aReturn) > 0 And not @error then Return $aReturn[0]
-	Return 0
-	#cs
+
 	Local $exe = $ProgramPath
 	Local $iLastBS = StringInStr($exe, "\", 0, -1)
 	If $iLastBS > 0 Then $exe = StringMid($exe, $iLastBS + 1)
@@ -136,13 +142,11 @@ Func ProcessExists2($ProgramPath, $ProgramParameter = Default, $CompareMode = De
 	EndIf
 	CloseWmiObject()
 	Return $pid
-	#ce
 EndFunc   ;==>ProcessExists2
 
 ; Special version of ProcessExists2 that returns Array of all processes found
 Func ProcessesExist($ProgramPath, $ProgramParameter = Default, $CompareMode = Default, $SearchMode = Default, $CompareCommandLineFunc = Default, $bReturnDetailedArray = Default, $strComputer = ".")
-	Return ProcessFindBy($ProgramPath, $ProgramParameter)
-	#cs
+
 	If $ProgramParameter = Default Then $ProgramParameter = ""
 	If $CompareMode = Default Then $CompareMode = 0
 	If $SearchMode = Default Then $SearchMode = 0
@@ -197,7 +201,6 @@ Func ProcessesExist($ProgramPath, $ProgramParameter = Default, $CompareMode = De
 	EndIf
 	CloseWmiObject()
 	Return $PIDs
-	#ce
 EndFunc   ;==>ProcessesExist
 
 ; Get complete Command Line by PID
@@ -317,7 +320,7 @@ Func ReadPipe(ByRef $hPipe)
 	If _WinAPI_ReadFile($hPipe, DllStructGetPtr($tBuffer), 4096, $iRead) Then
 		Return SetError(0, 0, DllStructGetData($tBuffer, "Text"))
 	EndIf
-	Return SetError(_WinAPI_GetLastError(), 0, "")
+	Return SetError( _WinAPI_GetLastError(), 0, "")
 EndFunc   ;==>ReadPipe
 
 Func WritePipe(ByRef $hPipe, Const $s)
@@ -328,7 +331,7 @@ Func WritePipe(ByRef $hPipe, Const $s)
 	If _WinAPI_WriteFile($hPipe, DllStructGetPtr($tBuffer), $iToWrite, $iWritten) Then
 		Return SetError(0, 0, $iWritten)
 	EndIf
-	Return SetError(_WinAPI_GetLastError(), 0, 0)
+	Return SetError( _WinAPI_GetLastError(), 0, 0)
 EndFunc   ;==>WritePipe
 
 Func DataInPipe(ByRef $hPipe)
@@ -386,7 +389,7 @@ Func _WinAPI_SetConsoleIcon($g_sLibIconPath, $nIconID, $hWnD = Default)
 				$Result = DllCall("kernel32.dll", "hwnd", "GetConsoleWindow")
 				$error = @error
 				$extended = @extended
-				If UBound($Result) > 0 Then $hWnD = $Result[0]
+				If UBound($Result) > 0 Then	$hWnD = $Result[0]
 			EndIf
 			If IsHWnd($hWnD) Then
 				_SendMessage($hWnD, $WM_SETICON, 0, DllStructGetData($hIcon, 1)) ; SMALL_ICON
@@ -402,7 +405,6 @@ Func _WinAPI_SetConsoleIcon($g_sLibIconPath, $nIconID, $hWnD = Default)
 EndFunc   ;==>_WinAPI_SetConsoleIcon
 
 Func _ConsoleWrite($Text)
-	If StringTrimRight($Text, 1) <> @CRLF Then $Text &= @CRLF ; Custom fix - Team AIO Mod++
 	Local $hFile, $pBuffer, $iToWrite, $iWritten, $tBuffer = DllStructCreate("char[" & StringLen($Text) & "]")
 	DllStructSetData($tBuffer, 1, $Text)
 	$hFile = _WinAPI_GetStdHandle(1)
