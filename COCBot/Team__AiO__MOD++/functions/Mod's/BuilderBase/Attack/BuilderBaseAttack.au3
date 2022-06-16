@@ -119,6 +119,8 @@ Func BuilderBaseAttack($bTestRun = False)
 
 		; Verify the scripts and attack bar
 		If Not $bIsToDropTrophies Then BuilderBaseSelectCorrectScript($aAvailableTroops)
+		If $g_bRestart = True Then Return
+		If Not $g_bRunState Then Return
 		
 		; Avoid bugs in redlines (too fast MyBot).
 		If RandomSleep(1500) Then Return
