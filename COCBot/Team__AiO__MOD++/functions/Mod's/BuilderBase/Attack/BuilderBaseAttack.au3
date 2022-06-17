@@ -585,7 +585,6 @@ Func BuilderBaseAttackReport($bNoExit = False)
 	Local $iStars = 0
 	Local $StarsPositions[3][2] = [[326, 394 + $g_iMidOffsetYFixed], [452, 388 + $g_iMidOffsetYFixed], [546, 413 + $g_iMidOffsetYFixed]] ; Fixed resolution
 	Local $iColor[3] = [0xD0D4D0, 0xDBDEDB, 0xDBDDD8]
-	Local $hResultColor = 0x000000
 
 	If _Sleep(1500) Then Return
 	If Not $g_bRunState Then Return
@@ -603,15 +602,15 @@ Func BuilderBaseAttackReport($bNoExit = False)
 	  CheckMainScreen()
 	EndIf
 
-	Local $iWait = 180000 ; 3 min
+	Local $iWait = 185000 ; 3 min
 	Local $hTimer = TimerInit()
 	Local $iErrorLoop = 0
 	Local $i = 0
 	Do
 		$i += 1
-		If Not $g_bRunState Then Return
+		If Not $g_bRunState Or $g_bRestart Then Return
 
-		If isOnBuilderBase(True) Or $iErrorLoop = 15 Then
+		If isOnBuilderBase(True) Or $iErrorLoop = 25 Then
 			SetLog("BuilderBaseAttackReport | Something weird happened here. Leave the screen alone.", $COLOR_ERROR)
 			If checkObstacles(True) Then SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
 			Return
@@ -626,7 +625,6 @@ Func BuilderBaseAttackReport($bNoExit = False)
 
 		; Thropy
 		If _WaitForCheckImg($g_sImgReportFinishedBB, "465, 405, 490, 461", Default, 5000, 250) Then ; Fixed resolution
-			$hResultColor = _GetPixelColor(150, 192 + $g_iMidOffsetYFixed, True) ; Fixed resolution
 			ExitLoop
 		Else
 			$iErrorLoop += 1
@@ -634,19 +632,19 @@ Func BuilderBaseAttackReport($bNoExit = False)
 
 	Until ($iWait < TimerDiff($hTimer))
 
-	If _Sleep(5000) Then Return
+	If RandomSleep(2500, 1550) Then Return
 
 	; 0, 1, 2
-	; Draw
-	Local $iModeSet = 2
+	Local $hResultColor = _GetPixelColor(150, 192 + $g_iMidOffsetYFixed, True) ; Fixed resolution
+	Local $aColorsResult = [0x8DBE51, 0xD0262C, 0x87A9CF]
+	Local $iModeSet = HexColorIndex($aColorsResult, $hResultColor, 25)
 
-	; Victory
-	If _ColorCheck($hResultColor, Hex(0x8DBE51, 6), 20) Then
-		$iModeSet = 0
-	; Defeat
-	ElseIf _ColorCheck($hResultColor, Hex(0xD0262C, 6), 20) Then
-		$iModeSet = 1
+	If $iModeSet = -1 Then
+		SetLog("Failed detection in BuilderBaseAttackReport", $COLOR_ERROR)
+		$iModeSet = 2
 	EndIf
+	
+	If Not $g_bRunState Or $g_bRestart Then Return
 
 	; Get the LOOT :
 	Local $iGain[3]
@@ -692,6 +690,7 @@ Func BuilderBaseAttackReport($bNoExit = False)
 		If $g_bIsBBevent = True Then
 			; xbebenk
 			For $i = 0 To 8
+				If Not $g_bRunState Or $g_bRestart Then Return
 				_CaptureRegion2(760, 510 + $g_iBottomOffsetYFixed, 820, 550 + $g_iBottomOffsetYFixed) ; Fixed resolution
 				If UBound(decodeSingleCoord(findImage("GameComplete", $g_sImgGameComplete & "\*", "FV", 1, False))) = 2 And not @error Then
 					SetLog("Nice, clan came completed.", $COLOR_INFO)
@@ -709,7 +708,7 @@ Func BuilderBaseAttackReport($bNoExit = False)
 			Next
 		EndIf
 
-		If RandomSleep(2000) Then Return
+		If RandomSleep(1500) Then Return
 	Else
 		If _CheckPixel($g_aOkayBtnBB, True) Then
 			Click($g_aOkayBtnBB[0] + Random(5, 10, 1), $g_aOkayBtnBB[1] + Random(5, 10, 1))
@@ -720,3 +719,12 @@ Func BuilderBaseAttackReport($bNoExit = False)
 		Return False
 	EndIf
 EndFunc   ;==>BuilderBaseAttackReport
+
+Func HexColorIndex($aMultiPixels, $pColor, $iTolerance = 25)
+	For $i = 0 To UBound($aMultiPixels) - 1
+		If _ColorCheck($pColor, Hex($aMultiPixels[$i], 6), $iTolerance) Then
+			Return $i
+		EndIf
+	Next
+	Return -1
+EndFunc   ;==>HexColorIndex
