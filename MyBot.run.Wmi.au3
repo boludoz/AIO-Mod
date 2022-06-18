@@ -13,7 +13,7 @@
 ; AutoIt pragmas
 #NoTrayIcon
 #RequireAdmin
-#AutoIt3Wrapper_UseX64=7n
+#AutoIt3Wrapper_UseX64=n
 #AutoIt3Wrapper_Run_Au3Stripper=y
 #Au3Stripper_Parameters=/rsln /MI=3
 ;/SV=0
@@ -28,9 +28,9 @@
 Opt("MustDeclareVars", 1)
 
 #include <APIErrorsConstants.au3>
-;~ #include <Misc.au3>
-;~ #include <WinAPI.au3>
-;~ #include <WinAPISys.au3>
+#include <Misc.au3>
+#include <WinAPI.au3>
+#include <WinAPISys.au3>
 #include <WinAPIProc.au3>
 #include <ProcessConstants.au3>
 #include <ColorConstants.au3>
@@ -44,20 +44,18 @@ Global $g_iGlobalActiveBotsAllowed = 0 ; Dummy
 Global $g_hMutextOrSemaphoreGlobalActiveBots = 0 ; Dummy
 Global $g_bBotLaunchOption_NoBotSlot = True
 Global $g_hStatusBar = 0 ; Dummy
-
-; Custom Fix - Team AIO Mod++
-Global Const $COLOR_DEBUGS = 0x808080
-Global Const $_COLOR_MONEYGREEN = 0x32CD32
+; Global Const $COLOR_ORANGE = 0xFF7700 ; Used for donate GUI buttons
 Global Const $COLOR_ERROR = $COLOR_RED ; Error messages
 Global Const $COLOR_WARNING = $COLOR_MAROON ; Warning messages
 Global Const $COLOR_INFO = $COLOR_BLUE ; Information or Status updates for user
 Global Const $COLOR_SUCCESS = 0x006600 ; Dark Green, Action, method, or process completed successfully
 Global Const $COLOR_SUCCESS1 = 0x009900 ; Med green, optional success message for users
 Global Const $COLOR_DEBUG = $COLOR_PURPLE ; Purple, basic debug color
-Global Const $COLOR_DEBUG1 = 0x7A00CC ; Dark Purple, Debug for successful status checks
-Global Const $COLOR_DEBUG2 = 0xAA80FF ; lt Purple, secondary debug color
+Global Const $COLOR_DEBUG1 = 0x7a00cc ; Dark Purple, Debug for successful status checks
+Global Const $COLOR_DEBUG2 = 0xaa80ff ; lt Purple, secondary debug color
+Global Const $COLOR_DEBUGS = 0xaa80ff ; Med Grey, debug color for less important but needed supporting data points in multiple messages
 Global Const $COLOR_ACTION = 0xFF8000 ; Med Orange, debug color for individual actions, clicks, etc
-Global Const $COLOR_ACTION1 = 0xCC80FF ; Light Purple, debug color for pixel/window checks
+Global Const $COLOR_ACTION1 = 0xcc80ff ; Light Purple, debug color for pixel/window checks
 
 Func _Sleep($ms, $iSleep = True, $CheckRunState = True)
 	Sleep($ms)
