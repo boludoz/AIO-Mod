@@ -42,20 +42,6 @@ Func TestBuilderBaseGetDeployPoints()
 	Setlog("** TestBuilderBaseGetDeployPoints END**", $COLOR_DEBUG)
 EndFunc   ;==>TestBuilderBaseGetDeployPoints
 
-Func TestBuilderBaseGetHall()
-	Setlog("** TestBuilderBaseGetHall START**", $COLOR_DEBUG)
-	Local $Status = $g_bRunState
-	$g_bRunState = True
-
-	Local $BuilderHallPos = _ImageSearchXML($g_sBundleBuilderHall, 1, "79,50,784,597", True, True)
-	If Not IsArray($BuilderHallPos) And UBound($BuilderHallPos) < 1 Then
-		SaveDebugImage("BuilderHall")
-	EndIf
-	Setlog(_ArrayToString($BuilderHallPos))
-	$g_bRunState = $Status
-	Setlog("** TestBuilderBaseGetHall END**", $COLOR_DEBUG)
-EndFunc   ;==>TestBuilderBaseGetHall
-
 Func builderbasegetdeploypoints($furtherfrom = 0, $bDebug = False)
 	If Not $g_brunstate Then Return 
 	Local $debuglog
@@ -267,12 +253,12 @@ Func DeployPointsPosition($aPixel, $bIsBH = False)
 	If Not $g_bRunState Then Return
 	Local $sReturn = "", $aXY[2]
 
-	If $bIsBH = True And IsArray($g_aBuilderHallPos) Then
+	If $bIsBH = True And UBound($g_aBuilderHallPos) > 0 And not @error Then
 		$aXY[0] = $g_aBuilderHallPos[0][1]
 		$aXY[1] = $g_aBuilderHallPos[0][2]
 	Else
-		$aXY[0] = 441
-		$aXY[1] = 422
+		$aXY[0] = $DiamondMiddleX
+		$aXY[1] = $DiamondMiddleY
 	EndIf
 
 	; Using to determinate the Side position on Screen |Bottom Right|Bottom Left|Top Left|Top Right|

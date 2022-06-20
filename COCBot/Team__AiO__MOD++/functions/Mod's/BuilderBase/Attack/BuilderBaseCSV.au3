@@ -81,6 +81,9 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $BestDeployPoin
 	If FileExists($FileNamePath) Then
 		Local $aLines = FileReadToArray($FileNamePath)
 		If @error Then Setlog("There was an error reading the CSV file. @error: " & @error, $COLOR_WARNING)
+		
+		; Custom
+		UpdateBHPos()
 
 		Local $Line = "", $BuildingSide = ""
 
@@ -383,30 +386,35 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $BestDeployPoin
 							WEnd
 
 						ElseIf $sDropSide = "BH" Then
-							If $g_aBuilderHallPos[0][0] <> Null Then
-								Local $BHposition = [$g_aBuilderHallPos[0][0], $g_aBuilderHallPos[0][1]]
-								; Get/Check if the distance from any deploy point is less than 75px
-								Local $Point2Deploy = GetThePointNearBH($BHposition, $aDeployPoints)
-								If $Point2Deploy[0] <> "" Then
-									For $i = 0 To $iQtyToDrop - 1
-										DeployTroopBB($sTroopName, $aSlot_XY, $Point2Deploy, 1)
-										$iQtyOfSelectedSlot -= 1
-										$iTotalQtyByTroop -= 1
-										; Remove the Qty from the Original array :
-										$aAvailableTroops_NXQ[$iSlotNumber][4] = $iQtyOfSelectedSlot
-										; If is the Machine exist and deployed
-										; If IsMachineDepoloyed() Then ExitLoop
-										If IsArray($g_aMachineBB) And UBound($g_aMachineBB) > 2 And $g_aMachineBB[2] Then ExitLoop
-										If $iTotalQtyByTroop < 1 Then ExitLoop
-										; Let's select another slot if this slot is empty
-										If $iQtyOfSelectedSlot < 1 Then
-											; VerifySlotTroops uses ByRef on $aSlot_XY , $iQtyOfSelectedSlot and $iSlotNumber
-											If Not VerifySlotTroop($sTroopName, $aSlot_XY, $iQtyOfSelectedSlot, $iSlotNumber, $aAvailableTroops_NXQ) Then ExitLoop
-										EndIf
-										; Just a small Delay to Pause Function
-										If _Sleep(100) Then Return
-									Next
-								EndIf
+							
+							; Custom logic
+							Local $BHposition[2] = [$DiamondMiddleX, $DiamondMiddleX]
+							If UBound($g_aBuilderHallPos) > 0 And not @error Then
+								$BHposition[0] = $g_aBuilderHallPos[0][1]
+								$BHposition[1] = $g_aBuilderHallPos[0][2]
+							EndIf
+							
+							; Get/Check if the distance from any deploy point is less than 75px
+							Local $Point2Deploy = GetThePointNearBH($BHposition, $aDeployPoints)
+							If $Point2Deploy[0] <> "" Then
+								For $i = 0 To $iQtyToDrop - 1
+									DeployTroopBB($sTroopName, $aSlot_XY, $Point2Deploy, 1)
+									$iQtyOfSelectedSlot -= 1
+									$iTotalQtyByTroop -= 1
+									; Remove the Qty from the Original array :
+									$aAvailableTroops_NXQ[$iSlotNumber][4] = $iQtyOfSelectedSlot
+									; If is the Machine exist and deployed
+									; If IsMachineDepoloyed() Then ExitLoop
+									If IsArray($g_aMachineBB) And UBound($g_aMachineBB) > 2 And $g_aMachineBB[2] Then ExitLoop
+									If $iTotalQtyByTroop < 1 Then ExitLoop
+									; Let's select another slot if this slot is empty
+									If $iQtyOfSelectedSlot < 1 Then
+										; VerifySlotTroops uses ByRef on $aSlot_XY , $iQtyOfSelectedSlot and $iSlotNumber
+										If Not VerifySlotTroop($sTroopName, $aSlot_XY, $iQtyOfSelectedSlot, $iSlotNumber, $aAvailableTroops_NXQ) Then ExitLoop
+									EndIf
+									; Just a small Delay to Pause Function
+									If _Sleep(100) Then Return
+								Next
 							EndIf
 						EndIf
 					EndIf

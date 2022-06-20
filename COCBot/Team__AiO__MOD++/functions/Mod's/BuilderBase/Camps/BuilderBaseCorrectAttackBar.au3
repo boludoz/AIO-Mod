@@ -330,16 +330,17 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 		Click($aSwicthBtn[$aWrongCamps[0]] + Random(2, 10, 1), $iDefaultY + Random(2, 10, 1))
 		If Not $g_bRunState Then Return
 		If RandomSleep(500) Then Return
-		
-		Local $aTroopsImg = 0
-		For $i = 1 To 3
-			$aTroopsImg = QuickMIS("CNX", $g_sImgDirBBTroops, 0, 454, 860, 556, True, False)
-			If UBound($aTroopsImg) > 0 And not @error Then ExitLoop
-			If Not $g_bRunState Then Return
-			If _Sleep(500) Then Return
-		Next
-		
+
+		Local $aResult = _PixelSearch(39, 533, 510, 533, Hex(0xF3F3F3, 6), 12, True, True)
+
 		$iTroopIndex = TroopIndexLookupBB($sMissingCamp)
+		If IsArray($aTroopsImg) And IsArray($aResult) Then
+			For $iSlotsTroops = 0 To UBound($aTroopsImg) - 1
+				$aTroopsImg[$iSlotsTroops][1] += $aResult[0]
+			Next
+		Else
+			$aTroopsImg = QuickMIS("CNX", $g_sImgDirBBTroops, 0, 454, 860, 556, True, False)
+		EndIf
 		
 		If UBound($aTroopsImg) > 0 And not @error Then
 			For $iTroops = 0 To UBound($aTroopsImg) - 1
@@ -367,6 +368,11 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 				EndIf
 			Next
 			
+			If IsArray($aResult) Then
+				For $iSlotsTroops = 0 To UBound($aTroopsImg) - 1
+					$aTroopsImg[$iSlotsTroops][1] -= $aResult[0]
+				Next
+			EndIf
 		Else
 			Click(8, 720, 1)
 			Return False

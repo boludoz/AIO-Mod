@@ -49,39 +49,63 @@ Func TestBuilderBaseAttackBB()
 	Setlog("** TestBuilderBaseAttackBB END**", $COLOR_DEBUG)
 EndFunc   ;==>TestBuilderBaseAttackBB
 
+Func TestUpdateBHPos()
+	Setlog("** TestUpdateBHPos START**", $COLOR_DEBUG)
+	Local $Status = $g_bRunState
+	$g_bRunState = True
+	UpdateBHPos()
+	If UBound($g_aBuilderHallPos) > 0 And Not @Error Then 
+		Setlog("TestUpdateBHPos : " & _ArrayToString($g_aBuilderHallPos), $COLOR_DEBUG)
+	Else
+		Setlog("TestUpdateBHPos : Error", $COLOR_ERROR)
+	EndIf
+	$g_bRunState = $Status
+	Setlog("** TestUpdateBHPos END**", $COLOR_DEBUG)
+EndFunc   ;==>TestUpdateBHPos
+
+Func UpdateBHPos()
+	Local $hStartTime = __TimerInit()
+	Local $aBuilderHallPos = -1
+	Local $aBuilderHall[1][4] = [["BuilderHall", $DiamondMiddleX, $DiamondMiddleX, 92]]
+	
+	$g_aBuilderHallPos = $aBuilderHall
+	
+	For $i = 0 To 3
+		$aBuilderHallPos = QuickMIS("CNX", $g_sBundleBuilderHall)
+
+		If UBound($aBuilderHallPos) > 0 And Not @Error Then
+			$g_aBuilderHallPos = $aBuilderHallPos
+			ExitLoop
+		EndIf
+		
+		If _Sleep(750) Then Return
+	Next
+	
+	If $i >= 2 Then 
+		SaveDebugImage("UpdateBHPos")
+		Setlog("Builder Hall detection error", $COLOR_ERROR)
+	EndIf
+	
+	SetLog("Builder Base Hall detection: " & Round(__TimerDiff($hStartTime) / 1000, 2) & " seconds", $COLOR_DEBUG)
+	Return $g_aBuilderHallPos
+EndFunc   ;==>UpdateBHPos
+
 Func AttackBB($aAvailableTroops = GetAttackBarBB(), $bRemainCSV = False)
 	Local $iSide = Random(0, 1, 1) ; randomly choose top left or top right
 	Local $aBMPos = 0
 
-	; If ZoomBuilderBaseMecanics(True) < 1 Then Return False
+	If $bRemainCSV = False Then UpdateBHPos()
 
 	$g_aBuilderBaseDiamond = BuilderBaseAttackDiamond()
 	If @error Then
 		Return -1
 	EndIf
-
+	
 	If IsArray($g_aBuilderBaseDiamond) <> True Or Not (UBound($g_aBuilderBaseDiamond) > 0) Then Return False
 
 	$g_aExternalEdges = BuilderBaseGetEdges($g_aBuilderBaseDiamond, "External Edges")
 
 	Local $sSideNames[4] = ["TopLeft", "TopRight", "BottomRight", "BottomLeft"]
-
-	Local $aBuilderHallPos
-	For $i = 0 To 3
-		$aBuilderHallPos = findMultipleQuick($g_sBundleBuilderHall, 1)
-		If IsArray($aBuilderHallPos) Then ExitLoop
-		If _Sleep(250) Then Return
-	Next
-
-	If IsArray($aBuilderHallPos) And UBound($aBuilderHallPos) > 0 Then
-		$g_aBuilderHallPos = $aBuilderHallPos
-	Else
-		SaveDebugImage("BuilderHall")
-		Setlog("Builder Hall detection Error!", $Color_Error)
-		Local $aBuilderHall[1][4] = [["BuilderHall", 450, 425, 92]]
-		$g_aBuilderHallPos = $aBuilderHall
-	EndIf
-
 	Local $iSide = _ArraySearch($sSideNames, BuilderBaseAttackMainSide(), 0, 0, 0, 0, 0, 0)
 
 	If $iSide < 0 Then
@@ -89,9 +113,7 @@ Func AttackBB($aAvailableTroops = GetAttackBarBB(), $bRemainCSV = False)
 		Return False
 	EndIf
 
-	If $bRemainCSV = False Then
-		BuilderBaseGetDeployPoints(15)
-	EndIf
+	If $bRemainCSV = False Then BuilderBaseGetDeployPoints(15)
 
 	Local $aVar
 	If UBound($g_aDeployPoints) > 0 Then

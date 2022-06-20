@@ -51,7 +51,7 @@ Func DebugUI()
 	GUICtrlSetOnEvent($btnSmartAttack, "TestBuilderBaseAttackBB")
 	$x += 75
 	$btnHall = GUICtrlCreateButton("BuilderHall", $x, $y, 75, 25, $WS_GROUP)
-	GUICtrlSetOnEvent($btnHall, "TestBuilderBaseGetHall")
+	GUICtrlSetOnEvent($btnHall, "TestUpdateBHPos")
 	$x += 75
 	$btnDrop = GUICtrlCreateButton("Attack (MAIN).", $x, $y, 75, 25, $WS_GROUP)
 	GUICtrlSetOnEvent($btnDrop, "TestBuilderBaseAttack")
