@@ -4971,14 +4971,18 @@ Func CheckEmuNewVersions()
 		Case "MEmu"
 			$NewVersion = GetVersionNormalized("8.0.0.0")
          Case "Nox"
-			$NewVersion = GetVersionNormalized("7.0.2.6")
+			$NewVersion = GetVersionNormalized("7.0.3.0")
 		Case Else
 			; diabled of the others
 			$NewVersion = GetVersionNormalized("99.0.0.0")
 	EndSwitch
 
-	If $Version > $NewVersion Then
+	If $Version > $NewVersion And $g_sAndroidEmulator = "Memu" Then
 		SetLog("Compatibility has not been certified for " & $g_sAndroidEmulator & " version (" & $g_sAndroidVersion & ")!", $COLOR_INFO)
 		SetLog($HelpLink, $COLOR_INFO)
+	EndIf
+	
+	If $g_sAndroidEmulator = "Memu" And $Version > $NewVersion Then
+		SetLog("Memu 8.0.1.0 onwards is not compatible", $COLOR_ERROR)
 	EndIf
 EndFunc   ;==>CheckEmuNewVersions

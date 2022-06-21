@@ -75,6 +75,65 @@ EndFunc   ;==>LaunchConsole
 Func ProcessExists2($ProgramPath, $ProgramParameter = Default, $CompareMode = Default, $SearchMode = 0, $CompareCommandLineFunc = "")
 
 	If IsInt($ProgramPath) Then
+		$ProgramPath = _WinAPI_GetProcessFileName($ProgramPath)
+	EndIf
+
+	If $ProgramParameter = Default Then
+		$ProgramParameter = ""
+		If $CompareMode = Default Then $CompareMode = 1
+	EndIf
+
+	If $CompareMode = Default Then
+		$CompareMode = 0
+	EndIf
+
+	Local $commandLine = ($ProgramPath <> "" ? ('"' & $ProgramPath & '"' & ($ProgramParameter = "" ? "" : " " & $ProgramParameter)) : $ProgramParameter)
+	Local $commandLineCompare = StringReplace(StringReplace(StringReplace(StringReplace($commandLine, ".exe", "", 1), " ", ""), '"', ""), "'", "")	
+	Local $aArrayProcess[0], $Process[3]
+	Local $aiProcessList = ProcessList()
+	If @error Then Return 0
+	
+	Local $iUBound = 0, $iPid = 0
+	For $iProcess = 1 To UBound($aiProcessList) - 1
+		If IsInt($aiProcessList[$iProcess][1]) = 0 Then ContinueLoop
+		$Process[0] = Int($aiProcessList[$iProcess][1])
+		If $Process[0] = 0 Then ContinueLoop
+		$Process[1] = _WinAPI_GetProcessFileName($Process[0])
+		If $Process[1] = "" Then ContinueLoop
+		
+		If $Process[1] <> $ProgramPath Then ContinueLoop
+		
+		$Process[2] = '"' & $Process[1] & '" ' & _WinAPI_GetProcessCommandLine($Process[0])
+
+		SetDebugLog($Process[0] & " = " & $Process[1] & " (" & $Process[2] & ")")
+		
+		Local $processCommandLineCompare = StringReplace(StringReplace(StringReplace(StringReplace($Process[2], ".exe", "", 1), " ", ""), '"', ""), "'", "")
+		If ($CompareMode = 0 And $commandLineCompare = $processCommandLineCompare) Or _
+				($CompareMode = 0 And StringRight($commandLineCompare, StringLen($processCommandLineCompare)) = $processCommandLineCompare) Or _
+				($CompareMode = 0 And $CompareCommandLineFunc <> "" And Execute($CompareCommandLineFunc & "(""" & StringReplace($Process[2], """", "") & """)") = True) Or _
+				$CompareMode = 1 Then
+			
+			$iPid = Number($Process[0])
+			SetDebugLog("Found Process " & $iPid & " by CommandLine: " & $ProgramPath & ($ProgramParameter = "" ? "" : ($ProgramPath <> "" ? " " : "") & $ProgramParameter))
+			Return $iPid
+		EndIf
+	Next
+	
+	SetDebugLog("Process by CommandLine not found: " & $ProgramPath & ($ProgramParameter = "" ? "" : ($ProgramPath <> "" ? " " : "") & $ProgramParameter))
+	Return $iPid
+EndFunc   ;==>ProcessExists2
+
+#cs
+; Special version of ProcessExists that checks process based on full process image path AND parameters
+; Supports also PID as $ProgramPath parameter
+; $CompareMode = 0 Path with parameter is compared (" ", '"' and "'" removed!)
+; $CompareMode = 1 Any Command Line containing path and parameter is used
+; $SearchMode = 0 Search only for $ProgramPath
+; $SearchMode = 1 Search for $ProgramPath and $ProgramParameter
+; $CompareParameterFunc is func that returns True or False if parameter is matching, "" not used
+Func _ProcessExists2($ProgramPath, $ProgramParameter = Default, $CompareMode = Default, $SearchMode = 0, $CompareCommandLineFunc = "")
+
+	If IsInt($ProgramPath) Then
 		Return ProcessExists($ProgramPath)
 	EndIf
 
@@ -126,6 +185,7 @@ Func ProcessExists2($ProgramPath, $ProgramParameter = Default, $CompareMode = De
 	CloseWmiObject()
 	Return $pid
 EndFunc   ;==>ProcessExists2
+#ce
 
 ; Special version of ProcessExists2 that returns Array of all processes found
 Func ProcessesExist($ProgramPath, $ProgramParameter = Default, $CompareMode = Default, $SearchMode = Default, $CompareCommandLineFunc = Default, $bReturnDetailedArray = Default, $strComputer = ".")
@@ -186,8 +246,28 @@ Func ProcessesExist($ProgramPath, $ProgramParameter = Default, $CompareMode = De
 	Return $PIDs
 EndFunc   ;==>ProcessesExist
 
+Func ProcessGetCommandLine($iPID, $VDEPRECATED = "", $bIncludePath = Default)
+	Local $sDebugLog = ""
+	If $bIncludePath = Default Then $bIncludePath = True
+	$iPID = ProcessExists($iPID)
+	If $iPID > 0 Then
+		$sDebugLog = _WinAPI_GetProcessCommandLine($iPID)
+		If @error Then Return SetError(1, 0, -1)
+		If $bIncludePath = True And StringIsSpace($sDebugLog) = 0 Then
+			$sDebugLog = '"' & _WinAPI_GetProcessFileName($iPID) & '" ' & $sDebugLog
+		ElseIf StringIsSpace($sDebugLog) = 1 Then
+			$sDebugLog = _WinAPI_GetProcessFileName($iPID)
+		EndIf
+		SetDebugLog("ProcessGetCommandLine: " & $sDebugLog)
+		Return $sDebugLog
+	EndIf	
+	SetDebugLog("ProcessGetCommandLine: process not found")
+	Return SetError(1, 0, -1)
+EndFunc   ;==>ProcessGetCommandLine
+
+; #CS
 ; Get complete Command Line by PID
-Func ProcessGetCommandLine($pid, $strComputer = ".")
+Func _ProcessGetCommandLine($pid, $strComputer = ".")
 
 	If Not IsNumber($pid) Then Return SetError(2, 0, -1)
 
@@ -208,6 +288,7 @@ Func ProcessGetCommandLine($pid, $strComputer = ".")
 	CloseWmiObject()
 	Return SetError(1, 0, -1)
 EndFunc   ;==>ProcessGetCommandLine
+; #CE
 
 ; Get Wmi Process Object for process
 Func ProcessGetWmiProcess($pid, $strComputer = ".")
@@ -240,10 +321,9 @@ EndFunc   ;==>CleanLaunchOutput
 
 Func RunPipe($program, $workdir, $show_flag, $opt_flag, ByRef $hStdIn, ByRef $hStdOut, ByRef $hProcess, ByRef $hThread)
 
-	If $g_bDebugAndroid = True Then
+	If $g_bDepurateADB = True Then
 		If StringInStr($program, "adb") Then 
-			SetLog("[DebugAndroid] [RunPipe] [ADB] :", $COLOR_SUCCESS)
-			SetLog($program, $COLOR_SUCCESS)
+			SetLog("DepurateADB : " & $program, $COLOR_INFO)
 		EndIf
 	EndIf
 
@@ -276,7 +356,7 @@ Func RunPipe($program, $workdir, $show_flag, $opt_flag, ByRef $hStdIn, ByRef $hS
 	Local $ProcessInformation = DllStructCreate($tagPROCESS_INFORMATION)
 	Local $lpProcessInformation = DllStructGetPtr($ProcessInformation)
 
-	If _WinAPI_CreateProcess("", $program, 0, 0, True, 0, 0, $workdir, $lpStartupInfo, $lpProcessInformation) Then
+	If __WinAPI_CreateProcess("", $program, 0, 0, True, 0, 0, $workdir, $lpStartupInfo, $lpProcessInformation) Then
 		Local $pid = DllStructGetData($ProcessInformation, "ProcessID")
 		$hProcess = DllStructGetData($ProcessInformation, "hProcess")
 		$hThread = DllStructGetData($ProcessInformation, "hThread")

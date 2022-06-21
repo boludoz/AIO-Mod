@@ -16,7 +16,7 @@
 #include <Array.au3>
 
 Global $g_oWMI = 0
-Global $g_WmiAPI_External = False ; True retrieves the process list by calling MyBot.run.Wmi.exe
+; Global $g_WmiAPI_External = True ; True retrieves the process list by calling MyBot.run.Wmi.exe - Custom - Team AIO Mod++
 Global Static $g_WmiFields = ["Handle", "ExecutablePath", "CommandLine"]
 
 Func GetWmiSelectFields()
@@ -36,6 +36,7 @@ Func CloseWmiObject()
 EndFunc   ;==>CloseWmiObject
 
 Func WmiQuery($sQuery)
+	#cs - Custom - Team AIO Mod++
 	If $g_WmiAPI_External = True Then
 		Local $sAppFile = @ScriptDir & "\MyBot.run.Wmi." & ((@Compiled) ? ("exe") : ("au3"))
 		If FileExists($sAppFile) Then
@@ -47,7 +48,8 @@ Func WmiQuery($sQuery)
 		EndIf
 		; fall back to internal WMI call
 	EndIf
-
+	#ce - Custom - Team AIO Mod++
+	
 	Local $aProcesses[0]
 	SetDebugLog("WMI Query: " & $sQuery)
 	Local $oObjc = GetWmiObject()
@@ -64,6 +66,7 @@ Func WmiQuery($sQuery)
 	Return $aProcesses
 EndFunc
 
+#cs - Custom - Team AIO Mod++
 Func WmiOutputToArray(ByRef $s)
 
 	Local $aProcesses[0]
@@ -91,6 +94,7 @@ Func WmiOutputToArray(ByRef $s)
 	Return $aProcesses
 
 EndFunc
+#ce - Custom - Team AIO Mod++
 
 Func StringBetween(ByRef $s, $sStartTag, $sEndTag, $iStartPos = 1)
     Local $iS = StringInStr($s, $sStartTag, 0, 1, $iStartPos)
