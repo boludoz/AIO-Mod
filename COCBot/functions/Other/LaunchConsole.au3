@@ -398,7 +398,9 @@ Func _ConsoleWrite($Text)
 	If StringTrimRight($Text, 1) <> @CRLF Then $Text &= @CRLF ; Custom fix - Team AIO Mod++
 	Local $hFile, $pBuffer, $iToWrite, $iWritten, $tBuffer = DllStructCreate("char[" & StringLen($Text) & "]")
 	DllStructSetData($tBuffer, 1, $Text)
+	_WinAPI_AttachConsole()
 	$hFile = _WinAPI_GetStdHandle(1)
+	_WinAPI_WriteConsole($hFile, $Text)
 	_WinAPI_WriteFile($hFile, $tBuffer, StringLen($Text), $iWritten)
 	Return $iWritten
 EndFunc   ;==>_ConsoleWrite
