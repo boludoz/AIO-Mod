@@ -1506,10 +1506,8 @@ Func FirstCheck()
 	Local $aRndFuncList = ['Collect', 'CollectCCGold', 'CollectCCGold', 'CleanYard']
 	_ArrayShuffle($aRndFuncList)
 	For $Index In $aRndFuncList
-		If Not $g_bRunState Then Return
 		_RunFunction($Index)
-		If $g_bRestart Then ExitLoop
-		If CheckAndroidReboot() Then ContinueLoop 2
+		If Not $g_bRunState Or $g_bRestart Or CheckAndroidReboot() Then ExitLoop
 	Next
 
 	VillageReport()

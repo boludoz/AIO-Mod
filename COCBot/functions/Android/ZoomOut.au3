@@ -540,6 +540,7 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 		EndIf
 		SetLog("Fixing center of village", $COLOR_INFO)
 		ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] + ($g_aFallbackDragFix[0] - $g_aFallbackDragFix[2]), $aScrollPos[1])
+		$g_aFallbackDragFix = -1
 	EndIf
 
 	If $bCenterVillage And Not $g_bZoomoutFailureNotRestartingAnything And Not $g_bAndroidZoomoutModeFallback Then
