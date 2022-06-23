@@ -49,47 +49,6 @@ Func TestBuilderBaseAttackBB()
 	Setlog("** TestBuilderBaseAttackBB END**", $COLOR_DEBUG)
 EndFunc   ;==>TestBuilderBaseAttackBB
 
-Func TestUpdateBHPos()
-	Setlog("** TestUpdateBHPos START**", $COLOR_DEBUG)
-	Local $Status = $g_bRunState
-	$g_bRunState = True
-	UpdateBHPos()
-	If UBound($g_aBuilderHallPos) > 0 And Not @Error Then 
-		Setlog("TestUpdateBHPos : " & _ArrayToString($g_aBuilderHallPos), $COLOR_DEBUG)
-	Else
-		Setlog("TestUpdateBHPos : Error", $COLOR_ERROR)
-	EndIf
-	$g_bRunState = $Status
-	Setlog("** TestUpdateBHPos END**", $COLOR_DEBUG)
-EndFunc   ;==>TestUpdateBHPos
-
-Func UpdateBHPos()
-	Local $hStartTime = __TimerInit()
-	Local $aBuilderHallPos = -1
-	Local $aBuilderHall[1][4] = [["BuilderHall", $DiamondMiddleX, $DiamondMiddleX, 92]]
-	
-	$g_aBuilderHallPos = $aBuilderHall
-	
-	For $i = 0 To 3
-		$aBuilderHallPos = QuickMIS("CNX", $g_sBundleBuilderHall)
-
-		If UBound($aBuilderHallPos) > 0 And Not @Error Then
-			$g_aBuilderHallPos = $aBuilderHallPos
-			ExitLoop
-		EndIf
-		
-		If _Sleep(750) Then Return
-	Next
-	
-	If $i >= 2 Then 
-		SaveDebugImage("UpdateBHPos")
-		Setlog("Builder Hall detection error", $COLOR_ERROR)
-	EndIf
-	
-	SetLog("Builder Base Hall detection: " & Round(__TimerDiff($hStartTime) / 1000, 2) & " seconds", $COLOR_DEBUG)
-	Return $g_aBuilderHallPos
-EndFunc   ;==>UpdateBHPos
-
 Func AttackBB($aAvailableTroops = GetAttackBarBB(), $bRemainCSV = False)
 	Local $iSide = Random(0, 1, 1) ; randomly choose top left or top right
 	Local $aBMPos = 0

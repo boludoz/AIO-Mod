@@ -237,18 +237,26 @@ Func BuilderBaseAttackOppoWait()
 	Local $iErrorLoop = 0
 	Local $i = 0;, $hResultColor = 0x000000
 	If _CheckPixel($g_aIsAttackBB, True) Then
+		Local $bWasSuspend = $g_bAndroidSuspended
+		$g_bAndroidSuspended = True
+
 		Do
 			$i += 1
 			If Not $g_bRunState Then Return
 
 			If isOnBuilderBase(True) Or $iErrorLoop = 15 Then
-				SetLog("BuilderBaseAttackOppoWait | Something weird happened here. Leave the screen alone.", $COLOR_ERROR)
+				SetLog("[BuilderBaseAttackOppoWait] Something weird happened here. Leave the screen alone.", $COLOR_ERROR)
 				If checkObstacles(True) Then SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
-				Return
+				Return False
 			EndIf
 
 			; Wait
 			If _CheckPixel($g_aIsAttackBB, True) Then
+				If isProblemAffect(True) Then
+					SetLog("[BuilderBaseAttackOppoWait] isProblemAffect ? True.", $COLOR_ERROR)
+					If checkObstacles(True) Then SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
+					Return False
+				EndIf
 				If (Mod($i  + 1, 4) = 0) Then Setlog("Opponent is attacking.", $COLOR_INFO)
 				If _Sleep(3000) Then Return ; 3 seconds
 				ContinueLoop
@@ -263,6 +271,8 @@ Func BuilderBaseAttackOppoWait()
 			EndIf
 
 		Until ($iWait < TimerDiff($hTimer))
+		
+		$g_bAndroidSuspended = $bWasSuspend
 
 		If _Sleep(5000) Then Return
 
@@ -606,18 +616,25 @@ Func BuilderBaseAttackReport($bNoExit = False)
 	Local $hTimer = TimerInit()
 	Local $iErrorLoop = 0
 	Local $i = 0
+	
+	Local $bWasSuspend = $g_bAndroidSuspended
+	$g_bAndroidSuspended = True
 	Do
 		$i += 1
 		If Not $g_bRunState Or $g_bRestart Then Return
 
-		If isOnBuilderBase(True) Or $iErrorLoop = 25 Then
-			SetLog("BuilderBaseAttackReport | Something weird happened here. Leave the screen alone.", $COLOR_ERROR)
-			If checkObstacles(True) Then SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
-			Return
-		EndIf
+			If isOnBuilderBase(True) Or $iErrorLoop = 15 Then
+				SetLog("[BuilderBaseAttackReport] Something weird happened here. Leave the screen alone.", $COLOR_ERROR)
+				If checkObstacles(True) Then SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
+				Return False
+			EndIf
 
-		; Wait
-        If _CheckPixel($g_aIsAttackBB, True) Then
+			; Wait
+			If _CheckPixel($g_aIsAttackBB, True) Then
+				If isProblemAffect(True) Then
+					SetLog("[BuilderBaseAttackReport] isProblemAffect ? True.", $COLOR_ERROR)
+					Return False
+				EndIf
 			If (Mod($i  + 1, 4) = 0) Then Setlog("Opponent is attacking.", $COLOR_INFO)
 			If _Sleep(3000) Then Return ; 3 seconds
 			ContinueLoop
@@ -631,7 +648,7 @@ Func BuilderBaseAttackReport($bNoExit = False)
 		EndIf
 
 	Until ($iWait < TimerDiff($hTimer))
-
+	$g_bAndroidSuspended = $bWasSuspend
 	If RandomSleep(2500, 1550) Then Return
 
 	; 0, 1, 2

@@ -277,6 +277,43 @@ Func DeployPointsPosition($aPixel, $bIsBH = False)
 	EndIf
 EndFunc   ;==>DeployPointsPosition
 
+Func TestUpdateBHPos()
+	Setlog("** TestUpdateBHPos START**", $COLOR_DEBUG)
+	Local $Status = $g_bRunState
+	$g_bRunState = True
+	UpdateBHPos()
+	If UBound($g_aBuilderHallPos) > 0 And Not @Error Then 
+		Setlog("TestUpdateBHPos : " & _ArrayToString($g_aBuilderHallPos), $COLOR_DEBUG)
+	Else
+		Setlog("TestUpdateBHPos : Error", $COLOR_ERROR)
+	EndIf
+	$g_bRunState = $Status
+	Setlog("** TestUpdateBHPos END**", $COLOR_DEBUG)
+EndFunc   ;==>TestUpdateBHPos
+
+Func UpdateBHPos()
+	Local $hStartTime = __TimerInit()
+	Local $aBuilderHallPos = -1
+	Local $aBuilderHall[1][4] = [["BuilderHall", $DiamondMiddleX, $DiamondMiddleY, 92]]
+	
+	For $i = 0 To 3
+		$aBuilderHallPos = QuickMIS("CNX", $g_sBundleBuilderHall)
+		If UBound($aBuilderHallPos) > 0 And Not @Error Then ExitLoop
+		If _Sleep(750) Then Return
+	Next
+	
+	If UBound($aBuilderHallPos) > 0 And Not @Error Then
+		$g_aBuilderHallPos = $aBuilderHallPos
+		SetLog("Builder Base Hall detection: " & Round(__TimerDiff($hStartTime) / 1000, 2) & " seconds", $COLOR_DEBUG)
+	Else
+		$g_aBuilderHallPos = $aBuilderHall
+		SaveDebugImage("UpdateBHPos")
+		Setlog("Builder Hall detection error", $COLOR_ERROR)
+	EndIf
+	
+	Return $g_aBuilderHallPos
+EndFunc   ;==>UpdateBHPos
+
 Func BuilderBaseBuildingsDetection($iBuilding = 4, $bScreenCap = True)
 
 	Local $aBuildings = ["AirDefenses", "Crusher", "GuardPost", "Cannon", "Air Bombs", "Lava Launcher", "Roaster", "BuilderHall"]
@@ -290,7 +327,48 @@ Func BuilderBaseBuildingsDetection($iBuilding = 4, $bScreenCap = True)
 
 	Local $aScreen[4] = [83, 136, 844, 694]
 	If Not $g_bRunState Then Return
-	Return findMultipleQuick($sDirectory, 10, $aScreen, False, Default, Default, 10)
+	
+	Switch $iBuilding
+		Case 0
+			If $g_aAirdefensesPos <> -1 Then Return $g_aAirdefensesPos
+		Case 1
+			If $g_aCrusherPos <> -1 Then Return $g_aCrusherPos
+		Case 2
+			If $g_aGuardPostPos <> -1 Then Return $g_aGuardPostPos
+		Case 3
+			If $g_aCannonPos <> -1 Then Return $g_aCannonPos
+		Case 4
+			If $g_aAirBombs <> -1 Then Return $g_aAirBombs
+		Case 5
+			If $g_aLavaLauncherPos <> -1 Then Return $g_aLavaLauncherPos
+		Case 6
+			If $g_aRoasterPos <> -1 Then Return $g_aRoasterPos
+		Case 7
+			If $g_aBuilderHallPos <> -1 Then Return $g_aBuilderHallPos
+	EndSwitch
+
+	Local $aReturn = findMultipleQuick($sDirectory, 10, $aScreen, False, Default, Default, 10)
+	
+	Switch $iBuilding
+		Case 0
+			$g_aAirdefensesPos = $aReturn
+		Case 1
+			$g_aCrusherPos = $aReturn
+		Case 2
+			$g_aGuardPostPos = $aReturn
+		Case 3
+			$g_aCannonPos = $aReturn
+		Case 4
+			$g_aAirBombs = $aReturn
+		Case 5
+			$g_aLavaLauncherPos = $aReturn
+		Case 6
+			$g_aRoasterPos = $aReturn
+		Case 7
+			$g_aBuilderHallPos = $aReturn
+	EndSwitch
+	
+	Return $aReturn
 
 EndFunc   ;==>BuilderBaseBuildingsDetection
 

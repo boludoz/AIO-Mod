@@ -63,10 +63,6 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $BestDeployPoin
 	Local $FileNamePath = @ScriptDir & "\CSV\BuilderBase\" & $g_sAttackScrScriptNameBB[$g_iBuilderBaseScript] & ".csv"
 	; Columm Names
 	Local $aIMGLtxt[8] = ["AirDefenses", "Crusher", "GuardPost", "Cannon", "AirBombs", "LavaLauncher", "Roaster", "BuilderHall"]
-	Local $aDefensesPos[8] = [$g_aAirdefensesPos, $g_aCrusherPos, $g_aGuardPostPos, $g_aCannonPos, $g_aAirBombs, $g_aLavaLauncherPos, $g_aRoasterPos, $g_aBuilderHallPos]
-
-	Local $bDefenses = [$g_aAirdefensesPos, $g_aCrusherPos, $g_aGuardPostPos, $g_aCannonPos, $g_aBuilderHallPos]
-	Local $aIMGL = [False, False, False, False, False]
 	Local $aDROP = ["CMD", "QTY", "TROOPNAME__", "DROP_POINTS_", "ADDTILES_", "DROP_SIDE", "SLEEPAFTER_", "OBS"]
 	Local $aSplitLine, $command
 
@@ -83,7 +79,7 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $BestDeployPoin
 		If @error Then Setlog("There was an error reading the CSV file. @error: " & @error, $COLOR_WARNING)
 		
 		; Custom
-		UpdateBHPos()
+		$g_aBuilderHallPos = UpdateBHPos()
 
 		Local $Line = "", $BuildingSide = ""
 
@@ -150,13 +146,13 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $BestDeployPoin
 										Case 6
 											$g_aRoasterPos = BuilderBaseBuildingsDetection(6)
 											Setlog("Detected Roaster: " & UBound($g_aRoasterPos), $COLOR_INFO)
-										; Case 7
+										Case 7
 											; Is not necessary to get again if was detected when deploy point detection ran
-											; If $g_aBuilderHallPos = -1 Then $g_aBuilderHallPos = BuilderBaseBuildingsDetection(7)
+											If $g_aBuilderHallPos = -1 Then $g_aBuilderHallPos = UpdateBHPos() ;BuilderBaseBuildingsDetection(7)
 									EndSwitch
 								EndIf
 							Next
-
+							
 							; Main Side to attack
 							$g_aBBMainSide = BuilderBaseAttackMainSide()
 							Setlog("Detected Front Side: " & $g_aBBMainSide, $COLOR_INFO)
@@ -173,7 +169,7 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $BestDeployPoin
 								If $command = 1 Then
 									Setlog("Check Force Detection For: " & $aIMGLtxt[$i])
 									; Get the Array inside the array $aDefensesPos
-									Local $aBuildPositionArray = $aDefensesPos[$i]
+									Local $aBuildPositionArray = BuilderBaseBuildingsDetection($i)
 									If UBound($aBuildPositionArray) > 0 And not @error Then
 										; Let get the First building detected
 										; Remember the Buildings Arrays is :  [0] = name , [1] = Xaxis , [1] = Yaxis
