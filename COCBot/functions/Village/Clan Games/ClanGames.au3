@@ -721,7 +721,7 @@ Func IsClanGamesWindow($getCapture = True, $bOnlyCheck = False, $bFromBB = False
 	EndIf
 	
 	; Just wait for window open
-	If _Wait4Pixel(827, 78, 0xFFFFFF, 5, 2500, 250, "IsClanGamesWindow") Then
+	If _Wait4Pixel(826, 34, 0xFFFFFF, 15, 2500, 250, "IsClanGamesWindow") Then
 		
 		$sState = IsClanGamesRunning()
 		Switch $sState
@@ -752,12 +752,15 @@ EndFunc   ;==>IsClanGamesWindow
 
 ; Close clan games with European lord manners.
 Func ClickAwayCross()
-	If _Wait4PixelGone(827, 78, 0xFFFFFF, 5, 1500, 250, "ClickAwayCross") Then
-		If IsMainPage(1) Then Return
-		ClickAway() ;Click Away
-	Else
-		Click(827, 78) ;Close Window
+	If _Wait4Pixel(827, 35, 0xFFFFFF, 15, 1500, 250, "ClickAwayCross") Then
+		Click(827, 35) ;Close Window
 	EndIf
+	
+	If IsMainPage(1) Then Return
+	
+	checkobstacles()
+
+	; ClickAway() ;Click Away
 EndFunc   ;==>CloseClanGamesWindow
 
 Func IsClanGamesRunning($getCapture = True) ;to check whether clangames current state, return string of the state "prepare" "running" "end"
@@ -782,57 +785,57 @@ Func IsClanGamesRunning($getCapture = True) ;to check whether clangames current 
 EndFunc ;==>IsClanGamesRunning
 
 Func GetTimesAndScores()
-	Local $iRestScore = -1, $sYourGameScore = "", $aiScoreLimit, $sTimeRemain = 0
+	Local $sYourGameScore = "", $aiScoreLimit, $sTimeRemain = 0
 	
-	;Ocr for game time remaining
-	For $i = 0 To 5
-		If _Sleep(800) Then Return
-		
-		$sTimeRemain = StringReplace(getOcrTimeGameTime(55, 470), " ", "") ; read Clan Games waiting time
-		If StringIsSpace($sTimeRemain) Then ContinueLoop
-		
-		;Check if OCR returned a valid timer format
-		If Not StringRegExp($sTimeRemain, "([0-2]?[0-9]?[DdHhSs]+)", $STR_REGEXPMATCH, 1) Then
-			SetLog("[" & $i & "] getOcrTimeGameTime(): no valid return value (" & $sTimeRemain & ")", $COLOR_ERROR)
-		Else
-			ExitLoop
-		EndIf
-		
-	Next
-
-	SetLog("Clan Games time remaining: " & $sTimeRemain, $COLOR_INFO)
-
+	; Ocr for game time remaining
 	; This Loop is just to check if the Score is changing , when you complete a previous events is necessary to take some time
 	For $i = 0 To 10
-		$sYourGameScore = getOcrYourScore(45, 530) ;  Read your Score
+		
+		$sYourGameScore = getOcrYourScore(45, 530 + $g_iMidOffsetYFixed) ;  Read your Score ; resolution fixed
 		If $g_bChkClanGamesDebug Then SetLog("Your OCR score: " & $sYourGameScore)
-		$sYourGameScore = StringReplace($sYourGameScore, "#", "/")
-		$aiScoreLimit = StringSplit($sYourGameScore, "/", $STR_NOCOUNT)
-		If UBound($aiScoreLimit, 1) > 1 Then
-			If $iRestScore = Int($aiScoreLimit[0]) Then ExitLoop
-			$iRestScore = Int($aiScoreLimit[0])
-		Else
-			Return -1
+		
+		;Check if OCR returned a valid timer format
+		If StringInStr($sYourGameScore, "#") Then
+			; read Clan Games waiting time ; resolution fixed
+			$sTimeRemain = getOcrTimeGameTime(55, 470 + $g_iMidOffsetYFixed)
+			
+			If _IsValideOCR($sTimeRemain) Then
+				$sTimeRemain = StringStripWS($sTimeRemain, $STR_STRIPALL)
+				
+				$sYourGameScore = StringReplace($sYourGameScore, "#", "/")
+				$aiScoreLimit = StringSplit($sYourGameScore, "/", $STR_NOCOUNT)
+				$aiScoreLimit[0] = Int($aiScoreLimit[0])
+				$aiScoreLimit[1] = Int($aiScoreLimit[1])
+				
+				;Update Values
+				$g_sClanGamesScore = $sYourGameScore
+				$g_sClanGamesTimeRemaining = $sTimeRemain
+
+				SetLog("Clan Games time remaining: " & $sTimeRemain, $COLOR_INFO)
+				Return $aiScoreLimit
+			EndIf
 		EndIf
+		
 		If _Sleep(800) Then Return
-		If $i = 10 Then Return -1
+		
+		If _ColorCheck(_GetPixelColor(232, 344 + $g_iMidOffsetYFixed, True), Hex(0x4C84C4, 6), 15) Then ; Resolution fixed
+			SetLog("[ClanGames] You need to joing a clan", $COLOR_WARNING)
+			ExitLoop
+		EndIf
 	Next
-
-	;Update Values
-	$g_sClanGamesScore = $sYourGameScore
-	$g_sClanGamesTimeRemaining = $sTimeRemain
-
-	$aiScoreLimit[0] = Int($aiScoreLimit[0])
-	$aiScoreLimit[1] = Int($aiScoreLimit[1])
-	Return $aiScoreLimit
+	
+	
+	SetLog("[ClanGames] [GetTimesAndScores] failed", $COLOR_ERROR)
+	Return -1
+	
 EndFunc   ;==>GetTimesAndScores
 
 Func CooldownTime($getCapture = True)
+	; Check IF exist the Gem icon
 	;check cooldown purge
-	Local $aiCoolDown = decodeSingleCoord(findImage("Cooldown", $g_sImgCoolPurge & "\*.xml", GetDiamondFromRect("480,326,570,366"), 1, True, Default)) ; Resolution changed 
-	If IsArray($aiCoolDown) And UBound($aiCoolDown, 1) >= 2 Then
+	If QuickMIS("BC1", $g_sImgCoolPurge, 480, 370 + $g_iMidOffsetYFixed, 570, 410 + $g_iMidOffsetYFixed, $getCapture, False) Then ; Resolution fixed
 		SetLog("Cooldown Purge Detected", $COLOR_INFO)
-		ClickAwayCross()
+		CloseClanGamesWindow()
 		Return True
 	EndIf
 	Return False
@@ -846,7 +849,7 @@ Func IsEventRunning($bOpenWindow = False)
 	EndIf
 
 	; Check if any event is running or not
-	If Not _ColorCheck(_GetPixelColor(300, 266, True), Hex(0x53E050, 6), 5) Then ; Green Bar from First Position
+	If Not _ColorCheck(_GetPixelColor(300, 257 + $g_iMidOffsetYFixed, True), Hex(0x53E050, 6), 5) Then ; Green Bar from First Position
 		;Check if Event failed
 		If _CheckPixel($g_aEventFailed, True) Then
 			SetLog("Couldn't finish last event! Lets trash it and look for a new one", $COLOR_INFO)
@@ -871,7 +874,7 @@ Func IsEventRunning($bOpenWindow = False)
 				;check if Challenge is BB Challenge, enabling force BB attack
 				If $g_bChkForceBBAttackOnClanGames Then
 
-					Click(340,210)
+					Click(340, 210 + $g_iMidOffsetYFixed)
 					If _Sleep(1000) Then Return
 					SetLog("Re-Check If Running Challenge is BB Event or No?", $COLOR_DEBUG)
 					If QuickMIS("BC1", $g_sImgVersus, 425, 180 + $g_iMidOffsetYFixed, 700, 235 + $g_iMidOffsetYFixed, True, False) Then ; Resolution changed
@@ -1088,6 +1091,42 @@ Func TrashFailedEvent()
 	Return True
 EndFunc   ;==>TrashFailedEvent
 
+Func _IsValideOCR($sString)
+
+	If StringInStr($sString, "d") > 0 Or _
+			StringInStr($sString, "h") > 0 Or _
+			StringInStr($sString, "m") > 0 Or _
+			StringInStr($sString, "s") > 0 Then Return True
+
+	Return False
+EndFunc   ;==>_IsValideOCR
+
+Func OcrToMinutes($sStringOCR)
+
+	If Not _IsValideOCR($sStringOCR) Then Return 0
+
+	Local $temp, $d, $h, $m
+
+	If StringInStr($sStringOCR, "d") > 0 Then
+		$temp = StringSplit($sStringOCR, "d", $STR_NOCOUNT)
+		$d = Int($temp[0])
+		$h = Int(StringReplace($temp[1], "h", ""))
+		Return ($d * 24) * 60 + ($h * 60)
+	ElseIf StringInStr($sStringOCR, "h") > 0 Then
+		$temp = StringSplit($sStringOCR, "h", $STR_NOCOUNT)
+		$h = Int($temp[0])
+		$m = Int(StringReplace($temp[1], "m", ""))
+		Return ($h * 60) + $m
+	ElseIf StringInStr($sStringOCR, "m") > 0 Then
+		$temp = StringSplit($sStringOCR, "m", $STR_NOCOUNT)
+		Return Int($temp[0])
+	ElseIf StringInStr($sStringOCR, "s") > 0 Then
+		Return 1
+	EndIf
+
+	Return 0
+EndFunc   ;==>OcrToMinutes
+
 Func GetEventTimeInMinutes($iXStartBtn, $iYStartBtn, $bIsStartBtn = True)
 
 	Local $XAxis = $iXStartBtn - 163 ; Related to Start Button
@@ -1099,9 +1138,8 @@ Func GetEventTimeInMinutes($iXStartBtn, $iYStartBtn, $bIsStartBtn = True)
 	EndIf
 
 	Local $Ocr = getOcrEventTime($XAxis, $YAxis)
-	If $Ocr = "1" Then $Ocr = "1d"
-	If $Ocr = "2" Then $Ocr = "2d"
-    Return ConvertOCRTime("ClanGames()", $Ocr, True)
+	Return OcrToMinutes($Ocr)
+
 EndFunc   ;==>GetEventTimeInMinutes
 
 Func GetEventInformation()
