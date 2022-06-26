@@ -42,7 +42,7 @@ Func __ClanGames($test = False, $bFromBB = False)
 	SetLog("Entering Clan Games", $COLOR_INFO)
 
 	; Local and Static Variables
-	Local $TabChallengesPosition[2] = [820, 130]
+	Local $TabChallengesPosition[2] = [820, 30] ; Resolution fixed
 	Local $sTimeRemain = "", $sEventName = "", $getCapture = True
 
 	; Initial Timer
@@ -126,75 +126,11 @@ Func __ClanGames($test = False, $bFromBB = False)
 	EndIf
 
 	; To store the detections
-	; [0]=ChallengeName [1]=EventName [2]=Xaxis [3]=Yaxis
-	Local $aAllDetectionsOnScreen[0][4]
-
-	Local $sClanGamesWindow = GetDiamondFromRect("300,111,765,504") ; Resolution changed
-	Local $aCurrentDetection = findMultiple($sTempPath, $sClanGamesWindow, $sClanGamesWindow, 0, 1000, 0, "objectname,objectpoints", True)
-	Local $aEachDetection
-
-	If $g_bChkClanGamesDebug Then Setlog("_ClanGames findMultiple (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
-	$hTimer = TimerInit()
-
-	; Let's split Names and Coordinates and populate a new array
-	If UBound($aCurrentDetection) > 0 Then
-
-		; Temp Variables
-		Local $FullImageName, $StringCoordinates, $sString, $tempObbj, $tempObbjs, $aNames
-		Local $BBCheck[2] = ["BBD-WallDes", "BBD-BuildingDes"]
-
-		For $i = 0 To UBound($aCurrentDetection) - 1
-			If _Sleep(50) Then Return ; just in case of PAUSE
-			If Not $g_bRunState Then Return ; Stop Button
-
-			$aEachDetection = $aCurrentDetection[$i]
-			; Justto debug
-			SetDebugLog(_ArrayToString($aEachDetection))
-
-			$FullImageName = String($aEachDetection[0])
-			$StringCoordinates = $aEachDetection[1]
-
-			If $FullImageName = "" Or $StringCoordinates = "" Then ContinueLoop
-
-			; Exist more than One coordinate!?
-			If StringInStr($StringCoordinates, "|") Then
-				; Code to test the string if exist anomalies on string
-				$StringCoordinates = StringReplace($StringCoordinates, "||", "|")
-				$sString = StringRight($StringCoordinates, 1)
-				If $sString = "|" Then $StringCoordinates = StringTrimRight($StringCoordinates, 1)
-				; Split the coordinates
-				$tempObbjs = StringSplit($StringCoordinates, "|", $STR_NOCOUNT)
-				; Just get the first [0]
-				$tempObbj = StringSplit($tempObbjs[0], ",", $STR_NOCOUNT) ;  will be a string : 708,360
-				If UBound($tempObbj) <> 2 Then ContinueLoop
-			Else
-				$tempObbj = StringSplit($StringCoordinates, ",", $STR_NOCOUNT) ;  will be a string : 708,360
-				If UBound($tempObbj) <> 2 Then ContinueLoop
-			EndIf
-
-			For $x = 0 To UBound($BBCheck) - 1
-				If $FullImageName = $BBCheck[$x] Then
-					If $g_bChkClanGamesDebug Then SetLog("Detection for " & $FullImageName & " :", $COLOR_INFO)
-					If Not IsBBChallenge($tempObbj[0],$tempObbj[1]) Then
-						If $g_bChkClanGamesDebug Then SetLog("False Detection, Skip this Challenge", $COLOR_ERROR)
-						ContinueLoop 2
-					Else
-						If $g_bChkClanGamesDebug Then SetLog("OK, Continue", $COLOR_SUCCESS)
-					Endif
-				EndIf
-			Next
-
-			$aNames = StringSplit($FullImageName, "-", $STR_NOCOUNT)
-			SetDebugLog("filename: " & $FullImageName & " $aNames[0] = " & $aNames[0] & " $aNames[1]= " & $aNames[1], $COLOR_ACTION)
-			ReDim $aAllDetectionsOnScreen[UBound($aAllDetectionsOnScreen) + 1][4]
-			$aAllDetectionsOnScreen[UBound($aAllDetectionsOnScreen) - 1][0] = $aNames[0] ; Challenge Name
-			$aAllDetectionsOnScreen[UBound($aAllDetectionsOnScreen) - 1][1] = $aNames[1] ; Event Name
-			$aAllDetectionsOnScreen[UBound($aAllDetectionsOnScreen) - 1][2] = $tempObbj[0] ; Xaxis
-			$aAllDetectionsOnScreen[UBound($aAllDetectionsOnScreen) - 1][3] = $tempObbj[1] ; Yaxis
-		Next
-	EndIf
-
 	Local $aSelectChallenges[0][5]
+	
+	; [0]=ChallengeName [1]=EventName [2]=Xaxis [3]=Yaxis
+	Local $aAllDetectionsOnScreen = ChallengeDetection()
+	If $g_bChkClanGamesDebug Then Setlog("_ClanGames findMultiple (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
 
 	If UBound($aAllDetectionsOnScreen) > 0 Then
 		For $i = 0 To UBound($aAllDetectionsOnScreen) - 1
@@ -824,7 +760,6 @@ Func GetTimesAndScores()
 		EndIf
 	Next
 	
-	
 	SetLog("[ClanGames] [GetTimesAndScores] failed", $COLOR_ERROR)
 	Return -1
 	
@@ -833,7 +768,7 @@ EndFunc   ;==>GetTimesAndScores
 Func CooldownTime($getCapture = True)
 	; Check IF exist the Gem icon
 	;check cooldown purge
-	If QuickMIS("BC1", $g_sImgCoolPurge, 480, 370 + $g_iMidOffsetYFixed, 570, 410 + $g_iMidOffsetYFixed, $getCapture, False) Then ; Resolution fixed
+	If QuickMIS("BC1", $g_sImgCoolPurge, 172, 72, 831, 505, $getCapture, False) Then ; Resolution fixed
 		SetLog("Cooldown Purge Detected", $COLOR_INFO)
 		CloseClanGames()
 		Return True
@@ -871,15 +806,16 @@ Func _IsEventRunning()
 			CloseClanGames()
 			Return True
 		EndIf
-	ElseIf _CheckPixel($g_aEventPurged, True) Then
-		SetLog("An event purge cooldown in progress!", $COLOR_WARNING)
-		CloseClanGames()
+	ElseIf CooldownTime() Then
+		; SetLog("An event purge cooldown in progress!", $COLOR_WARNING)
+		; CloseClanGames()
 		Return True
 	Else
-		SetLog("An event is already in progress!", $COLOR_SUCCESS)
-	
+
+		Local $aAllDetectionsOnScreen = ChallengeDetection()
+		
 		;check if its Enabled Challenge, if not = purge
-		If QuickMIS("BC1", @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\", 300, 160 + $g_iMidOffsetYFixed, 380, 240 + $g_iMidOffsetYFixed, True, False) Then ; Resolution changed
+		If UBound($aAllDetectionsOnScreen) > 0 Then ; Resolution changed
 			SetLog("Active Challenge is Enabled on Setting, OK!!", $COLOR_DEBUG)
 			;check if Challenge is BB Challenge, enabling force BB attack
 			If $g_bChkForceBBAttackOnClanGames Then
@@ -899,10 +835,95 @@ Func _IsEventRunning()
 			Setlog("Active Challenge Not Enabled on Setting! started by mistake?", $COLOR_ERROR)
 			ForcePurgeEvent(False, False)
 		EndIf
+
 		CloseClanGames()
 		Return True
 	EndIf
+	Return False
 EndFunc   ;==>_IsEventRunning
+
+Func ChallengeDetection()
+
+	; To store the detections
+	; [0]=ChallengeName [1]=EventName [2]=Xaxis [3]=Yaxis
+	Local $aAllDetectionsOnScreen[0][4]
+
+	; we can make a image detection by row !!! can be faster?!!!
+	Local $aRows = ["300,111,760,201", "300,271,760,361", "300,431,760,506"]
+
+	; Temp Variables
+	Local $sClanGamesWindow, $aCurrentDetection, $aEachDetection
+	Local $FullImageName, $StringCoordinates, $sString, $tempObbj, $tempObbjs, $aNames
+	
+	Local $BBCheck[2] = ["BBD-WallDes", "BBD-BuildingDes"]
+
+	_CaptureRegion2()
+	For $x = 0 To UBound($aRows) - 1
+
+		If $g_bChkClanGamesDebug Then Setlog("Detecting the row number " & $x + 1)
+		
+		$sClanGamesWindow = GetDiamondFromRect($aRows[$x]) ; Contains iXStart, $iYStart, $iXEnd, $iYEnd
+		$aCurrentDetection = findMultiple(@TempDir & "\" & $g_sProfileCurrentName & "\Challenges\", $sClanGamesWindow, "", 0, 1000, 0, "objectname,objectpoints", False)
+
+		; Let's split Names and Coordinates and populate a new array
+		If UBound($aCurrentDetection) > 0 Then
+
+			For $i = 0 To UBound($aCurrentDetection) - 1
+				If _Sleep(50) Then Return ; just in case of PAUSE
+				If Not $g_bRunState Then Return ; Stop Button
+
+				$aEachDetection = $aCurrentDetection[$i]
+				; Justto debug
+				SetDebugLog(_ArrayToString($aEachDetection))
+
+				$FullImageName = String($aEachDetection[0])
+				$StringCoordinates = $aEachDetection[1]
+
+				If $FullImageName = "" Or $StringCoordinates = "" Then ContinueLoop
+
+				; Exist more than One coordinate!?
+				If StringInStr($StringCoordinates, "|") Then
+					; Code to test the string if exist anomalies on string
+					$StringCoordinates = StringReplace($StringCoordinates, "||", "|")
+					$sString = StringRight($StringCoordinates, 1)
+					If $sString = "|" Then $StringCoordinates = StringTrimRight($StringCoordinates, 1)
+					; Split the coordinates
+					$tempObbjs = StringSplit($StringCoordinates, "|", $STR_NOCOUNT)
+					; Just get the first [0]
+					$tempObbj = StringSplit($tempObbjs[0], ",", $STR_NOCOUNT) ;  will be a string : 708,360
+					If UBound($tempObbj) <> 2 Then ContinueLoop
+				Else
+					$tempObbj = StringSplit($StringCoordinates, ",", $STR_NOCOUNT) ;  will be a string : 708,360
+					If UBound($tempObbj) <> 2 Then ContinueLoop
+				EndIf
+	
+				For $x = 0 To UBound($BBCheck) - 1
+					If $FullImageName = $BBCheck[$x] Then
+						If $g_bChkClanGamesDebug Then SetLog("Detection for " & $FullImageName & " :", $COLOR_INFO)
+						If Not IsBBChallenge($tempObbj[0],$tempObbj[1]) Then
+							If $g_bChkClanGamesDebug Then SetLog("False Detection, Skip this Challenge", $COLOR_ERROR)
+							ContinueLoop 2
+						Else
+							If $g_bChkClanGamesDebug Then SetLog("OK, Continue", $COLOR_SUCCESS)
+						Endif
+					EndIf
+				Next
+
+				$aNames = StringSplit($FullImageName, "-", $STR_NOCOUNT)
+				
+				SetDebugLog("filename: " & $FullImageName & " $aNames[0] = " & $aNames[0] & " $aNames[1]= " & $aNames[1], $COLOR_ACTION)
+
+				ReDim $aAllDetectionsOnScreen[UBound($aAllDetectionsOnScreen) + 1][4]
+				$aAllDetectionsOnScreen[UBound($aAllDetectionsOnScreen) - 1][0] = $aNames[0] ; Challenge Name
+				$aAllDetectionsOnScreen[UBound($aAllDetectionsOnScreen) - 1][1] = $aNames[1] ; Event Name
+				$aAllDetectionsOnScreen[UBound($aAllDetectionsOnScreen) - 1][2] = $tempObbj[0] ; Xaxis
+				$aAllDetectionsOnScreen[UBound($aAllDetectionsOnScreen) - 1][3] = $tempObbj[1] ; Yaxis
+			Next
+		EndIf
+	Next
+
+	Return $aAllDetectionsOnScreen
+EndFunc
 
 Func ClickOnEvent(ByRef $g_bYourAccScoreCG, $ScoreLimits, $sEventName, $getCapture)
 	If Not $g_bYourAccScoreCG[$g_iCurAccount][1] Then
@@ -950,11 +971,11 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
                     _FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - Purging Event ")
 					CloseClanGames()
 				Else
-					SetLog("$g_sImgOkayPurge Issue", $COLOR_ERROR)
+					SetLog("[StartsEvent] $g_sImgOkayPurge Issue", $COLOR_ERROR)
 					Return False
 				EndIf
 			Else
-				SetLog("$g_sImgTrashPurge Issue", $COLOR_ERROR)
+				SetLog("[StartsEvent] $g_sImgTrashPurge Issue", $COLOR_ERROR)
 				Return False
 			EndIf
 		EndIf
@@ -1008,7 +1029,7 @@ EndFunc   ;==>PurgeEvent
 Func ForcePurgeEvent($bTest = False, $startFirst = True)
 	Local $SearchArea
 
-	Click(340,200) ;Most Top Challenge
+	Click(340, 200 + $g_iMidOffsetYFixed) ;Most Top Challenge
 
 	If _Sleep(1500) Then Return
 	If $startFirst Then
@@ -1023,7 +1044,7 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			If _Sleep(1200) Then Return
 			SetLog("Click Trash", $COLOR_INFO)
-			If QuickMIS("BC1", $g_sImgOkayPurge, 440, 400 + $g_iBottomOffsetYFixed, 580, 450 + $g_iBottomOffsetYFixed, True, False) Then ; Resolution changed
+			If QuickMIS("BC1", $g_sImgOkayPurge, 440, 400 + $g_iMidOffsetYFixed, 580, 450 + $g_iMidOffsetYFixed, True, False) Then ; Resolution changed
 				SetLog("Click OK", $COLOR_INFO)
 				If $bTest Then Return
 				Click($g_iQuickMISX, $g_iQuickMISY)
@@ -1066,11 +1087,11 @@ Func StartAndPurgeEvent($bTest = False)
                 _FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - StartAndPurgeEvent: No event Found ")
 				CloseClanGames()
 			Else
-				SetLog("$g_sImgOkayPurge Issue", $COLOR_ERROR)
+				SetLog("[StartAndPurgeEvent] $g_sImgOkayPurge Issue", $COLOR_ERROR)
 				Return False
 			EndIf
 		Else
-			SetLog("$g_sImgTrashPurge Issue", $COLOR_ERROR)
+			SetLog("[StartAndPurgeEvent] $g_sImgTrashPurge Issue", $COLOR_ERROR)
 			Return False
 		EndIf
 	EndIf
