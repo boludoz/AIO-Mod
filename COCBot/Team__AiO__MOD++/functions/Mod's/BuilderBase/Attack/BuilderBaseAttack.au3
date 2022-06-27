@@ -111,16 +111,20 @@ Func BuilderBaseAttack($bTestRun = False)
 			CheckMainScreen()
 			Return -1
 		EndIf
-
-		; Zoomout the Opponent Village
-		BuilderBaseZoomOut(False, True)
-		If $g_bRestart = True Then Return
-		If Not $g_bRunState Then Return
-
-		; Verify the scripts and attack bar
-		If Not $bIsToDropTrophies Then BuilderBaseSelectCorrectScript($aAvailableTroops)
-		If $g_bRestart = True Then Return
-		If Not $g_bRunState Then Return
+					
+		For $i = 0 To 1
+			If (($i = 1) ? (True) : (False)) = (Not $g_bChkBBCustomAttack Or ($g_iCmbBBAttack = $g_eBBAttackSmart)) Then
+				; Zoomout the Opponent Village
+				BuilderBaseZoomOut(False, True)
+				If $g_bRestart = True Then Return
+				If Not $g_bRunState Then Return
+			ElseIf Not $bIsToDropTrophies Then
+				; Verify the scripts and attack bar
+				BuilderBaseSelectCorrectScript($aAvailableTroops)
+				If $g_bRestart = True Then Return
+				If Not $g_bRunState Then Return
+			EndIf
+		Next
 		
 		; Avoid bugs in redlines (too fast MyBot).
 		If RandomSleep(1500) Then Return
@@ -186,48 +190,51 @@ Func RemoveChangeTroopsDialog()
 	Return False
 EndFunc   ;==>RemoveChangeTroopsDialog
 
-Func CheckAttackBtn($bOnTandem = False)
+Func CheckAttackBtn()
 	Local $i = 0, $bFoundWindows = False
+	If QuickMIS("BC1", $g_sImgAttackBtnBB, 15, 622 + $g_iBottomOffsetYFixed, 109, 715 + $g_iBottomOffsetYFixed, True, False) Then
+		SetDebugLog("Attack Button detected: " & $g_iQuickMISX & "," & $g_iQuickMISY) ; Resolution changed
+		PureClick(Random(30, 94, 1), Random(636, 696, 1) + $g_iBottomOffsetYFixed, 1) ; Resolution changed
+	EndIf
+
 	Do
 		$i += 1
-		If $bOnTandem = True Then
-			$bFoundWindows = _CheckPixel($g_aFindBattleBB, True)
+		If Not _Wait4PixelArray($g_aOnVersusBattleWindowBB) Then
+			If QuickMIS("BC1", $g_sImgAttackBtnBB, 15, 622 + $g_iBottomOffsetYFixed, 109, 715 + $g_iBottomOffsetYFixed, True, False) Then
+				SetDebugLog("Attack Button detected: " & $g_iQuickMISX & "," & $g_iQuickMISY) ; Resolution changed
+				PureClick(Random(30, 94, 1), Random(636, 696, 1) + $g_iBottomOffsetYFixed, 1) ; Resolution changed
+			EndIf
+			If _Sleep(500) Then Return 
+			ContinueLoop
 		EndIf
-	Until ($i = 5) Or QuickMIS("BC1", $g_sImgAttackBtnBB, 0, 620 + $g_iBottomOffsetYFixed, 120, 732 + $g_iBottomOffsetYFixed, True, False) Or $bFoundWindows Or Not $g_bRunState Or _Sleep(500) ; Resolution changed
-	
-	If Not $g_bRunState Then Return
-	
-	If $bFoundWindows = False Then
-	
-		If $i < 5 Then
-			SetDebugLog("Attack Button detected: " & $g_iQuickMISX & "," & $g_iQuickMISY) ; Resolution changed
-			PureClick(Random(30, 94, 1), Random(636, 696, 1) + $g_iBottomOffsetYFixed, 1) ; Resolution changed
-		Else
-			SetLog("Attack Button not available.", $COLOR_ERROR)
-			ClickAway(Default, True)
-			Return False
-		EndIf
+		
+		$bFoundWindows = _CheckPixel($g_aFindBattleBB, True)
 		
 		If Not $g_bRunState Then Return
 		
-		If Not _Wait4PixelArray($g_aOnVersusBattleWindowBB) Then
-			SetLog("Attack Button not available.", $COLOR_ERROR)
-			ClickAway(Default, True)
-			Return False
+		If $bFoundWindows = False Then
+		
+			If Not $g_bRunState Then Return
+		
+			If _CheckPixel($g_aFindBattleBB, True) Then
+				SetDebugLog("Versus Battle window detected.")
+			ElseIf _CheckPixel($g_aOkayBtnBB, True) Then
+				Click($g_aOkayBtnBB[0] + Random(5, 10, 1), $g_aOkayBtnBB[1] + Random(5, 10, 1))
+			ElseIf Not BuilderBaseAttackOppoWait() Then
+				SetLog("[" & $i & "] Versus Battle window not available.", $COLOR_WARNING)
+			EndIf
+			
+			If _Sleep(1500) Then Return 
 		EndIf
-
-	EndIf
+		
+		
+	Until ($i = 30) Or $bFoundWindows Or Not $g_bRunState
 	
-	If _CheckPixel($g_aFindBattleBB, True) Then
-		SetDebugLog("Versus Battle window detected.")
-	ElseIf _CheckPixel($g_aOkayBtnBB, True) Then
-		Click($g_aOkayBtnBB[0] + Random(5, 10, 1), $g_aOkayBtnBB[1] + Random(5, 10, 1))
-	ElseIf Not BuilderBaseAttackOppoWait() Then
-		SetLog("Versus Battle window not available.", $COLOR_WARNING)
+	If $i > 14 Then
 		ClickAway(Default, True)
 		Return False
 	EndIf
-
+	
 	Return True
 EndFunc   ;==>CheckAttackBtn
 

@@ -168,21 +168,6 @@ Func IsLaunchAttackPage()
 
 EndFunc   ;==>IsLaunchAttackPage
 
-Func IsMultiplayerTabOpen()
-	Local $aMultiplayerTab = findImage("IsMultiplayerTab", $g_sImgIsMultiplayerTab, GetDiamondFromRect("4,20,258,636"), 1, True, Default) ; Resolution changed
-	If IsArray($aMultiplayerTab) And UBound($aMultiplayerTab, 1) > 0 Then
-		Local $aCoordinates = decodeSingleCoord($aMultiplayerTab)
-		ClickP($aCoordinates, 1)
-		If _Sleep(100) Then Return False
-		SetLog("Opened Multiplayer Tab!", $COLOR_INFO)
-	Else
-		SetDebugLog("Multiplayer Tab is open", $COLOR_INFO)
-		Return True
-	EndIf
-
-	Return False
-EndFunc
-
 Func IsEndBattlePage($bWriteLog = True)
 
 	If IsPageLoop($aConfirmSurrender, 1) Then

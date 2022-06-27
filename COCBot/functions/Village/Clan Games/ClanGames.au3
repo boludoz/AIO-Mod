@@ -38,11 +38,10 @@ Func __ClanGames($test = False, $bFromBB = False)
 	; Local $sINIPath = StringReplace($g_sProfileConfigPath, "config.ini", "ClanGames_config.ini")
 
 	; A user Log and a Click away just in case
-	; CloseClanGames()
 	SetLog("Entering Clan Games", $COLOR_INFO)
 
 	; Local and Static Variables
-	Local $TabChallengesPosition[2] = [820, 30] ; Resolution fixed
+	Local $TabChallengesPosition[2] = [820, 130 - 44] ; Resolution fixed
 	Local $sTimeRemain = "", $sEventName = "", $getCapture = True
 
 	; Initial Timer
@@ -126,255 +125,261 @@ Func __ClanGames($test = False, $bFromBB = False)
 	EndIf
 
 	; To store the detections
-	Local $aSelectChallenges[0][5]
+	Local $aSelectChallenges[0][6]
 	
-	; [0]=ChallengeName [1]=EventName [2]=Xaxis [3]=Yaxis
+	; [0]=ChallengeName [1]=EventName [2]=Xaxis [3]=Yaxis, [4]=IsBBChallenge
 	Local $aAllDetectionsOnScreen = ChallengeDetection()
 	If $g_bChkClanGamesDebug Then Setlog("_ClanGames findMultiple (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
 
 	If UBound($aAllDetectionsOnScreen) > 0 Then
 		For $i = 0 To UBound($aAllDetectionsOnScreen) - 1
-            ;If IsBBChallenge($aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3]) and $g_bChkClanGamesBBBattle == 0 and $g_bChkClanGamesBBDes == 0 Then ContinueLoop ; only skip if it is a BB challenge not supported
-
-			Switch $aAllDetectionsOnScreen[$i][0]
-				Case "L"
-					If Not $g_bChkClanGamesLoot Then ContinueLoop
-					;[0] = Path Directory , [1] = Name , [2] = TH level , [3] = Difficulty Level , [4] = Time to do it
-					; Local $g_aCGLootChallenges = $g_aCGLootChallenges
-					For $j = 0 To UBound($g_aCGLootChallenges) - 1
-						; If $g_aCGLootChallenges[$j][5] = False Then ContinueLoop
-						; Match the names
-						If $aAllDetectionsOnScreen[$i][1] = $g_aCGLootChallenges[$j][0] Then
-							; Verify your TH level and Challenge kind
-							If $g_iTownHallLevel < $g_aCGLootChallenges[$j][2] Then ExitLoop
-							; Disable this event from INI File
-							If $g_aCGLootChallenges[$j][3] = 0 Then ExitLoop
-							; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
-							Local $aArray = [$g_aCGLootChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $g_aCGLootChallenges[$j][3]]
-						EndIf
-					Next
-				Case "A"
-					If Not $g_bChkClanGamesAirTroop Then ContinueLoop
-					;[0] = Path Directory , [1] = Event Name , [2] = TH level , [3] = Event Quantities
-					; Local $g_aCGAirTroopChallenges = $g_aCGAirTroopChallenges
-					For $j = 0 To UBound($g_aCGAirTroopChallenges) - 1
-						; If $g_aCGAirTroopChallenges[$j][5] = False Then ContinueLoop
-						; Match the names
-						If $aAllDetectionsOnScreen[$i][1] = $g_aCGAirTroopChallenges[$j][0] Then
-							; Verify if the Troops exist in your Army Composition
-							Local $TroopIndex = Int(Eval("eTroop" & $g_aCGAirTroopChallenges[$j][1]))
-							; If doesn't Exist the Troop on your Army
-							If $g_aiCurrentTroops[$TroopIndex] < 1 Then
-								If $g_bChkClanGamesDebug Then SetLog("[" & $g_aCGAirTroopChallenges[$j][1] & "] No " & $g_asTroopNames[$TroopIndex] & " on your army composition.")
-								ExitLoop
-								; If Exist BUT not is required quantities
-							ElseIf $g_aiCurrentTroops[$TroopIndex] > 0 And $g_aiCurrentTroops[$TroopIndex] < $g_aCGAirTroopChallenges[$j][3] Then
-								If $g_bChkClanGamesDebug Then SetLog("[" & $g_aCGAirTroopChallenges[$j][1] & "] You need more " & $g_asTroopNames[$TroopIndex] & " [" & $g_aiCurrentTroops[$TroopIndex] & "/" & $g_aCGAirTroopChallenges[$j][3] & "]")
-								ExitLoop
+			
+			If $aAllDetectionsOnScreen[$i][4] = False Then
+				Switch $aAllDetectionsOnScreen[$i][0]
+					Case "L"
+						If Not $g_bChkClanGamesLoot Then ContinueLoop
+						;[0] = Path Directory , [1] = Name , [2] = TH level , [3] = Difficulty Level , [4] = Time to do it
+						; Local $g_aCGLootChallenges = $g_aCGLootChallenges
+						For $j = 0 To UBound($g_aCGLootChallenges) - 1
+							; If $g_aCGLootChallenges[$j][5] = False Then ContinueLoop
+							; Match the names
+							If $aAllDetectionsOnScreen[$i][1] = $g_aCGLootChallenges[$j][0] Then
+								; Verify your TH level and Challenge kind
+								If $g_iTownHallLevel < $g_aCGLootChallenges[$j][2] Then ExitLoop
+								; Disable this event from INI File
+								If $g_aCGLootChallenges[$j][3] = 0 Then ExitLoop
+								; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
+								Local $aArray = [$g_aCGLootChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $g_aCGLootChallenges[$j][3]]
 							EndIf
-							; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
-							Local $aArray[4] = [$g_aCGAirTroopChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], 1]
-						EndIf
-					Next
-
-				Case "S" ; - grumpy
-					If Not $g_bChkClanGamesSpell Then ContinueLoop
-					;[0] = Path Directory , [1] = Event Name , [2] = TH level , [3] = Event Quantities
-					; Local $g_aCGSpellChallenges = $g_aCGSpellChallenges ; load all spell challenges
-					For $j = 0 To UBound($g_aCGSpellChallenges) - 1 ; loop through all challenges
-						; If $g_aCGSpellChallenges[$j][5] = False Then ContinueLoop
-						; Match the names
-						If $aAllDetectionsOnScreen[$i][1] = $g_aCGSpellChallenges[$j][0] Then
-							; Verify if the Spell exist in your Army Composition
-							Local $SpellIndex = Int(Eval("eSpell" & $g_aCGSpellChallenges[$j][1])) ; assign $SpellIndex enum second column of array is spell name line 740 in GlobalVariables
-							; If doesn't Exist the Troop on your Army
-							If $g_aiCurrentSpells[$SpellIndex] < 1 Then
-								If $g_bChkClanGamesDebug Then SetLog("[" & $g_aCGSpellChallenges[$j][1] & "] No " & $g_asSpellNames[$SpellIndex] & " on your army composition.")
-								ExitLoop
-								; If Exist BUT not is required quantities
-							ElseIf $g_aiCurrentSpells[$SpellIndex] > 0 And $g_aiCurrentSpells[$SpellIndex] < $g_aCGSpellChallenges[$j][3] Then
-								If $g_bChkClanGamesDebug Then SetLog("[" & $g_aCGSpellChallenges[$j][1] & "] You need more " & $g_asSpellNames[$SpellIndex] & " [" & $g_aiCurrentSpells[$SpellIndex] & "/" & $g_aCGSpellChallenges[$j][3] & "]")
-								ExitLoop
+						Next
+					Case "A"
+						If Not $g_bChkClanGamesAirTroop Then ContinueLoop
+						;[0] = Path Directory , [1] = Event Name , [2] = TH level , [3] = Event Quantities
+						; Local $g_aCGAirTroopChallenges = $g_aCGAirTroopChallenges
+						For $j = 0 To UBound($g_aCGAirTroopChallenges) - 1
+							; If $g_aCGAirTroopChallenges[$j][5] = False Then ContinueLoop
+							; Match the names
+							If $aAllDetectionsOnScreen[$i][1] = $g_aCGAirTroopChallenges[$j][0] Then
+								; Verify if the Troops exist in your Army Composition
+								Local $TroopIndex = Int(Eval("eTroop" & $g_aCGAirTroopChallenges[$j][1]))
+								; If doesn't Exist the Troop on your Army
+								If $g_aiCurrentTroops[$TroopIndex] < 1 Then
+									If $g_bChkClanGamesDebug Then SetLog("[" & $g_aCGAirTroopChallenges[$j][1] & "] No " & $g_asTroopNames[$TroopIndex] & " on your army composition.")
+									ExitLoop
+									; If Exist BUT not is required quantities
+								ElseIf $g_aiCurrentTroops[$TroopIndex] > 0 And $g_aiCurrentTroops[$TroopIndex] < $g_aCGAirTroopChallenges[$j][3] Then
+									If $g_bChkClanGamesDebug Then SetLog("[" & $g_aCGAirTroopChallenges[$j][1] & "] You need more " & $g_asTroopNames[$TroopIndex] & " [" & $g_aiCurrentTroops[$TroopIndex] & "/" & $g_aCGAirTroopChallenges[$j][3] & "]")
+									ExitLoop
+								EndIf
+								; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
+								Local $aArray[4] = [$g_aCGAirTroopChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], 1]
 							EndIf
-							; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
-							Local $aArray[4] = [$g_aCGSpellChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], 1]
-						EndIf
-					Next
+						Next
 
-			   Case "G"
-					If Not $g_bChkClanGamesGroundTroop Then ContinueLoop
-					;[0] = Path Directory , [1] = Event Name , [2] = TH level , [3] = Event Quantities
-					; Local $g_aCGGroundTroopChallenges = $g_aCGGroundTroopChallenges
-					For $j = 0 To UBound($g_aCGGroundTroopChallenges) - 1
-						; If $g_aCGGroundTroopChallenges[$j][5] = False Then ContinueLoop
-						; Match the names
-						If $aAllDetectionsOnScreen[$i][1] = $g_aCGGroundTroopChallenges[$j][0] Then
-							; Verify if the Troops exist in your Army Composition
-							Local $TroopIndex = Int(Eval("eTroop" & $g_aCGGroundTroopChallenges[$j][1]))
-							; If doesn't Exist the Troop on your Army
-							If $g_aiCurrentTroops[$TroopIndex] < 1 Then
-								If $g_bChkClanGamesDebug Then SetLog("[" & $g_aCGGroundTroopChallenges[$j][1] & "] No " & $g_asTroopNames[$TroopIndex] & " on your army composition.")
-								ExitLoop
-								; If Exist BUT not is required quantities
-							ElseIf $g_aiCurrentTroops[$TroopIndex] > 0 And $g_aiCurrentTroops[$TroopIndex] < $g_aCGGroundTroopChallenges[$j][3] Then
-								If $g_bChkClanGamesDebug Then SetLog("[" & $g_aCGGroundTroopChallenges[$j][1] & "] You need more " & $g_asTroopNames[$TroopIndex] & " [" & $g_aiCurrentTroops[$TroopIndex] & "/" & $g_aCGGroundTroopChallenges[$j][3] & "]")
-								ExitLoop
+					Case "S" ; - grumpy
+						If Not $g_bChkClanGamesSpell Then ContinueLoop
+						;[0] = Path Directory , [1] = Event Name , [2] = TH level , [3] = Event Quantities
+						; Local $g_aCGSpellChallenges = $g_aCGSpellChallenges ; load all spell challenges
+						For $j = 0 To UBound($g_aCGSpellChallenges) - 1 ; loop through all challenges
+							; If $g_aCGSpellChallenges[$j][5] = False Then ContinueLoop
+							; Match the names
+							If $aAllDetectionsOnScreen[$i][1] = $g_aCGSpellChallenges[$j][0] Then
+								; Verify if the Spell exist in your Army Composition
+								Local $SpellIndex = Int(Eval("eSpell" & $g_aCGSpellChallenges[$j][1])) ; assign $SpellIndex enum second column of array is spell name line 740 in GlobalVariables
+								; If doesn't Exist the Troop on your Army
+								If $g_aiCurrentSpells[$SpellIndex] < 1 Then
+									If $g_bChkClanGamesDebug Then SetLog("[" & $g_aCGSpellChallenges[$j][1] & "] No " & $g_asSpellNames[$SpellIndex] & " on your army composition.")
+									ExitLoop
+									; If Exist BUT not is required quantities
+								ElseIf $g_aiCurrentSpells[$SpellIndex] > 0 And $g_aiCurrentSpells[$SpellIndex] < $g_aCGSpellChallenges[$j][3] Then
+									If $g_bChkClanGamesDebug Then SetLog("[" & $g_aCGSpellChallenges[$j][1] & "] You need more " & $g_asSpellNames[$SpellIndex] & " [" & $g_aiCurrentSpells[$SpellIndex] & "/" & $g_aCGSpellChallenges[$j][3] & "]")
+									ExitLoop
+								EndIf
+								; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
+								Local $aArray[4] = [$g_aCGSpellChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], 1]
 							EndIf
-							; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
-							Local $aArray[4] = [$g_aCGGroundTroopChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], 1]
-						EndIf
-					 Next
+						Next
 
-				Case "B"
-					If Not $g_bChkClanGamesBattle Then ContinueLoop
-					;[0] = Path Directory , [1] = Event Name , [2] = TH level , [3] = Difficulty Level , [4] = Time to do it
-					; Local $g_aCGBattleChallenges = $g_aCGBattleChallenges
-					For $j = 0 To UBound($g_aCGBattleChallenges) - 1
-						; If $g_aCGBattleChallenges[$j][5] = False Then ContinueLoop
-						; Match the names
-						If $aAllDetectionsOnScreen[$i][1] = $g_aCGBattleChallenges[$j][0] Then
-							; Verify the TH level and a few Challenge to destroy TH specific level
-							If $g_aCGBattleChallenges[$j][1] = "Scrappy 6s" And ($g_iTownHallLevel < 5 Or $g_iTownHallLevel > 7) Then ExitLoop        ; TH level 5-6-7
-							If $g_aCGBattleChallenges[$j][1] = "Super 7s" And ($g_iTownHallLevel < 6 Or $g_iTownHallLevel > 8) Then ExitLoop            ; TH level 6-7-8
-							If $g_aCGBattleChallenges[$j][1] = "Exciting 8s" And ($g_iTownHallLevel < 7 Or $g_iTownHallLevel > 9) Then ExitLoop        ; TH level 7-8-9
-							If $g_aCGBattleChallenges[$j][1] = "Noble 9s" And ($g_iTownHallLevel < 8 Or $g_iTownHallLevel > 10) Then ExitLoop        ; TH level 8-9-10
-							If $g_aCGBattleChallenges[$j][1] = "Terrific 10s" And ($g_iTownHallLevel < 9 Or $g_iTownHallLevel > 11) Then ExitLoop    ; TH level 9-10-11
-							If $g_aCGBattleChallenges[$j][1] = "Exotic 11s" And ($g_iTownHallLevel < 10 Or $g_iTownHallLevel > 12) Then ExitLoop     ; TH level 10-11-12
-							If $g_aCGBattleChallenges[$j][1] = "Triumphant 12s" And $g_iTownHallLevel < 11 Then ExitLoop  ; TH level 11-12-13
-						    If $g_aCGBattleChallenges[$j][1] = "Tremendous 13s" And $g_iTownHallLevel < 12 Then ExitLoop  ; TH level 12-13
+				   Case "G"
+						If Not $g_bChkClanGamesGroundTroop Then ContinueLoop
+						;[0] = Path Directory , [1] = Event Name , [2] = TH level , [3] = Event Quantities
+						; Local $g_aCGGroundTroopChallenges = $g_aCGGroundTroopChallenges
+						For $j = 0 To UBound($g_aCGGroundTroopChallenges) - 1
+							; If $g_aCGGroundTroopChallenges[$j][5] = False Then ContinueLoop
+							; Match the names
+							If $aAllDetectionsOnScreen[$i][1] = $g_aCGGroundTroopChallenges[$j][0] Then
+								; Verify if the Troops exist in your Army Composition
+								Local $TroopIndex = Int(Eval("eTroop" & $g_aCGGroundTroopChallenges[$j][1]))
+								; If doesn't Exist the Troop on your Army
+								If $g_aiCurrentTroops[$TroopIndex] < 1 Then
+									If $g_bChkClanGamesDebug Then SetLog("[" & $g_aCGGroundTroopChallenges[$j][1] & "] No " & $g_asTroopNames[$TroopIndex] & " on your army composition.")
+									ExitLoop
+									; If Exist BUT not is required quantities
+								ElseIf $g_aiCurrentTroops[$TroopIndex] > 0 And $g_aiCurrentTroops[$TroopIndex] < $g_aCGGroundTroopChallenges[$j][3] Then
+									If $g_bChkClanGamesDebug Then SetLog("[" & $g_aCGGroundTroopChallenges[$j][1] & "] You need more " & $g_asTroopNames[$TroopIndex] & " [" & $g_aiCurrentTroops[$TroopIndex] & "/" & $g_aCGGroundTroopChallenges[$j][3] & "]")
+									ExitLoop
+								EndIf
+								; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
+								Local $aArray[4] = [$g_aCGGroundTroopChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], 1]
+							EndIf
+						 Next
 
-							; Verify your TH level and Challenge
-							If $g_iTownHallLevel < $g_aCGBattleChallenges[$j][2] Then ExitLoop
-							; Disable this event from INI File
-							If $g_aCGBattleChallenges[$j][3] = 0 Then ExitLoop
-							; If you are a TH13 , doesn't exist the TH14 yet
-							If $g_aCGBattleChallenges[$j][1] = "Attack Up" And $g_iTownHallLevel >= 13 Then ExitLoop
-							; Check your Trophy Range
-							If $g_aCGBattleChallenges[$j][1] = "Slaying The Titans" And (Int($g_aiCurrentLoot[$eLootTrophy]) < 4100 or Int($g_aiCurrentLoot[$eLootTrophy]) > 5000) Then ExitLoop
+					Case "B"
+						If Not $g_bChkClanGamesBattle Then ContinueLoop
+						;[0] = Path Directory , [1] = Event Name , [2] = TH level , [3] = Difficulty Level , [4] = Time to do it
+						; Local $g_aCGBattleChallenges = $g_aCGBattleChallenges
+						For $j = 0 To UBound($g_aCGBattleChallenges) - 1
+							; If $g_aCGBattleChallenges[$j][5] = False Then ContinueLoop
+							; Match the names
+							If $aAllDetectionsOnScreen[$i][1] = $g_aCGBattleChallenges[$j][0] Then
+								; Verify the TH level and a few Challenge to destroy TH specific level
+								If $g_aCGBattleChallenges[$j][1] = "Scrappy 6s" And ($g_iTownHallLevel < 5 Or $g_iTownHallLevel > 7) Then ExitLoop        ; TH level 5-6-7
+								If $g_aCGBattleChallenges[$j][1] = "Super 7s" And ($g_iTownHallLevel < 6 Or $g_iTownHallLevel > 8) Then ExitLoop            ; TH level 6-7-8
+								If $g_aCGBattleChallenges[$j][1] = "Exciting 8s" And ($g_iTownHallLevel < 7 Or $g_iTownHallLevel > 9) Then ExitLoop        ; TH level 7-8-9
+								If $g_aCGBattleChallenges[$j][1] = "Noble 9s" And ($g_iTownHallLevel < 8 Or $g_iTownHallLevel > 10) Then ExitLoop        ; TH level 8-9-10
+								If $g_aCGBattleChallenges[$j][1] = "Terrific 10s" And ($g_iTownHallLevel < 9 Or $g_iTownHallLevel > 11) Then ExitLoop    ; TH level 9-10-11
+								If $g_aCGBattleChallenges[$j][1] = "Exotic 11s" And ($g_iTownHallLevel < 10 Or $g_iTownHallLevel > 12) Then ExitLoop     ; TH level 10-11-12
+								If $g_aCGBattleChallenges[$j][1] = "Triumphant 12s" And $g_iTownHallLevel < 11 Then ExitLoop  ; TH level 11-12-13
+								If $g_aCGBattleChallenges[$j][1] = "Tremendous 13s" And $g_iTownHallLevel < 12 Then ExitLoop  ; TH level 12-13
 
-						    If $g_aCGBattleChallenges[$j][1] = "Clash of Legends" And Int($g_aiCurrentLoot[$eLootTrophy]) < 5000 Then ExitLoop
+								; Verify your TH level and Challenge
+								If $g_iTownHallLevel < $g_aCGBattleChallenges[$j][2] Then ExitLoop
+								; Disable this event from INI File
+								If $g_aCGBattleChallenges[$j][3] = 0 Then ExitLoop
+								; If you are a TH13 , doesn't exist the TH14 yet
+								If $g_aCGBattleChallenges[$j][1] = "Attack Up" And $g_iTownHallLevel >= 13 Then ExitLoop
+								; Check your Trophy Range
+								If $g_aCGBattleChallenges[$j][1] = "Slaying The Titans" And (Int($g_aiCurrentLoot[$eLootTrophy]) < 4100 or Int($g_aiCurrentLoot[$eLootTrophy]) > 5000) Then ExitLoop
 
-							; Check if exist a probability to use any Spell
-							; If $g_aCGBattleChallenges[$j][1] = "No-Magic Zone" And ($g_bSmartZapEnable = True Or ($g_iMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 1) Or ($g_iMatchMode = $LB And $g_aiAttackAlgorithm[$LB] = 1)) Then ExitLoop
-							; same as above, but SmartZap as condition removed, cause SZ does not necessary triggers every attack
-							If $g_aCGBattleChallenges[$j][1] = "No-Magic Zone" And (($g_iMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 1) Or ($g_iMatchMode = $LB And $g_aiAttackAlgorithm[$LB] = 1)) Then ExitLoop
-							; Check if you are using Heroes
-							If $g_aCGBattleChallenges[$j][1] = "No Heroics Allowed" And ((Int($g_aiAttackUseHeroes[$DB]) > $eHeroNone And $g_iMatchMode = $DB) Or (Int($g_aiAttackUseHeroes[$LB]) > $eHeroNone And $g_iMatchMode = $LB)) Then ExitLoop
-							; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
-							Local $aArray[4] = [$g_aCGBattleChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $g_aCGBattleChallenges[$j][3]]
-						EndIf
-					Next
-				Case "D"
-					If Not $g_bChkClanGamesDes Then ContinueLoop
-					;[0] = Path Directory , [1] = Event Name , [2] = TH level , [3] = Difficulty Level , [4] = Time to do it
-					; Local $g_aCGDestructionChallenges = $g_aCGDestructionChallenges
-					For $j = 0 To UBound($g_aCGDestructionChallenges) - 1
-						; If $g_aCGDestructionChallenges[$j][5] = False Then ContinueLoop
-						; Match the names
-						If $aAllDetectionsOnScreen[$i][1] = $g_aCGDestructionChallenges[$j][0] Then
-							; Verify your TH level and Challenge kind
-							If $g_iTownHallLevel < $g_aCGDestructionChallenges[$j][2] Then ExitLoop
+								If $g_aCGBattleChallenges[$j][1] = "Clash of Legends" And Int($g_aiCurrentLoot[$eLootTrophy]) < 5000 Then ExitLoop
 
-							; Disable this event from INI File
-							If $g_aCGDestructionChallenges[$j][3] = 0 Then ExitLoop
+								; Check if exist a probability to use any Spell
+								; If $g_aCGBattleChallenges[$j][1] = "No-Magic Zone" And ($g_bSmartZapEnable = True Or ($g_iMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 1) Or ($g_iMatchMode = $LB And $g_aiAttackAlgorithm[$LB] = 1)) Then ExitLoop
+								; same as above, but SmartZap as condition removed, cause SZ does not necessary triggers every attack
+								If $g_aCGBattleChallenges[$j][1] = "No-Magic Zone" And (($g_iMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 1) Or ($g_iMatchMode = $LB And $g_aiAttackAlgorithm[$LB] = 1)) Then ExitLoop
+								; Check if you are using Heroes
+								If $g_aCGBattleChallenges[$j][1] = "No Heroics Allowed" And ((Int($g_aiAttackUseHeroes[$DB]) > $eHeroNone And $g_iMatchMode = $DB) Or (Int($g_aiAttackUseHeroes[$LB]) > $eHeroNone And $g_iMatchMode = $LB)) Then ExitLoop
+								; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
+								Local $aArray[4] = [$g_aCGBattleChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $g_aCGBattleChallenges[$j][3]]
+							EndIf
+						Next
+					Case "D"
+						If Not $g_bChkClanGamesDes Then ContinueLoop
+						;[0] = Path Directory , [1] = Event Name , [2] = TH level , [3] = Difficulty Level , [4] = Time to do it
+						; Local $g_aCGDestructionChallenges = $g_aCGDestructionChallenges
+						For $j = 0 To UBound($g_aCGDestructionChallenges) - 1
+							; If $g_aCGDestructionChallenges[$j][5] = False Then ContinueLoop
+							; Match the names
+							If $aAllDetectionsOnScreen[$i][1] = $g_aCGDestructionChallenges[$j][0] Then
+								; Verify your TH level and Challenge kind
+								If $g_iTownHallLevel < $g_aCGDestructionChallenges[$j][2] Then ExitLoop
 
-							; Check if you are using Heroes
-							If $g_aCGDestructionChallenges[$j][1] = "Hero Level Hunter" Or _
-									$g_aCGDestructionChallenges[$j][1] = "King Level Hunter" Or _
-									$g_aCGDestructionChallenges[$j][1] = "Queen Level Hunter" Or _
-									$g_aCGDestructionChallenges[$j][1] = "Warden Level Hunter" And ((Int($g_aiAttackUseHeroes[$DB]) = $eHeroNone And $g_iMatchMode = $DB) Or (Int($g_aiAttackUseHeroes[$LB]) = $eHeroNone And $g_iMatchMode = $LB)) Then ExitLoop
-							; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
-							Local $aArray[4] = [$g_aCGDestructionChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $g_aCGDestructionChallenges[$j][3]]
-						EndIf
-					Next
-				Case "M"
-					If Not $g_bChkClanGamesMiscellaneous Then ContinueLoop
-					;[0] = Path Directory , [1] = Event Name , [2] = TH level , [3] = Difficulty Level , [4] = Time to do it
-					; Local $g_aCGMiscChallenges = $g_aCGMiscChallenges
-					For $j = 0 To UBound($g_aCGMiscChallenges) - 1
-						; If $g_aCGMiscChallenges[$j][5] = False Then ContinueLoop
-						; Match the names
-						If $aAllDetectionsOnScreen[$i][1] = $g_aCGMiscChallenges[$j][0] Then
-							; Disable this event from INI File
-							If $g_aCGMiscChallenges[$j][3] = 0 Then ExitLoop
+								; Disable this event from INI File
+								If $g_aCGDestructionChallenges[$j][3] = 0 Then ExitLoop
 
-							; Exceptions :
-							; 1 - "Gardening Exercise" needs at least a Free Builder and "Remove Obstacles" enabled
-							If $g_aCGMiscChallenges[$j][1] = "Gardening Exercise" And ($g_iFreeBuilderCount < 1 Or Not $g_bChkCleanYard) Then ExitLoop
+								; Check if you are using Heroes
+								If $g_aCGDestructionChallenges[$j][1] = "Hero Level Hunter" Or _
+										$g_aCGDestructionChallenges[$j][1] = "King Level Hunter" Or _
+										$g_aCGDestructionChallenges[$j][1] = "Queen Level Hunter" Or _
+										$g_aCGDestructionChallenges[$j][1] = "Warden Level Hunter" And ((Int($g_aiAttackUseHeroes[$DB]) = $eHeroNone And $g_iMatchMode = $DB) Or (Int($g_aiAttackUseHeroes[$LB]) = $eHeroNone And $g_iMatchMode = $LB)) Then ExitLoop
+								; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
+								Local $aArray[4] = [$g_aCGDestructionChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $g_aCGDestructionChallenges[$j][3]]
+							EndIf
+						Next
+					Case "M"
+						If Not $g_bChkClanGamesMiscellaneous Then ContinueLoop
+						;[0] = Path Directory , [1] = Event Name , [2] = TH level , [3] = Difficulty Level , [4] = Time to do it
+						; Local $g_aCGMiscChallenges = $g_aCGMiscChallenges
+						For $j = 0 To UBound($g_aCGMiscChallenges) - 1
+							; If $g_aCGMiscChallenges[$j][5] = False Then ContinueLoop
+							; Match the names
+							If $aAllDetectionsOnScreen[$i][1] = $g_aCGMiscChallenges[$j][0] Then
+								; Disable this event from INI File
+								If $g_aCGMiscChallenges[$j][3] = 0 Then ExitLoop
 
-							; 2 - Verify your TH level and Challenge kind
-							If $g_iTownHallLevel < $g_aCGMiscChallenges[$j][2] Then ExitLoop
+								; Exceptions :
+								; 1 - "Gardening Exercise" needs at least a Free Builder and "Remove Obstacles" enabled
+								If $g_aCGMiscChallenges[$j][1] = "Gardening Exercise" And ($g_iFreeBuilderCount < 1 Or Not $g_bChkCleanYard) Then ExitLoop
 
-							; 3 - If you don't Donate Troops
-							If $g_aCGMiscChallenges[$j][1] = "Helping Hand" And Not $g_iActiveDonate Then ExitLoop
+								; 2 - Verify your TH level and Challenge kind
+								If $g_iTownHallLevel < $g_aCGMiscChallenges[$j][2] Then ExitLoop
 
-							; 4 - If you don't Donate Spells , $g_aiPrepDon[2] = Donate Spells , $g_aiPrepDon[3] = Donate All Spells [PrepareDonateCC()]
-							If $g_aCGMiscChallenges[$j][1] = "Donate Spells" And ($g_aiPrepDon[2] = 0 And $g_aiPrepDon[3] = 0) Then ExitLoop
+								; 3 - If you don't Donate Troops
+								If $g_aCGMiscChallenges[$j][1] = "Helping Hand" And Not $g_iActiveDonate Then ExitLoop
 
-							; 5 - If you don't use Blimp
-							If $g_aCGMiscChallenges[$j][1] = "Battle Blimp" And ($g_aiAttackUseSiege[$DB] = 2 Or $g_aiAttackUseSiege[$LB] = 2) And $g_aiArmyCompSiegeMachines[$eSiegeBattleBlimp] = 0 Then ExitLoop
+								; 4 - If you don't Donate Spells , $g_aiPrepDon[2] = Donate Spells , $g_aiPrepDon[3] = Donate All Spells [PrepareDonateCC()]
+								If $g_aCGMiscChallenges[$j][1] = "Donate Spells" And ($g_aiPrepDon[2] = 0 And $g_aiPrepDon[3] = 0) Then ExitLoop
 
-							; 6 - If you don't use Wrecker
-							If $g_aCGMiscChallenges[$j][1] = "Wall Wrecker" And ($g_aiAttackUseSiege[$DB] = 1 Or $g_aiAttackUseSiege[$LB] = 1) And $g_aiArmyCompSiegeMachines[$eSiegeWallWrecker] = 0 Then ExitLoop
+								; 5 - If you don't use Blimp
+								If $g_aCGMiscChallenges[$j][1] = "Battle Blimp" And ($g_aiAttackUseSiege[$DB] = 2 Or $g_aiAttackUseSiege[$LB] = 2) And $g_aiArmyCompSiegeMachines[$eSiegeBattleBlimp] = 0 Then ExitLoop
 
-							If $g_aCGMiscChallenges[$j][1] = "Stone Slammer" And ($g_aiAttackUseSiege[$DB] = 3 Or $g_aiAttackUseSiege[$LB] = 3) And $g_aiArmyCompSiegeMachines[$eSiegeStoneSlammer] = 0 Then ExitLoop
+								; 6 - If you don't use Wrecker
+								If $g_aCGMiscChallenges[$j][1] = "Wall Wrecker" And ($g_aiAttackUseSiege[$DB] = 1 Or $g_aiAttackUseSiege[$LB] = 1) And $g_aiArmyCompSiegeMachines[$eSiegeWallWrecker] = 0 Then ExitLoop
 
-							If $g_aCGMiscChallenges[$j][1] = "Siege Barrack" And ($g_aiAttackUseSiege[$DB] = 4 Or $g_aiAttackUseSiege[$LB] = 4) And $g_aiArmyCompSiegeMachines[$eSiegeBarracks] = 0 Then ExitLoop
+								If $g_aCGMiscChallenges[$j][1] = "Stone Slammer" And ($g_aiAttackUseSiege[$DB] = 3 Or $g_aiAttackUseSiege[$LB] = 3) And $g_aiArmyCompSiegeMachines[$eSiegeStoneSlammer] = 0 Then ExitLoop
 
-							If $g_aCGMiscChallenges[$j][1] = "Log Launcher" And ($g_aiAttackUseSiege[$DB] = 5 Or $g_aiAttackUseSiege[$LB] = 5) And $g_aiArmyCompSiegeMachines[$eSiegeLogLauncher] = 0 Then ExitLoop
+								If $g_aCGMiscChallenges[$j][1] = "Siege Barrack" And ($g_aiAttackUseSiege[$DB] = 4 Or $g_aiAttackUseSiege[$LB] = 4) And $g_aiArmyCompSiegeMachines[$eSiegeBarracks] = 0 Then ExitLoop
 
-							; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
-							Local $aArray[4] = [$g_aCGMiscChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $g_aCGMiscChallenges[$j][3]]
-						EndIf
-					Next
-                Case "BBB" ; BB Battle challenges
-                    If Not $g_bChkClanGamesBBBattle Then ContinueLoop
+								If $g_aCGMiscChallenges[$j][1] = "Log Launcher" And ($g_aiAttackUseSiege[$DB] = 5 Or $g_aiAttackUseSiege[$LB] = 5) And $g_aiArmyCompSiegeMachines[$eSiegeLogLauncher] = 0 Then ExitLoop
 
-                    ;[0] = Path Directory , [1] = Event Name , [2] = TH level , [3] = Difficulty Level , [4] = Time to do it
-                    ; Local $g_aCGBBBattleChallenges = $g_aCGBBBattleChallenges
-                    For $j = 0 To UBound($g_aCGBBBattleChallenges) - 1
-						; If $g_aCGBBBattleChallenges[$j][5] = False Then ContinueLoop
-                        ; Match the names
-                        If $aAllDetectionsOnScreen[$i][1] = $g_aCGBBBattleChallenges[$j][0] Then
+								; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
+								Local $aArray[4] = [$g_aCGMiscChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $g_aCGMiscChallenges[$j][3]]
+							EndIf
+						Next
+				EndSwitch
+			Else
+				Switch $aAllDetectionsOnScreen[$i][0]
+					Case "BBB" ; BB Battle challenges
+						If Not $g_bChkClanGamesBBBattle Then ContinueLoop
 
-                            ; Verify your TH level and Challenge kind
-                            ; If $g_iBBTownHallLevel < $g_aCGDestructionChallenges[$j][2] Then ExitLoop ; adding soon
+						;[0] = Path Directory , [1] = Event Name , [2] = TH level , [3] = Difficulty Level , [4] = Time to do it
+						; Local $g_aCGBBBattleChallenges = $g_aCGBBBattleChallenges
+						For $j = 0 To UBound($g_aCGBBBattleChallenges) - 1
+							; If $g_aCGBBBattleChallenges[$j][5] = False Then ContinueLoop
+							; Match the names
+							If $aAllDetectionsOnScreen[$i][1] = $g_aCGBBBattleChallenges[$j][0] Then
 
-                            Local $aArray[4] = [$g_aCGBBBattleChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $g_aCGBBBattleChallenges[$j][3]]
-                        EndIf
-                    Next
-                Case "BBD" ; BB Destruction challenges
-					If Not $g_bChkClanGamesBBDes Then ContinueLoop
+								; Verify your TH level and Challenge kind
+								; If $g_iBBTownHallLevel < $g_aCGDestructionChallenges[$j][2] Then ExitLoop ; adding soon
 
-                    ;[0] = Path Directory , [1] = Event Name , [2] = TH level , [3] = Difficulty Level , [4] = Time to do it
-                    ; Local $g_aCGBBDestructionChallenges = $g_aCGBBDestructionChallenges
-                    For $j = 0 To UBound($g_aCGBBDestructionChallenges) - 1
-						; If $g_aCGBBDestructionChallenges[$j][5] = False Then ContinueLoop
-						; Match the names
-                        If $aAllDetectionsOnScreen[$i][1] = $g_aCGBBDestructionChallenges[$j][0] Then
-							Local $aArray[4] = [$g_aCGBBDestructionChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $g_aCGBBDestructionChallenges[$j][3]]
-                        EndIf
-                    Next
-				Case "BBT" ; BB Troop challenges
-					If Not $g_bChkClanGamesBBTroops Then ContinueLoop
+								Local $aArray[4] = [$g_aCGBBBattleChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $g_aCGBBBattleChallenges[$j][3]]
+							EndIf
+						Next
+					Case "BBD" ; BB Destruction challenges
+						If Not $g_bChkClanGamesBBDes Then ContinueLoop
 
-                    ;[0] = Path Directory , [1] = Event Name , [2] = TH level , [3] = Difficulty Level , [4] = Time to do it
-                    ; Local $g_aCGBBTroopChallenges = $g_aCGBBTroopChallenges
-                    For $j = 0 To UBound($g_aCGBBTroopChallenges) - 1
-						; If $g_aCGBBTroopChallenges[$j][5] = False Then ContinueLoop
-                        ; Match the names
-                        If $aAllDetectionsOnScreen[$i][1] = $g_aCGBBTroopChallenges[$j][0] Then
-							Local $aArray[4] = [$g_aCGBBTroopChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $g_aCGBBTroopChallenges[$j][3]]
-                        EndIf
-                    Next
-			EndSwitch
+						;[0] = Path Directory , [1] = Event Name , [2] = TH level , [3] = Difficulty Level , [4] = Time to do it
+						; Local $g_aCGBBDestructionChallenges = $g_aCGBBDestructionChallenges
+						For $j = 0 To UBound($g_aCGBBDestructionChallenges) - 1
+							; If $g_aCGBBDestructionChallenges[$j][5] = False Then ContinueLoop
+							; Match the names
+							If $aAllDetectionsOnScreen[$i][1] = $g_aCGBBDestructionChallenges[$j][0] Then
+								Local $aArray[4] = [$g_aCGBBDestructionChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $g_aCGBBDestructionChallenges[$j][3]]
+							EndIf
+						Next
+					Case "BBT" ; BB Troop challenges
+						If Not $g_bChkClanGamesBBTroops Then ContinueLoop
+
+						;[0] = Path Directory , [1] = Event Name , [2] = TH level , [3] = Difficulty Level , [4] = Time to do it
+						; Local $g_aCGBBTroopChallenges = $g_aCGBBTroopChallenges
+						For $j = 0 To UBound($g_aCGBBTroopChallenges) - 1
+							; If $g_aCGBBTroopChallenges[$j][5] = False Then ContinueLoop
+							; Match the names
+							If $aAllDetectionsOnScreen[$i][1] = $g_aCGBBTroopChallenges[$j][0] Then
+								Local $aArray[4] = [$g_aCGBBTroopChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $g_aCGBBTroopChallenges[$j][3]]
+							EndIf
+						Next
+				EndSwitch
+			EndIf
+			
 			If IsDeclared("aArray") And $aArray[0] <> "" Then
-				ReDim $aSelectChallenges[UBound($aSelectChallenges) + 1][5]
+				ReDim $aSelectChallenges[UBound($aSelectChallenges) + 1][6]
 				$aSelectChallenges[UBound($aSelectChallenges) - 1][0] = $aArray[0] ; Event Name Full Name
 				$aSelectChallenges[UBound($aSelectChallenges) - 1][1] = $aArray[1] ; Xaxis
 				$aSelectChallenges[UBound($aSelectChallenges) - 1][2] = $aArray[2] ; Yaxis
 				$aSelectChallenges[UBound($aSelectChallenges) - 1][3] = $aArray[3] ; difficulty
 				$aSelectChallenges[UBound($aSelectChallenges) - 1][4] = 0 ; timer minutes
+				$aSelectChallenges[UBound($aSelectChallenges) - 1][5] = $aAllDetectionsOnScreen[$i][4] ; EventType: MainVillage/BuilderBase
 				$aArray[0] = ""
 			EndIf
 		Next
@@ -400,18 +405,19 @@ Func __ClanGames($test = False, $bFromBB = False)
 		Next
 
 		; let's get the 60 minutes events and remove from array
-		Local $aTempSelectChallenges[0][5]
+		Local $aTempSelectChallenges[0][6]
 		For $i = 0 To UBound($aSelectChallenges) - 1
 			If $aSelectChallenges[$i][4] = 60 And $g_bChkClanGames60 Then
 				Setlog($aSelectChallenges[$i][0] & " unselected, is a 60min event!", $COLOR_INFO)
 				ContinueLoop
 			EndIf
-			ReDim $aTempSelectChallenges[UBound($aTempSelectChallenges) + 1][5]
+			ReDim $aTempSelectChallenges[UBound($aTempSelectChallenges) + 1][6]
 			$aTempSelectChallenges[UBound($aTempSelectChallenges) - 1][0] = $aSelectChallenges[$i][0]
 			$aTempSelectChallenges[UBound($aTempSelectChallenges) - 1][1] = $aSelectChallenges[$i][1]
 			$aTempSelectChallenges[UBound($aTempSelectChallenges) - 1][2] = $aSelectChallenges[$i][2]
 			$aTempSelectChallenges[UBound($aTempSelectChallenges) - 1][3] = $aSelectChallenges[$i][3]
 			$aTempSelectChallenges[UBound($aTempSelectChallenges) - 1][4] = $aSelectChallenges[$i][4]
+			$aTempSelectChallenges[UBound($aTempSelectChallenges) - 1][5] = $aSelectChallenges[$i][5]
 		Next
 
 		; Drop to top again , because coordinates Xaxis and Yaxis
@@ -436,6 +442,7 @@ Func __ClanGames($test = False, $bFromBB = False)
 			$sEventName = $aTempSelectChallenges[0][0]
 			Click($aTempSelectChallenges[0][1], $aTempSelectChallenges[0][2])
 			If _Sleep(1750) Then Return
+			$g_bIsBBevent = $aTempSelectChallenges[0][5]
 			If ClickOnEvent($g_bYourAccScoreCG, $aiScoreLimit, $sEventName, $getCapture) Then Return
 			; Some error occurred let's click on Challenges Tab and proceeds
 			ClickP($TabChallengesPosition, 2, 0, "#Tab")
@@ -688,11 +695,11 @@ EndFunc   ;==>IsClanGamesWindow
 
 ; Close clan games with European lord manners.
 Func CloseClanGames()
-	If _Wait4Pixel(827, 35, 0xFFFFFF, 15, 1500, 250, "CloseClanGames") Then
-		Click(827, 35) ;Close Window
+	If _Wait4Pixel(824, 31, 0xFFFFFF, 15, 1500, 250, "CloseClanGames") Then
+		Click(824, 31) ;Close Window
 	EndIf
 	
-	If IsMainPage(1) Then Return
+	If IsMainPage(5) Then Return
 	
 	checkobstacles()
 
@@ -812,7 +819,8 @@ Func _IsEventRunning()
 		Return True
 	Else
 
-		Local $aAllDetectionsOnScreen = ChallengeDetection()
+		; [0]=ChallengeName [1]=EventName [2]=Xaxis [3]=Yaxis, [4]=IsBBChallenge
+		Local $aAllDetectionsOnScreen = ChallengeDetection(True)
 		
 		;check if its Enabled Challenge, if not = purge
 		If UBound($aAllDetectionsOnScreen) > 0 Then ; Resolution changed
@@ -842,22 +850,64 @@ Func _IsEventRunning()
 	Return False
 EndFunc   ;==>_IsEventRunning
 
-Func ChallengeDetection()
+Func IsBBChallenge($x, $y)
+
+	Local $aBorderX[4] = [290, 416, 542, 668]
+	Local $iColumn, $iRow, $bReturn
+
+	Switch $x
+		Case $aBorderX[0] To $aBorderX[1]
+			$iColumn = 0
+		Case $aBorderX[1] To $aBorderX[2]
+			$iColumn = 1
+		Case $aBorderX[1] To $aBorderX[3]
+			$iColumn = 2
+		Case Else
+			$iColumn = 3
+	EndSwitch
+
+	If $g_bChkClanGamesDebug Then SetLog("Column : " & $iColumn, $COLOR_DEBUG)
+	
+	Local $iModeSet = -1, $hResultColor = 0
+	Local $aColorsResult = [0x5C91CE, 0x78A9DD, 0x7DA9DD]
+	Local $aColorsResultBB = [0x0D6685, 0x0D6083, 0x0D5A7F, 0x0D5A81]
+
+	For $iX = $aBorderX[$iColumn] + 1 To $aBorderX[$iColumn] + 9
+		
+		$hResultColor = _GetPixelColor($iX, $y, False)
+		$iModeSet = HexColorIndex($aColorsResult, $hResultColor, 25)
+		If $iModeSet <> -1 Then
+			Return False
+		Else
+			$iModeSet = HexColorIndex($aColorsResultBB, $hResultColor, 25)
+			If $iModeSet <> -1 Then
+				Return True
+			EndIf
+		EndIf
+		
+	Next
+	
+	Return False
+EndFunc ;==>IsBBChallenge
+
+Func ChallengeDetection($bOnlyScanAtOne = False)
 
 	; To store the detections
-	; [0]=ChallengeName [1]=EventName [2]=Xaxis [3]=Yaxis
-	Local $aAllDetectionsOnScreen[0][4]
+	; [0]=ChallengeName [1]=EventName [2]=Xaxis [3]=Yaxis, [4]=IsBBChallenge
+	Local $aAllDetectionsOnScreen[0][5]
 
-	; we can make a image detection by row !!! can be faster?!!!
-	Local $aRows = ["300,111,760,201", "300,271,760,361", "300,431,760,506"]
-
+	; we can make a image detection by row, can be faster
+	If $bOnlyScanAtOne = False Then
+		Local $aRows = ["300,111,760,201", "300,271,760,361", "300,360,760,506"]
+	Else
+		Local $aRows = ["300,90,760, 247"]
+	EndIf
+	
 	; Temp Variables
 	Local $sClanGamesWindow, $aCurrentDetection, $aEachDetection
 	Local $FullImageName, $StringCoordinates, $sString, $tempObbj, $tempObbjs, $aNames
 	
-	Local $BBCheck[2] = ["BBD-WallDes", "BBD-BuildingDes"]
-
-	_CaptureRegion2()
+	_CaptureRegions()
 	For $x = 0 To UBound($aRows) - 1
 
 		If $g_bChkClanGamesDebug Then Setlog("Detecting the row number " & $x + 1)
@@ -897,27 +947,16 @@ Func ChallengeDetection()
 					If UBound($tempObbj) <> 2 Then ContinueLoop
 				EndIf
 	
-				For $x = 0 To UBound($BBCheck) - 1
-					If $FullImageName = $BBCheck[$x] Then
-						If $g_bChkClanGamesDebug Then SetLog("Detection for " & $FullImageName & " :", $COLOR_INFO)
-						If Not IsBBChallenge($tempObbj[0],$tempObbj[1]) Then
-							If $g_bChkClanGamesDebug Then SetLog("False Detection, Skip this Challenge", $COLOR_ERROR)
-							ContinueLoop 2
-						Else
-							If $g_bChkClanGamesDebug Then SetLog("OK, Continue", $COLOR_SUCCESS)
-						Endif
-					EndIf
-				Next
-
 				$aNames = StringSplit($FullImageName, "-", $STR_NOCOUNT)
 				
 				SetDebugLog("filename: " & $FullImageName & " $aNames[0] = " & $aNames[0] & " $aNames[1]= " & $aNames[1], $COLOR_ACTION)
 
-				ReDim $aAllDetectionsOnScreen[UBound($aAllDetectionsOnScreen) + 1][4]
+				ReDim $aAllDetectionsOnScreen[UBound($aAllDetectionsOnScreen) + 1][5]
 				$aAllDetectionsOnScreen[UBound($aAllDetectionsOnScreen) - 1][0] = $aNames[0] ; Challenge Name
 				$aAllDetectionsOnScreen[UBound($aAllDetectionsOnScreen) - 1][1] = $aNames[1] ; Event Name
 				$aAllDetectionsOnScreen[UBound($aAllDetectionsOnScreen) - 1][2] = $tempObbj[0] ; Xaxis
 				$aAllDetectionsOnScreen[UBound($aAllDetectionsOnScreen) - 1][3] = $tempObbj[1] ; Yaxis
+				If $bOnlyScanAtOne = False Then $aAllDetectionsOnScreen[UBound($aAllDetectionsOnScreen) - 1][4] = IsBBChallenge($tempObbj[0], $tempObbj[1])
 			Next
 		EndIf
 	Next
@@ -952,7 +991,7 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 	Local $aStartButton = StartButton(True, $getCapture)
 	If IsArray($aStartButton) Then
 		Local $Timer = GetEventTimeInMinutes($aStartButton[0], $aStartButton[1])
-		SetLog("Starting Event" & " [" & $Timer & " min]" & " Is builder base challenge? " & $g_bIsBBevent, $COLOR_SUCCESS)
+		If $g_bPurgeJob = False Then SetLog("Starting Event" & " [" & $Timer & " min]" & " Is builder base challenge? " & $g_bIsBBevent, $COLOR_SUCCESS)
 		Click($aStartButton[0], $aStartButton[1])
 		GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - Starting " & $sEventName & " for " & $Timer & " min", 1)
 		_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - Starting " & $sEventName & " for " & $Timer & " min")
@@ -991,17 +1030,10 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 EndFunc   ;==>StartsEvent
 
 Func StartButton($bGetEventType = True, $getCapture = True)
-	If $bGetEventType = True Then
-		$g_bIsBBevent = False
-	EndIf
-
     Local $aButtonPixel[2]
     If QuickMIS("BC1", $g_sImgStart, 220, 150 + $g_iMidOffsetYFixed, 830, 580 + $g_iBottomOffsetYFixed, $getCapture, False) Then ; Resolution changed
 		$aButtonPixel[0] = $g_iQuickMISX
 		$aButtonPixel[1] = $g_iQuickMISY
-		If $bGetEventType = True Then
-			$g_bIsBBevent = (QuickMIS("Q1", $g_sImgBorderBB, $aButtonPixel[0] - 250, $aButtonPixel[1] - 70, $aButtonPixel[0] + 250, $aButtonPixel[1] + 70) > 0) ? (True) : (False) ; Resolution changed
-		EndIf
 		Return $aButtonPixel
 	Else
 		SetLog("Bad $g_sImgStart.", $COLOR_ERROR)
@@ -1163,8 +1195,10 @@ Func GetEventTimeInMinutes($iXStartBtn, $iYStartBtn, $bIsStartBtn = True)
 		$YAxis = $iYStartBtn + 8 ; Related to Trash Button
 	EndIf
 
-	Local $Ocr = getOcrEventTime($XAxis, $YAxis)
-	Return OcrToMinutes($Ocr)
+	Local $iOcr = getOcrEventTime($XAxis, $YAxis)
+	Local $iOcrToMinutes = OcrToMinutes($iOcr)
+	If $iOcrToMinutes = 0 Then $iOcrToMinutes = 1440
+	Return $iOcrToMinutes
 
 EndFunc   ;==>GetEventTimeInMinutes
 
@@ -1176,50 +1210,6 @@ Func GetEventInformation()
 		Return 0
 	EndIf
 EndFunc   ;==>GetEventInformation
-
-
-Func IsBBChallenge($i = Default, $j = Default)
-
-	Local $BorderX[4] = [292, 418, 546, 669]
-	Local $BorderY[3] = [205 + $g_iMidOffsetYFixed, 363 + $g_iMidOffsetYFixed, 520 + $g_iBottomOffsetYFixed] ; Resolution changed
-	Local $iColumn, $iRow, $bReturn
-
-	Switch $i
-		Case $BorderX[0] To $BorderX[1]
-			$iColumn = 1
-		Case $BorderX[1] To $BorderX[2]
-			$iColumn = 2
-		Case $BorderX[1] To $BorderX[3]
-			$iColumn = 3
-		Case Else
-			$iColumn = 4
-	EndSwitch
-
-	Switch $j
-		Case $BorderY[0]-50 To $BorderY[1]-50
-			$iRow = 1
-		Case $BorderY[1]-50 To $BorderY[2]-50
-			$iRow = 2
-		Case Else
-			$iRow = 3
-	EndSwitch
-	If $g_bChkClanGamesDebug Then SetLog("Row: " & $iRow & ", Column : " & $iColumn, $COLOR_DEBUG)
-	For $y = 0 To 2
-		For $x = 0 To 3
-			If $iRow = ($y+1) And $iColumn = ($x+1) Then
-				;Search image border, our image is MainVillage event border, so If found return False
-				If QuickMIS("BC1", $g_sImgBorder, $BorderX[$x] - 50, $BorderY[$y] - 50, $BorderX[$x] + 50, $BorderY[$y] + 50, True, False) Then
-					If $g_bChkClanGamesDebug Then SetLog("IsBBChallenge = False", $COLOR_ERROR)
-					Return False
-				Else
-					If $g_bChkClanGamesDebug Then SetLog("IsBBChallenge = True", $COLOR_INFO)
-					Return True
-				EndIf
-			EndIf
-		Next
-	Next
-
-EndFunc ;==>IsBBChallenge
 
 ; Just for any button test
 Func ClanGames($bTest = False)

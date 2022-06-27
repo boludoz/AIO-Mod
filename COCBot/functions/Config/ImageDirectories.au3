@@ -160,7 +160,6 @@ Global $g_sImgEditQuickTrain = @ScriptDir & "\imgxml\Train\EditQuickTrain\"
 Global $g_sImgAttackBarDir = @ScriptDir & "\imgxml\AttackBar"
 Global $g_sImgSwitchSiegeMachine = @ScriptDir & "\imgxml\SwitchSiegeMachines\"
 Global $g_sImgSwitchWardenMode = @ScriptDir & "\imgxml\SwitchWardenMode"
-Global $g_sImgIsMultiplayerTab = @ScriptDir & "\imgxml\Attack\Search\MultiplayerTab*"
 #EndRegion
 
 #Region Search
@@ -204,8 +203,6 @@ Global Const $g_sImgTrashPurge = 	@ScriptDir & "\imgxml\Resources\ClanGamesImage
 Global Const $g_sImgOkayPurge = 	@ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Okay"
 Global Const $g_sImgReward = 		@ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Reward"
 Global Const $g_sImgWindow = 		@ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Window"
-Global Const $g_sImgBorder = 		@ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Border"
 Global Const $g_sImgGameComplete = 	@ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\GameComplete"
 Global Const $g_sImgVersus  =		@ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Versus"
-Global Const $g_sImgBorderBB =		@ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Border\IsBuilder"
 #EndRegion

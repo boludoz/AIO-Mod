@@ -807,6 +807,11 @@ Global Const $g_asLeagueDetails[22][5] = [ _
 		["200000", "Champion III", "1220", "C3", "3200"], ["225000", "Champion II", "1400", "C2", "3500"], ["250000", "Champion I", "1580", "C1", "3800"], _
 		["280000", "Titan III", "1880", "T3", "4100"], ["300000", "Titan II", "2060", "T2", "4400"], ["320000", "Titan I", "2240", "T1", "4700"], _
 		["340000", "Legend", "2400", "LE", "5000"]]
+; Legend trophy protection - Team AIO Mod++
+Global $g_bLegendLeagueFindingOpponents = False
+Global $g_bLegendLeagueAttacksDone = False
+Global $g_bTakedBonus = False, $g_bExitIfIsTakedBonus = False
+;------------------------------------------
 
 ; Loot types
 Global Enum $eLootGold, $eLootElixir, $eLootDarkElixir, $eLootTrophy, $eLootCount

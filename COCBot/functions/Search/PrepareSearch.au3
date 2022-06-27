@@ -12,14 +12,33 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will break shield
+
+Func PrepareSearch($iMode = $DB)
+	Local $bReturn = _PrepareSearch($iMode)
+	If  $g_bLegendLeagueFindingOpponents Or $g_bLegendLeagueAttacksDone Or ($g_bTakedBonus = True And $g_bExitIfIsTakedBonus = True) Then
+		CloseClanGames()
+		$g_bRestart = True
+		$g_bForceSwitch = True
+		Return False
+	EndIf
+	Return $bReturn
+EndFunc
+
+Func _PrepareSearch($Mode = $DB) ;Click attack button and find match button, will break shield
+	Local $aislegendleagueattackscreen[4] = [690, 275, 0x6131A7, 20]
+	Local $aislegendleaguecomplete[4] = [556, 483, 0x3583F3, 10]
+	Local $aislegendleaguesignup[4] = [556, 417, 0x3583F3, 10]
+	Local $islegendleaguesignupbtn[2] = [556, 417]
+	Local $aislegendleaguesignupok[4] = [515, 366, 0xDFF887, 10]
+	Local $islegendleaguesignupokbtn[2] = [515, 366]
+	Local $aattacknowwindowgreenbutton[4] = [690, 425, 0x69B231, 20]
 
 	SetLog("Going to Attack", $COLOR_INFO)
 
 	; RestartSearchPickupHero - Check Remaining Heal Time
 	If $g_bSearchRestartPickupHero And $Mode <> $DT Then
 		For $pTroopType = $eKing To $eChampion ; check all 4 hero
-			For $pMatchMode = $DB To $g_iModeCount - 1 ; check all attack modes
+			For $pMatchMode = $DB To $g_iModeCount - 1 ; check all attack Modes
 				If IsUnitUsed($pMatchMode, $pTroopType) Then
 					If Not _DateIsValid($g_asHeroHealTime[$pTroopType - $eKing]) Then
 						getArmyHeroTime("All", True, True)
@@ -30,151 +49,146 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 		Next
 	EndIf
 
-	ChkAttackCSVConfig()
-
-	If IsMainPage() Then
+	If chkattackcsvconfig() Then
+		SetLog("Bot is stopped due to Script file missing.", $COLOR_INFO)
+		Return
+	EndIf
+	
+	If isMainPage() Then
+		ZoomOut()
 		If _Sleep($DELAYTREASURY4) Then Return
 		If _CheckPixel($aAttackForTreasury, $g_bCapturePixel, Default, "Is attack for treasury:") Then
-			SetLog("It isn't attack for Treasury :-(", $COLOR_SUCCESS)
-			Return
+			SetLog("It isn't attack for Treasury", $COLOR_SUCCESS)
+			$g_bTakedBonus = True
+			If $g_bExitIfIsTakedBonus = True Then
+				SetLog("Exit if is taked bonus enabled", $COLOR_SUCCESS)
+				Return
+			EndIf
 		EndIf
 		If _Sleep($DELAYTREASURY4) Then Return
-
-		#Region - Custom PrepareSearch - Team AIO Mod++
-		; ZoomOut for update measurements
-		ZoomOut()
-
-		; Find attack button.
-		For $i = 0 To 4
-			Local $aAttack = findButton("AttackButton", Default, 1, True)
-			If IsArray($aAttack) And UBound($aAttack, 1) = 2 Then
-				ClickP($aAttack, 1, 0, "#0149")
-				ExitLoop
-			ElseIf $i > 3 Then
-				SetLog("Couldn't find the Attack Button!", $COLOR_ERROR)
-				If $g_bDebugImageSave Then SaveDebugImage("AttackButtonNotFound")
-				$g_bBadPrepareSearch = True ; Custom PrepareSearch - Team AIO Mod++
-				Return False
-			ElseIf $i = 1 Then
-				CloseClanChat()
-				CheckMainScreen()
-			EndIf
-		Next
-		#EndRegion - Custom PrepareSearch - Team AIO Mod++
+		ClickP($aattackbutton, 1, 0, "#0149")
 	EndIf
-
+	
 	If _Sleep($DELAYPREPARESEARCH1) Then Return
-	If Not IsWindowOpen($g_sImgGeneralCloseButton, 10, 200, GetDiamondFromRect("716,1,860,179"))  Then ; Resolution changed
-		SetLog("Attack Window did not open!", $COLOR_ERROR)
-		AndroidPageError("PrepareSearch")
+	Local $bIsPageError = Not IsWindowOpen($g_sImgGeneralCloseButton, 10, 200, GetDiamondFromRect("716,1,860,179"))
+	If $bIsPageError = True Then  ; Resolution changed
+		SetLog("Launch attack Page Fail", $COLOR_ERROR)
+	Else
+		$g_bLeagueAttack = _CheckPixel($aIsLegendLeagueAttackScreen, True, Default, "IsLegendLeague")
+		If Not $g_bLeagueAttack Then
+			If _CheckPixel($aIsLegendLeagueSignUp, True, Default, "SignUpLegendLeague") Then
+				SetLog("Let's Sing-Up at Legends League!", $COLOR_SUCCESS)
+				$g_bLeagueAttack = True
+				ClickP($IsLegendLeagueSignupBtn, 1, 0, "#0149")
+				If _Sleep($DELAYPREPARESEARCH2) Then Return
+				If _CheckPixel($aIsLegendLeagueSignUpOk, True, Default, "SignUpLegendLeagueOkBtn") Then
+					ClickP($IsLegendLeagueSignupBtn, 1, 0, "#0149")
+					If _Sleep($DELAYPREPARESEARCH2) Then Return
+					$g_bLegendLeagueFindingOpponents = True
+					Return
+				EndIf
+			EndIf
+		EndIf
+		If _CheckPixel($aIsLegendLeagueComplete, True, Default, "CompleteDailyLegendLeague") Then
+			SetLog("All of today's attacks are complete!", $COLOR_SUCCESS)
+			SetDebugLog("$aIsLegendLeagueComplete pixel checked")
+			If _Sleep($DELAYPREPARESEARCH2) Then Return
+			If Not $g_bLeagueAttack Then
+				SetDebugLog("Last verification in Legend League was False!!", $COLOR_ERROR)
+				SetDebugLog("Detected the Blue List icon!", $COLOR_ERROR)
+				$g_bLeagueAttack = True
+			EndIf
+			$g_bLegendLeagueAttacksDone = True
+			Return
+		EndIf
+		Local $aiMatch = _PixelSearch(650, 355 + $g_iMidOffsetYFixed, 730, 545 + $g_iBottomOffsetYFixed, Hex(0xC95918, 6), 30)
+		If UBound($aiMatch) > 1 And Not @error Then
+			$g_bLegendLeagueAttacksDone = False
+			$g_bLegendLeagueFindingOpponents = False
+			$g_bCloudsActive = True
+			If $g_iTownhallLevel <> "" And $g_iTownhallLevel > 0 Then
+				$g_iSearchCost += $g_aiSearchCost[$g_iTownhallLevel - 1]
+				$g_iStatsTotalGain[$elootgold] -= $g_aiSearchCost[$g_iTownhallLevel - 1]
+			EndIf
+			UpdateStats()
+			
+			If $g_bLeagueAttack Then
+				Local $sAttackStates = getocroveralldamage(671, 451)
+				If StringLen($sAttackStates) = 2 Then
+					SetLog("Legend League " & StringLeft($sAttackStates, 1) & "/" & StringRight($sAttackStates, 1) & " Attacks Available", $COLOR_INFO)
+				EndIf
+			EndIf
+
+			Click($aiMatch[0], $aiMatch[1])
+			SetDebugLog("Founded Match Button", $COLOR_SUCCESS)
+			
+			If $g_bLeagueAttack Then
+				If _wait4pixel($aattacknowwindowgreenbutton[0], $aattacknowwindowgreenbutton[1], $aattacknowwindowgreenbutton[2], $aattacknowwindowgreenbutton[3], 10000, "IsAttackNowWindow") Then
+					Click($aattacknowwindowgreenbutton[0], $aattacknowwindowgreenbutton[1])
+					SetDebugLog("Founded Attack now Button", $COLOR_SUCCESS)
+					If _Sleep($DELAYPREPARESEARCH1) Then Return
+				Else
+					SetDebugLog("Unable to find Legend League attack now window.", $COLOR_ERROR)
+					SaveDebugImage("IsAttackNowWindow")
+				EndIf
+			EndIf
+		Else
+			If $g_bLeagueAttack Then
+				For $i = 0 To 3
+					Local $aiMatch = _PixelSearch(510, 335, 660, 500, Hex(0x6E460E, 6), 15)
+					If UBound($aiMatch) > 1 And Not @error Then
+						SetLog("Finding Opponents, Let's do other work!", $COLOR_INFO)
+						$g_bLegendLeagueFindingOpponents = True
+						ExitLoop
+					Else
+						If _CheckPixel($aIsLegendLeagueSignUp, True, Default, "SignUpLegendLeague") Then
+							SetLog("Let's Sing-Up at Legends League!", $COLOR_SUCCESS)
+							$g_bLeagueAttack = True
+							ClickP($IsLegendLeagueSignupBtn, 1, 0, "#0149")
+							If _Sleep($DELAYPREPARESEARCH2) Then Return
+							If _CheckPixel($aIsLegendLeagueSignUpOk, True, Default, "SignUpLegendLeagueOkBtn") Then
+								ClickP($IsLegendLeagueSignupBtn, 1, 0, "#0149")
+								If _Sleep($DELAYPREPARESEARCH2) Then Return
+								ExitLoop
+							EndIf
+						EndIf
+						If _CheckPixel($aIsLegendLeagueComplete, True, Default, "CompleteDailyLegendLeague") Then
+							SetLog("All of today's attacks are complete!", $COLOR_SUCCESS)
+							SetDebugLog("$g_sImgLegendFindingOppoentents _PixelSearch checked")
+							$g_bLegendLeagueAttacksDone = True
+							ExitLoop
+						EndIf
+					EndIf
+					If _Sleep(3000) Then Return
+				Next
+				Return
+			Else
+				SetLog("Unable to find match button.", $COLOR_ERROR)
+				$bIsPageError = True
+			EndIf
+		EndIf
+	EndIf
+	If $bIsPageError Then
+		SaveDebugImage("IsAttackNowWindow")
+		Androidpageerror("PrepareSearch")
 		checkMainScreen()
 		$g_bRestart = True
 		$g_bIsClientSyncError = False
-		$g_bBadPrepareSearch = True ; Custom PrepareSearch - Team AIO Mod++
-		Return False
-	EndIf
-
-	$g_bCloudsActive = True ; early set of clouds to ensure no android suspend occurs that might cause infinite waits
-
-	If Not IsMultiplayerTabOpen() Then
-		SetLog("Error while checking if Multiplayer Tab is opened", $COLOR_ERROR)
-		$g_bBadPrepareSearch = True ; Custom PrepareSearch - Team AIO Mod++
 		Return
 	EndIf
-
-	#Region - Custom PrepareSearch - Team AIO Mod++
-	$g_bBadPrepareSearch = False
-
-	Local $aiMatch, $aConfirmAttackButton, $bIsItJustified = False, $bIsOkLegendAttack = False
-	Local $aLegendSignUpBtn[4] = [556, 461 + $g_iBottomOffsetYFixed, 0x3583F3, 30] ; Resolution changed
-	Local $aLegendWindow[4] = [340, 170 + $g_iMidOffsetYFixed, 0xD8A71C, 20] ; Resolution changed
-	Local $aAllAttacksDone[4] = [522, 508 + $g_iBottomOffsetYFixed, 0x3582F1, 30] ; Resolution changed
-
-	If Number($g_aiCurrentLoot[$eLootTrophy]) >= Number($g_asLeagueDetails[21][4]) Then
-		$g_bLeagueAttack = True
-		If _Sleep(1500) Then Return
-	Else
-		$g_bLeagueAttack = _Wait4Pixel($aLegendWindow[0], $aLegendWindow[1], $aLegendWindow[2], $aLegendWindow[3], 1600, 250, "LegendWindow")
-	EndIf
 	
-	SetLog("Are you a legend? " & $g_bLeagueAttack)
-
-	$aiMatch = _PixelSearch(650, 355 + $g_iMidOffsetYFixed, 730, 545 + $g_iBottomOffsetYFixed, Hex(0xC95918, 6), 30)
-	If $aiMatch <> 0 Then
-		ClickP($aiMatch)
-		If _Sleep(500) Then Return
-	EndIf
-	
-	If $g_bLeagueAttack = False Then
-		If isGemOpen(True) Then ; Check for gem window open)
-			SetLog(" Not enough gold to start searching!", $COLOR_ERROR)
-			Click(585, 252, 1, 0, "#0151") ; Click close gem window "X"
-			If _Sleep($DELAYPREPARESEARCH1) Then Return
-			Click(822, 32, 1, 0, "#0152") ; Click close attack window "X"
-			If _Sleep($DELAYPREPARESEARCH1) Then Return
-			$g_bOutOfGold = True ; Set flag for out of gold to search for attack
-			Return
-		EndIf
-	EndIf
-	
-	If $g_bLeagueAttack = True Then
-		If $aiMatch <> 0 Then
-			For $i = 0 To 10
-				If _Sleep(200) Then Return
-				$aConfirmAttackButton = findButton("ConfirmAttack", Default, 1, True)
-				If IsArray($aConfirmAttackButton) And UBound($aConfirmAttackButton, 1) = 2 Then
-					ClickP($aConfirmAttackButton, 1, 0)
-					$bIsOkLegendAttack = True
-					ExitLoop
-				EndIf
-			Next
-		EndIf
-
-		If $bIsOkLegendAttack = False Then
-			If _CheckPixel($aLegendSignUpBtn, True, Default, "SignUpLegendLeague") Then
-				SetLog("Sign-up to Legend League.", $COLOR_SUCCESS)
-				ClickP($aLegendSignUpBtn, 1, 0, "#0149")
-				If _Sleep($DELAYPREPARESEARCH2) Then Return
-				$bIsItJustified = True
-			EndIf
-
-			$aiMatch = _PixelSearch(447, 431 + $g_iBottomOffsetYFixed, 724, 472 + $g_iBottomOffsetYFixed, Hex(0xAD751E, 6), 15)
-			If $aiMatch <> 0 Then
-				$bIsItJustified = True
-				SetLog("Finding opponents.", $COLOR_ACTION)
-			EndIf
-
-			If _CheckPixel($aAllAttacksDone, True, Default, "AllAttacksDone") Then
-				$bIsItJustified = True
-				SetLog("All of today's attacks are complete.", $COLOR_SUCCESS)
-				If _Sleep($DELAYPREPARESEARCH2) Then Return
-			EndIf
-
-			If $bIsItJustified = True Then
-				$g_bForceSwitch = True     ; set this switch accounts next check
-			Else
-				$g_bBadPrepareSearch = True ; Custom PrepareSearch - Team AIO Mod++
-			EndIf
-
-			$g_bRestart = True
-			ClickAway(Default, True)
-			Return
-
-		EndIf
-	EndIf
-
-	#EndRegion - Custom PrepareSearch - Team AIO Mod++
-
-	If $g_iTownHallLevel <> "" And $g_iTownHallLevel > 0 Then
-		$g_iSearchCost += $g_aiSearchCost[$g_iTownHallLevel - 1]
-		$g_iStatsTotalGain[$eLootGold] -= $g_aiSearchCost[$g_iTownHallLevel - 1]
-	EndIf
-	UpdateStats()
-
 	If _Sleep($DELAYPREPARESEARCH2) Then Return
-
-	Local $Result = getAttackDisable(346, 182) ; Grab Ocr for TakeABreak check
-
+	
+	Local $Result = getAttackDisable(180, 156) ; Grab Ocr for TakeABreak check
+	If IsGemOpen(True) = True Then
+		SetLog(" Not enough gold to start searching.....", $COLOR_ERROR)
+		Click(585, 252, 1, 0, "#0151")
+		If _Sleep($DELAYPREPARESEARCH1) Then Return
+		Click(822, 32, 1, 0, "#0152")
+		If _Sleep($DELAYPREPARESEARCH1) Then Return
+		$g_bOutOfGold = True
+	EndIf
+	
 	checkAttackDisable($g_iTaBChkAttack, $Result) ;See If TakeABreak msg on screen
 
 	SetDebugLog("PrepareSearch exit check $g_bRestart= " & $g_bRestart & ", $g_bOutOfGold= " & $g_bOutOfGold, $COLOR_DEBUG)
@@ -197,24 +211,4 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 			Click($ButtonPixel[0] + 75, $ButtonPixel[1] + 25, 1, 0, "#0153") ; Click Okay Button
 		EndIf
 	EndIf
-
-	#Region - Custom PrepareSearch - Team AIO Mod++
-	; Bad findmatch.
-	Local $iCount
-	_CaptureRegion()
-	While _CheckPixel($aIsMainGrayed, False, Default, "IsMainGrayed") Or _CheckPixel($aIsMain, False, Default, "IsMain")
-		_CaptureRegion()
-		$iCount += 1
-		If _Sleep($DELAYATTACKREPORT1) Then Return
-		SetDebugLog("Waiting PrepareSearch, " & ($iCount / 2) & " Seconds.", $COLOR_DEBUG)
-		If $iCount > 15 Then ExitLoop ; wait 15*500ms = 7,5 seconds max for the window to render
-	WEnd
-
-	If $iCount > 15 Then
-		SetLog("Bad prepareSearch.", $COLOR_ERROR)
-		CheckMainScreen()
-		$g_bBadPrepareSearch = True ; Custom PrepareSearch - Team AIO Mod++
-		Return False
-	EndIf
-	#EndRegion - Custom PrepareSearch - Team AIO Mod++
 EndFunc   ;==>PrepareSearch

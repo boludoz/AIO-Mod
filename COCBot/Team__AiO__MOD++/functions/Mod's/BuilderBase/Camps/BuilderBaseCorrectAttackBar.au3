@@ -331,7 +331,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 		If Not $g_bRunState Then Return
 		If RandomSleep(500) Then Return
 
-		Local $aResult = _PixelSearch(39, 533, 510, 533, Hex(0xF3F3F3, 6), 12, True, True)
+		Local $aResult = 0 ;_PixelSearch(39, 533, 510, 533, Hex(0xF3F3F3, 6), 12, True, True)
 
 		$iTroopIndex = TroopIndexLookupBB($sMissingCamp)
 		If IsArray($aTroopsImg) And IsArray($aResult) Then
