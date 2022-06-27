@@ -304,7 +304,7 @@ Func UpdateBHPos()
 	
 	If UBound($aBuilderHallPos) > 0 And Not @Error Then
 		$g_aBuilderHallPos = $aBuilderHallPos
-		SetLog("Builder Base Hall detection: " & Round(__TimerDiff($hStartTime) / 1000, 2) & " seconds", $COLOR_DEBUG)
+		SetLog("Builder Base Hall detection: " & Round(__TimerDiff($hStartTime) / 1000, 2) & " seconds.", $COLOR_DEBUG)
 	Else
 		$g_aBuilderHallPos = $aBuilderHall
 		SaveDebugImage("UpdateBHPos")
@@ -410,10 +410,10 @@ Func debugbuilderbasebuildingsdetection($DeployPoints, $BestDeployPoints, $Outer
 	Local $hPenYellow = _GDIPlus_PenCreate(0xFFEEF017, 3) ; Create a pencil Color EEF017/YELLOW
 	Local $hPenBlue = _GDIPlus_PenCreate(0xFF6052F9, 3) ; Create a pencil Color 6052F9/BLUE
 	Local $harrowendcap = _gdiplus_arrowcapcreate(10, 10)
-    If UBound($g_aBuilderHallPos, $UBOUND_COLUMNS) >= 4 And not @error Then
-		_gdiplus_graphicsdrawrect($hgraphic, $g_aBuilderHallPos[0][0] - 5, $g_aBuilderHallPos[0][1] - 5, 10, 10, $hpenred)
-		_gdiplus_graphicsdrawline($hgraphic, 0, $g_aBuilderHallPos[0][1], 860, $g_aBuilderHallPos[0][1], $hpenwhite)
-		_gdiplus_graphicsdrawline($hgraphic, $g_aBuilderHallPos[0][0], 0, $g_aBuilderHallPos[0][0], 628, $hpenwhite)
+    If UBound($g_aBuilderHallPos, $UBOUND_COLUMNS) > 3 And not @error Then
+		_gdiplus_graphicsdrawrect($hgraphic, $g_aBuilderHallPos[0][1] - 5, $g_aBuilderHallPos[0][2] - 5, 10, 10, $hpenred)
+		_gdiplus_graphicsdrawline($hgraphic, 0, $g_aBuilderHallPos[0][2], 860, $g_aBuilderHallPos[0][2], $hpenwhite)
+		_gdiplus_graphicsdrawline($hgraphic, $g_aBuilderHallPos[0][1], 0, $g_aBuilderHallPos[0][2], 628, $hpenwhite)
 	EndIf
 	Local $hbrush = _gdiplus_brushcreatesolid(-1)
 	Local $hformat = _gdiplus_stringformatcreate()
@@ -473,8 +473,8 @@ Func debugbuilderbasebuildingsdetection($DeployPoints, $BestDeployPoints, $Outer
 	Local $ssidecsvnames[4] = ["FRONT", "BACK", "LEFT", "RIGHT"]
 	Local $ssidenames[4] = ["TopLeft", "TopRight", "BottomRight", "BottomLeft"]
 	Local $abasesidesposition[4][2] = [[155, 150], [720, 150], [720, 460], [155, 460]]
-	Local $bbdiamondmiddlex = 450
-	Local $bbdiamondmiddley = 325
+	Local $bbdiamondmiddlex = $DiamondMiddleX
+	Local $bbdiamondmiddley = $DiamondMiddleY
 	Local $amainsidesposition[4][4] = [[$bbdiamondmiddlex - 280, $bbdiamondmiddley - 215, $bbdiamondmiddlex - 280 + 80, $bbdiamondmiddley - 215 + 60], [$bbdiamondmiddlex + 280, $bbdiamondmiddley - 215, $bbdiamondmiddlex + 280 - 80, $bbdiamondmiddley - 215 + 60], [$bbdiamondmiddlex + 280, $bbdiamondmiddley + 215, $bbdiamondmiddlex + 280 - 80, $bbdiamondmiddley + 215 - 60], [$bbdiamondmiddlex - 280, $bbdiamondmiddley + 215, $bbdiamondmiddlex - 280 + 80, $bbdiamondmiddley + 215 - 60]]
 	Local $imainsidepostionindex = _arraysearch($ssidenames, $g_aBBMainSide)
 	If $imainsidepostionindex <> -1 Then
