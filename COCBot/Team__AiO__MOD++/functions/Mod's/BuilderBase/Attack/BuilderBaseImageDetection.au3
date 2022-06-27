@@ -615,25 +615,25 @@ Func BuilderBaseBuildingsOnEdge($g_aDeployPoints)
 	Local $TempOuterBL = $g_aOuterEdges[3]
 
 	;Index 3 Contains Side Name Needed For Adding Tiles Pixel
-	Local $ToReturn[0][3], $iLeft = False, $iTop = False, $iRight = False, $iBottom = False
+	Local $ToReturn[0][3], $Left = False, $Top = False, $Right = False, $Bottom = False
 
 	For $Index = 0 To UBound($TempTopLeft) - 1
-		If Int($TempTopLeft[$Index][0]) < 195 Then
-			If Not $iLeft Then
+		If Int($TempTopLeft[$Index][0]) < 200 Then
+			If Not $Left Then
 				ReDim $ToReturn[UBound($ToReturn) + 1][3]
 				$ToReturn[UBound($ToReturn) - 1][0] = $TempOuterTL[0][0]
 				$ToReturn[UBound($ToReturn) - 1][1] = $TempOuterTL[0][1]
 				$ToReturn[UBound($ToReturn) - 1][2] = $sSideNames[0]
-				$iLeft = True
+				$Left = True
 				Setlog("Possible Building at edge at LEFT corner " & $TempTopLeft[$Index][0] & "x" & $TempTopLeft[$Index][1], $COLOR_DEBUG)
 			EndIf
-		ElseIf Int($TempTopLeft[$Index][1]) < 265 Then
-			If Not $iTop Then
+		ElseIf Int($TempTopLeft[$Index][1]) < 160 Then
+			If Not $Top Then
 				ReDim $ToReturn[UBound($ToReturn) + 1][3]
 				$ToReturn[UBound($ToReturn) - 1][0] = $TempOuterTL[UBound($TempOuterTL) - 1][0]
 				$ToReturn[UBound($ToReturn) - 1][1] = $TempOuterTL[UBound($TempOuterTL) - 1][1]
 				$ToReturn[UBound($ToReturn) - 1][2] = $sSideNames[0]
-				$iTop = True
+				$Top = True
 				Setlog("Possible Building at edge at TOP corner " & $TempTopLeft[$Index][0] & "x" & $TempTopLeft[$Index][1], $COLOR_DEBUG)
 			EndIf
 		EndIf
@@ -642,22 +642,22 @@ Func BuilderBaseBuildingsOnEdge($g_aDeployPoints)
 	If Not $g_bRunState Then Return
 
 	For $Index = 0 To UBound($TempTopRight) - 1
-		If Int($TempTopRight[$Index][0]) > 700 Then
-			If Not $iRight Then
+		If Int($TempTopRight[$Index][0]) > 690 Then
+			If Not $Right Then
 				ReDim $ToReturn[UBound($ToReturn) + 1][3]
 				$ToReturn[UBound($ToReturn) - 1][0] = $TempOuterTR[UBound($TempOuterTR) - 1][0]
 				$ToReturn[UBound($ToReturn) - 1][1] = $TempOuterTR[UBound($TempOuterTR) - 1][1]
 				$ToReturn[UBound($ToReturn) - 1][2] = $sSideNames[1]
-				$iRight = True
+				$Right = True
 				Setlog("Possible Building at edge at RIGHT corner " & $TempTopRight[$Index][0] & "x" & $TempTopRight[$Index][1], $COLOR_DEBUG)
 			EndIf
-		ElseIf Int($TempTopRight[$Index][1]) < 265 Then
-			If Not $iTop Then
+		ElseIf Int($TempTopRight[$Index][1]) < 160 Then
+			If Not $Top Then
 				ReDim $ToReturn[UBound($ToReturn) + 1][3]
 				$ToReturn[UBound($ToReturn) - 1][0] = $TempOuterTR[0][0]
 				$ToReturn[UBound($ToReturn) - 1][1] = $TempOuterTR[0][1]
 				$ToReturn[UBound($ToReturn) - 1][2] = $sSideNames[1]
-				$iTop = True
+				$Top = True
 				Setlog("Possible Building at edge at TOP corner " & $TempTopRight[$Index][0] & "x" & $TempTopRight[$Index][1], $COLOR_DEBUG)
 			EndIf
 		EndIf
@@ -666,22 +666,22 @@ Func BuilderBaseBuildingsOnEdge($g_aDeployPoints)
 	If Not $g_bRunState Then Return
 
 	For $Index = 0 To UBound($TempBottomRight) - 1
-		If Int($TempBottomRight[$Index][0]) > 700 Then
-			If Not $iRight Then
+		If Int($TempBottomRight[$Index][0]) > 690 Then
+			If Not $Right Then
 				ReDim $ToReturn[UBound($ToReturn) + 1][3]
 				$ToReturn[UBound($ToReturn) - 1][0] = $TempOuterBR[0][0]
 				$ToReturn[UBound($ToReturn) - 1][1] = $TempOuterBR[0][1]
 				$ToReturn[UBound($ToReturn) - 1][2] = $sSideNames[2]
-				$iRight = True
+				$Right = True
 				Setlog("Possible Building at edge at RIGHT corner " & $TempBottomRight[$Index][0] & "x" & $TempBottomRight[$Index][1], $COLOR_DEBUG)
 			EndIf
-		ElseIf Int($TempBottomRight[$Index][1]) > 570 Then
-			If Not $iBottom Then
+		ElseIf Int($TempBottomRight[$Index][1]) > 490 Then ; RC
+			If Not $Bottom Then
 				ReDim $ToReturn[UBound($ToReturn) + 1][3]
 				$ToReturn[UBound($ToReturn) - 1][0] = $TempOuterBR[UBound($TempOuterBR) - 1][0]
 				$ToReturn[UBound($ToReturn) - 1][1] = $TempOuterBR[UBound($TempOuterBR) - 1][1]
 				$ToReturn[UBound($ToReturn) - 1][2] = $sSideNames[2]
-				$iBottom = True
+				$Bottom = True
 				Setlog("Possible Building at edge at BOTTOM corner " & $TempBottomRight[$Index][0] & "x" & $TempBottomRight[$Index][1], $COLOR_DEBUG)
 			EndIf
 		EndIf
@@ -690,22 +690,22 @@ Func BuilderBaseBuildingsOnEdge($g_aDeployPoints)
 	If Not $g_bRunState Then Return
 
 	For $Index = 0 To UBound($TempBottomLeft) - 1
-		If Int($TempBottomLeft[$Index][0]) < 195 Then
-			If Not $iLeft Then
+		If Int($TempBottomLeft[$Index][0]) < 200 Then
+			If Not $Left Then
 				ReDim $ToReturn[UBound($ToReturn) + 1][3]
 				$ToReturn[UBound($ToReturn) - 1][0] = $TempOuterBL[UBound($TempOuterBL) - 1][0]
 				$ToReturn[UBound($ToReturn) - 1][1] = $TempOuterBL[UBound($TempOuterBL) - 1][1]
 				$ToReturn[UBound($ToReturn) - 1][2] = $sSideNames[3]
-				$iLeft = True
+				$Left = True
 				Setlog("Possible Building at edge at LEFT corner " & $TempBottomLeft[$Index][0] & "x" & $TempBottomLeft[$Index][1], $COLOR_DEBUG)
 			EndIf
-		ElseIf Int($TempBottomLeft[$Index][1]) > 570 Then
-			If Not $iBottom Then
+		ElseIf Int($TempBottomLeft[$Index][1]) > 490 Then ; RC
+			If Not $Bottom Then
 				ReDim $ToReturn[UBound($ToReturn) + 1][3]
 				$ToReturn[UBound($ToReturn) - 1][0] = $TempOuterBL[0][0]
 				$ToReturn[UBound($ToReturn) - 1][1] = $TempOuterBL[0][1]
 				$ToReturn[UBound($ToReturn) - 1][2] = $sSideNames[3]
-				$iBottom = True
+				$Bottom = True
 				Setlog("Possible Building at edge at BOTTOM corner " & $TempBottomLeft[$Index][0] & "x" & $TempBottomLeft[$Index][1], $COLOR_DEBUG)
 			EndIf
 		EndIf
