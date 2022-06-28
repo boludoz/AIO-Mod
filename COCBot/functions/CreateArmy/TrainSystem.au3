@@ -76,7 +76,7 @@ Func TrainSystem()
 				getArmyTroopTime(False, False, True, ($iCount = 0))
 				
 				If $g_aiTimeTrain[0] <= 0 Then
-					Local $sResultTroops = getRemainTrainTimer(495, 169 + $g_iMidOffsetYFixed)
+					Local $sResultTroops = getRemainTrainTimer(468, 169 + $g_iMidOffsetYFixed)
 					If StringRight($sResultTroops, 1) = "s" And StringLen($sResultTroops) < 4 Then
 						$g_aiTimeTrain[0] = Number("0." & Number($sResultTroops))
 						$g_aiTimeTrain[0] = Int($g_aiTimeTrain[0] * Random(1.10, 1.25, 1))
@@ -343,14 +343,8 @@ Func TrainUsingWhatToTrain($rWTT, $bQueue = $g_bIsFullArmywithHeroesAndSpells)
 					Local $sTroopName = ($rWTT[$i][1] > 1 ? $g_asTroopNamesPlural[$iTroopIndex] : $g_asTroopNames[$iTroopIndex])
 				EndIf
 
-				If CheckValuesCost($rWTT[$i][0], $rWTT[$i][1]) Then
-					SetLog("Training " & $rWTT[$i][1] & "x " & $sTroopName, $COLOR_SUCCESS)
-					TrainIt($iTroopIndex, $rWTT[$i][1], $g_iTrainClickDelay)
-				Else
-					SetLog("No resources to Train " & $rWTT[$i][1] & "x " & $sTroopName, $COLOR_ACTION)
-					$g_bOutOfElixir = True
-				EndIf
-
+                SetLog("Training " & $rWTT[$i][1] & "x " & $sTroopName, $COLOR_SUCCESS)
+                TrainIt($iTroopIndex, $rWTT[$i][1], $g_iTrainClickDelay)
 			EndIf
 		EndIf
 		If _Sleep($DELAYRESPOND) Then Return ; add 5ms delay to catch TrainIt errors, and force return to back to main loop
@@ -380,13 +374,8 @@ Func BrewUsingWhatToTrain($rWTT, $bQueue = $g_bIsFullArmywithHeroesAndSpells)
 			If $NeededSpace > $LeftSpace Then $rWTT[$i][1] = Int($LeftSpace / $g_aiSpellSpace[$iSpellIndex - $eLSpell])
 			If $rWTT[$i][1] > 0 Then
 				Local $sSpellName = $g_asSpellNames[$iSpellIndex - $eLSpell]
-				If CheckValuesCost($rWTT[$i][0], $rWTT[$i][1]) Then
-					SetLog("Brewing " & $rWTT[$i][1] & "x " & $sSpellName & ($rWTT[$i][1] > 1 ? " Spells" : " Spell"), $COLOR_SUCCESS)
-					TrainIt($iSpellIndex, $rWTT[$i][1], $g_iTrainClickDelay)
-				Else
-					SetLog("No resources to Brew " & $rWTT[$i][1] & "x " & $sSpellName & ($rWTT[$i][1] > 1 ? " Spells" : " Spell"), $COLOR_ACTION)
-					$g_bOutOfElixir = True
-				EndIf
+                SetLog("Brewing " & $rWTT[$i][1] & "x " & $sSpellName & ($rWTT[$i][1] > 1 ? " Spells" : " Spell"), $COLOR_SUCCESS)
+                TrainIt($iSpellIndex, $rWTT[$i][1], $g_iTrainClickDelay)
 			EndIf
 		EndIf
 		If _Sleep($DELAYRESPOND) Then Return ; add 5ms delay to catch TrainIt errors, and force return to back to main loop
@@ -1462,83 +1451,6 @@ Func ValidateSearchArmyResult($aSearchResult, $iIndex = 0)
 	EndIf
 	Return False
 EndFunc   ;==>ValidateSearchArmyResult
-
-Func CheckValuesCost($Troop = "Arch", $troopQuantity = 1)
-	; Local Variables
-	Local $nElixirCurrent = 0, $nDarkCurrent = 0
-
-	If _Sleep(1000) Then Return ; small delay
-	If Not $g_bRunState Then Return
-
-	; Update Current Resources From Army Windows
-	Local $aCurrentResources = getArmyResources($g_bDebugSetlogTrain)
-	$nElixirCurrent = $aCurrentResources[1]
-	$nDarkCurrent = $aCurrentResources[2]
-
-	If $g_bDebugSetlogTrain Then SetLog("Elixir: " & $nElixirCurrent & ",  Dark Elixir: " & $nDarkCurrent, $COLOR_DEBUG)
-
-	Local $troopCost = 0
-	Local $iTroopIndex = TroopIndexLookup($Troop, "CheckValuesCost")
-
-	Local $aTrainPos = GetTrainPos($iTroopIndex)
-	Local $iTempTroopCost, $iTempSpellCost
-	If IsArray($aTrainPos) And $aTrainPos[0] <> -1 Then
-		If $iTroopIndex >= $eBarb And $iTroopIndex <= $eBarb + $eTroopCount - 1 Then
-			$iTempTroopCost = getArmyResourcesFromButtons($aTrainPos[0], $aTrainPos[1])
-			If $iTempTroopCost <> "" Then
-				$troopCost = Number($iTempTroopCost)
-			Else
-				$troopCost = $g_aiTroopCostPerLevel[$iTroopIndex][$g_aiTrainArmyTroopLevel[$iTroopIndex]]
-			EndIf
-		ElseIf $iTroopIndex >= $eLSpell And $iTroopIndex <= $eBtSpell Then
-			$iTempSpellCost = getArmyResourcesFromButtons($aTrainPos[0], $aTrainPos[1])
-			If $iTempSpellCost <> "" Then
-				$troopCost = Number($iTempSpellCost)
-			Else
-				$troopCost = $g_aiSpellCostPerLevel[$iTroopIndex - $eLSpell][$g_aiTrainArmySpellLevel[$iTroopIndex - $eLSpell]]
-			EndIf
-		EndIf
-	EndIf
-
-	;	DEBUG
-	If $g_bDebugSetlogTrain Then SetLog("Individual Cost " & $Troop & "= " & $troopCost)
-
-	; Cost of the Troop&Spell x the quantities
-	$troopCost *= $troopQuantity
-
-	; 	DEBUG
-	If $g_bDebugSetlogTrain Then SetLog("Total Cost " & $Troop & "= " & $troopCost)
-
-	If IsDarkTroop($Troop) Then
-		; If is Dark Troop
-		If $g_bDebugSetlogTrain Then SetLog("Dark Troop " & $Troop & " Is Dark Troop")
-		If $troopCost <= $nDarkCurrent Then
-			Return True
-		EndIf
-		Return False
-	ElseIf IsElixirSpell($Troop) Then
-		; If is Elixir Spell
-		If $g_bDebugSetlogTrain Then SetLog("Spell " & $Troop & " Is Elixir Spell")
-		If $troopCost <= $nElixirCurrent Then
-			Return True
-		EndIf
-		Return False
-	ElseIf IsDarkSpell($Troop) Then
-		; If is Dark Spell
-		If $g_bDebugSetlogTrain Then SetLog("Dark Spell " & $Troop & " Is Dark Spell")
-		If $troopCost <= $nDarkCurrent Then
-			Return True
-		EndIf
-		Return False
-	Else
-		; If Isn't Dark Troop And Spells, Then is Elixir Troop : )
-		If $troopCost <= $nElixirCurrent Then
-			If $g_bDebugSetlogTrain Then SetLog("Troop " & $Troop & " Is Elixir Troop")
-			Return True
-		EndIf
-		Return False
-	EndIf
-EndFunc   ;==>CheckValuesCost
 
 Func getArmyResources($bSetLog = True, $bNeedCapture = True)
 
