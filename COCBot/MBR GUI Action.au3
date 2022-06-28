@@ -25,9 +25,6 @@ Func BotStart($bAutostartDelay = 0)
 
 	ResumeAndroid()
 	CleanSecureFiles()
-	CalCostCamp()
-	CalCostSpell()
-	CalCostSiege()
 	sldAdditionalClickDelay(True)
 
 	$g_bRunState = True
@@ -149,7 +146,7 @@ EndFunc   ;==>BotStart
 #Region - Firewall - Team AiO MOD++
 Func EnableFirewall()
 	If $g_bChkEnableFirewall = False Then Return
-	
+
     Local $aRuleName[8] = ["config.inmobi.com", "engine.mobileapptracking.com", "in.appcenter.ms", "Unbotifyadjust", "w.alikunlun.com", "telemetry.sdk.eastus", "gdpr.adjust.com", "polyfill.io"]
     Local $aIps[8] = ["23.97.150.128", "13.225.13.0/24,13.32.83.78", "20.185.75.141", "185.151.204.0/24", "80.231.126.100-80.231.126.254", "52.150.55.162", "178.162.219.36", "151.101.130.109"]
     Local $aRuleString = 'NETSH advfirewall firewall add rule name="'
@@ -159,7 +156,7 @@ Func EnableFirewall()
         RunWait(@ComSpec & " /C " & 'NETSH advfirewall firewall delete rule name=' & $aRuleName[$iRule], "", @SW_HIDE)
         RunWait(@ComSpec & " /C " & $aRuleString & $aRuleName[$iRule] & $aRuleString1 & $aIps[$iRule] & $aRuleString2, "", @SW_HIDE)
     Next
-	
+
     If ConnectAndroidAdb(True, True) Then
         Local $sProcess_killed
         Local $s = LaunchConsole($g_sAndroidAdbPath, "-s " & $g_sAndroidAdbDevice & " remount", $sProcess_killed)

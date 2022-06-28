@@ -552,7 +552,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bRadioBBUpgradesToIgnore = (GUICtrlRead($g_hRadioBBUpgradesToIgnore) = $GUI_CHECKED)
 			$g_bRadioBBCustomOTTO = (GUICtrlRead($g_hRadioBBCustomOTTO) = $GUI_CHECKED)
 			#EndRegion - Custom Improve - Team AIO Mod++
-			
+
 			;ClanCapital
 			$g_bChkEnableCollectCCGold = (GUICtrlRead($g_hChkEnableCollectCCGold) = $GUI_CHECKED)
 			$g_bChkEnableForgeGold = (GUICtrlRead($g_hChkEnableForgeGold) = $GUI_CHECKED)
@@ -2302,10 +2302,10 @@ Func ApplyConfig_600_35_2($TypeReadSave)
 			GUICtrlSetState($g_hChkSmartSwitch, $g_bChkSmartSwitch ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkDonateLikeCrazy, $g_bDonateLikeCrazy ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbTotalAccount, $g_iTotalAcc - 1)
-			
+
 			; Farm Schedule - Team AiO MOD++
 			GUICtrlSetState($g_hBtnNextFarmingScheduleTab, (($g_iTotalAcc - 1) < 8) ? ($GUI_DISABLE) : ($GUI_ENABLE))
-			
+
 			For $i = 0 To $g_eTotalAcc - 1
 				GUICtrlSetState($g_ahChkAccount[$i], $g_abAccountNo[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
 				_GUICtrlComboBox_SetCurSel($g_ahCmbProfile[$i], _GUICtrlComboBox_FindStringExact($g_ahCmbProfile[$i], $g_asProfileName[$i]))
@@ -2387,22 +2387,16 @@ Func ApplyConfig_600_52_2($TypeReadSave)
 	Switch $TypeReadSave
 		Case "Read"
 			For $T = 0 To $eTroopCount - 1
-				Local $iColor = ($g_aiTrainArmyTroopLevel[$T] = $g_aiTroopCostPerLevel[$T][0] ? $COLOR_YELLOW : $COLOR_WHITE)
 				GUICtrlSetData($g_ahTxtTrainArmyTroopCount[$T], $g_aiArmyCustomTroops[$T])
 				GUICtrlSetData($g_ahLblTrainArmyTroopLevel[$T], $g_aiTrainArmyTroopLevel[$T])
-				If GUICtrlGetBkColor($g_ahLblTrainArmyTroopLevel[$T]) <> $iColor Then GUICtrlSetBkColor($g_ahLblTrainArmyTroopLevel[$T], $iColor)
 			Next
 			For $S = 0 To $eSpellCount - 1
-				Local $iColor = ($g_aiTrainArmySpellLevel[$S] = $g_aiSpellCostPerLevel[$S][0] ? $COLOR_YELLOW : $COLOR_WHITE)
 				GUICtrlSetData($g_ahTxtTrainArmySpellCount[$S], $g_aiArmyCustomSpells[$S])
 				GUICtrlSetData($g_ahLblTrainArmySpellLevel[$S], $g_aiTrainArmySpellLevel[$S])
-				If GUICtrlGetBkColor($g_ahLblTrainArmySpellLevel[$S]) <> $iColor Then GUICtrlSetBkColor($g_ahLblTrainArmySpellLevel[$S], $iColor)
 			Next
 			For $S = 0 To $eSiegeMachineCount - 1
-				Local $iColor = ($g_aiTrainArmySiegeMachineLevel[$S] = $g_aiSiegeMachineCostPerLevel[$S][0] ? $COLOR_YELLOW : $COLOR_WHITE)
 				GUICtrlSetData($g_ahTxtTrainArmySiegeCount[$S], $g_aiArmyCompSiegeMachines[$S])
 				GUICtrlSetData($g_ahLblTrainArmySiegeLevel[$S], $g_aiTrainArmySiegeMachineLevel[$S])
-				If GUICtrlGetBkColor($g_ahLblTrainArmySiegeLevel[$S]) <> $iColor Then GUICtrlSetBkColor($g_ahLblTrainArmySiegeLevel[$S], $iColor)
 			Next
 			; full & forced Total Camp values
 			GUICtrlSetData($g_hTxtFullTroop, $g_iTrainArmyFullTroopPct)
@@ -2423,7 +2417,7 @@ Func ApplyConfig_600_52_2($TypeReadSave)
 			GUICtrlSetState($g_hChkMMIgnoreIncorrectSpellCombo, $g_bIgnoreIncorrectSpellCombo ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbFillIncorrectSpellCombo, $g_iCmbFillIncorrectSpellCombo)
 			chkOnDoubleTrain()
-			
+
 			GUICtrlSetState($g_hChkPreTrainTroopsPercent, $g_bChkPreTrainTroopsPercent ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hInpPreTrainTroopsPercent, $g_iInpPreTrainTroopsPercent)
 			GUICtrlSetState($g_hChkTrainBeforeAttack, $g_bTrainBeforeAttack ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -2488,30 +2482,30 @@ Func ApplyConfig_600_54($TypeReadSave)
 
 			If $g_iCmbLassiPet < 0 Then $g_iCmbLassiPet = 0
 			_GUICtrlComboBox_SetCurSel($g_hCmbLassiPet, $g_iCmbLassiPet)
-			
+
 			If $g_iCmbElectroOwlPet < 0 Then $g_iCmbElectroOwlPet = 0
 			_GUICtrlComboBox_SetCurSel($g_hCmbElectroOwlPet, $g_iCmbElectroOwlPet)
-			
+
 			If $g_iCmbMightyYakPet < 0 Then $g_iCmbMightyYakPet = 0
 			_GUICtrlComboBox_SetCurSel($g_hCmbMightyYakPet, $g_iCmbMightyYakPet)
-			
+
 			If $g_iCmbUnicornPet < 0 Then $g_iCmbUnicornPet = 0
 			_GUICtrlComboBox_SetCurSel($g_hCmbUnicornPet, $g_iCmbUnicornPet)
-			
+
 			ChkPetHouseSelector()
 			chkTotalCampForced()
 			radSelectTrainType() ; this function also calls calls lblTotalCount and TotalSpellCountClick
 			SetComboTroopComp() ; this function also calls lblTotalCount
 
 			; Troops Order - Team AIO Mod++
-			CustomTrainOrderEnable() 
+			CustomTrainOrderEnable()
             GUICtrlSetState($g_hChkCustomTrainOrderEnable, $g_bCustomTrainOrderEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
             For $z = 0 To UBound($g_ahCmbTroopOrder) - 1
                 _GUICtrlComboBox_SetCurSel($g_ahCmbTroopOrder[$z], $g_aiCmbCustomTrainOrder[$z])
             Next
 
 			; Spells Order - Team AIO Mod++
-			CustomBrewOrderEnable() 
+			CustomBrewOrderEnable()
             GUICtrlSetState($g_hChkCustomBrewOrderEnable, $g_bCustomBrewOrderEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
             For $z = 0 To UBound($g_ahCmbSpellsOrder) - 1
                 _GUICtrlComboBox_SetCurSel($g_ahCmbSpellsOrder[$z], $g_aiCmbCustomBrewOrder[$z])
@@ -2523,7 +2517,7 @@ Func ApplyConfig_600_54($TypeReadSave)
             Next
 
             ; Sieges Machines Order - Custom Team AIO Mod++
-			CustomBuildOrderEnable() 
+			CustomBuildOrderEnable()
             GUICtrlSetState($g_hChkCustomBuildOrderEnable, $g_bCustomBuildOrderEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
             For $z = 0 To UBound($g_ahCmbSiegesOrder) - 1
                 _GUICtrlComboBox_SetCurSel($g_ahCmbSiegesOrder[$z], $g_aiCmbCustomBuildOrder[$z])
