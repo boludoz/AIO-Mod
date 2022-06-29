@@ -66,7 +66,7 @@ EndFunc   ;==>BattleMachineUpgrade
 ; Machine
 Func BuilderBaseUpgradeMachine($bTestRun = False)
 		Local $iXMoved = 0, $iYMoved = 0, $sSelectedUpgrade = "Battle Machine"
-		
+		ZoomOut()
 		If IsMainPageBuilderBase() Then
 
 			; Machine Detection

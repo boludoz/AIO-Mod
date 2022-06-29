@@ -13,39 +13,30 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func LocatePetHouse($bFromButton = False, $bManualAvoid = Default)
-
-	If $g_iTownHallLevel < 14 Then
-		SetLog("Townhall Lvl " & $g_iTownHallLevel & " has no Pet House, so skip locating.", $COLOR_DEBUG)
-		Return False
-	EndIf
-	
 	ZoomOut()
-	
-	; auto locate 
-	If $bFromButton = True Then
-		SetLog("Manual Pet House.", $COLOR_INFO)
-	Else
-		$bManualAvoid = ($g_bChkAvoidBuildingsLocate Or $g_bChkOnlyFarm)
-	EndIf
-	
-	If $bManualAvoid Or Not $bFromButton Then
-		If ImgLocatePetHouse() Then
-			chklocations()
-			Return True
-		EndIf
-		If $bManualAvoid Then Return False
-	EndIf
 	
 	; reset position
 	$g_aiPetHousePos[0] = -1
 	$g_aiPetHousePos[1] = -1
+
+	If $g_iTownHallLevel < 14 Then
+		SetLog("Townhall Lvl " & $g_iTownHallLevel & " has no Pet House, so skip locating.", $COLOR_DEBUG)
+		Return
+	EndIf
+
+	If $bManualAvoid = Default Then $bManualAvoid = ($g_bChkAvoidBuildingsLocate Or $g_bChkOnlyFarm)
+	If $bFromButton = True Then $bManualAvoid = False
+	
+	; auto locate 
+	If $bFromButton = False And $bManualAvoid = True Then ImgLocatePetHouse()
 	
 	SetLog("PetHouse: (" & $g_aiPetHousePos[0] & "," & $g_aiPetHousePos[1] & ")", $COLOR_DEBUG)
+	If $g_aiPetHousePos[0] > 0 And $g_aiPetHousePos[1] > 0 Then Return True
 	
-	Local $bResult = _LocatePetHouse(True) ; manual locate
-	; chklocations()
-	
-	Return $bResult
+	If $bManualAvoid = False Then
+		If $g_aiPetHousePos[1] = "" Or $g_aiPetHousePos[1] = -1 Then _LocatePetHouse(True) ; manual locate
+	EndIf
+	chklocations()
 EndFunc
 
 Func _LocatePetHouse($bCollect = True)
@@ -95,7 +86,7 @@ Func _LocatePetHouse($bCollect = True)
 			ClickAway()
 			Return False
 		EndIf
-		Local $sPetHouseInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY); 860x780
+		Local $sPetHouseInfo = BuildingInfo(245, 490 + $g_iBottomOffsetY)
 		If $sPetHouseInfo[0] > 1 Or $sPetHouseInfo[0] = "" Then
 			If StringInStr($sPetHouseInfo[1], "House") = 0 Then
 				Local $sLocMsg = ($sPetHouseInfo[0] = "" ? "Nothing" : $sPetHouseInfo[1])
@@ -136,7 +127,6 @@ EndFunc   ;==>LocatePetHouse
 
 ; Image Search for Pet House
 Func ImgLocatePetHouse()
-	ZoomOut()
 	Local $sImgDir = @ScriptDir & "\imgxml\Buildings\PetHouse\"
 
 	Local $sSearchArea = $CocDiamondECD
@@ -165,4 +155,4 @@ Func ImgLocatePetHouse()
 	EndIf
 	
 	Return False
-EndFunc   ;==>ImgLocatePetHouse
+EndFunc

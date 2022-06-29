@@ -26,7 +26,7 @@
 ; Zone to search for Gold / Elixir icons and values [445, 100, 90, 85 ]
 ; Gold offset for OCR [Point] [x,y, length]  ,x = x , y = - 10  , length = 535 - x , Height = y + 7   [17]
 ; Elixir offset for OCR [Point] [x,y, length]  ,x = x , y = - 10  , length = 535 - x , Height = y + 7 [17]
-; Buider Name OCR ::::: BuildingInfo(242, 580)
+; Buider Name OCR ::::: BuildingInfo(245, 490 + $g_iBottomOffsetY)
 ; Button Upgrade position [275, 670, 300, 30]  -> UpgradeButton_0_89.png
 ; Button OK position Check Pixel [430, 540, 0x6dbd1d, 10] and CLICK
 
@@ -133,8 +133,7 @@ Func MainSuggestedUpgradeCode($bDebug = $g_bDebugSetlog)
 	Local $aResourcesPicks[0][3], $aResourcesReset[0][3], $aMatrix[1][3], $aResult[3] = [-1, -1, ""]
 
 	Local $vMultipix = 0
-	Local $iyMax = 368
-	Local $aAreaToSearch[4] = [374, 72 + $g_iMidOffsetYFixed, 503, 368 + $g_iMidOffsetYFixed] ; Resolution changed
+	Local $aAreaToSearch[4] = [374, 73, 503, 370] ; Resolution changed
 
 	$g_bBuildingUpgraded = False
 
@@ -167,11 +166,9 @@ Func MainSuggestedUpgradeCode($bDebug = $g_bDebugSetlog)
 			
 			For $z = 0 To 6     ; For do scroll 7 times.
 
-				If _Sleep(3000) Then Return
+				If _Sleep(1500) Then Return
 
-				_CaptureRegion2()
-
-				$aArrays = _ImageSearchXML($g_sImgAutoUpgradeElixir, 10, $aAreaToSearch, False, True, True, 8, 0, 1000)
+				$aArrays = QuickMIS("CNX", $g_sImgAutoUpgradeElixir, $aAreaToSearch[0], $aAreaToSearch[1], $aAreaToSearch[2], $aAreaToSearch[3], True, False) ; _ImageSearchXML($g_sImgAutoUpgradeElixir, 10, $aAreaToSearch, False, True, True, 8, 0, 1000)
 				If IsArray($aArrays) Then
 					$iMinScroll1 = _ArrayMin($aArrays, 1, -1, -1, 2)
 					$iMaxScroll1 = _ArrayMax($aArrays, 1, -1, -1, 2)
@@ -192,7 +189,7 @@ Func MainSuggestedUpgradeCode($bDebug = $g_bDebugSetlog)
 					EndIf
 				EndIf
 
-				$aArrays =_ImageSearchXML($g_sImgAutoUpgradeGold, 10, $aAreaToSearch, False, True, True, 8, 0, 1000)
+				$aArrays = QuickMIS("CNX", $g_sImgAutoUpgradeGold, $aAreaToSearch[0], $aAreaToSearch[1], $aAreaToSearch[2], $aAreaToSearch[3], True, False) ; _ImageSearchXML($g_sImgAutoUpgradeGold, 10, $aAreaToSearch, False, True, True, 8, 0, 1000)
 				If IsArray($aArrays) Then
 					$iMinScroll2 = _ArrayMin($aArrays, 1, -1, -1, 2)
 					$iMaxScroll2 = _ArrayMax($aArrays, 1, -1, -1, 2)
@@ -270,15 +267,31 @@ Func MainSuggestedUpgradeCode($bDebug = $g_bDebugSetlog)
 
 				If $iMaxScroll > -1 And $iMinScroll > -1 Then
 					Local $iFixY = Round(Abs($iMaxScroll - $iMinScroll) * 0.25)
-					If $bAlreadyCheked = False Then
-						ClickDrag(333, $iMaxScroll - $iFixY, 333, $iMinScroll + $iFixY, 1000)     ; Do scroll down.
+					If _PixelSearch(443, 70, 444, 76, Hex(0xFFFFFF, 6), 35) <> 0 Then
+						If $bAlreadyCheked = False Then
+							ClickDrag(333, $iMaxScroll - $iFixY, 333, $iMinScroll + $iFixY, 1000)     ; Do scroll down.
+						Else
+							ExitLoop
+							; ClickDrag(333, $iMinScroll + $iFixY, 333, $iMaxScroll - $iFixY, 1000)     ; Do scroll up.
+						EndIf
 					Else
-						ClickDrag(333, $iMinScroll + $iFixY, 333, $iMaxScroll - $iFixY, 1000)     ; Do scroll up.
+						ClickOnBuilder()
+						If _Sleep(1500) Then Return
+						If _PixelSearch(443, 70, 444, 76, Hex(0xFFFFFF, 6), 35) = 0 Then
+							SetLog("[MainSuggestedUpgradeCode] Wrong upgrades window", $COLOR_ERROR)
+							ExitLoop
+						EndIf
+						If $bAlreadyCheked = False Then
+							ClickDrag(333, $iMaxScroll - $iFixY, 333, $iMinScroll + $iFixY, 1000)     ; Do scroll down.
+						Else
+							ExitLoop
+							; ClickDrag(333, $iMinScroll + $iFixY, 333, $iMaxScroll - $iFixY, 1000)     ; Do scroll up.
+						EndIf
 					EndIf
 				Else
 					ExitLoop
 				EndIf
-
+				
 				If _Sleep(1500) Then Return
 				If _PixelSearch(309, 79, 440, 103, Hex(0xD4FF80, 6), 25) = True Then ExitLoop
 			Next
@@ -310,7 +323,7 @@ Func ClickOnBuilder()
 		If _CheckPixel($g_aMasterBuilder, True) Then
 			; Click on Builder
 			Click($g_aMasterBuilder[0], $g_aMasterBuilder[1], 1)
-			If _Sleep(3000) Then Return
+			If _Sleep(1500) Then Return
 			; Let's verify if the Suggested Window open
 			If _PixelSearch(443, 70, 444, 76, Hex(0xFFFFFF, 6), 35) <> 0 Then
 				Return True
@@ -341,7 +354,7 @@ Func GetUpgradeButton($sUpgButtom = "", $bDebug = False)
 	$g_aBBUpgradeResourceCostDuration = $aResetBB
 	$g_aBBUpgradeNameLevel = $aResetBB
 
-	If _WaitForCheckImg($g_sImgAutoUpgradeBtnDir, "182, 565, 685, 723") Then
+	If _WaitForCheckImg($g_sImgAutoUpgradeBtnDir, "182, 500, 685, 883") Then
 		If UBound($g_aImageSearchXML) > 0 And Not @error Then
 			$g_aBBUpgradeNameLevel = BuildingInfo(245, 490 + $g_iBottomOffsetY)
 			If $g_aBBUpgradeNameLevel[0] = 2 Then
@@ -379,8 +392,9 @@ Func GetUpgradeButton($sUpgButtom = "", $bDebug = False)
 						SetLog($sMsg, $COLOR_SUCCESS)
 					EndIf
 				EndIf
-
-				If _MultiPixelSearch($g_aImageSearchXML[0][1], 579 + $g_iBottomOffsetYFixed, $g_aImageSearchXML[0][2] + 67, 613 + $g_iBottomOffsetYFixed, 2, 2, Hex(0xFF887F, 6), StringSplit2D("0xFF887F-0-1|0xFF887F-4-0"), 35) <> 0 Then
+				Local $iyBtn = 501; 579 + $g_iBottomOffsetYFixed
+				
+				If _MultiPixelSearch($g_aImageSearchXML[0][1], $iyBtn, $g_aImageSearchXML[0][2] + 67, $iyBtn + 34, 2, 2, Hex(0xFF887F, 6), StringSplit2D("0xFF887F-0-1|0xFF887F-4-0"), 35) <> 0 Then
 					SetLog("Upgrade stopped due to insufficient loot", $COLOR_ERROR)
 					ClickAway()
 
@@ -404,8 +418,8 @@ Func GetUpgradeButton($sUpgButtom = "", $bDebug = False)
 					EndIf
 				EndIf
 
-				If _WaitForCheckImg($sUpgButtom, $aBtnPos) Then
-					Click($g_aImageSearchXML[0][1], $g_aImageSearchXML[0][2], 1)
+				If QuickMIS("BC1", $sUpgButtom, $aBtnPos[0], $aBtnPos[1], $aBtnPos[2], $aBtnPos[3]) Then
+					Click($g_iQuickMISX, $g_iQuickMISY, 1)
 					If _Sleep(500) Then Return
 
 					If isGemOpen(True) Then
@@ -468,7 +482,7 @@ Func BBNewBuildings($aResult)
 	If UBound($aResult) = 3 And $aResult[2] = "New" Then
 
 		Click($aResult[0], $aResult[1], 1)
-		If _Sleep(3000) Then Return
+		If _Sleep(1500) Then Return
 
 		If _WaitForCheckImg(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\Upgrade\New\", "14, 131, 847, 579", Default, 4500) Then ; Resolution changed
 			Click($g_aImageSearchXML[0][1] - 100, $g_aImageSearchXML[0][2] + 100, 1)

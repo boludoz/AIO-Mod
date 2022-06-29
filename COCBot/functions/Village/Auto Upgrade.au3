@@ -158,14 +158,14 @@ Func _AutoUpgrade($bDebug = False)
 		$g_aupgradenamelevel = $aReset
 		
 		For $i = 0 To 5
-			$g_aupgradenamelevel = buildinginfo(242, 464)
+			$g_aupgradenamelevel = BuildingInfo(245, 490 + $g_iBottomOffsetY)
 			SetLog("Clicked in " & $g_aupgradenamelevel[1])
 			If $g_aupgradenamelevel[1] <> "" Then ExitLoop
 			If _Sleep($DELAYAUTOUPGRADEBUILDING3) Then ExitLoop
 			If $i = 5 And $g_aupgradenamelevel[1] = "" Then
 				$g_bdebugocr = True
 				$g_bdebugsetlog = True
-				buildinginfo(242, 464)
+				; BuildingInfo(245, 490 + $g_iBottomOffsetY)
 				SetLog("Unable to find the building title... Exiting Auto Upgrade...", $COLOR_ERROR)
 				SetLog("Taking a Image for debug! And OCR debug!", $COLOR_ERROR)
 				savedebugimage("AutoUpgrade")

@@ -433,7 +433,7 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 	If $CaptureRegion Then _CaptureRegion2()
 
 	Local $bOnBuilderBase = isOnBuilderBase($CaptureRegion)
-	If $bOnBuilderBase Then Return SearchZoomOutBB($UpdateMyVillage, $sSource, $CaptureRegion, $DebugLog, $bDebugWithImage)
+	; If $bOnBuilderBase Then Return SearchZoomOutBB($UpdateMyVillage, $sSource, $CaptureRegion, $DebugLog, $bDebugWithImage)
 
 	If $sSource <> "" Then $sSource = " (" & $sSource & ")"
 	Local $bCenterVillage = $CenterVillageBoolOrScrollPos
@@ -451,23 +451,8 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 
 	Local $aResult = ["", 0, 0, 0, 0] ; expected dummy value
 	Local $bUpdateSharedPrefs = $g_bUpdateSharedPrefs And $g_iAndroidZoomoutMode = 4
-	Local $iMultipler = ($g_aisearchzoomoutcounter[0] > 5) ? (2) : (1)
 
-	Static $iCallCount = 0
-
-	If $g_aisearchzoomoutcounter[0] > 1 And Mod($g_aisearchzoomoutcounter[0], 5 * $iMultipler) = 0 Then
-		ClickDrag($aCenterHomeVillageClickDrag[0], $aCenterHomeVillageClickDrag[1], $aCenterHomeVillageClickDrag[0] - 300, $aCenterHomeVillageClickDrag[1], 1000)
-		If _Sleep(1000) Then
-			$iCallCount = 0
-			Return FuncReturn($aResult)
-		EndIf
-		ClickDrag($aCenterHomeVillageClickDrag[0], $aCenterHomeVillageClickDrag[1], $aCenterHomeVillageClickDrag[0] + 113, $aCenterHomeVillageClickDrag[1] + 160, 1000, True)
-		If _Sleep(1000) Then
-			$iCallCount = 0
-			Return FuncReturn($aResult)
-		EndIf
-	EndIf
-	
+	Static $iCallCount = 0	
 	$g_aFallbackDragFix = -1
 	
 	Local $village
@@ -502,7 +487,7 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 					$aScrollPos[0] = $aCenterHomeVillageClickDrag[0]
 					$aScrollPos[1] = $aCenterHomeVillageClickDrag[1]
 				EndIf
-				; ClickAway()
+				ClickAway()
 
 				; Custom fix - Team AIO Mod++
 				If Pixel_Distance($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y) > 5 Then
@@ -532,14 +517,31 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 			Else
 			EndIf
 		EndIf
-	ElseIf $g_aFallbackDragFix <> -1 Then
+	ElseIf $g_aFallbackDragFix <> -1 And UBound($g_aFallbackDragFix) >= 5 And not @error Then
 		If $aScrollPos[0] = 0 And $aScrollPos[1] = 0 Then
 			; use fixed position now to prevent boat activation
 			$aScrollPos[0] = $aCenterHomeVillageClickDrag[0]
 			$aScrollPos[1] = $aCenterHomeVillageClickDrag[1]
 		EndIf
-		SetLog("Fixing center of village", $COLOR_INFO)
-		ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] + ($g_aFallbackDragFix[0] - $g_aFallbackDragFix[2]), $aScrollPos[1])
+		
+		Local $iDragFix = ($g_aFallbackDragFix[2] - $g_aFallbackDragFix[1]) 
+		If Abs($iDragFix) > 150 Then $iDragFix = Ceiling($iDragFix / 2)
+		If $bOnBuilderBase Then $iDragFix *= -1
+		
+		; Tree
+		If $g_aFallbackDragFix[4] = "Tree" Then
+			ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] + _Min(Abs($g_aFallbackDragFix[0] - $g_aFallbackDragFix[2]), 150), $aScrollPos[1] + $iDragFix)
+			SetLog("Centering village (tree)", $COLOR_ACTION)
+		; Stone
+		ElseIf $g_aFallbackDragFix[4] = "Stone" Then
+			ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - _Min(Abs($g_aFallbackDragFix[0] - $g_aFallbackDragFix[2]), 150), $aScrollPos[1] + ($g_aFallbackDragFix[3] - $g_aFallbackDragFix[1]))
+			SetLog("Centering village (stone)", $COLOR_ACTION)
+		; None
+		ElseIf $g_aFallbackDragFix[4] = "None" Then
+			ClickDrag($g_aFallbackDragFix[0], $g_aFallbackDragFix[1], $g_aFallbackDragFix[2], $g_aFallbackDragFix[3])
+			SetLog("Centering village (none)", $COLOR_ACTION)
+		EndIf
+
 		$g_aFallbackDragFix = -1
 	EndIf
 

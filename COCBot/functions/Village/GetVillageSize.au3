@@ -63,12 +63,17 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		$tree = FindTree($sDirectory, $sTreePrefix, $iAdditionalX, $iAdditionalY, $stone[4], $bCaptureRegion)
 	EndIf
 	
+	Local $aFallbackDragFix[5] = [800, 350, 800, 400, "None"]
 	If $stone[0] = 0 Then
 		SetDebugLog("GetVillageSize cannot find stone", $COLOR_WARNING)
 		If $tree[0] > 0 Then
-			Local $aFallbackDragFix[4] = [$tree[0], $tree[1], $tree[2], $tree[3]]
-			$g_aFallbackDragFix = $aFallbackDragFix
+			$aFallbackDragFix[0] = $tree[0]
+			$aFallbackDragFix[1] = $tree[1]
+			$aFallbackDragFix[2] = $tree[2]
+			$aFallbackDragFix[3] = $tree[3]
+			$aFallbackDragFix[4] = "Tree"
 		EndIf
+		$g_aFallbackDragFix = $aFallbackDragFix
 		Return FuncReturn($aResult)
 	Else
 		SetDebugLog("stone: " & _ArrayToString($stone))
@@ -78,9 +83,13 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	If $tree[0] = 0 Then
 		SetDebugLog("GetVillageSize cannot find tree", $COLOR_ACTION)
 		If $stone[0] > 0 Then
-			Local $aFallbackDragFix[4] = [$stone[0], $stone[1], $stone[2], $stone[3]]
-			$g_aFallbackDragFix = $aFallbackDragFix
+			$aFallbackDragFix[0] = $stone[0]
+			$aFallbackDragFix[1] = $stone[1]
+			$aFallbackDragFix[2] = $stone[2]
+			$aFallbackDragFix[3] = $stone[3]
+			$aFallbackDragFix[4] = "Stone"
 		EndIf
+		$g_aFallbackDragFix = $aFallbackDragFix
 		Return FuncReturn($aResult)
 	Else
 		SetDebugLog("tree: " & _ArrayToString($tree))

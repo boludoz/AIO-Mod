@@ -11,50 +11,36 @@
 ; ===============================================================================================================================
 Global $g_aImageSearchXML = - 1
 
-; Local $aArea = StringSplit($vArea2SearchOri, "", $STR_NOCOUNT)
-
-; For $i = 0 To UBound($aArea) -1
-	; If StringIsDigit($aArea[$i]) = 1 Then
-	; EndIf
-; Next
-Func _ImageSearchXML($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = "FV", $vForceCaptureOrPtr = True, $bDebugLog = False, $bCheckDuplicatedpoints = False, $iDistance2check = 25, $minLevel = 0, $maxLevel = 1000)
+Func _ImageSearchXML($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = Default, $vForceCaptureOrPtr = True, $bDebugLog = False, $bCheckDuplicatedpoints = False, $iDistance2check = 25, $minLevel = 0, $maxLevel = 1000)
 
 	$g_aImageSearchXML = -1
 	Local $iCount = 0, $returnProps = "objectname,objectlevel,objectpoints"
 	Local $error, $extError
 	
-	Static $_hHBitmap = 0
-	Local $bIsPtr = False
-	If $vForceCaptureOrPtr = Default Or $vForceCaptureOrPtr = True Then
-		; Capture the screen for comparison
-		If $vForceCaptureOrPtr Then 
-			_CaptureRegion2() ;to have FULL screen image to work with
-		EndIf
-	ElseIf IsPtr($vForceCaptureOrPtr) Then
-		$_hHBitmap = GetHHBitmapArea($vForceCaptureOrPtr)
-		$bIsPtr = True
+	Local $bIsPtr = 0
+	If $vForceCaptureOrPtr = Default Then $vForceCaptureOrPtr = True
+	If $vForceCaptureOrPtr = True Then
+		_CaptureRegion2() ;to have FULL screen image to work with
+	Else
+		$bIsPtr = StringLeft($vForceCaptureOrPtr, 2) = "0x"
 	EndIf
 
-	If $vArea2SearchOri = Default Then $vArea2SearchOri = "FV"
-	
-	If (IsArray($vArea2SearchOri)) Then
-		$vArea2SearchOri = GetDiamondFromArray($vArea2SearchOri)
-	EndIf
-	
-	If 3 = ((StringReplace($vArea2SearchOri, ",", ",") <> "") ? (@extended) : (0)) Then
-		$vArea2SearchOri = GetDiamondFromRect($vArea2SearchOri)
+	If $vArea2SearchOri = Default Then
+		$vArea2SearchOri = "FV"
+	Else
+		If IsArray($vArea2SearchOri) Then
+			$vArea2SearchOri = GetDiamondFromArray($vArea2SearchOri)
+		ElseIf StringInStr($vArea2SearchOri, "|") = 0 And StringInStr($vArea2SearchOri, ",") > 0 Then
+			$vArea2SearchOri = GetDiamondFromRect($vArea2SearchOri)
+		EndIf
 	EndIf
 	
 	Local $aCoords = "" ; use AutoIt mixed variable type and initialize array of coordinates to null
 	Local $returnData = StringSplit($returnProps, ",", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 	Local $returnLine[UBound($returnData)]
-	Local $result = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", ($bIsPtr = True) ? ($_hHBitmap) : ($g_hHBitmap2), "str", $sDirectory, "str", $vArea2SearchOri, "Int", $iQuantityMatch, "str", "FV", "Int", $minLevel, "Int", $maxLevel)
+	Local $result = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", ($bIsPtr = 0) ? ($g_hHBitmap2) : ($vForceCaptureOrPtr), "str", $sDirectory, "str", $vArea2SearchOri, "Int", $iQuantityMatch, "str", $vArea2SearchOri, "Int", $minLevel, "Int", $maxLevel)
 	$error = @error ; Store error values as they reset at next function call
 	$extError = @extended
-	If $_hHBitmap <> 0 Then
-		GdiDeleteHBitmap($_hHBitmap)
-	EndIf
-	$_hHBitmap = 0
 	If $error Then
 		_logErrorDLLCall($g_sLibMyBotPath, $error)
 		SetDebugLog(" imgloc DLL Error : " & $error & " --- " & $extError)
@@ -114,31 +100,38 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 	$g_aImageSearchXML = -1
 	Local $iCount = 0, $returnProps = "objectname,objectlevel,objectpoints"
 	
-	Static $_hHBitmap = 0
-	Local $bIsPtr = False
-	If $vForceCaptureOrPtr = Default Or $vForceCaptureOrPtr = True Then
-		; Capture the screen for comparison
-		If $vForceCaptureOrPtr Then 
-			_CaptureRegion2() ;to have FULL screen image to work with
-		EndIf
-	ElseIf IsPtr($vForceCaptureOrPtr) Then
-		$_hHBitmap = GetHHBitmapArea($vForceCaptureOrPtr)
-		$bIsPtr = True
+	Local $bIsPtr = 0
+	If $vForceCaptureOrPtr = Default Then $vForceCaptureOrPtr = True
+	If $vForceCaptureOrPtr = True Then
+		_CaptureRegion2() ;to have FULL screen image to work with
+	Else
+		$bIsPtr = StringLeft($vForceCaptureOrPtr, 2) = "0x"
 	EndIf
 	
-	If $vArea2SearchOri = Default Then $vArea2SearchOri = "FV"
-
 	If $iQuantityMatch = Default Then $iQuantityMatch = 0
 	If $sOnlyFind = Default Then $sOnlyFind = ""
 	Local $bOnlyFindIsSpace = StringIsSpace($sOnlyFind)
 
-	If (IsArray($vArea2SearchOri)) Then
-		$vArea2SearchOri = GetDiamondFromArray($vArea2SearchOri)
+	If $vArea2SearchOri = Default Then
+		$vArea2SearchOri = "FV"
+	Else
+		If IsArray($vArea2SearchOri) Then
+			$vArea2SearchOri = GetDiamondFromArray($vArea2SearchOri)
+		ElseIf StringInStr($vArea2SearchOri, "|") = 0 And StringInStr($vArea2SearchOri, ",") > 0 Then
+			$vArea2SearchOri = GetDiamondFromRect($vArea2SearchOri)
+		EndIf
 	EndIf
-	If 3 = ((StringReplace($vArea2SearchOri, ",", ",") <> "") ? (@extended) : (0)) Then
-		$vArea2SearchOri = GetDiamondFromRect($vArea2SearchOri)
+		
+	If $vArea2SearchOri2 = Default Then 
+		$vArea2SearchOri2 = $vArea2SearchOri
+	Else
+		If IsArray($vArea2SearchOri2) Then
+			$vArea2SearchOri2 = GetDiamondFromArray($vArea2SearchOri2)
+		ElseIf StringInStr($vArea2SearchOri2, "|") = 0 And StringInStr($vArea2SearchOri2, ",") > 0 Then
+			$vArea2SearchOri2 = GetDiamondFromRect($vArea2SearchOri2)
+		EndIf
 	EndIf
-
+	
 	Local $iQuantToMach = ($bOnlyFindIsSpace = True) ? ($iQuantityMatch) : (0)
 	If IsDir($sDirectory) = False Then
 		$sOnlyFind = StringRegExpReplace($sDirectory, "^.*\\|\..*$", "")
@@ -154,29 +147,15 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 		$iQuantToMach = 0
 	EndIf
 
-	If $vArea2SearchOri2 = Default Then 
-		$vArea2SearchOri2 = $vArea2SearchOri
-	Else
-		If (IsArray($vArea2SearchOri2)) Then
-			$vArea2SearchOri2 = GetDiamondFromArray($vArea2SearchOri2)
-		EndIf
-		If 3 = ((StringReplace($vArea2SearchOri2, ",", ",") <> "") ? (@extended) : (0)) Then
-			$vArea2SearchOri2 = GetDiamondFromRect($vArea2SearchOri2)
-		EndIf		
-	EndIf
 	
 	Local $aCoords = "" ; use AutoIt mixed variable type and initialize array of coordinates to null
 	Local $returnData = StringSplit($returnProps, ",", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 	Local $returnLine[UBound($returnData)]
 
 	Local $error, $extError
-	Local $result = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", ($bIsPtr = True) ? ($_hHBitmap) : ($g_hHBitmap2), "str", $sDirectory, "str", $vArea2SearchOri, "Int", $iQuantToMach, "str", "FV", "Int", $minLevel, "Int", $maxLevel)
+	Local $result = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", ($bIsPtr = 0) ? ($g_hHBitmap2) : ($vForceCaptureOrPtr), "str", $sDirectory, "str", $vArea2SearchOri, "Int", $iQuantToMach, "str", $vArea2SearchOri2, "Int", $minLevel, "Int", $maxLevel)
 	$error = @error ; Store error values as they reset at next function call
 	$extError = @extended
-	If $_hHBitmap <> 0 Then
-		GdiDeleteHBitmap($_hHBitmap)
-	EndIf
-	$_hHBitmap = 0
 	If $error Then
 		_logErrorDLLCall($g_sLibMyBotPath, $error)
 		SetDebugLog(" imgloc DLL Error : " & $error & " --- " & $extError)
