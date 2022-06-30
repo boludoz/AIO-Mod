@@ -63,6 +63,12 @@ Func ZoomOutBlueStacks() ;Zooms out
    ;Return ZoomOutCtrlClick(False, False, False)
 EndFunc
 
+Func ZoomOutBlueStacks5()
+    SetDebugLog("ZoomOutBlueStacks5()")
+    ; newer BlueStacks versions don't work with Ctrl-Click, so fall back to original arrow key
+    Return DefaultZoomOut("{DOWN}", 0, ($g_iAndroidZoomoutMode <> 3))
+EndFunc
+
 Func ZoomOutBlueStacks2()
 	SetDebugLog("ZoomOutBlueStacks2()")
 	If $__BlueStacks2Version_2_5_or_later = False Then

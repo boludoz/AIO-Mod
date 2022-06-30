@@ -1007,7 +1007,7 @@ Func InitAndroid($bCheckOnly = False, $bLogChangesOnly = True)
 	EndIf
 
 	; Check the Supported Emulator versions
-	CheckEmuNewVersions() ; Custom - Team AIO Mod++
+	CheckEmuNewVersions(True) ; Custom - Team AIO Mod++
 
 	Local $successful = @error = 0, $process_killed
 	If Not $bCheckOnly And $Result Then
@@ -2006,7 +2006,15 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 				SetLog("Cannot create dummy file: " & $g_sAndroidpictureshostpath & $dummyfile, $COLOR_ERROR)
 				Return SetError(4, 0)
 			EndIf
-			
+            
+			; Snorlax
+            $s = LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "-s " & $g_sAndroidAdbDevice & " shell" & $g_sAndroidAdbShellOptions & " ls '" & $g_sAndroidPicturesPath & $dummyFile & "'", $process_killed)
+            If StringInStr($s, $dummyFile) > 0 And StringInStr($s, $dummyFile & ":") = 0 And StringInStr($s, "No such file or directory") = 0 And StringInStr($s, "syntax error") = 0 And StringInStr($s, "Permission denied") = 0 Then
+                $pathFound = True
+                SetDebugLog("Using " & $g_sAndroidPicturesPath & " for Android shared folder")
+                ExitLoop
+            EndIf
+            
 			For $i = 0 To UBound($amounts) - 1
 				$path = $amounts[$i]
 				If $path = "" Then ContinueLoop
@@ -4948,12 +4956,12 @@ Func AddSpace($s, $Option = Default)
 	Return $s
 EndFunc   ;==>AddSpace
 
-Func CheckEmuNewVersions()
+Func CheckEmuNewVersions($bSilentLog = False)
 	
 	; Custom fix - Team AIO Mod++
 	; call Android initialization routine
 	Local $sResult = Execute("Init" & $g_sAndroidEmulator & "(False)")
-	If $sResult = "" And @error <> 0 Then
+	If $sResult = "" And @error <> 0 And $bSilentLog = False Then
 		; Not implemented
 		SetLog("Android support for " & $g_sAndroidEmulator & " is not available", $COLOR_ERROR)
 	EndIf
@@ -4966,6 +4974,8 @@ Func CheckEmuNewVersions()
 	Local $HelpLink = "Please visit MyBot Forum!"
 
 	Switch $g_sAndroidEmulator
+		Case "BlueStacks5"
+			$NewVersion = GetVersionNormalized("5.8.101.1001")
 		Case "BlueStacks2"
 			$NewVersion = GetVersionNormalized("4.280.0.4206") ; BlueStacks HyperV by Teknolojikpanda - Team__AiO__MOD
 		Case "MEmu"
@@ -4977,12 +4987,12 @@ Func CheckEmuNewVersions()
 			$NewVersion = GetVersionNormalized("99.0.0.0")
 	EndSwitch
 
-	If $Version > $NewVersion And $g_sAndroidEmulator = "Memu" Then
+	If $Version > $NewVersion And $g_sAndroidEmulator = "Memu" And $bSilentLog = False Then
 		SetLog("Compatibility has not been certified for " & $g_sAndroidEmulator & " version (" & $g_sAndroidVersion & ")!", $COLOR_INFO)
 		SetLog($HelpLink, $COLOR_INFO)
 	EndIf
 	
-	If $g_sAndroidEmulator = "Memu" And $Version = GetVersionNormalized("8.0.1.0") Then
+	If $g_sAndroidEmulator = "Memu" And $Version = GetVersionNormalized("8.0.1.0") And $bSilentLog = False Then
 		SetLog("Memu 8.0.1.0 has problems working, please install a later version.", $COLOR_ERROR)
 	EndIf
 EndFunc   ;==>CheckEmuNewVersions

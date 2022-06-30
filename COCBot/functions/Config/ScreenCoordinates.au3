@@ -164,9 +164,9 @@ Global $aButtonRemoveTroopsOK1[4] = [747, 582 + $g_iBottomOffsetYFixed, 0x76BF2F
 Global $aButtonRemoveTroopsOK2[4] = [500, 447 + $g_iBottomOffsetYFixed, 0x6DBC1F, 20]
 
 ;Change Language To English
-Global $aButtonLanguage[4] = [570, 270, 0xDDF685, 20]  ; Resolution fixed
+Global $aButtonLanguage[4] = [324, 363, 0xDDF685, 20]  ; Resolution fixed
 Global $aListLanguage[4] = [110, 87, 0xFFFFFF, 10]     ; Resolution fixed
-Global $aEnglishLanguage[4] = [146, 140, 0xD7D5C7, 20] ; Resolution fixed
+Global $aEnglishLanguage[4] = [210, 140, 0xD7D5C7, 20] ; Resolution fixed
 Global $aLanguageOkay[4] = [510, 400, 0x6FBD1F, 20]    ; Resolution fixed
 
 ;Personal Challenges

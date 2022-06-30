@@ -148,6 +148,7 @@
 #include "functions\Android\CheckAndroidTimeLag.au3"
 #include "functions\Android\CheckAndroidPageError.au3"
 #include "functions\Android\CheckAndroidRebootCondition.au3"
+#include "functions\Android\AndroidBlueStacks5.au3" ; snorlax
 #include "functions\Android\AndroidBlueStacks.au3"
 #include "functions\Android\AndroidMEmu.au3"
 #include "functions\Android\AndroidNox.au3"

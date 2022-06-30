@@ -195,7 +195,14 @@ Func getAllEmulators()
 	ElseIf $__BlueStacks_isHyperV = True Then
 		$sBluestacks = "BlueStacks2|"
 	EndIf
-	$sEmulatorString &= $sBluestacks
+	
+	; Snorlax
+    $__BlueStacks_Version = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "Version")
+    If Not @error Then
+        If GetVersionNormalized($__BlueStacks_Version) > GetVersionNormalized("5.0") Then $sEmulatorString &= "BlueStacks5|"
+    EndIf
+	
+    $sEmulatorString &= $sBluestacks
 
 	; Nox :
 	Local $Version = RegRead($g_sHKLM & "\SOFTWARE" & $g_sWow6432Node & "\Microsoft\Windows\CurrentVersion\Uninstall\Nox\", "DisplayVersion")
@@ -208,15 +215,24 @@ Func getAllEmulators()
 	If Not @error Then
 		$sEmulatorString &= "MEmu|"
 	EndIf
-
+	
+	Local $aEmulator[0]
 	Local $sResult = StringRight($sEmulatorString, 1)
-	If $sResult == "|" Then $sEmulatorString = StringTrimRight($sEmulatorString, 1)
+	; AIO
+	If $sResult == "|" Then
+		$sEmulatorString = StringTrimRight($sEmulatorString, 1)
+		$aEmulator = StringSplit($sEmulatorString, "|", $STR_NOCOUNT)
+	EndIf
 	If $sEmulatorString <> "" Then
-		Setlog("All Emulator found in your machine: " & $sEmulatorString)
+        Setlog("All Emulator found in your machine:", $COLOR_INFO)
+        For $i = 0 To UBound($aEmulator) - 1
+            SetLog("  - " & $aEmulator[$i], $COLOR_INFO)
+        Next
 	Else
 		Setlog("No Emulator found in your machine")
 		Return
 	EndIf
+
 
 	GUICtrlSetData($g_hCmbAndroidEmulator, $sEmulatorString)
 
@@ -249,6 +265,10 @@ Func getAllEmulatorsInstances()
 				$VMsBlueStacks = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks\", "DataDir")
 			EndIf
 			$sEmulatorPath = $VMsBlueStacks ; C:\ProgramData\BlueStacks\Engine
+       ; Snorlax
+	   Case "BlueStacks5"
+            Local $VMsBlueStacks = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "DataDir")
+            $sEmulatorPath = $VMsBlueStacks ; C:\ProgramData\BlueStacks\Engine
 		Case "Nox"
 			$sEmulatorPath = GetNoxPath() & "\BignoxVMS"
 		Case "MEmu"
@@ -263,8 +283,15 @@ Func getAllEmulatorsInstances()
 
 	; BS Multi Instance
 	Local $sBlueStacksFolder = ""
-	If $Emulator = "BlueStacks2" Then $sBlueStacksFolder = "Android"
-
+	If $Emulator = "BlueStacks2" Then
+		$sBlueStacksFolder = "Android"
+	EndIf
+	
+	 ; Snorlax
+	If $Emulator = "BlueStacks5" Then
+		$sBlueStacksFolder = "Nougat32"
+	EndIf
+	
 	; Getting all VM Folders
 	Local $eError = 0
 	Local $aEmulatorFolders = _FileListToArray($sEmulatorPath, $sBlueStacksFolder & "*", $FLTA_FOLDERS)
