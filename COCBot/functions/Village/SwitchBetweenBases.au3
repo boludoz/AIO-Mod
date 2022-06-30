@@ -24,6 +24,11 @@ Func SwitchBetweenBasesTest()
 	Return SwitchBetweenBases()
 EndFunc
 
+Func TestZoomOut($bSkip = False)
+	$g_bSkipFirstZoomout = $bSkip
+	ZoomOut()
+EndFunc
+
 Func SwitchBetweenBases($bCheckMainScreen = True)
 	Local $sSwitchFrom, $sSwitchTo, $bIsOnBuilderBase = False, $aButtonCoords
 	Local $sTile, $sTileDir, $sRegionToSearch
@@ -61,7 +66,7 @@ Func SwitchBetweenBases($bCheckMainScreen = True)
 		EndIf
 		
 		 ; Stop hitting the stone like a monkey in search of money and force the zoomout!
-		$g_bSkipFirstZoomout = True
+		$g_bSkipFirstZoomout = False
 		ZoomOut()
 
 		If _Sleep(1000) Then Return
@@ -100,6 +105,7 @@ Func SwitchBetweenBases($bCheckMainScreen = True)
 			Else
 				SetLog("Cannot find the Boat on the Coast. Maybe it is still broken or not visible", $COLOR_ERROR)
 			EndIf
+			$g_bSkipFirstZoomout = False
 			ZoomOut()
 		EndIf
 	Next

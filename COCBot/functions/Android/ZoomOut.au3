@@ -541,8 +541,13 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 			ClickDrag($g_aFallbackDragFix[0], $g_aFallbackDragFix[1], $g_aFallbackDragFix[2], $g_aFallbackDragFix[3])
 			SetLog("Centering village (none)", $COLOR_ACTION)
 		EndIf
+		
+		; force additional zoom-out
+		$g_aiSearchZoomOutCounter[1] -= 1
+		$aResult[0] = ""
 
 		$g_aFallbackDragFix = -1
+		Return $aResult
 	EndIf
 
 	If $bCenterVillage And Not $g_bZoomoutFailureNotRestartingAnything And Not $g_bAndroidZoomoutModeFallback Then
