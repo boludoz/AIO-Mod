@@ -85,11 +85,12 @@ Func _BuilderBase($bTestRun = False)
 
 	If _Sleep(2000) Then Return
 
-	If BuilderBaseZoomOut(True, False) = False Then
-		SetLog("Bad zoom builder base - BAD. (1)", $COLOR_ERROR)
-		$g_bStayOnBuilderBase = False
-		Return
-	EndIf
+	ZoomOut()
+	; If BuilderBaseZoomOut(True, False) = False Then
+		; SetLog("Bad zoom builder base - BAD. (1)", $COLOR_ERROR)
+		; $g_bStayOnBuilderBase = False
+		; Return
+	; EndIf
 
 	SetDebugLog("Zoom builder base - OK. (1)", $COLOR_SUCCESS)
 
@@ -127,12 +128,13 @@ Func _BuilderBase($bTestRun = False)
 
 		NotifyPendingActions()
 		If Not $g_bRunState Then Return
-
-		If Not BuilderBaseZoomOut(False, False) Then
-			SetLog("Bad zoom builder base. (1)", $COLOR_ERROR)
-			$g_bStayOnBuilderBase = False
-			Return
-		EndIf
+		
+		ZoomOut()
+		; If Not BuilderBaseZoomOut(False, False) Then
+			; SetLog("Bad zoom builder base. (1)", $COLOR_ERROR)
+			; $g_bStayOnBuilderBase = False
+			; Return
+		; EndIf
 
 		If Not $g_bRunState Then Return
 
@@ -205,7 +207,8 @@ Func _BuilderBase($bTestRun = False)
 
 		$bBoostedClock = StartClockTowerBoost() And Not $bCondition
 		
-		BuilderBaseZoomOut(False, False)
+		ZoomOut()
+		; BuilderBaseZoomOut(False, False)
 		CleanBBYard()
 		If Not $g_bRunState Then Return
 

@@ -43,7 +43,7 @@ Func SwitchBetweenBases($bCheckMainScreen = True)
 			$bIsOnBuilderBase = True
 			$sTile = "BoatBuilderBase"
 			$sTileDir = $g_sImgBoatBB
-			$sRegionToSearch = GetDiamondFromComma(487, 22, 708, 242 + $g_iBottomOffsetYFixed)
+			$sRegionToSearch = GetDiamondFromComma(173, 0, 653, 289)
 			If $g_bStayOnBuilderBase = True Then Return True
 
 		Else
@@ -72,6 +72,16 @@ Func SwitchBetweenBases($bCheckMainScreen = True)
 		If _Sleep(1000) Then Return
 		If Not $g_bRunState Then Return
 		$aButtonCoords = decodeSingleCoord(findMultiple($sTileDir, $sRegionToSearch, $sRegionToSearch, 0, 1000, 0, "objectname,objectpoints", True))
+		
+		; Custom fix - Team AIO Mod++
+		If (UBound($aButtonCoords) = 1 Or @Error) And $sSwitchFrom = "Builder Base" Then
+			ClickDrag(230, 30, 100, 130, 1000)
+			If _Sleep(1000) Then Return
+			
+			$aButtonCoords = decodeSingleCoord(findMultiple($sTileDir, $sRegionToSearch, $sRegionToSearch, 0, 1000, 0, "objectname,objectpoints", True))
+		EndIf
+		
+
 		If UBound($aButtonCoords) > 1 Then
 			SetLog("[" & $i & "] Going to " & $sSwitchTo, $COLOR_INFO)
 			ClickP($aButtonCoords)
