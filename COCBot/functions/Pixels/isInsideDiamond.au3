@@ -24,9 +24,28 @@ EndFunc   ;==>isInsideDiamondXY
 
 Func isInsideDiamond($aCoords)
 	Local $x = $aCoords[0], $y = $aCoords[1], $xD, $yD
-	Local $Left = 20, $right = 825, $top = 0, $bottom = 614 ; set the diamond shape based on reference village ; Resolution fixed
+	
+	; xbebenk - Team AIO Mod++
+	Static $sLastCode = $g_aVillageRefSize[0][0]
+	Static $Left = $g_aVillageRefSize[0][3], $Right = $g_aVillageRefSize[0][4], $Top = $g_aVillageRefSize[0][5], $Bottom = $g_aVillageRefSize[0][6]
+	If $sLastCode <> $g_sCurrentScenery Then
+		Local $iIndex = _ArraySearch($g_aVillageRefSize, $g_sCurrentScenery)
+		If $iIndex <> -1 Then 
+			$sLastCode = $g_sCurrentScenery
+			$Left = $g_aVillageRefSize[$iIndex][3]
+			$Right = $g_aVillageRefSize[$iIndex][4]
+			$Top = $g_aVillageRefSize[$iIndex][5]
+			$Bottom = $g_aVillageRefSize[$iIndex][6]
+			SetDebugLog("[isInsideDiamond] LRTB: " & $Left & "," & $Right & "," & $Top & "," & $Bottom)
+		Else
+			SetLog("[isInsideDiamond] Reference Size no match", $COLOR_ERROR)
+			Return True
+		EndIf
+	EndIf
+	
 	Local $aDiamond[2][2] = [[$Left, $Top], [$Right, $Bottom]]
 	Local $aMiddle = [($aDiamond[0][0] + $aDiamond[1][0]) / 2, ($aDiamond[0][1] + $aDiamond[1][1]) / 2]
+
 
 	; convert to real diamond compensating zoom and offset
 	; top diamond point
@@ -50,7 +69,7 @@ Func isInsideDiamond($aCoords)
 	ConvertToVillagePos($xD, $yD)
 	$Right = $xD
 
-	;SetDebugLog("isInsideDiamond coordinates updated by offset: " & $Left & ", " & $Right & ", " & $Top & ", " & $Bottom, $COLOR_DEBUG)
+	;If $g_bDebugSetlog Then SetDebugLog("isInsideDiamond coordinates updated by offset: " & $Left & ", " & $Right & ", " & $Top & ", " & $Bottom, $COLOR_DEBUG)
 
 	Local $aDiamond[2][2] = [[$Left, $Top], [$Right, $Bottom]]
 	Local $aMiddle = [($aDiamond[0][0] + $aDiamond[1][0]) / 2, ($aDiamond[0][1] + $aDiamond[1][1]) / 2]
