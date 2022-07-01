@@ -807,8 +807,7 @@ Func BlueStacksAdjustClickCoordinates(ByRef $x, ByRef $y)
 EndFunc   ;==>BlueStacksAdjustClickCoordinates
 
 Func BlueStacks2AdjustClickCoordinates(ByRef $x, ByRef $y)
-	$x = Round(32767.0 / $g_iAndroidClientWidth * $x)
-	$y = Round(32767.0 / $g_iAndroidClientHeight * $y)
+	Return BlueStacksAdjustClickCoordinates($x, $y)
 	;Local $Num = 32728
 	;$x = Int(($Num * $x) / $g_iAndroidClientWidth)
 	;$y = Int(($Num * $y) / $g_iAndroidClientHeight)

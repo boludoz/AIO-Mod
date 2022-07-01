@@ -51,7 +51,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		$sDirectory = $g_sImgZoomOutDir
 	EndIf
 	
-	Local $iAdditionalX = 150
+	Local $iAdditionalX = 200
 	Local $iAdditionalY = 150
 	Local $aResult = 0, $x, $y
 		
@@ -66,12 +66,14 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	Local $aFallbackDragFix[5] = [800, 350, 800, 400, "None"]
 	If $stone[0] = 0 Then
 		SetDebugLog("GetVillageSize cannot find stone", $COLOR_WARNING)
-		If $tree[0] > 0 Then
-			$aFallbackDragFix[0] = $tree[0]
-			$aFallbackDragFix[1] = $tree[1]
-			$aFallbackDragFix[2] = $tree[2]
-			$aFallbackDragFix[3] = $tree[3]
-			$aFallbackDragFix[4] = "Tree"
+		If UBound($tree) > 0 And not @error Then
+			If $tree[0] > 0 Then
+				$aFallbackDragFix[0] = $tree[0]
+				$aFallbackDragFix[1] = $tree[1]
+				$aFallbackDragFix[2] = $tree[2]
+				$aFallbackDragFix[3] = $tree[3]
+				$aFallbackDragFix[4] = "Tree"
+			EndIf
 		EndIf
 		$g_aFallbackDragFix = $aFallbackDragFix
 		Return FuncReturn($aResult)
@@ -82,12 +84,14 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	
 	If $tree[0] = 0 Then
 		SetDebugLog("GetVillageSize cannot find tree", $COLOR_ACTION)
-		If $stone[0] > 0 Then
-			$aFallbackDragFix[0] = $stone[0]
-			$aFallbackDragFix[1] = $stone[1]
-			$aFallbackDragFix[2] = $stone[2]
-			$aFallbackDragFix[3] = $stone[3]
-			$aFallbackDragFix[4] = "Stone"
+		If UBound($stone) > 0 And not @error Then
+			If $stone[0] > 0 Then
+				$aFallbackDragFix[0] = $stone[0]
+				$aFallbackDragFix[1] = $stone[1]
+				$aFallbackDragFix[2] = $stone[2]
+				$aFallbackDragFix[3] = $stone[3]
+				$aFallbackDragFix[4] = "Stone"
+			EndIf
 		EndIf
 		$g_aFallbackDragFix = $aFallbackDragFix
 		Return FuncReturn($aResult)
@@ -215,7 +219,7 @@ Func FindTree($sDirectory = $g_sImgZoomOutDir, $sTreePrefix = "tree", $iAddition
 	Local $aTreeFiles = _FileListToArray($sDirectory & "tree\", $sTreePrefix & "*.*", $FLTA_FILES)
 	If @error Then
 		SetLog("Error: Missing tree (" & @error & ")", $COLOR_ERROR)
-		Return
+		Return $tree
 	EndIf
 	
 	Local $scenerycode = "tree" & "*" & $sStoneName, $aiCorrection[4]

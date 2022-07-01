@@ -90,9 +90,10 @@ Func _BuilderBase($bTestRun = False)
 		; SetLog("Bad zoom builder base - BAD. (1)", $COLOR_ERROR)
 		; $g_bStayOnBuilderBase = False
 		; Return
+	; Else
+		; SetDebugLog("Zoom builder base - OK. (1)", $COLOR_SUCCESS)
 	; EndIf
 
-	SetDebugLog("Zoom builder base - OK. (1)", $COLOR_SUCCESS)
 
 	If Not $g_bRunState Then Return
 
