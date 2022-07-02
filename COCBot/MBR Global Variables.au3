@@ -1974,8 +1974,7 @@ Global $InternalArea[8][3]
 Global $ExternalArea[8][3]
 
 ; Team AiO MOD++ (2019)
-Global $g_aVillageSize[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global Const $g_aVillageSizeReset[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_aVillageSize[11] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 ; Pet House Alpha
 Global $g_aiPetHousePos[2] = [-1, -1] ; Position of Pet House

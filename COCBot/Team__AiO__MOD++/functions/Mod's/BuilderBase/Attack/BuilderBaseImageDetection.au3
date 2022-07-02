@@ -19,7 +19,6 @@ Func TestBuilderBaseBuildingsDetection()
 	Local $Status = $g_bRunState
 	$g_bRunState = True
 	; Reset the Boat Position , only in tests
-	$g_aVillageSize = $g_aVillageSizeReset ; Deprecated dim - Team AIO Mod++
 	Local $SelectedItem = _GUICtrlComboBox_GetCurSel($g_cmbBuildings)
 	Local $temp = BuilderBaseBuildingsDetection($SelectedItem)
 	For $i = 0 To UBound($temp) - 1
@@ -35,7 +34,6 @@ Func TestBuilderBaseGetDeployPoints()
 	Local $Status = $g_bRunState
 	$g_bRunState = True
 	; Reset the Boat Position , only in tests
-	$g_aVillageSize = $g_aVillageSizeReset ; Deprecated dim - Team AIO Mod++
 	Local $FurtherFrom = 5 ; 5 pixels before the deploy point
 	BuilderBaseGetDeployPoints($FurtherFrom, True)
 	$g_bRunState = $Status
