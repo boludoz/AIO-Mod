@@ -83,7 +83,7 @@ Func SearchZoomOutBB($bUpdateMyVillage = True, $sSource = "", $bCenterVillage = 
 	If $sSource <> "" Then $sSource = " (" & $sSource & ")"
 
 	; Setup arrays, including default return values for $return
-	Local $x, $y, $z, $aStone[2]
+	Local $x, $y, $z, $aStone[2], $aTree[2]
 	Local $iVillageSize = 0
 
 
@@ -95,16 +95,25 @@ Func SearchZoomOutBB($bUpdateMyVillage = True, $sSource = "", $bCenterVillage = 
 	EndIf
 
 	If $bCaptureRegion Then _CaptureRegion2()
-	Local $aVillage = GetVillageSize($bDebugLog, "stone", "tree", Default, True, False, $bCenterVillage = False)
+	Local $aVillage
+	If $g_aiSearchZoomOutCounter[0] = 6 Then SetLog("Try secondary village measuring...", $COLOR_INFO)
+	If $g_aiSearchZoomOutCounter[0] < 6 Then
+		$aVillage = GetVillageSize($bDebugLog, "stone", "tree", Default, True, False, $bCenterVillage = False)
+	Else
+		; try secondary images
+		$aVillage = GetVillageSize($bDebugLog, "2stone", "2tree", Default, True, False, $bCenterVillage = False)
+	EndIf
 
 	If IsArray($aVillage) = 1 Then
+		$aStone[0] = $aVillage[4]
+		$aStone[1] = $aVillage[5]
+		$aTree[0] = $aVillage[7]
+		$aTree[1] = $aVillage[8]
 		$iVillageSize = $aVillage[0]
-		If $iVillageSize > 400 And $iVillageSize < 750 Or $g_bDebugDisableZoomout Then ; xbebenk
+		If $iVillageSize > 400 And $iVillageSize < 750 Or $g_bDebugDisableZoomout And $aStone[0] > 0 And $aTree[0] > 0 Then ; xbebenk
 			$z = $aVillage[1]
 			$x = $aVillage[2]
 			$y = $aVillage[3]
-			$aStone[0] = $aVillage[4]
-			$aStone[1] = $aVillage[5]
 			$aResult[0] = "zoomout:" & $aVillage[6]
 			$aResult[1] = $x
 			$aResult[2] = $y
@@ -112,7 +121,7 @@ Func SearchZoomOutBB($bUpdateMyVillage = True, $sSource = "", $bCenterVillage = 
 			If $bCenterVillage = True Then
 				ClickDrag(100, 130, 230, 30, 1000)
 				If _Sleep(1500) Then Return
-				If Not $g_bRunState Then Return
+				If Not $g_bRunState Then Return $aResult
 
 				Local $aResult2 = SearchZoomOutBB($bUpdateMyVillage, "SearchZoomOutBB(1):" & $sSource, False, True, $bDebugLog, $bDebugWithImage)
 				; update difference in offset
@@ -129,11 +138,43 @@ Func SearchZoomOutBB($bUpdateMyVillage = True, $sSource = "", $bCenterVillage = 
 				setVillageOffset($x, $y, $z)
 				ConvertInternalExternArea("SearchZoomOutBB", $bDebugWithImage) ; generate correct internal/external diamond measures
 			EndIf
+		Else
+			ClickDrag(100, 130, 230, 30, 1000)
+			If _Sleep(1500) Then Return
+			If Not $g_bRunState Then Return $aResult
 		EndIf
 	Else
 		ClickDrag(100, 130, 230, 30, 1000)
 		If _Sleep(1500) Then Return
-		If Not $g_bRunState Then Return
+		If Not $g_bRunState Then Return $aResult
+	EndIf
+
+	If $bCenterVillage Then
+		If $aResult[0] = "" Then
+			If $g_aiSearchZoomOutCounter[0] > 12 Then
+				$g_aiSearchZoomOutCounter[0] = 0
+				Static $iCallCount = 0
+				$iCallCount += 1
+				If $iCallCount <= 2 Then
+					;CloseCoC(True)
+					SetLog("Restart CoC to reset zoom" & $sSource & "...", $COLOR_INFO)
+					PoliteCloseCoC("Zoomout" & $sSource)
+					If _Sleep(1000) Then Return $aResult
+					CloseCoC() ; ensure CoC is gone
+					OpenCoC()
+					waitMainScreen()
+				Else
+					SetLog("Restart Android to reset zoom" & $sSource & "...", $COLOR_INFO)
+					$iCallCount = 0
+					RebootAndroid()
+					If _Sleep(1000) Then Return $aResult
+					waitMainScreen()
+				EndIf
+				Return SearchZoomOutBB($bUpdateMyVillage, "SearchZoomOutBB:" & $sSource, True, $bDebugLog)
+			Else
+				$g_aiSearchZoomOutCounter[0] += 1
+			EndIf
+		EndIf
 	EndIf
 
 	Return $aResult
