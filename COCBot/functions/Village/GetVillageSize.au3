@@ -358,7 +358,6 @@ Func CenterVillage($iX, $iY, $iOffsetX, $iOffsetY, $bLayOut = False)
 	ClickAway()
 	Local $iOffsetXFixed = _Max($iOffsetX, Random(95, 100, 1))
 	If $bLayOut = True Then
-		; 13, 68
 		; It is like grumpy mod but the X offset is inverted in tree case
 		ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] + $iOffsetXFixed, $aScrollPos[1] - $iOffsetY)
 	Else

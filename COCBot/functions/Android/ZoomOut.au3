@@ -455,7 +455,7 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 		$aScrollPos[1] = $CenterVillageBoolOrScrollPos[1]
 		$bCenterVillage = (Not $g_bDebugDisableVillageCentering)
 	EndIf
-
+	
 	; Setup arrays, including default return values for $return
 	Local $x, $y, $z, $stone[2], $tree[2]
 	Local $villageSize = 0
@@ -465,8 +465,8 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 	Local $aResult = ["", 0, 0, 0, 0] ; expected dummy value
 
 	Local $village
-	If $g_aiSearchZoomOutCounter[0] = 7 Then SetLog("Try secondary village measuring...", $COLOR_INFO)
-	If $g_aiSearchZoomOutCounter[0] < 7 Then
+	If $g_aiSearchZoomOutCounter[0] = 10 Then SetLog("Try secondary village measuring...", $COLOR_INFO)
+	If $g_aiSearchZoomOutCounter[0] < 10 Then
 		$village = GetVillageSize($DebugLog, "stone", "tree")
 	Else
 		; try secondary images
@@ -573,13 +573,13 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 	EndIf
 	
 	If $bMustDrag = True Then
-		CenterVillage($aScrollPos[0], $aScrollPos[1], -450, 490, False)
+		ClickDrag($aScrollPos[0] - 100, $aScrollPos[1] - 70, $aScrollPos[0], $aScrollPos[1], 1000, True)
 		$aResult[0] = ""
 	EndIf
 	
-	If $UpdateMyVillage Then
+	If $UpdateMyVillage Or $bMustDrag = True Then
 		If $aResult[0] = "" Then
-			If $g_aiSearchZoomOutCounter[0] > 14 Then
+			If $g_aiSearchZoomOutCounter[0] > 20 Then
 				$g_aiSearchZoomOutCounter[0] = 0
 				Static $iCallCount = 0
 				$iCallCount += 1
