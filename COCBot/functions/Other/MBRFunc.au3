@@ -231,38 +231,28 @@ EndFunc   ;==>setGcCollectTotalMemoryPreasure
 
 Func ConvertVillagePos(ByRef $x, ByRef $y, $zoomfactor = 0)
 	If $g_hLibMyBot = -1 Then Return ; Bot didn't finish launch yet
-	If $zoomfactor >= 0 Then
-		Local $result = DllCall($g_hLibMyBot, "str", "ConvertVillagePos", "int", $x, "int", $y, "float", $zoomfactor)
-		If @error Or IsArray($result) = False Then
-			SetError(0, 0, 0)
-			SetDebugLog("ConvertVillagePos result error", $COLOR_ERROR)
-			Return ;exit if
-		EndIf
-		Local $a = StringSplit($result[0], "|")
-		If UBound($a) < 3 Then Return
-		$x = Int($a[1])
-		$y = Int($a[2])
-	Else
-		SetLog("[ConvertVillagePos] Wrong zoomfactor = " & $zoomfactor)
+	Local $result = DllCall($g_hLibMyBot, "str", "ConvertVillagePos", "int", $x, "int", $y, "float", $zoomfactor)
+	If IsArray($result) = False Then
+		SetDebugLog("ConvertVillagePos result error", $COLOR_ERROR)
+		Return ;exit if
 	EndIf
+	Local $a = StringSplit($result[0], "|")
+	If UBound($a) < 3 Then Return
+	$x = Int($a[1])
+	$y = Int($a[2])
 EndFunc   ;==>ConvertVillagePos
 
 Func ConvertToVillagePos(ByRef $x, ByRef $y, $zoomfactor = 0)
 	If $g_hLibMyBot = -1 Then Return ; Bot didn't finish launch yet
-	If $zoomfactor >= 0 Then
-		Local $result = DllCall($g_hLibMyBot, "str", "ConvertToVillagePos", "int", $x, "int", $y, "float", $zoomfactor)
-		If @error Or IsArray($result) = False Then
-			SetError(0, 0, 0)
-			SetDebugLog("ConvertToVillagePos result error", $COLOR_ERROR)
-			Return ;exit if
-		EndIf
-		Local $a = StringSplit($result[0], "|")
-		If UBound($a) < 3 Then Return
-		$x = Int($a[1])
-		$y = Int($a[2])
-	Else
-		SetLog("[ConvertVillagePos] Wrong zoomfactor = " & $zoomfactor)
+	Local $result = DllCall($g_hLibMyBot, "str", "ConvertToVillagePos", "int", $x, "int", $y, "float", $zoomfactor)
+	If IsArray($result) = False Then
+		SetDebugLog("ConvertToVillagePos result error", $COLOR_ERROR)
+		Return ;exit if
 	EndIf
+	Local $a = StringSplit($result[0], "|")
+	If UBound($a) < 3 Then Return
+	$x = Int($a[1])
+	$y = Int($a[2])
 EndFunc   ;==>ConvertToVillagePos
 
 Func ConvertFromVillagePos(ByRef $x, ByRef $y)
