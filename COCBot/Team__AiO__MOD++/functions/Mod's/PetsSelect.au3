@@ -15,23 +15,16 @@
 #include-once
 Func PetsByPassed()
 	If $g_iTownHallLevel <> 0 And $g_iTownHallLevel < 14 Then Return False
-
 	If IsMainPage() Then
 		
 		SetDebugLog("Pet House Position: " & $g_aiPetHousePos[0] & ", " & $g_aiPetHousePos[1], $COLOR_DEBUG)
-		If isInsideDiamond($g_aiPetHousePos) = False Then
-			LocatePetHouse()
-			If isInsideDiamond($g_aiPetHousePos) Then
-				saveConfig()
-			Else
-				Setlog("Pet House not located.", $COLOR_ERROR)
-				ClickAway()
-				Return False
-			EndIf
-			If _Sleep(1000) Then Return False
+		
+		If Not LocatePetHouse() Then
+			SetLog("Failed to open Pet House Window!", $COLOR_ERROR)
+			ClickAway()
+			Return False
 		EndIf
 		
-		BuildingClickP($g_aiPetHousePos, "#0197")
 		If _Sleep(1500) Then Return     ; Wait for window to open
 		
 		If Not FindPetsButton() Then Return

@@ -271,67 +271,84 @@ Func btnLocateClanCastle()
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
 	ZoomOut()
-	LocateClanCastle(True)
+	LocateCastle()
+	chklocations()
 	$g_bRunState = $wasRunState
-	AndroidShield("btnLocateClanCastle")
-	ChkLocations()
+	AndroidShield("btnLocateClanCastle") ; Update shield status due to manual $g_bRunState
 EndFunc   ;==>btnLocateClanCastle
 
 Func btnLocateKingAltar()
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
 	ZoomOut()
-	LocateKingAltar(True)
+	LocateKingAltar()
+	chklocations()
 	$g_bRunState = $wasRunState
-	AndroidShield("btnLocateKingAltar")
-	ChkLocations()
+	AndroidShield("btnLocateKingAltar") ; Update shield status due to manual $g_bRunState
 EndFunc   ;==>btnLocateKingAltar
-
-Func btnLocateChampionAltar()
-	Local $wasRunState = $g_bRunState
-	$g_bRunState = True
-	ZoomOut()
-	LocateChampionAltar(True)
-	$g_bRunState = $wasRunState
-	AndroidShield("btnLocateChampionAltar")
-	ChkLocations()
-EndFunc   ;==>btnLocateChampionAltar
 
 Func btnLocateQueenAltar()
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
 	ZoomOut()
-	LocateQueenAltar(True)
+	LocateQueenAltar()
+	chklocations()
 	$g_bRunState = $wasRunState
-	AndroidShield("btnLocateQueenAltar")
-	ChkLocations()
+	AndroidShield("btnLocateQueenAltar") ; Update shield status due to manual $g_bRunState
 EndFunc   ;==>btnLocateQueenAltar
 
 Func btnLocateWardenAltar()
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
 	ZoomOut()
-	LocateWardenAltar(True)
+	LocateWardenAltar()
+	chklocations()
 	$g_bRunState = $wasRunState
-	AndroidShield("btnLocateWardenAltar")
-	ChkLocations()
+	AndroidShield("btnLocateWardenAltar") ; Update shield status due to manual $g_bRunState
 EndFunc   ;==>btnLocateWardenAltar
 
-Func btnLocateTownHall()
+Func btnLocateChampionAltar()
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
 	ZoomOut()
-	Local $iOldTownHallLevel = $g_iTownHallLevel
-	LocateTownHall(False, True)
-
-	; It may not be necessary to restart.
-	If $iOldTownHallLevel <> $g_iTownHallLevel Then
-		applyConfig()
-	EndIf
-
+	LocateChampionAltar()
+	chklocations()
 	$g_bRunState = $wasRunState
-	AndroidShield("btnLocateTownHall")
+	AndroidShield("btnLocateChampionAltar") ; Update shield status due to manual $g_bRunState
+EndFunc   ;==>btnLocateChampionAltar
+
+Func btnLab()
+	Local $wasRunState = $g_bRunState
+	$g_bRunState = True
+	ZoomOut()
+	LocateLab()
 	ChkLocations()
+	$g_bRunState = $wasRunState
+	AndroidShield("btnLab")
+EndFunc   ;==>btnLab
+
+Func btnPet()
+	Local $wasRunState = $g_bRunState
+	$g_bRunState = True
+	ZoomOut()
+	LocatePetHouse()
+	ChkLocations()
+	$g_bRunState = $wasRunState
+	AndroidShield("btnPet")
+EndFunc   ;==>btnPet
+
+Func btnLocateTownHall()
+	Local $wasRunState = $g_bRunState
+	Local $g_iOldTownHallLevel = $g_iTownHallLevel
+	$g_bRunState = True
+	ZoomOut()
+	LocateTownHall()
+	If Not $g_iOldTownHallLevel = $g_iTownHallLevel Then
+		btnResetBuilding()
+	EndIf
+	chklocations()
+	$g_bRunState = $wasRunState
+	AndroidShield("btnLocateTownHall") ; Update shield status due to manual $g_bRunState
 EndFunc   ;==>btnLocateTownHall
 
 Func btnResetBuilding()
@@ -401,26 +418,6 @@ Func chklocations($breset = False)
 		GUICtrlSetBkColor($g_hlbllocatepethouse, $color_success)
 	EndIf
 EndFunc
-
-Func btnLab()
-	Local $wasRunState = $g_bRunState
-	$g_bRunState = True
-	ZoomOut()
-	LocateLab(True)
-	$g_bRunState = $wasRunState
-	AndroidShield("btnLab")
-	ChkLocations()
-EndFunc   ;==>btnLab
-
-Func btnPet()
-	Local $wasRunState = $g_bRunState
-	$g_bRunState = True
-	ZoomOut()
-	LocatePetHouse(True, False)
-	$g_bRunState = $wasRunState
-	AndroidShield("btnPet")
-	ChkLocations()
-EndFunc   ;==>btnPet
 #EndRegion - Custom Locate - Team AIO Mod++
 
 Func chkTrophyAtkDead()

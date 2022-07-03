@@ -111,6 +111,7 @@ Global Const $g_sImgLocationQueen =	@ScriptDir & "\COCBot\Team__AiO__MOD++\Image
 Global Const $g_sImgLocationChamp =	@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\AutoLocate\Champion\"
 Global Const $g_sImgLocationWarden = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\AutoLocate\Warden\"
 Global Const $g_sImgLocationCastle = @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\AutoLocate\Castle\"
+Global Const $g_sImgLocationPetHouse =  @ScriptDir & "\imgxml\Buildings\PetHouse\"
 #EndRegion - Auto Locate
 
 #Region - Chk no league
