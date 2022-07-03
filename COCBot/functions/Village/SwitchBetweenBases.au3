@@ -14,7 +14,7 @@
 ; ===============================================================================================================================
 
 #Region - Custom - Team AIO Mod++
-Func SwitchBetweenBasesTest()
+Func TestSwitchBetweenBases()
 	If isOnBuilderBase(True) Then
 		$g_bStayOnBuilderBase = False
 	Else
@@ -22,11 +22,6 @@ Func SwitchBetweenBasesTest()
 	EndIf
 	
 	Return SwitchBetweenBases()
-EndFunc
-
-Func TestZoomOut($bSkip = False)
-	$g_bSkipFirstZoomout = $bSkip
-	ZoomOut()
 EndFunc
 
 Func SwitchBetweenBases($bCheckMainScreen = True)

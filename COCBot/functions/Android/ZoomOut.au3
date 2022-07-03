@@ -465,8 +465,8 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 	Local $aResult = ["", 0, 0, 0, 0] ; expected dummy value
 
 	Local $village
-	If $g_aiSearchZoomOutCounter[0] = 5 Then SetLog("Try secondary village measuring...", $COLOR_INFO)
-	If $g_aiSearchZoomOutCounter[0] < 5 Then
+	If $g_aiSearchZoomOutCounter[0] = 7 Then SetLog("Try secondary village measuring...", $COLOR_INFO)
+	If $g_aiSearchZoomOutCounter[0] < 7 Then
 		$village = GetVillageSize($DebugLog, "stone", "tree")
 	Else
 		; try secondary images
@@ -497,6 +497,8 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 	Local $iRefSize = 0
 	Local $iMinSize = 0
 	Local $iMaxSize = 0
+	
+	Local $g_bOnBuilderBaseEnemyVillage = False, $bMustDrag = False
 
 	If IsArray($village) = 1 Then
 		$villageSize = $village[0]
@@ -510,18 +512,17 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 		$iRefSize = $village[10]
 
 		If $iRefSize > 0 Then
-			$iMinSize = Round($iRefSize * 0.81)
+			$iMinSize = 480 ; Round($iRefSize * 0.81)
 			$iMaxSize = Round($iRefSize * 1.1)
 
-			SetLog("Ref : " & $iRefSize & ", Min : " & $iMinSize & ", Max : " & $iMaxSize, $COLOR_INFO)
+			If $DebugLog Then SetLog("Ref : " & $iRefSize & ", Min : " & $iMinSize & ", Max : " & $iMaxSize, $COLOR_INFO)
 		EndIf
 
-		If ($villageSize > $iMinSize And $villageSize < $iMaxSize) Or $g_bDebugDisableZoomout Then
+		If ($villageSize > $iMinSize And $villageSize < $iMaxSize) Or $g_bDebugDisableZoomout And $stone[0] > 0 And $tree[0] > 0 Then
 
 			$aResult[0] = "zoomout:" & $village[6]
 			$aResult[1] = $x
 			$aResult[2] = $y
-			Local $g_bOnBuilderBaseEnemyVillage = False
 			If $bCenterVillage And ($x <> 0 Or $y <> 0) And ($UpdateMyVillage = False Or $x <> $g_iVILLAGE_OFFSET[0] Or $y <> $g_iVILLAGE_OFFSET[1]) And Not $g_bOnBuilderBaseEnemyVillage Then
 				If $DebugLog Then SetDebugLog("Center Village" & $sSource & " by: " & $x & ", " & $y)
 ;~ 				If IsCoordSafe($stone[0], $stone[1]) Then
@@ -554,25 +555,31 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 				ConvertInternalExternArea("SearchZoomOut", $g_bDebugImageSave) ; generate correct internal/external diamond measures
 			EndIf
 		Else ; found one fixed point - center using that then force another zoomout
-			; If $g_bOnBuilderBaseEnemyVillage And $g_aiSearchZoomOutCounter[0] = 0 Then
-				; SetLog("Builder Base Enemy Village First Zoom - no centering")
-			If $g_aiSearchZoomOutCounter[0] = 0 Then
-				SetLog("No centering")
+			If $g_bOnBuilderBaseEnemyVillage And $g_aiSearchZoomOutCounter[0] = 0 Then
+				SetLog("Builder Base Enemy Village First Zoom - no centering")
+				$bMustDrag = True
 			Else
 				If $stone[0] = 0 And $tree[0] > 0 Then
 					If $DebugLog Then SetLog("Centering using tree", $COLOR_INFO)
-					CenterVillage($tree[0], $tree[1], $x * - 1, $y * - 1)
+					CenterVillage($tree[0], $tree[1], $x, $y, True)
 				ElseIf $tree[0] = 0 And $stone[0] > 0 Then
 					If $DebugLog Then SetLog("Centering using stone", $COLOR_INFO)
-					CenterVillage($stone[0], $stone[1], $x, $y)
+					CenterVillage($stone[0], $stone[1], $x, $y, False)
 				EndIf
 			EndIf
 		EndIf
+	Else
+		$bMustDrag = True
 	EndIf
-
+	
+	If $bMustDrag = True Then
+		CenterVillage($aScrollPos[0], $aScrollPos[1], -450, 490, False)
+		$aResult[0] = ""
+	EndIf
+	
 	If $UpdateMyVillage Then
 		If $aResult[0] = "" Then
-			If $g_aiSearchZoomOutCounter[0] > 10 Then
+			If $g_aiSearchZoomOutCounter[0] > 14 Then
 				$g_aiSearchZoomOutCounter[0] = 0
 				Static $iCallCount = 0
 				$iCallCount += 1
