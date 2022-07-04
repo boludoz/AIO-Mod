@@ -52,7 +52,7 @@ Func _LocateClanCastle($bCollect = True)
 			Local $aPos = FindPos()
 			$g_aiClanCastlePos[0] = $aPos[0]
 			$g_aiClanCastlePos[1] = $aPos[1]
-			ConvertToVillagePos($aPos[0], $aPos[1])
+			VillageToPercent($aPos[0], $aPos[1])
 			If isInsideDiamond($aPos) = False Then
 				$iStupid += 1
 				Select

@@ -42,7 +42,7 @@ Func _LocateQueenAltar($bCollect = True)
 			Local $aPos = FindPos()
 			$g_aiQueenAltarPos[0] = $aPos[0]
 			$g_aiQueenAltarPos[1] = $aPos[1]
-			ConvertToVillagePos($aPos[0], $aPos[1])
+			VillageToPercent($aPos[0], $aPos[1])
 			If isInsideDiamond($aPos) = False Then
 				$iStupid += 1
 				Select
@@ -171,7 +171,7 @@ Func _LocateKingAltar($bCollect = True)
 			Local $aPos = FindPos()
 			$g_aiKingAltarPos[0] = $aPos[0]
 			$g_aiKingAltarPos[1] = $aPos[1]
-			ConvertToVillagePos($aPos[0], $aPos[1])
+			VillageToPercent($aPos[0], $aPos[1])
 			If isInsideDiamond($aPos) = False Then
 				$iStupid += 1
 				Select
@@ -328,7 +328,7 @@ Func _LocateWardenAltar($bCollect = True)
 			Local $aPos = FindPos()
 			$g_aiWardenAltarPos[0] = $aPos[0]
 			$g_aiWardenAltarPos[1] = $aPos[1]
-			ConvertToVillagePos($aPos[0], $aPos[1])
+			VillageToPercent($aPos[0], $aPos[1])
 			If isInsideDiamond($aPos) = False Then
 				$iStupid += 1
 				Select
@@ -486,7 +486,7 @@ Func _LocateChampionAltar($bCollect = True)
 			Local $aPos = FindPos()
 			$g_aiChampionAltarPos[0] = $aPos[0]
 			$g_aiChampionAltarPos[1] = $aPos[1]
-			ConvertToVillagePos($aPos[0], $aPos[1])
+			VillageToPercent($aPos[0], $aPos[1])
 			If isInsideDiamond($aPos) = False Then
 				$iStupid += 1
 				Select
