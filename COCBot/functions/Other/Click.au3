@@ -129,8 +129,13 @@ EndFunc   ;==>ClickP
 
 Func BuildingClick($x, $y, $debugtxt = "")
 	Local $point[2] = [$x, $y]
-	; ConvertToVillagePos($x, $y)
-	PercentToVillage($x, $y)
+	
+	If $x <= 100 And $y <= 100 Then
+		PercentToVillage($x, $y)
+	Else
+		ConvertToVillagePos($x, $y)
+	EndIf
+
 	If $g_bDebugClick Then
 		Local $txt = _DecodeDebug($debugtxt)
 		SetLog("BuildingClick " & $point[0] & "," & $point[1] & " converted to " & $x & "," & $y & " " & $debugtxt & $txt, $COLOR_ACTION)

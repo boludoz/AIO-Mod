@@ -25,6 +25,8 @@ EndFunc   ;==>isInsideDiamondXY
 Func isInsideDiamond($aCoords)
 	
 	If UBound($aCoords) > 1 And not @error Then 
+		
+		; AIO Temp fix.
 		If $aCoords[0] <= 100 And $aCoords[1] <= 100 Then
 			PercentToVillage($aCoords[0], $aCoords[1])
 		EndIf
