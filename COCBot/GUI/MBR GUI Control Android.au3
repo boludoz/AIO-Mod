@@ -289,7 +289,7 @@ Func getAllEmulatorsInstances()
 	
 	 ; Snorlax
 	If $Emulator = "BlueStacks5" Then
-		$sBlueStacksFolder = "Nougat32"
+		$sBlueStacksFolder = "Nougat"
 	EndIf
 	
 	; Getting all VM Folders
