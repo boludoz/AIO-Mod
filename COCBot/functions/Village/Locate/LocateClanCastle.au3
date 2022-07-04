@@ -192,8 +192,8 @@ Func LocateClanCastle()
 
 	; DETECTION IMGLOC
 	Local $aResult 
-	For $j = 0 to 10
-		SetLog("ImgLoc CC loop :" & $j & " zoom factor :" & $g_aVillageSize[1])
+	For $j = 0 to 1
+		; SetLog("ImgLoc CC loop :" & $j & " zoom factor :" & $g_aVillageSize[1])
 		$aResult = findMultiple($sImgDir, $sCocDiamond, $sRedLines, $iMinLevel, $iMaxLevel, $iMaxReturnPoints, $sReturnProps, $bForceCapture)
 		If IsArray($aResult) And UBound($aResult) > 0 Then ; we have an array with data of images found
 			For $i = 0 To UBound($aResult) - 1
@@ -214,8 +214,8 @@ Func LocateClanCastle()
 						; Test the coordinates
 						Local $tempObbj = StringSplit($tempObbjs[$j], ",", $STR_NOCOUNT) ;  will be a string : 708,360
 						If UBound($tempObbj) = 2 Then
-							$g_aiClanCastlePos[0] = Number($tempObbj[0]) ;+ 9
-							$g_aiClanCastlePos[1] = Number($tempObbj[1]) ;+ 15
+							$g_aiClanCastlePos[0] = Number($tempObbj[0]) - 5
+							$g_aiClanCastlePos[1] = Number($tempObbj[1]) - 8
 							SetLog("Clan Castle :" & $g_aiClanCastlePos[0] & "," & $g_aiClanCastlePos[1])
 							ConvertFromVillagePos($g_aiClanCastlePos[0],$g_aiClanCastlePos[1])
 							SetLog("Clan Castle VillagePos:" & $g_aiClanCastlePos[0] & "," & $g_aiClanCastlePos[1])
@@ -226,8 +226,8 @@ Func LocateClanCastle()
 					; Test the coordinate
 					Local $tempObbj = StringSplit($aObjectpoints, ",", $STR_NOCOUNT) ;  will be a string : 708,360
 					If UBound($tempObbj) = 2 Then
-						$g_aiClanCastlePos[0] = Number($tempObbj[0]) ;+ 9
-						$g_aiClanCastlePos[1] = Number($tempObbj[1]) ;+ 15
+						$g_aiClanCastlePos[0] = Number($tempObbj[0]) - 5
+						$g_aiClanCastlePos[1] = Number($tempObbj[1]) - 8
 						SetLog("Clan Castle :" & $g_aiClanCastlePos[0] & "," & $g_aiClanCastlePos[1])
 						ConvertFromVillagePos($g_aiClanCastlePos[0],$g_aiClanCastlePos[1])
 						SetLog("Clan Castle VillagePos:" & $g_aiClanCastlePos[0] & "," & $g_aiClanCastlePos[1])
