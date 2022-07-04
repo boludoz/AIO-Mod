@@ -17,9 +17,13 @@ Func GetTownHallLevel($bFirstTime = False)
 	Local $aTHInfo[3] = ["", "", ""]
 
 	SetDebugLog("Town Hall Position: " & $g_aiTownHallPos[0] & ", " & $g_aiTownHallPos[1], $COLOR_DEBUG)
-	If isInsideDiamond($g_aiTownHallPos) = False Then ; If TH pos is not known or is outside village then get new position
+	Local $aLocateFromVillagePos = $g_aiTownHallPos
+	ConvertToVillagePos($aLocateFromVillagePos[0], $aLocateFromVillagePos[1])
+	If isInsideDiamond($aLocateFromVillagePos) = False Then ; If TH pos is not known or is outside village then get new position
 		LocateTownHall(True) ; Set flag = true for location only, or repeated loop happens
-		If isInsideDiamond($g_aiTownHallPos) Then SaveConfig() ; save new location
+		Local $aLocateFromVillagePos = $g_aiTownHallPos
+		ConvertToVillagePos($aLocateFromVillagePos[0], $aLocateFromVillagePos[1])
+		If isInsideDiamond($aLocateFromVillagePos) Then SaveConfig() ; save new location
 		If _Sleep($DELAYGETTHLEVEL1) Then Return
 	EndIf
 

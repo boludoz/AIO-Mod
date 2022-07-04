@@ -27,15 +27,15 @@ Func TestPetHouse()
 EndFunc
 
 Func PetHouse($test = False)
-   Local $bUpgradePets = False
-   
-   PetUpgradeCostPerLevel()
-	
-   If $g_iTownHallLevel < 14 Then
+	If $g_iTownHallLevel < 14 Then
 		;SetLog("Townhall Lvl " & $g_iTownHallLevel & " has no Pet House.", $COLOR_ERROR)
 		Return
 	EndIf
 
+	Local $bUpgradePets = False
+   
+	PetUpgradeCostPerLevel()
+	
 	; Check at least one pet upgrade is enabled
 	For $i = 0 to $ePetCount - 1
 		If $g_bUpgradePetsEnable[$i] Then
@@ -46,13 +46,13 @@ Func PetHouse($test = False)
 
 	If Not $bUpgradePets Then Return
 
-	If $g_aiPetHousePos[0] <= 0 Or $g_aiPetHousePos[1] <= 0 Then
+	If LocatePetHouse() Then
 		SetLog("Pet House Location unknown!", $COLOR_WARNING)
-		LocatePetHouse() ; Pet House location unknown, so find it.
-		If $g_aiPetHousePos[0] = 0 Or $g_aiPetHousePos[1] = 0 Then
-			SetLog("Problem locating Pet House, re-locate Pet House position before proceeding", $COLOR_ERROR)
-			Return False
-		EndIf
+		
+		; Pet House location unknown, so find it.
+		SetLog("Problem locating Pet House, re-locate Pet House position before proceeding", $COLOR_ERROR)
+		ClickAway()
+		Return False
 	EndIf
 
  	If PetUpgradeInProgress() Then Return False ; see if we know about an upgrade in progress without checking the Pet House

@@ -92,7 +92,8 @@ Func LocateUpgrades()
 					Local $aPos = FindPos()
 					$g_avBuildingUpgrades[$icount][0] = $aPos[0]
 					$g_avBuildingUpgrades[$icount][1] = $aPos[1]
-					If isInsideDiamondXY($g_avBuildingUpgrades[$icount][0], $g_avBuildingUpgrades[$icount][1]) Then ; Check value to make sure its valid.
+					ConvertToVillagePos($aPos[0], $aPos[1])
+					If isInsideDiamond($aPos) Then ; Check value to make sure its valid.
 						Local $bMarkerDrawn = False
 						If $hGraphic <> 0 Then
 							Local $xUpgrade = $g_avBuildingUpgrades[$icount][0]

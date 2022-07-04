@@ -386,14 +386,13 @@ Func FindResearchButton($bOnLyCheck = False) ; Magic items - Team AIO Mod++
 
 	If $bOnLyCheck = False Then
 		CheckMainScreen(False)
+		
 		;Click Laboratory
 		ZoomOut()
 		CheckObstacles()
 		ClickAway()
-		If IsInsideDiamond($g_aiLaboratoryPos) Then
-			BuildingClick($g_aiLaboratoryPos[0], $g_aiLaboratoryPos[1], "#4548")
-		
-			If _Sleep(1000) Then Return ; Wait for window to open
+
+		If LocateLaboratory() Then
 	
 			Local $aCancelButton = findButton("Cancel")
 			If IsArray($aCancelButton) And UBound($aCancelButton, 1) = 2 Then
@@ -401,6 +400,9 @@ Func FindResearchButton($bOnLyCheck = False) ; Magic items - Team AIO Mod++
 				ClickAway()
 				Return False
 			EndIf
+		Else
+			ClickAway()
+			Return False
 		EndIf
 
 		Local $aResearchButton = findButton("Research", Default, 1, True)
@@ -434,8 +436,6 @@ Func FindResearchButton($bOnLyCheck = False) ; Magic items - Team AIO Mod++
 	ClickAway()
 	Return False
 EndFunc   ;==>FindResearchButton
-
-; BuildingClick($g_aiLaboratoryPos)
 
 Func BuildChecker(ByRef $aPosXY, $sImgDir)
 	Local $aImgLocPos[2] = [-1, -1]

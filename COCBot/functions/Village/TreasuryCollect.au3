@@ -28,13 +28,13 @@ Func TreasuryCollect()
 		If UBound($aCollect) > 0 And not @error Then
 			$g_aiClanCastlePos[0] = $aCollect[0][1] + 5
 			$g_aiClanCastlePos[1] = $aCollect[0][2] + 21
-			; ConvertFromVillagePos($g_aiClanCastlePos[0], $g_aiClanCastlePos[1])
+			ConvertFromVillagePos($g_aiClanCastlePos[0], $g_aiClanCastlePos[1])
 		Else
 			If _Sleep($DELAYRESPOND) Then Return
 		
 			If ($g_aiClanCastlePos[0] = -1 Or $g_aiClanCastlePos[1] = -1) Then
 				SetLog("Need Clan Castle location for the Treasury, Please locate your Clan Castle.", $COLOR_WARNING)
-				_LocateClanCastle()
+				LocateClanCastle()
 				If ($g_aiClanCastlePos[0] = -1 Or $g_aiClanCastlePos[1] = -1) Then
 					SetLog("Treasury skipped, bad Clan Castle location", $COLOR_ERROR)
 					If _Sleep($DELAYRESPOND) Then Return
@@ -43,14 +43,13 @@ Func TreasuryCollect()
 			EndIf
 		EndIf
 		
-		If isInsideDiamondInt($g_aiClanCastlePos[0], $g_aiClanCastlePos[1]) Then 
-			If _Sleep($DELAYCOLLECT3) Then Return
-			BuildingClick($g_aiClanCastlePos[0], $g_aiClanCastlePos[1], "#0250") ; select CC
-			If _Sleep($DELAYTREASURY2) Then Return
-		Else
-			SetLog("TreasuryCollect | CC Outside diamond.", $COLOR_ERROR)
+		If Not LocateClanCastle() Then 
+			SetLog("[TreasuryCollect] CC Outside diamond.", $COLOR_ERROR)
+			ClickAway()
 			Return
 		EndIf
+		
+		If _Sleep($DELAYCOLLECT3) Then Return
 		
 		Local $aTreasuryButton = findButton("Treasury", Default, 1, True)
 		If IsArray($aTreasuryButton) And UBound($aTreasuryButton, 1) = 2 Then
