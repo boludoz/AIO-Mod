@@ -25,6 +25,10 @@ EndFunc   ;==>isInsideDiamondXY
 Func isInsideDiamond($aCoords)
 	
 	If UBound($aCoords) > 1 And not @error Then 
+		If $aCoords[0] <= 100 And $aCoords[1] <= 100 Then
+			PercentToVillage($aCoords[0], $aCoords[1])
+		EndIf
+		
 		Local $iTolerance = 10
 		Local $iX = $aCoords[0], $iY = $aCoords[1]
 		Local $iLeft = $ExternalArea[0][0], $iRight = $ExternalArea[1][0], $iTop = $ExternalArea[2][1], $iBottom = $ExternalArea[3][1]
