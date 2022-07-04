@@ -20,10 +20,10 @@ Func UpgradeHeroes()
 	checkMainScreen(False)
 
 	If $g_bRestart Then Return
-	
+
 	#Region - Custom - Team AIO Mod++
 	ZoomOut()
-	
+
 	If $g_bUpgradeKingEnable Then
 		Local $aLocateFromVillagePos = $g_aiKingAltarPos
 		ConvertToVillagePos($aLocateFromVillagePos[0], $aLocateFromVillagePos[1])
@@ -56,7 +56,7 @@ Func UpgradeHeroes()
 		SaveConfig()
 	EndIf
 	#Region - Custom - Team AIO Mod++
-	
+
 	SetLog("Upgrading Heroes", $COLOR_INFO)
 
 	;Check if Auto Lab Upgrade is enabled and if a Dark Troop/Spell is selected for Upgrade. If yes, it has priority!
@@ -340,7 +340,7 @@ Func WardenUpgrade()
 
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
 
-	BuildingClickP($g_aiWardenAltarPos, 1, 0, "#8888") ; Click Warden Altar
+	BuildingClickP($g_aiWardenAltarPos, "#8888") ; Click Warden Altar
 
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
 
