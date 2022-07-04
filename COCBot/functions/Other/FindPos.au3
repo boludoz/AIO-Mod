@@ -23,7 +23,7 @@ Func FindPos()
 	$Pos[0] -= $g_aiBSpos[0]
 	$Pos[1] -= $g_aiBSpos[1]
 	; adjust village offset
-	PercentToVillage($Pos[0], $Pos[1])
+	VillageToPercent($Pos[0], $Pos[1])
 	; ConvertFromVillagePos($Pos[0], $Pos[1])
 	AndroidShieldForceDown($wasDown, True)
 	Return $Pos

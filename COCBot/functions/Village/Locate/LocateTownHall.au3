@@ -36,7 +36,7 @@ Func LocateTownHall($bLocationOnly = False, $bCollect = True)
 			Local $aPos = FindPos()
 			$g_aiTownHallPos[0] = $aPos[0]
 			$g_aiTownHallPos[1] = $aPos[1]
-			VillageToPercent($aPos[0], $aPos[1])
+			PercentToVillage($aPos[0], $aPos[1])
 			If isInsideDiamond($aPos) = False Then
 				$iStupid += 1
 				Select

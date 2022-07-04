@@ -388,10 +388,10 @@ EndFunc   ;==>BuilderBaseGetFakeEdges
 
 Func VillageToPercent(ByRef $x, ByRef $y, $xv1 = $InternalArea[0][0], $xv2 = $InternalArea[1][0], $ya1 = $InternalArea[2][1], $ya2 = $InternalArea[3][1])
     Local $aArray[2] = [-1, -1]
-    Local $ixAncho = $xv2 - $xv1
-    Local $iyAlto = $ya2 - $ya1
-    $aArray[0] = ($x / $ixAncho) * 100
-    $aArray[1] = ($y / $iyAlto) * 100
+    Local $ixAncho = pixel_distance(0, $xv2, 0, $xv1)
+    Local $iyAlto = pixel_distance(0, $ya2, 0, $ya1)
+    $aArray[0] = (($x - $xv1) / $ixAncho) * 100
+    $aArray[1] = (($y - $ya1) / $iyAlto) * 100
 	$x = $aArray[0]
 	$y = $aArray[1]
     Return $aArray
@@ -404,8 +404,8 @@ EndFunc   ;==>VillageToPercent
 
 Func PercentToVillage(ByRef $xPer, ByRef $yPer, $xv1 = $InternalArea[0][0], $xv2 = $InternalArea[1][0], $ya1 = $InternalArea[2][1], $ya2 = $InternalArea[3][1])
     Local $aArray[2] = [-1, -1]
-    Local $ixAncho = $xv2 - $xv1
-    Local $iyAlto = $ya2 - $ya1
+    Local $ixAncho = pixel_distance(0, $xv2, 0, $xv1)
+    Local $iyAlto = pixel_distance(0, $ya2, 0, $ya1)
     $aArray[0] = $xv1 + (($ixAncho * $xPer) / 100)
     $aArray[1] = $ya1 + (($iyAlto * $yPer) / 100)
 	$xPer = $aArray[0]
