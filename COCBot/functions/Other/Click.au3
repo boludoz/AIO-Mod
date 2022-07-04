@@ -130,6 +130,7 @@ EndFunc   ;==>ClickP
 Func BuildingClick($x, $y, $debugtxt = "")
 	Local $point[2] = [$x, $y]
 	
+	; AIO Temp fix.
 	If $x <= 100 And $y <= 100 Then
 		PercentToVillage($x, $y)
 	Else
