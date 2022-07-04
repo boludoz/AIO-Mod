@@ -386,7 +386,7 @@ EndFunc   ;==>BuilderBaseGetFakeEdges
 ; No reference village is based and no external DLL calls are made, just take the x and y endpoints,
 ; then subtract the endpoints and generate the percentages they represent on the axes.
 
-Func VillageToPercent($x, $y, $xv1, $xv2, $ya1, $ya2)
+Func VillageToPercent($x, $y, $xv1 = $InternalArea[0][0], $xv2 = $InternalArea[1][0], $ya1 = $InternalArea[2][1], $ya2 = $InternalArea[3][1])
     Local $aArray[2] = [-1, -1]
     Local $ixAncho = $xv2 - $xv1
     Local $iyAlto = $ya2 - $ya1
@@ -400,7 +400,7 @@ EndFunc   ;==>VillageToPercent
 ; Taking as input the percentage in which the construction is located at the Cartesian point, the position is returned.
 ; The code is simple to implement and has precision.
 
-Func PercentToVillage($xPer, $yPer, $xv1, $xv2, $ya1, $ya2)
+Func PercentToVillage($xPer, $yPer, $xv1 = $InternalArea[0][0], $xv2 = $InternalArea[1][0], $ya1 = $InternalArea[2][1], $ya2 = $InternalArea[3][1])
     Local $aArray[2] = [-1, -1]
     Local $ixAncho = $xv2 - $xv1
     Local $iyAlto = $ya2 - $ya1

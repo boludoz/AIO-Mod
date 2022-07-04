@@ -129,8 +129,8 @@ EndFunc   ;==>ClickP
 
 Func BuildingClick($x, $y, $debugtxt = "")
 	Local $point[2] = [$x, $y]
-	ZoomOut() ; Custom Fix - Team AIO Mod++
-	ConvertToVillagePos($x, $y)
+	; ConvertToVillagePos($x, $y)
+	PercentToVillage($x, $y)
 	If $g_bDebugClick Then
 		Local $txt = _DecodeDebug($debugtxt)
 		SetLog("BuildingClick " & $point[0] & "," & $point[1] & " converted to " & $x & "," & $y & " " & $debugtxt & $txt, $COLOR_ACTION)

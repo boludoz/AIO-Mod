@@ -52,7 +52,7 @@ Func _LocateLab($bCollect = True)
 			Local $aPos = FindPos()
 			$g_aiLaboratoryPos[0] = Int($aPos[0])
 			$g_aiLaboratoryPos[1] = Int($aPos[1])
-			ConvertToVillagePos($aPos[0], $aPos[1])
+			VillageToPercent($aPos[0], $aPos[1])
 			If isInsideDiamond($aPos) = False Then
 				$iStupid += 1
 				Select
