@@ -440,5 +440,6 @@ Func CloseUnsupportedBlueStacks5()
 EndFunc   ;==>CloseUnsupportedBlueStacks2
 
 Func BlueStacks5AdjustClickCoordinates(ByRef $x, ByRef $y)
-	Return BlueStacksAdjustClickCoordinates($x, $y)
+	$x = Round(32767.0 / $g_iAndroidClientWidth * $x)
+	$y = Round(32767.0 / $g_iAndroidClientHeight * $y)
 EndFunc   ;==>BlueStacksAdjustClickCoordinates
