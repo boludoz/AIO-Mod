@@ -131,7 +131,7 @@ Func BuildingClick($x, $y, $debugtxt = "")
 	Local $point[2] = [$x, $y]
 	
 	; AIO Temp fix.
-	If $x <= 100 And $y <= 100 Then
+	If $x <= 100 And $y <= 100 And $x >= 0 And $y >= 0 Then
 		PercentToVillage($x, $y)
 	Else
 		ConvertToVillagePos($x, $y)
@@ -141,18 +141,23 @@ Func BuildingClick($x, $y, $debugtxt = "")
 		Local $txt = _DecodeDebug($debugtxt)
 		SetLog("BuildingClick " & $point[0] & "," & $point[1] & " converted to " & $x & "," & $y & " " & $debugtxt & $txt, $COLOR_ACTION)
 	EndIf
-	Return PureClick($x, $y, 1, 0, $debugtxt)
+	Return PureClick($x, $y, 1, 0, $debugtxt, True) ; Custom fix - Team AIO Mod++
 EndFunc   ;==>BuildingClick
 
 Func BuildingClickP($point, $debugtxt = "")
 	Return BuildingClick($point[0], $point[1], $debugtxt)
 EndFunc   ;==>BuildingClickP
 
-Func PureClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
+Func PureClick($x, $y, $times = 1, $speed = 0, $debugtxt = "", $bByPassRandom = False) ; Custom fix - Team AIO Mod++
 	Local $txt = "", $aPrevCoor[2] = [$x, $y]
     If $g_bUseRandomClick Then
-		$x = Random($x - 5, $x + 5, 1)
-		$y = Random($y - 5, $y + 5, 1)
+		If $bByPassRandom = False Then
+			$x = Random($x - 5, $x + 5, 1)
+			$y = Random($y - 5, $y + 5, 1)
+		Else
+			$x = Random($x - 1, $x + 1, 1)
+			$y = Random($y, $y + 2, 1)
+		EndIf
 		If $g_bDebugClick Then
 			$txt = _DecodeDebug($debugtxt)
 			SetLog("Random PureClick X: " & $aPrevCoor[0] & " To " & $x & ", Y: " & $aPrevCoor[1] & " To " & $y & ", Times: " & $times & ", Speed: " & $speed & " " & $debugtxt & $txt, $COLOR_ACTION, "Verdana", "7.5", 0)
