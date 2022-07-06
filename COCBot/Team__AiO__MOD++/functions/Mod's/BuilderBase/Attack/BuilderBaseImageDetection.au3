@@ -40,13 +40,19 @@ Func TestBuilderBaseGetDeployPoints()
 	Setlog("** TestBuilderBaseGetDeployPoints END**", $COLOR_DEBUG)
 EndFunc   ;==>TestBuilderBaseGetDeployPoints
 
-Func builderbasegetdeploypoints($furtherfrom = 0, $bDebug = False)
+Func builderbasegetdeploypoints($furtherfrom = 5, $bDebug = False)
 	If Not $g_brunstate Then Return 
 	Local $debuglog
 	If $g_bDebugBBattack OR $bDebug Then $debuglog = True
+
+
 	Local $DeployPoints[4]
 	Local $Name[4] = ["TopLeft", "TopRight", "BottomRight", "BottomLeft"]
 	Local $hstarttime = __timerinit()
+	
+	; Custom
+	$g_aBuilderHallPos = UpdateBHPos()
+	
 	Local $deploypointsresult = DMClassicArray(DFind($g_sBundleDeployPointsBBD, 0, 0, 0, 0, 0, 0, 1000, True), 10, ($g_bDebugImageSave Or $debuglog))
 	If $deploypointsresult <> -1 And UBound($deploypointsresult) > 0 Then
 		Local $topleft[0][2], $topright[0][2], $bottomright[0][2], $bottomleft[0][2]
@@ -247,7 +253,7 @@ Func FindBestDropPoints($DropPoints, $MaxDropPoint = 10)
 	Return $aDeployP
 EndFunc   ;==>FindBestDropPoints
 
-Func DeployPointsPosition($aPixel, $bIsBH = False)
+Func DeployPointsPosition($aPixel, $bIsBH = True)
 	If Not $g_bRunState Then Return
 	Local $sReturn = "", $aXY[2]
 

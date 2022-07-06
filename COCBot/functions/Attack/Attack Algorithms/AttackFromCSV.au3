@@ -129,8 +129,8 @@ Func ConvertInternalExternArea($FunctionName = "", $bDebugImage = Default)
 			$InternalArea[0][0] & "," & $InternalArea[0][1]
 	
 	; Custom fix - Team AIO Mod++
-	$DiamondMiddleX = $InternalArea[0][1]
-	$DiamondMiddleY = $InternalArea[2][0]
+	$DiamondMiddleX = $InternalArea[0][0] + (($InternalArea[1][0] - $InternalArea[0][0]) / 2)
+	$DiamondMiddleY = $InternalArea[2][1] + (($InternalArea[3][1] - $InternalArea[2][1]) / 2)
 	
 	If $bDebugImage = Default Then $bDebugImage = $g_bDebugAttackCSV Or $g_bDebugImageSave
 	If $FunctionName <> "Start" And $bDebugImage = True Then

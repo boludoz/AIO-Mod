@@ -77,9 +77,6 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $BestDeployPoin
 	If FileExists($FileNamePath) Then
 		Local $aLines = FileReadToArray($FileNamePath)
 		If @error Then Setlog("There was an error reading the CSV file. @error: " & @error, $COLOR_WARNING)
-		
-		; Custom
-		$g_aBuilderHallPos = UpdateBHPos()
 
 		Local $Line = "", $BuildingSide = ""
 
