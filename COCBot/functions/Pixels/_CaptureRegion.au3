@@ -148,7 +148,7 @@ Func _CaptureGameScreen(ByRef $_hHBitmap, Const $iLeft = 0, Const $iTop = 0, Con
 					Local $hObjectOld = _WinAPI_SelectObject($hMemDC, $_hHBitmap)
 
 					Local $flags = 0
-					If StringInStr($g_sAndroidEmulator, "Bluestacks") > 0 And 9600 <= @OSBuild Then $flags = 2 ; Custom - Team AIO Mod++
+					;If StringInStr($g_sAndroidEmulator, "Bluestacks") > 0 And 9600 <= @OSBuild Then $flags = 2 ; Custom - Team AIO Mod++
 					; $PW_CLIENTONLY = 1 ; Only the client area of the window is copied to hdcBlt. By default, the entire window is copied.
 					; $PW_RENDERFULLCONTENT = 2 ; New in Windows 8.1, suppost to capture DirectX/OpenGL screens through DWM (but didn't work for MEmu)
 					DllCall("user32.dll", "int", "PrintWindow", "hwnd", $hCtrl, "handle", $hMemDC, "int", $flags)

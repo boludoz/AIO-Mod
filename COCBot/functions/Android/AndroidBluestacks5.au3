@@ -208,9 +208,11 @@ Func InitBlueStacks5($bCheckOnly = False)
 EndFunc   ;==>InitBlueStacks2
 
 Func GetBlueStacks5BackgroundMode()
+#cs
 	If 9600 <= @OSBuild Then
 		Return $g_iAndroidBackgroundModeDirectX
 	Else
+#ce
 		; check if BlueStacks 5 is running in OpenGL mode
 		Local $__BlueStacks5_ProgramData = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "UserDefinedDir")
 		Local $__Bluestacks5Conf = FileReadToArray($__BlueStacks5_ProgramData & "\bluestacks.conf")
@@ -237,7 +239,7 @@ Func GetBlueStacks5BackgroundMode()
 					Return 0
 			EndSwitch
 		EndIf
-	EndIf
+	;EndIf
 EndFunc   ;==>GetBlueStacksBackgroundMode
 
 Func RestartBlueStacks5CoC()

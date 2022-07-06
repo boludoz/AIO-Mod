@@ -981,25 +981,37 @@ Func CheckGoogleSelectAccount($bSelectFirst = True)
 EndFunc   ;==>CheckGoogleSelectAccount
 
 ; Checks if "Log in with Supercell ID" boot screen shows up and closes CoC and pushes shared_prefs to fix
-Func CheckLoginWithSupercellID()
+Func CheckLoginWithSupercellID($bTestLegacy = False)
 
 	Local $bResult = False
 
 	If Not $g_bRunState Then Return
 	
 	; Custom Fix - Team AIO Mod++
-	Local $bCheckPixel = _ColorCheck(_GetPixelColor($aLoginWithSupercellID[0], $aLoginWithSupercellID[1], False), Hex($aLoginWithSupercellID[2], 6), $aLoginWithSupercellID[3]) And _ColorCheck(_GetPixelColor($aLoginWithSupercellID2[0], $aLoginWithSupercellID2[1], False), Hex($aLoginWithSupercellID2[2], 6), $aLoginWithSupercellID2[3]) 
+	Local $bCheckPixel = _ColorCheck(_GetPixelColor($aLoginWithSupercellID[0], $aLoginWithSupercellID[1], False), Hex($aLoginWithSupercellID[2], 6), $aLoginWithSupercellID[3]) And _ColorCheck(_GetPixelColor($aLoginWithSupercellID2[0], $aLoginWithSupercellID2[1], False), Hex($aLoginWithSupercellID2[2], 6), $aLoginWithSupercellID2[3])
 	
 	; Account List check be there, validate with imgloc
 	If $bCheckPixel Then ; Fixed resolution
 		; Google Account selection found
 		SetLog("Verified Log in with Supercell ID boot screen")
 
-		If HaveSharedPrefs($g_sProfileCurrentName) Then
-			SetLog("Close CoC and push shared_prefs for Supercell ID screen")
-			PushSharedPrefs()
-			Return True
-		Else
+		Local $bSharedPrefsOK = False
+		If $bTestLegacy = False Then
+			If HaveSharedPrefs($g_sProfileCurrentName) Then
+				$bSharedPrefsOK = PushSharedPrefs($g_sProfileCurrentName, True)
+				If @error Then
+					SetLog("Push SharedPrefs error: " & @error, $COLOR_ERROR) ; that is amazing.
+					$bSharedPrefsOK = False
+				EndIf
+
+				If $bSharedPrefsOK Then
+					SetLog("Close CoC and push shared_prefs for Supercell ID screen")
+					Return True
+				EndIf
+			EndIf
+		EndIf
+		
+		If $bSharedPrefsOK = False Then
 			If $g_bChkSuperCellID And ProfileSwitchAccountEnabled() Then ; select the correct account matching with current profile
 				Local $NextAccount = 0
 				$bResult = True
@@ -1026,11 +1038,9 @@ Func CheckLoginWithSupercellID()
 				SetLog("and then pull shared_prefs in tab Bot/Profiles.", $COLOR_INFO)
 			EndIf
 		EndIf
-
-	Else
-		SetDebugLog("Log in with Supercell ID boot screen not verified")
 	EndIf
 
+	SetDebugLog("Log in with Supercell ID boot screen not verified")
 	Return $bResult
 EndFunc   ;==>CheckLoginWithSupercellID
 
