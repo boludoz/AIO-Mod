@@ -986,9 +986,12 @@ Func CheckLoginWithSupercellID()
 	Local $bResult = False
 
 	If Not $g_bRunState Then Return
-
+	
+	; Custom Fix - Team AIO Mod++
+	Local $bCheckPixel = _ColorCheck(_GetPixelColor($aLoginWithSupercellID[0], $aLoginWithSupercellID[1], False), Hex($aLoginWithSupercellID[2], 6), $aLoginWithSupercellID[3]) And _ColorCheck(_GetPixelColor($aLoginWithSupercellID2[0], $aLoginWithSupercellID2[1], False), Hex($aLoginWithSupercellID2[2], 6), $aLoginWithSupercellID2[3]) 
+	
 	; Account List check be there, validate with imgloc
-	If UBound(decodeSingleCoord(FindImageInPlace("LoginWithSupercellID", $g_sImgLoginWithSupercellID, "355,617(125,30)", False))) > 1 Then ; Fixed resolution
+	If $bCheckPixel Then ; Fixed resolution
 		; Google Account selection found
 		SetLog("Verified Log in with Supercell ID boot screen")
 
@@ -1040,9 +1043,12 @@ Func CheckLoginWithSupercellIDScreen()
 	If $g_bChkSuperCellID And ProfileSwitchAccountEnabled() Then
 		$acount = $g_iCurAccount
 	EndIf
+	
+	; Custom Fix - Team AIO Mod++
+	Local $bCheckPixel = _ColorCheck(_GetPixelColor($aLoginWithSupercellID[0], $aLoginWithSupercellID[1], False), Hex($aLoginWithSupercellID[2], 6), $aLoginWithSupercellID[3]) And _ColorCheck(_GetPixelColor($aLoginWithSupercellID2[0], $aLoginWithSupercellID2[1], False), Hex($aLoginWithSupercellID2[2], 6), $aLoginWithSupercellID2[3]) 
 
 	; Account List check be there, validate with imgloc
-	If UBound(decodeSingleCoord(FindImageInPlace("LoginWithSupercellID", $g_sImgLoginWithSupercellID, "318,590(125,30)", False))) > 1 Then ; Fixed resolution
+	If $bCheckPixel Then ; Fixed resolution
 		; Google Account selection found
 		SetLog("Verified Log in with Supercell ID boot screen for login")
 

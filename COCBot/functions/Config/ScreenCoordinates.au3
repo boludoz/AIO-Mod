@@ -143,8 +143,8 @@ Global $aArmyTrainButtonRND[4] = [20, 540 + $g_iMidOffsetY, 55, 570 + $g_iMidOff
 Global $aAttackButtonRND[4] = [20, 610 + $g_iMidOffsetY, 100, 670 + $g_iMidOffsetY] ; Attack Button, Main Screen, RND  Screen 860x732
 
 ;Switch Account
-Global $aLoginWithSupercellID[4] = [280, 640 + $g_iMidOffsetY, 0xDCF684, 20] ; Upper green button section "Log in with Supercell ID" 0xB1E25A
-Global $aLoginWithSupercellID2[4] = [266, 653 + $g_iMidOffsetY, 0xFFFFFF , 10] ; White Font "Log in with Supercell ID"
+Global $aLoginWithSupercellID[4] = [82, 581, 0xD0E978, 20] ; Upper green button section "Log in with Supercell ID" 0xD0E978
+Global $aLoginWithSupercellID2[4] = [347, 604, 0x78C020 , 20] ; Lower green button section "Log in with Supercell ID" 0xD0E978
 Global $aButtonSetting[4] = [820, 495, 0xFFFFFF, 10] ; Setting button, Main Screen ; Resolution fixed
 Global $aIsSettingPage[4] = [753, 81 + $g_iMidOffsetY, 0xFF8F95, 10] ; Main Screen, Setting page open - left upper corner of x button
 

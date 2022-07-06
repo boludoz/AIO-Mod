@@ -208,8 +208,36 @@ Func InitBlueStacks5($bCheckOnly = False)
 EndFunc   ;==>InitBlueStacks2
 
 Func GetBlueStacks5BackgroundMode()
-	; Only DirectX-Mode is supported for Background Mode
-	Return $g_iAndroidBackgroundModeDirectX
+	If 9600 <= @OSBuild Then
+		Return $g_iAndroidBackgroundModeDirectX
+	Else
+		; check if BlueStacks 5 is running in OpenGL mode
+		Local $__BlueStacks5_ProgramData = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "UserDefinedDir")
+		Local $__Bluestacks5Conf = FileReadToArray($__BlueStacks5_ProgramData & "\bluestacks.conf")
+		Local $iLineCount = @extended
+		Local $GlRenderMode = "dx"
+		For $i = 0 To $iLineCount - 1
+			If StringInStr($__Bluestacks5Conf[$i], "bst.instance." & $g_sAndroidInstance & ".graphics_renderer") Then
+				$GlRenderMode = StringRegExp($__Bluestacks5Conf[$i], '=\"(.+)\"', $STR_REGEXPARRAYMATCH)
+				ExitLoop
+			EndIf
+		Next
+		
+		If IsArray($GlRenderMode) Then
+			SetDebugLog("GlRenderMode = " & $GlRenderMode[0])
+			Switch $GlRenderMode[0]
+				Case "dx"
+					; DirectX
+					Return $g_iAndroidBackgroundModeDirectX
+				Case "gl"
+					; OpenGL
+					Return $g_iAndroidBackgroundModeOpenGL
+				Case Else
+					SetLog($g_sAndroidEmulator & " unsupported render mode " & $GlRenderMode, $COLOR_WARNING)
+					Return 0
+			EndSwitch
+		EndIf
+	EndIf
 EndFunc   ;==>GetBlueStacksBackgroundMode
 
 Func RestartBlueStacks5CoC()
@@ -219,78 +247,62 @@ EndFunc   ;==>RestartBlueStacks2CoC
 Func CheckScreenBlueStacks5($bSetLog = True)
 	Local $__BlueStacks5_ProgramData = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "UserDefinedDir")
 	Local $__Bluestacks5Conf = FileReadToArray($__BlueStacks5_ProgramData & "\bluestacks.conf")
-	Local $iLineCount = @extended
-	If @error Then
-		SetLog("[CheckScreenBlueStacks5] Wrong config path", $COLOR_ERROR)
-		Return False
-	EndIf
-	
-	; bst.custom_resolutions="860 x 644,860 x 732"
-	; bst.instance." & $g_sAndroidInstance & ".fb_height="644"
-	; bst.instance." & $g_sAndroidInstance & ".fb_width="860"
-	; bst.instance." & $g_sAndroidInstance & ".dpi="160"
-	; bst.instance." & $g_sAndroidInstance & ".gl_win_height="644"
-	; bst.instance." & $g_sAndroidInstance & ".gl_win_width="860"
-	; bst.instance." & $g_sAndroidInstance & ".gl_win_x="125"
-	; bst.instance." & $g_sAndroidInstance & ".gl_win_y="48"
+    If Not @error Then
+		Local $iLineCount = @extended
 
-	Local $aiSearch = ["bst.instance." & $g_sAndroidInstance & ".fb_height", _
-					   "bst.instance." & $g_sAndroidInstance & ".fb_width", _
-					   "bst.instance." & $g_sAndroidInstance & ".dpi", _
-					   "bst.instance." & $g_sAndroidInstance & ".gl_win_height", _
-					   "bst.instance." & $g_sAndroidInstance & ".gl_win_width"]
+		Local $aiSearch = ["bst.instance." & $g_sAndroidInstance & ".fb_width", _
+						   "bst.instance." & $g_sAndroidInstance & ".fb_height", _
+						   'bst.instance.' & $g_sAndroidInstance & '.dpi="160"', _
+						   "bst.instance." & $g_sAndroidInstance & ".gl_win_height", _
+						   "bst.instance." & $g_sAndroidInstance & ".display_name"]
 
-	Local $aiMustBe = ['"644"', _
-					   '"860"', _
-					   '"160"', _
-					   '"644"', _
-					   '"860"']
+		Local $aiMustBe = ['"860"', _
+						   '"644"', _
+						   '"160"', _
+						   '"644"', _
+						   '"Bluestacks5']
 
-	For $i = 0 To $iLineCount - 1
-		For $iSearch = 0 To UBound($aiSearch) - 1
-			If StringInStr($__Bluestacks5Conf[$i], $aiSearch[$iSearch]) Then
-				If StringInStr($__Bluestacks5Conf[$i], $aiMustBe[$iSearch]) = 0 Then
-					If $bSetLog = True Then SetLog("The bot will configure your Bluestacks", $COLOR_ERROR)
-					Return False
+		For $i = 0 To $iLineCount - 1
+			For $iSearch = 0 To UBound($aiSearch) - 1
+				If StringInStr($__Bluestacks5Conf[$i], $aiSearch[$iSearch]) Then
+					SetDebugLog($__Bluestacks5Conf[$i])
+					If StringInStr($__Bluestacks5Conf[$i], $aiMustBe[$iSearch]) = 0 Then
+						If $bSetLog = True Then SetLog("The bot will configure your Bluestacks", $COLOR_ERROR)
+						Return False
+					EndIf
 				EndIf
-			EndIf
+			Next
 		Next
-	Next
+    Else
+        SetLog("[CheckScreenBlueStacks5] Error in config path : " & @error, $COLOR_ERROR)
+        Return False
+    EndIf
 	Return True
 EndFunc   ;==>CheckScreenBlueStacks5
 
 Func SetScreenBlueStacks5()
 	Local $__BlueStacks5_ProgramData = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "UserDefinedDir")
 	Local $__Bluestacks5Conf = FileReadToArray($__BlueStacks5_ProgramData & "\bluestacks.conf")
-	Local $iLineCount = @extended
-	If Not @error Then
+    If Not @error Then
+		Local $iLineCount = @extended
 
-		; bst.custom_resolutions="860 x 644,860 x 732"
-		; bst.instance." & $g_sAndroidInstance & ".fb_height="644"
-		; bst.instance." & $g_sAndroidInstance & ".fb_width="860"
-		; bst.instance." & $g_sAndroidInstance & ".dpi="160"
-		; bst.instance." & $g_sAndroidInstance & ".gl_win_height="644"
-		; bst.instance." & $g_sAndroidInstance & ".gl_win_width="860"
-		; bst.instance." & $g_sAndroidInstance & ".gl_win_x="125"
-		; bst.instance." & $g_sAndroidInstance & ".gl_win_y="48"
-
-		Local $aiSearch = ["bst.custom_resolution", _
+		Local $aiSearch = ["bst.instance." & $g_sAndroidInstance & ".fb_width", _
 						   "bst.instance." & $g_sAndroidInstance & ".fb_height", _
-						   "bst.instance." & $g_sAndroidInstance & ".fb_width", _
 						   "bst.instance." & $g_sAndroidInstance & ".dpi", _
 						   "bst.instance." & $g_sAndroidInstance & ".gl_win_height", _
-						   "bst.instance." & $g_sAndroidInstance & ".gl_win_width", _
-						   "bst.instance." & $g_sAndroidInstance & ".gl_win_x", _
-						   "bst.instance." & $g_sAndroidInstance & ".gl_win_y"]
+						   "bst.instance." & $g_sAndroidInstance & ".show_sidebar", _
+						   "bst.instance." & $g_sAndroidInstance & ".display_name", _
+						   "bst.instance." & $g_sAndroidInstance & ".enable_fps_display", _
+						   "bst.instance." & $g_sAndroidInstance & ".google_login_popup_shown"]
 
-		Local $aiMustBe = ['bst.custom_resolutions="860 x 644,860 x 732"', _
+		Local $aiMustBe = ['bst.instance.' & $g_sAndroidInstance & '.fb_width="860"', _
 						   'bst.instance.' & $g_sAndroidInstance & '.fb_height="644"', _
-						   'bst.instance.' & $g_sAndroidInstance & '.fb_width="860"', _
 						   'bst.instance.' & $g_sAndroidInstance & '.dpi="160"', _
 						   'bst.instance.' & $g_sAndroidInstance & '.gl_win_height="644"', _
-						   'bst.instance.' & $g_sAndroidInstance & '.gl_win_width="860"', _
-						   'bst.instance.' & $g_sAndroidInstance & '.gl_win_x="125"', _
-						   'bst.instance.' & $g_sAndroidInstance & '.gl_win_y="48"']
+						   'bst.instance.' & $g_sAndroidInstance & '.show_sidebar="0"', _
+						   'bst.instance.' & $g_sAndroidInstance & '.display_name="BlueStacks5-' & $g_sAndroidInstance & '"', _
+						   'bst.instance.' & $g_sAndroidInstance & '.enable_fps_display="1"', _
+						   "bst.instance." & $g_sAndroidInstance & '.google_login_popup_shown="0"']
 
 		For $i = 0 To $iLineCount - 1
 			For $iSearch = 0 To UBound($aiSearch) - 1
@@ -301,10 +313,11 @@ Func SetScreenBlueStacks5()
 		Next
 	;~ 	_ArrayDisplay($__Bluestacks5Conf)
 		_FileWriteFromArray($__BlueStacks5_ProgramData & "\bluestacks.conf", $__Bluestacks5Conf)
-	Else
-		SetLog("[SetScreenBlueStacks5] Wrong config path", $COLOR_ERROR)
-		Return False
-	EndIf
+    Else
+        SetLog("[SetScreenBlueStacks5] Error in config path : " & @error, $COLOR_ERROR)
+        Return False
+    EndIf
+	Return True
 EndFunc   ;==>SetScreenBlueStacks5
 
 Func ConfigBlueStacks5WindowManager()
