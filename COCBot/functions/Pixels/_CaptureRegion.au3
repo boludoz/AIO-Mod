@@ -129,30 +129,38 @@ Func _CaptureGameScreen(ByRef $_hHBitmap, Const $iLeft = 0, Const $iTop = 0, Con
 			EndIf
 		EndIf
 		If $g_bChkBackgroundMode = True Then
-			If $g_bAndroidAdbScreencap = True Then
-				$_hHBitmap = AndroidScreencap($iL, $iT, $iW, $iH)
-			Else
-				$SuspendMode = ResumeAndroid(False)
-				;Local $hCtrl = ControlGetHandle($g_hAndroidWindow, $g_sAppPaneName, $g_sAppClassInstance)
-				Local $hCtrl = ControlGetHandle(GetCurrentAndroidHWnD(), $g_sAppPaneName, $g_sAppClassInstance)
-				If $hCtrl = 0 Then SetLog("AndroidHandle not found, contact support", $COLOR_ERROR)
-				Local $hDC_Capture = _WinAPI_GetDC($hCtrl)
-				Local $hMemDC = _WinAPI_CreateCompatibleDC($hDC_Capture)
-				$_hHBitmap = _WinAPI_CreateCompatibleBitmap($hDC_Capture, $iW, $iH)
-				Local $hObjectOld = _WinAPI_SelectObject($hMemDC, $_hHBitmap)
+			Local $bBackgroundMode = $g_bAndroidAdbScreencap
+			For $i = 0 To 1
+				If $bBackgroundMode = True Then
+					$_hHBitmap = AndroidScreencap($iL, $iT, $iW, $iH)
+				Else
+					$SuspendMode = ResumeAndroid(False)
+					; Local $hCtrl = ControlGetHandle($g_hAndroidWindow, $g_sAppPaneName, $g_sAppClassInstance)
+					Local $hCtrl = ControlGetHandle(GetCurrentAndroidHWnD(), $g_sAppPaneName, $g_sAppClassInstance)
+					If $hCtrl = 0 Then
+						SetLog("AndroidHandle not found, contact support", $COLOR_ERROR)
+						$bBackgroundMode = True
+						ContinueLoop
+					EndIf
+					Local $hDC_Capture = _WinAPI_GetDC($hCtrl)
+					Local $hMemDC = _WinAPI_CreateCompatibleDC($hDC_Capture)
+					$_hHBitmap = _WinAPI_CreateCompatibleBitmap($hDC_Capture, $iW, $iH)
+					Local $hObjectOld = _WinAPI_SelectObject($hMemDC, $_hHBitmap)
 
-				Local $flags = 0
-				; $PW_CLIENTONLY = 1 ; Only the client area of the window is copied to hdcBlt. By default, the entire window is copied.
-				; $PW_RENDERFULLCONTENT = 2 ; New in Windows 8.1, suppost to capture DirectX/OpenGL screens through DWM (but didn't work for MEmu)
-				DllCall("user32.dll", "int", "PrintWindow", "hwnd", $hCtrl, "handle", $hMemDC, "int", $flags)
-				_WinAPI_SelectObject($hMemDC, $_hHBitmap)
-				_WinAPI_BitBlt($hMemDC, 0, 0, $iW, $iH, $hDC_Capture, $iL, $iT, $SRCCOPY)
+					Local $flags = 0
+					; $PW_CLIENTONLY = 1 ; Only the client area of the window is copied to hdcBlt. By default, the entire window is copied.
+					; $PW_RENDERFULLCONTENT = 2 ; New in Windows 8.1, suppost to capture DirectX/OpenGL screens through DWM (but didn't work for MEmu)
+					DllCall("user32.dll", "int", "PrintWindow", "hwnd", $hCtrl, "handle", $hMemDC, "int", $flags)
+					_WinAPI_SelectObject($hMemDC, $_hHBitmap)
+					_WinAPI_BitBlt($hMemDC, 0, 0, $iW, $iH, $hDC_Capture, $iL, $iT, $SRCCOPY)
 
-				_WinAPI_DeleteDC($hMemDC)
-				_WinAPI_SelectObject($hMemDC, $hObjectOld)
-				_WinAPI_ReleaseDC($hCtrl, $hDC_Capture)
-				SuspendAndroid($SuspendMode, False)
-			EndIf
+					_WinAPI_DeleteDC($hMemDC)
+					_WinAPI_SelectObject($hMemDC, $hObjectOld)
+					_WinAPI_ReleaseDC($hCtrl, $hDC_Capture)
+					SuspendAndroid($SuspendMode, False)
+				EndIf
+				ExitLoop
+			Next
 		Else
 			getBSPos()
 			$SuspendMode = ResumeAndroid(False)
