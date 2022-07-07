@@ -41,7 +41,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	EndIf
 
 	If $bOnBuilderBase = Default Then
-		$bOnBuilderBase = isOnBuilderBase(False, True)
+		$bOnBuilderBase = isOnBuilderBase(False, $g_bStayOnBuilderBase)
 	EndIf
 
 	Local $sDirectory

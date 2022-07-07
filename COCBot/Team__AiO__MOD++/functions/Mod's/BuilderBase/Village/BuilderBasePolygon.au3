@@ -53,8 +53,10 @@ Func BuilderBaseZoomOut($bForceZoom = Default, $bVersusMode = True, $bDebugWithI
 		If BuilderBaseSendZoomOut(False, $i) Then
 			; Get the Distances between images
 			Local $aResult = SearchZoomOut($aCenterHomeVillageClickDrag, True, "BuilderBaseZoomOut", True, $g_bDebugSetlog, $bVersusMode)
-			If @error Then Return False
-			If $aResult[0] <> "" Then Return True
+			If UBound($aResult) < 1 Or @error Then Return False
+			If $aResult[0] <> "" Then
+				Return True
+			EndIf
 		Else
 			SetDebugLog("[BBzoomout] Send Script Error!", $COLOR_DEBUG)
 		EndIf

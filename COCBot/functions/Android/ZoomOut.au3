@@ -465,13 +465,24 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 	Local $aResult = ["", 0, 0, 0, 0] ; expected dummy value
 
 	Local $village
-	If $g_aiSearchZoomOutCounter[0] = 10 Then SetLog("Try secondary village measuring...", $COLOR_INFO)
-	If $g_aiSearchZoomOutCounter[0] < 10 Then
-		$village = GetVillageSize($DebugLog, "stone", "tree")
+	Local $bForceBB = ($bVersusMode = False) ? (Default) : (True)
+	
+	Static $bSecondAvoid = False
+	If $g_aiSearchZoomOutCounter[0] = 0 Then
+		$bSecondAvoid = False
+	ElseIf $g_aiSearchZoomOutCounter[0] = 10 Then
+		SetLog("Try secondary village measuring...", $COLOR_INFO)
+	EndIf
+	
+	If $g_aiSearchZoomOutCounter[0] < 10 Or $bSecondAvoid = True Then
+		$village = GetVillageSize($DebugLog, "stone", "tree", $bForceBB)
 	Else
 		; try secondary images
-		$village = GetVillageSize($DebugLog, "2stone", "2tree")
-		If @error = 2 Then $village = GetVillageSize($DebugLog, "stone", "tree")
+		$village = GetVillageSize($DebugLog, "2stone", "2tree", $bForceBB)
+		If @error = 2 Then
+			$village = GetVillageSize($DebugLog, "stone", "tree", $bForceBB)
+			$bSecondAvoid = False
+		EndIf
 	EndIf
 
 	; compare other stone measures
@@ -540,7 +551,7 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 				If $bVersusMode = False Then ClickAway()
 				ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y)
 				If _Sleep(1000) Then Return $aResult
-				Local $aResult2 = SearchZoomOut(False, $UpdateMyVillage, "SearchZoomOut:" & $sSource, True, $DebugLog)
+				Local $aResult2 = SearchZoomOut(False, $UpdateMyVillage, "SearchZoomOut:" & $sSource, True, $DebugLog, $bVersusMode)
 				; update difference in offset
 				$aResult2[3] = $aResult2[1] - $aResult[1]
 				$aResult2[4] = $aResult2[2] - $aResult[2]
@@ -574,7 +585,7 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 	EndIf
 
 	If $bMustDrag = True Or ($g_aiSearchZoomOutCounter[0] = 5 And $aResult[0] = "") Then
-		Local $bIsOnBuilderBase = ($bVersusMode = False) ? (isOnBuilderBase(False, False) = True) : (True)
+		Local $bIsOnBuilderBase = ($bVersusMode = True) ? (True) : (isOnBuilderBase(False, False) = True)
 		If $bIsOnBuilderBase = False Then
 			ClickDrag($aScrollPos[0] - 100, $aScrollPos[1] - 70, $aScrollPos[0], $aScrollPos[1], 1000, True)
 		Else
