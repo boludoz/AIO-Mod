@@ -101,7 +101,7 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 	Local $exitCount = 80
 	Local $delayCount = 20
 	ForceCaptureRegion()
-	Local $aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
+	Local $aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "DefaultZoomOut", True)
 
 	If StringInStr($aPicture[0], "zoomou") = 0 Then
 		If $g_bDebugSetlog Then
@@ -426,7 +426,7 @@ EndFunc   ;==>AndroidOnlyZoomOut
 ; 2 = Current Village Y Offset (after centering village)
 ; 3 = Difference of previous Village X Offset and current (after centering village)
 ; 4 = Difference of previous Village Y Offset and current (after centering village)
-Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag, $UpdateMyVillage = True, $sSource = "", $CaptureRegion = True, $DebugLog = $g_bDebugSetlog, $bDebugWithImage = $g_bDebugImageSave, $bVersusMode = False)
+Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag, $UpdateMyVillage = True, $sSource = "", $CaptureRegion = True, $DebugLog = $g_bDebugSetlog, $bVersusMode = False)
 	FuncEnter(SearchZoomOut)
 	Local $aResultSafe = ["", 0, 0, 0, 0] ; expected dummy value
 	Local $aResult = _SearchZoomOut($CenterVillageBoolOrScrollPos, $UpdateMyVillage, $sSource, $CaptureRegion, $DebugLog, $bVersusMode)
@@ -455,7 +455,7 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 		$aScrollPos[1] = $CenterVillageBoolOrScrollPos[1]
 		$bCenterVillage = (Not $g_bDebugDisableVillageCentering)
 	EndIf
-	
+
 	; Setup arrays, including default return values for $return
 	Local $x, $y, $z, $stone[2], $tree[2]
 	Local $villageSize = 0
@@ -471,7 +471,7 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 	Else
 		; try secondary images
 		$village = GetVillageSize($DebugLog, "2stone", "2tree")
-		If @error = 2 Then $village = GetVillageSize($bDebugLog, "stone", "tree")
+		If @error = 2 Then $village = GetVillageSize($DebugLog, "stone", "tree")
 	EndIf
 
 	; compare other stone measures
@@ -498,7 +498,7 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 	Local $iRefSize = 0
 	Local $iMinSize = 0
 	Local $iMaxSize = 0
-	
+
 	Local $bMustDrag = False
 
 	If IsArray($village) = 1 Then
@@ -572,7 +572,7 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 	Else
 		$bMustDrag = True
 	EndIf
-	
+
 	If $bMustDrag = True Or ($g_aiSearchZoomOutCounter[0] = 5 And $aResult[0] = "") Then
 		Local $bIsOnBuilderBase = ($bVersusMode = False) ? (isOnBuilderBase(False, False) = True) : (True)
 		If $bIsOnBuilderBase = False Then
@@ -582,7 +582,7 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 		EndIf
 		$aResult[0] = ""
 	EndIf
-	
+
 	If $UpdateMyVillage Or $bMustDrag = True Then
 		If $aResult[0] = "" Then
 			If $g_aiSearchZoomOutCounter[0] > 20 Then
