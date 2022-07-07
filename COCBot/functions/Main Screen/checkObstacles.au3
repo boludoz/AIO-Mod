@@ -22,7 +22,7 @@ Func checkObstacles($bBuilderBase = Default) ;Checks if something is in the way 
 		; Android not available
 		Return FuncReturn(True)
 	EndIf
-	If _ColorCheck(_GetPixelColor(383, 405), Hex(0xF0BE70, 6), 20) Then
+	If _ColorCheck(_GetPixelColor(383, 405 + $g_iMidOffsetYFixed), Hex(0xF0BE70, 6), 20) Then
 		SetLog("Found Switch Account dialog!", $COLOR_INFO)
 		PureClick(383, 375 + $g_iMidOffsetY, 1, 0, "Click Cancel")
 	EndIf
