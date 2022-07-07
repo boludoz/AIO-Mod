@@ -426,10 +426,10 @@ EndFunc   ;==>AndroidOnlyZoomOut
 ; 2 = Current Village Y Offset (after centering village)
 ; 3 = Difference of previous Village X Offset and current (after centering village)
 ; 4 = Difference of previous Village Y Offset and current (after centering village)
-Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag, $UpdateMyVillage = True, $sSource = "", $CaptureRegion = True, $DebugLog = $g_bDebugSetlog, $bDebugWithImage = $g_bDebugImageSave)
+Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag, $UpdateMyVillage = True, $sSource = "", $CaptureRegion = True, $DebugLog = $g_bDebugSetlog, $bDebugWithImage = $g_bDebugImageSave, $bVersusMode = False)
 	FuncEnter(SearchZoomOut)
 	Local $aResultSafe = ["", 0, 0, 0, 0] ; expected dummy value
-	Local $aResult = _SearchZoomOut($CenterVillageBoolOrScrollPos, $UpdateMyVillage, $sSource, $CaptureRegion, $DebugLog)
+	Local $aResult = _SearchZoomOut($CenterVillageBoolOrScrollPos, $UpdateMyVillage, $sSource, $CaptureRegion, $DebugLog, $bVersusMode)
 	If UBound($aResult) >= 5 And not @error Then Return $aResult
 	Return FuncReturn($aResultSafe)
 EndFunc
@@ -444,7 +444,7 @@ EndFunc
 ; 2 = Current Village Y Offset (after centering village)
 ; 3 = Difference of previous Village X Offset and current (after centering village)
 ; 4 = Difference of previous Village Y Offset and current (after centering village)
-Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag, $UpdateMyVillage = True, $sSource = "", $CaptureRegion = True, $DebugLog = $g_bDebugSetlog)
+Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag, $UpdateMyVillage = True, $sSource = "", $CaptureRegion = True, $DebugLog = $g_bDebugSetlog, $bVersusMode = False)
 	FuncEnter(SearchZoomOut)
 	If $sSource <> "" Then $sSource = " (" & $sSource & ")"
 	Local $bCenterVillage = $CenterVillageBoolOrScrollPos
@@ -499,7 +499,7 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 	Local $iMinSize = 0
 	Local $iMaxSize = 0
 	
-	Local $g_bOnBuilderBaseEnemyVillage = False, $bMustDrag = False
+	Local $bMustDrag = False
 
 	If IsArray($village) = 1 Then
 		$villageSize = $village[0]
@@ -524,7 +524,7 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 			$aResult[0] = "zoomout:" & $village[6]
 			$aResult[1] = $x
 			$aResult[2] = $y
-			If $bCenterVillage And ($x <> 0 Or $y <> 0) And ($UpdateMyVillage = False Or $x <> $g_iVILLAGE_OFFSET[0] Or $y <> $g_iVILLAGE_OFFSET[1]) And Not $g_bOnBuilderBaseEnemyVillage Then
+			If $bCenterVillage And ($x <> 0 Or $y <> 0) And ($UpdateMyVillage = False Or $x <> $g_iVILLAGE_OFFSET[0] Or $y <> $g_iVILLAGE_OFFSET[1]) Then
 				If $DebugLog Then SetDebugLog("Center Village" & $sSource & " by: " & $x & ", " & $y)
 ;~ 				If IsCoordSafe($stone[0], $stone[1]) Then
 ;~ 					$aScrollPos[0] = $stone[0]
@@ -537,7 +537,7 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 					$aScrollPos[1] = $aCenterHomeVillageClickDrag[1]
 ;~ 				EndIf
  				If $g_bDebugImageSave Then SaveDebugPointImage("SearchZoomOut", $aScrollPos)
-				ClickAway()
+				If $bVersusMode = False Then ClickAway()
 				ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y)
 				If _Sleep(1000) Then Return $aResult
 				Local $aResult2 = SearchZoomOut(False, $UpdateMyVillage, "SearchZoomOut:" & $sSource, True, $DebugLog)
@@ -556,7 +556,7 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 				ConvertInternalExternArea("SearchZoomOut", $g_bDebugImageSave) ; generate correct internal/external diamond measures
 			EndIf
 		Else ; found one fixed point - center using that then force another zoomout
-			If $g_bOnBuilderBaseEnemyVillage And $g_aiSearchZoomOutCounter[0] = 0 Then
+			If $bVersusMode And $g_aiSearchZoomOutCounter[0] = 0 Then
 				SetLog("Builder Base Enemy Village First Zoom - no centering")
 				$bMustDrag = True
 			Else
@@ -574,7 +574,7 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 	EndIf
 	
 	If $bMustDrag = True Or ($g_aiSearchZoomOutCounter[0] = 5 And $aResult[0] = "") Then
-		Local $bIsOnBuilderBase = isOnBuilderBase()
+		Local $bIsOnBuilderBase = ($bVersusMode = False) ? (isOnBuilderBase(False, False) = True) : (True)
 		If $bIsOnBuilderBase = False Then
 			ClickDrag($aScrollPos[0] - 100, $aScrollPos[1] - 70, $aScrollPos[0], $aScrollPos[1], 1000, True)
 		Else
