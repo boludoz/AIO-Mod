@@ -572,13 +572,8 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 		$bMustDrag = True
 	EndIf
 	
-	If $bMustDrag = True Or ($g_aiSearchZoomOutCounter[0] = 5 And $aResult[0] = "") Then
-		Local $bIsOnBuilderBase = isOnBuilderBase()
-		If $bIsOnBuilderBase = False Then
-			ClickDrag($aScrollPos[0] - 100, $aScrollPos[1] - 70, $aScrollPos[0], $aScrollPos[1], 1000, True)
-		Else
-			ClickDrag(100, 130, 230, 30, 1000)
-		EndIf
+	If $bMustDrag = True Then
+		ClickDrag($aScrollPos[0] - 100, $aScrollPos[1] - 70, $aScrollPos[0], $aScrollPos[1], 1000, True)
 		$aResult[0] = ""
 	EndIf
 	
