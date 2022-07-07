@@ -13,14 +13,20 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func isOnBuilderBase($bNeedCaptureRegion = False)
+Func isOnBuilderBase($bNeedCaptureRegion = False, $bOnAttack = False)
 	If _Sleep($DELAYISBUILDERBASE) Then Return
 	Local $asSearchResult = findMultiple($g_sImgIsOnBB, GetDiamondFromRect("260,0,406,54"), GetDiamondFromRect("260,0,406,54"), 0, 1000, 1, "objectname", $bNeedCaptureRegion) ; Resolution changed
 
 	If IsArray($asSearchResult) And UBound($asSearchResult) > 0 Then
 		SetDebugLog("Builder Base Builder detected", $COLOR_DEBUG)
 		Return True
-	Else
-		Return False
+		; Custom fix - Team AIO Mod++
+	ElseIf $bOnAttack = True Then
+		$asSearchResult = findMultiple($g_sImgIsOnBB & "OnAttack\", GetDiamondFromRect("344,57,854,245"), GetDiamondFromRect("344,57,854,245"), 0, 1000, 1, "objectname", $bNeedCaptureRegion) ; Resolution changed
+		If IsArray($asSearchResult) And UBound($asSearchResult) > 0 Then
+			SetDebugLog("Builder Base Builder attack detected", $COLOR_DEBUG)
+			Return True
+		EndIf	
 	EndIf
+	Return False
 EndFunc

@@ -471,6 +471,7 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 	Else
 		; try secondary images
 		$village = GetVillageSize($DebugLog, "2stone", "2tree")
+		If @error = 2 Then $village = GetVillageSize($bDebugLog, "stone", "tree")
 	EndIf
 
 	; compare other stone measures

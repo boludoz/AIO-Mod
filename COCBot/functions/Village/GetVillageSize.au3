@@ -41,7 +41,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	EndIf
 
 	If $bOnBuilderBase = Default Then
-		$bOnBuilderBase = isOnBuilderBase(False)
+		$bOnBuilderBase = isOnBuilderBase(False, True)
 	EndIf
 
 	Local $sDirectory
@@ -51,16 +51,21 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		$sDirectory = $g_sImgZoomOutDir
 	EndIf
 
-	Local $iAdditionalX = 200
-	Local $iAdditionalY = 150
+	Local $iAdditionalX = 250
+	Local $iAdditionalY = 205
 	Local $aResult = 0, $x, $y
 
 	$stone = FindStone($sDirectory, $sStonePrefix, $iAdditionalX, $iAdditionalY, $bCaptureRegion)
 
+	Local $iError = 0
 	If UBound($stone) > 3 And not @error And $stone[0] = 0 Then
 		$tree = FindTree($sDirectory, $sTreePrefix, $iAdditionalX, $iAdditionalY, "", $bCaptureRegion)
+		$iError = @error
+		If $iError = 2 Then Return SetError($iError, 0, $tree)
 	Else
 		$tree = FindTree($sDirectory, $sTreePrefix, $iAdditionalX, $iAdditionalY, $stone[4], $bCaptureRegion)
+		$iError = @error
+		If $iError = 2 Then Return SetError($iError, 0, $tree)
 	EndIf
 
 	If $stone[0] = 0 Then
@@ -234,7 +239,7 @@ Func FindTree($sDirectory = $g_sImgZoomOutDir, $sTreePrefix = "tree", $iAddition
 	Local $aTreeFiles = _FileListToArray($sDirectory & "tree\", $sTreePrefix & "*.*", $FLTA_FILES)
 	If @error Then
 		SetLog("Error: Missing tree (" & @error & ")", $COLOR_ERROR)
-		Return $tree
+		Return SetError(2, 0, $tree)
 	EndIf
 
 	Local $scenerycode = "tree" & "*" & $sStoneName, $aiCorrection[4]

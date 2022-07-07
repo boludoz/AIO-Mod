@@ -129,17 +129,23 @@ Func _CaptureGameScreen(ByRef $_hHBitmap, Const $iLeft = 0, Const $iTop = 0, Con
 			EndIf
 		EndIf
 		If $g_bChkBackgroundMode = True Then
-			Local $bBackgroundMode = $g_bAndroidAdbScreencap
+			Local $bAndroidAdbScreencap = $g_bAndroidAdbScreencap
 			For $i = 0 To 1
-				If $bBackgroundMode = True Then
+				If $bAndroidAdbScreencap = True Then
 					$_hHBitmap = AndroidScreencap($iL, $iT, $iW, $iH)
+					Local $iError = @error
+					If $iError <> 0 Then
+						SetLog("AndroidScreencap error : " & $iError, $COLOR_ERROR)
+						$bAndroidAdbScreencap = False
+						ContinueLoop
+					EndIf
 				Else
 					$SuspendMode = ResumeAndroid(False)
 					; Local $hCtrl = ControlGetHandle($g_hAndroidWindow, $g_sAppPaneName, $g_sAppClassInstance)
 					Local $hCtrl = ControlGetHandle(GetCurrentAndroidHWnD(), $g_sAppPaneName, $g_sAppClassInstance)
 					If $hCtrl = 0 Then
 						SetLog("AndroidHandle not found, contact support", $COLOR_ERROR)
-						$bBackgroundMode = True
+						$bAndroidAdbScreencap = True
 						ContinueLoop
 					EndIf
 					Local $hDC_Capture = _WinAPI_GetDC($hCtrl)

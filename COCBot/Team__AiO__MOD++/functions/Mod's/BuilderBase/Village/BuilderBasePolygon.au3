@@ -50,9 +50,9 @@ Func BuilderBaseZoomOut($bForceZoom = Default, $bVersusMode = True, $bDebugWithI
 		; Run the ZoomOut Script
 		If BuilderBaseSendZoomOut(False, $i) Then
 			; Get the Distances between images
-			Local $aSize = SearchZoomOutBB(True, "", $bVersusMode = False, True, $g_bDebugSetlog, $bDebugWithImage)
+			Local $aResult = SearchZoomOut($aCenterHomeVillageClickDrag, True, "BuilderBaseZoomOut", True, $g_bDebugSetlog)
 			If @error Then Return False
-			If IsArray($aSize) And $aSize[0] <> "" Then Return True
+			If $aResult[0] <> "" Then Return True
 		Else
 			SetDebugLog("[BBzoomout] Send Script Error!", $COLOR_DEBUG)
 		EndIf
@@ -69,116 +69,6 @@ Func BuilderBaseSendZoomOut($bWar = False, $i = 0)
 	SetDebugLog("[" & $i & "][BuilderBaseSendZoomOut OUT]")
 	Return True
 EndFunc   ;==>BuilderBaseSendZoomOut
-
-; SearchZoomOutBB returns always an Array.
-; If village can be measured and villages size < 500 pixel then it returns in idx 0 a String starting with "zoomout:" and tries to center base
-; Return Array:
-; 0 = Empty string if village cannot be measured (e.g. window blocks village or not zoomed out)
-; 1 = Current Village X Offset (after centering village)
-; 2 = Current Village Y Offset (after centering village)
-; 3 = Difference of previous Village X Offset and current (after centering village)
-; 4 = Difference of previous Village Y Offset and current (after centering village)
-Func SearchZoomOutBB($bUpdateMyVillage = True, $sSource = "", $bCenterVillage = True, $bCaptureRegion = True, $bDebugLog = $g_bDebugSetlog, $bDebugWithImage = False)
-	If Not $g_bRunState Then Return
-	If $sSource <> "" Then $sSource = " (" & $sSource & ")"
-
-	; Setup arrays, including default return values for $return
-	Local $x, $y, $z, $aStone[2], $aTree[2]
-	Local $iVillageSize = 0
-
-
- 	Local $aResult = ["", 0, 0, 0, 0] ; expected dummy value
-
-	If $g_bSkipFirstZoomout = True Then
-		$g_bSkipFirstZoomout = False
-		Return $aResult
-	EndIf
-
-	If $bCaptureRegion Then _CaptureRegion2()
-	Local $aVillage
-	If $g_aiSearchZoomOutCounter[0] = 6 Then SetLog("Try secondary village measuring...", $COLOR_INFO)
-	If $g_aiSearchZoomOutCounter[0] < 6 Then
-		$aVillage = GetVillageSize($bDebugLog, "stone", "tree", Default, True, False, $bCenterVillage = False)
-	Else
-		; try secondary images
-		$aVillage = GetVillageSize($bDebugLog, "2stone", "2tree", Default, True, False, $bCenterVillage = False)
-	EndIf
-
-	If IsArray($aVillage) = 1 Then
-		$aStone[0] = $aVillage[4]
-		$aStone[1] = $aVillage[5]
-		$aTree[0] = $aVillage[7]
-		$aTree[1] = $aVillage[8]
-		$iVillageSize = $aVillage[0]
-		If $iVillageSize > 400 And $iVillageSize < 750 Or $g_bDebugDisableZoomout And $aStone[0] > 0 And $aTree[0] > 0 Then ; xbebenk
-			$z = $aVillage[1]
-			$x = $aVillage[2]
-			$y = $aVillage[3]
-			$aResult[0] = "zoomout:" & $aVillage[6]
-			$aResult[1] = $x
-			$aResult[2] = $y
-
-			If $bCenterVillage = True Then
-				ClickDrag(100, 130, 230, 30, 1000)
-				If _Sleep(1500) Then Return
-				If Not $g_bRunState Then Return $aResult
-
-				Local $aResult2 = SearchZoomOutBB($bUpdateMyVillage, "SearchZoomOutBB(1):" & $sSource, False, True, $bDebugLog, $bDebugWithImage)
-				; update difference in offset
-				$aResult2[3] = $aResult2[1] - $aResult[1]
-				$aResult2[4] = $aResult2[2] - $aResult[2]
-				If $bDebugLog Then SetDebugLog("Centered Village Offset" & $sSource & ": " & $aResult2[1] & ", " & $aResult2[2] & ", change: " & $aResult2[3] & ", " & $aResult2[4])
-				Return $aResult2
-			EndIf
-
-			If $bUpdateMyVillage Then
-				If $x <> $g_iVILLAGE_OFFSET[0] Or $y <> $g_iVILLAGE_OFFSET[1] Or $z <> $g_iVILLAGE_OFFSET[2] Then
-					If $bDebugLog Then SetDebugLog("Village Offset" & $sSource & " updated to " & $x & ", " & $y & ", " & $z)
-				EndIf
-				setVillageOffset($x, $y, $z)
-				ConvertInternalExternArea("SearchZoomOutBB", $bDebugWithImage) ; generate correct internal/external diamond measures
-			EndIf
-		Else
-			ClickDrag(100, 130, 230, 30, 1000)
-			If _Sleep(1500) Then Return
-			If Not $g_bRunState Then Return $aResult
-		EndIf
-	Else
-		ClickDrag(100, 130, 230, 30, 1000)
-		If _Sleep(1500) Then Return
-		If Not $g_bRunState Then Return $aResult
-	EndIf
-
-	If $bCenterVillage Then
-		If $aResult[0] = "" Then
-			If $g_aiSearchZoomOutCounter[0] > 12 Then
-				$g_aiSearchZoomOutCounter[0] = 0
-				Static $iCallCount = 0
-				$iCallCount += 1
-				If $iCallCount <= 2 Then
-					;CloseCoC(True)
-					SetLog("Restart CoC to reset zoom" & $sSource & "...", $COLOR_INFO)
-					PoliteCloseCoC("Zoomout" & $sSource)
-					If _Sleep(1000) Then Return $aResult
-					CloseCoC() ; ensure CoC is gone
-					OpenCoC()
-					waitMainScreen()
-				Else
-					SetLog("Restart Android to reset zoom" & $sSource & "...", $COLOR_INFO)
-					$iCallCount = 0
-					RebootAndroid()
-					If _Sleep(1000) Then Return $aResult
-					waitMainScreen()
-				EndIf
-				Return SearchZoomOutBB($bUpdateMyVillage, "SearchZoomOutBB:" & $sSource, True, $bDebugLog)
-			Else
-				$g_aiSearchZoomOutCounter[0] += 1
-			EndIf
-		EndIf
-	EndIf
-
-	Return $aResult
-EndFunc   ;==>SearchZoomOutBB
 
 Func DebugZoomOutBB($x, $y, $x1, $y1, $aBoat, $DebugText)
 
