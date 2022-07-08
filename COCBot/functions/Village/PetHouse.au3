@@ -46,15 +46,6 @@ Func PetHouse($test = False)
 
 	If Not $bUpgradePets Then Return
 
-	If LocatePetHouse() Then
-		SetLog("Pet House Location unknown!", $COLOR_WARNING)
-		
-		; Pet House location unknown, so find it.
-		SetLog("Problem locating Pet House, re-locate Pet House position before proceeding", $COLOR_ERROR)
-		ClickAway()
-		Return False
-	EndIf
-
  	If PetUpgradeInProgress() Then Return False ; see if we know about an upgrade in progress without checking the Pet House
 
 	; Get updated village elixir and dark elixir values
@@ -71,8 +62,10 @@ Func PetHouse($test = False)
 		Return
 	EndIf
 
-	;Click Pet House
-	If PetsByPassed() Then Return False ; Custom buildings - Team AIO Mod++
+	If Not PetsByPassed() Then
+		SetLog("Pet House Location unknown!", $COLOR_WARNING)
+		Return False
+	EndIf
 
 	If CheckPetUpgrade() Then Return False ; cant start if something upgrading
 
