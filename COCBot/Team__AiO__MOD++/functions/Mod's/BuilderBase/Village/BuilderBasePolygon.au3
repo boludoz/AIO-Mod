@@ -51,6 +51,7 @@ Func BuilderBaseZoomOut($bForceZoom = Default, $bVersusMode = False, $bDebugWith
 		AndroidShield("AndroidOnlyZoomOut")
 		; Run the ZoomOut Script
 		If BuilderBaseSendZoomOut(False, $i) Then
+			If $i = 0 Or $i = 3 Then ClickDrag(100, 130, 230, 30)
 			; Get the Distances between images
 			Local $aResult = SearchZoomOut($aCenterHomeVillageClickDrag, True, "BuilderBaseZoomOut", True, $g_bDebugSetlog, $bVersusMode)
 			If UBound($aResult) < 1 Or @error Then Return False
