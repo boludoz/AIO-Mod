@@ -40,6 +40,24 @@ Func TestBuilderBaseZoomOut()
 	Setlog("** TestBuilderBaseZoomOutOnAttack END**", $COLOR_DEBUG)
 EndFunc   ;==>TestBuilderBaseZoomOut
 
+Func ZoomHelper($bVersusMode = False, $bNeedCaptureRegion = True)
+	Local $aDragTo = [539, 103]
+	If $bVersusMode = True Then
+		$aDragTo[0] = 545
+		$aDragTo[1] = 130
+	EndIf
+
+	Local $aCoords = decodeSingleCoord(findMultiple(@ScriptDir & "\imgxml\village\BuilderBase\ZoomHelper\", GetDiamondFromRect("226,0,697,249"), GetDiamondFromRect("226,0,697,249"), 0, 1000, 1, "objectname,objectpoints", $bNeedCaptureRegion)) ; Resolution changed
+	If UBound($aCoords) >= 2 And not @error Then
+		If Pixel_Distance($aCoords[0], $aCoords[1], $aDragTo[0], $aDragTo[1]) > 16 Then
+			ClickDrag($aCoords[0], $aCoords[1], $aDragTo[0], $aDragTo[1])
+		EndIf
+		Return True
+	EndIf
+	
+	Return False
+EndFunc   ;==>ZoomHelper
+
 Func BuilderBaseZoomOut($bForceZoom = Default, $bVersusMode = False, $bDebugWithImage = False)
 	$g_aiSearchZoomOutCounter[0] = 0
 	$g_aiSearchZoomOutCounter[1] = 0
@@ -51,11 +69,17 @@ Func BuilderBaseZoomOut($bForceZoom = Default, $bVersusMode = False, $bDebugWith
 		AndroidShield("AndroidOnlyZoomOut")
 		; Run the ZoomOut Script
 		If BuilderBaseSendZoomOut(False, $i) Then
-			If $i = 0 Or $i = 3 Then ClickDrag(100, 130, 230, 30)
+			If $i = 0 Or $i = 3 Then
+				If ZoomHelper($bVersusMode, True) = False Then 
+					ClickDrag(514, 187, 545, 130)
+				EndIf
+			EndIf
 			; Get the Distances between images
 			Local $aResult = SearchZoomOut($aCenterHomeVillageClickDrag, True, "BuilderBaseZoomOut", True, $g_bDebugSetlog, $bVersusMode)
 			If UBound($aResult) < 1 Or @error Then Return False
 			If $aResult[0] <> "" Then
+				$g_aiSearchZoomOutCounter[0] = 0
+				$g_aiSearchZoomOutCounter[1] = 0
 				Return True
 			EndIf
 		Else
