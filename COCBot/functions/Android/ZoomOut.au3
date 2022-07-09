@@ -474,9 +474,9 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 		SetLog("[SearchZoomOut] Try secondary village measuring.", $COLOR_INFO)
 	EndIf
 
-	If $bForceBB = True Or $bVersusMode = True Then
+	If $bForceBB = True Then
 		If $g_aiSearchZoomOutCounter[0] = 0 Or $g_aiSearchZoomOutCounter[0] = 3 Then
-			If $g_aiSearchZoomOutCounter[0] = 0 Then SetLog("[SearchZoomOut] Is on builder base attack ? " & String($bForceBB = True), $COLOR_INFO)
+			If $g_aiSearchZoomOutCounter[0] = 0 Then SetLog("[SearchZoomOut] Is on builder base attack ? " & String($bVersusMode == True), $COLOR_INFO)
 			ClickDrag(100, 130, 230, 30, 1000)
 			$g_aiSearchZoomOutCounter[0] += 1
 			If _Sleep(750) Then Return 
