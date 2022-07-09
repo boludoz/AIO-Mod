@@ -1005,7 +1005,7 @@ Global $g_iChkBBSuggestedUpgrades = 0, $g_iChkBBSuggestedUpgradesIgnoreGold = 0,
 Global $g_iChkPlacingNewBuildings = 0
 Global $g_bStayOnBuilderBase = False ; set to True in MyBot.run.au3 _RunFunction when on builder base
 
-Global $g_iQuickMISX = 0, $g_iQuickMISY = 0, $g_iQuickMISName = "" ; AIO Mod++
+Global $g_iQuickMISX = 0, $g_iQuickMISY = 0, $g_iQuickMISName = ""
 
 ; <><><><> Village / Achievements <><><><>
 Global $g_iUnbrkMode = 0, $g_iUnbrkWait = 5
@@ -2010,9 +2010,6 @@ Global $IMGLOCTHNEAR
 Global $IMGLOCTHFAR
 Global $IMGLOCTHRDISTANCE
 
-; Team AiO MOD++ (2019)
-#include "Team__AiO__MOD++\Globals_Team__AiO__MOD++.au3"
-
 Global $g_bIsModeActive[$g_iModeCount]
 
 ;ClanCapital
@@ -2020,3 +2017,7 @@ Global $g_iLootCCGold = 0, $g_iLootCCMedal = 0, $g_bChkEnableAutoUpgradeCC = Fal
 Global $g_bChkEnableCollectCCGold = False, $g_bChkEnableForgeGold = False, $g_bChkEnableForgeElix = False
 Global $g_bChkEnableForgeDE = False, $g_bChkEnableForgeBBGold = False, $g_bChkEnableForgeBBElix = False, $g_iCmbForgeBuilder = 0
 Global $aCCBuildingIgnore[9] = ["Grove", "Tree", "Forest", "Campsite", "Stone Circle", "Stone", "Pillar", "Forest Circle", "The First"]
+
+; Team AiO MOD++ (2019)
+#include "Team__AiO__MOD++\Globals_Team__AiO__MOD++.au3"
+
