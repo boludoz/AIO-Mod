@@ -467,21 +467,12 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 	Local $village
 	Local $bForceBB = ($bVersusMode = False) ? (Default) : (True)
 	
-	Static $bSecondAvoid = False
-	If $g_aiSearchZoomOutCounter[0] = 0 Then
-		$bSecondAvoid = False
-	ElseIf $g_aiSearchZoomOutCounter[0] = 10 Then
-		SetLog("[SearchZoomOut] Try secondary village measuring.", $COLOR_INFO)
-	EndIf
-
-	If $bForceBB = True Then
-		If $g_aiSearchZoomOutCounter[0] = 0 Or $g_aiSearchZoomOutCounter[0] = 3 Then
-			If $g_aiSearchZoomOutCounter[0] = 0 Then SetLog("[SearchZoomOut] Is on builder base attack ? " & String($bVersusMode == True), $COLOR_INFO)
-			ClickDrag(100, 130, 230, 30, 1000)
-			$g_aiSearchZoomOutCounter[0] += 1
-			If _Sleep(750) Then Return 
-			Return $aResult
-		EndIf
+	If $g_aiSearchZoomOutCounter[0] = 0 And $bForceBB = True Then
+		SetLog("[SearchZoomOut] Is on builder base attack ? " & String($bVersusMode == True), $COLOR_INFO)
+		ClickDrag(100, 130, 230, 30, 1000)
+		$g_aiSearchZoomOutCounter[0] += 1
+		If _Sleep(750) Then Return 
+		Return $aResult
 	EndIf
 
 	If $DebugLog Then 
@@ -489,14 +480,15 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 		SetLog("[SearchZoomOut] $bVersusMode : " & String($bVersusMode), $COLOR_INFO)
 	EndIf
 	
-	If $g_aiSearchZoomOutCounter[0] < 10 Or $bSecondAvoid = True Then
+	If $g_aiSearchZoomOutCounter[0] < 10 Then
 		$village = GetVillageSize($DebugLog, "stone", "tree", Default, $bForceBB)
 	Else
+		SetLog("[SearchZoomOut] Try secondary village measuring.", $COLOR_INFO)
+		
 		; try secondary images
 		$village = GetVillageSize($DebugLog, "2stone", "2tree", Default, $bForceBB)
 		If @error = 2 Then
-			$village = GetVillageSize($DebugLog, "stone", "tree", Default, $bForceBB)
-			$bSecondAvoid = True
+			$g_aiSearchZoomOutCounter[0] = 20
 		EndIf
 	EndIf
 

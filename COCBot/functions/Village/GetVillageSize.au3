@@ -54,10 +54,12 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	Local $iAdditionalX = 250
 	Local $iAdditionalY = 205
 	Local $aResult = 0, $x, $y
+	Local $iError = 0
 
 	$stone = FindStone($sDirectory, $sStonePrefix, $iAdditionalX, $iAdditionalY, $bCaptureRegion)
+	$iError = @error
+	If $iError = 2 Then Return SetError($iError, 0, $stone)
 
-	Local $iError = 0
 	If UBound($stone) > 3 And not @error And $stone[0] = 0 Then
 		$tree = FindTree($sDirectory, $sTreePrefix, $iAdditionalX, $iAdditionalY, "", $bCaptureRegion)
 		$iError = @error
@@ -187,6 +189,7 @@ Func FindStone($sDirectory = $g_sImgZoomOutDir, $sStonePrefix = "stone", $iAddit
 
 		If @error Then
 			SetDebugLog("Error: Missing stone files (" & @error & ")", $COLOR_ERROR)
+			If $check = 2 Then Return SetError(2, 0, $stone)
 			ContinueLoop
 		EndIf
 
