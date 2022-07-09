@@ -208,6 +208,9 @@ EndFunc   ;==>GetMaxPoint
 ; Example .......: No
 ; ===============================================================================================================================
 Func Algorithm_AttackCSV($testattack = False, $captureredarea = True)
+	
+	; Custom CSV - Team AIO Mod++
+	CSVRandomization()
 
 	Local $g_aiPixelNearCollectorTopLeft[0]
 	Local $g_aiPixelNearCollectorBottomLeft[0]
@@ -901,4 +904,49 @@ Func FindWallCSV(ByRef $aCSVExternalWall, ByRef $aCSVInternalWall)
 	EndIf
 
 	Return $bResult
+EndFunc
+
+Global $g_sAttackScrScriptName1[2], $g_sAttackScrScriptName2[2]
+
+Func CSVRandomization($bDebug = False)
+	If $g_bDebugSetlog = True Or $bDebug = True Then SetLog("[CSVRandomization] Start")
+	
+	Local $sFilePath = ""
+	Local $aRandom[3]
+	Local $aModes[2] = [$DB, $LB]
+	Local $aiExtraCSVRandomDB[3] = [$g_sAttackScrScriptName[$DB], $g_sAttackScrScriptName1[$DB], $g_sAttackScrScriptName2[$DB]]
+	Local $aiExtraCSVRandomAB[3] = [$g_sAttackScrScriptName[$LB], $g_sAttackScrScriptName2[$LB], $g_sAttackScrScriptName3[$LB]]
+	
+	For $i = 0 To UBound($aModes) - 1
+		$sFilePath = ""
+		
+		Switch $aModes[$i]
+			Case $DB
+				$aRandom = $aiExtraCSVRandomDB
+			Case $LB
+				$aRandom = $aiExtraCSVRandomAB
+			Case Else
+				SetLog("[CSVRandomization] Wrong mode")
+				ExitLoop
+		EndSwitch
+
+		_ArrayShuffle($aRandom)
+
+		If $bDebug = True Then _ArrayDisplay($aRandom)
+		
+		For $ia = 0 To UBound($aRandom) -1
+			$sFilePath = $g_sAttackScrScriptName & "\" & $aRandom[$ia]
+			If FileExists($sFilePath) Then ExitLoop
+			$sFilePath = ""
+		Next
+		
+		If $sFilePath = "" Then
+			SetLog("[CSVRandomization] No random script found", $COLOR_ERROR)
+			ContinueLoop
+		EndIf
+
+		If $g_bDebugSetlog = True Or $bDebug = True Then SetLog("[CSVRandomization] Randomized CSV file: " & String($sFilePath), $COLOR_SUCCESS)
+		If $bDebug = False Then $g_sAttackScrScriptName[$aModes[$i]] = $aRandom[$ia]
+	Next
+
 EndFunc

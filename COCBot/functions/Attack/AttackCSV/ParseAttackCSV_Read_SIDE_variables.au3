@@ -4,7 +4,7 @@
 ; Syntax ........: ParseAttackCSV_Read_SIDE_variables()
 ; Parameters ....:
 ; Return values .: None
-; Author ........: Sardo (2016)
+; Author ........: Sardo (2016), Boldina (09 July, 2022)
 ; Modified ......:
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
@@ -31,20 +31,21 @@ Func ParseAttackCSV_Read_SIDE_variables()
 	$g_bCSVLocateWall = False
 	$g_bCSVLocateClanCastle = False ; Custom CSV - Team AIO Mod++
 
+	Local $sFilename = ""
 	If $g_iMatchMode = $DB Then
-		Local $filename = $g_sAttackScrScriptName[$DB]
+		$sFilename = $g_sAttackScrScriptName[$DB]
 	Else
-		Local $filename = $g_sAttackScrScriptName[$LB]
+		$sFilename = $g_sAttackScrScriptName[$LB]
 	EndIf
 
 	Local $f, $line, $acommand, $command
 	Local $value1, $value2, $value3, $value4, $value5, $value6, $value7, $value8, $value9
 	Local $bForceSideExist = False
 
-	If FileExists($g_sCSVAttacksPath & "\" & $filename & ".csv") Then
-		Local $aLines = FileReadToArray($g_sCSVAttacksPath & "\" & $filename & ".csv")
+	If FileExists($g_sCSVAttacksPath & "\" & $sFilename & ".csv") Then
+		Local $aLines = FileReadToArray($g_sCSVAttacksPath & "\" & $sFilename & ".csv")
 		If @error Then
-			SetLog("Attack CSV script not found: " & $g_sCSVAttacksPath & "\" & $filename & ".csv", $COLOR_ERROR)
+			SetLog("Attack CSV script not found: " & $g_sCSVAttacksPath & "\" & $sFilename & ".csv", $COLOR_ERROR)
 			Return
 		EndIf
 		For $iLine = 0 To UBound($aLines) - 1
@@ -127,6 +128,6 @@ Func ParseAttackCSV_Read_SIDE_variables()
 			EndIf
 		Next
 	Else
-		SetLog("Cannot find attack file " & $g_sCSVAttacksPath & "\" & $filename & ".csv", $COLOR_ERROR)
+		SetLog("Cannot find attack file " & $g_sCSVAttacksPath & "\" & $sFilename & ".csv", $COLOR_ERROR)
 	EndIf
 EndFunc   ;==>ParseAttackCSV_Read_SIDE_variables

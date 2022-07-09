@@ -1266,9 +1266,10 @@ Func Attack() ;Selects which algorithm
 	; Custom Fix - Team AIO Mod++
 	$g_bAttackActive = True
 	$g_bAttackClickFC = True
+	
 	SetLog(" ====== Start Attack ====== ", $COLOR_SUCCESS)
 	If ($g_iMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 1) Or ($g_iMatchMode = $LB And $g_aiAttackAlgorithm[$LB] = 1) Then
-		SetDebugLog("start scripted attack", $COLOR_ERROR)
+		SetDebugLog("Start scripted attack", $COLOR_INFO)
 		Algorithm_AttackCSV()
 	ElseIf $g_iMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 2 Then
 		SetDebugLog("start smart farm attack", $COLOR_ERROR)
