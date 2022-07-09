@@ -79,7 +79,7 @@ Func ConvertInternalExternArea($FunctionName = "", $bDebugImage = Default)
 			[$InnerDiamondLeft + ($DiamondMiddleX - $InnerDiamondLeft) / 2, $DiamondMiddleY + ($InnerDiamondBottom - $DiamondMiddleY) / 2, "BOTTOM-LEFT"], _
 			[$DiamondMiddleX + ($InnerDiamondRight - $DiamondMiddleX) / 2, $DiamondMiddleY + ($InnerDiamondBottom - $DiamondMiddleY) / 2, "BOTTOM-RIGHT"] _
 			]
-	
+
 	Local $x, $y
 	; Update External coord.
 	For $i = 0 To 7
@@ -127,11 +127,11 @@ Func ConvertInternalExternArea($FunctionName = "", $bDebugImage = Default)
 			$InternalArea[1][0] & "," & $InternalArea[1][1] & "|" & _
 			$InternalArea[3][0] & "," & $InternalArea[3][1] & "|" & _
 			$InternalArea[0][0] & "," & $InternalArea[0][1]
-	
+
 	; Custom fix - Team AIO Mod++
 	$DiamondMiddleX = $InternalArea[0][0] + (($InternalArea[1][0] - $InternalArea[0][0]) / 2)
 	$DiamondMiddleY = $InternalArea[2][1] + (($InternalArea[3][1] - $InternalArea[2][1]) / 2)
-	
+
 	If $bDebugImage = Default Then $bDebugImage = $g_bDebugAttackCSV Or $g_bDebugImageSave
 	If $FunctionName <> "Start" And $bDebugImage = True Then
 		DebugInternalExternArea()
@@ -147,7 +147,7 @@ Func DebugInternalExternArea()
 	Local $hpenwhite = _gdiplus_pencreate(0xc0ffffff, 3)
 	Local $hpenblue = _gdiplus_pencreate(0xc00fbae9, 3)
 	Local $filename = String($date & "_" & $time & "_ConvertInternalExternArea_.png")
-	
+
 	;-- DRAW EXTERNAL PERIMETER LINES
 	_GDIPlus_GraphicsDrawLine($hGraphic, $ExternalArea[0][0], $ExternalArea[0][1], $ExternalArea[2][0], $ExternalArea[2][1], $hpenblue)
 	_GDIPlus_GraphicsDrawLine($hGraphic, $ExternalArea[0][0], $ExternalArea[0][1], $ExternalArea[3][0], $ExternalArea[3][1], $hpenblue)
@@ -160,7 +160,7 @@ Func DebugInternalExternArea()
 	_GDIPlus_GraphicsDrawLine($hGraphic, $InternalArea[1][0], $InternalArea[1][1], $InternalArea[2][0], $InternalArea[2][1], $hpenwhite)
 	_GDIPlus_GraphicsDrawLine($hGraphic, $InternalArea[1][0], $InternalArea[1][1], $InternalArea[3][0], $InternalArea[3][1], $hpenwhite)
 	_gdiplus_imagesavetofile($editedimage, $subdirectory & "\" & $filename)
-	
+
 	_gdiplus_pendispose($hpenwhite)
 	_gdiplus_pendispose($hpenblue)
 	_gdiplus_graphicsdispose($hgraphic)
@@ -208,7 +208,7 @@ EndFunc   ;==>GetMaxPoint
 ; Example .......: No
 ; ===============================================================================================================================
 Func Algorithm_AttackCSV($testattack = False, $captureredarea = True)
-	
+
 	; Custom CSV - Team AIO Mod++
 	CSVRandomization()
 
@@ -906,20 +906,20 @@ Func FindWallCSV(ByRef $aCSVExternalWall, ByRef $aCSVInternalWall)
 	Return $bResult
 EndFunc
 
-Global $g_sAttackScrScriptName1[2], $g_sAttackScrScriptName2[2]
 
 Func CSVRandomization($bDebug = False)
 	If $g_bDebugSetlog = True Or $bDebug = True Then SetLog("[CSVRandomization] Start")
-	
+	lOCAL $g_sAttackScrScriptName1[2], $g_sAttackScrScriptName2[2]
+
 	Local $sFilePath = ""
 	Local $aRandom[3]
 	Local $aModes[2] = [$DB, $LB]
 	Local $aiExtraCSVRandomDB[3] = [$g_sAttackScrScriptName[$DB], $g_sAttackScrScriptName1[$DB], $g_sAttackScrScriptName2[$DB]]
-	Local $aiExtraCSVRandomAB[3] = [$g_sAttackScrScriptName[$LB], $g_sAttackScrScriptName2[$LB], $g_sAttackScrScriptName3[$LB]]
-	
+	Local $aiExtraCSVRandomAB[3] = [$g_sAttackScrScriptName[$LB], $g_sAttackScrScriptName1[$LB], $g_sAttackScrScriptName2[$LB]]
+
 	For $i = 0 To UBound($aModes) - 1
 		$sFilePath = ""
-		
+
 		Switch $aModes[$i]
 			Case $DB
 				$aRandom = $aiExtraCSVRandomDB
@@ -933,13 +933,13 @@ Func CSVRandomization($bDebug = False)
 		_ArrayShuffle($aRandom)
 
 		If $bDebug = True Then _ArrayDisplay($aRandom)
-		
+
 		For $ia = 0 To UBound($aRandom) -1
 			$sFilePath = $g_sAttackScrScriptName & "\" & $aRandom[$ia]
 			If FileExists($sFilePath) Then ExitLoop
 			$sFilePath = ""
 		Next
-		
+
 		If $sFilePath = "" Then
 			SetLog("[CSVRandomization] No random script found", $COLOR_ERROR)
 			ContinueLoop
