@@ -496,7 +496,7 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 		$village = GetVillageSize($DebugLog, "2stone", "2tree", Default, $bForceBB)
 		If @error = 2 Then
 			$village = GetVillageSize($DebugLog, "stone", "tree", Default, $bForceBB)
-			$bSecondAvoid = False
+			$bSecondAvoid = True
 		EndIf
 	EndIf
 
