@@ -24,7 +24,7 @@ Func _CaptureRegion(Const $iLeft = 0, Const $iTop = 0, Const $iRight = $g_iGAME_
 	If $ReturnLocal_hHBitmap Then
 		; Custom fix - Team AIO Mod++
 		Static $_hHBitmap = 0
-		If $g_hHBitmap <> 0 Then GdiDeleteHBitmap($g_hHBitmap)
+		If $_hHBitmap <> 0 Then GdiDeleteHBitmap($_hHBitmap)
 		_CaptureGameScreen($_hHBitmap, $iLeft, $iTop, $iRight, $iBottom)
 		Return $_hHBitmap
 	EndIf
