@@ -463,16 +463,16 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 
 	Local $village
 	Local $bDraggedBB = False
-	
+
 	; Custom fix - Team AIO Mod++
-	If $bOnBuilderBase = True Then 
+	If $bOnBuilderBase = True Then
 		$bCenterVillage = (Not ZoomHelper($bBBAttack, False))
 		If _Sleep(1000) Then
 			$iCallCount = 0
 			Return FuncReturn($aResult)
 		EndIf
 	EndIf
-	
+
 	$village = GetVillageSize($DebugLog, "stone", "tree", Default, $bOnBuilderBase, $CaptureRegion, $bCenterVillage = False)
 
 	If $g_aiSearchZoomOutCounter[0] > 0 Then
@@ -495,8 +495,8 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 			$aResult[2] = $y
 			$g_bAndroidZoomoutModeFallback = False
 
-			
-			If $bCenterVillage And ($bOnBuilderBase Or Not $bUpdateSharedPrefs) And ($x <> 0 Or $y <> 0) And ($UpdateMyVillage = False Or $x <> $g_iVILLAGE_OFFSET[0] Or $y <> $g_iVILLAGE_OFFSET[1]) Then
+
+			If $bCenterVillage And ($x <> 0 Or $y <> 0) And ($UpdateMyVillage = False Or $x <> $g_iVILLAGE_OFFSET[0] Or $y <> $g_iVILLAGE_OFFSET[1]) Then
 				If $DebugLog Then SetDebugLog("Center Village" & $sSource & " by: " & $x & ", " & $y)
 				If $aScrollPos[0] = 0 And $aScrollPos[1] = 0 Then
 					;$aScrollPos[0] = $stone[0]
@@ -541,8 +541,9 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 			$aScrollPos[0] = $aCenterHomeVillageClickDrag[0]
 			$aScrollPos[1] = $aCenterHomeVillageClickDrag[1]
 		EndIf
-				
+
 		If $bDraggedBB = False Then
+			Local $iDragFix = ($g_aFallbackDragFix[2] - $g_aFallbackDragFix[1])
 			If Abs($iDragFix) > 150 Then $iDragFix = Ceiling($iDragFix / 2)
 			If $bOnBuilderBase Then $iDragFix *= -1
 

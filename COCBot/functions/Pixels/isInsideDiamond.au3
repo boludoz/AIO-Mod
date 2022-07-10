@@ -14,36 +14,42 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-
-Func isInsideDiamondXY($aCoordX, $aCoordY)
+Func isInsideDiamondXY($aCoordX, $aCoordY, $bPercentBased = True)
 
 	Local $aCoords = [$aCoordX, $aCoordY]
 	Return isInsideDiamond($aCoords)
 
 EndFunc   ;==>isInsideDiamondXY
 
-Func isInsideDiamond($aCoords)
+Func isInsideDiamond($aCoords, $bPercentBased = True)
 	
 	If UBound($aCoords) > 1 And not @error Then 
 		
-		; AIO Temp fix.
-		If $aCoords[0] <= 100 And $aCoords[1] <= 100 Then
+		; Barrani AIO Temp fix
+		If $aCoords[0] <= 100 And $aCoords[1] <= 100 And (Not $bPercentBased = False) Then
 			PercentToVillage($aCoords[0], $aCoords[1])
 		EndIf
 		
-		Local $iTolerance = 10
+		
 		Local $iX = $aCoords[0], $iY = $aCoords[1]
-		Local $iLeft = $ExternalArea[0][0], $iRight = $ExternalArea[1][0], $iTop = $ExternalArea[2][1], $iBottom = $ExternalArea[3][1]
+		Local $iLeft = $InternalArea[0][0], $iRight = $InternalArea[1][0], $iTop = $InternalArea[2][1], $iBottom = $InternalArea[3][1]
+		
+		Local $iFixX = (($iRight - $iLeft) * 1.086637298091043) - ($iRight - $iLeft)
+		Local $iFixY = (($iBottom - $iTop) * 1.086637298091043) - ($iBottom - $iTop)
+		
+		$iLeft = ($iLeft - $iFixX)
+		$iRight = ($iRight + $iFixX)
+		$iTop = ($iTop - $iFixY)
+		$iBottom = ($iBottom + $iFixY)
+		
+		; DebugsInsideDiamond($iLeft, $iRight, $iTop, $iBottom)
+		
 		Local $aDiamond[2][2] = [[$iLeft, $iTop], [$iRight, $iBottom]]
 		Local $aMiddle = [($aDiamond[0][0] + $aDiamond[1][0]) / 2, ($aDiamond[0][1] + $aDiamond[1][1]) / 2]
 		Local $aSize = [$aMiddle[0] - $aDiamond[0][0], $aMiddle[1] - $aDiamond[0][1]]
 
 		Local $iDX = Abs($iX - $aMiddle[0])
 		Local $iDY = Abs($iY - $aMiddle[1])
-
-		; Allow additional pixels
-		If $iDX >= $iTolerance Then $iDX -= $iTolerance
-		If $iDY >= $iTolerance Then $iDY -= $iTolerance
 
 		If ($iDX / $aSize[0] + $iDY / $aSize[1] <= 1) Then
 			If $iX < 70 And $iY > 270 Then ; coordinates where the game will click on the CHAT tab (safe margin)
@@ -71,3 +77,26 @@ Func isInsideDiamond($aCoords)
 		Return False ; Outside Village
 	EndIf
 EndFunc   ;==>isInsideDiamond
+
+Func DebugsInsideDiamond($iLeft, $iRight, $iTop, $iBottom)
+	Local $subdirectory = $g_sprofiletempdebugpath & "isInsideDiamond"
+	DirCreate($subdirectory)
+	Local $date = @YEAR & "-" & @MON & "-" & @MDAY, $time = @HOUR & "." & @MIN & "." & @SEC
+	_CaptureRegion()
+	Local $editedimage = _gdiplus_bitmapcreatefromhbitmap($g_hhbitmap)
+	Local $hgraphic = _gdiplus_imagegetgraphicscontext($editedimage)
+	Local $hpenblue = _gdiplus_pencreate(0xc00fbae9, 2)
+	Local $filename = String($date & "_" & $time & "_isInsideDiamond_.png")
+
+	;-- DRAW VERTICAL AND HORIZONTAL LINES
+	_GDIPlus_GraphicsDrawLine($hGraphic, $iLeft, $iTop + ($iBottom - $iTop) / 2, $iRight, $iTop + ($iBottom - $iTop) / 2, $hpenblue)
+
+	;-- DRAW DIAGONALS LINES
+	_GDIPlus_GraphicsDrawLine($hGraphic, $iLeft + ($iRight - $iLeft) / 2, $iTop, $iLeft + ($iRight - $iLeft) / 2, $iBottom, $hpenblue)
+
+	_gdiplus_imagesavetofile($editedimage, $subdirectory & "\" & $filename)
+
+	_gdiplus_pendispose($hpenblue)
+	_gdiplus_graphicsdispose($hgraphic)
+	_gdiplus_bitmapdispose($editedimage)
+EndFunc   ;==>DebugInternalExternArea

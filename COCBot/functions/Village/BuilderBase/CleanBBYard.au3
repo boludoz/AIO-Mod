@@ -19,7 +19,7 @@ Func CleanBBYard()
 	; Early exist if noting to do
 	If Not $g_bChkCleanBBYard And Not TestCapture() Then Return
 
-	FuncEnter(CleanBBYard)
+	; FuncEnter(CleanBBYard)
 
 	Local $bBuilderBase = True
 	If isOnBuilderBase(True) Then
@@ -43,10 +43,10 @@ Func CleanBBYard()
 					_ArrayShuffle($aCleanYardBBNXY)
 					SetDebugLog("Total Obstacles Found: " & UBound($aCleanYardBBNXY))
 					For $i = 0 To UBound($aCleanYardBBNXY) - 1
+						If isInsideDiamondXY($aCleanYardBBNXY[$i][1], $aCleanYardBBNXY[$i][2], False) = False Then ContinueLoop ; Check if X,Y is inside Builderbase or outside
 						$iObstacleRemoved += 1
 						SetLog("Going to remove Builder Base Obstacle: " & $iObstacleRemoved, $COLOR_SUCCESS)
 						SetDebugLog($aCleanYardBBNXY[$i][0] & " found at (" & $aCleanYardBBNXY[$i][1] & "," & $aCleanYardBBNXY[$i][2] & ")", $COLOR_SUCCESS)
-						If _IsPointInPoly($aCleanYardBBNXY[$i][1], $aCleanYardBBNXY[$i][2], $g_aBuilderBaseAttackPolygon) = False Then ContinueLoop ; Check if X,Y is inside Builderbase or outside
 						If IsMainPageBuilderBase() Then Click($aCleanYardBBNXY[$i][1], $aCleanYardBBNXY[$i][2], 1, 0, "#0430")
 						If _Sleep($DELAYCOLLECT3) Then Return
 						If Not ClickRemoveObstacle() Then
@@ -101,6 +101,6 @@ Func CleanBBYard()
 
 	EndIf
 
-	FuncReturn()
+	; FuncReturn()
 EndFunc   ;==>CleanBBYard
 #EndRegion - Custom Yard - Team AIO Mod++
