@@ -21,13 +21,12 @@ Func CleanBBYard()
 
 	; FuncEnter(CleanBBYard)
 
-	Local $bBuilderBase = True
-	If isOnBuilderBase(True) Then
+	Local $bBuilderBase = isOnBuilderBase(True)
+	If $bBuilderBase Then
 		SetLog("Going to check Builder Base Yard For Obstacles!", $COLOR_INFO)
 		Local $hObstaclesTimer = __TimerInit()
-
-		ZoomBuilderBaseMecanics(False)
-
+		
+		ZoomOut()
 		If Not @error Then
 			; Get Builders available
 			If Not getBuilderCount(False, $bBuilderBase) Then Return

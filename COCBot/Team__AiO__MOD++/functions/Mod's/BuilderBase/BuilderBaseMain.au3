@@ -26,7 +26,7 @@ Func BuilderBase($bTestRun = False, $bSkipBBCG = False)
 	Local $bReturn = False
 	
 	#Region - Dates - Team AIO Mod++
-	If Not $bTestRun And Not PlayBBOnly() And ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3, True, True) Then
+	If Not $bTestRun And Not PlayBBOnly() And ByPassedForceBBAttackOnClanGames($g_bChkBBStopAt3, True, False) Then
 		If _DateIsValid($g_sDateBuilderBase) Then
 			Local $iDateDiff = _DateDiff('s', _NowCalc(), $g_sDateBuilderBase)
 			If $iDateDiff > 0 And $g_sConstMaxBuilderBase > $iDateDiff Then
