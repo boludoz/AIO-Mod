@@ -30,7 +30,7 @@ Func TestBuilderBaseAttackBB()
 	If IsArray($aAvailableTroops) Then
 
 		; Zoomout the Opponent Village.
-		BuilderBaseZoomOut(False, True)
+		ZoomOut(False, True)
 
 		; Correct Script.
 		BuilderBaseSelectCorrectScript($aAvailableTroops)

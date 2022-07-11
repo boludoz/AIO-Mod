@@ -86,7 +86,7 @@ Func _BuilderBase($bTestRun = False)
 	If _Sleep(2000) Then Return
 
 	ZoomOut()
-	; If BuilderBaseZoomOut(True, False) = False Then
+	; If ZoomOut(True, False) = False Then
 		; SetLog("Bad zoom builder base - BAD. (1)", $COLOR_ERROR)
 		; $g_bStayOnBuilderBase = False
 		; Return
@@ -131,7 +131,7 @@ Func _BuilderBase($bTestRun = False)
 		If Not $g_bRunState Then Return
 		
 		ZoomOut()
-		; If Not BuilderBaseZoomOut(False, False) Then
+		; If Not ZoomOut(False, False) Then
 			; SetLog("Bad zoom builder base. (1)", $COLOR_ERROR)
 			; $g_bStayOnBuilderBase = False
 			; Return
@@ -209,7 +209,7 @@ Func _BuilderBase($bTestRun = False)
 		$bBoostedClock = StartClockTowerBoost() And Not $bCondition
 		
 		ZoomOut()
-		; BuilderBaseZoomOut(False, False)
+		; ZoomOut(False, False)
 		CleanBBYard()
 		If Not $g_bRunState Then Return
 

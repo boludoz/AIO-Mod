@@ -115,7 +115,7 @@ Func BuilderBaseAttack($bTestRun = False)
 		For $i = 0 To 1
 			If (($i = 1) ? (True) : (False)) = (Not $g_bChkBBCustomAttack Or ($g_iCmbBBAttack = $g_eBBAttackSmart)) Then
 				; Zoomout the Opponent Village
-				BuilderBaseZoomOut(False, True)
+				ZoomOut(False, True)
 				If $g_bRestart = True Then Return
 				If Not $g_bRunState Then Return
 			ElseIf Not $bIsToDropTrophies Then

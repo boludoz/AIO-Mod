@@ -15,7 +15,7 @@
 Global $g_aBoatPos[2] = [Null, Null]
 
 Func ZoomBuilderBaseMecanics($bForceZoom = Default, $bVersusMode = Default, $bDebugLog = False)
-	BuilderBaseZoomOut()
+	ZoomOut()
 	BuilderBaseAttackDiamond()
 	BuilderBaseAttackOuterDiamond()
 	Return 512
@@ -35,7 +35,7 @@ Func TestBuilderBaseZoomOut()
 	Setlog("** TestBuilderBaseZoomOutOnAttack START**", $COLOR_DEBUG)
 	Local $Status = $g_bRunState
 	$g_bRunState = True
-	BuilderBaseZoomOut(True, False, True)
+	ZoomOut(True, False, True)
 	$g_bRunState = $Status
 	Setlog("** TestBuilderBaseZoomOutOnAttack END**", $COLOR_DEBUG)
 EndFunc   ;==>TestBuilderBaseZoomOut
@@ -57,75 +57,6 @@ Func ZoomHelper($bVersusMode = False, $bNeedCaptureRegion = True)
 	
 	Return False
 EndFunc   ;==>ZoomHelper
-
-Func BuilderBaseZoomOut($bForceZoom = Default, $bVersusMode = False, $bDebugWithImage = False)
-	$g_aiSearchZoomOutCounter[0] = 0
-	$g_aiSearchZoomOutCounter[1] = 1
-	If $bForceZoom = Default Then $bForceZoom = $g_bSkipFirstZoomout Or $bVersusMode
-	$g_bSkipFirstZoomout = $bForceZoom
-	; Small loop just in case
-	For $i = 0 To 6
-		; Update shield status
-		AndroidShield("AndroidOnlyZoomOut")
-		; Run the ZoomOut Script
-		If BuilderBaseSendZoomOut(False, $i) Then
-			If $i = 0 Or $i = 3 Then
-				If ZoomHelper($bVersusMode, True) = False Then 
-					ClickDrag(514, 187, 545, 130)
-				EndIf
-			EndIf
-			; Get the Distances between images
-			Local $aResult = SearchZoomOut($aCenterHomeVillageClickDrag, True, "BuilderBaseZoomOut", True, $g_bDebugSetlog, $bVersusMode)
-			If UBound($aResult) < 1 Or @error Then Return False
-			If $aResult[0] <> "" Then
-				$g_aiSearchZoomOutCounter[0] = 0
-				$g_aiSearchZoomOutCounter[1] = 0
-				Return True
-			EndIf
-		Else
-			SetDebugLog("[BBzoomout] Send Script Error!", $COLOR_DEBUG)
-		EndIf
-	Next
-	Return False
-EndFunc   ;==>BuilderBaseZoomOut
-
-Func BuilderBaseSendZoomOut($bWar = False, $i = 0)
-	SetDebugLog("[" & $i & "][BuilderBaseSendZoomOut IN]")
-	If Not $g_bRunState Then Return
-	AndroidZoomOut(0, Default, ($g_iAndroidZoomoutMode <> 2)) ; use new ADB zoom-out
-	If @error <> 0 Then Return False
-	If _Sleep(500) Then Return
-	SetDebugLog("[" & $i & "][BuilderBaseSendZoomOut OUT]")
-	Return True
-EndFunc   ;==>BuilderBaseSendZoomOut
-
-Func DebugZoomOutBB($x, $y, $x1, $y1, $aBoat, $DebugText)
-
-	_CaptureRegion2()
-	Local $subDirectory = $g_sProfileTempDebugPath & "DebugZoomOutBB"
-	DirCreate($subDirectory)
-	Local $Date = @YEAR & "-" & @MON & "-" & @MDAY
-	Local $Time = @HOUR & "." & @MIN & "." & @SEC
-	Local $filename = String($Date & "_" & $Time & "_" & $DebugText & "_.png")
-	Local $editedImage = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
-	Local $hGraphic = _GDIPlus_ImageGetGraphicsContext($editedImage)
-	Local $hPenRED = _GDIPlus_PenCreate(0xFFFF0000, 3) ; Create a pencil Color FF0000/RED
-	Local $hPenWhite = _GDIPlus_PenCreate(0xFFFFFFFF, 3) ; Create a pencil Color FFFFFF/WHITE
-
-	_GDIPlus_GraphicsDrawRect($hGraphic, $x - 5, $y - 5, 10, 10, $hPenRED)
-	_GDIPlus_GraphicsDrawRect($hGraphic, $x1 - 5, $y1 - 5, 10, 10, $hPenRED)
-	_GDIPlus_GraphicsDrawRect($hGraphic, $aBoat[0] - 5, $aBoat[1] - 5, 10, 10, $hPenWhite)
-
-	_GDIPlus_GraphicsDrawRect($hGraphic, 623, 155, 10, 10, $hPenWhite)
-	_GDIPlus_GraphicsDrawRect($hGraphic, 278, 545, 10, 10, $hPenWhite)
-
-	_GDIPlus_ImageSaveToFile($editedImage, $subDirectory & "\" & $filename)
-	_GDIPlus_PenDispose($hPenRED)
-	_GDIPlus_PenDispose($hPenWhite)
-	_GDIPlus_GraphicsDispose($hGraphic)
-	_GDIPlus_BitmapDispose($editedImage)
-
-EndFunc   ;==>DebugZoomOutBB
 
 ; TODO RC
 Func BuilderBaseAttackDiamond()

@@ -32,7 +32,7 @@ Func TestBuilderBaseParseAttackCSV()
 	If IsArray($aAvailableTroops) Then
 
 		; Zoomout the Opponent Village.
-		BuilderBaseZoomOut(False, True)
+		ZoomOut(False, True)
 
 		; Correct script.
 		BuilderBaseSelectCorrectScript($aAvailableTroops)
