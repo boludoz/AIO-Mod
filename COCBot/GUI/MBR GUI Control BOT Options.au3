@@ -992,6 +992,21 @@ EndFunc   ;==>btnTestGetLocationBuildingImage
 
 #Region - Custom - Team AIO Mod++
 Func btnRunFunction($bExecuteCapture = False)
+	Local $a = [GUICtrlGetState($g_hBtnStart), GUICtrlGetState($g_hBtnStop)]
+	GUICtrlSetState($g_hBtnStart, $GUI_HIDE)
+	GUICtrlSetState($g_hBtnStop, $GUI_SHOW)
+
+	Local $iError = 0, $iExtended = 0
+	Local $vResult = _btnRunFunction($bExecuteCapture)
+	$iError = @error
+	$iExtended = @extended
+	
+	GUICtrlSetState($g_hBtnStart, $a[0])
+	GUICtrlSetState($g_hBtnStop, $a[1])
+
+	Return SetError($iError, $iExtended, $vResult)
+EndFunc
+Func _btnRunFunction($bExecuteCapture = False)
 	Local $bCurrentRunState = $g_bRunState, $bCurrentExecuteCapture = $g_bExecuteCapture, $iError = 0, $sSCap = ($bExecuteCapture = False) ? ("Run function ") : ("Run function + Capture ")
 	$g_bExecuteCapture = $bExecuteCapture
 	$g_bRunState = True
