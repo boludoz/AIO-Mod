@@ -50,7 +50,7 @@ Func btnTestSuperXP()
 	If $g_hTimerSinceStarted = 0 Then $g_hTimerSinceStarted = __TimerInit()
 	If $g_iTimePassed = 0 Then $g_iTimePassed += Int(__TimerDiff($g_hTimerSinceStarted))
 
-	AndroidOnlyZoomOut()
+	ZoomOut()
 	$g_bAQueenSX = $eHeroQueen
 	SetLog(_PadStringCenter(" Test SuperXP begin (" & $g_sBotVersion & ")", 54, "="), $COLOR_INFO)
 	MainSXHandler()
@@ -144,7 +144,7 @@ Func btnTestDailyDiscounts()
 	$g_bChkCollectMagicItems = True
 	$g_abChkDD_Deals[0] = True
 
-	AndroidOnlyZoomOut()
+	ZoomOut()
 	SetLog(_PadStringCenter(" Test DailyDiscounts begin (" & $g_sBotVersion & ")", 54, "="), $COLOR_INFO)
 	CollectMagicItems()
 	SetLog(_PadStringCenter(" Test DailyDiscounts end ", 54, "="), $COLOR_INFO)
@@ -166,7 +166,7 @@ Func btnTestAttackBB()
 	$g_bChkBBAttIfLootAvail = True
 	; $g_bChkBBWaitForMachine = True
 
-	AndroidOnlyZoomOut()
+	ZoomOut()
 	SetLog(_PadStringCenter(" Test Attack BuilderBase begin (" & $g_sBotVersion & ")", 54, "="), $COLOR_INFO)
 	AttackBB()
 	SetLog(_PadStringCenter(" Test Attack BuilderBase end ", 54, "="), $COLOR_INFO)

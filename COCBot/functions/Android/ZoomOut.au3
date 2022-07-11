@@ -430,9 +430,9 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag,
 	FuncEnter(SearchZoomOut)
 	Local $aResultSafe = ["", 0, 0, 0, 0] ; expected dummy value
 	Local $aResult = _SearchZoomOut($CenterVillageBoolOrScrollPos, $UpdateMyVillage, $sSource, $CaptureRegion, $DebugLog, $bBBAttack)
-	If UBound($aResult) >= 5 And not @error Then Return $aResult
+	If UBound($aResult) >= 5 And Not @error Then Return $aResult
 	Return FuncReturn($aResultSafe)
-EndFunc
+EndFunc   ;==>SearchZoomOut
 
 Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag, $UpdateMyVillage = True, $sSource = "", $CaptureRegion = True, $DebugLog = $g_bDebugSetlog, $bBBAttack = False)
 	If Not $g_bRunState Then Return
@@ -462,16 +462,6 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 	$g_aFallbackDragFix = -1
 
 	Local $village
-	Local $bDraggedBB = False
-
-	; Custom fix - Team AIO Mod++
-	If $bOnBuilderBase = True Then
-		$bCenterVillage = (Not ZoomHelper($bBBAttack, False))
-		If _Sleep(1000) Then
-			$iCallCount = 0
-			Return FuncReturn($aResult)
-		EndIf
-	EndIf
 
 	$village = GetVillageSize($DebugLog, "stone", "tree", Default, $bOnBuilderBase, $CaptureRegion, $bCenterVillage = False)
 
@@ -535,31 +525,29 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 			Else
 			EndIf
 		EndIf
-	ElseIf $g_aFallbackDragFix <> -1 And UBound($g_aFallbackDragFix) >= 5 And not @error Then
+	ElseIf $g_aFallbackDragFix <> -1 And UBound($g_aFallbackDragFix) >= 5 And Not @error Then
 		If $aScrollPos[0] = 0 And $aScrollPos[1] = 0 Then
 			; use fixed position now to prevent boat activation
 			$aScrollPos[0] = $aCenterHomeVillageClickDrag[0]
 			$aScrollPos[1] = $aCenterHomeVillageClickDrag[1]
 		EndIf
 
-		If $bDraggedBB = False Then
-			Local $iDragFix = ($g_aFallbackDragFix[2] - $g_aFallbackDragFix[1])
-			If Abs($iDragFix) > 150 Then $iDragFix = Ceiling($iDragFix / 2)
-			If $bOnBuilderBase Then $iDragFix *= -1
+		Local $iDragFix = ($g_aFallbackDragFix[2] - $g_aFallbackDragFix[1])
+		If Abs($iDragFix) > 150 Then $iDragFix = Ceiling($iDragFix / 2)
+		If $bOnBuilderBase Then $iDragFix *= -1
 
-			; Tree
-			If $g_aFallbackDragFix[4] = "Tree" Then
-				ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] + _Min(Abs($g_aFallbackDragFix[0] - $g_aFallbackDragFix[2]), 150), $aScrollPos[1] + $iDragFix)
-				SetLog("Centering village (tree)", $COLOR_ACTION)
+		; Tree
+		If $g_aFallbackDragFix[4] = "Tree" Then
+			ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] + _Min(Abs($g_aFallbackDragFix[0] - $g_aFallbackDragFix[2]), 150), $aScrollPos[1] + $iDragFix)
+			SetLog("Centering village (tree)", $COLOR_ACTION)
 			; Stone
-			ElseIf $g_aFallbackDragFix[4] = "Stone" Then
-				ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - _Min(Abs($g_aFallbackDragFix[0] - $g_aFallbackDragFix[2]), 150), $aScrollPos[1] + ($g_aFallbackDragFix[3] - $g_aFallbackDragFix[1]))
-				SetLog("Centering village (stone)", $COLOR_ACTION)
+		ElseIf $g_aFallbackDragFix[4] = "Stone" Then
+			ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - _Min(Abs($g_aFallbackDragFix[0] - $g_aFallbackDragFix[2]), 150), $aScrollPos[1] + ($g_aFallbackDragFix[3] - $g_aFallbackDragFix[1]))
+			SetLog("Centering village (stone)", $COLOR_ACTION)
 			; None
-			ElseIf $g_aFallbackDragFix[4] = "None" Then
-				ClickDrag($g_aFallbackDragFix[0], $g_aFallbackDragFix[1], $g_aFallbackDragFix[2], $g_aFallbackDragFix[3])
-				SetLog("Centering village (none)", $COLOR_ACTION)
-			EndIf
+		ElseIf $g_aFallbackDragFix[4] = "None" Then
+			ClickDrag($g_aFallbackDragFix[0], $g_aFallbackDragFix[1], $g_aFallbackDragFix[2], $g_aFallbackDragFix[3])
+			SetLog("Centering village (none)", $COLOR_ACTION)
 		EndIf
 
 		; force additional zoom-out
@@ -606,7 +594,7 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 						SetLog("Disable restarting CoC or Android on zoom-out failure", $COLOR_ERROR)
 						SetLog("Please clean village to allow village measuring and start bot again", $COLOR_ERROR)
 						$g_bZoomoutFailureNotRestartingAnything = True
-					EndIF
+					EndIf
 					Return FuncReturn($aResult)
 				EndIf
 			Else
@@ -625,7 +613,7 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 				If Not $g_bSkipFirstZoomout Then
 					; force additional zoom-out
 					$aResult[0] = ""
-				ElseIf $g_aiSearchZoomOutCounter[1] > 0 And $g_aiSearchZoomOutCounter[0] > 0  Then
+				ElseIf $g_aiSearchZoomOutCounter[1] > 0 And $g_aiSearchZoomOutCounter[0] > 0 Then
 					; force additional zoom-out
 					$g_aiSearchZoomOutCounter[1] -= 1
 					$aResult[0] = ""
@@ -636,4 +624,4 @@ Func _SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag
 	EndIf
 
 	Return $aResult
-EndFunc   ;==>SearchZoomOut
+EndFunc   ;==>_SearchZoomOut

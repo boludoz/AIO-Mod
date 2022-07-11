@@ -60,7 +60,7 @@ EndFunc   ;==>ZoomHelper
 
 Func BuilderBaseZoomOut($bForceZoom = Default, $bVersusMode = False, $bDebugWithImage = False)
 	$g_aiSearchZoomOutCounter[0] = 0
-	$g_aiSearchZoomOutCounter[1] = 0
+	$g_aiSearchZoomOutCounter[1] = 1
 	If $bForceZoom = Default Then $bForceZoom = $g_bSkipFirstZoomout Or $bVersusMode
 	$g_bSkipFirstZoomout = $bForceZoom
 	; Small loop just in case
