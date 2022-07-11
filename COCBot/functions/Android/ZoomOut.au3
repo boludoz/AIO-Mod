@@ -19,7 +19,7 @@ Func ZoomOut($bForceZoom = Default, $bVersusMode = False, $bDebugWithImage = Fal
 	Static $s_bZoomOutActive = False
 	If $s_bZoomOutActive Then Return ; recursive not allowed here
 	$s_bZoomOutActive = True
-	
+
 	ResumeAndroid()
 	WinGetAndroidHandle()
 	getBSPos() ; Update $g_hAndroidWindow and Android Window Positions
@@ -30,27 +30,27 @@ Func ZoomOut($bForceZoom = Default, $bVersusMode = False, $bDebugWithImage = Fal
 	$g_bSkipFirstZoomout = (Not $bForceZoom)
 
 	Local $aResult, $bBuilderBase
-	
+
 	Local $bMainSendZoomout = False
-	
+
 	; Small loop just in case
 	For $i = 0 To 12
 		; Update shield status
 		AndroidShield("ZoomOut")
-		
+
 		If $i = 0 Or $i = 3 Or $i = 6 Then
 			If IsProblemAffect(True) Then
 				SetLog("[ZoomOut] IsProblemAffect is true")
 				ExitLoop
 			EndIf
 		EndIf
-		
+
 		If $bForceZoom Or $i > 0 Then
-			$bMainSendZoomout = MainSendZoomout($i)
+			$bMainSendZoomout = MainSendZoomout($i, $bVersusMode)
 		Else
 			$bMainSendZoomout = True
 		EndIf
-		
+
 		; Run the ZoomOut Script
 		If $bMainSendZoomout Then
 			If $bVersusMode And $i = 0 Or $i = 3 Then ClickDrag(514, 187, 545, 130)
@@ -58,14 +58,14 @@ Func ZoomOut($bForceZoom = Default, $bVersusMode = False, $bDebugWithImage = Fal
 				$s_bZoomOutActive = False
 				Return False
 			EndIf
-			
+
 			; Get the Distances between images
 			$aResult = SearchZoomOut($aCenterHomeVillageClickDrag, True, "BuilderBaseZoomOut", True, $g_bDebugSetlog, $bVersusMode)
 			If UBound($aResult) < 1 Or @error Then
 				$s_bZoomOutActive = False
 				Return False
 			EndIf
-			
+
 			If $aResult[0] <> "" Then
 				$g_aiSearchZoomOutCounter[0] = 0
 				$g_aiSearchZoomOutCounter[1] = 1
@@ -81,7 +81,7 @@ Func ZoomOut($bForceZoom = Default, $bVersusMode = False, $bDebugWithImage = Fal
 	Return False
 EndFunc   ;==>ZoomOut
 
-Func MainSendZoomout($i = 0, $sEmulator = $g_sAndroidEmulator)
+Func MainSendZoomout($i = 0, $bVersusMode = False, $sEmulator = $g_sAndroidEmulator)
 	If $g_bDebugSetlog Then
 		SetDebugLog("Zooming Out (MainSendZoomout)", $COLOR_INFO)
 	Else
@@ -89,7 +89,7 @@ Func MainSendZoomout($i = 0, $sEmulator = $g_sAndroidEmulator)
 	EndIf
 	If $i > 2 Then  Return AndroidZoomOut(0, Default)
 	Local $bResult = False
-	If ($g_iAndroidZoomoutMode = 0 Or $g_iAndroidZoomoutMode = 3) And ($g_bAndroidEmbedded = False Or $g_iAndroidEmbedMode = 1) Then
+	If ($g_iAndroidZoomoutMode = 0 Or $g_iAndroidZoomoutMode = 3) And ($g_bAndroidEmbedded = False Or $g_iAndroidEmbedMode = 1) And $bVersusMode = False Then
 		Switch $sEmulator
 			Case "BlueStacks", "BlueStacks2", "BlueStacks5"
 				If $__BlueStacks2Version_2_5_or_later = False And Not $sEmulator = "BlueStacks5" Then
@@ -104,11 +104,11 @@ Func MainSendZoomout($i = 0, $sEmulator = $g_sAndroidEmulator)
 				$bResult = ZoomOutCtrlWheelScroll(True, True, True, Default, -5, 250)
 		EndSwitch
 	EndIf
-	
+
 	If $bResult = False Then
 		Return AndroidZoomOut(0, Default)
 	EndIf
-	
+
 	$g_bSkipFirstZoomout = True
 EndFunc   ;==>MainSendZoomout
 
@@ -120,7 +120,7 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $bCenterMouseWhileZooming = False) ;
 		$iControlFocus = ControlFocus($g_hAndroidWindow, "", "")
 		If $bCenterMouseWhileZooming Then MouseMove($g_aiBSpos[0] + Int($g_iDEFAULT_WIDTH / 2), $g_aiBSpos[1] + Int($g_iDEFAULT_HEIGHT / 2), 0)
 	EndIf
-	
+
 	$iControlSend = ControlSend($g_hAndroidWindow, "", "", $ZoomOutKey)
 	Return ($iControlFocus = 1 And $iControlSend = 0)
 EndFunc   ;==>DefaultZoomOut
