@@ -1113,31 +1113,6 @@ Func EndImageTest()
 	TestCapture(0)
 EndFunc   ;==>EndImageTest
 
-Func FixClanCastle($inputString)
-	; if found  a space in results of attack bar slot detection, force insert of clan castle
-	; work if the clan castle it is not placed in the last slot
-	Local $OutputFinal = ""
-	Local $aTroopDataList = StringSplit($inputString, "|")
-	Local $aTemp[12][3]
-	Local $counter = 0
-	If $inputString <> "" Then
-		For $i = 1 To $aTroopDataList[0]
-			If $counter > 0 Then $OutputFinal &= "|"
-			Local $troopData = StringSplit($aTroopDataList[$i], "#", $STR_NOCOUNT)
-			If $troopData[0] = 17 Or $troopData[0] = 18 Or $troopData[0] = 19 Or $troopData[0] = 20 Then $troopData[2] = 1
-			If $counter <> Number($troopData[1]) Then
-				$OutputFinal &= $eCastle & "#" & $counter & "#" & "1" & "|"
-				$counter = $troopData[1]
-				SetLog("Clan castle Forced in slot " & $counter, $COLOR_INFO)
-			EndIf
-			$counter += 1
-			$OutputFinal &= $troopData[0] & "#" & $troopData[1] & "#" & $troopData[2]
-		Next
-	EndIf
-	Return $OutputFinal
-
-EndFunc   ;==>FixClanCastle
-
 Func btnTestOcrMemory()
 
 	_CaptureRegion2(162, 200, 162 + 120, 200 + 27)
