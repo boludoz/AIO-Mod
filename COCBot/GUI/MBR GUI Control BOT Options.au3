@@ -1003,8 +1003,9 @@ Func btnRunFunction($bExecuteCapture = False)
 EndFunc
 
 Func _btnRunFunction($bExecuteCapture = False)
-	Local $bCurrentExecuteCapture = $g_bExecuteCapture, $iError = 0, $sSCap = ($bExecuteCapture = False) ? ("[btnRunFunction]") : ("[btnRunFunction] [Capture]")
+	Local $bCurrentRunState = $g_bRunState, $bCurrentExecuteCapture = $g_bExecuteCapture, $iError = 0, $sSCap = ($bExecuteCapture = False) ? ("Run function ") : ("Run function + Capture ")
 	$g_bExecuteCapture = $bExecuteCapture
+	$g_bRunState = True
 	$g_bRestart = False
 
 	; Prevent bugs.
@@ -1057,6 +1058,7 @@ Func _btnRunFunction($bExecuteCapture = False)
 	
 
 	$g_bExecuteCapture = $bCurrentExecuteCapture
+	$g_bRunState = $bCurrentRunState
 EndFunc
 #EndRegion - Custom - Team AIO Mod++
 
