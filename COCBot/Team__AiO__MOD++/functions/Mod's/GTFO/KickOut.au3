@@ -179,7 +179,7 @@ Func OpenClanPage()
 
 	SetLog(" ## OpenClanPage ## ", $COLOR_DEBUG)
 	; Click Info Profile Button
-	Click(Random(20, 59, 1), Random(10, 60, 1) + $g_iMidOffsetYFixed, 1, 0, "#0222")
+	Click(Random(20, 59, 1), Random(10, 60, 1), 1, 0, "#0222")
 	If _Sleep(2500) Then Return
 
 	; Check the '[X]' tab region

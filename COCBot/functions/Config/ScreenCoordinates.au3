@@ -11,10 +11,11 @@
 ; Example .......: No
 ; ===============================================================================================================================
 ; 	   $aiSomeVar = [StartX, StartY, EndX, EndY]
-
+;Global $aiClickAwayRegionLeft = [225, 10, 255, 30]
+;Global $aiClickAwayRegionRight = [605, 10, 645, 30]
 ;Let's tighten these up to avoid clicking on shields.
-Global $aiClickAwayRegionLeft = [193 - 5, 8 - 5 , 193 + 15, 8 + 5]
-Global $aiClickAwayRegionRight = [520 - 15, 30 - 5 , 520 + 15, 30 + 20]
+Global $aiClickAwayRegionLeft = [235, 10, 245, 30]
+Global $aiClickAwayRegionRight = [625, 10, 635, 30]
 
 Global $aCenterEnemyVillageClickDrag = [65, 525] ; Scroll village using this location in the water
 Global $aCenterHomeVillageClickDrag = [800, 350] ; Scroll village using this location : upper from setting button

@@ -193,8 +193,8 @@ Func PureClick($x, $y, $times = 1, $speed = 0, $debugtxt = "", $bByPassRandom = 
 EndFunc   ;==>PureClick
 
 ; PureClickP : takes an array[2] (or array[4]) as a parameter [x,y]
-Func PureClickP($point, $howMuch = 1, $speed = 0, $debugtxt = "")
-	PureClick($point[0], $point[1], $howMuch, $speed, $debugtxt)
+Func PureClickP($point, $howMuch = 1, $speed = 0, $debugtxt = "", $bByPassRandom = False)
+	PureClick($point[0], $point[1], $howMuch, $speed, $debugtxt, $bByPassRandom)
 EndFunc   ;==>PureClickP
 
 Func GemClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
@@ -321,14 +321,11 @@ Func ClickAway($sRegion = Default, $bForce = Default, $eTimes = Default)
 	If $g_bDebugClick = True Then
 		SetLog("ClickAway(): on X:" & $aiSpot[0] & ", Y:" & $aiSpot[1], $COLOR_ACTION)
 	EndIf
-	Local $bUseRandom = $g_bUseRandomClick
-	$g_bUseRandomClick = False
+
 	For $e = 1 To $eTimes
-		PureClickP($aiSpot, 1, 0, "#0000")
+		PureClickP($aiSpot, 1, 0, "#0000", True)
 		If RandomSleep(150) Then Return
 	Next
-
-	$g_bUseRandomClick = $bUseRandom
 EndFunc
 #EndRegion - ClickAway - Team AIO Mod++
 
