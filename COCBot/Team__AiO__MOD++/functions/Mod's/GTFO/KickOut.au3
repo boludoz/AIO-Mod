@@ -5,7 +5,7 @@
 ; Parameters ....: ---
 ; Return values .: ---
 ; Author ........: Boludoz
-; Modified ......: 04/2020
+; Modified ......: 07/2022
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2020
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......: ---
@@ -24,40 +24,36 @@ Func MainKickout()
 	For $T = 0 To $g_iTxtKickLimit - 1
 		
 		; Needs refresh.
-		CheckMainScreen()
+		If Not IsMainPage(3) Then
+			CheckMainScreen()
+		EndIf
 		
-		If OpenClanPage() Then
-
+		If OpenClanPage("Kickout") Then
+			ClickP($g_aClickOnMost, 4, 1000)
+			
 			SetLog("Donated CAP: " & $g_iTxtDonatedCap & " /Received CAP: " & $g_iTxtReceivedCap & " /Kick Spammers: " & $g_bChkKickOutSpammers, $COLOR_INFO)
 			For $Rank = 0 To 9
 
 				#Region - Core
 				If RandomSleep(1500) Then Return
-
-				Local $aXPStar = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\KickOut", 0, "140, 123, 190, 579", Default, "Star", True, 44) ; Resolution changed
+				
+				Go2Bottom()
+				Local $aXPStar = QuickMIS("CNX", @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\KickOut\Equal\", 61, 118, 92, 626, True, False) ; Resolution changed
 
 				If Not IsArray($aXPStar) Then
 					CheckMainScreen()
-					; Setlog("- KickOut fail : $aXPStar", $COLOR_ERROR)
+					Setlog("- KickOut fail : $aXPStar", $COLOR_ERROR)
 					Return False
 				EndIf
-
-				If RandomSleep(1500) Then Return
-
-				Local $iLocalSlot = SuperSlotInt($aXPStar)
-
-				If $iLastSlot = $iLocalSlot Then Return True
-
-				$iLastSlot = $iLocalSlot
-
-				Go2Bottom()
-
+				
+				; RemoveDupCNX($aXPStar)
+				
 				_ArrayShuffle($aXPStar)
 
 				For $i = 0 To UBound($aXPStar) - 1
 					; Get the Red from 'New' Word
-					Local $iNewWord = _PixelSearch(197, $aXPStar[$i][2] + 19, 214, $aXPStar[$i][2] + 28, Hex(0xE73838, 6), 10)
-					Local $iRank = _PixelSearch(197, $aXPStar[$i][2] + 19, 214, $aXPStar[$i][2] + 28, Hex(0x646051, 6), 10)
+					Local $iNewWord = _PixelSearch(197, $aXPStar[$i][2] - 23, 214, $aXPStar[$i][2] + 23, Hex(0xE73838, 6), 15)
+					Local $iRank = _PixelSearch(197, $aXPStar[$i][2], 214, $aXPStar[$i][2] + 23, Hex(0x434137, 6), 15)
 
 					; Return 0 let's proceed with a new loop
 					If $iNewWord = 0 Or $iRank <> 0 Then ContinueLoop
@@ -67,74 +63,45 @@ Func MainKickout()
 
 					; Confirming the array and the Dimension
 					If IsArray($iNewWord) Then
-						$iDonated = Number(getOcrAndCapture("coc-army", 509, $aXPStar[$i][2] + 12, 75, 27, True))
-						$iReceived = Number(getOcrAndCapture("coc-army", 626, $aXPStar[$i][2] + 12, 75, 27, True))
+						$iDonated = Number(getOcrAndCapture("coc-army", 508, $aXPStar[$i][2] - 6, 75, 16, True))
+						$iReceived = Number(getOcrAndCapture("coc-army", 625, $aXPStar[$i][2] - 6, 75, 16, True))
 						SetDebugLog("$iDonated : " & $iDonated & "/ $iReceived : " & $iReceived)
 						SetLog("[NEW CLAN MEMBER] Donated: " & $iDonated & " / Received: " & $iReceived, $COLOR_BLACK)
 					Else
 						ContinueLoop
 					EndIf
-
-					Local $bIsKick = False
-
+					
 					Select
 						Case ($iDonated = 0 And $iReceived = 0) Or ($iDonated < $g_iTxtDonatedCap And $iReceived < $g_iTxtReceivedCap)
-							$bIsKick = False
+							ContinueLoop
 
 						Case ($g_bChkKickOutSpammers = True And $iDonated > 0 And $iReceived = 0) Or ($g_bChkKickOutSpammers = False And $iDonated >= $g_iTxtDonatedCap) Or ($g_bChkKickOutSpammers = False And $iReceived >= $g_iTxtReceivedCap)
-							$bIsKick = True
 
 					EndSelect
 
-					SetDebugLog("Is This member 2 Kick? " & $bIsKick, $COLOR_DEBUG)
-					If Not $bIsKick Then ContinueLoop
-
-					Local $aFixC[4] = [18, $aXPStar[$i][2], 68, $aXPStar[$i][2] + 36]
-					Local $bFixOne = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\KickOut", 2, $aFixC, Default, "FixC", True, 10) ; Resolution changed
-
-					Click(Random(166, 708, 1), Random($aXPStar[$i][2] - 7, $aXPStar[$i][2] + 29, 1))
-					If RandomSleep(500) Then Return
-
-					Local $aClickMod = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\KickOut", 10, "556, 1, 579, 643", Default, "Btn", True, 40) ; Resolution changed
-
-					If Not IsArray($aClickMod) Then
-						Setlog("- KickOut fail : $aClickMod", $COLOR_ERROR)
+					Local $aKickOut = QuickMIS("CNX", @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\KickOut\KickOutBTN\", 445, 116, 493, 636, True, False) ; Resolution changed
+					
+					If Not IsArray($aKickOut) Then
+						Setlog("- KickOut fail : $aKickOut", $COLOR_ERROR)
 						Return False
-					Else
-						_ArraySort($aClickMod, 1, 0, 0, 2)
-
-						SetDebugLog("Is fix : " & IsArray($bFixOne), $COLOR_DEBUG)
-						SetDebugLog("Is fix : " & _ArrayToString($aClickMod), $COLOR_DEBUG)
-
-						If IsArray($bFixOne) Then
-							Click(Random(462, 566, 1), $aClickMod[1][2] - Random(4, 15, 1))
-							If RandomSleep(500) Then Return
-						Else
-							Click(Random(462, 566, 1), $aClickMod[0][2] - Random(4, 15, 1))
-							If RandomSleep(500) Then Return
+					ElseIf UBound($aKickOut) > 2 Then
+						_ArraySort($aKickOut, 1, 0, 0, 2)
+						PureClick($aKickOut[0][1] + 50, $aKickOut[0][2] + 25)
+						If _Wait4Pixel($g_aOkayKickOut[0], $g_aOkayKickOut[1] , $g_aOkayKickOut[2], $g_aOkayKickOut[3], 4000) Then
+							ClickP($g_aOkayKickOut, 1)
+							Setlog("Member Kicked Out", $COLOR_ACTION)
 						EndIf
-
-						Local $aSendOut = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\KickOut", 1, "457, 161, 585, 219", Default, "SendKick", True, 0) ; Resolution changed
-
-						If Not IsArray($aSendOut) Then
-							Setlog("- KickOut fail : $aSendOut", $COLOR_ERROR)
-							Return False
-						EndIf
-
-						Click(Random($aSendOut[0][1], $aSendOut[0][1] + 30), Random($aSendOut[0][2], $aSendOut[0][2] + 30))
-						If RandomSleep(500) Then Return
-
 						$Number2Kick += 1
-
+						ExitLoop 2
+						
 					EndIf
 				Next
 				#EndRegion - Core
 			Next
 			If $g_iTxtKickLimit >= $Number2Kick Then Return
-			Click(825, 5, 1)     ; Exit From Clan page
+			ClickP($g_aIsOnClanTab, 1)
 		Else
-			If _ColorCheck(_GetPixelColor(329, 362 + $g_iMidOffsetYFixed), Hex(0x2D9FF9, 6), 20) Then CloseClanChat() ; RC Done
-			ClickAway("Right", True, 2)
+			ClickP($g_aIsOnClanTab, 1)
 			CheckMainScreen()
 		EndIf
 		If $g_iTxtKickLimit >= $Number2Kick Then Return
@@ -142,20 +109,6 @@ Func MainKickout()
 
 
 EndFunc   ;==>MainKickout
-
-Func SuperSlotInt($aXPStar = -1)
-	Local $vLastIntKickOut
-
-	If IsArray($aXPStar) Then
-		_ArraySort($aXPStar, 0, 0, 0, 2)
-		$vLastIntKickOut = getOcrAndCapture("coc-v-t", 30, $aXPStar[UBound($aXPStar) - 1][2] - 2, 55, $aXPStar[UBound($aXPStar) - 1][2] - 20, True)
-		If $vLastIntKickOut = 0 And UBound($vLastIntKickOut) > 2 Then $vLastIntKickOut = getOcrAndCapture("coc-v-t", 30, $aXPStar[UBound($aXPStar) - 2][2] - 2, 55, $aXPStar[UBound($aXPStar) - 2][2] - 20, True)
-		$vLastIntKickOut += 1
-	EndIf
-
-	Return $vLastIntKickOut
-
-EndFunc   ;==>SuperSlotInt
 
 Func Go2Bottom()
 
@@ -171,41 +124,61 @@ Func Go2Bottom()
 	Return True
 EndFunc   ;==>Go2Bottom
 
-Func OpenClanPage()
+#cs
+# 1 . Open profile ; Mouse LBUTTONDOWN 036,029 Color FFFFFE
+# 2 . Go to clan page ; Mouse LBUTTONDOWN 323,020 Color 828C92
+	|--> Check if is on home village > Mouse LBUTTONDOWN 277,077 Color BCCBCD
+# 3 . Check if is leader o coleader ; 307,263 Color F0D56C (Coleader / Leader)
+# 4 . Do four clicks > Mouse LBUTTONDOWN 406,418 Color CF932F x4
+# 5 . Drag.
+# 4 . KickOut if condition is.
+#ce
 
-	$g_bDebugOcr = True
+Global $g_aOpenProfile = [36, 29]
+Global $g_aIsOnClanTab = [409, 23, 0xEBEFEF, 20]
+Global $g_aIsOnHomeVillage = [277, 77, 0xBCCBCD, 20]
+Global $g_aIsLeaderColeader = [438, 288, 0xd8f380, 20]
+Global $g_aClickOnMost = [406, 418, 0xCF932F, 20] ;x4
+Global $g_aCloseX = [824, 31 , 0xFFFFFF, 25]
+Global $g_aOkayKickOut = [553, 205 , 0x87F9E0, 25]
+
+Func OpenClanPage($sMode = "None")
 
 	; ********* OPEN TAB AND CHECK IT PROFILE ***********
 
-	SetLog(" ## OpenClanPage ## ", $COLOR_DEBUG)
+	SetLog("[OpenClanPage] Mode : " & $sMode, $COLOR_DEBUG)
 	; Click Info Profile Button
-	Click(Random(20, 59, 1), Random(10, 60, 1), 1, 0, "#0222")
+	ClickP($g_aOpenProfile, 1, 0, "#0222")
 	If _Sleep(2500) Then Return
 
 	; Check the '[X]' tab region
-	If _Wait4Pixel(811, 81 + $g_iMidOffsetYFixed, 0xF02227, 25, 4000) Then
+	If _Wait4Pixel($g_aCloseX[0], $g_aCloseX[1] , $g_aCloseX[2], $g_aCloseX[3], 4000) Then
 
 		; Click on Clan Tab
-		Click(Random(278, 419, 1), Random(62, 103, 1) + $g_iMidOffsetYFixed, 1)
+		ClickP($g_aIsOnClanTab, 1)
 		
-		If _Wait4Pixel(348, 64, 0x928C82, 25, 4000) Then
+		If _Wait4PixelArray($g_aIsOnClanTab) Then
 	
 			; Click on Home Village
-			If Not _Wait4Pixel(358, 125 + $g_iMidOffsetYFixed, 0xC9C7BA, 25, 500) Then Click(Random(148, 410, 1), Random(122, 149, 1), 1)
-		
-			; Clan Edit Button
-			Local $aCheckEditButton[4] = [419, 332 + $g_iMidOffsetYFixed, 0xD7F37F, 10]
-			If RandomSleep(500) Then Return
-		
-			If Not _ColorCheck(_GetPixelColor($aCheckEditButton[0], $aCheckEditButton[1], True), Hex($aCheckEditButton[2], 6), $aCheckEditButton[3]) = True Then
-				SetLog("You are not a Co-Leader/Leader of your clan! ", $COLOR_DEBUG)
-				ClickAway()
-				Return False
-			Else
-				Return True
+			If Not _Wait4Pixel($g_aIsOnHomeVillage[0], $g_aIsOnHomeVillage[1], $g_aIsOnHomeVillage[2], $g_aIsOnHomeVillage[3], 500) Then
+				ClickP($g_aIsOnHomeVillage, 1)
 			EndIf
-		
-			SetLog(" ## OpenClanPage ## didn't Openned", $COLOR_DEBUG)
+			
+			Switch $sMode
+				Case "KickOut"
+					If Not _Wait4Pixel($g_aIsLeaderColeader[0], $g_aIsLeaderColeader[1], $g_aIsLeaderColeader[2], $g_aIsLeaderColeader[3], 500) Then
+						SetLog("[OpenClanPage] You are not a Co-Leader/Leader of your clan! ", $COLOR_DEBUG)
+						ClickP($g_aCloseX)
+						CheckMainScreen()
+						Return False
+					Else
+						Return True
+					EndIf
+				Case "GTFO"
+					SetLog("[OpenClanPage] GTFO MODE NOT FINISHED", $COLOR_ERROR)
+			EndSwitch
+			
+			SetLog("[OpenClanPage] Didn't Openned", $COLOR_DEBUG)
 			Return False
 		EndIf
 	Else
