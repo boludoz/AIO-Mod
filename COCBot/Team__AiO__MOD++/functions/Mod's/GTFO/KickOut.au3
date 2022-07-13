@@ -38,7 +38,7 @@ Func MainKickout()
 				If RandomSleep(1500) Then Return
 				
 				Go2Bottom()
-				Local $aXPStar = QuickMIS("CNX", @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\KickOut\Equal\", 61, 118, 92, 626, True, False) ; Resolution changed
+				Local $aXPStar = QuickMIS("CNX", @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\KickOut\Equal\", 798, 118, 833, 626, True, False) ; Resolution changed
 
 				If Not IsArray($aXPStar) Then
 					CheckMainScreen()
