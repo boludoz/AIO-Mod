@@ -213,4 +213,11 @@ Func CreateAttackSearchActiveBaseAttack()
 			$g_hChkABBatSpell = GUICtrlCreateCheckbox("", $x + 27, $y, 17, 17)
 				_GUICtrlSetTip(-1, $sTxtTip)
 		GUICtrlCreateGroup("", -99, -99, 1, 1)
+		
+		$x = 25
+		$y += 45
+		GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "CSVSpeed", -1), $x - 20, $y - 15, 145, 54)
+			$cmbCSVSpeed[$LB] = GUICtrlCreateCombo("", $x + 27, $y + 5, 50, 20, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+			GUICtrlSetData(-1, "0.5x|0.75x|1x|1.25x|1.5x|2x|3x|4x|5x", "1x")
+		GUICtrlCreateGroup("", -99, -99, 1, 1)
 EndFunc   ;==>CreateAttackSearchActiveBaseAttack
