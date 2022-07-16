@@ -533,9 +533,8 @@ Global $g_CSVSpeedDivider[2] = [1, 1] ; default CSVSpeed for DB & LB
 Global $g_bScanMineAndElixir = False
 
 ; Collectors Outside Filter
-Global $g_bDBCollectorNone = True
-Global $g_bDBMeetCollectorOutside = False, $g_iDBMinCollectorOutsidePercent = 80
-Global $g_bDBCollectorNearRedline = False, $g_iCmbRedlineTiles = 1
+Global $g_bDBMeetCollectorOutside = False, $g_iDBMinCollectorOutsidePercent = 10
+Global $g_iCmbRedlineTiles = 3
 Global $g_bSkipCollectorCheck = False, $g_iTxtSkipCollectorGold = 400000, $g_iTxtSkipCollectorElixir = 400000, $g_iTxtSkipCollectorDark = 0
 Global $g_bSkipCollectorCheckTH = False, $g_iCmbSkipCollectorCheckTH = 1
 ; constants

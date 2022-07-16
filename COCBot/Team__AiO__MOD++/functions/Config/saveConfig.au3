@@ -291,10 +291,7 @@ Func SaveConfig_MOD_600_31()
 	; <><><> Check Collectors Outside <><><>
 	ApplyConfig_MOD_600_31(GetApplyConfigSaveAction())
 	_Ini_Add("search", "DBMeetCollectorOutside", $g_bDBMeetCollectorOutside ? 1 : 0)
-	_Ini_Add("search", "DBCollectorNone", $g_bDBCollectorNone ? 1 : 0)
 	_Ini_Add("search", "TxtDBMinCollectorOutsidePercent", $g_iDBMinCollectorOutsidePercent)
-
-	_Ini_Add("search", "DBCollectorNearRedline", $g_bDBCollectorNearRedline ? 1 : 0)
 	_Ini_Add("search", "CmbRedlineTiles", $g_iCmbRedlineTiles)
 
 	_Ini_Add("search", "SkipCollectorCheck", $g_bSkipCollectorCheck ? 1 : 0)

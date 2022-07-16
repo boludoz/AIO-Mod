@@ -14,81 +14,74 @@
 ; Example .......: None
 ; ===============================================================================================================================
 Func CollectorsAndRedLines($bForceCapture = False)
-	Local $bReturn = False
-
-	Local Const $imilkfarmoffsetxstep = 35
-	Local Const $imilkfarmoffsetystep = 26
-	Local $iDiamondx = $imilkfarmoffsetxstep + ($imilkfarmoffsetxstep * $g_iCmbRedlineTiles)
-	Local $iDiamondy = $imilkfarmoffsetystep + ($imilkfarmoffsetystep * $g_iCmbRedlineTiles)
-	Local $iPixelDistance = Pixel_Distance(0, 0, $iDiamondx, $iDiamondy)
-
-	If $g_bDBMeetCollectorOutside Or $g_bDBCollectorNearRedline Then
-		Local $hTimer = TimerInit()
-		Local $sText = ($g_bDBCollectorNearRedline And $g_bDBMeetCollectorOutside) ? ("Are collectors near redline ?") : ("Are collectors outside ?")
-		If $bForceCapture = True Then _CaptureRegion2()
-
-		Local $aAllCollectors = SmartFarmDetection("All", False, False)
-		SetDebugLog("Located collectors in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds", $COLOR_ACTION)
-		Local $iOut = 0
-		Local $iLocated = UBound($aAllCollectors)
-		If $iLocated > 0 And Not @error Then
-			If $g_bDBCollectorNearRedline Then
-				$iOut = AreCollectorsNearRedline($aAllCollectors)
-			Else
-				For $i = 0 To $iLocated - 1
-					If ($aAllCollectors[$i][3] = "Out") Then $iOut += 1
-				Next
-			EndIf
-			$bReturn = ($g_iDBMinCollectorOutsidePercent <= Round(Int(($iOut * 100) / $iLocated, 0)))
-			SetLog($sText & " : " & $bReturn & " - Out: " & $iOut & " - Located: " & $iLocated, $COLOR_INFO)
-		EndIf
-	EndIf
-	Return $bReturn
+	If $bForceCapture = True Then _CaptureRegion2()
+    If $g_bDBMeetCollectorOutside Then
+		Return AreCollectorsNearRedline()
+    EndIf
 EndFunc   ;==>CollectorsAndRedLines
 
-; FUNCTION ====================================================================================================================
-; Name ..........: AreCollectorsNearRedline
-; Description ...:
-; Syntax ........:
-; Parameters ....:
-; Return values .: True					more collectors near redline
-;				 : False				less collectors outside than specified
-; Author ........: Samkie (7 FEB 2017)
-; Modified ......:
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2018
-;                  MyBot is distributed under the terms of the GNU GPL
-; Related .......:
-; Link ..........: https://github.com/MyBotRun/MyBot/wiki
-; Example .......: None
-; ===============================================================================================================================
+Func TitleMesures()
+    Local $aNORTH[2] = [48.7915407854985, 20], $aWEST[2] = [47.8851963746224, 21.010101010101], $aEAST[2] = [49.6978851963746, 21.010101010101], $aSOUTH[2] = [48.7915407854985, 22.020202020202]
+    PercentToVillage($aNORTH[0], $aNORTH[1])
+    PercentToVillage($aWEST[0], $aWEST[1])
+    PercentToVillage($aEAST[0], $aEAST[1])
+    PercentToVillage($aSOUTH[0], $aSOUTH[1])
+    Local $aResult[2] = [Pixel_Distance($aWEST[0], $aWEST[1], $aEAST[0], $aEAST[1]), Pixel_Distance($aNORTH[0], $aNORTH[1], $aSOUTH[0], $aSOUTH[1])]
+    Return $aResult
+EndFunc   ;==>TitleMesures
 
-Func AreCollectorsNearRedline($aAllCollectors)
+Func AreCollectorsNearRedline()
+	SetLog("Locating Mines & Collectors", $COLOR_INFO)
+	
 	; reset variables
+	ReDim $g_aiPixelMine[0]
+	ReDim $g_aiPixelElixir[0]
+	ReDim $g_aiPixelDarkElixir[0]
+	Local $aiPixelNearCollector[0]
+
+	Local $hTimer = TimerInit()
 	Local $iTotalCollectorNearRedline = 0
 
-	ConvertInternalExternArea("CollectorsAndRedLines")
 	_GetRedArea()
 
-	Local $colNbr = UBound($aAllCollectors)
+	SuspendAndroid()
+	$g_aiPixelMine = GetLocationMine()
+	If (IsArray($g_aiPixelMine)) Then
+		_ArrayAdd($aiPixelNearCollector, $g_aiPixelMine, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
+	EndIf
+	$g_aiPixelElixir = GetLocationElixir()
+	If (IsArray($g_aiPixelElixir)) Then
+		_ArrayAdd($aiPixelNearCollector, $g_aiPixelElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
+	EndIf
+	$g_aiPixelDarkElixir = GetLocationElixir()
+	If (IsArray($g_aiPixelDarkElixir)) Then
+		_ArrayAdd($aiPixelNearCollector, $g_aiPixelDarkElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
+	EndIf
+	ResumeAndroid()
 
-    Local Const $iMilkFarmOffsetX = 56
-    Local Const $iMilkFarmOffsetY = 41
-	Local Const $imilkfarmoffsetxstep = 35
-	Local Const $imilkfarmoffsetystep = 26
+	$g_bScanMineAndElixir = True
 
+	Global $colNbr = UBound($aiPixelNearCollector)
+
+	SetLog("Located collectors in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds")
+	SetLog("[" & UBound($g_aiPixelMine) & "] Gold Mines")
+	SetLog("[" & UBound($g_aiPixelElixir) & "] Elixir Collectors")
+	SetLog("[" & UBound($g_aiPixelDarkElixir) & "] Dark Elixir Collectors")
+	
+	Local $aTitleMesures = TitleMesures()
+ 	Local $diamondx = $aTitleMesures[0] + ($aTitleMesures[0] * $g_iCmbRedlineTiles)
+ 	Local $diamondy = $aTitleMesures[1] + ($aTitleMesures[1] * $g_iCmbRedlineTiles)
 	Local $arrCollectorsFlag[0]
-	Local $aPixelCoord[2], $aPixelCoord2[2]
+
 	If $colNbr > 0 Then
 		ReDim $arrCollectorsFlag[$colNbr]
 		Local $iMaxRedArea = UBound($g_aiPixelRedArea) - 1
 		For $i = 0 To $iMaxRedArea
-			$aPixelCoord = $g_aiPixelRedArea[$i]
+			Local $pixelCoord = $g_aiPixelRedArea[$i]
 			For $j = 0 To $colNbr - 1
 				If $arrCollectorsFlag[$j] <> True Then
-					$aPixelCoord2[0] = $aAllCollectors[$j][0]
-					$aPixelCoord2[1] = $aAllCollectors[$j][1]
-					; Setlog($aPixelCoord2[0] & " " & $aPixelCoord2[1] & " " & $aPixelCoord[0] & " " & $aPixelCoord[1])
-					If Pixel_Distance($aPixelCoord2[0], $aPixelCoord2[1], $aPixelCoord[0], $aPixelCoord[1]) < (Pixel_Distance($iMilkFarmOffsetX, $iMilkFarmOffsetY, 0, 0) + (Pixel_Distance($imilkfarmoffsetxstep, $imilkfarmoffsetystep, 0, 0) * $g_iCmbRedlineTiles)) Then
+					Local $pixelCoord2 = $aiPixelNearCollector[$j]
+					If Abs(($pixelCoord[0] - $pixelCoord2[0]) / $diamondx) + Abs(($pixelCoord[1] - $pixelCoord2[1]) / $diamondy) <= 1 Then
 						$arrCollectorsFlag[$j] = True
 						$iTotalCollectorNearRedline += 1
 					EndIf
@@ -96,6 +89,11 @@ Func AreCollectorsNearRedline($aAllCollectors)
 			Next
 			If $iTotalCollectorNearRedline >= $colNbr Then ExitLoop
 		Next
+		SetLog("Total collectors Found: " & $colNbr)
+		SetLog("Total collectors near red line: " & $iTotalCollectorNearRedline)
+		If $iTotalCollectorNearRedline >= Round($colNbr * $g_iDBMinCollectorOutsidePercent / 100) Then
+			Return True
+		EndIf
 	EndIf
-	Return $iTotalCollectorNearRedline
-EndFunc   ;==>AreCollectorsNearRedline
+	Return False
+EndFunc

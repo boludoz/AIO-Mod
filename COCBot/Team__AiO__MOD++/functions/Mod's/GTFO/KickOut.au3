@@ -13,6 +13,24 @@
 ; Example .......: ---
 ; ===============================================================================================================================
 Global $g_bNotKick = False
+#cs
+# 1 . Open profile ; Mouse LBUTTONDOWN 036,029 Color FFFFFE
+# 2 . Go to clan page ; Mouse LBUTTONDOWN 323,020 Color 828C92
+	|--> Check if is on home village > Mouse LBUTTONDOWN 277,077 Color BCCBCD
+# 3 . Check if is leader o coleader ; 307,263 Color F0D56C (Coleader / Leader)
+# 4 . Do four clicks > Mouse LBUTTONDOWN 406,418 Color CF932F x4
+# 5 . Drag.
+# 4 . KickOut if condition is.
+#ce
+
+Global $g_aOpenProfile = [36, 29]
+Global $g_aIsOnClanTab = [409, 23, 0xEBEFEF, 20]
+Global $g_aIsOnHomeVillage = [277, 77, 0xBCCBCD, 20]
+Global $g_aIsLeaderColeader = [438, 288, 0xd8f380, 20]
+Global $g_aClickOnMost = [406, 418, 0xCF932F, 20] ;x4
+Global $g_aCloseX = [824, 31 , 0xFFFFFF, 25]
+Global $g_aOkayKickOut = [553, 205 , 0x87F9E0, 25]
+
 
 Func MainKickout()
 	If Not $g_bChkUseKickOut Or $g_bNotKick Then Return
@@ -22,21 +40,21 @@ Func MainKickout()
 	Local $Number2Kick = 0
 
 	For $T = 0 To $g_iTxtKickLimit - 1
-		
+
 		; Needs refresh.
 		If Not IsMainPage(3) Then
 			CheckMainScreen()
 		EndIf
-		
+
 		If OpenClanPage("Kickout") Then
 			ClickP($g_aClickOnMost, 4, 1000)
-			
+
 			SetLog("Donated CAP: " & $g_iTxtDonatedCap & " /Received CAP: " & $g_iTxtReceivedCap & " /Kick Spammers: " & $g_bChkKickOutSpammers, $COLOR_INFO)
 			For $Rank = 0 To 9
 
 				#Region - Core
 				If RandomSleep(1500) Then Return
-				
+
 				Go2Bottom()
 				Local $aXPStar = QuickMIS("CNX", @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\KickOut\Equal\", 798, 118, 833, 626, True, False) ; Resolution changed
 
@@ -45,9 +63,9 @@ Func MainKickout()
 					Setlog("- KickOut fail : $aXPStar", $COLOR_ERROR)
 					Return False
 				EndIf
-				
+
 				; RemoveDupCNX($aXPStar)
-				
+
 				_ArrayShuffle($aXPStar)
 
 				For $i = 0 To UBound($aXPStar) - 1
@@ -70,7 +88,7 @@ Func MainKickout()
 					Else
 						ContinueLoop
 					EndIf
-					
+
 					Select
 						Case ($iDonated = 0 And $iReceived = 0) Or ($iDonated < $g_iTxtDonatedCap And $iReceived < $g_iTxtReceivedCap)
 							ContinueLoop
@@ -80,7 +98,7 @@ Func MainKickout()
 					EndSelect
 
 					Local $aKickOut = QuickMIS("CNX", @ScriptDir & "\COCBot\Team__AiO__MOD++\Images\KickOut\KickOutBTN\", 445, 116, 493, 636, True, False) ; Resolution changed
-					
+
 					If Not IsArray($aKickOut) Then
 						Setlog("- KickOut fail : $aKickOut", $COLOR_ERROR)
 						Return False
@@ -93,7 +111,7 @@ Func MainKickout()
 						EndIf
 						$Number2Kick += 1
 						ExitLoop 2
-						
+
 					EndIf
 				Next
 				#EndRegion - Core
@@ -124,24 +142,6 @@ Func Go2Bottom()
 	Return True
 EndFunc   ;==>Go2Bottom
 
-#cs
-# 1 . Open profile ; Mouse LBUTTONDOWN 036,029 Color FFFFFE
-# 2 . Go to clan page ; Mouse LBUTTONDOWN 323,020 Color 828C92
-	|--> Check if is on home village > Mouse LBUTTONDOWN 277,077 Color BCCBCD
-# 3 . Check if is leader o coleader ; 307,263 Color F0D56C (Coleader / Leader)
-# 4 . Do four clicks > Mouse LBUTTONDOWN 406,418 Color CF932F x4
-# 5 . Drag.
-# 4 . KickOut if condition is.
-#ce
-
-Global $g_aOpenProfile = [36, 29]
-Global $g_aIsOnClanTab = [409, 23, 0xEBEFEF, 20]
-Global $g_aIsOnHomeVillage = [277, 77, 0xBCCBCD, 20]
-Global $g_aIsLeaderColeader = [438, 288, 0xd8f380, 20]
-Global $g_aClickOnMost = [406, 418, 0xCF932F, 20] ;x4
-Global $g_aCloseX = [824, 31 , 0xFFFFFF, 25]
-Global $g_aOkayKickOut = [553, 205 , 0x87F9E0, 25]
-
 Func OpenClanPage($sMode = "None")
 
 	; ********* OPEN TAB AND CHECK IT PROFILE ***********
@@ -156,14 +156,14 @@ Func OpenClanPage($sMode = "None")
 
 		; Click on Clan Tab
 		ClickP($g_aIsOnClanTab, 1)
-		
+
 		If _Wait4PixelArray($g_aIsOnClanTab) Then
-	
+
 			; Click on Home Village
 			If Not _Wait4Pixel($g_aIsOnHomeVillage[0], $g_aIsOnHomeVillage[1], $g_aIsOnHomeVillage[2], $g_aIsOnHomeVillage[3], 500) Then
 				ClickP($g_aIsOnHomeVillage, 1)
 			EndIf
-			
+
 			Switch $sMode
 				Case "KickOut"
 					If Not _Wait4Pixel($g_aIsLeaderColeader[0], $g_aIsLeaderColeader[1], $g_aIsLeaderColeader[2], $g_aIsLeaderColeader[3], 500) Then
@@ -177,12 +177,12 @@ Func OpenClanPage($sMode = "None")
 				Case "GTFO"
 					SetLog("[OpenClanPage] GTFO MODE NOT FINISHED", $COLOR_ERROR)
 			EndSwitch
-			
+
 			SetLog("[OpenClanPage] Didn't Openned", $COLOR_DEBUG)
 			Return False
 		EndIf
 	Else
-		
+
 	EndIf
 EndFunc   ;==>OpenClanPage
 

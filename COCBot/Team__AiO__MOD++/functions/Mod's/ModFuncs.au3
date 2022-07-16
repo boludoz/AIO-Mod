@@ -375,13 +375,3 @@ Func _OSBuild()
 	If @error Or Number($s_iTrueOSBuild) = 0 Then $s_iTrueOSBuild = @OSBuild
 	Return SetError(0, 0, $s_iTrueOSBuild)
 EndFunc   ;==>_OSBuild
-
-Func TitleMesures()
-	Local $aNORTH[2] = [48.7915407854985, 20], $aWEST[2] = [47.8851963746224, 21.010101010101], $aEAST[2] = [49.6978851963746, 21.010101010101], $aSOUTH[2] = [48.7915407854985, 22.020202020202]
-	PercentToVillage($aNORTH[0], $aNORTH[1])
-	PercentToVillage($aWEST[0], $aWEST[1])
-	PercentToVillage($aEAST[0], $aEAST[1])
-	PercentToVillage($aSOUTH[0], $aSOUTH[1])
-	Local $aResult[2] = [Pixel_Distance($aWEST[0], $aWEST[1], $aEAST[0], $aEAST[1]), Pixel_Distance($aNORTH[0], $aNORTH[1], $aSOUTH[0], $aSOUTH[1])]
-	Return $aResult
-EndFunc   ;==>TitleMesures
