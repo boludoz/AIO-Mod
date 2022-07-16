@@ -399,28 +399,22 @@ Func Algorithm_AttackCSV($testattack = False, $captureredarea = True)
 	;04 - MINES, COLLECTORS, DRILLS -----------------------------------------------------------------------------------------------------------------------
 
 	;reset variables
-	Global $g_aiPixelMine[0]
-	Global $g_aiPixelElixir[0]
-	Global $g_aiPixelDarkElixir[0]
+	; Collectors outside - Team AIO Mod++
+	If $g_bScanMineAndElixir = False Then
+		ReDim $g_aiPixelMine[0]
+		ReDim $g_aiPixelElixir[0]
+		ReDim $g_aiPixelDarkElixir[0]
+	EndIf
 	Local $g_aiPixelNearCollectorTopLeftSTR = ""
 	Local $g_aiPixelNearCollectorBottomLeftSTR = ""
 	Local $g_aiPixelNearCollectorTopRightSTR = ""
 	Local $g_aiPixelNearCollectorBottomRightSTR = ""
 
-	; Team AIO Mod++
-	Local $bCapturedMine = False
-
 	;04.01 If drop troop near gold mine
 	If $g_bCSVLocateMine Then
 		$hTimer = __timerinit()
-
-		; Team AIO Mod++
-		If $bCapturedMine = False Then
-			_CaptureRegion2()
-			$bCapturedMine = True
-		EndIf
-
-		$g_aiPixelMine = GetLocationMine(False) ; Team AIO Mod++
+		; Collectors outside - Team AIO Mod++
+		If UBound($g_aiPixelMine) < 1 Then $g_aiPixelMine = GetLocationMine(False)
 		If _Sleep($DELAYRESPOND) Then Return
 		CleanRedArea($g_aiPixelMine)
 		Local $htimerMine = Round(__timerdiff($hTimer) / 1000, 2)
@@ -459,13 +453,8 @@ Func Algorithm_AttackCSV($testattack = False, $captureredarea = True)
 	If $g_bCSVLocateElixir Then
 		$hTimer = __timerinit()
 
-		; Team AIO Mod++
-		If $bCapturedMine = False Then
-			_CaptureRegion2()
-			$bCapturedMine = True
-		EndIf
-
-		$g_aiPixelElixir = GetLocationElixir(False) ; Team AIO Mod++
+		; Collectors outside - Team AIO Mod++
+		If UBound($g_aiPixelElixir) < 1 Then $g_aiPixelElixir = GetLocationElixir(False)
 		If _Sleep($DELAYRESPOND) Then Return
 		CleanRedArea($g_aiPixelElixir)
 		Local $htimerMine = Round(__timerdiff($hTimer) / 1000, 2)
@@ -505,13 +494,8 @@ Func Algorithm_AttackCSV($testattack = False, $captureredarea = True)
 		;SetLog("Locating drills")
 		$hTimer = __timerinit()
 
-		; Team AIO Mod++
-		If $bCapturedMine = False Then
-			_CaptureRegion2()
-			$bCapturedMine = True
-		EndIf
-
-		$g_aiPixelDarkElixir = GetLocationDarkElixir(False) ; Team AIO Mod++
+		; Collectors outside - Team AIO Mod++
+		If UBound($g_aiPixelDarkElixir) < 1 Then $g_aiPixelDarkElixir = GetLocationDarkElixir(False)
 		If _Sleep($DELAYRESPOND) Then Return
 		CleanRedArea($g_aiPixelDarkElixir)
 		Local $htimerMine = Round(__timerdiff($hTimer) / 1000, 2)

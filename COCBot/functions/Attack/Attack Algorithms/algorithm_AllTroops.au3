@@ -457,76 +457,62 @@ Func CloseBattle()
 EndFunc   ;==>CloseBattle
 
 Func SmartAttackStrategy($imode)
-		If ($g_abAttackStdSmartAttack[$imode]) Then
-			SetLog("Calculating Smart Attack Strategy", $COLOR_INFO)
-			Local $hTimer = __TimerInit()
-			_CaptureRegion2()
-			_GetRedArea()
+	If ($g_abAttackStdSmartAttack[$imode]) Then
+		SetLog("Calculating Smart Attack Strategy", $COLOR_INFO)
+		Local $hTimer = __TimerInit()
+		_CaptureRegion2()
+		_GetRedArea()
 
-			SetLog("Calculated  (in " & Round(__TimerDiff($hTimer) / 1000, 2) & " seconds) :")
+		SetLog("Calculated  (in " & Round(__TimerDiff($hTimer) / 1000, 2) & " seconds) :")
 
-			If ($g_abAttackStdSmartNearCollectors[$imode][0] Or $g_abAttackStdSmartNearCollectors[$imode][1] Or $g_abAttackStdSmartNearCollectors[$imode][2]) Then
+		If ($g_abAttackStdSmartNearCollectors[$imode][0] Or $g_abAttackStdSmartNearCollectors[$imode][1] Or $g_abAttackStdSmartNearCollectors[$imode][2]) Then
 
-				; Team AIO Mod++
-				Local $bCapturedMine = False
-
-				SetLog("Locating Mines, Collectors & Drills", $COLOR_INFO)
-				$hTimer = __TimerInit()
-				Global $g_aiPixelMine[0]
-				Global $g_aiPixelElixir[0]
-				Global $g_aiPixelDarkElixir[0]
-				Global $g_aiPixelNearCollector[0]
-				; If drop troop near gold mine
-				If $g_abAttackStdSmartNearCollectors[$imode][0] Then
-
-					; Team AIO Mod++
-					If $bCapturedMine = False Then
-						_CaptureRegion2()
-						$bCapturedMine = True
-					EndIf
-
-					$g_aiPixelMine = GetLocationMine(False)
-					If (IsArray($g_aiPixelMine)) Then
-						_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelMine, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
-					EndIf
-				EndIf
-				; If drop troop near elixir collector
-				If $g_abAttackStdSmartNearCollectors[$imode][1] Then
-
-					; Team AIO Mod++
-					If $bCapturedMine = False Then
-						_CaptureRegion2()
-						$bCapturedMine = True
-					EndIf
-
-					$g_aiPixelElixir = GetLocationElixir(False)
-					If (IsArray($g_aiPixelElixir)) Then
-						_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
-					EndIf
-				EndIf
-				; If drop troop near dark elixir drill
-				If $g_abAttackStdSmartNearCollectors[$imode][2] Then
-
-					; Team AIO Mod++
-					If $bCapturedMine = False Then
-						_CaptureRegion2()
-						$bCapturedMine = True
-					EndIf
-
-					$g_aiPixelDarkElixir = GetLocationDarkElixir(False)
-					If (IsArray($g_aiPixelDarkElixir)) Then
-						_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelDarkElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
-					EndIf
-				EndIf
-				SetLog("Located  (in " & Round(__TimerDiff($hTimer) / 1000, 2) & " seconds) :")
-				SetLog("[" & UBound($g_aiPixelMine) & "] Gold Mines")
-				SetLog("[" & UBound($g_aiPixelElixir) & "] Elixir Collectors")
-				SetLog("[" & UBound($g_aiPixelDarkElixir) & "] Dark Elixir Drill/s")
-				$g_aiNbrOfDetectedMines[$imode] += UBound($g_aiPixelMine)
-				$g_aiNbrOfDetectedCollectors[$imode] += UBound($g_aiPixelElixir)
-				$g_aiNbrOfDetectedDrills[$imode] += UBound($g_aiPixelDarkElixir)
-				UpdateStats()
+			; Collectors outside - Team AIO Mod++
+			SetLog("Locating Mines, Collectors & Drills", $COLOR_INFO)
+			$hTimer = __TimerInit()
+			If $g_bScanMineAndElixir = False Then
+				ReDim $g_aiPixelMine[0]
+				ReDim $g_aiPixelElixir[0]
+				ReDim $g_aiPixelDarkElixir[0]
+				ReDim $g_aiPixelNearCollector[0]
 			EndIf
+			
+			; If drop troop near gold mine
+			If $g_abAttackStdSmartNearCollectors[$imode][0] Then
 
+				; Collectors outside - Team AIO Mod++
+				If UBound($g_aiPixelMine) < 1 Then $g_aiPixelMine = GetLocationMine(False)
+				If (IsArray($g_aiPixelMine)) Then
+					_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelMine, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
+				EndIf
+			EndIf
+			; If drop troop near elixir collector
+			If $g_abAttackStdSmartNearCollectors[$imode][1] Then
+
+				; Collectors outside - Team AIO Mod++
+				If UBound($g_aiPixelElixir) < 1 Then $g_aiPixelElixir = GetLocationElixir(False)
+				If (IsArray($g_aiPixelElixir)) Then
+					_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
+				EndIf
+			EndIf
+			; If drop troop near dark elixir drill
+			If $g_abAttackStdSmartNearCollectors[$imode][2] Then
+
+				; Collectors outside - Team AIO Mod++
+				If UBound($g_aiPixelDarkElixir) < 1 Then $g_aiPixelDarkElixir = GetLocationDarkElixir(False)
+				If (IsArray($g_aiPixelDarkElixir)) Then
+					_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelDarkElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
+				EndIf
+			EndIf
+			SetLog("Located  (in " & Round(__TimerDiff($hTimer) / 1000, 2) & " seconds) :")
+			SetLog("[" & UBound($g_aiPixelMine) & "] Gold Mines")
+			SetLog("[" & UBound($g_aiPixelElixir) & "] Elixir Collectors")
+			SetLog("[" & UBound($g_aiPixelDarkElixir) & "] Dark Elixir Drill/s")
+			$g_aiNbrOfDetectedMines[$imode] += UBound($g_aiPixelMine)
+			$g_aiNbrOfDetectedCollectors[$imode] += UBound($g_aiPixelElixir)
+			$g_aiNbrOfDetectedDrills[$imode] += UBound($g_aiPixelDarkElixir)
+			UpdateStats()
 		EndIf
+
+	EndIf
 EndFunc   ;==>SmartAttackStrategy

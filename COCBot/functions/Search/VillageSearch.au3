@@ -49,6 +49,8 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		$abHeroUse[$i] = ($g_abSearchSearchesEnable[$DB] ? IsUnitUsed($DB, $eKing + $i) : False) _
 				Or ($g_abSearchSearchesEnable[$LB] ? IsUnitUsed($LB, $eKing + $i) : False)
 	Next
+	
+	$g_bScanMineAndElixir = False ; Collectors outside - Team AIO Mod++
 
 	If $g_bDebugDeadBaseImage Or $g_aiSearchEnableDebugDeadBaseImage > 0 Then
 		DirCreate($g_sProfileTempDebugPath & "\SkippedZombies\")
@@ -308,7 +310,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 				Next
 			EndIf
 		EndIf
-		
+				
 		ResumeAndroid()
 		
 		If $g_bLeagueAttack = True Then
@@ -334,8 +336,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 			Local $bFlagSearchAnotherBase = False
 
 			If ($bFlagSearchAnotherBase = False) Then
-				If $g_bDBMeetCollectorOutside Then ; check is that collector  near outside
-					$g_bScanMineAndElixir = False
+				If $g_bDBMeetCollectorOutside Then ; check is that collector near outside
 
 					If CollectorsAndRedLines(False) Then
 						SetLog("Collectors are outside, match found !", $COLOR_SUCCESS)
