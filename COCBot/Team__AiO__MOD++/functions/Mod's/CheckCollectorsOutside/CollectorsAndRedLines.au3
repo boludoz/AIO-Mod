@@ -39,7 +39,7 @@ Func CollectorsAndRedLines($bForceCapture = False)
 	If (IsArray($g_aiPixelElixir)) Then
 		_ArrayAdd($aiPixelNearCollector, $g_aiPixelElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
 	EndIf
-	$g_aiPixelDarkElixir = GetLocationElixir(False)
+	$g_aiPixelDarkElixir = GetLocationDarkElixir(False)
 	If (IsArray($g_aiPixelDarkElixir)) Then
 		_ArrayAdd($aiPixelNearCollector, $g_aiPixelDarkElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
 	EndIf
