@@ -786,7 +786,7 @@ Func FindPreferredAdbPath()
 			; ensure target process is not running
 			KillProcess($aAdbProcess[$i], "FindPreferredAdbPath (1)")
 		Next
-	
+
 		Switch $g_iAndroidAdbReplace
 			Case 2
 				Local $sDummyAdb = @ScriptDir & "\lib\DummyExe.exe"
@@ -802,9 +802,9 @@ Func FindPreferredAdbPath()
 					FileCopy($sADBPathvdll, $sDirectory & StringRegExpReplace($sADBPathvdll, "^.*\\", ""), $FC_OVERWRITE)
 					FileCopy($sADBPathvdll1, $sDirectory & StringRegExpReplace($sADBPathvdll1, "^.*\\", ""), $FC_OVERWRITE)
 				EndIf
-				
+
 				$sPathAdbLegacy = Execute("Get" & $g_sAndroidEmulator & "AdbPath()")
-				
+
 				If FileExists($sPathAdbLegacy) Then
 					$g_sAndroidAdbPath = $sPathAdbLegacy
 					Return $g_sAndroidAdbPath
@@ -1013,7 +1013,7 @@ Func InitAndroid($bCheckOnly = False, $bLogChangesOnly = True)
 	If Not $bCheckOnly And $Result Then
 
 		InitAndroidAdbPorts()
-	
+
 		; exclude Android for WerFault reporting
 		If $b_sAndroidProgramWerFaultExcluded = True Then
 			Local $sFileOnly = StringMid($g_sAndroidProgramPath, StringInStr($g_sAndroidProgramPath, "\", 0, -1) + 1)
@@ -1034,7 +1034,7 @@ Func InitAndroid($bCheckOnly = False, $bLogChangesOnly = True)
 				EndIf
 			EndIf
 		EndIf
-		
+
 		; update Virtualbox properties
 		If FileExists($__VBoxManage_Path) Then
 			If $__VBoxGuestProperties = "" Then $__VBoxGuestProperties = LaunchConsole($__VBoxManage_Path, "guestproperty enumerate " & $g_sAndroidInstance, $process_killed)
@@ -1156,13 +1156,13 @@ EndFunc   ;==>OpenAndroid
 Func _OpenAndroid($bRestart = False, $bStartOnlyAndroid = False)
 	If StringIsSpace($g_sAndroidAdbPath) = 0 Then
 		ResumeAndroid()
-		
+
 		; list Android devices to ensure ADB Daemon is launched
 		Local $hMutex = AquireAdbDaemonMutex(), $process_killed
 		LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "devices", $process_killed)
 		ReleaseAdbDaemonMutex($hMutex)
 	EndIf
-	
+
 	If Not InitAndroid() Then
 		SetLog("Unable to open " & $g_sAndroidEmulator & ($g_sAndroidInstance = "" ? "" : " instance '" & $g_sAndroidInstance & "'"), $COLOR_ERROR)
 		SetLog("Please check emulator/installation", $COLOR_ERROR)
@@ -1175,7 +1175,7 @@ Func _OpenAndroid($bRestart = False, $bStartOnlyAndroid = False)
 
 	If StringIsSpace($g_sAndroidAdbPath) = 0 Then
 		ResumeAndroid()
-		
+
 		; list Android devices to ensure ADB Daemon is launched
 		Local $hMutex = AquireAdbDaemonMutex(), $process_killed
 		LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "devices", $process_killed)
@@ -1224,9 +1224,9 @@ Func _OpenAndroid($bRestart = False, $bStartOnlyAndroid = False)
 	If $bRestart = False Then
 		; Press home button to start default launcher (e.g. for BS 4 with Nova Launcher)
 		AndroidHomeButton()
-	
+
 		If _Sleep(3000) Then Return False ; wait 3 seconds or delayed home button execution "kill" games (maybe more seconds required?)
-	
+
 		If Not $g_bRunState Then Return False
 	EndIf
 
@@ -1980,7 +1980,7 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 		ElseIf $iconnected = 2 And $g_iAndroidadbprocess[0] Then
 			Return SetError(0, 0)
 		EndIf
-		
+
 		For $iMount = 0 To 15
 
 			$s = LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "-s " & $g_sAndroidAdbDevice & " shell" & $g_sAndroidAdbShellOptions & " mount", $process_killed)
@@ -2006,7 +2006,7 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 				SetLog("Cannot create dummy file: " & $g_sAndroidpictureshostpath & $dummyfile, $COLOR_ERROR)
 				Return SetError(4, 0)
 			EndIf
-            
+
 			; Snorlax
             $s = LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "-s " & $g_sAndroidAdbDevice & " shell" & $g_sAndroidAdbShellOptions & " ls '" & $g_sAndroidPicturesPath & $dummyFile & "'", $process_killed)
             If StringInStr($s, $dummyFile) > 0 And StringInStr($s, $dummyFile & ":") = 0 And StringInStr($s, "No such file or directory") = 0 And StringInStr($s, "syntax error") = 0 And StringInStr($s, "Permission denied") = 0 Then
@@ -2014,7 +2014,7 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
                 SetDebugLog("Using " & $g_sAndroidPicturesPath & " for Android shared folder")
                 ExitLoop
             EndIf
-            
+
 			For $i = 0 To UBound($amounts) - 1
 				$path = $amounts[$i]
 				If $path = "" Then ContinueLoop
@@ -2027,7 +2027,7 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 					ExitLoop
 				EndIf
 			Next
-	
+
 			FileDelete($g_sAndroidpictureshostpath & $dummyfile)
 			If $pathfound = True Then ExitLoop
 			If $imount = 0 Then
@@ -2043,10 +2043,10 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 				$cmdoutput = launchconsole($g_sAndroidadbpath, "remount", $process_killed)
 				SetDebugLog("OutPut: " & $cmdoutput)
 			EndIf
-			If _Sleep(6000) Then Return 
+			If _Sleep(6000) Then Return
 			$g_iAndroidVersionAPI = Int(AndroidAdbSendShellCommand("getprop ro.build.version.sdk", Default, $wasRunState, False))
 		Next
-		
+
 		$g_sAndroidPicturesPathAvailable = $pathFound
 		If $pathFound = False Then
 			SetLog($g_sAndroidEmulator & " cannot use ADB on shared folder, """ & $g_sAndroidPicturesPath & """ not found", $COLOR_ERROR)
@@ -2838,7 +2838,7 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 		EndIf
 		If $hFile = 0 Or $iSize < $ExpectedFileSize Or $iReadHeader < $iHeaderSize Or $iReadData < $iDataSize Then
 			If $hFile = 0 Then
-				
+
                 If $g_bRunState = False Then
                     SetLog("File not found: Try start android first!", $COLOR_ERROR)
                     If $hFile <> 0 Then _WinAPI_CloseHandle($hFile)
@@ -2846,7 +2846,7 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
                 Else
                     SetLog("File not found: " & $hostPath & $Filename, $COLOR_ERROR)
                 EndIf
-				
+
 			Else
 				If $iSize <> $ExpectedFileSize Then SetDebugLog("File size " & $iSize & " is not " & $ExpectedFileSize & " for " & $hostPath & $Filename, $COLOR_ERROR)
 				SetDebugLog("Captured screen size " & $g_iAndroidAdbScreencapWidth & " x " & $g_iAndroidAdbScreencapHeight, $COLOR_ERROR)
@@ -3853,7 +3853,7 @@ Func AndroidMinitouchClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect =
 	If IsKeepClicksActive(False) = False Then ; Invalidate ADB screencap (not when troops are deployed to speed up clicks)
 		$g_iAndroidAdbScreencapTimer = 0 ; invalidate ADB screencap timer/timeout
 	EndIf
-	
+
 	#cs
 	; update total stats
 	Local $duration = Round((__TimerDiff($hDuration) - $timeSlept) / $loops)
@@ -4961,7 +4961,7 @@ Func AddSpace($s, $Option = Default)
 EndFunc   ;==>AddSpace
 
 Func CheckEmuNewVersions($bSilentLog = False)
-	
+
 	; Custom fix - Team AIO Mod++
 	; call Android initialization routine
 	Local $sResult = Execute("Init" & $g_sAndroidEmulator & "(False)")
@@ -4972,8 +4972,10 @@ Func CheckEmuNewVersions($bSilentLog = False)
 
 	Local $Version = GetVersionNormalized($g_sAndroidVersion)
 	
-	GuiCtrlSetData($g_hLblAndroidInfo, $g_sAndroidEmulator & " v" & $g_sAndroidVersion)
-	
+	#Region - Custom - Team AIO Mod++
+	GUICtrlSetData($g_hLblAndroidInfo, $g_sandroidemulator & " v" & $g_sandroidversion)
+	#EndRegion - Custom - Team AIO Mod++
+
 	Local $NewVersion = ""
 	Local $HelpLink = "Please visit MyBot Forum!"
 
@@ -4995,7 +4997,7 @@ Func CheckEmuNewVersions($bSilentLog = False)
 		SetLog("Compatibility has not been certified for " & $g_sAndroidEmulator & " version (" & $g_sAndroidVersion & ")!", $COLOR_INFO)
 		SetLog($HelpLink, $COLOR_INFO)
 	EndIf
-	
+
 	If $g_sAndroidEmulator = "Memu" And $Version = GetVersionNormalized("8.0.1.0") And $bSilentLog = False Then
 		SetLog("Memu 8.0.1.0 has problems working, please install a later version.", $COLOR_ERROR)
 	EndIf

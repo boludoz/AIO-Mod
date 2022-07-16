@@ -992,20 +992,13 @@ EndFunc   ;==>btnTestGetLocationBuildingImage
 
 #Region - Custom - Team AIO Mod++
 Func btnRunFunction($bExecuteCapture = False)
-	Local $a = [GUICtrlGetState($g_hBtnStart), GUICtrlGetState($g_hBtnStop)]
+	Local $bCurrentExecuteCapture = $g_bExecuteCapture, $iError = 0, $sSCap = ($bExecuteCapture = False) ? ("Run function ") : ("Run function + Capture ")
+	Local $aBackup = [GUICtrlGetState($g_hBtnStart), GUICtrlGetState($g_hBtnStop), $g_bRunState]
 	GUICtrlSetState($g_hBtnStart, $GUI_HIDE)
 	GUICtrlSetState($g_hBtnStop, $GUI_SHOW)
-
-	_btnRunFunction($bExecuteCapture)
-	
-	GUICtrlSetState($g_hBtnStart, $a[0])
-	GUICtrlSetState($g_hBtnStop, $a[1])
-EndFunc
-
-Func _btnRunFunction($bExecuteCapture = False)
-	Local $bCurrentRunState = $g_bRunState, $bCurrentExecuteCapture = $g_bExecuteCapture, $iError = 0, $sSCap = ($bExecuteCapture = False) ? ("Run function ") : ("Run function + Capture ")
-	$g_bExecuteCapture = $bExecuteCapture
 	$g_bRunState = True
+	
+	$g_bExecuteCapture = $bExecuteCapture
 	$g_bRestart = False
 
 	; Prevent bugs.
@@ -1019,29 +1012,22 @@ Func _btnRunFunction($bExecuteCapture = False)
 
 	Setlog($sSCap & " Run Function : " & $sFunc, $COLOR_ACTION)
 
-	; Local $bDebugLogs = $g_bDebugSetlog
-	; $g_bDebugSetlog = True
 	Local $iError = 0, $iExtended = 0
 	Local $iTimer = __TimerInit()
 	Local $saExecResult = Execute($sFunc)
+	
 	$iError = @error
 	$iExtended = @extended
 	Local $iCalc = Round(__TimerDiff($iTimer)/1000, 2)
 	Setlog($sSCap & " Time Execution : " & $iCalc & " sec", $COLOR_INFO)
 
-	; $g_bDebugSetlog = $bDebugLogs
+	GUICtrlSetState($g_hBtnStart, $aBackup[0])
+	GUICtrlSetState($g_hBtnStop, $aBackup[1])
+	$g_bRunState = $aBackup[2]
 	
 	Local $sConv
 	If $iError = 0 Then
 		_GUICtrlTab_ClickTab($g_hTabMain, 0)
-		
-		If IsArray($saExecResult) Then
-			$sConv = _ArrayToString($saExecResult, "|", Default, Default, "#")
-			Setlog($sSCap & " Result (IsArray) : " & $sConv, $COLOR_INFO)
-			_ArrayDisplay($saExecResult, " Debug function Result")
-		Else
-			Setlog($sSCap & " Result : " & $saExecResult, $COLOR_INFO)
-		EndIf
 		
 		If IsArray($iExtended) Then
 			$sConv = _ArrayToString($iExtended, "|", Default, Default, "#")
@@ -1050,15 +1036,21 @@ Func _btnRunFunction($bExecuteCapture = False)
 		Else
 			SetLog($sSCap & " Debug @extended result: " & $iExtended, $COLOR_INFO)
 		EndIf
+		
+		If IsArray($saExecResult) Then
+			$sConv = _ArrayToString($saExecResult, "|", Default, Default, "#")
+			Setlog($sSCap & " Result (IsArray) : " & $sConv, $COLOR_INFO)
+			_ArrayDisplay($saExecResult, " Debug function Result")
+		Else
+			Setlog($sSCap & " Result : " & $saExecResult, $COLOR_INFO)
+		EndIf
 
 	Else
-		SetLog($sSCap & " Debug @error code : " & $iError, $COLOR_ERROR) 
 		SetLog($sSCap & " Debug @extended result: " & $iExtended, $COLOR_ERROR) 
+		SetLog($sSCap & " Debug @error code : " & $iError, $COLOR_ERROR) 
 	EndIf
 	
-
 	$g_bExecuteCapture = $bCurrentExecuteCapture
-	$g_bRunState = $bCurrentRunState
 EndFunc
 #EndRegion - Custom - Team AIO Mod++
 

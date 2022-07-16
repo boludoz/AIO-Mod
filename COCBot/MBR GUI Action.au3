@@ -116,6 +116,13 @@ Func BotStart($bAutostartDelay = 0)
 			$Result = RebootAndroid(False)
 		EndIf
 		If Not $g_bRunState Then Return FuncReturn()
+
+		#Region - Custom - Team AIO Mod++
+		Local $sAndroidVersion = AndroidAdbsendShellCommand("getprop ro.build.version.release", Default, $g_brunstate, False)
+		Local $sCPUS = (AndroidAdbsendShellCommand("getprop ro.product.cpu.abi", Default, $g_brunstate, False) = "x86_64") ? ("x64") : ("x32")
+		GUICtrlSetData($g_hLblAndroidInfoAndroid, "Android v" & $sAndroidVersion & " " & $sCPUS)
+		#EndRegion - Custom - Team AIO Mod++
+
 		Local $hWndActive = $g_hAndroidWindow
 		; check if window can be activated
 		If $g_bNoFocusTampering = False And $g_bAndroidBackgroundLaunched = False And $g_bAndroidEmbedded = False Then

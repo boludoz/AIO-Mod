@@ -807,4 +807,4 @@ Global $g_aFallbackDragFix = -1
 Global $g_bNewUpdateMainVillage = False, $g_hChkAutoBuildNew = 0
 
 ; Android version
-Global $g_hLblAndroidInfo = 0
+Global $g_hLblAndroidInfo = 0, $g_hLblAndroidInfoAndroid = 0
