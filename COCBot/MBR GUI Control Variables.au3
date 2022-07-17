@@ -328,7 +328,7 @@ Func InitializeControlVariables()
 		$oAlwaysEnabledControls($i) = 1
 	Next
 	
-	#Region AiO MOD++
+	#Region - AiO MOD++
 	For $i in $aTabControlsMOD
 		$oAlwaysEnabledControls($i) = 1
 	Next
@@ -345,8 +345,10 @@ Func InitializeControlVariables()
 		$oAlwaysEnabledControls($i) = 1
 	Next
 	
-	; AiO MOD++
 	$oAlwaysEnabledControls($g_hTxtClanGamesLog) = 1
-	#EndRegion
+
+	$groupIMGAttackABSpell &= "#"&$g_ahCmbCSVSpeed[$LB]
+	$groupIMGAttackDBSpell &= "#"&$g_ahCmbCSVSpeed[$DB]
+	#EndRegion - AiO MOD++
 	
 EndFunc

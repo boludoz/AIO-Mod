@@ -261,13 +261,13 @@ EndFunc   ;==>ReadConfig_MOD_600_28
 
 Func ReadConfig_MOD_600_29()
 	; <><><> CSV Deploy Speed <><><>
-	IniReadS($icmbCSVSpeed[$LB], $g_sProfileConfigPath, "attack", "cmbCSVSpeedLB", $icmbCSVSpeed[$LB], "int")
-	IniReadS($icmbCSVSpeed[$DB], $g_sProfileConfigPath, "attack", "cmbCSVSpeedDB", $icmbCSVSpeed[$DB], "int")
+	IniReadS($g_iCmbCSVSpeed[$LB], $g_sProfileConfigPath, "attack", "cmbCSVSpeedLB", $g_iCmbCSVSpeed[$LB], "int")
+	IniReadS($g_iCmbCSVSpeed[$DB], $g_sProfileConfigPath, "attack", "cmbCSVSpeedDB", $g_iCmbCSVSpeed[$DB], "int")
 	For $i = $DB To $LB
-		If $icmbCSVSpeed[$i] < 5 Then
-			$g_CSVSpeedDivider[$i] = 0.5 + $icmbCSVSpeed[$i] * 0.25        ; $g_CSVSpeedDivider = 0.5, 0.75, 1, 1.25, 1.5
+		If $g_iCmbCSVSpeed[$i] < 5 Then
+			$g_CSVSpeedDivider[$i] = 0.5 + $g_iCmbCSVSpeed[$i] * 0.25        ; $g_CSVSpeedDivider = 0.5, 0.75, 1, 1.25, 1.5
 		Else
-			$g_CSVSpeedDivider[$i] = 2 + $icmbCSVSpeed[$i] - 5            ; $g_CSVSpeedDivider = 2, 3, 4, 5
+			$g_CSVSpeedDivider[$i] = 2 + $g_iCmbCSVSpeed[$i] - 5            ; $g_CSVSpeedDivider = 2, 3, 4, 5
 		EndIf
 	Next
 EndFunc   ;==>ReadConfig_MOD_600_29

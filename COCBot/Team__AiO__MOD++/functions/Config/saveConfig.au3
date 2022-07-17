@@ -283,8 +283,8 @@ EndFunc   ;==>SaveConfig_MOD_600_28
 Func SaveConfig_MOD_600_29()
 	; <><><> CSV Deploy Speed <><><>
 	ApplyConfig_MOD_600_29(GetApplyConfigSaveAction())
-	_Ini_Add("attack", "cmbCSVSpeedLB", $icmbCSVSpeed[$LB])
-	_Ini_Add("attack", "cmbCSVSpeedDB", $icmbCSVSpeed[$DB])
+	_Ini_Add("attack", "cmbCSVSpeedLB", $g_iCmbCSVSpeed[$LB])
+	_Ini_Add("attack", "cmbCSVSpeedDB", $g_iCmbCSVSpeed[$DB])
 EndFunc   ;==>SaveConfig_MOD_600_29
 
 Func SaveConfig_MOD_600_31()

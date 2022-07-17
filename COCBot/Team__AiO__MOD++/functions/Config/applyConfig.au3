@@ -547,11 +547,11 @@ Func ApplyConfig_MOD_600_29($TypeReadSave)
 		Case "Read"
 			cmbDBMultiFinger()
 
-			_GUICtrlComboBox_SetCurSel($cmbCSVSpeed[$LB], $icmbCSVSpeed[$LB])
-			_GUICtrlComboBox_SetCurSel($cmbCSVSpeed[$DB], $icmbCSVSpeed[$DB])
+			_GUICtrlComboBox_SetCurSel($g_ahCmbCSVSpeed[$LB], $g_iCmbCSVSpeed[$LB])
+			_GUICtrlComboBox_SetCurSel($g_ahCmbCSVSpeed[$DB], $g_iCmbCSVSpeed[$DB])
 		Case "Save"
-			$icmbCSVSpeed[$LB] = _GUICtrlComboBox_GetCurSel($cmbCSVSpeed[$LB])
-			$icmbCSVSpeed[$DB] = _GUICtrlComboBox_GetCurSel($cmbCSVSpeed[$DB])
+			$g_iCmbCSVSpeed[$LB] = _GUICtrlComboBox_GetCurSel($g_ahCmbCSVSpeed[$LB])
+			$g_iCmbCSVSpeed[$DB] = _GUICtrlComboBox_GetCurSel($g_ahCmbCSVSpeed[$DB])
 	EndSwitch
 EndFunc   ;==>ApplyConfig_MOD_600_29
 

@@ -270,13 +270,13 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 
 		#Region 
 		$g_hLblAndroidInfo = GUICtrlCreateLabel("", $_GUI_MAIN_WIDTH - 163, $_GUI_MAIN_TOP, 160, 26, $SS_RIGHT)
-			GUICtrlSetFont(-1, 7, $FW_EXTRABOLD, Default, "Arial", $CLEARTYPE_QUALITY)
-			GUICtrlSetColor(-1, 0xFFEC3A)
+			GUICtrlSetFont(-1, 8.5, $FW_HEAVY, Default, "Verdana", $CLEARTYPE_QUALITY)
+			GUICtrlSetColor(-1, 0x029789)
 			GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
 			
 		$g_hLblAndroidInfoAndroid = GUICtrlCreateLabel("", $_GUI_MAIN_WIDTH - 163, $_GUI_MAIN_TOP + 8, 160, 26, $SS_RIGHT)
-			GUICtrlSetFont(-1, 7, $FW_EXTRABOLD, Default, "Arial", $CLEARTYPE_QUALITY)
-			GUICtrlSetColor(-1, 0xFFEC3A)
+			GUICtrlSetFont(-1, 8.5, $FW_HEAVY, Default, "Verdana", $CLEARTYPE_QUALITY)
+			GUICtrlSetColor(-1, 0x029789)
 			GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
 		#EndRegion 
 		

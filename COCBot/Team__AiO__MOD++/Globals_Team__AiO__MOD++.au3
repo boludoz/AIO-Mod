@@ -524,8 +524,8 @@ Global $g_eDDPotionTrain = 0, $g_eDDPotionClock = 1, $g_eDDPotionResearch = 2, $
 #EndRegion - Daily Discounts - Team AiO MOD++
 
 ; CSV Deploy Speed - Team AiO MOD++
-Global $cmbCSVSpeed[2] = [$LB, $DB]
-Global $icmbCSVSpeed[2] = [2, 2]
+Global $g_ahCmbCSVSpeed[2] = [$LB, $DB]
+Global $g_iCmbCSVSpeed[2] = [2, 2]
 Global $g_CSVSpeedDivider[2] = [1, 1] ; default CSVSpeed for DB & LB
 
 #Region Check Collectors Outside
