@@ -22,7 +22,7 @@ Func CreateAttackSearchDeadBaseScripted()
 	$g_hGUI_DEADBASE_ATTACK_SCRIPTED = _GUICreate("", $_GUI_MAIN_WIDTH - 195, $g_iSizeHGrpTab4, 150, 25, BitOR($WS_CHILD, $WS_TABSTOP), -1, $g_hGUI_DEADBASE)
 	;GUISetBkColor($COLOR_WHITE, $g_hGUI_DEADBASE_ATTACK_SCRIPTED)
 
-    Local $x = 25, $y = 20	
+    Local $x = 25, $y = 20
 	GUICtrlCreateTab($x - 20, $y - 20, 270, $TCS_MULTILINE - 168)
 	GUICtrlCreateTabItem( GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "DBTABScript_Main", "CSV Main"))
 	$y += 22
@@ -73,7 +73,7 @@ Func CreateAttackSearchDeadBaseScripted()
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnTrain, $x + 210, $y + 2, 16, 16)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Scripted", "IconApply_Info_01", "Apply Settings of troop, spell, redline, dropline, and request"))
 			GUICtrlSetOnEvent(-1, "ApplyScriptDB")
-	
+
 	#Region - Random CSV
 	GUICtrlCreateTabItem( GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "ABTABScript_Random", "Extra Random CSV"))
 	$x = 20
@@ -81,25 +81,25 @@ Func CreateAttackSearchDeadBaseScripted()
 
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnReload, $x + 215, $y, 16, 16)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Scripted", "IconReload_Info_01", "Reload Script Files"))
-		GUICtrlSetOnEvent(-1, 'UpdateComboScriptNameLB') ; Run this function when the secondary GUI [X] is clicked
+		GUICtrlSetOnEvent(-1, 'UpdateComboScriptNameAB') ; Run this function when the secondary GUI [X] is clicked
 
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnAddcvs, $x + 215, $y + 25, 16, 16)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Scripted", "IconCreate_Info_01", "Create a new Attack Script"))
-		GUICtrlSetOnEvent(-1, "NewScriptLB")
+		GUICtrlSetOnEvent(-1, "NewScriptAB")
 
 	$y -= 6
 
 	For $i = 0 To 3
 		GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Scripted", "RGroup_0" & $i + 1, "Random CSV " & $i + 1), $x, $y, 208, 77)
-		
+
 		$y += 17
 			$g_ahChkRandomCSVDB[$i] = GUICtrlCreateCheckbox("Enabled", $x + 2, $y)
 			$g_ahCmbRandomCSVDB[$i] = GUICtrlCreateCombo("", $x + 4, $y + 21, 200, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL, $WS_VSCROLL))
 		$y += 59
-		
+
 		GUICtrlCreateGroup("", -99, -99, 1, 1)
 	Next
-	
+
 	GUICtrlCreateTabItem("")
 	#EndRegion - Random CSV
 

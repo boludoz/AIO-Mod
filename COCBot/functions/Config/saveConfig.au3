@@ -1062,6 +1062,14 @@ Func SaveConfig_600_29_DB_Scripted()
 	_Ini_Add("attack", "RedlineRoutineDB", $g_aiAttackScrRedlineRoutine[$DB])
 	_Ini_Add("attack", "DroplineEdgeDB", $g_aiAttackScrDroplineEdge[$DB])
 	_Ini_Add("attack", "ScriptDB", $g_sAttackScrScriptName[$DB])
+
+	; Random CSV - Team AIO Mod++
+	For $i = 0 To UBound($g_asRandomCSVDB) -1
+		_Ini_Add("attack", "ChkRandomCSVDB", $g_abRandomCSVDB[$i] ? 1 : 0)
+		_Ini_Add("attack", "ScriptDB_R" & $i, $g_asRandomCSVDB[$i])
+	Next
+	; --->> Random CSV - Team AIO Mod++
+
 EndFunc   ;==>SaveConfig_600_29_DB_Scripted
 
 Func SaveConfig_600_29_DB_SmartFarm()
@@ -1131,6 +1139,13 @@ Func SaveConfig_600_29_LB_Scripted()
 	_Ini_Add("attack", "RedlineRoutineAB", $g_aiAttackScrRedlineRoutine[$LB])
 	_Ini_Add("attack", "DroplineEdgeAB", $g_aiAttackScrDroplineEdge[$LB])
 	_Ini_Add("attack", "ScriptAB", $g_sAttackScrScriptName[$LB])
+
+	; Random CSV - Team AIO Mod++
+	For $i = 0 To UBound($g_asRandomCSVDB) -1
+		_Ini_Add("attack", "ChkRandomCSVAB", $g_abRandomCSVAB[$i] ? 1 : 0)
+		_Ini_Add("attack", "ScriptAB_R" & $i, $g_asRandomCSVAB[$i])
+	Next
+	; --->> Random CSV - Team AIO Mod++
 EndFunc   ;==>SaveConfig_600_29_LB_Scripted
 
 Func SaveConfig_600_30()

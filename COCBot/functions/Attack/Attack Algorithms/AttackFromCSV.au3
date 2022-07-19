@@ -893,13 +893,16 @@ EndFunc
 
 Func CSVRandomization($bDebug = False)
 	If $g_bDebugSetlog = True Or $bDebug = True Then SetLog("[CSVRandomization] Start")
-	lOCAL $g_sAttackScrScriptName1[2], $g_sAttackScrScriptName2[2]
-
 	Local $sFilePath = ""
 	Local $aRandom[3]
 	Local $aModes[2] = [$DB, $LB]
-	Local $aiExtraCSVRandomDB[3] = [$g_sAttackScrScriptName[$DB], $g_sAttackScrScriptName1[$DB], $g_sAttackScrScriptName2[$DB]]
-	Local $aiExtraCSVRandomAB[3] = [$g_sAttackScrScriptName[$LB], $g_sAttackScrScriptName1[$LB], $g_sAttackScrScriptName2[$LB]]
+	Local $aiExtraCSVRandomDB = [$g_sAttackScrScriptName[$DB]]
+	Local $aiExtraCSVRandomAB = [$g_sAttackScrScriptName[$LB]]
+
+	For $i = 0 To 3
+		If $g_abRandomCSVDB[$i] Then $aiExtraCSVRandomDB &= $g_asRandomCSVDB[$i]
+		If $g_abRandomCSVAB[$i] Then $aiExtraCSVRandomAB &= $g_asRandomCSVAB[$i]
+	Next
 
 	For $i = 0 To UBound($aModes) - 1
 		$sFilePath = ""
@@ -919,7 +922,7 @@ Func CSVRandomization($bDebug = False)
 		If $bDebug = True Then _ArrayDisplay($aRandom)
 
 		For $ia = 0 To UBound($aRandom) -1
-			$sFilePath = $g_sAttackScrScriptName & "\" & $aRandom[$ia]
+			$sFilePath = @ScriptDir & "\CSV\Attack\" & $aRandom[$ia]
 			If FileExists($sFilePath) Then ExitLoop
 			$sFilePath = ""
 		Next
