@@ -24,7 +24,7 @@ Func CreateAttackSearchDeadBaseScripted()
 
     Local $x = 25, $y = 20	
 	GUICtrlCreateTab($x - 20, $y - 20, 270, $TCS_MULTILINE - 168)
-	GUICtrlCreateTabItem( GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "DBTABScript_1", "CSV 1"))
+	GUICtrlCreateTabItem( GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "DBTABScript_Main", "CSV Main"))
 	$y += 22
 		$g_hCmbScriptNameDB = GUICtrlCreateCombo("", $x, $y, 200, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL, $WS_VSCROLL))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Scripted", "CmbScriptName", "Choose the script; You can edit/add new scripts located in folder: 'CSV/Attack'"))
@@ -73,7 +73,35 @@ Func CreateAttackSearchDeadBaseScripted()
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnTrain, $x + 210, $y + 2, 16, 16)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Scripted", "IconApply_Info_01", "Apply Settings of troop, spell, redline, dropline, and request"))
 			GUICtrlSetOnEvent(-1, "ApplyScriptDB")
+	
+	#Region - Random CSV
+	GUICtrlCreateTabItem( GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "ABTABScript_Random", "Extra Random CSV"))
+	$x = 20
+	$y = 44
+
+	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnReload, $x + 215, $y, 16, 16)
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Scripted", "IconReload_Info_01", "Reload Script Files"))
+		GUICtrlSetOnEvent(-1, 'UpdateComboScriptNameLB') ; Run this function when the secondary GUI [X] is clicked
+
+	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnAddcvs, $x + 215, $y + 25, 16, 16)
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Scripted", "IconCreate_Info_01", "Create a new Attack Script"))
+		GUICtrlSetOnEvent(-1, "NewScriptLB")
+
+	$y -= 6
+
+	For $i = 0 To 3
+		GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Scripted", "RGroup_0" & $i + 1, "Random CSV " & $i + 1), $x, $y, 208, 77)
+		
+		$y += 17
+			$g_ahChkRandomCSVDB[$i] = GUICtrlCreateCheckbox("Enabled", $x + 2, $y)
+			$g_ahCmbRandomCSVDB[$i] = GUICtrlCreateCombo("", $x + 4, $y + 21, 200, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL, $WS_VSCROLL))
+		$y += 59
+		
+		GUICtrlCreateGroup("", -99, -99, 1, 1)
+	Next
+	
 	GUICtrlCreateTabItem("")
+	#EndRegion - Random CSV
 
 	;------------------------------------------------------------------------------------------
 	;----- populate list of script and assign the default value if no exist profile -----------

@@ -38,6 +38,14 @@ Func PopulateComboScriptsFilesDB()
 	; Set combo box
 	GUICtrlSetData($g_hCmbScriptNameDB, StringTrimRight($sOut, 1))
 	_GUICtrlComboBox_SetCurSel($g_hCmbScriptNameDB, _GUICtrlComboBox_FindStringExact($g_hCmbScriptNameDB, ""))
+	
+	#Region - Random CSV
+	For $i = 0 To 3
+		GUICtrlSetData($g_ahCmbRandomCSVDB[$i], StringTrimRight($sOut, 1))
+		_GUICtrlComboBox_SetCurSel($g_ahCmbRandomCSVDB[$i], _GUICtrlComboBox_FindStringExact($g_ahCmbRandomCSVDB[$i], ""))
+	Next
+	#EndRegion - Random CSV
+	
 	GUICtrlSetData($g_hLblNotesScriptDB, "")
 EndFunc   ;==>PopulateComboScriptsFilesDB
 
@@ -57,6 +65,14 @@ Func PopulateComboScriptsFilesAB()
 	; Set combo box
 	GUICtrlSetData($g_hCmbScriptNameAB, StringTrimRight($sOut, 1))
 	_GUICtrlComboBox_SetCurSel($g_hCmbScriptNameAB, _GUICtrlComboBox_FindStringExact($g_hCmbScriptNameAB, ""))
+	
+	#Region - Random CSV
+	For $i = 0 To 3
+		GUICtrlSetData($g_ahCmbRandomCSVAB[$i], StringTrimRight($sOut, 1))
+		_GUICtrlComboBox_SetCurSel($g_ahCmbRandomCSVAB[$i], _GUICtrlComboBox_FindStringExact($g_ahCmbRandomCSVAB[$i], ""))
+	Next
+	#EndRegion - Random CSV
+	
 	GUICtrlSetData($g_hLblNotesScriptAB, "")
 EndFunc   ;==>PopulateComboScriptsFilesAB
 #EndRegion - Custom - Team AIO Mod++
