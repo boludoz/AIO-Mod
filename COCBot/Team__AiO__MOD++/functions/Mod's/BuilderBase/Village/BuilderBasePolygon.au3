@@ -112,6 +112,16 @@ Func BuilderBaseAttackOuterDiamond()
 	Return $BuilderBaseDiamond
 EndFunc   ;==>BuilderBaseAttackOuterDiamond
 
+Func YLimiter(ByRef $iX, ByRef $iY, $iX1, $iY1, $iX2, $iY2, $iMaxY)
+	Static $iDY = 0
+	$iX2 -= $iX1
+	$iY2 -= $iY1
+	$iDY = $iX2 / $iY2
+	$iDY *= $iMaxY - $iY1
+	$iX = Round($iDY + $iX1)
+	$iY = Round($iMaxY)
+EndFunc   ;==>YLimiter
+
 Func BuilderBaseGetEdges($BuilderBaseDiamond, $Text)
 
 	Local $TopLeft[0][2], $TopRight[0][2], $BottomRight[0][2], $BottomLeft[0][2]
@@ -272,14 +282,3 @@ EndFunc   ;==>angle
 Func atan2($y, $x)
 	Return (2 * ATan($y / ($x + Sqrt($x * $x + $y * $y))))
 EndFunc   ;==>atan2
-
-Func YLimiter(ByRef $iX, ByRef $iY, $iX1, $iY1, $iX2, $iY2, $iMaxY)
-	$iX2 -= $iX1
-	$iY2 -= $iY1
-
-	Local $dy = $iX2 / $iY2
-	$dy *= $iMaxY - $iY1
-	$iX = Round($dy + $iX1)
-	$iY = Round($iMaxY)
-	; SetDebugLog($iX & ", " & $iY)
-EndFunc   ;==>YLimiter
