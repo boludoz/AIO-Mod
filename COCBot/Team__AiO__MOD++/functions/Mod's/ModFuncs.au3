@@ -60,6 +60,66 @@ Func UnderstandChatRules()
 	Return $bReturn
 EndFunc   ;==>UnderstandChatRules
 
+Func IsFullClanCastleType($CCType = 0) ; Troops = 0, Spells = 1, Siege Machine = 2
+	Local $aCheckCCNotFull[3] = [25, 455, 631], $sLog[3] = ["Troop", "Spell", "Siege Machine"]
+	Local $aiRequestCountCC[3] = [Number($g_iRequestCountCCTroop), Number($g_iRequestCountCCSpell), 0]
+	Local $bIsCCRequestTypeNotUsed = Not ($g_abRequestType[0] Or $g_abRequestType[1] Or $g_abRequestType[2])
+	If $CCType <> 0 And $bIsCCRequestTypeNotUsed Then ; Continue reading CC status if all 3 items are unchecked, but only if not troop
+		If $g_bDebugSetlog Then SetLog($sLog[$CCType] & " not cared about, only checking troops.")
+		Return True
+	Else
+		If _ColorCheck(_GetPixelColor($aCheckCCNotFull[$CCType], 471 + $g_iMidOffsetYFixed, True), Hex(0xE84B4F, 6), 30) Then ; red symbol ; Resolution fixed
+			If Not $g_abRequestType[$CCType] And Not $bIsCCRequestTypeNotUsed And $CCType <> 0 Then
+				; Don't care about the CC limit configured in setting
+				SetDebugLog("Found CC " & $sLog[$CCType] & " not full, but check is disabled")
+				Return True
+			EndIf
+			SetDebugLog("Found CC " & $sLog[$CCType] & " not full")
+
+			; avoid total expected troops / spells is less than expected CC q'ty.
+			Local $iTotalExpectedTroop = 0, $iTotalExpectedSpell = 0
+			For $i = 0 To $eTroopCount - 1
+				$iTotalExpectedTroop += $g_aiCCTroopsExpected[$i] * $g_aiTroopSpace[$i]
+				If $i <= $eSpellCount - 1 Then $iTotalExpectedSpell += $g_aiCCSpellsExpected[$i] * $g_aiSpellSpace[$i]
+			Next
+			If $aiRequestCountCC[0] > $iTotalExpectedTroop And $iTotalExpectedTroop > 0 Then $aiRequestCountCC[0] = $iTotalExpectedTroop
+			If $aiRequestCountCC[1] > $iTotalExpectedSpell And $iTotalExpectedSpell > 0 Then $aiRequestCountCC[1] = $iTotalExpectedSpell
+
+			If $aiRequestCountCC[$CCType] = 0 Or $aiRequestCountCC[$CCType] >= 40 - $CCType * 38 Then
+				Return False
+			Else
+				Local $sCCReceived = IsFullClanCastleTypeOCR($CCType) ; read CC (troops 0/40 or spells 0/2) ; Resolution fixed
+				SetDebugLog("Read CC " & $sLog[$CCType] & "s: " & $sCCReceived)
+				Local $aCCReceived = StringSplit($sCCReceived, "#", $STR_NOCOUNT) ; split the trained troop number from the total troop number
+				If IsArray($aCCReceived) Then
+					If $g_bDebugSetlog Then SetLog("Already received " & Number($aCCReceived[0]) & " CC " & $sLog[$CCType] & (Number($aCCReceived[0]) <= 1 ? "." : "s."))
+					If Number($aCCReceived[0]) >= $aiRequestCountCC[$CCType] Then
+						SetLog("CC " & $sLog[$CCType] & " is sufficient as required (" & Number($aCCReceived[0]) & "/" & $aiRequestCountCC[$CCType] & ")")
+						Return True
+					EndIf
+				EndIf
+			EndIf
+		Else
+			SetLog("CC " & $sLog[$CCType] & " is full" & ($CCType > 0 ? " or not available." : "."))
+			Return True
+		EndIf
+	EndIf
+EndFunc   ;==>IsFullClanCastleType
+
+Func IsFullClanCastleTypeOCR($iRequestType)
+	Switch $iRequestType
+		Case 0
+			Return getOcrAndCapture("coc-ms", 291, 422, 70, 18, True, False, True)
+		Case 1
+			Return getOcrAndCapture("coc-ms", 473, 422, 40, 18, True, False, True)
+		Case 2
+			Return getOcrAndCapture("coc-ms", 650, 422, 40, 18, True, False, True)
+		Case Else
+			SetLog("[IsFullClanCastleTypeOCR] Invalid CC type: " & $iRequestType, $COLOR_ERROR)
+			Return ""
+	EndSwitch
+EndFunc
+
 Func IsToRequestCC($ClickPAtEnd = True, $bSetLog = False, $bNeedCapture = True)
 	Local $bNeedRequest = False
 	Local $sCCRequestDiamond = GetDiamondFromRect("715, 534, 842, 571") ; Contains iXStart, $iYStart, $iXEnd, $iYEnd ; Resolution changed

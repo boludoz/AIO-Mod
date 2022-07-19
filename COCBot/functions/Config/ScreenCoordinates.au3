@@ -160,9 +160,9 @@ Global $aButtonConnectedSCID[4] = [640, 160 + $g_iMidOffsetY, 0x2D89FD, 20] ; Se
 Global $aCloseTabSCID[4] = [831, 57 + $g_iMidOffsetYFixed] ; Button Close Supercell ID tab
 
 ;Train
-Global $aButtonEditArmy[4] = [800, 542 + $g_iBottomOffsetYFixed, 0xDDF685, 25]
-Global $aButtonRemoveTroopsOK1[4] = [747, 582 + $g_iBottomOffsetYFixed, 0x76BF2F, 20]
-Global $aButtonRemoveTroopsOK2[4] = [500, 447 + $g_iBottomOffsetYFixed, 0x6DBC1F, 20]
+Global $aButtonEditArmy[4] = [800, 542 + $g_iMidOffsetYFixed, 0xDDF685, 25]
+Global $aButtonRemoveTroopsOK1[4] = [747, 582 + $g_iMidOffsetYFixed, 0x76BF2F, 20]
+Global $aButtonRemoveTroopsOK2[4] = [500, 447 + $g_iMidOffsetYFixed, 0x6DBC1F, 20]
 
 ;Change Language To English
 Global $aButtonLanguage[4] = [324, 363, 0xDDF685, 20]  ; Resolution fixed
