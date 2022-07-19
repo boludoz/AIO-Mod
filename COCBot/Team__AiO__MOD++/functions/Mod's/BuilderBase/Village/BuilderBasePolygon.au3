@@ -72,29 +72,16 @@ Func BuilderBaseAttackDiamond()
 
 	$Top[0] = $InternalArea[2][0]
 	$Top[1] = $InternalArea[2][1]
-
-	Local $aFinal[2], $aCut[2], $iPrecision = 10
-	For $iPoints = 1 To Ceiling(Pixel_Distance($InternalArea[1][0], $InternalArea[1][1], $InternalArea[3][0], $InternalArea[3][1]) / $iPrecision) * 2
-		$aCut = Linecutter($InternalArea[1][0], $InternalArea[1][1], $InternalArea[3][0], $InternalArea[3][1], $iPoints * $iPrecision, 0, 0)
-		If $aCut[1] > $g_aiDeployableLRTB[3] Then ExitLoop
-		$aFinal = $aCut
-	Next
-
-	$BottomR[0] = $aFinal[0]
-	$BottomR[1] = $aFinal[1]
-
-	For $iPoints = 1 To Ceiling(Pixel_Distance($InternalArea[0][0], $InternalArea[0][1], $InternalArea[3][0], $InternalArea[3][1]) / $iPrecision) * 2
-		$aCut = Linecutter($InternalArea[0][0], $InternalArea[0][1], $InternalArea[3][0], $InternalArea[3][1], $iPoints * $iPrecision, 0, 0)
-		If $aCut[1] > $g_aiDeployableLRTB[3] Then ExitLoop
-		$aFinal = $aCut
-	Next
-
-	$BottomL[0] = $aFinal[0]
-	$BottomL[1] = $aFinal[1]
+	
+	YLimiter($BottomR[0], $BottomR[1], $InternalArea[1][0], $InternalArea[1][1], $InternalArea[3][0], $InternalArea[3][1], $g_aiDeployableLRTB[3])
+	
+	YLimiter($BottomL[0], $BottomL[1], $InternalArea[0][0], $InternalArea[0][1], $InternalArea[3][0], $InternalArea[3][1], $g_aiDeployableLRTB[3])
 
 	Local $BuilderBaseDiamond[6] = [550, $Top, $Right, $BottomR, $BottomL, $Left]
+	
 	;This Format is for _IsPointInPoly function
-	Dim $g_aBuilderBaseAttackPolygon[7][2] = [[5, -1], [$Top[0], $Top[1]], [$Right[0], $Right[1]], [$BottomR[0], $BottomR[1]], [$BottomL[0], $BottomL[1]], [$Left[0], $Left[1]], [$Top[0], $Top[1]]] ; Make Polygon From Points
+	Local $aBuilderBaseAttackPolygonTmp[7][2] = [[5, -1], [$Top[0], $Top[1]], [$Right[0], $Right[1]], [$BottomR[0], $BottomR[1]], [$BottomL[0], $BottomL[1]], [$Left[0], $Left[1]], [$Top[0], $Top[1]]] ; Make Polygon From Points
+	$g_aBuilderBaseAttackPolygon = $aBuilderBaseAttackPolygonTmp
 	SetDebugLog("Builder Base Attack Polygon : " & _ArrayToString($g_aBuilderBaseAttackPolygon))
 	Return $BuilderBaseDiamond
 EndFunc   ;==>BuilderBaseAttackDiamond
@@ -111,29 +98,16 @@ Func BuilderBaseAttackOuterDiamond()
 
 	$Top[0] = $ExternalArea[2][0]
 	$Top[1] = $ExternalArea[2][1]
-
-	Local $aFinal[2], $aCut[2], $iPrecision = 10
-	For $iPoints = 1 To Ceiling(Pixel_Distance($ExternalArea[1][0], $ExternalArea[1][1], $ExternalArea[3][0], $ExternalArea[3][1]) / $iPrecision) * 2
-		$aCut = Linecutter($ExternalArea[1][0], $ExternalArea[1][1], $ExternalArea[3][0], $ExternalArea[3][1], $iPoints * $iPrecision, 0, 0)
-		If $aCut[1] > $g_aiDeployableLRTB[3] Then ExitLoop
-		$aFinal = $aCut
-	Next
-
-	$BottomR[0] = $aFinal[0]
-	$BottomR[1] = $aFinal[1]
-
-	For $iPoints = 1 To Ceiling(Pixel_Distance($ExternalArea[0][0], $ExternalArea[0][1], $ExternalArea[3][0], $ExternalArea[3][1]) / $iPrecision) * 2
-		$aCut = Linecutter($ExternalArea[0][0], $ExternalArea[0][1], $ExternalArea[3][0], $ExternalArea[3][1], $iPoints * $iPrecision, 0, 0)
-		If $aCut[1] > $g_aiDeployableLRTB[3] Then ExitLoop
-		$aFinal = $aCut
-	Next
-
-	$BottomL[0] = $aFinal[0]
-	$BottomL[1] = $aFinal[1]
+	
+	YLimiter($BottomR[0], $BottomR[1], $ExternalArea[1][0], $ExternalArea[1][1], $ExternalArea[3][0], $ExternalArea[3][1], $g_aiDeployableLRTB[3])
+	
+	YLimiter($BottomL[0], $BottomL[1], $ExternalArea[0][0], $ExternalArea[0][1], $ExternalArea[3][0], $ExternalArea[3][1], $g_aiDeployableLRTB[3])
 
 	Local $BuilderBaseDiamond[6] = [550, $Top, $Right, $BottomR, $BottomL, $Left]
+	
 	;This Format is for _IsPointInPoly function
-	Dim $g_aBuilderBaseOuterPolygon[7][2] = [[5, -1], [$Top[0], $Top[1]], [$Right[0], $Right[1]], [$BottomR[0], $BottomR[1]], [$BottomL[0], $BottomL[1]], [$Left[0], $Left[1]], [$Top[0], $Top[1]]] ; Make Polygon From Points
+	Local $aBuilderBaseOuterPolygonTmp[7][2] = [[5, -1], [$Top[0], $Top[1]], [$Right[0], $Right[1]], [$BottomR[0], $BottomR[1]], [$BottomL[0], $BottomL[1]], [$Left[0], $Left[1]], [$Top[0], $Top[1]]] ; Make Polygon From Points
+	$g_aBuilderBaseOuterPolygon = $aBuilderBaseOuterPolygonTmp
 	SetDebugLog("Builder Base Outer Polygon : " & _ArrayToString($g_aBuilderBaseOuterPolygon))
 	Return $BuilderBaseDiamond
 EndFunc   ;==>BuilderBaseAttackOuterDiamond
@@ -279,7 +253,7 @@ EndFunc   ;==>PercentToVillage
 ; ===============================================================================================================================
 Global Const $PI = 4 * ATan(1)
 
-Func Linecutter($cx = 0, $cy = 0, $ex = 1, $ey = 1, $iMult = 20, $iRmin = -1, $iRmax = 1)
+Func Linecutter($cx = 0, $cy = 0, $ex = 1, $ey = 1, $iMult = 20, $iRmin = -1, $iRmax = 1, $iMaxY = $g_aiDeployableLRTB[3])
 	Local $iAngle = angle($cx, $cy, $ex, $ey)
 	Local $iRandom = Random($iRmin, $iRmax)
 	Local $aReturn[2] = [$cx + Cos(_Radian($iAngle)) * $iMult + $iRandom, $cy + Sin(_Radian($iAngle)) * $iMult + $iRandom]
@@ -298,3 +272,14 @@ EndFunc   ;==>angle
 Func atan2($y, $x)
 	Return (2 * ATan($y / ($x + Sqrt($x * $x + $y * $y))))
 EndFunc   ;==>atan2
+
+Func YLimiter(ByRef $iX, ByRef $iY, $iX1, $iY1, $iX2, $iY2, $iMaxY)
+	$iX2 -= $iX1
+	$iY2 -= $iY1
+
+	Local $dy = $iX2 / $iY2
+	$dy *= $iMaxY - $iY1
+	$iX = Round($dy + $iX1)
+	$iY = Round($iMaxY)
+	; SetDebugLog($iX & ", " & $iY)
+EndFunc   ;==>YLimiter
