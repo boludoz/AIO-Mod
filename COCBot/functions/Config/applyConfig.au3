@@ -1821,7 +1821,7 @@ Func ApplyConfig_600_29_DB_Scripted($TypeReadSave)
 			EndIf
 			_GUICtrlComboBox_SetCurSel($g_hCmbScriptNameDB, $tempindex)
 			
-			; Random CSV - Team AIO Mod++
+			#Region - Random CSV - Team AIO Mod++
 			For $i = 0 To UBound($g_asRandomCSVDB) -1
 				GUICtrlSetState($g_ahChkRandomCSVDB[$i], $g_abRandomCSVDB[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
 
@@ -1831,7 +1831,7 @@ Func ApplyConfig_600_29_DB_Scripted($TypeReadSave)
 				EndIf
 				_GUICtrlComboBox_SetCurSel($g_ahCmbRandomCSVDB[$i], $tempindex)
 			Next
-			; --->> Random CSV - Team AIO Mod++
+			#EndRegion - Random CSV - Team AIO Mod++
 			
 			cmbScriptNameDB()
 			cmbScriptRedlineImplDB()
@@ -1844,7 +1844,7 @@ Func ApplyConfig_600_29_DB_Scripted($TypeReadSave)
 			$g_sAttackScrScriptName[$DB] = $scriptname
 			IniWriteS($g_sProfileConfigPath, "attack", "ScriptDB", $g_sAttackScrScriptName[$DB])
 			
-			; Random CSV - Team AIO Mod++
+			#Region - Random CSV - Team AIO Mod++
 			For $i = 0 To UBound($g_asRandomCSVDB) -1
 				$g_abRandomCSVDB[$i] = (GUICtrlRead($g_ahChkRandomCSVDB[$i]) = $GUI_CHECKED)
 
@@ -1854,7 +1854,7 @@ Func ApplyConfig_600_29_DB_Scripted($TypeReadSave)
 				$g_asRandomCSVDB[$i] = $scriptname
 				IniWriteS($g_sProfileConfigPath, "attack", "ScriptDB_R" & $i, $g_asRandomCSVDB[$i])
 			Next
-			; --->> Random CSV - Team AIO Mod++
+			#EndRegion - Random CSV - Team AIO Mod++
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_29_DB_Scripted
 
@@ -1997,7 +1997,7 @@ Func ApplyConfig_600_29_LB_Scripted($TypeReadSave)
 			EndIf
 			_GUICtrlComboBox_SetCurSel($g_hCmbScriptNameAB, $tempindex)
 			
-			; Random CSV - Team AIO Mod++
+			#Region - Random CSV - Team AIO Mod++
 			For $i = 0 To UBound($g_asRandomCSVAB) -1
 				GUICtrlSetState($g_ahChkRandomCSVAB[$i], $g_abRandomCSVAB[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
 
@@ -2007,7 +2007,7 @@ Func ApplyConfig_600_29_LB_Scripted($TypeReadSave)
 				EndIf
 				_GUICtrlComboBox_SetCurSel($g_ahCmbRandomCSVAB[$i], $tempindex)
 			Next
-			; --->> Random CSV - Team AIO Mod++
+			#EndRegion - Random CSV - Team AIO Mod++
 
 			cmbScriptNameAB()
 			cmbScriptRedlineImplAB()
@@ -2020,7 +2020,7 @@ Func ApplyConfig_600_29_LB_Scripted($TypeReadSave)
 			$g_sAttackScrScriptName[$LB] = $scriptname
 			IniWriteS($g_sProfileConfigPath, "attack", "ScriptAB", $g_sAttackScrScriptName[$LB])
 			
-			; Random CSV - Team AIO Mod++
+			#Region - Random CSV - Team AIO Mod++
 			For $i = 0 To UBound($g_asRandomCSVAB) -1
 				$g_abRandomCSVAB[$i] = (GUICtrlRead($g_ahChkRandomCSVAB[$i]) = $GUI_CHECKED)
 
@@ -2030,7 +2030,7 @@ Func ApplyConfig_600_29_LB_Scripted($TypeReadSave)
 				$g_asRandomCSVAB[$i] = $scriptname
 				IniWriteS($g_sProfileConfigPath, "attack", "ScriptAB_R" & $i, $g_asRandomCSVAB[$i])
 			Next
-			; --->> Random CSV - Team AIO Mod++
+			#EndRegion - Random CSV - Team AIO Mod++
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_29_LB_Scripted
 

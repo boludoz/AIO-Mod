@@ -75,7 +75,7 @@ Func CreateAttackSearchDeadBaseScripted()
 			GUICtrlSetOnEvent(-1, "ApplyScriptDB")
 
 	#Region - Random CSV
-	GUICtrlCreateTabItem( GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "ABTABScript_Random", "Extra Random CSV"))
+	GUICtrlCreateTabItem( GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "TABScript_Random", -1))
 	$x = 20
 	$y = 44
 

@@ -6,8 +6,8 @@
 ; Return values .: Success: 1
 ;				   Failure: 0
 ; Author ........: MMHK (01-2018)
-; Modified ......: Boldina (06-2021)
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2021
+; Modified ......:
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
@@ -30,16 +30,6 @@ Func ParseAttackCSV_Settings_variables(ByRef $aiCSVTroops, ByRef $aiCSVSpells, B
 		Local $iCommandCol = 1, $iTroopNameCol = 2, $iFlexCol = 3, $iTHBeginCol = 4
 		Local $iHeroRadioItemTotal = 3, $iHeroTimedLimit = 99
 
-		; Custom logic - Team AIO Mod++
-		Local $iTotalCampSpace = $g_iTotalCampSpace
-		Local $iTotalSpellValue = $g_iTotalSpellValue
-;~ 		Local $iTotalSiegeValue = $g_iTotalSiegeValue
-		If $g_bTotalCampForced Then
-			$iTotalCampSpace = $g_iTotalCampForcedValue
-			; $iTotalSpellValue = TotalSpellsToBrewInGUI() ; No
-		EndIf
-		; -----------------------------
-
 		For $iLine = 0 To UBound($asLine) - 1
 			$sLine = $asLine[$iLine]
 			$asCommand = StringSplit($sLine, "|")
@@ -48,27 +38,26 @@ Func ParseAttackCSV_Settings_variables(ByRef $aiCSVTroops, ByRef $aiCSVSpells, B
 				If Not StringRegExp($asCommand[$iCommandCol], "(TRAIN)|(REDLN)|(DRPLN)|(CCREQ)|(BOOST)", $STR_REGEXPMATCH) Then ContinueLoop
 
 				If $iTHCol = 0 Then ; select a command column TH based on camp space or skip all commands
-					If $g_bDebugAttackCSV Then SetLog("Camp Total Space: " & $iTotalCampSpace, $COLOR_DEBUG)
-					If $g_bDebugAttackCSV Then SetLog("Spell Total Space: " & $iTotalSpellValue, $COLOR_DEBUG)
-					If $iTotalCampSpace = 0 Then
+					If $g_bDebugAttackCSV Then SetLog("Camp Total Space: " & $g_iTotalCampSpace, $COLOR_DEBUG)
+					If $g_bDebugAttackCSV Then SetLog("Spell Total Space: " & $g_iTotalSpellValue, $COLOR_DEBUG)
+					If $g_iTotalCampSpace = 0 Then
 						SetLog("Has to run bot once first to get correct total camp space", $COLOR_ERROR)
 						Return
 					EndIf
-					If $iTotalSpellValue = 0 Then
+					If $g_iTotalSpellValue = 0 Then
 						SetLog("Has to set spell capacity first", $COLOR_ERROR)
 						Return
 					EndIf
-					Switch $iTotalCampSpace
-						Case $g_iMaxCapTroopTH[12] + 5 To $g_iMaxCapTroopTH[14]	; TH13 + TH14
-							; Custom logic - Team AIO Mod++
-							If $g_iTownHallLevel = 14 Then ; Ez
-								$iTHCol = $iTHBeginCol + 8
-								$iTH = 14
-							Else
-								$iTHCol = $iTHBeginCol + 7
-								$iTH = 13
-							EndIf
-							; -----------------------------
+					Switch $g_iTotalCampSpace
+						#Region - Custom fix - Team AIO Mod++ 
+						Case $g_iMaxCapTroopTH[13] + 5 To $g_iMaxCapTroopTH[14]	; TH14
+							If $g_iTownHallLevel = 13 Then ContinueCase
+							$iTHCol = $iTHBeginCol + 8
+							$iTH = 14
+						#EndRegion - Custom fix - Team AIO Mod++ 
+						Case $g_iMaxCapTroopTH[12] + 5 To $g_iMaxCapTroopTH[13]	; TH13
+							$iTHCol = $iTHBeginCol + 7
+							$iTH = 13
 						Case $g_iMaxCapTroopTH[11] + 5 To $g_iMaxCapTroopTH[12]	; TH12
 							$iTHCol = $iTHBeginCol + 6
 							$iTH = 12
@@ -82,7 +71,7 @@ Func ParseAttackCSV_Settings_variables(ByRef $aiCSVTroops, ByRef $aiCSVSpells, B
 							$iTHCol = $iTHBeginCol + 3
 							$iTH = 9
 						Case $g_iMaxCapTroopTH[6] + 5 To $g_iMaxCapTroopTH[8]	; TH7/8
-							Switch $iTotalSpellValue
+							Switch $g_iTotalSpellValue
 								Case $g_iMaxCapSpellTH[7] + 1 To $g_iMaxCapSpellTH[8]	; TH8
 									$iTHCol = $iTHBeginCol + 2
 									$iTH = 8
@@ -90,44 +79,27 @@ Func ParseAttackCSV_Settings_variables(ByRef $aiCSVTroops, ByRef $aiCSVSpells, B
 									$iTHCol = $iTHBeginCol + 1
 									$iTH = 7
 								Case Else
-									SetLog("Invalid spell size ( <" & $g_iMaxCapSpellTH[6] + 1 & " or >" & $g_iMaxCapSpellTH[8] & " ): " & $iTotalSpellValue & " for CSV", $COLOR_ERROR)
+									SetLog("Invalid spell size ( <" & $g_iMaxCapSpellTH[6] + 1 & " or >" & $g_iMaxCapSpellTH[8] & " ): " & $g_iTotalSpellValue & " for CSV", $COLOR_ERROR)
 									Return
 							EndSwitch
 						Case $g_iMaxCapTroopTH[5] + 5 To $g_iMaxCapTroopTH[6]	; TH6
 							$iTHCol = $iTHBeginCol
 							$iTH = 6
 						Case Else
-							SetLog("Invalid camp size ( <" & $g_iMaxCapTroopTH[5] + 5 & " or >" & $g_iMaxCapTroopTH[14] & " ): " & $iTotalCampSpace & " for CSV", $COLOR_ERROR)
+							SetLog("Invalid camp size ( <" & $g_iMaxCapTroopTH[5] + 5 & " or >" & $g_iMaxCapTroopTH[11] & " ): " & $g_iTotalCampSpace & " for CSV", $COLOR_ERROR)
 							Return
 					EndSwitch
 				EndIf
 
 				If $g_bDebugAttackCSV Then SetLog("Line: " & $iLine + 1 & " Command: " & $asCommand[$iCommandCol] & ($iTHCol >= $iTHBeginCol ? " Column: " & $iTHCol & " TH" & $iTH : ""), $COLOR_DEBUG)
-
-				; Custom logic - Team AIO Mod++
-				ReDim $asCommand[$iTH - 1]
-				Local $sLastOk = ""
-
-				Local $bFixed = False, $iCommandOld = $asCommand[0]
 				For $i = 2 To (UBound($asCommand) - 1)
 					$asCommand[$i] = StringStripWS($asCommand[$i], $STR_STRIPTRAILING)
-					If StringIsSpace($asCommand[$i]) Then
-						$asCommand[0] += 1
-						$asCommand[$i] = $sLastOk
-					Else
-						$sLastOk = $asCommand[$i]
-					EndIf
 				Next
-				If $asCommand[0] <> $iCommandOld Then $bFixed = True
-				; -----------------------------
-
 				Switch $asCommand[$iCommandCol]
 					Case "TRAIN"
-						; Custom logic - Team AIO Mod++
-						Local $sItemNameCol = StringStripWS($asCommand[$iTroopNameCol], $STR_STRIPALL)
-						$iTroopIndex = TroopIndexLookup($sItemNameCol, "ParseAttackCSV_Settings_variables")
+						$iTroopIndex = TroopIndexLookup($asCommand[$iTroopNameCol], "ParseAttackCSV_Settings_variables")
 						If $iTroopIndex = -1 Then
-							SetLog("CSV troop name '" & $sItemNameCol & "' is unrecognized - Line: " & $iLine + 1, $COLOR_ERROR)
+							SetLog("CSV troop name '" & $asCommand[$iTroopNameCol] & "' is unrecognized - Line: " & $iLine + 1, $COLOR_ERROR)
 							ContinueLoop ; discard TRAIN commands due to the invalid troop name
 						EndIf
 						If int($asCommand[$iTHCol]) <= 0 Then
@@ -165,11 +137,6 @@ Func ParseAttackCSV_Settings_variables(ByRef $aiCSVTroops, ByRef $aiCSVSpells, B
 				EndSwitch
 			EndIf
 		Next
-		; Custom logic - Team AIO Mod++
-		If $bFixed = True Then
-			SetLog("Settings applied, but update CSV for this TH or adjust army", $COLOR_WARNING)
-		EndIf
-		#CS
 		If $iTHCol >= $iTHBeginCol Then
 			Local $iCSVTotalCapTroops = 0, $bTotalInRange = False
 			For $i = 0 To UBound($aiCSVTroops) - 1
@@ -177,17 +144,19 @@ Func ParseAttackCSV_Settings_variables(ByRef $aiCSVTroops, ByRef $aiCSVSpells, B
 			Next
 			If $g_bDebugAttackCSV Then SetLog("CSV troop total: " & $iCSVTotalCapTroops, $COLOR_DEBUG)
 			If $iCSVTotalCapTroops > 0 Then
-				If $iTH = 8 Then
+				If $iTH = 8 Then ; TH8 	; check if csv has right troops total within the range of the TH level
 					If $iCSVTotalCapTroops > $g_iMaxCapTroopTH[$iTH - 2] And $iCSVTotalCapTroops <= $g_iMaxCapTroopTH[$iTH] Then $bTotalInRange = True
 				Else
-					If ($iCSVTotalCapTroops > $g_iMaxCapTroopTH[$iTH - 1] Or $bFixed = True) And $iCSVTotalCapTroops <= $g_iMaxCapTroopTH[$iTH] Then $bTotalInRange = True
+					If $iCSVTotalCapTroops > $g_iMaxCapTroopTH[$iTH - 1] And $iCSVTotalCapTroops <= $g_iMaxCapTroopTH[$iTH] Then $bTotalInRange = True
 				EndIf
-				If $bTotalInRange Then
+				If $bTotalInRange Then 	;if total not equal to user camp space, reduce/add troops amount based on flexible flag if possible
 					If $iCSVTotalCapTroops <> $g_iTotalCampSpace Then
 						Local $iDiff = $iCSVTotalCapTroops - $g_iTotalCampSpace
-						If $g_bDebugAttackCSV Then SetLog("Camp Total Space: " & $g_iTotalCampSpace, $COLOR_DEBUG)
-						If $g_bDebugAttackCSV Then SetLog("Difference: " & $iDiff, $COLOR_DEBUG)
-						If $g_bDebugAttackCSV Then SetLog("Flexible Index: " & $iFlexTroopIndex, $COLOR_DEBUG)
+						If $g_bDebugAttackCSV Then
+							SetLog("Camp Total Space: " & $g_iTotalCampSpace, $COLOR_DEBUG)
+							SetLog("Difference: " & $iDiff, $COLOR_DEBUG)
+							SetLog("Flexible Index: " & $iFlexTroopIndex, $COLOR_DEBUG)
+						EndIf
 						If $iFlexTroopIndex <> 999 And Mod($iDiff, $g_aiTroopSpace[$iFlexTroopIndex]) = 0 Then
 							Local $iCSVTroopAmount = $aiCSVTroops[$iFlexTroopIndex]
 							$aiCSVTroops[$iFlexTroopIndex] -= $iDiff / $g_aiTroopSpace[$iFlexTroopIndex]
@@ -195,23 +164,22 @@ Func ParseAttackCSV_Settings_variables(ByRef $aiCSVTroops, ByRef $aiCSVSpells, B
 						Else
 							SetLog("CSV Troop Total does not equal to Camp Total Space,", $COLOR_ERROR)
 							SetLog("adjust train settings manually", $COLOR_ERROR)
-							For $i = 0 To UBound($aiCSVTroops) - 1
+							For $i = 0 to UBound($aiCSVTroops) - 1 ; set troop amount to all 0
 								$aiCSVTroops[$i] = 0
 							Next
 						EndIf
 					EndIf
 				Else
 					SetLog("CSV troops total: " & $iCSVTotalCapTroops & " for TH" & $iTH & " is out of range", $COLOR_ERROR)
-					For $i = 0 To UBound($aiCSVTroops) - 1
+					For $i = 0 to UBound($aiCSVTroops) - 1 ; set troop amount to all 0
 						$aiCSVTroops[$i] = 0
 					Next
 				EndIf
 			EndIf
 		EndIf
-		#CE
 	Else
-		SetLog("Cannot find attack file " & $g_sCSVAttacksPath & "\" & $sFileName & ".csv", $COLOR_ERROR)
-		Return False
+		SetLog("Cannot find attack file " & $g_sCSVAttacksPath & "\" & $sFilename & ".csv", $COLOR_ERROR)
+		Return
 	EndIf
-	Return True
+	Return 1
 EndFunc   ;==>ParseAttackCSV_Settings_variables

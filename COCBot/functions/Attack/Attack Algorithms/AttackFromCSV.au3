@@ -890,20 +890,40 @@ Func FindWallCSV(ByRef $aCSVExternalWall, ByRef $aCSVInternalWall)
 	Return $bResult
 EndFunc
 
-
+#Region - Random CSV - Team AIO Mod++
 Func CSVRandomization($bDebug = False)
 	If $g_bDebugSetlog = True Or $bDebug = True Then SetLog("[CSVRandomization] Start")
 	Local $sFilePath = ""
 	Local $aRandom[3]
 	Local $aModes[2] = [$DB, $LB]
-	Local $aiExtraCSVRandomDB = [$g_sAttackScrScriptName[$DB]]
-	Local $aiExtraCSVRandomAB = [$g_sAttackScrScriptName[$LB]]
-
+	Local $aiExtraCSVRandomDB[1] = [$g_sAttackScrScriptName[$DB]]
+	Local $aiExtraCSVRandomAB[1] = [$g_sAttackScrScriptName[$LB]]
+	
+	Local $aModesSelected[2] = [False, False]
 	For $i = 0 To 3
-		If $g_abRandomCSVDB[$i] Then $aiExtraCSVRandomDB &= $g_asRandomCSVDB[$i]
-		If $g_abRandomCSVAB[$i] Then $aiExtraCSVRandomAB &= $g_asRandomCSVAB[$i]
-	Next
+		If $g_abRandomCSVDB[$i] Then
+			If $aModesSelected[0] = False Then
+				ReDim $aiExtraCSVRandomDB[0]
+			EndIf
+			
+			ReDim $aiExtraCSVRandomDB[UBound($aiExtraCSVRandomDB) + 1]
+			$aiExtraCSVRandomDB[UBound($aiExtraCSVRandomDB) - 1] = $g_asRandomCSVDB[$i]
+			$aModesSelected[0] = True
+		EndIf
+		
+		If $g_abRandomCSVAB[$i] Then
+			If $aModesSelected[1] = False Then 
+				ReDim $aiExtraCSVRandomAB[0]
+			EndIf
 
+			ReDim $aiExtraCSVRandomAB[UBound($aiExtraCSVRandomAB) + 1]
+			$aiExtraCSVRandomAB[UBound($aiExtraCSVRandomAB) - 1] = $g_asRandomCSVAB[$i]
+			$aModesSelected[1] = True
+		EndIf
+	Next
+	
+	If $aModesSelected[0] = False And $aModesSelected[1] = False Then Return False
+	
 	For $i = 0 To UBound($aModes) - 1
 		$sFilePath = ""
 
@@ -922,7 +942,7 @@ Func CSVRandomization($bDebug = False)
 		If $bDebug = True Then _ArrayDisplay($aRandom)
 
 		For $ia = 0 To UBound($aRandom) -1
-			$sFilePath = @ScriptDir & "\CSV\Attack\" & $aRandom[$ia]
+			$sFilePath = $g_sCSVAttacksPath & "\" & $aRandom[$ia] & ".csv"
 			If FileExists($sFilePath) Then ExitLoop
 			$sFilePath = ""
 		Next
@@ -933,7 +953,25 @@ Func CSVRandomization($bDebug = False)
 		EndIf
 
 		If $g_bDebugSetlog = True Or $bDebug = True Then SetLog("[CSVRandomization] Randomized CSV file: " & String($sFilePath), $COLOR_SUCCESS)
-		If $bDebug = False Then $g_sAttackScrScriptName[$aModes[$i]] = $aRandom[$ia]
+		If $bDebug = False Then
+			$g_sAttackScrScriptName[$aModes[$i]] = $aRandom[$ia]
+		EndIf
 	Next
 
-EndFunc
+	Local $iTempIndex = 0
+	
+	$iTempIndex = _GUICtrlComboBox_FindStringExact($g_hCmbScriptnameDB, $g_sAttackScrScriptName[$DB])
+	If $iTempIndex = -1 Then $iTempIndex = 0
+	_guictrlcombobox_setcursel($g_hCmbScriptnameDB, $iTempIndex)
+
+	cmbScriptNameAB()
+	; ApplyScriptAB()
+	
+	$iTempIndex = _GUICtrlComboBox_FindStringExact($g_hCmbScriptnameAB, $g_sAttackScrScriptName[$LB])
+	If $iTempIndex = -1 Then $iTempIndex = 0
+	_guictrlcombobox_setcursel($g_hCmbScriptnameAB, $iTempIndex)
+
+	cmbScriptNameDB()
+	; ApplyScriptDB()
+EndFunc   ;==>CSVRandomization
+#EndRegion - Random CSV - Team AIO Mod++
