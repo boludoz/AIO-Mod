@@ -38,8 +38,10 @@ Func ParseAttackCSV_Settings_variables(ByRef $aiCSVTroops, ByRef $aiCSVSpells, B
 				If Not StringRegExp($asCommand[$iCommandCol], "(TRAIN)|(REDLN)|(DRPLN)|(CCREQ)|(BOOST)", $STR_REGEXPMATCH) Then ContinueLoop
 
 				If $iTHCol = 0 Then ; select a command column TH based on camp space or skip all commands
-					If $g_bDebugAttackCSV Then SetLog("Camp Total Space: " & $g_iTotalCampSpace, $COLOR_DEBUG)
-					If $g_bDebugAttackCSV Then SetLog("Spell Total Space: " & $g_iTotalSpellValue, $COLOR_DEBUG)
+					If $g_bDebugAttackCSV Then
+						SetLog("Camp Total Space: " & $g_iTotalCampSpace, $COLOR_DEBUG)
+						SetLog("Spell Total Space: " & $g_iTotalSpellValue, $COLOR_DEBUG)
+					EndIf
 					If $g_iTotalCampSpace = 0 Then
 						SetLog("Has to run bot once first to get correct total camp space", $COLOR_ERROR)
 						Return
@@ -137,45 +139,16 @@ Func ParseAttackCSV_Settings_variables(ByRef $aiCSVTroops, ByRef $aiCSVSpells, B
 				EndSwitch
 			EndIf
 		Next
-		If $iTHCol >= $iTHBeginCol Then
-			Local $iCSVTotalCapTroops = 0, $bTotalInRange = False
-			For $i = 0 To UBound($aiCSVTroops) - 1
-				$iCSVTotalCapTroops += $aiCSVTroops[$i] * $g_aiTroopSpace[$i]
-			Next
-			If $g_bDebugAttackCSV Then SetLog("CSV troop total: " & $iCSVTotalCapTroops, $COLOR_DEBUG)
-			If $iCSVTotalCapTroops > 0 Then
-				If $iTH = 8 Then ; TH8 	; check if csv has right troops total within the range of the TH level
-					If $iCSVTotalCapTroops > $g_iMaxCapTroopTH[$iTH - 2] And $iCSVTotalCapTroops <= $g_iMaxCapTroopTH[$iTH] Then $bTotalInRange = True
-				Else
-					If $iCSVTotalCapTroops > $g_iMaxCapTroopTH[$iTH - 1] And $iCSVTotalCapTroops <= $g_iMaxCapTroopTH[$iTH] Then $bTotalInRange = True
-				EndIf
-				If $bTotalInRange Then 	;if total not equal to user camp space, reduce/add troops amount based on flexible flag if possible
-					If $iCSVTotalCapTroops <> $g_iTotalCampSpace Then
-						Local $iDiff = $iCSVTotalCapTroops - $g_iTotalCampSpace
-						If $g_bDebugAttackCSV Then
-							SetLog("Camp Total Space: " & $g_iTotalCampSpace, $COLOR_DEBUG)
-							SetLog("Difference: " & $iDiff, $COLOR_DEBUG)
-							SetLog("Flexible Index: " & $iFlexTroopIndex, $COLOR_DEBUG)
-						EndIf
-						If $iFlexTroopIndex <> 999 And Mod($iDiff, $g_aiTroopSpace[$iFlexTroopIndex]) = 0 Then
-							Local $iCSVTroopAmount = $aiCSVTroops[$iFlexTroopIndex]
-							$aiCSVTroops[$iFlexTroopIndex] -= $iDiff / $g_aiTroopSpace[$iFlexTroopIndex]
-							SetLog("Adjust CSV Train Troop - " & GetTroopName($iFlexTroopIndex) & " amount from " & $iCSVTroopAmount & " to " & $aiCSVTroops[$iFlexTroopIndex], $COLOR_SUCCESS)
-						Else
-							SetLog("CSV Troop Total does not equal to Camp Total Space,", $COLOR_ERROR)
-							SetLog("adjust train settings manually", $COLOR_ERROR)
-							For $i = 0 to UBound($aiCSVTroops) - 1 ; set troop amount to all 0
-								$aiCSVTroops[$i] = 0
-							Next
-						EndIf
-					EndIf
-				Else
-					SetLog("CSV troops total: " & $iCSVTotalCapTroops & " for TH" & $iTH & " is out of range", $COLOR_ERROR)
-					For $i = 0 to UBound($aiCSVTroops) - 1 ; set troop amount to all 0
-						$aiCSVTroops[$i] = 0
-					Next
-				EndIf
-			EndIf
+		Local $iCSVTotalCapTroops = 0
+		For $i = 0 To UBound($aiCSVTroops) - 1
+			$iCSVTotalCapTroops += $aiCSVTroops[$i] * $g_aiTroopSpace[$i]
+		Next
+		If $g_bDebugAttackCSV Then SetLog("CSV troop total: " & $iCSVTotalCapTroops, $COLOR_DEBUG)
+		If $iCSVTotalCapTroops > 0 Then
+			SetLog("CSV troops total: " & $iCSVTotalCapTroops)
+			FixInDoubleTrain($aiCSVTroops, $g_iTotalCampSpace, $g_aiTroopSpace, TroopIndexLookup($g_sCmbFICTroops[$g_iCmbFillIncorrectTroopCombo][0], "ParseAttackCSV_Settings_variables"))
+		Else
+			Return 0
 		EndIf
 	Else
 		SetLog("Cannot find attack file " & $g_sCSVAttacksPath & "\" & $sFilename & ".csv", $COLOR_ERROR)
