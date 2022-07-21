@@ -809,9 +809,10 @@ Global $g_bNewUpdateMainVillage = False, $g_hChkAutoBuildNew = 0
 ; Android version
 Global $g_hLblAndroidInfo = 0, $g_hLblAndroidInfoAndroid = 0
 
-; Random CSV
+#Region - Random CSV - Team AIO Mod++
 Global $g_ahChkRandomCSVDB[4], $g_ahCmbRandomCSVDB[4], _ 
 	   $g_ahChkRandomCSVAB[4], $g_ahCmbRandomCSVAB[4]
 	   
 Global $g_abRandomCSVDB[4], $g_asRandomCSVDB[4], _ 
 	   $g_abRandomCSVAB[4], $g_asRandomCSVAB[4]
+#EndRegion - Random CSV - Team AIO Mod++

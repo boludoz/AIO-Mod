@@ -127,24 +127,58 @@ Func cmbScriptNameAB()
 
 EndFunc   ;==>cmbScriptNameAB
 
-
+#Region - Random CSV - Team AIO Mod++
 Func UpdateComboScriptNameDB()
-	Local $indexofscript = _GUICtrlComboBox_GetCurSel($g_hCmbScriptNameDB)
-	Local $scriptname
+
+	Local $oDicRandomCSV = ObjCreate("Scripting.Dictionary")
+	If @error Then
+		SetLog("[UpdateComboScriptNameDB] Error creating the dictionary object")
+	EndIf
+	
+	Local $scriptname, $indexofscript
+	For $o = 0 To UBound($g_ahCmbRandomCSVDB) -1
+		$indexofscript = _GUICtrlComboBox_GetCurSel($g_ahCmbRandomCSVDB[$o])
+		_GUICtrlComboBox_GetLBText($g_ahCmbRandomCSVDB[$o], $indexofscript, $scriptname)
+		$oDicRandomCSV($g_ahCmbRandomCSVDB[$o]) = $scriptname
+	Next
+
+	$indexofscript = _GUICtrlComboBox_GetCurSel($g_hCmbScriptNameDB)
 	_GUICtrlComboBox_GetLBText($g_hCmbScriptNameDB, $indexofscript, $scriptname)
 	PopulateComboScriptsFilesDB()
 	_GUICtrlComboBox_SetCurSel($g_hCmbScriptNameDB, _GUICtrlComboBox_FindStringExact($g_hCmbScriptNameDB, $scriptname))
+
+	For $o = 0 To UBound($g_ahCmbRandomCSVDB) -1
+		_GUICtrlComboBox_SetCurSel($g_ahCmbRandomCSVDB[$o], _GUICtrlComboBox_FindStringExact($g_ahCmbRandomCSVDB[$o], $oDicRandomCSV($g_ahCmbRandomCSVDB[$o])))
+	Next
+
 	cmbScriptNameDB()
 EndFunc   ;==>UpdateComboScriptNameDB
 
 Func UpdateComboScriptNameAB()
-	Local $indexofscript = _GUICtrlComboBox_GetCurSel($g_hCmbScriptNameAB)
-	Local $scriptname
+	Local $oDicRandomCSV = ObjCreate("Scripting.Dictionary")
+	If @error Then
+		SetLog("[UpdateComboScriptNameAB] Error creating the dictionary object")
+	EndIf
+	
+	Local $scriptname, $indexofscript
+	For $o = 0 To UBound($g_ahCmbRandomCSVAB) -1
+		$indexofscript = _GUICtrlComboBox_GetCurSel($g_ahCmbRandomCSVAB[$o])
+		_GUICtrlComboBox_GetLBText($g_ahCmbRandomCSVAB[$o], $indexofscript, $scriptname)
+		$oDicRandomCSV($g_ahCmbRandomCSVAB[$o]) = $scriptname
+	Next
+
+	$indexofscript = _GUICtrlComboBox_GetCurSel($g_hCmbScriptNameAB)
 	_GUICtrlComboBox_GetLBText($g_hCmbScriptNameAB, $indexofscript, $scriptname)
 	PopulateComboScriptsFilesAB()
 	_GUICtrlComboBox_SetCurSel($g_hCmbScriptNameAB, _GUICtrlComboBox_FindStringExact($g_hCmbScriptNameAB, $scriptname))
+
+	For $o = 0 To UBound($g_ahCmbRandomCSVAB) -1
+		_GUICtrlComboBox_SetCurSel($g_ahCmbRandomCSVAB[$o], _GUICtrlComboBox_FindStringExact($g_ahCmbRandomCSVAB[$o], $oDicRandomCSV($g_ahCmbRandomCSVAB[$o])))
+	Next
+
 	cmbScriptNameAB()
 EndFunc   ;==>UpdateComboScriptNameAB
+#EndRegion - Random CSV - Team AIO Mod++
 
 
 Func EditScriptDB()
