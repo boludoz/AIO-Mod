@@ -81,11 +81,11 @@ Func CreateAttackSearchDeadBaseScripted()
 
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnReload, $x + 215, $y, 16, 16)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Scripted", "IconReload_Info_01", "Reload Script Files"))
-		GUICtrlSetOnEvent(-1, 'UpdateComboScriptNameAB') ; Run this function when the secondary GUI [X] is clicked
+		GUICtrlSetOnEvent(-1, 'UpdateComboScriptNameDB') ; Run this function when the secondary GUI [X] is clicked
 
 	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnAddcvs, $x + 215, $y + 25, 16, 16)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Scripted", "IconCreate_Info_01", "Create a new Attack Script"))
-		GUICtrlSetOnEvent(-1, "NewScriptAB")
+		GUICtrlSetOnEvent(-1, "NewScriptDB")
 
 	$y -= 6
 

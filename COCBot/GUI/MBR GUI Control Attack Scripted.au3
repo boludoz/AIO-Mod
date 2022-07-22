@@ -130,7 +130,7 @@ EndFunc   ;==>cmbScriptNameAB
 #Region - Random CSV - Team AIO Mod++
 Func UpdateComboScriptNameDB()
 
-	Local $oDicRandomCSV = ObjCreate("Scripting.Dictionary")
+	Static $oDicRandomCSV = ObjCreate("Scripting.Dictionary")
 	If @error Then
 		SetLog("[UpdateComboScriptNameDB] Error creating the dictionary object")
 	EndIf
@@ -155,7 +155,7 @@ Func UpdateComboScriptNameDB()
 EndFunc   ;==>UpdateComboScriptNameDB
 
 Func UpdateComboScriptNameAB()
-	Local $oDicRandomCSV = ObjCreate("Scripting.Dictionary")
+	Static $oDicRandomCSV = ObjCreate("Scripting.Dictionary")
 	If @error Then
 		SetLog("[UpdateComboScriptNameAB] Error creating the dictionary object")
 	EndIf
