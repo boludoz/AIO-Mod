@@ -815,4 +815,7 @@ Global $g_ahChkRandomCSVDB[4], $g_ahCmbRandomCSVDB[4], _
 	   
 Global $g_abRandomCSVDB[4], $g_asRandomCSVDB[4], _ 
 	   $g_abRandomCSVAB[4], $g_asRandomCSVAB[4]
+
+Global $g_ahChkLinkThatAndUseIn[2], _
+	   $g_abLinkThatAndUseIn[2]
 #EndRegion - Random CSV - Team AIO Mod++

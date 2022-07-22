@@ -1350,6 +1350,8 @@ Func ReadConfig_600_29_DB()
 	IniReadS($g_bDebugSmartFarm, $g_sProfileConfigPath, "SmartFarm", "DebugSmartFarm", False, "Bool")
 	
 	#Region - Random CSV - Team AIO Mod++
+	IniReadS($g_abLinkThatAndUseIn[$DB], $g_sProfileConfigPath, "attack", "ChkLinkThatAndUseInDB", False, "Bool")		
+
 	For $i = 0 To UBound($g_asRandomCSVDB) -1
 		IniReadS($g_abRandomCSVDB[$i], $g_sProfileConfigPath, "attack", "ChkRandomCSVDB_R" & $i, False, "Bool")		
 		IniReadS($g_asRandomCSVDB[$i], $g_sProfileConfigPath, "attack", "ScriptDB_R" & $i, "Barch four fingers")
@@ -1401,6 +1403,8 @@ Func ReadConfig_600_29_LB()
 	IniReadS($g_aiAttackUseSiege[$LB], $g_sProfileConfigPath, "attack", "ABAtkUseSiege", 5, "int")
 
 	#Region - Random CSV - Team AIO Mod++
+	IniReadS($g_abLinkThatAndUseIn[$LB], $g_sProfileConfigPath, "attack", "ChkLinkThatAndUseInAB", False, "Bool")		
+
 	For $i = 0 To UBound($g_asRandomCSVAB) -1
 		IniReadS($g_abRandomCSVAB[$i], $g_sProfileConfigPath, "attack", "ChkRandomCSVAB_R" & $i, False, "Bool")		
 		IniReadS($g_asRandomCSVAB[$i], $g_sProfileConfigPath, "attack", "ScriptAB_R" & $i, "Barch four fingers")

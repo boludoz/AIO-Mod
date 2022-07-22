@@ -1822,6 +1822,8 @@ Func ApplyConfig_600_29_DB_Scripted($TypeReadSave)
 			_GUICtrlComboBox_SetCurSel($g_hCmbScriptNameDB, $tempindex)
 			
 			#Region - Random CSV - Team AIO Mod++
+			GUICtrlSetState($g_ahChkLinkThatAndUseIn[$DB], $g_abLinkThatAndUseIn[$DB] ? $GUI_CHECKED : $GUI_UNCHECKED)
+			
 			For $i = 0 To UBound($g_asRandomCSVDB) -1
 				GUICtrlSetState($g_ahChkRandomCSVDB[$i], $g_abRandomCSVDB[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
 
@@ -1845,6 +1847,8 @@ Func ApplyConfig_600_29_DB_Scripted($TypeReadSave)
 			IniWriteS($g_sProfileConfigPath, "attack", "ScriptDB", $g_sAttackScrScriptName[$DB])
 			
 			#Region - Random CSV - Team AIO Mod++
+			$g_abLinkThatAndUseIn[$DB] = (GUICtrlRead($g_ahChkLinkThatAndUseIn[$DB]) = $GUI_CHECKED)
+			
 			For $i = 0 To UBound($g_asRandomCSVDB) -1
 				$g_abRandomCSVDB[$i] = (GUICtrlRead($g_ahChkRandomCSVDB[$i]) = $GUI_CHECKED)
 
@@ -1998,6 +2002,8 @@ Func ApplyConfig_600_29_LB_Scripted($TypeReadSave)
 			_GUICtrlComboBox_SetCurSel($g_hCmbScriptNameAB, $tempindex)
 			
 			#Region - Random CSV - Team AIO Mod++
+			GUICtrlSetState($g_ahChkLinkThatAndUseIn[$LB], $g_abLinkThatAndUseIn[$LB] ? $GUI_CHECKED : $GUI_UNCHECKED)
+
 			For $i = 0 To UBound($g_asRandomCSVAB) -1
 				GUICtrlSetState($g_ahChkRandomCSVAB[$i], $g_abRandomCSVAB[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
 
@@ -2021,6 +2027,8 @@ Func ApplyConfig_600_29_LB_Scripted($TypeReadSave)
 			IniWriteS($g_sProfileConfigPath, "attack", "ScriptAB", $g_sAttackScrScriptName[$LB])
 			
 			#Region - Random CSV - Team AIO Mod++
+			$g_abLinkThatAndUseIn[$LB] = (GUICtrlRead($g_ahChkLinkThatAndUseIn[$LB]) = $GUI_CHECKED)
+
 			For $i = 0 To UBound($g_asRandomCSVAB) -1
 				$g_abRandomCSVAB[$i] = (GUICtrlRead($g_ahChkRandomCSVAB[$i]) = $GUI_CHECKED)
 

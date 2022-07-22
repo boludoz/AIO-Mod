@@ -1064,6 +1064,8 @@ Func SaveConfig_600_29_DB_Scripted()
 	_Ini_Add("attack", "ScriptDB", $g_sAttackScrScriptName[$DB])
 
 	#Region - Random CSV - Team AIO Mod++
+	_Ini_Add("attack", "ChkLinkThatAndUseInDB", $g_abLinkThatAndUseIn[$DB] ? 1 : 0)
+
 	For $i = 0 To UBound($g_asRandomCSVDB) -1
 		_Ini_Add("attack", "ChkRandomCSVDB_R" & $i, $g_abRandomCSVDB[$i] ? 1 : 0)
 		_Ini_Add("attack", "ScriptDB_R" & $i, $g_asRandomCSVDB[$i])
@@ -1141,6 +1143,8 @@ Func SaveConfig_600_29_LB_Scripted()
 	_Ini_Add("attack", "ScriptAB", $g_sAttackScrScriptName[$LB])
 
 	#Region - Random CSV - Team AIO Mod++
+	_Ini_Add("attack", "ChkLinkThatAndUseInAB", $g_abLinkThatAndUseIn[$LB] ? 1 : 0)
+
 	For $i = 0 To UBound($g_asRandomCSVDB) -1
 		_Ini_Add("attack", "ChkRandomCSVAB_R" & $i, $g_abRandomCSVAB[$i] ? 1 : 0)
 		_Ini_Add("attack", "ScriptAB_R" & $i, $g_asRandomCSVAB[$i])

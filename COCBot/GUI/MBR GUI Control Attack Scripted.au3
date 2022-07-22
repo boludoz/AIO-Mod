@@ -591,3 +591,21 @@ Func AttackNowDB()
 	$g_aiCurrentSiegeMachines = $tempSieges
 	$g_bRunState = $tempbRunState
 EndFunc   ;==>AttackNowDB
+
+#Region - Random CSV - Team AIO Mod++
+Func ChkLinkThatAndUseInDB()
+	$g_abLinkThatAndUseIn[$DB] = (GUICtrlRead($g_ahChkLinkThatAndUseIn[$DB]) = $GUI_CHECKED)
+	If $g_abLinkThatAndUseIn[$DB] = True Then
+		$g_abLinkThatAndUseIn[$LB] = False
+		GUICtrlSetState($g_ahChkLinkThatAndUseIn[$LB], $GUI_UNCHECKED)
+	EndIf 
+EndFunc   ;==>ChkLinkThatAndUseIn
+
+Func ChkLinkThatAndUseInAB()
+	$g_abLinkThatAndUseIn[$LB] = (GUICtrlRead($g_ahChkLinkThatAndUseIn[$LB]) = $GUI_CHECKED)
+	If $g_abLinkThatAndUseIn[$LB] = True Then
+		$g_abLinkThatAndUseIn[$DB] = False
+		GUICtrlSetState($g_ahChkLinkThatAndUseIn[$DB], $GUI_UNCHECKED)
+	EndIf 
+EndFunc   ;==>ChkLinkThatAndUseInAB
+#EndRegion - Random CSV - Team AIO Mod++

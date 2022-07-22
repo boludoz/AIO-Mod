@@ -25,7 +25,11 @@ Func CreateAttackSearchActiveBaseScripted()
     Local $x = 25, $y = 20	
 	GUICtrlCreateTab($x - 20, $y - 20, 270, $TCS_MULTILINE - 168)
 	GUICtrlCreateTabItem( GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "DBTABScript_Main", "CSV Main"))
-	$y += 22
+
+	$g_ahChkLinkThatAndUseIn[$LB] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Bottom", "ChkSyncAttackAndTrainAB", "Sync on dead base and train"), $x - 5, $y + 1, -1, -1)
+		GUICtrlSetOnEvent(-1, "ChkLinkThatAndUseInAB")
+		
+	$y += 25
 		$g_hCmbScriptNameAB = GUICtrlCreateCombo("", $x, $y, 200, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL, $WS_VSCROLL))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Scripted", "CmbScriptName", -1))
 			GUICtrlSetState(-1, $GUI_UNCHECKED)

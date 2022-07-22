@@ -957,6 +957,12 @@ Func CSVRandomization($bDebug = False)
 			$g_sAttackScrScriptName[$aModes[$i]] = $aRandom[$ia]
 		EndIf
 	Next
+	
+	If $g_abLinkThatAndUseIn[$DB] Then
+		$g_sAttackScrScriptName[$LB] = $g_sAttackScrScriptName[$DB]
+	ElseIf $g_abLinkThatAndUseIn[$LB] Then
+		$g_sAttackScrScriptName[$DB] = $g_sAttackScrScriptName[$LB]
+	EndIf
 
 	Local $iTempIndex = 0
 	
@@ -965,13 +971,13 @@ Func CSVRandomization($bDebug = False)
 	_guictrlcombobox_setcursel($g_hCmbScriptnameDB, $iTempIndex)
 
 	cmbScriptNameAB()
-	; ApplyScriptAB()
+	ApplyScriptAB()
 	
 	$iTempIndex = _GUICtrlComboBox_FindStringExact($g_hCmbScriptnameAB, $g_sAttackScrScriptName[$LB])
 	If $iTempIndex = -1 Then $iTempIndex = 0
 	_guictrlcombobox_setcursel($g_hCmbScriptnameAB, $iTempIndex)
 
 	cmbScriptNameDB()
-	; ApplyScriptDB()
+	ApplyScriptDB()
 EndFunc   ;==>CSVRandomization
 #EndRegion - Random CSV - Team AIO Mod++
