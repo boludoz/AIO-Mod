@@ -98,6 +98,28 @@ Func ParseAttackCSV_Settings_variables(ByRef $aiCSVTroops, ByRef $aiCSVSpells, B
 					$asCommand[$i] = StringStripWS($asCommand[$i], $STR_STRIPTRAILING)
 				Next
 				Switch $asCommand[$iCommandCol]
+					Case "TRAIN"
+						$iTroopIndex = TroopIndexLookup($asCommand[$iTroopNameCol], "ParseAttackCSV_Settings_variables")
+						If $iTroopIndex = -1 Then
+							SetLog("CSV troop name '" & $asCommand[$iTroopNameCol] & "' is unrecognized - Line: " & $iLine + 1, $COLOR_ERROR)
+							ContinueLoop ; discard TRAIN commands due to the invalid troop name
+						EndIf
+						If int($asCommand[$iTHCol]) <= 0 Then
+							If $asCommand[$iTHCol] <> "0" Then SetLog("CSV troop amount/setting '" & $asCommand[$iTHCol] & "' is unrecognized - Line: " & $iLine + 1, $COLOR_ERROR)
+							ContinueLoop ; discard TRAIN commands due to the invalid troop amount/setting ex. int(chars)=0, negative #. "0" won't get alerted
+						EndIf
+						Switch $iTroopIndex
+							Case $eKing To $eChampion
+								Local $iHeroRadioItem = int(StringLeft($asCommand[$iTHCol], 1))
+								Local $iHeroTimed = Int(StringTrimLeft($asCommand[$iTHCol], 1))
+								If $iHeroRadioItem <= 0 Or $iHeroRadioItem > $iHeroRadioItemTotal Or $iHeroTimed < 0 Or $iHeroTimed > $iHeroTimedLimit Then
+									SetLog("CSV hero ability setting '" & $asCommand[$iTHCol] & "' is unrecognized - Line: " & $iLine + 1, $COLOR_ERROR)
+									ContinueLoop ; discard TRAIN commands due to prefix 0 or exceed # of radios
+								EndIf
+								$aiCSVHeros[$iTroopIndex - $eKing][0] = $iHeroRadioItem
+								$aiCSVHeros[$iTroopIndex - $eKing][1] = $iHeroTimed * 1000
+						EndSwitch
+						If $g_bDebugAttackCSV Then SetLog("Train " & $asCommand[$iTHCol] & "x " & $asCommand[$iTroopNameCol], $COLOR_DEBUG)
 					Case "REDLN"
 						$iCSVRedlineRoutineItem = int($asCommand[$iTHCol])
 						If $g_bDebugAttackCSV Then SetLog("Redline ComboBox #" & ($iCSVRedlineRoutineItem > 0 ? $iCSVRedlineRoutineItem : "None"), $COLOR_DEBUG)

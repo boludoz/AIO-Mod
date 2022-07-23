@@ -894,57 +894,60 @@ EndFunc
 Func CSVRandomization($bDebug = False)
 	If $g_bDebugSetlog = True Or $bDebug = True Then SetLog("[CSVRandomization] Start")
 	Local $sFilePath = ""
-	Static $aRandom[4]
-	Local $aModes[2] = [$DB, $LB]
+	Local $aModes[2] = [$DB, $LB], $sModes[2] = ["Dead base", "Active base"], $aCsvModesBool[2] = [$g_abRandomCSVDB, $g_abRandomCSVAB], $aCsvModesName[2] = [$g_asRandomCSVDB, $g_asRandomCSVAB]
+
+	Static $oDictionary = ObjCreate("Scripting.Dictionary")
+	If @error Then
+		SetLog("[CSVRandomization] Error creating the dictionary object")
+		Return False
+	EndIf
 	
-	For $i = 0 To UBound($aModes) - 1
-		$sFilePath = ""
-		If $aModes[$i] = $DB And $g_abLinkThatAndUseIn[$LB] = False Then
-		ElseIf $aModes[$i] = $LB And $g_abLinkThatAndUseIn[$DB] = False Then
-		Else
-			ContinueLoop
-		EndIf
+	Local $iLuck = 0, $iIndex = 0
+	For $j = 0 To UBound($aModes) - 1
+		If ($aModes[$j] = $DB And $g_abLinkThatAndUseIn[$LB] = True) Or ($aModes[$j] = $LB And $g_abLinkThatAndUseIn[$DB] = True) Then ContinueLoop
 		
-		_ArrayShuffle($aRandom)
+		For $i = 0 To 3
+			$oDictionary($i) = (($aCsvModesBool[$aModes[$j]])[$i] And FileExists($g_sCSVAttacksPath & "\" & ($aCsvModesName[$aModes[$j]])[$i] & ".csv")) ? (1) : (0)
+		Next
 		
-		For $ia = 0 To UBound($aRandom) -1
-			$sFilePath = $g_sCSVAttacksPath & "\" & $aRandom[$ia] & ".csv"
-			If FileExists($sFilePath) Then
-				If $g_bDebugSetlog = True Or $bDebug = True Then SetLog("[CSVRandomization] Randomized CSV file: " & String($sFilePath), $COLOR_SUCCESS)
-				$g_sAttackScrScriptName[$aModes[$i]] = $aRandom[$ia]
-				ContinueLoop 2
+		For $i = 1 To 256
+			$iLuck = Random(0, 3, 1)
+			$iIndex = $oDictionary($iLuck)
+			If $iIndex = 1 Then
+                $g_sAttackScrScriptName[$aModes[$j]] = ($aModes[$j] = $DB) ? ($g_asRandomCSVDB[$iLuck]) : ($g_asRandomCSVAB[$iLuck])
+				If $g_abLinkThatAndUseIn[$LB] = True Or $g_abLinkThatAndUseIn[$DB] = True Then $g_sAttackScrScriptName[$aModes[Abs($j - 1)]] = $g_sAttackScrScriptName[$aModes[$j]]
+                ContinueLoop 2
 			EndIf
 		Next
-
-		SetLog("[CSVRandomization] No random script found", $COLOR_ERROR)
+		
+		SetLog("[CSVRandomization] No random script found on " & $sModes[$j], $COLOR_ERROR)
 	Next
-
-	If $g_abLinkThatAndUseIn[$LB] Then
-		$g_sAttackScrScriptName[$DB] = $g_sAttackScrScriptName[$LB]
+	
+	If $g_iguimode = 1 Then
+		Local $iTempIndex = 0
+		
+		$iTempIndex = _GUICtrlComboBox_FindStringExact($g_hCmbScriptnameDB, $g_sAttackScrScriptName[$DB])
+		If $iTempIndex = -1 Then $iTempIndex = 0
+		_guictrlcombobox_setcursel($g_hCmbScriptnameDB, $iTempIndex)
+		
+		cmbScriptNameAB()
+		
+		$iTempIndex = _GUICtrlComboBox_FindStringExact($g_hCmbScriptnameAB, $g_sAttackScrScriptName[$LB])
+		If $iTempIndex = -1 Then $iTempIndex = 0
+		_guictrlcombobox_setcursel($g_hCmbScriptnameAB, $iTempIndex)
+		
+		cmbScriptNameDB()
 	EndIf
-
-	If $g_abLinkThatAndUseIn[$DB] Then
-		$g_sAttackScrScriptName[$LB] = $g_sAttackScrScriptName[$DB]
-	EndIf
-
-	Local $iTempIndex = 0
-	
-	$iTempIndex = _GUICtrlComboBox_FindStringExact($g_hCmbScriptnameDB, $g_sAttackScrScriptName[$DB])
-	If $iTempIndex = -1 Then $iTempIndex = 0
-	_guictrlcombobox_setcursel($g_hCmbScriptnameDB, $iTempIndex)
-	
-	cmbScriptNameAB()
-	
-	$iTempIndex = _GUICtrlComboBox_FindStringExact($g_hCmbScriptnameAB, $g_sAttackScrScriptName[$LB])
-	If $iTempIndex = -1 Then $iTempIndex = 0
-	_guictrlcombobox_setcursel($g_hCmbScriptnameAB, $iTempIndex)
-	
-	cmbScriptNameDB()
 	
 	If $g_abLinkThatAndUseIn[$LB] Or $g_abLinkThatAndUseIn[$DB] Then
-		ApplyScriptDB()
-		ApplyScriptAB()
+		If ($g_aiAttackAlgorithm[$DB] = 1) Then
+			ApplyScriptDB()
+		EndIf
+		If ($g_aiAttackAlgorithm[$LB] = 1) Then
+			ApplyScriptAB()
+		EndIf
 	EndIf
 	
+	If $g_bDebugSetlog = True Or $bDebug = True Then SetLog("[CSVRandomization] End")
 EndFunc   ;==>CSVRandomization
 #EndRegion - Random CSV - Team AIO Mod++
