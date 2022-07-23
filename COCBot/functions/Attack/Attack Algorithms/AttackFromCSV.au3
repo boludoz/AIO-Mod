@@ -894,42 +894,13 @@ EndFunc
 Func CSVRandomization($bDebug = False)
 	If $g_bDebugSetlog = True Or $bDebug = True Then SetLog("[CSVRandomization] Start")
 	Local $sFilePath = ""
-	Local $aRandom[3]
+	Static $aRandom[4]
 	Local $aModes[2] = [$DB, $LB]
-	Local $aiExtraCSVRandomDB[1] = [$g_sAttackScrScriptName[$DB]]
-	Local $aiExtraCSVRandomAB[1] = [$g_sAttackScrScriptName[$LB]]
-	
-	Local $aModesSelected[2] = [False, False]
-	For $i = 0 To 3
-		If $g_abRandomCSVDB[$i] Then
-			If $aModesSelected[0] = False Then
-				ReDim $aiExtraCSVRandomDB[0]
-			EndIf
-			
-			ReDim $aiExtraCSVRandomDB[UBound($aiExtraCSVRandomDB) + 1]
-			$aiExtraCSVRandomDB[UBound($aiExtraCSVRandomDB) - 1] = $g_asRandomCSVDB[$i]
-			$aModesSelected[0] = True
-		EndIf
-		
-		If $g_abRandomCSVAB[$i] Then
-			If $aModesSelected[1] = False Then 
-				ReDim $aiExtraCSVRandomAB[0]
-			EndIf
-
-			ReDim $aiExtraCSVRandomAB[UBound($aiExtraCSVRandomAB) + 1]
-			$aiExtraCSVRandomAB[UBound($aiExtraCSVRandomAB) - 1] = $g_asRandomCSVAB[$i]
-			$aModesSelected[1] = True
-		EndIf
-	Next
-	
-	If $aModesSelected[0] = False And $aModesSelected[1] = False Then Return False
 	
 	For $i = 0 To UBound($aModes) - 1
 		$sFilePath = ""
 		If $aModes[$i] = $DB And $g_abLinkThatAndUseIn[$LB] = False Then
-			$aRandom = $aiExtraCSVRandomDB
 		ElseIf $aModes[$i] = $LB And $g_abLinkThatAndUseIn[$DB] = False Then
-			$aRandom = $aiExtraCSVRandomAB
 		Else
 			ContinueLoop
 		EndIf
@@ -958,14 +929,12 @@ Func CSVRandomization($bDebug = False)
 
 	Local $iTempIndex = 0
 	
-	$g_sAttackScrScriptName[$LB] = $g_sAttackScrScriptName[$DB]
 	$iTempIndex = _GUICtrlComboBox_FindStringExact($g_hCmbScriptnameDB, $g_sAttackScrScriptName[$DB])
 	If $iTempIndex = -1 Then $iTempIndex = 0
 	_guictrlcombobox_setcursel($g_hCmbScriptnameDB, $iTempIndex)
 	
 	cmbScriptNameAB()
 	
-	$g_sAttackScrScriptName[$DB] = $g_sAttackScrScriptName[$LB]
 	$iTempIndex = _GUICtrlComboBox_FindStringExact($g_hCmbScriptnameAB, $g_sAttackScrScriptName[$LB])
 	If $iTempIndex = -1 Then $iTempIndex = 0
 	_guictrlcombobox_setcursel($g_hCmbScriptnameAB, $iTempIndex)
