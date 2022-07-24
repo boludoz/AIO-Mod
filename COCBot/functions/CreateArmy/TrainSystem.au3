@@ -136,37 +136,9 @@ Func TrainCustomArmy() ; Custom train - Team AIO Mod++
 
 	If $g_bDebugSetlogTrain Then SetLog(" == Initial Custom Train == ", $COLOR_ACTION)
 
-	;If $bDonateTrain = -1 Then SetbDonateTrain()
 	If $g_iActiveDonate = -1 Then PrepareDonateCC()
 
 	DoubleTrain(False)
-	
-	#cs
-	If Not $g_bRunState Then Return
-
-	If Not $g_bFullArmy Then
-		Local $rWhatToTrain = WhatToTrain(True) ; r in First means Result! Result of What To Train Function
-
-		RemoveExtraTroops($rWhatToTrain)
-	EndIf
-
-	If _Sleep($DELAYRESPOND) Then Return ; add 5ms delay to catch TrainIt errors, and force return to back to main loop
-
-	Local $bEmptyTroopQueue = IsQueueEmpty("Troops")
-	Local $bEmptySpellQueue = IsQueueEmpty("Spells")
-
-	If $bEmptyTroopQueue Or $bEmptySpellQueue Then
-		If Not $g_bRunState Then Return
-		If Not OpenArmyTab(False, "TrainCustomArmy()") Then Return
-		Local $rWhatToTrain = WhatToTrain()
-
-		If $bEmptyTroopQueue And DoWhatToTrainContainTroop($rWhatToTrain) Then TrainUsingWhatToTrain($rWhatToTrain)
-		If $bEmptySpellQueue And DoWhatToTrainContainSpell($rWhatToTrain) Then BrewUsingWhatToTrain($rWhatToTrain)
-	EndIf
-
-	If _Sleep(250) Then Return
-	If Not $g_bRunState Then Return
-	#ce
 EndFunc   ;==>TrainCustomArmy
 
 Func CheckIfArmyIsReady()
@@ -198,7 +170,7 @@ Func CheckIfArmyIsReady()
 	Next
 
 	If Number($g_iCurrentSpells) >= Number($g_iTotalSpellValue) Or Number($g_iCurrentSpells) >= Number($iTotalSpellsToBrew) Then $g_bFullArmySpells = True
-
+	#cs
 	If (Not $g_bFullArmy And Not $g_bFullArmySpells) Or $g_bPreciseArmy Then
 		Local $avWrongTroops = WhatToTrain(True)
 		Local $rRemoveExtraTroops = RemoveExtraTroops($avWrongTroops)
@@ -207,7 +179,7 @@ Func CheckIfArmyIsReady()
 			$g_bFullArmySpells = Number($g_iCurrentSpells) >= Number($g_iTotalSpellValue) Or Number($g_iCurrentSpells) >= Number($iTotalSpellsToBrew)
 		EndIf
 	EndIf
-
+	#ce
 	$g_bCheckSpells = CheckSpells()
 
 	; add to the hereos available, the ones upgrading so that it ignores them... we need this logic or the bitwise math does not work out correctly
