@@ -32,7 +32,7 @@ Func getArmySpellTime($bOpenArmyWindow = False, $bCloseArmyWindow = False, $bChe
 		EndIf
 	EndIf
 
-	Local $sResultSpells = getRemainTrainTimer(450, 315 + $g_iMidOffsetYFixed, $bNeedCapture) ;Get time via OCR.
+	Local $sResultSpells = getRemainTrainTimer(440, 315 + $g_iMidOffsetYFixed, $bNeedCapture) ;Get time via OCR. ; Resolution fixed
 	$g_aiTimeTrain[1] = ConvertOCRTime("Spells", $sResultSpells, $bSetLog) ; update global array
 
 	If $bCloseArmyWindow Then

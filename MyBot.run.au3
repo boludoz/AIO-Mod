@@ -1271,6 +1271,7 @@ Func Attack() ;Selects which algorithm
 	If ($g_iMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 1) Or ($g_iMatchMode = $LB And $g_aiAttackAlgorithm[$LB] = 1) Then
 		SetDebugLog("Start scripted attack", $COLOR_INFO)
 		Algorithm_AttackCSV()
+		CSVRandomization()
 	ElseIf $g_iMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 2 Then
 		SetDebugLog("start smart farm attack", $COLOR_ERROR)
 		; Variable to return : $Return[3]  [0] = To attack InSide  [1] = Quant. Sides  [2] = Name Sides

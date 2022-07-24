@@ -56,7 +56,7 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 	#Region - Custom Army - Team AIO Mod++
 	Local $bForceDouble = $g_bIsFullArmywithHeroesAndSpells
 	Local $bPreTrainFlag = $g_bDoubleTrain Or $bForceDouble
-	
+
 	If $g_bChkPreTrainTroopsPercent = True And $g_bForceDoubleTrain = False Then
 		$bPreTrainFlag = ($g_iArmyCapacity >= $g_iInpPreTrainTroopsPercent)
 		SetLog("Double train condition ? " & $bPreTrainFlag, $COLOR_INFO)
@@ -74,6 +74,11 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 	If $bWarTroop = True Or ($g_bDoubleTrain = True And $g_bIsFullArmywithHeroesAndSpells = True) Then
 		$bPreTrainFlag = True
 		$bForceDouble = True
+	EndIf
+	
+	If IsSyncCSVEnabled() Then
+		$bForceDouble = False
+		$bPreTrainFlag = False
 	EndIf
 	#EndRegion - Custom Army - Team AIO Mod++
 

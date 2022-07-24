@@ -210,7 +210,7 @@ EndFunc   ;==>GetMaxPoint
 Func Algorithm_AttackCSV($testattack = False, $captureredarea = True)
 
 	; Custom CSV - Team AIO Mod++
-	CSVRandomization()
+	SyncCSVMain()
 
 	Local $g_aiPixelNearCollectorTopLeft[0]
 	Local $g_aiPixelNearCollectorBottomLeft[0]
@@ -893,18 +893,26 @@ EndFunc
 #Region - Random CSV - Team AIO Mod++
 Func CSVRandomization($bDebug = False)
 	If $g_bDebugSetlog = True Or $bDebug = True Then SetLog("[CSVRandomization] Start")
+	
+	If ($g_aiAttackAlgorithm[$DB] <> 1) And ($g_aiAttackAlgorithm[$LB] <> 1) Then Return False
+
 	Local $sFilePath = ""
 	Local $aModes[2] = [$DB, $LB], $sModes[2] = ["Dead base", "Active base"], $aCsvModesBool[2] = [$g_abRandomCSVDB, $g_abRandomCSVAB], $aCsvModesName[2] = [$g_asRandomCSVDB, $g_asRandomCSVAB]
-
+	
+	
 	Static $oDictionary = ObjCreate("Scripting.Dictionary")
 	If @error Then
 		SetLog("[CSVRandomization] Error creating the dictionary object")
 		Return False
 	EndIf
 	
-	Local $iLuck = 0, $iIndex = 0
+	Local $iLuck = 0, $iIndex = 0, $bSync = IsSyncCSVEnabled()
 	For $j = 0 To UBound($aModes) - 1
-		If ($aModes[$j] = $DB And $g_abLinkThatAndUseIn[$LB] = True) Or ($aModes[$j] = $LB And $g_abLinkThatAndUseIn[$DB] = True) Then ContinueLoop
+		If $bSync = True Then
+			If ($aModes[$j] = $DB And $g_abLinkThatAndUseIn[$LB] = True) Or ($aModes[$j] = $LB And $g_abLinkThatAndUseIn[$DB] = True) Then
+				ContinueLoop
+			EndIf
+		EndIf
 		
 		For $i = 0 To 3
 			$oDictionary($i) = (($aCsvModesBool[$aModes[$j]])[$i] And FileExists($g_sCSVAttacksPath & "\" & ($aCsvModesName[$aModes[$j]])[$i] & ".csv")) ? (1) : (0)
@@ -915,7 +923,9 @@ Func CSVRandomization($bDebug = False)
 			$iIndex = $oDictionary($iLuck)
 			If $iIndex = 1 Then
                 $g_sAttackScrScriptName[$aModes[$j]] = ($aModes[$j] = $DB) ? ($g_asRandomCSVDB[$iLuck]) : ($g_asRandomCSVAB[$iLuck])
-				If $g_abLinkThatAndUseIn[$LB] = True Or $g_abLinkThatAndUseIn[$DB] = True Then $g_sAttackScrScriptName[$aModes[Abs($j - 1)]] = $g_sAttackScrScriptName[$aModes[$j]]
+				If $bSync = True Then
+					$g_sAttackScrScriptName[$aModes[Abs($j - 1)]] = $g_sAttackScrScriptName[$aModes[$j]]
+				EndIf
                 ContinueLoop 2
 			EndIf
 		Next
@@ -923,31 +933,54 @@ Func CSVRandomization($bDebug = False)
 		SetLog("[CSVRandomization] No random script found on " & $sModes[$j], $COLOR_ERROR)
 	Next
 	
-	If $g_iguimode = 1 Then
+	If $g_iGuiMode = 1 Then
 		Local $iTempIndex = 0
 		
 		$iTempIndex = _GUICtrlComboBox_FindStringExact($g_hCmbScriptnameDB, $g_sAttackScrScriptName[$DB])
 		If $iTempIndex = -1 Then $iTempIndex = 0
-		_guictrlcombobox_setcursel($g_hCmbScriptnameDB, $iTempIndex)
+		_GUICtrlComboBox_SetCurSel($g_hCmbScriptnameDB, $iTempIndex)
 		
 		cmbScriptNameAB()
 		
 		$iTempIndex = _GUICtrlComboBox_FindStringExact($g_hCmbScriptnameAB, $g_sAttackScrScriptName[$LB])
 		If $iTempIndex = -1 Then $iTempIndex = 0
-		_guictrlcombobox_setcursel($g_hCmbScriptnameAB, $iTempIndex)
+		_GUICtrlComboBox_SetCurSel($g_hCmbScriptnameAB, $iTempIndex)
 		
 		cmbScriptNameDB()
 	EndIf
 	
-	If $g_abLinkThatAndUseIn[$LB] Or $g_abLinkThatAndUseIn[$DB] Then
-		If ($g_aiAttackAlgorithm[$DB] = 1) Then
-			ApplyScriptDB()
-		EndIf
-		If ($g_aiAttackAlgorithm[$LB] = 1) Then
-			ApplyScriptAB()
-		EndIf
-	EndIf
+	SyncCSVMain()
 	
 	If $g_bDebugSetlog = True Or $bDebug = True Then SetLog("[CSVRandomization] End")
 EndFunc   ;==>CSVRandomization
+
+Func IsSyncCSVEnabled()
+	If ($g_aiAttackAlgorithm[$DB] = 1 And $g_abLinkThatAndUseIn[$LB] = True And $g_aiAttackAlgorithm[$LB] <> 1) Or _
+		($g_aiAttackAlgorithm[$LB] = 1 And $g_abLinkThatAndUseIn[$DB] = True And $g_aiAttackAlgorithm[$DB] <> 1) Then
+	   Return False
+	EndIf
+	
+	If ($g_abAttackTypeEnable[$LB] = False And $g_abLinkThatAndUseIn[$LB] = True) Or _
+		($g_abAttackTypeEnable[$DB] = False And $g_abLinkThatAndUseIn[$DB] = True) Then
+		Return False
+	EndIf
+	
+	Return $g_abLinkThatAndUseIn[$LB] = True Or $g_abLinkThatAndUseIn[$DB] = True
+EndFunc
+
+Func SyncCSVMain()
+	If IsSyncCSVEnabled() Then
+		If $g_abLinkThatAndUseIn[$LB] Or $g_abLinkThatAndUseIn[$DB] Then
+			If ($g_aiAttackAlgorithm[$DB] = 1) Then
+				ApplyScriptDB()
+				Return True
+			EndIf
+			If ($g_aiAttackAlgorithm[$LB] = 1) Then
+				ApplyScriptAB()
+				Return True
+			EndIf
+		EndIf
+	EndIf
+	Return False
+EndFunc
 #EndRegion - Random CSV - Team AIO Mod++

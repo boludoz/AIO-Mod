@@ -65,12 +65,12 @@ Func getArmyCCSiegeMachines($bOpenArmyWindow = False, $bCloseArmyWindow = False,
 
 			If $iCCSiegeIndex < 0 Then ContinueLoop
 
-			$g_aiCurrentCCSiegeMachines[$iCCSiegeIndex] = Number(getBarracksNewTroopQuantity(650, 498, $bNeedCapture)) ; Get The Quantity of the Troop, Slot() Does return the exact spot to read the Number from
+			$g_aiCurrentCCSiegeMachines[$iCCSiegeIndex] = Number(getBarracksNewTroopQuantity(650, 498 + $g_iMidOffsetYFixed, $bNeedCapture)) ; Get The Quantity of the Troop, Slot() Does return the exact spot to read the Number from
 
 			$sCCSiegeName = $g_aiCurrentCCSiegeMachines[$iCCSiegeIndex] >= 2 ? $g_asSiegeMachineNames[$iCCSiegeIndex] & "s" : $g_asSiegeMachineNames[$iCCSiegeIndex] & ""
 
 			If $g_bDebugSetlogTrain Then Setlog($sCCSiegeName & " Coord: (" & $aCCSiegeCoords[0] & "," & $aCCSiegeCoords[1] & ") Quant :" & $g_aiCurrentCCSiegeMachines[$iCCSiegeIndex])
-			If $g_bDebugSetlogTrain Then Setlog($sCCSiegeName & " Slot (" & 650 & "," & 498 & ")")
+			If $g_bDebugSetlogTrain Then Setlog($sCCSiegeName & " Slot (" & 650 & "," & 498 + $g_iMidOffsetYFixed & ")")
 
 			If $bSetLog Then SetLog(" - " & $g_aiCurrentCCSiegeMachines[$iCCSiegeIndex] & " " & $sCCSiegeName & " Available", $COLOR_SUCCESS)
 		Next

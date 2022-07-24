@@ -343,7 +343,7 @@ Func ApplyScriptDB()
 		$g_aiArmyCustomTroops = $aiCSVTroops
 		$g_aiArmyCustomSpells = $aiCSVSpells
 		; If $iApplySieges > 0 Then $g_aiArmyCompSiegeMachines = $aiCSVSieges
-		If $g_iguimode = 1 Then
+		If $g_iGuiMode = 1 Then
 			ApplyConfig_600_52_2("Read")
 			SetComboTroopComp() ; GUI refresh
 			lblTotalCountSpell2()
@@ -374,7 +374,7 @@ Func ApplyScriptDB()
 			EndIf
 		Next
 		
-		If $g_iguimode = 1 Then
+		If $g_iGuiMode = 1 Then
 			radHerosApply()
 			SetLog("CSV Hero Ability settings applied", $COLOR_SUCCESS)
 
@@ -387,7 +387,7 @@ Func ApplyScriptDB()
 	EndIf
 
 	If $sCSVCCReq <> "" Then
-		If $g_iguimode = 1 Then GUICtrlSetState($g_hChkDBDropCC, $GUI_CHECKED)
+		If $g_iGuiMode = 1 Then GUICtrlSetState($g_hChkDBDropCC, $GUI_CHECKED)
 		$g_abAttackDropCC[$DB] = True
 		SetLog("CSV 'Attack with' CC settings applied", $COLOR_SUCCESS)
 	EndIf
@@ -396,13 +396,13 @@ Func ApplyScriptDB()
 	Local $ahChkDBSpell = StringSplit($g_aGroupAttackDBSpell, "#", 2)
 	If IsArray($ahChkDBSpell) Then
 		For $i = 0 To UBound($ahChkDBSpell) - 1
-			If $g_iguimode = 1 Then GUICtrlSetState($ahChkDBSpell[$i], $aiCSVSpells[$i] > 0 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			If $g_iGuiMode = 1 Then GUICtrlSetState($ahChkDBSpell[$i], $aiCSVSpells[$i] > 0 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			If $aiCSVSpells[$i] > 0 Then $iApply += 1
 		Next
 		If $iApply > 0 Then SetLog("CSV 'Attack with' Spell settings applied", $COLOR_SUCCESS)
 	EndIf
 
-	If $g_iguimode = 1 Then 
+	If $g_iGuiMode = 1 Then 
 		If $iCSVRedlineRoutineItem > 0 And $iCSVRedlineRoutineItem <= _GUICtrlComboBox_GetCount($g_hCmbScriptRedlineImplDB) + 1 Then
 			_GUICtrlComboBox_SetCurSel($g_hCmbScriptRedlineImplDB, $iCSVRedlineRoutineItem - 1)
 			cmbScriptRedlineImplDB()
@@ -422,7 +422,7 @@ Func ApplyScriptDB()
 	If $sCSVCCReq <> "" Then
 		$g_bRequestTroopsEnable = True
 		$g_sRequestTroopsText = $sCSVCCReq
-		If $g_iguimode = 1 Then ApplyConfig_600_11("Read")
+		If $g_iGuiMode = 1 Then ApplyConfig_600_11("Read")
 		SetLog("CSV CC Request settings applied", $COLOR_SUCCESS)
 	EndIf
 EndFunc   ;==>ApplyScriptDB
@@ -460,7 +460,7 @@ Func ApplyScriptAB()
 		$g_aiArmyCustomTroops = $aiCSVTroops
 		$g_aiArmyCustomSpells = $aiCSVSpells
 		; If $iApplySieges > 0 Then $g_aiArmyCompSiegeMachines = $aiCSVSieges
-		If $g_iguimode = 1 Then
+		If $g_iGuiMode = 1 Then
 			ApplyConfig_600_52_2("Read")
 			SetComboTroopComp() ; GUI refresh
 			lblTotalCountSpell2()
@@ -491,7 +491,7 @@ Func ApplyScriptAB()
 				EndSwitch
 			EndIf
 		Next
-		If $g_iguimode = 1 Then
+		If $g_iGuiMode = 1 Then
 			radHerosApply()
 			SetLog("CSV Hero Ability settings applied", $COLOR_SUCCESS)
 
@@ -504,7 +504,7 @@ Func ApplyScriptAB()
 	EndIf
 
 	If $sCSVCCReq <> "" Then
-		If $g_iguimode = 1 Then GUICtrlSetState($g_hChkABDropCC, $GUI_CHECKED)
+		If $g_iGuiMode = 1 Then GUICtrlSetState($g_hChkABDropCC, $GUI_CHECKED)
 		$g_abAttackDropCC[$LB] = True
 		SetLog("CSV 'Attack with' CC settings applied", $COLOR_SUCCESS)
 	EndIf
@@ -513,13 +513,13 @@ Func ApplyScriptAB()
 	Local $ahChkABSpell = StringSplit($GroupAttackABSpell, "#", 2)
 	If IsArray($ahChkABSpell) Then
 		For $i = 0 To UBound($ahChkABSpell) - 1
-			If $g_iguimode = 1 Then GUICtrlSetState($ahChkABSpell[$i], $aiCSVSpells[$i] > 0 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			If $g_iGuiMode = 1 Then GUICtrlSetState($ahChkABSpell[$i], $aiCSVSpells[$i] > 0 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			If $aiCSVSpells[$i] > 0 Then $iApply += 1
 		Next
 		If $iApply > 0 Then SetLog("CSV 'Attack with' Spell settings applied", $COLOR_SUCCESS)
 	EndIf
 	
-	If $g_iguimode = 1 Then 
+	If $g_iGuiMode = 1 Then 
 		If $iCSVRedlineRoutineItem > 0 And $iCSVRedlineRoutineItem <= _GUICtrlComboBox_GetCount($g_hCmbScriptRedlineImplAB) + 1 Then
 			_GUICtrlComboBox_SetCurSel($g_hCmbScriptRedlineImplAB, $iCSVRedlineRoutineItem - 1)
 			cmbScriptRedlineImplAB()
@@ -539,7 +539,7 @@ Func ApplyScriptAB()
 	If $sCSVCCReq <> "" Then
 		$g_bRequestTroopsEnable = True
 		$g_sRequestTroopsText = $sCSVCCReq
-		If $g_iguimode = 1 Then ApplyConfig_600_11("Read")
+		If $g_iGuiMode = 1 Then ApplyConfig_600_11("Read")
 		SetLog("CSV CC Request settings applied", $COLOR_SUCCESS)
 	EndIf
 EndFunc   ;==>ApplyScriptAB

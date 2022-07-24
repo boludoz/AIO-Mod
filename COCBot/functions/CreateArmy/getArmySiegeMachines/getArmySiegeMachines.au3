@@ -72,7 +72,7 @@ Func getArmySiegeMachines($bOpenArmyWindow = False, $bCloseArmyWindow = False, $
 
 			If $iSiegeIndex < 0 Then ContinueLoop
 
-			$g_aiCurrentSiegeMachines[$iSiegeIndex] = Number(getBarracksNewTroopQuantity(Slot($aSiegeCoords[0], $aSiegeCoords[1]), 196, $bNeedCapture)) ; Get The Quantity of the Troop, Slot() Does return the exact spot to read the Number from
+			$g_aiCurrentSiegeMachines[$iSiegeIndex] = Number(getBarracksNewTroopQuantity(Slot($aSiegeCoords[0], $aSiegeCoords[1]), 196 + $g_iMidOffsetYFixed, $bNeedCapture)) ; Get The Quantity of the Troop, Slot() Does return the exact spot to read the Number from
 
 			$sSiegeName = $g_aiCurrentSiegeMachines[$iSiegeIndex] >= 2 ? $g_asSiegeMachineNames[$iSiegeIndex] & "s" : $g_asSiegeMachineNames[$iSiegeIndex] & ""
 
