@@ -338,7 +338,7 @@ Func ParseTroopsCSV(ByRef $aiCSVTroops, ByRef $aiCSVSpells, ByRef $aiCSVSieges, 
 	
 	If $g_bDebugAttackCSV Then SetLog("CSV troop total: " & $iCSVTotalCapTroops, $COLOR_DEBUG)
 	If $iCSVTotalCapTroops > 0 Then
-		SetLog("CSV troops total: " & $iCSVTotalCapTroops)
+		; SetLog("CSV troops total: " & $iCSVTotalCapTroops)
 		FixInDoubleTrain($aiCSVTroops, $g_iTotalCampSpace, $g_aiTroopSpace, TroopIndexLookup($g_sCmbFICTroops[$g_iCmbFillIncorrectTroopCombo][0], "ParseTroopsCSV Troops"))
 		
 		If $iCSVTotalCapSpells > 0 Then FixInDoubleTrain($aiCSVSpells, $g_iTotalSpellValue, $g_aiSpellSpace, TroopIndexLookup($g_sCmbFICSpells[$g_iCmbFillIncorrectSpellCombo][0], "ParseTroopsCSV Spells") - $eLSpell)

@@ -34,8 +34,6 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 	
 	If $bWarTroop = False Then
 		If IsSyncCSVEnabled() And IsSyncRandomCSVReallyEnabled() Then
-			SyncCSVArmy()
-			
 			$bForceDouble = False
 			$bPreTrainFlag = False
 			$bTrainBeforeAttack = False
@@ -207,11 +205,11 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 	EndIf
 
 	If $bNeedReCheckTroopTab Or $bNeedReCheckSpellTab Then
-		Local $aWhatToRemove = WhatToTrain(True)
+		Local $aWhatToRemove = WhatToTrain(True, $g_bIsFullArmywithHeroesAndSpells, $bTrainBeforeAttack)
 		Local $rRemoveExtraTroops = RemoveExtraTroops($aWhatToRemove)
 		If $bDebug Then SetLog("RemoveExtraTroops(): " & $rRemoveExtraTroops, $COLOR_DEBUG)
 
-		Local $aWhatToTrain = WhatToTrain(False, False)
+		Local $aWhatToTrain = WhatToTrain(False, False, $bTrainBeforeAttack)
 		If DoWhatToTrainContainTroop($aWhatToTrain) Then
 			TrainUsingWhatToTrain($aWhatToTrain)
 			TrainFullTroop($bPreTrainFlag)
