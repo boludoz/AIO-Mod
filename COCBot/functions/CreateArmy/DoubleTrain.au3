@@ -25,23 +25,41 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 	Local $bNeedReCheckTroopTab = False, $bNeedReCheckSpellTab = False
 
 	#Region - Missing PreciseArmy - Team AIO Mod++
+	Local $bForceDouble = $g_bIsFullArmywithHeroesAndSpells
+	Local $bPreTrainFlag = $g_bDoubleTrain Or $bForceDouble
+	Local $bTrainBeforeAttack = $g_bTrainBeforeAttack
+	Local $bForcePreBrewSpells = $g_bForcePreBrewSpells
+	Local $bPreciseBrew = $g_bPreciseBrew
+	Local $bPreciseArmy = $g_bPreciseArmy
+	
+	SyncCSVArmy()
+	
+	If IsSyncCSVEnabled() And IsSyncRandomCSVReallyEnabled() Then
+		$bForceDouble = False
+		$bPreTrainFlag = False
+		$bTrainBeforeAttack = False
+		$bForcePreBrewSpells = False
+		$bPreciseBrew = True
+		$bPreciseArmy = True
+	EndIf
+
 	Local $bHasIncorrectTroop = False, $bHasIncorrectSpell = False
-	If $g_bPreciseArmy Or $g_bPreciseBrew Then
+	If $bPreciseArmy Or $bPreciseBrew Then
 		Local $aWrongArmy = WhatToTrain(True)
 		If IsArray($aWrongArmy) Then
 			If $bDebug Then SetLog("$aWrongTroops: " & _ArrayToString($aWrongArmy), $COLOR_DEBUG)
 			If Not (UBound($aWrongArmy) = 1 And $aWrongArmy[0][1] = "Arch" And $aWrongArmy[0][1] = 0) Then ; Default result of WhatToTrain
 				For $i = 0 To UBound($aWrongArmy) - 1
-					If Not $bHasIncorrectTroop And _ArraySearch($g_asTroopShortNames, $aWrongArmy[$i][0]) >= 0 And $g_bPreciseArmy Then
+					If Not $bHasIncorrectTroop And _ArraySearch($g_asTroopShortNames, $aWrongArmy[$i][0]) >= 0 And $bPreciseArmy Then
 						$bHasIncorrectTroop = True
-						If $bHasIncorrectSpell Or Not $g_bPreciseArmy Then
+						If $bHasIncorrectSpell Or Not $bPreciseArmy Then
 							ExitLoop
 						EndIf
 					EndIf
-					
-					If Not $bHasIncorrectSpell And _ArraySearch($g_asSpellShortNames, $aWrongArmy[$i][0]) >= 0 And $g_bPreciseBrew Then
+
+					If Not $bHasIncorrectSpell And _ArraySearch($g_asSpellShortNames, $aWrongArmy[$i][0]) >= 0 And $bPreciseBrew Then
 						$bHasIncorrectSpell = True
-						If $bHasIncorrectTroop Or Not $g_bPreciseBrew Then
+						If $bHasIncorrectTroop Or Not $bPreciseBrew Then
 							ExitLoop
 						EndIf
 					EndIf
@@ -52,10 +70,8 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 		EndIf
 	EndIf
 	#EndRegion - Missing PreciseArmy - Team AIO Mod++
-	
+
 	#Region - Custom Army - Team AIO Mod++
-	Local $bForceDouble = $g_bIsFullArmywithHeroesAndSpells
-	Local $bPreTrainFlag = $g_bDoubleTrain Or $bForceDouble
 
 	If $g_bChkPreTrainTroopsPercent = True And $g_bForceDoubleTrain = False Then
 		$bPreTrainFlag = ($g_iArmyCapacity >= $g_iInpPreTrainTroopsPercent)
@@ -64,31 +80,35 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 		SetLog("Force double train before switch account.", $COLOR_SUCCESS)
 		$bPreTrainFlag = True
 	EndIf
-	
+
 	If $g_bIsFullArmywithHeroesAndSpells = True And $g_bDoubleTrain = False Then
-		$bPreTrainFlag = $g_bTrainBeforeAttack
-		$bForceDouble = $g_bTrainBeforeAttack
-		If $g_bIsFullArmywithHeroesAndSpells = True And $g_bTrainBeforeAttack = True Then SetLog("Force double train before attack.", $COLOR_SUCCESS)
+		$bPreTrainFlag = $bTrainBeforeAttack
+		$bForceDouble = $bTrainBeforeAttack
+		If $g_bIsFullArmywithHeroesAndSpells = True And $bTrainBeforeAttack = True Then SetLog("Force double train before attack.", $COLOR_SUCCESS)
 	EndIf
-	
+
 	If $bWarTroop = True Or ($g_bDoubleTrain = True And $g_bIsFullArmywithHeroesAndSpells = True) Then
 		$bPreTrainFlag = True
 		$bForceDouble = True
 	EndIf
 	
-	If IsSyncCSVEnabled() Then
+	If IsSyncCSVEnabled() And IsSyncRandomCSVReallyEnabled() Then
 		$bForceDouble = False
 		$bPreTrainFlag = False
+		$bTrainBeforeAttack = False
+		$bForcePreBrewSpells = False
+		$bPreciseBrew = True
+		$bPreciseArmy = True
 	EndIf
 	#EndRegion - Custom Army - Team AIO Mod++
 
 	Local $Step = 1
 	While 1
-		
+
 		; Troop
 		If Not OpenTroopsTab(False, "DoubleTrain()") Then Return
 		If _Sleep(500) Then Return
-		
+
 		Local $TroopCamp = GetCurrentArmy(48, 160 + $g_iMidOffsetYFixed, "DoubleTrain Troops")
 		SetLog("Checking Troop tab: " & $TroopCamp[0] & "/" & $TroopCamp[1] * 2)
 		If $TroopCamp[1] = 0 Then ExitLoop
@@ -135,7 +155,7 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 		While 1
 			If Not OpenSpellsTab(False, "DoubleTrain()") Then Return
 			If _Sleep(500) Then Return
-			
+
 			Local $SpellCamp = GetCurrentArmy(43, 160 + $g_iMidOffsetYFixed, "DoubleTrain Spells")
 			SetLog("Checking Spell tab: " & $SpellCamp[0] & "/" & $SpellCamp[1] * 2)
 
@@ -156,12 +176,12 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 				$bNeedReCheckSpellTab = True
 				If $bDebug Then SetLog($Step & ". DeleteQueued('Spells'). $bNeedReCheckSpellTab: " & $bNeedReCheckSpellTab, $COLOR_DEBUG)
 
-			ElseIf $SpellCamp[0] = $SpellCamp[1] Or $SpellCamp[0] <= $SpellCamp[1] + $iUnbalancedSpell And ($g_bForcePreBrewSpells Or ($g_bDoubleTrain And $bPreTrainFlag) Or $bForceDouble) Then ; 11/22
-				BrewFullSpell($bPreTrainFlag)
+			ElseIf $SpellCamp[0] = $SpellCamp[1] Or $SpellCamp[0] <= $SpellCamp[1] + $iUnbalancedSpell And ($bForcePreBrewSpells Or ($g_bDoubleTrain And $bPreTrainFlag) Or $bForceDouble) Then ; 11/22
+				BrewFullSpell($bPreTrainFlag Or $bForcePreBrewSpells)
 				If $iUnbalancedSpell > 0 Then TopUpUnbalancedSpell($iUnbalancedSpell)
 				If $bDebug Then SetLog($Step & ". BrewFullSpell(True) done!", $COLOR_DEBUG)
 
-			ElseIf ($g_bForcePreBrewSpells Or ($g_bDoubleTrain And $bPreTrainFlag) Or $bForceDouble) Then ; If $SpellCamp[0] <= $SpellCamp[1] * 2 Then ; 12-22/22
+			ElseIf ($bForcePreBrewSpells Or ($g_bDoubleTrain And $bPreTrainFlag) Or $bForceDouble) Then ; If $SpellCamp[0] <= $SpellCamp[1] * 2 Then ; 12-22/22
 				If CheckQueueSpellAndTrainRemain($SpellCamp, $bDebug, $iUnbalancedSpell) Then
 					If $SpellCamp[0] < ($SpellCamp[1] + $iUnbalancedSpell) * 2 Then TopUpUnbalancedSpell($iUnbalancedSpell)
 					If $bDebug Then SetLog($Step & ". CheckQueueSpellAndTrainRemain() done!", $COLOR_DEBUG)
@@ -195,7 +215,7 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 		EndIf
 		If DoWhatToTrainContainSpell($aWhatToTrain) Then
 			BrewUsingWhatToTrain($aWhatToTrain)
-			BrewFullSpell($bPreTrainFlag)
+			BrewFullSpell($bPreTrainFlag Or $bForcePreBrewSpells)
 			If $iUnbalancedSpell > 0 Then TopUpUnbalancedSpell($iUnbalancedSpell)
 			If $bDebug Then SetLog("BrewFullSpell(True) done.", $COLOR_DEBUG)
 		EndIf
@@ -207,7 +227,7 @@ EndFunc   ;==>DoubleTrain
 
 Func TrainFullTroop($bQueue = False)
 	SetLog("Training " & ($bQueue ? "2nd Army..." : "1st Army..."), $COLOR_ACTION)
-	
+
 	Local $ToReturn[1][2] = [["Arch", 0]]
 	For $i = 0 To $eTroopCount - 1
 		Local $troopIndex = $g_aiTrainOrder[$i]
@@ -228,7 +248,6 @@ Func TrainFullTroop($bQueue = False)
 EndFunc   ;==>TrainFullTroop
 
 Func BrewFullSpell($bQueue = False)
-	If $g_bForcePreBrewSpells Then $bQueue = True
 	SetLog("Brewing " & ($bQueue ? "2nd Army..." : "1st Army..."), $COLOR_ACTION)
 
 	Local $ToReturn[1][2] = [["Arch", 0]]
@@ -379,7 +398,7 @@ Func CheckQueueSpellAndTrainRemain($ArmyCamp, $bDebug, $iUnbalancedSpell = 0, $b
 			SetLog("A big guy blocks our camp")
 			Return False
 		EndIf
-		
+
 		; check wrong queue
 		Local $iUnbalancedSlot = 0, $iTypeOfSpell = 0
 		For $i = 0 To UBound($aiQueueSpells) - 1
@@ -393,7 +412,7 @@ Func CheckQueueSpellAndTrainRemain($ArmyCamp, $bDebug, $iUnbalancedSpell = 0, $b
 			EndIf
 		Next
 	EndIf
-	
+
 	If $ArmyCamp[0] < $ArmyCamp[1] * 2 And Not $bBrewPre Then
 		; Train remain
 		SetLog("Checking spells queue:")
@@ -457,14 +476,14 @@ Func FixInDoubleTrain(ByRef $aTroops, $iTotal, $aTroopSpace, $iIndexRemain = 0)
     For $i = 0 To $iCo -1
         $iRealCAP += $aTroops[$i] * $aTroopSpace[$i]
     Next
-	
+
     If $iRealCAP == $g_iTotalCampSpace Then Return
-	
+
     If $iRealCAP = 0 Or $iTotal = 0 Then
         SetLog("FixInDoubleTrain error", $COLOR_ERROR)
         Return False
     EndIf
-    
+
     If $iRealCAP = 0 Then
         SetLog("Set-up your army !", $COLOR_ERROR)
         $aTroops[$iIndexRemain] = $iTotal

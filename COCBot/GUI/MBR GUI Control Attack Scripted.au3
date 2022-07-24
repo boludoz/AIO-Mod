@@ -318,9 +318,15 @@ Func ApplyScriptDB()
 	Local $aiCSVHeros[$eHeroCount][2] = [[0, 0], [0, 0], [0, 0], [0, 0]]
 	Local $iCSVRedlineRoutineItem = 0, $iCSVDroplineEdgeItem = 0
 	Local $sCSVCCReq = ""
-	Local $aTemp = _GUICtrlComboBox_GetListArray($g_hCmbScriptNameDB)
-	Local $sFilename = $aTemp[_GUICtrlComboBox_GetCurSel($g_hCmbScriptNameDB) + 1]
-
+	Local $aTemp = "", $sFilename = ""
+	
+	If $g_iGuiMode = 1 Then
+		$aTemp = _GUICtrlComboBox_GetListArray($g_hCmbScriptNameDB)
+		$sFilename = $aTemp[_GUICtrlComboBox_GetCurSel($g_hCmbScriptNameDB) + 1]
+	Else
+		$sFilename = $g_sAttackScrScriptName[$DB]
+	EndIf
+	
 	SetLog("CSV settings apply starts: " & $sFilename, $COLOR_INFO)
 	$iApply = ParseAttackCSV_Settings_variables($aiCSVTroops, $aiCSVSpells, $aiCSVSieges, $aiCSVHeros, $iCSVRedlineRoutineItem, $iCSVDroplineEdgeItem, $sCSVCCReq, $sFilename)
 	If Not $iApply Then
@@ -397,6 +403,7 @@ Func ApplyScriptDB()
 	If IsArray($ahChkDBSpell) Then
 		For $i = 0 To UBound($ahChkDBSpell) - 1
 			If $g_iGuiMode = 1 Then GUICtrlSetState($ahChkDBSpell[$i], $aiCSVSpells[$i] > 0 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			$aiCSVSpells[$i] = True
 			If $aiCSVSpells[$i] > 0 Then $iApply += 1
 		Next
 		If $iApply > 0 Then SetLog("CSV 'Attack with' Spell settings applied", $COLOR_SUCCESS)
@@ -435,8 +442,14 @@ Func ApplyScriptAB()
 	Local $aiCSVHeros[$eHeroCount][2] = [[0, 0], [0, 0], [0, 0], [0, 0]]
 	Local $iCSVRedlineRoutineItem = 0, $iCSVDroplineEdgeItem = 0
 	Local $sCSVCCReq = ""
-	Local $aTemp = _GUICtrlComboBox_GetListArray($g_hCmbScriptNameAB)
-	Local $sFilename = $aTemp[_GUICtrlComboBox_GetCurSel($g_hCmbScriptNameAB) + 1]
+
+	Local $aTemp = "", $sFilename = ""
+	If $g_iGuiMode = 1 Then
+		$aTemp = _GUICtrlComboBox_GetListArray($g_hCmbScriptNameAB)
+		$sFilename = $aTemp[_GUICtrlComboBox_GetCurSel($g_hCmbScriptNameAB) + 1]
+	Else
+		$sFilename = $g_sAttackScrScriptName[$LB]
+	EndIf
 
 	SetLog("CSV settings apply starts: " & $sFilename, $COLOR_INFO)
 	$iApply = ParseAttackCSV_Settings_variables($aiCSVTroops, $aiCSVSpells, $aiCSVSieges, $aiCSVHeros, $iCSVRedlineRoutineItem, $iCSVDroplineEdgeItem, $sCSVCCReq, $sFilename)
@@ -514,6 +527,7 @@ Func ApplyScriptAB()
 	If IsArray($ahChkABSpell) Then
 		For $i = 0 To UBound($ahChkABSpell) - 1
 			If $g_iGuiMode = 1 Then GUICtrlSetState($ahChkABSpell[$i], $aiCSVSpells[$i] > 0 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			$aiCSVSpells[$i] = True
 			If $aiCSVSpells[$i] > 0 Then $iApply += 1
 		Next
 		If $iApply > 0 Then SetLog("CSV 'Attack with' Spell settings applied", $COLOR_SUCCESS)

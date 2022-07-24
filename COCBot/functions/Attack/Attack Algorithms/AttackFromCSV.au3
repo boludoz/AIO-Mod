@@ -954,6 +954,17 @@ Func CSVRandomization($bDebug = False)
 	If $g_bDebugSetlog = True Or $bDebug = True Then SetLog("[CSVRandomization] End")
 EndFunc   ;==>CSVRandomization
 
+Func IsSyncRandomCSVReallyEnabled()
+	For $i = 0 To 3
+		If $g_abLinkThatAndUseIn[$LB] = True Then
+			If $g_abRandomCSVAB[$i] And FileExists($g_sCSVAttacksPath & "\" & $g_asRandomCSVAB[$i] & ".csv") Then Return True
+		ElseIf $g_abLinkThatAndUseIn[$DB] = True Then
+			If $g_abRandomCSVDB[$i] And FileExists($g_sCSVAttacksPath & "\" & $g_asRandomCSVDB[$i] & ".csv") Then Return True
+		EndIf
+	Next
+	Return False
+EndFunc   ;==>SingularCSV
+
 Func IsSyncCSVEnabled()
 	If ($g_aiAttackAlgorithm[$DB] = 1 And $g_abLinkThatAndUseIn[$LB] = True And $g_aiAttackAlgorithm[$LB] <> 1) Or _
 		($g_aiAttackAlgorithm[$LB] = 1 And $g_abLinkThatAndUseIn[$DB] = True And $g_aiAttackAlgorithm[$DB] <> 1) Then
@@ -980,6 +991,50 @@ Func SyncCSVMain()
 				Return True
 			EndIf
 		EndIf
+	EndIf
+	Return False
+EndFunc
+
+Func SyncCSVArmy()
+	Local $iApply = 0, $sFilename = "", $asLine = Null
+	Local $aiCSVTroops[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+	Local $aiCSVSpells[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+	Local $aiCSVSieges[$eSiegeMachineCount] = [0, 0, 0, 0, 0, 0]
+
+	; SetLog("CSV settings apply starts: " & $sFilename, $COLOR_INFO)
+
+	If IsSyncCSVEnabled() Then
+		If ($g_aiAttackAlgorithm[$DB] = 1) And $g_abLinkThatAndUseIn[$DB] Then
+			$sFilename = $g_sAttackScrScriptName[$DB]
+		ElseIf ($g_aiAttackAlgorithm[$LB] = 1) And $g_abLinkThatAndUseIn[$LB] Then
+			$sFilename = $g_sAttackScrScriptName[$LB]
+		EndIf
+		
+		If $sFilename = "" Then Return False
+	
+		$asLine = FileReadToArray($g_sCSVAttacksPath & "\" & $sFilename & ".csv")
+		If @error Then
+			SetLog("Attack CSV script not found: " & $g_sCSVAttacksPath & "\" & $sFilename & ".csv", $COLOR_ERROR)
+			Return False
+		EndIf
+		
+		$iApply = ParseTroopsCSV($aiCSVTroops, $aiCSVSpells, $aiCSVSieges, $asLine)
+
+		$iApply = 0
+		For $i = 0 To UBound($aiCSVTroops) - 1
+			If $aiCSVTroops[$i] > 0 Then $iApply += 1
+		Next
+		
+		For $i = 0 To UBound($aiCSVSpells) - 1
+			If $aiCSVSpells[$i] > 0 Then $iApply += 1
+		Next
+		
+		If $iApply = 0 Then Return False
+		
+		$g_aiArmyCompTroops = $aiCSVTroops
+		$g_aiArmyCompSpells = $aiCSVSpells
+		Return True
+
 	EndIf
 	Return False
 EndFunc
