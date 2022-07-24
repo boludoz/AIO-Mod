@@ -46,6 +46,9 @@ Func TrainSystem()
 	
 	#Region - Custom train - Team AIO Mod++
 	If $bQuickTrain Then
+		$g_aiArmyCompTroops = $g_aiArmyQuickTroops
+		$g_aiArmyCompSpells = $g_aiArmyQuickSpells
+
 		Local $bPreTrainFlag = $g_bDoubleTrain
 		If $g_bChkPreTrainTroopsPercent And $g_bForceDoubleTrain = False Then
 			$bPreTrainFlag = ($g_iArmyCapacity >= $g_iInpPreTrainTroopsPercent)
@@ -57,6 +60,8 @@ Func TrainSystem()
 		EndIf
 		QuickTrain($bPreTrainFlag)
 	Else
+		$g_aiArmyCompTroops = $g_aiArmyCustomTroops
+		$g_aiArmyCompSpells = $g_aiArmyCustomSpells
 		TrainCustomArmy()
 	EndIf
 	#EndRegion - Custom train - Team AIO Mod++

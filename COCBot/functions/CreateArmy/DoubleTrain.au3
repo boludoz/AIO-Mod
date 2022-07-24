@@ -32,17 +32,19 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 	Local $bPreciseBrew = $g_bPreciseBrew
 	Local $bPreciseArmy = $g_bPreciseArmy
 	
-	SyncCSVArmy()
-	
-	If IsSyncCSVEnabled() And IsSyncRandomCSVReallyEnabled() Then
-		$bForceDouble = False
-		$bPreTrainFlag = False
-		$bTrainBeforeAttack = False
-		$bForcePreBrewSpells = False
-		$bPreciseBrew = True
-		$bPreciseArmy = True
+	If $bWarTroop = False Then
+		If IsSyncCSVEnabled() And IsSyncRandomCSVReallyEnabled() Then
+			SyncCSVArmy()
+			
+			$bForceDouble = False
+			$bPreTrainFlag = False
+			$bTrainBeforeAttack = False
+			$bForcePreBrewSpells = False
+			$bPreciseBrew = True
+			$bPreciseArmy = True
+		EndIf
 	EndIf
-
+	
 	Local $bHasIncorrectTroop = False, $bHasIncorrectSpell = False
 	If $bPreciseArmy Or $bPreciseBrew Then
 		Local $aWrongArmy = WhatToTrain(True)
@@ -92,13 +94,15 @@ Func DoubleTrain($bWarTroop = False) ; Check Stop For War - Team AiO MOD++
 		$bForceDouble = True
 	EndIf
 	
-	If IsSyncCSVEnabled() And IsSyncRandomCSVReallyEnabled() Then
-		$bForceDouble = False
-		$bPreTrainFlag = False
-		$bTrainBeforeAttack = False
-		$bForcePreBrewSpells = False
-		$bPreciseBrew = True
-		$bPreciseArmy = True
+	If $bWarTroop = False Then
+		If IsSyncCSVEnabled() And IsSyncRandomCSVReallyEnabled() Then
+			$bForceDouble = False
+			$bPreTrainFlag = False
+			$bTrainBeforeAttack = False
+			$bForcePreBrewSpells = False
+			$bPreciseBrew = True
+			$bPreciseArmy = True
+		EndIf
 	EndIf
 	#EndRegion - Custom Army - Team AIO Mod++
 
