@@ -34,6 +34,16 @@ Func TrainSystem()
 	EndIf
 	
 	If $bQuickTrain Then
+		$g_aiArmyCompTroops = $g_aiArmyQuickTroops
+		$g_aiArmyCompSpells = $g_aiArmyQuickSpells
+	Else
+		$g_aiArmyCompTroops = $g_aiArmyCustomTroops
+		$g_aiArmyCompSpells = $g_aiArmyCustomSpells
+		
+		SyncCSVArmy()
+	EndIf
+	
+	If $bQuickTrain Then
 		BoostSuperTroop()
 		If _Sleep(1000) Then Return
 		
@@ -41,14 +51,11 @@ Func TrainSystem()
 	EndIf
 	
 	If $bQuickTrain Then CheckQuickTrainTroop() ; update values of $g_aiArmyComTroops, $g_aiArmyComSpells
-
+	
 	CheckIfArmyIsReady()
 	
 	#Region - Custom train - Team AIO Mod++
 	If $bQuickTrain Then
-		$g_aiArmyCompTroops = $g_aiArmyQuickTroops
-		$g_aiArmyCompSpells = $g_aiArmyQuickSpells
-
 		Local $bPreTrainFlag = $g_bDoubleTrain
 		If $g_bChkPreTrainTroopsPercent And $g_bForceDoubleTrain = False Then
 			$bPreTrainFlag = ($g_iArmyCapacity >= $g_iInpPreTrainTroopsPercent)
@@ -60,10 +67,6 @@ Func TrainSystem()
 		EndIf
 		QuickTrain($bPreTrainFlag)
 	Else
-		$g_aiArmyCompTroops = $g_aiArmyCustomTroops
-		$g_aiArmyCompSpells = $g_aiArmyCustomSpells
-		
-		SyncCSVArmy()
 		TrainCustomArmy()
 	EndIf
 	#EndRegion - Custom train - Team AIO Mod++
@@ -170,7 +173,7 @@ Func CheckIfArmyIsReady()
 	Next
 
 	If Number($g_iCurrentSpells) >= Number($g_iTotalSpellValue) Or Number($g_iCurrentSpells) >= Number($iTotalSpellsToBrew) Then $g_bFullArmySpells = True
-	#cs
+
 	If (Not $g_bFullArmy And Not $g_bFullArmySpells) Or $g_bPreciseArmy Then
 		Local $avWrongTroops = WhatToTrain(True)
 		Local $rRemoveExtraTroops = RemoveExtraTroops($avWrongTroops)
@@ -179,7 +182,7 @@ Func CheckIfArmyIsReady()
 			$g_bFullArmySpells = Number($g_iCurrentSpells) >= Number($g_iTotalSpellValue) Or Number($g_iCurrentSpells) >= Number($iTotalSpellsToBrew)
 		EndIf
 	EndIf
-	#ce
+
 	$g_bCheckSpells = CheckSpells()
 
 	; add to the hereos available, the ones upgrading so that it ignores them... we need this logic or the bitwise math does not work out correctly

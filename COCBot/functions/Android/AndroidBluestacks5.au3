@@ -118,12 +118,14 @@ Func InitBlueStacks5X($bCheckOnly = False, $bAdjustResolution = False, $bLegacyM
 			Return False
 		EndIf
 	Next
+	
+	Local $sPreferredADB = FindPreferredAdbPath()
 
 	If Not $bCheckOnly Then
 		; update global variables
 		$g_sAndroidPath = $__BlueStacks_Path
 		$g_sAndroidProgramPath = $__BlueStacks_Path & $frontend_exe
-		$g_sAndroidAdbPath = $__BlueStacks_Path & "HD-Adb.exe"
+        $g_sAndroidAdbPath = $sPreferredADB
 		$g_sAndroidVersion = $__BlueStacks_Version
 		ConfigureSharedFolderBlueStacks5() ; something like D:\ProgramData\BlueStacks\Engine\UserData\SharedFolder\
 		WinGetAndroidHandle()
@@ -378,12 +380,12 @@ Func GetBlueStacks5RunningInstance($bStrictCheck = True)
 EndFunc   ;==>GetBlueStacks2RunningInstance
 
 Func BlueStacks5BotStartEvent()
-	Return False
-EndFunc   ;==>BlueStacks2BotStartEvent
+    Return AndroidCloseSystemBar()
+EndFunc  
 
 Func BlueStacks5BotStopEvent()
-	Return False
-EndFunc   ;==>BlueStacks2BotStopEvent
+    Return AndroidOpenSystemBar()
+EndFunc  
 
 Func GetBlueStacks5SvcPid()
 	; find process PID
