@@ -163,7 +163,7 @@ Func CheckIfArmyIsReady()
 		SetLog(" - $g_CurrentCampUtilization : " & $g_CurrentCampUtilization)
 		SetLog(" - $g_iTotalCampSpace : " & $g_iTotalCampSpace)
 		SetLog(" - $g_bFullArmy : " & $g_bFullArmy)
-		SetLog(" - $g_bPreciseArmy : " & $g_bPreciseArmy)
+		; SetLog(" - $g_bPreciseArmy : " & $g_bPreciseArmy)
 	EndIf
 
 	$g_bFullArmySpells = False
@@ -173,7 +173,8 @@ Func CheckIfArmyIsReady()
 	Next
 
 	If Number($g_iCurrentSpells) >= Number($g_iTotalSpellValue) Or Number($g_iCurrentSpells) >= Number($iTotalSpellsToBrew) Then $g_bFullArmySpells = True
-
+	
+	#cs
 	If (Not $g_bFullArmy And Not $g_bFullArmySpells) Or $g_bPreciseArmy Then
 		Local $avWrongTroops = WhatToTrain(True)
 		Local $rRemoveExtraTroops = RemoveExtraTroops($avWrongTroops)
@@ -182,7 +183,8 @@ Func CheckIfArmyIsReady()
 			$g_bFullArmySpells = Number($g_iCurrentSpells) >= Number($g_iTotalSpellValue) Or Number($g_iCurrentSpells) >= Number($iTotalSpellsToBrew)
 		EndIf
 	EndIf
-
+	#Ce
+	
 	$g_bCheckSpells = CheckSpells()
 
 	; add to the hereos available, the ones upgrading so that it ignores them... we need this logic or the bitwise math does not work out correctly
