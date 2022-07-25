@@ -29,6 +29,8 @@ Func TrainSystem()
 	; Custom BoostSuperTroop - Team AIO Mod++
 	Local $bQuickTrain = $g_bQuickTrainEnable
 	
+	SyncCSVMain()
+	
 	If IsSyncCSVEnabled() Then
 		$bQuickTrain = False
 	EndIf
@@ -174,7 +176,7 @@ Func CheckIfArmyIsReady()
 
 	If Number($g_iCurrentSpells) >= Number($g_iTotalSpellValue) Or Number($g_iCurrentSpells) >= Number($iTotalSpellsToBrew) Then $g_bFullArmySpells = True
 	
-	#cs
+	; If (Not $g_bFullArmy And Not $g_bFullArmySpells) Or $g_bPreciseArmy Then
 	If (Not $g_bFullArmy And Not $g_bFullArmySpells) Or $g_bPreciseArmy Then
 		Local $avWrongTroops = WhatToTrain(True)
 		Local $rRemoveExtraTroops = RemoveExtraTroops($avWrongTroops)
@@ -183,7 +185,6 @@ Func CheckIfArmyIsReady()
 			$g_bFullArmySpells = Number($g_iCurrentSpells) >= Number($g_iTotalSpellValue) Or Number($g_iCurrentSpells) >= Number($iTotalSpellsToBrew)
 		EndIf
 	EndIf
-	#Ce
 	
 	$g_bCheckSpells = CheckSpells()
 
