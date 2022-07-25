@@ -4190,8 +4190,46 @@ Func CheckAndroidReboot($bRebootAndroid = True)
 
 EndFunc   ;==>CheckAndroidReboot
 
-Func GetAndroidProcessPID($sPackage = Default, $bForeground = True, $iRetryCount = 0)
-	If $sPackage = Default Then $sPackage = $g_sAndroidGamePackage
+Func GetAndroidProcessPID($sPackage = Default, $bForeground = True, $DEPRECATED = "")
+	Local $iError = 0, $iPid = 0, $sDumpsys = ""
+	For $i = 1 To 3
+		SetDebugLog("[GetAndroidProcessPID][Try: " & $i & "]")
+		If $i <> 1 Then
+			If _Sleep(250) Then
+				Return 0
+			EndIf
+		EndIf
+		
+		If AndroidInvalidState() Then
+			$iError = 1
+			ContinueLoop
+		EndIf
+		
+		If $sPackage = Default Then $sPackage = $g_sAndroidGamePackage
+		
+		$iPid = Number(AndroidAdbSendShellCommand("pidof " & $sPackage))
+		If $iPid > 0 Then
+			SetDebugLog("[GetAndroidProcessPID] $g_sAndroidGamePackage: " & $sPackage)
+			SetDebugLog("[GetAndroidProcessPID] GetAndroidProcessPID StdOut :" & $iPid)
+			
+			If $bForeground = False Then
+				$iError = 0
+				ExitLoop
+			EndIf
+			
+			$sDumpsys = AndroidAdbSendShellCommand("dumpsys window windows | grep -E 'mCurrentFocus.*" & $sPackage & "'")
+			SetDebugLog("[GetAndroidProcessPID] dumpsys window windows StdOut :" & $sDumpsys)
+
+			If StringInStr($sDumpsys, $sPackage) Then
+				$iError = 0
+				ExitLoop
+			EndIf
+			If $i = 3 Then $iPid = 0
+		EndIf
+	Next
+	Return SetError($iError, 0, $iPid)
+	
+	#CS
 	; - USER  - PID - PPID  - VSS  - RSS  -   PRIO - NICE - RTPRIO - SCHED - WCHAN  - EIP    - STATE - NAME
 	; u0_a58    4395  580   1135308 187040     14    -6        0      0     ffffffff 00000000    S      com.supercell.clashofclans
 	; u0_a27    2912  142   663800  98656      30    10        0      3     ffffffff b7591617    S      com.tencent.tmgp.supercell.clashofclans
@@ -4247,6 +4285,7 @@ Func GetAndroidProcessPID($sPackage = Default, $bForeground = True, $iRetryCount
 	EndIf
 	SetDebugLog("Android process " & $sPackage & " not running")
 	Return SetError($error, 0, 0)
+	#Ce
 EndFunc   ;==>GetAndroidProcessPID
 
 Func AndroidToFront($hHWndAfter = Default, $sSource = "Unknown")

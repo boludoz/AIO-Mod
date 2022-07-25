@@ -282,35 +282,17 @@ Func getAllEmulatorsInstances()
 	$sEmulatorPath = StringReplace($sEmulatorPath, "\\", "\")
 
 	; BS Multi Instance
-	Local $sBlueStacksFolder = ""
-	If $Emulator = "BlueStacks2" Then
-		$sBlueStacksFolder = "Android"
-	EndIf
-	
-	 ; Snorlax
-	If $Emulator = "BlueStacks5" Then
-		$sBlueStacksFolder = "Nougat"
-	EndIf
+	Local $sBlueStacksFolder = ($Emulator = "BlueStacks2" Or $Emulator = "BlueStacks5") ? ("Pie*;Oreo*;Nougat*;Android*") : ("")
 	
 	; Getting all VM Folders
 	Local $eError = 0
-	Local $aEmulatorFolders = _FileListToArray($sEmulatorPath, $sBlueStacksFolder & "*", $FLTA_FOLDERS)
 	
-	$eError = @error
-	If $eError = 1 Then
-		SetLog($emulator & " -- Path was invalid. " & $sEmulatorPath)
-		Return
-	EndIf
-	If $eError = 4 Then
-		SetLog($emulator & " -- No file(s) were found. " & $sEmulatorPath)
-		Return
-	EndIf
-
-	; Removing the [0] -> $aArray[0] = Number of Files\Folders returned
-	_ArrayDelete($aEmulatorFolders, 0)
-
 	; Populating the Instance ComboBox var
-	GUICtrlSetData($g_hCmbAndroidInstance, _ArrayToString($aEmulatorFolders))
+	Local $aEmulatorFolders = _FileListToArrayRec($sEmulatorPath, $sBlueStacksFolder, $FLTA_FOLDERS)
+	$eError = @error
+	If $eError = 0 Then
+		GUICtrlSetData($g_hCmbAndroidInstance, StringReplace(_ArrayToString($aEmulatorFolders, "|", 1), "\", ""))
+	EndIf
 	
 	If $emulator == $g_sAndroidEmulator Then
 		_GUICtrlComboBox_SelectString($g_hCmbAndroidInstance, $g_sAndroidInstance)

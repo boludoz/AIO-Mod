@@ -74,8 +74,19 @@ EndFunc   ;==>LaunchConsole
 ; $CompareParameterFunc is func that returns True or False if parameter is matching, "" not used
 Func ProcessExists2($ProgramPath, $ProgramParameter = Default, $CompareMode = Default, $SearchMode = 0, $CompareCommandLineFunc = "")
 
-	If IsInt($ProgramPath) Then
-		Return ProcessExists($ProgramPath)
+	If IsInt($ProgramPath) Then ;Return ProcessExists($ProgramPath) ; Be compatible with ProcessExists
+		Local $hProcess, $pid = Int($ProgramPath)
+		If _WinAPI_GetVersion() >= 6.0 Then
+			$hProcess = _WinAPI_OpenProcess($PROCESS_QUERY_LIMITED_INFORMATION, 0, $pid)
+		Else
+			$hProcess = _WinAPI_OpenProcess($PROCESS_QUERY_INFORMATION, 0, $pid)
+		EndIf
+		Local $iExitCode = 0
+		If $hProcess And @error = 0 Then
+			$iExitCode = _WinAPI_GetExitCodeProcess($hProcess)
+			_WinAPI_CloseHandle($hProcess)
+		EndIf
+		Return (($iExitCode = 259) ? $pid : 0)
 	EndIf
 
 	If $ProgramParameter = Default Then
@@ -106,7 +117,7 @@ Func ProcessExists2($ProgramPath, $ProgramParameter = Default, $CompareMode = De
 	For $Process In WmiQuery($query)
 		SetDebugLog($Process[0] & " = " & $Process[1] & " (" & $Process[2] & ")")
 		If $pid = 0 Then
-            Local $processCommandLineCompare = StringReplace(StringReplace(StringReplace(StringReplace(StringReplace($Process[2], ".exe", "", 1), " ", ""), '"', ""), "'", ""), "\\", "\") ; snorlax
+			Local $processCommandLineCompare = StringReplace(StringReplace(StringReplace(StringReplace(StringReplace($Process[2], ".exe", "", 1), " ", ""), '"', ""), "'", ""), "\\", "\")
 			If ($CompareMode = 0 And $commandLineCompare = $processCommandLineCompare) Or _
 					($CompareMode = 0 And StringRight($commandLineCompare, StringLen($processCommandLineCompare)) = $processCommandLineCompare) Or _
 					($CompareMode = 0 And $CompareCommandLineFunc <> "" And Execute($CompareCommandLineFunc & "(""" & StringReplace($Process[2], """", "") & """)") = True) Or _
@@ -310,7 +321,7 @@ Func ReadPipe(ByRef $hPipe)
 	If _WinAPI_ReadFile($hPipe, DllStructGetPtr($tBuffer), 4096, $iRead) Then
 		Return SetError(0, 0, DllStructGetData($tBuffer, "Text"))
 	EndIf
-	Return SetError(_WinAPI_GetLastError(), 0, "")
+	Return SetError( _WinAPI_GetLastError(), 0, "")
 EndFunc   ;==>ReadPipe
 
 Func WritePipe(ByRef $hPipe, Const $s)
@@ -321,7 +332,7 @@ Func WritePipe(ByRef $hPipe, Const $s)
 	If _WinAPI_WriteFile($hPipe, DllStructGetPtr($tBuffer), $iToWrite, $iWritten) Then
 		Return SetError(0, 0, $iWritten)
 	EndIf
-	Return SetError(_WinAPI_GetLastError(), 0, 0)
+	Return SetError( _WinAPI_GetLastError(), 0, 0)
 EndFunc   ;==>WritePipe
 
 Func DataInPipe(ByRef $hPipe)

@@ -1025,8 +1025,7 @@ Func CloseUnsupportedBlueStacksX($bClose = True)
 	Local $sPartnerExePath
 	If $__BlueStacks_isHyperV = False Then
 		$sPartnerExePath = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks\Config\", "PartnerExePath")
-	EndIf
-	If $__BlueStacks_isHyperV = True Then
+	Else
 		$sPartnerExePath = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_bgp64_hyperv\Config\", "PartnerExePath")
 	EndIf
 	#EndRegion - BlueStacks HyperV by Teknolojikpanda - Team__AiO__MOD

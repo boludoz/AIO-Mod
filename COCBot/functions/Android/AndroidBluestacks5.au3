@@ -399,62 +399,41 @@ Func CloseBlueStacks5()
 
 	If Not InitAndroid() Then Return
 
-	If Not CloseUnsupportedBlueStacksX(False) And GetVersionNormalized($g_sAndroidVersion) > GetVersionNormalized("2.10") Then
-		; BlueStacks 3 supports multiple instance
-		Local $aFiles = ["HD-Frontend.exe", "HD-Plus-Service.exe", "HD-Service.exe"]
+	AndroidAdbSendShellCommand("reboot -p")
+	If _Sleep(2000) Then Return ; wait a bit
+	
+	AndroidAdbSendShellCommand("reboot -p")
+	If _Sleep(2000) Then Return ; wait a bit
 
-		Local $bError = False
-		For $sFile In $aFiles
-			Local $PID
-			$PID = ProcessExists2($sFile, $g_sAndroidInstance)
-			If $PID Then
-				ShellExecute(@WindowsDir & "\System32\taskkill.exe", " -f -t -pid " & $PID, "", Default, @SW_HIDE)
-				If _Sleep(1000) Then Return ; Give OS time to work
-			EndIf
-		Next
+	; BlueStacks 5 supports multiple instance
+	Local $PID = 0
+	Local $aFiles = ["HD-Player.exe"]
+	
+	Local $bError = False
+	For $sFile In $aFiles
+		$PID = ProcessExists2($sFile, $g_sAndroidInstance, 1)
+		If $PID Then
+			ShellExecute(@WindowsDir & "\System32\taskkill.exe", " -f -t -pid " & $PID, "", Default, @SW_HIDE)
+			If _Sleep(1000) Then Return ; Give OS time to work
+		EndIf
+	Next
+	If $PID <> 0 Then
 		If _Sleep(1000) Then Return ; Give OS time to work
 		For $sFile In $aFiles
-			Local $PID
-			$PID = ProcessExists2($sFile, $g_sAndroidInstance)
+			$PID = ProcessExists2($sFile, $g_sAndroidInstance, 1)
 			If $PID Then
 				SetLog($g_sAndroidEmulator & " failed to kill " & $sFile, $COLOR_ERROR)
 			EndIf
 		Next
-
-		; also close vm
-		CloseVboxAndroidSvc()
-	Else
-		SetDebugLog("Closing BlueStacks: " & $__BlueStacks_Path & "HD-Quit.exe")
-		RunWait($__BlueStacks_Path & "HD-Quit.exe")
-		If @error <> 0 Then
-			SetLog($g_sAndroidEmulator & " failed to quit", $COLOR_ERROR)
-			;SetError(1, @extended, -1)
-			;Return False
-		EndIf
 	EndIf
-
+	
 	If _Sleep(2000) Then Return ; wait a bit
 
 	If $bOops Then
 		SetError(1, @extended, -1)
 	EndIf
 
-EndFunc   ;==>CloseBlueStacks2
-
-Func CloseUnsupportedBlueStacks5()
-	Local $WinTitleMatchMode = Opt("WinTitleMatchMode", -3) ; in recent 2.3.x can be also "BlueStacks App Player"
-	Local $sPartnerExePath = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\Config\", "PartnerExePath")
-	If IsArray(ControlGetPos("Bluestacks App Player", "", "")) Or ($sPartnerExePath And ProcessExists2($sPartnerExePath)) Then ; $g_avAndroidAppConfig[1][4]
-		Opt("WinTitleMatchMode", $WinTitleMatchMode)
-		; Offical "Bluestacks App Player" v2.0 not supported because it changes the Android Screen!!!		
-		SetLog("MyBot doesn't work with " & $g_sAndroidEmulator & " App Player", $COLOR_ERROR)
-		SetLog("Please let MyBot start " & $g_sAndroidEmulator & " automatically", $COLOR_INFO)
-		RebootBlueStacks2SetScreen(False)
-		Return True
-	EndIf
-	Opt("WinTitleMatchMode", $WinTitleMatchMode)
-	Return False
-EndFunc   ;==>CloseUnsupportedBlueStacks2
+EndFunc   ;==>CloseBlueStacks5
 
 Func BlueStacks5AdjustClickCoordinates(ByRef $x, ByRef $y)
 	Return BlueStacksAdjustClickCoordinates($x, $y)
