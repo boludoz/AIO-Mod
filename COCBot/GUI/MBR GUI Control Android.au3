@@ -282,7 +282,7 @@ Func getAllEmulatorsInstances()
 	$sEmulatorPath = StringReplace($sEmulatorPath, "\\", "\")
 
 	; BS Multi Instance
-	Local $sBlueStacksFolder = ($Emulator = "BlueStacks2" Or $Emulator = "BlueStacks5") ? ("Pie*;Oreo*;Nougat*;Android*") : ("")
+	Local $sBlueStacksFolder = ($Emulator = "BlueStacks2" Or $Emulator = "BlueStacks5") ? ("Pie*;Oreo*;Nougat*;Android*") : ("*")
 	
 	; Getting all VM Folders
 	Local $eError = 0

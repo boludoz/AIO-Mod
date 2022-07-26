@@ -399,12 +399,6 @@ Func CloseBlueStacks5()
 
 	If Not InitAndroid() Then Return
 
-	AndroidAdbSendShellCommand("reboot -p")
-	If _Sleep(2000) Then Return ; wait a bit
-	
-	AndroidAdbSendShellCommand("reboot -p")
-	If _Sleep(2000) Then Return ; wait a bit
-
 	; BlueStacks 5 supports multiple instance
 	Local $PID = 0
 	Local $aFiles = ["HD-Player.exe"]

@@ -1371,6 +1371,12 @@ Func CloseAndroid($sSource)
 	FuncEnter(CloseAndroid)
 	ResumeAndroid()
 
+    ; AndroidAdbSendShellCommand("reboot -p")
+    ; If _Sleep(2000) Then Return ; wait a bit
+    
+    ; AndroidAdbSendShellCommand("reboot -p")
+    ; If _Sleep(2000) Then Return ; wait a bit
+
 	ResetAndroidProcess()
 
 	SetLog("Stopping " & $g_sAndroidEmulator & "....", $COLOR_INFO)
@@ -1819,7 +1825,7 @@ Func CheckScreenAndroid($ClientWidth, $ClientHeight, $bSetLog = True)
 		EndIf
 	Else
 		Switch $g_sAndroidEmulator
-			Case "BlueStacks", "BlueStacks2" ; BlueStacks doesn't support it
+			Case "BlueStacks", "BlueStacks2", "BlueStacks5" ; BlueStacks doesn't support it
 			Case Else
 				SetDebugLog($g_sAndroidEmulator & " Display Font Scale cannot be verified", $COLOR_ERROR)
 		EndSwitch
