@@ -2983,7 +2983,6 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 	;SetDebugLog("AndroidScreencap (" & $duration & "ms," & $shellLogInfo & "," & $iLoopCountFile & "): l=" & $iLeft & ",t=" & $iTop & ",w=" & $iWidth & ",h=" & $iHeight & ", " & $filename & ": w=" & $g_iAndroidAdbScreencapWidth & ",h=" & $g_iAndroidAdbScreencapHeight & ",f=" & $iF)
 
 	$g_iAndroidAdbScreencapTimer = __TimerInit() ; timeout starts now
-	#cs
 	; update total stats
 	$g_aiAndroidAdbStatsTotal[$AdbStatsType][0] += 1
 	$g_aiAndroidAdbStatsTotal[$AdbStatsType][1] += $duration
@@ -3007,7 +3006,6 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 			SetDebugLog("AdbScreencap: " & $totalAvg & "/" & $lastAvg & "/" & $duration & " ms (all/" & $iLastCount & "/1)," & $shellLogInfo & "," & $iLoopCountFile & ",l=" & $iLeft & ",t=" & $iTop & ",w=" & $iWidth & ",h=" & $iHeight & ", " & $Filename & ": w=" & $g_iAndroidAdbScreencapWidth & ",h=" & $g_iAndroidAdbScreencapHeight & ",f=" & $iF)
 		EndIf
 	EndIf
-	#ce
 	$tBIV5HDR = 0 ; Release the resources used by the structure
 	Return $hHBitmap
 EndFunc   ;==>_AndroidScreencap
@@ -3527,7 +3525,7 @@ Func _AndroidFastClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect = Tru
 	If IsKeepClicksActive(False) = False Then ; Invalidate ADB screencap (not when troops are deployed to speed up clicks)
 		$g_iAndroidAdbScreencapTimer = 0 ; invalidate ADB screencap timer/timeout
 	EndIf
-	#cs
+
 	; update total stats
 	Local $duration = Round((__TimerDiff($hDuration) - $timeSlept) / $loops)
 	$g_aiAndroidAdbStatsTotal[$AdbStatsType][0] += 1
@@ -3552,7 +3550,6 @@ Func _AndroidFastClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect = Tru
 			SetDebugLog("AndroidFastClick: " & $totalAvg & "/" & $lastAvg & "/" & $duration & " ms (all/" & $iLastCount & "/1), $x=" & $x & ", $y=" & $y & ", $times=" & $times & ", $speed = " & $speed & ", $checkProblemAffect=" & $checkProblemAffect)
 		EndIf
 	EndIf
-	#ce
 EndFunc   ;==>_AndroidFastClick
 
 ; User for docked mouse touches, $iaAction: 0 = move, 1 = down, 2 = up
@@ -3860,7 +3857,6 @@ Func AndroidMinitouchClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect =
 		$g_iAndroidAdbScreencapTimer = 0 ; invalidate ADB screencap timer/timeout
 	EndIf
 
-	#cs
 	; update total stats
 	Local $duration = Round((__TimerDiff($hDuration) - $timeSlept) / $loops)
 	$g_aiAndroidAdbStatsTotal[$AdbStatsType][0] += 1
@@ -3885,7 +3881,6 @@ Func AndroidMinitouchClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect =
 			SetDebugLog("AndroidMinitouchClick: " & $totalAvg & "/" & $lastAvg & "/" & $duration & " ms (all/" & $iLastCount & "/1), $x=" & $x & ", $y=" & $y & ", $times=" & $times & ", $speed = " & $speed & ", $checkProblemAffect=" & $checkProblemAffect)
 		EndIf
 	EndIf
-	#ce
 EndFunc   ;==>AndroidMinitouchClick
 
 Func AndroidSendText($sText, $SymbolFix = False, $wasRunState = $g_bRunState)
