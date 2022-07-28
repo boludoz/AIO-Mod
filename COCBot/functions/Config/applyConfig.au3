@@ -1834,7 +1834,7 @@ Func ApplyConfig_600_29_DB_Scripted($TypeReadSave)
 				_GUICtrlComboBox_SetCurSel($g_ahCmbRandomCSVDB[$i], $tempindex)
 			Next
 			#EndRegion - Random CSV - Team AIO Mod++
-			
+			ChkRandomCSVDB()
 			cmbScriptNameDB()
 			cmbScriptRedlineImplDB()
 		Case "Save"
@@ -2013,6 +2013,7 @@ Func ApplyConfig_600_29_LB_Scripted($TypeReadSave)
 				EndIf
 				_GUICtrlComboBox_SetCurSel($g_ahCmbRandomCSVAB[$i], $tempindex)
 			Next
+			ChkRandomCSVAB()
 			#EndRegion - Random CSV - Team AIO Mod++
 
 			cmbScriptNameAB()

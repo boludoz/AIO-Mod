@@ -97,8 +97,11 @@ Func CreateAttackSearchActiveBaseScripted()
 		GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Scripted", "RGroup_0" & $i + 1, -1), $x, $y, 208, 76)
 		
 		$y += 17
-			$g_ahChkRandomCSVAB[$i] = GUICtrlCreateCheckbox("Enabled", $x + 2, $y)
-			$g_ahCmbRandomCSVAB[$i] = GUICtrlCreateCombo("", $x + 4, $y + 21, 200, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL, $WS_VSCROLL))
+			$g_ahChkRandomCSVAB[$i] = GUICtrlCreateCheckbox(" ", $x + 3, $y)
+			GUICtrlSetOnEvent(-1, "ChkRandomCSVAB")
+
+			$g_ahCmbRandomCSVAB[$i] = GUICtrlCreateCombo("", $x + 27, $y, 173, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL, $WS_VSCROLL))
+			GUICtrlSetOnEvent(-1, "ChkRandomCSVAB")
 		$y += 59
 		
 		GUICtrlCreateGroup("", -99, -99, 1, 1)

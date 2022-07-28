@@ -502,6 +502,21 @@ Func FixInDoubleTrain(ByRef $aTroops, $iTotal, $aTroopSpace, $iIndexRemain = 0)
         For $i = 0 To $iCo -1
             If $aTroops[$i] = 0 Then ContinueLoop
             Local $iDiff = Abs($iTotalFixed - $iTotal)
+			Local $iDiv = Round($iDiff / $aTroopSpace[$i])
+            If $iDiv > 0 Then
+                $iFinal -= $aTroops[$i] * $aTroopSpace[$i]
+                $aTroops[$i] += $iDiff / $aTroopSpace[$i]
+                $iFinal += $aTroops[$i] * $aTroopSpace[$i]
+                ExitLoop
+            EndIf
+        Next
+    EndIf
+
+	$iFinal = $iTotalFixed
+    If $iTotalFixed <> $iTotal Then
+        For $i = 0 To $iCo -1
+            If $aTroops[$i] = 0 Then ContinueLoop
+            Local $iDiff = Abs($iTotalFixed - $iTotal)
             If Mod($iDiff, $aTroopSpace[$i]) = 0 Then
                 $iFinal -= $aTroops[$i] * $aTroopSpace[$i]
                 $aTroops[$i] += $iDiff / $aTroopSpace[$i]

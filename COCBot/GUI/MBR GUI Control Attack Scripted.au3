@@ -318,6 +318,7 @@ Func ApplyScriptDB()
 	Local $aiCSVHeros[$eHeroCount][2] = [[0, 0], [0, 0], [0, 0], [0, 0]]
 	Local $iCSVRedlineRoutineItem = 0, $iCSVDroplineEdgeItem = 0
 	Local $sCSVCCReq = ""
+	
 	Local $aTemp = "", $sFilename = ""
 	
 	If $g_iGuiMode = 1 Then
@@ -444,6 +445,7 @@ Func ApplyScriptAB()
 	Local $sCSVCCReq = ""
 
 	Local $aTemp = "", $sFilename = ""
+	
 	If $g_iGuiMode = 1 Then
 		$aTemp = _GUICtrlComboBox_GetListArray($g_hCmbScriptNameAB)
 		$sFilename = $aTemp[_GUICtrlComboBox_GetCurSel($g_hCmbScriptNameAB) + 1]
