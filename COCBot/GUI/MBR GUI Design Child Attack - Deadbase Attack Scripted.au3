@@ -18,13 +18,16 @@ Global $g_hGUI_DEADBASE_ATTACK_SCRIPTED = 0
 Global $g_hCmbScriptNameDB = 0, $g_hCmbScriptRedlineImplDB = 0, $g_hCmbScriptDroplineDB = 0
 Global $g_hLblNotesScriptDB = 0, $g_hBtnAttNowDB = 0
 
+; Random CSV - Team AIO Mod++
+Global $g_hTabItemCrateCsvDB = 0, $g_hTabItemCrateCsvTab1DB = 0, $g_hTabItemCrateCsvTab2DB = 0
+
 Func CreateAttackSearchDeadBaseScripted()
 	$g_hGUI_DEADBASE_ATTACK_SCRIPTED = _GUICreate("", $_GUI_MAIN_WIDTH - 195, $g_iSizeHGrpTab4, 150, 25, BitOR($WS_CHILD, $WS_TABSTOP), -1, $g_hGUI_DEADBASE)
 	;GUISetBkColor($COLOR_WHITE, $g_hGUI_DEADBASE_ATTACK_SCRIPTED)
 
     Local $x = 25, $y = 20
-	GUICtrlCreateTab($x - 20, $y - 20, 270, $TCS_MULTILINE - 168)
-	GUICtrlCreateTabItem( GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "DBTABScript_Main", "CSV Main"))
+	$g_hTabItemCrateCsvDB = GUICtrlCreateTab($x - 20, $y - 20, 270, $TCS_MULTILINE - 168)
+	$g_hTabItemCrateCsvTab1DB = GUICtrlCreateTabItem( GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "DBTABScript_Main", "CSV Main"))
 	
 	$g_ahChkLinkThatAndUseIn[$DB] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Bottom", "ChkSyncAttackAndTrainDB", "Sync on live base and train"), $x - 5, $y + 1, -1, -1)
 		GUICtrlSetOnEvent(-1, "ChkLinkThatAndUseInDB")
@@ -79,7 +82,7 @@ Func CreateAttackSearchDeadBaseScripted()
 			GUICtrlSetOnEvent(-1, "ApplyScriptDB")
 
 	#Region - Random CSV
-	GUICtrlCreateTabItem( GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "TABScript_Random", -1))
+	$g_hTabItemCrateCsvTab2DB = GUICtrlCreateTabItem( GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "TABScript_Random", -1))
 	$x = 20
 	$y = 44
 

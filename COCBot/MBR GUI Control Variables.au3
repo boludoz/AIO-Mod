@@ -345,6 +345,13 @@ Func InitializeControlVariables()
 		$oAlwaysEnabledControls($i) = 1
 	Next
 	
+	Local $aItems = [$g_hTabItemCrateCsvAB, $g_hTabItemCrateCsvTab1AB, $g_hTabItemCrateCsvTab2AB, _ 
+					$g_hTabItemCrateCsvDB, $g_hTabItemCrateCsvTab1DB, $g_hTabItemCrateCsvTab2DB]
+					
+	For $i In $aItems
+		$oAlwaysEnabledControls($i) = 1
+	Next
+
 	$oAlwaysEnabledControls($g_hTxtClanGamesLog) = 1
 
 	$groupIMGAttackABSpell &= "#"&$g_ahCmbCSVSpeed[$LB]

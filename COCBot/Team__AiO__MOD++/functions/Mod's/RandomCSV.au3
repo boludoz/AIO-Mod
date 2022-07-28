@@ -193,9 +193,9 @@ Func ChkRandomCSVAB()
 			If $g_abRandomCSVAB[$i] Then
 				$iLast += 1
 				$iLastSelected = _GUICtrlComboBox_GetCurSel($g_ahCmbRandomCSVAB[$i])
-				If $g_iGuiMode = 1 Then GUICtrlSetState($g_ahCmbRandomCSVAB[$i], $GUI_ENABLE)
+				GUICtrlSetState($g_ahCmbRandomCSVAB[$i], $GUI_ENABLE)
 			Else
-				If $g_iGuiMode = 1 Then GUICtrlSetState($g_ahCmbRandomCSVAB[$i], $GUI_DISABLE)
+				GUICtrlSetState($g_ahCmbRandomCSVAB[$i], $GUI_DISABLE)
 			EndIf
 		Next
 		
