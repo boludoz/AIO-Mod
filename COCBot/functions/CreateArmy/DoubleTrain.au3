@@ -491,32 +491,38 @@ Func FixInDoubleTrain(ByRef $aTroops, $iTotal, $aTroopSpace, $iIndexRemain = 0)
         $aTroops[$iIndexRemain] = $iTotal
         Return
     EndIf
-
-    For $i = 0 To $iCo -1
-        $aTroops[$i] = Floor(((((($aTroops[$i] * $aTroopSpace[$i]) / $iRealCAP)  * 100) * $iTotal) / 100) / $aTroopSpace[$i])
-        $iTotalFixed += $aTroops[$i] * $aTroopSpace[$i]
+	
+	Local $iDiv = 0, $iFinal = 0
+    For $i = $iCo -1 To 0 Step -1
+		$iDiv = Floor(((((($aTroops[$i] * $aTroopSpace[$i]) / $iRealCAP)  * 100) * $iTotal) / 100) / $aTroopSpace[$i])
+        If Int($iTotalFixed + Int($iDiv * $aTroopSpace[$i])) > $iTotal Then ContinueLoop
+		$aTroops[$i] = $iDiv
+		$iTotalFixed += $aTroops[$i] * $aTroopSpace[$i]
     Next
-
-    Local $iFinal = $iTotalFixed
+	
+    $iFinal = $iTotalFixed
     If $iTotalFixed <> $iTotal Then
         For $i = 0 To $iCo -1
             If $aTroops[$i] = 0 Then ContinueLoop
-            Local $iDiff = Abs($iTotalFixed - $iTotal)
-			Local $iDiv = Round($iDiff / $aTroopSpace[$i])
+			If $iFinal >= $iTotal Then ExitLoop
+			$iDiv = Floor(($iTotal - $iTotalFixed) / $aTroopSpace[$i])
             If $iDiv > 0 Then
                 $iFinal -= $aTroops[$i] * $aTroopSpace[$i]
-                $aTroops[$i] += $iDiff / $aTroopSpace[$i]
+				
+				If Int($iFinal + ($iDiv * $aTroopSpace[$i])) <= $iTotal Then
+					$aTroops[$i] += $iDiv
+				EndIf
+				
                 $iFinal += $aTroops[$i] * $aTroopSpace[$i]
-                ExitLoop
             EndIf
         Next
     EndIf
 
-	$iFinal = $iTotalFixed
+	$iTotalFixed = $iFinal
     If $iTotalFixed <> $iTotal Then
         For $i = 0 To $iCo -1
             If $aTroops[$i] = 0 Then ContinueLoop
-            Local $iDiff = Abs($iTotalFixed - $iTotal)
+            Local $iDiff = ($iTotal - $iTotalFixed)
             If Mod($iDiff, $aTroopSpace[$i]) = 0 Then
                 $iFinal -= $aTroops[$i] * $aTroopSpace[$i]
                 $aTroops[$i] += $iDiff / $aTroopSpace[$i]
@@ -525,6 +531,6 @@ Func FixInDoubleTrain(ByRef $aTroops, $iTotal, $aTroopSpace, $iIndexRemain = 0)
             EndIf
         Next
     EndIf
-    $aTroops[$iIndexRemain] += Abs($iFinal - $iTotal)
+   If $iFinal < $iTotal Then $aTroops[$iIndexRemain] += $iTotal - $iFinal
 EndFunc   ;==>FixInDoubleTrain
 #EndRegion - Custom Train - Team AIO Mod++

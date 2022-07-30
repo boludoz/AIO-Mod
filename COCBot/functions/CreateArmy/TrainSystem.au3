@@ -510,17 +510,30 @@ Func RemoveExtraTroops($toRemove)
 
 		SetLog("Troops To Remove: ", $COLOR_INFO)
 		$CounterToRemove = 0
+		
+		Local $iIfWrongIndex = -1
+		
 		; Loop through Troops needed to get removed Just to write some Logs
 		For $i = 0 To (UBound($toRemove) - 1)
 			If IsSpellToBrew($toRemove[$i][0]) Then ExitLoop
 			$CounterToRemove += 1
-			SetLog(" - " & $g_asTroopNames[TroopIndexLookup($toRemove[$i][0])] & ": " & $toRemove[$i][1] & "x", $COLOR_SUCCESS)
+			$iIfWrongIndex = TroopIndexLookup($toRemove[$i][0])
+			If $iIfWrongIndex <> -1 Then
+				SetLog(" - " & $g_asTroopNames[$iIfWrongIndex] & ": " & $toRemove[$i][1] & "x", $COLOR_SUCCESS)
+			Else
+				SetLog(" - Wrong " & $toRemove[$i][0], $COLOR_ERROR)
+			EndIf
 		Next
 
 		If $CounterToRemove <= UBound($toRemove) Then
 			SetLog("Spells To Remove: ", $COLOR_INFO)
 			For $i = $CounterToRemove To (UBound($toRemove) - 1)
-				SetLog(" - " & $g_asSpellNames[TroopIndexLookup($toRemove[$i][0]) - $eLSpell] & ": " & $toRemove[$i][1] & "x", $COLOR_SUCCESS)
+				$iIfWrongIndex = TroopIndexLookup($toRemove[$i][0]) - $eLSpell
+				If $iIfWrongIndex <> -1 Then
+					SetLog(" - " & $g_asSpellNames[$iIfWrongIndex] & ": " & $toRemove[$i][1] & "x", $COLOR_SUCCESS)
+				Else
+					SetLog(" - Wrong " & $toRemove[$i][0] & " - " & $eLSpell, $COLOR_ERROR)
+				EndIf
 			Next
 		EndIf
 		
