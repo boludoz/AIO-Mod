@@ -387,8 +387,11 @@ Func ReadConfig_Android()
 
 	If $g_bBotLaunchOption_Restart = True Or $g_asCmdLine[0] < 2 Then
 		; for now only read when bot crashed and restarted through watchdog or nofify event
-		Local $sAndroidEmulator = IniRead($g_sProfileConfigPath, "android", "emulator", "")
-		Local $sAndroidInstance = IniRead($g_sProfileConfigPath, "android", "instance", "")
+		Local $sAndroidEmulator = ($g_sAndroidEmulatorReplace = "") ? (IniRead($g_sProfileConfigPath, "android", "emulator", "")) : ($g_sAndroidEmulatorReplace)
+		Local $sAndroidInstance = ($g_sAndroidInstanceReplace = "") ? (IniRead($g_sProfileConfigPath, "android", "instance", "")) : ($g_sAndroidInstanceReplace)
+		$g_sAndroidEmulatorReplace = $sAndroidEmulator
+		$g_sAndroidInstanceReplace = $sAndroidInstance
+		
 		If $sAndroidEmulator <> "" Then
 			#cs Not required yet
 				If $g_hFrmBot = 0 Then

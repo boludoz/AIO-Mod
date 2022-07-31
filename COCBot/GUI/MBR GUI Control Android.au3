@@ -13,6 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 #include-once
+Global $g_sAndroidEmulatorReplace = "", $g_sAndroidInstanceReplace = ""
 
 Func LoadCOCDistributorsComboBox()
 	Local $sDistributors = $g_sNO_COC
@@ -142,6 +143,8 @@ Func CmbAndroidEmulator()
 		SetLog("Emulator " & $emulator & " Selected at first instance. Please reboot or select instance and reboot.", $COLOR_INFO)
 		$g_sAndroidEmulator = $emulator
 		$g_sAndroidInstance = GUICtrlRead($g_hCmbAndroidInstance)
+		$g_sAndroidEmulatorReplace = $g_sAndroidEmulator
+		$g_sAndroidInstanceReplace = $g_sAndroidInstance
 		UpdateAndroidConfig($g_sAndroidInstance, $g_sAndroidEmulator)
 		InitAndroidConfig(True)
 		BtnSaveprofile()
@@ -156,6 +159,8 @@ Func cmbAndroidInstance()
     If MsgBox($MB_YESNO, "Instance Selection", $Instance & ", Is correct?" & @CRLF & "If 'yes' is necessary REBOOT the 'bot'.", 10) = $IDYES Then
         SetLog("Instance " & $Instance & " Selected.")
         $g_sAndroidInstance = $Instance
+		$g_sAndroidEmulatorReplace = $g_sAndroidEmulator
+		$g_sAndroidInstanceReplace = $g_sAndroidInstance
 		UpdateAndroidConfig($g_sAndroidInstance, $g_sAndroidEmulator)
 		InitAndroidConfig(True)
         BtnSaveprofile()
