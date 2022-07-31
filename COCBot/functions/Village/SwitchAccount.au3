@@ -290,7 +290,7 @@ Func SwitchCOCAcc($NextAccount, $bForceSwitch = False)
 		Local $bSettingsPage = False
 		
 		; AIO Mod++
-		If $bSharedPrefs And $g_bChkSharedPrefs Then
+		If $bSharedPrefs = False And $g_bChkSharedPrefs = False Then
 			If IsMainPage() Then
 				Click($aButtonSetting[0], $aButtonSetting[1], 1, 0, "Click Setting")
 				If _Sleep(2000) Then Return 
