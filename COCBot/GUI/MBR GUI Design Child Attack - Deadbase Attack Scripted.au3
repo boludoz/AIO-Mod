@@ -26,11 +26,12 @@ Func CreateAttackSearchDeadBaseScripted()
 	;GUISetBkColor($COLOR_WHITE, $g_hGUI_DEADBASE_ATTACK_SCRIPTED)
 
     Local $x = 25, $y = 20
-	$g_hTabItemCrateCsvDB = GUICtrlCreateTab($x - 20, $y - 20, 270, $TCS_MULTILINE - 168)
-	$g_hTabItemCrateCsvTab1DB = GUICtrlCreateTabItem( GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "DBTABScript_Main", "CSV Main"))
 	
-	$g_ahChkLinkThatAndUseIn[$DB] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Bottom", "ChkSyncAttackAndTrainDB", "Sync on live base and train"), $x - 5, $y + 1, -1, -1)
+	$g_ahChkLinkThatAndUseIn[$DB] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Bottom", "ChkSyncAttackAndTrainDB_", "Sync LB and Train"), $x - 5 - 16, $y + 1 - 21, -1, -1)
 		GUICtrlSetOnEvent(-1, "ChkLinkThatAndUseInDB")
+		
+	$g_hTabItemCrateCsvDB = GUICtrlCreateTab($x - 20, $y - 20 + 21, 270, $TCS_MULTILINE - 168 - 21)
+	$g_hTabItemCrateCsvTab1DB = GUICtrlCreateTabItem( GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "DBTABScript_Main", "CSV Main"))
 		
 	$y += 25
 		$g_hCmbScriptNameDB = GUICtrlCreateCombo("", $x, $y, 200, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL, $WS_VSCROLL))
@@ -86,26 +87,26 @@ Func CreateAttackSearchDeadBaseScripted()
 	$x = 20
 	$y = 44
 
-	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnReload, $x + 215, $y, 16, 16)
+	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnReload, $x + 215, $y + 3, 16, 16)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Scripted", "IconReload_Info_01", "Reload Script Files"))
 		GUICtrlSetOnEvent(-1, 'UpdateComboScriptNameDB') ; Run this function when the secondary GUI [X] is clicked
 
-	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnAddcvs, $x + 215, $y + 25, 16, 16)
+	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnAddcvs, $x + 215, $y + 25 + 3, 16, 16)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Scripted", "IconCreate_Info_01", "Create a new Attack Script"))
 		GUICtrlSetOnEvent(-1, "NewScriptDB")
 
-	$y -= 6
+	$y += 6
 
 	For $i = 0 To 3
-		GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Scripted", "RGroup_0" & $i + 1, "Random CSV " & $i + 1), $x, $y, 208, 77)
+		GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Scripted", "RGroup_0" & $i + 1, "Random CSV " & $i + 1), $x, $y, 208, 77 - 29)
 
 		$y += 17
 			$g_ahChkRandomCSVDB[$i] = GUICtrlCreateCheckbox(" ", $x + 3, $y)
 			GUICtrlSetOnEvent(-1, "ChkRandomCSVDB")
 
-			$g_ahCmbRandomCSVDB[$i] = GUICtrlCreateCombo("", $x + 27, $y, 173, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL, $WS_VSCROLL))
+			$g_ahCmbRandomCSVDB[$i] = GUICtrlCreateCombo("", $x + 27, $y, 173 - 29, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL, $WS_VSCROLL))
 			GUICtrlSetOnEvent(-1, "ChkRandomCSVDB")
-		$y += 59
+		$y += 59 - 29
 
 		GUICtrlCreateGroup("", -99, -99, 1, 1)
 	Next
