@@ -273,7 +273,7 @@ Func SwitchCOCAcc($NextAccount, $bForceSwitch = False)
 	Local $abAccountNo = AccountNoActive()
 	If $NextAccount < 0 And $NextAccount > $g_iTotalAcc Then $NextAccount = _ArraySearch(True, $abAccountNo)
 	Static $iRetry = 0
-	Local $bResult
+	Local $bResult = False
 	If Not $g_bRunState Then Return
 
 	SetLog("Switching to Account [" & $NextAccount + 1 & "]")
@@ -287,88 +287,98 @@ Func SwitchCOCAcc($NextAccount, $bForceSwitch = False)
 		If Not $g_bRunState Then Return
 	Else
 		If Not $g_bRunState Then Return
+		Local $bSettingsPage = False
+		
 		; AIO Mod++
 		If $bSharedPrefs And $g_bChkSharedPrefs Then
+			If IsMainPage() Then
+				Click($aButtonSetting[0], $aButtonSetting[1], 1, 0, "Click Setting")
+				If _Sleep(2000) Then Return 
+			EndIf
+			If IsSettingPage() Then
+				$bSettingsPage = True
+				SetLog("Can't click on Button Settings!")
+			EndIf
 		Else
-			If IsMainPage() Then Click($aButtonSetting[0], $aButtonSetting[1], 1, 0, "Click Setting")
-			If _Sleep(500) Then Return
-		EndIf
-		
-		While 1
-			; all good
-			; AIO Mod++
 			If $bSharedPrefs And $g_bChkSharedPrefs Then
 				CloseCoC(False)
 				$bResult = True
-				ExitLoop
 			ElseIf $g_bChkSharedPrefs Then
 				SetLog("No Shared prefs in acc.", $COLOR_ERROR)
 			EndIf
+		EndIf
 		
-			If Not IsSettingPage() Then ExitLoop
-		
-			If $g_bChkGooglePlay Then
-				Switch SwitchCOCAcc_DisconnectConnect($bResult, $bSharedPrefs)
-					Case 0
-						Return
-					Case -1
-						ExitLoop
-				EndSwitch
-				Switch SwitchCOCAcc_ClickAccount($bResult, $NextAccount, $bSharedPrefs)
-					Case "OK"
-						; all good
-						If $g_bChkSharedPrefs Then
-							If $bSharedPrefs Then
-								CloseCoC(False)
-								$bResult = True
-								ExitLoop
-							Else
-								SetLog($g_asProfileName[$g_iNextAccount] & " missing shared_prefs, using normal switch account", $COLOR_WARNING)
+		If $bSettingsPage = True Then
+			While 1
+				; all good			
+				If $g_bChkGooglePlay Then
+					Switch SwitchCOCAcc_DisconnectConnect($bResult, $bSharedPrefs)
+						Case 0
+							Return
+						Case -1
+							ExitLoop
+					EndSwitch
+					
+					Switch SwitchCOCAcc_ClickAccount($bResult, $NextAccount, $bSharedPrefs)
+						Case "OK"
+							; all good
+							If $g_bChkSharedPrefs Then
+								If $bSharedPrefs Then
+									CloseCoC(False)
+									$bResult = True
+									ExitLoop
+								Else
+									SetLog($g_asProfileName[$g_iNextAccount] & " missing shared_prefs, using normal switch account", $COLOR_WARNING)
+								EndIf
 							EndIf
-						EndIf
-					Case "Error"
-						; some problem
-						ExitLoop
-					Case "Exit"
-						; no $g_bRunState
-						Return
-				EndSwitch
-				Switch SwitchCOCAcc_ConfirmAccount($bResult)
-					Case "OK"
-						; all good
-					Case "Error"
-						; some problem
-						ExitLoop
-					Case "Exit"
-						; no $g_bRunState
-						Return
-				EndSwitch
-		
-			ElseIf $g_bChkSuperCellID Then
-				Switch SwitchCOCAcc_ConnectedSCID($bResult)
-					Case "OK"
-						; all good
-					Case "Error"
-						; some problem
-						ExitLoop
-					Case "Exit"
-						; no $g_bRunState
-						Return
-				EndSwitch
-				Switch SwitchCOCAcc_ClickAccountSCID($bResult, $NextAccount, 2)
-					Case "OK"
-						; all good
-					Case "Error"
-						; some problem
-						ExitLoop
-					Case "Exit"
-						; no $g_bRunState
-						Return
-				EndSwitch
-		
-			EndIf
-			ExitLoop
-		WEnd
+						Case "Error"
+							; some problem
+							ExitLoop
+						Case "Exit"
+							; no $g_bRunState
+							Return
+					EndSwitch
+					
+					Switch SwitchCOCAcc_ConfirmAccount($bResult)
+						Case "OK"
+							; all good
+						Case "Error"
+							; some problem
+							ExitLoop
+						Case "Exit"
+							; no $g_bRunState
+							Return
+					EndSwitch
+			
+				ElseIf $g_bChkSuperCellID Then
+					Switch SwitchCOCAcc_ConnectedSCID($bResult)
+						Case "OK"
+							; all good
+						Case "Error"
+							; some problem
+							ExitLoop
+						Case "Exit"
+							; no $g_bRunState
+							Return
+					EndSwitch
+					
+					Switch SwitchCOCAcc_ClickAccountSCID($bResult, $NextAccount, 2)
+						Case "OK"
+							; all good
+						Case "Error"
+							; some problem
+							ExitLoop
+						Case "Exit"
+							; no $g_bRunState
+							Return
+					EndSwitch
+			
+				EndIf
+				ExitLoop
+			WEnd
+		Else
+			ClickAway()
+		EndIf
 		If _Sleep(500) Then Return
 	EndIf
 	
