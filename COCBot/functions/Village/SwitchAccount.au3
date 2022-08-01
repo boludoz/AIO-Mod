@@ -777,25 +777,25 @@ Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
 			_ArraySort($aCoord, 0, 0, 0, 1)
 
 			; Correct Index for Profile if needs to drag
-			If $NextAccount >= 3 Then $iIndexSCID = 3 ; based on drag logic, the account will always be the bottom one
+			If $NextAccount >= 2 Then $iIndexSCID = 2 ; based on drag logic, the account will always be the bottom one
 
 			; list all account see-able after drag on debug chat
 			For $j = 0 To UBound($aCoord) - 1
 				SetLog("[" & $j & "] Account coordinates: " & $aCoord[$j][0] & "," & $aCoord[$j][1] & " named: " & $g_asProfileName[$NextAccount-$iIndexSCID+$j])
 			Next
 
+			#cs
 			If UBound($aCoord) < 4 And $NextAccount >= 3 Then
 				SetLog("Only Found " & UBound($aCoord) & " SCID Account", $COLOR_ERROR)
 				$bResult = False
 				Return "Error"
 			EndIf
-			
 			If UBound($aCoord) <= $iIndexSCID Then 
 				SetLog("Error in SCID Account, out of range.", $COLOR_ERROR)
 				$bResult = False
 				Return "Error"
 			EndIf
-			
+			#ce
 			SetLog("   " & $iStep & ". Click Account [" & $NextAccount + 1 & "] Supercell ID with Profile: " & $g_asProfileName[$NextAccount])
 			Click($aCoord[$iIndexSCID][0]-75, $aCoord[$iIndexSCID][1] + 10, 1)
 			If _Sleep(750) Then Return
@@ -1347,7 +1347,7 @@ Func SCIDScrollUp()
 	SetLog("Try to scroll up", $COLOR_DEBUG)
 	For $i = 1 To 6
 		_CaptureRegion()
-		If _ColorCheck(_GetPixelColor(786, 340 + $g_iMidOffsetYFixed, False), Hex(0xF1F1F1, 6), 10) = True And _ColorCheck(_GetPixelColor(786, 357 + $g_iMidOffsetYFixed, False), Hex(0xEFEFEF, 6), 10) = True Then Return True
+		If _ColorCheck(_GetPixelColor(824, 303, False), Hex(0xE6E6E6, 6), 15) = True And _ColorCheck(_GetPixelColor(824, 319, False), Hex(0xCCCCCC, 6), 15) = True Then Return True
 		Swipe(Random(450, 456, 1), 316, Random(450, 456, 1), 316 + Random(100, 400, 1), 1000)
 		If _Sleep(500) Then Return
 	Next
