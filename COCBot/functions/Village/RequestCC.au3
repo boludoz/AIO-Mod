@@ -111,18 +111,29 @@ Func RequestCC($bClickPAtEnd = True, $sText = "")
 
 EndFunc   ;==>RequestCC
 
-Func _makerequest($aRequestButtonPos, $bRequestDefense = False)
+Func RequestCCButton(ByRef $bRequestWindowOpen, $iTry = 10)
+	Local $aClick[2] = [Null, Null]
+	For $i = 0 To $iTry
+		If _Sleep(250) Then Return
+		SetDebugLog("[" & $i & "] Wait for Send Request Window")
+		If QuickMis("BC1", $g_sImgSendRequestButton, 433, 62, 624, 494) Then 
+			SetDebugLog("[" & $i & "] Request window open", $COLOR_ACTION)
+			$aClick[0] = $g_iQuickMISX
+			$aClick[1] = $g_iQuickMISY
+			Return $aClick
+		EndIf
+	Next
+	Return False
+EndFunc   ;==>RequestCCButton
 
-	Local $sSendButtonArea = GetDiamondFromRect("220,150,650,606") ; Resolution changed
+Func _makerequest($aRequestButtonPos, $bRequestDefense = False)
+	Local $aClick = False
 
 	ClickP($aRequestButtonPos, 1, 0, "0336") ;click button request troops
-	If _Sleep(3000) Then Return
+
+	$aClick = RequestCCButton(10)
 	
-	If Not IsWindowOpen($g_sImgSendRequestButton, 20, 100, $sSendButtonArea) Then
-		SetLog("Request has already been made, or request window not available", $COLOR_ERROR)
-		ClickAway()
-		If _Sleep($DELAYMAKEREQUEST2) Then Return
-	Else
+	If UBound($aClick) > 0 and not @error Then
 		; Check if it's time to request troops for defense (Demen)
 		Local $iMode = ($bRequestDefense = True) ? (2) : (1)
 		Local $sRequestTroopsText = $g_sRequestTroopsText
@@ -135,9 +146,9 @@ Func _makerequest($aRequestButtonPos, $bRequestDefense = False)
 			If $g_aiRequestTroopTypeOnce[$g_iCurAccount] <> $iMode Then
 				If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
 				; fix for Android send text bug sending symbols like ``"
-				AndroidSendText($sRequestTroopsText, True)
-				Click(Int($g_avWindowCoordinates[0]), Int($g_avWindowCoordinates[1] - 75), 1, 0, "#0254")
+				Click($aClick[0] - 50, $aClick[1] - 75)
 				If _Sleep($DELAYMAKEREQUEST2) Then Return
+				AndroidSendText($sRequestTroopsText, True)
 				If SendText($sRequestTroopsText) = 0 Then
 					SetLog(" Request text entry failed, try again", $COLOR_ERROR)
 					Return
@@ -150,17 +161,28 @@ Func _makerequest($aRequestButtonPos, $bRequestDefense = False)
 			Else
 				$g_aiRequestTroopTypeOnce[$g_iCurAccount] = 0
 			EndIf
+						
+			$aClick = RequestCCButton(5)
+			If UBound($aClick) > 0 and not @error Then
+				Click(520, $aClick[1])
+				If _Sleep(1000) Then Return ; wait time after clicking request window border
+			Else
+				SetLog("[" & $i & "] Send button is gone", $COLOR_ERROR)
+			EndIf
 			#EndRegion - Type Once - ChacalGyn
-		EndIf
-		If _Sleep($DELAYMAKEREQUEST2) Then Return ; wait time for text request to complete
 
-		If Not IsWindowOpen($g_sImgSendRequestButton, 20, 100, $sSendButtonArea) Then
+		Else
+			SetLog("Request has already been made, or request window not available", $COLOR_ERROR)
+			ClickAway()
+			If _Sleep($DELAYMAKEREQUEST2) Then Return
+			
 			SetDebugLog("Send request button not found", $COLOR_DEBUG)
 			CheckMainScreen(False) ;emergency exit
 		EndIf
+		
+		If _Sleep($DELAYMAKEREQUEST2) Then Return ; wait time for text request to complete
 
 		If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "") ; make sure Android has window focus
-		ClickP($g_avWindowCoordinates, 1, 100, "#0256")
 		$g_bCanRequestCC = False
 	EndIf
 
