@@ -75,18 +75,8 @@ Func IsSyncRandomCSVReallyEnabled()
 EndFunc   ;==>SingularCSV
 
 Func IsSyncCSVEnabled()
-	If ($g_aiAttackAlgorithm[$DB] = 1 And $g_abLinkThatAndUseIn[$LB] = True And $g_aiAttackAlgorithm[$LB] <> 1) Or _
-		($g_aiAttackAlgorithm[$LB] = 1 And $g_abLinkThatAndUseIn[$DB] = True And $g_aiAttackAlgorithm[$DB] <> 1) Then
-	   Return False
-	EndIf
-	
-	If ($g_abAttackTypeEnable[$LB] = False And $g_abLinkThatAndUseIn[$LB] = True) Or _
-		($g_abAttackTypeEnable[$DB] = False And $g_abLinkThatAndUseIn[$DB] = True) Then
-		Return False
-	EndIf
-	
 	Local $aTemp = "", $sFilename = ""
-	If $g_abLinkThatAndUseIn[$LB] = True Then
+	If $g_abAttackTypeEnable[$LB] = True And $g_abLinkThatAndUseIn[$LB] = True And $g_aiAttackAlgorithm[$LB] = 1 Then
 		If $g_iGuiMode = 1 Then
 			$aTemp = _GUICtrlComboBox_GetListArray($g_hCmbScriptNameAB)
 			$sFilename = $aTemp[_GUICtrlComboBox_GetCurSel($g_hCmbScriptNameAB) + 1]
@@ -102,7 +92,7 @@ Func IsSyncCSVEnabled()
 		Return True
 	EndIf
 	
-	If $g_abLinkThatAndUseIn[$DB] = True Then
+	If $g_abAttackTypeEnable[$DB] = True And $g_abLinkThatAndUseIn[$DB] = True And $g_aiAttackAlgorithm[$DB] = 1 Then
 		If $g_iGuiMode = 1 Then
 			$aTemp = _GUICtrlComboBox_GetListArray($g_hCmbScriptNameDB)
 			$sFilename = $aTemp[_GUICtrlComboBox_GetCurSel($g_hCmbScriptNameDB) + 1]
@@ -118,7 +108,7 @@ Func IsSyncCSVEnabled()
 		Return True
 	EndIf
 
-	Return True
+	Return False
 EndFunc
 
 Func SyncCSVMain()

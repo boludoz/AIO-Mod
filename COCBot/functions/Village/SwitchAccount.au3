@@ -774,6 +774,7 @@ Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
 				$aFound = StringSplit($aAccount[$j], ",", $STR_NOCOUNT)
 				_ArrayAdd($aCoord, $aFound[0] + 750 & "|" & $aFound[1] + 320)
 			Next
+			
 			_ArraySort($aCoord, 0, 0, 0, 1)
 
 			; Correct Index for Profile if needs to drag
@@ -784,18 +785,19 @@ Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
 				SetLog("[" & $j & "] Account coordinates: " & $aCoord[$j][0] & "," & $aCoord[$j][1] & " named: " & $g_asProfileName[$NextAccount-$iIndexSCID+$j])
 			Next
 
-			#cs
-			If UBound($aCoord) < 4 And $NextAccount >= 3 Then
+
+			If UBound($aCoord) < 3 And $NextAccount >= 2 Then
 				SetLog("Only Found " & UBound($aCoord) & " SCID Account", $COLOR_ERROR)
 				$bResult = False
 				Return "Error"
 			EndIf
+			
 			If UBound($aCoord) <= $iIndexSCID Then 
 				SetLog("Error in SCID Account, out of range.", $COLOR_ERROR)
 				$bResult = False
 				Return "Error"
 			EndIf
-			#ce
+
 			SetLog("   " & $iStep & ". Click Account [" & $NextAccount + 1 & "] Supercell ID with Profile: " & $g_asProfileName[$NextAccount])
 			Click($aCoord[$iIndexSCID][0]-75, $aCoord[$iIndexSCID][1] + 10, 1)
 			If _Sleep(750) Then Return
