@@ -5041,4 +5041,7 @@ Func CheckEmuNewVersions($bSilentLog = False)
 	If $g_sAndroidEmulator = "Memu" And $Version = GetVersionNormalized("8.0.1.0") And $bSilentLog = False Then
 		SetLog("Memu 8.0.1.0 has problems working, please install a later version.", $COLOR_ERROR)
 	EndIf
+	If $g_sAndroidEmulator = "BlueStacks5" Then
+		SetLog("Experimental BlueStacks 5 doesn't work in the background!", $COLOR_ERROR)
+	EndIf
 EndFunc   ;==>CheckEmuNewVersions

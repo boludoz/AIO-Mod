@@ -449,9 +449,9 @@ Func SwitchCOCAcc($NextAccount, $bForceSwitch = False)
 		SetLog("Switching account failed!", $COLOR_ERROR)
 		SetSwitchAccLog("Switching to Acc " & $NextAccount + 1 & " Failed!", $COLOR_ERROR)
 		If $iRetry <= 3 Then
-			Local $ClickPoint = $aAway
-			If $g_bChkSuperCellID Then $ClickPoint = $aCloseTabSCID
-			ClickP($ClickPoint, 2, 500)
+			; Local $ClickPoint = $aAway
+			; If $g_bChkSuperCellID Then $ClickPoint = $aCloseTabSCID
+			; ClickP($ClickPoint, 2, 500)
 			checkMainScreen()
 		Else
 			$iRetry = 0
@@ -462,6 +462,7 @@ Func SwitchCOCAcc($NextAccount, $bForceSwitch = False)
 	waitMainScreen()
 	If Not $g_bRunState Then Return
 	;switch using scid sometime makes emulator seem freeze but not, need to send back button first for click work again
+	#cs
 	If $g_bChkSuperCellID Then
 		SetDebugLog("Checkscidswitch: Send AndroidBackButton", $COLOR_DEBUG)
 		AndroidBackButton() ;Send back button to android
@@ -470,6 +471,7 @@ Func SwitchCOCAcc($NextAccount, $bForceSwitch = False)
 			AndroidBackButton()
 		EndIf
 	EndIf
+	#ce
 	CheckObstacles()
 	If $g_bForceSinglePBLogoff Then $g_bGForcePBTUpdate = True
 	runBot()
