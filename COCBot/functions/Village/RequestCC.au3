@@ -51,7 +51,7 @@ Func RequestCC($bClickPAtEnd = True, $sText = "")
 		CheckCCArmy()
 	EndIf
 	; -------------------------------------------------------
-	
+
 	If Not $g_bRunState Then Return
 
 	Local $sSearchDiamond = GetDiamondFromRect("718,492,780,570") ; Resolution changed
@@ -111,12 +111,12 @@ Func RequestCC($bClickPAtEnd = True, $sText = "")
 
 EndFunc   ;==>RequestCC
 
-Func RequestCCButton(ByRef $bRequestWindowOpen, $iTry = 10)
+Func RequestCCButton($iTry = 10)
 	Local $aClick[2] = [Null, Null]
 	For $i = 0 To $iTry
 		If _Sleep(250) Then Return
 		SetDebugLog("[" & $i & "] Wait for Send Request Window")
-		If QuickMis("BC1", $g_sImgSendRequestButton, 433, 62, 624, 494) Then 
+		If QuickMis("BC1", $g_sImgSendRequestButton, 433, 62, 624, 494) Then
 			SetDebugLog("[" & $i & "] Request window open", $COLOR_ACTION)
 			$aClick[0] = $g_iQuickMISX
 			$aClick[1] = $g_iQuickMISY
@@ -132,7 +132,7 @@ Func _makerequest($aRequestButtonPos, $bRequestDefense = False)
 	ClickP($aRequestButtonPos, 1, 0, "0336") ;click button request troops
 
 	$aClick = RequestCCButton(10)
-	
+
 	If UBound($aClick) > 0 and not @error Then
 		; Check if it's time to request troops for defense (Demen)
 		Local $iMode = ($bRequestDefense = True) ? (2) : (1)
@@ -161,7 +161,7 @@ Func _makerequest($aRequestButtonPos, $bRequestDefense = False)
 			Else
 				$g_aiRequestTroopTypeOnce[$g_iCurAccount] = 0
 			EndIf
-						
+
 			$aClick = RequestCCButton(5)
 			If UBound($aClick) > 0 and not @error Then
 				Click(520, $aClick[1])
@@ -175,11 +175,11 @@ Func _makerequest($aRequestButtonPos, $bRequestDefense = False)
 			SetLog("Request has already been made, or request window not available", $COLOR_ERROR)
 			ClickAway()
 			If _Sleep($DELAYMAKEREQUEST2) Then Return
-			
+
 			SetDebugLog("Send request button not found", $COLOR_DEBUG)
 			CheckMainScreen(False) ;emergency exit
 		EndIf
-		
+
 		If _Sleep($DELAYMAKEREQUEST2) Then Return ; wait time for text request to complete
 
 		If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "") ; make sure Android has window focus
