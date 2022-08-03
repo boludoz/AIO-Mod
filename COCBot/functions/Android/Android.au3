@@ -1373,7 +1373,7 @@ Func CloseAndroid($sSource)
 
     ; AndroidAdbSendShellCommand("reboot -p")
     ; If _Sleep(2000) Then Return ; wait a bit
-    
+
     ; AndroidAdbSendShellCommand("reboot -p")
     ; If _Sleep(2000) Then Return ; wait a bit
 
@@ -2297,6 +2297,11 @@ Func _AndroidAdbSendShellCommand($cmd = Default, $timeout = Default, $wasRunStat
 		If StringRight($s, 1) = @CR Then $s = StringLeft($s, StringLen($s) - 1)
 	EndIf
 
+	If $g_bDebugAndroid = True Then
+		SetLog("[AndroidAdbSendShellCommand] [ADB] :", $COLOR_SUCCESS)
+		SetLog($s, $COLOR_SUCCESS)
+	EndIf
+
 	If $g_bAndroidAdbInstance = True And $g_bDebugAndroid And StringLen($s) > 0 Then SetDebugLog("ADB shell command output: " & $s)
 	SuspendAndroid($SuspendMode)
 	Local $error = (($g_bRunState = False Or __TimerDiff($hTimer) < $timeout Or $timeout < 1) ? 0 : 1)
@@ -3179,25 +3184,31 @@ Func AndroidClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect = True)
 	If Not ($x = Default) Then $x = Int($x) + $g_aiMouseOffset[0]
 	If Not ($x = Default) Then $y = Int($y) + $g_aiMouseOffset[1]
 	ForceCaptureRegion()
-	;AndroidSlowClick($x, $y, $times, $speed)
-	;AndroidFastClick($x, $y, $times, $speed, $checkProblemAffect)
+	; Custom Fix - Team__AiO__MOD
+	If $g_bAndroidAdbClickEnabled = False Then
+		Return AndroidSlowClick($x, $y, $times, $speed)
+	EndIf
+	AndroidSlowClick
 	AndroidMinitouchClick($x, $y, $times, $speed, $checkProblemAffect)
+	;AndroidFastClick($x, $y, $times, $speed, $checkProblemAffect)
 EndFunc   ;==>AndroidClick
 
-Func AndroidSlowClick($x, $y, $times = 1, $speed = 0)
+Func AndroidSlowClick($x, $y, $iTimes = 1, $speed = 0)
 	Local $wasRunState = $g_bRunState
 	Local $cmd = ""
+	Local $iSleep = 0, $iSleepSum = 0
 	Local $i = 0
 	$g_iAndroidAdbScreencapTimer = 0 ; invalidate ADB screencap timer/timeout
 	AndroidAdbLaunchShellInstance($wasRunState)
 	If @error = 0 Then
-		For $i = 1 To $times
-			$cmd &= "input tap " & $x & " " & $y & ";"
+		For $i = 1 To $iTimes
+			$iSleep = $speed + Random(Int($speed * 0.20) * -1, $speed * 0.20)
+			$iSleepSum += 3000 + Round($iSleep)
+			$cmd &= "input tap " & $x & " " & $y & String(($speed > 0) ? (";sleep " & Round(Int($iSleep / 100), 1) & ";") : (""))
 		Next
-		Local $timer = __TimerInit()
-		AndroidAdbSendShellCommand($cmd, Default, $wasRunState)
-		Local $wait = $speed - __TimerDiff($timer)
-		If $wait > 0 Then _Sleep($wait, False)
+		AndroidAdbSendShellCommand($cmd, -1, $wasRunState)
+		SetDebugLog("$iSleepSum " & $iSleepSum)
+		If _Sleep($iSleepSum) Then Return
 	Else
 		Local $error = @error
 		SetDebugLog("Disabled " & $g_sAndroidEmulator & " ADB mouse click, error " & $error, $COLOR_ERROR)
@@ -4200,24 +4211,24 @@ Func GetAndroidProcessPID($sPackage = Default, $bForeground = True, $DEPRECATED 
 				Return 0
 			EndIf
 		EndIf
-		
+
 		If AndroidInvalidState() Then
 			$iError = 1
 			ContinueLoop
 		EndIf
-		
+
 		If $sPackage = Default Then $sPackage = $g_sAndroidGamePackage
-		
+
 		$iPid = Number(AndroidAdbSendShellCommand("pidof " & $sPackage))
 		If $iPid > 0 Then
 			SetDebugLog("[GetAndroidProcessPID] $g_sAndroidGamePackage: " & $sPackage)
 			SetDebugLog("[GetAndroidProcessPID] GetAndroidProcessPID StdOut :" & $iPid)
-			
+
 			If $bForeground = False Then
 				$iError = 0
 				ExitLoop
 			EndIf
-			
+
 			$sDumpsys = AndroidAdbSendShellCommand("dumpsys window windows | grep -E 'mCurrentFocus.*" & $sPackage & "'")
 			SetDebugLog("[GetAndroidProcessPID] dumpsys window windows StdOut :" & $sDumpsys)
 
@@ -4229,7 +4240,7 @@ Func GetAndroidProcessPID($sPackage = Default, $bForeground = True, $DEPRECATED 
 		EndIf
 	Next
 	Return SetError($iError, 0, $iPid)
-	
+
 	#CS
 	; - USER  - PID - PPID  - VSS  - RSS  -   PRIO - NICE - RTPRIO - SCHED - WCHAN  - EIP    - STATE - NAME
 	; u0_a58    4395  580   1135308 187040     14    -6        0      0     ffffffff 00000000    S      com.supercell.clashofclans
@@ -5011,7 +5022,7 @@ Func CheckEmuNewVersions($bSilentLog = False)
 	EndIf
 
 	Local $Version = GetVersionNormalized($g_sAndroidVersion)
-	
+
 	#Region - Custom - Team AIO Mod++
 	GUICtrlSetData($g_hLblAndroidInfo, $g_sandroidemulator & " v" & $g_sandroidversion)
 	#EndRegion - Custom - Team AIO Mod++
