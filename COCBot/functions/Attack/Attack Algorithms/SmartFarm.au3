@@ -1389,23 +1389,26 @@ Func LaunchSpellsSmartFarm($SIDESNAMES = "TR|TL|BR|BL")
 	Return $aByGroups
 EndFunc   ;==>LaunchSpellsSmartFarm
 #ce
+
 Func _ImageCompareImagesMyBot($iTol = 30)
 	Local $aAllResults[0][2]
-	Local $iXS = 19, $iYS = 28, $iXE = $g_iGAME_WIDTH - 13, $iYE = $g_iGAME_HEIGHT - 119
+	Local $iXS = $ExternalArea[0][0], $iYS = $ExternalArea[2][1], $iXE = $ExternalArea[1][0], $iYE = $ExternalArea[3][1]
 	Local $iBits1, $iBits2
 	Local $iC = -1
 	Local $Red1, $Red2, $Blue1, $Blue2, $Green1, $Green2
-	For $iX = $iXS To $iXE Step 12
-		For $iY = $iYS To $iYE Step 12
+	For $iX = $iXS To $iXE Step 6
+		For $iY = $iYS To $iYE Step 6
 			If Not isInsideDiamondInt($iX, $iY) Then ContinueLoop
 			$iBits1 = Hex(_GDIPlus_BitmapGetPixel($g_FirstBitMap, $iX, $iY), 6)
 			$iBits2 = Hex(_GDIPlus_BitmapGetPixel($g_SecondBitMap, $iX, $iY), 6)
-			$Red1 = Dec(StringMid(String($iBits1), 1, 2))
 			$Blue1 = Dec(StringMid(String($iBits1), 3, 2))
-			$Red2 = Dec(StringMid(String($iBits2), 1, 2))
 			$Blue2 = Dec(StringMid(String($iBits2), 3, 2))
 			If Abs($Blue1 - $Blue2) < $iTol Then ContinueLoop
+			
+			$Red1 = Dec(StringMid(String($iBits1), 1, 2))
+			$Red2 = Dec(StringMid(String($iBits2), 1, 2))
 			If Abs($Red1 - $Red2) < $iTol Then ContinueLoop
+			
 			$iC += 1
 			ReDim $aAllResults[$iC + 1][2]
 			$aAllResults[$iC][0] = $iX

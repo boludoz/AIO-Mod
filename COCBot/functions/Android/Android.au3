@@ -3188,7 +3188,6 @@ Func AndroidClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect = True)
 	If $g_bAndroidAdbClickEnabled = False Then
 		Return AndroidSlowClick($x, $y, $times, $speed)
 	EndIf
-	AndroidSlowClick
 	AndroidMinitouchClick($x, $y, $times, $speed, $checkProblemAffect)
 	;AndroidFastClick($x, $y, $times, $speed, $checkProblemAffect)
 EndFunc   ;==>AndroidClick
