@@ -449,9 +449,9 @@ Func SwitchCOCAcc($NextAccount, $bForceSwitch = False)
 		SetLog("Switching account failed!", $COLOR_ERROR)
 		SetSwitchAccLog("Switching to Acc " & $NextAccount + 1 & " Failed!", $COLOR_ERROR)
 		If $iRetry <= 3 Then
-			; Local $ClickPoint = $aAway
-			; If $g_bChkSuperCellID Then $ClickPoint = $aCloseTabSCID
-			; ClickP($ClickPoint, 2, 500)
+			Local $ClickPoint = $aAway
+			If $g_bChkSuperCellID Then $ClickPoint = $aCloseTabSCID
+			ClickP($ClickPoint, 2, 500)
 			checkMainScreen()
 		Else
 			$iRetry = 0
