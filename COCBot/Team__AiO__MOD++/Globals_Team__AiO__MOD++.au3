@@ -458,7 +458,8 @@ Global $g_bDeployCastleFirst[2] = [False, False]
 Global $g_iDeployWave[3] = [5, 5, 5],  $g_iDeployDelay[3] = [5, 5, 5] ; $DB, $LB, $iCmbValue
 Global $g_bChkEnableRandom[3] = [True, True, True]
 ; GUI
-Global $g_hDeployCastleFirst[2] = [$LB, $DB]
+Global $g_hPicABDropFirstCC = 0, $g_hPicDBDropFirstCC = 0
+Global $g_ahChkDeployCastleFirst[2] = [$DB, $LB]
 Global $g_hDeployWave[3],  $g_hDeployDelay[3]
 Global $g_hChkEnableRandom[3]
 
@@ -524,7 +525,8 @@ Global $g_eDDPotionTrain = 0, $g_eDDPotionClock = 1, $g_eDDPotionResearch = 2, $
 #EndRegion - Daily Discounts - Team AiO MOD++
 
 ; CSV Deploy Speed - Team AiO MOD++
-Global $g_ahCmbCSVSpeed[2] = [$LB, $DB]
+Global $g_hCSVMODAIOLB, $g_hCSVMODAIODB
+Global $g_ahCmbCSVSpeed[2] = [$DB, $LB], $g_ahGroupCSVSpeed[2] = [$DB, $LB]
 Global $g_iCmbCSVSpeed[2] = [2, 2]
 Global $g_CSVSpeedDivider[2] = [1, 1] ; default CSVSpeed for DB & LB
 

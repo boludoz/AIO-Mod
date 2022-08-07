@@ -354,7 +354,7 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 	$g_aiDeployHeroesPosition[1] = -1
 
 	#Region - Drop CC first - Team AIO Mod++ (By Boludoz)
-	If (Ubound($g_bDeployCastleFirst) > $g_iMatchMode) And $g_bDeployCastleFirst[$g_iMatchMode] Then
+	If ($g_iMatchMode = $DB Or $g_iMatchMode = $LB) And $g_bDeployCastleFirst[$g_iMatchMode] Then
 			Local $aCC = _ArraySearch($listInfoDeploy, "CC", 0, 0, 0, 0, 0, 0)
 			Local $aRem = _ArrayExtract($listInfoDeploy, $aCC, $aCC)
 			_ArrayDelete($listInfoDeploy, $aCC)

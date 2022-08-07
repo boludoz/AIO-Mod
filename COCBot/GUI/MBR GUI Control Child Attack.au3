@@ -19,6 +19,9 @@ Func cmbDBAlgorithm()
 	; Algorithm Alltroops
 	_GUI_Value_STATE($iCmbValue = 1 ? "SHOW" : "HIDE", $g_aGroupAttackDBSpell & "#" & $groupIMGAttackDBSpell)
 
+	; Random CSV - Team AIO Mod++
+	_GUI_Value_STATE($iCmbValue = 1 ? "SHOW" : "HIDE", $g_hCSVMODAIODB)
+
 	If BitAND(GUICtrlGetState($g_hGUI_DEADBASE), $GUI_SHOW) And GUICtrlRead($g_hGUI_DEADBASE_TAB) = 1 Then ; fix ghosting during control applyConfig
 		Select
 			Case $iCmbValue = 0 ; Standard Attack
@@ -55,6 +58,9 @@ EndFunc   ;==>cmbDBAlgorithm
 Func cmbABAlgorithm()
 	Local $iCmbValue = _GUICtrlComboBox_GetCurSel($g_hcmbABAlgorithm)
 	_GUI_Value_STATE($iCmbValue = 1 ? "SHOW" : "HIDE", $groupAttackABSpell & "#" & $groupIMGAttackABSpell)
+	
+	; Random CSV - Team AIO Mod++
+	_GUI_Value_STATE($iCmbValue = 1 ? "SHOW" : "HIDE", $g_hCSVMODAIOLB)
 
 	If BitAND(GUICtrlGetState($g_hGUI_ACTIVEBASE), $GUI_SHOW) And GUICtrlRead($g_hGUI_ACTIVEBASE_TAB) = 1 Then ; fix ghosting during control applyConfig
 		Select

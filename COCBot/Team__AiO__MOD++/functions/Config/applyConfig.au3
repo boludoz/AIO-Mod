@@ -116,7 +116,7 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			GUICtrlSetState($g_hEdgeObstacle, ($g_bEdgeObstacle = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
 
 			For $i = $DB To $LB
-				GUICtrlSetState($g_hDeployCastleFirst[$i], ($g_bDeployCastleFirst[$i] = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
+				GUICtrlSetState($g_ahChkDeployCastleFirst[$i], ($g_bDeployCastleFirst[$i] = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED))
 			Next
 
 			; Setlog limit
@@ -207,7 +207,7 @@ Func ApplyConfig_MOD_MiscTab($TypeReadSave)
 			$g_bChkSkipFirstAttack = (GUICtrlRead($g_hChkSkipFirstAttack) = $GUI_CHECKED)
 
 			For $i = $DB To $LB
-				$g_bDeployCastleFirst[$i] = (GUICtrlRead($g_hDeployCastleFirst[$i]) = $GUI_CHECKED)
+				$g_bDeployCastleFirst[$i] = (GUICtrlRead($g_ahChkDeployCastleFirst[$i]) = $GUI_CHECKED)
 			Next
 
 			; Setlog limit

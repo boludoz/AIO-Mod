@@ -128,7 +128,8 @@ Func CreateAttackSearchDeadBaseAttack()
 		$y += 27
 		$x -= 46
 		#Region - Deploy CC First - Team AIO Mod++
-				$g_hDeployCastleFirst[$DB] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Chk-First", "SG/Castle first."), $x + 27, $y, 100, 17)
+			$g_hPicDBDropFirstCC = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnTroops, $x, $y, 24, 24)
+				$g_ahChkDeployCastleFirst[$DB] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "ChkDeployCastleFirst", "Siege, castle first"), $x + 27, $y, 105, 17)
 				$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "DeployCastleSiegeFirstTip", "Deploy CC / Sieges troops first, support for all modes.")
 				_GUICtrlSetTip(-1, $sTxtTip)
                 GUICtrlSetOnEvent(-1, "chkMiscModOptions")
@@ -224,7 +225,7 @@ Func CreateAttackSearchDeadBaseAttack()
 
 		$x = 25
 		$y += 45
-		GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "CSVSpeed", "CSV Deployment Speed"), $x - 20, $y - 15, 145, 54)
+		$g_ahGroupCSVSpeed[$DB] = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "CSVSpeed", "CSV Deployment Speed"), $x - 20, $y - 15, 145, 54)
 			$g_ahCmbCSVSpeed[$DB] = GUICtrlCreateCombo("", $x + 27, $y + 5, 50, 20, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 			GUICtrlSetData(-1, "0.5x|0.75x|1x|1.25x|1.5x|2x|3x|4x|5x", "1x")
 		GUICtrlCreateGroup("", -99, -99, 1, 1)

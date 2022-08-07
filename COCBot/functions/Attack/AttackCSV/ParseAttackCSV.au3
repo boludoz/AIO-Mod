@@ -45,7 +45,7 @@ Func ParseAttackCSV($debug = False)
 	Local $aLines = FileReadToArray($g_sCSVAttacksPath & "\" & $filename & ".csv")
 
 	#Region - Drop CC first - Team AIO Mod++ (By Boludoz)
-	If (Ubound($g_bDeployCastleFirst) > $g_iMatchMode) And $g_bDeployCastleFirst[$g_iMatchMode] Then
+	If ($g_iMatchMode = $DB Or $g_iMatchMode = $LB) And $g_bDeployCastleFirst[$g_iMatchMode] Then
 		Local $iFirstDrop = -1, $iCastlePosOld = -1, $iDbgSector = 0, $ichkDropCCFirst = 1, $aTmpCommand
 		Local $aShortAndCC = $g_asSiegeMachineShortNames
 		_ArrayAdd($aShortAndCC, "Castle")

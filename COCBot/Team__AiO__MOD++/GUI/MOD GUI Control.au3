@@ -94,8 +94,8 @@ Func chkMiscModOptions()
 
 	$g_bChkSkipFirstAttack = (GUICtrlRead($g_hChkSkipFirstAttack) = $GUI_CHECKED)
 
-	$g_bDeployCastleFirst[$DB] = (GUICtrlRead($g_hDeployCastleFirst[$DB]) = $GUI_CHECKED)
-	$g_bDeployCastleFirst[$LB] = (GUICtrlRead($g_hDeployCastleFirst[$LB]) = $GUI_CHECKED)
+	$g_bDeployCastleFirst[$DB] = (GUICtrlRead($g_ahChkDeployCastleFirst[$DB]) = $GUI_CHECKED)
+	$g_bDeployCastleFirst[$LB] = (GUICtrlRead($g_ahChkDeployCastleFirst[$LB]) = $GUI_CHECKED)
 
 EndFunc   ;==>chkMiscModOptions
 

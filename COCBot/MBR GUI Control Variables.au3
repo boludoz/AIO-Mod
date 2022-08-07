@@ -354,8 +354,8 @@ Func InitializeControlVariables()
 
 	$oAlwaysEnabledControls($g_hTxtClanGamesLog) = 1
 
-	$groupIMGAttackABSpell &= "#"&$g_ahCmbCSVSpeed[$LB]
-	$groupIMGAttackDBSpell &= "#"&$g_ahCmbCSVSpeed[$DB]
+	$g_hCSVMODAIOLB = $g_ahCmbCSVSpeed[$LB] & "#" & $g_ahGroupCSVSpeed[$LB]
+	$g_hCSVMODAIODB = $g_ahCmbCSVSpeed[$DB] & "#" & $g_ahGroupCSVSpeed[$DB]
 	#EndRegion - AiO MOD++
 	
 EndFunc
