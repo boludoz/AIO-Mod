@@ -1,0 +1,85 @@
+﻿NOTE  |
+NOTE  |                        ToomooR
+NOTE  |           - -- -- -- -- -- -- -- -- -- -- -- -- -- -- -
+NOTE  |            12 Loon + 8 Electro Dragon [TH14]
+NOTE  |            •• (  5 Rage + 1 Freeze  ) ••
+NOTE  |           - -- -- -- -- -- -- -- -- -- -- -- -- -- -- -
+NOTE  |                CC =  Balloons + Rage
+NOTE  |           - -- -- -- -- -- -- -- -- -- -- -- -- -- -- -
+NOTE  |          Set External Edge for Redline
+NOTE  |           - -- -- -- -- -- -- -- -- -- -- -- -- -- -- -
+NOTE  |           Victory: 99% ☆ ☆ ☆ ☆ ★
+NOTE  |
+NOTE  |                  e l o y      e d i t i o n
+
+      |_TROOPNAME_|__FLEXIBLE_|____TH06___|____TH07___|____TH08___|____TH09___|____TH10___|____TH11___|____TH12___|_________TH13-14_______|
+TRAIN |EDrag      |0          |0          |0          |0          |0          |0          |0          |8          |1                      |
+TRAIN |Ball       |0          |0          |0          |0          |0          |0          |0          |12         |1                      |
+      |           |           |           |           |           |           |           |           |           |                       |
+TRAIN |RSpell     |0          |0          |0          |0          |0          |0          |0          |5          |1                      |
+TRAIN |FSpell     |0          |0          |0          |0          |0          |0          |0          |1          |1                      |
+      |           |           |           |           |           |           |           |           |           |                       |
+      |_TROOPNAME_|___________|____TH06___|____TH07___|____TH08___|____TH09___|____TH10___|____TH11___|____TH12___|_________TH13-14_______|Hero Abilities: 1.Auto 2.Timed 3.Both
+TRAIN |King       |0          |0          |0          |0          |0          |0          |1          |1          |1                      |
+TRAIN |Queen      |0          |0          |0          |0          |0          |0          |1          |1          |1                      |
+TRAIN |Warden     |0          |0          |0          |0          |0          |0          |1          |1          |1                      |Both: Auto or Timed After 15 sec.
+TRAIN |Champion   |0          |0          |0          |0          |0          |0          |0          |0          |1                      |
+      |           |           |           |           |           |           |           |           |           |                       |
+      |___________|___________|____TH06___|____TH07___|____TH08___|____TH09___|____TH10___|____TH11___|____TH12___|_________TH13-14_______|
+REDLN |0          |0          |0          |0          |0          |0          |0          |4          |4          |4                      |1.RAW 2.POINTS 3.ORIGINAL 4.EDGES
+DRPLN |0          |0          |0          |0          |0          |0          |0          |0          |0          |0                      |1.CORNER 2.POINT 3.FULLCORNER 4.FULLPOINT 5.NONE
+      |           |           |           |           |           |           |           |           |           |                       |
+      |___________|___________|____TH06___|____TH07___|____TH08___|____TH09___|____TH10___|____TH11___|____TH12___|_________TH13-14_______|
+CCREQ |           |           |           |           |           |           |           |Loon   Rage|Loon   Rage|                       |
+
+      |EXTR. GOLD |EXTR.ELIXIR|EXTR. DARK |DEPO. GOLD |DEPO.ELIXIR|DEPO. DARK |TOWNHALL   |FORCED SIDE|___________________________________|
+SIDE  |0          |0          |0          |0          |0          |0          |10         |           |           |                       |
+      |EAGLE      |INFERNO    |XBOW       |WIZTOWER   |MORTAR     |AIRDEFENSE |GEMBOX     |GEMBOX     |           |                       |
+SIDEB |9          |5          |0          |0          |0          |0          |0          |           |           |                       |
+
+      |VECTOR_____|SIDE_______|DROP_POINTS|ADDTILES___|VERSUS_____|RANDOMX_PX_|RANDOMY_PX_|BUILDING___|___________________________________|
+MAKE  |A          |FRONT-LEFT |10         |0          |EXT-INT    |0          |0          |           |           |                       |
+MAKE  |B          |FRONT-RIGHT|10         |0          |INT-EXT    |0          |0          |           |           |                       |
+MAKE  |C          |FRONT-RIGHT|10         |0          |EXT-INT    |0          |5          |           |           |                       |
+MAKE  |D          |FRONT-LEFT |10         |0          |INT-EXT    |0          |5          |           |           |                       |
+MAKE  |E          |LEFT-FRONT |10         |0          |EXT-INT    |0          |0          |           |           |                       |
+MAKE  |F          |LEFT-FRONT |10         |0          |EXT-INT    |0          |5          |           |           |                       |
+MAKE  |G          |RIGHT-FRONT|10         |0          |EXT-INT    |0          |5          |           |           |                       |
+MAKE  |H          |FRONT-LEFT |1          |1          |IGNORE     |0          |0          |EAGLE      |           |                       |
+MAKE  |I          |FRONT-RIGHT|1          |1          |IGNORE     |0          |0          |INFERNO    |           |                       |
+MAKE  |J          |FRONT-LEFT |10         |-7         |INT-EXT    |0          |0          |           |           |                       |
+MAKE  |K          |FRONT-RIGHT|10         |-8         |INT-EXT    |0          |0          |           |           |                       |
+MAKE  |L          |FRONT-LEFT |10         |-16        |INT-EXT    |0          |0          |           |           |                       |
+MAKE  |M          |FRONT-RIGHT|10         |-17        |INT-EXT    |0          |0          |           |           |                       |
+
+      |VECTOR_____|INDEX______|QTY_X_VECT_|TROOPNAME__|DELAY_DROP_|DELAYCHANGE|SLEEPAFTER_|___________|___________________________________|
+DROP  |A          |10         |1          |WallW      |50-70      |0          |350-400    |           |           |                       |
+DROP  |A          |4,6,8,10   |4          |EDrag      |60-70      |50-70      |0          |           |           |                       |
+DROP  |B          |1,3,5,7    |4          |EDrag      |60-70      |50-70      |500-700    |           |           |                       |
+DROP  |A          |10         |1          |Castle     |50-70      |0          |150-200    |           |           |                       |
+DROP  |A          |4,5,7,9,10 |5          |Ball       |50-70      |27-50      |0          |           |           |                       |
+DROP  |B          |1,2,3,4,6  |5          |Ball       |50-70      |27-50      |90-110     |           |           |                       |
+DROP  |C          |8,6        |2          |Ball       |55-70      |27-50      |15-20      |           |           |                       |
+DROP  |D          |2,3        |2          |Ball       |55-70      |27-50      |150-200    |           |           |                       |
+DROP  |A          |10         |1          |Warden     |50-70      |0          |350-370    |           |           |                       |
+DROP  |A          |10         |1          |BattleB    |50-70      |0          |350-370    |           |           |                       |
+DROP  |J          |5          |1          |RSpell     |50-70      |0          |150-200    |           |           |                       |
+DROP  |J          |1          |1          |RSpell     |50-70      |0          |150-200    |           |           |                       |
+DROP  |K          |4          |1          |RSpell     |50-70      |0          |500-700    |           |           |                       |
+DROP  |F          |5          |1          |King       |0          |0          |500-550    |           |           |                       |
+DROP  |G          |3          |1          |Queen      |0          |0          |500-550    |           |           |                       |
+DROP  |D          |7          |1          |Champion   |0          |0          |50-50      |           |           |                       |
+WAIT  |1000-1200  |           |           |           |           |           |           |           |           |                       |
+DROP  |L          |5          |1          |RSpell     |50-70      |0          |150-200    |           |           |                       |
+DROP  |L          |1          |1          |RSpell     |50-70      |0          |200-250    |           |           |                       |
+DROP  |M          |4          |1          |RSpell     |50-70      |0          |500-700    |           |           |                       |
+WAIT  |3200-3500  |           |           |           |           |           |           |           |           |                       |
+DROP  |H          |1          |1          |FSpell     |50-70      |0          |350-400    |           |           |                       |
+DROP  |I          |1          |1          |FSpell     |50-70      |0          |150-200    |           |           |                       |
+DROP  |M          |2          |1          |HaSpell    |50-70      |0          |250-300    |           |           |                       |
+DROP  |E          |2          |1          |HaSpell    |50-70      |0          |200-250    |           |           |                       |
+WAIT  |3500-3700  |           |           |           |           |           |           |           |           |                       |
+DROP  |A          |10         |1          |BattleB    |50-70      |0          |150-170    |           |           |                       |
+DROP  |A          |10         |1          |WallW      |50-70      |0          |150-170    |           |           |                       |
+DROP  |A          |10         |1          |Warden     |50-100     |           |150-200    |           |           |                       |
+DROP  |F-G        |7-10       |1          |REMAIN     |50-70      |100        |50-100     |           |           |                       |
