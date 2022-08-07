@@ -103,10 +103,10 @@ Func SmartWait4Train($iTestSeconds = Default)
 		Local $abAccountNo = AccountNoActive()
 		For $i = 0 To $g_iTotalAcc
 			If $abAccountNo[$i] And Not $g_abDonateOnly[$i] Then
-				If $g_asTrainTimeFinish[$i] < $iRemainTrain Then
+				If _DateIsValid($g_asTrainTimeFinish[$i]) = False Then ContinueLoop
+				$iRemainTrain = _DateDiff("n", _NowCalc(), $g_asTrainTimeFinish[$i])
+				If $iRemainTrain < $iRemainTrain Then
 					$account = $i
-					If _DateIsValid($g_asTrainTimeFinish[$i]) = False Then ContinueLoop
-					$iRemainTrain = _DateDiff("n", _NowCalc(), $g_asTrainTimeFinish[$i])
 				EndIf
 			EndIf
 		Next

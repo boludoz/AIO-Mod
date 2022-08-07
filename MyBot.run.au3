@@ -728,10 +728,19 @@ Func MainLoop($bCheckPrerequisitesOK = True)
 	WEnd
 EndFunc   ;==>MainLoop
 
-Func runBot() ;Bot that runs everything in order
-	Local $iWaitTime, $bFirstCheck = True ; Custom - Team AIO Mod++
+Func runBot()
 	Static $s_bHardReset = False
 	Static $s_bRunOn = False
+	_runBot($s_bHardReset, $s_bRunOn)
+	If $g_bRunState = False Then
+		$s_bHardReset = False
+		$s_bRunOn = False
+		Return
+	EndIf
+EndFunc   ;==>runBot
+
+Func _runBot(ByRef $s_bHardReset, ByRef $s_bRunOn) ;Bot that runs everything in order
+	Local $iWaitTime, $bFirstCheck = True ; Custom - Team AIO Mod++
 	
 	SetDebugLog("[runBot] runBot 1")
 
@@ -1079,7 +1088,7 @@ Func runBot() ;Bot that runs everything in order
 			EndIf
 		WEnd
 	WEnd
-EndFunc   ;==>runBot
+EndFunc   ;==>_runBot
 
 Func Idle() ;Sequence that runs until Full Army
 	$g_bIdleState = True
@@ -1287,8 +1296,8 @@ Func AttackMain($bFirstStart = False, $bCheckCG = True) ;Main control for attack
 			SetLog("Search, Trophy or Army Camp % are out of range in search setting", $COLOR_WARNING)
 			$g_bIsSearchLimit = False
 			$g_bIsClientSyncError = False
+			SmartWait4Train() ; Custom schedule - Team AIO Mod++
 			If ProfileSwitchAccountEnabled() Then checkSwitchAcc()
-			SmartWait4Train()
 		EndIf
 	Else
 		SetLog("Attacking Not Planned, Skipped..", $COLOR_WARNING)
