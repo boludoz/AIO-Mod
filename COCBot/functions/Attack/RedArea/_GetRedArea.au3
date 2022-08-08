@@ -249,9 +249,53 @@ Func _GetRedArea($iMode = $REDLINE_IMGLOC, $iMaxAllowedPixelDistance = 25, $fMin
 	EndIf
 
 	debugRedArea($nameFunc & "  Size of arr pixel for TopLeft [" & UBound($g_aiPixelTopLeft) & "] /  BottomLeft [" & UBound($g_aiPixelBottomLeft) & "] /  TopRight [" & UBound($g_aiPixelTopRight) & "] /  BottomRight [" & UBound($g_aiPixelBottomRight) & "] ")
-
+	; Custom - Team AIO Mod++
+	If $g_bDebugRedArea Or $g_sBundleRedLineNV Or $g_bDebugImageSave Then 
+		DebugDropPoints()
+	EndIf
+	
 	debugRedArea($nameFunc & " OUT ")
 EndFunc   ;==>_GetRedArea
+
+; Custom - Team AIO Mod++
+Func DebugDropPoints($sFrom = "")
+	If IsPtr($g_hHBitmap2) Then
+		Local $sDir = ($sFrom <> "") ? ($sFrom) : ("DropPoints")
+		Local $sSubDir = $g_sProfileTempDebugPath & $sDir
+	
+		DirCreate($sSubDir)
+	
+		Local $sDate = @YEAR & "-" & @MON & "-" & @MDAY, $sTime = @HOUR & "." & @MIN & "." & @SEC
+		Local $sDebugImageName = String($sDate & "_" & $sTime & "_.png")
+		Local $hEditedImage = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
+		Local $hGraphic = _GDIPlus_ImageGetGraphicsContext($hEditedImage)
+		Local $hPenYellow = _GDIPlus_PenCreate(0xFFFFFF00, 1)
+		
+		Local $aXY[2]
+		For $i = 0 To UBound($g_aiPixelTopLeft) - 1
+			$aXY = $g_aiPixelTopLeft[$i]
+			_GDIPlus_GraphicsDrawRect($hGraphic, $aXY[0], $aXY[1], 1, 1, $hPenYellow)
+
+		Next
+		For $i = 0 To UBound($g_aiPixelBottomLeft) - 1
+			$aXY = $g_aiPixelBottomLeft[$i]
+			_GDIPlus_GraphicsDrawRect($hGraphic, $aXY[0], $aXY[1], 1, 1, $hPenYellow)
+		Next
+		For $i = 0 To UBound($g_aiPixelTopRight) - 1
+			$aXY = $g_aiPixelTopRight[$i]
+			_GDIPlus_GraphicsDrawRect($hGraphic, $aXY[0], $aXY[1], 1, 1, $hPenYellow)
+		Next
+		For $i = 0 To UBound($g_aiPixelBottomRight) - 1
+			$aXY = $g_aiPixelBottomRight[$i]
+			_GDIPlus_GraphicsDrawRect($hGraphic, $aXY[0], $aXY[1], 1, 1, $hPenYellow)
+		Next
+	
+		_GDIPlus_ImageSaveToFile($hEditedImage, $sSubDir & "\" & $sDebugImageName )
+		_GDIPlus_PenDispose($hPenYellow)
+		_GDIPlus_GraphicsDispose($hGraphic)
+		_GDIPlus_BitmapDispose($hEditedImage)
+	EndIf
+EndFunc
 
 Func SortRedline($redline, $StartPixel, $EndPixel, $sDelim = ",")
 	Local $aPoints = StringSplit($redline, "|", $STR_NOCOUNT)
