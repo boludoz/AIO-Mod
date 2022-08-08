@@ -29,7 +29,10 @@ Func ParseAttackCSV_Settings_variables(ByRef $aiCSVTroops, ByRef $aiCSVSpells, B
 		Local $iTroopIndex, $iFlexTroopIndex = 999
 		Local $iCommandCol = 1, $iTroopNameCol = 2, $iFlexCol = 3, $iTHBeginCol = 4
 		Local $iHeroRadioItemTotal = 3, $iHeroTimedLimit = 99
-
+		
+		If $g_iTotalCampSpace = 0 Then $g_iTotalCampSpace = $g_iTotalCampForcedValue
+		If $g_iTotalSpellValue = 0 Then $g_iTotalSpellValue = $g_iTotalSpellValues
+		
 		For $iLine = 0 To UBound($asLine) - 1
 			$sLine = $asLine[$iLine]
 			$asCommand = StringSplit($sLine, "|")
@@ -48,7 +51,7 @@ Func ParseAttackCSV_Settings_variables(ByRef $aiCSVTroops, ByRef $aiCSVSpells, B
 					EndIf
 					If $g_iTotalSpellValue = 0 Then
 						SetLog("Has to set spell capacity first", $COLOR_ERROR)
-						Return
+						; Return
 					EndIf
 					Switch $g_iTotalCampSpace
 						#Region - Custom fix - Team AIO Mod++
@@ -84,7 +87,7 @@ Func ParseAttackCSV_Settings_variables(ByRef $aiCSVTroops, ByRef $aiCSVSpells, B
 									SetLog("Invalid spell size ( <" & $g_iMaxCapSpellTH[6] + 1 & " or >" & $g_iMaxCapSpellTH[8] & " ): " & $g_iTotalSpellValue & " for CSV", $COLOR_ERROR)
 									Return
 							EndSwitch
-						Case $g_iMaxCapTroopTH[5] + 5 To $g_iMaxCapTroopTH[6]	; TH6
+						Case 5 To $g_iMaxCapTroopTH[6]	; TH6
 							$iTHCol = $iTHBeginCol
 							$iTH = 6
 						Case Else

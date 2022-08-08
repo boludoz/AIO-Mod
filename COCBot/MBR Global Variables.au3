@@ -1079,7 +1079,7 @@ Global $g_aiTrainArmySpellLevel[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 Global $g_aiTrainArmySiegeMachineLevel[$eSiegeMachineCount] = [0, 0, 0, 0, 0, 0]
 
 Global $g_iTrainArmyFullTroopPct = 100
-Global $g_bTotalCampForced = False, $g_iTotalCampForcedValue = 200
+Global $g_bTotalCampForced = False, $g_iTotalCampForcedValue = 220
 Global $g_iTotalSpellValue = 0
 Global $g_bDoubleTrain, $g_bPreciseArmy
 Global $g_bAllBarracksUpgd = False

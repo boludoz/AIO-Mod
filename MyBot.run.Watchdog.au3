@@ -56,7 +56,7 @@ Global $hStarted = 0 ; Timer handle watchdog started
 Global $bCloseWhenAllBotsUnregistered = True ; Automatically close watchdog when all bots closed
 Global $iTimeoutBroadcast = 15000 ; Milliseconds of sending broadcast messages to bots
 Global $iTimeoutCheckBot = 5000 ; Milliseconds bots are checked if restart required
-Global $iTimeoutRestartBot = 180000 ; Milliseconds un-responsive bot is launched again
+Global $iTimeoutRestartBot = 180000 * 2 ; Milliseconds un-responsive bot is launched again
 Global $iTimeoutAutoClose = 60000 ; Milliseconds watchdog automatically closed when no bot available, -1 = disabled
 Global $hTimeoutAutoClose = 0 ; Timer Handle for $iTimeoutAutoClose
 Global $g_bBotLaunchOption_NoBotSlot = True
