@@ -13,8 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func isInsideDiamondRedArea($aCoords)
-	Return True ; Inside Village
-	#cs
+
 	Local $Left = $ExternalArea[0][0], $Right = $ExternalArea[1][0], $Top = $ExternalArea[2][1], $Bottom = $ExternalArea[3][1] ; set the diamond shape 860x780
 	Local $aDiamond[2][2] = [[$Left, $Top], [$Right, $Bottom]]
 	Local $aMiddle = [($aDiamond[0][0] + $aDiamond[1][0]) / 2, ($aDiamond[0][1] + $aDiamond[1][1]) / 2]
@@ -33,5 +32,4 @@ Func isInsideDiamondRedArea($aCoords)
 		;debugAttackCSV("isInsideDiamondRedArea outside: " & $aCoords[0] & "," & $aCoords[1])
 		Return False ; Outside Village
 	EndIf
-	#ce
 EndFunc   ;==>isInsideDiamondRedArea
