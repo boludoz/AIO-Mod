@@ -13,7 +13,6 @@
 ; Example .......: No
 ; ===============================================================================================================================
 #include-once
-Global $g_sAndroidEmulatorReplace = "", $g_sAndroidInstanceReplace = ""
 
 Func LoadCOCDistributorsComboBox()
 	Local $sDistributors = $g_sNO_COC

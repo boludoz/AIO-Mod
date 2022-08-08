@@ -29,10 +29,15 @@ Func ParseAttackCSV_Settings_variables(ByRef $aiCSVTroops, ByRef $aiCSVSpells, B
 		Local $iTroopIndex, $iFlexTroopIndex = 999
 		Local $iCommandCol = 1, $iTroopNameCol = 2, $iFlexCol = 3, $iTHBeginCol = 4
 		Local $iHeroRadioItemTotal = 3, $iHeroTimedLimit = 99
-		
-		If $g_iTotalCampSpace = 0 Then $g_iTotalCampSpace = $g_iTotalCampForcedValue
-		If $g_iTotalSpellValue = 0 Then $g_iTotalSpellValue = $g_iTotalSpellValues
-		
+
+		If $g_iTotalCampSpace = 0 Then
+			$g_iTotalCampSpace = $g_iTotalCampForcedValue
+		EndIf
+
+		If $g_iTotalSpellValue = 0 Then
+			$g_iTotalSpellValue = $g_iTotalSpellValue
+		EndIf
+
 		For $iLine = 0 To UBound($asLine) - 1
 			$sLine = $asLine[$iLine]
 			$asCommand = StringSplit($sLine, "|")
@@ -232,20 +237,20 @@ Func ParseTroopsCSV(ByRef $aiCSVTroops, ByRef $aiCSVSpells, ByRef $aiCSVSieges, 
 		For $i = 0 To UBound($aiCSVTroops) - 1
 			$iCSVTotalCapTroops += $aiCSVTroops[$i] * $g_aiTroopSpace[$i]
 		Next
-		
+
 		If $iCSVTotalCapTroops > 0 Then
 			$iCSVTotalCapSpells = 0
 			For $i = 0 To UBound($aiCSVSpells) - 1
 				$iCSVTotalCapSpells += $aiCSVSpells[$i] * $g_aiSpellSpace[$i]
 			Next
 		EndIf
-		
+
 		$i += 1
 	Until $iCSVTotalCapTroops > 0
-	
+
 	; True AI
 	Local $iTotalVector = 0, $iTotalIndexes = 0, $aTmp = Null, $aTmp2 = Null, $aComma = Null, $aMiddle = Null
-	
+
 	If $iCSVTotalCapTroops = 0 Then
 		For $iLine = 0 To UBound($asLine) - 1
 			$sLine = $asLine[$iLine]
@@ -253,11 +258,11 @@ Func ParseTroopsCSV(ByRef $aiCSVTroops, ByRef $aiCSVSpells, ByRef $aiCSVSieges, 
 			If $asCommand[0] >= 8 Then
 				$asCommand[$iCommandCol] = StringStripWS(StringUpper($asCommand[$iCommandCol]), $STR_STRIPTRAILING)
 				If Not StringRegExp($asCommand[$iCommandCol], "(DROP)", $STR_REGEXPMATCH) Then ContinueLoop
-				
+
 				For $i = 2 To (UBound($asCommand) - 1)
 					$asCommand[$i] = StringStripWS($asCommand[$i], $STR_STRIPTRAILING)
 				Next
-				
+
 				Switch $asCommand[$iCommandCol]
 					Case "DROP"
 						$iTroopIndex = TroopIndexLookup($asCommand[5], "ParseTroopsCSV")
@@ -265,7 +270,7 @@ Func ParseTroopsCSV(ByRef $aiCSVTroops, ByRef $aiCSVSpells, ByRef $aiCSVSieges, 
 							SetLog("CSV troop name '" & $asCommand[5] & "' is unrecognized - Line: " & $iLine + 1, $COLOR_ERROR)
 							ContinueLoop ; discard TRAIN commands due to the invalid troop name
 						EndIf
-						
+
 						If StringInStr($asCommand[4], "%") Then
 							$iTotalVector = Null
 							$iTotalIndexes = Null
@@ -279,7 +284,7 @@ Func ParseTroopsCSV(ByRef $aiCSVTroops, ByRef $aiCSVSpells, ByRef $aiCSVSieges, 
 							Else
 								$iTotalVector = 1
 							EndIf
-							
+
 							$aComma = StringInStr($asCommand[3], ",") > 0
 							$aMiddle = StringInStr($asCommand[3], "-") > 0
 
@@ -305,14 +310,14 @@ Func ParseTroopsCSV(ByRef $aiCSVTroops, ByRef $aiCSVSpells, ByRef $aiCSVSieges, 
 
 							$asCommand[4] = Int($iTotalVector * $iTotalIndexes)
 						EndIf
-						
+
 						If StringInStr($asCommand[4], "-") Then $asCommand[4] = StringSplit($asCommand[4], "-", $STR_NOCOUNT)[0]
-						
+
 						If int($asCommand[4]) <= 0 Then
 							If $asCommand[4] <> "0" Then SetLog("CSV troop amount/setting '" & $asCommand[4] & "' is unrecognized - Line: " & $iLine + 1, $COLOR_ERROR)
 							ContinueLoop ; discard TRAIN commands due to the invalid troop amount/setting ex. int(chars)=0, negative #. "0" won't get alerted
 						EndIf
-						
+
 						Switch $iTroopIndex
 							Case $eBarb To $eTroopCount - 1
 								$aiCSVTroops[$iTroopIndex] = Int($asCommand[4])
@@ -330,7 +335,7 @@ Func ParseTroopsCSV(ByRef $aiCSVTroops, ByRef $aiCSVSpells, ByRef $aiCSVSieges, 
 		For $i = 0 To UBound($aiCSVTroops) - 1
 			$iCSVTotalCapTroops += $aiCSVTroops[$i] * $g_aiTroopSpace[$i]
 		Next
-		
+
 		If $iCSVTotalCapTroops > 0 Then
 			$iCSVTotalCapSpells = 0
 			For $i = 0 To UBound($aiCSVSpells) - 1
@@ -338,12 +343,12 @@ Func ParseTroopsCSV(ByRef $aiCSVTroops, ByRef $aiCSVSpells, ByRef $aiCSVSieges, 
 			Next
 		EndIf
 	EndIf
-	
+
 	If $g_bDebugAttackCSV Then SetLog("CSV troop total: " & $iCSVTotalCapTroops, $COLOR_DEBUG)
 	If $iCSVTotalCapTroops > 0 Then
 		; SetLog("CSV troops total: " & $iCSVTotalCapTroops)
 		FixInDoubleTrain($aiCSVTroops, $g_iTotalCampSpace, $g_aiTroopSpace, TroopIndexLookup($g_sCmbFICTroops[$g_iCmbFillIncorrectTroopCombo][0], "ParseTroopsCSV Troops"))
-		
+
 		If $iCSVTotalCapSpells > 0 Then FixInDoubleTrain($aiCSVSpells, $g_iTotalSpellValue, $g_aiSpellSpace, TroopIndexLookup($g_sCmbFICSpells[$g_iCmbFillIncorrectSpellCombo][0], "ParseTroopsCSV Spells") - $eLSpell)
 	Else
 		Return 0

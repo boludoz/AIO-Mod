@@ -810,6 +810,7 @@ Global $g_bNewUpdateMainVillage = False, $g_hChkAutoBuildNew = 0
 
 ; Android version
 Global $g_hLblAndroidInfo = 0, $g_hLblAndroidInfoAndroid = 0
+Global $g_sAndroidEmulatorReplace = "", $g_sAndroidInstanceReplace = ""
 
 #Region - Random CSV - Team AIO Mod++
 Global $g_ahChkRandomCSVDB[4], $g_ahCmbRandomCSVDB[4], _ 

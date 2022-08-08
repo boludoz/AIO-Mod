@@ -741,19 +741,19 @@ EndFunc   ;==>runBot
 
 Func _runBot(ByRef $s_bHardReset, ByRef $s_bRunOn) ;Bot that runs everything in order
 	Local $iWaitTime, $bFirstCheck = True ; Custom - Team AIO Mod++
-	
+
 	SetDebugLog("[runBot] runBot 1")
 
 	If $s_bRunOn = True Then
 		$s_bHardReset = True
 		$g_bRestart = True
-		Return 
+		Return
 	EndIf
 	SetDebugLog("[runBot] runBot 2")
 
 	$s_bRunOn = True
 	$s_bHardReset = False
-	
+
 	While 1
 		; Custom - Team AIO Mod++
 		$bFirstCheck = True
@@ -765,13 +765,13 @@ Func _runBot(ByRef $s_bHardReset, ByRef $s_bRunOn) ;Bot that runs everything in 
 			SetLog("Rematching Account [" & $g_iNextAccount + 1 & "] with Profile [" & GUICtrlRead($g_ahCmbProfile[$g_iNextAccount]) & "]")
 			SwitchCoCAcc($g_iNextAccount)
 		EndIf
-		
+
 		While 1
 			SetDebugLog("[runBot] runBot while 2")
 			; Custom - Team AIO Mod++
 			If $s_bHardReset Then ContinueLoop 2
 			$g_bRestart = False
-			
+
 			; Custom - Team AIO Mod++
 			If FileExists(@ScriptDir & "\EnableMBRDebug.txt") Then
 				While (FileReadLine(@ScriptDir & "\EnableMBRDebug.txt") = "wait")
@@ -1314,7 +1314,7 @@ Func Attack() ;Selects which algorithm
 	; Custom Fix - Team AIO Mod++
 	$g_bAttackActive = True
 	$g_bAttackClickFC = True
-	
+
 	SetLog(" ====== Start Attack ====== ", $COLOR_SUCCESS)
 	If ($g_iMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 1) Or ($g_iMatchMode = $LB And $g_aiAttackAlgorithm[$LB] = 1) Then
 		SetDebugLog("Start scripted attack", $COLOR_INFO)
