@@ -65,7 +65,7 @@ Func _AutoUpgrade($bDebug = False)
 	SetLog("Entering Auto Upgrade...", $COLOR_INFO)
 	
 	Local $iLoopAmount = 0
-	Local $iloopmax = 50
+	Local $iloopmax = 10
 	
 	SetDebugLog("Scroll Attempts? " & $iloopmax)
 	
