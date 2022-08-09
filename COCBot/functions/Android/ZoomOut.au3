@@ -89,7 +89,7 @@ Func MainSendZoomout($i = 0, $bVersusMode = False, $sEmulator = $g_sAndroidEmula
 	EndIf
 	If $i > 2 Then  Return AndroidZoomOut(0, Default)
 	Local $bResult = False
-	If ($g_iAndroidZoomoutMode = 0 Or $g_iAndroidZoomoutMode = 3) And ($g_bAndroidEmbedded = False Or $g_iAndroidEmbedMode = 1) And $bVersusMode = False Then
+	If $g_iAndroidZoomoutMode = 3 And ($g_bAndroidEmbedded = False Or $g_iAndroidEmbedMode = 1) And $bVersusMode = False Then
 		Switch $sEmulator
 			Case "BlueStacks", "BlueStacks2", "BlueStacks5"
 				If $__BlueStacks2Version_2_5_or_later = False And Not $sEmulator = "BlueStacks5" Then
