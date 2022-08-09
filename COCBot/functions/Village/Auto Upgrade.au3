@@ -12,38 +12,6 @@
 ; Link ..........: https://www.mybot.run
 ; Example .......: ---
 ;================================================================================================================================
-; Based in xbebenk and snorlax (the best devs)
-Func ClickDragAUpgrade($YY = Default, $DragCount = 3)
-	Local $x = 345, $yUp = 10, $yDown = 800, $iDelay = 1000
-	Local $Yscroll =  123
-	If $YY = Default Then $YY = $Yscroll
-	For $checkCount = 0 To 2
-		If Not $g_bRunState Then Return
-		If _ColorCheck(_GetPixelColor(350, 73, True), "FDFEFD", 20) Then ; check upgrade window border
-				
-			If $YY < 100 Then $YY = 150
-			If $DragCount > 1 Then
-				For $i = 1 To $DragCount
-					ClickDrag($x, $YY, $x, $yUp, $iDelay) ;drag up
-				Next
-			Else
-				ClickDrag($x, $YY, $x, $yUp, $iDelay) ;drag up
-			EndIf
-			
-			If _Sleep($DELAYAUTOUPGRADEBUILDING1) Then Return
-		EndIf
-
-		If _ColorCheck(_GetPixelColor(350, 73, True), "FDFEFD", 20) Then ;check upgrade window border
-			SetLog("Upgrade Window Exist", $COLOR_INFO)
-			Return True
-		Else
-			SetLog("Upgrade Window Gone!", $COLOR_DEBUG)
-			Click(295, 30)
-			If _Sleep(1000) Then Return
-		EndIf
-	Next
-	Return False
-EndFunc ;==>IsUpgradeWindow
 
 Func AutoUpgrade($bDebug = False)
 	Local $bwasrunstate = $g_brunstate
@@ -146,13 +114,25 @@ Func _AutoUpgrade($bDebug = False)
 			EndIf
 		EndIf
 		
-		If QuickMIS("NX", $g_simgaupgradeobst, 180, 80 + $g_icurrentlineoffset - 15 + $g_iMidOffsetYFixed, 480, 80 + $g_icurrentlineoffset + 15 + $g_iMidOffsetYFixed) <> "none" Then
-			SetLog("This is a New Building or an Equipment, looking next...", $color_warning)
+		If WaitforPixel(180, $g_iQuickMISY - 1, 480, $g_iQuickMISY + 1, Hex(0x0DFE0D, 6), 25, 0.5) Then
+			If $g_bNewUpdateMainVillage = True Then
+				PureClick($g_iQuickMISX, $g_iQuickMISY)
+				If _Sleep($DELAYAUTOUPGRADEBUILDING2) Then Return
+				NewBuildings()
+			Else
+				SetLog("This is a New Building, looking next...", $COLOR_WARNING)
+			EndIf
 			$g_inextlineoffset = $g_icurrentlineoffset
 			ContinueLoop
 		EndIf
 		
-		Click($g_iQuickMISX, $g_iQuickMISY)
+		If QuickMIS("NX", $g_simgaupgradeobst, 180, 80 + $g_icurrentlineoffset - 15 + $g_iMidOffsetYFixed, 480, 80 + $g_icurrentlineoffset + 15 + $g_iMidOffsetYFixed) <> "none" Then
+			SetLog("This is an Equipment, looking next...", $COLOR_WARNING)		
+			$g_inextlineoffset = $g_icurrentlineoffset
+			ContinueLoop
+		EndIf
+		
+		PureClick($g_iQuickMISX, $g_iQuickMISY)
 		
 		If _Sleep($DELAYAUTOUPGRADEBUILDING2) Then Return
 		
@@ -304,7 +284,7 @@ Func _AutoUpgrade($bDebug = False)
 			EndIf
 		EndIf
 		
-		For $i = 0 To 2
+		For $i = 0 To 1;2
 			If $g_aupgraderesourcecostduration[$i] = "" Then
 				SetLog("Error when trying to get upgrade details, looking next...", $COLOR_ERROR)
 				$g_inextlineoffset = $g_icurrentlineoffset
@@ -516,30 +496,48 @@ Func IsHonestOCR($sTring, $sItem, $iMaxDis = 1, $iEvery = 4)
 	Return False
 EndFunc   ;==>IsHonestOCR
 
+Func QuickMisInDiamond(ByRef $aQuickMis)
+	If Not IsArray($aQuickMis) Then Return
+	
+	For $i = 0 To UBound($aQuickMis) - 1
+		If isInsideDiamondXY($aQuickMis[$i][1], $aQuickMis[$i][2]) = False Then
+			_ArrayDelete($aQuickMis, $i)
+		EndIf
+	Next
+EndFunc   ;==>QuickMisInDiamond
+
 Func NewBuildings()
+	
+	Local $bScreencap = True, $bDebug = False, $aReturns[0]
 
-	Local $Screencap = True, $Debug = False
-
-	If _WaitForCheckImg(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\Upgrade\New\", "14, 131, 847, 579", Default, 4500) Then ; Resolution changed
+	If _WaitForCheckImg(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\Upgrade\New\", "14,131,847,579", Default, 4500) Then ; Resolution changed
 		Click($g_aImageSearchXML[0][1] - 100, $g_aImageSearchXML[0][2] + 100, 1)
 		If _Sleep(2000) Then Return
-
+		
+		If IsMainPage() Then ZoomOut()
+		
 		; Lets search for the Correct Symbol on field
-		If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgYes, 150, 150 + $g_iMidOffsetYFixed, 650, 550 + $g_iBottomOffsetYFixed, $Screencap, $Debug) Then ; Resolution changed
-			Click($g_iQuickMISX, $g_iQuickMISY, 1)
+		$aReturns = QuickMIS("CNX", $g_sImgAutoUpgradeNewBldgYes, 0, 0, $g_iGAME_WIDTH, $g_iGAME_HEIGHT, $bScreencap, $bDebug)
+		QuickMisInDiamond($aReturns)
+		If UBound($aReturns) > 0 And not @error Then ; Resolution changed
+			Click($aReturns[0][1], $aReturns[0][2], 1)
 			SetLog("Placed a new Building on main village! [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
 			If _Sleep(1000) Then Return
 
 			; Lets check if exist the [x] , Some Buildings like Traps when you place one will give other to place automaticly!
-			If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgNo, 150, 150 + $g_iMidOffsetYFixed, 650, 550 + $g_iBottomOffsetYFixed, $Screencap, $Debug) Then ; Resolution changed
-				Click($g_iQuickMISX, $g_iQuickMISY, 1)
+			$aReturns = QuickMIS("CNX", $g_sImgAutoUpgradeNewBldgNo, 0, 0, $g_iGAME_WIDTH, $g_iGAME_HEIGHT, $bScreencap, $bDebug)
+			QuickMisInDiamond($aReturns)
+			If UBound($aReturns) > 0 And not @error Then ; Resolution changed
+				Click($aReturns[0][1], $aReturns[0][2], 1)
 			EndIf
 
 			Return True
 		Else
-			If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgNo, 150, 150 + $g_iMidOffsetYFixed, 650, 550 + $g_iBottomOffsetYFixed, $Screencap, $Debug) Then ; Resolution changed
+			$aReturns = QuickMIS("CNX", $g_sImgAutoUpgradeNewBldgNo, 0, 0, $g_iGAME_WIDTH, $g_iGAME_HEIGHT, $bScreencap, $bDebug)
+			QuickMisInDiamond($aReturns)
+			If UBound($aReturns) > 0 And not @error Then ; Resolution changed
 				SetLog("Sorry! Wrong place to deploy a new building! [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_ERROR)
-				Click($g_iQuickMISX, $g_iQuickMISY, 1)
+				Click($aReturns[0][1], $aReturns[0][2], 1)
 			Else
 				SetLog("Error on Undo symbol!", $COLOR_ERROR)
 			EndIf
@@ -553,3 +551,36 @@ Func NewBuildings()
 	Return False
 
 EndFunc   ;==>NewBuildings
+
+; Based in xbebenk and snorlax (the best devs)
+Func ClickDragAUpgrade($YY = Default, $DragCount = 3)
+	Local $x = 345, $yUp = 10, $yDown = 800, $iDelay = 1000
+	Local $Yscroll =  123
+	If $YY = Default Then $YY = $Yscroll
+	For $checkCount = 0 To 2
+		If Not $g_bRunState Then Return
+		If _ColorCheck(_GetPixelColor(350, 73, True), "FDFEFD", 20) Then ; check upgrade window border
+				
+			If $YY < 100 Then $YY = 150
+			If $DragCount > 1 Then
+				For $i = 1 To $DragCount
+					ClickDrag($x, $YY, $x, $yUp, $iDelay) ;drag up
+				Next
+			Else
+				ClickDrag($x, $YY, $x, $yUp, $iDelay) ;drag up
+			EndIf
+			
+			If _Sleep($DELAYAUTOUPGRADEBUILDING1) Then Return
+		EndIf
+
+		If _ColorCheck(_GetPixelColor(350, 73, True), "FDFEFD", 20) Then ;check upgrade window border
+			SetLog("Upgrade Window Exist", $COLOR_INFO)
+			Return True
+		Else
+			SetLog("Upgrade Window Gone!", $COLOR_DEBUG)
+			Click(295, 30)
+			If _Sleep(1000) Then Return
+		EndIf
+	Next
+	Return False
+EndFunc ;==>IsUpgradeWindow

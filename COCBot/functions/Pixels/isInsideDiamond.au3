@@ -42,7 +42,6 @@ Func isInsideDiamond($aCoords, $bPercentBased = True, $bDebug = False)
 		$iTop = ($iTop - $iFixY)
 		$iBottom = ($iBottom + $iFixY)
 		
-		
 		Local $aDiamond[2][2] = [[$iLeft, $iTop], [$iRight, $iBottom]]
 		Local $aMiddle = [($aDiamond[0][0] + $aDiamond[1][0]) / 2, ($aDiamond[0][1] + $aDiamond[1][1]) / 2]
 		Local $aSize = [$aMiddle[0] - $aDiamond[0][0], $aMiddle[1] - $aDiamond[0][1]]

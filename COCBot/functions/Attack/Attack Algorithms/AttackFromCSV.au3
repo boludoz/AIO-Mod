@@ -91,28 +91,7 @@ Func ConvertInternalExternArea($FunctionName = "", $bDebugImage = Default)
 		$ExternalArea[$i][2] = $ExternalAreaRef[$i][2]
 		;debugAttackCSV("External Area Point " & $ExternalArea[$i][2] & ": " & $x & ", " & $y)
 	Next
-	; Full ECD Diamond $CocDiamondECD
-	; Top
-	$x = $ExternalAreaRef[2][0]
-	$y = $ExternalAreaRef[2][1] + $InnerDiamandDiffY
-	ConvertToVillagePos($x, $y)
-	$CocDiamondECD = $x & "," & $y
-	; Right
-	$x = $ExternalAreaRef[1][0] - $InnerDiamandDiffX
-	$y = $ExternalAreaRef[1][1]
-	ConvertToVillagePos($x, $y)
-	$CocDiamondECD &= "|" & $x & "," & $y
-	; Bottom
-	$x = $ExternalAreaRef[3][0]
-	$y = $ExternalAreaRef[3][1] - $InnerDiamandDiffX
-	ConvertToVillagePos($x, $y)
-	$CocDiamondECD &= "|" & $x & "," & $y
-	; Left
-	$x = $ExternalAreaRef[0][0] + $InnerDiamandDiffX
-	$y = $ExternalAreaRef[0][1]
-	ConvertToVillagePos($x, $y)
-	$CocDiamondECD &= "|" & $x & "," & $y
-
+	
 	; Update Internal coord.
 	For $i = 0 To 7
 		$x = $InternalAreaRef[$i][0]
@@ -127,6 +106,28 @@ Func ConvertInternalExternArea($FunctionName = "", $bDebugImage = Default)
 			$InternalArea[1][0] & "," & $InternalArea[1][1] & "|" & _
 			$InternalArea[3][0] & "," & $InternalArea[3][1] & "|" & _
 			$InternalArea[0][0] & "," & $InternalArea[0][1]
+
+	; Full ECD Diamond $CocDiamondECD
+	Local $iLeft = $InternalArea[0][0], $iRight = $InternalArea[1][0], $iTop = $InternalArea[2][1], $iBottom = $InternalArea[3][1]
+	Local $iFixX = (($iRight - $iLeft) * 1.086637298091043) - ($iRight - $iLeft)
+	Local $iFixY = (($iBottom - $iTop) * 1.086637298091043) - ($iBottom - $iTop)
+		
+	; Top
+	$x = $InternalArea[2][0]
+	$y = Round($InternalArea[2][1] - $iFixY)
+	$CocDiamondECD = $x & "," & $y
+	; Right
+	$x = Round($InternalArea[1][0] + $iFixX)
+	$y = $InternalArea[1][1]
+	$CocDiamondECD &= "|" & $x & "," & $y
+	; Bottom
+	$x = $InternalArea[3][0]
+	$y = Round($InternalArea[3][1] + $iFixY)
+	$CocDiamondECD &= "|" & $x & "," & $y
+	; Left
+	$x = Round($InternalArea[0][0] - $iFixX)
+	$y = $InternalArea[0][1]
+	$CocDiamondECD &= "|" & $x & "," & $y
 
 	; Custom fix - Team AIO Mod++
 	$DiamondMiddleX = $InternalArea[0][0] + (($InternalArea[1][0] - $InternalArea[0][0]) / 2)
