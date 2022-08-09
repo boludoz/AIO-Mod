@@ -394,10 +394,16 @@ Func ButtonClickArray($vVar, $iLeft, $iTop, $iRight, $iBottom, $iColorVariation 
 		Return True
     EndIf
 	Return False
-EndFunc
+EndFunc   ;==>ButtonClickArray
 
-Func _MasivePixelCompare($hHMapsOne, $hHMapsTwo, $iXS, $iYS, $iXE, $iYE, $iTol = 15, $iResol = 5, $bWhiteMask = False, $iBlurMask = 0)
-	Local $aAllResults[0][2]
+Func TestMasivePixelCompare($iTol = 10, $iResol = 5, $bWhiteMask = False, $iBlurMask = 0, $iTolerance = 92)
+	_CaptureRegion()
+	_Sleep(2000)
+	_CaptureRegion2()
+	_MasivePixelCompare($g_hHBitmap2, $g_hHBitmap, 206, 80, 347, 361, $iTol, $iResol, $bWhiteMask, $iBlurMask, $iTolerance, True)
+EndFunc   ;==>TestMasivePixelCompare
+
+Func _MasivePixelCompare($hHMapsOne, $hHMapsTwo, $iXS, $iYS, $iXE, $iYE, $iTol = 10, $iResol = 5, $bWhiteMask = False, $iBlurMask = 0, $iTolerance = 92, $bDebugLog = $g_bDebugSetlog)
 	Local $hMapsOne = _GDIPlus_BitmapCreateFromHBITMAP($hHMapsOne)
 	Local $hMapsTwo = _GDIPlus_BitmapCreateFromHBITMAP($hHMapsTwo)
 	
@@ -408,34 +414,34 @@ Func _MasivePixelCompare($hHMapsOne, $hHMapsTwo, $iXS, $iYS, $iXE, $iYE, $iTol =
 		_GDIPlus_EffectDispose($hEffect)
 	EndIf
 	
-	Local $iBits1, $iBits2, $iWhite = rgb2lab(Hex(0xFFFFFF, 6))
-	Local $iC = -1, $bWhite = 0, $iMap1, $iMap2
+	Local $iWhite = rgb2lab(Hex(0xFFFFFF, 6))
+	Local $bWhite = 0, $aMap1, $aMap2
+	Local $iC = 1, $iCountValid = 1
 	For $iX = $iXS To $iXE Step $iResol
 		For $iY = $iYS To $iYE Step $iResol
-			$iBits1 = _GDIPlus_BitmapGetPixel($hMapsOne, $iX, $iY)
-			$iBits2 = _GDIPlus_BitmapGetPixel($hMapsTwo, $iX, $iY)
-			$iMap1 = rgb2lab(Hex($iBits1, 6))
-			$iMap2 = rgb2lab(Hex($iBits2, 6))
-			
+			$aMap1 = rgb2lab(Hex(_GDIPlus_BitmapGetPixel($hMapsOne, $iX, $iY), 6))
+			$aMap2 = rgb2lab(Hex(_GDIPlus_BitmapGetPixel($hMapsTwo, $iX, $iY), 6))
+
 			If $bWhiteMask = True Then
-				If Ciede1976($iWhite, $iMap2) > $iTol Then ContinueLoop
-				If Ciede1976($iMap1, $iWhite) > $iTol Then ContinueLoop
+				If Ciede1976($iWhite, $aMap1) <= $iTol Then ContinueLoop
+				If Ciede1976($iWhite, $aMap2) <= $iTol Then ContinueLoop
 			EndIf
 			
-            If Ciede1976($iMap1, $iMap2) > $iTol Then
+			$iCountValid += 1
+            If Ciede1976($aMap1, $aMap2) <= $iTol Then
 				$iC += 1
-				ReDim $aAllResults[$iC + 1][2]
-				$aAllResults[$iC][0] = $iX
-				$aAllResults[$iC][1] = $iY
 			EndIf
 		Next
 	Next
-
-	If UBound($aAllResults) > 0 and not @error Then
-		SetLog("Masive pixels detected : " & UBound($aAllResults))
-		Return $aAllResults
+	
+	Local $iPercent = ($iC / $iCountValid) * 100
+	
+	If $iPercent >= $iTolerance Then
+		If $bDebugLog = True Then SetLog("Masive pixels detected : " & String($iC) & " " & String($iPercent) & " " & String($iCountValid), $COLOR_SUCCESS)
+		Return True
 	Else
-		SetLog("Masive pixels detected : " & 0)
-		Return -1
+		If $bDebugLog = True Then SetLog("Masive pixels detected : " & String($iC) & " " & String($iPercent) & " " & String($iCountValid), $COLOR_ERROR)
 	EndIf
-EndFunc
+	
+	Return False
+EndFunc   ;==>_MasivePixelCompare

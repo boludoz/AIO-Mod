@@ -168,7 +168,7 @@ Func BuilderPotionBoost($bDebug = False)
 		If _DateIsValid($sBuilderTimeLastCheck) And not $bDebug Then
 			$iTimeFromLastCheck = Int(_DateDiff('s', $sBuilderTimeLastCheck, _NowCalc())) ; elapse time in minutes
 	
-			SetDebugLog("Magic Items | It has been " & $iTimeFromLastCheck & " s since last check (" & $sBuilderTimeLastCheck & ")")
+			SetDebugLog("[Magic Items] It has been " & $iTimeFromLastCheck & " s since last check (" & $sBuilderTimeLastCheck & ")")
 	
 			If $iTimeFromLastCheck <= 21600 Then
 				SetDebugLog("$iTimeFromLastCheck: " & $iTimeFromLastCheck)
@@ -190,7 +190,7 @@ Func BuilderPotionBoost($bDebug = False)
 				SetDebugLog("$sResult QuickMIS OCR: " & $sBuilderTime & " (" & Round($iBuilderTime,2) & " minutes)")
 				If $iBuilderTime > 0 Then
 					$asBuilderTimeLastCheck[Number($g_iCurAccount)] = _NowCalc()
-					SetLog("Magic Items | Builder will be free in : " & $sBuilderTime, $COLOR_SUCCESS)
+					SetLog("[Magic Items] Builder will be free in : " & $sBuilderTime, $COLOR_SUCCESS)
 				EndIf
 				ExitLoop
 			Else
@@ -200,7 +200,7 @@ Func BuilderPotionBoost($bDebug = False)
 		Next
 					
 		If Number($iBuilderTime) < 600 And $bDebug = False Then
-			SetLog("Magic Items | Less than 10 hours left, it's not worth using the builder potion", $COLOR_INFO)
+			SetLog("[Magic Items] Less than 10 hours left, it's not worth using the builder potion", $COLOR_INFO)
 			ClickAway(Default, True)
 			Return False
 		EndIf
@@ -216,7 +216,7 @@ Func BuilderPotionBoost($bDebug = False)
 			If BoostPotionMod("BuilderPotion", $bDebug) Then
 				Return True
 			Else
-				Setlog("Magic Items | No builder potion.", $COLOR_ERROR)
+				Setlog("[Magic Items] No builder potion.", $COLOR_ERROR)
 			EndIf
 			
 		Else
@@ -224,7 +224,7 @@ Func BuilderPotionBoost($bDebug = False)
 		EndIf
 		ClickAway(Default, True, 2) ;Click Away
 	Else
-		Setlog("Magic Items | Condition not met.", $COLOR_WARNING)
+		Setlog("[Magic Items] Condition not met.", $COLOR_WARNING)
 	EndIf
 	Return False
 EndFunc   ;==>BuilderPotionBoost

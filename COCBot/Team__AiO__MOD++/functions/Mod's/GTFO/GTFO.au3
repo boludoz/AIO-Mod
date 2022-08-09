@@ -463,14 +463,14 @@ Func ScrollUp()
 	$aScroll = _PixelSearch(293, $y, 295, 8 + $y, Hex(0xFFFFFF, 6), 10)
 	If IsArray($aScroll) And _ColorCheck(_GetPixelColor(300, 95 + $g_iMidOffsetYFixed, True), Hex(0x5da515, 6), 15) Then
 		Click($aScroll[0], $aScroll[1], 1, 0, "#0172")
-		Local $aOk, $iLoop = 0
+		Local $bOk, $iLoop = 0
 		Do
 			$iLoop += 1
 			_CaptureRegion()
 			If _Sleep($DELAYDONATECC2) Then Return
 			_CaptureRegion2()
-			$aOk = _MasivePixelCompare($g_hHBitmap2, $g_hHBitmap, 13, 49, 20, 678 + $g_iBottomOffsetYFixed, 15, 5)
-		Until $aOk = -1 Or $iLoop > 15
+			$bOk = _MasivePixelCompare($g_hHBitmap2, $g_hHBitmap, 13, 49, 20, 678 + $g_iBottomOffsetYFixed, 15, 5)
+		Until $bOk = False Or $iLoop > 15
 		Return True
 	EndIf
 	Return False
@@ -482,14 +482,14 @@ Func ScrollDown()
 	$aScroll = _PixelSearch(24, 629 + $g_iBottomOffsetYFixed, 31, 679 + $g_iBottomOffsetYFixed, Hex(0x6EBD39, 6), 10)
 	If IsArray($aScroll) Then
 		Click($aScroll[0], $aScroll[1], 1, 0, "#0172")
-		Local $aOk, $iLoop = 0
+		Local $bOk, $iLoop = 0
 		Do
 			$iLoop += 1
 			_CaptureRegion()
 			If _Sleep($DELAYDONATECC2) Then Return
 			_CaptureRegion2()
-			$aOk = _MasivePixelCompare($g_hHBitmap2, $g_hHBitmap, 13, 49, 20, 678, 15, 5)
-		Until $aOk = -1 Or $iLoop > 15
+			$bOk = _MasivePixelCompare($g_hHBitmap2, $g_hHBitmap, 13, 49, 20, 678, 15, 5)
+		Until $bOk = False Or $iLoop > 15
 		Return True
 	Else
 		Return False

@@ -113,7 +113,7 @@ Func BotCommand()
 						ChatActions() ; ChatActions - Team AiO MOD++
 						MainSXHandler() ; SuperXP / GoblinXP - Team AiO MOD++
 					EndIf
-					If $iCmbBotCond <= 14 And $g_bCollectStarBonus And WaitforPixel(84, 630, 97, 635, 0xAF5725, 20, 2) Then
+					If $iCmbBotCond <= 14 And $g_bCollectStarBonus And WaitforPixel(84, 630, 97, 635, Hex(0xAF5725, 6), 20, 2) Then
 						SetLog("Star bonus available. Continue attacking to collect them.", $COLOR_ACTION)
 						Return False
 					EndIf

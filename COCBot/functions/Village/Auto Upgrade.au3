@@ -57,6 +57,8 @@ Func _AutoUpgrade($bDebug = False)
 	
 	If Not $g_bAutoUpgradeEnabled Then Return
 	
+	VillageReport(True, True)
+	
 	If Not $bDebug And $g_ifreebuildercount < 1 Then
 		SetLog("No builder available... Skipping Auto Upgrade...", $color_warning)
 		Return
@@ -65,7 +67,7 @@ Func _AutoUpgrade($bDebug = False)
 	SetLog("Entering Auto Upgrade...", $COLOR_INFO)
 	
 	Local $iLoopAmount = 0
-	Local $iloopmax = 10
+	Local $iloopmax = 50
 	
 	SetDebugLog("Scroll Attempts? " & $iloopmax)
 	
@@ -76,7 +78,6 @@ Func _AutoUpgrade($bDebug = False)
 	
 	If RandomSleep($DELAYAUTOUPGRADEBUILDING1) Then Return
 	
-	VillageReport(True, True)
 	Click(295, 30)
 	
 	If _Sleep($DELAYAUTOUPGRADEBUILDING1) Then Return
@@ -86,10 +87,16 @@ Func _AutoUpgrade($bDebug = False)
 	Local $bIsNewUpdate = False
 	While 1
 		$iLoopAmount += 1
+						
+		_CaptureRegion()
+		$s_hHBitmap = GetHHBitmapArea($g_hHBitmap)
+
 		If $iLoopAmount >= $iloopmax And $iloopmax <> 0 Then
 			SetLog("Scroll to top!")
-			For $i = 0 To 2
-				Clickdrag(345, 125, 345, 375, 1000)
+			For $i = 0 To 4
+				If WaitforPixel(220, 84, 335, 102, Hex(0xD3FE7F, 6), 20, 0.5) Then ExitLoop
+				Swipe(344, 124, 344, 374, 1000)
+				If _Sleep($DELAYBOOSTHEROES2) Then Return
 			Next
 			ExitLoop
 		EndIf
@@ -116,18 +123,16 @@ Func _AutoUpgrade($bDebug = False)
 			If $iloopamount <= $iloopmax And $iloopmax <> 0 Then
 				SetLog("Scroll Attempts: " & $iloopamount & " / " & $iloopmax, $color_info)
 				
-				_CaptureRegion()
-				If $s_hHBitmap <> 0 Then GdiDeleteHBitmap($s_hHBitmap) ; Prevent memory leaks.
-				$s_hHBitmap = GetHHBitmapArea($g_hHBitmap)
+				; _CaptureRegion()
+				; $s_hHBitmap = GetHHBitmapArea($g_hHBitmap)
 
 				ClickDragAUpgrade(Default, 3)
-				If _Sleep($DELAYAUTOUPGRADEBUILDING4 * 2) Then Return			
+				If _Sleep($DELAYAUTOUPGRADEBUILDING4 * 4) Then Return			
 
 				_CaptureRegion()
-				If $s_hHBitmap2 <> 0 Then GdiDeleteHBitmap($s_hHBitmap2) ; Prevent memory leaks.
 				$s_hHBitmap2 = GetHHBitmapArea($g_hHBitmap)
 				
-				If _MasivePixelCompare($s_hHBitmap, $s_hHBitmap2, 180, 80, 480, 410 + 160, 15, 5, False, 15.0) Then
+				If _MasivePixelCompare($s_hHBitmap, $s_hHBitmap2, 180, 80, 480, 570, 10, 5, True, 0, 95) Then
 					$iloopamount = $iLoopMax + 1
 					SetLog("My eye detected the end, chau.", $COLOR_INFO)
 				EndIf
