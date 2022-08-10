@@ -85,7 +85,7 @@ Func MainSendZoomout($i = 0, $bVersusMode = False, $sEmulator = $g_sAndroidEmula
 	If $g_bDebugSetlog Then
 		SetDebugLog("Zooming Out (MainSendZoomout)", $COLOR_INFO)
 	Else
-		SetLog("Zooming Out", $COLOR_INFO)
+		If $i = 0 Then SetLog("Zooming Out", $COLOR_INFO)
 	EndIf
 	If $i > 2 Then  Return AndroidZoomOut(0, Default)
 	Local $bResult = False

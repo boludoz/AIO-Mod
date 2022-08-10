@@ -13,6 +13,45 @@
 ; Example .......: No
 ; ===============================================================================================================================
 ; ALL RESOLUTION FIXED
+#cs
+Func MagicItemsInfo($bDebug = True)
+	Local $aColors = [[0x86CAEA, 0, 16], [0xE8E8E0, 0, 159 - 16]] ; coordinates of pixels relative to the 1st pixel
+	Local $aButtonPixel = _MultiPixelSearch(234, 140, 764, 540, 1, 1, Hex(0x5AB2EA, 6), $aColors, 20)
+	If $bDebug = True Then SetLog("[MagicItemsDrag] " & _ArrayToString($aButtonPixel, ", "))
+	Return $aButtonPixel
+EndFunc
+
+Func MagicItemsDrag($bDebug = True)	
+	Local $aButtonPixel = -1
+	Local $iFixY = 218, $aResult
+	Local $aAreaItems = [228, 140, 753, 541]
+	For $i = 1 To 2
+		Switch $i
+			Case 1
+				ClickDrag(581, 358, 518, 317, 1000)
+			Case Else
+				ClickDrag(588, 533, 588, 21, 1000)
+		EndSwitch
+		
+		If _Sleep(2500) Then Return
+		
+		$aButtonPixel = MagicItemsInfo()
+		If IsArray($aButtonPixel) Then
+			For $j = 1 To 2
+				$aAreaItems[1] = $aButtonPixel[1] + ($iFixY * ($j - 1)) - 15
+				$aAreaItems[3] = $aButtonPixel[1] + ($iFixY * $j)
+				If IsArray($aResult) Then
+					If $bDebug = True Then SetLog("[MagicItemsDrag] $aAreaItems " & _ArrayToString($aAreaItems, ", "))
+				EndIf
+				$aResult = QuickMIS("CNX", $g_sImgDirDailyDiscounts, $aAreaItems[0], $aAreaItems[1], $aAreaItems[2], $aAreaItems[3])
+				If IsArray($aResult) Then
+					If $bDebug = True Then SetLog("[MagicItemsDrag] $aResult " & _ArrayToString($aResult, ", "))
+				EndIf
+			Next
+		EndIf
+	Next
+EndFunc
+#ce
 Func CollectMagicItems($bTest = False)
 	If Not $g_bRunState Or $g_bRestart Then Return
 	
@@ -288,7 +327,8 @@ Func MagicItemsTime($x_start = 307, $y_start = 484, $iWidth = 240, $iHeight = 42
 	SetDebugLog("$g_sDateAndTimeMagicItems: " & $g_sDateAndTimeMagicItems)
 EndFunc   ;==>MagicItemsTime
 
-Func GetDealIndex($sName)
+#ce
+Func GetDealIndex($sName, $iGemValue = -1)
 	Switch ($sName)
 		Case "TrainPotion"
 			Return $g_eDDPotionTrain
@@ -337,4 +377,3 @@ Func GetDealIndex($sName)
 			Return -1 ; error
 	EndSwitch
 EndFunc   ;==>GetDealIndex
-#ce

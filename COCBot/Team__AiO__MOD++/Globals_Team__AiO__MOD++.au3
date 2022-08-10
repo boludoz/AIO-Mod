@@ -822,3 +822,6 @@ Global $g_abRandomCSVDB[4], $g_asRandomCSVDB[4], _
 Global $g_ahChkLinkThatAndUseIn[2], _
 	   $g_abLinkThatAndUseIn[2]
 #EndRegion - Random CSV - Team AIO Mod++
+
+; Recursion shield - Team AIO Mod++
+Global $g_bMustRunBotLoop = False
