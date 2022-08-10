@@ -367,6 +367,7 @@ Func StopAndPrepareForWar($iSleepTime)
 				Next
 
 				runBot()
+				Return
 			ElseIf UBound($aActiveAccount) = 1 Then
 				SetLog("This is the last active account for switching, close CoC anyway")
 			EndIf

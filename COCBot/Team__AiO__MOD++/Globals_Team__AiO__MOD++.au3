@@ -812,7 +812,7 @@ Global $g_bNewUpdateMainVillage = False, $g_hChkAutoBuildNew = 0
 Global $g_hLblAndroidInfo = 0, $g_hLblAndroidInfoAndroid = 0
 Global $g_sAndroidEmulatorReplace = "", $g_sAndroidInstanceReplace = ""
 
-#Region - Random CSV - Team AIO Mod++
+; Random CSV - Team AIO Mod++
 Global $g_ahChkRandomCSVDB[4], $g_ahCmbRandomCSVDB[4], _ 
 	   $g_ahChkRandomCSVAB[4], $g_ahCmbRandomCSVAB[4]
 	   
@@ -821,7 +821,6 @@ Global $g_abRandomCSVDB[4], $g_asRandomCSVDB[4], _
 
 Global $g_ahChkLinkThatAndUseIn[2], _
 	   $g_abLinkThatAndUseIn[2]
-#EndRegion - Random CSV - Team AIO Mod++
 
-; Recursion shield - Team AIO Mod++
+; Recursion fix - Team AIO Mod++
 Global $g_bMustRunBotLoop = False

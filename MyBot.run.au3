@@ -1199,11 +1199,13 @@ Func _Idle() ;Sequence that runs until Full Army
 		; Custom schedule - Team AIO Mod++
 		If ProfileSwitchAccountEnabled() Then CheckSwitchAcc()
 		ClickAway()
+		If $g_bMustRunBotLoop Then Return
 		If IsSearchAttackEnabled() = False Then
 			If Not ProfileSwitchAccountEnabled() Then
 				$g_iCommandStop = 2
 				SetLog("Attacking not planned, skipped.", $COLOR_WARNING)
 				checkSwitchAcc() ; Forced to switch when in halt attack mode
+				If $g_bMustRunBotLoop Then Return
 			EndIf
 			Return
 		EndIf
@@ -1222,6 +1224,7 @@ Func AttackMain($bFirstStart = False, $bCheckCG = True) ;Main control for attack
 	If IsSearchAttackEnabled() Then
 		If (IsSearchModeActive($DB) And checkCollectors(True, False)) Or IsSearchModeActive($LB) Then
 			If ProfileSwitchAccountEnabled() And ($g_aiAttackedCountSwitch[$g_iCurAccount] <= $g_aiAttackedCountAcc[$g_iCurAccount] - 2) Then checkSwitchAcc()
+			If $g_bMustRunBotLoop Then Return
 			If $g_bUseCCBalanced Then ;launch profilereport() only if option balance D/R is activated
 				ProfileReport()
 				If Not $g_bRunState Then Return
@@ -1278,6 +1281,7 @@ Func AttackMain($bFirstStart = False, $bCheckCG = True) ;Main control for attack
 			$g_bIsSearchLimit = False
 			$g_bIsClientSyncError = False
 			If ProfileSwitchAccountEnabled() Then checkSwitchAcc()
+			If $g_bMustRunBotLoop Then Return
 			SmartWait4Train()
 		EndIf
 	Else
@@ -1285,6 +1289,7 @@ Func AttackMain($bFirstStart = False, $bCheckCG = True) ;Main control for attack
 		If ProfileSwitchAccountEnabled() Then
 			$g_iCommandStop = 2
 			checkSwitchAcc() ; Forced to switch when in halt attack mode
+			If $g_bMustRunBotLoop Then Return
 		EndIf
 	EndIf
 EndFunc   ;==>AttackMain
