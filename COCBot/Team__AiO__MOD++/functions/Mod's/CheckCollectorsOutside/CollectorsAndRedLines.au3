@@ -20,9 +20,10 @@ Func CollectorsAndRedLines($bForceCapture = False)
 	SetLog("Locating Mines & Collectors", $COLOR_INFO)
 
 	; reset variables
-	ReDim $g_aiPixelMine[0]
-	ReDim $g_aiPixelElixir[0]
-	ReDim $g_aiPixelDarkElixir[0]
+	Static $sResetVars[0]
+	$g_aiPixelMine = $sResetVars
+	$g_aiPixelElixir = $sResetVars
+	$g_aiPixelDarkElixir = $sResetVars
 	Local $aiPixelNearCollector[0]
 
 	Local $hTimer = TimerInit()
