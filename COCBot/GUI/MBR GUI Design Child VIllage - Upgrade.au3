@@ -52,7 +52,7 @@ Global $g_ahPicWallsLevel[16] = [-1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 Global $g_hChkAutoUpgrade = 0, $g_hLblAutoUpgrade = 0, $g_hTxtAutoUpgradeLog = 0
 Global $g_hTxtSmartMinGold = 0, $g_hTxtSmartMinElixir = 0, $g_hTxtSmartMinDark = 0
 Global $g_hChkResourcesToIgnore[3] = [0, 0, 0]
-Global $g_hChkUpgradesToIgnore[35] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ; Custom Improve - Team AIO Mod++
+Global $g_hChkUpgradesToIgnore[36] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ; Custom Improve - Team AIO Mod++
 
 Func CreateVillageUpgrade()
 
@@ -725,6 +725,10 @@ Func CreateAutoUpgradeSubTab()
 		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
 	$x += 100
 	$g_hChkUpgradesToIgnore[34] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Traps", "Traps", "Traps"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		GUICtrlCreateGroup("", -99, -99, 1, 1)
+	$x += 100
+	$g_hChkUpgradesToIgnore[35] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Traps", "Town Hall Weapon", "TH Weapon"), $x, $y, -1, -1)
 		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
 		GUICtrlCreateGroup("", -99, -99, 1, 1)
 	$x = 5

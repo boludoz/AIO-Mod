@@ -237,10 +237,22 @@ Func UpgradeNormal($iUpgradeNumber)
 	EndIf
 
 	Local $aUpgradeButton = findButton("Upgrade", Default, 1, True)
+	If IsArray($aUpgradeButton) And UBound($aUpgradeButton, 1) = 2 Then
+		ClickP($aUpgradeButton, 1, 0, "#0297") ; Click Upgrade Button
+		If _Sleep($DELAYUPGRADENORMAL1) Then Return
+	Else
+		$aUpgradeButton = findButton("UpgradeWPN", Default, 1, True)
+		If IsArray($aUpgradeButton) And UBound($aUpgradeButton, 1) = 2 Then
+			ClickP($aUpgradeButton, 1, 0, "#0297") ; Click Upgrade Button
+			If _Sleep($DELAYUPGRADENORMAL1) Then Return
+		Else
+			SetLog("Upgrade button not found", $COLOR_ERROR)
+		EndIf
+	EndIf
 
 	If IsArray($aUpgradeButton) And UBound($aUpgradeButton, 1) = 2 Then
-		If _Sleep($DELAYUPGRADENORMAL2) Then Return
-		ClickP($aUpgradeButton, 1, 0, "#0297") ; Click Upgrade Button
+		;If _Sleep($DELAYUPGRADENORMAL2) Then Return
+		;ClickP($aUpgradeButton, 1, 0, "#0297") ; Click Upgrade Button
 		If _Sleep($DELAYUPGRADENORMAL3) Then Return ; Wait for window to open
 		If $g_bDebugImageSave Then SaveDebugImage("UpgradeRegBtn1")
 		Local $aBldgUpgradeWinChk[4] = [687, 161 + $g_iMidOffsetY, 0xCD1419, 20] ; Red pixel on botton X to close window

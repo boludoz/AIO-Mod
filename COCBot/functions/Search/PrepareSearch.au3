@@ -179,7 +179,7 @@ Func _PrepareSearch($Mode = $DB) ;Click attack button and find match button, wil
 	
 	If _Sleep($DELAYPREPARESEARCH2) Then Return
 	
-	Local $Result = getAttackDisable(180, 156) ; Grab Ocr for TakeABreak check
+	Local $Result = getAttackDisable(346, 156) ; Grab Ocr for TakeABreak check
 	If IsGemOpen(True) = True Then
 		SetLog(" Not enough gold to start searching.....", $COLOR_ERROR)
 		Click(585, 252, 1, 0, "#0151")

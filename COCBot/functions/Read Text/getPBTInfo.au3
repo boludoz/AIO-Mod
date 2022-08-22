@@ -54,7 +54,7 @@ Func getPBTInfo()
 	Local $iCount = 0
 	While _CheckPixel($aIsShieldInfo, $g_bCapturePixel) = False ; check for open shield info window
 		If _Sleep($DELAYPERSONALSHIELD2) Then Return
-		$Result = getAttackDisable(180, 156 + $g_iMidOffsetY) ; Try to grab Ocr for PBT warning message as it can randomly block pixel check
+		$Result = getAttackDisable(346, 156) ; Try to grab Ocr for PBT warning message as it can randomly block pixel check
 		SetDebugLog("OCR PBT warning= " & $Result, $COLOR_DEBUG)
 		If (StringLen($Result) > 3) And StringRegExp($Result, "[a-w]", $STR_REGEXPMATCH) Then ; Check string for valid characters
 			SetLog("Personal Break Warning found!", $COLOR_INFO)
@@ -73,11 +73,11 @@ Func getPBTInfo()
 
 	If _CheckPixel($aIsShieldInfo, $g_bCapturePixel) Or $bPBTStart Then
 
-		$sTimeResult = getOcrPBTtime(555, 499 + $g_iMidOffsetY) ; read PBT time
+		$sTimeResult = getOcrPBTtime(284, 457) ; Resolution fixed ; read PBT time
 		SetDebugLog("OCR PBT Time= " & $sTimeResult, $COLOR_DEBUG)
 		If $sTimeResult = "" Then ; try a 2nd time after a short delay if slow PC and null read
 			If _Sleep($DELAYPERSONALSHIELD2) Then Return ; pause for slow PC
-			$sTimeResult = getOcrPBTtime(555, 499 + $g_iMidOffsetY) ; read PBT time
+			$sTimeResult = getOcrPBTtime(284, 457) ; Resolution fixed ; read PBT time
 			SetDebugLog("OCR2 PBT Time= " & $sTimeResult, $COLOR_DEBUG)
 			If $sTimeResult = "" Then ; error if no read value
 				SetLog("strange error, no PBT value found?", $COLOR_ERROR)

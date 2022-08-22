@@ -257,8 +257,21 @@ Func UpgradeValue($inum, $bRepeat = False) ;function to find the value and type 
 
 	Local $aUpgradeButton = findButton("Upgrade", Default, 1, True)
 	If IsArray($aUpgradeButton) And UBound($aUpgradeButton, 1) = 2 Then
-		ClickP($aUpgradeButton, 1, 0, "#0213") ; Click Upgrade Button
+		ClickP($aUpgradeButton, 1, 0, "#0297") ; Click Upgrade Button
 		If _Sleep($DELAYUPGRADEVALUE5) Then Return
+	Else
+		$aUpgradeButton = findButton("UpgradeWPN", Default, 1, True)
+		If IsArray($aUpgradeButton) And UBound($aUpgradeButton, 1) = 2 Then
+			ClickP($aUpgradeButton, 1, 0, "#0297") ; Click Upgrade Button
+			If _Sleep($DELAYUPGRADEVALUE5) Then Return
+		Else
+			SetLog("Upgrade button not found", $COLOR_ERROR)
+		EndIf
+	EndIf
+
+	If IsArray($aUpgradeButton) And UBound($aUpgradeButton, 1) = 2 Then
+		;ClickP($aUpgradeButton, 1, 0, "#0213") ; Click Upgrade Button
+		;If _Sleep($DELAYUPGRADEVALUE5) Then Return
 		If $bOopsFlag And $g_bDebugImageSave Then SaveDebugImage("UpgradeView")
 		ForceCaptureRegion()
 		_CaptureRegion()

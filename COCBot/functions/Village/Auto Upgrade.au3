@@ -144,6 +144,7 @@ Func _AutoUpgrade($bDebug = False)
 		
 		For $i = 0 To 5
 			$g_aupgradenamelevel = BuildingInfo(245, 490 + $g_iBottomOffsetY)
+			
 			SetLog("Clicked in " & $g_aupgradenamelevel[1])
 			If $g_aupgradenamelevel[1] <> "" Then ExitLoop
 			If _Sleep($DELAYAUTOUPGRADEBUILDING3) Then ExitLoop
@@ -162,10 +163,19 @@ Func _AutoUpgrade($bDebug = False)
 		; check if any wrong Click by verifying the presence of the Upgrade button (the hammer)
 		Local $aUpgradeButton = findButton("Upgrade", Default, 1, True)
 		If Not(IsArray($aUpgradeButton) And UBound($aUpgradeButton, 1) = 2) Then
-			SetLog("No upgrade here... Wrong Click, looking next...", $COLOR_WARNING)
-			;$g_iNextLineOffset = $g_iCurrentLineOffset -> not necessary finally, but in case, I keep lne commented
-			$g_iNextLineOffset = $g_iCurrentLineOffset
-			ContinueLoop
+			$bTHWapon = False
+			If IsHonestOCR($g_aupgradenamelevel[1], "Town Hall") Then
+				$aUpgradeButton = findButton("UpgradeWPN", Default, 1, True)
+			EndIf
+			
+			If Not(IsArray($aUpgradeButton) And UBound($aUpgradeButton, 1) = 2) Then
+				SetLog("No upgrade here... Wrong Click, looking next...", $COLOR_WARNING)
+				;$g_iNextLineOffset = $g_iCurrentLineOffset -> not necessary finally, but in case, I keep lne commented
+				$g_iNextLineOffset = $g_iCurrentLineOffset
+				ContinueLoop
+			Else
+				$bTHWapon = True
+			EndIf
 		EndIf
 
 		If $g_aupgradenamelevel[0] = "" Then
@@ -178,8 +188,6 @@ Func _AutoUpgrade($bDebug = False)
 		Local $sEvaluateUpgrade = $g_aupgradenamelevel[1]
 		Local $bmustignoreupgrade = False
 		Select
-			Case IsHonestOCR($sEvaluateUpgrade, "Town Hall")
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[0] = 1)
 			Case IsHonestOCR($sEvaluateUpgrade, "Gold Mine")
 				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[1] = 1)
 			Case IsHonestOCR($sEvaluateUpgrade, "Elixir Collector")
@@ -248,6 +256,12 @@ Func _AutoUpgrade($bDebug = False)
 				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[33] = 1 Or $g_bAutoUpgradeWallsEnable = True)
 			Case IsHonestOCR($sEvaluateUpgrade, "Bomb") Or IsHonestOCR($sEvaluateUpgrade, "Spring Trap") Or IsHonestOCR($sEvaluateUpgrade, "Giant Bomb") Or IsHonestOCR($sEvaluateUpgrade, "Air Bomb") Or IsHonestOCR($sEvaluateUpgrade, "Seeking Air Mine") Or IsHonestOCR($sEvaluateUpgrade, "Skeleton Trap") Or IsHonestOCR($sEvaluateUpgrade, "Tornado Trap")
 				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[34] = 1)
+			Case IsHonestOCR($sEvaluateUpgrade, "Town Hall")
+				If $bTHWapon = True Then
+					$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[35] = 1)
+				Else
+					$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[0] = 1)
+				EndIf
 			Case Else
 				$bMustIgnoreUpgrade = False
 		EndSelect

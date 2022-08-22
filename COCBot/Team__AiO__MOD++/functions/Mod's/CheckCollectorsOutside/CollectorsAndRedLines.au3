@@ -20,11 +20,11 @@ Func CollectorsAndRedLines($bForceCapture = False)
 	SetLog("Locating Mines & Collectors", $COLOR_INFO)
 
 	; reset variables
-	Static $sResetVars[0]
-	$g_aiPixelMine = $sResetVars
-	$g_aiPixelElixir = $sResetVars
-	$g_aiPixelDarkElixir = $sResetVars
-	Local $aiPixelNearCollector[0]
+	Static $s_aResetVars[0]
+	$g_aiPixelMine = $s_aResetVars
+	$g_aiPixelElixir = $s_aResetVars
+	$g_aiPixelDarkElixir = $s_aResetVars
+	$g_aiPixelNearCollector = $s_aResetVars
 
 	Local $hTimer = TimerInit()
 	Local $iTotalCollectorNearRedline = 0
@@ -34,21 +34,21 @@ Func CollectorsAndRedLines($bForceCapture = False)
 	SuspendAndroid()
 	$g_aiPixelMine = GetLocationMine(False)
 	If (IsArray($g_aiPixelMine)) Then
-		_ArrayAdd($aiPixelNearCollector, $g_aiPixelMine, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
+		_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelMine, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
 	EndIf
 	$g_aiPixelElixir = GetLocationElixir(False)
 	If (IsArray($g_aiPixelElixir)) Then
-		_ArrayAdd($aiPixelNearCollector, $g_aiPixelElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
+		_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
 	EndIf
 	$g_aiPixelDarkElixir = GetLocationDarkElixir(False)
 	If (IsArray($g_aiPixelDarkElixir)) Then
-		_ArrayAdd($aiPixelNearCollector, $g_aiPixelDarkElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
+		_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelDarkElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
 	EndIf
 	ResumeAndroid()
 
 	$g_bScanMineAndElixir = True
 
-	Local $iColNbr = UBound($aiPixelNearCollector)
+	Local $iColNbr = UBound($g_aiPixelNearCollector)
 
 	SetDebugLog("Located collectors in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds")
 	SetLog("[" & UBound($g_aiPixelMine) & "] Gold Mines", $COLOR_INFO)
@@ -68,7 +68,7 @@ Func CollectorsAndRedLines($bForceCapture = False)
 			$aPixelCoord = $g_aiPixelRedArea[$i]
 			For $j = 0 To $iColNbr - 1
 				If $aCollectorsFlag[$j] <> True Then
-					$aPixelCoord2 = $aiPixelNearCollector[$j]
+					$aPixelCoord2 = $g_aiPixelNearCollector[$j]
 					If Abs(($aPixelCoord[0] - $aPixelCoord2[0]) / $iDiamondX) + Abs(($aPixelCoord[1] - $aPixelCoord2[1]) / $iDiamondY) <= 1 Then
 						$aCollectorsFlag[$j] = True
 						$iTotalCollectorNearRedline += 1

@@ -91,7 +91,7 @@ Func ConvertInternalExternArea($FunctionName = "", $bDebugImage = Default)
 		$ExternalArea[$i][2] = $ExternalAreaRef[$i][2]
 		;debugAttackCSV("External Area Point " & $ExternalArea[$i][2] & ": " & $x & ", " & $y)
 	Next
-	
+
 	; Update Internal coord.
 	For $i = 0 To 7
 		$x = $InternalAreaRef[$i][0]
@@ -111,7 +111,7 @@ Func ConvertInternalExternArea($FunctionName = "", $bDebugImage = Default)
 	Local $iLeft = $InternalArea[0][0], $iRight = $InternalArea[1][0], $iTop = $InternalArea[2][1], $iBottom = $InternalArea[3][1]
 	Local $iFixX = (($iRight - $iLeft) * 1.086637298091043) - ($iRight - $iLeft)
 	Local $iFixY = (($iBottom - $iTop) * 1.086637298091043) - ($iBottom - $iTop)
-		
+
 	; Top
 	$x = $InternalArea[2][0]
 	$y = Round($InternalArea[2][1] - $iFixY)
@@ -402,10 +402,13 @@ Func Algorithm_AttackCSV($testattack = False, $captureredarea = True)
 	;reset variables
 	; Collectors outside - Team AIO Mod++
 	If $g_bScanMineAndElixir = False Then
-		ReDim $g_aiPixelMine[0]
-		ReDim $g_aiPixelElixir[0]
-		ReDim $g_aiPixelDarkElixir[0]
+		Static $s_aResetVars[0]
+		$g_aiPixelMine = $s_aResetVars
+		$g_aiPixelElixir = $s_aResetVars
+		$g_aiPixelDarkElixir = $s_aResetVars
+		$g_aiPixelNearCollector = $s_aResetVars
 	EndIf
+
 	Local $g_aiPixelNearCollectorTopLeftSTR = ""
 	Local $g_aiPixelNearCollectorBottomLeftSTR = ""
 	Local $g_aiPixelNearCollectorTopRightSTR = ""

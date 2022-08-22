@@ -4,14 +4,23 @@ Func CollectCCGold($bTest = False)
 	SetLog("Start Collecting Clan Capital Gold", $COLOR_INFO)
 	ClickAway()
 	ZoomOut() ;ZoomOut first
-	If QuickMIS("BC1", $g_sImgCCGoldCollect, 250, 550, 400, 730) Then
-		Click($g_iQuickMISX, $g_iQuickMISY + 20)
+	
+	#Region - Custom fix - Team AIO Mod++
+	; Shooting a missile at a rooster - Forge - Team AIO Mod++
+	Local $aDeployPointsResult = DMClassicArray(DFind($g_sForgeCollect, 172, 403, 683, 644, 0, 0, 1000, True), 10, $g_bDebugImageSave) ; _MultiPixelSearch(172, 403, 683, 638, 2, 2, Hex(0xCACBA8, 6), StringSplit2D("0xC2C69F/-1/2|0x9B08BB/9/7", "/", "|"), 25)
+	If UBound($aDeployPointsResult) > 0 And not @error Then		
+		PureClick($aDeployPointsResult[0][1], $aDeployPointsResult[0][2])
+		If _Sleep(1500) Then Return
+
+	;If QuickMIS("BC1", $g_sImgCCGoldCollect, 250, 550, 400, 730) Then
+		;Click($g_iQuickMISX, $g_iQuickMISY + 20)
+	#EndRegion - Custom fix - Team AIO Mod++
 		For $i = 1 To 5
 			SetDebugLog("Waiting for Forge Window #" & $i, $COLOR_ACTION)
 			If QuickMIS("BC1", $g_sImgGeneralCloseButton, 710, 150, 760, 230) Then
 				ExitLoop
 			EndIf
-			_Sleep(500)
+			If _Sleep(500) Then Return
 		Next
 		Local $aCollect = 0
 		If QuickMIS("BC1", $g_sImgCCGoldCollect, 120, 340, 250, 450) Then

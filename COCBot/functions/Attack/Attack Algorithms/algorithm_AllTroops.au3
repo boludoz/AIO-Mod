@@ -20,7 +20,7 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 	If _Sleep($DELAYALGORITHM_ALLTROOPS1) Then Return
 
 	#Region - Multi Finger - Team AIO Mod++
-	If ($g_aiAttackStdDropSides[$g_iMatchMode] = 4 And $g_iMatchMode = $DB) = False Then 
+	If ($g_aiAttackStdDropSides[$g_iMatchMode] = 4 And $g_iMatchMode = $DB) = False Then
 		SmartAttackStrategy($g_iMatchMode) ; detect redarea first to drop any troops
 	EndIf
 	#EndRegion - Multi Finger - Team AIO Mod++
@@ -354,7 +354,7 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 	$g_aiDeployHeroesPosition[1] = -1
 
 	#Region - Drop CC first - Team AIO Mod++ (By Boludoz)
-	If ($g_iMatchMode = $DB Or $g_iMatchMode = $LB) Then 
+	If ($g_iMatchMode = $DB Or $g_iMatchMode = $LB) Then
 		If $g_bDeployCastleFirst[$g_iMatchMode] Then
 			Local $aCC = _ArraySearch($listInfoDeploy, "CC", 0, 0, 0, 0, 0, 0)
 			Local $aRem = _ArrayExtract($listInfoDeploy, $aCC, $aCC)
@@ -366,7 +366,7 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 
 	; Custom smart attack - Team AIO Mod++
 	If $g_abAttackStdSmartDropSpells[$g_iModeCount] Then DeploySpell("", "", True) ; Custom SmartFarm - Team AIO Mod++
-	
+
 	#Region - Multi finger - Team AIO Mod+++
 	If $g_aiAttackStdDropSides[$g_iMatchMode] = 4 And $g_iMatchMode = $DB Then
 		SetLog("Multi finger attack mode.", $COLOR_INFO)
@@ -378,7 +378,7 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 	#Region - Multi finger - Team AIO Mod+++
 
 	CheckHeroesHealth()
-	
+
 	#Region - Custom smart attack - Team AIO Mod++
 	If $g_abAttackStdSmartDropSpells[$g_iModeCount] Then
 		If _Sleep(500) Then Return
@@ -473,37 +473,44 @@ Func SmartAttackStrategy($imode)
 			SetLog("Locating Mines, Collectors & Drills", $COLOR_INFO)
 			$hTimer = __TimerInit()
 			If $g_bScanMineAndElixir = False Then
-				ReDim $g_aiPixelMine[0]
-				ReDim $g_aiPixelElixir[0]
-				ReDim $g_aiPixelDarkElixir[0]
-				ReDim $g_aiPixelNearCollector[0]
+				Static $s_aResetVars[0]
+				$g_aiPixelMine = $s_aResetVars
+				$g_aiPixelElixir = $s_aResetVars
+				$g_aiPixelDarkElixir = $s_aResetVars
+				$g_aiPixelNearCollector = $s_aResetVars
 			EndIf
-			
+
 			; If drop troop near gold mine
 			If $g_abAttackStdSmartNearCollectors[$imode][0] Then
 
 				; Collectors outside - Team AIO Mod++
-				If UBound($g_aiPixelMine) < 1 Then $g_aiPixelMine = GetLocationMine(False)
-				If (IsArray($g_aiPixelMine)) Then
-					_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelMine, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
+				If $g_bScanMineAndElixir = True Then
+					$g_aiPixelMine = GetLocationMine(False)
+					If UBound($g_aiPixelMine) > 0 and not @error Then
+						_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelMine, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
+					EndIf
 				EndIf
 			EndIf
 			; If drop troop near elixir collector
 			If $g_abAttackStdSmartNearCollectors[$imode][1] Then
 
 				; Collectors outside - Team AIO Mod++
-				If UBound($g_aiPixelElixir) < 1 Then $g_aiPixelElixir = GetLocationElixir(False)
-				If (IsArray($g_aiPixelElixir)) Then
-					_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
+				If $g_bScanMineAndElixir = True Then
+					$g_aiPixelElixir = GetLocationElixir(False)
+					If UBound($g_aiPixelMine) > 0 and not @error Then
+						_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
+					EndIf
 				EndIf
 			EndIf
 			; If drop troop near dark elixir drill
 			If $g_abAttackStdSmartNearCollectors[$imode][2] Then
 
 				; Collectors outside - Team AIO Mod++
-				If UBound($g_aiPixelDarkElixir) < 1 Then $g_aiPixelDarkElixir = GetLocationDarkElixir(False)
-				If (IsArray($g_aiPixelDarkElixir)) Then
-					_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelDarkElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
+				If $g_bScanMineAndElixir = True Then
+					$g_aiPixelDarkElixir = GetLocationDarkElixir(False)
+					If UBound($g_aiPixelMine) > 0 and not @error Then
+						_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelDarkElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
+					EndIf
 				EndIf
 			EndIf
 			SetLog("Located  (in " & Round(__TimerDiff($hTimer) / 1000, 2) & " seconds) :")
