@@ -38,7 +38,7 @@ Func BuilderBaseAttack($bTestRun = False)
 	EndIf
 
 	; Variables
-	Local $IsReaddy = False, $bIsToDropTrophies = False
+	Local $IsReaddy = True, $bIsToDropTrophies = False
 
 	; LOG
 	Setlog("Entering in Builder Base Attack!", $COLOR_INFO)
@@ -66,7 +66,7 @@ Func BuilderBaseAttack($bTestRun = False)
 	EndIf
 
 	; Get Army Status
-	ArmyStatus($IsReaddy)
+	;ArmyStatus($IsReaddy)
 	If RandomSleep(800) Then Return
 
 	; Get Drop Trophies Status
