@@ -22,6 +22,7 @@ lib/debug/
 Strategies/strategy *.ini
 *.sqlite3
 lib/ModLibs/Dissociable.Imaging.DebugImages/*
+lib/TempAdb/
 Nueva carpeta/
 Profiles_/
 *_stripped.au3
@@ -32,7 +33,4 @@ AutoUpdate.txt
 #MyBot.run.exe
 #MyBot.run.MiniGui.exe
 bin/AdbPath/
-
-lib/AdbTemp/MEmu/adb.exe
-lib/AdbTemp/MEmu/AdbWinApi.dll
-lib/AdbTemp/MEmu/AdbWinUsbApi.dll
+lib/AdbTemp/
