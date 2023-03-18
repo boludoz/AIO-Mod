@@ -318,6 +318,8 @@ Func ArmyStatus(ByRef $bIsReady)
 		SetLog("Full Army detected", $COLOR_SUCCESS)
 	EndIf
 
+	$g_bBBMachineReady = True
+
 	If QuickMis("BC1", $g_sImgHeroStatusUpg, 108, 355 + $g_iMidOffsetYFixed, 431, 459 + $g_iMidOffsetYFixed, True, False) Then ; Resolution changed
 		SetLog("Full Army detected, But Battle Machine is on Upgrade", $COLOR_INFO)
 		$g_bBBMachineReady = False
