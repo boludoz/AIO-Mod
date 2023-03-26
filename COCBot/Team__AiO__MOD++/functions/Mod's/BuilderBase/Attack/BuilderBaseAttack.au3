@@ -66,7 +66,7 @@ Func BuilderBaseAttack($bTestRun = False)
 	EndIf
 
 	; Get Army Status
-	ArmyStatus($IsReaddy)
+	;ArmyStatus($IsReaddy)
 	If RandomSleep(800) Then Return
 
 	; Get Drop Trophies Status
@@ -313,18 +313,17 @@ Func ArmyStatus(ByRef $bIsReady)
 	EndIf
 	#EndRegion Legacy Chilly-Chill fragment.
 
-	If QuickMis("BC1", $g_sImgFullArmyBB, 108, 355 + $g_iMidOffsetYFixed, 431, 459 + $g_iMidOffsetYFixed, True, False) Then ; Resolution changed
-		SetDebugLog("Full Army detected.")
-		SetLog("Full Army detected", $COLOR_INFO)
-		$bIsReady = True
-	ElseIf QuickMis("BC1", $g_sImgHeroStatusUpg, 108, 355 + $g_iMidOffsetYFixed, 431, 459 + $g_iMidOffsetYFixed, True, False) Then ; Resolution changed
-		SetLog("Full Army detected, But Battle Machine is on Upgrade", $COLOR_INFO)
-		$bIsReady = True
-	Else
-		$bIsReady = False
+	$bIsReady = QuickMis("BC1", $g_sImgFullArmyBB, 108, 355 + $g_iMidOffsetYFixed, 431, 459 + $g_iMidOffsetYFixed, True, False)
+	If $bIsReady == True Then ; Resolution changed
+		SetLog("Full Army detected", $COLOR_SUCCESS)
 	EndIf
 
-	$g_bBBMachineReady = $bIsReady
+	$g_bBBMachineReady = True
+
+	If QuickMis("BC1", $g_sImgHeroStatusUpg, 108, 355 + $g_iMidOffsetYFixed, 431, 459 + $g_iMidOffsetYFixed, True, False) Then ; Resolution changed
+		SetLog("Full Army detected, But Battle Machine is on Upgrade", $COLOR_INFO)
+		$g_bBBMachineReady = False
+	EndIf
 
 EndFunc   ;==>ArmyStatus
 

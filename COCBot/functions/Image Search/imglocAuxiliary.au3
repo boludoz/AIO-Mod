@@ -361,6 +361,7 @@ Func UpdateImgeTile(ByRef $sImageTile, $AndroidTag = Default)
 EndFunc   ;==>UpdateImgeTile
 
 Func findImage($sImageName, $sImageTile, $sImageArea, $maxReturnPoints = 1, $bForceCapture = True, $AndroidTag = Default)
+	SetDebugLog("findImage variables sImageName: " & $sImageName & " sImageTile: " & $sImageTile & " sImageArea: " & $sImageArea & " maxReturnPoints: " & $maxReturnPoints & " bForceCapture: " & $bForceCapture & " AndroidTag: " & $AndroidTag)
 	If $AndroidTag = Default Then $AndroidTag = True
 	Local $aCoords = "" ; use AutoIt mixed variable type and initialize array of coordinates to null
 	Local $iPattern = StringInStr($sImageTile, "*")
