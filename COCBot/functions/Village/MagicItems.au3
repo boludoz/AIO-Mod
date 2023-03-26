@@ -80,7 +80,7 @@ Func CollectMagicItems($bTest = False)
 		Return
 	EndIf
 
-	Local $aiDailyDiscount = decodeSingleCoord(findImage("DailyDiscount", $g_sImgDailyDiscountWindow, GetDiamondFromComma(370, 145 + $g_iMidOffsetYFixed, 480, 175 + $g_iMidOffsetYFixed), 1, True, Default))
+	Local $aiDailyDiscount = decodeSingleCoord(findImage("DailyDiscount", $g_sImgDailyDiscountWindow, GetDiamondFromRect2(370, 145 + $g_iMidOffsetYFixed, 480, 175 + $g_iMidOffsetYFixed), 1, True, Default))
 	If Not IsArray($aiDailyDiscount) Or UBound($aiDailyDiscount, 1) < 1 Then
 		ClickAway()
 		Return

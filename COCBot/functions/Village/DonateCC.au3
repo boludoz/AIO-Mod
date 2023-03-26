@@ -1425,7 +1425,7 @@ Func SearchImgloc($directory = "", $x = 0, $y = 0, $x1 = $g_iGAME_WIDTH, $y1 = $
 
 	; Capture the screen for comparison
 	If $bNeedCapture = True Then _CaptureRegion2()
-	Local $Redlines = GetDiamondFromComma($x, $y, $x1, $y1)
+	Local $Redlines = GetDiamondFromRect2($x, $y, $x1, $y1)
 	Local $res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $directory, "str", $Redlines, "Int", 0, "str", $Redlines, "Int", 0, "Int", 1000)
 
 	If $res[0] <> "" Then

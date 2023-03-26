@@ -125,7 +125,7 @@ Func BoostPotionMod($sName, $bDebug = False)
 	
 	Local $aFiles = _FileListToArray($g_sImgPotionsBtn, $sName & "*.*", $FLTA_FILES)
 	If UBound($aFiles) > 1 And not @error Then
-		Local $aCoords = decodeSingleCoord(findImage($aFiles[1], $g_sImgPotionsBtn & "\" & $aFiles[1], GetDiamondFromComma(198, 477, 678, 585), 1, True))
+		Local $aCoords = decodeSingleCoord(findImage($aFiles[1], $g_sImgPotionsBtn & "\" & $aFiles[1], GetDiamondFromRect2(198, 477, 678, 585), 1, True))
 		If UBound($aCoords) > 1 And Not @error Then
 			Setlog("Magic Items : boosting " & $sName, $COLOR_INFO)
 			ClickP($aCoords, 1)

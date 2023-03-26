@@ -627,7 +627,7 @@ Func GetDiamondFromArray($aRectArray)
 EndFunc   ;==>GetDiamondFromArray
 
 #Region - Custom - Team AIO Mod++
-Func GetDiamondFromComma($iX = -1, $iY = -1, $iEndX = $g_iGAME_WIDTH, $iEndY = $g_iGAME_HEIGHT)
+Func GetDiamondFromRect2($iX = -1, $iY = -1, $iEndX = $g_iGAME_WIDTH, $iEndY = $g_iGAME_HEIGHT)
 
 	If $iX = -1 Or $iY = -1 Or $iEndX = -1 Or $iEndY = -1 Then
 		SetDebugLog("GetDiamondRectComma: Bad input!", $COLOR_ERROR)

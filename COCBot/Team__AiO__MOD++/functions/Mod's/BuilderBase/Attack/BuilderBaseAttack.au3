@@ -66,7 +66,7 @@ Func BuilderBaseAttack($bTestRun = False)
 	EndIf
 
 	; Get Army Status
-	;ArmyStatus($IsReaddy)
+	ArmyStatus($IsReaddy)
 	If RandomSleep(800) Then Return
 
 	; Get Drop Trophies Status
